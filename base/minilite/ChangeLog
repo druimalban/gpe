@@ -1,8 +1,9 @@
 
 2004-06-21	Florian Boor <florian.boor@kernelconcepts.de>
+	* Fixed ChangeLog :-0
 	* Released V 0.41
-	* main.c: Removed dependency from iPaq kernel headers.
-	* main.c: Fixed several warnings.
+	* minilite.c: Removed dependency from iPaq kernel headers.
+	* minilite.c: Fixed several warnings.
 	* Makefile: Some updates to become OE-compatible.
 
 2004-06-20	Florian Boor <florian.boor@kernelconcepts.de>
