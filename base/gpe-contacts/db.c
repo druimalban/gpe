@@ -1,29 +1,47 @@
+#include <stdlib.h>
+#include <string.h>
+#include <glib.h>
 
+#include <sqlite.h>
 
-#define DB_NAME
+#include "errorbox.h"
+#include "db.h"
 
-sqlite *sqlite_open(const char *dbname, int mode, char **errmsg);
+#define DB_NAME "/.gpe/contacts"
 
-int db_open(void) {
+sqlite *db;
+
+int 
+db_open(void) 
+{
     /* open persistent connection */
-    const sqlite *db=NULL;
     char *errmsg;
+    char *buf;
+    size_t len;
+    char *home = getenv ("HOME");
+    if (home == NULL)
+      home = "";
+    
+    len = strlen (home) + strlen (DB_NAME) + 1;
+    buf = g_malloc (len);
+    strcpy (buf, home);
+    strcat (buf, DB_NAME);
 
-    if (db==NULL) {
-	db=sqlite(DB_NAME,"rw",&errmsg);
-	if (db==NULL) {
-	    /* error! */
+    db = sqlite_open (buf, 0, &errmsg);
+    g_free (buf);
+    
+    if (db == NULL) 
+      {
+	gpe_error_box (errmsg);
+	free (errmsg);
+	return -1;
+      }
 
-            return -1;
-	}
-    }
     return 0;
 }
 
-
-int db_getres(const char *query) {
-    /* get only the first result of a query */
-    const char *res;
-
-
+void
+load_structure (void)
+{
+  initial_structure ();
 }

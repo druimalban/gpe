@@ -13,25 +13,9 @@
 #include "interface.h"
 #include "support.h"
 
-typedef enum
-{
-  PAGE,
-  GROUP,
-  ITEM_MULTI_LINE,
-  ITEM_SINGLE_LINE
-} edit_thing_type;
+#include "structure.h"
 
-struct edit_thing
-{
-  edit_thing_type type;
-  gchar *name;
-  GSList *children;
-  struct edit_thing *parent;
-};
-
-GSList *edit_pages;
-
-typedef struct edit_thing *edit_thing_t;
+static GSList *edit_pages;
 
 static void
 run_list (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
@@ -90,7 +74,6 @@ new_thing (edit_thing_type t, gchar *name, edit_thing_t parent)
     parent->children = g_slist_append (parent->children, e);
   return e;
 }
-
 
 void
 structure_add_clicked (GtkButton       *button,

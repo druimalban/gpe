@@ -9,8 +9,11 @@
 
 #include <gtk/gtk.h>
 
+#include "init.h"
+
 #include "interface.h"
 #include "support.h"
+#include "db.h"
 
 int
 main (int argc, char *argv[])
@@ -22,8 +25,11 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
+
+  if (db_open ())
+    exit (1);
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
@@ -31,21 +37,9 @@ main (int argc, char *argv[])
   mainw = create_main ();
   gtk_widget_show (mainw);
 
-#if 0
-  detailview = create_detailview ();
-  /* gtk_widget_show (detailview); */
-  edit = create_edit ();
-  /* gtk_widget_show (edit); */
-  calender = create_calender ();
-  /* gtk_widget_show (calender); */
-  fileselection1 = create_fileselection1 ();
-  /* gtk_widget_show (fileselection1); */
-#endif
-
-  initial_structure ();
+  load_structure ();
   edit_structure ();
 
   gtk_main ();
   return 0;
 }
-
