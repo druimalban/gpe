@@ -1,4 +1,6 @@
-1. Implement recurring events
+1. Implement recurring events (this requires the building of an "alarm
+rescheduling" code for recurring events that have alarms -- uschedule is not
+smart enought to schedule more than 1 event in advance reliably)
 
 2. Improve support for alarms.  When the alarm goes off, play a
 user-selected sound and display the summary for the appointment in
@@ -9,23 +11,17 @@ question.
 4. Add a preferences dialog to control day_view_combined_times,
 week_starts_monday, and maybe other flags.
 
-5. Do database access through usqld rather than direct
+5. Fix the GtkCalendars "selected-day" problem and make it behave like the
+month-view pop-ups.
 
-6. Make week-view do something useful with mouse clicks
+6. Do database access through usqld rather than direct
 
-7. Maybe move the GtkDateSels from the bottom of the window to the
-top. Rationale: it might look better that way, and I keep hitting xkbd by
-mistake when trying to change days. :-)
-
-8. Find a way to stop the GtkCalendars in year-view from highlighting
-their own "currently selected" day.
-
-9. Make it so that events can be rescheduled by dragging them around
+7. Make it so that events can be rescheduled by dragging them around
 inside day_view and month_view.
 
-10. Make all-day events work properly.
+8. Make all-day events work properly.
 
-11. Replace pervasive use of time_t with some other time representation,
+9. Replace pervasive use of time_t with some other time representation,
 so that dates prior to 1970 can be expressed.
 
-12. Allow timezone to be specified when scheduling an appointment.
+10. Allow timezone to be specified when scheduling an appointment.
