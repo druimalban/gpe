@@ -46,7 +46,9 @@ install-program: all
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -d $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -m 644 $(PACKAGE)-9.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -m 644 $(PACKAGE)-13.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -m 644 $(PACKAGE)-19.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 	for i in $(PIXMAPS); do \
 	install -m 644 pixmaps/$$i   $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/;\

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Go 13
+Comment=GPE Go
+Exec=gpe-go 13
+Terminal=0
+Type=Application
+Icon=gpe-go.png
+Categories=Games
+StartupNotify=True
