@@ -9,7 +9,7 @@ endif
 
 PACKAGE_CFLAGS = -Os -g -Wall
 
-PACKAGE_CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags libxml-2.0` -DFILE_OFFSET_BITS=64 -I../../libgpewidget
+PACKAGE_CFLAGS += `pkg-config --cflags glib-2.0` -DFILE_OFFSET_BITS=64 -I../../libgpewidget
 PACKAGE_LDFLAGS += `pkg-config --libs glib-2.0`
 
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../../vorbis-fixp/lib
@@ -41,7 +41,7 @@ $(BACKEND_SO): $(BACKEND)
 	ln -sf $^ $@
 
 $(BACKEND): $(OBJS)
-	$(CC) -shared -o $@ $^ $(PACKAGE_LDFLAGS) -nostartfiles `pkg-config --libs libxml-2.0` -Wl,-soname -Wl,$(BACKEND) -g
+	$(CC) -shared -o $@ $^ $(PACKAGE_LDFLAGS) -nostartfiles -Wl,-soname -Wl,$(BACKEND) -g
 
 -include $(DEPS)
 

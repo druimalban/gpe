@@ -5,7 +5,7 @@
    <track><url>KLF/Make_It_Rain.ogg</url></track>
    <track><url>KLF/3.A.M._Eternal_(Live_At_The_S.S.L).ogg</url>
        <artist>who knows</artist>
-       <album>album</album>
+       <album>album</notalbum>
    </track>
    <track><url>KLF/Church_Of_The_KLF.ogg</url></track>
    <track><url>KLF/Last_Train_To_Trancentral_(LP_Mix).ogg</url></track>

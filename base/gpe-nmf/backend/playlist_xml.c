@@ -8,8 +8,13 @@
  */
 
 #include <glib.h>
-#include <libxml/parser.h>
+#include <glib/gmarkup.h>
+#include <string.h>
 #include <libintl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include <gpe/errorbox.h>
 
@@ -18,97 +23,155 @@
 
 #define _(x) gettext(x)
 
-static struct playlist *
-playlist_parse_xml_track (xmlDocPtr doc, xmlNodePtr cur)
+struct playlist_context {
+  gchar *filename;
+  struct playlist *playlist;
+  struct playlist *cur_playlist;
+  gchar **textptr;
+  int first_element_seen;
+};
+
+void playlist_xml_start_element (GMarkupParseContext *context,
+                          const gchar         *element_name,
+                          const gchar        **attribute_names,
+                          const gchar        **attribute_values,
+                          gpointer             user_data,
+                          GError             **error)
 {
-  struct playlist *i = playlist_new_track ();
-
-  while (cur)
-    {
-      if (!xmlStrcmp (cur->name, "title"))
-	i->title = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-      else if (!xmlStrcmp (cur->name, "url"))
-	i->data.track.url = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-      else if (!xmlStrcmp (cur->name, "artist"))
-	i->data.track.artist = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-      else if (!xmlStrcmp (cur->name, "album"))
-	i->data.track.album = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-
-      cur = cur->next;
+  struct playlist_context *pc = (struct playlist_context *)user_data;
+  if (!pc->first_element_seen) {
+    pc->first_element_seen = 1;
+    if (strcmp(element_name, "playlist") != 0) {
+      *error = g_error_new(g_quark_from_string("playlist-xml"),
+			   -22, "Playlist description has wrong document type");
+      return;
     }
-
-  player_fill_in_playlist (i);
-
-  if (i->title == NULL)
-    i->title = i->data.track.url;
-
-  return i;
+  }
+  if (strcmp(element_name, "list") == 0
+      || strcmp(element_name, "playlist") == 0) {
+    struct playlist *pl = playlist_new_list ();
+    //fprintf(stderr, "newlist %s pl=%p\n", element_name, pl);
+    if (!pc->playlist) {
+      pc->playlist = pl;
+      pl->title = g_path_get_basename(pc->filename);
+    }
+    pl->parent = pc->cur_playlist;
+    pc->cur_playlist = pl;
+    pc->textptr = NULL;
+  } else if (strcmp(element_name, "title") == 0) {
+    pc->textptr = &pc->cur_playlist->title;
+  } else if (strcmp(element_name, "track") == 0) {
+    struct playlist *pl = playlist_new_track ();
+    //fprintf(stderr, "newltrack pl=%p\n", pl);
+    pl->parent = pc->cur_playlist;
+    pc->cur_playlist = pl;
+    pc->textptr = NULL;
+  } else if (strcmp(element_name, "url") == 0) {
+    pc->textptr = &pc->cur_playlist->data.track.url;
+  } else if (strcmp(element_name, "artist") == 0) {
+    pc->textptr = &pc->cur_playlist->data.track.artist;
+  } else if (strcmp(element_name, "album") == 0) {
+    pc->textptr = &pc->cur_playlist->data.track.album;
+  }
 }
 
-static struct playlist *
-playlist_parse_xml (xmlDocPtr doc, xmlNodePtr cur)
+/* Called for close tags </foo> */
+void playlist_xml_end_element (GMarkupParseContext *context,
+			       const gchar         *element_name,
+			       gpointer             user_data,
+			       GError             **error)
 {
-  struct playlist *i = playlist_new_list ();
+  struct playlist_context *pc = (struct playlist_context *)user_data;
+  if ((strcmp(element_name, "playlist") == 0)
+      || (strcmp(element_name, "list") == 0)
+      || (strcmp(element_name, "track") == 0)) {
+    /* this playlist/track description done, append it to parent's list of playlists/tracks */
+    struct playlist *cur = pc->cur_playlist;
+    struct playlist *parent = cur->parent;
+    //fprintf(stderr, "endlist %s pl=%p parent=%p pc->playlist=%p\n", element_name, cur, parent, pc->playlist);
+    if (parent)
+      parent->data.list = g_slist_append (parent->data.list, cur);
 
-  while (cur)
-    {
-      if (!xmlStrcmp (cur->name, "title"))
-	i->title = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-      else if (!xmlStrcmp (cur->name, "track"))
-	{
-	  struct playlist *p = playlist_parse_xml_track (doc, cur->xmlChildrenNode);
-	  p->parent = i;
-	  i->data.list = g_slist_append (i->data.list, p);
-	}
-      else if (!xmlStrcmp (cur->name, "list"))
-	{
-	  struct playlist *p = playlist_parse_xml (doc, cur->xmlChildrenNode);
-	  p->parent = i;
-	  i->data.list = g_slist_append (i->data.list, p);
-	}
-	
-      cur = cur->next;
+    if (cur->type == ITEM_TYPE_TRACK) {
+      if (cur->title == NULL)
+	cur->title = g_strdup(cur->data.track.url);
+      player_fill_in_playlist (cur);
     }
-
-  if (i->title == NULL)
-    i->title = _("<untitled list>");
-
-  return i;
+    /* now pop stack */
+    pc->cur_playlist = parent;
+  } else if ((strcmp(element_name, "title") == 0)
+	     || (strcmp(element_name, "url") == 0)
+	     || (strcmp(element_name, "artist") == 0) 
+	     || (strcmp(element_name, "album") == 0) 
+	     ) {
+    pc->textptr = NULL;
+  }
 }
+
+  /* Called for character data */
+  /* text is not nul-terminated */
+void playlist_xml_text (GMarkupParseContext *context,
+			const gchar         *text,
+			gsize                text_len,  
+			gpointer             user_data,
+			GError             **error)
+{
+  struct playlist_context *pc = (struct playlist_context *)user_data;
+  if (pc->textptr)
+    *pc->textptr = g_strndup(text, text_len);
+}
+
+GMarkupParser parser = {
+  .start_element = playlist_xml_start_element,
+  .end_element = playlist_xml_end_element,
+  .text = playlist_xml_text,
+  .passthrough = NULL,
+  .error = NULL
+};
 
 struct playlist *
 playlist_xml_load (gchar *name)
 {
-  xmlDocPtr doc = xmlParseFile (name);
-  xmlNodePtr cur;
-  struct playlist *result;
+  struct playlist_context playlist_context = { name, NULL, NULL, 0 };
+  GMarkupParseContext *context = g_markup_parse_context_new (&parser, 0,
+							     &playlist_context, NULL);
+  int fd = open(name, O_RDONLY, 0);
 
-  if (doc == NULL)
+  if (fd < 0)
     {
       gpe_perror_box (name);
       return FALSE;
     }
 
-  xmlCleanupParser ();
+  while (1) {
+    gchar text[1024];
+    int textlen = read(fd, text, sizeof(text));
+    GError *error;
+    if (textlen <= 0) {
+      break;
+    }
+    if (g_markup_parse_context_parse (context, text, textlen, &error) == FALSE) {
+      gpe_error_box ("Error parsing xml playlist");
+      g_markup_parse_context_free (context);
+      return FALSE;
+    }
+  }
 
-  cur = xmlDocGetRootElement (doc);
-  if (cur == NULL)
+  if (playlist_context.playlist == NULL)
     {
       gpe_error_box ("Playlist description is empty");
-      xmlFreeDoc (doc);
+      g_markup_parse_context_free (context);
       return FALSE;
     }
 
-  if (xmlStrcmp (cur->name, "playlist")) 
-    {
-      gpe_error_box ("Playlist description has wrong document type");
-      xmlFreeDoc (doc);
-      return FALSE;
-    }
-
-  result = playlist_parse_xml (doc, cur->xmlChildrenNode);
-      
-  xmlFreeDoc (doc);
-
-  return result;
+  g_markup_parse_context_free (context);
+  if (playlist_context.playlist 
+      && playlist_context.playlist->data.list
+      && playlist_context.playlist->data.list->next == NULL) {
+    /* top level playlist (for the file) contains singleton, unwrap and return */
+    struct playlist *tmp = playlist_context.playlist;
+    playlist_context.playlist = tmp->data.list->data;
+    g_free(tmp);
+  }
+  return playlist_context.playlist;
 }
