@@ -214,8 +214,11 @@ void on_button_colors_clicked(GtkButton * button, gpointer colorbox){
 void on_radiobutton_brush_clicked (GtkButton *button, gpointer brush){
   GtkWidget * brushbox;
   GtkWidget * topbutton;
+#ifdef GTK2
+  GtkWidget * topbutton_image;
+  GdkPixbuf * button_image;
+#else //GTK1
   GtkGpePixmap * topbutton_pixmap;
-#ifndef GTK2 //GTK1
   GdkPixmap * button_image;
   GdkBitmap * button_mask;
 #endif
@@ -224,10 +227,13 @@ void on_radiobutton_brush_clicked (GtkButton *button, gpointer brush){
 
   brushbox  = gtk_widget_get_toplevel((GtkWidget *)button);
   topbutton = gtk_object_get_data((GtkObject *) brushbox, "calling_button");
-  topbutton_pixmap = gtk_object_get_data((GtkObject *) topbutton, "pixmap");
+
 #ifdef GTK2
-  //FIXME: need to switch icon
+  topbutton_image = gtk_object_get_data((GtkObject *) topbutton, "pixmap");
+  button_image = gtk_image_get_pixbuf (GTK_IMAGE(GTK_BIN (button)->child));
+  gtk_image_set_from_pixbuf(GTK_IMAGE(topbutton_image), button_image);
 #else
+  topbutton_pixmap = gtk_object_get_data((GtkObject *) topbutton, "pixmap");
   gtk_gpe_pixmap_get(GTK_GPE_PIXMAP(GTK_BIN (button)->child), &button_image, &button_mask);
   gtk_gpe_pixmap_set(topbutton_pixmap, button_image, button_mask);
 #endif
