@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-06 11:23+0000\n"
+"POT-Creation-Date: 2003-08-17 14:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,18 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-taskmanager.c:217
+#: gpe-taskmanager.c:226
 msgid "No program is selected"
 msgstr ""
 
-#: gpe-taskmanager.c:237
+#: gpe-taskmanager.c:246
+msgid "Icon"
+msgstr ""
+
+#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
 msgid "Running programs"
 msgstr ""
 
-#: gpe-taskmanager.c:246
-msgid "Kill program"
-msgstr ""
-
 #: gpe-taskmanager.c:260
-msgid "Program manager"
+msgid "Kill program"
 msgstr ""

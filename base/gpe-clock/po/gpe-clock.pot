@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-20 14:10+0100\n"
+"POT-Creation-Date: 2003-09-06 00:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,54 +15,65 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: clock.c:104
+#: clock.c:261
+msgid "Unable to set alarm"
+msgstr ""
+
+#: clock.c:319
 msgid "Clock preferences"
 msgstr ""
 
-#: clock.c:109
+#: clock.c:324
 msgid "12-hour format"
 msgstr ""
 
-#: clock.c:111
+#: clock.c:326
 msgid "24-hour format"
 msgstr ""
 
-#: clock.c:113
+#: clock.c:328
 msgid "Show seconds"
 msgstr ""
 
-#: clock.c:173
+#: clock.c:432
 msgid "Time:"
 msgstr ""
 
-#: clock.c:187
+#: clock.c:447
 msgid "Set alarm"
 msgstr ""
 
-#: clock.c:193
+#: clock.c:453
 msgid "Alarm active"
 msgstr ""
 
-#: clock.c:197
+#: clock.c:465
 msgid "Date:"
 msgstr ""
 
-#: clock.c:199
+#: clock.c:467
 msgid "Weekly, on:"
 msgstr ""
 
-#: clock.c:277
+#: clock.c:590
 msgid "Preferences"
 msgstr ""
 
-#: clock.c:278
+#: clock.c:591
 msgid "Set the time"
 msgstr ""
 
-#: clock.c:279
+#: clock.c:592
 msgid "Alarm ..."
 msgstr ""
 
-#: clock.c:280
+#: clock.c:593
 msgid "Remove from panel"
+msgstr ""
+
+#: clock.c:614
+msgid ""
+"This is the clock.\n"
+"Tap here to set the alarm, set the time, change the display format, or "
+"remove this program from the panel."
 msgstr ""

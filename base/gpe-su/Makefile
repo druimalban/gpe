@@ -4,6 +4,8 @@ DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.09
 
+LINGUAS = nl
+
 MEMBERS = gpe-su
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
