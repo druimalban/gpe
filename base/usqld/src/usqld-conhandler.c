@@ -197,7 +197,7 @@ int usqld_send_row(usqld_row_context * rc,
  */
 int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
   XDR_tree * reply = NULL;
-  int rv;
+  int rv =0;
   char * sql,*errmsg;
   usqld_row_context rc;
   
