@@ -51,5 +51,6 @@ gint rewrite_section(NWInterface_t *Scheme, gint startpos);
 gint get_section_text(gchar* section);
 gint get_file_text();
 gint get_scheme_list();
+gchar* get_file_var(const gchar *file, const gchar *var);
 
 #endif

@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <libintl.h>
 
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
@@ -19,6 +20,7 @@
 #include <time.h>
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
+#include <gpe/errorbox.h>
 
 #include "applets.h"
 #include "keyctl.h"
@@ -54,7 +56,7 @@ void init_buttons()
     int i;
 
     strcpy(buttons[0],"");
-
+ #warning	for user use $HOME/.keylaunchrc
     /* read from configfile and set buttons */
     fd=fopen("/etc/keylaunchrc","r");
     if (fd==NULL) {
@@ -220,7 +222,7 @@ void Keyctl_Save()
 
     fd=fopen("/etc/keylaunchrc","w");
     if (fd==NULL) {
-	printf("ERROR: Can't open /etc/keylaunchrc for writing!\n");
+	gpe_error_box(_("ERROR: Can't open /etc/keylaunchrc for writing!\n"));
 	return;
     }
     for (i=0;i<7;i++) {

@@ -59,7 +59,7 @@ char * get_cur_matchboxtheme()
     {
       fgets (cur, 255, pipe);
       if(feof(pipe) || strlen(cur)==0) //test if mcontrol is here
-	return 0;
+	    return 0;
       cur[strlen(cur)-1] = 0; //remove the last \n
       pclose (pipe);
     }

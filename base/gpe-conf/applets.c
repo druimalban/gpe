@@ -98,6 +98,7 @@ GtkWidget *make_menu_from_dir(char *path, int(*entrytest)(char* path), char *cur
     gtk_menu_set_active(GTK_MENU(menu),selected);
   return menu;
 }
+
 /***************************************************************************************/
 int mystrcmp(char *s,char*c)
 {
@@ -300,7 +301,7 @@ int suid_exec(const char* cmd,const char* params)
                                                   GTK_RESPONSE_REJECT,
                                                   NULL);
 	  label =
-		gtk_label_new (_("Please enter the root password\nto access this!"));
+		gtk_label_new (_("Some options are only accessible for\n user root.\nPlease enter password."));
 	  hbox = gtk_hbox_new (FALSE, 4);
 	
 	  gtk_widget_realize (dialog);

@@ -114,7 +114,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_container_set_border_width (GTK_CONTAINER (self.table), gpe_border);
 
   self.brightnessl = gtk_label_new("Brightness:");
-  adjLight = gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0);
+  adjLight = GTK_WIDGET(gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0));
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (adjLight));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_RIGHT);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
@@ -125,8 +125,8 @@ GtkWidget *ipaqscreen_Build_Objects()
   self.screensaverbt = gtk_check_button_new_with_label ("On");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), TRUE);
 
-  adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0);
-  self.screensaver = gtk_hscale_new(GTK_ADJUSTMENT (adjSaver));
+  adjSaver = GTK_WIDGET(gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0));
+  self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (adjSaver)));
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
 

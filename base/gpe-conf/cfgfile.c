@@ -1,7 +1,7 @@
 
 /*
  *
- * Copyright (C) 2002  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2002, 2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,6 +48,48 @@ gint get_first_char(gchar* s);
 gint get_param_val(gchar* line, gchar* param, gchar* value);
 gint subst_val(gchar* line, gchar* value);
 
+gchar* get_file_var(const gchar *file, const gchar *var)
+{
+  gchar *content;
+  gchar **lines;
+  gint length;
+  gchar *delim;
+  gint i = 0;
+
+  GError *err;
+
+  delim = g_strdup ("\n");
+  if (!g_file_get_contents (file, &content, &length, &err))
+  {
+	  fprintf(stderr,"Could not access file: %s.\n",file);
+	  return NULL;
+  }
+  lines = g_strsplit (content, delim, 2048);
+  g_free (delim);
+  delim = NULL;
+  g_free (content);
+  while (lines[i])
+    {
+      if ((g_strrstr (g_strchomp(lines[i]), var))
+	  && (!g_str_has_prefix (g_strchomp(lines[i]), "#")))
+	{
+		delim = g_strrstr(lines[i],"=");
+		if (delim)
+			delim = g_strdup(g_strchomp(delim)+1);
+		if (!delim)
+		{
+			delim = g_strrstr(lines[i]," ");
+			if (delim)
+				delim = g_strdup(g_strchomp(delim)+1);
+		}	
+		break;
+	}
+      i++;
+    }
+	
+  g_strfreev (lines);
+  return delim;
+}
 
 gint subst_val(gchar* line, gchar* value)
 {

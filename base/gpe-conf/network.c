@@ -2,6 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+ *	             2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +37,7 @@
 #include "parser.h"
 #include "cfgfile.h"
 #include "misc.h"
+#include "suid.h"
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -46,6 +48,10 @@
 #include <gpe/question.h>
 #include <gpe/smallbox.h>
 
+// offset for global page(s)
+#define PAGE_OFFSET 1 
+
+
 extern NWInterface_t* iflist;
 extern gint iflen;
 extern GtkWidget *mainw;
@@ -55,6 +61,8 @@ GtkWidget* create_nwdhcp_widgets(NWInterface_t iface);
 GtkWidget* create_nwppp_widgets(NWInterface_t iface);
 
 static guint not_added = 0;
+static gchar* cfgfile;
+static gboolean have_access = FALSE;
 
 static void
 add_interface(GtkWidget *widget, gpointer d)
@@ -73,7 +81,6 @@ add_interface(GtkWidget *widget, gpointer d)
 				gpe_error_box(_("This interface definition already exists!"));
 				return;
 			}
-				
 		iflen++;
 		iflist=(NWInterface_t*)realloc(iflist,iflen*sizeof(NWInterface_t));
 		memset(&iflist[iflen-1],'\0',sizeof(NWInterface_t));
@@ -119,9 +126,9 @@ void changed_nwtype(GtkToggleButton *togglebutton,gpointer user_data)
 {
 	GtkWidget *ctable, *label;
 	gchar wname[100];
-	gint row = gtk_notebook_get_current_page(GTK_NOTEBOOK(table))+not_added; // HACK: add 1 for loop
+	gint row = gtk_notebook_get_current_page(GTK_NOTEBOOK(table))+not_added-PAGE_OFFSET; 
 
-	if (!gtk_toggle_button_get_active(togglebutton)) return;
+	if (!gtk_toggle_button_get_active(togglebutton)) return; // just run once
 
 	// look who called us...
 	strcpy(wname,"static");
@@ -157,9 +164,9 @@ void changed_nwtype(GtkToggleButton *togglebutton,gpointer user_data)
 	{
 		label = gtk_label_new(iflist[row].name);
 		gtk_notebook_remove_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
-		gtk_notebook_insert_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label,row-not_added);
+		gtk_notebook_insert_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label,row-not_added+PAGE_OFFSET);
 		gtk_widget_show_all(table);
-		gtk_notebook_set_page(GTK_NOTEBOOK(table),row-not_added);
+		gtk_notebook_set_page(GTK_NOTEBOOK(table),row-not_added+PAGE_OFFSET);
 	}
 }
 
@@ -171,6 +178,7 @@ void create_editable_entry(NWInterface_t* piface, GtkWidget* attach_to, gchar* w
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	
 	label = gtk_label_new(ltext);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 0, 1, clnr, clnr+1,
 			(GtkAttachOptions) (GTK_FILL),
 			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
@@ -182,6 +190,31 @@ void create_editable_entry(NWInterface_t* piface, GtkWidget* attach_to, gchar* w
 	gtk_widget_ref(label);
 	gtk_object_remove_data(GTK_OBJECT(table),wname);
 	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+	gtk_entry_set_text(GTK_ENTRY(label),wdata);
+	gtk_entry_set_editable(GTK_ENTRY(label),TRUE);
+	gtk_table_attach (GTK_TABLE (attach_to), label, 1, 2, clnr, clnr+1,
+				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				gpe_boxspacing, gpe_boxspacing);
+}
+
+void create_editable_entry_simple(GtkWidget* attach_to, gchar* name, gchar* ltext, gchar* wdata, gint clnr)
+{
+	GtkWidget* label;
+	guint gpe_boxspacing = gpe_get_boxspacing ();
+	
+	label = gtk_label_new(ltext);
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (attach_to), label, 0, 1, clnr, clnr+1,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+	label = gtk_entry_new();
+	gtk_widget_set_name(GTK_WIDGET(label),name);
+	gtk_widget_ref(label);
+	gtk_object_remove_data(GTK_OBJECT(table),name);
+	gtk_object_set_data_full (GTK_OBJECT (table), name, label,
                             (GtkDestroyNotify) gtk_widget_unref);
 	gtk_entry_set_text(GTK_ENTRY(label),wdata);
 	gtk_entry_set_editable(GTK_ENTRY(label),TRUE);
@@ -395,6 +428,110 @@ GtkWidget* create_nwppp_widgets(NWInterface_t iface)
 }
 
 
+GtkWidget* create_global_widgets()
+{
+	gchar* tmpval;
+	
+	GtkWidget *label, *container, *ctable, *box;
+	guint gpe_boxspacing = gpe_get_boxspacing ();
+	guint gpe_border     = gpe_get_border ();
+	gint dhcp_on = TRUE;	
+	
+	// page headers
+	
+	ctable=gtk_table_new(3,7,FALSE);
+	container = gtk_hbox_new(TRUE,0);  
+	
+	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
+
+	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+	  	  
+	// which config file to use
+	if (!getuid()) // if we are root we change global config file
+	{		
+		cfgfile = malloc(20*sizeof(gchar));
+		sprintf(cfgfile,"%s","/etc/dillorc");
+	}
+	else
+	{
+		cfgfile = g_strdup_printf ("%s/.dillo/dillorc", g_get_home_dir());
+		if (access(cfgfile,F_OK))
+		{
+
+			gchar *content;
+			FILE *fnew;
+			gint length;
+			GError *err;
+
+			mkdir(g_strdup_printf ("%s/.dillo", g_get_home_dir()),S_IRWXU);
+			g_file_get_contents ("/etc/dillorc", &content, &length, &err);
+			fnew = fopen (cfgfile, "w");
+			fprintf (fnew, "%s",content);
+  			fclose (fnew);
+  			g_free (content);
+		}
+	}			
+	
+	//proxy for dillo
+	tmpval = get_file_var(cfgfile, "http_proxy");
+	create_editable_entry_simple(ctable, "proxy", _("Proxy"), tmpval, 0);
+	g_free(tmpval);
+	
+	tmpval = get_file_var(cfgfile, "no_proxy");
+	create_editable_entry_simple(ctable, "no_proxy", _("No proxy for"), tmpval, 1);
+	g_free(tmpval);
+	
+	// dhcp on - off
+	tmpval = get_file_var("/etc/pcmcia/network.opts", "DHCP");
+	dhcp_on = !strcmp(tmpval,"\"y\"");
+	g_free(tmpval);
+	
+	label = gtk_label_new(_("Use DHCP"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 4, 5,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+	gtk_widget_set_sensitive(label,have_access);
+	
+	box = gtk_hbox_new(TRUE,0);
+	gtk_table_attach (GTK_TABLE (ctable), box, 1, 2, 4, 5,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+	
+	label = gtk_radio_button_new_with_label_from_widget(NULL,_("on"));
+	gtk_widget_set_sensitive(label,have_access);
+	gtk_widget_set_name(GTK_WIDGET(label),"use-dhcp-on");
+	gtk_widget_ref(label);
+	gtk_object_set_data_full(GTK_OBJECT (table), "use-dhcp-on", label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),dhcp_on);  
+	gtk_container_add(GTK_CONTAINER(box),label);
+	label = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(label),_("off"));
+	gtk_widget_set_sensitive(label,have_access);
+	gtk_widget_set_name(GTK_WIDGET(label),"use-dhcp-off");
+	gtk_widget_ref(label);
+	gtk_object_set_data_full(GTK_OBJECT (table), "use-dhcp-off", label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),!dhcp_on);  
+	gtk_container_add(GTK_CONTAINER(box),label);
+
+	// nameserver
+	tmpval = get_file_var("/etc/resolv.conf", "nameserver");
+	create_editable_entry_simple(ctable, "nameserver", _("DNS server"), tmpval, 5);
+	g_free(tmpval);
+	
+	label = gtk_object_get_data (GTK_OBJECT (table),"nameserver");
+	gtk_widget_set_sensitive(label,have_access);
+	
+	return ctable;
+}
+
+
 void Network_Free_Objects()
 {
 	set_file_open(FALSE);	
@@ -408,7 +545,7 @@ void Network_Save()
 	GtkWidget* entry;
 	gchar wname[100];
 	gchar* newval;
-	
+
 	//if (!(access(NET_CONFIGFILE,W_OK) == 0)) return; // we are not allowed to write config
 	
 	// traverse all...
@@ -493,12 +630,46 @@ void Network_Save()
 		}
 	}
 	
-	// save to file
+	// save interface data to file
 	write_sections();
 	set_file_open(FALSE);
 	
-	// copy and activate config
+	// copy and activate interface config
 	suid_exec("CPIF","");
+	
+	strcpy(wname,"proxy");
+	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	if (entry)
+	{
+		newval=gtk_editable_get_chars(GTK_EDITABLE(entry),0,-1);
+		change_cfg_value (cfgfile, "http_proxy", newval,'=');
+	}
+	strcpy(wname,"no_proxy");
+	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	if (entry)
+	{
+		newval=gtk_editable_get_chars(GTK_EDITABLE(entry),0,-1);
+		change_cfg_value (cfgfile, "no_proxy", newval,'=');
+	}
+	g_free(cfgfile);
+	
+	// save and activate dhcp 
+	strcpy(wname,"use-dhcp-on");
+	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	if (entry)
+	{
+		sprintf(wname,"%i",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));
+		suid_exec("DHCP",wname);
+	}
+
+	// save nameserver
+	strcpy(wname,"nameserver");
+	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	if (entry)
+	{
+		newval=gtk_editable_get_chars(GTK_EDITABLE(entry),0,-1);
+		suid_exec("SDNS",newval);
+	}
 }
 
 void Network_Restore()
@@ -513,7 +684,6 @@ GtkWidget *Network_Build_Objects()
 	gint row = 0;
 	gint num_int = 0;
 	GtkWidget *button;
-	gboolean have_access = FALSE;
 	
 	have_access = (access(NET_CONFIGFILE,W_OK) == 0); 
 	if (!have_access) 
@@ -564,7 +734,14 @@ GtkWidget *Network_Build_Objects()
 		num_int = get_scheme_list();
 	}
 	
-	// add widgets
+	// create and add globals section
+	ctable = create_global_widgets();
+	//if (!have_access) gtk_widget_set_sensitive(ctable,FALSE);
+	label = gtk_label_new(_("global"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label);
+
+	
+	// add interface widgets
 	for (row=0;row<num_int;row++)
 	{
 		ctable = NULL;
@@ -578,7 +755,7 @@ GtkWidget *Network_Build_Objects()
 			gtk_notebook_append_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label);
 		}
 		else
-			not_added++;
+			not_added++; // we'll run into trouble if we have a loopback device between other in interfaces
 	} 
    return tablebox;
 }

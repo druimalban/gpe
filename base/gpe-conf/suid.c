@@ -2,6 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+ *               2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,51 +34,140 @@ static GtkWidget *passwd_entry;
 static int retv;
 
 int check_root_passwd (const char *passwd);
-
 int check_user_access (const char *cmd);
 
-#ifdef __DARWIN__		// to compile/test under powerpc macosx
-int
-stime (time_t * t)
+
+void update_dhcp_status(const gchar* active)
 {
-  printf ("Setting time : %ld uid:%d euid:%d\n", *t, getuid (), geteuid ());
-  return (geteuid () != 0) ? -1 : 0;
+	gint use_dhcp = atoi(active);
+	
+	if (use_dhcp)
+	{
+		change_cfg_value("/etc/pcmcia/network.opts","DHCP","\"y\"",'=');
+		switch (fork ())
+		  {
+		  case -1:
+		    fprintf (stderr, "cant fork\n");
+		    exit (errno);
+		  case 0:
+			execlp ("/sbin/dhcpcd", "dhcpcd", "-d", "eth0");
+		    exit(0);
+		  default:
+		  break;
+	      }
+	}
+	else
+	{
+		change_cfg_value("/etc/pcmcia/network.opts","DHCP","\"n\"",'=');
+		system("/usr/bin/killall dhcpcd");
+	}
 }
-#endif
+
+void update_dns_server(const gchar* server)
+{
+	change_cfg_value("/etc/resolv.conf","nameserver",server,' ');
+}
 
 void
-update_login_bg_sh (char * setupinfo)
+change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gchar seperator)
 {
-	if (atoi(setupinfo))
-      system_printf("rm -f %s", GPE_LOGIN_BG_DONTSHOW_FILE);
-    else 
-	  system_printf("touch %s", GPE_LOGIN_BG_DONTSHOW_FILE);
-}
+  gchar *content, *tmpval;
+  gchar **lines;
+  gint length;
+  gchar *delim;
+  FILE *fnew;
+  gint i = 0;
+  gint j = 0;
+  GError *err;
 
-void
-update_ownerinfo_sh (char * setupinfo)
-{
-	if (atoi(setupinfo)) 
-		system_printf("rm -f %s", GPE_OWNERINFO_DONTSHOW_FILE);
-  	else 
-		system_printf("touch %s", GPE_OWNERINFO_DONTSHOW_FILE);
-}
+  tmpval = "";
+  delim = g_strdup ("\n");
+  if (!g_file_get_contents (file, &content, &length, &err))
+  {
+	  fprintf(stderr,"Could not access file: %s.\n",file);
+	  return;
+  }
+  lines = g_strsplit (content, delim, 2048);
+  g_free (delim);
+  delim = NULL;
+  g_free (content);
 
-void 
-update_login_lock_auto (char * setupinfo)
-{
-  if (atoi(setupinfo)) 
-	system_printf("chmod a+x %s", GPE_LOGIN_LOCK_SCRIPT);
+  while (lines[i])
+    {
+      if ((g_strrstr (g_strchomp (lines[i]), var))
+	  && (!g_str_has_prefix (g_strchomp (lines[i]), "#")))
+	{
+	  delim = lines[i];
+	  j=get_first_char(delim);
+	  if (j>0) {
+		  tmpval = g_malloc(j);
+		  strncpy(tmpval,delim,j);
+	  	  lines[i] = g_strdup_printf ("%s%s%c%s", tmpval,var,seperator,val);
+	  	  g_free(tmpval);
+	  }
+	  else
+	  {
+	  	lines[i] = g_strdup_printf ("%s%c%s", var,seperator, val);
+	  }
+	}
+      i++;
+    }
+
+  i--;
+
+  if ((delim == NULL) && val)
+    {
+      lines = realloc (lines, i * sizeof (gchar *));
+      lines[i] = g_strdup_printf ("%s%c%s", var,seperator,val);
+      i++;
+    }
   else
-    system_printf("chmod a-x %s", GPE_LOGIN_LOCK_SCRIPT);
+    free (delim);
+
+  fnew = fopen (file, "w");
+
+  for (j = 0; j < i; j++)
+    {
+      fprintf (fnew, "%s\n", lines[j]);
+    }
+  fclose (fnew);
+  g_strfreev (lines);
 }
 
-void 
-update_login_background (char * file)
+
+void
+update_login_bg_sh (char *setupinfo)
 {
-  system_printf("rm -f %s",GPE_LOGIN_BG_LINKED_FILE);
-  if (symlink(file,GPE_LOGIN_BG_LINKED_FILE))
-	  g_warning("Could not create link to %s\n",file);
+  if (atoi (setupinfo))
+    system_printf ("rm -f %s", GPE_LOGIN_BG_DONTSHOW_FILE);
+  else
+    system_printf ("touch %s", GPE_LOGIN_BG_DONTSHOW_FILE);
+}
+
+void
+update_ownerinfo_sh (char *setupinfo)
+{
+  if (atoi (setupinfo))
+    system_printf ("rm -f %s", GPE_OWNERINFO_DONTSHOW_FILE);
+  else
+    system_printf ("touch %s", GPE_OWNERINFO_DONTSHOW_FILE);
+}
+
+void
+update_login_lock_auto (char *setupinfo)
+{
+  if (atoi (setupinfo))
+    system_printf ("chmod a+x %s", GPE_LOGIN_LOCK_SCRIPT);
+  else
+    system_printf ("chmod a-x %s", GPE_LOGIN_LOCK_SCRIPT);
+}
+
+void
+update_login_background (char *file)
+{
+  system_printf ("rm -f %s", GPE_LOGIN_BG_LINKED_FILE);
+  if (symlink (file, GPE_LOGIN_BG_LINKED_FILE))
+    g_warning ("Could not create link to %s\n", file);
 }
 
 void
@@ -162,9 +252,10 @@ suidloop (int write, int read)
 
   while (!feof (in))		// the prg exits with sigpipe
     {
+      cmd[0] = ' ';
       fflush (stdout);
       fscanf (in, "%4s\n%s\n", cmd, passwd);
-      printf ("cmd: \"%s\"\n", cmd);
+      printf ("cmd: \"%s\", pid %i\n", cmd, getpid());
       //    if (!feof (in))
       {
 	cmd[4] = 0;
@@ -240,6 +331,16 @@ suidloop (int write, int read)
 		fscanf (in, "%100s", arg2);
 		update_login_background (arg2);
 	      }
+	    else if (strcmp (cmd, "DHCP") == 0)
+	      {
+		fscanf (in, "%100s", arg2);
+		update_dhcp_status (arg2);
+	      }
+	    else if (strcmp (cmd, "SDNS") == 0)
+	      {
+		fscanf (in, "%100s", arg2);
+		update_dns_server (arg2);
+	      }
 #if 0
 	    if (bin)		// fork and exec
 	      {
@@ -314,3 +415,12 @@ verify_pass (gpointer user_data)
       gtk_widget_destroy (GTK_WIDGET (user_data));	// close the dialog
     }
 }
+
+#ifdef __DARWIN__		// to compile/test under powerpc macosx
+int
+stime (time_t * t)
+{
+  printf ("Setting time : %ld uid:%d euid:%d\n", *t, getuid (), geteuid ());
+  return (geteuid () != 0) ? -1 : 0;
+}
+#endif
