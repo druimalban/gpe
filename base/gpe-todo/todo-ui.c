@@ -18,6 +18,7 @@
 #include <gpe/gtkdatecombo.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
+#include <gpe/spacing.h>
 
 #include <libdm.h>
 
@@ -292,7 +293,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   GtkWidget *state = gtk_option_menu_new ();
   GtkWidget *state_menu = gtk_menu_new ();
   GtkWidget *label_summary = gtk_label_new (_("Summary:"));
-  GtkWidget *frame_details = gtk_frame_new (_("Details"));
+  GtkWidget *label_details = gtk_label_new (_("Details:"));
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   GtkWidget *hbox_categories;
@@ -379,8 +380,6 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (state), state_menu);
 
-  gtk_container_add (GTK_CONTAINER (frame_details), text);
-
   gtk_box_pack_start (GTK_BOX (hbox_summary), label_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (hbox_summary), entry_summary, TRUE, TRUE, 2);
 
@@ -390,13 +389,18 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   if (todo_db_get_categories_list())
     gtk_box_pack_start (GTK_BOX (vbox), hbox_categories, FALSE, FALSE, 2);
-
-  gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);
+  
+  gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.5);
+  gtk_box_pack_start (GTK_BOX (vbox), label_details, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), text, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
 
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text), TRUE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
+  gtk_widget_set_usize (text, -1, 88);
 
+  gtk_container_set_border_width (GTK_CONTAINER (window),
+				  gpe_get_border ());
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
   gtk_widget_grab_focus (entry_summary);

@@ -24,15 +24,12 @@
 static struct gpe_icon my_icons[] = {
   { "hide" },
   { "clean" },
-  { "properties" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick" },
   { NULL, NULL }
 };
 
 #define _(_x) gettext(_x)
-
-guint window_x = 240, window_y = 320;
 
 GtkWidget *the_notebook;
 GtkWidget *window;
@@ -59,7 +56,7 @@ open_window (void)
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));
   gpe_set_window_icon (window, "icon");
 
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
 }
 
 int

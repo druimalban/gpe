@@ -78,8 +78,8 @@ new_todo_item (GtkWidget *w, gpointer user_data)
 static void
 purge_completed (GtkWidget *w, gpointer list)
 {
-  if (gpe_question_ask (_("Permanently delete all completed items?"), _("Confirm"), 
-			"!gtk-dialog-question", _("Delete"), "clean", "!gtk-cancel", NULL, NULL) == 0)
+  if (gpe_question_ask (_("Are you sure you want to delete all completed items permanently?"), _("Confirm"), 
+			"!gtk-dialog-question", "!gtk-cancel", NULL, _("Delete"), "clean", NULL) == 1)
     {
       GSList *iter = todo_db_get_items_list();
 
@@ -306,94 +306,67 @@ top_level (GtkWidget *window)
   GtkWidget *draw = gtk_drawing_area_new();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
 
-#if GTK_MAJOR_VERSION < 2  
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
-  toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
-#else
   toolbar = gtk_toolbar_new ();
   toolbar2 = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
-#endif
 
   g_option = option;
   categories_menu ();
 
-#if GTK_MAJOR_VERSION < 2
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
-#endif
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+			    _("New item"), _("Tap here to add a new item."),
+			    G_CALLBACK (new_todo_item), NULL, -1);
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("New"), 
-			   _("Add a new item"), 
-			   _("Add a new item"),
-			   pw, (GtkSignalFunc)new_todo_item, NULL);
-
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("properties"));
+  pw = gtk_image_new_from_stock (GTK_STOCK_PROPERTIES, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Configure"), 
 			   _("Configure categories"), 
-			   _("Configure categories"),
-			   pw, (GtkSignalFunc)configure, NULL);
+			   _("Tap here to configure categories."),
+			   pw, GTK_SIGNAL_FUNC (configure), NULL);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("clean"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("clean", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Purge"), 
 			   _("Purge completed items"), 
-			   _("Purge completed items"),
-			   pw, (GtkSignalFunc)purge_completed, NULL);
+			   _("Tap here to purge completed items from the list."),
+			   pw, GTK_SIGNAL_FUNC (purge_completed), NULL);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("hide"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("hide", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Re-sort"), 
 			   _("Move completed items to the end of the list"), 
-			   _("Move completed items to the end of the list"),
-			   pw, (GtkSignalFunc)show_hide_completed, NULL);
+			   _("Tap here to move completed items to the end of the list."),
+			   pw, GTK_SIGNAL_FUNC (show_hide_completed), NULL);
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 
-			   _("Exit"), 
-			   _("Exit the program"), 
-			   _("Exit the program"),
-			   pw, G_CALLBACK (g_main_loop_quit), NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
+			    _("Quit"), _("Tap here to quit the program."),
+			    G_CALLBACK (g_main_loop_quit), NULL, -1);
 
-  gtk_widget_show (toolbar);
-  gtk_widget_show (toolbar2);
-  gtk_widget_show (sep);
-  gtk_widget_show (option);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), option, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
-  gtk_widget_show (hbox);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   
-  gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
-		      GTK_SIGNAL_FUNC (draw_expose_event),
-		      NULL);
+  g_signal_connect (G_OBJECT (draw), "expose_event",
+		    G_CALLBACK (draw_expose_event),
+		    NULL);
 
-  gtk_signal_connect (GTK_OBJECT (draw), "button_press_event",
-		      GTK_SIGNAL_FUNC (draw_click_event), NULL);
+  g_signal_connect (G_OBJECT (draw), "button_press_event",
+		    G_CALLBACK (draw_click_event), NULL);
 
   gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
-  gtk_widget_show (draw);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled),
 					 draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_AUTOMATIC);
-  gtk_widget_show (scrolled);
 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
-
-  gtk_widget_show (vbox);
 
   g_draw = draw;
 

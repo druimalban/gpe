@@ -1,3 +1,17 @@
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* main.c (open_window): Use gtk_widget_show_all.
+
+	* todo-ui.c (edit_item): Set border width on container.  Remove
+	frame.  Set size for description widget.
+
+	* list-ui.c (top_level): Remove GTK 1 support.  Use stock items
+	for toolbar.  Use GObject in place of GtkObject.
+	(purge_completed): Flip button order.
+
+	* main.c (my_icons): Delete properties.
+	(window_x, window_y): Deleted.
+
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add pt.
