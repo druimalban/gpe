@@ -1,4 +1,4 @@
-VERSION = 0.2.8pre
+VERSION = 0.2.8
 
 PACKAGE = gpe-sketchbook
 

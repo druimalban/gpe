@@ -1,3 +1,8 @@
+2004-06-15  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Released V 0.2.8
+	* Makefile: Updated version.
+	* familiar/control1: Fixed dependency to new libgpewidget.
+
 2004-06-14  Florian Boor  <florian.boor@kernelconcepts.de>
 	* sketchpad.c: (reset_drawing_area) Fixed minor memory leak.
 	* selector.c: (open_indexed_sketch) Fixed minor memory leak.

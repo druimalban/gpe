@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Luc Pionchon <luc@handhelds.org>
-Depends: libgtk2.0-0, libgpewidget1 (>= 0.55), gpe-icons (>= 0.20), libxsettings-client0, gpe-sketchbook-locale*
+Depends: libgtk2.0-0, libgpewidget1 (>= 0.82), gpe-icons (>= 0.20), libxsettings-client0, gpe-sketchbook-locale*
 Description: A GPE notebook to sketch your notes
 Provides: gpe-sketchbook
 Source: gpe-sketchbook-VERSION.tar.gz

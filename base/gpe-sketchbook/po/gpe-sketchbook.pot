@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-02 00:28+0200\n"
+"POT-Creation-Date: 2004-06-15 15:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,43 +16,43 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:119
+#: src/gpe-sketchbook.c:120
 msgid "Sketchbook: preferences"
 msgstr ""
 
-#: src/gpe-sketchbook.c:123
+#: src/gpe-sketchbook.c:124
 msgid "Sketchbook"
 msgstr ""
 
-#: src/preferences.c:323
+#: src/preferences.c:329
 msgid "Start with"
 msgstr ""
 
-#: src/preferences.c:326
+#: src/preferences.c:332
 msgid "Sketchpad"
 msgstr ""
 
-#: src/preferences.c:328
+#: src/preferences.c:334
 msgid "Selector - list"
 msgstr ""
 
-#: src/preferences.c:330
+#: src/preferences.c:336
 msgid "Selector - icons table"
 msgstr ""
 
-#: src/preferences.c:346
+#: src/preferences.c:352
 msgid "Use joypad scrolling"
 msgstr ""
 
-#: src/preferences.c:353
+#: src/preferences.c:359
 msgid "Grow on scroll"
 msgstr ""
 
-#: src/preferences.c:362
+#: src/preferences.c:368
 msgid "OK"
 msgstr ""
 
-#: src/preferences.c:363 src/selector-cb.c:67 src/sketchpad-cb.c:250
+#: src/preferences.c:369 src/selector-cb.c:67 src/sketchpad-cb.c:254
 msgid "Cancel"
 msgstr ""
 
@@ -74,40 +74,40 @@ msgstr ""
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:249
+#: src/selector-cb.c:66 src/sketchpad-cb.c:253
 msgid "Delete current sketch?"
 msgstr ""
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
-#: src/sketchpad-cb.c:249
+#: src/selector-cb.c:66 src/sketchpad-cb.c:46 src/sketchpad-cb.c:80
+#: src/sketchpad-cb.c:253
 msgid "Question"
 msgstr ""
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:250 src/sketchpad-gui.c:468
+#: src/selector-cb.c:67 src/sketchpad-cb.c:254 src/sketchpad-gui.c:466
 msgid "Delete"
 msgstr ""
 
-#: src/selector-gui.c:99
+#: src/selector-gui.c:98
 msgid "New sketch"
 msgstr ""
 
-#: src/selector-gui.c:104
+#: src/selector-gui.c:103
 msgid "Edit sketch"
 msgstr ""
 
-#: src/selector-gui.c:112
+#: src/selector-gui.c:110
 msgid "Delete selected sketch"
 msgstr ""
 
-#: src/selector-gui.c:120
+#: src/selector-gui.c:118
 msgid "Import from image"
 msgstr ""
 
-#: src/selector-gui.c:129
+#: src/selector-gui.c:127
 msgid "Toggle view"
 msgstr ""
 
-#: src/selector-gui.c:143
+#: src/selector-gui.c:141
 msgid "Preferences"
 msgstr ""
 
@@ -134,55 +134,55 @@ msgid ""
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:81
 msgid "Discard"
 msgstr ""
 
-#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:467
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:81 src/sketchpad-gui.c:465
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:80
 msgid "Save current sketch?"
 msgstr ""
 
-#: src/sketchpad-gui.c:266
+#: src/sketchpad-gui.c:265
 msgid "Select eraser"
 msgstr ""
 
-#: src/sketchpad-gui.c:268
+#: src/sketchpad-gui.c:267
 msgid "Select pencil"
 msgstr ""
 
-#: src/sketchpad-gui.c:270
+#: src/sketchpad-gui.c:269
 msgid "Brush size"
 msgstr ""
 
-#: src/sketchpad-gui.c:271
+#: src/sketchpad-gui.c:270
 msgid "Brush color"
 msgstr ""
 
-#: src/sketchpad-gui.c:430
+#: src/sketchpad-gui.c:428
 msgid "Sketch menu"
 msgstr ""
 
-#: src/sketchpad-gui.c:439
+#: src/sketchpad-gui.c:437
 msgid "Show list"
 msgstr ""
 
-#: src/sketchpad-gui.c:444
+#: src/sketchpad-gui.c:442
 msgid "Previous sketch"
 msgstr ""
 
-#: src/sketchpad-gui.c:449
+#: src/sketchpad-gui.c:447
 msgid "Next sketch"
 msgstr ""
 
-#: src/sketchpad-gui.c:465
+#: src/sketchpad-gui.c:463
 msgid "New"
 msgstr ""
 
-#: src/sketchpad-gui.c:466
+#: src/sketchpad-gui.c:464
 msgid "Import"
 msgstr ""
 
