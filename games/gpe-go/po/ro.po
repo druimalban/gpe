@@ -1,4 +1,4 @@
-# Mesajele în limba românã pentru gpe-sketchbook.
+# Mesajele în limba românã pentru gpe-go.
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-go.
 # Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
@@ -6,9 +6,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-go 0.04\n"
-"POT-Creation-Date: 2003-10-12 22:18+0300\n"
-"PO-Revision-Date: 2003-10-13 12:00-0500\n"
+"Project-Id-Version: gpe-go 0.05\n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2003-11-24 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -16,57 +16,72 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: gpe-go.c:734
+#: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
 msgstr "B:%d  W:%d "
 
-#: gpe-go.c:967
+#: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
 msgstr "Nu pot salva jocul în %s."
 
-#: gpe-go.c:1066
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Nou..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Salveazã..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Încarcã..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Meniu joc"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Primul"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Mergi la începutul jocului"
+
+#: gpe-go.c:1435
 msgid "Undo"
 msgstr "Desfã"
 
-#: gpe-go.c:1080
+#: gpe-go.c:1441
 msgid "Redo"
 msgstr "Refã"
 
-#: gpe-go.c:1088
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Ultimul"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Mergi la sfârºitul jocului"
+
+#: gpe-go.c:1457
 msgid "B:0  W:0 "
 msgstr "B:0  W:0 "
 
-#: gpe-go.c:1109
-msgid "PASS"
-msgstr "PASS"
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Pas"
 
-#: gpe-go.c:1122
-msgid "Save"
-msgstr "Salveazã"
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Paseazã rândul"
 
-#: gpe-go.c:1126
-msgid "Save as..."
-msgstr "Salveazã ca..."
-
-#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
-#: gpe-go-19.desktop.in.h:1
+#: gpe-go.desktop.in.h:1
 msgid "GPE Go"
 msgstr "GPE Go"
 
 #: gpe-go.desktop.in.h:2
 msgid "Go"
 msgstr "Go"
-
-#: gpe-go-9.desktop.in.h:2
-msgid "Go 9"
-msgstr "Go 9"
-
-#: gpe-go-13.desktop.in.h:2
-msgid "Go 13"
-msgstr "Go 13"
-
-#: gpe-go-19.desktop.in.h:2
-msgid "Go 19"
-msgstr "Go 19"
