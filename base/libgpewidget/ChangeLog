@@ -1,3 +1,13 @@
+2005-01-05  Phil Blundell  <philb@gnu.org>
+
+	* Version 0.97 released.
+	
+2005-01-05  Phil Blundell  <philb@gnu.org>
+
+	* Makefile (MEMBERS): Remove what, gpetooltips2.
+	* init.c (gpe_application_init): Don't call gpe_what_init.
+	* what.c, what.h, gpetooltips2.c: Deleted.
+
 2004-11-27  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.96 released.

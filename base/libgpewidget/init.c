@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,8 +25,6 @@
 #include <gtk/gtk.h>
 
 #include "errorbox.h"
-#include "what.h"
-#include "stylus.h"
 
 gint saved_argc;
 gchar **saved_argv;
@@ -83,8 +81,6 @@ gpe_application_init (int *argc, char **argv[])
   
       g_free (fn);
     }
-
-  gpe_what_init ();
 
   return TRUE;
 }

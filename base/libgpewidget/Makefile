@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = yes
-VERSION = 0.96
+VERSION = 0.97
 CVSBUILD = yes
 CAIRO = yes
 
@@ -9,7 +9,7 @@ IN_LIBGPEWIDGET = yes
 
 LINGUAS = ro de id pt fr ga wa sv nl cs es
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp gpeiconlistview gpewindowbits infoprint
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton stylus screensize question gtksimplemenu spacing tray translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpe-iconlist gpewindowlist gpehelp gpeiconlistview gpewindowbits infoprint
 
 SONAME = libgpewidget.so.1
 BINPACKAGE = libgpewidget1
