@@ -1,3 +1,7 @@
+2003-07-11  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.16 released.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* playlist_edit.c: Removed GTK1 warning.
@@ -21,7 +25,6 @@
 	now provided by Makefile.dpkg_ipkg).  
 	(BUILD): New variable, used for the other makefile includes.
 	'install-program' now depends on the desktop file..
-
 
 2003-03-09  Philip Blundell  <philb@gnu.org>
 
