@@ -4,6 +4,8 @@
 	
 2003-04-11  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control1 (Depends): Require libeventdb 0.06.
+
 	* event-ui.c (click_delete): Reformat.  Make question string
 	static and mark for translation.  Fix warning about argument
 	shadowed by local var.
