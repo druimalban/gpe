@@ -19,8 +19,13 @@
 #include <netinet/in.h>
 #include <errno.h>
 #include <sqlite.h>
+#include <netdb.h>
+
+#include <sasl/sasl.h>
 
 #include <glib.h>
+
+#include "common.h"
 
 #define PORT 6666
 #define BUFFER_LENGTH 2048
@@ -40,6 +45,7 @@ struct nsql_context
   FILE *ifp, *ofp;
   int quit;
   sqlite *sqliteh;
+  sasl_conn_t *conn;
   
   char *cmd_id;
 };
@@ -224,11 +230,117 @@ process_line (struct nsql_context *ctx, char *line)
   return FALSE;
 }
 
+/* do the sasl negotiation; return -1 if it fails */
+int mysasl_negotiate(FILE *in, FILE *out, sasl_conn_t *conn)
+{
+  char buf[8192];
+  char chosenmech[128];
+  const char *data;
+  int len;
+  int r;
+  const char *userid;
+  int count;
+    
+  /* generate the capability list */
+
+  dprintf(1, "generating client mechanism list... ");
+  r = sasl_listmech (conn, NULL, NULL, " ", NULL,
+		     &data, &len, &count);
+  if (r != SASL_OK) 
+    saslfail (r, "generating mechanism list");
+  dprintf(1, "%d mechanisms\n", count);
+
+  /* send capability list to client */
+  send_string (out, data, len);
+
+  dprintf(1, "waiting for client mechanism...\n");
+  len = recv_string (in, chosenmech, sizeof chosenmech);
+  if (len <= 0) 
+    {
+      printf("client didn't choose mechanism\n");
+      fputc('N', out); /* send NO to client */
+      fflush (out);
+      return -1;
+    }
+
+  /* receive initial response (if any) */
+  len = recv_string(in, buf, sizeof (buf));
+
+  /* start libsasl negotiation */
+  r = sasl_server_start(conn, chosenmech, buf, len,
+			&data, &len);
+  if (r != SASL_OK && r != SASL_CONTINUE) 
+    {
+      saslerr(r, "starting SASL negotiation");
+      fputc('N', out); /* send NO to client */
+      fflush(out);
+      return -1;
+    }
+  
+  while (r == SASL_CONTINUE) 
+    {
+      if (data) 
+	{
+	  dprintf(2, "sending response length %d...\n", len);
+	  fputc('C', out); /* send CONTINUE to client */
+	  send_string(out, data, len);
+	  free(data);
+	} 
+      else 
+	{
+	  dprintf(2, "sending null response...\n");
+	  fputc('C', out); /* send CONTINUE to client */
+	  send_string(out, "", 0);
+	}
+      
+      dprintf(1, "waiting for client reply...\n");
+      len = recv_string(in, buf, sizeof buf);
+      if (len < 0) {
+	printf("client disconnected\n");
+	return -1;
+      }
+      
+      r = sasl_server_step(conn, buf, len, &data, &len);
+      if (r != SASL_OK && r != SASL_CONTINUE) {
+	saslerr(r, "performing SASL negotiation");
+	fputc('N', out); /* send NO to client */
+	fflush(out);
+	return -1;
+      }
+    }
+  
+  if (r != SASL_OK) {
+    saslerr(r, "incorrect authentication");
+    fputc('N', out); /* send NO to client */
+    fflush(out);
+    return -1;
+  }
+  
+  fputc ('O', out); /* send OK to client */
+  fflush (out);
+  dprintf (1, "negotiation complete\n");
+  if (data)
+    free(data);
+  
+  r = sasl_getprop (conn, SASL_USERNAME, (void **)&userid);
+  printf("successful authentication '%s'\n", userid);
+  
+  return 0;
+}
+
 int
 main_loop (int fd)
 {
   struct nsql_context *ctx;
+  struct sockaddr_storage local_ip, remote_ip;
+  socklen_t salen;
   int fd2;
+  int r;
+  sasl_security_properties_t secprops;
+  char localaddr[NI_MAXHOST | NI_MAXSERV],
+    remoteaddr[NI_MAXHOST | NI_MAXSERV];
+  char myhostname[1024+1];
+  char hbuf[NI_MAXHOST], pbuf[NI_MAXSERV];
 
   fd2 = dup (fd);
   if (fd2 < 0)
@@ -241,6 +353,47 @@ main_loop (int fd)
 
   ctx->ifp = fdopen (fd, "r");
   ctx->ofp = fdopen (fd2, "w");
+
+  r = gethostname(myhostname, sizeof(myhostname)-1);
+  if(r == -1) saslfail(r, "getting hostname");
+
+  /* set ip addresses */
+  salen = sizeof(local_ip);
+  if (getsockname(fd, (struct sockaddr *)&local_ip, &salen) < 0) {
+    perror("getsockname");
+  }
+  getnameinfo((struct sockaddr *)&local_ip, salen,
+	      hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
+	      NI_NUMERICHOST | NI_NUMERICSERV);
+  snprintf(localaddr, sizeof(localaddr), "%s;%s", hbuf, pbuf);
+
+  salen = sizeof(remote_ip);
+  if (getpeername(fd, (struct sockaddr *)&remote_ip, &salen) < 0) {
+    perror("getpeername");
+  }
+  getnameinfo((struct sockaddr *)&remote_ip, salen,
+	      hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
+	      NI_NUMERICHOST | NI_NUMERICSERV);
+  snprintf(remoteaddr, sizeof(remoteaddr), "%s;%s", hbuf, pbuf);
+
+  r = sasl_server_new ("nsql", myhostname, NULL, localaddr, remoteaddr,
+		       NULL, 0, &ctx->conn);
+  if (r != SASL_OK) 
+    saslfail (r, "allocating connection state");
+
+  memset (&secprops, 0, sizeof (secprops));
+  secprops.min_ssf = 0;
+  secprops.max_ssf = 1024;
+  secprops.maxbufsize = 1024;  
+  secprops.property_names = NULL;
+  secprops.property_values = NULL;
+  secprops.security_flags = 0;
+  
+  r = sasl_setprop (ctx->conn, SASL_SEC_PROPS, &secprops);
+  if (r != SASL_OK) saslfail(r, "setting security props");
+
+  r = mysasl_negotiate (ctx->ifp, ctx->ofp, ctx->conn);
+  if (r != SASL_OK) saslfail(r, "SASL negotiation");
 
   while (!ctx->quit && !feof (ctx->ifp))
     {
@@ -267,16 +420,51 @@ new_connection (int fd, struct sockaddr *sin, socklen_t slen)
   close (fd);
 }
 
+static int
+getuser(void *context __attribute__((unused)),
+	char ** path) 
+{
+  return SASL_OK;
+}
+
+static int
+getpasswd(void *context __attribute__((unused)),
+	char ** path) 
+{
+  return SASL_OK;
+}
+
+static sasl_callback_t callbacks[] = {
+  {
+    SASL_CB_USER, &getuser, NULL      /* we'll just use an interaction if this comes up */
+  },
+  { 
+    SASL_CB_PASS, &getpasswd, NULL      /* Call getsecret_func if need secret */
+  }, 
+  {
+    SASL_CB_LIST_END, NULL, NULL
+  }
+};
+
 int
 main (int argc, char *argv[])
 {
   int sock;
   struct sockaddr_in6 sin;
   int sopt;
+  int r;
 
   signal (SIGCHLD, SIG_IGN);
 
-  sock = socket (AF_INET6, SOCK_STREAM, 0);
+  sock = socket (AF_INET6, SOCK_STREAM, 0);    
+
+  /* Initialize SASL */
+  r = sasl_server_init (callbacks,      /* Callbacks supported */
+			"nsqld");  /* Name of the application */
+
+  if (r != SASL_OK) 
+    saslfail (r, "initializing libsasl");
+
   if (sock < 0)
     {
       perror ("socket");

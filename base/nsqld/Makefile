@@ -6,7 +6,7 @@ CVSBUILD = yes
 
 LINGUAS = 
 
-MEMBERS = nsqld
+MEMBERS = nsqld common
 
 CPPFLAGS = -D_GNU_SOURCE
 ifeq ($(DEBUG),yes)
@@ -34,7 +34,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -lsqlite `pkg-config --libs glib-2.0`
+	$(CC) -o $@ $^ -lsqlite `pkg-config --libs glib-2.0` -lsasl2
 
 install-program: all
 
