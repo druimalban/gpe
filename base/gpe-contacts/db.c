@@ -158,7 +158,9 @@ discard_person (struct person *p)
   free_tag_values (p->data);
   g_free (p->name);
   g_free (p->given_name);
+  g_free (p->middle_name);
   g_free (p->family_name);
+  g_free (p->company);
   g_free (p);
 }
 
@@ -213,6 +215,24 @@ read_family_name (void *arg, int argc, char **argv, char **names)
 }
 
 static int
+read_middle_name (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+  p->middle_name = g_strdup (argv[1]);
+
+  return 0;
+}
+static int
+
+read_company (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+  p->company = g_strdup (argv[1]);
+
+  return 0;
+}
+
+static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
@@ -223,8 +243,12 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
 		      read_name, p, NULL, p->id);
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='GIVEN_NAME') or (tag='given_name'))",
 		      read_given_name, p, NULL, p->id);
+  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and (tag='MIDDLE_NAME')",
+		      read_middle_name, p, NULL, p->id);
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='FAMILY_NAME') or (tag='family_name'))",
 		      read_family_name, p, NULL, p->id);
+  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and (tag='COMPANY')",
+		      read_company, p, NULL, p->id);
 
   /* we support contacts without name now */
   if (!p->name) 

@@ -1,5 +1,6 @@
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * db.*, main.c: Added middle name and company to search.
     * namedetail.c: Fixed minor bug causing wrong defaults and warnings.
     * editing.c: Make name detail dialog work with new contacts. 
                  Moved name splitter to separate function.
