@@ -27,8 +27,10 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget -lsqlite
 
@@ -48,7 +50,7 @@ all: gpe-filemanager
 gpe-filemanager: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all
+install-program: all
 	install -D gpe-filemanager $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 	install -D -m 644 gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png
 	install -D -m 644 gpe-filemanager.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-filemanager
@@ -66,5 +68,5 @@ uninstall:
 clean:
 	rm -f gpe-filemanager $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
