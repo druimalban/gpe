@@ -1,3 +1,7 @@
+2005-01-27  Phil Blundell  <philb@gnu.org>
+
+	* Xserver: Add -rgba flags for iPAQ H2200.
+
 2004-12-31  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.42 released.
