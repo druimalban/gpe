@@ -28,6 +28,7 @@ static struct gpe_icon my_icons[] = {
   { "properties", "properties" },
   { "delete", "delete" },
   { "cancel", "cancel" },
+  { "exit", "exit" },
   { NULL, NULL }
 };
 
@@ -38,13 +39,16 @@ guint window_x = 240, window_y = 320;
 GtkWidget *the_notebook;
 GtkWidget *window;
 
-extern GtkWidget *top_level (void);
+extern GtkWidget *top_level (GtkWidget *window);
 
 static void
 open_window (void)
 {
-  GtkWidget *top = top_level();
+  GtkWidget *top;
+
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+  top = top_level(window);
 
   gtk_container_add (GTK_CONTAINER (window), top);
 

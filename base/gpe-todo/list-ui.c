@@ -113,17 +113,29 @@ ui_create_new_list(GtkWidget *widget,
 }
 
 static void
+close_window(GtkWidget *widget,
+	     GtkWidget *w)
+{
+  gtk_widget_destroy (w);
+}
+
+static void
 new_list_box (GtkWidget *w, gpointer data)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *ok = gtk_button_new_with_label ("OK");
+  GtkWidget *ok;
+  GtkWidget *cancel;
   GtkWidget *buttons = gtk_hbox_new (FALSE, 0);
   GtkWidget *label = gtk_label_new ("Name:");
   GtkWidget *name = gtk_entry_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 
+  ok = gpe_picture_button (window->style, _("OK"), "ok");
+  cancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
+
   gtk_widget_show (ok);
+  gtk_widget_show (cancel);
   gtk_widget_show (buttons);
   gtk_widget_show (label);
   gtk_widget_show (hbox);
@@ -133,6 +145,7 @@ new_list_box (GtkWidget *w, gpointer data)
   gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
 
   gtk_box_pack_end (GTK_BOX (buttons), ok, FALSE, FALSE, 2);
+  gtk_box_pack_end (GTK_BOX (buttons), cancel, FALSE, FALSE, 2);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (vbox), buttons, FALSE, FALSE, 0);
@@ -142,6 +155,9 @@ new_list_box (GtkWidget *w, gpointer data)
   
   gtk_signal_connect (GTK_OBJECT (ok), "clicked",
 		      GTK_SIGNAL_FUNC (ui_create_new_list), window);
+  
+  gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
+		      close_window, window);
 
   gtk_widget_show (vbox);
 
@@ -382,19 +398,19 @@ lists_menu (void)
 }
 
 GtkWidget *
-top_level (void)
+top_level (GtkWidget *window)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *sep = gtk_vseparator_new ();
   GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
 					GTK_TOOLBAR_ICONS);
+  GtkWidget *toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
   GtkWidget *option = gtk_option_menu_new ();
   GtkWidget *pw;
   GtkWidget *draw = gtk_drawing_area_new();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GdkPixmap *pixmap;
-  GdkBitmap *bitmap;
   
   g_option = option;
   lists_menu ();
@@ -403,29 +419,37 @@ top_level (void)
     curr_list = lists->data;
 
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
 
-  gpe_find_icon_pixmap ("new", &pixmap, &bitmap);
-  pw = gtk_pixmap_new (pixmap, bitmap);
+  pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("New"), 
 			   _("Add a new item"), 
 			   _("Add a new item"),
 			   pw, new_todo_item, NULL);
 
-  gpe_find_icon_pixmap ("properties", &pixmap, &bitmap);
-  pw = gtk_pixmap_new (pixmap, bitmap);
+  pw = gpe_render_icon (window->style, gpe_find_icon ("properties"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Configure"), 
 			   _("Configure lists"), 
 			   _("Configure lists"),
 			   pw, configure, NULL);
 
+  pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 
+			   _("Exit"), 
+			   _("Exit"), 
+			   _("Exit"),
+			   pw, gtk_exit, NULL);
+
   gtk_widget_show (toolbar);
+  gtk_widget_show (toolbar2);
   gtk_widget_show (sep);
   gtk_widget_show (option);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), option, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
   gtk_widget_show (hbox);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   
