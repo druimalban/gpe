@@ -603,7 +603,7 @@ build_edit_event_window (void)
 
   GtkWidget *weeklyhbox3 = gtk_hbox_new (FALSE, 0);
   GtkWidget *weeklylabelevery = gtk_label_new (_("Every"));
-  GtkWidget *weeklylabelweeks = gtk_label_new (_("week(s), on:"));
+  GtkWidget *weeklylabelweeks = gtk_label_new (_("weeks, on:"));
 
   GtkAdjustment *weeklyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 52, 1, 5, 5);
   GtkWidget *weeklyspin = gtk_spin_button_new (GTK_ADJUSTMENT (weeklyspin_adj), 1, 0);
@@ -642,8 +642,8 @@ build_edit_event_window (void)
 		      GTK_SIGNAL_FUNC (set_notebook_page), s);
 
   s->optionmenutask = gtk_simple_menu_new ();
-  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Day(s)"));
-  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Week(s)"));
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Days"));
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Weeks"));
   
 /* Begin event vbox */
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
@@ -801,7 +801,7 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (dailyhbox), dailyspin, FALSE, FALSE, 0);
 
   /* days label */
-  dailylabels = gtk_label_new (_("day(s)"));
+  dailylabels = gtk_label_new (_("days"));
   gtk_box_pack_start (GTK_BOX (dailyhbox), dailylabels, 
 			   FALSE, FALSE, 0);
 
@@ -857,7 +857,7 @@ build_edit_event_window (void)
   			   FALSE, FALSE, 0);
 
   /* months label */
-  monthlylabels = gtk_label_new (_("month(s)"));
+  monthlylabels = gtk_label_new (_("months"));
   gtk_box_pack_start (GTK_BOX (monthlyhbox1), monthlylabels, 
   			   FALSE, FALSE, 0);
 
@@ -909,7 +909,7 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (yearlyhbox), yearlyspin, FALSE, FALSE, 0);
 
   /* years label */
-  yearlylabels = gtk_label_new (_("year(s)"));
+  yearlylabels = gtk_label_new (_("years"));
   gtk_box_pack_start (GTK_BOX (yearlyhbox), yearlylabels, 
 			   FALSE, FALSE, 0);
 
@@ -970,7 +970,7 @@ build_edit_event_window (void)
 			   TRUE, TRUE, 2);
 
   /* events label */
-  endlabel= gtk_label_new (_("event(s)"));
+  endlabel= gtk_label_new (_("events"));
   gtk_box_pack_start (GTK_BOX (hboxendafter), endlabel, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endlabel, FALSE);
 
@@ -983,17 +983,17 @@ build_edit_event_window (void)
 
   /* begin alarm page */
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("minute(s)")));
+		   gtk_menu_item_new_with_label (_("minutes")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("hour(s)")));
+		   gtk_menu_item_new_with_label (_("hours")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("day(s)")));
+		   gtk_menu_item_new_with_label (_("days")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("week(s)")));
+		   gtk_menu_item_new_with_label (_("weeks")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("month(s)")));
+		   gtk_menu_item_new_with_label (_("months")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("year(s)")));
+		   gtk_menu_item_new_with_label (_("years")));
 		
   gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
   gtk_widget_set_usize (alarmoption, 120, -1);

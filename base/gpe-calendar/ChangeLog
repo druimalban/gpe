@@ -1,5 +1,8 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (build_edit_event_window): Replace trailing "(s)"
+	with "s" for ease of translation.
+
 	* Makefile (install): Depend on $(PACKAGE).desktop.
 
 	* gpe-calendar.desktop.in: New file.
