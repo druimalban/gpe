@@ -1258,7 +1258,7 @@ void on_button_last_pressed(GtkWidget *widget, gpointer unused){
       node = node->next;
     }
     hitem = node->data;
-    if(hitem->item == PASS){
+    if(hitem->action == PASS){
       pass_turn();
     }
     else{
