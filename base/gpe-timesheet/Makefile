@@ -37,6 +37,8 @@ gpe-timesheet: $(OBJS)
 install: install-mo
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install gpe-timesheet $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 gpe-timesheet.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-timesheet.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
 
 clean:

@@ -35,7 +35,7 @@ struct gpe_icon my_icons[] = {
   { "tick", },
   { "ok" },
   { "cancel" },
-  { "gpe-alarm" },
+  { "gpe-timesheet", PREFIX "/share/pixmaps/gpe-timesheet.png" },
   { "edit" },
   { NULL, NULL }
 };
@@ -113,7 +113,7 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   gtk_box_pack_start (GTK_BOX (vbox2), vbox, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), vbox2, FALSE, FALSE, 8);
 
-  pixbuf = gpe_find_icon ("gpe-alarm");
+  pixbuf = gpe_find_icon ("gpe-timesheet");
   if (pixbuf)
     {
       icon = gpe_render_icon (w->style, pixbuf);
@@ -314,6 +314,8 @@ main(int argc, char *argv[])
   GtkWidget *tree;
   GtkWidget *chatter;
   GdkPixbuf *p;
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -396,6 +398,8 @@ main(int argc, char *argv[])
 		      gtk_main_quit, NULL);
 
   gtk_widget_realize (window);
+  if (gpe_find_icon_pixmap ("gpe-timesheet", &pmap, &bmap))
+    gdk_window_set_icon (window->window, NULL, pmap, bmap);
   gtk_widget_show (window);
 
   gtk_clist_set_column_width (GTK_CLIST (tree), 0, 
