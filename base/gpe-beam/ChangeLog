@@ -1,5 +1,10 @@
 2004-10-16	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Makefile: New version.
+	* pixmaps/*48*: New larger icon files.
+	* main.c: Some minor fixes to correct icon display
+	          Support for larger icons if panel is large enough.
+			  
 	* Released V 0.2.5
 	
 2004-10-14	Florian Boor <florian.boor@kernelconcepts.de>

@@ -57,9 +57,12 @@
 static const gchar *MY_VCARD;
 
 struct gpe_icon my_icons[] = {
-	{"irda-on", PREFIX "/share/pixmaps/irda-on-16.png"},
-	{"irda-off", PREFIX "/share/pixmaps/irda-16.png"},
-	{"irda-conn", PREFIX "/share/pixmaps/irda-conn-16.png"},
+	{"irda-on16", PREFIX "/share/pixmaps/irda-on-16.png"},
+	{"irda-off16", PREFIX "/share/pixmaps/irda-16.png"},
+	{"irda-conn16", PREFIX "/share/pixmaps/irda-conn-16.png"},
+	{"irda-on48", PREFIX "/share/pixmaps/irda-on-48.png"},
+	{"irda-off48", PREFIX "/share/pixmaps/irda.png"},
+	{"irda-conn48", PREFIX "/share/pixmaps/irda-conn-48.png"},
 	{"irda", PREFIX "/share/pixmaps/irda.png"},
 	{NULL, NULL}
 };
@@ -102,8 +105,13 @@ set_image(int sx, int sy)
 	}
 	
 	size = (sx > sy) ? sx : sy;
-	sbuf = gpe_find_icon (radio_is_on ? 
-	                      (have_peer ? "irda-conn" : "irda-on") : "irda-off");
+	if (size < 24)
+		sbuf = gpe_find_icon (radio_is_on ? 
+	    	                  (have_peer ? "irda-conn16" : "irda-on16") : "irda-off16");
+	else
+		sbuf = gpe_find_icon (radio_is_on ? 
+	    	                  (have_peer ? "irda-conn48" : "irda-on48") : "irda-off48");
+	
 	dbuf = gdk_pixbuf_scale_simple(sbuf, sx, sy, GDK_INTERP_HYPER);
 	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
 	gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
@@ -670,20 +678,26 @@ get_irstatus (void)
 
 	if (success)
 	{
-		if (strlen (nick))
-			nick[strlen (nick) - 1] = 0;
-		gtk_label_set_text (GTK_LABEL (lDevice), nick);
-		snprintf (nick, 32, "0x%8llx", saddr);
-		gtk_label_set_text (GTK_LABEL (lSaddr), nick);
-		ts = parse_hints (chint);
-		gtk_label_set_text (GTK_LABEL (lCHint), ts);
-		free (ts);
+		if (control_window)
+		{
+			if (strlen (nick))
+				nick[strlen (nick) - 1] = 0;
+			gtk_label_set_text (GTK_LABEL (lDevice), nick);
+			snprintf (nick, 32, "0x%8llx", saddr);
+			gtk_label_set_text (GTK_LABEL (lSaddr), nick);
+			ts = parse_hints (chint);
+			gtk_label_set_text (GTK_LABEL (lCHint), ts);
+			free (ts);
+		}
 	}
 	else
 	{
-		gtk_label_set_text (GTK_LABEL (lDevice), "");
-		gtk_label_set_text (GTK_LABEL (lSaddr), "");
-		gtk_label_set_text (GTK_LABEL (lCHint), "");
+		if (control_window)
+		{
+			gtk_label_set_text (GTK_LABEL (lDevice), "");
+			gtk_label_set_text (GTK_LABEL (lSaddr), "");
+			gtk_label_set_text (GTK_LABEL (lCHint), "");
+		}
 	}
 	if (have_peer != success)
 	{
@@ -700,12 +714,6 @@ control_window_destroyed (void)
 	control_window = NULL;
 	lTStatus = NULL;
 	radio_off ();
-	/* stop updates from scanner */
-	if (timeout_id)
-	{
-		gtk_timeout_remove (timeout_id);
-		timeout_id = 0;
-	}
 
 	return FALSE;
 }
@@ -862,9 +870,6 @@ show_control (void)
 				  "destroy",
 				  G_CALLBACK
 				  (control_window_destroyed), NULL);
-		timeout_id =
-			gtk_timeout_add (1000,
-					 (GtkFunction) get_irstatus, NULL);
 	}
 }
 
@@ -879,8 +884,9 @@ radio_on (void)
 	radio_is_on = TRUE;
 	set_image(0, 0);
 	if (lTStatus)
-		gtk_label_set_text (GTK_LABEL
-				    (lTStatus), _("IR transceiver on"));
+		gtk_label_set_text (GTK_LABEL(lTStatus), _("IR transceiver on"));
+	timeout_id = gtk_timeout_add (1000,
+	                              (GtkFunction) get_irstatus, NULL);
 }
 
 
@@ -901,8 +907,14 @@ radio_off (void)
 	do_stop_radio ();
 	set_image(0, 0);
 	if (lTStatus)
-		gtk_label_set_text (GTK_LABEL
-				    (lTStatus), _("IR transceiver off"));
+		gtk_label_set_text (GTK_LABEL(lTStatus), 
+	                        _("IR transceiver off"));
+	/* stop updates from scanner */
+	if (timeout_id)
+	{
+		gtk_timeout_remove (timeout_id);
+		timeout_id = 0;
+	}
 }
 
 
@@ -1037,9 +1049,9 @@ main (int argc, char *argv[])
 	gtk_menu_append (GTK_MENU (menu), menu_remove);
 	
 	icon = gtk_image_new_from_pixbuf
-		(gpe_find_icon (radio_is_on ? "irda-on" : "irda-off"));
+		(gpe_find_icon (radio_is_on ? "irda-on16" : "irda-off16"));
 	gdk_pixbuf_render_pixmap_and_mask
-		(gpe_find_icon ("irda-on"), NULL, &bitmap, 255);
+		(gpe_find_icon ("irda-on16"), NULL, &bitmap, 255);
 	gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 	gdk_bitmap_unref (bitmap);
 	gtk_widget_show (icon);
