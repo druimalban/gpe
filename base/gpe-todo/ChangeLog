@@ -1,3 +1,7 @@
+2003-07-07  Moray Allan  <moray@sermisy.org>
+
+	* Makefile (clean): Depend on clean-po target.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* list-ui.c (draw_item): Removed legacy GTK1 code.

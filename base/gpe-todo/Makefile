@@ -40,7 +40,7 @@ all: $(PACKAGE) all-mo
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm -L../libtododb -ltododb
 
-clean:
+clean: clean-po
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
 
 all: $(PACKAGE)
