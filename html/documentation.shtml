@@ -12,10 +12,11 @@
 
 <h2>Developers</h2>
 
+Developer documentation is mainly stored in the 
+<a href="http://www.handhelds.org/z/wiki/GPE">GPE pages in the
+handhelds.org wiki</a> for now.
 <ul>
-<li>Developer documentation as mainly stored in the 
-    <a href="http://www.handhelds.org/z/wiki/GPE">GPE pages in the
-      handhelds.org wiki</a> for now.
+<li> <a	href="http://gpe.handhelds.org/projects/libgpewidget.shtml">libgpewidget documentation</a>
 </ul>
 
 <!--#include virtual="includes/foot.shtml"-->

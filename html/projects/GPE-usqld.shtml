@@ -2,16 +2,21 @@
 <!--#set var="pagename" value="usqld"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<h2> uSQLd a micro-sql server</h2> 
+<h2>uSQLd - a micro-SQL server</h2> 
 
-uSQLd is basically a network RPC wrapper for D. Richard Hipp's fantastic open source sql library SQLite: <a href="http://www.hwaci.com/sw/sqlite/">http://www.hwaci.com/sw/sqlite/</a>
 <p> 
+  uSQLd is basically a network RPC wrapper for D. Richard Hipp's
+  fantastic open source sql library SQLite: 
+  <a href="http://www.hwaci.com/sw/sqlite/">http://www.hwaci.com/sw/sqlite/</a>
+</p> 
 
-The first unstable release of GPE is in handhelds.org FTP: <a
-	href="ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.1.tar.gz">ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.1.tar.gz</a>
+<p> 
+  The first unstable release of GPE is in handhelds.org FTP: 
+  <a href="ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.1.tar.gz">ftp://handhelds.org/pub/projects/gpe/unstable/SOURCES/usqld-0.2.1.tar.gz</a>
+</p>
+
 <p>
-<b> N.B uslqd requires any sqlite 2.x compiled with -DTHREADSAFE=1</b>
-<p>
-ipkgs will make their way into the feed shortly. 
+  <b>Note: uslqd requires any sqlite 2.x to be compiled with -DTHREADSAFE=1</b>
+</p>
 
 <!--#include virtual="/includes/foot.shtml"-->
