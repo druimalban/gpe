@@ -60,6 +60,8 @@ LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
 
 endif #native or cross-compile
 
+CPPFLAGS += -I.
+
 MEMBERS  = main applets parser suid
 MEMBERS += misc
 MEMBERS += unimplemented
