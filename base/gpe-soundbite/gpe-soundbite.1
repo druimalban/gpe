@@ -1,0 +1,28 @@
+.TH gpe-soundbite 1 "10 Jun 2003" "version 1.0.4"
+.SH NAME
+gpe-soundbite \- audio note recorder for GPE
+.SH SYNOPSIS
+.B gpe-soundbite
+{ \fB play \fP | \fB record \fP } [ \fB\-\-auto\-generate\-filename\fP \fIpath\fP ] [ \fIfilename\fP ]
+.SH DESCRIPTION
+.PP
+The \fIgpe-soundbite\fP program allows you to record and play back spoken
+notes. Audio files are compressed using GSM speech compression before they
+are written to disk, greatly reducing the space they take up.
+.SH DESCRIPTION
+Unless the \-h, or \-\-help option is given, one  of  the  commands  below
+must be present.
+.TP 8
+.B "play"
+Play back an audio note.
+.TP 8
+.B "record"
+Record an audio note.
+.SH OPTIONS
+.TP 8
+.B \-\-auto\-generate\-filename
+This option requests that a new filename be automatically chosen, below the
+specified path.
+.SH AUTHOR
+.B gpe-soundbite
+was written by Moray Allan <moray@sermisy.org>.

@@ -1,0 +1,27 @@
+.\" teleport.1 - move applications between displays
+.\" Copyright 2003  Moray Allan
+.TH teleport 1 "Oct 13 2003" "version 0.31.1"
+.SH NAME
+teleport \- move applications between displays
+.SH SYNOPSIS
+.B teleport
+.SH DESCRIPTION
+.B teleport
+allows running applications to be moved between X displays,
+without closing and restarting them. It uses X properties to request that
+applications which support the display migration protocol move to another
+display.
+
+When run, teleport provides a menu of windows on the current X display which
+support the display migration protocol, and a text entry field in which a
+target X display can be entered.
+
+.SH SEE ALSO
+
+.BR tp\-keygen (1),
+.BR /usr/share/doc/libdisplaymigration0-dev/spec.txt .
+
+.SH AUTHOR
+.B teleport
+was written by Philip Blundell <philb@gnu.org>.
+
