@@ -1237,6 +1237,7 @@ void create_main_window()
 	gtk_key_snooper_install ((GtkKeySnoopFunc)keysnoop,NULL);
 
 	//draw_timeout_id = gtk_timeout_add (0, (GtkFunction)cb_win_draw_real, NULL);
+	cb_win_draw (NULL, NULL);
 }
 
 /* clean_up():
