@@ -30,7 +30,8 @@ edit_thing_t new_thing (edit_thing_type t, gchar *name, edit_thing_t parent);
 static void
 insert_new_thing (GtkCTree *ct,
 		  gchar *name,
-		  edit_thing_type type)
+		  edit_thing_type type,
+		  gchar *tag)
 {
   GtkCTreeNode *sibling = NULL, *parent = NULL, *node;
   edit_thing_t e_sibling = NULL, e_parent = NULL;
@@ -73,6 +74,7 @@ insert_new_thing (GtkCTree *ct,
 
   n = new_thing (type, name, NULL);
   n->parent = e_parent;
+  n->tag = tag;
 
   line_info[0] = name;
   line_info[1] = NULL;
@@ -104,7 +106,7 @@ structure_new_page (GtkWidget *widget,
   if (t)
     {
       if (t[0])
-	insert_new_thing (ct, t, PAGE);
+	insert_new_thing (ct, t, PAGE, NULL);
       else
 	g_free (t);
     }
@@ -122,7 +124,7 @@ structure_new_group (GtkWidget *widget,
       if (t)
 	{
 	  if (t[0])
-	    insert_new_thing (ct, t, GROUP);
+	    insert_new_thing (ct, t, GROUP, NULL);
 	  else
 	    g_free (t);
 	}
@@ -148,14 +150,20 @@ structure_new_field (GtkWidget *widget,
       GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radio1), 
 								       _("Multiple line"));
       
-      gchar *t = smallbox (_("New field"), _("Title"), "");
+      struct box_desc bd[3];
+      memset (&bd, 0, sizeof (bd));
+      bd[0].label = _("Title");
+      bd[1].label = _("Tag");
+      smallbox_x (_("New field"), bd);
 
-      if (t)
+      if (bd[0].value && bd[1].value && bd[0].value[0] && bd[1].value[0])
+	insert_new_thing (ct, bd[0].value, ITEM_SINGLE_LINE, bd[1].value);
+      else
 	{
-	  if (t[0])
-	    insert_new_thing (ct, t, ITEM_SINGLE_LINE);
-	  else
-	    g_free (t);
+	  if (bd[0].value)
+	    g_free (bd[0].value);
+	  if (bd[1].value)
+	    g_free (bd[1].value);
 	}
     }
   else
