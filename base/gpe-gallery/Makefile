@@ -51,6 +51,8 @@ install: all
 	install -D -m 644 gpe-gallery.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-gallery.png
 	install -D -m 644 gpe-gallery.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-gallery
 	install -D -m 644 gpe-gallery.mime $(DESTDIR)/etc/mime-handlers/gpe-gallery.mime
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery
 	install -m 644 pixmaps/slideshow.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/slideshow.png
 	install -m 644 pixmaps/fullscreen.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/fullscreen.png

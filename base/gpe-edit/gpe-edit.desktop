@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Text Editor
+Comment=GPE Text Editor
+Exec=gpe-edit
+Terminal=0
+Type=Application
+Icon=gpe-edit.png
+Categories=Application;Utility;GPE
+StartupNotify=True

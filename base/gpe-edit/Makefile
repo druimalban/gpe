@@ -54,6 +54,8 @@ install-program: all
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
 	install -D -m 644 gpe-edit.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
 	install -D -m 644 gpe-edit.mime $(DESTDIR)/etc/mime-handlers/gpe-edit.mime
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-edit
 
 clean:
