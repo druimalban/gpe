@@ -274,7 +274,7 @@ day_view_update ()
 	  GdkBitmap *bmap;
 	  
 	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
-    	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
+    	  if ((ev->flags & FLAG_ALARM) && ev->recur)
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
 		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,
@@ -286,7 +286,7 @@ day_view_update ()
 		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,
 				       pmap, bmap);
 	    }
-	  else if (ev->flags & FLAG_RECUR)
+	  else if (ev->recur)
 	    {
 	      if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
 		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,

@@ -1,5 +1,13 @@
 2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* future_view.c: delete old clone-checking cruft
+	* event-ui.c: stop double freeing clones and move recurrence
+	checking/getting
+	* day_view.c: stop using FLAG_RECUR
+	* day_popup.c: likewise
+	
+2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* event-ui.c: use libschedule
 	* familiar/control*: likewise
 	

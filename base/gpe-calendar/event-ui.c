@@ -238,9 +238,8 @@ click_delete (GtkWidget *widget, event_t ev)
   
   ev_real = (event_t)ev->cloned_ev;
   ev_d = event_db_get_details (ev_real);
-  r = event_db_get_recurrence (ev_real);
      
-  if (r)
+  if (ev->recur)
   {
 	if (gpe_question_ask_yn (qn))
 	{			  
@@ -250,12 +249,13 @@ click_delete (GtkWidget *widget, event_t ev)
 	  	schedule_next(0,0);
 		}
 
-		event_db_destroy_clone (ev);
-		event_db_remove (ev_real);		
+		event_db_remove (ev_real);
+				
 	}
 	else 
 	{
-		r->exceptions = g_slist_append(r->exceptions,(void *)ev->start);
+		r = event_db_get_recurrence (ev_real);
+  		r->exceptions = g_slist_append(r->exceptions,(void *)ev->start);
 		event_db_flush (ev_real);
 	}
 	
@@ -268,8 +268,8 @@ click_delete (GtkWidget *widget, event_t ev)
 	  	schedule_next(0,0);
 	}
 
-	event_db_destroy_clone (ev);
-	event_db_remove (ev_real);		
+	event_db_remove (ev_real);
+
   }
   
   update_all_views ();
@@ -426,13 +426,11 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       if (ev->recur)
         g_free (ev->recur);
       ev->recur = NULL;
-      ev->flags &= ~FLAG_RECUR;
     }
   else
     {
       recur_t r = event_db_get_recurrence (ev);
 
-      ev->flags |= FLAG_RECUR;
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily)))
         {
           r->type = RECUR_DAILY;

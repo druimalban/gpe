@@ -81,9 +81,7 @@ future_view_update ()
 #endif
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
-      if (ev->flags & FLAG_CLONE)
-	gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
-      else gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
+      gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
     	
       row++;
     } 

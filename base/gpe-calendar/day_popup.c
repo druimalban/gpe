@@ -139,7 +139,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 
 	  gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
 	  
-	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
+	  if ((ev->flags & FLAG_ALARM) && ev->recur)
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
 		gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
@@ -151,7 +151,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 		gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
 				       pmap, bmap);
 	    }
-	  else if (ev->flags & FLAG_RECUR)
+	  else if (ev->recur)
 	    {
 	      if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
 		gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
