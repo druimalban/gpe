@@ -1,5 +1,10 @@
 2003-07-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 	
+	* day_view.c (selction_made): added a search for dat when multiple
+	events are liste3d in the same timeslot (stops the crash)
+	
+2003-07-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+	
 	* main.c : add new global week_offset to allow week_starts_monday to
 	affect month-view
 	* month_view.c (draw_expose_event): Move days declaration and setting
