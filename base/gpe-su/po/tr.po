@@ -1,14 +1,14 @@
 # Turkish translation of gpe-su.
 # Copyright (C) 2005 gpe-su.
 # This file is distributed under the same license as the gpe-su package.
-# Abdullah Ulas <ulas@freeshell.org>, 2005.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-su 0.09\n"
 "POT-Creation-Date: 2003-09-06 00:36+0100\n"
-"PO-Revision-Date: 2005-03-27 10:36+0300\n"
+"PO-Revision-Date: 2005-04-06 17:36+0300\n"
 "Last-Translator: Abdullah Ulas <ulas@freeshell.org>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"

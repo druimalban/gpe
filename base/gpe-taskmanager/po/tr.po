@@ -1,15 +1,15 @@
 # Turkish translation of gpe-taskmanager
 # Copyright (C) 2005 gpe-taskmanager.
 # This file is distributed under the same license as the gpe-taskmanager package.
-# Abdullah Ulas <ulas@sdf.lonestar.org>, 2005.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-taskmanager 0.14\n"
 "POT-Creation-Date: 2003-08-17 14:08+0100\n"
-"PO-Revision-Date: 2005-03-27 11:41+0300\n"
-"Last-Translator: Abdullah Ulas <ulas@sdf.lonestar.org>\n"
+"PO-Revision-Date: 2005-04-06 17:41+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-9\n"

@@ -1,0 +1,230 @@
+# Kinyarwanda translations for gpe-sketchbook package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-sketchbook package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-12 20:45+0300\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/gpe-sketchbook.c:115
+#, fuzzy
+msgid "Sketchbook: preferences"
+msgstr "Ibyahiswemo"
+
+#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+msgid "Sketchbook"
+msgstr ""
+
+#: src/preferences.c:93
+#, fuzzy
+msgid ""
+"Cannot create XSettings client.\n"
+"Use default preferences."
+msgstr "Kurema Umukiriya Mburabuzi Ibyahiswemo"
+
+#: src/preferences.c:188
+#, fuzzy
+msgid ""
+"gpe-confd is not running.\n"
+"Cannot save the preferences."
+msgstr "ni OYA Kubika i Ibyahiswemo"
+
+#: src/preferences.c:277
+msgid "Start with"
+msgstr "hera/tangirira ku"
+
+#: src/preferences.c:280
+msgid "Sketchpad"
+msgstr ""
+
+#: src/preferences.c:282
+#, fuzzy
+msgid "Selector - list"
+msgstr "Urutonde"
+
+#: src/preferences.c:284
+#, fuzzy
+msgid "Selector - icons table"
+msgstr "Udushushondanga imbonerahamwe#"
+
+#: src/preferences.c:300
+msgid "Use joypad scrolling"
+msgstr ""
+
+#: src/preferences.c:307
+#, fuzzy
+msgid "Grow on scroll"
+msgstr "ku"
+
+#: src/preferences.c:316
+msgid "OK"
+msgstr "OKE"
+
+#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
+msgid "Cancel"
+msgstr "Kureka"
+
+#: src/selector.c:88
+#, fuzzy, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Gusoma i bushyinguro"
+
+#. TRANSLATORS: %s are: [folder name] [error message]
+#: src/selector.c:95
+#, fuzzy, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Kurema"
+
+#. TRANSLATORS: default sketch label based on [date] and [time]
+#. example: "2003 10 12  at  18:48:51"
+#: src/selector.c:179
+#, fuzzy, c-format
+msgid "%s  at  %s"
+msgstr "%sku"
+
+#: src/selector-cb.c:66 src/sketchpad-cb.c:243
+#, fuzzy
+msgid "Delete current sketch?"
+msgstr "KIGEZWEHO"
+
+#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:243
+msgid "Question"
+msgstr ""
+
+#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
+msgid "Delete"
+msgstr "Gusiba"
+
+#: src/selector-gui.c:102
+msgid "New sketch"
+msgstr ""
+
+#: src/selector-gui.c:107
+msgid "Edit sketch"
+msgstr ""
+
+#: src/selector-gui.c:115
+#, fuzzy
+msgid "Delete selected sketch"
+msgstr "Byahiswemo"
+
+#: src/selector-gui.c:123
+#, fuzzy
+msgid "Import from image"
+msgstr "Bivuye Ishusho"
+
+#: src/selector-gui.c:132
+#, fuzzy
+msgid "Toggle view"
+msgstr "Kureba"
+
+#: src/selector-gui.c:146
+msgid "Preferences"
+msgstr "Ibyahisemo"
+
+#: src/sketchpad.c:184
+msgid "Sketch"
+msgstr ""
+
+# basctl/source\basicide\brkdlg.src:RID_BASICIDE_BREAKPOINTDLG.RID_PB_NEW.text
+#: src/sketchpad.c:189
+#, fuzzy
+msgid "new"
+msgstr "Gishya"
+
+#: src/sketchpad.c:220
+#, fuzzy, c-format
+msgid "Import of `%s' failed."
+msgstr "Bya Byanze"
+
+#: src/sketchpad.c:237
+#, fuzzy
+msgid "Image to import"
+msgstr "Kuri Kuzana"
+
+#: src/sketchpad-cb.c:47
+#, fuzzy
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr "Byahinduwe Kubika Mbere"
+
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
+msgid "Discard"
+msgstr "iyitarura"
+
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
+msgid "Save"
+msgstr "Kubika"
+
+#: src/sketchpad-cb.c:77
+#, fuzzy
+msgid "Save current sketch?"
+msgstr "Kubika KIGEZWEHO"
+
+#: src/sketchpad-gui.c:266
+msgid "Select eraser"
+msgstr ""
+
+#: src/sketchpad-gui.c:268
+msgid "Select pencil"
+msgstr ""
+
+#: src/sketchpad-gui.c:270
+#, fuzzy
+msgid "Brush size"
+msgstr "Ingano"
+
+#: src/sketchpad-gui.c:271
+#, fuzzy
+msgid "Brush color"
+msgstr "Ibara"
+
+#: src/sketchpad-gui.c:430
+#, fuzzy
+msgid "Sketch menu"
+msgstr "Ibikubiyemo"
+
+#: src/sketchpad-gui.c:439
+#, fuzzy
+msgid "Show list"
+msgstr "Urutonde"
+
+#: src/sketchpad-gui.c:444
+msgid "Previous sketch"
+msgstr ""
+
+#: src/sketchpad-gui.c:449
+msgid "Next sketch"
+msgstr ""
+
+#: src/sketchpad-gui.c:465
+msgid "New"
+msgstr "Gishya"
+
+#: src/sketchpad-gui.c:466
+msgid "Import"
+msgstr "Kuzana"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr ""

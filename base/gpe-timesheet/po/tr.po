@@ -1,0 +1,68 @@
+# Turkish translation of gpe-timesheet.
+# Copyright (C) 2005 gpe-timesheet GNU GPL.
+# This file is distributed under the same license as the gpe-timesheet package.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-timesheet 0.11\n"
+"POT-Creation-Date: 2003-02-20 20:25+0000\n"
+"PO-Revision-Date: 2005-04-05 14:23+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
+msgid "Time Tracker"
+msgstr "Zaman izleyicisi"
+
+#: main.c:125
+msgid "Notes"
+msgstr "Notlar"
+
+#: main.c:138
+msgid "OK"
+msgstr "Tamam"
+
+#: main.c:139
+msgid "Cancel"
+msgstr "Ýptal"
+
+#: main.c:191
+msgid "Clocking in:"
+msgstr "Saat gir"
+
+#: main.c:210
+msgid "Clocking out:"
+msgstr "Saat çýk"
+
+#: main.c:272 main.c:359 main.c:360
+msgid "New task"
+msgstr "Yeni görev"
+
+#: main.c:272
+msgid "Name"
+msgstr "Ad"
+
+#: main.c:365 main.c:366
+msgid "Delete task"
+msgstr "Görev sil"
+
+#: main.c:371 main.c:372
+msgid "Clock on"
+msgstr "saatin bulunduðu"
+
+#: main.c:377 main.c:378
+msgid "Clock off"
+msgstr "Saat kapat"
+
+#: main.c:383 main.c:384
+msgid "Note"
+msgstr "Not"
+
+#: gpe-timesheet.desktop.in.h:1
+msgid "GPE Timesheet"
+msgstr "GPE Zaman Çizelgesi"

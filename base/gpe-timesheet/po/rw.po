@@ -1,0 +1,81 @@
+# Kinyarwanda translations for gpe-timesheet package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-timesheet package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-timesheet 0.11\n"
+"POT-Creation-Date: 2003-02-20 20:25+0000\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
+msgid "Time Tracker"
+msgstr ""
+
+#: main.c:125
+msgid "Notes"
+msgstr "ibisobanuro"
+
+#: main.c:138
+msgid "OK"
+msgstr "OKE"
+
+#: main.c:139
+msgid "Cancel"
+msgstr "Kureka"
+
+#: main.c:191
+#, fuzzy
+msgid "Clocking in:"
+msgstr "in"
+
+#: main.c:210
+#, fuzzy
+msgid "Clocking out:"
+msgstr "Inyuma"
+
+#: main.c:272 main.c:359 main.c:360
+msgid "New task"
+msgstr "Igikorwa gishya"
+
+#: main.c:272
+msgid "Name"
+msgstr "Izina"
+
+#: main.c:365 main.c:366
+#, fuzzy
+msgid "Delete task"
+msgstr "Igikorwa"
+
+#: main.c:371 main.c:372
+#, fuzzy
+msgid "Clock on"
+msgstr "ku"
+
+#: main.c:377 main.c:378
+#, fuzzy
+msgid "Clock off"
+msgstr "Bidakora"
+
+#: main.c:383 main.c:384
+msgid "Note"
+msgstr "Igisobanuro"
+
+#: gpe-timesheet.desktop.in.h:1
+msgid "GPE Timesheet"
+msgstr ""

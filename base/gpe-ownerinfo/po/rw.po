@@ -1,0 +1,97 @@
+# Kinyarwanda translations for gpe-ownerinfo package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-ownerinfo package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-ownerinfo.c:345
+msgid "Owner"
+msgstr ""
+
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr ""
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr ""
+
+#: gpe-ownerinfo.c:410
+#, fuzzy
+msgid "Valid options:\n"
+msgstr "Amahitamo"
+
+#: gpe-ownerinfo.c:411
+#, fuzzy
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "-g Idirishya Iyigamashusho Mburabuzi 0"
+
+#: gpe-ownerinfo.c:412
+#, fuzzy
+msgid "   -t           make window transparent\n"
+msgstr "-T Ubwoko Idirishya"
+
+#: gpe-ownerinfo.c:413
+#, fuzzy
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "-K Buri gihe Gumana: Idirishya ku Hejuru:"
+
+#: gpe-ownerinfo.c:414
+#, fuzzy
+msgid "   -h           this help text\n"
+msgstr "-h iyi Ifashayobora"
+
+#: gpe-ownerinfo.c:433
+msgid "GPE User"
+msgstr ""
+
+#: gpe-ownerinfo.c:434
+msgid "nobody@localhost.localdomain"
+msgstr ""
+
+#: gpe-ownerinfo.c:435
+msgid "+99 (9999) 999-9999"
+msgstr ""
+
+#: gpe-ownerinfo.c:439
+#, fuzzy
+msgid "Configurable with"
+msgstr "Na:"
+
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr ""
+
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr ""
+
+# wizards/source\euro\euro.src:STEP_LASTPAGE_+_3.text
+#: gpe-ownerinfo.c:441
+#, fuzzy
+msgid " Settings."
+msgstr "Amagenamiterere:"
+
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Aderesi:"

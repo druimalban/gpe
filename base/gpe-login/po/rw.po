@@ -1,0 +1,100 @@
+# Kinyarwanda translations for gpe-login package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-login package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr ""
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr ""
+
+#: gpe-login.c:581
+#, fuzzy
+msgid "Passwords don't match"
+msgstr "BIHUYE"
+
+#: gpe-login.c:590
+#, fuzzy
+msgid "Empty password not allowed"
+msgstr "Ijambobanga... OYA"
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Icyabitswe"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr ""
+
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr ""
+
+#: gpe-login.c:1396
+#, fuzzy
+msgid "Screen locked"
+msgstr "Gifunze"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Izina ry'ukoresha"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Ijambobanga"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Ururimi"
+
+#: gpe-login.c:1460
+#, fuzzy
+msgid "Enter password with hard keys"
+msgstr "Ijambobanga... Na: Ikomeye Utubuto"
+
+#: gpe-login.c:1517
+#, fuzzy
+msgid "Full name"
+msgstr "Izina:"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Kwemeza ijambobanga"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "ukoresha mushya"
+
+#: gpe-logout.desktop.in.h:1
+#, fuzzy
+msgid "Log out"
+msgstr "Kuvamo"
+
+#: gpe-logout.desktop.in.h:2
+#, fuzzy
+msgid "Log out of GPE"
+msgstr "Inyuma Bya"

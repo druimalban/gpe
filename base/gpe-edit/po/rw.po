@@ -1,0 +1,140 @@
+# Kinyarwanda translations for gpe-edit package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-edit package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-edit 0.13\n"
+"POT-Creation-Date: 2003-02-20 20:31+0000\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+# filter/source\xsltdialog\xmlfilterdialogstrings.src:STR_DEFAULT_UI_NAME.text
+#: main.c:88 main.c:89
+msgid "Untitled"
+msgstr "Nta mutwe"
+
+#: main.c:260
+#, fuzzy
+msgid "Open File ..."
+msgstr "Fungura Idosiye..."
+
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+#: main.c:289
+#, fuzzy
+msgid "Save as .."
+msgstr "Kubika nka"
+
+#: main.c:327
+#, fuzzy
+msgid "Save current file before exiting?"
+msgstr "Kubika KIGEZWEHO IDOSIYE Mbere"
+
+#: main.c:327
+msgid "Question"
+msgstr ""
+
+#: main.c:328
+#, fuzzy
+msgid "Don't save"
+msgstr "Ntu bike"
+
+#: main.c:328 main.c:616
+msgid "Save"
+msgstr "Kubika"
+
+#: main.c:390
+#, fuzzy
+msgid "Text not found"
+msgstr "Inyandiko ntiyabonetse:\""
+
+#: main.c:429
+#, fuzzy
+msgid "Unable to replace text"
+msgstr "Kuri Gusimbura Umwandiko"
+
+#: main.c:443 main.c:492
+#, fuzzy
+msgid "Search for:"
+msgstr "Gushakisha:"
+
+#: main.c:446 main.c:498
+msgid "Find"
+msgstr "Gushaka"
+
+#: main.c:493
+msgid "Replace with:"
+msgstr "Hinduranya na"
+
+#: main.c:497 main.c:630
+msgid "Replace"
+msgstr "Gusimbura"
+
+#: main.c:608
+msgid "New"
+msgstr "Gishya"
+
+#: main.c:609
+msgid "New document"
+msgstr "Inyandiko nshya"
+
+#: main.c:612
+msgid "Open"
+msgstr "Gufungura"
+
+# sfx2/sdi\sfxslots.src:SID_OPENDOC.text
+#: main.c:613
+#, fuzzy
+msgid "Open file"
+msgstr "Gufungura Dosiye"
+
+#: main.c:617
+#, fuzzy
+msgid "Save current file"
+msgstr "Kubika KIGEZWEHO IDOSIYE"
+
+#: main.c:620
+msgid "Save as"
+msgstr "kubika nka"
+
+#: main.c:621
+#, fuzzy
+msgid "Save current file as"
+msgstr "Kubika KIGEZWEHO IDOSIYE Nka"
+
+#: main.c:626
+msgid "Search"
+msgstr "Gushaka"
+
+#: main.c:627
+#, fuzzy
+msgid "Search for a string"
+msgstr "kugirango a Ikurikiranyanyuguti"
+
+#: main.c:631
+#, fuzzy
+msgid "Replace a string"
+msgstr "a Ikurikiranyanyuguti"
+
+#: gpe-edit.desktop.in.h:1
+msgid "GPE Text Editor"
+msgstr ""
+
+#: gpe-edit.desktop.in.h:2
+msgid "Text Editor"
+msgstr "Umuhinduzi w'inyandiko"
