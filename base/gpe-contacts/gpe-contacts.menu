@@ -1,8 +1,0 @@
-?package(gpe-contacts): \
- needs=x11 \
- title="Contacts" \
- logtitle="Contacts" \
- command=gpe-contacts \
- icon48=/usr/share/pixmaps/gpe-contacts.png \
- section=PIM \
- windowtitle=Contacts

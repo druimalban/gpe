@@ -1,8 +1,0 @@
-?package(gpe-filemanager): \
- needs=x11 \
- title="File Manager" \
- logtitle="File Manager" \
- command=gpe-filemanager \
- icon48=/usr/share/pixmaps/gpe-filemanager.png \
- section=PIM \
- windowtitle="GPE Filemanager *"

@@ -1,7 +1,0 @@
-?package(gpe-su): \
- needs=x11 \
- title="Root Shell" \
- command=gpe-su \
- icon48=/usr/share/pixmaps/gpe-su.png \
- section=Utilities \
- windowtitle=gpe-su
