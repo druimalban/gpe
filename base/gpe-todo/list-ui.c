@@ -65,8 +65,8 @@ set_category (GtkWidget *w, gpointer user_data)
 static void
 toggle_completed_items (GtkWidget *w, gpointer user_data)
 {
-   show_completed_tasks = gtk_check_menu_item_get_active
-      (GTK_CHECK_MENU_ITEM (w));
+   show_completed_tasks = 
+       gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM (w));
    refresh_items ();
 }
 
@@ -271,6 +271,12 @@ sort_more_complex (gconstpointer a, gconstpointer b)
   ia = (struct todo_item *)a;
   ib = (struct todo_item *)b;
 
+  /* status */
+  if ((ia->state >= COMPLETED) && (ib->state < COMPLETED))
+      return 1;
+  if ((ib->state >= COMPLETED) && (ia->state < COMPLETED))
+      return -1;
+  
   /* both due date: sort by date */
   if (ia->time && ib->time)
     {
@@ -479,11 +485,15 @@ top_level (GtkWidget *window)
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
 			    _("Tap here to add a new item."), NULL,
 			    G_CALLBACK (new_todo_item), NULL, -1);
-
+                            
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-                            _("Delete completed items"), 
-                            _("Tap here to delete completed items."),
+                            _("Delete completed items."), NULL,
                             G_CALLBACK (delete_completed_items), NULL, -1);
+  
+  if (mode_landscape || large_screen)
+    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
+                              _("Refresh list sorting"), NULL,
+                              G_CALLBACK (refresh_items), NULL, -1);
   /* New */
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
 

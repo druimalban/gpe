@@ -24,4 +24,7 @@ extern GtkWidget *edit_item (struct todo_item *item,
 extern void categories_menu (void);
 extern void refresh_items (void);
 
+extern gboolean mode_landscape;
+extern gboolean large_screen;
+
 #endif

@@ -1,6 +1,14 @@
+2005-04-05  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * list-ui.c: Applied patch to fix tooltip and add sorting by 
+                 completion state. Add button to run it is screen is large 
+                 or landscape.
+    * todo-ui.c: Cleverer solution for dialog sizing.
+    * todo.h, main.c, todo-ui.c: Moved screen dimension stuff to main.c.
+
 2005-04-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
-	* list-ui.c: Some formating fixes, major restructuring of dialog creation.
+	* todo-ui.c: Some formating fixes, major restructuring of dialog creation.
 
 2005-03-31  Florian Boor  <florian.boor@kernelconcepts.de>
 

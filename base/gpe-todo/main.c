@@ -39,6 +39,8 @@ static struct gpe_icon my_icons[] = {
 
 GtkWidget *the_notebook;
 GtkWidget *window;
+gboolean large_screen;
+gboolean mode_landscape;
 
 extern GtkWidget *top_level (GtkWidget *window);
 
@@ -47,6 +49,9 @@ open_window (void)
 {
   GtkWidget *top;
 
+  large_screen = (gdk_screen_width() > 400);
+  mode_landscape = (gdk_screen_width() > gdk_screen_height());
+    
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
   displaymigration_mark_window (window);
@@ -87,7 +92,7 @@ main (int argc, char *argv[])
     exit (1);  
 
   displaymigration_init ();
-
+  
   open_window ();
   
   gtk_main ();

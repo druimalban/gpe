@@ -278,8 +278,6 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gchar *s = NULL;
   struct edit_todo *t;
   guint i = 0, pos = 0;
-  gboolean large_screen = (gdk_screen_width() > 400);
-  gboolean mode_landscape = (gdk_screen_width() > gdk_screen_height());
   guint gpe_spacing = gpe_get_boxspacing();
   struct tm tm;
   time_t the_time;
@@ -302,10 +300,9 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   displaymigration_mark_window (window);
   if (large_screen)
     {
-        if (mode_landscape)
-          gtk_window_set_default_size (GTK_WINDOW (window), 400, 320);
-        else
-          gtk_window_set_default_size (GTK_WINDOW (window), 320, 400);
+      gtk_window_set_default_size (GTK_WINDOW (window), 
+                                   (int)(gdk_screen_width() * 0.8), 
+                                   (int)(gdk_screen_height() * 0.8));
     }
   else
     gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
