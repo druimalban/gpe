@@ -678,21 +678,6 @@ GtkWidget *create_group_tab_label (char *group, GtkStyle *style)
 	return hb;
 }
 
-int group_has_items (char *group)
-{
-	GList *l;
-	l = items;
-
-	while (l)
-	{
-		if (!strcasecmp (package_get_data(l->data,"section"), group))
-			return TRUE;
-		l = l->next;
-	}
-
-	return FALSE;
-}
-
 /* Wipe the old tabs / icons and replace them with whats
  * currently supposed to be there */
 void refresh_tabs ()
@@ -716,11 +701,10 @@ void refresh_tabs ()
 	l = groups;
 	while (l)
 	{
-		if (group_has_items (l->data))
-			gtk_notebook_append_page (
-				GTK_NOTEBOOK(notebook),
-				create_tab (items, l->data, cfg_options.tab_view, NULL),
-				create_group_tab_label(l->data, notebook->style));
+		gtk_notebook_append_page (
+			GTK_NOTEBOOK(notebook),
+			create_tab (items, l->data, cfg_options.tab_view, NULL),
+			create_group_tab_label(l->data, notebook->style));
 
 		l = l->next;
 	}
