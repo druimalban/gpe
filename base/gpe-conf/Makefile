@@ -7,7 +7,7 @@ GTK2 = yes
 IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 CC = arm-linux-gcc
 INSTALL = install
-PREFIX = /usr/local
+PREFIX = /usr/
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdm -ldm -L.
