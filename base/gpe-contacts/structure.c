@@ -194,7 +194,18 @@ initial_structure (void)
 }
 
 static void
-pop_singles (GtkWidget *vbox, GSList *list)
+add_tag (guint tag, GtkWidget *w, GtkWidget *pw)
+{
+  GSList *tags;
+  gtk_object_set_data (GTK_OBJECT (w), "db-tag", (gpointer)tag);
+
+  tags = gtk_object_get_data (GTK_OBJECT (pw), "tag-widgets");
+  tags = g_slist_append (tags, w);
+  gtk_object_set_data (GTK_OBJECT (pw), "tag-widgets", tags);
+}
+
+static void
+pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw)
 {
   if (list)
     {
@@ -206,13 +217,16 @@ pop_singles (GtkWidget *vbox, GSList *list)
 	{
 	  GSList *next = list->next;
 	  edit_thing_t e = list->data;
+	  GtkWidget *w = gtk_entry_new ();
+
+	  add_tag (e->tag, w, pw);
 
 	  gtk_table_attach (GTK_TABLE (table),
 			    gtk_label_new (e->name),
 			    0, 1, x, x + 1,
 			    0, 0, 0, 0);
 	  gtk_table_attach (GTK_TABLE (table),
-			    gtk_entry_new (),
+			    w,
 			    1, 2, x, x + 1,
 			    GTK_EXPAND | GTK_SHRINK | GTK_FILL,
 			    0, 0, 0);
@@ -230,7 +244,7 @@ pop_singles (GtkWidget *vbox, GSList *list)
 }
 
 static void
-build_children (GtkWidget *vbox, GSList *children)
+build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
 {
   GSList *child;
   GSList *singles = NULL;
@@ -243,18 +257,18 @@ build_children (GtkWidget *vbox, GSList *children)
       switch (e->type)
 	{
 	case GROUP:
-	  pop_singles (vbox, singles);
+	  pop_singles (vbox, singles, pw);
 	  singles = NULL;
 	  w = gtk_frame_new (e->name);
 	  ww = gtk_vbox_new (FALSE, 0);
 	  gtk_container_add (GTK_CONTAINER (w), ww);
 	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
-	  build_children (ww, e->children);
+	  build_children (ww, e->children, pw);
 	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
 	  break;
 
 	case ITEM_MULTI_LINE:
-	  pop_singles (vbox, singles);
+	  pop_singles (vbox, singles, pw);
 	  singles = NULL;
 	  w = gtk_frame_new (e->name);
 	  ww = gtk_text_new (NULL, NULL);
@@ -262,6 +276,7 @@ build_children (GtkWidget *vbox, GSList *children)
 	  gtk_container_add (GTK_CONTAINER (w), ww);
 	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
 	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
+	  add_tag (e->tag, pw, ww);
 	  break;
 
 	case ITEM_SINGLE_LINE:
@@ -273,7 +288,7 @@ build_children (GtkWidget *vbox, GSList *children)
 	}
     }
 
-  pop_singles (vbox, singles);
+  pop_singles (vbox, singles, pw);
   singles = NULL;
 }
 
@@ -291,7 +306,7 @@ edit_window (void)
       GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
       GtkWidget *label = gtk_label_new (e->name);
 
-      build_children (vbox, e->children);
+      build_children (vbox, e->children, w);
 
       gtk_widget_show_all (vbox);
       gtk_widget_show (label);
@@ -401,6 +416,12 @@ structure_parse_xml_item (xmlDocPtr doc, xmlNodePtr cur,
       if (!xmlStrcmp (cur->name, "label"))
 	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
 
+      if (!xmlStrcmp (cur->name, "tag"))
+	{
+	  gchar *s = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+	  e->tag = atoi (s);
+	}
+
       cur = cur->next;
     }
 }
@@ -422,7 +443,7 @@ structure_parse_xml_group (xmlDocPtr doc, xmlNodePtr cur,
 	
       if (!xmlStrcmp (cur->name, "single-item"))
 	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_MULTI_LINE, e);
+				  ITEM_SINGLE_LINE, e);
 
       cur = cur->next;
     }
@@ -447,7 +468,7 @@ structure_parse_xml_page (xmlDocPtr doc, xmlNodePtr cur)
 	
       if (!xmlStrcmp (cur->name, "single-item"))
 	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
-				  ITEM_MULTI_LINE, e);
+				  ITEM_SINGLE_LINE, e);
 
       cur = cur->next;
     }

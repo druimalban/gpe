@@ -759,6 +759,15 @@ create_edit (void)
   gtk_signal_connect (GTK_OBJECT (edit_bt_image), "clicked",
                       GTK_SIGNAL_FUNC (on_edit_bt_image_clicked),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (edit_clear), "clicked",
+                      GTK_SIGNAL_FUNC (on_edit_clear_clicked),
+                      edit);
+  gtk_signal_connect (GTK_OBJECT (edit_cancel), "clicked",
+                      GTK_SIGNAL_FUNC (on_edit_cancel_clicked),
+                      edit);
+  gtk_signal_connect (GTK_OBJECT (edit_save), "clicked",
+                      GTK_SIGNAL_FUNC (on_edit_save_clicked),
+                      edit);
 
   gtk_object_set_data (GTK_OBJECT (edit), "tooltips", tooltips);
 

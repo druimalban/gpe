@@ -6,20 +6,6 @@
 #include "db.h"
 #include "gtkdatecombo.h"
 
-void main_showlist(GtkWidget *object) 
-{
-  /* redisplays the list in the main window */
-  GtkWidget *widget;
-  gchar *text;
-  char query[1024];
-  
-  /* get category ID */
-  widget = lookup_widget (object, "main_cat");
-  text = gtk_editable_get_chars(GTK_EDITABLE(widget), 0, -1);
-  
-  snprintf (query, 1023, "select ID from contact_cats where Name='%s'", text);
-}
-
 void on_main_new_clicked (GtkWidget *widget, gpointer d)
 {
   GtkWidget *w = edit_window ();
@@ -103,5 +89,43 @@ on_structure_save_clicked              (GtkButton       *button,
                                         gpointer         user_data)
 {
 
+}
+
+/* ... */
+
+void
+on_edit_clear_clicked                  (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+on_edit_cancel_clicked                 (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  gtk_widget_destroy (GTK_WIDGET (user_data));
+}
+
+
+void
+on_edit_save_clicked                   (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  GtkWidget *edit = (GtkWidget *)user_data;
+  GSList *tags;
+
+  for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
+       tags;
+       tags = tags->next)
+    {
+      GtkWidget *w = tags->data;
+      gchar *text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+      guint tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+
+    }
+
+  gtk_widget_destroy (edit);
 }
 

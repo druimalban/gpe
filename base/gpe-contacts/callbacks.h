@@ -48,3 +48,27 @@ on_structure_test                      (GtkButton       *button,
 void
 on_structure_save_clicked              (GtkButton       *button,
                                         gpointer         user_data);
+
+void
+on_edit_clear_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_edit_cancel_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_edit_save_clicked                   (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_edit_clear_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_edit_cancel_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_edit_save_clicked                   (GtkButton       *button,
+                                        gpointer         user_data);
