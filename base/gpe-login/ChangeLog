@@ -1,3 +1,15 @@
+2003-10-09  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add cs.
+
+2003-09-28  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.54 released.
+
+2003-09-28  Philip Blundell  <philb@gnu.org>
+
+	* standard.mbdock: Reinstate xstroke.
+
 2003-09-23  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.64 released.
