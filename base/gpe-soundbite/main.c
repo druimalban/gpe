@@ -28,6 +28,8 @@
 #include "picturebutton.h"
 #include "pixmaps.h"
 #include "render.h"
+#include "gtkminifilesel.h"
+#include "errorbox.h"
 
 #include "gsm-codec.h"
 
@@ -41,6 +43,7 @@ static struct gpe_icon my_icons[] = {
 
 GtkWidget *window;
 GtkWidget *progress_bar;
+GtkWidget *file_selector = NULL;
 
 extern gboolean stop;
 gboolean playing;
@@ -65,9 +68,10 @@ void stop_sound (void)
       kill (sound_process, SIGINT);
       waitpid (sound_process, 0, 0);
     }
-  if (timer > 0)
+  if (timer != NULL)
     {
       g_timer_stop (timer);
+      timer = NULL;
     }
 
   if (timeout_handler != 0)
@@ -96,8 +100,6 @@ gint continue_sound (gpointer data)
 void start_sound (void)
 {
   stop_sound ();
-
-  g_timer_start (timer);
 
   timeout_handler = gtk_timeout_add (150, continue_sound, NULL);
 
@@ -143,7 +145,7 @@ void start_sound (void)
 	   if (infd < 0)
 	     fprintf (stderr, "Error opening sound device for reading\n");
            if (outfd < 0)
-             fprintf (stderr, "Error opening output file\n");
+             perror (filename);
            exit(1);
         }
     }
@@ -177,12 +179,17 @@ void start_sound (void)
         else
         {
 	   if (infd < 0)
-	     fprintf (stderr, "Error opening input file '%s'\n", filename);
+             perror (filename);
            if (outfd < 0)
              fprintf (stderr, "Error opening sound device for writing\n");
            exit(1);
         }
     }
+
+  timer = g_timer_new ();
+  g_timer_start (timer);
+
+  gtk_widget_show (window);
 }
 
 void
@@ -209,6 +216,25 @@ on_ok_button_clicked                (GtkButton       *button,
   gtk_exit(0);
 }
 
+void
+file_chosen_signal (GtkFileSelection *selector, gpointer user_data)
+{
+  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
+
+  if (recording && !strchr (filename, '.'))
+    {
+      gchar *tmpfilename;
+      tmpfilename = malloc (strlen(filename) + 4);
+      sprintf (tmpfilename, "%s.gsm", filename);
+      free (filename);
+      filename = tmpfilename;
+    }
+
+  start_sound ();
+
+  gtk_widget_destroy (file_selector);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -224,7 +250,7 @@ main(int argc, char *argv[])
 
   if (argc < 2)
     {
-      fprintf (stderr, "must specify play or record\n");
+      fprintf (stderr, "syntax: gpe-soundbite play|record [filename]\n");
       exit (1);
     }
 
@@ -244,9 +270,14 @@ main(int argc, char *argv[])
       exit(1);
     }
 
-  /* and should obviously parse arguments for this! : */
-
-  filename = strdup ("/tmp/out.gsm");
+  if (argc >= 3)
+    {
+      filename = argv[2];
+    }
+  else
+    {
+      filename = NULL;
+    }
 
   setlocale (LC_ALL, "");
 
@@ -308,11 +339,24 @@ main(int argc, char *argv[])
                       GTK_SIGNAL_FUNC (on_window_destroy),
                       NULL);
 
-  gtk_widget_show (window);
+  if (filename == NULL)
+    {
+      if (playing)
+        file_selector = gtk_mini_file_selection_new ("Open audio note");
+      else
+        file_selector = gtk_mini_file_selection_new ("Save audio note as");
 
-  timer = g_timer_new ();
-
-  start_sound ();
+      gtk_signal_connect (GTK_OBJECT (file_selector),
+                      "completed", GTK_SIGNAL_FUNC (file_chosen_signal), NULL);
+      gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
+                             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
+                             (gpointer) file_selector);
+      gtk_widget_show (file_selector);
+    }
+  else
+    {
+      start_sound ();
+    }
 
   gtk_main ();
 
