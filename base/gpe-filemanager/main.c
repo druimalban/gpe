@@ -355,7 +355,6 @@ make_view (gchar *view)
   DIR *dir;
   gchar *filename;
   GList *filenames = NULL;
-  FileInfomation *file_info;
   GnomeVFSDirectoryHandle *handle;
   GnomeVFSFileInfo *vfs_file_info;
   GnomeVFSURI *uri;
@@ -373,12 +372,12 @@ make_view (gchar *view)
 
 
   uri = gnome_vfs_uri_new (current_directory);
-  vfs_file_info = gnome_vfs_file_info_new ();
 
   open_dir_result = gnome_vfs_directory_open_from_uri (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
 
   while (open_dir_result == GNOME_VFS_OK)
   {
+    vfs_file_info = gnome_vfs_file_info_new ();
     result = gnome_vfs_directory_read_next (handle, vfs_file_info);
     printf ("Gnome VFS FileInfo->Name: %s\n", vfs_file_info->name);
 
@@ -387,6 +386,8 @@ make_view (gchar *view)
 
     if (vfs_file_info->name != NULL && vfs_file_info->name[0] != '.')
     {
+      FileInfomation *file_info = g_malloc (sizeof (*file_info));
+	
       if (strcmp (current_directory, "/"))
         file_info->filename = g_strdup_printf ("%s/%s", current_directory, vfs_file_info->name);
       else
@@ -401,7 +402,6 @@ make_view (gchar *view)
       break;
   }
   printf ("Got here (1)\n");
-  gnome_vfs_file_info_unref (vfs_file_info);
   gnome_vfs_directory_close (handle);
   printf ("Got here (2)\n");
 
