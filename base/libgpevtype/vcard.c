@@ -140,6 +140,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
   struct tag_map *t = &map[0];
   GSList *data = NULL;
   GList *l;
+  gchar *fn, *ln, *name;
 
   while (t->tag)
     {
@@ -148,7 +149,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
       g_object_get (G_OBJECT (vcard), t->vc ? t->vc : t->tag, &value, NULL);
 
       if (value)
-	data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+        data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
 
       t++;
     }
@@ -212,10 +213,10 @@ vcard_to_tags (MIMEDirVCard *vcard)
       g_object_get (G_OBJECT (email), "address", &s, NULL);
 
       if (s) // we cheat a little bit - vcard doesn't tell us
-	{
-	  data = gpe_tag_list_prepend (data, "home.email", s);
-	  data = gpe_tag_list_prepend (data, "work.email", s);
-	}
+        {
+          data = gpe_tag_list_prepend (data, "home.email", g_strdup(s));/*!*/
+          data = gpe_tag_list_prepend (data, "work.email", s);
+        }
 
       l = g_list_next (l);
     }
@@ -264,5 +265,15 @@ vcard_to_tags (MIMEDirVCard *vcard)
       l = g_list_next (l);
     }
   
+  /* generate name field */
+  g_object_get (G_OBJECT (vcard), "givenname", &fn, NULL);
+  g_object_get (G_OBJECT (vcard), "familyname", &ln, NULL);
+  g_strstrip(fn);
+  g_strstrip(ln);
+  name = g_strdup_printf("%s %s", fn, ln);
+  g_free(fn);
+  g_free(ln);
+  gpe_tag_list_prepend(data, "NAME", name);
+	
   return data;
 }
