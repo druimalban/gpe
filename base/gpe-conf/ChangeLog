@@ -1,3 +1,9 @@
+
+2004-06-04	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile: some minor build fixes.
+	* battery.c: Fixed platform dependency.
+	* cardinfo.c: Fixed incuding of pcmcia headers.
+
 2004-06-03	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Makefile, brightness.c: Some more changes to become more independent from 
 	  hardware platform.

@@ -48,9 +48,9 @@ endif
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0` 
 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS)
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt -lXinerama
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS) -I.
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG
@@ -65,16 +65,16 @@ PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/shar
 # setup how to compile
 ifeq ($(NATIVE),yes)
 
-STRIP=strip
-CC=gcc
+#STRIP=strip
+#CC=gcc
 
 #CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
 #LIBS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0`
 
 else # we do cross-compile...
 
-CC=arm-linux-gcc
-STRIP=arm-linux-strip
+#CC=arm-linux-gcc
+#STRIP=arm-linux-strip
 
 #CFLAGS += -march=armv4 -mtune=strongarm
 #CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
@@ -86,7 +86,6 @@ STRIP=arm-linux-strip
 
 endif #native or cross-compile
 
-#CPPFLAGS += -I.
 
 MEMBERS  = main applets parser suid
 MEMBERS += misc
@@ -182,12 +181,12 @@ endif
 all: $(PACKAGE) gpe-info
 
 $(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(PACKAGE_LDFLAGS)
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 	cp $(PACKAGE) gpe-conf.pc
 	$(STRIP) $(PACKAGE)
 
 gpe-info: $(OBJS_INFO)
-	$(CC) -g -o $@ $(OBJS_INFO) $(PACKAGE_LDFLAGS)
+	$(CC) -g -o $@ $(OBJS_INFO) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 	$(STRIP) gpe-info
 	
 install-program: all all-desktop

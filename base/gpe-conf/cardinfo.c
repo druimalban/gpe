@@ -34,11 +34,11 @@
 #include <poll.h>
 #include <time.h>
 
-#include <pcmcia/version.h>
-#include <pcmcia/cs_types.h>
-#include <pcmcia/cs.h>
-#include <pcmcia/cistpl.h>
-#include <pcmcia/ds.h>
+#include "pcmcia/version.h"
+#include "pcmcia/cs_types.h"
+#include "pcmcia/cs.h"
+#include "pcmcia/cistpl.h"
+#include "pcmcia/ds.h"
 
 #include <gtk/gtk.h>
 

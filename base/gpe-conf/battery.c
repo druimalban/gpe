@@ -26,7 +26,7 @@
 #include <sys/ioctl.h> 
 #include <sys/time.h>
 #include <sys/types.h>
-#ifdef __arm__
+#ifdef MACH_IPAQ
 #include <linux/h3600_ts.h>
 #endif
 
@@ -88,7 +88,7 @@ void init_device()
 
 gint update_bat_values(gpointer data)
 {
-#ifdef __arm__
+#ifdef MACH_IPAQ
 static struct h3600_battery battery_val;
 float bperc;
 gchar percstr[9];
