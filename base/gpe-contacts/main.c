@@ -38,6 +38,7 @@
 #include "proto.h"
 #include "main.h"
 #include "export.h"
+#include "import-vcard.h"
 
 #define SYSTEM_PIXMAPS_DIR PREFIX "/share/pixmaps/"
 #define MY_PIXMAPS_DIR "gpe-contacts/"
@@ -413,13 +414,13 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   else
     fn = g_strdup("");
   
-  if (p->name)
+  if ((p->name) && strlen(p->name))
     name = g_utf8_strdown(p->name, -1);
   else
     name = g_strdup("");
   
   if (!g_str_has_prefix(gn,text) && !g_str_has_prefix(fn,text) 
-	  && !g_str_has_prefix(fn,text))
+	  && !g_str_has_prefix(name,text))
     {
       if (gn) g_free(gn);
       if (fn) g_free(fn);
@@ -870,11 +871,32 @@ create_main (gboolean show_config_button)
   return main_window;
 }
 
+
+static int 
+import_one_file(gchar *filename)
+{
+  GError *err = NULL;
+  gchar *content;
+  gsize count;
+  int result = 0;
+	
+  if (g_file_get_contents(filename,&content,&count,&err))
+    {
+      result = import_vcard(content,count);
+      g_free(content);
+    }
+  else
+    result = -1;
+  return result;
+}
+
+
 int
 main (int argc, char *argv[])
 {
   int arg;
   gboolean show_config_button = TRUE;
+  gchar *ifile = NULL;
   
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -891,14 +913,37 @@ main (int argc, char *argv[])
     exit (1);
 
   /* check command line args */
-  while ((arg = getopt(argc, argv, "n")) >= 0)
+  while ((arg = getopt(argc, argv, "ni:")) >= 0)
   {
-    if (arg == 'n') 
+    if (arg == 'n')
       {
         show_config_button = FALSE;
         break;
       }
+    if (arg == 'i')
+		ifile = optarg;
   }    
+
+  /* are we called to import a file? */
+  if (ifile)
+    {
+	  GtkWidget *dialog;
+      if (import_one_file(ifile))
+        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
+	                                    GTK_BUTTONS_OK,
+	                                    _("Could not import file %s."),
+	                                    ifile);
+	  else
+        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
+	                                      GTK_BUTTONS_OK,
+	                                      _("File %s imported sucessfully."),
+	                                      ifile);
+printf("file imported\n");	  
+     gtk_widget_show_all(dialog);
+     gtk_dialog_run(GTK_DIALOG(dialog));
+printf(_("rf\n"));	  
+      exit (EXIT_SUCCESS);
+    }
   
   if (db_open ())
     exit (1);

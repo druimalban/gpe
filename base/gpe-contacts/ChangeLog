@@ -1,5 +1,8 @@
 2004-08-08  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c: match_for_search() Fixed fieldname.
+	* import-vcard*: New files (code taken from gpe-bluetooth).
+	* main.c: Implemented import of vcard files (-i switch).
 	* main.c: match_for_search() Added missing name field to look at.
 
 2004-08-05  Florian Boor  <florian.boor@kernelconcepts.de>
