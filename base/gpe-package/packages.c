@@ -25,7 +25,7 @@
 #include <ipkglib.h>
 
 #include "packages.h"
-#include "suid.h"
+#include "main.h"
 
 static int sock;
 static int await_response = FALSE;
@@ -54,6 +54,7 @@ send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2)
 	}
 }
 
+
 static void
 do_response (char *res)
 {
@@ -62,9 +63,8 @@ do_response (char *res)
 }
 
 
-
 /* ipkg interface */
-ipkg_response_callback
+char * /*ipkg_response_callback*/
 ipkg_question (char *question)
 {
 	send_message (PK_QUESTION, 1, question, NULL);
@@ -75,7 +75,7 @@ printf("Response: %s\n",response);
 }
 
 
-ipkg_message_callback
+int /*ipkg_message_callback*/
 ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 {
 	if (level <= IPKG_NOTICE)
@@ -89,7 +89,7 @@ ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 }
 
 
-ipkg_list_callback
+int /*ipkg_list_callback*/
 list_entry (char *name, char *desc)
 {
 	send_message (PK_LIST, 1, name, desc);
@@ -191,11 +191,11 @@ suidloop (int csock)
 	/* init ipkg lib */
 	sock = csock;
 	
-	ipkg_init ((ipkg_message_callback) ipkg_msg,
-		   (ipkg_response_callback) ipkg_question, &args);
+	ipkg_init (/*(ipkg_message_callback)*/ ipkg_msg,
+		   /*(ipkg_response_callback)*/ ipkg_question, &args);
 
 	while (wait_message ()) ;
-
+printf("leaving...\n");
 	ipkg_deinit(&args);
 	
 	close (sock);

@@ -74,7 +74,6 @@ main (int argc, char *argv[])
 		else
 		{
 			suidloop(csock);
-			printf("\nleft mainloop\n");
 			close(csock);
 		}
 		kill(suidPID,SIGTERM);

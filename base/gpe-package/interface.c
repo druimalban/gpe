@@ -38,7 +38,7 @@
 
 #include "packages.h"
 #include "interface.h"
-#include "suid.h"
+#include "main.h"
 
 /* --- module global variables --- */
 
@@ -211,11 +211,11 @@ mainloop (int argc, char *argv[])
 {
 	struct sockaddr_un name;
 sleep(1);
-	setlocale (LC_ALL, "");
+/*	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
-
+*/
 	
 	/* Create socket from which to read. */
 	sock = socket (AF_UNIX, SOCK_STREAM, 0);
@@ -256,7 +256,7 @@ sleep(1);
 
 
 /* 
- * Checks if the given packeage is installed.
+ * Checks if the given package is installed.
  */
 int do_package_check(const char *package)
 {
@@ -293,7 +293,6 @@ void on_network_update_clicked(GtkButton *button, gpointer user_data)
   gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
   gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
   gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
-
   send_message(PK_COMMAND,CMD_UPDATE,"","");
   send_message(PK_COMMAND,CMD_UPGRADE,"-force-depends","");
 }

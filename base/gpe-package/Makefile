@@ -73,7 +73,6 @@ all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
-	$(STRIP) $(PACKAGE)
 
 install-program: $(PACKAGE)
 	mkdir -p $(DESTDIR)/CONTROL
