@@ -66,6 +66,7 @@ GList *history = NULL;
 
 gchar *current_directory = "";
 gchar *current_view = "icons";
+gint current_zoom = 28;
 
 typedef struct
 {
@@ -479,7 +480,7 @@ make_view (gchar *view)
     gtk_widget_destroy (view_widget);
 
   view_widget = gpe_iconlist_new ();
-
+  gpe_iconlist_set_icon_size (view_widget, current_zoom);
   gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
 		      GTK_SIGNAL_FUNC (button_clicked), NULL);
   gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
