@@ -18,6 +18,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <libintl.h>
+#include <sys/stat.h>
 
 #include <gtk/gtk.h>
 #include <libgnomevfs/gnome-vfs.h>
@@ -38,7 +39,7 @@ t_storage;
 
 static t_storage *storages = NULL;
 static int num_storage = 0;
-
+static time_t mtab_time = 0;
 
 /* checks if a tree is mounted */
 static gboolean
@@ -189,6 +190,23 @@ scan_fstab(void)
 }
 
 
+gboolean
+check_mount(void)
+{
+  struct stat sdat;
+  
+  if (!stat(FILE_MTAB, &sdat))
+    {
+      if (mtab_time != sdat.st_ctime)
+        {
+          do_scheduled_update();
+          mtab_time = sdat.st_ctime;
+        }
+    }
+  return TRUE;	
+}
+
+
 GtkWidget *
 build_storage_menu(gboolean wide)
 {
@@ -250,8 +268,11 @@ build_storage_menu(gboolean wide)
                         GNOME_VFS_MONITOR_FILE, 
                         (GnomeVFSMonitorCallback)mountpoint_changed, 
                         NULL)) != GNOME_VFS_OK)
-  fprintf(stderr, "Installing monitor failed: %s\n", 
+  {
+    fprintf(stderr, "Installing monitor failed: %s\n", 
           gnome_vfs_result_to_string(ret));
-      
+	fprintf(stderr, "Polling...\n");
+    g_timeout_add(1000, (GSourceFunc)check_mount, NULL);
+  }  
   return vmenu;
 }

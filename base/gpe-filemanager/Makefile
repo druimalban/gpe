@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.20
+VERSION = 0.21
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 
 MEMBERS = main bluetooth guitools

@@ -1,3 +1,8 @@
+2004-10-14  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * guitools.c: Implemented polling for mounts.
+    * Makefile: Version to 0.21
+
 2004-09-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (browse_directory): Added infoprints for opening directories.
