@@ -4,6 +4,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #include "brightness.h"
 
 void set_brightness (int brightness)
@@ -22,6 +25,10 @@ void set_brightness (int brightness)
 			sprintf (s, "%d", brightness);
 			execlp ("bl", "bl", s, 0);
 			exit(0);
+		}
+		else if (pid > 0)
+		{
+			waitpid (pid, NULL, 0);
 		}
 	}
 }

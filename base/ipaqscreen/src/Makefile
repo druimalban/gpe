@@ -86,7 +86,7 @@ POSUB = po
 RANLIB = ranlib
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 0.0.1
+VERSION = 0.0.2
 
 INCLUDES =  	-I$(top_srcdir)/intl 	-I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include
 
