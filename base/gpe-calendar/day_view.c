@@ -16,7 +16,6 @@
 #include <gtk/gtk.h>
 
 #include "gtkdatesel.h"
-#include "cotidie.h"
 
 extern GtkWidget *new_event(time_t t, guint timesel);
 extern GdkFont *timefont, *datefont;

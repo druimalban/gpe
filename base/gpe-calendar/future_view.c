@@ -16,7 +16,6 @@
 #include <gtk/gtk.h>
 
 #include "gtkdatesel.h"
-#include "cotidie.h"
 
 static gint
 draw_expose_event (GtkWidget *widget,

@@ -15,7 +15,7 @@
 
 #include <gtk/gtk.h>
 
-#include "cotidie.h"
+#include "globals.h"
 #include "event.h"
 
 void

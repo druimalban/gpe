@@ -16,7 +16,6 @@
 #include <gtk/gtk.h>
 
 #include "gtkdatesel.h"
-#include "cotidie.h"
 
 GdkGC *red_gc;
 extern GdkFont *datefont, *timefont;
