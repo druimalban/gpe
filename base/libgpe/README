@@ -1,0 +1,19 @@
+libgpe V0.1
+-----------
+
+Lib-GPE is intended as a collection of certain utility functions that are
+(hopefully) useful for more than one application. At the moment those
+funktions inlcude:
+
+- Easy but still properly forking off new processes (i.e. creating child
+  processes): gpe-exec
+- API for controlling the RTC daemon process, current main focus on RTC
+  alarms: gpe-rtcd
+- API for generating and playing sound beeps without the need for storing
+  sampled data: gpe-soundgen
+- Utility functions for child process window handling: xsi
+
+
+This package is currently maintained by
+	Nils Faerber <nils@kernelconcepts.de)
+
