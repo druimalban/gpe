@@ -7,6 +7,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <gtk/gtk.h>
 #include <time.h>
 #include "event-db.h"
 
