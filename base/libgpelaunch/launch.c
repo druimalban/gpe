@@ -435,7 +435,7 @@ gpe_launch_program_with_callback (Display *dpy, char *exec, char *name, gboolean
       if (startup_notify)
 	sn_launcher_context_setup_child_process (context);
       do_exec (exec);
-      gpe_perror_box ("exec");
+      perror (exec);
       _exit (1);
       
     default:
