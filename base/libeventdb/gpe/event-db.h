@@ -62,6 +62,7 @@ typedef struct recur_s
   unsigned int count;
   unsigned int increment;
   unsigned long daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
+  GSList *exceptions;
   
   time_t end;			/* 0 == perpetual */
 } *recur_t;
@@ -79,7 +80,15 @@ typedef struct event_s
   
   event_details_t details;
   gboolean mark;
+  gpointer *cloned_ev;
+  
 } *event_t;
+
+typedef struct event_display_s
+{
+  calendar_time_t start;
+  event_t *pevent;
+} *event_display_t;
 
 #define EVENT_DB_USE_MEMCHUNK
 
@@ -128,6 +137,7 @@ extern event_t event_db_clone (event_t);
 extern event_t event_db_new (void);
 extern event_t event_db_find_by_uid (guint uid);
 extern void event_db_destroy (event_t);
+extern void event_db_destroy_clone (event_t);
 
 extern event_details_t event_db_alloc_details (event_t);
 extern event_details_t event_db_get_details (event_t);

@@ -145,6 +145,12 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	  recur_t r = event_db_get_recurrence (ev);
 	  r->daymask = atoi (argv[1]);
 	}
+      else if (!strcasecmp (argv[0], "rexceptions"))
+	{
+	  recur_t r = event_db_get_recurrence (ev);
+	  long rmtime = (long)atoi (argv[1]);
+	  r->exceptions = g_slist_append(r->exceptions,	(void *)rmtime);
+	}
       else if (!strcasecmp (argv[0], "recur"))
 	{
 	  recur_t r = event_db_get_recurrence (ev);
@@ -379,6 +385,8 @@ event_db_find_by_uid (guint uid)
 
   return NULL;
 }
+link_warning(event_db_find_by_uid, 
+	     "warning: event_db_find_by_uid is obsolescent: use the ev->cloned_ev pointer directly.");
 
 void
 event_db_destroy_clone (event_t ev)
@@ -406,9 +414,9 @@ event_t
 event_db_clone (event_t ev)
 {
   event_t n = event_db__alloc_event ();
-  memcpy (n, ev, sizeof (*ev));
+  memcpy (n, ev, sizeof (struct event_s));
+  n->cloned_ev = (void *)ev;
   n->flags |= FLAG_CLONE;
-  if (ev->flags & FLAG_ALARM) n->flags |= FLAG_ALARM;
   return n;
 }
 
@@ -417,7 +425,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 				   gboolean untimed_significant, gboolean alarms, 
 				   guint max)
 {
-  GSList *iter;
+  GSList *iter, *iter2;
   GSList *list = NULL;
   struct tm tm_event;
   
@@ -433,7 +441,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
   
   for (iter = one_shot_events; iter; iter = g_slist_next (iter))
     {
-      event_t ev = iter->data;
+      event_t ev = iter->data, clone;
       time_t fixed_start = ev->start;
       
       if (untimed_significant)
@@ -456,12 +464,16 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	  || (ev->duration && ((fixed_start + ev->duration == start))))
 	continue;
 
-      list = g_slist_insert_sorted (list, ev, (GCompareFunc)event_sort_func);
+      if (alarms) fixed_start-=ev->alarm;
+      
+      clone = event_db_clone(ev);
+      clone->start = fixed_start;
+      list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
     }
   
   for (iter = recurring_events; iter; iter = g_slist_next (iter))
     {
-      event_t ev = iter->data, new_ev;
+      event_t ev = iter->data, clone;
       time_t fixed_start = ev->start;
       recur_t r = ev->recur;
       
@@ -492,13 +504,20 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	case RECUR_DAILY:
 	  do {
 	    localtime_r (&fixed_start, &tm_event);
+	    if (alarms) fixed_start-=ev->alarm;
 	    if (fixed_start >= start) 
 	      {
-		new_ev = event_db_clone (ev);
-		new_ev->start = fixed_start;
-	        if (alarms) new_ev->start-=60*ev->alarm;
-		new_ev->flags |= FLAG_RECUR;
-		list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+		gboolean skip=FALSE;
+		if (r->exceptions) 
+		  for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+		    if ((long)iter2->data == (long)fixed_start) skip=TRUE;
+		 if (!skip)
+		 {
+		    clone = event_db_clone(ev);
+      		    clone->start = fixed_start;
+      		    clone->flags |= FLAG_RECUR;
+		    list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		 }
 	      }
 	    tm_event.tm_mday+=r->increment;
 	    fixed_start = mktime (&tm_event);   
@@ -508,6 +527,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	case RECUR_WEEKLY:
           do {
 	    localtime_r (&fixed_start, &tm_event);
+	    if (alarms) fixed_start-=ev->alarm;
 	    if (fixed_start >= start &&
 		((r->daymask & MON && tm_event.tm_wday==1) ||
 		 (r->daymask & TUE && tm_event.tm_wday==2) ||
@@ -516,11 +536,17 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 		 (r->daymask & FRI && tm_event.tm_wday==5) ||
 		 (r->daymask & SAT && tm_event.tm_wday==6) ||
 		 (r->daymask & SUN && tm_event.tm_wday==0))) {
-	      new_ev = event_db_clone (ev);
-	      new_ev->start = fixed_start;
-	      if (alarms) new_ev->start-=60*ev->alarm;
-	      new_ev->flags |= FLAG_RECUR;
-	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	        gboolean skip=FALSE;
+		if (r->exceptions) 
+		  for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+		    if ((long)iter2->data == (long)fixed_start) skip=TRUE;
+		 if (!skip)
+		 {
+		    clone = event_db_clone(ev);
+      		    clone->start = fixed_start;
+      		    clone->flags |= FLAG_RECUR;
+		    list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		 }
 	    }
 	    tm_event.tm_mday++;
 	    fixed_start = mktime (&tm_event);  
@@ -530,12 +556,19 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	case RECUR_MONTHLY:
           do {
 	    localtime_r (&fixed_start, &tm_event);
+	    if (alarms) fixed_start-=ev->alarm;
 	    if (fixed_start >= start) {
-	      new_ev = event_db_clone (ev);
-	      new_ev->start = fixed_start;
-	      if (alarms) new_ev->start-=60*ev->alarm;
-	      new_ev->flags |= FLAG_RECUR;
-	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	        gboolean skip=FALSE;
+		if (r->exceptions) 
+		  for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+		    if ((long)iter2->data == (long)fixed_start) skip=TRUE;
+		 if (!skip)
+		 {
+		    clone = event_db_clone(ev);
+      		    clone->start = fixed_start;
+      		    clone->flags |= FLAG_RECUR;
+		    list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		 }
 	    }
 	    tm_event.tm_mon+=r->increment;
 	    fixed_start = mktime (&tm_event); 	  
@@ -545,12 +578,19 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	case RECUR_YEARLY:
           do {
 	    localtime_r (&fixed_start, &tm_event);
+	    if (alarms) fixed_start-=ev->alarm;
 	    if (fixed_start >= start) {
-	      new_ev = event_db_clone (ev);
-	      new_ev->start = fixed_start;
-	      new_ev->start = fixed_start;
-	      new_ev->flags |= FLAG_RECUR;
-	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	        gboolean skip=FALSE;
+		if (r->exceptions) 
+		  for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
+		    if ((long)iter2->data == (long)fixed_start) skip=TRUE;
+		 if (!skip)
+		 {
+		    clone = event_db_clone(ev);
+      		    clone->start = fixed_start;
+      		    clone->flags |= FLAG_RECUR;
+		    list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
+		 }
 	    }
 	    tm_event.tm_year+=r->increment;
 	    fixed_start = mktime (&tm_event); 	  
@@ -645,6 +685,14 @@ event_db_write (event_t ev, char **err)
 	  || insert_values (sqliteh, ev->uid, "rdaymask", "%d", r->daymask))
 	goto exit;
 
+      if (ev->recur->exceptions)
+      {
+		GSList *iter;
+  		for (iter = ev->recur->exceptions; iter; iter = g_slist_next (iter))
+			if (insert_values (sqliteh, ev->uid, "rexceptions", "%d",
+					(long) iter->data)) goto exit;
+      }
+      	      
       if (r->end != 0)
 	{
 	  gmtime_r (&r->end, &tm);
