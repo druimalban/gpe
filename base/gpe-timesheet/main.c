@@ -192,6 +192,7 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   frame = gtk_frame_new (_("Notes"));
   gtk_widget_show (frame);
   entry = gtk_text_view_new ();
+  gtk_text_view_set_accepts_tab(GTK_TEXT_VIEW(entry),FALSE);
   gtk_widget_show (entry);
   gtk_container_add (GTK_CONTAINER (frame), entry);
 
@@ -202,10 +203,12 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
   buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
-		      buttonok, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
 		      buttoncancel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
 
+  GTK_WIDGET_SET_FLAGS(buttonok,GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(buttonok);
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
 		      GTK_SIGNAL_FUNC (confirm_click_ok), NULL);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", 
