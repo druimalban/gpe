@@ -47,6 +47,7 @@ static MBPixbufImage *img_icon = NULL, *img_backing = NULL;
 static XColor xcol_bg;
 static Pixmap pxm_backing = None;
 
+static Atom interactive_help_atom;
 
 static int mixerfd;
 
@@ -177,20 +178,25 @@ popup_create(void)
   popup_shape(8, 33, 130, True);
 }
 
-
-
-void popup_draw_slider(int level)
+void 
+popup_draw_slider(int level)
 {
   XClearWindow(dpy, win_popup);
   XDrawRectangle(dpy, win_popup, gc, 2, (100-level) + popup_y_offset, 29, 8); 
 }
 
-int set_level(int level)
+int 
+set_level(int level)
 {
   char buf[64];
 
+  if (level < 0)
+    {
+      system ("bl off");
+      return -1;
+    }
+
   if (level > 100) level = 100;
-  if (level < 0)   level = 0;
 
   snprintf (buf, sizeof (buf) - 1, "bl %d", level);
   buf[sizeof (buf) - 1] = 0;
@@ -250,6 +256,12 @@ usage(char *progname)
 {
   fprintf (stderr, _("usage: %s [-d <display>]\n"), progname);
   exit (1);
+}
+
+static int
+no_errors (Display *dpy, XErrorEvent *ev)
+{
+  return 0;
 }
 
 int 
@@ -323,6 +335,10 @@ main(int argc, char **argv)
   XSelectInput(dpy, win_popup, VisibilityChangeMask|ExposureMask
 	       |ButtonPressMask|ButtonReleaseMask|ButtonMotionMask|PointerMotionHintMask); 
 
+  interactive_help_atom = XInternAtom (dpy, "_GPE_INTERACTIVE_HELP", False);
+  XChangeProperty (dpy, win_panel, interactive_help_atom, interactive_help_atom,
+		   32, PropModeReplace, NULL, 0);
+
   level = read_old_level ();
 
   while (1)
@@ -330,9 +346,23 @@ main(int argc, char **argv)
       XNextEvent(dpy, &xevent);
       switch (xevent.type) 
 	{
+	case ClientMessage:
+	  if (xevent.xclient.message_type == interactive_help_atom)
+	    {
+	      Window w = xevent.xclient.data.l[0];
+	      const char *str = _("This is the frontlight control.\nTap here to alter the brightness.\n");
+	      void *old_handler = XSetErrorHandler (no_errors);
+	      XChangeProperty (dpy, w, interactive_help_atom, XA_STRING, 8,
+			       PropModeReplace, str, strlen (str));
+	      XFlush (dpy);
+	      XSetErrorHandler (old_handler);
+	    }
+	  break;
+	  
 	case Expose:
 	  popup_draw_slider(level);
 	  break;
+
 	case ButtonPress:
 	  if (xevent.xmotion.window == win_popup)
 	    {
@@ -368,9 +398,11 @@ main(int argc, char **argv)
 		}
 	    }
 	  break;
+
 	case ButtonRelease:
 	  slider_active = False;
 	  break;
+
 	case MotionNotify:
 	  if (slider_active)
 	    {
