@@ -1,3 +1,8 @@
+2002-10-25  Robert Mibus  <mibus@handhelds.org>
+
+	* gpeiconlist.gob: Add a LGPL and copyright notice
+	* gpe-iconlist.c: regenerate from .gob
+
 2002-10-20  Moray Allan  <moray@handhelds.org>
 
 	* pixmaps.c (gpe_find_icon): Removed unnecessary abort().
