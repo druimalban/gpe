@@ -1,3 +1,4 @@
+<div class="menu">
 <small>
 
 <!--#if expr="x${pagename}=xhome" -->
@@ -50,3 +51,4 @@
 <A href="/contact.shtml">Mailing list/Contact</a>
 <!--#endif -->
 </small>
+</div>
