@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-06-17 20:29+0100\n"
+"POT-Creation-Date: 2002-08-25 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,90 +14,122 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: todo-ui.c:148
+#: todo-ui.c:195
 msgid "Summary:"
 msgstr ""
 
-#: todo-ui.c:149
+#: todo-ui.c:196
 msgid "Details"
 msgstr ""
 
-#: todo-ui.c:154
+#: todo-ui.c:202
 msgid "Not started"
 msgstr ""
 
-#: todo-ui.c:154
+#: todo-ui.c:202
 msgid "In progress"
 msgstr ""
 
-#: todo-ui.c:155
+#: todo-ui.c:203
 msgid "Completed"
 msgstr ""
 
-#: todo-ui.c:164
+#: todo-ui.c:212
 msgid "Save"
 msgstr ""
 
-#: todo-ui.c:165
+#: configure.c:103 todo-ui.c:213
 msgid "Cancel"
 msgstr ""
 
-#: list-ui.c:196 todo-ui.c:166
+#: configure.c:209 todo-ui.c:214
 msgid "Delete"
 msgstr ""
 
-#: todo-ui.c:175
+#: todo-ui.c:223
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:242
-msgid "Edit item"
+#: todo-ui.c:231
+msgid "Categories:"
 msgstr ""
 
-#: todo-ui.c:249
+#: todo-ui.c:320
+msgid "Edit to-do item"
+msgstr ""
+
+#: todo-ui.c:327
 msgid "New item"
 msgstr ""
 
-#: list-ui.c:89
-msgid "List title must not be blank"
+#: list-ui.c:55
+msgid "*all*"
 msgstr ""
 
-#: list-ui.c:99
-msgid "A list by that name already exists"
-msgstr ""
-
-#: list-ui.c:148
-msgid "New list"
-msgstr ""
-
-#: list-ui.c:189 list-ui.c:410
+#: configure.c:202 list-ui.c:347
 msgid "New"
 msgstr ""
 
-#: list-ui.c:190 list-ui.c:191
-msgid "Create a new list"
-msgstr ""
-
-#: list-ui.c:197 list-ui.c:198
-msgid "Delete the selected list"
-msgstr ""
-
-#: list-ui.c:203
-msgid "Close"
-msgstr ""
-
-#: list-ui.c:204 list-ui.c:205
-msgid "Close this window"
-msgstr ""
-
-#: list-ui.c:411 list-ui.c:412
+#: list-ui.c:348 list-ui.c:349
 msgid "Add a new item"
 msgstr ""
 
-#: list-ui.c:418
+#: list-ui.c:354
 msgid "Configure"
 msgstr ""
 
-#: list-ui.c:419 list-ui.c:420
-msgid "Configure lists"
+#: list-ui.c:355 list-ui.c:356
+msgid "Configure categories"
+msgstr ""
+
+#: list-ui.c:361
+msgid "Purge"
+msgstr ""
+
+#: list-ui.c:362 list-ui.c:363
+msgid "Purge completed items"
+msgstr ""
+
+#: list-ui.c:368
+msgid "Show/Hide"
+msgstr ""
+
+#: list-ui.c:369 list-ui.c:370
+msgid "Show/Hide completed items"
+msgstr ""
+
+#: list-ui.c:375
+msgid "Exit"
+msgstr ""
+
+#: list-ui.c:376 list-ui.c:377
+msgid "Exit the program"
+msgstr ""
+
+#: configure.c:56
+msgid "Category name must not be blank"
+msgstr ""
+
+#: configure.c:66
+msgid "A category by that name already exists"
+msgstr ""
+
+#: configure.c:102 configure.c:196
+msgid "OK"
+msgstr ""
+
+#: configure.c:132
+msgid "New category"
+msgstr ""
+
+#: configure.c:165
+msgid "Categories"
+msgstr ""
+
+#: configure.c:203 configure.c:204
+msgid "Create a new category"
+msgstr ""
+
+#: configure.c:210 configure.c:211
+msgid "Delete the selected category"
 msgstr ""
