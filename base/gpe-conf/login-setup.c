@@ -57,6 +57,20 @@ static gchar login_bg_filename[PATH_MAX + 1] = "<none>";
 
 void update_login_lock (GtkWidget *togglebutton,gpointer  user_data);
 
+static
+gboolean have_password(void)
+{
+	struct passwd *pw;
+	
+	pw = getpwuid(getuid());
+	
+	if (pw)
+		if (pw->pw_passwd) 
+			return TRUE;
+	
+	return FALSE;
+}
+
 
 GtkWidget *Login_Setup_Build_Objects()
 {
@@ -142,8 +156,16 @@ GtkWidget *Login_Setup_Build_Objects()
   
   ownerinfo_show_check =
     gtk_check_button_new_with_label (_("Show owner information at login."));
-  login_lock_display_check =
-    gtk_check_button_new_with_label (_("Lock display on suspend."));
+	
+  if (have_password())
+    login_lock_display_check =
+      gtk_check_button_new_with_label (_("Lock display on suspend."));
+  else
+  {
+    login_lock_display_check =
+      gtk_check_button_new_with_label (_("Lock display on suspend. \n  (needs password)"));
+	gtk_widget_set_sensitive(GTK_WIDGET(login_lock_display_check), FALSE);
+  }
 
   /* check the dontshow files to set initial values for the checkboxes */
   get_initial_values();

@@ -97,7 +97,7 @@ struct Applet applets[]=
     { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore ,
 		"Buttons" ,"keyctl", "Button Configuration",PREFIX "/share/pixmaps/gpe-config-keyctl.png"},
     { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore ,
-		"Network" ,"network","IP Addresses",PREFIX "/share/pixmaps/gpe-config-network.png"},
+		"Network" ,"network","Network Setup",PREFIX "/share/pixmaps/gpe-config-network.png"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
 		"Theme" ,"theme", "Look and Feel",PREFIX "/share/pixmaps/gpe-config-theme.png"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
@@ -183,7 +183,6 @@ void item_select(int useronly, gpointer user_data)
   if(self.applet)
     {
       gtk_widget_hide(self.applet);
-      // TODO there must be a memory leak here..
       gtk_container_remove(GTK_CONTAINER(self.viewport),self.applet);
     }
   self.cur_applet = i;

@@ -1,3 +1,12 @@
+2004-10-01	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* login-setup.c: Enable display locking only if a password is set.
+	* users/callbacks.c: Remove new user if cancel is clicked.
+
+2004-09-29	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* main.c: Renamed network applet from "IP Addresses" to "Network Setup".
+
 2004-09-28	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* serial.c: Added hint that gpsd is necessary to use GPS settings.

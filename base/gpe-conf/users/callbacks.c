@@ -59,8 +59,6 @@ users_on_new_clicked                      (GtkButton       *button,
   cur->pw.pw_shell = strdup("/bin/sh");
   cur->next = 0;
   gtk_widget_show(create_userchange (cur,mainw));
-  ReloadList();
-
 }
 
 void
@@ -180,7 +178,26 @@ users_on_save_clicked                        (GtkButton       *button,
 
   gtk_widget_destroy(self->w);
   ReloadList();
+}
 
+void
+delete_newuser(void)
+{
+  pwlist *cur = pwroot;
+  pwlist *prec = NULL;
+
+  while(cur)
+    {
+	  if (!strcmp(cur->pw.pw_name, "newuser"))
+	    {
+			if (prec) 
+				prec->next = cur->next;
+			free(cur);
+			break;
+		}
+	  prec = cur;
+      cur = cur ->next;
+    }
 }
 
 
@@ -189,9 +206,8 @@ users_on_cancel_clicked                      (GtkButton       *button,
                                         gpointer         user_data)
 {
   userw *self=(userw *)user_data;
-
+  delete_newuser();
   gtk_widget_destroy(self->w);
-
 }
 
 
