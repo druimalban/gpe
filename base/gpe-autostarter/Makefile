@@ -32,7 +32,7 @@ install-program: all
 	install $(PACKAGE).xsession $(DESTDIR)/etc/X11/Xsession.d/50$(PACKAGE)
 
 clean:
-	rm -f $(PACKAGE) $(OBJS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
