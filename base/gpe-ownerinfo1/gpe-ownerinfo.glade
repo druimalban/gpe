@@ -300,7 +300,6 @@ Foobarland</label>
 	  <widget>
 	    <class>GtkButton</class>
 	    <name>smallphotobutton</name>
-	    <tooltip>Owner photo</tooltip>
 	    <can_focus>True</can_focus>
 	    <has_focus>True</has_focus>
 	    <signal>
@@ -346,7 +345,6 @@ Foobarland</label>
 	<class>GtkButton</class>
 	<name>bigphotobutton</name>
 	<sensitive>False</sensitive>
-	<tooltip>Owner photo</tooltip>
 	<signal>
 	  <name>clicked</name>
 	  <handler>on_bigphotobutton_clicked</handler>

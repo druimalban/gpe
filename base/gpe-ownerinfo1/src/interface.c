@@ -45,13 +45,10 @@ create_GPE_Ownerinfo (void)
   GtkWidget *bigphotobutton;
   GtkWidget *bigphoto;
   GtkWidget *label4;
-  GtkTooltips *tooltips;
   // GtkStyle* style;
   GtkStyle *style = gtk_style_new();
   GdkColor myGdkColor = {0, 0xAFFF, 0xFFFF, 0xCFFF};
 	  
-  tooltips = gtk_tooltips_new ();
-
   GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_Ownerinfo, "GPE_Ownerinfo");
   gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "GPE_Ownerinfo", GPE_Ownerinfo);
@@ -223,7 +220,6 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (smallphotobutton);
   gtk_box_pack_end (GTK_BOX (vbox1), smallphotobutton, TRUE, TRUE, 0);
-  gtk_tooltips_set_tip (tooltips, smallphotobutton, _("Owner photo"), NULL);
   gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
 
   smallphoto = create_pixmap (GPE_Ownerinfo, "ownerphoto");
@@ -250,7 +246,6 @@ create_GPE_Ownerinfo (void)
   gtk_widget_show (bigphotobutton);
   gtk_container_add (GTK_CONTAINER (notebook), bigphotobutton);
   GTK_WIDGET_UNSET_FLAGS (bigphotobutton, GTK_CAN_FOCUS);
-  gtk_tooltips_set_tip (tooltips, bigphotobutton, _("Owner photo"), NULL);
   gtk_button_set_relief (GTK_BUTTON (bigphotobutton), GTK_RELIEF_NONE);
 
   //  style->bg[GTK_STATE_PRELIGHT] = myGdkColor;
@@ -285,7 +280,6 @@ create_GPE_Ownerinfo (void)
                       NULL);
 
   gtk_widget_grab_focus (smallphotobutton);
-  gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "tooltips", tooltips);
 
   return GPE_Ownerinfo;
 }

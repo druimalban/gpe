@@ -1,5 +1,8 @@
 2002-09-03  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-ownerinfo.glade (Module), 
+	src/interface.c (create_GPE_Ownerinfo): Remove tooltips.
+
 	* src/main.c (upgrade_to_v2): Remove PREFIX
 	warning. Makefile.dpkg_ipkg takes care of it now.
 	(main): Got full transparency now. pb rules.
