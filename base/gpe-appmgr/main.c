@@ -557,7 +557,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			}
 			if (!pixbuf) {
 				if (!default_pixbuf)
-					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program48.png");
+					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program.png");
 				pixbuf = default_pixbuf;
 			}
 
