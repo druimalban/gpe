@@ -2,6 +2,7 @@
 #define GPE_PACKAGES_IF_H
 
 int mainloop (int argc, char *argv[]);
+void do_safe_exit();
 
 /* Colors */
 

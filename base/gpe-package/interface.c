@@ -41,8 +41,15 @@
 #include "main.h"
 #include "filesel.h"
 
+#define N_(x) (x)
+
 /* --- module global variables --- */
 void create_fMain (void);
+void on_select_local(GtkButton *button, gpointer user_data);
+void on_packages_update_clicked(GtkButton *button, gpointer user_data);
+void on_system_update_clicked(GtkButton *button, gpointer user_data);
+void on_package_install_clicked(GtkButton *button, gpointer user_data);
+
 int sock;
 static pkcommand_t running_command = CMD_NONE;
 static char *last_pkgname = NULL;
@@ -55,11 +62,30 @@ static GtkWidget *notebook;
 static GtkWidget *txLog;
 static GtkWidget *treeview;
 static GtkTreeStore *store = NULL;
-static GtkWidget *bUpdate, *bApply, *bSysUpgrade, *bSelectLocal;
+static GtkWidget *bApply;
+//*bUpdate , *bSysUpgrade, *bSelectLocal;
 static GtkWidget *sbar;
 static GtkWidget *fMain;
 static GtkWidget *dlgAction = NULL;
+static GtkWidget *mMain;
 
+
+static GtkItemFactoryEntry mMain_items[] = {
+  { N_("/_File"),         NULL,         NULL,           0, "<Branch>" },
+  { N_("/File/_Install file"), "", on_select_local,    0, "<Item>"},
+  { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
+  { N_("/File/_Close"),  NULL, do_safe_exit,    0, "<StockItem>", GTK_STOCK_QUIT },
+  { N_("/_Packages"),         NULL,         NULL,           0, "<Branch>" },
+  { N_("/Packages/_Update lists"), "<Control> U", on_packages_update_clicked,    0, "<Item>"},
+  { N_("/Packages/Upgrade _System"), "", on_system_update_clicked,    0, "<Item>"},
+  { N_("/_Packages/s2"), NULL , NULL,    0, "<Separator>"},
+  { N_("/Packages/_Apply"), "", on_package_install_clicked,    0, "<StockItem>", GTK_STOCK_APPLY},
+  { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
+  { N_("/_Help/Index"),   NULL,         NULL,    0, "<Item>" },
+  { N_("/_Help/About"),   NULL,         NULL,    0, "<Item>" },
+};
+
+int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
 
 struct gpe_icon my_icons[] = {
   { "save" },
@@ -68,7 +94,7 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "exit" },
   { "refresh" },
-  { "local-package", PREFIX "/share/pixmaps/local-package-16" },
+  { "local-package", PREFIX "/share/pixmaps/local-package-16.png" },
   { "icon", PREFIX "/share/pixmaps/gpe-package.png" }
 };
 
@@ -314,9 +340,10 @@ void do_info(int priority, char *str1, char *str2)
 
 void do_end_command()
 {
-    gtk_widget_set_sensitive(bUpdate,TRUE);
+#warning - change in menu
+//    gtk_widget_set_sensitive(bUpdate,TRUE);
     gtk_widget_set_sensitive(bApply,TRUE);
-	gtk_widget_set_sensitive(bSysUpgrade,TRUE);
+//	gtk_widget_set_sensitive(bSysUpgrade,TRUE);
     printlog(txLog,_("Command finished. Please check log messages for errors."));
 	if (dlgAction) 
 	{
@@ -548,9 +575,9 @@ on_system_update_clicked(GtkButton *button, gpointer user_data)
 {
   GtkTextBuffer *logbuf;
   GtkTextIter start,end;
-  gtk_widget_set_sensitive(bUpdate,FALSE);
+//  gtk_widget_set_sensitive(bUpdate,FALSE);
   gtk_widget_set_sensitive(bApply,FALSE);
-  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
+//  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
 
 	error = 0;
 	
@@ -578,9 +605,9 @@ on_packages_update_clicked(GtkButton *button, gpointer user_data)
 {
   GtkTextBuffer *logbuf;
   GtkTextIter start,end;
-  gtk_widget_set_sensitive(bUpdate,FALSE);
+//  gtk_widget_set_sensitive(bUpdate,FALSE);
   gtk_widget_set_sensitive(bApply,FALSE);
-  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
+//  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
 
 	error = 0;
 	
@@ -637,6 +664,26 @@ tv_row_clicked(GtkTreeView *treeview, GtkTreePath *arg1,
 }
 
 
+/* create menus from description */
+GtkWidget *
+create_mMain(GtkWidget  *window)
+{
+	GtkItemFactory *itemfactory;
+	GtkAccelGroup *accelgroup;
+
+	accelgroup = gtk_accel_group_new ();
+
+	itemfactory = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>",
+                                       accelgroup);
+	gtk_item_factory_create_items (itemfactory, mMain_items_count, 
+		mMain_items, NULL);
+	gtk_window_add_accel_group (GTK_WINDOW (window), accelgroup);
+
+	return (gtk_item_factory_get_widget (itemfactory, "<main>"));
+}
+
+
+
 /* --- create mainform --- */
 
 void
@@ -674,6 +721,11 @@ create_fMain (void)
 	
   tooltips = gtk_tooltips_new ();
 
+  /* main menu */ 
+  
+  mMain = create_mMain(fMain);
+  gtk_box_pack_start(GTK_BOX(vbox),mMain,FALSE,TRUE,0);
+  
   /* toolbar */
 	
   toolbar = gtk_toolbar_new ();
@@ -681,7 +733,7 @@ create_fMain (void)
 			       GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  bUpdate = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_DOWN, 
+/*  bUpdate = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_DOWN, 
   			_("Update package lists"),	_("Update package lists"),
 			   (GtkSignalFunc) on_packages_update_clicked , NULL, -1);
 			   
@@ -689,17 +741,17 @@ create_fMain (void)
   bSysUpgrade = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Update System"),
 			   _("Update System"), _("Update entire system over an internet connection."), pw,
 			   (GtkSignalFunc) on_system_update_clicked , NULL);
-
+*/
   bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
 			   _("Apply package selection"), _("Apply package selection"),
 			   (GtkSignalFunc) on_package_install_clicked , NULL, -1);
 			   
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("local-package"));
+/*  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("local-package"));
   bSelectLocal = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Install package"),
 			   _("Install package"), 
 			   _("Select a package to install in local filesystem."), pw,
 			   (GtkSignalFunc) on_select_local , NULL);
-			   
+*/			   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
   pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
@@ -714,8 +766,6 @@ create_fMain (void)
   notebook = gtk_notebook_new();	
   gtk_box_pack_start(GTK_BOX(vbox),notebook,TRUE,TRUE,0);
 	
-//  gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
-  
   gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
   
   sbar = gtk_statusbar_new();

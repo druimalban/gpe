@@ -84,6 +84,8 @@ main (int argc, char *argv[])
 		setresuid(getuid(),getuid(),getuid());
 		setresgid(getgid(),getgid(),getgid());
 		
+		signal(SIGTERM, do_safe_exit);
+		signal(SIGINT, do_safe_exit);
 		mainloop(argc, argv);	
 
 	}
