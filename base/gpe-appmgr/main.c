@@ -534,7 +534,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			GtkWidget *pixmap;
 
 			/* Button picture */
-			icon = find_icon (get_closest_icon (p, 48));
+			icon = find_icon (get_closest_icon (p, cfg_options.list_icon_size));
 			if (icon)
 			{
 				pixbuf = gdk_pixbuf_new_from_file (icon);
@@ -561,7 +561,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			vb = gtk_vbox_new(0,0);
 			gtk_box_pack_end_defaults (GTK_BOX(vb),lbl);
 			if (pixbuf) {
-				GdkPixbuf *spixbuf = gdk_pixbuf_scale_simple (pixbuf, 48, 48, GDK_INTERP_BILINEAR);
+				GdkPixbuf *spixbuf = gdk_pixbuf_scale_simple (pixbuf, cfg_options.list_icon_size, cfg_options.list_icon_size, GDK_INTERP_BILINEAR);
 				if (pixbuf != default_pixbuf)
 					gdk_pixbuf_unref (pixbuf);
 				pixmap = gpe_render_icon (notebook->style, 
@@ -976,31 +976,36 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 /* Create the 'recent' list as a dock app or normal widget */
 void create_recent_box(GtkBox *cont)
 {
+	GdkAtom window_type;
+	GdkAtom window_type_dock;
+	GtkWidget *w;
+	int can_dock=0;
+
 	TRACE ("create_recent_box");
         recent_tab = gtk_vbox_new(0,0);
 
-	if (cont)
+	w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_container_set_border_width(GTK_CONTAINER (w), 0);
+	gtk_container_add(GTK_CONTAINER(w), recent_tab);
+	gtk_widget_set_usize (w, 16*cfg_options.recent_apps_number, 16);
+
+	window_type = gdk_atom_intern("_NET_WM_WINDOW_TYPE", FALSE);
+	window_type_dock = gdk_atom_intern("_NET_WM_WINDOW_TYPE_DOCK", FALSE);
+	gtk_widget_realize(w);
+	//gtk_widget_show_all(recent_tab);
+	gdk_property_change(w->window, window_type, XA_ATOM, 32, GDK_PROP_MODE_REPLACE, (guchar *) &window_type_dock, 1);
+	can_dock = tray_init (GDK_WINDOW_XDISPLAY (w->window), GDK_WINDOW_XWINDOW (w->window));
+	gdk_window_add_filter (w->window, filter, w);
+
+	if (!can_dock)
 	{
+		//gtk_container_remove (GTK_CONTAINER(w), recent_box);
+		gtk_widget_destroy (w);
+		recent_tab = gtk_vbox_new(0,0);
 		gtk_box_pack_start (GTK_BOX(cont), recent_tab,0,0,0);
 		gtk_widget_show (recent_tab);
-	} else {
-		GdkAtom window_type;
-		GdkAtom window_type_dock;
-		GtkWidget *w;
-
-		w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		gtk_container_set_border_width(GTK_CONTAINER (w), 0);
-		gtk_container_add(GTK_CONTAINER(w), recent_tab);
-		gtk_widget_set_usize (w, 16*cfg_options.recent_apps_number, 16);
-
-		window_type = gdk_atom_intern("_NET_WM_WINDOW_TYPE", FALSE);
-		window_type_dock = gdk_atom_intern("_NET_WM_WINDOW_TYPE_DOCK", FALSE);
-		gtk_widget_realize(w);
-		gtk_widget_show_all(recent_tab);
-		gdk_property_change(w->window, window_type, XA_ATOM, 32, GDK_PROP_MODE_REPLACE, (guchar *) &window_type_dock, 1);
-		tray_init (GDK_WINDOW_XDISPLAY (w->window), GDK_WINDOW_XWINDOW (w->window));
-		gdk_window_add_filter (w->window, filter, w);
 	}
+
 	TRACE ("create_recent_box: end");
 }
 
@@ -1090,9 +1095,8 @@ void create_main_window()
 	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_box_pack_start (GTK_BOX(vbox), notebook, 1, 1, 0);
 
-	/* The two styles of recent lists, appmgr or standalone */
-	//create_recent_box (GTK_BOX(vbox));
-	create_recent_box (NULL);
+	// REMOVE:: /* The two styles of recent lists, appmgr or standalone */
+	create_recent_box (GTK_BOX(vbox));
 
 	gtk_widget_show_all (window);
 

@@ -90,6 +90,7 @@ void cfg_load ()
 	}
 
 	cfg_options.recent_apps_number = 4;
+	cfg_options.list_icon_size = 48;
 
 	if ((s = package_get_data (p, "tab_view")))
 	{
