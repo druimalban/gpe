@@ -1,5 +1,9 @@
 2003-08-01  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.55 released.
+
+2003-08-01  Philip Blundell  <philb@gnu.org>
+
 	* familiar/control.gpe-session-scripts (Depends): Require xstroke.
 
 	* gpe-login.setup: Add xstroke.  Only write to suspend_button_mode
