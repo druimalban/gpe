@@ -75,6 +75,8 @@ guint window_x = 240, window_y = 310;
 guint week_offset = 0;
 gboolean week_starts_monday = TRUE;
 gboolean day_view_combined_times;
+gchar collected_keys[32] = "";
+gint ccpos = 0;
 
 static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
 			   31, 31, 30, 31, 30, 31 };
@@ -180,6 +182,24 @@ do_reset_new(gpointer d)
   return FALSE;
 }
 
+
+static gboolean
+do_insert_text (GtkWidget *window)
+{
+  GtkWidget *entry;
+  
+  entry = g_object_get_data(G_OBJECT(window), "default-entry");
+  if (entry)
+    {
+      gtk_entry_prepend_text(GTK_ENTRY(entry), collected_keys);
+      gtk_editable_set_position(GTK_EDITABLE(entry),-1);
+      memset(collected_keys, 0, sizeof(gchar) * 32);
+      ccpos = 0;
+    }
+  return FALSE;  
+}
+
+
 static void
 new_appointment (void)
 {
@@ -191,6 +211,7 @@ new_appointment (void)
   g_timeout_add(1000, do_reset_new, NULL);
   
   appt = new_event (viewtime, 0);
+  g_timeout_add(500, do_insert_text, (gpointer)appt);
   gtk_widget_show (appt);
 }
 
@@ -320,7 +341,11 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 {
   if (k->string && isalpha(k->string[0]))
     {
-        new_appointment();
+        if (!just_new) 
+          new_appointment();
+        if (ccpos < 31) 
+          collected_keys[ccpos] = k->string[0];
+        ccpos++;
         return TRUE;
     }
   return FALSE;

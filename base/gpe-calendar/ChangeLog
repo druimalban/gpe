@@ -1,3 +1,7 @@
+2004-08-30  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c, event-ui.c: Buffer characters to add in a new event.
+
 2004-08-29  Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c: Don't add spaces if screen width < 260 pixels.

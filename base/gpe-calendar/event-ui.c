@@ -1370,6 +1370,7 @@ build_edit_event_window (void)
   
   GTK_WIDGET_SET_FLAGS (summaryentry, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(summaryentry);
+  g_object_set_data(G_OBJECT(window), "default-entry", summaryentry);
   
   return window;
 }
