@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-06-14 19:10+0100\n"
+"POT-Creation-Date: 2002-08-08 23:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,199 +14,199 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:237
+#: main.c:232 main.c:233
 msgid "New Appointment"
 msgstr ""
 
-#: main.c:239
+#: main.c:239 main.c:240
 msgid "Today"
 msgstr ""
 
-#: main.c:241
+#: main.c:246 main.c:247
 msgid "Future View"
 msgstr ""
 
-#: main.c:242
+#: main.c:251 main.c:252
 msgid "Day View"
 msgstr ""
 
-#: main.c:243
+#: main.c:256 main.c:257
 msgid "Week View"
 msgstr ""
 
-#: main.c:244
+#: main.c:261 main.c:262
 msgid "Month View"
 msgstr ""
 
-#: main.c:245
+#: main.c:266 main.c:267
 msgid "Year View"
 msgstr ""
 
-#: main.c:247
+#: main.c:273 main.c:274
 msgid "Exit"
 msgstr ""
 
-#: event-ui.c:338
+#: event-ui.c:280
+msgid "End time must not be earlier than start time"
+msgstr ""
+
+#: event-ui.c:351
 msgid "Event"
 msgstr ""
 
-#: event-ui.c:339
+#: event-ui.c:352
 msgid "Recurrence"
 msgstr ""
 
-#: event-ui.c:340 event-ui.c:381
+#: event-ui.c:353 event-ui.c:394
 msgid "Alarm"
 msgstr ""
 
-#: event-ui.c:356
-msgid "Save"
-msgstr ""
-
-#: event-ui.c:357
-msgid "Cancel"
-msgstr ""
-
-#: event-ui.c:358
-msgid "Delete"
-msgstr ""
-
-#: event-ui.c:365
+#: event-ui.c:378
 msgid "Start on:"
 msgstr ""
 
-#: event-ui.c:366
+#: event-ui.c:379
 msgid "End on:"
 msgstr ""
 
-#: event-ui.c:367 event-ui.c:368
+#: event-ui.c:380 event-ui.c:381
 msgid "at:"
 msgstr ""
 
-#: event-ui.c:372
+#: event-ui.c:385
 msgid "Summary:"
 msgstr ""
 
-#: event-ui.c:374
+#: event-ui.c:387
 msgid "Description:"
 msgstr ""
 
-#: event-ui.c:377
+#: event-ui.c:390
 msgid "All-day event"
 msgstr ""
 
-#: event-ui.c:386
+#: event-ui.c:399
 msgid "before event"
 msgstr ""
 
-#: event-ui.c:446
+#: event-ui.c:434
+msgid "Save"
+msgstr ""
+
+#: event-ui.c:435
+msgid "Cancel"
+msgstr ""
+
+#: event-ui.c:436
+msgid "Delete"
+msgstr ""
+
+#: event-ui.c:464
 msgid "Type:"
 msgstr ""
 
-#: event-ui.c:455
+#: event-ui.c:473
 msgid "No recurrence"
 msgstr ""
 
-#: event-ui.c:461
+#: event-ui.c:479
 msgid "Daily"
 msgstr ""
 
-#: event-ui.c:466
+#: event-ui.c:484
 msgid "Weekly"
 msgstr ""
 
-#: event-ui.c:472
+#: event-ui.c:490
 msgid "Monthly"
 msgstr ""
 
-#: event-ui.c:477
+#: event-ui.c:495
 msgid "Yearly"
 msgstr ""
 
-#: event-ui.c:500 event-ui.c:521 event-ui.c:576 event-ui.c:644
+#: event-ui.c:518 event-ui.c:539 event-ui.c:594 event-ui.c:662
 msgid "Every"
 msgstr ""
 
-#: event-ui.c:510 event-ui.c:728
+#: event-ui.c:528 event-ui.c:746
 msgid "day(s)"
 msgstr ""
 
-#: event-ui.c:522
+#: event-ui.c:540
 msgid "week(s), on:"
 msgstr ""
 
-#: event-ui.c:587 event-ui.c:732
+#: event-ui.c:605 event-ui.c:750
 msgid "month(s)"
 msgstr ""
 
-#: event-ui.c:592
+#: event-ui.c:610
 #, c-format
 msgid "on day %d"
 msgstr ""
 
-#: event-ui.c:597
+#: event-ui.c:615
 msgid "on the"
 msgstr ""
 
-#: event-ui.c:613
+#: event-ui.c:631
 msgid "first"
 msgstr ""
 
-#: event-ui.c:615
+#: event-ui.c:633
 msgid "second"
 msgstr ""
 
-#: event-ui.c:617
+#: event-ui.c:635
 msgid "third"
 msgstr ""
 
-#: event-ui.c:619
+#: event-ui.c:637
 msgid "fourth"
 msgstr ""
 
-#: event-ui.c:621
+#: event-ui.c:639
 msgid "fifth"
 msgstr ""
 
-#: event-ui.c:623
+#: event-ui.c:641
 msgid "last"
 msgstr ""
 
-#: event-ui.c:654 event-ui.c:734
+#: event-ui.c:672 event-ui.c:752
 msgid "year(s)"
 msgstr ""
 
-#: event-ui.c:667
+#: event-ui.c:685
 msgid "End Date:"
 msgstr ""
 
-#: event-ui.c:674
+#: event-ui.c:692
 msgid "forever"
 msgstr ""
 
-#: event-ui.c:686
+#: event-ui.c:704
 msgid "end after"
 msgstr ""
 
-#: event-ui.c:703
+#: event-ui.c:721
 msgid "end on"
 msgstr ""
 
-#: event-ui.c:711
+#: event-ui.c:729
 msgid "event(s)"
 msgstr ""
 
-#: event-ui.c:724
+#: event-ui.c:742
 msgid "minute(s)"
 msgstr ""
 
-#: event-ui.c:726
+#: event-ui.c:744
 msgid "hour(s)"
 msgstr ""
 
-#: event-ui.c:730
+#: event-ui.c:748
 msgid "week(s)"
-msgstr ""
-
-#: about.c:37
-msgid "OK"
 msgstr ""
