@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,9 +14,5 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 extern GtkWidget *gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf);
-extern void gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
-		  GdkBitmap **bitmap);
-extern void gpe_render_pixmap_alpha(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
-		  GdkBitmap **bitmap, guint overall_alpha);
 
 #endif

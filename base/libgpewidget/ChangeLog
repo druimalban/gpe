@@ -1,5 +1,15 @@
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
+	* render.c (gpe_render_icon): Just call gtk_image_new_from_pixbuf.
+	(gpe_render_pixmap_alpha): Delete.
+	(gpe_render_pixmap): Likewise.
+	* gpe/render.h (gpe_render_pixmap): Delete.
+	(gpe_render_pixmap_alpha): Likewise.
+	* gtkgpepixmap2.c: Delete.
+	* Makefile (MEMBERS): Remove gtkgpepixmap2.
+	
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.41 released.
 
 2003-01-05  Philip Blundell  <philb@gnu.org>
