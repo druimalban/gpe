@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.6\n"
+"Project-Id-Version: gpe-conf 0.1.10\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-03 00:26+0100\n"
-"PO-Revision-Date: 2004-03-10 11:24+0100\n"
+"POT-Creation-Date: 2004-06-10 12:19+0200\n"
+"PO-Revision-Date: 2004-06-18 22:16+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Root access"
 msgstr "Root toegang"
 
-#: applets.c:369
+#: applets.c:373
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -72,7 +72,7 @@ msgstr ""
 "gebruiker root toegankelijk.\n"
 "Geef a.u.b. het wachtwoord."
 
-#: applets.c:414 ipaqscreen/calibrate.c:34
+#: applets.c:419 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
 msgstr "Sorry, verkeerd wachtwoord."
 
@@ -160,117 +160,73 @@ msgstr "Selecteer hier de positie in minuten voor zomertijd."
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Om de zorgen dat de tijdzone instellingen actief worden, dient u uit te loggen en opnieuw in te loggen."
 
-#: appmgr_setup.c:189 gpe-admin.c:86
-msgid "General"
-msgstr "Algemeen"
-
-#: appmgr_setup.c:206
-msgid "Show 'All' group"
-msgstr "'Alle' groep weergeven"
-
-#: appmgr_setup.c:214
-msgid "Auto-hide group labels"
-msgstr "Groep labels auto-verbergen"
-
-#: appmgr_setup.c:221
-msgid "Show 'Recent' tab"
-msgstr "'Recent' tabblad gebruiken"
-
-#: appmgr_setup.c:228
-msgid "Do not launch at startup"
-msgstr "Niet uitvoeren bij opstarten"
-
-#: appmgr_setup.c:237
-msgid "Tab View"
-msgstr "Tabblad weergave"
-
-#: appmgr_setup.c:252
-msgid "Icon"
-msgstr "Pictogram"
-
-#: appmgr_setup.c:256
-msgid "List"
-msgstr "Lijst"
-
-#: appmgr_setup.c:265
-msgid "Changes will take effect after relog"
-msgstr "Wijzigingen zullen effektief worden na opnieuw inloggen"
-
-#: ipaqscreen/main.c:70
+#: ipaqscreen/main.c:71
 msgid "Portrait"
 msgstr "Portret"
 
-#: ipaqscreen/main.c:71
+#: ipaqscreen/main.c:72
 msgid "Landscape (left)"
 msgstr "Landschap (links)"
 
-#: ipaqscreen/main.c:72
+#: ipaqscreen/main.c:73
 msgid "Inverted"
 msgstr "Omgekeerd"
 
-#: ipaqscreen/main.c:73
+#: ipaqscreen/main.c:74
 msgid "Landscape (right)"
 msgstr "Landschap (rechts)"
 
-#: ipaqscreen/main.c:94
+#: ipaqscreen/main.c:98
 msgid "Light"
 msgstr "Licht"
 
-#: ipaqscreen/main.c:100
+#: ipaqscreen/main.c:104
 msgid "Brightness"
 msgstr "Helderheid"
 
-#: ipaqscreen/main.c:106 ipaqscreen/main.c:129
+#: ipaqscreen/main.c:110 ipaqscreen/main.c:133
 msgid "State"
 msgstr "Status"
 
-#: ipaqscreen/main.c:117
+#: ipaqscreen/main.c:121
 msgid "Screensaver"
 msgstr "Schermbeveiliging"
 
-#: ipaqscreen/main.c:123
+#: ipaqscreen/main.c:127
 msgid "Delay until start"
 msgstr "Uitstellen tot start"
 
-#: ipaqscreen/main.c:133 ipaqscreen/main.c:169
+#: ipaqscreen/main.c:137 ipaqscreen/main.c:174
 msgid "on"
 msgstr "aan"
 
-#: ipaqscreen/main.c:134 ipaqscreen/main.c:170
+#: ipaqscreen/main.c:138 ipaqscreen/main.c:175
 msgid "off"
 msgstr "uit"
 
-#: ipaqscreen/main.c:144
+#: ipaqscreen/main.c:148
 msgid "Orientation"
 msgstr "Oriëntatie"
 
-#: ipaqscreen/main.c:163
+#: ipaqscreen/main.c:168
 msgid "Touchscreen"
 msgstr "Aanraakscherm"
 
-#: ipaqscreen/main.c:167
+#: ipaqscreen/main.c:172
 msgid "Calibrate"
 msgstr "Kalibreren"
 
-#: ipaqscreen/main.c:302
+#: ipaqscreen/main.c:307
 msgid "min"
 msgstr "min"
 
-#: ipaqscreen/main.c:305
+#: ipaqscreen/main.c:310
 msgid "sec"
 msgstr "sec"
 
 #: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
 msgid "Couldn't read screen settings!"
 msgstr "Kon scherminstellingen niet lezen!"
-
-#: ipaqscreen/rotation.c:54
-msgid "Can't interpret output from xrandr!"
-msgstr "Kan uitvoer van xrandr niet verwerken!"
-
-#: ipaqscreen/rotation.c:71
-msgid "Can't set rotation on an x86."
-msgstr "Kan rotatie op een x86 niet instellen."
 
 #: kbd.c:146
 msgid "Keyboard Geometry / Layout"
@@ -284,7 +240,7 @@ msgstr "Door gebruiker bepaald"
 msgid "Current Config"
 msgstr "Huidige config"
 
-#: network.c:175 ownerinfo.c:221
+#: network.c:175 ownerinfo.c:226
 msgid "Name:"
 msgstr "Naam:"
 
@@ -444,119 +400,143 @@ msgstr "Kon netwerkconfiguratie niet lezen."
 msgid "global"
 msgstr "algemeen"
 
-#: theme.c:417
+#: theme.c:421
 msgid "Red"
 msgstr "Rood"
 
-#: theme.c:422
+#: theme.c:426
 msgid "Green"
 msgstr "Groen"
 
-#: theme.c:427
+#: theme.c:431
 msgid "Blue"
 msgstr "Blauw"
 
-#: theme.c:702
+#: theme.c:727
 msgid "Select color"
 msgstr "Selecteer kleur"
 
-#: theme.c:728 theme.c:800
+#: theme.c:753 theme.c:825
 msgid "You don't have read access to selected background image!"
 msgstr "U heeft geen leestoegang tot de gekozen achtergrondafbeelding!"
 
-#: theme.c:899
+#: theme.c:933
 msgid "Theme"
 msgstr "Thema"
 
-#: theme.c:908
+#: theme.c:942
 msgid "Desktop Theme"
 msgstr "Bureaublad thema"
 
-#: theme.c:920
+#: theme.c:954
 msgid "Name"
 msgstr "Naam"
 
-#: theme.c:936
+#: theme.c:970
 msgid "Icon Size"
 msgstr "Pictogramgrootte"
 
-#: theme.c:952
-msgid "Toolbar Icon Size"
-msgstr "Werkbalkpictogram grootte"
-
-#: theme.c:968
+#: theme.c:986
 msgid "Visual Effects"
 msgstr "Visuele effecten"
 
-#: theme.c:974
+#: theme.c:992
 msgid "Enable Visual Effects"
 msgstr "Visuele effecten aanzetten"
 
-#: theme.c:981
+#: theme.c:999
 msgid "Background"
 msgstr "Achtergrond"
 
-#: theme.c:992
+#: theme.c:1010
 msgid "Background Settings"
 msgstr "Achtergrondinstellingen"
 
-#: theme.c:999
+#: theme.c:1017
 msgid "Theme Default"
 msgstr "Thema standaard"
 
-#: theme.c:1006
+#: theme.c:1024
 msgid "Solid color"
 msgstr "Effen kleur"
 
-#: theme.c:1020
+#: theme.c:1038
 msgid "Horizontal"
 msgstr "Horizontaal"
 
-#: theme.c:1024
+#: theme.c:1042
 msgid "Vertical"
 msgstr "Verticaal"
 
-#: theme.c:1029 theme.c:1048 theme.c:1145 theme.c:1151
+#: theme.c:1047 theme.c:1066 theme.c:1219 theme.c:1225
 msgid "Color"
 msgstr "Kleur"
 
-#: theme.c:1039
+#: theme.c:1057
 msgid "Color gradient"
 msgstr "Kleurgradiënt"
 
-#: theme.c:1059
+#: theme.c:1077
 msgid "Image"
 msgstr "Afbeelding"
 
-#: theme.c:1085
+#: theme.c:1103
 msgid "Centered"
 msgstr "Gecentreerd"
 
-#: theme.c:1089
+#: theme.c:1107
 msgid "Tiled"
 msgstr "Getegeld"
 
-#: theme.c:1092
+#: theme.c:1110
 msgid "Stretched"
 msgstr "Uitgerekt"
 
-#: theme.c:1097
+#: theme.c:1116
+msgid "Toolbars"
+msgstr "Werkbalken"
+
+#: theme.c:1127
+msgid "Toolbar Style"
+msgstr "Werkbalkstijl"
+
+#: theme.c:1134
+msgid "Icons"
+msgstr "Pictogrammen"
+
+#: theme.c:1139
+msgid "Text"
+msgstr "Tekst"
+
+#: theme.c:1144
+msgid "Both"
+msgstr "Beide"
+
+#: theme.c:1149
+msgid "Both H"
+msgstr "Beide H"
+
+#: theme.c:1156
+msgid "Toolbar Icon Size"
+msgstr "Werkbalkpictogram grootte"
+
+#: theme.c:1171
 msgid "Fonts"
 msgstr "Lettertypen"
 
-#: theme.c:1106 theme.c:1126
+#: theme.c:1180 theme.c:1200
 msgid "Desktop Font"
 msgstr "Bureaublad lettertype"
 
-#: theme.c:1113 theme.c:1169
+#: theme.c:1187 theme.c:1243
 msgid "Family"
 msgstr "Familie"
 
-#: theme.c:1133 theme.c:1189
+#: theme.c:1207 theme.c:1263
 msgid "Size"
 msgstr "Grootte"
 
-#: theme.c:1162 theme.c:1182
+#: theme.c:1236 theme.c:1256
 msgid "Application Font"
 msgstr "Toepassingen lettertype"
 
@@ -616,52 +596,51 @@ msgstr "Kon sleutelverwerker niet herstarten!\n"
 msgid "The file you selected is not executable."
 msgstr "Het door u gekozen bestand is niet uitvoerbaar."
 
-#: ownerinfo.c:197
-msgid "<b>Information about  the Owner</b>"
-msgstr "<b>Informatie over  de Eigenaar</b>"
+#: ownerinfo.c:199
+msgid "Information about the Owner"
+msgstr "Informatie over de Eigenaar"
 
-#: ownerinfo.c:202
+#: ownerinfo.c:207
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Alleen gebruiker 'root' mag deze informatie wijzigen"
 
-#: ownerinfo.c:236
+#: ownerinfo.c:241
 msgid "E-Mail:"
 msgstr "E-mail:"
 
-#: ownerinfo.c:251
+#: ownerinfo.c:256
 msgid "Phone:"
 msgstr "Telefoon:"
 
-#: ownerinfo.c:266
+#: ownerinfo.c:271
 msgid "Address:"
 msgstr "Adres:"
 
-#: ownerinfo.c:292
+#: ownerinfo.c:297
 msgid "Photofile:"
 msgstr "Fotobestand:"
 
-#: login-setup.c:130
+#: login-setup.c:131
 msgid "Some or all of these settings can only be changed by the user 'root'."
 msgstr "Sommige of al deze instellingen kunnen alleen door gebruiker 'root' worden gewijzigd."
 
-#. TRANSLATORS: Please ignore the tags <>
-#: login-setup.c:153
-msgid "<b>General</b>"
-msgstr "<b>Algemeen</b>"
+#: login-setup.c:154 gpe-admin.c:86
+msgid "General"
+msgstr "Algemeen"
 
-#: login-setup.c:168
+#: login-setup.c:171
 msgid "Show owner information at login."
 msgstr "Eigenaarsinformatie weergeven bij inloggen."
 
-#: login-setup.c:170
+#: login-setup.c:173
 msgid "Use background image for login screen."
 msgstr "Achtergrondafbeelding gebruiken voor inlogscherm."
 
-#: login-setup.c:172
+#: login-setup.c:175
 msgid "Lock display on suspend."
 msgstr "Beeldscherm blokkeren bij slaapmodus"
 
-#: login-setup.c:185
+#: login-setup.c:188
 msgid "Image:"
 msgstr "Afbeelding:"
 
@@ -697,7 +676,7 @@ msgstr "Auto dimmen niveau"
 msgid "Auto sleep advanced controls"
 msgstr "Auto-slapen geavanceerde mogelijkheden"
 
-#: sleep/interface.c:164 sysinfo.c:490
+#: sleep/interface.c:164 sysinfo.c:491
 msgid "CPU"
 msgstr "Processor"
 
@@ -929,128 +908,128 @@ msgstr "Baud snelheid"
 msgid "Serial Port"
 msgstr "Seriële poort"
 
-#: cardinfo.c:104
+#: cardinfo.c:105
 msgid "/_Card"
 msgstr "/_Kaart"
 
-#: cardinfo.c:105
+#: cardinfo.c:106
 msgid "/Card/_Insert"
 msgstr "/Kaart/_Invoeren"
 
-#: cardinfo.c:106
+#: cardinfo.c:107
 msgid "/Card/_Eject"
 msgstr "/Kaart/_Uitwerpen"
 
-#: cardinfo.c:107
+#: cardinfo.c:108
 msgid "/Card/_Suspend"
 msgstr "/Kaart/_Slaapstand"
 
-#: cardinfo.c:108
+#: cardinfo.c:109
 msgid "/Card/_Resume"
 msgstr "/Kaart/_Hervatten"
 
-#: cardinfo.c:109
+#: cardinfo.c:110
 msgid "/Card/_Reset"
 msgstr "/Kaart/_Opnieuw instellen"
 
-#: cardinfo.c:110
+#: cardinfo.c:111
 msgid "/Card/s1"
 msgstr "/Kaart/s1"
 
-#: cardinfo.c:111
+#: cardinfo.c:112
 msgid "/Card/_Assign Driver"
 msgstr "/Kaart/Stuurprogramma _toewijzen"
 
-#: cardinfo.c:112
+#: cardinfo.c:113
 msgid "/Card/s2"
 msgstr "/Kaart/s2"
 
-#: cardinfo.c:113
+#: cardinfo.c:114
 msgid "/Card/_Close"
 msgstr "/Kaart/_Close"
 
-#: cardinfo.c:114
+#: cardinfo.c:115
 msgid "/_Help"
 msgstr "/_Hulp"
 
-#: cardinfo.c:115
+#: cardinfo.c:116
 msgid "/_Help/Index"
 msgstr "/_Hulp/Inhoudsopgave"
 
-#: cardinfo.c:116
+#: cardinfo.c:117
 msgid "/_Help/About"
 msgstr "/_Hulp/Over"
 
-#: cardinfo.c:176 cardinfo.c:864
+#: cardinfo.c:177 cardinfo.c:865
 msgid "card not recognized"
 msgstr "kaart niet herkend"
 
-#: cardinfo.c:278 cardinfo.c:349
+#: cardinfo.c:279 cardinfo.c:350
 msgid "Could not write to temporal config file."
 msgstr "Kon niet schrijven naar tijdelijk config bestand."
 
-#: cardinfo.c:555
+#: cardinfo.c:556
 msgid "Could not open pidfile:"
 msgstr "Kon pidbestand niet openen:"
 
-#: cardinfo.c:561
+#: cardinfo.c:562
 msgid "Could not read pidfile"
 msgstr "Kon pidbestand niet lezen"
 
-#: cardinfo.c:565
+#: cardinfo.c:566
 msgid "Could not signal cardmgr:"
 msgstr "Kon cardmgr niet bereiken:"
 
-#: cardinfo.c:640
+#: cardinfo.c:641
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf moet setuid root zijn om de cardinfo mogelijkheid te gebruiken."
 
-#: cardinfo.c:659
+#: cardinfo.c:660
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Geen PCMCIA stuurprogramma in '/proc/devices'"
 
-#: cardinfo.c:662
+#: cardinfo.c:663
 msgid "Could not open '/proc/devices'"
 msgstr "Kon '/proc/devices' niet openen"
 
-#: cardinfo.c:674
+#: cardinfo.c:675
 msgid "No sockets found\n"
 msgstr "Geen sockets gevonden\n"
 
-#: cardinfo.c:683
+#: cardinfo.c:684
 msgid "Card Services release does not match!"
 msgstr "Kaartvoorzieningen versie komt niet overeen!"
 
-#: cardinfo.c:688
+#: cardinfo.c:689
 msgid "Could not get CS revision info!\n"
 msgstr "Kon CS revisie info niet verkrijgen!\n"
 
-#: cardinfo.c:851
+#: cardinfo.c:852
 msgid "flock(stabfile) failed"
 msgstr "flock(stabbestand) mislukt"
 
-#: cardinfo.c:870
+#: cardinfo.c:871
 #, c-format
 msgid "no driver loaded"
 msgstr "geen stuurprogramma geladen"
 
-#: cardinfo.c:979
+#: cardinfo.c:980
 msgid "ready"
 msgstr "gereed"
 
-#: cardinfo.c:997
+#: cardinfo.c:998
 msgid "not ready"
 msgstr "niet gereed"
 
-#: cardinfo.c:1012
+#: cardinfo.c:1013
 msgid "suspended"
 msgstr "in slaapmodus"
 
-#: cardinfo.c:1204
+#: cardinfo.c:1205
 msgid "Assign Driver"
 msgstr "Stuurprogramma toewijzen"
 
-#: cardinfo.c:1213
+#: cardinfo.c:1214
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1060,59 +1039,59 @@ msgstr ""
 "toewijzing voor een PCMCIA- of CF-kaart\n"
 "selecteren of wijzigen."
 
-#: cardinfo.c:1223
+#: cardinfo.c:1224
 msgid "Your current card identifies itself as:"
 msgstr "Uw huidige kaart identificeert zichzelf als:"
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Manuf. Id"
 msgstr "Maker id"
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Class"
 msgstr "Klasse"
 
-#: cardinfo.c:1341 cardinfo.c:1354
+#: cardinfo.c:1342 cardinfo.c:1355
 msgid "PC/CF card socket information."
 msgstr "PC/CF-kaart socket informatie."
 
-#: cardinfo.c:1349
+#: cardinfo.c:1350
 msgid "Socket"
 msgstr "Socket"
 
-#: cardinfo.c:1380
+#: cardinfo.c:1381
 msgid "Information for socket"
 msgstr "Informatie over socket"
 
-#: cardinfo.c:1389
+#: cardinfo.c:1390
 msgid "State:"
 msgstr "Status:"
 
-#: cardinfo.c:1390
+#: cardinfo.c:1391
 msgid "Device:"
 msgstr "Apparaat:"
 
-#: cardinfo.c:1391
+#: cardinfo.c:1392
 msgid "Driver:"
 msgstr "Stuurprogramma:"
 
-#: cardinfo.c:1392
+#: cardinfo.c:1393
 msgid "Type:"
 msgstr "Soort:"
 
-#: cardinfo.c:1393
+#: cardinfo.c:1394
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1394
+#: cardinfo.c:1395
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1401
+#: cardinfo.c:1402
 msgid "Flags:"
 msgstr "Opties:"
 
-#: cardinfo.c:1418
+#: cardinfo.c:1419
 msgid "PCMCIA initialisation failed"
 msgstr "PCMCIA initialisatie mislukt"
 
@@ -1405,7 +1384,7 @@ msgid "Free memory"
 msgstr "Vrij geheugen"
 
 #: storage.c:186 storage.c:193 storage.c:339 storage.c:350 storage.c:455
-#: storage.c:468 sysinfo.c:499 sysinfo.c:508
+#: storage.c:468 sysinfo.c:500 sysinfo.c:509
 msgid "MB"
 msgstr "MB"
 
@@ -1566,51 +1545,56 @@ msgstr "Systeeminformatie"
 msgid "Version"
 msgstr "Versie"
 
-#: sysinfo.c:430
+#. TRANSLATORS: "Familiar" is the name of the linux disrtribution.
+#: sysinfo.c:431
 msgid "Familiar Version"
 msgstr "Familiar-versie"
 
-#: sysinfo.c:455
+#: sysinfo.c:456
 msgid "System"
 msgstr "Systeem"
 
-#: sysinfo.c:464
+#: sysinfo.c:465
 msgid "Device information"
 msgstr "Apparaat informatie"
 
-#: sysinfo.c:476
+#: sysinfo.c:477
 msgid "Device"
 msgstr "Apparaat"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:499
+#: sysinfo.c:500
 msgid "RAM"
 msgstr "RAM"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:508
+#: sysinfo.c:509
 msgid "Flash"
 msgstr "Flash"
 
-#: sysinfo.c:515
+#: sysinfo.c:516
 msgid "Hardware"
 msgstr "Hardware"
 
-#: sysinfo.c:520
+#: sysinfo.c:521
 msgid "Battery"
 msgstr "Batterij"
 
-#: sysinfo.c:525
+#: sysinfo.c:526
 msgid "Storage"
 msgstr "Opslag"
 
-#: sysinfo.c:530
+#: sysinfo.c:531
 msgid "Networks"
 msgstr "Netwerken"
 
-#: sysinfo.c:535
+#: sysinfo.c:536
 msgid "Syslog"
 msgstr "Syslog"
+
+#: gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr "Configuratiescherm"
 
 #: gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
@@ -1697,8 +1681,8 @@ msgid "Setup Date and Time"
 msgstr "Datum en tijd instellen"
 
 #: gpe-conf-users.desktop.in.h:1
-msgid "Manage local users "
-msgstr "Lokale gebruikers beheren "
+msgid "Manage local users"
+msgstr "Lokale gebruikers beheren"
 
 #: gpe-conf-users.desktop.in.h:2
 msgid "User Manager"

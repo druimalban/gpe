@@ -367,13 +367,13 @@ void set_brightness (int brightness)
 		integral_set_level(brightness);
 	break;
 	case P_SIMPAD_NEW:
-		return simpad_new_set_level(brightness);
+		simpad_new_set_level(brightness);
 	break;
 	case P_SIMPAD:
-		return simpad_set_level(brightness);
+		simpad_set_level(brightness);
 	break;
 	case P_GENERIC:
-		return generic_set_level(brightness);
+		generic_set_level(brightness);
 	break;
 	default:
 	break;

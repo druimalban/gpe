@@ -1,3 +1,9 @@
+
+2004-08-05	Florian Boor  	<florian.boor@kernelconcepts.de>
+ 
+	* Released Version 0.1.12
+	* brightness.c: Minor bugfix.
+
 2004-08-04	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	brightness.c: Merged in code from minilite to support generic and
