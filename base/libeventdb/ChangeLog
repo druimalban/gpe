@@ -1,3 +1,7 @@
+2004-03-06  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.14 released.
+
 2004-03-05  Philip Blundell  <philb@gnu.org>
 
 	* event-db.c (event_db_write): Only write out description and
