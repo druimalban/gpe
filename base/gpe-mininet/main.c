@@ -25,13 +25,9 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
-#include <gpe/gpe-iconlist.h>
 #include <gpe/tray.h>
 #include <gpe/popup.h>
 #include <gpe/spacing.h>
@@ -40,7 +36,6 @@
 
 #define _(x) gettext(x)
 
-#define PIXMAP_SIZE  GTK_ICON_SIZE_DIALOG
 #define BIN_INFO PREFIX "/bin/gpe-info"
 #define BIN_CONFIG PREFIX "/bin/gpe-conf"
 #define PARAM_INFO "network"
@@ -84,11 +79,20 @@ net_get_status()
 }
 
 
-static void
+static gboolean
+remove_dock_message (guint id)
+{
+	gpe_system_tray_cancel_message (dock_window->window, id);
+	return FALSE;
+}
+
+
+static gboolean
 update_netstatus (void)
 {
 	GdkBitmap *bitmap;
 	gboolean oldstatus = net_is_on;
+	guint msg_id;
 	
 	net_is_on = net_get_status();
 	
@@ -105,14 +109,23 @@ update_netstatus (void)
 					   &bitmap, 128);
 		gtk_widget_shape_combine_mask (dock_window, bitmap, 0, 0);
 		gdk_bitmap_unref (bitmap);
+		msg_id = gpe_system_tray_send_message (dock_window->window, 
+			net_is_on ? _("Network connection established.") 
+				: _("Network connection lost.")
+			, 0);
+		g_timeout_add (10000, (GSourceFunc) remove_dock_message,
+		       (gpointer) msg_id);
 	}
+	return TRUE;
 }
+
 
 static void
 app_shutdown ()
 {
 	gtk_main_quit ();
 }
+
 
 static void
 do_network_info (void)
@@ -158,22 +171,6 @@ sigterm_handler (int sig)
 	app_shutdown ();
 }
 
-static void
-cancel_dock_message (guint id)
-{
-	gdk_threads_enter ();
-	gpe_system_tray_cancel_message (dock_window->window, id);
-	gdk_threads_leave ();
-}
-
-
-void
-schedule_message_delete (guint id, guint time)
-{
-	g_timeout_add (time, (GSourceFunc) cancel_dock_message,
-		       (gpointer) id);
-}
-
 
 static void
 clicked (GtkWidget * w, GdkEventButton * ev)
@@ -193,9 +190,6 @@ main (int argc, char *argv[])
 	GtkWidget *menu_config;
 	GtkWidget *menu_info;
 	GtkTooltips *tooltips;
-
-	g_thread_init (NULL);
-	gdk_threads_init ();
 
 	if (gpe_application_init (&argc, &argv) == FALSE)
 		exit (1);
@@ -276,9 +270,7 @@ main (int argc, char *argv[])
 
 	gtk_timeout_add (2000, (GtkFunction) update_netstatus, NULL);
 
-	gdk_threads_enter ();
 	gtk_main ();
-	gdk_threads_leave ();
 	
 	exit (0);
 }
