@@ -1,5 +1,7 @@
 2003-02-11  Philip Blundell  <philb@gnu.org>
 
+	* X11/Xsession-gpe.d/25dotfiles: Use stock "yes" and "no" buttons.
+
 	* X11/Xdefaults: New file.
 	* Makefile (install-scripts): Ship it.
 
