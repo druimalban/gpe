@@ -130,10 +130,11 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   
   gtk_widget_set_usize (window, 240, 320);
 
-  gtk_widget_set_usize (state, -1, state->style->font->ascent * 2);
+  gtk_widget_set_usize (state, -1, state->style->font->ascent + 
+			state->style->font->descent + 4);
 
   gtk_box_pack_start (GTK_BOX (duebox), t->duetoggle, FALSE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (duebox), t->duedate, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (duebox), t->duedate, TRUE, TRUE, 1);
 
   gtk_signal_connect (GTK_OBJECT (t->duetoggle), "clicked",
 		      GTK_SIGNAL_FUNC (due_toggle_clicked), t);
@@ -153,11 +154,11 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   gtk_box_pack_start (GTK_BOX (hbox_summary), label_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (hbox_summary), entry_summary, TRUE, TRUE, 2);
 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, TRUE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), duebox, TRUE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), state, TRUE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), buttonbox, TRUE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
 
   gtk_text_set_editable (GTK_TEXT (text), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
