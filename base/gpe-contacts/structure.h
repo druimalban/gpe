@@ -33,7 +33,7 @@ struct edit_thing
 
 typedef struct edit_thing *edit_thing_t;
 
-extern void edit_structure (void);
+extern GtkWidget *edit_structure (void);
 extern GtkWidget *edit_window (void);
 
 extern void print_structure (FILE *);

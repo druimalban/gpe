@@ -17,8 +17,12 @@
 #include "interface.h"
 #include "support.h"
 #include "structure.h"
+#include "pixmaps.h"
 
 static GSList *edit_pages;
+
+void structure_add_clicked (GtkButton       *button,
+			    gpointer         user_data);
 
 static void
 run_list (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
@@ -53,15 +57,39 @@ run_list (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
     }
 }
 
-void
+GtkWidget *
 edit_structure (void)
 {
-  GtkWidget *w = create_structure ();
-  GtkWidget *tree = lookup_widget (w, "ctree1");
+  GtkWidget *tree = gtk_ctree_new (2, 0);
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
+  struct pix *p;
+  GtkWidget *pw;
+
+  gtk_widget_show (vbox);
+  gtk_widget_show (scrolled);
+  gtk_widget_show (tree);
+  gtk_widget_show (toolbar);
+
+  p = find_pixmap ("new");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
+			   "New Contact", "New field", 
+			   pw, structure_add_clicked, tree);
+
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
+
+  gtk_container_add (GTK_CONTAINER (scrolled), tree);
+  gtk_clist_set_column_width (GTK_CLIST (tree), 0, 80);
+  gtk_clist_set_column_width (GTK_CLIST (tree), 1, 80);
+  gtk_clist_column_titles_hide (GTK_CLIST (tree));
 
   run_list (GTK_CTREE (tree), edit_pages, NULL);
 
-  gtk_widget_show (w);
+  return vbox;
 }
 
 edit_thing_t
@@ -302,6 +330,8 @@ edit_window (void)
 {
   GtkWidget *w = create_edit ();
   GtkWidget *book = lookup_widget (w, "notebook2");
+  GtkWidget *displaylabel = gtk_label_new ("Display");
+  GtkWidget *displayvbox = gtk_vbox_new (FALSE, 0);
   GSList *page;
 
   for (page = edit_pages; page; page = page->next)
@@ -318,6 +348,11 @@ edit_window (void)
       gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
     }
 
+  gtk_widget_show (displayvbox);
+  gtk_widget_show (displaylabel);
+  gtk_notebook_append_page (GTK_NOTEBOOK (book), displayvbox, 
+			    displaylabel);
+      
   return w;
 }
 
