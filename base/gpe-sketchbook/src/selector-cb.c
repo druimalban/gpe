@@ -25,8 +25,8 @@
 #include "files.h"
 #include "sketchpad.h"
 
-#include "about.h"
-#include "question.h"
+#include "gpe/about.h"
+#include "gpe/question.h"
 
 
 void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show){

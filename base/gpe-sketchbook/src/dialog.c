@@ -10,10 +10,9 @@
 #include <gtk/gtk.h>
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include "pixmaps.h"
-#include "render.h"
-
-#include "picturebutton.h"
+#include "gpe/pixmaps.h"
+#include "gpe/render.h"
+#include "gpe/picturebutton.h"
 
 #define _(_x) (_x) //gettext(_x)
 

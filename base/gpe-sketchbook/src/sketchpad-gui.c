@@ -22,8 +22,8 @@
 #include "sketchpad-gui.h"
 #include "sketchpad-cb.h"
 
-#include "pixmaps.h"
-#include "render.h"
+#include "gpe/pixmaps.h"
+#include "gpe/render.h"
 
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height);
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window);

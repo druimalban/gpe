@@ -23,8 +23,8 @@
 #include "selector.h"
 
 //gpe libs
-#include "pixmaps.h"
-#include "render.h"
+#include "gpe/pixmaps.h"
+#include "gpe/render.h"
 
 
 GtkWidget * create_window_selector(){

@@ -18,8 +18,8 @@
 #include <gtk/gtk.h>
 
 //--GPE libs
-#include "init.h"
-#include "pixmaps.h"
+#include "gpe/init.h"
+#include "gpe/pixmaps.h"
 
 //--own headers
 #include "gpe-sketchbook.h"
