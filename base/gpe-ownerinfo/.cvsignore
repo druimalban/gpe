@@ -3,3 +3,6 @@
 *.ipk.asc
 *.ipk.upload.html
 semantic.cache
+gpe-ownerinfo
+translation-ipkgs.txt
+.xvpics
