@@ -18,6 +18,10 @@ if [ -e /dev/touchscreen/0 ]; then
 chown $USER /dev/touchscreen/0
 fi
 
+if [ -e /dev/misc/buzzer ]; then
+chown $USER /dev/misc/buzzer
+fi
+
 mkdir -p /mnt/ramfs/home/$USER
 chown $USER /mnt/ramfs/home/$USER
 
