@@ -10,7 +10,7 @@
 #define GPE_OWNERINFO_DONTSHOW_FILE "/etc/gpe/gpe-ownerinfo.dontshow"
 #define GPE_LOGIN_BG_LINKED_FILE    "/etc/gpe/gpe-login-bg.png"
 #define GPE_LOGIN_BG_DONTSHOW_FILE  "/etc/gpe/gpe-login-bg.dontshow"
-#define GPE_LOGIN_LOCK_SCRIPT "/etc/suspend-scripts/S98lock-display"
+#define GPE_LOGIN_LOCK_SCRIPT "/etc/apm/resume.d/S98lock-display"
 
 GtkWidget *Login_Setup_Build_Objects();
 void Login_Setup_Free_Objects();

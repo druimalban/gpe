@@ -1,3 +1,7 @@
+2004-09-06	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* login-setup.h: Updated path to latest standard.
+
 2004-09-02	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
 	* sysinfo.c: Quick hack to fix reporting of wireless devices.
