@@ -384,7 +384,7 @@ build_ops (GtkWidget *table)
       for (x = 0; x < 2; x++)
 	{
 	  int n = x + (y * 2);
-	  make_button (table, op_buttons[n].str, (x * 2) + 6, y, op_buttons[n].func, op_buttons[n].arg, 2);
+	  make_button (table, op_buttons[n].str, x + 6, y, op_buttons[n].func, op_buttons[n].arg, 1);
 	}
     }
 }
@@ -444,13 +444,6 @@ main (int argc, char *argv[])
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
   display = gtk_text_view_new ();
-  gtk_widget_show (display);
-  gtk_text_view_set_editable (GTK_TEXT_VIEW (display), FALSE);
-  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (display), GTK_WRAP_WORD);
-  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (display), FALSE);
-  gtk_text_view_set_left_margin (GTK_TEXT_VIEW (display), 10);
-  gtk_text_view_set_right_margin (GTK_TEXT_VIEW (display), 10);
-  display_init (display);
   gtk_container_set_border_width (GTK_CONTAINER (window), 2);
   gtk_box_pack_start (GTK_BOX (vbox), display, FALSE, FALSE, 2);
   table = gtk_table_new (4, 8, TRUE);
@@ -498,6 +491,14 @@ main (int argc, char *argv[])
   gtk_widget_set_style (window, black_style);
 
   gtk_widget_show (window);
+
+  gtk_widget_show (display);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (display), FALSE);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (display), GTK_WRAP_WORD);
+  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (display), FALSE);
+  gtk_text_view_set_left_margin (GTK_TEXT_VIEW (display), 10);
+  gtk_text_view_set_right_margin (GTK_TEXT_VIEW (display), 10);
+  display_init (display);
 
   clear (TRUE);
 
