@@ -21,6 +21,7 @@
 #include "init.h"
 #include "errorbox.h"
 #include "pixmaps.h"
+#include "gtkminifilesel.h"
 
 #define _(_x) gettext (_x)
 
@@ -65,11 +66,11 @@ open_file (GtkFileSelection *selector, gpointer user_data)
   int fp;
   int pos = 0;
 
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
+  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
 
   if ( (fp = open(filename, O_RDONLY)) == -1)
   {
-    gpe_error_box ("No such file.");
+    gpe_perror_box (filename);
   }
   else
   {
@@ -81,6 +82,8 @@ open_file (GtkFileSelection *selector, gpointer user_data)
 
     gtk_editable_insert_text (GTK_EDITABLE (text_area), buffer, file_stat.st_size, &pos);
   }
+
+  gtk_widget_destroy (file_selector);
 }
 
 void
@@ -89,11 +92,11 @@ save_file (GtkFileSelection *selector, gpointer user_data)
   guint text_length;
   int fp;
 
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
+  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
 
   if ( (fp = open(filename, O_WRONLY)) == -1)
   {
-    gpe_error_box ("File not writable.");    
+    gpe_perror_box (filename);
   }
   else
   {
@@ -102,24 +105,23 @@ save_file (GtkFileSelection *selector, gpointer user_data)
     buffer = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
 
     write (fp, buffer, text_length);
+    close (fp);
+    g_free (buffer);
   }
+  gtk_widget_destroy (file_selector);
 }
 
 void
 select_open_file (void)
 {
-  file_selector = gtk_file_selection_new ("Save File ...");
+  file_selector = gtk_mini_file_selection_new ("Open File ...");
   //gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_selector), filename);
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (file_selector));
+  //gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (file_selector));
 
-  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-		      "clicked", GTK_SIGNAL_FUNC (open_file), NULL);
+  gtk_signal_connect (GTK_OBJECT (file_selector),
+		      "completed", GTK_SIGNAL_FUNC (open_file), NULL);
 
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-		             (gpointer) file_selector);
-
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
+  gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
   gtk_widget_show (file_selector);
@@ -128,17 +130,12 @@ select_open_file (void)
 void
 select_save_file (void)
 {
-  file_selector = gtk_file_selection_new ("Open File ...");
-  gtk_file_selection_hide_fileop_buttons (GTK_FILE_SELECTION (file_selector));
+  file_selector = gtk_mini_file_selection_new ("Save File ...");
 
-  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-		      "clicked", GTK_SIGNAL_FUNC (save_file), NULL);
+  gtk_signal_connect (GTK_OBJECT (file_selector),
+		      "completed", GTK_SIGNAL_FUNC (save_file), NULL);
 
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-		             (gpointer) file_selector);
-
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
+  gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
   gtk_widget_show (file_selector);
