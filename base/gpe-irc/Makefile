@@ -4,7 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 
-MEMBERS = main irc irc_input dictionary networks_config
+MEMBERS = main irc irc_input dictionary networks_config networks_config_sql
 LINGUAS = de
 
 ifeq ($(GTK2),yes)
@@ -29,7 +29,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget
+LDFLAGS += -lgpewidget -lsqlite
 
 ifeq ($(GTK2),yes)
 LDFLAGS += `pkg-config --libs gtk+-2.0`

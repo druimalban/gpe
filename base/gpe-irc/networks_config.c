@@ -18,14 +18,39 @@
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 
+#include "networks_config_sql.h"
+
 enum
 {
   COLUMN_NETWORK,
   COLUMN_EDITABLE,
+  COLUMN_SQL_NETWORK,
   NUM_COLUMNS
 };
 
+GtkTreeView *networks_config_tree_view;
 GtkListStore *networks_config_list_store;
+
+static void
+kill_widget (GtkWidget *parent, GtkWidget *widget)
+{
+  gtk_widget_destroy (widget);
+}
+
+void
+networks_config_add_from_sql ()
+{
+  GSList *iter;
+  GtkTreeIter tree_iter;
+ 
+  iter = sql_networks; 
+  while (iter)
+  {
+    gtk_list_store_append (networks_config_list_store, &tree_iter);
+    gtk_list_store_set (networks_config_list_store, &tree_iter, COLUMN_NETWORK, ((struct sql_network *) iter->data)->name, COLUMN_EDITABLE, TRUE, COLUMN_SQL_NETWORK, (gpointer) (struct sql_network *) iter->data, -1);
+    iter = iter->next;
+  }
+}
 
 void
 networks_config_network_cell_edited (GtkCellRendererText *cell, const gchar *path_string, const gchar *new_text, gpointer data)
@@ -34,27 +59,69 @@ networks_config_network_cell_edited (GtkCellRendererText *cell, const gchar *pat
   GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
   GtkTreeIter iter;
   gchar *old_text;
+  struct sql_network *network;
   
   gtk_tree_model_get_iter (model, &iter, path);
+
   gtk_tree_model_get (model, &iter, COLUMN_NETWORK, &old_text, -1);
   g_free (old_text);
+
+  gtk_tree_model_get (model, &iter, COLUMN_SQL_NETWORK, &network, -1);
+  network->name = g_strdup (new_text);
+  edit_sql_network (network);
+
   gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_NETWORK, new_text, -1);
 }
 
 void
 networks_config_new ()
 {
+  struct sql_network *network;
   GtkTreeIter iter;
 
+  network = new_sql_network ("Untitled", "", "", "");
+
   gtk_list_store_append (networks_config_list_store, &iter);
-  gtk_list_store_set (networks_config_list_store, &iter, COLUMN_NETWORK, "Untitled", COLUMN_EDITABLE, TRUE, -1);
+  gtk_list_store_set (networks_config_list_store, &iter, COLUMN_NETWORK, "Untitled", COLUMN_EDITABLE, TRUE, COLUMN_SQL_NETWORK, (gpointer) network, -1);
 }
 
 void
-networks_config_edit_network ()
+networks_config_delete ()
 {
-  GtkWidget *window, *table, *vbox, *hbox, *button_hbox, *label, *hsep;
-  GtkWidget *network_combo, *server_combo, *nick_entry, *real_name_entry, *password_entry;
+  GtkTreeSelection *selec;
+  GtkTreeIter iter;
+  struct sql_network *network;
+  
+  selec = gtk_tree_view_get_selection (networks_config_tree_view);
+  if (gtk_tree_selection_get_selected (selec, NULL, &iter) == TRUE)
+  {
+    gtk_tree_model_get (GTK_TREE_MODEL (networks_config_list_store), &iter, COLUMN_SQL_NETWORK, &network, -1);
+    del_sql_network (network);
+
+    gtk_list_store_remove (networks_config_list_store, &iter);
+  }
+}
+
+void
+networks_config_edit ()
+{
+  GtkTreeSelection *selec;
+  GtkTreeIter iter;
+  struct sql_network *network;
+  
+  selec = gtk_tree_view_get_selection (networks_config_tree_view);
+  if (gtk_tree_selection_get_selected (selec, NULL, &iter) == TRUE)
+  {
+    gtk_tree_model_get (GTK_TREE_MODEL (networks_config_list_store), &iter, COLUMN_SQL_NETWORK, &network, -1);
+    networks_config_edit_window (network);
+  }
+}
+
+void
+networks_config_edit_window (struct sql_network *network)
+{
+  GtkWidget *window, *table, *vbox, *button_hbox, *label, *hsep;
+  GtkWidget *nick_entry, *real_name_entry, *password_entry;
   GtkWidget *connect_button, *close_button, *network_properties_button;
   GtkTreeView *tree_view;
   GtkTreeViewColumn* column;
@@ -65,10 +132,10 @@ networks_config_edit_network ()
   guint window_x = 240, window_y = 310;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (window), "IRC Client - ");
+  gtk_window_set_title (GTK_WINDOW (window), g_strdup_printf ("IRC Client - Modify %s", network->name));
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_widget_destroy), NULL);
+		      GTK_SIGNAL_FUNC (kill_widget), window);
 
   gtk_widget_realize (window);
 
@@ -153,17 +220,10 @@ networks_config_edit_network ()
 }
 
 void
-networks_config_delete ()
-{
-  gpe_error_box ("Delete item.");
-}
-
-void
 networks_config_window ()
 {
   GtkWidget *window, *vbox, *button_hbox, *hsep, *scroll;
   GtkWidget *new_button, *edit_button, *delete_button;
-  GtkTreeView *tree_view;
   GtkTreeViewColumn* column;
   GtkCellRenderer *renderer;
   GdkPixmap *pmap;
@@ -184,12 +244,12 @@ networks_config_window ()
   gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
   gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
   
-  networks_config_list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, G_TYPE_BOOLEAN);
+  networks_config_list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_POINTER);
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_network_cell_edited), GTK_TREE_MODEL (networks_config_list_store));
-  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (networks_config_list_store));
-  gtk_tree_view_insert_column_with_attributes (tree_view, -1, "Network", renderer, "text", COLUMN_NETWORK, "editable", COLUMN_EDITABLE, NULL);
-  gtk_tree_view_set_headers_visible (tree_view, TRUE);
+  networks_config_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (networks_config_list_store));
+  gtk_tree_view_insert_column_with_attributes (networks_config_tree_view, -1, "Network", renderer, "text", COLUMN_NETWORK, "editable", COLUMN_EDITABLE, NULL);
+  gtk_tree_view_set_headers_visible (networks_config_tree_view, TRUE);
 
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -203,12 +263,12 @@ networks_config_window ()
   gtk_signal_connect (GTK_OBJECT (new_button), "clicked",
     		      GTK_SIGNAL_FUNC (networks_config_new), NULL);
   gtk_signal_connect (GTK_OBJECT (edit_button), "clicked",
-    		      GTK_SIGNAL_FUNC (networks_config_edit_network), NULL);
+    		      GTK_SIGNAL_FUNC (networks_config_edit), NULL);
   gtk_signal_connect (GTK_OBJECT (delete_button), "clicked",
     		      GTK_SIGNAL_FUNC (networks_config_delete), NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
-  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (tree_view));
+  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (networks_config_tree_view));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
@@ -218,6 +278,8 @@ networks_config_window ()
 
   if (gpe_find_icon_pixmap ("properties", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
+    
+  networks_config_add_from_sql ();
 
   gtk_widget_show_all (window);
 }

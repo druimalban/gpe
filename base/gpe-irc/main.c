@@ -26,6 +26,7 @@
 #include "irc.h"
 #include "irc_input.h"
 #include "dictionary.h"
+#include "networks_config_sql.h"
 #include "networks_config.h"
 
 #define WINDOW_NAME "IRC Client"
@@ -35,6 +36,7 @@ struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "delete", "delete" },
   { "edit", "edit" },
+  { "save, "save" },
   { "properties", "properties" },
   { "preferences", "preferences" },
   { "close", "close" },
@@ -514,6 +516,9 @@ main (int argc, char *argv[])
     exit (1);
 
   if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
+  
+  if (networks_sql_start () == -1)
     exit (1);
 
   setlocale (LC_ALL, "");
