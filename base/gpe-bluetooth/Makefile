@@ -34,12 +34,14 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: $(PACKAGE) all-mo bnep-helper
+all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 bnep-helper: bnep-helper.c
+
+rfcomm-helper: rfcomm-helper.c
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -47,6 +49,8 @@ install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth
 	install -s bnep-helper $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/
 	chmod u+s $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/bnep-helper
+	install -s rfcomm-helper $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/
+	chmod u+s $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/rfcomm-helper
 	mkdir -p $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth
 	install -m 644 pixmaps/bt-on.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/bt-off.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
