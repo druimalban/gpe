@@ -1,3 +1,7 @@
+
+2004-08-24 Florian Boor <florian.boor@kernelconcepts.de>
+	Makefile: Install binary suid.
+
 2004-08-19 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Fix unterminated list causing segfault.
 	* Released V 0.0.11
