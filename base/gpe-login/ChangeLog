@@ -1,3 +1,18 @@
+2002-07-20  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c: (read_key_events): Delete.
+	(do_login): Set USER too.
+	(login_correct): New function, broken out from enter_callback.
+	(enter_lock_callback): New function.
+	(filter): Likewise.
+	(key_pressed): Delete.
+	(spawn_xkbd): New function, broken out from main.
+	(main): Add autolock mode; remove button handling.  Set override
+	redirect when going fullscreen.
+
+	* gpe-lock-display.c: New file.
+	* Makefile: Add gpe-lock-display.
+
 2002-07-19  Philip Blundell  <philb@gnu.org>
 
 	* gpe-dm.c (main): Clear the environment.

@@ -23,6 +23,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
 #include <gdk/gdkx.h>
@@ -37,7 +40,6 @@
 
 #define GPE_ICON PREFIX "/share/gpe/pixmaps/gpe-logo.png"
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login.setup"
-#define KEY_EVENTS_FILE "/etc/X11/gpe-login.buttons"
 #define PRE_SESSION "/etc/X11/gpe-login.pre-session"
 #define PASSWORD_FILE "/etc/passwd"
 #define GROUP_FILE "/etc/group"
@@ -55,79 +57,20 @@ static const char *xkbd_path = "/usr/bin/xkbd";
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
 
-struct keymap
-{
-  guint keyval;
-  const gchar *cmd;
-};
+static gboolean autolock_mode;
 
-static GSList *key_events;
+static GtkWidget *window;
+static GtkWidget *focus;
+
+static guint xkbd_xid;
+
+static Atom suspended_atom;
 
 static struct gpe_icon my_icons[] = {
   { "logo", GPE_ICON },
   { "ok", "ok" },
   { NULL, NULL }
 };
-
-static void
-read_key_events (void)
-{
-  char buffer[1024];
-  FILE *fp = fopen (KEY_EVENTS_FILE, "r");
-  if (fp)
-    {
-      while (!feof (fp))
-	{
-	  char *p, *cmd = NULL;
-	  struct keymap *k;
-	  guint keyval;
-	  if (fgets (buffer, sizeof (buffer), fp) == NULL)
-	    break;
-	  p = buffer;
-	  while (*p)
-	    {
-	      if (*p == ' ' || *p == '\t')
-		{
-		  cmd = p;
-		  *p = 0;
-		  break;
-		}
-	      p++;
-	    }
-
-	  if (cmd == NULL)
-	    continue;
-
-	  cmd++;
-
-	  keyval = gdk_keyval_from_name (buffer);
-	  
-	  if (keyval == GDK_VoidSymbol)
-	    continue;
-	  
-	  while (*cmd == ' ' || *cmd == '\t')
-	    cmd++;
-	  p = cmd;
-	  while (*p)
-	    {
-	      if (*p == '\n') 
-		*p = 0;
-	      p++;
-	    }
-
-	  if (*cmd == 0)
-	    continue;
-
-	  k = g_malloc (sizeof (struct keymap));
-	  k->cmd = g_strdup (cmd);
-	  k->keyval = keyval;
-	  
-	  key_events = g_slist_append (key_events, k);
-	}
-
-      fclose (fp);
-    }
-}
 
 static void
 cleanup_children (void)
@@ -234,6 +177,7 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 
   setenv ("SHELL", shell, 1);
   setenv ("HOME", dir, 1);
+  setenv ("USER", name, 1);
   chdir (dir);
   
   if (access (".xsession", X_OK) == 0)
@@ -243,23 +187,20 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
   _exit (1);
 }
 
-static void
-enter_callback (GtkWidget *widget, GtkWidget *entry)
+static gboolean
+login_correct (GtkWidget *entry, struct passwd **pwe_ret)
 {
   gchar *pwstr;
   struct passwd *pwe;
   struct spwd *spe;
   char *p;
 
-  if (current_username == NULL)
-    return;
-
   pwstr = gtk_entry_get_text (GTK_ENTRY (entry));
   gtk_entry_set_text (GTK_ENTRY (entry), "");
 
   pwe = getpwnam (current_username);
   if (pwe == NULL)
-    goto login_incorrect;
+    return FALSE;
 
   spe = getspnam (current_username);
   if (spe)
@@ -267,14 +208,55 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
 
   p = crypt (pwstr, pwe->pw_passwd);
   if (strcmp (p, pwe->pw_passwd))
-    goto login_incorrect;
-  
-  do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
-  gtk_main_quit ();
-  return;
+    return FALSE;
 
- login_incorrect:
-  gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
+  if (pwe_ret)
+    *pwe_ret = pwe;
+
+  return TRUE;
+}
+
+static void
+enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
+{
+  if (login_correct (entry, NULL))
+    gtk_widget_hide (window);
+  else
+    gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
+}
+
+static GdkFilterReturn
+filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+{
+  XEvent *xev = (XEvent *)xevp;
+  
+  if (xev->type == PropertyNotify)
+    {
+      if (xev->xproperty.atom == suspended_atom)
+	{
+	  gtk_widget_show_all (window);
+	  gtk_widget_grab_focus (focus);
+	}
+    }
+
+  return GDK_FILTER_CONTINUE;
+}
+
+static void
+enter_callback (GtkWidget *widget, GtkWidget *entry)
+{
+  struct passwd *pwe;
+
+  if (current_username == NULL)
+    return;
+
+  if (login_correct (entry, &pwe))
+    {
+      do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
+      gtk_main_quit ();
+    }
+  else
+    gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
 }
 
 static void
@@ -374,43 +356,67 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   gtk_main_quit ();
 }
 
-static gboolean
-key_pressed (GtkWidget *widget,
-	     GdkEventKey *event,
-	     gpointer user_data)
+static GtkWidget *
+spawn_xkbd (void)
 {
-  GSList *iter;
-  for (iter = key_events; iter; iter = iter->next)
+  GtkWidget *socket = NULL;
+  int fd[2];
+
+  socket = gtk_socket_new ();
+  pipe (fd);
+  kbd_pid = fork ();
+  if (kbd_pid == 0)
     {
-      struct keymap *k = iter->data;
-      if (k->keyval == event->keyval)
-	{
-	  pid_t cpid = fork ();
-	  if (cpid == 0)
-	    {
-	      system (k->cmd);
-	      _exit (0);
-	    }
-	  return TRUE;
-	}
+      close (fd[0]);
+      if (dup2 (fd[1], 1) < 0)
+	perror ("dup2");
+      close (fd[1]);
+      if (fcntl (1, F_SETFD, 0))
+	perror ("fcntl");
+      execl (xkbd_path, xkbd_path, "-xid", NULL);
+      perror (xkbd_path);
+      _exit (1);
     }
-  return FALSE;
+  
+  close (fd[1]);
+  
+  {
+    char buf[256];
+    char c;
+    int a = 0;
+    size_t n;
+    
+    do {
+      n = read (fd[0], &c, 1);
+      if (n)
+	{
+	  buf[a++] = c;
+	}
+    } while (n && (c != 10) && (a < (sizeof (buf) - 1)));
+    
+    if (a)
+      {
+	buf[a] = 0;
+	xkbd_xid = atoi (buf);
+      }
+  }
+
+  return socket;
 }
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *window;
   GtkWidget *option, *menu;
   GtkWidget *vbox, *hbox, *vbox2;
-  GtkWidget *next_button;
+  GtkWidget *ok_button;
   GtkWidget *frame;
   GtkWidget *logo = NULL;
-  GtkWidget *focus;
-  GtkWidget *socket = NULL;
-  int fd[2];
-  guint xkbd_xid = 0;
   GdkPixbuf *icon;
+  GtkWidget *socket = NULL;
+  gboolean fullscreen;
+  Display *dpy;
+  Window root;
   
   gtk_set_locale ();
   gtk_init (&argc, &argv);
@@ -420,103 +426,89 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
+  if (argc == 2 && !strcmp (argv[1], "-autolock"))
+    autolock_mode = TRUE;
+
   signal (SIGCHLD, SIG_IGN);
 
   gpe_load_icons (my_icons);
 
-  read_key_events ();
-
-  if (access (GPE_LOGIN_SETUP, X_OK) == 0)
+  if (! autolock_mode)
     {
-      setup_pid = fork ();
-      switch (setup_pid)
+      if (access (GPE_LOGIN_SETUP, X_OK) == 0)
 	{
-	case 0:
-	  {
-	    pid_t mypid = getpid ();
-	    setpgid (0, mypid);
-	    system (GPE_LOGIN_SETUP);
-	    _exit (0);
-	  }
-
-	case -1:
-	  perror ("fork");
-	  break;
-
-	default:
-	  waitpid (setup_pid, NULL, 0);
-	  break;
+	  setup_pid = fork ();
+	  switch (setup_pid)
+	    {
+	    case 0:
+	      {
+		pid_t mypid = getpid ();
+		setpgid (0, mypid);
+		system (GPE_LOGIN_SETUP);
+		_exit (0);
+	      }
+	      
+	    case -1:
+	      perror ("fork");
+	      break;
+	      
+	    default:
+	      waitpid (setup_pid, NULL, 0);
+	      break;
+	    }
 	}
+      
+      signal (SIGINT, cleanup_children_and_exit);
+      signal (SIGQUIT, cleanup_children_and_exit);
+      signal (SIGTERM, cleanup_children_and_exit);
     }
-
-  signal (SIGINT, cleanup_children_and_exit);
-  signal (SIGQUIT, cleanup_children_and_exit);
-  signal (SIGTERM, cleanup_children_and_exit);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
   if (access (xkbd_path, X_OK) == 0)
-    {
-      socket = gtk_socket_new ();
-      pipe (fd);
-      kbd_pid = fork ();
-      if (kbd_pid == 0)
-	{
-	  close (fd[0]);
-	  if (dup2 (fd[1], 1) < 0)
-	    perror ("dup2");
-	  close (fd[1]);
-	  if (fcntl (1, F_SETFD, 0))
-	    perror ("fcntl");
-	  execl (xkbd_path, xkbd_path, "-xid", NULL);
-	  perror (xkbd_path);
-	  _exit (1);
-	}
-
-      close (fd[1]);
-      
-      {
-	char buf[256];
-	char c;
-	int a = 0;
-	size_t n;
-	
-	do {
-	  n = read (fd[0], &c, 1);
-	  if (n)
-	    {
-	      buf[a++] = c;
-	    }
-	} while (n && (c != 10) && (a < (sizeof (buf) - 1)));
-	
-	if (a)
-	  {
-	    buf[a] = 0;
-	    xkbd_xid = atoi (buf);
-	  }
-      }
-  }
+    socket = spawn_xkbd ();
 
   gtk_widget_realize (window);
 
-  {
-    /* If no window manager is running, set size to full-screen */
-    /*
-      <mallum> pb: request the 'SubstructureRedirect' event mask on the root window
-      <mallum> pb: if that fails, theres already a window manager running
-    */
-    GdkEventMask ev = gdk_window_get_events (window->window);
-    int r;
-    gdk_error_trap_push ();
-    XSelectInput (GDK_WINDOW_XDISPLAY (window->window),
-			  RootWindow (GDK_WINDOW_XDISPLAY (window->window), 0),
-		  SubstructureRedirectMask);
-    gdk_flush ();
-    r = gdk_error_trap_pop ();
-    gdk_window_set_events (window->window, ev);
-    if (r == 0)
+  dpy = GDK_DISPLAY ();
+  root = GDK_ROOT_WINDOW ();
+
+  if (autolock_mode)
+    {
+      suspended_atom = XInternAtom (dpy, "GPE_DISPLAY_LOCKED", 0);
+      fullscreen = TRUE;
+
+      current_username = getenv ("USER");
+      if (current_username == NULL)
+	{
+	  fprintf (stderr, "USER not set\n");
+	  exit (1);
+	}
+    }
+  else
+    {
+      /* If no window manager is running, set size to full-screen */
+      /*
+	<mallum> pb: request the 'SubstructureRedirect' event mask on the root window
+	<mallum> pb: if that fails, theres already a window manager running
+      */
+      GdkEventMask ev = gdk_window_get_events (window->window);
+      int r;
+      gdk_error_trap_push ();
+      XSelectInput (GDK_WINDOW_XDISPLAY (window->window),
+		    RootWindow (GDK_WINDOW_XDISPLAY (window->window), 0),
+		    SubstructureRedirectMask);
+      gdk_flush ();
+      r = gdk_error_trap_pop ();
+      gdk_window_set_events (window->window, ev);
+      fullscreen = (r == 0) ? TRUE : FALSE;
+    }
+
+  if (fullscreen)
+    {
       gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
-  }
+      gdk_window_set_override_redirect (window->window, TRUE);
+    }
     
   icon = gpe_find_icon ("logo");
   if (icon)
@@ -525,7 +517,7 @@ main (int argc, char *argv[])
   menu = gtk_menu_new ();
   slurp_passwd (menu);
 
-  next_button = gpe_picture_button (window->style, _("OK"), "ok");
+  ok_button = gpe_picture_button (window->style, _("OK"), "ok");
 
   vbox2 = gtk_vbox_new (FALSE, 0);
 
@@ -534,20 +526,29 @@ main (int argc, char *argv[])
 
   hbox = gtk_hbox_new (FALSE, 0);
 
-  if (have_users)
+  if (autolock_mode || have_users)
     {
       GtkWidget *hbox_user, *hbox_password;
       GtkWidget *login_label, *password_label;
       GtkWidget *entry;
+      GtkWidget *socket = NULL;
 
-      frame = gtk_frame_new (_("Log in"));
+      frame = gtk_frame_new (autolock_mode ? _("Screen locked") : _("Log in"));
 
       login_label = gtk_label_new (_("Username"));
       password_label = gtk_label_new (_("Password"));
       label_result = gtk_label_new ("");
 
-      option = gtk_option_menu_new ();
-      gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
+      if (autolock_mode)
+	{
+	  option = gtk_label_new (current_username);
+	}
+      else
+	{
+	  option = gtk_option_menu_new ();
+	  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
+	}
+
       entry = gtk_entry_new ();
       gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 
@@ -578,10 +579,20 @@ main (int argc, char *argv[])
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
       
-      gtk_signal_connect (GTK_OBJECT (entry), "activate",
-			 GTK_SIGNAL_FUNC (enter_callback), entry);
-      gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
-			 GTK_SIGNAL_FUNC (enter_callback), entry);
+      if (autolock_mode)
+	{
+	  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+			      GTK_SIGNAL_FUNC (enter_lock_callback), entry);
+	  gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
+			      GTK_SIGNAL_FUNC (enter_lock_callback), entry);
+	}
+      else
+	{
+	  gtk_signal_connect (GTK_OBJECT (entry), "activate",
+			      GTK_SIGNAL_FUNC (enter_callback), entry);
+	  gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
+			      GTK_SIGNAL_FUNC (enter_callback), entry);
+	}
 
       focus = entry;
     }
@@ -648,7 +659,7 @@ main (int argc, char *argv[])
 			 GTK_SIGNAL_FUNC (move_callback), entry_confirm);
       gtk_signal_connect (GTK_OBJECT (entry_confirm), "activate",
 			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
-      gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
+      gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
 			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
 
       frame = gtk_frame_new (_("New user"));
@@ -665,7 +676,7 @@ main (int argc, char *argv[])
       focus = entry_username;
     }
 
-  gtk_box_pack_end (GTK_BOX (hbox), next_button, FALSE, FALSE, 5);
+  gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 5);
       
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
@@ -675,15 +686,20 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 
   gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
-  gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
-        GTK_SIGNAL_FUNC (key_pressed), NULL);
 
-  gtk_widget_show_all (window);
+  if (autolock_mode)
+    {
+      XSelectInput (dpy, root, PropertyChangeMask);
+      gdk_window_add_filter (GDK_ROOT_PARENT (), filter, 0);
+    }
+  else
+    {
+      gtk_widget_show_all (window);
+      gtk_widget_grab_focus (focus);
+    }
 
   if (xkbd_xid && socket)
     gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
-
-  gtk_widget_grab_focus (focus);
 
   gtk_main ();
 
