@@ -10,7 +10,13 @@ ifndef DEBUG
 DEBUG = no
 endif
 
+ifndef CVSBUILD
+CVSBUILD = yes
+endif
+
+
 LINGUAS = #cs
+
 EXTRA_DESKTOPS = \
     gpe-go-9.desktop.in \
     gpe-go-13.desktop.in \
@@ -72,10 +78,6 @@ clean:
 
 
 #--include GPE generic Makefiles
-ifndef CVSBUILD
-CVSBUILD = no
-endif
-
 ifeq ($(CVSBUILD),yes)
 BUILD = ../../base/build
 else

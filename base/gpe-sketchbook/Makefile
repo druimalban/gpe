@@ -29,7 +29,7 @@ clean: clean-po
 
 #--include GPE generic Makefiles
 ifndef CVSBUILD
-CVSBUILD = no
+CVSBUILD = yes
 endif
 
 ifeq ($(CVSBUILD),yes)
