@@ -19,10 +19,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <ctype.h>
 #include "ipaq-sleep.h"
 
 #include <X11/Xlib.h>
 #include <X11/extensions/scrnsaver.h>
+
+#undef DEBUG
 
 int irqs[MAX_IRQS]; /* irqs to examine have a value of 1 */
 long v, irq_count[MAX_IRQS]; /* holds previous counters of the irq's */
@@ -38,6 +41,7 @@ int debug=0;
 int probe=1;
 double load_check=0.25;
 int X=1;
+int battery_level = 0;
 
 int apmvalue=0, no_sleep=0;
 time_t oldpidtime=0;
@@ -61,8 +65,10 @@ int init() {
   		XScreenSaverQueryExtension(dpy, &first_event, &first_error);
   		root = DefaultRootWindow(dpy);
   		info = XScreenSaverAllocInfo();
+#ifdef DEBUG
   		if (debug) 
 		  fprintf(dgfp, "X seems to be running....\nUsing display %x\n", dpy);
+#endif
 		return (0);
 	}
 }
@@ -74,61 +80,66 @@ void query_idle(Time *idleTime) {
   
 }
 
+int set_backlight (int val)
+{
+  if (val < 0)
+    return system (BL " off");
+  else
+    {
+      char command[256];
+      snprintf(command, sizeof (command), BL " %i\n", val);
+      return system(command);
+    }
+}
+
+int read_backlight (void)
+{
+  int r = 32;
+  FILE *input;
+
+  if ((input=popen(BL, "r")) != NULL)
+    {
+      char buf[32];
+      if (fgets (buf, 32, input))
+	{
+	  if (!strncmp (buf, "on ", 3))
+	    r = atoi (buf + 4);
+	  else
+	    r = -1;
+	}
+      pclose (input);
+    }
+  else
+    fprintf(stderr, "Cannot Open Stdin for bl command\n");
+
+  return r;
+}
+
 void usage () {
-	printf("\n");
-	
-	fprintf(stderr, "usage:  ipaq-sleep -[usnxcCidSh] \n automatic
-		sleep/dim daemon for the ipaq. By default the inactivity time
-		for dimming is 1 minute and sleeping is 3 minutes. The
-		program will probe for IRQs for serial communication, audio
-		output, and USB activity and checks for button and
-		touchscreen activity via X screen saver extensions. You can
-		set a CPU load threshold (defaults to 0.25), or have it
-		stay on when plugged into external power (this is on by
-		default). Select bits can be over-ridden by changing
-		/etc/ipaq-sleep.conf. All auto-sleep activity can be stopped
-		by listing \"no-sleep\" PIDs in /var/run/no-sleep/.\n	
-
-	-u (int)\t	set inactivity time for sleep (in seconds) (0 or
-	negative means do not suspend)\n
-	-o (int)\t	set inactivity time for dim (in seconds) (0 or
-	negative means do not dim)\n
-	-s	\t	sleep command (in "")	\n
-	-S	\t	save new defaults (do NOT run)\n
-	-a	\t	ignore apm status	\n
-	-n	\t	turn OFF daemon-mode	\n
-	-x	\t 	turn OFF X-mode  	\n
-	-c	\t 	turn OFF cpu-mode  	\n
-	-C (float)\t	 set custom CPU load  	 \n
-	-i (int)\t 	set custom IRQs (use with p to remove those already probed) 	\n
-	-p 	\t 	do NOT probe for IRQs  	\n
-	-d	\t	run in debug mode	\n
-	-S	\t	save these values as defaults\n
-	-h	\t	show this message  \n\n");
-
+	fprintf(stderr, "usage:  ipaq-sleep -[usnxcCidbSh]\n"
+	" -u SECONDS\t inactivity time for sleep (0/-ve: don't suspend) [default 300]\n"
+	" -o SECONDS\t inactivity time for dim (0/-ve: don't dim) [default 60]\n"
+	" -s COMMAND\t sleep command\n"
+	" -S\t\t save new defaults (do NOT run)\n"
+	" -a\t\t ignore apm status\n"
+	" -n\t\t turn OFF daemon-mode\n"
+	" -x\t\t turn OFF X-mode\n"
+	" -c\t\t turn OFF cpu-mode\n"
+	" -C LOAD\t only sleep when load is below this threshold\n"
+	" -i INT\t\t set custom IRQs (use with p to remove those already probed)\n"
+	" -p\t\t don't probe for IRQs\n"
+	" -b MINUTES\t sleep immediately when remaining run time reaches this level\n"
+#ifdef DEBUG
+	" -d\t\t run in debug mode\n"
+#endif
+	" -h\t\t show this message  \n\n");
 }
 
-/* Signal handler to reap all child processes */
-static void reap_children(int signum)
+static void do_sleep(void)
 {
-    pid_t pid;
-
-    do {
-        pid = waitpid(-1, NULL, WNOHANG);
-    } while (pid > 0);
+  if (system(sleep_command) != 0) 
+    fprintf(stderr, "%s failed\n", sleep_command);
 }
-
-/* Install the child reaper handler */
-static void install_signal_handlers(void)
-{
-    struct sigaction action;
-
-    action.sa_flags = 0;
-    sigemptyset(&action.sa_mask);
-    action.sa_handler = reap_children;
-    sigaction(SIGCHLD, &action, NULL);
-}
-
 
 void parse_command_line (int argc, char **argv) {
 	extern char *optarg;
@@ -145,52 +156,80 @@ void parse_command_line (int argc, char **argv) {
 			if (sscanf(dline,"%s = %s", func, value) == 2) {
 				if (strcmp(func, uflag)==0) {
 					sleep_idle=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "sleep_idle=%d\n", sleep_idle);
+#endif
 					if (sleep_idle>0) sleeping=1;
 					else {
+#ifdef DEBUG
 						if (debug) fprintf(dgfp, "sleeping disabled!\n");
+#endif
 						sleeping=0;
 					}
 				}
 				if (strcmp(func, oflag)==0) {
 					dim_idle=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "dim_idle=%d\n", dim_idle);
+#endif
 					if (dim_idle>0) dimming=1;
 					else {
+#ifdef DEBUG
 						if (debug) fprintf(dgfp, "dimming disabled!\n");
+#endif
 						dimming=0;
 					}
 				}
 				if (strcmp(func, aflag)==0) {
 					apm=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "apm=%d\n", apm);
+#endif
 				}
 				if (strcmp(func, cflag)==0) {
 					cpu=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "cpu=%d\n", cpu);
+#endif
 				}
 				if (strcmp(func, xflag)==0) {
 					X=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "X=%d\n", cpu);
+#endif
 				}
 				if (strcmp(func, dflag)==0) {
 					debug=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "debug=%d\n", cpu);
+#endif
 				}
 				if (strcmp(func, Cflag)==0) {
 					load_check=atof(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "load_check=%lf\n", load_check);
+#endif
 				}
 				if (strcmp(func, pflag)==0) {
 					probe=atoi(value);
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "probe=%d\n", probe);
+#endif
+				}
+				if (strcmp(func, bflag)==0) {
+					battery_level=atoi (value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "battery=%d\n", battery_level);
+#endif
 				}
 				if (strcmp(func, iflag)==0) {
 					i = atoi(value);
 					if ((i < 0) || (i >= MAX_IRQS)) 
 						fprintf(stderr, "ipaq-sleep: bad irq number %d in /etc/ipaqsleep.conf\n", i);
 					irqs[i]=1;
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "IRQ %d set\n", i);
+#endif
 				}
 			}
 		}
@@ -198,7 +237,7 @@ void parse_command_line (int argc, char **argv) {
 	}
 			
 	while (c != -1) {
-		c=getopt(argc,argv, "s:nacxpdSC:u:o:i:h");
+		c=getopt(argc,argv, "s:nacxpdSC:u:o:i:b:h");
 		switch (c) {
 			case 's':
 				sleep_command=strdup(optarg);
@@ -229,7 +268,9 @@ void parse_command_line (int argc, char **argv) {
 				sleep_idle=atoi(optarg);
 				if (sleep_idle>0) sleeping=1;
 				else {
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "sleeping disabled!\n");
+#endif
 					sleeping=0;
 				}
 				break;
@@ -237,7 +278,9 @@ void parse_command_line (int argc, char **argv) {
 				dim_idle=atoi(optarg);
 				if (dim_idle>0) dimming=1;
 				else {
+#ifdef DEBUG
 					if (debug) fprintf(dgfp, "dimming disabled!\n");
+#endif
 					dimming=0;
 				}
 				break;
@@ -246,6 +289,9 @@ void parse_command_line (int argc, char **argv) {
 				if ((i < 0) || (i >= MAX_IRQS))
 					fprintf(stderr, "ipaq-sleep: bad irq number %d\n", i);
 				irqs[atoi(optarg)]=1;
+				break;
+			case 'b':
+				battery_level = atoi(optarg);
 				break;
 			case 'S':
 				save=1;
@@ -273,7 +319,7 @@ void parse_command_line (int argc, char **argv) {
 			fprintf(f,"check_apm = %i\n", apm);
 			fprintf(f,"check_cpu = %i\n", cpu);
 			fprintf(f,"X = %i\n", X);
-			fprintf(f,"CPU_value = %lf\n", load_check);
+			fprintf(f,"CPU_value = %f\n", load_check);
 			fprintf(f,"probe_IRQs = %i\n", probe);
 			for (i=0;i<MAX_IRQS;i++) 
 				if (irqs[i]==1) fprintf(f,"IRQ = %i\n", i);
@@ -310,7 +356,9 @@ int probe_IRQs() {
 					if (irqs[i]!=1) {
 						redo=1;
 						irqs[i]=1;
+#ifdef DEBUG
 						if (debug) fprintf(dgfp,"Found a new IRQ.... %d\n", i);
+#endif
 					}
 					irq_count[i] = v;
 				}
@@ -326,7 +374,8 @@ int probe_IRQs() {
 int check_apm() {
 	char apmline[64];
 	char junk[24];
-  	
+	int runtime;
+	
 	FILE *f;
 	
 	if (apm) {
@@ -337,19 +386,33 @@ int check_apm() {
 		{
 			while(fgets(apmline,sizeof(apmline),f)) {
 				/* Find the external power "string". */
-				if ((sscanf(apmline,"%s %s %s %x %s %s %s %s %s", 
+				if ((sscanf(apmline,"%s %s %s %x %s %s %s %d %s", 
 					junk, junk, junk, &apmvalue, junk, junk,
-					junk, junk, junk)) == 9) {
+					junk, &runtime, junk)) == 9) {
 					if (apmvalue) {
+#ifdef DEBUG
 						if (debug) fprintf(dgfp,"You are on external power. NOT sleeping.\n");
+#endif
 						fclose(f);
 						return(1);
 					}
 					else {
+#ifdef DEBUG
 						if (debug) fprintf(dgfp,"You are NOT on external power. Its all good.....\n");
+#endif
+						if (runtime < battery_level)
+						  {
+#ifdef DEBUG
+						    if (debug)
+						      fprintf (dgfp, "Battery level %d below threshold, sleeping\n", runtime);
+#endif
+						    do_sleep ();
+						  }
 					}
 				}
+#ifdef DEBUG
 				else if (debug) fprintf(dgfp,"Problem checking apm status.\n");
+#endif
 			}
 			fclose(f);	    	
 		}
@@ -363,14 +426,18 @@ int check_PID() {
 	char command[60], pid_file[25];
   	struct stat pid_stat;
 
-	FILE *input, *pid_check;
+	FILE *input;
 		
 	stat(NO_SLEEP_DIR, &pid_stat);
+#ifdef DEBUG
 	if (debug) fprintf(dgfp, "Last time %i, new time %i\n", oldpidtime, pid_stat.st_mtime);  
+#endif
 	if (pid_stat.st_mtime>oldpidtime) {
 		
 		no_sleep=0;
+#ifdef DEBUG
 		if (debug) fprintf(dgfp,"The no-sleep directory has been modified\nChecking for PID locks\n");
+#endif
 		oldpidtime=pid_stat.st_mtime;
 		sprintf(command, "/bin/ls %s", NO_SLEEP);
   
@@ -380,16 +447,18 @@ int check_PID() {
   		while((fscanf(input, "%i", &PID))!=-1) {
   
    			sprintf(pid_file, "/proc/%i/cmdline", PID);
-  			if ((pid_check=fopen(pid_file, "r"))!=NULL) {
+  			if (access (pid_file, F_OK) == 0) {
+#ifdef DEBUG
 				if (debug) fprintf(dgfp,"PID lock for %d\n", PID);
+#endif
 				no_sleep=1;
-   		 		fclose(pid_check);
 			}
 			else {
-			
+#ifdef DEBUG			
 		  		if (debug) fprintf(dgfp,"Bad PID lock for process %d,removing\n", PID);
-				sprintf(command, "/bin/rm %s/%i", NO_SLEEP_DIR,PID);
-  				system(command);
+#endif
+				snprintf(command, sizeof (command), "%s/%i", NO_SLEEP_DIR,PID);
+  				unlink(command);
 			}
 		}
 		
@@ -397,7 +466,9 @@ int check_PID() {
 			
   	}
   	if (no_sleep) {
+#ifdef DEBUG
 		if (debug) fprintf(dgfp,"Still PID locked\n");
+#endif
 		return(1);
 	}
 	else return(0);
@@ -417,10 +488,14 @@ int check_cpu() {
                 else {
 			if (load>=load_check) {
 				activity=1;
+#ifdef DEBUG
 				if (debug) fprintf(dgfp,"CPU activity %f greater than %f\n", load, load_check);
+#endif
                 	}
+#ifdef DEBUG
 			else if (debug) fprintf(dgfp,"CPU load is %f lower than %f,
 				its all good...\n", load, load_check);
+#endif
 			fclose(f);
 		}
                 
@@ -435,13 +510,10 @@ void main_loop (void) {
 	int activity, i, total_unused=0, apm_active=0, old_apm=0;
 	int dimmed=0, current_bl=32;
 	int newIdle, oldIdle, lastIdle, oldTime, newTime;
-	double load=0.0;
 	char iline[64];
-	char command[60], junk[24], dim_status[3];
   	
 	Time idleTime; /* milliseconds */
         FILE *f;
-	FILE *input;
   
 	sleep_idle=sleep_idle;
 	dim_idle=1000*dim_idle;
@@ -451,20 +523,22 @@ void main_loop (void) {
 	
 	query_idle(&idleTime);
 	lastIdle=oldIdle=(int)idleTime;
+#ifdef DEBUG
 	if (debug) fprintf(dgfp,"Setting oldIdle %d.\n", oldIdle);
-			
-	sprintf(command, "/usr/bin/bl");
-  	if((input=popen(command, "r"))==NULL) fprintf(stderr, "Cannot Open Stdin for bl command\n");
- 	if (debug) fprintf(dgfp,"Current bl value is %d\n Saving this.\n", current_bl);
-	if((fscanf(input, "%s %i", dim_status, &current_bl))==-1)
-		current_bl=32;
-	
-	if (strcmp(dim_status, "off")==0) {
+#endif
+
+	current_bl = read_backlight ();
+				
+	if (current_bl < 0) {
+#ifdef DEBUG
 		if (debug) fprintf(dgfp,"Currently bl is off...did you want to mean to disable dim handling? Use -o 0\n");
+#endif
 		dimmed=1;
 	}
 	else {
+#ifdef DEBUG
 		if (debug) fprintf(dgfp,"Good the bl is on, leave everything to me!\n");
+#endif
 		dimmed=0;
 	}
 	
@@ -494,31 +568,27 @@ void main_loop (void) {
 			if ((newIdle-oldIdle)<(lastIdle-oldIdle)) {
 				activity=1;
 				oldIdle=0;
+#ifdef DEBUG
 				if (debug) fprintf(dgfp,"Recent X activity.\nNewidle=%d, oldidle=%d\n", newIdle, oldIdle);
+#endif
 				if (dimming && dimmed) {
+#ifdef DEBUG
 			  	  	if (debug) fprintf(dgfp,"Resetting bl value of %d\n",current_bl);
-			  	  	sprintf(command, "/usr/bin/bl %i\n", current_bl);
-  			  	  	system(command);
+#endif
+					set_backlight (current_bl);
 			  	 	dimmed=0;
 				}		
 						
 			}
 			
+#ifdef DEBUG
 			else if (debug) fprintf(dgfp,"No activity. Newidle=%d, oldidle=%d\n", newIdle, oldIdle);
+#endif
 			
 			if (dimming  && !dimmed && !apm_active) {
 				if ((newIdle-oldIdle)>=dim_idle) {
-					sprintf(command, "/usr/bin/bl");
-  					if((input=popen(command, "r"))==NULL) fprintf(stderr, "Cannot Open Stdin for bl command\n");
- 					if (debug) fprintf(dgfp,"Current bl value is %d\nSaving this, then Dimming.\n", current_bl);
-  					if((fscanf(input, "%s %i", junk, &current_bl))==-1)
-						current_bl=32;
-					
-					if (strcmp(dim_status, "off")==0) 
-						if (debug) fprintf(dgfp,"Currently bl is off...but I thought *I* was supposed to do that?\n");
-					
-					sprintf(command, "/usr/bin/bl off\n");
-  					system(command);
+					current_bl = read_backlight ();
+					set_backlight (-1);
 					dimmed=1;
 				}
 			}
@@ -532,9 +602,10 @@ void main_loop (void) {
 			activity=1;	
 			oldIdle=newIdle;
 			if (old_apm==0 && dimming && dimmed) {
+#ifdef DEBUG
 				if (debug) fprintf(dgfp,"Resetting bl value of %d\n",current_bl);
-			  	sprintf(command, "/usr/bin/bl %i\n", current_bl);
-  			  	system(command);
+#endif
+				set_backlight (current_bl);
 				dimmed=0;	
 			}
 		}
@@ -548,13 +619,17 @@ void main_loop (void) {
 			if (total_unused >= sleep_idle && sleeping) {
 				
 				if (check_cpu() || check_PID() || probe_IRQs()) {
+#ifdef DEBUG
 					if (debug) fprintf(dgfp,"You cannot sleep at this time! Not going to sleep....\n");
+#endif
 					total_unused=0;
 					oldIdle=newIdle;
 				}
 				else {
+#ifdef DEBUG
 					if (debug) fprintf(dgfp,"Going to sleep....\n");
-					if (system(sleep_command) != 0) fprintf(stderr, "%s failed", sleep_command);
+#endif
+					do_sleep ();
 					total_unused=0;
 				}
 			}
@@ -566,18 +641,24 @@ void main_loop (void) {
 		
 		newTime=time(NULL);
 		if (oldTime && newTime-sleep_time > oldTime +1) {
-			fprintf(stderr, "%i sec sleep; resetting timer and resetting dimmer...", (int)(newTime - oldTime));
+#ifdef DEBUG
+			if (debug)
+			  fprintf(stderr, "%i sec sleep; resetting timer and resetting dimmer...", (int)(newTime - oldTime));
+#endif
 			total_unused=0;
 			
 			query_idle(&idleTime);
 			lastIdle=oldIdle=(int)idleTime;
+#ifdef DEBUG
 			if (debug) fprintf(dgfp,"Re-setting oldIdle %d.\n", oldIdle);
+#endif
 			
 			if (dimming && dimmed) {
+#ifdef DEBUG
 			  	  if (debug) fprintf(dgfp,"Resetting bl value of %d\n",current_bl);
-			  	  sprintf(command, "/usr/bin/bl %i\n", current_bl);
-  			  	  system(command);
-			  	 dimmed=0;
+#endif
+				  set_backlight (current_bl);
+				  dimmed=0;
 			}
 		}
 		oldTime=newTime;	
@@ -594,7 +675,7 @@ int main (int argc, char **argv) {
 		exit(1);
 	}
 	
-	install_signal_handlers();
+	signal (SIGCHLD, SIG_IGN);
 	parse_command_line(argc, argv);
 	
 	if (daemonize) {
@@ -608,7 +689,9 @@ int main (int argc, char **argv) {
 	
 	while (try<10) {
 		if (checkinit) {
+#ifdef DEBUG
 			if (debug) fprintf(dgfp,"Waiting for X....\n");
+#endif
 			tmpX=0;
 			sleep(2);
 			checkinit=init();
@@ -621,8 +704,9 @@ int main (int argc, char **argv) {
 	}
 	
 	if(tmpX!=1) {
-		
+#ifdef DEBUG
 		if (debug) fprintf(dgfp, "It looks like X is not running. You might be somewhat hosed....\n");
+#endif
 		X=tmpX;
 	
 	}

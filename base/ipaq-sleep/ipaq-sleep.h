@@ -7,6 +7,7 @@
 #define NO_SLEEP_DIR "/var/run/no-sleep"
 #define NO_SLEEP "/var/run/no-sleep/ 2> /dev/null"
 #define DEFAULT_SLEEP_TIME 1
+#define BL "/usr/bin/bl"
 
 #define uflag	"auto-sleep_time"
 #define oflag	"dim_time"
@@ -17,5 +18,6 @@
 #define Cflag	"CPU_value"
 #define pflag	"probe_IRQs"
 #define iflag	"IRQ"
+#define bflag	"low_battery"
 
-char *sleep_command="/sbin/pm_helper suspend";
+const char *sleep_command="/sbin/pm_helper suspend";

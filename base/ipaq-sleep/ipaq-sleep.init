@@ -1,0 +1,20 @@
+#! /bin/sh
+ 
+case "$1" in
+  start)
+       echo -n "Starting sleep daemon: ipaq-sleep"
+       mkdir -p /var/run/no-sleep
+       start-stop-daemon --start --quiet --exec /usr/bin/ipaq-sleep >/dev/null&
+       echo "."
+       ;;
+  stop)
+       echo -n "Stopping sleep daemon: ipaq-sleep"
+       start-stop-daemon --stop --quiet --oknodo --exec /usr/bin/ipaq-sleep
+       echo "."
+       ;;
+  *)
+       echo "Usage: /etc/init.d/ipaq-sleep {start|stop}"
+       exit 1
+esac
+
+exit 0                                                                         
