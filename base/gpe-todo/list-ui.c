@@ -68,6 +68,9 @@ categories_menu (void)
   GtkWidget *menu = gtk_menu_new ();
   GSList *l;
   GtkWidget *i;
+  gboolean found;
+
+  found = FALSE;
 
   i = gtk_menu_item_new_with_label (_("All items"));
   gtk_menu_append (GTK_MENU (menu), i);
@@ -81,8 +84,16 @@ categories_menu (void)
       gtk_menu_append (GTK_MENU (menu), i);
       g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)t->id);
       gtk_widget_show (i);
+
+      if (t->id == selected_category)
+        found = TRUE;
     }
 
+  if (!found && selected_category != -1)
+    {
+      selected_category = -1;
+      refresh_items ();
+    }
   gtk_widget_show (menu);
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);

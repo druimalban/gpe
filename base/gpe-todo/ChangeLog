@@ -1,3 +1,9 @@
+2004-09-21  Phil Blundell  <pb@nexus.co.uk>
+
+	* list-ui.c (categories_menu): Apply patch from Chris Owen to
+	correctly refresh main window if currently-showing category was
+	deleted.  [Bug #1253]
+
 2004-09-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * list-ui.c (delete_completed_items): Changed type of dialog from 
