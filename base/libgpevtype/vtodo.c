@@ -2,9 +2,9 @@
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  */
 
 #include <stdio.h>
@@ -21,15 +21,17 @@
 
 struct tag_map
 {
+  GType type;
   gchar *tag;
   gchar *vc;
 };
 
 static struct tag_map map[] =
   {
-    { "summary", NULL },
-    { "description", NULL },
-    { NULL, NULL }
+    { G_TYPE_STRING, "summary", NULL },
+    { G_TYPE_STRING, "description", NULL },
+    { G_TYPE_INT, "priority", NULL },
+    { G_TYPE_NONE, NULL, NULL }
   };
 
 static gboolean
@@ -40,7 +42,12 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
     {
       if (!strcasecmp (t->tag, tag))
 	{
-	  g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, value, NULL);
+	  if (t->type == G_TYPE_STRING)
+	    g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, value, NULL);
+	  else if (t->type == G_TYPE_INT)
+	    g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, atoi (value), NULL);
+	  else
+	    abort ();
 	  return TRUE;
 	}
       t++;
@@ -91,12 +98,25 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
 
   while (t->tag)
     {
-      gchar *value;
+      if (t->type == G_TYPE_STRING)
+	{
+	  gchar *value;
 
-      g_object_get (G_OBJECT (vtodo), t->vc ? t->vc : t->tag, &value, NULL);
+	  g_object_get (G_OBJECT (vtodo), t->vc ? t->vc : t->tag, &value, NULL);
 
-      if (value)
-	data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+	  if (value)
+	    data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+	}
+      else if (t->type == G_TYPE_INT)
+	{
+	  gint value;
+
+	  g_object_get (G_OBJECT (vtodo), t->vc ? t->vc : t->tag, &value, NULL);
+
+	  data = gpe_tag_list_prepend (data, t->tag, g_strdup_printf ("%d", value));
+	}
+      else
+	abort ();
 
       t++;
     }
