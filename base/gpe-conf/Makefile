@@ -62,36 +62,10 @@ PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 
-# setup how to compile
-ifeq ($(NATIVE),yes)
-
-#STRIP=strip
-#CC=gcc
-
-#CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
-#LIBS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0`
-
-else # we do cross-compile...
-
-#CC=arm-linux-gcc
-#STRIP=arm-linux-strip
-
-#CFLAGS += -march=armv4 -mtune=strongarm
-#CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
-#LIBS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
-#LIBS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
-#LIBS += -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 
-#LIBS += -lgmodule-2.0 -ldl -lglib-2.0 -lXinerama
-#LIBS += -lX11 -lXext -lXrender -lgdk-x11-2.0
-
-endif #native or cross-compile
-
-
 MEMBERS  = main applets parser suid
 MEMBERS += misc
 MEMBERS += unimplemented
 MEMBERS += timeanddate
-#MEMBERS += appmgr_setup ../gpe-appmgr/package 
 MEMBERS += ipaqscreen/main ipaqscreen/brightness  ipaqscreen/rotation ipaqscreen/calibrate ipaqscreen/callbacks ipaqscreen/xset 
 MEMBERS += kbd
 MEMBERS += network
@@ -196,7 +170,7 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
 	$(INSTALL) -m 644 keyboards.def $(DESTDIR)/etc/gpe/
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
-	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-conf
+	$(INSTALL) -m 4755 $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(INSTALL) gpe-info $(DESTDIR)$(PREFIX)/bin/gpe-info
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-info
