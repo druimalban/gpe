@@ -63,7 +63,6 @@ typedef struct _go {
 #endif
 
   int board_size;//px PARAM - size of the board widget
-  //int free_space;//px - free space on the widget out of the grid
   int margin;    //***px - left/top margin
 
   int game_size; //9, 13, 19, ...
@@ -162,6 +161,7 @@ void append_hitem(GoAction action, GoItem item, int gox, int goy){
 
 void app_init(int argc, char ** argv){
   int i,j;
+  int free_space;
 
   //--grid size
   if(argc > 1){//first arg is board size if numeric
@@ -176,24 +176,15 @@ void app_init(int argc, char ** argv){
 
   go.cell_size = go.board_size / go.game_size;
   if ((go.cell_size - go.grid_stroke - go.stone_space) %2) go.cell_size--;
-  go.free_space = go.board_size - go.game_size * go.cell_size;
-  if(go.free_space < 2){
+
+  free_space = go.board_size - go.game_size * go.cell_size;
+  if(free_space < 2){
     go.cell_size--;
-    go.free_space += go.game_size;
+    free_space += go.game_size;
   }
-  go.margin = go.free_space / 2;
+  go.margin = free_space / 2;
   
   go.stone_size = go.cell_size - go.stone_space;
-  
-  TRACE("|%d| %d x %d |%d|",
-        go.margin,
-        go.cell_size,
-        go.game_size,
-        go.free_space - go.margin);
-  TRACE("cells: %d |%d %d|",
-        go.cell_size,
-        go.stone_space,
-        go.stone_size);
 
   //--init grid
   //one unused row/col to have index from *1* to grid_size.
