@@ -41,6 +41,7 @@ struct cfg_options_s
 	int list_icon_size;
 	tab_view_style tab_view;
 	window_close_command on_window_close;
+	int use_windowtitle;
 } cfg_options;
 
 void cfg_load ();

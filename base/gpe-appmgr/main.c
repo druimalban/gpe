@@ -171,7 +171,8 @@ gint btn_released (GtkObject *btn, gpointer data)
 	gtk_timeout_add (1000, unignore_press, NULL);
 
 	p = (struct package *) gtk_object_get_data (GTK_OBJECT(btn), "program");
-	run_program (package_get_data (p, "command"), package_get_data (p, "windowtitle"));
+	run_program (package_get_data (p, "command"),
+		     cfg_options.use_windowtitle ? package_get_data (p, "windowtitle") : NULL);
 
 	/* Add it to the recently-run list
 	   Remove it first if it's already there

@@ -38,6 +38,7 @@ void cfg_load ()
 	cfg_options.tab_view = TAB_VIEW_ICONS;
 	cfg_options.show_recent_apps = 0;
 	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
+	cfg_options.use_windowtitle = 1;
 
 	home_dir = (char*) getenv("HOME");
 	if (home_dir)
@@ -98,6 +99,19 @@ void cfg_load ()
 		case 'H': case 'h': /* not implemented! */
 		case 'E': case 'e':
 			cfg_options.on_window_close = WINDOW_CLOSE_EXIT;
+			break;
+		}
+	}
+
+	/* Use windowtitle=? */
+	if ((s = package_get_data (p, "use_windowtitle")))
+	{
+		switch (tolower(*s))
+		{
+		case '0':
+		case 'N': case 'n':
+		case 'F': case 'f':
+			cfg_options.use_windowtitle = 0;
 			break;
 		}
 	}
