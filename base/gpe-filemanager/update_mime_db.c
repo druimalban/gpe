@@ -47,7 +47,6 @@ _parse_ini_entry (IniFile *ini)
   FILE *fp;
   char data[256];
   const char delim[] = "=";
-  int type;
   char *key = NULL, *val = NULL, *str = NULL;
   
   if (!(fp = fopen(ini->filename, "r"))) return INI_ERROR_FILE_OPEN_FAILED;
@@ -78,7 +77,7 @@ _parse_ini_entry (IniFile *ini)
 	if ((val = strsep (&str, delim)) != NULL)
 	  {
 	    char new_key[64], locale[16]; 
-	    if (scanf (key, "%64[^[][%16[^][]]", new_key, locale) == 2)
+	    if (sscanf (key, "%64[^[][%16[^][]]", new_key, locale) == 2)
 	      {
 		if (ini->lang == NULL) goto END; /* Ignore C or no locale*/
 		if (!strcmp(ini->lang, locale)) /* Check for match */
@@ -182,9 +181,10 @@ int
 main (int argc, char **argv)
 {
   IniFile *ini = NULL;
-  struct nlist *n;
   const char *lang;
   gchar *filename;
+  gchar **extensions;
+  int i = 0;
   struct dirent *d;
   DIR *dir;
 
@@ -242,7 +242,18 @@ main (int argc, char **argv)
           printf ("extension => %s \n", ini_get (ini, "Extension"));
           printf ("icon => %s \n", ini_get (ini, "Icon"));
 
-          new_mime_type (ini_get (ini, "Type"), ini_get (ini, "Name"), ini_get (ini, "Extension"), ini_get (ini, "Icon"));
+	  extensions = g_strsplit (ini_get (ini, "Extension"), " ", 0);
+
+	  while (1)
+	  {
+	    if (extensions[i])
+	      new_mime_type (ini_get (ini, "Type"), ini_get (ini, "Name"), extensions[i], ini_get (ini, "Icon"));
+            else
+	      break;
+
+	    i++;
+	  }
+	  i = 0;
 	}
         else if (strcmp (ini->type, "Mime Program Association") == 0)
         {
