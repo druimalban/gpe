@@ -4,4 +4,6 @@ gpe-todo
 *.ipk.asc
 *.ipk.upload.html
 *.desktop
+*.desktop.in.h
+translation-ipkgs.txt
 
