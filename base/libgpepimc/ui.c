@@ -276,6 +276,7 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 		    {
 		      g_free ((void *)c->name);
 		      c->name = g_strdup (title);
+		      gpe_pim_category_rename (id, title);
 		    }
 		}
 	      else
@@ -306,6 +307,32 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
   g_slist_free (selected_categories);
 
   gtk_widget_destroy (window);
+}
+
+void
+change_category_name (GtkCellRendererText *cell,
+                      gchar               *path_string,
+                      gchar               *new_text,
+                      gpointer             user_data)
+{
+  GtkListStore *list_store;
+  GtkTreeIter iter;
+  struct todo_item *i;
+  gint id;
+
+  list_store = GTK_LIST_STORE (user_data);
+
+  if (!gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (list_store),
+                                            &iter, path_string))
+    {
+      gpe_error_box ("Error getting changed item");
+      return;
+    }
+
+  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 2, &id, -1);
+
+  /* Update the name in the list, it will be updated in the db on ok. */
+  gtk_list_store_set (list_store, &iter, 1, new_text, -1);
 }
 
 GtkWidget *
@@ -379,7 +406,11 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 						  "text", 1,
 						  NULL);
 
-  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
+  g_signal_connect (G_OBJECT (renderer), "edited", 
+                    G_CALLBACK(change_category_name),
+                    list_store);
+
+ gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
 
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);
 

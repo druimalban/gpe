@@ -140,3 +140,22 @@ gpe_pim_category_delete (struct gpe_pim_category *c)
 
   categories = g_slist_remove (categories, c);
 }
+
+gboolean
+gpe_pim_category_rename (gint id, gchar *new_name)
+{
+  gchar *err;
+  gint r;
+
+  r = sqlite_exec_printf (db,
+                          "update category set description = '%q' where id =%d",
+                          NULL, NULL, &err, new_name, id);
+
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+  return TRUE;
+}
