@@ -15,6 +15,8 @@
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
 
+#include "init.h"
+
 #include "event-db.h"
 #include "event-ui.h"
 #include "globals.h"
@@ -117,11 +119,10 @@ main(int argc, char *argv[])
   guint hour;
 
   gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
-  
-  gtk_set_locale ();
-  gtk_init(&argc, &argv);
-  gdk_imlib_init ();
 
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
+  
   if (event_db_start () == FALSE)
     exit (1);
 

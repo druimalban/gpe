@@ -25,8 +25,7 @@ static sqlite *sqliteh;
 
 static GSList *single_events, *recurring_events;
 
-static const char *dname = "/.gpe";
-static const char *fname = "/calendar";
+static const char *fname = "/.gpe/calendar";
 
 static unsigned long uid;
 
@@ -110,21 +109,12 @@ event_db_start (void)
   size_t len;
   if (home == NULL) 
     home = "";
-  len = strlen (home) + strlen (dname) + strlen (fname) + 1;
+  len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
-  strcat (buf, dname);
-  if (access (buf, F_OK))
-    {
-      if (mkdir (buf, 0700))
-	{
-	  gpe_perror_box (buf);
-	  g_free (buf);
-	  return -1;
-	}
-    }
   strcat (buf, fname);
   sqliteh = sqlite_open (buf, 0, &err);
+  g_free (buf);
   if (sqliteh == NULL)
     {
       gpe_error_box (err);
