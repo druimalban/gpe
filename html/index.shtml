@@ -26,4 +26,13 @@ importantly, the GPE environment fixes standards for program interaction,
 such as SQL, XML, and other data schemas.
 </p>
 
+<p>
+GPE is committed to the <a href="http://www.opensource.org/">Open Source</a>
+idea. All GPE core components are released under
+<a href="http://www.gnu.org/">GNU</a>
+<a href="http://www.gnu.org/licenses/licenses.html">licenses</a>, applications
+using the <a href="http://www.gnu.org/licenses/gpl.html">GPL</a> and shared
+libraries using the <a href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>.
+Those allow for the most free usability of the GPE system.
+</p>
 <!--#include virtual="includes/foot.shtml"-->
