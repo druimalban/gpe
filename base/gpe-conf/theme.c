@@ -274,7 +274,7 @@ GtkWidget *Theme_Build_Objects()
    * GTK_JUSTIFY_CENTER (the default)
    * GTK_JUSTIFY_FILL
    */
-  table_justify_left_col = GTK_JUSTIFY_RIGHT;
+  table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
   widget_padding_x = 5;
@@ -297,14 +297,15 @@ GtkWidget *Theme_Build_Objects()
   gtk_container_set_border_width (GTK_CONTAINER (table), widget_padding_x);
 
   /* ------------------------------------------------------------------------ */
-  label = gtk_label_new(_("Matchbox\nTheme"));
+  label = gtk_label_new(_("Matchbox Theme:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
 			widget_padding_x, widget_padding_y_even);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");
@@ -324,14 +325,15 @@ GtkWidget *Theme_Build_Objects()
 
 
   
-  label = gtk_label_new(_("GTK+\nTheme"));
+  label = gtk_label_new(_("GTK+ Theme:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
 			widget_padding_x, widget_padding_y_even);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");
@@ -349,14 +351,15 @@ GtkWidget *Theme_Build_Objects()
                       GTK_SIGNAL_FUNC (on_gtk_entry_changed),
                       NULL);
 
-  label = gtk_label_new(_("Wallpaper"));
+  label = gtk_label_new(_("Wallpaper:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
 			widget_padding_x, widget_padding_y_even);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");

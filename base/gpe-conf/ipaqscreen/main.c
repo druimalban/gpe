@@ -92,7 +92,7 @@ GtkWidget *ipaqscreen_Build_Objects()
    * GTK_JUSTIFY_CENTER (the default)
    * GTK_JUSTIFY_FILL
    */
-  table_justify_left_col = GTK_JUSTIFY_RIGHT;
+  table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
   widget_padding_x = 5;
@@ -115,13 +115,13 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_container_add (GTK_CONTAINER (self.viewport), self.table);
   gtk_container_set_border_width (GTK_CONTAINER (self.table), widget_padding_x);
 
-  self.brightnessl = gtk_label_new("Brightness");
+  self.brightnessl = gtk_label_new("Brightness:");
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0)));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_RIGHT);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
 
-  self.screensaverl = gtk_label_new("Screensaver");
-  self.screensaverl2 = gtk_label_new("Screensaver");
+  self.screensaverl = gtk_label_new("Screensaver:");
+  self.screensaverl2 = gtk_label_new("Screensaver:");
 
   self.screensaverbt = gtk_check_button_new_with_label ("On");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), TRUE);
@@ -131,7 +131,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
 
-  self.rotationl = gtk_label_new("Rotation");
+  self.rotationl = gtk_label_new("Rotation:");
   self.rotation = gtk_option_menu_new ();
 
   menu =  gtk_menu_new ();
@@ -145,14 +145,14 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.rotation),menu);
   gtk_option_menu_set_history(GTK_OPTION_MENU (self.rotation),get_rotation());
  
-  self.touchscreen = gtk_label_new("Touchscreen");
+  self.touchscreen = gtk_label_new("Touchscreen:");
   self.calibrate = gtk_button_new_with_label("Calibrate");
 
   gtk_table_attach (GTK_TABLE (self.table), self.brightnessl, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (self.brightnessl), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.brightnessl), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (self.brightnessl), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.brightnessl),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
@@ -167,7 +167,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (self.screensaverl), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.screensaverl), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (self.screensaverl), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.screensaverl),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
@@ -190,7 +190,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (self.rotationl), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.rotationl), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (self.rotationl), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.rotationl),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
@@ -205,7 +205,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
   gtk_label_set_justify (GTK_LABEL (self.touchscreen), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.touchscreen), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (self.touchscreen), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.touchscreen),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
