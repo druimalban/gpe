@@ -57,6 +57,7 @@ guint x_start, y_start, x_max, y_max;
 double xadj_start, yadj_start;
 
 gboolean rotate_flag;
+guint zoom_timer_id;
 
 struct gpe_icon my_icons[] = {
   { "open", "open" },
@@ -85,6 +86,12 @@ guint window_x = 240, window_y = 310;
 
 static double starting_angle;	// for rotating drags
 static GdkPixbuf *rotate_pixbuf;
+
+static void
+kill_widget (GtkWidget *parent, GtkWidget *widget)
+{
+  gtk_widget_destroy (widget);
+}
 
 static void
 update_window_title (void)
@@ -262,19 +269,37 @@ image_blur ()
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
+gboolean
+image_zoom_hyper (GdkPixbuf *pixbuf)
+{
+  gint width, height;
+
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (pixbuf));
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (pixbuf));
+
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+
+  return FALSE;
+}
+
 void
 image_zoom_in ()
 {
   gint width, height;
 
+  gtk_timeout_remove (zoom_timer_id);
+
   if (!scaled_image_pixbuf)
     scaled_image_pixbuf = image_pixbuf;
 
-  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) * 1.5;
-  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) * 1.5;
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) * 1.1;
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) * 1.1;
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_NEAREST);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+
+  zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
 }
 
 void
@@ -282,14 +307,19 @@ image_zoom_out ()
 {
   gint width, height;
 
+  gtk_timeout_remove (zoom_timer_id);
+
   if (!scaled_image_pixbuf)
     scaled_image_pixbuf = image_pixbuf;
 
-  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) / 1.5;
-  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) / 1.5;
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) / 1.1;
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) / 1.1;
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_NEAREST);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+
+  zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
+
 }
 
 void
@@ -491,9 +521,13 @@ stop_slideshow ()
 void
 start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
 {
+  GtkWidget *parent_window;
   guint delay;
 
+  parent_window = g_object_get_data (spin_button, "parent_window");
   delay = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin_button));
+
+  gtk_widget_destroy (parent_window);
 
   if (slideshow_timer == 0)
   {
@@ -531,8 +565,12 @@ show_new_slideshow (void)
   start_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Start"), "slideshow");
   close_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Cancel"), "cancel");
 
-  gtk_signal_connect (GTK_OBJECT (start_button), "destroy",
+  g_object_set_data (spin_button, G_OBJECT (slideshow_dialog), "parent_window");
+
+  gtk_signal_connect (GTK_OBJECT (start_button), "clicked",
 		      GTK_SIGNAL_FUNC (start_slideshow), spin_button);
+  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
+		      GTK_SIGNAL_FUNC (kill_widget), slideshow_dialog);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (slideshow_dialog)->vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
@@ -541,8 +579,8 @@ show_new_slideshow (void)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (slideshow_dialog)->action_area), start_button, TRUE, TRUE, 4);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (slideshow_dialog)->action_area), close_button, TRUE, TRUE, 4);
 
-  gtk_widget_show (slideshow_dialog);
   gtk_widget_show (hbox);
+  gtk_widget_show (slideshow_dialog);
   gtk_widget_show (label1);
   gtk_widget_show (spin_button);
   gtk_widget_show (label2);
@@ -694,8 +732,6 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Slideshow"), 
 			   _("Slideshow"), _("Slideshow"), pw, show_new_slideshow, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
   gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), view_option_menu,
 			   _("Select View"), _("Select View"));
 
@@ -756,8 +792,8 @@ main (int argc, char *argv[])
 			   _("Stop Loading"), _("Stop Loading"), pw, NULL, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  //gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), loading_toolbar, FALSE, FALSE, 0);
@@ -772,8 +808,8 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
   gtk_widget_show (loading_label);
   gtk_widget_show (loading_progress_bar);
-  gtk_widget_show (view_option_menu);
-  gtk_widget_show (view_menu);
+  //gtk_widget_show (view_option_menu);
+  //gtk_widget_show (view_menu);
 
   if (argc > 1)
   {
