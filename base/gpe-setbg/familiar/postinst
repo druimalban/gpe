@@ -12,3 +12,5 @@ if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
     fi
 fi
 
+# always return true:
+return 0

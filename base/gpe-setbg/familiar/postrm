@@ -6,3 +6,6 @@ if [ -L /etc/gpe/gpe-login-bg.png ]; then
 fi
 ## *don't* remove /etc/gpe/gpe-login-bg.dontshow so that the user
 ## has it for the next time
+
+# always return true:
+return 0
