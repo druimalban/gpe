@@ -1,6 +1,7 @@
 PACKAGE = gpe-mapviewer
 PREFIX = /usr/local
 DEBUG = no
+CVSBUILD = yes
 LINGUAS = 
 
 MEMBERS = main
@@ -36,14 +37,19 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = bell.png
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
-install: all 
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+install-program: all 
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
@@ -52,9 +58,10 @@ install: all
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 	install -m 644 pixmaps/*.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
-	
+
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../../base/build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
