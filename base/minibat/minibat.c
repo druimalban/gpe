@@ -1,6 +1,7 @@
-/* miniapm - A tiny battery monitor
+/* minibat - A tiny battery monitor
 
    Copyright 2002 Matthew Allum
+   Copyright (c) 2002, 2003 Phil Blundell
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -12,11 +13,6 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 */
-/* 
-   TODO
-   o Add define + install scripts for apm.png ( and rename )
-
- */
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -159,9 +155,8 @@ read_apm(int *values)
 
 #endif
 
-
-static void 
-paint( void )
+static void
+paint (void)
 {
   int power_pixels = 0;
   Bool old_power = ac_power;
@@ -239,13 +234,6 @@ paint( void )
       time_left_idx++;
     }
 
-  if (pxm_backing) XFreePixmap(dpy, pxm_backing);
-
-  pxm_backing = XCreatePixmap(dpy, win_panel, 
-			      mb_pixbuf_img_get_width(img_icon), 
-			      mb_pixbuf_img_get_height(img_icon),
-			      pb->depth);
-
   mb_pixbuf_img_render_to_drawable(pb, img_backing, pxm_backing, 0, 0);
 
   XSetWindowBackgroundPixmap(dpy, win_panel, pxm_backing);
@@ -254,62 +242,54 @@ paint( void )
 }
 
 static void
-set_backing( void *user_data )
+set_backing (void *user_data)
 {
-  mb_tray_get_bg_col(dpy, &xcol_bg);
-  mb_pixbuf_img_fill(pb, img_backing, 
-		     xcol_bg.red, xcol_bg.green, xcol_bg.blue, 0);
-  if (ac_power)
-    mb_pixbuf_img_composite(pb, img_backing, img_icon_pwr , 0, 0);
-  else
-    mb_pixbuf_img_composite(pb, img_backing, img_icon , 0, 0);
+  mb_tray_get_bg_col (dpy, &xcol_bg);
+  mb_pixbuf_img_fill (pb, img_backing, xcol_bg.red, xcol_bg.green, xcol_bg.blue, 0);
 
+  mb_pixbuf_img_composite(pb, img_backing, ac_power ? img_icon_pwr : img_icon, 0, 0);
 
-  paint();
+  paint ();
 }
 
 void 
-usage(char *progname)
+usage (char *progname)
 {
   ;
 }
 
 static void
-mbpixbuf_to_mask(MBPixbuf    *pb,
-		 MBPixbufImage *img,
-		 Drawable     drw,
-		 GC gc0, GC gc1,
-		 int drw_x,
-		 int drw_y)
+mbpixbuf_to_mask (MBPixbuf *pb, MBPixbufImage *img, Drawable     drw,
+		  GC gc0, GC gc1, int drw_x, int drw_y)
 {
-      unsigned char *p;
-      int x,y;
-      int r, g, b;
+  unsigned char *p;
+  int x,y;
+  int r, g, b;
 
-      p = img->rgba;
+  p = img->rgba;
 
-      for(y=0; y<img->height; y++)
+  for(y=0; y<img->height; y++)
+    {
+      for(x=0; x<img->width; x++)
 	{
-	  for(x=0; x<img->width; x++)
-	    {
-	      r = ( *p++ );
-	      g = ( *p++ );
-	      b = ( *p++ );
-	      XDrawPoint (dpy, drw, (*p++) ? gc1 : gc0, x + drw_x, y + drw_y);
-	    }
+	  r = ( *p++ );
+	  g = ( *p++ );
+	  b = ( *p++ );
+	  XDrawPoint (dpy, drw, (*p++) ? gc1 : gc0, x + drw_x, y + drw_y);
 	}
+    }
 }
 
 void
 draw_text_in (Drawable dr, char *s, int x, int y)
 {
-  XftDraw *xftdraw =  XftDrawCreate(dpy, dr,
+  XftDraw *xftdraw = XftDrawCreate (dpy, dr,
 				    DefaultVisual(dpy, screen),
 				    DefaultColormap(dpy, screen));
 
-  XftDrawStringUtf8(xftdraw, &fg_xftcol, msg_font, x, y, (FcChar8 *)s, strlen (s));
+  XftDrawStringUtf8 (xftdraw, &fg_xftcol, msg_font, x, y, (FcChar8 *)s, strlen (s));
 
-  XftDrawDestroy(xftdraw);
+  XftDrawDestroy (xftdraw);
 }
 
 void
@@ -340,12 +320,12 @@ build_pixmap (void)
 int
 GetWinPosition (Display *dpy, Window win, int *x, int *y, int *w, int *h)
 {
-  Window root, parent, *children ;
-  unsigned int nchildren ;
-  XWindowAttributes attr ;
-  unsigned int udumm ;
+  Window root, parent, *children;
+  unsigned int nchildren;
+  XWindowAttributes attr;
+  unsigned int udumm;
   
-  XGetWindowAttributes( dpy, win, &attr );
+  XGetWindowAttributes (dpy, win, &attr);
 
   *w = attr.width;
   *h = attr.height;
@@ -353,14 +333,14 @@ GetWinPosition (Display *dpy, Window win, int *x, int *y, int *w, int *h)
   *x = 0 ;
   *y = 0 ;
   
-  while( XQueryTree( dpy, win, &root, &parent, &children, &nchildren ) )
+  while (XQueryTree (dpy, win, &root, &parent, &children, &nchildren))
     {
       int w_x, w_y ;
       unsigned int border_w ;
       if (children) 
 	XFree (children);
 
-      if (!XGetGeometry( dpy, win, &root, &w_x, &w_y, &udumm, &udumm, &border_w, &udumm ))
+      if (!XGetGeometry (dpy, win, &root, &w_x, &w_y, &udumm, &udumm, &border_w, &udumm))
 	break ;
 
       (*x)+=w_x+(int)border_w ;
@@ -369,16 +349,16 @@ GetWinPosition (Display *dpy, Window win, int *x, int *y, int *w, int *h)
       if (parent == root)
 	return 1;
 
-      win = parent ;
+      win = parent;
     }
 
-  *x = 0 ;
-  *y = 0 ;
-  return 0 ;
+  *x = 0;
+  *y = 0;
+  return 0;
 }
 
 int 
-main(int argc, char **argv)
+main (int argc, char **argv)
 {
   int i;
   XEvent xevent;
@@ -444,6 +424,11 @@ main(int argc, char **argv)
 				  0,
 				  BlackPixel(dpy, screen),
 				  WhitePixel(dpy, screen));
+
+  pxm_backing = XCreatePixmap(dpy, win_panel, 
+			      mb_pixbuf_img_get_width(img_icon), 
+			      mb_pixbuf_img_get_height(img_icon),
+			      pb->depth);
 
   popup_mask = XCreatePixmap (dpy, win_popup, popup_w, popup_h, 1);
 
@@ -600,5 +585,4 @@ main(int argc, char **argv)
 	  mb_tray_handle_event(dpy, win_panel, &xevent);
 	}
     }
-
 }
