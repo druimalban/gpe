@@ -25,11 +25,7 @@ CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget -lsqlite
 
-ifeq ($(GTK2),yes)
 LDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
-endif
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
