@@ -30,10 +30,7 @@ sign_challenge (gchar *text, int length, gchar *target)
 
   libdm_crypt_create_hash (target, text, length, hash);
   if (libdm_crypt_sign_hash (&private_key, hash, &sig) == FALSE)
-    {
-      fprintf(stderr, "sign_challenge: return NULL\n");
-      return NULL;
-    }
+    return NULL;
 
   result = g_strdup_printf ("%08x %s", key_id, sig);
   g_free (sig);

@@ -86,7 +86,6 @@ migrate_to (Display *dpy, Window w, char *host, int display, int screen)
 	  g_free (target);
 	  if (prop)
 	    XFree (prop);
-	  fprintf (stderr, "Key signing failed!\n");
 	  return;
 	}
     }
