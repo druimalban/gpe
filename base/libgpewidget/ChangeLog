@@ -1,5 +1,6 @@
 2005-02-07  Florian Boor <florian@kernelconcepts.de>
 
+	* Makefile: Don't build documentation per default.
 	* doc/tmpl/gpetimesel.sgml: More documentation.
 	
 2005-02-02  Florian Boor <florian@kernelconcepts.de>

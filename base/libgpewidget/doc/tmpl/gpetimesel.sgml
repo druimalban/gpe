@@ -21,6 +21,10 @@ for a time value and an extra button which opens a time selection popup.
 </para>
 
 @hbox: 
+@hour_adj: 
+@minute_adj: 
+@hour_spin: 
+@minute_spin: 
 @label: 
 @button: 
 @popup: 
@@ -59,3 +63,5 @@ values passed to the method.
 @sel: Widget
 @hour: Hour value to set.
 @minute: Minute value to set.
+
+

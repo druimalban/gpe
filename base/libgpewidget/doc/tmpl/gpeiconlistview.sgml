@@ -166,7 +166,7 @@ Change margin in X dimension for icons inside a GpeIconListView.
 </para>
 
 @self: Widget
-@margin: Margin in pixels 
+@margin: Margin in pixels
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_clear ##### -->
@@ -209,7 +209,7 @@ This function sets the position of the descriptive text of items.
 </para>
 
 @self: Widget
-@textpos: Text position 
+@textpos: Text position
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_border_color ##### -->
@@ -228,3 +228,5 @@ This function is used to change the width of the icon lists border.
 
 @self: Widget
 @width: New width in pixels
+
+

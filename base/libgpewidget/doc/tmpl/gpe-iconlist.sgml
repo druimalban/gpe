@@ -142,7 +142,7 @@ Change margin in X dimension for icons inside a GpeIconList.
 </para>
 
 @self: Widget
-@margin: Margin in pixels 
+@margin: Margin in pixels
 
 
 <!-- ##### FUNCTION gpe_iconlist_clear ##### -->
@@ -231,4 +231,6 @@ Changes the size of the icons displayed in the icon list.
 @func: 
 @data: 
 @destroy_data: 
-@flags:
+@flags: 
+
+
