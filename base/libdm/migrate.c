@@ -35,7 +35,6 @@ static GdkAtom rsa_challenge_gdkatom;
 #define DISPLAY_CHANGE_AUTHENTICATION_BAD	3
 #define DISPLAY_CHANGE_INDETERMINATE_ERROR	4
 
-static gboolean enabled;
 static gboolean no_auth;
 
 static GSList *all_widgets;
@@ -246,9 +245,6 @@ unrealize_window (GtkWidget *w)
 void
 libdm_mark_window (GtkWidget *w)
 {
-  if (!enabled)
-    return;
-  
   if (GTK_WIDGET_REALIZED (w))
     {
       GdkWindow *window = w->window;
@@ -269,9 +265,6 @@ libdm_mark_window (GtkWidget *w)
 void
 libdm_init (void)
 {
-  if (getenv ("GPE_DISPLAY_MIGRATION") != NULL)
-    enabled = TRUE;
-
   if (getenv ("GPE_DISPLAY_MIGRATION_NO_AUTH") != NULL)
     no_auth = TRUE;
 
