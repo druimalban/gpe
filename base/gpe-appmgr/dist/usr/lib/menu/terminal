@@ -1,0 +1,1 @@
+?package(terminal): needs=x11 title=Terminal command=x-terminal-emulator icon48=terminal.png icon16=terminal16.png section=System windowtitle=x-terminal-emulator

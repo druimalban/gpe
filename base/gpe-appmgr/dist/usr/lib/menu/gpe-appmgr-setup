@@ -1,0 +1,1 @@
+?package(gpe-appmgr-setup): needs=x11 title="Appmgr Setup" command=gpe-appmgr-setup icon48=gpe-appmgr-setup.png section=System
