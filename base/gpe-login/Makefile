@@ -67,7 +67,6 @@ install-program: gpe-login gpe-lock-display
 	install -m 755 gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install -m 755 gpe-login.session $(DESTDIR)/etc/X11/Xsession.d/50autolock
-	install -m 755 X11/10unsetgtkrc $(DESTDIR)/etc/X11/Xsession.d/10unsetgtkrc
 	install -d $(DESTDIR)/etc/X11/Xinit.d
 	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
 	install -d $(DESTDIR)/etc/gpe

@@ -1,3 +1,10 @@
+2003-08-11  Philip Blundell  <philb@gnu.org>
+
+	* X11/10unsetgtkrc: Deleted.
+	* Makefile (install-program): Don't install it.
+
+	* X11/Xsession-gpe.d/99xWindowManager: Add missing #!/bin/sh.
+
 2003-08-09  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (main): Don't show ownerinfo at new-user screen.
