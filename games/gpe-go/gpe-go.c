@@ -1684,16 +1684,20 @@ void gui_init(){
                            _("Go to the beginning of the game"),
                            image, GTK_SIGNAL_FUNC (on_button_first_pressed), NULL);
 
-  //[UNDO] button
+  //[PREV] button
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-                           _("Undo"), _("Undo"), _("Undo"),
+                           _("Prev"),
+                           _("Go to the previous step"),
+                           _("Go to the previous step"),
                            image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
 
-  //[REDO] button
+  //[NEXT] button
   image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-                           _("Redo"), _("Redo"), _("Redo"),
+                           _("Next"),
+                           _("Go to the next step"),
+                           _("Go to the next step"),
                            image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
 
   //[LAST] button
