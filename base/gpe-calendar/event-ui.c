@@ -25,14 +25,10 @@
 
 struct sens
 {
-  GtkWidget *frombutton;
-  GtkWidget *alldaybutton;
-  GtkWidget *starttime;
-  GtkWidget *endtime;
-  GtkWidget *timeend;
   GtkWidget *deletebutton;
 
   GtkWidget *startdate, *enddate;
+  GtkWidget *starttime, *endtime;
   
   GtkWidget *alarmbutton;
   GtkWidget *alarmspin;
@@ -80,19 +76,6 @@ recalculate_sensitivities(GtkWidget *widget,
 			  GtkWidget *d)
 {
   struct sens *s = gtk_object_get_data (GTK_OBJECT (d), "sens_list");
-
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
-    {
-      gtk_widget_set_sensitive (s->starttime, 1);
-      gtk_widget_set_sensitive (s->endtime, 1);
-      gtk_widget_set_sensitive (s->timeend, 1);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (s->starttime, 0);
-      gtk_widget_set_sensitive (s->endtime, 0);
-      gtk_widget_set_sensitive (s->timeend, 0);
-    }
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
@@ -182,7 +165,8 @@ click_ok(GtkWidget *widget,
   tm.tm_hour = 0;
   tm.tm_min = 0;
   ev->duration = 24 * 60 * 60;
-  
+
+#if 0  
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
     {
       char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
@@ -203,6 +187,7 @@ click_ok(GtkWidget *widget,
 	    }
 	}
     }
+#endif
 
   ev->start = mktime (&tm);
 
@@ -270,15 +255,6 @@ edit_event_window(void)
   
   GtkWidget *text = gtk_text_new (NULL, NULL);
 
-  GtkWidget *frombutton = gtk_radio_button_new_with_label (NULL, _("From"));
-  GtkWidget *alldaybutton = 
-    gtk_radio_button_new_with_label (gtk_radio_button_group 
-				     (GTK_RADIO_BUTTON (frombutton)), 
-				     _("All day"));
-  GtkWidget *timehbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *alldayhbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *timeend = gtk_label_new (_("to"));
-
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok = gtk_button_new_with_label (_("Save"));
   GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
@@ -289,8 +265,13 @@ edit_event_window(void)
 
   GtkWidget *startdatebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *enddatebox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *startdatelabel = gtk_label_new (_("Start date:"));
-  GtkWidget *enddatelabel = gtk_label_new (_("End date:"));
+  GtkWidget *startdatelabel = gtk_label_new (_("Start on:"));
+  GtkWidget *enddatelabel = gtk_label_new (_("End on:"));
+
+  GtkWidget *starttimebox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *endtimebox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *starttimelabel = gtk_label_new (_("at:"));
+  GtkWidget *endtimelabel = gtk_label_new (_("at:"));
 
   GtkWidget *alarmhbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *alarmmenu = gtk_menu_new ();
@@ -322,34 +303,28 @@ edit_event_window(void)
   gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
   gtk_widget_set_usize (alarmoption, 120, -1);
 
-  gtk_widget_set_usize (starttime, 64, -1);
-  gtk_widget_set_usize (endtime, 64, -1);
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
 
   s->startdate = gtk_date_combo_new ();
   s->enddate = gtk_date_combo_new ();
   
-  gtk_box_pack_start (GTK_BOX (startdatebox), startdatelabel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (startdatebox), s->startdate, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (startdatebox), s->startdate, TRUE, TRUE, 2);
+  gtk_box_pack_end (GTK_BOX (startdatebox), startdatelabel, FALSE, FALSE, 2);
+  gtk_box_pack_end (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 2);
+  gtk_box_pack_end (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 2);
+
+  gtk_box_pack_end (GTK_BOX (starttimebox), starttime, FALSE, FALSE, 2);
+  gtk_box_pack_end (GTK_BOX (starttimebox), starttimelabel, FALSE, FALSE, 2);
+  gtk_box_pack_end (GTK_BOX (endtimebox), endtime, FALSE, FALSE, 2);
+  gtk_box_pack_end (GTK_BOX (endtimebox), endtimelabel, FALSE, FALSE, 2);
 
   gtk_text_set_editable (GTK_TEXT (text), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
   gtk_widget_set_usize (text, -1, 88);
 
-  gtk_signal_connect (GTK_OBJECT (frombutton), "clicked",
-		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   gtk_signal_connect (GTK_OBJECT (alarmbutton), "clicked",
 		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-
-  gtk_box_pack_start (GTK_BOX (alldayhbox), alldaybutton, FALSE, FALSE, 5);
-
-  gtk_box_pack_start (GTK_BOX (timehbox), frombutton, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (timehbox), starttime, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (timehbox), timeend, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (timehbox), endtime, FALSE, FALSE, 5);
 
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmbutton, FALSE, FALSE, 5);
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, FALSE, FALSE, 0);
@@ -361,9 +336,9 @@ edit_event_window(void)
 		      GTK_SIGNAL_FUNC (click_cancel), window);
 
   gtk_box_pack_start (GTK_BOX (vboxevent), startdatebox, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxevent), starttimebox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), enddatebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), timehbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), alldayhbox, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxevent), endtimebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), alarmhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), text, TRUE, TRUE, 2);
   
@@ -439,7 +414,7 @@ edit_event_window(void)
   /* daily spinner */
   dailyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   dailyspin = gtk_spin_button_new (GTK_ADJUSTMENT (dailyspin_adj), 1, 0);
-  gtk_widget_set_usize(dailyspin,50, 20);
+  gtk_widget_set_usize (dailyspin, 50, 20);
   gtk_box_pack_start_show (GTK_BOX (dailyvbox), dailyspin, FALSE, FALSE, 0);
 
   /* days label */
@@ -503,7 +478,7 @@ edit_event_window(void)
   /* yearly spinner */
   yearlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   yearlyspin = gtk_spin_button_new (GTK_ADJUSTMENT (yearlyspin_adj), 1, 0);
-  gtk_widget_set_usize(yearlyspin,50, 20);
+  gtk_widget_set_usize (yearlyspin, 50, 20);
   gtk_box_pack_start_show (GTK_BOX (yearlyvbox), yearlyspin, FALSE, FALSE, 0);
 
   /* years label */
@@ -548,7 +523,7 @@ edit_event_window(void)
   /* end after spinner */
   endspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   endspin = gtk_spin_button_new (GTK_ADJUSTMENT (endspin_adj), 1, 0);
-  gtk_widget_set_usize(endspin,50, 20);
+  gtk_widget_set_usize (endspin, 50, 20);
   gtk_box_pack_start_show (GTK_BOX (hboxendafter), endspin, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endspin, FALSE);
 
@@ -583,10 +558,7 @@ edit_event_window(void)
   gtk_widget_grab_focus (text);
 
   s->deletebutton = buttondelete;
-  s->frombutton = frombutton;
-  s->alldaybutton = alldaybutton;
   s->starttime = starttime;
-  s->timeend = timeend;
   s->endtime = endtime;
   s->alarmbutton = alarmbutton;
   s->alarmspin = alarmspin;
@@ -642,11 +614,6 @@ new_event(time_t t, guint timesel)
       struct sens *s = gtk_object_get_data (GTK_OBJECT (w), "sens_list");
 
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
-
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->frombutton), 
-				    timesel);
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alldaybutton), 
-				    ! timesel);
 
       localtime_r (&t, &tm);
       strftime (buf, sizeof(buf), "%X", &tm);
