@@ -1,2 +1,3 @@
-startup-monitor &
+#!/bin/sh
 
+startup-monitor &
