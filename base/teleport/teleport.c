@@ -30,6 +30,8 @@
 
 #include "displays.h"
 
+extern void crypt_init (void);
+
 #define _(x) gettext(x)
 
 Atom migrate_atom;
@@ -40,7 +42,15 @@ GtkListStore *list_store;
 
 gboolean grabbed;
 
-struct display *selected_dpy;
+struct client_window
+{
+  Display *dpy;
+  Window w;
+  gchar *name;
+  GdkPixbuf *icon;
+};
+
+struct client_window *selected_client, *active_client;
 
 extern gchar *sign_challenge (gchar *text, int length, gchar *target);
 
@@ -61,12 +71,11 @@ char *atom_names[] =
 #define _NET_WM_NAME 3
 #define _NET_WM_ICON 4
 
-struct client_window
-{
-  Window w;
-  gchar *name;
-  GdkPixbuf *icon;
-};
+#define DISPLAY_CHANGE_SUCCESS			0
+#define DISPLAY_CHANGE_UNABLE_TO_CONNECT	1
+#define DISPLAY_CHANGE_NO_SUCH_SCREEN		2
+#define DISPLAY_CHANGE_AUTHENTICATION_BAD	3
+#define DISPLAY_CHANGE_INDETERMINATE_ERROR	4
 
 struct gpe_icon my_icons[] = 
   {
@@ -124,6 +133,36 @@ migrate_to (Display *dpy, Window w, char *host, int display, int screen)
     g_free (data);
 }
 
+static gboolean
+can_migrate (Display *dpy, Window w)
+{
+  Atom actual_type = None;
+  int actual_format;
+  unsigned long nitems, bytes_after;
+  unsigned char *prop = NULL;
+  gboolean rc = FALSE;
+
+  gdk_error_trap_push ();
+
+  rc = XGetWindowProperty (dpy, w, migrate_atom,
+			   0, 0, False, AnyPropertyType, 
+			   &actual_type, &actual_format,
+			   &nitems, &bytes_after, &prop);
+
+  gdk_error_trap_pop ();
+
+  if (rc != Success)
+    return FALSE;
+
+  if (actual_type != None)
+    rc = TRUE;
+
+  if (prop)
+    XFree (prop);
+
+  return rc;
+}
+
 GSList *
 get_clients (Display *dpy)
 {
@@ -139,16 +178,15 @@ get_clients (Display *dpy)
       struct client_window *cw;
       GdkPixbuf *icon;
  
-#if 0
       if (! can_migrate (dpy, w))
 	continue;
-#endif
 
       name = gpe_get_window_name (dpy, w);
 
       icon = gpe_get_window_icon (dpy, w);
 
       cw = g_malloc (sizeof (*cw));
+      cw->dpy = dpy;
       cw->w = w;
       cw->name = name;
       if (icon)
@@ -166,26 +204,69 @@ get_clients (Display *dpy)
 }
 
 void
-go_callback (GtkWidget *button, GtkWidget *list_view)
+go_callback (GtkWidget *button, GtkWidget *the_combo)
 {
-  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
-  GtkTreeIter iter;
-  GtkTreeModel *model;
+  GtkWidget *entry = GTK_COMBO (the_combo)->entry;
+  gchar *text = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  gchar *colon;
+  int display_nr = -1, screen_nr = 0;
+  gchar *host = NULL;
+  gboolean new_display = TRUE;
+  GSList *i;
 
-  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+  colon = strrchr (text, ':');
+  if (colon)
     {
-      Display *dpy = GDK_DISPLAY ();
-
-      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &selected_dpy, -1);
-
-      grabbed = TRUE;
-
-      XGrabPointer (dpy, RootWindow (dpy, 0), False, ButtonReleaseMask,
-		    GrabModeAsync, GrabModeAsync,
-		    None, None, CurrentTime);
+      gchar *dot;
+      *(colon++) = 0;
+      dot = strchr (colon, '.');
+      if (dot)
+	{
+	  *(dot++) = 0;
+	  screen_nr = atoi (dot);
+	}
+      host = g_strdup (text);
+      display_nr = atoi (colon);
     }
-  else
-    gpe_error_box (_("No display selected"));
+
+  g_free (text);
+
+  if (host == NULL || display_nr == -1)
+    {
+      gpe_error_box (_("Invalid display name"));
+      return;
+    }
+
+  if (selected_client == NULL)
+    {
+      gpe_error_box (_("No window is selected"));
+      return;
+    }
+
+  for (i = displays; i; i = i->next)
+    {
+      struct display *d = i->data;
+      if (strcmp (d->host, host) == 0
+	  && d->dpy == display_nr
+	  && d->screen == screen_nr)
+	new_display = FALSE;
+    }
+
+  if (new_display)
+    add_display (host, display_nr, screen_nr);
+
+  active_client = selected_client;
+
+  migrate_to (selected_client->dpy, selected_client->w,
+	      host, display_nr, screen_nr);
+}
+
+void
+note_client_window (GtkWidget *w)
+{
+  struct client_window *cw = g_object_get_data (G_OBJECT (w), "client_window");
+  
+  selected_client = cw;
 }
 
 void
@@ -239,6 +320,8 @@ open_window (GSList *clients)
 	  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
 	}
 
+      g_object_set_data (G_OBJECT (item), "client_window", cw);
+      g_signal_connect (G_OBJECT (item), "activate", G_CALLBACK (note_client_window), NULL);
       gtk_widget_show (item);
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
     }
@@ -253,19 +336,57 @@ open_window (GSList *clients)
   gpe_set_window_icon (GTK_WIDGET (window), "icon");
 
   g_signal_connect (G_OBJECT (quit_button), "clicked", G_CALLBACK (g_main_loop_quit), NULL);
-  g_signal_connect (G_OBJECT (go_button), "clicked", G_CALLBACK (go_callback), NULL);
+  g_signal_connect (G_OBJECT (go_button), "clicked", G_CALLBACK (go_callback), display_combo);
 
   g_signal_connect (G_OBJECT (window), "delete-event", G_CALLBACK (g_main_loop_quit), NULL);
 
   gtk_widget_show_all (window);
 }
 
+static GdkFilterReturn 
+filter_func (GdkXEvent *xev, GdkEvent *ev, gpointer p)
+{
+  XClientMessageEvent *xc = (XClientMessageEvent *)xev;
+
+  if (active_client
+      && xc->data.l[0] == active_client->w
+      && xc->display == active_client->dpy)
+    {
+      int rc = xc->data.l[1];
+      
+      switch (rc)
+	{
+	case DISPLAY_CHANGE_SUCCESS:
+	  fprintf (stderr, "Display change successful.\n");
+	  break;
+	case DISPLAY_CHANGE_UNABLE_TO_CONNECT:
+	  gpe_error_box (_("Unable to connect to target display"));
+	  break;
+	case DISPLAY_CHANGE_NO_SUCH_SCREEN:
+	  gpe_error_box (_("Specified screen doesn't exist on target display"));
+	  break;
+	case DISPLAY_CHANGE_AUTHENTICATION_BAD:
+	  gpe_error_box (_("Not authorised to migrate this application"));
+	  break;
+	case DISPLAY_CHANGE_INDETERMINATE_ERROR:
+	  gpe_error_box (_("Migration failed"));
+	  break;
+	}
+
+      active_client = NULL;
+    }
+
+  return GDK_FILTER_CONTINUE;
+}
+
 int
 main (int argc, char *argv[])
 {
   Display *dpy;
-  gchar *home_dir, *d;
+  const gchar *home_dir;
+  gchar *d;
   GSList *clients;
+  GdkAtom migrate_gdkatom;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -277,6 +398,7 @@ main (int argc, char *argv[])
   string_atom = XInternAtom (dpy, "STRING", False);
   migrate_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE", False);
   challenge_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE_RSA_CHALLENGE", False);
+  migrate_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE", FALSE);
 
   home_dir = g_get_home_dir ();
 
@@ -295,6 +417,10 @@ main (int argc, char *argv[])
 		False, atoms);
 
   clients = get_clients (dpy);
+
+  XSelectInput (dpy, RootWindow (dpy, DefaultScreen (dpy)), SubstructureNotifyMask);
+
+  gdk_add_client_message_filter (migrate_gdkatom, filter_func, NULL);
 
   open_window (clients);
 

@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = teleport
 DEBUG = yes
+VERSION = 0.30
 
 LINGUAS = 
 
