@@ -1,5 +1,7 @@
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
+	* main.c (main): Call bind_textdomain_codeset.
+
 	* Makefile (LINGUAS): Add pt, de.
 
 	* po/pt.po: New file from Translation Project, courtesy Luis
