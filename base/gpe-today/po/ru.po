@@ -1,0 +1,39 @@
+# Translation of gpe-today-0.06.po to Russian.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-today package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2003-10-29 21:04+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:179 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "Сводка"
+
+#: todo.c:40
+msgid "No todo items"
+msgstr "Нет пунктов todo"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "На сегодня событий нет"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "Событие на все дни"
+
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "Невозможно создать клиента XSettings"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "Сегодня GPE"
