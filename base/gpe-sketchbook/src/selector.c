@@ -293,8 +293,9 @@ gchar * get_time_label(glong timestamp){
   else if(formated_stamped->tm_year < formated_current->tm_year){
     s = g_strdup_printf(" %4d", formated_stamped->tm_year +1900);
   }
-  else if(formated_stamped->tm_mon  <= formated_current->tm_mon &&
-          formated_stamped->tm_mday <  formated_current->tm_mday){
+  else if(formated_stamped->tm_mon  <  formated_current->tm_mon ||
+          (formated_stamped->tm_mon  == formated_current->tm_mon &&
+           formated_stamped->tm_mday <  formated_current->tm_mday)){
     s = g_strdup_printf("%02d/%02d",
                         formated_stamped->tm_mday,
                         formated_stamped->tm_mon+1); //FIXME: needs localization !!!
