@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+04.04.2003		Florian			cardinfo.c					Changed config set generation to generate only sets without "version".
+
 04.04.2003		Florian			cardinfo.c					Fixed some bugs in card handling. Should look better now and find all known cards.
 
 04.04.2003		Florian			cardinfo.*					Finished pcmcia driver assignment/changing task.

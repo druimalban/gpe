@@ -144,7 +144,6 @@ static void save_config(char *config, int socket)
   lines = g_strsplit (content, "\n", 4096);
   g_free (content);
 
-printf("search:%s\n",g_strchomp(cur_bind));  
   new = TRUE;
   while (lines[i])
 	{
@@ -177,7 +176,12 @@ printf("search:%s\n",g_strchomp(cur_bind));
 		free(delim);
 		i++;
 	  }
-      lines[i] = g_strdup("");
+	  if ((lines[i]) && (!strstr(lines[i],"card \"")))
+	  {
+		 free(lines[i]);
+		 lines[i] = g_strdup("");
+ 	  }
+
 	}	  
 	  i++;
 	}
@@ -291,7 +295,7 @@ static char* get_card_ident(int socket)
 				strncat(result,buffer+10,strlen(buffer)-12);
 				strncat(result,"\n",1);
 			}
-			if (strstr(buffer,"PRODID_3=\""))
+/*			if (strstr(buffer,"PRODID_3=\""))
 			{
 				result = realloc(result,strlen(result)+strlen(buffer)-9);
 				strncat(result,buffer+10,strlen(buffer)-12);
@@ -303,10 +307,10 @@ static char* get_card_ident(int socket)
 				strncat(result,buffer+10,strlen(buffer)-12);
 				strncat(result,"\n",1);
 			}
-			if (strstr(buffer,"MANFID="))
+*/			if (strstr(buffer,"MANFID="))
 			{
-				result = realloc(result,strlen(result)+strlen(buffer)-1);
-				strncat(result,"0x",2);
+				result = realloc(result,strlen(result)+strlen(buffer)); // -1
+				strncat(result,"\n0x",3);								// 2
 				strncat(result,buffer+7,5);
 				strncat(result," 0x",3);
 				strncat(result,buffer+12,4);
