@@ -1,3 +1,13 @@
+2004-02-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* vcard-import.c: Rewrite with libgpevtype.
+
+2004-02-16  Phil Blundell  <pb@nexus.co.uk>
+
+	* vcard-export.c: Rewrite with libgpevtype.
+	* vcard.c: Deleted.
+	* Makefile: Adjust appropriately.
+
 2003-11-27	Florian Boor <florian.boor@kernelconcepts.de>
 	* main.c: Fixed bug 1061.
 	* Some format changes.

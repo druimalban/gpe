@@ -8,7 +8,8 @@
 
 #include <sqlite.h>
 
-#include "vcard.h"
+#include <gpe/tag-db.h>
+#include <gpe/vcard.h>
 
 #define _(x) gettext (x)
 
@@ -43,16 +44,64 @@ db_open(void)
   return 0;
 }
 
+gboolean
+gpe_import_vcard (sqlite *db, MIMEDirVCard *card)
+{
+  GSList *tags, *iter;
+  gchar *err;
+  guint id;
+
+  if (sqlite_exec (db, "begin transaction", NULL, NULL, &err))
+    {
+      fprintf (stderr, "%s\n", err);
+      free (err);
+      return FALSE;
+    }
+
+  if (sqlite_exec (db, "insert into contacts_urn values (NULL)",
+		   NULL, NULL, &err))
+    goto error;
+
+  id = sqlite_last_insert_rowid (db);
+
+  tags = vcard_to_tags (card);
+
+  for (iter = tags; iter; iter = iter->next)
+    {
+      gpe_tag_pair *t = iter->data;
+
+      if (sqlite_exec_printf (db, "insert into contacts values ('%d', '%q', '%q')", NULL, NULL, &err, id, t->tag, t->value))
+	{
+	  gpe_tag_list_free (tags);
+	  goto error;
+	}
+    }
+
+  gpe_tag_list_free (tags);
+
+  if (sqlite_exec (db, "commit transaction", NULL, NULL, &err))
+    {
+      fprintf (stderr, "%s\n", err);
+      free (err);
+      return FALSE;
+    }
+
+  return TRUE;
+
+ error:
+  sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+  fprintf (stderr, "%s\n", err);
+  free (err);
+  return FALSE;
+}
+
 int
 main (int argc, char *argv[])
 {
-  guint uid;
   MIMEDirVCard *vcard;
   gchar *str;
   GError *err = NULL;
   GIOChannel *channel;
-  FILE *fp;
-  char line[256];
 
   g_type_init ();
 
