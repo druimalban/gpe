@@ -57,7 +57,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = irda-16.png irda.png irda-on-16.png irda-conn-16.png irda-on-48.png irda-conn-48.png
 
-all: $(PACKAGE) vcard-export vcard-import irsw vcal-export
+all: $(PACKAGE) irsw
 
 $(PACKAGE): libircp.a $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(IRFLAGS) $(PACKAGE_LDFLAGS)
@@ -66,15 +66,6 @@ irsw: irsw.o irsw.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 PACKAGE_CFLAGS += $(MIMECFLAGS)
-
-vcal-export: vcal-export.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
-
-vcard-export: vcard-export.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
-
-vcard-import: vcard-import.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
 libircp.a: $(libircp_a_OBJECTS) $(libircp_a_DEPENDENCIES)
 	-rm -f libircp.a
@@ -87,15 +78,13 @@ install-program: all all-desktop
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(INSTALL) -m 4755 irsw $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) -m 755 vcard-export $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) -m 755 vcard-import $(DESTDIR)$(PREFIX)/bin/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE) vcard-export vcard-import vcard-import-file irsw vcal-export $(OBJS) *~ */*~ *.ipk *.o *.a ircp/*.o
+	rm -f $(PACKAGE) vcard-import-file irsw $(OBJS) *~ */*~ *.ipk *.o *.a ircp/*.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
