@@ -61,6 +61,7 @@ open_window (void)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
+  gtk_window_set_title (GTK_WINDOW (window), _("To-do list"));
   gtk_widget_realize (window);
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);

@@ -1,5 +1,13 @@
 2002-10-06  Philip Blundell  <philb@gnu.org>
 
+	* main.c (open_window): Set window title.
+
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.26 released.
+
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
 	* familiar/control1 (Provides, Replaces): Add.
 
 	* list-ui.c (draw_item): Cope with NULL summary.
