@@ -25,17 +25,18 @@
 
 extern void about (void);
 
-extern GtkWidget *new_event (time_t t, guint timesel);
+extern GtkWidget *new_event (time_t t, guint timesel, event_t *ev);
 
 GdkFont *timefont;
 GdkFont *datefont;
 GdkFont *yearfont;
+GtkWidget *day_list;
 GList *times;
 time_t viewtime;
 
 static GtkWidget *window, *day, *week, *future, *year, *current_view;
 
-guint window_x = 240, window_y = 320;
+guint window_x = 240, window_y = 310;
 
 void
 update_current_view (void)
@@ -91,7 +92,7 @@ set_year_view(void)
 static void
 new_appointment(void)
 {
-  GtkWidget *appt = new_event (time (NULL), 0);
+  GtkWidget *appt = new_event (time (NULL), 0, NULL);
   gtk_widget_show (appt);
 }
 
@@ -119,6 +120,8 @@ main(int argc, char *argv[])
 
   gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
+  event_db_start ();
+
   gtk_set_locale ();
   gtk_init(&argc, &argv);
   gdk_imlib_init ();
@@ -126,9 +129,17 @@ main(int argc, char *argv[])
   for (hour = 0; hour < 24; hour++)
     {
       char buf[32];
-      g_snprintf (buf, sizeof (buf), "%02d:%02d", hour, 0);
+      struct tm tm;
+      time_t t=time(NULL);
+      
+      localtime_r (&t, &tm);
+      tm.tm_hour = hour;
+      tm.tm_min = 0;
+      strftime (buf, sizeof(buf), "%X", &tm);
       times = g_list_append (times, g_strdup (buf));
-      g_snprintf (buf, sizeof (buf), "%02d:%02d", hour, 30);
+      tm.tm_hour = hour;
+      tm.tm_min = 30;
+      strftime (buf, sizeof(buf), "%X", &tm);
       times = g_list_append (times, g_strdup (buf));
     }
 
@@ -167,10 +178,6 @@ main(int argc, char *argv[])
   day = day_view ();
   future = future_view ();
   year = year_view ();
-
-  event_db_start ();
-
-  gtk_widget_set_usize (GTK_WIDGET (menubar), -1, 20);
 
   gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), day, TRUE, TRUE, 0);
