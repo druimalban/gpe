@@ -1,2 +1,3 @@
 title:Calculator
 path:Add/Utility
+cmd:monolaunch -k /usr/share/pixmaps/gpe-minicalc.xpm gpe-minicalc

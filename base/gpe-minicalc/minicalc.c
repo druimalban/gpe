@@ -57,89 +57,123 @@ error (void)
 void
 display_to_val (void)
 {
-  if (mpf_set_str (dv, buf, base))
+  char *p = g_malloc (strlen (buf) + 1);
+  if (base == 2)
+    {
+      char *i = buf, *j = p;
+      while (*i)
+	{
+	  if (*i != '\'')
+	    *(j++) = *i;
+	  i++;
+	}
+      *j = 0;
+    }
+  else
+    strcpy (p, buf);
+  if (mpf_set_str (dv, p, base))
     error ();
+  g_free (p);
 }
 
 void
 val_to_display (void)
 {
-  mp_exp_t exp;
-  char *ss = mpf_get_str (NULL, &exp, base, sizeof (buf) - 32, dv);
-  char *s = ss;
-  size_t l = strlen (s);
-  char *op = buf;
-  size_t oplen = sizeof (buf) - 1;
-
-  if (s[0] == '-')
+  if (!in_error)
     {
-      *op++ = '-';
-      oplen--;
-      l--;
-      s++;
-    }
-
-  if (exp == 0)
-    {
-      op[0] = '0';
-      if (l)
+      mp_exp_t exp;
+      char *ss = mpf_get_str (NULL, &exp, base, sizeof (buf) - 32, dv);
+      char *s = ss;
+      size_t l = strlen (s);
+      char *op = buf;
+      size_t oplen = sizeof (buf) - 1;
+      
+      if (s[0] == '-')
 	{
-	  op[1] = '.';
-	  strcpy (op+2, s);
+	  *op++ = '-';
+	  oplen--;
+	  l--;
+	  s++;
+	}
+      
+      if (exp == 0)
+	{
+	  op[0] = '0';
+	  if (l)
+	    {
+	      op[1] = '.';
+	      strcpy (op+2, s);
+	    }
+	  else
+	    op[1] = 0;
+	}
+      else if (exp == l)
+	{
+	  if (base == 2)
+	    {
+	      /* insert ' spacers every four bits, per Colin Marquardt request */
+	      int n = ((l + 3) & ~3) - l, i;
+	      memset (op, '0', n);
+	      op += n;
+	      for (i = 0; i < l; i++)
+		{
+		  if (n && ((n & 3) == 0))
+		    *op++ = '\'';
+		  *op++ = s[i];
+		  n++;
+		}
+	      *op++ = 0;
+	    }
+	  else
+	    strncpy (op, s, oplen);
+	}
+      else if (exp > 0 && exp < l)
+	{
+	  strncpy (op, s, exp);
+	  op[exp] = '.';
+	  strcpy (op + exp + 1, s + exp);
+	}
+      else if (exp < 0)
+	{
+	  if (exp > -40)
+	    {
+	      int n;
+	      strcpy (op, "0.");
+	      for (n = exp; n < 0; n++)
+		strcat (op, "0");
+	      strcat (op, s);
+	    }
+	  else
+	    {
+	      char *p;
+	      op[0] = s[0];
+	      op[1] = '.';
+	      p = stpcpy (op + 2, s);
+	      snprintf (p, oplen - (p - op), "@%d", exp);
+	    }
 	}
       else
-	op[1] = 0;
-    }
-  else if (exp == l)
-    {
-      strncpy (op, s, oplen);
-    }
-  else if (exp > 0 && exp < l)
-    {
-      strncpy (op, s, exp);
-      op[exp] = '.';
-      strcpy (op + exp + 1, s + exp);
-    }
-  else if (exp < 0)
-    {
-      if (exp > -40)
 	{
-	  int n;
-	  strcpy (op, "0.");
-	  for (n = exp; n < 0; n++)
-	    strcat (op, "0");
-	  strcat (op, s);
+	  if (exp <= 40)
+	    {
+	      int n;
+	      strcpy (op, s);
+	      for (n = 0; n < (exp - l); n++)
+		strcat (op, "0");
+	    }
+	  else
+	    {
+	      char *p;
+	      op[0] = s[0];
+	      op[1] = '.';
+	      p = stpcpy (op + 2, s);
+	      snprintf (p, oplen - (p - op), "@%d", exp);
+	    }
 	}
-      else
-	{
-	  char *p;
-	  op[0] = s[0];
-	  op[1] = '.';
-	  p = stpcpy (op + 2, s);
-	  snprintf (p, oplen - (p - op), "@%d", exp);
-	}
+      free (ss);
+      display_volatile = TRUE;
+      update_display ();
     }
-  else
-    {
-      if (exp <= 40)
-	{
-	  int n;
-	  strcpy (op, s);
-	  for (n = 0; n < (exp - l); n++)
-	    strcat (op, "0");
-	}
-      else
-	{
-	  char *p;
-	  op[0] = s[0];
-	  op[1] = '.';
-	  p = stpcpy (op + 2, s);
-	  snprintf (p, oplen - (p - op), "@%d", exp);
-	}
-    }
-  free (ss);
-  display_volatile = TRUE;
-  update_display ();
 }
 
 void
@@ -178,11 +212,9 @@ clear (gboolean all)
   point = FALSE;
   buf[0] = 0;
   update_display ();
+  in_error = FALSE;
   if (all)
-    {
-      binop = 0;
-      mpf_clear (accum);
-    }
+    binop = 0;
 }
 
 GtkWidget *
@@ -360,7 +392,7 @@ main (int argc, char *argv[])
 
   window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
   window_type_dock_atom = XInternAtom (dpy,
-				       "_NET_WM_WINDOW_TYPE_DOCK", False);
+				       "_NET_WM_WINDOW_TYPE_TOOLBAR", False);
 
   XChangeProperty (dpy, xwindow, 
 		   window_type_atom, XA_ATOM, 32, 
