@@ -1,5 +1,7 @@
 2003-03-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* .cvsignore: Add 'semantic.cache'.
+
 	* familiar/.cvsignore: Add 'dist-translation'.
 
 	* po/de.po: Fix Project-Id-Version.
