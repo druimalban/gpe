@@ -28,7 +28,7 @@ else
 BUILD = build
 endif
 
-all: $(PACKAGE).so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc doc
+all: $(PACKAGE).so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
 
 doc: 
 	make -C doc PACKAGE=$(PACKAGE)
