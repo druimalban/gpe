@@ -1,3 +1,6 @@
+2003-09-11	Florian Boor  	<florian.boor@kernelconcepts.de>
+	*	Added Slovak translation, thanks to Marcel Telka
+
 2003-09-02	Florian Boor	<florian.boor@kernelconcepts.de>
 	* timeanddate.c: Fixed bug in time setting, removed obsolete stuff.
 	
