@@ -22,24 +22,23 @@
 GList *
 sync_contacts (GList *data, gpe_conn *conn, int newdb)
 {
-  GSList *list, *first;
+  GSList *list, *i;
   
   list = fetch_uid_list (conn->contacts, "select distinct urn from contacts_urn");
-
-  first = list;
-
-  while (list)
+  
+  for (i = list; i; i = i->next)
     {
-      int urn = (int)list->data;
       GSList *tags, *first;
       MIMEDirVCard *vcard;
       gchar *string;
       changed_object *obj;
+      int urn = (int)i->data;
       
       tags = fetch_tag_data (conn->contacts, "select tag,value from contacts where urn=%d", urn);
-
       vcard = vcard_from_tags (tags);
+      gpe_tag_list_free (tags);
       string = mimedir_vcard_write_to_string (vcard);
+      g_object_unref (vcard);
 
       obj = g_malloc0 (sizeof (*obj));
       obj->comp = string;
@@ -48,25 +47,9 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
       obj->change_type = SYNC_OBJ_MODIFIED; 
 
       data = g_list_append (data, obj);
- 
-      first = tags;
-      while (tags)
-	{
-	  gpe_tag_pair *p = tags->data;
-
-	  g_free ((void *)p->tag);
-	  g_free ((void *)p->value);
-	  g_free (p);
-
-	  tags = tags->next;
-	}
-
-      g_slist_free (first);
-
-      list = list->next;
     }
 
-  g_slist_free (first);
+  g_slist_free (list);
 
   return data;
 }
