@@ -1,12 +1,6 @@
 <layout>
-  <page>
-    <label>About</label>
-    <group>
+    <page>
       <label>Home</label>
-      <multi-item>
-        <tag>HOME.ADDRESS</tag>
-        <label>Address</label>
-      </multi-item>
       <single-item>
         <tag>HOME.TELEPHONE</tag>
         <label>Phone</label>
@@ -27,13 +21,13 @@
         <tag>HOME.WWW</tag>
         <label>Web</label>
       </single-item>
-    </group>
-    <group>
-      <label>Work</label>
       <multi-item>
-        <tag>WORK.ADDRESS</tag>
+        <tag>HOME.ADDRESS</tag>
         <label>Address</label>
       </multi-item>
+  </page>
+  <page>
+      <label>Work</label>
       <single-item>
         <tag>WORK.TELEPHONE</tag>
         <label>Phone</label>
@@ -54,9 +48,23 @@
         <tag>WORK.WWW</tag>
         <label>Web</label>
       </single-item>
-    </group>
+      <multi-item>
+        <tag>WORK.ADDRESS</tag>
+        <label>Address</label>
+      </multi-item>
   </page>
-  <page>
+   <page>
+    <label>About</label>
+    <date-item>
+      <tag>BIRTHDAY</tag>
+      <label>Birthday</label>
+    </date-item>
+    <image-item>
+      <tag>PHOTO</tag>
+      <label>Photo</label>
+    </image-item>
+  </page>
+ <page>
     <label>Notes</label>
     <multi-item>
       <tag>NOTES</tag>

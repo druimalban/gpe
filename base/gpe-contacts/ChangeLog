@@ -1,7 +1,12 @@
+2004-07-24  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* editing.c: Some improvement in dialog layout.
+	* contacts-layout.xml: Optimisations for small screens, split up in "home"
+	                       and "work" address page. 
 
 2004-07-23  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    * maon.c: Fixed bug in screen size detection.
+    * main.c: Fixed bug in screen size detection.
 
 2004-07-16  Florian Boor  <florian.boor@kernelconcepts.de>
 

@@ -151,7 +151,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           pop_singles (vbox, singles, pw);
           singles = NULL;
           
-          hbox = gtk_hbox_new (FALSE, 0);
+          hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
           gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.5);
           gtk_box_pack_start (GTK_BOX (hbox), l, TRUE, TRUE, 0);
 
@@ -177,9 +177,9 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           pop_singles (vbox, singles, pw);
           singles = NULL;
           
-          hbox = gtk_hbox_new (FALSE, 0);
+          hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
           gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.5);
-          gtk_box_pack_start (GTK_BOX (hbox), l, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, TRUE, 0);
 
           btn = gtk_button_new();
           image = gtk_image_new();
@@ -250,7 +250,11 @@ create_edit (void)
   else
     {
       edit = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-      action_area = gtk_hbox_new (FALSE, 0);
+      action_area = gtk_hbutton_box_new();
+	  gtk_button_box_set_spacing(GTK_BUTTON_BOX(action_area),
+		                         gpe_get_boxspacing());
+	  gtk_button_box_set_layout(GTK_BUTTON_BOX(action_area),
+		                        GTK_BUTTONBOX_END);
       vbox = gtk_vbox_new (FALSE, 0);
       gtk_box_pack_end (GTK_BOX (vbox), action_area, FALSE, FALSE, 0);
       gtk_container_add (GTK_CONTAINER (edit), vbox);
@@ -260,8 +264,7 @@ create_edit (void)
   gpe_set_window_icon (edit, "icon");
 
   notebook2 = gtk_notebook_new ();
-  gtk_box_pack_start (GTK_BOX (vbox), notebook2, 
-		      TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), notebook2, TRUE, TRUE, 0);
 
   edit_delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
   edit_cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
@@ -605,6 +608,7 @@ on_edit_bt_image_clicked (GtkWidget *bimage, gpointer user_data)
   gtk_window_set_transient_for(GTK_WINDOW(filesel),
                                GTK_WINDOW(gtk_widget_get_toplevel(bimage)));
   gtk_window_set_modal(GTK_WINDOW(filesel),TRUE);
+  gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(filesel));
   
   g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
 		      "clicked", G_CALLBACK (store_filename), filesel);
