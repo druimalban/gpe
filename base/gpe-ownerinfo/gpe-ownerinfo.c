@@ -717,7 +717,7 @@ main (int argc, char *argv[])
   if (flag_transparent)
     {
       GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
-      style->bg_pixmap[GTK_STATE_NORMAL] = GDK_PARENT_RELATIVE;
+      style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap *)GDK_PARENT_RELATIVE;
       gtk_widget_set_style (smallphotobutton, style);
       gtk_widget_set_style (smallphotodrawingarea, style);
       gtk_widget_set_style (address, style);
