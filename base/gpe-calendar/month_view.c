@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <langinfo.h>
 
 #include <gtk/gtk.h>
 #include <glib.h>
@@ -22,136 +23,139 @@
 #include "globals.h"
 #include "month_view.h"
 
-static GSList *strings;
-static GtkWidget *day_list;
-static GtkWidget *datesel;
+static GtkWidget *datesel, *draw;
+static guint xp, xs, ys;
 
-static GtkStyle *light_style, *dark_style, *time_style;
-static GdkColor light_color, dark_color, time_color;
-
-static char *
-format_event (event_t ev)
+struct render_ctl
 {
-  char buf[256];
-  char *p = buf;
-  size_t l = sizeof (buf);
-  size_t r;
-  struct tm tm;
-  time_t t;
-  event_details_t evd;
+  gboolean valid;
+  guint nr;
+  gboolean events;
+};
 
-  localtime_r (&ev->start, &tm);
-  r = strftime (p, l, "%R-", &tm);
-  if (r == 0) return NULL;
-  p += r;
-  l -= r;
+static struct render_ctl rc[35];
 
-  t = ev->start + ev->duration;
-  localtime_r (&t, &tm);
-  r = strftime (p, l, "%R ", &tm);
-  if (r == 0) return NULL;
-  p += r;
-  l -= r;
+static gint
+draw_expose_event (GtkWidget *widget,
+		   GdkEventExpose *event,
+		   gpointer user_data)
+{
+  GtkDrawingArea *darea;
+  GdkDrawable *drawable;
+  guint width, height;
+  GdkGC *black_gc;
+  GdkGC *gray_gc;
+  GdkGC *white_gc;
+  guint i, j;
+  GdkFont *font = widget->style->font;
 
-  evd = event_db_get_details (ev);
-  if (evd == NULL) return NULL;
-  strncpy (p, evd->summary, l - 1);
-  p[l - 1] = 0;
+  g_return_val_if_fail (widget != NULL, TRUE);
+  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+
+  white_gc = widget->style->white_gc;
+  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
+  black_gc = widget->style->black_gc;
   
-  return g_strdup (buf);
-}
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+  
+  darea = GTK_DRAWING_AREA (widget);
+  drawable = widget->window;
 
-static void 
-selection_made( GtkWidget      *clist,
-		gint            row,
-		gint            column,
-		GdkEventButton *event,
-		GtkWidget      *widget)
-{
-  event_t ev;
-    
-  if (event->type == GDK_2BUTTON_PRESS)
+  width = widget->allocation.width;
+  height = widget->allocation.height;
+
+  gdk_window_clear_area (drawable, 
+			 event->area.x, event->area.y,
+			 event->area.width, event->area.height);
+
+  gdk_draw_rectangle (drawable, black_gc, 1,
+		      0, ys / 2,
+		      width,
+		      ys / 2);
+
+  for (i = 0; i < 7; i++)
     {
-      struct tm tm;
-      
-      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      guint x = xp + (i * xs);
+      static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
+				      ABDAY_6, ABDAY_7, ABDAY_1 };
+      gchar *s = nl_langinfo (days[i]);
+      guint w = gdk_string_width (font, s);
+      gdk_draw_text (drawable, font, white_gc,
+		     x + (xs - w) / 2, ys - font->descent,
+		     s, strlen (s));
+ 
+      for (j = 0; j < 5; j++)
+	{
+	  guint d = i + (7 * j);
+	  struct render_ctl *c = &rc[d];
+	  guint y = (j + 1) * ys;
 
-      if (ev) 
-	{
-	  gtk_widget_show (edit_event (ev));
-	}
-      else 
-	{
-	  char *t;
-	  gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t);
-	  localtime_r (&viewtime, &tm);
-	  strptime (t, MONTHTIMEFMT, &tm);
-	  viewtime = mktime (&tm);
-	  set_day_view ();
+	  if (c->valid)
+	    {
+	      char buf[10];
+	      guint w;
+	      
+	      gdk_draw_rectangle (drawable, white_gc, TRUE,
+				  x, y, xs, ys);
+	      
+	      gdk_draw_rectangle (drawable, black_gc, FALSE,
+				  x, y, xs, ys);
+	      
+	      snprintf (buf, sizeof (buf), "%d", c->nr);
+	      w = gdk_string_width (font, buf);
+	      
+	      gdk_draw_text (drawable, font, black_gc, 
+			     x + (xs - w) / 2, y + (ys / 2) + font->ascent,
+			     buf, strlen (buf));
+	    }
 	}
     }
+
+  gdk_gc_set_clip_rectangle (black_gc, NULL);
+  gdk_gc_set_clip_rectangle (gray_gc, NULL);
+  gdk_gc_set_clip_rectangle (white_gc, NULL);
+
+  return TRUE;
+}
+
+static guint
+day_of_week(guint year, guint month, guint day)
+{
+  guint result;
+
+  if (month < 3) 
+    {
+      month += 12;
+      --year;
+    }
+
+  result = day + (13 * month - 27)/5 + year + year/4
+    - year/100 + year/400;
+  return ((result + 6) % 7);
 }
 
 static gint
 month_view_update ()
 {
-  guint day, row = 0;
+  guint day;
   time_t start, end;
   struct tm tm_start, tm_end;
-  char buf[10];
-  gchar *line_info[2];
   GSList *day_events[32];
   GSList *iter;
-  guint i, width = 0, widget_width;
   guint days;
-
-  widget_width=day_list->allocation.width;
+  guint year, month;
+  guint wday;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
   gtk_widget_draw (datesel, NULL);
       
-  if (! light_style)
-    {
-      guint j;
-      light_color.red = 60000;
-      light_color.green = 60000;
-      light_color.blue = 60000;
-  
-      time_color.red = 20000;
-      time_color.green = 20000;
-      time_color.blue = 20000;
-  
-      dark_color.red = 45000;
-      dark_color.green = 45000;
-      dark_color.blue = 45000;
-
-      light_style = gtk_style_copy (gtk_widget_get_style (day_list));
-      dark_style = gtk_style_copy (gtk_widget_get_style (day_list));
-      time_style = gtk_style_copy (gtk_widget_get_style (day_list));
-      time_style->font = datefont;
- 
-      for (j = 0; j < 5; j++) 
-	{
-	  light_style->base[j] = light_color;
-	  dark_style->base[j] = dark_color;
-	  time_style->base[j] = time_color;
-	  time_style->fg[j] = light_color;
-	}
-    }
-  
-  gtk_clist_freeze (GTK_CLIST (day_list));
-  gtk_clist_clear (GTK_CLIST (day_list));
-
-  if (strings)
-    {
-      for (iter = strings; iter; iter = iter->next)
-	g_free (iter->data);
-      g_slist_free (strings);
-      strings = NULL;
-    }
-  
   localtime_r (&viewtime, &tm_start);
-  days = days_in_month (tm_start.tm_year + 1900, tm_start.tm_mon);
+  year = tm_start.tm_year + 1900;
+  month = tm_start.tm_mon;
+
+  days = days_in_month (year, month);
 
   for (day = 1; day <= days; day++)
     {
@@ -175,114 +179,80 @@ month_view_update ()
 	((event_t)iter->data)->mark = FALSE;
     }
 
-  for (day = 1; day <= days; day++)
+  wday = 1 - day_of_week(year, month + 1, 1);
+  for (day = 0; day < 35; day++)
     {
-      guint w;
-      gchar *text = NULL;
-      event_t ev = NULL;
- 
-      tm_start.tm_mday = day;
-      tm_start.tm_hour = 0;
-      tm_start.tm_min = 0;
-      tm_start.tm_sec = 0;
-      mktime (&tm_start);
-
-      for (iter = day_events[day]; iter; iter = iter->next)
+      gint rday = day + wday;
+      struct render_ctl *c = &rc[day];
+      c->nr = rday;
+      if (rday <= 0 || rday > days)
 	{
-	  ev = (event_t) iter->data;
-
-	  if (ev->mark == FALSE)
-	    {
-	      ev->mark = TRUE;
-	      text = format_event (ev);
-	      g_slist_append (strings, text);
-	      break;
-	    }
-	} 
-
-      line_info[1] = text;
-      strftime (buf, sizeof (buf), MONTHTIMEFMT, &tm_start);
-      line_info[0] = buf;
-     
-      w = gdk_string_width (time_style->font, buf);
-      if (w > width) width = w;
-	
-      gtk_clist_append (GTK_CLIST (day_list), line_info);
-
-      if (ev)
-	gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
-      
-      gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, 
-				day_events[day] ? dark_style : light_style); 
-      row++;
-
-      for (; iter; iter = iter->next)
+	  c->valid = FALSE;
+	}
+      else
 	{
-	  ev = (event_t) iter->data;
-
-	  if (ev->mark)
-	    continue;
-
-	  ev->mark = TRUE;
-
-	  line_info[0] = NULL;
-	  line_info[1] = format_event (ev);
-	  g_slist_append (strings, line_info[1]);
-
-          gtk_clist_append (GTK_CLIST (day_list), line_info);
-	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
-	
-	  gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, dark_style);
-	  row++;
-       } 
+	  c->valid = TRUE;
+	  c->events = day_events[rday] ? TRUE : FALSE;
+	}
     }
 
-  for (day = 1; day <= days; day++)
-    event_db_list_destroy (day_events[day]);
-
-  for (i = 0; i < row; i++)
-    gtk_clist_set_cell_style (GTK_CLIST (day_list), i, 0, time_style);
-
-  gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
-  gtk_clist_set_column_width (GTK_CLIST (day_list), 1, widget_width - 20 - (width + 4));
-
-  gtk_clist_thaw (GTK_CLIST (day_list));
+  gtk_widget_draw (draw, NULL);
   
   return TRUE;
 }
 
 static void
 changed_callback(GtkWidget *widget,
-		 GtkWidget *clist)
+		 gpointer d)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
   month_view_update ();
+}
+
+static void
+resize_table(GtkWidget *widget,
+	     gpointer d)
+{
+  static guint old_width, old_height;
+  guint width = widget->allocation.width,
+    height = widget->allocation.height;
+
+  if (width != old_width || height != old_height)
+    {
+      old_width = width;
+      old_height = height;
+
+      xs = width / 7;
+      ys = height / 6;
+
+      if (ys > xs) 
+	ys = xs;
+
+      gtk_widget_draw (draw, NULL);
+    }
 }
 
 GtkWidget *
 month_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+
+  draw = gtk_drawing_area_new ();
+  gtk_signal_connect (GTK_OBJECT (draw),
+		      "expose_event",
+		      GTK_SIGNAL_FUNC (draw_expose_event),
+		      NULL);
 
   datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
   
-  day_list = gtk_clist_new (2);
-  
-  gtk_signal_connect (GTK_OBJECT (day_list), "select_row",
-                       GTK_SIGNAL_FUNC (selection_made),
-                       NULL);
-
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  
-  gtk_container_add (GTK_CONTAINER (scrolled_window), day_list);
-  
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
+
+  gtk_signal_connect(GTK_OBJECT (draw), "size-allocate",
+		     GTK_SIGNAL_FUNC (resize_table), NULL);
 
   gtk_signal_connect(GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), day_list);
+		     GTK_SIGNAL_FUNC (changed_callback), NULL);
   
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
 		       (gpointer) month_view_update);
