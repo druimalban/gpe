@@ -149,11 +149,10 @@ pan (GtkWidget *w, GdkEventMotion *m)
 {
   gint x = m->x - x_start, y = m->y - y_start;
 
-  if ((x < (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 10)) && (y < (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10)))
-  {
+  if (x < (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 10))
     gtk_adjustment_set_value (h_adjust, (double) x);
+  if (y < (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10))
     gtk_adjustment_set_value (v_adjust, (double) y);
-  }
 }
 
 void
