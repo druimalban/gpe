@@ -133,7 +133,7 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/Packages/_Apply"), "", on_package_install_clicked, MI_PACKAGES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
   { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
   { N_("/_Help/Index"),   NULL,         on_help_clicked,    0, "<StockItem>",GTK_STOCK_HELP },
-  { N_("/_Help/About"),   NULL,         on_about_clicked,    0, "<Item>" },
+  { N_("/_Help/About"),   NULL,         on_about_clicked,    0, "<Item>" }
 };
 
 int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
@@ -142,7 +142,8 @@ int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
 struct gpe_icon my_icons[] = {
   { "exit" },
   { "local-package", PREFIX "/share/pixmaps/local-package-16.png" },
-  { "icon", PREFIX "/share/pixmaps/gpe-package.png" }
+  { "icon", PREFIX "/share/pixmaps/gpe-package.png" },
+  { NULL, NULL}
 };
 
 
