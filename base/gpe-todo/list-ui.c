@@ -40,7 +40,7 @@ extern GtkWidget *window;
 static void
 item_do_edit (void)
 {
-  gtk_widget_show_all (edit_item (current_menu_item, -1));
+  gtk_widget_show_all (edit_item (current_menu_item, -1, GTK_WINDOW(window)));
 
   current_menu_item = NULL;
 }
@@ -102,7 +102,7 @@ categories_menu (void)
 static void
 new_todo_item (GtkWidget *w, gpointer user_data)
 {
-  GtkWidget *todo = edit_item (NULL, selected_category);
+  GtkWidget *todo = edit_item (NULL, selected_category, GTK_WINDOW(window));
 
   gtk_widget_show_all (todo);
 }
@@ -157,7 +157,7 @@ open_editing_window (GtkTreePath *path)
 
   gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 3, &i, -1);
 
-  gtk_widget_show_all (edit_item (i, -1));
+  gtk_widget_show_all (edit_item (i, -1, GTK_WINDOW(window)));
 }
 
 void

@@ -18,7 +18,8 @@ extern GtkWidget *g_draw;
 extern GtkWidget *the_notebook;
 
 extern GtkWidget *edit_item (struct todo_item *item,
-                             gint initial_category);
+                             gint initial_category,
+                             GtkWindow *parent);
 
 extern void categories_menu (void);
 extern void refresh_items (void);

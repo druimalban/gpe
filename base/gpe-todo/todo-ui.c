@@ -247,7 +247,7 @@ change_categories (GtkWidget *w, struct edit_todo *t)
  * if item=NULL, you may pass the item's initial category.
  */
 GtkWidget *
-edit_item (struct todo_item *item, gint initial_category)
+edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *top_vbox;
@@ -267,7 +267,7 @@ edit_item (struct todo_item *item, gint initial_category)
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   GtkWidget *hbox_categories = NULL;
-  GtkWidget *scrolled_window;
+  GtkWidget *scrolled_window, *viewport;
   struct edit_todo *t;
   guint i;
   struct tm tm;
@@ -275,6 +275,8 @@ edit_item (struct todo_item *item, gint initial_category)
 
   t = g_malloc (sizeof (struct edit_todo));
 
+  gtk_window_set_transient_for(GTK_WINDOW(window), parent);
+  gtk_window_set_modal(GTK_WINDOW(window), TRUE);
   displaymigration_mark_window (window);
 
   top_vbox = gtk_vbox_new (FALSE, 0);
@@ -284,6 +286,9 @@ edit_item (struct todo_item *item, gint initial_category)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
+  viewport = gtk_viewport_new(NULL, NULL);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(viewport), GTK_SHADOW_NONE);
+  
   buttonok = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
@@ -394,7 +399,8 @@ edit_item (struct todo_item *item, gint initial_category)
 
   gtk_container_set_border_width (GTK_CONTAINER (window),
 				  gpe_get_border ());
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
+  gtk_container_add (GTK_CONTAINER (viewport), vbox);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), viewport);
 
   gtk_box_pack_start (GTK_BOX (top_vbox), scrolled_window, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (top_vbox), buttonbox, FALSE, FALSE, 2);

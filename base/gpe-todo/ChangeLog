@@ -1,3 +1,11 @@
+2004-10-11  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * list-ui.c, todo-ui.c, todo.h: Added parameter for parent window to 
+                                    edit_item()
+    * todo-ui.c (edit_item): Changed window to become modal. Removed shadow
+                             from viewport.
+
+
 2004-09-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.49 released.
