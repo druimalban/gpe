@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libtododb
 #DEBUG = yes 
 CVSBUILD = yes
-VERSION = 0.06
+VERSION = 0.07
 
 LINGUAS =
 
@@ -10,20 +10,9 @@ MEMBERS = todo-db old-db
 
 SONAME = libtododb.so.0
 
-CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED -I../libgpepimc
-LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget -L../libgpepimc -lgpepimc
-
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -g #-O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD
-
-CPPFLAGS += -I. -I../libgpewidget
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED -I../libgpepimc
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs glib-2.0` -lsqlite -L../libgpepimc -lgpepimc
 
 HEADERS = gpe/todo-db.h
 
@@ -43,10 +32,7 @@ libtododb.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/$$i; done
