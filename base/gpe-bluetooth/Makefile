@@ -5,7 +5,7 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.26
 
-MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus
+MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset
 
 CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -Wall
 

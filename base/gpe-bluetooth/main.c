@@ -47,6 +47,7 @@
 #include "dun.h"
 #include "lap.h"
 #include "pan.h"
+#include "headset.h"
 
 #define _(x) gettext(x)
 
@@ -571,6 +572,7 @@ main (int argc, char *argv[])
   dun_init ();
   lap_init ();
   pan_init ();
+  headset_init ();
 
   dock_window = window->window;
   gpe_system_tray_dock (window->window);
