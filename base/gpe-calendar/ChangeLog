@@ -1,3 +1,7 @@
+2002-07-31  Philip Blundell  <philb@gnu.org>
+
+	* main.c: Remove useless include of gdk_imlib.h
+
 2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-calendar.menu: Give full path for the icon. Move to section

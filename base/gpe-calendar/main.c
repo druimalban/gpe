@@ -13,7 +13,6 @@
 #include <time.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 #include <libintl.h>
 
 #include "init.h"
