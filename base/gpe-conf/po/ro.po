@@ -1,0 +1,1093 @@
+# Mesajele în limba românã pentru gpe-conf.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-conf.
+# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+#
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.0.9\n"
+"POT-Creation-Date: 2003-04-22 11:20+0200\n"
+"PO-Revision-Date: 2003-05-05 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: main.c:318
+msgid "Warning: PCMCIA init failed."
+msgstr "Avertisment: iniþializare PCMCIA eºuatã."
+
+#: main.c:345
+msgid "This mode is disabled, please try:\n"
+msgstr "Acest mod este deactivat, vã rugãm încercaþi:\n"
+
+#: main.c:346
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf [NumeApplet]\n"
+"unde NumeAppletName este:\n"
+
+#: main.c:360
+#, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Applet %s necunoscut!\n"
+
+#: main.c:361
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Folosire: gpe-conf [NumeApplet]\n"
+"unde NumeAppletName este:\n"
+
+#: applets.c:332
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Unele opþiuni sunt\n"
+"accesibile numai pentru root.\n"
+"Vã rugãm introduceþi parola."
+
+#: applets.c:368 ipaqscreen/calibrate.c:33
+msgid "Sorry, wrong password."
+msgstr "Ne pare rãu, parolã greºitã"
+
+#: timeanddate.c:350
+msgid "Time & Date"
+msgstr "Timp ºi Datã"
+
+#: timeanddate.c:364
+msgid "Date"
+msgstr "Datã"
+
+#: timeanddate.c:385
+msgid "Enter current date here or use button to select."
+msgstr "Introduceþi data curentã aici sau folosiþi butonul pentru a selecta."
+
+#: timeanddate.c:392
+msgid "Time"
+msgstr "Timp"
+
+#: timeanddate.c:429 network.c:340
+msgid "Network"
+msgstr "Reþea"
+
+#: timeanddate.c:455
+msgid "Here you may select which timeserver i use to set my clock."
+msgstr "Puteþi selecta aici ce server de timp e folosit pentru setarea ceasului."
+
+#: timeanddate.c:457
+msgid "Get time from network"
+msgstr "Obþine timpul de pe reþea"
+
+#: timeanddate.c:463
+msgid "If i'm connected to the Internet, you may press this butten to set the time on this device using the timeserver above."
+msgstr "Dacã sunt conectat la Internet, puteþi apãsa acest buton pentru a seta timpul pe acest dispozitiv folosind serverul de tim de deasupra."
+
+#: timeanddate.c:468 timeanddate.c:474
+msgid "Timezone"
+msgstr "Zona de timp"
+
+#: timeanddate.c:512
+msgid "Select your current timezone here. The setting applies after after next login."
+msgstr "Selectaþi zona d-voastrã de timp aici. Setarea se aplicã dupã urmãtorul login."
+
+#: timeanddate.c:518
+msgid "Daylight Saving"
+msgstr "Ora de varã"
+
+#: timeanddate.c:524
+msgid "Use daylight saving time"
+msgstr "Foloseºte timpul conform orarul de varã"
+
+#: timeanddate.c:529
+msgid "Check this box if you want your device to handle daylight saving time for you."
+msgstr "Bifaþi aceastã cãsuþã dacã doriþi ca dispozitivul d-voastrã sã seteze schimbarea orarul de varã pentru d-voastrã."
+
+#: timeanddate.c:531
+msgid "Offset"
+msgstr "Diferenþã"
+
+#: timeanddate.c:538
+msgid "Default"
+msgstr "Implicit"
+
+#: timeanddate.c:543
+msgid "Use default DST offset of one hour?"
+msgstr "Folosiþi diferenþa implicitã de o orã pentru orarul de varã"
+
+#: timeanddate.c:548
+#, fuzzy
+msgid "Hours"
+msgstr "Ore"
+
+#: timeanddate.c:551
+msgid "Select daylight saving time offset hours here."
+msgstr "Selectaþi diferenþa în ore pentru orarul de varã."
+
+#: timeanddate.c:556
+msgid "Minutes"
+msgstr "Minute"
+
+#: timeanddate.c:559
+msgid "Select daylight saving time offset minutes here."
+msgstr "Selectaþi diferenþa în minute pentru orarul de varã."
+
+#: timeanddate.c:565
+#, fuzzy
+msgid "Advanced Settings"
+msgstr "Setãri Avansate"
+
+#: timeanddate.c:570
+msgid "Use advanced settings"
+msgstr "Foloseºte setãri avansate"
+
+#: timeanddate.c:572
+msgid "Check this if you want to use the advanced settings below."
+msgstr "Bifeazã aici dacã doriþi sã folosiþi setãrile avansate dedesubt."
+
+#: timeanddate.c:637
+msgid "Could not set timezone."
+msgstr "Nu am putut seta zona de timp."
+
+#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:74
+msgid "General"
+msgstr "General"
+
+#: appmgr_setup.c:237
+#, fuzzy
+msgid "Tab View"
+msgstr "Tab Vizualizare"
+
+#: appmgr_setup.c:252
+#, fuzzy
+msgid "Icon"
+msgstr "Iconuri"
+
+#: appmgr_setup.c:256
+msgid "List"
+msgstr "Listã"
+
+#: appmgr_setup.c:265
+msgid "Changes will take effect after relog"
+msgstr "Schimbãrile vor fi în efect dupã re-logare"
+
+#: ipaqscreen/main.c:68
+msgid "Portrait"
+msgstr "Verticalã"
+
+#: ipaqscreen/main.c:69
+msgid "Landscape (left)"
+msgstr "Orizontalã (stânga)"
+
+#: ipaqscreen/main.c:70
+#, fuzzy
+msgid "Inverted"
+msgstr "Rãsturnat"
+
+#: ipaqscreen/main.c:71
+msgid "Landscape (right)"
+msgstr "Orizontalã (dreapta)"
+
+#: ipaqscreen/main.c:92
+msgid "Light"
+msgstr "Luminã"
+
+#: ipaqscreen/main.c:98
+msgid "Brightness"
+msgstr "Strãlucire"
+
+#: ipaqscreen/main.c:104
+msgid "State"
+msgstr "Stare"
+
+#: ipaqscreen/main.c:115
+msgid "Screensaver"
+msgstr "Screensaver"
+
+#: ipaqscreen/main.c:121
+msgid "Delay until start"
+msgstr "Întârziere pânã începe"
+
+#: ipaqscreen/main.c:125
+msgid "Activated"
+msgstr "Activat"
+
+#: ipaqscreen/main.c:135
+msgid "Orientation"
+msgstr "Orientare"
+
+#: ipaqscreen/main.c:154
+msgid "Touchscreen"
+msgstr "Touchscreen"
+
+#: ipaqscreen/main.c:158
+msgid "Calibrate"
+msgstr "Calibrare"
+
+#: ipaqscreen/main.c:160 network.c:553
+#, fuzzy
+msgid "on"
+msgstr "activat"
+
+#: ipaqscreen/main.c:161 network.c:561
+msgid "off"
+msgstr "deactivat"
+
+#: ipaqscreen/main.c:272
+msgid "minutes"
+msgstr "minute"
+
+#: ipaqscreen/main.c:275
+msgid "seconds"
+msgstr "secunde"
+
+#: ipaqscreen/main.c:277
+msgid "Off"
+msgstr "Deactivat"
+
+#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:124
+msgid "Couldn't read screen settings!"
+msgstr "Nu am putut citi setãri ecran!"
+
+#: ipaqscreen/rotation.c:54
+msgid "Can't interpret output from xrandr!"
+msgstr "Nu am putut interpreta ieºire lui xrandr!"
+
+#: ipaqscreen/rotation.c:71
+msgid "Can't set rotation on an x86."
+msgstr "Nu pot seta rotaþia pe un x86."
+
+#: kbd.c:146
+msgid "Keyboard Geometry / Layout"
+msgstr "Geometrie tastaturã / Aºezare"
+
+#: kbd.c:186
+msgid "User defined"
+msgstr "Definit de utilizator"
+
+#: keyboard.c:138
+#, fuzzy
+msgid "Error reading keyboard definition)"
+msgstr "Eroare la citirea definirii tastaturii"
+
+#: keyboard.c:212
+msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
+msgstr "Configurare tastaturã externã. Butoane deactivate \t\t\t\t\tnu sunt instalate în prezent."
+
+#: keyboard.c:217
+msgid "External Keyboard Type"
+msgstr "Tip tastaturã externã"
+
+#: keyboard.c:224
+msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
+msgstr "Aici puteþi selecta modelul tastaturii externe. \t\t\t\t  Pentru a instala software de suport conectaþi dispozitivul d-voastra \t\t\t\t  la internet ºi apãsaþi butonul \"Install\"."
+
+#: keyboard.c:245
+msgid "Tap here to select this keyboard model."
+msgstr "Apãsaþi aici pentru a selecta acest model de tastaturã."
+
+#: keyboard.c:252
+msgid "Install"
+msgstr "Instaleazã"
+
+#: keyboard.c:258
+msgid "Tap here to install support for this keyboard."
+msgstr "Apãsaþi aici pentru a instala suport pentru aceastã tastaturã."
+
+#: network.c:115
+msgid "New interface:"
+msgstr "Nouã interfaþã:"
+
+#: network.c:121
+msgid "Enter name of new interface"
+msgstr "Introduceþi numele noii interfeþe"
+
+#: network.c:127
+msgid "This interface definition already exists!"
+msgstr "Acestã definiþie de interfaþã existã deja!"
+
+#: network.c:163
+msgid "Do you want to delete this interface?"
+msgstr "Doriþi sã ºtergeþi aceastã interfaþã?"
+
+#: network.c:163
+msgid "Question"
+msgstr "Întrebare"
+
+#: network.c:337
+#, fuzzy
+msgid "Address"
+msgstr "Adresã"
+
+#: network.c:338
+msgid "Netmask"
+msgstr "Netmask"
+
+#: network.c:339
+msgid "Broadcast"
+msgstr "Broadcast"
+
+#: network.c:341
+msgid "Gateway"
+msgstr "Gateway"
+
+#: network.c:407
+#, fuzzy
+msgid "Hostname"
+msgstr "Hostname"
+
+#: network.c:473
+#, fuzzy
+msgid "Provider"
+msgstr "Furnizor"
+
+#: network.c:527
+msgid "Proxy"
+msgstr "Proxy"
+
+#: network.c:531
+msgid "No proxy for"
+msgstr "Nici un proxy pentru"
+
+#: network.c:539
+msgid "Use DHCP"
+msgstr "Foloseºte DHCP"
+
+#: network.c:572
+#, fuzzy
+msgid "DNS server"
+msgstr "Server DNS"
+
+#: network.c:752 network.c:753
+msgid "Add Interface"
+msgstr "Adaugã Interfaþã"
+
+#: network.c:758 network.c:759
+#, fuzzy
+msgid "Remove Interface"
+msgstr "Eliminã Interfaþã"
+
+#: network.c:775
+#, fuzzy
+msgid "Couldn't read network configuration."
+msgstr "Nu am putut citi configuraþia pentru reþea."
+
+#: network.c:784
+msgid "global"
+msgstr "global"
+
+#: theme.c:220 theme.c:224 theme.c:888 theme.c:908 theme.c:1004 theme.c:1010
+#, fuzzy
+msgid "Color"
+msgstr "Culoare"
+
+#: theme.c:392
+#, fuzzy
+msgid "Red"
+msgstr "Roºu"
+
+#: theme.c:397
+#, fuzzy
+msgid "Green"
+msgstr "Verde"
+
+#: theme.c:402
+#, fuzzy
+msgid "Blue"
+msgstr "Albastru"
+
+#: theme.c:641
+#, fuzzy
+msgid "Select color"
+msgstr "Selecteazã culoare"
+
+#: theme.c:667 theme.c:733
+msgid ""
+"You don't have read access\n"
+"to selected background image!"
+msgstr ""
+"Nu aveþi permisiune pentru a citi\n"
+"pentru a selecta imagine de fundal!"
+
+#: theme.c:811
+#, fuzzy
+msgid "Theme"
+msgstr "Teme"
+
+#: theme.c:820
+#, fuzzy
+msgid "Desktop Theme"
+msgstr "Teme Desktop"
+
+#: theme.c:832
+msgid "Name"
+msgstr "Nume"
+
+#: theme.c:847
+msgid "Background"
+msgstr "Fundal"
+
+#: theme.c:858
+#, fuzzy
+msgid "Background Settings"
+msgstr "Setãri Fundal"
+
+#: theme.c:865
+msgid "Solid color"
+msgstr "Culoare solidã"
+
+#: theme.c:879
+msgid "Horizontal"
+msgstr "Orizontalã"
+
+#: theme.c:883
+#, fuzzy
+msgid "Vertical"
+msgstr "Verticalã"
+
+#: theme.c:899
+#, fuzzy
+msgid "Color gradient"
+msgstr "Culoare gradient"
+
+#: theme.c:919
+msgid "Image"
+msgstr "Imagine"
+
+#: theme.c:945
+msgid "Centered"
+msgstr "Centratã"
+
+#: theme.c:949
+#, fuzzy
+msgid "Tiled"
+msgstr "Repetatã"
+
+#: theme.c:952
+#, fuzzy
+msgid "Stretched"
+msgstr "Întinsã"
+
+#: theme.c:957
+#, fuzzy
+msgid "Font"
+msgstr "Font"
+
+#: theme.c:966 theme.c:986
+#, fuzzy
+msgid "Desktop Font"
+msgstr "Font Desktop"
+
+#: theme.c:973 theme.c:1028
+msgid "Family"
+msgstr "Familie"
+
+#: theme.c:993 theme.c:1048
+msgid "Size"
+msgstr "Dimensiune"
+
+#: theme.c:1021 theme.c:1041
+#, fuzzy
+msgid "Application Font"
+msgstr "Font Aplicaþie"
+
+#: keyctl.c:231
+msgid "ERROR: Can't open keylaunchrc for writing!\n"
+msgstr "EROARE: Nu pot deschide keylaunchrc pentru scriere!\n"
+
+#: ownerinfo.c:201
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Numai utilizatorul 'root' are dreptul sã schimba aceastã informaþie"
+
+#: ownerinfo.c:221
+msgid "Name:"
+msgstr "Nume"
+
+#: ownerinfo.c:236
+msgid "E-Mail:"
+msgstr "E-Mail:"
+
+#: ownerinfo.c:251
+#, fuzzy
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: ownerinfo.c:266
+#, fuzzy
+msgid "Address:"
+msgstr "Adresa:"
+
+#: ownerinfo.c:292
+#, fuzzy
+msgid "Photofile:"
+msgstr "Fiºier pozã:"
+
+#: login-setup.c:131
+msgid "Some or all of these settings can only be changed by the user 'root'."
+msgstr "Unele dintre aceste setãri pot fi schimbate doar de 'root'."
+
+#: login-setup.c:167
+msgid "Show owner information at login."
+msgstr "Afiºeazã informaþie utilizator la login."
+
+#: login-setup.c:169
+msgid "Use background image for login screen."
+msgstr "Foloseºte imagine fundal pentru ecran login."
+
+#: login-setup.c:171
+msgid "Lock display on suspend."
+msgstr "Încuie ecran la suspendare."
+
+#: login-setup.c:184
+msgid "Image:"
+msgstr "Imagine:"
+
+#: sleep/interface.c:71
+#, fuzzy
+msgid "Auto sleep"
+msgstr "Auto adormire"
+
+#: sleep/interface.c:81 sleep/interface.c:117
+#, fuzzy
+msgid "enabled"
+msgstr "permis"
+
+#: sleep/interface.c:95
+msgid "sleep timeout"
+msgstr "pauzã adormire"
+
+#: sleep/interface.c:98 sleep/interface.c:132
+msgid "idle(sec)"
+msgstr "nefolosit(sec)"
+
+#: sleep/interface.c:107
+msgid "Auto dim"
+msgstr "Auto estompare"
+
+#: sleep/interface.c:130
+msgid "backlight dim timeout"
+msgstr "pauzã estompare backlight"
+
+#: sleep/interface.c:139
+msgid "Auto dim level"
+msgstr "Nivel zoom automat"
+
+#: sleep/interface.c:157
+msgid "Auto sleep advanced controls"
+msgstr "Controale avansate auto adormire"
+
+#: sleep/interface.c:167
+msgid "CPU"
+msgstr "CPU"
+
+#: sleep/interface.c:174
+msgid "Sleep on cpu less than load"
+msgstr "Adormire la cpu mai puþin de încãrcare"
+
+#: sleep/interface.c:185
+msgid "load"
+msgstr "încãrcare"
+
+#: sleep/interface.c:192
+msgid "APM"
+msgstr "APM"
+
+#: sleep/interface.c:198
+msgid "Sleep on AC"
+msgstr "Adormire pe AC"
+
+#: sleep/interface.c:200
+msgid "probe IRQs"
+msgstr "probeazã întreruperi"
+
+#: sleep/interface.c:206
+msgid "Check IRQ activity"
+msgstr "Verificã activitate întreruperi"
+
+#: sleep/interface.c:208
+#, fuzzy
+msgid "Choose IRQs"
+msgstr "Alegeþi întreruperi"
+
+#: users/interface.c:208
+#, fuzzy
+msgid "User Name"
+msgstr "Nume utilizator"
+
+#: users/interface.c:209
+#, fuzzy
+msgid "User Info"
+msgstr "Informaþii Utilizator"
+
+#: users/interface.c:211
+msgid "Home"
+msgstr "Acasã"
+
+#: users/interface.c:228 users/interface.c:229
+msgid "Add user"
+msgstr "Adaugã utilizator"
+
+#: users/interface.c:229
+#, fuzzy
+msgid "Add a new user"
+msgstr "Adaugã un nou utilizator"
+
+#: users/interface.c:233 users/interface.c:234
+#, fuzzy
+msgid "Edit user"
+msgstr "Editare utilizator"
+
+#: users/interface.c:234
+#, fuzzy
+msgid "Edit existing user"
+msgstr "Editare utilizator existest"
+
+#: users/interface.c:238 users/interface.c:239
+#, fuzzy
+msgid "Delete user"
+msgstr "ªterge utilizator"
+
+#: users/interface.c:239
+msgid "Delete existing user"
+msgstr "ªterge utilizator existent"
+
+#: users/interface.c:283
+#, fuzzy
+msgid "User settings"
+msgstr "Setãri utilizator"
+
+#: users/interface.c:297
+#, fuzzy
+msgid "User Name:"
+msgstr "Nume utilizator:"
+
+#: users/interface.c:313
+msgid "Password:"
+msgstr "Parolã:"
+
+#: users/interface.c:321
+#, fuzzy
+msgid "User Info:"
+msgstr "Informaþii Utilizator:"
+
+#: users/interface.c:337
+#, fuzzy
+msgid "Shell:"
+msgstr "Shell:"
+
+#: users/interface.c:356
+#, fuzzy
+msgid "Home:"
+msgstr "Acasã:"
+
+#: users/interface.c:374
+#, fuzzy
+msgid "Change"
+msgstr "Schimbã"
+
+#: users/interface.c:435
+#, fuzzy
+msgid "Change Password"
+msgstr "Schimbã Parolã"
+
+#: users/interface.c:462
+#, fuzzy
+msgid "Old Password:"
+msgstr "Vechea Parolã:"
+
+#: users/interface.c:469
+#, fuzzy
+msgid "New Password:"
+msgstr "Noua Parolã:"
+
+#: users/interface.c:477
+msgid "Confirm:"
+msgstr "Confirmare:"
+
+#: users/callbacks.c:104
+#, fuzzy
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"Nu puteþi elimina\n"
+" utilizatori sistem!"
+
+#: users/callbacks.c:138
+msgid "Please choose a user name."
+msgstr "Vã rugãm alegeþi un nume utilizator."
+
+#: users/callbacks.c:156
+msgid "Please choose a home directory."
+msgstr "Vã rugãm alegeþi un director acasã."
+
+#: users/callbacks.c:217
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"Cele doi noi parole sunt diferite!\n"
+" Încercaþi din nou!"
+
+#: users/callbacks.c:220
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Parolã greºitã\n"
+" Încercaþi din nou!"
+
+#: cfgfile.c:630
+#, fuzzy
+msgid "No write access to network configuration."
+msgstr "Nu aveþi permisiune pentru a scrie configuraþia pentru reþea."
+
+#: gpe-admin.c:45
+msgid "This setting can only be changed by user root!"
+msgstr "Aceastã setare poate fi schimbatã numai de utilizatorul root!"
+
+#: gpe-admin.c:81
+msgid "Allow users to configure everything"
+msgstr "Permite utilizatori sã seteze totul"
+
+#: storage.c:261 storage.c:422
+#, fuzzy
+msgid "Internal Flash"
+msgstr "Flash intern"
+
+#: storage.c:267 storage.c:428
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:273 storage.c:434
+#, fuzzy
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:279 storage.c:440
+msgid "Network Filesystem"
+msgstr "Sistem de fiºiere de reþea"
+
+#: storage.c:296 storage.c:355 storage.c:477 storage.c:530
+#, fuzzy
+msgid "Total:"
+msgstr "Total:"
+
+#: storage.c:299 storage.c:480
+msgid "Mounted at"
+msgstr "Montal la"
+
+#: storage.c:305 storage.c:463
+#, fuzzy
+msgid "Free space"
+msgstr "Spaþiu liber"
+
+#: storage.c:342
+msgid "System memory"
+msgstr "Memorie sistem"
+
+#: storage.c:349 storage.c:518
+msgid "Free memory"
+msgstr "Memorie liberã"
+
+#: storage.c:501
+msgid "System Memory"
+msgstr "Memorie Sistem"
+
+#: serial.c:143
+#, fuzzy
+msgid "Couldn't find default runlevel!"
+msgstr "Nu am putut determina nivelul de rulare implicit!"
+
+#: serial.c:265 serial.c:269
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Interfaþã simplã pentru configurarea portului serial. Componentele deactivate nu sunt instalate."
+
+#: serial.c:267
+#, fuzzy
+msgid "Simple"
+msgstr "Simplu"
+
+#: serial.c:272
+msgid "Serial port default usage"
+msgstr "Folosire implicitã a portului serial"
+
+#: serial.c:276
+msgid "Select desired software to use serial port here."
+msgstr "Selectaþi software-ul dorit pentru a folosi portul serial aici."
+
+#: serial.c:278
+#, fuzzy
+msgid "Console"
+msgstr "Consolã"
+
+#: serial.c:280
+msgid "This option runs console on serial port. (default)"
+msgstr "Aceastã opþiune ruleazã consola pe portul serial. (implicit)"
+
+#: serial.c:282
+msgid "GPS Daemon"
+msgstr "Demon GPS"
+
+#: serial.c:285
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Aceastã opþiune permite pornirea lui GPSD, care furnizeazã date de la un receptor GPS la aplicaþii."
+
+#: serial.c:287
+msgid "Nothing (free)"
+msgstr "Nimic (liber)"
+
+#: serial.c:289
+msgid "Don't start any software that uses the serial port."
+msgstr "Nu porni nici un software ce foloseºte portul serial."
+
+#: logread.c:140
+msgid "<empty syslog>"
+msgstr "<syslog gol>"
+
+#: logread.c:191
+#, fuzzy
+msgid "System Log"
+msgstr "Log sistem"
+
+#: packages.c:80 packages.c:185
+msgid "Start"
+msgstr "Start"
+
+#: packages.c:82
+msgid "Update finished. Please check log messages for errors."
+msgstr "Actualizare terminatã. Vã rugãm verificaþi mesaje log pentru erori."
+
+#: packages.c:103
+msgid "Update using \"ipkg upgrade\" started.\n"
+msgstr "Actualizare folosind \"ipkg upgrade\" începutã.\n"
+
+#: packages.c:126
+msgid "Running..."
+msgstr "Rulez..."
+
+#: packages.c:175
+msgid "Update"
+msgstr "Actualizeazã"
+
+#: packages.c:180
+msgid "Update from network"
+msgstr "Actualizeazã de pe reþea"
+
+#: packages.c:189
+msgid "Update entire system over an internet connection."
+msgstr "Actualizeazã întregul sistem prin conexiune pe internet."
+
+#: packages.c:193
+msgid "Activity log"
+msgstr "Log activitate"
+
+#: packages.c:201
+msgid "This window shows all output from the packet manager that performs the update."
+msgstr "Aceastã fereastrã aratã toate ieºirile de la managerul de pachete care executã actualizãri."
+
+#: cardinfo.c:224
+#, fuzzy
+msgid "Could not write to temporal config file."
+msgstr "Nu am putut scrie în fiºierul de configurare temporar."
+
+#: cardinfo.c:394
+#, fuzzy
+msgid "Could not open pidfile:"
+msgstr "Nu am putut deschide fiºierpid:"
+
+#: cardinfo.c:398
+#, fuzzy
+msgid "Could not read pidfile"
+msgstr "Nu am putut citi fiºierpid"
+
+#: cardinfo.c:402
+msgid "Could not signal cardmgr:"
+msgstr "Nu am utut semnala cardmgr:"
+
+#: cardinfo.c:467
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "gpe-conf trbuie sã fie setuid root pentru a folosi capabilitatea cardinfo"
+
+#: cardinfo.c:480
+msgid "No pcmcia driver in /proc/devices"
+msgstr "Nici un driver pcmcia în /proc/devices"
+
+#: cardinfo.c:482
+msgid "Could not open /proc/devices"
+msgstr "Nu am putut deschide /proc/devices"
+
+#: cardinfo.c:491
+msgid "No sockets found\n"
+msgstr "Nu am gãsit nici un socket\n"
+
+#: cardinfo.c:497
+msgid "Card Services release does not match!"
+msgstr "Versiunile Card Services nu se potrivesc!"
+
+#: cardinfo.c:499
+msgid "Could not get CS revision info!\n"
+msgstr "Nu pot obþine info despre versiunea CS!\n"
+
+#: cardinfo.c:629
+msgid "flock(stabfile) failed)"
+msgstr "flock(stabfile) eºuat)"
+
+#: cardinfo.c:714
+#, fuzzy
+msgid "ready"
+msgstr "e gata"
+
+#: cardinfo.c:722
+msgid "not ready"
+msgstr "nu e gata"
+
+#: cardinfo.c:729
+msgid "suspended"
+msgstr "suspendat"
+
+#: cardinfo.c:786
+msgid "Operation failed"
+msgstr "Operaþiunea a eºuat"
+
+#: cardinfo.c:861 cardinfo.c:983 cardinfo.c:984
+#, fuzzy
+msgid "Assign Driver"
+msgstr "Repartizeazã Driver"
+
+#: cardinfo.c:868
+msgid ""
+"This dialog allows you to select/change\n"
+"the driver assignment for a\n"
+"PCMCIA/CF card."
+msgstr ""
+"Acest dialog vã permite sã selectaþi/schimbaþi\n"
+"repartizarea driverului pentru un card PCMCIA/CF"
+
+#: cardinfo.c:875
+msgid "Your current card identifies itself as:"
+msgstr "Cardul d-voastrã curent se identificã ca:"
+
+#: cardinfo.c:884
+msgid "Manuf. Id"
+msgstr "Manuf. Id"
+
+#: cardinfo.c:884
+msgid "Class"
+msgstr "Clasa"
+
+#: cardinfo.c:952 cardinfo.c:953
+msgid "Insert Card"
+msgstr "Introduceþi Card"
+
+#: cardinfo.c:953
+msgid "Tap here to start card insertion manually."
+msgstr "Apãsaþi aici pentru a începe inserarea manualã a cardului."
+
+#: cardinfo.c:957 cardinfo.c:958
+msgid "Eject Card"
+msgstr "Scoate Card"
+
+#: cardinfo.c:958
+msgid "Tap here to eject card manually."
+msgstr "Apãsaþi aici pentru a scoate cardul manual."
+
+#: cardinfo.c:962 cardinfo.c:963
+msgid "Suspend Card"
+msgstr "Suspendã Card"
+
+#: cardinfo.c:963
+msgid "Tap here to suspend current card."
+msgstr "Apãsaþi aici pentru a suspenda cardul curent."
+
+#: cardinfo.c:967 cardinfo.c:968
+msgid "Resume Card"
+msgstr "Reporneºte Card"
+
+#: cardinfo.c:968
+msgid "Tap here to resume current card."
+msgstr "Apãsaþi aici pentru a reporni cardul curent"
+
+#: cardinfo.c:972 cardinfo.c:973
+#, fuzzy
+msgid "Reset Card"
+msgstr "Reseteazã Card"
+
+#: cardinfo.c:973
+msgid "Tap here to reset current card."
+msgstr "Apãsaþi aici pentru a reseta cardul curent."
+
+#: cardinfo.c:978 cardinfo.c:979
+msgid "Reset Card Manager"
+msgstr "Reseteazã Managerul de Carduri"
+
+#: cardinfo.c:979
+msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
+msgstr "Apãsaþi aici pentru a reseta managerul de carduri. Aceasta comite toate actualizãrile fiºierelor de configurare pentru pcmcia."
+
+#: cardinfo.c:984
+msgid "Tap here to assign a driver to this card / change current driver assignment."
+msgstr "Apãsaþi aici pentru a repartiza un driver pentru acest card / a schimba repartizarea curentã a driverului."
+
+#: cardinfo.c:989 cardinfo.c:990
+msgid "Exit applet"
+msgstr "Terminã applet"
+
+#: cardinfo.c:998 cardinfo.c:1006
+msgid "PC/CF card socket information."
+msgstr "Informaþie socket card PC/CF."
+
+#: cardinfo.c:1003
+msgid "Socket"
+msgstr "Socket"
+
+#: cardinfo.c:1026
+msgid "Information for socket"
+msgstr "Informaþie pentru socket"
+
+#: cardinfo.c:1035
+msgid "State:"
+msgstr "Stare:"
+
+#: cardinfo.c:1036
+msgid "Device:"
+msgstr "Dispozitiv:"
+
+#: cardinfo.c:1037
+msgid "Driver:"
+msgstr "Driver:"
+
+#: cardinfo.c:1038
+msgid "Type:"
+msgstr "Tip:"
+
+#: cardinfo.c:1039
+msgid "I/O:"
+msgstr "I/O:"
+
+#: cardinfo.c:1040
+msgid "IRQ:"
+msgstr "IRQ:"
+
+#: cardinfo.c:1046
+msgid "Flags:"
+msgstr "Opþiuni:"
+
+#: cardinfo.c:1059
+msgid "PCMCIA initialisation failed"
+msgstr "Iniþializare PCMCIA a eºuat"
