@@ -55,7 +55,7 @@ GList *image_filenames;
 
 // 0 = Detailed list
 // 1 = Thumbs
-gint current_view = 0;
+gint current_view = 1;
 gint loading_directory = 0;
 gint fullscreen_state = 0;
 gboolean confine_pointer_to_window;
@@ -181,13 +181,40 @@ motion_notify (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
 static void
 show_image (GtkWidget *widget, GList *image_filename)
 {
+  gint width, height;
+  gint widget_width, widget_height;
+  float width_ratio, height_ratio;
+  float scale_width_ratio, scale_height_ratio;
+
   gtk_widget_hide (view_widget);
 
   image_filenames = image_filename;
   image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filename->data, NULL);
-  scaled_image_pixbuf = image_pixbuf;
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), image_pixbuf);
+  widget_width = main_scrolled_window->allocation.width - 5;
+  widget_height = main_scrolled_window->allocation.height - 5;
+
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf));
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf));
+
+  width_ratio = (float) width / (float) widget_width;
+  height_ratio = (float) height / (float) widget_height;
+
+  if (width_ratio >= height_ratio)
+  {
+    scale_width_ratio = 1;
+    scale_height_ratio = (float) height_ratio / (float) width_ratio;
+  }
+  else
+  {
+    scale_height_ratio = 1;
+    scale_width_ratio = (float) width_ratio / (float) height_ratio;
+  }
+
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+
+  g_object_unref (image_pixbuf);
 
   gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_event_box);
@@ -251,38 +278,34 @@ toggle_fullscreen ()
 }
 
 static gboolean
-image_zoom_hyper (gpointer pixbuf)
+image_zoom_hyper ()
 {
   gint width, height;
 
-  width = gdk_pixbuf_get_width (GDK_PIXBUF (pixbuf));
-  height = gdk_pixbuf_get_height (GDK_PIXBUF (pixbuf));
+  width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf));
+  height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf));
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
+  g_object_unref (scaled_image_pixbuf);
+
+  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+  g_object_unref (image_pixbuf);
 
   return FALSE;
 }
 
 static void
-image_rotate ()
+image_rotate () // BROKEN
 {
   GdkPixbuf *pixbuf;
 
   gtk_timeout_remove (zoom_timer_id);
 
-  if (!scaled_image_pixbuf)
-    scaled_image_pixbuf = image_pixbuf;
-
-  pixbuf = image_tools_rotate (GDK_PIXBUF (image_pixbuf));
-  g_object_unref (image_pixbuf);
-  image_pixbuf = pixbuf;
-
   pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf));
   g_object_unref (scaled_image_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (pixbuf));
   scaled_image_pixbuf = pixbuf;
-
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
 }
@@ -308,14 +331,15 @@ image_zoom_in ()
 
   gtk_timeout_remove (zoom_timer_id);
 
-  if (!scaled_image_pixbuf)
-    scaled_image_pixbuf = image_pixbuf;
-
   width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) * 1.1;
   height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) * 1.1;
 
+  g_object_unref (scaled_image_pixbuf);
+
+  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_NEAREST);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+  g_object_unref (image_pixbuf);
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
 }
@@ -327,14 +351,15 @@ image_zoom_out ()
 
   gtk_timeout_remove (zoom_timer_id);
 
-  if (!scaled_image_pixbuf)
-    scaled_image_pixbuf = image_pixbuf;
-
   width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) / 1.1;
   height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) / 1.1;
 
+  g_object_unref (scaled_image_pixbuf);
+
+  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_NEAREST);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+  g_object_unref (image_pixbuf);
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
 
@@ -343,7 +368,8 @@ image_zoom_out ()
 void
 image_zoom_1 ()
 {
-  scaled_image_pixbuf = image_pixbuf;
+  g_object_unref (scaled_image_pixbuf);
+  scaled_image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
@@ -355,8 +381,8 @@ image_zoom_fit ()
   float width_ratio, height_ratio;
   float scale_width_ratio, scale_height_ratio;
 
-  if (!scaled_image_pixbuf)
-    scaled_image_pixbuf = image_pixbuf;
+  g_object_unref (scaled_image_pixbuf);
+  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
 
   widget_width = main_scrolled_window->allocation.width - 5;
   widget_height = main_scrolled_window->allocation.height - 5;
@@ -378,8 +404,9 @@ image_zoom_fit ()
     scale_width_ratio = (float) width_ratio / (float) height_ratio;
   }
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_HYPER);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+  g_object_unref (image_pixbuf);
 }
 
 static void
@@ -399,6 +426,8 @@ hide_image ()
   stop_slideshow ();
   if (view_widget)
   {
+    g_object_unref (scaled_image_pixbuf);
+
     gtk_widget_hide (image_widget);
     gtk_widget_hide (image_event_box);
     gtk_widget_hide (tools_toolbar);
@@ -533,6 +562,7 @@ render_list_view_free (GtkObject *object, GList *loaded_images)
   {
     list_item = (ListItem *) this_item->data;
     g_object_unref (list_item->pixbuf);
+    g_object_unref (list_item->pango_layout);
     g_free (list_item);
 
     this_item = this_item->next;
@@ -603,7 +633,7 @@ render_list_view ()
 	  list_item->height = MAX_ICON_SIZE;
 	}
 
-	pixbuf = gdk_pixbuf_scale_simple (list_item->pixbuf, list_item->width, list_item->height, GDK_INTERP_HYPER);
+	pixbuf = gdk_pixbuf_scale_simple (list_item->pixbuf, list_item->width, list_item->height, GDK_INTERP_BILINEAR);
 	g_object_unref (list_item->pixbuf);
 	list_item->pixbuf = pixbuf;
       }
@@ -678,6 +708,8 @@ render_view (GtkWidget *parent, gint view)
 
   if (image_widget)
   {
+    g_object_unref (scaled_image_pixbuf);
+
     gtk_widget_hide (image_widget);
     gtk_widget_hide (image_event_box);
     gtk_widget_hide (tools_toolbar);
@@ -745,6 +777,8 @@ next_image (gpointer data)
     else
       image_filenames = g_list_first (image_filenames);
 
+    g_object_unref (scaled_image_pixbuf);
+
     show_image (NULL, image_filenames);
 
     return TRUE;
@@ -762,6 +796,8 @@ previous_image ()
       image_filenames = g_list_previous (image_filenames);
     else
       image_filenames = g_list_last (image_filenames);
+
+    g_object_unref (scaled_image_pixbuf);
 
     show_image (NULL, image_filenames);
 
@@ -1039,6 +1075,14 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
   gtk_widget_show (loading_label);
   gtk_widget_show (loading_progress_bar);
+
+  // Ugly hack so we know how to resize images that want to fit the screen
+  gtk_widget_show (main_scrolled_window);
+    while (gtk_events_pending ())
+      gtk_main_iteration ();
+  gtk_widget_hide (main_scrolled_window);
+    while (gtk_events_pending ())
+      gtk_main_iteration ();
 
   if (argc > 1)
   {
