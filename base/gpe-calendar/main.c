@@ -190,13 +190,13 @@ main (int argc, char *argv[])
       times = g_list_append (times, g_strdup (buf));
     }
 
-  datefont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-c-*-*");
+  datefont = gdk_font_load ("-*-*-medium-r-normal--7-*-*-*-c-*-*");
   if (datefont == NULL)
     {
       printf ("Couldn't get date font\n");
       abort ();
     }
-  yearfont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-*-*-*");
+  yearfont = gdk_font_load ("-*-*-medium-r-normal--7-*-*-*-*-*-*");
   if (yearfont == NULL)
     {
       printf ("Couldn't get year font\n");

@@ -1,3 +1,22 @@
+2003-01-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+        * event-db.h : add FLAGS for RECUR and CLONE 
+	* day_popup.c (selection_made & day_popup): attach uid to row so 
+	we can grab the uncloned event_t (also fix small warning on 
+	SIGNAL_FUNC)
+	* day_view.c (selection_made & day_view_update): attach uid to row so 
+	we can grab the uncloned event_t
+	* event-db.c (event_db_list_for_period_internal): losts of changes 
+	here and elsewhere to add cloned records; highlights -> new 
+	routines get_ev_from_uid, event_db_destroy_clone; remove clones
+	when doing event_db_list_destroy, *will now be able to get event-list
+	IN ORDER, so we can implement next_alarm!*
+	* event-ui.c (edit_event): small warning fix, and silly fix for recur
+	toggle buttons
+	* future_view.c (selection_made & future_view_update): attach uid to 
+	row so we can grab the uncloned event_t (also warning fix)
+	 * main.c : change default font slightly	
+	
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.28 released.

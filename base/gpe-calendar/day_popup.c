@@ -59,8 +59,12 @@ selection_made (GtkWidget *clist, gint row, gint column,
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
-      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      guint uid;
+      
+      uid = (int)gtk_clist_get_row_data (GTK_CLIST (clist), row);
 
+      ev = get_ev_from_uid(uid);
+      
       gtk_widget_show (edit_event (ev));
 
       gtk_widget_destroy (widget);
@@ -126,7 +130,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 	  
 	  gtk_clist_append (GTK_CLIST (contents), lineinfo);
 
-	  gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
+	  gtk_clist_set_row_data (GTK_CLIST (contents), row, (gpointer)(ev->uid));
 
 	  row++;
 	  events = events->next;
@@ -183,7 +187,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 
   gtk_object_set_data (GTK_OBJECT (parent), "popup-handle", window);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      destroy_popup, parent);
+		      GTK_SIGNAL_FUNC(destroy_popup), parent);
 
   gtk_widget_show (window);
 

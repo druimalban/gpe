@@ -34,8 +34,12 @@ selection_made( GtkWidget      *clist,
   if (event->type == GDK_2BUTTON_PRESS)
     {
       GtkWidget *appt;
+      guint uid;
       
-      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      uid = (int)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+
+      ev = get_ev_from_uid(uid);
+      
       if (ev)
 	{
 	  appt = edit_event (ev);
@@ -58,7 +62,7 @@ future_view_update ()
   gchar *line_info[2];
   GSList *events;
   GSList *iter;
-  guint width = 0, widget_width;
+  guint widget_width;
      
   widget_width=future_list->allocation.width;
 		
@@ -75,7 +79,6 @@ future_view_update ()
       
   for (iter = events; iter; iter = iter->next)
     {
-      guint w;
       ev = (event_t) iter->data;
       evd = event_db_get_details (ev);
       
@@ -91,7 +94,7 @@ future_view_update ()
 #endif
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
-      gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
+      gtk_clist_set_row_data (GTK_CLIST (future_list), row, (gpointer)(ev->uid));
       
       row++;
     } 
@@ -101,6 +104,8 @@ future_view_update ()
   gtk_clist_set_column_width (GTK_CLIST (future_list), 1, widget_width - 20 - (width + 4));
 #endif
 
+  if (events) event_db_list_destroy (events);
+  
   gtk_clist_sort (GTK_CLIST (future_list));
   gtk_clist_thaw (GTK_CLIST (future_list));
   

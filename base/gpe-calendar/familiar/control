@@ -1,6 +1,9 @@
-Section: x11 
+Package: gpe-calendar
+Section: base
 Priority: optional
-Version: 0.01
-Architecture: all 
-Maintainer: Luis Oliveira <luis@handhelds.org>
-Description: Wallpaper created by Ayo, you can see more of his artwork at http://www.73lab.com/ 
+Version: 0.29
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libsqlite0, gpe-icons (>= 0.14), libgpewidget0 (>= 0.08), atd, libxsettings-client0
+Description: GPE calendar
+Provides: gpe-calendar

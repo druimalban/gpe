@@ -1134,6 +1134,7 @@ edit_event (event_t ev)
       char buf[32];
       struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
 						  "edit_state");
+      
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
 
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
@@ -1180,9 +1181,11 @@ edit_event (event_t ev)
       if (ev->recur)
 	{
 	  recur_t r = ev->recur;
-	  guint i;
+	  
 	  switch (r->type)
 	    {
+	    case RECUR_NONE:
+	      abort ();
 	    case RECUR_DAILY:
 	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
 	      gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->dailyspin), r->increment);
@@ -1191,11 +1194,13 @@ edit_event (event_t ev)
 	    case RECUR_WEEKLY:
 	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
 	      gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->weeklyspin), r->increment);
-	      for (i = 0; i < 7; i++)
-		{
-		  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0]), 
-						(r->daymask & 1 << i) ? 1 : 0);
-		}
+	      if (r->daymask & MON) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0]), 1);
+	      if (r->daymask & TUE) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[1]), 1);
+	      if (r->daymask & WED) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[2]), 1);
+	      if (r->daymask & THU) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[3]), 1);
+	      if (r->daymask & FRI) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[4]), 1);
+	      if (r->daymask & SAT) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[5]), 1);
+	      if (r->daymask & SUN) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[6]), 1);
 	      break;
 
 	    case RECUR_MONTHLY:

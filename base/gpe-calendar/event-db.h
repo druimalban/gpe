@@ -36,6 +36,8 @@ typedef struct event_details_s
 #define FLAG_UNTIMED   (1 << 0)
 #define FLAG_ALARM     (1 << 1)
 #define FLAG_TENTATIVE (1 << 2)
+#define FLAG_CLONE (1 << 3)
+#define FLAG_RECUR (1 << 4)
 
 struct calendar_time_s
 {
@@ -81,6 +83,7 @@ extern gboolean event_db_remove (event_t);
 extern gboolean event_db_flush (event_t ev);
 
 extern event_t event_db_new (void);
+extern event_t get_ev_from_uid (guint uid);
 extern void event_db_destroy (event_t);
 
 extern event_details_t event_db_alloc_details (event_t);
