@@ -23,12 +23,16 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
+#include <X11/Xlib.h>
+
 #define REQUEST_NAME "org.handhelds.gpe.hotplug"
 
 #define _(x) gettext(x)
 
 extern void handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter);
 extern void handle_net_message (DBusMessage *message, DBusMessageIter *iter);
+
+Display *dpy;
 
 void
 autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
@@ -90,14 +94,79 @@ autostarter_init_dbus (void)
   dbus_connection_add_filter (connection, handler);
 }
 
+typedef struct
+{
+  GSource source; /**< the parent GSource */
+
+  GPollFD *poll_fd;
+} GSourceWrapped;
+
+static gboolean
+source_prepare (GSource *source,
+		gint    *timeout)
+{
+  *timeout = -1;
+
+  return FALSE;
+}
+
+static gboolean
+source_check (GSource *source)
+{
+  GSourceWrapped *s = (GSourceWrapped *)source;
+
+  if (s->poll_fd->revents != 0)
+    return TRUE;
+
+  return FALSE;  
+}
+
+static gboolean
+source_dispatch (GSource     *source,
+		 GSourceFunc  callback,
+		 gpointer     user_data)
+{
+  XEvent ev;
+
+  while (XPending (dpy))
+    XNextEvent (dpy, &ev);
+
+  return TRUE;
+}
+
+GSourceFuncs source_funcs =
+  {
+    source_prepare,
+    source_check,
+    source_dispatch,
+    NULL
+  };
+
 int
 main (int argc, char *argv[])
 {
   GMainLoop *main_loop;
+  GSourceWrapped *source;
 
   signal (SIGCHLD, SIG_IGN);
 
   main_loop = g_main_loop_new (NULL, FALSE);
+
+  dpy = XOpenDisplay (NULL);
+  if (dpy == NULL)
+    {
+      fprintf (stderr, "Couldn't connect to X display\n");
+      exit (1);
+    }
+
+  source = (GSourceWrapped *)g_source_new (&source_funcs, sizeof (GSourceWrapped));
+
+  source->poll_fd = g_new (GPollFD, 1);
+  source->poll_fd->fd = ConnectionNumber (dpy);
+  source->poll_fd->events = G_IO_IN | G_IO_ERR | G_IO_HUP;
+
+  g_source_add_poll ((GSource *)source, source->poll_fd);
+  g_source_attach ((GSource *)source, g_main_loop_get_context (main_loop));
 
   autostarter_init_dbus ();
 

@@ -59,7 +59,7 @@ handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter)
 
       if (pid == 0)
 	{
-	  execlp ("gpe-bluetooth", "gpe-bluetooth", NULL);
+	  execlp ("gpe-bluetooth", "+gpe-bluetooth", NULL);
 	  perror ("gpe-bluetooth");
 	  _exit (1);
 	}
