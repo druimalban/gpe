@@ -54,6 +54,8 @@ typedef struct _go {
   GtkWidget * capture_label;
   char      * capture_string;
 
+  GtkWidget * file_selector;
+
 #ifdef TURN_LABEL
   GtkWidget * turn_label;
   char      * turn_string;
@@ -918,6 +920,69 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
   return FALSE;
 }
 
+/*
+  Property index of FF[1]-FF[4]
+  http://www.red-bean.com/sgf/proplist_ff.html
+  
+  (;GM[1]FF[3]
+  RU[Japanese]SZ[13]HA[0]KM[5.5]
+  PW[White]
+  PB[Black]
+  GN[White (W) vs. Black (B)]
+  DT[2003-09-02]
+  SY[Cgoban 1.9.14]TM[30:00(5x1:00)];B[am]BL[1791];W[al]WL[1799];B[em]
+  BL[1786];W[bm]WL[1799];B[dm]BL[1780]
+  )
+*/
+void _save_hitem(FILE * f, Hitem * hitem){
+  char item;
+
+  if(!hitem) return;
+  if(hitem->item == BLACK_STONE) item = 'B'; else item = 'W';
+  if     (hitem->action == PASS) fprintf(f, "%c[tt];", item);//FIXME: support "[]"
+  else if(hitem->action == PLAY) fprintf(f, "%c[%c%c];", item,
+                                         hitem->posx + 'a' -1,
+                                         hitem->posy + 'a' -1);
+}
+
+void save_game(){
+  FILE * f;
+  char * filename;
+  GList * c;
+
+  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
+  f = fopen(filename, "w");
+  if(!f){
+    //error
+    return;
+  }
+  g_free(filename);
+
+  c = g_list_first(go.history);
+  if(!c) return;
+
+  fprintf(f, "(;GM[1]FF[3]\n");
+  fprintf(f, "RU[Japanese]SZ[%d]H[%d]KM[%f]\n", go.grid_size, 0, 5.5);
+  fprintf(f, "PW[%s]\n", "white");
+  fprintf(f, "PB[%s]\n", "black");
+  fprintf(f, "GN[%s]\n", "the game of the year");
+  fprintf(f, "DT[%s]\n", "yyyy-mm-dd");
+
+  do{
+    _save_hitem(f, c->data);
+    c = c->next;
+  }while (c);
+
+  fprintf(f, "\n)");
+
+  fclose(f);
+  gtk_widget_hide (go.file_selector);
+}
+
+void on_button_save_pressed (void){
+  gtk_widget_show (go.file_selector);
+}
+
 void on_button_pref_pressed (void){
   TRACE("-------------------------------------\\");
   TRACE("Preferences.");
@@ -946,8 +1011,10 @@ void on_button_pass_clicked (void){
 }
 
 void gui_init(){
-  GtkWidget   * window;
-  GtkWidget   * vbox;
+  GtkWidget * widget;
+
+  GtkWidget * window;
+  GtkWidget * vbox;
 
   GtkWidget * toolbar;
   GdkPixbuf * pixbuf;
@@ -1012,7 +1079,8 @@ void gui_init(){
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-
+#ifdef PREFS
+  //[PREFS] button
   pixbuf = gpe_find_icon ("prefs");
   image = gtk_image_new_from_pixbuf(pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
@@ -1020,8 +1088,8 @@ void gui_init(){
 			   image, GTK_SIGNAL_FUNC (on_button_pref_pressed), NULL);
   gdk_pixbuf_unref(pixbuf);
 
-
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+#endif
 
   {// [PASS] button
     GtkWidget * button;
@@ -1032,6 +1100,26 @@ void gui_init(){
 
     gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), button, NULL, NULL);
   }
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  //[SAVE] button
+  image = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
+			   _("Save"), _("Save"), _("Save"),
+			   image, GTK_SIGNAL_FUNC (on_button_save_pressed), NULL);
+
+  //file selector
+  widget = gtk_file_selection_new (_("Save as..."));
+
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(widget)->ok_button),
+			     "clicked", GTK_SIGNAL_FUNC (save_game), NULL);
+
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(widget)->cancel_button),
+		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_hide),
+		             (gpointer) widget);
+  gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf");
+  go.file_selector = widget;
 
   //--drawing area (Go Board)
   drawing_area = gtk_drawing_area_new ();
