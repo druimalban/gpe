@@ -161,7 +161,7 @@ month_view_update ()
       tm_start.tm_sec = 0;
       start = mktime (&tm_start);
       localtime_r (&viewtime, &tm_end);
-      tm_start.tm_mday = day;
+      tm_end.tm_mday = day;
       tm_end.tm_hour = 23;
       tm_end.tm_min = 59;
       tm_end.tm_sec = 59;
