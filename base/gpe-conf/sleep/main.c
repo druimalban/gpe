@@ -23,11 +23,15 @@ GtkWidget *Sleep_Build_Objects()
   GtkWidget *GPE_Config_Sleep;
   ipaq_conf_t *ISconf;
 
-  strcpy(cname, "/etc/ipaq-sleep.conf");
+  sprintf(cname,"%s/ipaq-sleep.conf",g_get_home_dir());
   ISconf = load_ISconf(cname);
   if(ISconf == NULL) {
-    fprintf(stderr, "Error loading configuration file\n");
-    exit(1);
+    strcpy(cname, "/etc/ipaq-sleep.conf");
+    ISconf = load_ISconf(cname);
+    if(ISconf == NULL) {
+      fprintf(stderr, "Error loading configuration file\n");
+      exit(1);
+    }
   }
   strcpy(ISconf->binCmd, "/etc/init.d/ipaq-sleep");
   load_IRQs(ISconf, "/proc/interrupts");
