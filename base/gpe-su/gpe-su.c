@@ -20,14 +20,10 @@
 #include "render.h"
 #include "picturebutton.h"
 
-static struct pix my_pix[] = {
-  { "keys", "keys" },
-  { NULL, NULL }
-};
-
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
   { "cancel", "cancel" },
+  { "lock", "lock" },
   { NULL, NULL }
 };
 
@@ -36,16 +32,14 @@ static struct gpe_icon my_icons[] = {
 int
 main(int argc, char *argv[])
 {
-  struct pix *p;
+  GdkPixbuf *p;
+  GtkWidget *pw;
   GtkWidget *window;
   GtkWidget *hbox, *vbox;
   GtkWidget *entry, *label;
   GtkWidget *buttonok, *buttoncancel;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
-    exit (1);
-
-  if (gpe_load_pixmaps (my_pix) == FALSE)
     exit (1);
 
   if (gpe_load_icons (my_icons) == FALSE)
@@ -72,13 +66,10 @@ main(int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 
-  p = gpe_find_pixmap ("keys");
-  if (p)
-    {
-      GtkWidget *pw = gtk_pixmap_new (p->pixmap, p->mask);
-      gtk_widget_show (pw);
-      gtk_box_pack_start (GTK_BOX (hbox), pw, FALSE, FALSE, 4);
-    }
+  p = gpe_find_icon ("lock");
+  pw = gpe_render_icon (window->style, p);
+  gtk_widget_show (pw);
+  gtk_box_pack_start (GTK_BOX (hbox), pw, FALSE, FALSE, 4);
 
   gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
