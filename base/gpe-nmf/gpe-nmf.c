@@ -172,6 +172,7 @@ main (int argc, char *argv[])
   GtkWidget *vol_slider;
   GtkObject *vol_adjust;
   struct nmf_frontend *fe = g_malloc (sizeof (struct nmf_frontend));
+  gint button_height = 20;
 
   gchar *color = "gray80";
   Atom window_type_atom, window_type_toolbar_atom;
@@ -238,6 +239,7 @@ main (int argc, char *argv[])
   prev_button = gtk_button_new ();
   gtk_widget_show (prev_button);
   gtk_widget_set_style (prev_button, style);
+  gtk_widget_set_usize (prev_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (prev_button), w);
   gtk_signal_connect (GTK_OBJECT (prev_button), "clicked",
 		      GTK_SIGNAL_FUNC (prev_clicked), fe);
@@ -248,6 +250,7 @@ main (int argc, char *argv[])
   rewind_button = gtk_button_new ();
   gtk_widget_show (rewind_button);
   gtk_widget_set_style (rewind_button, style);
+  gtk_widget_set_usize (rewind_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (rewind_button), w);
 
   p = gpe_find_icon ("media-play");
@@ -256,6 +259,7 @@ main (int argc, char *argv[])
   gtk_widget_show (play_button);
   gtk_widget_set_style (play_button, style);
   gtk_container_add (GTK_CONTAINER (play_button), w);
+  gtk_widget_set_usize (play_button, -1, button_height);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (play_button), "clicked", 
 		      GTK_SIGNAL_FUNC (play_clicked), fe);
@@ -266,6 +270,7 @@ main (int argc, char *argv[])
   gtk_widget_show (pause_button);
   gtk_widget_set_style (pause_button, style);
   gtk_container_add (GTK_CONTAINER (pause_button), w);
+  gtk_widget_set_usize (pause_button, -1, button_height);
   gtk_widget_show (w);
 
   p = gpe_find_icon ("media-stop");
@@ -274,6 +279,7 @@ main (int argc, char *argv[])
   gtk_widget_show (stop_button);
   gtk_widget_set_style (stop_button, style);
   gtk_container_add (GTK_CONTAINER (stop_button), w);
+  gtk_widget_set_usize (stop_button, -1, button_height);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (stop_button), "clicked", 
 		      GTK_SIGNAL_FUNC (stop_clicked), fe);
@@ -283,6 +289,7 @@ main (int argc, char *argv[])
   forward_button = gtk_button_new ();
   gtk_widget_show (forward_button);
   gtk_widget_set_style (forward_button, style);
+  gtk_widget_set_usize (forward_button, -1, button_height);
   gtk_container_add (GTK_CONTAINER (forward_button), w);
   gtk_widget_show (w);
 
@@ -292,6 +299,7 @@ main (int argc, char *argv[])
   gtk_widget_show (next_button);
   gtk_widget_set_style (next_button, style);
   gtk_container_add (GTK_CONTAINER (next_button), w);
+  gtk_widget_set_usize (next_button, -1, button_height);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
 		      GTK_SIGNAL_FUNC (next_clicked), fe);
@@ -302,6 +310,7 @@ main (int argc, char *argv[])
   gtk_widget_show (eject_button);
   gtk_widget_set_style (eject_button, style);
   gtk_container_add (GTK_CONTAINER (eject_button), w);
+  gtk_widget_set_usize (eject_button, -1, button_height);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (eject_button), "clicked", 
 		      GTK_SIGNAL_FUNC (eject_clicked), fe);
