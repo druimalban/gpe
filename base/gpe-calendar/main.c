@@ -449,13 +449,15 @@ main (int argc, char *argv[])
 			    _("New appointment"), _("Tap here to add a new appointment or reminder"),
 			    G_CALLBACK (new_appointment), NULL, -1);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  if (window_x > 260) 
+    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pw = gtk_image_new_from_stock (GTK_STOCK_HOME, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   today_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"),
 			   _("Today"), _("Today"), pw, set_today, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  if (window_x > 260) 
+    gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon_scaled ("future_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);

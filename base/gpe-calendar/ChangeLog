@@ -1,3 +1,7 @@
+2004-08-29  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c: Don't add spaces if screen width < 260 pixels.
+
 2004-08-24  Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Select current day of week as default for weekly recurrence.
