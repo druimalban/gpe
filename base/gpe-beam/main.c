@@ -49,7 +49,7 @@
 
 #define COMMAND_IR_ON  "/usr/bin/irsw on"
 #define COMMAND_IR_OFF  "/usr/bin/irsw off"
-#define COMMAND_VCARD_IMPORT "/usr/bin/vcard-import < cat " IR_INBOX "/%s"
+#define COMMAND_VCARD_IMPORT "/usr/bin/vcard-import < " IR_INBOX "/%s"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
 #define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
 
@@ -419,60 +419,77 @@ do_send_file (void)
 
 
 static void
+do_import_file(GtkWidget *dlg,gint response,char *filename)
+{
+	char *imp;
+	
+	if (response == GTK_RESPONSE_YES)
+	{
+		gtk_widget_destroy (dlg);
+		imp = g_strdup_printf
+			(COMMAND_VCARD_IMPORT, filename);
+		switch (system (imp))
+		{
+		case -1:
+			dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_MESSAGE_ERROR,
+							  GTK_BUTTONS_CLOSE,
+							  _("Could not start import tool."));
+			break;
+		case 0:
+			dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
+							  GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_MESSAGE_INFO,
+							  GTK_BUTTONS_CLOSE,
+							  _("VCARD was successfully imorted."));
+			break;
+		default:
+			dlg = gtk_message_dialog_new
+				(GTK_WINDOW(control_window),
+				 GTK_DIALOG_DESTROY_WITH_PARENT,
+				 GTK_MESSAGE_ERROR,
+				 GTK_BUTTONS_CLOSE,
+				 _("Import of VCARD failed."));
+			break;
+		}
+		gtk_dialog_run (GTK_DIALOG (dlg));
+		gtk_widget_destroy (dlg);
+
+		g_free (imp);
+	}
+	else
+	{
+		gtk_widget_destroy (dlg);
+	}
+}
+
+
+static void
 check_file_import (char *filename)
 {
 	GtkWidget *dlg;
-	char *imp;
 
 	/* ultra simple check for a vcf file */
 	if (strstr (filename, "vcf"))
 	{
+		gdk_threads_enter ();
+		
 		dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
-					      GTK_DIALOG_DESTROY_WITH_PARENT,
+					      GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
 					      GTK_MESSAGE_QUESTION,
 					      GTK_BUTTONS_YES_NO,
 					      _
 					      ("The file %s looks like a VCARD, "
 					       "may i import it?"), filename);
-		if (gtk_dialog_run (GTK_DIALOG (dlg)) == GTK_RESPONSE_YES)
-		{
-			gtk_widget_destroy (dlg);
-			imp = g_strdup_printf
-				(COMMAND_VCARD_IMPORT, filename);
-			switch (system (imp))
-			{
-			case -1:
-				dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
-							      GTK_DIALOG_DESTROY_WITH_PARENT,
-							      GTK_MESSAGE_ERROR,
-							      GTK_BUTTONS_CLOSE,
-							      _
-							      ("Could not start import tool."));
-				break;
-			case 0:
-				dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
-							      GTK_DIALOG_DESTROY_WITH_PARENT,
-							      GTK_MESSAGE_INFO,
-							      GTK_BUTTONS_CLOSE,
-							      _
-							      ("VCARD was successfully imorted."));
-				break;
-			default:
-				dlg = gtk_message_dialog_new
-					(GTK_WINDOW(control_window),
-					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 GTK_MESSAGE_ERROR,
-					 GTK_BUTTONS_CLOSE,
-					 _("Import of VCARD failed."));
-				break;
-			}
-			gtk_dialog_run (GTK_DIALOG (dlg));
-			gtk_widget_destroy (dlg);
-			g_free (imp);
-		}
+		
+		 g_signal_connect_after (GTK_OBJECT (dlg), "response",
+                           G_CALLBACK (do_import_file),
+                           filename);
+		gtk_widget_show_all(dlg);
 
+		gdk_threads_leave ();
 	}
-
 }
 
 
@@ -517,14 +534,17 @@ do_receive_file (void)
 	{
 		ircp_srv_recv (srv, IR_INBOX);
 		ircp_srv_close (srv);
+		
 		if (str_last_filename)
 		{
+			gdk_threads_enter ();
 			ts = g_strdup_printf ("%s %s",
 					      _
 					      ("Received file"),
 					      str_last_filename);
 			gtk_label_set_text (GTK_LABEL (lTStatus), ts);
 			free (ts);
+			gdk_threads_leave ();
 			check_file_import (str_last_filename);
 		}
 	}
@@ -848,14 +868,17 @@ main (int argc, char *argv[])
 	GtkWidget *menu_remove;
 	GtkTooltips *tooltips;
 	GdkBitmap *bitmap;
+	
 	g_thread_init (NULL);
 	gdk_threads_init ();
 	if (gpe_application_init (&argc, &argv) == FALSE)
 		exit (1);
+	
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
+	
 	window = gtk_plug_new (0);
 	gtk_widget_set_usize (window, 16, 16);
 	gtk_widget_realize (window);

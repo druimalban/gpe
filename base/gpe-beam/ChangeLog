@@ -1,3 +1,8 @@
+08/15/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- Finished vcard import.
+	- Fixed some thread related issues.
+	
 08/14/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- Added control file.	
