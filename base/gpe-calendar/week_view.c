@@ -69,6 +69,9 @@ draw_expose_event (GtkWidget *widget,
   t = gtk_date_sel_get_time (GTK_DATE_SEL (user_data));
   localtime_r(&t, &tm);
   t -= 60 * 60 * 24 * tm.tm_wday;
+#ifdef WEEK_STARTS_ON_MONDAY
+  t += 60 * 60 * 24;
+#endif
 
   for (day = 0; day < 7; day++)
     {
@@ -116,17 +119,22 @@ week_view(void)
   GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
+  GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
 
-  gtk_drawing_area_size(GTK_DRAWING_AREA (draw), 240, 13 * 20);
+  gtk_drawing_area_size (GTK_DRAWING_AREA (draw), 240, 13 * 20);
   gtk_signal_connect (GTK_OBJECT (draw),
 		      "expose_event",
 		      GTK_SIGNAL_FUNC (draw_expose_event),
 		      datesel);
   
-  gtk_box_pack_start(GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
 
-  gtk_box_pack_start(GTK_BOX (vbox), draw, FALSE, FALSE, 0);
-  gtk_box_pack_end(GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
 
   gtk_signal_connect(GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), draw);
