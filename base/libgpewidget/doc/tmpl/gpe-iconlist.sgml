@@ -138,28 +138,28 @@ Turn titles on/off.
 
 <!-- ##### FUNCTION gpe_iconlist_set_icon_xmargin ##### -->
 <para>
-
+Change margin in X dimension for icons inside a GpeIconList.
 </para>
 
-@self: 
-@margin: 
+@self: Widget
+@margin: Margin in pixels 
 
 
 <!-- ##### FUNCTION gpe_iconlist_clear ##### -->
 <para>
-
+Removes all items from an icon list.
 </para>
 
-@self: 
+@self: Widget to clear
 
 
 <!-- ##### FUNCTION gpe_iconlist_set_icon_size ##### -->
 <para>
-
+Changes the size of the icons displayed in the icon list.
 </para>
 
-@self: 
-@size: 
+@self: Widget
+@size: Size in pixels
 
 
 <!-- ##### FUNCTION gpe_iconlist_popup_removed ##### -->
@@ -231,6 +231,4 @@ Turn titles on/off.
 @func: 
 @data: 
 @destroy_data: 
-@flags: 
-
-
+@flags:
