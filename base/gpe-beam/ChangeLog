@@ -1,5 +1,6 @@
 2004-10-16	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* main.c: main() Make sure correct menu item is shown.
 	* Makefile: Added icon files.
 	* Removed gpe-beam.desktop from cvs. (generated file)
 	* Makefile: New version.

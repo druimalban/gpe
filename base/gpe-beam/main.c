@@ -61,7 +61,6 @@ struct gpe_icon my_icons[] = {
 	{"irda-off16", PREFIX "/share/pixmaps/irda-16.png"},
 	{"irda-conn16", PREFIX "/share/pixmaps/irda-conn-16.png"},
 	{"irda-on48", PREFIX "/share/pixmaps/irda-on-48.png"},
-	{"irda-off48", PREFIX "/share/pixmaps/irda.png"},
 	{"irda-conn48", PREFIX "/share/pixmaps/irda-conn-48.png"},
 	{"irda", PREFIX "/share/pixmaps/irda.png"},
 	{NULL, NULL}
@@ -110,7 +109,7 @@ set_image(int sx, int sy)
 	    	                  (have_peer ? "irda-conn16" : "irda-on16") : "irda-off16");
 	else
 		sbuf = gpe_find_icon (radio_is_on ? 
-	    	                  (have_peer ? "irda-conn48" : "irda-on48") : "irda-off48");
+	    	                  (have_peer ? "irda-conn48" : "irda-on48") : "irda");
 	
 	dbuf = gdk_pixbuf_scale_simple(sbuf, sx, sy, GDK_INTERP_HYPER);
 	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
@@ -1015,17 +1014,17 @@ main (int argc, char *argv[])
 			  (menu_remove),
 			  "activate", G_CALLBACK (gtk_main_quit), NULL);
 	radio_is_on = irda_is_on ();
+	
 	if (access(MY_VCARD, R_OK))
-	{
 		gtk_widget_set_sensitive (menu_vcard, FALSE);
-		gtk_widget_show (menu_radio_on);
-	}
 	else
-	{
 		gtk_widget_set_sensitive (menu_vcard, TRUE);
-		gtk_widget_show (menu_radio_off);
-	}
 
+	if (radio_is_on)
+		gtk_widget_show (menu_radio_off);
+	else
+		gtk_widget_show (menu_radio_on);
+	
 	gtk_widget_show (menu_control);
 	gtk_widget_show (menu_vcard);
 	gtk_widget_show (menu_remove);
