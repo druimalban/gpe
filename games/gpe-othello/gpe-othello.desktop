@@ -6,4 +6,4 @@ Terminal=0
 Type=Application
 Icon=gpe-othello.png
 Categories=Games
-StartupNotify=False
+StartupNotify=True

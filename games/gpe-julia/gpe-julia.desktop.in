@@ -6,3 +6,4 @@ Terminal=0
 Type=Application
 Icon=gpe-julia.png
 Categories=Application;Game;GPE
+StartupNotify=True
