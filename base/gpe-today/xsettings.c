@@ -22,7 +22,7 @@
 static void notify_func(const char *name, XSettingsAction action,
                         XSettingsSetting *setting, void *cb_data)
 {
-    if (action != XSETTINGS_ACTION_NEW || action != XSETTINGS_ACTION_CHANGED)
+    if (action != XSETTINGS_ACTION_NEW && action != XSETTINGS_ACTION_CHANGED)
         return;
 
     if (conf.bg == MBDESKTOP_BG && !strncmp(name, MBG, strlen(MBG))) {
