@@ -7,10 +7,9 @@
 
 <h2>Base software/libraries</h2>
 <ul> 
-<LI> <A HREF="http://www.gtk.org">GTK+ Toolkit</A> graphical user
-interface toolkit (not maintained by the GPE project)
+<LI> <A HREF="http://www.gtk.org">GTK+ widget toolkit</A> (not maintained by the GPE project)
 <LI> <A HREF="libgpewidget.shtml">libgpewidget</A>
-<LI> <A HREF="GPE-usqld.shtml">uSQLd Database Engine</A> - database engine based on <a href="http://www.hwaci.com/sw/sqlite/">SQLite</a>
+<LI> <A HREF="GPE-usqld.shtml">uSQLd Database Engine</A> (based on <a href="http://www.hwaci.com/sw/sqlite/">SQLite</a>)
 </UL>
 
 <h2>Applications</h2>
