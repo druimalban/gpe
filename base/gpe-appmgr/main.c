@@ -1019,7 +1019,7 @@ void create_recent_box(GtkBox *cont)
 		w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_container_set_border_width(GTK_CONTAINER (w), 0);
 		gtk_container_add(GTK_CONTAINER(w), recent_tab);
-		gtk_widget_set_usize (w, 48, 16);
+		gtk_widget_set_usize (w, 16*cfg_options.recent_apps_number, 16);
 
 		window_type = gdk_atom_intern("_NET_WM_WINDOW_TYPE", FALSE);
 		window_type_dock = gdk_atom_intern("_NET_WM_WINDOW_TYPE_DOCK", FALSE);
