@@ -9,8 +9,8 @@ MEMBERS = event-db old-db
 SONAME = libeventdb.so
 CONTROL = control
 
-CFLAGS = pkg-config --cflags glib-2.0
-LDFLAGS = pkg-config --libs glib-2.0
+CFLAGS = `pkg-config --cflags glib-2.0`
+LDFLAGS = `pkg-config --libs glib-2.0`
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 
