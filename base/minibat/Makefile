@@ -2,7 +2,7 @@ PACKAGE = minibat
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.15
+VERSION = 0.16
 
 LINGUAS = 
 
@@ -16,7 +16,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-LDFLAGS = -L/usr/X11R6/lib -lX11 -lXext -lmb `pkg-config --libs xft` -lapm
+LDFLAGS = -L/usr/X11R6/lib -lX11 -lXext -lmb `pkg-config --libs xft` -lapm -lm
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
