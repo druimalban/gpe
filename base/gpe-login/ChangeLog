@@ -1,3 +1,10 @@
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Add gpe-question.
+
+	* X11/Xsession-gpe.d/90GpeAppMgr: Deleted.
+	* X11/Xsession-gpe.d/55xScreenSaver: Likewise.
+
 2002-11-74  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.26 released.

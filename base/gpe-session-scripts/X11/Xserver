@@ -26,4 +26,3 @@ case `module_id` in
 esac
 
 exec Xipaq $ARGS $*
-

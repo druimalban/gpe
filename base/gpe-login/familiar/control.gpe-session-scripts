@@ -4,6 +4,6 @@ Priority: optional
 Version: 0.26
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: matchbox, gpe-login, xcalibrate (>= 0.2-2), keylaunch, ipaq-sleep
+Depends: matchbox, gpe-login, xcalibrate (>= 0.2-2), keylaunch, ipaq-sleep, gpe-question
 Suggests: gpe-setbg
 Description: GPE session startup scripts
