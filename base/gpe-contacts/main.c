@@ -656,12 +656,14 @@ create_main (gboolean show_config_button)
   GtkWidget *scrolled_window;
   gint size_x, size_y;
 
-  size_x = gdk_screen_width() / 4;
-  size_y = gdk_screen_height() / 3;  
-  if (size_x < 240) size_x = 240;
-  if (size_y < 320) size_y = 320;
+  size_x = gdk_screen_width();
+  size_y = gdk_screen_height();  
   mode_large_screen = (size_x > 240) && (size_y > 320);
   mode_landscape = (size_x > size_y);
+  size_x /= 4;
+  size_y /= 3;
+  if (size_x < 240) size_x = 240;
+  if (size_y < 320) size_y = 320;
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
   gtk_window_set_default_size (GTK_WINDOW (main_window), size_x, size_y);

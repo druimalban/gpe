@@ -1,4 +1,8 @@
 
+2004-07-23  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * maon.c: Fixed bug in screen size detection.
+
 2004-07-16  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Version 0.23 released
