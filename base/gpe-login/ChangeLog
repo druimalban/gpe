@@ -1,5 +1,20 @@
 2003-01-02  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.34 released.
+	* gpe-session-scripts 0.31 released.
+
+2003-01-02  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-login1: Provide gpe-session-starter.
+	* familiar/control.gpe-session-scripts: Depend on
+	gpe-session-starter not gpe-login directly.
+
+	* X11/Xinit.d/99gpe-login: Move to ...
+	* gpe-login.xinit: ... here.
+	* Makefile (install-login): Install it.
+
+2003-01-02  Philip Blundell  <philb@gnu.org>
+
 	* X11/Xinit.d/90xXkbd: Delete, contents moved to ...
 	* X11/Xinit.d/99gpe-login: ... here.
 	* X11/Xsession-gpe.d/90xXkbd: Delete.

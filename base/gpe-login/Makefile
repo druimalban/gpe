@@ -69,6 +69,8 @@ install-login: gpe-login install-po
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install -m 755 gpe-login.session $(DESTDIR)/etc/X11/Xsession.d/50autolock
 	install -m 755 X11/10unsetgtkrc $(DESTDIR)/etc/X11/Xsession.d/10unsetgtkrc
+	install -d $(DESTDIR)/etc/X11/Xinit.d
+	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
 
 install-dm: gpe-dm
 	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
