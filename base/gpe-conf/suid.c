@@ -84,25 +84,11 @@ update_dhcp_status (const gchar * active)
 
 	if (use_dhcp)
 	{
-		change_cfg_value ("/etc/pcmcia/network.opts", "DHCP", "\"y\"",
-				  '=');
-		switch (fork ())
-		{
-		case -1:
-			fprintf (stderr, "cant fork\n");
-			exit (errno);
-		case 0:
-			execlp ("/sbin/dhcpcd", "dhcpcd");
-			exit (0);
-		default:
-			break;
-		}
+		change_cfg_value ("/etc/pcmcia/network.opts", "DHCP", "\"y\"",'=');
 	}
 	else
 	{
-		change_cfg_value ("/etc/pcmcia/network.opts", "DHCP", "\"n\"",
-				  '=');
-		system ("/usr/bin/killall dhcpcd");
+		change_cfg_value ("/etc/pcmcia/network.opts", "DHCP", "\"n\"",'=');
 	}
 }
 
@@ -171,8 +157,9 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val,
 				j = get_first_char (delim);
 				if (j > 0)
 				{
-					tmpval = g_malloc (j);
+					tmpval = g_malloc (j+2);
 					strncpy (tmpval, delim, j);
+					tmpval[j]=0;
 					lines[i] =
 						g_strdup_printf ("%s%s%c%s", tmpval,
 								 var, seperator, val);
