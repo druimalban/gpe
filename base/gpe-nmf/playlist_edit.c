@@ -12,6 +12,8 @@
 #include <assert.h>
 #include <libintl.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <dirent.h>
 
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
@@ -100,13 +102,69 @@ load_file (struct nmf_frontend *fe, gchar *s)
     }
 }
 
+int isdir (char *fn)
+{
+        struct stat buf;
+
+        if (stat (fn, &buf))
+                return 0;
+
+        if (S_ISDIR(buf.st_mode))
+                return 1;
+
+        return 0;
+}
+
+void add_playlist_item (struct nmf_frontend *fe, char *fn);
+
+void add_playlist_file (struct nmf_frontend *fe, char *fn)
+{
+        load_file (fe, g_strdup(fn));
+}
+
+void add_playlist_directory (struct nmf_frontend *fe, char *dname)
+{
+        DIR *dir;
+        struct dirent *entry;
+
+        dir = opendir (dname);
+        if (!dir)
+                return;
+
+        while ((entry = readdir (dir)))
+        {
+                char *fn;
+
+                if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
+                        continue;
+
+                fn = g_strdup_printf ("%s/%s", dname, entry->d_name);
+
+                add_playlist_item (fe, fn);
+
+                g_free (fn);
+        }
+        closedir (dir);
+}
+
+void add_playlist_item (struct nmf_frontend *fe, char *fn)
+{
+                if (isdir (fn))
+                {
+                        add_playlist_directory (fe, fn);
+                } else
+                {
+                        add_playlist_file (fe, fn);
+                }
+}
+
 static void
 select_file_done (GtkWidget *fs, struct nmf_frontend *fe)
 {
   char *s = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (fs));
   
-  load_file (fe, s);
-  
+  add_playlist_item (fe, s);
+
   gtk_widget_destroy (fs);
 }
 
