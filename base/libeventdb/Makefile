@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libeventdb
 #DEBUG = yes 
 CVSBUILD = yes
-VERSION = 0.14
+VERSION = 0.15
 
 LINGUAS = 
 
@@ -10,20 +10,9 @@ MEMBERS = event-db old-db
 
 SONAME = $(PACKAGE).so.0
 
-CFLAGS = $(shell pkg-config --cflags glib-2.0) $(GPECFLAGS) -DG_DISABLE_DEPRECATED
-LDFLAGS = $(shell pkg-config --libs glib-2.0) -lsqlite $(GPELIBS)
-
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -g #-O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD
-
-CPPFLAGS += -I. -I../libgpewidget
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(shell pkg-config --cflags glib-2.0) $(GPECFLAGS) -DG_DISABLE_DEPRECATED
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(shell pkg-config --libs glib-2.0) -lsqlite $(GPELIBS)
 
 HEADERS = event-db.h
 
@@ -43,10 +32,7 @@ $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
