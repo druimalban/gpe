@@ -1,5 +1,9 @@
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (GTKCFLAGS): Remove -DGTK_ENABLE_BROKEN.
+
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.30 released.
 
 2003-01-05  Philip Blundell  <philb@gnu.org>

@@ -5,7 +5,7 @@ GTK2 = yes
 LINGUAS = de
 
 ifeq ($(GTK2),yes)
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 else
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
