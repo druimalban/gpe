@@ -38,8 +38,6 @@ int search_replace_open = 0;
 int last_found = 0;
 gboolean utf8_mode;
 
-static gchar* default_colors = "black:white:gray50:red:purple:blue:light blue:green:yellow:orange:lavender:brown:goldenrod4:dodger blue:pink:light green:gray10:gray30:gray75:gray90";
-
 GtkWidget *main_window;
 GtkWidget *text_view;
 GtkWidget *file_selector;
@@ -649,53 +647,6 @@ cursor_position_changed (GtkTextView *text_view, GdkEventButton *event)
   */
 }
 
-static void
-construct_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j)
-{
-  GtkWidget *frame, *drawing_area;
-
-  frame = gtk_frame_new (NULL);
-  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
-  
-  drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_size_request (drawing_area, 12, 12);
-  gtk_widget_modify_bg (drawing_area, GTK_STATE_NORMAL, &color);
-
-  gtk_container_add (GTK_CONTAINER (frame), drawing_area);
-  gtk_table_attach_defaults (GTK_TABLE (table), frame, i, i+1, j, j+1);
-}
-
-
-static GtkWidget *
-construct_color_popup (GtkWidget *parent_button)
-{
-  GtkWidget *table;
-  GdkColor *colors = NULL;
-  gint i = 0, j = 0, k = 0;
-  gint window_x, window_y;
-  gint n_colors = 0;
-
-  table = gtk_table_new (4, 5, TRUE);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 1);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 1);
-
-  gtk_color_selection_palette_from_string (default_colors, &colors, &n_colors);
-
-  while (k < n_colors)
-  {
-    if (j == 4)
-    {
-      j = 0;
-      i++;
-    }
-    construct_color_popup_add_color (table, colors[k], i, j);
-    k++;
-    j++;
-  }
-
-  return table;
-}
-
 static GtkWidget *
 construct_justification_popup_add_button (const gchar *stock_id)
 {
@@ -772,7 +723,7 @@ add_default_buffer_tags (GtkTextBuffer *buffer)
 }
 
 static void
-font_selected (PangoFontFamily *font)
+font_selected (GtkWidget *parent, PangoFontFamily *font)
 {
   printf ("Selected font %s\n", pango_font_family_get_name (font));
 }
@@ -895,14 +846,14 @@ main (int argc, char *argv[])
   g_hash_table_insert (tag_widgets, (gpointer) "strikethrough", (gpointer) toolbar_button_strikethrough);
 
   justify_button = popup_menu_button_new_from_stock (GTK_STOCK_JUSTIFY_LEFT, construct_justification_popup, NULL);
-
+  color_button = popup_menu_button_new_type_color (NULL);
   font_button = popup_menu_button_new_type_font (font_selected);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), gtk_item_factory_get_widget (item_factory, "<main>"), FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, TRUE, TRUE, 0);
   gtk_box_pack_end (GTK_BOX (hbox), font_button, FALSE, FALSE, 0);
-  //gtk_box_pack_end (GTK_BOX (hbox), color_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), color_button, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (hbox), justify_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
