@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall
 OBJS = control.o game.o gfx.o gsoko.o init.o interface.o move.o
-VERSION = 0.4.2-gpe3
+VERSION = 0.4.2-gpe4
 PACKAGE = gsoko
 
 PREFIX = /usr/local
