@@ -198,7 +198,7 @@ void paint_board(){
                      0, 0, 0, 0, BOARD_SIZE, BOARD_SIZE);
   rect.x = rect.y = 0;
   rect.width = rect.height = BOARD_SIZE;
-  gtk_widget_draw (go.board.drawing_area, &rect);
+  gdk_window_invalidate_rect(go.board.drawing_area->window, &rect, FALSE);
 }
 
 void unpaint_stone(int col, int row){
@@ -213,7 +213,7 @@ void unpaint_stone(int col, int row){
                      go.board.pixmap_empty_board,
                      rect.x, rect.y, rect.x, rect.y,
                      rect.width, rect.height);
-  gtk_widget_draw (go.board.drawing_area, &rect);
+  gdk_window_invalidate_rect(go.board.drawing_area->window, &rect, FALSE);
 }
 
 /* optional last args for specific marks */
@@ -313,7 +313,7 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
     default:
       break;
   }
-  gtk_widget_draw (go.board.drawing_area, &rect);
+  gdk_window_invalidate_rect(go.board.drawing_area->window, &rect, FALSE);
 }//paint_mark()
 
 void paint_stone(int col, int row, GoItem item){
@@ -345,7 +345,8 @@ void paint_stone(int col, int row, GoItem item){
   case EMPTY:
     break;
   }//switch item
-  gtk_widget_draw (go.board.drawing_area, &rect);
+  gdk_window_invalidate_rect(go.board.drawing_area->window, &rect, FALSE);
+
 }
 
 
