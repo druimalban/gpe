@@ -15,6 +15,7 @@
 #include <gtk/gtk.h>
 
 #include "todo.h"
+#include "todo-sql.h"
 
 #define _(_x) gettext(_x)
 
@@ -26,28 +27,6 @@ GtkWidget *window;
 extern GtkWidget *top_level (void);
 
 GSList *lists;
-
-static gint
-insert_sort_func (gconstpointer a, gconstpointer b)
-{
-  const struct todo_item *ia = a, *ib = b;
-  return ia->time - ib->time;
-}
-
-void
-add_new_event(struct todo_list *list, time_t t, const char *what, item_state state, const char *summary)
-{
-  struct todo_item *i = g_malloc (sizeof (struct todo_item));
-
-  i->what = what;
-  i->time = t;
-  i->state = state;
-  i->summary = summary;
-
-  list->items = g_list_insert_sorted (list->items, i, insert_sort_func);
-
-  gtk_widget_draw (list->widget, NULL);
-}
 
 int
 new_list_id (void)
@@ -82,11 +61,6 @@ new_list (int id, const char *title)
 
   lists = g_slist_append (lists, t);
   return t;
-}
-
-void
-new_item ()
-{
 }
 
 static void

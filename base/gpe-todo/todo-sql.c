@@ -11,13 +11,55 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 #include <sqlite.h>
 
 #include "todo.h"
+#include "todo-sql.h"
 
 static sqlite *sqliteh;
 
 static char *dname = "/.gpe/todo";
+
+struct todo_item *
+add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
+		      item_state state, const char *summary, int id);
+
+static int
+item_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 6)
+    {
+      int id = atoi (argv[0]);
+      int list = atoi (argv[1]);
+      char *summary = argv[2];
+      char *description = argv[3];
+      int state = atoi (argv[4]);
+      char *due = argv[5];
+
+      GSList *iter;
+      struct todo_list *l;
+      time_t t = (time_t)0;
+      int uid = 0;
+
+      for (iter = lists; iter; iter = iter->next)
+	{
+	  struct todo_list *l = iter->data;
+	  if (l->id == list)
+	    break;
+	}
+
+      /* ignore items belonging to deleted / bogus lists */
+      if (iter == NULL)
+	return 0;
+      
+      add_new_item_internal ((struct todo_list *)iter->data, 
+			     t, g_strdup (description), state, 
+			     g_strdup (summary), uid);
+    }
+
+  return 0;
+}
 
 static int
 list_callback (void *arg, int argc, char **argv, char **names)
@@ -25,17 +67,6 @@ list_callback (void *arg, int argc, char **argv, char **names)
   if (argc == 2)
     {
       new_list (atoi (argv[0]), g_strdup (argv[1]));
-    }
-  return 0;
-}
-
-static int
-item_callback (void *arg, int argc, char **argv, char **names)
-{
-  if (argc == 5)
-    {
-      new_item (atoi (argv[0]), atoi (argv[1]),
-		argv[2], atoi(argv[3]), argv[4]);
     }
   return 0;
 }
@@ -80,7 +111,7 @@ sql_start (void)
     }
 
   if (sqlite_exec (sqliteh, 
-		   "select uid,list,summary,state,due_by from todo_items",
+		   "select uid,list,summary,description,state,due_by from todo_items",
 		   item_callback, NULL, &err))
     {
       fprintf (stderr, "sqlite: %s\n", err);
@@ -100,9 +131,69 @@ sql_close (void)
 void
 sql_add_list (int id, const char *title)
 {
-  char buf[256];
-  snprintf (buf, sizeof(buf), 
-	    "insert into todo_lists values(%d,'%s')", 
-	    id, title);
-  sqlite_exec (sqliteh, buf, NULL, NULL, NULL);
+  char *err;
+  if (sqlite_exec_printf (sqliteh, "insert into todo_lists values(%d,'%q')", 
+		      NULL, NULL, &err, id, title))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+    }
+}
+
+static void
+add_new_item_sql (struct todo_item *i, int list_id)
+{
+  char d_buf[32];
+  char *due, *err;
+
+  if (i->time)
+    {
+      struct tm tm;
+      localtime_r (&i->time, &tm);
+      strftime (d_buf, sizeof(d_buf), "%F", &tm);
+      due = d_buf;
+    }
+  else
+    due = "";
+      
+  if (sqlite_exec_printf (sqliteh, 
+			  "insert into todo_items values(%d,%d,'%q','%q',%d,'%q','%q')",
+			  NULL, NULL, &err, i->id, list_id, i->summary, i->what,
+			  i->state, due, ""))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+    }
+}
+
+static gint
+insert_sort_func (gconstpointer a, gconstpointer b)
+{
+  const struct todo_item *ia = a, *ib = b;
+  return ia->time - ib->time;
+}
+
+struct todo_item *
+add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
+		      item_state state, const char *summary, int id)
+{
+  struct todo_item *i = g_malloc (sizeof (struct todo_item));
+
+  i->id = id;
+  i->what = what;
+  i->time = t;
+  i->state = state;
+  i->summary = summary;
+
+  list->items = g_list_insert_sorted (list->items, i, insert_sort_func);
+
+  return i;
+}
+
+void
+add_new_item (struct todo_list *list, time_t t, const char *what, 
+	      item_state state, const char *summary, int id)
+{
+  struct todo_item *i = add_new_item_internal (list, t, what, state, summary, id);
+  add_new_item_sql (i, list->id);
 }

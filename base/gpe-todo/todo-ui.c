@@ -16,6 +16,7 @@
 
 #include "gtkdatecombo.h"
 #include "todo.h"
+#include "todo-sql.h"
 
 #define _(_x) gettext(_x)
 
@@ -35,8 +36,6 @@ struct edit_todo
 static void
 destroy_user_data (gpointer p)
 {
-  struct edit_todo *t = (struct edit_todo *)p;
-
   g_free (p);
 }
 
@@ -88,10 +87,11 @@ click_ok(GtkWidget *widget,
       t->item->summary = summary;
       t->item->time = when;
       t->item->state = t->state;
-      gtk_widget_draw (t->list->widget, NULL);
     }
   else
-    add_new_event (t->list, when, what, t->state, summary);
+    add_new_item (t->list, when, what, t->state, summary, 0);
+
+  gtk_widget_draw (t->list->widget, NULL);
 
   gtk_widget_hide (window);
   gtk_widget_destroy (window);
@@ -125,7 +125,6 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *text = gtk_text_new (NULL, NULL);
   GtkWidget *duebox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *donebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok = gtk_button_new_with_label (_("Save"));
   GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
@@ -137,13 +136,12 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   struct edit_todo *t = g_malloc(sizeof(struct edit_todo));
-  struct tm tm;
   time_t the_time;
-  char buf[32];
 
   const char *state_strings[] = { _("Not started"), _("In progress"),
 				  _("Completed") };
-  void (*state_funcs[3])(void) = { state_func_0, state_func_1, state_func_2 };
+  void (*state_funcs[3])(GtkMenuItem *, gpointer) = 
+    { state_func_0, state_func_1, state_func_2 };
   guint i;
  
   for (i = 0; i < 3; i++)

@@ -10,11 +10,11 @@ typedef enum
 
 struct todo_item
 {
+  int id;
   time_t time;
   const char *what;
   const char *summary;
   item_state state;
-  time_t due;
 };
 
 struct todo_list 
@@ -32,4 +32,5 @@ extern struct todo_list *new_list (int id, const char *title);
 extern GtkWidget *the_notebook;
 extern void add_new_event(struct todo_list *list, time_t t, 
 			  const char *what, item_state state, 
-			  const char *summary);
+			  const char *summary, int uid);
+extern void sql_add_item (struct todo_item *i, int list_id);
