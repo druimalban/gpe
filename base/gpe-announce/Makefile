@@ -16,7 +16,8 @@ PACKAGE = gpe-announce
 PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
-LINGUAS = de pt_PT
+LINGUAS = 
+GTK2 = yes
 
 MEMBERS = main interface callbacks
 
@@ -62,8 +63,8 @@ $(PACKAGE): $(OBJS)
 
 install-program: all 
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -d $(PACKAGE) $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)

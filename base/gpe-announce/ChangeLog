@@ -1,3 +1,9 @@
+2003-03-30  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install-program): Use install -d, install -s.
+	(GTK2): Default on.
+	(LINGUAS): Set to nothing.
+
 2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is
