@@ -1,3 +1,24 @@
+2002-09-30  Philip Blundell  <philb@gnu.org>
+
+	* todo-ui.c (click_cancel): Remove unnecessary gtk_widget_hide.
+	(click_delete): Likewise.
+	(click_ok): Likewise.
+	(edit_item): Fix warnings with GTK 2.
+
+	* main.c (my_icons): Add tick.
+	* list-ui.c (draw_expose_event): Fix warnings with GTK 2.
+	Remove references to tick.xpm and box.xpm.  Pass extra parameter
+	"event" to draw_item.  Obtain reference to "tick" icon.
+	(draw_item): New parameter "event".  Rewrite handling of
+	completion checkbox.  Support Pango properly.
+	* tick.xpm, box.xpm: Deleted.
+
+2002-09-29  Philip Blundell  <philb@gnu.org>
+
+	* todo-sql.c: Don't define _XOPEN_SOURCE here.
+	(converted_category): Reformat.  Fix warning.
+	* Makefile (CPPFLAGS): Add -D_GNU_SOURCE.
+
 2002-09-29  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.23 released.

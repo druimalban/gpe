@@ -22,13 +22,9 @@
 
 #include "todo.h"
 
-#include "tick.xpm"
-#include "box.xpm"
-
 #define _(_x) gettext(_x)
 
-static GdkPixmap *tick_pixmap, *box_pixmap;
-static GdkBitmap *tick_bitmap, *box_bitmap;
+static GdkPixbuf *tick_image;
 
 static guint ystep;
 static guint xcol = 18;
@@ -55,7 +51,7 @@ categories_menu (void)
 
   i = gtk_menu_item_new_with_label (_("*all*"));
   gtk_menu_append (GTK_MENU (menu), i);
-  gtk_signal_connect (GTK_OBJECT (i), "activate", set_category, NULL);
+  gtk_signal_connect (GTK_OBJECT (i), "activate", (GtkSignalFunc)set_category, NULL);
   gtk_widget_show (i);
 
   for (l = categories; l; l = l->next)
@@ -63,7 +59,7 @@ categories_menu (void)
       struct todo_category *t = l->data;
       i = gtk_menu_item_new_with_label (t->title);
       gtk_menu_append (GTK_MENU (menu), i);
-      gtk_signal_connect (GTK_OBJECT (i), "activate", set_category, t);
+      gtk_signal_connect (GTK_OBJECT (i), "activate", (GtkSignalFunc)set_category, t);
       gtk_widget_show (i);
     }
 
@@ -127,23 +123,19 @@ item_layout (struct todo_item *i)
 #endif
 
 static void
-draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct todo_item *i, guint skew)
+draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct todo_item *i, guint skew, GdkEventExpose *event)
 {
   GdkGC *black_gc = widget->style->black_gc;
 #if GTK_MAJOR_VERSION < 2
   GdkFont *font = widget->style->font;
 #endif
+  guint width, height;
 
 #if GTK_MAJOR_VERSION < 2
-
   gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
 		 i->summary, strlen (i->summary));
-
-  if (i->state == COMPLETED)
-    gdk_draw_line (drawable, black_gc, xcol, 
-		   y + ystep / 2, 
-		   18 + gdk_string_width (font, i->summary), 
-		   y + ystep / 2);
+  width = gdk_string_width (font, i->summary);
+  height = font->ascent + font->descent;
 #else
   PangoLayout *l = item_layout (i);
   
@@ -156,9 +148,24 @@ draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct
 		    "label",
 		    xcol, y,
 		    l);
+
+  pango_layout_get_size (l, &width, &height);
+  width /= PANGO_SCALE;
+  height /= PANGO_SCALE;
 #endif
-  gdk_draw_pixmap (drawable, black_gc, (i->state == COMPLETED) ? tick_pixmap : box_pixmap,
-		   2, 0, 2, y - skew, 14, 14);
+  
+  gdk_draw_rectangle (drawable, widget->style->black_gc, FALSE, 2, y + skew, 12, 12);
+  if (i->state == COMPLETED)
+    {
+      gdk_draw_line (drawable, black_gc, xcol, 
+		     y + height / 2, 
+		     18 + width, 
+		     y + height / 2);
+
+      gdk_pixbuf_render_to_drawable_alpha (tick_image, drawable, 
+					   0, 0, 3, y + skew + 1, 10, 10, GDK_PIXBUF_ALPHA_BILEVEL, 128,
+					   GDK_RGB_DITHER_NONE, 0, 0);
+    }
 }
 
 static gint
@@ -186,19 +193,10 @@ draw_expose_event (GtkWidget *widget,
 
   ystep = 14;
 
-  if (! tick_pixmap)
-    {
-      tick_pixmap = gdk_pixmap_create_from_xpm_d (widget->window,
-						  &tick_bitmap,
-						  NULL,
-						  tick_xpm);
-      box_pixmap = gdk_pixmap_create_from_xpm_d (widget->window,
-						 &box_bitmap,
-						 NULL,
-						 box_xpm);
-    }
+  if (! tick_image)
+    tick_image = gpe_find_icon ("tick");
   
-  gdk_draw_rectangle(drawable, white_gc, TRUE, 0, 0, max_width, max_height);
+  gdk_draw_rectangle (drawable, white_gc, TRUE, 0, 0, max_width, max_height);
 
   y = skew;
 
@@ -208,7 +206,7 @@ draw_expose_event (GtkWidget *widget,
 
       if (! i->was_complete)
 	{
-	  draw_item (drawable, widget, xcol, y, i, skew);
+	  draw_item (drawable, widget, xcol, y, i, skew, event);
 	  
 	  i->pos=y/ystep;
 	  y += ystep;
@@ -221,7 +219,7 @@ draw_expose_event (GtkWidget *widget,
 
       if (i->was_complete)
 	{
-	  draw_item (drawable, widget, xcol, y, i, skew);
+	  draw_item (drawable, widget, xcol, y, i, skew, event);
 	  
 	  i->pos=y/ystep;
 	  y += ystep;
@@ -351,35 +349,35 @@ top_level (GtkWidget *window)
 			   _("New"), 
 			   _("Add a new item"), 
 			   _("Add a new item"),
-			   pw, new_todo_item, NULL);
+			   pw, (GtkSignalFunc)new_todo_item, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("properties"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Configure"), 
 			   _("Configure categories"), 
 			   _("Configure categories"),
-			   pw, configure, NULL);
+			   pw, (GtkSignalFunc)configure, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("clean"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Purge"), 
 			   _("Purge completed items"), 
 			   _("Purge completed items"),
-			   pw, purge_completed, NULL);
+			   pw, (GtkSignalFunc)purge_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("hide"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Re-sort"), 
 			   _("Move completed items to the end of the list"), 
 			   _("Move completed items to the end of the list"),
-			   pw, show_hide_completed, NULL);
+			   pw, (GtkSignalFunc)show_hide_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 
 			   _("Exit"), 
 			   _("Exit the program"), 
 			   _("Exit the program"),
-			   pw, gtk_exit, NULL);
+			   pw, (GtkSignalFunc)gtk_exit, NULL);
 
   gtk_widget_show (toolbar);
   gtk_widget_show (toolbar2);

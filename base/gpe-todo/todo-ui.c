@@ -67,7 +67,6 @@ static void
 click_cancel (GtkWidget *widget,
 	      GtkWidget *window)
 {
-  gtk_widget_hide (window);
   gtk_widget_destroy (window);
 }
 
@@ -82,13 +81,12 @@ click_delete (GtkWidget *widget,
 
   refresh_items ();
   
-  gtk_widget_hide (window);
   gtk_widget_destroy (window);
 }
 
 static void
-click_ok(GtkWidget *widget,
-	 GtkWidget *window)
+click_ok (GtkWidget *widget,
+	  GtkWidget *window)
 {
   struct edit_todo *t = gtk_object_get_data (GTK_OBJECT (window), "todo");
 
@@ -154,7 +152,6 @@ click_ok(GtkWidget *widget,
 
   refresh_items ();
 
-  gtk_widget_hide (window);
   gtk_widget_destroy (window);
 }
 
@@ -217,7 +214,7 @@ edit_item (struct todo_item *item)
     {
       GtkWidget *l = gtk_menu_item_new_with_label (state_strings[i]);
       gtk_menu_append (GTK_MENU (state_menu), l);
-      gtk_signal_connect (GTK_OBJECT (l), "activate", state_funcs[i], t);
+      gtk_signal_connect (GTK_OBJECT (l), "activate", (GtkSignalFunc)state_funcs[i], t);
     }
 		   
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
@@ -283,8 +280,10 @@ edit_item (struct todo_item *item)
   gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
+
   if (categories)
     gtk_box_pack_start (GTK_BOX (vbox), frame_categories, FALSE, FALSE, 2);
+
   gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
 

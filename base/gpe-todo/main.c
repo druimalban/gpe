@@ -32,6 +32,7 @@ static struct gpe_icon my_icons[] = {
   { "exit", },
   { "question" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
+  { "tick" },
   { NULL, NULL }
 };
 

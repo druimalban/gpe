@@ -9,6 +9,8 @@ GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 GTKLDFLAGS = `gtk-config --libs`
 endif
 
+CPPFLAGS += -D_GNU_SOURCE
+
 CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD

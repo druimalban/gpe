@@ -7,8 +7,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#define _XOPEN_SOURCE
-
 #include <sys/types.h>
 #include <stdlib.h>
 #include <time.h>
@@ -46,7 +44,8 @@ new_category_internal (int id, const char *title)
   return t;
 }
 
-int converted_category (const char *title)
+int 
+converted_category (const char *title)
 {
   char *err;
 
@@ -55,11 +54,11 @@ int converted_category (const char *title)
     {
       gpe_error_box (err);
       free (err);
-      return NULL;
+      return -1;
     }
 
   new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
-  return (sqlite_last_insert_rowid (sqliteh));
+  return sqlite_last_insert_rowid (sqliteh);
 }
 
 struct todo_category *
