@@ -1372,7 +1372,6 @@ main (int argc, char *argv[])
 
   menu = gtk_menu_new ();
   slurp_passwd (menu);
-  locale_try_user (current_username);
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
@@ -1439,6 +1438,7 @@ main (int argc, char *argv[])
 	{
 	  GtkWidget *language_label = gtk_label_new_with_translation (PACKAGE, N_("Language"));
 	  build_language_menu ();
+	  locale_try_user (current_username);
 
 	  gtk_table_attach (GTK_TABLE (table), language_label, 0, 1, 2, 3, 0, GTK_EXPAND | GTK_FILL, xpad, ypad);
 	  gtk_table_attach (GTK_TABLE (table), language_menu, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, xpad, ypad);

@@ -1,5 +1,14 @@
 2003-08-14  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.60 released.
+	
+2003-08-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Defer locale_try_user until locale list has
+	been created.
+
+2003-08-14  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.59 released.
 
 2003-08-14  Philip Blundell  <philb@gnu.org>
