@@ -44,7 +44,7 @@ db_open(void)
 }
 
 int
-read_tags (void *ignore, int argc, char *argv[], void *data)
+read_tags (void *data, int argc, char *argv[], char *ignore[])
 {
   GSList **tags = (GSList **)data;
 
