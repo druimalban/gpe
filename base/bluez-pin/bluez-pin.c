@@ -23,6 +23,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/render.h>
 #include <gpe/picturebutton.h>
+#include <gpe/pixmaps.h>
 
 #define BT_ICON PREFIX "/share/pixmaps/bt-logo.png"
 
@@ -33,13 +34,21 @@ static char *name = "";
 static GtkWidget *check;
 static sqlite *sqliteh;
 
-static const char *fname = "/etc/bluetooth/pin.db";
+struct gpe_icon my_icons[] = 
+  {
+    { "bt-logo" },
+    { "ok" },
+    { "cancel" },
+    { NULL }
+  };
 
 int
 sql_start (void)
 {
   char *err;
+  char *fname = g_strdup_printf ("%s/.bluez-pin", g_get_home_dir ());
   sqliteh = sqlite_open (fname, 0, &err);
+  g_free (fname);
   if (sqliteh == NULL)
     {
       gpe_error_box (err);
@@ -129,7 +138,14 @@ ask_user (int outgoing, const char *address)
  
   gtk_widget_realize (window);
 
+#ifdef USE_LIBGPEWIDGET
+  if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
+
+  pixbuf = gpe_find_icon ("bt-logo");
+#else
   pixbuf = gdk_pixbuf_new_from_file (BT_ICON, NULL);
+#endif
   if (pixbuf)
     logo = gpe_render_icon (window->style, pixbuf);
 

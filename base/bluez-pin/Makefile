@@ -1,6 +1,7 @@
 GPE = yes
 PREFIX = /usr/local
 PACKAGE = bluez-pin
+GTK2 = yes
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -26,9 +27,13 @@ bluez-pin: bluez-pin.o
 bluez-pin.o: bluez-pin.c
 	$(CC) -c -o $@ $< $(CPPFLAGS) $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer
 
+ifneq ($(GPE),yes)
+install:
+	install -D bt-logo.png $(DESTDIR)/usr/share/pixmaps/bt-logo.png
+endif
+
 install: all install-mo
 	install -D bluez-pin $(DESTDIR)/usr/bin/bluez-pin
-	install -D bt-logo.png $(DESTDIR)/usr/share/pixmaps/bt-logo.png
 	strip $(DESTDIR)/usr/bin/bluez-pin
 
 clean:
