@@ -38,27 +38,26 @@ gpe_application_init (int *argc, char **argv[])
 
   /* FIXME: use g_get_home_dir(), move directory creation away [CM]: */
   home = getenv ("HOME");
-  if (home == NULL) 
-    home = "";
-
-  len = strlen (home) + strlen (dname) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  if (access (buf, F_OK))
+  if (home)
     {
-      gpe_perror_box (buf);
-      g_free (buf);
-      return FALSE;
-    }
-
-  strcat (buf, dname);
-  if (access (buf, F_OK))
-    {
-      if (mkdir (buf, 0700))
+      if (access (home, F_OK))
 	{
-	  gpe_perror_box (buf);
-	  g_free (buf);
+	  gpe_perror_box (home);
 	  return FALSE;
+	}
+
+      len = strlen (home) + strlen (dname) + 1;
+      buf = g_malloc (len);
+      strcpy (buf, home);
+      strcat (buf, dname);
+      if (access (buf, F_OK))
+	{
+	  if (mkdir (buf, 0700))
+	    {
+	      gpe_perror_box (buf);
+	      g_free (buf);
+	      return FALSE;
+	    }
 	}
     }
 

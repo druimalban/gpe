@@ -1,3 +1,8 @@
+2002-07-20  Philip Blundell  <philb@gnu.org>
+
+	* init.c (gpe_application_init): Don't attempt to create ~/.gpe when
+	HOME not set.
+
 2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
 
 	* init.c (gpe_application_init): Free user_gtkrc_file.
