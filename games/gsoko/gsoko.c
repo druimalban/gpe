@@ -29,11 +29,6 @@ int main(int argc, char *argv[])
 
  	gtk_init(&argc, &argv);	/* process gtk+ arguments */
 
-	/* change the working directory to the one containing the binary */
-	sdir = argv[0];
-	*strrchr(sdir, '/') = 0;	/* XXX this should be OS dependent : windows = '\\' */
-	chdir(sdir);
-
 	/* create a new window */
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), W_TITLE);

@@ -117,6 +117,7 @@ void init_level(void)
 	  level = 1;
 	else {
 	  file = fopen(filename, "r");
+	  if (!file) { perror(filename); exit(1); }
 	  if (fscanf(file, "%d", &level) != 1)
 	    level = 1;
 	  fclose(file);
@@ -131,7 +132,8 @@ void save_level(void)
 
 	strcpy(filename, getenv("HOME"));
 	strcat(filename, "/.gsokorc");
-	if ((file = fopen(filename, "w")) != NULL)
+	if ((file = fopen(filename, "w")) != NULL) {
 	  fprintf(file, "%d\n", level);
-	fclose(file);
+	  fclose(file);	
+	}
 }

@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall
 OBJS = control.o game.o gfx.o gsoko.o init.o interface.o move.o
-VERSION = 0.4.2-gpe1
+VERSION = 0.4.2-gpe3
 PACKAGE = gsoko
 
 PREFIX = /usr/local
@@ -10,7 +10,7 @@ BUILD = ../../base/build
 all:	gsoko
 
 gsoko:	$(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) `pkg-config --libs gtk+-2.0` 
+	$(CC) $(CFLAGS) -o $@ $(OBJS) `pkg-config --libs gtk+-2.0`
 
 clean:
 	rm -f *.o
