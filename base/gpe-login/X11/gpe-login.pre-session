@@ -8,3 +8,7 @@ fi
 if [ -e /dev/sound/mixer ]; then
 chown $USER /dev/sound/mixer
 fi
+
+mkdir -p /mnt/ramfs/home/$USER
+chown $USER /mnt/ramfs/home/$USER
+ln -s /mnt/ramfs/home/$USER /home/$USER/.ramdisk

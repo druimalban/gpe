@@ -422,7 +422,6 @@ main (int argc, char *argv[])
   GtkWidget *frame;
   GtkWidget *logo = NULL;
   GdkPixbuf *icon;
-  gboolean fullscreen;
   Display *dpy;
   Window root;
 
@@ -486,7 +485,8 @@ main (int argc, char *argv[])
   if (autolock_mode)
     {
       suspended_atom = XInternAtom (dpy, "GPE_DISPLAY_LOCKED", 0);
-      fullscreen = TRUE;
+      gdk_window_set_override_redirect (window->window, TRUE);
+      gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 
       current_username = getenv ("USER");
       if (current_username == NULL)
@@ -497,29 +497,50 @@ main (int argc, char *argv[])
     }
   else
     {
-      /* If no window manager is running, set size to full-screen */
-      /*
-	<mallum> pb: request the 'SubstructureRedirect' event mask on the root window
-	<mallum> pb: if that fails, theres already a window manager running
-      */
-      GdkEventMask ev = gdk_window_get_events (window->window);
-      int r;
-      gdk_error_trap_push ();
-      XSelectInput (GDK_WINDOW_XDISPLAY (window->window),
-		    RootWindow (GDK_WINDOW_XDISPLAY (window->window), 0),
-		    SubstructureRedirectMask);
-      gdk_flush ();
-      r = gdk_error_trap_pop ();
-      gdk_window_set_events (window->window, ev);
-      fullscreen = (r == 0) ? TRUE : FALSE;
+      gboolean geometry_set = FALSE;
+      FILE *fp = fopen ("/etc/X11/gpe-login.geometry", "r");
+      if (fp)
+	{
+	  char buf[1024];
+	  if (fgets (buf, sizeof (buf), fp))
+	    {
+	      int x, y, h, w;
+	      int val = XParseGeometry (buf, &x, &y, &w, &h);
+	      if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
+		{
+		  gtk_widget_set_usize (window, w, h);
+		  geometry_set = TRUE;
+		}
+	      if ((val & (XValue | YValue)) == (XValue | YValue))
+		gtk_widget_set_uposition (window, x, y);
+	    }
+	  fclose (fp);
+	}
+
+      if (geometry_set == FALSE)
+	{
+	  /* If no window manager is running, set size to full-screen */
+	  /*
+	    <mallum> pb: request the 'SubstructureRedirect' event mask on the root window
+	    <mallum> pb: if that fails, theres already a window manager running
+	  */
+	  GdkEventMask ev = gdk_window_get_events (window->window);
+	  int r;
+	  gdk_error_trap_push ();
+	  XSelectInput (GDK_WINDOW_XDISPLAY (window->window),
+			RootWindow (GDK_WINDOW_XDISPLAY (window->window), 0),
+			SubstructureRedirectMask);
+	  gdk_flush ();
+	  r = gdk_error_trap_pop ();
+	  gdk_window_set_events (window->window, ev);
+	  if (r == 0)
+	    {
+	      gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
+	      geometry_set = TRUE;
+	    }
+	}
     }
 
-  if (fullscreen)
-    {
-      gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
-      gdk_window_set_override_redirect (window->window, TRUE);
-    }
-    
   icon = gpe_find_icon ("logo");
   if (icon)
     logo = gpe_render_icon (window->style, icon);

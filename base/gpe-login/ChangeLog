@@ -1,4 +1,14 @@
+2002-07-21  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Use /etc/X11/gpe-login.geometry if it exists.
+
 2002-07-20  Philip Blundell  <philb@gnu.org>
+
+	* X11/gpe-login.pre-session: Create home directory in RAM disk.
+
+	* gpe-login.setup: Add keylaunch invocation.
+	* gpe-login.keylaunchrc: New file.
+	* Makefile (install-login): Install it.
 
 	* X11/Xsession-gpe.d/10setroot: New file.
 

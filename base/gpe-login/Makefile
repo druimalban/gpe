@@ -41,6 +41,7 @@ install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
 	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
+	install -D gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
 	install -D -m 644 gpe-login.buttons $(DESTDIR)/etc/X11/gpe-login.buttons
 	install -D gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
 	install -D gpe-login.session $(DESTDIR)/etc/X11/Xsession-gpe.d/50autolock
