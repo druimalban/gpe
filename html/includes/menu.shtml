@@ -18,6 +18,8 @@
 <A href="/standards.shtml">Standards</a>
 <!--#endif -->
 |
+<A href="http://europa.armlinux.org/bugzilla/">Bugs</A>
+|
 <!--#if expr="x${pagename}=xcvs" -->
 <b>CVS</b>
 <!--#else -->
