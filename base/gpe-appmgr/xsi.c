@@ -291,25 +291,6 @@ int run_program (char *exec, char *name)
 	{
 		char *cmd[] = {"/bin/sh", "-c", exec};
 		gnome_execute_async (NULL, 3, cmd);
-/* Don't need this now:
-		XCloseDisplay(display);
-
-		switch (fork())
-	        {
-	        case 0: // Child process
-			fprintf (stderr, "Running new process\n");
-	              	execlp("/bin/sh", "sh", "-c", exec, NULL);
-
-	              	// If we got here, we couldn't exec the process.
-	              	fprintf(stderr, "Can't exec '/bin/sh -c \"%s\"'\n", exec);
-			break;
-	        case -1: // fork failed
-	              	fprintf(stderr, "Couldn't fork\n");
-			return -1;
-	              	break;
-	        }
-*/
-
 	}
 	else
 	{
