@@ -45,8 +45,6 @@ struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "help", "help" },
   { "exit", "exit" },
-  { "ok", "ok" },
-  { "cancel", "cancel" },
   { "pause", "tetris/pause" },
   { "stop", "tetris/stop" },
   { "highscores", "tetris/highscores" },
@@ -185,7 +183,7 @@ void new_highscore_name()
 #endif
   
   highscore_name_entry = gtk_entry_new ();
-  ok = gpe_picture_button (new_highscore_window->style, _("OK"), "ok");
+  ok = gtk_button_new_from_stock (GTK_STOCK_OK);
 
   gtk_widget_show (ok);
   gtk_widget_show (buttons);
@@ -430,8 +428,7 @@ void show_new_game()
 	gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,TRUE,0);
 
 	gtk_widget_realize (new_game_window);
-	button = gpe_picture_button (new_game_window->style,
-				     _("Close"), "cancel");
+	button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 	gtk_signal_connect(GTK_OBJECT(button),"clicked",
 				GTK_SIGNAL_FUNC(show_new_game_close),GINT_TO_POINTER(TRUE));	
 	gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,TRUE,0);
@@ -539,8 +536,7 @@ int main(int argc,char *argv[])
 	gtk_widget_show(toolbar);
 #endif
 
-	p = gpe_find_icon ("new");
-	pw = gpe_render_icon (main_window->style, p);
+	pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	menu_game_start = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New game"), 
 			   _("New game"), _("New game"), pw, show_new_game, NULL);
 
@@ -575,13 +571,11 @@ int main(int argc,char *argv[])
 	gtk_widget_show(toolbar2);
 #endif
 
-	p = gpe_find_icon ("help");
-	pw = gpe_render_icon (main_window->style, p);
+	pw = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Help"), 
 			   _("Help"), _("Help"), pw, show_help, NULL);
 
-	p = gpe_find_icon ("exit");
-	pw = gpe_render_icon (main_window->style, p);
+	pw = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Exit"), 
 			   _("Exit"), _("Exit"), pw, gtk_main_quit, NULL);
 
@@ -643,9 +637,7 @@ int main(int argc,char *argv[])
 	gtk_widget_show(lines_label);
 	gtk_box_pack_start(GTK_BOX(right_side),lines_label,FALSE,FALSE,3);
 
-	gtk_widget_realize (main_window);
-	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-		gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
+	gpe_set_window_icon (main_window, "icon");
 	
 	// show window widget
 	gtk_widget_show(main_window);

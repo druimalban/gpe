@@ -126,9 +126,9 @@ game_over (void)
   gchar *msg;
   int r;
  
-  msg = g_strdup_printf (_("Congratulations!\n\nYou made it with %d moves.\n\nNew game?"), moves);
+  msg = g_strdup_printf (_("Congratulations!\n\nYou made it with %d moves.\n\nPlay again?"), moves);
 
-  r = gpe_question_ask (msg, _("Game over"), "icon", _("Yes"), "ok", _("No"), "cancel", NULL, NULL);
+  r = gpe_question_ask (msg, _("Game over"), "icon", "!gtk-yes", NULL, "!gtk-no", NULL, NULL, NULL);
 
   g_free (msg);
 
@@ -726,8 +726,8 @@ prefs (void)
 
   gtk_widget_realize (pref_dialog);
 
-  ok = gpe_picture_button (pref_dialog->style, _("OK"), "ok");
-  cancel = gpe_picture_button (pref_dialog->style, _("Cancel"), "cancel");
+  ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+  cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 
   gtk_signal_connect (GTK_OBJECT(pref_dialog), "delete_event", (GtkSignalFunc)pref_cancel, NULL);
 
@@ -887,12 +887,7 @@ prefs (void)
 }
 
 struct gpe_icon my_icons[] = {
-  { "new", },
-  { "preferences" },
   { "icon", PREFIX "/share/pixmaps/gpe-lights.png" },
-  { "exit", },
-  { "ok" },
-  { "cancel" },
   { NULL }
 };
 
@@ -902,13 +897,13 @@ main (int argc, char *argv[])
   GtkWidget *label;
   GtkWidget *window;
   GtkWidget *toolbar;
-  GdkPixbuf *p;
   GtkWidget *pw;
 
   gpe_application_init (&argc, &argv);
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   srand (time (NULL));
 
@@ -933,20 +928,17 @@ main (int argc, char *argv[])
   gpe_set_window_icon (window, "icon");
   gtk_window_set_title (GTK_WINDOW (window), _("Lights Out"));
 
-  p = gpe_find_icon ("new");
-  pw = gtk_image_new_from_pixbuf(p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   _("New"), _("New game"), _("Tap here to start a new game."),
 			   pw, GTK_SIGNAL_FUNC (new_game), NULL);
   
-  p = gpe_find_icon ("preferences");
-  pw = gtk_image_new_from_pixbuf(p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_PREFERENCES, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   _("Prefs"), _("Preferences"), _("Tap here to configure Lights Out."),
 			   pw, GTK_SIGNAL_FUNC (prefs), NULL);
 
-  p = gpe_find_icon ("exit");
-  pw = gtk_image_new_from_pixbuf(p);
+  pw = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Exit the program."), pw, 
 			   GTK_SIGNAL_FUNC (gtk_exit), NULL);

@@ -2,6 +2,7 @@ PACKAGE = gpe-lights
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = 
+VERSION = 0.11
 
 MEMBERS = gpe-lights
 
@@ -31,7 +32,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
 
 install: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

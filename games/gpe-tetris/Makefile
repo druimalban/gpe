@@ -7,6 +7,7 @@ GROUP = games
 HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
+VERSION = 0.6
 
 CC = gcc
 
