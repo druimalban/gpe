@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,7 +40,7 @@ main (int argc, char *argv[])
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
       XCloseDisplay (dpy);
-      system ("echo \"Matchbox.cursor: no\" | /usr/X11R6/bin/xrdb -nocpp -merge");
+      system ("echo \"Matchbox.cursor: no\\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
     }
       
   exit (0);

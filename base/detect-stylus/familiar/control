@@ -2,7 +2,8 @@ Package: detect-stylus
 Section: x11
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
-Depends: xlibs, xbase-clients
+Depends: xlibs, xbase-clients, libxcursor-theme-fully-transparent
 Maintainer: Phil Blundell <pb@debian.org>
 Description: Touchscreen detection utility
