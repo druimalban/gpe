@@ -32,6 +32,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/gpe-iconlist.h>
 #include <gpe/tray.h>
+#include <gpe/popup.h>
 
 #include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
@@ -449,7 +450,7 @@ sigchld_handler (int sig)
 static void
 clicked (GtkWidget *w, GdkEventButton *ev)
 {
-  gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, ev->button, ev->time);
+  gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
 int
