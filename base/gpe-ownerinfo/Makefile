@@ -5,7 +5,7 @@ VERSION = 0.24
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi
+LINGUAS = de hu id pt pt_BR fr zh_TW ro sv nl sk cs ru sr es zh_CN vi fi tr
 
 LIB_TARGET = libgpe-ownerinfo.a
 LIB_MEMBERS = $(PACKAGE)
