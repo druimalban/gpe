@@ -1,10 +1,19 @@
 2002-09-29  Philip Blundell  <philb@gnu.org>
 
+	* day_view.c (format_event): Handle untimed events.  Elide end
+	time if duration is zero.
+	(day_view_update): Handle untimed events appropriately.
+
+	* event-db.c (event_db_new): Zero newly allocated structure.
+
+2002-09-29  Philip Blundell  <philb@gnu.org>
+
 	* event-db.c (event_db_list_for_period_internal): New parameters
 	"max", "untimed_significant".
 	(event_db_list_for_period): Update call to above function.
 	(event_db_untimed_list_for_period): Likewise.
 	(event_db_list_for_future): New.
+
 	* event-db.h (event_db_list_for_future): New prototype.
 	
 2002-09-29  Philip Blundell  <philb@gnu.org>

@@ -42,20 +42,28 @@ format_event (event_t ev)
   time_t t;
   event_details_t evd;
 
-  if (day_view_combined_times == FALSE)
+  if ((ev->flags & FLAG_UNTIMED) == 0 && day_view_combined_times == FALSE)
     {
       localtime_r (&ev->start, &tm);
-      r = strftime (p, l, "%R-", &tm);
+      r = strftime (p, l, "%R", &tm);
       if (r == 0) return NULL;
       p += r;
       l -= r;
       
-      t = ev->start + ev->duration;
-      localtime_r (&t, &tm);
-      r = strftime (p, l, "%R ", &tm);
-      if (r == 0) return NULL;
-      p += r;
-      l -= r;
+      if (ev->duration)
+	{
+	  t = ev->start + ev->duration;
+	  localtime_r (&t, &tm);
+	  r = strftime (p, l, "-%R", &tm);
+	  if (r == 0) return NULL;
+	  p += r;
+	  l -= r;
+	}
+      if (l)
+	{
+	  *p++ = ' ';
+	  l--;
+	}
     }
       
   evd = event_db_get_details (ev);
@@ -104,7 +112,7 @@ day_view_update ()
   struct tm tm_start, tm_end;
   char buf[10];
   gchar *line_info[2];
-  GSList *day_events[24];
+  GSList *day_events[24], *untimed_events;
   GSList *iter;
   guint i, width = 0, widget_width;
      
@@ -148,6 +156,32 @@ day_view_update ()
       g_slist_free (strings);
       strings = NULL;
     }
+
+  localtime_r (&viewtime, &tm_start);
+  tm_start.tm_hour = 0;
+  tm_start.tm_min = 0;
+  tm_start.tm_sec = 0;
+  start = mktime (&tm_start);
+  localtime_r (&viewtime, &tm_end);
+  tm_end.tm_hour = 23;
+  tm_end.tm_min = 59;
+  tm_end.tm_sec = 0;
+  end = mktime (&tm_end);
+  untimed_events = event_db_untimed_list_for_period (start, end, TRUE);
+
+  for (iter = untimed_events; iter; iter = iter->next)
+    {
+      event_t ev = (event_t)iter->data;
+      gchar *text = format_event (ev);
+      g_slist_append (strings, text);
+
+      line_info[0] = NULL;
+      line_info[1] = text;
+
+      gtk_clist_append (GTK_CLIST (day_list), line_info);
+      gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
+      row++;
+    }
   
   for (hour = 0; hour <= 23; hour++)
     {
@@ -163,7 +197,7 @@ day_view_update ()
       tm_end.tm_sec = 0;
       end = mktime (&tm_end);
 
-      day_events[hour] = event_db_list_for_period (start, end-1);
+      day_events[hour] = event_db_untimed_list_for_period (start, end-1, FALSE);
       
       for (iter = day_events[hour]; iter; iter = iter->next)
 	((event_t)iter->data)->mark = FALSE;
@@ -191,6 +225,7 @@ day_view_update ()
 	      ev->mark = TRUE;
 	      text = format_event (ev);
 	      g_slist_append (strings, text);
+
 	      if (day_view_combined_times)
 		{
 		  localtime_r (&ev->start, &tm);

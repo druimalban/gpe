@@ -668,7 +668,9 @@ event_db_remove (event_t ev)
 event_t
 event_db_new (void)
 {
-  return (event_t) g_malloc (sizeof (struct event_s));
+  event_t ev = (event_t) g_malloc (sizeof (struct event_s));
+  memset (ev, 0, sizeof (struct event_s));
+  return ev;
 }
 
 void
