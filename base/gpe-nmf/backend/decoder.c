@@ -57,11 +57,11 @@ load_decoder (char *fn)
 
   if (ds == NULL)
     {
+      fprintf (stderr, "%s: %s\n", fn, dlerror ());
       dlclose (dh);
       return FALSE;
     }
 
-  printf ("Loaded decoder %s\n", ((struct decoder_engine *)ds)->name);
   decoders = g_slist_append (decoders, ds);
 
   return TRUE;

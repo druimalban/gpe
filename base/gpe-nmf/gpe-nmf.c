@@ -32,6 +32,8 @@
 #include "player.h"
 #include "decoder.h"
 
+gboolean playing;
+
 static struct gpe_icon my_icons[] = {
   { "ok" },
   { "cancel" },
@@ -130,10 +132,22 @@ eject_clicked (GtkWidget *w, gpointer d)
 static void
 play_clicked (GtkWidget *w, player_t p)
 {
-  struct player_status ps;
-  player_play (p);
-  player_status (p, &ps);
-  update_track_info (ps.item);
+  if (!playing)
+    {
+      struct player_status ps;
+      player_play (p);
+      player_status (p, &ps);
+      update_track_info (ps.item);
+      playing = TRUE;
+    }
+}
+
+static void
+stop_clicked (GtkWidget *w, player_t p)
+{
+  player_stop (p);
+  update_track_info (NULL);
+  playing = FALSE;
 }
 
 int
@@ -241,6 +255,8 @@ main (int argc, char *argv[])
   gtk_widget_set_style (stop_button, style);
   gtk_container_add (GTK_CONTAINER (stop_button), w);
   gtk_widget_show (w);
+  gtk_signal_connect (GTK_OBJECT (stop_button), "clicked", 
+		      GTK_SIGNAL_FUNC (stop_clicked), player);
 
   p = gpe_find_icon ("media-fwd");
   w = gpe_render_icon (window->style, p);
