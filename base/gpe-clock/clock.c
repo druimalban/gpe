@@ -64,6 +64,24 @@ struct alarm_context
 static struct alarm_state state;
 
 static void
+set_defaults (void)
+{
+  time_t t;
+  struct tm tm;
+
+  memset (&state, 0, sizeof (state));
+
+  time (&t);
+  t += 24 * 60 * 60;
+  localtime_r (&t, &tm);
+
+  state.date_flag = TRUE;
+  state.year = tm.tm_year + 1900;
+  state.month = tm.tm_mon;
+  state.day = tm.tm_mday;
+}
+
+static void
 flush_alarm_details (void)
 {
   FILE *fp = fopen (alarm_file, "w");
@@ -499,6 +517,8 @@ main (int argc, char *argv[])
 
       exit (0);
     }
+
+  set_defaults ();
 
   panel_window = gtk_plug_new (0);
 
