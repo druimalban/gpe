@@ -1,6 +1,5 @@
 PACKAGE = gpe-beam
-VERSION = 0.2.3
-NATIVE = yes
+VERSION = 0.2.4
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -23,7 +22,7 @@ PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
 PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
-PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DDBUS_API_SUBJECT_TO_CHANGE
 
 PACKAGE_CPPFLAGS += -I.
 
@@ -46,10 +45,10 @@ CC=gcc
 AR = ar
 RANLIB = ranlib
 
-PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) $(GTKCFLAGS) `pkg-config --cflags gthread-2.0`
-PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS) `pkg-config --libs gthread-2.0`
+PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) $(GTKCFLAGS) `pkg-config --cflags gthread-2.0` `pkg-config --cflags dbus-glib-1`
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS) `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1`
 
-MEMBERS  = main filesel
+MEMBERS  = main filesel dbus obexclient-dbus
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -87,10 +86,9 @@ install-program: all all-desktop
 	sed -e s/VERSION/$(VERSION)/ <familiar/$(CONTROL) > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) irsw $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
-	$(STRIP) $(DESTDIR)$(PREFIX)/bin/*
+	$(INSTALL) -m 4755 irsw $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) -m 755 vcard-export $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) -m 755 vcard-import $(DESTDIR)$(PREFIX)/bin/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications

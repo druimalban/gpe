@@ -1,7 +1,7 @@
 /*
  * This is gpe-beam, a simple IrDa frontend for GPE
  *
- * Copyright (c) 2003, Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (c) 2003, 2004 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Based on gpe-bluetooth dockapp, see below... 
  *
@@ -21,6 +21,7 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -39,6 +40,7 @@
 #include <sys/socket.h>
 #include "main.h"
 #include "filesel.h"
+#include "dbus.h"
 #include "ircp/ircp.h"
 #include "ircp/ircp_server.h"
 #include "ircp/ircp_client.h"
@@ -61,9 +63,8 @@ struct gpe_icon my_icons[] = {
 	{NULL, NULL}
 };
 
+GtkWidget *window;
 static GtkWidget *icon;
-
-
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_vcard, *menu_control;
@@ -82,6 +83,31 @@ static GtkWidget *dlgStatus = NULL;
 static void radio_on (void);
 static void radio_off (void);
 static ircp_client_t *cli = NULL;
+
+
+void
+set_image(int sx, int sy)
+{
+	GdkBitmap *bitmap;
+	GdkPixbuf *sbuf, *dbuf;
+	int size;
+	
+	if (!sx)
+	{
+		sy = gdk_pixbuf_get_height(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
+		sx = gdk_pixbuf_get_width(gtk_image_get_pixbuf(GTK_IMAGE(icon)));
+	}
+	
+	size = (sx > sy) ? sx : sy;
+	sbuf = gpe_find_icon (radio_is_on ? "irda-on" : "irda-off");
+	dbuf = gdk_pixbuf_scale_simple(sbuf, sx, sy, GDK_INTERP_HYPER);
+	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
+	gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+	gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
+	gdk_bitmap_unref (bitmap);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(icon), dbuf);
+	gtk_widget_set_size_request(GTK_WIDGET(window), size, size);
+}
 
 
 GtkWidget *
@@ -323,7 +349,7 @@ exec_file_tx (char *filename)
 		gdk_threads_enter ();
 		ts = g_strdup_printf ("%s %s", _("Transmitted file"),
 				      filename);
-		gtk_label_set_text (GTK_LABEL (lTStatus), ts);
+		if (lTStatus) gtk_label_set_text (GTK_LABEL (lTStatus), ts);
 		free (ts);
 		gdk_threads_leave ();
 	}
@@ -332,7 +358,7 @@ exec_file_tx (char *filename)
 		gdk_threads_enter ();
 		ts = g_strdup_printf ("%s %s", _("Could not transmit file"),
 				      filename);
-		gtk_label_set_text (GTK_LABEL (lTStatus), ts);
+		if (lTStatus) gtk_label_set_text (GTK_LABEL (lTStatus), ts);
 		free (ts);
 		gdk_threads_leave ();
 	}
@@ -357,6 +383,38 @@ tx_file_select (char *filename, gpointer data)
 
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start file transmit."));
+}
+
+
+void
+send_data (char *filename, char *data, size_t len)
+{
+	int tmpfile;
+	char *fn = g_strdup_printf("/tmp/%s", filename);
+
+	tmpfile = open(fn, O_CREAT | O_WRONLY);
+	if (tmpfile >= 0)
+	{
+		write(tmpfile, data, len);
+		close(tmpfile);
+		
+		if (!radio_is_on)
+			radio_on ();
+
+		cli = ircp_cli_open (ircp_info_cb);
+
+		gdk_threads_enter ();
+		dlgStatus =
+			bt_progress_dialog (_("IR Receive and Transmit........."),
+						gpe_find_icon ("irda"));
+		gtk_widget_show_all (dlgStatus);
+		gdk_threads_leave ();
+	
+		if (cli != NULL)
+		{
+			tx_file_select (fn, NULL);
+		}
+	}
 }
 
 
@@ -538,7 +596,7 @@ do_receive_file (void)
 			ts = g_strdup_printf ("%s %s",
 					      _("Received file"),
 					      str_last_filename);
-			gtk_label_set_text (GTK_LABEL (lTStatus), ts);
+			if (lTStatus) gtk_label_set_text (GTK_LABEL (lTStatus), ts);
 			free (ts);
 			gdk_threads_leave ();
 			check_file_import (str_last_filename);
@@ -651,7 +709,6 @@ show_control (void)
 		GtkWidget *bClose =
 			gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 		GtkWidget *table = gtk_table_new (6, 3, FALSE);
-		GtkTooltips *tooltips = gtk_tooltips_new ();
 		GtkWidget *lcPeer = gtk_label_new (NULL);
 		GtkWidget *lcActions = gtk_label_new (NULL);
 		GtkWidget *l1 = gtk_label_new (_("Name:"));
@@ -793,19 +850,12 @@ show_control (void)
 static void
 radio_on (void)
 {
-	sigset_t sigs;
 	gtk_widget_hide (menu_radio_on);
 	gtk_widget_show (menu_radio_off);
 	gtk_widget_set_sensitive (menu_vcard, TRUE);
 	system (COMMAND_IR_ON);
-	gtk_image_set_from_pixbuf
-		(GTK_IMAGE (icon), gpe_find_icon ("irda-on"));
 	radio_is_on = TRUE;
-	sigemptyset (&sigs);
-	sigaddset (&sigs, SIGCHLD);
-	sigprocmask (SIG_BLOCK, &sigs, NULL);
-//  hciattach_pid = fork_hciattach ();
-	sigprocmask (SIG_UNBLOCK, &sigs, NULL);
+	set_image(0, 0);
 	if (lTStatus)
 		gtk_label_set_text (GTK_LABEL
 				    (lTStatus), _("IR transceiver on"));
@@ -826,9 +876,8 @@ radio_off (void)
 	gtk_widget_hide (menu_radio_off);
 	gtk_widget_show (menu_radio_on);
 	gtk_widget_set_sensitive (menu_vcard, FALSE);
-	gtk_image_set_from_pixbuf
-		(GTK_IMAGE (icon), gpe_find_icon ("irda-off"));
 	do_stop_radio ();
+	set_image(0, 0);
 	if (lTStatus)
 		gtk_label_set_text (GTK_LABEL
 				    (lTStatus), _("IR transceiver off"));
@@ -860,35 +909,22 @@ clicked (GtkWidget * w, GdkEventButton * ev)
 			gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
+
 /* handle resizing */
 gboolean 
 external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
-  GdkBitmap *bitmap;
-  GdkPixbuf *sbuf, *dbuf;
-  int size;
-
-  if (event->type == GDK_CONFIGURE)
-  {
-    size = (event->width > event->height) ? event->height : event->width;
-    sbuf = gpe_find_icon (radio_is_on ? "irda-on" : "irda-off");
-    dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
-    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
-    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
-    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
-    gdk_bitmap_unref (bitmap);
-    gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
-	/* make sure we want to resize all the time */
-	gtk_widget_set_size_request(GTK_WIDGET(window),size+1,size);
-  }
-  return FALSE;
+	if (event->type == GDK_CONFIGURE)
+	{
+		set_image(event->width, event->height);
+	}
+	return FALSE;
 }
 
 int
 main (int argc, char *argv[])
 {
 	Display *dpy;
-	GtkWidget *window;
 	GtkWidget *menu_remove;
 	GtkTooltips *tooltips;
 	GdkBitmap *bitmap;
@@ -976,6 +1012,7 @@ main (int argc, char *argv[])
 	dock_window = window->window;
 	gpe_system_tray_dock (window->window);
 	gdk_threads_enter ();
+	gpe_beam_init_dbus();
 	gtk_main ();
 	gdk_threads_leave ();
 	exit (0);

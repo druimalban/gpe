@@ -1,3 +1,13 @@
+2004-10-13	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Released V 0.2.4
+	* obexclient-dbus.c, dbus.[c/h]: New files for irobex transfer service.
+	* Makefile: Install irsw suid, some minor fixes.
+	            Added dbus libraries and new files.
+	* main.c: Fixed icon size.
+	          send_data(): hack to send vcard data received via dbus.
+	* irsw.c: Run irattach before activating irda.
+
 2004-09-29	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Honor PREFIX in calls to irsw.
