@@ -413,10 +413,11 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			GList *icons;
 
 			icons = il->_priv->icons;
-			for (i=0;i<il->_priv->mrow*il->_priv->cols+il->_priv->mcol;i++)
+			for (i=0;i<il->_priv->mrow*il->_priv->cols+il->_priv->mcol && icons;i++)
 				icons = icons->next;
 
-			gpe_iconlist_clicked (il, ((struct ILIcon *)icons->data)->udata);
+			if (icons)
+				gpe_iconlist_clicked (il, ((struct ILIcon *)icons->data)->udata);
 		}
 
 		il->_priv->mcol = il->_priv->mrow = -1;

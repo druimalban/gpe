@@ -1,3 +1,8 @@
+2002-11-12  Robert Mibus  <mibus@handhelds.org>
+
+	* gpeiconlist.gob, gpe-iconlist.c, gpe/gpe-iconlist.h:
+	don't advance through a NULL pointer (thanks pb), fixes #144
+
 2002-11-10  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (GTK2): Default on.
