@@ -1,3 +1,26 @@
+2003-01-25  Philip Blundell  <philb@gnu.org>
+
+	* gpe-dm 0.20 released.
+	* gpe-session-scripts 0.34 released.
+	* gpe-login 0.37 released.
+	
+2003-01-25  Philip Blundell  <philb@gnu.org>
+
+	* familiar/gpe-logout.png: Move to ...
+	* gpe-logout.png: ... here.
+	* Makefile (ipkg): Don't install gpe-logout.png here.
+	(install-scripts): Install it here.
+
+	* familiar/gpe-logout.menu: Deleted.
+	* Makefile (ipkg): Don't install it.
+	* gpe-logout.desktop: New file.
+	* Makefile (install-scripts): Ship it.
+	
+	* gpe-login.c (main): Set cursor for window.
+
+	* familiar/control.gpe-dm: Conflict with old xserver-tiny-h3600.
+	* X11/Xserver (ARGS): Add -br.
+
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.36 released.

@@ -89,6 +89,8 @@ install-scripts:
 	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 	install -d $(DESTDIR)/etc/gpe
 	install -m 644 X11/xsettings.default $(DESTDIR)/etc/gpe/
+	mkdir -p familiar/dist.gpe-session-scripts/usr/share/pixmaps
+	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps/gpe-logout.png
 
 ipkg:
 	make PREFIX=/usr clean all
@@ -112,11 +114,6 @@ ipkg:
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
 	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
 	make DESTDIR=`pwd`/familiar/dist.gpe-session-scripts PREFIX=/usr install-scripts
-	mkdir -p familiar/dist.gpe-session-scripts/usr/lib/menu
-	cp familiar/gpe-logout.menu familiar/dist.gpe-session-scripts/usr/lib/menu/gpe-logout
-	mkdir -p familiar/dist.gpe-session-scripts/usr/share/pixmaps
-	cp familiar/gpe-logout.png  familiar/dist.gpe-session-scripts/usr/share/pixmaps/gpe-logout.png
-	#
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
 

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Log out
+Comment=Log out of GPE
+Exec=gpe-logout
+Terminal=0
+Type=Application
+Icon=gpe-logout.png
+Categories=Utility;GPE
+StartupNotify=True

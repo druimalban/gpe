@@ -625,6 +625,7 @@ main (int argc, char *argv[])
   gboolean flag_transparent = FALSE;
   gboolean flag_xkbd = FALSE;
   FILE *cfp;
+  GdkCursor *cursor;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -756,6 +757,9 @@ main (int argc, char *argv[])
     }
 
   gtk_widget_realize (window);
+
+  cursor = gdk_cursor_new (GDK_LEFT_PTR);
+  gdk_window_set_cursor (window->window, cursor);
 
   dpy = GDK_DISPLAY ();
   root = GDK_ROOT_WINDOW ();
