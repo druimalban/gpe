@@ -442,11 +442,12 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		gpe_iconlist__refresh_containing (GTK_WIDGET(widget), il->_priv->mcol, il->_priv->mrow);
 
 		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(col), &(row));
-		if (col == il->_priv->mcol && row == il->_priv->mrow)
-			gpe_iconlist_clicked (il,
-					      (gpe_iconlist__get_icon(il,
-								      il->_priv->mcol,
-								      il->_priv->mrow))->udata);		
+		if (col == il->_priv->mcol && row == il->_priv->mrow) {
+			struct ILIcon *data;
+			data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
+			if (data)
+				gpe_iconlist_clicked (il, data->udata);
+		}
 
 		il->_priv->mcol = il->_priv->mrow = -1;
 
@@ -456,8 +457,6 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private gint _popup (gpointer data) {
 		GPEIconList *il = data;
 		int row, col;
-
-		gpe_iconlist__cancel_popup (il);
 
 		row = il->_priv->mrow;
 		col = il->_priv->mcol;
@@ -471,8 +470,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
 
-//		gpe_iconlist__refresh_containing (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(il), "da")),
-//						  col, row);
+		gpe_iconlist__refresh_containing (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(il), "da")),
+						  col, row);
 
 		return FALSE;
 	}
@@ -482,10 +481,13 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
-		il->_priv->popup_timeout = gtk_timeout_add (500, gpe_iconlist__popup, (gpointer)il);
-
 		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
 		gpe_iconlist__refresh_containing (widget, il->_priv->mcol, il->_priv->mrow);
+
+		/* Register a popup if there is an icon under the cursor */
+		if (gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow)) {
+			il->_priv->popup_timeout = gtk_timeout_add (500, gpe_iconlist__popup, (gpointer)il);
+		}
 
 		return TRUE;
 	}
