@@ -111,7 +111,7 @@ configure_event (GtkWidget *window, GdkEventConfigure *event)
   xoff = (event->width - 30) / 2;
   yoff = (event->height - 32) / 2;
 
-  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
+  gtk_widget_shape_combine_mask (window, bitmap, xoff, yoff);
  
   return FALSE;
 }
