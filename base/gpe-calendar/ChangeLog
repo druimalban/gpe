@@ -1,5 +1,9 @@
 2004-10-07  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.57 released.
+
+2004-10-07  Phil Blundell  <pb@nexus.co.uk>
+
 	* future_view.c, future_view.h: Deleted.
 	* Makefile (MEMBERS): Remove future_view.
 	* main.c: Delete references to future_view.	
