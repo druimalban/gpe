@@ -40,6 +40,14 @@ version number. E.g., if your application is called "foo" (defined
 in your app's Makefile in the variable PACKAGE), then 'make dist'
 will create "foo-0.23.tar.gz".
 
+Also, you need to have something like
+,----
+| Source: SOURCE
+`----
+in your control file (make sure you also upload the source to
+ftp://gpe.handhelds.org/gpe/source/$(PACKAGE)-$(VERSION).tar.gz -
+'make dist-upload' attempts to do that for you).
+
 Look at gpe/base/libgpewidget/Makefile for a real-world example.
 
 

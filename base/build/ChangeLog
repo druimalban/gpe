@@ -1,3 +1,8 @@
+2003-08-02  Colin Marquardt  <colin@marquardt-home.de>
+
+	* README: Mention Source: field in the control file; mention
+	dist-upload.
+
 2003-08-02  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (ipkg): Refuse to build packages with no
