@@ -26,14 +26,20 @@
 #include "selector.h"
 #include "selector-cb.h"
 
+#include "dialog.h"
 #include "gpe/question.h"
+
+#define _(_x) (_x) //gettext(_x)
 
 //---------------------------------------------------------
 //--------------------- GENERAL ---------------------------
 void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
   int ret;
   gtk_widget_show (GTK_WIDGET(object));
-  ret = gpe_question_ask_yn ("Save sketch?");
+  //FIXME: use gpe_question
+  if(confirm_action_dialog_box(_("Before quitting,\nsave last sketch?"),_("Save"))) ret = 1;
+  else ret = 0;
+  //ret = gpe_question_ask_yn ("Save sketch?");
   switch (ret) {
     case 1:
       on_button_file_save_clicked(NULL,NULL);
@@ -87,9 +93,11 @@ void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
 
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) return;
-  if(gpe_question_ask_yn ("Delete sketch?") == 1){
-    delete_current_sketch();
-  }
+  //NOTE: moved back to my own dialog-box, gpe_question freezes.
+  if(confirm_action_dialog_box(_("Delete sketch?"),_("Delete"))) delete_current_sketch();  
+  //if(gpe_question_ask_yn ("Delete sketch?") == 1){
+  //  delete_current_sketch();
+  //}
 }
 
 
@@ -113,6 +121,7 @@ void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
   //else
   current_sketch++;
   open_indexed_sketch(current_sketch);
+  //FIXME: the following selects the row BUT does NOT turn it in darkblue
   gtk_clist_select_row(selector_clist, current_sketch, 1);
 }
 

@@ -52,7 +52,7 @@ gboolean confirm_action_dialog_box(gchar * text,
   //--warning icon
   {
     GdkPixbuf * icon_pixbuf;
-    icon_pixbuf = gpe_find_icon ("warning");
+    icon_pixbuf = gpe_find_icon ("question");
     icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, icon_pixbuf);
   }
 

@@ -115,12 +115,16 @@ void gui_init(){
 
   //the window to show first
   //NOTE: could be defined by preference, or command line argument
-  if(1){
-    //gtk_widget_realise   (window_sketchpad);
-    gtk_widget_show   (window_sketchpad);
-    gtk_widget_hide   (window_sketchpad);
-    gtk_widget_show   (window_selector);
-  }
-  else  gtk_widget_show   (window_sketchpad);
+
+  //if(1){ workaround...
+  //  //gtk_widget_realise   (window_sketchpad);
+  //  gtk_widget_show   (window_sketchpad);
+  //  gtk_widget_hide   (window_sketchpad);
+  //  gtk_widget_show   (window_selector);
+  //}
+  //else  gtk_widget_show   (window_sketchpad);
+
+  if(1) gtk_widget_show   (window_sketchpad);
+  else  gtk_widget_show   (window_selector);
 
 }//gui_init()

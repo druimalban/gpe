@@ -27,7 +27,9 @@
 
 #include "gpe/about.h"
 #include "gpe/question.h"
+#include "dialog.h"
 
+#define _(_x) (_x) //gettext(_x)
 
 void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show){
   gtk_widget_hide (window_to_hide);
@@ -55,9 +57,11 @@ void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
 void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   //--ask confirmation (maybe a preference)
-  if(gpe_question_ask_yn ("Delete sketch?") == 1){
-    delete_current_sketch();
-  }
+  //NOTE: moved back to my own dialog-box, gpe_question freezes.
+  if(confirm_action_dialog_box(_("Delete sketch?"),_("Delete"))) delete_current_sketch();  
+  //if(gpe_question_ask_yn ("Delete sketch?") == 1){
+  //  delete_current_sketch();
+  //}
 }
 
 void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
