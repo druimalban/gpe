@@ -21,6 +21,7 @@
 
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
 
 #include <gpe/errorbox.h>
 
@@ -82,8 +83,8 @@ gpe_bluetooth_init_dbus (void)
 {
   DBusConnection *connection;
   DBusError error;
-  static const char *object_path1[] = { "org", "handhelds", "gpe", "bluez", "PinAgent", NULL };
-  static const char *object_path2[] = { "org", "handhelds", "gpe", "bluez", "OBEX", NULL };
+  static const char *object_path1 = "/org/bluez/PinAgent"; 
+  static const char *object_path2 = "/org/handhelds/gpe/bluez/OBEX";
 
   dbus_g_thread_init ();
 
