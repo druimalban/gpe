@@ -14,19 +14,18 @@ endif
 all: gpe-bootsplash
 
 gpe-bootsplash: splash.c
-	gcc $(CFLAGS) -fomit-frame-pointer -Os splash.c -o gpe-bootsplash
-	strip gpe-bootsplash
+	$(CC) $(CFLAGS) -fomit-frame-pointer -Os splash.c -o gpe-bootsplash
 
-ipkg:
-	rm -rf dist
-	mkdir -p dist/CONTROL
-	mkdir -p dist/usr/bin
-	mkdir -p dist/usr/share/gpe
-	mkdir -p dist/etc/rcS.d
-	mkdir -p dist/etc/init.d
-	cp gpe-bootsplash.init dist/etc/init.d/gpe-bootsplash
-	install -m 644 $(SPLASH) dist/usr/share/gpe/splash.png
-	cp gpe-bootsplash dist/usr/bin/
-	cp $(CONTROL) dist/CONTROL/control
-	ln -s ../init.d/gpe-bootsplash dist/etc/rcS.d/S00bootsplash
-	ipkg-build dist
+install-program: gpe-bootsplash
+	mkdir -p $(DESTDIR)/CONTROL
+	mkdir -p $(DESTDIR)/usr/bin
+	mkdir -p $(DESTDIR)/usr/share/gpe
+	mkdir -p $(DESTDIR)/etc/rcS.d
+	mkdir -p $(DESTDIR)/etc/init.d
+	cp gpe-bootsplash.init $(DESTDIR)/etc/init.d/gpe-bootsplash
+	install -m 644 $(SPLASH) $(DESTDIR)/usr/share/gpe/splash.png
+	install -s gpe-bootsplash $(DESTDIR)/usr/bin/
+	cp $(CONTROL) $(DESTDIR)/CONTROL/control
+	ln -sf ../init.d/gpe-bootsplash $(DESTDIR)/etc/rcS.d/S00bootsplash
+
+include ../build/Makefile.dpkg_ipkg
