@@ -15,10 +15,10 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 all: libgpewidget.so
 
 libgpewidget.so: $(SONAME)
-	ln -s $^ $@
+	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	gcc -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME)
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
 
 install: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)/usr/lib/$(SONAME)
