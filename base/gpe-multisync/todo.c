@@ -27,7 +27,11 @@ todo_get_changes (struct db *db, int newdb)
   GList *data = NULL;
   GSList *list, *i;
   
-  list = fetch_uid_list (db->db, "select distinct uid from todo_urn");
+  if (newdb)
+    list = fetch_uid_list (db->db, "select distinct uid from todo_urn");
+  else
+    list = fetch_uid_list (db->db, "select uid from todo where tag='modified' and value>%d",
+			   db->last_timestamp);
   
   for (i = list; i; i = i->next)
     {
