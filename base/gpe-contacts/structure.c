@@ -139,6 +139,13 @@ structure_new_field (GtkWidget *widget,
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
+      GtkWidget *box = gtk_dialog_new ();
+      GtkWidget *label1 = gtk_label_new (_("Label:"));
+      GtkWidget *label2 = gtk_label_new (_("Tag:"));
+      GtkWidget *radio1 = gtk_radio_button_new_with_label (_("Single line"));
+      GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget ();
+      
+#if 0
       gchar *t = smallbox (_("New field"), _("Title"), "");
 
       if (t)
@@ -148,6 +155,7 @@ structure_new_field (GtkWidget *widget,
 	  else
 	    g_free (t);
 	}
+#endif
     }
   else
     {
