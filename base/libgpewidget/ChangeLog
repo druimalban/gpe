@@ -6,6 +6,7 @@
 
 	* Makefile (CFLAGS, LDFLAGS).  Use $(GTKFLAGS).  Include flags for
 	Render.
+	(LINGUAS): Add cs.
 
 	* debian/control (Build-Depends): Require libxrender-dev.
 

@@ -4,7 +4,7 @@ DEBUG = no
 VERSION = 0.73
 CVSBUILD = yes
 
-LINGUAS = ro de id pt fr ga wa sv nl
+LINGUAS = ro de id pt fr ga wa sv nl cs
 
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist
 
