@@ -319,6 +319,6 @@ event_details_t
 event_db_alloc_details (event_t ev)
 {
   ev->details = (event_details_t) g_malloc (sizeof (struct event_details_s));
-  memset (ev->details, 0, sizeof (ev->details));
+  memset (ev->details, 0, sizeof (*ev->details));
   return ev->details;
 }
