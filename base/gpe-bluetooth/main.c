@@ -402,6 +402,8 @@ show_devices (void)
       gtk_window_set_title (GTK_WINDOW (devices_window), _("Bluetooth devices"));
       gpe_set_window_icon (devices_window, "bt-logo");
 
+      gtk_window_set_default_size (GTK_WINDOW (devices_window), 240, 240);
+
       iconlist = gpe_iconlist_new ();
       gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
       gpe_iconlist_set_embolden (GPE_ICONLIST (iconlist), FALSE);
