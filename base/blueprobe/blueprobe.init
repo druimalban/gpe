@@ -1,25 +1,29 @@
 #!/bin/sh
 
 module_id() {
+    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
+}
+
+module_id() {
     echo 'iPAQ' `cat /proc/hal/model`
 }
 
 if [ ! -f /etc/sysconfig/bluetooth ]; then
   echo -n "Checking for built-in Bluetooth: "
   case `module_id` in
-    "iPAQ 5400")
+    "HP iPAQ H5400")
 	BLUETOOTH=yes
 	PORT=/dev/tts/1
 	SPEED=921600
         PROTO=any
 	;;
-    "iPAQ 3900")
+    "HP iPAQ H3900")
 	BLUETOOTH=yes
 	PORT=/dev/tts/1
 	SPEED=921600
         PROTO=bcsp
 	;;
-    "iPAQ 3800")
+    "HP iPAQ H3800")
 	BLUETOOTH=yes
 	PORT=/dev/ttySB0
 	SPEED=230400
