@@ -65,9 +65,9 @@
 	  <class>GtkLabel</class>
 	  <name>owner_name_label</name>
 	  <label>Name</label>
-	  <justify>GTK_JUSTIFY_LEFT</justify>
+	  <justify>GTK_JUSTIFY_RIGHT</justify>
 	  <wrap>False</wrap>
-	  <xalign>0</xalign>
+	  <xalign>1</xalign>
 	  <yalign>0.5</yalign>
 	  <xpad>5</xpad>
 	  <ypad>0</ypad>
@@ -117,9 +117,9 @@
 	  <class>GtkLabel</class>
 	  <name>owner_email_label</name>
 	  <label>E-Mail</label>
-	  <justify>GTK_JUSTIFY_LEFT</justify>
+	  <justify>GTK_JUSTIFY_RIGHT</justify>
 	  <wrap>False</wrap>
-	  <xalign>0</xalign>
+	  <xalign>1</xalign>
 	  <yalign>0.5</yalign>
 	  <xpad>5</xpad>
 	  <ypad>0</ypad>
@@ -169,9 +169,9 @@
 	  <class>GtkLabel</class>
 	  <name>owner_phone_label</name>
 	  <label>Phone</label>
-	  <justify>GTK_JUSTIFY_LEFT</justify>
+	  <justify>GTK_JUSTIFY_RIGHT</justify>
 	  <wrap>False</wrap>
-	  <xalign>0</xalign>
+	  <xalign>1</xalign>
 	  <yalign>0.5</yalign>
 	  <xpad>5</xpad>
 	  <ypad>0</ypad>
@@ -284,9 +284,9 @@ Foobarland</label>
 	    <class>GtkLabel</class>
 	    <name>owner_address_label</name>
 	    <label>Address</label>
-	    <justify>GTK_JUSTIFY_LEFT</justify>
+	    <justify>GTK_JUSTIFY_RIGHT</justify>
 	    <wrap>False</wrap>
-	    <xalign>0</xalign>
+	    <xalign>1</xalign>
 	    <yalign>0</yalign>
 	    <xpad>5</xpad>
 	    <ypad>0</ypad>

@@ -1,5 +1,10 @@
 2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* src/interface.c, gpe-ownerinfo.glade: Right-justify the labels.
+
+	* src/main.c (main): Give the labels like "Name", "E-Mail" etc. a
+	special style (gpe_ownerinfo_labels).
+
 	* gpe-ownerinfo.glade (Module): Make border for frame1 wider.
 
 	* src/interface.c (create_GPE_Ownerinfo): Make border 5 pixels

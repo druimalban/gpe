@@ -63,7 +63,7 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (frame1);
   gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), frame1);
-  gtk_container_set_border_width (GTK_CONTAINER (frame1), 5);
+      gtk_container_set_border_width (GTK_CONTAINER (frame1), 5);
 
   notebook = gtk_notebook_new ();
   gtk_widget_set_name (notebook, "notebook");
@@ -93,8 +93,8 @@ create_GPE_Ownerinfo (void)
   gtk_table_attach (GTK_TABLE (table1), owner_name_label, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_name_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_name_label), 0, 0.5);
+  gtk_label_set_justify (GTK_LABEL (owner_name_label), GTK_JUSTIFY_RIGHT);
+  gtk_misc_set_alignment (GTK_MISC (owner_name_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_name_label), 5, 0);
 
   name = gtk_label_new (_("Foo Bar"));
@@ -119,8 +119,8 @@ create_GPE_Ownerinfo (void)
   gtk_table_attach (GTK_TABLE (table1), owner_email_label, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_email_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_email_label), 0, 0.5);
+  gtk_label_set_justify (GTK_LABEL (owner_email_label), GTK_JUSTIFY_RIGHT);
+  gtk_misc_set_alignment (GTK_MISC (owner_email_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_email_label), 5, 0);
 
   email = gtk_label_new (_("nobody@localhost"));
@@ -145,8 +145,8 @@ create_GPE_Ownerinfo (void)
   gtk_table_attach (GTK_TABLE (table1), owner_phone_label, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_phone_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 0, 0.5);
+  gtk_label_set_justify (GTK_LABEL (owner_phone_label), GTK_JUSTIFY_RIGHT);
+  gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_phone_label), 5, 0);
 
   phone = gtk_label_new (_("+99 (9999) 999-9999"));
@@ -210,8 +210,8 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (owner_address_label);
   gtk_box_pack_start (GTK_BOX (vbox1), owner_address_label, FALSE, FALSE, 1);
-  gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_RIGHT);
+  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 1, 0);
   gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
 
   smallphotobutton = gtk_button_new ();
