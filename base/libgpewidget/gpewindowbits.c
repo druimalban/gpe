@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+
 #include <glib.h>
 #include <gdk/gdk.h>
 
@@ -25,6 +27,7 @@
 #include <X11/Xatom.h>
 
 #include "gpewindowlist.h"
+#include "link-warning.h"
 
 static gboolean initialized;
 
@@ -70,11 +73,16 @@ gpe_get_client_window_list (Display *dpy, Window **list, guint *nr)
 			  &nitems, &bytes_after, &prop) != Success)
     return FALSE;
 
-  *list = (Window *)prop;
   *nr = (guint)nitems;
+
+  list = g_malloc (sizeof (Window) * nitems);
+  memcpy (list, prop, sizeof (Window) * nitems);
+  XFree (prop);
 
   return TRUE;
 }
+
+link_warning (gpe_get_client_window_list, "gpe_get_client_window_list is obsolescent: use GPEWindowList instead");
 
 gchar *
 gpe_get_window_name (Display *dpy, Window w)

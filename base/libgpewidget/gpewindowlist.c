@@ -17,6 +17,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <string.h>
+
 #include <glib.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
@@ -33,7 +35,7 @@ struct _GPEWindowListClass
 {
   GObjectClass parent_class;
   void (*list_changed)           (GPEWindowList *sm);
-  void (*active_window_changed)  (GPEWindowList *sm, Window w);
+  void (*active_window_changed)  (GPEWindowList *sm);
 };
 
 static GdkFilterReturn window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d);
@@ -41,7 +43,15 @@ static GdkFilterReturn window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
 static void
 gpe_window_list_init (GPEWindowList *list)
 {
+}
+
+static void
+gpe_window_list_setup_for_screen (GPEWindowList *list, GdkScreen *screen)
+{
   GdkAtom net_client_list, net_active_window;
+  GdkWindow *root;
+
+  list->screen = screen;
 
   net_client_list = gdk_atom_intern ("_NET_CLIENT_LIST", FALSE);
   net_active_window = gdk_atom_intern ("_NET_ACTIVE_WINDOW", FALSE);
@@ -51,7 +61,11 @@ gpe_window_list_init (GPEWindowList *list)
   list->net_active_window_atom = gdk_x11_atom_to_xatom_for_display (gdk_screen_get_display (list->screen),
 								    net_active_window);
 
-  gdk_window_add_filter (gdk_screen_get_root_window (list->screen), window_filter, list);
+  root = gdk_screen_get_root_window (list->screen);
+
+  gdk_window_add_filter (root, window_filter, list);
+
+  XSelectInput (GDK_WINDOW_XDISPLAY (root), GDK_WINDOW_XID (root), PropertyChangeMask);
 }
 
 static void
@@ -67,9 +81,9 @@ gpe_window_list_list_changed (GPEWindowList *i)
 }
 
 static void
-gpe_window_list_active_window_changed (GPEWindowList *i, Window w)
+gpe_window_list_active_window_changed (GPEWindowList *i)
 {
-  g_signal_emit (G_OBJECT (i), my_signals[1], 0, w);
+  g_signal_emit (G_OBJECT (i), my_signals[1], 0);
 }
 
 static void
@@ -121,13 +135,10 @@ GObject *
 gpe_window_list_new (GdkScreen *screen)
 {
   GObject *obj;
-  GPEWindowList *w;
 
   obj = g_object_new (gpe_window_list_get_type (), NULL);
 
-  w = (GPEWindowList *)obj;
-
-  w->screen = screen;
+  gpe_window_list_setup_for_screen (GPE_WINDOW_LIST (obj), screen);
 
   return obj;
 }
@@ -136,7 +147,6 @@ static GdkFilterReturn
 window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
 {
   XEvent *ev = (XEvent *)xev;
-  Display *dpy = ev->xany.display;
   GPEWindowList *list = GPE_WINDOW_LIST (d);
 
   if (ev->xany.type == PropertyNotify)
@@ -144,19 +154,33 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
       if (ev->xproperty.atom == list->net_client_list_atom)
 	gpe_window_list_list_changed (list);
       else if (ev->xproperty.atom == list->net_active_window_atom)
-	{
-	  Atom actual_type;
-	  int actual_format;
-	  unsigned long nitems, bytes_after = 0;
-	  Window *w;
-	  *w = None;
-	  XGetWindowProperty (dpy, ev->xproperty.window, list->net_active_window_atom,
-			      0, 1, False, XA_WINDOW, &actual_type, &actual_format,
-			      &nitems, &bytes_after, (unsigned char **)&w);
-	  gpe_window_list_active_window_changed (list, *w);
-	  XFree (w);
-	}
+	gpe_window_list_active_window_changed (list);
     }
 
   return GDK_FILTER_CONTINUE;
+}
+
+gboolean
+gpe_window_list_get_clients (GPEWindowList *list, Window **ret, guint *nr)
+{
+  GdkWindow *root;
+  Atom actual_type;
+  int actual_format;
+  unsigned long nitems, bytes_after = 0;
+  unsigned char *prop = NULL;
+
+  root = gdk_screen_get_root_window (list->screen);
+
+  if (XGetWindowProperty (GDK_WINDOW_XDISPLAY (root), GDK_WINDOW_XID (root), 
+			  list->net_client_list_atom,
+			  0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
+			  &nitems, &bytes_after, &prop) != Success)
+    return FALSE;
+
+  *nr = (guint)nitems;
+  ret = g_malloc (sizeof (Window) * nitems);
+  memcpy (ret, prop, sizeof (Window) * nitems);
+
+  XFree (prop);
+  return TRUE;
 }

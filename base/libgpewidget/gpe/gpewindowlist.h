@@ -39,7 +39,7 @@ GtkType		 gpe_window_list_get_type (void);
 
 GObject         *gpe_window_list_new (GdkScreen *);
 
-gboolean         gpe_window_list_get_clients (GObject *, Window **, guint *nr);
+gboolean         gpe_window_list_get_clients (GPEWindowList *, Window **, guint *nr);
 
 extern gboolean  gpe_get_client_window_list (Display *dpy, Window **list, guint *nr);
 

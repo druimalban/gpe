@@ -1,5 +1,13 @@
 2004-05-22  Philip Blundell  <philb@gnu.org>
 
+	* gpewindowlist.c (gpe_window_list_get_clients): New function.
+	* gpewindowbits.c (gpe_get_client_window_list): Copy returned
+	data.  Mark as obsolescent.
+	* gpe/gpewindowlist.h (gpe_window_list_get_clients): First
+	argument is GPEWindowList*.
+
+2004-05-22  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (PACKAGE_CFLAGS, PACKAGE_LDFLAGS): No longer need Render.
 
 	* gpewindowlist.c (gpe_window_list_list_changed): Make static.
