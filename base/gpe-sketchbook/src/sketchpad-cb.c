@@ -91,11 +91,11 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
-  switch_to_page(PAGE_SELECTOR);
-
   if(is_current_sketch_new){
     gtk_clist_unselect_all(selector_clist);
     GTK_CLIST(selector_clist)->focus_row = -1;
+    gtk_widget_set_sensitive(selector.button_edit,   FALSE);
+    gtk_widget_set_sensitive(selector.button_delete, FALSE);
   }
   else{
     //set the current one selected
@@ -105,7 +105,10 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
     gtk_signal_emit_by_name((GtkObject *)selector_clist, "select-row",
                             current_sketch, 1,
                             NULL, NULL);//highlight the selected item
+    gtk_widget_set_sensitive(selector.button_edit,   TRUE);
+    gtk_widget_set_sensitive(selector.button_delete, TRUE);
   }
+  switch_to_page(PAGE_SELECTOR);
 }
 
 //---------------------------------------------------------

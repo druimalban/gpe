@@ -153,7 +153,8 @@ void gui_init(){
 
   //--show up
   //NOTE: could be defined by preference, or command line argument
-  gtk_notebook_set_page(notebook, PAGE_SELECTOR);
+  if(1) gtk_notebook_set_page(notebook, PAGE_SELECTOR);
+  else  gtk_notebook_set_page(notebook, PAGE_SKETCHPAD);
 
   gtk_widget_show (GTK_WIDGET(notebook));
   gtk_widget_show (window);

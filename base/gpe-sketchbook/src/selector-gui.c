@@ -103,15 +103,19 @@ GtkWidget * build_selector_toolbar(){
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_new_clicked), NULL);
   pixbuf = gpe_find_icon ("open");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_open_clicked), NULL);
+  gtk_widget_set_sensitive(button, FALSE);
+  selector.button_edit = button;
   pixbuf = gpe_find_icon ("delete");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            //_("Delete selected sketch"), _("Delete selected sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_delete_clicked), NULL);
+  gtk_widget_set_sensitive(button, FALSE);
+  selector.button_delete = button;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 

@@ -24,6 +24,9 @@
 
 typedef struct _selector {
   GtkWidget * iconlist;
+
+  GtkWidget * button_edit;
+  GtkWidget * button_delete;
 } Selector;
 extern Selector selector;
 

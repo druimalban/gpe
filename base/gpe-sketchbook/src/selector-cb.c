@@ -39,6 +39,10 @@ void switch_to_page(guint page){
       break;
     case PAGE_SELECTOR:
     default:
+      if(icons_mode){//FIXME: to remove if iconlist can select
+        gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: to remove
+        gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: to remove
+      }//FIXME: to remove
       gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   }
 }
@@ -92,17 +96,21 @@ void _switch_icon(GtkButton * button){
 }
 
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){
-  if(icons_mode){
-    //**/g_printerr("switch to LIST view\n");
+  if(icons_mode){//--> switch to LIST view
     gtk_widget_hide(selector.iconlist);
     gtk_widget_show(scrolledwindow_selector_clist);
     icons_mode = FALSE;
+    if(is_current_sketch_selected){//FIXME: remove if iconlist can select
+      gtk_widget_set_sensitive(selector.button_edit,   TRUE);//FIXME: remove
+      gtk_widget_set_sensitive(selector.button_delete, TRUE);//FIXME: remove
+    }//FIXME: remove if iconlist can select
   }
-  else {
-    //**/g_printerr("switch to ICON view\n");
+  else {//--> switch to ICON view
     gtk_widget_hide(scrolledwindow_selector_clist);
     gtk_widget_show(selector.iconlist);
     icons_mode = TRUE;
+    gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: remove if iconlist can select
+    gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: remove if iconlist can select
   }
   _switch_icon(button);
 }
@@ -114,6 +122,8 @@ void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
   if(event == NULL) return;//explicit call, user_func does nothing.
   current_sketch = row;
   set_current_sketch_selected();
+  gtk_widget_set_sensitive(selector.button_edit,   TRUE);
+  gtk_widget_set_sensitive(selector.button_delete, TRUE);
 
   if(event->type == GDK_2BUTTON_PRESS){//--> double click = open related sketch
     Note * note;
@@ -125,7 +135,10 @@ void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
 
 void on_clist_selector_unselect_row (GtkCList *clist, gint row, gint column,
                                      GdkEvent *event, gpointer user_data){
+  if(event == NULL) return;//explicit call, user_func does nothing.
   if(row == current_sketch) set_current_sketch_unselected();
+  gtk_widget_set_sensitive(selector.button_edit,   FALSE);
+  gtk_widget_set_sensitive(selector.button_delete, FALSE);
 }
 
 void on_clist_selector_click_column (GtkCList *clist, gint column, gpointer user_data){
