@@ -1,3 +1,10 @@
+2003-08-01  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Require xstroke.
+
+	* gpe-login.setup: Add xstroke.  Only write to suspend_button_mode
+	if it exists, to avoid errors on non-stoneage kernels.
+
 2003-07-31  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (BUILD): Define.
@@ -7,6 +14,10 @@
 
 	* Makefile (gpe-lock-display): Use pkg-config x11 rather than
 	hardcoded -L /usr/X11R6.
+
+2003-07-21  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpe-login 0.54 released.
 
 2003-07-21  Phil Blundell  <pb@nexus.co.uk>
 

@@ -2,10 +2,13 @@
 
 PATH=$PATH:/usr/X11R6/bin:/usr/bin
 
-echo 1 > /proc/sys/ts/suspend_button_mode
+if [ -f /proc/sys/ts/suspend_button_mode ]; then
+  echo 1 > /proc/sys/ts/suspend_button_mode
+fi
 
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
 ipaq-sleep -u 60 -o 30 -n &
+xstroke &
 
 # check if the user wants a bg image at all:
 if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
