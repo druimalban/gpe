@@ -2,7 +2,7 @@ PACKAGE = startup-monitor
 PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.18
+VERSION = 0.18-1
 
 LINGUAS = 
 
