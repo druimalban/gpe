@@ -58,6 +58,7 @@ install-program: all
 	install -m 644 pixmaps/cellphone.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/network.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/Computer.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
+	install -m 644 pixmaps/Printer.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)/etc/bluetooth/
