@@ -90,6 +90,7 @@ struct gpe_icon my_icons[] = {
   { "cancel", "cancel" },
   { "question", "question" },
   { "error", "error" },
+  { "preferences", "preferences" },
   { "zoom_in", "filemanager/zoom_in" },
   { "zoom_out", "filemanager/zoom_out" },
   { "icon", PREFIX "/share/pixmaps/gpe-filemanager.png" },
@@ -491,7 +492,7 @@ sort_filenames (gconstpointer *a, gconstpointer *b)
 
 /* Render the contents for the current directory. */
 static void
-make_view (gchar *view)
+make_view ()
 {
   struct dirent *d;
   DIR *dir;
@@ -542,19 +543,6 @@ make_view (gchar *view)
 }
 
 static void
-set_view (GtkWidget *button, gpointer data)
-{
-  current_view = (gchar *) data;
-  make_view ((gchar *) data);
-}
-
-static void
-refresh_view (void)
-{
-  set_view (NULL, current_view);
-}
-
-static void
 goto_directory (GtkWidget *widget)
 {
   gchar *new_directory;
@@ -597,7 +585,7 @@ browse_directory (gchar *directory)
       current_directory = g_strdup (directory);
       add_history (directory);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
-      refresh_view ();
+      make_view ();
     }
     else
     {
@@ -661,7 +649,7 @@ history_back (GtkWidget *widget)
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), history);
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), new_directory);
     current_directory = g_strdup (new_directory);
-    refresh_view ();
+    make_view ();
   }
 }
 
@@ -680,7 +668,7 @@ history_forward (GtkWidget *widget)
     gtk_combo_set_popdown_strings (GTK_COMBO (combo), history);
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), new_directory);
     current_directory = g_strdup (new_directory);
-    refresh_view ();
+    make_view ();
   }
 }
 
@@ -711,7 +699,7 @@ zoom_out ()
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *hbox2, *toolbar, *toolbar2, *view_option_menu, *view_menu, *view_menu_item;
+  GtkWidget *vbox, *hbox, *toolbar, *toolbar2;
   GdkPixbuf *p;
   GtkWidget *pw;
   GdkPixmap *pmap;
@@ -739,26 +727,9 @@ main (int argc, char *argv[])
   vbox = gtk_vbox_new (FALSE, 0);
 
   hbox = gtk_hbox_new (FALSE, 0);
-  hbox2 = gtk_hbox_new (FALSE, 0);
 
   combo = gtk_combo_new ();
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry), "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
-
-  view_option_menu = gtk_option_menu_new ();
-  view_menu = gtk_menu_new ();
-  gtk_option_menu_set_menu(GTK_OPTION_MENU (view_option_menu) ,view_menu);
-
-  view_menu_item = gtk_menu_item_new_with_label ("Icon view");
-  gtk_widget_show (view_menu_item);
-  gtk_menu_append (GTK_MENU (view_menu), view_menu_item);
-  gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
-     (GtkSignalFunc) set_view, "icons");
-
-  view_menu_item = gtk_menu_item_new_with_label ("List view");
-  gtk_widget_show (view_menu_item);
-  gtk_menu_append (GTK_MENU (view_menu), view_menu_item);
-  gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
-     (GtkSignalFunc) set_view, "list");
 
   view_widget = gpe_iconlist_new ();
   gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
@@ -800,20 +771,24 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Up one level"), 
 			   _("Up one level"), _("Up one level"), pw, up_one_level, NULL);
 
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
   p = gpe_find_icon ("stop");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop"), 
 			   _("Stop"), _("Stop"), pw, safety_check, NULL);
 
-  p = gpe_find_icon ("refresh");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Refresh"), 
-			   _("Refresh"), _("Refresh"), pw, refresh_view, NULL);
+  //p = gpe_find_icon ("refresh");
+  //pw = gpe_render_icon (window->style, p);
+  //gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Refresh"), 
+  //			   _("Refresh"), _("Refresh"), pw, refresh_view, NULL);
 
   p = gpe_find_icon ("home");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Home"), 
 			   _("Home"), _("Home"), pw, set_directory_home, NULL);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon ("zoom_in");
   pw = gpe_render_icon (window->style, p);
@@ -825,19 +800,24 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Zoom Out"), 
 			   _("Zoom Out"), _("Zoom Out"), pw, zoom_out, NULL);
 
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  p = gpe_find_icon ("preferences");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Preferences"), 
+			   _("Preferences"), _("Preferences"), pw, NULL, NULL);
+
   p = gpe_find_icon ("dir-up");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Goto Location"), 
 			   _("Goto Location"), _("Goto Location"), pw, goto_directory, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), view_option_menu, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox2), combo, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox2), toolbar2, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), view_widget, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
@@ -845,12 +825,9 @@ main (int argc, char *argv[])
   gtk_widget_show (window);
   gtk_widget_show (vbox);
   gtk_widget_show (hbox);
-  gtk_widget_show (hbox2);
   gtk_widget_show (toolbar);
   gtk_widget_show (toolbar2);
   gtk_widget_show (combo);
-  //gtk_widget_show (view_option_menu);
-  //gtk_widget_show (view_menu);
   gtk_widget_show (view_widget);
 
   popup_menu = gtk_menu_new ();
@@ -866,9 +843,6 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (popup_menu), "hide", hide_menu, NULL);
 
   gnome_vfs_init ();
-
-  gtk_option_menu_set_history (GTK_OPTION_MENU (view_option_menu), 0);
-
   set_directory_home (NULL);
 
   gtk_main();
