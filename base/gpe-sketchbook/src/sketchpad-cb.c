@@ -229,11 +229,28 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
       note_id = db_insert_note(&note);
     }
 
-    selector_add_note(note_id, title, filename, thumbnail);
+    selector_add_note(note_id, title, filename, current_time.tv_sec, current_time.tv_sec, thumbnail);
   }
   else{
 
     db_update_timestamp(note_id, current_time.tv_sec);
+
+    //update "update" field
+    {
+      gchar * path_string;
+      gchar *updated_label;
+      path_string = g_strdup_printf("%d", current_sketch);
+      
+      /*gboolean*/gtk_tree_model_get_iter_from_string( selector.listmodel, &iter, path_string);
+      g_free(path_string);
+
+      updated_label = get_time_label(current_time.tv_sec);  
+      gtk_list_store_set (GTK_LIST_STORE(selector.listmodel), &iter,
+                          ENTRY_UPDATED,     updated_label,
+                          ENTRY_UPDATED_VAL, current_time.tv_sec,
+                          -1);
+      g_free(updated_label);
+    }
 
     if(selector.thumbnails_notloaded == FALSE){
       //update icon_view

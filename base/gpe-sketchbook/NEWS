@@ -1,9 +1,15 @@
 GPE sketchbook NEWS
 
 * cvs
+- list: makes columns sortable
+- list: display "last updated" timestamp
 - store updated timestamp in DB
-- added editable titles
+- list: added editable titles
 - store notes into sqlite DB (open door to many improvements :)
+
+* 0.2.8 2004-06-16
+- use the new GpeIconListView (from Florian Boor <florian@handhelds.org>)
+- biger default sketch size for biger screens (from Florian Boor <florian@handhelds.org>)
 
 * 0.2.7 2003-10-12
 - insert a default sketch when the .sketchbook folder is created (#984).

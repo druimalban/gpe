@@ -82,7 +82,7 @@ static int load_note_cb(void *pArg, int argc, char **argv, char **columnNames){
 //          _get_time_label(note.created),
 //          _get_time_label(note.updated));
 
-    selector_add_note(note.id, note.title, note.url, NULL);
+    selector_add_note(note.id, note.title, note.url, note.created, note.updated, NULL);
     sketch_list_size++;
   }
   return 0;

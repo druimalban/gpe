@@ -41,13 +41,22 @@ extern Selector selector;
 enum{//Entry id for the list store
   ENTRY_TITLE        = 0,
   ENTRY_ID           = 1,
-  ENTRY_URL          = 2 ,
-  ENTRY_THUMBNAIL    = 3,
-  ENTRY_ICONLISTITEM = 4,
+  ENTRY_CREATED_VAL  = 2,
+  ENTRY_CREATED      = 3,
+  ENTRY_UPDATED_VAL  = 4,
+  ENTRY_UPDATED      = 5,
+  ENTRY_URL          = 6,
+  ENTRY_THUMBNAIL    = 7,
+  ENTRY_ICONLISTITEM = 8,
   NUM_ENTRIES
 };
 
-void selector_add_note(gint id, gchar * title, gchar * url, GdkPixbuf * thumbnail);
+void selector_add_note(gint id,
+                       gchar * title,
+                       gchar * url,
+                       gint created,
+                       gint updated,
+                       GdkPixbuf * thumbnail);
 void load_thumbnails();
 
 extern gint sketch_list_size;

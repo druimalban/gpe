@@ -191,7 +191,7 @@ GtkWidget * build_scrollable_textlist(){
 
   gtk_tree_view_set_rules_hint(treeview, TRUE);//request alternate color
   gtk_tree_selection_set_mode(gtk_tree_view_get_selection(treeview), GTK_SELECTION_SINGLE);
-  gtk_tree_view_set_headers_visible(treeview, FALSE);
+  gtk_tree_view_set_headers_visible(treeview,TRUE);
 
   gtk_tree_selection_set_select_function(gtk_tree_view_get_selection(treeview),
                                          on_treeview_selection_change, //GtkTreeSelectionFunc func,
@@ -204,9 +204,31 @@ GtkWidget * build_scrollable_textlist(){
   g_object_unref(G_OBJECT(model));//treeview keep a ref on its model
   selector.textlistview = GTK_WIDGET(treeview);
 
+//  //--COLUMN: Created
+//  renderer = gtk_cell_renderer_text_new ();
+//  column = gtk_tree_view_column_new_with_attributes (_("C"), renderer,
+//                                                     "text", ENTRY_CREATED,
+//                                                     NULL);
+//  gtk_tree_view_column_set_sort_column_id (column, ENTRY_CREATED_VAL);
+//  gtk_tree_view_append_column (treeview, column);
+
+  //--COLUMN: Updated
+  renderer = gtk_cell_renderer_text_new ();
+
+  /* TRANSLATORS: "U" stands for "Updated"
+   *  It is the title for the column that displays last update timestamp.
+   *  The data in this column is no more than 5 characters.
+   *  Please, try to make this title 5 characters max.
+   */
+  column = gtk_tree_view_column_new_with_attributes (_("U"), renderer,
+                                                     "text", ENTRY_UPDATED,
+                                                     NULL);
+  gtk_tree_view_column_set_sort_column_id (column, ENTRY_UPDATED_VAL);
+  gtk_tree_view_append_column (treeview, column);
+
   //--COLUMN: title
   renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes ("title", renderer,
+  column = gtk_tree_view_column_new_with_attributes (_("Title"), renderer,
                                                      "text", ENTRY_TITLE,
                                                      NULL);
   g_object_set(renderer, "editable", TRUE, NULL);

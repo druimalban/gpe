@@ -61,9 +61,13 @@ void selector_init(){
   store = gtk_list_store_new (NUM_ENTRIES,
                               /*0*/G_TYPE_STRING,  //title
                               /*1*/G_TYPE_INT,     //id
-                              /*2*/G_TYPE_STRING,  //note's url
-                              /*3*/GDK_TYPE_PIXBUF,//thumbnail
-                              /*4*/G_TYPE_OBJECT   //GPEIconListItem
+                              /*2*/G_TYPE_INT,     //creation timestamp
+                              /*3*/G_TYPE_STRING,  //creation timestamp label
+                              /*4*/G_TYPE_INT,     //update timestamp
+                              /*5*/G_TYPE_STRING,  //update timestamp label
+                              /*6*/G_TYPE_STRING,  //note's url
+                              /*7*/GDK_TYPE_PIXBUF,//thumbnail
+                              /*8*/G_TYPE_OBJECT   //GPEIconListItem
                               );
   selector.listmodel = GTK_TREE_MODEL(store);
 
@@ -75,20 +79,37 @@ void selector_init(){
 }//selector_init()
 
 
-void selector_add_note(gint id, gchar * title, gchar * url, GdkPixbuf * thumbnail){
+void selector_add_note(gint id,
+                       gchar * title,
+                       gchar * url,
+                       gint created,
+                       gint updated,
+                       GdkPixbuf * thumbnail){
   GtkListStore * store;
   GtkTreeIter iter;
+  gchar *created_label, *updated_label;
 
+  created_label = get_time_label(created);
+  updated_label = get_time_label(updated);
+  
   store = GTK_LIST_STORE(selector.listmodel);
   gtk_list_store_append (store, &iter);
   gtk_list_store_set (store, &iter,
-                      ENTRY_ID,        id,
-                      ENTRY_TITLE,     title,
-                      ENTRY_URL,       url,
-                      ENTRY_THUMBNAIL, thumbnail,
+                      ENTRY_ID,          id,
+                      ENTRY_TITLE,       title,
+                      ENTRY_CREATED,     created_label,
+                      ENTRY_CREATED_VAL, created,
+                      ENTRY_UPDATED,     updated_label,
+                      ENTRY_UPDATED_VAL, updated,
+                      ENTRY_URL,         url,
+                      ENTRY_THUMBNAIL,   thumbnail,
                       -1);
-  g_free(url);  //liststore take a copy
-  g_free(title);//liststore take a copy
+
+  //free items, liststore takes a copy
+  g_free(url);  
+  g_free(title);
+  g_free(created_label);
+  g_free(updated_label);
 
   //gpe-iconlist is not linked to the model, so update it
   if(thumbnail){
@@ -239,4 +260,50 @@ void open_indexed_sketch(gint index){
   gtk_tree_model_get(model, &iter, ENTRY_URL, &fullpath_filename, -1);
   sketchpad_open_file(fullpath_filename);
   g_free(fullpath_filename);
+}
+
+/** Formats a timestamp on 5 characters.
+    The time displayed is relative to the current time.
+
+    hh:mm    17:53   -> today
+    dd/mm    18/01   -> this year
+     YYYY     2003   -> previous year
+    xxxxx    xxxxx   -> future date  (litteral "xxxxx")
+
+    Returned string is newly allocated, must be freed.
+*/
+gchar * get_time_label(glong timestamp){
+  gchar * s;
+  GTimeVal current_time; //struct GTimeVal{  glong tv_sec;  glong tv_usec;};
+  GTimeVal stamped_time; //struct GTimeVal{  glong tv_sec;  glong tv_usec;};
+  struct tm * formated_current;
+  struct tm * formated_stamped;
+  struct tm   aformated_stamped;
+
+  g_get_current_time(&current_time);
+  stamped_time.tv_sec = timestamp;
+  
+  formated_current = localtime ((time_t *) &current_time);
+  localtime_r((time_t *) &stamped_time, &aformated_stamped);
+  formated_stamped = &aformated_stamped;
+
+  if(stamped_time.tv_sec > current_time.tv_sec){
+    s = g_strdup_printf("xxxxx"); //future
+  }
+  else if(formated_stamped->tm_year < formated_current->tm_year){
+    s = g_strdup_printf(" %4d", formated_stamped->tm_year +1900);
+  }
+  else if(formated_stamped->tm_mon  <= formated_current->tm_mon &&
+          formated_stamped->tm_mday <  formated_current->tm_mday){
+    s = g_strdup_printf("%02d/%02d",
+                        formated_stamped->tm_mday,
+                        formated_stamped->tm_mon+1); //FIXME: needs localization !!!
+  }
+  else{
+    s = g_strdup_printf("%02d:%02d",
+                        formated_stamped->tm_hour,
+                        formated_stamped->tm_min);
+  }
+
+  return s;
 }
