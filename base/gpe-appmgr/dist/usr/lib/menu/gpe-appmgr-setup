@@ -1,1 +1,6 @@
-?package(gpe-appmgr-setup): needs=x11 title="Appmgr Setup" command=gpe-appmgr-setup icon48=gpe-appmgr-setup.png section=System
+?package(gpe-appmgr-setup): \
+ needs=x11 \
+ title="Appmgr Setup" \
+ command=gpe-appmgr-setup \
+ icon48=/usr/share/pixmaps/gpe-appmgr-setup.png \
+ section=Utilities
