@@ -494,7 +494,10 @@ make_view (gchar *view)
       if (loading_directory == 0)
         break;
 
-      filename = g_strdup_printf ("%s/%s", current_directory, d->d_name);
+      if (strcmp (current_directory, "/"))
+        filename = g_strdup_printf ("%s/%s", current_directory, d->d_name);
+     else
+        filename = g_strdup_printf ("/%s", d->d_name);
 
       if (basename (filename)[0] != '.')
       {
