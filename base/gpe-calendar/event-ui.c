@@ -82,7 +82,7 @@ static void
 recalculate_sensitivities (GtkWidget *widget,
 			   GtkWidget *d)
 {
-  struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
+  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
@@ -288,7 +288,7 @@ click_delete (GtkWidget *widget, event_t ev)
 static void
 click_ok (GtkWidget *widget, GtkWidget *d)
 {
-  struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
+  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
   event_t ev;
   event_details_t ev_d;
   struct tm tm_start, tm_end, tm_rend;
@@ -641,8 +641,8 @@ build_edit_event_window (void)
 #if 0
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Task"));
 #endif
-  gtk_signal_connect (GTK_OBJECT (s->optionmenutype), "item-changed", 
-		      GTK_SIGNAL_FUNC (set_notebook_page), s);
+  g_signal_connect (G_OBJECT (s->optionmenutype), "item-changed",
+		    G_CALLBACK (set_notebook_page), s);
 
   s->optionmenutask = gtk_simple_menu_new ();
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Days"));
@@ -679,8 +679,8 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (hboxreminder1), s->reminderdate, TRUE, TRUE, 2);
 
   s->remindertimebutton = gtk_check_button_new_with_label (_("Time:"));
-  gtk_signal_connect (GTK_OBJECT (s->remindertimebutton), "clicked", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (s->remindertimebutton), "clicked",
+		    G_CALLBACK (recalculate_sensitivities), window);
   s->remindertime = gtk_combo_new ();
   gtk_combo_set_popdown_strings (GTK_COMBO (s->remindertime), times);
   gtk_box_pack_start (GTK_BOX (hboxreminder2), s->remindertimebutton, FALSE, FALSE, 2);
@@ -721,8 +721,8 @@ build_edit_event_window (void)
   buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
   buttondelete = gpe_button_new_from_stock (GTK_STOCK_DELETE, GPE_BUTTON_TYPE_BOTH);
 
-  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
-		      GTK_SIGNAL_FUNC (click_ok), window);
+  g_signal_connect (G_OBJECT (buttonok), "clicked",
+		    G_CALLBACK (click_ok), window);
   g_signal_connect_swapped (G_OBJECT (buttoncancel), "clicked",
 			    G_CALLBACK (edit_finished), window);
 
@@ -778,16 +778,16 @@ build_edit_event_window (void)
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonnone), TRUE);
 
-  gtk_signal_connect (GTK_OBJECT (radiobuttonnone), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttondaily), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonweekly), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonmonthly), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonyearly), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttonnone), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttondaily), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttonweekly), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttonmonthly), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttonyearly), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
   
 /* daily hbox */
   s->dailybox = gtk_vbox_new (FALSE, 0);
@@ -977,10 +977,10 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (hboxendafter), endlabel, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endlabel, FALSE);
 
-  gtk_signal_connect (GTK_OBJECT (radiobuttonforever), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonendafter), "toggled", 
-		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttonforever), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (radiobuttonendafter), "toggled",
+		    G_CALLBACK (recalculate_sensitivities), window);
   		  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonforever), TRUE);
 
@@ -1001,8 +1001,8 @@ build_edit_event_window (void)
   gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
   gtk_widget_set_usize (alarmoption, 120, -1);
 
-  gtk_signal_connect (GTK_OBJECT (alarmbutton), "clicked",
-		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  g_signal_connect (G_OBJECT (alarmbutton), "clicked",
+		    G_CALLBACK (recalculate_sensitivities), window);
 
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmoption, TRUE, TRUE, 2);
@@ -1063,15 +1063,15 @@ build_edit_event_window (void)
   s->monthlyspin_adj = monthlyspin_adj;
   s->yearlyspin_adj = yearlyspin_adj;
    
-  gtk_object_set_data_full (GTK_OBJECT (window), "edit_state", s, 
-			    destroy_user_data);
+  g_object_set_data_full (G_OBJECT (window), "edit_state", s,
+			  destroy_user_data);
 
   recalculate_sensitivities (NULL, window);
 
   gpe_set_window_icon (window, "icon");
 
-  gtk_signal_connect (GTK_OBJECT (window), "delete_event",
-		      GTK_SIGNAL_FUNC (edit_finished), NULL);
+  g_signal_connect (G_OBJECT (window), "delete_event",
+		    G_CALLBACK (edit_finished), NULL);
 
   return window;
 }
@@ -1107,8 +1107,8 @@ new_event (time_t t, guint timesel)
     {
       struct tm tm;
       char buf[32];
-      struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
-						  "edit_state");
+      struct edit_state *s = g_object_get_data (G_OBJECT (w),
+						"edit_state");
 
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: New event"));
   
@@ -1152,14 +1152,14 @@ edit_event (event_t ev)
       time_t end;
       struct tm tm;
       char buf[32];
-      struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
-						  "edit_state");
+      struct edit_state *s = g_object_get_data (G_OBJECT (w),
+						"edit_state");
       
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
 
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
-      gtk_signal_connect (GTK_OBJECT (s->deletebutton), "clicked",
-			  GTK_SIGNAL_FUNC (click_delete), ev);
+      g_signal_connect (G_OBJECT (s->deletebutton), "clicked",
+			G_CALLBACK (click_delete), ev);
       evd = event_db_get_details (ev);
 #if GTK_MAJOR_VERSION < 2
       gtk_text_insert (GTK_TEXT (s->description), NULL, NULL, NULL, 
