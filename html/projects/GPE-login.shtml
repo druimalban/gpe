@@ -15,37 +15,50 @@ contribute to this project, please contact him directly.
 <H2>Function</H2>
 <P>
 The login program serves two purposes.  First, it provides password
-protection for your personal data; second, it allows multiple users
-to share a single device.
+protection for your personal data; second, it allows multiple users to
+share a single device.  In fact, two packages are involved:
+<CODE>gpe-login</CODE> proper, which deals with user interaction, and
+<CODE>gpe-dm</CODE>, which takes care of starting the X server and
+cleaning up between sessions.  There is an optional third package,
+<CODE>gpe-session-scripts</CODE>, which contains some auxiliary files
+from /etc/X11.
 </P>
 
+<H3>Details of operation</H2>
 <P>
-gpe-dm starts the X server, then runs /etc/X11/Xinit as root (which
-in turn calls in everything in /etc/X11/Xinit.d).  Once Xinit has
-finished, it launches gpe-login, which runs /etc/X11/gpe-login.setup
-(also as root), then displays its UI and prompts the user to log in.
-Once the user is authenticated, it runs ~/.xsession if it exists, and
-/etc/X11/Xsession if not, both as the user.
+This is the sequence of events that takes place:
+<OL>
+<LI><CODE>gpe-dm</CODE> starts the X server on display :0 or whatever
+was specified on its command line.</LI> 
+<LI><CODE>gpe-dm</CODE> runs <CODE>/etc/X11/Xinit</CODE> as root, and
+waits for it to finish.  The default script will execute everything
+from <CODE>/etc/X11/Xinit.d</CODE> in order.</LI>
+<LI><CODE>gpe-dm</CODE> launches <CODE>gpe-login</CODE>.</LI>
+<LI><CODE>gpe-login</CODE> runs <CODE>/etc/X11/gpe-login.setup</CODE>
+as root, and waits for it to finish.</LI>
+<LI><CODE>gpe-login</CODE> displays UI and invites the user to log in.</LI>
+<LI>Any processes started by <CODE>gpe-login.setup</CODE> are terminated.
+(Processes started by <CODE>/etc/X11/Xinit</CODE> are not killed, and
+will persist into the user's session.)</LI>
+<LI><CODE>/etc/X11/gpe-login.pre-session</CODE> is run as root, with
+the user's login name passed as its first argument.</LI>
+<LI><CODE>gpe-login</CODE> switches to the user's environment and then
+attempts to launch a session.  It tries to exec
+<CODE>~/.xsession</CODE>, <CODE>/etc/X11/Xsession</CODE> and
+<CODE>/usr/bin/x-terminal-emulator</CODE> in that order.</LI>
+<LI>When the session ends, <CODE>gpe-dm</CODE> resets the X server and
+loops back to step 2.</LI>
+</OL>
 </P>
 
+<H3>Button mapping</H3>
 <P>
-/etc/X11/gpe-login.buttons lets you map the buttons so that they run an
-application. By default, this is set up so that XF86AudioRecord (the
-Record button on iPAQs) runs the touchscreen calibration program.
-The format of gpe-login.buttons is 
-    <pre>KeySym binary</pre>
-</P>
-
-<P>
-The Xsession file needs to end by running the window manager, 
-session manager, or some other long-living thing.  
-Once Xsession returns, gpe-dm will do a server reset and start 
-the whole cycle again.
-</P>
-
-<P>
-Processes started by Xinit survive into the user's session, whereas
-things run from gpe-login.setup are terminated before Xsession starts.
+<CODE>gpe-login</CODE> can be set up to run an external program if the
+user presses a button at the login screen.  By default, pressing the
+Record button will launch the touchscreen calibration program.
+Associations between buttons and commands are stored in the file
+<CODE>/etc/X11/gpe-login.buttons</CODE>.  Each line consists of an X
+keysym and a command line, separated by whitespace.
 </P>
 
 <H2>Status</H2>
@@ -54,10 +67,6 @@ The source code can be found in <A href="../cvs.shtml">CVS</A>,
 module <b>gpe-login</b>.  Precompiled binaries for ARM PDAs are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 (Packages gpe-login and gpe-dm)
-</P>
-<P>
-Some example startup scripts are provided
-<A href="ftp://ftp.handhelds.org/pub/projects/gpe/xstuff.tgz">here</A>.
 </P>
 
 <H2>Screenshots</H2>
