@@ -385,9 +385,9 @@ event_db_find_by_uid (guint uid)
 
   return NULL;
 }
-link_warning(event_db_find_by_uid, 
+/*link_warning(event_db_find_by_uid, 
 	     "warning: event_db_find_by_uid is obsolescent: use the ev->cloned_ev pointer directly.");
-
+*/
 void
 event_db_destroy_clone (event_t ev)
 {
