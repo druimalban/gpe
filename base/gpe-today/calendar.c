@@ -127,7 +127,7 @@ gboolean calendar_update(gpointer data)
 	/* check events' status */
 	time(&current_time);
 	for (i = 0; (event = (struct calevent *) g_slist_nth_data(calendar_entries, i)); i++) {
-		if ((event->ev->start + event->ev->duration) > current_time) {
+		if ((event->ev->start + event->ev->duration) < current_time) {
 			/* event finished */
 			/* TODO: simply remove the event's widget */
 			calendar_events_db_update();
