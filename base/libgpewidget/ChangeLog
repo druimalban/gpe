@@ -1,3 +1,8 @@
+
+2005-03-16  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/tmpl/*.sgml: More documentation (Popup).
+
 2005-03-14  Florian Boor <florian@kernelconcepts.de>
 
 	* pixmaps.c, popup.c: Fixed some formating.
