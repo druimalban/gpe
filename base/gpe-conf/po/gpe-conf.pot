@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-14 17:48+0200\n"
+"POT-Creation-Date: 2003-04-22 11:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,27 +15,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:316
+#: main.c:318
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:343
+#: main.c:345
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:344
+#: main.c:346
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:358
+#: main.c:360
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:359
+#: main.c:361
 msgid ""
 "\n"
 "\n"
@@ -268,6 +268,39 @@ msgstr ""
 msgid "User defined"
 msgstr ""
 
+#: keyboard.c:138
+msgid "Error reading keyboard definition)"
+msgstr ""
+
+#: keyboard.c:212
+msgid ""
+"External keyboard configuration. Disabled buttons \t\t\t\t\tare currently "
+"not installed."
+msgstr ""
+
+#: keyboard.c:217
+msgid "External Keyboard Type"
+msgstr ""
+
+#: keyboard.c:224
+msgid ""
+"Here you may select your external keyboard model. \t\t\t\t  To install "
+"software support connect your device to \t\t\t\t  internet and click the "
+"\"Install\" button."
+msgstr ""
+
+#: keyboard.c:245
+msgid "Tap here to select this keyboard model."
+msgstr ""
+
+#: keyboard.c:252
+msgid "Install"
+msgstr ""
+
+#: keyboard.c:258
+msgid "Tap here to install support for this keyboard."
+msgstr ""
+
 #: network.c:115
 msgid "New interface:"
 msgstr ""
@@ -344,7 +377,7 @@ msgstr ""
 msgid "global"
 msgstr ""
 
-#: theme.c:220 theme.c:224 theme.c:887 theme.c:907 theme.c:1003 theme.c:1009
+#: theme.c:220 theme.c:224 theme.c:888 theme.c:908 theme.c:1004 theme.c:1010
 msgid "Color"
 msgstr ""
 
@@ -382,63 +415,63 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: theme.c:846
+#: theme.c:847
 msgid "Background"
 msgstr ""
 
-#: theme.c:857
+#: theme.c:858
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:864
+#: theme.c:865
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:878
+#: theme.c:879
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:882
+#: theme.c:883
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:898
+#: theme.c:899
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:918
+#: theme.c:919
 msgid "Image"
 msgstr ""
 
-#: theme.c:944
+#: theme.c:945
 msgid "Centered"
 msgstr ""
 
-#: theme.c:948
+#: theme.c:949
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:951
+#: theme.c:952
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:956
+#: theme.c:957
 msgid "Font"
 msgstr ""
 
-#: theme.c:965 theme.c:985
+#: theme.c:966 theme.c:986
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:972 theme.c:1027
+#: theme.c:973 theme.c:1028
 msgid "Family"
 msgstr ""
 
-#: theme.c:992 theme.c:1047
+#: theme.c:993 theme.c:1048
 msgid "Size"
 msgstr ""
 
-#: theme.c:1020 theme.c:1040
+#: theme.c:1021 theme.c:1041
 msgid "Application Font"
 msgstr ""
 
@@ -618,14 +651,6 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
-#: users/interface.c:383 users/interface.c:514
-msgid "Cancel"
-msgstr ""
-
-#: users/interface.c:387 users/interface.c:520
-msgid "OK"
-msgstr ""
-
 #: users/interface.c:435
 msgid "Change Password"
 msgstr ""
@@ -776,39 +801,39 @@ msgstr ""
 msgid "System Log"
 msgstr ""
 
-#: packages.c:63 packages.c:168
+#: packages.c:80 packages.c:185
 msgid "Start"
 msgstr ""
 
-#: packages.c:65
+#: packages.c:82
 msgid "Update finished. Please check log messages for errors."
 msgstr ""
 
-#: packages.c:86
+#: packages.c:103
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr ""
 
-#: packages.c:109
+#: packages.c:126
 msgid "Running..."
 msgstr ""
 
-#: packages.c:158
+#: packages.c:175
 msgid "Update"
 msgstr ""
 
-#: packages.c:163
+#: packages.c:180
 msgid "Update from network"
 msgstr ""
 
-#: packages.c:172
+#: packages.c:189
 msgid "Update entire system over an internet connection."
 msgstr ""
 
-#: packages.c:176
+#: packages.c:193
 msgid "Activity log"
 msgstr ""
 
-#: packages.c:184
+#: packages.c:201
 msgid ""
 "This window shows all output from the packet manager that performs the "
 "update."
