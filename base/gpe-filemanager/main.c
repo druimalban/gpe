@@ -1820,7 +1820,7 @@ create_view_widget_icons(void)
 static GtkWidget*
 create_dir_view_widget(void)
 {
-    GtkWidget *treeview;
+    GtkWidget *treeview, *hseparator;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	
@@ -1857,7 +1857,10 @@ create_dir_view_widget(void)
   		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(dir_view_window),treeview);
     gtk_box_pack_start (GTK_BOX (main_hbox), dir_view_window, FALSE, TRUE, 0);
-
+    
+    hseparator = gtk_hseparator_new();
+    gtk_box_pack_start (GTK_BOX (main_hbox), hseparator, FALSE, TRUE, 0);
+    
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
 	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
@@ -1940,7 +1943,7 @@ main (int argc, char *argv[])
     "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
   
   view_widget = create_view_widget_list();
-  
+#warning necessary?  
   dir_view_widget = create_dir_view_widget();
   
   storage_menu = build_storage_menu(directory_browser);
