@@ -78,6 +78,8 @@ static Atom suspended_atom;
 static int hard_key_length = 4;
 static gchar *hard_key_buf;
 
+static gchar *pango_lang_code;
+
 typedef struct
 {
   const gchar *name;
@@ -388,8 +390,11 @@ enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
       kill (kbd_pid, 15);
     }
   else
-    gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
-
+    gtk_label_set_markup (GTK_LABEL (label_result),
+			  g_strdup_printf ("<span lang='%s' foreground='red'>%s</span>",
+					   pango_lang_code,
+					   _("Login incorrect")));
+  
   memset (pwstr, 0, strlen (pwstr));
   g_free (pwstr);
 }
@@ -404,7 +409,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
       if (xev->xproperty.atom == suspended_atom)
 	{
 	  spawn_xkbd ();
-	  gtk_label_set_text (GTK_LABEL (label_result), "");
+	  gtk_label_set_markup (GTK_LABEL (label_result), "");
 	  gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 	  gtk_widget_show_all (window);
 	  gtk_widget_grab_focus (focus);
@@ -438,7 +443,10 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
       gtk_main_quit ();
     }
   else
-    gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
+    gtk_label_set_markup (GTK_LABEL (label_result),
+			  g_strdup_printf ("<span lang='%s' foreground='red'>%s</span>",
+					   pango_lang_code,
+					   _("Login incorrect")));
 
   memset (pwstr, 0, strlen (pwstr));
   g_free (pwstr);
@@ -621,14 +629,20 @@ main (int argc, char *argv[])
   gboolean flag_xkbd = FALSE;
   FILE *cfp;
   GdkCursor *cursor;
+  gchar *pango_lang_code;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
+  /* (LanguageCode) translators: please replace this with your own
+     Pango language code: */
+  pango_lang_code = g_strdup (_("en"));
+  
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   cfp = fopen (GPE_LOGIN_CONF, "r");
   if (cfp)
@@ -839,21 +853,31 @@ main (int argc, char *argv[])
 
   vbox2 = gtk_vbox_new (FALSE, 0);
 
-  calibrate_hint = gtk_label_new (_("Press Record to recalibrate touchscreen"));
+  calibrate_hint = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (calibrate_hint),
+			g_strdup_printf ("<span lang='%s'><i>%s</i> %s</span>",
+					 pango_lang_code,
+					 _("Record"),
+					 _("recalibrates touchscreen")));
   gtk_label_set_line_wrap (GTK_LABEL (calibrate_hint), TRUE);
 
   if (autolock_mode || have_users)
     {
       GtkWidget *hbox_password;
-      GtkWidget *login_label, *password_label;
+      GtkWidget *login_label, *lock_label, *password_label;
       GtkWidget *entry = NULL, *table;
 
-      frame = gtk_frame_new (autolock_mode ? _("Screen locked") : _("Log in"));
-
+      if (autolock_mode) {
+	lock_label = gtk_label_new (NULL);
+	gtk_label_set_markup (GTK_LABEL (lock_label),
+			      g_strdup_printf ("<span lang='%s'><b>%s</b></span>",
+					       pango_lang_code,
+					       _("Screen locked")));
+	gtk_box_pack_start (GTK_BOX (vbox2), lock_label, FALSE, FALSE, 0);
+      }
+      
       login_label = gtk_label_new (_("Username"));
-      label_result = gtk_label_new ("");
-      gtk_rc_parse_string ("widget '*login_result_label*' style 'gpe_login_result'");
-      gtk_widget_set_name (label_result, "login_result_label");
+      label_result = gtk_label_new (NULL);
 
       if (autolock_mode)
 	{
@@ -913,8 +937,6 @@ main (int argc, char *argv[])
 	  gtk_box_pack_start (GTK_BOX (vbox), socket_box, TRUE, TRUE, 0);
 	}
 
-      gtk_container_add (GTK_CONTAINER (frame), vbox);
-      gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
       
       if (! hard_keys_mode)
@@ -942,7 +964,7 @@ main (int argc, char *argv[])
 	  focus = window;
 	}
 
-      gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox2), vbox, FALSE, FALSE, 0);
 
       if (! autolock_mode)
 	gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
