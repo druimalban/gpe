@@ -42,6 +42,7 @@
 #include "battery.h"
 #include "storage.h"
 #include "tools/interface.h"
+#include "logread.h"
 
 /* local definitions */
 #define MODEL_INFO 		"/proc/hal/model"
@@ -480,6 +481,11 @@ Sysinfo_Build_Objects (void)
 	/* network tab */
 	table = network_create_widgets();
 	tw = gtk_label_new(_("Network"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	
+	/* logfiles tab */
+	table = Logread_Build_Objects();
+	tw = gtk_label_new(_("Syslog"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 	
 	gtk_widget_show_all(notebook);

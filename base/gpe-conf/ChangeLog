@@ -3,6 +3,7 @@
 	* tools/interface.c: Some hacks to make strings look nicer.
 	* storage.c: Code reduction, statup speedup.
 	* sysinfo.c: Fixed dialog come up with wrong tab.
+	* sysinfo.c: Added syslog tab.
 	
 2004-01-08	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* sysinfo.c: Started merging info applets.
