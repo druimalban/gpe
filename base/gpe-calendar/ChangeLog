@@ -2,7 +2,7 @@
 
 	* event-ui.c (build_edit_event_window): Just say "Start" and "End"
 	not "Start on" and "End on".  Put recurrence widgets inside a
-	notebook.
+	notebook.  Remove setting of window default size.
 
 2003-02-12  Philip Blundell  <philb@gnu.org>
 
