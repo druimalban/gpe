@@ -253,6 +253,7 @@ gboolean islearning = FALSE;
 	{
 		int percent;
 		int remaining; 
+		int ac_connected;
 		
 		/* apm knows only about one battery */
 		gtk_widget_set_sensitive(batt_ext.bar, FALSE);
@@ -267,7 +268,8 @@ gboolean islearning = FALSE;
 		file_apm = fopen(PROC_APM,"r");
 
 		if (fscanf(file_apm,
-			       "%*f %*f %*s %*s %*s %*s %i%% %i",
+			       "%*f %*f %*s %i %*s %*s %i%% %i",
+		           &ac_connected,
 		           &percent, 
 		           &remaining) >= 2)
 		{
@@ -294,7 +296,7 @@ gboolean islearning = FALSE;
 			}
 			gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
 			
-			if ((remaining < 0) || (remaining > 5000))
+			if (ac_connected)
 				sprintf(tmp,"%s",_("AC connected"));
 			else
 				sprintf(tmp,"%s: %d min.",_("Lifetime"),remaining);

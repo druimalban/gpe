@@ -1,3 +1,7 @@
+
+2004-07-20	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* battery.c: Improved battery status display using APM.
+
 2004-07-01	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c, appmgr_setup.c: Applied several patches that fix hardcoded 
 	  pathes and gconf related breakage. Contributed by Jim Huang.
