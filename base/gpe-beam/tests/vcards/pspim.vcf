@@ -1,0 +1,19 @@
+BEGIN:VCARD
+VERSION:2.1
+N:Knudsen;Petter
+FN:Petter Knudsen
+TITLE:Student
+ORGNAME:NTNU
+TEL;CELL:12345667
+TEL;PAGER:1234567
+TEL;FAX:1234567
+TEL;WORK:+47 1234567
+EMAIL:paxanima@handheld.sorg
+LABEL;QUOTED-PRINTABLE:Some road=0ASomwhere=0ASome nation
+C:Norway
+X-PALM-CUSTOM;1;jall:Custom1
+X-PALM-CUSTOM;2;jall:Custom2
+X-PALM-CUSTOM;3;jall:Custom3
+X-PALM-CUSTOM;4;jall:Custom4
+END:VCARD
+
