@@ -52,8 +52,10 @@ autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (!strcmp (subsys, "net"))
     handle_net_message (message, &iter);
 
+#if 0
   if (!strcmp (subsys, "bluetooth"))
     handle_bluetooth_message (message, &iter);
+#endif
 }
 
 DBusHandlerResult
