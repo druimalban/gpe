@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Colin Marquardt <ipaq@marquardt-home.de>
+ * Copyright (C) 2002, 2003 Colin Marquardt <ipaq@marquardt-home.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@
 #include <X11/Xatom.h>
 
 static struct gpe_icon my_icons[] = {
-  { "login_bg", PREFIX "/share/pixmaps/gpe-default-bg.png" },
+  { "login_bg", PREFIX "/share/pixmaps/gpe-default-g.png" },
   { NULL, NULL }
 };
 
@@ -46,14 +46,15 @@ main (int argc, char *argv[])
   gpe_application_init (&argc, &argv);
 
   if (argc > 2) {
-    g_error ("gpe-setbg: Expecting at most 1 argument.");
+    fprintf (stderr, "%s: Expecting at most 1 argument.\n", argv[0]);
+    fprintf (stderr, "Usage: %s [gpe-icon-file]\n", argv[0]);
     exit (1);
   }
   if (argc == 2) {
     if (access (argv[1], R_OK) == 0) /* set file if given on the command line */
       my_icons[0].filename = g_strdup (argv[1]);
     else {
-      g_print ("gpe-setbg: ERROR: Could not read image file\n'%s'\n", argv[1]);
+      g_print ("%s: ERROR: Could not read image file\n'%s'\n", argv[0], argv[1]);
       exit (1);
     }
   }
@@ -63,7 +64,8 @@ main (int argc, char *argv[])
     exit (1);
   
   if (gpe_find_icon_pixmap ("login_bg", &pixmap, &bitmap)) {
-    g_print ("gpe-setbg: Setting background to pixmap %08x.\n", GDK_PIXMAP_XID (pixmap));
+    g_print ("%s: Setting background to pixmap %08x.\n",
+	     argv[0], (unsigned int)GDK_PIXMAP_XID (pixmap));
     gdk_window_set_back_pixmap (GDK_ROOT_PARENT (), pixmap, 0);
     set_xrootpmap_id (GDK_PIXMAP_XID (pixmap));
   }

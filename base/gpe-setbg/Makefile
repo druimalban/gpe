@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-setbg
+GTK2=yes
 DEBUG = yes
 CVSBUILD = yes
 

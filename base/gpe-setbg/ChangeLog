@@ -1,3 +1,10 @@
+2003-02-01  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (GTK2): Set GTK2=yes by default.
+
+	* gpe-setbg.c (main): Give usage info if wrong number of arguments
+	are given.
+
 2002-12-26  Philip Blundell  <philb@gnu.org>
 
 	* Makefile: Ship empty /etc/gpe since postinst needs it.
