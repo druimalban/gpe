@@ -31,14 +31,11 @@ static GdkBitmap *tick_bitmap, *box_bitmap;
 static guint ystep;
 static guint xcol = 18;
 
-GtkWidget *g_draw;
+static GtkWidget *g_draw;
 
 static GtkWidget *g_option;
-static GSList *display_items = NULL;
-
-static struct todo_category *selected_category = NULL;
-
-static void lists_menu (void);
+static GSList *display_items;
+static struct todo_category *selected_category;
 
 static void
 set_category (GtkWidget *w, gpointer user_data)
@@ -52,11 +49,17 @@ categories_menu (void)
 {
   GtkWidget *menu = gtk_menu_new ();
   GSList *l;
+  GtkWidget *i;
+
+  i = gtk_menu_item_new_with_label (_("*all*"));
+  gtk_menu_append (GTK_MENU (menu), i);
+  gtk_signal_connect (GTK_OBJECT (i), "activate", set_category, NULL);
+  gtk_widget_show (i);
 
   for (l = categories; l; l = l->next)
     {
       struct todo_category *t = l->data;
-      GtkWidget *i = gtk_menu_item_new_with_label (t->title);
+      i = gtk_menu_item_new_with_label (t->title);
       gtk_menu_append (GTK_MENU (menu), i);
       gtk_signal_connect (GTK_OBJECT (i), "activate", set_category, t);
       gtk_widget_show (i);
@@ -89,14 +92,14 @@ purge_completed (GtkWidget *w, gpointer list)
       iter = new_iter;
     }
   
-  gtk_widget_draw (g_draw, NULL);
+  refresh_items ();
 }
 
 static void
-show_hide_completed(GtkWidget *w, gpointer list)
+show_hide_completed (GtkWidget *w, gpointer list)
 {
   hide = ! hide;
-  gtk_widget_draw (g_draw, NULL);
+  refresh_items ();
 }
 
 static gint
@@ -181,7 +184,7 @@ draw_expose_event (GtkWidget *widget,
 	      gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
 			       2, 0, 2, y - skew, 14, 14);
 	      i->pos=y/ystep;
-	       y += ystep;
+	      y += ystep;
 	    }
 	}
     }
@@ -282,29 +285,29 @@ top_level (GtkWidget *window)
   pw = gpe_render_icon (window->style, gpe_find_icon ("properties"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Configure"), 
-			   _("Configure lists"), 
-			   _("Configure lists"),
+			   _("Configure categories"), 
+			   _("Configure categories"),
 			   pw, configure, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("clean"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Purge completed"), 
-			   _("Purge completed"), 
-			   _("Purge completed"),
+			   _("Purge"), 
+			   _("Purge completed items"), 
+			   _("Purge completed items"),
 			   pw, purge_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("hide"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Show/Hide completed"), 
-			   _("Show/Hide completed"), 
-			   _("Show/Hide completed"),
+			   _("Show/Hide"), 
+			   _("Show/Hide completed items"), 
+			   _("Show/Hide completed items"),
 			   pw, show_hide_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 
 			   _("Exit"), 
-			   _("Exit"), 
-			   _("Exit"),
+			   _("Exit the program"), 
+			   _("Exit the program"),
 			   pw, gtk_exit, NULL);
 
   gtk_widget_show (toolbar);

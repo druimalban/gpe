@@ -65,9 +65,9 @@ click_delete (GtkWidget *widget,
   
   if (t->item)
     delete_item (t->item);
-  
-  gtk_widget_draw (g_draw, NULL);
 
+  refresh_items ();
+  
   gtk_widget_hide (window);
   gtk_widget_destroy (window);
 }
@@ -122,8 +122,6 @@ click_ok(GtkWidget *widget,
 
   refresh_items ();
 
-  gtk_widget_draw (g_draw, NULL);
-
   gtk_widget_hide (window);
   gtk_widget_destroy (window);
 }
@@ -166,7 +164,8 @@ edit_item (struct todo_item *item)
   GtkWidget *frame_details = gtk_frame_new (_("Details"));
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
-  struct edit_todo *t = g_malloc(sizeof(struct edit_todo));
+  GtkWidget *frame_categories;
+  struct edit_todo *t = g_malloc (sizeof (struct edit_todo));
 
   const char *state_strings[] = { _("Not started"), _("In progress"),
 				  _("Completed") };
@@ -192,10 +191,28 @@ edit_item (struct todo_item *item)
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
 
+  if (categories)
+    {
+      GtkWidget *vbox, *sw;
+      GSList *iter;
+      frame_categories = gtk_frame_new (_("Categories:"));
+      vbox = gtk_vbox_new (FALSE, 0);
+      for (iter = categories; iter; iter = iter->next)
+	{
+	  struct todo_category *c = iter->data;
+	  GtkWidget *w = gtk_check_button_new_with_label (c->title);
+	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+	}
+      sw = gtk_scrolled_window_new (NULL, NULL);
+      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+				      GTK_POLICY_NEVER,
+				      GTK_POLICY_AUTOMATIC);
+      gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
+      gtk_container_add (GTK_CONTAINER (frame_categories), sw);
+    }
+
   t->item = item;
   
-  gtk_widget_set_usize (window, 240, 320);
-
   gtk_widget_set_usize (state, -1, state->style->font->ascent + 
 			state->style->font->descent + 4);
 
@@ -225,6 +242,8 @@ edit_item (struct todo_item *item)
   gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
+  if (categories)
+    gtk_box_pack_start (GTK_BOX (vbox), frame_categories, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
 
