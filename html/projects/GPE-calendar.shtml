@@ -36,7 +36,7 @@ the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">un
 <IMG SRC="/images/calendar-day.png" ALT="Single-day view">
 <IMG SRC="/images/calendar-week.png" ALT="Week view">
 <IMG SRC="/images/calendar-month.png" ALT="Month view">
-<IMG SRC="/images/cotidie-appt.png" ALT="New appointment entry">
+<IMG SRC="/images/calendar-event.png" ALT="New appointment entry">
 </P>
 
 <!--#include virtual="/includes/foot.shtml"-->
