@@ -13,7 +13,7 @@
 #include "gtkgpepixmap.h"
 #include "render.h"
 
-static void
+void
 gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 		  GdkBitmap **bitmap)
 {
