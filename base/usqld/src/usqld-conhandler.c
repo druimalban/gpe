@@ -87,7 +87,7 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
     reply = usqld_error_packet(SQLITE_CANTOPEN,errmsg);
     goto connect_send_reply;
   }
-
+  sqlite_busy_timeout(tc->db,101);
   tc->database_name = strdup(database);
   /*we are set*/
   reply = usqld_ok_packet();
@@ -289,7 +289,7 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
       break;
     case PICKLE_QUERY: 
       resp_rv = usqld_do_query(&tc,p);
-      break;
+      break; 
     default:
       {
 	fprintf(stderr,"unsupported packet type %d\n",
@@ -302,6 +302,7 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
       break;
     }
   }
+
   if(rv!=USQLD_OK){
     fprintf(stderr,"error %d while demarshalling request\n",rv);
   }

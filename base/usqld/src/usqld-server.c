@@ -54,13 +54,13 @@ int main(int argc, char * argv[])
    
 	
    if(!database_dir)
-     database_dir = "/tmp/";
+     database_dir = USQLD_DATABASE_DIR;
 
    printf("single-thread mode is :%s\n",(single_thread?"on":"off"));
    printf("database directory is:%s\n",database_dir);
 
    conf = XDR_malloc(usqld_config);
-   conf->db_base_dir = strdup("/tmp/");
+   conf->db_base_dir = strdup(database_dir);
    
    if(-1==(ssock_fd = socket(PF_INET,SOCK_STREAM,0)))
      {

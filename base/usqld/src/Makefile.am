@@ -2,7 +2,7 @@ lib_LTLIBRARIES=libusqld.la
 bin_PROGRAMS=usqld 
 INCLUDES= -I../xdr/
 LDFLAGS=-L../xdr/
-CFLAGS=-Os -g -Wall 
+CFLAGS=-g -Wall 
 
 usqld_LDADD=-lxdr -lpthread -lsqlite -lpopt
 

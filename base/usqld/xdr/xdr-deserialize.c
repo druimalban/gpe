@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
@@ -26,7 +27,7 @@ XDR_deserialize_elem (XDR_schema * s, int fd, XDR_tree ** out_t)
     case XDR_FLOAT:
       {
 	XDR_tree_simple *t;
-	if (-1 == read (fd, buf, 4))
+	if (-1 == recv(fd, buf, 4,MSG_WAITALL))
 	  return XDR_IO_ERROR;
 	XDR_tree_new_simple (s->type, &t);
 	t->val.uintVal = ntohl (*((u_int32_t *) buf));
@@ -46,7 +47,7 @@ XDR_deserialize_elem (XDR_schema * s, int fd, XDR_tree ** out_t)
 	size_t slen = 0;
 	unsigned char *data = NULL;
 
-	if (-1 == read (fd, buf, 4))
+	if (-1 == recv (fd, buf, 4,MSG_WAITALL))
 	  return XDR_IO_ERROR;
 
 	slen = ntohl (*((u_int32_t *) buf));
@@ -60,7 +61,7 @@ XDR_deserialize_elem (XDR_schema * s, int fd, XDR_tree ** out_t)
 
 	while (slen)
 	  {
-	    if (-1 == read (fd, buf, 4))
+	    if (-1 == recv (fd, buf, 4,MSG_WAITALL))
 	      return XDR_IO_ERROR;
 	    if (slen < 4)
 	      {
@@ -88,7 +89,7 @@ XDR_deserialize_elem (XDR_schema * s, int fd, XDR_tree ** out_t)
 
 	if (s->type == XDR_VARARRAY)
 	  {
-	    if (-1 == read (fd, buf, 4))
+	    if (-1 == recv (fd, buf, 4,MSG_WAITALL))
 	      return XDR_IO_ERROR;
 
 	    len = ntohl (*((int *) buf));
@@ -149,7 +150,7 @@ XDR_deserialize_elem (XDR_schema * s, int fd, XDR_tree ** out_t)
 	XDR_schema *d_t = NULL;
 	XDR_tree_compound *t = NULL;
 	XDR_tree_simple *disc = NULL;
-	if (-1 == read (fd, buf, 4))
+	if (-1 == recv (fd, buf, 4,MSG_WAITALL))
 	  return XDR_IO_ERROR;
 
 	d_val = ntohl (*((int *) buf));
