@@ -14,11 +14,12 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <string.h>
-
-#include <gtk/gtk.h>
 #include <libintl.h>
 #include <langinfo.h>
 #include <ctype.h>
+
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 #include <gpe/tray.h>
 #include <gpe/init.h>
@@ -29,6 +30,9 @@
 #include <gpe/gpetimesel.h>
 #include <gpe/gpeclockface.h>
 #include <gpe/schedule.h>
+#include <gpe/launch.h>
+
+Display *dpy;
 
 GtkWidget *panel_window, *time_label, *face, *menu;
 GtkObject *hour_adj, *minute_adj;
@@ -43,6 +47,9 @@ static gchar *alarm_file, *prefs_file;
 
 static gboolean show_seconds;
 static int format = FORMAT_ANALOGUE;
+
+gboolean prefs_window_open;
+gboolean alarm_window_open;
 
 #define SHORT_TERM_ALARMS
 
@@ -429,10 +436,16 @@ click_ok (GtkWidget *w, GtkWidget *window)
 }
 
 static void
+note_closed (GtkWidget *widget, gboolean *false)
+{
+  *false = FALSE;
+}
+
+static void
 prefs_window (GtkWidget *w, GtkWidget *time_label)
 {
-  GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
+  GtkWidget *window;
+  GtkWidget *ok_button;
   GtkWidget *format_12_button;
   GtkWidget *format_24_button;
   GtkWidget *format_analogue_button;
@@ -441,6 +454,19 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
 #endif
   GSList    *radiogroup;
   int spacing = gpe_get_boxspacing ();
+
+  if (prefs_window_open)
+    return;
+
+  prefs_window_open = TRUE;
+
+  window = gtk_dialog_new ();
+
+  gtk_window_set_default_size (GTK_WINDOW (window), 200, 150);
+  
+  g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (note_closed), &prefs_window_open);
+
+  ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
   gtk_window_set_title (GTK_WINDOW (window), _("Clock preferences"));
 
@@ -487,11 +513,18 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
 static void
 set_time_window (void)
 {
-  if (fork () == 0)
+  static const gchar *cmd = "gpe-conf time";
+  Window w;
+
+  w = gpe_launch_get_window_for_binary (dpy, cmd);
+  if (w)
     {
-      execlp ("gpe-conf", "gpe-conf", "time", NULL);
-      gpe_perror_box ("gpe-conf");
-      _exit (1);
+      gpe_launch_activate_window (dpy, w);
+    }
+  else if (! gpe_launch_startup_is_pending (dpy, cmd))
+    {
+      gpe_popup_infoprint (dpy, "Starting Time Setup");
+      gpe_launch_program_with_callback (dpy, cmd, cmd, TRUE, NULL, NULL);
     }
 }
 
@@ -569,7 +602,7 @@ static void
 alarm_window (void)
 {
   GtkWidget *ok_button, *cancel_button;
-  GtkWidget *time_label = gtk_label_new (_("Time:"));
+  GtkWidget *time_label;
   GtkWidget *date_hbox;
   GtkWidget *time_hbox;
   GtkWidget *weeklytable;
@@ -580,10 +613,17 @@ alarm_window (void)
   int i;
   struct alarm_context *ctx;
 
+  if (alarm_window_open)
+    return;
+
+  time_label = gtk_label_new (_("Time:"));
+
   spacing = gpe_get_boxspacing ();
   ctx = g_malloc0 (sizeof (struct alarm_context));
 
   ctx->window = gtk_dialog_new ();
+  g_signal_connect (G_OBJECT (ctx->window), "destroy", G_CALLBACK (note_closed), &alarm_window_open);
+
   gtk_window_set_title (GTK_WINDOW (ctx->window), _("Set alarm"));
   gtk_container_set_border_width (GTK_CONTAINER (ctx->window), gpe_get_border ());
 
@@ -872,7 +912,8 @@ main (int argc, char *argv[])
   gtk_window_resize (GTK_WINDOW (panel_window), panel_window->allocation.width, panel_window->allocation.height);
   if (format == FORMAT_ANALOGUE)
     gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
-  
+
+  dpy = GDK_WINDOW_XDISPLAY (panel_window->window);
   gpe_system_tray_dock (panel_window->window);
 
   tooltips = gtk_tooltips_new ();

@@ -20,14 +20,14 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 ifeq ($(CVSBUILD),yes)
-PACKAGE_CFLAGS += -I../libschedule 
-PACKAGE_LDFLAGS += -L../libschedule 
+PACKAGE_CFLAGS += -I../libschedule -I../libgpelaunch
+PACKAGE_LDFLAGS += -L../libschedule -L../libgpelaunch/.libs
 BUILD = ../build
 else
 BUILD = build
 endif
 
-PACKAGE_LDFLAGS += -lschedule
+PACKAGE_LDFLAGS += -lschedule -lgpelaunch
 
 all: $(PACKAGE)
 
