@@ -1150,7 +1150,6 @@ button_clicked (GtkWidget *widget, gpointer udata)
 {
   GnomeVFSMimeApplication *default_mime_application;
   FileInformation *file_info;
-  pid_t pid;
     
   file_info = (FileInformation *) udata;
 
@@ -1194,21 +1193,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
           default_mime_application = gnome_vfs_mime_get_default_application (file_info->vfs->mime_type);
           if (default_mime_application != NULL)
           {
-			pid = fork();
-			switch (pid)
-			{
-				case -1: 
-					return; /* failed */
-				break;
-				case  0: 
-				  if (default_mime_application->requires_terminal)
-					execlp(DEFAULT_TERMINAL,DEFAULT_TERMINAL,default_mime_application->command,file_info->filename);
-				  else
-					execlp(default_mime_application->command,default_mime_application->command,file_info->filename,NULL);
-				break;
-				default: 
-				break;
-			} 
+            open_with(default_mime_application, file_info);
           }
           else
             ask_open_with (file_info);
