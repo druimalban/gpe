@@ -245,7 +245,7 @@ char query[128];
 	sprintf(query,"select * from %s",entry);
 	DBEntryCList=lookup_widget(GPE_DB_Main, "EntryCList");
 	if (DBEntryCList == NULL) {
-		g_print("EntryCList not found!¸n");
+		g_print("EntryCList not found!\n");
 		return;
 	}
 	gtk_clist_freeze(GTK_CLIST(DBEntryCList));

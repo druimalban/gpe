@@ -13,5 +13,5 @@ gpe_db_SOURCES = \
 	callbacks.c callbacks.h \
 	db-funcs.c db-funcs.h
 
-gpe_db_LDADD = @GTK_LIBS@ $(INTLLIBS) -lsqlite
+gpe_db_LDADD = -L../../libgpewidget -lgpewidget @GTK_LIBS@ $(INTLLIBS) -lsqlite
 

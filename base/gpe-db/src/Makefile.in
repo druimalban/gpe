@@ -96,7 +96,7 @@ bin_PROGRAMS = gpe-db
 gpe_db_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h 	db-funcs.c db-funcs.h
 
 
-gpe_db_LDADD = @GTK_LIBS@ $(INTLLIBS) -lsqlite
+gpe_db_LDADD = -L../../libgpewidget -lgpewidget @GTK_LIBS@ $(INTLLIBS) -lsqlite
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
