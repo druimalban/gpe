@@ -1,3 +1,19 @@
+2004-01-19  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.22 released.
+	
+2004-01-19  Philip Blundell  <philb@gnu.org>
+
+	* pin-ui.c: Implement as GObject interface.
+	* pin-ui.h: New file.
+
+	* main.c, pin-dbus.c: Keep in step.
+
+2004-01-19  Philip Blundell  <philb@gnu.org>
+
+	* pin-dbus.c: Update for D-BUS 0.20.
+	* main.c: Likewise.
+
 2003-10-26  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.21 released.

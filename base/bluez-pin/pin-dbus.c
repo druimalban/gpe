@@ -24,6 +24,12 @@
 
 #include <bluetooth/bluetooth.h>
 
+#include "pin-ui.h"
+
+#define PATH_NAME "/org/handhelds/gpe/bluez"
+#define INTERFACE_NAME "org.handhelds.gpe.bluez"
+#define METHOD_NAME "PinRequest"
+
 #define WRONG_ARGS_ERROR "org.handhelds.gpe.bluez.Error.WrongArgs"
 
 struct pin_request_context
@@ -44,61 +50,71 @@ bluez_pin_send_dbus_reply (DBusConnection *connection, DBusMessage *message, con
     dbus_message_iter_append_string (&iter, pin);
 
   dbus_connection_send (connection, message, NULL);
+
+  dbus_message_unref (message);
 }
 
 void
-bluez_pin_response (struct pin_request_context *ctx, const char *pin)
+dbus_pin_result (BluetoothPinRequest *req, gchar *result, void *user_data)
 {
-  bluez_pin_send_dbus_reply (ctx->connection, ctx->message, pin);
+  struct pin_request_context *ctx = user_data;
+
+  bluez_pin_send_dbus_reply (ctx->connection, ctx->message, result);
 
   g_free (ctx);
+
+  g_object_unref (req);
 }
 
-void
+DBusHandlerResult
 bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
 {
   DBusMessageIter iter;
   gboolean out;
   bdaddr_t bdaddr, sbdaddr;
   int type;
-  int i;
   char *address;
   DBusMessage *reply;
   struct pin_request_context *ctx;
-  DBusError error;
+  unsigned char *bytes;
+  int nbytes;
+  BluetoothPinRequest *req;
 
-  dbus_error_init (&error);
   dbus_message_iter_init (message, &iter);
  
   type = dbus_message_iter_get_arg_type (&iter);
   if (type != DBUS_TYPE_BOOLEAN)
   {
-    reply = dbus_message_new_error_reply (message, WRONG_ARGS_ERROR,
-		    			  "Boolean expected, other type given");
+    reply = dbus_message_new_error (message, WRONG_ARGS_ERROR,
+				    "Boolean expected, other type given");
     goto error;
   }
 
   out = dbus_message_iter_get_boolean (&iter);
 
-  for (i = 0; i < sizeof (bdaddr); i++)
+  if (! dbus_message_iter_next (&iter))
     {
-      unsigned char *p = (unsigned char *)&bdaddr;
-
-      if (! dbus_message_iter_next (&iter))
-	goto error;
-
-      type = dbus_message_iter_get_arg_type (&iter);
-      if (type != DBUS_TYPE_BYTE)
-      {
-        reply = dbus_message_new_error_reply (message, WRONG_ARGS_ERROR,
-					      "Byte type expected, other type given");
-	goto error;
-      }
-
-      p[i] = dbus_message_iter_get_byte (&iter);
+      reply = dbus_message_new_error (message, WRONG_ARGS_ERROR,
+				      "Byte array expected but missing");
+      goto error;
     }
 
-  reply = dbus_message_new_reply (message);
+  type = dbus_message_iter_get_arg_type (&iter);
+
+  if (type != DBUS_TYPE_ARRAY
+      || ! dbus_message_iter_get_byte_array (&iter, &bytes, &nbytes)
+      || nbytes != sizeof (bdaddr))
+  {
+    reply = dbus_message_new_error (message, WRONG_ARGS_ERROR,
+				    "Byte array expected, other type given");
+    goto error;
+  }
+
+  memcpy (&bdaddr, bytes, sizeof (bdaddr));
+
+  reply = dbus_message_new_method_return (message);
+  if (!reply)
+    return DBUS_HANDLER_RESULT_NEED_MEMORY;
 
   ctx = g_malloc (sizeof (*ctx));
   ctx->message = reply;
@@ -107,10 +123,16 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
   baswap (&sbdaddr, &bdaddr);
   address = batostr (&sbdaddr);
 
-  bluez_pin_request (ctx, out, address, NULL);
+  req = bluetooth_pin_request_new (out, address, NULL);
 
-  return;
+  g_signal_connect (G_OBJECT (req), "result", G_CALLBACK (dbus_pin_result), ctx);
+
+  return DBUS_HANDLER_RESULT_HANDLED;
 
  error:
   dbus_connection_send (connection, reply, NULL);
+
+  dbus_message_unref (reply);
+
+  return DBUS_HANDLER_RESULT_HANDLED;
 }

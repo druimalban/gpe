@@ -1,3 +1,16 @@
+bluez-pin (0.21-3) unstable; urgency=low
+
+  * Install dbus config file to correct location, courtesy Dagfinn 
+    Ilmari (Closes: #220516)
+
+ -- Philip Blundell <pb@handhelds.org>  Thu, 15 Jan 2004 19:55:49 +0000
+
+bluez-pin (0.21-2) unstable; urgency=low
+
+  * Add missing build-depends on libgconf2-dev; closes: #217639
+
+ -- Philip Blundell <pb@nexus.co.uk>  Sun, 26 Oct 2003 14:14:27 +0000
+
 bluez-pin (0.21-1) unstable; urgency=low
 
   * New upstream release.
