@@ -1636,6 +1636,8 @@ void gui_init(){
   //main page
   vbox = gtk_vbox_new (FALSE, 0);
 
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
   {
     GtkWidget * status;
     status = gtk_statusbar_new();
@@ -1645,8 +1647,6 @@ void gui_init(){
     gtk_statusbar_push(GTK_STATUSBAR(status), 0, "let's go!");
 
   }
-  gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
 
   //
   widget = gtk_notebook_new();
