@@ -82,3 +82,40 @@
     icon48=/usr/share/pixmaps/gpe-config-users.png \
     section=Configuration/gpe-config
 
+?package(gpe-conf): \
+    needs=x11 \
+    title="PC/CF Cards" \
+    command="gpe-conf cardinfo" \
+    icon48=/usr/share/pixmaps/gpe-config-cardinfo.png \
+    section=Configuration/gpe-config
+
+?package(gpe-conf): \
+    needs=x11 \
+    title="Storage Information" \
+    command="gpe-conf storage" \
+    icon48=/usr/share/pixmaps/gpe-config-storage.png \
+    section=Configuration/gpe-config
+
+?package(gpe-conf): \
+    needs=x11 \
+    title="Serial Port" \
+    command="gpe-conf serial" \
+    icon48=/usr/share/pixmaps/gpe-config-serial.png \
+    section=Configuration/gpe-config
+
+?package(gpe-conf): \
+    needs=x11 \
+    title="Global Config" \
+    command="gpe-conf admin" \
+    icon48=/usr/share/pixmaps/gpe-config-admin.png \
+    section=Configuration/gpe-config
+
+?package(gpe-conf): \
+    needs=x11 \
+    title="Update Manager" \
+    command="gpe-conf packages" \
+    icon48=/usr/share/pixmaps/gpe-config-packages.png \
+    section=Configuration/gpe-config
+
+
+

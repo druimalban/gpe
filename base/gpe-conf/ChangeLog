@@ -1,5 +1,8 @@
 When			Who				Where						What
 
+06.04.2003		Florian			gpe-conf.menu_tmp			Updated menu file, version info.
+								control1
+
 06.04.2003		Florian			timeanddate.c				Fixed bug causing applet to segfault.
 								Makefile					Added default config file.
 								gpe-conf.config				Fixed storage bar color bug. (red if started as user)
