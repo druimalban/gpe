@@ -1,0 +1,4 @@
+#!/bin/sh
+for i in /etc/menu-methods/*; do
+	$i
+done
