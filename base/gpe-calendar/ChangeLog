@@ -1,3 +1,8 @@
+2002-11-29  Philip Blundell  <philb@gnu.org>
+
+	* day_view.c (selection_made): Set viewtime when a row is single
+	clicked.
+
 2002-10-17  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.25 released.

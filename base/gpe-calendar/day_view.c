@@ -75,7 +75,7 @@ format_event (event_t ev)
 }
 
 static void 
-selection_made( GtkWidget      *clist,
+selection_made (GtkWidget      *clist,
 		gint            row,
 		gint            column,
 		GdkEventButton *event,
@@ -101,6 +101,16 @@ selection_made( GtkWidget      *clist,
 	  strptime (t, TIMEFMT, &tm);
 	  gtk_widget_show (new_event (mktime (&tm), 1));
 	}
+    }
+  else if (event->type == GDK_BUTTON_RELEASE)
+    {
+      // set the default event time to match the selected row
+      struct tm tm;
+      char *t;
+      gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t);
+      localtime_r (&viewtime, &tm);
+      strptime (t, TIMEFMT, &tm);
+      viewtime = mktime (&tm);
     }
 }
 
