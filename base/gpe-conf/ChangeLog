@@ -1,3 +1,7 @@
+2005-02-27	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* theme.c: Changed default.
+	
 2005-02-25	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* keyctl.c: Implemeting configurable buttons (continued).

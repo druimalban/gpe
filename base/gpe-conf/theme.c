@@ -1576,7 +1576,7 @@ Theme_Build_Objects ()
 
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSTerminal), 
                             get_terminal_fontsize());
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance), TRUE);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance), FALSE);
   mb_start_xsettings ();
 
   return notebook;
