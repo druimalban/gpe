@@ -2,16 +2,34 @@
 <!--#set var="pagename" value="cvs"-->
 <!--#include virtual="includes/head.shtml"-->
 
-<H2>Acessing the GPE CVS repository</H2>
+<H2>Accessing the GPE CVS repository</H2>
 <P>
-For a more detailed description about how to use Handhelds.org CVS please see
+For a more detailed description about how to use handhelds.org CVS please see
 <a href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
-here.</a>
+here</a>.
 </P>
 <P>
-The GPE CVSROOT is: <b>/cvs/gpe</b>, not <b>/cvs</b> as used in the examples.
-You can watch the CVS repository directly by follwing
+You can watch the CVS repository directly by following
 <A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">this link</A>.
 </P>
+<p>
+In short, if you are not (yet?) a developer, you do the following:
+   <pre>
+      bash$ cd gpe_cvs
+      bash$ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
+      bash$ cvs login
+      Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
+      CVS Password: anoncvs
+      bash$ cvs checkout gpe
+   </pre>
+
+You only have to do this one time. The next time you want to update
+your CVS, do:
+   <pre>
+      bash$ cd gpe_cvs
+      bash$ cvs up
+   </pre>
+
+</p>
 
 <!--#include virtual="includes/foot.shtml"-->
