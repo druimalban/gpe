@@ -37,6 +37,9 @@ else
 LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
 endif
 
+CFLAGS += -I../libdm
+LDFLAGS += -L../libdm -ldm
+
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))

@@ -27,6 +27,8 @@
 #include <gpe/question.h>
 #include <gpe/gtkminifilesel.h>
 
+#include <libdm.h>
+
 #define WINDOW_NAME "Editor"
 #define _(_x) gettext (_x)
 
@@ -571,6 +573,10 @@ main (int argc, char *argv[])
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+
+  libdm_init ();
+
+  libdm_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 
