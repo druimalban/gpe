@@ -1,5 +1,7 @@
 2003-03-07  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile (.PHONY): Add dist-prep.
+
 	* gpe-ownerinfo.c (main): Drop root privileges (seteuid to
 	'nobody').
 

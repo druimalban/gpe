@@ -42,7 +42,7 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 CFLAGS += -MD
 
 .SUFFIXES: .d
-.PHONY: all-mo install-mo update-po extract-po clean-po translation-package dist ipkg dpkg printinfo tag
+.PHONY: all-mo install-mo update-po extract-po clean-po translation-package dist dist-prep ipkg dpkg printinfo tag
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
