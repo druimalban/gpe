@@ -38,6 +38,7 @@ static int base = 10;
 
 static gboolean display_volatile;
 static gboolean in_error;
+static char binop;
 
 void
 update_display (void)
@@ -100,8 +101,10 @@ val_to_display (void)
     {
       if (exp <= 40)
 	{
+	  int n;
 	  strcpy (buf, s);
-	  strncat (buf, "000000", exp - l);
+	  for (n = 0; n < (exp - l); n++)
+	    strcat (buf, "0");
 	}
       else
 	{
@@ -143,10 +146,15 @@ push_digit (GtkWidget *w, int n)
 }
 
 void
-clear (void)
+clear (gboolean all)
 {
   buf[0] = 0;
   update_display ();
+  if (all)
+    {
+      binop = 0;
+      mpf_clear (accum);
+    }
 }
 
 GtkWidget *
@@ -192,6 +200,103 @@ base_button (GtkWidget *box, char *string, int n)
   gtk_box_pack_start (GTK_BOX (box), w, FALSE, FALSE, 0);
 }
 
+void
+do_binop (GtkWidget *w, int op)
+{
+  binop = op;
+  display_to_val ();
+  mpf_set (accum, dv);
+  display_volatile = TRUE;
+}
+
+void
+do_clear (GtkWidget *w, int flag)
+{
+  clear (flag ? TRUE : FALSE);
+}
+
+void
+do_equals (GtkWidget *w)
+{
+  if (binop)
+    {
+      display_to_val ();
+      switch (binop)
+	{
+	case '+':
+	  mpf_add (dv, dv, accum);
+	  break;
+	case '-':
+	  mpf_sub (dv, accum, dv);
+	  break;
+	case '*':
+	  mpf_add (dv, dv, accum);
+	  break;
+	case '/':
+	  mpf_add (dv, accum, dv);
+	  break;
+	}
+      val_to_display ();
+      binop = 0;
+    }
+}
+
+struct
+{
+  char *str;
+  void *func;
+  int arg;
+} op_buttons[] = 
+  {
+    { NULL },
+    { NULL },
+    { "C", do_clear, 0 },
+    { "AC", do_clear, 1 },
+
+    { NULL },
+    { NULL },
+    { NULL },
+    { NULL },
+
+    { "+", do_binop, '+' },
+    { "-", do_binop, '-' },
+    { "*", do_binop, '*' },
+    { "/", do_binop, '/' },
+
+    { "." },
+    { "+/-" },
+    { NULL },
+    { "=", do_equals },
+  };
+
+void
+make_button (GtkWidget *table, char *str, int x, int y, void *func, int arg)
+{
+  if (str)
+    {
+      GtkWidget *w = gtk_button_new_with_label (str);
+      gtk_widget_set_usize (w, 32, 16);
+      gtk_table_attach_defaults (GTK_TABLE (table), w, x, x+1, y, y+1);
+      if (func)
+	gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (func), arg);
+      gtk_widget_show (w);
+    }
+}
+
+void
+build_ops (GtkWidget *table)
+{
+  int x, y;
+  for (y = 0; y < 4; y++)
+    {
+      for (x = 0; x < 4; x++)
+	{
+	  int n = x + (y * 4);
+	  make_button (table, op_buttons[n].str, x, y, op_buttons[n].func, op_buttons[n].arg);
+	}
+    }
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -204,6 +309,7 @@ main (int argc, char *argv[])
   Window xwindow;
   int x, y;
   GtkWidget *vbox_base;
+  GtkWidget *optable;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -225,6 +331,7 @@ main (int argc, char *argv[])
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox);
+  gtk_container_add (GTK_CONTAINER (window), vbox);
   display = gtk_label_new ("");
   gtk_widget_show (display);
   gtk_misc_set_alignment (GTK_MISC (display), 1.0, 0.5);
@@ -233,6 +340,7 @@ main (int argc, char *argv[])
   gtk_widget_show (table);
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
   for (y = 0; y < 4; y++)
     {
@@ -255,11 +363,12 @@ main (int argc, char *argv[])
   base_button (vbox_base, "bin", 2);
   gtk_box_pack_end (GTK_BOX (hbox), vbox_base, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  optable = gtk_table_new (4, 4, TRUE);
+  gtk_box_pack_start (GTK_BOX (hbox), optable, FALSE, FALSE, 4);
+  gtk_widget_show (optable);
+  build_ops (optable);
 
-  gtk_container_add (GTK_CONTAINER (window), vbox);
-
-  clear ();
+  clear (TRUE);
   mpf_init (dv);
   mpf_init (accum);
 
