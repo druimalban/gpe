@@ -1,3 +1,14 @@
+2004-04-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-flyer.tex: Use rcsinfo.sty, pull in all translations into
+	one document.
+
+	* gpe-flyer_de.tex, gpe-flyer_es.tex: Use rcsinfo.sty.
+
+2004-04-10  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-flyer_es.tex: Say "freedesktop.org X server", "OpenEmbedded".
+
 2004-04-09  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-flyer.tex, gpe-flyer_de.tex: freedesktop.org Xserver

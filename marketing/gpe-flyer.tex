@@ -1,10 +1,13 @@
+% search for "LANG" in this file in order to see how to use a
+% different language
+
 \pdfcompresslevel=9
 \NeedsTeXFormat{LaTeX2e}
 \documentclass[10pt,a4paper]{article}
 
 \usepackage[margin=0.8cm,noheadfoot,a4paper]{geometry}
 \usepackage{calc}
-\usepackage[english]{babel} % language support
+\usepackage[english,ngerman,spanish]{babel} % language support
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{ae}
@@ -13,6 +16,7 @@
 \usepackage{paralist}
 %\usepackage{eso-pic}
 \usepackage{graphicx}
+\usepackage{rcsinfo}
 
 \usepackage{hyperref}
 \hypersetup {
@@ -29,6 +33,7 @@
 % accompanying wiki page: http://handhelds.org/z/wiki/GPEMarketing
 
 \newcommand{\flyertext}{%
+\rcsInfo $Id$
 %\AddToShipoutPicture{%
 %\includegraphics[width=\textwidth/2-1cm]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}}
 \textbf{\large
@@ -69,7 +74,7 @@ for handhelds«.
 \textbf{Technology}
 \begin{compactitem}
    \item X Window System{\texttrademark}{} server with Render and
-     Resize/Rotate extension (e.\,g. freedesktop.org Xserver, kdrive)
+     Resize/Rotate extension (e.\,g. freedesktop.org X server, kdrive)
    \item fontconfig
    \item XFT2 with subpixel anti-aliased font support
    \item GTK+~2.2, featuring bidirectional text, display migration
@@ -86,17 +91,13 @@ for handhelds«.
 \end{compactitem}
 
 \smallskip
-\textit{Users and developers welcome!}\hfill\tiny{\$Revision: 1.7}
+\textit{Users and developers welcome!}%
+\hfill\tiny{\rcsInfoRevision, \rcsInfoYear-\rcsInfoMonth-\rcsInfoDay}
 }
 
 % ------------------------------------------------------------------------------
 
 \begin{document}
-
-
-%% input another language file (that is using \renewcommand{\flyertext})
-%\input{gpe-flyer_es}
-
 
 \thispagestyle{empty}
 \pagestyle{empty}
@@ -116,6 +117,34 @@ for handhelds«.
 %     \flyertext{} & & \flyertext{} & & \flyertext{}  
 %   \end{tabular}
 % \end{table}
+
+\clearpage
+%% input another language file (that is using \renewcommand{\flyertext})
+\input{gpe-flyer_de}
+
+\RaggedRight
+\begin{table}
+  \begin{tabular}{p{\textwidth/2-1cm}p{1cm}p{\textwidth/2-1cm}}%
+    \flyertext{} & & \flyertext{}\\[1cm]
+    \flyertext{} & & \flyertext{}
+%    \\\vspace{1cm}%
+  \end{tabular}
+\end{table}
+
+\clearpage
+%% input another language file (that is using \renewcommand{\flyertext})
+\input{gpe-flyer_es}
+
+\RaggedRight
+\begin{table}
+  \begin{tabular}{p{\textwidth/2-1cm}p{1cm}p{\textwidth/2-1cm}}%
+    \flyertext{} & & \flyertext{}\\[1cm]
+    \flyertext{} & & \flyertext{}
+%    \\\vspace{1cm}%
+  \end{tabular}
+\end{table}
+
+
 \end{document}
 
 
