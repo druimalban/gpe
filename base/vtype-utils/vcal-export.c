@@ -44,7 +44,7 @@ db_open(void)
 }
 
 int
-read_tags (void *ignore, int argc, char *argv[], void *data)
+read_tags (void *data, int argc, char *argv[], char *ignore[])
 {
   GSList **tags = (GSList **)data;
 
@@ -59,10 +59,15 @@ export_one_vcal (int uid)
   MIMEDirVCal *vcal;
   MIMEDirVEvent *vevent;
   gchar *str;
+  char *err = NULL;
   GSList *tags = NULL;
 
-  sqlite_exec_printf (db, "select tag,value from calendar where uid=%d", read_tags, &tags, NULL,
-		      uid);  
+  if (sqlite_exec_printf (db, "select tag,value from calendar where uid=%d", read_tags, &tags, &err,
+			  uid) != SQLITE_OK)
+    {
+      printf ("%s\n", err);
+      exit (1);
+    }
 
   vcal = mimedir_vcal_new ();
   vevent = vevent_from_tags (tags);
