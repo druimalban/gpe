@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.05
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2
+Depends: libgtk1.2, libgdk-pixbuf2
 Description: Common widget set for GPE
