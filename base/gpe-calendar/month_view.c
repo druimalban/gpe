@@ -35,6 +35,37 @@ struct render_ctl
 
 static struct render_ctl rc[35];
 
+static gboolean
+button_press(GtkWidget *widget,
+	      GdkEventButton *event,
+	      gpointer d)
+{
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      guint x = event->x;
+      guint y = event->y;
+      struct render_ctl *c;
+
+      x -= xp;
+      x /= xs;
+      
+      y /= ys;
+      y -= 1;
+      
+      c = &rc[x + (y * 7)];
+      if (c->valid)
+	{
+	  struct tm tm;
+	  localtime_r (&viewtime, &tm);
+	  tm.tm_mday = c->nr;
+	  viewtime = mktime (&tm);
+	  set_day_view ();
+	}
+    }
+
+  return TRUE;
+}
+
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEventExpose *event,
@@ -97,7 +128,8 @@ draw_expose_event (GtkWidget *widget,
 	      char buf[10];
 	      guint w;
 	      
-	      gdk_draw_rectangle (drawable, white_gc, TRUE,
+	      gdk_draw_rectangle (drawable, c->events ? gray_gc : white_gc, 
+				  TRUE,
 				  x, y, xs, ys);
 	      
 	      gdk_draw_rectangle (drawable, black_gc, FALSE,
@@ -250,6 +282,11 @@ month_view(void)
 
   gtk_signal_connect(GTK_OBJECT (draw), "size-allocate",
 		     GTK_SIGNAL_FUNC (resize_table), NULL);
+
+  gtk_signal_connect(GTK_OBJECT (draw), "button-press-event",
+		     GTK_SIGNAL_FUNC (button_press), NULL);
+
+  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK);
 
   gtk_signal_connect(GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), NULL);
