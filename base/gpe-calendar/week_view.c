@@ -77,6 +77,13 @@ draw_expose_event (GtkWidget *widget,
 
   for (day = 0; day < 7; day++)
     {
+      GSList *iter;
+      for (iter = week_days[day].events; iter; iter = iter->next)
+	((event_t)iter->data)->mark = FALSE;
+    }
+
+  for (day = 0; day < 7; day++)
+    {
       guint x, y = week_days[day].y;
       GSList *iter;
 
@@ -105,10 +112,19 @@ draw_expose_event (GtkWidget *widget,
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
 	      size_t s = sizeof (buf), l;
-	      localtime_r (&ev->start, &tm);
-	      l = strftime (p, s, TIMEFMT, &tm);
-	      s -= l;
-	      p += l;
+	      if (ev->mark)
+		{
+		  p = stpcpy (p, _("(contd...) "));
+		  s -= (p - buf);
+		}
+	      else
+		{
+		  localtime_r (&ev->start, &tm);
+		  l = strftime (p, s, TIMEFMT, &tm);
+		  s -= l;
+		  p += l;
+		  ev->mark = TRUE;
+		}
 	      snprintf (p, s - 1, " %s", evd->summary);
 	      p[s - 1] = 0;
 	      
