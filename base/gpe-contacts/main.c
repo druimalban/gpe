@@ -417,7 +417,8 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   if (gn) g_free(gn);
   if (fn) g_free(fn);
     
-/*  if ...
+/* alternate method if nothing found 
+  if ...
     
   else
     {
@@ -546,28 +547,32 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
   GtkTreePath *path;
   
   if (k->keyval == GDK_Up)
-  {
-    gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
-    if (path) 
-      gtk_tree_path_prev(path);
-    else
-      path = gtk_tree_path_new_first();
-    gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
-    gtk_tree_path_free(path);
-    return TRUE;
-  }
+    {
+      gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
+      if (path) 
+        gtk_tree_path_prev(path);
+      else
+        path = gtk_tree_path_new_first();
+      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
+      gtk_tree_path_free(path);
+      return TRUE;
+    }
   if (k->keyval == GDK_Down)
-  {
-    gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
-    if (path)
-      gtk_tree_path_next(path);
-    else
-      path = gtk_tree_path_new_first();
-    gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
-    gtk_tree_path_free(path);
-    return TRUE;
-  }
-  
+    {
+      gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
+      if (path)
+        gtk_tree_path_next(path);
+      else
+        path = gtk_tree_path_new_first();
+      gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
+      gtk_tree_path_free(path);
+      return TRUE;
+    }
+
+  if (k->keyval == GDK_Return)
+    {
+      edit_contact(NULL, NULL);
+    }  
   return FALSE;
 }
 
@@ -699,6 +704,7 @@ create_main (gboolean show_config_button)
   GtkWidget *scrolled_window;
   gint size_x, size_y;
 
+  /* screen layout detection */
   size_x = gdk_screen_width();
   size_y = gdk_screen_height();  
   mode_large_screen = (size_x > 240) && (size_y > 320);
@@ -707,6 +713,8 @@ create_main (gboolean show_config_button)
   size_y /= 3;
   if (size_x < 240) size_x = 240;
   if (size_y < 320) size_y = 320;
+
+  /* main window */
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
   gtk_window_set_default_size (GTK_WINDOW (main_window), size_x, size_y);

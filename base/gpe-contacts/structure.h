@@ -30,6 +30,7 @@ struct edit_thing
   gchar *name;
   gchar *tag;
   GSList *children;
+  gboolean hidden;
   struct edit_thing *parent;
 };
 

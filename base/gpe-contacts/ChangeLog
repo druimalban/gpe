@@ -1,3 +1,11 @@
+2004-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * editing.c, *.xml, structure.c: Support for name detail fields hidden in 
+                                     main window.
+    * contacts-layout.xml: Fixed name field.
+    * editing.c: Support for multiple name fields.
+    * main.c: Run editor if return key is pressed.    
+
 2004-07-30  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: match_for_search(): Implemeted improved search algorithm.

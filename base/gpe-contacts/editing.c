@@ -55,21 +55,21 @@ add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
 }
 
 static void
-pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw)
+pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
 {
   if (list)
     {
       guint l = g_slist_length (list);
       GtkWidget *table = gtk_table_new (l, 2, FALSE);
       guint x = 0;
-      
+    
       while (list)
         {
           GSList *next = list->next;
           edit_thing_t e = list->data;
           GtkWidget *w = gtk_entry_new ();
           GtkWidget *l;
-        
+          
           add_tag (e->tag, w, pw);
           if (strcmp(e->tag,"NAME")) /* the name field on a button */
             {
@@ -100,12 +100,16 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw)
       gtk_table_set_col_spacings (GTK_TABLE (table), 2);
       gtk_container_set_border_width (GTK_CONTAINER (table), 2);
 
+      if (visible)
+        gtk_widget_show_all(table);
+      else
+        gtk_widget_hide_all(table);
       gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 4);
     }
 }
 
 static void
-build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
+build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visible)
 {
   GSList *child;
   GSList *singles = NULL;
@@ -121,20 +125,31 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           {
             gchar *markup = g_strdup_printf ("<b>%s</b>", e->name);
             w = gtk_label_new (NULL);
+            if (visible)
+              gtk_widget_show(w);
+            else
+              gtk_widget_hide(w);
             gtk_label_set_markup (GTK_LABEL (w), markup);
             gtk_misc_set_alignment (GTK_MISC (w), 0, 0.5);
             g_free (markup);
-            pop_singles (vbox, singles, pw);
+            pop_singles (vbox, singles, pw, visible);
             singles = NULL;
             gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
-            build_children (vbox, e->children, pw);
+            /* hidden group */
+            build_children (vbox, e->children, pw, !e->hidden);
+            if (e->hidden)
+              gtk_widget_hide(w);
           }
         break;
       
         case ITEM_MULTI_LINE:
-          pop_singles (vbox, singles, pw);
+          pop_singles (vbox, singles, pw, visible);
           singles = NULL;
           ww = gtk_text_view_new ();
+          if (visible)
+            gtk_widget_show(ww);
+          else
+            gtk_widget_hide(ww);
           gtk_text_view_set_editable (GTK_TEXT_VIEW (ww), TRUE);
           gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD);
           g_signal_connect(G_OBJECT(ww),"move_cursor",
@@ -148,6 +163,10 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           if (e->name)
             {
               w = gtk_frame_new (e->name);
+              if (visible)
+                gtk_widget_show(w);
+              else
+                gtk_widget_hide(w);
               gtk_container_add (GTK_CONTAINER (w), ww);
               gtk_container_set_border_width (GTK_CONTAINER (w), gpe_get_border());
             }
@@ -165,7 +184,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
         {
           GtkWidget *l = gtk_label_new (e->name);
           GtkWidget *hbox, *cbsched, *datecombo, *cbnoyear;
-          pop_singles (vbox, singles, pw);
+          pop_singles (vbox, singles, pw, visible);
           singles = NULL;
           
           hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
@@ -183,6 +202,10 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           g_signal_connect (G_OBJECT (cbnoyear), "toggled",
 		    G_CALLBACK (on_unknown_year_toggled), datecombo);
           g_object_set_data(G_OBJECT(datecombo),"cbnoyear",cbnoyear);
+          if (visible)
+            gtk_widget_show_all(hbox);
+          else
+            gtk_widget_hide_all(hbox);
           gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, gpe_get_boxspacing());
           add_tag (e->tag, datecombo, pw);
         }
@@ -191,7 +214,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
         {
           GtkWidget *l = gtk_label_new (e->name);
           GtkWidget *hbox, *image, *btn;
-          pop_singles (vbox, singles, pw);
+          pop_singles (vbox, singles, pw, visible);
           singles = NULL;
           
           hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
@@ -202,6 +225,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           image = gtk_image_new();
           gtk_container_add(GTK_CONTAINER(btn),image);
           gtk_box_pack_start (GTK_BOX (hbox), btn, TRUE, TRUE, 0);
+          gtk_widget_show_all(hbox);
           gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 
             gpe_get_boxspacing());
           g_signal_connect (G_OBJECT (btn), "clicked",
@@ -215,7 +239,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
       }
     }
 
-  pop_singles (vbox, singles, pw);
+  pop_singles (vbox, singles, pw, visible);
   singles = NULL;
 }
 
@@ -295,7 +319,7 @@ create_edit (void)
       gtk_box_pack_end (GTK_BOX (vbox), action_area, FALSE, FALSE, 0);
       gtk_container_add (GTK_CONTAINER (edit), vbox);
     }
-    
+  
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
   gpe_set_window_icon (edit, "icon");
 
@@ -350,6 +374,8 @@ edit_window (void)
   GtkWidget *book = lookup_widget (w, "notebook2");
   GSList *page;
 
+  gtk_widget_show_all(w);
+
   for (page = edit_pages; page; page = page->next)
     {
       edit_thing_t e = page->data;
@@ -359,13 +385,13 @@ edit_window (void)
 
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 2);
 
-      build_children (vbox, e->children, w);
-
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
       gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
+      gtk_widget_show_all(scrolled_window);
+      gtk_widget_show(label);
       gtk_notebook_append_page (GTK_NOTEBOOK (book), scrolled_window, label);
-      
+      build_children (vbox, e->children, w, TRUE);
       /* add categories stuff to the last page */
       if (!page->next)
         {
@@ -380,6 +406,7 @@ edit_window (void)
           g_signal_connect (G_OBJECT (catbutton), "clicked",
 		    G_CALLBACK (on_categories_clicked), w);
           g_object_set_data (G_OBJECT (w), "categories-label", catlabel);
+          gtk_widget_show_all(cathbox);
         }
     }
 
@@ -556,13 +583,15 @@ edit_person (struct person *p)
       gtk_object_set_data (GTK_OBJECT (w), "person", p);
     }
   store_special_fields (w, p);
-  gtk_widget_show_all (w);
+  gtk_widget_show (w);
 }
 
 void
 update_edit (struct person *p, GtkWidget *w)
 {
-  GtkWidget *nameentry = NULL;
+  GtkWidget *nameentry[5];
+  int namenum = 0;
+  int i;
   gchar *n1 = NULL, *n2 = NULL, *n3 = NULL, *n4 = NULL;
   if (p)
     {
@@ -586,7 +615,10 @@ update_edit (struct person *p, GtkWidget *w)
               if (!strcmp(v->tag,"HONORIFIC_SUFFIX"))
                 n4 = v->value;
               if (!strcmp(v->tag,"NAME"))
-                nameentry = w;
+              {
+                nameentry[namenum] = w;
+                namenum++;
+              }
 
               if (GTK_IS_EDITABLE (w))
                 {
@@ -629,7 +661,7 @@ update_edit (struct person *p, GtkWidget *w)
         }
     }
   store_special_fields (w, p);
-  if (nameentry)
+  if (namenum)
     {
       gchar *ts = g_strdup(n1);
       if (n2) 
@@ -650,7 +682,8 @@ update_edit (struct person *p, GtkWidget *w)
           g_free(ts);
           ts = n1;
         }
-      gtk_entry_set_text(GTK_ENTRY(nameentry),ts);  
+      for (i=0;i<namenum;i++)
+        gtk_entry_set_text(GTK_ENTRY(nameentry[i]),ts);
       g_free(ts);
     }
 }

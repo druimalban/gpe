@@ -1,33 +1,10 @@
 <layout>
-    <page>
-      <label>Home</label>
-      <single-item>
-        <tag>HOME.TELEPHONE</tag>
-        <label>Phone</label>
-      </single-item>
-      <single-item>
-        <tag>HOME.MOBILE</tag>
-        <label>Mobile</label>
-      </single-item>
-      <single-item>
-        <tag>HOME.FAX</tag>
-        <label>Fax</label>
-      </single-item>
-      <single-item>
-        <tag>HOME.EMAIL</tag>
-        <label>Mail</label>
-      </single-item>
-      <single-item>
-        <tag>HOME.WWW</tag>
-        <label>Web</label>
-      </single-item>
-      <multi-item>
-        <tag>HOME.ADDRESS</tag>
-        <label>Address</label>
-      </multi-item>
-  </page>
   <page>
       <label>Work</label>
+      <single-item>
+        <tag>NAME</tag>
+        <label>Name</label>
+      </single-item>
       <single-item>
         <tag>WORK.TELEPHONE</tag>
         <label>Phone</label>
@@ -53,6 +30,37 @@
         <label>Address</label>
       </multi-item>
   </page>
+    <page>
+      <label>Home</label>
+      <single-item>
+        <tag>NAME</tag>
+        <label>Name</label>
+      </single-item>
+      <single-item>
+        <tag>HOME.TELEPHONE</tag>
+        <label>Phone</label>
+      </single-item>
+      <single-item>
+        <tag>HOME.MOBILE</tag>
+        <label>Mobile</label>
+      </single-item>
+      <single-item>
+        <tag>HOME.FAX</tag>
+        <label>Fax</label>
+      </single-item>
+      <single-item>
+        <tag>HOME.EMAIL</tag>
+        <label>Mail</label>
+      </single-item>
+      <single-item>
+        <tag>HOME.WWW</tag>
+        <label>Web</label>
+      </single-item>
+      <multi-item>
+        <tag>HOME.ADDRESS</tag>
+        <label>Address</label>
+      </multi-item>
+  </page>
    <page>
     <label>About</label>
     <date-item>
@@ -69,5 +77,24 @@
     <multi-item>
       <tag>NOTES</tag>
     </multi-item>
+    <group>
+      <label>hidden</label>
+      <single-item>
+        <tag>TITLE</tag>
+        <label>Title</label>
+      </single-item>
+      <single-item>
+        <tag>GIVEN_NAME</tag>
+        <label>Given name</label>
+      </single-item>
+      <single-item>
+        <tag>FAMILY_NAME</tag>
+        <label>Familiy name</label>
+      </single-item>
+      <single-item>
+        <tag>HONORIFIC_SUFFIX</tag>
+        <label>Name Suffix</label>
+      </single-item>
+    </group>
   </page>
 </layout>

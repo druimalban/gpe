@@ -75,7 +75,7 @@
       <tag>NOTES</tag>
     </multi-item>
     <group>
-      <label>Name Details</label>
+      <label>hidden</label>
       <single-item>
         <tag>TITLE</tag>
         <label>Title</label>

@@ -273,6 +273,7 @@ new_thing (edit_thing_type t, gchar *name, edit_thing_t parent)
   e->type = t;
   e->name = name;
   e->children = NULL;
+  e->hidden = FALSE;
   e->parent = parent;
   if (parent)
     parent->children = g_slist_append (parent->children, e);
@@ -400,7 +401,11 @@ structure_parse_xml_item (xmlDocPtr doc, xmlNodePtr cur,
   while (cur)
     {
       if (!xmlStrcmp (cur->name, "label"))
-	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+        {
+          e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+          if (!xmlStrcmp(e->name,"hidden"))
+            e->hidden = TRUE;
+        }
 
       if (!xmlStrcmp (cur->name, "tag"))
 	e->tag = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
@@ -418,7 +423,11 @@ structure_parse_xml_group (xmlDocPtr doc, xmlNodePtr cur,
   while (cur)
     {
       if (!xmlStrcmp (cur->name, "label"))
-	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+        {
+          e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+          if (!xmlStrcmp(e->name,"hidden"))
+            e->hidden = TRUE;
+        }
 
       if (!xmlStrcmp (cur->name, "multi-item"))
 	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
