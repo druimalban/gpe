@@ -43,15 +43,40 @@
 char buttons[9][1024];
 char *keylaunchrc = NULL;
 
+#define NUM_BUTTONS 5
+
+/* local types */
+
+typedef struct 
+{
+	char *pixname;
+	char *ident;
+	char *command;
+	int type;
+}
+t_buttondef;
+
+
+/* local variables */
+
 static struct
 {
-	GtkWidget *button[8];
+	GtkWidget *button[NUM_BUTTONS];
 	GdkPixbuf *p;
 	GtkWidget *edit;
 	GtkWidget *icon;
 	GtkWidget *select;
 }
 self;
+
+t_buttondef buttondef[NUM_BUTTONS] = {
+	{NULL, "XF86AudioRecord","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
+    {NULL, "XF86Calendar","gpe-calendar",0},
+	{NULL, "telephone","gpe-contacts",0},
+	{NULL, "XF86Mail","gpe-taskmanager",0},
+	{NULL, "XF86Start","mbcontrol -desktop",0}};
+
+static int active_button = 0;
 
 char *default_keyctl_conf[] = {
 	"key=???Pressed XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",
@@ -164,8 +189,16 @@ on_button_clicked (GtkButton * button, gpointer user_data)
 void
 on_button_select (GtkButton * button, gpointer user_data)
 {
-	int nr = user_data;
+	int nr = (int)user_data;
 	
+	if ((active_button < 0) && (active_button >= NUM_BUTTONS))
+		return;	
+	g_free(buttondef[active_button].command);
+	buttondef[active_button].command = 
+		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
+	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[nr].command);
+#warning pixmap, type	
+	active_button = nr;
 }
 
 
@@ -281,6 +314,10 @@ Keyctl_Build_Objects ()
 	gtk_signal_connect_object (GTK_OBJECT (bDefault), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_defaults_clicked), NULL);
+	
+	gtk_widget_grab_focus(self.button[0]);
+	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
+	active_button = 0;
 //	init_buttons ();
 	
 	return vbox;
