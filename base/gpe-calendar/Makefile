@@ -36,7 +36,7 @@ po/gpe-calendar.pot: $(SOURCES)
 	xgettext -k_ -o po/gpe-calendar.pot $^
 
 gpe-calendar: $(OBJS)
-	$(CC) -o $@ $^ `gtk-config --libs` -lsqlite -L../libgpewidget -lgpewidget $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -lsqlite $(LDFLAGS)
 
 install: all install-po
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/gpe-calendar/pixmaps/$$i; done
