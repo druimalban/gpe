@@ -1,3 +1,7 @@
+2004-09-08	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	main.c: Moved window title setup.
+
 2004-09-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	gpe-config.conf: Fixed access control.

@@ -185,9 +185,9 @@ void item_select(int useronly, gpointer user_data)
   self.applet = applets[i].Build_Objects(useronly);
   gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
 	
-  gtk_widget_show_all(self.applet);
-
   gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
+	
+  gtk_widget_show_all(self.applet);
   
   if(applets[self.cur_applet].Save != &Unimplemented_Save)
   {
@@ -229,9 +229,7 @@ void initwindow()
    // main window
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    wstyle = self.w->style;
-   gtk_window_set_title(GTK_WINDOW(self.w),"GPE-Config " VERSION);
    gtk_widget_set_usize(GTK_WIDGET(self.w),240, 310);
-
 
    gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
 		       (GtkSignalFunc) gtk_main_quit, NULL);
