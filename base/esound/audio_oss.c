@@ -60,7 +60,7 @@ int esd_audio_open()
     /* set the sound driver fragment size and number */
 #if !defined(__powerpc__) /* does not exist on powerpc */
     /* fragment = max_buffers << 16 + log2(buffer_size), (256 16) */
-    value = test = ( 0x0100 << 16 ) + 0x0008;
+    value = test = ( 0x7fff<< 16 ) + 0x000b;
     if (ioctl(afd, SNDCTL_DSP_SETFRAGMENT, &test) == -1)
     {   /* Fatal error */
         perror( "SNDCTL_DSP_SETFRAGMENT" );
