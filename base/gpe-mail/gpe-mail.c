@@ -22,6 +22,7 @@ struct {
    char *path;
    char expanded_path[100];
    char conf[3][10][100];
+   int num_new;
 } config={
    "~/.emailsync",
    "",
@@ -1022,19 +1023,57 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    char *sp2;
    char type;
    int i;
+
+
+
    sp=(char **)&s;
+   if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,3,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
+   //printf("s=%s\n",*sp);
+   //sscanf(*sp,"%s.",&i);
+   sscanf(*sp,"%s",&s3);
+   if (ends_with(s3,".head")) s3[strlen(s3)-5]=0;
+   else printf("%s does not end with '.head'\n",s3);
+   if (column==5) // seen
+   {
+
+      sprintf(s,"%s/%s/%s.flags",config.expanded_path,self.current_folder,s3);
+      f=(FILE *)fopen(s,"r");
+      if (f!=NULL) 
+      {
+         s2[0]=0;
+         fgets(s2,sizeof(s2),f);
+	 if ((sp2=strstr(s2,"\\Seen"))!=NULL)
+		 strcpy(sp2,sp2+5);
+	 else
+	 {
+		 if (strlen(s2))
+			 if (s2[strlen(s2-1)]!=' ') strcat(s2," ");
+		 strcat(s2,"\\Seen");
+	 }
+	 fclose(f);
+         f=(FILE *)fopen(s,"w");
+	 if (f==NULL) perror(s);
+	 else
+	 {
+		 fprintf(f,"%s",s2);
+		 //printf("writing '%s'\n",s2);
+		 fclose(f);
+	 }
+	 gtk_clist_set_text((GtkCList *)self.cl1,row,5,NULL!=strstr(s2,"Seen") ? "Y":"N");
+         sprintf(s2,"echo '%sseen %s \"%s\"' >> %s/.onsync",NULL!=strstr(s2,"Seen") ? "":"un",s3,self.current_folder,config.expanded_path);
+	 //printf("system(%s)\n",s2);
+	 system(s2);
+      } //else printf("'%s' not found\n",s);
+      gtk_clist_unselect_row((GtkCList *)self.cl1,row,1);
+      return;
+   }
+   strcpy(self.cur_msg,s3);
    gtk_text_freeze((GtkText *)self.mt);
    gtk_text_forward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_backward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    //gtk_text_set_point((GtkText *)self.mt,0);
    //gtk_text_forward_delete((GtkText *)self.mt,1e9);
    //printf("row=%d\n",row);
-   if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,3,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
-   //printf("s=%s\n",*sp);
-   //sscanf(*sp,"%s.",&self.cur_msg);
-   sscanf(*sp,"%s",&self.cur_msg);
-   if (ends_with(self.cur_msg,".head")) self.cur_msg[strlen(self.cur_msg)-5]=0;
-   else printf("%s does not end withe '.head'\n",self.cur_msg);
    //printf("num=%s\n",self.cur_msg);
    self.cl1_row=row;
    sprintf(s2,"%s/%s/%s.head",config.expanded_path,self.current_folder,self.cur_msg);
@@ -1067,6 +1106,29 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
       fclose(f);
    }
 
+
+   sprintf(s2,"%s/%s/%s.flags",config.expanded_path,self.current_folder,self.cur_msg);
+   f=(FILE *)fopen(s2,"r");
+   if (f!=NULL)
+   {
+	   fgets(s2,sizeof(s2),f);
+	   fclose(f);
+	   if (NULL==strstr(s2,"Seen"))
+	   {
+		   strcat(s2," \\Seen");
+		   sprintf(s2+strlen(s2)+1,"%s/%s/%s.flags",config.expanded_path,self.current_folder,self.cur_msg);
+		   f=(FILE *)fopen(s2+strlen(s2)+1,"w");
+		   if (f==NULL) perror(s2+strlen(s2)+1);
+		   else
+		   {
+			   fprintf(f,"%s",s2);
+			   fclose(f);
+			   sprintf(s2,"echo 'seen %s \"%s\"' >> %s/.onsync",self.cur_msg,self.current_folder,config.expanded_path);
+			   system(s2);
+			   gtk_clist_set_text((GtkCList *)self.cl1,row,5,"Y");
+		   }
+	   }
+   }
 
    sprintf(s2,"%s/%s/%s.body",config.expanded_path,self.current_folder,self.cur_msg);
    strcpy(s3,self.fromto);
@@ -1161,10 +1223,15 @@ int open_mailfolder()
    char from[100];
    char date[100];
    char fname[100];
-   char *a[6]={subj,from,date,fname,s,NULL};
+   char seen[2];
+   int num_new;
+   int cnt;
+   char *a[7]={subj,from,date,fname,s,seen,NULL};
 
    int i;
 
+   num_new=0;
+   cnt=0;
    self.cur_msg[0]=0;
    self.cl1_row=-1;
    usleep(10000);
@@ -1214,9 +1281,23 @@ int open_mailfolder()
             trunc_newlines(from);
             trunc_newlines(date);
             fclose(f);
+	    sprintf(s,"%s/%d.flags",path,i);
+	    seen[0]='?';
+	    seen[1]=0;
+	    f=(FILE *)fopen(s,"r");
+	    s[0]=0;
+	    if (f!=NULL)
+	    {
+	    	fgets(s,sizeof(s),f);
+	    	fclose(f);
+		seen[0]='N';
+		if (strstr(s,"Seen")!=NULL) seen[0]='Y';
+		else num_new++;
+	    }
             sprintf(s,"%08d",i);
             strcpy(fname,direntptr->d_name);
             gtk_clist_append(GTK_CLIST(self.cl1),a);
+	    cnt++;
          }
       }
    } while (direntptr);
@@ -1225,6 +1306,7 @@ int open_mailfolder()
    gtk_clist_set_sort_column(GTK_CLIST(self.cl1),4);
    gtk_clist_sort(GTK_CLIST(self.cl1));
    gtk_clist_thaw(GTK_CLIST(self.cl1));
+   printf("%d msgs (%d new)\n",cnt,num_new);
    return FALSE;
 }
 
@@ -1263,7 +1345,7 @@ int do_folders()
 int main(int argc, char **argv)
 {
 
-   gchar *titles[]={"Subject","From","Sent","filename","uid"};
+   gchar *titles[]={"Subject","From","Sent","filename","uid","seen"};
    GtkStyle *gtk_style;
 
    loadconfig();
@@ -1361,7 +1443,7 @@ int main(int argc, char **argv)
    
    gtk_tooltips_enable(self.tt);
    // subject clist
-   self.cl1=gtk_clist_new_with_titles(5,titles);
+   self.cl1=gtk_clist_new_with_titles(6,titles);
    gtk_clist_set_column_width(GTK_CLIST(self.cl1),0,100);
    gtk_clist_set_column_width(GTK_CLIST(self.cl1),1,50);
    gtk_clist_set_column_width(GTK_CLIST(self.cl1),2,30);
@@ -1369,6 +1451,7 @@ int main(int argc, char **argv)
    gtk_clist_set_column_width(GTK_CLIST(self.cl1),4,0);
    gtk_clist_set_column_visibility(GTK_CLIST(self.cl1),3,0);
    gtk_clist_set_column_visibility(GTK_CLIST(self.cl1),4,0);
+   gtk_clist_set_column_width(GTK_CLIST(self.cl1),5,10);
    gtk_container_add (GTK_CONTAINER (self.sw2), self.cl1);
    self.sortby_last=-1;
    gtk_signal_connect (GTK_OBJECT(self.cl1), "select_row", 
