@@ -1,5 +1,10 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* X11/Xsession.d/98standard-apps: If the date is set to 1970,
+	prompt the user to enter the correct time.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (LINGUAS): Add hu, ro, ru, sr, sk.
 
 2004-02-14  Philip Blundell  <philb@gnu.org>
