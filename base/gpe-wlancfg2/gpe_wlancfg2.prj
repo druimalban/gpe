@@ -1,0 +1,135 @@
+# Anjuta Version 1.0.0 
+Compatibility Level: 1 
+
+<PROJECT_DESCRIPTION_START>
+Gpe WLAN config tool for GTK 2.0
+<PROJECT_DESCRIPTION_END>
+<CONFIG_PROGS_START>
+<CONFIG_PROGS_END>
+<CONFIG_LIBS_START>
+<CONFIG_LIBS_END>
+<CONFIG_HEADERS_START>
+<CONFIG_HEADERS_END>
+<CONFIG_CHARACTERISTICS_START>
+<CONFIG_CHARACTERISTICS_END>
+<CONFIG_LIB_FUNCS_START>
+<CONFIG_LIB_FUNCS_END>
+<CONFIG_ADDITIONAL_START>
+<CONFIG_ADDITIONAL_END>
+<CONFIG_FILES_START>
+<CONFIG_FILES_END>
+<MAKEFILE_AM_START>
+<MAKEFILE_AM_END>
+
+props.file.type=project
+
+anjuta.version=1.0.0
+anjuta.compatibility.level=1
+
+project.name=gpe_wlancfg2
+project.type=GTK 2.0
+project.target.type=EXECUTABLE
+project.version=0.2
+project.author=Ole Reinhardt, kernel concepts
+project.source.target=gpe
+
+project.excluded.modules=\
+	intl
+
+project.has.gettext=1
+
+project.programming.language=C
+
+project.menu.entry=gpe_wlancfg2 Version 0.2
+project.menu.group=Application
+project.menu.comment=gpe_wlancfg2 Version 0.2
+project.menu.icon=
+project.menu.need.terminal=0
+
+project.configure.options=
+
+anjuta.program.arguments=
+
+project.config.blocked=1
+
+project.config.disable.overwriting=1 1 1 1 1 1 1 1 1 
+project.config.extra.modules.before=
+project.config.extra.modules.after=
+
+module.include.name=.
+module.include.type=
+module.include.expanded=1
+module.include.files=\
+	callbacks.h\
+	config-parser.h\
+	helptext.h\
+	confpars_wl.h\
+	interface.h\
+	support.h
+
+module.source.name=.
+module.source.type=
+module.source.expanded=1
+module.source.files=\
+	callbacks.c\
+	config-parser.c\
+	interface.c\
+	confscan_wl.c\
+	main.c\
+	confpars_wl.c\
+	support.c\
+	confscan_wl.l\
+	confpars_wl.y
+
+module.pixmap.name=.
+module.pixmap.type=
+module.pixmap.expanded=0
+module.pixmap.files=
+
+module.data.name=.
+module.data.type=
+module.data.expanded=0
+module.data.files=
+
+module.help.name=.
+module.help.type=
+module.help.expanded=0
+module.help.files=
+
+module.doc.name=.
+module.doc.type=
+module.doc.expanded=0
+module.doc.files=\
+	po/ChangeLog
+
+module.po.expanded=0
+module.po.files=
+
+compiler.options.supports=
+
+compiler.options.include.paths=\
+	.\
+	..
+
+compiler.options.library.paths=
+
+compiler.options.libraries=
+compiler.options.libraries.selected=
+
+compiler.options.defines=\
+	HAVE_CONFIG_H
+
+compiler.options.warning.buttons=0 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 
+
+compiler.options.optimize.buttons=0 0 1 0 
+
+compiler.options.other.buttons=1 0 
+
+compiler.options.other.c.flags=
+
+compiler.options.other.l.flags=
+
+compiler.options.other.l.libs=
+
+project.source.paths=
+
