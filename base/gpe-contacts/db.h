@@ -6,6 +6,7 @@
 #include <gpe/pim-categories.h>
 
 #define CONFIG_PANEL 0
+#define CONFIG_LIST  1
 
 extern int db_open (void);
 extern gboolean load_structure (void);
@@ -42,11 +43,11 @@ extern gboolean db_delete_by_uid (guint uid);
 extern void db_set_multi_data (struct person *p, gchar *tag, gchar *value);
 extern void db_delete_tag (struct person *p, gchar *tag);
 
-extern GSList *db_get_entries_alpha (const gchar* alphalist);
 extern gint db_get_tag_list (gchar ***list);
 extern gint db_get_config_values (gint group, gchar ***list);
 extern void db_add_config_values (gint group, gchar *identifier, gchar *value);
 extern void db_delete_config_values (gint group, gchar *identifier);
+void db_update_config_values (gint group, gchar * identifier, gchar * value);
 extern gchar* db_get_config_tag (gint group, const gchar *tagname);
 extern void db_free_result(char** table);
 

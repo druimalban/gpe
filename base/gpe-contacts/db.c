@@ -504,96 +504,6 @@ db_delete_category (guint id)
   return TRUE;
 }
 
-static int
-read_one_entry_alpha (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = new_person ();
-  GSList **list = (GSList **) arg;
-
-  p->id = atoi (argv[0]);
-  p->name = g_strdup (argv[1]);
-
-  if (p->name)
-    *list = g_slist_prepend (*list, p);
-  else
-    discard_person (p);
-
-  return 0;
-}
-
-GSList *
-db_get_entries_alpha (const gchar * alphalist)
-{
-  GSList *list = NULL;
-
-  char *command, *tmp = NULL, *modifier;
-  char *err;
-  int r, s, t;
-
-  const gchar *cursym;
-  gssize temp_char_len;
-  gchar *temp_char_low;
-  gchar *temp_char_up;
-
-  if (! g_utf8_validate (alphalist, -1, &cursym))
-    {
-      gpe_error_box ("Not a valid UTF-8 string");
-      return NULL;
-    }
-
-  s = g_utf8_strlen (alphalist, -1);
-  command = g_strdup ("");
-	
-  if (alphalist[0] == '!')
-    {
-      t = 1;
-      modifier = g_strdup (" NOT ");
-    }	  
-  else
-    {
-      t = 0;  
-      modifier = g_strdup (" ");
-    }
-
-  cursym = alphalist + t;
-
-  for (r = t; r < s; r++)
-    {
-      tmp = g_utf8_offset_to_pointer (cursym, 1);
-      temp_char_len = tmp - cursym;
-
-      temp_char_low = g_utf8_strdown (cursym, temp_char_len);
-      temp_char_up  = g_utf8_strup (cursym, temp_char_len);
-      
-      tmp = g_strdup_printf ("%s(value like '%s%%') or (value like '%s%%')",
-			     command, temp_char_up, temp_char_low);
-      
-      g_free (command);
-      g_free (temp_char_low);
-      g_free (temp_char_up);
-
-      if (r != s-1)
-        command = g_strdup_printf ("%s or", tmp);
-      
-      cursym = g_utf8_next_char (cursym);
-      
-    }
-  
-  command = g_strdup_printf ("select urn, value from contacts "
-			     "where ((( tag = 'NAME') or ( tag = 'name')) and%s(%s)) "
-			     "order by value desc", modifier, tmp);
-  r = sqlite_exec (db, command, read_one_entry_alpha, &list, &err);
-  g_free (tmp);
-
-  if (r)
-    {
-      gpe_error_box (err);
-      free (err);
-      return NULL;
-    }
-  
-  return list;
-}
 
 gint
 db_get_tag_list (gchar *** list)
@@ -671,6 +581,12 @@ db_delete_config_values (gint group, gchar * identifier)
     }
 }
 
+void
+db_update_config_values (gint group, gchar * identifier, gchar * value)
+{
+  db_delete_config_values(group, identifier);
+  db_add_config_values(group, identifier, value);
+}
 
 gchar *
 db_get_config_tag (gint group, const gchar * tagname)

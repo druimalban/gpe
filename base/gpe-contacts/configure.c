@@ -28,11 +28,13 @@
 #include <gpe/question.h>
 #include <gpe/gtksimplemenu.h>
 #include <gpe/picturebutton.h>
+#include <gpe/spacing.h>
 
 #include "support.h"
 #include "db.h"
 #include "structure.h"
 #include "proto.h"
+#include "main.h"
 
 extern GtkWidget *mainw;
 
@@ -115,6 +117,9 @@ on_bDetRemove_clicked (GtkButton * button, GtkWidget *tree_view)
   g_slist_free (refs);
 }
 
+
+/* This create the setup for portrait displays to configure the details panel
+   fields and order */
 GtkWidget *
 create_pageSetup (GObject *container)
 {
@@ -252,6 +257,44 @@ create_pageSetup (GObject *container)
   return vbox9;
 }
 
+/* This one is for lanscape diplays creating setup for position of list
+   and related stuff */
+
+GtkWidget *
+create_pageLandSetup (GObject *container)
+{
+  GtkWidget *table = gtk_table_new(3, 3, FALSE);
+  GtkWidget *label, *w;
+  gchar *markup, *cfgval;
+
+  gtk_container_set_border_width(GTK_CONTAINER(table), gpe_get_border());
+  gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+  gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
+    
+  markup = g_strdup_printf("<b>%s</b>", _("Screen Layout"));
+  label = gtk_label_new(NULL);
+  gtk_label_set_markup(GTK_LABEL(label), markup);
+  g_free(markup);
+  gtk_table_attach(GTK_TABLE(table), label, 0, 3, 0, 1, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  label = gtk_label_new(_("List position"));
+  gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  w = gtk_radio_button_new_with_label(NULL, _("left"));
+  gtk_table_attach(GTK_TABLE(table), w, 1, 2, 1, 2, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  w = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(w), _("right"));
+  gtk_table_attach(GTK_TABLE(table), w, 2, 3, 1, 2, GTK_EXPAND, GTK_EXPAND, 0, 0);
+  cfgval = db_get_config_tag (CONFIG_LIST, "pos");
+  if (cfgval)
+    {
+      if (!strcmp(cfgval, "right"))
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), TRUE);
+      else
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), FALSE);
+      g_free(cfgval);
+    }
+  g_object_set_data (container, "rb-right", w);
+  return table;
+}
+
 static void
 configure_ok_clicked (GtkWidget *widget, GtkWidget *window)
 {
@@ -261,64 +304,87 @@ configure_ok_clicked (GtkWidget *widget, GtkWidget *window)
   GSList *list = NULL;
   int tagcount;
   int i;
+  GtkWidget *w, *wh, *wl;
 	  
   list_store = g_object_get_data (G_OBJECT (window), "list-store");
 
+  if (mode_landscape)
+    {
+      w = g_object_get_data (G_OBJECT (window), "rb-right");
+      wh = g_object_get_data (G_OBJECT (mainw), "hbox");
+      wl = g_object_get_data (G_OBJECT (mainw), "swlist");
+    
+      if (w && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
+        {
+          db_update_config_values(CONFIG_LIST, "pos", "right");
+          if (wh && wl)
+            gtk_box_set_child_packing(GTK_BOX(wh), wl, FALSE, TRUE, 0, GTK_PACK_END);
+        }
+      else
+        {
+          db_update_config_values(CONFIG_LIST, "pos", "left");
+          if (wh && wl)
+            gtk_box_set_child_packing(GTK_BOX(wh), wl, FALSE, TRUE, 0, GTK_PACK_START);
+        }
+    }
+  /* panel config */
   tagcount = db_get_config_values (CONFIG_PANEL, &taglist);
-
-  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
-    {
-      do 
-	{
-	  gboolean found = FALSE;
-	  gchar *tag, *label;
-
-	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &label, 1, &tag, -1);
-
-	  for (i = 1; i <= tagcount; i++)
-	    {
-	      gchar *ttag = taglist[2 * i];
-	      
-	      if (!strcasecmp (label, ttag))
-		{
-		  found = TRUE;
-		  break;
-		}
-	    }
-
-	  list = g_slist_prepend (list, label);
-
-	  if (!found)
-	    db_add_config_values (CONFIG_PANEL, label, tag);
-
-	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
-    }
-
-  for (i = 1; i <= tagcount; i++)
-    {
-      gboolean found = FALSE;
-      gchar *ttag = taglist[2 * i];
-      GSList *iter;
-
-      for (iter = list; iter; iter = iter->next)
-	{
-	  if (!strcasecmp (ttag, iter->data))
-	    {
-	      found = TRUE;
-	      break;
-	    }
-	}
-
-      if (!found)
-	db_delete_config_values (CONFIG_PANEL, ttag);
-    }
   
-  g_slist_free (list);
-
-  db_free_result (taglist);
-
-  load_panel_config ();
-
+  if (list_store)
+    {
+      if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+        {
+          do 
+        {
+          gboolean found = FALSE;
+          gchar *tag, *label;
+    
+          gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &label, 1, &tag, -1);
+    
+          for (i = 1; i <= tagcount; i++)
+            {
+              gchar *ttag = taglist[2 * i];
+              
+              if (!strcasecmp (label, ttag))
+            {
+              found = TRUE;
+              break;
+            }
+            }
+    
+          list = g_slist_prepend (list, label);
+    
+          if (!found)
+            db_add_config_values (CONFIG_PANEL, label, tag);
+    
+        } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+        }
+    
+      for (i = 1; i <= tagcount; i++)
+        {
+          gboolean found = FALSE;
+          gchar *ttag = taglist[2 * i];
+          GSList *iter;
+    
+          for (iter = list; iter; iter = iter->next)
+        {
+          if (!strcasecmp (ttag, iter->data))
+            {
+              found = TRUE;
+              break;
+            }
+        }
+    
+          if (!found)
+        db_delete_config_values (CONFIG_PANEL, ttag);
+        }
+      
+      g_slist_free (list);
+    
+      db_free_result (taglist);
+    
+      load_panel_config ();
+    }
   gtk_widget_destroy (window);
 }
 
@@ -333,7 +399,11 @@ configure (GtkWidget * widget, gpointer d)
   GtkWidget *configbox;
   GtkWidget *ok_button, *cancel_button;
 
-  configbox = create_pageSetup (G_OBJECT (window));
+  if (mode_landscape)
+    configbox = create_pageLandSetup (G_OBJECT (window));
+  else  
+    configbox = create_pageSetup (G_OBJECT (window));
+  
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), editbox, editlabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), configbox, configlabel);
@@ -361,4 +431,3 @@ configure (GtkWidget * widget, gpointer d)
 
   gtk_widget_show_all (window);
 }
-

@@ -196,20 +196,21 @@ delete_contact (GtkWidget * widget, gpointer d)
       if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
 			    "question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
         {
+          gtk_tree_view_get_cursor(GTK_TREE_VIEW(list_view), &path, NULL);
+          if (path) 
+            {
+              if (!gtk_tree_path_prev(path))
+                gtk_tree_path_next(path);
+            }
+          else
+            path = gtk_tree_path_new_first();
           if (db_delete_by_uid (uid))
             {
-              gtk_tree_view_get_cursor(GTK_TREE_VIEW(list_view),&path,NULL);
-              if (path) 
-                {
-                  if (!gtk_tree_path_prev(path))
-                    gtk_tree_path_next(path);
-                }
-              else
-                path = gtk_tree_path_new_first();
-              gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view),path,NULL,FALSE);
-              gtk_tree_path_free(path);
               update_display ();
+              gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, 
+                                       NULL, FALSE);    
             }
+          gtk_tree_path_free(path);
         }
     }
 }
@@ -509,8 +510,7 @@ show_details (struct person *p)
               lleft = ((GtkTableChild *) pchild)->widget;
               tagname =
                 db_get_config_tag (CONFIG_PANEL,
-                           g_strdup (gtk_label_get_text
-                             (GTK_LABEL (lleft))));
+                           g_strdup (gtk_label_get_text(GTK_LABEL (lleft))));
               curtag = db_find_tag (p, tagname);
               if (curtag != NULL)
                 {
@@ -1189,9 +1189,17 @@ create_main (gboolean show_config_button)
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
   if (mode_landscape)
     {
-      hbox1 = gtk_hbox_new(FALSE,gpe_get_boxspacing());
-      gtk_box_pack_start (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+      gchar *cfgval = db_get_config_tag(CONFIG_LIST, "pos");
+      hbox1 = gtk_hbox_new(FALSE, gpe_get_boxspacing());
       gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
+      if ((cfgval) && !strcmp(cfgval, "right"))
+        gtk_box_pack_end (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+      else
+        gtk_box_pack_start (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+      if (cfgval)
+        g_free(cfgval);
+      g_object_set_data(G_OBJECT(main_window), "hbox", hbox1);
+      g_object_set_data(G_OBJECT(main_window), "swlist", scrolled_window);
     }
   else  
     {
@@ -1213,8 +1221,8 @@ create_main (gboolean show_config_button)
   hbox3 = gtk_hbox_new (FALSE, 0);
   if (mode_landscape)
     {
-       gtk_container_set_border_width(GTK_CONTAINER(hbox3),gpe_get_border());
-       gtk_box_set_spacing(GTK_BOX(hbox3),gpe_get_boxspacing());
+       gtk_container_set_border_width(GTK_CONTAINER(hbox3), gpe_get_border());
+       gtk_box_set_spacing(GTK_BOX(hbox3), gpe_get_boxspacing());
     }
   gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
 
@@ -1268,7 +1276,7 @@ create_main (gboolean show_config_button)
   
   if (mode_landscape)
     {
-      gtk_container_set_border_width(GTK_CONTAINER(pDetail),gpe_get_border());
+      gtk_container_set_border_width(GTK_CONTAINER(pDetail), gpe_get_border());
       gtk_box_pack_start (GTK_BOX (hbox1), pDetail, TRUE, TRUE, 0);
     }
   else
