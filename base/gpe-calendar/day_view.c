@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -69,7 +69,7 @@ draw_expose_event (GtkWidget *widget,
       char buf[128];
       guint cell_height = 22, yoff = 0;
 
-      if (hour & 1)
+      if (day_events[hour])
 	gdk_draw_rectangle (drawable, gray_gc, TRUE, c + 1, y, max_width, max_height);
       else
 	gdk_draw_rectangle (drawable, white_gc, TRUE, c + 1, y, max_width, max_height);
@@ -95,9 +95,9 @@ draw_expose_event (GtkWidget *widget,
 
 	      points[0].x = xoff + 6;
 	      points[1].x = xoff + 6;
-	      points[2].x = xoff + 11;
-	      points[0].y = y + yoff;
-	      points[1].y = y + yoff + datefont->ascent;
+	      points[2].x = xoff + 10;
+	      points[0].y = y + yoff + datefont->ascent / 2 - 3;
+	      points[1].y = y + yoff + datefont->ascent / 2 + 3; 
 	      points[2].y = y + yoff + datefont->ascent / 2;
 
 	      gdk_draw_line (drawable, black_gc, xoff + 2, 

@@ -23,7 +23,7 @@
 
 #define _(_x) gettext (_x)
 
-struct sens
+struct edit_state
 {
   GtkWidget *deletebutton;
 
@@ -73,7 +73,7 @@ static void
 recalculate_sensitivities(GtkWidget *widget,
 			  GtkWidget *d)
 {
-  struct sens *s = gtk_object_get_data (GTK_OBJECT (d), "sens_list");
+  struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
@@ -145,10 +145,17 @@ static void
 click_ok(GtkWidget *widget,
 	 GtkWidget *d)
 {
-  struct sens *s = gtk_object_get_data (GTK_OBJECT (d), "sens_list");
+  struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
   event_t ev = event_db_new ();
   event_details_t ev_d;
   struct tm tm, tm2;
+  struct tm tm_start, tm_end;
+  char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
+						      (s->starttime)->entry), 
+					0, -1);
+  char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
+						    (s->endtime)->entry),
+				      0, -1);
 
   ev_d = event_db_alloc_details (ev);
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->text), 
@@ -164,28 +171,20 @@ click_ok(GtkWidget *widget,
   tm.tm_min = 0;
   ev->duration = 24 * 60 * 60;
 
-#if 0  
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->frombutton)))
+  if (strptime (start, "%X", &tm_start))
     {
-      char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-							  (s->starttime)->entry), 0, -1);
-      char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-						  (s->endtime)->entry),
-					  0, -1);
-      struct tm tm_start, tm_end;
-      if (strptime (start, "%X", &tm_start))
+      tm.tm_hour = tm_start.tm_hour;
+      tm.tm_min = tm_start.tm_min;
+      
+      if (strptime (end, "%X", &tm_end))
 	{
-	  tm.tm_hour = tm_start.tm_hour;
-	  tm.tm_min = tm_start.tm_min;
-
-	  if (strptime (end, "%X", &tm_end))
-	    {
-	      ev->duration = ((tm_end.tm_hour - tm_start.tm_hour) * 60
-			      + (tm_end.tm_min - tm_start.tm_min)) * 60;
-	    }
+	  ev->duration = ((tm_end.tm_hour - tm_start.tm_hour) * 60
+			  + (tm_end.tm_min - tm_start.tm_min)) * 60;
 	}
     }
-#endif
+
+  g_free (end);
+  g_free (start);
 
   ev->start = mktime (&tm);
 
@@ -278,7 +277,7 @@ edit_event_window(void)
   GtkWidget *alarmoption = gtk_option_menu_new ();
 
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  struct sens *s = g_malloc (sizeof (struct sens));
+  struct edit_state *s = g_malloc (sizeof (struct edit_state));
 
   memset (s, 0, sizeof (*s));
 
@@ -576,7 +575,8 @@ edit_event_window(void)
   s->monthlyspin_adj = monthlyspin_adj;
   s->yearlyspin_adj = yearlyspin_adj;
    
-  gtk_object_set_data_full (GTK_OBJECT (window), "sens_list", s, destroy_user_data);
+  gtk_object_set_data_full (GTK_OBJECT (window), "edit_state", s, 
+			    destroy_user_data);
 
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
 
@@ -594,7 +594,8 @@ new_event(time_t t, guint timesel)
     {
       struct tm tm;
       char buf[32];
-      struct sens *s = gtk_object_get_data (GTK_OBJECT (w), "sens_list");
+      struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
+						  "edit_state");
 
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
 
