@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-01 14:47+0000\n"
+"POT-Creation-Date: 2003-03-09 13:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,292 +15,235 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: editing.c:165
-msgid "Edit Contact"
-msgstr ""
-
-#: editing.c:199 main.c:173
+#: db.c:103 db.c:136 editing.c:201 main.c:431
 msgid "Name"
 msgstr ""
 
-#: editing.c:208
-msgid "more detailed name options"
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr ""
+
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr ""
+
+#: editing.c:166 main.c:728 main.c:729
+msgid "Edit Contact"
 msgstr ""
 
 #: editing.c:210
+msgid "more detailed name options"
+msgstr ""
+
+#: editing.c:212
 msgid "Summary"
 msgstr ""
 
-#: editing.c:221 interface.c:709
+#: editing.c:223
 msgid "Birthday"
 msgstr ""
 
-#: editing.c:232
+#: editing.c:234
 msgid "Image"
 msgstr ""
 
-#: editing.c:263
+#: editing.c:265
 msgid "Schedule"
 msgstr ""
 
-#: editing.c:270
+#: editing.c:273
 msgid "automatic appointment"
 msgstr ""
 
-#: editing.c:289
+#: editing.c:292
 msgid "click to choose file"
 msgstr ""
 
-#: editing.c:291 main.c:267
+#: editing.c:294 main.c:541
 msgid "Categories"
 msgstr ""
 
-#: editing.c:352
+#: editing.c:355
 msgid "Personal"
 msgstr ""
 
-#: editing.c:360 main.c:162
-msgid "Cancel"
-msgstr ""
-
-#: editing.c:369
-msgid "Clear"
-msgstr ""
-
-#: editing.c:378
-msgid "Save"
-msgstr ""
-
-#: interface.c:73
+#: interface.c:65
 msgid "Contacts"
+msgstr ""
+
+#: interface.c:99 interface.c:134 interface.c:169 interface.c:204
+#: interface.c:239 interface.c:274 interface.c:310
+msgid "label45"
 msgstr ""
 
 #: interface.c:107 interface.c:142 interface.c:177 interface.c:212
 #: interface.c:247 interface.c:282 interface.c:318
-msgid "label45"
-msgstr ""
-
-#: interface.c:115 interface.c:150 interface.c:185 interface.c:220
-#: interface.c:255 interface.c:290 interface.c:326
 msgid "label46"
 msgstr ""
 
-#: interface.c:123
+#: interface.c:115
 msgid "ABC"
 msgstr ""
 
-#: interface.c:158
+#: interface.c:150
 msgid "DEF"
 msgstr ""
 
-#: interface.c:193
+#: interface.c:185
 msgid "GHIJ"
 msgstr ""
 
-#: interface.c:228
+#: interface.c:220
 msgid "KLMN"
 msgstr ""
 
-#: interface.c:263
+#: interface.c:255
 msgid "OPQR"
 msgstr ""
 
-#: interface.c:298
+#: interface.c:290
 msgid "STUV"
 msgstr ""
 
-#: interface.c:334
+#: interface.c:326
 msgid "WXYZ"
 msgstr ""
 
-#: interface.c:350
+#: interface.c:342
 msgid "Find:"
 msgstr ""
 
-#: interface.c:366
+#: interface.c:358
 msgid "Contact"
 msgstr ""
 
-#: interface.c:383
-msgid "Phone"
+#: interface.c:423 main.c:543
+msgid "Setup"
 msgstr ""
 
-#: interface.c:396
-msgid "Mail"
+#: interface.c:435 main.c:146
+msgid "Detail panel"
 msgstr ""
 
-#: interface.c:409 interface.c:671
-msgid "Mobile"
+#: interface.c:474 main.c:185
+msgid "NAME"
 msgstr ""
 
-#: interface.c:422
-msgid "FAX"
+#: interface.c:484 main.c:195
+msgid "Add"
 msgstr ""
 
-#: interface.c:435
-msgid "label77"
+#: interface.c:492 main.c:203
+msgid "Remove"
 msgstr ""
 
-#: interface.c:446
-msgid "label78"
+#: interface.c:520 main.c:233
+msgid "Data Field"
 msgstr ""
 
-#: interface.c:457
-msgid "label79"
+#: interface.c:528 main.c:241
+msgid "Label"
 msgstr ""
 
-#: interface.c:468
-msgid "label80"
+#: interface.c:536 main.c:249
+msgid "Pages"
 msgstr ""
 
-#: interface.c:539
-msgid "Contact Details"
-msgstr ""
-
-#: interface.c:563
-msgid "Edit"
-msgstr ""
-
-#: interface.c:572 main.c:162 main.c:219 main.c:220 structure.c:264
-#: structure.c:265
-msgid "Delete"
-msgstr ""
-
-#: interface.c:613
-msgid "Markus Musterman"
-msgstr ""
-
-#: interface.c:622
-msgid "Summary Description"
-msgstr ""
-
-#: interface.c:633
-msgid ""
-"Somestreet No. 10\n"
-"12345 Some City\n"
-"UnknownCountry"
-msgstr ""
-
-#: interface.c:652
-msgid "Telephone"
-msgstr ""
-
-#: interface.c:660 interface.c:679
-msgid "(555) 213 456 78"
-msgstr ""
-
-#: interface.c:690
-msgid "E-Mail"
-msgstr ""
-
-#: interface.c:698
-msgid "dummy@aol.com"
-msgstr ""
-
-#: interface.c:717
-msgid "31. 2. 1968"
-msgstr ""
-
-#: interface.c:728
-msgid "Main Data"
-msgstr ""
-
-#: interface.c:736
-msgid "label38"
-msgstr ""
-
-#: interface.c:744
-msgid "Other Data"
-msgstr ""
-
-#: interface.c:769
-msgid ""
-"\n"
-"\n"
-"\n"
-"There's some space here for arbitrary notes\n"
-"about a contact.\n"
-"\n"
-msgstr ""
-
-#: interface.c:771
-msgid "Notes"
-msgstr ""
-
-#: main.c:65
+#: main.c:301
 msgid "All categories"
 msgstr ""
 
-#: main.c:161
+#: main.c:418
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:161
+#: main.c:418 main.c:451 structure.c:179
 msgid "Confirm"
 msgstr ""
 
-#: main.c:173
+#: main.c:419 main.c:452 main.c:494 structure.c:180 structure.c:260
+#: structure.c:261
+msgid "Delete"
+msgstr ""
+
+#: main.c:419 main.c:452 structure.c:180
+msgid "Cancel"
+msgstr ""
+
+#: main.c:431
 msgid "New Category"
 msgstr ""
 
-#: main.c:215 main.c:216
+#: main.c:451
+msgid "Really delete this category?"
+msgstr ""
+
+#: main.c:488
 msgid "New"
 msgstr ""
 
-#: main.c:265
+#: main.c:489
+msgid "New category"
+msgstr ""
+
+#: main.c:490
+msgid "Tap here to create a new category."
+msgstr ""
+
+#: main.c:495
+msgid "Delete category"
+msgstr ""
+
+#: main.c:496
+msgid "Tap here to delete the selected category."
+msgstr ""
+
+#: main.c:539
 msgid "Editing Layout"
 msgstr ""
 
-#: main.c:428 main.c:429
+#: main.c:566
+msgid "Contacts: Configuration"
+msgstr ""
+
+#: main.c:723 main.c:724
 msgid "New Contact"
 msgstr ""
 
-#: main.c:433 main.c:434
+#: main.c:733 main.c:734
 msgid "Delete Contact"
 msgstr ""
 
-#: main.c:438 main.c:439
+#: main.c:738 main.c:739
 msgid "Configure"
 msgstr ""
 
-#: structure.c:107
+#: structure.c:108
 msgid "New page"
 msgstr ""
 
-#: structure.c:107 structure.c:126 structure.c:159
+#: structure.c:108 structure.c:127 structure.c:152
 msgid "Title"
 msgstr ""
 
-#: structure.c:126
+#: structure.c:127
 msgid "New group"
 msgstr ""
 
-#: structure.c:138 structure.c:176
+#: structure.c:139 structure.c:169
 msgid "No container selected"
 msgstr ""
 
-#: structure.c:150
-msgid "Label:"
-msgstr ""
-
-#: structure.c:151
-msgid "Tag:"
-msgstr ""
-
 #: structure.c:153
-msgid "Single line"
-msgstr ""
-
-#: structure.c:155
-msgid "Multiple line"
-msgstr ""
-
-#: structure.c:160
 msgid "Tag"
 msgstr ""
 
-#: structure.c:162
+#: structure.c:155
 msgid "New field"
+msgstr ""
+
+#: structure.c:179
+msgid "Really delete this field?"
 msgstr ""
 
 #: support.c:121
