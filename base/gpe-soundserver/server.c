@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/signal.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 #include <X11/Xlib.h>
 
 pid_t pid;
@@ -18,6 +20,13 @@ void
 quit ()
 {
   kill (pid, SIGTERM);
+}
+
+void
+child_dead ()
+{
+  int rc = wait (NULL);
+  exit (rc);
 }
 
 int
@@ -39,6 +48,8 @@ main ()
       perror ("exec");
       exit (1);
     }
+
+  signal (SIGCHLD, child_dead);
 
   atexit (quit);
 
