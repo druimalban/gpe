@@ -60,7 +60,7 @@ irc_channel_send_message (IRCServer *server, gchar *message)
 
 /* Join secified channel on specified server */
 gboolean
-irc_server_join_channel (IRCServer **server, gchar *channel)
+irc_server_join_channel (IRCServer *server, gchar *channel)
 {
   int send_result;
   gchar *join_string;
@@ -74,7 +74,7 @@ irc_server_join_channel (IRCServer **server, gchar *channel)
   if (send_result != -1)
   {
     printf ("Channel joined.\n");
-    irc_channel = g_malloc (sizeof (irc_channel));
+    irc_channel = g_malloc (sizeof (*irc_channel));
     g_hash_table_insert (server->channel, (gpointer) channel, (gpointer) irc_channel);
     return TRUE;
   }
@@ -85,7 +85,7 @@ irc_server_join_channel (IRCServer **server, gchar *channel)
 
 /* Autojoin any enabled channels */
 gboolean
-irc_server_login_init (IRCServer **server)
+irc_server_login_init (IRCServer *server)
 {
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
   irc_server_join_channel (server, "#gpe");
@@ -95,7 +95,7 @@ irc_server_login_init (IRCServer **server)
 
 /* Login to the IRC server with the username and password values from server->user_info */
 gboolean
-irc_server_login (IRCServer **server)
+irc_server_login (IRCServer *server)
 {
   int send_result;
   gchar *login_string;
@@ -121,7 +121,7 @@ irc_server_login (IRCServer **server)
 }
 
 gboolean
-irc_server_connect (IRCServer **server)
+irc_server_connect (IRCServer *server)
 {
   int fd, connect_result;
   struct addrinfo *address;
@@ -185,7 +185,7 @@ main (int argc, char *argv[])
     server->user_info->nick = g_strdup ("argv[2]");
     server->user_info->username = g_strdup ("argv[2]");
     server->user_info->real_name = g_strdup ("argv[2]");
-    irc_server_connect (&server);
+    irc_server_connect (server);
   }
   else
   {
@@ -193,7 +193,7 @@ main (int argc, char *argv[])
     server->user_info->nick = g_strdup ("dc_gpe-irc");
     server->user_info->username = g_strdup ("dc_gpe-irc");
     server->user_info->real_name = g_strdup ("dc_gpe-irc");
-    irc_server_connect (&server);
+    irc_server_connect (server);
   }
 
   return 0;
