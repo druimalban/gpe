@@ -1,3 +1,8 @@
+2003-03-30  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install-program): Remove strip.  Use install -d in
+	place of mkdir.
+
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.16 released.
