@@ -1,3 +1,8 @@
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* configure.c (new_category_box): Mark string for translation.
+	Patch from Libor Klepac.
+
 2003-07-13  Moray Allan  <moray@sermisy.org>
 
 	* Version 0.36.1.

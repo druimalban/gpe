@@ -94,7 +94,7 @@ new_category_box (GtkWidget *w, gpointer data)
   GtkWidget *vbox = GTK_DIALOG (window)->vbox;
   GtkWidget *ok;
   GtkWidget *cancel;
-  GtkWidget *label = gtk_label_new ("Name:");
+  GtkWidget *label = gtk_label_new (_("Name:"));
   GtkWidget *name = gtk_entry_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   guint spacing = gpe_get_boxspacing ();
