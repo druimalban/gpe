@@ -1,3 +1,9 @@
+2004-07-14  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistview.c (LABEL_YMARGIN): Set to 17.
+	(_gpe_icon_list_view_expose): Tweak text positioning.
+	(_gpe_icon_list_view_recalc_size): Set req->width appropriately.
+
 2004-07-12  Phil Blundell  <pb@nexus.co.uk>
 
 	* gpeiconlistview.c: (PARENT_HANDLER): Delete.

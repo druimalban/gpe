@@ -68,7 +68,7 @@ static GtkWidgetClass *parent_class;
 static void _gpe_icon_list_view_cancel_popup (GPEIconListView *il);
 static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row);
 
-#define LABEL_YMARGIN	8
+#define LABEL_YMARGIN	17
 #define LABEL_XMARGIN   5
 #define TOP_MARGIN	5
 
@@ -328,14 +328,14 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      if (il->textpos == GPE_TEXT_BELOW)
 		{
 		  r1.x = cell_x;
-		  r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
+		  r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN - 8;
 		  r1.width = cell_w;
 		  r1.height = label_height;
 		}
 	      else
 		{
 		  r1.x = LABEL_XMARGIN + 2 * il->icon_size;
-		  r1.y = row * il_row_height (il) + LABEL_YMARGIN;
+		  r1.y = row * il_row_height (il) + LABEL_YMARGIN - 8;
 		  r1.width = widget->allocation.width - r1.x;
 		  r1.height = label_height;
 		}
@@ -484,6 +484,10 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self,
   if (self->rows_set && self->rows > self->rows_set)
     self->rows = self->rows_set;
 
+  if (count > self->cols)
+    req->width = self->cols * il_col_width (self);
+  else
+    req->width = count * il_col_width (self);
   req->height = self->rows * il_row_height (self) + TOP_MARGIN;
 }
 	
