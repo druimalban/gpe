@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-21 02:37+0000\n"
+"POT-Creation-Date: 2003-02-23 18:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,10 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: calendar.c:107
+#: calendar.c:114
 msgid "All day event"
 msgstr ""
 
 #: gpe-today.desktop.in.h:1
-msgid "GPE Today "
+msgid "GPE Today"
 msgstr ""
