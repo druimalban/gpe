@@ -1,5 +1,7 @@
 2003-12-16  Colin Marquardt  <colin@marquardt-home.de>
 
+	* includes/head.php: Link GPE logo to point to the GPE home page.
+
 	* includes/menu.php: Name section "Home/News".
 
 	* gpe-news.php: Add "News" heading.

@@ -17,14 +17,15 @@
 <table border=0 width="100%">
 <tr>
 <td width=70>
-<img src="/images/gpe-logo.png" alt="[The GPE Logo]">
+<a href="http://gpe.handhelds.org">
+<img src="/images/gpe-logo.png" alt="[The GPE Logo] > gpe.handhelds.org">
 </td>
 <td width="*" valign="middle">
 <h1> GPE: <?php echo $addtitle; ?></h1>
 </td>
 <td halign="right">
 <a href="http://handhelds.org">
-<img src="http://www.handhelds.org/images/handheld_icon_white.jpg" alt="handhelds.org">
+<img src="http://www.handhelds.org/images/handheld_icon_white.jpg" alt="[The hh.org Logo] > handhelds.org">
 </a>
 </td>
 </tr>
