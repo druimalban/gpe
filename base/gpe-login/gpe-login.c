@@ -61,6 +61,7 @@ static gboolean autolock_mode;
 
 static GtkWidget *window;
 static GtkWidget *focus;
+static GtkWidget *socket = NULL;
 
 static guint xkbd_xid;
 
@@ -220,7 +221,10 @@ static void
 enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
 {
   if (login_correct (entry, NULL))
-    gtk_widget_hide (window);
+    {
+      gdk_keyboard_ungrab (GDK_CURRENT_TIME);
+      gtk_widget_hide (window);
+    }
   else
     gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
 }
@@ -236,6 +240,9 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	{
 	  gtk_widget_show_all (window);
 	  gtk_widget_grab_focus (focus);
+	  gdk_keyboard_grab (window->window, TRUE, GDK_CURRENT_TIME);
+	  if (xkbd_xid && socket)
+	    gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
 	}
     }
 
@@ -413,7 +420,6 @@ main (int argc, char *argv[])
   GtkWidget *frame;
   GtkWidget *logo = NULL;
   GdkPixbuf *icon;
-  GtkWidget *socket = NULL;
   gboolean fullscreen;
   Display *dpy;
   Window root;
@@ -426,7 +432,7 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (argc == 2 && !strcmp (argv[1], "-autolock"))
+  if (argc == 2 && !strcmp (argv[1], "--autolock"))
     autolock_mode = TRUE;
 
   signal (SIGCHLD, SIG_IGN);
@@ -531,7 +537,6 @@ main (int argc, char *argv[])
       GtkWidget *hbox_user, *hbox_password;
       GtkWidget *login_label, *password_label;
       GtkWidget *entry;
-      GtkWidget *socket = NULL;
 
       frame = gtk_frame_new (autolock_mode ? _("Screen locked") : _("Log in"));
 
@@ -696,10 +701,9 @@ main (int argc, char *argv[])
     {
       gtk_widget_show_all (window);
       gtk_widget_grab_focus (focus);
+      if (xkbd_xid && socket)
+	gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
     }
-
-  if (xkbd_xid && socket)
-    gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
 
   gtk_main ();
 

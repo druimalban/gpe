@@ -1,0 +1,2 @@
+#!/bin/sh
+DISPLAY=:0 /usr/bin/gpe-lock-display

@@ -41,9 +41,13 @@ install: install-dm install-login
 
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
+	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
 	install -D -m 644 gpe-login.buttons $(DESTDIR)/etc/X11/gpe-login.buttons
+	install -D gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
+	install -D gpe-login.session $(DESTDIR)/etc/X11/Xsession-gpe.d/50autolock
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
+	strip $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 
 install-dm: gpe-dm
 	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
@@ -60,7 +64,7 @@ install-scripts:
 	install -D X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do mkdir -p $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; cp $$FILES $(DESTDIR)/etc/$$i/; done
 
-ipkg:
+ipkg: all
 	rm -rf familiar/dist.gpe-login
 	mkdir -p familiar/dist.gpe-login/CONTROL
 	cp familiar/control.gpe-login familiar/dist.gpe-login/CONTROL/control
@@ -86,4 +90,4 @@ ipkg:
 	ipkg-build familiar/dist.gpe-session-scripts
 
 clean:
-	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o
+	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o
