@@ -18,6 +18,7 @@
 #include <gtk/gtk.h>
 #include <libintl.h>
 #include <langinfo.h>
+#include <ctype.h>
 
 #include <gpe/tray.h>
 #include <gpe/init.h>
@@ -61,6 +62,68 @@ struct alarm_context
 };
 
 static struct alarm_state state;
+
+static void
+flush_alarm_details (void)
+{
+  FILE *fp = fopen (alarm_file, "w");
+  if (fp)
+    {
+      fprintf (fp, "ACTIVE: %d\n", state.active);
+      fprintf (fp, "TIME: %02d:%02d\n", state.hour, state.minute);
+      if (state.date_flag)
+	fprintf (fp, "DATE: %04d-%02d-%02d\n", state.year, state.month, state.day);
+      else
+	fprintf (fp, "DAYS: %02x\n", state.day_mask);
+      fclose (fp);
+    }
+}
+
+static void
+load_alarm_details (void)
+{
+  FILE *fp = fopen (alarm_file, "r");
+  if (fp)
+    {
+      while (!feof (fp))
+	{
+	  char buf[128];
+
+	  if (fgets (buf, 128, fp))
+	    {
+	      char *p = strchr (buf, ':');
+	      if (p)
+		{
+		  *p++ = 0;
+
+		  while (isspace (p))
+		    p++;
+ 
+		  if (!strcasecmp (buf, "ACTIVE"))
+		    {
+		      state.active = atoi (p);
+		    }
+		  else if (!strcasecmp (buf, "TIME"))
+		    {
+		      sscanf (p, "%02d:%02d", &state.hour, &state.minute);
+		    }
+		  else if (!strcasecmp (buf, "DATE"))
+		    {
+		      state.date_flag = TRUE;
+		      sscanf (p, "%04d-%02d-%02d", &state.year, &state.month, &state.day);
+		    }
+		  else if (!strcasecmp (buf, "DAYS"))
+		    {
+		      state.date_flag = FALSE;
+		      sscanf (p, "%02x", &state.day_mask);
+		    }
+		}
+	    }
+	}
+
+      fclose (fp);
+    }
+}
 
 static time_t
 extract_time (struct alarm_state *alarm)
@@ -137,7 +200,7 @@ set_alarm (struct alarm_state *alarm)
 	  alarm->day = tm.tm_mday;
 	}
       
-      if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm") == FALSE)
+      if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm\n") == FALSE)
 	{
 	  gpe_error_box (_("Unable to set alarm"));
 	  alarm->active = FALSE;
@@ -296,6 +359,8 @@ do_set_alarm (struct alarm_context *ctx)
 
   set_alarm (&state);
 
+  flush_alarm_details ();
+
   free_alarm_context (ctx);
 }
 
@@ -386,6 +451,12 @@ clicked (GtkWidget *w, GdkEventButton *ev, GtkWidget *menu)
 static void
 do_check_alarm (void)
 {
+  if (state.date_flag == FALSE)
+    set_alarm (&state);
+  else
+    state.active = FALSE;
+
+  flush_alarm_details ();
 }
 
 int
@@ -403,6 +474,8 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   alarm_file = g_strdup_printf ("%s/.gpe/alarm", g_get_home_dir ());
+
+  load_alarm_details ();
 
   if (argc > 1 && !strcmp (argv[1], "--check-alarm"))
     {
