@@ -817,7 +817,7 @@ do_update (GtkWidget * widget)
 
 		if (flock (fileno (f), LOCK_SH) != 0)
 		{
-			do_alert ("%s: %s", _("flock(stabfile) failed)"),
+			do_alert ("%s: %s", _("flock(stabfile) failed"),
 				  strerror (errno));
 			return FALSE;
 		}

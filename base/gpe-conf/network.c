@@ -628,7 +628,7 @@ create_nwppp_widgets (NWInterface_t iface)
 	create_editable_entry (&iface, ctable, "provider", _("Provider"),
 			       iface.provider,
 			       _
-			       ("Here you need to enter the name if the provider configuration to use for this interface."),
+			       ("Here you need to enter the name of the provider configuration to use for this interface."),
 			       1);
 	return ctable;
 }
@@ -729,7 +729,7 @@ create_global_widgets ()
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 
-	label = gtk_radio_button_new_with_label_from_widget (NULL, _("on"));
+	label = gtk_radio_button_new_with_label_from_widget (NULL, _("yes"));
 	gtk_tooltips_set_tip (tooltips, label, helptext, NULL);
 	gtk_widget_set_sensitive (label, have_access);
 	gtk_widget_set_name (GTK_WIDGET (label), "use-dhcp-on");
@@ -740,7 +740,7 @@ create_global_widgets ()
 	gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, 0);
 	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
 							     (label),
-							     _("off"));
+							     _("no"));
 	gtk_tooltips_set_tip (tooltips, label, helptext, NULL);
 
 	gtk_widget_set_sensitive (label, have_access);
@@ -1003,7 +1003,7 @@ Network_Build_Objects ()
 
 	label = gtk_image_new_from_pixbuf (gpe_find_icon ("exit"));
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"),
-				 _("Close  network tool"),
+				 _("Close network tool"),
 				 _("Close network tool"), label,
 				 (GtkSignalFunc) gtk_main_quit, NULL);
 

@@ -285,7 +285,7 @@ select_save_file_as (void)
 
   suggested_filename = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
-  file_selector = gtk_file_selection_new (_("Save as .."));
+  file_selector = gtk_file_selection_new (_("Save as ..."));
 
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
 			     "clicked", GTK_SIGNAL_FUNC (save_file_as), NULL);

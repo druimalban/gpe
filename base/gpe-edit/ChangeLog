@@ -1,3 +1,7 @@
+2003-08-01  luc  <luc@handhelds.org>
+
+	* main.c (select_save_file_as): i18n cosmetic.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile, main.c (main): Removed legacy GTK1 code.

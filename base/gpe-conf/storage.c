@@ -356,7 +356,7 @@ update_status ()
 					 "<span foreground=\"black\">",
 					 _("Total:"),
 					 (float) filesystems[fs_pos - 1].total / 1024.0, 
-					_("Mounted at"),
+					_("Mounted at "),
 					 filesystems[fs_pos - 1].mountpoint,
 					 "</span>");
 				gtk_label_set_markup (GTK_LABEL
@@ -594,7 +594,7 @@ Storage_Build_Objects (void)
 					 "<span foreground=\"black\">",
 					 _("Total:"),
 					 (float) filesystems[fs_count - 1].total /
-					 1024.0, _("Mounted at"),
+					 1024.0, _("Mounted at "),
 					 filesystems[fs_count - 1].mountpoint,
 					 "</span>");
 				gtk_label_set_markup (GTK_LABEL (label1),

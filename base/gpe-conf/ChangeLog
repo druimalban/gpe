@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+01.08.2003		Luc			cardinfo.c, network.c, storage.c              minor fix for i18n.
+	
 31.07.2003		Florian			po/fr.po					Updated French translation.
 
 30.07.2003		Florian			main.c						Applied better UTF8 patch from Libor Klepac <elkropac@students.zcu.cz>
