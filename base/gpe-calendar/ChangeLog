@@ -1,3 +1,19 @@
+2004-07-16  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * week_view.c: Very basic keyboard controls for week view.
+    * week_view.c: Formating updates, minor painting improvements.
+    
+2004-07-15  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * day_view.c: selection_made() Changed clicking behaviour to start edit
+                  on click on any entry.
+    * day_view.c: Started implementing keyboard control, deleting of events.
+    * main.c: Removed hardcoded toolbar style.
+    * day_view.c: Don't display very early/late slots if they are not used.
+    * day_view.c, event_ui.c: Some formating improvements.
+    * event_ui.c: click_delete() Replaced obsolete gpe_question_ask_yn().
+    * week_view.c: Activate scrollbar only if necessary.
+
 2004-06-21  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add es, sk, sr, ru, hu.
@@ -1261,5 +1277,3 @@
 	* Makefile: Don't link with gdk-imlib.
 	(MEMBERS): Remove about.
 	* about.c: Obsolete, deleted.
-	
-

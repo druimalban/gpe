@@ -15,6 +15,7 @@
 #include <libintl.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/event-db.h>
 
@@ -38,6 +39,8 @@ struct week_day
   gchar *string;
   GSList *events;
   gboolean is_today;
+  gboolean is_active;
+  gboolean initialized;
 } week_days[7];
 
 static gint
@@ -89,7 +92,7 @@ draw_expose_event (GtkWidget *widget,
     {
       GSList *iter;
       for (iter = week_days[day].events; iter; iter = iter->next)
-	((event_t)iter->data)->mark = FALSE;
+        ((event_t)iter->data)->mark = FALSE;
     }
 
   for (day = 0; day < 7; day++)
@@ -99,7 +102,7 @@ draw_expose_event (GtkWidget *widget,
       PangoRectangle pr;
 
       if (draw_sep)
-	gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
+        gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
 
       gdk_draw_rectangle (drawable, white_gc, 
 			  TRUE, time_width, y + 1, max_width - time_width, max_height);
@@ -123,7 +126,7 @@ draw_expose_event (GtkWidget *widget,
       y += pr.height + 2;
 
       if (week_days[day].events)
-	{
+      {
 	  for (iter = week_days[day].events; iter; iter = iter->next)
 	    {
 	      guint height = 0;
@@ -149,12 +152,12 @@ draw_expose_event (GtkWidget *widget,
 					&event->area,
 					widget,
 					"label",
-					0, y,
+					2, y - 2,
 					pl_evt);
 
 		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 		      if (height < pr.height)
-			height = pr.height;
+                height = pr.height;
 		      ev->mark = TRUE;
 		      g_free (buffer);
 		    }
@@ -170,25 +173,25 @@ draw_expose_event (GtkWidget *widget,
 				&event->area,
 				widget,
 				"label",
-				2 + time_width, y,
+				2 + time_width, y - 2,
 				pl_evt);
 
-	      if (height < pr.height)
-		height = pr.height;
+          if (height < pr.height)
+            height = pr.height;
 
 	      y += height + 2;
 	    }
 	}
 
-      if (week_days[day].is_today)
-	{
-	  gdk_draw_rectangle (drawable, red_gc, FALSE, 0, week_days[day].y0, max_width, week_days[day].y1 - week_days[day].y0);
-	  gdk_draw_rectangle (drawable, red_gc, FALSE, 1, week_days[day].y0 + 1, max_width - 2, week_days[day].y1 - week_days[day].y0 - 2);
-	  draw_sep = FALSE;
-	}
+      if (week_days[day].is_active)
+        {
+	      gdk_draw_rectangle (drawable, red_gc, FALSE, 0, week_days[day].y0, max_width, week_days[day].y1 - week_days[day].y0);
+          gdk_draw_rectangle (drawable, red_gc, FALSE, 1, week_days[day].y0 + 1, max_width - 2, week_days[day].y1 - week_days[day].y0 - 2);
+          draw_sep = FALSE;
+        }
       else
-	draw_sep = TRUE;
-    }
+       draw_sep = TRUE;
+  }
 
   gdk_gc_unref (red_gc);
 
@@ -226,7 +229,7 @@ week_view_update (void)
       struct week_day *d = &week_days[day];
 
       if (d->events)
-	event_db_list_destroy (d->events);
+        event_db_list_destroy (d->events);
 
       d->events = event_db_untimed_list_for_period (t, t + SECONDS_IN_DAY - 1, TRUE);
       d->events = g_slist_concat (d->events, 
@@ -237,49 +240,54 @@ week_view_update (void)
       week_days[day].is_today = (tm.tm_mday == today.tm_mday 
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
+      if (!week_days[day].initialized)
+        {
+          week_days[day].is_active = week_days[day].is_today;
+          week_days[day].initialized = TRUE;
+        }
       strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
       if (d->string)
-	g_free (d->string);
+	     g_free (d->string);
       d->string = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 
       t += SECONDS_IN_DAY;
 
       for (iter = week_days[day].events; iter; iter = iter->next)
-	((event_t)iter->data)->mark = FALSE;
+        ((event_t)iter->data)->mark = FALSE;
     }
 
   for (day = 0; day < 7; day++)
     {
       struct week_day *d = &week_days[day];
       for (iter = d->events; iter; iter = iter->next)
-	{
-	  /* calculate width required to display times */
-	  PangoRectangle pr;
-	  event_t ev = (event_t)iter->data;
-	  char buf[32];
-	  char *p = buf;
-	  size_t l = sizeof (buf) - 1;
-	  gchar *s;
-	  if ((ev->flags & FLAG_UNTIMED) == 0)
-	    {
-	      if (ev->mark == FALSE)
-		{
-		  size_t n;
-		  localtime_r (&ev->start, &tm);
-		  n = strftime (p, l, "%H:%M", &tm);
-		  p += n;
-		  l -= n;
-		}
-
-	      ev->mark = TRUE;
-	      s = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-	      pango_layout_set_text (pl_evt, s, strlen (s));
-	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
-	      if (time_width < pr.width)
-		time_width = pr.width;
-	      g_free (s);
-	    }
-	}
+        {
+          /* calculate width required to display times */
+          PangoRectangle pr;
+          event_t ev = (event_t)iter->data;
+          char buf[32];
+          char *p = buf;
+          size_t l = sizeof (buf) - 1;
+          gchar *s;
+          if ((ev->flags & FLAG_UNTIMED) == 0)
+            {
+              if (ev->mark == FALSE)
+                {
+                  size_t n;
+                  localtime_r (&ev->start, &tm);
+                  n = strftime (p, l, "%H:%M", &tm);
+                  p += n;
+                  l -= n;
+                }
+    
+              ev->mark = TRUE;
+              s = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+              pango_layout_set_text (pl_evt, s, strlen (s));
+              pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+              if (time_width < pr.width)
+                time_width = pr.width;
+              g_free (s);
+            }
+        }
     }
 
   time_width += 2;
@@ -343,9 +351,42 @@ update_hook_callback (void)
   week_view_update ();
 }
 
+static gboolean
+week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *notebook)
+{
+  int i;
+  
+  if (k->keyval == GDK_Down) 
+  {
+    for (i=0;i<7;i++)
+      if (week_days[i].is_active)
+        {
+          week_days[i].is_active = FALSE;
+          week_days[(i+1)%7].is_active = TRUE;
+          week_view_update ();
+          break;
+        }
+    return TRUE;
+  }
+  if (k->keyval == GDK_Up) 
+  {
+    for (i=0;i<7;i++)
+      if (week_days[i].is_active)
+        {
+          week_days[i].is_active = FALSE;
+          week_days[(i+6)%7].is_active = TRUE;
+          week_view_update ();
+          break;
+        }
+    return TRUE;
+  }
+  return FALSE;
+}
+
 GtkWidget *
 week_view (void)
 {
+  int i;
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
@@ -361,7 +402,7 @@ week_view (void)
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
-				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
@@ -373,6 +414,12 @@ week_view (void)
                      (gpointer) update_hook_callback);
 
   week_view_draw = draw;
-
+  
+  for (i=0;i<7;i++)
+    week_days[i].initialized = FALSE;
+  gtk_widget_grab_focus(datesel);
+  g_signal_connect (G_OBJECT (datesel), "key_press_event", 
+		    G_CALLBACK (week_view_key_press_event), NULL);
+  
   return vbox;
 }

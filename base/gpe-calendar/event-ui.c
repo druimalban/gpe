@@ -255,30 +255,32 @@ click_delete (GtkWidget *widget, GtkWidget *d)
      
   if (ev_real->recur)
     {
-      if (gpe_question_ask_yn (_("Delete all recurring entries?\n(If no, delete this instance only)")))
-	{			  
-	  if (ev_real->flags & FLAG_ALARM)
-	    {
-	      unschedule_alarm (ev);
-	      schedule_next (0,0);
-	    }
-	  
-	  event_db_remove (ev_real);
-	}
+      if (gpe_question_ask(
+        _("Delete all recurring entries?\n(If no, delete this instance only)"), 
+        _("Question"), "question", "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
+        {			  
+          if (ev_real->flags & FLAG_ALARM)
+            {
+              unschedule_alarm (ev);
+              schedule_next (0,0);
+            }
+          
+          event_db_remove (ev_real);
+        }
       else 
-	{
-	  r = event_db_get_recurrence (ev_real);
-	  r->exceptions = g_slist_append (r->exceptions, (void *)ev->start);
-	  event_db_flush (ev_real);
-	}
+        {
+          r = event_db_get_recurrence (ev_real);
+          r->exceptions = g_slist_append (r->exceptions, (void *)ev->start);
+          event_db_flush (ev_real);
+        }
     }
   else
     {			  
       if (ev_real->flags & FLAG_ALARM)
-	{
-	  unschedule_alarm (ev);
-	  schedule_next (0,0);
-	}
+        {
+          unschedule_alarm (ev);
+          schedule_next (0,0);
+        }
       
       event_db_remove (ev_real);
   }

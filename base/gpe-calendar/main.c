@@ -258,7 +258,6 @@ main (int argc, char *argv[])
   toolbar = gtk_toolbar_new ();
 
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
