@@ -106,5 +106,8 @@ pkmessage_t;
 #define PK_SOCKET "/tmp/.gpe_shield_icm"
 
 extern int suidloop (int sock);
+extern void do_rules_apply();
+extern int do_load_rules();
+extern void do_clear();
 
 #endif

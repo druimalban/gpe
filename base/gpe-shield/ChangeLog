@@ -1,4 +1,9 @@
-
+2004-06-09 Florian Boor <florian.boor@kernelconceps.de>
+	* backend.c: send_message() Add check for connection is active.
+	* backend.h: Export some more functions.
+	* main.c: Added command line switch "--active" that triggers activating 
+		stored rules.
+	
 2004-06-07 Florian Boor <florian.boor@kernelconceps.de>
 	* Makefile: Another fix: Install binary suid root.
 	* Makefile: Some improvements to be oe-compatible.

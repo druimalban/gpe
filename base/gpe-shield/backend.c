@@ -29,14 +29,14 @@
 
 /* module global variables */
 
-static int sock;
+static int sock = -1;
 
 /* local rule repository */
 static rule_t *rule_info = NULL;
 static int rule_count = 0;
 
 #define IPTABLES_CMD "/sbin/iptables"
-#define CONFIGFILE	"/tmp/access.conf"
+#define CONFIGFILE	"/etc/access.conf"
 #define DEFAULT_INTERFACE "! lo"
 
 /* forwared definitions */
@@ -322,6 +322,8 @@ static void
 send_message (pkcontent_t ctype, rule_t *rule)
 {
 	pkmessage_t msg;
+	
+	if (sock < 0) return; /* no connection active */
 	msg.type = PK_FRONT;
 	msg.ctype = ctype;
 	if (rule) 

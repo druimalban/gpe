@@ -38,6 +38,22 @@ main (int argc, char *argv[])
 	int lsock, csock;
 	struct sockaddr_un laddr, caddr;
 	socklen_t len;
+	gboolean activate_rules = FALSE;
+	
+	/* check command line parameters */
+	if (argc > 1)
+	{
+		activate_rules = !strcmp(argv[1],"--activate");
+	}
+	
+	/* command line paramater tells us just to do setup and exit */
+	if (activate_rules)
+	{
+		do_clear();
+		do_load_rules();
+		do_rules_apply();
+		exit(0);
+	}
 	
 	/* fork frontend process */
 	suidPID = fork();
