@@ -1,3 +1,23 @@
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (CPPFLAGS, LDFLAGS): Add libgpepimc.
+	* main.c (main): Call gpe_pim_categories_init.
+	* todo.h (edit_item): Second arg is int, not pointer.
+	* list-ui.c (selected_category): Change type to int.
+	(item_do_edit): Keep in step.
+	(set_category): Likewise.
+	(refresh_items): Likewise.
+	(categories_menu): Likewise.  Get category list from libgpepimc.
+	* todo-ui.c (destroy_user_data): Remove useless conditional.
+	(categories_ok, categories_cancel, do_new_category): Deleted.
+	(new_category): Deleted.
+	(delete_category): Deleted.
+	(categories_button_press_event): Deleted.
+	(change_categories): Deleted.
+	(build_categories_string): Use libgpepimc.
+	(update_categories, change_categories): New.
+	(edit_item): Get category list from libgpepimc.
+
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.42 released.

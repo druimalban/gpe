@@ -16,6 +16,7 @@
 #include <gtk/gtk.h>
 #include <gpe/pixmaps.h>
 #include <gpe/init.h>
+#include <gpe/pim-categories.h>
 
 #include <libdisplaymigration/displaymigration.h>
 
@@ -63,7 +64,7 @@ open_window (void)
 }
 
 int
-main(int argc, char *argv[])
+main (int argc, char *argv[])
 {
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -79,6 +80,9 @@ main(int argc, char *argv[])
 
   if (todo_db_start ())
     exit (1);
+
+  if (gpe_pim_categories_init () == FALSE)
+    exit (1);  
 
   displaymigration_init ();
 

@@ -20,13 +20,14 @@
 #include <gpe/render.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
+#include <gpe/pim-categories.h>
 
 #include "todo.h"
 
 #define _(_x) gettext(_x)
 
 static GtkWidget *g_option;
-static struct todo_category *selected_category;
+static gint selected_category = -1;
 
 GtkListStore *list_store;
 GtkWidget *item_menu;
@@ -38,7 +39,7 @@ static struct todo_item *current_menu_item;
 static void
 item_do_edit (void)
 {
-  gtk_widget_show_all (edit_item (current_menu_item, NULL));
+  gtk_widget_show_all (edit_item (current_menu_item, -1));
 
   current_menu_item = NULL;
 }
@@ -56,7 +57,7 @@ item_do_delete (void)
 static void
 set_category (GtkWidget *w, gpointer user_data)
 {
-  selected_category = user_data;
+  selected_category = (gint)user_data;
   refresh_items ();
 }
 
@@ -69,15 +70,15 @@ categories_menu (void)
 
   i = gtk_menu_item_new_with_label (_("All items"));
   gtk_menu_append (GTK_MENU (menu), i);
-  gtk_signal_connect (GTK_OBJECT (i), "activate", (GtkSignalFunc)set_category, NULL);
+  g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)-1);
   gtk_widget_show (i);
 
-  for (l = todo_db_get_categories_list(); l; l = l->next)
+  for (l = gpe_pim_categories_list (); l; l = l->next)
     {
-      struct todo_category *t = l->data;
-      i = gtk_menu_item_new_with_label (t->title);
+      struct gpe_pim_category *t = l->data;
+      i = gtk_menu_item_new_with_label (t->name);
       gtk_menu_append (GTK_MENU (menu), i);
-      gtk_signal_connect (GTK_OBJECT (i), "activate", (GtkSignalFunc)set_category, t);
+      g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)t->id);
       gtk_widget_show (i);
     }
 
@@ -104,7 +105,7 @@ open_editing_window (GtkTreePath *path)
 
   gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 3, &i, -1);
 
-  gtk_widget_show_all (edit_item (i, NULL));
+  gtk_widget_show_all (edit_item (i, -1));
 }
 
 void
@@ -160,8 +161,8 @@ refresh_items (void)
   for (iter = list; iter; iter = iter->next)
     {
       struct todo_item *i = iter->data;
-      if (selected_category == NULL 
-	  || g_slist_find (i->categories, selected_category))
+      if (selected_category == -1
+	  || g_slist_find (i->categories, (gpointer)selected_category))
 	{
 	  GtkTreeIter iter;
 	  gboolean complete;

@@ -12,11 +12,11 @@ CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
 LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 ifeq ($(CVSBUILD),yes)
-CPPFLAGS += -I../libdisplaymigration -I../libtododb
-LDFLAGS += -L../libdisplaymigration -L../libtododb
+CPPFLAGS += -I../libdisplaymigration -I../libtododb -I../libgpepimc
+LDFLAGS += -L../libdisplaymigration -L../libtododb -L../libgpepimc
 endif
 
-LDFLAGS += -ltododb -ldisplaymigration
+LDFLAGS += -ltododb -ldisplaymigration -lgpepimc
 
 MEMBERS = main todo-ui list-ui
 
