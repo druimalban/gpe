@@ -1334,14 +1334,15 @@ create_global_widgets ()
 			gint length;
 			GError *err = NULL;
 
-			mkdir (g_strdup_printf
-			       ("%s/.dillo", g_get_home_dir ()), S_IRWXU);
-			g_file_get_contents ("/etc/dillorc", &content,
-					     &length, &err);
-			fnew = fopen (cfgfile, "w");
-			fprintf (fnew, "%s", content);
-			fclose (fnew);
-			g_free (content);
+			mkdir (g_strdup_printf("%s/.dillo", g_get_home_dir ()), S_IRWXU);
+			if (g_file_get_contents ("/etc/dillorc", &content,
+				                     &length, &err))
+			{
+				fnew = fopen (cfgfile, "w");
+				fprintf (fnew, "%s", content);
+				fclose (fnew);
+				g_free (content);
+			}
 		}
 	}
 

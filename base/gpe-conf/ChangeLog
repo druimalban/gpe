@@ -1,7 +1,16 @@
 2004-11-17	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* users/interface.c, users/callbacks.c: Fixed password changing.
+
+2004-11-15	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* main.c: Use dialogs for 640x480 screens.
+	* network.c: Fixed bug causing segfault if dillo is not installed.
+
+2004-11-17	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
 	* cardinfo.c, packages.c: Removed including unused header file.
-
+	
 2004-11-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* soundctl.c: Fixed some more restore bugs.

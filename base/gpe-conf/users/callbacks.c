@@ -28,7 +28,7 @@
 #include <time.h>
 
 extern GtkWidget *user_list;
-static gboolean set_own_password = FALSE;
+gboolean set_own_password = FALSE;
 
 /************** main dialog *****************/
 
@@ -249,15 +249,15 @@ users_on_changepasswd_clicked                (GtkButton       *button,
 				                                : "*");
 				suid_exec("CHPW", pwds);
 				g_free(pwds);
+				sleep(5);
 			}
 			gtk_widget_destroy(self->w);
 		}
       else
-	gpe_error_box(_("The two new pass are different!\n Please try again!"));
+        gpe_error_box(_("The two new pass are different!\n Please try again!"));
     }
   else
     gpe_error_box(_("Wrong password\n Please try again!"));
-
 }
 
 

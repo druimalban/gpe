@@ -248,7 +248,7 @@ void initwindow()
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    gtk_widget_set_usize(GTK_WIDGET(self.w),240, 310);
 	
-   if ((size_x > 640) && (size_y > 480))
+   if ((size_x >= 640) && (size_y >= 480))
    {
       gtk_window_set_type_hint(GTK_WINDOW(self.w), GDK_WINDOW_TYPE_HINT_DIALOG);
 	  gtk_window_set_default_size(GTK_WINDOW(self.w), 320, 420);

@@ -34,6 +34,7 @@
 #include "gpe/render.h"
 
 static gchar *listTitles[3];
+extern gboolean set_own_password;
 
 pwlist *pwroot = NULL;
 
@@ -578,8 +579,10 @@ create_passwindow (pwlist *init, GtkWidget *parent)
  	 gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
 		      (GtkSignalFunc) freedata, (gpointer)self);
   else
+  {
+     set_own_password = TRUE;
  	 gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
 		      gtk_main_quit, NULL);
-
+  }
   return passwindow;
 }
