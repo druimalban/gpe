@@ -126,6 +126,9 @@ decoder_fill_in_playlist (struct playlist *p)
   if (p->type != ITEM_TYPE_TRACK)
     return FALSE;
 
+  if (p->data.track.url == NULL || p->data.track.url[0] == 0)
+    return FALSE;
+
   e = find_decoder_for (p->data.track.url);
   if (e)
     return e->fill_in_playlist (p);

@@ -14,6 +14,7 @@
 #include <gpe/errorbox.h>
 
 #include "playlist_db.h"
+#include "decoder.h"
 
 #define _(x) gettext(x)
 
