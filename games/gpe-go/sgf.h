@@ -1,6 +1,8 @@
-/* gpe-go
+/* gpe-go, a GO board for GPE
  *
- * Copyright (C) 2003 Luc Pionchon
+ * $Id$
+ *
+ * Copyright (C) 2003-2004 Luc Pionchon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,7 +15,7 @@
 
 enum sgf_scanner_error{
   SGF_ERROR_NONE = 0,
-  SGF_ERROR_OPEN_FILE,
+  SGF_ERROR_OPEN_FILE
 };
 
 int load_sgf_file(const char * filename);
@@ -37,7 +39,7 @@ enum _PropIdent{
   SYMBOL_C ,
   SYMBOL_TM,
   //more to come...
-  LAST_SGF_SYMBOL,
+  LAST_SGF_SYMBOL
 };
 typedef enum _PropIdent PropIdent;
 

@@ -17,7 +17,7 @@ endif
 
 LINGUAS = cs de pl ro sv nl fr pt ru
 
-MEMBERS = gpe-go sgf sgf-handler
+MEMBERS = gpe-go sgf sgf-handler model board
 
 PIXMAPS = board white.png black.png
 

@@ -1,6 +1,8 @@
-/* gpe-go
+/* gpe-go, a GO board for GPE
  *
- * Copyright (C) 2003 Luc Pionchon
+ * $Id$
+ *
+ * Copyright (C) 2003-2004 Luc Pionchon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -10,6 +12,7 @@
  */
 
 #include <glib.h>
+#include <stdio.h>  //sscanf()
 
 #include "sgf-handler.h"
 
@@ -18,9 +21,9 @@
 
 #include "gpe/errorbox.h"
 
-#ifdef DEBUG
-void __print_hitem (Hitem * hitem);
-#endif
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext(_x)
 
 /*
  (;GM[1]FF[3]
@@ -32,6 +35,10 @@ void __print_hitem (Hitem * hitem);
    (;W[jd];B[gd];W[nd])  
  )
 */
+
+/* ################################################################ */
+/* ########################## load game ########################### */
+
 GQueue * branches;
 gboolean is_first_branch;
 GNode * loaded_main_branch;//to avoid overwritting by undo()/play_at() calls
@@ -122,25 +129,120 @@ void sgf_parsed_prop_move(PropIdent prop_id, char row, char col){
   }
 }
 
+/* ################################################################ */
+/* ########################## save game ########################### */
 
-#ifdef DEBUG
-void __print_hitem (Hitem * hitem)    {
-  char action;
+void _save_hitem_sgf(FILE * f, Hitem * hitem){
+//  ;B[am]BL[1791];W[al]WL[1799]
   char item;
-  
+
   if(!hitem) return;
-  
-  switch(hitem->action){
-  case PASS   : action = '='; break;
-  case PLAY   : action = '+'; break;
-  case CAPTURE: action = '-'; break;
-  default: action = ' ';
+  if(hitem->item == BLACK_STONE) item = 'B'; else item = 'W';
+  if     (hitem->action == PASS) fprintf(f, ";%c[tt]", item);//FIXME: support "[]"
+  else if(hitem->action == PLAY) fprintf(f, ";%c[%c%c]", item,
+                                         hitem->col + 'a' -1,
+                                         hitem->row + 'a' -1);
+  if(hitem->comment){
+    gchar * s;
+    GString * string;
+
+    string = g_string_sized_new(1000);
+
+    g_string_append(string, "C[");
+
+    s = hitem->comment;
+    while(*s){
+      switch(*s){
+        case '[':
+        case ']':
+        case '\\':
+          g_string_append_c (string, '\\');
+      }
+      g_string_append_c(string, *s);
+      s++;
+    }
+
+    g_string_append_c(string, ']');
+
+    fprintf(f, "%s", string->str);
+
+    g_string_free(string, TRUE);
   }
-  switch(hitem->item){
-  case BLACK_STONE: item = 'B'; break;
-  case WHITE_STONE: item = 'W'; break;
-  default: item = ' ';
-  }
-  g_print("***********> %c %c: %d %d\n", action, item, hitem->col, hitem->row);
 }
-#endif
+
+void _save_tree_to_sgf_from (GNode *node, FILE * f){
+  gboolean has_siblings = FALSE;
+
+  if(node->parent && g_node_n_children(node->parent) > 1){
+    has_siblings = TRUE;
+    fprintf(f, "\n (");
+  }
+
+  if(node->data) _save_hitem_sgf(f, node->data);
+
+  node = node->children;
+  while (node){
+      _save_tree_to_sgf_from (node, f);
+      node = node->next;
+  }
+
+  if(has_siblings) fprintf(f, " )\n");  
+}
+
+void save_game(){
+  FILE * f;
+  char * filename;
+  char * filename_sgf;
+
+  //--Open file
+  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
+  if(g_str_has_suffix(filename, ".sgf") == FALSE){
+    filename_sgf = g_strconcat (filename, ".sgf", NULL);
+    g_free(filename);
+  }
+  else{
+    filename_sgf = filename;
+  }
+  f = fopen(filename_sgf, "w");
+  if(!f){
+    gtk_widget_hide (go.file_selector);
+    gpe_error_box_fmt (_("Cannot save the game into %s."), filename_sgf);
+    return;
+  }
+  g_free(filename_sgf);
+
+
+  //--Save history
+  fprintf(f, "(;GM[1]FF[3]\n");
+  fprintf(f, "RU[Japanese]SZ[%d]\n", go.game_size);
+  fprintf(f, "PW[%s]\n", "white");
+  fprintf(f, "PB[%s]\n", "black");
+
+  _save_tree_to_sgf_from (go.history_root, f);
+
+  fprintf(f, "\n)\n");
+
+  fclose(f);
+}
+
+void load_game(){
+  char * filename;
+  char * filename_sgf;
+
+  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
+  if(g_str_has_suffix(filename, ".sgf") == FALSE){
+    filename_sgf = g_strconcat (filename, ".sgf", NULL);
+    g_free(filename);
+  }
+  else{
+    filename_sgf = filename;
+  }
+
+  //gtk_widget_hide (go.file_selector);
+  //loading... dialog
+
+  load_sgf_file(filename_sgf);
+
+  g_free(filename_sgf);
+}
+

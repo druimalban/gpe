@@ -1,6 +1,8 @@
-/* gpe-go
+/* gpe-go, a GO board for GPE
  *
- * Copyright (C) 2003 Luc Pionchon
+ * $Id$
+ *
+ * Copyright (C) 2003-2004 Luc Pionchon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,6 +14,9 @@
 #define SGF_HANDLER_H
 
 #include "sgf.h"
+
+void save_game();
+void load_game();
 
 void sgf_parsed_init();
 void sgf_parsed_end();

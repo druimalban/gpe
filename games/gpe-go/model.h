@@ -1,12 +1,31 @@
+/* gpe-go, a GO board for GPE
+ *
+ * $Id$
+ *
+ * Copyright (C) 2003-2004 Luc Pionchon
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ */
 #ifndef MODEL_H
 #define MODEL_H
 
+//CLEAN: move away GUI stuff
 #include <gtk/gtk.h>
 
 void init_new_game(int game_size);
+
 void play_at(int col, int row);
+
 void undo_turn();
+void redo_turn();
 void pass_turn();
+
+void goto_first();
+void goto_last ();
 
 typedef struct _go {
   //--ui
@@ -48,6 +67,7 @@ typedef struct _go {
   char      * turn_string;
 #endif
 
+  //--board
   int board_size;//px PARAM - size of the board widget
   int margin;    //***px - left/top margin
   
@@ -90,7 +110,7 @@ Go go;
 typedef enum {
   EMPTY = 0,
   BLACK_STONE,
-  WHITE_STONE,
+  WHITE_STONE
 } GoItem;
 
 typedef enum {
@@ -98,13 +118,13 @@ typedef enum {
   MARK_SQUARE,
   MARK_SPOT,
   //MARK_TRIANGLE
-  MARK_LABEL,
+  MARK_LABEL
 } GoMark;
 
 typedef enum {
   PASS,
   PLAY,
-  CAPTURE,
+  CAPTURE
 } GoAction;
 
 typedef struct _hist_item{
