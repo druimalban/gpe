@@ -86,6 +86,9 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   gtk_dialog_set_has_separator (GTK_DIALOG (window), FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (window), gpe_border);
   gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (window)->vbox), gpe_boxspacing);
+  /* See the following mail about UrgencyHint:
+   * http://mail.gnome.org/archives/usability/2002-January/msg00088.html
+   */
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
   g_signal_connect (G_OBJECT (window), "destroy",

@@ -2,6 +2,8 @@
 
 	* question.c (gpe_question_ask): Make label selectable as it can
 	contain useful information that one might want to copy.
+	(gpe_question_ask): Add comment pointing to a mail about
+	UrgencyHint.
 
 2003-03-11  Philip Blundell  <philb@gnu.org>
 
