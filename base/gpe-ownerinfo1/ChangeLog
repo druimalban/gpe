@@ -1,7 +1,14 @@
+2002-09-03  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/main.c (upgrade_to_v2): Remove PREFIX
+	warning. Makefile.dpkg_ipkg takes care of it now.
+	(main): Got full transparency now. pb rules.
+
 2002-09-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c: No transparency for now. Print warning for PREFIX
 	problem.
+	(main): Move gpe_load_icons() after gpe_application_init().
 
 	* src/Makefile.am (INCLUDES): Add PREFIX.
 
