@@ -96,7 +96,9 @@ void cfg_load ()
 	{
 		switch (tolower(*s))
 		{
-		case 'H': case 'h': /* not implemented! */
+		case 'H': case 'h': /* doesn't work properly! */
+			cfg_options.on_window_close = WINDOW_CLOSE_HIDE;
+			break;
 		case 'E': case 'e':
 			cfg_options.on_window_close = WINDOW_CLOSE_EXIT;
 			break;

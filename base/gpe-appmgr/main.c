@@ -1217,6 +1217,32 @@ void set_window_pixmap ()
 	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
 		gdk_window_set_icon (window->window, NULL, pmap, bmap);
 }
+
+
+gint on_window_delete (GtkObject *object, gpointer data)
+{
+	switch (cfg_options.on_window_close)
+	{
+	case WINDOW_CLOSE_IGNORE:
+		/* TODO: send _WM_NET_PING(?) */
+		return TRUE;
+		break;
+	case WINDOW_CLOSE_HIDE: /* doesn't work properly :( */
+	{
+		Display *display;
+		Window window;
+		display = GDK_WINDOW_XDISPLAY (GTK_WIDGET(object)->window);
+		window = GDK_WINDOW_XWINDOW (GTK_WIDGET(object)->window);
+		XLowerWindow (display, GDK_WINDOW_XWINDOW(GTK_WIDGET(object)->window));
+	}
+		break;
+	case WINDOW_CLOSE_EXIT:
+		gtk_main_quit ();
+	break;
+	}
+	return FALSE;
+}
+
 /* Create the UI for the main window and
  * stuff
  */
@@ -1231,18 +1257,8 @@ void create_main_window()
 	set_window_pixmap();
 
 #ifndef DEBUG
-	switch (cfg_options.on_window_close)
-	{
-	case WINDOW_CLOSE_IGNORE:
-		gtk_signal_connect (GTK_OBJECT(window), "delete_event",
-				    (GtkSignalFunc)gtk_true, NULL);
-		break;
-	case WINDOW_CLOSE_HIDE: /* unimplemented */
-	case WINDOW_CLOSE_EXIT:
-		gtk_signal_connect (GTK_OBJECT(window), "delete_event",
-				    (GtkSignalFunc)gtk_main_quit, NULL);
-	break;
-	}
+	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
+			    (GtkSignalFunc)on_window_delete, NULL);
 #else
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
 			    (GtkSignalFunc)gtk_main_quit, NULL);
