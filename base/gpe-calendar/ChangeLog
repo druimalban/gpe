@@ -1,5 +1,9 @@
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.42 released.
+	
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
 	* day_view.c (day_view_update): Remove spurious call to
 	gtk_clist_set_row_data.  Reorganise code slightly for improved
 	clarity.
