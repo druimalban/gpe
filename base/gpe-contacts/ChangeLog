@@ -1,5 +1,11 @@
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.17 released.
+
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* familiar/control1 (Depends): Add libgpepimc0.
+
 	* main.c (panel_config_has_changed): Delete.
 	(load_panel_config): Rewrite.
 	(new_contact): Create new person struct here.
