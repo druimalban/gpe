@@ -1,3 +1,17 @@
+2004-10-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (window_key_press_event): Delete key deletes entry if not used for
+                                       search entry. 
+    * main.c (show_details, build_children, pop_singles):
+             Major changes to detail display: Uses structure similar to 
+             database layout now.
+    * main.c (create_main): Moved details table to scrolled window.
+    * main.c (window_key_press_event): Jump to search box if chars are typed.
+    * editing.c (store_name_fields): Fixed source of a segfault.
+    * namedetail.c (do_edit_name_detail): Minor formating fixes.
+                                          Window transient to edit dialog.
+    * namedetail.c: Ordered titles/suffixes and addded missing ones.
+
 2004-09-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Some minor bugfixes and speed improvements.

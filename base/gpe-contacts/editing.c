@@ -223,10 +223,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
           datecombo = gtk_date_combo_new ();
           gtk_box_pack_start (GTK_BOX (hbox), datecombo, TRUE, TRUE, 0);
           gtk_date_combo_clear(GTK_DATE_COMBO(datecombo));
-/*          cbsched = gtk_check_button_new_with_label (_("Schedule"));
-          gtk_widget_set_sensitive (cbsched, FALSE);
-          gtk_box_pack_start (GTK_BOX (hbox), cbsched, TRUE, TRUE, 0);
-*/          cbnoyear = gtk_check_button_new_with_label (_("no year"));
+          cbnoyear = gtk_check_button_new_with_label (_("no year"));
           gtk_box_pack_start (GTK_BOX (hbox), cbnoyear, TRUE, TRUE, 0);
           g_signal_connect (G_OBJECT (cbnoyear), "toggled",
 		    G_CALLBACK (on_unknown_year_toggled), datecombo);
@@ -747,7 +744,7 @@ char *suffix = NULL;
         if (!has_title) /* find user defined title */
           {
             v = db_find_tag(p, "TITLE");
-            if (v && !strcasecmp(e[0], v->value))
+            if (v && v->value && !strcasecmp(e[0], v->value))
               {
                 has_title = TRUE;
                 title = sp;
@@ -1058,6 +1055,6 @@ on_name_clicked (GtkButton *button, gpointer user_data)
   name = gtk_editable_get_chars(GTK_EDITABLE(e), 0, -1);
   store_name_fields(p, name);
   g_free(name);
-
-  do_edit_name_detail(edit, p);
+  if (do_edit_name_detail(edit, p))
+    update_edit(p, GTK_WIDGET(edit));
 }

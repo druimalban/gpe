@@ -27,10 +27,9 @@
 #define N_(z) (z)
 
 /* TRANSLATORS: These abbreviations are a list of common titles used in a name */
-gchar *titles[] = {N_("Mr."), N_("Mrs."), N_("Sir"), N_("Dr."), NULL};
+gchar *titles[] = {N_("Dr."), N_("Miss"), N_("Mr."), N_("Mrs."), N_("Ms."), N_("Prof."), N_("Sir"), NULL};
 /* TRANSLATORS: This is a list of common name suffixes */
-gchar *suffixes[] = {N_("Sr."), N_("Jr."), N_("I"), N_("II"), N_("III"), N_("Esq."), NULL};
-
+gchar *suffixes[] = {N_("Jr."), N_("Esq."), N_("Sr."), N_("I"), N_("II"), N_("III"), NULL};
 
 gboolean
 do_edit_name_detail(GtkWindow *parent, struct person *p)
@@ -59,13 +58,14 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
     }
     
   /* create dialog window */
-  dialog = gtk_dialog_new_with_buttons(_("Edit Name Details"),parent,
+  dialog = gtk_dialog_new_with_buttons(_("Edit Name Details"), parent,
                                        GTK_DIALOG_MODAL,
                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                        NULL);
-  btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog),GTK_STOCK_OK, 
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent));
+  btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_OK, 
                                 GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS(btnOK,GTK_CAN_DEFAULT);
+  GTK_WIDGET_SET_FLAGS(btnOK, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(btnOK);
   gtk_widget_grab_focus(btnOK);
   
@@ -149,13 +149,11 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
       db_set_data(p, "FAMILY_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(efamily))));
       db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(gtk_entry_get_text(GTK_ENTRY(esuffix))));
       db_set_data(p, "NAME", g_strdup(""));
-      update_edit(p, parent);
       gtk_widget_destroy(dialog);
       g_list_free(l_titles);
       g_list_free(l_suffixes);
       return TRUE;
     }
-
   gtk_widget_destroy(dialog);
   g_list_free(l_titles);
   g_list_free(l_suffixes);
