@@ -67,7 +67,6 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "exit" },
   { "refresh" },
-  { "send_and_recieve" },
   { "icon", PREFIX "/share/pixmaps/gpe-packages.png" }
 };
 

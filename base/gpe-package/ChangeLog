@@ -1,3 +1,9 @@
+2003-10-23 Florian Boor <florian.boor@kernelconcepts.de>
+	* Removed obsolete image from list.
+	
+2003-10-19 Florian Boor <florian.boor@kernelconcepts.de>
+	* Made postinst add suid bit to correct file.
+
 2003-10-18 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Listing packags only once now.
 	* Changed button order, using apply button from stock.

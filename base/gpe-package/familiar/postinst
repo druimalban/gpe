@@ -1,4 +1,4 @@
 #!/bin/sh
 
-chmod +s /usr/bin/gpe-conf
+chmod +s /usr/bin/gpe-package
 
