@@ -26,7 +26,6 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "errorbox.h"
-#include "render.h"
 #include "picturebutton.h"
 #include "pixmaps.h"
 

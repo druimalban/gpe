@@ -27,7 +27,6 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "question.h"
-#include "render.h"
 #include "spacing.h"
 #include "picturebutton.h"
 #include "pixmaps.h"

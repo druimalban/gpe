@@ -1,3 +1,8 @@
+
+2005-03-30  Florian Boor <florian@kernelconcepts.de>
+
+	* errorbox.c, picturebutton.c, question.c: Removed inclusion of render.h.
+
 2005-03-18  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/Makefile: Support for documentation in code.

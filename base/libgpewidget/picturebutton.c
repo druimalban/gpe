@@ -19,7 +19,6 @@
 
 #include <gtk/gtk.h>
 
-#include "render.h"
 #include "pixmaps.h"
 #include "picturebutton.h"
 
