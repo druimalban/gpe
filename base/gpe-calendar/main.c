@@ -191,21 +191,22 @@ main (int argc, char *argv[])
   if (event_db_start () == FALSE)
     exit (1);
 
-  while ((option_letter = getopt(argc, argv, "s:e:")) != -1 ){
-  
-    if (option_letter == 's') {  
-      skip = atol(optarg);
-      schedule_only=TRUE;   
-    } 
-    if (option_letter == 'e') {  
-      uid = atol(optarg);  
-    }   
+  while ((option_letter = getopt (argc, argv, "s:e:")) != -1)
+    {
+      if (option_letter == 's') 
+	{  
+	  skip = atol (optarg);
+	  schedule_only = TRUE;   
+	}
 
-  }   
+      if (option_letter == 'e')
+	uid = atol (optarg);  
+    }
   
-  schedule_next(skip, uid);
+  schedule_next (skip, uid);
   
-  if (schedule_only) exit(0);
+  if (schedule_only) 
+    exit (EXIT_SUCCESS);
   
   for (hour = 0; hour < 24; hour++)
     {
@@ -234,7 +235,7 @@ main (int argc, char *argv[])
   future = future_view ();
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
+  gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gpe_cal_exit), NULL);
 

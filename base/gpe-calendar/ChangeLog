@@ -1,5 +1,8 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
+	* main.c (main): Mark window title for translation.  Reformat
+	option parsing code.
+
 	* event-ui.c (build_edit_event_window): Replace trailing "(s)"
 	with "s" for ease of translation.
 
