@@ -12,9 +12,9 @@
 #include <time.h>
 #include <libintl.h>
 #include <locale.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <sys/time.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -55,6 +55,10 @@ static Pixmap pixmap;
 
 static gboolean active;
 
+static struct timeval close_time;
+
+#define TIMEOUT 10
+
 static void
 redraw_popup (void)
 {
@@ -91,21 +95,36 @@ close_popup (void)
 }
 
 static void
-popup_box (const char *text, int x, int y)
+popup_box (const char *text, int length, int x, int y)
 {
   PangoRectangle ink_rect;
   unsigned int w, h;
   XSetWindowAttributes attr;
   Pixmap mask;
   GC gc0, gc1;
+  unsigned int root_w, root_h;
+
+  if (length < 0)
+    length = strlen (text);
 
   close_popup ();
 
-  pango_layout_set_text (pango_layout, text, strlen (text));
+  {
+    unsigned int x, y, b, d;
+    Window r;
+    XGetGeometry (dpy, DefaultRootWindow (dpy), &r, &x, &y, &root_w, &root_h, &b, &d);
+  }
+
+  pango_layout_set_text (pango_layout, text, length);
 
   pango_layout_get_pixel_extents (pango_layout, &ink_rect, NULL);
   w = ink_rect.width + (2 * XPADDING);
   h = ink_rect.height + (2 * YPADDING);
+
+  if (x + w >= root_w)
+    x -= w;
+  if (y + h >= root_h)
+    y -= h;
 
   win_popup = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), x, y, w, h, 0, 0, bgcol);
   mask = XCreatePixmap (dpy, win_popup, w, h, 1);
@@ -146,10 +165,15 @@ popup_box (const char *text, int x, int y)
   XSelectInput (dpy, win_popup, ExposureMask | ButtonPressMask);
 
   XMapRaised (dpy, win_popup);
+
+  XSync (dpy, 0);
+
+  gettimeofday (&close_time, NULL);
+  close_time.tv_sec += TIMEOUT;
 }
 
 static gboolean
-handle_click (Window w, Window orig_w)
+handle_click (Window w, Window orig_w, int x, int y)
 {
   Atom type;
   int format;
@@ -168,7 +192,7 @@ handle_click (Window w, Window orig_w)
       if (children)
 	XFree (children);
       
-      return (root == parent) ? FALSE : handle_click (parent, orig_w);
+      return (root == w || root == parent) ? FALSE : handle_click (parent, orig_w, x, y);
     }
 
   if (prop)
@@ -180,6 +204,8 @@ handle_click (Window w, Window orig_w)
   event.format = 32;
   memset (&event.data.b[0], 0, sizeof (event.data.b));
   event.data.l[0] = win_panel;
+  event.data.l[1] = x;
+  event.data.l[2] = y;
 
   XSendEvent (dpy, w, False, 0, (XEvent *)&event);
 
@@ -188,7 +214,7 @@ handle_click (Window w, Window orig_w)
 
 static Window 
 find_deepest_window (Display *dpy, Window grandfather, Window parent,
-		     int x, int y)
+		     int x, int y, int *rx, int *ry)
 {
   int dest_x, dest_y;
   Window child;
@@ -196,7 +222,15 @@ find_deepest_window (Display *dpy, Window grandfather, Window parent,
   XTranslateCoordinates (dpy, grandfather, parent, x, y,
 			 &dest_x, &dest_y, &child);
 
-  return (child == None) ? parent : find_deepest_window(dpy, parent, child, dest_x, dest_y);
+  if (child == None)
+    {
+      *rx = x;
+      *ry = y;
+
+      return parent;
+    }
+  
+  return find_deepest_window(dpy, parent, child, dest_x, dest_y, rx, ry);
 }
 
 static void
@@ -229,6 +263,7 @@ main (int argc, char *argv[])
   MBPixbufImage *img_icon;
   int last_x = 0, last_y = 0;
   Atom string_atom;
+  int xfd;
 
   g_type_init ();
 
@@ -312,52 +347,91 @@ main (int argc, char *argv[])
   XAllocColor (dpy, DefaultColormap (dpy, screen), &c);
   bgcol = c.pixel;
 
-  XSelectInput (dpy, win_panel, ExposureMask | ButtonPressMask | StructureNotifyMask | PropertyChangeMask);
+  XChangeProperty (dpy, win_panel, help_atom, string_atom, 8, PropModeReplace, NULL, 0);
+
+  XSelectInput (dpy, win_panel, ButtonPressMask | PropertyChangeMask);
+
+  xfd = ConnectionNumber (dpy);
 
   for (;;)
     {
       XEvent xev;
+
+      if (win_popup != None && ! XPending (dpy))
+	{
+	  struct timeval now, tvt;
+	  fd_set fd;
+
+	  gettimeofday (&now, NULL);
+
+	  tvt.tv_usec = close_time.tv_usec - now.tv_usec;
+	  tvt.tv_sec = close_time.tv_sec - now.tv_sec;
+	  if (tvt.tv_usec < 0)
+	    {
+	      if (tvt.tv_sec <= 0)
+		{
+		  close_popup ();
+		  continue;
+		}
+	      tvt.tv_sec --;
+	      tvt.tv_usec += 1000000;
+	    }
+
+	  FD_ZERO (&fd);
+	  FD_SET (xfd, &fd);	  
+
+	  if (select (xfd+1, &fd, NULL, NULL, &tvt) == 0)
+	    close_popup ();
+	}
+
       XNextEvent (dpy, &xev);
 
       switch (xev.type)
 	{
 	case Expose:
-	  if (xev.xexpose.window == win_popup)
-	    redraw_popup ();
+	  redraw_popup ();
 	  break;
 
 	case ButtonPress:
-	  if (xev.xbutton.window == win_popup)
-	    close_popup ();
-	  else if (active)
+	  if (xev.xbutton.window == win_panel)
 	    {
-	      Window w;
-
-	      XUngrabPointer (dpy, xev.xbutton.time);
-
-	      w = find_deepest_window (dpy, DefaultRootWindow (dpy), DefaultRootWindow (dpy),
-				       xev.xbutton.x_root, xev.xbutton.y_root);
-
-	      last_x = xev.xbutton.x_root;
-	      last_y = xev.xbutton.y_root;
-		 
-	      if (handle_click (w, w) == FALSE)
-		popup_box (_("No help available."), xev.xbutton.x_root, xev.xbutton.y_root);
-	      
-	      active = FALSE;
+	      if (active)
+		{
+		  Window w;
+		  int x, y;
+		  
+		  XUngrabPointer (dpy, xev.xbutton.time);
+		  
+		  w = find_deepest_window (dpy, DefaultRootWindow (dpy), DefaultRootWindow (dpy),
+					   xev.xbutton.x_root, xev.xbutton.y_root, &x, &y);
+		  
+		  last_x = xev.xbutton.x_root;
+		  last_y = xev.xbutton.y_root;
+		  
+		  if (handle_click (w, w, x, y) == FALSE)
+		    popup_box (_("No help available."), -1, xev.xbutton.x_root, xev.xbutton.y_root);
+		  
+		  active = FALSE;
+		}
+	      else
+		{
+		  active = TRUE;
+		  XGrabPointer (dpy, win_panel, False, ButtonPressMask,
+				GrabModeAsync, GrabModeAsync,
+				None, None, xev.xbutton.time);
+		}
 	    }
 	  else
-	    {
-	      active = TRUE;
-	      XGrabPointer (dpy, win_panel, False, ButtonPressMask,
-			    GrabModeAsync, GrabModeAsync,
-			    None, None, xev.xbutton.time);
-	    }
+	    close_popup ();
+	  break;
+
+	case ClientMessage:
+	  if (xev.xclient.message_type == help_atom)
+	    popup_box (_("This is the interactive help icon."), -1, last_x, last_y);
 	  break;
 
 	case PropertyNotify:
-	  if (xev.xproperty.window == win_panel
-	      && xev.xproperty.atom == help_atom)
+	  if (xev.xproperty.atom == help_atom)
 	    {
 	      unsigned char *prop;
 	      unsigned long nitems, bytes_after;
@@ -367,7 +441,7 @@ main (int argc, char *argv[])
 	      if (XGetWindowProperty (dpy, win_panel, help_atom, 0, 65536, False,
 				      string_atom, &type, &format, &nitems, &bytes_after, &prop) == Success)
 		{
-		  popup_box (prop, last_x, last_y);
+		  popup_box (prop, nitems, last_x, last_y);
 		  XFree (prop);
 		}
 	    }
