@@ -697,7 +697,7 @@ show_popup (GtkWidget *widget, gpointer udata)
   if (file_clipboard)
     gtk_widget_set_sensitive (paste_menu_item, TRUE);
   else
-    gtk_widget_set_sensitive (copy_menu_item, FALSE);
+    gtk_widget_set_sensitive (paste_menu_item, FALSE);
   
   gtk_menu_popup (GTK_MENU (gtk_item_factory_get_widget (item_factory, "<main>")), 
 		  NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
@@ -1215,9 +1215,9 @@ main (int argc, char *argv[])
   gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
   gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
 
-  bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via _Bluetooth");
-  copy_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/_Copy");
-  paste_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/_Paste");
+  bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
+  copy_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Copy");
+  paste_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Paste");
 
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
