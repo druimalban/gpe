@@ -69,7 +69,7 @@ selection_made( GtkWidget      *clist,
     }
 }
 
-void
+GtkObject *
 day_popup(GtkWidget *parent, struct day_popup *p)
 {
   GtkRequisition requisition;
@@ -96,7 +96,7 @@ day_popup(GtkWidget *parent, struct day_popup *p)
   label = gtk_label_new (buf);
 
   if (gtk_object_get_data (GTK_OBJECT (parent), "popup-handle"))
-    return;
+    return NULL;
 
   if (p->events)
     {
@@ -185,4 +185,6 @@ day_popup(GtkWidget *parent, struct day_popup *p)
 		      destroy_popup, parent);
 
   gtk_widget_show (window);
+
+  return GTK_OBJECT (window);
 }
