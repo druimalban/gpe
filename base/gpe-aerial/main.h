@@ -1,28 +1,13 @@
 #include <gtk/gtk.h>
-/*
-struct bt_device
-{
-  gchar *name;
-  guint class;
-  bdaddr_t bdaddr;
-  GdkPixbuf *pixbuf;
-  gboolean sdp;
-  GSList *services;
-};
+#include "prismstumbler.h"
 
-struct bt_service
+typedef struct
 {
-  struct bt_service_desc *desc;
-};
+	psnetinfo_t net;
+	GdkPixbuf *pix;
+}
+netinfo_t;
 
-struct bt_service_desc
-{
-  uuid_t uuid;
-
-  struct bt_service * (*scan)(sdp_record_t *rec, struct bt_device *bd);
-  void (*popup_menu)(struct bt_service *, GtkWidget *);
-};
-*/
 extern gboolean radio_is_on;
 
 extern GSList *service_desc_list;

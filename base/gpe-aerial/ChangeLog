@@ -1,3 +1,21 @@
+05/15/2003		Florian Boor
+	
+	- main.c 	Details dialog major upgrade.
+			Changed scanner to run longer.
+			Updted memory management.
+			Added scanner background activity.
+
+05/14/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- main.c 	Added networks list, detail dialog, scanner control.
+
+05/13/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- added scanner interface
+	- changed some icons
+	- temporarily added prismstumbler header file
+
+
 05/09/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- Created this file
