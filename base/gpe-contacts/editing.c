@@ -50,7 +50,8 @@ void on_name_clicked (GtkButton *button, gpointer user_data);
 static gboolean
 phone_key_press_event (GtkWidget *widget, GdkEventKey *k, gpointer p)
 {
-  if (!strstr(" +0123456789-/()",k->string)) 
+  if (!strstr(" +0123456789-/()", k->string) 
+      && !(k->state & GDK_CONTROL_MASK))
     {
       return TRUE;
     }
