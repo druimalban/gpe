@@ -1,3 +1,9 @@
+2002-07-30  Moray Allan  <moray@handhelds.org>
+
+	* gpe-terminal.menu: Fixed (presumably) typo in command.
+	* Makefile: ipkg target now builds correctly.
+	* familiar/control, familiar/postinst: New files for ipkg.
+
 2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-terminal.menu: Give full path for icon. Move to section
