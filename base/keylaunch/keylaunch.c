@@ -38,7 +38,8 @@ typedef struct _Key Key;
 
 struct _Key
 {
-  int keycode, modifier;
+  int keycode;
+  unsigned int modifier;
   char *command;
   Key *next;
   char *window;
@@ -51,9 +52,6 @@ Key *lastkey = NULL;
 int NumLockMask, CapsLockMask, ScrollLockMask;
 time_t last_update;
 char *rc_file;
-
-int previousevent_keycode = 0;
-Time previousevent_time = 0;
 
 /*
  *
@@ -126,19 +124,22 @@ grab_key (int keycode, unsigned int modifiers, Window w)
     {
       XGrabKey (dpy, keycode, modifiers, w, True, GrabModeAsync,
 		GrabModeAsync);
-      XGrabKey (dpy, keycode, modifiers | NumLockMask, w, False,
-		GrabModeAsync, GrabModeAsync);
-      XGrabKey (dpy, keycode, modifiers | CapsLockMask, w, False,
-		GrabModeAsync, GrabModeAsync);
-      XGrabKey (dpy, keycode, modifiers | ScrollLockMask, w, False,
-		GrabModeAsync, GrabModeAsync);
-      XGrabKey (dpy, keycode, modifiers | NumLockMask | CapsLockMask, w,
-		False, GrabModeAsync, GrabModeAsync);
-      XGrabKey (dpy, keycode, modifiers | NumLockMask | ScrollLockMask, w,
-		False, GrabModeAsync, GrabModeAsync);
-      XGrabKey (dpy, keycode,
-		modifiers | NumLockMask | CapsLockMask | ScrollLockMask, w,
-		False, GrabModeAsync, GrabModeAsync);
+      if (modifiers != AnyModifier)
+        {
+          XGrabKey (dpy, keycode, modifiers | NumLockMask, w, False,
+		    GrabModeAsync, GrabModeAsync);
+          XGrabKey (dpy, keycode, modifiers | CapsLockMask, w, False,
+		    GrabModeAsync, GrabModeAsync);
+          XGrabKey (dpy, keycode, modifiers | ScrollLockMask, w, False,
+		    GrabModeAsync, GrabModeAsync);
+          XGrabKey (dpy, keycode, modifiers | NumLockMask | CapsLockMask, w,
+		    False, GrabModeAsync, GrabModeAsync);
+          XGrabKey (dpy, keycode, modifiers | NumLockMask | ScrollLockMask, w,
+		    False, GrabModeAsync, GrabModeAsync);
+          XGrabKey (dpy, keycode,
+	            modifiers | NumLockMask | CapsLockMask | ScrollLockMask, w,
+                    False, GrabModeAsync, GrabModeAsync);
+        }
     }
 }
 
@@ -180,13 +181,19 @@ create_new_key (char *key_string)
   k->modifier = 0;
   k->keycode = 0;
 
-  if (key_str[0] == '*')
-    k->modifier = k->modifier | ShiftMask;
-  if (key_str[1] == '*')
-    k->modifier = k->modifier | ControlMask;
-  if (key_str[2] == '*')
-    k->modifier = k->modifier | Mod1Mask;
-
+  if (key_str[0] == '?')
+    {
+      k->modifier = AnyModifier;
+    }
+  else
+    {
+      if (key_str[0] == '*')
+	k->modifier = k->modifier | ShiftMask;
+      if (key_str[1] == '*')
+	k->modifier = k->modifier | ControlMask;
+      if (key_str[2] == '*')
+	k->modifier = k->modifier | Mod1Mask;
+    }
   k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 3));
 
   grab_key (k->keycode, k->modifier, root);
@@ -195,6 +202,7 @@ create_new_key (char *key_string)
     k->window = strdup (window);
   else
     k->window = NULL;
+/*  printf ("new key: %s (%X) (%d)\n", k->window, k->keycode, k->modifier); */
   return;
 }
 
@@ -399,11 +407,8 @@ main (int argc, char *argv[])
 		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
 	      for (k = key; k != NULL; k = k->next)
 		if (k->keycode == ev.xkey.keycode
-		    && k->modifier == ev.xkey.state
-		    && (k->window == NULL
-			|| (ev.xkey.keycode != previousevent_keycode
-			    || abs (ev.xkey.
-				    time - previousevent_time) > 1000)))
+		    && (k->modifier == AnyModifier
+			|| k->modifier == ev.xkey.state))
 		  {
 		    if (k->window == NULL
 			|| (try_to_raise_window (dpy, k->window) != 0))
@@ -412,18 +417,24 @@ main (int argc, char *argv[])
 			fork_exec (k->command);
 		      }
 		  }
-	      previousevent_keycode = ev.xkey.keycode;
-	      previousevent_time = ev.xkey.time;
 	    }
 	  else if (ev.type == KeyRelease)
 	    {
+	      KeySym t;
+	      char *t2;
+	      printf ("key release event...\n");
+	      t = XKeycodeToKeysym (dpy, ev.xkey.keycode, 0);
+	      t2 = XKeysymToString (t);
+	      printf ("key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
+		      ev.xkey.state);
+
 	      ev.xkey.state =
 		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
 	      for (k = key; k != NULL; k = k->next)
 		if (k->keycode == ev.xkey.keycode
-		    && k->modifier == ev.xkey.state)
+		    && (k->modifier == AnyModifier
+			|| k->modifier == ev.xkey.state))
 		  {
-		    printf ("key release event...\n");
 		    free_keys ();
 		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
 		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
