@@ -1,17 +1,33 @@
 
-<!--#set var="addtitle" value="Media Player"-->
+<!--#set var="addtitle" value="NMF"-->
 <!--#set var="pagename" value="media"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#set var="author" value="Phil Blundell"-->
+<!--#set var="authoremail" value="pb@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
+
+<H2>Coordinator</H2>
+<P>
+The coordinator for this sub-project is Philip Blundell
+(<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>) . If you want to 
+contribute to this project, please contact him directly.
+</P>
 
 <H2>Function</H2>
 <P>
-Plays multi media files like MP3, Ogg-Vorbis and maybe MPEG-1 Video.
+<code>NMF</code> is the GPE audio player.  It uses the
+<a href="http://www.gstreamer.net">GStreamer</a> media framework, and
+should in theory be able to play any file for which a GStreamer plugin
+exists.  Ogg Vorbis and MP3 are known to be supported, using the
+Tremor and MAD decoders respectively.
+</P>
+<P>Hierarchical playlists are supported.  These can be loaded or saved
+as XML files.</P>
 
-Sometimes (often?), the version at 
-<a href="http://handhelds.org/~mibus/"> http://handhelds.org/~mibus/</a> 
-might be newer than what's in CVS.
+<H2>Status</H2>
+<P>
+The source code can be found in <A href="../cvs.shtml">CVS</A>, module
+<B>gpe-nmf</B>.  Precompiled binaries for iPAQ are available in
+the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 
 </P>
 <!--#include virtual="/includes/foot.shtml"-->
