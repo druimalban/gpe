@@ -1,12 +1,11 @@
 Package: ipaq-sleep
-Version: 0.7-5
+Version: 0.7-6
 Priority: optional
 Section: base
 Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
-Depends: libc6, xlibs
+Depends: libc6, xlibs, libapm1, apmd
 Suggests: isgui
 Architecture: arm
-Filename: ./ipaq-sleep_0.7-4_arm.ipk
 Description: Application to dim the backlight and put the iPAQ to sleep.
  An application to dim the backlight and/or put the iPAQ to sleep after a
  predefined period of inactivity. By default it looks at serial, USB,

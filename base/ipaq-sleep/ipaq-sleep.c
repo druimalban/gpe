@@ -20,6 +20,8 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <ctype.h>
+#include <apm.h>
+
 #include "ipaq-sleep.h"
 
 #include <X11/Xlib.h>
@@ -465,50 +467,29 @@ int probe_IRQs() {
 }
 	
 int check_apm() {
-	char apmline[64];
-	char junk[24];
 	int runtime;
+	apm_info info;
+
+	apm_read(&info);
 	
-	FILE *f;
-	
-	if (apm) {
-			
-		f=fopen(APM, "r");
-		if (! f) fprintf(stderr, "problem opening %s\n", APM);
-		else
-		{
-			while(fgets(apmline,sizeof(apmline),f)) {
-				/* Find the external power "string". */
-				if ((sscanf(apmline,"%s %s %s %x %s %s %s %d %s", 
-					junk, junk, junk, &apmvalue, junk, junk,
-					junk, &runtime, junk)) == 9) {
-					if (apmvalue) {
+	if (info.ac_line_status == AC_LINE_STATUS_ON) {
 #ifdef DEBUG
-						if (debug) fprintf(dgfp,"You are on external power. NOT sleeping.\n");
+		if (debug) fprintf(dgfp,"You are on external power. NOT sleeping.\n");
 #endif
-						fclose(f);
-						return(1);
-					}
-					else {
+		return(1);
+	}
+
 #ifdef DEBUG
-						if (debug) fprintf(dgfp,"You are NOT on external power. Its all good.....\n");
+	if (debug) fprintf(dgfp,"You are NOT on external power. Its all good.....\n");
 #endif
-						if (runtime < battery_level)
-						  {
+	runtime = info.battery_time;
+	if (runtime >= 0 && runtime < battery_level)
+	{
 #ifdef DEBUG
-						    if (debug)
-						      fprintf (dgfp, "Battery level %d below threshold, sleeping\n", runtime);
+		if (debug)
+			fprintf (dgfp, "Battery level %d below threshold, sleeping\n", runtime);
 #endif
-						    do_sleep ();
-						  }
-					}
-				}
-#ifdef DEBUG
-				else if (debug) fprintf(dgfp,"Problem checking apm status.\n");
-#endif
-			}
-			fclose(f);	    	
-		}
+		do_sleep ();
 	}
 	
 	return(0);
@@ -640,22 +621,6 @@ void main_loop (void) {
 	while (1) {
 		activity=0;
 		
-		f=fopen(INTERRUPTS, "r");
-		if (! f) fprintf(stderr, "problem opening %s\n", INTERRUPTS);
-		else {
-			while(fgets(iline,sizeof(iline),f)) {
-				if (sscanf(iline,"%d: %ld",&i, &v) == 2 && 
-			   	 irqs[i] && irq_count[i] != v) {
-					activity=1;
-#ifdef DEBUG
-					if (debug) fprintf(dgfp,"IRQ activity %d\n", i);
-#endif
-					irq_count[i] = v;
-				}
-			}
-			fclose(f);
-		}
-		
 		if (X) {
 			query_idle(&idleTime);
 			newIdle=(int)idleTime;
@@ -691,7 +656,7 @@ void main_loop (void) {
 			lastIdle=newIdle;
 	
 		}
-		
+
 		apm_active=check_apm();
 		if (apm_active) {
 			activity=1;	
@@ -706,6 +671,24 @@ void main_loop (void) {
 		}
 		old_apm=apm_active;
 		
+		if (activity == 0) {
+			f=fopen(INTERRUPTS, "r");
+			if (! f) fprintf(stderr, "problem opening %s\n", INTERRUPTS);
+			else {
+				while(fgets(iline,sizeof(iline),f)) {
+					if (sscanf(iline,"%d: %ld",&i, &v) == 2 && 
+					    irqs[i] && irq_count[i] != v) {
+						activity=1;
+#ifdef DEBUG
+						if (debug) fprintf(dgfp,"IRQ activity %d\n", i);
+#endif
+						irq_count[i] = v;
+					}
+				}
+				fclose(f);
+			}
+		}
+
 		if (activity) {
 			total_unused = 0;
 		}

@@ -5,7 +5,7 @@ PREFIX = /usr/local
 all: ipaq-sleep
 
 ipaq-sleep: ipaq-sleep.c
-	$(CC) -Os -fomit-frame-pointer -o ipaq-sleep ipaq-sleep.c -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lXext -lXss -Wall
+	$(CC) -Os -fomit-frame-pointer -o ipaq-sleep ipaq-sleep.c -I/usr/X11R6/include -L/usr/X11R6/lib -lX11 -lXext -lXss -Wall -lapm
 
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
