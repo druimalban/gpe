@@ -570,9 +570,9 @@ main (int argc, char *argv[])
 
   if (autolock_mode || have_users)
     {
-      GtkWidget *hbox_user, *hbox_password;
+      GtkWidget *hbox_password;
       GtkWidget *login_label, *password_label;
-      GtkWidget *entry;
+      GtkWidget *entry, *table;
 
       frame = gtk_frame_new (autolock_mode ? _("Screen locked") : _("Log in"));
 
@@ -585,6 +585,7 @@ main (int argc, char *argv[])
       if (autolock_mode)
 	{
 	  option = gtk_label_new (current_username);
+	  gtk_misc_set_alignment (GTK_MISC (option), 0.0, 0.5);
 	}
       else
 	{
@@ -601,19 +602,19 @@ main (int argc, char *argv[])
       gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
       
-      hbox_user = gtk_hbox_new (FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox_user), login_label, TRUE, TRUE, 4);
-      gtk_box_pack_start (GTK_BOX (hbox_user), option, TRUE, TRUE, 0);
-      
       hbox_password = gtk_hbox_new (FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox_password), password_label, 
-			  TRUE, TRUE, 4);
       gtk_box_pack_start (GTK_BOX (hbox_password), entry, TRUE, TRUE, 0);
+      gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
+      
+      table = gtk_table_new (2, 2, FALSE);
+      gtk_table_attach_defaults (GTK_TABLE (table), login_label, 0, 1, 0, 1);
+      gtk_table_attach_defaults (GTK_TABLE (table), option, 1, 2, 0, 1);
+      gtk_table_attach_defaults (GTK_TABLE (table), password_label, 0, 1, 1, 2);
+      gtk_table_attach_defaults (GTK_TABLE (table), hbox_password, 1, 2, 1, 2);
       
       vbox = gtk_vbox_new (FALSE, 0);
 
-      gtk_box_pack_start (GTK_BOX (vbox), hbox_user, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox), hbox_password, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), label_result, FALSE, FALSE, 0);
       if (socket)
 	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
@@ -717,10 +718,10 @@ main (int argc, char *argv[])
       gtk_container_set_border_width (GTK_CONTAINER (table), 5);
 
       focus = entry_username;
+
+      gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 5);
     }
 
-  gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 5);
-      
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
   gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
