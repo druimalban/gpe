@@ -1,4 +1,12 @@
+2003-10-18 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c: Listing packags only once now.
+	* Changed button order, using apply button from stock.
+	* interface.c: Replaced do_error() by a generic message dialog.
+	* Added error/change counter and message dialogs.
+	
 2003-10-17 Florian Boor <florian.boor@kernelconcepts.de>
+	* Moved version display to statusbar.
+	* Some cleanups.
 	* Now updating list display after install.
 
 2003-10-16 Florian Boor <florian.boor@kernelconcepts.de>

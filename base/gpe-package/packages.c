@@ -67,7 +67,7 @@ do_response (char *res)
 
 
 /* ipkg interface */
-char * /*ipkg_response_callback*/
+char * 
 ipkg_question (char *question)
 {
 	send_message (PK_QUESTION, 1, question, NULL, NULL, 0);
@@ -78,7 +78,7 @@ printf("Response: %s\n",response);
 }
 
 
-int /*ipkg_message_callback*/
+int
 ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 {
 	if (level <= IPKG_NOTICE)
@@ -92,7 +92,7 @@ ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 }
 
 
-int /*ipkg_list_callback*/
+int
 list_entry (char *name, char *desc, char *version, pkg_state_status_t status)
 {
 	send_message (PK_LIST, 1, name, desc, version, status);
@@ -193,13 +193,11 @@ suidloop (int csock)
 {
 	/* init ipkg lib */
 	sock = csock;
-	
 	ipkg_init (ipkg_msg, ipkg_question, &args);
 
 	while (wait_message ()) ;
-printf("leaving...\n");
+		
 	ipkg_deinit(&args);
-	
 	close (sock);
 
 	return 0;
