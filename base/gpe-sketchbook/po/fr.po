@@ -17,8 +17,8 @@ msgstr ""
 #: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
 msgid "Sketchbook"
 msgstr "Bloc-notes"
-# Carnet à/de croquis // Carnet de notes // Bloc à dessin
 
+# Carnet à/de croquis // Carnet de notes // Bloc à dessin
 #: src/selector.c:87
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."

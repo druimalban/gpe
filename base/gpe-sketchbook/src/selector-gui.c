@@ -120,7 +120,7 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("import");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    _("Import from png"), _("Import from png"),
+                                    _("Import from image"), _("Import from image"),
 				    pixmap,
 				    GTK_SIGNAL_FUNC(on_button_selector_import_clicked), NULL);
 

@@ -234,9 +234,9 @@ static void import_from_filesel(GtkFileSelection *fs, GtkButton *ignored)
 
 // Opens a file selection dialog for the user to import an image
 void sketchpad_import_image(void){
-  GtkWidget *file_selector = gtk_file_selection_new(_("Import Image ..."));
+  GtkWidget *file_selector = gtk_file_selection_new(_("Image to import"));
 
-  gtk_file_selection_complete(GTK_FILE_SELECTION(file_selector), "*.png");
+  //gtk_file_selection_complete(GTK_FILE_SELECTION(file_selector), "*.png");
 
   gtk_signal_connect_object
       (GTK_OBJECT(GTK_FILE_SELECTION(file_selector)->ok_button),

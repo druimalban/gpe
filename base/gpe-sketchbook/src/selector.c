@@ -91,6 +91,7 @@ void window_selector_init(GtkWidget * window_selector){
         case EACCES: //write permission is denied
         case ENOSPC: //file system doesn't have enough room
         default:
+          /* TRANSLATORS: %s are: [folder name] [error message]*/
           gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchbook.save_dir, strerror(errno));
       }
       app_quit();
@@ -173,6 +174,8 @@ gchar * make_label_from_filename(const gchar * filename){
   time_token = strtok(NULL, ".");
   if(!time_token) return g_strdup_printf("%s", g_strdelimit(date_token, "-", ' '));
 
+  /* TRANSLATORS: default sketch label based on [date] and [time]
+     example: "2003 10 12  at  18:48:51" */
   label = g_strdup_printf(_("%s  at  %s"),
                           g_strdelimit(date_token, "-", ' '), //FIXME: localize date/time
                           g_strdelimit(time_token, "-", ':'));

@@ -1,73 +1,20 @@
 # translation of gpe-sketchbook.po to Czech
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Libor Klepac <elkropac@students.zcu.cz>, 2003.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-sketchbook 0.27\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: 2003-08-26 23:29+0100\n"
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2003-10-08 23:35+0100\n"
 "Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:115
-msgid "Sketchbook: preferences"
-msgstr "Skicák: Nastavení"
-
-#: src/gpe-sketchbook.c:119
-#: gpe-sketchbook.desktop.in.h:2
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
 msgid "Sketchbook"
 msgstr "Skicák"
-
-#: src/preferences.c:93
-msgid ""
-"Cannot create XSettings client.\n"
-"Use default preferences."
-msgstr ""
-"Nemohu vytvořit klienta XSettings.\n"
-"Použiji standardní nastavení."
-
-#: src/preferences.c:188
-msgid ""
-"gpe-confd is not running.\n"
-"Cannot save the preferences."
-msgstr ""
-"gpe-confd neběží.\n"
-"Nemohu uložit nastavení."
-
-#: src/preferences.c:277
-msgid "Start with"
-msgstr "Začít s"
-
-#: src/preferences.c:280
-msgid "Sketchpad"
-msgstr ""
-
-#: src/preferences.c:282
-msgid "Selector - list"
-msgstr "Zobrazit seznam"
-
-#: src/preferences.c:284
-msgid "Selector - icons table"
-msgstr "Zobrazit náhledy"
-
-#: src/preferences.c:300
-msgid "Use joypad scrolling"
-msgstr "Zapnout posun obrazu ovládacím křížem"
-
-#: src/preferences.c:307
-msgid "Grow on scroll"
-msgstr "Upravovat velikost při posunu"
-
-#: src/preferences.c:316
-msgid "OK"
-msgstr "Budiž"
-
-#: src/preferences.c:317
-#: src/selector-cb.c:67
-#: src/sketchpad-cb.c:244
-msgid "Cancel"
-msgstr "Zrušit"
 
 #: src/selector.c:87
 #, c-format
@@ -82,68 +29,30 @@ msgstr "Nemohu vytvořit %s: %s. Končím."
 #: src/selector.c:164
 #, c-format
 msgid "%s  at  %s"
-msgstr "% jako %s"
+msgstr "%s jako %s"
 
-#: src/selector-cb.c:66
-#: src/sketchpad-cb.c:243
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
 msgid "Delete current sketch?"
 msgstr "Smazat tuto skicu?"
 
-#: src/selector-cb.c:66
-#: src/sketchpad-cb.c:47
-#: src/sketchpad-cb.c:77
-#: src/sketchpad-cb.c:243
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
 msgid "Question"
 msgstr "Otázka"
 
-#: src/selector-cb.c:67
-#: src/sketchpad-cb.c:244
-#: src/sketchpad-gui.c:468
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
 msgid "Delete"
 msgstr "Smazat"
 
-#: src/selector-gui.c:102
-msgid "New sketch"
-msgstr "Nová skica"
-
-#: src/selector-gui.c:107
-msgid "Edit sketch"
-msgstr "Editovat skicu"
-
-#: src/selector-gui.c:115
-msgid "Delete selected sketch"
-msgstr "Smazat vybranou skicu"
-
-#: src/selector-gui.c:123
-msgid "Import from png"
-msgstr "Importovat z obrázku png"
-
-#: src/selector-gui.c:132
-msgid "Toggle view"
-msgstr "Přepnout pohled"
-
-#: src/selector-gui.c:146
-msgid "Preferences"
-msgstr "Nastavení"
-
 #: src/sketchpad.c:184
-msgid "Sketch"
-msgstr "Skicák"
-
-#: src/sketchpad.c:189
 msgid "new"
 msgstr "Nový"
 
-#: src/sketchpad.c:220
-#, c-format
-msgid "Import of `%s' failed."
-msgstr "Nelze vložit soubor '%s'."
-
-#: src/sketchpad.c:237
-msgid "Import Image ..."
-msgstr "Vložit z obrázku ..."
-
-#: src/sketchpad-cb.c:47
+#: src/sketchpad-cb.c:46
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
@@ -151,66 +60,26 @@ msgstr ""
 "Skica byla změněna,\n"
 "chcete uložit změny?"
 
-#: src/sketchpad-cb.c:48
-#: src/sketchpad-cb.c:78
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 msgid "Discard"
 msgstr "Neukládat"
 
-#: src/sketchpad-cb.c:48
-#: src/sketchpad-cb.c:78
-#: src/sketchpad-gui.c:467
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
 msgid "Save"
 msgstr "Uložit"
 
-#: src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:76
 msgid "Save current sketch?"
 msgstr "Uložit tuto skicu?"
 
-#: src/sketchpad-gui.c:266
-msgid "Select eraser"
-msgstr "Vybrat gumu"
-
-#: src/sketchpad-gui.c:268
-msgid "Select pencil"
-msgstr "Vybrat tužku"
-
-#: src/sketchpad-gui.c:270
-msgid "Brush size"
-msgstr "Velikost tužky"
-
-#: src/sketchpad-gui.c:271
-msgid "Brush color"
-msgstr "Barva tužky"
-
-#: src/sketchpad-gui.c:430
-msgid "Sketch menu"
-msgstr "Menu"
-
-#: src/sketchpad-gui.c:439
-msgid "Show list"
-msgstr "Ukázat seznam"
-
-#: src/sketchpad-gui.c:444
-msgid "Previous sketch"
-msgstr "Předchozí skica"
-
-#: src/sketchpad-gui.c:449
-msgid "Next sketch"
-msgstr "Následující skica"
-
-#: src/sketchpad-gui.c:465
+#: src/sketchpad-gui.c:426
 msgid "New"
 msgstr "Nový"
 
-#: src/sketchpad-gui.c:466
-msgid "Import"
-msgstr "Vložit ze souboru"
-
-#: src/sketchpad-gui.c:469
+#: src/sketchpad-gui.c:429
 msgid "Properties"
 msgstr "Nastavení"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
 msgstr "GPE Skicák"
-

@@ -1,12 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-20 23:46+0300\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-12 18:53+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:114
+#: src/gpe-sketchbook.c:115
 msgid "Sketchbook: preferences"
 msgstr ""
 
-#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:118
+#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
 msgid "Sketchbook"
 msgstr ""
 
@@ -66,17 +68,20 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/selector.c:87
+#: src/selector.c:88
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
 msgstr ""
 
-#: src/selector.c:93
+#. TRANSLATORS: %s are: [folder name] [error message]
+#: src/selector.c:95
 #, c-format
 msgid "Cannot create %s: %s. Exit."
 msgstr ""
 
-#: src/selector.c:164
+#. TRANSLATORS: default sketch label based on [date] and [time]
+#. example: "2003 10 12  at  18:48:51"
+#: src/selector.c:179
 #, c-format
 msgid "%s  at  %s"
 msgstr ""
@@ -94,6 +99,30 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+#: src/selector-gui.c:102
+msgid "New sketch"
+msgstr ""
+
+#: src/selector-gui.c:107
+msgid "Edit sketch"
+msgstr ""
+
+#: src/selector-gui.c:115
+msgid "Delete selected sketch"
+msgstr ""
+
+#: src/selector-gui.c:123
+msgid "Import from image"
+msgstr ""
+
+#: src/selector-gui.c:132
+msgid "Toggle view"
+msgstr ""
+
+#: src/selector-gui.c:146
+msgid "Preferences"
+msgstr ""
+
 #: src/sketchpad.c:184
 msgid "Sketch"
 msgstr ""
@@ -108,7 +137,7 @@ msgid "Import of `%s' failed."
 msgstr ""
 
 #: src/sketchpad.c:237
-msgid "Import Image ..."
+msgid "Image to import"
 msgstr ""
 
 #: src/sketchpad-cb.c:47
@@ -129,16 +158,44 @@ msgstr ""
 msgid "Save current sketch?"
 msgstr ""
 
+#: src/sketchpad-gui.c:266
+msgid "Select eraser"
+msgstr ""
+
+#: src/sketchpad-gui.c:268
+msgid "Select pencil"
+msgstr ""
+
+#: src/sketchpad-gui.c:270
+msgid "Brush size"
+msgstr ""
+
+#: src/sketchpad-gui.c:271
+msgid "Brush color"
+msgstr ""
+
+#: src/sketchpad-gui.c:430
+msgid "Sketch menu"
+msgstr ""
+
+#: src/sketchpad-gui.c:439
+msgid "Show list"
+msgstr ""
+
+#: src/sketchpad-gui.c:444
+msgid "Previous sketch"
+msgstr ""
+
+#: src/sketchpad-gui.c:449
+msgid "Next sketch"
+msgstr ""
+
 #: src/sketchpad-gui.c:465
 msgid "New"
 msgstr ""
 
 #: src/sketchpad-gui.c:466
 msgid "Import"
-msgstr ""
-
-#: src/sketchpad-gui.c:469
-msgid "Properties"
 msgstr ""
 
 #: gpe-sketchbook.desktop.in.h:1
