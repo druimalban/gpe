@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=Legacy-Mixed
-Name=gSoko
+Name=Sokoban
 Comment=Clone of the Sokoban game
 Comment[sv]=Klon av spelet Sokoban
 Exec=gsoko
