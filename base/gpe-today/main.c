@@ -90,6 +90,7 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 	gtk_widget_queue_draw(todo.scroll->draw);
 	gtk_widget_queue_draw(todo.toplevel);
 	gtk_widget_queue_draw(calendar.toplevel);
+	gtk_widget_queue_draw(window.vpan1);
 
 	if (old_pix) {
 		g_object_unref(old_pix);
@@ -128,10 +129,10 @@ static void load_modules(void)
 	gtk_box_pack_start(GTK_BOX(window.vbox1), window.vpan1, TRUE, TRUE, 0);
 
 	calendar_init();
-	gtk_paned_pack1 (GTK_PANED(window.vpan1), calendar.toplevel, TRUE, TRUE);
+	gtk_paned_pack1 (GTK_PANED(window.vpan1), calendar.toplevel, FALSE, FALSE);
 
 	todo_init();
-	gtk_paned_pack2 (GTK_PANED(window.vpan1), todo.toplevel, TRUE, TRUE);
+	gtk_paned_pack2 (GTK_PANED(window.vpan1), todo.toplevel, FALSE, FALSE);
 }
 
 void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask, int alpha)
