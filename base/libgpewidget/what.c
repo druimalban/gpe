@@ -15,11 +15,15 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
+#include "render.h"
+#include "pixmaps.h"
+
 static Display *dpy;
 static Window root;
 static Atom atom;
 
 static GtkWidget *widget;
+static GtkWidget *label;
 
 static gboolean query_on, showing;
 
@@ -62,6 +66,8 @@ do_widget (GtkWidget *tips, GtkWidget *widget, gchar *text, gchar *text_private,
   GtkWidget *window = p;
   guint x, y;
 
+  gtk_label_set_text (GTK_LABEL (label), text);
+
   gdk_window_get_pointer (NULL, &x, &y, NULL);
   y += 16;
   gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
@@ -77,29 +83,66 @@ static void
 stop_query (GtkWidget *w, GtkWidget *window)
 {
   char b = 0;
-  gtk_widget_hide (window);
   XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
   query_on = FALSE;
   showing = FALSE;
+}
+
+static void
+close_clicked (GtkWidget *w, GdkEventButton *ev, GtkWidget *ww)
+{
+  gtk_widget_hide (ww);
 }
 
 void
 what_init (void)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
+  GtkStyle *style;
+  GdkColor col;
+  GtkWidget *hbox;
+  GtkWidget *close, *closei;
+
   dpy = GDK_DISPLAY ();
   root = GDK_ROOT_WINDOW ();
   atom = XInternAtom (dpy, "GPE_WHAT", 0);
+
+  gdk_color_parse ("yellow", &col);
 
   XSelectInput (dpy, root, PropertyChangeMask);
 
   gdk_window_add_filter (GDK_ROOT_PARENT (), filter, 0);
 
-  widget = gtk_tips_query_new ();
-  gtk_widget_show (widget);
-  gtk_container_add (GTK_CONTAINER (window), widget);
-  gtk_widget_show (window);
+  style = gtk_style_copy (window->style);
+  style->bg[GTK_STATE_NORMAL] = col;
+  gtk_widget_set_style (window, style);
 
-  gtk_signal_connect (widget, "widget-entered", do_widget, window);
-  gtk_signal_connect (widget, "stop-query", stop_query, window);
+  widget = gtk_tips_query_new ();
+  label = gtk_label_new ("");
+  gtk_widget_show (label);
+
+  closei = gpe_render_icon (window->style, gpe_find_icon ("cancel"));
+  gtk_widget_show (closei);
+  close = gtk_button_new ();
+  gtk_container_add (GTK_CONTAINER (close), closei);
+  gtk_widget_show (close);
+  gtk_button_set_relief (GTK_BUTTON (close), GTK_RELIEF_NONE);
+
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox);
+  gtk_box_pack_start (GTK_BOX (hbox), widget, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), close, FALSE, FALSE, 0);
+
+  gtk_container_add (GTK_CONTAINER (window), hbox);
+  gtk_widget_realize (window);
+  gtk_widget_realize (widget);
+
+  gtk_signal_connect (GTK_OBJECT (widget), "widget-entered", 
+		      do_widget, window);
+  gtk_signal_connect (GTK_OBJECT (widget), "stop-query", 
+		      stop_query, window);
+
+  gtk_signal_connect (GTK_OBJECT (close), "clicked",
+		      close_clicked, window);
 }
