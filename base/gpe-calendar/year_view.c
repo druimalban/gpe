@@ -148,12 +148,17 @@ draw_expose_event (GtkWidget *widget,
       guint w = gdk_string_width (datefont, s);
       guint d, dy;
       guint y1 = y + yoff;
-      
-      gdk_draw_text (drawable, datefont, black_gc, 
-		     x + (month_width / 2) - (w / 2), y + datefont->ascent, s, strlen (s));
 
+      /* Draw the month label */
+      gdk_draw_string (drawable, datefont, black_gc, 
+		       x + (month_width / 2) - (w / 2), y + datefont->ascent, s);
+
+      /* Draw the weekend highlight */
+      gdk_draw_rectangle (drawable, grey_gc, 1,
+			  x + (5 * day_pitch), y1, 2 * day_pitch, 5 * day_vpitch);
+
+      /* Draw the days */
       dy = day_of_week (year, m + 1, 1);
-
       for (d = 1; d <= days[m]; d++)
 	{
 	  GdkGC *fg_gc = black_gc;
@@ -173,9 +178,9 @@ draw_expose_event (GtkWidget *widget,
 	  if (d == today.tm_mday && m == today.tm_mon  && tm.tm_year == today.tm_year)
 	    fg_gc = red_gc;
 
-	  gdk_draw_text (drawable, yearfont, fg_gc, 
+	  gdk_draw_string (drawable, yearfont, fg_gc, 
 			 x1 + ((day_pitch - w) / 2), y1 + yearfont->ascent, 
-			 buf, strlen (buf));
+			 buf);
 	  if (++dy == 7)
 	    {
 	      dy = 0;
