@@ -1,0 +1,12 @@
+# Copy to $HOME/.keylaunchrc
+#
+# Format:
+# key=...KeyName:Command
+#
+# ... No modifier
+# *.. Shift
+# .*. Ctrl
+# ..* Alt
+
+key=..*Return:xterm
+key=.**n:netscape

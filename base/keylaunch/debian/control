@@ -1,0 +1,14 @@
+Source: keylaunch
+Section: x11
+Priority: optional
+Maintainer: Stefan Pfetzing <dreamind@dreamind.de>
+Build-Depends: debhelper (>= 2.0), xlibs-dev
+Standards-Version: 3.5.2
+
+Package: keylaunch
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: A small utility for binding commands to a hot key.
+ KeyLaunch is a small utility for binding commands to a hot key. It reads a
+ configuration file in ${HOME}.keylaunchrc. KeyLaunch uses Ctrl, Alt and Shift
+ as modifier keys, the hotkey is up to the user.

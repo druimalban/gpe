@@ -1,0 +1,22 @@
+This package was debianized by Brandon L. Griffith <brandon@debian.org> on
+Mon, 13 Aug 2001 11:32:04 -0400.
+
+It was downloaded from
+http://www.kensden.pwp.blueyonder.co.uk/Oroborus/download.htm
+
+Upstream Author(s):  Ken Lynch <oroborus@blueyonder.co.uk>
+
+Copyright: GNU/GPL
+
+   This package is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; version 2 dated June, 1991.
+
+   This package is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+On Debian GNU/Linux systems, the complete text of the GNU General
+Public License can be found in `/usr/share/common-licenses/GPL'.
+

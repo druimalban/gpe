@@ -1,0 +1,20 @@
+KeyLaunch
+=========
+Copyright(c) Ken Lynch, 2001
+Distributed under the GPL
+See LICENSE for more details
+
+Installation
+============
+Type the following:
+
+	make
+	make install
+
+Then add keylaunch to your .xinitrc file.
+
+Usage
+=====
+KeyLaunch is a small utility for binding commands to a hot key.
+See example_rc for more information.
+
