@@ -1,5 +1,11 @@
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
+	* link-warning.h: New file.
+	* render.c: Note that gpe_render_icon is obsolete and should not
+	be used.
+
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
 	* render.c (gpe_render_icon): Just call gtk_image_new_from_pixbuf.
 	(gpe_render_pixmap_alpha): Delete.
 	(gpe_render_pixmap): Likewise.

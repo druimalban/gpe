@@ -10,6 +10,8 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include "link-warning.h"
+
 GtkWidget *
 gpe_render_icon (GtkStyle *style, GdkPixbuf *pixbuf)
 {
@@ -18,3 +20,5 @@ gpe_render_icon (GtkStyle *style, GdkPixbuf *pixbuf)
 
   return gtk_image_new_from_pixbuf (pixbuf);
 }
+
+link_warning(gpe_render_icon, "warning: gpe_render_icon is obsolete and should not be used.");
