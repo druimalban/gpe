@@ -2,6 +2,6 @@
 Exec=repton
 Icon=repton.png
 Type=Application
-Name=Repton
-Comment=Collect the diamonds
+_Name=Repton
+_Comment=Collect the diamonds
 Categories=Games

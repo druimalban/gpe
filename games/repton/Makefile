@@ -57,7 +57,7 @@ all: $(PROG)
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
-install-program: $(PROG) $(MAPS) $(BMPS)
+install-program: $(PROG) $(MAPS) $(BMPS) repton.desktop
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(BINDIR)
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/maps
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/bmps
