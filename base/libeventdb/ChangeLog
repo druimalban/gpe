@@ -1,6 +1,10 @@
-2004-02-20  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+2004-02-21  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
-        * Version 0.10 released. (messed up tag)
+        * Version 0.11 released.
+                                                                                
+2004-02-21  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+                                                                                
+        * event-db.h: re-add SECONDS_IN_DAY to fix daily recur
                                                                                 
 2004-02-20  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
