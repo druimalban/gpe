@@ -19,7 +19,7 @@ PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --cflags $(LIBGPEVTYPE_PC)`
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lXsettings-client -ldisplaymigration -leventdb -lschedule -lgpepimc `pkg-config --libs mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --libs $(LIBGPEVTYPE_PC)`
 
-MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel import-vcal day_render
+MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel import-vcal
 
 .SUFFIXES: .d
 

@@ -13,7 +13,7 @@
 #include <string.h>
 #include <time.h>
 #include <langinfo.h>
-#include <time.h>
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib.h>
@@ -25,7 +25,6 @@
 #include "day_popup.h"
 
 #include "gtkdatesel.h"
-#include "day_render.h"
 
 static GSList *day_events[32];
 static GtkWidget *datesel, *draw;
@@ -41,8 +40,6 @@ struct render_ctl
   gboolean active;
   gboolean initialized;
 };
-
-
 
 #define TOTAL_DAYS (6 * 7)
 
@@ -119,21 +116,13 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *gray_gc;
   GdkGC *white_gc;
   GdkGC *cream_gc;
-	
-  GdkGC *busy_gc;
-  GdkGC *overlap_gc;
-	
   GdkGC *light_gray_gc;
   GdkGC *dark_gray_gc;
   GdkGC *red_gc;
-  GdkColor busy_color;
-	
-	
   GdkColor cream;
   GdkColor light_gray;
   GdkColor dark_gray;
   GdkColor red;
-	GdkColor overlap_color;
   GdkColormap *colormap;
   guint i, j;
   PangoLayout *pl;
@@ -193,19 +182,7 @@ draw_expose_event (GtkWidget *widget,
   gdk_color_parse ("gray40", &dark_gray);
   gdk_colormap_alloc_color (colormap, &dark_gray, FALSE, TRUE);
   gdk_gc_set_foreground (dark_gray_gc, &dark_gray);
-  
-  busy_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (busy_gc, widget->style->black_gc);
-  gdk_color_parse ("magenta", &busy_color);
-  gdk_colormap_alloc_color (colormap, &busy_color, FALSE, TRUE);
-  gdk_gc_set_foreground (busy_gc, &busy_color);
-  
-  overlap_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (overlap_gc, widget->style->black_gc);
-  gdk_color_parse ("dark magenta", &overlap_color);
-  gdk_colormap_alloc_color (colormap, &overlap_color, FALSE, TRUE);
-  gdk_gc_set_foreground (overlap_gc, &overlap_color);
-  
+
   white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
@@ -229,7 +206,7 @@ draw_expose_event (GtkWidget *widget,
   gdk_window_clear_area (drawable, 
 			 event->area.x, event->area.y,
 			 event->area.width, event->area.height);
-//Why this?
+
   gdk_draw_rectangle (drawable, light_gray_gc, 1,
 		      0, ys / 2,
 		      width,
@@ -264,38 +241,21 @@ draw_expose_event (GtkWidget *widget,
 
 	  if (c->valid)
 	    {
-	      char buf[40];
+	      char buf[10];
 	      guint w;
-		  struct day_render *dr;
-		  struct tm today_tm;
-		  time_t today_time;
-		  GSList *events = c->popup.events;
-		  GdkPoint offset = { .x = x , .y = y};
-		  
-		   
-		  memset (&today_tm, 0, sizeof (today_tm));
-		  today_tm.tm_year = c->popup.year;
-		  today_tm.tm_mon = c->popup.month;
-		  today_tm.tm_mday = c->popup.day;
-		  today_time = mktime(&today_tm);
-
-		  gdk_draw_rectangle (drawable, /*c->popup.events ? dark_gray_gc : */cream_gc, 
+	
+	      gdk_draw_rectangle (drawable, c->popup.events ? dark_gray_gc : cream_gc, 
 				  TRUE,
-				  x, y, xs, ys);		  
-			gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
 				  x, y, xs, ys);
-		  
-		  dr = day_render_new(drawable, busy_gc,overlap_gc ,today_time , xs, ys, 4, ys/12, offset, events);
-		  day_render_show(dr);
-		  
-		  //Displays day number.
-	      snprintf (buf, sizeof (buf), "<span size='x-small'>%d</span>", c->popup.day);
-		  
+
+	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
+				  x, y, xs, ys);
+
+	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
 	      buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
-	      pango_layout_set_markup(pl, buffer, strlen (buffer));
+	      pango_layout_set_text (pl, buffer, strlen (buffer));
 	      pango_layout_get_pixel_extents (pl, &pr, NULL);
 	      w = pr.width;
-	      //Draw day number in the upper left corner
 	      gtk_paint_layout (widget->style,
 				widget->window,
 				GTK_WIDGET_STATE (widget),
@@ -303,8 +263,7 @@ draw_expose_event (GtkWidget *widget,
 				&event->area,
 				widget,
 				"label",
-				//x + (xs - w) / 2, y + (ys / 2)/* + font->ascent*/,
-				x,y,
+				x + (xs - w) / 2, y + (ys / 2)/* + font->ascent*/,
 				pl);
 	      g_free (buffer);
 	    }
@@ -355,11 +314,10 @@ draw_expose_event (GtkWidget *widget,
   return TRUE;
 }
 
-
 guint
 day_of_week(guint year, guint month, guint day)
 {
-	  guint result;
+  guint result;
 
   if (month < 3)
     {
@@ -372,16 +330,15 @@ day_of_week(guint year, guint month, guint day)
   return ((result + 6) % 7);
 }
 
-
 static gint
 month_view_update ()
 {
   guint day;
-  guint year, month;
   time_t start, end;
   struct tm tm_start, tm_end;
   GSList *iter;
   guint days;
+  guint year, month;
   guint wday;
   struct tm today;
   time_t t;
@@ -506,7 +463,6 @@ resize_table (GtkWidget *widget,
 
       gtk_widget_draw (draw, NULL);
     }
-	
 }
 
 static gboolean
@@ -656,36 +612,22 @@ month_view(void)
 {
   int day;
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  
-  datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
-  draw = gtk_drawing_area_new ();
 
-  
-  xs = 240/7;
-  ys = 240/7;
+  draw = gtk_drawing_area_new ();
   gtk_widget_show (draw);
-  gtk_widget_show (scrolled_window);
-  gtk_widget_show (datesel);
-	
   g_signal_connect (G_OBJECT (draw), "expose_event",
                     G_CALLBACK (draw_expose_event), NULL);
 
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), draw);
-	
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-                                  GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-	
-  
-  
+  datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
+  gtk_widget_show (datesel);
   gtk_widget_grab_focus(datesel);
-  
+
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
 
   g_signal_connect(G_OBJECT (draw), "size-allocate",
-                G_CALLBACK (resize_table), NULL);
-//  resize_table(scrolled_window,NULL);
+                   G_CALLBACK (resize_table), NULL);
+
   g_signal_connect(G_OBJECT (draw), "button-press-event",
                    G_CALLBACK (button_press), NULL);
 
@@ -708,6 +650,6 @@ month_view(void)
       rc[day].initialized = FALSE;
   
   g_object_set_data(G_OBJECT(main_window),"datesel-month",datesel);
-  
+
   return vbox;
 }
