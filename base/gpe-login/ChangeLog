@@ -1,5 +1,9 @@
 2002-12-24  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.32 released.
+
+2002-12-24  Philip Blundell  <philb@gnu.org>
+
 	* gpe-logout.c (main): Request no window decorations.  Swap
 	buttons over so "yes" is on the left.  Use gpe-logout icon rather
 	than generic question.
