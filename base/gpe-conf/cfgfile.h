@@ -5,7 +5,6 @@
 
 
 #define NET_CONFIGFILE "/etc/network/interfaces"
-//#define NET_CONFIGFILE "/tmp/interfaces"
 
 
 #define Saddress 	1

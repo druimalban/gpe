@@ -8,7 +8,7 @@
  * as published by the Free Software Foundation; either version
   * 2 of the License, or (at your option) any later version.
  *
- * Dynamic interface configuration added bv Florian Boor (florian.boor@kernelconcepts.de)
+ * Dynamic interface configuration added by Florian Boor (florian.boor@kernelconcepts.de)
  *
  */
 #include <stdio.h>
@@ -405,6 +405,8 @@ void Network_Save()
 	gchar wname[100];
 	gchar* newval;
 	
+	if (!(access(NET_CONFIGFILE,W_OK) == 0)) return; // we are not allowed to write config
+	
 	// traverse all...
 	for (sect=0;sect<iflen;sect++)
 	{
@@ -497,12 +499,19 @@ void Network_Save()
 		system("/sbin/ifup -a");
 }
 
+void Network_Restore()
+{
+	set_file_open(FALSE);
+}
+
 
 GtkWidget *Network_Build_Objects()
 {  
 	GtkWidget *label, *ctable, *tablebox, *toolbar;
 	gint row = 0;
 	gint num_int = 0;
+	GtkWidget *button;
+	gboolean have_access = (access(NET_CONFIGFILE,W_OK) == 0); // add this to sudo tasks
 	
 	tablebox = gtk_vbox_new(FALSE,0);
 	
@@ -519,16 +528,17 @@ GtkWidget *Network_Build_Objects()
 	gtk_widget_show (toolbar);
 	gtk_box_pack_start (GTK_BOX (tablebox), toolbar, FALSE, FALSE, 0);
 
-	label = gpe_render_icon (mainw->style, gpe_find_icon ("new"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Add Interface"), 
+	label =  gtk_image_new_from_pixbuf(gpe_find_icon ("new"));
+	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Add Interface"), 
 			   _("Add Interface"), _("Add Interface"),
 			   label, (GtkSignalFunc)add_interface, NULL);
-
-	label = gpe_render_icon (mainw->style, gpe_find_icon ("delete"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Remove Interface"), 
+	if (!have_access) gtk_widget_set_sensitive(button,FALSE);
+	
+	label = gtk_image_new_from_pixbuf(gpe_find_icon ("delete"));
+	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Remove Interface"), 
 			   _("Remove Interface"), _("Remove Interface"), 
 			   label, (GtkSignalFunc)remove_interface, NULL);
-
+	if (!have_access) gtk_widget_set_sensitive(button,FALSE);
 
 	// chreate tabbed notebook
 	// this contains lookup list!
@@ -557,6 +567,7 @@ GtkWidget *Network_Build_Objects()
 		if (iflist[row].isppp) ctable = create_nwppp_widgets(iflist[row]);
 		if (ctable)	
 		{
+			if (!have_access) gtk_widget_set_sensitive(ctable,FALSE);
 			label = gtk_label_new(iflist[row].name);
 			gtk_notebook_append_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label);
 		}

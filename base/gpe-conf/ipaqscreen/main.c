@@ -26,7 +26,13 @@
 #include "rotation.h"
 #include "callbacks.h"
 #include "xset.h"
+/*#include <linux/h3600_ts.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
 
+#define TS_DEV "/dev/h3600_ts"
+extern FLITE_IN bl;
+*/
 int initialising = 1;
 char *RotationLabels[4]=
   {
@@ -57,7 +63,9 @@ GtkWidget *ipaqscreen_Build_Objects()
   GtkWidget *glade_menuitem = NULL;
   guint i;
   int ss_sec;
-
+/*  struct h3600_ts_backlight tsbl;
+  int fd;
+*/
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
 
@@ -67,6 +75,9 @@ GtkWidget *ipaqscreen_Build_Objects()
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
+  
+  GtkWidget* adjLight;
+  GtkWidget* adjSaver;
 
   /* 
    * GTK_EXPAND  the widget should expand to take up any extra space
@@ -103,7 +114,8 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_container_set_border_width (GTK_CONTAINER (self.table), gpe_border);
 
   self.brightnessl = gtk_label_new("Brightness:");
-  self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0)));
+  adjLight = gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0);
+  self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (adjLight));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_RIGHT);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
 
@@ -112,9 +124,9 @@ GtkWidget *ipaqscreen_Build_Objects()
 
   self.screensaverbt = gtk_check_button_new_with_label ("On");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), TRUE);
-  //  gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (self.screensaverbt), FALSE);
 
-  self.screensaver = gtk_hscale_new(GTK_ADJUSTMENT (gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0)));
+  adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0);
+  self.screensaver = gtk_hscale_new(GTK_ADJUSTMENT (adjSaver));
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
 
@@ -204,11 +216,11 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
 
-  gtk_signal_connect (GTK_OBJECT (self.brightness), "draw",
+  gtk_signal_connect (GTK_OBJECT (adjLight), "value_changed",
                       GTK_SIGNAL_FUNC (on_brightness_hscale_draw),
                       NULL);
 
-  gtk_signal_connect (GTK_OBJECT (self.screensaver), "draw",
+  gtk_signal_connect (GTK_OBJECT (adjSaver), "value_changed",
                       GTK_SIGNAL_FUNC (on_screensaver_hscale_draw),
                       NULL);
 
@@ -223,6 +235,17 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_signal_connect (GTK_OBJECT (self.screensaverbt), "clicked",
                       GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
                       NULL);
+/*
+  bl.mode=1;
+  bl.pwr=1;
+  bl.brightness=1;
+  fd = open(TS_DEV, O_RDWR);
+  if (fd != -1) {
+    ioctl(fd,TS_GET_BACKLIGHT,(void *)&tsbl);
+    close(fd);
+    gtk_adjustment_set_value(GTK_ADJUSTMENT(GTK_RANGE(self.brightness)->adjustment), tsbl.brightness);
+  }
+*/
   initialising = 0;
 
   return self.table;

@@ -59,5 +59,8 @@ ipaq_conf_t *default_ISconf();
 void load_IRQs(ipaq_conf_t *c, const char *fname);
 int save_ISconf(ipaq_conf_t *c, const char *fname);
 
+void Sleep_Save ();
+void Sleep_Restore ();
+
 #endif
 

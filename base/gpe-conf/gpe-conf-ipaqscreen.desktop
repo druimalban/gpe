@@ -6,4 +6,4 @@ Terminal=0
 Type=Application
 Icon=gpe-config-ipaqscreen.png
 Categories=Application;SystemSettings;GPE
-StartupNotify=True
+StartupNotify=False

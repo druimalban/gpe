@@ -81,8 +81,7 @@ gpe_create_pixmap                      (GtkWidget       *widget,
 
   maxwidth  = pxwidth;
   maxheight = pxheight;
-  /* g_message ("allocation2: %d x %d", maxwidth, maxheight); */
-
+ 
   if (width > maxwidth)
     scale_width = (gfloat) maxwidth / width;
   else
@@ -100,7 +99,7 @@ gpe_create_pixmap                      (GtkWidget       *widget,
   
   /* g_message ("scale: %f", scale); */
   
-  pixmap = gpe_render_icon (widget->style,
+  pixmap = gtk_image_new_from_pixbuf(
 			    gdk_pixbuf_scale_simple
 			    (icon, width * scale, height * scale, GDK_INTERP_BILINEAR));
   

@@ -5,19 +5,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <libintl.h>
+#define _(x) gettext(x)
 
 #include <gtk/gtk.h>
 
 #include "callbacks.h"
 #include "interface.h"
 #include <gpe/picturebutton.h>
+#include <gpe/errorbox.h>
 
 #include "../applets.h"
 #include "../suid.h"
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
-static gchar *listTitles[] = { _("User Name"),_("User Info"),_("Shell"),_("Home")};
+static gchar *listTitles[4];
 
 pwlist *pwroot = NULL;
 
@@ -170,11 +173,9 @@ void Users_Save()
       cur = cur->next;
     }
   fclose(f);
-  if(ask_root_passwd())
-    {
-      fprintf(suidout,"CPPW\n");
-      fflush(suidout);
-    }
+  
+ suid_exec("CPPW","");
+ sleep(1);
 }
 
 void Users_Restore()
@@ -192,6 +193,11 @@ Users_Build_Objects (void)
   GtkWidget *button1;
   GtkWidget *button2;
   GtkWidget *button3;
+
+  listTitles[0] = _("User Name");
+  listTitles[1] = _("User Info");
+  listTitles[2] = _("Shell");
+  listTitles[3] = _("Home");
 
   InitSpacings ();
 
@@ -432,7 +438,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   /* 1st column: */
   if(p)
     {
-      GtkWidget *pixmap1 = gpe_render_icon (wstyle, p);
+      GtkWidget *pixmap1 = gtk_image_new_from_pixbuf (p);
       gtk_widget_show (pixmap1);
 
       /* span all table rows from 0 to 3: */

@@ -1,5 +1,4 @@
 #include <gtk/gtk.h>
-//#include <libintl.h>
 
 
 #ifndef APPLETS_H
@@ -16,7 +15,7 @@ struct Applet
 };
 
 /* When translation will be implemented...*/
-#define _(x) (x)
+#define _(x) gettext(x)
 
 /* Return 1 if a file exists & can be read, 0 otherwise.*/
 
@@ -31,6 +30,8 @@ void ask_user_a_file(char *path, char *prompt,
 
 int mystrcmp(char *s, char *c);
 
+int runProg(char *cmd);
+
 // one usefull macro..
 int system_and_gfree(gchar *cmd);
 #define system_printf(y...)   system_and_gfree(g_strdup_printf(y))
@@ -42,5 +43,15 @@ freedata                               (GtkWidget       *ignored,
 extern struct gpe_icon my_icons[];
 extern GtkStyle *wstyle; // for pixmaps
 extern GtkWidget *mainw; // for dialogs
+
+struct fstruct
+{
+  GtkWidget *fs;
+  void (*File_Selected)(char *filename, gpointer data);  
+  void (*Cancel)(gpointer data);
+  gpointer data;
+};
+
+extern int suid_exec(const char* cmd,const char* params);
 
 #endif

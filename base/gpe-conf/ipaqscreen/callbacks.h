@@ -1,10 +1,8 @@
 void
-on_brightness_hscale_draw              (GtkWidget       *widget,
-                                        GdkRectangle    *area,
+on_brightness_hscale_draw              (GtkWidget       *adjustment,
                                         gpointer         user_data);
 void
-on_screensaver_hscale_draw              (GtkWidget       *widget,
-                                        GdkRectangle    *area,
+on_screensaver_hscale_draw              (GtkWidget       *adjustment,
                                         gpointer         user_data);
 void
 on_screensaver_button_clicked              (GtkWidget       *widget,

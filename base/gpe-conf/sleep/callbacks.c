@@ -23,38 +23,14 @@
 #include "interface.h"
 #include "conf.h"
 #include "confGUI.h"
+#include "../applets.h"
 
 extern GtkWidget *sleep_idle_spin;
 extern GtkWidget *dim_spin;
 extern GtkWidget *sleep_cpu_spin;
 extern GtkWidget *sleep_choose_irq;
 
-static int runProg(char *cmd)
-{
-  int	status;
-  pid_t	pid;
 
-  char	*c, *argv[5];
-  int	argc = 0;
-  while(cmd && (*cmd != (char)NULL)) {
-    if((c = strchr(cmd, ' ')) != NULL) *c++ = (char)NULL;
-    argv[argc++] = cmd; cmd = c;
-  }
-  argv[argc++] = NULL;
-
-  if((pid = fork()) < 0) {
-    perror("fork");
-    return(1);
-  }
-  if(pid == 0) {
-    execvp(*argv, argv);
-    perror(*argv);
-    return(2);
-  }
-  while(wait(&status) != pid) /* do nothing */;
-
-  return status;
-}
 void
 on_sleep_idle_spin_activate (GtkEditable     *editable,
 			     gpointer         user_data)
@@ -242,7 +218,8 @@ start_button (GtkButton       *button,
     if(!save_ISconf(ISconf, homeConf))
       strcpy(ISconf->confName, homeConf);
   }
-  sprintf(cmd, "%s start", ISconf->binCmd); runProg(cmd);
+  sprintf(cmd, "%s start", ISconf->binCmd);
+  runProg(cmd);
 }
 
 
@@ -252,10 +229,9 @@ stop_button (GtkButton       *button,
 {
   char		cmd[64];
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  sprintf(cmd, "%s stop", ISconf->binCmd); runProg(cmd);
+  sprintf(cmd, "%s stop", ISconf->binCmd); 
+  runProg(cmd);
 }
-
-
 
 void
 irq_done_clicked (GtkButton       *button,

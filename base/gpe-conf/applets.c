@@ -18,14 +18,25 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <libintl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <gtk/gtk.h>
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
+#endif
 #include <time.h>
 #include "applets.h"
 #include <gpe/errorbox.h>
+#include <gpe/pixmaps.h>
+#include "suid.h"
+
+/* indicator for opened file selector */
+static int selector_open = FALSE; 
+
+/* we remember the password */
+static gchar *password = NULL;
 
 
 /***************************************************************************************/
@@ -108,19 +119,11 @@ int mystrcmp(char *s,char*c)
 // Maybe this should be in libgpewidget
 // but, this doesnt fit in the gtk "way of life"
 
-struct fstruct
-{
-  GtkWidget *fs;
-  void (*File_Selected)(char *filename, gpointer data);  
-  void (*Cancel)(gpointer data);
-  gpointer data;
-};
-
 static void
 select_fs                                (GtkButton       *button,
                                         gpointer         user_data)
 {
-  char * file;
+  const char * file;
   struct stat st;
   struct fstruct *s = (struct fstruct *)user_data;
 
@@ -130,8 +133,6 @@ select_fs                                (GtkButton       *button,
       if(S_ISDIR(st.st_mode))
 	{
 	  // TODO dont do anything for now. (work in libgpewidget)
-	  //printf("%s\n",file);
-	  //gtk_mini_file_selection_set_directory(GTK_FILE_SELECTION(s->fs),file);
 	}
       else
 	{
@@ -139,6 +140,7 @@ select_fs                                (GtkButton       *button,
 	  gtk_widget_destroy(GTK_WIDGET(s->fs));
 	}
     }
+  selector_open = FALSE;
 }
 
 static void
@@ -151,15 +153,18 @@ cancel_fs                               (GtkButton       *button,
     s->Cancel(s->data);
 
   gtk_widget_destroy(GTK_WIDGET(s->fs));
+  selector_open = FALSE;
 }
+
 void
 freedata                               (GtkWidget       *ignored,
                                         gpointer         user_data)
 {
   struct fstruct *s = (struct fstruct *)user_data;
   free(s);
-
+  selector_open = FALSE;
 }
+
 void ask_user_a_file(char *path, char *prompt,
 		     void (*File_Selected)(char *filename, gpointer data),
 		     void (*Cancel)(gpointer data),
@@ -174,6 +179,10 @@ void ask_user_a_file(char *path, char *prompt,
     GtkWidget *ok_button1 = GTK_FILE_SELECTION (fileselection1)->ok_button;
     GtkWidget *cancel_button1 = GTK_FILE_SELECTION (fileselection1)->cancel_button;
     struct fstruct *s= (struct fstruct *)malloc(sizeof(struct fstruct));
+
+	if (selector_open) return;
+	selector_open = TRUE;
+
     if(ret)
       chdir(buf);
     s->fs = fileselection1;
@@ -181,7 +190,6 @@ void ask_user_a_file(char *path, char *prompt,
     s->Cancel=Cancel;
     s->data=data;
   
-
 #if GTK_MAJOR_VERSION >= 2
   GTK_WINDOW (fileselection1)->type = GTK_WINDOW_TOPLEVEL;
 #else
@@ -202,7 +210,16 @@ void ask_user_a_file(char *path, char *prompt,
     gtk_signal_connect (GTK_OBJECT(s->fs) , "destroy", 
 			(GtkSignalFunc) freedata, (gpointer)s); // in case of destruction by close (X) button
 
-    gtk_widget_show (s->fs);
+    g_signal_connect_swapped (GTK_OBJECT (ok_button1),
+                             "clicked",
+                             G_CALLBACK (gtk_widget_destroy), 
+                             (gpointer) s->fs); 
+
+    g_signal_connect_swapped (GTK_OBJECT (cancel_button1),
+                             "clicked",
+                             G_CALLBACK (gtk_widget_destroy),
+                             (gpointer) s->fs);
+    gtk_widget_show (s->fs);	
   }
 }
 
@@ -211,7 +228,7 @@ void ask_user_a_file(char *path, char *prompt,
 /***************************************************************************************/
 
 
-static int runProg(char *cmd)
+int runProg(char *cmd)
 {
   int	status;
   pid_t	pid;
@@ -243,7 +260,7 @@ int system_and_gfree(gchar *cmd)
   int rv;
   gchar *buf;
   rv = runProg(cmd);
-  if(rv != 0)
+  if((rv != 0) && (rv != 256)) // 256 only as workaround for a bug in mbcontrol
     {
       buf = g_strdup_printf("%s\n failed with return code %d\nperhaps you have \nmisinstalled something",cmd, rv);
       gpe_error_box(buf);
@@ -252,3 +269,79 @@ int system_and_gfree(gchar *cmd)
   g_free(cmd);
   return rv;
 }
+
+/*
+	Check if user is allowed to exec command / change setting.
+	If not ask for root password and check.
+*/
+int suid_exec(const char* cmd,const char* params)
+{
+  GtkWidget *label, *dialog, *icon, *passwd_entry;
+  GtkWidget *hbox;
+  GdkPixbuf *p;
+  gint res = 0;
+	
+  struct passwd *pwent;
+	
+	if ((password) || (check_user_access (cmd) == TRUE))
+	{
+		fprintf(suidout,"%s\n%s\n%s",cmd,"<none>",params);
+		fflush(suidout);
+		return 0;
+	}
+	else
+	{
+	  dialog = 	gtk_dialog_new_with_buttons ("Root access",
+                                                  GTK_WINDOW(mainw),
+                                                  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                  GTK_STOCK_OK,
+                                                  GTK_RESPONSE_ACCEPT,
+                                                  GTK_STOCK_CANCEL,
+                                                  GTK_RESPONSE_REJECT,
+                                                  NULL);
+	  label =
+		gtk_label_new (_("Please enter the root password\nto access this!"));
+	  hbox = gtk_hbox_new (FALSE, 4);
+	
+	  gtk_widget_realize (dialog);
+	
+	  p = gpe_find_icon ("lock");
+	  icon = gtk_image_new_from_pixbuf (p);
+	  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+	  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
+	
+	  passwd_entry = gtk_entry_new ();
+	
+	  gtk_entry_set_visibility (GTK_ENTRY (passwd_entry), FALSE);
+	
+	  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
+	  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), passwd_entry);
+	
+	  gtk_widget_show_all (dialog);
+	
+      pwent = getpwuid(0);
+	  
+	  while (res != GTK_RESPONSE_REJECT)
+	  {
+	    res = gtk_dialog_run(GTK_DIALOG(dialog));
+		password = g_strdup(gtk_entry_get_text (GTK_ENTRY (passwd_entry)));
+		if (!strcmp (crypt (password, pwent->pw_passwd), pwent->pw_passwd))
+		{
+			fprintf(suidout,"%s\n%s\n%s\n",cmd,password,params);
+			fflush(suidout);
+	  		gtk_widget_destroy(dialog);
+			return 0;
+		}
+	  	else
+		{
+			if (password) free(password);
+			password = NULL;
+			if (res != GTK_RESPONSE_REJECT) gpe_error_box(_("Sorry, wrong password."));
+		}
+	  }
+	  gtk_widget_destroy(dialog);
+	}
+	return -1;
+}
+
+

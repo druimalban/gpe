@@ -7,10 +7,13 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <libintl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
+#endif
 #include <time.h>
 #include "applets.h"
 #include "timeanddate.h"
@@ -18,7 +21,7 @@
 
 #include <gpe/spacing.h>
 
-gchar *Ntpservers[5]=
+gchar *Ntpservers[6]=
   {
     "time.handhelds.org",
     "time.apple.com",
@@ -57,10 +60,7 @@ static struct
 
 void GetInternetTime()
 {
-
-  fprintf(suidout,"NTPD\n%s\n", gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
-  fflush(suidout);
-  printf("\n");
+	  if (suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry))))
   sleep(1);
   Time_Restore();
 }
@@ -195,6 +195,8 @@ void Time_Save()
   guint year,month,day, h, m,s;
   struct tm tm;
   time_t t;
+  char* par = malloc(100);
+  
   gtk_calendar_get_date(GTK_CALENDAR(self.cal),&year,&month,&day);
   h=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.h));
   m=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.m));
@@ -207,10 +209,12 @@ void Time_Save()
   tm.tm_sec=s;
   tm.tm_isdst = 0;
   t=mktime(&tm);
-  fprintf(suidout,"STIM %ld",t);
-  fflush(suidout);
-  //  stime(&t);
+
+  snprintf(par,99,"%ld",t);
+  suid_exec("STIM",par);
+  free(par);
 }
+
 void Time_Restore()
 {
   time_t t = time(NULL);

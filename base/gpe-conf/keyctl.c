@@ -11,7 +11,11 @@
 #include <sys/stat.h>
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
+
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
+#endif
+
 #include <time.h>
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
@@ -22,20 +26,22 @@
 #include <gpe/spacing.h>
 
 
-char buttons[5][1024];
+char buttons[7][1024];
 static struct{
-
   GtkWidget *button[5];
   GdkPixbuf *p;  
 }self;
 
 char * default_keyctl_conf[] = {
-  "/usr/bin/record",
-  "/usr/bin/schedule",
-  "/usr/bin/mingle",
-  "/usr/bin/x-terminal-emulator",
-  "/usr/bin/fmenu"
+  "key=???Pressed XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",
+  "key=???XF86Calendar:Calendar:gpe-calendar",
+  "key=???telephone:Contacts:gpe-contacts",
+  "key=???XF86Mail:Mail:gpe-mail",
+  "key=???XF86Start:Programs:gpe-appmgr",
+  "key=???XF86PowerDown:-:apm --suspend",
+  "key=???Held XF86PowerDown:-:bl toggle"
 };
+
 void FileSelected(char *file, gpointer data);
 
 void init_buttons()
@@ -50,18 +56,30 @@ void init_buttons()
     strcpy(buttons[0],"");
 
     /* read from configfile and set buttons */
-    fd=fopen("/etc/keyctl.conf","r");
+    fd=fopen("/etc/keylaunchrc","r");
     if (fd==NULL) {
 	/* defaults */
-	for (i=0;i<5;i++) {
+	for (i=0;i<7;i++) {
 	    strcpy(buttons[i],default_keyctl_conf[i]);
-	    slash=strrchr(buttons[i],'/')+1;
-	    if (slash==NULL) { slash=buttons[i]; }
+  		slash=strrchr(buttons[i],'/');
+  		if (slash==NULL) 
+  		{ 
+			slash=strrchr(buttons[i],':');
+  		};
+  		if (slash==NULL) 
+  		{ 
+			// FIXME: compensate broken entry!
+    		slash=buttons[i]; 
+  		}
+  		else
+  		{
+    		slash++; // select next char after selected position
+  		}	  
 	    strncpy(btext,slash,15);
 	    btext[15]='\x0';
 	    target=GTK_BUTTON(self.button[i]);
 #if GTK_MAJOR_VERSION >= 2
-            gtk_button_set_label(GTK_BUTTON(target),btext);
+        gtk_button_set_label(GTK_BUTTON(target),btext);
 #else
 	    gtk_label_set_text(GTK_LABEL(target->child),btext);
 #endif
@@ -73,33 +91,35 @@ void init_buttons()
 	    slash=strchr(buffer,'\n');
 	    if (slash!=NULL) { *slash='\x0'; }
 	    strcpy(buttons[i],buffer);
-	    slash=strrchr(buffer,'/')+1;
-	    if (slash==NULL) { slash=buffer; }
+  		slash=strrchr(buttons[i],'/');
+  		if (slash==NULL) 
+  		{ 
+			slash=strrchr(buttons[i],':');
+  		};
+  		if (slash==NULL) 
+  		{ 
+			// FIXME: compensate broken entry!
+    		slash=buttons[i]; 
+  		}
+  		else
+  		{
+    		slash++; // select next char after selected position
+  		}	  
 	    strncpy(btext,slash,15);
 	    btext[15]='\x0';
 	    target=GTK_BUTTON(self.button[i]);
 #if GTK_MAJOR_VERSION >= 2
-            gtk_button_set_label(GTK_BUTTON(target),btext);
+        gtk_button_set_label(GTK_BUTTON(target),btext);
 #else
 	    gtk_label_set_text(GTK_LABEL(target->child),btext);
 #endif
 	}
         fclose(fd);
+		strncpy(buttons[5],default_keyctl_conf[5],1023);
+		strncpy(buttons[6],default_keyctl_conf[6],1023);
     }
 }
 
-#if 1 // an attempt to draw some nice arrows from the pixmaps to the buttons. 
-// if anyone is more experienced on gdk and wan to do it..
-gboolean expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{			     
-
-  gdk_draw_line (widget->window,
-                widget->style->fg_gc[widget->state],
-                184, 182,165, 145 
-                 );
-  return TRUE;
-}
-#endif
 
 void
 on_button_clicked                      (GtkButton       *button,
@@ -113,7 +133,6 @@ on_button_clicked                      (GtkButton       *button,
 
 GtkWidget *Keyctl_Build_Objects()
 {
-  guint gpe_border = gpe_get_border ();
   GtkWidget *layout1 = gtk_layout_new (NULL, NULL);
   GtkWidget *button_1 = gtk_button_new_with_label ("Record");
   GtkWidget *button_2 = gtk_button_new_with_label ("Calendar");
@@ -123,7 +142,7 @@ GtkWidget *Keyctl_Build_Objects()
   GtkWidget *scroll = gtk_scrolled_window_new(
 					      GTK_ADJUSTMENT(gtk_adjustment_new(0,0,230,1,10,240)),
 					      GTK_ADJUSTMENT(gtk_adjustment_new(0,0,220,1,10,240)));
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
   self.p = gpe_find_icon ("ipaq");
 
 
@@ -137,46 +156,40 @@ GtkWidget *Keyctl_Build_Objects()
   gtk_container_add (GTK_CONTAINER (scroll), layout1);
   gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 220);
 
-#warning FIXME: this aint right... :)
-  /* gtk_container_set_border_width (GTK_CONTAINER (scroll), gpe_border); */
+  gtk_container_set_border_width (GTK_CONTAINER (scroll), 2); 
   
   GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->hadjustment)->step_increment = 10;
   GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->vadjustment)->step_increment = 10;
 
-  gtk_widget_show (button_1);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_1, 0, 56);
-  gtk_widget_set_usize (button_1, 50, 20);
-
-  gtk_widget_show (button_2);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_2, 8, 182);
-  gtk_widget_set_usize (button_2, 50, 20);
-
-  gtk_widget_show (button_5);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_5, 184, 182);
-  gtk_widget_set_usize (button_5, 50, 20);
-
-  gtk_widget_show (button_3);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_3, 64, 196);
-  gtk_widget_set_usize (button_3, 50, 20);
-
-  gtk_widget_show (button_4);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_4, 128, 196);
-  gtk_widget_set_usize (button_4, 50, 20);
-
   if(self.p)
     {
-      GtkWidget *pixmap1 = gpe_render_icon (wstyle, self.p);
+      GtkWidget *pixmap1 = gtk_image_new_from_pixbuf (self.p);
       gtk_widget_show (pixmap1);
-      gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 50, 0);
-      gtk_widget_set_usize (pixmap1, 144, 208);
+      gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 30, 5);
+      gtk_widget_set_usize (pixmap1, 188, 205);
 
-
-      gtk_signal_connect_after (GTK_OBJECT (pixmap1), "expose_event",GTK_SIGNAL_FUNC (expose_event),NULL);
-
-
-      
     }
+
+  gtk_widget_show (button_1);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_1, 0, 54);
+  gtk_widget_set_usize (button_1, 70, 20);
+
+  gtk_widget_show (button_2);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_2, 2, 176);
+  gtk_widget_set_usize (button_2, 70, 20);
+
+  gtk_widget_show (button_3);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_3, 38, 198);
+  gtk_widget_set_usize (button_3, 70, 20);
+
+  gtk_widget_show (button_4);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_4, 118, 200);
+  gtk_widget_set_usize (button_4, 70, 20);
   
+  gtk_widget_show (button_5);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_5, 162, 178);
+  gtk_widget_set_usize (button_5, 70, 20);
+
   gtk_signal_connect_object (GTK_OBJECT (button_1), "clicked",
                              GTK_SIGNAL_FUNC (on_button_clicked),
                              GTK_OBJECT (button_1));
@@ -196,20 +209,21 @@ GtkWidget *Keyctl_Build_Objects()
   return scroll;
 
 }
+
 void Keyctl_Free_Objects();
+
 void Keyctl_Save()
 {
     /* save new config, force keyctl to reload, and exit */
     int i;
     FILE *fd;
 
-    fd=fopen("/etc/keyctl.conf","w");
+    fd=fopen("/etc/keylaunchrc","w");
     if (fd==NULL) {
-	printf("ERROR: Can't open /etc/keyctl.conf for writing!\n");
+	printf("ERROR: Can't open /etc/keylaunchrc for writing!\n");
 	return;
-	//        exit(1);
     }
-    for (i=0;i<5;i++) {
+    for (i=0;i<7;i++) {
 #ifdef DEBUG
 	printf("button #%d => %s\n",i,buttons[i]);
 #endif
@@ -218,11 +232,9 @@ void Keyctl_Save()
     fclose(fd);
 
 }
+
 void Keyctl_Restore()
 {
-
-  init_buttons();
-
 }
 
 
@@ -234,25 +246,31 @@ void FileSelected(char *file, gpointer data)
   char *slash;
   int button_nr;
 
+  if (!strlen(file)) return;
+	  
   target=data;
   for(button_nr = 0; button_nr<5 && self.button[button_nr]!=GTK_WIDGET(target) ;button_nr++);
-
-  if(button_nr==5)
-    {
-      printf("cant find button\n");
-      return;
-    }
-	
-
-  strncpy(buttons[button_nr],file,1023);
+  slash=strrchr(buttons[button_nr],':')+1;
+  strncpy(slash,file,1023-(strlen(buttons[button_nr])-strlen(slash))-1);
   buttons[button_nr][1023]='\x0';
 
 #ifdef DEBUG
   printf("button %d changed to %s\n",button_nr,file);
 #endif
   len=strlen(file);
-  slash=strrchr(file,'/')+1;
-  if (slash==NULL) { slash=file; }
+  slash=strrchr(file,'/');
+  if (slash==NULL) 
+  { 
+	slash=strrchr(file,':');
+  };
+  if (slash==NULL) 
+  { 
+    slash=file; 
+  }
+  else
+  {
+    slash++; // select next char after selected position
+  }	  
   strncpy(btext,slash,15);
   btext[15]='\x0';
 #ifdef DEBUG

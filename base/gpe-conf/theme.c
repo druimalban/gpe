@@ -20,7 +20,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
+#endif
 #include <time.h>
 #include "applets.h"
 #include "theme.h"
@@ -51,7 +53,7 @@ char * get_cur_matchboxtheme()
   static char cur[256];
   return 0;
   pipe = popen ("mbcontrol -r", "r");
-  
+
   if (pipe > 0)
     {
       fgets (cur, 255, pipe);
@@ -68,6 +70,7 @@ char * get_cur_matchboxtheme()
   return cur;
 
 }
+
 void get_gtkrc(char *cur)
 {
   char *home = getenv("HOME");
@@ -77,15 +80,18 @@ void get_gtkrc(char *cur)
   sprintf(cur,"%s/.gtkrc",home);
 
 }
+
 void get_wallpaper_filename(char *cur)
 {
   char *home = getenv("HOME");
+	
   if(strlen(home) > 240)
       gpe_error_box( "bad $HOME !!");
 
   sprintf(cur,"%s/.gpe/wallpaper",home);
 
 }
+
 char * get_cur_gtktheme()
 {
   FILE *f;
@@ -131,6 +137,7 @@ get_wallpaper              ()
 {
   static char buf[255];
   FILE *f;
+
   get_wallpaper_filename(buf);
   f = fopen(buf,"r");
   buf[0]=0;
@@ -141,6 +148,7 @@ get_wallpaper              ()
     }
   return buf;
 }
+
 int gtk_entry_test(char *path)
 {
   char buf[256];
@@ -162,6 +170,7 @@ on_matchbox_entry_changed              (GtkWidget     *menu,
                                         gpointer         user_data)
 {
 #if ! __i386__
+	
   system_printf("mbcontrol -t %s",(char *)gtk_object_get_data(GTK_OBJECT(
 								 gtk_menu_get_active(GTK_MENU(menu))
 								 ),"fullpath"));
@@ -177,6 +186,7 @@ on_gtk_entry_changed              (GtkWidget     *menu,
   GtkWidget *active=gtk_menu_get_active(GTK_MENU(menu));
   char * fullpath= gtk_object_get_data(GTK_OBJECT(active),"fullpath");
   char rc[256];
+	
   get_gtkrc(rc);
 
   
@@ -201,20 +211,22 @@ on_gtk_entry_changed              (GtkWidget     *menu,
 
 static void File_Selected(char *file, gpointer data)
 {
-  gtk_entry_set_text(GTK_ENTRY(self.WallPaper),file);
+  gtk_entry_set_text(GTK_ENTRY(self.WallPaper),file);	
 }
+
 void
 choose_wallpaper              (GtkWidget     *button,
 			       gpointer         user_data)
 {
   ask_user_a_file(getenv("HOME"),NULL,File_Selected,NULL,NULL);
-
 }
+
 void Theme_Save()
 {
-  char *file = gtk_entry_get_text(GTK_ENTRY(self.WallPaper));
+  char *file;
   char configfile[255];
   FILE * f;
+  file = gtk_entry_get_text(GTK_ENTRY(self.WallPaper));	
   get_wallpaper_filename(configfile);
   if(file[0])
     {
@@ -225,8 +237,8 @@ void Theme_Save()
 	  fprintf(f,file);
 	  fclose(f);
 	}
-      if(system_printf("qiv -z %s",file))
-	gpe_error_box("You need qiv installed\nto set the wallpaper!!");
+    if(system_printf("gpe-setbg %s",file))
+	gpe_error_box("You need gpe-setbg installed\nto set the wallpaper!!");
     }
 }
 

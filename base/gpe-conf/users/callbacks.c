@@ -13,6 +13,7 @@
 #include <crypt.h>
 #include <time.h>
 
+extern GtkWidget *user_list;
 
 
 /************** main dialog *****************/
@@ -47,7 +48,6 @@ users_on_new_clicked                      (GtkButton       *button,
   ReloadList();
 
 }
-extern GtkWidget *user_list;
 
 void
 users_on_edit_clicked                      (GtkButton       *button,
@@ -100,7 +100,7 @@ users_on_delete_clicked                      (GtkButton       *button,
 	i--;
       }
     if(cur->pw.pw_uid < MINUSERUID)
-      gpe_error_box("Dont remove\n system users!");
+      gpe_error_box(_("Dont remove\n system users!"));
     else
       {
 	*prec = cur->next;
@@ -133,7 +133,7 @@ users_on_save_clicked                        (GtkButton       *button,
   
   if(strcmp(tmp,"newuser")==0)
     {
-      gpe_error_box(_("please choose a user name."));
+      gpe_error_box(_("Please choose a user name."));
       return ;
     }
   
@@ -151,7 +151,7 @@ users_on_save_clicked                        (GtkButton       *button,
   tmp = gtk_entry_get_text(GTK_ENTRY(self->home));
   if(strcmp(tmp,"/home/newuser")==0)
     {
-      gpe_error_box(_("please choose a home."));
+      gpe_error_box(_("Please choose a home."));
       return ;
     }
 
@@ -209,10 +209,10 @@ users_on_changepasswd_clicked                (GtkButton       *button,
 	  
 	}
       else
-	gpe_error_box(_("The two new pass are different!\n try again!"));
+	gpe_error_box(_("The two new pass are different!\n Please try again!"));
     }
   else
-    gpe_error_box(_("Wrong password\n try again!"));
+    gpe_error_box(_("Wrong password\n Please try again!"));
 
 }
 

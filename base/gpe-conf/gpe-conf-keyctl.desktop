@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Button Configuration
+Name=Button Config
 Comment=Button Configuration
 Exec=gpe-conf keyctl
 Terminal=0

@@ -14,6 +14,8 @@
 */
 
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -24,15 +26,14 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "../gpe-appmgr/package.h"
 #include "../gpe-appmgr/cfg.h"
 #include "applets.h"
 
 #include "appmgr_setup.h"
+#include "xsettings-client.h"
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 
-struct package *config=NULL;
 
 GtkWidget *all_group_check=NULL;
 GtkWidget *tab_view_icon=NULL;
@@ -42,6 +43,115 @@ GtkWidget *show_recent_check=NULL;
 GtkWidget *dont_launch_check=NULL;
 
 char dont_launch_file[255];
+
+static XSettingsClient *client;
+
+#define KEY_BASE "GPE/APPMGR/"
+
+static void
+notify_func (const char       *name,
+	     XSettingsAction   action,
+	     XSettingsSetting *setting,
+	     void             *cb_data)
+{
+
+  if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
+    {
+      char *p = (char*)name + strlen (KEY_BASE);
+
+      if (!strcmp (p, "SHOW-ALL-GROUP"))
+	{
+	  if (setting->type == XSETTINGS_TYPE_INT)
+	    {
+		    cfg_options.show_all_group = setting->data.v_int;
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(all_group_check),
+				cfg_options.show_all_group);
+	    }
+	}
+
+      if (!strcmp (p, "AUTOHIDE-GROUP-LABELS"))
+      {
+	      if (setting->type == XSETTINGS_TYPE_INT)
+	      {
+			cfg_options.auto_hide_group_labels = setting->data.v_int;
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check),
+				      cfg_options.auto_hide_group_labels);
+	      }
+      }
+      
+      if (!strcmp (p, "SHOW-RECENT-APPS")) {
+	      if (setting->type == XSETTINGS_TYPE_INT) {
+		      cfg_options.show_recent_apps = setting->data.v_int;
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(show_recent_check),
+				      cfg_options.show_recent_apps);
+	      }
+      }
+
+    }
+}
+
+static GdkFilterReturn
+xsettings_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+{
+  if (xsettings_client_process_event (client, (XEvent *)xevp))
+    return GDK_FILTER_REMOVE;
+
+  return GDK_FILTER_CONTINUE;
+}
+
+
+static void 
+watch_func (Window window,
+	    Bool   is_start,
+	    long   mask,
+	    void  *cb_data)
+{
+  GdkWindow *gdkwin;
+  
+  gdkwin = gdk_window_lookup (window);
+
+  if (is_start)
+    {
+      if (!gdkwin)
+	gdkwin = gdk_window_foreign_new (window);
+      else
+	g_object_ref (gdkwin);
+
+      gdk_window_add_filter (gdkwin, xsettings_event_filter, NULL);
+    }
+  else
+    {
+      g_assert (gdkwin);
+      g_object_unref (gdkwin);
+      gdk_window_remove_filter (gdkwin, xsettings_event_filter, NULL);
+    }
+}
+
+gboolean
+gpe_appmgr_start_xsettings (void)
+{
+  Display *dpy = GDK_DISPLAY ();
+
+	/* Default options */
+	cfg_options.show_all_group = 0;
+	cfg_options.auto_hide_group_labels = 1;
+	cfg_options.tab_view = TAB_VIEW_ICONS;
+	cfg_options.list_icon_size = 48;
+	cfg_options.show_recent_apps = 0;
+	cfg_options.recent_apps_number = 4;
+	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
+	cfg_options.use_windowtitle = 1;
+
+  client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_func, watch_func, NULL);
+  if (client == NULL)
+    {
+      fprintf (stderr, "Cannot create XSettings client\n");
+      return FALSE;
+    }
+
+	return TRUE;
+}
+
 
 int dont_launch_exists()
 {
@@ -73,13 +183,11 @@ void page_add (GtkVBox *vb)
 	gchar *gpe_catindent = gpe_get_catindent ();
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 
-	cfg_load();
-
 	/* -------------------------------------------------------------------------- */
 	catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
 	gtk_box_pack_start (GTK_BOX (vb), catvbox1, TRUE, TRUE, 0);
 	
-	catlabel1 = gtk_label_new (_("General")); /* FIXME: GTK2: make this bold */
+	catlabel1 = gtk_label_new (_("General")); 
 	gtk_box_pack_start (GTK_BOX (catvbox1), catlabel1, FALSE, FALSE, 0);
 	gtk_label_set_justify (GTK_LABEL (catlabel1), GTK_JUSTIFY_LEFT);
 	gtk_misc_set_alignment (GTK_MISC (catlabel1), 0, 0.5);
@@ -159,61 +267,32 @@ void page_add (GtkVBox *vb)
 	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), label);
 
+	gpe_appmgr_start_xsettings();
+
 	gtk_widget_show_all (GTK_WIDGET(vb));
 }
 
 void Appmgr_Restore (void){}
-void Appmgr_Free_Objects (void){}
+	
+void Appmgr_Free_Objects (void){	
+}
+	
 void Appmgr_Save (void)
 {
-	char *fn;
-
-	if (!config)
-	{
-		config = (struct package *) package_new ();
-		config->name = (char*) strdup ("package");
-		config->data = (char*) strdup("gpe-appmgr");
-	}
-
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(all_group_check)))
-		package_set_data (config, "show_all_group", "yes");
-	else
-		package_set_data (config, "show_all_group", "no");
-
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check)))
-		package_set_data (config, "auto_hide_group_labels", "yes");
-	else
-		package_set_data (config, "auto_hide_group_labels", "no");
-
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(show_recent_check)))
-		package_set_data (config, "show_recent_apps", "yes");
-	else
-		package_set_data (config, "show_recent_apps", "no");
-
-
+	system_printf("xst write %s%s int %i",KEY_BASE,"SHOW-ALL-GROUP",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(all_group_check)));
+	system_printf("xst write %s%s int %i",KEY_BASE,"AUTOHIDE-GROUP-LABELS",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check)));
+	system_printf("xst write %s%s int %i",KEY_BASE,"SHOW-RECENT-APPS",gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(show_recent_check)));
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(dont_launch_check)))
 	  system_printf("touch %s",dont_launch_file);
 	else if(file_exists(dont_launch_file))
 	  system_printf("rm %s",dont_launch_file);
-
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(tab_view_icon)))
-		package_set_data (config, "tab_view", "icon");
-	else
-		package_set_data (config, "tab_view", "list");
-
- 	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr", g_get_home_dir());
-	package_save (config, fn);
-	g_free (fn);
-
-	system("kill -HUP  `pidof gpe-appmgr`");
-
 }
 
 GtkWidget *Appmgr_Build_Objects()
 {
 	GtkWidget  *vbox;
 
-        guint gpe_catspacing = gpe_get_catspacing ();
+ 	guint gpe_catspacing = gpe_get_catspacing ();
 	guint gpe_border = gpe_get_border ();
   
 	vbox = gtk_vbox_new (FALSE, gpe_catspacing);

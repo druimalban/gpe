@@ -23,13 +23,11 @@
 #include "calibrate.h"
 #include "rotation.h"
 void
-on_brightness_hscale_draw              (GtkWidget       *widget,
-                                        GdkRectangle    *area,
+										
+on_brightness_hscale_draw              (GtkWidget       *adjustment,
                                         gpointer         user_data)
 {
-  GtkAdjustment *adjustment;
-  adjustment = gtk_range_get_adjustment (GTK_RANGE(widget));
-  set_brightness ((int) (adjustment->value * 2.55));
+  set_brightness ((int) (GTK_ADJUSTMENT(adjustment)->value * 2.55));
 }
 
 
@@ -37,16 +35,13 @@ on_brightness_hscale_draw              (GtkWidget       *widget,
 void change_screen_saver_label(int);
 
 void
-on_screensaver_hscale_draw              (GtkWidget       *widget,
-                                        GdkRectangle    *area,
+on_screensaver_hscale_draw              (GtkWidget       *adjustment,
                                         gpointer         user_data)
 {
-  GtkAdjustment *adjustment;
   int sec;
-  adjustment = gtk_range_get_adjustment (GTK_RANGE(widget));
 
-  if(adjustment->value>0.1)
-    sec=1+(int)exp(adjustment->value/2.8208);// an exponentiel range from 0 to 20 min
+  if(GTK_ADJUSTMENT(adjustment)->value>0.1)
+    sec=1+(int)exp(GTK_ADJUSTMENT(adjustment)->value/2.8208);// an exponentiel range from 0 to 20 min
   else
     sec = 0;
   if(sec>60)
@@ -66,8 +61,6 @@ on_screensaver_button_clicked           (GtkWidget       *widget,
 {
   GtkAdjustment *adjustment;
   adjustment = gtk_range_get_adjustment (GTK_RANGE(widget));
-
-  
 }
 
 

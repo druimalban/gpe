@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Date and Time
-Comment=Date and Time Setup
+Name=Date/Time Setup
+Comment=Setup Date and Time
 Exec=gpe-conf time
 Terminal=0
 Type=Application

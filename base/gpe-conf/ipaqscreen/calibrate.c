@@ -12,10 +12,15 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <libintl.h>
 #include "gpe/errorbox.h"
 
 #include "calibrate.h"
 #include "../suid.h"
+#include "../applets.h"
+#ifndef _
+# define _(x) gettext(x)
+#endif
 
 void calibrate ()
 {
@@ -24,7 +29,7 @@ void calibrate ()
 	gpe_error_box ("you are on 386 machine!!");
 	return ; // xrandr doesnt exit on i386 dev machines!
 #endif
-	fprintf(suidout,"XCAL\n");
-	fflush(suidout);
+	if (suid_exec("XCAL",""))
+	  gpe_error_box(_("Sorry, wrong password."));
 
 }

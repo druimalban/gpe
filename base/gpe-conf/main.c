@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
+#include <libintl.h>
 #include "suid.h"
 #include "applets.h"
 #include "timeanddate.h"
@@ -36,6 +37,7 @@
 #include "ownerinfo.h"
 #include "login-setup.h"
 #include "users.h"
+#include "sleep/conf.h"
 
 #include "gpe/init.h"
 
@@ -59,7 +61,6 @@ static struct {
   GtkWidget *applet;
   GtkWidget *vbox;
   GtkWidget *viewport;
-  //  GtkWidget *frame;
 
   GtkWidget *save;
   GtkWidget *cancel;
@@ -77,12 +78,12 @@ struct Applet applets[]=
     { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr", "Launcher Setup"},
     { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup"},
     { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Unimplemented_Restore , "vKeyboard" ,"keyboard", "Virtual Keyboard Setup"},
-    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Unimplemented_Restore , "Buttons" ,"keyctl", "Button Configuration"},
-    { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Unimplemented_Restore , "Network" ,"network","IP Addresses"},
+    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore , "Buttons" ,"keyctl", "Button Configuration"},
+    { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore , "Network" ,"network","IP Addresses"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance Setup"},
-    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
+    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore , "Sleep" ,"sleep","Sleep Configuration"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore, "Owner", "ownerinfo", "Owner Information"},
-    { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Unimplemented_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
+    { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
@@ -172,10 +173,10 @@ void initwindow()
     exit (1);
 
    // main window
-   self.w= mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+   self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    wstyle = self.w->style;
-   gtk_window_set_title(GTK_WINDOW(self.w),"GPE-Conf " VERSION);
-   gtk_widget_set_usize(GTK_WIDGET(self.w),300, 400);
+   gtk_window_set_title(GTK_WINDOW(self.w),"GPE-Config " VERSION);
+   gtk_widget_set_usize(GTK_WIDGET(self.w),240, 310);
 
 
    gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
@@ -222,7 +223,7 @@ void make_container()
 }
 void main_all()
 {
-  int i;
+/*  int i;
   GtkWidget *ntree;
   GtkWidget *root_tree;
   GtkWidget *sys_root;
@@ -283,6 +284,7 @@ void main_all()
   
   gtk_main();
   gtk_exit(0);
+*/  
   return;
 }
 
@@ -355,7 +357,11 @@ int main(int argc, char **argv)
       setresgid(getgid(),getgid(),getgid()); // abandon privilege..
       if(argc == 1)
 	{
-	  main_all(argc,argv);
+		fprintf(stderr,"This mode is disabled, please try:\n");
+	      printf("\ngpe-conf [AppletName]\nwhere AppletName is in:\n");
+	      for( i = 0 ; i< applets_nb ; i++)
+		if(applets[i].Build_Objects != Unimplemented_Build_Objects)
+		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
 	}
       else
 	{

@@ -20,9 +20,19 @@
 #include "brightness.h"
 #include "../applets.h"
 #include "../parser.h"
+/*
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/h3600_ts.h>
 
+#define TS_DEV "/dev/h3600_ts"
+
+FLITE_IN bl;
+
+*/
 void set_brightness (int brightness)
 {
+//	int fd;
 #ifdef __i386__
   return ; // bl doesnt exit on i386 dev machines!
 #endif
@@ -30,6 +40,16 @@ void set_brightness (int brightness)
     system ("bl off\n");
   else
     system_printf("bl %d",brightness);
+/*
+	fd = open(TS_DEV, O_RDWR);
+	if (fd == -1)
+		return;
+	if (brightness>0) bl.pwr=1;
+		else bl.pwr=0;
+	bl.brightness=(unsigned char)brightness;
+	ioctl(fd,FLITE_ON,(void *)&bl);
+	close(fd);
+	*/
 }
 
 int get_brightness ()

@@ -21,7 +21,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
-#define _XOPEN_SOURCE /* For GlibC2 */
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE /* Pour GlibC2 */
+#endif
 #include <time.h>
 
 #include <gpe/errorbox.h>
@@ -51,6 +53,8 @@ GtkWidget *name;
 GtkWidget *email;
 GtkWidget *phone;
 GtkWidget *address;
+GtkWidget *photo;
+GtkWidget *button;
 
 static gchar *ownerphotofile, *ownername, *owneremail, *ownerphone, *owneraddress;
 
@@ -67,8 +71,6 @@ GtkWidget *Ownerinfo_Build_Objects()
   GtkWidget *owner_email_label;
   GtkWidget *owner_phone_label;
   GtkWidget *owner_address_label;
-  GtkWidget *button;
-  GtkWidget *photo;
   GdkPixbuf *pixbuf;
   gint upgrade_result = UPGRADE_ERROR;
   GtkAttachOptions table_attach_left_col_x;
@@ -174,10 +176,6 @@ GtkWidget *Ownerinfo_Build_Objects()
   else /* fp == NULL, no file existing */
     {
       /* it's just okay if the file doesn't exist */
-      /*
-	gpe_perror_box (GPE_OWNERINFO_DATA);
-	exit (1);
-      */
     }
 
   /*
@@ -219,7 +217,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 
   pixbuf = gpe_find_icon ("warning16");
-  icon = gpe_render_icon (hbox->style, pixbuf);
+  icon = gtk_image_new_from_pixbuf (pixbuf);
   gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
   gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 2*gpe_boxspacing);
@@ -288,7 +286,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_table_attach (GTK_TABLE (table), scrolledwindow1, 1, 2, 3, 4,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y),
+                    (GtkAttachOptions) (table_attach_right_col_x),
 		    0, gpe_boxspacing);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -297,12 +295,11 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport1), GTK_SHADOW_NONE);
 
-  address = gtk_text_new (NULL, NULL);
+  
+  address = gtk_text_view_new (); 
   gtk_container_add (GTK_CONTAINER (viewport1), address);
-  gtk_text_set_editable (GTK_TEXT (address), TRUE);
-  gtk_text_insert (GTK_TEXT (address), NULL, NULL, NULL,
-                   owneraddress, strlen(owneraddress));
-
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (address), TRUE);
+  gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),owneraddress,-1);
   /* ------------------------------------------------------------------------ */
   owner_photofile_label = gtk_label_new (_("Photofile:"));
   gtk_table_attach (GTK_TABLE (table), owner_photofile_label, 0, 1, 4, 5,
@@ -365,7 +362,8 @@ void Ownerinfo_Free_Objects()
 void Ownerinfo_Save()
 {
   gchar *firstline;
-  
+  GtkTextIter pstart, pend;
+	
   fp = fopen (GPE_OWNERINFO_DATA, "w");
   if (fp)
     {
@@ -384,30 +382,43 @@ void Ownerinfo_Save()
       ownerphone = gtk_entry_get_text (GTK_ENTRY (phone));
       fputs (ownerphone, fp);
       fputs ("\n", fp);
-      owneraddress = gtk_editable_get_chars (GTK_EDITABLE (address), 0, -1);
+	
+      gtk_text_buffer_get_start_iter(
+		gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),&pstart);
+      gtk_text_buffer_get_end_iter(
+        gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),&pend);
+		
+      owneraddress =  gtk_text_buffer_get_text(
+		gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),&pstart,&pend,TRUE);
+      gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),owneraddress,-1);
       fputs (owneraddress, fp);
       fclose (fp);
     }
   else /* fp == NULL, something went wrong */
     {
-      gpe_perror_box (GPE_OWNERINFO_DATA);
+	  // don't bother our user with this
+      //gpe_perror_box (GPE_OWNERINFO_DATA);
       /* don't exit, it might be "just" permission denied: */
-      /* exit (1); */
     }
 }
 
 void Ownerinfo_Restore()
 {
+  GtkTextIter pstart, pend;
+	
   gtk_entry_set_text (GTK_ENTRY (photofile), ownerphotofile);
   gtk_entry_set_text (GTK_ENTRY (name),      ownername);
   gtk_entry_set_text (GTK_ENTRY (email),     owneremail);
   gtk_entry_set_text (GTK_ENTRY (phone),     ownerphone);
 
-  gtk_editable_delete_text (GTK_EDITABLE (address), 0, -1);
-  gtk_text_freeze (GTK_TEXT (address));
-  gtk_text_insert (GTK_TEXT (address), NULL, &address->style->black, NULL,
-                   owneraddress, -1);
-  gtk_text_thaw (GTK_TEXT (address));
+	gtk_text_buffer_get_start_iter(
+		gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),&pstart);
+      gtk_text_buffer_get_end_iter(
+        gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),&pend);
+		
+      gtk_text_buffer_delete(
+		gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),&pstart,&pend);
+	
 }
 
 
@@ -502,9 +513,7 @@ upgrade_to_v2 (guint new_version)
   FILE *fp;
   
   /* firstline = g_strdup ("Initial firstline"); */
-#warning FIXME: Why doesnt this work?
-  /* sprintf (firstline, "%s %d]", INFO_MATCH, new_version); */
-  /* sprintf (firstline, INFO_MATCH "%d]", INFO_MATCH, new_version); maybe??? */
+
   firstline =  g_strdup ("[gpe-ownerinfo data version 2]");
   oldcontent = g_strdup ("Initial oldcontent.");
   
@@ -561,8 +570,18 @@ void File_Selected (char *file,
 {
   /* check if we can read the selected file */
   /* FIXME: gotta check if it's a valid png file */
-  if (access (file, R_OK) == 0) 
+  int width, height;
+  if (access (file, R_OK) == 0) {
     gtk_entry_set_text (GTK_ENTRY (photofile), file);
+	width = 32;
+	height = 48;
+    gtk_container_remove (GTK_CONTAINER (button), photo);
+    photo = gpe_create_pixmap (button, file,
+					 width,
+					 height);
+    gtk_container_add (GTK_CONTAINER (button), photo);
+    gtk_widget_show (GTK_WIDGET (photo));
+  }
   else
     g_message ("Can't read '%s'.", file);
 }
@@ -571,7 +590,5 @@ void
 choose_photofile              (GtkWidget     *button,
 			       gpointer       user_data)
 {
-  ask_user_a_file (gpe_dirname (ownerphotofile), NULL, File_Selected, NULL, NULL);
-#warning FIXME: update the image in the button here  
-  /* gtk_widget_draw (GTK_WIDGET (button), NULL); */
+  ask_user_a_file (gpe_dirname (ownerphotofile), NULL, File_Selected, NULL, NULL); 	
 }

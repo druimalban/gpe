@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Sleep Configuration	
+Name=Sleep Config	
 Comment=Sleep Configuration
 Exec=gpe-conf sleep
 Terminal=0

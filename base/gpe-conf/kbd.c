@@ -10,7 +10,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
+#ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE /* Pour GlibC2 */
+#endif
 #include <time.h>
 #include "applets.h"
 
@@ -107,7 +109,6 @@ GtkWidget *Kbd_Build_Objects()
   GtkWidget *catindentlabel1;
   GtkWidget *controlvbox1;
 
-  GtkWidget *vbox;
   GtkWidget *opt1;
   char *user_kbdrc;
 
@@ -116,9 +117,6 @@ GtkWidget *Kbd_Build_Objects()
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
  
-  // vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
-  // gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_border);
-
   categories = gtk_vbox_new (FALSE, gpe_catspacing);
   gtk_container_set_border_width (GTK_CONTAINER (categories), gpe_border);
 

@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Theme Selection
+Name=Theme Selector
 Comment=Global Appearance Setup
 Exec=gpe-conf theme
 Terminal=0
