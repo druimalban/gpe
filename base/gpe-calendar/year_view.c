@@ -203,7 +203,7 @@ year_view_update (void)
   guint i;
   time_t basetime;
   struct tm *tm = localtime (&viewtime);
-  tm->tm_mday = 0;
+  tm->tm_mday = 1;
   tm->tm_mon = 0;
   tm->tm_yday = 0;
   tm->tm_hour = 0;
