@@ -36,7 +36,7 @@ ifeq ($(CVSBUILD),yes)
 CFLAGS  += -I../../libgpewidget
 LDFLAGS += -L../../libgpewidget
 
-CFALGS  += -I../../libgpe/include
+CFLAGS  += `cd ../../libgpe && ln -sf include gpe` -I../../libgpe
 LDFLAGS += -L../../libgpe/src
 endif
 
