@@ -6,12 +6,16 @@ RunInTerminal=true
 ShowLocals=true
 
 [filenumbers]
-0=92
-1=14
+0=6
+1=1
+2=130
+3=14
 
 [filemarkers]
 0=
 1=
+2=
+3=
 
 [Project State]
 clean before build=false
@@ -22,5 +26,16 @@ filter.file.ignore.hidden=0
 filter.dir.ignore.hidden=0
 
 [filelist]
-0=/home/fuchs/Projekte/simpad/kernel/linux-2.4.25/drivers/misc/switches-core.c
-1=/home/fuchs/Projekte/gpe/todo.txt
+0=/home/fuchs/Projekte/gpe/gpe/base/gpe-mixer/Makefile
+1=/home/fuchs/Projekte/gpe/gpe/base/gpe-mixer/ChangeLog
+2=/home/fuchs/Projekte/gpe/gpe/base/gpe-mixer/gpe-mixer.c
+3=/home/fuchs/Projekte/gpe/todo.txt
+
+[Project Tree]
+0=0
+1=0:0
+2=0:1
+3=0:2
+
+[File Tree]
+0=0

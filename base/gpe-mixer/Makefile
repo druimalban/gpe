@@ -1,9 +1,9 @@
-PREFIX = /usr
+PREFIX = /usr/local
 PACKAGE = gpe-mixer
 DEBUG = yes
 CVSBUILD = yes
 GST = yes
-VERSION = 0.35
+VERSION = 0.36
 
 MEMBERS = gpe-mixer
 

@@ -55,6 +55,7 @@ static struct gpe_icon my_icons[] = {
 GtkWidget *window;				/* Main window */
 GtkStyle *style;
 GtkObject **MixerAdjuster;
+gchar **channels = NULL;
 
 /* helper for i8n */
 #define _(x) gettext(x)
@@ -65,6 +66,20 @@ char *mixer_names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_NAMES;
 int devmask = 0, recmask = 0, recsrc = 0;
 int mixfd;
 
+static gboolean 
+channel_active(const gchar *name)
+{
+	int i = 0;
+	
+	if (!channels)
+		return TRUE;
+	
+	while (channels[i])
+		if (!strcmp(channels[i++], name))
+			return TRUE;
+		
+	return FALSE;
+}
 
 static void
 set_volume (GtkObject *o, void *t)
@@ -95,7 +110,7 @@ GdkPixbuf *pbuf = NULL;
 	
 	/* count mixers */
 	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
-		if ((1 << i) & devmask)
+		if (((1 << i) & devmask) && channel_active(mixer_names[i]))
 			n++;
 	}
 
@@ -103,14 +118,14 @@ GdkPixbuf *pbuf = NULL;
 	table=gtk_table_new(2, n, FALSE);
 	style = gtk_style_copy (table->style);
 	gtk_container_add (GTK_CONTAINER (window), table);
-	MixerAdjuster = (GtkObject **)malloc(n * sizeof (GtkObject));
+	MixerAdjuster = (GtkObject **)g_malloc0(n * sizeof (GtkObject *));
 
 	mixer_tips = gtk_tooltips_new ();
 
 	/* fill table with mixers */
 	n=0;
 	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
-		if ((1 << i) & devmask) {
+		if (((1 << i) & devmask) && channel_active(mixer_names[i])) {
 			devnum=(int *)malloc(sizeof(int));
 			*devnum=i;
 			MixerAdjuster[n] = gtk_adjustment_new (101.0, 0.0, 101.0, 1.0, 10.0, 1.0);
@@ -155,7 +170,7 @@ int mval;
 
 	n=0;
 	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
-		if ((1 << i) & devmask) {
+		if (((1 << i) & devmask) && channel_active(mixer_names[n])){
 			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get setting */
 				perror("MIXER_READ");
 			else
@@ -175,7 +190,9 @@ main (int argc, char *argv[])
 GtkWidget *table;
 GdkColor col;
 gchar *color = "gray80";
-
+int arg;
+gchar *cstr = NULL;
+	
 #ifdef USE_GPE
 	if (gpe_application_init (&argc, &argv) == FALSE)
 		exit (1);
@@ -187,6 +204,44 @@ gchar *color = "gray80";
 	gtk_init (&argc, &argv);
 #endif
 
+	/* command line parameters */
+	while ((arg = getopt(argc, argv, "c:")) > 0) {
+		switch (arg) {
+			case 'c':
+				cstr = g_strdup(optarg);
+			break;
+			default:
+				fprintf(stderr, _("Unknown argument: %c\n"),arg);
+		}
+	}
+	
+	/* get list of selected channels */
+	if (cstr) {
+		int i = 0;
+		gchar *j = cstr;
+		gchar *p = cstr;
+		
+		while (j) {
+			channels = realloc(channels, sizeof (gchar*) * (i + 1));
+			if ((j = strstr(p, ","))) {
+				channels[i] = malloc(j - p + 1);
+				snprintf(channels[i], j - p + 1, "%s", p);
+				p = j + 1;
+			}
+			else {
+				channels = realloc(channels, sizeof (gchar*) * (i + 2));
+				channels[i] = g_strdup(p);
+				channels[i + 1] = NULL;
+				j = NULL;
+			}
+			i++;
+		}
+		g_free(cstr);
+		i = 0;
+		while (channels[i])
+			printf("DC: %s\n",channels[i++]);
+	}
+	
 	gdk_color_parse (color, &col);
   
 	/* mixer init */
