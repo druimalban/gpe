@@ -1,5 +1,9 @@
 2004-10-09  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.58 released.
+
+2004-10-09  Phil Blundell  <pb@nexus.co.uk>
+
 	* day_view.c (day_changed_calendar): Do nothing if date has not
 	actually changed.
 	* week_view.c (day_changed_calendar): Likewise.
