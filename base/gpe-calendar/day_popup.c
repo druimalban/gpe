@@ -80,20 +80,12 @@ day_popup(GtkWidget *parent, struct day_popup *p)
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *day_pixmap;
-  GtkWidget *close_pixmap;
-  GtkWidget *day_button = gtk_button_new ();
-  GtkWidget *close_button = gtk_button_new ();
+  GtkWidget *day_button = gpe_picture_button (window->style, NULL, "day_view");
+  GtkWidget *close_button = gpe_picture_button (window->style, NULL, "cancel");
   GtkWidget *label;
   GtkWidget *contents;
   char buf[256];
   struct tm tm;
-  struct pix *pix;
-
-  pix = gpe_find_pixmap ("cancel");
-  close_pixmap = gtk_pixmap_new (pix->pixmap, pix->mask);
-  pix = gpe_find_pixmap ("day_view");
-  day_pixmap = gtk_pixmap_new (pix->pixmap, pix->mask);
 
   memset (&tm, 0, sizeof (tm));
   tm.tm_year = p->year - 1900;
@@ -145,9 +137,6 @@ day_popup(GtkWidget *parent, struct day_popup *p)
     {
       contents = gtk_label_new ("No appointments");
     }
-
-  gtk_container_add (GTK_CONTAINER (day_button), day_pixmap);
-  gtk_container_add (GTK_CONTAINER (close_button), close_pixmap);
 
   gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (day_button), GTK_RELIEF_NONE);

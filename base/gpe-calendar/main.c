@@ -41,7 +41,7 @@ time_t viewtime;
 
 GtkWidget *main_window;
 
-struct pix my_pix[] = {
+struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "home", "home" },
   { "future_view", "future_view" },
@@ -50,6 +50,8 @@ struct pix my_pix[] = {
   { "month_view", "month_view" },
   { "year_view", "year_view" },
   { "exit", "exit" },
+  { "delete", "delete" },
+  { "save", "save" },
   { "cancel", "cancel" },
   {NULL, NULL}
 };
@@ -151,7 +153,7 @@ int
 main(int argc, char *argv[])
 {
   GtkWidget *vbox, *toolbar;
-  struct pix *p;
+  GdkPixbuf *p;
   GtkWidget *pw;
 
   guint hour;
@@ -159,7 +161,7 @@ main(int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  if (gpe_load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   setlocale (LC_ALL, "");
@@ -218,49 +220,49 @@ main(int argc, char *argv[])
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
 
-  p = gpe_find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("new");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Appointment"), 
 			   _("New Appointment"), _("New Appointment"), pw, new_appointment, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_pixmap ("home");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("home");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"), 
 			   _("Today"), _("Today"), pw, set_today, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_pixmap ("future_view");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("future_view");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Future View"), 
 			   _("Future View"), _("Future View"), pw, set_future_view, NULL);
 
-  p = gpe_find_pixmap ("day_view");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("day_view");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Day View"), 
 			   _("Day View"), _("Day View"), pw, set_day_view, NULL);
 
-  p = gpe_find_pixmap ("week_view");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("week_view");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Week View"), 
 			   _("Week View"), _("Week View"), pw, set_week_view, NULL);
 
-  p = gpe_find_pixmap ("month_view");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("month_view");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Month View"), 
 			   _("Month View"), _("Month View"), pw, set_month_view, NULL);
 
-  p = gpe_find_pixmap ("year_view");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("year_view");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Year View"), 
 			   _("Year View"), _("Year View"), pw, set_year_view, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_pixmap ("exit");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("exit");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Exit"), pw, gtk_exit, NULL);
 

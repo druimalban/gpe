@@ -17,6 +17,7 @@
 
 #include <gtk/gtk.h>
 
+#include "pixmaps.h"
 #include "globals.h"
 #include "event-db.h"
 #include "event-ui.h"
@@ -353,9 +354,9 @@ edit_event_window(void)
   GtkWidget *description = gtk_text_new (NULL, NULL);
 
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *buttonok = gtk_button_new_with_label (_("Save"));
-  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
-  GtkWidget *buttondelete = gtk_button_new_with_label (_("Delete"));
+  GtkWidget *buttonok;
+  GtkWidget *buttoncancel;
+  GtkWidget *buttondelete;
 
   GtkWidget *starttime = gtk_combo_new ();
   GtkWidget *endtime = gtk_combo_new ();
@@ -416,6 +417,10 @@ edit_event_window(void)
   gtk_text_set_editable (GTK_TEXT (description), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
   gtk_widget_set_usize (description, -1, 88);
+
+  buttonok = gpe_picture_button (window->style, _("Save"), "save");
+  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  buttondelete = gpe_picture_button (window->style, _("Delete"), "delete");
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
