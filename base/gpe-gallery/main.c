@@ -292,31 +292,36 @@ add_directory (gchar *directory)
 void
 next_image ()
 {
+  GList *buf;
+
   if (image_widget)
   {
+    buf = image_filenames;
     gtk_widget_destroy (image_widget);
-    image_filenames = g_list_next (image_filenames);
+    buf = g_list_next (image_filenames);
 
-    if (image_filenames == NULL)
-      image_filenames = g_list_first (image_filenames);
+    if (buf == NULL)
+      buf = g_list_first (image_filenames);
 
-    show_image (NULL, (gpointer) image_filenames);
+    show_image (NULL, (gpointer) buf);
   }
 }
 
 void
 previous_image ()
 {
+  GList *buf;
+
   if (image_widget)
   {
+    buf = image_filenames;
     gtk_widget_destroy (image_widget);
-    image_filenames = g_list_previous (image_filenames);
+    buf = g_list_previous (image_filenames);
 
-    if (image_filenames == NULL)
-      image_filenames = g_list_last (image_filenames);
+    if (buf == NULL)
+      buf = g_list_last (image_filenames);
 
-
-    show_image (NULL, (gpointer) image_filenames);
+    show_image (NULL, (gpointer) buf);
   }
 }
 
