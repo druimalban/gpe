@@ -10,11 +10,12 @@
 #define DIALOG_H
 
 /* Example:
-   if(confirm_action_dialog_box("Delete document?","Delete")){
+   if(confirm_action_dialog_box("Delete document?", "Cancel", "Delete")){
      delete_document();
    }
 */
 gboolean confirm_action_dialog_box(gchar * text,
+                                   gchar * cancel_button_label,
                                    gchar * action_button_label);
 
 #endif

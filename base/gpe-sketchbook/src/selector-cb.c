@@ -60,10 +60,10 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   //--ask confirmation (maybe a preference)
   //NOTE: moved back to my own dialog-box, gpe_question freezes.
-  if(confirm_action_dialog_box(_("Delete sketch?"),_("Delete"))) delete_current_sketch();  
   //if(gpe_question_ask_yn ("Delete sketch?") == 1){
-  //  delete_current_sketch();
-  //}
+  if(confirm_action_dialog_box(_("Delete sketch?"),_("Cancel"),_("Delete"))){
+    delete_current_sketch();  
+  }
 }
 
 void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,

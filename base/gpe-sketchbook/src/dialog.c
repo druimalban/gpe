@@ -14,10 +14,6 @@
 #include "gpe/render.h"
 #include "gpe/picturebutton.h"
 
-//--i18n
-#include <libintl.h>
-#define _(_x) gettext (_x)
-
 gboolean user_choice;
 #define ACTION TRUE
 #define CANCEL FALSE
@@ -28,7 +24,8 @@ static void _confirm_action(GtkButton * button, gpointer dialog_to_destroy){
 }
 
 gboolean confirm_action_dialog_box(gchar * text,
-                                   gchar * action_button_label){  
+                                   gchar * cancel_button_label,
+                                   gchar * action_button_label){
 
   GtkWidget * dialog;
 
@@ -68,7 +65,7 @@ gboolean confirm_action_dialog_box(gchar * text,
                       (gpointer)dialog);
 
   //--cancel button
-  button_cancel = gpe_picture_button (dialog->style, _("Cancel"), "cancel");
+  button_cancel = gpe_picture_button (dialog->style, cancel_button_label, "cancel");
   gtk_signal_connect_object (GTK_OBJECT (button_cancel), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
 			     (gpointer)dialog);

@@ -39,7 +39,8 @@ void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
   if(is_current_sketch_modified){
     gtk_widget_show (GTK_WIDGET(object));
     //FIXME: use gpe_question
-    if(confirm_action_dialog_box(_("Before quitting,\nsave last sketch?"),_("Save"))){
+    if(confirm_action_dialog_box(_("Sketch modified;\nsave before exiting?"),
+                                 _("Exit"),_("Save"))){
       on_button_file_save_clicked(NULL,NULL);
     }
   }
@@ -49,7 +50,7 @@ void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   if(is_current_sketch_modified){
     //FIXME: use gpe_question
-    if(confirm_action_dialog_box(_("Save last sketch?"),_("Save"))){
+    if(confirm_action_dialog_box(_("Save last sketch?"),_("Cancel"),_("Save"))){
       on_button_file_save_clicked(NULL,NULL);
     }
   }
@@ -88,7 +89,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_modified){
     //FIXME: use gpe_question
-    if(confirm_action_dialog_box(_("Save last sketch?"),_("Save"))){
+    if(confirm_action_dialog_box(_("Save last sketch?"),_("Cancel"),_("Save"))){
       on_button_file_save_clicked(NULL,NULL);
     }
   }
@@ -100,10 +101,10 @@ void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) return;
   //NOTE: moved back to my own dialog-box, gpe_question freezes.
-  if(confirm_action_dialog_box(_("Delete sketch?"),_("Delete"))) delete_current_sketch();  
   //if(gpe_question_ask_yn ("Delete sketch?") == 1){
-  //  delete_current_sketch();
-  //}
+  if(confirm_action_dialog_box(_("Delete sketch?"),_("Cancel"),_("Delete"))){
+    delete_current_sketch();  
+  }
 }
 
 
