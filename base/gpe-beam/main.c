@@ -64,45 +64,135 @@ static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_vcard, *menu_control;
 static GtkWidget *control_window;
-static GtkWidget *lDevice, *lCHint;
+static GtkWidget *lDevice, *lCHint, *lSaddr;
 
 gboolean radio_is_on;
 GdkWindow *dock_window;
 static guint timeout_id = 0;
 
 
-static int vparse(FILE *f, char *format, va_list ap)
+/*
+ *    Function taken from irdadump by Dag Brattli <dagb@cs.uit.no>  
+ *
+ *    Parse and print the names of the various hint bits if they are set
+ *
+ */
+char*
+parse_hints (int hint)
 {
-  char buffer[256];
-  fgets (buffer, 255, f);
-  while ((feof(f) == 0))
-    {
-      if ( vsscanf(buffer, format, ap) > 0)
+	char *str = g_strdup("");
+	char *str1;
+	
+	if (hint & HINT_TELEPHONY)
 	{
-	  return 0;
+		str1 = g_strdup_printf ("%s%s\n",str, _("Telephony"));
+		free(str);
+		str = str1;
 	}
-      fgets (buffer, 255, f);
-    }
-  return 1;
+	if (hint & HINT_FILE_SERVER)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("File Server"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_COMM)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("IrCOMM"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_OBEX)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("IrOBEX"));
+		free(str);
+		str = str1;
+	}
+
+	hint >>= 8;
+	
+	if (hint & HINT_PNP)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("PnP"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_PDA)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("PDA/Palmtop"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_COMPUTER)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("Computer"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_PRINTER)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("Printer"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_MODEM)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("Modem"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_FAX)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("Fax"));
+		free(str);
+		str = str1;
+	}
+	if (hint & HINT_LAN)
+	{
+		str1 = g_strdup_printf ("%s%s\n",str, _("LAN Access"));
+		free(str);
+		str = str1;
+	}
+	
+	if (strlen(str))
+		str[strlen(str)-1] = 0;
+	
+	return str;
+}
+
+static int
+vparse (FILE * f, char *format, va_list ap)
+{
+	char buffer[256];
+	fgets (buffer, 255, f);
+	while ((feof (f) == 0))
+	{
+		if (vsscanf (buffer, format, ap) > 0)
+		{
+			return 0;
+		}
+		fgets (buffer, 255, f);
+	}
+	return 1;
 }
 
 
-static int parse_file(char *file,char *format,...)
+static int
+parse_file (char *file, char *format, ...)
 {
-  va_list ap;
-  FILE *f;
-  int rv = 1;
-  va_start(ap, format);
+	va_list ap;
+	FILE *f;
+	int rv = 1;
+	va_start (ap, format);
 
-  f = fopen (file, "r");
+	f = fopen (file, "r");
 
-  if (f > 0)
-    {
-      rv = vparse(f,format,ap);
-      fclose (f);
-    }
-  va_end(ap);
-  return rv;
+	if (f > 0)
+	{
+		rv = vparse (f, format, ap);
+		fclose (f);
+	}
+	va_end (ap);
+	return rv;
 }
 
 
@@ -113,18 +203,37 @@ send_vcard (void)
 }
 
 
-static void
+static gboolean
 get_irstatus (void)
 {
-	char nick[32];
-	int chint = 0;
-	//unsigned long long 
-	if (!parse_file(IR_DISCOVERY,"nickname: %s, hint: %ix, %*s %*s %*s %*s",nick,chint))
+	static char nick[32];
+	static unsigned int chint = 0;
+	unsigned long long saddr = 0;
+	unsigned long long daddr = 0;
+	char* ts;
+
+	if (!parse_file
+	    (IR_DISCOVERY,
+	     "nickname: %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx", nick,
+	     &chint, &saddr, &daddr))
 	{
-		gtk_label_set_text(GTK_LABEL(lDevice),nick);
-		snprintf(nick,32,"%ix",chint);
-		gtk_label_set_text(GTK_LABEL(lCHint),nick);
-	}		
+		if (strlen (nick))
+			nick[strlen (nick) - 1] = 0;
+		gtk_label_set_text (GTK_LABEL (lDevice), nick);
+		snprintf (nick, 32, "0x%8llx", saddr);
+		gtk_label_set_text (GTK_LABEL (lSaddr), nick);
+		
+		ts = parse_hints(chint);
+		gtk_label_set_text (GTK_LABEL (lCHint), ts);
+		free(ts);
+	}
+	else
+	{
+		gtk_label_set_text (GTK_LABEL (lDevice), "");
+		gtk_label_set_text (GTK_LABEL (lSaddr), "");
+		gtk_label_set_text (GTK_LABEL (lCHint), "");
+	}
+	return TRUE;
 }
 
 
@@ -147,6 +256,8 @@ control_window_destroyed (void)
 static void
 show_control (void)
 {
+	char *ts;
+
 	if (control_window == NULL)
 	{
 		GtkWidget *hsep = gtk_hseparator_new ();
@@ -154,20 +265,52 @@ show_control (void)
 		GtkWidget *vbox = gtk_vbox_new (FALSE, gpe_get_boxspacing ());
 		GtkWidget *hbox = gtk_hbutton_box_new ();
 		GtkWidget *bOK = gtk_button_new_from_stock (GTK_STOCK_OK);
-		GtkWidget *bCancel =
-			gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+		GtkWidget *bClose =
+			gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 		GtkWidget *table = gtk_table_new (6, 3, FALSE);
 		GtkTooltips *tooltips = gtk_tooltips_new ();
 
-		lDevice = gtk_label_new(NULL);
-		gtk_misc_set_alignment(GTK_MISC(lDevice),0,0.5);
-		
-		lCHint = gtk_label_new(NULL);
-		gtk_misc_set_alignment(GTK_MISC(lCHint),0,0.5);
-		
-		gtk_table_attach(GTK_TABLE(table),lDevice,0,1,0,1,GTK_FILL,GTK_FILL,0,0);
-		gtk_table_attach(GTK_TABLE(table),lCHint,1,2,0,1,GTK_FILL,GTK_FILL,0,0);
-		
+		GtkWidget *lcPeer = gtk_label_new (NULL);
+
+		GtkWidget *l1 = gtk_label_new (_("Name:"));
+		GtkWidget *l2 = gtk_label_new (_("Hint:"));
+		GtkWidget *l3 = gtk_label_new (_("Address:"));
+
+
+		lDevice = gtk_label_new (NULL);
+		gtk_misc_set_alignment (GTK_MISC (lDevice), 0, 0.5);
+		lCHint = gtk_label_new (NULL);
+		gtk_misc_set_alignment (GTK_MISC (lCHint), 0, 0.5);
+		lSaddr = gtk_label_new (NULL);
+		gtk_misc_set_alignment (GTK_MISC (lSaddr), 0, 0.5);
+
+		gtk_label_set_markup (GTK_LABEL (lcPeer),
+				     _("<b>Peer Information</b>"));
+
+		gtk_misc_set_alignment (GTK_MISC (lcPeer), 0, 0.5);
+		gtk_misc_set_alignment (GTK_MISC (l1), 0, 0.5);
+		gtk_misc_set_alignment (GTK_MISC (l2), 0, 0.0);
+		gtk_misc_set_alignment (GTK_MISC (l3), 0, 0.5);
+
+		gtk_table_attach (GTK_TABLE (table), lcPeer, 0, 3, 0, 1,
+				  GTK_FILL | GTK_EXPAND,
+				  GTK_FILL | GTK_EXPAND, 0, 0);
+
+		gtk_table_attach (GTK_TABLE (table), l1, 0, 1, 1, 2, GTK_FILL,
+				  GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE (table), lDevice, 1, 2, 1, 2,
+				  GTK_FILL, GTK_FILL, 0, 0);
+
+		gtk_table_attach (GTK_TABLE (table), l3, 0, 1, 2, 3, GTK_FILL,
+				  GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE (table), lSaddr, 1, 2, 2, 3,
+				  GTK_FILL, GTK_FILL, 0, 0);
+				  
+		gtk_table_attach (GTK_TABLE (table), l2, 0, 1, 3, 4, GTK_FILL,
+				  GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE (table), lCHint, 1, 2, 3, 4,
+				  GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+
 		control_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
 		gtk_window_set_title (GTK_WINDOW (control_window),
@@ -193,7 +336,7 @@ show_control (void)
 		gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, TRUE, 0);
 		gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, TRUE, 0);
 
-		gtk_box_pack_start (GTK_BOX (hbox), bCancel, FALSE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox), bClose, FALSE, TRUE, 0);
 		gtk_box_pack_start (GTK_BOX (hbox), bOK, FALSE, TRUE, 0);
 
 		gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -204,9 +347,10 @@ show_control (void)
 /*		
 	g_signal_connect (G_OBJECT (bOK), "clicked",
 				  G_CALLBACK (ok_clicked), window);
-	g_signal_connect_swapped (G_OBJECT (bCancel), "clicked",
-				  G_CALLBACK (gtk_widget_destroy), window);
-				*/
+*/
+		g_signal_connect_swapped (G_OBJECT (bClose), "clicked",
+					  G_CALLBACK (gtk_widget_destroy),
+					  control_window);
 		g_signal_connect (G_OBJECT (control_window), "destroy",
 				  G_CALLBACK (control_window_destroyed),
 				  NULL);

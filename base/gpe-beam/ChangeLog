@@ -1,5 +1,10 @@
 07/24/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
+	- Reads some information about peer.
+	- GUI updates.
+
+07/24/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
 	- Interface updates.
 	- Major reformating.
 	- Correct file header for main.c.
