@@ -479,11 +479,14 @@ void scale_graphics(){
 
 
 void paint_board(GtkWidget * widget){
-  
+  GdkRectangle rect;
   gdk_draw_drawable (go.drawing_area_pixmap_buffer,
                      widget->style->black_gc,
                      go.pixmap_empty_board,
                      0, 0, 0, 0, BOARD_SIZE, BOARD_SIZE);
+  rect.x = rect.y = 0;
+  rect.width = rect.height = BOARD_SIZE;
+  gtk_widget_draw (go.drawing_area, &rect);
 }
 
 void unpaint_stone(int col, int row){
@@ -1242,12 +1245,6 @@ void on_button_first_pressed(GtkWidget *widget, gpointer unused){
   }
 
   paint_board(go.drawing_area);
-  {//!!!
-    GdkRectangle rect;
-    rect.x = rect.y = 0;
-    rect.width = rect.height = BOARD_SIZE;
-    gtk_widget_draw (go.drawing_area, &rect);
-  }
 }
 
 void on_button_last_pressed(GtkWidget *widget, gpointer unused){
