@@ -667,9 +667,10 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			GPEIconListItem *data;
 			data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
 			il->_priv->mcol = il->_priv->mrow = -1;
-			gpe_icon_list_item_button_release (data, event);
-			if (data)
+			if (data) {
+				gpe_icon_list_item_button_release (data, event);
 				gpe_iconlist_clicked (il, data->udata);
+			}
 		} else
 			il->_priv->mcol = il->_priv->mrow = -1;
 
