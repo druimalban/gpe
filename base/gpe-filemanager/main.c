@@ -747,7 +747,7 @@ zoom_in ()
   {
     current_zoom = current_zoom + ZOOM_INCREMENT;
     printf ("ZOOMING IN!\n");
-    refresh_view ();
+    gpe_iconlist_set_icon_size (view_widget, current_zoom);
   }
   printf ("Current zoom is %d\n", current_zoom);
 }
@@ -759,7 +759,7 @@ zoom_out ()
   {
     current_zoom = current_zoom - ZOOM_INCREMENT;
     printf ("ZOOMING OUT!\n");
-    refresh_view ();
+    gpe_iconlist_set_icon_size (view_widget, current_zoom);
   }
   printf ("Current zoom is %d\n", current_zoom);
 }
