@@ -250,16 +250,12 @@ selection_made(GtkWidget      *clist,
 	case 1:
 	  {
 	    size_t l = strlen (text);
-	    if (text[0] == '[' && text[l - 1] == ']')
-	      {
-		size_t dl = strlen (fs->directory);
-		char *s = malloc (l + dl);
-		strcpy (s, fs->directory);
-		s[dl] = '/';
-		strncpy (s + dl + 1, text + 1, l - 2);
-		s[dl + l - 1] = 0;
-		set_directory (fs, s);
-	      }
+	    size_t dl = strlen (fs->directory);
+	    gchar *s = malloc (strlen (text) + strlen (fs->directory) + 2);
+	    strcpy (s, fs->directory);
+	    strcat (s, "/");
+	    strcat (s, text);
+	    set_directory (fs, s);
 	    break;
 	  }
 	case 2:
