@@ -83,9 +83,7 @@ static GSList *rows, *labels;
 
 #define DEFAULT_BACKGROUND PREFIX "/share/gpe/pixmaps/default/gpe-appmgr/desktop-background.png"
 
-#define ICONLIST_WIDTH		560
 #define ICONLIST_XOFFSET	52
-
 #define LABEL_WIDTH		24
 
 #define N_(x)  (x)
@@ -249,10 +247,13 @@ add_row (GtkWidget *row, gint cur_y, gchar *label)
 {
   GtkAllocation alloc;
   GtkRequisition req;
+  guint width;
+
+  width = programs_fixed->allocation.width;
 
   alloc.x = ICONLIST_XOFFSET;
   alloc.y = cur_y;
-  alloc.width = ICONLIST_WIDTH;
+  alloc.width = width - (2 * ICONLIST_XOFFSET) + LABEL_WIDTH;
   alloc.height = 1;
   gtk_widget_size_allocate (row, &alloc);
   gtk_widget_size_request (row, &req);
