@@ -289,7 +289,11 @@ pixelColorWeightNolock (MBPixbufImage *dst, int x, int y, uint32_t color, int a)
   int r = (color >> 24) & 0xff;
   int g = (color >> 16) & 0xff;
   int b = (color >> 8) & 0xff;
-  int ap = 255 - a;
+  int ap;
+
+  a = (160 * a) >> 8;
+
+  ap = 255 - a;
   
   *p = ((*p * ap) + (r * a)) >> 8;
   p++;
@@ -731,7 +735,12 @@ main (int argc, char **argv)
 		  
 		  GetWinPosition (dpy, win_panel, &x, &y, &w, &h);
 		  x_pos = x + (w / 2) - (popup_w / 2);
-		  y_pos = y + h - popup_h;
+		  y_pos = y + h - popup_h + 4;
+
+		  if (x_pos < 0)
+		    x_pos = 0;
+		  if (y_pos < 0)
+		    y_pos = 0;
 
 		  line1_buf[0] = 0;
 		  line2_buf[0] = 0;
