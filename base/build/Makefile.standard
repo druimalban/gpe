@@ -1,0 +1,15 @@
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += -MD
+
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+-include $(DEPS)
+
+.PHONY: clean clean-standard
+
+clean-standard:
+	rm -f $(OBJS) $(DEPS)
+
+clean: clean-standard

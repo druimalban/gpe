@@ -1,3 +1,8 @@
+2005-02-28  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.dpkg_ipkg (dist): Also install
+	Makefile.translation-auto-linguas.
+
 2004-11-18  Phil Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (check-source): Check for existence of
