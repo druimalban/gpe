@@ -22,8 +22,8 @@
 #define FB "/dev/fb/0"
 
 #define IMAGE "/usr/share/gpe/splash.png"
-#define SVG_NAME_LANDSCAPE "/usr/share/gpe/splash-l.png"
-#define SVG_NAME_PORTRAIT "/usr/share/gpe/splash-p.png"
+#define SVG_NAME_LANDSCAPE "/usr/share/gpe/splash-l.svg"
+#define SVG_NAME_PORTRAIT "/usr/share/gpe/splash-p.svg"
 
 #define SIZE 240 * 320 * 2
 
@@ -54,9 +54,11 @@ main(int argc, char *argv[])
   int tty;
   int mat[2][3];
   int i;
+  int size;
 #ifdef USE_SVG
   const char *svg_name;
 #endif
+  gboolean has_alpha;
 
   g_type_init ();
 
@@ -64,12 +66,6 @@ main(int argc, char *argv[])
   if (fd < 0)
     {
       perror (FB);
-      exit (1);
-    }
-  fb = mmap (0, SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-  if (fb == NULL)
-    {
-      perror ("mmap");
       exit (1);
     }
   
@@ -85,7 +81,7 @@ main(int argc, char *argv[])
       exit (1);
     }
   /* XXX handle only a few fb formats */
-  if (fix.visual == FB_VISUAL_TRUECOLOR &&
+  if ((fix.visual == FB_VISUAL_TRUECOLOR || fix.visual == FB_VISUAL_DIRECTCOLOR) &&
       var.bits_per_pixel == 16 &&
       var.red.offset == 11 && 
       var.green.offset == 5 &&
@@ -103,10 +99,20 @@ main(int argc, char *argv[])
   else
     {
       fprintf (stderr, "%s: frame buffer neither 565 nor monochrome\n", argv[0]);
+      fprintf (stderr, "%d, %d, %d, %d, %d\n", fix.visual,
+	       var.bits_per_pixel, var.red.offset, var.green.offset, var.blue.offset);
       exit (1);
     }
 
   landscape_fb = var.xres >= var.yres;
+
+  size = var.xres * var.yres * var.bits_per_pixel / 8;
+  fb = mmap (0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  if (fb == NULL)
+    {
+      perror ("mmap");
+      exit (1);
+    }
 
 #ifdef USE_SVG
   if (var.xres > var.yres)
@@ -186,11 +192,11 @@ main(int argc, char *argv[])
   }
 
   dest_line = fb;
+  has_alpha = gdk_pixbuf_get_has_alpha (buf);
   for (fb_y = 0; fb_y < var.yres; fb_y++)
   {
     guchar  monobits = 0;
-    dest = dest_line;
-    dest_line += fix.line_length;
+    dest = fb + (fb_y * fix.line_length);
     for (fb_x = 0; fb_x < var.xres; fb_x++)
     {
       guchar  *ppix;
@@ -199,11 +205,18 @@ main(int argc, char *argv[])
       y = mat[1][0] * fb_x + mat[1][1] * fb_y + mat[1][2];
       if (0 <= x && x < xsize && 0 <= y && y < ysize)
       {
-	ppix = pix + y * stride + x * 3;
+	ppix = pix + y * stride + x * (has_alpha ? 4 : 3);
       }
       else
 	ppix = pix; /* fill with pixel from upper left */
       red = ppix[0]; green = ppix[1]; blue = ppix[2];
+      if (has_alpha)
+	{
+	  int alpha = ppix[3];
+	  red = (((int)red * alpha) + (255 * (255 - alpha))) / 256;
+	  green = (((int)green * alpha) + (255 * (255 - alpha))) / 256;
+	  blue = (((int)blue * alpha) + (255 * (255 - alpha))) / 256;
+	}
       if (mono)
       {
 	int	brightness;
@@ -244,9 +257,11 @@ main(int argc, char *argv[])
       }
       else
       {
-	*(gushort *) dest = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
+	*(volatile gushort *) dest = ((red >> 3) << 11) | ((green >> 2) << 5) | (blue >> 3);
 	dest += 2;
       }
     }
   }
+
+  exit (0);
 }
