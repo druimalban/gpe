@@ -78,6 +78,7 @@ int main (int argc, char ** argv){
   if (gpe_load_icons (my_icons) == FALSE) exit (1);
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
   setlocale (LC_ALL, "");
 
