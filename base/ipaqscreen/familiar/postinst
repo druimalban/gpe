@@ -2,8 +2,15 @@
 
 if test -e /usr/X11R6/bin/xcalibrate; then
   if test ! -u /usr/X11R6/bin/xcalibrate; then
-    echo xcalibrate was not setuid: now executing 'chmod u+s /usr/X11R6/bin/xcalibrate'
+    echo 'xcalibrate' was not setuid: now executing 'chmod u+s /usr/X11R6/bin/xcalibrate'
     chmod u+s /usr/X11R6/bin/xcalibrate
+  fi
+fi
+
+if test -e /usr/bin/bl; then
+  if test ! -u /usr/bin/bl; then
+    echo 'bl' was not setuid: now executing 'chmod u+s /usr/bin/bl'
+    chmod u+s /usr/bin/bl
   fi
 fi
 
