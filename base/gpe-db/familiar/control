@@ -1,0 +1,8 @@
+Package: gpe-db
+Section: base
+Priority: optional
+Version: 0.1
+Architecture: arm
+Maintainer: Nils Faerber <nils@kernelconcepts.de
+Depends: libgtk1.2, libgpe0
+Description: GPE database browser / editor
