@@ -9,6 +9,10 @@
 
 #include <gtk/gtk.h>
 
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include "pixmaps.h"
+#include "render.h"
+
 #include "picturebutton.h"
 
 #define _(_x) (_x) //gettext(_x)
@@ -26,11 +30,14 @@ gboolean confirm_action_dialog_box(gchar * text,
                                    gchar * action_button_label){  
 
   GtkWidget * dialog;
+
+  GtkWidget * hbox;
+  GtkWidget * icon;
   GtkWidget * label;
+
   GtkWidget * button_action;
   GtkWidget * button_cancel;
 
-  GtkWidget * hbox;
 
   //--by default, cancel the action
   user_choice = CANCEL;
@@ -43,8 +50,15 @@ gboolean confirm_action_dialog_box(gchar * text,
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   gtk_widget_realize (dialog);
 
+  //--warning icon
+  {
+    GdkPixbuf * icon_pixbuf;
+    icon_pixbuf = gpe_find_icon ("warning");
+    icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, icon_pixbuf);
+  }
+
   //--label
-  label  = gtk_label_new (text);
+  label = gtk_label_new (text);
 
   //--action button
   button_action = gpe_picture_button (dialog->style, action_button_label, "ok");
@@ -60,11 +74,12 @@ gboolean confirm_action_dialog_box(gchar * text,
 
   //--packing
   hbox = gtk_hbox_new (FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (hbox), icon,  TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), button_cancel);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), button_action);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
 
   //--show up
   gtk_widget_show_all (dialog);
