@@ -36,21 +36,19 @@
 #include <gpe/popup.h>
 
 #include <sys/socket.h>
-#include <bluetooth/bluetooth.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/hci_lib.h>
-#include <bluetooth/sdp.h>
-
 #include "main.h"
 
 #define _(x) gettext(x)
 
 //static GThread *scan_thread;
 
+#define COMMAND_IR_ON  "ifconfig irda0 up ; echo 1 > /proc/sys/net/irda/discovery" 
+#define COMMAND_IR_OFF  "echo 0 > /proc/sys/net/irda/discovery ; ifconfig irda0 down" 
+
 struct gpe_icon my_icons[] = {
-  { "irda-on", "irda-on-16" },
-  { "irda-off", "irda-16" },
-  { "irda" },
+  { "irda-on", "/usr/share/pixmaps/irda-on-16.png" },
+  { "irda-off", "/usr/share/pixmaps/irda-16.png" },
+  { "irda","/usr/share/pixmaps/irda.png" },
   { NULL }
 };
 
@@ -60,7 +58,7 @@ static pid_t hciattach_pid;
 
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
-static GtkWidget *menu_devices;
+static GtkWidget *menu_devices, *menu_control;
 static GtkWidget *devices_window;
 static GtkWidget *iconlist;
 
@@ -79,6 +77,8 @@ radio_on (void)
   gtk_widget_show (menu_radio_off);
   gtk_widget_set_sensitive (menu_devices, TRUE);
 
+  system(COMMAND_IR_ON);
+
   gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("irda-on"));
   radio_is_on = TRUE;
 /*  sigemptyset (&sigs);
@@ -92,7 +92,7 @@ static void
 do_stop_radio (void)
 {
   radio_is_on = FALSE;
-
+  system(COMMAND_IR_OFF);
 }
 
 static void
@@ -117,7 +117,7 @@ devices_window_destroyed (void)
 
 
 static void
-show_device_info (GtkWidget *w, struct bt_device *this_device)
+show_device_info (GtkWidget *w)
 {
 }
 
@@ -196,9 +196,10 @@ main (int argc, char *argv[])
 //  signal (SIGCHLD, sigchld_handler);
 
   menu = gtk_menu_new ();
-  menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
-  menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
-  menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
+  menu_radio_on = gtk_menu_item_new_with_label (_("Switch IR on"));
+  menu_radio_off = gtk_menu_item_new_with_label (_("Switch IR off"));
+  menu_devices = gtk_menu_item_new_with_label (_("Send vcard"));
+  menu_control = gtk_menu_item_new_with_label (_("Controls..."));
   menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
 
   g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
@@ -218,16 +219,17 @@ main (int argc, char *argv[])
   gtk_menu_append (GTK_MENU (menu), menu_radio_on);
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
   gtk_menu_append (GTK_MENU (menu), menu_devices);
+  gtk_menu_append (GTK_MENU (menu), menu_control);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  icon = gtk_image_new_from_pixbuf (gpe_find_icon (radio_is_on ? "irda-on" : "irda-off"));
+  icon = gtk_image_new_from_pixbuf (gpe_find_icon_scaled (radio_is_on ? "irda-on" : "irda-off", 16));
   gtk_widget_show (icon);
-  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("irda-off"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 2, 2);
-  gdk_bitmap_unref (bitmap);
+//  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("irda-on"), NULL, &bitmap, 255);
+//  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
+//  gdk_bitmap_unref (bitmap);
 
   gpe_set_window_icon (window, "irda");
 
@@ -243,7 +245,7 @@ main (int argc, char *argv[])
 
   gtk_widget_show (window);
 
-//  atexit (do_stop_radio);
+  atexit (do_stop_radio);
 
   dock_window = window->window;
   gpe_system_tray_dock (window->window);

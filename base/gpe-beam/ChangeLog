@@ -1,3 +1,7 @@
+07/24/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- Several updates, icons hack, switching device on/off works as root.  
+	
 07/07/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- Changed path to icons, removed absolute path.

@@ -5,7 +5,7 @@ CVSBUILD = yes
 DEBUG = no
 GTK2 = yes
 INSTALL = install
-PREFIX = /usr/
+PREFIX = /usr
 DESTDIR = /
 
 ifeq ($(CVSBUILD),yes)
@@ -65,7 +65,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = irda-16.png
+PIXMAPS = irda-16.png irda.png
 
 all: $(PACKAGE) vcard-export vcard-import vcard-import-file
 
