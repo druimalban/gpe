@@ -187,6 +187,8 @@ main (int argc, char *argv[])
       exit (1);
     }
 
+  gtk_widget_show (window);
+
   mywindow = GDK_WINDOW_XWINDOW (window->window);
   gpe_system_tray_dock (window->window);
 
