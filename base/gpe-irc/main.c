@@ -72,9 +72,9 @@ GtkListStore *users_list_store;
 GtkWidget *users_tree_view, *users_scroll;
 GtkWidget *scroll;
 
-IRCServer *selected_server;
-IRCChannel *selected_channel;
-GtkWidget *selected_button;
+IRCServer *selected_server = NULL;
+IRCChannel *selected_channel = NULL;
+GtkWidget *selected_button = NULL;
 
 void
 toggle_users_list ()
@@ -158,16 +158,27 @@ update_text_view (GString *text)
 }
 
 void
-append_to_buffer (GtkTextBuffer *buffer, gchar *text, gchar *colour)
+append_to_buffer (IRCServer *server, gchar *target, gchar *text, gchar *tag_name)
 {
   GtkTextIter start, end;
+  GtkTextBuffer *buffer = NULL;
+  gchar *tag_value;
 
   if (text != NULL)
   {
+    if (target != NULL)
+      buffer = ((IRCChannel *) irc_server_channel_get(server, target))->buffer;
+    if (buffer == NULL)
+      buffer = server->buffer;
+
     gtk_text_buffer_get_bounds (buffer, &start, &end);
 
-    if (colour != NULL)
-      gtk_text_buffer_insert_with_tags_by_name (buffer, &end, text, -1, colour, NULL);
+    if (tag_name != NULL)
+    {
+      tag_value = g_hash_table_lookup (sql_general_config, (gconstpointer) tag_name);
+      if(tag_value != NULL)
+	gtk_text_buffer_insert_with_tags_by_name (buffer, &end, text, -1, tag_value, NULL);
+    }
     else
       gtk_text_buffer_insert (buffer, &end, text, -1);
 
@@ -234,6 +245,9 @@ join_channel (IRCServer *server, gchar *channel_name)
     channel->buffer = gtk_text_buffer_new (NULL);
     channel->server = server;
     selected_channel = channel;
+
+    add_default_buffer_tags (channel->buffer);
+    gtk_text_view_set_buffer (main_text_view, channel->buffer);
 
     if (selected_button)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
@@ -680,13 +694,16 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 
     if (event->keyval == GDK_Return && strlen (entry_text) > 0)
     {
+      if (selected_channel == NULL)
+	return FALSE;
+
       irc_privmsg (selected_server, selected_channel->name, entry_text);
       display_text = g_strdup_printf ("%s: %s\n", selected_server->user_info->nick, entry_text);
-      append_to_buffer(selected_server->buffer, "<", NULL);
-      append_to_buffer(selected_server->buffer, selected_server->user_info->nick, NULL);
-      append_to_buffer(selected_server->buffer, "> ", NULL);
-      append_to_buffer(selected_server->buffer, entry_text, NULL);
-      append_to_buffer(selected_server->buffer, "\n", NULL);
+      append_to_buffer(selected_server, selected_channel->name, "<", NULL);
+      append_to_buffer(selected_server, selected_channel->name, selected_server->user_info->nick, NULL);
+      append_to_buffer(selected_server, selected_channel->name, "> ", NULL);
+      append_to_buffer(selected_server, selected_channel->name, entry_text, NULL);
+      append_to_buffer(selected_server, selected_channel->name, "\n", NULL);
       gtk_entry_set_text (GTK_ENTRY (main_entry), "");
     }
   }

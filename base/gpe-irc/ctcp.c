@@ -169,9 +169,9 @@ ctcp_action(IRCServer *server, gchar *prefix, gchar *target, gchar *msg)
 	gchar *nick = NULL;
 
 	nick = irc_prefix_to_nick(prefix);
-	append_to_buffer(server->buffer, "* ", "red");
-	append_to_buffer(server->buffer, g_strdup_printf ("%s %s", nick, msg), NULL);
-	append_to_buffer(server->buffer, "\n", NULL);
+	append_to_buffer(server, target, "* ", "tag_action");
+	append_to_buffer(server, target, g_strdup_printf ("%s %s", nick, msg), NULL);
+	append_to_buffer(server, target, "\n", NULL);
 
 	g_free(nick);
 	return TRUE;
