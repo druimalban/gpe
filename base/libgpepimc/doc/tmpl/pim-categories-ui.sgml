@@ -16,7 +16,7 @@ pim-categories-ui
 
 <!-- ##### FUNCTION gpe_pim_categories_dialog ##### -->
 <para>
-
+Creates a dialog to manage categories.
 </para>
 
 @selected_categories: 

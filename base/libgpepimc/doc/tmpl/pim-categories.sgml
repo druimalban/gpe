@@ -6,7 +6,7 @@ pim-categories
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+NOTE: currently all categories are global.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
@@ -19,41 +19,42 @@ pim-categories
 
 </para>
 
-@name: 
-@id: 
+@name: Name of the category
+@id:   Id of the category
 
 <!-- ##### FUNCTION gpe_pim_categories_init ##### -->
 <para>
-
+Initializes the category management framework.
 </para>
 
-@Returns: 
+@Returns: TRUE if initialisation succeed, FALSE otherwise.
 
 
 <!-- ##### FUNCTION gpe_pim_categories_list ##### -->
 <para>
-
+Returns a list of registered categories. The elements of the list are of
+type #gpe_pim_category
 </para>
 
-@Returns: 
+@Returns: A list of registered categories.
 
 
 <!-- ##### FUNCTION gpe_pim_category_new ##### -->
 <para>
-
+Adds a new category. @id 
 </para>
 
-@title: 
-@id: 
-@Returns: 
+@title: Name of the category to be added.
+@id: Pointer to a gint to host the new category id. Must be allocated.
+@Returns: TRUE if the category is added, FALSE otherwise.
 
 
 <!-- ##### FUNCTION gpe_pim_category_name ##### -->
 <para>
-
+Returns the name of the category with specified @id.
 </para>
 
-@id: 
-@Returns: 
+@id: the id of the category
+@Returns: the name of the category
 
 
