@@ -2,7 +2,7 @@ PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.59
+VERSION = 0.60
 
 LINGUAS = id pt de fr zh_TW ro wa sv nl cs es sk sr ru hu zh_CN
 

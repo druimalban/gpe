@@ -1,5 +1,9 @@
 2005-01-09  Phil Blundell  <philb@gnu.org>
 
+	* Version 0.60 released.
+
+2005-01-09  Phil Blundell  <philb@gnu.org>
+
 	Apply patches from Peter Naulls:
 	* week_view.c (draw_expose_event): Use different background colours
 	for weekdays, weekends, and days with events.
