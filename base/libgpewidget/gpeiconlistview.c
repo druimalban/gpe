@@ -26,6 +26,29 @@
 
 static guint my_signals[2];
 
+struct _GPEIconListView
+{
+  GtkWidget class;
+  
+  /* private */
+  GList *icons;
+  GdkPixbuf * bgpixbuf;
+  guint32 bgcolor;
+  int rows;
+  int cols;
+  int mcol;
+  int mrow;
+  int popup_timeout;
+  gboolean flag_embolden;
+  gboolean flag_show_title;
+  guint icon_size;
+  guint icon_xmargin;
+  guint label_height;
+
+  int rows_set;
+  t_gpe_textpos textpos;
+};
+
 struct _GPEIconListViewClass 
 {
   GtkWidgetClass parent_class;
@@ -136,7 +159,7 @@ _gpe_icon_list_view_refresh_containing (GPEIconListView *widget, int col, int ro
   gtk_widget_queue_draw_area (GTK_WIDGET (widget), x, y, il_col_width (widget), il_row_height (widget) + 5);
 }
 
-static void 
+void 
 _gpe_icon_list_view_check_icon_size (GPEIconListView *il, GObject *obj)
 {
   GPEIconListItem *icon = GPE_ICON_LIST_ITEM (obj);
@@ -156,6 +179,33 @@ _gpe_icon_list_view_check_icon_size (GPEIconListView *il, GObject *obj)
 	  gdk_pixbuf_ref (icon->pb);
 	  icon->pb_scaled = icon->pb;
 	}
+    }
+}
+
+void
+_gpe_icon_list_view_queue_redraw (GPEIconListView *view, GPEIconListItem *i)
+{
+  GList *icons;
+  int row = 0, col = 0;
+
+  for (icons = view->icons; icons; icons = icons->next)
+    {
+      if (icons->data == i)
+	break;
+      col++;
+      if (col == view->cols)
+	{
+	  col = 0;
+	  row++;
+	}
+    }
+
+  if (icons)
+    {
+      int x = il_col_width (view) * col;
+      int y = il_row_height (view) * row;
+
+      gtk_widget_queue_draw_area (GTK_WIDGET (view), x, y, il_col_width (view), il_row_height (view) + 5);
     }
 }
 
@@ -256,11 +306,11 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      pixbuf_h = gdk_pixbuf_get_height (pixbuf);
 
 	      // adjust X position for actual size
-          if (il->textpos == GPE_TEXT_BELOW)
-	        x_offset = (il_col_width (il) - pixbuf_w) / 2;
-          else 
-            x_offset = LABEL_XMARGIN;
-          
+	      if (il->textpos == GPE_TEXT_BELOW)
+		x_offset = (il_col_width (il) - pixbuf_w) / 2;
+	      else 
+		x_offset = LABEL_XMARGIN;
+	      
 	      r1.x = cell_x + x_offset;
 	      r1.y = cell_y;
 	      r1.width = pixbuf_w;
@@ -280,20 +330,20 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	    {
 	      /* if show_title mode is set and current title non NULL, then */
 	      /* Compute & render the title */
-          if (il->textpos == GPE_TEXT_BELOW)
-          {
-	        r1.x = cell_x;
-	        r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
-	        r1.width = cell_w;
-	        r1.height = label_height;
-          }
-          else
-          {
-	        r1.x = LABEL_XMARGIN + 2 * il->icon_size;
-	        r1.y = row * il_row_height (il) + LABEL_YMARGIN;
-	        r1.width = widget->allocation.width - r1.x;
-	        r1.height = label_height;
-          }
+	      if (il->textpos == GPE_TEXT_BELOW)
+		{
+		  r1.x = cell_x;
+		  r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
+		  r1.width = cell_w;
+		  r1.height = label_height;
+		}
+	      else
+		{
+		  r1.x = LABEL_XMARGIN + 2 * il->icon_size;
+		  r1.y = row * il_row_height (il) + LABEL_YMARGIN;
+		  r1.width = widget->allocation.width - r1.x;
+		  r1.height = label_height;
+		}
 	      
 	      if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
 		{
@@ -456,6 +506,7 @@ gpe_icon_list_view_add_item (GPEIconListView *self, char *title, char *icon, gpo
 {
   GtkWidget *da = GTK_WIDGET (self);
   GObject *new = _gpe_icon_list_view_new_icon (title, icon, udata, NULL);
+  gpe_icon_list_item_set_parent (GPE_ICON_LIST_ITEM (new), self);
   self->icons = g_list_append (self->icons, new);
   _gpe_icon_list_view_recalc_size (self, &da->allocation);
   return new;
@@ -468,6 +519,7 @@ gpe_icon_list_view_add_item_pixbuf (GPEIconListView *self, char *title, GdkPixbu
   GtkWidget *da = GTK_WIDGET (self);
   gdk_pixbuf_ref (icon);
   new = _gpe_icon_list_view_new_icon (title, NULL, udata, icon);
+  gpe_icon_list_item_set_parent (GPE_ICON_LIST_ITEM (new), self);
   self->icons = g_list_append (self->icons, new);
   _gpe_icon_list_view_check_icon_size (self, new);
   _gpe_icon_list_view_recalc_size (self, &da->allocation);

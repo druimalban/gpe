@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,6 +12,8 @@
 
 #include <gtk/gtk.h>
 #include <glib-object.h>
+
+#include <gpe/gpeiconlistview.h>
 
 #define GPE_TYPE_ICON_LIST_ITEM           (gpe_icon_list_item_get_type ())
 #define GPE_ICON_LIST_ITEM(obj)           G_TYPE_CHECK_INSTANCE_CAST ((obj), gpe_icon_list_item_get_type(), GPEIconListItem)
@@ -29,7 +31,9 @@ struct _GPEIconListItem
   char *icon;
   gpointer udata;
   GdkPixbuf *pb;
-  GdkPixbuf *pb_scaled;  
+  GdkPixbuf *pb_scaled;
+
+  GPEIconListView *parent;
 };
 
 typedef struct _GPEIconListItem	        GPEIconListItem;
@@ -42,5 +46,10 @@ GObject        *gpe_icon_list_item_new ();
 void           gpe_icon_list_item_button_press (GPEIconListItem *i, GdkEventButton *b);
 
 void           gpe_icon_list_item_button_release (GPEIconListItem *i, GdkEventButton *b);
+
+void	       gpe_icon_list_item_set_parent (GPEIconListItem *i, GPEIconListView *view);
+
+void	       gpe_icon_list_item_set_pixbuf (GPEIconListItem *i, GdkPixbuf *pixbuf);
+GdkPixbuf *    gpe_icon_list_item_get_pixbuf (GPEIconListItem *i);
 
 #endif

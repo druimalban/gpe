@@ -1,3 +1,25 @@
+2004-06-30  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistitem.c (gpe_icon_list_item_get_pixbuf): New function.
+	(gpe_icon_list_item_set_pixbuf): Likewise.
+	(gpe_icon_list_item_set_parent): Likewise.
+	* gpe/gpeiconlistitem.h (gpe_icon_list_item_set_parent): Add
+	prototype.
+	(gpe_icon_list_item_set_pixbuf): Likewise.
+	(gpe_icon_list_item_get_pixbuf): Likewise.
+	(struct _GPEIconListItem): Add parent.
+	* gpeiconlistview.c (_gpe_icon_list_view_check_icon_size): Make
+	global.
+	(_gpe_icon_list_view_queue_redraw): New function.
+	(_gpe_icon_list_view_expose): Reformat newly added code.
+	(gpe_icon_list_view_add_item): Call gpe_icon_list_item_set_parent.
+	(gpe_icon_list_view_add_item_pixbuf): Likewise.
+	
+2004-06-30  Philip Blundell  <philb@gnu.org>
+
+	* gpe/gpeiconlistview.h (struct _GPEIconListView): Move to ...
+	* gpeiconlistview.c: ... here.
+
 2004-06-15  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (HEADERS): Add gpeiconlistitem.h.

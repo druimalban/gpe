@@ -27,28 +27,7 @@ typedef enum
   GPE_TEXT_RIGHT
 }t_gpe_textpos;
 
-struct _GPEIconListView
-{
-  GtkWidget class;
-  
-  /* private */
-  GList * icons;
-  GdkPixbuf * bgpixbuf;
-  guint32 bgcolor;
-  int rows;
-  int cols;
-  int mcol;
-  int mrow;
-  int popup_timeout;
-  gboolean flag_embolden;
-  gboolean flag_show_title;
-  guint icon_size;
-  guint icon_xmargin;
-  guint label_height;
-
-  int rows_set;
-  t_gpe_textpos textpos;
-};
+struct _GPEIconListView;
 
 typedef struct _GPEIconListView	        GPEIconListView;
 typedef struct _GPEIconListViewClass    GPEIconListViewClass;

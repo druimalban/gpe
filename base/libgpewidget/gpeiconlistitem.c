@@ -18,6 +18,7 @@
  */
 
 #include "gpeiconlistitem.h"
+#include "gpeiconlistview.h"
 
 static guint my_signals[2];
 
@@ -27,6 +28,9 @@ struct _GPEIconListItemClass
   void (*button_press)      (GPEIconListItem *sm, GdkEventButton *);
   void (*button_release)    (GPEIconListItem *sm, GdkEventButton *);
 };
+
+extern void _gpe_icon_list_view_queue_redraw (GPEIconListView *view, GPEIconListItem *i);
+extern void _gpe_icon_list_view_check_icon_size (GPEIconListView *il, GObject *obj);
 
 static void
 gpe_icon_list_item_init (GPEIconListItem *item)
@@ -100,6 +104,36 @@ gpe_icon_list_item_get_type (void)
     }
 
   return item_type;
+}
+
+GdkPixbuf *
+gpe_icon_list_item_get_pixbuf (GPEIconListItem *i)
+{
+  return i->pb_scaled ? i->pb_scaled : i->pb;
+}
+
+void
+gpe_icon_list_item_set_pixbuf (GPEIconListItem *i, GdkPixbuf *pixbuf)
+{
+  if (i->pb)
+    gdk_pixbuf_unref (i->pb);
+  if (i->pb_scaled)
+    gdk_pixbuf_unref (i->pb_scaled);
+  
+  gdk_pixbuf_ref (pixbuf);
+  i->pb = pixbuf;
+
+  if (i->parent)
+    {
+      _gpe_icon_list_view_check_icon_size (i->parent, G_OBJECT (i));
+      _gpe_icon_list_view_queue_redraw (i->parent, i);
+    }
+}
+
+void
+gpe_icon_list_item_set_parent (GPEIconListItem *item, GPEIconListView *parent)
+{
+  item->parent = parent;
 }
 
 GObject *
