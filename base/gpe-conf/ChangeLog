@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+10.04.2003		Florian			network.c					Network setup suggests new interfaces now.
+
+09.04.2003		Florian			timeanddate.c				Updated GUI, DST setting is now possible.
+
 08.04.2003		Florian			cfgfile.c					Fixed several minor bugs in string and interface handling.
 								network.c					Network interfaces are now added to auto up list. 
 								suid.c

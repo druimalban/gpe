@@ -29,7 +29,7 @@
 #endif
 #include <time.h>
 #include <libintl.h>
-
+#include <net/if.h>
 #define _(x) gettext(x)
 
 #include "applets.h"
@@ -47,6 +47,7 @@
 #include <gpe/render.h>
 #include <gpe/question.h>
 #include <gpe/smallbox.h>
+#include <gpe/gtksimplemenu.h>
 
 // offset for global page(s)
 #define PAGE_OFFSET 1 
@@ -64,17 +65,56 @@ static guint not_added = 0;
 static gchar* cfgfile;
 static gboolean have_access = FALSE;
 
+static GList* 
+get_unconfigured_interfaces()
+{
+	GList* result = NULL; 
+	struct if_nameindex *ifnames;
+	int i, j;
+	gboolean found;
+	
+	ifnames = if_nameindex();
+	
+	for (j=0;ifnames[j].if_name!=NULL;j++)
+	{
+		found = FALSE;
+		for (i=0;i<iflen;i++)
+		{
+			if (!strcmp(ifnames[j].if_name,iflist[i].name))
+			{
+				found = TRUE;
+				break;
+			}
+		}
+		if (!found)
+		{
+			result = g_list_append(result,g_strdup(ifnames[j].if_name));
+		}
+	}
+	if_freenameindex(ifnames);
+	return(result);
+}
+
 static void
 add_interface(GtkWidget *widget, gpointer d)
 {
 	gchar* ifname;
 	GtkWidget* ctable = NULL;
 	GtkWidget* label;
-	gint i;
+	gint i;	
+    struct box_desc2 ifbox[2];
 	
-	ifname = smallbox(_("Enter name of new interface"), _("New interface:"), "eth0");
-	if (ifname)
+	ifbox[0].suggestions = get_unconfigured_interfaces();
+	ifbox[0].label = g_strdup(_("New interface:"));
+	ifbox[0].value = ifbox[0].suggestions->data;
+	ifbox[1].suggestions = NULL;
+	ifbox[1].label = NULL;
+	ifbox[1].value = NULL;
+	
+
+	if (smallbox_x2(_("Enter name of new interface"),ifbox))
 	{
+		ifname = g_strdup(ifbox[0].value);
 		for (i=0;i<iflen;i++)
 			if (!strcmp(ifname,iflist[i].name))
 			{
