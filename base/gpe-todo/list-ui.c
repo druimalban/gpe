@@ -460,6 +460,7 @@ top_level (GtkWidget *window)
   GtkWidget *list_view;
   GtkAccelGroup *accel_group;
   GtkItemFactory *item_factory;
+  GtkToolItem *item;
 
   no_tick_icon = gpe_find_icon ("notick-box");
   tick_icon = gpe_find_icon ("tick-box");
@@ -471,50 +472,57 @@ top_level (GtkWidget *window)
 
   accel_group = gtk_accel_group_new ();
   item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
-  g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
-  gtk_item_factory_create_items (item_factory, sizeof (menu_items) / sizeof (menu_items[0]), 
-				 menu_items, NULL);
+  g_object_set_data_full (G_OBJECT (window), "<main>", item_factory,
+                          (GDestroyNotify) g_object_unref);
+  gtk_item_factory_create_items (item_factory, 
+                                 sizeof (menu_items) / sizeof (menu_items[0]), 
+                                 menu_items, NULL);
 
   item_menu = gtk_item_factory_get_widget (item_factory, "<main>");
 
-  /* Design the Tool Bar a little better, see Bug 733 */
-  /* New | Conf | Purge Down | List | Exit */
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
-			    _("Tap here to add a new item."), NULL,
-			    G_CALLBACK (new_todo_item), NULL, -1);
-                            
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-                            _("Delete completed items."), NULL,
-                            G_CALLBACK (delete_completed_items), NULL, -1);
+  /* New button */
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (new_todo_item), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
+  /* Delete button */
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
+  g_signal_connect(G_OBJECT(item), "clicked", 
+                   G_CALLBACK (delete_completed_items), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  /* Insert refresh button if we have enough space */
   if (mode_landscape || large_screen)
-    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
-                              _("Refresh list sorting"), NULL,
-                              G_CALLBACK (refresh_items), NULL, -1);
-  /* New */
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+    {
+      item = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
+      g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (refresh_items), 
+                       NULL);
+      gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+    }
+    
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+    
+  item = gtk_separator_tool_item_new();
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  /* | */
-  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
-
-  /* List */
-  gtk_box_pack_start (GTK_BOX (hbox), option, FALSE, FALSE, 0);
-
-  /* | */
-  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
-
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-			    _("Quit"), _("Tap here to quit the program."),
-			    G_CALLBACK (gtk_main_quit), NULL, -1);
-
-  /* Exit */
-  gtk_box_pack_end (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+  /* Category menu */    
+  item = gtk_tool_item_new();
+  gtk_container_add(GTK_CONTAINER(item), option);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  
+  /* Some space and quit button */
+  item = gtk_separator_tool_item_new();
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gtk_main_quit), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 

@@ -1,5 +1,7 @@
 2005-04-05  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * list-ui.c: Changed toolbar to use new toolbar API, some fixes and
+                 improvements.
     * list-ui.c: Applied patch to fix tooltip and add sorting by 
                  completion state. Add button to run it is screen is large 
                  or landscape.
