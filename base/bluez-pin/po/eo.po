@@ -1,0 +1,40 @@
+# Mesaĝoj en Esperanto por bluez-pin.
+# Copyright © 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the bluez-pin package.
+# Edmund GRIMLEY EVANS <edmundo@rano.org>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2003-02-24 09:00+0000\n"
+"Last-Translator: Edmund GRIMLEY EVANS <edmundo@rano.org>\n"
+"Language-Team: Esperanto <translation-team-eo@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Eliranta konekto al"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Envenanta konekto de"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "Pasnumero:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Skribi en datenbankon"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "Bludenta pasnumero"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Uzado: %s <in|out> <adreso>\n"

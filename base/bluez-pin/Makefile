@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = bluez-pin
 GTK2 = yes
+LINGUAS = eo
 VERSION = 0.08
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED
