@@ -1,3 +1,8 @@
+2004-11-15  Phil Blundell  <pb@nexus.co.uk>
+
+	* week_view.c (week_view_key_press_event): Replace complicated
+	up/down logic with calls to gtk_date_sel_move_day.
+
 2004-11-07  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (LINGUAS): Add zh_CN.

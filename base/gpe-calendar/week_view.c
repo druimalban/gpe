@@ -248,7 +248,7 @@ week_free_lists()
         }
     }
 }
-  
+
 static void
 week_view_update (void)
 {
@@ -467,39 +467,11 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
       return TRUE;
 
     case GDK_Down:
-      for (i=0;i<7;i++)
-	if (week_days[i].is_active)
-	  {
-	    if (i < 6) 
-	      {
-		week_days[i].is_active = FALSE;
-		week_days[i+1].is_active = TRUE;
-		c = &week_days[i+1].rc;
-		viewtime = time_from_day (c->popup.year,c->popup.month,c->popup.day);
-		gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
-		gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
-		week_view_update ();
-	      }
-	    break;
-	  }
+      gtk_date_sel_move_day (GTK_DATE_SEL (datesel), 1);
       return TRUE;
 
     case GDK_Up:
-      for (i=0;i<7;i++)
-	if (week_days[i].is_active)
-	  {
-	    if (i > 0) 
-	      {
-		week_days[i].is_active = FALSE;
-		week_days[i-1].is_active = TRUE;
-		c = &week_days[i-1].rc;
-		viewtime = time_from_day (c->popup.year,c->popup.month,c->popup.day);
-		gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
-		gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
-		week_view_update ();
-	      }
-	    break;
-	  }
+      gtk_date_sel_move_day (GTK_DATE_SEL (datesel), -1);
       return TRUE;
 
     case GDK_space:
