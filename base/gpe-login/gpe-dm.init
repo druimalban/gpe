@@ -1,3 +1,30 @@
 #!/bin/sh
-echo "Starting GPE display manager"
-/usr/bin/gpe-dm
+
+set -e
+
+killproc() {            # kill the named process(es)
+        pid=`/bin/ps -e x |
+             /bin/grep $1 |
+             /bin/grep -v grep |
+             /bin/sed -e 's/^  *//' -e 's/ .*//'`
+        [ "$pid" != "" ] && kill $pid
+}
+
+case "$1" in
+  start)
+	echo "Starting GPE display manager: gpe-dm"
+	/usr/bin/gpe-dm
+  ;;
+
+  stop)
+        echo "Stopping GPE display manager: gpe-dm"
+        killproc /usr/bin/gpe-dm
+	dd if=/dev/zero of=/dev/fb0 2>/dev/null
+  ;;
+
+  *)
+        echo "usage: $0 { start | stop }"
+  ;;
+esac
+
+exit 0
