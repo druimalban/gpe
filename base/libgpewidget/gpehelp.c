@@ -51,12 +51,12 @@ gpe_show_help(const char* book, const char* topic)
 								);
 	
 	/* check if the file is readable */
-	if (access(helpfile,R_OK))
+	if (access(helpfile, R_OK))
 		return TRUE;
 	
 	/* check if we are able to execute one of the displaying applications */
-	if (!access(GPE_HELP_APP1,X_OK)) app = GPE_HELP_APP1;
-	else if (!access(GPE_HELP_APP2,X_OK)) app = GPE_HELP_APP2;
+	if (!access(GPE_HELP_APP1, X_OK)) app = GPE_HELP_APP1;
+	else if (!access(GPE_HELP_APP2, X_OK)) app = GPE_HELP_APP2;
 	
 	/* return if no app is available */
 	if (app == NULL) 
@@ -83,7 +83,7 @@ gpe_show_help(const char* book, const char* topic)
 			return TRUE;
 		break;
 		case  0: 
-				execlp(app,app,helpadress,NULL);
+				execlp(app, app, helpadress, NULL);
 		break;
 		default: 
 			g_free(helpadress);
@@ -91,6 +91,6 @@ gpe_show_help(const char* book, const char* topic)
 			return FALSE;
 		break;
 	} 
-	/* we should never get there, help the compiler - he doesn't know */
+	/* we should never get there, help the compiler - it doesn't know */
 	return TRUE;
 }
