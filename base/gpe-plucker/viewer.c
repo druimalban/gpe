@@ -25,7 +25,6 @@
 
 /* for GPE specific things */
 #include <gpe/init.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #define _(_x) gettext (_x)
