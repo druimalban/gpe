@@ -1,5 +1,11 @@
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
+	* picturebutton.c (gpe_picture_button): Fix formatting.
+	(gpe_picture_button_aligned): Likewise.  Use
+	gtk_image_new_from_pixbuf in place of gpe_render_icon.
+	(gpe_button_new_from_stock): Just call gtk_button_new_from_stock
+	for BOTH case.
+
 	* gtktimesel.c (gtk_time_sel_init): Fix off-by-one errors.
 
 	* gpe/pixmaps.h: Add #error to catch attempted GTK 1 builds.

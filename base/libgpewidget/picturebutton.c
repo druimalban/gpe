@@ -24,7 +24,8 @@
 #include "picturebutton.h"
 
 GtkWidget *
-gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon){
+gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon)
+{
   return gpe_picture_button_aligned (style, text, icon, GPE_POS_CENTER);
 }
 
@@ -46,7 +47,7 @@ gpe_picture_button_aligned (GtkStyle *style, gchar *text, gchar *icon, GpePositi
       GdkPixbuf *p = gpe_try_find_icon (icon, NULL);
       if (p)
 	{
-	  GtkWidget *pw = gpe_render_icon (style, p);
+	  GtkWidget *pw = gtk_image_new_from_pixbuf (p);
 	  gtk_box_pack_start (GTK_BOX (hbox), pw, FALSE, FALSE, 0);
 	  gtk_widget_show (pw);
 	}
@@ -68,16 +69,18 @@ gpe_picture_button_aligned (GtkStyle *style, gchar *text, gchar *icon, GpePositi
   if (pos != GPE_POS_CENTER)
     {
       GtkWidget * alignment;
-      switch(pos){
-      case GPE_POS_LEFT:
-        alignment = gtk_alignment_new (0.0, 0.5, 0, 0);
-        break;
-      case GPE_POS_RIGHT:
-        alignment = gtk_alignment_new (1.0, 0.5, 0, 0);
-        break;
-      default:
-        alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
-      }
+      switch(pos)
+	{
+	case GPE_POS_LEFT:
+	  alignment = gtk_alignment_new (0.0, 0.5, 0, 0);
+	  break;
+	case GPE_POS_RIGHT:
+	  alignment = gtk_alignment_new (1.0, 0.5, 0, 0);
+	  break;
+	default:
+	  alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
+	}
+
       gtk_container_add (GTK_CONTAINER (alignment), hbox2);
       gtk_container_add (GTK_CONTAINER (button), alignment);
     }
@@ -92,30 +95,37 @@ gpe_picture_button_aligned (GtkStyle *style, gchar *text, gchar *icon, GpePositi
 GtkWidget *
 gpe_button_new_from_stock (const gchar *stock_id, int type)
 {
-  GtkWidget *button, *hbox, *image, *label, *align;
+  GtkWidget *button;
   GtkStockItem item;
+
+  if (type == GPE_BUTTON_TYPE_BOTH)
+    return gtk_button_new_from_stock (stock_id);
 
   button = gtk_button_new ();
   
   if (gtk_stock_lookup (stock_id, &item) == TRUE)
     {
-      hbox = gtk_hbox_new (FALSE, 2);
+      GtkWidget *widget = NULL, *align;
+
       align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-      
-      if (type == GPE_BUTTON_TYPE_ICON || type == GPE_BUTTON_TYPE_BOTH)
+
+      switch (type)
 	{
-	  image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
-	  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	case GPE_BUTTON_TYPE_ICON:
+	  widget = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	  gtk_container_add (GTK_CONTAINER (button), widget);
+	  break;
+
+	case GPE_BUTTON_TYPE_LABEL:
+	  widget = gtk_label_new_with_mnemonic (item.label);
+	  gtk_container_add (GTK_CONTAINER (button), widget);
+	  break;
+
+	default:
+	  break;
 	}
 
-      if (type == GPE_BUTTON_TYPE_LABEL || type == GPE_BUTTON_TYPE_BOTH)
-	{
-	  label = gtk_label_new_with_mnemonic (item.label);
-	  gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-	}
-      
       gtk_container_add (GTK_CONTAINER (button), align);
-      gtk_container_add (GTK_CONTAINER (align), hbox);
       gtk_widget_show_all (align);
     }
 
