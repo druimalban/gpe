@@ -84,14 +84,15 @@ button_press (GtkWidget *widget,
       else if (event->type == GDK_2BUTTON_PRESS)
 	{
 	  struct tm tm;
+	  time_t selected_time;
 	  localtime_r (&viewtime, &tm);
 	  tm.tm_year = c->popup.year - 1900;
 	  tm.tm_mon = c->popup.month;
 	  tm.tm_mday = c->popup.day;
-	  viewtime = mktime (&tm);
+	  selected_time = mktime (&tm);
 	  if (pop_window) 
 	    gtk_widget_destroy (pop_window);
-	  set_day_view ();    
+	  set_time_and_day_view (selected_time);    
 	}
     }
   

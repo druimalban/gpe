@@ -20,7 +20,7 @@ extern void update_all_views (void);
 extern guint days_in_month (guint year, guint month);
 extern gboolean week_starts_monday;
 extern gboolean day_view_combined_times;
-extern void set_day_view (void);
+extern void set_time_and_day_view(time_t selected_time);
 
 extern GdkPixmap *close_pix, *day_pix;
 extern GdkBitmap *close_mask, *day_mask;

@@ -1,3 +1,24 @@
+2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* main.c: change set_day_view to set_time_and_day_view and change
+	original call to be new_view(day) so set_day_view becomes unnecessary
+	* event-ui.c: get rid of find_by_uid since I have added a pointer in
+	event_t that points to the original ev (for a clone). fix small memory
+	leak in schedule_next, ALLOW EXCEPTIONS to recurring events (so delete
+	needs to ask about what you are deleting...maybe someday I will allow
+	editting of a single instance, but this will likely be done by
+	deleteing one (like this code now does) and making a completely new
+	event), also fix the alarm spinner code so it always reports ev->alarm
+	in seconds...I cannot seem to get the show/hide of the recurring page
+	worked out when editting stuff! 
+	* day_view.c : erase check for clones since I use *all* clones now and
+	get rid of calls to find_by_uid
+	* future_view: erase reference to gtkdatesel and delete calls to
+	find_by_uid
+	* month_view: use set_time_and_day_view now
+	* globals.h: use set_time_and_day_view now
+	* day_popup: use set_time_and_day_view now and eliminate find_by_uid
+
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
 	* gtkdatesel.c: New file.

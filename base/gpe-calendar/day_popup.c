@@ -45,13 +45,14 @@ day_clicked (GtkWidget *widget, GtkWidget *w)
 {
   struct day_popup *p = g_object_get_data (G_OBJECT (w), "popup-data");
   struct tm tm;
+  time_t selected_time;
   localtime_r (&viewtime, &tm);
   tm.tm_year = p->year - 1900;
   tm.tm_mon = p->month;
   tm.tm_mday = p->day;
-  viewtime = mktime (&tm);
+  selected_time = mktime (&tm);
   gtk_widget_destroy (w);
-  set_day_view ();
+  set_time_and_day_view (selected_time);
 }
 
 static void 
@@ -136,10 +137,8 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 	  
 	  gtk_clist_append (GTK_CLIST (contents), lineinfo);
 
-	  if (ev->flags & FLAG_CLONE)
-	    gtk_clist_set_row_data (GTK_CLIST (contents), row, event_db_find_by_uid (ev->uid));
-	  else gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
-
+	  gtk_clist_set_row_data (GTK_CLIST (contents), row, ev);
+	  
 	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))

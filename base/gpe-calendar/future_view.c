@@ -15,7 +15,6 @@
 
 #include <gtk/gtk.h>
 
-#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "future_view.h"
 #include "event-ui.h"
@@ -83,7 +82,7 @@ future_view_update ()
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
       if (ev->flags & FLAG_CLONE)
-	gtk_clist_set_row_data (GTK_CLIST (future_list), row, event_db_find_by_uid (ev->uid));
+	gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
       else gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
     	
       row++;

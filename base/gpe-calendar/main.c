@@ -127,13 +127,6 @@ new_view (GtkWidget *widget)
     } while (w != NULL);
 }
 
-void
-set_day_view (void)
-{
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
-  new_view (day);
-}
-
 static void
 new_appointment (void)
 {
@@ -146,6 +139,15 @@ set_today(void)
 {
   time (&viewtime);
   update_current_view ();
+}
+
+void
+set_time_and_day_view(time_t selected_time)
+{
+  viewtime=selected_time;
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
+  new_view (day);
+  update_current_view();
 }
 
 static void
@@ -330,7 +332,7 @@ main (int argc, char *argv[])
 
   update_all_views ();
 
-  set_day_view ();
+  new_view (day);
 
   gtk_main ();
 

@@ -198,9 +198,7 @@ day_view_update ()
       line_info[1] = text;
 
       gtk_clist_append (GTK_CLIST (day_list), line_info);
-      if (ev->flags & FLAG_CLONE) 
-	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, event_db_find_by_uid (ev->uid));
-      else gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
+      gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
       row++;
     }
   
@@ -275,11 +273,8 @@ day_view_update ()
 	  GdkPixmap *pmap;
 	  GdkBitmap *bmap;
 	  
-	  if (ev->flags & FLAG_CLONE) 
-	    gtk_clist_set_row_data (GTK_CLIST (day_list), row, event_db_find_by_uid (ev->uid));
-	  else gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
-    	    
-	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
+	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
+    	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
 		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 5,
@@ -328,9 +323,7 @@ day_view_update ()
 	  g_slist_append (strings, line_info[1]);
 
           gtk_clist_append (GTK_CLIST (day_list), line_info);
-	  if (ev->flags & FLAG_CLONE) 
-	    gtk_clist_set_row_data (GTK_CLIST (day_list), row, event_db_find_by_uid (ev->uid));
-	  else gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
+	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
 
 	  gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, dark_style);
 	  row++;
