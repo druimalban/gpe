@@ -23,8 +23,6 @@ create_main (void)
 {
   GtkWidget *main;
   GtkWidget *vbox1;
-  GtkWidget *hbuttonbox1;
-  GtkWidget *toolbar1;
   GtkWidget *nbList;
   GtkWidget *clist1;
   GtkWidget *label45;
@@ -54,6 +52,9 @@ create_main (void)
   GtkWidget *label63;
   GtkWidget *label64;
   GtkWidget *label52;
+  GtkWidget *hbox3;
+  GtkWidget *label83;
+  GtkWidget *entry1;
   GtkWidget *frame1;
   GtkWidget *table1;
   GtkWidget *label73;
@@ -80,26 +81,6 @@ create_main (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (vbox1);
   gtk_container_add (GTK_CONTAINER (main), vbox1);
-
-  hbuttonbox1 = gtk_hbutton_box_new ();
-  gtk_widget_set_name (hbuttonbox1, "hbuttonbox1");
-  gtk_widget_ref (hbuttonbox1);
-  gtk_object_set_data_full (GTK_OBJECT (main), "hbuttonbox1", hbuttonbox1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (hbuttonbox1);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, FALSE, 0);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_SPREAD);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbuttonbox1), 10);
-  gtk_button_box_set_child_size (GTK_BUTTON_BOX (hbuttonbox1), 50, 20);
-  gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (hbuttonbox1), 3, 0);
-
-  toolbar1 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_widget_set_name (toolbar1, "toolbar1");
-  gtk_widget_ref (toolbar1);
-  gtk_object_set_data_full (GTK_OBJECT (main), "toolbar1", toolbar1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (toolbar1);
-  gtk_box_pack_start (GTK_BOX (vbox1), toolbar1, FALSE, FALSE, 0);
 
   nbList = gtk_notebook_new ();
   gtk_widget_set_name (nbList, "nbList");
@@ -358,6 +339,30 @@ create_main (void)
   gtk_widget_show (label52);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 6), label52);
 
+  hbox3 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox3, "hbox3");
+  gtk_widget_ref (hbox3);
+  gtk_object_set_data_full (GTK_OBJECT (main), "hbox3", hbox3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox3);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
+
+  label83 = gtk_label_new (_("Find:"));
+  gtk_widget_set_name (label83, "label83");
+  gtk_widget_ref (label83);
+  gtk_object_set_data_full (GTK_OBJECT (main), "label83", label83,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label83);
+  gtk_box_pack_start (GTK_BOX (hbox3), label83, FALSE, FALSE, 0);
+
+  entry1 = gtk_entry_new ();
+  gtk_widget_set_name (entry1, "entry1");
+  gtk_widget_ref (entry1);
+  gtk_object_set_data_full (GTK_OBJECT (main), "entry1", entry1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (entry1);
+  gtk_box_pack_start (GTK_BOX (hbox3), entry1, TRUE, TRUE, 0);
+
   frame1 = gtk_frame_new (_("Contact"));
   gtk_widget_set_name (frame1, "frame1");
   gtk_widget_ref (frame1);
@@ -511,7 +516,6 @@ create_detailview (void)
   GtkWidget *det_name;
   GtkWidget *det_desc;
   GtkWidget *det_add;
-  GtkWidget *image2;
   GtkWidget *vbox6;
   GtkWidget *det1f;
   GtkWidget *det1;
@@ -636,14 +640,6 @@ create_detailview (void)
   gtk_label_set_justify (GTK_LABEL (det_add), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (det_add), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (det_add), 10, 0);
-
-  image2 = gtk_image_new (gdk_image_new (GDK_IMAGE_NORMAL, gdk_visual_get_system (), 96, 128), NULL);
-  gtk_widget_set_name (image2, "image2");
-  gtk_widget_ref (image2);
-  gtk_object_set_data_full (GTK_OBJECT (detailview), "image2", image2,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (image2);
-  gtk_box_pack_start (GTK_BOX (hbox2), image2, FALSE, FALSE, 0);
 
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_set_name (vbox6, "vbox6");
@@ -770,7 +766,7 @@ create_detailview (void)
   gtk_widget_show (det_notes);
   gtk_container_add (GTK_CONTAINER (det_notesscroll), det_notes);
   gtk_text_insert (GTK_TEXT (det_notes), NULL, NULL, NULL,
-                   _("\n\n\nThere's some space here for arbitrary notes\nabout a contact.\n\n"), -1);
+                   _("\n\n\nThere's some space here for arbitrary notes\nabout a contact.\n\n"), strlen(_("\n\n\nThere's some space here for arbitrary notes\nabout a contact.\n\n")));
 
   label8 = gtk_label_new (_("Notes"));
   gtk_widget_set_name (label8, "label8");

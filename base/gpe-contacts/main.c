@@ -19,6 +19,7 @@
 #include <gtk/gtk.h>
 #include <libintl.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -27,6 +28,7 @@
 #include <gpe/render.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/question.h>
+#include <gpe/gtksimplemenu.h>
 
 #include "interface.h"
 #include "support.h"
@@ -36,7 +38,7 @@
 
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 
-static GtkWidget *combo;
+static GtkWidget *categories_smenu;
 GtkWidget *clist;
 gchar *active_chars;
 
@@ -53,21 +55,20 @@ struct gpe_icon my_icons[] = {
 };
 
 static void
-update_combo_categories (void)
+update_categories (void)
 {
   GSList *categories = db_get_categories (), *iter;
-  GList *list = NULL;
-  
-  list = g_list_append (list, _("*all*"));
+  GtkWidget *menu = categories_smenu;
+
+  gtk_simple_menu_flush (menu);
+
+  gtk_simple_menu_append_item (menu, _("All categories"));
 
   for (iter = categories; iter; iter = iter->next)
     {
       struct category *c = iter->data;
-      list = g_list_append (list, (gpointer)c->name);
+      gtk_simple_menu_append_item (menu, c->name);
     }
-
-  gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
-  g_list_free (list);
 
   for (iter = categories; iter; iter = iter->next)
     {
@@ -179,13 +180,13 @@ new_category (GtkWidget *w, gpointer p)
 	gtk_clist_append (GTK_CLIST (p), line_info);
     }
 
-  update_combo_categories ();
+  update_categories ();
 }
 
 static void
 delete_category (GtkWidget *w, gpointer p)
 {
-  update_combo_categories ();
+  update_categories ();
 }
 
 static GtkWidget *
@@ -257,7 +258,7 @@ config_categories_box(void)
 }
 
 static void
-configure(GtkWidget *widget, gpointer d)
+configure (GtkWidget *widget, gpointer d)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *notebook = gtk_notebook_new ();
@@ -284,33 +285,70 @@ configure(GtkWidget *widget, gpointer d)
   gtk_widget_show (window);
 }
 
+static int
+show_details (struct person *p)
+{
+  gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lPhone")), "");
+  gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lMobile")), "");
+  gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lMail")), "");
+  gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lFAX")), "");
+
+  if (p)
+    {
+      GSList *iter;
+
+      for (iter = p->data; iter; iter = iter->next)
+	{
+	  struct tag_value *t = iter->data;
+	  
+	  if (strstr (t->tag, "TELEPHONE") != NULL)
+	    gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lPhone")), t->value);
+	  
+	  if (strstr (t->tag, "MOBILE") != NULL)
+	    gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lMobile")), t->value);
+	  
+	  if (strstr (t->tag, "EMAIL") != NULL)
+	    gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lMail")), t->value);
+	  
+	  if (strstr (t->tag, "FAX") != NULL)
+	    gtk_label_set_text (GTK_LABEL (lookup_widget (GTK_WIDGET (clist), "lFAX")), t->value);
+	}
+    }
+
+  return 0;
+}
+
 static void 
-selection_made( GtkWidget      *clist,
+selection_made (GtkWidget      *clist,
 		gint            row,
 		gint            column,
 		GdkEventButton *event,
 		GtkWidget      *widget)
 {
   guint id;
+  struct person *p;
 
-	id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-	db_detail_by_uid (id);
+  id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+  p = db_get_by_uid (id);
+  show_details (p);
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
-      struct person *p;
       id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      p = db_get_by_uid (id);
       edit_person (p);
     }
+  else
+    discard_person (p);
 }
 
 void
 update_display (void)
 {
   GSList *items = db_get_entries_alpha (active_chars), *iter;
-	gtk_clist_freeze(GTK_CLIST(clist));
+
+  gtk_clist_freeze(GTK_CLIST(clist));
   gtk_clist_clear (GTK_CLIST (clist));
+
   for (iter = items; iter; iter = iter->next)
     {
       struct person *p = iter->data;
@@ -322,8 +360,9 @@ update_display (void)
       gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)p->id);
       discard_person (p);
     }
+  
   g_slist_free (items);
-	gtk_clist_thaw(GTK_CLIST(clist));
+  gtk_clist_thaw(GTK_CLIST(clist));
 }
 
 int
@@ -332,6 +371,9 @@ main (int argc, char *argv[])
   GtkWidget *mainw;
   GtkWidget *toolbar;
   GtkWidget *pw;
+  GtkWidget *vbox1;
+  GtkWidget *hbox1;
+  GtkWidget *smenu;
 
 #ifdef ENABLE_NLS
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
@@ -353,10 +395,15 @@ main (int argc, char *argv[])
   load_well_known_tags ();
 
   mainw = create_main ();
-  combo = lookup_widget (GTK_WIDGET (mainw), "combo1");
-  update_combo_categories ();
+  smenu = gtk_simple_menu_new ();
+  hbox1 = lookup_widget (GTK_WIDGET (mainw), "hbox3");
+  gtk_box_pack_start (GTK_BOX (hbox1), smenu, TRUE, TRUE, 0);
+  gtk_widget_show (smenu);
+  categories_smenu = smenu;
+  update_categories ();
   clist = lookup_widget (GTK_WIDGET (mainw), "clist1");
   update_display ();
+  show_details (NULL);
   gtk_widget_show (mainw);
   gtk_signal_connect (GTK_OBJECT (clist), "select_row",
                        GTK_SIGNAL_FUNC (selection_made),
@@ -365,7 +412,18 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy",
 		      gtk_main_quit, NULL);
 
-  toolbar = lookup_widget (mainw, "toolbar1");
+  vbox1 = lookup_widget (mainw, "vbox1");
+#if GTK_MAJOR_VERSION < 2
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
+  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
+  gtk_box_reorder_child (GTK_BOX (vbox1), toolbar, 0);
+  gtk_widget_show (toolbar);
+
   pw = gpe_render_icon (mainw->style, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
 			   _("New Contact"), _("New Contact"),

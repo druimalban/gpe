@@ -1,5 +1,29 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* src/main.c (show_details): New function.
+	(selection_made): Use it.
+	(main): Clear details at startup.
+
+	* src/main.c (update_categories_combo): Delete.
+	(update_categories): New function.
+	(delete_category): Adjust accordingly.
+	(new_category): Likewise.
+	(main): Likewise.  Make the GtkSimpleMenu and pack it in place.
+
+	* src/db.c (db_detail_by_uid): Delete.
+	(read_detail_data): Likewise.
+	(read_detail_fields): Likewise.
+	(db_get_categories): Reformat.
+	(db_get_entries_alpha): Likewise.
+
+	* adb.glade (main): Delete toolbar.  Add new hbox below main clist
+	containing category selector and search filter box.
+	(detail_view): Delete image.
+	* src/main.c (main): Create a toolbar here and splice it into the
+	main window.
+
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
 	Patch from Florian Boor:
 
 	* adb.glade: updated gui

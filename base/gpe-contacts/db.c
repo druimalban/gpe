@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <ctype.h>
 
 #include <gpe/errorbox.h>
 
@@ -523,19 +524,20 @@ db_get_categories (void)
 {
   GSList *list = NULL;
   char *err;
+  if (
 #ifdef USE_USQLD		
-  if (usqld_exec (db,
+      usqld_exec
 #else
-  if (sqlite_exec (db,
+      sqlite_exec
 #endif		
-		   "select id,description from contacts_category",
-		   load_one_attribute, &list, &err))
-  {
-    fprintf (stderr, "sqlite: %s\n", err);
-    free (err);
-    return NULL;
-  }
-		
+      (db, "select id,description from contacts_category",
+       load_one_attribute, &list, &err))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+      return NULL;
+    }
+  
   return list;
 }
 
@@ -549,63 +551,16 @@ db_get_entries_alpha (const gchar* alphalist)
 
   statement=malloc(sizeof(gchar)*100);
   for (r=0;r<strlen(alphalist);r++)
-  {
-    sprintf(statement,"select urn,value from contacts where (tag='NAME') and ((value like \'%c%%\') or (value like \'%c%%\'))",alphalist[r],tolower(alphalist[r]));
+    {
+      sprintf(statement,"select urn,value from contacts where (tag='NAME') and ((value like \'%c%%\') or (value like \'%c%%\'))",alphalist[r],tolower(alphalist[r]));
 #ifdef USE_USQLD		
-    usqld_exec (db, statement, read_one_entry, &list, &err);
+      usqld_exec (db, statement, read_one_entry, &list, &err);
 #else
-    sqlite_exec (db, statement, read_one_entry, &list, &err);
+      sqlite_exec (db, statement, read_one_entry, &list, &err);
 #endif		
-  }
+    }
   free(statement);
   return list;
 }
 
-
-static int
-read_detail_fields (void *arg, int argc, char **argv, char **names)
-{
-  struct person *p = new_person ();
-  GSList **list = (GSList **)arg;
-
-  p->id = atoi (argv[0]);
-  p->name = g_strdup (argv[1]);
-  *list = g_slist_insert_sorted (*list, p, (GCompareFunc)sort_entries);
-
-  return 0;
-}
-
-
-static int
-read_detail_data (void *arg, int argc, char **argv, char **names)
-{
-  if (strstr(argv[0],"TELEPHONE") != NULL)
-    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lPhone")),argv[1]);
-  if (strstr(argv[0],"MOBILE") != NULL)
-    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lMobile")),argv[1]);
-  if (strstr(argv[0],"EMAIL") != NULL)
-    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lMail")),argv[1]);
-  if (strstr(argv[0],"FAX") != NULL)
-    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lFAX")),argv[1]);
-  return 0;
-}
-
-void
-db_detail_by_uid (guint uid)
-{
-  char *err;
-  int r;
-	
-#ifdef USE_USQLD		
-  r = usqld_exec_printf (db, "select tag,value from contacts where urn=%d",
-#else
-  r = sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
-#endif		
-			  read_detail_data, NULL, &err, uid);
-  if (r)
-    {
-      gpe_error_box (err);
-      free (err);
-    }
-}
 
