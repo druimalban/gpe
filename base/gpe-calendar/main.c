@@ -33,6 +33,7 @@
 #include "future_view.h"
 #include "month_view.h"
 #include "import-vcal.h"
+#include "gtkdatesel.h"
 
 #include <libdisplaymigration/displaymigration.h>
 #include <gpe/pim-categories.h>
@@ -85,6 +86,20 @@ days_in_month (guint year, guint month)
     }
 
   return nr_days[month];
+}
+
+void
+set_time_all_views(void)
+{
+  gpointer ds;
+  
+  ds = g_object_get_data(G_OBJECT(main_window),"datesel-week");
+  gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
+  ds = g_object_get_data(G_OBJECT(main_window),"datesel-month");
+  gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
+  ds = g_object_get_data(G_OBJECT(main_window),"datesel-day");
+  gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
+  update_all_views();
 }
 
 void
@@ -157,22 +172,6 @@ set_time_and_day_view(time_t selected_time)
   viewtime=selected_time;
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
-  update_current_view();
-}
-
-void
-set_day(int year, int month, int day)
-{
-  struct tm tm;
-  time_t selected_time;
-  localtime_r (&viewtime, &tm);
-  tm.tm_year = year;
-  tm.tm_mon = month;
-  tm.tm_mday = day;
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  tm.tm_sec = 0;
-  selected_time = mktime (&tm);
   update_current_view();
 }
 
@@ -317,12 +316,6 @@ main (int argc, char *argv[])
   vbox = gtk_vbox_new (FALSE, 0);
   notebook = gtk_notebook_new ();
 
-  time (&viewtime);
-  week = week_view ();
-  day = day_view ();
-  month = month_view ();
-  future = future_view ();
-
   /* main window */
   window_x = gdk_screen_width() / 2;
   window_y = gdk_screen_height() / 2;  
@@ -341,6 +334,11 @@ main (int argc, char *argv[])
 
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
+  time (&viewtime);
+  week = week_view ();
+  day = day_view ();
+  month = month_view ();
+  future = future_view ();
   toolbar = gtk_toolbar_new ();
 
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);

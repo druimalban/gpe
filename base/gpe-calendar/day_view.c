@@ -572,6 +572,8 @@ day_view(void)
   g_signal_connect (G_OBJECT (day_list), "key_press_event", 
 		    G_CALLBACK (list_key_press_event), NULL);
   g_object_set_data(G_OBJECT(day_list),"selected-row",(void *)0);
-            
+
+  g_object_set_data(G_OBJECT(main_window),"datesel-day",datesel);
+
   return vbox;
 }

@@ -343,7 +343,9 @@ month_view_update ()
   struct tm today;
   time_t t;
 
-  time (&t);
+/* hack */
+  //time (&t);
+  t = viewtime;
   localtime_r (&t, &today);
 
   localtime_r (&viewtime, &tm_start);
@@ -351,12 +353,15 @@ month_view_update ()
   month = tm_start.tm_mon;
 
   days = days_in_month (year, month);
+  wday = 1 - day_of_week(year, month + 1, 1);
 
   for (day = 0; day < TOTAL_DAYS; day++)
     {
+      gint rday = day + wday;
       struct render_ctl *c = &rc[day];
       if (c->popup.events)
         c->popup.events = NULL;
+      if (rday == tm_start.tm_mday) active_day = day;
       c->active = (day == active_day) ? TRUE : FALSE;
     }
 
@@ -375,7 +380,7 @@ month_view_update ()
       tm_end.tm_min = 59;
       tm_end.tm_sec = 59;
       end = mktime (&tm_end);
-
+      
       if (!tm_start.tm_isdst) {
 	      start+=60*60;
 	      end+=60*60;
@@ -388,7 +393,6 @@ month_view_update ()
         ((event_t)iter->data)->mark = FALSE;
     }
 
-  wday = 1 - day_of_week(year, month + 1, 1);
   for (day = 0; day < TOTAL_DAYS; day++)
     {
       gint rday = day + wday;
@@ -397,14 +401,14 @@ month_view_update ()
       c->popup.year = year - 1900;
       c->popup.month = month;
       if (rday <= 0 || rday > days)
-	{
-	  c->valid = FALSE;
-	}
+        {
+          c->valid = FALSE;
+        }
       else
-	{
-	  c->valid = TRUE;
-	  c->popup.events = day_events[rday];
-	}
+        {
+          c->valid = TRUE;
+          c->popup.events = day_events[rday];
+        }
 
          c->today = ((year == today.tm_year + 1900
 		   && month == today.tm_mon
@@ -428,6 +432,7 @@ changed_callback(GtkWidget *widget,
 		 gpointer d)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  
   month_view_update ();
 }
 
@@ -654,6 +659,8 @@ month_view(void)
                      
   for (day = 0; day < TOTAL_DAYS; day++)
       rc[day].initialized = FALSE;
+  
+  g_object_set_data(G_OBJECT(main_window),"datesel-month",datesel);
 
   return vbox;
 }

@@ -54,6 +54,23 @@ struct week_day
   struct render_ctl rc;
 } week_days[7];
 
+
+time_t
+time_from_day(int year, int month, int day)
+{
+  struct tm tm;
+  time_t selected_time;
+  localtime_r (&viewtime, &tm);
+  tm.tm_year = year;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  selected_time = mktime (&tm);
+  return selected_time;
+}
+
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEventExpose *event,
@@ -274,10 +291,10 @@ week_view_update (void)
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
       if (!week_days[day].initialized)
-        {
-          week_days[day].is_active = week_days[day].is_today;
-          week_days[day].initialized = TRUE;
-        }
+         {
+           week_days[day].is_active = week_days[day].is_today;
+           week_days[day].initialized = TRUE;
+         }
       strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
       if (d->string)
 	     g_free (d->string);
@@ -410,16 +427,8 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
             {
               if (pop_window) 
                 gtk_widget_destroy (pop_window);
-              if (c != c_old) 
-                {
-                  pop_window = day_popup (main_window, &c->popup, FALSE);
-                  c_old = c;
-                }
-              else 
-                {
-                  pop_window = NULL;
-                  c_old = NULL;
-                }
+                pop_window = NULL;
+                c_old = NULL;
             }    
         }
     }
@@ -433,6 +442,9 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
             {
               week_days[i].is_active = FALSE;
               week_days[i+1].is_active = TRUE;
+              c = &week_days[i+1].rc;
+              viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
+              set_time_all_views();
             }
           else
             gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
@@ -451,6 +463,9 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
             {
               week_days[i].is_active = FALSE;
               week_days[i-1].is_active = TRUE;
+              c = &week_days[i-1].rc;
+              viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
+              set_time_all_views();
             }
           else
             gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
@@ -488,7 +503,7 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
   if (k->keyval == GDK_Return)
     {
       for (i=0;i<7;i++)
-          if (week_days[i].is_active) break;
+         if (week_days[i].is_active) break;
             
       c = &week_days[i].rc;
       if (c->valid)
@@ -547,6 +562,8 @@ week_view_button_press (GtkWidget *widget,
           for (i=0;i<7;i++)
              week_days[i].is_active = FALSE;
           week_days[get_day_from_y(y)].is_active = TRUE;
+          viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
+          set_time_all_views();
           week_view_update();
           
           if (pop_window) 
@@ -625,5 +642,6 @@ week_view (void)
   gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   gtk_widget_add_events (GTK_WIDGET (datesel), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
   
+  g_object_set_data(G_OBJECT(main_window),"datesel-week",datesel);
   return vbox;
 }

@@ -58,6 +58,7 @@ GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode);
 time_t          gtk_date_sel_get_time (GtkDateSel *sel);
 void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
 void            gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
+void            gtk_date_sel_set_day (GtkDateSel *sel, int year, int month, int day);
 
 #ifdef __cplusplus
 }

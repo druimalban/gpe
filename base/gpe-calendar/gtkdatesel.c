@@ -392,6 +392,23 @@ gtk_date_sel_set_time (GtkDateSel *sel, time_t time)
 }
 
 void
+gtk_date_sel_set_day(GtkDateSel *sel, int year, int month, int day)
+{
+  struct tm tm;
+  time_t selected_time;
+  localtime_r (&sel->time, &tm);
+  tm.tm_year = year;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  selected_time = mktime (&tm);
+  sel->time = selected_time;
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+}
+
+void
 gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style)
 {
   sel->month_style = style;

@@ -1,5 +1,6 @@
 2004-07-22  Florian Boor <florian.boor@kernelconcepts.de>
     
+    * *view.c, main.c: Several hacks to keep active day global and up to date.
     * event_ui.c: Multiple optical uodates and small fixes.
                   Set default focus to text field, set some window parameters.
     * main.c: Added function to set current date.

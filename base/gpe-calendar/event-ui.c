@@ -895,7 +895,7 @@ build_edit_event_window (void)
                    G_CALLBACK(on_description_focus_out),window);
 
   descriptionlabel    = gtk_label_new (_("Description:"));
-  gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0.015, 0.0);
+  gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0, 0.5);
   gtk_widget_set_size_request (GTK_WIDGET (description), -1, 88);
   gtk_container_add (GTK_CONTAINER (descriptionhbox), description);
   
