@@ -1,3 +1,8 @@
+libgpe - Common functions for GPE.
+
+* cvs 0.2
+- API for preferences.
+
 libgpe V0.1
 -----------
 
