@@ -1,5 +1,9 @@
 2003-04-11  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.41 released.
+	
+2003-04-11  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (click_delete): Reformat.  Make question string
 	static and mark for translation.  Fix warning about argument
 	shadowed by local var.
