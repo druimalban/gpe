@@ -54,8 +54,8 @@ main (int argc, char *argv[])
 		  fd = open (buf, O_RDONLY);
 		  if (fd >= 0)
 		    {
-		      char c;
-		      if (ioctl (fd, EVIOCGBIT(EV_ABS, 0), &c) < 0)
+		      long c;
+		      if (ioctl (fd, EVIOCGBIT(EV_ABS, sizeof (c)), &c) < 0)
 			c = 0;
 		      if ((c & 3) != 3)
 			{
