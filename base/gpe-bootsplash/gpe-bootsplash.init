@@ -5,7 +5,7 @@ module_id() {
     echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
 }
 
-depmod
+mount /proc
 
 case $1 in
 'start')

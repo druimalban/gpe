@@ -1,13 +1,15 @@
 PACKAGE = gpe-bootsplash
 VERSION = 1.9
 
-CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 librsvg-2.0` `pkg-config --libs gdk-pixbuf-2.0 librsvg-2.0` -DGTK2
+PACKAGE_CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 librsvg-2.0` `pkg-config --libs gdk-pixbuf-2.0 librsvg-2.0` -DGTK2
+CFLAGS = -fomit-frame-pointer -Os
+
 SPLASH = splash2.png
 
 all: gpe-bootsplash
 
 gpe-bootsplash: splash.c
-	$(CC) $(CFLAGS) -fomit-frame-pointer -Os splash.c -o gpe-bootsplash
+	$(CC) $(CFLAGS) $(PACKAGE_CFLAGS) $(LDFLAGS) splash.c -o gpe-bootsplash
 
 install-program: gpe-bootsplash
 	mkdir -p $(DESTDIR)/usr/bin
@@ -21,5 +23,3 @@ install-program: gpe-bootsplash
 
 clean:
 	rm -f gpe-bootsplash splash.o
-
-include ../build/Makefile.dpkg_ipkg
