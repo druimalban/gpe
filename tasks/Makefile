@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.2
+VER_gpe-task-base = 0.3
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -95,7 +95,7 @@ DEP_gpe-task-base = \
     \
     startup-monitor, \
     \
-    xcalibrate, \
+    xtscal, \
     gpe-su2, \
     gpe-conf2, \
     gpe-confd, \
@@ -110,9 +110,8 @@ DEP_gpe-task-base = \
     hotplug-dbus
 #FIXME: could be refined (contains hardware dependant packages)
 
-VER_gpe-collateral-gtk2 = 0.04
+VER_gpe-collateral-gtk2 = 0.05
 DEP_gpe-collateral-gtk2 = \
-    libgtk2.0-0, \
     gtk2-theme-angelistic, \
     ttf-bitstream-vera
 
