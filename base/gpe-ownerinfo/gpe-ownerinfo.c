@@ -668,13 +668,16 @@ main (int argc, char *argv[])
   gtk_label_set_justify (GTK_LABEL (address), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (address), 0, 0);
 
-  {
-    GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
-    style->bg_pixmap[GTK_STATE_NORMAL] = GDK_PARENT_RELATIVE;
-    gtk_widget_set_style (scrolledwindow, style);
-    gtk_widget_set_style (viewport, style);
-    gtk_widget_set_style (address, style);
-  }
+  if (flag_transparent)
+    {
+      GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
+      style->bg_pixmap[GTK_STATE_NORMAL] = GDK_PARENT_RELATIVE;
+      gtk_widget_set_style (scrolledwindow, style);
+      gtk_widget_set_style (viewport, style);
+      gtk_widget_set_style (address, style);
+      gtk_widget_set_style (smallphotobutton, style);
+      gtk_widget_set_style (smallphotodrawingarea, style);
+    }
 
   /*
    * The second notebook page
