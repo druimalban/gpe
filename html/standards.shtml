@@ -5,16 +5,28 @@ One of the goals of the GPE project is to encourage developers for our platform
 to conform to a number of standards separate from the core GPE
 software.
 
-<h2> SQL schemas</h2> 
-The core storage model for environment-wide data such as PIM data and
+<h2>Desktop interoperability</h2>
+
+<p>GPE programs aim to meet the relevant <a href="http://www.freedesktop.org/standards/">freedesktop.org standards</a>.
+</p>
+
+<p>GPE programs should comply with the <a href="http://developer.gnome.org/projects/gup/hig/1.0/">GNOME Human Interface Guidelines</a> where it is appropriate. Some deviations have to be made to deal with peculiarities of the palmtop environment, such as small screens; some of these changes and additions to the GNOME HIG can be found on the <a href="http://www.handhelds.org/z/wiki/GpeHIG">GPE HIG</a> Wiki page.
+</p>
+
+<h2>SQL schemas</h2> 
+
+<p>The core storage model for environment-wide data such as PIM data and
 user preferences is that of a relational database, implemented
 through the ubiquitous SQL (Structured Query Language). The core SQL
 schemas for this information are currently under development, and the
-current proposals for these standards are listed here:
+current proposals for these standards are listed below.
+</p>
 
-<h3> PIM schema</h3> 
-A hacked-together version of the bulk of the GPE schema is available <a href=pim.sql>here</a>. This omits a specification for storing events, and has not yet been finalised. 
+<h3>PIM schema</h3> 
 
-
+<p>
+A hacked-together version of the bulk of the <a href="pim.sql">PIM schema</a> is available.
+This omits a specification for storing events, and has not yet been finalised. 
+</p>
 
 <!--#include virtual="includes/foot.shtml"-->
