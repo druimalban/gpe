@@ -1,5 +1,13 @@
 2003-03-16  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.39 released.
+
+2003-03-16  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xdefaults: Set font for rxvt.
+
+2003-03-16  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (CFLAGS, LDFLAGS): Set according to $(DEBUG).
 
 	* locale.alias: New file.
