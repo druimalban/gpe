@@ -40,7 +40,7 @@ main (int argc, char *argv[])
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
       XCloseDisplay (dpy);
-      system ("echo \"Matchbox.cursor: no\\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
+      system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
     }
       
   exit (0);
