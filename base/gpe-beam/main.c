@@ -16,6 +16,7 @@
 //#include <sys/types.h>
 #include <stdlib.h>
 #include <libintl.h>
+#include <string.h>
 
 /*#include <locale.h>
 #include <pty.h>

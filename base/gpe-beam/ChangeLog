@@ -1,5 +1,7 @@
 2003-07-27  Phil Blundell  <pb@nexus.co.uk>
 
+	* main.c: Include string.h to suppress warning.
+
 	* Makefile (GTKCFLAGS, GTKLDFLAGS): gtk+-2.0 includes gdk-2.0 and
 	gdk-pixbuf-2.0, no need to call them in here.
 	(CFLAGS) [NATIVE=yes]: Include $(GTKCFLAGS).
