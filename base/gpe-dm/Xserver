@@ -20,9 +20,9 @@ ARGS="-dpi 100 -br"
 # start off server in conventional location.
 case `module_id` in
 	" iPAQ 3100" | " iPAQ 3800")
-		ARGS="$ARGS -screen 240x320@90" ;;
+		ARGS="$ARGS -screen 240x320@90 -rgba rgb" ;;
 	" iPAQ 3600" | " iPAQ 3700" | " iPAQ 3900" )
-		ARGS="$ARGS -screen 240x320@270" ;;
+		ARGS="$ARGS -screen 240x320@270 -rgba vbgr" ;;
 esac
 
 exec Xipaq $ARGS $*
