@@ -5,6 +5,7 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
+<H1><font color="red">Note: This application is no longer part of the base package, as it has been replaced by mbdesktop</font></h1>
 <H2>Coordinator</H2>
 <P>
 The coordinator for this sub-project is Robert Mibus (<A
