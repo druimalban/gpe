@@ -1,7 +1,7 @@
 Package: minitheme
 Section: x11
 Priority: optional
-Version: 0.19
+Version: 0.10
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.32), libxsettings-client0

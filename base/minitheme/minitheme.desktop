@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Bluetooth Control
-Comment=Panel based Bluetooth control
-Exec=gpe-bluetooth
+Name=Theme switcher
+Comment=Matchbox theme selection utility
+Exec=minitheme
 Type=PanelApp
-Icon=/usr/share/gpe/pixmaps/default/bt-logo.png
-Categories=Panel;Utility;GPE;Bluetooth
+Icon=/usr/share/pixmaps/minitheme.png
+Categories=Panel;Utility;GPE

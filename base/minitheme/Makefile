@@ -50,7 +50,7 @@ install: install-program install-mo
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
-	mkdir $(DESTDIR)$(PREFIX)/share/pixmaps
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
