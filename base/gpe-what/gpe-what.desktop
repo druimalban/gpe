@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Interactive help
+Comment=Displays tooltips in a window
+Exec=gpe-what
+Type=PanelApp
+Icon=/usr/share/pixmaps/gpe-what.png
+Categories=Panel;Utility;GPE
