@@ -1,5 +1,7 @@
 2002-07-09  Philip Blundell  <philb@gnu.org>
 
+	* stylus-mode.c: New file.
+
 	* Makefile (MEMBERS): Add stylus, nocursor.
 
 	* nocursor.c: New file.
