@@ -3,8 +3,8 @@ Provides: gpe-games
 Replaces: gpe-games
 Section: games
 Priority: optional
-Version: 0.05
+Version: 0.06
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-tetris2, xdemineur, gpe-lights, gpe-code2
+Depends: gpe-tetris2, xdemineur, gpe-lights, gpe-code2, gpe-julia2
 Description: Task package for GPE games
