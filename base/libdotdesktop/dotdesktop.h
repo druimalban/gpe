@@ -1,3 +1,4 @@
+#include <glib.h>
 
 typedef struct _dotdesktopitem
 {

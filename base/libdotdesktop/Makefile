@@ -2,9 +2,11 @@ PREFIX = /usr/local
 PACKAGE = libdotdesktop
 DEBUG = no
 
+CC=gcc
+
 LINGUAS = en_AU
 
-MEMBERS = dotdesktop
+MEMBERS = dotdesktop hash
 
 SONAME = libdotdesktop.so.0
 CONTROL = control
@@ -18,7 +20,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD
 
-CPPFLAGS += -I./gpe
+CPPFLAGS += -I./gpe `pkg-config --cflags glib-2.0`
 
 HEADERS = dotdesktop.h
 
