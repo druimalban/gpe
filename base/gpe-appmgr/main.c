@@ -1171,9 +1171,9 @@ void icons_page_up_down (int down)
 	adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW(sw));
 
 	if (down)
-		newval = adj->value + adj->page_increment*1.5f;
+		newval = adj->value + adj->page_increment;
 	else
-		newval = adj->value - adj->page_increment*1.5f;
+		newval = adj->value - adj->page_increment;
 
 	if (newval < adj->lower)
 		newval = adj->lower;
