@@ -1,5 +1,9 @@
 2003-09-27  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.72 released.
+	
+2003-09-27  Philip Blundell  <philb@gnu.org>
+
 	* gpetimesel.c (spin_button_output): New function.
 	(gpe_time_sel_init): Use it as output callback for spinbuttons.
 
