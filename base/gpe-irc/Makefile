@@ -4,7 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 
-MEMBERS = irc
+MEMBERS = main irc
 LINGUAS = de
 
 ifeq ($(GTK2),yes)
@@ -52,6 +52,8 @@ install: install-program
 install-program: all
 	install -D gpe-irc $(DESTDIR)$(PREFIX)/bin/gpe-irc
 	install -D -m 644 gpe-irc.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-irc.png
+	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc
+	install -m 644 pixmaps/globe.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc/globe.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-irc

@@ -17,40 +17,9 @@
 
 #include <gtk/gtk.h>
 
+#include "irc.h"
+
 #define SERVICE "ircd"
-
-typedef struct
-{
-  GtkWidget *text_box;
-  GtkWidget *entry;
-} IRCGtkWidgets;
-
-typedef struct
-{
-  gchar *nick;
-  gchar *username;
-  gchar *real_name;
-  gchar *email;
-  gchar *password;
-} IRCUserInfo;
-
-typedef struct
-{
-  gchar *topic;
-  GList *users;
-  IRCGtkWidgets *widgets;
-  GtkWidget *users_clist;
-} IRCChannel;
-
-typedef struct
-{
-  gchar *name;
-  int fd;
-  gboolean connected;
-  GHashTable *channel;
-  IRCUserInfo *user_info;
-  IRCGtkWidgets *widgets;
-} IRCServer;
 
 gboolean
 irc_server_read (IRCServer *server)
@@ -58,13 +27,16 @@ irc_server_read (IRCServer *server)
   fd_set rfds;
   int data_waiting, buf_len, char_num = 0, message_num = 0;
   char buf[256];
-  char *message;
+  char *message = NULL;
 
   FD_ZERO (&rfds);
   FD_SET (server->fd, &rfds);
 
   if (server->fd == -1)
+  {
     printf ("No socket open!\n");
+    return -1;
+  }
 
   while (1)
   {
@@ -73,12 +45,10 @@ irc_server_read (IRCServer *server)
     tv.tv_usec = 1;
     FD_ZERO (&rfds);
     FD_SET (server->fd, &rfds);
-    //printf ("Checking for data...\n");
     data_waiting = select (server->fd + 1, &rfds, NULL, NULL, &tv);
 
     if (data_waiting)
     {
-      //printf ("Data waiting.\n");
       char_num = 0;
       buf_len = read (server->fd, buf, sizeof (buf));
       if (buf_len != -1)
@@ -95,15 +65,19 @@ irc_server_read (IRCServer *server)
 	    message[message_num] = '\0';
 	    printf ("%s", message);
 	    message_num = 0;
+	    return message;
 	  }
 
 	  char_num++;
 	}
       }
     }
+
+    while (gtk_events_pending ())
+      gtk_main_iteration ();
   }
 
-  return FALSE;
+  return -1;
 }
 
 /* Send a the users message to specified channel on specified server */
@@ -144,9 +118,8 @@ gboolean
 irc_server_login_init (IRCServer *server)
 {
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
-  irc_server_join_channel (server, "#handhelds.org");
+  irc_server_join_channel (server, "#lobby");
 
-  irc_server_read (server);
   return TRUE;
 }
 
@@ -227,32 +200,3 @@ irc_server_disconnect (IRCServer *server)
   printf ("IRC Server Disconnect.\n");
   return TRUE;
 }
-
-int
-main (int argc, char *argv[])
-{
-  IRCServer *server;
-
-  server = g_malloc (sizeof (*server));
-  server->user_info = g_malloc (sizeof (*server->user_info));
-
-  if (argc > 2)
-  {
-    server->name = g_strdup (argv[1]);
-    server->user_info->nick = g_strdup (argv[2]);
-    server->user_info->username = g_strdup (argv[2]);
-    server->user_info->real_name = g_strdup (argv[2]);
-    irc_server_connect (server);
-  }
-  else
-  {
-    server->name = g_strdup ("irc.handhelds.org");
-    server->user_info->nick = g_strdup ("dc_gpe-irc");
-    server->user_info->username = g_strdup ("dc_gpe-irc");
-    server->user_info->real_name = g_strdup ("dc_gpe-irc");
-    irc_server_connect (server);
-  }
-
-  return 0;
-}
-
