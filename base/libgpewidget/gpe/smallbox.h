@@ -18,7 +18,15 @@ struct box_desc
   gchar *value;
 };
 
+struct box_desc2
+{
+  gchar *label;
+  gchar *value;
+  GList *suggestions;
+};
+
 extern gboolean smallbox_x (gchar *title, struct box_desc *d);
+extern gboolean smallbox_x2 (gchar *title, struct box_desc2 *d);
 extern gchar *smallbox (gchar *title, gchar *labeltext, gchar *dval);
 
 #endif
