@@ -22,6 +22,8 @@
 #include "globals.h"
 #include "day_view.h"
 
+gboolean day_view_combined_times;
+
 static GSList *strings;
 static GtkWidget *day_list;
 static GtkWidget *datesel;
@@ -40,19 +42,22 @@ format_event (event_t ev)
   time_t t;
   event_details_t evd;
 
-  localtime_r (&ev->start, &tm);
-  r = strftime (p, l, "%R-", &tm);
-  if (r == 0) return NULL;
-  p += r;
-  l -= r;
-
-  t = ev->start + ev->duration;
-  localtime_r (&t, &tm);
-  r = strftime (p, l, "%R ", &tm);
-  if (r == 0) return NULL;
-  p += r;
-  l -= r;
-
+  if (day_view_combined_times == FALSE)
+    {
+      localtime_r (&ev->start, &tm);
+      r = strftime (p, l, "%R-", &tm);
+      if (r == 0) return NULL;
+      p += r;
+      l -= r;
+      
+      t = ev->start + ev->duration;
+      localtime_r (&t, &tm);
+      r = strftime (p, l, "%R ", &tm);
+      if (r == 0) return NULL;
+      p += r;
+      l -= r;
+    }
+      
   evd = event_db_get_details (ev);
   if (evd == NULL) return NULL;
   strncpy (p, evd->summary, l - 1);
@@ -175,21 +180,28 @@ day_view_update ()
       tm_start.tm_min = 0;
       tm_start.tm_sec = 0;
 
+      strftime (buf, sizeof (buf), "%R", &tm_start);
+
       for (iter = day_events[hour]; iter; iter = iter->next)
 	{
 	  ev = (event_t) iter->data;
 
 	  if (ev->mark == FALSE)
 	    {
+	      struct tm tm;
 	      ev->mark = TRUE;
 	      text = format_event (ev);
 	      g_slist_append (strings, text);
+	      if (day_view_combined_times)
+		{
+		  localtime_r (&ev->start, &tm);
+		  strftime (buf, sizeof (buf), "%R", &tm);
+		}
 	      break;
 	    }
 	} 
 
       line_info[1] = text;
-      strftime (buf, sizeof (buf), "%R", &tm_start);
       line_info[0] = buf;
      
       if (! width_set)
@@ -217,7 +229,17 @@ day_view_update ()
 
 	  ev->mark = TRUE;
 
-	  line_info[0] = NULL;
+	  if (day_view_combined_times)
+	    {
+	      struct tm tm;
+	      localtime_r (&ev->start, &tm);
+	      strftime (buf, sizeof (buf), "%R", &tm);
+	      line_info[0] = buf;
+	    }
+	  else
+	    {
+	      line_info[0] = NULL;
+	    }
 	  line_info[1] = format_event (ev);
 	  g_slist_append (strings, line_info[1]);
 

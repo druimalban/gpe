@@ -11,5 +11,6 @@
 #define DAY_VIEW_H
 
 extern GtkWidget *day_view (void);
+extern gboolean day_view_combined_times;
 
 #endif
