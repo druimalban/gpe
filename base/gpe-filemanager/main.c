@@ -300,17 +300,6 @@ rename_file (GtkDialog *dialog_window, gint response_id)
 }
 
 static void
-delete_file (GtkDialog *dialog_window, gint response_id)
-{
-  if (response_id == GTK_RESPONSE_ACCEPT)
-  {
-    gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (current_popup_file->filename));
-  }
-
-  gtk_widget_destroy (dialog_window);
-}
-
-static void
 move_file (gchar *directory)
 {
   gchar *dest, *error;
@@ -355,7 +344,6 @@ popup_ask_move_file ()
   GtkWidget *dirbrowser_window;
 
   dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), (gchar *) g_get_home_dir (), GTK_SELECTION_SINGLE, move_file);
-  gtk_signal_connect (GTK_OBJECT (dirbrowser_window), "destroy", GTK_SIGNAL_FUNC (gtk_widget_destroyed), &dirbrowser_window);
   gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
 
   gtk_widget_show_all (dirbrowser_window);
@@ -370,7 +358,7 @@ popup_ask_rename_file ()
 
   label_text = g_strdup_printf ("Rename file %s to:", current_popup_file->vfs->name);
 
-  dialog_window = gtk_dialog_new_with_buttons ("Rename file", window, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+  dialog_window = gtk_dialog_new_with_buttons ("Rename file", window, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
   g_signal_connect (G_OBJECT (dialog_window), "delete_event", GTK_SIGNAL_FUNC (kill_widget), dialog_window);
   g_signal_connect (G_OBJECT (dialog_window), "response", GTK_SIGNAL_FUNC (rename_file), NULL);
 
@@ -396,17 +384,20 @@ popup_ask_delete_file ()
   GtkWidget *label;
   gchar *label_text;
 
-  label_text = g_strdup_printf ("Delete %s?", current_popup_file->vfs->name);
+  label_text = g_strdup_printf (_("Delete \"%s\"?"), current_popup_file->vfs->name);
 
-  dialog_window = gtk_dialog_new_with_buttons ("Rename file", window, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
-  g_signal_connect (G_OBJECT (dialog_window), "delete_event", GTK_SIGNAL_FUNC (kill_widget), dialog_window);
-  g_signal_connect (G_OBJECT (dialog_window), "response", GTK_SIGNAL_FUNC (delete_file), NULL);
+  if (gpe_question_ask (label_text, _("Confirm"), "!gtk-dialog-question", 
+			"!gtk-cancel", NULL, "!gtk-delete", NULL, NULL, NULL) == 1)
+    {
+      GnomeVFSResult r;
 
-  label = gtk_label_new (label_text);
+      r = gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (current_popup_file->filename));
 
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox), label);
+      if (r != GNOME_VFS_OK)
+	gpe_error_box (gnome_vfs_result_to_string (r));
+    }
 
-  gtk_widget_show_all (dialog_window);
+  g_free (label_text);
 }
 
 static void
@@ -775,7 +766,7 @@ browse_directory (gchar *directory)
 static void
 set_directory_home (GtkWidget *widget)
 {
-  browse_directory ((gchar *) g_get_home_dir ());
+  browse_directory ("/mnt"); //(gchar *) g_get_home_dir ());
 }
 
 static void
@@ -971,7 +962,6 @@ main (int argc, char *argv[])
   g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
   gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
   gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (gtk_item_factory_get_item (item_factory, "/Preferences/Shape/Oval")), TRUE);
 
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
