@@ -3,7 +3,7 @@ PACKAGE = gpe-nmf
 DEBUG = no
 CVSBUILD = yes
 GST = yes
-VERSION = 0.14
+VERSION = 0.15
 
 MEMBERS = gpe-nmf playlist_edit
 
