@@ -63,7 +63,6 @@ struct gpe_icon my_icons[] = {
 
 static GtkWidget *icon;
 
-static pid_t hcid_pid;
 static pid_t hciattach_pid;
 
 static GtkWidget *menu, *device_menu;
@@ -177,20 +176,6 @@ run_scan (void *data)
 }
 
 static pid_t
-fork_hcid (void)
-{
-  pid_t p = vfork ();
-  if (p == 0)
-    {
-      execlp ("hcid", "hcid", "-n", NULL);
-      perror ("hcid");
-      _exit (1);
-    }
-
-  return p;
-}
-
-static pid_t
 fork_hciattach (void)
 {
   if (access (HCIATTACH, X_OK) == 0)
@@ -223,7 +208,6 @@ radio_on (void)
   sigemptyset (&sigs);
   sigaddset (&sigs, SIGCHLD);
   sigprocmask (SIG_BLOCK, &sigs, NULL);
-  hcid_pid = fork_hcid ();
   hciattach_pid = fork_hciattach ();
   sigprocmask (SIG_UNBLOCK, &sigs, NULL);
 }
@@ -241,11 +225,6 @@ do_stop_radio (void)
 	{
 	  stop_dun (bd);
 	}
-    }
-  if (hcid_pid)
-    {
-      kill (hcid_pid, 15);
-      hcid_pid = 0;
     }
   if (hciattach_pid)
     {
@@ -414,16 +393,7 @@ sigchld_handler (int sig)
   int status;
   pid_t p = waitpid (0, &status, WNOHANG);
 
-  if (p == hcid_pid)
-    {
-      hcid_pid = 0;
-      if (radio_is_on)
-	{
-	  gpe_error_box_nonblocking (_("hcid died unexpectedly"));
-	  radio_off ();
-	}
-    }
-  else if (p == hciattach_pid)
+  if (p == hciattach_pid)
     {
       hciattach_pid = 0;
       if (radio_is_on)
@@ -432,7 +402,7 @@ sigchld_handler (int sig)
 	  radio_off ();
 	}
     }
-  else if (p != -1)
+  else if (p > 0)
     {
       fprintf (stderr, "unknown pid %d exited\n", p);
     }
