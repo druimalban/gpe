@@ -22,9 +22,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE /* Pour GlibC2 */
-#endif
 #include <time.h>
 
 #include <gpe/errorbox.h>
@@ -46,6 +43,7 @@ void File_Selected (char *file,
 
 #define UPGRADE_ERROR      -1
 #define UPGRADE_NOT_NEEDED  0
+#define GPE_LOGIN_STARTUP	"/etc/X11/Xsession.d/50autolock"
 
 GtkWidget *photofile;
 GtkWidget *name;
@@ -58,6 +56,14 @@ GtkWidget *button;
 static gchar *ownerphotofile, *ownername, *owneremail, *ownerphone, *owneraddress;
 
 FILE *fp;
+
+
+static void
+restart_gpe_login(void)
+{
+	system("killall gpe-login");
+	system(GPE_LOGIN_STARTUP);
+}
 
 GtkWidget *Ownerinfo_Build_Objects()
 {
@@ -391,6 +397,9 @@ void Ownerinfo_Save()
       fputs (owneraddress, fp);
       fclose (fp);
 	  suid_exec("CPOI","");
+	  /* more a hack than a feature */
+	  usleep(300000);
+	  restart_gpe_login();
     }
   else /* fp == NULL, something went wrong */
     {

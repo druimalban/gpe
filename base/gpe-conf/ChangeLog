@@ -1,3 +1,6 @@
+2004-09-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* ownerinfo.c: Restart gpe-login to update info.
 
 2004-09-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 
