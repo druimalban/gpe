@@ -41,12 +41,37 @@
 
 #define _(x) gettext(x)
 
+struct dbus_push_context
+{
+  gchar *filename;
+  gchar *mimetype;
+  gchar *data;
+
+  DBusConnection *connection;
+  DBusMessage *reply;
+};
+
+static void
+push_done (gboolean result, struct dbus_push_context *ctx)
+{
+  dbus_free (ctx->filename);
+  dbus_free (ctx->mimetype);
+  dbus_free (ctx->data);
+
+  dbus_connection_send (ctx->connection, ctx->reply, NULL);
+
+  g_free (ctx);
+}
+
 DBusHandlerResult
 obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
 {
   DBusMessageIter iter;
   DBusMessage *reply;
-  int type;
+  gchar *filename, *mime_type;
+  unsigned char *data;
+  size_t len;
+  struct dbus_push_context *ctx;
 
   dbus_message_iter_init (message, &iter);
  
@@ -54,6 +79,41 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   if (!reply)
     return DBUS_HANDLER_RESULT_NEED_MEMORY;
 
+  if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
+    goto wrong_args;
+
+  filename = dbus_message_iter_get_string (&iter);
+
+  if (!dbus_message_iter_next (&iter))
+    goto wrong_args;
+
+  if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
+    goto wrong_args;
+
+  mime_type = dbus_message_iter_get_string (&iter);
+
+  if (!dbus_message_iter_next (&iter))
+    goto wrong_args;
+  
+  if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_ARRAY
+      || dbus_message_iter_get_array_type (&iter) != DBUS_TYPE_BYTE)
+    goto wrong_args;
+
+  dbus_message_iter_get_byte_array (&iter, &data, &len);
+
+  ctx = g_new (struct dbus_push_context, 1);
+
+  ctx->filename = filename;
+  ctx->mimetype = mime_type;
+  ctx->data = data;
+  ctx->reply = reply;
+  ctx->connection = connection;
+
+  obex_object_push (filename, mime_type, data, len, G_CALLBACK (push_done), ctx);
+
+  return DBUS_HANDLER_RESULT_HANDLED;
+
+ wrong_args:
+  g_critical ("wrong args");
   return DBUS_HANDLER_RESULT_HANDLED;
 }
-
