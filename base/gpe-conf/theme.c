@@ -113,12 +113,12 @@ init_tools(void)
 	use_gconf = FALSE;
 	use_xst = FALSE;
 	
-	/* prefer gconf */
-	if (!access(CMD_GCONF,X_OK))
-		use_gconf = TRUE;
+	/* prefer xst */
+	if (!access(CMD_XST,X_OK))
+		use_xst = TRUE;
 	else
-		if (!access(CMD_XST,X_OK))
-			use_xst = TRUE;	
+		if (!access(CMD_GCONF,X_OK))
+			use_gconf = TRUE;	
 }
 
 gboolean
