@@ -5,6 +5,7 @@ CVSBUILD = yes
 VERSION = 0.20
 
 MEMBERS = main
+#FIXME: add: cs ru sr ('de' is not on TP?)
 LINGUAS = id pt de zh_TW fr ro wa sv nl sk
 
 CPPFLAGS += $(STANDARD_CPPFLAGS)
