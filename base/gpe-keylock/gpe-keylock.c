@@ -21,6 +21,7 @@
 #include <gdk/gdkkeysyms.h>
 
 GtkWidget *w;
+GtkWidget *info_w;
 
 #define _(x) gettext(x)
 
@@ -32,10 +33,12 @@ gboolean window_visible;
 
 #define DELAY 2500
 
+GdkWindow *grab_window;
+
 gboolean
 hide_window (gpointer data)
 {
-  window_visible = TRUE;
+  window_visible = FALSE;
 
   gtk_widget_hide (w);
 
@@ -50,6 +53,56 @@ show_window (void)
   gtk_widget_show_all (w);
 
   g_timeout_add (DELAY, hide_window, NULL);
+}
+
+gboolean
+hide_info_window (gpointer data)
+{
+  gtk_main_quit ();
+
+  return FALSE;
+}
+
+void
+create_info_widgets (GtkWidget *parent)
+{
+  GtkWidget *lock;
+  GtkWidget *hbox;
+  GtkWidget *label;
+
+  lock = gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+
+  hbox = gtk_vbox_new (FALSE, 4);
+
+  label = gtk_label_new ("");
+
+  gtk_label_set_markup (GTK_LABEL (label), _("Screen unlocked"));
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+
+  gtk_box_pack_start (GTK_BOX (hbox), lock, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+
+  gtk_container_set_border_width (GTK_CONTAINER (parent), 4);
+
+  gtk_container_add (GTK_CONTAINER (parent), hbox);
+}
+
+void
+do_unlock (void)
+{
+  hide_window (NULL);
+
+  gdk_window_hide (grab_window);
+
+  info_w = gtk_window_new (GTK_WINDOW_POPUP);
+
+  gtk_window_set_position (GTK_WINDOW (info_w), GTK_WIN_POS_CENTER_ALWAYS);
+
+  create_info_widgets (info_w);
+
+  gtk_widget_show_all (info_w);
+
+  g_timeout_add (DELAY, hide_info_window, NULL);
 }
 
 GdkFilterReturn
@@ -76,11 +129,16 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	    {
 	      keys_down |= key;
 	      if (keys_down == 3)
-		gtk_main_quit ();
+		do_unlock ();
 	    }
 	  else
 	    keys_down &= ~key;
 	}
+    }
+  else if (xev->type == ButtonPress)
+    {
+      if (! window_visible)
+	show_window ();
     }
 
   return GDK_FILTER_CONTINUE;
@@ -89,12 +147,9 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 void
 create_widgets (GtkWidget *parent)
 {
-  GtkWidget *frame;
   GtkWidget *lock;
   GtkWidget *hbox;
   GtkWidget *label;
-
-  frame = gtk_frame_new (NULL);
 
   lock = gtk_image_new_from_file (PREFIX "/share/gpe/pixmaps/default/lock.png");
 
@@ -108,9 +163,23 @@ create_widgets (GtkWidget *parent)
   gtk_box_pack_start (GTK_BOX (hbox), lock, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
-  gtk_container_add (GTK_CONTAINER (frame), hbox);
+  gtk_container_set_border_width (GTK_CONTAINER (parent), 4);
 
-  gtk_container_add (GTK_CONTAINER (parent), frame);
+  gtk_container_add (GTK_CONTAINER (parent), hbox);
+}
+
+GdkWindow *
+create_grab_window (void)
+{
+  GdkWindowAttr attr;
+
+  attr.wclass = GDK_INPUT_ONLY;
+  attr.window_type = GDK_WINDOW_TEMP;
+  attr.width = 1;
+  attr.height = 1;
+  attr.override_redirect = TRUE;
+
+  return gdk_window_new (NULL, &attr, GDK_WA_NOREDIR);
 }
 
 int
@@ -133,17 +202,22 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (w);
 
+  grab_window = create_grab_window ();
+
   dpy = GDK_WINDOW_XDISPLAY (w->window);
 
   left_key = XKeysymToKeycode (dpy, XF86XK_Calendar);
   right_key = XKeysymToKeycode (dpy, XF86XK_Start);
 
   show_window ();
+  gdk_window_show (grab_window);
 
-  gtk_widget_add_events (GTK_WIDGET (w), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+  gdk_window_add_filter (grab_window, filter, 0);
 
-  gdk_keyboard_grab (w->window, TRUE, GDK_CURRENT_TIME);
-  gdk_window_add_filter (w->window, filter, 0);
+  gdk_window_set_events (grab_window, GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
+  gdk_keyboard_grab (grab_window, TRUE, GDK_CURRENT_TIME);
+  gdk_pointer_grab (grab_window, TRUE, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK, NULL, NULL, GDK_CURRENT_TIME);
 
   gtk_main ();
 
