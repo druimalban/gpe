@@ -311,7 +311,7 @@ ask_open_with (char *exec)
 void
 button_clicked (GtkWidget *widget, gpointer udata)
 {
-  printf ("My type is %s\n", ((struct file_infomation *) udata)->type);
+  //printf ("My type is %s\n", ((struct file_infomation *) udata)->type);
 
   if (strcmp (((struct file_infomation *) udata)->type, "file") == 0)
   {
@@ -393,7 +393,7 @@ add_icon (gchar *base_filename, gchar *filename)
     }
     image_filename = g_strdup_printf ("%s%s", image_filename, ".png");
   }
-  printf ("Found image %s\n", image_filename);
+  //printf ("Found image %s\n", image_filename);
   gpe_iconlist_add_item (GPE_ICONLIST (view_widget), base_filename, image_filename, (gpointer) file_info);
 }
 
@@ -438,7 +438,7 @@ make_view (gchar *view)
       if (basename (filename)[0] != '.')
       {
 
-	printf ("Found file %s\n", filename);
+	//printf ("Found file %s\n", filename);
 	filenames = g_list_append (filenames, filename);
 	//add_icon (basename (filename), filename);
       }
@@ -744,13 +744,13 @@ main (int argc, char *argv[])
   {
     GSList *iter;
 
-    printf ("|\tname\t\t|\tmime\t|\tcommand\t|\n\n");
+    //printf ("|\tname\t\t|\tmime\t|\tcommand\t|\n\n");
 
     for (iter = mime_programs; iter; iter = iter->next)
     {
       struct mime_program *c = iter->data;
 
-      printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->name, c->mime, c->command);
+      //printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->name, c->mime, c->command);
     }
   }
 
