@@ -48,6 +48,7 @@ struct gpe_icon my_icons[] = {
   { "pause", "tetris/pause" },
   { "stop", "tetris/stop" },
   { "highscores", "tetris/highscores" },
+  { "icon", PREFIX "/share/pixmaps/gpe-tetris.png" },
   {NULL, NULL}
 };
 
@@ -415,6 +416,8 @@ int main(int argc,char *argv[])
 	GtkWidget *toolbar, *toolbar2, *toolbar_hbox;
 	GtkWidget *pw;
 	GdkPixbuf *p;
+	GdkPixmap *pmap;
+	GdkBitmap *bmap;
 	
 	gtk_init(&argc,&argv);
 
@@ -555,6 +558,10 @@ int main(int argc,char *argv[])
 	gtk_label_set_justify(GTK_LABEL(lines_label),GTK_JUSTIFY_RIGHT);
 	gtk_widget_show(lines_label);
 	gtk_box_pack_start(GTK_BOX(right_side),lines_label,FALSE,FALSE,3);
+
+	gtk_widget_realize (main_window);
+	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+		gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
 	
 	// show window widget
 	gtk_widget_show(main_window);
@@ -563,7 +570,7 @@ int main(int argc,char *argv[])
 	blocks_pixmap = gdk_pixmap_create_from_xpm_d(game_area->window,
 						&mask,
 						NULL,
-						(gchar **)blocks_xpm);	
+						(gchar **)blocks_xpm); 
 	// seed random generator
 	srandom(time(NULL));
 

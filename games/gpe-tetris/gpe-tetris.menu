@@ -1,0 +1,8 @@
+?package(gpe-tetris):\
+ needs="x11"\
+ section="Games"\
+ logtitle="GPE-Tetris"\
+ title=Tetris\
+ icon48=gpe-tetris.png\
+ command=gpe-tetris\
+ windowtitle="gpe-tetris"
