@@ -1,5 +1,6 @@
 2004-09-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* Released Version 0.19
 	* Applied patches by Chris Lord <cwiiis@blueyonder.co.uk> fixing:
           - Pause button
           -Progress from one track to the next
