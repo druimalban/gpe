@@ -35,11 +35,14 @@ GtkObject *hour_adj, *minute_adj;
 
 #define _(x) gettext(x)
 
-static gboolean show_seconds;
-static gboolean format_24 = TRUE;
-static gboolean flag_graphical = FALSE;
-
 static gchar *alarm_file, *prefs_file;
+
+#define FORMAT_12	        0
+#define FORMAT_24		1
+#define FORMAT_ANALOGUE		2
+
+static gboolean show_seconds;
+static int format;
 
 struct alarm_state
 {
@@ -64,6 +67,8 @@ struct alarm_context
 };
 
 static struct alarm_state state;
+
+void select_new_format (int new_format);
 
 static void
 set_defaults (void)
@@ -92,7 +97,7 @@ flush_prefs (void)
   
   if (fp)
     {
-      fprintf (fp, "%d %d\n", show_seconds, format_24);
+      fprintf (fp, "%d %d\n", show_seconds, format);
       fclose (fp);
     }
 }
@@ -106,11 +111,10 @@ load_prefs (void)
   
   if (fp)
     {
-      int seconds, hours;
+      int seconds;
 
-      fscanf (fp, "%d %d", &seconds, &hours);
+      fscanf (fp, "%d %d", &seconds, &format);
       show_seconds = (seconds != 0) ? TRUE : FALSE;
-      format_24 = (hours != 0) ? TRUE : FALSE;
       fclose (fp);
     }
 }
@@ -290,22 +294,21 @@ update_time_label (GtkWidget *label)
   char buf[256];
   time_t t;
   struct tm tm;
-  const char *format;
-  
+  const char *time_format;
   
   time (&t);
   localtime_r (&t, &tm);
 
-  if (format_24)
+  if (format == FORMAT_24)
     {
-      format = show_seconds ? "%H:%M:%S" : "%H:%M";
+      time_format = show_seconds ? "%H:%M:%S" : "%H:%M";
     }
   else
     {
-      format = show_seconds ? "%I:%M:%S%p" : "%I:%M%p";
+      time_format = show_seconds ? "%I:%M:%S%p" : "%I:%M%p";
     }
     
-  strftime (buf, sizeof (buf), format, &tm);
+  strftime (buf, sizeof (buf), time_format, &tm);
   gtk_label_set_markup (GTK_LABEL (label), buf);
 }
 
@@ -325,7 +328,7 @@ update_time_face (void)
 static void
 update_time (void)
 {
-  if (flag_graphical)
+  if (format == FORMAT_ANALOGUE)
     update_time_face ();
   else
     update_time_label (time_label);
@@ -336,15 +339,23 @@ set_seconds (GtkWidget *w, GtkWidget *time_label)
 {
   show_seconds = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
   update_time ();
-  flush_prefs ();
 }
 
 static void
-set_format (GtkWidget *w, GtkWidget *time_label)
+set_format (GtkWidget *w, void *value)
 {
-  format_24 = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
-  update_time ();
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
+    {
+      select_new_format ((int)value);
+      update_time ();
+    }
+}
+
+static void
+click_ok (GtkWidget *w, GtkWidget *window)
+{
   flush_prefs ();
+  gtk_widget_destroy (window);
 }
 
 static void
@@ -354,8 +365,8 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
   GtkWidget *format_12_button;
   GtkWidget *format_24_button;
+  GtkWidget *format_analogue_button;
   GtkWidget *seconds_button;
-
   GSList    *radiogroup;
   int spacing = gpe_get_boxspacing ();
 
@@ -367,12 +378,15 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   format_12_button = gtk_radio_button_new_with_label (NULL, _("12-hour format"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (format_12_button));
   format_24_button = gtk_radio_button_new_with_label (radiogroup, _("24-hour format"));
+  format_analogue_button = gtk_radio_button_new_with_label (radiogroup, _("Analogue format"));
 
   seconds_button = gtk_check_button_new_with_label (_("Show seconds"));
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (seconds_button), show_seconds);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_24_button), format_24);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_24_button), format == FORMAT_24);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_analogue_button), format == FORMAT_ANALOGUE);
 
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_analogue_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_12_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_24_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), seconds_button, FALSE, FALSE, 0);
@@ -382,9 +396,11 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   gtk_widget_show_all (window);
 
   g_signal_connect (G_OBJECT (seconds_button), "toggled", G_CALLBACK (set_seconds), time_label);
-  g_signal_connect (G_OBJECT (format_24_button), "toggled", G_CALLBACK (set_format), time_label);
+  g_signal_connect (G_OBJECT (format_24_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_24);
+  g_signal_connect (G_OBJECT (format_12_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_12);
+  g_signal_connect (G_OBJECT (format_analogue_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_ANALOGUE);
  
-  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
+  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (click_ok), window);
 }
 
 static void
@@ -593,56 +609,66 @@ do_check_alarm (void)
   flush_alarm_details ();
 }
 
+void
+select_new_format (int new_format)
+{
+  if (format == FORMAT_ANALOGUE)
+    {
+      gtk_widget_destroy (face);
+      gtk_object_destroy (hour_adj);
+      gtk_object_destroy (minute_adj);
+    }
+  else
+    gtk_widget_destroy (time_label);
+
+  format = new_format;
+  
+  if (format == FORMAT_ANALOGUE)
+    {
+      hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
+      minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
+      
+      face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
+      gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
+      gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
+      gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
+      gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
+      gtk_widget_show (face);
+      gtk_container_add (GTK_CONTAINER (panel_window), face);
+      gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
+      
+      g_signal_connect (G_OBJECT (face), "button-press-event", G_CALLBACK (clicked), menu);
+    }
+  else
+    {
+      time_label = gtk_label_new (NULL);
+      
+      gtk_container_add (GTK_CONTAINER (panel_window), time_label);
+      gtk_widget_show (time_label);
+	    
+      g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
+      gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+    }
+}
+
 /* handle resizing */
 gboolean 
 external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
+#if 0
   gboolean flag_graphical_old = flag_graphical;
 
   if (event->type == GDK_CONFIGURE)
   {
     flag_graphical = (event->height >= 32);
-	if (flag_graphical_old != flag_graphical)
-	{
-	  if (flag_graphical_old)
+    if (flag_graphical_old != flag_graphical)
       {
-        gtk_widget_destroy(face);
-        gtk_object_destroy(hour_adj);
-        gtk_object_destroy(minute_adj);
       }
-      else
-        gtk_widget_destroy(time_label);
-      
-      if (flag_graphical)
-        {
-          hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
-          minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
-      
-          face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
-          gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
-          gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
-          gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
-          gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
-          gtk_widget_show (face);
-          gtk_container_add (GTK_CONTAINER (panel_window), face);
-    
-          g_signal_connect (G_OBJECT (face), "button-press-event", G_CALLBACK (clicked), menu);
-        }
-      else
-        {
-          time_label = gtk_label_new (NULL);
-    
-          gtk_container_add (GTK_CONTAINER (panel_window), time_label);
-          gtk_widget_show (time_label);
-    
-          g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
-          gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-        }
-        
-	}
+
     if (!flag_graphical) 
       update_time_label (time_label);
   }
+#endif
   return FALSE;
 }
 
@@ -650,7 +676,7 @@ external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *menu_set_time, *menu_alarm, *menu_remove, *menu_prefs;
+  GtkWidget *menu_set_time, *menu_alarm, *menu_prefs;
   GtkTooltips *tooltips;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -680,7 +706,7 @@ main (int argc, char *argv[])
       switch (c)
 	{
 	case 'g':
-	  flag_graphical = TRUE;
+	  format = FORMAT_ANALOGUE;
 	  break;
 	}
     }
@@ -704,26 +730,22 @@ main (int argc, char *argv[])
   menu_prefs = gtk_menu_item_new_with_label (_("Preferences"));
   menu_set_time = gtk_menu_item_new_with_label (_("Set the time"));
   menu_alarm = gtk_menu_item_new_with_label (_("Alarm ..."));
-  menu_remove = gtk_menu_item_new_with_label (_("Remove from panel"));
 
   gtk_widget_show (menu_prefs);
   gtk_widget_show (menu_set_time);
   gtk_widget_show (menu_alarm);
-  gtk_widget_show (menu_remove);
 
   gtk_menu_append (GTK_MENU (menu), menu_alarm);
   gtk_menu_append (GTK_MENU (menu), menu_set_time);
   gtk_menu_append (GTK_MENU (menu), menu_prefs);
-  gtk_menu_append (GTK_MENU (menu), menu_remove);
 
   g_signal_connect (G_OBJECT (menu_prefs), "activate", G_CALLBACK (prefs_window), time_label);
   g_signal_connect (G_OBJECT (menu_set_time), "activate", G_CALLBACK (set_time_window), NULL);
   g_signal_connect (G_OBJECT (menu_alarm), "activate", G_CALLBACK (alarm_window), NULL);
-  g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
   panel_window = gtk_plug_new (0);
 
-  if (flag_graphical)
+  if (format == FORMAT_ANALOGUE)
     {
       hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
       minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
@@ -760,13 +782,13 @@ main (int argc, char *argv[])
 
   gdk_window_resize (panel_window->window, panel_window->allocation.width, panel_window->allocation.height);
   gtk_window_resize (GTK_WINDOW (panel_window), panel_window->allocation.width, panel_window->allocation.height);
-  if (flag_graphical)
+  if (format == FORMAT_ANALOGUE)
     gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
   
   gpe_system_tray_dock (panel_window->window);
 
   tooltips = gtk_tooltips_new ();
-  gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, change the display format, or remove this program from the panel."), NULL);
+  gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, or change the display format."), NULL);
 
   g_timeout_add (1000, (GtkFunction) update_time, NULL);
 
