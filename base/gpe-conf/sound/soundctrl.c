@@ -168,26 +168,33 @@ sound_load_settings(void)
 	{
 		int nc = -1, val = -1, ret;
 		char buf[128];
+		
+		memset(buf, 0, 128);
+		
 		while (fgets(buf, 128, cfgfile))
 		{
 			ret = sscanf(buf, "muted %d", &nc);
 			if (ret)
 				muted = nc;
 			
-			ret = sscanf(buf, "%d %d", &nc, &val);			
+			ret = sscanf(buf, "%d %d", &nc, &val);		
+			
+			memset(buf, 0, 128);
 			if ((ret == 2) && (nc >= 0) && (nc <= SOUND_MIXER_NRDEVICES))
 			{
-				if (channel_active(nc))
+				if (channel_active(mchannels[nc].nr) && !(nc && !mchannels[nc].nr))
 				{
 					if (muted)
 					{
 						set_volume(mchannels[nc].nr, 0);
 						mchannels[nc].backupval = val;
+						mchannels[nc].initval = val;
 						mchannels[nc].value = val;
 					}
 					else
 					{
 						mchannels[nc].value = val;
+						mchannels[nc].initval = val;
 						set_volume(mchannels[nc].nr, val);
 					}
 				}
@@ -227,10 +234,13 @@ sound_restore_settings(void)
 	if (!initialized)
 		return;
 		
-	for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
+	for (i = 0; i < active_channels; i++)
 	{
-		mchannels[i].value = mchannels[i].initval;
-		set_volume(mchannels[i].nr, mchannels[i].value);
+		if (channel_active(mchannels[i].nr))
+		{
+			mchannels[i].value = mchannels[i].initval;
+			set_volume(mchannels[i].nr, mchannels[i].value);
+		}
 	}
 }
 
@@ -279,7 +289,7 @@ sound_init(void)
 		
 	for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
 	{
-		if (channel_active(i)) 
+		if (/*((1 << i) & devmask)*/channel_active(i))
 		{
 			mchannels[active_channels].nr = i; /* channel number */
 			if (i) /* name and label */
