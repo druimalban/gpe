@@ -1,3 +1,16 @@
+2003-03-31  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistitem.c: New file.
+	* gpe/gpeiconlistitem.h: Likewise.
+	* Makefile (MEMBERS): Add gpeiconlistitem.
+
+	* gpeiconlist.gob: Use new GPEIconListItem class in place of
+	struct IL_Icon.
+	(new_icon): Return type is GObject*.
+	(_check_icon_size): Second argument is GObject*.
+	(add_item, add_item_pixbuf): Return the new object.
+	* gpe-iconlist.c, gpe/gpe-iconlist.h: Regenerate.
+
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (HEADERS): Remove gtkdatesel.h.

@@ -67,11 +67,11 @@ void 	gpe_iconlist_update_icon_item_with_udata	(GPEIconList * self,
 					gpointer udata);
 void 	gpe_iconlist_remove_item_with_udata	(GPEIconList * self,
 					gpointer udata);
-void 	gpe_iconlist_add_item	(GPEIconList * self,
+GObject * 	gpe_iconlist_add_item	(GPEIconList * self,
 					char * title,
 					char * icon,
 					gpointer udata);
-void 	gpe_iconlist_add_item_pixbuf	(GPEIconList * self,
+GObject * 	gpe_iconlist_add_item_pixbuf	(GPEIconList * self,
 					char * title,
 					GdkPixbuf * icon,
 					gpointer udata);

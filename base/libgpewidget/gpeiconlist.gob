@@ -25,6 +25,7 @@ requires 2.0.0
 #include <string.h>
 #include <gtk/gtk.h>
 #include "gpe-iconlist.h"
+#include "gpeiconlistitem.h"
 
 //#define CHIT_CHAT
 
@@ -48,20 +49,11 @@ requires 2.0.0
                           )
 #define il_col_width(_x)	(il_icon_size (_x) + (2 * GPE_ICONLIST (_x)->_priv->icon_xmargin))
 
-struct ILIcon
-{
-	char *title;
-	char *icon;
-	gpointer udata;
-	GdkPixbuf *pb;
-	GdkPixbuf *pb_scaled;
-};
-
 //private structure used to find an icon from its data, see _find_from_udata()
 struct _Pack
 {
   gpointer udata;        //udata to find
-  struct ILIcon * icon;  //the icon if found, NULL if not found
+  GPEIconListItem *icon;  //the icon if found, NULL if not found
 };
 
 %}
@@ -176,8 +168,9 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		return label_height;
 	}
 
-	private void _check_icon_size (GPEIconList *il, struct ILIcon *icon)
+	private void _check_icon_size (GPEIconList *il, GObject *obj)
 	{
+		GPEIconListItem *icon = GPE_ICON_LIST_ITEM (obj);
 		if (icon->pb) {
 			guint h = gdk_pixbuf_get_height (icon->pb);
 			if (h > il->_priv->icon_size + 1
@@ -270,7 +263,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		icons = il->_priv->icons;
 		while (icons) {
 			GdkRectangle r1, r2, dst;
-			struct ILIcon *icon;
+			GPEIconListItem *icon;
 			GdkPixbuf *pixbuf=NULL;
 
 			icon = icons->data;
@@ -349,7 +342,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		icons = il->_priv->icons;
 		while (icons) {
 			GdkRectangle r1, r2, dst;
-			struct ILIcon *icon;
+			GPEIconListItem *icon;
 			icon = icons->data;
 
       if(il->_priv->flag_show_title && icon->title){
@@ -467,16 +460,16 @@ class GPE:IconList from Gtk:Scrolled:Window {
     
 	}
 
-	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
+	private GObject *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
 	{
-		struct ILIcon *ret;
-		ret = (struct ILIcon *) malloc (sizeof (struct ILIcon));
+		GPEIconListItem *ret;
+		ret = (GPEIconListItem *) gpe_icon_list_item_new ();
 		ret->title = title;
 		ret->icon = icon;
 		ret->udata = udata;
 		ret->pb = pb;
 		ret->pb_scaled = NULL;
-		return ret;
+		return G_OBJECT (ret);
 	}
 
   /* Update an existing icon found from its udata. */
@@ -506,7 +499,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	}
 
   private void _find_from_udata (gpointer icon, gpointer data_pak){
-    if( ((struct ILIcon *)icon)->udata == ((struct _Pack *)data_pak)->udata ){
+    if( ((GPEIconListItem *)icon)->udata == ((struct _Pack *)data_pak)->udata ){
       ((struct _Pack *)data_pak)->icon = icon;
     }
   }
@@ -520,7 +513,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
     if(pak.icon != NULL)
     {
-      MAYBE_PRINTF("remove icon: %s.\n", ((struct ILIcon *)pak.icon)->title);
+      MAYBE_PRINTF("remove icon: %s.\n", ((GPEIconListItem *)pak.icon)->title);
       self->_priv->icons = g_list_remove (self->_priv->icons, pak.icon);
     }
     else
@@ -531,20 +524,23 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	}
 
 
-	public void add_item (self, char *title, char *icon, gpointer udata)
+	public GObject *add_item (self, char *title, char *icon, gpointer udata)
 	{
-		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, icon, udata, NULL));
+		GObject *new = gpe_iconlist_new_icon (title, icon, udata, NULL);
+		self->_priv->icons = g_list_append (self->_priv->icons, new);
 		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		return new;
 	}
 
-	public void add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
+	public GObject *add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
 	{
-		struct ILIcon *i;
+		GObject *new;
 		gdk_pixbuf_ref (icon);
-		i = gpe_iconlist_new_icon (title, NULL, udata, icon);
-		self->_priv->icons = g_list_append (self->_priv->icons, i);
-		gpe_iconlist__check_icon_size (self, i);
+		new = gpe_iconlist_new_icon (title, NULL, udata, icon);
+		self->_priv->icons = g_list_append (self->_priv->icons, new);
+		gpe_iconlist__check_icon_size (self, new);
 		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		return new;
 	}
 
 	public void set_embolden (self, gboolean yes)
@@ -566,12 +562,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	{
 		GList *iter;
 		for (iter = self->_priv->icons; iter; iter = iter->next) {
-			struct ILIcon *i = (struct ILIcon *)iter->data;
-			if (i->pb)
-				gdk_pixbuf_unref (i->pb);
-			if (i->pb_scaled)
-				gdk_pixbuf_unref (i->pb_scaled);
-			free (i);
+			GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
+			g_object_unref (i);
 		}
 		
 		g_list_free (self->_priv->icons);
@@ -585,7 +577,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		GList *iter;
 
 		for (iter = self->_priv->icons; iter; iter = iter->next) {
-			struct ILIcon *i = (struct ILIcon *)iter->data;
+			GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
 			if (i->pb_scaled)
 				gdk_pixbuf_unref (i->pb_scaled);
 			i->pb_scaled = NULL;
@@ -637,7 +629,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		gtk_widget_queue_draw_area (w, x, y, il_col_width (widget), il_row_height (widget) + 5);
 	}
 
-	private struct ILIcon *_get_icon (GPEIconList *il, int col, int row) {
+	private GPEIconListItem *_get_icon (GPEIconList *il, int col, int row) {
 		int i;
 		GList *icons;
 
@@ -670,7 +662,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		gpe_iconlist__get_rowcol (il, event->x, event->y, &(col), &(row));
 		if (col == il->_priv->mcol && row == il->_priv->mrow) {
-			struct ILIcon *data;
+			GPEIconListItem *data;
 			data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
 			il->_priv->mcol = il->_priv->mrow = -1;
 			if (data)
