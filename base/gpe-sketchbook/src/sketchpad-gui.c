@@ -180,7 +180,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   TYPE ##_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM));\
   \
   pixbuf = gpe_find_icon (  TOSTRING(##TYPE ##_ ##ITEM)  );\
-  pixmap = gpe_render_icon (window->style, pixbuf);\
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);\
   gtk_button_set_relief (GTK_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), GTK_RELIEF_NONE);\
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), FALSE);\
   \
@@ -203,7 +203,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_button_set_relief (GTK_BUTTON (button_brushes), GTK_RELIEF_NONE);
   gtk_widget_set_usize (button_brushes,  20, 20);
   pixbuf = gpe_find_icon ("brush_medium");//default value.
-  button_brushes_pixmap = gpe_render_icon (window->style, pixbuf);
+  button_brushes_pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_object_set_data((GtkObject *) button_brushes, "pixmap", button_brushes_pixmap);
   gtk_container_add (GTK_CONTAINER (button_brushes), button_brushes_pixmap);
 
@@ -394,7 +394,7 @@ GtkWidget * filesbox_new(){
 #define MAKE_FILES_BUTTON(action, icon, x, y, a, b)  \
   button_ ##action = gtk_button_new ();\
   pixbuf = gpe_find_icon ( ##icon );\
-  pixmap = gpe_render_icon (filesbox->style, pixbuf);\
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);\
   gtk_container_add (GTK_CONTAINER (button_ ##action), pixmap);\
   gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
   gtk_signal_connect (GTK_OBJECT (button_ ##action), "clicked",\
@@ -421,7 +421,7 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   /**/gtk_window_set_transient_for(GTK_WINDOW(filesbox), GTK_WINDOW(window));
 
   pixbuf = gpe_find_icon ("files");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_files_clicked, filesbox);
@@ -429,17 +429,17 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pixbuf = gpe_find_icon ("list");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_list_view_clicked, NULL);
   pixbuf = gpe_find_icon ("left");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_file_prev_clicked, NULL);
   pixbuf = gpe_find_icon ("right");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_file_next_clicked, NULL);

@@ -101,17 +101,17 @@ GtkWidget * build_selector_toolbar(GtkWidget * window){
 #endif
 
   pixbuf = gpe_find_icon ("new");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_selector_new_clicked, NULL);
   pixbuf = gpe_find_icon ("open");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_selector_open_clicked, NULL);
   pixbuf = gpe_find_icon ("delete");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            //_("Delete selected sketch"), _("Delete selected sketch"),
@@ -120,7 +120,7 @@ GtkWidget * build_selector_toolbar(GtkWidget * window){
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pixbuf = gpe_find_icon ("icons");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_selector_change_view_clicked, NULL);
@@ -131,7 +131,7 @@ GtkWidget * build_selector_toolbar(GtkWidget * window){
   gtk_button_set_relief (GTK_BUTTON (button_help),  GTK_RELIEF_NONE);
 
   pixbuf = gpe_find_icon ("about");
-  pixmap = gpe_render_icon (window->style, pixbuf);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_container_add (GTK_CONTAINER (button_help), pixmap);
   gtk_signal_connect (GTK_OBJECT (button_help), "clicked",
                       GTK_SIGNAL_FUNC (on_button_selector_about_clicked), NULL);
@@ -221,7 +221,7 @@ void build_thumbnail_widget(Note * note, GtkStyle * style){
                                            GDK_INTERP_BILINEAR);
                                            //GDK_INTERP_HYPER);
   gdk_pixbuf_unref(pixbuf);
-  pixmap = gpe_render_icon (style, pixbuf_scaled);
+  pixmap = gtk_image_new_from_pixbuf (pixbuf_scaled);
   gdk_pixbuf_unref(pixbuf_scaled);
   gtk_container_add (GTK_CONTAINER (button), pixmap);
   if(note->icon_widget != NULL) gtk_widget_destroy(note->icon_widget);
