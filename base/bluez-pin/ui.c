@@ -35,8 +35,14 @@ static void
 click_cancel (GtkWidget *widget, GtkWidget *window)
 {
   struct req_context *req = g_object_get_data (G_OBJECT (window), "context");
-  
-  bluez_pin_response (req, NULL);
+
+  if (req)
+    bluez_pin_response (req, NULL);
+  else
+    {
+      printf ("ERR\n");
+      gtk_main_quit ();
+    }
 
   gtk_widget_destroy (window);
 }
@@ -51,7 +57,13 @@ click_ok (GtkWidget *widget, GtkWidget *window)
   entry = g_object_get_data (G_OBJECT (window), "entry");
   pin = gtk_entry_get_text (GTK_ENTRY (entry));
 
-  bluez_pin_response (req, pin);
+  if (req)
+    bluez_pin_response (req, pin);
+  else
+    {
+      printf ("PIN:%s\n", pin);
+      gtk_main_quit ();
+    }
 
   gtk_widget_destroy (window);
 }
@@ -114,6 +126,8 @@ bluez_pin_request (struct pin_request_context *ctx, gboolean outgoing, const gch
 		    G_CALLBACK (click_cancel), window);
   g_signal_connect (G_OBJECT (entry), "activate",
 		    G_CALLBACK (click_ok), window);
+  g_signal_connect (G_OBJECT (window), "delete-event",
+		    G_CALLBACK (click_cancel), window);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox_pin, TRUE, TRUE, 0);

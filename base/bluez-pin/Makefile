@@ -11,7 +11,7 @@ else
 BUILD = build
 endif
 
-CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE -DMAIN
+CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
 LDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs dbus-glib-1` -lbluetooth
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
@@ -34,7 +34,7 @@ install-program: all
 	install -m 664 bt-logo.png $(DESTDIR)$(PREFIX)/share/pixmaps/bt-logo.png
 
 clean:
-	rm -f $(PACKAGE) $(PACKAGE).o
+	rm -f $(PACKAGE) $(OBJS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
