@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+26.04.2003		Florian			*.dotdesktop				Changed some names.
+								cardinfo.*					Updated to call ioctls from suid process.
+								suid.c
+
 25.04.2003		Florian			keyboards.def				Bugfixes, added package installation for keyboard packages.
 								keyboard.c					(very basic)
 								packages.*					

@@ -361,6 +361,7 @@ suidloop (int write, int read)
 	char arg1[255];
 	char arg2[100];
 	int numarg = 0;
+	int numarg2 = 0;
 
 	setuid (0);
 	nsreturnfd = write;
@@ -516,6 +517,11 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%d", &numarg);
 					do_get_card_ident (numarg);
+				}
+				else if (strcmp (cmd, "CMCO") == 0)  // do pcmcia ioctl
+				{
+					fscanf (in, "%d %d", &numarg, &numarg2);
+					do_ioctl (numarg,numarg2);
 				}
 				else if (strcmp (cmd, "CMRE") == 0)  // reset cardmgr
 				{

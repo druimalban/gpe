@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name= Storage Information
+Name=Storage Usage
 Comment=Storage Information
 Exec=gpe-conf storage
 Terminal=0

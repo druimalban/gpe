@@ -763,28 +763,52 @@ static int do_update(GtkWidget *widget)
 	return TRUE;
 }
 
+
+void do_ioctl(int chan, int cmd)
+{
+	int ret = 0;
+	switch (cmd)
+	{
+		case CMD_RESET:
+		ret = ioctl(st[chan].fd, DS_RESET_CARD); break;
+		case CMD_SUSPEND:
+		ret = ioctl(st[chan].fd, DS_SUSPEND_CARD); break;
+		case CMD_RESUME:
+		ret = ioctl(st[chan].fd, DS_RESUME_CARD); break;
+		case CMD_EJECT:
+		ret = ioctl(st[chan].fd, DS_EJECT_CARD); break;
+		case CMD_INSERT:
+		ret = ioctl(st[chan].fd, DS_INSERT_CARD); break;
+	}
+    if (ret != 0)
+		fprintf(stderr,"%s",strerror(errno));
+//	do_alert("%s: %s", _("Operation failed"), strerror(errno));
+}
+
+
 static void do_menu(GtkWidget *button, int op)
 {
-    int ret = 0;
 	int i = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
+	char *cmdstr;
 
     switch (op) {
     case 1:
 	break;
     case 2:
-	ret = ioctl(st[i].fd, DS_RESET_CARD); break;
+	cmdstr = g_strdup_printf("%d %d",i,CMD_RESET); break;
     case 3:
-	ret = ioctl(st[i].fd, DS_SUSPEND_CARD); break;
+	cmdstr = g_strdup_printf("%d %d",i,CMD_SUSPEND); break;
     case 4:
-	ret = ioctl(st[i].fd, DS_RESUME_CARD); break;
+	cmdstr = g_strdup_printf("%d %d",i,CMD_RESUME); break;
     case 5:
-	ret = ioctl(st[i].fd, DS_EJECT_CARD); break;
+	cmdstr = g_strdup_printf("%d %d",i,CMD_EJECT); break;
     case 6:
-	ret = ioctl(st[i].fd, DS_INSERT_CARD); break;
+	cmdstr = g_strdup_printf("%d %d",i,CMD_INSERT); break;
     }
-    if (ret != 0)
-	do_alert("%s: %s", _("Operation failed"), strerror(errno));
+	suid_exec("CMCO",cmdstr);
+	free(cmdstr);
 } /* do_menu */
+
 
 static void do_tabchange(GtkNotebook *notebook,
                                      GtkNotebookPage *page,
