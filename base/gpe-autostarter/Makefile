@@ -19,6 +19,7 @@ endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: $(PACKAGE) all-mo
 
@@ -36,3 +37,5 @@ clean:
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
+-include $(DEPS)
+
