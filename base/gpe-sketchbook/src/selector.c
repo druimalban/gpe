@@ -64,6 +64,9 @@ void window_selector_init(GtkWidget * window_selector){
   int n;
   GdkColormap * colormap;
 
+  //--window title
+  gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketchbook: selector"));
+
   //--alternate bg color for list items
   colormap = gdk_colormap_get_system();
   bg_color.red   = 65535;

@@ -78,6 +78,9 @@ void sketchpad_init(){
 //FIXME: a single init function is enough!
 void window_sketchpad_init(GtkWidget * window_sketchpad){
 
+  //--window title
+  sketchpad_reset_title();
+
   //--colors
   colormap = gdk_colormap_get_system();
 
@@ -170,12 +173,12 @@ void sketchpad_set_brush_s (gchar * _brush){
   gdk_window_set_cursor(drawing_area->window, *current_cursor);
 }
 
-void sketchpad_set_title(const gchar * name){
+void sketchpad_reset_title(){
   gchar * title;
-  title = g_strdup_printf("[%d/%d] %s",
+  title = g_strdup_printf("Sketch [%d/%d] %s",
                           (is_current_sketch_new)?sketch_list_size+1:current_sketch +1,
-                          sketch_list_size, 
-                          name);
+                          sketch_list_size,
+                          (is_current_sketch_modified)?"*":(is_current_sketch_new)?_("new"):"");
   gtk_window_set_title(GTK_WINDOW (window_sketchpad), title);
   g_free(title);
 }
@@ -183,13 +186,13 @@ void sketchpad_set_title(const gchar * name){
 void sketchpad_open_file(gchar * fullpath_filename, const gchar * name){
   //**/g_printerr("sketchpad open: %s\n", fullpath_filename);
   file_load(fullpath_filename);
-  sketchpad_set_title(name);
   is_current_sketch_modified = FALSE;
+  sketchpad_reset_title();//NOTE: needed?
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){
   reset_drawing_area(drawing_area);
-  sketchpad_set_title(SKETCHPAD_TITLE_NEW);
+  sketchpad_reset_title();
   sketchpad_refresh_drawing_area(drawing_area);
 }//sketchpad_new_sketch()
 
@@ -224,7 +227,10 @@ void draw_point(gdouble x, gdouble y){
 
   updated_rectangle = & ellipse;
   gtk_widget_draw (drawing_area, updated_rectangle);
-  is_current_sketch_modified = TRUE;
+  if(is_current_sketch_modified == FALSE){
+    is_current_sketch_modified = TRUE;
+    sketchpad_reset_title();
+  }
 }//draw_point()
 
 void draw_line (gdouble x1, gdouble y1,
@@ -246,7 +252,10 @@ void draw_line (gdouble x1, gdouble y1,
   updated_rectangle.width  = ABS(x1 - x2) + 2* brush + 1;
   updated_rectangle.height = ABS(y1 - y2) + 2* brush + 1;
   gtk_widget_draw (drawing_area, &updated_rectangle);
-  is_current_sketch_modified = TRUE;
+  if(is_current_sketch_modified == FALSE){
+    is_current_sketch_modified = TRUE;
+    sketchpad_reset_title();
+  }
 }
 
 void reset_drawing_area(){

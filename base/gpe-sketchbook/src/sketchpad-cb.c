@@ -133,7 +133,6 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 
     name[0] = make_label_from_filename(note->fullpath_filename);
     current_sketch = gtk_clist_append(selector_clist, name);
-    sketchpad_set_title(name[0]);
     g_free(name[0]);
     gtk_clist_set_row_data_full(selector_clist, current_sketch, note, note_destroy);
     if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
@@ -146,6 +145,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 
   }
   is_current_sketch_modified = FALSE;
+  sketchpad_reset_title();
 
   //in case of direct call, button == NULL, ie: from on_button_file_new_clicked()
   if(button) _close_filesbox(button);

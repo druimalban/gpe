@@ -25,8 +25,6 @@ extern GtkWidget * drawing_area;
 
 extern gboolean is_current_sketch_modified;
 
-#define SKETCHPAD_TITLE_NEW _("new")  //FIXME: not noticed by xgettext
-
 void sketchpad_init();
 void window_sketchpad_init(GtkWidget * window_sketchpad);
 
@@ -37,7 +35,7 @@ void sketchpad_refresh_drawing_area();
 
 void sketchpad_open_file(gchar * fullpath_filename, const gchar * title);
 void sketchpad_new_sketch();
-void sketchpad_set_title(const gchar * name);
+void sketchpad_reset_title();
 
 //--drawing functions
 void draw_point(gdouble x, gdouble y);
