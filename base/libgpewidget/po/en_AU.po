@@ -17,7 +17,7 @@ msgstr ""
 
 #: errorbox.c:48
 msgid "Error"
-msgstr ""
+msgstr "Strewth!"
 
 #: errorbox.c:58 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:675
 #: dirbrowser.c:307 about.c:125

@@ -1,3 +1,8 @@
+2002-10-13  Philip Blundell  <philb@gnu.org>
+
+	* po/en_AU.po: New file.
+	* Makefile (LINGUAS): Add en_AU.
+
 2002-10-13  Robert Mibus  <mibus@handhelds.org>
 
 	* gpeiconlist.gob etc.: add the GPEIconList widget
