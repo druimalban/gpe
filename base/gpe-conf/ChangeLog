@@ -1,3 +1,6 @@
+2003-08-14	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Added optimising flags to makefile.
+
 2003-08-10	Florian Boor	<florian.boor@kernelconcepts.de>
 	* control1 Added libdisplaymigration to the dependencies 
 	* released V 0.1.0-pre7

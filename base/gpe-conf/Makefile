@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.0-pre7
+VERSION = 0.1.0-pre8
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -22,7 +22,7 @@ endif
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG
 else
-CFLAGS += -Os -fomit-frame-pointer
+CFLAGS += -Os -fomit-frame-pointer -march=armv4 -mtune=strongarm
 endif
 
 LDFLAGS += -lXsettings -lXsettings-client -lcrypt
