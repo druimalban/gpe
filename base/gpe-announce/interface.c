@@ -94,7 +94,7 @@ create_window (char *announcetext)
   gtk_container_add (GTK_CONTAINER (frame4), table6);
 
   p = gpe_find_icon ("bell");
-  pw = gpe_render_icon (AlarmWin->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "bell", pw,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (pw);
