@@ -1,3 +1,9 @@
+2004-10-19 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* feededit.c: Support for writing new feed configuration.
+	              Finished feed editor.
+				  Fixed several bugs, changed file location.
+
 2004-10-18 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Some formating changes and minor fixes.
