@@ -327,7 +327,7 @@ list_sort_func (gconstpointer a, gconstpointer b)
 }
 
 #define insert_values(db, id, key, format, value)	\
-	sqlite_exec_printf (db, "insert into todo values (%d, '%q', '" ## format ## "')", \
+	sqlite_exec_printf (db, "insert into todo values (%d, '%q', '" format "')", \
 			    NULL, NULL, &err, id, key, value)
 
 gboolean
