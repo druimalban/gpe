@@ -1,5 +1,9 @@
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.61 released.
+	
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
 	* errorbox.c (do_gpe_perror_box): New function.
 	(gpe_perror_box): Call it.
 	(gpe_perror_box_nonblocking): New function.
