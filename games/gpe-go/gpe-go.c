@@ -42,6 +42,11 @@ static struct gpe_icon my_icons[] = {
 
 #define BOARD_SIZE 240 //pixels
 
+//colors
+GdkGC       * gc;
+GdkColormap * colormap;
+GdkColor red = {0, 65535, 0, 0};
+
 typedef struct _go {
   //--ui
   GtkWidget * window;
@@ -69,7 +74,7 @@ typedef struct _go {
   int stone_size; //px
   int stone_space;//px PARAM space between two stones (0/1 px)
   
-  int grid_stroke;//px PARAM width of the grid stroke (1px)  
+  int grid_stroke;//px PARAM width of the grid stroke (1px)
 
   //--game
   int game_size; //9, 13, 19, ...
@@ -230,7 +235,7 @@ void app_quit(){
   gtk_exit (0);
 }
 
-void _print_gird(){
+void _print_grid(){
   int i,j;
   g_print("     ");
   for(j=1; j<= go.game_size; j++) g_print("%2d ", j);
@@ -355,6 +360,10 @@ void load_graphics(){
     //               0, 23040);//23040 == 360*64
   }
 
+  //--colors
+  gc = gdk_gc_new(go.drawing_area->window);
+  colormap = gdk_colormap_get_system();
+  gdk_colormap_alloc_color(colormap, &red,  FALSE,TRUE);
 
 }
 
@@ -480,7 +489,7 @@ void unpaint_stone(int col, int row){
   gtk_widget_draw (go.drawing_area, &rect);
 }
 
-void paint_mark(int col, int row, GoMark mark){
+void paint_mark(int col, int row, GoMark mark, GdkColor * color){
   GdkRectangle rect;
 
   if(mark == NO_MARK) return;
@@ -492,14 +501,11 @@ void paint_mark(int col, int row, GoMark mark){
   TRACE("mark (%d %d) %s", col, row,
         (go.grid[col][row] == BLACK_STONE)?"black":"white");
 
-  _print_gird();
-
+  gdk_gc_set_foreground(gc, color);
   switch(mark){
     case MARK_SQUARE:
       gdk_draw_rectangle (go.drawing_area_pixmap_buffer,
-                          (go.grid[col][row] == BLACK_STONE)
-                          ?go.drawing_area->style->white_gc
-                          :go.drawing_area->style->black_gc,//FIXME: use better color
+                          gc,
                           FALSE,
                           rect.x + go.stone_size / 4, rect.y + go.stone_size / 4,
                           go.stone_size / 2, go.stone_size / 2
@@ -549,7 +555,7 @@ void update_last_played_mark_to(int next_col, int next_row){
   if(go.last_col && go.grid[go.last_col][go.last_row] != EMPTY){
     paint_stone(go.last_col, go.last_row, go.grid[go.last_col][go.last_row]);
   }
-  paint_mark(next_col, next_row, MARK_SQUARE);
+  if(next_col) paint_mark(next_col, next_row, MARK_SQUARE, &red);
   go.last_col = next_col;
   go.last_row = next_row;
 }
@@ -665,7 +671,7 @@ void stamp_group_of(int gox, int goy){
   stamp(gox,goy);
 
   //TRACE("Examining %d %d (%d)",gox,goy, my_color);
-  //**/_print_gird();
+  //**/_print_grid();
   //**/scanf("%c",&c);scanf("%c",&c);
 
   x = gox;
@@ -704,7 +710,7 @@ int size_group_of(int gox, int goy){
   stamp(gox,goy);
 
   //TRACE("I am          %d %d (%d)",gox,goy, my_color);
-  //**/_print_gird();
+  //**/_print_grid();
   //**/scanf("%c",&c);scanf("%c",&c);
 
   x = gox;
@@ -739,7 +745,7 @@ gboolean is_alive_group_of(int gox, int goy){
   stamp(gox,goy);
 
   //TRACE("I am          %d %d (%d)",gox,goy, my_color);
-  //**/_print_gird();
+  //**/_print_grid();
   //**/scanf("%c",&c);scanf("%c",&c);
 
   x = gox;     //NORTH
@@ -1087,7 +1093,7 @@ void on_button_save_pressed (void){
 void on_button_pref_pressed (void){
   TRACE("-------------------------------------\\");
   TRACE("Preferences.");
-  //**/_print_gird();
+  //**/_print_grid();
   /**/_print_history();
   TRACE("turn %d", go.turn);
   TRACE("last %d", go.last_turn);
