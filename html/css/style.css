@@ -49,3 +49,100 @@ div.footer {
 	margin-top:	6pt;
 	margin-bottom:	2pt;
 }
+
+.storytitle {
+	font-size: 12px;
+	font-weight: bold; 
+	font-family: verdana, arial, sans-serif;
+	}
+.storybyline {
+	color: gray; 
+	font-size: 10px;
+	font-weight: bold; 
+	font-family: verdana, arial, sans-serif;
+	}
+.storyunderline{
+	background: #404040; 
+	}
+.warning {
+	color: red; 
+	font-size: 12px;
+	font-weight: bold; 
+	font-family: verdana, arial, sans-serif;
+	}
+.warningsmall {
+	color: red; 
+	font-size: 10px;
+	font-family: verdana, arial, sans-serif;
+	}
+.commentbar1 {
+	color: white; 
+	background: #404040; 
+	font-size: 12px;
+	font-family: verdana, arial, sans-serif;
+	}
+.commentbar2 {
+	background: #404040; 
+	font-size: 12px;
+	font-family: verdana, arial, sans-serif;
+	}
+.commentbar3 {
+	color: white; 
+	background: #404040; 
+	font-size: 10px;
+	font-family: verdana, arial, sans-serif;
+	}
+.commenttitle {
+	font-size: 12px;
+	font-weight: bold; 
+	background: #EEEEEE; 
+	font-family: verdana, arial, sans-serif;
+	}
+.cal_day {
+    font-size: 14px;
+    font-weight: bold;
+    }
+.cal-nullday {
+    background: #EEEEEE;
+    }
+.cal-oldday {
+    background: #DDDDDD;
+    }
+.cal-today {
+    background: yellow;
+    }
+.weekview_caltitle {
+    background: #DDDDDD;
+    font-weight: bold;
+    font-size: 14px;
+    }
+.weekview-curday {
+    background: yellow;
+    }
+.weekview-offday {
+    background: #DDDDDD;
+    }
+.weekview_dayformat {
+    font-weight: bold;
+    }
+.weekview_addevent {
+    font-size: 9px;
+    }
+.weekview_daterange {
+    font-size: 16px;
+    font-weight: bold;
+    }
+.dayview_times {
+    font-weight: bold;
+    text-align: center;
+    }
+.dayview_datecol {
+    font-weight: bold;
+    background: #DDDDDD;
+    font-size: 16px;
+    }
+.dayview_quickaddtitle {
+    font-weight: bold;
+    background: #DDDDDD;
+    font-size: 14px;
+    }
