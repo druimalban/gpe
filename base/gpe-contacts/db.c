@@ -188,10 +188,11 @@ new_person_id (guint *id)
   char *err;
 #ifdef USE_USQLD	
   int r = usqld_exec (db, "insert into contacts_urn values (NULL)",
+		       NULL, NULL, &err);
 #else	
   int r = sqlite_exec (db, "insert into contacts_urn values (NULL)",
-#endif
 		       NULL, NULL, &err);
+#endif
   if (r)
     {
       gpe_error_box (err);
@@ -204,7 +205,7 @@ new_person_id (guint *id)
 #else
   *id = sqlite_last_insert_rowid (db);
 #endif	
-	return TRUE;
+  return TRUE;
 }
 
 gint 
@@ -294,21 +295,25 @@ db_delete_by_uid (guint uid)
 
 #ifdef USE_USQLD	
   r = usqld_exec_printf (db, "delete from contacts where urn='%d'",
-#else
-  r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
-#endif
 			  NULL, NULL, &err,
 			  uid);
+#else
+  r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
+			  NULL, NULL, &err,
+			  uid);
+#endif
   if (r)
     goto error;
   
 #ifdef USE_USQLD	
   r = usqld_exec_printf (db, "delete from contacts_urn where urn='%d'",
-#else
-  r = sqlite_exec_printf (db, "delete from contacts_urn where urn='%d'",
-#endif
 			  NULL, NULL, &err,
 			  uid);
+#else
+  r = sqlite_exec_printf (db, "delete from contacts_urn where urn='%d'",
+			  NULL, NULL, &err,
+			  uid);
+#endif
   if (r)
     goto error;
 
@@ -416,11 +421,13 @@ commit_person (struct person *p)
     {
 #ifdef USE_USQLD		
       r = usqld_exec_printf (db, "delete from contacts where urn='%d'",
-#else
-      r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
-#endif		
 			      NULL, NULL, &err,
 			      p->id);
+#else
+      r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
+			      NULL, NULL, &err,
+			      p->id);
+#endif		
       if (r)
 	goto error;
     }
@@ -444,12 +451,15 @@ commit_person (struct person *p)
 	{
 #ifdef USE_USQLD		
 	  r = usqld_exec_printf (db,
-#else
-	  r = sqlite_exec_printf (db,
-#endif		
 				  "insert into contacts values(%d,'%q','%q')",
 				  NULL, NULL, &err,
 				  p->id, v->tag, v->value);
+#else
+	  r = sqlite_exec_printf (db,
+				  "insert into contacts values(%d,'%q','%q')",
+				  NULL, NULL, &err,
+				  p->id, v->tag, v->value);
+#endif		
 	}
       if (r)
 	goto error;
@@ -483,22 +493,44 @@ db_insert_category (gchar *name, guint *id)
   char *err;
 #ifdef USE_USQLD		
   int r = usqld_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
+			      NULL, NULL, &err, name);
 #else
   int r = sqlite_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
-#endif		
 			      NULL, NULL, &err, name);
+#endif		
   if (r)
     {
       gpe_error_box (err);
       free (err);
       return FALSE;
     }
- 
+  
 #ifdef USE_USQLD 
   *id = usqld_last_insert_rowid (db);
 #else
   *id = sqlite_last_insert_rowid (db);
 #endif
+  return TRUE;
+}
+ 
+gboolean
+db_delete_category (guint id)
+{
+  char *err;
+#ifdef USE_USQLD		
+  int r = usqld_exec_printf (db, "delete from contacts_category where id=%d", 
+			      NULL, NULL, &err, id);
+#else
+  int r = sqlite_exec_printf (db, "delete from contacts_category where id=%d", 
+			      NULL, NULL, &err, id);
+#endif		
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+
   return TRUE;
 }
 

@@ -1,5 +1,14 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.06 released.
+	
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
+	* src/main.c (delete_category): Implement.
+
+	* src/db.c (db_delete_category): New function.
+	* src/db.h (db_delete_category): Prototype.
+
 	* src/structure.c (structure_delete_item): Add "are you sure" dialog.
 
 	* familiar/control, familiar/control1: Require libgpewidget 0.30.

@@ -152,7 +152,7 @@ new_contact(GtkWidget *widget, gpointer d)
 }
 
 static void
-delete_contact(GtkWidget *widget, gpointer d)
+delete_contact (GtkWidget *widget, gpointer d)
 {
   if (GTK_CLIST (clist)->selection)
     {
@@ -184,9 +184,22 @@ new_category (GtkWidget *w, gpointer p)
 }
 
 static void
-delete_category (GtkWidget *w, gpointer p)
+delete_category (GtkWidget *w, gpointer clist)
 {
-  update_categories ();
+  if (GTK_CLIST (clist)->selection)
+    {
+      guint row = (guint)(GTK_CLIST (clist)->selection->data);
+      guint id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      if (gpe_question_ask (_("Really delete this category?"), _("Confirm"), 
+			    "question", _("Delete"), "delete", _("Cancel"), "cancel", NULL) == 0)
+	{
+	  if (db_delete_category (id))
+	    {
+	      gtk_clist_remove (GTK_CLIST (clist), row);
+	      update_categories ();
+	    }
+	}
+    }
 }
 
 static GtkWidget *
