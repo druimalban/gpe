@@ -98,9 +98,9 @@ smallbox_x (gchar *title, struct box_desc *d)
 		      TRUE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
-		      buttonok, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
 		      buttoncancel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
 		      GTK_SIGNAL_FUNC (smallbox_click_ok), NULL);
@@ -203,9 +203,9 @@ smallbox_x2 (gchar *title, struct box_desc2 *d)
 		      TRUE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
-		      buttonok, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
 		      buttoncancel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
 		      GTK_SIGNAL_FUNC (smallbox_click_ok), NULL);

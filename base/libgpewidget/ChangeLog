@@ -1,5 +1,17 @@
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
+	* smallbox.c (smallbox_x2): Swap order of buttons.
+	(smallbox_x): Likewise.
+
+	* gpeclockface.c (struct _GpeClockFace): Add can_render.
+	(gpe_clock_face_realize): Check for sufficiently new RENDER
+	extension.
+	(draw_hand): Add fallback in case of missing RENDER.
+	(gpe_clock_face_prepare_xrender): Likewise.
+	(gpe_clock_face_unrealize): Likewise.
+
+2003-04-12  Philip Blundell  <philb@gnu.org>
+
 	* gpeclockface.c (gpe_clock_face_motion_notify): Advance hour hand
 	when minute hand is dragged past midnight.
 	(draw_hand): Optimise calculation of vertices for polygon.
