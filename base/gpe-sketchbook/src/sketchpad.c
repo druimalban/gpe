@@ -77,7 +77,6 @@ void sketchpad_init(){
   brush = MEDIUM;
 }//sketchpad_init()
 
-//FIXME: a single init function is enough!
 void window_sketchpad_init(GtkWidget * window_sketchpad){
 
   //--window title

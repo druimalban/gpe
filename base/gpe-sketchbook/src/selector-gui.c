@@ -83,6 +83,7 @@ GtkWidget * create_window_selector(){
 
 GtkWidget * build_selector_toolbar(GtkWidget * window){
   GtkWidget * toolbar;
+  GtkWidget * button;
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
 
@@ -119,10 +120,15 @@ GtkWidget * build_selector_toolbar(GtkWidget * window){
 
   pixbuf = gpe_find_icon ("icons");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
-                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_change_view_clicked), NULL);
-
+  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                                    NULL, NULL,
+                                    pixmap,
+                                    GTK_SIGNAL_FUNC(on_button_selector_change_view_clicked), NULL);
+  g_object_set_data((GObject *) button, "icon_mode_icon", pixmap);
+  pixbuf = gpe_find_icon ("list");
+  pixmap = gtk_image_new_from_pixbuf (pixbuf);
+  g_object_set_data((GObject *) button, "list_mode_icon", pixmap);
+  
   return toolbar;
 }
 

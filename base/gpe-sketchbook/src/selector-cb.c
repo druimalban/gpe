@@ -64,6 +64,30 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
 
 }
 
+
+void _switch_icon(GtkButton * button){
+#ifdef GTK2
+  GtkWidget * old_icon;
+  GtkWidget * new_icon;
+
+  GtkWidget * vbox;//Button > VBox > ..., icon, ...
+  vbox = gtk_bin_get_child(GTK_BIN (button));
+
+  if(icons_mode){
+    new_icon = gtk_object_get_data((GtkObject *) button, "list_mode_icon");
+    old_icon = gtk_object_get_data((GtkObject *) button, "icon_mode_icon");
+  }
+  else{
+    new_icon = gtk_object_get_data((GtkObject *) button, "icon_mode_icon");
+    old_icon = gtk_object_get_data((GtkObject *) button, "list_mode_icon");
+  }  
+  g_object_ref(old_icon);
+  gtk_container_remove (GTK_CONTAINER (vbox), old_icon );
+  gtk_container_add    (GTK_CONTAINER (vbox), new_icon );
+  gtk_widget_show_now(new_icon);
+#endif
+}
+
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){
   if(icons_mode){
     //**/g_printerr("switch to LIST view\n");
@@ -77,6 +101,7 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
     gtk_widget_show(scrolledwindow_selector_icons);
     icons_mode = TRUE;
   }
+  _switch_icon(button);
 }
 
 
