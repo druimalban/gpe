@@ -2,20 +2,14 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.44
+VERSION = 0.47
 DEBUG = no
 
 LINGUAS = de
 
-ifeq ($(GTK2),yes)
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-CONTROL_GPE_LOGIN = control.gpe-login1
-else
-GTKLDFLAGS = `gtk-config --libs`
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-CONTROL_GPE_LOGIN = control.gpe-login
-endif
+CONTROL_GPE_LOGIN = control1
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g

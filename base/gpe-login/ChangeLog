@@ -1,5 +1,11 @@
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control.gpe-login1: Rename to control1.
+	* familiar/control.gpe-login: Deleted.
+	* Makefile: Update appropriately.  Remove GTK 1 support.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.47 released.
 
 2003-03-24  Philip Blundell  <philb@gnu.org>
