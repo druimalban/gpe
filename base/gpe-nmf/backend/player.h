@@ -18,7 +18,7 @@ struct player_status
 {
   struct playlist *item;
   unsigned long long time;
-  gboolean finished;
+  gboolean changed;
 };
 
 extern player_t player_new (void);
