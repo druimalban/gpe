@@ -404,9 +404,9 @@ GtkWidget * filesbox_new(){
                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
 
   MAKE_FILES_BUTTON (new        , "new"        , 0, 1, 0, 1);
-  MAKE_FILES_BUTTON (properties , "properties" , 0, 1, 1, 2);
-  MAKE_FILES_BUTTON (save       , "save"       , 1, 2, 1, 2);
-  MAKE_FILES_BUTTON (delete     , "delete"     , 1, 2, 0, 1);
+  MAKE_FILES_BUTTON (properties , "properties" , 1, 2, 0, 1);
+  MAKE_FILES_BUTTON (save       , "save"       , 0, 1, 1, 2);
+  MAKE_FILES_BUTTON (delete     , "delete"     , 1, 2, 1, 2);
 
   return filesbox;
 }//filebox_new()
