@@ -325,7 +325,7 @@ slurp_passwd (GtkWidget *menu)
       const char *name;
 
       if (!strcmp (pw->pw_name, "root") 
-	  && strcmp (pw->pw_passwd, "x"))
+	  && strcmp (pw->pw_passwd, "*"))
 	root_password_set = TRUE;
 
       if (pw->pw_uid < 100 || pw->pw_uid >= 65534)
@@ -586,7 +586,7 @@ enter_root_callback (GtkWidget *widget, gpointer h)
       return;
     }
 
-  fp = fopen ("passwd.new", "w");
+  fp = fopen ("/etc/passwd.new", "w");
   if (! fp)
     {
       gpe_error_box ("Couldn't open new password file for writing");
@@ -1223,8 +1223,7 @@ build_root_password_box (void)
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
  
   label_prompt = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label_prompt), _("Please choose a password for the <i>root</i> account.\n\nThis will be needed when performing system administration."));
-  gtk_label_set_line_wrap (GTK_LABEL (label_prompt), TRUE);
+  gtk_label_set_markup (GTK_LABEL (label_prompt), _("Please choose a password for the\n<i>root</i> account.\n\nThis will be needed when\nperforming system administration."));
   label_password = gtk_label_new (_("Password"));
   label_confirm = gtk_label_new (_("Confirm"));
 
