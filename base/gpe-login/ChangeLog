@@ -1,3 +1,7 @@
+2004-09-08  Florian Boor <florian@kernelconcepts.de>
+
+	* gpe-login.c (main): Don't show ownerinfo it is disabled by user.
+
 2004-08-29  Phil Blundell  <pb@nexus.co.uk>
 
 	* gpe-login.c (main): Clear CAN_FOCUS flag on "OK" button.
@@ -1650,5 +1654,3 @@
 	(all): Include it.
 
 	* gpe-login.c (do_login): Remove useless fork.
-	
-

@@ -55,6 +55,7 @@
 #define GPE_LOCALE_ALIAS "/etc/gpe/locales/"
 #define GPE_LOCALE_DEFAULT "/etc/gpe/locale.default"
 #define GPE_LOCALE_USER_FILE ".gpe/locale"
+#define GPE_OWNERINFO_DONTSHOW_FILE "/etc/gpe/gpe-ownerinfo.dontshow"
 #define DEBUG 0
 
 #define bin_to_ascii(c) ((c)>=38?((c)-38+'a'):(c)>=12?((c)-12+'A'):(c)+'.')
@@ -1835,7 +1836,8 @@ main (int argc, char *argv[])
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox2), gpe_border);
 
-  if (autolock_mode || have_users)
+  if ((autolock_mode || have_users) 
+      && access(GPE_OWNERINFO_DONTSHOW_FILE, F_OK))
     {
       ownerinfo = gpe_owner_info ();
       gtk_box_pack_start (GTK_BOX (vbox2), ownerinfo, TRUE, TRUE, 0);
