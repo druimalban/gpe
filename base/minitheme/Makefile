@@ -21,8 +21,10 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget -I../libxsettings-client -I../libxsettings
 LDFLAGS += -L../libgpewidget -L../libxsettings-client -L../libxsettings
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lXsettings-client
 
@@ -36,8 +38,6 @@ all: $(PACKAGE) all-mo
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: install-program install-mo
-
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
@@ -49,5 +49,5 @@ install-program: all
 clean:
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg

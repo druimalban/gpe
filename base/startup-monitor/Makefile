@@ -1,5 +1,6 @@
 PACKAGE = startup-monitor
 PREFIX = /usr/local
+CVSBUILD = yes
 DEBUG = no
 VERSION = 0.17
 
@@ -27,6 +28,12 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
@@ -41,6 +48,6 @@ install-program: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
