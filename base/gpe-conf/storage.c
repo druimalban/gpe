@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *	             2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -269,7 +269,7 @@ update_status ()
 							    FALSE, 0);
 								
 					filesystems[fs_count - 1].dummy = gtk_label_new (NULL);
-					gtk_widget_set_size_request(filesystems[fs_count - 1].dummy,-1,5);
+					gtk_widget_set_size_request(filesystems[fs_count - 1].dummy,-1,3);
 					gtk_box_pack_start (GTK_BOX (vbox), filesystems[fs_count - 1].dummy, FALSE, FALSE, 0);
 								
 					gtk_widget_show_all (vbox);
@@ -405,9 +405,7 @@ Storage_Build_Objects (void)
 {
 	static GtkWidget *label1;
 	gchar *fstr = NULL;
-	FILE *pipe;
-	static char cur[256];
-	static char cnew[255], cnew2[255], cnew3[255];
+	static char cnew2[255];
 	static GtkWidget *bar_flash;
 
 	vbox = gtk_vbox_new (FALSE, 1);
@@ -472,133 +470,6 @@ Storage_Build_Objects (void)
 
 	gtk_widget_show_all(vbox);
 	
-/* now look at mounted filesystems */
-
-	pipe = popen ("/bin/df -k", "r");
-
-	if (pipe > 0)
-	{
-		fgets (cur, 255, pipe);
-		while (!feof (pipe))
-		{
-			fgets (cur, 255, pipe);
-			if ((which_fs_type (cur) != FS_T_UNKNOWN)
-			    && (!feof (pipe)))
-			{
-				fs_count++;
-				filesystems =
-					realloc (filesystems, fs_count * sizeof (tfs));
-				filesystems[fs_count - 1].type = which_fs_type (cur);
-				sscanf (cur, "%s %i %i %i %s %s", cnew,
-					&filesystems[fs_count - 1].total,
-					&filesystems[fs_count - 1].used,
-					&filesystems[fs_count - 1].avail,
-					cnew2, cnew3);
-				filesystems[fs_count - 1].name =
-					g_strdup (cnew);
-				filesystems[fs_count - 1].mountpoint =
-					g_strdup (cnew3);
-
-				switch (filesystems[fs_count - 1].type)
-				{
-				case FS_T_FLASH:
-					fstr = g_strdup_printf ("%s%s %s",
-								"<b><span foreground=\"black\">",
-								_("Internal Flash"),
-								"</span></b>");
-					break;
-				case FS_T_MMC:
-					fstr = g_strdup_printf ("%s%s %s",
-								"<b><span foreground=\"black\">",
-								_("MMC"),
-								"</span></b>");
-					break;
-				case FS_T_CF:
-					fstr = g_strdup_printf ("%s%s %s",
-								"<b><span foreground=\"black\">",
-								_("Compact Flash"),
-								"</span></b>");
-					break;
-				case FS_T_NFS:
-					fstr = g_strdup_printf ("%s%s %s",
-								"<b><span foreground=\"black\">",
-								_("Network Filesystem"),
-								"</span></b>");
-					break;
-				}
-
-				label1 = gtk_label_new (NULL);
-				filesystems[fs_count - 1].label = label1;
-				gtk_label_set_markup (GTK_LABEL (label1),
-						      fstr);
-				g_free (fstr);
-				gtk_label_set_justify (GTK_LABEL (label1),
-						       GTK_JUSTIFY_LEFT);
-				gtk_misc_set_alignment (GTK_MISC (label1),
-							0.0, 0.5);
-
-				gtk_box_pack_start (GTK_BOX (vbox), label1,
-						    FALSE, FALSE, 0);
-
-				bar_flash = gtk_progress_bar_new ();
-				filesystems[fs_count - 1].bar = bar_flash;
-				gtk_widget_set_sensitive (bar_flash, TRUE);
-				toolbar_set_style (bar_flash,
-						   (int) ((float)
-							  filesystems[fs_count - 1].used /
-							  (float)
-							  filesystems[fs_count - 1].total * 100.0));
-				gtk_box_pack_start (GTK_BOX (vbox), bar_flash,
-						    FALSE, FALSE, 0);
-				gtk_progress_bar_set_fraction
-					(GTK_PROGRESS_BAR (bar_flash),
-					 (float) filesystems[fs_count -
-							     1].used /
-					 (float) filesystems[fs_count -
-							     1].total);
-				sprintf (cnew2, "%s: <i>%4.1f</i> %s",
-					 _("Free space"),
-					 ((float) filesystems[fs_count - 1].
-					  total -
-					  (float) filesystems[fs_count - 1].used) / 1024.0, _("MB"));
-				label1 = gtk_label_new (NULL);
-				filesystems[fs_count - 1].label3 = label1;
-				gtk_label_set_markup (GTK_LABEL (label1),
-						      cnew2);
-				gtk_misc_set_alignment (GTK_MISC (label1),
-							0.0, 0.5);
-				gtk_box_pack_start (GTK_BOX (vbox), label1,
-						    FALSE, FALSE, 0);
-
-				label1 = gtk_label_new (NULL);
-				filesystems[fs_count - 1].label2 = label1;
-				fstr = g_strdup_printf
-					("%s%s %4.1f %s, %s <i>%s</i> %s",
-					 "<span foreground=\"black\">",
-					 _("Total:"),
-					 (float) filesystems[fs_count - 1].total /
-					 1024.0, _("MB"), _("Mounted at "),
-					 filesystems[fs_count - 1].mountpoint,
-					 "</span>");
-				gtk_label_set_markup (GTK_LABEL (label1),
-						      fstr);
-				g_free (fstr);
-				gtk_misc_set_alignment (GTK_MISC (label1),
-							0.0, 0.5);
-				gtk_box_pack_start (GTK_BOX (vbox), label1,
-						    FALSE, FALSE, 0);
-				filesystems[fs_count - 1].dummy = gtk_label_new (NULL);
-				gtk_widget_set_size_request(filesystems[fs_count - 1].dummy,-1,3);
-				gtk_box_pack_start (GTK_BOX (vbox), filesystems[fs_count - 1].dummy, FALSE, FALSE, 0);
-			}
-		}
-		pclose (pipe);
-	}
-	else
-	{
-		gpe_error_box (_("Couldn't get filesystem info!"));
-	}
-
 	gtk_timeout_add (1600, (GtkFunction) update_status, NULL);
 	return vbox;
 }

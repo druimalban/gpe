@@ -8,6 +8,9 @@
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  *
+ * WLAN detection code from prismstumbler source
+ * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ *
  * GPE system information module.
  *
  */
@@ -23,7 +26,10 @@
 #include <fcntl.h>   
 #include <sys/types.h>
 #include <sys/utsname.h>
-#include <net/if.h>
+
+#include <sys/socket.h>
+#include <linux/wireless.h>
+#include <sys/ioctl.h> 
 	
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
@@ -45,9 +51,12 @@
 #define PIC_DEVICE 		PREFIX "/share/pixmaps/device-info.png"
 #define PIC_FAMILIAR 	PREFIX "/share/pixmaps/familiar.png"
 #define PIC_NET			PREFIX "/share/pixmaps/gpe-config-network.png"
+#define PIC_WLAN 		PREFIX "/share/pixmaps/pccard-network.png"
 #define P_CPUINFO 		"/proc/cpuinfo"
 #define P_IPAQ			"/proc/hal/model"
 #define P_PARTITIONS	"/proc/partitions"
+
+#define strpos(a,b) (strstr(a,b)-a)
 
 /* local types and structs */
 typedef enum
@@ -200,73 +209,101 @@ get_familiar_time()
 	return g_strstrip(result);
 }
 
+
+gboolean 
+device_is_wlan(char* ifname)
+{
+	int fd;
+	struct iwreq wrq;
+	gboolean result;
+
+	fd = socket (AF_INET, SOCK_DGRAM, 0);
+	if (fd < 0)
+	return 0;
+
+	memset (&wrq, 0, sizeof (wrq));
+	strncpy (wrq.ifr_name, ifname, IFNAMSIZ);
+	if (ioctl (fd, SIOCGIWNAME, &wrq) < 0)
+		result = FALSE;
+	else
+		result = TRUE;
+	close (fd);
+
+	return result;
+}
+
+
 GtkWidget*
 network_create_widgets (void)
 {
-	char *buffer = g_strdup ("");
 	char *tmp = NULL;
 	struct interface *ife;
 	struct interface *int_list;
-	GtkWidget *table, *label, *tw;
-	char *ts;
+	GtkWidget *table, *tw, *sw;
+	char *ts, *nwshort, *nwlong;
+	int pos = 0;
 
 	int_list = if_getlist ();
 
-	for (ife = int_list; ife->next; ife = ife->next)
-	{
-		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
-		{
-			tmp = if_to_infostr (ife);
-			buffer = realloc (buffer,
-					  strlen (tmp) + strlen (buffer) + 1);
-			buffer[strlen(buffer)] = 0;
-			strcat (buffer, tmp);
-			free (tmp);
-		}
-	}
-
+	sw = gtk_scrolled_window_new(NULL,NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),
+		GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	
 	table = gtk_table_new(6,2,FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw),table);
 	
 	tw = gtk_label_new(NULL);
 	ts = g_strdup_printf("<b>%s</b>",_("Network Status"));
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
 	g_free(ts);
-	gtk_table_attach(GTK_TABLE(table),tw,0,2,0,1,GTK_FILL | GTK_EXPAND,
+	gtk_table_attach(GTK_TABLE(table),tw,0,3,0,1,GTK_FILL | GTK_EXPAND,
                      GTK_FILL,2,2);
 	
-	tw = gtk_image_new_from_file(PIC_NET);
-	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.0);
-	gtk_table_attach(GTK_TABLE(table),tw,0,1,1,2,GTK_FILL | GTK_EXPAND,
-                     GTK_FILL,0,0);
-/*	tw = gtk_label_new(NULL);
-	ts = g_strdup_printf("<i>%s</i>",_("Device"));
-	gtk_label_set_markup(GTK_LABEL(tw),ts);
-	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.8);
-	g_free(ts);
-	gtk_table_attach(GTK_TABLE(table),tw,1,2,1,2,GTK_FILL | GTK_EXPAND,
-                     GTK_FILL,0,0);
-*/					 
-	tw = gtk_label_new(NULL);
-//!
-ts = g_strdup_printf("%s",buffer);
-	gtk_label_set_markup(GTK_LABEL(tw),ts);
-	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
-	g_free(ts);
-	gtk_table_attach(GTK_TABLE(table),tw,1,2,1,3,GTK_FILL,
-                     GTK_FILL,0,0);
+	for (ife = int_list; ife->next; ife = ife->next)
+	{
+		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
+		{
+			tmp = if_to_infostr (ife);
 
+			/* split string into long and short lines */
+			nwlong = strstr(tmp,_("HWaddr (MAC)"));
+			if (nwlong != NULL) 
+			{
+				tmp[strpos(tmp,_("HWaddr (MAC)"))-1] = 0;
+				nwlong[strlen(nwlong)-2] = 0;
+			}
+			nwshort = tmp;
 
-/*	vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
-	label = gtk_label_new (NULL);
-	gtk_label_set_markup (GTK_LABEL (label), buffer);
-	gtk_label_set_selectable(GTK_LABEL(label),TRUE);
-	gtk_box_pack_start(GTK_BOX (vbox), label, TRUE, TRUE, 0);
-*/	
-	g_free (buffer);
-	return(table);
+			/* create widgets */
+			if (device_is_wlan(ife->name))
+				tw = gtk_image_new_from_file(PIC_WLAN); 
+			else
+				tw = gtk_image_new_from_file(PIC_NET);
+			gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.0);
+			gtk_table_attach(GTK_TABLE(table),tw,0,1,1+pos,2+pos,
+				GTK_FILL | GTK_EXPAND, GTK_FILL,0,0);
+
+			tw = gtk_label_new(NULL);
+			gtk_label_set_markup(GTK_LABEL(tw),nwshort);
+			gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
+			gtk_table_attach(GTK_TABLE(table),tw,1,2,1+pos,3+pos,
+				GTK_FILL | GTK_EXPAND, GTK_FILL,0,0);
+			
+			tw = gtk_label_new(NULL);
+			gtk_label_set_markup(GTK_LABEL(tw),nwlong);
+			gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
+			gtk_table_attach(GTK_TABLE(table),tw,0,2,3+pos,4+pos,GTK_FILL,
+            	GTK_FILL,0,0);
+			
+			g_free (tmp);
+			pos+=3;
+		}
+	}
+
+	return(sw);
 }
 
 
@@ -291,8 +328,7 @@ Sysinfo_Build_Objects (void)
 	uname(&uinfo);
 	notebook = gtk_notebook_new();
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),TRUE);
-	gtk_container_set_border_width (GTK_CONTAINER (notebook),
-					0 /*gpe_get_border ()*/);
+	gtk_container_set_border_width (GTK_CONTAINER (notebook), 0 );
 	
 	/* globals tab */
 	
@@ -446,8 +482,8 @@ Sysinfo_Build_Objects (void)
 	tw = gtk_label_new(_("Network"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 	
-	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),0);
 	gtk_widget_show_all(notebook);
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),0);
 	
 	return notebook;
 }

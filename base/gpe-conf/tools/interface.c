@@ -1884,15 +1884,7 @@ char* if_to_infostr(struct interface *ptr)
     sprintf(tmp,_("<b>Interface %s</b>\nType: %s\n"), ptr->name, _(hw->title));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
-    /* For some hardware types (eg Ash, ATM) we don't print the 
-       hardware address if it's null.  */
-    if (hw->print != NULL && (! (hw_null_address(hw, ptr->hwaddr) &&
-				  hw->suppress_null_addr)))
-	{
-		sprintf(tmp,_("HWaddr (MAC): %s\n"), hw->print(ptr->hwaddr));
-		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
-		strcat(buffer,tmp);
-	}
+	
 #ifdef IFF_PORTSEL
     if (ptr->flags & IFF_PORTSEL) {
 	sprintf(tmp,_("Media: %s"), if_port_text[ptr->map.port][0]);
@@ -1912,28 +1904,37 @@ char* if_to_infostr(struct interface *ptr)
 
 #if HAVE_AFINET
     if (ptr->has_ip) {
-	sprintf(tmp,_("Address: %s\n"),
+	sprintf(tmp,_("Address:\t\t%s\n"),
 	       ap->sprint(&ptr->addr, 1));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	if (ptr->flags & IFF_POINTOPOINT) {
-	    sprintf(tmp,_("P-t-P: %s\n"), ap->sprint(&ptr->dstaddr, 1));
+	    sprintf(tmp,_("P-t-P:\t\t%s\n"), ap->sprint(&ptr->dstaddr, 1));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
-	sprintf(tmp,_("Netmask: %s\n"), ap->sprint(&ptr->netmask, 1));
+	sprintf(tmp,_("Netmask:\t\t%s\n"), ap->sprint(&ptr->netmask, 1));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	if (ptr->flags & IFF_BROADCAST) {
-	    sprintf(tmp,_("Broadcast: %s\n"), ap->sprint(&ptr->broadaddr, 1));
+	    sprintf(tmp,_("Broadcast:\t%s\n"), ap->sprint(&ptr->broadaddr, 1));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
     }
 #endif
 
+    /* For some hardware types (eg Ash, ATM) we don't print the 
+       hardware address if it's null.  */
+    if (hw->print != NULL && (! (hw_null_address(hw, ptr->hwaddr) &&
+				  hw->suppress_null_addr)))
+	{
+		sprintf(tmp,_("HWaddr (MAC): %s\n"), hw->print(ptr->hwaddr));
+		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
+		strcat(buffer,tmp);
+	}
+	
 #if HAVE_AFINET6x
-    /* FIXME: should be integrated into interface.c.   */
 
     if ((f = fopen(_PATH_PROCNET_IFINET6, "r")) != NULL) {
 	while (fscanf(f, "%4s%4s%4s%4s%4s%4s%4s%4s %02x %02x %02x %02x %20s\n",
@@ -1958,8 +1959,7 @@ char* if_to_infostr(struct interface *ptr)
 
 		    }
 		}
-		/* add a newline before adress because of it's length.*/
-		sprintf(tmp, _("IPv6 Address:\n  %s/%d\n"), addr6, plen);
+		sprintf(tmp, _("IPv6 Address: %s/%d\n"), addr6, plen);
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 		sprintf(tmp,_("Scope: "));

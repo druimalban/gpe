@@ -1,6 +1,12 @@
+2004-01-09	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* sysinfo.c: Major update to network info tab.
+	* tools/interface.c: Some hacks to make strings look nicer.
+	* storage.c: Code reduction, statup speedup.
+	* sysinfo.c: Fixed dialog come up with wrong tab.
+	
 2004-01-08	Florian Boor  	<florian.boor@kernelconcepts.de>
-	* info.c: Started merging info applets.
-	* info.c: Added network info.
+	* sysinfo.c: Started merging info applets.
+	* sysinfo.c: Added network info.
 	* packages.c: Minor GUI improvements.
 	* storage.c: Some other small tweaks and fixes.
 	* tools/interface.c: Removed some obsolete stuff, minor fixes.
