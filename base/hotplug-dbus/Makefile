@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = hotplug-dbus
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.8
+VERSION = 0.9
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build

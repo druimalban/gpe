@@ -1,3 +1,7 @@
+2004-10-20  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.9 released.
+
 2004-10-17  Phil Blundell  <pb@nexus.co.uk>
 
 	* hotplug-dbus (MESSAGE): Add missing name component.
