@@ -1,2 +1,4 @@
 #!/bin/sh
-kill -HUP `ps -C gpe-appmgr --no-heading -o %p`
+PID=`pidof gpe-appmgr`
+[ "$PID" ] && kill -HUP $PID
+
