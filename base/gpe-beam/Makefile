@@ -1,12 +1,12 @@
 PREFIX = /usr/local
 PACKAGE = gpe-beam
-DEBUG = yes
+DEBUG = no
 CVSBUILD = yes
 
-all: vcard-export vcard-import
+all: vcard-export vcard-import vcard-import-file
 
 GTKCFLAGS = `pkg-config --cflags mimedir-1.0`
-GTKLDFLAGS += `pkg-config --libs mimedir-1.0`
+GTKLDFLAGS += -lmimedir -lglib-2.0
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -23,4 +23,7 @@ vcard-export: send-vcard.o vcard.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 vcard-import: import-vcard.o vcard.o
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+vcard-import-file: import-vcard-file.o vcard.o
 	$(CC) -o $@ $^ $(LDFLAGS)

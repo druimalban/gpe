@@ -172,7 +172,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	{
 	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')",
 				  NULL, NULL, &err,
-				  id, t->tag, value))
+				  id, t->tag, g_strstrip(value)))
 	    goto error;
 	}
       t++;
