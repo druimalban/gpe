@@ -188,6 +188,8 @@ main(int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
+  gtk_widget_realize (window);
+
   tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/new.xpm");
   new_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
