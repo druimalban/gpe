@@ -22,10 +22,9 @@ static const char *dname = "/.gpe";
 gboolean
 gpe_application_init (int *argc, char **argv[])
 {
-  const char *home;
-  char *buf;
-  size_t len;
-  const gchar *user_gtkrc_file;
+  char *fn;
+  struct stat buf;
+  gchar *user_gtkrc_file;
   const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
 	  
   gtk_rc_add_default_file (default_gtkrc_file);
@@ -37,31 +36,23 @@ gpe_application_init (int *argc, char **argv[])
 
   gtk_init(argc, argv);
 
-  /* FIXME: use g_get_home_dir(), move directory creation away [CM]: */
-  home = getenv ("HOME");
-  if (home)
+  fn = g_strdup_printf ("%s%s", g_get_home_dir(),dname);
+  if (stat (fn, &buf) != 0)
     {
-      if (access (home, F_OK))
+      if (mkdir (fn, 0700) != 0)
 	{
-	  gpe_perror_box (home);
+	  gpe_perror_box ("Cannot create ~/.gpe");
 	  return FALSE;
 	}
-
-      len = strlen (home) + strlen (dname) + 1;
-      buf = g_malloc (len);
-      strcpy (buf, home);
-      strcat (buf, dname);
-      if (access (buf, F_OK))
+    } else {
+      if (!S_ISDIR(buf.st_mode))
 	{
-	  if (mkdir (buf, 0700))
-	    {
-	      gpe_perror_box (buf);
-	      g_free (buf);
-	      return FALSE;
-	    }
+	  gpe_perror_box ("ERROR: ~/.gpe is not a directory!\n");
+	  return FALSE;
 	}
-      g_free (buf);
     }
+  
+  g_free (fn);
 
   gpe_what_init ();
 
