@@ -34,3 +34,5 @@ install-question: gpe-question
 
 clean:
 	rm -f gpe-question.o gpe-question
+
+include ../build/Makefile.dpkg_ipkg
