@@ -475,7 +475,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 					GTK_RESPONSE_REJECT,
 					NULL);
 	
-	gtk_window_set_default_size(GTK_WINDOW(dialog), 200, 290);
+	gtk_window_set_default_size(GTK_WINDOW(dialog), 220, 320);
 
 	btnok = gtk_dialog_add_button(GTK_DIALOG(dialog), 
 	                              GTK_STOCK_OK, GTK_RESPONSE_OK);

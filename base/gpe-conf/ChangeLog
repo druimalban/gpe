@@ -1,3 +1,11 @@
+2004-10-26	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Makefile: Version++
+	* network.c: Increased default dialog size.
+	* main.c: Make applets appear as a dialog on larger screens.
+	* theme.c, main.c: Added hack "task_background" to change background
+	                   image only.
+
 2004-10-25	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* suid.c: Set hardware clock using hwclock.

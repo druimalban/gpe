@@ -125,7 +125,9 @@ struct Applet applets[]=
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
 		"Task nameserver" ,"task_nameserver","Task for changing nameserver", PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
-		"Task sound" ,"task_sound","Command line task saving/restoring sound settings.", PREFIX "/share/pixmaps/gpe-config-admin.png"}
+		"Task sound" ,"task_sound","Command line task saving/restoring sound settings.", PREFIX "/share/pixmaps/gpe-config-admin.png"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+		"Task background image" ,"task_background","Only select background image.", PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
   
 struct gpe_icon my_icons[] = {
@@ -235,10 +237,24 @@ int killchild()
 
 void initwindow()
 {
-   // main window
+  gint size_x, size_y;
+
+   /* screen layout detection */
+   size_x = gdk_screen_width();
+   size_y = gdk_screen_height();  
+
+	
+   /* main window */	
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-   wstyle = self.w->style;
    gtk_widget_set_usize(GTK_WIDGET(self.w),240, 310);
+	
+   if ((size_x > 640) && (size_y > 480))
+   {
+      gtk_window_set_type_hint(GTK_WINDOW(self.w), GDK_WINDOW_TYPE_HINT_DIALOG);
+	  gtk_window_set_default_size(GTK_WINDOW(self.w), 280, 340);
+   }
+   
+   wstyle = self.w->style;
 
    gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
 		       (GtkSignalFunc) gtk_main_quit, NULL);
@@ -337,18 +353,27 @@ void main_one(int argc, char **argv,int applet)
 			  fprintf(stderr,_("'task_sound' needs (s)ave/(r)estore as argument.\n"));
 		  exit(0);
 	  }
+	  if (!strcmp(argv[1], "task_background"))
+	  {
+		  special_flag = TRUE;
+		  standalone = TRUE;
+		  task_change_background_image();
+		  exit(0);
+	  }
   }
   
   /* If no task? - start applet */
   if (!handled)
   { 
 	  self.cur_applet = -1;
-	  self.applet = NULL;	  if (!standalone)
+	  self.applet = NULL;
+	  
+	  if (!standalone)
 	  {
 		  initwindow();
 		
 		  self.vbox = gtk_vbox_new(FALSE,0);
-		  gtk_container_add(GTK_CONTAINER(self.w),self.vbox);
+		  gtk_container_add(GTK_CONTAINER(self.w), self.vbox);
 				
 		  make_container();
 		

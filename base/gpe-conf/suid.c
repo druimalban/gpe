@@ -376,6 +376,7 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "XCAL") == 0)  // runs screen calibration tool
 				{
+					fscanf (in, "%100s", arg2);
 					system ("/usr/bin/xtscal");
 				}
 				else if (strcmp (cmd, "STZO") == 0)  // changes the timezone setting 

@@ -128,9 +128,57 @@ init_tools(void)
 	/* prefer xst */
 	if (!access(CMD_XST,X_OK))
 		use_xst = TRUE;
-	else
-		if (!access(CMD_GCONF,X_OK))
-			use_gconf = TRUE;	
+	/* to be extended in future */
+}
+
+void
+task_change_background_image(void)
+{
+	GtkWidget *filesel, *feedbackdlg;
+  
+	Theme_Build_Objects();
+	filesel = gtk_file_selection_new(_("Choose backgound image"));
+	gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel), FALSE);
+  
+	if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+	{
+		int ec = 0;
+		const gchar *file = 
+			gtk_file_selection_get_filename (GTK_FILE_SELECTION(filesel));
+		
+		gtk_widget_hide(filesel); 
+		ec = access(file, R_OK);
+		if (ec)
+			feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(filesel),
+			  GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+			  _("You are not allowed to read this file, choose another."));
+		else
+		{
+			gchar *confstr = NULL;
+				if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgCent)))
+					confstr = g_strdup_printf("img-centered:%s", file);
+				else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgStr)))
+					confstr = g_strdup_printf("img-stretched:%s", file);
+				else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgTiled)))
+					confstr = g_strdup_printf("img-tiled:%s", file);
+			if (confstr != NULL)
+			{
+				gchar *p = g_strdup_printf (CMD_XST " write %s%s str '%s'", 
+				                            KEY_MATCHBOX, "Background", confstr);
+				system(p);
+				g_free(p);
+				g_free(confstr);
+			}
+	  
+			feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(filesel),
+			  GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+			  "%s\n%s",_("Succesfully changed background image."), 
+			  _("Use \"Look and Feel\" setup tool to change details."));
+		}
+		gtk_dialog_run(GTK_DIALOG(feedbackdlg));
+		gtk_widget_destroy(feedbackdlg);
+	}
+	gtk_widget_destroy(filesel);	
 }
 
 gboolean
