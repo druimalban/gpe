@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-gallery
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.8.1
+VERSION = 0.8.2
 
 MEMBERS = main image_tools
 
