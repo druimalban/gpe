@@ -42,11 +42,13 @@
 //--------------------- GENERAL ---------------------------
 void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
   if(is_current_sketch_modified){
+    int ret;
     gtk_widget_show (GTK_WIDGET(object));
-    //FIXME: use gpe_question
-    if(confirm_action_dialog_box(_("Sketch modified;\nsave before exiting?"),
-                                 _("Exit"),_("Save"))){
-      on_button_file_save_clicked(NULL,NULL);
+
+    ret = gpe_question_ask (_("Sketch modified,\nsave before exiting?"), _("Question"), "question", 
+                            _("Discard"), "!gtk-no", _("Save"), "!gtk-yes", NULL);
+    if(ret != 0){
+      on_button_file_save_clicked(NULL, NULL);
     }
   }
   app_quit();
@@ -69,10 +71,15 @@ void on_window_size_allocate (GtkWidget     * widget,
 
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   if(is_current_sketch_modified){
-    //FIXME: use gpe_question
-    if(confirm_action_dialog_box(_("Save last sketch?"),_("Cancel"),_("Save"))){
-      on_button_file_save_clicked(NULL,NULL);
+    int ret;
+    ret = gpe_question_ask (_("Save last sketch?"), _("Question"), "question", 
+                            _("Discard"), "!gtk-no", _("Save"), "!gtk-yes", NULL);
+    //NOTE: could had a [Cancel] button
+    if(ret == 1){
+      on_button_file_save_clicked(NULL, NULL);
     }
+    else if (ret == -1) return; //destroy window (ret == -1) cancel the action
+
   }
   switch_windows(window_sketchpad, window_selector);
 
@@ -105,7 +112,7 @@ void _close_filesbox(GtkButton * button){
   gtk_widget_hide (GTK_WIDGET (filesbox));
 }
 
-void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
+void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   Note * note;
 
   if(!is_current_sketch_modified){ _close_filesbox(button); return;}
@@ -140,14 +147,22 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
 
   }
   is_current_sketch_modified = FALSE;
-  _close_filesbox(button);
+
+  //in case of direct call, button == NULL, ie: from on_button_file_new_clicked()
+  if(button) _close_filesbox(button);
 }
 
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_modified){
-    //FIXME: use gpe_question
-    if(confirm_action_dialog_box(_("Save last sketch?"),_("Cancel"),_("Save"))){
-      on_button_file_save_clicked(NULL,NULL);
+    int ret;
+    ret = gpe_question_ask (_("Save last sketch?"), _("Question"), "question", 
+                            _("Discard"), "!gtk-no", _("Save"), "!gtk-yes", NULL);
+    if(ret == 1){
+      on_button_file_save_clicked(NULL, NULL);
+    }
+    else if (ret == -1){ //Question box destroyed
+      _close_filesbox(button);
+      return;
     }
   }
   current_sketch = SKETCH_NEW;
@@ -162,14 +177,14 @@ void on_button_file_properties_clicked (GtkButton *button, gpointer user_data){
 }
 
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
-  if(is_current_sketch_new){ _close_filesbox(button); return;}
+  int ret;
 
-  //NOTE: moved back to my own dialog-box, gpe_question freezes.
-  //if(gpe_question_ask_yn ("Delete sketch?") == 1){
-  if(confirm_action_dialog_box(_("Delete sketch?"),_("Cancel"),_("Delete"))){
-    delete_current_sketch();  
-  }
-    
+  if(is_current_sketch_new){ _close_filesbox(button); return;}
+  
+  ret = gpe_question_ask (_("Delete current sketch?"), _("Question"), "question", 
+                          _("Cancel"), "!gtk-no", _("Delete"), "!gtk-yes", NULL);
+  if(ret == 1) delete_current_sketch();
+
   _close_filesbox(button);
 }
 
