@@ -1,0 +1,86 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2003-02-20 21:02+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:147 main.c:508
+msgid "unknown"
+msgstr ""
+
+#: main.c:432
+msgid "Radio is switched off"
+msgstr ""
+
+#: main.c:453 main.c:520
+msgid "Disconnect"
+msgstr ""
+
+#: main.c:453 main.c:520
+msgid "Connect"
+msgstr ""
+
+#: main.c:498
+msgid "Service class: "
+msgstr ""
+
+#: main.c:502
+msgid "Dial-Up Network"
+msgstr ""
+
+#: main.c:505
+msgid "LAN Access"
+msgstr ""
+
+#: main.c:568
+msgid "Bluetooth devices"
+msgstr ""
+
+#: main.c:588
+msgid "Unable to scan"
+msgstr ""
+
+#: main.c:604
+msgid "hcid died unexpectedly"
+msgstr ""
+
+#: main.c:613
+msgid "hciattach died unexpectedly"
+msgstr ""
+
+#: main.c:650
+msgid "Bluetooth control"
+msgstr ""
+
+#: main.c:655
+msgid "Switch radio on"
+msgstr ""
+
+#: main.c:656
+msgid "Switch radio off"
+msgstr ""
+
+#: main.c:657
+msgid "Devices..."
+msgstr ""
+
+#: main.c:658
+msgid "Remove from dock"
+msgstr ""
+
+#: main.c:688
+msgid ""
+"This is the Bluetooth control.\n"
+"Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
+msgstr ""
