@@ -173,13 +173,6 @@ run_package (GnomeDesktopFile *p)
   gpe_launch_program (dpy, cmd, title);
 }
 
-gboolean 
-btn_clicked (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
-{
-  run_package ((struct package *)user_data);
-  return TRUE;
-}
-
 /* clean_up():
  * free all data etc.
  */
@@ -260,7 +253,7 @@ package_compare (GnomeDesktopFile *a, GnomeDesktopFile *b)
 }
 
 static void 
-cb_package_add (GnomeDesktopFile *p)
+add_one_package (GnomeDesktopFile *p)
 {
   struct package_group *group;
 
@@ -283,14 +276,34 @@ load_from (const char *path)
 	{
 	  char *temp;
 	  GnomeDesktopFile *p;
+	  GError *err = NULL;
 	  
 	  if (entry->d_name[0] == '.')
 	    continue;
 	  
 	  temp = g_strdup_printf ("%s/%s", PREFIX "/share/applications", entry->d_name);
-	  p = gnome_desktop_file_load (temp, NULL);
+	  p = gnome_desktop_file_load (temp, &err);
 	  if (p)
-	    cb_package_add (p);
+	    {
+	      gchar *type;
+	      gnome_desktop_file_get_string (p, NULL, "Type", &type);
+
+	      if (type == NULL || strcmp (type, "Application"))
+		{
+		  fprintf (stderr, "ignoring .desktop with type=\"%s\"\n", type ? type : "<null>");
+		  gnome_desktop_file_free (p);
+		}
+	      else
+		add_one_package (p);
+
+	      if (type)
+		g_free (type);
+	    }
+	  else
+	    fprintf (stderr, "Couldn't load \"%s\": %s\n", temp, err->message);
+
+	  if (err)
+	    g_error_free (err);
 
 	  g_free (temp);
 	}
