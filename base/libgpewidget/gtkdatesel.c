@@ -38,6 +38,8 @@ static void gtk_date_sel_init           (GtkDateSel      *spin_button);
 static void gtk_date_sel_realize        (GtkWidget          *widget);
 static void gtk_date_sel_size_request   (GtkWidget          *widget,
 					    GtkRequisition     *requisition);
+static void gtk_date_sel_size_allocate  (GtkWidget          *widget,
+					    GtkAllocation      *allocation);
 static void gtk_date_sel_paint          (GtkWidget          *widget,
 					    GdkRectangle       *area);
 static void gtk_date_sel_draw           (GtkWidget          *widget,
@@ -119,6 +121,7 @@ gtk_date_sel_class_init (GtkDateSelClass *class)
 
   widget_class->realize = gtk_date_sel_realize;
   widget_class->size_request = gtk_date_sel_size_request;
+  widget_class->size_allocate = gtk_date_sel_size_allocate;
   widget_class->draw = gtk_date_sel_draw;
   widget_class->expose_event = gtk_date_sel_expose;
   widget_class->button_press_event = gtk_date_sel_button_press;
@@ -128,34 +131,6 @@ gtk_date_sel_class_init (GtkDateSelClass *class)
 static void
 gtk_date_sel_init (GtkDateSel *sel)
 {
-  GtkWidget *widget = GTK_WIDGET (sel);
-  struct tm tm;
-  guint i, w;
-  char buf[128];
-
-  sel->week_width = gdk_string_width (widget->style->font, "Week 88");
-
-  for (i = 0; i < 7; i++)
-    {
-      tm.tm_wday = i;
-      strftime (buf, sizeof (buf), "%a", &tm);
-      w = gdk_string_width (widget->style->font, buf);
-      if (w > sel->day_width)
-	sel->day_width = w;
-    }
-  sel->day_width += gdk_string_width(widget->style->font, ", 88");
-  
-  for (i = 0; i < 11; i++)
-    {
-      tm.tm_mon = i;
-      strftime (buf, sizeof (buf), "%B", &tm);
-      w = gdk_string_width (widget->style->font, buf);
-      if (w > sel->month_width)
-	sel->month_width = w;
-    }
-
-  sel->year_width = gdk_string_width (widget->style->font, "8888");
-
   time(&sel->time);
   sel->day_clamped = -1;
 }
@@ -203,6 +178,10 @@ gtk_date_sel_size_request (GtkWidget      *widget,
 			   GtkRequisition *requisition)
 {
   GtkDateSel *sel;
+  struct tm tm;
+  guint i, w;
+  char buf[128];
+
   g_return_if_fail (widget != NULL);
   g_return_if_fail (requisition != NULL);
   g_return_if_fail (GTK_IS_DATE_SEL (widget));
@@ -211,6 +190,29 @@ gtk_date_sel_size_request (GtkWidget      *widget,
 
   GTK_WIDGET_CLASS (parent_class)->size_request (widget, requisition);
   
+  sel->week_width = gdk_string_width (widget->style->font, "Week 88");
+
+  for (i = 0; i < 7; i++)
+    {
+      tm.tm_wday = i;
+      strftime (buf, sizeof (buf), "%a", &tm);
+      w = gdk_string_width (widget->style->font, buf);
+      if (w > sel->day_width)
+	sel->day_width = w;
+    }
+  sel->day_width += gdk_string_width (widget->style->font, ", 88");
+  
+  for (i = 0; i < 11; i++)
+    {
+      tm.tm_mon = i;
+      strftime (buf, sizeof (buf), "%B", &tm);
+      w = gdk_string_width (widget->style->font, buf);
+      if (w > sel->month_width)
+	sel->month_width = w;
+    }
+
+  sel->year_width = gdk_string_width (widget->style->font, "8888");
+
   requisition->height = widget->style->font->ascent + 
     widget->style->font->descent;
 
@@ -226,6 +228,22 @@ gtk_date_sel_size_request (GtkWidget      *widget,
       requisition->width = sel->day_width + sel->month_width + sel->year_width
 	+ 6 * ARROW_SIZE + 9 * PAD;
       break;
+    }
+}
+
+static void
+gtk_date_sel_size_allocate (GtkWidget *widget,
+			    GtkAllocation *allocation)
+{
+  widget->allocation = *allocation;
+
+  if (GTK_WIDGET_REALIZED (widget))
+    {
+      gdk_window_move_resize (widget->window,
+			      allocation->x,
+			      allocation->y,
+			      allocation->width,
+			      allocation->height);
     }
 }
 
@@ -252,12 +270,14 @@ gtk_date_sel_paint (GtkWidget    *widget,
 		    GdkRectangle *area)
 {
   GtkDateSel *sel;
-  guint l, r;
+  guint leftspace, l, r;
 
   g_return_if_fail (widget != NULL);
   g_return_if_fail (GTK_IS_DATE_SEL (widget));
 
   sel = GTK_DATE_SEL (widget);
+
+  leftspace = (widget->allocation.width - widget->requisition.width) / 2;
 
   if (GTK_WIDGET_DRAWABLE (widget))
     {
@@ -276,24 +296,26 @@ gtk_date_sel_paint (GtkWidget    *widget,
       switch (sel->mode)
 	{
 	case GTKDATESEL_YEAR:
-	  r = sel->year_width + ARROW_SIZE + PAD + PAD;
-	  draw_arrows(widget, 0, r);
+	  l = leftspace;
+	  r = l + sel->year_width + ARROW_SIZE + PAD + PAD;
+	  draw_arrows(widget, l, r);
 	  strftime(buf, sizeof(buf), "%Y", &tm);
 	  w = gdk_string_width(widget->style->font, buf);
 	  gdk_draw_string(widget->window, widget->style->font,
 			  widget->style->black_gc,
-			  ARROW_SIZE + PAD + ((sel->year_width - w) / 2), 
+			  l + ARROW_SIZE + PAD + ((sel->year_width - w) / 2), 
 			  fy, buf);
 	  break;
 
 	case GTKDATESEL_WEEK:
-	  r = sel->week_width + ARROW_SIZE + PAD + PAD;
-	  draw_arrows(widget, 0, r);
+	  l = leftspace;
+	  r = l + sel->week_width + ARROW_SIZE + PAD + PAD;
+	  draw_arrows(widget, l, r);
 	  strftime(buf, sizeof(buf), "Week %W", &tm);
 	  w = gdk_string_width(widget->style->font, buf);
 	  gdk_draw_string(widget->window, widget->style->font,
 			  widget->style->black_gc,
-			  ARROW_SIZE + PAD + ((sel->week_width - w) / 2), fy,
+			  l + ARROW_SIZE + PAD + ((sel->week_width - w) / 2), fy,
 			  buf);      
 
 	  l = r + ARROW_SIZE + PAD;
@@ -309,13 +331,14 @@ gtk_date_sel_paint (GtkWidget    *widget,
 	  break;
 
 	case GTKDATESEL_FULL:
-	  r = sel->day_width + ARROW_SIZE + PAD + PAD;
-	  draw_arrows(widget, 0, r);
+	  l = leftspace;
+	  r = l + sel->day_width + ARROW_SIZE + PAD + PAD;
+	  draw_arrows(widget, l, r);
 	  strftime(buf, sizeof(buf), "%a, %d", &tm);
 	  w = gdk_string_width(widget->style->font, buf);
 	  gdk_draw_string(widget->window, widget->style->font,
 			  widget->style->black_gc,
-			  ARROW_SIZE + PAD + ((sel->day_width - w) / 2), fy,
+			  l + ARROW_SIZE + PAD + ((sel->day_width - w) / 2), fy,
 			  buf);      
 	  l = r + ARROW_SIZE + PAD;
 	  r = l + sel->month_width + ARROW_SIZE + PAD + PAD;
