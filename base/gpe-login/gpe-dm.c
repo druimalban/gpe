@@ -70,6 +70,8 @@ shutdown (int s)
       
   if (session_pid)
     kill (session_pid, SIGTERM);
+
+  exit (128 + s);
 }
 
 int
