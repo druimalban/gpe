@@ -18,7 +18,6 @@
 
 extern GtkWidget *new_event(time_t t, guint timesel);
 extern GtkWidget *future_view(void);
-extern GtkWidget *new_todo(void);
 
 GdkFont *timefont;
 GdkFont *datefont;
