@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 INCLUDES = \
+        -I$(top_srcdir)/../libgpewidget `gdk-pixbuf-config --cflags` \
 	-I$(top_srcdir)/intl \
 	@GTK_CFLAGS@
 
@@ -15,4 +16,4 @@ ipaqscreen_SOURCES = \
 	calibrate.c calibrate.h \
 	rotation.c rotation.h
 
-ipaqscreen_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@ $(INTLLIBS)
+ipaqscreen_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget @GTK_LIBS@ $(INTLLIBS)
