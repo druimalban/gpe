@@ -1,0 +1,10 @@
+Package: nsqld
+Version: VERSION
+Depends: libc6, libsqlite0, libglib2.0-0
+Source: SOURCE
+Section: libs
+Priority: standard
+Architecture: arm
+Maintainer: Phil Blundell <pb@nexus.co.uk>
+Description: Network interface shim for sqlite database
+
