@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-21 19:37+0000\n"
+"POT-Creation-Date: 2003-03-30 15:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,63 +15,63 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:395 gpe-login.c:448
+#: gpe-login.c:480 gpe-login.c:553
 msgid "Login incorrect"
 msgstr ""
 
-#: gpe-login.c:477
+#: gpe-login.c:582
 msgid "User already exists"
 msgstr ""
 
-#: gpe-login.c:488
+#: gpe-login.c:593
 msgid "Passwords don't match"
 msgstr ""
 
-#: gpe-login.c:497
+#: gpe-login.c:602
 msgid "Empty password not allowed"
 msgstr ""
 
-#: gpe-login.c:647
-msgid "en"
-msgstr ""
-
-#: gpe-login.c:869
+#: gpe-login.c:1058
 msgid "Record"
 msgstr ""
 
-#: gpe-login.c:870
+#: gpe-login.c:1059
 msgid "recalibrates touchscreen"
 msgstr ""
 
-#: gpe-login.c:886
+#: gpe-login.c:1095
+msgid "en"
+msgstr ""
+
+#: gpe-login.c:1329
 msgid "Screen locked"
 msgstr ""
 
-#: gpe-login.c:890 gpe-login.c:1002
+#: gpe-login.c:1333 gpe-login.c:1448
 msgid "Username"
 msgstr ""
 
-#: gpe-login.c:913 gpe-login.c:1004
+#: gpe-login.c:1358 gpe-login.c:1450
 msgid "Password"
 msgstr ""
 
-#: gpe-login.c:926
+#: gpe-login.c:1372
 msgid "Language"
 msgstr ""
 
-#: gpe-login.c:946
+#: gpe-login.c:1392
 msgid "Enter password with hard keys"
 msgstr ""
 
-#: gpe-login.c:1003
+#: gpe-login.c:1449
 msgid "Full name"
 msgstr ""
 
-#: gpe-login.c:1005
+#: gpe-login.c:1451
 msgid "Confirm password"
 msgstr ""
 
-#: gpe-login.c:1059
+#: gpe-login.c:1505
 msgid "New user"
 msgstr ""
 
