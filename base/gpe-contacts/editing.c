@@ -193,7 +193,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
 
           datecombo = gtk_date_combo_new ();
           gtk_box_pack_start (GTK_BOX (hbox), datecombo, TRUE, TRUE, 0);
-
+          gtk_date_combo_clear(GTK_DATE_COMBO(datecombo));
 /*          cbsched = gtk_check_button_new_with_label (_("Schedule"));
           gtk_widget_set_sensitive (cbsched, FALSE);
           gtk_box_pack_start (GTK_BOX (hbox), cbsched, TRUE, TRUE, 0);

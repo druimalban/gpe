@@ -1,5 +1,10 @@
+2004-08-05  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Fixed unclean creation of date combos.
+
 2004-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c: Fixed special handling of name.
     * editing.c: Layout fixed, labels aligned rigth now, corrected spacing.
     * contacts-layout-bigscreen.xml: Added ":" to labels, we have enough
                                      space here.

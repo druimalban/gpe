@@ -257,8 +257,10 @@ show_details (struct person *p)
           {
             struct tag_value *id = (struct tag_value *) iter->data;
             fieldname = get_tag_name(id->tag);
-            if (fieldname)
+            if ((fieldname) && strcmp(id->tag,"NAME"))
               {
+                if (fieldname[strlen(fieldname)-1] == ':')
+                  fieldname[strlen(fieldname)-1] = 0;
                 if (strstr(id->tag,"HOME"))
                   fielddesc = g_strdup_printf("%s (%s):",fieldname,_("home"));
                 else if (strstr(id->tag,"WORK"))
@@ -280,6 +282,8 @@ show_details (struct person *p)
                 gchar *ts;
                 if (!strcmp(id->tag,"NAME")) 
                  {
+                    if (fieldname[strlen(fieldname)-1] == ':')
+                      fieldname[strlen(fieldname)-1] = 0;
                     lleft = gtk_label_new(NULL);
                     ts = g_strdup_printf("<b>%s:</b>",_("Name"));
                     gtk_label_set_markup(GTK_LABEL(lleft),ts);
