@@ -1,0 +1,8 @@
+#!/bin/sh
+
+## /etc/suspend-scripts/S10usbnet
+
+# Bring down the USB Device so that it works after suspension
+# dunno why i can't use "ifdown usbf" to bring it down
+ifdown usbf
+modprobe -r usb-eth

@@ -1,0 +1,10 @@
+## /etc/network/interfaces
+
+# usb network 
+# (192.168.0.202 is the iPAQ's IP, 192.168.0.200 is the host's IP)
+iface usbf inet static
+        address 192.168.0.202
+        netmask 255.255.255.0
+        network 192.168.0.0
+        gateway 192.168.0.200
+

@@ -1,0 +1,27 @@
+## /etc/init.d/usbnet
+
+#!/bin/sh
+# chkconfig: 345 45 96
+# processname: usbnet
+usage()
+{
+        echo "Usage: $0 {start|stop|status}"
+}
+if [ $# -lt 1 ] ; then usage ; fi
+    action=$1
+    case "$action" in
+        start)
+                modprobe usb-eth
+                ifup usbf
+        ;;
+        stop)
+                ifdown usbf
+                modprobe -r usb-eth
+        ;;
+        status)
+                ifconfig usbf
+        ;;
+        *)
+                usage
+        ;;
+    esac

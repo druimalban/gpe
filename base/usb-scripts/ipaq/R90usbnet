@@ -1,0 +1,8 @@
+#!/bin/sh
+
+## /etc/resume-scripts/R90usbnet
+
+# bring up usb networking
+modprobe sa1100usb_core
+modprobe usb-eth
+ifup usbf
