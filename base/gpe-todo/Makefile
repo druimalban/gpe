@@ -5,7 +5,7 @@ CVSBUILD = yes
 VERSION = 0.35
 DEBUG = no
 
-LINGUAS = de id pt
+LINGUAS = de id pt zh_TW
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`

@@ -1,3 +1,8 @@
+2003-04-20  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add zh_TW.
+	* po/zh_TW.po: New file, courtesy Chao-Hsiung Liao.
+
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.35 released.

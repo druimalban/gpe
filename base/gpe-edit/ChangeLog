@@ -1,3 +1,8 @@
+2003-04-20  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add zh_TW.
+	* po/zh_TW.po: New file. courtesy Chao-Hsiung Liao.
+
 2003-04-14  Colin Marquardt  <colin@marquardt-home.de>
 
 	* main.c: Fix "tab&hold" typos.
