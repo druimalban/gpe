@@ -324,6 +324,8 @@ main (int argc, char *argv[])
   gtk_widget_show (scroll);
   gtk_widget_show (text_area);
 
+  gtk_widget_grab_focus (text_area);
+
   gtk_main();
   return 0;
 }
