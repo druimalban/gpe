@@ -1,7 +1,18 @@
 2003-10-09  Colin Marquardt  <colin@marquardt-home.de>
 
-	* gpe-ownerinfo.c (gpe_owner_info): Don't translate 
-	"nobody@localhost.localdomain".
+	* familiar/control1 (Depends): Remove librootimage0.
+
+	* Makefile (VERSION): Bump up to version 0.22.
+
+	* familiar/control1 (Depends): Add gpe-ownerinfo-locale*.
+
+	* gpe-ownerinfo.c (gpe_owner_info): Don't translate
+	"nobody@localhost.localdomain".  
+
+	Allow translation of "nobody@localhost.localdomain" again, but add
+	a note for translators.  Remove unused widgets. Don't use pango
+	language code anymore, as nobody else seems to be using it. 
+	Add more translator comments.
 
 2003-10-08  Colin Marquardt  <colin@marquardt-home.de>
 

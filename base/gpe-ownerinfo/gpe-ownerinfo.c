@@ -57,7 +57,6 @@ static gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
 static PangoLayout *address_layout;
 static guint lost_height;
 static GtkWidget *scrollbar;
-static gchar *pango_lang_code;
 
 /* redraw the pixbuf */
 static gboolean
@@ -91,7 +90,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   resultwidth  = (gint) (width  * scale);
   resultheight = (gint) (height * scale);
 
-  scaledpixbuf = gdk_pixbuf_scale_simple (photopixbuf, resultwidth, resultheight, GDK_INTERP_BILINEAR);
+  scaledpixbuf = gdk_pixbuf_scale_simple (photopixbuf, resultwidth, resultheight,
+					  GDK_INTERP_BILINEAR);
 
   gdk_pixbuf_render_to_drawable_alpha (scaledpixbuf, widget->window,
 				       0, 0,                      /* src_x, src_y */
@@ -132,7 +132,8 @@ upgrade_to_v2 (guint new_version)
   gchar *firstline, *oldcontent;
   FILE *fp;
   
-  firstline = g_strdup ("Initial firstline, must be looooooooooooooooooong enough for the later content");
+  firstline = g_strdup ("Initial firstline, must be looooooooooooooooooong"
+			" enough for the later content");
   sprintf (firstline, "%s %d]", INFO_MATCH, new_version);
   oldcontent = g_strdup ("Initial oldcontent.");
   
@@ -209,12 +210,14 @@ maybe_upgrade_datafile ()
 	    version = strtol (firstline + strlen (INFO_MATCH), (char **)NULL, 10);
 	    
 	    if (version == 0) {
-	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d, which should not happen.\n",
+	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d,"
+		       " which should not happen.\n",
 		       GPE_OWNERINFO_DATA, version);
 	      fprintf (stderr, "   Please file a bug. I am continuing anyway.\n");
 	    }
 	    if (version > CURRENT_DATAFILE_VER) {
-	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d.\n   I only know how to handle version %d. Exiting.\n",
+	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d.\n"
+		       "   I only know how to handle version %d. Exiting.\n",
 		       GPE_OWNERINFO_DATA, version, CURRENT_DATAFILE_VER);
 	      fclose (fp);
 	      exit (1);
@@ -251,7 +254,8 @@ maybe_upgrade_datafile ()
     }
 
   if (upgrade_result == UPGRADE_ERROR) {
-    printf ("gpe-ownerinfo: Had found version %d, but cannot upgrade for some reason.\n", version);
+    printf ("gpe-ownerinfo: Had found version %d,"
+	    " but cannot upgrade for some reason.\n", version);
     return (UPGRADE_ERROR);
   }
   else {
@@ -314,9 +318,12 @@ static void
 translate_name_label (GtkWidget *namelabel, gpointer data)
 {
   gtk_label_set_markup (GTK_LABEL (namelabel),
-			g_strdup_printf ("<span lang='%s'><b>%s</b></span> ",
-					 /* TRANSLATORS: only a short word will look good here */
-					 pango_lang_code, _("Owner")));
+			/* cheat a bit with the space here*/
+			g_strdup_printf ("<b>%s</b> ",
+					 /* TRANSLATORS: only a short word will look good
+					  here.  If the word is shorter than 5 letters,
+					  please fill it up with spaces.*/
+					 _("Owner")));
 }
 
 GtkWidget *
@@ -324,12 +331,10 @@ gpe_owner_info (void)
 {
   GtkWidget *notebook;
   GtkWidget *mainvbox;
-  GtkWidget *catlabel;
   GtkWidget *cathbox;
   GtkWidget *indentedhbox;
   GtkWidget *leftcolvbox;
   GtkWidget *namelabel;
-  GtkWidget *addresslabel;
   GtkWidget *address_button_vbox;
   GtkWidget *smallphotodrawingarea;
   GtkWidget *bigphotodrawingarea;
@@ -348,18 +353,16 @@ gpe_owner_info (void)
   gchar *ownerphotofile;
   FILE *fp;
 
-  /* TRANSLATORS: please replace this with the Pango code for your own language */
-  pango_lang_code = g_strdup (_("en"));
-
   ownername    = g_strdup (_("GPE User"));
-  owneremail   = g_strdup ("nobody@localhost.localdomain");
+  /* TRANSLATORS: you should make sure to not use a 'fantasy' domain
+     which might actually exist (maybe in the future). You can
+     replace the 'nobody' though, or use '@example.org' (see RFC 2606) */
+  owneremail   = g_strdup (_("nobody@localhost.localdomain"));
   ownerphone   = g_strdup (_("+99 (9999) 999-9999"));
-  owneraddress = g_strdup_printf ("%s\n"
-				  "<span font_desc='Italic'>%s</span>\n"
-				  "%s" "<span font_desc='Italic'>%s</span>",
-				  _("Configurable with"),
-				  _("Owner Information"),
-				  _("under"), _(" Settings."));
+  /* TRANSLATORS: the translations below should match 'Owner
+     Information' (in gpe-conf) and 'Settings' (in mbdesktop) */
+  owneraddress = g_strdup (_("Configurable with <i>Owner Information</i>"
+			     " under <i>Settings</i>."));
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
@@ -373,8 +376,8 @@ gpe_owner_info (void)
       /* printf ("gpe-ownerinfo: upgrade_result: %d\n", upgrade_result); */
       
       if (upgrade_result == UPGRADE_NOT_NEEDED) {	
-	/*  we have at least version 2, so we need to skip the 1st line
-	 *  and read the photo file name:
+	/*  we have at least datafile version 2, so we need to skip
+	 *  the 1st line and read the photo file name:
 	 */
 	if (fgets (buf, sizeof (buf), fp))
 	  {
@@ -388,7 +391,8 @@ gpe_owner_info (void)
 	    if (access (ownerphotofile, R_OK) == 0)
 	      photofile = g_strdup (ownerphotofile);
 	    else
-	      fprintf (stderr, "gpe-ownerinfo: file '%s' could not be found,\n   using default file '%s'.\n",
+	      fprintf (stderr, "gpe-ownerinfo: file '%s' could not be found,\n"
+		       "   using default file '%s'.\n",
 		       ownerphotofile, photofile);
 	  }
       }
@@ -452,12 +456,6 @@ gpe_owner_info (void)
   gtk_widget_show (mainvbox);
   gtk_container_add (GTK_CONTAINER (notebook), mainvbox);
 
-  catlabel = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (catlabel),
-			g_strdup_printf ("<span lang='%s' weight='bold'>%s</span>",
-					 pango_lang_code, 
-					 _("Owner Information")));
-
   cathbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (cathbox);
   gtk_box_pack_start (GTK_BOX (mainvbox), cathbox, TRUE, TRUE, 0);
@@ -469,7 +467,8 @@ gpe_owner_info (void)
   leftcolvbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (leftcolvbox);
   //gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox,
+		      FALSE, FALSE, gpe_boxspacing);
 
   namelabel = gtk_label_new (NULL);
   gtk_widget_add_translation_hook (namelabel, translate_name_label, NULL);
@@ -481,11 +480,6 @@ gpe_owner_info (void)
   address_button_vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (address_button_vbox);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), address_button_vbox, TRUE, TRUE, 0);
-
-  addresslabel = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (addresslabel),
-			g_strdup_printf ("<span lang='%s'>%s</span>",
-					 pango_lang_code, _("Address:")));
 
   smallphotobutton = gtk_button_new ();
   gtk_widget_show (smallphotobutton);
@@ -530,10 +524,13 @@ gpe_owner_info (void)
   address_layout = gtk_widget_create_pango_layout (address, NULL);
   pango_layout_set_markup (address_layout, owneraddress, -1);
 
-  g_signal_connect (G_OBJECT (address), "size-allocate", G_CALLBACK (set_address_size), adjustment);
-  g_signal_connect (G_OBJECT (address), "expose-event", G_CALLBACK (draw_address), adjustment);
+  g_signal_connect (G_OBJECT (address), "size-allocate",
+		    G_CALLBACK (set_address_size), adjustment);
+  g_signal_connect (G_OBJECT (address), "expose-event",
+		    G_CALLBACK (draw_address), adjustment);
 
-  g_signal_connect (G_OBJECT (adjustment), "value-changed", G_CALLBACK (do_scroll_address), address);
+  g_signal_connect (G_OBJECT (adjustment), "value-changed",
+		    G_CALLBACK (do_scroll_address), address);
 
   addresshbox = gtk_hbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (addresshbox), address, TRUE, TRUE, 0);

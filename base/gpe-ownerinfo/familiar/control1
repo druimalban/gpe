@@ -5,7 +5,7 @@ Version: VERSION
 Architecture: arm
 Provides: gpe-ownerinfo
 Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
-Depends: gpe-icons (>= 0.13), gpe-login2 (>= 0.21), libgpewidget1 (>= 0.07), librootimage0
+Depends: gpe-icons (>= 0.13), gpe-login2 (>= 0.21), libgpewidget1 (>= 0.07), gpe-ownerinfo-locale*
 Suggests: gpe-conf (>= 0.0.3), gpe-setbg
 Description: Displays owner information
 Replaces: gpe-ownerinfo2
