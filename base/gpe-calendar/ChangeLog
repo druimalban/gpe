@@ -1,3 +1,8 @@
+2003-03-19  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Use gtk_window_set_default_size not
+	gtk_widget_set_usize.
+
 2003-03-19  Christian Meyer  <chrisime@gnome.org>
 
         * event-ui.c: Indentation fixes.

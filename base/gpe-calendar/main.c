@@ -318,7 +318,7 @@ main (int argc, char *argv[])
 
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
-  gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
+  gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 
   gpe_set_window_icon (main_window, "icon");
 
