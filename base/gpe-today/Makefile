@@ -18,7 +18,7 @@ CPPFLAGS = -I../libgpewidget -D_GNU_SOURCE
 
 #ifeq ($(DEBUG),yes)
 CFLAGS = -g
-LDFLAGS = -lefence
+#LDFLAGS = -lefence
 #else
 #CFLAGS = -Os -fomit-frame-pointer
 #endif

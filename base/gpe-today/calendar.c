@@ -127,6 +127,18 @@ gboolean calendar_update(gpointer data)
 	/* check events' status */
 	time(&current_time);
 	for (i = 0; (event = (struct calevent *) g_slist_nth_data(calendar_entries, i)); i++) {
+		if ((event->ev->start + event->ev->duration) > current_time) {
+			/* event finished */
+			/* TODO: simply remove the event's widget */
+			calendar_events_db_update();
+			/*
+			  calendar_entries = g_slist_remove(calendar_entries, event);
+			  unpack
+			*/
+
+			continue;
+		}
+
 		if (event->ev->start < current_time) { /* event in progress */
 			if (event->in_progress == TRUE)
 				continue;
@@ -141,18 +153,6 @@ gboolean calendar_update(gpointer data)
 			gtk_widget_set_name(event->summary, "event_in_progress-summary");
 			gtk_widget_set_name(event->time, "event_in_progress-time");
 			
-			continue;
-		}
-			
-		if ((event->ev->start + event->ev->duration) > current_time) {
-			/* event finished */
-			/* TODO: simply remove the event's widget */
-			calendar_events_db_update();
-			/*
-			  calendar_entries = g_slist_remove(calendar_entries, event);
-			  unpack
-			*/
-
 			continue;
 		}
 	}
@@ -192,6 +192,7 @@ void calendar_events_db_update(void)
 	events = event_db_list_for_period(current_time, midnight);
 	for (i = 0; (ev = (event_t) g_slist_nth_data(events, i)); i++)
 		calendar_add_event(ev);
+//      event_db_list_destroy(events);
 
 }
 
@@ -241,6 +242,25 @@ static void calendar_add_event(event_t event)
 
 	gtk_box_pack_start(GTK_BOX(calendar.eventsvbox), vbox, FALSE, FALSE, 0);
 	gtk_widget_show_all(vbox);
+
+	/* change event->start for recurring events */
+	if (event->recur) {
+		int min, sec, hour;
+		time_t now;
+		struct tm *ev = localtime(&event->start);
+		
+		min = ev->tm_min;
+		sec = ev->tm_sec;
+		hour = ev->tm_hour;
+
+		time(&now);
+		ev = localtime(&now);
+		ev->tm_min = min;
+		ev->tm_sec = sec;
+		ev->tm_hour = hour;
+
+		event->start = mktime(ev);
+	}
 }
 
 static void free_calendar_entries(void)
