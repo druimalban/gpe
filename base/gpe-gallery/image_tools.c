@@ -12,6 +12,7 @@
 #include <math.h>
 #include <gtk/gtk.h>
 #include <assert.h>
+#include <string.h>
 
 static void image_convolve( GdkPixbuf* pixbuf, int* mask, int mask_size, int mask_divisor ) {
 
