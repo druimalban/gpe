@@ -1,5 +1,7 @@
 2002-06-16  Philip Blundell  <pb@debian.org>
 
+	* default/keys.xpm: New file.
+	
 	* Makefile (ipkg): Expect files in familiar subdir.  Set prefix 
 	to /usr.
 	(install): Use mode 644.
