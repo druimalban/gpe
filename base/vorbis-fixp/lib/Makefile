@@ -31,7 +31,7 @@ libfixpvorbis.a: $(OBJS)
 	$(AR) rcs $@ $(OBJS)
 
 libvorbis-fixp.so.0: libfixpvorbis.a
-	gcc -shared -o $@ -Wl,--whole-archive $< -Wl,--no-whole-archive
+	gcc -shared -o $@ -Wl,--whole-archive $< -Wl,--no-whole-archive -Wl,-soname -Wl,libvorbis-fixp.so.0
 
 clean:
 	rm -f libfixpvorbis.a *.o *.s *.d *~
