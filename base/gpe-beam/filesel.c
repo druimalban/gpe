@@ -36,6 +36,7 @@ select_fs (GtkButton * button, gpointer user_data)
 	char *file = NULL;
 	struct stat st;
 	struct fstruct *s = (struct fstruct *) user_data;
+		
 	file = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (s->fs)));
 	if (stat (file, &st) == 0)
 	{
@@ -60,13 +61,11 @@ cancel_fs (GtkButton * button, gpointer user_data)
 {
 	struct fstruct *s = (struct fstruct *) user_data;
 
-	gdk_threads_enter ();
 	if (s->Cancel)
 		s->Cancel (s->data);
 
 	gtk_widget_destroy (GTK_WIDGET (s->fs));
 	selector_open = FALSE;
-	gdk_threads_leave ();
 }
 
 
@@ -86,7 +85,7 @@ ask_user_a_file (char *path, char *prompt,
 {
 	char buf[1024];
 	char *ret = getcwd (buf, 1024);
-	gdk_threads_enter();
+	
 	if (path)		// this is a hack, we're all waiting a gtk_file_selection_change_directory().. (TODO)
 		chdir (path);
 	{
@@ -136,5 +135,4 @@ ask_user_a_file (char *path, char *prompt,
 					  (gpointer) s->fs);
 		gtk_widget_show (s->fs);
 	}
-	gdk_threads_leave();
 }

@@ -1,3 +1,7 @@
+2003-11-27	Florian Boor <florian.boor@kernelconcepts.de>
+	* main.c: Fixed bug 1061.
+	* Some format changes.
+	
 2003-11-26	Florian Boor <florian.boor@kernelconcepts.de>
 	* We have a french translation, thanks!
 

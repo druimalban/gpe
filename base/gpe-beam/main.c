@@ -363,10 +363,8 @@ tx_file_select (char *filename, gpointer data)
 void
 exec_file_abort ()
 {
-	gdk_threads_enter ();
 	gtk_widget_destroy (dlgStatus);
 	lStatus = NULL;
-	gdk_threads_leave ();
 }
 
 
@@ -376,7 +374,6 @@ tx_file_cancel (gpointer data)
 	scan_thread =
 		g_thread_create ((GThreadFunc) exec_file_abort, NULL, FALSE,
 				 NULL);
-
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start file transmit."));
 	
@@ -409,9 +406,11 @@ do_send_file (void)
 	}
 	else
 	{
+		gdk_threads_enter();
 		ask_user_a_file (getenv ("HOME"),
 				 _("Select file to transmit"), tx_file_select,
 				 tx_file_cancel, NULL);
+		gdk_threads_leave();
 		printf ("exit do send...\n");
 	}
 }
@@ -481,7 +480,7 @@ check_file_import (char *filename)
 					      _("File '%s' looks like a vCard, "
 					       "do you want to import it?"), filename);
 		
-		 g_signal_connect_after (GTK_OBJECT (dlg), "response",
+		g_signal_connect_after (GTK_OBJECT (dlg), "response",
                            G_CALLBACK (do_import_file),
                            filename);
 		gtk_widget_show_all(dlg);
@@ -537,8 +536,7 @@ do_receive_file (void)
 		{
 			gdk_threads_enter ();
 			ts = g_strdup_printf ("%s %s",
-					      _
-					      ("Received file"),
+					      _("Received file"),
 					      str_last_filename);
 			gtk_label_set_text (GTK_LABEL (lTStatus), ts);
 			free (ts);
