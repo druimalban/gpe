@@ -1,8 +1,9 @@
 Package: <package>-<language>
+Provides: apps-locale-<language>
 Section: base
 Priority: optional
 Version: <version>
 Architecture: all
 Maintainer: <maintainer>
-Depends: ipkg (>= 0.99.xx), <package>, locales-base-<language>
+Depends: ipkg (>= 0.99.30), <package>, locale-base-<language>
 Description: Translation into <language> for <package>.
