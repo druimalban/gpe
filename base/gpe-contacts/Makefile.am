@@ -12,12 +12,14 @@ install-data-local:
 	@$(NORMAL_INSTALL)
 	if test -d $(srcdir)/icons; then \
 	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
-	  for pixmap in $(srcdir)/icons/*; do \
+	  for pixmap in $(srcdir)/icons/*.xpm; do \
 	    if test -f $$pixmap; then \
-	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(PREFIX)/share/pixmaps; \
+	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
 	    fi \
 	  done \
 	fi
+	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/pixmaps
+	$(INSTALL_DATA) $(srcdir)/icons/gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps
 	$(INSTALL_DATA) contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
 	install -D gpe-contacts.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-contacts
 
