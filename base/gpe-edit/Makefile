@@ -6,7 +6,7 @@ GTK2 = yes
 VERSION = 0.18
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW fr ro
+LINGUAS = id pt de zh_TW fr ro wa
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -63,7 +63,7 @@ install-program: all gpe-edit.desktop
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
 	install -D -m 644 gpe-edit.mime $(DESTDIR)/etc/mime-handlers/gpe-edit.mime
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 
 clean: clean-po
 	rm -f gpe-edit $(OBJS) $(PACKAGE).desktop
