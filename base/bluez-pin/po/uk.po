@@ -1,0 +1,40 @@
+# Ukrainian translation of Bluez-pin.
+# Igor Sachko <kick@tcs.com.ua>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin-0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2004-10-13 14:33+0200\n"
+"Last-Translator: Igor Sachko <kick@tcs.com.ua>\n"
+"Language-Team: Ukrainian <translation-team-uk@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Ukrainian\n"
+"X-Poedit-Country: UKRAINE\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Вихідне з'єднання до"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Вхідне з'єднання від"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr ""
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Зберегти в базі даних"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr ""
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr ""
