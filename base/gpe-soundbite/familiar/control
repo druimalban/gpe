@@ -1,7 +1,7 @@
 Package: gpe-soundbite
 Section: base
 Priority: optional
-Version: 1.0.2
+Version: 1.0.3
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libgtk1.2, libgpewidget0 (>= 0.14), gpe-icons (>= 0.04), libgsm1, libesd0
