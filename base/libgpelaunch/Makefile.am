@@ -7,7 +7,7 @@ libgpelaunch_la_LIBADD = @LAUNCHER_LIBS@
 libgpelaunch_la_SOURCES = launch.c launch.h desktop_file.c desktop_file.h
 
 gpeincludedir = $(includedir)/gpe
-gpeinclude_HEADERS = launch.h desktop_file.h
+gpeinclude_HEADERS = gpe/launch.h gpe/desktop_file.h
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libgpelaunch.pc
