@@ -1,3 +1,9 @@
+2002-09-08  Philip Blundell  <philb@gnu.org>
+
+	* gpe/gtksimplemenu.h: New file.
+	* gtksimplemenu.c: Likewise.
+	* Makefile (MEMBERS): Add gtksimplemenu.
+
 2002-09-08  Robert Mibus  <mibus@handhelds.org>
 
 	* question.[ch]: Fix bug #85 (dc's mis-commit ;-)
