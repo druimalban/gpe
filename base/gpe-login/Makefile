@@ -26,8 +26,6 @@ update-po: po/$(PACKAGE).pot
 po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot $^
 
-all: gpe-login gpe-dm
-
 gpe-login: gpe-login.o
 	$(CC) -o $@ $< $(LDFLAGS) `gtk-config --libs` -lcrypt
 
