@@ -1,6 +1,6 @@
-USER = cmarqu
+#USER = cmarqu
 PACKAGE = gpe-ownerinfo
-VERSION = 0.22
+VERSION = 0.23
 
 PREFIX = /usr/local
 DEBUG = no
@@ -11,29 +11,15 @@ LIB_TARGET = libgpe-ownerinfo.a
 LIB_MEMBERS = $(PACKAGE)
 MEMBERS = main
 
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
 BUILD = ../build
 else
-CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += -lgpewidget
-
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
-CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
 
 .SUFFIXES: .d
 .PHONY: all-mo install-mo update-po extract-po clean-po translation-package dist dist-prep ipkg dpkg printinfo tag
@@ -52,7 +38,7 @@ $(LIB_TARGET): $(LIB_OBJS)
 	ar cq $@ $^
 
 $(PACKAGE): $(OBJS) $(LIB_TARGET)
-	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS) -L. -lgpe-ownerinfo
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -L. -lgpe-ownerinfo
 
 install-program: all 
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
