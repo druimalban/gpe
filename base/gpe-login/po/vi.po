@@ -1,0 +1,83 @@
+# Vietnamese Translation for gpe-login-0.60.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2005-02-01 22:19+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr "Đăng nhập không đúng"
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr "Có người dùng ấy rồi"
+
+#: gpe-login.c:581
+msgid "Passwords don't match"
+msgstr "Hai mật khẩu không khớp được"
+
+#: gpe-login.c:590
+msgid "Empty password not allowed"
+msgstr "Không cho phép mật khẩu trống"
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Ghi"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr "định chuẩn lại màn ảnh sờ"
+
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr "vi"
+
+#: gpe-login.c:1396
+msgid "Screen locked"
+msgstr "Màn ảnh bị khóa"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Tên dùng"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+#: gpe-login.c:1460
+msgid "Enter password with hard keys"
+msgstr "Nhập mật khẩu bằng phím cứng"
+
+#: gpe-login.c:1517
+msgid "Full name"
+msgstr "Họ tên"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Xác nhận mật khẩu"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "Người dùng mới"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Đăng xuất"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Đăng xuất GPE"

@@ -2,11 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.75
+VERSION = 0.76
 DEBUG = no
 
-LINGUAS = de sv wa nl pt cs fr hu ro ru sr sk es zh_CN
-
+#LINGUAS = pt_BR nl sr pt ro ru sv sk zh_TW cs vi de wa es fr zh_CN hu
 CONTROL_GPE_LOGIN = control1
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
@@ -68,5 +67,5 @@ clean: clean-po
 	rm -f gpe-login $(OBJS) $(DEPS) gpe-lock-display gpe-lock-display.o gpe-lock-display.d
 
 include $(BUILD)/Makefile.dpkg_ipkg
-include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.translation-auto-linguas
 -include $(DEPS)

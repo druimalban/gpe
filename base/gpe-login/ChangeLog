@@ -1,6 +1,18 @@
+2005-02-28  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.76 released.
+	
+2005-02-28  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Fix warning.
+
+	* Makefile: Use Makefile.translation-auto-linguas.
+
+	* po/vi.po: New file, courtesy Clytie Siddall.
+
 2005-02-23  Chris Lord  <cwiiis@handhelds.org>
 
-	* Add recalibration on a long stylus-press
+	* gpe-login.c: Add recalibration on a long stylus-press
 
 2005-01-03  Phil Blundell  <philb@gnu.org>
 

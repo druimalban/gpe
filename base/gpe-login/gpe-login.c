@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1763,7 +1763,7 @@ main (int argc, char *argv[])
 
   socket_frame = gtk_aspect_frame_new (NULL, 0, 0, 3.0, FALSE);
   gtk_frame_set_shadow_type (GTK_FRAME (socket_frame), GTK_SHADOW_NONE);
-  gtk_container_set_border_width (GTK_FRAME (socket_frame), 0);
+  gtk_container_set_border_width (GTK_CONTAINER (socket_frame), 0);
 
   if (autolock_mode || have_users)
     {
