@@ -57,10 +57,13 @@
 	[ ]note properties
 		[ ]type: text/sketch/voice
 		[ ]category: none/<named>
-		[ ]a line of text??? (=note on note!)
+		[ ]title
 		[ ]volatile/permanante
-		[ ]date/time (read only?)
 		[ ]background/template
+		[ ]created_on
+		[ ]updated_on
+		[ ]user_datetime
+		[ ]filename; url, size
 	[ ]resizable sketch
 		[ ]need tools: pan mode, zoom+ zoom-, fit, grown, shrink
 	[ ]misc

@@ -1,6 +1,6 @@
 PREFIX  = /usr/local
 
-VERSION = 0.2.7-pre
+VERSION = 0.2.7pre
 
 PACKAGE = gpe-sketchbook
 
