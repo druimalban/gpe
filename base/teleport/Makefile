@@ -44,7 +44,7 @@ clean:
 install: all install-mo
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s teleport $(DESTDIR)$(PREFIX)/bin/
-	install -s tpkeygen $(DESTDIR)$(PREFIX)/bin/
+	install -s tp-keygen $(DESTDIR)$(PREFIX)/bin/
 
 include ../build/Makefile.dpkg_ipkg
 include ../build/Makefile.translation
