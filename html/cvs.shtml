@@ -46,10 +46,10 @@ applications:
 
    <pre>
       $ cd libgpewidget
-      $ make libgpewidget
-      $ make install libgpewidget
+      $ make
+      $ make install
       $ cd ../gpe-icons
-      $ make install gpe-icons
+      $ make install
    </pre>
 </p>
 
