@@ -1,3 +1,10 @@
+2003-02-13  Philip Blundell  <pb@nexus.co.uk>
+
+	* gpe-terminal.menu: Deleted.
+	* gpe-terminal.desktop: New.
+	* Makefile: Install .desktop instead of .menu.
+	* familiar/control (Version): 0.0.2
+
 2003-02-11  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-terminal.menu: Add option -sr ro rxvt-aa call to get the
