@@ -61,6 +61,7 @@ gpe_about (gchar * app_name,
 
   //--about header: [icon_gpe] name/version [icon_app]
   icon_pixbuf = gpe_find_icon ("gpe-logo");
+  icon_pixbuf = gdk_pixbuf_scale_simple (icon_pixbuf, 48,48, GDK_INTERP_BILINEAR);
   icon_gpe    = gpe_render_icon (window_about->style, icon_pixbuf);
 
   icon_pixbuf = gpe_find_icon (app_icon);
