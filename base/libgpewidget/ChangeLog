@@ -6,6 +6,17 @@
 
 	* render.c (gpe_render_pixmap): Correct alpha in composited image.
 
+	* Makefile (SONAME): Use libgpewidget.so.1 if building for GTK 2.
+	(CFLAGS, LDFLAGS): Conditionalise on GTK version.
+	(libgpewidget.a): New target.
+	(MEMBERS): Delete gpedialog, gtksmallentry, nocursor.  Build
+	appropriate versions of gtkgpepixmap and gpetooltips for GTK in
+	use.
+
+	* gpedialog.c: Deleted.
+	* gtksmallentry.c: Likewise.
+	* nocursor.c: Likewise.
+
 2002-08-03  Philip Blundell  <philb@gnu.org>
 
 	* gtkgpepixmap.h (gtk_gpe_pixmap_set_build_insensitive): Second

@@ -195,7 +195,8 @@ day_update (GtkDateSel *sel, GtkWidget *w)
 }
 
 static void
-make_field (GtkDateSel *sel, struct elem *e, GtkSignalFunc click, GtkSignalFunc update)
+make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateSel *),
+	    void (*update)(GtkDateSel *, GtkWidget *))
 {
   GtkWidget *arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
   GtkWidget *arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
@@ -219,7 +220,7 @@ make_field (GtkDateSel *sel, struct elem *e, GtkSignalFunc click, GtkSignalFunc 
   gtk_box_pack_start (GTK_BOX (sel), e->text, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (sel), e->arrow_r, TRUE, FALSE, 2);
 
-  gtk_signal_connect (sel, "changed", update, e->text);
+  gtk_signal_connect (GTK_OBJECT (sel), "changed", update, e->text);
   update (sel, e->text);
 }
 

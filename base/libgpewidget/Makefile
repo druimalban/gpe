@@ -1,15 +1,29 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 
-SONAME = libgpewidget.so.0
 GTKRC = gtkrc
 
-MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render gtkgpepixmap dirbrowser picturebutton what stylus nocursor gpetooltips screensize gpedialog
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize
 
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
+ifeq ($(GTK2),yes)
+MEMBERS += gpetooltips2 gtkgpepixmap2
+SONAME = libgpewidget.so.1
+else
+MEMBERS += gpetooltips gtkgpepixmap
+SONAME = libgpewidget.so.0
+endif
+
+ifeq ($(GTK2),yes)
+CFLAGS = `pkg-config --cflags gtk+-2.0`
+LDFLAGS = `pkg-config --libs gtk+-2.0`
+else
+CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags`
+LDFLAGS =`gtk-config --libs` `gdk-pixbuf-config --libs` 
+endif
+CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g
+LDFLAGS += -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
@@ -32,7 +46,10 @@ libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) `gtk-config --libs` `gdk-pixbuf-config --libs` $(LDFLAGS)
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
+
+libgpewidget.a: $(OBJS)
+	ar cq $@ $^
 
 .c.s:;
 	$(CC) $(CFLAGS) -S $<
