@@ -6,7 +6,7 @@
 
 	* event-ui.c (click_ok): Disallow end time earlier than start time.
 
-	* familiar/control (Depends): Require libgpewidget 0.07.  Remove
+	* familiar/control (Depends): Require libgpewidget 0.08.  Remove
 	explicit dependency on gdk-pixbuf2.
 
 2002-06-20  Philip Blundell  <pb@debian.org>
