@@ -120,11 +120,11 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/File/_Close"),  NULL, do_safe_exit, 0, "<StockItem>", GTK_STOCK_QUIT },
   { N_("/_Rules"),         NULL,         NULL, 0, "<Branch>" },
   { N_("/Rules/_Add"), "", on_add_clicked, MI_ADD , "<StockItem>", GTK_STOCK_ADD},
-  { N_("/Rules/_Edit"), "", on_add_clicked, MI_ADD , "<StockItem>", GTK_STOCK_PROPERTIES},
+  { N_("/Rules/_Edit"), "", on_edit_clicked, MI_ADD , "<StockItem>", GTK_STOCK_PROPERTIES},
   { N_("/Rules/_Delete"), "", on_remove_clicked, MI_DELETE , "<StockItem>", GTK_STOCK_DELETE},
-  { N_("/Rules/_Info"), "", on_info_clicked, MI_INFO , "<Item>"},
+/*  { N_("/Rules/_Info"), "", on_info_clicked, MI_INFO , "<Item>"},*/
   { N_("/Rules/s2"), NULL , NULL,    0, "<Separator>"},
-  { N_("/Rules/_Apply"), "", on_rules_apply_clicked, MI_RULES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
+  { N_("/Rules/Appl_y"), "", on_rules_apply_clicked, MI_RULES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
   { N_("/_Help"),         NULL, NULL,           0, "<Branch>" },
   { N_("/_Help/Index"),   NULL, on_help_clicked,    0, "<StockItem>",GTK_STOCK_HELP },
   { N_("/_Help/About"),   NULL, on_about_clicked,    0, "<Item>" },
@@ -459,6 +459,7 @@ void
 on_rules_apply_clicked (GtkWidget * w)
 {
 	send_message(PK_COMMAND,CMD_SET,NULL);
+	show_message(GTK_MESSAGE_INFO, _("Rules applied."));
 }
 
 
@@ -467,7 +468,6 @@ update_tree(void)
 {
 	int i;
 	GtkTreeIter iter;
-
 
 #warning improve this
 	gtk_tree_store_clear(GTK_TREE_STORE(store));
@@ -808,26 +808,26 @@ create_fMain (void)
 			       GTK_ORIENTATION_HORIZONTAL);
 
   bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
-			   _("Apply rules"), _("Apply rules"),
+			   _("Apply rules to your system"), NULL,
 			   (GtkSignalFunc) on_rules_apply_clicked , NULL, -1);
 			   
   bAdd = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ADD,
-			   _("Add rule"), _("Add rule"),
+			   _("Add a new rule"), NULL,
 			   (GtkSignalFunc) on_add_clicked , NULL, -1);
 			   
   bRemove = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REMOVE,
-			   _("Remove rule"), _("Remove Rule"),
+			   _("Remove selected rule"), NULL,
 			   (GtkSignalFunc) on_remove_clicked , NULL, -1);
 			   
   bEdit = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
-			   _("Edit rule"), _("Edit Rule"),
+			   _("Edit selected rule"), NULL,
 			   (GtkSignalFunc) on_edit_clicked , NULL, -1);
 			   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
   pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"),
-			   _("Close application"), _("Close application"), pw,
+			   _("Close application"), NULL, pw,
 			   (GtkSignalFunc) do_safe_exit, NULL);
 			   
   gtk_box_pack_start(GTK_BOX(vbox),toolbar,FALSE,TRUE,0);
@@ -864,9 +864,6 @@ create_fMain (void)
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
   gtk_container_add(GTK_CONTAINER(cur),treeview);	
   
-/*	g_signal_connect_after (G_OBJECT (treeview), "cursor-changed",
-			  G_CALLBACK (tv_row_clicked), NULL);
-*/
 	renderer = gtk_cell_renderer_toggle_new ();
 	gtk_cell_renderer_toggle_set_radio(GTK_CELL_RENDERER_TOGGLE(renderer),FALSE);
 	g_signal_connect (G_OBJECT (renderer), "toggled",

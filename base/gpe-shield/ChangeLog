@@ -1,8 +1,18 @@
+2004-09-21 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* interface.c: Aded feedback dialog applying rules.
+	               Improved button bar help, removed obsolete stuff.
+	* interface.c: Removed useless "info" menu entry, changed shortcut.
+	* editrule.c: Change window title to "Add Rule" when adding new rules.
 
 2004-09-03 Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* Changed title to "Network Shield" to avoid confusion, it 
           is not really a firewall.
+
+2004-08-16 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* backend.c: Fixed major bug causing segfault on some platforms.
 
 2004-07-29 Florian Boor <florian.boor@kernelconcepts.de>
 	

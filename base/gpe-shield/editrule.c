@@ -84,18 +84,18 @@ create_dialog()
 	GList *slChain = NULL;
 	GList *slProtocol = NULL;
 	
-	slTarget = g_list_append(slTarget,VAL_ACCEPT);
-	slTarget = g_list_append(slTarget,VAL_DROP);
-	slTarget = g_list_append(slTarget,VAL_REJECT);
+	slTarget = g_list_append(slTarget, VAL_ACCEPT);
+	slTarget = g_list_append(slTarget, VAL_DROP);
+	slTarget = g_list_append(slTarget, VAL_REJECT);
 
-	slChain = g_list_append(slChain,VAL_INPUT);
-	slChain = g_list_append(slChain,VAL_OUTPUT);
-	slChain = g_list_append(slChain,VAL_FORWARD);
+	slChain = g_list_append(slChain, VAL_INPUT);
+	slChain = g_list_append(slChain, VAL_OUTPUT);
+	slChain = g_list_append(slChain, VAL_FORWARD);
 	
-	slProtocol = g_list_append(slProtocol,VAL_TCP);
-	slProtocol = g_list_append(slProtocol,VAL_UDP);
-	slProtocol = g_list_append(slProtocol,VAL_ICMP);
-	slProtocol = g_list_append(slProtocol,VAL_ALL);
+	slProtocol = g_list_append(slProtocol, VAL_TCP);
+	slProtocol = g_list_append(slProtocol, VAL_UDP);
+	slProtocol = g_list_append(slProtocol, VAL_ICMP);
+	slProtocol = g_list_append(slProtocol, VAL_ALL);
 	
 	dialog = 
 		gtk_dialog_new_with_buttons(_("Edit rule"),
@@ -113,9 +113,9 @@ create_dialog()
 	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),table,TRUE,TRUE,0);
 	
 	label = gtk_label_new(NULL);
-	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-	text = g_strdup_printf("<b>%s</b>",_("Edit rule parameters"));
-	gtk_label_set_markup(GTK_LABEL(label),text);
+	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
+	text = g_strdup_printf("<b>%s</b>", _("Edit rule parameters"));
+	gtk_label_set_markup(GTK_LABEL(label), text);
 	g_free(text);
 	gtk_table_attach(GTK_TABLE(table),label,0,2,0,1,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	
@@ -178,6 +178,8 @@ edit_rule(rule_t *rule)
 {
 	int i;
 	char *text;
+		
+	edit_dialog = create_dialog();
 	
 	/* check if we need to allocate a new rule */
 	if (rule == NULL)
@@ -185,10 +187,9 @@ edit_rule(rule_t *rule)
 		rule = malloc(sizeof(rule_t));
 		memset(rule,0,sizeof(rule_t));
 		/* set some defaults */
-		sprintf(rule->name,"%s",_("New rule"));
+		sprintf(rule->name,"%s", _("New rule"));
+		gtk_window_set_title(GTK_WINDOW(edit_dialog), _("Add Rule"));
 	}
-	
-	edit_dialog = create_dialog();
 	
 	/* fill in values */
 	gtk_entry_set_text(GTK_ENTRY(eName),rule->name);

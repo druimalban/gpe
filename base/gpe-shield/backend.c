@@ -41,6 +41,7 @@ static int rule_count = 0;
 #define IPTABLES_CMD1 "/usr/sbin/iptables"
 #define IPTABLES_CMD2 "/sbin/iptables"
 #define IPTABLES_CMD3 "/usr/local/sbin/iptables"
+#define IPTABLES_CMD4 "/usr/bin/iptables"
 
 static const char* IPTABLES_CMD = NULL;
 
@@ -144,13 +145,17 @@ do_load_rules(void)
 void
 do_clear(void)
 {
-	char* cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"--flush");
+	char* cmd;
+	
+	cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"--flush");
 	system(cmd);
+	
 	g_free(cmd);
 	cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"-P INPUT ACCEPT"); /* reset input policy */
 	system(cmd);
 	g_free(cmd);
 	g_free(rule_info);
+	
 	rule_info = NULL;
 	rule_count = 0;
 }
@@ -387,6 +392,7 @@ wait_message ()
 
 	pfd[0].fd = sock;
 	pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
+	
 	while (poll (pfd, 1, -1) > 0)
 	{
 		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP))
@@ -497,7 +503,8 @@ find_iptables ()
 		IPTABLES_CMD = IPTABLES_CMD2;
 	else if (!access(IPTABLES_CMD3,X_OK))
 		IPTABLES_CMD = IPTABLES_CMD3;
-	
+	else if (!access(IPTABLES_CMD4,X_OK))
+		IPTABLES_CMD = IPTABLES_CMD4;
 }
 
 /* app mainloop */
@@ -505,8 +512,16 @@ find_iptables ()
 int
 suidloop (int csock)
 {
-        find_iptables();
-
+	find_iptables();
+	
+	if (IPTABLES_CMD == NULL)
+	{
+		fprintf(stderr, "Iptables not found, exiting.\n");
+		close (sock);
+		unlink (PK_SOCKET);
+		exit (2);
+	}
+	
 	sock = csock;
 
 	while (wait_message ()) ;
