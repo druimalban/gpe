@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(minimix, 0.5, gpe@handhelds.org)
+AC_INIT(minimix, 0.6, gpe@handhelds.org)
 AC_CONFIG_SRCDIR([minimix.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_CONFIG_HEADER([config.h])
