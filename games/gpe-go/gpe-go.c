@@ -636,44 +636,6 @@ on_drawing_area_expose_event (GtkWidget       *widget,
   return FALSE;
 }
 
-
-gboolean
-on_drawing_area_motion_notify_event(GtkWidget       *widget,
-                                    GdkEventMotion  *event,
-                                    gpointer         user_data){
-  int x, y;
-
-  GdkModifierType state;
-
-  if (event->is_hint){
-    gdk_window_get_pointer (event->window, &x, &y, &state);
-  }
-  else{
-    x = event->x;
-    y = event->y;
-    state = event->state;
-  }
-
-  go.col = (x - go.margin) / go.cell_size + 1;
-  go.row = (y - go.margin) / go.cell_size + 1;
-  //TRACE("[%d,%d] (%d,%d) %d", go.col, go.row, x, y, state);
-
-
-  if (state & GDK_BUTTON1_MASK){
-  }
-
-  return FALSE;
-}
-
-
-gboolean
-on_drawing_area_button_press_event(GtkWidget       *widget,
-                                   GdkEventButton  *event,
-                                   gpointer         user_data){
-  //TRACE("press");
-  return FALSE;
-}
-
 void clear_grid(){
   int i,j;
   for(i=0; i<= go.game_size; i++)
@@ -1151,7 +1113,8 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
                                      GdkEventButton  *event,
                                      gpointer         user_data){
   TRACE("release");
-
+  go.col = (event->x - go.margin) / go.cell_size + 1;
+  go.row = (event->y - go.margin) / go.cell_size + 1;
   play_at(go.col, go.row);
 
   return FALSE;
@@ -1652,30 +1615,18 @@ void gui_init(){
   gtk_widget_set_usize (drawing_area, BOARD_SIZE, BOARD_SIZE);
   gtk_widget_set_events (drawing_area, 0
                          | GDK_EXPOSURE_MASK
-                         | GDK_POINTER_MOTION_MASK
-                         | GDK_POINTER_MOTION_HINT_MASK
                          | GDK_BUTTON_PRESS_MASK
                          | GDK_BUTTON_RELEASE_MASK
-                         //| GDK_LEAVE_NOTIFY_MASK
                          );
   go.drawing_area = drawing_area;
   go.drawing_area_pixmap_buffer = NULL;
 
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "configure_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_configure_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_expose_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "motion_notify_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_motion_notify_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_button_press_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "button_release_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_button_release_event),
-                      NULL);
+  g_signal_connect (G_OBJECT (drawing_area), "configure_event",
+                    G_CALLBACK (on_drawing_area_configure_event), NULL);
+  g_signal_connect (G_OBJECT (drawing_area), "expose_event",
+                    G_CALLBACK (on_drawing_area_expose_event), NULL);
+  g_signal_connect (G_OBJECT (drawing_area), "button_release_event",
+                    G_CALLBACK (on_drawing_area_button_release_event), NULL);
 
   //--New game page
   new_game_dialog = build_new_game_dialog();
