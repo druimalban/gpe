@@ -52,7 +52,8 @@ gpe-filemanager: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all
-	install -D gpe-filemanager $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -s gpe-filemanager $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 	install -D -m 644 gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png
 	install -D -m 644 gpe-filemanager.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-filemanager
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
@@ -61,7 +62,6 @@ install-program: all
 	for i in $(SPINNER_PIXMAPS); do install -D pixmaps/spinner/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/spinner/$$i; done
 	install -m 644 pixmaps/zoom_in.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/zoom_in.png
 	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/zoom_out.png
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 
 uninstall:
 	rm -rf $(DESTDIR)$(PREFIX)/bin/gpe-filemanager $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png $(DESTDIR)$(PREFIX)/lib/menu/gpe-filemanager $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager
