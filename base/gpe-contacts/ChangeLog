@@ -1,6 +1,10 @@
+2004-08-17  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Released Version 0.25
+
 2004-08-10  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    * main.c: Finished vcard import, disbled broken dialog.
+    * main.c: Finished vcard import, disabled broken dialog.
     * main.c: Made tag search case insensitive, imported contacts are 
               displayed correctly now.    
     
