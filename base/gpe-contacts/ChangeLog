@@ -1,3 +1,7 @@
+2003-04-11  Philip Blundell  <philb@gnu.org>
+
+	* editing.c (create_edit): Don't use GtkDialog.
+
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* callbacks.c (on_edit_save_clicked): Put decl in right place.

@@ -166,12 +166,20 @@ create_edit (void)
 
   tooltips = gtk_tooltips_new ();
 
+#if 0
   edit = gtk_dialog_new ();
+  action_area = GTK_DIALOG (edit)->action_area;
+  vbox = GTK_DIALOG (edit)->vbox;
+#else
+  edit = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  action_area = gtk_hbox_new (FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), action_area, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (edit), vbox);
+#endif
+
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
   gpe_set_window_icon (edit, "icon");
-
-  vbox = GTK_DIALOG (edit)->vbox;
-  action_area = GTK_DIALOG (edit)->action_area;
 
   notebook2 = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (vbox), notebook2, 
