@@ -31,6 +31,7 @@
 #include "month_view.h"
 
 #include <libdisplaymigration/displaymigration.h>
+#include <gpe/pim-categories.h>
 
 #include <locale.h>
 
@@ -195,6 +196,9 @@ main (int argc, char *argv[])
   displaymigration_init ();
 
   if (event_db_start () == FALSE)
+    exit (1);
+
+  if (gpe_pim_categories_init () == FALSE)
     exit (1);
 
   while ((option_letter = getopt (argc, argv, "s:e:")) != -1)

@@ -1,3 +1,7 @@
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (CPPFLAGS, LDFLAGS): Add libgpepimc.
+
 2004-02-20  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
         * event-ui.c : update last_modified when changes are made 

@@ -28,6 +28,7 @@
 #include <gpe/event-db.h>
 #include <gpe/spacing.h>
 #include <gpe/schedule.h>
+#include <gpe/pim-categories.h>
 
 #include "globals.h"
 #include "event-ui.h"
@@ -66,6 +67,9 @@ struct edit_state
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj,
                 *yearlyspin_adj;
 
+  GSList *categories;
+  GtkWidget *categories_label;
+
   GtkWidget *notebookrecur;
 
   guint page;
@@ -81,6 +85,9 @@ static const int alarm_multipliers[] = { 60, 60*60, 24*60*60, 7*24*60*60 };
 static void
 destroy_user_data (gpointer p)
 {
+  struct edit_state *s = (struct edit_state *)p;
+
+  g_slist_free (s->categories);
   g_free (p);
 }
 
@@ -402,6 +409,9 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary),
                                           0, -1);
 
+  g_slist_free (ev_d->categories);
+  ev_d->categories = g_slist_copy (s->categories);
+
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
       unsigned int mi;
@@ -524,6 +534,58 @@ set_notebook_page (GtkWidget *w, struct edit_state *s)
   return FALSE;
 }
 
+static gchar *
+build_categories_string (struct edit_state *es)
+{
+  gchar *s = NULL;
+  GSList *iter;
+
+  for (iter = es->categories; iter; iter = iter->next)
+    {
+      const gchar *cat;
+      cat = gpe_pim_category_name ((int)iter->data);
+
+      if (cat)
+	{
+	  if (s)
+	    {
+	      char *ns = g_strdup_printf ("%s, %s", s, cat);
+	      g_free (s);
+	      s = ns;
+	    }
+	  else
+	    s = g_strdup (cat);
+	}
+    }
+
+  return s;
+}
+
+static void
+update_categories (GtkWidget *ui, GSList *new, struct edit_state *s)
+{
+  gchar *str;
+
+  g_slist_free (s->categories);
+
+  s->categories = g_slist_copy (new);
+
+  str = build_categories_string (s);
+  gtk_label_set_text (GTK_LABEL (s->categories_label), str);
+  g_free (str);
+}
+
+static void
+click_categories (GtkWidget *b, GtkWidget *w)
+{
+  struct edit_state *s;
+  GtkWidget *ui;
+
+  s = g_object_get_data (G_OBJECT (w), "edit_state");
+  
+  ui = gpe_pim_categories_dialog (s->categories, G_CALLBACK (update_categories), s);
+}
+
 static GtkWidget *
 build_edit_event_window (void)
 {
@@ -562,6 +624,9 @@ build_edit_event_window (void)
   GtkWidget *descriptionhbox;
   GtkWidget *description;
   GtkWidget *descriptionlabel;
+
+  /* Categories widgets */
+  GtkWidget *cathbox, *catbutton, *catlabel;
 
   /* Buttons !! */
   GtkWidget *buttonbox;
@@ -759,6 +824,18 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask1, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask2, FALSE, FALSE, 0);
 
+  /* Categories */
+  cathbox = gtk_hbox_new (FALSE, 0);
+  catbutton = gtk_button_new_with_label (_("Categories:"));
+  catlabel = gtk_label_new (NULL);
+
+  gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 4);
+  gtk_misc_set_alignment (GTK_MISC (catlabel), 0.0, 0.5);  
+
+  g_signal_connect (G_OBJECT (catbutton), "clicked",
+                    G_CALLBACK (click_categories), window);
+
   /* Description textarea */
   descriptionhbox     = gtk_hbox_new (TRUE, boxspacing);
 
@@ -782,6 +859,7 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxevent), menutypehbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), s->notebooktype, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), cathbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionlabel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionhbox, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vboxevent), border);
@@ -829,12 +907,9 @@ build_edit_event_window (void)
 
   /* Button box */
   buttonbox           = gtk_hbox_new (FALSE, 0);
-  buttonok            = gpe_button_new_from_stock (GTK_STOCK_SAVE,
-                                                   GPE_BUTTON_TYPE_BOTH);
-  buttoncancel        = gpe_button_new_from_stock (GTK_STOCK_CANCEL,
-                                                   GPE_BUTTON_TYPE_BOTH);
-  buttondelete        = gpe_button_new_from_stock (GTK_STOCK_DELETE,
-                                                   GPE_BUTTON_TYPE_BOTH);
+  buttonok            = gtk_button_new_from_stock (GTK_STOCK_SAVE);
+  buttoncancel        = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  buttondelete        = gtk_button_new_from_stock (GTK_STOCK_DELETE);
 
   gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
@@ -1149,12 +1224,12 @@ build_edit_event_window (void)
   s->dailyspin_adj = dailyspin_adj;
   s->monthlyspin_adj = monthlyspin_adj;
   s->yearlyspin_adj = yearlyspin_adj;
+  s->categories_label = catlabel;
 
   gtk_box_pack_start (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 0);
   gtk_container_add (GTK_CONTAINER (window), vboxtop);
 
-  g_object_set_data_full (G_OBJECT (window), "edit_state", s,
-                          destroy_user_data);
+  g_object_set_data_full (G_OBJECT (window), "edit_state", s, destroy_user_data);
 
   gtk_widget_show_all (vboxtop);
   recalculate_sensitivities (NULL, window);

@@ -13,8 +13,8 @@ LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
 
-CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration
-LDFLAGS += -L../libxsettings -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libdisplaymigration -L../libeventdb -L../libschedule 
+CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc
+LDFLAGS += -L../libxsettings -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libdisplaymigration -L../libeventdb -L../libschedule -L../libgpepimc -lgpepimc
 
 LDFLAGS += -lXsettings-client -ldisplaymigration -leventdb -lschedule
 
