@@ -353,7 +353,8 @@ create_editable_entry_simple (GtkWidget * attach_to, gchar * name,
 	gtk_object_remove_data (GTK_OBJECT (table), name);
 	gtk_object_set_data_full (GTK_OBJECT (table), name, label,
 				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_entry_set_text (GTK_ENTRY (label), wdata);
+	if (wdata)
+		gtk_entry_set_text (GTK_ENTRY (label), wdata);
 	gtk_entry_set_editable (GTK_ENTRY (label), TRUE);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 1, 2, clnr, clnr + 1,
 			  (GtkAttachOptions) (GTK_FILL),
