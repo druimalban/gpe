@@ -521,7 +521,7 @@ ask_open_with (FileInfomation *file_info)
     gtk_widget_destroy (entry);
     gtk_widget_destroy (clist);
     gtk_widget_destroy (open_button);
-    gtk_label_set_text (GTK_LABEL (label), "No avalible applications.");
+    gtk_label_set_text (GTK_LABEL (label), _("No available applications"));
   }
 
   gtk_widget_show_all (dialog_window);	
@@ -877,8 +877,6 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *hbox, *toolbar, *toolbar2;
   GdkPixbuf *p;
   GtkWidget *pw;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
   GtkAccelGroup *accel_group;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -966,8 +964,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
 
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  gpe_set_window_icon (window, "icon");
 
   accel_group = gtk_accel_group_new ();
   item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
