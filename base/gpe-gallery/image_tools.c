@@ -92,7 +92,7 @@ void image_tools_sharpen( GdkPixbuf* pixbuf ) {
 
 }
 
-GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf)
+GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf, gint rotation)
 {
   int x, y, b, width, height, new_width, new_height, rowstride, new_rowstride, channels;
   GdkPixbuf* return_pixbuf;
@@ -103,8 +103,17 @@ GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf)
 
   width = gdk_pixbuf_get_width (GDK_PIXBUF (pixbuf));
   height = gdk_pixbuf_get_height (GDK_PIXBUF (pixbuf));
-  new_width = gdk_pixbuf_get_height (GDK_PIXBUF (pixbuf));
-  new_height = gdk_pixbuf_get_width (GDK_PIXBUF (pixbuf));
+  if (rotation % 2)
+    {
+      new_width = gdk_pixbuf_get_height (GDK_PIXBUF (pixbuf));
+      new_height = gdk_pixbuf_get_width (GDK_PIXBUF (pixbuf));
+    }
+  else
+    {
+      new_height = height;
+      new_width = width;
+    }
+  
 
   return_pixbuf = gdk_pixbuf_new (gdk_pixbuf_get_colorspace (GDK_PIXBUF (pixbuf)),
 				  gdk_pixbuf_get_has_alpha (GDK_PIXBUF (pixbuf)),
@@ -125,7 +134,24 @@ GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf)
     {
       for( b = 0; b < channels; b++)
       {
-	return_image[x * new_rowstride + y * channels + b] = image[y * rowstride + (width - x - 1) * channels + b];
+         switch (rotation)
+           {
+             case 0:
+               return_image[x * new_rowstride + y * channels + b] = 
+		         image[x * rowstride + y * channels + b];
+             break;
+             case 1:             
+               return_image[x * new_rowstride + y * channels + b] = 
+		         image[y * rowstride + (width - x - 1) * channels + b];
+             break;
+             case 2:
+               return_image[x * new_rowstride + y * channels + b] = 
+		         image[(height - y - 1) * rowstride + (width - x - 1) * channels + b];
+                printf("pos %i\n", (height - y - 1) * rowstride + (width - x - 1) * channels + b);
+             break;
+             case 3:
+             break;
+           }
       }
     }
   }

@@ -10,4 +10,4 @@
 
 extern void image_tools_blur (GdkPixbuf* pixbuf);
 extern void image_tools_sharpen (GdkPixbuf* pixbuf);
-extern GdkPixbuf *image_tools_rotate (GdkPixbuf* pixbuf);
+extern GdkPixbuf *image_tools_rotate (GdkPixbuf* pixbuf, gint rotation);

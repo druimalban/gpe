@@ -69,7 +69,8 @@ guint fullscreen_pointer_timer = 0;
 guint x_start, y_start, x_max, y_max;
 gint pointer_x, pointer_y = 0;
 double xadj_start, yadj_start;
-guint zoom_timer_id;
+guint zoom_timer_id = 0;
+static gint current_rotation = 0;
 
 static void toggle_fullscreen ();
 
@@ -312,18 +313,19 @@ image_zoom_hyper ()
 }
 
 static void
-image_rotate () // BROKEN
+image_rotate () 
 {
   GdkPixbuf *pixbuf;
 
-  gtk_timeout_remove (zoom_timer_id);
-
-  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf));
+  //gtk_timeout_remove (zoom_timer_id);
+  current_rotation++;
+  current_rotation = current_rotation % 4;
+  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf), 2);
   g_object_unref (scaled_image_pixbuf);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (pixbuf));
   scaled_image_pixbuf = pixbuf;
-
-  zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
+	
+  //zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
 }
 
 static void

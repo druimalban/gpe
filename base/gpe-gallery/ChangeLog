@@ -1,3 +1,7 @@
+2004-00-06  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c, image_tools.c: Started to fix rotation.
+
 2004-08-30  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c: Fix to prevent close button to disappear.
