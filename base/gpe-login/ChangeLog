@@ -1,3 +1,9 @@
+2003-04-26  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (CPPFLAGS): Add -D_GNU_SOURCE.
+	
+	* gpe-logout.sh: Rewrap text for better display.
+
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.43 released.

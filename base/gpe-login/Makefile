@@ -18,6 +18,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
+CPPFLAGS += -D_GNU_SOURCE
 CFLAGS += $(GTKCFLAGS) -Wall -I../librootimage
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
