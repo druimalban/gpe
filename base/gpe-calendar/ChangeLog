@@ -1,3 +1,8 @@
+2003-09-24  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Use $(GPECFLAGS), $(GPELIBS).
+	(CPPFLAGS): Add -DG_DISABLE_CAST_CHECKS.
+
 2003-09-23  Philip Blundell  <philb@gnu.org>
 
 	* gpe-calendar 0.48 released.

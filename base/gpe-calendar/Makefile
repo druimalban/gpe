@@ -8,18 +8,17 @@ LINGUAS = id pt de fr zh_TW ro wa sv nl
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CPPFLAGS = -D_GNU_SOURCE -I../libeventdb -I../libschedule
 
-CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb -I../libschedule
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g 
 else
 CFLAGS += -Os -fomit-frame-pointer
+CPPFLAGS += -DG_DISABLE_CAST_CHECKS
 endif
-CFLAGS += -Wall $(GTKCFLAGS) -I../libxsettings -I../libxsettings-client -I../libdisplaymigration
-LDFLAGS += $(GTKLDFLAGS) -L../libxsettings -L../libxsettings-client -lXsettings-client -L../libdisplaymigration -ldisplaymigration -Wl,-rpath-link,../libxsettings
+CFLAGS += -Wall $(GPECFLAGS) -I../libxsettings -I../libxsettings-client -I../libdisplaymigration
+LDFLAGS += $(GPELDFLAGS) -L../libxsettings -L../libxsettings-client -lXsettings-client -L../libdisplaymigration -ldisplaymigration -Wl,-rpath-link,../libxsettings
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
