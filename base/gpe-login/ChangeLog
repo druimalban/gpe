@@ -1,3 +1,19 @@
+2003-09-23  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.64 released.
+	* gpe-session-scripts 0.53 released.
+	
+2003-09-23  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession.d/98standard-apps: Reflow text.
+	* gpe-logout.sh: Likewise.
+
+	* gpe-login.c (main): Call build_language_menu in new user
+	scenario.
+	(build_new_user_box): Add language selector to dialog.  Use
+	translated labels.  Set current_locale to default locale.
+	(enter_newuser_callback): Don't set current_locale here.
+	
 2003-09-22  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.64 released.

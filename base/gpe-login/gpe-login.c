@@ -714,7 +714,6 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fputs (buf, fp);
   fclose (fp);
 
-  current_locale = default_locale;
   do_login (username, uid, gid, home, "/bin/sh");
 
   gtk_main_quit ();
@@ -1282,14 +1281,15 @@ build_new_user_box (void)
   GtkWidget *hbox;
   GtkWidget *label;
   GtkWidget *ok_button;
+  GtkWidget *language_label;
   guint gpe_boxspacing = gpe_get_boxspacing ();
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
-  label_username = gtk_label_new (_("Username"));
-  label_fullname = gtk_label_new (_("Full name"));
-  label_password = gtk_label_new (_("Password"));
-  label_confirm = gtk_label_new (_("Confirm password"));
+  label_username = gtk_label_new_with_translation (PACKAGE, N_("Username"));
+  label_fullname = gtk_label_new_with_translation (PACKAGE, N_("Full name"));
+  label_password = gtk_label_new_with_translation (PACKAGE, N_("Password"));
+  label_confirm = gtk_label_new_with_translation (PACKAGE, N_("Confirm password"));
 
   entry_username = gtk_entry_new ();
   entry_fullname = gtk_entry_new ();
@@ -1300,6 +1300,7 @@ build_new_user_box (void)
   hbox_fullname = gtk_hbox_new (0, FALSE);
   hbox_password = gtk_hbox_new (0, FALSE);
   hbox_confirm = gtk_hbox_new (0, FALSE);
+  hbox_language = gtk_hbox_new (0, FALSE);
 
   gtk_entry_set_visibility (GTK_ENTRY (entry_password), FALSE);
   gtk_entry_set_visibility (GTK_ENTRY (entry_confirm), FALSE);
@@ -1312,8 +1313,12 @@ build_new_user_box (void)
 		      FALSE, FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (hbox_confirm), label_confirm,
 		      FALSE, FALSE, gpe_boxspacing);
+  gtk_box_pack_start (GTK_BOX (hbox_language), language_label,
+		      FALSE, FALSE, gpe_boxspacing);
 
-  table = gtk_table_new (4, 2, FALSE);
+  language_label = gtk_label_new_with_translation (PACKAGE, N_("Language"));
+
+  table = gtk_table_new (5, 2, FALSE);
   gtk_table_attach_defaults (GTK_TABLE (table), hbox_username, 
 			     0, 1, 0, 1);
   gtk_table_attach_defaults (GTK_TABLE (table), hbox_fullname, 
@@ -1322,6 +1327,8 @@ build_new_user_box (void)
 			     0, 1, 2, 3);
   gtk_table_attach_defaults (GTK_TABLE (table), hbox_confirm, 
 			     0, 1, 3, 4);
+  gtk_table_attach_defaults (GTK_TABLE (table), hbox_language,
+			     0, 1, 4, 5);
   
   gtk_table_attach_defaults (GTK_TABLE (table), entry_username, 
 			     1, 2, 0, 1);
@@ -1331,6 +1338,8 @@ build_new_user_box (void)
 			     1, 2, 2, 3);
   gtk_table_attach_defaults (GTK_TABLE (table), entry_confirm, 
 			     1, 2, 3, 4);
+  gtk_table_attach_defaults (GTK_TABLE (table), language_menu,
+			     1, 2, 4, 5);
   
   g_signal_connect (G_OBJECT (entry_username), "activate",
 		    G_CALLBACK (move_callback), entry_fullname);
@@ -1354,7 +1363,8 @@ build_new_user_box (void)
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   
-  focus = entry_username;   
+  focus = entry_username;
+  current_locale = default_locale;
 
   return vbox;
 }
@@ -1605,7 +1615,7 @@ main (int argc, char *argv[])
   if (flag_force_new_user)
     {
       have_users = FALSE;
-      root_password_set = FALSE;
+      //root_password_set = FALSE;
     }
 
   vbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
@@ -1743,6 +1753,8 @@ main (int argc, char *argv[])
   else
     {
       GtkWidget *vbox;
+
+      build_language_menu ();
 
       if (! root_password_set)
 	{
