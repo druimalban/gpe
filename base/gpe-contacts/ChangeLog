@@ -1,5 +1,11 @@
 2003-03-15  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.11 released.
+
+2003-03-15  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Depends): Require libdm0.
+
 	* main.c (do_search): New function.
 	(match_for_search): Likewise.
 	(create_main): Wire up "search" functionality.

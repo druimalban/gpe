@@ -3,7 +3,7 @@ PACKAGE = gpe-contacts
 GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
-VERSION = 0.10
+VERSION = 0.11
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
