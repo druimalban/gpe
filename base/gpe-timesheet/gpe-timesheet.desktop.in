@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Time Tracker
-Comment=GPE Timesheet
+_Name=Time Tracker
+_Comment=GPE Timesheet
 Exec=gpe-timesheet
 Terminal=0
 Type=Application

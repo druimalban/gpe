@@ -36,14 +36,11 @@ all: gpe-timesheet
 gpe-timesheet: $(OBJS)
 	$(CC) -o $@ $^ $(LGPEWIDGET) $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 
-install: all install-mo
+install: all install-mo gpe-timesheet.desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install gpe-timesheet $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
+	install -s gpe-timesheet $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 gpe-timesheet.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-timesheet.png
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
-	install -m 644 gpe-timesheet.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-timesheet
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 gpe-timesheet.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-timesheet
 

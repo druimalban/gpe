@@ -1,7 +1,0 @@
-?package(gpe-timesheet): \
- needs=x11 \
- title="Time Tracker" \
- command=gpe-timesheet \
- icon48=/usr/share/pixmaps/gpe-timesheet.png \
- section=PIM \
- windowtitle="Time Tracker"
