@@ -370,7 +370,7 @@ edit_item (struct todo_item *item, gint initial_category)
 
   hbox_state = gtk_hbox_new (FALSE, 0);
 
-  priority_label = gtk_label_new (_("Pri:"));
+  priority_label = gtk_label_new (_("Priority:"));
   priority_optionmenu = gtk_option_menu_new ();
   gtk_option_menu_set_menu (GTK_OPTION_MENU (priority_optionmenu), priority_menu);
 
@@ -458,4 +458,3 @@ edit_item (struct todo_item *item, gint initial_category)
 
   return window;
 }
-

@@ -30,6 +30,8 @@ static struct gpe_icon my_icons[] = {
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick-box", MY_PIXMAPS_DIR "/tick-box.png" },
   { "notick-box", MY_PIXMAPS_DIR "/notick-box.png" },
+  { "bar-box", MY_PIXMAPS_DIR "/bar-box.png" },
+  { "dot-box", MY_PIXMAPS_DIR "/dot-box.png" },
   { NULL, NULL }
 };
 

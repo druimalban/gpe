@@ -47,6 +47,8 @@ install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
 	install -m 644 tick-box.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/tick-box.png
 	install -m 644 notick-box.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/notick-box.png
+	install -m 644 dot-box.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/dot-box.png
+	install -m 644 bar-box.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/bar-box.png
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

@@ -1,8 +1,17 @@
+
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * list-ui.c: Added patch by Chris Owen to add button for removing 
                  completed items.
 
+2004-09-10  Florian Boor <florian@kernelconcepts.de>
+
+	* list-ui.c (top_level): Removed hardcoded setting of toolbar style.
+	* main.c: Added loading of new pixmaps.
+	* list-ui.c (top_level): Added two additional colums (priority, date).
+	* list-ui.c (toggle_completed): likewise
+    * dot-box.png, bar-box.png: New files.
+    
 2004-08-28  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.48 released.
