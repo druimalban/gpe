@@ -292,7 +292,7 @@ read_bit:
 	mov	old1hi,	new1hi
 	mov	old2hi, new2hi
 
-	ldi	bits, 16
+	ldi	bits, 15
 check_bit:
 	clr	this_bit
 	rol	new1lo
@@ -316,7 +316,7 @@ skip1:
 	rcall	xmit
 skip2:
 	dec	bits
-	brne	check_bit
+	brvc	check_bit
 	reti
 
 	; char to send is in "this_bit"
