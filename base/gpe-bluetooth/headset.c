@@ -58,7 +58,7 @@ headset_scan (sdp_record_t *rec, struct bt_device *bd)
   struct bt_service_headset *s;
   int port;
 
-  port = ;
+  port = 6;
 
   s = g_malloc (sizeof (*s));
 
@@ -77,6 +77,7 @@ static gboolean
 headset_connect (struct bt_service_headset *svc, GError *error)
 {
   pid_t pid;
+  char bdaddr_buf[32];
   char chan_buf[32];
 
   sprintf (chan_buf, "%d", svc->port);
@@ -84,7 +85,8 @@ headset_connect (struct bt_service_headset *svc, GError *error)
   pid = vfork ();
   if (pid == 0)
     {
-      execlp (PREFIX "/bin/bluezsco", ba2str(svc->bd->bdaddr), channel_buf, NULL);
+      ba2str(&svc->bd->bdaddr, bdaddr_buf);
+      execlp (PREFIX "/bin/bluezsco", bdaddr_buf, chan_buf, NULL);
       perror ("exec");
       _exit (1);
     }
