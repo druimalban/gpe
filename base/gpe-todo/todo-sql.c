@@ -17,7 +17,7 @@
 
 static sqlite *sqliteh;
 
-static char *dname = "/.gpe/tasklist";
+static char *dname = "/.gpe/todo";
 
 static int
 list_callback (void *arg, int argc, char **argv, char **names)
@@ -32,6 +32,12 @@ list_callback (void *arg, int argc, char **argv, char **names)
 int
 sql_start (void)
 {
+  static const char *schema1_str = 
+    "create table todo_lists (uid integer NOT NULL, description text)";
+  static const char *schema2_str = 
+    "create table todo_items (uid integer NOT NULL, list integer NOT NULL,"
+    "summary text, description text, state integer, due integer)";
+
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
@@ -45,13 +51,23 @@ sql_start (void)
   sqliteh = sqlite_open (buf, 0, &err);
   if (sqliteh == NULL)
     {
-      fprintf (stderr, "%s\n", err);
+      fprintf (stderr, "sqlite: %s\n", err);
       free (err);
       return -1;
     }
 
-  sqlite_exec (sqliteh, "select id,description from gpe_tasklists",
-	       list_callback, NULL, NULL);
+  sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
+  sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
+
+  if (sqlite_exec (sqliteh, "select uid,description from todo_lists",
+		   list_callback, NULL, &err))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+      return -1;
+    }
+
+  return 0;
 }
 
 void
@@ -65,7 +81,7 @@ sql_add_list (int id, const char *title)
 {
   char buf[256];
   snprintf (buf, sizeof(buf), 
-	    "insert into gpe_tasklists values(%d,'%s')", 
+	    "insert into todo_lists values(%d,'%s')", 
 	    id, title);
   sqlite_exec (sqliteh, buf, NULL, NULL, NULL);
 }
