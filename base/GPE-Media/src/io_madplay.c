@@ -29,6 +29,38 @@ int r;
 	}
 }
 
+/* Stop the player */
+PlayerStateT madplay_stop(void)
+{
+	kill(MadPlayer.player_pid, SIGTERM);
+	waitpid(MadPlayer.player_pid,NULL,0);
+	MadPlayer.player_pid=0;
+	MadPlayer.PosSec=0;
+	MadPlayer.PlayerState=0;
+	close(MadPlayer.input_fd);
+	UpdateUI_cb();
+
+return 0;
+}
+
+/* pause player, True=pause, False=restart */
+PlayerStateT madplay_pause(gboolean pause)
+{
+	if (pause)
+		kill(MadPlayer.player_pid, SIGSTOP);
+	else
+		kill(MadPlayer.player_pid, SIGCONT);
+
+return 0;
+}
+
+/* seek to a specific file position */
+PlayerStateT madplay_seek(unsigned int seconds)
+{
+
+return 0;
+}
+
 /* Starts player */
 PlayerT *madplay_start(char *filename)
 {
@@ -39,7 +71,9 @@ pid_t ppid;
 		perror("pipe");
 		return NULL;
 	}
+#ifdef DEBUG
 	fprintf(stderr,"pipe returned %d and %d\n",ppair[0],ppair[1]);
+#endif
 	ppid=fork();
 	if (ppid == 0) {
 		/* child */
@@ -66,45 +100,16 @@ pid_t ppid;
 		close(ppair[1]);
 		return(NULL);
 	} else {
-/*		close(ppair[1]);*/
+		close(ppair[1]);
 		MadPlayer.input_fd=ppair[0];
 		MadPlayer.PosSec=0;
 		MadPlayer.input_cb=madplay_input;
 		MadPlayer.player_pid=ppid;
 		MadPlayer.PlayerState=1;
+		MadPlayer.player_stop=madplay_stop;
+		MadPlayer.player_pause=madplay_pause;
+		MadPlayer.player_seek=madplay_seek;
 		return &MadPlayer;
 	}
 return NULL;
-}
-
-/* Stop the player */
-int madplay_stop(void)
-{
-	kill(MadPlayer.player_pid, SIGINT);
-	waitpid(MadPlayer.player_pid,NULL,0);
-	MadPlayer.player_pid=0;
-	MadPlayer.PosSec=0;
-	MadPlayer.PlayerState=0;
-	close(MadPlayer.input_fd);
-	UpdateUI_cb();
-
-return 0;
-}
-
-/* pause player, True=pause, False=restart */
-int madplay_pause(gboolean pause)
-{
-	if (pause)
-		kill(MadPlayer.player_pid, SIGSTOP);
-	else
-		kill(MadPlayer.player_pid, SIGCONT);
-
-return 0;
-}
-
-/* seek to a specific file position */
-int madplay_seek(unsigned int seconds)
-{
-
-return 0;
 }

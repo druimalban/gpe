@@ -15,6 +15,7 @@
 #include <sys/soundcard.h>
 #include <string.h>
 #include <limits.h>
+#include <fnmatch.h>
 
 #ifndef PATH_MAX
 #define PATH_MAX 1024
@@ -25,12 +26,14 @@
 #include "support.h"
 
 #include "player.h"
-#include "io_madplay.h"
 
 static PlayerT *CurrentPlayer = NULL;
 static gint ListPos=0;
 GtkLabel *TimeLabel;
 GtkCList *FileList;
+extern GtkWidget *FileSelector;
+
+PlayerT *madplay_start(char *);
 
 void UpdateUI_cb(void)
 {
@@ -47,26 +50,38 @@ void sig_child_handler(int signo)
 int status;
 GtkWidget *button;
 
+#ifdef DEBUG
 	fprintf(stderr," SIGCHLD caught, status ");
+#endif
 	if (CurrentPlayer != NULL) {
 		waitpid(CurrentPlayer->player_pid, &status, WNOHANG | WUNTRACED);
+#ifdef DEBUG
 		fprintf(stderr,"%d\n",status);
+#endif
 		if (WIFSTOPPED(status)) {
+#ifdef DEBUG
 			fprintf(stderr,"was stopped by signal %d\n",WSTOPSIG(status));
+#endif
 			return;
 		}
 	}
 	if (WIFEXITED(status)) {
+#ifdef DEBUG
 		fprintf(stderr,"child exited with %d\n",WEXITSTATUS(status));
+#endif
 	} else
 	if (WIFSIGNALED(status)) {
+#ifdef DEBUG
 		fprintf(stderr,"because of signal %d\n",WTERMSIG(status));
+#endif
 	}
 	if (CurrentPlayer != NULL) {
+#ifdef DEBUG
 		fprintf(stderr,"stopping player !\n");
+#endif
 		gtk_input_remove(CurrentPlayer->input_cb_tag);
-		if (CurrentPlayer->PlayerState != 0) {
-			madplay_stop();
+		if (CurrentPlayer->PlayerState != PlayerStopped) {
+			CurrentPlayer->player_stop();
 			CurrentPlayer=NULL;
 			ListPos++;
 			button=lookup_widget(GTK_WIDGET(FileList),"Start");
@@ -74,20 +89,27 @@ GtkWidget *button;
 			return;
 		} else
 			CurrentPlayer=NULL;
-	} else
+	}
+#ifdef DEBUG
+	 else
 		fprintf(stderr,"no player active\n");
+#endif
 	button=lookup_widget(GTK_WIDGET(FileList),"Start");
 	gtk_widget_set_sensitive(GTK_WIDGET(button), 1);
 }
 
 void sig_pipe_handler(int signo)
 {
+#ifdef DEBUG
 	fprintf(stderr," SIGPIPE caught\n");
+#endif
 }
 
 void sig_handler(int signo)
 {
+#ifdef DEBUG
 	fprintf(stderr,"caught signal %d\n", signo);
+#endif
 }
 
 void
@@ -98,7 +120,9 @@ gchar filename[PATH_MAX];
 
 	if (CurrentPlayer == NULL) {
 		if (ListPos >= FileList->rows) {
+#ifdef DEBUG
 			fprintf(stderr,"on_Start: ListPos=%d FileList=%d\n",ListPos,FileList->rows);
+#endif
 			ListPos=0;
 			gtk_clist_select_row(FileList,ListPos,0);
 			gtk_widget_set_sensitive(GTK_WIDGET(button), 1);
@@ -110,14 +134,18 @@ gchar filename[PATH_MAX];
 		signal(SIGPIPE,sig_pipe_handler);
 		if (button != NULL)
 			gtk_widget_set_sensitive(GTK_WIDGET(button), 0);
-		CurrentPlayer=madplay_start(filename);
+		/* guess filetype from filename */
+		if (fnmatch("*.mp3",filename,FNM_NOESCAPE|FNM_CASEFOLD) == 0)
+			CurrentPlayer=madplay_start(filename);
 		if ((CurrentPlayer == NULL) || (CurrentPlayer->input_fd <= 0)) {
 			/* something went wrong */
+#ifdef DEBUG
 			fprintf(stderr,"error starting player\n");
+#endif
 			return;
 		}
 		CurrentPlayer->input_cb_tag=gtk_input_add_full(CurrentPlayer->input_fd, GDK_INPUT_READ, CurrentPlayer->input_cb , NULL, NULL, NULL);
-		CurrentPlayer->PlayerState = 1;
+		CurrentPlayer->PlayerState = PlayerPlaying;
 	}
 }
 
@@ -127,10 +155,12 @@ on_Stop_clicked                        (GtkButton       *button,
                                         gpointer         user_data)
 {
 	if (CurrentPlayer != NULL) {
+#ifdef DEBUG
 		fprintf(stderr,"stopping...\n");
-		CurrentPlayer->PlayerState = 0;
+#endif
+		CurrentPlayer->PlayerState = PlayerStopped;
 		gtk_input_remove(CurrentPlayer->input_cb_tag);
-		madplay_stop();
+		CurrentPlayer->player_stop();
 		CurrentPlayer=NULL;
 	}
 }
@@ -141,12 +171,12 @@ on_Pause_clicked                       (GtkButton       *button,
                                         gpointer         user_data)
 {
 	if (CurrentPlayer != NULL) {
-		if (CurrentPlayer->PlayerState == 1) {
-			madplay_pause(TRUE);
-			CurrentPlayer->PlayerState = 2;
-		} else if (CurrentPlayer->PlayerState == 2) {
-			madplay_pause(FALSE);
-			CurrentPlayer->PlayerState = 1;
+		if (CurrentPlayer->PlayerState == PlayerPlaying) {
+			CurrentPlayer->player_pause(TRUE);
+			CurrentPlayer->PlayerState = PlayerPaused;
+		} else if (CurrentPlayer->PlayerState == PlayerPaused) {
+			CurrentPlayer->player_pause(FALSE);
+			CurrentPlayer->PlayerState = PlayerPlaying;
 		}
 	}
 }
@@ -161,10 +191,12 @@ GtkWidget *StartButton;
 	if ((ListPos + 1) >= FileList->rows)
 		return;
 	if (CurrentPlayer != NULL) {
+#ifdef DEBUG
 		fprintf(stderr,"stopping...\n");
-		CurrentPlayer->PlayerState = 0;
+#endif
+		CurrentPlayer->PlayerState = PlayerStopped;
 		gtk_input_remove(CurrentPlayer->input_cb_tag);
-		madplay_stop();
+		CurrentPlayer->player_stop();
 		CurrentPlayer = NULL;
 	}
 	ListPos += 1;
@@ -187,7 +219,7 @@ on_exit1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
 	if (CurrentPlayer != NULL) {
-		madplay_stop();
+		CurrentPlayer->player_stop();
 	}
 	gtk_main_quit();
 }
@@ -210,10 +242,12 @@ GtkWidget *StartButton;
 	if ((ListPos - 1) < 0)
 		return;
 	if (CurrentPlayer != NULL) {
+#ifdef DEBUG
 		fprintf(stderr,"stopping...\n");
-		CurrentPlayer->PlayerState = 0;
+#endif
+		CurrentPlayer->PlayerState = PlayerStopped;
 		gtk_input_remove(CurrentPlayer->input_cb_tag);
-		madplay_stop();
+		CurrentPlayer->player_stop();
 		CurrentPlayer=NULL;
 	}
 	ListPos -= 1;
@@ -227,10 +261,6 @@ void
 on_AddList_clicked                     (GtkButton       *button,
                                         gpointer         user_data)
 {
-GtkWidget *FileSelector;
-
-	FileSelector=create_fileselection();
-	gtk_file_selection_set_filename(GTK_FILE_SELECTION(FileSelector),"/mnt/");
 	gtk_widget_show(FileSelector);
 }
 
@@ -287,11 +317,9 @@ void
 on_filesel_ok_clicked                  (GtkButton       *button,
                                         gpointer         user_data)
 {
-GtkWidget *FileSelector;
 gchar *completename;
 gchar *entry[3];
 
-	FileSelector=lookup_widget(GTK_WIDGET(button),"fileselection");
 	gtk_widget_hide(FileSelector);
 	completename=(gchar *)malloc(PATH_MAX * sizeof(gchar));
 	strcpy(completename,gtk_file_selection_get_filename(GTK_FILE_SELECTION(FileSelector)));
@@ -306,7 +334,6 @@ gchar *entry[3];
 	free(entry[0]);
 	free(entry[1]);
 	free(entry[2]);
-	gtk_widget_destroy(FileSelector);
 }
 
 
@@ -314,11 +341,7 @@ void
 on_filesel_cancel_clicked              (GtkButton       *button,
                                         gpointer         user_data)
 {
-GtkWidget *FileSelector;
-
-	FileSelector=lookup_widget(GTK_WIDGET(button),"fileselection");
 	gtk_widget_hide(FileSelector);
-	gtk_widget_destroy(FileSelector);
 }
 
 
@@ -329,7 +352,9 @@ on_FileList_select_row                 (GtkCList        *clist,
                                         GdkEvent        *event,
                                         gpointer         user_data)
 {
+#ifdef DEBUG
 	fprintf(stderr,"selected: '%s'\n",(gchar *)gtk_clist_get_row_data(clist, row));
+#endif
 	ListPos=row;
 }
 

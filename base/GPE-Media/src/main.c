@@ -48,6 +48,8 @@ main (int argc, char *argv[])
    * the project. Delete any components that you don't want shown initially.
    */
   GPE_Media = create_GPE_Media ();
+  FileSelector = create_fileselection();
+  gtk_file_selection_set_filename(GTK_FILE_SELECTION(FileSelector),"/mnt/");
 
   scale=lookup_widget(GPE_Media, "Slider");
   gtk_widget_hide(scale);
