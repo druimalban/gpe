@@ -13,7 +13,7 @@ PACKAGE_LDFLAGS += -L../libdisplaymigration
 endif
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `libgcrypt-config --cflags`
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -ltododb -ldisplaymigration -lgpepimc `libgcrypt-config --libs` -lsqlite
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -ldisplaymigration `libgcrypt-config --libs` -lsqlite
 
 MEMBERS = teleport crypt displays keygen tp-keygen
 
