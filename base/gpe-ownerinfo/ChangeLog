@@ -1,5 +1,7 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
+	* gpe-ownerinfo2.c (main): Remove #ifdef ENABLE_NLS.
+
 	* po/gpe-ownerinfo2.pot: New file.
 
 2003-02-17  Colin Marquardt  <colin@marquardt-home.de>

@@ -414,12 +414,10 @@ main (int argc, char *argv[])
      Pango language code: */
   pango_lang_code = g_strdup (_("en"));
   
-#ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
-#endif
 
   while ((opt = getopt (argc,argv,"hktg:")) != EOF)
     {
