@@ -177,31 +177,26 @@ schedule_alarm(event_t ev, time_t start)
   
   sprintf(filename, "/var/spool/at/%ld.%ld", (long)alarm_t, ev->uid);
   
-  if (fopen(filename, "w"))
+  if ((f=fopen(filename, "w")))
   {
-    if ((f=fopen(filename, "w")))
-    {
-      fprintf(f, "#!/bin/sh\n");
-      fprintf(f, "export DISPLAY=:0.0\n");
-      fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
-      fprintf(f, "/usr/bin/gpe-calendar -s %ld -e %ld &\n", (long)alarm_t, ev->uid);
-      fprintf(f, "/bin/rm $0\n");
+    fprintf(f, "#!/bin/sh\n");
+    fprintf(f, "export DISPLAY=:0.0\n");
+    fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
+    fprintf(f, "/usr/bin/gpe-calendar -s %ld -e %ld &\n", (long)alarm_t, ev->uid);
+    fprintf(f, "/bin/rm $0\n");
 
-      fclose(f);
+    fclose(f);
 
-      chmod (filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-      
-      f=NULL;
-      f=fopen("/var/spool/at/trigger","w");
-      if (f != NULL) 
-      {
-        fprintf(f,"\n");
-        fclose(f);
-      }
-    }
+    chmod (filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
     
+    f=NULL;
+    f=fopen("/var/spool/at/trigger","w");
+    if (f != NULL) 
+    {
+      fprintf(f,"\n");
+      fclose(f);
+    }
   }
-  
 }
 
 static void
