@@ -241,7 +241,7 @@ void package_read_to (char *fn, void (* add_cb) (struct package *))
 		r->data = (char *) strdup (fn);
 		r->next = p;
 
-		add_cb (p);
+		add_cb (r);
 	}
 	fclose (inp);
 }
