@@ -29,6 +29,14 @@ Once the user is authenticated, it runs ~/.xsession if it exists, and
 </P>
 
 <P>
+/etc/X11/gpe-login.buttons lets you map the buttons so that they run an
+application. By default, this is set up so that XF86AudioRecord (the
+Record button on iPAQs) runs the touchscreen calibration program.
+The format of gpe-login.buttons is 
+    <pre>KeySym binary</pre>
+</P>
+
+<P>
 The Xsession file needs to end by running the window manager, 
 session manager, or some other long-living thing.  
 Once Xsession returns, gpe-dm will do a server reset and start 
@@ -43,7 +51,7 @@ things run from gpe-login.setup are terminated before Xsession starts.
 <H2>Status</H2>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>,
-module <b>gpe-login</b>.  Precompiled binaries for iPAQ are available
+module <b>gpe-login</b>.  Precompiled binaries for ARM PDAs are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 (Packages gpe-login and gpe-dm)
 </P>
