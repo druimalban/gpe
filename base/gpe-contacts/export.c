@@ -33,6 +33,7 @@
 static DBusConnection *connection;
 
 #define BLUETOOTH_SERVICE_NAME   "org.handhelds.gpe.bluez"
+#define IRDA_SERVICE_NAME   "org.handhelds.gpe.irda"
 
 static gchar *
 export_to_vcard (guint uid)
@@ -63,6 +64,31 @@ menu_do_send_bluetooth (void)
   message = dbus_message_new_method_call (BLUETOOTH_SERVICE_NAME,
 					  "/org/handhelds/gpe/bluez/OBEX",
 					  BLUETOOTH_SERVICE_NAME ".OBEX",
+					  "ObjectPush");
+
+  dbus_message_append_iter_init (message, &iter);
+
+  dbus_message_iter_append_string (&iter, "GPE.vcf");
+  dbus_message_iter_append_string (&iter, "application/x-vcard");
+  dbus_message_iter_append_byte_array (&iter, card, strlen (card));
+
+  dbus_connection_send (connection, message, NULL);
+
+  g_free (card);
+}
+
+void
+menu_do_send_irda (void)
+{
+  gchar *card;
+  DBusMessage *message;
+  DBusMessageIter iter;
+
+  card = export_to_vcard (menu_uid);
+
+  message = dbus_message_new_method_call (IRDA_SERVICE_NAME,
+					  "/org/handhelds/gpe/irda/OBEX",
+					  IRDA_SERVICE_NAME ".OBEX",
 					  "ObjectPush");
 
   dbus_message_append_iter_init (message, &iter);
@@ -139,6 +165,19 @@ export_bluetooth_available (void)
     return FALSE;
 
   r = dbus_bus_service_exists (connection, BLUETOOTH_SERVICE_NAME, NULL);
+
+  return r ? TRUE : FALSE;
+}
+
+gboolean
+export_irda_available (void)
+{
+  dbus_bool_t r;
+
+  if (connection == NULL)
+    return FALSE;
+
+  r = dbus_bus_service_exists (connection, IRDA_SERVICE_NAME, NULL);
 
   return r ? TRUE : FALSE;
 }

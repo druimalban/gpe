@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-09 22:04+0200\n"
+"POT-Creation-Date: 2004-10-12 16:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:107 main.c:1162
+#: editing.c:107 main.c:1212
 msgid "Details"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgstr ""
 msgid "no year"
 msgstr ""
 
-#: editing.c:435 main.c:467 main.c:595
+#: editing.c:435 main.c:469 main.c:596
 msgid "Categories"
 msgstr ""
 
@@ -52,71 +52,75 @@ msgstr ""
 msgid "Select image"
 msgstr ""
 
-#: main.c:84 main.c:196
+#: main.c:85 main.c:197
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:84 main.c:196 structure.c:176
+#: main.c:85 main.c:197 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:136
+#: main.c:137
 msgid "All categories"
 msgstr ""
 
-#: main.c:478
+#: main.c:480
 msgid "No contact selected."
 msgstr ""
 
-#: main.c:551 main.c:1201 main.c:1267
+#: main.c:552 main.c:1266 main.c:1332
 msgid "Contact"
 msgstr ""
 
-#: main.c:1126 gpe-contacts.desktop.in.h:1
+#: main.c:1176 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:1139
+#: main.c:1189
 msgid "Tap this button to add a new contact."
 msgstr ""
 
-#: main.c:1146
+#: main.c:1196
 msgid "Edit"
 msgstr ""
 
-#: main.c:1147
+#: main.c:1197
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:1153
+#: main.c:1203
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:1163
+#: main.c:1213
 msgid "Tap here to show contacts details."
 msgstr ""
 
-#: main.c:1170
-msgid "Properties"
-msgstr ""
-
-#: main.c:1170
-msgid "Tap here to configure the program."
-msgstr ""
-
-#: main.c:1176
-msgid "Close"
-msgstr ""
-
-#: main.c:1176
-msgid "Tap here to exit gpe-contacts."
+#: main.c:1222
+msgid "Find a contact by searching for any data."
 msgstr ""
 
 #: main.c:1227
+msgid "Properties"
+msgstr ""
+
+#: main.c:1227
+msgid "Tap here to configure this program."
+msgstr ""
+
+#: main.c:1233
+msgid "Close"
+msgstr ""
+
+#: main.c:1233
+msgid "Tap here to exit gpe-contacts."
+msgstr ""
+
+#: main.c:1292
 msgid "Find:"
 msgstr ""
 
-#: main.c:1234
+#: main.c:1299
 msgid "in"
 msgstr ""
 
@@ -172,39 +176,88 @@ msgstr ""
 msgid "Tap here to delete the selected item."
 msgstr ""
 
-#: configure.c:155
+#. TRANSLATORS: kB = kilo bytes
+#: configure.c:131 configure.c:337
+msgid "Current size:"
+msgstr ""
+
+#: configure.c:132
+msgid "kB (optimised)"
+msgstr ""
+
+#: configure.c:177
 msgid "<b>Detail panel:</b>"
 msgstr ""
 
-#: configure.c:181
+#: configure.c:203
 msgid "NAME"
 msgstr ""
 
-#: configure.c:191
+#: configure.c:213
 msgid "Add"
 msgstr ""
 
-#: configure.c:198
+#: configure.c:220
 msgid "Remove"
 msgstr ""
 
-#: configure.c:220
+#: configure.c:242
 msgid "Label"
 msgstr ""
 
-#: configure.c:225
+#: configure.c:247
 msgid "Data item"
 msgstr ""
 
+#: configure.c:291
+msgid "Screen Layout"
+msgstr ""
+
+#: configure.c:297
+msgid "List position"
+msgstr ""
+
+#: configure.c:300
+msgid "left"
+msgstr ""
+
+#: configure.c:302
+msgid "right"
+msgstr ""
+
 #: configure.c:330
+msgid "Database Size"
+msgstr ""
+
+#: configure.c:337
+msgid "kB"
+msgstr ""
+
+#: configure.c:342
+msgid "Actions"
+msgstr ""
+
+#: configure.c:349
+msgid "Optimise database"
+msgstr ""
+
+#: configure.c:352
+msgid "Run"
+msgstr ""
+
+#: configure.c:458
 msgid "Editing Layout"
 msgstr ""
 
-#: configure.c:332
+#: configure.c:460
 msgid "Setup"
 msgstr ""
 
-#: configure.c:357
+#: configure.c:461
+msgid "Database"
+msgstr ""
+
+#: configure.c:493
 msgid "Contacts: Configuration"
 msgstr ""
 
@@ -288,6 +341,14 @@ msgstr ""
 
 #: namedetail.c:92
 msgid "Title:"
+msgstr ""
+
+#: finddlg.c:37
+msgid "Find Contacts"
+msgstr ""
+
+#: finddlg.c:49
+msgid "Search for:"
 msgstr ""
 
 #: gpe-contacts.desktop.in.h:2

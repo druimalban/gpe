@@ -1,3 +1,7 @@
+2004-10-13  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * export.*, main.c: Added support for irda transfer via dbus.
+
 2004-10-12  Florian Boor <florian.boor@kernelconcepts.de>
     
     * Released Version 0.31

@@ -54,6 +54,7 @@ GtkWidget *list_view;
 GtkWidget *search_entry;
 GtkWidget *popup_menu;
 GtkWidget *bluetooth_menu_item;
+GtkWidget *irda_menu_item;
 guint menu_uid;
 gboolean mode_landscape;
 gboolean mode_large_screen;
@@ -1085,7 +1086,12 @@ list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *lis
                 gtk_widget_show (bluetooth_menu_item);
               else
                 gtk_widget_hide (bluetooth_menu_item);
-          
+              
+              if (export_irda_available ())
+                gtk_widget_show (irda_menu_item);
+              else
+                gtk_widget_hide (irda_menu_item);
+              
               gtk_menu_popup (GTK_MENU (popup_menu), 
                               NULL, NULL, NULL, widget, b->button, b->time);
             }
@@ -1114,6 +1120,7 @@ static GtkItemFactoryEntry popup_items[] =
   { "/Delete",		    NULL, menu_do_delete,         0, "<StockItem>", GTK_STOCK_DELETE },
   { "/Save as ...",	    NULL, menu_do_save,           0, "<Item>" },
   { "/Send via Bluetooth", NULL, menu_do_send_bluetooth, 0, "<Item>", },
+  { "/Send via Irda", NULL, menu_do_send_irda, 0, "<Item>", },
 };
 
 static GtkWidget *
@@ -1129,6 +1136,7 @@ create_popup (GtkWidget *window)
 				 popup_items, NULL);
 
   bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
+  irda_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Irda");
 
   return gtk_item_factory_get_widget (item_factory, "<main>");
 }
