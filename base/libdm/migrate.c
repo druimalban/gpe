@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <libintl.h>
-#include <netinet/in.h>
+#include <string.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -20,6 +20,7 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
+#include "auth.h"
 #include "libdm.h"
 
 #define _(x) gettext(x)
@@ -39,9 +40,6 @@ static gboolean no_auth;
 static GSList *all_widgets;
 
 extern char *challenge_string;
-extern void generate_challenge (void);
-extern void update_challenge (void);
-extern void check_rsa_sig (char *data);
 
 static int
 do_change_display (GtkWidget *w, char *display_name)
@@ -87,7 +85,7 @@ set_challenge_on_window (GdkWindow *window)
 }
 
 static void
-update_challenge (void)
+update_challenge_on_windows (void)
 {
   GSList *i;
 
@@ -161,7 +159,7 @@ handle_request (GdkWindow *gwindow, char *prop)
     }
   else if (!strcasecmp (auth_method, "rsa-sig"))
     {
-      if (check_rsa_sig (auth_data) == FALSE)
+      if (check_rsa_sig (target, auth_data) == FALSE)
 	return DISPLAY_CHANGE_AUTHENTICATION_BAD;
     }
   else
@@ -206,6 +204,7 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 		      generate_response (gdisplay, xev->display, xev->window, rc);
 		    }
 
+		  update_challenge_on_windows ();
 		  reset_state (gwindow);
 		}
 	    }

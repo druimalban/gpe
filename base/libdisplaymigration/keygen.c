@@ -18,6 +18,7 @@
 
 static gchar *home_dir;
 
+#if 0
 GcryMPI
 mpi_from_sexp (GcrySexp r, char *tag)
 {
@@ -35,6 +36,7 @@ hex_from_mpi (GcryMPI m)
 
   return buf;
 }
+#endif
 
 int
 generate_key (struct rsa_key *rv)
@@ -86,6 +88,9 @@ write_public (struct rsa_key *k)
 
   buf = g_strdup_printf ("%s %s %s\n", id, e, n);
 
+  gcry_free (n);
+  gcry_free (e);
+
   write (fd, buf, strlen (buf));
 
   g_free (buf);
@@ -117,6 +122,12 @@ write_secret (struct rsa_key *k)
   id = n + (len - 8);
 
   buf = g_strdup_printf ("%s %s %s %s %s %s\n", id, d, n, p, q, u);
+
+  gcry_free (n);
+  gcry_free (d);
+  gcry_free (p);
+  gcry_free (q);
+  gcry_free (u);
 
   write (fd, buf, strlen (buf));
 

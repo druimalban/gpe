@@ -11,15 +11,18 @@
 #define AUTH_H
 
 #include <gcrypt.h>
+#include <glib.h>
 
 struct rsa_key
 {
-  u_int32_t id;
-
   GcryMPI n, e, d, p, q, u;
 };
 
 extern void update_challenge (void);
 extern void generate_challenge (void);
+extern gboolean check_rsa_sig (char *display, char *data);
+
+extern GcryMPI mpi_from_sexp (GcrySexp r, char *tag);
+extern char *hex_from_mpi (GcryMPI m);
 
 #endif
