@@ -442,7 +442,7 @@ do_import_file(GtkWidget *dlg,gint response,char *filename)
 							  GTK_DIALOG_DESTROY_WITH_PARENT,
 							  GTK_MESSAGE_INFO,
 							  GTK_BUTTONS_CLOSE,
-							  _("VCARD was imported successfully."));
+							  _("vCard was imported successfully."));
 			break;
 		default:
 			dlg = gtk_message_dialog_new
@@ -450,7 +450,7 @@ do_import_file(GtkWidget *dlg,gint response,char *filename)
 				 GTK_DIALOG_DESTROY_WITH_PARENT,
 				 GTK_MESSAGE_ERROR,
 				 GTK_BUTTONS_CLOSE,
-				 _("Import of VCARD failed."));
+				 _("Import of vCard failed."));
 			break;
 		}
 		gtk_dialog_run (GTK_DIALOG (dlg));
@@ -480,8 +480,8 @@ check_file_import (char *filename)
 					      GTK_MESSAGE_QUESTION,
 					      GTK_BUTTONS_YES_NO,
 					      _
-					      ("The file %s looks like a VCARD, "
-					       "may i import it?"), filename);
+					      ("File '%s' looks like a vCard, "
+					       "do you want to import it?"), filename);
 		
 		 g_signal_connect_after (GTK_OBJECT (dlg), "response",
                            G_CALLBACK (do_import_file),
@@ -886,7 +886,7 @@ main (int argc, char *argv[])
 	menu = gtk_menu_new ();
 	menu_radio_on = gtk_menu_item_new_with_label (_("Switch IR on"));
 	menu_radio_off = gtk_menu_item_new_with_label (_("Switch IR off"));
-	menu_vcard = gtk_menu_item_new_with_label (_("Send vcard"));
+	menu_vcard = gtk_menu_item_new_with_label (_("Send vCard"));
 	menu_control = gtk_menu_item_new_with_label (_("Controls..."));
 	menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
 	g_signal_connect (G_OBJECT
