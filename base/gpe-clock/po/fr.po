@@ -1,0 +1,79 @@
+# French translation for gpe-clock
+# Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+# This file is distributed under the same license as the PACKAGE package.
+# Luc Pionchon <luc@handhelds.org>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-clock 0.6\n"
+"POT-Creation-Date: 2003-09-06 00:02+0100\n"
+"PO-Revision-Date: 2003-10-11 23:16+0300\n"
+"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clock.c:261
+msgid "Unable to set alarm"
+msgstr "Impossible d'enclencher l'alarme"
+
+#: clock.c:319
+msgid "Clock preferences"
+msgstr "Préférences de l'horloge"
+
+#: clock.c:324
+msgid "12-hour format"
+msgstr "Format sur 12 heures"
+
+#: clock.c:326
+msgid "24-hour format"
+msgstr "Format sur 24 heures"
+
+#: clock.c:328
+msgid "Show seconds"
+msgstr "Afficher les secondes"
+
+#: clock.c:432
+msgid "Time:"
+msgstr "Heure :"
+
+#: clock.c:447
+msgid "Set alarm"
+msgstr "Configurer l'alarme"
+
+#: clock.c:453
+msgid "Alarm active"
+msgstr "Alarme active"
+
+#: clock.c:465
+msgid "Date:"
+msgstr "Date :"
+
+#: clock.c:467
+msgid "Weekly, on:"
+msgstr "Hebdomadaire, le :"
+
+#: clock.c:590
+msgid "Preferences"
+msgstr "Préférences"
+
+#: clock.c:591
+msgid "Set the time"
+msgstr "Changer l'heure"
+
+#: clock.c:592
+msgid "Alarm ..."
+msgstr "Alarme ..."
+
+#: clock.c:593
+msgid "Remove from panel"
+msgstr "Retirer de la barre des tâches"
+
+#: clock.c:614
+msgid ""
+"This is the clock.\n"
+"Tap here to set the alarm, set the time, change the display format, or remove this program from the panel."
+msgstr ""
+"Voici l'horloge.\n"
+"Cliquer ici pour configurer l'heure, l'alarme, changer le format d'affichage, ou retirer cette application de la barre des tâches."

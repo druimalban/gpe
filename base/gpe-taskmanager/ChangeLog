@@ -1,3 +1,9 @@
+2003-10-18  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add fr.
+	(GTKCFLAGS, GTKLDFLAGS): Don't define.  Use GPEFLAGS, GPELIBS from
+	Makefile.dpkg_ipkg instead.
+
 2003-10-09  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.16 released.

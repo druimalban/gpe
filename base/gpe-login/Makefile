@@ -5,10 +5,8 @@ GTK2 = yes
 VERSION = 0.64
 DEBUG = no
 
-LINGUAS = de sv wa nl pt cs
+LINGUAS = de sv wa nl pt cs fr
 
-GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL_GPE_LOGIN = control1
 
 ifeq ($(DEBUG),yes)
@@ -18,14 +16,9 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CFLAGS += $(GTKCFLAGS) -Wall
+CFLAGS += $(GPECFLAGS) -Wall
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -D_GNU_SOURCE -I../gpe-ownerinfo
 
-ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
-endif
-LDFLAGS += -lgpewidget
 LDFLAGS_OWNERINFO = -L../gpe-ownerinfo -lgpe-ownerinfo
 
 MEMBERS = gpe-login
@@ -47,7 +40,7 @@ export PKG_CONFIG_PATH = $(BUILD)
 all: gpe-login gpe-lock-display
 
 gpe-login: gpe-login.o nocursor.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_OWNERINFO) -lcrypt
+	$(CC) -o $@ $^ $(LDFLAGS) $(GPELIBS) $(LDFLAGS_OWNERINFO) -lcrypt
 
 gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $^ `pkg-config --libs x11`

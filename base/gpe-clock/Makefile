@@ -5,24 +5,21 @@ GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.8
 
-LINGUAS = nl pt cs
+LINGUAS = nl pt cs fr
 
 MEMBERS = clock 
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CPPFLAGS = -D_GNU_SOURCE -I../libschedule $(GPECFLAGS)
 
-CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libschedule
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS)
+
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+CFLAGS += -MD -Wall
 
 .SUFFIXES: .d
 
@@ -39,7 +36,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -L../libschedule -lgpewidget -lschedule $(LDFLAGS)
+	$(CC) -o $@ $^ $(GPELIBS) -L../libschedule -lschedule $(LDFLAGS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin

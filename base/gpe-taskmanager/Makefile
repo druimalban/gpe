@@ -5,22 +5,18 @@ GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.16
 
-LINGUAS = nl cs
+LINGUAS = nl cs fr
 
 MEMBERS = gpe-taskmanager
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
-CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb
+CPPFLAGS = $(GPECFLAGS) -D_GNU_SOURCE -I../libeventdb
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS)
+CFLAGS += -Wall
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -39,7 +35,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(LDFLAGS)
+	$(CC) -o $@ $^ $(GPELIBS) $(LDFLAGS)
 
 install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin

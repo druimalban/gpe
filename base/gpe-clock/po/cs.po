@@ -1,0 +1,83 @@
+# translation of gpe-clock.po to Czech
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Libor Klepac <elkropac@students.zcu.cz>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-clock 0.6\n"
+"POT-Creation-Date: 2003-09-06 00:02+0100\n"
+"PO-Revision-Date: 2003-10-08 22:57+0100\n"
+"Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
+"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clock.c:261
+msgid "Unable to set alarm"
+msgstr "Nemohu nastavit upozornìní"
+
+#: clock.c:319
+msgid "Clock preferences"
+msgstr "Nastavení zobrazení ..."
+
+#: clock.c:324
+msgid "12-hour format"
+msgstr "12 hodinový re¾im"
+
+#: clock.c:326
+msgid "24-hour format"
+msgstr "24 hodinový re¾im"
+
+#: clock.c:328
+msgid "Show seconds"
+msgstr "Zobrazovat sekundy"
+
+#: clock.c:432
+msgid "Time:"
+msgstr "Èas:"
+
+#: clock.c:447
+msgid "Set alarm"
+msgstr "Nastavení upozornìní"
+
+#: clock.c:453
+msgid "Alarm active"
+msgstr "Upozornìní zapnuto"
+
+#: clock.c:465
+msgid "Date:"
+msgstr "Datum:"
+
+#: clock.c:467
+msgid "Weekly, on:"
+msgstr "Tyto dny:"
+
+#: clock.c:590
+msgid "Preferences"
+msgstr "Nastavení ..."
+
+#: clock.c:591
+msgid "Set the time"
+msgstr "Nastavit èas a datum"
+
+#: clock.c:592
+msgid "Alarm ..."
+msgstr "Upozornìní ... "
+
+#: clock.c:593
+msgid "Remove from panel"
+msgstr "Odstranit z panelu"
+
+#: clock.c:614
+msgid ""
+"This is the clock.\n"
+"Tap here to set the alarm, set the time, change the display format, or remove this program from the panel."
+msgstr ""
+"Hodiny s upozornìním.\n"
+"«uknutím lze nastavit upozornìní, èas, zmìnit formát zobrazení nebo odstranit hodiny z panelu."
+
+#~ msgid "Alarm clock"
+#~ msgstr "Hodiny s upozornìním"
+
+#~ msgid "Panel clock with alarm facility"
+#~ msgstr "Hodiny do panelu s funkcí upozornìní"
