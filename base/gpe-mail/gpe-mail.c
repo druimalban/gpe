@@ -945,6 +945,21 @@ void compose_window_destroy(GtkButton *button, struct compose_t *compose)
    free(compose);
 }
 
+#ifndef GTK1
+void compose_window_update_title(GtkEntry *e, struct compose_t *compose)
+{
+   char s2[100]="Compose: ";
+   char *s=s2+9;
+
+
+   strcpy(s,gtk_entry_get_text(GTK_ENTRY(compose->entries[4])));
+   gtk_window_set_title(GTK_WINDOW(compose->win),s2);
+
+}
+#endif
+
+
+
 void compose_window_send(GtkButton *button, struct compose_t *compose)
 {
    time_t t;
@@ -1049,7 +1064,7 @@ void do_compose(GtkButton *button, gpointer user_data)
 	 if (a>0&&a<4)
 	 {
 //#ifndef GTK1
-		 compose->entries[a]=gtk_entry_new();
+		 //compose->entries[a]=gtk_entry_new();
 		 //fixme
 //#else
 		 compose->entries[a]=gtk_colombo_new();
@@ -1063,6 +1078,8 @@ void do_compose(GtkButton *button, gpointer user_data)
 
       }
 #ifndef GTK1
+      gtk_signal_connect (GTK_OBJECT(compose->entries[4]), "changed", 
+         (GtkSignalFunc) compose_window_update_title, compose);
       compose->text=gtk_text_view_new();
       compose->text_buffer=gtk_text_view_get_buffer (GTK_TEXT_VIEW (compose->text));
       gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(compose->text),GTK_WRAP_WORD);
@@ -1091,6 +1108,9 @@ void do_compose(GtkButton *button, gpointer user_data)
       gtk_box_pack_start (GTK_BOX (compose->hb), but1, TRUE, TRUE, 0);
       gtk_box_pack_start (GTK_BOX (compose->hb), but2, TRUE, TRUE, 0);
    }
+#ifndef GTK1
+      gtk_window_set_title(GTK_WINDOW(compose->win),"Compose:");
+#endif
    s2[0]=0;
    for(a=1;a<5;a++)
       Gtk_entry_set_text(GTK_ENTRY(compose->entries[a]),s2);
@@ -1100,7 +1120,12 @@ void do_compose(GtkButton *button, gpointer user_data)
       if (0==gtk_clist_get_text((GtkCList *)self.cl1,self.cl1_row,0,sp)) {printf("can not find file name in clist\n");return;}
       while (**sp==' ') (*sp)++;
       if (starts_with(*sp,"Fwd:")) *sp+=4;
+      if (starts_with(*sp,"fwd:")) *sp+=4;
       while (**sp==' ') (*sp)++;
+#ifndef GTK1
+      sprintf(s2,"Compose: Fwd: %s",*sp);
+      gtk_window_set_title(GTK_WINDOW(compose->win),g_locale_from_utf8(s2,-1,NULL,NULL,NULL));
+#endif
       sprintf(s2,"Fwd: %s",*sp);
       Gtk_entry_set_text(GTK_ENTRY(compose->entries[4]),s2);
       s2[0]=0;
@@ -1112,7 +1137,12 @@ void do_compose(GtkButton *button, gpointer user_data)
       if (0==gtk_clist_get_text((GtkCList *)self.cl1,self.cl1_row,0,sp)) {printf("can not find file name in clist\n");return;}
       while (**sp==' ') (*sp)++;
       if (starts_with(*sp,"Re:")) *sp+=3;
+      if (starts_with(*sp,"re:")) *sp+=3;
       while (**sp==' ') (*sp)++;
+#ifndef GTK1
+      sprintf(s2,"Compose: Re: %s",*sp);
+      gtk_window_set_title(GTK_WINDOW(compose->win),g_locale_from_utf8(s2,-1,NULL,NULL,NULL));
+#endif
       sprintf(s2,"Re: %s",*sp);
       Gtk_entry_set_text(GTK_ENTRY(compose->entries[4]),s2);
       sp=(char **)&s;
@@ -1313,6 +1343,9 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    strcat(s3,"\nSubject: ");
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,0,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
    strcat(s3,*sp);
+#ifndef GTK1
+   gtk_window_set_title(GTK_WINDOW(self.w),g_locale_from_utf8(*sp,-1,NULL,NULL,NULL));
+#endif
    strcat(s3,"\nDate: ");
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,2,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
    strcat(s3,*sp);
