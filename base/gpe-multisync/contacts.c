@@ -79,7 +79,7 @@ contacts_push_object (struct db *db, const char *obj, const char *uid,
     {
       char *errmsg;
 
-      if (nsqlc_exec (db->db, "insert into calendar_urn values (NULL)",
+      if (nsqlc_exec (db->db, "insert into contacts_urn values (NULL)",
 		      NULL, NULL, &errmsg))
 	return FALSE;
       
