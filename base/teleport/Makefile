@@ -6,31 +6,16 @@ VERSION = 0.33
 
 LINGUAS = 
 
-CPPFLAGS += -D_GNU_SOURCE
-
-CFLAGS = $(GPECFLAGS) -Wall
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
-LDFLAGS += $(GPELIBS)
-
-MEMBERS = teleport crypt displays keygen tp-keygen
-
 ifeq ($(CVSBUILD),yes)
 # temporary hack to work around lack of pkg-config for libdisplaymigration
-CFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration
+PACKAGE_CPPFLAGS += -I../libdisplaymigration
+PACKAGE_LDFLAGS += -L../libdisplaymigration
 endif
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `libgcrypt-config --cflags`
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -ltododb -ldisplaymigration -lgpepimc `libgcrypt-config --libs` -lsqlite
 
-CFLAGS += `libgcrypt-config --cflags`
-LDFLAGS += -ldisplaymigration `libgcrypt-config --libs`
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-LDFLAGS += 
-endif
+MEMBERS = teleport crypt displays keygen tp-keygen
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -45,10 +30,10 @@ endif
 all: teleport all-mo tp-keygen
 
 teleport: teleport.o crypt.o displays.o keygen.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lsqlite
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 tp-keygen: tp-keygen.o keygen.o
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 clean:
 	rm -f teleport tp-keygen tp-keygen.o $(OBJS) $(DEPS)
