@@ -1,0 +1,5 @@
+key=...XF86AudioRecord:gpe-soundbite record
+key=...XF86Calendar:gpe-calendar
+key=...telephone:gpe-contacts
+key=...XF86Mail:gpe-mail
+key=...XF86Start:gpe-appmgr
