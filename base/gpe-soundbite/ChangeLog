@@ -1,5 +1,7 @@
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Add dependency tracking gubbins.
+
 	* gsm-codec.c: Include <string.h> to silence warning.
 
 2004-03-08  Moray Allan  <moray@sermisy.org>

@@ -30,6 +30,7 @@ endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: $(PACKAGE)
 
@@ -48,7 +49,8 @@ install-program: all $(PACKAGE)-play.desktop  $(PACKAGE)-record.desktop
 	install -m 644 $(PACKAGE).glade $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gpe-soundbite.glade
 
 clean:
-	rm -f $(PACKAGE) $(OBJS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
+-include $(DEPS)
