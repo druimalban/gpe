@@ -418,16 +418,17 @@ do_replace_string (GtkWidget *widget, gpointer p)
   GtkWidget *entry;
   GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
   GtkTextIter sel_start, sel_end, at;
-#warning it segfaults somewhere here
+
   entry = gtk_object_get_data (GTK_OBJECT (widget), "entry");
   replace_with = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
 
   if (gtk_text_buffer_get_selection_bounds (buf, &sel_start, &sel_end))
   {
-    gtk_text_iter_set_offset (&at, last_found);
-    gtk_text_buffer_delete_selection (buf, FALSE, TRUE);
-    gtk_text_buffer_insert (buf, &at, replace_with, strlen (replace_with));
-    last_found = gtk_text_iter_get_offset (&sel_end);
+      gtk_text_buffer_get_iter_at_offset (buf, &at, last_found);
+      gtk_text_buffer_insert (buf, &at, replace_with, strlen (replace_with));
+      gtk_text_buffer_delete_selection (buf, FALSE, TRUE);
+	  gtk_text_buffer_get_selection_bounds (buf, &sel_start, &sel_end);
+      last_found = gtk_text_iter_get_offset (&sel_end);
   }
   else
   {

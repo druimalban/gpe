@@ -44,7 +44,7 @@ install-program: all gpe-edit.desktop
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 
 clean: clean-po
-	rm -f gpe-edit $(OBJS) $(DEPS) $(PACKAGE).desktop
+	rm -f gpe-edit $(OBJS) $(DEPS) $(PACKAGE).desktop *.ipk *~ *.bak
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

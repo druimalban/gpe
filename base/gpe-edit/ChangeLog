@@ -1,5 +1,7 @@
 2004-08-25  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* main.c: Fixed replace function.
+	* Makefile: Improved "clean" target.
 	* main.c: Search edit activates search button.
 	* main.c: Added default hotkeys for common actions.
 	* Makefile: V 0.28
