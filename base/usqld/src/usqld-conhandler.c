@@ -14,6 +14,7 @@
 #include "usqld-server.h"
 #include "usqld-conhandler.h"
 #include "usqld-protocol.h"
+#include <error.h>
 
 typedef struct{
   int client_fd;
@@ -21,6 +22,18 @@ typedef struct{
   char * database_name;
   usqld_config * config;
 }usqld_tc;
+
+/*
+  checks the incoming stream to see if a packet header is there
+  return the the start (i.e. the type) of the incomming packet
+ */
+unsigned int usqld_peek_next_packet(int fd){
+  unsigned char header[4];
+  
+  if(EAGAIN != recv(fd,header,4,MSG_DONTWAIT)){
+    return ntohl(*((unsigned int *)header));
+  }
+}
 
 int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
   char * database = NULL;
@@ -56,7 +69,6 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
   strncpy(fn_buf,tc->config->db_base_dir,512);
   strncat(fn_buf,database,512);
 
-  fprintf(stderr,"openining database at %s\n",fn_buf);
 
   if(NULL==(tc->db=sqlite_open(fn_buf,0644,&errmsg))){
     reply = usqld_error_packet(SQLITE_CANTOPEN,errmsg);
@@ -65,7 +77,6 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
 
   tc->database_name = strdup(database);
   /*we are set*/
-  fprintf(stderr,"database:%s is now open,sending OK\n",database);
   reply = usqld_ok_packet();
   goto connect_send_reply;
   
@@ -93,10 +104,15 @@ int usqld_send_row(usqld_row_context * rc,
   int i;
   int rv;
 
-  fprintf(stderr,"about to send a row:\n[");
 
-#ifdef _DEBUG
-  for(i = 0;i<nfields;i++){
+
+  if(PICKLE_INTERRUPT=usqld_peek_next_packet(rc->tc->client_fd){
+    rc->interrupted = 1;
+    return 1;
+  }
+
+#ifdef VERBOSE_DEBUG
+  for(i = 0;i<nfiels;i++){
     fprintf(stderr,"\t%s,",heads[i]);
   }
   fprintf(stderr,"]\n");
@@ -182,7 +198,6 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
 				&errmsg))){
       
     
-    fprintf(stderr,"error executing sql:%s\n",errmsg);
 
     if(rc.terminate_now)
       goto query_send_reply; //fatal error

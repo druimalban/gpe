@@ -119,12 +119,16 @@ XDR_schema * usqld_get_protocol(){
    if the function returns anything  byt USQLD_OK;
    
    return value: 
+   USQLD_OK (0) on success. 
    one of the possible XDR error codes for deserialization
  */
 int usqld_recv_packet(int fd,XDR_tree ** packet){
    int rv = XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
+
+#ifdef VERBOSE_DEBUG
    if(rv==USQLD_OK)
      {
+
        fprintf(stderr,"got a %s packet\n",
 	       usqld_find_packet_name(
 		 XDR_t_get_union_disc(XDR_TREE_COMPOUND(*packet))));
@@ -134,15 +138,19 @@ int usqld_recv_packet(int fd,XDR_tree ** packet){
      {
 	fprintf(stderr,"packet recieve failed with code %d\n",rv);
      }
-   
+#endif   
    return rv;
 }
 
+
 int usqld_send_packet(int fd,XDR_tree* packet){
 
+#ifdef VERBOSE_DEBUG
   fprintf(stderr,"about to send a %s packet\n",
 	  usqld_find_packet_name(XDR_t_get_union_disc(XDR_TREE_COMPOUND(packet))));
    XDR_tree_dump(packet);
+#endif
+
   return XDR_serialize_elem(usqld_get_protocol(),packet,fd);
 }
 

@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include "usql.h"
 #include "usqld-protocol.h"
-#include "xdr.h"
 
 int test_print_results(void * f,int nrows,
 		       const char ** heads,
@@ -27,12 +26,7 @@ int main (int argc, char ** argv)
 {
    usqld_conn * con;
    char * errstring;
-   XDR_schema * s;
-   
-   
-   s = usqld_get_protocol();
-   XDR_dump_schema(s);
-   if(NULL==(con=usqld_connect("pc-80-192-26-107-bt.blueyonder.co.uk",
+   if(NULL==(con=usqld_connect("localhost",
 			       "test",&errstring))){
       fprintf(stderr,"couldn't connect to database: %s\n",errstring);
       exit(1);

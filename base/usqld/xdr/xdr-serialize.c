@@ -16,16 +16,19 @@ int  XDR_serialize_elem(XDR_schema * in_s,
   char * reason;
   char errbuf[1024];
   
-
+#ifdef VERBOSE_DEBUG
   fprintf(stderr,
 	  "About to serialize a %s using a %s\n",
 	  XDR_find_type_name(in_s->type),
 	  (in_t==NULL?"NULL":XDR_find_type_name(in_s->type)));
+#endif
   
   if(in_s->type!=in_t->type){
+#ifdef VERBOSE_DEBUG
     fprintf(stderr,"errrr, schema says %s, but type says %s\n",
 	    XDR_find_type_name(in_s->type),
 	    XDR_find_type_name(in_t->type));
+#endif
     reason = "data does not match schema";
     goto serialize_failed_output;    
   }
@@ -221,11 +224,14 @@ int  XDR_serialize_elem(XDR_schema * in_s,
   
   return XDR_OK;
  serialize_failed_output:
+
+#ifdef VERBOSE_DEBUG
   fprintf(stderr,"serialization failed because %s, "\
 	  "while processing data elemm of type %s, and schema elem of type %s\n",
 	  reason,
 	  XDR_find_type_name(in_t->type),
 	  XDR_find_type_name(in_s->type));
+#endif
   return rv;
 	  
 	  

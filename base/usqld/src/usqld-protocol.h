@@ -12,6 +12,7 @@
 #define PICKLE_ROW 7
 #define PICKLE_EOF 8
 #define PICKLE_MAX 9
+#define PICKLE_INTERRUPT 9
 
 #define USQLD_PROTOCOL_VERSION "USQLD_0.1.0"
 
