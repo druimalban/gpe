@@ -34,9 +34,8 @@
 
 #include <gpe/errorbox.h>
 #include <gpe/init.h>
-#include <gpe/pixmaps.h>
-#include <gpe/picturebutton.h>
 #include <gpe/render.h>
+#include <gpe/gtksimplemenu.h>
 
 #include "rootpixmap.h"
 
@@ -611,6 +610,16 @@ mapped (GtkWidget *window)
     }
 }
 
+static GtkWidget *
+build_language_menu (void)
+{
+  GtkWidget *m = gtk_simple_menu_new ();
+
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (m), "English");
+
+  return m;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -849,7 +858,7 @@ main (int argc, char *argv[])
   menu = gtk_menu_new ();
   slurp_passwd (menu);
 
-  ok_button = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
 
@@ -866,15 +875,17 @@ main (int argc, char *argv[])
       GtkWidget *hbox_password;
       GtkWidget *login_label, *lock_label, *password_label;
       GtkWidget *entry = NULL, *table;
+      guint xpad = 4, ypad = 1;
 
-      if (autolock_mode) {
-	lock_label = gtk_label_new (NULL);
-	gtk_label_set_markup (GTK_LABEL (lock_label),
-			      g_strdup_printf ("<span lang='%s'><b>%s</b></span>",
-					       pango_lang_code,
-					       _("Screen locked")));
-	gtk_box_pack_start (GTK_BOX (vbox2), lock_label, FALSE, FALSE, 0);
-      }
+      if (autolock_mode) 
+	{
+	  lock_label = gtk_label_new (NULL);
+	  gtk_label_set_markup (GTK_LABEL (lock_label),
+				g_strdup_printf ("<span lang='%s'><b>%s</b></span>",
+						 pango_lang_code,
+						 _("Screen locked")));
+	  gtk_box_pack_start (GTK_BOX (vbox2), lock_label, FALSE, FALSE, 0);
+	}
       
       login_label = gtk_label_new (_("Username"));
       label_result = gtk_label_new (NULL);
@@ -893,7 +904,7 @@ main (int argc, char *argv[])
       gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
       
-      table = gtk_table_new (2, 2, FALSE);
+      table = gtk_table_new (3, 2, FALSE);
 
       if (! hard_keys_mode)
 	{
@@ -906,12 +917,21 @@ main (int argc, char *argv[])
 	  gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
 	  gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
 
-	  gtk_table_attach_defaults (GTK_TABLE (table), password_label, 0, 1, 1, 2);
-	  gtk_table_attach_defaults (GTK_TABLE (table), hbox_password, 1, 2, 1, 2);
+	  gtk_table_attach (GTK_TABLE (table), password_label, 0, 1, 1, 2, 0, GTK_EXPAND | GTK_FILL, xpad, ypad);
+	  gtk_table_attach (GTK_TABLE (table), hbox_password, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, xpad, ypad);
 	}
 
-      gtk_table_attach_defaults (GTK_TABLE (table), login_label, 0, 1, 0, 1);
-      gtk_table_attach_defaults (GTK_TABLE (table), option, 1, 2, 0, 1);
+      if (! autolock_mode)
+	{
+	  GtkWidget *language_label = gtk_label_new (_("Language"));
+	  GtkWidget *language_option_menu = build_language_menu ();
+
+	  gtk_table_attach (GTK_TABLE (table), language_label, 0, 1, 2, 3, 0, GTK_EXPAND | GTK_FILL, xpad, ypad);
+	  gtk_table_attach (GTK_TABLE (table), language_option_menu, 1, 2, 2, 3, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, xpad, ypad);
+	}
+
+      gtk_table_attach (GTK_TABLE (table), login_label, 0, 1, 0, 1, 0, GTK_EXPAND | GTK_FILL, xpad, ypad);
+      gtk_table_attach (GTK_TABLE (table), option, 1, 2, 0, 1, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, xpad, ypad);
 
       gtk_label_set_justify (GTK_LABEL (login_label), GTK_JUSTIFY_LEFT);
       gtk_misc_set_alignment (GTK_MISC (login_label), 0, 0.5);

@@ -1,5 +1,11 @@
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.c (main): Tweak formatting of main table.  Add
+	language selector; currently not functional.
+	(build_language_menu): New.  Dummy implementation only.
+
+2003-02-21  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c (main): Only set default size if all other
 	geometry-setting avenues have been exhausted.
 
