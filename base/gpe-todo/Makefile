@@ -41,7 +41,7 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm -L../libtododb -ltododb
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
 
 all: $(PACKAGE)
 

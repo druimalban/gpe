@@ -4,6 +4,12 @@
 	
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (clean): Also remove .desktop file.
+
+	* main.c (main): Call bind_textdomain_codeset.
+
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
 	* po/fr.po: New file, courtesy Luc Pionchon.
 	* Makefile (LINGUAS): Add fr.
 
