@@ -11,7 +11,14 @@
 
 2002-10-13  Robert Mibus  <mibus@handhelds.org>
 
-	* gpeiconlist.gob etc.: add the GPEIconList widget
+	* gpeiconlist.gob: add gob source for the GPEIconList widget
+
+	* gpe-iconlist.c: add generated C source
+
+	* gpe/gpe-iconlist.h.: add generated header
+
+	* Makefile: build iconlist files from .gob when needed;
+	add gpe-iconlist.o to OBJS
 
 2002-10-06  Philip Blundell  <philb@gnu.org>
 
