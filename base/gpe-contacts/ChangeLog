@@ -1,5 +1,9 @@
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.13 released.
+	
+2003-04-12  Philip Blundell  <philb@gnu.org>
+
 	* db.h (sort_entries): Add prototype.
 	* main.c (do_search): Sort the returned list.
 
