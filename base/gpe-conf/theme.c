@@ -38,10 +38,12 @@
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 #include <gpe/spacing.h>
+//#include <gpe/popup_menu.h>
 #include <xsettings-client.h>
 
 #define KEY_MATCHBOX "MATCHBOX/"
 #define KEY_THEME "Net/"
+#define KEY_GTK "Gtk/"
 
 static XSettingsClient *client;
 
@@ -56,7 +58,9 @@ static struct
   gchar *themename;
   GtkWidget *bOpen;
   GtkWidget *demolabel;
+  GtkWidget *demolabel2;
   GtkWidget *spFS, *bFont, *bColorFont;
+  GtkWidget *spFSApp, *bFontApp;
 }
 self;
 
@@ -94,6 +98,7 @@ MBDesktopBG mb_back;
 static void select_font_popup (GtkWidget *parent_button);
 static void on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1);
 static GtkWidget *popup_menu_button_new (const gchar *stock_id);
+//static void on_font_select(char* desc);
 
 
 gboolean
@@ -428,6 +433,23 @@ notify_func (const char *name,
   GtkRcStyle *astyle;
   GtkWidget *label;
 	
+   if (strncmp (name, KEY_GTK, strlen (KEY_GTK)) == 0)
+    {
+      char *p = (char *) name + strlen (KEY_GTK);
+
+ 	  if (!strcmp (p, "FontName"))
+	  {
+	  if (setting->type == XSETTINGS_TYPE_STRING)
+	    {
+           astyle = gtk_rc_style_new ();
+           astyle->font_desc = pango_font_description_from_string (setting->data.v_string);
+           gtk_widget_modify_style (self.demolabel2, astyle);
+		   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)pango_font_description_get_size(astyle->font_desc)/PANGO_SCALE);
+		   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
+		   gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(astyle->font_desc));	
+		}
+	  }
+    }
    if (strncmp (name, KEY_THEME, strlen (KEY_THEME)) == 0)
     {
       char *p = (char *) name + strlen (KEY_THEME);
@@ -722,7 +744,7 @@ Theme_Save ()
 		free(confstr);
 	}
 
-	/* font type and size */
+	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS));
@@ -735,6 +757,13 @@ Theme_Save ()
 	printf ("xst write %s%s str \"%s\"\n", KEY_MATCHBOX, "DesktopFontColor", confstr);
 	system_printf ("xst write %s%s str \"%s\"", KEY_MATCHBOX, "DesktopFontColor", confstr);
 	free(confstr);
+	/* application font type and size */
+	label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
+	clabel = gtk_label_get_text(GTK_LABEL(label));
+	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSApp));
+	confstr = g_strdup_printf("xst write %s%s str \"%s %i\"", KEY_GTK, "FontName", clabel,fs);
+	system(confstr);
+	free(confstr);	
 }
 
 void
@@ -944,52 +973,106 @@ Theme_Build_Objects ()
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
 
   self.bFont = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
   g_object_set_data (G_OBJECT (self.bFont), "active", FALSE);
   gtk_signal_connect (GTK_OBJECT (self.bFont), "pressed",
 		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
-  gtk_table_attach (GTK_TABLE (table), self.bFont, 0, 3, 2, 3,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  self.demolabel = gtk_label_new(_("GPE rulez!"));  
-  gtk_table_attach (GTK_TABLE (table), self.demolabel, 0, 3, 5, 6,
+  gtk_table_attach (GTK_TABLE (table), self.bFont, 0, 1, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.demolabel = gtk_label_new(_("Desktop Font"));  
+  gtk_table_attach (GTK_TABLE (table), self.demolabel, 0, 4, 3, 4,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  gtk_widget_set_size_request(self.demolabel,-1,30);
+  gtk_misc_set_alignment(GTK_MISC(self.demolabel),0.5,0.2);
   
   label = gtk_label_new(_("Size"));
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 3, 4,
+  gtk_table_attach (GTK_TABLE (table), label, 1, 2, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  self.spFS = gtk_spin_button_new_with_range(1,30,1);
-  gtk_table_attach (GTK_TABLE (table), self.spFS, 0, 1, 4, 5,
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.spFS = gtk_spin_button_new_with_range(1,20,1);
+  gtk_table_attach (GTK_TABLE (table), self.spFS, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   g_signal_connect(G_OBJECT(self.spFS),"value-changed",G_CALLBACK(on_font_size_change),NULL);	
-  gtk_widget_set_size_request(self.spFS,20,-1);
+  
+  label = gtk_label_new(_("Color"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 3, 4, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   self.bColorFont = gtk_button_new();
   gtk_button_set_label(GTK_BUTTON(self.bColorFont),_("Color"));
   g_signal_connect (GTK_OBJECT (self.bColorFont), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
-  gtk_table_attach (GTK_TABLE (table), self.bColorFont, 2, 3, 4, 5,
+  gtk_table_attach (GTK_TABLE (table), self.bColorFont, 3, 4, 2, 3,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  
+ /*---------------------------------------------*/
+ 
+  label = gtk_label_new("none");
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Application Font"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
- gtk_widget_set_size_request(self.bColorFont,20,-1);
+
+  label = gtk_label_new(_("Family"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 5, 6,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+
+  self.bFontApp = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
+  g_object_set_data (G_OBJECT (self.bFontApp), "active", FALSE);
+  gtk_signal_connect (GTK_OBJECT (self.bFontApp), "pressed",
+		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  gtk_table_attach (GTK_TABLE (table), self.bFontApp, 0, 1, 6, 7,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.demolabel2 = gtk_label_new(_("Application Font"));  
+  gtk_table_attach (GTK_TABLE (table), self.demolabel2, 0, 4, 7, 8,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  gtk_widget_set_size_request(self.demolabel2,-1,30);
+  gtk_misc_set_alignment(GTK_MISC(self.demolabel2),0.5,0.2);
+
+  label = gtk_label_new(_("Size"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 1, 2, 5, 6,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.spFSApp = gtk_spin_button_new_with_range(1,20,1);
+  gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 6, 7,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  g_signal_connect(G_OBJECT(self.spFSApp),"value-changed",G_CALLBACK(on_font_size_change),NULL);	
   
+			
 /* insert some defaults */
   astyle = gtk_rc_style_new ();
   astyle->font_desc = pango_font_description_from_string ("Sans 9");
   gtk_widget_modify_style (self.demolabel, astyle);
+  gtk_widget_modify_style (self.demolabel2, astyle);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
+  gtk_label_set_text(GTK_LABEL(label),"Sans");	
+  label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   
   mb_start_xsettings ();
 
   return notebook;
 }
+
 
 //------font stuff------------from gpe-word
 static GtkWidget *
@@ -1033,7 +1116,7 @@ popup_menu_button_new (const gchar *stock_id)
 
 
 static void
-on_font_select(GtkWidget * widget, gpointer style)
+on_font_select_desk(GtkWidget * widget, gpointer style)
 {
 	GtkWidget * label;
 	gtk_widget_modify_style(self.demolabel,GTK_RC_STYLE(style));
@@ -1042,15 +1125,48 @@ on_font_select(GtkWidget * widget, gpointer style)
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 }
 
+static void
+on_font_select_app(GtkWidget * widget, gpointer style)
+{
+	GtkWidget * label;
+	gtk_widget_modify_style(self.demolabel2,GTK_RC_STYLE(style));
+	pango_font_description_set_size(GTK_RC_STYLE(style)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSApp))*PANGO_SCALE);
+	label = g_object_get_data(G_OBJECT(self.bFontApp),"label");
+	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
+}
+
+/*
+static void
+on_font_select(char* desc)
+{
+	GtkRcStyle *astyle = gtk_rc_style_new();
+printf("cb %s\n",desc);
+    astyle->font_desc = pango_font_description_from_string (desc);
+	pango_font_description_set_size(GTK_RC_STYLE(astyle)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS))*PANGO_SCALE);
+    gtk_widget_modify_style (self.demolabel, astyle);
+//	label = g_object_get_data(G_OBJECT(self.bFont),"label");
+//	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
+}
+*/
 
 static void
 on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1)
 {
 	GtkRcStyle *astyle = gtk_rc_style_new();
 	
-	astyle->font_desc = gtk_widget_get_style(self.demolabel)->font_desc;
-	pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS))*PANGO_SCALE);
-	gtk_widget_modify_style(self.demolabel,GTK_RC_STYLE(astyle));
+	if (GTK_WIDGET(spinbutton) == self.spFS)
+	{
+		astyle->font_desc = gtk_widget_get_style(self.demolabel)->font_desc;
+		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
+	    gtk_widget_modify_style(self.demolabel,GTK_RC_STYLE(astyle));
+	}
+	else if (GTK_WIDGET(spinbutton) == self.spFSApp) 	
+	{
+		astyle->font_desc = gtk_widget_get_style(self.demolabel2)->font_desc;
+		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
+	    gtk_widget_modify_style(self.demolabel2,GTK_RC_STYLE(astyle));
+	}
+
 	g_free(astyle);
 }
 
@@ -1114,7 +1230,8 @@ select_font_popup (GtkWidget *parent_button)
       gtk_container_add (GTK_CONTAINER (alignment), button_label);
       gtk_container_add (GTK_CONTAINER (button), alignment);
       gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-	  g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select),button_label_rc_style);
+	  if (parent_button == self.bFont) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_desk),button_label_rc_style);
+	  if (parent_button == self.bFontApp) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_app),button_label_rc_style);
     }
 
     g_free (families);

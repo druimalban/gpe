@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+31.03.2003		Florian			theme.c						Application (GTK) font selection, font selection gui update.
+
 28.03.2003		Florian			timeanddate.c				Changed ui to use GtkDateCombo.
 															Added support for some standard timezones.
 															Added some (possibly) helpful hints.
