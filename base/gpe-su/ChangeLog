@@ -1,3 +1,7 @@
+2004-06-07  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile: install binary suid root.
+
 2004-06-04  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.11 released.
