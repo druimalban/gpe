@@ -1,13 +1,15 @@
 # Dutch translation of gpe-aerial.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-aerial package.
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
-#
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003, 2004.
+# 
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-aerial 0.2.6\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-10-10 18:55+0200\n"
-"PO-Revision-Date: 2003-10-11 12:37+0100\n"
+"PO-Revision-Date: 2004-01-03 14:36+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -203,9 +205,8 @@ msgid "This field needs to contain the name of this wireless LAN."
 msgstr "Dit veld moet de naam van dit draadloze LAN bevatten."
 
 #: netedit.c:257 netedit.c:258
-#, fuzzy
 msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."
-msgstr "Hier selecteer u het soort netwerk. Als u een accesspoint heeft, selecteer \"beheerd\"."
+msgstr "Hier selecteert u welk soort netwerk u gebruikt, als u een accesspoint heeft, selecteer \"beheerd\"."
 
 #: netedit.c:259
 msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."

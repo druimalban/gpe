@@ -4,6 +4,6 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
-Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), gpe-conf (>= 0.1.0), libsqlite0, prismstumbler (>=0.7.0-pre8)
+Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), gpe-conf (>= 0.1.0), libsqlite0, prismstumbler (>=0.7.0)
 Description: GPE wireless LAN communication applet
-Source: gpe-aerial-VERSION-.tar.gz @ gpe ftp
+Source: ftp://ftp.handhelds.org/pub/projects/gpe/gpe-aerial-VERSION-.tar.gz

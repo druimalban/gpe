@@ -37,10 +37,17 @@
 #define DT_PRISM   0x01
 #define DT_ORINOCO 0x02
 #define DT_HOSTAP  0x04
+#define DT_SCAN    0x08
 
 #define PS_SOCKET "/tmp/.psintercom"
-#define DHCP_COMMAND "dhcpcd %s &"
+#define PIC_SCANNER_OFF PREFIX "/share/pixmaps/stock_record.png"
+#define PIC_SCANNER_ON PREFIX "/share/pixmaps/stock_record_on.png"
+#define PIC_DUMP_ON PREFIX "/share/pixmaps/stock_jump_on.png"
+
+
+#define DHCP_COMMAND "/sbin/dhcpcd %s &"
 #define SEQ_USERNET 0xFFFF
+
 
 typedef enum
 {
@@ -75,9 +82,7 @@ info_t;
 
 typedef enum
 {
-	N_UNKNOWN,
 	N_NET,
-	N_MANAGED,
 	N_ADHOC,
 	N_HOST,
 	N_GATEWAY,
@@ -113,6 +118,8 @@ typedef struct
 	int singlechan;
 	int autosend;
 	char wpfile[255];
+	char dumpfile[255];
+	int dumptofile;	
 }
 psconfig_t;
 
