@@ -29,6 +29,12 @@
 <!--#else -->
 <A href="/linkres.shtml">Links/Resources</a>
 <!--#endif -->
+
+<!--#if expr="x${pagename}=xdownload" -->
+<b>Download</b>
+<!--#else -->
+<A href="/download.shtml">Download</a>
+<!--#endif -->
 |
 <!--#if expr="x${pagename}=xcontact" -->
 <b>Contact</b>
