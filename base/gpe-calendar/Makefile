@@ -12,10 +12,12 @@ endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
+all: gpe-calendar
+
 gpe-calendar: $(OBJS)
 	$(CC) -o $@ $^ `gtk-config --libs` -lgdk_imlib -lsqlite -L../libgpewidget -lgpewidget $(LDFLAGS)
 
-install:
+install: all
 	install -D gpe-calendar $(DESTDIR)/usr/bin/gpe-calendar
 	strip $(DESTDIR)/usr/bin/gpe-calendar
 

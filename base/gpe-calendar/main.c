@@ -134,13 +134,13 @@ main(int argc, char *argv[])
 
   vbox = gtk_vbox_new (FALSE, 0);
 
-  timefont = gdk_font_load ("-*-*-medium-r-normal--12-*-*-*-*-*-*");
+  timefont = gdk_font_load ("-*-*-medium-r-normal--10-*-*-*-*-*-*");
   if (timefont == NULL)
     {
       printf ("Couldn't get time font\n");
       abort ();
     }
-  datefont = gdk_font_load ("-*-*-medium-r-normal--10-*-*-*-*-*-*");
+  datefont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-c-*-*");
   if (datefont == NULL)
     {
       printf ("Couldn't get date font\n");

@@ -262,11 +262,17 @@ edit_event_window(void)
   GtkWidget *enddatebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *startdatelabel = gtk_label_new (_("Start on:"));
   GtkWidget *enddatelabel = gtk_label_new (_("End on:"));
-
-  GtkWidget *starttimebox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *endtimebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *starttimelabel = gtk_label_new (_("at:"));
   GtkWidget *endtimelabel = gtk_label_new (_("at:"));
+
+  GtkWidget *summaryhbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *summaryentry = gtk_entry_new ();
+  GtkWidget *summarylabel = gtk_label_new (_("Summary:"));
+
+  GtkWidget *descriptionframe = gtk_frame_new (_("Description:"));
+
+  GtkWidget *alldaybutton = 
+    gtk_check_button_new_with_label (_("All-day event"));
 
   GtkWidget *alarmhbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *alarmmenu = gtk_menu_new ();
@@ -304,15 +310,15 @@ edit_event_window(void)
   s->startdate = gtk_date_combo_new ();
   s->enddate = gtk_date_combo_new ();
   
+  gtk_box_pack_end (GTK_BOX (startdatebox), starttime, TRUE, TRUE, 2);
+  gtk_box_pack_end (GTK_BOX (startdatebox), starttimelabel, FALSE, FALSE, 2);
   gtk_box_pack_end (GTK_BOX (startdatebox), s->startdate, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (startdatebox), startdatelabel, FALSE, FALSE, 2);
+
+  gtk_box_pack_end (GTK_BOX (enddatebox), endtime, TRUE, TRUE, 2);
+  gtk_box_pack_end (GTK_BOX (enddatebox), endtimelabel, FALSE, FALSE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 2);
-
-  gtk_box_pack_end (GTK_BOX (starttimebox), starttime, FALSE, FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (starttimebox), starttimelabel, FALSE, FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (endtimebox), endtime, FALSE, FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (endtimebox), endtimelabel, FALSE, FALSE, 2);
 
   gtk_text_set_editable (GTK_TEXT (text), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
@@ -330,12 +336,18 @@ edit_event_window(void)
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
 		      GTK_SIGNAL_FUNC (click_cancel), window);
 
+  gtk_container_add (GTK_CONTAINER (descriptionframe), text);
+  gtk_container_set_border_width (GTK_CONTAINER (descriptionframe), 2);
+
+  gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (summaryhbox), summaryentry, TRUE, TRUE, 2);
+
   gtk_box_pack_start (GTK_BOX (vboxevent), startdatebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), starttimebox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), enddatebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), endtimebox, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxevent), alldaybutton, FALSE, FALSE, 2);  
   gtk_box_pack_start (GTK_BOX (vboxevent), alarmhbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), text, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), descriptionframe, TRUE, TRUE, 2);
   
   gtk_widget_show_all (vboxevent);
   
