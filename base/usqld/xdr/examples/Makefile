@@ -10,3 +10,6 @@ reader_example: example-schema.o reader-example.c
 
 example-schema.o:example-schema.c example-schema.h
 	gcc $(CFLAGS) -c example-schema.c
+
+clean: 
+	rm -f writer_example reader_example *~ *o
