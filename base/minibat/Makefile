@@ -8,7 +8,7 @@ LINGUAS =
 
 MEMBERS = minibat mbtray
 
-CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config --cflags xft`
+CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config $(PKG_CONFIG) --cflags x11` `pkg-config --cflags xft`
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -16,7 +16,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-LDFLAGS = -L/usr/X11R6/lib -lX11 -lXext -lmb `pkg-config --libs xft` -lapm -lm
+LDFLAGS = `pkg-config --libs x11` -lXext -lmb `pkg-config --libs xft` -lapm -lm
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
@@ -32,6 +32,8 @@ BUILD = ../build
 else
 BUILD = build
 endif
+
+export PKG_CONFIG_PATH = $(BUILD)
 
 all: $(PACKAGE) all-mo
 
