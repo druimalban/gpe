@@ -235,7 +235,7 @@ void draw (void)
 void redraw (void)
 {
   gtk_image_set_from_pixbuf (GTK_IMAGE(image_widget), pixbuf);
-  gdk_window_process_updates(window->window, FALSE);
+  gdk_window_process_updates (GTK_WIDGET(image_widget)->window, FALSE);
 }
 
 void
