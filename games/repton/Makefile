@@ -10,9 +10,14 @@ CFLAGS=		-I. -Wall $(COPT) `sdl-config --cflags` -MD
 LDFLAGS=
 LIBS=		`sdl-config --libs`
 
+CVSBUILD = yes
 PREFIX = /usr
+ifeq ($(CVSBUILD),yes)
 BUILD = ../../base/build
-VERSION = 1.3
+else
+BUILD = build
+endif
+VERSION = 1.3-gpe0
 PACKAGE = repton
 
 BINDIR=		$(DESTDIR)$(PREFIX)/bin
