@@ -20,10 +20,10 @@ Special functionality included is support for
 <LI> Entries without due-time, just a note for a particular day.
 <LI> Recurring events with options for daily, workdays, weekends, monthly,
 yearly (birthdays or other anniversaries)
-<LI> Beaming entries via IrDA/Bluetooth OBEX in vCalendar format.
 <LI> Different view modes to give the user a good overview.
 </UL>
 </P>
+<P>Future enhancements will include beaming entries via IrDA/Bluetooth OBEX in vCalendar format.</P>
 
 <H2>Status</H2>
 <P>
