@@ -1668,6 +1668,15 @@ void gui_init(){
   //main page
   vbox = gtk_vbox_new (FALSE, 0);
 
+  {
+    GtkWidget * status;
+    status = gtk_statusbar_new();
+    gtk_statusbar_set_has_resize_grip(status, FALSE);
+    gtk_box_pack_start (GTK_BOX (vbox), status, FALSE, FALSE, 0);
+   
+    gtk_statusbar_push(status,0,"let's go!");
+
+  }
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
 
