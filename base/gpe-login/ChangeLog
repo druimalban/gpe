@@ -1,5 +1,9 @@
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.40 released.
+
+2003-02-20  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c (main): Remove local pango_lang_code
 	shadowing global of same name.
 
