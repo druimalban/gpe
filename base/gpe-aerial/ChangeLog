@@ -1,5 +1,11 @@
 2005-01-04		Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Released version 0.2.12
+	* main.c: Changed pixmaps to load.
+	* pixmaps/scan-on.png: New pixmap. increased size.
+	* Makefile: Updated pixmap files to use.
+	* Added new translations.
+	* prismstumbler.h: Updated from prismstumbler 0.7.3.
 	* main.c: Fixed window resizing. Still missing: Larger pixmaps.
 	* Makefile: New version: 0.2.12
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-04 17:29+0100\n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:379
+#: main.c:386
 msgid "Wireless networks"
 msgstr ""
 
-#: main.c:395
+#: main.c:402
 msgid ""
 "This window shows all detected networks. It will be updated while the "
 "scanner is running. The colors tell you something about the possibility to "
@@ -28,79 +28,83 @@ msgid ""
 "possible."
 msgstr ""
 
-#: main.c:403 netedit.c:231 netedit.c:422 netedit.c:424
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
 msgid "Mode"
 msgstr ""
 
-#: main.c:413
+#: main.c:420
 msgid "ESSID"
 msgstr ""
 
-#: main.c:424
+#: main.c:431
 msgid "CH"
 msgstr ""
 
-#: main.c:435
+#: main.c:442
 msgid "WEP"
 msgstr ""
 
-#: main.c:456
+#: main.c:463
 msgid "Unable to scan for devices."
 msgstr ""
 
-#: main.c:590
+#: main.c:597
 msgid "Successfully connected."
 msgstr ""
 
-#: main.c:604
+#: main.c:611
 msgid "Ad-Hoc connections setup complete."
 msgstr ""
 
-#: main.c:613
+#: main.c:620
 msgid "Could not connect to wireless LAN."
 msgstr ""
 
-#: main.c:693
+#: main.c:700
 msgid "Details..."
 msgstr ""
 
-#: main.c:699
+#: main.c:706
 msgid "Enter additional info"
 msgstr ""
 
-#: main.c:706
+#: main.c:713
 msgid "Try connect..."
 msgstr ""
 
-#: main.c:761
+#: main.c:768
 msgid "Scanning for networks..."
 msgstr ""
 
-#: main.c:860
+#: main.c:867
 msgid "scanner died unexpectedly"
 msgstr ""
 
-#: main.c:958
+#: main.c:966
 msgid "Wireless LAN control"
 msgstr ""
 
-#: main.c:964
+#: main.c:972
 msgid "Switch scanner on"
 msgstr ""
 
-#: main.c:966
+#: main.c:974
 msgid "Switch scanner off"
 msgstr ""
 
-#: main.c:967
+#: main.c:975
 msgid "Networks..."
 msgstr ""
 
-#: main.c:968
+#: main.c:976
 msgid "Remove from dock"
 msgstr ""
 
-#: main.c:1009
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr ""
+
+#: main.c:1022
 msgid "This is gpe-aerial - the wireless LAN selector."
 msgstr ""
 

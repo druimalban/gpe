@@ -1,0 +1,263 @@
+# Serbian translation of `gpe-aerial'.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the `gpe-aerial' package.
+# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2004.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-aerial 0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2004-06-18 23:49-0400\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"Language-Team: Serbian <gnu@prevod.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:386
+msgid "Wireless networks"
+msgstr "Бежичне мреже"
+
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "Овај прозор приказује све откривене мреже. Обнављаће се док скенер буде радио. Боје казују нешто о могућности повезивања. Зелена=може; жута=можда, уз нешто подешавања; црвена=не може."
+
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
+msgid "Mode"
+msgstr "Режим"
+
+#: main.c:420
+msgid "ESSID"
+msgstr "ESSID"
+
+#: main.c:431
+msgid "CH"
+msgstr "CH"
+
+#: main.c:442
+msgid "WEP"
+msgstr "WEP"
+
+#: main.c:463
+msgid "Unable to scan for devices."
+msgstr "Не могу да скенирам по уређајима."
+
+#: main.c:597
+msgid "Successfully connected."
+msgstr "Прикључење успело."
+
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Завршено подешавање аd-hoc веза."
+
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "Нисам могао да се прикључим на бежични LAN."
+
+#: main.c:700
+msgid "Details..."
+msgstr "Детаљи..."
+
+#: main.c:706
+msgid "Enter additional info"
+msgstr "Унеси додатне информације"
+
+#: main.c:713
+msgid "Try connect..."
+msgstr "Покушај прикључивање..."
+
+#: main.c:768
+msgid "Scanning for networks..."
+msgstr "Скенирам за мреже..."
+
+#: main.c:867
+msgid "scanner died unexpectedly"
+msgstr "скенер неочекивано умро"
+
+#: main.c:966
+msgid "Wireless LAN control"
+msgstr "Управљач бежичним LAN"
+
+#: main.c:972
+msgid "Switch scanner on"
+msgstr "Укључи скенер"
+
+#: main.c:974
+msgid "Switch scanner off"
+msgstr "Искључи скенер"
+
+#: main.c:975
+msgid "Networks..."
+msgstr "Мреже..."
+
+#: main.c:976
+msgid "Remove from dock"
+msgstr "Уклони из дока"
+
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "Искључи WLAN"
+
+#: main.c:1022
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr "Ово је gpe-aerial — бирач бежичних LAN."
+
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "Унесени знак није исправан."
+
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "Унесена IP адреса није исправна."
+
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "Унесена адреса маске подмреже није исправна."
+
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "Унесена адреса мрежног пролаза није исправна."
+
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "Унесена адреса DNS сервера није исправна."
+
+#: netedit.c:227
+msgid "SSID"
+msgstr "SSID"
+
+#: netedit.c:232
+msgid "Managed"
+msgstr "Управљана"
+
+#: netedit.c:233 netedit.c:441
+msgid "Channel"
+msgstr "Канал"
+
+#: netedit.c:234 netedit.c:445 netedit.c:447
+msgid "WEP enabled"
+msgstr "WEP омогућен"
+
+#: netedit.c:235
+msgid "Use DHCP"
+msgstr "Користи DHCP"
+
+#: netedit.c:236
+msgid "DNS Server"
+msgstr "DNS сервер"
+
+#: netedit.c:240
+msgid "Ad-Hoc"
+msgstr "Ad-Hoc"
+
+#: netedit.c:244
+msgid "Gateway"
+msgstr "Мрежни пролаз"
+
+#: netedit.c:246
+msgid "Subnet mask"
+msgstr "Маска подмреже"
+
+#: netedit.c:248
+msgid "IP Address"
+msgstr "IP адреса"
+
+#: netedit.c:251
+msgid "WEP key"
+msgstr "WEP кључ"
+
+#: netedit.c:255
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr "Унесите овде жељену IP адресу, нпр. 192.168.1.2"
+
+#: netedit.c:256
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr "Унесите овде жељену маску подмреже, обично се задаје 255.255.255.0"
+
+#: netedit.c:257
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr "Ово поље мора да садржи име ове бежичне LAN."
+
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "Изаберите овде врсту мреже, ако имате приступну тачку изабери „управљана“, за директне прикључке „ad-hoc“."
+
+#: netedit.c:260
+msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
+msgstr "Изабери овде канал, потребно само у ad hoc режиму. Примедба: Неки канали нису дозвољени у неким земљама."
+
+#: netedit.c:261
+msgid "Get IP setup using DHCP."
+msgstr "Постави IP помоћу DHCP."
+
+#: netedit.c:262
+msgid "Enter the IP of the default gateway to use."
+msgstr "Унесите IP подразумеваног мрежног пролаза."
+
+#: netedit.c:263
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr "Штиклирај ако је WEP шифровање присутно на овом LAN-у."
+
+#: netedit.c:264
+msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr "Унеси овде WEP кључ. Користи хексадецималне цифре или ASCII ниске (s: <ниска>)"
+
+#: netedit.c:265
+msgid "Enter the IP address of the primary nameserver to be used in this net here."
+msgstr "Унеси IP адресу примарног сервера имена у употреби на овој мрежи."
+
+#: netedit.c:268
+msgid "Network editor"
+msgstr "Уређивач мреже"
+
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
+msgstr "Овде се дају неки подаци о изабраном бежичном LAN-у."
+
+#: netedit.c:409
+msgid "Network information"
+msgstr "Подаци о мрежи"
+
+#: netedit.c:429
+msgid "Max. signal"
+msgstr "Макс. сигнал"
+
+#: netedit.c:434 netedit.c:437
+msgid "Speed"
+msgstr "Брзина"
+
+#: netedit.c:438
+msgid "unknown"
+msgstr "непознат"
+
+#: netedit.c:445 netedit.c:452 netedit.c:460
+msgid "yes"
+msgstr "да"
+
+#: netedit.c:447 netedit.c:455 netedit.c:462
+msgid "no"
+msgstr "не"
+
+#: netedit.c:451 netedit.c:454
+msgid "IPSec detected"
+msgstr "Примећен IPSec"
+
+#: netedit.c:459 netedit.c:462
+msgid "DHCP detected"
+msgstr "Примећен DHCP"
+
+#: netedit.c:466 netedit.c:472
+msgid "Subnet"
+msgstr "Подмрежа"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>непознат</i>"
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr "Антена"
+
+#: gpe-aerial.desktop.in.h:2
+msgid "Panel based wireless LAN communications control"
+msgstr "Управљач LAN комуникацијама на панелу"

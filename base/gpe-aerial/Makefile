@@ -41,8 +41,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
 PIXMAPS = gpe-aerial.png
-PIXMAPS += scan-on-16.png
-PIXMAPS += scan-off-16.png
+PIXMAPS += scan-on.png
 
 all: $(PACKAGE) 
 

@@ -1,0 +1,264 @@
+# French translation for gpe-aerial.
+# Copyright (C) 2003 Florian Boor <florian.boor@kernelconcepts.de>
+# This file is distributed under the same license as the gpe-aerial package.
+# Luc Pionchon <luc@handhelds.org>, 2003-2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-aerial 0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2004-10-30 01:03+0300\n"
+"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:386
+msgid "Wireless networks"
+msgstr "Réseaux sans-fil"
+
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "Cette fenêtre montre tous les réseaux détectés. Elle sera mise à jour tant que le scanner sera en marche. Les couleurs indiquent les possibilités de connection au réseau: Vert = OK, Jaune = possible (sous réserve de configuration), Rouge = impossible."
+
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
+msgid "Mode"
+msgstr "Mode"
+
+#: main.c:420
+msgid "ESSID"
+msgstr "ESSID"
+
+#: main.c:431
+msgid "CH"
+msgstr "CH"
+
+#: main.c:442
+msgid "WEP"
+msgstr "WEP"
+
+#: main.c:463
+msgid "Unable to scan for devices."
+msgstr "Impossible de détecter des appareils."
+
+#: main.c:597
+msgid "Successfully connected."
+msgstr "Connection réalisée."
+
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Connections Ad-Hoc configurées."
+
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "Impossible de se connecter au réseau local sans-fil."
+
+#: main.c:700
+msgid "Details..."
+msgstr "Détails..."
+
+#: main.c:706
+msgid "Enter additional info"
+msgstr "informations complémentaires"
+
+#: main.c:713
+msgid "Try connect..."
+msgstr "Tentative de connection..."
+
+#: main.c:768
+msgid "Scanning for networks..."
+msgstr "Recherche de réseaux..."
+
+#: main.c:867
+msgid "scanner died unexpectedly"
+msgstr "Le scanner à quitté de façon inopinée"
+
+#: main.c:966
+msgid "Wireless LAN control"
+msgstr "Contrôle des réseaux sans-fil"
+
+#: main.c:972
+msgid "Switch scanner on"
+msgstr "Activer le scanner"
+
+#: main.c:974
+msgid "Switch scanner off"
+msgstr "Désactiver le scanner"
+
+#: main.c:975
+msgid "Networks..."
+msgstr "Réseaux..."
+
+#: main.c:976
+msgid "Remove from dock"
+msgstr "Retirer du dock"
+
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "Désactive le WLAN"
+
+#: main.c:1022
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr "GPE aerial - sélection de réseaux locaux sans-fil."
+
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "La clef saisie n'est pas valide."
+
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "L'adresse IP saisie n'est pas valide."
+
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "Le masque de sous-réseau saisi n'est pas valide."
+
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "L'adresse de la passerelle saisie n'est pas valide."
+
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "L'adresse du serveur de nom saisie n'est pas valide."
+
+#: netedit.c:227
+msgid "SSID"
+msgstr "SSID"
+
+#: netedit.c:232
+msgid "Managed"
+msgstr "Géré"
+
+#: netedit.c:233 netedit.c:441
+msgid "Channel"
+msgstr "Canal"
+
+#: netedit.c:234 netedit.c:445 netedit.c:447
+msgid "WEP enabled"
+msgstr "WEP activé"
+
+#: netedit.c:235
+msgid "Use DHCP"
+msgstr "Utiliser DHCP"
+
+#: netedit.c:236
+msgid "DNS Server"
+msgstr "Serveur DNS"
+
+#: netedit.c:240
+msgid "Ad-Hoc"
+msgstr "Ad-Hoc"
+
+#: netedit.c:244
+msgid "Gateway"
+msgstr "Gateway"
+
+#: netedit.c:246
+msgid "Subnet mask"
+msgstr "Masque de sous réseau"
+
+#: netedit.c:248
+msgid "IP Address"
+msgstr "Adresse IP"
+
+#: netedit.c:251
+msgid "WEP key"
+msgstr "Clef WEP"
+
+#: netedit.c:255
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr "Saisir l'adresse IP désirée, par exemple 192.168.1.2"
+
+#: netedit.c:256
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr "Saisir le masque de sous réseau, normalement 255.255.255.0"
+
+#: netedit.c:257
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr "Ce champ doit contenir le nom du réseau local sans-fil"
+
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "Sélection du type de réseau. Si vous avez un point d'accès, sélectionnez \"Géré\", pour une connection \"Ad-Hoc\" directe."
+
+#: netedit.c:260
+msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
+msgstr "Sélection des canaux, utile pour le mode had-hoc uniquement. Note : certains canaux sont interdits dans certains pays."
+
+#: netedit.c:261
+msgid "Get IP setup using DHCP."
+msgstr "Obtenir l'adresse IP par DHCP"
+
+#: netedit.c:262
+msgid "Enter the IP of the default gateway to use."
+msgstr "Saisir l'adresse IP de la passerelle par défaut"
+
+#: netedit.c:263
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr "Cocher ici si l'encryption est utilisée dans ce réseau."
+
+#: netedit.c:264
+msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr "Saisir la clef WEP. Utiliser un nombre hexadécimal, ou bien la déclarer comme chaîne ASCII (s: <clef>)"
+
+#: netedit.c:265
+msgid "Enter the IP address of the primary nameserver to be used in this net here."
+msgstr "Saisir l'adresse IP du serveur de nom primaire à utiliser pour ce réseau."
+
+#: netedit.c:268
+msgid "Network editor"
+msgstr "Éditeur de réseau"
+
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
+msgstr "Cette page décrit le réseau sans-fil sélectionné."
+
+#: netedit.c:409
+msgid "Network information"
+msgstr "Informations sur le réseau"
+
+#: netedit.c:429
+msgid "Max. signal"
+msgstr "Signal max."
+
+#: netedit.c:434 netedit.c:437
+msgid "Speed"
+msgstr "Vitesse"
+
+#: netedit.c:438
+msgid "unknown"
+msgstr "inconnu"
+
+#: netedit.c:445 netedit.c:452 netedit.c:460
+msgid "yes"
+msgstr "oui"
+
+#: netedit.c:447 netedit.c:455 netedit.c:462
+msgid "no"
+msgstr "non"
+
+#: netedit.c:451 netedit.c:454
+msgid "IPSec detected"
+msgstr "IPSec détecté"
+
+#: netedit.c:459 netedit.c:462
+msgid "DHCP detected"
+msgstr "DHCP détecté"
+
+#: netedit.c:466 netedit.c:472
+msgid "Subnet"
+msgstr "Sous réseau"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>inconnu</i>"
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr "Aerial"
+
+#: gpe-aerial.desktop.in.h:2
+msgid "Panel based wireless LAN communications control"
+msgstr "Controle des communications sur un réseau local sans fil."
