@@ -12,29 +12,36 @@
 #define GPEIRC_INFO			"IRC Client for GPE - http://gpe.handhelds.org/"
 
 
-static gboolean ctcp_version (IRCServer * server, gchar * prefix,
-                              gchar * target, gchar * msg);
-static gboolean ctcp_ping (IRCServer * server, gchar * prefix, gchar * target,
-                           gchar * msg);
-static gboolean ctcp_userinfo (IRCServer * server, gchar * prefix,
-                               gchar * target, gchar * msg);
-static gboolean ctcp_clientinfo (IRCServer * server, gchar * prefix,
-                                 gchar * target, gchar * msg);
-static gboolean ctcp_finger (IRCServer * server, gchar * prefix,
-                             gchar * target, gchar * msg);
-static gboolean ctcp_time (IRCServer * server, gchar * prefix, gchar * target,
-                           gchar * msg);
-static gboolean ctcp_dcc (IRCServer * server, gchar * prefix, gchar * target,
-                          gchar * msg);
-static gboolean ctcp_action (IRCServer * server, gchar * prefix,
-                             gchar * target, gchar * msg);
+static gboolean ctcp_version (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_ping (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_userinfo (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_clientinfo (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_finger (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_time (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_dcc (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
+
+static gboolean ctcp_action (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg);
 
 
 typedef struct
 {
   gchar *ctcp;
-    gboolean (*func) (IRCServer * server, gchar * prefix, gchar * target,
-                      gchar * msg);
+    gboolean (*func) (IRCServer * server,
+	    const gchar * prefix, const gchar * target, const gchar * msg);
 }
 ctcp_t;
 
@@ -53,7 +60,7 @@ ctcp_t ctcptable[] = {
 
 
 gboolean
-ctcp_send (IRCServer * server, gchar * target, gchar * msg)
+ctcp_send (IRCServer * server, const gchar * target, const gchar * msg)
 {
   gchar *str = NULL;
 
@@ -65,7 +72,7 @@ ctcp_send (IRCServer * server, gchar * target, gchar * msg)
 
 
 static gboolean
-is_ctcp (gchar * str)
+is_ctcp (const gchar * str)
 {
   return (str && (str[0] == '\x01') && (str[strlen (str) - 1] == '\x01'));
 }
@@ -73,7 +80,8 @@ is_ctcp (gchar * str)
 
 
 static gboolean
-ctcp_version (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_version (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
   gchar *nick = NULL;
 
@@ -85,7 +93,8 @@ ctcp_version (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
 
 
 static gboolean
-ctcp_ping (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_ping (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
   STRIP_COLON (msg);
 
@@ -105,8 +114,8 @@ ctcp_ping (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
 
 
 static gboolean
-ctcp_userinfo (IRCServer * server, gchar * prefix, gchar * target,
-               gchar * msg)
+ctcp_userinfo (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
 
   return TRUE;
@@ -114,8 +123,8 @@ ctcp_userinfo (IRCServer * server, gchar * prefix, gchar * target,
 
 
 static gboolean
-ctcp_clientinfo (IRCServer * server, gchar * prefix, gchar * target,
-                 gchar * msg)
+ctcp_clientinfo (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
   int m = 0;
   gchar *nick = NULL;
@@ -136,7 +145,8 @@ ctcp_clientinfo (IRCServer * server, gchar * prefix, gchar * target,
 
 
 static gboolean
-ctcp_finger (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_finger (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
 
   return TRUE;
@@ -144,7 +154,8 @@ ctcp_finger (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
 
 
 static gboolean
-ctcp_time (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_time (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
   time_t t;
   gchar *str = NULL;
@@ -166,7 +177,8 @@ ctcp_time (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
 
 
 static gboolean
-ctcp_dcc (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_dcc (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
 
   return TRUE;
@@ -174,7 +186,8 @@ ctcp_dcc (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
 
 
 static gboolean
-ctcp_action (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_action (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
   /* FIXME: Wait for a better frontend interface */
   gchar *nick = NULL;
@@ -191,19 +204,22 @@ ctcp_action (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
 
 
 gboolean
-ctcp_parse (IRCServer * server, gchar * prefix, gchar * target, gchar * msg)
+ctcp_parse (IRCServer * server,
+	const gchar * prefix, const gchar * target, const gchar * msg)
 {
   gboolean ret = FALSE;
 
   if (is_ctcp (msg))
     {
       int m = 0;
+      gchar *parse_msg = NULL;
       gchar **str_array = NULL;
 
-      msg[strlen (msg) - 1] = '\0';
-      msg++;
+      parse_msg = g_strdup(msg);
+      parse_msg[strlen (parse_msg) - 1] = '\0';
+      parse_msg++;
 
-      str_array = g_strsplit (msg, " ", 2);
+      str_array = g_strsplit (parse_msg, " ", 2);
 
       if (str_array && *str_array)
         {

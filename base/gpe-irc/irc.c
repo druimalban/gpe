@@ -80,7 +80,7 @@ irc_server_send (IRCServer * server, gchar * command, const gchar * param)
 }
 
 gboolean
-irc_pong (IRCServer * server, gchar * target)
+irc_pong (IRCServer * server, const gchar * target)
 {
   return irc_server_send (server, "PONG", target);
 }
@@ -104,7 +104,7 @@ irc_user (IRCServer * server, gchar * username, gchar * realname)
 }
 
 gboolean
-irc_pass (IRCServer * server, gchar * password)
+irc_pass (IRCServer * server, const gchar * password)
 {
   return irc_server_send (server, "PASS", password);
 }
@@ -116,7 +116,7 @@ irc_join (IRCServer * server, const gchar * channel)
 }
 
 gboolean
-irc_part (IRCServer * server, gchar * channel, gchar * reason)
+irc_part (IRCServer * server, const gchar * channel, const gchar * reason)
 {
   gboolean ret = FALSE;
   gchar *str;
@@ -129,7 +129,7 @@ irc_part (IRCServer * server, gchar * channel, gchar * reason)
 
 
 gboolean
-irc_notice (IRCServer * server, gchar * target, gchar * msg)
+irc_notice (IRCServer * server, const gchar * target, const gchar * msg)
 {
   gboolean ret = FALSE;
   gchar *str;
@@ -142,7 +142,7 @@ irc_notice (IRCServer * server, gchar * target, gchar * msg)
 
 
 gboolean
-irc_privmsg (IRCServer * server, gchar * target, gchar * msg)
+irc_privmsg (IRCServer * server, const gchar * target, const gchar * msg)
 {
   gboolean ret = FALSE;
   gchar *str;
@@ -154,7 +154,7 @@ irc_privmsg (IRCServer * server, gchar * target, gchar * msg)
 }
 
 gboolean
-irc_action (IRCServer * server, gchar * target, gchar * msg)
+irc_action (IRCServer * server, const gchar * target, const gchar * msg)
 {
   gboolean ret = FALSE;
   gchar *str;
@@ -166,7 +166,7 @@ irc_action (IRCServer * server, gchar * target, gchar * msg)
 }
 
 gboolean
-irc_quit (IRCServer * server, gchar * reason)
+irc_quit (IRCServer * server, const gchar * reason)
 {
   gboolean ret = FALSE;
   gchar *str;

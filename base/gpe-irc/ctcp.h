@@ -3,7 +3,8 @@
 
 #include "irc.h"
 
-gboolean ctcp_parse(IRCServer *server, gchar *prefix, gchar *target, gchar *msg);
+gboolean ctcp_parse(IRCServer *server,
+	const gchar *prefix, const gchar *target, const gchar *msg);
 
 #endif
 
