@@ -28,8 +28,8 @@ yearly (birthdays or other anniversaries)
 <H2>Status</H2>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>, module
-<B>gpe-calendar</B>.  At present it is not complete though most of the
-major parts are in place.
+<B>gpe-calendar</B>.  Precompiled binaries for iPAQ are available in
+the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 
 <H2>User interface</H2>
 <P>
