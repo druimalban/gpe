@@ -75,41 +75,40 @@ class GPE:IconList from Gtk:Scrolled:Window {
 /* init and other gtkish methods */
 	init (self)
 	{
-		GtkWidget *vp, *da;
+	  GtkWidget *vp, *da;
 
-		gtk_scrolled_window_set_hadjustment (GTK_SCROLLED_WINDOW(self), NULL);
-		gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW(self), NULL);
+	  gtk_scrolled_window_set_hadjustment (GTK_SCROLLED_WINDOW(self), NULL);
+	  gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW(self), NULL);
 
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(GTK_SCROLLED_WINDOW(self)),
-						GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (GTK_SCROLLED_WINDOW (self)),
+					  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
-		vp = gtk_viewport_new (NULL, NULL);
-		gtk_container_add (GTK_CONTAINER(self), vp);
+	  vp = gtk_viewport_new (NULL, NULL);
+	  gtk_container_add (GTK_CONTAINER (self), vp);
 
-		da = gtk_drawing_area_new ();
-		gtk_widget_add_events (GTK_WIDGET (da), GDK_BUTTON_PRESS_MASK |
-				       GDK_BUTTON_RELEASE_MASK);
-		gtk_signal_connect (GTK_OBJECT(da), "expose_event",
-				    (GtkSignalFunc)gpe_iconlist__expose, NULL);
-		gtk_signal_connect (GTK_OBJECT(da), "button_release_event",
-				    GTK_SIGNAL_FUNC(gpe_iconlist__button_release), NULL);
-		gtk_signal_connect (GTK_OBJECT(da), "button_press_event",
-				    GTK_SIGNAL_FUNC(gpe_iconlist__button_press), NULL);
-		gtk_container_add (GTK_CONTAINER(vp), da);
-
-		gtk_object_set_data (GTK_OBJECT (self), "da", da);
-		gtk_object_set_data (GTK_OBJECT (da), "il", self);
-		gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment(GTK_VIEWPORT(vp)));
-
-		self->_priv->label_height = gpe_iconlist__title_height (self);
-
-		gtk_widget_show_all (vp);
+	  da = gtk_drawing_area_new ();
+	  gtk_widget_add_events (GTK_WIDGET (da), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+	  g_signal_connect (G_OBJECT (da), "expose_event",
+			    G_CALLBACK (gpe_iconlist__expose), NULL);
+	  g_signal_connect (G_OBJECT (da), "button_release_event",
+			    G_CALLBACK (gpe_iconlist__button_release), NULL);
+	  g_signal_connect (G_OBJECT (da), "button_press_event",
+			    G_CALLBACK (gpe_iconlist__button_press), NULL);
+	  gtk_container_add (GTK_CONTAINER (vp), da);
+	  
+	  gtk_object_set_data (GTK_OBJECT (self), "da", da);
+	  gtk_object_set_data (GTK_OBJECT (da), "il", self);
+	  gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment (GTK_VIEWPORT (vp)));
+	  
+	  self->_priv->label_height = gpe_iconlist__title_height (self);
+	  
+	  gtk_widget_show_all (vp);
 	}
 
 	public GtkWidget *
 	new (void)
 	{
-		return GTK_WIDGET(GET_NEW);
+	  return GTK_WIDGET (GET_NEW);
 	}
 
 /* Set the background */

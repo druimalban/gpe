@@ -1,3 +1,8 @@
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlist.gob (init): Set vertical scrollbar policy to
+	ALWAYS.  Replace gtk_signal functions with g_signal.
+
 2003-09-05  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.66 released.
