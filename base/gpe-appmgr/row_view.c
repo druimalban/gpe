@@ -74,6 +74,12 @@
 GtkWidget *bin;
 GtkWidget *table;
 
+static void
+run_callback (GObject *obj, GdkEventButton *ev, struct package *p)
+{
+  run_package (p);
+}
+
 /* Make the contents for a notebook tab.
  * Generally we only want one group, but NULL means
  * ignore group setting (ie. "All").
@@ -93,14 +99,18 @@ create_row (GList *all_items, char *current_group)
   while (this_item)
     {
       struct package *p;
-      
+      GObject *item;
+ 
       p = (struct package *) this_item->data;
       
-      if (!current_group || (current_group && !strcmp (current_group, package_get_data (p, "section"))))
-	gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (il),
-				     package_get_data (p, "title"),
-				     get_icon_fn (p, 48),
-				     (gpointer)p);
+      if (!current_group || (current_group && !strcmp (current_group, package_get_data (p, "section")))) {
+	item = gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (il),
+					    package_get_data (p, "title"),
+					    get_icon_fn (p, 48),
+					    (gpointer)p);
+
+	g_signal_connect (item, "button-release", G_CALLBACK (run_callback), p);
+      }
       
       this_item = this_item->next;
       
