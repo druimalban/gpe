@@ -43,6 +43,17 @@ GdkPixbuf *default_pixbuf;
 
 guint screen_w, screen_h;
 
+GtkWidget *current_button=NULL;
+int current_button_is_down=0;
+
+/* For not starting an app twice after a double click */
+int ignore_press = 0;
+
+int loading_directory = 0;
+
+int history_place = 0;
+GList *history = NULL;
+
 gchar *current_directory = "";
 gchar *current_view = "icons";
 
@@ -69,6 +80,20 @@ struct gpe_icon my_icons[] = {
 };
 
 guint window_x = 240, window_y = 310;
+
+static void set_directory (gchar *new_directory);
+static void update_spinner (void);
+static void set_spinner_rest (void);
+
+static void
+safety_check (void)
+{
+  if (loading_directory == 1)
+  {
+    loading_directory = 0;
+    sleep (0.2);
+  }
+}
 
 /* Limit the title to two lines at <68px wide
    Eeeevil and Uuuugly but it works just fine AFAIK */
@@ -172,22 +197,116 @@ get_file_extension (gchar *filename)
   }
 }
 
+static gint
+unignore_press (gpointer data)
+{
+  ignore_press = 0;
+  return FALSE;
+}
+
+/* Callback for selecting a program to run */
+static gint
+button_released (GtkObject *button, gpointer data)
+{
+  struct mime_type *mime;
+  gchar *path, *type;
+
+  gtk_widget_set_state (GTK_WIDGET(button), GTK_STATE_NORMAL);
+
+  /* Clear the variables stating what button is down etc. 
+   * and close if we're not on the original button */
+  if (GTK_WIDGET (button) != current_button || !current_button_is_down)
+  {
+    current_button = NULL;
+    current_button_is_down = 0;
+    return TRUE;
+  }
+
+  if (!GTK_IS_EVENT_BOX (button)) /* Could be the notebook! */
+    return TRUE;
+
+  if (ignore_press)
+    return TRUE;
+
+  /* So we ignore a second press within 1000msec */
+  ignore_press = 1;
+  gtk_timeout_add (500, unignore_press, NULL);
+
+  mime = (struct mime_type *) gtk_object_get_data (GTK_OBJECT (button), "mime");
+  path = (gchar *) gtk_object_get_data (GTK_OBJECT (button), "path");
+  type = (gchar *) gtk_object_get_data (GTK_OBJECT (button), "type");
+
+  if (strcmp (type, "directory") == 0)
+    set_directory (path);
+
+  return TRUE;	
+}
+
+static gint
+button_pressed (GtkWidget *button, GdkEventButton *event, gpointer data)
+{
+  /* We only want left mouse button events */
+  if (event && (!(event->button == 1)))
+    return TRUE;
+
+  if (ignore_press) /* Ignore double clicks! */ 
+  {
+    return TRUE;
+  }
+
+  current_button = button;
+  current_button_is_down = 1;
+
+  gtk_widget_set_state (button, GTK_STATE_SELECTED);
+
+  return TRUE;	
+}
+
+static gint
+button_enter (GtkWidget *button, GdkEventCrossing *event)
+{
+  /* We only want left mouse button events */
+  if (!(event->state & 256))
+  {
+    current_button = NULL;
+    return TRUE;
+  }
+
+  /* If we're moving onto the button that was last selected,
+     do the same as if we've just started pressing on it again */
+  if (button == current_button)
+    button_pressed (button, NULL, NULL);
+
+  return TRUE;
+}
+
+static gint
+button_leave (GtkWidget *button, GdkEventCrossing *event)
+{
+  gtk_widget_set_state (button, GTK_STATE_NORMAL);
+  current_button_is_down = 0;
+  return TRUE;
+}
+
 /* Make the contents for the current directory. */
 static void
 set_icons_view (void)
 {
   struct dirent *d;
+  struct mime_type *file_mime;
   DIR *dir;
   int i = 0;
   int cols;
   int loop_num = 0;
-  gchar *fp, *buf, *extension;
+  gchar *fp, *buf, *extension, *file_type;
   gchar *previous_extension;
   GdkFont *font; /* Font in the label */
   char *icon;
   GdkPixbuf *pixbuf = NULL, *spixbuf;
   GtkWidget *pixmap;
   GtkWidget *table, *button, *label, *vbox;
+
+  loading_directory = 1;
 
   if (view_widget)
     gtk_widget_destroy (view_widget);
@@ -209,11 +328,18 @@ set_icons_view (void)
   {
     while (d = readdir (dir), d != NULL)
     {
+      if (loading_directory == 0)
+        break;
+
       if (d->d_name[0] != '.')
       {
         struct stat s;
         fp = g_strdup_printf ("%s", d->d_name);
-        buf = g_strdup_printf ("%s/%s", current_directory, fp);
+
+        if (strcmp (current_directory, "/") == 0)
+          buf = g_strdup_printf ("/%s", fp);
+        else
+          buf = g_strdup_printf ("%s/%s", current_directory, fp);
 
         if (stat (buf, &s) == 0)
         {
@@ -229,34 +355,46 @@ set_icons_view (void)
 
           if (S_ISDIR (s.st_mode))
           {
+            file_type = g_strdup_printf ("directory");
             pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/directory.png");
             previous_extension = g_strdup_printf ("");
           }
           else
           {
+            file_type = g_strdup_printf ("file");
             extension = get_file_extension (fp);
 
             if (mime_types)
             {
               GSList *iter;
+              struct mime_type *file_mime;
+
               for (iter = mime_types; iter; iter = iter->next)
               {
                 struct mime_type *c = iter->data;
 
+                if (loading_directory == 0)
+                  break;
+
                 if (strcmp (c->extension, extension) == 0)
                 {
-                  if (strcmp (previous_extension, c->extension) != 0)
-                  {
-                    pixbuf = gdk_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-%s.png", PREFIX, c->icon));
-                    previous_extension = g_strdup_printf ("%s", c->extension);
-                    break;
-                  }
+                  file_mime = c;
+                  break;
                 }
                 else
                 {
-                  pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
-                  previous_extension = g_strdup_printf ("");
+                  file_mime = NULL;
                 }
+              }
+              if (file_mime == NULL)
+              {
+                pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
+                previous_extension = g_strdup_printf ("");
+              }
+              else if (strcmp (previous_extension, file_mime->extension))
+              {
+                  pixbuf = gdk_pixbuf_new_from_file (g_strdup_printf ("%s/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-%s.png", PREFIX, file_mime->icon));
+                  previous_extension = g_strdup_printf ("%s", file_mime->extension);
               }
             }
             else
@@ -265,6 +403,10 @@ set_icons_view (void)
               previous_extension = g_strdup_printf ("");
             }
           }
+
+          if (loading_directory == 0)
+            break;
+
           /* Button label */
           label = gtk_label_new ("");
 
@@ -292,6 +434,15 @@ set_icons_view (void)
              max. height of the font */
           //gtk_widget_set_usize (button, 70, 55 + 2*gdk_text_height(font, "Ay", 2));
 
+          gtk_object_set_data (GTK_OBJECT (button), "mime", (gpointer) file_mime);
+          gtk_object_set_data (GTK_OBJECT (button), "path", (gpointer) buf);
+          gtk_object_set_data (GTK_OBJECT (button), "type", (gpointer) file_type);
+
+          gtk_signal_connect( GTK_OBJECT (button), "button_release_event", GTK_SIGNAL_FUNC (button_released), NULL);
+          gtk_signal_connect( GTK_OBJECT (button), "button_press_event", GTK_SIGNAL_FUNC (button_pressed), NULL);
+          gtk_signal_connect( GTK_OBJECT (button), "enter_notify_event", GTK_SIGNAL_FUNC (button_enter), NULL);
+          gtk_signal_connect( GTK_OBJECT (button), "leave_notify_event", GTK_SIGNAL_FUNC (button_leave), NULL);
+
           gtk_container_add (GTK_CONTAINER (button), vbox);
           gtk_table_attach_defaults (GTK_TABLE (table), button, i%cols,i%cols+1,i/cols,i/cols+1);
 
@@ -307,6 +458,7 @@ set_icons_view (void)
     closedir (dir);
     set_spinner_rest ();
   }
+  loading_directory = 0;
 }
 
 static void
@@ -345,14 +497,27 @@ static void
 set_directory (gchar *new_directory)
 {
   struct stat s;
+  GtkWidget *entry;
 
   if (stat (new_directory, &s) == 0)
   {
     if (S_ISDIR (s.st_mode))
     {
+      entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (window), "entry");
       current_directory = g_strdup_printf ("%s", new_directory);
+      gtk_entry_set_text (GTK_ENTRY (entry), current_directory);
+      history = g_list_append (history, current_directory);
+      history_place = g_list_length (history) - 1;
       refresh_view ();
     }
+    else
+    {
+      gpe_error_box ("This file isn't a directory.");
+    }
+  }
+  else
+  {
+    gpe_error_box ("No such file or directory.");
   }
 }
 
@@ -362,14 +527,15 @@ goto_directory (GtkWidget *widget, GtkWidget *entry)
   struct stat s;
   gchar *new_directory;
 
+  safety_check ();
+
   new_directory = gtk_entry_get_text (GTK_ENTRY (entry));
   set_directory (new_directory);
 }
 
 static void
-set_directory_home (GtkWidget *widget, GtkWidget *entry)
+set_directory_home (GtkWidget *widget, gpointer data)
 {
-  gtk_entry_set_text (GTK_ENTRY (entry), g_get_home_dir ());
   set_directory (g_get_home_dir ());
 }
 
@@ -380,12 +546,17 @@ up_one_level (GtkWidget *widget, GtkWidget *entry)
   int found_slash = 0;
   gchar *new_directory;
 
+  safety_check ();
+
   new_directory = gtk_entry_get_text (GTK_ENTRY (entry));
 
   for (i = strlen (new_directory); i > 0; i--)
   {
     if (new_directory[i] == '/')
     {
+      if (found_slash ==1)
+        break;
+
       found_slash = 1;
       new_directory[i] = 0;
     }
@@ -396,8 +567,43 @@ up_one_level (GtkWidget *widget, GtkWidget *entry)
     }
   }
 
-  gtk_entry_set_text (GTK_ENTRY (entry), new_directory);
   set_directory (new_directory);
+}
+
+static void
+history_back (GtkWidget *widget, GtkWidget *entry)
+{
+  gchar *new_place;
+
+  safety_check ();
+
+  if (history_place > 0)
+  {
+    history_place--;
+
+    new_place = g_list_nth_data (history, history_place);
+    gtk_entry_set_text (GTK_ENTRY (entry), new_place);
+    current_directory = g_strdup_printf ("%s", new_place);
+    refresh_view ();
+  }
+}
+
+static void
+history_forward (GtkWidget *widget, GtkWidget *entry)
+{
+  gchar *new_place;
+
+  safety_check ();
+
+  if (history_place < g_list_length (history) - 1)
+  {
+    history_place++;
+
+    new_place = g_list_nth_data (history, history_place);
+    gtk_entry_set_text (GTK_ENTRY (entry), new_place);
+    current_directory = g_strdup_printf ("%s", new_place);
+    refresh_view ();
+  }
 }
 
 static void
@@ -467,6 +673,7 @@ main (int argc, char *argv[])
   hbox2 = gtk_hbox_new (FALSE, 0);
 
   entry = gtk_entry_new ();
+  gtk_object_set_data (GTK_OBJECT (window), "entry", (gpointer) entry);
 
   view_scrolld = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (view_scrolld), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -498,12 +705,12 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("left");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Back"), 
-			   _("Back"), _("Back"), pw, NULL, NULL);
+			   _("Back"), _("Back"), pw, history_back, entry);
 
   p = gpe_find_icon ("right");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Forward"), 
-			   _("Forward"), _("Forward"), pw, NULL, NULL);
+			   _("Forward"), _("Forward"), pw, history_forward, entry);
 
   p = gpe_find_icon ("up");
   pw = gpe_render_icon (window->style, p);
@@ -513,7 +720,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("stop");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop"), 
-			   _("Stop"), _("Stop"), pw, NULL, NULL);
+			   _("Stop"), _("Stop"), pw, safety_check, NULL);
 
   p = gpe_find_icon ("refresh");
   pw = gpe_render_icon (window->style, p);
@@ -523,7 +730,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("home");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Home"), 
-			   _("Home"), _("Home"), pw, set_directory_home, entry);
+			   _("Home"), _("Home"), pw, set_directory_home, NULL);
 
   p = gpe_find_icon ("dir-up");
   pw = gpe_render_icon (window->style, p);
@@ -566,6 +773,7 @@ main (int argc, char *argv[])
     exit (1);
 
   set_directory_home (NULL, entry);
+  history_place--;
 
   gtk_option_menu_set_history (GTK_OPTION_MENU (view_option_menu), 0);
 

@@ -100,13 +100,15 @@ add_mime_types (void)
   e = new_mime_type ("application/x-ogg", "OGG Vorbis Audio File", "ogg", "ogg123", "application-x-ogg");
   e = new_mime_type ("audio/x-wav", "WAV Audio File", "wav", "", "audio-x-wav");
   e = new_mime_type ("font/ttf", "True Type Font", "ttf", "", "font-ttf");
+  e = new_mime_type ("image/png", "Portabe Image Graphics File", "png", "qiv", "image-png");
+  e = new_mime_type ("text/html", "HTML Text Document", "html", "dillo", "text-html");
 }
 
 int
 sql_start (void)
 {
   static const char *schema1_str = 
-    "create table mime_types (uid INTEGER PRIMARY KEY, mime_name TEXT, description TEXT, extension TEXT, program TEXT, icon TEXT)";
+    "create table mime_types (uid INTEGER PRIMARY KEY, name TEXT, description TEXT, extension TEXT, program TEXT, icon TEXT)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -129,7 +131,7 @@ sql_start (void)
 
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select uid,mime_name,description,extension,program,icon from mime_types",
+  if (sqlite_exec (sqliteh, "select uid,name,description,extension,program,icon from mime_types",
 		   mime_type_callback, NULL, &err))
     {
       gpe_error_box (err);
