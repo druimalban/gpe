@@ -22,7 +22,7 @@ t_sql_handle
 This is a wrapper for a connection to a database and is defined as sqlite or 
 usqld_conn depending on USE_USQLD compiler cirective. 
 
-t_sql_handle* sql_open (char *dbtoopen)
+t_sql_handle* sql_open (const char *dbtoopen)
 Open a database connection to query or change permissions of a database. 
 The single parameter dbtoopen is the name of this database. libgpedb opens this 
 database in $HOME/.gpe/ if sqlite is used. The function returns a handle to an 
@@ -65,9 +65,10 @@ makefile. If needed define USE_USQLD at the top of the makefile above the
 folowing lines. 
 
 ifeq ($(USE_USQLD),yes)
-CFLAGS += -DUSE_USQLD  -lusqld -lgpedb
+CFLAGS += -DUSE_USQLD
+LDFLAGS += -lusqld -lgpedb -L../libgpedb/src
 else
-CFLAGS += -lsqlite -lgpedb
+LDFLAGS += -lsqlite -lgpedb -L../libgpedb/src
 endif
 
-Add  -I../../libgpedb/includeto your includes (e.g. CFLAGS).
+Add  -I../../libgpedb/include to your includes (e.g. CFLAGS).

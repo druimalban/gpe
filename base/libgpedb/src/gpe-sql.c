@@ -45,23 +45,27 @@ sql_open (const char *dbtoopen)
   );
   ";
 
-  char *err = NULL;
+  char *err;
   char *buf = NULL;
   t_sql_handle *sqlh;
-	
 #ifdef USE_USQLD
   sqlh = usqld_connect ("localhost", dbtoopen, &err);
 #else
-  const char *home = getenv ("HOME");
-  size_t len;
-  if (home == NULL)
-    home = "";
-  len = strlen (home) + strlen (dbpath) + strlen (dbtoopen) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  strcat (buf, dbpath);
-  strcat (buf, dbtoopen);
-  sqlh = sqlite_open (buf, 0, &err);
+  if (strcmp(USQLD_CFGDB,dbtoopen))
+  {
+    const char *home = getenv ("HOME");
+    size_t len;
+    if (home == NULL)
+      home = "";
+    len = strlen (home) + strlen (dbpath) + strlen (dbtoopen) + 1;
+    buf = g_malloc (len);
+    strcpy (buf, home);
+    strcat (buf, dbpath);
+    strcat (buf, dbtoopen);
+    sqlh = sqlite_open (buf, 0, &err);
+  }
+  else
+	sqlh = sqlite_open (dbtoopen, 0, &err);
 #endif
   if (sqlh == NULL)
     {
@@ -72,7 +76,7 @@ sql_open (const char *dbtoopen)
     }
 
 #ifndef USE_USQLD
-	// create control table if it doesn't exist
+  // create control table if it doesn't exist
   // we just want to be shure :-)
   sql_exec (sqlh, create_control_str, NULL, NULL, &err);
 #endif

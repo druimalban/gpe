@@ -2,6 +2,7 @@
 #define _GPE_SQL_H
 
 #define USQLD_DBAC_NAME "_acontrol"
+#define USQLD_CFGDB "/etc/usqld/cfgdb"
 
 #ifdef USE_USQLD
 #include <usql.h>
