@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+30.06.2003		Florian			main.c						New feature: Command line tasks.
+								tasks.*						First one: change nameserver.
+								Makefile
+								
 30.06.2003		Florian			packages.*					Added feature to remove a package.
 								suid.c
 

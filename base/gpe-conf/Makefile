@@ -87,6 +87,7 @@ MEMBERS += serial
 MEMBERS += logread
 MEMBERS += packages cardinfo
 MEMBERS += tools/interface
+MEMBERS += tasks
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

@@ -46,6 +46,7 @@
 #include "logread.h"
 #include "packages.h"
 #include "cardinfo.h"
+#include "tasks.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -101,7 +102,9 @@ struct Applet applets[]=
     { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore , "Cardinfo" ,"cardinfo","PC/CF Card Info and Config"},
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Adding and Removing Programs"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Task nameserver" ,"task_nameserver","Task for changing nameserver"}
   };
+  
 struct gpe_icon my_icons[] = {
   { "save" },
   { "cancel" },
@@ -192,6 +195,7 @@ void item_select(GtkWidget *ignored, gpointer user_data)
     gtk_widget_hide(self.cancel);
 }
 
+
 int killchild()
 {
   kill(suidPID,SIGTERM);
@@ -260,15 +264,33 @@ void make_container()
 
 void main_one(int argc, char **argv,int applet)
 {
-
-  self.alone_applet=1;
+  int handled = FALSE;
+	
+  self.alone_applet = 1;
 	
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
-	
+
+  /* check if we are called to do a command line task */
+  if (argc > 1)
+  {
+	  if (!strcmp(argv[1],"task_nameserver"))
+	  {
+		  handled = TRUE;
+		  if (argc == 3)
+			  task_change_nameserver(argv[2]);
+		  else
+			  fprintf(stderr,_("'task_nameserver' needs a new (and only one) nameserver as argument.\n"));
+		  exit(0);
+	  }
+  }
+  
+  /* If no task? - start applet */
+  if (!handled)
+  { 
   initwindow();
 
   self.vbox = gtk_vbox_new(FALSE,0);
@@ -288,6 +310,7 @@ void main_one(int argc, char **argv,int applet)
   item_select(NULL, (gpointer)applet);
   gtk_main();
   gtk_exit(0);
+  }
   return ;
   
 }
@@ -318,6 +341,7 @@ int main(int argc, char **argv)
 	  	perror(_("Warning: PCMCIA init failed."));
   }
 
+  /* fork suid root process */
   switch(suidPID = fork())
     {
     case -1:
@@ -344,24 +368,22 @@ int main(int argc, char **argv)
 	{
 		fprintf(stderr,_("This mode is disabled, please try:\n"));
 	    fprintf(stderr,_("\ngpe-conf [AppletName]\nwhere AppletName is in:\n"));
-	    for ( i = 0 ; i< applets_nb ; i++)
-		if (applets[i].Build_Objects != Unimplemented_Build_Objects)
-		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
+	    for ( i = 0 ; i < applets_nb ; i++)
+		  fprintf(stderr,"%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
 	}
       else
 	{
-	  for( i = 0 ; i< applets_nb ; i++)
+	  for( i = 0 ; i < applets_nb ; i++)
 	    {
           if (strcmp(argv[1], applets[i].name) == 0)
           main_one(argc,argv,i);
 	    }
-	  if (i ==applets_nb)
+	  if (i == applets_nb)
 	    {
 	      fprintf(stderr,_("Applet %s unknown!\n"),argv[1]);
-	      printf(_("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n"));
-	      for( i = 0 ; i< applets_nb ; i++)
-		if(applets[i].Build_Objects != Unimplemented_Build_Objects)
-		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
+	      fprintf(stderr,_("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n"));
+	      for( i = 0 ; i < applets_nb ; i++)
+		    fprintf(stderr,"%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
 	    }
 	}
       fclose(suidout);
