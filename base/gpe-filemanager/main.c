@@ -60,12 +60,11 @@ GList *history = NULL;
 gchar *current_directory = "";
 gchar *current_view = "icons";
 
-struct file_infomation
+typedef struct
 {
-  struct mime_type *mime;
   gchar *filename;
-  gchar *type;
-};
+  GnomeVFSFileInfo *vfs;
+} FileInfomation;
 
 struct gpe_icon my_icons[] = {
   { "left", "left" },
@@ -312,92 +311,34 @@ ask_open_with (char *exec)
 void
 button_clicked (GtkWidget *widget, gpointer udata)
 {
-  //printf ("My type is %s\n", ((struct file_infomation *) udata)->type);
+  FileInfomation *file_info;
+  printf ("You clicked on %s\n", file_info->vfs->name);
 
-  if (strcmp (((struct file_infomation *) udata)->type, "file") == 0)
-  {
-    run_program (((struct file_infomation *) udata)->filename,((struct file_infomation *) udata)->mime ->mime_name);
-  }
-  else if (strcmp (((struct file_infomation *) udata)->type, "regular") == 0)
-  {
-    ask_open_with (((struct file_infomation *) udata)->filename);
-  }
-  else
-  {
-    browse_directory (((struct file_infomation *) udata)->filename);
-  }
+  file_info = (FileInfomation *) udata;
+
+  if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
+    ask_open_with (file_info->filename);
+  else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
+    browse_directory (file_info->filename);
 }
 
 void
-add_icon (gchar *base_filename, gchar *filename)
+add_icon (FileInfomation *file_info)
 {
   struct stat file_stats;
-  struct mime_type *file_mime = NULL;
-  struct file_infomation *file_info = g_malloc (sizeof (struct file_infomation));
   GSList *iter;
   gchar *image_filename = PREFIX "/share/gpe/pixmaps/default/filemanager/document-icons/";
   gchar *extension;
 
-  printf ("add_icon varibles:\n\tbase_filename = %s\n\tfilename = %s\n\n", base_filename, filename);
+  if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
+    image_filename = g_strdup_printf ("%s%s", image_filename, "directory.png");
+  else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
+    image_filename = g_strdup_printf ("%s%s", image_filename, "regular.png");
+  else
+    image_filename = g_strdup_printf ("%s%s", image_filename, "regular.png");
 
-  if (stat (filename, &file_stats) == 0)
-  {
-    file_info->filename = filename;
-
-    if (S_ISDIR (file_stats.st_mode))
-    {
-      file_info->type = "directory";
-      image_filename = g_strdup_printf ("%s%s", image_filename, "directory");
-    }
-    else if (__S_ISTYPE ((file_stats.st_mode), __S_IEXEC))
-    {
-      file_info->type = "executable";
-      image_filename = g_strdup_printf ("%s%s", image_filename, "executable");
-    }
-     else
-    {
-      extension = get_file_extension (filename);
-
-      if (mime_types)
-      {
-
-        for (iter = mime_types; iter; iter = iter->next)
-         {
-          struct mime_type *type = iter->data;
-
-          if (loading_directory == 0)
-            break;
-
-          if (strcmp (type->extension, extension) == 0)
-          {
-            file_mime = type;
-            break;
-          }
-          else
-          {
-            file_mime = NULL;
-           }
-        }
-
-        if (file_mime == NULL)
-        {
-          file_info->type = "regular";
-          file_info->mime = NULL;
-          image_filename = g_strdup_printf ("%s%s", image_filename, "regular");
-        }
-         else
-        {
-          file_info->type = "file";
-          file_info->mime = file_mime;
-          image_filename = g_strdup_printf ("%s%s", image_filename, "gnome-");
-          image_filename = g_strdup_printf ("%s%s", image_filename, file_mime->icon);
-        }
-      }
-    }
-    image_filename = g_strdup_printf ("%s%s", image_filename, ".png");
-  }
-  //printf ("Found image %s\n", image_filename);
-  gpe_iconlist_add_item (GPE_ICONLIST (view_widget), base_filename, image_filename, (gpointer) file_info);
+  printf ("Added %s\n", file_info->filename);
+  gpe_iconlist_add_item (GPE_ICONLIST (view_widget), file_info->vfs->name, image_filename, (gpointer) file_info);
 }
 
 gint
@@ -414,8 +355,9 @@ make_view (gchar *view)
   DIR *dir;
   gchar *filename;
   GList *filenames = NULL;
+  FileInfomation *file_info;
   GnomeVFSDirectoryHandle *handle;
-  GnomeVFSFileInfo *file_info;
+  GnomeVFSFileInfo *vfs_file_info;
   GnomeVFSURI *uri;
   GnomeVFSResult result, open_dir_result;
   loading_directory = 1;
@@ -431,47 +373,37 @@ make_view (gchar *view)
 
 
   uri = gnome_vfs_uri_new (current_directory);
-  file_info = gnome_vfs_file_info_new ();
+  vfs_file_info = gnome_vfs_file_info_new ();
 
   open_dir_result = gnome_vfs_directory_open_from_uri (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
 
   while (open_dir_result == GNOME_VFS_OK)
   {
-    result = gnome_vfs_directory_read_next (handle, file_info);
-    printf ("Gnome VFS FileInfo->Name: %s\n", file_info->name);
+    result = gnome_vfs_directory_read_next (handle, vfs_file_info);
+    printf ("Gnome VFS FileInfo->Name: %s\n", vfs_file_info->name);
 
     if (loading_directory == 0)
       break;
 
-    if (file_info->name != NULL)
+    if (vfs_file_info->name != NULL && vfs_file_info->name[0] != '.')
     {
       if (strcmp (current_directory, "/"))
-        filename = g_strdup_printf ("%s/%s", current_directory, file_info->name);
+        file_info->filename = g_strdup_printf ("%s/%s", current_directory, vfs_file_info->name);
       else
-        filename = g_strdup_printf ("/%s", file_info->name);
+        file_info->filename = g_strdup_printf ("/%s", "foo");
 
-      if (basename (filename)[0] != '.')
-        filenames = g_list_append (filenames, filename);
+      file_info->vfs = vfs_file_info;
+
+      add_icon (file_info);
     }
 
     if (result != GNOME_VFS_OK)
       break;
   }
-
-  if (open_dir_result == GNOME_VFS_OK)
-  {
-    gnome_vfs_file_info_unref (file_info);
-    gnome_vfs_directory_close (handle);
-
-    filenames = g_list_sort (filenames, sort_filenames);
-    filenames = g_list_first (filenames);
-
-    while (filenames)
-    {
-      add_icon (basename ((gchar *) filenames->data), (gchar *) filenames->data);
-      filenames = filenames->next;
-    }
-  }
+  printf ("Got here (1)\n");
+  gnome_vfs_file_info_unref (vfs_file_info);
+  gnome_vfs_directory_close (handle);
+  printf ("Got here (2)\n");
 
   /*
   dir = opendir (current_directory);
@@ -508,6 +440,7 @@ make_view (gchar *view)
   }
   */
   loading_directory = 0;
+  printf ("Got here (3)\n");
 }
 
 static void
@@ -784,6 +717,8 @@ main (int argc, char *argv[])
   gtk_widget_show (view_menu);
   gtk_widget_show (vbox2);
 
+  gnome_vfs_init ();
+
   if (sql_start ())
     exit (1);
 
@@ -809,8 +744,6 @@ main (int argc, char *argv[])
 
   set_directory_home (NULL);
   //history_place--;
-
-  gnome_vfs_init ();
 
   gtk_main();
 
