@@ -223,7 +223,7 @@ networks_config_edit_save (GtkWidget *widget, struct sql_network *network)
 void
 networks_config_edit_window (struct sql_network *network)
 {
-  GtkWidget *window, *table, *vbox, *button_hbox, *button_hbox2, *label, *hsep, *scroll;
+  GtkWidget *window, *table, *frame, *frame2, *vbox, *vbox2, *button_hbox, *button_hbox2, *label, *hsep, *scroll;
   GtkWidget *nick_entry, *real_name_entry, *password_entry;
   GtkWidget *save_button, *close_button, *new_server_button, *delete_server_button;
   GtkTreeViewColumn* column;
@@ -244,13 +244,17 @@ networks_config_edit_window (struct sql_network *network)
   gtk_widget_realize (window);
 
   vbox = gtk_vbox_new (FALSE, 0);
-  
+  gtk_box_set_spacing (GTK_BOX (vbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  vbox2 = gtk_vbox_new (FALSE, 0);
   button_hbox = gtk_hbox_new (FALSE, 0);
   gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
   gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
   button_hbox2 = gtk_hbox_new (FALSE, 0);
   gtk_box_set_spacing (GTK_BOX (button_hbox2), 6);
-  gtk_container_set_border_width (GTK_CONTAINER (button_hbox2), 6);
+
+  frame = gtk_frame_new ("User Infomation");
+  frame2 = gtk_frame_new ("Servers");
 
   table = gtk_table_new (2, 3, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -299,7 +303,7 @@ networks_config_edit_window (struct sql_network *network)
   g_object_set_data (G_OBJECT (renderer), "irc_network", network);
   gtk_tree_view_insert_column_with_attributes (tree_view, -1, "Port", renderer, "text", COLUMN_PORT, "editable", COLUMN_EDITABLE2, NULL);
 
-  gtk_tree_view_set_headers_visible (tree_view, TRUE);
+  gtk_tree_view_set_headers_visible (tree_view, FALSE);
 
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -323,15 +327,17 @@ networks_config_edit_window (struct sql_network *network)
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (tree_view));
-  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (table));
+  gtk_container_add (GTK_CONTAINER (frame2), GTK_WIDGET (vbox2));
+  gtk_box_pack_start (GTK_BOX (vbox2), scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), button_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), frame2, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_hbox2, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (button_hbox), close_button, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (button_hbox), save_button, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (button_hbox2), new_server_button, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (button_hbox2), delete_server_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox2), close_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox2), save_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox), delete_server_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox), new_server_button, FALSE, FALSE, 0);
 
   gtk_table_attach_defaults (GTK_TABLE (table), nick_entry, 1, 2, 0, 1);
   gtk_table_attach_defaults (GTK_TABLE (table), real_name_entry, 1, 2, 1, 2);
@@ -362,16 +368,22 @@ networks_config_edit ()
 }
 
 void
-networks_config_window_close (GtkWidget *window, GtkWidget *widget)
+networks_config_window_close (GtkWidget *parent, GtkWidget *widget)
 {
+  GtkWidget *window = NULL;
+
   get_networks (g_object_get_data (G_OBJECT (widget), "network_combo"), g_object_get_data (G_OBJECT (widget), "network_hash"));
+
+  window = g_object_get_data (G_OBJECT (parent), "window");
+  if (window)
+    gtk_widget_destroy (window);
 }
 
 void
 networks_config_window (GtkWidget *widget)
 {
-  GtkWidget *window, *vbox, *button_hbox, *hsep, *scroll;
-  GtkWidget *new_button, *edit_button, *delete_button;
+  GtkWidget *window, *frame, *vbox, *vbox2, *button_hbox, *button_hbox2, *hsep, *scroll;
+  GtkWidget *new_button, *edit_button, *delete_button, *save_button, *close_button;
   GtkTreeViewColumn* column;
   GtkCellRenderer *renderer;
   GdkPixmap *pmap;
@@ -388,16 +400,23 @@ networks_config_window (GtkWidget *widget)
   gtk_widget_realize (window);
 
   vbox = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_box_set_spacing (GTK_BOX (vbox), 6);
+  vbox2 = gtk_vbox_new (FALSE, 0);
   button_hbox = gtk_hbox_new (FALSE, 0);
   gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
   gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
+  button_hbox2 = gtk_hbox_new (FALSE, 0);
+  gtk_box_set_spacing (GTK_BOX (button_hbox2), 6);
+
+  frame = gtk_frame_new ("Networks");
   
   networks_config_list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_POINTER);
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_network_cell_edited), GTK_TREE_MODEL (networks_config_list_store));
   networks_config_tree_view = GTK_TREE_VIEW(gtk_tree_view_new_with_model (GTK_TREE_MODEL (networks_config_list_store)));
   gtk_tree_view_insert_column_with_attributes (networks_config_tree_view, -1, "Network", renderer, "text", COLUMN_NETWORK, "editable", COLUMN_EDITABLE, NULL);
-  gtk_tree_view_set_headers_visible (networks_config_tree_view, TRUE);
+  gtk_tree_view_set_headers_visible (networks_config_tree_view, FALSE);
 
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -407,6 +426,8 @@ networks_config_window (GtkWidget *widget)
   new_button = gpe_picture_button (button_hbox->style, "New", "new");
   edit_button = gpe_picture_button (button_hbox->style, "Modify", "preferences");
   delete_button = gpe_picture_button (button_hbox->style, "Delete", "delete");
+  close_button = gpe_picture_button (button_hbox2->style, "Close", "close");
+  save_button = gpe_picture_button (button_hbox2->style, "Save", "save");
   
   g_signal_connect (G_OBJECT (new_button), "clicked",
                              G_CALLBACK (networks_config_new), NULL);
@@ -414,15 +435,26 @@ networks_config_window (GtkWidget *widget)
                              G_CALLBACK (networks_config_edit), NULL);
   g_signal_connect (G_OBJECT (delete_button), "clicked",
                              G_CALLBACK (networks_config_delete), NULL);
+  g_signal_connect (G_OBJECT (close_button), "clicked",
+                             G_CALLBACK (networks_config_window_close), widget);
+  g_signal_connect (G_OBJECT (save_button), "clicked",
+                             G_CALLBACK (networks_config_window_close), widget);
+
+  g_object_set_data (G_OBJECT (close_button), "window", (gpointer) window);
+  g_object_set_data (G_OBJECT (save_button), "window", (gpointer) window);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (networks_config_tree_view));
-  gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (frame), GTK_WIDGET (vbox2));
+  gtk_box_pack_start (GTK_BOX (vbox2), scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), button_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_hbox2, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (button_hbox), delete_button, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (button_hbox), edit_button, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (button_hbox), new_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox2), close_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox2), save_button, FALSE, FALSE, 0);
 
   if (gpe_find_icon_pixmap ("properties", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
