@@ -1,0 +1,763 @@
+/* gpe-appmgr - a program launcher
+
+   Copyright 2002 Robert Mibus;
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+*/
+
+/* Gtk etc. */
+#include <gtk/gtk.h>
+#include <gdk_imlib.h>
+
+/* directory listing */
+#include<sys/types.h>
+#include <dirent.h>
+#include <string.h>
+
+/* catch SIGHUP */
+#include <signal.h>
+
+/* I/O */
+#include <stdio.h>
+
+/* malloc / free */
+#include <stdlib.h>
+
+/* everything else */
+#include "main.h"
+#include "cfg.h"
+#include "package.h"
+#include "popupmenu.h"
+#include "xsi.h"
+
+GList *items=NULL;
+GList *groups=NULL;
+GList *forced_groups=NULL;
+
+GtkWidget *current_button=NULL;
+int current_button_is_down=0;
+
+void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
+{
+	GtkWidget *hb;
+	int i=0;
+
+	if (!cfg_options.auto_hide_group_labels)
+		return;
+
+	while (1)
+	{
+		GtkWidget *page_contents;
+		GList *children;
+
+		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK(nb), i++);
+		if (!page_contents)
+			break;
+
+		hb = gtk_notebook_get_tab_label (GTK_NOTEBOOK(nb), page_contents);
+		if (!hb)
+			continue;
+
+
+
+		children = gtk_container_children (GTK_CONTAINER(hb));
+		while (children)
+		{
+			if (GTK_IS_LABEL(children->data))
+			{
+				if (page_contents == page->child)
+					gtk_widget_show (GTK_WIDGET(children->data));
+				else
+					gtk_widget_hide (GTK_WIDGET(children->data));
+			}
+			children = children->next;
+		}
+	}
+}
+
+/* Callback for selecting a program to run */
+gint btn_released (GtkObject *btn, gpointer data)
+{
+	struct package *p;
+	popup_menu_cancel ();
+	gtk_widget_set_state (GTK_WIDGET(btn), GTK_STATE_NORMAL);
+
+	if (GTK_WIDGET(btn) != current_button || !current_button_is_down)
+	{
+		current_button = NULL;
+		current_button_is_down = 0;
+		return TRUE;
+	}
+
+	p = (struct package *) gtk_object_get_data (GTK_OBJECT(btn), "program");
+	run_program (package_get_data (p, "command"), package_get_data (p, "windowtitle"));
+
+	return TRUE;	
+}
+
+gint btn_pressed (GtkWidget *btn, GdkEventButton *ev, gpointer data)
+{
+	struct package *p;
+
+	popup_menu_cancel ();
+
+	/* We only want left mouse button events */
+	if (ev && (!(ev->button == 1)))
+	    return TRUE;
+
+	current_button = btn;
+	current_button_is_down = 1;
+
+	p = (struct package *) gtk_object_get_data (GTK_OBJECT(btn), "program");
+	popup_menu_later (500, p);
+
+	gtk_widget_set_state (btn, GTK_STATE_SELECTED);
+
+	return TRUE;	
+}
+
+gint btn_enter (GtkWidget *btn, GdkEventCrossing *event)
+{
+	/* We only want left mouse button events */
+	if (!(event->state & 256))
+	{
+		current_button = NULL;
+		return TRUE;
+	}
+
+	/* If we're moving onto the button that was last selected,
+	   do the same as if we've just started pressing on it again */
+	if (btn == current_button)
+		btn_pressed (btn, NULL, NULL);
+
+	return TRUE;
+}
+
+gint btn_leave (GtkWidget *btn, GdkEventCrossing *event)
+{
+	popup_menu_cancel ();
+	gtk_widget_set_state (btn, GTK_STATE_NORMAL);
+	current_button_is_down = 0;
+	return TRUE;
+}
+
+/* Remove the tabs from the notebook */
+void clear_tabs ()
+{
+	while (gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook)) != -1)
+		gtk_notebook_remove_page (GTK_NOTEBOOK(notebook), 0);
+}
+
+char *find_icon (char *base)
+{
+	char *temp;
+	FILE *inp;
+	int i;
+
+	char *directories[]=
+	{
+		"/usr/share/pixmaps",
+		"/usr/X11R6/include/X11/pixmaps",
+		"/mnt/ramfs/share/pixmaps",
+		"/mnt/cf/usr/share/pixmaps",
+		NULL
+	};
+
+	if (!base)
+		return NULL;
+
+	inp = fopen (base, "r");
+	if (inp)
+	{
+		fclose (inp);
+		return (char *) strdup (base);
+	}
+
+	for (i=0;directories[i];i++)
+	{
+		temp = g_strdup_printf ("%s/%s", directories[i], base);
+		inp = fopen (temp, "r");
+		if (inp)
+		{
+			fclose (inp);
+			return temp;
+		}
+		g_free (temp);
+	}
+	return NULL;
+}
+
+/* Limit the title to two lines at <68px wide
+   Eeeevil and Uuuugly but it works just fine AFAIK */
+void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
+{
+	int i;
+	char *title;
+	char *last_break=NULL;
+
+	g_assert (label != NULL);
+	g_assert (font != NULL);
+	g_assert (full_title != NULL);
+
+	title = g_strdup (full_title);
+	for (i=0;i<strlen(title);i++)
+	{
+		if (gdk_text_width (font, title, i) >= 68)
+		{
+			if (last_break)
+			{
+				char *t;
+				int k;
+				int done=0;
+				*last_break = '\n';
+				t = last_break+1;
+				for (k=0;k<strlen(t) && !done;k++)
+				{
+					if (gdk_text_width (font, t, k) >= 68)
+					{
+						/* Cut the title short & make it end in "..." */
+						int j;
+						if (k > 0)
+							*(t + --k) = 0;
+						for (j=0;j<3;j++)
+							*(t + --k) = '.';
+						done = 1;
+					}
+				}
+				break;
+			} else
+			{
+				/* Cut the title short & make it end in "..." */
+				int j;
+				if (i > 0)
+					*(title + --i) = 0;
+				for (j=0;j<3;j++)
+					*(title + --i) = '.';
+				break;
+			}
+		}
+
+		/* Note if this character can be changed to a newline safely.
+		 * This is done now not at the top because bad wrapping can
+		 * occur if it is the "breakable character" pushes the string
+		 * past the 70 pixel width. */
+		if (title[i] == ' ')
+			last_break = title + i;
+	}
+
+	gtk_label_set_text (GTK_LABEL (label), title);
+	g_free (title);
+}
+
+/* Make the contents for a notebook tab.
+ * Generally we only want one group, but NULL means
+ * ignore group setting (ie. "All").
+ */
+GtkWidget *create_tab (char *current_group, tab_view_style style)
+{
+	GtkWidget *tbl;
+	GtkWidget *sw;
+	GList *this_item;
+	int i=0;
+	int cols;
+
+	if (style == TAB_VIEW_ICONS)
+	{
+		/* Get the number of columns assuming 70px per item, 20px scrollbar */
+		/* This should really find out how much space it *can* use */
+		if (window->allocation.width - 20 > 70) 
+			cols = (window->allocation.width - 20) / 70;
+		else
+			cols = 1;
+	}
+	else
+		cols = 1;
+
+	tbl = gtk_table_new (3,cols,TRUE);
+
+	/* Make the scrolled window */
+	sw = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(sw),
+					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw), tbl);
+
+	this_item = items;
+	while (this_item)
+	{
+		struct package *p;
+		GtkWidget *btn, *vb;
+
+		p = (struct package *) this_item->data;
+
+		/* Is the program going to appear in this group? */
+		if (current_group && strcmp (current_group, package_get_data (p, "section")))
+		{
+			this_item = g_list_next (this_item);
+			continue;
+		}
+
+		if (style == TAB_VIEW_ICONS)
+		{
+			GdkFont *font; /* Font in the label */
+			GtkWidget *img=NULL,*lbl;
+			GdkPixmap *pm;
+			GdkBitmap *bm;
+			char *icon;
+
+			/* Button picture */
+			icon = find_icon (package_get_data (p, "icon48"));
+			if (icon)
+			{
+				if (gdk_imlib_load_file_to_pixmap(icon, &pm, &bm))
+					img = gtk_pixmap_new (pm,bm);
+				free (icon);
+			}
+			if (!img)
+				if (gdk_imlib_load_file_to_pixmap("/usr/share/pixmaps/menu_unknown_program.png",&pm,&bm))
+					img = gtk_pixmap_new (pm, bm);
+
+			/* Button label */
+			lbl = gtk_label_new("");
+
+			/* Get the font used by the label */
+			if (gtk_rc_get_style (lbl))
+				font = gtk_rc_get_style (lbl)->font;
+			else
+				font = gtk_widget_get_style (lbl)->font;
+
+			make_nice_title (lbl, font, package_get_data (p, "title"));
+
+			/* Button VBox */
+			vb = gtk_vbox_new(0,0);
+			gtk_box_pack_end_defaults (GTK_BOX(vb),lbl);
+			if (img)
+				gtk_box_pack_end_defaults (GTK_BOX(vb),img);
+
+
+			/* The 'button' itself */
+			btn = gtk_event_box_new ();
+			/* The "Ay" is arbitrary; I figure'd it'd give a decent approximation at the
+			   max. height of the font */
+			gtk_widget_set_usize (btn, 70, 55 + 2*gdk_text_height(font, "Ay", 2));
+
+		} else /* Thus style == TAB_VIEW_LIST */
+		{
+			GtkWidget *img=NULL,*lbl;
+			GdkPixmap *pm;
+			GdkBitmap *bm;
+			char *icon;
+
+			/* Button picture */
+			icon = find_icon (package_get_data (p, "icon16"));
+			if (icon)
+			{
+				if (gdk_imlib_load_file_to_pixmap(icon, &pm, &bm))
+					img = gtk_pixmap_new (pm,bm);
+				free (icon);
+			}
+			if (!img)
+				if (gdk_imlib_load_file_to_pixmap("/usr/share/pixmaps/menu_unknown_program16.png",&pm,&bm))
+					img = gtk_pixmap_new (pm, bm);
+
+			/* Button label */
+			lbl = gtk_label_new(package_get_data (p, "title"));
+			gtk_label_set_justify (GTK_LABEL(lbl), GTK_JUSTIFY_LEFT);
+			gtk_widget_set_usize (lbl, 0, 16);
+
+			/* Button HBox */
+			vb = gtk_hbox_new (0,0);
+
+			/* Pad it up */
+			gtk_box_pack_end_defaults (GTK_BOX(vb),gtk_label_new(""));
+
+			/* Put the label and pixmap in the box */
+			gtk_box_pack_end (GTK_BOX(vb),lbl, 0, 0, 0);
+			if (img)
+				gtk_box_pack_end (GTK_BOX(vb),img, 0, 0, 0);
+
+
+			/* The button itself */
+			btn = gtk_event_box_new ();
+		}
+
+		gtk_container_add (GTK_CONTAINER(btn),vb);
+		gtk_object_set_data (GTK_OBJECT(btn), "program", (gpointer)p);
+		gtk_signal_connect( GTK_OBJECT(btn), "button_release_event",
+				    GTK_SIGNAL_FUNC(btn_released), NULL);
+		gtk_signal_connect( GTK_OBJECT(btn), "button_press_event",
+				    GTK_SIGNAL_FUNC(btn_pressed), NULL);
+		gtk_signal_connect( GTK_OBJECT(btn), "enter_notify_event",
+				    GTK_SIGNAL_FUNC(btn_enter), NULL);
+		gtk_signal_connect( GTK_OBJECT(btn), "leave_notify_event",
+				    GTK_SIGNAL_FUNC(btn_leave), NULL);
+
+		/* Put the button in the table */
+		gtk_table_attach_defaults (GTK_TABLE(tbl), btn,
+					   i%cols,i%cols+1,i/cols,i/cols+1);
+
+		i++;
+
+		this_item = g_list_next (this_item);
+	}
+
+	return sw;
+}
+
+/* Creates the image/label combo for the tab
+ * of a specified group.
+ */
+GtkWidget *create_group_tab_label (char *group)
+{
+	GdkPixmap *pm;
+	GdkBitmap *bm;
+	GtkWidget *img=NULL,*lbl,*hb;
+	char *icon_file;
+
+	icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", group);
+
+	if (gdk_imlib_load_file_to_pixmap(icon_file, &pm, &bm))
+		img = gtk_pixmap_new (pm,bm);
+	g_free (icon_file);
+
+	if (!img)
+	{
+		if (gdk_imlib_load_file_to_pixmap(
+			"/usr/share/pixmaps/menu_unknown_group16.png", &pm, &bm))
+			img = gtk_pixmap_new (pm,bm);
+	}
+
+	lbl = gtk_label_new (group);
+
+	hb = gtk_hbox_new (FALSE, 0);
+	if (img)
+		gtk_box_pack_start_defaults (GTK_BOX(hb), img);
+	gtk_box_pack_start_defaults (GTK_BOX(hb), lbl);
+
+	gtk_widget_show_all (hb);
+	if (cfg_options.auto_hide_group_labels)
+		gtk_widget_hide (lbl);
+
+	return hb;
+}
+
+int group_has_items (char *group)
+{
+	GList *l;
+	l = items;
+
+	while (l)
+	{
+		if (!strcasecmp (package_get_data(l->data,"section"), group))
+			return TRUE;
+		l = l->next;
+	}
+
+	return FALSE;
+}
+
+/* Wipe the old tabs / icons and replace them with whats
+ * currently supposed to be there */
+void refresh_tabs ()
+{
+	GList *l;
+	int old_tab;
+
+	old_tab = gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook));
+
+	clear_tabs ();
+
+	/* Create the tabs */
+
+	if (cfg_options.show_all_group)
+		gtk_notebook_append_page (GTK_NOTEBOOK(notebook),
+					  create_tab (NULL, cfg_options.tab_view),
+					  create_group_tab_label("All"));
+
+	l = groups;
+	while (l)
+	{
+		if (group_has_items (l->data))
+			gtk_notebook_append_page (
+				GTK_NOTEBOOK(notebook),
+				create_tab (l->data, cfg_options.tab_view),
+				create_group_tab_label(l->data));
+		l = l->next;
+	}
+
+	gtk_widget_show_all (notebook);
+	if (old_tab != -1)
+		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
+}
+
+GList *load_simple_list (char *fn)
+{
+	GList *l=NULL;
+	char line[1024], *t;
+	FILE *inp;
+
+	inp = fopen (fn, "r");
+	if (!inp)
+		return NULL;
+
+	t = line;
+	do
+	{
+		*t = getc (inp);
+		if (*t == '\n' || t - line > 1000)
+		{
+			*t = 0;
+			l = g_list_append (l, strdup (line));
+			t = line;
+			continue;
+		}
+		t++;
+	} while (!feof (inp));
+
+	fclose (inp);
+
+	return l;
+}
+
+GList *load_forced_groups ()
+{
+	char *fn;
+	GList *l;
+
+	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr_group-order", g_get_home_dir ());
+
+	l = load_simple_list (fn);
+
+	g_free (fn);
+
+	return l;
+}
+
+GList *load_ignored_items ()
+{
+	char *fn;
+	GList *l;
+
+	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr_ignored-items", g_get_home_dir ());
+
+	l = load_simple_list (fn);
+
+	g_free (fn);
+
+	return l;
+}
+
+void cb_package_add (struct package *p)
+{
+	/* add the item to the list */
+	if (p)
+	{
+				/* The package has to provide a 48x48 icon and a section */
+		if (package_get_data (p, "icon48") && package_get_data (p, "section"))
+		{
+			/* Don't allow X/Y section names (eg. "Games/Strategy") */
+			if (strchr (package_get_data (p, "section"), '/'))
+				*(strchr(package_get_data (p, "section"), '/'))=0;
+			items = g_list_insert_sorted (items, p, (GCompareFunc)package_compare);
+			/* Update the groups if necessary */
+			if ((g_list_find_custom (groups, package_get_data (p, "section"),
+						 (GCompareFunc) strcmp) == NULL) &&
+			    (g_list_find_custom (forced_groups, package_get_data (p, "section"),
+						 (GCompareFunc) strcmp) == NULL))
+				groups = g_list_insert_sorted (groups, strdup(package_get_data(p,"section")), (GCompareFunc)strcasecmp);
+
+		}
+		else
+			package_free (p);
+
+	}
+}
+
+/* Reloads the menu files into memory, causes the UI to refresh */
+int refresh_list ()
+{
+	GList *l, *old_items, *old_groups;
+	GList *ignored_items;
+	DIR *dir;
+	struct dirent *entry;
+	int i;
+	char *user_menu=NULL, *home_dir;
+
+	char *directories[]=
+	{
+		"/usr/lib/menu",
+		"/home/mibus/programming/c/gpe/gpe-appmgr/dist/usr/lib/menu", /* test dir */
+		"/mnt/ramfs/lib/menu",
+		"/mnt/cf/usr/lib/menu",
+		NULL, /* Placeholder for ~/.gpe/menu */
+		NULL
+	};
+	if ((home_dir = (char*) getenv ("HOME")))
+	{
+		for (i=0;directories[i];i++)
+			;
+		directories[i] = user_menu = g_strdup_printf ("%s/.gpe/menu", home_dir);
+	}
+
+	popup_menu_cancel ();
+
+	old_items = items;
+	old_groups = groups;
+
+	items = groups = NULL;
+
+	forced_groups = load_forced_groups ();
+	ignored_items = load_ignored_items ();
+
+	for (i=0;directories[i];i++)
+	{
+		dir = opendir (directories[i]);
+		if (!dir)
+			continue;
+		while ((entry = readdir (dir)))
+		{
+			char *temp;
+
+			if (entry->d_name[0] == '.')
+				continue;
+
+			/* read the file if we don't want to ignore it */
+			temp = g_strdup_printf ("%s/%s", directories[i], entry->d_name);
+			if (g_list_find_custom (ignored_items, temp, (GCompareFunc)strcmp))
+			{
+				g_free (temp);
+				continue;
+			}
+			package_read_to (temp, cb_package_add);
+			g_free (temp);
+		}
+		closedir (dir);
+	}
+
+	groups = g_list_concat (forced_groups, groups);
+
+	/* free the old data. note that we do it now so that
+	   any stuff that references it can't ever
+	   reference invalid data */
+	l = old_items;
+	while (l)
+	{
+		if (l->data)
+			package_free ((struct package *)l->data);
+		l = l->next;
+	}
+	g_list_free (old_items);
+
+	l = old_groups;
+	while (l)
+	{
+		if (l->data)
+			free (l->data);
+		l = l->next;
+	}
+	g_list_free (old_groups);
+
+	/* We allocated a string for the user's menu dir; free it */
+	if (user_menu)
+		g_free (user_menu);
+
+	return FALSE;
+}
+
+
+/* refresh_tabs() is called through GTK so that
+   the window already exists; thus we can get it's
+   size and determine the number of columns available.
+   It's also called when XRANDR does its job.
+*/
+void cb_win_draw (GtkWidget *widget,
+		  gpointer user_data)
+{
+	static int last_width = 0;
+
+	if (window && last_width != window->allocation.width)
+	{
+		last_width = window->allocation.width;
+		refresh_tabs();
+	}
+}
+
+/* run on SIGHUP
+ * just refreshes the program list, eg. if a new
+ * program was just added */
+static void catch_signal (int signo)
+{
+	cfg_load ();
+	refresh_list ();
+	refresh_tabs();
+}
+
+/* Create the UI for the main window and
+ * stuff
+ */
+void create_main_window()
+{
+	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title (GTK_WINDOW(window), "Programs");
+	gtk_widget_set_usize (window, 220,280);
+	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
+			    (GtkSignalFunc)gtk_widget_show, NULL);
+	gtk_signal_connect (GTK_OBJECT(window), "draw",
+			    (GtkSignalFunc)cb_win_draw, NULL);
+	notebook = gtk_notebook_new ();
+	gtk_notebook_set_homogeneous_tabs(GTK_NOTEBOOK(notebook), FALSE);
+	gtk_notebook_set_scrollable (GTK_NOTEBOOK(notebook), TRUE);
+	gtk_notebook_set_tab_border (GTK_NOTEBOOK(notebook), 0);
+	gtk_signal_connect (GTK_OBJECT(notebook), "switch_page",
+			    (GtkSignalFunc)nb_switch, NULL);
+
+	/* If a person releases the stylus when over the table, we want
+	   current_button etc. to get cleared properly, so: */
+	gtk_signal_connect( GTK_OBJECT(notebook), "button_release_event",
+			    GTK_SIGNAL_FUNC(btn_released), NULL);
+
+	gtk_container_add (GTK_CONTAINER (window), notebook);
+
+	gtk_widget_show_all (window);
+}
+
+/* main():
+ * init the libs, setup the signal handler,
+ * run gtk bits
+ */
+int main(int argc, char *argv[]) {
+        struct sigaction sa_old, sa_new;
+
+	/* Init gtk & friends */
+	gtk_init (&argc, &argv);
+	gdk_imlib_init();
+
+	/* load our configuration */
+	cfg_load ();
+
+	create_main_window();
+
+	/* Register SIGHUP */
+        sa_new.sa_handler = catch_signal;
+        sigemptyset (&sa_new.sa_mask);
+        sa_new.sa_flags = 0;
+        sigaction (SIGHUP,&sa_new,&sa_old);
+
+	/* So we don't keep 'defunct' processes in the process table */
+	signal (SIGCHLD, SIG_IGN);
+
+	/* update the menu data */
+	refresh_list ();
+
+	/* start the event loop */
+	gtk_main();
+
+	return 0;
+}

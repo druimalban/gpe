@@ -1,0 +1,147 @@
+======
+Readme
+======
+
+This is gpe-appmgr, the application launcher for GPE.
+
+It is licensed under the GPL, see the file 'COPYING'.
+
+========
+Contents
+========
+ * Introduction to GPE
+ * Installation
+ * Use
+ * Menu extensions
+ * Config Files
+
+===================
+Introduction to GPE
+===================
+
+GPE is the GNU Palmtop Environment.
+
+It is a free (as in speech) environment designed for handheld computers such
+as the iPAQ. It is based around X11 and GTK.
+
+See http://www.handhelds.org/projects/GPE/ for more information.
+
+============
+Installation
+============
+ 1) On a local system
+    Just run 'make install'
+
+ 2) On an iPAQ running familiar
+    Run 'make ipk', then install the new package via ipkg
+
+===
+Use
+===
+Tap an icon to launch the program. If possible, gpe-appmgr will bring
+a currently-running copy of the program to the front.
+
+Hold the pen down on an icon to bring up a list of options.
+ [Window titles of currently running programs]
+ Force Run
+ Properties
+
+Click on a window title to bring that specific window to the front. This is
+especially useful for Dillo, for example.
+
+"Force Run" causes the program to run again, even if it is already running. Do
+this to launch a second (or third) terminal/whatever.
+
+"Properties" will show you a list of properties associated with that menu
+entry. At the moment, you cannot edit these properties.
+
+===============
+Menu extensions
+===============
+
+For its extra functionality, extensions to the normal menu format
+were needed. They are:
+ icon16=
+ icon48=
+ windowtitle=
+and are for
+ 16x16 icons
+ 48x48 icons
+ Window title of already running process.
+respectively.
+
+Note that the icons need not (indeed, should not) have paths
+specified. Thus if installed to a network on a CompactFlash
+card, the icon will still be available.
+
+The window title may include "*", it is expanded in the same way
+file names are.
+
+An example for "Dillo", a small web browser:
+
+?package(dillo):\
+ needs=x11\
+ section=Viewers\
+ command=dillo\
+ title=Dillo\
+ icon48=dillo.png\
+ windowtitle="Dillo:*"
+
+============
+Config Files
+============
+
+Most people won't need this; the 'Appmgr Setup' applet should take
+care of most people's needs.
+
+ -= ~/.gpe/gpe-appmgr =-
+
+A file in the package menu format used by Debian.
+
+Options:
+ show_all_group ("yes" or "no")  [Default: "no"]
+ Controls whether the special "All" tab is displayed.
+
+ auto_hide_group_labels ("yes" or "no")  [Default: "yes"]
+ Controls whether to hide the names of the tabs other than the
+ currently active one.
+
+ tab_view ("list" or "icon") [Default: "list"]
+ Whether to show a list of programs or a proper application launcher
+ icon display
+
+Eg:
+<SNIP>
+?package(gpe-appmgr): show_all_group="yes" tab_view="icon" auto_hide_group_labels="yes"
+</SNIP>
+
+ -= ~/.gpe/gpe-appmgr_ignored-items =-
+
+A list of menu files to ignore, one per line.
+Eg:
+<SNIP>
+/usr/lib/menu/scream
+/usr/lib/menu/clerk
+</SNIP>
+
+ -= ~/.gpe/gpe-appmgr_group_order =-
+
+A list of groups ordered to your specifications. Groups will be ordered in the
+order listed here. "All" will be before the list (if you choose to have the "All"
+group visible). All groups not specified will be appended to the end in alphabetical
+order.
+
+Eg:
+<SNIP>
+PIM
+Viewers
+</SNIP>
+
+Might result in
+ [All][PIM][Viewers][Audio][Games][System]
+
+If a group that is listed here doesn't have any menu entries for it, it will not
+be created.
+
+--
+Robert Mibus <mibus@bigpond.com>
