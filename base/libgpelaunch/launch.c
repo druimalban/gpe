@@ -166,17 +166,20 @@ read_client_map (struct sn_display_map *map)
       key = p;
       while (*p != '=' && *p != '\0') p++;
 
-      RETURN_NONE_IF_NULL(*p);
+      if (*p == 0)
+	return;
 
       *p = '\0'; p++;
 
-      RETURN_NONE_IF_NULL(*p);
+      if (*p == 0)
+	return;
 
       value = p;
 
       while (*p != '|' && *p != '\0') p++;
 
-      RETURN_NONE_IF_NULL(*p);
+      if (*p == 0)
+	return;
 
       *p = '\0';
 
