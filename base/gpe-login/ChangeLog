@@ -1,3 +1,12 @@
+2002-09-11  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-xcalibrate.sh: Add comment on the fixed xcalibrate, but
+	don't evaluate the return code yet (not until ipkg supports
+	versioned dependencies).
+
+	* familiar/control.gpe-session-scripts (Depends): Versioned
+	dependency on xcalibrate (>= 0.2-2).
+
 2002-09-09  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-logout.c (main): Don't set window title, in accordance to
