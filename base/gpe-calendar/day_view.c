@@ -110,6 +110,7 @@ day_view_update ()
   static gboolean width_set;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
       
   if (! light_style)
     {
