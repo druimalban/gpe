@@ -19,6 +19,9 @@
 
 struct player
 {
+  pthread_t thread;
+  pthread_lock_t lock;
+
   struct playlist *list;
   struct playlist *cur;
   guint idx;
@@ -105,6 +108,46 @@ player_stop (player_t p)
 }
 
 gboolean
+play_track (player_t p, struct playlist *t)
+{
+  p->stream = stream_open (t->data.track.url);
+  if (p->stream == NULL)
+    {
+      player_error (p, _("Cannot open stream"));
+      return FALSE;
+    }
+  p->decoder = decoder_open (p, t->data.track.url, p->stream, p->audio);
+  if (p->decoder == NULL)
+    {
+      player_error (p, _("Cannot decode this stream"));
+      stream_close (p->stream);
+      p->stream = NULL;
+      return FALSE;
+    }
+
+  decoder_run (p->decoder);
+  
+  decoder_close (p->decoder);
+  p->decoder = NULL;
+  stream_close (p->stream);
+  p->stream = NULL;
+
+  return TRUE;
+}
+
+static void *
+player_thread (player_t p)
+{
+  while (p->cur = playlist_fetch_item (p->list, p->idx), p->cur != NULL)
+    {
+      play_track (p, p->cur);
+      p->idx++;
+    }
+
+  return NULL;
+}
+
+gboolean
 player_play (player_t p)
 {
   player_stop (p);
@@ -115,44 +158,7 @@ player_play (player_t p)
       return FALSE;
     }
 
-  p->cur = playlist_fetch_item (p->list, p->idx);
-  if (p->cur)
-    {
-      p->stream = stream_open (p->cur->data.track.url);
-      if (p->stream == NULL)
-	{
-	  player_error (p, _("Cannot open stream"));
-	  p->cur = NULL;
-	  return FALSE;
-	}
-      p->decoder = decoder_open (p, p->cur->data.track.url, p->stream, p->audio);
-      if (p->decoder == NULL)
-	{
-	  player_error (p, _("Cannot decode this stream"));
-	  stream_close (p->stream);
-	  p->stream = NULL;
-	  p->cur = NULL;
-	  return FALSE;
-	}
-    }
   return TRUE;
-}
-
-struct stream *
-player_next_stream (player_t p)
-{
-  stream_close (p->stream);
-  p->stream = NULL;
-  p->idx++;
-  p->cur = playlist_fetch_item (p->list, p->idx);
-  if (p->cur)
-    {
-      p->stream = stream_open (p->cur->data.track.url);
-      if (p->stream == NULL)
-	p->cur = NULL;
-    }
-      
-  return p->stream;
 }
 
 void

@@ -1,6 +1,6 @@
 .SUFFIXES: .so
 
-CFLAGS = -Os -fomit-frame-pointer -Wall
+CFLAGS = -O2 -g -Wall
 
 CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags libxml-2.0` -DFILE_OFFSET_BITS=64
 LDFLAGS += `pkg-config --libs glib-2.0`
@@ -9,13 +9,21 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 
 LVORBIS = -L../../vorbis-fixp/lib
 
-CODECS = d-vorbis.so d-mad.so
 BACKEND = libgpenmf.so.0
 BACKEND_SO = libgpenmf.so
 
-MEMBERS = decoder stream file_stream playlist_db playlist_xml player audio playlist_m3u
+MEMBERS = playlist_db playlist_xml playlist_m3u
+ifneq ($(GST),yes)
+MEMBERS += decoder stream file_stream player audio 
 MAD_MEMBERS = mad playlist_id3
 OGG_MEMBERS = vorbis playlist_ogg
+CODECS = d-vorbis.so d-mad.so
+LDFLAGS += -lesd
+else
+MEMBERS += gstplayer
+LDFLAGS += `pkg-config --libs gstreamer` -lpthread
+CPPFLAGS += `pkg-config --cflags gstreamer`
+endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 OGG_OBJS = $(patsubst %,%.o,$(OGG_MEMBERS))
@@ -35,7 +43,7 @@ $(BACKEND_SO): $(BACKEND)
 	ln -sf $^ $@
 
 $(BACKEND): $(OBJS)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles `pkg-config --libs libxml-2.0` -Wl,-soname -Wl,$(BACKEND) -lesd -g
+	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles `pkg-config --libs libxml-2.0` -Wl,-soname -Wl,$(BACKEND) -g
 
 -include $(DEPS)
 

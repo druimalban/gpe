@@ -43,4 +43,6 @@ extern void player_error_handler (player_t, void (*func)(gchar *));
 
 extern struct stream *player_next_stream (player_t p);
 
+extern void player_fill_in_playlist (struct playlist *);
+
 #endif

@@ -30,7 +30,9 @@ playlist_m3u_load (gchar *s)
       while (s && isspace (buf[s-1]))
 	buf[--s] = 0;
       i->data.track.url = g_strdup (buf);
-      decoder_fill_in_playlist (i);
+
+      player_fill_in_playlist (i);
+
       if (i->title == NULL)
 	i->title = i->data.track.url;
       i->parent = p;

@@ -15,6 +15,9 @@
 #include <sys/time.h>
 #include <assert.h>
 #include <libintl.h>
+#ifdef GST_NMF
+#include <gst/gst.h>
+#endif
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -29,7 +32,6 @@
 #include <gpe/gtkminifilesel.h>
 
 #include "frontend.h"
-#include "decoder.h"
 
 static struct gpe_icon my_icons[] = {
   { "ok" },
@@ -181,6 +183,10 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
+#ifdef GST_NMF
+  gst_init (&argc, &argv);
+#endif
+
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
@@ -203,7 +209,6 @@ main (int argc, char *argv[])
 		   window_type_atom, XA_ATOM, 32, PropModeReplace, 
 		  (unsigned char *) &window_type_toolbar_atom, 1);
 
-  decoder_init ();
   fe->player = player_new ();
   if (fe->player == NULL)
     {
@@ -211,8 +216,12 @@ main (int argc, char *argv[])
       exit (1);
     }
 
+  player_play (fe->player);
+
   fe->playlist = playlist_new_list ();
+#ifndef GST_NMF
   player_error_handler (fe->player, gpe_error_box);
+#endif
   g_timeout_add (250, (GSourceFunc)player_poll_func, fe);
 
   fe->playlist_widget = playlist_edit (fe, NULL);

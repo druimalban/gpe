@@ -37,7 +37,7 @@ playlist_parse_xml_track (xmlDocPtr doc, xmlNodePtr cur)
       cur = cur->next;
     }
 
-  decoder_fill_in_playlist (i);
+  player_fill_in_playlist (i);
 
   if (i->title == NULL)
     i->title = i->data.track.url;

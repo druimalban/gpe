@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-nmf
 DEBUG = no
 CVSBUILD = yes
+GST = yes
 
 MEMBERS = gpe-nmf playlist_edit
 
@@ -15,7 +16,13 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../vorbis-fixp/lib -I./backend
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I./backend
+
+ifneq ($(GST),yes)
+CPPFLAGS +=  -I../vorbis-fixp/lib
+else
+CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer`
+endif
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
@@ -33,7 +40,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: backend $(PACKAGE)
 
 backend:
-	make -C backend PREFIX=$(PREFIX)
+	make -C backend PREFIX=$(PREFIX) GST=$(GST)
 
 $(PACKAGE): $(OBJS) $(LIB)
 	$(CC) -o $@ $^ $(LDFLAGS) -Lbackend -lgpenmf

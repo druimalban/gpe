@@ -23,7 +23,6 @@
 #include <gpe/smallbox.h>
 
 #include "frontend.h"
-#include "decoder.h"
 
 #define _(x) gettext(x)
 
@@ -87,7 +86,8 @@ load_file (struct nmf_frontend *fe, gchar *s)
     {
       p = playlist_new_track ();
       p->data.track.url = s;
-      decoder_fill_in_playlist (p);
+
+      player_fill_in_playlist (p);
 
       if (p->title == NULL)
 	p->title = p->data.track.url;
