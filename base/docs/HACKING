@@ -1,0 +1,49 @@
+
+You are welcome to participate at gpe.
+
+hh.org is a big site, and his wiki, is very useful, but it is not always evident to find the information.
+Here are some usefull stuff to be quickly used to handhelds.org and gpe developement environment.
+
+* CVS:
+If you read this, you have successfully checked out the CVS.
+Note that if you want to commit your work you'll have to ask for an account.
+
+ http://www.handhelds.org/contributing.html
+
+* Compile and Run:
+There are *many* way to compile for the arm-linux.
+
+- Cross Compiling. 
+http://www.handhelds.org/z/wiki/Toolchains
+This is a way...
+but, you then will need to add all the library and headers manually (gtk, gdk, etc), as some are known not to cross compile.
+And there are many lib version pb as the prebuild toolchains are a little old.
+
+- Native compiling.
+The best way IMHO, is to compile natively. There are 2 way to do that.
+  - on your ipaq:
+	You 'll have to configure a NFS root, mount it and chroot to it. I dont have tried.
+  - on the hh.org machines:
+	skiff cluster is the most easy.
+http://www.handhelds.org/z/wiki/SkiffCluster
+
+You should start to debug your interface directly on you PC, and only test on the ipaq only 
+for the PDA specific features. Try to make your app as cross-platform possible, 
+do not rely on the 240x320 screen for example..
+Then a simple tar |ftp of your app directory into the skiff cluster should compile.
+Do the reverse with the binary and lets test it on the ipaq.
+
+* Coding style, shoulds and shouldnots:
+http://www.handhelds.org/z/wiki/GpeHacking
+
+* other useful links:
+
+GPE mailing list
+GPE@handhelds.org
+http://handhelds.org/mailman/listinfo/gpe
+
+We also strongly use irc:
+irc.handhelds.org  -> #gpe
+
+Take snapshots of your gpe-app, and check for the last stuff:
+http://www.handhelds.org/scap  
