@@ -1,24 +1,21 @@
 PACKAGE   = keylaunch
-VERSION   = 2.0.5
+VERSION   = 2.0.6
 
 #DEBUG     = 1
 CVSBUILD  = yes
 
 CC        = gcc
-#CFLAGS    = -g -O2 -Wall
-CFLAGS    = -Os -fomit-frame-pointer -Wall
+PACKAGE_CFLAGS    = -Os -fomit-frame-pointer -Wall
 XROOT     = /usr/X11R6
-INCLUDES  = -I$(XROOT)/include
-LIBS      = -lX11 -lXtst
-LDPATH    = -L$(XROOT)/lib
+PACKAGE_CFLAGS  += $(STANDARD_CFLAGS) `pkg-config --cflags xtst`
+LIBS      = `pkg-config --libs xtst`
 
 PROG      = keylaunch
 
-DESTDIR	  = /usr/local
-PREFIX    = /usr
+PREFIX    = /usr/local
 RCFILE1	  = .$(PROG)rc
 RCFILE2   = /etc/$(PROG)rc
-DEFINES   = -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" -DDEBUG
+PACKAGE_CFLAGS  += -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" -DDEBUG
 
 OBJS      = $(PROG).o xsi.o
 
@@ -31,13 +28,10 @@ endif
 all: $(PROG) 
 
 $(PROG): $(OBJS)
-	$(CC) $(OBJS) $(LDPATH) $(LIBS) -o $@
-
-$(OBJS): %.o: %.c $(HEADERS)
-	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -c $< -o $@
+	$(CC) $(OBJS) $(LIBS) -o $@
 
 install-program: all
-	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
+	install -sD $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	install -D -m 644 $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
