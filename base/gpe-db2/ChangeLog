@@ -1,3 +1,6 @@
+20030209
+	- Removed gpe-minifilesel again and setup gtk-fileselection properly
+	- Started with writing back values (editing)
 20021215
 	- Removed Glade stuff and converted to more commonly used "raw"
 	  Makefile build process
