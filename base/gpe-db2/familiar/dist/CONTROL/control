@@ -1,0 +1,8 @@
+Package: gpe-db2
+Section: base
+Priority: optional
+Version: 0.02
+Architecture: arm
+Maintainer: Nils Faerber <nils@kernelconcepts.de>
+Depends: libgtk2, gpe-icons
+Description: GPE database browser

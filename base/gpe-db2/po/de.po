@@ -1,0 +1,77 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-12-15 20:32+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: interface.c:53
+msgid "GPE DB"
+msgstr "GPE DB"
+
+#: interface.c:72
+msgid "File"
+msgstr "Datei"
+
+#: interface.c:88
+msgid "Select DB"
+msgstr "DB Ausw‰hlen"
+
+#: interface.c:105
+msgid "Exit"
+msgstr "Beenden"
+
+#: interface.c:113
+msgid "Options"
+msgstr "Optionen"
+
+#: interface.c:129
+msgid "Preferences"
+msgstr "Einstellungen"
+
+#: interface.c:137
+msgid "Help"
+msgstr "Hilfe"
+
+#: interface.c:154
+msgid "About"
+msgstr "‹ber"
+
+#: interface.c:217 interface.c:255
+msgid "Tables"
+msgstr "Tabellen"
+
+#: interface.c:236
+msgid "Open DB"
+msgstr "DB ÷ffnen"
+
+#: interface.c:245
+msgid "Close DB"
+msgstr "DB Schlieﬂen"
+
+#: callbacks.c:94
+msgid "Entries"
+msgstr "Eintr‰ge"
+
+#: callbacks.c:130
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Bitmapdatei '%s' nicht gefunden"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Fehler beim Laden der Bitmapdatei '%s'"

@@ -1,0 +1,4 @@
+20021215
+	- Removed Glade stuff and converted to more commonly used "raw"
+	  Makefile build process
+	- Thus created Makefile and minor GPEisms in source
