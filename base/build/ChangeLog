@@ -1,3 +1,8 @@
+2004-11-18  Phil Blundell  <philb@gnu.org>
+
+	* Makefile.dpkg_ipkg (check-source): Check for existence of
+	control file, not just familiar/ directory.
+
 2004-03-13  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (dist): Don't exclude *.d.
