@@ -1,5 +1,10 @@
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (HEADERS): Remove gtkdatesel.h.
+	(MEMBERS): Remove gtkdatesel.
+	* gtkdatesel.c: Deleted; moved to ../gpe-calendar.
+	* gpe/gtkdatesel.h: Likewise.
+
 	* pixmaps.c (gpe_find_icon_pixmap): Add linker warning.
 
 	* picturebutton.c (gpe_picture_button): Fix formatting.
