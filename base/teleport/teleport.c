@@ -53,23 +53,6 @@ struct client_window *selected_client, *active_client;
 
 extern gchar *sign_challenge (gchar *text, int length, gchar *target);
 
-Atom atoms[8];
-
-char *atom_names[] = 
-  {
-    "_NET_CLIENT_LIST",
-    "UTF8_STRING",
-    "WM_NAME",
-    "_NET_WM_NAME",
-    "_NET_WM_ICON"
-  };
-
-#define _NET_CLIENT_LIST 0
-#define UTF8_STRING 1
-#define WM_NAME 2
-#define _NET_WM_NAME 3
-#define _NET_WM_ICON 4
-
 #define DISPLAY_CHANGE_SUCCESS			0
 #define DISPLAY_CHANGE_UNABLE_TO_CONNECT	1
 #define DISPLAY_CHANGE_NO_SUCH_SCREEN		2
@@ -441,9 +424,6 @@ main (int argc, char *argv[])
   crypt_init ();
 
   displays_init ();
-
-  XInternAtoms (dpy, atom_names, sizeof (atom_names) / sizeof (atom_names[0]),
-		False, atoms);
 
   clients = get_clients (dpy);
 

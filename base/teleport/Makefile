@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = teleport
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.31.1
+VERSION = 0.32
 
 LINGUAS = 
 
