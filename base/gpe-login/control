@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.03
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, gdk-imlib1, gpe-icons
+Depends: libgtk1.2, gdk-imlib1, gpe-icons, libgpewidget (>= 0.02)
 Description: Gtk-based login program for GPE

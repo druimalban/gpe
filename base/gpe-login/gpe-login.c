@@ -25,9 +25,10 @@
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
 
+#include "errorbox.h"
+
 #define _(x) gettext(x)
 
-#define ERROR_ICON "/usr/share/pixmaps/error.png"
 #define GPE_ICON "/usr/share/pixmaps/gpe-logo.png"
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login-setup"
 #define PASSWORD_FILE "/etc/passwd"
@@ -43,47 +44,6 @@ static pid_t mypid;
 
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
-static GtkWidget *error_icon;
-
-static void
-message_dialog (char *text)
-{
-  GtkWidget *label, *ok, *dialog;
-  GtkWidget *hbox;
-
-  dialog = gtk_dialog_new ();
-  label = gtk_label_new (text);
-  ok = gtk_button_new_with_label (_("OK"));
-  hbox = gtk_hbox_new (FALSE, 4);
-
-  gtk_signal_connect_object (GTK_OBJECT (ok), "clicked",
-			     GTK_SIGNAL_FUNC (gtk_widget_destroy), dialog);
-
-  if (error_icon)
-    gtk_box_pack_start (GTK_BOX (hbox), error_icon, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
-
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
-
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
-
-  gtk_widget_show_all (dialog);
-}
-
-static void
-error (char *text)
-{
-  int err = errno;
-  size_t s;
-  char buf[256];
-  snprintf (buf, sizeof (buf), "%s: ", text);
-  s = strlen (buf);
-  strerror_r (err, buf + s, sizeof (buf) - s - 1);
-  buf[sizeof (buf)] = 0;
-  message_dialog (buf);
-}
 
 static void
 cleanup_children (void)
@@ -205,7 +165,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   pwe = getpwnam (username);
   if (pwe)
     {
-      message_dialog (_("User already exists"));
+      gpe_error_box (_("User already exists"));
 
       gtk_entry_set_text (GTK_ENTRY (entry_username), "");
       gtk_entry_set_text (GTK_ENTRY (entry_password), "");
@@ -216,7 +176,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
 
   if (strcmp (password, confirm))
     {
-      message_dialog (_("Passwords don't match"));
+      gpe_error_box (_("Passwords don't match"));
       gtk_entry_set_text (GTK_ENTRY (entry_password), "");
       gtk_entry_set_text (GTK_ENTRY (entry_confirm), "");
       gtk_widget_grab_focus (entry_password);
@@ -225,7 +185,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
 
   if (password[0] == 0)
     {
-      message_dialog (_("Empty password not allowed"));
+      gpe_error_box (_("Empty password not allowed"));
       gtk_widget_grab_focus (entry_password);
       return;
     }
@@ -256,7 +216,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fp = fopen (PASSWORD_FILE, "a");
   if (fp == NULL)
     {
-      error (PASSWORD_FILE);
+      gpe_perror_box (PASSWORD_FILE);
       exit (1);
     }
   snprintf (buf, sizeof (buf), "%s:%s:%d:%d:%s:%s:%s\n",
@@ -267,7 +227,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fp = fopen (GROUP_FILE, "a");
   if (fp == NULL)
     {
-      error (GROUP_FILE);
+      gpe_perror_box (GROUP_FILE);
       exit (1);
     }
   snprintf (buf, sizeof (buf), "%s:x:%d:\n", username, gid);
@@ -288,8 +248,8 @@ main (int argc, char *argv[])
   GtkWidget *logo = NULL;
   GtkWidget *focus;
 
-  GdkPixmap *gpe_pix, *error_pix;
-  GdkBitmap *gpe_pix_mask, *error_pix_mask;
+  GdkPixmap *gpe_pix;
+  GdkBitmap *gpe_pix_mask;
 
   pid_t cpid;
 
@@ -316,9 +276,6 @@ main (int argc, char *argv[])
 
   if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
     logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
-
-  if (gdk_imlib_load_file_to_pixmap (ERROR_ICON, &error_pix, &error_pix_mask))
-    error_icon = gtk_pixmap_new (error_pix, error_pix_mask);
 
   menu = gtk_menu_new ();
   slurp_passwd (menu);
