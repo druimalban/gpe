@@ -17,6 +17,7 @@
 
 #include "render.h"
 #include "pixmaps.h"
+#include "what.h"
 
 static Display *dpy;
 static Window root;
@@ -27,7 +28,7 @@ static GtkWidget *label;
 
 static gboolean query_on, showing;
 
-GdkFilterReturn
+static GdkFilterReturn
 filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 {
   XEvent *xev = (XEvent *)xevp;

@@ -1,7 +1,8 @@
-2002-06-20  Philip Blundell  <pb@kc.cam.armlinux.org>
+2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* Makefile (MEMBERS): Add what.
 	* what.c: New file.
+	* what.h: Likewise.
 
 2002-06-20  Philip Blundell  <pb@debian.org>
 
