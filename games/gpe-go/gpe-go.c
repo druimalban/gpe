@@ -43,7 +43,8 @@ static struct gpe_icon my_icons[] = {
 //colors
 GdkGC       * gc;
 GdkColormap * colormap;
-GdkColor red = {0, 65535, 0, 0};
+GdkColor red  = {0, 65535, 0,     0};
+GdkColor blue = {0,     0, 0, 65535};
 
 enum page_names{
   PAGE_BOARD = 0,
@@ -112,6 +113,8 @@ typedef struct _go {
 
   GNode * history_root; //root node
   GNode * history;      //current pointer
+  GNode * main_branch;  //ref to the leaf of the main branch
+  GNode * variation_main_branch_node;
 
   gboolean lock_variation_choice;
 
@@ -201,6 +204,15 @@ gboolean delete_hitem(GNode * node, gpointer unused_data){
   return FALSE;
 }
 
+gboolean is_on_main_branch(GNode * node){
+  GNode * n = go.main_branch;
+  while(n != go.history_root){
+    if(n == node) return TRUE;
+    n = n->parent;
+  }
+  return FALSE;
+}
+
 char ** new_table(int size){
   int i,j;
   char ** table;
@@ -266,7 +278,8 @@ void init_new_game(int game_size){
     g_node_destroy (go.history_root);//does it free the hitems?
   }
   go.history_root = g_node_new (NULL);
-  go.history = go.history_root;
+  go.history      = go.history_root;
+  go.main_branch  = go.history_root;
 
   go.white_captures = 0;
   go.black_captures = 0;
@@ -387,7 +400,8 @@ void load_graphics(){
   //--colors
   gc = gdk_gc_new(go.drawing_area->window);
   colormap = gdk_colormap_get_system();
-  gdk_colormap_alloc_color(colormap, &red,  FALSE,TRUE);
+  gdk_colormap_alloc_color(colormap, &red ,  FALSE,TRUE);
+  gdk_colormap_alloc_color(colormap, &blue,  FALSE,TRUE);
 }
 
 void scale_graphics(){
@@ -992,8 +1006,30 @@ void play_at(int gox, int goy){
 void undo_turn(){
   Hitem * hitem;
 
-  if(go.lock_variation_choice) return;
+  if(go.lock_variation_choice){//clear marks
+    int i;
+    int children;
+    GNode * child;
+
+    children = g_node_n_children(go.history);
+    child = g_node_first_child (go.history);
+    //unpaint SPOTS
+    for(i=0; i<children; i++){
+      Hitem * item;
+      child = g_node_nth_child (go.history, i);
+      item = child->data;
+      unpaint_stone(item->posx, item->posy);
+    }
+    clear_stamps();
+    go.lock_variation_choice = FALSE;
+
+    return;
+  }
+
   if(!go.history || go.turn == 0) return;
+
+  //keep a ref to the leaf of the main branch
+  if(G_NODE_IS_LEAF(go.history)) go.main_branch = go.history;
 
   hitem = go.history->data;
 
@@ -1053,6 +1089,7 @@ void redo_turn(){
 
     if(children > 1){//variations
       if(go.lock_variation_choice == FALSE){
+        //--display possible variations, and restrict input to them (lock)
         int i;
         GNode * child;
         TRACE("VARIATIONS: %d", children -1);
@@ -1065,8 +1102,14 @@ void redo_turn(){
           
           stamp(item->posx, item->posy);
           paint_mark(item->posx, item->posy, MARK_SPOT, &red);
+          if(is_on_main_branch(child)){
+            //add extra mark on main branch's move
+            paint_mark(item->posx, item->posy, MARK_SQUARE, &blue);
+            go.variation_main_branch_node = child;
+          }
+
+          //FIXME: need to mark also branches starting by "PASS"
         }
-        
         go.lock_variation_choice = TRUE;
         return;
       }
@@ -1074,17 +1117,27 @@ void redo_turn(){
         int i;
         GNode * child;
 
-        if(!is_stamped(go.col, go.row)) return;
-        //select the child
-        
+        //select the child        
+        if(!is_stamped(go.col, go.row)){
+          //play the one on the main branch
+          choosen_child = go.variation_main_branch_node;
+        }
+        else{
+          for(i=0; i<children; i++){
+            Hitem * item;
+            child = g_node_nth_child (go.history, i);
+            item = child->data;
+            if(item->posx == go.col && item->posy == go.row){
+              choosen_child = child;
+              i = children;
+            }
+          }
+        }
+        //unpaint SPOTS
         for(i=0; i<children; i++){
           Hitem * item;
           child = g_node_nth_child (go.history, i);
           item = child->data;
-          if(item->posx == go.col && item->posy == go.row){
-            choosen_child = child;
-          }
-          //unpaint SPOTS
           unpaint_stone(item->posx, item->posy);
         }
         clear_stamps();
@@ -1615,8 +1668,8 @@ void gui_init(){
   //main page
   vbox = gtk_vbox_new (FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
 
   //
   widget = gtk_notebook_new();
