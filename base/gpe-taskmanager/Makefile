@@ -2,7 +2,7 @@ PACKAGE = gpe-taskmanager
 PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
-VERSION = 0.11
+VERSION = 0.12
 
 LINGUAS = 
 
@@ -35,12 +35,14 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(LDFLAGS)
 
 install: all install-mo
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
-	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-taskmanager
+	install -m 644 xkill.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-taskmanager/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)

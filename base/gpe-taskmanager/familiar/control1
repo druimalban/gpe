@@ -4,5 +4,5 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: xlibs, libgtk2.0-0
-Description: Show list of windows and allow them to be killed
+Depends: xlibs, libgtk2.0-0, libgpewidget1 (>= 0.50)
+Description: Lists windows and kills errant programs

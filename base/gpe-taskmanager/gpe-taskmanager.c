@@ -21,151 +21,59 @@
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 #include <gpe/errorbox.h>
+#include <gpe/windows.h>
+#include <gpe/picturebutton.h>
 
 #define _(_x) gettext (_x)
 
 struct gpe_icon my_icons[] = {
   { "icon", PREFIX "/share/pixmaps/gpe-taskmanager.png" },
+  { "kill", "gpe-taskmanager/xkill.png" },
   { NULL, NULL }
 };
 
 Display *dpy;
 GtkListStore *list_store;
 
-Atom atoms[8];
+Atom atoms[3];
 
 char *atom_names[] = 
   {
-    "_NET_CLIENT_LIST",
-    "UTF8_STRING",
-    "WM_NAME",
-    "_NET_WM_NAME",
     "WM_PROTOCOLS",
     "_NET_WM_PING",
     "WM_DELETE_WINDOW",
-    "_NET_WM_ICON"
   };
 
-#define _NET_CLIENT_LIST 0
-#define UTF8_STRING 1
-#define WM_NAME 2
-#define _NET_WM_NAME 3
-#define WM_PROTOCOLS 4
-#define _NET_WM_PING 5
-#define WM_DELETE_WINDOW 6
-#define _NET_WM_ICON 7
-
-int 
-dummy_error_handler ()
-{
-  return 0;
-}
-
-void *old_error_handler;
+#define WM_PROTOCOLS 0
+#define _NET_WM_PING 1
+#define WM_DELETE_WINDOW 2
 
 void
-ignore_x_errors (void)
-{
-  old_error_handler = XSetErrorHandler (dummy_error_handler);
-}
-
-void
-restore_x_errors (void)
-{
-  XSetErrorHandler (old_error_handler);
-}
-
-gboolean
-get_client_windows (Window **list, guint *nr)
-{
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after = 0;
-  unsigned char *prop = NULL;
-  unsigned long length = 65536;
-  
-  do 
-    {
-      length += bytes_after;
-      
-      if (prop)
-	XFree (prop);
-      
-      if (XGetWindowProperty (dpy, DefaultRootWindow (dpy), atoms[_NET_CLIENT_LIST],
-			      0, length, False, XA_WINDOW, &actual_type, &actual_format,
-			      &nitems, &bytes_after, &prop) != Success)
-	return FALSE;
-    }
-  while (bytes_after);
-
-  *list = (Window *)prop;
-  *nr = (guint)nitems;
-
-  return TRUE;
-}
-
-gchar *
-get_window_name (Window w)
-{
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after;
-  unsigned char *prop = NULL;
-  gchar *name = NULL;
-  int rc;
-
-  ignore_x_errors ();
-
-  rc = XGetWindowProperty (dpy, w, atoms[_NET_WM_NAME],
-			  0, 65536, False, atoms[UTF8_STRING], &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop);
-
-  restore_x_errors ();
-
-  if (rc != Success)
-    return FALSE;
-
-  if (nitems)
-    {
-      name = g_strdup (prop);
-      XFree (prop);
-    }
-  else
-    {
-      if (XGetWindowProperty (dpy, w, atoms[WM_NAME],
-			      0, 65536, False, XA_STRING, &actual_type, &actual_format,
-			      &nitems, &bytes_after, &prop) != Success)
-	return FALSE;
-
-      if (nitems)
-	{
-	  name = g_locale_to_utf8 (prop, -1, NULL, NULL, NULL);
-	  XFree (prop);
-	}
-    }
-
-  return name;
-}
-
-void
-add_window (Window w)
+add_window (Display *dpy, Window w)
 {
   GtkTreeIter iter;
-  gchar *name = get_window_name (w);
+  gchar *name = gpe_get_window_name (dpy, w);
+  GdkPixbuf *icon = gpe_get_window_icon (dpy, w);
 
   gtk_list_store_append (list_store, &iter);
   gtk_list_store_set (list_store, &iter, 0, name, 1, w, -1);
+  if (icon)
+    {
+      GdkPixbuf *icons = gdk_pixbuf_scale_simple (icon, 16, 16, GDK_INTERP_BILINEAR);
+      gdk_pixbuf_unref (icon);
+      gtk_list_store_set (list_store, &iter, 2, icons, -1);      
+    }
 }
 
 void
-update_list (void)
+update_list (Display *dpy)
 {
   Window *list;
   guint nr, i;
   GtkTreeIter iter;
   char *p;
 
-  if (get_client_windows (&list, &nr) == FALSE)
+  if (gpe_get_client_window_list (dpy, &list, &nr) == FALSE)
     exit (1);
 
   p = g_malloc0 (nr);
@@ -206,7 +114,7 @@ update_list (void)
   for (i = 0; i < nr; i++)
     {
       if (p[i] == 0)
-	add_window (list[i]);
+	add_window (dpy, list[i]);
     }
 
   g_free (p);
@@ -221,12 +129,12 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
   if (ev->xany.type == PropertyNotify
       && ev->xproperty.window == DefaultRootWindow (dpy)
       && ev->xproperty.atom == atoms[_NET_CLIENT_LIST])
-    update_list ();
+    update_list (dpy);
 
   return GDK_FILTER_CONTINUE;
 }
 
-void
+gboolean
 send_delete_message (Window w)
 {
   XEvent e;
@@ -238,16 +146,31 @@ send_delete_message (Window w)
   e.xclient.data.l[0] = atoms[WM_DELETE_WINDOW];
   e.xclient.data.l[1] = CurrentTime;
 
+  gdk_error_trap_push ();
+
   XSendEvent (dpy, w, False, NoEventMask, &e);
+  XFlush (dpy);
+
+  if (gdk_error_trap_pop ())
+    return FALSE;
+
+  return TRUE;
 }
 
-void
+gboolean
 kill_window (Window w)
 {
   Atom *protocols;
-  int count;
+  int count, i, rc;
 
-  if (XGetWMProtocols (dpy, w, &protocols, &count))
+  gdk_error_trap_push ();
+
+  rc = XGetWMProtocols (dpy, w, &protocols, &count);
+
+  if (gdk_error_trap_pop ())
+    return FALSE;
+
+  if (rc)
     {
       int i;
       gboolean delete_supported = FALSE;
@@ -261,13 +184,18 @@ kill_window (Window w)
       XFree (protocols);
 
       if (delete_supported)
-	{
-	  send_delete_message (w);
-	  return;
-	}
+	return send_delete_message (w);
     }
 
+  gdk_error_trap_push ();
+
   XKillClient (dpy, w);
+  XFlush (dpy);
+
+  if (gdk_error_trap_pop ())
+    return FALSE;
+
+  return TRUE;
 }
 
 gboolean
@@ -286,7 +214,7 @@ kill_task (GtkWidget *w, GtkWidget *list_view)
       kill_window (w);
     }
   else
-    gpe_error_box (_("No task is selected"));
+    gpe_error_box (_("No program is selected"));
 
   return TRUE;
 }
@@ -301,12 +229,12 @@ task_manager (void)
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
 
-  list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
+  list_store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), FALSE);
 
   renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes (_("Tasks"), renderer,
+  column = gtk_tree_view_column_new_with_attributes (_("Running programs"), renderer,
 						     "text", 0, NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
@@ -315,7 +243,7 @@ task_manager (void)
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled, TRUE, TRUE, 0);
 
-  kill_button = gtk_button_new_with_label (_("Kill task"));
+  kill_button = gpe_picture_button (_("Kill program"), "kill");
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, TRUE, FALSE, 0);
   
@@ -323,13 +251,13 @@ task_manager (void)
 
   XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask);
 
-  update_list ();
+  update_list (dpy);
 
   g_signal_connect (G_OBJECT (kill_button), "clicked", G_CALLBACK (kill_task), list_view);
   g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
   gtk_window_set_default_size (GTK_WINDOW (window), 200, 128);
-  gtk_window_set_title (GTK_WINDOW (window), _("Tasks"));
+  gtk_window_set_title (GTK_WINDOW (window), _("Program manager"));
   gpe_set_window_icon (window, "icon");
 
   gtk_widget_show_all (window);
@@ -348,6 +276,7 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   dpy = GDK_DISPLAY ();
 
