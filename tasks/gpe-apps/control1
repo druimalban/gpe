@@ -3,8 +3,8 @@ Provides: gpe-apps
 Replaces: gpe-apps
 Section: base
 Priority: optional
-Version: 0.28
+Version: 0.29
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-calendar2, gpe-todo2, gpe-login2, gpe-dm, gpe-session-scripts, xkbd, matchbox, gpe-edit2, gpe-soundbite2, keylaunch, esd, detect-stylus, xstroke, dillo2, gpe-soundserver, gpe-bootsplash2, gpe-minicalc2, gpe-terminal, xcalibrate, xfonts-ttf, update-menus, gpe-setbg2, gpe-conf2, gpe-confd, xst, gpe-filemanager2, gpe-collateral-gtk2, gpe-question2, gpe-gallery, figment, gpe-nmf, gpe-contacts2, gpe-timesheet2, gpe-irc, gpe-calculator2, xmonobut, minilite, startup-monitor, minitheme, gpe-what, teleport, gpe-announce2, minibat, gpe-taskmanager, minipredict, gpe-su2
+Depends: gpe-calendar2, gpe-todo2, gpe-login2, gpe-dm, gpe-session-scripts, xkbd, matchbox, gpe-edit2, gpe-soundbite2, keylaunch, esd, detect-stylus, xstroke, dillo2, gpe-soundserver, gpe-bootsplash2, gpe-minicalc2, gpe-terminal, xcalibrate, xfonts-ttf, update-menus, gpe-setbg2, gpe-conf2, gpe-confd, xst, gpe-filemanager2, gpe-collateral-gtk2, gpe-question2, gpe-gallery, figment, gpe-nmf, gpe-contacts2, gpe-timesheet2, gpe-irc, gpe-calculator2, xmonobut, minilite, startup-monitor, minitheme, gpe-what, teleport, gpe-announce2, minibat, gpe-taskmanager, minipredict, gpe-su2, gpe-ownerinfo2
 Description: Task package for GPE applications
