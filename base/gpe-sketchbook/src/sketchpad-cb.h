@@ -22,6 +22,7 @@
 
 /* general */
 void on_window_sketchpad_destroy   (GtkObject *object, gpointer user_data);
+void on_window_size_allocate       (GtkWidget *widget, GtkAllocation *a, gpointer data);
 void on_button_list_view_clicked   (GtkButton *button, gpointer user_data);
 
 /* files toolbar*/

@@ -22,6 +22,7 @@
 #include "sketchpad-gui.h"
 #include "sketchpad-cb.h"
 
+#include "dock.h"
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
@@ -32,6 +33,7 @@
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height);
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window);
 GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window);
+void        sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window);
 
 /**
  * Builds a top level window, integrating:
@@ -42,13 +44,11 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window);
  **/
 GtkWidget * sketchpad_build_window(){
   GtkWidget * window_sketchpad;
+  GpeDock   * dock;
 
   GtkWidget * scrollable_drawing_area;
   GtkWidget * drawing_toolbar;
-  GtkWidget * files_toolbar;
-
-  GtkWidget * vbox;
-  GtkWidget * hbox_toolbar;
+  //GtkWidget * files_toolbar; temporarily disabled (all buttons in drawing_toolbar)
 
   //--building
   window_sketchpad = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -56,29 +56,26 @@ GtkWidget * sketchpad_build_window(){
   gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);
 #endif
   gtk_signal_connect (GTK_OBJECT (window_sketchpad), "destroy",
-                      GTK_SIGNAL_FUNC (on_window_sketchpad_destroy),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_window_sketchpad_destroy), NULL);
+
+  dock = gpe_dock_new();
+	gtk_signal_connect (GTK_OBJECT(window_sketchpad), "size-allocate",
+                      GTK_SIGNAL_FUNC (on_window_size_allocate),
+                      dock);
 
   drawing_toolbar         = sketchpad_build_drawing_toolbar(window_sketchpad);
-  files_toolbar           = sketchpad_build_files_toolbar(window_sketchpad);
+  //files_toolbar           = sketchpad_build_files_toolbar(window_sketchpad);
   scrollable_drawing_area = sketchpad_build_scrollable_drawing_area(drawing_area_width,
                                                                     drawing_area_height);
 
-  //--packing
-  hbox_toolbar = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_toolbar), files_toolbar,        FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_toolbar), gtk_vseparator_new(), FALSE, FALSE, 2);
-  gtk_box_pack_end   (GTK_BOX (hbox_toolbar), drawing_toolbar,      FALSE, FALSE, 0);
+  gpe_dock_add_app_content(dock, scrollable_drawing_area);
+  gpe_dock_add_toolbar    (dock, (GtkToolbar*)drawing_toolbar, GTK_ORIENTATION_HORIZONTAL);
 
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox_toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrollable_drawing_area, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (window_sketchpad), gpe_dock(dock));
 
-  gtk_container_add (GTK_CONTAINER (window_sketchpad), vbox);
-
-  gtk_widget_show_all(vbox);
+  gtk_widget_show_all(gpe_dock(dock));
   return window_sketchpad;
-}//create_window_sketchpad()
+}//sketchpad_build_window()
 
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
   GtkWidget *scrolledwindow;
@@ -93,8 +90,8 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
   //--drawing area
   drawing_area = gtk_drawing_area_new ();
   gtk_widget_set_usize (drawing_area, width, height);
-  gtk_widget_set_events (drawing_area,
-                         GDK_EXPOSURE_MASK
+  gtk_widget_set_events (drawing_area, 0
+                         | GDK_EXPOSURE_MASK
                          | GDK_POINTER_MOTION_MASK
                          | GDK_POINTER_MOTION_HINT_MASK
                          | GDK_BUTTON_PRESS_MASK
@@ -160,6 +157,9 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_toolbar_set_space_style   (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
   //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
 
+  /**///NOTE: use temporarily a single toolbar, until the dock may host several
+  /**/sketchpad_fill_files_toolbar (toolbar, window);//filetools
+  /**/gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
 #define TOSTRINGBASE(s) #s
 #define TOSTRING(s) TOSTRINGBASE(s)
@@ -346,13 +346,19 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   //file toolbar
   GtkWidget * toolbar;
 
-  GdkPixbuf *pixbuf;
-  GtkWidget *pixmap;
-
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style   (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
   //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
+
+  sketchpad_fill_files_toolbar(toolbar, window);
+
+  return toolbar;
+}//sketchpad_build_files_toolbar()
+
+void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
+  GdkPixbuf *pixbuf;
+  GtkWidget *pixmap;
 
   pixbuf = gpe_find_icon ("new");
   pixmap = gpe_render_icon (window->style, pixbuf);
@@ -388,5 +394,4 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
                            NULL, NULL,
                            pixmap, on_button_list_view_clicked, NULL);
 
-  return toolbar;
-}//sketchpad_build_files_toolbar()
+}

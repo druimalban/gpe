@@ -7,6 +7,7 @@ PREFIX  = /usr/local
 LINGUAS = fr
 MEMBERS = \
 	gpe-sketchbook       \
+	dock                 \
 	dialog               \
 	selector	     \
 	selector-cb	     \

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-09-06 22:59+0300\n"
+"POT-Creation-Date: 2002-09-07 19:36+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,16 +32,16 @@ msgstr ""
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:106
+#: src/selector-cb.c:64 src/sketchpad-cb.c:122
 msgid "Delete sketch?"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:54 src/sketchpad-cb.c:93
-#: src/sketchpad-cb.c:106
+#: src/selector-cb.c:64 src/sketchpad-cb.c:70 src/sketchpad-cb.c:109
+#: src/sketchpad-cb.c:122
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:106
+#: src/selector-cb.c:64 src/sketchpad-cb.c:122
 msgid "Delete"
 msgstr ""
 
@@ -62,21 +62,21 @@ msgid ""
 "Distributed under GPL"
 msgstr ""
 
-#: src/sketchpad-cb.c:43
+#: src/sketchpad-cb.c:44
 msgid ""
 "Sketch modified;\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:44
+#: src/sketchpad-cb.c:45
 msgid "Exit"
 msgstr ""
 
-#: src/sketchpad-cb.c:44 src/sketchpad-cb.c:54 src/sketchpad-cb.c:93
+#: src/sketchpad-cb.c:45 src/sketchpad-cb.c:70 src/sketchpad-cb.c:109
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:54 src/sketchpad-cb.c:93
+#: src/sketchpad-cb.c:70 src/sketchpad-cb.c:109
 msgid "Save last sketch?"
 msgstr ""
 

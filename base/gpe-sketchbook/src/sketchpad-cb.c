@@ -26,6 +26,7 @@
 #include "selector.h"
 #include "selector-cb.h"
 
+#include "dock.h"
 #include "dialog.h"
 #include "gpe/question.h"
 #include "gpe/gtkgpepixmap.h"
@@ -46,6 +47,21 @@ void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
     }
   }
   app_quit();
+}
+
+void on_window_size_allocate (GtkWidget     * widget,
+                              GtkAllocation * allocation,
+                              gpointer        dock){
+  /**/g_printerr("Window size allocated: (%d,%d) (%d,%d)\n",
+  /**/           allocation->x, allocation->y,
+  /**/           allocation->width, allocation->height);
+
+  if(dock == NULL) return;
+
+  if(allocation->width > 240)//FIXME: that's very ugly way to detect LANDSCAPE mode!
+    gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_VERTICAL);
+  else//Portrait mode
+    gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_HORIZONTAL); 
 }
 
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){

@@ -71,7 +71,10 @@ x: $(PACKAGE)
 
 clean:
 	rm -f *~
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) #$(ARM_BIN)
+	rm -f $(OBJS) $(DEPS)
+
+realclean: clean
+	rm -f $(PACKAGE) #$(ARM_BIN)
 
 -include $(DEPS)
 
