@@ -1,5 +1,7 @@
 2004-09-25  Colin Marquardt  <colin@marquardt-home.de>
 
+	* includes/head.php: Link new logo.
+
 	* contact.phtml, cvs.phtml, linkres.phtml: Fix links to wiki.
 
 	* contact.phtml: Add new hackers. Yay! :)
