@@ -96,10 +96,10 @@ typedef struct {
   gint orig_height;
   gint width;
   gint height;
-  gint file_size;
-  time_t file_modified;
-  gchar *file_name;
-} ImageInfo;
+  PangoLayout *pango_title_layout, *pango_dimensions_layout, *pango_size_layout, *pango_modified_layout;
+  PangoRectangle pango_title_rect, pango_dimensions_rect, pango_size_rect, pango_modified_rect;
+  gint total_height;
+} ListItem;
 
 guint window_x = 240, window_y = 310;
 
@@ -397,9 +397,7 @@ hide_image ()
 static gboolean
 render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, GList *loaded_images)
 {
-  ImageInfo *image_info;
-  PangoLayout *pango_title_layout, *pango_dimensions_layout, *pango_size_layout, *pango_modified_layout;
-  PangoRectangle pango_title_rect, pango_dimensions_rect, pango_size_rect, pango_modified_rect;
+  ListItem *list_item;
   GList *this_item;
   gchar *buf;
   gint y = 0, text_y = 0;
@@ -410,46 +408,26 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 
   while (this_item)
   {
-    image_info = (ImageInfo *) this_item->data;
+    list_item = (ListItem *) this_item->data;
 
-    pango_title_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
-    pango_layout_set_width (pango_title_layout, -1);
-    buf = g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>", basename (image_info->file_name));
-    pango_layout_set_markup (pango_title_layout, buf, -1);
-    g_free (buf);
-    pango_layout_get_pixel_extents (pango_title_layout, &pango_title_rect, NULL);
+    if (((GdkRectangle) event->area).y >= y + MARGIN_Y && ((GdkRectangle) event->area).y <= y + MARGIN_Y + list_item->height)
+      gdk_pixbuf_render_to_drawable (list_item->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, MARGIN_X, y + MARGIN_Y, list_item->width, list_item->height, GDK_RGB_DITHER_NORMAL, MARGIN_X, y + MARGIN_Y);
 
-    pango_dimensions_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
-    pango_layout_set_width (pango_dimensions_layout, -1);
-    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>", image_info->orig_width, image_info->orig_height);
-    pango_layout_set_markup (pango_dimensions_layout, buf, -1);
-    g_free (buf);
-    pango_layout_get_pixel_extents (pango_dimensions_layout, &pango_dimensions_rect, NULL);
+    if (gdk_rectangle_intersect (&event->area, &list_item->pango_title_rect, NULL) == TRUE)
+      gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y, list_item->pango_title_layout);
+    text_y = list_item->pango_title_rect.height + MARGIN_Y;
 
-    pango_size_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
-    pango_layout_set_width (pango_size_layout, -1);
-    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>", image_info->file_size);
-    pango_layout_set_markup (pango_size_layout, buf, -1);
-    g_free (buf);
-    pango_layout_get_pixel_extents (pango_size_layout, &pango_size_rect, NULL);
+    if (gdk_rectangle_intersect (&event->area, &list_item->pango_dimensions_rect, NULL) == TRUE)
+    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, list_item->pango_dimensions_layout);
+    text_y = text_y + list_item->pango_dimensions_rect.height + MARGIN_Y;
 
-    pango_modified_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
-    pango_layout_set_width (pango_modified_layout, -1);
-    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", ctime (&image_info->file_modified));
-    pango_layout_set_markup (pango_modified_layout, buf, -1);
-    g_free (buf);
-    pango_layout_get_pixel_extents (pango_modified_layout, &pango_modified_rect, NULL);
+    if (gdk_rectangle_intersect (&event->area, &list_item->pango_size_rect, NULL) == TRUE)
+    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, list_item->pango_size_layout);
+    text_y = text_y + list_item->pango_size_rect.height + MARGIN_Y;
 
-    gdk_pixbuf_render_to_drawable (image_info->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, MARGIN_X, y + MARGIN_Y, image_info->width, image_info->height, GDK_RGB_DITHER_NORMAL, MARGIN_X, y + MARGIN_Y);
-
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y, pango_title_layout);
-    text_y = pango_title_rect.height + MARGIN_Y;
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, pango_dimensions_layout);
-    text_y = text_y + pango_dimensions_rect.height + MARGIN_Y;
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, pango_size_layout);
-    text_y = text_y + pango_size_rect.height + MARGIN_Y;
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, pango_modified_layout);
-    text_y = text_y + pango_modified_rect.height;
+    if (gdk_rectangle_intersect (&event->area, &list_item->pango_modified_rect, NULL) == TRUE)
+    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, list_item->pango_modified_layout);
+    text_y = text_y + list_item->pango_modified_rect.height;
 
     if (text_y >= MAX_ICON_SIZE)
       y = y + text_y;
@@ -462,11 +440,6 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 
     y = y + 1;
 
-    g_object_unref (pango_title_layout);
-    g_object_unref (pango_dimensions_layout);
-    g_object_unref (pango_size_layout);
-    g_object_unref (pango_modified_layout);
-
     this_item = this_item->next;
   }
   return TRUE;
@@ -475,16 +448,15 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 static void
 render_list_view_free (GtkObject *object, GList *loaded_images)
 {
-  ImageInfo *image_info;
+  ListItem *list_item;
   GList *this_item;
 
   this_item = loaded_images;
   while (this_item)
   {
-    image_info = (ImageInfo *) this_item->data;
-    g_object_unref (image_info->pixbuf);
-    g_free (image_info->file_name);
-    g_free (image_info);
+    list_item = (ListItem *) this_item->data;
+    g_object_unref (list_item->pixbuf);
+    g_free (list_item);
 
     this_item = this_item->next;
   }
@@ -498,54 +470,96 @@ render_list_view ()
   GtkWidget *scrolled_window, *drawing_area;
   GtkRequisition scrolled_window_requisition;
   GdkPixbuf *pixbuf;
-  ImageInfo *image_info;
+  ListItem *list_item;
   GList *loaded_images = NULL;
   GList *this_item;
   gint num_items = g_list_length (image_filenames);
+  gchar *file_name, *buf;
+  gint file_size;
+  time_t file_modified;
   struct stat file_stats;
+
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  gtk_widget_size_request (scrolled_window, &scrolled_window_requisition);
+
+  drawing_area = gtk_drawing_area_new ();
+  gtk_widget_set_size_request (GTK_WIDGET (drawing_area), scrolled_window_requisition.width, num_items * (MAX_ICON_SIZE + (MARGIN_Y * 2) + 1));
+
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), drawing_area);
+  gtk_widget_show_all (scrolled_window);
 
   this_item = image_filenames;
   while (this_item)
   {
-    image_info = g_malloc (sizeof (*image_info));
-    image_info->file_name = g_strdup ((gchar *) this_item->data);
-    image_info->pixbuf = gdk_pixbuf_new_from_file (image_info->file_name, NULL);
-    image_info->orig_width = gdk_pixbuf_get_width (image_info->pixbuf);
-    image_info->orig_height = gdk_pixbuf_get_height (image_info->pixbuf);
-    image_info->width = gdk_pixbuf_get_width (image_info->pixbuf);
-    image_info->height = gdk_pixbuf_get_height (image_info->pixbuf);
+    list_item = g_malloc (sizeof (*list_item));
+    file_name = (gchar *) this_item->data;
+    list_item->pixbuf = gdk_pixbuf_new_from_file (file_name, NULL);
+    list_item->orig_width = gdk_pixbuf_get_width (list_item->pixbuf);
+    list_item->orig_height = gdk_pixbuf_get_height (list_item->pixbuf);
+    list_item->width = gdk_pixbuf_get_width (list_item->pixbuf);
+    list_item->height = gdk_pixbuf_get_height (list_item->pixbuf);
 
-    stat (image_info->file_name, &file_stats);
-    image_info->file_size = file_stats.st_size / 1024;
-    image_info->file_modified = file_stats.st_mtime;
+    stat (file_name, &file_stats);
+    file_size = file_stats.st_size / 1024;
+    file_modified = file_stats.st_mtime;
 
-    if (image_info->pixbuf)
+    if (list_item->pixbuf)
     {
-      if (image_info->width > MAX_ICON_SIZE || image_info->height > MAX_ICON_SIZE)
+      if (list_item->width > MAX_ICON_SIZE || list_item->height > MAX_ICON_SIZE)
       {
-	if (image_info->width > image_info->height)
+	if (list_item->width > list_item->height)
 	{
-	  image_info->height = image_info->height / (image_info->width / MAX_ICON_SIZE);
-	  image_info->width = MAX_ICON_SIZE;
+	  list_item->height = list_item->height / (list_item->width / MAX_ICON_SIZE);
+	  list_item->width = MAX_ICON_SIZE;
 	}
-        else if (image_info->height > image_info->width)
+        else if (list_item->height > list_item->width)
         {
-	  image_info->width = image_info->width / (image_info->height / MAX_ICON_SIZE);
-	  image_info->height = MAX_ICON_SIZE;
+	  list_item->width = list_item->width / (list_item->height / MAX_ICON_SIZE);
+	  list_item->height = MAX_ICON_SIZE;
 	}
         else
 	{
-	  image_info->width = MAX_ICON_SIZE;
-	  image_info->height = MAX_ICON_SIZE;
+	  list_item->width = MAX_ICON_SIZE;
+	  list_item->height = MAX_ICON_SIZE;
 	}
 
-	pixbuf = gdk_pixbuf_scale_simple (image_info->pixbuf, image_info->width, image_info->height, GDK_INTERP_HYPER);
-	g_object_unref (image_info->pixbuf);
-	image_info->pixbuf = pixbuf;
+	pixbuf = gdk_pixbuf_scale_simple (list_item->pixbuf, list_item->width, list_item->height, GDK_INTERP_HYPER);
+	g_object_unref (list_item->pixbuf);
+	list_item->pixbuf = pixbuf;
       }
-
-      loaded_images = g_list_append (loaded_images, image_info);
     }
+
+    list_item->pango_title_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
+    pango_layout_set_width (list_item->pango_title_layout, -1);
+    buf = g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>", basename (file_name));
+    pango_layout_set_markup (list_item->pango_title_layout, buf, -1);
+    g_free (buf);
+    pango_layout_get_pixel_extents (list_item->pango_title_layout, &list_item->pango_title_rect, NULL);
+
+    list_item->pango_dimensions_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
+    pango_layout_set_width (list_item->pango_dimensions_layout, -1);
+    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>", list_item->orig_width, list_item->orig_height);
+    pango_layout_set_markup (list_item->pango_dimensions_layout, buf, -1);
+    g_free (buf);
+    pango_layout_get_pixel_extents (list_item->pango_dimensions_layout, &list_item->pango_dimensions_rect, NULL);
+
+    list_item->pango_size_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
+    pango_layout_set_width (list_item->pango_size_layout, -1);
+    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>", file_size);
+    pango_layout_set_markup (list_item->pango_size_layout, buf, -1);
+    g_free (buf);
+    pango_layout_get_pixel_extents (list_item->pango_size_layout, &list_item->pango_size_rect, NULL);
+
+    list_item->pango_modified_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
+    pango_layout_set_width (list_item->pango_modified_layout, -1);
+    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", ctime (&file_modified));
+    pango_layout_set_markup (list_item->pango_modified_layout, buf, -1);
+    g_free (buf);
+    pango_layout_get_pixel_extents (list_item->pango_modified_layout, &list_item->pango_modified_rect, NULL);
+
+    loaded_images = g_list_append (loaded_images, list_item);
 
     this_item = this_item->next;
 
@@ -555,20 +569,10 @@ render_list_view ()
       gtk_main_iteration ();
   }
 
-  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-  gtk_widget_size_request (scrolled_window, &scrolled_window_requisition);
-
-  drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_size_request (GTK_WIDGET (drawing_area), scrolled_window_requisition.width, num_items * (MAX_ICON_SIZE + (MARGIN_Y * 2) + 1));
   g_signal_connect (G_OBJECT (drawing_area), "expose_event", 
                     G_CALLBACK (render_list_view_expose_event), loaded_images);
   g_signal_connect (G_OBJECT (scrolled_window), "destroy",
                     G_CALLBACK (render_list_view_free), loaded_images);
-
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), drawing_area);
-  gtk_widget_show_all (scrolled_window);
 
   return scrolled_window;
 }
