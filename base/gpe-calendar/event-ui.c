@@ -264,12 +264,11 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       end_t = mktime (&tm_end);
 
       /* If DST was in effect, mktime will have "helpfully" incremented the
-	 hour.  Knock it back and run the conversion again so it comes out
-	 right.  */
+         hour.  */
       if (tm_start.tm_isdst)
 	{
-	  tm_start.tm_hour --;
-	  start_t = mktime (&tm_start);
+	  start_t -= 60*60;
+	  end_t -= 60*60;
 	}
 
       g_free (end);
