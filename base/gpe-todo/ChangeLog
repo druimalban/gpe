@@ -1,3 +1,10 @@
+2002-10-03  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-todo.png: New icon from
+	http://art.gnome.org/show_icons.php?type=other&page=14.
+        The old one really looked out of place.
+
+
 2002-09-30  Philip Blundell  <philb@gnu.org>
 
 	* familiar/control (Depends): Demand gpe-icons 0.15 or later.
