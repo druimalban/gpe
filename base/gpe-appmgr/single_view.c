@@ -80,6 +80,10 @@ create_view (GList *all_items)
 
   view = gpe_icon_list_view_new ();
 
+  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view), 32);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view), 24);
+  gpe_icon_list_view_set_border_width (GPE_ICON_LIST_VIEW (view), 8);
+
   this_item = all_items;
   while (this_item)
     {
