@@ -210,7 +210,11 @@ void
 on_DeleteList_clicked                  (GtkButton       *button,
                                         gpointer         user_data)
 {
-
+/*
+	fprintf(stderr,"ListPos = %d\n",ListPos);
+*/
+	free(gtk_clist_get_row_data(FileList, ListPos));
+	gtk_clist_remove(FileList, ListPos);
 }
 
 
@@ -388,5 +392,14 @@ on_shuffle1_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
 
+}
+
+
+void
+on_FileList_click_column               (GtkCList        *clist,
+                                        gint             column,
+                                        gpointer         user_data)
+{
+	fprintf(stderr,"COLUMN CLICKED\n");
 }
 

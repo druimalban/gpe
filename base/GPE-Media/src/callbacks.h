@@ -92,3 +92,8 @@ on_repeat_all1_activate                (GtkMenuItem     *menuitem,
 void
 on_shuffle1_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
+
+void
+on_FileList_click_column               (GtkCList        *clist,
+                                        gint             column,
+                                        gpointer         user_data);

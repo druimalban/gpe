@@ -10,6 +10,7 @@
   <language>C</language>
   <gnome_support>False</gnome_support>
   <gettext_support>True</gettext_support>
+  <use_widget_names>True</use_widget_names>
 </project>
 
 <widget>
@@ -336,6 +337,11 @@
 	  <handler>on_FileList_select_row</handler>
 	  <last_modification_time>Fri, 01 Feb 2002 22:35:28 GMT</last_modification_time>
 	</signal>
+	<signal>
+	  <name>click_column</name>
+	  <handler>on_FileList_click_column</handler>
+	  <last_modification_time>Mon, 15 Apr 2002 23:23:23 GMT</last_modification_time>
+	</signal>
 	<columns>3</columns>
 	<column_widths>16,148,40</column_widths>
 	<selection_mode>GTK_SELECTION_SINGLE</selection_mode>
@@ -534,6 +540,7 @@
 <widget>
   <class>GtkFileSelection</class>
   <name>fileselection</name>
+  <border_width>10</border_width>
   <title>Select File</title>
   <type>GTK_WINDOW_TOPLEVEL</type>
   <position>GTK_WIN_POS_NONE</position>

@@ -42,6 +42,8 @@ main (int argc, char *argv[])
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
 
+  gtk_rc_parse("/usr/share/gpe-media/gpe-media.gtkrc");
+
   /*
    * The following code was added by Glade to create one of each component
    * (except popup menus), just so that you see something after building
