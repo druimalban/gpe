@@ -1,1 +1,8 @@
-?package(gpe-edit): needs=x11 title="Text Editor" command=gpe-edit icon48=gpe-edit.png section=Applications windowtitle=gpe-edit
+?package(gpe-edit): \
+ needs=x11 \
+ title="Text Editor" \
+ logtitle="Text Editor" \
+ command=gpe-edit \
+ icon48=/usr/share/pixmaps/gpe-edit.png \
+ section=PIM \
+ windowtitle=gpe-edit
