@@ -7,15 +7,14 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef GPE_VCARD_H
-#define GPE_VCARD_H
+#ifndef GPE_VEVENT_H
+#define GPE_VEVENT_H
 
 #include <glib.h>
-#include <mimedir/mimedir-vcard.h>
+#include <mimedir/mimedir-vevent.h>
 
 #include <gpe/tag-db.h>
 
-extern MIMEDirVCard *vcard_from_tags (GSList *tags);
-extern GSList *vcard_to_tags (MIMEDirVCard *vcard);
+extern MIMEDirVEvent *vevent_from_tags (GSList *tags);
 
 #endif

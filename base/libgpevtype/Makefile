@@ -6,7 +6,7 @@ VERSION = 0.1
 
 LINGUAS = 
 
-MEMBERS = tag-db vcard vtodo
+MEMBERS = tag-db vcard vtodo vevent
 
 SONAME = $(PACKAGE).so.0
 
