@@ -54,6 +54,8 @@ new_todo_item(GtkWidget *w, gpointer user_data)
       GtkWidget *todo = edit_todo (curr_list, NULL);
       gtk_widget_show_all (todo);
     }
+  else
+    gpe_error_box (_("No list is selected"));
 }
 
 static void
@@ -131,6 +133,9 @@ new_list_box (GtkWidget *w, gpointer data)
   GtkWidget *label = gtk_label_new ("Name:");
   GtkWidget *name = gtk_entry_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  guint x, y;
+  guint screen_width, screen_height;
+  GtkRequisition requisition;
 
   ok = gpe_picture_button (window->style, _("OK"), "ok");
   cancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
@@ -165,6 +170,17 @@ new_list_box (GtkWidget *w, gpointer data)
   gtk_window_set_title (GTK_WINDOW (window), _("New list"));
 
   gtk_container_add (GTK_CONTAINER (window), vbox);
+
+  gtk_widget_realize (window);
+  gtk_widget_size_request (window, &requisition);  
+  gdk_window_get_pointer (NULL, &x, &y, NULL);
+  screen_width = gdk_screen_width ();
+  screen_height = gdk_screen_height ();
+
+  x = CLAMP (x - (requisition.width / 2), 0, MAX (0, screen_width - requisition.width));
+  y = CLAMP (y - 24, 0, MAX (0, screen_height - requisition.height));
+  gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
+
   gtk_widget_show (window);
   gtk_widget_grab_focus (name);
 }
@@ -184,6 +200,9 @@ configure(GtkWidget *w, gpointer list)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *clist = gtk_clist_new (1);
   GtkWidget *pw;
+  GtkWidget *frame = gtk_frame_new (_("Categories"));
+  GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
+  GtkWidget *okbutton;
   GSList *l;
 
   for (l = lists; l; l = l->next)
@@ -201,6 +220,10 @@ configure(GtkWidget *w, gpointer list)
 
   gtk_widget_realize (window);
 
+  okbutton = gpe_picture_button (window->style, _("OK"), "ok");
+
+  gtk_signal_connect (GTK_OBJECT (okbutton), "clicked", close_configure, window);
+
   pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("New"), 
@@ -215,13 +238,6 @@ configure(GtkWidget *w, gpointer list)
 			   _("Delete the selected list"),
 			   pw, ui_del_list, clist);
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("cancel"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Close"),
-			   _("Close this window"), 
-			   _("Close this window"),
-			   pw, close_configure, window);
-
   gtk_widget_show (toolbar);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
 
@@ -229,7 +245,12 @@ configure(GtkWidget *w, gpointer list)
   gtk_box_pack_start (GTK_BOX (vbox), clist, TRUE, TRUE, 0);
 
   gtk_widget_show (vbox);
-  gtk_container_add (GTK_CONTAINER (window), vbox);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  gtk_widget_show (frame);
+  gtk_box_pack_start (GTK_BOX (vboxtop), frame, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxtop), okbutton, FALSE, FALSE, 0);
+  gtk_widget_show (vboxtop);
+  gtk_container_add (GTK_CONTAINER (window), vboxtop);
   
   gtk_widget_set_usize (window, 240, 320);
 
@@ -239,26 +260,28 @@ configure(GtkWidget *w, gpointer list)
 static void
 purge_completed(GtkWidget *w, gpointer list)
 {
-  GList *iter = curr_list->items;
-  
-  while (iter)
+  if (curr_list)
     {
-      struct todo_item *i = iter->data;
-      GList *new_iter = iter->next;
-      if (i->state == COMPLETED)
-	delete_item (curr_list, i);
-
-      iter = new_iter;
+      GList *iter = curr_list->items;
+  
+      while (iter)
+	{
+	  struct todo_item *i = iter->data;
+	  GList *new_iter = iter->next;
+	  if (i->state == COMPLETED)
+	    delete_item (curr_list, i);
+	  
+	  iter = new_iter;
+	}
+      
+      gtk_widget_draw (g_draw, NULL);
     }
-
-  gtk_widget_draw (g_draw, NULL);
 }
 
 static void
 show_hide_completed(GtkWidget *w, gpointer list)
 {
-  if (hide) hide=0;
-  else hide=1;
+  hide = ! hide;
   gtk_widget_draw (g_draw, NULL);
 }
 

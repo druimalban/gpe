@@ -1,3 +1,10 @@
+2002-07-11  Philip Blundell  <philb@gnu.org>
+
+	* list-ui.c (new_todo_item): Display error if curr_list is NULL.
+	(purge_completed): Avoid segfault when no lists defined.
+	(configure): Tweak UI.
+	(new_list_box): Try to position dialog near pointer.
+
 2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-todo.menu: Give full path to icon. Move to section PIM (to
