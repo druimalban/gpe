@@ -29,6 +29,8 @@ static const char *fname = "/.gpe/mime-types";
 
 GSList *mime_types;
 
+gint rows = 0;
+
 static struct mime_type *
 new_mime_type_internal (int id, const char *mime_name, const char *description, const char *extension, const char *icon)
 {
@@ -81,6 +83,7 @@ mime_type_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 5 && argv[0] && argv[1])
     new_mime_type_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]), g_strdup (argv[3]), g_strdup (argv[4]));
+  rows++;
   return 0;
 }
 
@@ -148,7 +151,8 @@ sql_start (void)
       return -1;
     }
 
-  add_mime_types ();
+  if (rows == 0)
+    add_mime_types ();
 
   return 0;
 }

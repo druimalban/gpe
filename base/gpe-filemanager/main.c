@@ -297,6 +297,14 @@ ask_open_with (char *exec)
     }
   }
 
+  if (row_num == 0)
+  {
+    gtk_widget_destroy (entry);
+    gtk_widget_destroy (clist);
+    gtk_widget_destroy (open_button);
+    gtk_label_set_text (GTK_LABEL (label), "No avalible applications.");
+  }
+
   gtk_widget_show_all (window);	
 }
 

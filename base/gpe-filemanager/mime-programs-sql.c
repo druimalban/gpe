@@ -83,18 +83,6 @@ mime_program_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-/* --- */
-
-static void
-add_mime_programs (void)
-{
-  struct mime_program *e = g_malloc (sizeof (struct mime_program));
-
-  e = new_mime_program ("Editor", "", "gpe-edit");
-  e = new_mime_program ("Web Browser", "text/html", "dillo");
-  e = new_mime_program ("Image Gallery", "image/*", "gpe-gallery");
-}
-
 int
 programs_sql_start (void)
 {
@@ -129,8 +117,6 @@ programs_sql_start (void)
       free (err);
       return -1;
     }
-
-  add_mime_programs ();
 
   return 0;
 }
