@@ -137,7 +137,7 @@ save_config (char *config, int socket)
 		  st[socket].card.str + 3);
 	
 	/* determine config file type */
-	if (strstr(config,"prism2_cs"))
+	if (!access(wlan_ng_cfgfile,F_OK) && strstr(config,"prism2_cs"))
 	{
 		use_wlan_ng = TRUE;
 		cfgfile = wlan_ng_cfgfile;
@@ -262,74 +262,78 @@ writefile:
 		suid_exec ("CMCP", "0");
 	usleep(400000);
 
-	/* search other files, eliminate all entries for same id */
-	if (use_wlan_ng)
-		cfgfile = pcmcia_cfgfile;
-	else
-		cfgfile = wlan_ng_cfgfile;
-	
-	if (!g_file_get_contents (cfgfile, &content, &length, &err))
+	/* do we have wlan-ng at all? */
+	if (!access(wlan_ng_cfgfile,F_OK)) 
 	{
-		fprintf (stderr, "Could not access file: %s.\n",
-			 cfgfile);
-	}
-	lines = g_strsplit (content, "\n", 4096);
-	g_free (content);
-	
-	/* clean strings for easier identification */
-	for (i=0;i<4;i++)
-	{
-		delim = cfg[i];
-		cfg[i]=g_strchomp(cfg[i]);
-	}
-	
-	i = 1;
-	while (lines[i])
-	{
-		if (g_str_has_prefix (g_strchomp (lines[i]), "card") && lines[i+1] && lines[i+2] &&
-			(strstr(lines[i+1],cfg[1]) || strstr(lines[i+2],cfg[1]) || strstr(lines[i+1],cfg[2]) || strstr(lines[i+2],cfg[2])))
-		{
-			changes = TRUE;
-			for (j=0;j<3;j++)
-			{
-				delim = lines[i+j];
-				lines[i+j] = g_strdup_printf ("# %s", delim);
-				free (delim);
-			}
-			i+=2;
-			if (lines[i+1] && strlen(lines[i+1]))
-			{
-				delim = lines[i+1];
-				lines[i+1] = g_strdup_printf ("# %s", delim);
-				free (delim);
-			}
-		}
-		i++;
-	}
-	
-	if (changes)
-	{
-		fnew = fopen (pcmcia_tmpcfgfile, "w");
-		if (!fnew)
-		{
-			gpe_error_box (_("Could not write to temporal config file."));
-			return;
-		}
-
-		for (j = 0; j < i; j++)
-		{
-			fprintf (fnew, "%s\n", lines[j]);
-		}
-		fclose (fnew);
-		
-		/* copy new file */
+		/* search other files, eliminate all entries for same id */
 		if (use_wlan_ng)
-			suid_exec ("CMCP", "0");
+			cfgfile = pcmcia_cfgfile;
 		else
-			suid_exec ("CMCP", "1");
-		usleep(400000);
+			cfgfile = wlan_ng_cfgfile;
+		
+		if (!g_file_get_contents (cfgfile, &content, &length, &err))
+		{
+			fprintf (stderr, "Could not access file: %s.\n",
+				 cfgfile);
+		}
+		lines = g_strsplit (content, "\n", 4096);
+		g_free (content);
+		
+		/* clean strings for easier identification */
+		for (i=0;i<4;i++)
+		{
+			delim = cfg[i];
+			cfg[i]=g_strchomp(cfg[i]);
+		}
+		
+		i = 1;
+		while (lines[i])
+		{
+			if (g_str_has_prefix (g_strchomp (lines[i]), "card") && lines[i+1] && lines[i+2] &&
+				(strstr(lines[i+1],cfg[1]) || strstr(lines[i+2],cfg[1]) || strstr(lines[i+1],cfg[2]) || strstr(lines[i+2],cfg[2])))
+			{
+				changes = TRUE;
+				for (j=0;j<3;j++)
+				{
+					delim = lines[i+j];
+					lines[i+j] = g_strdup_printf ("# %s", delim);
+					free (delim);
+				}
+				i+=2;
+				if (lines[i+1] && strlen(lines[i+1]))
+				{
+					delim = lines[i+1];
+					lines[i+1] = g_strdup_printf ("# %s", delim);
+					free (delim);
+				}
+			}
+			i++;
+		}
+		
+		if (changes)
+		{
+			fnew = fopen (pcmcia_tmpcfgfile, "w");
+			if (!fnew)
+			{
+				gpe_error_box (_("Could not write to temporal config file."));
+				return;
+			}
+	
+			for (j = 0; j < i; j++)
+			{
+				fprintf (fnew, "%s\n", lines[j]);
+			}
+			fclose (fnew);
+			
+			/* copy new file */
+			if (use_wlan_ng)
+				suid_exec ("CMCP", "0");
+			else
+				suid_exec ("CMCP", "1");
+			usleep(400000);
+		}
+		g_strfreev (lines);
 	}
-	g_strfreev (lines);
 }  
 
 
@@ -729,6 +733,10 @@ update_icon (char *type, GtkWidget * container)
 	GtkWidget *ctype_pixmap;
 	char *fname;
 
+	/* transfer types we know */
+	if (!strcmp(type,"254"))
+		sprintf(type,"usb");
+	
 	fname = g_strdup_printf ("%spccard-%s.png", PIXMAP_PATH, type);
 	if (access (fname, R_OK))
 	{

@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.0-pre5
+VERSION = 0.1.0-pre6
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -121,6 +121,7 @@ PIXMAPS += menu-reset2.png menu-reset.png menu-resume.png menu-suspend.png
 PIXMAPS += pccard-cdrom.png pccard-ide.png pccard-memory.png
 PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
 PIXMAPS += pccard-network.png
+PIXMAPS += pccard-usb.png
 PIXMAPS += gpe-config-logread.png
 PIXMAPS += gpe-config-keyboard.png
 
