@@ -26,84 +26,53 @@ GSList *edit_pages;
 
 static void
 structure_new_page (GtkWidget *widget,
-		    gpointer d)
+		    gpointer user_data)
 {
   gchar *t = smallbox (_("New page"), _("Title"), "");
+
+  GtkCTree *ct = GTK_CTREE (user_data);
+  if (GTK_CLIST (ct)->selection)
+    {
+    }
+
 }
 
 static void
 structure_new_group (GtkWidget *widget,
-		    gpointer d)
+		    gpointer user_data)
 {
-  gchar *t = smallbox (_("New group"), _("Title"), "");
+  GtkCTree *ct = GTK_CTREE (user_data);
+  if (GTK_CLIST (ct)->selection)
+    {
+      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
+      gchar *t = smallbox (_("New group"), _("Title"), "");
+    }
+  else
+    {
+      gpe_error_box (_("No container selected"));
+    }
 }
 
 static void
 structure_new_field (GtkWidget *widget,
-		    gpointer d)
-{
-}
-
-void
-structure_edit_clicked (GtkButton       *button,
-			gpointer         user_data)
+		    gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
-#if 0
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      GtkWidget *w = create_structure_item ();
-      GtkWidget *ww, *radio1, *radio2;
       edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
-
-      radio1 = lookup_widget (w, "radiobutton2");
-      radio2 = lookup_widget (w, "radiobutton3");
-      
-      ww = lookup_widget (w, "entry16");
-      gtk_entry_set_text (GTK_ENTRY (ww), e->name);
-
-      ww = lookup_widget (w, "optionmenu1");
-      switch (e->type)
-	{
-	case PAGE:
-	  gtk_option_menu_set_history (GTK_OPTION_MENU (ww), 0);
-	  gtk_widget_set_sensitive (radio1, FALSE);
-	  gtk_widget_set_sensitive (radio2, FALSE);
-	  break;
-
-	case GROUP:
-	  gtk_widget_set_sensitive (radio1, FALSE);
-	  gtk_widget_set_sensitive (radio2, FALSE);
-	  gtk_option_menu_set_history (GTK_OPTION_MENU (ww), 1);
-	  break;
-
-	case ITEM_SINGLE_LINE:
-	  gtk_option_menu_set_history (GTK_OPTION_MENU (ww), 2);
-	  gtk_widget_set_sensitive (radio1, TRUE);
-	  gtk_widget_set_sensitive (radio2, TRUE);
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio1), TRUE);
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio2), FALSE);
-	  break;
-
-	case ITEM_MULTI_LINE:
-	  gtk_option_menu_set_history (GTK_OPTION_MENU (ww), 2);
-	  gtk_widget_set_sensitive (radio1, TRUE);
-	  gtk_widget_set_sensitive (radio2, TRUE);
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio1), FALSE);
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radio2), TRUE);
-	  break;
-	}
-
-      gtk_widget_show (w);
     }
-#endif
+  else
+    {
+      gpe_error_box (_("No container selected"));
+    }
 }
 
-
-void
-structure_delete_clicked (GtkButton       *button,
-			  gpointer         user_data)
+static void
+structure_delete_item (GtkButton       *button,
+		       gpointer         user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
@@ -134,18 +103,12 @@ build_edit_tree (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
       text[0] = e->name;
       text[1] = NULL;
  
-      node = gtk_ctree_insert_node (ct,
-				    parent,
-				    NULL,
-				    text,
-				    4,
-				    NULL,
-				    NULL,
-				    NULL,
-				    NULL,
-				    (e->type == PAGE || e->type == GROUP) ? FALSE : TRUE,
+      node = gtk_ctree_insert_node (ct, parent, NULL, text,
+				    4, NULL, NULL, NULL, NULL,
+				    (e->type == PAGE 
+				     || e->type == GROUP) ? FALSE : TRUE,
 				    TRUE);
-
+      
       GTK_CTREE_ROW (node)->row.data = e;
 
       if (e->children)
@@ -172,32 +135,26 @@ edit_structure (void)
   p = find_pixmap ("notebook");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
-			   "New page", "New page", 
-			   pw, structure_new_page, tree);
+			   "New page", "New page", pw, 
+			   structure_new_page, tree);
 
   p = find_pixmap ("frame");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
-			   "New group", "New group", 
-			   pw, structure_new_group, tree);
+			   "New group", "New group", pw, 
+			   structure_new_group, tree);
 
   p = find_pixmap ("entry");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
-			   "New field", "New field", 
-			   pw, structure_new_field, tree);
+			   "New field", "New field", pw, 
+			   structure_new_field, tree);
 
   p = find_pixmap ("delete");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, NULL, NULL);
-
-#if 0
-  p = find_pixmap ("save");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Save", 
-			   "Save", "Save", pw, NULL, NULL);
-#endif
+			   _("Delete"), _("Delete"), pw, 
+			   structure_delete_item, tree);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
