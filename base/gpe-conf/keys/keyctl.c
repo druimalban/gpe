@@ -40,23 +40,26 @@
 #include <gpe/spacing.h>
 
 static char *keylaunchrc = NULL;
+static char *bg_image = NULL;
 static gboolean menuselect = FALSE;
 static int NUM_COMMANDS = 0;
+static int NUM_BUTTONS = 0;
 
-#define KEYLAUNCH_BIN PREFIX "/bin/keylaunch"
-#define FILE_COMMANDS "/etc/gpe/key-commands"
-#define NUM_BUTTONS 5
+#define KEYLAUNCH_BIN   PREFIX "/bin/keylaunch"
+#define FILE_COMMANDS   "/etc/gpe/key-commands"
+#define FILE_LAYOUT     "/etc/gpe/key-layout"
 
 /* local types */
 
 typedef struct 
 {
-	char *pixname;
-	char *ident;
+	char *symbol;
+	char *key;
 	char *modificator;
 	char *command;
 	char *title;
 	int type;
+	int x, y;
 }
 t_buttondef;
 
@@ -71,7 +74,7 @@ t_scommand;
 
 static struct
 {
-	GtkWidget *button[NUM_BUTTONS];
+	GtkWidget **buttons;
 	GdkPixbuf *p;
 	GtkWidget *edit;
 	GtkWidget *icon;
@@ -79,15 +82,16 @@ static struct
 }
 self;
 
-
+/*
 t_buttondef buttondef[NUM_BUTTONS] = {
 	{NULL, "XF86AudioRecord","???Pressed","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
     {NULL, "XF86Calendar","???Pressed","gpe-calendar",0},
 	{NULL, "telephone","???Pressed","gpe-contacts",0},
 	{NULL, "XF86Mail","???Pressed","gpe-taskmanager",0},
 	{NULL, "XF86Start","???Pressed","mbcontrol -desktop",0}};
-
-t_scommand *commands = NULL;
+*/
+t_scommand  *commands  = NULL;
+t_buttondef *buttondef = NULL;
 static int active_button = 0;
 
 struct gpe_icon local_icons[] = {
@@ -125,13 +129,13 @@ commands_load(void)
 		{
 			int cnt = 0;
 			gchar **vals;
-			commands = realloc(commands, (i+1) * sizeof(t_scommand));
+			commands = realloc(commands, (NUM_COMMANDS+1) * sizeof(t_scommand));
 			vals = g_key_file_get_string_list (cmdfile, "Commands",
                                                keys[i], &cnt, &err);
 			if (cnt == 2)
 			{
-				commands[i].title = vals[0];
-				commands[i].command = vals[1];
+				commands[NUM_COMMANDS].title = vals[0];
+				commands[NUM_COMMANDS].command = vals[1];
 				NUM_COMMANDS++;
 			}
 			else
@@ -142,8 +146,106 @@ commands_load(void)
 		}
 		g_strfreev(keys);
 	}
+	return TRUE;
 }
 	
+static gboolean
+layout_load(void)
+{
+	GKeyFile *layoutfile;
+	GError *err = NULL;
+	gchar **btndefs;
+	int i, btncnt, paramcnt;
+	
+	layoutfile = g_key_file_new();
+	
+	if (!g_key_file_load_from_file (layoutfile, FILE_LAYOUT,
+                                    G_KEY_FILE_KEEP_COMMENTS, &err))
+	{
+		gpe_error_box(err->message);
+		g_error_free(err);
+		return FALSE;
+	}
+	
+	if (g_key_file_has_group(layoutfile, "Global"))
+	{
+		bg_image = g_key_file_get_string(layoutfile, "Global", "imagefile", &err);
+		if (err)
+			g_error_free(err);
+	}
+	else
+	{
+		gpe_error_box(_("Button layout file is missing a global section."));
+		return FALSE;
+	}
+	
+	btndefs = g_key_file_get_groups(layoutfile, &btncnt, &err);
+	if (btndefs)
+	{
+		for (i=0; i < btncnt; i++)
+		{
+			if (!strstr(btndefs[i], "Global")) /* Ignore global section */
+				continue;
+			buttons = realloc(buttons, (NUM_BUTTONS+1) * sizeof(t_buttondef));
+			buttons[NUM_BUTTONS].title = 
+				g_key_file_get_string(layoutfile, btndefs[i], "title", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+			buttons[NUM_BUTTONS].symbol = 
+				g_key_file_get_string(layoutfile, btndefs[i], "symbolfile", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+			buttons[NUM_BUTTONS].key = 
+				g_key_file_get_string(layoutfile, btndefs[i], "key", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+			buttons[NUM_BUTTONS].modificator = 
+				g_key_file_get_string(layoutfile, btndefs[i], "modificator", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+			buttons[NUM_BUTTONS].symbol = 
+				g_key_file_get_string(layoutfile, btndefs[i], "command", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+			buttons[NUM_BUTTONS].x = 
+				g_key_file_get_string(layoutfile, btndefs[i], "xpos", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+			buttons[NUM_BUTTONS].y = 
+				g_key_file_get_string(layoutfile, btndefs[i], "ypos", &err);
+			if (err)
+			{
+				g_error_free(err);
+				continue;
+			}
+
+			NUM_BUTTONS++;
+		}
+		g_strfreev(btndefs);
+	}
+		
+	return TRUE;
+}
+
+
 void FileSelected (char *file, gpointer data);
 
 
@@ -155,7 +257,7 @@ init_buttons ()
 	char *slash;
 	int i;
 	size_t len;
-
+#todo correlate read settings with defined buttons
 	active_button = 0;
 	
 	/* make string variables from initial constants */
@@ -277,22 +379,6 @@ on_defaults_clicked (GtkButton * button, gpointer user_data)
 	}
 }
 
-
-void 
-fill_commands(void)
-{
-	commands[0].title = g_strdup(_("User Defined"));
-	commands[1].title = g_strdup(_("Record Memo"));
-	commands[2].title = g_strdup(_("Calendar"));
-	commands[3].title = g_strdup(_("Contacts"));
-	commands[4].title = g_strdup(_("Taskmanager"));
-	commands[5].title = g_strdup(_("Audio Player"));
-	commands[6].title = g_strdup(_("Web Browser"));
-	commands[7].title = g_strdup(_("To-do List"));
-	commands[8].title = g_strdup(_("Toggle Desktop"));
-}
-
-
 void 
 on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
 {
@@ -320,6 +406,7 @@ Keyctl_Build_Objects ()
 	gpe_load_icons(local_icons);
 	
 	commands_load();
+	layout_load();
 	
 	gtk_menu_set_screen(GTK_MENU(cmenu),NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
