@@ -1,12 +1,15 @@
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.69.1 released.
+
+2003-09-12  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (install-devel): Respect $(DESTDIR) when installing .pc
 	file.
 	(clean): Also remove .pc files.
 
-	* libgpewidget.pc.in (Libs): Remove full path.
-	* libgpewidget-uninstalled.pc.in (Libs): Likewise.  Only use it
-	with -L.
+	* libgpewidget.pc.in (Libs): Use ${libs}, etc.
+	* libgpewidget-uninstalled.pc.in (Libs): Only use full path with -L.
 
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
