@@ -14,8 +14,8 @@
 #include "render.h"
 
 void
-gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
-		  GdkBitmap **bitmap)
+gpe_render_pixmap_alpha (GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
+			 GdkBitmap **bitmap, guint overall_alpha)
 {
   guint width = gdk_pixbuf_get_width (pixbuf),
     height = gdk_pixbuf_get_height (pixbuf);
@@ -51,13 +51,21 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 	      sg = *sp++;
 	      sb = *sp++;
 	      sa = *sp++;
+
+	      sa = (sa * overall_alpha) / 256;
 	      
-	      if (sa == 255 || sa == 0)
+	      if (sa == 255)
 		{
 		  /* fully opaque or fully transparent is trivial */
 		  red = sr;
 		  green = sg;
 		  blue = sb;
+		}
+	      else if (sa == 0)
+		{
+		  red = br;
+		  green = bg;
+		  blue = bb;
 		}
 	      else 
 		{
@@ -88,6 +96,13 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
   else
     gdk_pixbuf_render_pixmap_and_mask (pixbuf,
 				       pixmap, bitmap, 127);
+}
+
+void
+gpe_render_pixmap (GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
+		    GdkBitmap **bitmap)
+{
+  gpe_render_pixmap_alpha (bgcol, pixbuf, pixmap, bitmap, 256);
 }
 
 GtkWidget *

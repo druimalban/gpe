@@ -16,5 +16,7 @@
 extern GtkWidget *gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf);
 extern void gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 		  GdkBitmap **bitmap);
+extern void gpe_render_pixmap_alpha(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
+		  GdkBitmap **bitmap, guint overall_alpha);
 
 #endif
