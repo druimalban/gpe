@@ -95,6 +95,21 @@ drop_calendar (GtkWidget *widget, GtkDateCombo *dp)
     }
 }
 
+gboolean 
+verify_date (GtkWidget *entry, GdkEventFocus *event, GtkDateCombo *cb)
+{
+  const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+  struct tm time;
+  char *ret;
+    
+  ret = strptime(text, "%x", &time);
+  if (ret)
+    gtk_date_combo_set_date (cb, time.tm_year+1900, time.tm_mon, time.tm_mday);
+  else
+    update_text(cb);
+  return FALSE;
+}
+
 static void
 gtk_date_combo_init (GtkDateCombo *combo)
 {
@@ -129,9 +144,9 @@ gtk_date_combo_init (GtkDateCombo *combo)
   gtk_box_pack_start (GTK_BOX (combo), combo->entry, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (combo), combo->button, FALSE, FALSE, 0);
 
-  GTK_WIDGET_UNSET_FLAGS (combo->button, GTK_CAN_FOCUS);
+  GTK_WIDGET_SET_FLAGS (combo->button, GTK_CAN_FOCUS);
 
-  gtk_entry_set_editable (GTK_ENTRY (combo->entry), FALSE);
+  gtk_entry_set_editable (GTK_ENTRY (combo->entry), TRUE);
 
   gtk_widget_show (combo->button);
   gtk_widget_show (combo->entry);
@@ -150,6 +165,9 @@ gtk_date_combo_init (GtkDateCombo *combo)
   gtk_signal_connect (GTK_OBJECT (combo->cal), 
 		      gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
 		      GTK_SIGNAL_FUNC (click_calendar), combo);
+              
+  g_signal_connect (G_OBJECT (combo->entry), "focus-out-event",
+		      G_CALLBACK (verify_date), combo);
 }
 
 static GtkHBoxClass *parent_class = NULL;

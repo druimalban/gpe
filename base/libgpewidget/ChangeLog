@@ -1,5 +1,7 @@
 2004-07-14  Florian Boor <florian.boor@kernelconcepts.de>
-
+	
+	* gtkdatecombo.c: Is freely editable now and checks date according
+                          current locale settings.
 	* gtkdatecombo.c: Reset date to something more useful if ignore_year
                           is turned off.
 	* gtkdatecombo.*: gtk_date_combo_ignore_year() New method to
