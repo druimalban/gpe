@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 22:18+0300\n"
+"POT-Creation-Date: 2003-10-15 17:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,15 +38,17 @@ msgstr ""
 msgid "B:0  W:0 "
 msgstr ""
 
-#: gpe-go.c:1109
+#. TRANSLATORS: button's label, use a short word.
+#. * proposals for a meaningful icon are warmly welcome!
+#: gpe-go.c:1111
 msgid "PASS"
 msgstr ""
 
-#: gpe-go.c:1122
+#: gpe-go.c:1124
 msgid "Save"
 msgstr ""
 
-#: gpe-go.c:1126
+#: gpe-go.c:1128
 msgid "Save as..."
 msgstr ""
 

@@ -15,7 +15,7 @@ CVSBUILD = yes
 endif
 
 
-LINGUAS = cs de pl ro sv nl
+LINGUAS = cs de pl ro sv nl fr
 
 EXTRA_DESKTOPS = \
     gpe-go-9.desktop.in \
