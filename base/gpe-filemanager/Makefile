@@ -33,10 +33,10 @@ else
 CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += -lgpewidget -lsqlite
+LDFLAGS += -lgpewidget -lsqlite -lgnomevfs-2
 
 ifeq ($(GTK2),yes)
-LDFLAGS += `pkg-config --libs gtk+-2.0 gnome-vfs-2.0`
+LDFLAGS += `pkg-config --libs gtk+-2.0`
 else
 LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
 endif
