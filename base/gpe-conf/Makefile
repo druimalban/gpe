@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.22
+VERSION = 0.1.21
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
