@@ -95,18 +95,24 @@ create_pixmap                          (GtkWidget       *widget,
 {
   GtkWidget *pixmap;
   GdkPixbuf *icon;
+  GtkWidget *smallphotobutton;
   
   gint width, height;
   gfloat scale, scale_width = 2.72, scale_height = 3.14;
 
-  const guint maxwidth = 32, maxheight = 32;
+  //const guint maxwidth = 32, maxheight = 32;
+  guint maxwidth = 32, maxheight = 32;
   
   icon = gpe_find_icon (filename);
   
   width  = gdk_pixbuf_get_width (icon);
   height = gdk_pixbuf_get_height (icon);
-
   /* g_message ("image is %d x %d", width, height); */
+
+  smallphotobutton = lookup_widget (widget, "smallphotobutton");
+  maxwidth  = smallphotobutton->allocation.width;
+  maxheight = smallphotobutton->allocation.height;
+  /* g_message ("allocation: %d x %d", maxwidth, maxheight); */
 
   if (width > maxwidth)
     scale_width = (gfloat) maxwidth / width;
@@ -150,10 +156,10 @@ create_pixmap_big                      (GtkWidget       *widget,
   
   width  = gdk_pixbuf_get_width (icon);
   height = gdk_pixbuf_get_height (icon);
-  /* g_message ("image is %d x %d", width, height); */
-
-  /* g_message ("allocation: %d x %d", widget->allocation.width, widget->allocation.height); */
-  /* FIXME: connect to "size-allocate" signal to get the real, dynamic allocation */
+  /*
+    g_message ("image is %d x %d", width, height);
+    g_message ("big photo allocation: %d x %d", widget->allocation.width, widget->allocation.height);
+  */
     
   if (width > maxwidth)
     scale_width = (gfloat) maxwidth / width;

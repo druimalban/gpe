@@ -1,3 +1,12 @@
+2002-09-11  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/support.c (Module): Comment out debug output.
+
+	* src/callbacks.c (on_smallphotobutton_size_allocate): Check
+	gtk_container_children() to see if we already display the
+	smallphoto, thanks to PaxAnima.
+	(on_bigphotobutton_size_allocate): Ditto.
+
 2002-09-09  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Version 0.04-3 is released.
