@@ -1,13 +1,13 @@
-# libgpewidget-0.46 (Indonesian)
+# libgpewidget-0.56 (Indonesian)
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # Tedi Heriyanto <tedi_h@gmx.net>, 2003
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpewidget 0.46\n"
-"POT-Creation-Date: 2003-02-01 16:44+0000\n"
-"PO-Revision-Date: 2003-03-07 13:08GMT+0700\n"
+"Project-Id-Version: libgpewidget 0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2003-04-04 14:39GMT+0700\n"
 "Last-Translator: Tedi Heriyanto <tedi_h@gmx.net>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -15,66 +15,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: errorbox.c:58
-msgid "Error"
-msgstr "Kesalahan"
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "GPE-ERROR: %s\n"
 
-#: pixmaps.c:81
+#: pixmaps.c:82
 #, c-format
 msgid "Unable to load icon \"%s\""
 msgstr "Tidak dapat memuat ikon \"%s\""
 
-#: pixmaps.c:167
+#: pixmaps.c:168
 #, c-format
 msgid "Icon \"%s\" not loaded"
 msgstr "Ikon \"%s\" tidak dimuat"
 
-#: dirbrowser.c:307
-msgid "OK"
-msgstr "OK"
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Tidak ada direktori yang dipilih"
 
-#: dirbrowser.c:315
-msgid "Cancel"
-msgstr "Batal"
-
-#: what.c:69
+#: what.c:78
 msgid "No help available."
 msgstr "Tidak tersedia bantuan"
 
-#: gtkdatesel.c:187
-msgid "%Y"
-msgstr "%Y"
-
-#: gtkdatesel.c:196
-msgid "%b"
-msgstr "%b"
-
-#: gtkdatesel.c:199
-msgid "%B"
-msgstr "%B"
-
-#: gtkdatesel.c:202
-#, c-format
-msgid "%m"
-msgstr "%m"
-
-#: gtkdatesel.c:213
-msgid "Week %V"
-msgstr "Minggu %V"
-
-#: gtkdatesel.c:219
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: question.c:136
+#: question.c:175
 msgid "Question"
 msgstr "Pertanyaan"
 
-#: question.c:137
-msgid "No"
-msgstr "Tidak"
+#~ msgid "Error"
+#~ msgstr "Kesalahan"
 
-#: question.c:137
-msgid "Yes"
-msgstr "Ya"
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Cancel"
+#~ msgstr "Batal"
+
+#~ msgid "%Y"
+#~ msgstr "%Y"
+
+#~ msgid "%b"
+#~ msgstr "%b"
+
+#~ msgid "%B"
+#~ msgstr "%B"
+
+#~ msgid "%m"
+#~ msgstr "%m"
+
+#~ msgid "Week %V"
+#~ msgstr "Minggu %V"
+
+#~ msgid "%a, %d"
+#~ msgstr "%a, %d"
+
+#~ msgid "No"
+#~ msgstr "Tidak"
+
+#~ msgid "Yes"
+#~ msgstr "Ya"
