@@ -1,0 +1,85 @@
+# Serbian translation of `gpe-go'.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the `gpe-go' package.
+# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2004.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2004-03-04 01:18-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"Language-Team: Serbian <gnu@prevod.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-go.c:754
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "Ц:%d  Б:%d "
+
+#: gpe-go.c:1083
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Не могу да сачувам игру у „%s“."
+
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Нова..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Сачувај..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Учитај..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Мени игре"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Први"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Помери се на почетак игре"
+
+#: gpe-go.c:1435
+msgid "Undo"
+msgstr "Опозови"
+
+#: gpe-go.c:1441
+msgid "Redo"
+msgstr "Понови"
+
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Задњи"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Помери се на крај игре"
+
+#: gpe-go.c:1457
+msgid "B:0  W:0 "
+msgstr "Ц:0  Б:0 "
+
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Потез"
+
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Пропусти потез"
+
+#: gpe-go.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Го"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Го"

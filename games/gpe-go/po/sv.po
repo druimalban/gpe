@@ -1,56 +1,83 @@
 # Swedish messages for gpe-go.
-# Copyright (C) 2003 Free Software Foundation, Inc.
-# Christian Rose <menthos@menthos.com>, 2003.
+# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-go 0.04\n"
-"POT-Creation-Date: 2003-10-12 22:18+0300\n"
-"PO-Revision-Date: 2003-10-13 22:07+0200\n"
+"Project-Id-Version: gpe-go 0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2004-03-23 14:08+0100\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: \n"
 
 # skulle gissa att detta är Svart och Vit
-#: gpe-go.c:734
+#: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
 msgstr "S:%d  V:%d "
 
-#: gpe-go.c:967
+#: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
 msgstr "Kan inte spara spelet i %s."
 
-#: gpe-go.c:1066
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Ny..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Spara..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Läs in..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Spelmeny"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Första"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Gå till början på spelet"
+
+#: gpe-go.c:1435
 msgid "Undo"
 msgstr "Ångra"
 
-#: gpe-go.c:1080
+#: gpe-go.c:1441
 msgid "Redo"
 msgstr "Gör om"
 
-#: gpe-go.c:1088
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Sista"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Gå till slutet på spelet"
+
+#: gpe-go.c:1457
 msgid "B:0  W:0 "
 msgstr "S:0  V:0 "
 
-#: gpe-go.c:1109
-msgid "PASS"
-msgstr "PASS"
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Hoppa över"
 
-#: gpe-go.c:1122
-msgid "Save"
-msgstr "Spara"
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Hoppa över ditt drag"
 
-#: gpe-go.c:1126
-msgid "Save as..."
-msgstr "Spara som..."
-
-#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
-#: gpe-go-19.desktop.in.h:1
+#: gpe-go.desktop.in.h:1
 msgid "GPE Go"
 msgstr "GPE-Go"
 
@@ -58,17 +85,23 @@ msgstr "GPE-Go"
 msgid "Go"
 msgstr "Go"
 
-#: gpe-go-9.desktop.in.h:2
-msgid "Go 9"
-msgstr "Go 9"
+#~ msgid "Save as..."
+#~ msgstr "Spara som..."
 
-#: gpe-go-13.desktop.in.h:2
-msgid "Go 13"
-msgstr "Go 13"
+#~ msgid "PASS"
+#~ msgstr "PASS"
 
-#: gpe-go-19.desktop.in.h:2
-msgid "Go 19"
-msgstr "Go 19"
+#~ msgid "Save"
+#~ msgstr "Spara"
+
+#~ msgid "Go 9"
+#~ msgstr "Go 9"
+
+#~ msgid "Go 13"
+#~ msgstr "Go 13"
+
+#~ msgid "Go 19"
+#~ msgstr "Go 19"
 
 #~ msgid "B:%d  W:%d"
 #~ msgstr "S:%d  V:%d"
