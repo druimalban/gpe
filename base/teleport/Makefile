@@ -12,7 +12,10 @@ CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall -I../libdm
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = teleport
+MEMBERS = teleport crypt
+
+CFLAGS += -I../libdm `libgcrypt-config --cflags`
+LDFLAGS += -L../libdm -ldm `libgcrypt-config --libs`
 
 CFLAGS += -Os -fomit-frame-pointer
 LDFLAGS += 

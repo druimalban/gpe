@@ -25,9 +25,9 @@
 
 #define _(x) gettext(x)
 
-Atom migrate_ok_atom;
 Atom migrate_atom;
 Atom string_atom;
+Atom challenge_atom;
 GdkWindow *grab_window;
 GtkListStore *list_store;
 
@@ -51,16 +51,47 @@ struct display
 static GSList *displays;
 struct display *selected_dpy;
 
-void
-send_message (Display *dpy, Window w, char *host, int display, int screen)
+static void
+send_message (Display *dpy, Window w, char *host, gchar *method, gchar *data)
 {
-  char buf[256];
-  memset (buf, 0, 8);
-  sprintf (buf + 8, "%s:%d.%d", host, display, screen);
+  gchar *buf = g_strdup_printf ("%s %s %s", host, method, data);
   
-  XChangeProperty (dpy, w, migrate_atom, migrate_atom, 8, PropModeReplace, buf, 8 + strlen (buf + 8));
-
+  XChangeProperty (dpy, w, migrate_atom, string_atom, 8, PropModeReplace, buf, strlen (buf));
   XFlush (dpy);
+
+  g_free (buf);
+}
+
+static void
+migrate_to (Display *dpy, Window w, char *host, int display, int screen)
+{
+  gchar *auth = "NONE";
+  gchar *data = NULL;
+  Atom type;
+  int format;
+  unsigned long nitems, bytes_after;
+  unsigned char *prop = NULL;
+  gchar *target;
+
+  target = g_strdup_printf ("%s:%d.%d", host, display, screen);
+
+  if (XGetWindowProperty (dpy, w, challenge_atom, 0, 8192, False, string_atom,
+			  &type, &format, &nitems, &bytes_after, &prop) == Success
+      && type == string_atom && nitems != 0)
+    {
+      auth = "RSA-SIG";
+      data = sign_challenge (prop, nitems, target);
+    }
+
+  if (prop)
+    XFree (prop);
+
+  send_message (dpy, w, target, auth, data ? data : "");
+
+  g_free (target);
+
+  if (data)
+    g_free (data);
 }
 
 static int
@@ -72,8 +103,8 @@ handle_click (Display *dpy, Window w)
   unsigned char *prop = NULL;
 
   if (XGetWindowProperty (dpy, w, migrate_atom, 0, 0, False,
-			  migrate_atom, &type, &format, &nitems, &bytes_after, &prop) != Success
-      || type != migrate_atom)
+			  string_atom, &type, &format, &nitems, &bytes_after, &prop) != Success
+      || type != string_atom)
     {
       Window root, parent, *children;
       unsigned int nchildren;  
@@ -329,7 +360,7 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
       XGrabServer (dpy);
       w = handle_click (dpy, w);
       if (w)
-	send_message (dpy, w, selected_dpy->host, selected_dpy->dpy, selected_dpy->screen);
+	migrate_to (dpy, w, selected_dpy->host, selected_dpy->dpy, selected_dpy->screen);
       XUngrabServer (dpy);
 
       if (w == None)
@@ -355,6 +386,7 @@ main (int argc, char *argv[])
   dpy = GDK_DISPLAY ();
   string_atom = XInternAtom (dpy, "STRING", False);
   migrate_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE", False);
+  challenge_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE_RSA_CHALLENGE", False);
 
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
