@@ -16,6 +16,7 @@ PACKAGE = gpe-db
 VERSION = 2.0
 PREFIX = /usr/local
 DEBUG = no
+CVSBUILD = yes
 GTK2 = yes
 
 LINGUAS = de
@@ -50,6 +51,12 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 #PIXMAPS = bell.png
 
 all: $(PACKAGE)
@@ -58,14 +65,13 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 #	$(CC) -o $@ $^ -L/skiff/local/arm-linux/lib/X11 -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 
-install: all 
+install-program: all 
 #	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
