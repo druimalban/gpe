@@ -357,9 +357,11 @@ signal_handler (int signal)
 }
 
 void
-initialize ()
+initialize (int argc, char *argv[])
 {
   struct sigaction act;
+  int i;
+  int rcflag = 0;
 
   act.sa_handler = signal_handler;
   act.sa_flags = 0;
@@ -368,14 +370,26 @@ initialize ()
   sigaction (SIGHUP, &act, NULL);
   sigaction (SIGCHLD, &act, NULL);
 
+  for (i = 1; i < argc; i++)
+    {
+      if (rcflag)
+	{
+	  rc_file = argv[i];
+	  rcflag = 0;
+	}
+      else if (!strcmp (argv[i], "-f"))
+	rcflag = 1;
+    }
+
   if (!(dpy = XOpenDisplay (NULL)))
     print_error ("Can't open display, X may not be running.\n", True);
 
   root = XDefaultRootWindow (dpy);
 
   init_keyboard ();
-
-  rc_file = find_rc ();
+  
+  if (! rc_file)
+    rc_file = find_rc ();
 
   parse_rc (rc_file);
 }
@@ -389,7 +403,7 @@ initialize ()
 int
 main (int argc, char *argv[])
 {
-  initialize ();
+  initialize (argc, argv);
 
   while (1)
     {
