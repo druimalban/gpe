@@ -68,18 +68,27 @@ void on_window_size_allocate (GtkWidget     * widget,
     gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_HORIZONTAL); 
 }
 
-void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
+
+enum {ACTION_CANCELED, ACTION_DONE};
+
+int _save_current_if_needed(){
   if(is_current_sketch_modified){
     int ret;
-    ret = gpe_question_ask (_("Save last sketch?"), _("Question"), "question", 
+    ret = gpe_question_ask (_("Save current sketch?"), _("Question"), "question", 
                             _("Discard"), "!gtk-no", _("Save"), "!gtk-yes", NULL);
     //NOTE: could had a [Cancel] button
     if(ret == 1){
       on_button_file_save_clicked(NULL, NULL);
     }
-    else if (ret == -1) return; //destroy window (ret == -1) cancel the action
-
+    else if (ret == -1) return ACTION_CANCELED; //destroy window (ret == -1) cancel the action
   }
+  return ACTION_DONE;
+}
+
+void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
+  
+  if (_save_current_if_needed() == ACTION_CANCELED) return;
+
   switch_windows(window_sketchpad, window_selector);
 
   if(is_current_sketch_new){
@@ -152,17 +161,9 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 }
 
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
-  if(is_current_sketch_modified){
-    int ret;
-    ret = gpe_question_ask (_("Save last sketch?"), _("Question"), "question", 
-                            _("Discard"), "!gtk-no", _("Save"), "!gtk-yes", NULL);
-    if(ret == 1){
-      on_button_file_save_clicked(NULL, NULL);
-    }
-    else if (ret == -1){ //Question box destroyed
-      _close_filesbox(button);
-      return;
-    }
+  if(_save_current_if_needed() == ACTION_CANCELED){
+    _close_filesbox(button);
+    return;
   }
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
@@ -190,6 +191,7 @@ void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
 
 void on_button_file_prev_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_first || is_sketch_list_empty) return;
+  if( _save_current_if_needed() == ACTION_CANCELED) return;
   if(is_current_sketch_new) current_sketch = SKETCH_LAST;
   else current_sketch--;
   open_indexed_sketch(current_sketch);
@@ -198,6 +200,7 @@ void on_button_file_prev_clicked (GtkButton *button, gpointer user_data){
 
 void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) return;
+  if( _save_current_if_needed() == ACTION_CANCELED) return;
   if(is_current_sketch_last){
     current_sketch = SKETCH_NEW;
     sketchpad_new_sketch();
