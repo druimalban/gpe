@@ -35,4 +35,4 @@ clean:
 
 distclean: clean
 	rm -f *.ipk
-	rm -f dist/usr/bin/*
+	rm -f dist/usr/bin/gpe-appmgr*
