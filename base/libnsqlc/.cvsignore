@@ -1,2 +1,4 @@
 *.d
+nsqlc-test
+libnsqlc.so.0
 
