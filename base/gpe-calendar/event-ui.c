@@ -407,6 +407,9 @@ edit_event_window(void)
   gtk_box_pack_end (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 2);
 
+  /* disable "all day" until it's better supported */
+  gtk_widget_set_sensitive (alldaybutton, 0);
+
   gtk_signal_connect (GTK_OBJECT (alldaybutton), "toggled", 
 		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
 
