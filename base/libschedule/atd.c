@@ -36,6 +36,8 @@ alarm_filename (guint id, time_t start)
   return g_strdup_printf ("%s/%ld.%ld-%ld", ATD_BASE, start, id, uid);
 }
 
+static const char *boilerplate_1 = "#!/bin/sh\nrm -f $0\nDISPLAY=:0\nexec ";
+
 gboolean
 schedule_set_alarm (guint id, time_t start, const gchar *action)
 {
@@ -49,6 +51,11 @@ schedule_set_alarm (guint id, time_t start, const gchar *action)
       g_free (filename);
       return FALSE;
     }
+
+  write (fd, boilerplate_1, strlen (boilerplate_1));
+  write (fd, action, strlen (action));
+
+  close (fd);
 
   g_free (filename);
 
