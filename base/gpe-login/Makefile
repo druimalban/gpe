@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.66
+VERSION = 0.67
 DEBUG = no
 
 LINGUAS = de sv wa nl pt cs fr hu ro ru sr sk
@@ -20,7 +20,7 @@ endif
 
 PACKAGE_LDFLAGS_OWNERINFO += -lgpe-ownerinfo
 
-MEMBERS = gpe-login nocursor
+MEMBERS = gpe-login
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-28 19:42+0000\n"
+"POT-Creation-Date: 2004-03-08 19:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,12 +92,4 @@ msgstr ""
 
 #: gpe-login.c:1711
 msgid "Enter password with hard keys"
-msgstr ""
-
-#: gpe-logout.desktop.in.h:1
-msgid "Log out"
-msgstr ""
-
-#: gpe-logout.desktop.in.h:2
-msgid "Log out of GPE"
 msgstr ""
