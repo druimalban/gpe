@@ -25,6 +25,7 @@
 #include "render.h"
 #include "pixmaps.h"
 #include "gtkminifilesel.h"
+#include "what.h"
 
 #define WINDOW_NAME "GPE Edit"
 #define _(_x) gettext (_x)
@@ -318,6 +319,8 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
   gtk_widget_show (scroll);
   gtk_widget_show (text_area);
+
+  what_init ();
 
   gtk_main();
   return 0;
