@@ -23,11 +23,51 @@
 
 static GtkWidget *g_draw;
 
-static const nl_item months[] = { ABMON_1, ABMON_2, ABMON_3, ABMON_4,
-				  ABMON_5, ABMON_6, ABMON_7, ABMON_8,
-				  ABMON_9, ABMON_10, ABMON_11, ABMON_12 };
+static const nl_item months[] = { MON_1, MON_2, MON_3, MON_4,
+				  MON_5, MON_6, MON_7, MON_8,
+				  MON_9, MON_10, MON_11, MON_12 };
 
 static unsigned int day_event_bits[(366 / sizeof(unsigned int)) + 1];
+
+static guint day_pitch, month_width, yoff;
+static guint months_across, month_height, space;
+static guint day_vpitch;
+
+static void
+calc_geometry (GtkWidget *widget)
+{
+  guint rows;
+  guint x = widget->allocation.width;
+
+  months_across = x / month_width;
+
+  if (months_across == 0)
+    {
+      months_across = 1;
+      x = month_width;
+    }
+
+  space = (x - (months_across * month_width)) / (months_across + 1);
+  rows = (12 + (months_across - 1)) / months_across;
+
+  gtk_widget_set_usize (widget, x, rows * month_height + yoff + 4);
+}
+
+static guint
+day_of_week(guint year, guint month, guint day)
+{
+  guint result;
+
+  if (month < 3) 
+    {
+      month += 12;
+      --year;
+    }
+
+  result = day + (13 * month - 27)/5 + year + year/4
+    - year/100 + year/400;
+  return ((result + 6) % 7);
+}
 
 static gint
 draw_expose_event (GtkWidget *widget,
@@ -44,10 +84,10 @@ draw_expose_event (GtkWidget *widget,
   guint max_width;
   guint max_height;
   struct tm tm, today;
-  guint xi, yi;
   gint dbias;
   guint year;
   time_t t;
+  guint m;
   guint dn = 0;
 
   static guint days[] = { 31, 28, 31, 30, 31, 30, 
@@ -88,109 +128,55 @@ draw_expose_event (GtkWidget *widget,
 
   gdk_draw_rectangle (drawable, white_gc, TRUE, 0, 0, max_width, max_height);
 
-  for (yi = 0; yi < 4; yi++)
+  for (m = 0; m < 12; m++)
     {
-      for (xi = 0; xi < 3; xi++)
+      const char *s = nl_langinfo(months[m]);
+      guint i = m % months_across, j = m / months_across;
+      guint x = space + (i * (space + month_width));
+      guint y = 4 + yoff + (j * month_height);
+      guint w = gdk_string_width (datefont, s);
+      guint d, dy;
+      guint y1 = y + yoff;
+      
+      gdk_draw_text (drawable, datefont, black_gc, 
+		     x + (month_width / 2) - (w / 2), y + datefont->ascent, s, strlen (s));
+
+      dy = day_of_week (year, m + 1, 1);
+
+      for (d = 1; d <= days[m]; d++)
 	{
-	  guint xd, yd;
-	  guint m = yi * 3 + xi;
-	  const char *s = nl_langinfo(months[m]);
-	  guint x = (xi * 78);
-	  guint y = (yi * 72) + yearfont->ascent + 2;
+	  GdkGC *fg_gc = black_gc;
+	  char buf[32];
+	  guint x1, w;
+	  snprintf (buf, sizeof (buf), "%d", d);
+	  w = gdk_string_width (yearfont, buf);
+	  x1 = x + (dy * day_pitch);
 
-	  /* Draw the month name at a 90-degree angle */
-	  {
-	    GdkColor black, white;
-	    GdkPixmap *pixmap;
-	    GdkGC *rotgc;
-	    GdkImage *image;
-	    
-	    int lbearing, rbearing, width, ascent, descent, height;
-	    int i, j;
-	    
-	    gdk_text_extents (timefont, s, strlen (s),
-			      &lbearing, &rbearing,
-			      &width, &ascent, &descent);
-	    
-	    height = ascent + descent;
-	    
-	    /* draw text into pixmap */
-	    pixmap = gdk_pixmap_new (drawable, width, height, 1);
-	    rotgc = gdk_gc_new (pixmap);
-	    gdk_gc_set_font (rotgc, timefont);
-	    
-	    white.pixel = gdk_rgb_xpixel_from_rgb (0xffffffff);
-	    black.pixel = gdk_rgb_xpixel_from_rgb (0);
-
-	    gdk_gc_set_foreground (rotgc, &white);
-	    gdk_draw_rectangle (pixmap, rotgc, 1, 0, 0, width, height);
-	    
-	    gdk_gc_set_foreground (rotgc, &black);
-	    gdk_draw_text (pixmap, timefont, rotgc, 0, ascent, s, 
-			   strlen (s));
-	    image = gdk_image_get (pixmap, 0, 0, width, height);
-
-	    for (i = 0; i < width; i++)
-	      {
-		for (j = 0; j < height; j++)
-		  {
-		    if (gdk_image_get_pixel (image, width - i - 1, j) 
-			== black.pixel)
-		      gdk_draw_point (drawable, black_gc, 
-				      8 - (height / 2 ) + x + j, 
-				      28 - (width / 2 ) + y + i);
-		  }
-	      }
-	    
-	    gdk_pixmap_unref (pixmap);
-	    gdk_gc_unref (rotgc);
-	  }
-
-	  /* Draw the weekend highlights */
-	  gdk_draw_rectangle (drawable, grey_gc, 1,
-			      x + 16, y + (4 * 9),
-			      (12 * 5), (2 * 9));
-
-	  /* Draw the days */
-	  for (xd = 0; xd < 5; xd++)
+	  if (day_event_bits[dn / sizeof(unsigned int)] & (1 << (dn % sizeof(unsigned int))))
 	    {
-	      guint xp = x + 16 + (xd * 12);
-			     
-	      for (yd = 0; yd < 7; yd++)
-		{
-		  char buf[3];
-		  guint w;
-		  guint yp = y + (yd * 9);
-		  guint d = 1 + (xd * 7) + yd - dbias;
-		  GdkGC *fg_gc = black_gc;
-
-		  if (d <= 0 || d > days[m])
-		    continue;
-
-		  if (day_event_bits[dn / sizeof(unsigned int)] & (1 << (dn % sizeof(unsigned int))))
-		    {
-		      gdk_draw_rectangle (drawable, black_gc, 1, xp, yp - 9,
-					  12, 9);
-		      fg_gc = white_gc;
-		    }
-
-		  snprintf (buf, sizeof (buf), "%d", d);
-		  w = gdk_string_width (yearfont, buf);
-		  gdk_draw_text (drawable, yearfont, 
-				 (d == today.tm_mday 
-				  && m == today.tm_mon 
-				  && tm.tm_year == today.tm_year) ? red_gc : fg_gc,
-				 xp + 6 - (w / 2), yp, buf, strlen (buf));
-
-		  dn++;
-		}
+	      gdk_draw_rectangle (drawable, black_gc, 1, x1, y1,
+				  day_pitch, day_vpitch);
+	      fg_gc = white_gc;
 	    }
 
-	  dbias = (dbias + days[m]) % 7;
+	  if (d == today.tm_mday && m == today.tm_mon  && tm.tm_year == today.tm_year)
+	    fg_gc = red_gc;
+
+	  gdk_draw_text (drawable, yearfont, fg_gc, 
+			 x1 + ((day_pitch - w) / 2), y1 + yearfont->ascent, 
+			 buf, strlen (buf));
+	  if (++dy == 7)
+	    {
+	      dy = 0;
+	      y1 += day_vpitch;
+	    }
+	  
+	  dn++;
 	}
     }
 
   gdk_gc_unref (grey_gc);
+  gdk_gc_unref (red_gc);
 
   return TRUE;
 }
@@ -209,20 +195,20 @@ year_view_update (void)
   tm->tm_sec = 0;
   basetime = mktime (tm);
 
+  memset (day_event_bits, 0, sizeof (day_event_bits));
+
   for (i = 0; i < 367; i++)
     {
-      GSList *l = event_db_list_for_period (basetime + (i * 24 * 60 * 60),
-					    basetime + 
-					    ((i + 1) * 24 * 60 * 60) - 1);
+      GSList *l = event_db_list_for_period (basetime + (i * SECONDS_IN_DAY),
+					    basetime + ((i + 1) * SECONDS_IN_DAY) - 1);
       if (l)
 	{
 	  g_slist_free (l);
-	  day_event_bits[(i-1) / sizeof(unsigned int)] |= 1 << ((i-1) % sizeof (unsigned int));
+	  day_event_bits[i / sizeof(unsigned int)] |= 1 << (i % sizeof (unsigned int));
 	}
-      else
-	day_event_bits[(i-1) / sizeof(unsigned int)] &= ~(1 << ((i-1) % sizeof (unsigned int)));
     }
 
+  calc_geometry (g_draw);
   gtk_widget_draw (g_draw, NULL);
 }
 
@@ -237,32 +223,49 @@ changed_callback(GtkWidget *widget,
 GtkWidget *
 year_view(void)
 {
-  GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  char buf[32];
+  guint d, maxw = 0;
   
+  g_draw = gtk_drawing_area_new ();
+
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_drawing_area_size (GTK_DRAWING_AREA (draw), 240, 14 * 20);
-  gtk_signal_connect (GTK_OBJECT (draw),
+  gtk_signal_connect (GTK_OBJECT (g_draw),
 		      "expose_event",
 		      GTK_SIGNAL_FUNC (draw_expose_event),
 		      NULL);
 
   gtk_signal_connect (GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), draw);
+		     GTK_SIGNAL_FUNC (changed_callback), g_draw);
 
   gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), draw);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window),
+					 g_draw);
   
-  gtk_box_pack_start (GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
 		       (gpointer) year_view_update);
 
-  g_draw = draw;
+  for (d = 10; d < 32; d++)
+    {
+      guint w;
+      snprintf (buf, sizeof (buf), "%d", d);
+      w = gdk_string_width (yearfont, buf);
+      if (w > maxw)
+	maxw = w;
+    }
+
+  day_pitch = maxw + 2;
+  day_vpitch = yearfont->ascent + yearfont->descent;
+  yoff = datefont->ascent + datefont->descent;
+  month_width = (day_pitch * 7) + 4;
+  month_height = (day_vpitch * 5) + 4 + yoff;
+  calc_geometry (g_draw);
 
   return vbox;
 }
