@@ -41,6 +41,10 @@
 char IpaqModel = -1;
 #endif
 
+#ifdef INTEGRAL
+#define PROC_LIGHT "/proc/hw90200/backlight"
+#endif
+
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
 
@@ -101,6 +105,18 @@ set_level (int level)
   else
     return level;
 #else
+#ifdef INTEGRAL
+  FILE *f_light;
+  
+  f_light = fopen(PROC_LIGHT,"w");
+  if (f_light >= 0)
+  {
+  	fprintf(f_light,"%i\n", level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+#endif  
 return level;
 #endif
 }
@@ -125,8 +141,21 @@ read_old_level (void)
     return -1;
   else
     return bl.brightness;
-#else
-return 0;
+#else 
+#ifdef INTEGRAL
+  FILE *f_light;
+  int level;
+  
+  f_light = fopen(PROC_LIGHT,"r");
+  if (f_light >= 0)
+  {
+  	fscanf(f_light,"%i", &level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+#endif
+  return 0;
 #endif
 }
 

@@ -5,10 +5,18 @@ DEBUG = no
 VERSION = 0.31
 INSTALL = install
 LINGUAS = 
+FORDEVICE = ipaq
 
 MEMBERS = minilite
 
+ifeq ($(FORDEVICE),ipaq)
 CPPFLAGS = -Wall -D_GNU_SOURCE -DIPAQ
+endif
+
+ifeq ($(FORDEVICE),integral)
+CPPFLAGS = -Wall -D_GNU_SOURCE -DINTEGRAL
+endif
+
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
