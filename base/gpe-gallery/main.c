@@ -144,6 +144,7 @@ motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
   gtk_image_set_from_pixbuf (image_widget, rotate_pixbuf);
 }
 
+#if 0
 void
 pan (GtkWidget *w, GdkEventMotion *m)
 {
@@ -154,6 +155,23 @@ pan (GtkWidget *w, GdkEventMotion *m)
   if (y < (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10))
     gtk_adjustment_set_value (v_adjust, (double) y);
 }
+#else
+void
+pan (GtkWidget *w, GdkEventMotion *m)
+{
+  gint dx = m->x - x_start, dy = m->y - y_start;
+  double x, y;
+
+  x = gtk_adjustment_get_value (h_adjust);
+  y = gtk_adjustment_get_value (v_adjust);
+
+  x -= dx;
+  y -= dy;
+
+  gtk_adjustment_set_value (h_adjust, x);
+  gtk_adjustment_set_value (v_adjust, y);
+}
+#endif
 
 void
 show_image (GtkWidget *widget, gpointer *udata)
