@@ -42,8 +42,8 @@ sync_todo (GList *data, gpe_conn *conn, int newdb)
       gpe_tag_list_free (tags);
       vcal = mimedir_vcal_new ();
       mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vtodo));
-      g_object_unref (vtodo);
       string = mimedir_vcal_write_to_string (vcal);
+      g_object_unref (vtodo);
       g_object_unref (vcal);
 
       obj = g_malloc0 (sizeof (*obj));
