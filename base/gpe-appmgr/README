@@ -43,6 +43,7 @@ a currently-running copy of the program to the front.
 
 Hold the pen down on an icon to bring up a list of options.
  [Window titles of currently running programs]
+ ----------
  Force Run
  Properties
 
@@ -53,7 +54,7 @@ especially useful for Dillo, for example.
 this to launch a second (or third) terminal/whatever.
 
 "Properties" will show you a list of properties associated with that menu
-entry. At the moment, you cannot edit these properties.
+entry. You cannot edit these properties.
 
 ===============
 Menu extensions
@@ -61,10 +62,12 @@ Menu extensions
 
 For its extra functionality, extensions to the normal menu format
 were needed. They are:
+ icon=
  icon16=
  icon48=
  windowtitle=
 and are for
+ icons (any size)
  16x16 icons
  48x48 icons
  Window title of already running process.
@@ -73,6 +76,8 @@ respectively.
 Note that the icons need not (indeed, should not) have paths
 specified. Thus if installed to a network on a CompactFlash
 card, the icon will still be available.
+
+A program doesn't need to supply all types of icons, gpe-appmgr will check for "icon[#]=", "icon=", and "icon48=" where [#] is the icon size desired.
 
 The window title may include "*", it is expanded in the same way
 file names are.
@@ -86,6 +91,10 @@ An example for "Dillo", a small web browser:
  title=Dillo\
  icon48=dillo.png\
  windowtitle="Dillo:*"
+
+Note that without a "section=" component, the menu entry will be ignored.
+
+More than one entry can be specified in each file.
 
 ============
 Config Files
@@ -140,8 +149,7 @@ Viewers
 Might result in
  [All][PIM][Viewers][Audio][Games][System]
 
-If a group that is listed here doesn't have any menu entries for it, it will not
-be created.
+If a group that is listed here doesn't have any menu entries for it, it will still be created.
 
 --
 Robert Mibus <mibus@bigpond.com>
