@@ -1,10 +1,11 @@
 PREFIX = /usr/local
 PACKAGE = gpe-edit
-DEBUG = yes
+DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
 
 MEMBERS = main
+LINGUAS = de
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
