@@ -1,4 +1,5 @@
 PREFIX=/usr/local
+VERSION=0.0.2
 
 all:
 
