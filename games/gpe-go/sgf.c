@@ -333,14 +333,13 @@ static guint parse_sgf_CValueType (GScanner *scanner){
 int load_sgf_file(const char * filename){
   int file_descriptor;
   int gametree_level;
+  gint  content = 0;// see case: G_TOKEN_IDENTIFIER
 
   sgf_parsed_init();
 
-  gint  content = 0;// see case: G_TOKEN_IDENTIFIER
-
+  last_sgf_property = 0;
 
   //--Config scanner
-
   scanner = g_scanner_new (NULL);
 
   //Character sets
