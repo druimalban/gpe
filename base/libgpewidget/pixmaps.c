@@ -27,6 +27,7 @@
 
 #include "pixmaps.h"
 #include "errorbox.h"
+#include "link-warning.h"
 
 static GData *pbdata;
 
@@ -195,6 +196,7 @@ gpe_find_icon_pixmap (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
 				     127);
   return TRUE;
 }
+link_warning(gpe_find_icon_pixmap, "warning: gpe_find_icon_pixmap is obsolescent.");
 
 void
 gpe_set_window_icon (GtkWidget *window, gchar *icon)
