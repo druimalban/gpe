@@ -1,7 +1,7 @@
 Package: gpe-todo2
 Section: base
 Priority: optional
-Version: 0.28
+Version: 0.29
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: sqlite, libgpewidget1 (>= 0.33), gpe-icons (>= 0.15)

@@ -313,7 +313,16 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 		   
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
-  t->selected_categories = g_slist_copy (item->categories);
+
+  if (item)
+    t->selected_categories = g_slist_copy (item->categories);
+  else
+    {
+      if (initial_category)
+	t->selected_categories = g_slist_append (NULL, initial_category);
+      else
+	t->selected_categories = NULL;
+    }
 
   if (categories)
     {
@@ -321,10 +330,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
       GtkWidget *label = gtk_label_new ("");
       gchar *s = NULL;
 
-      if (item)
-	s = build_categories_string (item->categories);
-      else if (initial_category)
-	s = g_strdup (initial_category->title);
+      s = build_categories_string (t->selected_categories);
 
       if (s)
 	{

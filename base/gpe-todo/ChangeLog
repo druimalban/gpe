@@ -1,5 +1,14 @@
 2002-12-24  Philip Blundell  <pb@nexus.co.uk>
 
+	* Version 0.29 released.
+
+2002-12-24  Philip Blundell  <philb@gnu.org>
+
+	* todo-ui.c (edit_item): Handle categories correctly when creating
+	new item.
+
+2002-12-24  Philip Blundell  <pb@nexus.co.uk>
+
 	* Version 0.28 released.
 
 2002-12-24  Philip Blundell  <pb@nexus.co.uk>
