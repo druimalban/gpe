@@ -198,11 +198,8 @@ void delete_current_sketch(){
 
 void open_indexed_sketch(gint index){
   Note * note;
-  gchar * title;
-
   note = gtk_clist_get_row_data(selector_clist, index);
-  gtk_clist_get_text(selector_clist, index, 0, &title);
-  sketchpad_open_file(note->fullpath_filename , title);
+  sketchpad_open_file(note->fullpath_filename);
 }
 
 void _clist_update_alternate_colors_from(GtkCList * clist, gint index){

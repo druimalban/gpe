@@ -33,7 +33,7 @@ void reset_drawing_area();
 void sketchpad_set_drawing_area(GtkWidget * a_drawing_area);
 void sketchpad_refresh_drawing_area();
 
-void sketchpad_open_file(gchar * fullpath_filename, const gchar * title);
+void sketchpad_open_file(gchar * fullpath_filename);
 void sketchpad_new_sketch();
 void sketchpad_reset_title();
 

@@ -91,11 +91,8 @@ void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
 
   if(event->type == GDK_2BUTTON_PRESS){//--> double click = open related sketch
     Note * note;
-    gchar     * title;
-
     note = gtk_clist_get_row_data(clist, row);
-    gtk_clist_get_text(clist, row, 0, &title);
-    sketchpad_open_file(note->fullpath_filename, title);
+    sketchpad_open_file(note->fullpath_filename);
     switch_windows(window_selector, window_sketchpad);
   }
 }

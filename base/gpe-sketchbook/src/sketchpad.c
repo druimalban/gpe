@@ -185,7 +185,7 @@ void sketchpad_reset_title(){
   g_free(title);
 }
 
-void sketchpad_open_file(gchar * fullpath_filename, const gchar * name){
+void sketchpad_open_file(gchar * fullpath_filename){
   //**/g_printerr("sketchpad open: %s\n", fullpath_filename);
   file_load(fullpath_filename);
   is_current_sketch_modified = FALSE;
