@@ -44,7 +44,7 @@ install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/share/matchbox/mbdock/
 	install -m 644 $(PACKAGE).dock $(DESTDIR)$(PREFIX)/share/matchbox/mbdock
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps/
-	install -m 644 $(PACKAGE).xpm $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 
