@@ -1,3 +1,7 @@
+08/18/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- Several fixes and tweask in vcard import
+	- New vcard in tests, Nokia 9210
+
 08/15/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- Finished vcard import.

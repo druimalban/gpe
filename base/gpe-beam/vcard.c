@@ -36,6 +36,7 @@ static struct tag_map map[] =
     { "honorific_suffix", "suffix" },
     { "nickname", NULL },
     { "comment", "note" },
+	{ "work_organization", "organization"},
     { NULL, NULL }
   };
 
@@ -119,10 +120,13 @@ gpe_export_vcard (sqlite *db, guint uid)
 }
 
 #define insert(a,b) \
-	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
+	  {if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
 				  NULL, NULL, &err, \
 				  id, a, b)) \
-	    goto error;
+	    goto error; \
+	  printf ("insert into contacts values (%d,'%s','%s')\n", \
+				  \
+				  id, a, b);}
 
 gchar *
 append_str (gchar *old, gchar *new)
@@ -148,6 +152,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
   guint id;
   struct tag_map *t = &map[0];
   GList *l;
+  gboolean home = FALSE, work = FALSE;
 
   if (sqlite_exec (db, "begin transaction", NULL, NULL, &err))
     {
@@ -169,11 +174,13 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
       gchar *value;
       g_object_get (G_OBJECT (vcard), t->vc ? t->vc : t->tag, &value, NULL);
       if (value)
-	{
+	{	
 	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')",
 				  NULL, NULL, &err,
 				  id, t->tag, g_strstrip(value)))
 	    goto error;
+printf("1: insert into contacts values (%d,'%s','%s')\n", 
+				  id, t->tag, g_strstrip(value));	  
 	}
       t++;
     }
@@ -184,7 +191,6 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
     {
       MIMEDirVCardAddress *address;
       gchar *s = NULL;
-      gboolean home = FALSE, work = FALSE;
       address = l->data;
       g_object_get (G_OBJECT (address), "full", &s, NULL);
       if (s == NULL)
@@ -204,7 +210,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	  if (ext)
 	    s = append_str (s, ext);
 	  if (street)
-	    s = append_str (s, ext);
+	    s = append_str (s, street);
 	  if (region)
 	    s = append_str (s, region);
 	  if (locality)
@@ -219,7 +225,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	{
 	  g_object_get (G_OBJECT (address), "home", &home, NULL);
 	  g_object_get (G_OBJECT (address), "work", &work, NULL);
-	  if (home || !work)
+	  if (home && !work)
 	    insert ("home.address", s);
 	  if (work)
 	    insert ("work.address", s);
@@ -237,8 +243,11 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 
       g_object_get (G_OBJECT (email), "address", &s, NULL);
 
-      if (s)
-	insert ("home.email", s);
+      if (s) // we cheat a little bit - vcard doesn't tell us
+	{
+	    insert ("home.email", s);
+	    insert ("work.email", s);
+	}
 
       l = g_list_next (l);
     }
@@ -249,6 +258,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
       MIMEDirVCardPhone *phone = l->data;
       gchar *s = NULL;
       gboolean home = FALSE, work = FALSE;
+      gboolean fax = FALSE, cell = FALSE, voice = FALSE;
 
       g_object_get (G_OBJECT (phone), "number", &s, NULL);
 
@@ -256,10 +266,31 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	{
 	  g_object_get (G_OBJECT (phone), "home", &home, NULL);
 	  g_object_get (G_OBJECT (phone), "work", &work, NULL);
-	  if (home || !work)
-	    insert ("home.telephone", s);
-	  if (work)
-	    insert ("work.telephone", s);
+	  g_object_get (G_OBJECT (phone), "fax", &fax, NULL);
+	  g_object_get (G_OBJECT (phone), "cell", &cell, NULL);
+	  g_object_get (G_OBJECT (phone), "voice", &voice, NULL);
+	
+      if (voice && !cell) 
+	  {		  
+	    if (work)
+	      insert ("work.telephone", s)
+	    else
+	      insert ("home.telephone", s);
+      }
+      if (fax)
+	  {		  
+	    if (work)
+	      insert ("work.fax", s)
+	    else
+	      insert ("home.fax", s);
+      }
+      if (cell)
+	  {		  
+	    if (work)
+	      insert ("work.mobile", s)
+	    else
+	      insert ("home.mobile", s);
+      }
 	}
 
       l = g_list_next (l);
