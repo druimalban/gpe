@@ -1,3 +1,7 @@
+2003-02-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (clean): Make 'clean' depend on clean-po.
+
 2002-09-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* main.c: Convert to #include <gpe/foo.h> style.

@@ -61,7 +61,7 @@ install-program: all
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-edit
 
-clean:
+clean: clean-po
 	rm -f gpe-edit $(OBJS)
 
 include ../build/Makefile.translation
