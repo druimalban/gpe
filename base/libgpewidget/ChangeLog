@@ -1,5 +1,14 @@
 2004-05-31  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.82 released.
+
+2004-05-31  Philip Blundell  <philb@gnu.org>
+
+	* gpewindowbits.c (gpe_get_client_window_list): Improve error checking.
+	(gpe_get_wm_class): Likewise.
+
+2004-05-31  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.81 released.
 
 2004-05-31  Philip Blundell  <philb@gnu.org>

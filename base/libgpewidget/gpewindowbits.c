@@ -67,12 +67,15 @@ gpe_get_client_window_list (Display *dpy, Window **list, guint *nr)
   int actual_format;
   unsigned long nitems, bytes_after = 0;
   unsigned char *prop = NULL;
+  int rc;
 
   initialize (dpy);
   
-  if (XGetWindowProperty (dpy, DefaultRootWindow (dpy), atoms[_NET_CLIENT_LIST],
-			  0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop) != Success)
+  rc = XGetWindowProperty (dpy, DefaultRootWindow (dpy), atoms[_NET_CLIENT_LIST],
+			   0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
+			   &nitems, &bytes_after, &prop);
+
+  if (rc != Success || prop == NULL)
     return FALSE;
 
   *nr = (guint)nitems;
@@ -103,7 +106,7 @@ gpe_get_wm_class (Display *dpy, Window w, gchar **instance, gchar **class)
 			  0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
 			  &nitems, &bytes_after, &prop);
 
-  if (gdk_error_trap_pop () || rc != Success)
+  if (gdk_error_trap_pop () || rc != Success || prop == NULL)
     return FALSE;
 
   if (instance)
