@@ -33,7 +33,7 @@
 #include <gpe/stylus.h>
 #include <gpe/translabel.h>
 
-#include <rootpixmap.h>
+#include "gpe-ownerinfo.h"
 
 #define CURRENT_DATAFILE_VER 2
 
@@ -46,22 +46,21 @@
 
 #define _(_x) gettext(_x)
 
-GtkWidget *GPE_Ownerinfo;
-GtkWidget *name;
-GtkWidget *phone;
-GtkWidget *email;
-GtkWidget *address;
-GdkPixbuf *photopixbuf;
-GtkWidget *smallphotobutton;
-GtkWidget *bigphotobutton;
-gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
-PangoLayout *address_layout;
-guint lost_height;
-GtkWidget *scrollbar;
-gchar *pango_lang_code;
+static GtkWidget *name;
+static GtkWidget *phone;
+static GtkWidget *email;
+static GtkWidget *address;
+static GdkPixbuf *photopixbuf;
+static GtkWidget *smallphotobutton;
+static GtkWidget *bigphotobutton;
+static gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
+static PangoLayout *address_layout;
+static guint lost_height;
+static GtkWidget *scrollbar;
+static gchar *pango_lang_code;
 
 /* redraw the pixbuf */
-gboolean
+static gboolean
 on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   gint width  = 10;
@@ -107,27 +106,18 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   return TRUE;
 }
 
-void
+static void
 on_smallphotobutton_clicked            (GtkButton       *button,
                                         GtkWidget       *notebook)
 {
   gtk_notebook_set_page (GTK_NOTEBOOK (notebook), 1);
 }
 
-void
+static void
 on_bigphotobutton_clicked              (GtkButton       *button,
                                         GtkWidget       *notebook)
 {
   gtk_notebook_set_page (GTK_NOTEBOOK (notebook), 0);
-}
-
-void
-realize (GtkWidget *w)
-{
-  GtkViewport *vp = GTK_VIEWPORT (w);
-
-  gdk_window_set_back_pixmap (vp->view_window, NULL, TRUE);
-  gdk_window_set_back_pixmap (vp->bin_window, NULL, TRUE);
 }
 
 /*
@@ -136,7 +126,7 @@ realize (GtkWidget *w)
  *  The data file format is described in the file HACKING.
  */
 
-gint
+static gint
 upgrade_to_v2 (guint new_version)
 {
   gchar *firstline, *oldcontent;
@@ -193,7 +183,7 @@ upgrade_to_v2 (guint new_version)
 }
 
 
-gint
+static gint
 maybe_upgrade_datafile ()
 {
   gchar *firstline;
@@ -271,25 +261,6 @@ maybe_upgrade_datafile ()
 }
 
 
-static void
-mapped (GtkWidget *window)
-{
-  Pixmap rmap = GetRootPixmap (GDK_DISPLAY ());
-  if (rmap != None)
-    {
-      Pixmap pmap;
-      pmap = CutWinPixmap (GDK_DISPLAY(), GDK_WINDOW_XWINDOW (window->window), rmap, 
-			   GDK_GC_XGC (window->style->black_gc));
-      if (pmap != None)
-	{
-	  GtkStyle *style = gtk_style_copy (window->style);
-	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
-	  style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
-	  gtk_widget_set_style (window, style);
-	}
-    }
-}
-
 static gboolean
 draw_address (GtkWidget *widget, GdkEventExpose *event, gpointer user_data)
 {
@@ -339,7 +310,7 @@ set_address_size (GtkWidget *widget, GtkAllocation *allocation, gpointer user_da
   adj->page_size = (double)allocation->height / (double)height;
 }
 
-void
+static void
 translate_name_label (GtkWidget *namelabel, gpointer data)
 {
   gtk_label_set_markup (GTK_LABEL (namelabel),
@@ -348,12 +319,9 @@ translate_name_label (GtkWidget *namelabel, gpointer data)
 					 pango_lang_code, _("Owner")));
 }
 
-int
-main (int argc, char *argv[])
+GtkWidget *
+gpe_owner_info (void)
 {
-  struct passwd *pwd;
-  gchar *package_revision = "$Revision$";
-  
   GtkWidget *GPE_Ownerinfo;
   GtkWidget *notebook;
   GtkWidget *mainvbox;
@@ -370,6 +338,7 @@ main (int argc, char *argv[])
   GtkWidget *addresshbox;
   GtkSizeGroup *sizegroup;
   GtkObject *adjustment;
+  gint upgrade_result = UPGRADE_ERROR;
   
   /* gchar *gpe_catindent = gpe_get_catindent ();  */
   /* guint gpe_catspacing = gpe_get_catspacing (); */
@@ -379,73 +348,10 @@ main (int argc, char *argv[])
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   gchar *ownerphotofile;
   FILE *fp;
-  gchar * geometry = NULL;
-  gboolean flag_transparent = FALSE;
-  gboolean flag_keep_on_top = FALSE;
-  gint x = -1, y = -1, h = 0, w = 0;
-  gint val;
-  gint opt;
-  gint upgrade_result = UPGRADE_ERROR;
 
   /* TRANSLATORS: please replace this with the Pango code for your own language */
   pango_lang_code = g_strdup (_("en"));
 
-  /* drop root privileges */
-  pwd = getpwnam ("nobody");
-  if (pwd == NULL) {
-    fprintf (stderr, "getpwnam call failed. Exiting.\n");
-    exit (1);
-  }
-  else {
-    if (!seteuid (pwd->pw_uid)) {
-      perror ("seteuid call failed. Exiting.");
-      exit (1);
-    }
-  }
-  
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
-  bind_textdomain_codeset (PACKAGE, "UTF-8");
-
-  while ((opt = getopt (argc,argv,"hktg:")) != EOF)
-    {
-      switch (opt) {
-      case 'g':
-	geometry = optarg;
-	break;
-      case 't':
-	flag_transparent = TRUE;
-	break;
-      case 'k':
-	flag_keep_on_top = TRUE;
-	break;
-      case 'h':
-	printf (g_strdup_printf ("%s %s", _("GPE Owner Info"), package_revision));
-	printf ("\n");
-	printf (_("Valid options:\n"));
-	printf (_("   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"));
-	printf (_("   -t           make window transparent\n"));
-	printf (_("   -k           always keep window on top (override redirect)\n"));
-	printf (_("   -h           this help text\n"));
-	exit (1);
-      case '?':
-	if (isprint (optopt))
-	  ;
-	/* fprintf (stderr, "gpe-ownerinfo: Unknown option -%c'.\n", optopt); */
-	else
-	  fprintf (stderr,
-		   "gpe-ownerinfo: Unknown option character \\x%x'.\n",
-		   optopt);
-	break;
-      default:
-	fprintf (stderr,
-		 "gpe-ownerinfo: Unknown error while parsing command line. Command was %c\n",
-		 opt);
-	exit (1);
-      }
-    }
-    
   ownername    = g_strdup (_("GPE User"));
   owneremail   = g_strdup (_("nobody@localhost.localdomain"));
   ownerphone   = g_strdup (_("+99 (9999) 999-9999"));
@@ -525,9 +431,6 @@ main (int argc, char *argv[])
       exit (1);
       */
     }
-
-  if (gpe_application_init (&argc, &argv) == FALSE)
-    exit (1);
 
   /* FIXME: check error */
   photopixbuf = gdk_pixbuf_new_from_file (photofile, NULL);
@@ -668,18 +571,6 @@ main (int argc, char *argv[])
   gtk_widget_show (bigphotodrawingarea);
   gtk_container_add (GTK_CONTAINER (bigphotobutton), bigphotodrawingarea);
   
-  if (flag_transparent)
-    {
-      GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
-      style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap *)GDK_PARENT_RELATIVE;
-      gtk_widget_set_style (smallphotobutton, style);
-      gtk_widget_set_style (smallphotodrawingarea, style);
-      gtk_widget_set_style (address, style);
-      gtk_widget_set_style (scrollbar, style);
-      gtk_widget_set_style (bigphotobutton, style);
-      gtk_widget_set_style (bigphotodrawingarea, style);
-    }
-
   /* Make sure the labels are all the same height (which might not
    * be the case because of the pango markup for e.g. 'email').
    * Don't put 'address' in it, it is too high.
@@ -691,21 +582,6 @@ main (int argc, char *argv[])
   gtk_size_group_add_widget (sizegroup, phone);
 
   /* end of drawing the GUI */
-
-  
-  if (geometry)
-    {
-      val = XParseGeometry (geometry, &x, &y, &w, &h);
-      if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
-	gtk_widget_set_usize (GPE_Ownerinfo, w, h);
-      if (val & (XValue | YValue))
-	gtk_widget_set_uposition (GPE_Ownerinfo, x, y);
-    }
-  else
-    {
-      gtk_widget_set_usize (GPE_Ownerinfo, 240, 100);
-      gtk_widget_set_uposition (GPE_Ownerinfo, 0, 220); /* 320 - 100 */
-    }
 
   gtk_label_set_markup (GTK_LABEL (name),
 			g_strdup_printf ("<span>%s</span>",
@@ -722,12 +598,6 @@ main (int argc, char *argv[])
 					 ownerphone));
   gtk_label_set_selectable (GTK_LABEL (phone), TRUE);
     
-  /* make window transparent if option -t is given: */
-  if (flag_transparent) {
-    gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
-			GTK_SIGNAL_FUNC (mapped), NULL);
-  }
-
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
@@ -738,14 +608,5 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (on_bigphotobutton_clicked),
 		      notebook);
 
-  gtk_widget_realize (GPE_Ownerinfo);
-
-  if (flag_keep_on_top) {
-    gdk_window_set_override_redirect (GPE_Ownerinfo->window, TRUE);
-  }
-
-  gtk_widget_show (GPE_Ownerinfo);
-
-  gtk_main ();
-  return 0;
+  return GPE_Ownerinfo;
 }

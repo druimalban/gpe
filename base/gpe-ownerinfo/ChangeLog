@@ -1,3 +1,13 @@
+2003-07-18  Philip Blundell  <philb@gnu.org>
+
+	* gpe-ownerinfo.c: Remove transparency.  Make internal functions
+	and variables static.
+	(gpe_owner_info): New function.
+	(main): Move to ...
+	* main.c (main): ... here.  New file.
+	* gpe-ownerinfo.h: New file.
+	* Makefile: Build libgpe-ownerinfo.a.  Don't use librootimage.
+
 2003-07-08  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add 'sv'.
