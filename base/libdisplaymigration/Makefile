@@ -51,3 +51,5 @@ clean:
 	rm -f $(OBJS) $(SONAME) libdotdesktop.so $(DEPS)
 
 -include $(DEPS)
+include ../build/Makefile.dpkg_ipkg
+
