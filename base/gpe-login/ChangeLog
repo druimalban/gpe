@@ -3,6 +3,9 @@
 	* gpe-xcalibrate.sh: New file. Runs xcalibrate and writes the
 	config file.
 
+	Make it only write the configuration when xcalibrated returned
+	successfully.
+
 	* Makefile (install-login): Install gpe-xcalibrate.sh.
 
 	* gpe-login.keylaunchrc: Call wrapper script that also saves the
