@@ -583,8 +583,7 @@ do_message_info (psinfo_t * psi)
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO,
 						 GTK_BUTTONS_OK,
-						 _
-						 ("Successfully connected."));
+						 _("Successfully connected."));
 		g_signal_connect_swapped (G_OBJECT (dialog), "response",
 					  G_CALLBACK (gtk_widget_destroy),
 					  G_OBJECT (dialog));
@@ -598,8 +597,7 @@ do_message_info (psinfo_t * psi)
 							 GTK_DIALOG_DESTROY_WITH_PARENT,
 							 GTK_MESSAGE_INFO,
 							 GTK_BUTTONS_OK,
-							 _
-							 ("Ad-Hoc connections setup complete."));
+							 _("Ad-Hoc connections setup complete."));
 			g_signal_connect_swapped (G_OBJECT (dialog),
 						  "response",
 						  G_CALLBACK
@@ -608,8 +606,7 @@ do_message_info (psinfo_t * psi)
 			gtk_widget_show (dialog);
 		}
 		else
-			gpe_error_box_nonblocking (_
-						   ("Could not connect to wireless LAN."));
+			gpe_error_box_nonblocking (_("Could not connect to wireless LAN."));
 		break;
 	case I_ERRCARD:
 	case I_NOCARD:
@@ -953,7 +950,7 @@ main (int argc, char *argv[])
 				    G_TYPE_STRING);
 
 	window = gtk_plug_new (0);
-	gtk_widget_set_usize (window, 19, 19);
+	gtk_widget_set_usize (window, 16, 16);
 	gtk_widget_realize (window);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Wireless LAN control"));
@@ -995,10 +992,12 @@ main (int argc, char *argv[])
 
 	icon = gtk_image_new_from_pixbuf (gpe_find_icon
 					  (radio_is_on ? "scan-on" :
-					   "scan-off"));
+	"scan-off")); 
+
 	gtk_widget_show (icon);
 	gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("scan-off"), NULL,
-					   &bitmap, 255);
+					   &bitmap, 128);
+	
 	gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 	gdk_bitmap_unref (bitmap);
 
