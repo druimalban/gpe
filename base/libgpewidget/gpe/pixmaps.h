@@ -22,6 +22,7 @@ struct gpe_icon
 
 extern gboolean gpe_load_icons (struct gpe_icon *);
 extern GdkPixbuf *gpe_find_icon (const char *name);
+extern GdkPixbuf *gpe_try_find_icon (const char *name, gchar **error);
 extern gboolean gpe_find_icon_pixmap (const char *name,
 				      GdkPixmap **pixmap,
 				      GdkBitmap **bitmap);

@@ -129,14 +129,13 @@ gpe_load_icons (struct gpe_icon *p)
 }
 
 GdkPixbuf *
-gpe_find_icon (const char *name)
+gpe_try_find_icon (const char *name, gchar **error)
 {
   struct gpe_icon *p = g_datalist_get_data (&pbdata, name);
-  gchar *error;
 
   if (p == NULL)
     {
-      GdkPixbuf *buf = gpe_load_one_icon (name, &error);
+      GdkPixbuf *buf = gpe_load_one_icon (name, error);
       if (buf)
 	{
 	  p = g_malloc (sizeof (struct gpe_icon));
@@ -144,13 +143,24 @@ gpe_find_icon (const char *name)
 	  p->pixbuf = buf;
 	  g_datalist_set_data (&pbdata, p->shortname, p);
 	}
-      else
-	{
-	  fprintf (stderr, error);
-	}
     }
   
   return p ? p->pixbuf : NULL;
+}
+
+GdkPixbuf *
+gpe_find_icon (const char *name)
+{
+  gchar *error;
+  GdkPixbuf *p = gpe_try_find_icon (name, &error);
+  
+  if (p == NULL)
+    {
+      gpe_error_box (error);
+      g_free (error);
+    }
+
+  return p;
 }
 
 gboolean

@@ -27,7 +27,7 @@ static volatile gboolean currently_handling_error = FALSE;
 static void
 do_gpe_error_box (const char *text, gboolean block)
 {
-  GtkWidget *label, *ok, *dialog, *icon;
+  GtkWidget *label, *ok, *dialog;
   GtkWidget *hbox;
   GdkPixbuf *p;
   GtkWidget *fakewindow;
@@ -64,9 +64,12 @@ do_gpe_error_box (const char *text, gboolean block)
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
 			     (gpointer)dialog);
 
-  p = gpe_find_icon ("error");
-  icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, p);
-  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+  p = gpe_try_find_icon ("error", NULL);
+  if (p)
+    {
+      GtkWidget *icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, p);
+      gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+    }
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);

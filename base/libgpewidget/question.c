@@ -82,7 +82,7 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
 
-  p = gpe_find_icon (iconname);
+  p = gpe_try_find_icon (iconname, NULL);
   if (p != NULL)
   {
     icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);

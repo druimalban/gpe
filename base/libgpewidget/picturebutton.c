@@ -16,7 +16,7 @@
 GtkWidget *
 gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon)
 {
-  GdkPixbuf *p = gpe_find_icon (icon);
+  GdkPixbuf *p = gpe_try_find_icon (icon, NULL);
   GtkWidget *button = gtk_button_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *hbox2 = gtk_hbox_new (FALSE, 0);
