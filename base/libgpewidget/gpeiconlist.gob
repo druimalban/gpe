@@ -26,7 +26,7 @@ requires 2.0.0
 #include <gtk/gtk.h>
 #include "gpe-iconlist.h"
 
-#undef  CHIT_CHAT
+//#define CHIT_CHAT
 
 #ifdef CHIT_CHAT
 #define MAYBE_PRINTF printf
@@ -114,6 +114,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 				    GTK_SIGNAL_FUNC(gpe_iconlist__button_press), NULL);
 		gtk_container_add (GTK_CONTAINER(vp), da);
 
+		gtk_object_set_data (GTK_OBJECT (self), "vp", vp); //luc
 		gtk_object_set_data (GTK_OBJECT (self), "da", da);
 		gtk_object_set_data (GTK_OBJECT (da), "il", self);
 		gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment(GTK_VIEWPORT(vp)));
@@ -429,19 +430,36 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private void _recalc_size (self, GtkAllocation *allocation)
 	{
 		int count;
+    GtkAllocation * il_allocation; //iconlist's allocation
+    GtkAllocation * vp_allocation; //viewport's allocation (does not include scrollbar)
 
-		if (allocation->width > 15 + il_col_width (self)) 
-			self->_priv->cols = (allocation->width - 15) / il_col_width (self);
+    il_allocation = allocation; //NOT: &GTK_WIDGET(self)->allocation (!?!)
+    vp_allocation = & (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(self), "vp"))->allocation);
+    MAYBE_PRINTF("luc> _recalc il w h: %d %d\n", il_allocation->width, il_allocation->height);
+    MAYBE_PRINTF("luc> _recalc vp w h: %d %d\n", vp_allocation->width, vp_allocation->height);
+
+    //luc: I believe 15 was for the scrollbar's size
+		//if (allocation->width > 15 + il_col_width (self)) 
+		//	self->_priv->cols = (allocation->width - 15) / il_col_width (self);
+		if (il_allocation->width > il_col_width (self)) //check according listicon's allocation
+			self->_priv->cols = (il_allocation->width) / il_col_width (self);
 		else
 			self->_priv->cols = 1;
-		
+
 		count = g_list_length (self->_priv->icons);
 		
 		self->_priv->rows = ((count+self->_priv->cols-1)/self->_priv->cols);
 
-		gtk_drawing_area_size (
+    MAYBE_PRINTF("luc> _recalc count : %d\n", count);
+    MAYBE_PRINTF("luc> _recalc col   : %d\n", self->_priv->cols);
+    MAYBE_PRINTF("luc> _recalc row   : %d\n", self->_priv->rows);
+
+		gtk_drawing_area_size (//use viewport's allocation
 			GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(self), "da")),
-			allocation->width, self->_priv->rows * il_row_height (self) + 5);
+			vp_allocation->width, self->_priv->rows * il_row_height (self) + 5);
+
+    MAYBE_PRINTF("luc> _recalc da w h: %d %d\n",
+      vp_allocation->width, self->_priv->rows * il_row_height (self) + 5);
 	}
 
 	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)

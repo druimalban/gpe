@@ -1,3 +1,9 @@
+2003-03-24  Luc Pionchon  <luc@handhelds.org>
+
+	* gpeiconlist.gob (_recalc_size): use viewport's allocation to
+	update the drawinf area.
+	(init): keep a ref to the viewport.
+
 2003-03-23  Luc Pionchon  <luc@handhelds.org>
 
 	* gpeiconlist.gob (set_icon_xmargin): new function.
