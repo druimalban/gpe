@@ -4,6 +4,8 @@ PIXMAPS = copy.png cut.png exit.png new.png open.png paste.png save.png save_as.
 
 SPIXMAPS = delrecord.xpm new.xpm tick.xpm
 
+all:
+
 install:
 	for i in $(PIXMAPS); do install -m 644 -D default/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
 	install -D -m 644 gpe-logo.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-logo.png
