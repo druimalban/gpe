@@ -1,5 +1,5 @@
 /*
- * gpe-packages
+ * gpe-package
  *
  * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
@@ -71,6 +71,10 @@ struct gpe_icon my_icons[] = {
   { "local-package", "local-package-16" },
   { "icon", PREFIX "/share/pixmaps/gpe-packages.png" }
 };
+
+
+gboolean get_pending_messages ();
+
 
 /* dialogs */
 #warning todo panel
@@ -454,6 +458,21 @@ list_toggle_inst (GtkCellRendererToggle * cellrenderertoggle,
 }
 
 
+void
+do_local_install(char *filename,gpointer userdata)
+{
+	printf(filename);
+	if (!access(filename,F_OK))
+	{
+		send_message(PK_COMMAND,CMD_INSTALL,"",filename);
+		wait_command_finish();
+	}
+	else
+		do_message_dlg(GTK_MESSAGE_ERROR,
+		_("The selected file could not be accessed."));		
+}
+
+
 /* app mainloop */
 
 int
@@ -520,7 +539,7 @@ do_package_check(const char *package)
 void
 on_select_local(GtkButton *button, gpointer user_data)
 {
-	ask_user_a_file("/tmp",_("Select package file"),NULL,NULL,NULL);
+	ask_user_a_file("/tmp",_("Select package file"),do_local_install,NULL,NULL);
 }
 
 
@@ -678,7 +697,7 @@ create_fMain (void)
   pw = gtk_image_new_from_pixbuf (gpe_find_icon ("local-package"));
   bSelectLocal = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Install package"),
 			   _("Install package"), 
-			   _("Select a package in local filesystem to install."), pw,
+			   _("Select a package to install in local filesystem."), pw,
 			   (GtkSignalFunc) on_select_local , NULL);
 			   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));

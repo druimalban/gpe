@@ -1,5 +1,5 @@
 /*
- * gpe-packages
+ * gpe-package
  *
  * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
  *

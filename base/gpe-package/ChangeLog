@@ -1,3 +1,6 @@
+2003-10-30 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c: Install local packages.
+	
 2003-10-28 Florian Boor <florian.boor@kernelconcepts.de>
 	* packages.*, interface.c: Changed to renamed header files.
 	* filesel.*: new files (from gpe-beam)
