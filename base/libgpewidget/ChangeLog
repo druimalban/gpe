@@ -1,3 +1,7 @@
+2002-08-25  Luc Pionchon <luc.pionchon@welho.com>
+
+	* about.c: scale down to 48x48 gpe_logo; and support for app_icon on window
+
 2002-08-25  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.22 released.
