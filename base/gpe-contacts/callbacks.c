@@ -114,12 +114,16 @@ on_edit_save_clicked                   (GtkButton       *button,
                                         gpointer         user_data)
 {
   GtkWidget *edit = (GtkWidget *)user_data;
+  GtkWidget *w;
   GSList *data = NULL;
   GSList *tags;
   struct person *p = gtk_object_get_data (GTK_OBJECT (edit), "person");
   if (p == NULL)
     p = new_person ();
 
+  w = lookup_widget (edit, "name_entry");
+  p->name = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+  
   for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
        tags;
        tags = tags->next)
