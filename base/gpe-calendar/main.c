@@ -31,7 +31,7 @@
 
 #define _(_x) gettext (_x)
 
-extern void about (void);
+extern gboolean gpe_calendar_start_xsettings (void);
 
 GList *times;
 time_t viewtime;
@@ -66,6 +66,7 @@ static GtkWidget *day_button, *week_button, *month_button, *year_button, *future
 guint window_x = 240, window_y = 310;
 
 gboolean week_starts_monday = TRUE;
+gboolean day_view_combined_times;
 
 static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
 			   31, 31, 30, 31, 30, 31 };
@@ -316,10 +317,11 @@ main (int argc, char *argv[])
   gtk_widget_show (vbox);
   gtk_widget_show (toolbar);
 
+  gpe_calendar_start_xsettings ();
+
   set_day_view ();
 
   gtk_main ();
 
   return 0;
 }
-

@@ -20,6 +20,7 @@ extern void update_current_view (void);
 
 extern guint days_in_month (guint year, guint month);
 extern gboolean week_starts_monday;
+extern gboolean day_view_combined_times;
 extern void set_day_view (void);
 
 extern GdkPixmap *close_pix, *day_pix;

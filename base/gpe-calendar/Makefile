@@ -5,7 +5,7 @@ GTK2 = yes
 
 LINGUAS = de pt_PT
 
-MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup old-db
+MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup old-db xsettings
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
@@ -22,8 +22,8 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS)
+CFLAGS += -Wall $(GTKCFLAGS) -I../libXsettings -I../libXsettings-client
+LDFLAGS += $(GTKLDFLAGS) -L../libXsettings -L../libXsettings-client -lXsettings-client
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 

@@ -1,3 +1,14 @@
+2002-10-17  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Call gpe_calendar_start_xsettings.
+	(day_view_combined_times): Define.
+	* xsettings.c: New file.
+	* globals.h (day_view_combined_times): Declare.
+	* day_view.c (day_view_combined_times): Don't define.
+	* Makefile (MEMBERS): Add xsettings.
+	* Makefile (LDFLAGS): Add Xsettings libraries.
+	* Makefile (CFLAGS): Add Xsettings include paths.
+	
 2002-10-14  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
         * event-ui.c (schedule_alarm): add DISPLAY to script 

@@ -24,8 +24,6 @@
 #include "globals.h"
 #include "day_view.h"
 
-gboolean day_view_combined_times;
-
 static GSList *strings;
 static GtkWidget *day_list;
 static GtkWidget *datesel;
