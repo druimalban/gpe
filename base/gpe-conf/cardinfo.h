@@ -20,9 +20,12 @@ typedef struct socket_info_t {
 
 extern socket_info_t st[];
 extern int ns;
+extern const char *pcmcia_tmpcfgfile;
+extern const char *pcmcia_cfgfile;
 
 int init_pcmcia_suid();
 void do_reset();
+void do_get_card_ident(int socket);
 
 GtkWidget *Cardinfo_Build_Objects();
 void Cardinfo_Free_Objects();

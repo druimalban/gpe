@@ -479,10 +479,22 @@ suidloop (int write, int read)
 		fscanf (in, "%d", &numarg);
 		assign_serial_port(numarg);
 	      }
+	    else if (strcmp (cmd, "CMID") == 0)
+	      {
+		fscanf (in, "%d", &numarg);
+		do_get_card_ident(numarg);	  
+	      }
 	    else if (strcmp (cmd, "CMRE") == 0)
 	      {
 		fscanf (in, "%s", arg1);
 		do_reset();
+	      }
+	    else if (strcmp (cmd, "CMCP") == 0)
+	      {
+		    fscanf (in, "%s", arg1);
+		    system_printf ("/bin/cp %s %s", pcmcia_tmpcfgfile, pcmcia_cfgfile);
+		    system_printf ("chmod 0644 %s", pcmcia_cfgfile);
+		    system_printf ("/bin/rm -f %s", pcmcia_tmpcfgfile);
 	      }
 #if 0
 	    if (bin)		// fork and exec

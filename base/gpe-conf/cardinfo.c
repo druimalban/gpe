@@ -30,6 +30,8 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/file.h>
+#include <stropts.h>
+#include <poll.h>
 
 #include <pcmcia/version.h>
 #include <pcmcia/cs_types.h>
@@ -42,6 +44,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
+#include <gpe/popup_menu.h>
 
 #include "cardinfo.h"
 #include "applets.h"
@@ -90,8 +93,10 @@ static GtkWidget *toolicons[7];
 int ns;
 static int changed_tab = FALSE;
 socket_info_t st[MAX_SOCK];
-
-static char *pidfile = "/var/run/cardmgr.pid";
+static GList *drivers = NULL;
+static const char *pidfile = "/var/run/cardmgr.pid";
+const char *pcmcia_tmpcfgfile = "/tmp/config";
+const char *pcmcia_cfgfile = "/etc/pcmcia/config";
 static char *stabfile;
 
 #define PIXMAP_PATH PREFIX "/share/pixmaps/"
@@ -99,13 +104,237 @@ static char *stabfile;
 
 /* --- local intelligence --- */
 
-static GList *get_driver_list(void *param)
+
+static void save_config(char *config, int socket)
+{
+  gchar *content, *tmpval;
+  gchar **lines = NULL;
+  gint length;
+  gchar *delim = NULL;
+  FILE *fnew;
+  gint i = 0;
+  gint j = 0;
+  GError *err = NULL;
+	char **cfg;
+	char *cur_bind;
+	int new;
+	
+	cfg = g_strsplit(config,"\n",4); // idstr,version,manfid,binding
+	cur_bind = st[socket].card.str; // current driver binding
+	
+	new = g_str_has_prefix(g_strchomp(cur_bind),"unsupported card"); // check if this is a known card
+	
+	if (!new) cur_bind = cfg[0];  // cur_bind holds the ident line we search for
+	
+  tmpval = "";
+  if (!g_file_get_contents (pcmcia_cfgfile, &content, &length, &err))
+  {
+	  fprintf(stderr,"Could not access file: %s.\n",pcmcia_cfgfile);
+	  if (access(pcmcia_cfgfile,F_OK)) // file exists, but access is denied
+	  {
+		  i = 0;
+		  goto writefile;
+	  }
+  }
+  lines = g_strsplit (content, "\n", 4096);
+  g_free (content);
+
+  new = TRUE;
+  while (lines[i])
+	{
+	  if ((g_strrstr (g_strchomp (lines[i]), g_strchomp(cur_bind)))
+	  && (!g_str_has_prefix (g_strchomp (lines[i]), "#")))
+	{
+		new = FALSE;
+	  delim = lines[i];
+	  lines[i] = g_strdup_printf("%s",cfg[0]);
+	  free(delim);
+	  i++;
+	  if ((config[1]) && strlen(cfg[1]))
+	  {
+	    delim = lines[i];
+		lines[i] = g_strdup_printf("%s",cfg[1]);
+		free(delim);
+		i++;
+	  }
+	  if ((config[2]) && strlen(cfg[2]))
+	  {
+		delim = lines[i];
+		lines[i] = g_strdup_printf("%s",cfg[2]); // really bad if not true
+		free(delim);
+		i++;
+	  }
+	  if ((config[3]) && strlen(cfg[3])) 
+	  {
+	    delim = lines[i];
+		lines[i] = g_strdup_printf("%s",cfg[3]);
+		free(delim);
+	  }
+	}	  
+	  i++;
+	}
+
+  i--;
+writefile:
+	
+  if (new)
+    {
+      lines = realloc (lines, (i+4) * sizeof (gchar *));
+      lines[i] = g_strdup_printf("%s",cfg[0]);
+      i++;
+      if ((config[1]) && strlen(cfg[1]))
+      {
+	    lines[i] = g_strdup_printf("%s",cfg[1]);
+	    i++;
+      }
+      if ((config[2]) && strlen(cfg[2]))
+      {
+	    lines[i] = g_strdup_printf("%s",cfg[2]);
+	    i++;
+      }
+      if ((config[3]) && strlen(cfg[3])) 
+      {
+	    lines[i] = g_strdup_printf("%s",cfg[3]);
+        i++;
+      }
+        lines[i] = NULL;
+    }
+  
+  fnew = fopen (pcmcia_tmpcfgfile, "w");
+  if (!fnew) 
+  {
+     fprintf(stderr,"Could not write to file: %s.\n",pcmcia_tmpcfgfile);
+     return;
+  }	  
+  
+  for (j = 0; j < i; j++)
+    {
+      fprintf (fnew, "%s\n", lines[j]);
+    }
+  fclose (fnew);
+  g_strfreev (lines);
+}
+
+
+static char* user_get_card_ident(int socket)
+{
+  static char str[256];
+  struct pollfd pfd[1];
+  int i = 0, j = 0;
+  char *result = 0;
+  
+  if (setvbuf(suidin,NULL,_IONBF,0) != 0) 
+    fprintf(stderr,"gpe-conf: error setting buffer size!");
+  
+  sprintf(str,"%d",socket);
+  suid_exec("CMID",str);
+  
+  pfd[0].fd = suidinfd;
+  pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
+ 
+  /* we hope and pray */
+  while ((i<4) && (j<20))
+  {
+    j++;
+    while (poll(pfd,1,500))
+    {
+      fgets (str, 255, suidin);
+      i++;
+      if (i==1)
+        result = g_strdup(str);
+      else
+	  {		  
+		result = realloc(result,strlen(result)+strlen(str)+1);
+        strcat(result,str);
+	  }
+    }
+  }	
+  return result;	
+}
+
+
+static char* get_card_ident(int socket)
+{
+	FILE *pipe;
+	char buffer[256];
+	char *result = NULL;
+	
+	sprintf(buffer,"/sbin/cardctl info %d",socket);
+	pipe = popen (buffer, "r");
+
+	if (pipe > 0)
+    {
+  		while ((feof(pipe) == 0))
+    	{
+      		fgets (buffer, 255, pipe);
+			if (strstr(buffer,"PRODID_1=\""))
+			{
+				result = malloc(strlen(buffer)-10);
+				snprintf(result,strlen(buffer)-11,"%s ",buffer+10);
+				strncat(result," ",1);
+			}
+			if (strstr(buffer,"PRODID_2=\""))
+			{
+				result = realloc(result,strlen(result)+strlen(buffer)-9);
+				strncat(result,buffer+10,strlen(buffer)-12);
+				strncat(result,"\n",1);
+			}
+			if (strstr(buffer,"PRODID_3=\""))
+			{
+				result = realloc(result,strlen(result)+strlen(buffer)-9);
+				strncat(result,buffer+10,strlen(buffer)-12);
+				strncat(result," ",1);
+			}
+			if (strstr(buffer,"PRODID_4=\""))
+			{
+				result = realloc(result,strlen(result)+strlen(buffer)-9);
+				strncat(result,buffer+10,strlen(buffer)-12);
+				strncat(result,"\n",1);
+			}
+			if (strstr(buffer,"MANFID="))
+			{
+				result = realloc(result,strlen(result)+strlen(buffer)-1);
+				strncat(result,"0x",2);
+				strncat(result,buffer+7,5);
+				strncat(result," 0x",3);
+				strncat(result,buffer+13,4);
+				strncat(result,"\n",1);
+			}
+			if (strstr(buffer,"FUNCID="))
+			{
+				result = realloc(result,strlen(result)+strlen(buffer)-6);
+				strncat(result,buffer+7,strlen(buffer)-8);
+	 			return result;
+			}
+    	}
+      pclose (pipe);
+	  return result;
+    }
+	return NULL;
+}
+
+
+void do_get_card_ident(int socket)
+{
+  char *id = NULL;
+
+  id = get_card_ident(socket);
+  if (setvbuf(nsreturn,NULL,_IONBF,0) != 0) 
+    fprintf(stderr,"gpe-conf: error setting buffer size!");
+    fprintf(nsreturn,"%s\n",id);
+    fflush(nsreturn);
+    fsync(nsreturnfd);
+  free(id);
+}
+
+
+
+static int get_driver_list()
 {
 	FILE *pipe;
 	char buffer[256], dr[128];
-	GList *drivers = NULL;
 	
-	pipe = popen ("grep device /etc/pcmcia/config | grep -v \"#\"", "r");
+	pipe = popen ("/bin/grep device /etc/pcmcia/config | /bin/grep -v \"#\"", "r");
 
 	if (pipe > 0)
     {
@@ -115,13 +344,15 @@ static GList *get_driver_list(void *param)
 			if (sscanf(buffer,"device \"%s\"",dr))
 			{
 		    	dr[strcspn(dr, "\"")] = '\0';
-				g_list_append(drivers,g_strdup(dr));
+				drivers = g_list_append(drivers,g_strdup(dr));
 			}
     	}
       pclose (pipe);
+	  return 0;
     }
-	return drivers;
+	return -1;
 }
+
 
 static void do_alert(char *fmt, ...)
 {
@@ -133,11 +364,13 @@ static void do_alert(char *fmt, ...)
     va_end(args);
 } /* do_alert */
 
+
 void do_reset()
 {
     FILE *f;
     pid_t pid;
     
+	/* this seems not to work in familiar :-( */
     f = fopen(pidfile, "r");
     if (f == NULL) {
 	do_alert("%s %s",_("Could not open pidfile:"), strerror(errno));
@@ -149,7 +382,13 @@ void do_reset()
     }
     if (kill(pid, SIGHUP) != 0)
 	do_alert("%s %s", _("Could not signal cardmgr:"),strerror(errno));
+	
+	/* ... this should work everytime */
+	
+	system("/etc/init.d/pcmcia restart");
+	 
 }
+
 
 static void reset_cardmgr(GtkWidget *button)
 {
@@ -369,7 +608,7 @@ static int do_update(GtkWidget *widget)
 	    return TRUE;
 	
 	if (flock(fileno(f), LOCK_SH) != 0) {
-	    do_alert("flock(stabfile) failed: %s", strerror(errno));
+	    do_alert("%s: %s", _("flock(stabfile) failed)"),strerror(errno));
 	    return FALSE;
 	}
 	last = now;
@@ -537,11 +776,111 @@ static void do_tabchange(GtkNotebook *notebook,
 	changed_tab = page_num+1;
 }
 
+
+void
+dialog_driver_response (GtkDialog * dialog, gint response, gpointer param)
+{
+  char *ident, *config, **buf, *tmp;
+  GtkWidget *eDriver;
+  
+  if (response == GTK_RESPONSE_ACCEPT)
+    {
+		eDriver = gtk_object_get_data(GTK_OBJECT(dialog),"driver");
+		ident = gtk_object_get_data(GTK_OBJECT(dialog),"ident");
+		
+		buf = g_strsplit(ident,"\n",4);
+		if (buf)
+		{
+		  config = g_strdup_printf("card \"%s\"\n",buf[0]);
+		  if (strlen(buf[1])>2) 
+		  {
+			  tmp = g_strdup_printf("%s  version \"%s\"\n",config,buf[1]);
+			  free(config);
+			  config = tmp;
+		  }
+		  if (strlen(buf[2])) // should be true in all cases
+		  {
+			  tmp = g_strdup_printf("%s  manfid %s\n",config,buf[2]);
+			  free(config);
+			  config = tmp;
+		  }
+		  free(buf);
+		  free(ident);
+		  ident = strdup(gtk_entry_get_text(GTK_ENTRY(eDriver)));
+		  
+		  tmp = g_strdup_printf("%s  bind \"%s\"\n",config,ident);
+		  free(config);
+		  free(ident);
+		  config = tmp;
+		  printf("-config-\n%s-end-\n",config);
+
+		  /* save new config */
+		  save_config(config,(int)param);
+		  suid_exec("CMCP","CMCP");
+		  sleep(1);
+		  free(config);
+		  reset_cardmgr(NULL);
+		}
+    }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+}
+
+
+static void do_driver_dialog (GtkWidget *parent_button)
+{
+  GtkWidget *w, *cb, *l;
+  int i;
+  char *identmsg = NULL;
+
+  i = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
+  cb = gtk_combo_new();
+  gtk_widget_show(cb);
+  gtk_combo_set_popdown_strings(GTK_COMBO(cb),drivers);
+  gtk_entry_set_text(GTK_ENTRY (GTK_COMBO (cb)->entry),st[i].driver.str);
+	
+  w = gtk_dialog_new_with_buttons (_("Assign Driver"), GTK_WINDOW (mainw),
+				   GTK_DIALOG_MODAL |
+				   GTK_DIALOG_DESTROY_WITH_PARENT,
+				   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+				   GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+				   NULL);
+  
+  l = gtk_label_new(_("This dialog allows you to select/change\nthe driver assignment for a\nPCMCIA/CF card."));
+  gtk_misc_set_alignment(GTK_MISC(l),0.0,0.5);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), l, FALSE, TRUE,gpe_get_boxspacing());
+  gtk_widget_show(l);
+  
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), cb, FALSE, TRUE,gpe_get_boxspacing());
+	
+  l = gtk_label_new(_("Your current card identifies itself as:"));	
+  gtk_misc_set_alignment(GTK_MISC(l),0.0,0.5);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), l, FALSE, TRUE,gpe_get_boxspacing());
+  gtk_widget_show(l);
+  
+  identmsg = user_get_card_ident(i);
+  l = gtk_text_view_new(); 
+  gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(l)),identmsg,strlen(identmsg));
+  gtk_widget_set_size_request(l,-1,60);
+  gtk_widget_show(l);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), l, FALSE, TRUE,gpe_get_boxspacing());
+  
+  gtk_object_set_data(GTK_OBJECT(w),"ident",identmsg);
+  gtk_object_set_data(GTK_OBJECT(w),"driver",GTK_COMBO(cb)->entry);
+  /* connect response, submit socket as param */
+  g_signal_connect (GTK_OBJECT (w), "response",
+		    (void *) dialog_driver_response, (void*)i);
+
+  gtk_dialog_run (GTK_DIALOG (w));
+}
+
+
 /* --- gpe-conf interface --- */
 
 void
 Cardinfo_Free_Objects ()
 {
+	g_list_free(drivers);
 }
 
 void
@@ -618,8 +957,9 @@ Cardinfo_Build_Objects (void)
   label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-assign",16));
   toolicons[1] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Assign Driver"), 
 			   _("Assign Driver"), _("Tap here to assign a driver to this card / change current driver assignment."),
-			   label, (GtkSignalFunc) get_driver_list, NULL);
+			   label, (GtkSignalFunc) do_driver_dialog, NULL);
 			   
+
   /* socket tabs */	
   for (i=0;i<ns;i++)
   {
@@ -681,6 +1021,7 @@ Cardinfo_Build_Objects (void)
 	  
   }
   
+  get_driver_list();
   gtk_timeout_add(500,(GtkFunction)do_update,NULL);
   return bookbox;
 }

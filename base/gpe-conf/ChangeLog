@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+04.03.2003		Florian			cardinfo.*					Finished pcmcia driver assignment/changing task.
+								suid.c						Added workaround for the not working cardmgr reset in familiar.
+								packages.h					Added missing declaration.
+
 03.03.2003		Florian			cardinfo.c					Buttonbar for manual card control, parser to create a driver list.
 															Logread now updates as expected.
 															Suid task for cardmgr reset.
