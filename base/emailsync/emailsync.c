@@ -16,7 +16,7 @@
 //#include <math.h>
 
 
-#define VERSION "0.0.9"
+#define VERSION "0.0.10"
 #define MIN(a,b)	(((a)<(b)) ? (a):(b))
 int fd_out,fd_in;
 int label=0;
@@ -684,6 +684,7 @@ char *sp, *sp2;
 int i,j,num_msgs,size,get_body;
 float flt;
 char flag;
+char action;
 
 
 	bzero(&options,sizeof(options));
@@ -740,7 +741,7 @@ char flag;
 			"prefix=<directory where to write mail to>\n"
 			"verbose=<0 1 or 2>\n"
 			"remove=1			(remove msg body if too big)\n"
-			"no_del=1			( do not delet msgs from outbox after send)"
+			"no_del=1			( do not delete msgs from outbox after send)"
 			"cleandir=1			(remove old messages from disk)\n"
 			"\n\n"
 			"DEFAULTS:\n"
@@ -810,7 +811,8 @@ char flag;
 	}
 #endif
 	// now read prefix/.onsync and do what it says
-	// file syntax is: delete <uid> "<foldername>"
+	// file syntax is: {delete|seen|unseen} <uid> "<foldername>"
+	// for pop3, only delete is valid
 	// we currently ignore what we do not understand
 	if (options.pop3)
 	{
@@ -857,9 +859,11 @@ char flag;
 		if (s[0])
 		{
 			lowstr(s);
-			if (strncmp(s,"delete ",7)==0)
+			// delete for pop/imap, seen/unseen for imap only
+			if ((strncmp(s,"delete ",7)==0||strncmp(s,"seen ",5)==0||strncmp(s,"unseen ",7)==0)&&(s[0]=='d' || ! options.pop3))
 			{
-				sp=s+7;
+				action=s[0];
+				sp=s+(action=='s' ? 5:7);
 				s2[0]=0;
 				sscanf(sp,"%s ",s2);
 				i=s2[0];
@@ -924,7 +928,9 @@ char flag;
 										sscanf(sp,"%d",&i);
 										if (i)
 										{
-											sprintf(s,"store %d +FLAGS (\\Deleted)",i);
+											if (action!='u') sprintf(s,"store %d +FLAGS (\\%s)",i,action=='d' ? "Deleted":"Seen");
+											else sprintf(s,"store %d -FLAGS (\\Seen)",i);
+
 											send2server(s);
 											if (!rcv_ok(s,0)) if (debug) printf("error on %s\n",s);
 										}
@@ -1146,6 +1152,8 @@ char flag;
 							fprintf(fl,"%s",sp+1);
 							fclose(fl);
 						} else error (s,"body missing");
+
+
 					} else if (debug) printf("msg too big (%d>%d), not writing %s\n",size,options.size,s2);
 				} else {
 					if ((debug>1)&&size) {
@@ -1160,6 +1168,31 @@ char flag;
 				{
 					fprintf(stderr,"Warning: %s exists, but msg too big, %sremoving\n",s2, options.remove ? "":"not ");
 					if (options.remove) if (unlink(s2)) perror("unlink");
+				}
+				if (get_body && ! options.pop3 )
+				{
+					if (debug) printf("getting flags\n");
+					sprintf(s,"fetch %d FLAGS",msgs[i]);
+					send2server(s);
+					sprintf(s,"fetch flags of msg[%d]",msgs[i]);
+					rcv_ok(s,1);
+					sp=index(imap_buf,'(');
+					if (sp) sp=index(sp+1,'(');
+					if (sp)
+					{
+						sp++;
+						sp2=index(sp+strlen(sp)-4,')');
+						if (sp2) *sp2=0;
+					}
+					if (sp)
+					{
+						if (debug>2) printf("flags: %s\n",sp);
+						strcpy(s2+strlen(s2)-4,"flags");
+						fl=openfile(s2,0);
+						strcpy(s2+strlen(s2)-5,"body");
+						fprintf(fl,"%s",sp);
+						fclose(fl);
+					} else error (s,"flags missing");
 				}
 			}
 		}
@@ -1189,6 +1222,10 @@ char flag;
 					else {
 						sprintf(s2,"%s.body",msg_ids[i]);
 						if (strcmp(s2,direntptr->d_name)==0) flag=1;
+						else {
+							sprintf(s2,"%s.flags",msg_ids[i]);
+							if (strcmp(s2,direntptr->d_name)==0) flag=1;
+						}
 					}
 				}
 				if (debug>1) printf("file %s %sfound\n",direntptr->d_name, flag ? "":"not ");
