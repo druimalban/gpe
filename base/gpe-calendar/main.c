@@ -14,6 +14,7 @@
 
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
+#include <libintl.h>
 
 #include "init.h"
 
@@ -148,7 +149,12 @@ main(int argc, char *argv[])
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
-  
+
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+
   if (event_db_start () == FALSE)
     exit (1);
 
