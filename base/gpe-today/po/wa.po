@@ -1,0 +1,37 @@
+# Translation into the walloon language.
+# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
+# Pablo Saratxaga <pablo@walon.org>, 2003
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2003-06-25 20:08+0100\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:179 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "Rascourti"
+
+#: todo.c:40
+msgid "No todo items"
+msgstr "Pont d' cayets a fé"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "Pont d' evenmints po ouy"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "Evenmint po tote li djournêye"
+
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "Dji n' sai ahiver l' cliyint XSettings"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "GPE Ouy"
