@@ -39,7 +39,8 @@ typedef enum
 {
   XSETTINGS_TYPE_INT     = 0,
   XSETTINGS_TYPE_STRING  = 1,
-  XSETTINGS_TYPE_COLOR   = 2
+  XSETTINGS_TYPE_COLOR   = 2,
+  XSETTINGS_TYPE_NONE    = 0xff
 } XSettingsType;
 
 typedef enum
