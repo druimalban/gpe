@@ -114,7 +114,10 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 	}
 
       if (sdp_get_group_id (svcrec, &sub_group) != -1)
-	sdp_browse_device (bd, sub_group.value.uuid16);
+	{
+	  if (sub_group.value.uuid16 != group_id)
+	    sdp_browse_device (bd, sub_group.value.uuid16);
+	}
 
       next = seq->next;
       free (seq);
