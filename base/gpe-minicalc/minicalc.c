@@ -104,6 +104,11 @@ val_to_display (void)
     {
       if (exp > -40)
 	{
+	  int n;
+	  strcpy (op, "0.");
+	  for (n = exp; n < 0; n++)
+	    strcat (op, "0");
+	  strcat (op, s);
 	}
       else
 	{
@@ -253,10 +258,10 @@ do_equals (GtkWidget *w)
 	  mpf_sub (dv, accum, dv);
 	  break;
 	case '*':
-	  mpf_add (dv, dv, accum);
+	  mpf_mul (dv, dv, accum);
 	  break;
 	case '/':
-	  mpf_add (dv, accum, dv);
+	  mpf_div (dv, accum, dv);
 	  break;
 	}
       val_to_display ();
