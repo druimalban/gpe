@@ -36,7 +36,7 @@ static rule_t *rule_info = NULL;
 static int rule_count = 0;
 
 #define CONFIGFILE	"/etc/access.conf"
-#define DEFAULT_INTERFACE "! lo"
+#define DEFAULT_INTERFACE "!lo"
 
 #define IPTABLES_CMD1 "/usr/sbin/iptables"
 #define IPTABLES_CMD2 "/sbin/iptables"
@@ -78,7 +78,7 @@ do_save_rules(void)
 	for (i=0;i<rule_count;i++)
 	{
 		translate_name(rule_info[i].name,1);
-		fprintf(cfgfile,"%s %d %d %d %d %d %d %d %d\n",
+		fprintf(cfgfile,"%s %d %d %d %d %d %d %d %d %s\n",
 		        rule_info[i].name,
 	            rule_info[i].status,
 	            rule_info[i].target,
@@ -87,7 +87,8 @@ do_save_rules(void)
 	            rule_info[i].d_port,
 	            rule_info[i].s_port,
 	            rule_info[i].state,
-	            rule_info[i].is_policy);
+		    rule_info[i].is_policy,
+		    rule_info[i].interface);
 	}
 	fclose(cfgfile);
 	return 0;
@@ -106,17 +107,26 @@ do_load_rules(void)
 		return -1;
 	while (ret != EOF)
 	{
-		ret = fscanf(cfgfile,"%254s %d %d %d %d %d %d %d %d\n",
-		       (char*)arule.name,
+		char buf[256];
+		if (fgets (buf, sizeof (buf), cfgfile) == NULL)
+			break;
+		ret = sscanf(buf,"%254s %d %d %d %d %d %d %d %d %s\n",
+		   (char*)arule.name,
 	           &arule.status,
 	           (int*)&arule.target,
 	           (int*)&arule.protocol,
 	           (int*)&arule.chain,
 	           &arule.d_port,
 	           &arule.s_port,
-		       &arule.state,
-	           &arule.is_policy);
-		if (ret == 9)
+		   &arule.state,
+		   &arule.is_policy,
+		   (char *)arule.interface);
+		if (ret < 10)
+		  {
+		    strncpy (arule.interface, DEFAULT_INTERFACE, sizeof (arule.interface) - 2);
+		    arule.interface[sizeof (arule.interface) - 1] = 0;
+		  }
+		if (ret >= 9)
 		{
 			rule_count++;
 			rule_info = realloc(rule_info,rule_count*sizeof(rule_t));
@@ -154,6 +164,7 @@ do_rules_apply()
 	const gchar *prot;
 	const gchar *target;
 	int i;
+	char interface[64];
 	
 	/* cleans all existing iptables settings */
 	cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"--flush");
@@ -262,6 +273,13 @@ do_rules_apply()
 				portspec = g_strdup_printf("--dport %d",rule_info[i].d_port);
 			else 
 				portspec = g_strdup("");
+
+			if (rule_info[i].interface[0] == '!')
+			  {
+			    sprintf (interface, "! %s", rule_info[i].interface + 1);
+			  }
+			else
+			  strcpy (interface, rule_info[i].interface);
 			
 			if (rule_info[i].is_policy)
 				cmd = g_strdup_printf("%s %s %s %s",IPTABLES_CMD, "-P", dir, target);
@@ -269,7 +287,7 @@ do_rules_apply()
 				cmd = g_strdup_printf("%s %s %s %s %s %s %s %s -j %s",
 								  IPTABLES_CMD, 
 								  "-A", dir,
-								  (rule_info[i].chain == CHAIN_OUTPUT) ? "-o" : "-i", DEFAULT_INTERFACE,
+								  (rule_info[i].chain == CHAIN_OUTPUT) ? "-o" : "-i", interface,
 				                  states,
 								  prot,
 								  portspec,
@@ -470,14 +488,9 @@ do_command (pkcommand_t command, rule_t rule)
 	send_message(PK_FINISHED,NULL);
 }
 
-
-/* app mainloop */
-
-int
-suidloop (int csock)
+void
+find_iptables ()
 {
-	sock = csock;
-
 	if (!access(IPTABLES_CMD1,X_OK))
 		IPTABLES_CMD = IPTABLES_CMD1;
 	else if (!access(IPTABLES_CMD2,X_OK))
@@ -485,6 +498,17 @@ suidloop (int csock)
 	else if (!access(IPTABLES_CMD3,X_OK))
 		IPTABLES_CMD = IPTABLES_CMD3;
 	
+}
+
+/* app mainloop */
+
+int
+suidloop (int csock)
+{
+        find_iptables();
+
+	sock = csock;
+
 	while (wait_message ()) ;
 		
 	close (sock);

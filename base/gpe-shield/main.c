@@ -49,7 +49,8 @@ main (int argc, char *argv[])
 	/* command line paramater tells us just to do setup and exit */
 	if (activate_rules)
 	{
-		do_clear();
+		find_iptables();
+	 	do_clear();
 		do_load_rules();
 		do_rules_apply();
 		exit(0);

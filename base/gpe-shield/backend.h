@@ -43,6 +43,7 @@ typedef struct
 	u_int d_port, s_port;
 	int state;
 	int is_policy;
+	char interface[16];
 }
 rule_t;
 
