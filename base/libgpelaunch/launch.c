@@ -1,5 +1,5 @@
 /*
- * gpe-appmgr - a program launcher
+ * GPE program launcher library
  *
  * Copyright (c) 2004 Phil Blundell
  *
@@ -19,16 +19,18 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
 #include <libsn/sn-launcher.h>
+#include <libsn/sn-monitor.h>
 
 #include <gpe/errorbox.h>
 
 #include "config.h"
-#include "launch.h"
+#include "gpe/launch.h"
 
 #define MAX_ARGS 255
 
@@ -38,17 +40,43 @@ struct sn_display_map
   SnDisplay *sn_dpy;
 };
 
-GSList *sn_display_list;
+struct launch_record
+{
+  launch_callback_func cb;
+  void *data;
+  SnLauncherContext *context;
+};
+
+static GSList *sn_display_list;
 
 static GdkFilterReturn
 sn_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 {
   XEvent *xev = (XEvent *)xevp;
-  
-  if (sn_display_process_event ((SnDisplay *)p, xev))
+  SnDisplay *sn_dpy = NULL;
+  GSList *l;
+  struct sn_display_map *map;
+
+  for (l = sn_display_list; l; l = l->next)
+    {
+      map = l->data;
+      if (map->dpy == xev->xany.display)
+	{
+	  sn_dpy = map->sn_dpy;
+	  break;
+	}
+    }
+
+  if (sn_dpy && sn_display_process_event (sn_dpy, xev))
     return GDK_FILTER_REMOVE;
 
   return GDK_FILTER_CONTINUE;
+}
+
+void
+gpe_launch_install_filter (void)
+{
+  gdk_window_add_filter (NULL, sn_event_filter, NULL);
 }
 
 static SnDisplay *
@@ -68,8 +96,41 @@ sn_display_for_display (Display *dpy)
   map->dpy = dpy;
   map->sn_dpy = sn_display_new (dpy, NULL, NULL);
   sn_display_list = g_slist_prepend (sn_display_list, map);
-  gdk_window_add_filter (GDK_ROOT_PARENT (), sn_event_filter, map->sn_dpy);
   return map->sn_dpy;
+}
+
+static void
+monitor_event (SnMonitorEvent *event, void *user_data)
+{
+  SnMonitorContext *context;
+  SnStartupSequence *sequence;
+  const char *id;
+  struct launch_record *r;
+
+  context = sn_monitor_event_get_context (event);
+  sequence = sn_monitor_event_get_startup_sequence (event);
+  id = sn_startup_sequence_get_id (sequence);
+
+  r = (struct launch_record *)user_data;
+  if (!strcmp (sn_launcher_context_get_startup_id (r->context), id))
+    {
+      switch (sn_monitor_event_get_type (event))
+	{
+	case SN_MONITOR_EVENT_INITIATED:
+	  r->cb (LAUNCH_STARTING, r->data);
+	  break;
+
+	case SN_MONITOR_EVENT_COMPLETED:
+	  r->cb (LAUNCH_COMPLETE, r->data);
+	  sn_monitor_context_unref (context);
+	  break;
+	  
+	case SN_MONITOR_EVENT_CANCELED:
+	  r->cb (LAUNCH_FAILED, r->data);
+	  sn_monitor_context_unref (context);
+	  break;
+	} 
+    }
 }
 
 /* Exec a command like the shell would.  */
@@ -149,24 +210,46 @@ do_exec (char *cmd)
   return rc;
 }
 
-gboolean
-gpe_launch_program (Display *dpy, char *exec, char *name)
+static void
+launch_record_free (void *ptr)
 {
-  SnLauncherContext *context;
-  SnDisplay *sn_dpy;
+  struct launch_record *r = (struct launch_record *)ptr;
+  sn_launcher_context_unref (r->context);
+  g_free (r);
+}
+
+gboolean
+gpe_launch_program_with_callback (Display *dpy, char *exec, char *name, gboolean startup_notify, launch_callback_func cb, void *data)
+{
+  SnLauncherContext *context = NULL;
+  SnDisplay *sn_dpy = NULL;
   int screen;
   pid_t pid;
   int i;
 
-  screen = DefaultScreen (dpy);
-  sn_dpy = sn_display_for_display (dpy);
-  context = sn_launcher_context_new (sn_dpy, screen);
+  if (startup_notify)
+    {
+      screen = DefaultScreen (dpy);
+      sn_dpy = sn_display_for_display (dpy);
+      context = sn_launcher_context_new (sn_dpy, screen);
   
-  if (name)
-    sn_launcher_context_set_name (context, name);
-  sn_launcher_context_set_binary_name (context, exec);
+      if (name)
+	sn_launcher_context_set_name (context, name);
+      sn_launcher_context_set_binary_name (context, exec);
 
-  sn_launcher_context_initiate (context, "gpe-appmgr launch", exec, CurrentTime);
+      if (cb)
+	{
+	  struct SnMonitorContext *monitor;
+	  struct launch_record *r = g_malloc (sizeof (*r));
+	  sn_launcher_context_ref (context);
+	  r->cb = cb;
+	  r->data = data;
+	  r->context = context;
+	  monitor = sn_monitor_context_new (sn_dpy, screen, monitor_event, r, launch_record_free);
+	}
+
+      sn_launcher_context_initiate (context, "libgpelaunch", exec, CurrentTime);
+    }
 
   pid = fork ();
   switch (pid)
@@ -180,7 +263,8 @@ gpe_launch_program (Display *dpy, char *exec, char *name)
 	 with SIGCHLD set to SIG_IGN.  */
       for (i = 0; i < _NSIG; i++)
 	signal (i, SIG_DFL);
-      sn_launcher_context_setup_child_process (context);
+      if (startup_notify)
+	sn_launcher_context_setup_child_process (context);
       do_exec (exec);
       gpe_perror_box ("exec");
       _exit (1);
@@ -191,3 +275,10 @@ gpe_launch_program (Display *dpy, char *exec, char *name)
 
   return TRUE;
 }
+
+gboolean
+gpe_launch_program (Display *dpy, char *exec, char *name)
+{
+  return gpe_launch_program_with_callback (dpy, exec, name, FALSE, NULL, NULL);
+}
+
