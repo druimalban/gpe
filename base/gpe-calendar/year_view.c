@@ -20,6 +20,7 @@
 #include "year_view.h"
 #include "event-db.h"
 #include "gtkdatesel.h"
+#include "day_popup.h"
 
 static GtkWidget *g_table;
 static GtkWidget *cal[12];
@@ -72,8 +73,10 @@ year_view_update (void)
       guint md, days;
       gtk_calendar_freeze (GTK_CALENDAR (cal[i]));
       gtk_calendar_select_month (GTK_CALENDAR (cal[i]), i, year);
-      if (i==month) gtk_calendar_select_day (GTK_CALENDAR (cal[i]), day);
-      else  gtk_calendar_select_day (GTK_CALENDAR (cal[i]), 0);
+      if (i == month) 
+	gtk_calendar_select_day (GTK_CALENDAR (cal[i]), day);
+      else  
+	gtk_calendar_select_day (GTK_CALENDAR (cal[i]), 0);
       
       gtk_calendar_clear_marks (GTK_CALENDAR (cal[i]));
 
@@ -102,16 +105,43 @@ changed_callback(GtkWidget *widget,
 }
 
 static void
+destroy_popup(GtkObject *o, gpointer d)
+{
+  struct day_popup *p = (struct day_popup *)d;
+  event_db_list_destroy (p->events);
+  g_free (p);
+}
+
+static void
 day_selected (GtkWidget *w, gpointer d)
 {
+  struct day_popup *p = g_malloc (sizeof (struct day_popup));
+  GtkObject *o;
   struct tm tm;
+  time_t t;
 
-  memset (&tm, 0, sizeof (tm));
-  gtk_calendar_get_date (GTK_CALENDAR (w),
-			 &tm.tm_year, &tm.tm_mon, &tm.tm_mday);
-  tm.tm_year -= 1900;
-  viewtime = mktime (&tm);
-  set_day_view ();
+  gtk_calendar_get_date (GTK_CALENDAR (w), &p->year, &p->month, &p->day);
+
+  localtime_r (&viewtime, &tm);
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  tm.tm_year = p->year - 1900;
+  tm.tm_mon = p->month;
+  tm.tm_mday = p->day;
+  t = mktime (&tm);
+
+  p->events = event_db_list_for_period (t, t + SECONDS_IN_DAY - 1);
+
+  o = day_popup (main_window, p);
+  if (o)
+    {
+      gtk_signal_connect (o, "destroy", GTK_SIGNAL_FUNC (destroy_popup), p);
+    }
+  else
+    {
+      g_free (p);
+    }
 }
 
 GtkWidget *
