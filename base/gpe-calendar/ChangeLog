@@ -9,6 +9,23 @@
 
 	* Version 0.09 released.
 
+2002-06-21  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* month_view.c (button_press): Use global pop_window pointers so it
+	is easier to manipulate the pop-up from a few different routines
+	(this will help with the soon-to-be-worked-on new year-view as well).
+
+	* globals.h : Add a new global for the pop-up windows (so they are
+	easier to kill).
+
+	* main.c : Add a new global for the pop-up windows (so they are
+	easier to kill).
+
+	* day_popup.c (destroy_popup): Set global pop_window pointer to NULL
+	when window is killed
+
+	* Version 0.08 released.
+
 2002-06-21  Philip Blundell  <pb@debian.org>
 
 	* month_view.c (draw_expose_event): Draw days with events as
