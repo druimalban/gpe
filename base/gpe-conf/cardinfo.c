@@ -98,6 +98,7 @@ static GtkWidget *toolicons[7];
 
 int ns;
 static int changed_tab = FALSE;
+static int updating = FALSE;
 socket_info_t st[MAX_SOCK];
 static GList *drivers = NULL;
 static const char *pidfile = "/var/run/cardmgr.pid";
@@ -668,6 +669,8 @@ do_update (GtkWidget * widget)
 	fd_set fds;
 	struct timeval timeout;
 
+	if (updating) return TRUE;
+	updating = TRUE;
 
 	/* Poll for events */
 	FD_ZERO (&fds);
@@ -721,6 +724,7 @@ do_update (GtkWidget * widget)
 			if (!fgets (s, 80, f))
 				break;
 			s[strlen (s) - 1] = '\0';
+			/* if you change formating here, change <b>empty</b> too!*/
 			snprintf (d, 80, "<b>%s</b>", s + 9);
 			update_field (&st[i].card, d);
 			*d = '\0';
@@ -773,7 +777,7 @@ do_update (GtkWidget * widget)
 		state = S_EMPTY;
 		status.Function = 0;
 		ioctl (st[i].fd, DS_GET_STATUS, &status);
-		if (strcmp (st[i].card.str, "empty") == 0)
+		if (strcmp (st[i].card.str, "<b>empty</b>") == 0)
 		{
 			if (status.CardState & CS_EVENT_CARD_DETECT)
 				state = S_PRESENT;
@@ -810,11 +814,13 @@ do_update (GtkWidget * widget)
 			{
 			case S_EMPTY:
 				update_field (&st[i].state, "");
+				gtk_widget_set_sensitive (toolicons
+							  [6], TRUE);
 				break;
 			case S_PRESENT:
 				if (j == i)
 					gtk_widget_set_sensitive (toolicons
-								  [6], TRUE);
+								  [5], TRUE);
 				update_field (&st[i].state, "");
 				break;
 			case S_READY:
@@ -913,6 +919,7 @@ do_update (GtkWidget * widget)
 		update_flag (&st[i].wp,
 			     status.CardState & CS_EVENT_WRITE_PROTECT);
 	}
+	updating = FALSE;
 	return TRUE;
 }
 
@@ -981,6 +988,7 @@ do_tabchange (GtkNotebook * notebook,
 	      GtkNotebookPage * page, guint page_num, gpointer user_data)
 {
 	changed_tab = page_num + 1;
+	do_update(NULL);
 }
 
 
@@ -1141,8 +1149,6 @@ Cardinfo_Build_Objects (void)
 	notebook = gtk_notebook_new ();
 	gtk_container_set_border_width (GTK_CONTAINER (notebook), 0);
 	gtk_object_set_data (GTK_OBJECT (notebook), "tooltips", tooltips);
-	g_signal_connect_after (G_OBJECT (notebook), "switch-page",
-				G_CALLBACK (do_tabchange), NULL);
 
 	/* toolbar and packing */
 	toolbar = gtk_toolbar_new ();
@@ -1306,6 +1312,9 @@ Cardinfo_Build_Objects (void)
 
 	}
 
+	g_signal_connect_after (G_OBJECT (notebook), "switch-page",
+				G_CALLBACK (do_tabchange), NULL);
+	
 	if (PCMCIA_ERROR)
 	{
 		errmsg = g_strdup_printf ("%s\n%s",

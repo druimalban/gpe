@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+05.05.2003		Florian			cardinfo.c					Fixed behaviour with empty slot, now you can't assign a driver
+															to an empty slot.
+								network.c					Added some help, major formating changes.															
+
 05.05.2003		Florian			cardinfo.c					Major formating changes.
 															Shows as text if no driver is loaded.
 															Fixed bug that caused gpe-conf to crash.
