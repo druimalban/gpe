@@ -15,15 +15,15 @@
 #include "libdisplaymigration/auth.h"
 #include "libdisplaymigration/crypt.h"
 
-static GcryMPI
-mpi_from_sexp (GcrySexp r, char *tag)
+static gcry_mpi_t
+mpi_from_sexp (gcry_sexp_t r, char *tag)
 {
-  GcrySexp s = gcry_sexp_find_token (r, tag, 0);
+  gcry_sexp_t s = gcry_sexp_find_token (r, tag, 0);
   return gcry_sexp_nth_mpi (s, 1, GCRYMPI_FMT_USG);
 }
 
 static char *
-hex_from_mpi (GcryMPI m)
+hex_from_mpi (gcry_mpi_t m)
 {
   char *buf;
   gcry_mpi_aprint (GCRYMPI_FMT_HEX, (void *)&buf, NULL, m);
@@ -43,7 +43,7 @@ displaymigration_crypt_create_hash (char *display, char *challenge, size_t len, 
 
 static int
 do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
-              unsigned int nbits, GCRY_MPI *r_val)
+              unsigned int nbits, gcry_mpi_t *r_val)
 {
   int nframe = (nbits+7) / 8;
   unsigned char *frame;
@@ -76,7 +76,7 @@ do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
   memcpy ( frame+n, digest, digestlen ); n += digestlen;
   assert ( n == nframe );
       
-  gcry_mpi_scan (r_val, GCRYMPI_FMT_USG, frame, &nframe);
+  gcry_mpi_scan (r_val, GCRYMPI_FMT_USG, frame, nframe, &nframe);
   g_free (frame);
   return 0;
 }
@@ -84,8 +84,8 @@ do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
 gboolean
 displaymigration_crypt_sign_hash (struct rsa_key *k, char *hash, gchar **result)
 {
-  GcryMPI mpi;
-  GcrySexp data, sig, key;
+  gcry_mpi_t mpi;
+  gcry_sexp_t data, sig, key;
   int rc;
   char *hex;
 
@@ -124,8 +124,8 @@ displaymigration_crypt_sign_hash (struct rsa_key *k, char *hash, gchar **result)
 gboolean
 displaymigration_crypt_check_signature (struct rsa_key *k, char *hash, char *sigbuf)
 {
-  GcryMPI mpi, mpi2;
-  GcrySexp data, sig, key;
+  gcry_mpi_t mpi, mpi2;
+  gcry_sexp_t data, sig, key;
   int rc;
 
   do_encode_md (hash, 20, GCRY_MD_SHA1, 1024, &mpi);
@@ -136,7 +136,7 @@ displaymigration_crypt_check_signature (struct rsa_key *k, char *hash, char *sig
 
   gcry_sexp_build (&key, NULL, "(public-key (rsa (n %m) (e %m)))", k->n, k->e);
 
-  if (gcry_mpi_scan (&mpi2, GCRYMPI_FMT_HEX, sigbuf, NULL))
+  if (gcry_mpi_scan (&mpi2, GCRYMPI_FMT_HEX, sigbuf, 0, NULL))
     {
       gcry_sexp_release (data);
       return FALSE;

@@ -3,7 +3,7 @@
 
 struct rsa_key
 {
-  GcryMPI n, e, d, p, q, u;
+  gcry_mpi_t n, e, d, p, q, u;
 };
 
 extern void displaymigration_crypt_create_hash (char *display, char *challenge, size_t len, char *result);

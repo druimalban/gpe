@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libdisplaymigration
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.27
+VERSION = 0.28
 
 LINGUAS = 
 

@@ -55,13 +55,13 @@ static struct rsa_key *
 parse_pubkey (char *s)
 {
   struct rsa_key *r;
-  GcryMPI n, e;
+  gcry_mpi_t n, e;
   gchar *sp;
 
   sp = strtok (s, " \n");
-  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, sp, 0, NULL);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, sp, 0, NULL);
 
   r = g_malloc0 (sizeof (struct rsa_key));
   r->e = e;
