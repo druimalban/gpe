@@ -44,26 +44,20 @@ CFLAGS += -D_GNU_SOURCE
 
 OBJS=main.o xsi.o popupmenu.o package.o cfg.o properties.o gnome-exec.o plugin.o tray.o
 
-all: gpe-appmgr gpe-appmgr-setup
+all: gpe-appmgr
 
 gpe-appmgr: $(OBJS)
 	$(CC) -o gpe-appmgr $(OBJS) $(LDFLAGS)
 
-gpe-appmgr-setup: appmgr_setup.c package.o cfg.o
-	$(CC) -o gpe-appmgr-setup appmgr_setup.c package.o cfg.o $(LDFLAGS) $(CFLAGS)
-
-install: gpe-appmgr gpe-appmgr-setup
+install: gpe-appmgr
 	$(INSTALL) -D gpe-appmgr $(DESTDIR)/$(BINDIR)/gpe-appmgr
 	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-appmgr
-	$(INSTALL) -D gpe-appmgr-setup $(DESTDIR)/$(BINDIR)/gpe-appmgr-setup
-	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-appmgr-setup
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/pixmaps
 	$(INSTALL) -D dist/usr/share/pixmaps/*.png  $(DESTDIR)/$(PREFIX)/share/pixmaps
 	$(INSTALL) -D dist/etc/menu-methods/gpe_appmgr $(DESTDIR)/$(ETCDIR)/menu-methods/gpe_appmgr
-	$(INSTALL) -D dist/usr/lib/menu/gpe-appmgr-setup $(DESTDIR)/$(PREFIX)/lib/menu/gpe-appmgr-setup
 
 clean:
-	rm -f *.o gpe-appmgr gpe-appmgr-setup
+	rm -f *.o gpe-appmgr
 
 distclean: clean
 	rm -f *.ipk
