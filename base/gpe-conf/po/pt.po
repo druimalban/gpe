@@ -5,24 +5,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.0-pre4\n"
-"POT-Creation-Date: 2003-06-11 18:07+0200\n"
-"PO-Revision-Date: 2003-06-13 04:45+0100\n"
+"Project-Id-Version: gpe-conf 0.1.0-pre6\n"
+"POT-Creation-Date: 2003-07-08 20:08+0200\n"
+"PO-Revision-Date: 2003-07-09 16:59+0100\n"
 "Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
 "Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:318
+#: main.c:288
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "'task_nameserver' precisa de um (e apenas um) novo nameserver como argumento.\n"
+
+#: main.c:343
 msgid "Warning: PCMCIA init failed."
-msgstr "Aviso: a inicialização PCMCIA falhou."
+msgstr "Aviso: a inicializa,bgc(Bo PCMCIA falhou."
 
-#: main.c:345
+#: main.c:371
 msgid "This mode is disabled, please try:\n"
-msgstr "Este modo está desactivado, por favor tente:\n"
+msgstr "Este modo est,ba(B desactivado, por favor tente:\n"
 
-#: main.c:346
+#: main.c:372
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
@@ -30,14 +34,14 @@ msgid ""
 msgstr ""
 "\n"
 "gpe-conf [AppletName]\n"
-"onde AppletName é um de:\n"
+"onde AppletName ,bi(B um de:\n"
 
-#: main.c:360
+#: main.c:385
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Applet %s desconhecido!\n"
 
-#: main.c:361
+#: main.c:386
 msgid ""
 "\n"
 "\n"
@@ -46,20 +50,20 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Utilização: gpe-conf  [AppletName]\n"
-"onde AppletName é um de:\n"
+"Utiliza,bgc(Bo: gpe-conf  [AppletName]\n"
+"onde AppletName ,bi(B um de:\n"
 
-#: applets.c:332
+#: applets.c:327
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"Algumas opções apenas estão\n"
-"acessíveis ao utilizador root.\n"
+"Algumas op,bgu(Bes apenas est,bc(Bo\n"
+"acess,bm(Bveis ao utilizador root.\n"
 "Por favor insira a password."
 
-#: applets.c:368 ipaqscreen/calibrate.c:33
+#: applets.c:363 ipaqscreen/calibrate.c:33
 msgid "Sorry, wrong password."
 msgstr "Password incorrecta"
 
@@ -73,7 +77,7 @@ msgstr "Data"
 
 #: timeanddate.c:379
 msgid "Enter current date here or use button to select."
-msgstr "Insira a data current aqui ou utilize o butão para seleccionar."
+msgstr "Insira a data current aqui ou utilize o but,bc(Bo para seleccionar."
 
 #: timeanddate.c:384
 msgid "Time"
@@ -85,7 +89,7 @@ msgstr "Rede"
 
 #: timeanddate.c:427
 msgid "Select the timeserver to use to set the clock."
-msgstr "Seleccione o timeserver a utilizar para acertar o relógio."
+msgstr "Seleccione o timeserver a utilizar para acertar o rel,bs(Bgio."
 
 #: timeanddate.c:429
 msgid "Get time from network"
@@ -93,39 +97,39 @@ msgstr "Obter as horas pela rede"
 
 #: timeanddate.c:436
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Se houver ligação à Internet, pode carregar neste butão para acertar as horas utilizando o timeserver em cima indicado."
+msgstr "Se houver liga,bgc(Bo ,b`(B Internet, pode carregar neste but,bc(Bo para acertar as horas utilizando o timeserver em cima indicado."
 
 #: timeanddate.c:441 timeanddate.c:450
 msgid "Timezone"
-msgstr "Fuso horário"
+msgstr "Fuso hor,ba(Brio"
 
 #: timeanddate.c:478
 msgid "Select your current timezone here. The setting applies after the next login."
-msgstr "Seleccione aqui o fuso horário, este será aplicado na próxima sessão."
+msgstr "Seleccione aqui o fuso hor,ba(Brio, este ser,ba(B aplicado na pr,bs(Bxima sess,bc(Bo."
 
 #: timeanddate.c:486
 msgid "Daylight Saving"
-msgstr "Horário Verão/Inverno"
+msgstr "Hor,ba(Brio Ver,bc(Bo/Inverno"
 
 #: timeanddate.c:493
 msgid "Use daylight saving time"
-msgstr "Mundança automática de horário"
+msgstr "Mundan,bg(Ba autom,ba(Btica de hor,ba(Brio"
 
 #: timeanddate.c:500
 msgid "Check this box if you want your device to handle daylight saving time for you."
-msgstr "Seleccione esta caixa se quiser que o computador faça a mudança automática do horário."
+msgstr "Seleccione esta caixa se quiser que o computador fa,bg(Ba a mudan,bg(Ba autom,ba(Btica do hor,ba(Brio."
 
 #: timeanddate.c:502
 msgid "Offset:"
-msgstr "Avanço:"
+msgstr "Avan,bg(Bo:"
 
 #: timeanddate.c:511
 msgid "Default"
-msgstr "Por omissão"
+msgstr "Por omiss,bc(Bo"
 
 #: timeanddate.c:518
 msgid "Use default DST offset of one hour?"
-msgstr "Utilizar diferença de horário verão de um hora por omissão?"
+msgstr "Utilizar diferen,bg(Ba de hor,ba(Brio ver,bc(Bo de um hora por omiss,bc(Bo?"
 
 #: timeanddate.c:523
 msgid "Hours"
@@ -133,7 +137,7 @@ msgstr "Horas"
 
 #: timeanddate.c:526
 msgid "Select daylight saving time offset hours here."
-msgstr "Seleccione aqui a diferença de horas na mudança de horário de verão."
+msgstr "Seleccione aqui a diferen,bg(Ba de horas na mudan,bg(Ba de hor,ba(Brio de ver,bc(Bo."
 
 #: timeanddate.c:531
 msgid "Minutes"
@@ -141,23 +145,23 @@ msgstr "Minutos"
 
 #: timeanddate.c:534
 msgid "Select daylight saving time offset minutes here."
-msgstr "Seleccione aqui a diferença de minutos no horário de verão."
+msgstr "Seleccione aqui a diferen,bg(Ba de minutos no hor,ba(Brio de ver,bc(Bo."
 
 #: timeanddate.c:540
 msgid "Advanced Settings"
-msgstr "Opções Avançadas"
+msgstr "Op,bgu(Bes Avan,bg(Badas"
 
 #: timeanddate.c:546
 msgid "Use advanced settings"
-msgstr "Utilizar opções avançadas"
+msgstr "Utilizar op,bgu(Bes avan,bg(Badas"
 
 #: timeanddate.c:549
 msgid "Check this if you want to use the advanced settings below."
-msgstr "Seleccione aqui se deseja utilizar as opções avançadas em baixo."
+msgstr "Seleccione aqui se deseja utilizar as op,bgu(Bes avan,bg(Badas em baixo."
 
 #: timeanddate.c:646
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr "Para que as opções do fuso horário entrem em efeito é preciso reiniciar a sessão."
+msgstr "Para que as op,bgu(Bes do fuso hor,ba(Brio entrem em efeito ,bi(B preciso reiniciar a sess,bc(Bo."
 
 #: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
 msgid "General"
@@ -169,7 +173,7 @@ msgstr "Vista com Tabs"
 
 #: appmgr_setup.c:252
 msgid "Icon"
-msgstr "Ícone"
+msgstr ",bM(Bcone"
 
 #: appmgr_setup.c:256
 msgid "List"
@@ -177,7 +181,7 @@ msgstr "Lista"
 
 #: appmgr_setup.c:265
 msgid "Changes will take effect after relog"
-msgstr "As alterações terão efeito na próxima sessão"
+msgstr "As altera,bgu(Bes ter,bc(Bo efeito na pr,bs(Bxima sess,bc(Bo"
 
 #: ipaqscreen/main.c:68
 msgid "Portrait"
@@ -197,7 +201,7 @@ msgstr "Horizontal (direita)"
 
 #: ipaqscreen/main.c:92
 msgid "Light"
-msgstr "Iluminação"
+msgstr "Ilumina,bgc(Bo"
 
 #: ipaqscreen/main.c:98
 msgid "Brightness"
@@ -209,11 +213,11 @@ msgstr "Estado"
 
 #: ipaqscreen/main.c:115
 msgid "Screensaver"
-msgstr "Protector de ecrã"
+msgstr "Protector de ecr,bc(B"
 
 #: ipaqscreen/main.c:121
 msgid "Delay until start"
-msgstr "Atrasar até ao início"
+msgstr "Atrasar at,bi(B ao in,bm(Bcio"
 
 #: ipaqscreen/main.c:125
 msgid "Activated"
@@ -221,7 +225,7 @@ msgstr "Activado"
 
 #: ipaqscreen/main.c:135
 msgid "Orientation"
-msgstr "Orientação"
+msgstr "Orienta,bgc(Bo"
 
 #: ipaqscreen/main.c:154
 msgid "Touchscreen"
@@ -253,15 +257,15 @@ msgstr "Desligado"
 
 #: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:124
 msgid "Couldn't read screen settings!"
-msgstr "Não foi possível ler a configuração do visor"
+msgstr "N,bc(Bo foi poss,bm(Bvel ler a configura,bgc(Bo do visor"
 
 #: ipaqscreen/rotation.c:54
 msgid "Can't interpret output from xrandr!"
-msgstr "Não foi possível interpretar o resultado do xrandr!"
+msgstr "N,bc(Bo foi poss,bm(Bvel interpretar o resultado do xrandr!"
 
 #: ipaqscreen/rotation.c:71
 msgid "Can't set rotation on an x86."
-msgstr "Nao é possível alterar a orientação num x86."
+msgstr "Nao ,bi(B poss,bm(Bvel alterar a orienta,bgc(Bo num x86."
 
 #: kbd.c:146
 msgid "Keyboard Geometry / Layout"
@@ -272,17 +276,16 @@ msgid "User defined"
 msgstr "Definido pelo utilizador"
 
 #: keyboard.c:131
-#, fuzzy
 msgid "Could not read keyboard definition file."
-msgstr "Não foi possível ler as definições do teclado"
+msgstr "N,bc(Bo foi poss,bm(Bvel ler as defini,bgu(Bes do teclado."
 
 #: keyboard.c:171
 msgid "Error reading keyboard definition."
-msgstr "Erro ao ler as definições do teclado"
+msgstr "Erro ao ler as defini,bgu(Bes do teclado"
 
 #: keyboard.c:274
 msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
-msgstr "Configuração de teclado externa. Butões desactivados não estão de momento instalados."
+msgstr "Configura,bgc(Bo de teclado externa. But,bu(Bes desactivados n,bc(Bo est,bc(Bo de momento instalados."
 
 #: keyboard.c:279
 msgid "External Keyboard Type"
@@ -290,13 +293,13 @@ msgstr "Tipo de Teclado Externo"
 
 #: keyboard.c:286
 msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
-msgstr "Aqui pode seleccionar o modelo so seu teclado externo. Para install o software de apoio ligue o dispositivo à internet e clique no botão \"Instalar\"."
+msgstr "Aqui pode seleccionar o modelo so seu teclado externo. Para install o software de apoio ligue o dispositivo ,b`(B internet e clique no bot,bc(Bo \"Instalar\"."
 
 #: keyboard.c:308
 msgid "Tap here to select this keyboard model."
 msgstr "Clique aqui apara seleccionar este modelo de teclado."
 
-#: keyboard.c:315
+#: keyboard.c:315 packages.c:183 packages.c:364
 msgid "Install"
 msgstr "Instalar"
 
@@ -306,7 +309,7 @@ msgstr "Clique aqui para instalar o sofware de apoio para este teclado."
 
 #: network.c:95
 msgid "Current Config"
-msgstr "Configuração Corrente"
+msgstr "Configura,bgc(Bo Corrente"
 
 #: network.c:173
 msgid "New interface:"
@@ -318,23 +321,23 @@ msgstr "Insira o nome da nova interface"
 
 #: network.c:186
 msgid "This interface definition already exists!"
-msgstr "Esta interface já existe!"
+msgstr "Esta interface j,ba(B existe!"
 
 #: network.c:227
 msgid "Do you want to delete this interface?"
 msgstr "Deseja apagar esta interface?"
 
-#: network.c:227 keyctl.c:159
+#: network.c:227 keyctl.c:151
 msgid "Question"
-msgstr "Questão"
+msgstr "Quest,bc(Bo"
 
 #: network.c:441
 msgid "Address"
-msgstr "Endereço"
+msgstr "Endere,bg(Bo"
 
 #: network.c:444
 msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Insira o seu endereço IP aqui, ex: 192.168.1.2"
+msgstr "Insira o seu endere,bg(Bo IP aqui, ex: 192.168.1.2"
 
 #: network.c:446
 msgid "Netmask"
@@ -342,7 +345,7 @@ msgstr "Netmask"
 
 #: network.c:449
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr "Insira a máscara de rede aqui, ex: 255.255.255.0 na maioria dos casos"
+msgstr "Insira a m,ba(Bscara de rede aqui, ex: 255.255.255.0 na maioria dos casos"
 
 #: network.c:451
 msgid "Broadcast"
@@ -350,7 +353,7 @@ msgstr "Broadcast"
 
 #: network.c:454
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Insira o seu enderenço de broadcast aqui, normalmente igual ao seu IP mas com 255 como último número."
+msgstr "Insira o seu enderen,bg(Bo de broadcast aqui, normalmente igual ao seu IP mas com 255 como ,bz(Bltimo n,bz(Bmero."
 
 #: network.c:456
 msgid "Gateway"
@@ -358,7 +361,7 @@ msgstr "Gateway"
 
 #: network.c:459
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Insira aqui o endereço IP da gateway por omissão."
+msgstr "Insira aqui o endere,bg(Bo IP da gateway por omiss,bc(Bo."
 
 #: network.c:541
 msgid "Hostname"
@@ -366,7 +369,7 @@ msgstr "Hostname"
 
 #: network.c:544
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Insira o hostname que deseja aqui. Este parâmetro é opcional."
+msgstr "Insira o hostname que deseja aqui. Este par,bb(Bmetro ,bi(B opcional."
 
 #: network.c:627
 msgid "Provider"
@@ -374,11 +377,11 @@ msgstr "Provedor"
 
 #: network.c:630
 msgid "Here you need to enter the name if the provider configuration to use for this interface."
-msgstr "Aqui deve inserir o nome da configuração a utilizar para esta interface."
+msgstr "Aqui deve inserir o nome da configura,bgc(Bo a utilizar para esta interface."
 
 #: network.c:654
 msgid "Global Settings"
-msgstr "Opções Globais"
+msgstr "Op,bgu(Bes Globais"
 
 #: network.c:695
 msgid "Proxy"
@@ -390,15 +393,15 @@ msgstr "Se quer utilizar um proxy, insira-o aqui. (Por agora, isto apenas se apl
 
 #: network.c:702
 msgid "No proxy for"
-msgstr "Não utilizar proxy para"
+msgstr "N,bc(Bo utilizar proxy para"
 
 #: network.c:705
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Aqui deve inserir os domínios para os quais não pretende utilizar proxy."
+msgstr "Aqui deve inserir os dom,bm(Bnios para os quais n,bc(Bo pretende utilizar proxy."
 
 #: network.c:714
 msgid "Use DHCP in any case (usually not needed)."
-msgstr "Usar DHCP sempre (normalmente desnecessário)."
+msgstr "Usar DHCP sempre (normalmente desnecess,ba(Brio)."
 
 #: network.c:716
 msgid "Use DHCP"
@@ -417,56 +420,56 @@ msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
 msgstr ""
-"Aqui é possível modificar a configuração base do seu dispositivo.\n"
+"Aqui ,bi(B poss,bm(Bvel modificar a configura,bgc(Bo base do seu dispositivo.\n"
 "Utilize static para configurar a interface manualmente, dhcp para utilizar DHCP ou ppp para utilizar o protocolo PPP"
 
-#: network.c:971 network.c:972
+#: network.c:966 network.c:967
 msgid "Add Interface"
 msgstr "Adicionar Interface"
 
-#: network.c:973
+#: network.c:968
 msgid "Add a new Interface"
 msgstr "Adicionar uma nova Interface"
 
-#: network.c:981 network.c:982
+#: network.c:976 network.c:977
 msgid "Remove Interface"
 msgstr "Remover Interface"
 
-#: network.c:983
+#: network.c:978
 msgid "Remove current Interface"
 msgstr "Remover a Interface corrente"
 
-#: network.c:996
+#: network.c:991
 msgid "Information"
-msgstr "Informação"
+msgstr "Informa,bgc(Bo"
 
-#: network.c:997 network.c:998
+#: network.c:992 network.c:993
 msgid "Show current configuration."
-msgstr "Mostrar a configuração corrente."
+msgstr "Mostrar a configura,bgc(Bo corrente."
 
-#: network.c:1009
+#: network.c:1004
 msgid "Close"
 msgstr "Fechar"
 
-#: network.c:1010
+#: network.c:1005
 msgid "Close  network tool"
-msgstr "Fechar configuração da rede"
+msgstr "Fechar configura,bgc(Bo da rede"
 
-#: network.c:1011
+#: network.c:1006
 msgid "Close network tool"
-msgstr "Fechar configuração da rede"
+msgstr "Fechar configura,bgc(Bo da rede"
 
-#: network.c:1026
+#: network.c:1021
 msgid "Couldn't read network configuration."
-msgstr "Não foi possível ler a configuração de rede."
+msgstr "N,bc(Bo foi poss,bm(Bvel ler a configura,bgc(Bo de rede."
 
-#: network.c:1035
+#: network.c:1030
 msgid "global"
 msgstr "global"
 
 #: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
 msgid "Color"
-msgstr "Côr"
+msgstr "C,bt(Br"
 
 #: theme.c:393
 msgid "Red"
@@ -482,14 +485,14 @@ msgstr "Azul"
 
 #: theme.c:654
 msgid "Select color"
-msgstr "Seleccione uma côr"
+msgstr "Seleccione uma c,bt(Br"
 
 #: theme.c:680 theme.c:746
 msgid ""
 "You don't have read access\n"
 "to selected background image!"
 msgstr ""
-"Não tem permissões de leitura\n"
+"N,bc(Bo tem permiss,bu(Bes de leitura\n"
 "para a imagem seleccionada!"
 
 #: theme.c:828
@@ -506,7 +509,7 @@ msgstr "Nome"
 
 #: theme.c:865
 msgid "Icon Size"
-msgstr "Tamanho dos Ícones"
+msgstr "Tamanho dos ,bM(Bcones"
 
 #: theme.c:879
 msgid "Background"
@@ -514,11 +517,11 @@ msgstr "Fundo"
 
 #: theme.c:890
 msgid "Background Settings"
-msgstr "Opções de Fundo"
+msgstr "Op,bgu(Bes de Fundo"
 
 #: theme.c:897
 msgid "Solid color"
-msgstr "Côr plana"
+msgstr "C,bt(Br plana"
 
 #: theme.c:911
 msgid "Horizontal"
@@ -530,7 +533,7 @@ msgstr "Vertical"
 
 #: theme.c:931
 msgid "Color gradient"
-msgstr "Gradação de côr"
+msgstr "Grada,bgc(Bo de c,bt(Br"
 
 #: theme.c:951
 msgid "Image"
@@ -558,7 +561,7 @@ msgstr "Fonte de Desktop"
 
 #: theme.c:1005 theme.c:1060
 msgid "Family"
-msgstr "Família"
+msgstr "Fam,bm(Blia"
 
 #: theme.c:1025 theme.c:1080
 msgid "Size"
@@ -566,23 +569,23 @@ msgstr "Tamanho"
 
 #: theme.c:1053 theme.c:1073
 msgid "Application Font"
-msgstr "Fonte das Aplicações"
+msgstr "Fonte das Aplica,bgu(Bes"
 
-#: keyctl.c:159
+#: keyctl.c:151
 msgid "Reset button config to default?"
-msgstr "Restaurar as definições dos butões?"
+msgstr "Restaurar as defini,bgu(Bes dos but,bu(Bes?"
 
-#: keyctl.c:196
+#: keyctl.c:188
 msgid "Defaults"
 msgstr "Defaults"
 
-#: keyctl.c:301
+#: keyctl.c:293
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
-msgstr "ERRO: Não foi possível abrir o keylaunchrc para escrita!\n"
+msgstr "ERRO: N,bc(Bo foi poss,bm(Bvel abrir o keylaunchrc para escrita!\n"
 
 #: ownerinfo.c:201
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Apenas o utilizador 'root' tem permissão para alterar esta informção"
+msgstr "Apenas o utilizador 'root' tem permiss,bc(Bo para alterar esta inform,bgc(Bo"
 
 #: ownerinfo.c:221
 msgid "Name:"
@@ -606,19 +609,19 @@ msgstr "Fotografia:"
 
 #: login-setup.c:131
 msgid "Some or all of these settings can only be changed by the user 'root'."
-msgstr "Algumas ou todas estas opções apenas podem ser alteradas pelo utilizador 'root'."
+msgstr "Algumas ou todas estas op,bgu(Bes apenas podem ser alteradas pelo utilizador 'root'."
 
 #: login-setup.c:167
 msgid "Show owner information at login."
-msgstr "Mostrar informação do proprietário no login."
+msgstr "Mostrar informa,bgc(Bo do propriet,ba(Brio no login."
 
 #: login-setup.c:169
 msgid "Use background image for login screen."
-msgstr "Utilizador imagem de fundo no ecrã de login."
+msgstr "Utilizador imagem de fundo no ecr,bc(B de login."
 
 #: login-setup.c:171
 msgid "Lock display on suspend."
-msgstr "Trancar o ecrã ao suspender."
+msgstr "Trancar o ecr,bc(B ao suspender."
 
 #: login-setup.c:184
 msgid "Image:"
@@ -626,7 +629,7 @@ msgstr "Imagem:"
 
 #: sleep/interface.c:71
 msgid "Auto sleep"
-msgstr "Suspensão automática"
+msgstr "Suspens,bc(Bo autom,ba(Btica"
 
 #: sleep/interface.c:81 sleep/interface.c:117
 msgid "enabled"
@@ -634,7 +637,7 @@ msgstr "activado"
 
 #: sleep/interface.c:95
 msgid "sleep timeout"
-msgstr "timeout de suspensão"
+msgstr "timeout de suspens,bc(Bo"
 
 #: sleep/interface.c:98 sleep/interface.c:132
 msgid "idle(sec)"
@@ -650,11 +653,11 @@ msgstr "timeout para escurecer"
 
 #: sleep/interface.c:139
 msgid "Auto dim level"
-msgstr "Nível de escurecimento automático"
+msgstr "N,bm(Bvel de escurecimento autom,ba(Btico"
 
 #: sleep/interface.c:157
 msgid "Auto sleep advanced controls"
-msgstr "Opções avançadas de suspensão automática"
+msgstr "Op,bgu(Bes avan,bg(Badas de suspens,bc(Bo autom,ba(Btica"
 
 #: sleep/interface.c:167
 msgid "CPU"
@@ -674,7 +677,7 @@ msgstr "APM"
 
 #: sleep/interface.c:198
 msgid "Sleep on AC"
-msgstr "Suspender quando ligado à corrente"
+msgstr "Suspender quando ligado ,b`(B corrente"
 
 #: sleep/interface.c:200
 msgid "probe IRQs"
@@ -694,7 +697,7 @@ msgstr "Nome de Utilizador"
 
 #: users/interface.c:209
 msgid "User Info"
-msgstr "Informação do Utilizador"
+msgstr "Informa,bgc(Bo do Utilizador"
 
 #: users/interface.c:211
 msgid "Home"
@@ -726,7 +729,7 @@ msgstr "Apagar utilizador existente"
 
 #: users/interface.c:283
 msgid "User settings"
-msgstr "Opções de utilizador"
+msgstr "Op,bgu(Bes de utilizador"
 
 #: users/interface.c:297
 msgid "User Name:"
@@ -738,7 +741,7 @@ msgstr "Palavra-passe:"
 
 #: users/interface.c:321
 msgid "User Info:"
-msgstr "Informação do Utilizador:"
+msgstr "Informa,bgc(Bo do Utilizador:"
 
 #: users/interface.c:337
 msgid "Shell:"
@@ -773,7 +776,7 @@ msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
-"Não pode remover\n"
+"N,bc(Bo pode remover\n"
 " utilizadores do sistema!"
 
 #: users/callbacks.c:138
@@ -789,7 +792,7 @@ msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
-"As palavras-passe não coincidem!\n"
+"As palavras-passe n,bc(Bo coincidem!\n"
 " Por favor, tente outra vez!"
 
 #: users/callbacks.c:220
@@ -802,59 +805,63 @@ msgstr ""
 
 #: cfgfile.c:630
 msgid "No write access to network configuration."
-msgstr "Não tem acesso de escrita às configurações da rede."
+msgstr "N,bc(Bo tem acesso de escrita ,b`(Bs configura,bgu(Bes da rede."
 
 #: gpe-admin.c:93
 msgid "Allow users to configure everything"
 msgstr "Permitir aos utilizadores configurar tudo"
 
-#: storage.c:261 storage.c:422
-msgid "Internal Flash"
-msgstr "Flash Interna"
+#: storage.c:195
+msgid "System memory"
+msgstr "Mem,bs(Bria de sistema"
 
-#: storage.c:267 storage.c:428
-msgid "MMC"
-msgstr "MMC"
+#: storage.c:202 storage.c:464
+msgid "Free memory"
+msgstr "Mem,bs(Bria livre"
 
-#: storage.c:273 storage.c:434
-msgid "Compact Flash"
-msgstr "Compact Flash"
-
-#: storage.c:279 storage.c:440
-msgid "Network Filesystem"
-msgstr "Partilha de Ficheiros"
-
-#: storage.c:296 storage.c:355 storage.c:477 storage.c:530
+#: storage.c:209 storage.c:357 storage.c:477 storage.c:595
 msgid "Total:"
 msgstr "Total:"
 
-#: storage.c:299 storage.c:480
+#: storage.c:321 storage.c:524
+msgid "Internal Flash"
+msgstr "Flash Interna"
+
+#: storage.c:327 storage.c:530
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:333 storage.c:536
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:339 storage.c:542
+msgid "Network Filesystem"
+msgstr "Partilha de Ficheiros"
+
+#: storage.c:359 storage.c:597
 msgid "Mounted at"
 msgstr "Mounted em"
 
-#: storage.c:305 storage.c:463
+#: storage.c:367 storage.c:577
 msgid "Free space"
-msgstr "Espaço livre"
+msgstr "Espa,bg(Bo livre"
 
-#: storage.c:342
-msgid "System memory"
-msgstr "Memória de sistema"
-
-#: storage.c:349 storage.c:518
-msgid "Free memory"
-msgstr "Memória livre"
-
-#: storage.c:501
+#: storage.c:444
 msgid "System Memory"
-msgstr "Memória de Sistema"
+msgstr "Mem,bs(Bria de Sistema"
+
+#: storage.c:616
+msgid "Couldn't get filesystem info!"
+msgstr "N,bc(Bo foi poss,bm(Bvel obter informa,bgc(Bo acerca do sistema de ficheiros!"
 
 #: serial.c:146
 msgid "Couldn't find default runlevel!"
-msgstr "Não foi possível encontrar o runlevel por omissão!"
+msgstr "N,bc(Bo foi poss,bm(Bvel encontrar o runlevel por omiss,bc(Bo!"
 
 #: serial.c:268 serial.c:272
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
-msgstr "Interface simples de configuração da porta de série. Não estão instalados componentes desactivados."
+msgstr "Interface simples de configura,bgc(Bo da porta de s,bi(Brie. N,bc(Bo est,bc(Bo instalados componentes desactivados."
 
 #: serial.c:270
 msgid "Simple"
@@ -862,11 +869,11 @@ msgstr "Simples"
 
 #: serial.c:275
 msgid "Serial port default usage"
-msgstr "Utilização da porta de série por omissão"
+msgstr "Utiliza,bgc(Bo da porta de s,bi(Brie por omiss,bc(Bo"
 
 #: serial.c:279
 msgid "Select desired software to use serial port here."
-msgstr "Seleccione aqui o software desejado para utilzar a porta de série."
+msgstr "Seleccione aqui o software desejado para utilzar a porta de s,bi(Brie."
 
 #: serial.c:281
 msgid "Console"
@@ -874,7 +881,7 @@ msgstr "Consola"
 
 #: serial.c:283
 msgid "This option runs console on serial port. (default)"
-msgstr "Estão opção corre a consola na porta de sério. (por omissão)"
+msgstr "Est,bc(Bo op,bgc(Bo corre a consola na porta de s,bi(Brio. (por omiss,bc(Bo)"
 
 #: serial.c:285
 msgid "GPS Daemon"
@@ -882,7 +889,7 @@ msgstr "Daemon GPS"
 
 #: serial.c:288
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
-msgstr "Esta opção activa a inicialização do GPSD que fornece informação de um receptor GPS às aplicações."
+msgstr "Esta op,bgc(Bo activa a inicializa,bgc(Bo do GPSD que fornece informa,bgc(Bo de um receptor GPS ,b`(Bs aplica,bgu(Bes."
 
 #: serial.c:290
 msgid "Nothing (free)"
@@ -890,7 +897,7 @@ msgstr "Nada (livre)"
 
 #: serial.c:292
 msgid "Don't start any software that uses the serial port."
-msgstr "Não iniciar nenhum software que utilize a porta de série."
+msgstr "N,bc(Bo iniciar nenhum software que utilize a porta de s,bi(Brie."
 
 #: logread.c:140
 msgid "<empty syslog>"
@@ -900,231 +907,267 @@ msgstr "<syslog vazio>"
 msgid "System Log"
 msgstr "Log the Sistema"
 
-#: packages.c:62
+#: packages.c:66
+msgid "Removing package"
+msgstr "A remover pacote"
+
+#: packages.c:71
 msgid "Installing package"
 msgstr "A instalar pacote"
 
-#: packages.c:140 packages.c:245
+#: packages.c:150 packages.c:324
 msgid "Start"
 msgstr "Iniciar"
 
-#: packages.c:142
+#: packages.c:155
 msgid "Update finished. Please check log messages for errors."
-msgstr "Actualização concluida. Por favor verifique se existem erros nas mensagem do log."
+msgstr "Actualiza,bgc(Bo concluida. Por favor verifique se existem erros nas mensagem do log."
 
-#: packages.c:163
+#: packages.c:184 packages.c:370
+msgid "Remove"
+msgstr "Remover"
+
+#: packages.c:185
+msgid "Install/Removal finished. Please check log messages for errors."
+msgstr "Actualiza,bgc(Bo concluida. Por favor verifique se existem erros nas mensagem do log."
+
+#: packages.c:205
 msgid "Update using \"ipkg upgrade\" started.\n"
-msgstr "Actualização utilizando \"ipkg upgrade\" iniciada.\n"
+msgstr "Actualiza,bgc(Bo utilizando \"ipkg upgrade\" iniciada.\n"
 
-#: packages.c:186
+#: packages.c:229 packages.c:253
 msgid "Running..."
 msgstr "A Executar..."
 
-#: packages.c:235
+#: packages.c:314
 msgid "Update"
 msgstr "Actualizar"
 
-#: packages.c:240
+#: packages.c:319
 msgid "Update from network"
-msgstr "Actualizar através da rede"
+msgstr "Actualizar atrav,bi(Bs da rede"
 
-#: packages.c:249
+#: packages.c:328
 msgid "Update entire system over an internet connection."
-msgstr "Actualizar todo o sistema via uma ligação à Internet."
+msgstr "Actualizar todo o sistema via uma liga,bgc(Bo ,b`(B Internet."
 
-#: packages.c:253
+#: packages.c:332 packages.c:378
 msgid "Activity log"
 msgstr "Log de actividade"
 
-#: packages.c:261
+#: packages.c:340
 msgid "This window shows all output from the packet manager that performs the update."
-msgstr "Esta janela mostra todo o resultado do programa que executa a actualização."
+msgstr "Esta janela mostra todo o resultado do programa que executa a actualiza,bgc(Bo."
 
-#: cardinfo.c:234
+#: packages.c:350
+msgid "Install/Remove"
+msgstr "Instalar/Remover"
+
+#: packages.c:355
+msgid "Install/Remove a package"
+msgstr "Instalar/Remover um pacote"
+
+#: packages.c:362
+msgid "Enter name of package to be installed here."
+msgstr "Insira aqui o nome do pacote que deseja instalar."
+
+#: packages.c:368
+msgid "Install a package from a configured source."
+msgstr "Instalar o pacote apartir de uma fonte configurada."
+
+#: packages.c:374
+msgid "Remove the package."
+msgstr "Remover o pacote."
+
+#: packages.c:386
+msgid "This window shows all output from the packet manager installing the package."
+msgstr "Esta janela mostra todo o resultado do programa que executa a instalação do pacote."
+
+#: cardinfo.c:247 cardinfo.c:318
 msgid "Could not write to temporal config file."
-msgstr "Não foi possível escrever no ficheiro de configuração temporário."
+msgstr "N,bc(Bo foi poss,bm(Bvel escrever no ficheiro de configura,bgc(Bo tempor,ba(Brio."
 
-#: cardinfo.c:426
+#: cardinfo.c:524
 msgid "Could not open pidfile:"
-msgstr "Não foi possível abrir o pidfile:"
+msgstr "N,bc(Bo foi poss,bm(Bvel abrir o pidfile:"
 
-#: cardinfo.c:432
+#: cardinfo.c:530
 msgid "Could not read pidfile"
-msgstr "Não foi possível ler o pidfile"
+msgstr "N,bc(Bo foi poss,bm(Bvel ler o pidfile"
 
-#: cardinfo.c:436
+#: cardinfo.c:534
 msgid "Could not signal cardmgr:"
-msgstr "Não foi possível enviar sinal ao cardmgr:"
+msgstr "N,bc(Bo foi poss,bm(Bvel enviar sinal ao cardmgr:"
 
-#: cardinfo.c:511
+#: cardinfo.c:609
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "O gpe-conf tem de ser setuid para poder utilizador para utilizar o cardinfo."
 
-#: cardinfo.c:530
+#: cardinfo.c:628
 msgid "No pcmcia driver in /proc/devices"
-msgstr "Não há nenhum controlador pcmcia em /proc/devices"
+msgstr "N,bc(Bo h,ba(B nenhum controlador pcmcia em /proc/devices"
 
-#: cardinfo.c:533
+#: cardinfo.c:631
 msgid "Could not open /proc/devices"
-msgstr "Não foi possível abrir o /proc/devices"
+msgstr "N,bc(Bo foi poss,bm(Bvel abrir o /proc/devices"
 
-#: cardinfo.c:545
+#: cardinfo.c:643
 msgid "No sockets found\n"
 msgstr "Nenhuma socket encontrada\n"
 
-#: cardinfo.c:554
+#: cardinfo.c:652
 msgid "Card Services release does not match!"
-msgstr "A versão do Card Services não coincide!"
+msgstr "A vers,bc(Bo do Card Services n,bc(Bo coincide!"
 
-#: cardinfo.c:559
+#: cardinfo.c:657
 msgid "Could not get CS revision info!\n"
-msgstr "Não foi possível obter informação acerca do CS!\n"
+msgstr "N,bc(Bo foi poss,bm(Bvel obter informa,bgc(Bo acerca do CS!\n"
 
-#: cardinfo.c:716
+#: cardinfo.c:820
 msgid "flock(stabfile) failed)"
 msgstr "flock(stabfile) falhou"
 
-#: cardinfo.c:732
+#: cardinfo.c:836
 msgid "no driver loaded"
 msgstr "nenhum driver carregado"
 
-#: cardinfo.c:841
+#: cardinfo.c:945
 msgid "ready"
-msgstr "disponível"
+msgstr "dispon,bm(Bvel"
 
-#: cardinfo.c:859
+#: cardinfo.c:963
 msgid "not ready"
-msgstr "não disponível"
+msgstr "n,bc(Bo dispon,bm(Bvel"
 
-#: cardinfo.c:874
+#: cardinfo.c:978
 msgid "suspended"
 msgstr "suspenso"
 
-#: cardinfo.c:1068 cardinfo.c:1239 cardinfo.c:1240
+#: cardinfo.c:1170 cardinfo.c:1341 cardinfo.c:1342
 msgid "Assign Driver"
 msgstr "Atribuir Controlador"
 
-#: cardinfo.c:1077
+#: cardinfo.c:1179
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 "Esta janela permite-lhe seleccionar ou\n"
-"modificar a atribuição de um controlador\n"
-"a um cartão PCMCIA/CF."
+"modificar a atribui,bgc(Bo de um controlador\n"
+"a um cart,bc(Bo PCMCIA/CF."
 
-#: cardinfo.c:1087
+#: cardinfo.c:1189
 msgid "Your current card identifies itself as:"
-msgstr "O cartão corrente está identificado como:"
+msgstr "O cart,bc(Bo corrente est,ba(B identificado como:"
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1203 cardinfo.c:1209
 msgid "Manuf. Id"
 msgstr "Manuf. Id"
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1203 cardinfo.c:1209
 msgid "Class"
 msgstr "Classe"
 
-#: cardinfo.c:1180
+#: cardinfo.c:1282
 msgid "Insert Card"
-msgstr "Insira Cartão"
+msgstr "Insira Cart,bc(Bo"
 
-#: cardinfo.c:1182
+#: cardinfo.c:1284
 msgid "Tap here to start card insertion manually."
-msgstr "Clique aqui para iniciar inserção do cartão manualmente."
+msgstr "Clique aqui para iniciar inser,bgc(Bo do cart,bc(Bo manualmente."
 
-#: cardinfo.c:1190
+#: cardinfo.c:1292
 msgid "Eject Card"
-msgstr "Ejectar Cartão"
+msgstr "Ejectar Cart,bc(Bo"
 
-#: cardinfo.c:1192
+#: cardinfo.c:1294
 msgid "Tap here to eject card manually."
-msgstr "Clique aqui para ejectar o cartão manualmente."
+msgstr "Clique aqui para ejectar o cart,bc(Bo manualmente."
 
-#: cardinfo.c:1200
+#: cardinfo.c:1302
 msgid "Suspend Card"
-msgstr "Suspender Cartão"
+msgstr "Suspender Cart,bc(Bo"
 
-#: cardinfo.c:1202
+#: cardinfo.c:1304
 msgid "Tap here to suspend current card."
-msgstr "Clique aqui para suspender o cartão corrente."
+msgstr "Clique aqui para suspender o cart,bc(Bo corrente."
 
-#: cardinfo.c:1210
+#: cardinfo.c:1312
 msgid "Resume Card"
-msgstr "Resumir Cartão"
+msgstr "Resumir Cart,bc(Bo"
 
-#: cardinfo.c:1212
+#: cardinfo.c:1314
 msgid "Tap here to resume current card."
-msgstr "Clique aqui para resumir o cartão corrente."
+msgstr "Clique aqui para resumir o cart,bc(Bo corrente."
 
-#: cardinfo.c:1220
+#: cardinfo.c:1322
 msgid "Reset Card"
-msgstr "Reiniciar Cartão"
+msgstr "Reiniciar Cart,bc(Bo"
 
-#: cardinfo.c:1221
+#: cardinfo.c:1323
 msgid "Tap here to reset current card."
-msgstr "Clique aqui para reiniciar o cartão corrente."
+msgstr "Clique aqui para reiniciar o cart,bc(Bo corrente."
 
-#: cardinfo.c:1229 cardinfo.c:1230
+#: cardinfo.c:1331 cardinfo.c:1332
 msgid "Reset Card Manager"
 msgstr "Reiniciar o Card Manager"
 
-#: cardinfo.c:1232
+#: cardinfo.c:1334
 msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
-msgstr "Clique aqui para reiniciar o card manager. Isto força a escrita de todas as actualizações aos ficheiros de configuração PCMCIA."
+msgstr "Clique aqui para reiniciar o card manager. Isto for,bg(Ba a escrita de todas as actualiza,bgu(Bes aos ficheiros de configura,bgc(Bo PCMCIA."
 
-#: cardinfo.c:1242
+#: cardinfo.c:1344
 msgid "Tap here to assign a driver to this card / change current driver assignment."
-msgstr "Clique aqui para atribuir um controlador a este cartão ou alterar a atribuição actual."
+msgstr "Clique aqui para atribuir um controlador a este cart,bc(Bo ou alterar a atribui,bgc(Bo actual."
 
-#: cardinfo.c:1249 cardinfo.c:1250
+#: cardinfo.c:1351 cardinfo.c:1352
 msgid "Exit applet"
 msgstr "Sair do applet"
 
-#: cardinfo.c:1259 cardinfo.c:1272
+#: cardinfo.c:1361 cardinfo.c:1374
 msgid "PC/CF card socket information."
-msgstr "Informação acerca do socket do cartão PC/CF."
+msgstr "Informa,bgc(Bo acerca do socket do cart,bc(Bo PC/CF."
 
-#: cardinfo.c:1267
+#: cardinfo.c:1369
 msgid "Socket"
 msgstr "Socket"
 
-#: cardinfo.c:1298
+#: cardinfo.c:1400
 msgid "Information for socket"
-msgstr "Informação da socket"
+msgstr "Informa,bgc(Bo da socket"
 
-#: cardinfo.c:1307
+#: cardinfo.c:1409
 msgid "State:"
 msgstr "Estado:"
 
-#: cardinfo.c:1308
+#: cardinfo.c:1410
 msgid "Device:"
 msgstr "Dispositivo:"
 
-#: cardinfo.c:1309
+#: cardinfo.c:1411
 msgid "Driver:"
 msgstr "Controlador:"
 
-#: cardinfo.c:1310
+#: cardinfo.c:1412
 msgid "Type:"
 msgstr "Tipo:"
 
-#: cardinfo.c:1311
+#: cardinfo.c:1413
 msgid "I/O:"
 msgstr "E/S:"
 
-#: cardinfo.c:1312
+#: cardinfo.c:1414
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1319
+#: cardinfo.c:1421
 msgid "Flags:"
 msgstr "Flags:"
 
-#: cardinfo.c:1336
+#: cardinfo.c:1438
 msgid "PCMCIA initialisation failed"
-msgstr "Inicialição PCMCIA falhou"
+msgstr "Iniciali,bgc(Bo PCMCIA falhou"
 
 #: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
 #: tools/interface.c:622
@@ -1134,7 +1177,7 @@ msgstr "[NENHUM ESCOLHIDO]"
 #: tools/interface.c:394
 #, c-format
 msgid "rresolve: unsupport address family %d !\n"
-msgstr "rresolve: família de endereços não suportada %d !\n"
+msgstr "rresolve: fam,bm(Blia de endere,bg(Bos n,bc(Bo suportada %d !\n"
 
 #: tools/interface.c:677 tools/interface.c:1650
 msgid "UNSPEC"
@@ -1186,44 +1229,44 @@ msgstr "Ash"
 
 #: tools/interface.c:736
 msgid "Too much address family arguments.\n"
-msgstr "Demasiados argumentos na família de enfereços.\n"
+msgstr "Demasiados argumentos na fam,bm(Blia de enfere,bg(Bos.\n"
 
 #: tools/interface.c:747
 #, c-format
 msgid "Unknown address family `%s'.\n"
-msgstr "Família de endereços desconhecida `%s'.\n"
+msgstr "Fam,bm(Blia de endere,bg(Bos desconhecida `%s'.\n"
 
 #: tools/interface.c:810
 msgid "Please don't supply more than one address family.\n"
-msgstr "Por favor forneça apenas uma família de endereços.\n"
+msgstr "Por favor forne,bg(Ba apenas uma fam,bm(Blia de endere,bg(Bos.\n"
 
 #: tools/interface.c:937
 msgid "No usable address families found.\n"
-msgstr "Não foram encontradas famílias de enfereços utilizáveis.\n"
+msgstr "N,bc(Bo foram encontradas fam,bm(Blias de enfere,bg(Bos utiliz,ba(Bveis.\n"
 
 #: tools/interface.c:1007
 #, c-format
 msgid "warning: no inet socket available: %s\n"
-msgstr "aviso: nenhuma inet socket disponível: %s\n"
+msgstr "aviso: nenhuma inet socket dispon,bm(Bvel: %s\n"
 
 #: tools/interface.c:1159
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr "Aviso: não foi possível abrir %s (%s). Output limitado.\n"
+msgstr "Aviso: n,bc(Bo foi poss,bm(Bvel abrir %s (%s). Output limitado.\n"
 
 #: tools/interface.c:1402
 msgid "Device not found"
-msgstr "Dispositivo não encontrado"
+msgstr "Dispositivo n,bc(Bo encontrado"
 
 #: tools/interface.c:1406
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr "%s: erro ao tentar obter informação acerca da interface: %s\n"
+msgstr "%s: erro ao tentar obter informa,bgc(Bo acerca da interface: %s\n"
 
 #: tools/interface.c:1480 tools/interface.c:1497
 #, c-format
 msgid "in_ether(%s): invalid ether address!\n"
-msgstr "in_ether(%s): endereço ether inválido!\n"
+msgstr "in_ether(%s): endere,bg(Bo ether inv,ba(Blido!\n"
 
 #: tools/interface.c:1511
 #, c-format
@@ -1237,7 +1280,7 @@ msgstr "in_ether(%s)\" trailing junk!\n"
 
 #: tools/interface.c:1555
 msgid "You cannot start PPP with this program.\n"
-msgstr "Não é iniciar o PPP com este programa.\n"
+msgstr "N,bc(Bo ,bi(B iniciar o PPP com este programa.\n"
 
 #: tools/interface.c:1649
 msgid "Local Loopback"
@@ -1277,7 +1320,7 @@ msgstr "HIPPI"
 
 #: tools/interface.c:1680
 msgid "generic X.25"
-msgstr "X.25 genérico"
+msgstr "X.25 gen,bi(Brico"
 
 #: tools/interface.c:1683
 msgid "IPIP Tunnel"
@@ -1340,7 +1383,7 @@ msgstr "HWaddr (MAC): %s\n"
 #: tools/interface.c:1832
 #, c-format
 msgid "Media: %s"
-msgstr "Mídia: %s"
+msgstr "M,bm(Bdia: %s"
 
 #: tools/interface.c:1837
 msgid "(auto)"
@@ -1369,7 +1412,7 @@ msgstr "Broadcast: %s\n"
 #: tools/interface.c:1882
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
-msgstr "Endereço IPv6: %s/%d\n"
+msgstr "Endere,bg(Bo IPv6: %s/%d\n"
 
 #: tools/interface.c:1886
 msgid "Scope: "
@@ -1385,7 +1428,7 @@ msgstr "Link"
 
 #: tools/interface.c:1897
 msgid "Site"
-msgstr "Sítio"
+msgstr "S,bm(Btio"
 
 #: tools/interface.c:1900
 msgid "Compat"
@@ -1399,11 +1442,79 @@ msgstr "Host"
 msgid "Unknown"
 msgstr "Desconhecido"
 
-#~ msgid "Could not set timezone."
-#~ msgstr "Não possível seleccionar o fuso horário."
+#: battery.c:79
+#, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "n,bc(Bo foi poss,bm(Bvel abrir o dispositivo touchscreen '%s'\n"
 
-#~ msgid "This setting can only be changed by user root!"
-#~ msgstr "Esta opção só pode ser alterada pelo utilizador root!"
+#: battery.c:127 battery.c:179
+msgid "Status: high"
+msgstr "Estado: cheia"
 
-#~ msgid "Operation failed"
-#~ msgstr "Operação falhou"
+#: battery.c:130 battery.c:182
+msgid "Status: low"
+msgstr "Estado: vazia"
+
+#: battery.c:133 battery.c:185
+msgid "Status: critical"
+msgstr "Estado: cr,bm(Btico"
+
+#: battery.c:136 battery.c:188
+msgid "Status: charging"
+msgstr "Estado: a carregar"
+
+#: battery.c:139 battery.c:191
+msgid "Status: charge main"
+msgstr "Estado: a carregar principal"
+
+#: battery.c:142
+msgid "Status: dead"
+msgstr "Estado: desactivada"
+
+#: battery.c:145 battery.c:197
+msgid "Status: full"
+msgstr "Estado: cheia"
+
+#: battery.c:148 battery.c:200
+msgid "Status: no battery"
+msgstr "Estado: nenhuma bateria"
+
+#: battery.c:151 battery.c:203 battery.c:222
+msgid "Status: unknown"
+msgstr "Estado: desconhecido"
+
+#: battery.c:155 battery.c:207
+msgid "Voltage"
+msgstr "Voltagem"
+
+#: battery.c:159 battery.c:211
+msgid "AC connected"
+msgstr "Ligada ,b`(B corrente"
+
+#: battery.c:161 battery.c:213
+msgid "Lifetime"
+msgstr "Autonomia"
+
+#: battery.c:194
+msgid "Status: not installed"
+msgstr "Estado: n,bc(Bo instalada"
+
+#: battery.c:220
+msgid "not installed"
+msgstr "n,bc(Bo instalada"
+
+#: battery.c:224
+msgid "Voltage: unknown"
+msgstr "Voltagem: desconhecida"
+
+#: battery.c:226
+msgid "Lifetime: unknown"
+msgstr "Autonomia: desconhecida"
+
+#: battery.c:265
+msgid "Internal battery"
+msgstr "Bateria Interna"
+
+#: battery.c:269
+msgid "Jacket battery"
+msgstr "Bateria externa"

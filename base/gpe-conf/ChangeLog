@@ -1,4 +1,7 @@
 2003-09-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* fixed warning in timeanddate.c
+	* cleaned up Makefile
+	* removed obsolete gpe-confsuid.c
 	* removed obsolete menu building script
 	* timeanddate.c: cleaned up handling of timer
 	* fixed warning in cfgfile.c 

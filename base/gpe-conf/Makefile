@@ -140,34 +140,29 @@ PIXMAPS += gpe-config-battery.png
 
 all: $(PACKAGE) 
 
-gpe-conf: $(OBJS)
+$(PACKAGE): $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
-	cp gpe-conf gpe-conf.pc
-	$(STRIP) gpe-conf
+	cp $(PACKAGE) gpe-conf.pc
+	$(STRIP) $(PACKAGE)
 
-gpe-confsuid: gpe-confsuid.c
-	$(CC) -o $@ gpe-confsuid.c 
-	$(STRIP) gpe-confsuid
-
-install-program: gpe-conf
+install-program: $(PACKAGE)
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
 	$(INSTALL) -m 644 familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
 	$(INSTALL) -m 644 keyboards.def $(DESTDIR)/etc/gpe/
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
-	$(INSTALL) gpe-conf $(DESTDIR)$(PREFIX)/bin/gpe-conf
+	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
-	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../libgpewidget/
 	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
 	$(INSTALL) -m 644 pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f gpe-conf $(OBJS) *~ */*~ *.ipk *.o
+	rm -f $(PACKAGE) $(OBJS) *~ */*~ *.ipk *.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

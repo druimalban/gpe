@@ -188,7 +188,7 @@ tzinfo get_tz_info(char *tzstr)
 	
 	/* init with defaults */
 	sprintf(result.tzname,"UTC");
-	sprintf(result.dstname,"");
+	result.dstname[0] = 0;
 	result.utcofs_h = 0;
 	result.utcofs_m = 0;
 	result.utcdstofs_h = 0;
