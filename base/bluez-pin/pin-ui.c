@@ -23,6 +23,10 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
+#ifdef GPE_BLUETOOTH
+#include <gpe/pixmaps.h>
+#endif
+
 #define BT_ICON PREFIX "/share/pixmaps/bt-logo.png"
 
 #define _(x) gettext(x)
@@ -85,10 +89,14 @@ bluez_pin_request (struct pin_request_context *ctx, gboolean outgoing, const gch
     : _("Incoming connection from");
 
   window = gtk_dialog_new ();
- 
+
+#ifdef GPE_BLUETOOTH
+  pixbuf = gpe_find_icon ("bt-logo");
+#else 
   pixbuf = gdk_pixbuf_new_from_file (BT_ICON, NULL);
   if (pixbuf)
     logo = gtk_image_new_from_pixbuf (pixbuf);
+#endif
 
   pin_label = gtk_label_new (_("PIN:"));
   entry = gtk_entry_new ();
