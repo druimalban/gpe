@@ -22,6 +22,11 @@ extern time_t viewtime;
 
 extern void update_current_view (void);
 
+#define SECONDS_IN_DAY (24*60*60)
+
 /* stuff that could perhaps be configurable */
 #define TIMEFMT "%R"
 #define WEEK_STARTS_ON_MONDAY
+
+/* KEEP RECURRENCE PAGE OUT UNTIL WE ACTUALLY SUPPORT IT BETTER */
+#undef DO_RECURRENCE
