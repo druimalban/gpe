@@ -1,5 +1,14 @@
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.35 released.
+
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
+	* gpe-logout.c (main): Add GtkHSeparator above buttons.  Pack them
+	into box with fill=FALSE.
+	
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
 	* gpe-logout.c (on_window_destroy, on_cancel_button_clicked):
 	Delete.
 	(main): Use gtk_main_quit in place of above functions.  Use plain

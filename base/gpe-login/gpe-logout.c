@@ -44,7 +44,7 @@ int
 main(int argc, char *argv[])
 {
   GtkWidget *window, *hbox, *label, *icon, *vbox, *buttonhbox;
-  GtkWidget *buttonok, *buttoncancel, *frame;
+  GtkWidget *buttonok, *buttoncancel, *frame, *sep;
   GdkPixbuf *p;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -106,12 +106,13 @@ main(int argc, char *argv[])
                       GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
 
-  gtk_container_add (GTK_CONTAINER (buttonhbox),
-		     buttonok);
-  gtk_container_add (GTK_CONTAINER (buttonhbox),
-                     buttoncancel);
+  gtk_box_pack_start (GTK_BOX (buttonhbox), buttonok, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonhbox), buttoncancel, TRUE, FALSE, 0);
+
+  sep = gtk_hseparator_new ();
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 6);
   gtk_box_pack_start (GTK_BOX (vbox), buttonhbox, FALSE, FALSE, 0);
 
   /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
