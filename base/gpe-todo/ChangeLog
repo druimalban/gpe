@@ -6,4 +6,6 @@
 
 	* control, postinst: Moved to ...
 	* familiar/control, familiar/postinst: ... here.
+
+	* .cvsignore: New file.
 	
