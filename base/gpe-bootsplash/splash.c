@@ -20,6 +20,7 @@
 #endif
 
 #define FB "/dev/fb/0"
+#define FB0 "/dev/fb0"
 
 #define IMAGE "/usr/share/gpe/splash.png"
 #define SVG_NAME_LANDSCAPE "/usr/share/gpe/splash-l.svg"
@@ -64,6 +65,8 @@ main(int argc, char *argv[])
   g_type_init ();
 
   fd = open (FB, O_RDWR);
+  if (fd < 0 && errno == ENOENT)
+    fd = open (FB0, O_RDWR);
   if (fd < 0)
     {
       perror (FB);

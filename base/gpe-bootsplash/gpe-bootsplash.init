@@ -17,7 +17,7 @@ case $1 in
 		"HP IPAQ H3800" | *COLLIE)
 			ARGS="--force-portrait" ;;
 		"SHARP SHEPHERD" | "SHARP HUSKY" | "SHARP CORGI")
-			ARGS="--force-landscape" ;;
+			ARGS="--force-landscape --flip" ;;
 		"HP IPAQ H5400" | "HP IPAQ H2200" )
 			;;
 	esac
