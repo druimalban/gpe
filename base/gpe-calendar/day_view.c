@@ -100,7 +100,7 @@ selection_made (GtkWidget      *clist,
 	  gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t);
 	  localtime_r (&viewtime, &tm);
 	  strptime (t, TIMEFMT, &tm);
-	  gtk_widget_show (new_event (mktime (&tm), 1));
+	  gtk_widget_show_all (new_event (mktime (&tm), 1));
 	}
     }
   else if (event->type == GDK_BUTTON_RELEASE)
