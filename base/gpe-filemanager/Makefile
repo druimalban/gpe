@@ -14,29 +14,18 @@ else
 BUILD = build
 endif
 
-CFLAGS += $(GPECFLAGS) `pkg-config --cflags gnome-vfs-2.0 dbus-glib-1`
-CPPFLAGS += -DDBUS_API_SUBJECT_TO_CHANGE
-
-CFLAGS += -D_GNU_SOURCE -Wall
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-
-LDFLAGS += $(GPELIBS) -lsqlite `pkg-config --libs gnome-vfs-2.0 dbus-glib-1`
-
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gnome-vfs-2.0 dbus-glib-1`
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs gnome-vfs-2.0 dbus-glib-1`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: gpe-filemanager
 
 gpe-filemanager: $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
@@ -53,7 +42,8 @@ uninstall:
 	rm -rf $(DESTDIR)$(PREFIX)/bin/gpe-filemanager $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager
 
 clean:
-	rm -f gpe-filemanager $(OBJS)
+	rm -f gpe-filemanager $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
+-include $(DEPS)
