@@ -27,16 +27,18 @@
 #define _(x) gettext(x)
 
 #define SERVICE_NAME   "org.handhelds.gpe.bluez"
-#define INTERFACE_NAME SERVICE_NAME ".PinAgent"
+#define PIN_INTERFACE_NAME SERVICE_NAME ".PinAgent"
+#define OBEX_INTERFACE_NAME SERVICE_NAME ".OBEX"
 
 extern DBusHandlerResult bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message);
+extern DBusHandlerResult obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *message);
 
 DBusHandlerResult
-handler_func (DBusConnection     *connection,
+pin_handler_func (DBusConnection     *connection,
 	      DBusMessage        *message,
 	      void               *user_data)
 {
-  if (dbus_message_is_method_call (message, INTERFACE_NAME, "PinRequest"))
+  if (dbus_message_is_method_call (message, PIN_INTERFACE_NAME, "PinRequest"))
     return bluez_pin_handle_dbus_request (connection, message);
   
   if (dbus_message_is_signal (message,
@@ -47,9 +49,31 @@ handler_func (DBusConnection     *connection,
   return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
-static DBusObjectPathVTable dbus_vtable = {
+static DBusObjectPathVTable dbus_pin_vtable = {
   NULL,
-  handler_func,
+  pin_handler_func,
+  NULL
+};
+
+DBusHandlerResult
+obex_handler_func (DBusConnection     *connection,
+		   DBusMessage        *message,
+		   void               *user_data)
+{
+  if (dbus_message_is_method_call (message, OBEX_INTERFACE_NAME, "ObjectPush"))
+    return obex_client_handle_dbus_request (connection, message);
+  
+  if (dbus_message_is_signal (message,
+                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              "Disconnected"))
+    exit (0);
+  
+  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+}
+
+static DBusObjectPathVTable dbus_obex_vtable = {
+  NULL,
+  obex_handler_func,
   NULL
 };
 
@@ -58,7 +82,10 @@ gpe_bluetooth_init_dbus (void)
 {
   DBusConnection *connection;
   DBusError error;
-  static const char *object_path[] = { "org", "handhelds", "gpe", "bluez", "PinAgent", NULL };
+  static const char *object_path1[] = { "org", "handhelds", "gpe", "bluez", "PinAgent", NULL };
+  static const char *object_path2[] = { "org", "handhelds", "gpe", "bluez", "OBEX", NULL };
+
+  dbus_g_thread_init ();
 
   dbus_error_init (&error);
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
@@ -72,7 +99,8 @@ gpe_bluetooth_init_dbus (void)
 
   dbus_connection_setup_with_g_main (connection, NULL);
 
-  dbus_connection_register_object_path (connection, object_path, &dbus_vtable, NULL);
+  dbus_connection_register_object_path (connection, object_path1, &dbus_pin_vtable, NULL);
+  dbus_connection_register_object_path (connection, object_path2, &dbus_obex_vtable, NULL);
 
   dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
   if (dbus_error_is_set (&error))

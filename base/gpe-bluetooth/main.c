@@ -50,6 +50,7 @@
 #include "headset.h"
 
 #include "obexserver.h"
+#include "obexclient.h"
 
 #define _(x) gettext(x)
 
@@ -489,7 +490,7 @@ main (int argc, char *argv[])
 {
   GtkWidget *window;
   GdkBitmap *bitmap;
-  GtkWidget *menu_remove;
+  GtkWidget *menu_remove, *menu_file;
   GtkTooltips *tooltips;
   int dd;
 
@@ -526,11 +527,13 @@ main (int argc, char *argv[])
   menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
   menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
   menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
+  menu_file = gtk_menu_item_new_with_label (_("Send file ..."));
   menu_remove = gtk_menu_item_new_with_label (_("Remove from panel"));
 
   g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
   g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off), NULL);
   g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
+  g_signal_connect (G_OBJECT (menu_file), "activate", G_CALLBACK (send_file_dialog), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
   if (! radio_is_on)
@@ -541,10 +544,12 @@ main (int argc, char *argv[])
 
   gtk_widget_show (menu_devices);
   gtk_widget_show (menu_remove);
+  gtk_widget_show (menu_file);
 
   gtk_menu_append (GTK_MENU (menu), menu_radio_on);
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
   gtk_menu_append (GTK_MENU (menu), menu_devices);
+  gtk_menu_append (GTK_MENU (menu), menu_file);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
 
   if (gpe_load_icons (my_icons) == FALSE)

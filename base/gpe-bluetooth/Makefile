@@ -8,9 +8,9 @@ VERSION = 0.33
 
 GLADE = bluez-pin-gpe.glade
 
-MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown
+MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown obexclient
 
-CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` -Wall `pkg-config --cflags mimedir-1.0` -I../libgpevtype
+CFLAGS += -MD `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` -Wall `pkg-config --cflags mimedir-1.0` -I../libgpevtype
 
 CPPFLAGS += -D_GNU_SOURCE -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
 
@@ -35,6 +35,7 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
 
@@ -103,3 +104,6 @@ clean:
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
+
+-include $(DEPS)
+

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-25 22:22+0000\n"
+"POT-Creation-Date: 2004-02-26 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,71 +16,71 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:156
+#: main.c:158
 msgid "No kernel support for Bluetooth"
 msgstr ""
 
-#: main.c:219
+#: main.c:221
 msgid "Device information"
 msgstr ""
 
-#: main.c:259
+#: main.c:261
 msgid "Details ..."
 msgstr ""
 
-#: main.c:292
+#: main.c:294
 msgid "Scanning for devices"
 msgstr ""
 
-#: main.c:305
+#: main.c:307
 msgid "Inquiry failed"
 msgstr ""
 
-#: main.c:317
+#: main.c:319
 msgid "HCI device open failed"
 msgstr ""
 
-#: main.c:348
+#: main.c:350
 msgid "unknown"
 msgstr ""
 
-#: main.c:387
+#: main.c:389
 msgid "Retrieving service information"
 msgstr ""
 
-#: main.c:424
+#: main.c:426
 msgid "Bluetooth devices"
 msgstr ""
 
-#: main.c:442
+#: main.c:444
 msgid "Unable to scan for devices"
 msgstr ""
 
-#: main.c:456
+#: main.c:458
 msgid "hciattach died unexpectedly"
 msgstr ""
 
-#: main.c:520
+#: main.c:522
 msgid "Bluetooth control"
 msgstr ""
 
-#: main.c:525
+#: main.c:527
 msgid "Switch radio on"
 msgstr ""
 
-#: main.c:526
+#: main.c:528
 msgid "Switch radio off"
 msgstr ""
 
-#: main.c:527
+#: main.c:529
 msgid "Devices..."
 msgstr ""
 
-#: main.c:528
+#: main.c:530
 msgid "Remove from panel"
 msgstr ""
 
-#: main.c:561
+#: main.c:563
 msgid ""
 "This is the Bluetooth control.\n"
 "Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
@@ -168,7 +168,24 @@ msgstr ""
 msgid "Connect HEADSET"
 msgstr ""
 
-#: obex-vcard.c:115
+#: obex-vcard.c:107
 #, c-format
 msgid "Received a business card for %s.  Import it?"
+msgstr ""
+
+#: obex-vcal.c:183
+msgid "Received a calendar entry.  Import it?"
+msgstr ""
+
+#: obex-unknown.c:60
+#, c-format
+msgid "Received a file '%s' (%d bytes).  Save it?"
+msgstr ""
+
+#: obex-unknown.c:60
+msgid "<no name>"
+msgstr ""
+
+#: obex-unknown.c:78
+msgid "Save as ..."
 msgstr ""
