@@ -711,25 +711,7 @@ int refresh_list ()
 	char *user_menu=NULL, *home_dir;
 	GSList *j;
 
-	char *directories[]=
-	{
-		"/usr/local/lib/menu",
-		"/usr/lib/menu",
-		"/home/mibus/programming/c/gpe/gpe-appmgr/dist/usr/lib/menu", /* test dir */
-		"/mnt/ramfs/lib/menu",
-		"/mnt/hda/usr/lib/menu",
-		NULL, /* Placeholder for ~/.gpe/menu */
-		NULL
-	};
-
 	TRACE ("refresh_list");
-
-	if ((home_dir = (char*) getenv ("HOME")))
-	{
-		for (i=0;directories[i];i++)
-			;
-		directories[i] = user_menu = g_strdup_printf ("%s/.gpe/menu", home_dir);
-	}
 
 	/* Wipe out 'recent' list */
 	recent_items = NULL;
@@ -753,32 +735,6 @@ int refresh_list ()
 	ignored_items = load_ignored_items ();
 	translate_list = load_group_translations ();
 	
-	for (i=0;directories[i];i++)
-	{
-		dir = opendir (directories[i]);
-		if (!dir)
-			continue;
-		while ((entry = readdir (dir)))
-		{
-			char *temp;
-
-			if (entry->d_name[0] == '.')
-				continue;
-
-			/* read the file if we don't want to ignore it */
-			temp = g_strdup_printf ("%s/%s", directories[i], entry->d_name);
-			if (g_list_find_custom (ignored_items, temp, (GCompareFunc)strcmp))
-			{
-				g_free (temp);
-				continue;
-			}
-
-			package_read_to (temp, cb_package_add);
-			g_free (temp);
-		}
-		closedir (dir);
-	}
-#define PREFIX "/gnome/head/INSTALL"
 	dir = opendir (PREFIX "/share/applications");
 	if (dir)
 	{
