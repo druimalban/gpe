@@ -1,3 +1,10 @@
+2004-05-25  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: Same for second toolbar.
+    
+2004-05-24  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: Removed setting of toolbar style for more fexibility. 
+              We'll use xsettings to set this in future.
+    
 2004-05-23  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: show_popup(): Enabled context menu everywhere. Enable only 
 	  possible items.
