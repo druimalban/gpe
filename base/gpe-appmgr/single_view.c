@@ -39,7 +39,6 @@
 /* GPE */
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/spacing.h>
 #include <gpe/gpeiconlistview.h>
 #include <gpe/tray.h>
