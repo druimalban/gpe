@@ -1,3 +1,7 @@
+2004-01-05	Florian Boor <florian.boor@kernelconcepts.de>
+	* Fixed model info.
+	* Changed slider range for H5xxx.
+
 2003-09-26	Nils Faerber <nils@kernelconcepts.de>
 	* bump to version 0.30
 	* removed system() calls and replaced with ioctl()s

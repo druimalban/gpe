@@ -78,7 +78,7 @@ get_ipaq_model (void)
     g_print ("model is H38xx\n");
     IpaqModel = H38XX;
   } else if ((strncmp (buf, "54", 2) == 0) || (strncmp (buf, "55", 2) == 0)) {
-    g_print ("model is H38xx\n");
+    g_print ("model is H5xxx\n");
     IpaqModel = H5XXX;
   } else
     IpaqModel = -1;
@@ -224,7 +224,7 @@ main (int argc, char **argv)
       slider = gtk_vscale_new_with_range (0, 64, 1);
       break;
     case H5XXX:
-      slider = gtk_vscale_new_with_range (0, 64, 1);
+      slider = gtk_vscale_new_with_range (0, 255, 1);
       break;
     case H19XX:
       slider = gtk_vscale_new_with_range (0, 255, 1);
