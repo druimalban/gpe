@@ -21,6 +21,13 @@
 struct _GtkMiniFileSelection
 {
   GtkWindow window;
+  GtkWidget *clist;
+  GtkWidget *cancel_button;
+  GtkWidget *ok_button;
+  GtkWidget *entry;
+  GtkWidget *option;
+
+  char *directory;
 };
 
 struct _GtkMiniFileSelectionClass {
@@ -31,6 +38,6 @@ typedef struct _GtkMiniFileSelection	   GtkMiniFileSelection;
 typedef struct _GtkMiniFileSelectionClass  GtkMiniFileSelectionClass;
 
 GtkType		gtk_mini_file_selection_get_type	   (void);
-GtkWidget      *gtk_mini_file_selection_new (void);
+GtkWidget      *gtk_mini_file_selection_new (const gchar *title);
 
 #endif

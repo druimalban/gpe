@@ -1,3 +1,5 @@
+DEBUG = yes
+
 SONAME = libgpewidget.so.0
 
 MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel

@@ -91,5 +91,5 @@ gpe_find_pixmap (const char *name)
 }
 
 struct pix *
-find_pixmaps () __attribute__ ((weak, deprecated, alias ("gpe_find_pixmap")));
+find_pixmap () __attribute__ ((weak, deprecated, alias ("gpe_find_pixmap")));
 
