@@ -304,7 +304,7 @@ GtkWidget *gpe_create_dir_browser(gchar * title, gchar * current_path, GtkSelect
 	gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_END);
 	gtk_button_box_set_spacing(GTK_BUTTON_BOX(bbox), 5);
 
-	ok = gtk_button_new_with_label(_("Ok"));
+	ok = gtk_button_new_with_label(_("OK"));
 	gtk_object_set_user_data(GTK_OBJECT(ok), window);
 	GTK_WIDGET_SET_FLAGS(ok, GTK_CAN_DEFAULT);
 	gtk_window_set_default(GTK_WINDOW(window), ok);

@@ -1,6 +1,15 @@
+2002-07-17  Philip Blundell  <pb@nexus.co.uk>
+
+	* Version 0.12 released
+
+2002-07-17  Philip Blundell  <pb@nexus.co.uk>
+
+	* dirbrowser.c (gpe_create_dir_browser): Unify message text.
+	* po/libgpewidget.pot: New.
+
 2002-07-15  Philip Blundell  <philb@gnu.org>
 
-	* stylus-mode.c (main): Deleted.
+	* stylus-mode.c: Deleted.
 
 2002-07-13  Philip Blundell  <philb@gnu.org>
 

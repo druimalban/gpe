@@ -1,0 +1,28 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-07-17 10:13+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: dirbrowser.c:307 errorbox.c:48 gtkminifilesel.c:370 smallbox.c:46
+msgid "OK"
+msgstr ""
+
+#: pixmaps.c:57
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr ""
+
+#: dirbrowser.c:315 gtkminifilesel.c:366 smallbox.c:47
+msgid "Cancel"
+msgstr ""
