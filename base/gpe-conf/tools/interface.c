@@ -58,6 +58,7 @@
  */
 #define HAVE_HWETHER	1
 #define HAVE_HWPPP	1
+#define HAVE_HWIRDA     1
 #undef HAVE_HWSLIP
 
 
@@ -78,8 +79,9 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <libintl.h>
 
-#define _(x) x
+#define _(x) gettext(x)
 #define _PATH_PROCNET_DEV               "/proc/net/dev"
 #define new(p) ((p) = calloc(1,sizeof(*(p))))
 #define KRELEASE(maj,min,patch) ((maj) * 65536 + (min)*256 + (patch))
@@ -1543,6 +1545,31 @@ static struct hwtype ether_hwtype =
 
 #endif				/* HAVE_HWETHER */
 
+#ifdef HAVE_HWIRDA
+
+#include <net/if_arp.h>
+
+/* Display an IrLAP address in readable format. */
+static char *pr_irda(unsigned char *ptr)
+{
+    static char buff[64];
+
+    snprintf(buff, sizeof(buff), "%02X:%02X:%02X:%02X",
+	     (ptr[3] & 0377), (ptr[2] & 0377),
+	     (ptr[1] & 0377), (ptr[0] & 0377)
+	);
+    return (buff);
+}
+
+
+static struct hwtype irda_hwtype =
+{
+    "irda", "IrLAP", ARPHRD_IRDA, 4,
+    pr_irda, NULL , NULL
+};
+
+
+#endif 				/* HAVE_HWIRDA */
 
 #if HAVE_HWPPP
 
