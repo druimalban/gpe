@@ -1,5 +1,9 @@
 2003-10-18  Philip Blundell  <philb@gnu.org>
 
+	* gpe/popup.h: Include Xlib.h to avoid undefined types.
+
+2003-10-18  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.74 released.
 	
 2003-10-18  Philip Blundell  <philb@gnu.org>

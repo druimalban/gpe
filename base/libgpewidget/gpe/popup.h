@@ -20,6 +20,8 @@
 #ifndef GPE_POPUP_H
 #define GPE_POPUP_H
 
+#include <X11/Xlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
