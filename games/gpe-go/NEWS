@@ -1,7 +1,8 @@
 GPE go NEWS
 
 * cvs
-- added simple dialog to choose game size
+- moved [new] [save] into a popup menu with coming [load]
+- added dialog to choose game size
 - support for variations
 - support for colored marks
 - mark last played stone

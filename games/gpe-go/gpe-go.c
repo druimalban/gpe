@@ -17,6 +17,8 @@
 #include "gpe/pixmaps.h"
 #include "gpe/errorbox.h"
 #include "gpe/question.h"
+#include "gpe/popup_menu.h"
+#include "gpe/picturebutton.h"
 
 //--i18n
 #include <libintl.h>
@@ -33,9 +35,6 @@
 static struct gpe_icon my_icons[] = {
   { "this_app_icon", PREFIX "/share/pixmaps/gpe-go.png" },
 
-  //{ "new",        "new"   },
-  //{ "prefs",      "preferences"  },
-
   { NULL, NULL }
 };
 
@@ -46,11 +45,22 @@ GdkGC       * gc;
 GdkColormap * colormap;
 GdkColor red = {0, 65535, 0, 0};
 
+enum page_names{
+  PAGE_BOARD = 0,
+  PAGE_GAME_SETTINGS
+};
+
 typedef struct _go {
   //--ui
   GtkWidget * window;
+  GtkWidget * notebook;
+
   GdkPixmap * drawing_area_pixmap_buffer;
   GtkWidget * drawing_area;
+
+  GdkPixbuf * loaded_board;
+  GdkPixbuf * loaded_black_stone;
+  GdkPixbuf * loaded_white_stone;
 
   GdkPixbuf * pixbuf_black_stone;
   GdkPixbuf * pixbuf_white_stone;
@@ -60,6 +70,11 @@ typedef struct _go {
   char      * capture_string;
 
   GtkWidget * file_selector;
+
+  GtkWidget * game_popup_button;
+
+  int selected_game_size;
+  GtkWidget * game_size_spiner;
 
 #ifdef TURN_LABEL
   GtkWidget * turn_label;
@@ -181,30 +196,41 @@ void append_hitem(GoAction action, GoItem item, int gox, int goy){
   go.last_turn = g_node_depth(go.history);
 }
 
-void app_init(int argc, char ** argv){
+gboolean delete_hitem(GNode * node, gpointer unused_data){
+  if(node->data) free_hitem(node->data);
+  return FALSE;
+}
+
+char ** new_table(int size){
   int i,j;
+  char ** table;
+  //one unused row/col to have index from *1* to grid_size.
+  table = (char **) malloc ((size +1) * sizeof(char *));
+  for (i=0; i<= size; i++){
+    table[i] = (char *) malloc ((size +1) * sizeof(char));
+  }
+  for(i=1; i<= size; i++) for(j=1; j<=size; j++) table[i][j]=0;
+  return table;
+}
+
+void free_table(char ** table, int size){
+  int i;
+  for(i=0; i<= size; i++){
+    if(table[i]) free(table[i]);
+  }
+  if(table) free(table);
+}
+
+void init_new_game(int game_size){
   int free_space;
+  int old_game_size;
 
-  //--grid size
-  if(argc > 1){//first arg is board size if numeric
-    int size;
-    if(sscanf(argv[1], "%d", &size) == 1) go.game_size = size;
-  }
-  else{
-    int rep;
-    rep = gpe_question_ask (_("Size of the game:"),
-                            "gpe-go", "this_app_icon",
-                            "19", "19",
-                            "13", "13",
-                            "9",  "9",
-                            NULL);
-    switch(rep){
-      case 0:  go.game_size = 19; break;
-      case 1:  go.game_size = 13; break;
-      default: go.game_size =  9; break;
-    }
-  }
+  old_game_size = go.game_size;
+  go.game_size = game_size;
 
+  TRACE("init NEW GAME %d", go.game_size);
+
+  //dimensions
   go.board_size = BOARD_SIZE;//240
   go.stone_space = 1;
   go.grid_stroke = 1;
@@ -221,22 +247,24 @@ void app_init(int argc, char ** argv){
   
   go.stone_size = go.cell_size - go.stone_space;
 
-  //--init grid
-  //one unused row/col to have index from *1* to grid_size.
-  go.grid = (char **) malloc ((go.game_size +1) * sizeof(char *));
-  for (i=0; i<=go.game_size; i++){
-    go.grid[i] = (char *) malloc ((go.game_size +1) * sizeof(char));
-  }
-  for(i=1; i<= go.game_size; i++) for(j=1; j<=go.game_size; j++) go.grid[i][j]=0;
+  //stones grid
+  if(go.grid != NULL) free_table(go.grid, old_game_size);
+  go.grid = new_table(go.game_size);
 
   //stamps grid
-  go.stamps = (char **) malloc ((go.game_size +1) * sizeof(char *));
-  for (i=0; i<=go.game_size; i++){
-    go.stamps[i] = (char *) malloc ((go.game_size +1) * sizeof(char));
-  }
-  for(i=1; i<= go.game_size; i++) for(j=1; j<=go.game_size; j++) go.stamps[i][j]=0;
+  if(go.stamps != NULL) free_table(go.stamps, old_game_size);
+  go.stamps = new_table(go.game_size);
 
   //--init game
+  if(go.history_root != NULL){
+    g_node_traverse ( go.history_root,
+                      G_PRE_ORDER,
+                      G_TRAVERSE_ALL,
+                      -1, //gint max_depth,
+                      delete_hitem,
+                      NULL);
+    g_node_destroy (go.history_root);//does it free the hitems?
+  }
   go.history_root = g_node_new (NULL);
   go.history = go.history_root;
 
@@ -250,7 +278,15 @@ void app_init(int argc, char ** argv){
   go.last_row = 0;
 
   go.lock_variation_choice = FALSE;
+}
 
+void app_init(int argc, char ** argv){
+  int size = 19;//default value
+
+  if(argc > 1){//first arg is board size if numeric
+    sscanf(argv[1], "%d", &size);
+  }
+  init_new_game(size);
 }
 
 void app_quit(){
@@ -343,130 +379,126 @@ int main (int argc, char ** argv){
 #define PIXMAPS_SRC  PREFIX "/share/gpe/pixmaps/default/" PACKAGE "/"
 
 void load_graphics(){
-  GdkPixbuf * stone_image;
-  GdkPixbuf * stone_scaled;
+  //--board and stones
+  go.loaded_board       = gdk_pixbuf_new_from_file(PIXMAPS_SRC "board", NULL);
+  go.loaded_black_stone = gdk_pixbuf_new_from_file(PIXMAPS_SRC "black.png", NULL);
+  go.loaded_white_stone = gdk_pixbuf_new_from_file(PIXMAPS_SRC "white.png", NULL);
 
-  int stone_size;
+  //--colors
+  gc = gdk_gc_new(go.drawing_area->window);
+  colormap = gdk_colormap_get_system();
+  gdk_colormap_alloc_color(colormap, &red,  FALSE,TRUE);
+}
 
-  stone_size = go.stone_size;
+void scale_graphics(){
+  int stone_size = go.stone_size;
+  int i;
+  int cell_size;
+  int border_trans; //grid's translation from the border of the board
 
   //--black stone
-  stone_image = gdk_pixbuf_new_from_file(PIXMAPS_SRC "black.png", NULL);
-  if(stone_image != NULL){
-    stone_scaled = gdk_pixbuf_scale_simple (stone_image,
+  if(go.pixbuf_black_stone != NULL){
+    gdk_pixbuf_unref(go.pixbuf_black_stone);
+  }
+  if(go.loaded_black_stone != NULL){
+    go.pixbuf_black_stone = gdk_pixbuf_scale_simple (go.loaded_black_stone,
                                             stone_size,
                                             stone_size,
                                             GDK_INTERP_BILINEAR);
-    gdk_pixbuf_unref(stone_image);
-    go.pixbuf_black_stone = stone_scaled;
-
   }
-  else {
-    //gdk_draw_arc(go.drawing_area_pixmap_buffer,
+  else {//draw it yourself
+    //gdk_draw_arc(go.pixbuf_black_stone,
     //             widget->style->black_gc,
     //             TRUE,
     //             0, 0,
     //             stone_size, stone_size,
     //             0, 23040);//23040 == 360*64
   }
+  TRACE("scaled black stone");
 
   //--white stone
-  stone_image = gdk_pixbuf_new_from_file(PIXMAPS_SRC "white.png", NULL);
-  if(stone_image != NULL){
-    stone_scaled = gdk_pixbuf_scale_simple (stone_image,
+  if(go.pixbuf_white_stone != NULL){
+    gdk_pixbuf_unref(go.pixbuf_white_stone);
+  }
+  if(go.loaded_white_stone != NULL){
+    go.pixbuf_white_stone = gdk_pixbuf_scale_simple (go.loaded_white_stone,
                                             stone_size,
                                             stone_size,
                                             GDK_INTERP_BILINEAR);
-    gdk_pixbuf_unref(stone_image);
-    go.pixbuf_white_stone = stone_scaled;
   }
-  else {
-    //gdk_draw_arc(go.drawing_area_pixmap_buffer,
+  else {//draw it yourself
+    //gdk_draw_arc(go.pixbuf_white_stone,
     //             widget->style->white_gc,
     //             TRUE,
     //             rect.x, rect.y,
     //             rect.width, rect.height,
     //             0, 23040);//23040 == 360*64
-    //gdk_draw_arc(go.drawing_area_pixmap_buffer, //black border
+    //gdk_draw_arc(go.pixbuf_white_stone, //black border
     //             widget->style->black_gc,
     //             FALSE,
     //             rect.x, rect.y,
     //             rect.width, rect.height,
     //               0, 23040);//23040 == 360*64
   }
+  TRACE("scaled white stone");
 
-  //--colors
-  gc = gdk_gc_new(go.drawing_area->window);
-  colormap = gdk_colormap_get_system();
-  gdk_colormap_alloc_color(colormap, &red,  FALSE,TRUE);
+  //--Board
+  if(go.pixmap_empty_board == NULL){
+    go.pixmap_empty_board = gdk_pixmap_new (go.drawing_area->window,
+                                            BOARD_SIZE,
+                                            BOARD_SIZE,
+                                            -1);
+  }
+  if(go.loaded_board != NULL){
+    GdkPixbuf * scaled_bg;
 
-}
-
-
-void paint_board(GtkWidget * widget){
-  int i;
-  int cell_size;
-  int border_trans; //grid's translation from the border of the board
-
-  GdkPixbuf * bg_image;
-  GdkPixbuf * bg_scaled;
-
-
-  go.pixmap_empty_board = gdk_pixmap_new (widget->window,
-                                          BOARD_SIZE,
-                                          BOARD_SIZE,
-                                          -1);
-
-  //--background
-  bg_image = gdk_pixbuf_new_from_file(PIXMAPS_SRC "board", NULL);
-  if(bg_image != NULL){
-    bg_scaled = gdk_pixbuf_scale_simple (bg_image,
+    scaled_bg = gdk_pixbuf_scale_simple (go.loaded_board,
                                          BOARD_SIZE, BOARD_SIZE,
                                          GDK_INTERP_BILINEAR);
-    gdk_pixbuf_unref(bg_image);
-
     gdk_draw_pixbuf(go.pixmap_empty_board,
-                    widget->style->white_gc,
-                    bg_scaled,
+                    go.drawing_area->style->white_gc,
+                    scaled_bg,
                     0, 0, 0, 0,
                     -1, -1,
                     GDK_RGB_DITHER_NONE, //GdkRgbDither dither,
                     0, //gint x_dither,
                     0); //gint y_dither);
-
-    gdk_pixbuf_unref(bg_scaled);
+    gdk_pixbuf_unref(scaled_bg);
   }
-  else {
+  else{//draw it yourself
     gdk_draw_rectangle (go.pixmap_empty_board,
-                        widget->style->white_gc,//FIXME: use better color
+                        go.drawing_area->style->white_gc,//FIXME: use better color
                         TRUE,
                         0, 0,
                         BOARD_SIZE,
                         BOARD_SIZE);
   }
+  TRACE("scaled board");
 
-  //--grid
+  //grid
   cell_size = go.cell_size;
   border_trans = go.margin + go.cell_size / 2;
   
   for(i=0; i< go.game_size; i++){
     //vertical lines
     gdk_draw_line(go.pixmap_empty_board,
-                  widget->style->black_gc,
+                  go.drawing_area->style->black_gc,
                   border_trans + cell_size * i, border_trans,
                   border_trans + cell_size * i, BOARD_SIZE - border_trans);
     //horizontal lines
     gdk_draw_line(go.pixmap_empty_board,
-                  widget->style->black_gc,
+                  go.drawing_area->style->black_gc,
                   border_trans, border_trans + cell_size * i,
                   BOARD_SIZE - border_trans, border_trans + cell_size * i);
   }
-  //--advantage points
+  TRACE("scaled grid");
+
+  //advantage points for 9/13/19 boards
 
 #define ADVANTAGE_POINT_SIZE 3
 #define paint_point(x,y) \
       gdk_draw_rectangle(go.pixmap_empty_board, \
-               widget->style->black_gc, TRUE, \
+               go.drawing_area->style->black_gc, TRUE, \
                border_trans + cell_size * (x-1) - ADVANTAGE_POINT_SIZE/2, \
                border_trans + cell_size * (y-1) - ADVANTAGE_POINT_SIZE/2, \
                ADVANTAGE_POINT_SIZE, ADVANTAGE_POINT_SIZE);
@@ -501,13 +533,16 @@ void paint_board(GtkWidget * widget){
     paint_point(16, 16);
   }
 
+}
+
+
+void paint_board(GtkWidget * widget){
   
   gdk_draw_drawable (go.drawing_area_pixmap_buffer,
                      widget->style->black_gc,
                      go.pixmap_empty_board,
                      0, 0, 0, 0, BOARD_SIZE, BOARD_SIZE);
 }
-
 
 void unpaint_stone(int col, int row){
   GdkRectangle rect;
@@ -638,7 +673,7 @@ on_drawing_area_configure_event (GtkWidget         * widget,
                                                    BOARD_SIZE,
                                                    BOARD_SIZE,
                                                    -1);
-    paint_board(widget);
+    //paint_board(widget); not here!
   }
   return TRUE;
 }
@@ -1199,12 +1234,6 @@ void save_game(){
   gtk_widget_hide (go.file_selector);
 }
 
-void on_button_save_pressed (void){
-  gtk_widget_show (go.file_selector);
-}
-
-void on_button_pref_pressed (void){
-}
 void on_button_prev_pressed (void){
   TRACE("prev");
   undo_turn();
@@ -1226,11 +1255,194 @@ void on_button_pass_clicked (void){
   update_last_played_mark_to(0, 0);
 }
 
+void on_button_newgame_cancel_clicked (void){
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+}
+
+void on_button_newgame_ok_clicked (void){
+  init_new_game(go.selected_game_size);
+  scale_graphics();
+  paint_board(go.drawing_area);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+}
+
+void on_button_game_new_clicked(GtkButton *button, gpointer unused){
+  popup_menu_close(go.game_popup_button);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_GAME_SETTINGS);
+}
+void on_button_game_save_clicked(GtkButton *button, gpointer unused){
+  popup_menu_close(go.game_popup_button);
+  gtk_widget_show (go.file_selector);
+}
+void on_button_game_load_clicked(GtkButton *button, gpointer unused){
+  popup_menu_close(go.game_popup_button);
+  gpe_question_ask (_("On its way, wait...\n(the next release ;)"),
+                    _("Warning"), "!gtk-dialog-warning",
+                    _("OK"), "!gtk-ok", NULL);
+}
+
+void on_radiobutton_size_clicked (GtkButton *button, gpointer size){
+  if(size == NULL) return; //NOTE: should not come here.
+  go.selected_game_size = GPOINTER_TO_INT(size);
+}
+
+void on_spinbutton_value_changed(GtkSpinButton *spinbutton,
+                                 gpointer radiobutton){
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton), TRUE);
+  go.selected_game_size = gtk_spin_button_get_value_as_int (spinbutton);
+}
+
+GtkWidget * build_new_game_dialog(){
+  //FIXME: make a pretty dialog!!!
+
+  GtkWidget * top_level_container;
+
+  //containers
+  GtkWidget * title;
+  GtkWidget * game_size;
+  GtkWidget * buttons;
+
+  //
+  GtkWidget * label;
+  GtkWidget * vbox;
+  GtkWidget * radiobutton1;
+  GtkWidget * radiobutton3;
+  GtkWidget * radiobutton4;
+  GSList    * group_game_size_group = NULL;
+  GtkWidget * hbox2;
+  GtkWidget * radiobutton2;
+  GtkObject * spinbutton1_adj;
+  GtkWidget * spinbutton1;
+
+
+  //--title
+  label = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (label), "<big><b>New Game</b></big>");
+
+  title = label;
+  
+  //--size choice
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  label = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (label), "<b>Size</b>");
+  gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+
+  radiobutton1 = gtk_radio_button_new_with_label (group_game_size_group, "9");
+  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton1));
+  gtk_box_pack_start (GTK_BOX (vbox), radiobutton1, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (radiobutton1), "clicked",
+                      G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(9));
+
+  radiobutton3 = gtk_radio_button_new_with_label (group_game_size_group, "13");
+  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton3));
+  gtk_box_pack_start (GTK_BOX (vbox), radiobutton3, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (radiobutton3), "clicked",
+                      G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(13));
+
+  radiobutton4 = gtk_radio_button_new_with_label (group_game_size_group, "19");
+  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton4));
+  gtk_box_pack_start (GTK_BOX (vbox), radiobutton4, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (radiobutton4), "clicked",
+                      G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(19));
+
+  hbox2 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+
+  radiobutton2 = gtk_radio_button_new_with_label (group_game_size_group, "");
+  group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
+  gtk_box_pack_start (GTK_BOX (hbox2), radiobutton2, FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (radiobutton2), "clicked",
+                      G_CALLBACK (on_radiobutton_size_clicked), NULL);
+
+  spinbutton1_adj = gtk_adjustment_new (21, 4, 26, 1, 10, 10);
+  spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
+  g_signal_connect (G_OBJECT (spinbutton1), "value-changed",
+                      G_CALLBACK (on_spinbutton_value_changed), radiobutton2);
+
+  gtk_box_pack_start (GTK_BOX (hbox2), spinbutton1, FALSE, FALSE, 0);
+
+  //default
+  go.selected_game_size = 19;
+   //..._set_active() calls on_radiobutton_brush_clicked ()
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton4), TRUE);
+
+  go.game_size_spiner = spinbutton1;
+
+  game_size = vbox;
+
+  //[OK] button
+  {
+    GtkWidget * button;
+    GtkWidget * hbox;
+
+    hbox = gtk_hbox_new(TRUE, 0);
+    
+    button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+    g_signal_connect (G_OBJECT (button), "clicked",
+                      G_CALLBACK (on_button_newgame_cancel_clicked), NULL);
+
+    gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 4);
+
+    button = gtk_button_new_from_stock (GTK_STOCK_OK);
+    g_signal_connect (G_OBJECT (button), "clicked",
+                      G_CALLBACK (on_button_newgame_ok_clicked), NULL);
+    
+    gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 4);
+
+    buttons = hbox;
+  }
+    
+  //--Packing
+  top_level_container = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (top_level_container), 5);
+
+  gtk_box_pack_start (GTK_BOX (top_level_container), title, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (top_level_container), game_size, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (top_level_container), gtk_hseparator_new (), FALSE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (top_level_container), buttons, FALSE, FALSE, 4);
+
+  return top_level_container;
+}
+
+GtkWidget * _game_popup_menu_new (GtkWidget *parent_button){
+  GtkWidget *vbox;//to return
+
+  GtkWidget * button_new;
+  GtkWidget * button_load;
+  GtkWidget * button_save;
+
+  GtkStyle * style = go.window->style;
+
+  button_new  = gpe_picture_button_aligned (style, _("New...") , "!gtk-new" , GPE_POS_LEFT);
+  button_save = gpe_picture_button_aligned (style, _("Save..."), "!gtk-save", GPE_POS_LEFT);
+  button_load = gpe_picture_button_aligned (style, _("Load..."), "!gtk-open", GPE_POS_LEFT);
+
+#define _BUTTON_SETUP(action) \
+              gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
+              g_signal_connect (G_OBJECT (button_ ##action), "clicked",\
+              G_CALLBACK (on_button_game_ ##action ##_clicked), NULL);
+
+  _BUTTON_SETUP(new);
+  _BUTTON_SETUP(save);
+  _BUTTON_SETUP(load);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_new,  FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_save, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_load, FALSE, FALSE, 0);
+
+  return vbox;
+}
+
+
 void gui_init(){
   GtkWidget * widget;
 
   GtkWidget * window;
   GtkWidget * vbox;
+
+  GtkWidget * new_game_dialog;
 
   GtkWidget * toolbar;
 #ifdef PREFS
@@ -1266,7 +1478,21 @@ void gui_init(){
                               GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
+  //[game] popup menu
+  {
+    GtkWidget * game_popup_button;
 
+    game_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW,
+                                                          _game_popup_menu_new, NULL);
+    gtk_button_set_relief (GTK_BUTTON (game_popup_button), GTK_RELIEF_NONE);
+    gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
+                              game_popup_button, _("Game menu"), _("Game menu"));
+    go.game_popup_button = game_popup_button;
+  }
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  //[UNDO] button
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   _("Undo"), _("Undo"), _("Undo"),
@@ -1280,6 +1506,7 @@ void gui_init(){
   go.turn_label = turn_label;
 #endif
 
+  //[REDO] button
   image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
 
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
@@ -1310,25 +1537,11 @@ void gui_init(){
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 #endif
 
-  {// [PASS] button
-    GtkWidget * button;
-    /* TRANSLATORS: button's label, use a short word.
-     * proposals for a meaningful icon are warmly welcome! */
-    button = gtk_button_new_with_label (_("PASS"));
-    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-    g_signal_connect (G_OBJECT (button), "clicked",
-                      G_CALLBACK (on_button_pass_clicked), NULL);
-    //FIXME: add tooltip!
-    gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), button, NULL, NULL);
-  }
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  //[SAVE] button
-  image = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  // [PASS] button
+  image = gtk_image_new_from_stock (GTK_STOCK_NO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   _("Save"), _("Save"), _("Save"),
-			   image, GTK_SIGNAL_FUNC (on_button_save_pressed), NULL);
+                           _("Pass"), _("Pass your turn"), _("Pass your turn"),
+                           image, GTK_SIGNAL_FUNC (on_button_pass_clicked), NULL);
 
   //file selector
   widget = gtk_file_selection_new (_("Save as..."));
@@ -1372,17 +1585,35 @@ void gui_init(){
                       GTK_SIGNAL_FUNC (on_drawing_area_button_release_event),
                       NULL);
 
+  //--New game page
+  new_game_dialog = build_new_game_dialog();
 
   //--packing
+
+  //main page
   vbox = gtk_vbox_new (FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
-  gtk_container_add (GTK_CONTAINER (window), vbox);
+
+  //
+  widget = gtk_notebook_new();
+  go.notebook = widget;
+  gtk_notebook_set_show_border(GTK_NOTEBOOK(widget), FALSE);
+  gtk_notebook_set_show_tabs  (GTK_NOTEBOOK(widget), FALSE);
+  //g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(on_notebook_switch_page), NULL);
+
+  gtk_notebook_insert_page(GTK_NOTEBOOK(widget), vbox,  NULL, PAGE_BOARD);
+  gtk_notebook_insert_page(GTK_NOTEBOOK(widget), new_game_dialog, NULL, PAGE_GAME_SETTINGS);
+
+  gtk_container_add (GTK_CONTAINER (window), widget);
 
   gtk_widget_show_all (window);
+  gtk_notebook_set_page(GTK_NOTEBOOK(widget), PAGE_BOARD);
 
   load_graphics();
-
+  scale_graphics();
+  paint_board(drawing_area);
+  
 }//gui_init()
 
