@@ -565,7 +565,7 @@ main (int argc, char *argv[])
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   update_window_title ();
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
-  g_signal_connect (GTK_OBJECT (main_window), "destroy",
+  g_signal_connect (GTK_OBJECT (main_window), "delete-event",
 		      GTK_SIGNAL_FUNC (ask_save_before_exit), NULL);
 
   libdm_init ();
