@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libxsettings-client0
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.11
+VERSION = 0.12
 
 .SUFFIXES: .os
 
