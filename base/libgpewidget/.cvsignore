@@ -1,4 +1,8 @@
 libgpewidget.so.0
 libgpewidget.so.1
 *.d
+*.ipk
+*.ipk.asc
+*.ipk.upload.html
+*.pc
 
