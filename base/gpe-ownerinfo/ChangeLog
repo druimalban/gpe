@@ -1,6 +1,7 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
 	* gpe-ownerinfo2.c (main): Remove #ifdef ENABLE_NLS.
+	(main): Call bind_textdomain_codeset for UTF-8.
 
 	* po/gpe-ownerinfo2.pot: New file.
 

@@ -544,6 +544,7 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   /* FIXME: check error */
   photopixbuf = gdk_pixbuf_new_from_file (photofile, NULL);
@@ -554,6 +555,7 @@ main (int argc, char *argv[])
   gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "GPE_Ownerinfo", GPE_Ownerinfo);
   //gtk_widget_set_usize (GPE_Ownerinfo, 240, 120);
   //gtk_container_set_border_width (GTK_CONTAINER (GPE_Ownerinfo), gpe_border);
+  fprintf (stderr, _("GPE Owner Info"));
   gtk_window_set_title (GTK_WINDOW (GPE_Ownerinfo), _("GPE Owner Info"));
 
   /* notebook with two pages;
