@@ -1,3 +1,8 @@
+2002-08-07  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control (Version): 0.5.2
+	* interface.c (menu_game_quick): Delete.  All uses removed.
+
 2002-07-31  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/postinst (Module): Return success.

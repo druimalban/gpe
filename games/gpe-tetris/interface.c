@@ -25,7 +25,6 @@ GtkWidget *main_window;
 GtkWidget *score_label;
 GtkWidget *level_label;
 GtkWidget *lines_label;
-GtkWidget *menu_game_quick;
 GtkWidget *menu_game_start;
 GtkWidget *menu_game_stop;
 GtkWidget *menu_game_pause;
@@ -372,7 +371,6 @@ void game_new_wrapper()
 void show_new_game_close(int close)
 {
 	gtk_widget_set_sensitive(menu_game_start,TRUE);
-	gtk_widget_set_sensitive(menu_game_quick,TRUE);
 	if(close)
 		gtk_widget_hide(new_game_window);
 }
@@ -446,7 +444,6 @@ void show_new_game()
 	gtk_widget_set_usize(new_game_window,220,130);
 	gtk_widget_show_all(new_game_window);
 	gtk_widget_set_sensitive(menu_game_start,FALSE);
-	gtk_widget_set_sensitive(menu_game_quick,FALSE);
 }
 
 void show_highscore_wrapper()
