@@ -39,8 +39,6 @@ GdkFont *yearfont;
 GList *times;
 time_t viewtime;
 
-GdkPixmap *close_pix, *day_pix;
-GdkBitmap *close_mask, *day_mask;
 GtkWidget *main_window;
 
 struct pix my_pix[] = {
@@ -52,6 +50,7 @@ struct pix my_pix[] = {
   { "month_view", "month_view" },
   { "year_view", "year_view" },
   { "exit", "exit" },
+  { "cancel", "cancel" },
   {NULL, NULL}
 };
 

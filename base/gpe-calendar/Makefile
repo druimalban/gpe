@@ -3,7 +3,7 @@ DEBUG = yes
 
 MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup
 
-CPPFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -I../libgpewidget
+CPPFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -I../libgpewidget
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence

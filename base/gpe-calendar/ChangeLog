@@ -1,4 +1,9 @@
-2002-06-15  Philip Blundell  <pb@kc.cam.armlinux.org>
+2002-06-16  Philip Blundell  <pb@debian.org>
+
+	* main.c (my_pix): Add "cancel".
+	* day_popup.c (day_popup): Use gpe_find_pixmap.
+
+2002-06-15  Philip Blundell  <pb@debian.org>
 
 	* Makefile: Don't link with gdk-imlib.
 	(MEMBERS): Remove about.
