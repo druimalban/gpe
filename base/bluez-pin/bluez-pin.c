@@ -20,11 +20,6 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <gpe/errorbox.h>
-#include <gpe/render.h>
-#include <gpe/picturebutton.h>
-#include <gpe/pixmaps.h>
-
 #define BT_ICON PREFIX "/share/pixmaps/bt-logo.png"
 
 #define _(x) gettext(x)
