@@ -1,0 +1,8 @@
+Package: gpe-todo
+Section: base
+Priority: optional
+Version: 0.01
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk1.2, sqlite, libgpewidget0
+Description: GPE to-do list
