@@ -1,0 +1,1 @@
+?package(gpe-su): needs=x11 title="Root Shell" command=gpe-su icon48=gpe-su.png section=System windowtitle=gpe-su
