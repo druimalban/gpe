@@ -29,7 +29,6 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-LDFLAGS += -lipkg /home/fuchs/Projekte/gpe/familiar/dist/ipkg/C/libbb/libbb.a
 CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -DIPKG_LIB
@@ -45,6 +44,7 @@ CC=gcc
 
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` 
+LDFLAGS += -lipkg /home/fuchs/Projekte/gpe/familiar/dist/ipkg/C/libbb/libbb.a
 
 else # we do cross-compile...
 
@@ -54,6 +54,7 @@ STRIP=arm-linux-strip
 CFLAGS += -march=armv4 -mtune=strongarm
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
 LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
+LDFLAGS += -lipkg /home/fuchs/Projekte/gpe/familiar/dist/ipkg/C/libbb/libbb.a
 LDFLAGS += -lgpewidget 
 LDFLAGS += -lgdk_pixbuf-2.0 -lm -lgobject-2.0 
 LDFLAGS += -lgmodule-2.0 -ldl -lglib-2.0 
@@ -76,7 +77,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: $(PACKAGE)
 	mkdir -p $(DESTDIR)/CONTROL
-	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
+	sed -e s/VERSION/$(VERSION)/ < familiar/control > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

@@ -150,7 +150,9 @@ wait_message ()
 static void
 do_command (pkcommand_t command, char *params, char *list)
 {
-	/* add args here */
+	/* seems to be necessary for latest ipkg or nothing will happen */
+	if (!strlen(list))
+		list = NULL;
 	
 	switch (command)
 	{

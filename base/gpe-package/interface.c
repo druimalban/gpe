@@ -514,7 +514,7 @@ mainloop (int argc, char *argv[])
 	gtk_widget_show (fMain);
   
 	/* get packages list */
-	send_message(PK_COMMAND,CMD_LIST,"","");
+	send_message(PK_COMMAND,CMD_LIST,NULL,NULL);
 	
 	gtk_timeout_add(500,get_pending_messages,NULL);
 	

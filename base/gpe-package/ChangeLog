@@ -1,3 +1,8 @@
+2004-01-17 Florian Boor <florian.boor@kernelconcepts.de>
+	* packages.c: Another fix, works again.
+	* Renamed pixmap file.
+	* Released and packaged V 0.0.8
+	
 2003-12-29 Florian Boor <florian.boor@kernelconcepts.de>
 	* packages.c: Some changes to work with latest libipkg.
 
