@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -76,6 +76,7 @@ INTLBISON = @INTLBISON@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
 INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
+LEX = @LEX@
 LIBICONV = @LIBICONV@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
@@ -87,16 +88,23 @@ RANLIB = @RANLIB@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
+YACC = @YACC@
+
+LFLAGS = -L
+YFLAGS = -ld
 
 INCLUDES =  	-I$(top_srcdir)/intl 	@GTK_CFLAGS@
 
 
 bin_PROGRAMS = gpe-wlancfg
 
-gpe_wlancfg_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h
+gpe_wlancfg_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h 	confpars_wl.y 	confscan_wl.l 	cfgfile.c cfgfile.h 	config-parser.c config-parser.h
 
 
-gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS)
+#	confpars_wl.c confpars_wl.h \
+#	confscan_wl.c confscan_wl.h \
+
+gpe_wlancfg_LDADD = @GTK_LIBS@ $(INTLLIBS) /skiff/local/arm-linux/lib/libfl.a
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
@@ -107,28 +115,32 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-gpe_wlancfg_OBJECTS =  main.o support.o interface.o callbacks.o
-gpe_wlancfg_DEPENDENCIES = 
+gpe_wlancfg_OBJECTS =  main.o support.o interface.o callbacks.o \
+confpars_wl.o confscan_wl.o cfgfile.o config-parser.o
+gpe_wlancfg_DEPENDENCIES =  /skiff/local/arm-linux/lib/libfl.a
 gpe_wlancfg_LDFLAGS = 
+LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
+LEXLIB = @LEXLIB@
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
-DIST_COMMON =  Makefile.am Makefile.in
+DIST_COMMON =  Makefile.am Makefile.in confpars_wl.c confscan_wl.c
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = tar
+TAR = gtar
 GZIP_ENV = --best
-DEP_FILES =  .deps/callbacks.P .deps/interface.P .deps/main.P \
+DEP_FILES =  .deps/callbacks.P .deps/cfgfile.P .deps/config-parser.P \
+.deps/confpars_wl.P .deps/confscan_wl.P .deps/interface.P .deps/main.P \
 .deps/support.P
 SOURCES = $(gpe_wlancfg_SOURCES)
 OBJECTS = $(gpe_wlancfg_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .o .s
+.SUFFIXES: .S .c .l .o .s .y
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu src/Makefile
 
@@ -181,6 +193,15 @@ maintainer-clean-compile:
 gpe-wlancfg: $(gpe_wlancfg_OBJECTS) $(gpe_wlancfg_DEPENDENCIES)
 	@rm -f gpe-wlancfg
 	$(LINK) $(gpe_wlancfg_LDFLAGS) $(gpe_wlancfg_OBJECTS) $(gpe_wlancfg_LDADD) $(LIBS)
+.l.c:
+	$(LEX) $(AM_LFLAGS) $(LFLAGS) $< && mv $(LEX_OUTPUT_ROOT).c $@
+.y.c:
+	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
+	if test -f y.tab.h; then \
+	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
+	else :; fi
+confpars_wl.h: confpars_wl.c
+
 
 tags: TAGS
 
@@ -299,6 +320,7 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	-test -z "confscan_wllconfpars_wlhconfpars_wlc" || rm -f confscan_wll confpars_wlh confpars_wlc
 mostlyclean-am:  mostlyclean-binPROGRAMS mostlyclean-compile \
 		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 

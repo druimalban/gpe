@@ -141,7 +141,7 @@ create_GeneralHelpWin (void)
   gtk_widget_show (text1);
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), text1);
   gtk_text_insert (GTK_TEXT (text1), NULL, NULL, NULL,
-                   _("General Settings\n\nInfo:\n\tFree form informational string,\n\thas no function.\n\nESSID:\n\tNetwork name, sometimes also\n\tcalled Domain ID.\n\tIdentifies your network, most\n\tWLAN cards get this\n\tautomatically from the access\n\tpoint in managed mode, other\n\tcards require to specify a name.\n\tIn Ad-Hoc mode the same name\n\tshould be spcified on all\n\tparticipating nodes.\nNWID:\n\tNetwork ID, specifies nodes\n\tbelonging to the same cell.\nMode:\n\tValid choices are:\n\tAd-Hoc\n\t\tSometimes also called\n\t\tDemo mode, nodes\n\t\twithout access point\n\tManaged\n\t\tManaged network with\n\t\taccess point\n\tMaster\n\t\tThe nodes acts as master or\n\t\taccess point, not supported\n\t\tby all cards.\n\tRepeater\n\t\tThe node acts as packet\n\t\tforwarder, not supported\n\t\tby all cards.\n\tSecondary\n\t\tThe node acts as secondary\n\t\tor backup master, not\n\t\tsupported by all cards.\n\tAuto\n\t\tTry to automatically\n\t\tdetermine operation mode\n\t\tor use card's default mode."), 907);
+                   _("General Settings\n\nInfo:\n\tFree form informational string,\n\thas no function.\n\nESSID:\n\tNetwork name, sometimes also\n\tcalled Domain ID.\n\tIdentifies your network, most\n\tWLAN cards get this\n\tautomatically from the access\n\tpoint in managed mode, other\n\tcards require to specify a name.\n\tIn Ad-Hoc mode the same name\n\tshould be spcified on all\n\tparticipating nodes.\nNWID:\n\tNetwork ID, specifies nodes\n\tbelonging to the same cell.\nMode:\n\tValid choices are:\n\tAd-Hoc\n\t\tSometimes also called\n\t\tDemo mode, nodes\n\t\twithout access point\n\tManaged\n\t\tManaged network with\n\t\taccess point\n\tMaster\n\t\tThe nodes acts as master or\n\t\taccess point, not supported\n\t\tby all cards.\n\tRepeater\n\t\tThe node acts as packet\n\t\tforwarder, not supported\n\t\tby all cards.\n\tSecondary\n\t\tThe node acts as secondary\n\t\tor backup master, not\n\t\tsupported by all cards.\n\tAuto\n\t\tTry to automatically\n\t\tdetermine operation mode\n\t\tor use card's default mode."), -1);
 
   dialog_action_area1 = GTK_DIALOG (GeneralHelpWin)->action_area;
   gtk_widget_set_name (dialog_action_area1, "dialog_action_area1");
@@ -215,7 +215,7 @@ create_RFParamsHelp (void)
   gtk_widget_show (text2);
   gtk_container_add (GTK_CONTAINER (scrolledwindow2), text2);
   gtk_text_insert (GTK_TEXT (text2), NULL, NULL, NULL,
-                   _("RF Parameters\n\nChannel specification\n\tThe WaveLAN frequency band is\n\tfrom 2.4GHz up to 2.4836GHz\n\tis devided into up to 14\n\tchannels. Not all cards support\n\tall channels.\n\tFor Ad-Hoc mode a fixed\n\tcommon channel / freqency for\n\tthe participating nodes has to be\n\tspecified. For some access\n\tpoint - card combinations it can\n\tbe necessary to specify the\n\taccess point's control channel\n\there.\n\tThe channel can be either\n\tspecified by it's frequency or\n\tchannel number.\n\nRate\n\tSpecifies the transmission rate,\n\tdepending on the card\n\t1MBit/sec, or 11MBit/sec are\n\tsupported. Auto selects the\n\tcard's default rate."), 611);
+                   _("RF Parameters\n\nChannel specification\n\tThe WaveLAN frequency band is\n\tfrom 2.4GHz up to 2.4836GHz\n\tis devided into up to 14\n\tchannels. Not all cards support\n\tall channels.\n\tFor Ad-Hoc mode a fixed\n\tcommon channel / freqency for\n\tthe participating nodes has to be\n\tspecified. For some access\n\tpoint - card combinations it can\n\tbe necessary to specify the\n\taccess point's control channel\n\there.\n\tThe channel can be either\n\tspecified by it's frequency or\n\tchannel number.\n\nRate\n\tSpecifies the transmission rate,\n\tdepending on the card\n\t1MBit/sec, or 11MBit/sec are\n\tsupported. Auto selects the\n\tcard's default rate."), -1);
 
   hbox1 = GTK_DIALOG (RFParamsHelp)->action_area;
   gtk_widget_set_name (hbox1, "hbox1");
@@ -289,7 +289,7 @@ create_WEPHelpWin (void)
   gtk_widget_show (text3);
   gtk_container_add (GTK_CONTAINER (scrolledwindow3), text3);
   gtk_text_insert (GTK_TEXT (text3), NULL, NULL, NULL,
-                   _("WEP Encryption\n\nEncryption\n\tOn - Enable link encryption\n\tOff - Disable link encryption\n\nMode\n\tOpen\n\t\tAlso accept not encrypted\n\t\tdata packets\n\tRestricted\n\t\tOnly accept correctly encrypted\n\t\tdata packets"), 202);
+                   _("WEP Encryption\n\nEncryption\n\tOn - Enable link encryption\n\tOff - Disable link encryption\n\nMode\n\tOpen\n\t\tAlso accept not encrypted\n\t\tdata packets\n\tRestricted\n\t\tOnly accept correctly encrypted\n\t\tdata packets"), -1);
 
   hbox2 = GTK_DIALOG (WEPHelpWin)->action_area;
   gtk_widget_set_name (hbox2, "hbox2");
@@ -363,7 +363,7 @@ create_EncKeysHelpWin (void)
   gtk_widget_show (text4);
   gtk_container_add (GTK_CONTAINER (scrolledwindow4), text4);
   gtk_text_insert (GTK_TEXT (text4), NULL, NULL, NULL,
-                   _("Encryption Keys\n\nEncryption keys can be specified\neither as HEX encoded strings\nlike\n\t0123-4567-89\nor\n\t0a2d46ff3c\nor as simple strings which will be\nconverted to numerical keys\nautomatically.\n\nUp to 4 different keys can be\nconfigured but only one of them\ncan be active at a time."), 279);
+                   _("Encryption Keys\n\nEncryption keys can be specified\neither as HEX encoded strings\nlike\n\t0123-4567-89\nor\n\t0a2d46ff3c\nor as simple strings which will be\nconverted to numerical keys\nautomatically.\n\nUp to 4 different keys can be\nconfigured but only one of them\ncan be active at a time."), -1);
 
   hbox3 = GTK_DIALOG (EncKeysHelpWin)->action_area;
   gtk_widget_set_name (hbox3, "hbox3");
@@ -437,7 +437,7 @@ create_ExpertHelpWin (void)
   gtk_widget_show (text5);
   gtk_container_add (GTK_CONTAINER (scrolledwindow5), text5);
   gtk_text_insert (GTK_TEXT (text5), NULL, NULL, NULL,
-                   _("Expert settings\n\nAll WLAN settings are performed\nthrough two utility programs\ncalled \"iwconfig\" and \"iwpriv\".\nThose utilities provide even more\noptions than are usually necessary\nto get your WLAN up and running.\nIf one of those seldomly options\nhas to be used it can be specified\nhere as it would be on the utilitie's\ncommandline.\n\nFor example some Orinico based\nneed an extra iwpriv option to\nproperly enable Ad-Hoc or\nMaster mode:\nAd-Hoc:\n\tset_port3 1\nMaster:\n\tset_port3 0\n\nAdditionally options for the\niwspy utility can be specified.\n\nBe aware of the fact that wrong\noptions can cause the settings\nprocess to fail, not only the\nadditional settings!\n\nFor more information on the\niwconfig, iwspy and iwpriv\nutilities please consult the\nextra documentation."), 757);
+                   _("Expert settings\n\nAll WLAN settings are performed\nthrough two utility programs\ncalled \"iwconfig\" and \"iwpriv\".\nThose utilities provide even more\noptions than are usually necessary\nto get your WLAN up and running.\nIf one of those seldomly options\nhas to be used it can be specified\nhere as it would be on the utilitie's\ncommandline.\n\nFor example some Orinico based\nneed an extra iwpriv option to\nproperly enable Ad-Hoc or\nMaster mode:\nAd-Hoc:\n\tset_port3 1\nMaster:\n\tset_port3 0\n\nAdditionally options for the\niwspy utility can be specified.\n\nBe aware of the fact that wrong\noptions can cause the settings\nprocess to fail, not only the\nadditional settings!\n\nFor more information on the\niwconfig, iwspy and iwpriv\nutilities please consult the\nextra documentation."), -1);
 
   hbox4 = GTK_DIALOG (ExpertHelpWin)->action_area;
   gtk_widget_set_name (hbox4, "hbox4");
@@ -590,7 +590,7 @@ create_SchemeHelpWin (void)
   gtk_widget_show (text6);
   gtk_container_add (GTK_CONTAINER (scrolledwindow7), text6);
   gtk_text_insert (GTK_TEXT (text6), NULL, NULL, NULL,
-                   _("Scheme\n\nDifferent WLAN cards may use\ndifferent settings. Also different\nsituations may require different\nsettings.\nUsing schemes it is possible to\ndefine several profiles for different\nsituations and hardware combinations.\nThe setting string may contain the\nglobbing characters \"*\" and \"?\" for\nmatching.\nSchemes are identified by\n\nScheme name\n\tA simple string identifying\n\ta situation like e.g.\n\t\thome\n\t\toffice\n\t\t*\n\tMostly defaults to *\n\nSocket\n\tThe device socket number,\n\tusually 0 or 1.\n\tMostly defaults to *\n\nInstance\n\t???\n\tMostly defaults to *\n\nHW-Address\n\tThe hardware address of the\n\tcard. This makes it possible to\n\tidentify different hardware\n\tvendors and to set hardware\n\tspecific settings.\n\tHere the globbing characters\n\thelp to match a whole vendor\n\tdevice address range like e.g.\n\t\t00:60:1D:*|*,*,*,00:02:2D:*\n\twhich matches almost all\n\toriginal Lucent Wavelan cards."), 879);
+                   _("Scheme\n\nDifferent WLAN cards may use\ndifferent settings. Also different\nsituations may require different\nsettings.\nUsing schemes it is possible to\ndefine several profiles for different\nsituations and hardware combinations.\nThe setting string may contain the\nglobbing characters \"*\" and \"?\" for\nmatching.\nSchemes are identified by\n\nScheme name\n\tA simple string identifying\n\ta situation like e.g.\n\t\thome\n\t\toffice\n\t\t*\n\tMostly defaults to *\n\nSocket\n\tThe device socket number,\n\tusually 0 or 1.\n\tMostly defaults to *\n\nInstance\n\t???\n\tMostly defaults to *\n\nHW-Address\n\tThe hardware address of the\n\tcard. This makes it possible to\n\tidentify different hardware\n\tvendors and to set hardware\n\tspecific settings.\n\tHere the globbing characters\n\thelp to match a whole vendor\n\tdevice address range like e.g.\n\t\t00:60:1D:*|*,*,*,00:02:2D:*\n\twhich matches almost all\n\toriginal Lucent Wavelan cards."), -1);
 
   hbox5 = GTK_DIALOG (SchemeHelpWin)->action_area;
   gtk_widget_set_name (hbox5, "hbox5");
@@ -651,7 +651,7 @@ create_GPE_WLANCFG (void)
   GtkWidget *viewport2;
   GtkWidget *table8;
   GtkWidget *label34;
-  GtkWidget *Scheme;
+  GtkWidget *SchemeName;
   GtkWidget *Socket;
   GtkWidget *Instance;
   GtkWidget *HWAddress;
@@ -693,8 +693,8 @@ create_GPE_WLANCFG (void)
   GtkWidget *ChannelChan;
   GtkObject *Frequency_adj;
   GtkWidget *Frequency;
-  GtkObject *Channe_lNr_adj;
-  GtkWidget *Channe_lNr;
+  GtkObject *ChannelNr_adj;
+  GtkWidget *ChannelNr;
   GtkWidget *label11;
   GtkWidget *label2;
   GtkWidget *scrolledwindow12;
@@ -905,8 +905,9 @@ create_GPE_WLANCFG (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hbuttonbox7);
   gtk_box_pack_start (GTK_BOX (vbox8), hbuttonbox7, FALSE, TRUE, 0);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbuttonbox7), 15);
+  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbuttonbox7), 0);
   gtk_button_box_set_child_size (GTK_BUTTON_BOX (hbuttonbox7), 65, 27);
+  gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (hbuttonbox7), 0, 0);
 
   SchemeDelete = gtk_button_new_with_label (_("Delete"));
   gtk_widget_set_name (SchemeDelete, "SchemeDelete");
@@ -995,16 +996,16 @@ create_GPE_WLANCFG (void)
   gtk_label_set_justify (GTK_LABEL (label34), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label34), 0, 0.5);
 
-  Scheme = gtk_entry_new_with_max_length (32);
-  gtk_widget_set_name (Scheme, "Scheme");
-  gtk_widget_ref (Scheme);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_WLANCFG), "Scheme", Scheme,
+  SchemeName = gtk_entry_new_with_max_length (32);
+  gtk_widget_set_name (SchemeName, "SchemeName");
+  gtk_widget_ref (SchemeName);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_WLANCFG), "SchemeName", SchemeName,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (Scheme);
-  gtk_table_attach (GTK_TABLE (table8), Scheme, 1, 2, 0, 1,
+  gtk_widget_show (SchemeName);
+  gtk_table_attach (GTK_TABLE (table8), SchemeName, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 2, 2);
-  gtk_entry_set_text (GTK_ENTRY (Scheme), _("*"));
+  gtk_entry_set_text (GTK_ENTRY (SchemeName), _("*"));
 
   Socket = gtk_entry_new_with_max_length (32);
   gtk_widget_set_name (Socket, "Socket");
@@ -1318,11 +1319,14 @@ create_GPE_WLANCFG (void)
   glade_menuitem = gtk_menu_item_new_with_label (_("1M"));
   gtk_widget_show (glade_menuitem);
   gtk_menu_append (GTK_MENU (Rate_menu), glade_menuitem);
+  glade_menuitem = gtk_menu_item_new_with_label (_("2M"));
+  gtk_widget_show (glade_menuitem);
+  gtk_menu_append (GTK_MENU (Rate_menu), glade_menuitem);
   glade_menuitem = gtk_menu_item_new_with_label (_("11M"));
   gtk_widget_show (glade_menuitem);
   gtk_menu_append (GTK_MENU (Rate_menu), glade_menuitem);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (Rate), Rate_menu);
-  gtk_option_menu_set_history (GTK_OPTION_MENU (Rate), 2);
+  gtk_option_menu_set_history (GTK_OPTION_MENU (Rate), 3);
 
   hbuttonbox6 = gtk_hbutton_box_new ();
   gtk_widget_set_name (hbuttonbox6, "hbuttonbox6");
@@ -1406,14 +1410,14 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  Channe_lNr_adj = gtk_adjustment_new (1, 1, 14, 1, 10, 10);
-  Channe_lNr = gtk_spin_button_new (GTK_ADJUSTMENT (Channe_lNr_adj), 1, 0);
-  gtk_widget_set_name (Channe_lNr, "Channe_lNr");
-  gtk_widget_ref (Channe_lNr);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_WLANCFG), "Channe_lNr", Channe_lNr,
+  ChannelNr_adj = gtk_adjustment_new (1, 1, 14, 1, 10, 10);
+  ChannelNr = gtk_spin_button_new (GTK_ADJUSTMENT (ChannelNr_adj), 1, 0);
+  gtk_widget_set_name (ChannelNr, "ChannelNr");
+  gtk_widget_ref (ChannelNr);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_WLANCFG), "ChannelNr", ChannelNr,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (Channe_lNr);
-  gtk_table_attach (GTK_TABLE (table7), Channe_lNr, 1, 2, 2, 3,
+  gtk_widget_show (ChannelNr);
+  gtk_table_attach (GTK_TABLE (table7), ChannelNr, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
@@ -1935,6 +1939,9 @@ create_GPE_WLANCFG (void)
   gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "destroy",
                       GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "show",
+                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_show),
+                      NULL);
   gtk_signal_connect (GTK_OBJECT (SchemeList), "select_row",
                       GTK_SIGNAL_FUNC (on_SchemeList_select_row),
                       NULL);
@@ -1956,7 +1963,7 @@ create_GPE_WLANCFG (void)
   gtk_signal_connect (GTK_OBJECT (SchemeEdit), "clicked",
                       GTK_SIGNAL_FUNC (on_SchemeEdit_clicked),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (Scheme), "changed",
+  gtk_signal_connect (GTK_OBJECT (SchemeName), "changed",
                       GTK_SIGNAL_FUNC (on_Scheme_changed),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (Socket), "changed",
@@ -1992,7 +1999,7 @@ create_GPE_WLANCFG (void)
   gtk_signal_connect (GTK_OBJECT (Frequency), "changed",
                       GTK_SIGNAL_FUNC (on_Frequency_changed),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (Channe_lNr), "changed",
+  gtk_signal_connect (GTK_OBJECT (ChannelNr), "changed",
                       GTK_SIGNAL_FUNC (on_Channe_lNr_changed),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (EncryptionOn), "toggled",
