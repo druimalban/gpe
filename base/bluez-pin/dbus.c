@@ -60,7 +60,7 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
   bdaddr_t bdaddr, sbdaddr;
   int type;
   int i;
-  char *address, *pin;
+  char *address;
   DBusMessage *reply;
   struct pin_request_context *ctx;
 
