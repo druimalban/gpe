@@ -1,0 +1,21 @@
+<!--#set var="addtitle" value="Documentation"-->
+<!--#set var="pagename" value="documentation"-->
+<!--#set var="author" value="Colin Marquardt"-->
+<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
+<!--#include virtual="includes/head.shtml"-->
+
+<h2>Users</h2>
+
+<ul>
+<li><a href="http://gpe.handhelds.org/documentation/wireless.shtml">Configuring Wireless Networking with GPE</a>
+</ul>
+
+<h2>Developers</h2>
+
+<ul>
+<li>Developer documentation as mainly stored in the 
+    <a href="http://www.handhelds.org/z/wiki/GPE">GPE pages in the
+      handhelds.org wiki</a> for now.
+</ul>
+
+<!--#include virtual="includes/foot.shtml"-->

@@ -1,0 +1,102 @@
+<!--#set var="addtitle" value="Configuring Wireless Networking with GPE"-->
+<!--#set var="pagename" value="wireless"-->
+<!--#set var="author" value="Colin Marquardt"-->
+<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
+<!--#include virtual="../includes/head.shtml"-->
+
+<p>
+  There are a few scenarios with wireless networking with GPE in
+  Familiar. We assume Familiar 0.7 here. See also 
+  <a href="http://handhelds.org/z/wiki/GPEWirelessConfig/editform?page=GPEBluetoothConfig">GPEBluetoothConfig</a>
+  and <a href="http://handhelds.org/z/wiki/GPEIrDAConfig">GPEIrDAConfig</a>.
+</p>
+
+<p> 
+  First, make sure your card is recognized and a suitable module is
+  loaded. Use the Settings>PC/CF Cards applet for this.  Use the button
+  with the green arrow (second from right) to get the "Assign Driver"
+  dialog:
+</p>
+
+<p> 
+  <img src="http://handhelds.org/scap/html.cgi?fn=port.9280.png"> 
+  <img src="http://handhelds.org/scap/html.cgi?fn=port.12381.png">
+</p>
+
+<p>
+  Note the "Device:" that is shown here, you might need it later. If
+  you need help about the usage of the applet, you can use the
+  Interactive Help (gpe-what) dock applet to find out what the single
+  parts of the applet are used for.
+</p>
+
+<p> 
+  <a href="http://pcmcia-cs.sourceforge.net/ftp/SUPPORTED.CARDS">http://pcmcia-cs.sourceforge.net/ftp/SUPPORTED.CARDS</a>
+  might give you an idea what driver you need to select for your card.
+</p>
+
+<h4>With DHCP</h4>
+
+<ul>
+  <li><p>
+      Network in Infrastructure/Managed Mode
+    <p>    Should work out of the box.</p>
+    </p>
+  </li>
+  <li><p>Network in Ad-hoc Mode<p>    Use WLAN Config to set your card to ad-hoc mode and configure ESSID and channel if necessary:</p>
+    <p>    
+      <img src="http://handhelds.org/scap/html.cgi?fn=port.32727.png"> 
+      <img src="http://handhelds.org/scap/html.cgi?fn=port.12644.png"></p>
+    <p> 
+      Eject and re-insert your card. If you have the Wireless Monitor
+      added to your dock, it should show a signal by turning red (assuming
+      that you have another wifi card active).
+    </p>
+  </p>
+  </li>
+</ul>
+
+<h4>Without DHCP</h4>
+
+<ul>
+  <li>
+    <p>Set Ad-hoc mode as described above if necessary.</p>
+  </li>
+  <li>
+  <p>
+    Assign an IP address and a netmask (the rest is optional) with the
+    Settings>Network Setup applet. Use the device that was shown for your
+    card in the PC/CF Cards applet (most likely wlan0 or eth0/1):
+   <p> 
+     <img src="http://handhelds.org/scap/html.cgi?fn=port.26110.png"> 
+     <img src="http://handhelds.org/scap/html.cgi?fn=port.21850.png">
+   </p>
+   </p>
+  </li>
+</ul>
+
+<h4>WEP</h4>
+<p>  
+  Set a WEP key with WLAN Config:
+</p>
+<p> 
+   <img src="http://handhelds.org/scap/html.cgi?fn=port.13706.png"> 
+   <img src="http://handhelds.org/scap/html.cgi?fn=port.16290.png">
+</p>
+
+<h4>Investigate current interface configuration</h4>
+<p> 
+  You may find out more about your current network configuration by using
+  the info dialog in the Network Setup applet. This is especially useful
+  if you want to find out if your network interface using DHCP was
+  successfully configured or not. All interfaces not shown in this dialog
+  are down or of type "Loopback".
+</p>
+<p>  
+  <img src="http://handhelds.org/scap/html.cgi?fn=port.2751.png">
+  <img src="http://handhelds.org/scap/html.cgi?fn=port.22359.png">
+</p>
+<hr>
+Keywords: Wireless LAN, WLAN, Wi-Fi, WiFi
+
+<!--#include virtual="../includes/foot.shtml"-->

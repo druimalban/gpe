@@ -1,0 +1,75 @@
+2003-06-09  Colin Marquardt  <colin@marquardt-home.de>
+
+	* documentation.shtml: New file.
+
+	* documentation/wireless.shtml: New file, taken from the wiki.
+
+2003-04-11  Colin Marquardt  <colin@marquardt-home.de>
+
+	* linkres.shtml (href): Link QEMU.
+
+	* includes/menu.shtml: Point to hh.org bugzilla.
+
+2003-04-10  Colin Marquardt  <colin@marquardt-home.de>
+
+	* linkres.shtml (href): Add link to XMerge.
+
+2003-04-08  Colin Marquardt  <colin@marquardt-home.de>
+
+	* linkres.shtml: Fix HTML.
+	Again. Sigh.
+
+2003-04-01  Colin Marquardt  <colin@marquardt-home.de>
+
+	* download.shtml (href): Change to new boot image location.
+
+2003-03-31  Colin Marquardt  <colin@marquardt-home.de>
+
+	* cvs.shtml: Mention pb's new makefile that can build GPE as a
+	whole.
+
+2003-03-16  Colin Marquardt  <colin@marquardt-home.de>
+
+	* contact.shtml: Add info about our GMANE newsgroup.
+	(href): Changed wording.
+
+2003-03-12  Colin Marquardt  <colin@marquardt-home.de>
+
+	* download.shtml (href): Remove link to pb's images.
+
+2003-03-09  Colin Marquardt  <colin@marquardt-home.de>
+
+	* download.shtml (href): Link to installation instructions.
+
+2003-03-06  Colin Marquardt  <colin@marquardt-home.de>
+
+	* contact.shtml: List archive is now at
+	http://handhelds.org/hypermail/gpe/current/.
+
+2003-03-05  Colin Marquardt  <colin@marquardt-home.de>
+
+	* download.shtml (href): Link to nelson's bootgpe2 images.
+
+2003-02-27  Colin Marquardt  <colin@marquardt-home.de>
+
+	* download.shtml: Link to pb's bootgpe2 images.
+	Link to our sources directory.
+	Minor change.
+
+2003-02-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* cvs.shtml: Fix small typo.
+
+2003-02-18  Colin Marquardt  <colin@marquardt-home.de>
+
+	* linkres.shtml: Link to XSETTINGS and D-BUS.
+
+	* includes/foot.shtml: Remove quick links.
+
+	* css/style.css: Make background a bit lighter. Let's see...
+	Still not bright enough.
+
+2003-02-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	* linkres.shtml (href): Add links to multisync and PaxAnima.
+

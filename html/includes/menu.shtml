@@ -12,6 +12,12 @@
 <A href="/projects/">Projects</a>
 <!--#endif -->
 |
+<!--#if expr="x${pagename}=xdocumentation" -->
+<b>Documentation</b>
+<!--#else -->
+<A href="/documentation.shtml">Documentation</a>
+<!--#endif -->
+|
 <!--#if expr="x${pagename}=xscreenshots" -->
 <b>Screenshots</b>
 <!--#else -->
