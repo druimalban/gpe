@@ -1,3 +1,6 @@
+2003-09-01	Florian Boor	<florian.boor@kernelconcepts.de>
+	* timeanddate.c: Uses gpe_time_sel now.
+
 2003-08-30	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Released V 0.1.0-pre8
 	* Applied 2 i8n patches contributed by Libor Klepac
