@@ -8,7 +8,7 @@
 
 #include <sqlite.h>
 
-#include "vcard.h"
+#include <gpe/vcard.h>
 
 #define _(x) gettext (x)
 
@@ -43,15 +43,27 @@ db_open(void)
   return 0;
 }
 
+int
+read_tags (void *ignore, int argc, char *argv[], void *data)
+{
+  GSList **tags = (GSList **)data;
+
+  *tags = gpe_tag_list_prepend (*tags, argv[0], g_strdup (argv[1]));
+
+  return 0;
+}
+
 void
 export_one_vcard (int uid)
 {
   MIMEDirVCard *vcard;
   gchar *str;
-  GError *err = NULL;
-  GIOChannel *channel;
+  GSList *tags = NULL;
 
-  vcard = gpe_export_vcard (db, uid);
+  sqlite_exec_printf (db, "select tag,value from contacts where urn=%d", read_tags, &tags, NULL,
+		      uid);  
+
+  vcard = vcard_from_tags (tags);
 
   if (vcard)
     {
@@ -74,10 +86,6 @@ read_one (void *ignore, int argc, char *argv[], void *data)
 int
 main (int argc, char *argv[])
 {
-  guint uid;
-  FILE *fp;
-  char line[256];
-
   g_type_init ();
 
   if (db_open ())
@@ -85,6 +93,7 @@ main (int argc, char *argv[])
 
   if (argc > 1)
     {
+      guint uid;
       uid = atoi (argv[1]);
       export_one_vcard (uid);
     }

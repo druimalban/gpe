@@ -23,7 +23,7 @@ endif
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG -DIRCP_DEBUG=9
 else
-CFLAGS += -Os -fomit-frame-pointer -march=armv4 -mtune=strongarm
+CFLAGS += -Os -fomit-frame-pointer 
 endif
 
 CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
@@ -34,8 +34,8 @@ CPPFLAGS += -I.
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 
-MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0
-MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir 
+MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0 -I../libgpevtype
+MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir -L../libgpevtype -lgpevtype
 
 libircp_a_OBJECTS =  ircp/ircp_client.o ircp/ircp_server.o ircp/ircp_io.o ircp/dirtraverse.o
 IRFLAGS = -lopenobex libircp.a
@@ -87,10 +87,10 @@ irsw: irsw.o irsw.o
 
 CFLAGS += $(MIMECFLAGS)
 
-vcard-export: send-vcard.o vcard.o
+vcard-export: vcard-export.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
-vcard-import: import-vcard.o vcard.o
+vcard-import: vcard-import.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
 vcard-import-file: import-vcard-file.o vcard.o
