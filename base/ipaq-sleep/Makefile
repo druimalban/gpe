@@ -10,9 +10,7 @@ install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/init.d
-	mkdir -p $(DESTDIR)/etc/rc2.d
 	install ipaq-sleep.init $(DESTDIR)/etc/init.d/ipaq-sleep
-	ln -sf /etc/init.d/ipaq-sleep $(DESTDIR)/etc/rc2.d/S99ipaq-sleep
 	install ipaq-sleep.conf $(DESTDIR)/etc/ipaq-sleep.conf
 	install -D ipaq-sleep.session $(DESTDIR)/etc/X11/Xsession.d/69ipaq-sleep
 
