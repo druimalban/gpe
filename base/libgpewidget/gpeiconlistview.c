@@ -212,10 +212,10 @@ apply_translucency (GPEIconListView *il, GdkPixbuf *p)
   int alpha, br, bg, bb;
   int stride, bpp;
 
-  bb = il->bgcol & 0xff;
-  bg = (il->bgcol >> 8) & 0xff;
-  br = (il->bgcol >> 16) & 0xff;
-  alpha = (il->bgcol >> 24) & 0xff;
+  bb = il->bgcolor & 0xff;
+  bg = (il->bgcolor >> 8) & 0xff;
+  br = (il->bgcolor >> 16) & 0xff;
+  alpha = (il->bgcolor >> 24) & 0xff;
 
   if (!p)
     return;
