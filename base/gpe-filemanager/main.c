@@ -458,7 +458,7 @@ get_pixbuf (gchar *filename)
   {
     pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
     g_hash_table_insert (loaded_icons, (gpointer) filename, (gpointer) pixbuf);
-    reutrn pixbuf;
+    return pixbuf;
   }
 }
 
