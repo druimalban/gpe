@@ -1,6 +1,10 @@
-2002-11-17  Philip Blundell  <philb@gnu.org>
+2002-11-24  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.25 released.
+
+2002-11-24  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.keylaunchrc (key): Add entry for held power button.
 
 2002-11-23  Philip Blundell  <philb@gnu.org>
 
