@@ -1,0 +1,81 @@
+# Dutch translation of gpe-ownerinfo.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-ownerinfo package.
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2003-07-30 17:23+0100\n"
+"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
+"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-ownerinfo.c:345
+msgid "Owner"
+msgstr "Eigenaar"
+
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "nl"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "GPE Eigenaar info"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "Mogelijke opties:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g AFMETINGEN  vensterafmetingen (standaard: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "   -t           venster doorschijnend maken\n"
+
+#: gpe-ownerinfo.c:413
+#, fuzzy
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           venster altijd bovenaan houden (override redirect)\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "   -h           deze hulptekst\n"
+
+#: gpe-ownerinfo.c:433
+msgid "GPE User"
+msgstr "GPE Gebruiker"
+
+#: gpe-ownerinfo.c:434
+msgid "nobody@localhost.localdomain"
+msgstr "nobody@localhost.localdomain"
+
+#: gpe-ownerinfo.c:435
+msgid "+99 (9999) 999-9999"
+msgstr "+99 (099) 9999999"
+
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "Instelbaar met"
+
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "Eigenaar informatie"
+
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "onder"
+
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr " Instellingen."
+
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Adres:"

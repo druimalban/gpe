@@ -1,3 +1,9 @@
+2003-09-09  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add 'sk'.
+
+	* po/sk.po: New file courtesy Marcel Telka.
+
 2003-08-15  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add 'nl'.

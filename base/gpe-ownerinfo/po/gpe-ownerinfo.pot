@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-07-08 20:16+0200\n"
+"POT-Creation-Date: 2003-08-15 01:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,68 +15,22 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. TRANSLATORS: only a short word will look good here
-#: gpe-ownerinfo.c:348
-msgid "Owner"
-msgstr ""
-
-#. TRANSLATORS: please replace this with the Pango code for your own language
-#: gpe-ownerinfo.c:391
-msgid "en"
-msgstr ""
-
-#: gpe-ownerinfo.c:424 gpe-ownerinfo.c:540
+#: main.c:84 main.c:113
 msgid "GPE Owner Info"
 msgstr ""
 
-#: gpe-ownerinfo.c:426
+#: main.c:86
 msgid "Valid options:\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:427
+#: main.c:87
 msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:428
-msgid "   -t           make window transparent\n"
-msgstr ""
-
-#: gpe-ownerinfo.c:429
+#: main.c:88
 msgid "   -k           always keep window on top (override redirect)\n"
 msgstr ""
 
-#: gpe-ownerinfo.c:430
+#: main.c:89
 msgid "   -h           this help text\n"
-msgstr ""
-
-#: gpe-ownerinfo.c:449
-msgid "GPE User"
-msgstr ""
-
-#: gpe-ownerinfo.c:450
-msgid "nobody@localhost.localdomain"
-msgstr ""
-
-#: gpe-ownerinfo.c:451
-msgid "+99 (9999) 999-9999"
-msgstr ""
-
-#: gpe-ownerinfo.c:455
-msgid "Configurable with"
-msgstr ""
-
-#: gpe-ownerinfo.c:456 gpe-ownerinfo.c:565
-msgid "Owner Information"
-msgstr ""
-
-#: gpe-ownerinfo.c:457
-msgid "under"
-msgstr ""
-
-#: gpe-ownerinfo.c:457
-msgid " Settings."
-msgstr ""
-
-#: gpe-ownerinfo.c:594
-msgid "Address:"
 msgstr ""
