@@ -18,6 +18,7 @@
 #include "pixmaps.h"
 #include "init.h"
 #include "sql.h"
+#include "smallbox.h"
 
 #define _(_x) gettext(_x)
 
@@ -59,29 +60,33 @@ stop_timing(GtkWidget *w, gpointer user_data)
 }
 
 static void
-delete_task(GtkWidget *w, gpointer user_data)
+ui_delete_task(GtkWidget *w, gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      struct task *t = gtk_ctree_node_get_row_data (ct, node);
+      delete_task (t);
       gtk_ctree_remove_node (ct, node);
     }
 }
 
 static void
-new_task(GtkWidget *w, gpointer p)
+ui_new_task(GtkWidget *w, gpointer p)
 {
   GtkCTree *ctree = GTK_CTREE (p);
   GtkCTreeNode *parent = NULL;
   GtkCTreeNode *node;
   gchar *text[2];
+  struct task *pt = NULL;
 
   if (GTK_CLIST (ctree)->selection)
     {
       gchar *text;
       gboolean leaf;
       parent = GTK_CTREE_NODE (GTK_CLIST (ctree)->selection->data);
+      pt = gtk_ctree_node_get_row_data (ctree, parent);
       gtk_ctree_get_node_info (ctree, parent, &text, NULL,
 			       NULL, NULL, NULL, NULL, &leaf, NULL);
       if (leaf)
@@ -89,12 +94,36 @@ new_task(GtkWidget *w, gpointer p)
 				 NULL, NULL, NULL, NULL, FALSE, TRUE);
     }
   
-  text[0] = "New task";
+  text[0] = smallbox (_("New task"), _("Name"), "");
   text[1] = "";
+  if (text[0])
+    {
+      node = gtk_ctree_insert_node (ctree, parent, NULL,
+				    text, 0, NULL, NULL, NULL, NULL,
+				    TRUE, TRUE);
+      new_task (text[0], pt);
+    }
+}
 
-  node = gtk_ctree_insert_node (ctree, parent, NULL,
-				text, 0, NULL, NULL, NULL, NULL,
-				TRUE, TRUE);
+static void
+load_tasks (GSList *list, GtkCTree *ctree, GtkCTreeNode *parent)
+{
+  GSList *iter;
+
+  for (iter = list; iter; iter = iter->next)
+    {
+      struct task *t = iter->data;
+      gchar *text[2];
+      GtkCTreeNode *node;
+      text[0] = t->description;
+      text[1] = NULL;
+      node = gtk_ctree_insert_node (ctree, parent, NULL,
+				    text, 0, NULL, NULL, NULL, NULL,
+				    t->children ? FALSE : TRUE, TRUE);
+      gtk_ctree_node_set_row_data (ctree, node, t);
+      if (t->children)
+	load_tasks (t->children, ctree, node);
+    }
 }
 
 int
@@ -139,13 +168,13 @@ main(int argc, char *argv[])
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New task"), 
 			   _("New task"), _("New task"),
-			   pw, new_task, tree);
+			   pw, ui_new_task, tree);
 
   p = find_pixmap ("delete");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete task"),
 			   _("Delete task"), _("Delete task"),
-			   pw, delete_task, tree);
+			   pw, ui_delete_task, tree);
 
   p = find_pixmap ("start");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
@@ -164,6 +193,8 @@ main(int argc, char *argv[])
   gtk_widget_show (vbox_top);
   gtk_widget_show (tree);
   gtk_widget_show (chatter);
+
+  load_tasks (tasks, GTK_CTREE (tree), NULL);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
