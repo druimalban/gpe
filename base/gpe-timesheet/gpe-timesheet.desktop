@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Time Tracker
+Comment=GPE Timesheet
+Exec=gpe-timesheet
+Terminal=0
+Type=Application
+Icon=gpe-timesheet.png
+Categories=Application;PIM;GPE
+StartupNotify=True

@@ -92,6 +92,7 @@ confirm_dialog (gchar **text, gchar *action, gchar *action2)
 
   gtk_widget_realize (w);
   gdk_window_set_transient_for (w->window, top_level_window);
+  gtk_window_set_title (GTK_WINDOW (w), _("Time Tracker"));
 
   gtk_widget_show (hbox);
   gtk_widget_show (vbox);
@@ -402,7 +403,7 @@ main(int argc, char *argv[])
   if (gpe_find_icon_pixmap ("gpe-timesheet", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
 
-  gtk_window_set_title (GTK_WINDOW (window), "Timesheet");
+  gtk_window_set_title (GTK_WINDOW (window), _("Time Tracker"));
 
   gtk_widget_show (window);
 

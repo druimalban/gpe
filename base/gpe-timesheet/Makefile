@@ -44,6 +44,8 @@ install: all install-mo
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	install -m 644 gpe-timesheet.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-timesheet
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 gpe-timesheet.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-timesheet
 
 clean:
 	rm -f gpe-timesheet $(OBJS) $(DEPS)
