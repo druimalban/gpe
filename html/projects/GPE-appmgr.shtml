@@ -41,52 +41,12 @@ menu-bar instead of a status-bar. Applications could register menus in it
 and it could also display system global items like time/date.
 </P>
 
-<H3>First proposal</H3>
 <P>
-Robert Mibus (<A HREF="mailto:mibus@bigpond.com">mibus@bigpond.com</A>)
-already programmed such an application and posted the following
-to the GPE mailinglist:
+There is, however, a small list of recently-used items. This is to be introduced in appmgr 0.07.
 </P>
+
+<H3>Screenshot</H3>
 <P>
-<I>
-<P>
-As there was an apparent lack of PalmOS/WinCE style program launchers, I
-wrote my own. the 'fmenu' executable can go anywhere, fmenu.glade wants
-to go in /usr/share/.
-It reads all of the files in /usr/lib/fmenu/ and /mnt/ramfs/fmenu/, the
-format is very simple. (There are a few examples in the tarball).
-</P>
-<P>
-Each file has four lines.<BR>
-line 1 is the proper, displayed name (eg. Dillo or Web Browser)<BR>
-line 2 is the executable name (eg dillo)<BR>
-line 3 is the icon name (eg /usr/share/pixmaps/dillo.png)<BR>
-line 4 is the group name.<BR>
-</P>
-<P>
-There is a clock in the top-left corner - it is actually a menu with
-'refresh' and 'quit' (hitting the 'X' has been disabled because I don't
-want to accidentally kill it off). In the middle is an APM monitor, the
-top-right has the group selector.
-</P>
-<P>
-<A HREF="http://users.bigpond.com/mibus/fmenu.tar.gz">http://users.bigpond.com/mibus/fmenu.tar.gz</A>
-</P>
-<P>
-Please, bash it around - iPAQ binaries included.
-</P>
-<P>
-The only problem I know of is that when you press the group drop-down,
-the list (in the background) often changes to "All"; this appears to be
-a Gtk problem AFAICT. It doesn't affect the usability though.
-</P>
-</I>
-</P>
-<P>
-And this is what his <I>fmenu</I> application looks like (admittedly much
-better than my above Glade mock-up ;)
-</P>
-<P>
-<IMG SRC="/images/fmenu.png">
+<IMG SRC="../images/gpe-appmgr.png" alt="GPE-Appmgr in action">
 </P>
 <!--#include virtual="/includes/foot.shtml"-->
