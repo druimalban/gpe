@@ -1,0 +1,87 @@
+# Translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Marcus Moreira de Souza <marcus@frb.br>, 2004.
+# based on the translation to Portuguese (pt) by
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2004-09-02 17:17-0300\n"
+"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-go.c:754
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "P:%d  B:%d "
+
+#: gpe-go.c:1083
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Não foi possível salvar jogo em %s."
+
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Novo.."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Salvar..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Abrir..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Menu jogos"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Primeiro"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Ir para o início do jogo"
+
+#: gpe-go.c:1435
+msgid "Undo"
+msgstr "Desfazer"
+
+#: gpe-go.c:1441
+msgid "Redo"
+msgstr "Refazer"
+
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Último"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Ir para o final do jogo"
+
+#: gpe-go.c:1457
+msgid "B:0  W:0 "
+msgstr "P:0  W:0 "
+
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr ""
+
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr ""
+
+#: gpe-go.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Go"
