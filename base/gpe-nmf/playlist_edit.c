@@ -30,12 +30,16 @@
 #error Eat flaming death, GTK 1 users!
 #endif
 
+gchar *current_dir = NULL;
+
 enum
   {
     TITLE_COLUMN,
     DATA_COLUMN,
     N_COLUMNS
   };
+
+gboolean add_playlist_item (struct nmf_frontend *fe, char *fn);
 
 static void
 store_playlist (GtkTreeStore *store, struct playlist *p, GtkTreeIter *parent)
@@ -69,8 +73,8 @@ close_file_sel (GtkWidget *w, gpointer d)
   gtk_widget_destroy (GTK_WIDGET (d));
 }
 
-void
-load_file (struct nmf_frontend *fe, gchar *s)
+gboolean
+add_playlist_file (struct nmf_frontend *fe, char *s)
 {
   struct playlist *p = NULL;
 
@@ -85,7 +89,7 @@ load_file (struct nmf_frontend *fe, gchar *s)
   else
     {
       p = playlist_new_track ();
-      p->data.track.url = s;
+      p->data.track.url = g_strdup (s);
 
       player_fill_in_playlist (p);
 
@@ -100,62 +104,60 @@ load_file (struct nmf_frontend *fe, gchar *s)
       player_set_playlist (fe->player, fe->playlist);
       playlist_edit_push (fe->playlist_widget, fe->playlist);
     }
+
+  return TRUE;
 }
 
-int isdir (char *fn)
+gboolean
+add_playlist_directory (struct nmf_frontend *fe, char *dname)
 {
-        struct stat buf;
+  DIR *dir;
+  struct dirent *entry;
+  
+  dir = opendir (dname);
+  if (! dir)
+    {
+      gpe_perror_box (dname);
+      return FALSE;
+    }
+ 
+  while (entry = readdir (dir), entry != NULL)
+    {
+      gchar *fn;
+      
+      if (!strcmp (entry->d_name, ".") || !strcmp (entry->d_name, ".."))
+	continue;
+      
+      fn = g_strdup_printf ("%s/%s", dname, entry->d_name);
+      
+      add_playlist_item (fe, fn);
+      
+      g_free (fn);
+    }
 
-        if (stat (fn, &buf))
-                return 0;
+  closedir (dir);
 
-        if (S_ISDIR(buf.st_mode))
-                return 1;
-
-        return 0;
+  return TRUE;
 }
 
-void add_playlist_item (struct nmf_frontend *fe, char *fn);
-
-void add_playlist_file (struct nmf_frontend *fe, char *fn)
+int 
+isdir (char *fn)
 {
-        load_file (fe, g_strdup(fn));
+  struct stat buf;
+  
+  if (stat (fn, &buf))
+    return 0;
+  
+  if (S_ISDIR (buf.st_mode))
+    return 1;
+  
+  return 0;
 }
 
-void add_playlist_directory (struct nmf_frontend *fe, char *dname)
+gboolean
+add_playlist_item (struct nmf_frontend *fe, char *fn)
 {
-        DIR *dir;
-        struct dirent *entry;
-
-        dir = opendir (dname);
-        if (!dir)
-                return;
-
-        while ((entry = readdir (dir)))
-        {
-                char *fn;
-
-                if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, ".."))
-                        continue;
-
-                fn = g_strdup_printf ("%s/%s", dname, entry->d_name);
-
-                add_playlist_item (fe, fn);
-
-                g_free (fn);
-        }
-        closedir (dir);
-}
-
-void add_playlist_item (struct nmf_frontend *fe, char *fn)
-{
-                if (isdir (fn))
-                {
-                        add_playlist_directory (fe, fn);
-                } else
-                {
-                        add_playlist_file (fe, fn);
-                }
+  return isdir (fn) ? add_playlist_directory (fe, fn) : add_playlist_file (fe, fn);
 }
 
 static void
@@ -165,6 +167,11 @@ select_file_done (GtkWidget *fs, struct nmf_frontend *fe)
   
   add_playlist_item (fe, s);
 
+  if (current_dir)
+    g_free (current_dir);
+  
+  current_dir = gtk_mini_file_selection_get_directory (GTK_MINI_FILE_SELECTION (fs));
+			  
   gtk_widget_destroy (fs);
 }
 
@@ -172,20 +179,16 @@ static void
 new_entry (GtkWidget *w, struct nmf_frontend *fe)
 {
   GtkWidget *fs = gtk_mini_file_selection_new (_("Select file"));
+  
   gtk_signal_connect (GTK_OBJECT (GTK_MINI_FILE_SELECTION (fs)->cancel_button), 
 		      "clicked", GTK_SIGNAL_FUNC (close_file_sel), fs);
   gtk_signal_connect (GTK_OBJECT (fs), "completed", 
 		      GTK_SIGNAL_FUNC (select_file_done), fe);
+  
+  if (current_dir)
+    gtk_mini_file_selection_set_directory (GTK_MINI_FILE_SELECTION (fs), current_dir);
+  
   gtk_widget_show (fs);
-}
-
-void
-new_folder (GtkWidget *w, gpointer d)
-{
-  char *name = smallbox (_("New folder"), _("Title"), "");
-  if (name)
-    {
-    }
 }
 
 void
@@ -232,6 +235,7 @@ row_signal (GtkTreeView *treeview, GtkTreePath *path,
 	  player_set_playlist (fe->player, item->parent);
 	  player_set_index (fe->player, g_slist_index (item->parent->data.list, item));
 	}
+
       player_play (fe->player);
       player_status (fe->player, &ps);
       update_track_info (fe, ps.item);
@@ -263,6 +267,8 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 									NULL);
   GtkWidget *pw;
 
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 300);
+  
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("open"));
