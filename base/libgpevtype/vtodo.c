@@ -19,6 +19,15 @@
 
 #define _(x) gettext (x)
 
+/* this is from todo-db.h for status mapping */
+typedef enum
+{
+  NOT_STARTED,
+  IN_PROGRESS,
+  COMPLETED,
+  ABANDONED
+} item_state;
+
 struct tag_map
 {
   GType type;
@@ -46,13 +55,30 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
 	    g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, value, NULL);
 	  else if (t->type == G_TYPE_INT) 
 	    {
-	      if (!strcasecmp (t->tag, "STATE") && !strcmp(value, "2")) 
-		{ // Completed Task
-		  g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_COMPLETED, NULL);
-		  g_object_set (G_OBJECT (todo), "dtcompleted", mimedir_datetime_new_from_time_t (time(NULL)), NULL);
-		} 
-	      else
-		g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, atoi (value), NULL);
+	      if (!strcasecmp (t->tag, "STATE"))
+		    {
+              gint val = atol(value);
+              switch (val)
+              {
+                case NOT_STARTED:
+		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_NEEDS_ACTION, NULL);
+                break;
+                case IN_PROGRESS:
+		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_IN_PROCESS, NULL);
+                break;
+                case ABANDONED:
+                case COMPLETED:
+                  // Completed Task
+		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_COMPLETED, NULL);
+		          g_object_set (G_OBJECT (todo), "dtcompleted", mimedir_datetime_new_from_time_t (time(NULL)), NULL);
+                break;
+                default:
+		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_NEEDS_ACTION, NULL);
+                break;
+              }
+            }
+          else
+            g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, atoi (value), NULL);
 	    } 
 	  else
 	    return FALSE;
@@ -124,7 +150,20 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
 
 	  // Convert from MIMEDir's Status to GPE's state
 	  if (! strcasecmp (t->tag, "STATE"))
-	    value = (value == MIMEDIR_STATUS_COMPLETED) ? 2 : 0;
+        {
+          switch (value)
+            {
+              case MIMEDIR_STATUS_COMPLETED:
+                value = COMPLETED;
+              break;
+              case MIMEDIR_STATUS_IN_PROCESS:
+                value = IN_PROGRESS;
+              break;
+              default:
+                value = NOT_STARTED;
+              break;
+            }
+        }
 	  // The default priority of 0 seems to annoy GPE-Todo?
 	  if (! strcasecmp (t->tag, "PRIORITY"))
 	    value = (value >= 5) ? value : 5;
