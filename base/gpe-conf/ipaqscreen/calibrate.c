@@ -24,13 +24,10 @@
 
 void calibrate ()
 {
-	const char * cmd_toggle = "/usr/bin/mbcontrol -panel-toggle -panel-id 0" ;
 #ifndef __arm__
 	gpe_error_box ("Wrong system type, can't execute xcalibrate.");
 	return ; 
 #endif
-	system(cmd_toggle);
-	if (suid_exec("XCAL",""))
+	if (suid_exec("XCAL","--??"))
 	  gpe_error_box(_("Sorry, wrong password."));
-	system(cmd_toggle);
 }

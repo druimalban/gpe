@@ -1,21 +1,20 @@
-# Перевод сообщений gpe-conf-0.1.6.po на Russian
-# Translation of gpe-conf-0.1.0-pre9.po to Russian.
+# Translation of gpe-conf-0.1.10.po to Russian
 # Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-conf package.
 # Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf-0.1.6\n"
+"Project-Id-Version: gpe-conf-0.1.10\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-03 00:26+0100\n"
-"PO-Revision-Date: 2004-03-03 10:02+0200\n"
+"POT-Creation-Date: 2004-06-10 12:19+0200\n"
+"PO-Revision-Date: 2004-06-17 09:31+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.0.2\n"
+"X-Generator: KBabel 1.3\n"
 
 #: main.c:305
 #, c-format
@@ -64,7 +63,7 @@ msgstr ""
 msgid "Root access"
 msgstr "Доступ root'a"
 
-#: applets.c:369
+#: applets.c:373
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -74,7 +73,7 @@ msgstr ""
 "только для пользователя root.\n"
 "Пожалуйста, введите пароль."
 
-#: applets.c:414 ipaqscreen/calibrate.c:34
+#: applets.c:419 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
 msgstr "Извините, пароль неверный."
 
@@ -162,117 +161,73 @@ msgstr "Выберите величину смещения в минутах п�
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Чтобы настройки часового пояса вступили в силу, вы должны выйти и снова войти в систему."
 
-#: appmgr_setup.c:189 gpe-admin.c:86
-msgid "General"
-msgstr "Основные"
-
-#: appmgr_setup.c:206
-msgid "Show 'All' group"
-msgstr "Показать группу 'Все'"
-
-#: appmgr_setup.c:214
-msgid "Auto-hide group labels"
-msgstr "Автоматически скрывать метки групп"
-
-#: appmgr_setup.c:221
-msgid "Show 'Recent' tab"
-msgstr "Показать закладку 'Последние'"
-
-#: appmgr_setup.c:228
-msgid "Do not launch at startup"
-msgstr "Не запускать автоматически"
-
-#: appmgr_setup.c:237
-msgid "Tab View"
-msgstr "Вид закладок"
-
-#: appmgr_setup.c:252
-msgid "Icon"
-msgstr "Значки"
-
-#: appmgr_setup.c:256
-msgid "List"
-msgstr "Список"
-
-#: appmgr_setup.c:265
-msgid "Changes will take effect after relog"
-msgstr "Изменения вступят в силу после повторного входа в систему"
-
-#: ipaqscreen/main.c:70
+#: ipaqscreen/main.c:71
 msgid "Portrait"
 msgstr "Портрет"
 
-#: ipaqscreen/main.c:71
+#: ipaqscreen/main.c:72
 msgid "Landscape (left)"
 msgstr "Альбомный (слева)"
 
-#: ipaqscreen/main.c:72
+#: ipaqscreen/main.c:73
 msgid "Inverted"
 msgstr "Перевернутый"
 
-#: ipaqscreen/main.c:73
+#: ipaqscreen/main.c:74
 msgid "Landscape (right)"
 msgstr "Альбомный (справа)"
 
-#: ipaqscreen/main.c:94
+#: ipaqscreen/main.c:98
 msgid "Light"
 msgstr "Освещение"
 
-#: ipaqscreen/main.c:100
+#: ipaqscreen/main.c:104
 msgid "Brightness"
 msgstr "Яркость"
 
-#: ipaqscreen/main.c:106 ipaqscreen/main.c:129
+#: ipaqscreen/main.c:110 ipaqscreen/main.c:133
 msgid "State"
 msgstr "Состояние"
 
-#: ipaqscreen/main.c:117
+#: ipaqscreen/main.c:121
 msgid "Screensaver"
 msgstr "Хранитель экрана"
 
-#: ipaqscreen/main.c:123
+#: ipaqscreen/main.c:127
 msgid "Delay until start"
 msgstr "Задержка до запуска"
 
-#: ipaqscreen/main.c:133 ipaqscreen/main.c:169
+#: ipaqscreen/main.c:137 ipaqscreen/main.c:174
 msgid "on"
 msgstr "вкл."
 
-#: ipaqscreen/main.c:134 ipaqscreen/main.c:170
+#: ipaqscreen/main.c:138 ipaqscreen/main.c:175
 msgid "off"
 msgstr "выкл."
 
-#: ipaqscreen/main.c:144
+#: ipaqscreen/main.c:148
 msgid "Orientation"
 msgstr "Ориентация"
 
-#: ipaqscreen/main.c:163
+#: ipaqscreen/main.c:168
 msgid "Touchscreen"
 msgstr "Сенсорный экран"
 
-#: ipaqscreen/main.c:167
+#: ipaqscreen/main.c:172
 msgid "Calibrate"
 msgstr "Калибровка"
 
-#: ipaqscreen/main.c:302
+#: ipaqscreen/main.c:307
 msgid "min"
 msgstr "мин"
 
-#: ipaqscreen/main.c:305
+#: ipaqscreen/main.c:310
 msgid "sec"
 msgstr "сек"
 
 #: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
 msgid "Couldn't read screen settings!"
 msgstr "Невозможно прочитать настройки экрана!"
-
-#: ipaqscreen/rotation.c:54
-msgid "Can't interpret output from xrandr!"
-msgstr "Невозможно интерпретировать выходные данные xrandr!"
-
-#: ipaqscreen/rotation.c:71
-msgid "Can't set rotation on an x86."
-msgstr "Невозможно установить вражение на x86."
 
 #: kbd.c:146
 msgid "Keyboard Geometry / Layout"
@@ -286,7 +241,7 @@ msgstr "Пользовательская"
 msgid "Current Config"
 msgstr "Текущая настройка"
 
-#: network.c:175 ownerinfo.c:221
+#: network.c:175 ownerinfo.c:226
 msgid "Name:"
 msgstr "Имя:"
 
@@ -446,119 +401,143 @@ msgstr "Невозможно прочитать настройку сети."
 msgid "global"
 msgstr "общий"
 
-#: theme.c:417
+#: theme.c:421
 msgid "Red"
 msgstr "Красный"
 
-#: theme.c:422
+#: theme.c:426
 msgid "Green"
 msgstr "Зеленый"
 
-#: theme.c:427
+#: theme.c:431
 msgid "Blue"
 msgstr "Синий"
 
-#: theme.c:702
+#: theme.c:727
 msgid "Select color"
 msgstr "Выбор цвета"
 
-#: theme.c:728 theme.c:800
+#: theme.c:753 theme.c:825
 msgid "You don't have read access to selected background image!"
 msgstr "У вас нет прав на чтение выбранного фонового изображения!"
 
-#: theme.c:899
+#: theme.c:933
 msgid "Theme"
 msgstr "Тема"
 
-#: theme.c:908
+#: theme.c:942
 msgid "Desktop Theme"
 msgstr "Тема рабочего стола"
 
-#: theme.c:920
+#: theme.c:954
 msgid "Name"
 msgstr "Имя"
 
-#: theme.c:936
+#: theme.c:970
 msgid "Icon Size"
 msgstr "Размер значков"
 
-#: theme.c:952
-msgid "Toolbar Icon Size"
-msgstr "Размер значков панели инструментов"
-
-#: theme.c:968
+#: theme.c:986
 msgid "Visual Effects"
 msgstr "Визуальные эффекты"
 
-#: theme.c:974
+#: theme.c:992
 msgid "Enable Visual Effects"
 msgstr "Включить визуальные эффекты"
 
-#: theme.c:981
+#: theme.c:999
 msgid "Background"
 msgstr "Фон"
 
-#: theme.c:992
+#: theme.c:1010
 msgid "Background Settings"
 msgstr "Настройки фона"
 
-#: theme.c:999
+#: theme.c:1017
 msgid "Theme Default"
 msgstr "Тема по умолчанию"
 
-#: theme.c:1006
+#: theme.c:1024
 msgid "Solid color"
 msgstr "Сплошной цвет"
 
-#: theme.c:1020
+#: theme.c:1038
 msgid "Horizontal"
 msgstr "Горизонтальный"
 
-#: theme.c:1024
+#: theme.c:1042
 msgid "Vertical"
 msgstr "Вертикальный"
 
-#: theme.c:1029 theme.c:1048 theme.c:1145 theme.c:1151
+#: theme.c:1047 theme.c:1066 theme.c:1219 theme.c:1225
 msgid "Color"
 msgstr "Цвет"
 
-#: theme.c:1039
+#: theme.c:1057
 msgid "Color gradient"
 msgstr "Цветовой градиент"
 
-#: theme.c:1059
+#: theme.c:1077
 msgid "Image"
 msgstr "Изображение"
 
-#: theme.c:1085
+#: theme.c:1103
 msgid "Centered"
 msgstr "По центру"
 
-#: theme.c:1089
+#: theme.c:1107
 msgid "Tiled"
 msgstr "Мозаикой"
 
-#: theme.c:1092
+#: theme.c:1110
 msgid "Stretched"
 msgstr "Растянутое"
 
-#: theme.c:1097
+#: theme.c:1116
+msgid "Toolbars"
+msgstr "Панели инструментов"
+
+#: theme.c:1127
+msgid "Toolbar Style"
+msgstr "Стиль панели инструментов"
+
+#: theme.c:1134
+msgid "Icons"
+msgstr "Значки"
+
+#: theme.c:1139
+msgid "Text"
+msgstr "Текст"
+
+#: theme.c:1144
+msgid "Both"
+msgstr "Оба"
+
+#: theme.c:1149
+msgid "Both H"
+msgstr "Оба H"
+
+#: theme.c:1156
+msgid "Toolbar Icon Size"
+msgstr "Размер значков панели инструментов"
+
+#: theme.c:1171
 msgid "Fonts"
 msgstr "Шрифты"
 
-#: theme.c:1106 theme.c:1126
+#: theme.c:1180 theme.c:1200
 msgid "Desktop Font"
 msgstr "Шрифт рабочего стола"
 
-#: theme.c:1113 theme.c:1169
+#: theme.c:1187 theme.c:1243
 msgid "Family"
 msgstr "Семейство"
 
-#: theme.c:1133 theme.c:1189
+#: theme.c:1207 theme.c:1263
 msgid "Size"
 msgstr "Размер"
 
-#: theme.c:1162 theme.c:1182
+#: theme.c:1236 theme.c:1256
 msgid "Application Font"
 msgstr "Шрифт приложения"
 
@@ -618,52 +597,51 @@ msgstr "Невозможно перезапустить обработчик к�
 msgid "The file you selected is not executable."
 msgstr "Выбранный вами файл не является исполняемым."
 
-#: ownerinfo.c:197
-msgid "<b>Information about  the Owner</b>"
-msgstr "<b>Информация о владельце</b>"
+#: ownerinfo.c:199
+msgid "Information about the Owner"
+msgstr "Информация о владельце"
 
-#: ownerinfo.c:202
+#: ownerinfo.c:207
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Только пользователю 'root' разрешено изменять эту информацию"
 
-#: ownerinfo.c:236
+#: ownerinfo.c:241
 msgid "E-Mail:"
 msgstr "E-Mail:"
 
-#: ownerinfo.c:251
+#: ownerinfo.c:256
 msgid "Phone:"
 msgstr "Телефон:"
 
-#: ownerinfo.c:266
+#: ownerinfo.c:271
 msgid "Address:"
 msgstr "Адрес:"
 
-#: ownerinfo.c:292
+#: ownerinfo.c:297
 msgid "Photofile:"
 msgstr "Файл фото:"
 
-#: login-setup.c:130
+#: login-setup.c:131
 msgid "Some or all of these settings can only be changed by the user 'root'."
 msgstr "Некоторые или все эти настройки могут быть изменены только пользователем 'root'."
 
-#. TRANSLATORS: Please ignore the tags <>
-#: login-setup.c:153
-msgid "<b>General</b>"
-msgstr "<b>Основные</b>"
+#: login-setup.c:154 gpe-admin.c:86
+msgid "General"
+msgstr "Основные"
 
-#: login-setup.c:168
+#: login-setup.c:171
 msgid "Show owner information at login."
 msgstr "Показывать информацию о владельце при входе в систему."
 
-#: login-setup.c:170
+#: login-setup.c:173
 msgid "Use background image for login screen."
 msgstr "Использовать фоновое изображение на экране входа в систему."
 
-#: login-setup.c:172
+#: login-setup.c:175
 msgid "Lock display on suspend."
 msgstr "Блокировать экран при переходе в ждущий режим."
 
-#: login-setup.c:185
+#: login-setup.c:188
 msgid "Image:"
 msgstr "Изображение:"
 
@@ -699,7 +677,7 @@ msgstr "Уровень автозатемнения"
 msgid "Auto sleep advanced controls"
 msgstr "Доп. управление автопереходом в спящий режим"
 
-#: sleep/interface.c:164 sysinfo.c:490
+#: sleep/interface.c:164 sysinfo.c:491
 msgid "CPU"
 msgstr "Процессор"
 
@@ -931,128 +909,128 @@ msgstr "Скорость двоичной передачи"
 msgid "Serial Port"
 msgstr "Последовательный порт"
 
-#: cardinfo.c:104
+#: cardinfo.c:105
 msgid "/_Card"
 msgstr "/_Карточка"
 
-#: cardinfo.c:105
+#: cardinfo.c:106
 msgid "/Card/_Insert"
 msgstr "/Карточка/_Вставить"
 
-#: cardinfo.c:106
+#: cardinfo.c:107
 msgid "/Card/_Eject"
 msgstr "/Карточка/_Извлечь"
 
-#: cardinfo.c:107
+#: cardinfo.c:108
 msgid "/Card/_Suspend"
 msgstr "/Карточка/_Приостановить"
 
-#: cardinfo.c:108
+#: cardinfo.c:109
 msgid "/Card/_Resume"
 msgstr "/Карточка/В_озобновить"
 
-#: cardinfo.c:109
+#: cardinfo.c:110
 msgid "/Card/_Reset"
 msgstr "/Карточка/_Сбросить"
 
-#: cardinfo.c:110
+#: cardinfo.c:111
 msgid "/Card/s1"
 msgstr "/Карточка/s1"
 
-#: cardinfo.c:111
+#: cardinfo.c:112
 msgid "/Card/_Assign Driver"
 msgstr "/Карточка/_Назначить драйвер"
 
-#: cardinfo.c:112
+#: cardinfo.c:113
 msgid "/Card/s2"
 msgstr "/Карточка/s2"
 
-#: cardinfo.c:113
+#: cardinfo.c:114
 msgid "/Card/_Close"
 msgstr "/Карточка/_Закрыть"
 
-#: cardinfo.c:114
+#: cardinfo.c:115
 msgid "/_Help"
 msgstr "/_Справка"
 
-#: cardinfo.c:115
+#: cardinfo.c:116
 msgid "/_Help/Index"
 msgstr "/_Справка/Индекс"
 
-#: cardinfo.c:116
+#: cardinfo.c:117
 msgid "/_Help/About"
 msgstr "/_Справка/О программе"
 
-#: cardinfo.c:176 cardinfo.c:864
+#: cardinfo.c:177 cardinfo.c:865
 msgid "card not recognized"
 msgstr "карточка не распознана"
 
-#: cardinfo.c:278 cardinfo.c:349
+#: cardinfo.c:279 cardinfo.c:350
 msgid "Could not write to temporal config file."
 msgstr "Невозможно выполнить запись во временный файл настройки."
 
-#: cardinfo.c:555
+#: cardinfo.c:556
 msgid "Could not open pidfile:"
 msgstr "Невозможно открыть pid-файл:"
 
-#: cardinfo.c:561
+#: cardinfo.c:562
 msgid "Could not read pidfile"
 msgstr "Невозможно прочитать pid-файл"
 
-#: cardinfo.c:565
+#: cardinfo.c:566
 msgid "Could not signal cardmgr:"
 msgstr "Невозможно подать сигнал cardmgr:"
 
-#: cardinfo.c:640
+#: cardinfo.c:641
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr "gpe-conf должен быть setuid root, чтобы использовать возможность cardinfo."
+msgstr "gpe-conf должен иметь suid root'a, чтобы использовать возможность cardinfo."
 
-#: cardinfo.c:659
+#: cardinfo.c:660
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Нет драйвера PCMCIA в '/proc/devices'"
 
-#: cardinfo.c:662
+#: cardinfo.c:663
 msgid "Could not open '/proc/devices'"
 msgstr "Невозможно открыть '/proc/devices'"
 
-#: cardinfo.c:674
+#: cardinfo.c:675
 msgid "No sockets found\n"
 msgstr "Сокеты не найдены\n"
 
-#: cardinfo.c:683
+#: cardinfo.c:684
 msgid "Card Services release does not match!"
 msgstr "Версии Card Services не совпадают!"
 
-#: cardinfo.c:688
+#: cardinfo.c:689
 msgid "Could not get CS revision info!\n"
 msgstr "Невозможно получить информацию о редакции CS!\n"
 
-#: cardinfo.c:851
+#: cardinfo.c:852
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) завершился неудачей"
 
-#: cardinfo.c:870
+#: cardinfo.c:871
 #, c-format
 msgid "no driver loaded"
 msgstr "драйвер не загружен"
 
-#: cardinfo.c:979
+#: cardinfo.c:980
 msgid "ready"
 msgstr "готов"
 
-#: cardinfo.c:997
+#: cardinfo.c:998
 msgid "not ready"
 msgstr "не готов"
 
-#: cardinfo.c:1012
+#: cardinfo.c:1013
 msgid "suspended"
 msgstr "приостановлен"
 
-#: cardinfo.c:1204
+#: cardinfo.c:1205
 msgid "Assign Driver"
 msgstr "Назначить драйвер"
 
-#: cardinfo.c:1213
+#: cardinfo.c:1214
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1062,59 +1040,59 @@ msgstr ""
 "изменить назначение драйвера для\n"
 "карты PCMCIA или CF."
 
-#: cardinfo.c:1223
+#: cardinfo.c:1224
 msgid "Your current card identifies itself as:"
 msgstr "Ваша текущая карта опознает себя как:"
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Manuf. Id"
 msgstr "Id производителя"
 
-#: cardinfo.c:1237 cardinfo.c:1243
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Class"
 msgstr "Класс"
 
-#: cardinfo.c:1341 cardinfo.c:1354
+#: cardinfo.c:1342 cardinfo.c:1355
 msgid "PC/CF card socket information."
 msgstr "Информация о сокете карты PC/CF."
 
-#: cardinfo.c:1349
+#: cardinfo.c:1350
 msgid "Socket"
 msgstr "Сокет"
 
-#: cardinfo.c:1380
+#: cardinfo.c:1381
 msgid "Information for socket"
 msgstr "Информация для сокета"
 
-#: cardinfo.c:1389
+#: cardinfo.c:1390
 msgid "State:"
 msgstr "Состояние:"
 
-#: cardinfo.c:1390
+#: cardinfo.c:1391
 msgid "Device:"
 msgstr "Устройство:"
 
-#: cardinfo.c:1391
+#: cardinfo.c:1392
 msgid "Driver:"
 msgstr "Драйвер:"
 
-#: cardinfo.c:1392
+#: cardinfo.c:1393
 msgid "Type:"
 msgstr "Тип:"
 
-#: cardinfo.c:1393
+#: cardinfo.c:1394
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1394
+#: cardinfo.c:1395
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1401
+#: cardinfo.c:1402
 msgid "Flags:"
 msgstr "Флаги:"
 
-#: cardinfo.c:1418
+#: cardinfo.c:1419
 msgid "PCMCIA initialisation failed"
 msgstr "Сбой инициализации PCMCIA"
 
@@ -1407,7 +1385,7 @@ msgid "Free memory"
 msgstr "Свободная память"
 
 #: storage.c:186 storage.c:193 storage.c:339 storage.c:350 storage.c:455
-#: storage.c:468 sysinfo.c:499 sysinfo.c:508
+#: storage.c:468 sysinfo.c:500 sysinfo.c:509
 msgid "MB"
 msgstr "МБ"
 
@@ -1568,51 +1546,56 @@ msgstr "Информация о системе"
 msgid "Version"
 msgstr "Версия"
 
-#: sysinfo.c:430
+#. TRANSLATORS: "Familiar" is the name of the linux disrtribution.
+#: sysinfo.c:431
 msgid "Familiar Version"
 msgstr "Похожая версия"
 
-#: sysinfo.c:455
+#: sysinfo.c:456
 msgid "System"
 msgstr "Система"
 
-#: sysinfo.c:464
+#: sysinfo.c:465
 msgid "Device information"
 msgstr "Информация об устройстве"
 
-#: sysinfo.c:476
+#: sysinfo.c:477
 msgid "Device"
 msgstr "Устройство"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:499
+#: sysinfo.c:500
 msgid "RAM"
 msgstr "RAM"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:508
+#: sysinfo.c:509
 msgid "Flash"
 msgstr "Flash"
 
-#: sysinfo.c:515
+#: sysinfo.c:516
 msgid "Hardware"
 msgstr "Оборудование"
 
-#: sysinfo.c:520
+#: sysinfo.c:521
 msgid "Battery"
 msgstr "Аккумулятор"
 
-#: sysinfo.c:525
+#: sysinfo.c:526
 msgid "Storage"
 msgstr "Хранилище"
 
-#: sysinfo.c:530
+#: sysinfo.c:531
 msgid "Networks"
 msgstr "Сети"
 
-#: sysinfo.c:535
+#: sysinfo.c:536
 msgid "Syslog"
 msgstr "Системный журнал"
+
+#: gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr "Панель управления"
 
 #: gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
@@ -1699,7 +1682,7 @@ msgid "Setup Date and Time"
 msgstr "Настройка даты и времени"
 
 #: gpe-conf-users.desktop.in.h:1
-msgid "Manage local users "
+msgid "Manage local users"
 msgstr "Управление локальными пользователями"
 
 #: gpe-conf-users.desktop.in.h:2
@@ -1709,162 +1692,3 @@ msgstr "Менеджер пользователей"
 #: gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
 msgstr "Информация о системе"
-
-#~ msgid "Activated"
-#~ msgstr "Включен"
-
-#~ msgid "Off"
-#~ msgstr "Выкл."
-
-#~ msgid "Could not read keyboard definition file."
-#~ msgstr "Невозможно прочитать файл описания клавиатуры."
-
-#~ msgid "Error reading keyboard definition."
-#~ msgstr "Ошибка чтения описания клавиатуры."
-
-#~ msgid "External keyboard configuration. Model support packages not installed if inactive."
-#~ msgstr "Настройка внешней клавиатуры. Пакеты с поддержкой модели не установлены в неактивном состоянии."
-
-#~ msgid "External Keyboard Type"
-#~ msgstr "Тип внешней клавиатуры"
-
-#~ msgid "Here you may select your external keyboard model. To install software support, connect your device to the internet and click the \"Install\" button."
-#~ msgstr "Здесь вы можете выбрать тип своей внешней клавиатуры. Для установки программной поддержки подключите свое устройство к Интернету и нажмите кнопку \"Установить\"."
-
-#~ msgid "Click here to select this keyboard model."
-#~ msgstr "Нажмите сюда, чтобы выбрать модель этой клавиатуры."
-
-#~ msgid "Install"
-#~ msgstr "Установить"
-
-#~ msgid "Click here to install support for this keyboard."
-#~ msgstr "Нажмите сюда, чтобы установить поддержку этой клавиатуры."
-
-#~ msgid "Choose IRQs"
-#~ msgstr "Выбрать прерывания"
-
-#~ msgid "Couldn't get filesystem info!"
-#~ msgstr "Невозможно получить информацию о файловой системе!"
-
-#~ msgid "Removing package"
-#~ msgstr "Удаляется пакет"
-
-#~ msgid "Installing package"
-#~ msgstr "Устанавливается пакет"
-
-#~ msgid "Start"
-#~ msgstr "Начать"
-
-#~ msgid "Update finished. Please check log messages for errors."
-#~ msgstr "Обновление завершено. Пожалуйста, проверьте ошибки в зарегистрированных сообщениях."
-
-#~ msgid "Remove"
-#~ msgstr "Удалить"
-
-#~ msgid "Install/Removal finished. Please check log messages for errors."
-#~ msgstr "Установка/удаление завершено. Пожалуйста, проверьте ошибки в зарегистрированных сообщениях."
-
-#~ msgid "Update using \"ipkg upgrade\" started.\n"
-#~ msgstr "Обновление, используя \"ipkg upgrade\", запущено.\n"
-
-#~ msgid "Running..."
-#~ msgstr "Запущено..."
-
-#~ msgid "Update"
-#~ msgstr "Обновить"
-
-#~ msgid "Update from network"
-#~ msgstr "Обновление из сети"
-
-#~ msgid "Update entire system over an internet connection."
-#~ msgstr "Обновить всю систему через подключение к Интернету."
-
-#~ msgid "Activity log"
-#~ msgstr "Журнал активности"
-
-#~ msgid "This window shows all output from the packet manager that performs the update."
-#~ msgstr "В этом окне отображаются все выходные данные менеджера пакетов, выполняющего обновление."
-
-#~ msgid "Install/Remove"
-#~ msgstr "Установка/Удаление"
-
-#~ msgid "Install/Remove a package"
-#~ msgstr "Установить/удалить пакет"
-
-#~ msgid "Enter name of package to be installed here."
-#~ msgstr "Введите имя устанавливаемого пакета."
-
-#~ msgid "Install a package from a configured source."
-#~ msgstr "Установить пакет из настроенного источника."
-
-#~ msgid "Remove the package."
-#~ msgstr "Удалить пакет."
-
-#~ msgid "This window shows all output from the packet manager installing the package."
-#~ msgstr "В этом окне отображаются все выходные данные менеджера пакетов, устанавливающего пакет."
-
-#~ msgid "Insert Card"
-#~ msgstr "Вставьте карту"
-
-#~ msgid "Click here to start card insertion manually."
-#~ msgstr "Нажмите сюда, чтобы вставить карту вручную."
-
-#~ msgid "Eject Card"
-#~ msgstr "Извлечь карту"
-
-#~ msgid "Click here to eject card manually."
-#~ msgstr "Нажмите сюда, чтобы извлечь карту вручную."
-
-#~ msgid "Suspend Card"
-#~ msgstr "Перевести карту в режим ожидания"
-
-#~ msgid "Click here to suspend current card."
-#~ msgstr "Нажмите сюда, чтобы перевести текущую карту в режим ожидания."
-
-#~ msgid "Resume Card"
-#~ msgstr "Возобновить работу карты"
-
-#~ msgid "Click here to resume current card."
-#~ msgstr "Нажмите сюда, чтобы возобновить работу текущей карты."
-
-#~ msgid "Reset Card"
-#~ msgstr "Сбросить карту"
-
-#~ msgid "Click here to reset current card."
-#~ msgstr "Нажмите сюда, чтобы сбросить текущую карту."
-
-#~ msgid "Reset Card Manager"
-#~ msgstr "Сбросить менеджер карты"
-
-#~ msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
-#~ msgstr "Нажмите сюда, чтобы сбросить менеджер карты. Это зафиксирует все обновления в файлах настройки pcmcia."
-
-#~ msgid "Click here to assign a driver to this card / change current driver assignment."
-#~ msgstr "Нажмите сюда, чтобы назначить драйвер этой карте или изменить текущий драйвер."
-
-#~ msgid "Exit applet"
-#~ msgstr "Закрыть апплет"
-
-#~ msgid "Battery Information"
-#~ msgstr "Информация об аккумуляторе"
-
-#~ msgid "External Keyboard"
-#~ msgstr "Внешняя клавиатура"
-
-#~ msgid "External Keyboard Setup"
-#~ msgstr "Настройка внешней клавиатуры"
-
-#~ msgid "Accesss System Log "
-#~ msgstr "Доступ к системному журналу "
-
-#~ msgid "Show Logs"
-#~ msgstr "Показать логи"
-
-#~ msgid " Update Manager"
-#~ msgstr " Менеджер обновления"
-
-#~ msgid "Update installed packages"
-#~ msgstr "Обновить установленные пакеты"
-
-#~ msgid "Global Look"
-#~ msgstr "Внешний вид"

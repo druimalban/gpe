@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -80,21 +80,6 @@ update_screen_rotation (int rotation)
 		set_rotation (rotation);
 }
 
-
-void
-update_dhcp_status (const gchar * active)
-{
-	gint use_dhcp = atoi (active);
-
-	if (use_dhcp)
-	{
-		change_cfg_value ("/etc/pcmcia/network.opts", "DHCP", "\"y\"",'=');
-	}
-	else
-	{
-		change_cfg_value ("/etc/pcmcia/network.opts", "DHCP", "\"n\"",'=');
-	}
-}
 
 void
 update_dns_server (const gchar * server)
@@ -421,11 +406,6 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%100s", arg2);
 					update_login_background (arg2);
-				}
-				else if (strcmp (cmd, "DHCP") == 0)  // switch dhcp usage on/off
-				{
-					fscanf (in, "%100s", arg2);
-					update_dhcp_status (arg2);
 				}
 				else if (strcmp (cmd, "SDNS") == 0)  // change to another dns server
 				{

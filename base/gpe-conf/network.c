@@ -654,13 +654,11 @@ create_global_widgets ()
 {
 	gchar *tmpval;
 
-	GtkWidget *label, *ctable, *box;
+	GtkWidget *label, *ctable;
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border = gpe_get_border ();
-	gint dhcp_on = FALSE;
-	gchar *helptext;
-	// page headers
 
+	// page headers
 	ctable = gtk_table_new (2, 7, FALSE);
 
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
@@ -721,50 +719,6 @@ create_global_widgets ()
 	                   " don't want to use a proxy."),
 				      2);
 	g_free (tmpval);
-
-	// dhcp on - off
-	tmpval = get_file_var ("/etc/pcmcia/network.opts", "DHCP");
-	dhcp_on = !strcmp (tmpval, "\"y\"");
-	g_free (tmpval);
-
-	helptext = _("Use DHCP in any case (usually not needed).");
-
-	label = gtk_label_new (_("Use DHCP"));
-	gtk_tooltips_set_tip (tooltips, label, helptext, NULL);
-	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
-	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 4, 5,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
-	gtk_widget_set_sensitive (label, have_access);
-
-	box = gtk_hbox_new (TRUE, 0);
-	gtk_table_attach (GTK_TABLE (ctable), box, 1, 2, 4, 5,
-			  (GtkAttachOptions) (GTK_FILL),
-			  (GtkAttachOptions) (GTK_FILL),
-			  gpe_boxspacing, gpe_boxspacing);
-
-	label = gtk_radio_button_new_with_label_from_widget (NULL, _("yes"));
-	gtk_tooltips_set_tip (tooltips, label, helptext, NULL);
-	gtk_widget_set_sensitive (label, have_access);
-	gtk_widget_set_name (GTK_WIDGET (label), "use-dhcp-on");
-	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "use-dhcp-on", label,
-				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), dhcp_on);
-	gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, 0);
-	label = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
-							     (label),
-							     _("no"));
-	gtk_tooltips_set_tip (tooltips, label, helptext, NULL);
-
-	gtk_widget_set_sensitive (label, have_access);
-	gtk_widget_set_name (GTK_WIDGET (label), "use-dhcp-off");
-	gtk_widget_ref (label);
-	gtk_object_set_data_full (GTK_OBJECT (table), "use-dhcp-off", label,
-				  (GtkDestroyNotify) gtk_widget_unref);
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (label), !dhcp_on);
-	gtk_box_pack_start (GTK_BOX (box), label, TRUE, FALSE, 0);
 
 	// nameserver
 	tmpval = get_file_var ("/etc/resolv.conf", "nameserver");
@@ -914,16 +868,6 @@ Network_Save ()
 	}
 	g_free (cfgfile);
 
-	// save and activate dhcp 
-	entry = gtk_object_get_data (GTK_OBJECT (table), "use-dhcp-on");
-	if (entry)
-	{
-		sprintf (wname, "%i",
-			 gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON
-						       (entry)));
-		suid_exec ("DHCP", wname);
-	}
-
 	// save nameserver
 	strcpy (wname, "nameserver");
 	entry = gtk_object_get_data (GTK_OBJECT (table), wname);
@@ -968,7 +912,6 @@ Network_Build_Objects ()
 	toolbar = gtk_toolbar_new ();
 	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 				     GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
 	gtk_widget_set_name (toolbar, "toolbar");
 	gtk_widget_ref (toolbar);
@@ -1008,14 +951,6 @@ Network_Build_Objects ()
 					  label,
 					  (GtkSignalFunc) show_current_config,
 					  NULL);
-
-	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"),
-				 _("Close network tool"),
-				 _("Close network tool"), label,
-				 (GtkSignalFunc) gtk_main_quit, NULL);
 
 	// chreate tabbed notebook
 	// this contains lookup list!

@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.10
+VERSION = 0.1.11
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -52,7 +52,10 @@ GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0`
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS) -I.
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt -L/usr/X11R6/lib -lXrandr
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt -L/usr/X11R6/lib -lXrandr 
+
+#Uncomment this if you use the old GTK2 crosstoolchain
+#PACKAGE_LDFLAGS +=  /skiff/local/arm-linux/lib/X11/libXinerama.a
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG
@@ -145,7 +148,7 @@ PIXMAPS += ibutton3.png
 PIXMAPS += ibutton4.png
 PIXMAPS += ibutton5.png
 PIXMAPS += system-info.png
-PIXMAPS += familiar.png
+PIXMAPS += distribution.png
 PIXMAPS += device-info.png
 PIXMAPS += ipaq-s1.png
 

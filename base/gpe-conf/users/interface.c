@@ -207,7 +207,6 @@ Users_Build_Objects (void)
 
   listTitles[0] = _("User Name");
   listTitles[1] = _("User Info");
-  //listTitles[2] = _("Shell");
   listTitles[2] = _("Home");
 
   InitSpacings ();
@@ -218,7 +217,6 @@ Users_Build_Objects (void)
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
   gtk_box_reorder_child (GTK_BOX (vbox1), toolbar, 0);

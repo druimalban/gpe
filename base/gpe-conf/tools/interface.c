@@ -1904,16 +1904,16 @@ char* if_to_infostr(struct interface *ptr)
 
 #if HAVE_AFINET
     if (ptr->has_ip) {
-	sprintf(tmp,_("Address:\t\t%s\n"),
+	sprintf(tmp,_("Address:\t%s\n"),
 	       ap->sprint(&ptr->addr, 1));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	if (ptr->flags & IFF_POINTOPOINT) {
-	    sprintf(tmp,_("P-t-P:\t\t%s\n"), ap->sprint(&ptr->dstaddr, 1));
+	    sprintf(tmp,_("P-t-P:\t%s\n"), ap->sprint(&ptr->dstaddr, 1));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
-	sprintf(tmp,_("Netmask:\t\t%s\n"), ap->sprint(&ptr->netmask, 1));
+	sprintf(tmp,_("Netmask:\t%s\n"), ap->sprint(&ptr->netmask, 1));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	if (ptr->flags & IFF_BROADCAST) {

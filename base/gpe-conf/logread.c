@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *	             2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -218,6 +218,7 @@ Logread_Build_Objects (void)
 
   /* syslog box */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_get_border ());
   tw = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("System Log"));
@@ -242,6 +243,7 @@ Logread_Build_Objects (void)
   /* xsession-errors box */	
   
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_get_border ());
   tw = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Session Log"));

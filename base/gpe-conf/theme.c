@@ -705,9 +705,9 @@ on_matchbox_entry_changed (GtkWidget * menu, gpointer user_data)
     {
 	  if (use_xst)
 		system_printf (CMD_XST " write %s%s str %s", KEY_THEME, "ThemeName", tn);
-	  if (use_gconf)
+/*	  if (use_gconf)
 #warning here		system_printf (CMD_GCONF " write %s%s str %s", KEY_THEME, "ThemeName", tn);
-    }
+*/    }
   if (tn)
     g_free (tn);
 }

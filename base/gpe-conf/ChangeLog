@@ -1,3 +1,16 @@
+2004-06-17	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Released V 0.1.11
+	* sysinfo.c: Swapped methods identifying flash size.
+	* sysinfo.c: Added some Zaurus models.
+	* sysinfo.c, Makefile: We know about Familiar and OpenEmbedded now.
+	* Makefile: Version pushed to 0.1.11.
+	* sysinfo.c: Several minor fixes.
+	* logread.c: Added missing borders.
+	* interface.c: Removed stupid tabs.
+	* suid.c, network.c: Removed obsolete DHCP setting.
+	* interface.c, network.c: Removed toolbar style setting.
+	* calibrate.c: Removed obsolete mbcontrol call. Fixed strange behaviour.
+
 2004-06-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c: Second step of teaching gpe-conf gconf.
 

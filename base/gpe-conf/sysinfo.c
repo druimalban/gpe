@@ -40,7 +40,6 @@
 #include "applets.h"
 #include "storage.h"
 #include "battery.h"
-#include "storage.h"
 #include "tools/interface.h"
 #include "logread.h"
 
@@ -48,9 +47,10 @@
 #define MODEL_INFO 		"/proc/hal/model"
 #define FAMILIAR_VINFO 	"/etc/familiar-version"
 #define FAMILIAR_TIME 	"/etc/familiar-timestamp"
+#define OE_VERSION 		"/etc/version"
 #define PIC_LINUX 		PREFIX "/share/pixmaps/system-info.png"
 #define PIC_DEVICE 		PREFIX "/share/pixmaps/device-info.png"
-#define PIC_FAMILIAR 	PREFIX "/share/pixmaps/familiar.png"
+#define PIC_DISTRI		PREFIX "/share/pixmaps/distribution.png"
 #define PIC_NET			PREFIX "/share/pixmaps/gpe-config-network.png"
 #define PIC_WLAN 		PREFIX "/share/pixmaps/pccard-network.png"
 #define P_CPUINFO 		"/proc/cpuinfo"
@@ -95,46 +95,46 @@ get_flash_size()
 	int result = 0;
 	int v = 0;
 	
-	/* read partition info */
-	if (g_file_get_contents(P_PARTITIONS,&str,&len,&err))
+	/* read mtd info */
+	i=0;
+	if (g_file_get_contents(P_MTD,&str,&len,&err))
 	{
 		strv = g_strsplit(str,"\n",32);
 		g_free(str);
 		while (strv[i])
 		{
-			if (strstr(strv[i],"mtdblock"))
+			/* check mtd partitions, masq mtd ram stuff */
+			if (strstr(strv[i],"mtd") && !strstr(strv[i],"ram")) 
 			{
-				sscanf(strv[i],"%*i %*i %i %*s",&v);
+				sscanf(strv[i],"%*s %0x %*0x %*s",&v);
 				result += v;
 			}
 			i++;
 		}
 		g_strfreev(strv);
 	}
-	
-	result /= 2048;
+	result /= (1024 * 1024);
+	result++;
 
-	/* nothing in partitions, try mtd */
+	/* nothing in mtd, try partitions */
 	if (result == 0)
 	{
-		i=0;
-		if (g_file_get_contents(P_MTD,&str,&len,&err))
+		if (g_file_get_contents(P_PARTITIONS,&str,&len,&err))
 		{
 			strv = g_strsplit(str,"\n",32);
 			g_free(str);
 			while (strv[i])
 			{
-				/* check mtd partitions, masq mtd ram stuff */
-				if (strstr(strv[i],"mtd") && !strstr(strv[i],"ram")) 
+				if (strstr(strv[i],"mtdblock"))
 				{
-					sscanf(strv[i],"%*i %0x %*0x %*s",&v);
+					sscanf(strv[i],"%*i %*i %i %*s",&v);
 					result += v;
 				}
 				i++;
 			}
 			g_strfreev(strv);
 		}
-		result /= 1024;
+		result /= 2048;
 	}
 	
 	return result;
@@ -178,11 +178,30 @@ get_device_info()
 			if (strstr(strv[i],"Hardware"))
 			{
 				result.model = g_strdup(strchr(strv[i],':')+1);
+				g_strstrip(result.model);
 				if (strstr(strv[i],"Collie"))
 				{
 					result.mach = M_ZAURUS;
 					g_free(result.model);
 					result.model = g_strdup("Sharp Zaurus (Collie)");
+				}
+				if (strstr(strv[i],"Husky"))
+				{
+					result.mach = M_ZAURUS;
+					g_free(result.model);
+					result.model = g_strdup("Sharp Zaurus (Husky)");
+				}
+				if (strstr(strv[i],"Poodle"))
+				{
+					result.mach = M_ZAURUS;
+					g_free(result.model);
+					result.model = g_strdup("Sharp Zaurus (Poodle)");
+				}
+				if (strstr(strv[i],"Shepherd"))
+				{
+					result.mach = M_ZAURUS;
+					g_free(result.model);
+					result.model = g_strdup("Sharp Zaurus (Shepherd)");
 				}
 				if (strstr(strv[i],"Siemens")) //needs to be verfied
 				{
@@ -223,35 +242,65 @@ get_device_info()
 
 
 char *
-get_familiar_version()
+get_distribution_version()
 {
 	char *result = NULL;
+	char *tmp = NULL;
 	int len = 0;
 	GError *err = NULL;
 	
-	if (g_file_get_contents(FAMILIAR_VINFO,&result,&len,&err))
+	/* check for Familiar */
+	if (g_file_get_contents(FAMILIAR_VINFO,&tmp,&len,&err))
 	{
-		if (strchr(result,'\n'))
-			strchr(result,'\n')[0] = 0;
-	 	return g_strstrip(result);
+		if (strchr(tmp,'\n'))
+			strchr(tmp,'\n')[0] = 0;
+    	/*TRANSLATORS: "Familiar" is the name of a linux distribution.*/
+		result = g_strdup_printf("%s %s", _("Familiar"), g_strstrip(tmp));
+		g_free(tmp);
+	 	return result;
 	}
+	
+	/* check for OpenEmbedded */
+	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
+	{
+	   	/*TRANSLATORS: "Familiar" is the name of a linux distribution.*/
+		result = g_strdup_printf(_("OpenEmbedded"));
+		g_free(tmp);
+	 	return (result);
+	}
+	
 	return result;
 }
 
 
 char *
-get_familiar_time()
+get_distribution_time()
 {
 	char *result = NULL;
+	char *tmp = NULL;
 	int len = 0;
 	GError *err = NULL;
 	
+	/* Familiar */
 	if (g_file_get_contents(FAMILIAR_TIME,&result,&len,&err))
 	{
 		if (strchr(result,'\n'))
 			strchr(result,'\n')[0] = 0;
 		return g_strstrip(result);
 	}
+	
+	/* OpenEmbedded */
+	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
+	{
+		if (strlen(tmp) >= 10)
+			result = g_strdup_printf("%s %4s-%2s-%2s %2s:%2s", 
+				_("Build"), &tmp[0], &tmp[4], &tmp[6], &tmp[8], &tmp[10]);
+		else
+			result = g_strdup_printf("%s %s",_("Build"),tmp);
+		g_free(tmp);
+	 	return (result);
+	}
+	
 	return result;
 }
 
@@ -335,6 +384,7 @@ network_create_widgets (void)
 	table = gtk_table_new(6,2,FALSE);
 	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+	gtk_container_set_border_width(GTK_CONTAINER(table),gpe_get_border());
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw),table);
 	
 	tw = gtk_label_new(NULL);
@@ -462,28 +512,30 @@ Sysinfo_Build_Objects (int whichtab)
 	gtk_table_attach(GTK_TABLE(table),tw,1,2,3,4,GTK_FILL,
                      GTK_FILL,0,0);
 	
-	// familiar section
-	fv = get_familiar_version();
-	ft = get_familiar_time();
-	if (fv && ft) /* is familiar? */
+	/* distribution section */
+	fv = get_distribution_version();
+	ft = get_distribution_time();
+	if (fv && ft) /* is a known one? */
 	{	
-		tw = gtk_image_new_from_file(PIC_FAMILIAR);
-		gtk_table_attach(GTK_TABLE(table),tw,0,1,4,7,GTK_FILL | GTK_EXPAND,
+		tw = gtk_label_new(" ");
+		gtk_table_attach(GTK_TABLE(table),tw,0,3,4,5,GTK_FILL,
+                     GTK_FILL,2,0);
+		tw = gtk_image_new_from_file(PIC_DISTRI);
+		gtk_table_attach(GTK_TABLE(table),tw,0,1,5,8,GTK_FILL | GTK_EXPAND,
 						 GTK_FILL,0,0);
 		tw = gtk_label_new(NULL);
-    /*TRANSLATORS: "Familiar" is the name of the linux distribution.*/
-		ts = g_strdup_printf("<i>%s</i>",_("Familiar Version"));
+		ts = g_strdup_printf("<i>%s</i>",_("Distribution"));
 		gtk_label_set_markup(GTK_LABEL(tw),ts);
 		gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.8);
 		g_free(ts);
-		gtk_table_attach(GTK_TABLE(table),tw,1,2,4,5,GTK_FILL | GTK_EXPAND,
+		gtk_table_attach(GTK_TABLE(table),tw,1,2,5,6,GTK_FILL | GTK_EXPAND,
 						 GTK_FILL,0,0);
 		tw = gtk_label_new(NULL);
 		ts = g_strdup_printf("%s",fv);
 		gtk_label_set_markup(GTK_LABEL(tw),ts);
 		gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
 		g_free(ts);
-		gtk_table_attach(GTK_TABLE(table),tw,1,2,5,6,GTK_FILL | GTK_EXPAND,
+		gtk_table_attach(GTK_TABLE(table),tw,1,2,6,7,GTK_FILL | GTK_EXPAND,
 						 GTK_FILL,0,0);
 		tw = gtk_label_new(NULL);
 		gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
@@ -491,7 +543,7 @@ Sysinfo_Build_Objects (int whichtab)
 		gtk_label_set_markup(GTK_LABEL(tw),ts);
 		gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 		g_free(ts);
-		gtk_table_attach(GTK_TABLE(table),tw,1,2,6,7,GTK_FILL,
+		gtk_table_attach(GTK_TABLE(table),tw,1,2,7,8,GTK_FILL,
 						 GTK_FILL,0,0);
 		g_free(fv);
 		g_free(ft);
@@ -518,7 +570,7 @@ Sysinfo_Build_Objects (int whichtab)
 	gtk_table_attach(GTK_TABLE(table),tw,0,1,1,4,GTK_FILL | GTK_EXPAND,
                      GTK_FILL,0,0);
 	tw = gtk_label_new(NULL);
-	ts = g_strdup_printf("<i>%s</i>",_("Device"));
+	ts = g_strdup_printf("<i>%s</i>",_("Device Name"));
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.8);
 	g_free(ts);
@@ -531,17 +583,12 @@ Sysinfo_Build_Objects (int whichtab)
 	g_free(ts);
 	gtk_table_attach(GTK_TABLE(table),tw,1,2,2,3,GTK_FILL | GTK_EXPAND,
                      GTK_FILL,0,0);
-	tw = gtk_label_new(NULL);
-	ts = g_strdup_printf("%s:\t%s",_("CPU"),devinfo.cpu);
-	gtk_label_set_markup(GTK_LABEL(tw),ts);
-	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
-	g_free(ts);
+	tw = gtk_label_new(" ");
 	gtk_table_attach(GTK_TABLE(table),tw,0,2,4,5,GTK_FILL,
                      GTK_FILL,2,0);
+					 
 	tw = gtk_label_new(NULL);
-	gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
-	/* TRANSLATORS: MB == Mega Bytes*/
-	ts = g_strdup_printf("%s:\t%i %s",_("RAM"),devinfo.ram,_("MB"));
+	ts = g_strdup_printf("%s:\t%s",_("CPU"),devinfo.cpu);
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 	g_free(ts);
@@ -550,11 +597,20 @@ Sysinfo_Build_Objects (int whichtab)
 	tw = gtk_label_new(NULL);
 	gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
 	/* TRANSLATORS: MB == Mega Bytes*/
-	ts = g_strdup_printf("%s:\t%i %s",_("Flash"),devinfo.flash,_("MB"));
+	ts = g_strdup_printf("%s:\t%i %s",_("RAM"),devinfo.ram,_("MB"));
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 	g_free(ts);
 	gtk_table_attach(GTK_TABLE(table),tw,0,2,6,7,GTK_FILL,
+                     GTK_FILL,2,0);
+	tw = gtk_label_new(NULL);
+	gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
+	/* TRANSLATORS: MB == Mega Bytes*/
+	ts = g_strdup_printf("%s:\t%i %s",_("Flash"),devinfo.flash,_("MB"));
+	gtk_label_set_markup(GTK_LABEL(tw),ts);
+	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
+	g_free(ts);
+	gtk_table_attach(GTK_TABLE(table),tw,0,2,7,8,GTK_FILL,
                      GTK_FILL,2,0);
 
 	tw = gtk_label_new(_("Hardware"));
@@ -577,7 +633,7 @@ Sysinfo_Build_Objects (int whichtab)
 	
 	/* logfiles tab */
 	table = Logread_Build_Objects();
-	tw = gtk_label_new(_("Syslog"));
+	tw = gtk_label_new(_("Log Display"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 	
 	gtk_widget_show_all(notebook);
