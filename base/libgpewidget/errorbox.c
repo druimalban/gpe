@@ -54,7 +54,7 @@ gpe_error_box (char *text)
       gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
     }
 
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
