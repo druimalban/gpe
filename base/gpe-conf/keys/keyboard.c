@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <ctype.h>
 
 #include <libintl.h>
 #define _(x) gettext(x)
@@ -54,7 +55,7 @@
 /* --- module global variables --- */
 
 int keyboard_type = KBD_TYPE_NONE;
-gchar *keyboard_port = NULL;
+gchar keyboard_port[PATH_MAX] = {0};
 
 /* --- local intelligence --- */
 
@@ -142,6 +143,14 @@ char buf[PATH_MAX];
 	}
 }
 
+static void
+keyboard_selected(GtkToggleButton *tb, gpointer data)
+{
+	int keyboard = (int)data;
+	if (gtk_toggle_button_get_active(tb))
+		keyboard_type = keyboard;
+}
+
 /* --- gpe-conf interface --- */
 
 void
@@ -162,18 +171,17 @@ Keyboard_Restore ()
 GtkWidget *
 Keyboard_Build_Objects (void)
 {
-	GtkWidget *label;
+	GtkWidget *label, *cbAny;
 	GtkWidget *table;
 	gchar *buf;
 	GtkTooltips *tooltips;
-
+	
+	parse_config(KBDD_CONFIG, &keyboard_type, &keyboard_port);
 	tooltips = gtk_tooltips_new ();
-
-	buf = malloc (255);
-
+	buf = g_malloc (255);
+	
 	table = gtk_table_new (3, 2, FALSE);
-	gtk_container_set_border_width (GTK_CONTAINER (table),
-					gpe_get_border ());
+	gtk_container_set_border_width (GTK_CONTAINER (table), gpe_get_border ());
 	gtk_table_set_row_spacings (GTK_TABLE (table), gpe_get_boxspacing ());
 	gtk_table_set_col_spacings (GTK_TABLE (table), gpe_get_boxspacing ());
 
@@ -188,11 +196,110 @@ Keyboard_Build_Objects (void)
 	gtk_label_set_markup (GTK_LABEL (label), buf);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1,
-			  GTK_FILL, GTK_FILL, 0, 0);
+	                  GTK_FILL, GTK_FILL, 0, 0);
 
 	gtk_tooltips_set_tip (tooltips, label,
 			              _("Here you may select your external keyboard model."),
 	                      NULL);
+						  
+	cbAny = gtk_radio_button_new_with_label(NULL, _("None"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 1, 2,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_NONE);
+	/* TRANSLATORS: Keyboard names below are brand names, 
+	   check local names or keep original names */
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Foldable"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 2, 3,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_FOLDABLE);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("SnapNType"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 3, 4,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_SNAPNTYPE)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_SNAPNTYPE);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Stowaway"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 4, 5,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_STOWAWAY)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_STOWAWAY);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("StowawayXT"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 5, 6,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_STOWAWAYXT)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_STOWAWAYXT);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("HP Slim"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 6, 7,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_HPSLIM)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_HPSLIM);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Smart BT"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 7, 8,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_SMARTBT)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_SMARTBT);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("LIRC"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 8, 9,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_LIRC)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_LIRC);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Belkin IR"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 9, 10,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_BELKINIR)
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_BELKINIR);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Flexis"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 10, 11,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_FLEXIS)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_FLEXIS);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Benq Gamepad"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 11, 12,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_BENQ_GAMEPAD)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_BENQ_GAMEPAD);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Pocketvik"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 12, 13,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_POCKETVIK)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);	
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_POCKETVIK);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Micro Foldaway"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 13, 14,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_MICRO_FOLDAWAY)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_MICRO_FOLDAWAY);
+	cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), _("Micro Datapad"));
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 14, 15,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	if (keyboard_type == KBD_TYPE_MICRO_DATAPAD)
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
+	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
+	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_MICRO_DATAPAD);
 
+	g_free(buf);
 	return table;
 }

@@ -45,11 +45,14 @@
 #include "sleep/conf.h"
 #include "sound/sound.h"
 
+#include <gdk/gdkx.h>
+
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/spacing.h>
+#include <gpe/infoprint.h>
 
 #define N_(_x) (_x)
 
@@ -141,6 +144,7 @@ int applets_nb = sizeof(applets) / sizeof(struct Applet);
 void Save_Callback()
 {
   applets[self.cur_applet].Save();
+  gpe_popup_infoprint(GDK_DISPLAY(), _("Settings saved"));
   if(self.alone_applet)
   {
     gtk_main_quit();
