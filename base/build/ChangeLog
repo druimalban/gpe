@@ -2,6 +2,7 @@
 
 	* Makefile.dpkg_ipkg (dist): Don't exclude "familiar" directory
 	from the tarball.
+	(STANDARD_CPPFLAGS): New.
 
 2003-10-13  Philip Blundell  <philb@gnu.org>
 

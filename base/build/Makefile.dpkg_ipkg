@@ -24,6 +24,8 @@ GPELIBS = $(shell $(PC_EXTRA) pkg-config --libs $(LIBGPEWIDGET_PC))
 GTKCFLAGS = $(shell pkg-config --cflags gtk+-2.0)
 GTKLIBS = $(shell pkg-config --libs gtk+-2.0)
 
+STANDARD_CPPFLAGS = -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+
 dist: check-source clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	mkdir ../$(PACKAGE)-$(VERSION)
