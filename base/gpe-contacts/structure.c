@@ -21,6 +21,7 @@
 #include "gtkdatecombo.h"
 #include "callbacks.h"
 #include "smallbox.h"
+#include "render.h"
 
 GSList *edit_pages;
 
@@ -218,7 +219,6 @@ edit_structure (void)
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
 					GTK_TOOLBAR_ICONS);
-  struct pix *p;
   GtkWidget *pw;
 
   gtk_widget_show (vbox);
@@ -226,26 +226,22 @@ edit_structure (void)
   gtk_widget_show (tree);
   gtk_widget_show (toolbar);
 
-  p = find_pixmap ("notebook");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("notebook"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
 			   "New page", "New page", pw, 
 			   structure_new_page, tree);
 
-  p = find_pixmap ("frame");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("frame"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
 			   "New group", "New group", pw, 
 			   structure_new_group, tree);
 
-  p = find_pixmap ("entry");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("entry"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
 			   "New field", "New field", pw, 
 			   structure_new_field, tree);
 
-  p = find_pixmap ("delete");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, 
 			   structure_delete_item, tree);

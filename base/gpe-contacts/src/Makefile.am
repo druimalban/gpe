@@ -1,12 +1,12 @@
 ## Process this file with automake to produce Makefile.in
 
 INCLUDES = \
-	-I$(top_srcdir)/../libgpewidget \
-	@GTK_CFLAGS@ `xml2-config --cflags`
+	-I$(top_srcdir)/../libgpewidget `gdk-pixbuf-config --cflags` \
+	@GTK_CFLAGS@ `xml2-config --cflags` -DPREFIX=\"@prefix@\"
 
-bin_PROGRAMS = adb
+bin_PROGRAMS = gpe-contacts
 
-adb_SOURCES = \
+gpe_contacts_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
@@ -15,4 +15,4 @@ adb_SOURCES = \
 	db.c db.h \
 	editing.c
 
-adb_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
+gpe_contacts_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@

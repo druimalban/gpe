@@ -20,16 +20,16 @@
 #include "structure.h"
 #include "smallbox.h"
 #include "errorbox.h"
+#include "render.h"
 
-#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
-#define MY_PIXMAPS_DIR "/usr/share/gpe-contacts/pixmaps"
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 
 static GtkWidget *combo;
 
-struct pix my_pix[] = {
-  { "delete", MY_PIXMAPS_DIR "/trash.png" },
-  { "new", MY_PIXMAPS_DIR "/new.png" },
-  { "config", MY_PIXMAPS_DIR "/preferences.png" },
+struct gpe_icon my_icons[] = {
+  { "delete", },
+  { "new", },
+  { "properties", },
   { "frame", MY_PIXMAPS_DIR "/frame.xpm" },
   { "notebook", MY_PIXMAPS_DIR "/notebook.xpm" },
   { "entry", MY_PIXMAPS_DIR "/entry.xpm" },
@@ -161,7 +161,6 @@ config_categories_box(void)
   GtkWidget *clist = gtk_clist_new (1);
   GtkWidget *toolbar;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  struct pix *p;
   GtkWidget *pw;
   GSList *categories;
 
@@ -171,13 +170,11 @@ config_categories_box(void)
 
   gtk_widget_show (toolbar);
 
-  p = find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
 			   _("New"), _("New"), pw, new_category, clist);
 
-  p = find_pixmap ("delete");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, 
 			   delete_category, clist);
@@ -226,7 +223,6 @@ config_attributes_box(void)
   GtkWidget *clist = gtk_clist_new (2);
   GtkWidget *toolbar;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  struct pix *p;
   GtkWidget *pw;
   GSList *attrs;
 
@@ -236,13 +232,11 @@ config_attributes_box(void)
 
   gtk_widget_show (toolbar);
 
-  p = find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
 			   _("New"), _("New"), pw, new_attribute, clist);
 
-  p = find_pixmap ("delete");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, delete_attribute, 
 			   clist);
@@ -326,7 +320,6 @@ main (int argc, char *argv[])
 {
   GtkWidget *mainw;
   GtkWidget *toolbar;
-  struct pix *p;
   GtkWidget *pw;
 
 #ifdef ENABLE_NLS
@@ -337,7 +330,7 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  if (load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   if (db_open ())
@@ -352,20 +345,17 @@ main (int argc, char *argv[])
 		      gtk_main_quit, NULL);
 
   toolbar = lookup_widget (mainw, "toolbar1");
-  p = find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (mainw->style, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
 			   _("New Contact"), _("New Contact"),
 			   pw, new_contact, NULL);
 
-  p = find_pixmap ("delete");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (mainw->style, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete Contact"), 
 			   _("Delete Contact"), _("Delete Contact"), 
 			   pw, delete_contact, NULL);
 
-  p = find_pixmap ("config");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  pw = gpe_render_icon (mainw->style, gpe_find_icon ("properties"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Configure"), 
 			   _("Configure"), _("Configure"),
 			   pw, configure, NULL);

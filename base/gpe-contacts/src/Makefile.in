@@ -95,37 +95,36 @@ am__quote = @am__quote@
 install_sh = @install_sh@
 
 INCLUDES = \
-	-I$(top_srcdir)/../libgpewidget \
-	@GTK_CFLAGS@ `xml2-config --cflags`
+	-I$(top_srcdir)/../libgpewidget `gdk-pixbuf-config --cflags` \
+	@GTK_CFLAGS@ `xml2-config --cflags` -DPREFIX=\"@prefix@\"
 
 
-bin_PROGRAMS = adb
+bin_PROGRAMS = gpe-contacts
 
-adb_SOURCES = \
+gpe_contacts_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
 	callbacks.c callbacks.h \
 	structure.c structure.h \
 	db.c db.h \
-	editing.c \
-	smallbox.c smallbox.h
+	editing.c
 
 
-adb_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
+gpe_contacts_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
-bin_PROGRAMS = adb$(EXEEXT)
+bin_PROGRAMS = gpe-contacts$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_adb_OBJECTS = main.$(OBJEXT) support.$(OBJEXT) interface.$(OBJEXT) \
-	callbacks.$(OBJEXT) structure.$(OBJEXT) db.$(OBJEXT) \
-	editing.$(OBJEXT) smallbox.$(OBJEXT)
-adb_OBJECTS = $(am_adb_OBJECTS)
-adb_DEPENDENCIES =
-adb_LDFLAGS =
+am_gpe_contacts_OBJECTS = main.$(OBJEXT) support.$(OBJEXT) \
+	interface.$(OBJEXT) callbacks.$(OBJEXT) structure.$(OBJEXT) \
+	db.$(OBJEXT) editing.$(OBJEXT)
+gpe_contacts_OBJECTS = $(am_gpe_contacts_OBJECTS)
+gpe_contacts_DEPENDENCIES =
+gpe_contacts_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -135,16 +134,16 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/callbacks.Po $(DEPDIR)/db.Po \
 @AMDEP_TRUE@	$(DEPDIR)/editing.Po $(DEPDIR)/interface.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main.Po $(DEPDIR)/smallbox.Po \
-@AMDEP_TRUE@	$(DEPDIR)/structure.Po $(DEPDIR)/support.Po
+@AMDEP_TRUE@	$(DEPDIR)/main.Po $(DEPDIR)/structure.Po \
+@AMDEP_TRUE@	$(DEPDIR)/support.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
-DIST_SOURCES = $(adb_SOURCES)
+DIST_SOURCES = $(gpe_contacts_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = $(adb_SOURCES)
+SOURCES = $(gpe_contacts_SOURCES)
 
 all: all-am
 
@@ -180,9 +179,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-adb$(EXEEXT): $(adb_OBJECTS) $(adb_DEPENDENCIES) 
-	@rm -f adb$(EXEEXT)
-	$(LINK) $(adb_LDFLAGS) $(adb_OBJECTS) $(adb_LDADD) $(LIBS)
+gpe-contacts$(EXEEXT): $(gpe_contacts_OBJECTS) $(gpe_contacts_DEPENDENCIES) 
+	@rm -f gpe-contacts$(EXEEXT)
+	$(LINK) $(gpe_contacts_LDFLAGS) $(gpe_contacts_OBJECTS) $(gpe_contacts_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -195,7 +194,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/editing.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/smallbox.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/structure.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/support.Po@am__quote@
 

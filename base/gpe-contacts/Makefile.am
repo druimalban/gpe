@@ -8,14 +8,15 @@ EXTRA_DIST = \
 
 install-data-local:
 	@$(NORMAL_INSTALL)
-	if test -d $(srcdir)/pixmaps; then \
+	if test -d $(srcdir)/icons; then \
 	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
-	  for pixmap in $(srcdir)/pixmaps/*; do \
+	  for pixmap in $(srcdir)/icons/*; do \
 	    if test -f $$pixmap; then \
 	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
 	    fi \
 	  done \
 	fi
+	$(INSTALL_DATA) contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
 
 dist-hook:
 	if test -d pixmaps; then \

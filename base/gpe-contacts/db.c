@@ -13,7 +13,7 @@
 
 #define DB_NAME "/.gpe/contacts"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
-#define DEFAULT_STRUCTURE "/usr/share/gpe-contacts/default-layout.xml"
+#define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 
 static sqlite *db;
 

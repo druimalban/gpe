@@ -792,7 +792,7 @@ if test "`CDPATH=:; cd $srcdir && pwd`" != "`pwd`" &&
 fi
 
 # Define the identity of the package.
-PACKAGE=adb
+PACKAGE=gpe-contacts
 VERSION=0.1
 cat >> confdefs.h <<EOF
 #define PACKAGE "$PACKAGE"
