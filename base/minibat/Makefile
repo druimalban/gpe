@@ -1,6 +1,7 @@
 PACKAGE = minibat
 PREFIX = /usr/local
 DEBUG = no
+CVSBUILD = yes
 VERSION = 0.15
 
 LINGUAS = 
@@ -26,16 +27,22 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all install-mo
+install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	#install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
+#install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -m 644 $(PACKAGE)-ac.png $(DESTDIR)$(PREFIX)/share/pixmaps/
@@ -44,6 +51,6 @@ install: all install-mo
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
