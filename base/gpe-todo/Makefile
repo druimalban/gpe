@@ -35,7 +35,7 @@ clean:
 
 all: gpe-todo
 
-install: all $(PACKAGE).desktop
+install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s gpe-todo $(DESTDIR)$(PREFIX)/bin/gpe-todo
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu

@@ -4,6 +4,8 @@
 
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
+	* Makefile (install): Rename to install-program.
+
 	* main.c (open_window): Use gtk_widget_show_all.
 
 	* todo-ui.c (edit_item): Set border width on container.  Remove
