@@ -31,6 +31,8 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/time.h>
+#include <time.h>
 
 #include "xsi.h"
 
@@ -51,6 +53,7 @@ Key *key = NULL;
 Key *lastkey = NULL;
 int NumLockMask, CapsLockMask, ScrollLockMask;
 time_t last_update;
+struct timeval key_press_time;
 char *rc_file;
 
 /*
@@ -340,7 +343,7 @@ void
 signal_handler (int signal)
 {
 #ifdef DEBUG
-  printf ("signal_handler\n");
+  fprintf (stderr, "signal_handler\n");
 #endif
 
   switch (signal)
@@ -417,6 +420,48 @@ main (int argc, char *argv[])
 	  XNextEvent (dpy, &ev);
 	  if (ev.type == KeyPress)
 	    {
+	      struct timeval time_now;
+	      struct timeval time_elapsed;
+
+	      gettimeofday (&time_now, NULL);
+
+	      fprintf (stderr, "key press event...\n");
+
+	      timersub (&time_now, &key_press_time, &time_elapsed);
+	      if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
+		{
+		  fprintf (stderr, "ignoring - too soon after previous\n");
+		  key_press_time.tv_sec = 0;
+		  key_press_time.tv_usec = 0;
+		}
+	      else
+		{
+		  key_press_time = time_now;
+		}
+	    }
+	  else if ((ev.type == KeyRelease) && (key_press_time.tv_sec || key_press_time.tv_usec))
+	    {
+	      KeySym t;
+	      char *t2;
+	      struct timeval key_release_time;
+	      struct timeval time_elapsed;
+	      int long_press = 0;
+
+	      fprintf (stderr, "key release event...\n");
+
+	      gettimeofday (&key_release_time, NULL);
+
+	      timersub (&key_release_time, &key_press_time, &time_elapsed);
+	      if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
+		{
+		  fprintf (stderr, "short press\n");
+		}
+	      else
+		{
+		  fprintf (stderr, "long press\n");
+		  long_press = 1;
+		}
+
 	      ev.xkey.state =
 		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
 	      for (k = key; k != NULL; k = k->next)
@@ -427,19 +472,14 @@ main (int argc, char *argv[])
 		    if (k->window == NULL
 			|| (try_to_raise_window (dpy, k->window) != 0))
 		      {
-			printf ("running program\n");
+			fprintf (stderr, "running program\n");
 			fork_exec (k->command);
 		      }
 		  }
-	    }
-	  else if (ev.type == KeyRelease)
-	    {
-	      KeySym t;
-	      char *t2;
-	      printf ("key release event...\n");
+
 	      t = XKeycodeToKeysym (dpy, ev.xkey.keycode, 0);
 	      t2 = XKeysymToString (t);
-	      printf ("key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
+	      fprintf (stderr, "key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
 		      ev.xkey.state);
 
 	      ev.xkey.state =
@@ -452,7 +492,7 @@ main (int argc, char *argv[])
 		    free_keys ();
 		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
 		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
-		    printf ("faking key event\n");
+		    fprintf (stderr, "faking key event\n");
 		    parse_rc (rc_file);
 		    k = lastkey;
 		  }
