@@ -1,3 +1,8 @@
+2004-09-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* index.phtml: Link to freedesktop.org rather than xfree86.org.
+	Reported by Michael Opdenacker.
+
 2004-07-28  Colin Marquardt  <colin@marquardt-home.de>
 
 	* documentation.phtml: Add links to the new docs in the Wiki.
