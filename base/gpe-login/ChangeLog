@@ -1,5 +1,8 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* gpe-dm.c (main): Call openlog.  Replace fork with vfork.
+	(start_server): Replace fork with vfork.  Replace fprintf with syslog.
+
 	* familiar/control.gpe-session-scripts (Depends): Add gpe-question.
 
 	* X11/Xsession-gpe.d/90GpeAppMgr: Deleted.

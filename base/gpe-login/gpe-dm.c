@@ -15,7 +15,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
-#include <X11/Xlib.h>
+#include <syslog.h>
 
 #include <glib.h>
 
@@ -47,12 +47,12 @@ start_server (gboolean crashed)
       server_crashing_count++;
       if (server_crashing_count == SERVER_CRASHING_THRESHOLD)
 	{
-	  fprintf (stderr, _("gpe-dm: X server keeps crashing, giving up\n"));
+	  syslog (LOG_DAEMON | LOG_ERR, _("gpe-dm: X server keeps crashing, giving up\n"));
 	  exit (1);
 	}
     }
 
-  xserver_pid = fork ();
+  xserver_pid = vfork ();
   if (xserver_pid == 0)
     {
       execl (XSERVER, XSERVER, dpyname, "-noreset", NULL);
@@ -97,6 +97,8 @@ main(int argc, char *argv[])
   if (! nodaemon)
     daemon (0, 0);
 
+  openlog ("gpe-dm", 0, 0);
+
   start_server (FALSE);
 
   clearenv ();
@@ -109,18 +111,17 @@ main(int argc, char *argv[])
   for (;;)
     {
       pid_t wpid;
-      gboolean f = FALSE;
+      gboolean f;
 
       /* start session */
-      session_pid = fork ();
+      session_pid = vfork ();
       if (session_pid == 0)
 	{
 	  execl (XINIT, XINIT, NULL);
 	  _exit (1);
 	}
 
-      /* wait for news */
-      while (!f)
+      for (f = FALSE; f == FALSE; )
 	{
 	  wpid = wait (NULL);
 	  if (wpid == xserver_pid)
