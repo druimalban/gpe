@@ -30,16 +30,25 @@ static GSList *items;
 struct display_item {
 	struct todo_item *ti;
 	PangoLayout *pl;
+	gboolean overdue;
 };
+
+static void refresh_todo_markup(struct display_item *di);
 
 static void free_items(void)
 {
 	int i;
 	struct display_item *di;
 
+	if (todo.message) {
+		g_object_unref(todo.message);
+		todo.message = NULL;
+	}
+
 	for (i=0; (di = g_slist_nth_data(items, i)); i++) {
 		g_free(di->ti);
 		g_object_unref(di->pl);
+		g_free(di);
 	}
 
 	g_slist_free(todo.scroll->list);
@@ -116,28 +125,57 @@ static void todo_db_update(void)
 	if (db_opened)
 		todo_db_stop();
 
-	db_opened = TRUE;
 	if (todo_db_start())
 		return;
+	else
+		db_opened = TRUE;
 
 	free_items();
 
 	for (iter = todo_db_get_items_list(); iter; iter = g_slist_next(iter)) {
+		if (((struct todo_item *)iter->data)->state == COMPLETED)
+			continue;
+
 		di = g_malloc(sizeof(struct display_item));
-		g_slist_append(items, di);
+		items = g_slist_append(items, di);
 		di->ti = iter->data;
 
 		di->pl = gtk_widget_create_pango_layout(todo.scroll->draw, NULL);
 		pango_layout_set_wrap(di->pl, PANGO_WRAP_WORD);
 		todo.scroll->list = g_slist_append(todo.scroll->list, di->pl);
-		markup_printf(di->pl, "%s", di->ti->summary);
+		di->overdue = FALSE;
+		refresh_todo_markup(di);
 	}
+
+	if (g_slist_length(items) == 0) {
+		todo.message = gtk_widget_create_pango_layout(todo.scroll->draw, NULL);
+		todo.scroll->list = g_slist_append(todo.scroll->list, todo.message);
+		markup_printf(todo.message, "%s", _("No todo items"));
+	}
+}
+
+static void refresh_todo_markup(struct display_item *di)
+{
+	char *color, *red = "red", *black = "black", *green = "green";
+	time_t t = time(NULL);
+
+	if (di->ti->time != 0 && di->ti->time < mktime(localtime(&t))) {
+		di->overdue = TRUE;
+		color = red;
+	} else if (di->ti->state == IN_PROGRESS)
+		color = green;
+	else
+		color = black;
+
+	markup_printf(di->pl, "<span foreground=\"%s\">%s</span>", color, di->ti->summary);
 }
 
 gboolean todo_update(gpointer data)
 {
 	struct stat db;
 	static time_t prev_modified = 0;
+	time_t current_time;
+	GSList *iter;
 
 	if (stat(db_fname, &db) == -1) {
 		gpe_perror_box(_("Error stating todo DB"));
@@ -147,6 +185,16 @@ gboolean todo_update(gpointer data)
 	if (db.st_mtime > prev_modified) {
 		prev_modified = db.st_mtime;
 		todo_db_update();
+	}
+
+	current_time = time(NULL);
+	current_time = mktime(localtime(&current_time));
+
+	for (iter = items; iter; iter = g_slist_next(iter)) {
+		struct display_item *di = iter->data;
+		
+		if (!di->overdue && di->ti->time != 0 && di->ti->time < current_time)
+			refresh_todo_markup(di);
 	}
 
 	refresh_todo_widget();

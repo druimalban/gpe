@@ -161,6 +161,7 @@ gboolean calendar_update(gpointer data)
 
 	time(&current_time);
 	lt = localtime(&current_time);
+	current_time = mktime(lt);
 	
 	/* new day */
 	if (prev_day != lt->tm_yday) {

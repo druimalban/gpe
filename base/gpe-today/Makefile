@@ -2,7 +2,8 @@ PACKAGE = gpe-today
 PREFIX = /usr/local
 VERSION = 0.02
 CVSBUILD = yes
-#DEBUG = yes 
+#DEBUG = yes
+#EFENCE = yes
 LINGUAS = pt de
 
 MEMBERS = main todo calendar date
@@ -12,9 +13,12 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS = -I../libgpewidget -I../libeventdb -I../libtododb -I../librootimage -D_GNU_SOURCE
 
+ifeq ($(EFENCE),yes)
+LDFLAGS = -lefence
+endif
+
 ifeq ($(DEBUG),yes)
 CFLAGS = -g
-LDFLAGS = -lefence
 else
 CFLAGS = -Os -fomit-frame-pointer
 endif
