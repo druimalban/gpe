@@ -29,6 +29,13 @@ child_dead ()
   exit (rc);
 }
 
+void
+fatal_signal (int sig)
+{
+  quit ();
+  exit (128 + sig);
+}
+
 int
 main ()
 {
@@ -50,6 +57,9 @@ main ()
     }
 
   signal (SIGCHLD, child_dead);
+  signal (SIGTERM, fatal_signal);
+  signal (SIGINT, fatal_signal);
+  signal (SIGQUIT, fatal_signal);
 
   atexit (quit);
 
