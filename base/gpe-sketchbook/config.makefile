@@ -1,4 +1,4 @@
-VERSION = pre0.1.4
+VERSION = pre0.1.5
 
 DEPENDS = libgtk1.2, libgpewidget0
 
@@ -19,9 +19,7 @@ MEMBERS = \
 	sketchpad-gui	     \
 	files		     \
 	files-xpm	     \
-	files-png	     \
-	dialog		     \
-	about
+	files-png	     
 
 PIXMAPS = `cd pixmaps && ls *.png`
 
@@ -30,5 +28,5 @@ PIXMAPS = `cd pixmaps && ls *.png`
 #DIST_COMMON    = COPYING README INSTALL TODO AUTHORS ChangeLog
 
 #-- PREFIX is overwritten to "/usr" by target ipkg:
-PREFIX  = /usr
+PREFIX  = /usr/local
 
