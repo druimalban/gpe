@@ -437,7 +437,7 @@ create_editable_entry_simple (GtkWidget * attach_to, gchar * name,
 void
 show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 {
-	GtkWidget *dialog;
+	GtkWidget *dialog, *btnok;
 	GtkWidget *label, *rb, *container, *ctable;
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border = gpe_get_border ();
@@ -450,10 +450,13 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 					GTK_DIALOG_MODAL| GTK_DIALOG_DESTROY_WITH_PARENT,
 					GTK_STOCK_CANCEL,
 					GTK_RESPONSE_REJECT,
-					GTK_STOCK_OK,
-					GTK_RESPONSE_OK,
 					NULL);
 
+	btnok = gtk_dialog_add_button(GTK_DIALOG(dialog), 
+	                              GTK_STOCK_OK, GTK_RESPONSE_OK);
+	GTK_WIDGET_SET_FLAGS(btnok, GTK_CAN_DEFAULT);
+	gtk_widget_grab_default(btnok);
+	
 	// page headers
 
 	ctable = gtk_table_new (8, 2, FALSE);
@@ -495,7 +498,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 			       
-	label = gtk_label_new(_("Mode:"));
+	label = gtk_label_new(_("Mode"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
 	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 2, 3,
@@ -556,7 +559,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 
-	label = gtk_label_new(_("WEP:"));
+	label = gtk_label_new(_("WEP"));
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
 	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 4, 5,
@@ -690,7 +693,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 
-
+/*
 	rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 4"));
 	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (rb), "key4select");
@@ -719,7 +722,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
-
+*/
 			       
 	gtk_widget_show_all(dialog);
 	response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -740,10 +743,10 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key3");
 		strncpy(iface->key[2], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
-		
+/*		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key4");
 		strncpy(iface->key[3], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
-
+*/
 		label = gtk_object_get_data (GTK_OBJECT (table), "mode_managed");
 		iface->mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? MODE_MANAGED : MODE_ADHOC;
 		
@@ -1452,8 +1455,9 @@ Network_Build_Objects ()
 	label = gtk_image_new_from_pixbuf (gpe_find_icon ("new"));
 	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					  _("Add Interface"),
-					  _("Add Interface"),
-					  _("Add a new Interface"), label,
+					  _("Add a new Interface"), 
+					  NULL,
+					  label,
 					  (GtkSignalFunc) add_interface,
 					  NULL);
 	if (!have_access)
@@ -1462,8 +1466,8 @@ Network_Build_Objects ()
 	label = gtk_image_new_from_pixbuf (gpe_find_icon ("delete"));
 	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					  _("Remove Interface"),
-					  _("Remove Interface"),
 					  _("Remove current Interface"),
+	                  NULL,
 					  label,
 					  (GtkSignalFunc) remove_interface,
 					  NULL);
@@ -1478,7 +1482,7 @@ Network_Build_Objects ()
 	button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					  _("Information"),
 					  _("Show current configuration."),
-					  _("Show current configuration."),
+					  NULL,
 					  label,
 					  (GtkSignalFunc) show_current_config,
 					  NULL);

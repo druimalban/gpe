@@ -1,5 +1,16 @@
 2004-08-29	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* Released V 0.1.17
+	* network.c: Fixed some labels, set button defaults, dialog size.
+	* Makefile: Some minor fixes.
+	* cfgfile.c: Fixed broken initialisation.
+	* applets.c: Removed obsolete definition.
+	* users/interface.c: Implemented password changing.
+	        callbacks.c
+			
+2004-08-29	Florian Boor  	<florian.boor@kernelconcepts.de>
+	
+	* Makefile: Version update.
 	* theme.c: Changed some spellings from AE to BE.
 	* main.c, main-info.c: Set default button.
 	* users/*: Added password change dialog, changed default settings.

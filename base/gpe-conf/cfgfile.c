@@ -191,8 +191,7 @@ gint get_file_text()
 
 void parse_key(NWInterface_t *iface, gchar* key)
 {
-	gchar* token;
-	token = strtok(key, " ");
+	gchar* token = strtok(key, " ");
 	gint key_was_last = TRUE;
 	gint index_was_last = FALSE;
 	gint keynr = 1;

@@ -282,6 +282,7 @@ check_user_access (const char *cmd)
 		return TRUE;
 	if (!strcmp (cmd, "NTPD"))
 		return TRUE;
+	
 	return global_user_access;
 }
 

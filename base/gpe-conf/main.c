@@ -130,6 +130,7 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "new" },
   { "lock" },
+  { "lock16" },
   { "exit" },
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
@@ -137,7 +138,7 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-#define count_icons 10
+#define count_icons 11
 
 int applets_nb = sizeof(applets) / sizeof(struct Applet);
 

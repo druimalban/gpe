@@ -244,7 +244,7 @@ Users_Build_Objects (void)
 			   _("Delete user"), _("Delete existing user"), pw,
 			   GTK_SIGNAL_FUNC (users_on_delete_clicked), NULL);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("lock"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("lock16"));
   button4 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Password"),
 			   _("Change password"), NULL, pw,
 			   GTK_SIGNAL_FUNC (password_change_clicked), NULL);
@@ -265,7 +265,9 @@ Users_Build_Objects (void)
   if (suid_exec("CHEK",""))
   {
 	  gtk_widget_set_sensitive(user_list, FALSE);
-	  gtk_widget_set_sensitive(toolbar, FALSE);
+	  gtk_widget_set_sensitive(button1, FALSE);
+	  gtk_widget_set_sensitive(button2, FALSE);
+	  gtk_widget_set_sensitive(button3, FALSE);
 	  have_access = FALSE;
   }
   else

@@ -24,9 +24,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <gtk/gtk.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE		/* Pour GlibC2 */
-#endif
 #include <time.h>
 #include "applets.h"
 #include <gpe/errorbox.h>

@@ -28,7 +28,7 @@
 #include <time.h>
 
 extern GtkWidget *user_list;
-
+static gboolean set_own_password = FALSE;
 
 /************** main dialog *****************/
 
@@ -217,17 +217,43 @@ users_on_changepasswd_clicked                (GtkButton       *button,
   if ((old_crypted_pass[0]==0 && oldpasswd[0]==0) // there was no pass!
       || strcmp(crypt(oldpasswd,old_crypted_pass ), old_crypted_pass) == 0)
     {
-      if(strcmp(newpasswd,newpasswd2)==0)
-	{
-	  if(newpasswd[0])// we have a passwd
-	    self->cur->pw.pw_passwd = strdup(crypt(newpasswd,salt));
-	  else
-	      self->cur->pw.pw_passwd = strdup(newpasswd); // keep it clear
-
-	  free(old_crypted_pass);
-	  gtk_widget_destroy(self->w);
-	  
-	}
+      if(strcmp(newpasswd,newpasswd2) == 0)
+		{
+			if (set_own_password)
+			{
+				FILE *passctl;
+				int ret;
+				
+				passctl = popen("/usr/bin/passwd", "w");
+				if (passctl)
+				{
+					sleep(1);
+					fprintf(passctl, "%s\n", oldpasswd);
+					fflush (passctl);
+					usleep(300000);
+					fprintf(passctl, "%s\n", newpasswd);
+					fflush (passctl);
+					usleep(300000);
+					fprintf(passctl, "%s\n", newpasswd2);
+					fflush (passctl);
+					ret = pclose(passctl);
+					if (ret) 
+						gpe_error_box(_("Bad password!\n" \
+					                     "(too short, too simple,\n" \
+					                     "similar to an old one)\n" \
+					                     "Please try again!"));
+				}
+			}
+			else
+			{
+				if(newpasswd[0])// we have a passwd
+					self->cur->pw.pw_passwd = strdup(crypt(newpasswd,salt));
+				else
+					self->cur->pw.pw_passwd = strdup(newpasswd); // keep it clear
+				free(old_crypted_pass);
+			}
+			gtk_widget_destroy(self->w);
+		}
       else
 	gpe_error_box(_("The two new pass are different!\n Please try again!"));
     }
@@ -243,7 +269,6 @@ users_on_passwdcancel_clicked                (GtkButton       *button,
 {
   passw *self=(passw *)user_data;
   gtk_widget_destroy(self->w);
-
 }
 
 void
@@ -255,6 +280,7 @@ password_change_clicked                (GtkButton       *button,
  	{
 		if (!strcmp(g_get_user_name(),cur->pw.pw_name))
 		{
+			set_own_password = TRUE;
     		gtk_widget_show(create_passwindow (cur, mainw));
 			break;
 		}
