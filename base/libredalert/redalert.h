@@ -6,6 +6,7 @@
 */
 
 #include <time.h>
+#include <glib.h>
 
-void redalert_set_alarm (time_t unixtime, char *program);
-void redalert_set_alarm_message (time_t unixtime, char *message);
+void redalert_set_alarm (const char *program, guint alarm_id, time_t unixtime, const char *command);
+void redalert_set_alarm_message (const char *program, guint alarm_id, time_t unixtime, const char *message);
