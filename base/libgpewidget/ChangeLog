@@ -1,3 +1,7 @@
+2003-07-16  Moray Allan  <moray@sermisy.org>
+
+	* Makefile: Added gtksimplemenu.h to HEADERS.
+
 2003-07-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.63 released.
