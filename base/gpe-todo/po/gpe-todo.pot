@@ -1,11 +1,12 @@
-# Translation templates for gpe-todo
-# Copyright (C) 2002 Phil Blundell <pb@debian.org>
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-06-14 13:14+0100\n"
+"POT-Creation-Date: 2002-06-17 20:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,62 +14,90 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: list-ui.c:91
-msgid "A list by that name already exists"
-msgstr ""
-
-#: list-ui.c:143 list-ui.c:177 list-ui.c:178
-msgid "New list"
-msgstr ""
-
-#: list-ui.c:183 list-ui.c:184
-msgid "Delete list"
-msgstr ""
-
-#: list-ui.c:387 list-ui.c:388 list-ui.c:393 list-ui.c:394
-msgid "New Contact"
-msgstr ""
-
-#: todo-ui.c:141
-msgid "Save"
-msgstr ""
-
-#: todo-ui.c:142
-msgid "Cancel"
-msgstr ""
-
-#: todo-ui.c:143
-msgid "Delete"
-msgstr ""
-
-#: todo-ui.c:146
+#: todo-ui.c:148
 msgid "Summary:"
 msgstr ""
 
-#: todo-ui.c:147
+#: todo-ui.c:149
 msgid "Details"
 msgstr ""
 
-#: todo-ui.c:152
+#: todo-ui.c:154
 msgid "Not started"
 msgstr ""
 
-#: todo-ui.c:152
+#: todo-ui.c:154
 msgid "In progress"
 msgstr ""
 
-#: todo-ui.c:153
+#: todo-ui.c:155
 msgid "Completed"
 msgstr ""
 
-#: todo-ui.c:167
+#: todo-ui.c:164
+msgid "Save"
+msgstr ""
+
+#: todo-ui.c:165
+msgid "Cancel"
+msgstr ""
+
+#: list-ui.c:196 todo-ui.c:166
+msgid "Delete"
+msgstr ""
+
+#: todo-ui.c:175
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:234
+#: todo-ui.c:242
 msgid "Edit item"
 msgstr ""
 
-#: todo-ui.c:241
+#: todo-ui.c:249
 msgid "New item"
+msgstr ""
+
+#: list-ui.c:89
+msgid "List title must not be blank"
+msgstr ""
+
+#: list-ui.c:99
+msgid "A list by that name already exists"
+msgstr ""
+
+#: list-ui.c:148
+msgid "New list"
+msgstr ""
+
+#: list-ui.c:189 list-ui.c:410
+msgid "New"
+msgstr ""
+
+#: list-ui.c:190 list-ui.c:191
+msgid "Create a new list"
+msgstr ""
+
+#: list-ui.c:197 list-ui.c:198
+msgid "Delete the selected list"
+msgstr ""
+
+#: list-ui.c:203
+msgid "Close"
+msgstr ""
+
+#: list-ui.c:204 list-ui.c:205
+msgid "Close this window"
+msgstr ""
+
+#: list-ui.c:411 list-ui.c:412
+msgid "Add a new item"
+msgstr ""
+
+#: list-ui.c:418
+msgid "Configure"
+msgstr ""
+
+#: list-ui.c:419 list-ui.c:420
+msgid "Configure lists"
 msgstr ""

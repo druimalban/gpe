@@ -1,7 +1,15 @@
 PREFIX = /usr/local
+PACKAGE = gpe-todo
 
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -g -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += -MD
+
+MEMBERS = main todo-ui todo-sql list-ui
+
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: gpe-todo mo
 
@@ -11,11 +19,16 @@ mo:
 install-po:
 	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
 
-gpe-todo: main.o todo-ui.o todo-sql.o list-ui.o
+gpe-todo: $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -g -lsqlite
 
+update-po: po/$(PACKAGE).pot
+
+po/$(PACKAGE).pot: $(SOURCES)
+	xgettext -k_ -o po/$(PACKAGE).pot $^
+
 clean:
-	rm -f gpe-todo main.o todo-ui.o todo-sql.o
+	rm -f gpe-todo $(OBJS) $(DEPS)
 
 all: gpe-todo
 
@@ -33,3 +46,4 @@ ipkg:
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 
+-include $(DEPS)

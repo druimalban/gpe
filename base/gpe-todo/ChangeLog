@@ -1,5 +1,10 @@
 2002-06-17  Philip Blundell  <pb@debian.org>
 
+	* Makefile: Add dependency tracking and "update-po" rule.
+	* po/gpe-todo.pot: Update.
+
+2002-06-17  Philip Blundell  <pb@debian.org>
+
 	* main.c: Convert to new-style pixmap management.
 	* list-ui.c: Likewise.  Improve tooltips.
 	(ui_create_new_list): Disallow blank title.
