@@ -23,7 +23,7 @@
 #define UPDATE_INTERVAL 60000 /* 1 minute */
 
 static GSList *calendar_entries;
-char *db_fname;
+static char *db_fname;
 static int calendar_update_tag = 0;
 
 struct calevent {
@@ -69,28 +69,24 @@ int calendar_init(void)
 
 	/* calendar icon */
 	calendar.vboxlogo = gtk_vbox_new(FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.vboxlogo, FALSE,
-	                   FALSE, 5);
+	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.vboxlogo, FALSE, FALSE, 5);
 
 	load_pixmap(IMAGEPATH(calendar.png), &pix, &mask, 130);
 	calendar.logo = gtk_pixmap_new(pix, mask);
 
-	gtk_box_pack_start(GTK_BOX(calendar.vboxlogo), calendar.logo, FALSE,
-	                   FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(calendar.vboxlogo), calendar.logo, FALSE, FALSE, 0);
 
 	/* scrollable pango layout list */
 	calendar.scroll = myscroll_new(TRUE);
-	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->draw,
-			   TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(calendar.toplevel),
-	                   calendar.scroll->scrollbar, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->draw, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->scrollbar,
+			   FALSE, FALSE, 0);
 
 	gtk_widget_show_all(calendar.toplevel);
 
 	/* update and set regular update intervals */
 	calendar_update(NULL);
-	calendar_update_tag = g_timeout_add(UPDATE_INTERVAL, calendar_update,
-	                                    NULL);
+	calendar_update_tag = g_timeout_add(UPDATE_INTERVAL, calendar_update, NULL);
 
 	return 1;
 }
@@ -155,7 +151,7 @@ gboolean calendar_update(gpointer data)
 
 	if (stat(db_fname, &db) == -1) {
 		gpe_perror_box(_("Error stating calendar DB"));
-		return TRUE;
+		return FALSE;
 	}
 
 	if (db.st_mtime > prev_modified) { /* DB changed */

@@ -78,12 +78,17 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 			g_object_ref(pix);
 			g_object_ref(pix);
 			gtk_widget_set_style(wid, wid->style);
-			g_object_set_data_full (G_OBJECT (pix), "pixmap", (void *)pmap, (GDestroyNotify)free_pixmap);
+			g_object_set_data_full (G_OBJECT (pix), "pixmap", (void *)pmap,
+						(GDestroyNotify)free_pixmap);
 			g_object_set_data (G_OBJECT (wid), "bg-pixmap", pix);
 		}
 	}
 
+	/* refresh various modules */
+	/* weird stuff going on here, MUST draw scroll's BEFORE toplevel */
 	gtk_widget_queue_draw(calendar.scroll->draw);
+	gtk_widget_queue_draw(todo.scroll->draw);
+	gtk_widget_queue_draw(todo.toplevel);
 	gtk_widget_queue_draw(calendar.toplevel);
 
 	if (old_pix) {
@@ -120,12 +125,13 @@ static void load_modules(void)
 	gtk_box_pack_start(GTK_BOX(window.vbox1), date.toplevel, FALSE, FALSE, 0);
 
 	calendar_init();
-	gtk_box_pack_start(GTK_BOX(window.vbox1), calendar.toplevel,
-	                   TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(window.vbox1), calendar.toplevel, TRUE, TRUE, 0);
+
+	todo_init();
+	gtk_box_pack_start(GTK_BOX(window.vbox1), todo.toplevel, TRUE, TRUE, 0);
 }
 
-void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask,
-                 int alpha)
+void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask, int alpha)
 {
 	if (!load_pixmap_non_critical(path, pixmap, mask, alpha)) {
 		gpe_error_box_fmt("Could not load pixmap\n%s", path);
