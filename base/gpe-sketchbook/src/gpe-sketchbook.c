@@ -52,16 +52,12 @@ static struct gpe_icon my_icons[] = {
   { "sketchpad", "gpe-sketchbook/sketchpad" },
 
   //own icons
-  { "pencil",       "gpe-sketchbook/tool_pencil"},
-  { "eraser",       "gpe-sketchbook/tool_eraser"},
-  { "brush_small", "gpe-sketchbook/brush_small"},
+  { "tool_pencil",  "gpe-sketchbook/tool_pencil"},
+  { "tool_eraser",  "gpe-sketchbook/tool_eraser"},
+  { "brush_small",  "gpe-sketchbook/brush_small"},
   { "brush_medium", "gpe-sketchbook/brush_medium"},
   { "brush_large",  "gpe-sketchbook/brush_large"},
   { "brush_xlarge", "gpe-sketchbook/brush_xlarge"},
-  { "color_black",  "gpe-sketchbook/color_black"},
-  { "color_red",    "gpe-sketchbook/color_red"},
-  { "color_green", "gpe-sketchbook/color_green"},
-  { "color_blue",   "gpe-sketchbook/color_blue"},
 
   { NULL, NULL }
 };
