@@ -1,5 +1,9 @@
 2004-10-09  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.93 released.
+
+2004-10-09  Phil Blundell  <pb@nexus.co.uk>
+
 	* gtkdatecombo.c (popdown_calendar): New function.
 	(gtk_date_combo_button_press): Likewise.
 	(popup_grab_on_window): Likewise.
