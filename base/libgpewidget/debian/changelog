@@ -1,3 +1,10 @@
+libgpewidget (0.66-1) unstable; urgency=low
+
+  * New upstream version.
+  * Uploading to unstable since dependency on XRENDER has been relaxed.
+
+ -- Philip Blundell <pb@nexus.co.uk>  Fri,  5 Sep 2003 18:53:54 +0100
+
 libgpewidget (0.65-1) experimental; urgency=low
 
   * New upstream version.
