@@ -1520,6 +1520,7 @@ void on_button_edit_comment_clicked(){
   }
   go.comment_edited = FALSE;
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_COMMENT_EDITOR);
+  gtk_widget_grab_focus(go.comment_text_view);
 }
 
 void on_textbuffer_changed (GtkTextBuffer * textbuffer, gpointer unused){
@@ -1597,6 +1598,7 @@ GtkWidget * build_comment_editor(){
   go.comment_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (comment_text_view));
   g_signal_connect (G_OBJECT (go.comment_buffer), "changed",
                     G_CALLBACK (on_textbuffer_changed), NULL);
+  go.comment_text_view = comment_text_view;
 
   //scrolled window
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);

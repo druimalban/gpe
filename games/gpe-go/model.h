@@ -39,6 +39,7 @@ typedef struct _go {
 
   gboolean save_game;
 
+  GtkWidget * comment_text_view;
   GtkTextBuffer * comment_buffer;
   gboolean comment_edited;
 
