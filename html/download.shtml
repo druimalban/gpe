@@ -6,5 +6,5 @@ be downloaded from the handhelds.org FTP site: <a
 href="ftp://ftp.handhelds.org/pub/projects/gpe/">ftp://ftp.handhelds.org/pub/projects/gpe/</a>
 <p>
 At present these are unstable, and active development sources can be found
-in the <a href=/cvs.shtml>GPE CVS archive</a>.
+in the <a href="/cvs.shtml">GPE CVS archive</a>.
 <!--#include virtual="includes/foot.shtml"-->
