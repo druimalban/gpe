@@ -1,8 +1,14 @@
-AC_INIT(sqlited.c)
-VERSION=0.0.1
-PACKAGE=sqlited
-AM_INIT_AUTOMAKE($PACKAGE,$VERSION,no-define)
+AC_INIT(src/usqld-server.c)
+VERSION=0.1.0
+PACKAGE=usqlds
+AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
+
 AM_PROG_LIBTOOL
 AM_MAINTAINER_MODE
 
 
+AC_SUBST(PACKAGE)
+AC_SUBST(VERSION)
+
+AC_PROG_CC
+AC_OUTPUT(Makefile src/Makefile xdr/Makefile xdr/examples/Makefile)
