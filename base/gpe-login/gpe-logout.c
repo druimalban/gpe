@@ -95,18 +95,19 @@ main(int argc, char *argv[])
   gtk_widget_show (hbox);
 
   /* FIXME: GTK2: set this text in bold */
-  label = gtk_label_new (_("Are you sure you\nwant to log out?"));
+  label = gtk_label_new (_("Are you sure you want to log out?"));
 
   gtk_widget_show (label);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 1);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 
   p = gpe_find_icon ("question");
   icon = gpe_render_icon (GTK_DIALOG (window)->vbox->style, p);
   gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
   /* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 6);
 
   gtk_widget_realize (window);
 
