@@ -7,7 +7,7 @@ module_id() {
 if [ ! -f /etc/sysconfig/bluetooth ]; then
   echo -n "Checking for built-in Bluetooth: "
   case `module_id` in
-    "iPAQ 3900")
+    "iPAQ 5400" | "iPAQ 3900")
 	BLUETOOTH=yes
 	PORT=/dev/tts/1
 	SPEED=921600
