@@ -5,6 +5,7 @@
 #define LEN_LIST  1024
 #define LEN_STR1   255
 #define LEN_STR2  1024
+#define LEN_STR3   128
 
 typedef enum
 {
@@ -48,6 +49,7 @@ typedef struct
 	int priority;
 	char str1[LEN_STR1];
 	char str2[LEN_STR2];
+	char str3[LEN_STR3];
 }
 msg2front_t;
 

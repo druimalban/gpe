@@ -40,7 +40,7 @@ static args_t args;
 /* message send and receive */
 
 static void
-send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2)
+send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2, const char *str3)
 {
 	pkmessage_t msg;
 	msg.type = PK_FRONT;
@@ -48,6 +48,7 @@ send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2)
 	msg.content.tf.priority = prio;
 	snprintf(msg.content.tf.str1,LEN_STR1, str1);
 	snprintf(msg.content.tf.str2,LEN_STR2, str2);
+	snprintf(msg.content.tf.str3,LEN_STR3, str3);
 	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
 	{
 		perror ("err sending data to backend");
@@ -67,7 +68,7 @@ do_response (char *res)
 char * /*ipkg_response_callback*/
 ipkg_question (char *question)
 {
-	send_message (PK_QUESTION, 1, question, NULL);
+	send_message (PK_QUESTION, 1, question, NULL, NULL);
 	await_response = TRUE;
 	while (await_response) wait_message();
 printf("Response: %s\n",response);
@@ -81,18 +82,18 @@ ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 	if (level <= IPKG_NOTICE)
 	{
 		if (level <= IPKG_ERROR)
-			send_message (PK_ERROR, level, msg, NULL);
+			send_message (PK_ERROR, level, msg, NULL, NULL);
 		else
-			send_message (PK_INFO, level, msg, NULL);
+			send_message (PK_INFO, level, msg, NULL, NULL);
 	}
 	return 0;
 }
 
 
 int /*ipkg_list_callback*/
-list_entry (char *name, char *desc)
+list_entry (char *name, char *desc, char *version)
 {
-	send_message (PK_LIST, 1, name, desc);
+	send_message (PK_LIST, 1, name, desc, version);
 	return 0;
 }
 
@@ -179,7 +180,7 @@ do_command (pkcommand_t command, char *params, char *list)
 	break;
 	}
 	
-	send_message(PK_FINISHED,0,"","");
+	send_message(PK_FINISHED,0,"","","");
 }
 
 
