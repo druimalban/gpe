@@ -16,7 +16,7 @@
 #include <gtk/gtk.h>
 #include "gtkcolombo.h"
 
-#define VERSION "0.0.7"
+#define VERSION "0.0.7alpha-gtk2"
 
 #ifndef GTK1
 #define gtk_text_thaw(a) 
@@ -278,7 +278,7 @@ char *search_email(char *key)
 
 void a2b_base64(char *s)
 {
-   char c;
+   signed char c;
    int i,j,val,ofs;
    static char initialized=0;
    static signed char conv[256];
