@@ -1,3 +1,8 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-calendar.menu: Give full path for the icon. Move to section
+	PIM (to conform to http://familiar.handhelds.org/policy/menu.html)
+
 2002-07-17  Philip Blundell  <pb@nexus.co.uk>
 
 	* Version 0.10 released
