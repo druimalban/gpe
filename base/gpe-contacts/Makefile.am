@@ -14,7 +14,7 @@ install-data-local:
 	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
 	  for pixmap in $(srcdir)/icons/*; do \
 	    if test -f $$pixmap; then \
-	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
+	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(PREFIX)/share/pixmaps; \
 	    fi \
 	  done \
 	fi
