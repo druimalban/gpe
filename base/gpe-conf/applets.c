@@ -2,12 +2,15 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
+ *
+ * Utitity functions used by multiple applets.
+ *
  */
 
 #include <stdio.h>
@@ -29,12 +32,185 @@
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
 #include "suid.h"
+#include "cfgfile.h"
 
 /* indicator for opened file selector */
 static int selector_open = FALSE;
 
 /* we remember the password */
 static gchar *password = NULL;
+
+/**
+ * This function replaces a line in the given file. 
+ * The line is identified by a given pattern.
+ * Every line beginning with these pattern will be replaced.
+ */
+
+void
+file_set_line (const gchar *file, const gchar *pattern, const gchar *newline)
+{
+	gchar *content = NULL;
+	gchar **lines = NULL;
+	gint length;
+	gchar *delim;
+	FILE *fnew;
+	gint i = 0;
+	gint j = 0;
+	GError *err = NULL;
+
+	delim = g_strdup ("\n");
+	if (!g_file_get_contents (file, &content, &length, &err))
+	{
+		fprintf (stderr, "Could not access file: %s.\n", file);
+		if (access (file, F_OK))	/* file exists, but access is denied */
+		{
+			i = 0;
+			delim = NULL;
+			goto writefile;
+		}
+	}
+	lines = g_strsplit (content, delim, 2048);
+	g_free (delim);
+	delim = NULL;
+	g_free (content);
+
+	while (lines[i])
+	{
+		if (g_str_has_prefix (g_strchomp (lines[i]), pattern))
+		{
+			delim = lines[i];
+			lines[i] = g_strdup(newline);
+		}
+		i++;
+	}
+
+	if (i)
+		i--;
+
+  writefile:
+
+	if (delim == NULL)
+	{
+		lines = realloc (lines, (i + 1) * sizeof (gchar *));
+		lines[i] = g_strdup(newline);
+		i++;
+		lines[i] = NULL;
+	}
+	else
+		free (delim);
+
+	fnew = fopen (file, "w");
+	if (!fnew)
+	{
+		fprintf (stderr, "Could not write to file: %s.\n", file);
+		return;
+	}
+
+	for (j = 0; j < i; j++)
+	{
+		fprintf (fnew, "%s\n", lines[j]);
+	}
+	fclose (fnew);
+	g_strfreev (lines);
+}
+
+
+/* 
+ * Changes a setting in a config file, to be used with caution.
+ * seperator == 0 means to comment out this line 
+ */
+void
+change_cfg_value (const gchar *file, const gchar *var, const gchar *val,
+                  gchar seperator)
+{
+	gchar *content, *tmpval;
+	gchar **lines = NULL;
+	gint length;
+	gchar *delim;
+	FILE *fnew;
+	gint i = 0;
+	gint j = 0;
+	GError *err = NULL;
+
+	tmpval = "";
+	delim = g_strdup ("\n");
+	if (!g_file_get_contents (file, &content, &length, &err))
+	{
+		fprintf (stderr, "Could not access file: %s.\n", file);
+		if (access (file, F_OK))	// file exists, but access is denied
+		{
+			i = 0;
+			delim = NULL;
+			goto writefile;
+		}
+	}
+	lines = g_strsplit (content, delim, 2048);
+	g_free (delim);
+	delim = NULL;
+	g_free (content);
+
+	while (lines[i])
+	{
+		if (g_str_has_prefix (g_strchomp (lines[i]), var))
+		{
+			delim = lines[i];
+			if (seperator)
+			{
+				j = get_first_char (delim);
+				if (j > 0)
+				{
+					tmpval = g_malloc (j+2);
+					strncpy (tmpval, delim, j);
+					tmpval[j]=0;
+					lines[i] =
+						g_strdup_printf ("%s%s%c%s", tmpval,
+								 var, seperator, val);
+					g_free (tmpval);
+				}
+				else
+				{
+					lines[i] =
+						g_strdup_printf ("%s%c%s", var,
+								 seperator, val);
+				}
+			}
+			else
+			{
+				lines[i] = g_strdup_printf ("# %s", lines[i]);
+			}
+		}
+		i++;
+	}
+
+	if (i)
+		i--;
+
+      writefile:
+
+	if ((delim == NULL) && val)
+	{
+		lines = realloc (lines, (i + 1) * sizeof (gchar *));
+		lines[i] = g_strdup_printf ("%s%c%s", var, seperator, val);
+		i++;
+		lines[i] = NULL;
+	}
+	else
+		free (delim);
+
+	fnew = fopen (file, "w");
+	if (!fnew)
+	{
+		fprintf (stderr, "Could not write to file: %s.\n", file);
+		return;
+	}
+
+	for (j = 0; j < i; j++)
+	{
+		fprintf (fnew, "%s\n", lines[j]);
+	}
+	fclose (fnew);
+	g_strfreev (lines);
+}
 
 
 void
@@ -46,72 +222,15 @@ printlog (GtkWidget * textview, gchar * str)
 }
 
 
-/***************************************************************************************/
 /* Return 1 if a file exists & can be read, 0 otherwise.*/
 
 int
 file_exists (char *fn)
 {
-	FILE *inp;
-
-	inp = fopen (fn, "r");
-	if (inp)
-	{
-		fclose (inp);
+	if (!access(fn, R_OK))
 		return 1;
-	}
-	return 0;
-}
-
-/***************************************************************************************/
-
-GtkWidget *
-make_menu_from_dir (char *path, int (*entrytest) (char *path), char *current)
-{
-	DIR *dir;
-	struct dirent *entry;
-	GtkWidget *menu = gtk_menu_new ();
-	int i = 0, selected = -1;
-	dir = opendir (path);
-	if (dir)
-	{
-		while ((entry = readdir (dir)))
-		{
-			char *temp;
-			GtkWidget *menuitem;
-
-			if (entry->d_name[0] == '.')
-				continue;
-
-			/* read the file if we don't want to ignore it */
-			temp = g_strdup_printf ("%s/%s", path, entry->d_name);
-			if (entrytest != 0 && !entrytest (temp))
-			{
-				g_free (temp);
-			}
-			else
-			{
-				menuitem =
-					gtk_menu_item_new_with_label (entry->
-								      d_name);
-				gtk_object_set_data_full (GTK_OBJECT
-							  (menuitem),
-							  "fullpath", temp,
-							  (GtkDestroyNotify)
-							  g_free);
-				i++;
-				gtk_widget_show (menuitem);
-				gtk_menu_append (GTK_MENU (menu), menuitem);
-				if (current != 0
-				    && strcmp (current, temp) == 0)
-					selected = i - 1;
-			}
-		}
-		closedir (dir);
-	}
-	if (selected != -1)
-		gtk_menu_set_active (GTK_MENU (menu), selected);
-	return menu;
+	else
+		return 0;
 }
 
 
@@ -145,32 +264,6 @@ make_items_from_dir (char *path, char* filter)
 	return items;
 }
 
-/***************************************************************************************/
-int
-mystrcmp (char *s, char *c)
-{
-	int i = 0;
-	while (*s == ' ')
-	{
-		s++;
-		i++;
-	}
-	while (*c)
-	{
-		if (*s != *c)
-			return -1;
-		s++;
-		c++;
-		i++;
-	}
-	return i;
-}
-
-/***************************************************************************************/
-
-
-// Maybe this should be in libgpewidget
-// but, this doesnt fit in the gtk "way of life"
 
 static void
 select_fs (GtkButton * button, gpointer user_data)
@@ -274,10 +367,6 @@ ask_user_a_file (char *path, char *prompt,
 		gtk_widget_show (s->fs);
 	}
 }
-
-
-
-/***************************************************************************************/
 
 
 int

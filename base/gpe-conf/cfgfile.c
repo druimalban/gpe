@@ -10,7 +10,7 @@
  * 
  * 	Configfile I/O routines, part of dynamic interface configuration.
  *
- * Wireless LAN support added by Ole Reinhardt (ole.reinhardt@kernelconcepts.de)
+ *  Wireless LAN support added by Ole Reinhardt
  * 
  */
 
@@ -47,7 +47,7 @@ gint get_scheme_list();
 
 gint write_sections();
 
-// some helper for parsing strings
+/* some helper for parsing strings */
 gchar last_char(gchar* s);
 gint count_char(gchar* s, gchar c);
 gint get_first_char(gchar* s);

@@ -1,3 +1,10 @@
+2005-01-19	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* theme.c: Some cleanups, added setting for terminal font size.
+	* applets.*: Removed some old cruft.
+	* suid.*, applets.*: Moved change_cfg_value() to applets.c.
+	* tasks.c: include applets.h instead of suid.h.
+
 2005-01-01  Luc Pionchon  <luc@handhelds.org>
 
 	* network.c (show_wificonfig): remove markup from i18n'ed strings.

@@ -19,7 +19,7 @@
 #include <unistd.h>
  
 #include "tasks.h"
-#include "suid.h"
+#include "applets.h"
 #include "sound/soundctrl.h"
 
 /* change primary nameserver in resolv.conf */

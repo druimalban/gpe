@@ -42,6 +42,7 @@
 #define KEY_GTK "Gtk/"
 #define CMD_XST PREFIX "/bin/xst"
 #define CMD_GCONF PREFIX "/bin/gconftool-2"
+#define PARAM_RXVT_FONTSIZE "Rxvt*font:"
 
 static XSettingsClient *client;
 static gboolean use_xst, use_gconf;
@@ -50,36 +51,27 @@ static struct
 {
   GtkWidget *cbTheme;
   GtkWidget *eImage;
-#ifndef APPMGR_INTERFACE	
-  GtkWidget *rbSolid, *rbGrad, *rbImage;	
-#endif	
   GtkWidget *rbImgStr,*rbImgTiled,*rbImgCent;
-#ifndef APPMGR_INTERFACE	
-  GtkWidget *rbH,*rbV;
-  GtkWidget *bColor1,*bColor2;
-#endif	
   gchar *themename;
   GtkWidget *bOpen;
-#ifndef APPMGR_INTERFACE	
-  GtkWidget *demolabel;
-#endif	
   GtkWidget *demolabel2;
-#ifndef APPMGR_INTERFACE	
-  GtkWidget *spFS, *bFont, *bColorFont;
-#endif
   GtkWidget *spFSApp, *bFontApp;
-#ifndef APPMGR_INTERFACE	
-  GtkWidget *slIconSize;
-  GtkWidget *slToolbarSize;
-#endif  
   GtkWidget *cDefault;
-#ifndef APPMGR_INTERFACE	
-  GtkWidget *cPerformance;
-#endif  
   GtkWidget *rbToolIcons;
   GtkWidget *rbToolText;
   GtkWidget *rbToolBoth;
   GtkWidget *rbToolBothH;
+  GtkWidget *spFSTerminal;
+#ifndef APPMGR_INTERFACE	
+  GtkWidget *rbSolid, *rbGrad, *rbImage;	
+  GtkWidget *rbH,*rbV;
+  GtkWidget *bColor1,*bColor2;
+  GtkWidget *demolabel;
+  GtkWidget *spFS, *bFont, *bColorFont;
+  GtkWidget *slIconSize;
+  GtkWidget *slToolbarSize;
+  GtkWidget *cPerformance;
+#endif  
 }
 self;
 
@@ -129,6 +121,50 @@ init_tools(void)
 	if (!access(CMD_XST,X_OK))
 		use_xst = TRUE;
 	/* to be extended in future */
+}
+
+int 
+get_terminal_fontsize(void)
+{
+	gchar *xdefaults;
+	FILE *fxdefaults;
+	int size = 9;
+	
+	xdefaults = g_strdup_printf("%s/%s", g_get_home_dir(), ".Xdefaults");
+	if (access(xdefaults, R_OK))
+	{
+		g_free(xdefaults);
+		xdefaults = g_strdup("/etc/X11/Xdefaults");
+		if (access(xdefaults, R_OK))
+		{
+			g_free(xdefaults);
+			return size;
+		}
+	}
+	
+	fxdefaults = fopen(xdefaults, "r");
+	if (fxdefaults)
+	{
+		while (!feof(fxdefaults))
+		{
+			if (fscanf(fxdefaults, PARAM_RXVT_FONTSIZE " xft:Mono:pixelsize=%i", &size))
+				break;
+		}
+		fclose(fxdefaults);
+	}
+	return size;
+}
+
+void
+set_terminal_fontsize(int size)
+{
+	gchar *line, *xdefaults;
+	
+	xdefaults = g_strdup_printf("%s/%s", g_get_home_dir(), ".Xdefaults");
+	line = g_strdup_printf("%s %s%i",PARAM_RXVT_FONTSIZE, "xft:Mono:pixelsize=", size);
+	file_set_line(xdefaults, PARAM_RXVT_FONTSIZE, line);
+	g_free(line);
+	g_free(xdefaults);
 }
 
 void
@@ -872,7 +908,7 @@ char* get_color_from_widget(GtkWidget* w)
 
 
 void
-Theme_Save ()
+Theme_Save (void)
 {
 	char *confstr = NULL;
 	const char* clabel;
@@ -985,6 +1021,10 @@ Theme_Save ()
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolBothH)))
 		fs = GTK_TOOLBAR_BOTH_HORIZ;
 	system_printf (CMD_XST " write %s%s int %d", KEY_GTK, "ToolbarStyle", fs);
+	
+	/* terminal */
+	set_terminal_fontsize(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSTerminal)));
+
 }
 
 void
@@ -1000,10 +1040,10 @@ Theme_Restore ()
 GtkWidget *
 Theme_Build_Objects ()
 {
-  GtkWidget *table, *rg_img;
 #ifndef APPMGR_INTERFACE	
   GtkWidget *rg_background, *rg_hv;
 #endif	
+  GtkWidget *table, *rg_img;
   GtkWidget *label;
   GtkWidget *hbox;
   GtkWidget *notebook;
@@ -1035,6 +1075,7 @@ Theme_Build_Objects ()
 /* ------------------------------------------------------------------------ */
 
   notebook  = gtk_notebook_new();
+  gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook), TRUE);
   
 #ifndef APPMGR_INTERFACE	
   label = gtk_label_new (_("Theme"));
@@ -1042,7 +1083,7 @@ Theme_Build_Objects ()
   label = gtk_label_new (_("Look and Feel"));
 #endif  
   table = gtk_table_new (3, 2, FALSE);
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), table, label);
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
@@ -1471,22 +1512,47 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
 #endif
   g_signal_connect(G_OBJECT(self.spFSApp),"value-changed",G_CALLBACK(on_font_size_change),NULL);	
-  
+
+/* terminal tab */
+  label = gtk_label_new (_("Terminal"));
+  table = gtk_table_new (2, 2, FALSE);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), table, label);
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
+
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Font"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+
+  label = gtk_label_new(_("Size"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.spFSTerminal = gtk_spin_button_new_with_range(5, 16, 1);
+  gtk_table_attach (GTK_TABLE (table), self.spFSTerminal, 1, 2, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+
 			
 /* insert some defaults */
   astyle = gtk_rc_style_new ();
   astyle->font_desc = pango_font_description_from_string ("Sans 9");
+  gtk_widget_modify_style (self.demolabel2, astyle);
 #ifndef APPMGR_INTERFACE	
   gtk_widget_modify_style (self.demolabel, astyle);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
-#endif  
-  gtk_widget_modify_style (self.demolabel2, astyle);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
-#ifndef APPMGR_INTERFACE	
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
 #endif
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
@@ -1508,6 +1574,9 @@ Theme_Build_Objects ()
   else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
 
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSTerminal), 
+                            get_terminal_fontsize());
+  
   mb_start_xsettings ();
 
   return notebook;

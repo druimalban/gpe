@@ -18,11 +18,12 @@ struct Applet
 #define _(x) gettext(x)
 
 
+void change_cfg_value (const gchar *file, const gchar *var, const gchar* val, gchar seperator);
+void file_set_line (const gchar *file, const gchar *pattern, const gchar *newline);
 void printlog(GtkWidget *textview, gchar *str);
 
 /* Return 1 if a file exists & can be read, 0 otherwise.*/
 int file_exists (char *fn);
-GtkWidget *make_menu_from_dir(char *path, int(*entrytest)(char* path), char *current);
 GList *make_items_from_dir(char *path, char *filter);
 
 // I just want to get a file !
@@ -30,8 +31,6 @@ void ask_user_a_file(char *path, char *prompt,
 		     void (*File_Selected)(char *filename, gpointer data),
 		     void (*Cancel)(gpointer data),
 		     gpointer data);
-
-int mystrcmp(char *s, char *c);
 
 int runProg(char *cmd);
 
