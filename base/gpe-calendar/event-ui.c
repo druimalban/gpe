@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -598,7 +598,7 @@ build_edit_event_window (void)
   GtkWidget *menu1 = gtk_menu_new ();
   GtkWidget *menu2 = gtk_menu_new ();
   struct edit_state *s = g_malloc (sizeof (struct edit_state));
-  
+
   memset (s, 0, sizeof (*s));
 
   s->optionmenutype = gtk_simple_menu_new ();
@@ -620,6 +620,11 @@ build_edit_event_window (void)
   s->enddate = gtk_date_combo_new ();
   s->reminderdate = gtk_date_combo_new ();
   s->taskdate = gtk_date_combo_new ();
+
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate), week_starts_monday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate), week_starts_monday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->reminderdate), week_starts_monday);
+  gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->taskdate), week_starts_monday);
  
   gtk_box_pack_end (GTK_BOX (startdatebox), starttime, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (startdatebox), starttimelabel, FALSE, FALSE, 2);
@@ -1044,6 +1049,10 @@ build_edit_event_window (void)
 			    destroy_user_data);
 
   recalculate_sensitivities (NULL, window);
+
+  gpe_set_window_icon (window, "icon");
+
+  gtk_window_set_default_size (GTK_WINDOW (window), 280, 320);
   
   return window;
 }
@@ -1081,6 +1090,9 @@ new_event (time_t t, guint timesel)
       char buf[32];
       struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
 						  "edit_state");
+
+      gtk_window_set_title (GTK_WINDOW (w), _("Calendar: New event"));
+  
       s->ev = NULL;
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
       
@@ -1120,6 +1132,8 @@ edit_event (event_t ev)
       char buf[32];
       struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
 						  "edit_state");
+      gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
+
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
       gtk_signal_connect (GTK_OBJECT (s->deletebutton), "clicked",
 			  GTK_SIGNAL_FUNC (click_delete), ev);

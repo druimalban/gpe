@@ -1,3 +1,33 @@
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (build_edit_event_window): Set week-starts-monday
+	flag on newly created GtkDateCombo widgets.
+	(build_edit_event_window): Set default size for window.
+
+	* xsettings.c (gpe_calendar_start_xsettings): Use gpe_error_box.
+	(watch_func): Reformat decl.
+	(notify_func): Likewise.  Make key names case insensitive.  Add
+	GPE/week-starts-monday as synonym for old key under GPE/Calendar.
+	(KEY_BASE): Set to "GPE/".
+
+	* gpe-calendar.desktop (SingleInstance): Set to true.
+
+	* main.c (my_icons): Add close.
+	(main): Use gpe_set_window_icon.  Add more verbose tooltips.
+
+	* day_popup.c (day_popup): Replace cancel pixmap with close.  Pack
+	buttons with no padding.  Put a frame around the window contents.
+	(destroy_popup): Reformat.
+	(close_window): Likewise.
+	(day_clicked): Likewise.
+	(selection_made): Likewise.
+	
+	* event-ui.c (new_event): Set window title.
+	(edit_event): Likewise.
+	(build_edit_event_window): Set icon for window.
+
+	* main.c (main): Remove call to event_ui_init.
+
 2002-12-19  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.27 released.

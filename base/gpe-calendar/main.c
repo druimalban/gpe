@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,6 +56,7 @@ struct gpe_icon my_icons[] = {
   { "bell", "bell" },
   { "recur", "recur" },
   { "bell_recur", "bell_recur" },
+  { "close" },
   { "icon", PREFIX "/share/pixmaps/gpe-calendar.png" },
   {NULL, NULL}
 };
@@ -155,8 +156,6 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *toolbar;
   GdkPixbuf *p;
   GtkWidget *pw;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
 
   guint hour;
 
@@ -214,8 +213,6 @@ main (int argc, char *argv[])
   future = future_view ();
   year = year_view ();
 
-  event_ui_init ();
-
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
@@ -236,7 +233,9 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("new");
   pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Appointment"), 
-			   _("New Appointment"), _("New Appointment"), pw, new_appointment, NULL);
+			   _("New Appointment"), 
+			   _("Tap here to add a new appointment or reminder"), 
+			   pw, new_appointment, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -251,35 +250,40 @@ main (int argc, char *argv[])
   pw = gpe_render_icon (main_window->style, p);
   future_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					      GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
-					      _("Future View"), _("Future View"), _("Future View"),
+					      _("Future"), _("Future View"), 
+					      _("Tap here to see all future events."),
 					      pw, GTK_SIGNAL_FUNC (button_toggled), future);
 
   p = gpe_find_icon ("day_view");
   pw = gpe_render_icon (main_window->style, p);
   day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					   GTK_TOOLBAR_CHILD_RADIOBUTTON, future_button,
-					   ("Day View"), _("Day View"), _("Day View"),
+					   ("Day"), _("Day View"), 
+					   _("Tap here to select day-at-a-time view."),
 					   pw, GTK_SIGNAL_FUNC (button_toggled), day);
   
   p = gpe_find_icon ("week_view");
   pw = gpe_render_icon (main_window->style, p);
   week_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_RADIOBUTTON, day_button,
-					    _("Week View"), _("Week View"), _("Week View"),
+					    _("Week"), _("Week View"), 
+					    _("Tap here to select week-at-a-time view."),
 					    pw, GTK_SIGNAL_FUNC (button_toggled), week);
 
   p = gpe_find_icon ("month_view");
   pw = gpe_render_icon (main_window->style, p);
   month_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					     GTK_TOOLBAR_CHILD_RADIOBUTTON, week_button,
-					     _("Month View"), _("Month View"), _("Month View"),
+					     _("Month"), _("Month View"), 
+					     _("Tap here to select month-at-a-time view."),
 					     pw, GTK_SIGNAL_FUNC (button_toggled), month);
 
   p = gpe_find_icon ("year_view");
   pw = gpe_render_icon (main_window->style, p);
   year_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_RADIOBUTTON, month_button,
-					    _("Year View"), _("Year View"), _("Year View"),
+					    _("Year"), _("Year View"), 
+					    _("Tap here to select year-at-a-time view."),
 					    pw, GTK_SIGNAL_FUNC (button_toggled), year);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -287,7 +291,8 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("exit");
   pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
-			   _("Exit"), _("Exit"), pw, GTK_SIGNAL_FUNC (gtk_exit), NULL);
+			   _("Exit"), _("Tap here to exit the program"),
+			   pw, GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
@@ -312,8 +317,7 @@ main (int argc, char *argv[])
 
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
 
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
+  gpe_set_window_icon (main_window, "icon");
 
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);

@@ -10,28 +10,32 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <libintl.h>
 
 #include <gdk/gdkx.h>
+
+#include <gpe/errorbox.h>
 
 #include "xsettings-client.h"
 
 #include "globals.h"
 
+#define _(x) gettext(x)
+
 static XSettingsClient *client;
 static gboolean push_new_changes;
 
-#define KEY_BASE "GPE/CALENDAR/"
+#define KEY_BASE "GPE/"
 
 static void
-notify_func (const char       *name,
-	     XSettingsAction   action,
-	     XSettingsSetting *setting,
-	     void             *cb_data)
+notify_func (const char *name, XSettingsAction action,
+	     XSettingsSetting *setting, void *cb_data)
 {
   if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
       char *p = name + strlen (KEY_BASE);
-      if (!strcmp (p, "WEEK-STARTS-MONDAY"))
+      if (!strcasecmp (p, "week-starts-monday")
+	  || !strcasecmp (p, "Calendar/week-starts-monday"))
 	{
 	  if (setting->type == XSETTINGS_TYPE_INT)
 	    {
@@ -40,7 +44,7 @@ notify_func (const char       *name,
 		update_current_view ();
 	    }
 	}
-      else if (!strcmp (p, "DAY-VIEW-COMBINED-TIMES"))
+      else if (!strcasecmp (p, "Calendar/day-view-combined-times"))
 	{
 	  if (setting->type == XSETTINGS_TYPE_INT)
 	    {
@@ -62,10 +66,8 @@ xsettings_event_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 }
 
 static void 
-watch_func (Window window,
-	    Bool   is_start,
-	    long   mask,
-	    void  *cb_data)
+watch_func (Window window, Bool is_start, long mask,
+	    void *cb_data)
 {
   GdkWindow *gdkwin;
   
@@ -96,7 +98,7 @@ gpe_calendar_start_xsettings (void)
   client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_func, watch_func, NULL);
   if (client == NULL)
     {
-      fprintf (stderr, "Cannot create XSettings client\n");
+      gpe_error_box (_("Cannot create XSettings client"));
       return FALSE;
     }
 

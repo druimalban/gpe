@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,31 +16,29 @@
 
 #include <gtk/gtk.h>
 
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+
 #include "globals.h"
 #include "event-db.h"
 #include "event-ui.h"
 #include "day_popup.h"
-#include <gpe/pixmaps.h>
-#include <gpe/picturebutton.h>
 
 static void
-destroy_popup(GtkWidget *widget,
-	      GtkWidget *parent)
+destroy_popup (GtkWidget *widget, GtkWidget *parent)
 {
   gtk_object_set_data (GTK_OBJECT (parent), "popup-handle", NULL);
-  pop_window=NULL;
+  pop_window = NULL;
 }
 
 static void
-close_window(GtkWidget *widget,
-	     GtkWidget *w)
+close_window (GtkWidget *widget, GtkWidget *w)
 {
   gtk_widget_destroy (w);
 }
 
 static void
-day_clicked(GtkWidget *widget,
-	    GtkWidget *w)
+day_clicked (GtkWidget *widget, GtkWidget *w)
 {
   struct day_popup *p = gtk_object_get_data (GTK_OBJECT (w), "popup-data");
   struct tm tm;
@@ -54,11 +52,8 @@ day_clicked(GtkWidget *widget,
 }
 
 static void 
-selection_made( GtkWidget      *clist,
-		gint            row,
-		gint            column,
-		GdkEventButton *event,
-		GtkWidget      *widget)
+selection_made (GtkWidget *clist, gint row, gint column,
+		GdkEventButton *event, GtkWidget *widget)
 {
   event_t ev;
     
@@ -86,12 +81,13 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   GtkWidget *close_button;
   GtkWidget *label;
   GtkWidget *contents;
+  GtkWidget *frame;
   char buf[256];
   struct tm tm;
 
   gtk_widget_realize (window);
   day_button = gpe_picture_button (window->style, NULL, "day_view");
-  close_button = gpe_picture_button (window->style, NULL, "cancel");
+  close_button = gpe_picture_button (window->style, NULL, "close");
 
   memset (&tm, 0, sizeof (tm));
   tm.tm_year = p->year - 1900;
@@ -158,19 +154,21 @@ day_popup (GtkWidget *parent, struct day_popup *p)
                        (gpointer) p);
 
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (hbox), day_button, FALSE, FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (hbox), close_button, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox), day_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), close_button, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), contents, TRUE, TRUE, 0);
 
-  gtk_container_add (GTK_CONTAINER (window), vbox);
+  frame = gtk_frame_new (NULL);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  gtk_container_add (GTK_CONTAINER (window), frame);
 
   gtk_window_set_transient_for (GTK_WINDOW (window), GTK_WINDOW (parent));
 
   gdk_window_get_pointer (NULL, &x, &y, NULL);
 
-  gtk_widget_show_all (vbox);
+  gtk_widget_show_all (frame);
 
   gtk_widget_realize (window);
   gtk_widget_size_request (window, &requisition);
