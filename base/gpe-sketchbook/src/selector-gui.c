@@ -25,7 +25,7 @@
 //gpe libs
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
-#include "gpe/gpe-iconlist.h"
+#include "gpe/gpeiconlistview.h"
 
 //--i18n
 #include <libintl.h>
@@ -91,7 +91,6 @@ GtkWidget * build_selector_toolbar(){
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   pixbuf = gpe_find_icon ("new");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
@@ -108,7 +107,6 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("delete");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           //NULL, NULL,
                            _("Delete selected sketch"), _("Delete selected sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_delete_clicked), NULL);
   gtk_widget_set_sensitive(button, FALSE);
@@ -201,11 +199,11 @@ void on_iconlist_clicked    (GtkWidget * iconlist, gpointer il_data, gpointer da
 GtkWidget * build_scrollable_iconlist(GtkWidget * window){
   GtkWidget * iconlist;
 
-  iconlist = gpe_iconlist_new();
-  gpe_iconlist_set_icon_size (GPE_ICONLIST(iconlist), THUMBNAIL_SIZE);
-  gpe_iconlist_set_bg_color  (GPE_ICONLIST(iconlist), 0xbabac444);//0xddddd444);//light grey 
-	gpe_iconlist_set_show_title(GPE_ICONLIST(iconlist), FALSE);
-  gpe_iconlist_set_icon_xmargin (GPE_ICONLIST(iconlist), 4);
+  iconlist = gpe_icon_list_view_new();
+  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW(iconlist), THUMBNAIL_SIZE);
+  gpe_icon_list_view_set_bg_color  (GPE_ICON_LIST_VIEW(iconlist), 0xbabac444);//0xddddd444);//light grey 
+  gpe_icon_list_view_set_show_title(GPE_ICON_LIST_VIEW(iconlist), FALSE);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW(iconlist), 4);
 
   g_signal_connect (G_OBJECT (iconlist), "clicked",
                     G_CALLBACK (on_iconlist_clicked), NULL);
@@ -247,4 +245,3 @@ void on_iconlist_clicked (GtkWidget * iconlist, gpointer iter, gpointer data) {
 //void on_iconlist_show_popup (GtkWidget *il, gpointer note, gpointer data) {
 //  /**/g_printerr("ICONLIST> %s", data);
 //}
-

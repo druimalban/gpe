@@ -28,7 +28,7 @@
 #include <stdlib.h>   //system()
 
 #include "gpe/errorbox.h"
-#include "gpe/gpe-iconlist.h"
+#include "gpe/gpeiconlistview.h"
 #include "gpe/gpeiconlistitem.h"
 
 #include "selector.h"
@@ -84,7 +84,7 @@ void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
   //gpe-iconlist is not linked to the model, so update it
   if(thumbnail){
     GObject * item;
-    item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+    item = gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW(selector.iconlist),
                                          NULL, //title
                                          thumbnail,//icon
                                          gtk_tree_iter_copy(&iter));//udata
@@ -173,7 +173,7 @@ void load_thumbnails(){
     gdk_pixbuf_unref(pixbuf);
     gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_THUMBNAIL, thumbnail, -1);
 
-    item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+    item = gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW(selector.iconlist),
                                          NULL, //title
                                          thumbnail,//icon
                                          gtk_tree_iter_copy(&iter));//udata
@@ -271,7 +271,7 @@ void delete_current_sketch(){
                        ENTRY_ICONLISTITEM, &iconlist_item,
                        -1);
 
-    gpe_iconlist_remove_item(GPE_ICONLIST(selector.iconlist), iconlist_item);
+    gpe_icon_list_view_remove_item(GPE_ICON_LIST_VIEW(selector.iconlist), iconlist_item);
 
     gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 
@@ -306,5 +306,5 @@ void open_indexed_sketch(gint index){
 
   gtk_tree_model_get(model, &iter, ENTRY_URL, &fullpath_filename, -1);
   sketchpad_open_file(fullpath_filename);
+  g_free(fullpath_filename);
 }
-

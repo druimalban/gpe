@@ -36,7 +36,7 @@ GdkPixmap * drawing_area_pixmap_buffer;
 
 gboolean is_current_sketch_modified;
 
-GdkGC * graphical_context;
+GdkGC * graphical_context = NULL;
 GdkColormap * colormap;
 GdkColor * current_color;
 GdkColor white;
@@ -393,6 +393,8 @@ void reset_drawing_area(void){
                       0, 0,
                       drawing_area_width,
                       drawing_area_height);
+  if (graphical_context) 
+	  gdk_gc_unref(graphical_context);
   graphical_context = gdk_gc_new(drawing_area->window);
 }
 

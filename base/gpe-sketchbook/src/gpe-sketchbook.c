@@ -170,7 +170,7 @@ void gui_init(){
   gtk_notebook_insert_page(notebook, sketchpad_ui, NULL, PAGE_SKETCHPAD);
   gtk_notebook_insert_page(notebook, prefs_ui,     NULL, PAGE_PREFERENCES);
 
-#ifdef DEBUG
+#ifdef DEBUG__
   {
     GtkWidget * w;
     w = gtk_window_new (GTK_WINDOW_TOPLEVEL);

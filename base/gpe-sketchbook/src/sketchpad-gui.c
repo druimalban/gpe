@@ -199,7 +199,6 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
 
@@ -404,7 +403,6 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
 
   sketchpad_fill_files_toolbar(toolbar, window);

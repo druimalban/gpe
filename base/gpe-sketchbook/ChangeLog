@@ -1,3 +1,15 @@
+2004-06-14  Florian Boor  <florian.boor@kernelconcepts.de>
+	* sketchpad.c: (reset_drawing_area) Fixed minor memory leak.
+	* selector.c: (open_indexed_sketch) Fixed minor memory leak.
+	* selector-cb.c: (on_treeview_event) Fixed minor memory leak.
+	* selector-gui.c, sketchpad-gui.c: Removed setting of toolbar style, this
+	  should be done via GTK/Xsettings now.
+	* sketchpad-cb.c: (on_window_size_allocate) Improved position handling.
+	  Honors common toolbar on top on systems with large screen now too.
+	* preferences.c: Avoid nasty error message if preferences table exists.
+	* src/selector.c, src/sketchpad-cb.c, src/selector-gui.c, src/selector-cb.c:
+	  Changed GpeIconlist widget to GpeIconListView widget.
+
 2004-05-03  Philip Blundell  <philb@gnu.org>
 
 	* src/Makefile: Use PACKAGE_CFLAGS, etc.
@@ -65,4 +77,3 @@
 	* gpe-sketchbook.menu: Give full path for icon. Move to section
 	Graphics (to conform to
 	http://familiar.handhelds.org/policy/menu.html)
-

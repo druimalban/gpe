@@ -18,7 +18,8 @@
 #include <gtk/gtk.h>
 
 //--GPE libs
-#include "gpe/picturebutton.h"
+#include <gpe/picturebutton.h>
+#include <gpe/spacing.h>
 
 //--own headers
 #include "gpe-sketchbook.h"
@@ -34,7 +35,7 @@
 #include <glib.h>
 #include <sqlite.h> //backend
 #include <stdlib.h> //free() atoi() atof()
-
+#include <unistd.h> //access
 
 #ifdef DEBUG
 #define TRACE(message...) {g_printerr(message); g_printerr("\n");}
@@ -56,10 +57,13 @@ GpePrefsResult gpe_prefs_init(gchar * prog_name){
   gint    error;
   gchar * errmsg;
   gint mode = 0;// rw/r mode, ignored by sqlite (2.8.5)
+  gint dbexists;
 
   //--Open DB
   db_name = g_strdup_printf("%s/.gpe/prefs_%s.db", g_get_home_dir(), prog_name);
 
+  dbexists = !access(db_name, F_OK);
+	
   TRACE("Opening: %s", db_name);
   prefs_db = sqlite_open(db_name, mode, &errmsg);
   g_free(db_name);
@@ -68,16 +72,18 @@ GpePrefsResult gpe_prefs_init(gchar * prog_name){
     return GPE_PREFS_ERROR;
   }
 
-  //--Create table
-  //if already exists, will return an error.
-  error = sqlite_exec (prefs_db, db_schema, NULL, NULL, &errmsg);
-  TRACE("%s", db_schema);
-  if(error){
-    g_printerr("ERROR> #%d %s\n", error, errmsg);
-    free (errmsg);
-    return GPE_PREFS_ERROR;
+  //--Create table if necessary, we assume table exists if database is present
+  
+  if (!dbexists){
+    //if already exists, will return an error.
+    error = sqlite_exec (prefs_db, db_schema, NULL, NULL, &errmsg);
+    TRACE("%s", db_schema);
+    if(error){
+	  g_printerr("ERROR> #%d %s\n", error, errmsg);
+	  free (errmsg);
+ 	  return GPE_PREFS_ERROR;
+    }
   }
-
   return GPE_PREFS_OK;
 }
 
@@ -365,12 +371,13 @@ GtkWidget * preferences_gui(GtkWidget * window){
   g_signal_connect (G_OBJECT (button_no), "clicked", G_CALLBACK (on_button_no_clicked), NULL);
 
   hbox = gtk_hbox_new(TRUE, 4);
+  gtk_container_set_border_width(GTK_CONTAINER(hbox),gpe_get_border());
   gtk_box_pack_start (GTK_BOX (hbox), button_no, TRUE, TRUE, 4);
   gtk_box_pack_start (GTK_BOX (hbox), button_ok, TRUE, TRUE, 4);
 
   separator = gtk_hseparator_new();
-  gtk_box_pack_start(GTK_BOX(vbox), separator, FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(vbox), hbox,      FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(vbox), separator, FALSE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(vbox), hbox,      FALSE, TRUE, 0);
 
   gtk_widget_show_all(vbox);
   return vbox;

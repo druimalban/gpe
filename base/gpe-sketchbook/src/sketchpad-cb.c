@@ -29,7 +29,7 @@
 
 #include "dock.h"
 #include "gpe/question.h"
-#include "gpe/gpe-iconlist.h"
+#include "gpe/gpeiconlistview.h"
 #include "gpe/popup_menu.h"
 
 //--i18n
@@ -60,8 +60,12 @@ void on_window_size_allocate (GtkWidget     * widget,
   //**/           allocation->width, allocation->height);
 
   if(dock == NULL) return;
-
-  if(allocation->width > 260)//240)//FIXME: that's very ugly way to detect LANDSCAPE mode!
+  
+  /* Set vertical on small screens in landscape mode.
+     On large screens stay horizontal like in portrait mode to look
+     more like a common PC application. */
+    
+  if ((allocation->width > allocation->height+20) && (allocation->width <= 640))
     gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_VERTICAL);
   else//Portrait mode
     gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_HORIZONTAL); 
@@ -185,7 +189,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   }
 
   file_save(filename); //FIXME: should catch saving errors
-
+  
   if(selector.thumbnails_notloaded == FALSE){//--make thumbnail
     GdkPixbuf * pixbuf;
     GdkPixbuf * pixbuf_scaled;
@@ -206,7 +210,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   }
   else if(selector.thumbnails_notloaded == FALSE){
     //update icon_view
-  	gpe_iconlist_set_item_icon(GPE_ICONLIST(selector.iconlist), iconlist_item, thumbnail);
+  	gpe_icon_list_view_set_item_icon(GPE_ICON_LIST_VIEW(selector.iconlist), iconlist_item, thumbnail);
   }
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
@@ -401,4 +405,3 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
   prev_pos_x = prev_pos_y = NO_PREV_POS;
   return FALSE;
 }
-

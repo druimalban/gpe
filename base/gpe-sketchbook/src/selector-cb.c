@@ -129,8 +129,6 @@ gboolean on_treeview_selection_change(GtkTreeSelection *selection,
     gint * indices;
     indices = gtk_tree_path_get_indices(path);
 
-    /**/g_printerr("select: %d\n", indices[0]);
-
     //FIXME: selection is done HERE - remove duplicated and dead code.
 
     current_sketch = indices[0];
@@ -160,6 +158,7 @@ gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_mo
         gtk_tree_model_get(model, &iter,
                            ENTRY_URL, &fullpath_filename, -1);
         sketchpad_open_file(fullpath_filename);//NOTE: keep an index and open_indexed()
+		g_free(fullpath_filename);
         switch_to_page(PAGE_SKETCHPAD);
         return TRUE;
       }
