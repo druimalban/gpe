@@ -60,7 +60,7 @@ ipkglist  := translation-ipkgs.txt
 real-translation-package: all-mo
 	rm -rf $(transdist) $(ipkglist)
 	for LINGUA in $(LINGUAS); do \
-		i=$$(echo $$LINGUA | tr '[A-Z_]' '[a-z-]'); \
+		i=$$(echo $$LINGUA | tr '[A-Z_]' '[a-z+]'); \
 		mkdir -p $(transdist)/$$i/CONTROL; \
 		mkdir -p $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES; \
 		install -m 644 po/$$LINGUA.mo $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/$(PACKAGE).mo; \
