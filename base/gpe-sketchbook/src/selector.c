@@ -25,6 +25,7 @@
 #include <sys/stat.h> //mkdir
 #include <sys/types.h>//mkdir
 #include <asm/errno.h>//mkdir
+#include <stdlib.h>   //system()
 
 #include "gpe/errorbox.h"
 #include "gpe/gpe-iconlist.h"
@@ -94,8 +95,19 @@ void window_selector_init(GtkWidget * window_selector){
       }
       app_quit();
     }
+    {//then insert a dummy sketch (so the list does not appear empty)
+      gchar * command;
+      command = g_strdup_printf("cp -f %s/share/gpe/pixmaps/default/gpe-sketchbook/welcome.png %s/2003-00-00_00-00-00.png", PREFIX, sketchbook.save_dir);
+      system (command);
+      g_free(command);
+      scandir_nb_entries = scandir (sketchbook.save_dir,
+                                    &direntries,
+                                    _direntry_selector,
+                                    alphasort);//FIXME: --> file.c
+      /**/g_printerr("inserted %d\n", scandir_nb_entries);
+    }
   }
-  else{
+  /*else*/{ //if empty, added a dummy sketch so do it in any case
     gchar * fullpath_filename;
     gchar * line_text[1];
     int line;
