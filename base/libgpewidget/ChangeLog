@@ -1,3 +1,7 @@
+2005-03-04  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/tmpl/*.sgml: More documentation (Smallbox, Render).
+
 2005-03-03  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/*.sgml: More documentation (Question).
