@@ -1,6 +1,6 @@
 2002-06-19  Philip Blundell  <philb@gnu.org>
 
-	* gpe-login.c (do_login): Fork and become session leader.
+	* gpe-login.c (do_login): Become session leader.
 
 	* gpe-dm.c (shutdown): New function.
 	(main): Dissociate from controlling tty.  Try to kill session and

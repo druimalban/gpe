@@ -117,18 +117,7 @@ do_login (uid_t uid, gid_t gid, char *dir)
 {
   cleanup_children ();
 
-  /* fork and set up as session leader */
-  switch (fork ())
-    {
-    case 0:
-      break;
-    case -1:
-      perror ("fork");
-      _exit (1);
-    default:
-      _exit (0);
-    }
-
+  /* become session leader */
   if (setsid ())
     perror ("setsid");
   
