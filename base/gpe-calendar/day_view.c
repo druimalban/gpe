@@ -208,39 +208,37 @@ day_view_update ()
 	
       gtk_clist_append (GTK_CLIST (day_list), line_info);
 
-      if (ev) {
-	GdkPixmap *pmap;
-  	GdkBitmap *bmap;
-	
-	gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
-      
-	if ((ev->flags & FLAG_ALARM) && (ev->recur.type != RECUR_NONE))
-	{  
-	  if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
-	    gtk_clist_set_pixtext(GTK_CLIST (day_list), row,1,text,10,
-                            pmap,
-                            bmap);
-	}
-	else if (ev->flags & FLAG_ALARM)
-	{ 
-	  if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
-	    gtk_clist_set_pixtext(GTK_CLIST (day_list), row,1,text,10,
-                            pmap,
-                            bmap);
-        }
-	else if (ev->recur.type != RECUR_NONE)
+      if (ev) 
 	{
-	  if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
-	    gtk_clist_set_pixtext(GTK_CLIST (day_list), row,1,text,10,
-                            pmap,
-                            bmap);
-        }
-      }
+	  GdkPixmap *pmap;
+	  GdkBitmap *bmap;
+	  
+	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
+	  
+	  if ((ev->flags & FLAG_ALARM) && ev->recur)
+	    {
+	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
+		gtk_clist_set_pixtext(GTK_CLIST (day_list), row, 1, text, 10,
+				      pmap, bmap);
+	    }
+	  else if (ev->flags & FLAG_ALARM)
+	    { 
+	      if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
+		gtk_clist_set_pixtext(GTK_CLIST (day_list), row, 1, text, 10,
+				      pmap, bmap);
+	    }
+	  else if (ev->recur)
+	    {
+	      if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
+		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 10,
+				       pmap, bmap);
+	    }
+	}
       
       gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, 
 				day_events[hour] ? dark_style : light_style); 
       row++;
-
+      
       for (; iter; iter = iter->next)
 	{
 	  ev = (event_t) iter->data;
@@ -261,6 +259,7 @@ day_view_update ()
 	    {
 	      line_info[0] = NULL;
 	    }
+
 	  line_info[1] = format_event (ev);
 	  g_slist_append (strings, line_info[1]);
 

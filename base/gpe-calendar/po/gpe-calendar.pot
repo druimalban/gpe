@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-09-08 17:13+0100\n"
+"POT-Creation-Date: 2002-09-29 16:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,39 +15,39 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:225 main.c:226
+#: main.c:228 main.c:229
 msgid "New Appointment"
 msgstr ""
 
-#: main.c:232 main.c:233
+#: main.c:235 main.c:236
 msgid "Today"
 msgstr ""
 
-#: main.c:239 main.c:240
+#: main.c:242 main.c:243
 msgid "Future View"
 msgstr ""
 
-#: main.c:244 main.c:245
+#: main.c:247 main.c:248
 msgid "Day View"
 msgstr ""
 
-#: main.c:249 main.c:250
+#: main.c:252 main.c:253
 msgid "Week View"
 msgstr ""
 
-#: main.c:254 main.c:255
+#: main.c:257 main.c:258
 msgid "Month View"
 msgstr ""
 
-#: main.c:259 main.c:260
+#: main.c:262 main.c:263
 msgid "Year View"
 msgstr ""
 
-#: main.c:266 main.c:267
+#: main.c:269 main.c:270
 msgid "Exit"
 msgstr ""
 
-#: event-ui.c:329
+#: event-ui.c:334
 msgid "End time must not be earlier than start time"
 msgstr ""
 

@@ -1,3 +1,30 @@
+2002-09-29  Philip Blundell  <philb@gnu.org>
+
+	* event-db.h (recur_t): New, broken out from event_t.
+	(event_t): Member "recur" is now a pointer.
+	(event_db_get_recurrence): New prototype.
+	* event-db.c (events): Separate back into recurring_events and
+	one_shot_events.
+	(event_db_add_internal): Use appropriate list.
+	(event_db_remove_internal): Likewise.
+	(load_data_callback): Allocate ev->recur when required.
+	(load_callback): Free recurrence struct if it was allocated by
+	mistake.
+	(event_db_list_for_period_internal): Use separate one-shot and
+	recurring lists.  Cope with ev->recur as a pointer.
+	(event_db_write): Only write recurrence tags for recurring events.
+	Cope with ev->recur as a pointer.
+	(event_db_destroy): Free recurrence struct if it exists.
+	(event_db_get_recurrence): New.
+	* day_view.c (day_view_update): Fix formatting.  Just test
+	ev->recur, not ev->recur.type.
+	* old-db.c (load_callback0): No need to set recurrence type.
+	* event-ui.c (click_ok): Allocate or dispose of recurrence struct
+	as appropriate.  Fix formatting.  Use "for" loop for day-related
+	tests.
+	(edit_event): Fix formatting.  Expect ev->recur as a pointer.  Use
+	"for" loop for day masking.
+
 2002-09-26  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* Makefile: drop libgpe dependencies	

@@ -20,7 +20,7 @@ typedef enum
   RECUR_WEEKLY,
   RECUR_MONTHLY,
   RECUR_YEARLY
-} recur_t;
+} recur_type_t;
 
 typedef struct event_details_s
 {
@@ -46,6 +46,17 @@ struct calendar_time_s
 
 typedef time_t calendar_time_t;
 
+typedef struct recur_s
+{
+  recur_type_t type;
+  
+  unsigned int count;
+  unsigned int increment;
+  unsigned long daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
+  
+  time_t end;			/* 0 == perpetual */
+} *recur_t;
+
 typedef struct event_s
 {
   unsigned long uid;
@@ -54,18 +65,9 @@ typedef struct event_s
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
   unsigned long flags;
+
+  recur_t recur;
   
-  struct
-  {
-    recur_t type;
-
-    unsigned int count;
-    unsigned int increment;
-    unsigned long daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
-
-    time_t end;			/* 0 == perpetual */
-  } recur;
-
   event_details_t details;
   gboolean mark;
 } *event_t;
@@ -88,5 +90,7 @@ extern void event_db_forget_details (event_t);
 extern GSList *event_db_list_for_period (time_t start, time_t end);
 extern GSList *event_db_untimed_list_for_period (time_t start, time_t end);
 extern void event_db_list_destroy (GSList *);
+
+extern recur_t event_db_get_recurrence (event_t ev);
 
 #endif

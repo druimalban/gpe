@@ -48,7 +48,6 @@ load_callback0 (void *arg, int argc, char **argv, char **names)
       ev->start = timegm (&tm);
       ev->duration = argv[2] ? atoi(argv[2]) : 0;
       ev->alarm = atoi (argv[3]);
-      ev->recur.type = RECUR_NONE;
 
       ev->details->summary = g_strdup (argv[5]);
       ev->details->description = g_strdup (argv[6]);

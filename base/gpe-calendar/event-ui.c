@@ -360,65 +360,58 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     ev->flags &= ~FLAG_ALARM;
   
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone)))
-    { 
-      ev->recur.type = RECUR_NONE;
-      ev->recur.increment=0;
-      ev->recur.count=0;
-      ev->recur.daymask=0;
-      ev->recur.end=0;
+    {
+      if (ev->recur)
+	g_free (ev->recur);
+      ev->recur = NULL;
     }
   else
     {
+      recur_t r = event_db_get_recurrence (ev);
+
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily))) 
         { 
-          ev->recur.type = RECUR_DAILY;
-          ev->recur.increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->dailyspin));
-	  ev->recur.daymask=0;
+          r->type = RECUR_DAILY;
+          r->increment = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->dailyspin));
+	  r->daymask = 0;
         }
       else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly))) 
         { 
-          ev->recur.type = RECUR_WEEKLY;
-          ev->recur.increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->weeklyspin));
-	  ev->recur.daymask=0;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0])))
-		  ev->recur.daymask|=MON;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[1])))
-		  ev->recur.daymask|=TUE;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[2])))
-		  ev->recur.daymask|=WED;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[3])))
-		  ev->recur.daymask|=THU;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[4])))
-		  ev->recur.daymask|=FRI;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[5])))
-		  ev->recur.daymask|=SAT;
-	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[6])))
-		  ev->recur.daymask|=SUN;
+	  guint i;
+          r->type = RECUR_WEEKLY;
+          r->increment = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->weeklyspin));
+	  r->daymask = 0;
+
+	  for (i = 0; i < 7; i++)
+	    {
+	      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i])))
+		r->daymask |= 1 << i;
+	    }
         }
       else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly))) 
         { 
-          ev->recur.type = RECUR_MONTHLY;
-          ev->recur.increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->monthlyspin));
-	  ev->recur.daymask=0;
+          r->type = RECUR_MONTHLY;
+          r->increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->monthlyspin));
+	  r->daymask=0;
         }
       else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly))) 
         { 
-          ev->recur.type = RECUR_YEARLY;
-          ev->recur.increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->yearlyspin));
-	  ev->recur.daymask=0;
+          r->type = RECUR_YEARLY;
+          r->increment=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->yearlyspin));
+	  r->daymask=0;
         }
       
       if (gtk_toggle_button_get_active 
 	  (GTK_TOGGLE_BUTTON (s->radiobuttonforever))) 
 	{
-	  ev->recur.count=0;
-          ev->recur.end=0;
+	  r->count=0;
+          r->end=0;
 	}
       else if (gtk_toggle_button_get_active 
 	       (GTK_TOGGLE_BUTTON (s->radiobuttonendafter))) 
 	{
-	  ev->recur.count=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->endspin));
-          ev->recur.end=0;
+	  r->count=gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->endspin));
+          r->end=0;
   	}
 	
       else if (gtk_toggle_button_get_active 
@@ -441,9 +434,11 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 	  
 	  /* If DST was in effect, mktime will have "helpfully" incremented the
 	     hour.  */
-	  if (tm_rend.tm_isdst) rend_t -= 60*60;
-	  ev->recur.count=0;
-	  ev->recur.end=rend_t;
+	  if (tm_rend.tm_isdst) 
+	    rend_t -= 60*60;
+
+	  r->count = 0;
+	  r->end = rend_t;
   	}
     }
     
@@ -1095,62 +1090,56 @@ edit_event (event_t ev)
       
       if (ev->flags & FLAG_ALARM) 
 	{
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), 
-					TRUE);
-	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), 
-				     ev->alarm);
-	  
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
+	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm);
 	}
 
-      switch (ev->recur.type)
+      if (ev->recur)
 	{
-	case RECUR_NONE:
-	  break;
-	case RECUR_DAILY:
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
-	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->dailyspin), ev->recur.increment);
-	  break;
-	case RECUR_WEEKLY:
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
-	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->weeklyspin), ev->recur.increment);
-	  if (ev->recur.daymask & MON)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0]),1);
-	  if (ev->recur.daymask & TUE)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[1]),1);
-	  if (ev->recur.daymask & WED)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[2]),1);
-	  if (ev->recur.daymask & THU)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[3]),1);
-	  if (ev->recur.daymask & FRI)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[4]),1);
-	  if (ev->recur.daymask & SAT)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[5]),1);
-	  if (ev->recur.daymask & SUN)
-            gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[6]),1);
-	  break;
-	case RECUR_MONTHLY:
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), TRUE);
-	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->monthlyspin), ev->recur.increment);
-	  break;
-	case RECUR_YEARLY:
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), TRUE);
-	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->yearlyspin), ev->recur.increment);
-	  break;
-	}
+	  recur_t r = ev->recur;
+	  guint i;
+	  switch (r->type)
+	    {
+	    case RECUR_DAILY:
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
+	      gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->dailyspin), r->increment);
+	      break;
+
+	    case RECUR_WEEKLY:
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
+	      gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->weeklyspin), r->increment);
+	      for (i = 0; i < 7; i++)
+		{
+		  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[0]), 
+						(r->daymask & 1 << i) ? 1 : 0);
+		}
+	      break;
+
+	    case RECUR_MONTHLY:
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), TRUE);
+	      gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->monthlyspin), r->increment);
+	      break;
+
+	    case RECUR_YEARLY:
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), TRUE);
+	      gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->yearlyspin), r->increment);
+	      break;
+	    }
 	
-	if (ev->recur.end!=0) 
-	  {
-            localtime_r (&ev->recur.end, &tm);
-            gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
-			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonendon), 
-					TRUE);
-          }
-	else gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever), 
-					TRUE);
+	  if (r->end) 
+	    {
+	      localtime_r (&r->end, &tm);
+	      gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
+				       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+	      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonendon), 
+					    TRUE);
+	    }
+	  else 
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonforever), 
+					  TRUE);
+	}
 	  
-      s->ev = ev;
-      
+	s->ev = ev;
     }    
   
   return w;
