@@ -26,7 +26,7 @@
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
   { "cancel", "cancel" },
-  { "question", "question" },
+  { "logout", PREFIX "/share/pixmaps/gpe-logout.png" },
   { NULL, NULL }
 };
 
@@ -81,7 +81,10 @@ main(int argc, char *argv[])
 
   window = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW (fakeparentwindow));
+
   /* set no window title in accordance to the Gnome 2 HIG */
+  gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
+
   gtk_window_set_title (GTK_WINDOW(window), "");
   gtk_widget_realize (window);
  
@@ -102,7 +105,7 @@ main(int argc, char *argv[])
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
 
-  p = gpe_find_icon ("question");
+  p = gpe_find_icon ("logout");
   icon = gpe_render_icon (GTK_DIALOG (window)->vbox->style, p);
   gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
   gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
@@ -122,9 +125,9 @@ main(int argc, char *argv[])
                       NULL);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
-                     buttoncancel);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
                       buttonok);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
+                     buttoncancel);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
 
