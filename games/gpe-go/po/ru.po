@@ -1,0 +1,70 @@
+# Translation of gpe-go-0.04.po to Russian.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-go package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.04\n"
+"POT-Creation-Date: 2003-10-12 22:18+0300\n"
+"PO-Revision-Date: 2003-10-25 12:30+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-go.c:734
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "B:%d  W:%d "
+
+#: gpe-go.c:967
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Невозможно сохранить игру в %s."
+
+#: gpe-go.c:1066
+msgid "Undo"
+msgstr "Отмена"
+
+#: gpe-go.c:1080
+msgid "Redo"
+msgstr "Повтор"
+
+#: gpe-go.c:1088
+msgid "B:0  W:0 "
+msgstr "B:0  W:0 "
+
+#: gpe-go.c:1109
+msgid "PASS"
+msgstr "PASS"
+
+#: gpe-go.c:1122
+msgid "Save"
+msgstr "Сохранить"
+
+#: gpe-go.c:1126
+msgid "Save as..."
+msgstr "Сохранить как..."
+
+#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
+#: gpe-go-19.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Go"
+
+#: gpe-go-9.desktop.in.h:2
+msgid "Go 9"
+msgstr "Go 9"
+
+#: gpe-go-13.desktop.in.h:2
+msgid "Go 13"
+msgstr "Go 13"
+
+#: gpe-go-19.desktop.in.h:2
+msgid "Go 19"
+msgstr "Go 19"

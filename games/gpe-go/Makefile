@@ -15,7 +15,7 @@ CVSBUILD = yes
 endif
 
 
-LINGUAS = cs de pl ro sv nl fr pt
+LINGUAS = cs de pl ro sv nl fr pt ru
 
 MEMBERS = gpe-go
 
