@@ -2,6 +2,7 @@ PACKAGE   = keylaunch
 VERSION   = 2.0.0
 
 DEBUG     = 0
+CVSBUILD  = yes
 
 CC        = gcc
 #CFLAGS    = -g -O2 -Wall
@@ -20,6 +21,12 @@ RCFILE2   = /etc/$(PROG)rc
 DEFINES   = -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" -DDEBUG
 
 OBJS      = $(PROG).o xsi.o
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
 all: $(PROG) 
 
@@ -49,4 +56,4 @@ old-ipkg:
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.dpkg_ipkg

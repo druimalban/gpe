@@ -23,6 +23,12 @@ CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: gpe-question
 
 gpe-question: gpe-question.o
@@ -37,4 +43,4 @@ install-question: gpe-question
 clean:
 	rm -f gpe-question.o gpe-question
 
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.dpkg_ipkg
