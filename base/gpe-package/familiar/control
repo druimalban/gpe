@@ -1,0 +1,9 @@
+Package: gpe-package
+Section: base
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Depends: libgpewidget1 (>= 0.40), libipkg, libdisplaymigration0
+Description: A package manager GUI
+Source: gpe-package-VERSION.tar.gz
