@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-16 16:29+0200\n"
+"POT-Creation-Date: 2003-03-16 21:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,20 +33,20 @@ msgstr ""
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:195
+#: src/selector-cb.c:66 src/sketchpad-cb.c:194
 msgid "Delete current sketch?"
 msgstr ""
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:45 src/sketchpad-cb.c:75
-#: src/sketchpad-cb.c:195
+#: src/selector-cb.c:66 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:194
 msgid "Question"
 msgstr ""
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:196
+#: src/selector-cb.c:67 src/sketchpad-cb.c:195
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:196
+#: src/selector-cb.c:67 src/sketchpad-cb.c:195 src/sketchpad-gui.c:428
 msgid "Delete"
 msgstr ""
 
@@ -54,22 +54,30 @@ msgstr ""
 msgid "new"
 msgstr ""
 
-#: src/sketchpad-cb.c:45
+#: src/sketchpad-cb.c:46
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 msgid "Discard"
 msgstr ""
 
-#: src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:75
+#: src/sketchpad-cb.c:76
 msgid "Save current sketch?"
+msgstr ""
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr ""
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
 msgstr ""
 
 #: gpe-sketchbook.desktop.in.h:1

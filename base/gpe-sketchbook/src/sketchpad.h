@@ -26,6 +26,7 @@ typedef struct _sketchpad {
   //GtkWidget * drawing_area;
 
   //GtkWidget * files_toolbar;
+  GtkWidget * files_popup_button;
 
   //GtkWidget * drawing_toolbar;
   GtkWidget * button_tools_pencil;

@@ -30,6 +30,7 @@
 #include "dock.h"
 #include "gpe/question.h"
 #include "gpe/gpe-iconlist.h"
+#include "gpe/popup_menu.h"
 
 //--i18n
 #include <libintl.h>
@@ -84,6 +85,9 @@ int _save_current_if_needed(){
 }
 
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
+
+  //close popup, in case it was around
+  popup_menu_close (sketchpad.files_popup_button);
   
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
@@ -106,22 +110,14 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
 
 //---------------------------------------------------------
 //--------------------- FILE TOOLBAR ----------------------
-void on_button_files_clicked(GtkButton * button, gpointer filesbox){
-  gtk_widget_hide    (GTK_WIDGET (filesbox));
-  gtk_widget_show_all(GTK_WIDGET (filesbox));
-}
-
-void _close_filesbox(GtkButton * button){
-  GtkWidget * filesbox;
-  filesbox = gtk_widget_get_toplevel((GtkWidget *)button);
-  gtk_widget_hide (GTK_WIDGET (filesbox));
-}
 
 void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   Note * note;
 
-  if(!is_current_sketch_modified){ _close_filesbox(button); return;}
-
+  if(!is_current_sketch_modified){
+    popup_menu_close (sketchpad.files_popup_button);
+    return;
+  }
   if(is_current_sketch_new){
     note = note_new();
     note->fullpath_filename = file_new_fullpath_filename();
@@ -168,35 +164,37 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   sketchpad_reset_title();
 
   //in case of direct call, button == NULL, ie: from on_button_file_new_clicked()
-  if(button) _close_filesbox(button);
+  if(button) popup_menu_close (sketchpad.files_popup_button);
 }
 
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
   if(_save_current_if_needed() == ACTION_CANCELED){
-    _close_filesbox(button);
+    popup_menu_close (sketchpad.files_popup_button);
     return;
   }
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
 
-  _close_filesbox(button);
+  popup_menu_close (sketchpad.files_popup_button);
 }
 
 void on_button_file_properties_clicked (GtkButton *button, gpointer user_data){
   //does nothing yet
-  _close_filesbox(button);
+  popup_menu_close (sketchpad.files_popup_button);
 }
+
 
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
   int ret;
 
-  if(is_current_sketch_new){ _close_filesbox(button); return;}
-  
+  //first close the popup, to avoid overlaping with the message box
+  popup_menu_close (sketchpad.files_popup_button);
+
+  if(is_current_sketch_new) return;
   ret = gpe_question_ask (_("Delete current sketch?"), _("Question"), "question", 
                           _("Cancel"), "!gtk-no", _("Delete"), "!gtk-yes", NULL);
   if(ret == 1) delete_current_sketch();
 
-  _close_filesbox(button);
 }
 
 

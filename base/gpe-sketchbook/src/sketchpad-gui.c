@@ -18,6 +18,7 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include "gpe-sketchbook.h"
 #include "sketchpad.h"
 #include "sketchpad-gui.h"
 #include "sketchpad-cb.h"
@@ -25,6 +26,8 @@
 #include "dock.h"
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
+#include "gpe/popup_menu.h"
+#include "gpe/picturebutton.h"
 
 //--i18n
 #include <libintl.h>
@@ -203,7 +206,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_container_add (GTK_CONTAINER (button_brushes), button_brushes_pixmap);
 
   brushbox = brushbox_new();
-  /**/gtk_window_set_transient_for(GTK_WINDOW(brushbox), GTK_WINDOW(window));
+  //**/gtk_window_set_transient_for(GTK_WINDOW(brushbox), GTK_WINDOW(window));
   gtk_object_set_data((GtkObject *) brushbox, "calling_button", button_brushes);
   gtk_signal_connect (GTK_OBJECT (button_brushes), "clicked",
                       GTK_SIGNAL_FUNC (on_button_brushes_clicked), brushbox);
@@ -215,7 +218,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   colorbox_button_set_color(button_colors, &black);//default color
 
   colorbox = colorbox_new();
-  /**/gtk_window_set_transient_for(GTK_WINDOW(colorbox), GTK_WINDOW(window));
+  //**/gtk_window_set_transient_for(GTK_WINDOW(colorbox), GTK_WINDOW(window));
   gtk_object_set_data((GtkObject *) colorbox, "calling_button", button_colors);
   gtk_signal_connect (GTK_OBJECT (button_colors), "clicked",
                       GTK_SIGNAL_FUNC (on_button_colors_clicked), colorbox);
@@ -371,55 +374,24 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   return toolbar;
 }//sketchpad_build_files_toolbar()
 
-GtkWidget * filesbox_new(){
-  GtkWidget * filesbox;
 
-  GtkWidget * table_files;
-  GtkWidget * button_new;
-  GtkWidget * button_save;
-  GtkWidget * button_delete;
-  GtkWidget * button_properties;
-
-  GdkPixbuf *pixbuf;
-  GtkWidget *pixmap;
-
-  table_files = gtk_table_new (2, 2, FALSE);
-  filesbox = _popupwindow (table_files);
-
-#define MAKE_FILES_BUTTON(action, icon, x, y, a, b)  \
-  button_ ##action = gtk_button_new ();\
-  pixbuf = gpe_find_icon ( ##icon );\
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);\
-  gtk_container_add (GTK_CONTAINER (button_ ##action), pixmap);\
-  gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
-  gtk_signal_connect (GTK_OBJECT (button_ ##action), "clicked",\
-                      GTK_SIGNAL_FUNC (on_button_file_ ##action ##_clicked), NULL);\
-  \
-  gtk_table_attach (GTK_TABLE (table_files), button_ ##action, x, y, a, b, \
-                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
-
-  MAKE_FILES_BUTTON (new        , "new"        , 0, 1, 0, 1);
-  MAKE_FILES_BUTTON (properties , "properties" , 1, 2, 0, 1);
-  MAKE_FILES_BUTTON (save       , "save"       , 0, 1, 1, 2);
-  MAKE_FILES_BUTTON (delete     , "delete"     , 1, 2, 1, 2);
-
-  return filesbox;
-}//filebox_new()
+GtkWidget * _files_popup_new (GtkWidget *parent_button);
 
 void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   GdkPixbuf *pixbuf;
   GtkWidget *pixmap;
 
-  GtkWidget *filesbox;
+  GtkWidget * files_popup_button;
 
-  filesbox = filesbox_new();
-  /**/gtk_window_set_transient_for(GTK_WINDOW(filesbox), GTK_WINDOW(window));
-
-  pixbuf = gpe_find_icon ("files");
+  pixbuf = gpe_find_icon ("new");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
-                           pixmap, GTK_SIGNAL_FUNC(on_button_files_clicked), filesbox);
+  files_popup_button = popup_menu_button_new (pixmap, _files_popup_new, NULL/* callback func */);
+  //files_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW, _files_popup_new, NULL);
+  gtk_button_set_relief (GTK_BUTTON (files_popup_button), GTK_RELIEF_NONE);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
+                            files_popup_button, NULL, NULL);
+  //keep a ref
+  sketchpad.files_popup_button = files_popup_button;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -439,4 +411,38 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
                            NULL, NULL,
                            pixmap, GTK_SIGNAL_FUNC(on_button_file_next_clicked), NULL);
 
+}
+
+GtkWidget * _files_popup_new (GtkWidget *parent_button){
+  GtkWidget *vbox;//to return
+
+  GtkWidget * button_new;
+  GtkWidget * button_save;
+  GtkWidget * button_delete;
+  GtkWidget * button_properties;
+
+  GtkStyle * style = sketchbook.window->style;
+
+  button_new        = gpe_picture_button_aligned (style, _("New"), "new", GPE_POS_LEFT);
+  button_save       = gpe_picture_button_aligned (style, _("Save"), "save", GPE_POS_LEFT);
+  button_delete     = gpe_picture_button_aligned (style, _("Delete"), "delete", GPE_POS_LEFT);
+  button_properties = gpe_picture_button_aligned (style, _("Properties"), "properties", GPE_POS_LEFT);
+
+#define _BUTTON_SETUP(action) \
+              gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
+              g_signal_connect (G_OBJECT (button_ ##action), "clicked",\
+              G_CALLBACK (on_button_file_ ##action ##_clicked), NULL);
+
+  _BUTTON_SETUP(new);
+  _BUTTON_SETUP(save);
+  _BUTTON_SETUP(delete);
+  _BUTTON_SETUP(properties);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_new,        FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_save,       FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_delete,     FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_properties, FALSE, FALSE, 0);
+
+  return vbox;
 }
