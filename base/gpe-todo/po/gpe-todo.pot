@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-01-01 23:05+0000\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,63 +15,47 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:64
+#: main.c:60
 msgid "To-do list"
 msgstr ""
 
-#: todo-ui.c:254 configure.c:105 configure.c:199
-msgid "OK"
-msgstr ""
-
-#: todo-ui.c:255 todo-ui.c:304 list-ui.c:82 configure.c:106
-msgid "Cancel"
-msgstr ""
-
-#: todo-ui.c:264
+#: todo-ui.c:269
 msgid "Select categories"
 msgstr ""
 
-#: todo-ui.c:286
+#: todo-ui.c:291
 msgid "Summary:"
 msgstr ""
 
-#: todo-ui.c:287
+#: todo-ui.c:292
 msgid "Details"
 msgstr ""
 
-#: todo-ui.c:293
+#: todo-ui.c:298
 msgid "Not started"
 msgstr ""
 
-#: todo-ui.c:293
+#: todo-ui.c:298
 msgid "In progress"
 msgstr ""
 
-#: todo-ui.c:294
+#: todo-ui.c:299
 msgid "Completed"
 msgstr ""
 
-#: todo-ui.c:303
-msgid "Save"
-msgstr ""
-
-#: todo-ui.c:305 list-ui.c:82 configure.c:212
-msgid "Delete"
-msgstr ""
-
-#: todo-ui.c:314
+#: todo-ui.c:321
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:329
+#: todo-ui.c:336
 msgid "Categories:"
 msgstr ""
 
-#: todo-ui.c:423
+#: todo-ui.c:429
 msgid "Edit to-do item"
 msgstr ""
 
-#: todo-ui.c:430
+#: todo-ui.c:436
 msgid "New item"
 msgstr ""
 
@@ -87,70 +71,78 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: list-ui.c:342 configure.c:205
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr ""
+
+#: list-ui.c:82
+msgid "Cancel"
+msgstr ""
+
+#: list-ui.c:333 configure.c:210
 msgid "New"
 msgstr ""
 
-#: list-ui.c:343 list-ui.c:344
+#: list-ui.c:334 list-ui.c:335
 msgid "Add a new item"
 msgstr ""
 
-#: list-ui.c:349
+#: list-ui.c:340
 msgid "Configure"
 msgstr ""
 
-#: list-ui.c:350 list-ui.c:351
+#: list-ui.c:341 list-ui.c:342
 msgid "Configure categories"
 msgstr ""
 
-#: list-ui.c:356
+#: list-ui.c:347
 msgid "Purge"
 msgstr ""
 
-#: list-ui.c:357 list-ui.c:358
+#: list-ui.c:348 list-ui.c:349
 msgid "Purge completed items"
 msgstr ""
 
-#: list-ui.c:363
+#: list-ui.c:354
 msgid "Re-sort"
 msgstr ""
 
-#: list-ui.c:364 list-ui.c:365
+#: list-ui.c:355 list-ui.c:356
 msgid "Move completed items to the end of the list"
 msgstr ""
 
-#: list-ui.c:370
+#: list-ui.c:361
 msgid "Exit"
 msgstr ""
 
-#: list-ui.c:371 list-ui.c:372
+#: list-ui.c:362 list-ui.c:363
 msgid "Exit the program"
 msgstr ""
 
-#: configure.c:56
+#: configure.c:58
 msgid "Category name must not be blank"
 msgstr ""
 
-#: configure.c:66
+#: configure.c:68
 msgid "A category by that name already exists"
 msgstr ""
 
-#: configure.c:102
+#: configure.c:106
 msgid "To-do list: Categories"
 msgstr ""
 
-#: configure.c:135
+#: configure.c:139
 msgid "New category"
 msgstr ""
 
-#: configure.c:168
+#: configure.c:172
 msgid "Categories"
 msgstr ""
 
-#: configure.c:206 configure.c:207
+#: configure.c:211 configure.c:212
 msgid "Create a new category"
 msgstr ""
 
-#: configure.c:213 configure.c:214
+#: configure.c:218 configure.c:219
 msgid "Delete the selected category"
 msgstr ""

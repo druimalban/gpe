@@ -1,8 +1,9 @@
 PREFIX = /usr/local
 PACKAGE = gpe-todo
 GTK2 = yes
+VERSION = 0.32
 
-LINGUAS = de
+LINGUAS = 
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`

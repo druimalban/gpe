@@ -1,3 +1,7 @@
+2003-02-14  Phil Blundell <pb@handhelds.org>
+
+	* Version 0.32 released.
+
 2003-01-29  Luis Oliveira  <luis@handhelds.org>
 
 	* Makefile (CFLAGS): Add ../libtododb to include path.
