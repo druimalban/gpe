@@ -18,7 +18,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
 #include <gpe/init.h>
-#include <gpe/gtkminifilesel.h>
 #include <gpe/render.h>
 #include <gpe/smallbox.h>
 
@@ -29,8 +28,6 @@
 #if GTK_MAJOR_VERSION < 2
 #error Eat flaming death, GTK 1 users!
 #endif
-
-gchar *current_dir = NULL;
 
 enum
   {
@@ -161,33 +158,29 @@ add_playlist_item (struct nmf_frontend *fe, char *fn)
 }
 
 static void
-select_file_done (GtkWidget *fs, struct nmf_frontend *fe)
+select_file_done (GtkWidget *w, GtkWidget *fs)
 {
-  char *s = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (fs));
+  struct nmf_frontend *fe = g_object_get_data (G_OBJECT (fs), "frontend");
+
+  char *s = gtk_file_selection_get_filename (GTK_FILE_SELECTION (fs));
   
   add_playlist_item (fe, s);
 
-  if (current_dir)
-    g_free (current_dir);
-  
-  current_dir = gtk_mini_file_selection_get_directory (GTK_MINI_FILE_SELECTION (fs));
-			  
   gtk_widget_destroy (fs);
 }
 
 static void
 new_entry (GtkWidget *w, struct nmf_frontend *fe)
 {
-  GtkWidget *fs = gtk_mini_file_selection_new (_("Select file"));
+  GtkWidget *fs = gtk_file_selection_new (_("Select file"));
   
-  gtk_signal_connect (GTK_OBJECT (GTK_MINI_FILE_SELECTION (fs)->cancel_button), 
+  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (fs)->cancel_button), 
 		      "clicked", GTK_SIGNAL_FUNC (close_file_sel), fs);
-  gtk_signal_connect (GTK_OBJECT (fs), "completed", 
-		      GTK_SIGNAL_FUNC (select_file_done), fe);
-  
-  if (current_dir)
-    gtk_mini_file_selection_set_directory (GTK_MINI_FILE_SELECTION (fs), current_dir);
-  
+  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (fs)->ok_button), 
+		      "clicked", GTK_SIGNAL_FUNC (select_file_done), fs);
+
+  g_object_set_data (G_OBJECT (fs), "frontend", fe);
+
   gtk_widget_show (fs);
 }
 
