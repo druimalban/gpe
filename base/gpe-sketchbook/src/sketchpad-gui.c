@@ -238,14 +238,17 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
 }//sketchpad_build_drawing_toolbar()
 
 
-/** WARNING: will destroy button->child if any */
 void colorbox_button_set_color(GtkWidget * button, GdkColor * color){
   GtkWidget * event_box;
-  GtkStyle * style;
+  GtkStyle  * style;
 
-  if(GTK_BIN (button)->child != NULL) gtk_widget_destroy(GTK_BIN (button)->child);
-
-  event_box = gtk_event_box_new();
+  if(GTK_BIN (button)->child == NULL){
+    event_box = gtk_event_box_new();
+    gtk_container_add (GTK_CONTAINER (button), event_box);
+  }
+  else{
+    event_box = GTK_BIN (button)->child;
+  }
   style = gtk_style_copy(event_box->style);
   style->bg[0] = * color;
   style->bg[1] = * color;
@@ -254,7 +257,6 @@ void colorbox_button_set_color(GtkWidget * button, GdkColor * color){
   style->bg[4] = * color;
   gtk_widget_set_style(event_box, style);
   gtk_widget_show_now(event_box);
-  gtk_container_add (GTK_CONTAINER (button), event_box);
 }
 
 GtkWidget * _popupwindow (GtkWidget * widget){
