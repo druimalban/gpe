@@ -1,3 +1,8 @@
+2004-09-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Makefile: Released Version 0.20
+    * guitools.c: Filter usbdevfs from filesystems.
+
 2004-09-19  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Changed dirbrowser default size.

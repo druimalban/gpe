@@ -178,7 +178,7 @@ scan_fstab(void)
                 add_storage(_("MMC-Card"), path, TRUE);
               else if (strstr(path, "cf") || strstr(path, "hda"))
                 add_storage(_("CF-Card"), path, TRUE);
-              else if (strstr(path, "usb"))
+              else if (strstr(path, "usb") && !strstr(path, "proc"))
                 add_storage(_("USB-Device"), path, TRUE);
               else if (strstr(path, "cdrom"))
                 add_storage(_("CDROM"), path, TRUE);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-02 00:13+0200\n"
+"POT-Creation-Date: 2004-09-20 01:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,36 +16,40 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:69
+#: main.c:67
 msgid "Displaying help failed."
 msgstr ""
 
-#: main.c:220
+#: main.c:219
 msgid "/_File"
 msgstr ""
 
-#: main.c:221
+#: main.c:220
 msgid "/_File/_Create Directory"
 msgstr ""
 
-#: main.c:222
+#: main.c:221
 msgid "/_File/s1"
 msgstr ""
 
-#: main.c:223
+#: main.c:222
 msgid "/_File/_Close"
 msgstr ""
 
-#: main.c:224
+#: main.c:223
 msgid "/_Settings"
 msgstr ""
 
-#: main.c:225
+#: main.c:224
 msgid "/_Settings/Directory Browser"
 msgstr ""
 
-#: main.c:226
+#: main.c:225
 msgid "/_Settings/My Files only"
+msgstr ""
+
+#: main.c:226
+msgid "/_Go To"
 msgstr ""
 
 #: main.c:227
@@ -68,121 +72,157 @@ msgstr ""
 msgid "/Settings/My Files only"
 msgstr ""
 
-#: main.c:795
+#: main.c:254
+msgid "/Go To"
+msgstr ""
+
+#: main.c:563
+msgid "Directory created."
+msgstr ""
+
+#: main.c:596
+msgid "File copied."
+msgstr ""
+
+#: main.c:612
+msgid "File copied to clipboard."
+msgstr ""
+
+#: main.c:683
+msgid "Starting"
+msgstr ""
+
+#: main.c:753
+msgid "File renamed."
+msgstr ""
+
+#: main.c:797
+msgid "File moved."
+msgstr ""
+
+#: main.c:808
 msgid "Move to directory..."
 msgstr ""
 
-#: main.c:835
+#: main.c:857
 #, c-format
 msgid "Delete \"%s\"?"
 msgstr ""
 
-#: main.c:837
+#: main.c:859
 msgid "Confirm"
 msgstr ""
 
-#: main.c:944
+#: main.c:966
 msgid "<b>Open with program</b>"
 msgstr ""
 
-#: main.c:1009
+#: main.c:1031
 msgid "<b>No available applications</b>"
 msgstr ""
 
-#: main.c:1141
+#: main.c:1137
 #, c-format
 msgid "Symbolic link %s leads to inaccessable file!"
 msgstr ""
 
-#: main.c:1149
+#: main.c:1145
 #, c-format
 msgid "Maximum symbolic link depth exceeded for %s"
 msgstr ""
 
-#: main.c:1753 main.c:1849
+#: main.c:1739 main.c:1835
 msgid "Icon"
 msgstr ""
 
-#: main.c:1761
+#: main.c:1747
 msgid "Name"
 msgstr ""
 
-#: main.c:1770
+#: main.c:1756
 msgid "Size"
 msgstr ""
 
-#: main.c:1779
+#: main.c:1765
 msgid "Changed"
 msgstr ""
 
-#: main.c:1856
+#: main.c:1842
 msgid "Directory"
 msgstr ""
 
-#: main.c:1961
-msgid "Back"
-msgstr ""
-
-#: main.c:1961
+#: main.c:1957
 msgid "Go back in history."
 msgstr ""
 
-#: main.c:1965
-msgid "Forward"
-msgstr ""
-
-#: main.c:1965
+#: main.c:1961
 msgid "Go forward in history."
 msgstr ""
 
-#: main.c:1969
-msgid "Up one level"
-msgstr ""
-
-#: main.c:1969
+#: main.c:1965
 msgid "Go up one level."
 msgstr ""
 
-#: main.c:1975
-msgid "Home"
-msgstr ""
-
-#: main.c:1975
+#: main.c:1973
 msgid "Goto your home directory."
 msgstr ""
 
-#: main.c:1979
-msgid "Stop"
+#: main.c:1978
+msgid "Refresh current directory."
 msgstr ""
 
-#: main.c:1979
+#: main.c:1982
 msgid "Stop the current process."
 msgstr ""
 
-#: main.c:1986 main.c:1987
+#: main.c:1989
 msgid "Icon view"
 msgstr ""
 
-#: main.c:1987
+#: main.c:1990
 msgid "View files as icons"
 msgstr ""
 
-#: main.c:1992 main.c:1993
+#: main.c:1995
 msgid "List view"
 msgstr ""
 
-#: main.c:1993
+#: main.c:1996
 msgid "View files in a list"
 msgstr ""
 
-#: main.c:1999
+#: main.c:2002
 msgid "Go!"
 msgstr ""
 
-#: main.c:2000
+#: main.c:2003
 msgid "Goto Location"
 msgstr ""
 
 #: bluetooth.c:49
 msgid "This file is too large to beam"
+msgstr ""
+
+#: guitools.c:178
+msgid "MMC-Card"
+msgstr ""
+
+#: guitools.c:180
+msgid "CF-Card"
+msgstr ""
+
+#: guitools.c:182
+msgid "USB-Device"
+msgstr ""
+
+#: guitools.c:184
+msgid "CDROM"
+msgstr ""
+
+#: guitools.c:202
+msgid "My Documents"
+msgstr ""
+
+#: guitools.c:203
+msgid "Filesystem"
 msgstr ""
