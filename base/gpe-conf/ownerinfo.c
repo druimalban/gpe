@@ -60,6 +60,7 @@ FILE *fp;
 GtkWidget *Ownerinfo_Build_Objects()
 {
   GtkWidget *table;
+  GtkWidget *vbox, *hbox, *label, *icon;
   GtkWidget *scrolledwindow;
   GtkWidget *scrolledwindow1;
   GtkWidget *viewport;
@@ -71,6 +72,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   GtkWidget *owner_address_label;
   GtkWidget *button;
   GtkWidget *photo;
+  GdkPixbuf *pixbuf;
   gint upgrade_result = UPGRADE_ERROR;
   GtkAttachOptions table_attach_left_col_x;
   GtkAttachOptions table_attach_left_col_y;
@@ -81,6 +83,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   guint widget_padding_x;
   guint widget_padding_y_even;
   guint widget_padding_y_odd;
+  gboolean datafile_writable = FALSE;
 
   /* ======================================================================== */
   /* get the data from the file if existant */
@@ -113,8 +116,8 @@ GtkWidget *Ownerinfo_Build_Objects()
    * GTK_JUSTIFY_CENTER (the default)
    * GTK_JUSTIFY_FILL
    */
-  table_justify_left_col = GTK_JUSTIFY_RIGHT;
-  table_justify_right_col = GTK_JUSTIFY_RIGHT;
+  table_justify_left_col = GTK_JUSTIFY_LEFT;
+  table_justify_right_col = GTK_JUSTIFY_LEFT;
 
   widget_padding_x = 5;
   widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
@@ -185,6 +188,23 @@ GtkWidget *Ownerinfo_Build_Objects()
       */
     }
 
+  /*
+   * Check if we are even allowed to write to the owner data file
+   *    or create it if necessary.
+   * FIXME:
+   *    Gotta do the same at top level of gpe-conf since the buttons
+   *    are not insensitive otherwise.
+   */
+
+  /* either we can write to the file... */
+  if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
+      /* ...or we are allowed to write in this directory, and the file does not yet exist */
+      (((access (my_dirname (g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
+       (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
+    datafile_writable = TRUE;
+  else
+    datafile_writable = FALSE;
+
   /* ======================================================================== */
   /* draw the GUI */
   scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
@@ -195,18 +215,42 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_container_add (GTK_CONTAINER (scrolledwindow), viewport);
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
 
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox);
+  gtk_container_add (GTK_CONTAINER (viewport), vbox);
+  /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox);
+
+  /* FIXME: GTK2: make this text bold */
+  label = gtk_label_new (_("Only the user 'root' is allowed to change this information"));
+  gtk_widget_show (label);
+  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+
+  pixbuf = gpe_find_icon ("warning16");
+  icon = gpe_render_icon (hbox->style, pixbuf);
+  gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
+  /* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 6);
+  if (!datafile_writable)
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, TRUE, 0);
+ 
   table = gtk_table_new (6, 2, FALSE);
   gtk_widget_set_name (table, "table");
-  gtk_container_add (GTK_CONTAINER (viewport), table);
-  gtk_container_set_border_width (GTK_CONTAINER (table), widget_padding_x);
+  gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   /* ------------------------------------------------------------------------ */
-  owner_name_label = gtk_label_new (_("Name"));
+  owner_name_label = gtk_label_new (_("Name:"));
   gtk_table_attach (GTK_TABLE (table), owner_name_label, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_name_label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (owner_name_label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (owner_name_label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_name_label),
 			widget_padding_x, widget_padding_y_even);
 
@@ -217,12 +261,12 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   /* ------------------------------------------------------------------------ */
-  owner_email_label = gtk_label_new (_("E-Mail"));
+  owner_email_label = gtk_label_new (_("E-Mail:"));
   gtk_table_attach (GTK_TABLE (table), owner_email_label, 0, 1, 1, 2,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_email_label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (owner_email_label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (owner_email_label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_email_label),
 			widget_padding_x, widget_padding_y_odd);
 
@@ -233,12 +277,12 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   /* ------------------------------------------------------------------------ */
-  owner_phone_label = gtk_label_new (_("Phone"));
+  owner_phone_label = gtk_label_new (_("Phone:"));
   gtk_table_attach (GTK_TABLE (table), owner_phone_label, 0, 1, 2, 3,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_phone_label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_phone_label),
 			widget_padding_x, widget_padding_y_even);
 
@@ -249,12 +293,12 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   /* ------------------------------------------------------------------------ */
-  owner_address_label = gtk_label_new (_("Address"));
+  owner_address_label = gtk_label_new (_("Address:"));
   gtk_table_attach (GTK_TABLE (table), owner_address_label, 0, 1, 3, 4,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y | GTK_FILL ), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_address_label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 1, 0);
+  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
   gtk_misc_set_padding (GTK_MISC (owner_address_label),
 			widget_padding_x, widget_padding_y_odd);
 
@@ -277,12 +321,12 @@ GtkWidget *Ownerinfo_Build_Objects()
                    owneraddress, strlen(owneraddress));
 
   /* ------------------------------------------------------------------------ */
-  owner_photofile_label = gtk_label_new (_("Photofile"));
+  owner_photofile_label = gtk_label_new (_("Photofile:"));
   gtk_table_attach (GTK_TABLE (table), owner_photofile_label, 0, 1, 4, 5,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_photofile_label), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 1, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_photofile_label),
 			widget_padding_x, widget_padding_y_even);
 
@@ -321,17 +365,8 @@ GtkWidget *Ownerinfo_Build_Objects()
  
   /*
    * Check if we are even allowed to write to the owner data file
-   *    or create it if necessary.
-   * FIXME:
-   *    Gotta do the same at top level of gpe-conf since the buttons
-   *    are not insensitive otherwise.
    */
-
-  /* either we can write to the file... */
-  if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
-      /* ...or we are allowed to write in this directory, and the file does not yet exist */
-      (((access (my_dirname (g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
-       (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
+  if (datafile_writable)
     gtk_widget_set_sensitive (table, TRUE);
   else 
     gtk_widget_set_sensitive (table, FALSE);
