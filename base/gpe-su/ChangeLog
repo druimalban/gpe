@@ -2,6 +2,10 @@
 
 	* Version 0.12 released.
 
+2004-06-07  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (GTKCFLAGS, GTKLDFLAGS): Delete.
+	
 2004-06-07  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Makefile: install binary suid root.
