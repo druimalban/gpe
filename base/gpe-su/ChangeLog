@@ -1,3 +1,8 @@
+2004-11-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (LINGUAS): Add zh_CN.
+	* po/zh_CN.po: New file, courtsesy Meng Jie.
+
 2004-08-16  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Released V 0.18
