@@ -1,3 +1,7 @@
+2004-08-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* timeanddate.c: Fixed bug causing date not set if changed in combo.
+
 2004-08-18	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Released Version 0.1.15

@@ -83,7 +83,7 @@ update_dns_server (const gchar * server)
 void
 update_time_from_net (const gchar * server)
 {
-	char *tstr = g_strdup_printf ("/usr/sbin/ntpdate -b %s", server);
+	char *tstr = g_strdup_printf ("ntpdate -b %s", server);
 	if (system(tstr))
 	{
 		fprintf (stderr, "failed to execute ntpdate\n");

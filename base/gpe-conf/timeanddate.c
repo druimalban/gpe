@@ -657,8 +657,9 @@ void Time_Save()
   if (!nonroot_mode)
   {
 	  tz = get_tz_info(par);
-		  
-	  gtk_calendar_get_date(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),&year,&month,&day);
+	  year = GTK_DATE_COMBO(self.cal)->year;
+	  month = GTK_DATE_COMBO(self.cal)->month;
+	  day = GTK_DATE_COMBO(self.cal)->day;
 	  gpe_time_sel_get_time(GPE_TIME_SEL(self.tsel),&h,&m);
 	  s = 0;	 
 	  tm.tm_mday=day;
