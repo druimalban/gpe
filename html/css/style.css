@@ -1,0 +1,47 @@
+body {
+	margin-left:	15px;
+	margin-right:	15px;
+	background-color:	white;
+	color:		black;
+}
+
+p,li {
+	line-height:	120%
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family:	gill, helvetica, sans-serif;
+}
+
+code, tt {
+	font-family:	lucidatypewriter, monospace;
+	font-size:	80%
+}
+
+table {
+	border-style:	none;
+}
+
+img {
+	border-style:	none;
+}
+
+hr {
+	color:		black;
+	background-color:	black;
+	height:		1px;
+	width:		100%;
+	border:		0;
+}
+
+div.menu {
+	margin-top:	6pt;
+	margin-bottom:	2pt;
+	font-family:	sans-serif;
+}
+
+div.footer {
+	margin-top:	70pt;
+	margin-bottom:	2pt;
+	font-family:	sans-serif;
+}
