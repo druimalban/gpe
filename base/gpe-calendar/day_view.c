@@ -91,7 +91,7 @@ selection_made (GtkWidget      *clist,
       
       uid = (int)gtk_clist_get_row_data (GTK_CLIST (clist), row);
 
-      ev = get_ev_from_uid(uid);
+      ev = event_db_find_by_uid (uid);
       
       if (ev) 
 	{

@@ -63,7 +63,7 @@ selection_made (GtkWidget *clist, gint row, gint column,
       
       uid = (int)gtk_clist_get_row_data (GTK_CLIST (clist), row);
 
-      ev = get_ev_from_uid(uid);
+      ev = event_db_find_by_uid (uid);
       
       gtk_widget_show (edit_event (ev));
 
@@ -142,7 +142,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
     }
   else
     {
-      contents = gtk_label_new ("No appointments");
+      contents = gtk_label_new (_("No appointments"));
     }
 
   gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
