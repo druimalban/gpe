@@ -69,7 +69,43 @@ gboolean
 calendar_push_object (struct db *db, const char *obj, const char *uid, 
 		      char *returnuid, int *returnuidlen, GError **err)
 {
-  return FALSE;
+  GSList *list, *tags;
+  MIMEDirVEvent *vevent;
+  MIMEDirVCal *vcal;
+  int id;
+
+  vcal = mimedir_vcal_new_from_string (obj, err);
+  if (vcal == NULL)
+    return FALSE;
+
+  list = mimedir_vcal_get_todo_list (vcal);
+  vevent = MIMEDIR_VEVENT (list->data);
+
+  tags = vevent_to_tags (vevent);
+
+  if (uid)
+    id = atoi (uid);
+  else
+    {
+      char *errmsg;
+
+      if (nsqlc_exec (db->db, "insert into calendar_urn values (NULL)",
+		      NULL, NULL, &errmsg))
+	return FALSE;
+      
+      id = nsqlc_last_insert_rowid (db->db);
+    }
+   
+  mimedir_vcal_free_component_list (list);
+   
+  g_object_unref (vcal);
+
+  store_tag_data (db->db, "calendar", id, tags, TRUE);
+
+  sprintf (returnuid, "%d", id);
+  *returnuidlen = strlen (returnuid);
+
+  return TRUE;
 }
 
 gboolean

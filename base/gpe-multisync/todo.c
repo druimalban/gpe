@@ -98,6 +98,8 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
    
   mimedir_vcal_free_component_list (list);
    
+  g_object_unref (vcal);
+
   store_tag_data (db->db, "todo", id, tags, TRUE);
 
   sprintf (returnuid, "%d", id);
