@@ -18,7 +18,7 @@
 
 //--i18n
 #include <libintl.h>
-#define _(_x) gettext (_x)
+#define _(_x) gettext(_x)
 
 //#define TURN_LABEL
 #ifdef DEBUG
@@ -250,6 +250,7 @@ int main (int argc, char ** argv){
   if (gpe_load_icons (my_icons) == FALSE) exit (1);
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
   setlocale (LC_ALL, "");
 
@@ -727,7 +728,7 @@ int kill_group_of(int gox, int goy){//returns number of stones killed
 void update_capture_label(){
   free(go.capture_string);
   go.capture_string = (char *) malloc (20 * sizeof(char));
-  sprintf(go.capture_string, "B:%d  W:%d ", go.black_captures, go.white_captures);
+  sprintf(go.capture_string, _("B:%d  W:%d "), go.black_captures, go.white_captures);
   //TRACE("Capture points: %s", go.capture_string);
   gtk_label_set_text (GTK_LABEL (go.capture_label), go.capture_string);
 }
@@ -982,7 +983,7 @@ void gui_init(){
 
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   NULL, NULL, NULL,
+			   _("Undo"), _("Undo"), _("Undo"),
 			   image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
 
 #ifdef TURN_LABEL
@@ -994,8 +995,9 @@ void gui_init(){
 #endif
 
   image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
+
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   NULL, NULL, NULL,
+			   _("Redo"), _("Redo"), _("Redo"),
 			   image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
  
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -1003,7 +1005,7 @@ void gui_init(){
 
   //Capture label, 
   //let put it in the toolbar. Will find a better place later
-  capture_label = gtk_label_new("B:0  W:0 ");
+  capture_label = gtk_label_new(_("B:0  W:0 "));
   
   gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), capture_label, NULL, NULL);
   go.capture_label = capture_label;
@@ -1023,7 +1025,7 @@ void gui_init(){
 
   {// [PASS] button
     GtkWidget * button;
-    button = gtk_button_new_with_label ("PASS");
+    button = gtk_button_new_with_label (_("PASS"));
     gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
     g_signal_connect (G_OBJECT (button), "clicked",
                       G_CALLBACK (on_button_pass_clicked), NULL);

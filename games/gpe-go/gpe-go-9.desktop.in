@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Go 9
-Comment=GPE Go
+_Name=Go 9
+_Comment=GPE Go
 Exec=gpe-go 9
 Terminal=0
 Type=Application

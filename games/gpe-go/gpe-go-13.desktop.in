@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Go
-Comment=GPE Go
-Exec=gpe-go
+_Name=Go 13
+_Comment=GPE Go
+Exec=gpe-go 13
 Terminal=0
 Type=Application
 Icon=gpe-go.png

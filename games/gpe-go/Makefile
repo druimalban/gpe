@@ -1,9 +1,20 @@
 VERSION = 0.03
 
 PACKAGE = gpe-go
-PREFIX = /usr/local
+
+ifndef PREFIX
+PREFIX = /usr
+endif
+
+ifndef DEBUG
 DEBUG = no
-LINGUAS = 
+endif
+
+LINGUAS = cs
+EXTRA_DESKTOPS = \
+    gpe-go-9.desktop.in \
+    gpe-go-13.desktop.in \
+    gpe-go-19.desktop.in
 
 MEMBERS = gpe-go
 
@@ -29,7 +40,8 @@ LDFLAGS += -L../../base/libgpewidget -lgpewidget
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
-SRCS = $(patsubst %,%.c,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+EXTRA_DESKTOPS_RM = $(patsubst %.in,%,$(EXTRA_DESKTOPS))
 
 ifdef DESKTOP #environement variable to set if you want extra code included.
 CPPFLAGS += -DDESKTOP
@@ -40,7 +52,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
-install-program: all 
+install-program: $(EXTRA_DESKTOPS_RM) all #Later: depends only on $(PACKAGE).desktop
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
@@ -55,8 +67,23 @@ install-program: all
 	done
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop $(EXTRA_DESKTOPS_RM)
 	find . -name "*~" -exec rm -f {} \;
 
-include ../../base/build/Makefile.dpkg_ipkg
+
+#--include GPE generic Makefiles
+ifndef CVSBUILD
+CVSBUILD = no
+endif
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../../base/build
+else
+BUILD = build
+endif
+
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+
+
 -include $(DEPS)
