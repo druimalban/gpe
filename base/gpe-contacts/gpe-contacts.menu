@@ -5,4 +5,4 @@
  command=gpe-contacts \
  icon48=/usr/share/pixmaps/gpe-contacts.png \
  section=PIM \
- windowtitle=gpe-contacts
+ windowtitle=Contacts
