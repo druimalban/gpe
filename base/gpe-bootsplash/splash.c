@@ -48,12 +48,8 @@ main(int argc, char *argv[])
   int mat[2][3];
   int i;
 
-#ifdef GTK2
   g_type_init ();
   buf =  gdk_pixbuf_new_from_file (IMAGE, NULL);
-#else
-  buf =  gdk_pixbuf_new_from_file (IMAGE);
-#endif
 
   if (buf == NULL)
     exit (1);

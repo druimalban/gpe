@@ -1,3 +1,7 @@
+2003-07-07  Moray Allan  <moray@sermisy.org>
+
+	* splash.c (main): Remove legacy GTK1 code.
+
 2002-12-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.0-4 released.
