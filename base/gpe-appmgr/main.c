@@ -16,6 +16,7 @@
 /* Gtk etc. */
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdkkeysyms.h>
 
 /* directory listing */
 #include<sys/types.h>
@@ -162,7 +163,7 @@ gint btn_released (GtkObject *btn, gpointer data)
 	{
 		recent_items = g_list_prepend (recent_items, p);
 
-		while (g_list_length (recent_items) > 9)
+		while (g_list_length (recent_items) > cfg_options.recent_apps_number)
 		{
 			recent_items = g_list_remove_link(recent_items,
 							  g_list_last (recent_items));
@@ -254,7 +255,7 @@ char *find_icon (char *base)
 		"/usr/share/pixmaps",
 		"/usr/X11R6/include/X11/pixmaps",
 		"/mnt/ramfs/share/pixmaps",
-		"/mnt/cf/usr/share/pixmaps",
+		"/mnt/hda/usr/share/pixmaps",
 		NULL
 	};
 
@@ -439,6 +440,9 @@ void create_recent_list ()
 
 	hb = gtk_hbox_new (0,0);
 
+	gtk_container_add(GTK_CONTAINER(recent_tab),
+			  hb);
+
 	this_item = recent_items;
 	while (this_item)
 	{
@@ -477,10 +481,6 @@ void create_recent_list ()
 
 		this_item = this_item->next;
 	}
-
-	/* Add the updated list */
-	gtk_container_add(GTK_CONTAINER(recent_tab),
-			  hb);
 
 	gtk_widget_show_all (recent_tab);
 }
@@ -730,10 +730,12 @@ void refresh_tabs ()
 				GTK_NOTEBOOK(notebook),
 				create_tab (items, l->data, cfg_options.tab_view, NULL),
 				create_group_tab_label(l->data));
+
 		l = l->next;
 	}
 
 	gtk_widget_show_all (notebook);
+
 	if (old_tab != -1)
 		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
 }
@@ -838,7 +840,7 @@ int refresh_list ()
 		"/usr/lib/menu",
 		"/home/mibus/programming/c/gpe/gpe-appmgr/dist/usr/lib/menu", /* test dir */
 		"/mnt/ramfs/lib/menu",
-		"/mnt/cf/usr/lib/menu",
+		"/mnt/hda/usr/lib/menu",
 		NULL, /* Placeholder for ~/.gpe/menu */
 		NULL
 	};
@@ -920,6 +922,7 @@ int refresh_list ()
 	if (user_menu)
 		g_free (user_menu);
 
+	TRACE ("refresh_list: end");
 	return FALSE;
 }
 
@@ -927,14 +930,26 @@ int refresh_list ()
    the window already exists; thus we can get it's
    size and determine the number of columns available.
    It's also called when XRANDR does its job.
+
+   It's done this way (a timeout via a draw callback)
+   because calling refresh_tabs() directly from the
+   draw callback was causing crashes (apparently
+   within Gtk, not sure though)
 */
-/* NB. temporarily moved from void to int return
-   because it's a timeout fn not a draw callback */
-int cb_win_draw (GtkWidget *widget,
-		 gpointer user_data)
+
+int draw_timeout_id=0;
+int cb_win_draw_real (GtkWidget *widget,
+		       gpointer user_data)
+{
+	refresh_tabs();
+	draw_timeout_id = 0;
+	return FALSE;
+}
+
+void cb_win_draw (GtkWidget *widget,
+		  gpointer user_data)
 {
 	static int last_width = 0;
-
 	TRACE ("cb_win_draw");
 	DBG((stderr, "window: %p\n", window));
 	DBG((stderr, "last_width: %d\n", last_width));
@@ -943,12 +958,12 @@ int cb_win_draw (GtkWidget *widget,
 
 	if (window && last_width != window->allocation.width)
 	{
+		if (draw_timeout_id != 0)
+			gtk_timeout_remove (draw_timeout_id);
+		draw_timeout_id = gtk_timeout_add (last_width == 0 ? : 200, (GtkFunction)cb_win_draw_real, NULL);
 		last_width = window->allocation.width;
-		refresh_tabs();
 	}
 	TRACE("cb_win_draw: end");
-
-	return TRUE;
 }
 
 /* run on SIGHUP
@@ -969,6 +984,7 @@ static void catch_signal (int signo)
 /* Create the 'recent' list as a dock app or normal widget */
 void create_recent_box(GtkBox *cont)
 {
+	TRACE ("create_recent_box");
         recent_tab = gtk_vbox_new(0,0);
 
 	if (cont)
@@ -990,6 +1006,55 @@ void create_recent_box(GtkBox *cont)
 		gdk_property_change(w->window, window_type, XA_ATOM, 32, GDK_PROP_MODE_REPLACE, (guchar *) &window_type_dock, 1);
 		gtk_widget_show_all (w);
 	}
+	TRACE ("create_recent_box: end");
+}
+
+void icons_page_up_down (int down)
+{
+	GtkWidget *sw;
+	GtkAdjustment *adj;
+	int page;
+	gfloat newval;
+
+	page = gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook));
+	sw = gtk_notebook_get_nth_page (GTK_NOTEBOOK(notebook), page);
+
+	adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW(sw));
+
+	if (down)
+		newval = adj->value + adj->page_increment*1.5f;
+	else
+		newval = adj->value - adj->page_increment*1.5f;
+
+	if (newval < adj->lower)
+		newval = adj->lower;
+	else if (newval > adj->upper-adj->page_size)
+		newval = adj->upper-adj->page_size;
+
+	gtk_adjustment_set_value(adj, newval);
+}
+
+gint keysnoop (GtkWidget *grab_widget, GdkEventKey *event, gpointer func_data)
+{
+	switch (event->keyval) {
+	case GDK_Up:
+		icons_page_up_down (0);
+		break;
+	case GDK_Down:
+		icons_page_up_down (1);
+		break;
+	case GDK_Left:
+		gtk_notebook_prev_page (GTK_NOTEBOOK(notebook));
+		break;
+	case GDK_Right:
+		gtk_notebook_next_page (GTK_NOTEBOOK(notebook));
+		break;
+	default:
+		DBG ((stderr, "Unhandled key: %d\n", event->keyval));
+		DBG ((stderr, "     (%s)\n", gdk_keyval_name(event->keyval)));
+		return 0;
+	}
+	return 1;
 }
 
 /* Create the UI for the main window and
@@ -1010,19 +1075,9 @@ void create_main_window()
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
 			    (GtkSignalFunc)gtk_main_quit, NULL);
 #endif
-	/* This has been removed temporarily to stop a
-	   crasher. When the window is being resized, it is
-	   possible to get two "draw" events in a row;
-	   this mixed with refresh_tabs() seems to kill GTK.
-
-	   Original code:
-	   gtk_signal_connect (GTK_OBJECT(window), "draw",
-	                       (GtkSignalFunc)cb_win_draw, NULL);
-
-	   Now we use a timeout to make sure it doesn't happen.
-	   We need to come up with a "real" solution.
-	*/
-	gtk_timeout_add (2000, (GtkFunction)cb_win_draw, NULL);
+	
+	gtk_signal_connect (GTK_OBJECT(window), "draw",
+			    (GtkSignalFunc)cb_win_draw, NULL);
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_homogeneous_tabs(GTK_NOTEBOOK(notebook), FALSE);
@@ -1037,22 +1092,22 @@ void create_main_window()
 			    GTK_SIGNAL_FUNC(btn_released), NULL);
 
 	vbox = gtk_vbox_new(0,0);
+	gtk_container_add (GTK_CONTAINER (window), vbox);
 	gtk_box_pack_start (GTK_BOX(vbox), notebook, 1, 1, 0);
 
-#if 1 // TEST ME!!!
-	gtk_box_pack_start (GTK_BOX(vbox), recent_tab = gtk_vbox_new(0,0) ,0,0,0);
-#else
+	/* The two styles of recent lists, appmgr or standalone */
 	//create_recent_box (GTK_BOX(vbox));
 	create_recent_box (NULL);
-//	gtk_box_pack_start (GTK_BOX(vbox), gtk_label_new("Hi!"),0,0,0);
-#endif
-
-	gtk_container_add (GTK_CONTAINER (window), vbox);
 
 	gtk_widget_show_all (window);
 
 	/* Example plugin usage:
 	 plugin_load ("plug"); */
+
+	/* Send all key events to the one place */
+	gtk_key_snooper_install ((GtkKeySnoopFunc)keysnoop,NULL);
+
+	//draw_timeout_id = gtk_timeout_add (0, (GtkFunction)cb_win_draw_real, NULL);
 }
 
 /* clean_up():

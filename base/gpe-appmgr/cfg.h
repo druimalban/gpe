@@ -30,6 +30,7 @@ struct cfg_options_s
 	int show_all_group;
 	int auto_hide_group_labels;
 	int show_recent_apps;
+	int recent_apps_number;
 	tab_view_style tab_view;
 } cfg_options;
 
