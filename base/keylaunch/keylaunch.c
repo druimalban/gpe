@@ -1,8 +1,9 @@
 /* 
- * Oroborus Window Manager - KeyLaunch
+ * Oroborus Window Manager - KeyLaunch (patched for GPE)
  *
  * Copyright (C) 2001 Ken Lynch
  * Copyright (C) 2002 Stefan Pfetzing
+ * Copyright (C) 2002 Moray Allan
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,6 +45,7 @@ Window root;
 Key *key;
 int NumLockMask, CapsLockMask, ScrollLockMask;
 time_t last_update;
+char *rc_file;
 
 /*
  *
@@ -61,20 +63,13 @@ void print_error(char *error, int critical)
   if(critical) exit(1);
 }
 
-time_t get_last_update(char *dir, char *file)
+time_t get_last_update(char *rc_file)
 {
-  char *file_name;
   struct stat stat_buf;
 
-  if((file_name=malloc(strlen(dir)+strlen(file)+2))==NULL)
-    print_error("Memory allocation failed.\n", True);
-
-  sprintf(file_name, "%s/%s", dir, file);
-
   /* If no rc file then set time equal to last_update */
-  if(stat(file_name, &stat_buf))
+  if(stat(rc_file, &stat_buf))
     stat_buf.st_mtime=last_update;
-  free(file_name);
   return stat_buf.st_mtime;
 }
 
@@ -186,19 +181,36 @@ void free_keys()
  *
  */
 
-void parse_rc(char *dir, char *file)
+char *find_rc()
 {
   FILE *rc;
-  char *rc_file, buf[1024], *lvalue, *rvalue;
+  char *rc_file1;
+
+  if((rc_file1=malloc(strlen(getenv("HOME"))+strlen(RCFILE1)+2))==NULL)
+    {
+      perror("malloc");
+      exit(1);
+    }
+
+  sprintf(rc_file1, "%s/%s", getenv("HOME"), RCFILE1); 
+
+  if((rc=fopen(rc_file1, "r")))
+  {
+    fclose(rc);
+    return rc_file1;
+  }
+
+  return RCFILE2;
+}
+
+void parse_rc(char *rc_file)
+{
+  FILE *rc;
+  char buf[1024], *lvalue, *rvalue;
 
 #ifdef DEBUG
   printf("parse_rc\n");
 #endif
-
-  if((rc_file=malloc(strlen(dir)+strlen(file)+2))==NULL)
-    return;
- 
-  sprintf(rc_file, "%s/%s", dir, file); 
 
   if((rc=fopen(rc_file, "r")))
   {
@@ -215,8 +227,9 @@ void parse_rc(char *dir, char *file)
         }
       }
     }
+    fclose (rc);
   }
-  last_update=get_last_update(getenv("HOME"), RCFILE);
+  last_update=get_last_update(rc_file);
 }
 
 /*
@@ -300,7 +313,10 @@ void initialize()
   root=XDefaultRootWindow(dpy);
   
   init_keyboard();  
-  parse_rc(getenv("HOME"), RCFILE);
+
+  rc_file = find_rc();
+
+  parse_rc(rc_file);
 }
 
 /*
@@ -329,10 +345,10 @@ int main(int argc, char *argv[])
             fork_exec(k->command);
       }
     }
-    if(get_last_update(getenv("HOME"), RCFILE)!=last_update)
+    if(get_last_update(rc_file)!=last_update)
     {
       free_keys();
-      parse_rc(getenv("HOME"), RCFILE);
+      parse_rc(rc_file);
     }
     usleep(1);
   }

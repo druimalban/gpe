@@ -1,3 +1,9 @@
+keylaunch (1.3.0-5gpe0) unstable; urgency=low
+
+  * Patched to use global /etc/keylaunchrc if there's no per-user file.
+
+ -- Moray Allan <moray@sermisy.org>  Fri, 21 Jun 2002 21:48:30 +0000
+
 keylaunch (1.3.0-5) unstable; urgency=low
 
   * Fixed the Header to represent the actual situation. 
