@@ -1,3 +1,7 @@
+
+2004-06-10  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Released V 0.15
+
 2004-06-09  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: Fixed selfmade bug causing history to contain bad stuff.
 	* main.c: Fixed several memory leaks.
