@@ -193,12 +193,12 @@ on_button_select (GtkButton * button, gpointer user_data)
 	if ((nr == active_button) ||
 		((active_button < 0) && (active_button >= NUM_BUTTONS)))
 		return;	
-	printf("bnr: %i\n",nr);
+	
 	g_free(buttondef[active_button].command);
 	buttondef[active_button].command = 
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[nr].command);
-#warning pixmap, type	
+#warning pixmap, box, type
 	active_button = nr;
 }
 
