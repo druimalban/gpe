@@ -934,15 +934,6 @@ int refresh_list ()
    within Gtk, not sure though)
 */
 
-int draw_timeout_id=0;
-int cb_win_draw_real (GtkWidget *widget,
-		       gpointer user_data)
-{
-	refresh_tabs();
-	draw_timeout_id = 0;
-	return FALSE;
-}
-
 void cb_win_draw (GtkWidget *widget,
 		  gpointer user_data)
 {
@@ -955,9 +946,7 @@ void cb_win_draw (GtkWidget *widget,
 
 	if (window && last_width != window->allocation.width)
 	{
-		if (draw_timeout_id != 0)
-			gtk_timeout_remove (draw_timeout_id);
-		draw_timeout_id = gtk_timeout_add (last_width == 0 ? : 200, (GtkFunction)cb_win_draw_real, NULL);
+		refresh_tabs();
 		last_width = window->allocation.width;
 	}
 	TRACE("cb_win_draw: end");
@@ -1118,7 +1107,7 @@ void create_main_window()
 			    (GtkSignalFunc)gtk_main_quit, NULL);
 #endif
 	
-	gtk_signal_connect (GTK_OBJECT(window), "draw",
+	gtk_signal_connect (GTK_OBJECT(window), "size-allocate",
 			    (GtkSignalFunc)cb_win_draw, NULL);
 
 	notebook = gtk_notebook_new ();
@@ -1193,6 +1182,10 @@ int main(int argc, char *argv[]) {
 	/* load our configuration */
 	cfg_load ();
 
+	/* update the menu data */
+	refresh_list ();
+
+	/* make the UI */
 	create_main_window();
 
 	/* Register SIGHUP */
@@ -1203,9 +1196,6 @@ int main(int argc, char *argv[]) {
 
 	/* So we don't keep 'defunct' processes in the process table */
 	signal (SIGCHLD, SIG_IGN);
-
-	/* update the menu data */
-	refresh_list ();
 
 	last_update = time (NULL);
 
