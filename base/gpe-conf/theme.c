@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,8 +40,11 @@
 #define KEY_MATCHBOX "MATCHBOX/"
 #define KEY_THEME "Net/"
 #define KEY_GTK "Gtk/"
+#define CMD_XST PREFIX "/bin/xst"
+#define CMD_GCONF PREFIX "/bin/gconftool-2"
 
 static XSettingsClient *client;
+static gboolean use_xst, use_gconf;
 
 static struct
 {
@@ -103,6 +106,20 @@ static void select_font_popup (GtkWidget *parent_button);
 static void on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1);
 static GtkWidget *popup_menu_button_new (const gchar *stock_id);
 
+/* some init stuff related to external tools and libs */
+void
+init_tools(void)
+{
+	use_gconf = FALSE;
+	use_xst = FALSE;
+	
+	/* prefer gconf */
+	if (!access(CMD_GCONF,X_OK))
+		use_gconf = TRUE;
+	else
+		(!access(CMD_XST,X_OK))
+		use_xst = TRUE;	
+}
 
 gboolean
 mbbg_parse_spec(MBDesktopBG *mbbg, char *spec)
@@ -926,6 +943,9 @@ Theme_Build_Objects ()
 
   csel = malloc (sizeof (tcsel));
   self.themename = NULL;
+  
+  init_tools();
+  
 /* ------------------------------------------------------------------------ */
 
   notebook  = gtk_notebook_new();

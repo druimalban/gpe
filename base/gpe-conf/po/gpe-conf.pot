@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-03 19:22+0200\n"
+"POT-Creation-Date: 2004-06-10 12:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,14 +56,14 @@ msgstr ""
 msgid "Root access"
 msgstr ""
 
-#: applets.c:369
+#: applets.c:373
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
 
-#: applets.c:414 ipaqscreen/calibrate.c:34
+#: applets.c:419 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -158,80 +158,72 @@ msgid ""
 "again."
 msgstr ""
 
-#: ipaqscreen/main.c:70
+#: ipaqscreen/main.c:71
 msgid "Portrait"
 msgstr ""
 
-#: ipaqscreen/main.c:71
+#: ipaqscreen/main.c:72
 msgid "Landscape (left)"
 msgstr ""
 
-#: ipaqscreen/main.c:72
+#: ipaqscreen/main.c:73
 msgid "Inverted"
 msgstr ""
 
-#: ipaqscreen/main.c:73
+#: ipaqscreen/main.c:74
 msgid "Landscape (right)"
 msgstr ""
 
-#: ipaqscreen/main.c:94
+#: ipaqscreen/main.c:98
 msgid "Light"
 msgstr ""
 
-#: ipaqscreen/main.c:100
+#: ipaqscreen/main.c:104
 msgid "Brightness"
 msgstr ""
 
-#: ipaqscreen/main.c:106 ipaqscreen/main.c:129
+#: ipaqscreen/main.c:110 ipaqscreen/main.c:133
 msgid "State"
 msgstr ""
 
-#: ipaqscreen/main.c:117
+#: ipaqscreen/main.c:121
 msgid "Screensaver"
 msgstr ""
 
-#: ipaqscreen/main.c:123
+#: ipaqscreen/main.c:127
 msgid "Delay until start"
 msgstr ""
 
-#: ipaqscreen/main.c:133 ipaqscreen/main.c:169
+#: ipaqscreen/main.c:137 ipaqscreen/main.c:174
 msgid "on"
 msgstr ""
 
-#: ipaqscreen/main.c:134 ipaqscreen/main.c:170
+#: ipaqscreen/main.c:138 ipaqscreen/main.c:175
 msgid "off"
 msgstr ""
 
-#: ipaqscreen/main.c:144
+#: ipaqscreen/main.c:148
 msgid "Orientation"
 msgstr ""
 
-#: ipaqscreen/main.c:163
+#: ipaqscreen/main.c:168
 msgid "Touchscreen"
 msgstr ""
 
-#: ipaqscreen/main.c:167
+#: ipaqscreen/main.c:172
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:302
+#: ipaqscreen/main.c:307
 msgid "min"
 msgstr ""
 
-#: ipaqscreen/main.c:305
+#: ipaqscreen/main.c:310
 msgid "sec"
 msgstr ""
 
 #: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
 msgid "Couldn't read screen settings!"
-msgstr ""
-
-#: ipaqscreen/rotation.c:54
-msgid "Can't interpret output from xrandr!"
-msgstr ""
-
-#: ipaqscreen/rotation.c:71
-msgid "Can't set rotation on an x86."
 msgstr ""
 
 #: kbd.c:146
@@ -1598,6 +1590,10 @@ msgstr ""
 
 #: sysinfo.c:536
 msgid "Syslog"
+msgstr ""
+
+#: gpe-conf.desktop.in.h:1
+msgid "Control Panel"
 msgstr ""
 
 #: gpe-conf-admin.desktop.in.h:1
