@@ -24,15 +24,24 @@
 
 struct bt_service_pan
 {
-  struct bt_service svc;
+  struct bt_service service;
+
+  struct bt_device *bd;
 };
 
 static struct bt_service_desc pan_service_desc;
 
 static struct bt_service *
-pan_scan (sdp_record_t *rec)
+pan_scan (sdp_record_t *rec, struct bt_device *bd)
 {
-  return NULL;
+  struct bt_service_pan *s;
+
+  s = g_malloc (sizeof (*s));
+
+  s->service.desc = &pan_service_desc;
+  s->bd = bd;
+
+  return (struct bt_service *)s;
 }
 
 void

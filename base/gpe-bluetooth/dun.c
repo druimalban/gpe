@@ -21,18 +21,6 @@
 #include <errno.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-
-#include <gpe/init.h>
-#include <gpe/pixmaps.h>
-#include <gpe/errorbox.h>
-#include <gpe/gpe-iconlist.h>
-#include <gpe/tray.h>
-
 #include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>
@@ -41,22 +29,33 @@
 #include <bluetooth/sdp_lib.h>
 
 #include "main.h"
+#include "sdp.h"
 #include "dun.h"
 
 #define _(x) gettext(x)
 
 struct bt_service_dun
 {
-  struct bt_service svc;
+  struct bt_service service;
+
+  struct bt_device *bd;
+
   unsigned int port;
 };
 
 static struct bt_service_desc dun_service_desc;
 
 static struct bt_service *
-dun_scan (sdp_record_t *rec)
+dun_scan (sdp_record_t *rec, struct bt_device *bd)
 {
-  return NULL;
+  struct bt_service_dun *s;
+
+  s = g_malloc (sizeof (*s));
+
+  s->service.desc = &dun_service_desc;
+  s->bd = bd;
+
+  return (struct bt_service *)s;
 }
 
 void

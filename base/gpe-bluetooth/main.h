@@ -1,13 +1,5 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-typedef enum
-  {
-    BT_UNKNOWN,
-    BT_LAP,
-    BT_DUN,
-    BT_NAP
-  } bt_service_type;
-
 struct bt_device
 {
   gchar *name;
@@ -20,15 +12,14 @@ struct bt_device
 
 struct bt_service
 {
-  struct bt_device *dev;
-  bt_service_type type;
+  struct bt_service_desc *desc;
 };
 
 struct bt_service_desc
 {
   uuid_t uuid;
 
-  struct bt_service * (*scan)(sdp_record_t *rec);
+  struct bt_service * (*scan)(sdp_record_t *rec, struct bt_device *bd);
 };
 
 extern gboolean radio_is_on;

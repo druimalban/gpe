@@ -110,7 +110,6 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
     {
       sdp_record_t *svcrec = (sdp_record_t *) seq->data;
       sdp_list_t *list = 0;
-      bt_service_type type = BT_UNKNOWN;
       uuid_t sub_group;
 
       if (sdp_get_service_classes (svcrec, &list) == 0) 
@@ -119,29 +118,29 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 
 	  for (; list; list = next)
 	    {
-	      uuid_t *u = list->data;
+	      uuid_t *u;
+	      GSList *iter;
 
-#if 0
-	      if (sdp_uuid_cmp (u, &lap_uuid) == 0)
-		type = BT_LAP;
-	      else if (sdp_uuid_cmp (u, &dun_uuid) == 0)
-		type = BT_DUN;
-	      else if (sdp_uuid_cmp (u, &nap_uuid) == 0)
-		type = BT_NAP;
-#endif
+	      u = list->data;
+
+	      for (iter = service_desc_list; iter; iter = iter->next)
+		{
+		  struct bt_service_desc *d; 
+		  
+		  d = iter->data;
+
+		  if (sdp_uuid_cmp (u, &d->uuid) == 0)
+		    {
+		      struct bt_service *sv = d->scan (svcrec);
+
+		      if (sv)
+			bd->services = g_slist_append (bd->services, sv);
+		    }
+		}
 
 	      next = list->next;
 	      free (list);
 	    }
-	}
-
-      if (type != BT_UNKNOWN)
-	{
-	  struct bt_service *sv = g_malloc0 (sizeof (struct bt_service));
-
-	  sv->type = type;
-
-	  bd->services = g_slist_append (bd->services, sv);
 	}
 
       if (sdp_get_group_id (svcrec, &sub_group) != -1)
