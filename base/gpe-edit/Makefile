@@ -1,5 +1,6 @@
 PREFIX = /usr/local
-DEBUG = yes
+PACKAGE = gpe-edit
+#DEBUG = yes
 
 MEMBERS = main
 
@@ -20,17 +21,17 @@ gpe-edit: $(OBJS)
 
 install: all
 	install -D gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
-	install -D gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
-	install -D gpe-edit.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
+	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
+	install -D -m 644 gpe-edit.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-edit
 
 ipkg:
-	rm -rf dist
-	mkdir -p dist/CONTROL
-	cp control postinst dist/CONTROL
-	make DESTDIR=`pwd`/dist install
-	chown -R root.root dist
-	ipkg-build dist
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/control postinst familiar/dist/CONTROL
+	make DESTDIR=`pwd`/familiar/dist install
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
 
 clean:
 	rm -f gpe-edit $(OBJS)
