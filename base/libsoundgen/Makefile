@@ -20,7 +20,7 @@ GLIBLDFLAGS = `glib-config --libs`
 endif
 
 CFLAGS += -Wall $(GLIBCFLAGS)
-LDFLAGS += $(GLIBLDFLAGS)
+LDFLAGS += $(GLIBLDFLAGS) -lm -lesd
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 

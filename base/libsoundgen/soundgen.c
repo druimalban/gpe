@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <esd.h>
+#include <string.h>
 
 #define DEBUG 1
 
@@ -106,7 +107,7 @@ size_t bufsize;
 
 int soundgen_init(void)
 {
-int dspfd, iocval;
+int dspfd;
 
         if ((dspfd = esd_play_stream_fallback(ESD_STEREO | ESD_BITS16 | ESD_STREAM | ESD_PLAY, 44100, NULL, NULL)) < 0) {
 #ifdef DEBUG
