@@ -32,10 +32,10 @@ extern "C" {
 #define GTK_IS_DATE_SEL(obj)               (GTK_CHECK_TYPE ((obj), GTK_TYPE_DATE_SEL))
 #define GTK_IS_DATE_SEL_CLASS(klass)       (GTK_CHECK_CLASS_TYPE ((klass), GTK_TYPE_DATE_SEL))
 
-typedef struct _GtkDateSel	   GtkDateSel;
-typedef struct _GtkDateSelClass  GtkDateSelClass;
+typedef struct _GtkDateSel GtkDateSel;
+typedef struct _GtkDateSelClass GtkDateSelClass;
 
-typedef enum 
+typedef enum
   {
     GTKDATESEL_FULL,
     GTKDATESEL_WEEK,
@@ -45,19 +45,19 @@ typedef enum
 
 typedef enum
   {
-    GTKDATESEL_MONTH_LONG,		/* November */
-    GTKDATESEL_MONTH_SHORT,		/* Nov */
-    GTKDATESEL_MONTH_NUMERIC,		/* 11 */
-    GTKDATESEL_MONTH_ROMAN		/* xi */
+    GTKDATESEL_MONTH_LONG,              /* November */
+    GTKDATESEL_MONTH_SHORT,             /* Nov */
+    GTKDATESEL_MONTH_NUMERIC,           /* 11 */
+    GTKDATESEL_MONTH_ROMAN              /* xi */
   } GtkDateSelMonthStyle;
 
-GtkType		gtk_date_sel_get_type (void);
+GType           gtk_date_sel_get_type (void);
 
 GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode);
 
-time_t		gtk_date_sel_get_time (GtkDateSel *sel);
+time_t          gtk_date_sel_get_time (GtkDateSel *sel);
 void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
-void		gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
+void            gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
 
 #ifdef __cplusplus
 }

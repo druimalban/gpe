@@ -25,6 +25,7 @@
 
 #include "gtkdatesel.h"
 
+static GSList *day_events[32];
 static GtkWidget *datesel, *draw;
 static guint xp, xs, ys;
 static struct render_ctl *c_old;
@@ -312,7 +313,6 @@ month_view_update ()
   guint day;
   time_t start, end;
   struct tm tm_start, tm_end;
-  GSList *day_events[32];
   GSList *iter;
   guint days;
   guint year, month;
@@ -333,10 +333,8 @@ month_view_update ()
     {
       struct render_ctl *c = &rc[day];
       if (c->popup.events)
-	{
-	  event_db_list_destroy (c->popup.events);
-	  c->popup.events = NULL;
-	}
+	c->popup.events = NULL;
+
     }
 
   for (day = 1; day <= days; day++)
@@ -360,6 +358,7 @@ month_view_update ()
 	      end+=60*60;
       }
 
+      if (day_events[day]) event_db_list_destroy (day_events[day]);
       day_events[day] = event_db_list_for_period (start, end);
 
       for (iter = day_events[day]; iter; iter = iter->next)

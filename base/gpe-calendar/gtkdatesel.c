@@ -48,7 +48,7 @@ struct _GtkDateSel
   GtkDateSelMonthStyle month_style;
 };
 
-struct _GtkDateSelClass 
+struct _GtkDateSelClass
 {
   GtkHBoxClass parent_class;
   void (* changed)      (GtkDateSel *sel);
@@ -63,10 +63,10 @@ days_in_month (struct tm *tm)
     {
       guint y = 1900 + tm->tm_year;
       if ((y % 4) == 0
-	  && (((y % 100) != 0) || (y % 400) == 0))
-	return 29;
+          && (((y % 100) != 0) || (y % 400) == 0))
+        return 29;
       else
-	return 28;
+        return 28;
     }
 
   switch (tm->tm_mon)
@@ -84,46 +84,46 @@ days_in_month (struct tm *tm)
 static void
 day_click (GtkWidget *w, GtkDateSel *sel)
 {
-  int d = gtk_object_get_data (GTK_OBJECT (w), "direction") ? 1 : -1;
+  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
   sel->time += d * 60 * 60 * 24;
   sel->day_clamped = -1;
-  gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
 static void
 week_click (GtkWidget *w, GtkDateSel *sel)
 {
-  int d = gtk_object_get_data (GTK_OBJECT (w), "direction") ? 1 : -1;
+  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
   sel->time += d * 60 * 60 * 24 * 7;
-  gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
 static void
 month_click (GtkWidget *w, GtkDateSel *sel)
 {
-  int d = gtk_object_get_data (GTK_OBJECT (w), "direction") ? 1 : -1;
+  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
   struct tm tm;
   guint mdays;
   localtime_r (&sel->time, &tm);
   if (d < 0)
     {
       if (tm.tm_mon)
-	tm.tm_mon--;
+        tm.tm_mon--;
       else
-	{
-	  tm.tm_year--;
-	  tm.tm_mon = 11;
-	}
+        {
+          tm.tm_year--;
+          tm.tm_mon = 11;
+        }
     }
   else
     {
       if (tm.tm_mon < 11)
-	tm.tm_mon++;
+        tm.tm_mon++;
       else
-	{
-	  tm.tm_year++;
-	  tm.tm_mon = 0;
-	}
+        {
+          tm.tm_year++;
+          tm.tm_mon = 0;
+        }
     }
   mdays = days_in_month (&tm);
   if (tm.tm_mday > mdays)
@@ -134,20 +134,20 @@ month_click (GtkWidget *w, GtkDateSel *sel)
   else
     {
       if (sel->day_clamped != -1)
-	{
-	  tm.tm_mday = mdays;
-	  if (tm.tm_mday > sel->day_clamped)
-	    tm.tm_mday = sel->day_clamped;
-	}
+        {
+          tm.tm_mday = mdays;
+          if (tm.tm_mday > sel->day_clamped)
+            tm.tm_mday = sel->day_clamped;
+        }
     }
   sel->time = mktime (&tm);
-  gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
 static void
 year_click (GtkWidget *w, GtkDateSel *sel)
 {
-  int d = gtk_object_get_data (GTK_OBJECT (w), "direction") ? 1 : -1;
+  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
   struct tm tm;
   guint mdays;
   localtime_r (&sel->time, &tm);
@@ -161,14 +161,14 @@ year_click (GtkWidget *w, GtkDateSel *sel)
   else
     {
       if (sel->day_clamped != -1)
-	{
-	  tm.tm_mday = mdays;
-	  if (tm.tm_mday > sel->day_clamped)
-	    tm.tm_mday = sel->day_clamped;
-	}
+        {
+          tm.tm_mday = mdays;
+          if (tm.tm_mday > sel->day_clamped)
+            tm.tm_mday = sel->day_clamped;
+        }
     }
   sel->time = mktime (&tm);
-  gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
 static void
@@ -221,7 +221,7 @@ day_update (GtkDateSel *sel, GtkWidget *w)
 
 static void
 make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateSel *),
-	    void (*update)(GtkDateSel *, GtkWidget *))
+            void (*update)(GtkDateSel *, GtkWidget *))
 {
   GtkWidget *arrow_l = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_OUT);
   GtkWidget *arrow_r = gtk_arrow_new (GTK_ARROW_RIGHT, GTK_SHADOW_OUT);
@@ -238,17 +238,17 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
   gtk_button_set_relief (GTK_BUTTON (e->arrow_l), GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (e->arrow_r), GTK_RELIEF_NONE);
 
-  gtk_object_set_data (GTK_OBJECT (e->arrow_l), "direction", (gpointer)0);
-  gtk_object_set_data (GTK_OBJECT (e->arrow_r), "direction", (gpointer)1);
+  g_object_set_data (G_OBJECT (e->arrow_l), "direction", (gpointer)0);
+  g_object_set_data (G_OBJECT (e->arrow_r), "direction", (gpointer)1);
 
-  gtk_signal_connect (GTK_OBJECT (e->arrow_l), "clicked", GTK_SIGNAL_FUNC (click), sel);
-  gtk_signal_connect (GTK_OBJECT (e->arrow_r), "clicked", GTK_SIGNAL_FUNC (click), sel);
+  g_signal_connect (G_OBJECT (e->arrow_l), "clicked", G_CALLBACK (click), sel);
+  g_signal_connect (G_OBJECT (e->arrow_r), "clicked", G_CALLBACK (click), sel);
 
   gtk_box_pack_start (GTK_BOX (sel), e->arrow_l, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (sel), e->text, TRUE, TRUE, 1);
   gtk_box_pack_start (GTK_BOX (sel), e->arrow_r, TRUE, FALSE, 0);
 
-  gtk_signal_connect (GTK_OBJECT (sel), "changed", GTK_SIGNAL_FUNC (update), e->text);
+  g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (update), e->text);
   update (sel, e->text);
 }
 
@@ -287,17 +287,17 @@ gtk_date_sel_show (GtkWidget *widget)
   sel = GTK_DATE_SEL (widget);
   switch (sel->mode)
     {
-    case GTKDATESEL_FULL:	/* day, month, year */
+    case GTKDATESEL_FULL:       /* day, month, year */
       show_field (&sel->day);
       show_field (&sel->month);
       break;
-    case GTKDATESEL_WEEK:	/* week, year */
+    case GTKDATESEL_WEEK:       /* week, year */
       show_field (&sel->week);
       break;
-    case GTKDATESEL_MONTH:	/* month, year */
+    case GTKDATESEL_MONTH:      /* month, year */
       show_field (&sel->month);
       break;
-    case GTKDATESEL_YEAR:	/* year */
+    case GTKDATESEL_YEAR:       /* year */
       break;
     }
   show_field (&sel->year);
@@ -306,51 +306,49 @@ gtk_date_sel_show (GtkWidget *widget)
 static void
 gtk_date_sel_class_init (GtkDateSelClass * klass)
 {
-  GtkObjectClass *oclass;
+  GObjectClass *oclass;
   GtkWidgetClass *widget_class;
 
   parent_class = gtk_type_class (gtk_hbox_get_type ());
-  oclass = (GtkObjectClass *) klass;
+  oclass       = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
   widget_class->show = gtk_date_sel_show;
 
-  my_signals[0] = gtk_signal_new ("changed",
-				  GTK_RUN_LAST,
-#if GTK_MAJOR_VERSION < 2
-				  oclass->type,
-#else
-				  GTK_CLASS_TYPE (oclass),				  
-#endif
-				  GTK_SIGNAL_OFFSET (GtkDateSelClass, changed),
-				  gtk_marshal_NONE__NONE,
-				  GTK_TYPE_NONE, 0);
+  my_signals[0] = g_signal_new ("changed",
+                                G_OBJECT_CLASS_TYPE (oclass),
+                                G_SIGNAL_RUN_LAST,
+                                G_STRUCT_OFFSET (GtkDateSelClass, changed),
+                                NULL,
+                                NULL,
+                                g_cclosure_marshal_VOID__VOID,
+                                G_TYPE_NONE,
+                                0);
 
-#if GTK_MAJOR_VERSION < 2
-  gtk_object_class_add_signals (oclass, my_signals, 1);
-#endif
 }
 
-GtkType
+GType
 gtk_date_sel_get_type (void)
 {
-  static guint date_sel_type = 0;
+  static GType date_sel_type = 0;
 
   if (! date_sel_type)
     {
-      static const GtkTypeInfo date_sel_info =
+      static const GTypeInfo date_sel_info =
       {
-	"GtkDateSel",
-	sizeof (GtkDateSel),
-	sizeof (GtkDateSelClass),
-	(GtkClassInitFunc) gtk_date_sel_class_init,
-	(GtkObjectInitFunc) gtk_date_sel_init,
-	/* reserved_1 */ NULL,
-	/* reserved_2 */ NULL,
-        (GtkClassInitFunc) NULL,
+        sizeof (GtkDateSelClass),
+        (GBaseInitFunc) NULL,
+        (GBaseFinalizeFunc) NULL,
+        (GClassInitFunc) gtk_date_sel_class_init,
+        NULL, /* class finalizer */
+        NULL, /* class data */
+        sizeof (GtkDateSel),
+        0, /* # preallocs */
+        (GInstanceInitFunc) gtk_date_sel_init,
       };
-      date_sel_type = gtk_type_unique (gtk_hbox_get_type (), 
-				       &date_sel_info);
+
+      date_sel_type = g_type_register_static (GTK_TYPE_HBOX, "GTKDateSel",
+                                              &date_sel_info, 0);
     }
   return date_sel_type;
 }
@@ -373,7 +371,7 @@ void
 gtk_date_sel_set_time (GtkDateSel *sel, time_t time)
 {
   sel->time = time;
-  gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
 void

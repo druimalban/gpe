@@ -1,3 +1,19 @@
+2003-04-11  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+	
+	* day_view.c (day_view_update): move GSList declares of day_events and
+	untimed_events to outside function, also delete old GSLists (and
+	clones) directly prior to building new ones
+	* event-ui.c (click_delete): switch to taking window as arg (instead
+	of event_t), switch to checking existence of ev->recur (rather than
+	checking flags), add a forget_details, minor things (set RECUR flag in
+	click_ok, toggle the none button in event_edit, move s->ev=ev to end)
+	* future_view.c : move GSList declares outside function
+	* month_view.c : likewise
+	
+2003-04-11  Christian Meyer  <chrisime@gnome.org>
+
+	* gtkdatesel.{cc,h}: GObject'ification. :-)
+	
 2003-04-10  Philip Blundell  <philb@gnu.org>
 
 	* familiar/control: Deleted.

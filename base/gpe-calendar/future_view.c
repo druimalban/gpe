@@ -19,6 +19,7 @@
 #include "future_view.h"
 #include "event-ui.h"
 
+GSList *events;
 GtkWidget *future_list;
 
 static void
@@ -47,7 +48,6 @@ future_view_update ()
   struct tm tm;
   char buf[256];
   gchar *line_info[2];
-  GSList *events;
   GSList *iter;
   guint widget_width;
      
@@ -61,7 +61,9 @@ future_view_update ()
   localtime_r (&start, &tm);
   tm.tm_year++;
   end = mktime (&tm);
-      
+   
+  if (events) event_db_list_destroy (events);
+     
   events = event_db_list_for_future (start, 15);
       
   for (iter = events; iter; iter = iter->next)
@@ -91,8 +93,6 @@ future_view_update ()
   gtk_clist_set_column_width (GTK_CLIST (future_list), 1, widget_width - 20 - (width + 4));
 #endif
 
-  if (events) event_db_list_destroy (events);
-  
   gtk_clist_sort (GTK_CLIST (future_list));
   gtk_clist_thaw (GTK_CLIST (future_list));
   

@@ -26,6 +26,7 @@
 #include "gtkdatesel.h"
 
 static GSList *strings;
+static GSList *day_events[24], *untimed_events;
 static GtkWidget *day_list;
 static GtkWidget *datesel;
 static GtkAdjustment *scroll_adjustment;
@@ -124,7 +125,6 @@ day_view_update ()
   struct tm tm_start, tm_end;
   char buf[10];
   gchar *line_info[2];
-  GSList *day_events[24], *untimed_events;
   GSList *iter;
   guint i, width = 0, widget_width;
 #if GTK_MAJOR_VERSION >= 2
@@ -186,6 +186,8 @@ day_view_update ()
   tm_end.tm_min = 59;
   tm_end.tm_sec = 0;
   end = mktime (&tm_end);
+  
+  if (untimed_events) event_db_list_destroy (untimed_events);
   untimed_events = event_db_untimed_list_for_period (start, end, TRUE);
 
   for (iter = untimed_events; iter; iter = iter->next)
@@ -216,7 +218,9 @@ day_view_update ()
       tm_end.tm_sec = 0;
       end = mktime (&tm_end);
 
+      if (day_events[hour]) event_db_list_destroy (day_events[hour]);
       day_events[hour] = event_db_untimed_list_for_period (start, end-1, FALSE);
+      gtk_clist_set_row_data (GTK_CLIST (day_list), row, NULL);
       
       for (iter = day_events[hour]; iter; iter = iter->next)
 	((event_t)iter->data)->mark = FALSE;
@@ -329,9 +333,6 @@ day_view_update ()
 	  row++;
        } 
     }
-
-  for (hour = 0; hour <= 23; hour++)
-    event_db_list_destroy (day_events[hour]);
 
   for (i = 0; i < row; i++)
     gtk_clist_set_cell_style (GTK_CLIST (day_list), i, 0, time_style);

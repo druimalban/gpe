@@ -227,19 +227,20 @@ edit_finished (GtkWidget *d)
 }
 
 static void
-click_delete (GtkWidget *widget, event_t ev)
+click_delete (GtkWidget *widget, GtkWidget *d)
 {
+  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
   char *qn = "Delete all recurring entries?\n(If no, delete this instance only)";
   GtkWidget *d = gtk_widget_get_toplevel (widget);
 
-  event_t ev_real;
+  event_t ev=s->ev, ev_real;
   event_details_t ev_d;
   recur_t r;
   
   ev_real = (event_t)ev->cloned_ev;
   ev_d = event_db_get_details (ev_real);
      
-  if (ev->recur)
+  if (ev_real->recur)
   {
 	if (gpe_question_ask_yn (qn))
 	{			  
@@ -273,7 +274,9 @@ click_delete (GtkWidget *widget, event_t ev)
   }
   
   update_all_views ();
+  event_db_forget_details(ev_real);
   edit_finished (d);
+  
 }
 
 static void
@@ -425,12 +428,14 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     {
       if (ev->recur)
         g_free (ev->recur);
+      ev->flags |= FLAG_RECUR;
       ev->recur = NULL;
     }
   else
     {
       recur_t r = event_db_get_recurrence (ev);
-
+      ev->flags &= ~FLAG_RECUR;
+      
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily)))
         {
           r->type = RECUR_DAILY;
@@ -802,6 +807,8 @@ build_edit_event_window (void)
 
   g_signal_connect (G_OBJECT (buttonok), "clicked",
                     G_CALLBACK (click_ok), window);
+  g_signal_connect (G_OBJECT (buttondelete), "clicked",
+                    G_CALLBACK (click_delete), window);
   g_signal_connect_swapped (G_OBJECT (buttoncancel), "clicked",
                             G_CALLBACK (edit_finished), window);
 
@@ -1233,8 +1240,6 @@ edit_event (event_t ev)
       gtk_window_set_title (GTK_WINDOW (w), _("Calendar: Edit event"));
 
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
-      g_signal_connect (G_OBJECT (s->deletebutton), "clicked",
-                        G_CALLBACK (click_delete), ev);
       evd = event_db_get_details (ev);
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
                                 evd->description, -1);
@@ -1327,8 +1332,12 @@ edit_event (event_t ev)
                                             TRUE);
             }
         }
-
-        s->ev = ev;
+	
+	else gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
+	
+	s->ev = ev;
+        
+      
     }
 
   return w;
