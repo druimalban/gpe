@@ -26,7 +26,9 @@
 #include <gpe/spacing.h>
 
 #include "brightness.h"
+#ifndef DISABLE_XRANDR
 #include "rotation.h"
+#endif
 #include "callbacks.h"
 #include "xset.h"
 
@@ -87,8 +89,9 @@ GtkWidget *ipaqscreen_Build_Objects()
 
   ss_sec = xset_get_ss_sec();
   initval.screensaver = ss_sec;
+#ifndef DISABLE_XRANDR  
   rotation_available = check_init_rotation();
-  
+#endif  
   /* ======================================================================== */
   /* draw the GUI */
 
@@ -143,6 +146,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), TRUE);
 
+#ifndef DISABLE_XRANDR
   self.rotationl = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.rotationl),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Orientation"));
@@ -162,6 +166,7 @@ GtkWidget *ipaqscreen_Build_Objects()
     }
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.rotation),menu);
   gtk_option_menu_set_history(GTK_OPTION_MENU (self.rotation),get_rotation());
+#endif	
  
   self.touchscreen = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.touchscreen),0.0,0.5);
@@ -213,6 +218,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
+#ifndef DISABLE_XRANDR
   gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 7, 8,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
@@ -221,7 +227,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 7, 8,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-
+#endif
   gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 8, 9,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
@@ -240,17 +246,19 @@ GtkWidget *ipaqscreen_Build_Objects()
                       GTK_SIGNAL_FUNC (change_screen_saver_label),
                       NULL);
 
+#ifndef DISABLE_XRANDR
   gtk_signal_connect (GTK_OBJECT (gtk_option_menu_get_menu(GTK_OPTION_MENU (self.rotation))), "selection-done",
                       GTK_SIGNAL_FUNC (on_rotation_entry_changed),
                       NULL);
-
+#endif
   gtk_signal_connect (GTK_OBJECT (self.calibrate), "clicked",
                       GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
                       NULL);
   
   initval.brightness = get_brightness();
+#ifndef DISABLE_XRANDR
   initval.orientation = get_rotation();
-    
+#endif    
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), ss_sec ? TRUE : FALSE);
   gtk_timeout_add(2000,(GtkFunction)on_light_check,(gpointer)adjLight);
     
@@ -316,5 +324,7 @@ void ipaqscreen_Save()
 void ipaqscreen_Restore()
 {
   set_brightness(initval.brightness);
+#ifndef DISABLE_XRANDR	
   set_rotation(initval.orientation);
+#endif	
 }

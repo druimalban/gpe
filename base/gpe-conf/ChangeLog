@@ -1,3 +1,9 @@
+2004-09-02	Florian Boor  	<florian.boor@kernelconcepts.de>
+	
+	* theme.c: Added defines to switch to alternate, less functional GUI.
+	* ipaqscreen/*, suid.c: Added defines to turn of Xrandr which is note               
+	                        supported on all platforms.
+
 2004-08-29	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* theme.c: Fixed default icon size.

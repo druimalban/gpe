@@ -50,20 +50,32 @@ static struct
 {
   GtkWidget *cbTheme;
   GtkWidget *eImage;
-  GtkWidget *rbSolid, *rbGrad, *rbImage;
+#ifndef APPMGR_INTERFACE	
+  GtkWidget *rbSolid, *rbGrad, *rbImage;	
+#endif	
   GtkWidget *rbImgStr,*rbImgTiled,*rbImgCent;
+#ifndef APPMGR_INTERFACE	
   GtkWidget *rbH,*rbV;
   GtkWidget *bColor1,*bColor2;
+#endif	
   gchar *themename;
   GtkWidget *bOpen;
+#ifndef APPMGR_INTERFACE	
   GtkWidget *demolabel;
+#endif	
   GtkWidget *demolabel2;
+#ifndef APPMGR_INTERFACE	
   GtkWidget *spFS, *bFont, *bColorFont;
+#endif
   GtkWidget *spFSApp, *bFontApp;
+#ifndef APPMGR_INTERFACE	
   GtkWidget *slIconSize;
   GtkWidget *slToolbarSize;
+#endif  
   GtkWidget *cDefault;
+#ifndef APPMGR_INTERFACE	
   GtkWidget *cPerformance;
+#endif  
   GtkWidget *rbToolIcons;
   GtkWidget *rbToolText;
   GtkWidget *rbToolBoth;
@@ -325,21 +337,28 @@ void update_enabled_widgets()
 {
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cDefault)))
 	{
+#ifndef APPMGR_INTERFACE	
 		gtk_widget_set_sensitive(self.bColor1,FALSE);
 		gtk_widget_set_sensitive(self.bColor2,FALSE);
+#endif
 		gtk_widget_set_sensitive(self.eImage,FALSE);
 		gtk_widget_set_sensitive(self.bOpen,FALSE);
+#ifndef APPMGR_INTERFACE	
 		gtk_widget_set_sensitive(self.rbH,FALSE);
 		gtk_widget_set_sensitive(self.rbV,FALSE);
+#endif		
 		gtk_widget_set_sensitive(self.rbImgCent,FALSE);
 		gtk_widget_set_sensitive(self.rbImgStr,FALSE);
 		gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
+#ifndef APPMGR_INTERFACE	
 		gtk_widget_set_sensitive(self.rbSolid,FALSE);
 		gtk_widget_set_sensitive(self.rbGrad,FALSE);
 		gtk_widget_set_sensitive(self.rbImage,FALSE);
+#endif		
 	}
 	else
 	{
+#ifndef APPMGR_INTERFACE	
 		gtk_widget_set_sensitive(self.rbSolid,TRUE);
 		gtk_widget_set_sensitive(self.rbGrad,TRUE);
 		gtk_widget_set_sensitive(self.rbImage,TRUE);
@@ -368,13 +387,16 @@ void update_enabled_widgets()
 			gtk_widget_set_sensitive(self.rbImgTiled,FALSE);
 		}
 		else if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
+#endif			
 		{
+#ifndef APPMGR_INTERFACE	
 			gtk_widget_set_sensitive(self.bColor1,FALSE);
 			gtk_widget_set_sensitive(self.bColor2,FALSE);
-			gtk_widget_set_sensitive(self.eImage,TRUE);
-			gtk_widget_set_sensitive(self.bOpen,TRUE);
 			gtk_widget_set_sensitive(self.rbH,FALSE);
 			gtk_widget_set_sensitive(self.rbV,FALSE);
+#endif			
+			gtk_widget_set_sensitive(self.eImage,TRUE);
+			gtk_widget_set_sensitive(self.bOpen,TRUE);
 			gtk_widget_set_sensitive(self.rbImgCent,TRUE);
 			gtk_widget_set_sensitive(self.rbImgStr,TRUE);
 			gtk_widget_set_sensitive(self.rbImgTiled,TRUE);
@@ -491,7 +513,7 @@ notify_func (const char *name,
    if (strncmp (name, KEY_GTK, strlen (KEY_GTK)) == 0)
     {
       char *p = (char *) name + strlen (KEY_GTK);
-
+#ifndef APPMGR_INTERFACE	
  	  if (!strcmp (p, "ToolbarIconSize"))
 	  {
 	  if (setting->type == XSETTINGS_TYPE_INT)
@@ -499,6 +521,7 @@ notify_func (const char *name,
 			gtk_range_set_value(GTK_RANGE(self.slToolbarSize),(float)setting->data.v_int);
 		}
 	  }
+#endif	  
  	  if (!strcmp (p, "ToolbarStyle"))
 	  {
 	  if (setting->type == XSETTINGS_TYPE_INT)
@@ -549,25 +572,34 @@ notify_func (const char *name,
 			mbbg_parse_spec(&mb_back,g_strdup(setting->data.v_string));
 			  switch(mb_back.type)
 				{
+#ifndef APPMGR_INTERFACE	
 				case BG_SOLID:
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbSolid),TRUE);
 				  widget_set_color_rgb8(self.bColor1,(float)mb_back.data.cols[0]/255.0,(float)mb_back.data.cols[1]/255.0,(float)mb_back.data.cols[2]/255.0);
 				  break;
+#endif				
 				case BG_TILED_PXM:
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImgTiled),TRUE);
+#ifndef APPMGR_INTERFACE	
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImage),TRUE);
+#endif				
 				  gtk_entry_set_text(GTK_ENTRY(self.eImage),mb_back.data.filename);
 				  break;
    				case BG_CENTERED_PXM:
  				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImgCent),TRUE);
+#ifndef APPMGR_INTERFACE	
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImage),TRUE);
+#endif				
 				  gtk_entry_set_text(GTK_ENTRY(self.eImage),mb_back.data.filename);
 				  break;
 				case BG_STRETCHED_PXM:
  				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImgStr),TRUE);
+#ifndef APPMGR_INTERFACE	
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImage),TRUE);
+#endif				
 				  gtk_entry_set_text(GTK_ENTRY(self.eImage),mb_back.data.filename);
 				  break;
+#ifndef APPMGR_INTERFACE	
 				case BG_GRADIENT_HORIZ:
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbH),TRUE);
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbGrad),TRUE);
@@ -580,12 +612,14 @@ notify_func (const char *name,
 				  widget_set_color_rgb8(self.bColor1,(float)mb_back.data.cols[0]/255.0,(float)mb_back.data.cols[2]/255.0,(float)mb_back.data.cols[4]/255.0);
 				  widget_set_color_rgb8(self.bColor2,(float)mb_back.data.cols[1]/255.0,(float)mb_back.data.cols[3]/255.0,(float)mb_back.data.cols[5]/255.0);
 				  break;
+#endif				
 				}    
 			}
  	    update_enabled_widgets();			
 	}
       
 	
+#ifndef APPMGR_INTERFACE	
 	if (!strcmp (p, "Desktop/IconSize"))
 	{
 	  if (setting->type == XSETTINGS_TYPE_INT)
@@ -635,6 +669,7 @@ notify_func (const char *name,
 				!strcmp(setting->data.v_string,"on"));
 		}
 	}
+#endif	
    }
  }
 
@@ -699,8 +734,8 @@ on_matchbox_entry_changed (GtkWidget * menu, gpointer user_data)
 {
   gchar *tn = NULL;
   tn =
-    gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (self.cbTheme)->entry), 0,
-			    -1);
+    gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (self.cbTheme)->entry), 0, 
+	                        -1);
   if ((tn) && (strlen (tn)))
     {
 	  if (use_xst)
@@ -768,7 +803,7 @@ File_Selected (char *file, gpointer data)
 void
 choose_file (GtkWidget * button, gpointer user_data)
 {
-  ask_user_a_file (getenv ("HOME"), NULL, File_Selected, NULL, NULL);
+  ask_user_a_file (g_get_home_dir(), NULL, File_Selected, NULL, NULL);
 }
 
 char* get_color_from_widget(GtkWidget* w)
@@ -804,6 +839,7 @@ Theme_Save ()
 	}
 	else
 	{	
+#ifndef APPMGR_INTERFACE	
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
 		{
 			par1 = get_color_from_widget(self.bColor1);
@@ -822,6 +858,7 @@ Theme_Save ()
 			free(par2);		
 		}
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImage)))
+#endif			
 		{
 			par1 = gtk_editable_get_chars(GTK_EDITABLE(self.eImage),0,-1);
 			if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbImgCent)))
@@ -854,12 +891,13 @@ Theme_Save ()
 		system_printf (CMD_XST " delete %s%s", KEY_MATCHBOX, "Background");
 	}
 	
+#ifndef APPMGR_INTERFACE	
 	/* composite/performance setting */
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cPerformance)))
 		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "on");
 	else
 		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "off");
-			
+	
 	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
@@ -872,7 +910,7 @@ Theme_Save ()
 	confstr = get_color_from_widget(self.bColorFont);
 	system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "Desktop/FontColor", confstr);
 	free(confstr);
-	
+#endif	
 	/* application font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
@@ -881,6 +919,7 @@ Theme_Save ()
 	system(confstr);
 	free(confstr);	
 
+#ifndef APPMGR_INTERFACE	
 	/* desktop icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slIconSize));
 	system_printf (CMD_XST " write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
@@ -888,7 +927,7 @@ Theme_Save ()
 	/* toolbar icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slToolbarSize));
 	system_printf (CMD_XST " write %s%s int %d", KEY_GTK, "ToolbarIconSize", fs);
-	
+#endif	
 	/* toolbar style */
 	fs = GTK_TOOLBAR_ICONS;
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolText)))
@@ -913,7 +952,10 @@ Theme_Restore ()
 GtkWidget *
 Theme_Build_Objects ()
 {
-  GtkWidget *table, *rg_background, *rg_hv, *rg_img;
+  GtkWidget *table, *rg_img;
+#ifndef APPMGR_INTERFACE	
+  GtkWidget *rg_background, *rg_hv;
+#endif	
   GtkWidget *label;
   GtkWidget *hbox;
   GtkWidget *notebook;
@@ -946,7 +988,11 @@ Theme_Build_Objects ()
 
   notebook  = gtk_notebook_new();
   
+#ifndef APPMGR_INTERFACE	
   label = gtk_label_new (_("Theme"));
+#else
+  label = gtk_label_new (_("Look and Feel"));
+#endif  
   table = gtk_table_new (3, 2, FALSE);
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
@@ -981,6 +1027,7 @@ Theme_Build_Objects ()
   gtk_signal_connect (GTK_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
 		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
 			  
+#ifndef APPMGR_INTERFACE	
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
   tstr = g_strdup_printf ("<b>%s</b>", _("Icon Size"));
@@ -1019,12 +1066,14 @@ Theme_Build_Objects ()
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
-
+#endif
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Background Settings"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
+  
+#ifndef APPMGR_INTERFACE	
   gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1035,7 +1084,19 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   g_signal_connect (GTK_OBJECT (self.cDefault), "toggled",
 		       (update_enabled_widgets), NULL);
-			
+#else
+  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 2, 3,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+
+  self.cDefault = gtk_check_button_new_with_label(_("Theme Default"));
+  gtk_table_attach (GTK_TABLE (table), self.cDefault, 0, 2, 3, 4,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  g_signal_connect (GTK_OBJECT (self.cDefault), "toggled",
+		       (update_enabled_widgets), NULL);
+#endif
+#ifndef APPMGR_INTERFACE
   label = gtk_radio_button_new_with_label (NULL, _("Solid colour"));
   rg_background = label;
   self.rbSolid = label;
@@ -1086,7 +1147,6 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
-
   label =
     gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
 						 (rg_background), _("Image"));
@@ -1096,7 +1156,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 7, 8,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-
+#endif
   self.eImage = gtk_entry_new ();
   gtk_table_attach (GTK_TABLE (table), self.eImage, 0, 1, 8, 9,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1127,7 +1187,8 @@ Theme_Build_Objects ()
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
 			
   /* toolbar tab */
-  
+
+#ifndef APPMGR_INTERFACE
   label = gtk_label_new (_("Toolbars"));
   table = gtk_table_new (3, 2, FALSE);
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
@@ -1136,12 +1197,13 @@ Theme_Build_Objects ()
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
-
+#endif
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Style"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
+#ifndef APPMGR_INTERFACE
   gtk_table_attach (GTK_TABLE (table), label, 0, 3, 0, 1,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1165,7 +1227,31 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.rbToolBothH, 3, 4, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+#else
+  gtk_table_attach (GTK_TABLE (table), label, 0, 3, 10, 11,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
+  hbox = gtk_hbox_new(TRUE, gpe_get_boxspacing());
+  gtk_table_attach (GTK_TABLE (table), hbox, 0, 4, 11, 12,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  
+  self.rbToolIcons =  gtk_radio_button_new_with_label (NULL, _("Icons"));
+  gtk_box_pack_start(GTK_BOX(hbox), self.rbToolIcons, FALSE, TRUE, 0);
+  
+  self.rbToolText =  gtk_radio_button_new_with_label_from_widget 
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Text"));
+  gtk_box_pack_start(GTK_BOX(hbox), self.rbToolText, FALSE, TRUE, 0);
+  self.rbToolBoth =  gtk_radio_button_new_with_label_from_widget 
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both"));
+  gtk_box_pack_start(GTK_BOX(hbox), self.rbToolBoth, FALSE, TRUE, 0);
+  self.rbToolBothH =  gtk_radio_button_new_with_label_from_widget 
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both H"));
+  gtk_box_pack_start(GTK_BOX(hbox), self.rbToolBothH, FALSE, TRUE, 0);
+#endif
+
+#ifndef APPMGR_INTERFACE	
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
   tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Icon Size"));
@@ -1181,15 +1267,16 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_range_set_value(GTK_RANGE(self.slToolbarSize),2.0);  
   gtk_range_set_increments(GTK_RANGE(self.slToolbarSize),1.0,1.0);
-			
+#endif			
  /* fonts tab */
+#ifndef APPMGR_INTERFACE	
   label = gtk_label_new (_("Fonts"));
   table = gtk_table_new (2, 2, FALSE);
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
- 
+
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Desktop Font"));
@@ -1243,14 +1330,14 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.bColorFont, 3, 4, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  
- /*---------------------------------------------*/
- 
+#endif
+/*---------------------------------------------*/
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Application Font"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
+#ifndef APPMGR_INTERFACE	
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 4, 5,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1285,19 +1372,59 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+#else
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 12, 13,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+
+  label = gtk_label_new(_("Family"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 1, 13, 14,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+
+  self.bFontApp = GTK_WIDGET(popup_menu_button_new (GTK_STOCK_SELECT_FONT));
+  g_object_set_data (G_OBJECT (self.bFontApp), "active", FALSE);
+  gtk_signal_connect (GTK_OBJECT (self.bFontApp), "pressed",
+		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  gtk_table_attach (GTK_TABLE (table), self.bFontApp, 0, 1, 14, 15,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.demolabel2 = gtk_label_new(_("Application Font"));  
+  gtk_table_attach (GTK_TABLE (table), self.demolabel2, 0, 4, 15, 16,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  gtk_widget_set_size_request(self.demolabel2,-1,30);
+  gtk_misc_set_alignment(GTK_MISC(self.demolabel2),0.5,0.2);
+
+  label = gtk_label_new(_("Size"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach (GTK_TABLE (table), label, 1, 2, 13, 14,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+  self.spFSApp = gtk_spin_button_new_with_range(5,20,1);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),8.0);
+  gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 14, 15,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
+#endif
   g_signal_connect(G_OBJECT(self.spFSApp),"value-changed",G_CALLBACK(on_font_size_change),NULL);	
   
 			
 /* insert some defaults */
   astyle = gtk_rc_style_new ();
   astyle->font_desc = pango_font_description_from_string ("Sans 9");
+#ifndef APPMGR_INTERFACE	
   gtk_widget_modify_style (self.demolabel, astyle);
-  gtk_widget_modify_style (self.demolabel2, astyle);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
+#endif  
+  gtk_widget_modify_style (self.demolabel2, astyle);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
+#ifndef APPMGR_INTERFACE	
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
+#endif
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
@@ -1310,7 +1437,9 @@ Theme_Build_Objects ()
 	 isize = 32;
   else 
 	 isize = 48;
+#ifndef APPMGR_INTERFACE	
   gtk_range_set_value(GTK_RANGE(self.slIconSize),(float)isize);
+#endif 
   /* toolbar layout */
   if (minsize > 400)
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBoth),TRUE);
@@ -1364,6 +1493,7 @@ popup_menu_button_new (const gchar *stock_id)
 }
 
 
+#ifndef APPMGR_INTERFACE	
 static void
 on_font_select_desk(GtkWidget * widget, gpointer style)
 {
@@ -1375,6 +1505,7 @@ on_font_select_desk(GtkWidget * widget, gpointer style)
 	select_font_popup(self.bFont);
 	on_font_size_change(GTK_SPIN_BUTTON(self.spFS),GTK_SCROLL_NONE);
 }
+#endif	
 
 static void
 on_font_select_app(GtkWidget * widget, gpointer style)
@@ -1394,13 +1525,16 @@ on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1)
 {
 	GtkRcStyle *astyle = gtk_rc_style_new();
 	
+#ifndef APPMGR_INTERFACE	
 	if (GTK_WIDGET(spinbutton) == self.spFS)
 	{
 		astyle->font_desc = gtk_widget_get_style(self.demolabel)->font_desc;
 		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
 	    gtk_widget_modify_style(self.demolabel,GTK_RC_STYLE(astyle));
 	}
-	else if (GTK_WIDGET(spinbutton) == self.spFSApp) 	
+	else 
+#endif		
+		if (GTK_WIDGET(spinbutton) == self.spFSApp) 	
 	{
 		astyle->font_desc = gtk_widget_get_style(self.demolabel2)->font_desc;
 		pango_font_description_set_size(astyle->font_desc,gtk_spin_button_get_value_as_int(spinbutton)*PANGO_SCALE);
@@ -1470,7 +1604,9 @@ select_font_popup (GtkWidget *parent_button)
       gtk_container_add (GTK_CONTAINER (alignment), button_label);
       gtk_container_add (GTK_CONTAINER (button), alignment);
       gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+#ifndef APPMGR_INTERFACE	
 	  if (parent_button == self.bFont) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_desk),button_label_rc_style);
+#endif		  
 	  if (parent_button == self.bFontApp) g_signal_connect(G_OBJECT(button),"clicked",G_CALLBACK(on_font_select_app),button_label_rc_style);
     }
 

@@ -11,8 +11,10 @@ typedef struct
   GtkWidget *screensaver;
   GtkWidget *screensaverbt1;
   GtkWidget *screensaverbt2;
+#ifndef DISABLE_XRANDR
   GtkWidget *rotation;
   GtkWidget *rotationl;
+#endif	
   GtkWidget *touchscreen;
   GtkWidget *calibrate;
   GtkObject* adjSaver;

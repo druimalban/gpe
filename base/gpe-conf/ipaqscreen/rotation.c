@@ -26,6 +26,8 @@
 #include "gpe/errorbox.h"
 #include "../applets.h"
 
+#ifndef DISABLE_XRANDR
+
 extern char *RotationLabels;
 static Display *dpy = NULL;
 static int screen;
@@ -154,3 +156,4 @@ void set_rotation (int rotation)
     system_printf("/usr/X11R6/bin/xmodmap %s",xmodmaps[rotation]);
 #endif  
 }
+#endif

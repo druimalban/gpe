@@ -60,6 +60,7 @@ void
 on_rotation_entry_changed              (GtkWidget     *menu,
                                         gpointer         user_data)
 {
+#ifndef DISABLE_XRANDR
   char val[10];
   // it seems that it is the only way to have the nb of the selected item..
 
@@ -73,6 +74,7 @@ on_rotation_entry_changed              (GtkWidget     *menu,
     }
   snprintf(val,9,"%d",i);
   suid_exec("SCRR",val);
+#endif	
 }
 
 

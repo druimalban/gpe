@@ -34,7 +34,9 @@
 #include "cfgfile.h"
 #include "ownerinfo.h"
 #include "ipaqscreen/brightness.h"
+#ifndef DISABLE_XRANDR
 #include "ipaqscreen/rotation.h"
+#endif
 #ifdef PACKAGETOOL		
 #include "packages.h"
 #include "keyboard.h"
@@ -66,13 +68,14 @@ update_screen_brightness (int br)
 	set_brightness (br);
 }
 
+#ifndef DISABLE_XRANDR
 void
 update_screen_rotation (int rotation)
 {
 	if ((rotation >= 0) && (rotation <= 3))
 		set_rotation (rotation);
 }
-
+#endif
 
 void
 update_dns_server (const gchar * server)
@@ -411,11 +414,13 @@ suidloop (int write, int read)
 					fscanf (in, "%d", &numarg);
 					update_screen_brightness (numarg);
 				}
+#ifndef DISABLE_XRANDR
 				else if (strcmp (cmd, "SCRR") == 0)  // rotate screen
 				{
 					fscanf (in, "%d", &numarg);
 					update_screen_rotation (numarg);
 				}
+#endif				
 				else if (strcmp (cmd, "CRHD") == 0)  // create a users home directory
 				{
 					fscanf (in, "%100s", arg1);	// directory
