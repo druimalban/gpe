@@ -16,5 +16,6 @@
 #include <gpe/tag-db.h>
 
 extern MIMEDirVTodo *vtodo_from_tags (GSList *tags);
+extern GSList *vtodo_to_tags (MIMEDirVTodo *vtodo);
 
 #endif

@@ -82,3 +82,24 @@ vtodo_from_tags (GSList *tags)
 
   return vtodo;
 }
+
+GSList *
+vtodo_to_tags (MIMEDirVTodo *vtodo)
+{
+  GSList *data = NULL;
+  struct tag_map *t = &map[0];
+
+  while (t->tag)
+    {
+      gchar *value;
+
+      g_object_get (G_OBJECT (vtodo), t->vc ? t->vc : t->tag, &value, NULL);
+
+      if (value)
+	data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+
+      t++;
+    }
+
+  return data;
+}
