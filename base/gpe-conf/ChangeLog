@@ -1,3 +1,6 @@
+2004-05-24	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* theme.c: New setting: toolbar style via xsettings.
+
 2004-03-27	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* ownerinfo.c, login-setup.c: Removed markup from string, fixes bug #1187.
 	* gpe-conf-users.desktop.in: Removed trailing spaces, fixes bug #1189.

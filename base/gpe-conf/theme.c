@@ -61,6 +61,10 @@ static struct
   GtkWidget *slToolbarSize;
   GtkWidget *cDefault;
   GtkWidget *cPerformance;
+  GtkWidget *rbToolIcons;
+  GtkWidget *rbToolText;
+  GtkWidget *rbToolBoth;
+  GtkWidget *rbToolBothH;
 }
 self;
 
@@ -486,6 +490,27 @@ notify_func (const char *name,
 			gtk_range_set_value(GTK_RANGE(self.slToolbarSize),(float)setting->data.v_int);
 		}
 	  }
+ 	  if (!strcmp (p, "ToolbarStyle"))
+	  {
+	  if (setting->type == XSETTINGS_TYPE_INT)
+	    {
+			switch (setting->data.v_int)
+			{
+				case GTK_TOOLBAR_TEXT:
+					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolText),TRUE);
+				break;
+				case GTK_TOOLBAR_BOTH:
+					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBoth),TRUE);
+				break;
+				case GTK_TOOLBAR_BOTH_HORIZ:
+					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBothH),TRUE);
+				break;
+				default:
+					gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
+				break;
+			}
+		}
+	  }
     }
    if (strncmp (name, KEY_THEME, strlen (KEY_THEME)) == 0)
     {
@@ -822,7 +847,6 @@ Theme_Save ()
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "on");
 	else
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "off");
-		
 			
 	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
@@ -849,9 +873,19 @@ Theme_Save ()
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slIconSize));
 	system_printf ("xst write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
 	
-	/* desktop icon size */
+	/* toolbar icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slToolbarSize));
 	system_printf ("xst write %s%s int %d", KEY_GTK, "ToolbarIconSize", fs);
+	
+	/* toolbar style */
+	fs = GTK_TOOLBAR_ICONS;
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolText)))
+		fs = GTK_TOOLBAR_TEXT;
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolBoth)))
+		fs = GTK_TOOLBAR_BOTH;
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbToolBothH)))
+		fs = GTK_TOOLBAR_BOTH_HORIZ;
+	system_printf ("xst write %s%s int %d", KEY_GTK, "ToolbarStyle", fs);
 }
 
 void
@@ -949,30 +983,14 @@ Theme_Build_Objects ()
   
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
-  tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Icon Size"));
+  tstr = g_strdup_printf ("<b>%s</b>", _("Visual Effects"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
   gtk_table_attach (GTK_TABLE (table), label, 0, 2, 4, 5,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  
-  self.slToolbarSize = gtk_hscale_new_with_range(1.0,3.0,1.0);
-  gtk_table_attach (GTK_TABLE (table), self.slToolbarSize, 0, 4, 5, 6,
-		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  gtk_range_set_value(GTK_RANGE(self.slToolbarSize),2.0);  
-  gtk_range_set_increments(GTK_RANGE(self.slToolbarSize),1.0,1.0);
-  
-  label = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
-  tstr = g_strdup_printf ("<b>%s</b>", _("Visual Effects"));
-  gtk_label_set_markup (GTK_LABEL (label), tstr);
-  g_free (tstr);
-  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 6, 7,
-		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   self.cPerformance = gtk_check_button_new_with_label(_("Enable Visual Effects"));
-  gtk_table_attach (GTK_TABLE (table), self.cPerformance, 0, 2, 7, 8,
+  gtk_table_attach (GTK_TABLE (table), self.cPerformance, 0, 2, 5, 6,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
@@ -1093,7 +1111,63 @@ Theme_Build_Objects ()
   self.rbImgStr = label;
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
 			
- /*---------------------------------------------*/
+  /* toolbar tab */
+  
+  label = gtk_label_new (_("Toolbars"));
+  table = gtk_table_new (3, 2, FALSE);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
+
+  gtk_widget_set_name (table, "table");
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
+
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Style"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 3, 0, 1,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+
+  self.rbToolIcons =  gtk_radio_button_new_with_label (NULL, _("Icons"));
+  gtk_table_attach (GTK_TABLE (table), self.rbToolIcons, 0, 1, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  self.rbToolText =  gtk_radio_button_new_with_label_from_widget 
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Text"));
+  gtk_table_attach (GTK_TABLE (table), self.rbToolText, 1, 2, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  self.rbToolBoth =  gtk_radio_button_new_with_label_from_widget 
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both"));
+  gtk_table_attach (GTK_TABLE (table), self.rbToolBoth, 2, 3, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  self.rbToolBothH =  gtk_radio_button_new_with_label_from_widget 
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both H"));
+  gtk_table_attach (GTK_TABLE (table), self.rbToolBothH, 3, 4, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Icon Size"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 2, 3,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  
+  self.slToolbarSize = gtk_hscale_new_with_range(1.0,3.0,1.0);
+  gtk_table_attach (GTK_TABLE (table), self.slToolbarSize, 0, 3, 3, 4,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  gtk_range_set_value(GTK_RANGE(self.slToolbarSize),2.0);  
+  gtk_range_set_increments(GTK_RANGE(self.slToolbarSize),1.0,1.0);
+			
+ /* fonts tab */
   label = gtk_label_new (_("Fonts"));
   table = gtk_table_new (2, 2, FALSE);
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
@@ -1207,6 +1281,7 @@ Theme_Build_Objects ()
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
