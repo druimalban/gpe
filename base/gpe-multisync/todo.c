@@ -16,9 +16,41 @@
 
 #include "gpe_sync.h"
 
+#include <gpe/vtodo.h>
+#include <gpe/tag-db.h>
+
 GList *
 sync_todo (GList *data, gpe_conn *conn, int newdb)
 {
+  GSList *list, *i;
+  
+  list = fetch_uid_list (conn->todo, "select distinct uid from todo_urn");
+  
+  for (i = list; i; i = i->next)
+    {
+      GSList *tags;
+      MIMEDirVTodo *vtodo;
+      gchar *string;
+      changed_object *obj;
+      int urn = (int)i->data;
+      
+      tags = fetch_tag_data (conn->todo, "select tag,value from todo where uid=%d", urn);
+      vtodo = vtodo_from_tags (tags);
+      gpe_tag_list_free (tags);
+      string = mimedir_vtodo_write_to_string (vtodo);
+      g_object_unref (vtodo);
+
+      obj = g_malloc0 (sizeof (*obj));
+      obj->comp = string;
+      obj->uid = g_strdup_printf ("%d", urn);
+      obj->object_type = SYNC_OBJECT_TYPE_TODO;
+      obj->change_type = SYNC_OBJ_MODIFIED; 
+
+      data = g_list_append (data, obj);
+    }
+
+  g_slist_free (list);
+
   return data;
 }
 
