@@ -37,6 +37,8 @@ main (int argc, char *argv[])
       atom = XInternAtom (dpy, "GPE_STYLUS_MODE", 0);
       
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
+
+      XCloseDisplay (dpy);
     }
       
   exit (0);
