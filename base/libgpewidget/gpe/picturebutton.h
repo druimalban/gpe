@@ -35,14 +35,12 @@ typedef enum {
   GPE_POS_BOTTOM
 } GpePositionType; //GtkPositionType does not provide _POS_CENTER
 
-#define gpe_picture_button(style, text, icon) \
-        gpe_picture_button_aligned (style, text, icon, GPE_POS_CENTER)
-
 extern GtkWidget * gpe_picture_button_aligned (GtkStyle *style,
                                                gchar *text,
                                                gchar *icon,
                                                GpePositionType pos);
 
+extern GtkWidget *gpe_picture_button(GtkStyle *style, gchar *text, gchar *icon);
 extern GtkWidget *gpe_button_new_from_stock (const gchar *stock_id, int type);
 
 #endif
