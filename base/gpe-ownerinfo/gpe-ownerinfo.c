@@ -57,6 +57,7 @@ GtkWidget *bigphotobutton;
 gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
 PangoLayout *address_layout;
 guint lost_height;
+GtkWidget *scrollbar;
 
 /* redraw the pixbuf */
 gboolean
@@ -357,12 +358,15 @@ set_address_size (GtkWidget *widget, GtkAllocation *allocation, gpointer user_da
   width /= PANGO_SCALE;
   height /= PANGO_SCALE;
 
-  fprintf (stderr, "height required: %d, height obtained: %d\n", height, allocation->height);
-
   if (height < allocation->height)
     height = allocation->height;
 
   lost_height = height - allocation->height;
+
+  if (lost_height)
+    gtk_widget_show (scrollbar);
+  else
+    gtk_widget_hide (scrollbar);
 
   adj->page_size = (double)allocation->height / (double)height;
 }
@@ -388,7 +392,6 @@ main (int argc, char *argv[])
   GtkWidget *smallphotodrawingarea;
   GtkWidget *bigphotodrawingarea;
   GtkWidget *rightcolvbox;
-  GtkWidget *scrollbar;
   GtkWidget *addresshbox;
   GtkSizeGroup *sizegroup;
   GtkObject *adjustment;

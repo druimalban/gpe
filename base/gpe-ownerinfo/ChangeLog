@@ -2,6 +2,8 @@
 
 	* gpe-ownerinfo2.c (main): Remove duplicate locale code.  Move
 	bind_textdomain_codeset to correct place.
+	(set_address_size): Hide the scrollbar if the height was
+	sufficient.
 
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
