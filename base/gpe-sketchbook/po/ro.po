@@ -7,9 +7,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-sketchbook 0.2.5\n"
-"POT-Creation-Date: 2003-04-02 02:26+0300\n"
-"PO-Revision-Date: 2003-05-05 12:00-0500\n"
+"Project-Id-Version: gpe-sketchbook 0.2.7\n"
+"POT-Creation-Date: 2003-10-12 20:45+0300\n"
+"PO-Revision-Date: 2003-10-13 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -17,73 +17,193 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
-msgid "Sketchbook"
-msgstr "Caiet schiþe"
+#: src/gpe-sketchbook.c:115
+msgid "Sketchbook: preferences"
+msgstr "Sketchbook: preferinþe"
 
-#: src/selector.c:87
+#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+msgid "Sketchbook"
+msgstr "Sketchbook"
+
+#: src/preferences.c:93
+msgid ""
+"Cannot create XSettings client.\n"
+"Use default preferences."
+msgstr ""
+"Nu pot crea clientul XSettings.\n"
+"Folosiþi preferinþele implicite."
+
+#: src/preferences.c:188
+msgid ""
+"gpe-confd is not running.\n"
+"Cannot save the preferences."
+msgstr ""
+"gpe-confd nu ruleazã.\n"
+"Nu pot salva preferinþele."
+
+#: src/preferences.c:277
+msgid "Start with"
+msgstr "Începe cu"
+
+#: src/preferences.c:280
+msgid "Sketchpad"
+msgstr "Sketchpad"
+
+#: src/preferences.c:282
+msgid "Selector - list"
+msgstr "Selector - listã"
+
+#: src/preferences.c:284
+msgid "Selector - icons table"
+msgstr "Selector - tabel pictograme"
+
+#: src/preferences.c:300
+msgid "Use joypad scrolling"
+msgstr "Foloseºte scroll cu joypad-ul"
+
+#: src/preferences.c:307
+msgid "Grow on scroll"
+msgstr "Creºte la scroll"
+
+#: src/preferences.c:316
+msgid "OK"
+msgstr "OK"
+
+#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
+msgid "Cancel"
+msgstr "Renunþã"
+
+#: src/selector.c:88
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
-msgstr "Nu pot citi directorul caiet schiþe: %s. Termin."
+msgstr "Nu pot citi directorul sketchbook: %s. Termin."
 
-#: src/selector.c:93
+#. TRANSLATORS: %s are: [folder name] [error message]
+#: src/selector.c:95
 #, c-format
 msgid "Cannot create %s: %s. Exit."
-msgstr "Nu pot crea %s:  %s. Termin."
+msgstr "Nu pot crea %s: %s. Termin."
 
-#: src/selector.c:164
+#. TRANSLATORS: default sketch label based on [date] and [time]
+#. example: "2003 10 12  at  18:48:51"
+#: src/selector.c:179
 #, c-format
 msgid "%s  at  %s"
 msgstr "%s  la  %s"
 
-#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+#: src/selector-cb.c:66 src/sketchpad-cb.c:243
 msgid "Delete current sketch?"
-msgstr "Nu pot ºterge schiþa curentã"
+msgstr "ªterge schiþa curentã?"
 
-#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
-#: src/sketchpad-cb.c:197
+#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:243
 msgid "Question"
 msgstr "Întrebare"
 
-#: src/selector-cb.c:71 src/sketchpad-cb.c:198
-msgid "Cancel"
-msgstr "Renunþã"
-
-#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
 msgid "Delete"
 msgstr "ªterge"
 
+#: src/selector-gui.c:102
+msgid "New sketch"
+msgstr "Schiþã nouã"
+
+#: src/selector-gui.c:107
+msgid "Edit sketch"
+msgstr "Editeazã schiþã"
+
+#: src/selector-gui.c:115
+msgid "Delete selected sketch"
+msgstr "ªterge schiþa selectatã"
+
+#: src/selector-gui.c:123
+msgid "Import from image"
+msgstr "Importã din imagine"
+
+#: src/selector-gui.c:132
+msgid "Toggle view"
+msgstr "Comutã vedere"
+
+#: src/selector-gui.c:146
+msgid "Preferences"
+msgstr "Preferinþa"
+
 #: src/sketchpad.c:184
+msgid "Sketch"
+msgstr "Schiþã"
+
+#: src/sketchpad.c:189
 msgid "new"
 msgstr "nou"
 
-#: src/sketchpad-cb.c:46
+#: src/sketchpad.c:220
+#, c-format
+msgid "Import of `%s' failed."
+msgstr "importul lui `%s' a eºuat."
+
+#: src/sketchpad.c:237
+msgid "Image to import"
+msgstr "Imaginea de importat"
+
+#: src/sketchpad-cb.c:47
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
 "Schiþã modificatã,\n"
-"salveazã înainte de a termina?"
+"salvaþi înainte de a ieºi?"
 
-#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
 msgid "Discard"
-msgstr "Aruncã"
+msgstr "Ignorã"
 
-#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
 msgid "Save"
 msgstr "Salveazã"
 
-#: src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:77
 msgid "Save current sketch?"
 msgstr "Salveazã schiþa curentã?"
 
-#: src/sketchpad-gui.c:426
+#: src/sketchpad-gui.c:266
+msgid "Select eraser"
+msgstr "Selecteazã radierã"
+
+#: src/sketchpad-gui.c:268
+msgid "Select pencil"
+msgstr "Selecteazã creion"
+
+#: src/sketchpad-gui.c:270
+msgid "Brush size"
+msgstr "Dimensiune pensulã"
+
+#: src/sketchpad-gui.c:271
+msgid "Brush color"
+msgstr "Culoare pensulã"
+
+#: src/sketchpad-gui.c:430
+msgid "Sketch menu"
+msgstr "Meniu schiþã"
+
+#: src/sketchpad-gui.c:439
+msgid "Show list"
+msgstr "Aratã lista"
+
+#: src/sketchpad-gui.c:444
+msgid "Previous sketch"
+msgstr "Schiþa anterioarã"
+
+#: src/sketchpad-gui.c:449
+msgid "Next sketch"
+msgstr "Urmãtoarea schiþã"
+
+#: src/sketchpad-gui.c:465
 msgid "New"
 msgstr "Nou"
 
-#: src/sketchpad-gui.c:429
-msgid "Properties"
-msgstr "Proprietãþi"
+#: src/sketchpad-gui.c:466
+msgid "Import"
+msgstr "Import"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
