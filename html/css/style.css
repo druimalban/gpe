@@ -10,7 +10,11 @@ p,li {
 }
 
 h1,h2,h3,h4,h5,h6 {
-	font-family:	gill, helvetica, sans-serif;
+	font-family:	helvetica, sans-serif;
+}
+
+th {
+	font-family:	helvetica, sans-serif;
 }
 
 code, tt {
