@@ -3,6 +3,7 @@
 #include <time.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
+#include <libintl.h>
 
 #include "tetris.h"
 
@@ -206,7 +207,7 @@ void show_about()
 	GtkWidget *v_box;
 	
 	about_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(about_window),"About");
+	gtk_window_set_title(GTK_WINDOW(about_window),_("About"));
 	gtk_window_set_policy(GTK_WINDOW(about_window),FALSE,FALSE,TRUE);
 	gtk_window_set_position(GTK_WINDOW(about_window),GTK_WIN_POS_CENTER);
 	gtk_container_border_width(GTK_CONTAINER(about_window),1);
@@ -364,14 +365,17 @@ void show_new_game()
 	
 	hbox = gtk_hbox_new(TRUE,0);
 	gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,TRUE,0);
-	
-	button = gtk_button_new_with_label("Close");	
+
+	gtk_widget_realize (new_game_window);
+	button = gpe_picture_button (new_game_window->style,
+				     _("Close"), "cancel");
 	gtk_signal_connect(GTK_OBJECT(button),"clicked",
 				GTK_SIGNAL_FUNC(show_new_game_close),GINT_TO_POINTER(TRUE));	
 	gtk_box_pack_start(GTK_BOX(hbox),button,FALSE,TRUE,0);
   	GTK_WIDGET_SET_FLAGS (button, GTK_CAN_DEFAULT);
 	
-	button = gtk_button_new_with_label("Start game");	
+	button = gpe_picture_button (new_game_window->style,
+				     _("Start game"), "ok");
 	gtk_signal_connect(GTK_OBJECT(button),"clicked",
 				GTK_SIGNAL_FUNC(game_new_wrapper),
 				NULL);	
@@ -426,6 +430,12 @@ int main(int argc,char *argv[])
 
 	if (gpe_load_icons (my_icons) == FALSE)
 		exit (1);
+
+
+	setlocale (LC_ALL, "");
+	
+	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+	textdomain (PACKAGE);	
 
 	// init game values
 	game_over = TRUE;
