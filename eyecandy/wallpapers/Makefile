@@ -1,5 +1,5 @@
 PREFIX = /usr
-WALLPAPERS = audiotux gnu linuxaddict tux tux2 wintertux woman1 woman2
+WALLPAPERS = gnu bigeyetux penguin
 
 all:
 	for i in $(WALLPAPERS); do \
