@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libgpevtype
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.6
+VERSION = 0.7
 
 LINGUAS = 
 
