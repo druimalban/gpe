@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+29.04.2003		Florian			network.c					Fixed several bugs in gui, some improvements. 
+
 29.04.2003		Florian			timeanddate.c				Some GUI rework, fixes bug #753
 
 28.04.2003		Florian			theme.c						Fixed missing activation of "rbImage" if a bg image is set.

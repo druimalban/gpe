@@ -1012,7 +1012,7 @@ Cardinfo_Build_Objects (void)
   label = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit applet"),
 			   _("Exit applet"), _("Exit applet"), label,
-			   (GtkSignalFunc) gtk_main_quit, NULL);
+			   (GtkSignalFunc)gtk_main_quit, NULL);
 			   
 
   /* socket tabs */	

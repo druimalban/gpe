@@ -279,6 +279,7 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface)
 	guint gpe_border     = gpe_get_border ();
  
 	gchar wname[100];
+	gchar *tmpval;
 
 	// page headers
 	
@@ -289,6 +290,16 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface)
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
 
 	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+	
+	label = gtk_label_new(NULL);
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	tmpval = g_strdup_printf ("<b>%s</b>", iface.name);
+	gtk_label_set_markup (GTK_LABEL (label), tmpval);
+	g_free (tmpval);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 0, 1,
 			(GtkAttachOptions) (GTK_FILL),
 			(GtkAttachOptions) (GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
@@ -350,7 +361,7 @@ GtkWidget* create_nwdhcp_widgets(NWInterface_t iface)
 	guint gpe_border     = gpe_get_border ();
  
 	gchar wname[100];
-
+	gchar *tmpval;
 	// page headers
 	
 	ctable=gtk_table_new(3,7,FALSE);
@@ -359,6 +370,16 @@ GtkWidget* create_nwdhcp_widgets(NWInterface_t iface)
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
 
 	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+	
+	label = gtk_label_new(NULL);
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	tmpval = g_strdup_printf ("<b>%s</b>", iface.name);
+	gtk_label_set_markup (GTK_LABEL (label), tmpval);
+	g_free (tmpval);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 0, 1,
 			(GtkAttachOptions) (GTK_FILL),
 			(GtkAttachOptions) (GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
@@ -416,7 +437,8 @@ GtkWidget* create_nwppp_widgets(NWInterface_t iface)
 	guint gpe_border     = gpe_get_border ();
  
 	gchar wname[100];
-
+	gchar *tmpval;
+	
 	// page headers
 	
 	ctable=gtk_table_new(3,7,FALSE);
@@ -429,6 +451,16 @@ GtkWidget* create_nwppp_widgets(NWInterface_t iface)
 			(GtkAttachOptions) (GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
 	  	  
+	label = gtk_label_new(NULL);
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	tmpval = g_strdup_printf ("<b>%s</b>", iface.name);
+	gtk_label_set_markup (GTK_LABEL (label), tmpval);
+	g_free (tmpval);
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 0, 1,
+			(GtkAttachOptions) (GTK_FILL),
+			(GtkAttachOptions) (GTK_FILL),
+			gpe_boxspacing, gpe_boxspacing);
+			
 	label = gtk_radio_button_new_with_label_from_widget(NULL,"static");
 	strcpy(wname,"static");
 	strcat(wname,iface.name);  
@@ -479,23 +511,28 @@ GtkWidget* create_global_widgets()
 {
 	gchar* tmpval;
 	
-	GtkWidget *label, *container, *ctable, *box;
+	GtkWidget *label, *ctable, *box;
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border     = gpe_get_border ();
-	gint dhcp_on = TRUE;	
+	gint dhcp_on = FALSE;	
 	
 	// page headers
 	
-	ctable=gtk_table_new(3,7,FALSE);
-	container = gtk_hbox_new(TRUE,0);  
+	ctable=gtk_table_new(2,7,FALSE);
 	
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
+			
+	label = gtk_label_new(NULL);
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	tmpval = g_strdup_printf ("<b>%s</b>", _("Global Settings"));
+	gtk_label_set_markup (GTK_LABEL (label), tmpval);
+	g_free (tmpval);
 
-	gtk_table_attach (GTK_TABLE (ctable), container, 1, 2, 0, 1,
-			(GtkAttachOptions) (GTK_FILL),
+	gtk_table_attach (GTK_TABLE (ctable), label, 0, 3, 0, 1,
+			(GtkAttachOptions) (GTK_FILL | GTK_EXPAND),
 			(GtkAttachOptions) (GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
-	  	  
+			
 	// which config file to use
 	if (!getuid()) // if we are root we change global config file
 	{		
@@ -524,11 +561,11 @@ GtkWidget* create_global_widgets()
 	
 	//proxy for dillo
 	tmpval = get_file_var(cfgfile, "http_proxy");
-	create_editable_entry_simple(ctable, "proxy", _("Proxy"), tmpval, 0);
+	create_editable_entry_simple(ctable, "proxy", _("Proxy"), tmpval, 1);
 	g_free(tmpval);
 	
 	tmpval = get_file_var(cfgfile, "no_proxy");
-	create_editable_entry_simple(ctable, "no_proxy", _("No proxy for"), tmpval, 1);
+	create_editable_entry_simple(ctable, "no_proxy", _("No proxy for"), tmpval, 2);
 	g_free(tmpval);
 	
 	// dhcp on - off
@@ -557,7 +594,7 @@ GtkWidget* create_global_widgets()
 	gtk_object_set_data_full(GTK_OBJECT (table), "use-dhcp-on", label,
                             (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),dhcp_on);  
-	gtk_box_pack_start(GTK_BOX(box),label,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_BOX(box),label,TRUE,FALSE,0);
 	label = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(label),_("off"));
 	gtk_widget_set_sensitive(label,have_access);
 	gtk_widget_set_name(GTK_WIDGET(label),"use-dhcp-off");
@@ -565,7 +602,7 @@ GtkWidget* create_global_widgets()
 	gtk_object_set_data_full(GTK_OBJECT (table), "use-dhcp-off", label,
                             (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),!dhcp_on);  
-	gtk_box_pack_start(GTK_BOX(box),label,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_BOX(box),label,TRUE,FALSE,0);
 
 	// nameserver
 	tmpval = get_file_var("/etc/resolv.conf", "nameserver");
@@ -759,6 +796,12 @@ GtkWidget *Network_Build_Objects()
 			   _("Remove Interface"), _("Remove Interface"), 
 			   label, (GtkSignalFunc)remove_interface, NULL);
 	if (!have_access) gtk_widget_set_sensitive(button,FALSE);
+		
+	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));	
+	label = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"), 
+			   _("Close  network tool"), _("Close network tool"), 
+			   label, (GtkSignalFunc)gtk_main_quit, NULL);
 
 	// chreate tabbed notebook
 	// this contains lookup list!
