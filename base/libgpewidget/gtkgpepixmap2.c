@@ -229,6 +229,30 @@ gtk_gpe_pixmap_expose (GtkWidget      *widget,
 		           pixmap->pixmap_insensitive,
 		           0, 0, x, y, -1, -1);
         }
+      else if (GTK_WIDGET_STATE (widget) == GTK_STATE_PRELIGHT
+	       && pixmap->pixmap_prelight)
+	{
+          gdk_draw_pixmap (widget->window,
+	   	           widget->style->black_gc,
+		           pixmap->pixmap_prelight,
+		           0, 0, x, y, -1, -1);
+	}
+      else if (GTK_WIDGET_STATE (widget) == GTK_STATE_ACTIVE
+	       && pixmap->pixmap_active)
+	{
+          gdk_draw_pixmap (widget->window,
+	   	           widget->style->black_gc,
+		           pixmap->pixmap_active,
+		           0, 0, x, y, -1, -1);
+	}
+      else if (GTK_WIDGET_STATE (widget) == GTK_STATE_SELECTED
+	       && pixmap->pixmap_selected)
+	{
+          gdk_draw_pixmap (widget->window,
+	   	           widget->style->black_gc,
+		           pixmap->pixmap_selected,
+		           0, 0, x, y, -1, -1);
+	}
       else
 	{
           gdk_draw_pixmap (widget->window,
@@ -281,6 +305,19 @@ gtk_gpe_pixmap_set_active (GtkGpePixmap *pixmap, GdkPixmap *val)
   if (pixmap->pixmap_active)
     gdk_pixmap_unref (pixmap->pixmap_active);
   pixmap->pixmap_active = val;
+  if (val)
+    gdk_pixmap_ref (val);
+}
+
+void
+gtk_gpe_pixmap_set_selected (GtkGpePixmap *pixmap, GdkPixmap *val)
+{
+  g_return_if_fail (pixmap != NULL);
+  g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
+
+  if (pixmap->pixmap_selected)
+    gdk_pixmap_unref (pixmap->pixmap_selected);
+  pixmap->pixmap_selected = val;
   if (val)
     gdk_pixmap_ref (val);
 }

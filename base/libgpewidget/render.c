@@ -9,9 +9,13 @@
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <gdk/gdkx.h>
+#include <X11/Xlib.h>
 
 #include "gtkgpepixmap.h"
 #include "render.h"
+
+static int mono = -1;
 
 void
 gpe_render_pixmap_alpha (GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
@@ -20,8 +24,27 @@ gpe_render_pixmap_alpha (GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
   guint width = gdk_pixbuf_get_width (pixbuf),
     height = gdk_pixbuf_get_height (pixbuf);
   guint depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
+
+#if 0
+  if (mono == -1)
+    {
+      Visual *v = XDefaultVisual (GDK_DISPLAY (), gdk_screen);
+      switch (v->class)
+	{
+	case StaticGray:
+	case GrayScale:
+	  mono = 1;
+	  break;
+	default:
+	  mono = 0;
+	  break;
+	}
+    }
+#else
+    mono = 0;
+#endif
   
-  if (bgcol && gdk_pixbuf_get_has_alpha (pixbuf))	
+  if (!mono && bgcol && gdk_pixbuf_get_has_alpha (pixbuf))	
     {
       GdkColorspace color = gdk_pixbuf_get_colorspace (pixbuf);
       guint y, stride, sstride;
@@ -134,6 +157,14 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
       gpe_render_pixmap (&style->bg[GTK_STATE_ACTIVE], pixbuf,
 			 &pixmap, &bitmap);
       gtk_gpe_pixmap_set_active (GTK_GPE_PIXMAP (widget), pixmap);
+    }
+
+  if (style && 
+      style->bg[GTK_STATE_NORMAL].pixel != style->bg[GTK_STATE_SELECTED].pixel)
+    {
+      gpe_render_pixmap (&style->bg[GTK_STATE_SELECTED], pixbuf,
+			 &pixmap, &bitmap);
+      gtk_gpe_pixmap_set_selected (GTK_GPE_PIXMAP (widget), pixmap);
     }
 
   return widget;

@@ -57,6 +57,8 @@ struct _GtkGpePixmap
   GdkPixmap *pixmap_insensitive;
   GdkPixmap *pixmap_prelight;
   GdkPixmap *pixmap_active;
+  GdkPixmap *pixmap_selected;
+
   guint build_insensitive : 1;
 };
 
@@ -82,6 +84,8 @@ void       gtk_gpe_pixmap_set_build_insensitive (GtkGpePixmap *pixmap,
 void	   gtk_gpe_pixmap_set_prelight (GtkGpePixmap *pixmap, GdkPixmap *val);
 
 void	   gtk_gpe_pixmap_set_active (GtkGpePixmap *pixmap, GdkPixmap *val);
+
+void	   gtk_gpe_pixmap_set_selected (GtkGpePixmap *pixmap, GdkPixmap *val);
 
 #ifdef __cplusplus
 }
