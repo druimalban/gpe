@@ -12,5 +12,28 @@ to enter information fast and especially retrieve that information fast. It
 should also be possible to beam items as ASCII-text using IrDA IrOBEX which
 is a common standard.
 </P>
+
+<H2>Status</H2>
+<P>
+The easier/faster way to enter/retrieve information on devices with a touchscreen, is sketches. So gpe-sktechbook is the first stone of the GPE notebook. GPE notebook should later integrate voice notes for devices with microphone/speaker (see the <a href="GPE-soundbite.shtml">gpe-soundbit</a> project), and also simple text notes.
+<P/>
+<P>
+The source code can be found in <A href="../cvs.shtml">CVS</A>,
+module <b>gpe-sketchbook</b>.  Precompiled binaries for iPAQ are available
+in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>. Try: <code>&gt;ipkg install gpe-sketchbook</code>.
+</P>
+
+<H2>Coordinator</H2>
+<p>
+The coordinator for the gpe-sketchbook sub-project is Luc Pionchon (<a HREF="mailto:luc.pionchon@welho.com">luc.pionchon@welho.com</a>). If you want to contribute to this project, please contact him directly.
+</p>
+
+<H2>Screenshots</H2>
+<P>
+<IMG SRC="../images/gpe-sketchbook-0.1.4-selector.png" ALT="Sketch selector">
+<IMG SRC="../images/gpe-sketchbook-0.1.4-sketch2.png " ALT="Sketch 1">
+<IMG SRC="../images/gpe-sketchbook-0.1.4-sketch1.png " ALT="Sketch 2">
+</P>
+
 <!--#include virtual="/includes/foot.shtml"-->
 
