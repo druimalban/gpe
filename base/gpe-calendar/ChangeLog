@@ -18,6 +18,10 @@
 	(resize_table): Calculate height on the basis of 7 rows.  
 	[Bug #133]
 
+	* main.c (main): Use radio buttons for view selection, based on
+	patch from pigeon@pigeond.net.
+	(set_week_view, set_month_view, set_year_view, set_future_view): Deleted.
+
 2002-10-04  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* event-db.c (event_db_list_for_period_internal: erase
