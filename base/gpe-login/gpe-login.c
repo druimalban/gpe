@@ -116,9 +116,29 @@ static void
 do_login (uid_t uid, gid_t gid, char *dir)
 {
   cleanup_children ();
+
+  /* fork and set up as session leader */
+  switch (fork ())
+    {
+    case 0:
+      break;
+    case -1:
+      perror ("fork");
+      _exit (1);
+    default:
+      _exit (0);
+    }
+
+  if (setsid ())
+    perror ("setsid");
   
-  setuid (uid);
-  setgid (gid);
+  /* establish the user's environment */
+  if (setuid (uid))
+    perror ("setuid");
+  
+  if (setgid (gid))
+    perror ("setgid");
+
   setenv ("HOME", dir, 1);
   chdir (dir);
   
@@ -126,7 +146,6 @@ do_login (uid_t uid, gid_t gid, char *dir)
     execl (".xsession", ".xsession", NULL);
   execl ("/etc/X11/Xsession", "/etc/X11/Xsession", NULL);
   execl ("/usr/bin/x-terminal-emulator", "/usr/bin/x-terminal-emulator", NULL);
-
   _exit (1);
 }
 
