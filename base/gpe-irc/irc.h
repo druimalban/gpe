@@ -3,8 +3,6 @@
 
 #include <gtk/gtk.h>
 
-#define DEBUG 1
-
 typedef struct
 {
   gchar *nick;
