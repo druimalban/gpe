@@ -53,10 +53,3 @@ gboolean file_delete(const gchar * fullpath_filename){
   else return FALSE;
 }
 
-void     file_save(const gchar * fullpath_filename){
-  file_save_png(fullpath_filename);
-}
-void     file_load(const gchar * fullpath_filename){
-  file_load_png(fullpath_filename);
-}
-

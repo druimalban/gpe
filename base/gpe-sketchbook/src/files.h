@@ -19,10 +19,12 @@
 #define FILES_H
 
 #include <gtk/gtk.h>
+#include "files-png.h"
 
 gchar *  file_new_fullpath_filename();
 gboolean file_delete(const gchar * fullpath_filename);
-void     file_save(const gchar * fullpath_filename);
-void     file_load(const gchar * fullpath_filename);
+
+#define  file_save file_save_png
+#define  file_load file_load_png
 
 #endif
