@@ -1,3 +1,6 @@
+2004-10-07	Florian Boor <florian.boor@kernelconcepts.de>
+    * Added support for sysfs interface in kernel 2.6.
+	
 2004-08-06	Florian Boor <florian.boor@kernelconcepts.de>
 	* Do not set level to 0 on platforms that my have a 
           non-transflective display.
