@@ -224,6 +224,9 @@ gtk_date_sel_size_request (GtkWidget      *widget,
     case GTKDATESEL_WEEK:
       requisition->width = sel->week_width + sel->year_width + 4 * ARROW_SIZE + 6 * PAD;
       break;
+    case GTKDATESEL_MONTH:
+      requisition->width = sel->month_width + sel->year_width + 4 * ARROW_SIZE + 6 * PAD;
+      break;
     case GTKDATESEL_FULL:
       requisition->width = sel->day_width + sel->month_width + sel->year_width
 	+ 6 * ARROW_SIZE + 9 * PAD;
@@ -317,6 +320,29 @@ gtk_date_sel_paint (GtkWidget    *widget,
 	  gdk_draw_string(widget->window, widget->style->font,
 			  widget->style->black_gc,
 			  l + ARROW_SIZE + PAD + ((sel->week_width - w) / 2), fy,
+			  buf);      
+
+	  l = r + ARROW_SIZE + PAD;
+	  r = l + sel->year_width + ARROW_SIZE + PAD + PAD;
+	  draw_arrows(widget, l, r);
+
+	  strftime(buf, sizeof(buf), "%Y", &tm);
+	  w = gdk_string_width(widget->style->font, buf);
+	  gdk_draw_string(widget->window, widget->style->font,
+			  widget->style->black_gc,
+			  l + ARROW_SIZE + PAD + ((sel->year_width - w) / 2), fy,
+			  buf);
+	  break;
+
+	case GTKDATESEL_MONTH:
+	  l = leftspace;
+	  r = l + sel->month_width + ARROW_SIZE + PAD + PAD;
+	  draw_arrows(widget, l, r);
+	  strftime(buf, sizeof(buf), "%B", &tm);
+	  w = gdk_string_width(widget->style->font, buf);
+	  gdk_draw_string(widget->window, widget->style->font,
+			  widget->style->black_gc,
+			  l + ARROW_SIZE + PAD + ((sel->month_width - w) / 2), fy,
 			  buf);      
 
 	  l = r + ARROW_SIZE + PAD;
@@ -544,6 +570,20 @@ gtk_date_sel_button_press (GtkWidget      *widget,
 	year_click(sel, -1);
       else if (x > (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
 	       && x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
+	year_click(sel, 1);
+      break;
+
+    case GTKDATESEL_MONTH:
+      if (x < ARROW_SIZE)
+	month_click(sel, -1);
+      else if (x > (ARROW_SIZE + PAD + sel->month_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE))
+	month_click(sel, 1);
+      else if (x > (ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
+	year_click(sel, -1);
+      else if (x > (ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
 	year_click(sel, 1);
       break;
 
