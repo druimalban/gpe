@@ -124,6 +124,10 @@ update_time_from_net (const gchar * server)
 }
 
 
+/* Changes a setting in a config file, to be used with caution.
+ * seperator == 0 means to comment out this line 
+ */
+
 void
 change_cfg_value (const gchar * file, const gchar * var, const gchar * val,
 		  gchar seperator)
@@ -160,21 +164,28 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val,
 		    && (!g_str_has_prefix (g_strchomp (lines[i]), "#")))
 		{
 			delim = lines[i];
-			j = get_first_char (delim);
-			if (j > 0)
+			if (seperator)
 			{
-				tmpval = g_malloc (j);
-				strncpy (tmpval, delim, j);
-				lines[i] =
-					g_strdup_printf ("%s%s%c%s", tmpval,
-							 var, seperator, val);
-				g_free (tmpval);
+				j = get_first_char (delim);
+				if (j > 0)
+				{
+					tmpval = g_malloc (j);
+					strncpy (tmpval, delim, j);
+					lines[i] =
+						g_strdup_printf ("%s%s%c%s", tmpval,
+								 var, seperator, val);
+					g_free (tmpval);
+				}
+				else
+				{
+					lines[i] =
+						g_strdup_printf ("%s%c%s", var,
+								 seperator, val);
+				}
 			}
 			else
 			{
-				lines[i] =
-					g_strdup_printf ("%s%c%s", var,
-							 seperator, val);
+				lines[i] = g_strdup_printf ("# %s", lines[i]);
 			}
 		}
 		i++;
@@ -522,6 +533,11 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%d", &numarg);
 					assign_serial_port (numarg);
+				}
+				else if (strcmp (cmd, "SGPS") == 0)  // change gps settings
+				{
+					fscanf (in, "%100s", arg1);
+					update_gpsd_settings(arg1+1, (arg1[0] == '1') ? 1 : 0);
 				}
 				else if (strcmp (cmd, "CMID") == 0)  // identify pcmcia card
 				{

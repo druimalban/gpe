@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-10 21:02+0200\n"
+"POT-Creation-Date: 2003-08-23 03:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgid ""
 "Please enter password."
 msgstr ""
 
-#: applets.c:363 ipaqscreen/calibrate.c:33
+#: applets.c:363 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:227 keyctl.c:151
+#: network.c:227 keyctl.c:162
 msgid "Question"
 msgstr ""
 
@@ -583,15 +583,15 @@ msgstr ""
 msgid "Application Font"
 msgstr ""
 
-#: keyctl.c:151
+#: keyctl.c:162
 msgid "Reset button config to default?"
 msgstr ""
 
-#: keyctl.c:188
+#: keyctl.c:199
 msgid "Defaults"
 msgstr ""
 
-#: keyctl.c:293
+#: keyctl.c:304
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr ""
 
@@ -859,52 +859,90 @@ msgstr ""
 msgid "Couldn't get filesystem info!"
 msgstr ""
 
-#: serial.c:146
+#: serial.c:149
 msgid "Couldn't find default runlevel!"
 msgstr ""
 
-#: serial.c:268 serial.c:272
+#: serial.c:266 serial.c:270
 msgid ""
 "Simple interface to serial port configuration. Disabled components are not "
 "installed."
 msgstr ""
 
-#: serial.c:270
-msgid "Simple"
+#: serial.c:268
+msgid "Port A"
 msgstr ""
 
-#: serial.c:275
+#: serial.c:273
 msgid "Serial port default usage"
 msgstr ""
 
-#: serial.c:279
+#: serial.c:277
 msgid "Select desired software to use serial port here."
 msgstr ""
 
-#: serial.c:281
+#: serial.c:279
 msgid "Console"
 msgstr ""
 
-#: serial.c:283
+#: serial.c:281
 msgid "This option runs console on serial port. (default)"
 msgstr ""
 
-#: serial.c:285
+#: serial.c:283
 msgid "GPS Daemon"
 msgstr ""
 
-#: serial.c:288
+#: serial.c:286
 msgid ""
 "This option enables the start of GPSD, which provides data from a GPS "
 "reciver to applications."
 msgstr ""
 
-#: serial.c:290
+#: serial.c:288
 msgid "Nothing (free)"
 msgstr ""
 
-#: serial.c:292
+#: serial.c:290
 msgid "Don't start any software that uses the serial port."
+msgstr ""
+
+#: serial.c:323 serial.c:328
+msgid "This page configures the GPS receiver software."
+msgstr ""
+
+#: serial.c:326
+msgid "GPS Receiver"
+msgstr ""
+
+#: serial.c:331
+msgid "GPS settings"
+msgstr ""
+
+#: serial.c:336
+msgid "Receiver Type"
+msgstr ""
+
+#: serial.c:340
+msgid "NMEA"
+msgstr ""
+
+#: serial.c:342
+msgid ""
+"The GPS receiver is a sends NMEA data. (default, no need to change for most "
+"receivers)"
+msgstr ""
+
+#: serial.c:344
+msgid "Earthmate"
+msgstr ""
+
+#: serial.c:347
+msgid "GPS receiver is an Earthmate GPS."
+msgstr ""
+
+#: serial.c:350
+msgid "Baud Rate"
 msgstr ""
 
 #: logread.c:140

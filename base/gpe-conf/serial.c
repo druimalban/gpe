@@ -73,6 +73,7 @@ t_serial_item;
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
+static int gpsd_installed;
 
 static struct 
 {
@@ -157,6 +158,22 @@ int get_serial_port_assignment()
 	return SA_NONE;
 }
 
+
+void update_gpsd_settings(char *baud, int emate)
+{
+	if (emate)
+	{
+		change_cfg_value(GPSD_CONFIG,"-T","e",' ');
+	}
+	else
+	{
+		change_cfg_value(GPSD_CONFIG,"-T","e",0);
+	}
+	
+ 	change_cfg_value(GPSD_CONFIG,"-s",baud,' ');
+}
+
+
 gint serial_get_items(gchar *file)
 {
 	return 0;
@@ -179,7 +196,18 @@ Serial_Free_Objects ()
 void
 Serial_Save ()
 {
-	char tmp[2];
+	char tmp[10];
+	
+	/* this first, gpsd is reloaded in next step */
+	if (gpsd_installed)
+	{
+		sprintf(tmp," %s",gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.cbBaudrate)->entry)));
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbEarthmate)))
+			tmp[0] = '1';
+		else
+			tmp[0] = '0';
+		suid_exec("SGPS",tmp);
+	}
 	
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbConsole)))
 		snprintf(tmp,2,"%d",SA_CONSOLE);
@@ -210,7 +238,7 @@ Serial_Build_Objects (void)
   gchar etmp[10];
   gboolean emate = FALSE;
 	
-  int gpsd_installed = !access(GPSD_STARTUP_SCRIPT,F_OK);
+  gpsd_installed = !access(GPSD_STARTUP_SCRIPT,F_OK);
 
   if (!parse_file(GPSD_CONFIG,"-T %c",etmp) ||
 	  !parse_file(GPSD_CONFIG,"-T%c",etmp))

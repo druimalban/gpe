@@ -9,6 +9,7 @@ typedef enum {
 t_serial_assignment;
 
 void assign_serial_port(t_serial_assignment type);
+void update_gpsd_settings(char *baud, int emate);
 
 GtkWidget *Serial_Build_Objects();
 void Serial_Free_Objects();
