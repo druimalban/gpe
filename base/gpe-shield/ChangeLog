@@ -1,3 +1,10 @@
+2004-07-29 Florian Boor <florian.boor@kernelconceps.de>
+	
+	* Released Version 0.6
+	* Makefile: New version.
+	* interface.c: Don't activate rules on start of frontend.
+	* interface.c: Apply rules only if networking control is active.
+
 2004-06-21  Philip Blundell  <philb@gnu.org>
 
 	* backend.c (DEFAULT_INTERFACE): Remove space from string.
@@ -11,7 +18,7 @@
 	* backend.h (struct): Add interface.
 	* main.c (main): Call find_iptables before other backend functions.
 	
-004-06-18 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-18 Florian Boor <florian.boor@kernelconceps.de>
 	* Released V 0.5
 	* improved postinst.
 	* backend.c: Improved rule handling. Removes policies now. 

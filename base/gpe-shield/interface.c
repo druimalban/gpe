@@ -386,7 +386,7 @@ on_add_clicked (GtkWidget * w)
 {
 	rule_t *newrule;
 	
-	newrule = edit_rule(NULL); /* returns up to date rule or NULL on abort */
+	newrule = edit_rule(NULL); /* returns new rule or NULL on abort */
 	
 	if (newrule != NULL) 
 	{
@@ -503,10 +503,12 @@ on_help_clicked (GtkWidget * w)
 void
 change_network_control (GtkWidget * w)
 {
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
-		send_message(PK_COMMAND,CMD_CFG_LOAD,NULL);
-	else
-		send_message(PK_COMMAND,CMD_CFG_DONTLOAD,NULL);
+	gboolean state;
+	
+	state = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w));
+	
+	send_message(PK_COMMAND,state ? CMD_CFG_LOAD : CMD_CFG_DONTLOAD, NULL);
+	gtk_widget_set_sensitive(GTK_WIDGET(bApply),state);
 }
 
 
@@ -542,8 +544,8 @@ void do_end_command()
 {
     gtk_widget_set_sensitive(miLoad,TRUE);
     gtk_widget_set_sensitive(miSave,TRUE);
-    gtk_widget_set_sensitive(miApply,TRUE);
-    gtk_widget_set_sensitive(bApply,TRUE);
+    gtk_widget_set_sensitive(miApply,get_network_control());
+    gtk_widget_set_sensitive(bApply,get_network_control());
 	if (running_command == CMD_ADD) 
 		update_tree();
 	running_command = CMD_NONE;
@@ -674,9 +676,6 @@ mainloop (int argc, char *argv[])
 	if (rule_count == 0) 
 		add_default_policies();
 	update_tree();
-	/* activate current rules */
-	send_message(PK_COMMAND,CMD_SET,NULL);
-	wait_command_finish();
 	
 	gtk_main ();
 
@@ -773,15 +772,15 @@ create_fMain (void)
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
   char *tmp;
-  	int size_x, size_y;
+  int size_x, size_y;
 
-	/* init tree storage stuff */
-	store = gtk_tree_store_new (N_COLUMNS,
-				    G_TYPE_BOOLEAN,
-				    G_TYPE_STRING,
-					G_TYPE_STRING,
-				    G_TYPE_POINTER
-	);
+  /* init tree storage stuff */
+  store = gtk_tree_store_new (N_COLUMNS,
+  			    G_TYPE_BOOLEAN,
+			    G_TYPE_STRING,
+				G_TYPE_STRING,
+			    G_TYPE_POINTER
+  );
 
   /* main window */
   size_x = gdk_screen_width() / 2;
@@ -905,7 +904,7 @@ create_fMain (void)
   free(tmp);
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
   
-  cur = gtk_check_button_new_with_label(_("Start network control on system start"));
+  cur = gtk_check_button_new_with_label(_("Network contol active"));
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cur),get_network_control());
   g_signal_connect_after (G_OBJECT (cur), "toggled",
