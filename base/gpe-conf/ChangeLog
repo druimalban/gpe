@@ -1,3 +1,11 @@
+2004-09-22	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* theme.c: Changed maximum application font size from 20 to 16.
+	           Some GUI improvement for appmgr interface.
+		   
+	* login-setup.c: Removed support for login background because of missing
+	                 support in gpe-login.
+
 2004-09-20	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* sleep/callbacks.c,

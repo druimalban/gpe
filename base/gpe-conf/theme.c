@@ -1066,10 +1066,16 @@ Theme_Build_Objects ()
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
+#else
 #endif
+
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+#ifndef APPMGR_INTERFACE	
   tstr = g_strdup_printf ("<b>%s</b>", _("Background Settings"));
+#else
+  tstr = g_strdup_printf ("\n<b>%s</b>", _("Background Settings"));
+#endif
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
   
@@ -1200,7 +1206,11 @@ Theme_Build_Objects ()
 #endif
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+#ifndef APPMGR_INTERFACE
   tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Style"));
+#else
+  tstr = g_strdup_printf ("\n<b>%s</b>", _("Toolbar Style"));
+#endif
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
 #ifndef APPMGR_INTERFACE
@@ -1232,7 +1242,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
-  hbox = gtk_hbox_new(TRUE, gpe_get_boxspacing());
+  hbox = gtk_hbox_new(FALSE, gpe_get_boxspacing());
   gtk_table_attach (GTK_TABLE (table), hbox, 0, 4, 11, 12,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1244,10 +1254,10 @@ Theme_Build_Objects ()
   						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Text"));
   gtk_box_pack_start(GTK_BOX(hbox), self.rbToolText, FALSE, TRUE, 0);
   self.rbToolBoth =  gtk_radio_button_new_with_label_from_widget 
-  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both"));
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both (icon above text)"));
   gtk_box_pack_start(GTK_BOX(hbox), self.rbToolBoth, FALSE, TRUE, 0);
   self.rbToolBothH =  gtk_radio_button_new_with_label_from_widget 
-  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both H"));
+  						(GTK_RADIO_BUTTON(self.rbToolIcons), _("Both (icon left of text)"));
   gtk_box_pack_start(GTK_BOX(hbox), self.rbToolBothH, FALSE, TRUE, 0);
 #endif
 
@@ -1334,7 +1344,11 @@ Theme_Build_Objects ()
 /*---------------------------------------------*/
   label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+#ifndef APPMGR_INTERFACE	
   tstr = g_strdup_printf ("<b>%s</b>", _("Application Font"));
+#else  
+  tstr = g_strdup_printf ("\n<b>%s</b>", _("Application Font"));
+#endif
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
 #ifndef APPMGR_INTERFACE	
@@ -1402,7 +1416,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 13, 14,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFSApp = gtk_spin_button_new_with_range(5,20,1);
+  self.spFSApp = gtk_spin_button_new_with_range(5,16,1);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),8.0);
   gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 14, 15,
 		    (GtkAttachOptions) (table_attach_left_col_x),

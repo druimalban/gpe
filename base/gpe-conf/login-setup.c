@@ -41,19 +41,12 @@ GtkWidget *login_bg_pixmap;
 GtkWidget *login_lock_display_check;
 GtkWidget *controlvbox1;
 
-GtkWidget *login_bg_file_label;
-GtkWidget *login_bg_file_entry;
-GtkWidget *login_bg_file_button;
-
-gboolean login_bg_show  = FALSE;
 gboolean login_lock_display = FALSE;
 gboolean ownerinfo_show = FALSE;
 
-gboolean login_bg_show_initial  = FALSE;
 gboolean ownerinfo_show_initial = FALSE;
 gboolean login_lock_display_initial  = FALSE;
 
-gboolean login_bg_show_writable  = FALSE;
 gboolean ownerinfo_show_writable = FALSE;
 gboolean login_lock_script_writable  = FALSE;
 
@@ -62,9 +55,8 @@ guint hsync = 36;
 
 static gchar login_bg_filename[PATH_MAX + 1] = "<none>";
 
-
 void update_login_lock (GtkWidget *togglebutton,gpointer  user_data);
-static void File_Selected (char *file, gpointer data);
+
 
 GtkWidget *Login_Setup_Build_Objects()
 {
@@ -86,31 +78,15 @@ GtkWidget *Login_Setup_Build_Objects()
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
 
-  gint bytes;
   gchar *tstr;
 
-  if ((bytes = readlink (GPE_LOGIN_BG_LINKED_FILE,
-			 login_bg_filename,
-			 PATH_MAX - 1)) < 0)
-    {
-      perror ("login-setup: Cannot read file at end of symlink (with readlink)");
-      login_bg_filename[0] = '\0';
-    }
-  else
-    {
-      login_bg_filename[bytes] = '\0';
-    }
-  g_message ("login-setup: File at end of symlink: %s", login_bg_filename);
-	
   if (suid_exec("CHEK",""))
   {
-    login_bg_show_writable = FALSE;
     ownerinfo_show_writable = FALSE;
     login_lock_script_writable = FALSE;
   }
   else
   {
-    login_bg_show_writable = TRUE;
     ownerinfo_show_writable = TRUE;
     login_lock_script_writable = TRUE;
   }
@@ -125,7 +101,7 @@ GtkWidget *Login_Setup_Build_Objects()
   rootwarn_hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (rootwarn_hbox);
 
-  rootwarn_label = gtk_label_new (_("Some or all of these settings can only be changed by the user 'root'."));
+  rootwarn_label = gtk_label_new (_("Some of these settings can only be changed by the user 'root'."));
   gtk_widget_show (rootwarn_label);
   gtk_label_set_justify (GTK_LABEL (rootwarn_label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (rootwarn_label), TRUE);
@@ -136,7 +112,7 @@ GtkWidget *Login_Setup_Build_Objects()
   gtk_misc_set_alignment (GTK_MISC (rootwarn_icon), 0, 0);
   gtk_box_pack_start (GTK_BOX (rootwarn_hbox), rootwarn_icon, FALSE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (rootwarn_hbox), rootwarn_label, TRUE, TRUE, gpe_boxspacing);
-  if ((!login_bg_show_writable) || (!ownerinfo_show_writable))
+  if (!ownerinfo_show_writable)
     gtk_box_pack_start (GTK_BOX (mainvbox), rootwarn_hbox, FALSE, TRUE, 0);
    
   /* -------------------------------------------------------------------------- */
@@ -166,42 +142,18 @@ GtkWidget *Login_Setup_Build_Objects()
   
   ownerinfo_show_check =
     gtk_check_button_new_with_label (_("Show owner information at login."));
-  login_bg_show_check =
-    gtk_check_button_new_with_label (_("Use background image for login screen."));
   login_lock_display_check =
     gtk_check_button_new_with_label (_("Lock display on suspend."));
 
   /* check the dontshow files to set initial values for the checkboxes */
   get_initial_values();
   ownerinfo_show = ownerinfo_show_initial;
-  login_bg_show  = login_bg_show_initial;
   login_lock_display  = login_lock_display_initial;
 
   gtk_box_pack_start (GTK_BOX(controlvbox1), ownerinfo_show_check, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX(controlvbox1), login_bg_show_check, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX(controlvbox1), login_lock_display_check, FALSE, FALSE, 0);
 
   /* ------------------------------------------------------------------------ */
-  login_bg_file_label = gtk_label_new (_("Image:"));
-  gtk_box_pack_start (GTK_BOX(controlvbox1), login_bg_file_label, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (login_bg_file_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (login_bg_file_label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (login_bg_file_label), 0, gpe_boxspacing);
-
-  login_bg_file_entry = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX(controlvbox1), login_bg_file_entry, FALSE, FALSE, 0);
-  gtk_entry_set_text (GTK_ENTRY (login_bg_file_entry), login_bg_filename);
-
-  login_bg_file_button = gtk_button_new ();
-  gtk_box_pack_start (GTK_BOX(controlvbox1), login_bg_file_button, TRUE, TRUE, 0);
-
-  gtk_signal_connect (GTK_OBJECT (login_bg_file_button), "clicked",
- 		      GTK_SIGNAL_FUNC (choose_login_bg_file),
- 		      NULL);
-  
-  gtk_signal_connect (GTK_OBJECT (login_bg_show_check), "clicked",
-                      GTK_SIGNAL_FUNC (update_login_bg_show),
-                      NULL);
   gtk_signal_connect (GTK_OBJECT (ownerinfo_show_check), "clicked",
                       GTK_SIGNAL_FUNC (update_ownerinfo_show),
                       NULL);
@@ -214,39 +166,6 @@ GtkWidget *Login_Setup_Build_Objects()
   else 
     gtk_widget_set_sensitive (ownerinfo_show_check, FALSE);
 
-  if (login_bg_show)
-    {
-      gtk_widget_set_sensitive (login_bg_file_label, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_entry, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_button, TRUE);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (login_bg_file_label, FALSE);
-      gtk_widget_set_sensitive (login_bg_file_entry, FALSE);
-      gtk_widget_set_sensitive (login_bg_file_button, FALSE);
-    }
-
-  if (login_bg_show_writable)
-    {
-      gtk_widget_set_sensitive (login_bg_show_check, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_label, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_entry, TRUE);
-      gtk_widget_set_sensitive (login_bg_file_button, TRUE);
-      gtk_widget_set_sensitive (login_lock_display_check, TRUE);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (login_bg_show_check, FALSE);
-      gtk_widget_set_sensitive (login_bg_file_label, FALSE);
-      gtk_widget_set_sensitive (login_bg_file_entry, FALSE);
-      gtk_widget_set_sensitive (login_lock_display_check, FALSE);
-    }
-
-  gtk_signal_connect (GTK_OBJECT (login_bg_file_button), "size_allocate",
-		      GTK_SIGNAL_FUNC (on_login_bg_file_button_size_allocate),
-		      NULL);
-	
   return mainvbox;
 }
 
@@ -272,10 +191,6 @@ void
 Login_Setup_Restore ()
 {
   g_message ("Requested explicit restoration of initial values.");
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_bg_show_check),
-				login_bg_show_initial);
-  login_bg_show = login_bg_show_initial;
-  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ownerinfo_show_check),
 				ownerinfo_show_initial);
   ownerinfo_show = ownerinfo_show_initial;
@@ -287,49 +202,11 @@ Login_Setup_Restore ()
 
 
 void
-choose_login_bg_file (GtkWidget *button,
-		      gpointer  user_data)
-{
-  ask_user_a_file (gpe_dirname (login_bg_filename), NULL, File_Selected, NULL, NULL);
-}
-
-static void
-File_Selected (char *file,
-	       gpointer data)
-{
-  /* check if we can read the selected file */
-  /* FIXME: gotta check if it's a valid png file */
-  if (access (file, R_OK) == 0) {
-    gtk_entry_set_text (GTK_ENTRY (login_bg_file_entry), file);
-    
-	if (login_bg_pixmap != NULL)
-    	gtk_container_remove (GTK_CONTAINER (login_bg_file_button), login_bg_pixmap);
-    login_bg_pixmap = gpe_create_pixmap (controlvbox1, file,
-					 buttonwidth,
-					 buttonheight);
-    gtk_container_add (GTK_CONTAINER (login_bg_file_button), login_bg_pixmap);
-    gtk_widget_show (GTK_WIDGET (login_bg_pixmap));
-  }
-  else {
-    g_message ("Can't read '%s'.", file);
-  }
-
-  strncpy (login_bg_filename, file, sizeof (login_bg_filename));
-
-  update_login_bg_show ();
-}
-
-
-void
 get_initial_values ()
 {
   g_message ("Checking the dontshow files to set initial values for the checkboxes.");
+
   /* check if the dontshow files are there */
-  if (access (GPE_LOGIN_BG_DONTSHOW_FILE, F_OK) == 0)
-    login_bg_show_initial = FALSE;
-  else
-    login_bg_show_initial = TRUE;
-  
   if (access (GPE_OWNERINFO_DONTSHOW_FILE, F_OK) == 0)
     ownerinfo_show_initial = FALSE;
   else
@@ -340,29 +217,11 @@ get_initial_values ()
   else
     login_lock_display_initial = TRUE;
     
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_bg_show_check),
-				login_bg_show_initial);
-  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ownerinfo_show_check),
 				ownerinfo_show_initial);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_lock_display_check),
 				login_lock_display_initial);
-}
-
-
-void 
-update_login_bg_show ()
-{
-  char uc[3];
-	
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(login_bg_show_check)))
-    login_bg_show = TRUE;
-  else
-    login_bg_show = FALSE;
-
-  sprintf(uc,"%i",login_bg_show);
-  suid_exec("ULBS",uc);
 }
 
 void 
@@ -377,39 +236,6 @@ update_ownerinfo_show ()
 
   sprintf(uc,"%i",ownerinfo_show);
   suid_exec("UOIS",uc);
-}
-
-
-void
-on_login_bg_file_button_size_allocate (GtkWidget       *widget,
-                                       GtkAllocation   *allocation,
-                                       gpointer         user_data)
-{
-  /* Note: this updates only the first time the button/pixmap is
-     drawn, but this is fine. */
-	
-  /* sanity check */
-  if (access(login_bg_filename,R_OK)) 
-  {
-	  login_bg_pixmap = NULL;
-	  return;
-  }
-	  
-  buttonwidth  = allocation->width;
-  buttonheight = allocation->height-hsync;
-  hsync=0;
-  /*
-   * gtk_container_children() brought to me by PaxAnima. Thanks.
-   * It looks like in GTK2, this function is called
-   *   gtk_container_get_children().
-   */
-  if (gtk_container_children (GTK_CONTAINER (login_bg_file_button)) == NULL) {
-    login_bg_pixmap = gpe_create_pixmap (controlvbox1, login_bg_filename,
-					 buttonwidth,
-					 buttonheight);
-    gtk_container_add (GTK_CONTAINER (login_bg_file_button), login_bg_pixmap);
-    gtk_widget_show (GTK_WIDGET (login_bg_pixmap));
-  }
 }
 
 
