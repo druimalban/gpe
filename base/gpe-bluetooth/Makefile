@@ -5,7 +5,7 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.25
 
-MEMBERS = main dun sdp pan lap rfcomm ui dbus
+MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus
 
 CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
 
@@ -33,9 +33,15 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-vpath %.c ../bluez-pin
-
 all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
+
+pin-ui.c: ../bluez-pin/pin-ui.c
+	cp $< $@
+	chmod a-w $@
+
+pin-dbus.c: ../bluez-pin/pin-dbus.c
+	cp $< $@
+	chmod a-w $@
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
@@ -67,7 +73,7 @@ install-program: all
 	install -m 644 peers/lap $(DESTDIR)/etc/ppp/peers/lap
 
 clean:
-	rm -f $(PACKAGE) $(OBJS)
+	rm -f $(PACKAGE) $(OBJS) pin-ui.c pin-dbus.c
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

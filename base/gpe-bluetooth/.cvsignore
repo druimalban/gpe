@@ -1,4 +1,7 @@
 gpe-bluetooth
 bnep-helper
 rfcomm-helper
+*.ipk
+pin-ui.c
+pin-dbus.c
 

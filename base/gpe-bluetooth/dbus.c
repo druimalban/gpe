@@ -26,8 +26,6 @@
 
 #define _(x) gettext(x)
 
-#include "../bluez-pin/dbus.c"
-
 DBusHandlerResult
 dbus_handler_func (DBusMessageHandler *handler,
  	      DBusConnection     *connection,
