@@ -37,10 +37,10 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GtkWidget *table1, *hbox;
   GtkWidget *sleep;
   GtkObject *sleep_idle_spin_adj;
-  GtkWidget *sleep_idle_label;
+//  GtkWidget *sleep_idle_label;
   GtkWidget *dim;
   GtkObject *dim_spin_adj;
-  GtkWidget *dim_idle_label;
+//  GtkWidget *dim_idle_label;
   GtkWidget *frame5;
   GtkObject *sleep_cpu_spin_adj;
   GtkWidget *sleep_cpu_label;
