@@ -1,3 +1,8 @@
+2003-03-12  Colin Marquardt  <colin@marquardt-home.de>
+
+	* question.c (gpe_question_ask): Make label selectable as it can
+	contain useful information that one might want to copy.
+
 2003-03-11  Philip Blundell  <philb@gnu.org>
 
 	* gpe/init.h: Add extern "C" { ... } gunk.

@@ -123,6 +123,7 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   gtk_label_set_markup (GTK_LABEL (label), qn);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  gtk_label_set_selectable (GTK_LABEL (label), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
