@@ -452,7 +452,7 @@ GtkWidget *Time_Build_Objects()
 
   gtk_combo_set_popdown_strings (GTK_COMBO (self.ntpserver), ntpsrv);
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.ntpserver, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, self.ntpserver, _("Here you may select which timeserver i use to set my clock."), NULL);
+  gtk_tooltips_set_tip (tooltips, self.ntpserver, _("Select the timeserver to use to set the clock."), NULL);
 
   self.internet = gtk_button_new_with_label(_("Get time from network"));
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
@@ -460,7 +460,7 @@ GtkWidget *Time_Build_Objects()
   gtk_widget_set_sensitive(self.internet,is_network_up());
   
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.internet, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, self.internet, _("If i'm connected to the Internet, you may press this butten to set the time on this device using the timeserver above."), NULL);
+  gtk_tooltips_set_tip (tooltips, self.internet, _("If connected to the Internet, you may press this button to set the time on this device using the timeserver above."), NULL);
 
   
    /*------------------------------*/
@@ -509,7 +509,7 @@ GtkWidget *Time_Build_Objects()
   g_free(fstr);
   gtk_combo_set_popdown_strings (GTK_COMBO (self.timezone), tzones);
   gtk_box_pack_start(GTK_BOX(self.controlvbox4), self.timezone, FALSE, FALSE, 0); 
-  gtk_tooltips_set_tip (tooltips, self.timezone, _("Select your current timezone here. The setting applies after after next login."), NULL);
+  gtk_tooltips_set_tip (tooltips, self.timezone, _("Select your current timezone here. The setting applies after the next login."), NULL);
 
   gtk_list_select_item(GTK_LIST(GTK_COMBO(self.timezone)->list),mark);
 
