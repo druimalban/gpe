@@ -1,5 +1,10 @@
 2002-06-17  Philip Blundell  <pb@debian.org>
 
+	* gtkminifilesel.c (gtk_mini_file_selection_init): Use picture 
+	buttons.
+
+2002-06-17  Philip Blundell  <pb@debian.org>
+
 	* render.c (gpe_render_pixmap): Tweak for better code generation.
 	Use high 8 bits of GdkColor information.
 	(gpe_render_icon): Don't render prelight if it would be the same

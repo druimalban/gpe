@@ -20,6 +20,7 @@
 #include <libgen.h>
 
 #include "gtkminifilesel.h"
+#include "picturebutton.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -319,7 +320,7 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
   gtk_widget_show (hbox);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
-  gtk_widget_realize (fs);
+  gtk_widget_realize (GTK_WIDGET (fs));
   fs->cancel_button = gpe_picture_button (GTK_WIDGET (fs)->style, _("Cancel"), "cancel");
   gtk_widget_show (fs->cancel_button);
   gtk_box_pack_start (GTK_BOX (hbox), fs->cancel_button, TRUE, TRUE, 0);
