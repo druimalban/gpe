@@ -34,24 +34,28 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-timesheet
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
 
-gpe-timesheet: $(OBJS)
+all: $(PACKAGE)
+
+$(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LGPEWIDGET) $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 
-install: all install-mo gpe-timesheet.desktop
+install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s gpe-timesheet $(DESTDIR)$(PREFIX)/bin/gpe-timesheet
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -m 644 gpe-timesheet.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-timesheet.png
+	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 gpe-timesheet.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-timesheet
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 
 clean:
-	rm -f gpe-timesheet $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
-
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
-
