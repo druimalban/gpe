@@ -94,6 +94,14 @@ year_view_update (void)
 }
 
 static void
+changed_callback(GtkWidget *widget,
+		 gpointer d)
+{
+  viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  year_view_update ();
+}
+
+static void
 day_selected (GtkWidget *w, gpointer d)
 {
   struct tm tm;
@@ -136,6 +144,9 @@ year_view(void)
       gtk_signal_connect (GTK_OBJECT (cal[i]), "day-selected-double-click",
 			  GTK_SIGNAL_FUNC (day_selected), NULL);
     }
+
+  gtk_signal_connect(GTK_OBJECT (datesel), "changed",
+		     GTK_SIGNAL_FUNC (changed_callback), NULL);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled), 
 					 table);
