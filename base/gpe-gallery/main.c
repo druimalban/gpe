@@ -28,12 +28,11 @@
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/dirbrowser.h>
-#include <gpe/gpe-iconlist.h>
+#include <gpe/gpeiconlistview.h>
 #include <gpe/spacing.h>
 
 #include "image_tools.h"
@@ -734,7 +733,7 @@ render_icon_view ()
   GList *this_item;
   gchar *image_filename, *buf;
 
-  il = gpe_iconlist_new ();
+  il = gpe_icon_list_view_new ();
 
   this_item = image_filenames;
   while (this_item)
@@ -742,7 +741,7 @@ render_icon_view ()
     image_filename = (gchar *) this_item->data;
     buf = g_strdup (image_filename);
 
-    gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, this_item);
+    gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW(il), basename (buf), image_filename, this_item);
 
     gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
 
@@ -1112,8 +1111,6 @@ main (int argc, char *argv[])
 {
   GtkWidget *vbox, *scrolled_window, *toolbar, *loading_label, *toolbar_icon;
   GdkPixbuf *p;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
   struct stat arg_stat;
 
 #ifdef USE_MCHECK
@@ -1272,9 +1269,8 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), loading_toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), tools_toolbar, FALSE, FALSE, 0);
 
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
-
+  gtk_window_set_icon(GTK_WINDOW(window), gpe_find_icon("icon"));
+  
   gtk_widget_show (window);
   gtk_widget_show (vbox);
   gtk_widget_show (vbox2);

@@ -1,3 +1,8 @@
+2005-03-11  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: Remove unused render.h, fixed window icon code.
+	          Converted GpeIconlist to GpeIconListView.
+
 2005-01-29  Phil Blundell  <philb@gnu.org>
 
 	* main.c: Guard mcheck code with #ifdef USE_MCHECK.
