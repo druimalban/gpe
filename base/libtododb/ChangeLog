@@ -1,3 +1,9 @@
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
+	* gpe/todo-db.h (enum item_state): Add ABANDONED.
+	(struct todo_item): Add priority.
+	(PRIORITY_STANDARD, PRIORITY_HIGH, PRIORITY_LOW): New.
+
 2004-02-13  Phil Blundell  <pb@nexus.co.uk>
 
 	* todo-db.c (todo_db_push_item): Write out MODIFIED tag.

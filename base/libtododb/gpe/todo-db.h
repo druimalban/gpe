@@ -7,7 +7,8 @@ typedef enum
 {
   NOT_STARTED,
   IN_PROGRESS,
-  COMPLETED
+  COMPLETED,
+  ABANDONED
 } item_state;
 
 struct todo_item
@@ -19,7 +20,12 @@ struct todo_item
   item_state state;
   gboolean was_complete;
   GSList *categories;
+  guint priority;
 };
+
+#define PRIORITY_HIGH		100
+#define PRIORITY_STANDARD	50
+#define PRIORITY_LOW		1
 
 struct todo_category
 {
