@@ -41,4 +41,4 @@ on_bNew_clicked                     (GtkButton       *button,
                                         gpointer         user_data);
 
 void
-on_bClose_clicked (GtkButton * button, gpointer user_data);
+on_bDelete_clicked (GtkButton * button, gpointer user_data);

@@ -91,7 +91,7 @@ main (int argc, char *argv[])
   pw = gpe_render_icon (wdcmain->style, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete rule"),
 			   _("Delete rule"), _("Delete rule"), pw,
-			   (GtkSignalFunc) on_bClose_clicked, NULL);
+			   (GtkSignalFunc) on_bDelete_clicked, NULL);
   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   

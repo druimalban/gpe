@@ -32,6 +32,8 @@ create_wdcmain (void)
   GtkWidget *wdcmain;
   AtkObject *atko;
   GtkWidget *vbox1;
+  GtkWidget *notebook1;
+  GtkWidget *vbox2;
   GtkWidget *hbox1;
   GtkWidget *label1;
   GtkWidget *cbDatabase;
@@ -42,6 +44,17 @@ create_wdcmain (void)
   GtkWidget *eTable;
   GtkWidget *scrolledwindow1;
   GtkWidget *tvACL;
+  GtkWidget *label3;
+  GtkWidget *table1;
+  GtkWidget *cbBaseDir;
+  GList *cbBaseDir_items = NULL;
+  GtkWidget *eBaseDir;
+  GtkWidget *cbPolicy;
+  GList *cbPolicy_items = NULL;
+  GtkWidget *ePolicy;
+  GtkWidget *label6;
+  GtkWidget *label5;
+  GtkWidget *label4;
 
   wdcmain = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (wdcmain, "wdcmain");
@@ -54,15 +67,26 @@ create_wdcmain (void)
   gtk_widget_show (vbox1);
   gtk_container_add (GTK_CONTAINER (wdcmain), vbox1);
 
+  notebook1 = gtk_notebook_new ();
+  gtk_widget_set_name (notebook1, "notebook1");
+  gtk_widget_show (notebook1);
+  gtk_box_pack_start (GTK_BOX (vbox1), notebook1, TRUE, TRUE, 3);
+
+  vbox2 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox2, "vbox2");
+  gtk_widget_show (vbox2);
+  gtk_container_add (GTK_CONTAINER (notebook1), vbox2);
+
   hbox1 = gtk_hbox_new (FALSE, 0);
   gtk_widget_set_name (hbox1, "hbox1");
   gtk_widget_show (hbox1);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, TRUE, 3);
+  gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, TRUE, 0);
 
   label1 = gtk_label_new (_("Database"));
   gtk_widget_set_name (label1, "label1");
   gtk_widget_show (label1);
-  gtk_box_pack_start (GTK_BOX (hbox1), label1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox1), label1, TRUE, TRUE, 1);
+  gtk_widget_set_size_request (label1, 100, -2);
   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label1), 3, 0);
@@ -73,7 +97,7 @@ create_wdcmain (void)
   gtk_widget_set_name (cbDatabase, "cbDatabase");
   gtk_widget_show (cbDatabase);
   gtk_box_pack_start (GTK_BOX (hbox1), cbDatabase, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (cbDatabase, 168, -2);
+  gtk_widget_set_size_request (cbDatabase, 130, -2);
   gtk_combo_set_use_arrows_always (GTK_COMBO (cbDatabase), TRUE);
 
   eDatabase = GTK_COMBO (cbDatabase)->entry;
@@ -83,12 +107,13 @@ create_wdcmain (void)
   hbox2 = gtk_hbox_new (FALSE, 0);
   gtk_widget_set_name (hbox2, "hbox2");
   gtk_widget_show (hbox2);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox2, FALSE, TRUE, 3);
+  gtk_box_pack_start (GTK_BOX (vbox2), hbox2, FALSE, TRUE, 0);
 
   label2 = gtk_label_new (_("Table"));
   gtk_widget_set_name (label2, "label2");
   gtk_widget_show (label2);
-  gtk_box_pack_start (GTK_BOX (hbox2), label2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox2), label2, TRUE, TRUE, 1);
+  gtk_widget_set_size_request (label2, 100, -2);
   gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label2), 3, 0);
@@ -98,8 +123,8 @@ create_wdcmain (void)
                      "GladeParentKey", cbTable);
   gtk_widget_set_name (cbTable, "cbTable");
   gtk_widget_show (cbTable);
-  gtk_box_pack_end (GTK_BOX (hbox2), cbTable, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (cbTable, 168, -2);
+  gtk_box_pack_start (GTK_BOX (hbox2), cbTable, FALSE, FALSE, 0);
+  gtk_widget_set_size_request (cbTable, 130, -2);
 
   eTable = GTK_COMBO (cbTable)->entry;
   gtk_widget_set_name (eTable, "eTable");
@@ -108,7 +133,7 @@ create_wdcmain (void)
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_set_name (scrolledwindow1, "scrolledwindow1");
   gtk_widget_show (scrolledwindow1);
-  gtk_box_pack_start (GTK_BOX (vbox1), scrolledwindow1, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), scrolledwindow1, TRUE, TRUE, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   tvACL = gtk_tree_view_new ();
@@ -117,6 +142,78 @@ create_wdcmain (void)
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), tvACL);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (tvACL), TRUE);
   gtk_tree_view_set_reorderable (GTK_TREE_VIEW (tvACL), TRUE);
+
+  label3 = gtk_label_new (_("Access"));
+  gtk_widget_set_name (label3, "label3");
+  gtk_widget_show (label3);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 0), label3);
+  gtk_label_set_justify (GTK_LABEL (label3), GTK_JUSTIFY_LEFT);
+
+  table1 = gtk_table_new (3, 2, FALSE);
+  gtk_widget_set_name (table1, "table1");
+  gtk_widget_show (table1);
+  gtk_container_add (GTK_CONTAINER (notebook1), table1);
+
+  cbBaseDir = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (cbBaseDir)->popwin),
+                     "GladeParentKey", cbBaseDir);
+  gtk_widget_set_name (cbBaseDir, "cbBaseDir");
+  gtk_widget_show (cbBaseDir);
+  gtk_table_attach (GTK_TABLE (table1), cbBaseDir, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
+                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL), 0, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (cbBaseDir), 3);
+  cbBaseDir_items = g_list_append (cbBaseDir_items, (gpointer) _("~/.gpe"));
+  gtk_combo_set_popdown_strings (GTK_COMBO (cbBaseDir), cbBaseDir_items);
+  g_list_free (cbBaseDir_items);
+
+  eBaseDir = GTK_COMBO (cbBaseDir)->entry;
+  gtk_widget_set_name (eBaseDir, "eBaseDir");
+  gtk_widget_show (eBaseDir);
+
+  cbPolicy = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (cbPolicy)->popwin),
+                     "GladeParentKey", cbPolicy);
+  gtk_widget_set_name (cbPolicy, "cbPolicy");
+  gtk_widget_show (cbPolicy);
+  gtk_table_attach (GTK_TABLE (table1), cbPolicy, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_SHRINK | GTK_FILL),
+                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL), 0, 0);
+  gtk_widget_set_size_request (cbPolicy, 80, -2);
+  gtk_container_set_border_width (GTK_CONTAINER (cbPolicy), 3);
+  cbPolicy_items = g_list_append (cbPolicy_items, (gpointer) _("disallow all access"));
+  cbPolicy_items = g_list_append (cbPolicy_items, (gpointer) _("allow read"));
+  cbPolicy_items = g_list_append (cbPolicy_items, (gpointer) _("allow read and write"));
+  gtk_combo_set_popdown_strings (GTK_COMBO (cbPolicy), cbPolicy_items);
+  g_list_free (cbPolicy_items);
+
+  ePolicy = GTK_COMBO (cbPolicy)->entry;
+  gtk_widget_set_name (ePolicy, "ePolicy");
+  gtk_widget_show (ePolicy);
+
+  label6 = gtk_label_new (_("Global policy"));
+  gtk_widget_set_name (label6, "label6");
+  gtk_widget_show (label6);
+  gtk_table_attach (GTK_TABLE (table1), label6, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label6), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label6), 0, 0.5);
+
+  label5 = gtk_label_new (_("Base directory"));
+  gtk_widget_set_name (label5, "label5");
+  gtk_widget_show (label5);
+  gtk_table_attach (GTK_TABLE (table1), label5, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (label5), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label5), 0, 0.5);
+
+  label4 = gtk_label_new (_("Global"));
+  gtk_widget_set_name (label4, "label4");
+  gtk_widget_show (label4);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 1), label4);
+  gtk_label_set_justify (GTK_LABEL (label4), GTK_JUSTIFY_LEFT);
 
   g_signal_connect_after ((gpointer) wdcmain, "destroy",
                           G_CALLBACK (gtk_main_quit),
@@ -141,6 +238,8 @@ create_wdcmain (void)
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (wdcmain, wdcmain, "wdcmain");
   GLADE_HOOKUP_OBJECT (wdcmain, vbox1, "vbox1");
+  GLADE_HOOKUP_OBJECT (wdcmain, notebook1, "notebook1");
+  GLADE_HOOKUP_OBJECT (wdcmain, vbox2, "vbox2");
   GLADE_HOOKUP_OBJECT (wdcmain, hbox1, "hbox1");
   GLADE_HOOKUP_OBJECT (wdcmain, label1, "label1");
   GLADE_HOOKUP_OBJECT (wdcmain, cbDatabase, "cbDatabase");
@@ -151,6 +250,15 @@ create_wdcmain (void)
   GLADE_HOOKUP_OBJECT (wdcmain, eTable, "eTable");
   GLADE_HOOKUP_OBJECT (wdcmain, scrolledwindow1, "scrolledwindow1");
   GLADE_HOOKUP_OBJECT (wdcmain, tvACL, "tvACL");
+  GLADE_HOOKUP_OBJECT (wdcmain, label3, "label3");
+  GLADE_HOOKUP_OBJECT (wdcmain, table1, "table1");
+  GLADE_HOOKUP_OBJECT (wdcmain, cbBaseDir, "cbBaseDir");
+  GLADE_HOOKUP_OBJECT (wdcmain, eBaseDir, "eBaseDir");
+  GLADE_HOOKUP_OBJECT (wdcmain, cbPolicy, "cbPolicy");
+  GLADE_HOOKUP_OBJECT (wdcmain, ePolicy, "ePolicy");
+  GLADE_HOOKUP_OBJECT (wdcmain, label6, "label6");
+  GLADE_HOOKUP_OBJECT (wdcmain, label5, "label5");
+  GLADE_HOOKUP_OBJECT (wdcmain, label4, "label4");
 
   return wdcmain;
 }
