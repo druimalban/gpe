@@ -78,13 +78,14 @@ init_buttons ()
 	else
 		keylaunchrc = g_strdup ("/etc/keylaunchrc");
 
-	strcpy (buttons[0], "");
+	buttons[0][0] = 0;
+	
 	/* read from configfile and set buttons */
 	fd = fopen (keylaunchrc, "r");
 	if (fd == NULL)
 	{
 		/* defaults */
-		for (i = 0; i < 7; i++)
+		for (i = 0; i < 5; i++)
 		{
 			strcpy (buttons[i], default_keyctl_conf[i]);
 			slash = strrchr (buttons[i], '/');
@@ -208,15 +209,15 @@ Keyctl_Build_Objects ()
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
 	self.p = gpe_find_icon ("ipaq");
-
-
+	
+	
 	self.button[0] = button_1;
 	self.button[1] = button_2;
 	self.button[2] = button_3;
 	self.button[3] = button_4;
 	self.button[4] = button_5;
 
-	gtk_widget_show (layout1);
+//	gtk_widget_show (layout1);
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
 	gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 220);
 
@@ -230,35 +231,28 @@ Keyctl_Build_Objects ()
 	if (self.p)
 	{
 		GtkWidget *pixmap1 = gtk_image_new_from_pixbuf (self.p);
-		gtk_widget_show (pixmap1);
 		gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 30, 5);
 		gtk_widget_set_usize (pixmap1, 188, 205);
 
 	}
 
-	gtk_widget_show (button_1);
 	gtk_layout_put (GTK_LAYOUT (layout1), button_1, 3, 54);
 	gtk_widget_set_usize (button_1, 70, 20);
 
-	gtk_widget_show (button_2);
 	gtk_layout_put (GTK_LAYOUT (layout1), button_2, 3, 176);
 	gtk_widget_set_usize (button_2, 70, 20);
 
-	gtk_widget_show (button_3);
 	gtk_layout_put (GTK_LAYOUT (layout1), button_3, 38, 198);
 	gtk_widget_set_usize (button_3, 70, 20);
 
-	gtk_widget_show (button_4);
 	gtk_layout_put (GTK_LAYOUT (layout1), button_4, 118, 200);
 	gtk_widget_set_usize (button_4, 70, 20);
 
-	gtk_widget_show (button_5);
 	gtk_layout_put (GTK_LAYOUT (layout1), button_5, 162, 178);
 	gtk_widget_set_usize (button_5, 70, 20);
 
-	gtk_widget_show (bDefault);
 	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 164, 3);
-	 gtk_widget_set_usize (bDefault, 70, 20);
+	gtk_widget_set_usize (bDefault, 70, 20);
 
 	gtk_signal_connect_object (GTK_OBJECT (button_1), "clicked",
 				   GTK_SIGNAL_FUNC
@@ -284,9 +278,10 @@ Keyctl_Build_Objects ()
 				   GTK_SIGNAL_FUNC
 				   (on_defaults_clicked), NULL);
 	init_buttons ();
+	
 	return scroll;
-
 }
+
 
 void Keyctl_Free_Objects ();
 

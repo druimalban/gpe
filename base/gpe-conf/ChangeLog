@@ -1,5 +1,6 @@
 2003-09-23	Florian Boor  	<florian.boor@kernelconcepts.de>
-	* Removed nasty scrollbar.
+	* keyctl.c: Fixed stupid crash, removed some obsolete stuff.
+	* Removed nasty scrollbar (battery.c).
 	* Bold label in login setup. (login-setup.c)
 	* Added a nice bold headline to ownerinfo setup (ownerinfo.c).
 	* Fixed bug cause network setup to die.
