@@ -39,6 +39,10 @@
 
 #include <X11/Xatom.h>
 
+/* i18n */
+#include <libintl.h>
+#include <locale.h>
+
 /* GPE */
 #include "init.h"
 #include "pixmaps.h"
@@ -76,6 +80,8 @@ GtkWidget *recent_tab=NULL;
 
 time_t last_update=0;
 
+GSList *translate_list;
+
 /* For not starting an app twice after a double click */
 int ignore_press = 0;
 
@@ -89,6 +95,7 @@ struct gpe_icon my_icons[] = {
 GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw);
 void create_recent_list ();
 void create_recent_box(GtkBox *cont);
+char *translate_group_name (char *name);
 
 void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 {
@@ -665,7 +672,7 @@ GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style)
 	if (!img)
 		img = create_icon_pixmap (style, "/usr/share/pixmaps/menu_unknown_group16.png", 16);
 
-	lbl = gtk_label_new (name);
+	lbl = gtk_label_new (translate_group_name (name));
 
 	hb = gtk_hbox_new (FALSE, 0);
 	if (img)
@@ -794,6 +801,79 @@ GList *load_ignored_items ()
 	return l;
 }
 
+GList *load_translations_from (char *fmt, char *a1, char *a2)
+{
+	GList *rl;
+	char *p = g_strdup_printf (fmt, a1, a2);
+	rl = load_simple_list (p);
+	free (p);
+	return rl;
+}
+
+struct translation_entry
+{
+  gchar *a, *b;
+};
+
+
+GSList *load_group_translations ()
+{
+	GList *l = NULL, *i;
+	GSList *tmap = NULL;
+
+	char *locale = setlocale (LC_MESSAGES, NULL);
+	if (locale) {
+		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s", g_get_home_dir (), locale);
+		if (!l)
+			l = load_translations_from ("/usr/share/gpe/group-map.%s", locale, NULL);
+		if (!l) {
+			gchar *ln = g_strdup (locale);
+			char *p = strchr (ln, '_');
+			if (p) {
+				*p = 0;
+				l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s", g_get_home_dir (), ln);
+				if (!l)
+					l = load_translations_from ("/usr/share/gpe/group-map.%s", ln, NULL);
+			}
+			g_free (ln);
+		}
+	}
+	if (!l)
+		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map", g_get_home_dir (), NULL);
+	if (!l)
+		l = load_translations_from ("/usr/share/gpe/group-map", NULL, NULL);
+
+	for (i = l; i; i = i->next) {
+		char *s = i->data;
+		char *p = strchr (s, '=');
+		if (p) {
+			struct translation_entry *t = g_malloc (sizeof (*t));
+			*p++ = 0;
+			t->a = g_strdup (s);
+			t->b = g_strdup (p);
+			tmap = g_slist_append (tmap, t);
+		}
+		free (i->data);
+	}
+	g_list_free (i);
+
+	return tmap;
+}
+
+char *translate_group_name (char *name)
+{
+	GSList *i;
+	
+	for (i = translate_list; i; i = i->next) {
+		struct translation_entry *t = i->data;
+		if (!strcmp (t->a, name)) {
+			return t->b;
+		}
+	}
+
+	return name;
+}
+
 void cb_package_add (struct package *p)
 {
 	TRACE ("cb_package_add");
@@ -830,6 +910,7 @@ int refresh_list ()
 	struct dirent *entry;
 	int i;
 	char *user_menu=NULL, *home_dir;
+	GSList *j;
 
 	char *directories[]=
 	{
@@ -863,9 +944,19 @@ int refresh_list ()
 
 	items = groups = NULL;
 
+	/* flush old translations */
+	for (j = translate_list; j; j = j->next) {
+		struct translation_entry *t = j->data;
+		g_free (t->a);
+		g_free (t->b);
+		g_free (t);
+	}
+	g_slist_free (translate_list);
+
 	forced_groups = load_forced_groups ();
 	ignored_items = load_ignored_items ();
-
+	translate_list = load_group_translations ();
+	
 	for (i=0;directories[i];i++)
 	{
 		dir = opendir (directories[i]);
