@@ -54,19 +54,24 @@ FILE *fp;
 GtkWidget *Ownerinfo_Build_Objects()
 {
   GtkWidget *table;
+  GtkWidget *scrolledwindow;
+  GtkWidget *scrolledwindow1;
+  GtkWidget *viewport;
+  GtkWidget *viewport1;
   GtkWidget *owner_photofile_label;
   GtkWidget *owner_name_label;
   GtkWidget *owner_email_label;
   GtkWidget *owner_phone_label;
   GtkWidget *owner_address_label;
-  GtkWidget *scrolledwindow;
-  GtkWidget *scrolledwindow1;
-  GtkWidget *viewport;
-  GtkWidget *viewport1;
-  gint upgrade_result = UPGRADE_ERROR;
-
   GtkWidget *button;
   GtkWidget *photo;
+  gint upgrade_result = UPGRADE_ERROR;
+  GtkAttachOptions table_attach_left_col_x;
+  GtkAttachOptions table_attach_left_col_y;
+  GtkAttachOptions table_attach_right_col_x;
+  GtkAttachOptions table_attach_right_col_y;
+  GtkJustification table_justify_left_col;
+  GtkJustification table_justify_right_col;
 
   /* ======================================================================== */
   /* get the data from the file if existant */
@@ -75,6 +80,32 @@ GtkWidget *Ownerinfo_Build_Objects()
   owneremail     = g_strdup ("nobody@localhost.localdomain");
   ownerphone     = g_strdup ("+99 (9999) 999-9999");
   owneraddress   = g_strdup ("Data stored in\n/etc/gpe/gpe-ownerinfo.data.");
+
+  /* 
+   * GTK_EXPAND  the widget should expand to take up any extra space
+                 in its container that has been allocated.
+   * GTK_SHRINK  the widget should shrink as and when possible.
+   * GTK_FILL    the widget should fill the space allocated to it.
+   */
+  
+  /*
+   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
+   * let it fill on the left side (so that the right alignment
+   * works:
+   */ 
+  table_attach_left_col_x = GTK_SHRINK | GTK_FILL; 
+  table_attach_left_col_y = 0;
+  table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
+  table_attach_right_col_y = GTK_EXPAND | GTK_FILL;
+  
+  /*
+   * GTK_JUSTIFY_LEFT
+   * GTK_JUSTIFY_RIGHT
+   * GTK_JUSTIFY_CENTER (the default)
+   * GTK_JUSTIFY_FILL
+   */
+  table_justify_left_col = GTK_JUSTIFY_RIGHT;
+  table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
@@ -153,62 +184,62 @@ GtkWidget *Ownerinfo_Build_Objects()
   /* ------------------------------------------------------------------------ */
   owner_name_label = gtk_label_new (_("Name"));
   gtk_table_attach (GTK_TABLE (table), owner_name_label, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_name_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_name_label), 0, 0.5);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+    gtk_label_set_justify (GTK_LABEL (owner_name_label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (owner_name_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_name_label), 5, 0);
 
   name = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (name), ownername);
   gtk_table_attach (GTK_TABLE (table), name, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_email_label = gtk_label_new (_("E-Mail"));
   gtk_table_attach (GTK_TABLE (table), owner_email_label, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_email_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_email_label), 0, 0.5);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (owner_email_label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (owner_email_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_email_label), 5, 0);
 
   email = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (email), owneremail);
   gtk_table_attach (GTK_TABLE (table), email, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_phone_label = gtk_label_new (_("Phone"));
   gtk_table_attach (GTK_TABLE (table), owner_phone_label, 0, 1, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_phone_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 0, 0.5);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (owner_phone_label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_phone_label), 5, 0);
 
   phone = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (phone), ownerphone);
   gtk_table_attach (GTK_TABLE (table), phone, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_address_label = gtk_label_new (_("Address"));
   gtk_table_attach (GTK_TABLE (table), owner_address_label, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y | GTK_FILL ), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (owner_address_label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 1, 0);
   gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
 
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_table_attach (GTK_TABLE (table), scrolledwindow1, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
@@ -225,25 +256,25 @@ GtkWidget *Ownerinfo_Build_Objects()
   /* ------------------------------------------------------------------------ */
   owner_photofile_label = gtk_label_new (_("Photofile"));
   gtk_table_attach (GTK_TABLE (table), owner_photofile_label, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_photofile_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 0, 0.5);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (owner_photofile_label), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 1, 0.5);
   gtk_misc_set_padding (GTK_MISC (owner_photofile_label), 5, 0);
 
   photofile = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (photofile), ownerphotofile);
 
   gtk_table_attach (GTK_TABLE (table), photofile, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
+  /* ------------------------------------------------------------------------ */
   button = gtk_button_new ();
   gtk_table_attach (GTK_TABLE (table), button, 0, 2, 5, 6,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   
-
   photo = create_pixmap (table, ownerphotofile);
   gtk_container_add (GTK_CONTAINER (button), photo);
 
@@ -251,6 +282,19 @@ GtkWidget *Ownerinfo_Build_Objects()
                       GTK_SIGNAL_FUNC (choose_photofile),
                       NULL);
 
+  /* ------------------------------------------------------------------------ */
+  /* make the labels grey: */
+  gtk_rc_parse_string ("widget '*owner_name_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (owner_name_label, "owner_name_label");
+  gtk_rc_parse_string ("widget '*owner_email_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (owner_email_label, "owner_email_label");
+  gtk_rc_parse_string ("widget '*owner_phone_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (owner_phone_label, "owner_phone_label");
+  gtk_rc_parse_string ("widget '*owner_address_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (owner_address_label, "owner_address_label");
+  gtk_rc_parse_string ("widget '*owner_photofile_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (owner_photofile_label, "owner_photofile_label");
+ 
   /*
    * Check if we are even allowed to write to the owner data file
    *    or create it if necessary.
