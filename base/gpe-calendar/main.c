@@ -49,6 +49,7 @@ extern gboolean gpe_calendar_start_xsettings (void);
 GList *times;
 time_t viewtime;
 gboolean force_today = FALSE;
+gboolean just_new = FALSE;
 
 GtkWidget *main_window, *pop_window;
 GtkWidget *notebook;
@@ -172,10 +173,24 @@ new_view (GtkWidget *widget)
     } while (w != NULL);
 }
 
+static gboolean
+do_reset_new(gpointer d)
+{
+  just_new = FALSE;
+  return FALSE;
+}
+
 static void
 new_appointment (void)
 {
-  GtkWidget *appt = new_event (viewtime, 0);
+  GtkWidget *appt;
+  
+  if (just_new)
+    return;
+  just_new = TRUE;
+  g_timeout_add(1000, do_reset_new, NULL);
+  
+  appt = new_event (viewtime, 0);
   gtk_widget_show (appt);
 }
 

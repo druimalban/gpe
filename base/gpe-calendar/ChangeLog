@@ -1,5 +1,6 @@
 2004-08-18  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * main.c: Prevent user from accidentally creating more than on new event.
     * Released V 0.55
     * day_view.c, week_view.c, month_view.c: Removed focus changes on 
       direction key press.
