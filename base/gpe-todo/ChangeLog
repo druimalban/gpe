@@ -1,0 +1,9 @@
+2002-06-16  Philip Blundell  <pb@kc.cam.armlinux.org>
+
+	* Makefile (gpe-todo): Don't include gdk_imlib in link.
+	(CFLAGS): Add gdk-pixbuf flags.
+	(ipkg): Expect files in familiar.
+
+	* control, postinst: Moved to ...
+	* familiar/control, familiar/postinst: ... here.
+	
