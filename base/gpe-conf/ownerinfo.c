@@ -72,6 +72,9 @@ GtkWidget *Ownerinfo_Build_Objects()
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
+  guint widget_padding_x;
+  guint widget_padding_y_even;
+  guint widget_padding_y_odd;
 
   /* ======================================================================== */
   /* get the data from the file if existant */
@@ -96,7 +99,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   table_attach_left_col_x = GTK_SHRINK | GTK_FILL; 
   table_attach_left_col_y = 0;
   table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
-  table_attach_right_col_y = GTK_EXPAND | GTK_FILL;
+  table_attach_right_col_y = GTK_FILL;
   
   /*
    * GTK_JUSTIFY_LEFT
@@ -106,6 +109,11 @@ GtkWidget *Ownerinfo_Build_Objects()
    */
   table_justify_left_col = GTK_JUSTIFY_RIGHT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
+
+  widget_padding_x = 5;
+  widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
+  widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
+  
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
@@ -180,6 +188,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   table = gtk_table_new (6, 2, FALSE);
   gtk_widget_set_name (table, "table");
   gtk_container_add (GTK_CONTAINER (viewport), table);
+  gtk_container_set_border_width (GTK_CONTAINER (table), widget_padding_x);
 
   /* ------------------------------------------------------------------------ */
   owner_name_label = gtk_label_new (_("Name"));
@@ -188,7 +197,8 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
     gtk_label_set_justify (GTK_LABEL (owner_name_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_name_label), 1, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_name_label), 5, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_name_label),
+			widget_padding_x, widget_padding_y_even);
 
   name = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (name), ownername);
@@ -203,7 +213,8 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_email_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_email_label), 1, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_email_label), 5, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_email_label),
+			widget_padding_x, widget_padding_y_odd);
 
   email = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (email), owneremail);
@@ -218,7 +229,8 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_phone_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 1, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_phone_label), 5, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_phone_label),
+			widget_padding_x, widget_padding_y_even);
 
   phone = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (phone), ownerphone);
@@ -233,7 +245,8 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y | GTK_FILL ), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_address_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_address_label), 1, 0);
-  gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_address_label),
+			widget_padding_x, widget_padding_y_odd);
 
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
@@ -260,7 +273,8 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_photofile_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 1, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_photofile_label), 5, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_photofile_label),
+			widget_padding_x, widget_padding_y_even);
 
   photofile = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (photofile), ownerphotofile);
@@ -273,7 +287,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   button = gtk_button_new ();
   gtk_table_attach (GTK_TABLE (table), button, 0, 2, 5, 6,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_y | GTK_EXPAND), 0, 0);
   
   photo = create_pixmap (table, ownerphotofile);
   gtk_container_add (GTK_CONTAINER (button), photo);
