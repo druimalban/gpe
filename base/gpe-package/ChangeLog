@@ -1,4 +1,7 @@
 2004-01-23 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c: Started to split list into installed/not installed packages.
+	* interface.c: Enable / Disable menu items.
+	* Removed some inactive stuff, some formating changes.
 	* Packaged 0.0.8-2
 
 2004-01-19 Florian Boor <florian.boor@kernelconcepts.de>

@@ -22,8 +22,10 @@
 #include <poll.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/signal.h>
 #include <sys/un.h>
 
+ #include <locale.h>
 #include <libintl.h>
 #define _(x) gettext(x)
 
@@ -43,6 +45,15 @@
 
 #define N_(x) (x)
 
+#define MI_FILE             1
+#define MI_FILE_INSTALL     2
+#define MI_FILE_CLOSE       3
+#define MI_PACKAGES         4
+#define MI_PACKAGES_UPDATE  5
+#define MI_PACKAGES_UPGRADE 6
+#define MI_PACKAGES_APPLY   7
+
+
 /* --- module global variables --- */
 void create_fMain (void);
 void on_select_local(GtkButton *button, gpointer user_data);
@@ -61,9 +72,10 @@ static int error = 0;
 static GtkWidget *notebook;
 static GtkWidget *txLog;
 static GtkWidget *treeview;
-static GtkTreeStore *store = NULL;
+static GtkTreeStore *store_inst = NULL;
+static GtkTreeStore *store_notinst = NULL;
 static GtkWidget *bApply;
-//*bUpdate , *bSysUpgrade, *bSelectLocal;
+static GtkWidget *miUpdate, *miSysUpgrade, *miSelectLocal, *miApply;
 static GtkWidget *sbar;
 static GtkWidget *fMain;
 static GtkWidget *dlgAction = NULL;
@@ -71,15 +83,15 @@ static GtkWidget *mMain;
 
 
 static GtkItemFactoryEntry mMain_items[] = {
-  { N_("/_File"),         NULL,         NULL,           0, "<Branch>" },
-  { N_("/File/_Install file"), "", on_select_local,    0, "<Item>"},
+  { N_("/_File"),         NULL,         NULL, MI_FILE, "<Branch>" },
+  { N_("/File/_Install file"), "", on_select_local, MI_FILE_INSTALL, "<Item>"},
   { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
-  { N_("/File/_Close"),  NULL, do_safe_exit,    0, "<StockItem>", GTK_STOCK_QUIT },
-  { N_("/_Packages"),         NULL,         NULL,           0, "<Branch>" },
-  { N_("/Packages/_Update lists"), "<Control> U", on_packages_update_clicked,    0, "<Item>"},
-  { N_("/Packages/Upgrade _System"), "", on_system_update_clicked,    0, "<Item>"},
+  { N_("/File/_Close"),  NULL, do_safe_exit, MI_FILE_CLOSE, "<StockItem>", GTK_STOCK_QUIT },
+  { N_("/_Packages"),         NULL,         NULL, MI_PACKAGES, "<Branch>" },
+  { N_("/Packages/_Update lists"), "<Control> U", on_packages_update_clicked, MI_PACKAGES_UPDATE , "<Item>"},
+  { N_("/Packages/Upgrade _System"), "", on_system_update_clicked, MI_PACKAGES_UPGRADE, "<Item>"},
   { N_("/_Packages/s2"), NULL , NULL,    0, "<Separator>"},
-  { N_("/Packages/_Apply"), "", on_package_install_clicked,    0, "<StockItem>", GTK_STOCK_APPLY},
+  { N_("/Packages/_Apply"), "", on_package_install_clicked, MI_PACKAGES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
   { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
   { N_("/_Help/Index"),   NULL,         NULL,    0, "<Item>" },
   { N_("/_Help/About"),   NULL,         NULL,    0, "<Item>" },
@@ -103,8 +115,7 @@ gboolean get_pending_messages ();
 
 
 /* dialogs */
-#warning todo panel
-#warning todo separation
+#warning todo info dialog, icons, verbose dialogs
 
 GtkWidget *
 progress_dialog (gchar * text, GdkPixbuf * pixbuf)
@@ -155,7 +166,8 @@ send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 		{
 			case CMD_LIST:
 				desc = _("Reading packages list...");
-				gtk_tree_store_clear(GTK_TREE_STORE(store));
+				gtk_tree_store_clear(GTK_TREE_STORE(store_inst));
+				gtk_tree_store_clear(GTK_TREE_STORE(store_notinst));			
 			break;
 			case CMD_UPDATE:
 				desc = _("Updating package lists");
@@ -214,8 +226,8 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 {
 	pkg_state_want_t dstate;
 	char *name;
-
-	gtk_tree_model_get (GTK_TREE_MODEL(store), iter, 
+// store -> model
+	gtk_tree_model_get (GTK_TREE_MODEL(model), iter, 
 						COL_DESIREDSTATE, &dstate,
 						COL_NAME,&name,	-1);
 	switch (dstate)
@@ -223,7 +235,8 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 		case SW_INSTALL:
 			send_message(PK_COMMAND,CMD_INSTALL,"",name);
 			wait_command_finish();
-			gtk_tree_store_set (GTK_TREE_STORE(store), iter, 
+//store -> model		
+			gtk_tree_store_set (GTK_TREE_STORE(model), iter, 
                       COL_INSTALLED,TRUE,
                       COL_DESIREDSTATE,SW_UNKNOWN,
                       COL_COLOR,NULL,-1);
@@ -231,7 +244,8 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 		case SW_DEINSTALL:
 			send_message(PK_COMMAND,CMD_REMOVE,"",name);
 			wait_command_finish();
-			gtk_tree_store_set (GTK_TREE_STORE(store), iter, 
+//store...		
+			gtk_tree_store_set (GTK_TREE_STORE(model), iter, 
                       COL_INSTALLED,FALSE,
                       COL_DESIREDSTATE,SW_UNKNOWN,
                       COL_COLOR,NULL,-1);
@@ -268,7 +282,7 @@ void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_
 	char *color = NULL;
 	char *lversion;
 	char *nversion = NULL;
-	
+#error this more work, we need to move entrys	
 	updatev = (last_pkgname != NULL) && !strcmp(pkgname,last_pkgname);
 	
 	if (updatev) 
@@ -340,10 +354,10 @@ void do_info(int priority, char *str1, char *str2)
 
 void do_end_command()
 {
-#warning - change in menu
-//    gtk_widget_set_sensitive(bUpdate,TRUE);
+    gtk_widget_set_sensitive(miUpdate,TRUE);
+    gtk_widget_set_sensitive(miApply,TRUE);
+	gtk_widget_set_sensitive(miSysUpgrade,TRUE);
     gtk_widget_set_sensitive(bApply,TRUE);
-//	gtk_widget_set_sensitive(bSysUpgrade,TRUE);
     printlog(txLog,_("Command finished. Please check log messages for errors."));
 	if (dlgAction) 
 	{
@@ -425,6 +439,7 @@ get_pending_messages ()
 			case PK_PACKAGESTATE:
 //				do_state(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
 			case PK_FINISHED:
+				printf("finished\n");
 				do_end_command();
 			default:
 				break;
@@ -513,7 +528,9 @@ mainloop (int argc, char *argv[])
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
 	
-	
+	signal (SIGINT, do_safe_exit);
+	signal (SIGTERM, do_safe_exit);
+ 
 	/* Create socket from which to read. */
 	sock = socket (AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0)
@@ -573,20 +590,22 @@ on_select_local(GtkButton *button, gpointer user_data)
 void
 on_system_update_clicked(GtkButton *button, gpointer user_data)
 {
-  GtkTextBuffer *logbuf;
-  GtkTextIter start,end;
-//  gtk_widget_set_sensitive(bUpdate,FALSE);
-  gtk_widget_set_sensitive(bApply,FALSE);
-//  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
+	GtkTextBuffer *logbuf;
+	GtkTextIter start,end;
+	
+    gtk_widget_set_sensitive(miUpdate,FALSE);
+    gtk_widget_set_sensitive(miApply,FALSE);
+	gtk_widget_set_sensitive(miSysUpgrade,FALSE);
+	gtk_widget_set_sensitive(bApply,FALSE);
 
 	error = 0;
 	
-  /* clear log */	
-  logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
-  gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
-  gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
-  gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
-  send_message(PK_COMMAND,CMD_UPDATE,"","");
+	/* clear log */	
+	logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
+	gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
+	gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
+	gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
+	send_message(PK_COMMAND,CMD_UPDATE,"","");
 	wait_command_finish();
 	send_message(PK_COMMAND,CMD_UPGRADE,"","");
 	wait_command_finish();
@@ -603,20 +622,22 @@ on_system_update_clicked(GtkButton *button, gpointer user_data)
 void
 on_packages_update_clicked(GtkButton *button, gpointer user_data)
 {
-  GtkTextBuffer *logbuf;
-  GtkTextIter start,end;
-//  gtk_widget_set_sensitive(bUpdate,FALSE);
-  gtk_widget_set_sensitive(bApply,FALSE);
-//  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
+	GtkTextBuffer *logbuf;
+	GtkTextIter start,end;
+
+    gtk_widget_set_sensitive(miUpdate,FALSE);
+    gtk_widget_set_sensitive(miApply,FALSE);
+	gtk_widget_set_sensitive(miSysUpgrade,FALSE);
+	gtk_widget_set_sensitive(bApply,FALSE);
 
 	error = 0;
 	
-  /* clear log */	
-  logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
-  gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
-  gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
-  gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
-  send_message(PK_COMMAND,CMD_UPDATE,"","");
+	/* clear log */	
+	logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
+	gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
+	gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
+	gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
+	send_message(PK_COMMAND,CMD_UPDATE,"","");
 	wait_command_finish();
 	send_message(PK_COMMAND,CMD_LIST,"","");
 	wait_command_finish();
@@ -679,6 +700,11 @@ create_mMain(GtkWidget  *window)
 		mMain_items, NULL);
 	gtk_window_add_accel_group (GTK_WINDOW (window), accelgroup);
 
+	miUpdate = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_UPDATE);
+	miSysUpgrade = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_UPGRADE);
+	miSelectLocal = gtk_item_factory_get_item_by_action(itemfactory,MI_FILE_INSTALL);
+	miApply = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_APPLY);
+	
 	return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 }
 
@@ -733,25 +759,10 @@ create_fMain (void)
 			       GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-/*  bUpdate = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_DOWN, 
-  			_("Update package lists"),	_("Update package lists"),
-			   (GtkSignalFunc) on_packages_update_clicked , NULL, -1);
-			   
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("refresh"));
-  bSysUpgrade = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Update System"),
-			   _("Update System"), _("Update entire system over an internet connection."), pw,
-			   (GtkSignalFunc) on_system_update_clicked , NULL);
-*/
   bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
 			   _("Apply package selection"), _("Apply package selection"),
 			   (GtkSignalFunc) on_package_install_clicked , NULL, -1);
 			   
-/*  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("local-package"));
-  bSelectLocal = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Install package"),
-			   _("Install package"), 
-			   _("Select a package to install in local filesystem."), pw,
-			   (GtkSignalFunc) on_select_local , NULL);
-*/			   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
   pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
@@ -771,10 +782,61 @@ create_fMain (void)
   sbar = gtk_statusbar_new();
   gtk_box_pack_start(GTK_BOX(vbox),sbar,FALSE,TRUE,0);
 
-  /* list tab */	
+  /* installed tab */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
-  cur = gtk_label_new(_("Packages"));
+  cur = gtk_label_new(_("Installed"));
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
+
+  cur = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+  tmp = g_strdup_printf("<b>%s</b>",_("Installed Packages"));
+  gtk_label_set_markup(GTK_LABEL(cur),tmp);
+  free(tmp);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+	
+  cur = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
+
+  /* packages tree */
+  treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+  gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
+  gtk_container_add(GTK_CONTAINER(cur),treeview);	
+  
+	g_signal_connect_after (G_OBJECT (treeview), "cursor-changed",
+			  G_CALLBACK (tv_row_clicked), NULL);
+
+	renderer = gtk_cell_renderer_toggle_new ();
+	gtk_cell_renderer_toggle_set_radio(GTK_CELL_RENDERER_TOGGLE(renderer),FALSE);
+	g_signal_connect (G_OBJECT (renderer), "toggled",
+					  G_CALLBACK (list_toggle_inst), store);
+	column = gtk_tree_view_column_new_with_attributes (_("Inst."),
+							   renderer,
+							   "active",
+							   COL_INSTALLED,
+							   "cell-background",
+							   COL_COLOR,
+							   NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Name"),
+							   renderer,
+							   "text",
+							   COL_NAME,
+							   "background",
+							   COL_COLOR,
+							   NULL);
+	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+  /* uninstalled tab */	
+  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+
+  cur = gtk_label_new(_("Not Installed"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
 
   cur = gtk_label_new(NULL);
@@ -821,7 +883,8 @@ create_fMain (void)
 							   NULL);
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-	
+
+
   /* messages tab */
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 

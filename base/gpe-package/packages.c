@@ -73,7 +73,6 @@ ipkg_question (char *question)
 	send_message (PK_QUESTION, 1, question, NULL, NULL, 0);
 	await_response = TRUE;
 	while (await_response) wait_message();
-printf("Response: %s\n",response);
 	return (response);
 }
 
@@ -106,6 +105,7 @@ wait_message ()
 {
 	static pkmessage_t msg;
 	struct pollfd pfd[1];
+	static int retry_count = 0;
 
 	pfd[0].fd = sock;
 	pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
@@ -115,34 +115,40 @@ wait_message ()
 		{
 #ifdef DEBUG
 			perror ("Err: connection lost: ");
-#endif
-			return FALSE;
+#endif		
+			retry_count++;
+			if (retry_count > 6) return FALSE;
+			usleep(500000);
 		}
-		if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
+		else
 		{
-#ifdef DEBUG
-			perror ("err receiving data packet");
-#endif
-			close (sock);
-			exit (1);
-		}
-		else if (msg.type == PK_BACK)
-		{
-			switch (msg.ctype)
+			if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
 			{
-			case (PK_COMMAND):
-				do_command (msg.content.tb.command,
-					    msg.content.tb.params,
-					    msg.content.tb.list);
-				break;
-			case (PK_REPLY):
-				do_response (msg.content.tb.params);
-				break;
-			default:
-				break;
+	#ifdef DEBUG
+				perror ("err receiving data packet");
+	#endif
+				close (sock);
+				exit (1);
 			}
-		}
-	}
+			else if (msg.type == PK_BACK)
+			{
+				retry_count = 0;
+				switch (msg.ctype)
+				{
+				case (PK_COMMAND):
+					do_command (msg.content.tb.command,
+							msg.content.tb.params,
+							msg.content.tb.list);
+					break;
+				case (PK_REPLY):
+					do_response (msg.content.tb.params);
+					break;
+				default:
+					break;
+				}
+			}
+		} /* else */	
+	} /* while */
 	return TRUE;
 }
 
@@ -182,6 +188,8 @@ do_command (pkcommand_t command, char *params, char *list)
 	break;
 	case CMD_FILES:
 		ipkg_package_files(&args,list,list_entry, NULL);
+	break;
+	default:
 	break;
 	}
 	
