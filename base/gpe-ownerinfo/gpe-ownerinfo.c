@@ -89,11 +89,11 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   maxwidth  = widget->allocation.width;
   maxheight = widget->allocation.height;
-  g_message ("allocation for drawing area: %d x %d", maxwidth, maxheight);
+  g_message ("gpe-ownerinfo2: allocation for drawing area: %d x %d", maxwidth, maxheight);
 
   width  = gdk_pixbuf_get_width (photopixbuf);
   height = gdk_pixbuf_get_height (photopixbuf);
-  g_message ("pixbuf: %d x %d", width, height);
+  g_message ("gpe-ownerinfo2: pixbuf: %d x %d", width, height);
 
   if (width > maxwidth)
     scale_width = (gfloat) maxwidth / width;
@@ -106,12 +106,12 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
     scale_height = 1.0;
 
   scale = scale_width < scale_height ? scale_width : scale_height;
-  g_message ("scale_width: %f, scale_height: %f, selected scale: %f",
+  g_message ("gpe-ownerinfo2: scale_width: %f, scale_height: %f, selected scale: %f",
 	     scale_width, scale_height, scale);
 
   resultwidth  = (gint) (width  * scale);
   resultheight = (gint) (height * scale);
-  g_message ("resulting size: %d x %d", resultwidth, resultheight);
+  g_message ("gpe-ownerinfo2: resulting size: %d x %d", resultwidth, resultheight);
 
   scaledpixbuf = gdk_pixbuf_scale_simple (photopixbuf, resultwidth, resultheight, GDK_INTERP_BILINEAR);
 
@@ -125,7 +125,7 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 				       GDK_RGB_DITHER_NORMAL,     /* dither mode */
 				       0, 0);                     /* x_dither, y_dither */
   
-  g_message ("======================================================");
+  g_message ("gpe-ownerinfo2: ======================================================");
   return TRUE;
 }
 
@@ -314,6 +314,24 @@ maybe_upgrade_datafile ()
 // }
 // 
 
+
+static void
+mapped (GtkWidget *window)
+{
+  Pixmap rmap = GetRootPixmap (GDK_DISPLAY ());
+  if (rmap != None)
+    {
+      Pixmap pmap;
+      pmap = CutWinPixmap (GDK_DISPLAY(), GDK_WINDOW_XWINDOW (window->window), rmap, 
+			   GDK_GC_XGC (window->style->black_gc));
+      if (pmap != None)
+	{
+	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
+	  window->style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
+	  gtk_widget_set_style (window, window->style);
+	}
+    }
+}
 
 int
 main (int argc, char *argv[])
@@ -672,11 +690,11 @@ main (int argc, char *argv[])
   gtk_widget_show (widget);
   */
 
-//  /* make window transparent if option -t is given: */
-//  if (flag_transparent) {
-//    gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
-//			GTK_SIGNAL_FUNC (mapped), NULL);
-//  }
+  /* make window transparent if option -t is given: */
+  if (flag_transparent) {
+    gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
+			GTK_SIGNAL_FUNC (mapped), NULL);
+  }
 
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
@@ -688,11 +706,13 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (on_bigphotobutton_clicked),
 		      notebook);
 
-  gtk_widget_show (GPE_Ownerinfo);
+  gtk_widget_realize (GPE_Ownerinfo);
 
   if (flag_keep_on_top) {
     gdk_window_set_override_redirect (GPE_Ownerinfo->window, TRUE);
   }
+
+  gtk_widget_show (GPE_Ownerinfo);
 
   gtk_main ();
   return 0;
