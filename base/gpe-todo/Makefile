@@ -12,6 +12,9 @@ install: all
 	install -D gpe-todo $(DESTDIR)/usr/bin/gpe-todo
 	install -D gpe-todo.menu $(DESTDIR)/usr/lib/menu/gpe-todo
 	install -D gpe-todo.png $(DESTDIR)/usr/share/pixmaps/gpe-todo.png
+	install -D new.png $(DESTDIR)/usr/share/gpe-todo/pixmaps/new.png
+	install -D trash.png $(DESTDIR)/usr/share/gpe-todo/pixmaps/trash.png
+	install -D preferences.png $(DESTDIR)/usr/share/gpe-todo/pixmaps/preferences.png
 	strip $(DESTDIR)/usr/bin/gpe-todo
 
 ipkg:
