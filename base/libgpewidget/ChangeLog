@@ -1,15 +1,34 @@
+2003-03-19  Philip Blundell  <philb@gnu.org>
+
+	* smallbox.c (smallbox_x): Try to use correct spacing.  Remove
+	spurious gtk_widget_show calls.  Don't force window size, just set
+	the default.
+	(smallbox_x2): Likewise.
+
+	* pixmaps.c (gpe_find_icon_scaled): Don't unref original pixbuf.
+
+	* Makefile (LINGUAS): Add pt.
+
+ 	* po/pt.po: New file from Translation Project, courtesy Luis
+	Oliveira.
+
 2003-03-16  Luc Pionchon  <luc@handhelds.org>
 
-	* gpeiconlist.gob (set_show_title): New public function to allow titleless iconlist
-	(_expose): render title only with show_title mode, and if non NULL title
+	* gpeiconlist.gob (set_show_title): New public function to allow
+	titleless iconlist
+	(_expose): render title only with show_title mode, and if non NULL
+	title
 	* gpe-iconlist.[ch]: regenerate.
 	
 2003-03-16  Luc Pionchon  <luc@handhelds.org>
 
-	* gpeiconlist.gob (set_bg_color): New public function to set the bg color
-	(update_icon_item_with_udata): New public function to update an icon
+	* gpeiconlist.gob (set_bg_color): New public function to set the
+	bg color
+	(update_icon_item_with_udata): New public function to update an
+	icon
 	(remove_item_with_udata): New public function to remove an icon
-	(_find_from_udata): New private function used by update_icon_item_with_udata() and remove_item_with_udata.
+	(_find_from_udata): New private function used by
+	update_icon_item_with_udata() and remove_item_with_udata.
 
 2003-03-15  Philip Blundell  <philb@gnu.org>
 

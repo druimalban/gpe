@@ -180,11 +180,7 @@ gpe_find_icon_scaled (const char *name, GtkIconSize size)
   int width, height;
 
   if (gtk_icon_size_lookup (size, &width, &height))
-    {
-      GdkPixbuf *scaled = gdk_pixbuf_scale_simple (p, width, height, GDK_INTERP_BILINEAR);
-      g_object_unref (p);
-      p = scaled;
-    }
+    p = gdk_pixbuf_scale_simple (p, width, height, GDK_INTERP_BILINEAR);
 
   return p;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,7 @@
 
 #include "smallbox.h"
 #include "picturebutton.h"
+#include "spacing.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -60,13 +61,11 @@ smallbox_x (gchar *title, struct box_desc *d)
   guint i = 0;
   struct box_desc *di = d;
   GtkWidget *buttonok, *buttoncancel;
+  guint gpe_boxspacing = gpe_get_boxspacing ();
 
   gtk_widget_realize (window);
   buttonok  = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
   buttoncancel  = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
-
-  gtk_widget_show (buttonok);
-  gtk_widget_show (buttoncancel);
 
   while (di->label)
     {
@@ -88,18 +87,13 @@ smallbox_x (gchar *title, struct box_desc *d)
       if (di->value)
 	gtk_entry_set_text (GTK_ENTRY (entry[i]), di->value);
 
-      gtk_widget_show (entry[i]);
-      gtk_widget_show (label);
-
-      gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, i, i + 1);
+      gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i + 1, 0, 0, gpe_boxspacing, 1);
       gtk_table_attach_defaults (GTK_TABLE (table), entry[i], 1, 2, i, i + 1);
 
       i++;
       di++;
     }
   
-  gtk_widget_show (table);
-
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), table, 
 		      TRUE, FALSE, 0);
 
@@ -119,9 +113,9 @@ smallbox_x (gchar *title, struct box_desc *d)
   g_signal_connect (G_OBJECT (window), "destroy",
 		    G_CALLBACK (smallbox_note_destruction), &destroyed);
 
-  gtk_widget_set_usize (window, 200, 100);
+  gtk_window_set_default_size (GTK_WINDOW (window), 200, 100);
 
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
   gtk_widget_grab_focus (entry[0]);
 
   gtk_main ();
@@ -167,9 +161,7 @@ smallbox_x2 (gchar *title, struct box_desc2 *d)
   gboolean destroyed = FALSE;
   guint i = 0;
   struct box_desc2 *di = d;
-
-  gtk_widget_show (buttonok);
-  gtk_widget_show (buttoncancel);
+  guint gpe_boxspacing = gpe_get_boxspacing ();
 
   while (di->label)
     {
@@ -190,29 +182,23 @@ smallbox_x2 (gchar *title, struct box_desc2 *d)
 	{
 	  GtkWidget *combo = make_combo (di->suggestions);
 	  entry[i] = GTK_COMBO (combo)->entry;
-	  gtk_widget_show (combo);
 	  gtk_table_attach_defaults (GTK_TABLE (table), combo, 1, 2, i, i + 1);
 	}
       else
 	{
 	  entry[i] = gtk_entry_new ();
-	  gtk_widget_show (entry[i]);
 	  gtk_table_attach_defaults (GTK_TABLE (table), entry[i], 1, 2, i, i + 1);
 	}
 
       if (di->value)
 	gtk_entry_set_text (GTK_ENTRY (entry[i]), di->value);
 
-      gtk_widget_show (label);
-
-      gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, i, i + 1);
+      gtk_table_attach (GTK_TABLE (table), label, 0, 1, i, i + 1, 0, 0, gpe_boxspacing, 1);
 
       i++;
       di++;
     }
   
-  gtk_widget_show (table);
-
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), table, 
 		      TRUE, FALSE, 0);
 
@@ -232,9 +218,9 @@ smallbox_x2 (gchar *title, struct box_desc2 *d)
   g_signal_connect (G_OBJECT (window), "destroy",
 		    G_CALLBACK (smallbox_note_destruction), &destroyed);
 
-  gtk_widget_set_usize (window, 200, 100);
+  gtk_window_set_default_size (GTK_WINDOW (window), 200, 100);
 
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
   gtk_widget_grab_focus (entry[0]);
 
   gtk_main ();
