@@ -1,7 +1,7 @@
 Package: gpe-setbg2
 Section: base
 Priority: optional
-Version: 0.02
+Version: 0.02-1
 Architecture: arm
 Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
 Depends: libgpewidget1
