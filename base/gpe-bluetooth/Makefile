@@ -7,9 +7,9 @@ VERSION = 0.25
 
 MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus
 
-CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
+CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -Wall
 
-CFLAGS += -D_GNU_SOURCE -Wall
+CPPFLAGS += -D_GNU_SOURCE -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
@@ -51,14 +51,14 @@ bnep-helper: bnep-helper.c
 rfcomm-helper: rfcomm-helper.c
 
 install-program: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth
+	install -d $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth
 	install -s bnep-helper $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/
 	chmod u+s $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/bnep-helper
 	install -s rfcomm-helper $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/
 	chmod u+s $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/rfcomm-helper
-	mkdir -p $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth
+	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth
 	install -m 644 pixmaps/bt-on.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/bt-off.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/cellphone.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
