@@ -145,6 +145,9 @@ PIXMAPS += ibutton2.png
 PIXMAPS += ibutton3.png
 PIXMAPS += ibutton4.png
 PIXMAPS += ibutton5.png
+PIXMAPS += system-info.png
+PIXMAPS += familiar.png
+PIXMAPS += device-info.png
 
 all: $(PACKAGE)
 

@@ -34,26 +34,6 @@
 
 static GtkWidget *vbox;
 
-#define FS_T_FLASH 0
-#define FS_T_MMC 1
-#define FS_T_CF 2
-#define FS_T_NFS 3
-#define FS_T_UNKNOWN 4
-
-typedef struct
-{
-	int total;
-	int used;
-	int avail;
-	char *name;
-	char *mountpoint;
-	int type;
-	GtkWidget *bar;
-	GtkWidget *label, *label2, *label3, *dummy;
-	int present;
-}
-tfs;
-
 tfs *filesystems = NULL;
 int fs_count = 0;
 tfs meminfo;

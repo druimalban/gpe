@@ -1,3 +1,10 @@
+2003-11-28	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Fixed several issues in CVS (wrong/missing files)
+	* We now read familiar version info.
+	* storage.*: Moved stuff to header file.
+	* Makefile: added new pixmaps
+	* Added device information features.
+	
 2003-11-27	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Makefile, main.c: Added sysinfo applet.
 	* Added files *sysinfo*.
