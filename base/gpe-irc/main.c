@@ -33,20 +33,20 @@
 #define _(_x) gettext (_x)
 
 struct gpe_icon my_icons[] = {
-  { "new", "new" },
-  { "delete", "delete" },
-  { "edit", "edit" },
-  { "save", "save" },
-  { "properties", "properties" },
-  { "preferences", "preferences" },
-  { "close", "close" },
-  { "stop", "stop" },
-  { "error", "error" },
-  { "globe", "irc/globe" },
-  { "quote", "irc/quote" },
-  { "smiley_happy", "irc/smileys/happy" },
-  { "icon", PREFIX "/share/pixmaps/gpe-irc.png" },
-  {NULL, NULL}
+  { "new", "new", NULL },
+  { "delete", "delete", NULL },
+  { "edit", "edit", NULL },
+  { "save", "save", NULL },
+  { "properties", "properties", NULL },
+  { "preferences", "preferences", NULL },
+  { "close", "close", NULL },
+  { "stop", "stop", NULL },
+  { "error", "error", NULL },
+  { "globe", "irc/globe", NULL },
+  { "quote", "irc/quote", NULL },
+  { "smiley_happy", "irc/smileys/happy", NULL },
+  { "icon", PREFIX "/share/pixmaps/gpe-irc.png", NULL },
+  {NULL, NULL, NULL}
 };
 
 guint window_x = 240, window_y = 310;
@@ -127,7 +127,7 @@ scroll_text_view_to_bottom ()
 
   text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
   gtk_text_buffer_get_bounds (text_buffer, &start, &end);
-  gtk_text_view_scroll_to_iter (main_text_view, &end, 0, TRUE, 1.0, 1.0);
+  gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (main_text_view), &end, 0, TRUE, 1.0, 1.0);
 
   return FALSE;
 }
@@ -398,7 +398,7 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
   entry = g_object_get_data (G_OBJECT (widget), "entry");
   server_combo = g_object_get_data (G_OBJECT (widget), "server_combo");
 
-  network_name = gtk_entry_get_text (GTK_ENTRY (entry));
+  network_name = (gchar *) gtk_entry_get_text (GTK_ENTRY (entry));
 
   if (strlen (network_name) > 0)
     servers = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
@@ -407,7 +407,7 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
   {
 	for(;servers && servers->data && ((struct sql_network_server *) servers->data)->name; servers = servers->next)
 	{
-		popdown_strings = g_list_append(popdown_strings, ((struct sql_network_server *) servers->data)->name);
+		popdown_strings = g_list_append(popdown_strings, (gpointer) ((struct sql_network_server *) servers->data)->name);
 	}
 
     gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
@@ -424,7 +424,7 @@ get_networks (GtkWidget *combo, GHashTable *network_hash)
   iter = sql_networks; 
   while (iter)
   {
-    popdown_strings = g_list_append (popdown_strings, ((struct sql_network *) iter->data)->name);
+    popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
     g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, ((struct sql_network *) iter->data)->servers);
     iter = iter->next;
   }
@@ -544,7 +544,7 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 
   if (selected_channel != NULL)
   {
-    entry_text = gtk_entry_get_text (main_entry);
+    entry_text = (gchar *) gtk_entry_get_text (GTK_ENTRY (main_entry));
 
     if (event->keyval == GDK_Return && strlen (entry_text) > 0)
     {
@@ -613,7 +613,7 @@ main (int argc, char *argv[])
   main_entry = gtk_entry_new ();
 
   users_list_store = gtk_list_store_new (1, G_TYPE_STRING);
-  users_tree_view = gtk_tree_view_new_with_model (users_list_store);
+  users_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (users_list_store));
 
   users_button_arrow = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
   users_button_arrow2 = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
