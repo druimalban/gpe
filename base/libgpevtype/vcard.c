@@ -66,6 +66,34 @@ tag_with_type (MIMEDirVCard *card, const char *tag, const char *value, const cha
       mimedir_vcard_append_phone (card, a);
       return TRUE;
     }
+  else if (!strcasecmp (tag, "mobile"))
+    {
+      MIMEDirVCardPhone *a = mimedir_vcard_phone_new ();
+      set_type (G_OBJECT (a), type);
+      g_object_set (G_OBJECT (a), "voice", FALSE, NULL);
+      g_object_set (G_OBJECT (a), "cell", TRUE, NULL);
+      g_object_set (G_OBJECT (a), "number", value, NULL);
+      mimedir_vcard_append_phone (card, a);
+      return TRUE;
+    }
+  else if ((!strcasecmp (tag, "fax")) 
+           || (!strcasecmp (tag, "modem"))
+           || (!strcasecmp (tag, "bbs"))
+           || (!strcasecmp (tag, "isdn"))
+           || (!strcasecmp (tag, "car"))
+           || (!strcasecmp (tag, "pager"))
+          )
+    {
+      gchar *gtag = g_ascii_strdown(tag, -1);
+      MIMEDirVCardPhone *a = mimedir_vcard_phone_new ();
+      set_type (G_OBJECT (a), type);
+      g_object_set (G_OBJECT (a), "voice", FALSE, NULL);
+      g_object_set (G_OBJECT (a), dtag, TRUE, NULL);
+      g_object_set (G_OBJECT (a), "number", value, NULL);
+      mimedir_vcard_append_phone (card, a);
+      g_free(dtag);
+      return TRUE;
+    }
   else if (!strcasecmp (tag, "email"))
     {
       MIMEDirVCardEMail *a = mimedir_vcard_email_new ();
@@ -81,6 +109,7 @@ static gboolean
 vcard_interpret_tag (MIMEDirVCard *card, const char *tag, const char *value)
 {
   struct tag_map *t = &map[0];
+    
   while (t->tag)
     {
       if (!strcasecmp (t->tag, tag))
