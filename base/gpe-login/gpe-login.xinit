@@ -2,7 +2,7 @@
 
 . /etc/sysconfig/gpelogin
 
-if [ "$AUTOLOGIN" == "true" ] ; then
+if [ "$AUTOLOGIN" = "true" ] ; then
 	exec /etc/X11/Xsession
 else
 	GEOMETRY=
