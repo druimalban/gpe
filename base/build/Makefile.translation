@@ -35,7 +35,7 @@ install-mo: all-mo
 .po.po8:;
 	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; sed "s/\(Content-Type: .*=\)$$CTYPE/\1UTF-8/" < $< | iconv -f $${CTYPE} -t UTF-8 >$@
 
-update-po: $(po-files) $(DIR_PO)/$(PACKAGE).pot extract-po
+update-po: $(po-files) extract-po
 
 dist-prep: update-po
 # empty
@@ -43,7 +43,7 @@ dist-prep: update-po
 extract-po:
 	mkdir -p $(DIR_PO)
 	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; xgettext --add-comments=TRANSLATORS: -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES )
-	if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi
+	if [ -f $(DIR_PO)/$(PACKAGE).pot.new ]; then if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi; fi
 
 clean-po:
 	rm -rf $(DIR_PO)/*.mo $(PACKAGE).desktop.in.h

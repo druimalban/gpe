@@ -1,3 +1,8 @@
+2003-06-12  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (update-po): Don't depend on POT file.
+	(extract-po): Lack of output file is not an error.
+
 2003-05-14  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (freshen-po): New target.
