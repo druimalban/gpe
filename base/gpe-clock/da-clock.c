@@ -16,7 +16,7 @@
 
 #include <gtk/gtk.h>
 
-static int clock_radius = 50, border = 2;
+static int clock_radius = 40, border = 2;
 
 static guint x_offset, y_offset;
 
@@ -148,8 +148,17 @@ button_down (GtkWidget *w, GdkEventButton *b, GtkWidget *scrolled_window)
   gint y_start = b->y - y_offset - clock_radius;
   double r = sqrt (x_start * x_start + y_start * y_start);
   double start_angle = calc_angle (x_start, y_start);
+  double hour_angle = gtk_adjustment_get_value (hour_adj) * 2 * M_PI / 12;
+  double minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
+  
+  hour_angle -= start_angle;
+  minute_angle -= start_angle;
+  if (hour_angle < 0)
+    hour_angle = -hour_angle;
+  if (minute_angle < 0)
+    minute_angle = -minute_angle;
 
-  if (r > (clock_radius * 2 / 3))
+  if (r > (clock_radius * 2 / 3) || (minute_angle < hour_angle))
     hand = TRUE;
   else
     hand = FALSE;
@@ -179,9 +188,13 @@ button_drag (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
 
   gtk_adjustment_set_value (hand ? minute_adj : hour_adj, val);
 
-  draw_clock (w, NULL, NULL);
-
   gdk_window_get_pointer (w->window, NULL, NULL, NULL);
+}
+
+static void
+adjustment_value_changed (GObject *a, GtkWidget *w)
+{
+  draw_clock (w, NULL, NULL);
 }
 
 GtkWidget *
@@ -200,7 +213,10 @@ clock_widget (GtkAdjustment *hadj, GtkAdjustment *madj)
   hour_adj = hadj;
   minute_adj = madj;
 
-  g_signal_connect (G_OBJECT (w), "expose_event", draw_clock, NULL);
+  g_signal_connect (G_OBJECT (w), "expose_event", G_CALLBACK (draw_clock), NULL);
+
+  g_signal_connect (G_OBJECT (hadj), "value_changed", G_CALLBACK (adjustment_value_changed), w);
+  g_signal_connect (G_OBJECT (madj), "value_changed", G_CALLBACK (adjustment_value_changed), w);
 
   return w;
 }
