@@ -1,5 +1,7 @@
 2003-02-14  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.12 released.
+
 	* playlist_edit.c (add_playlist_file): Just use the basename as
 	the default title.
 
