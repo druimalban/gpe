@@ -65,12 +65,29 @@ update_combo_categories (void)
 }
 
 static void
-new_contact(GtkWidget *widget, gpointer d)
+edit_person (struct person *p)
 {
   GtkWidget *w = edit_window ();
   GtkWidget *entry = lookup_widget (w, "name_entry");
+  GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
+  GSList *iter;
+  for (iter = tags; iter; iter = iter->next)
+    {
+      GtkWidget *w = iter->data;
+      gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+      struct tag_value *v = db_find_tag (p, tag);
+      guint pos = 0;
+      if (v && v->value)
+	gtk_editable_insert_text (GTK_EDITABLE (w), v->value, strlen (v->value), &pos);
+    }
   gtk_widget_show (w);
   gtk_widget_grab_focus (entry);
+}
+
+static void
+new_contact(GtkWidget *widget, gpointer d)
+{
+  edit_person (NULL);
 }
 
 static void
@@ -98,60 +115,6 @@ static void
 delete_category (GtkWidget *w, gpointer p)
 {
   update_combo_categories ();
-}
-
-static void
-new_attribute (GtkWidget *w, gpointer p)
-{
-  gchar *name;
-  gchar *desc;
-  struct box_desc dx[3];
-
-  dx[0].label = _("Tag");
-  dx[1].label = _("Description");
-  dx[2].label = NULL;
-  dx[0].value = NULL;
-  dx[1].value = NULL;
-  dx[2].value = NULL;
-
-  if (smallbox_x (_("New attribute"), dx) == TRUE)
-    {
-      name = dx[0].value;
-      desc = dx[1].value;
-
-      if (name[0])
-	{
-	  gchar *line_info[2];
-	  if (name[0] == 0)
-	    {
-	      gpe_error_box (_("Invalid attribute tag"));
-	      return;
-	    }
-	  if (desc[0] == 0)
-	    {
-	      gpe_error_box (_("No description given"));
-	      return;
-	    }
-	  
-	  line_info[0] = name;
-	  line_info[1] = desc;
-	  if (db_insert_attribute (name, desc))
-	    {
-	      gtk_clist_append (GTK_CLIST (p), line_info);
-	      gtk_clist_columns_autosize (GTK_CLIST (p));
-	    }
-	}
-      else
-	{
-	  g_free (name);
-	  g_free (desc);
-	}
-    }
-}
-
-static void
-delete_attribute (GtkWidget *w, gpointer p)
-{
 }
 
 static GtkWidget *
@@ -216,71 +179,6 @@ config_categories_box(void)
   return box;
 }
 
-static GtkWidget *
-config_attributes_box(void)
-{
-  GtkWidget *box = gtk_vbox_new (FALSE, 0);
-  GtkWidget *clist = gtk_clist_new (2);
-  GtkWidget *toolbar;
-  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *pw;
-  GSList *attrs;
-
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-
-  gtk_widget_show (toolbar);
-
-  pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New"), _("New"), pw, new_attribute, clist);
-
-  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, delete_attribute, 
-			   clist);
-  gtk_container_add (GTK_CONTAINER (scrolled), clist);
-  gtk_widget_show (clist);
-  gtk_widget_show (scrolled);
-
-  attrs = db_get_attributes ();
-  if (attrs)
-    {
-      GSList *iter;
-      guint row = 0;
-      
-      for (iter = attrs; iter; iter = iter->next)
-	{
-	  gchar *line_info[2];
-	  char buf[10];
-	  struct attribute *c = iter->data;
-	  sprintf (buf, "%d", c->id);
-	  line_info[0] = buf;
-	  line_info[1] = c->name;
-	  gtk_clist_append (GTK_CLIST (clist), line_info);
-	  gtk_clist_set_row_data (GTK_CLIST (clist), row, 
-				  (gpointer) c->id);
-	  g_free (c->name);
-	  g_free (c);
-	  row ++;
-	}
-
-      g_slist_free (attrs);
-    }
-  gtk_clist_columns_autosize (GTK_CLIST (clist));
-
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-				  GTK_POLICY_NEVER,
-				  GTK_POLICY_AUTOMATIC);
-
-  gtk_box_pack_start (GTK_BOX (box), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, 0);
-
-  gtk_widget_show (box);
-  return box;
-}
-
 static void
 configure(GtkWidget *widget, gpointer d)
 {
@@ -289,22 +187,16 @@ configure(GtkWidget *widget, gpointer d)
   GtkWidget *editlabel = gtk_label_new (_("Editing layout"));
   GtkWidget *editbox = edit_structure ();
   GtkWidget *categorieslabel = gtk_label_new (_("Categories"));
-  GtkWidget *attributeslabel = gtk_label_new (_("Attributes"));
   GtkWidget *categoriesbox = config_categories_box ();
-  GtkWidget *attributesbox = config_attributes_box ();
 
   gtk_widget_show (notebook);
   gtk_widget_show (editlabel);
   gtk_widget_show (editbox);
   gtk_widget_show (categorieslabel);
   gtk_widget_show (categoriesbox);
-  gtk_widget_show (attributeslabel);
-  gtk_widget_show (attributesbox);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    editbox, editlabel);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
-			    attributesbox, attributeslabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    categoriesbox, categorieslabel);
 
@@ -313,6 +205,24 @@ configure(GtkWidget *widget, gpointer d)
   gtk_widget_set_usize (window, 240, 300);
 
   gtk_widget_show (window);
+}
+
+static void 
+selection_made( GtkWidget      *clist,
+		gint            row,
+		gint            column,
+		GdkEventButton *event,
+		GtkWidget      *widget)
+{
+  guint id;
+    
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      struct person *p;
+      id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      p = db_get_by_uid (id);
+      edit_person (p);
+    }
 }
 
 static void
@@ -328,7 +238,7 @@ update_display (void)
       text[0] = p->name;
       text[1] = NULL;
       row = gtk_clist_append (GTK_CLIST (clist), text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)p->uid);
+      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)p->id);
       discard_person (p);
     }
   g_slist_free (items);
@@ -361,6 +271,9 @@ main (int argc, char *argv[])
   clist = lookup_widget (GTK_WIDGET (mainw), "clist1");
   update_display ();
   gtk_widget_show (mainw);
+  gtk_signal_connect (GTK_OBJECT (clist), "select_row",
+                       GTK_SIGNAL_FUNC (selection_made),
+                       NULL);
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy",
 		      gtk_main_quit, NULL);

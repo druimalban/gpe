@@ -305,6 +305,7 @@ create_edit (void)
     }
 
   name_entry = gtk_entry_new ();
+  add_tag ("NAME", name_entry, edit);
   gtk_widget_set_name (name_entry, "name_entry");
   gtk_widget_ref (name_entry);
   gtk_object_set_data_full (GTK_OBJECT (edit), "name_entry", name_entry,
@@ -316,6 +317,7 @@ create_edit (void)
 
   summary_entry = gtk_entry_new ();
   gtk_widget_set_name (summary_entry, "summary_entry");
+  add_tag ("SUMMARY", summary_entry, edit);
   gtk_widget_ref (summary_entry);
   gtk_object_set_data_full (GTK_OBJECT (edit), "summary_entry", summary_entry,
                             (GtkDestroyNotify) gtk_widget_unref);
@@ -400,10 +402,12 @@ edit_window (void)
       gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
     }
 
+#if 0
   gtk_widget_show (displayvbox);
   gtk_widget_show (displaylabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (book), displayvbox, 
 			    displaylabel);
+#endif
       
   return w;
 }

@@ -86,7 +86,6 @@ new_tag_value (gchar *tag, gchar *value)
   struct tag_value *t = g_malloc (sizeof (struct tag_value));
   t->tag = tag;
   t->value = value;
-  t->oid = 0;
   return t;
 }
 
@@ -97,6 +96,7 @@ free_tag_values (GSList *list)
   for (i = list; i; i = i->next)
     {
       struct tag_value *t = i->data;
+      g_free (t->tag);
       g_free (t->value);
       g_free (t);
     }
@@ -132,6 +132,12 @@ new_person_id ()
   return 1;
 }
 
+gint 
+sort_entries (struct person *a, struct person *b)
+{
+  return strcoll (a->name, b->name);
+}
+
 static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
@@ -141,7 +147,7 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   p->id = atoi (argv[0]);
   p->name = g_strdup (argv[1]);
 
-  *list = g_slist_append (*list, p);
+  *list = g_slist_insert_sorted (*list, p, (GCompareFunc)sort_entries);
 
   return 0;
 }
@@ -157,6 +163,34 @@ db_get_entries (void)
 		   read_one_entry, &list, &err);
 
   return list;
+}
+
+static int
+read_entry_data (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = arg;
+  db_set_data (p, argv[0], g_strdup (argv[1]));
+  return 0;
+}
+
+struct person *
+db_get_by_uid (guint uid)
+{
+  struct person *p = new_person ();
+  char *err;
+  int r;
+
+  r = sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
+			  read_entry_data, p, &err, uid);
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      discard_person (p);
+      return NULL;
+    }
+  
+  return p;
 }
 
 struct tag_value *
@@ -187,7 +221,7 @@ db_set_data (struct person *p, gchar *tag, gchar *value)
     }
   else
     {
-      t = new_tag_value (tag, value);
+      t = new_tag_value (g_strdup (tag), value);
       p->data = g_slist_append (p->data, t);
     }
 }
@@ -220,10 +254,13 @@ commit_person (struct person *p)
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *v = iter->data;
-      r = sqlite_exec_printf (db,
-			      "insert into contacts values(%d,'%q','%q')",
-			      NULL, NULL, &err,
-			      p->id, v->tag, v->value);
+      if (v->value && v->value[0])
+	{
+	  r = sqlite_exec_printf (db,
+				  "insert into contacts values(%d,'%q','%q')",
+				  NULL, NULL, &err,
+				  p->id, v->tag, v->value);
+	}
       if (r)
 	goto error;
     }

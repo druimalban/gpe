@@ -98,14 +98,6 @@ on_edit_save_clicked                   (GtkButton       *button,
   struct person *p = gtk_object_get_data (GTK_OBJECT (edit), "person");
   if (p == NULL)
     p = new_person ();
-
-  w = lookup_widget (edit, "name_entry");
-  s = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
-  db_set_data (p, "NAME", s);
-  
-  w = lookup_widget (edit, "summary_entry");
-  s = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
-  db_set_data (p, "SUMMARY", s);
   
   for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
        tags;

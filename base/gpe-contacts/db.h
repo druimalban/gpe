@@ -10,7 +10,6 @@ struct tag_value
 {
   gchar *tag;
   gchar *value;
-  guint oid;
 };
 
 extern struct tag_value *new_tag_value (gchar *, gchar *);
