@@ -232,7 +232,7 @@ join_channel (IRCServer *server, gchar *channel_name)
 }
 
 void
-quit_channel (IRCServer *server, IRCChannel *channel)
+part_channel (IRCServer *server, IRCChannel *channel)
 {
   irc_part (server, channel->name, "GPE IRC");
   gtk_widget_destroy (channel->button);
@@ -243,9 +243,9 @@ quit_channel (IRCServer *server, IRCChannel *channel)
 }
 
 void
-quit_channel_from_hash (gpointer key, gpointer value, gpointer data)
+part_channel_from_hash (gpointer key, gpointer value, gpointer data)
 {
-  quit_channel ((IRCServer *) data, (IRCChannel *) value);
+  part_channel ((IRCServer *) data, (IRCChannel *) value);
 }
 
 void
@@ -260,7 +260,7 @@ disconnect_from_server (IRCServer *server)
   irc_quit (server, "GPE IRC");
   server->connected = FALSE;
   g_io_channel_shutdown (server->io_channel, FALSE, NULL);
-  g_hash_table_foreach (server->channel, quit_channel_from_hash, (gpointer) server);
+  g_hash_table_foreach (server->channel, part_channel_from_hash, (gpointer) server);
 
   servers = g_list_remove (servers, (gconstpointer) server);                                            
   if (servers != NULL)
@@ -285,7 +285,7 @@ close_button_clicked ()
     if (gtk_object_get_data (GTK_OBJECT (selected_button), "type") == IRC_SERVER)
       disconnect_from_server (selected_server);
     else
-      quit_channel (selected_server, selected_channel);
+      part_channel (selected_server, selected_channel);
   }
 }
 
@@ -383,15 +383,19 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 }
 
 void
-select_servers_from_network (GtkWidget *entry, GHashTable *network_hash)
+select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 {
-  GtkWidget *server_combo;
+  GtkWidget *server_combo, *entry;
   gchar *network_name;
-  GList *popdown_strings;
+  GList *popdown_strings = NULL;
+
+  entry = g_object_get_data (G_OBJECT (widget), "entry");
+  server_combo = g_object_get_data (G_OBJECT (widget), "server_combo");
 
   network_name = gtk_entry_get_text (GTK_ENTRY (entry));
-  server_combo = g_object_get_data (G_OBJECT (entry), "server_combo");
-  popdown_strings = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
+
+  if (strlen (network_name) > 0)
+    popdown_strings = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
 
   if (popdown_strings != NULL)
     gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
@@ -400,14 +404,14 @@ select_servers_from_network (GtkWidget *entry, GHashTable *network_hash)
 void
 get_networks (GtkWidget *combo, GHashTable *network_hash)
 {
-  GList *popdown_strings;
+  GList *popdown_strings = NULL;
   GSList *iter;
  
   iter = sql_networks; 
   while (iter)
   {
     popdown_strings = g_list_append (popdown_strings, ((struct sql_network *) iter->data)->name);
-    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) ((struct sql_network *) iter->data)->servers);
+    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, ((struct sql_network *) iter->data)->servers);
     iter = iter->next;
   }
   gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
@@ -482,7 +486,8 @@ new_connection_dialog ()
   g_object_set_data (G_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
   g_object_set_data (G_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
   g_object_set_data (G_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
-  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->entry), "server_combo", (gpointer) server_combo);
+  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "server_combo", (gpointer) server_combo);
+  g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "entry", (gpointer) GTK_COMBO (network_combo)->entry);
 
   g_signal_connect (G_OBJECT (connect_button), "clicked",
                              G_CALLBACK (new_connection), window);
@@ -490,7 +495,7 @@ new_connection_dialog ()
                              G_CALLBACK (kill_widget), window);
   g_signal_connect (GTK_OBJECT (network_properties_button), "clicked",
                              G_CALLBACK (networks_config_window), NULL);
-  g_signal_connect (G_OBJECT (GTK_COMBO (network_combo)->entry), "insert-text",
+  g_signal_connect (G_OBJECT (GTK_COMBO (network_combo)->list), "selection-changed",
                              G_CALLBACK (select_servers_from_network), network_hash);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
