@@ -95,13 +95,13 @@ decoder_init (void)
 }
 
 decoder_t
-decoder_open (char *name, stream_t in, audio_t out)
+decoder_open (player_t p, char *name, stream_t in, audio_t out)
 {
   struct decoder_engine *decoder = find_decoder_for (name);
   if (decoder == NULL)
     return NULL;
 
-  return decoder->open (in, out);
+  return decoder->open (p, in, out);
 }
 
 void

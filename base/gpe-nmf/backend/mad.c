@@ -26,6 +26,7 @@ struct mad_context
 
   struct stream *s;
   audio_t audio;
+  player_t p;
 
   pthread_t thread;
 
@@ -129,6 +130,8 @@ enum mad_flow output(void *data,
   unsigned short obuf[OBUFSIZ];
   unsigned int op = 0;
 
+  pthread_testcancel ();
+
   /* pcm->samplerate contains the sampling frequency */
 
   nchannels = pcm->channels;
@@ -203,19 +206,29 @@ mad_play_loop (void *d)
   if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, NULL))
     perror ("pthread_setcancelstate");
 
-  if (pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL))
+  if (pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, NULL))
     perror ("pthread_setcanceltype");
 
-  /* start decoding */
-  mad_decoder_run(&c->decoder, MAD_DECODER_MODE_SYNC);
+  do {
+    c->finished = FALSE;
+    mad_decoder_init (&c->decoder, c,
+		      input, 0 /* header */, 0 /* filter */, output,
+		      error, 0 /* message */);
+    
+    /* start decoding */
+    mad_decoder_run(&c->decoder, MAD_DECODER_MODE_SYNC);
 
-  c->finished = TRUE;
+    mad_decoder_finish(&c->decoder);
+    c->finished = TRUE;
 
+    c->s = player_next_stream (c->p);
+  } while (c->s);
+    
   return NULL;
 }
 
 static void *
-mad_open (struct stream *s, audio_t audio)
+mad_open (player_t p, struct stream *s, audio_t audio)
 {
   struct mad_context *c = g_malloc (sizeof (struct mad_context));
   int ret;
@@ -228,10 +241,7 @@ mad_open (struct stream *s, audio_t audio)
   c->time = c->total_time = 0;
   c->channels = 0;
   c->rate = 0;
-
-  mad_decoder_init (&c->decoder, c,
-		    input, 0 /* header */, 0 /* filter */, output,
-		    error, 0 /* message */);
+  c->p = p;
 
   ret = pthread_create (&c->thread, 0, mad_play_loop, c);
   if (ret < 0)
@@ -252,7 +262,8 @@ mad_close (struct mad_context *c)
     perror ("pthread_join");
 
   /* release the decoder */
-  mad_decoder_finish(&c->decoder);
+  if (!c->finished)
+    mad_decoder_finish(&c->decoder);
 }
 
 static void

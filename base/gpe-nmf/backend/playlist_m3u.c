@@ -9,6 +9,7 @@
 
 #include <glib.h>
 #include <stdio.h>
+#include <ctype.h>
 
 #include "playlist_db.h"
 #include "decoder.h"
@@ -32,6 +33,7 @@ playlist_m3u_load (gchar *s)
       decoder_fill_in_playlist (i);
       if (i->title == NULL)
 	i->title = i->data.track.url;
+      i->parent = p;
       p->data.list = g_slist_append (p->data.list, i);
     }
   fclose (fp);

@@ -93,6 +93,7 @@ load_file (struct nmf_frontend *fe, gchar *s)
 
   if (p)
     {
+      p->parent = fe->playlist;
       fe->playlist->data.list = g_slist_append (fe->playlist->data.list, p);
       player_set_playlist (fe->player, fe->playlist);
       playlist_edit_push (fe->playlist_widget, fe->playlist);
@@ -164,7 +165,15 @@ row_signal (GtkTreeView *treeview, GtkTreePath *path,
       struct playlist *item;
       struct player_status ps;
       gtk_tree_model_get (fe->model, &iter, DATA_COLUMN, &item, -1);
-      player_set_playlist (fe->player, item);
+      if (item->type == ITEM_TYPE_LIST || item->parent == NULL)
+	{
+	  player_set_playlist (fe->player, item);
+	}
+      else
+	{
+	  player_set_playlist (fe->player, item->parent);
+	  player_set_index (fe->player, g_slist_index (item->parent->data.list, item));
+	}
       player_play (fe->player);
       player_status (fe->player, &ps);
       update_track_info (fe, ps.item);

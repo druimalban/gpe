@@ -22,6 +22,7 @@ struct playlist
 {
   gchar *title;
   item_type type;
+  struct playlist *parent;
   union
   {
     GSList *list;
@@ -30,6 +31,10 @@ struct playlist
       gchar *url;
       gchar *artist;
       gchar *album;
+
+      guint volume;
+      guint treble;
+      guint bass;
     } track;
   } data;
 };

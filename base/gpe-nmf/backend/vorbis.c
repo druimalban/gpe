@@ -14,6 +14,7 @@
 
 #include <vorbis/vorbisfile.h>
 
+#include "player.h"
 #include "stream.h"
 #include "decoder_i.h"
 #include "audio.h"
@@ -30,6 +31,7 @@ struct vorbis_context
 
   struct stream *s;
   audio_t audio;
+  player_t p;
 
   OggVorbis_File vf;
   vorbis_comment *vc;
@@ -58,74 +60,82 @@ vorbis_play_loop (void *vv)
   if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, NULL))
     perror ("pthread_setcancelstate");
 
-  if (pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL))
+  if (pthread_setcanceltype (PTHREAD_CANCEL_DEFERRED, NULL))
     perror ("pthread_setcanceltype");
 
-  ret = ov_open_callbacks (v, &v->vf, NULL, 0, vorbisfile_callbacks);
-  if (ret < 0)
-    {
-      fprintf (stderr, "Couldn't open Vorbis: error %d\n", ret);
-      g_free (v);
-      return NULL;
-    }
+  do {
+    ret = ov_open_callbacks (v, &v->vf, NULL, 0, vorbisfile_callbacks);
+    if (ret < 0)
+      {
+	fprintf (stderr, "Couldn't open Vorbis: error %d\n", ret);
+	g_free (v);
+	return NULL;
+      }
 
-  while (!v->eos)
-    {
-      /* Read comments and audio info at the start of a logical bitstream */
-      unsigned int bytes = 0;
-      unsigned char *bufp = buffer;
+    v->eos = FALSE;
 
-      if (v->bos) 
-	{
-	  v->vc = ov_comment(&v->vf, -1);
-	  v->vi = ov_info(&v->vf, -1);
-	  v->total_time = ov_pcm_total (&v->vf, -1);
-	  v->bos = 0;
-	  if (v->rate != v->vi->rate)
-	    {
-	      v->rate = v->vi->rate;
-	      audio_set_rate (v->audio, v->rate);
-	    }
-	  if (v->channels != v->vi->channels)
-	    {
-	      v->channels = v->vi->channels;
-	      audio_set_channels (v->audio, v->channels);
-	    }
-	}
+    while (!v->eos)
+      {
+	/* Read comments and audio info at the start of a logical bitstream */
+	unsigned int bytes = 0;
+	unsigned char *bufp = buffer;
+	
+	if (v->bos) 
+	  {
+	    v->vc = ov_comment(&v->vf, -1);
+	    v->vi = ov_info(&v->vf, -1);
+	    v->total_time = ov_pcm_total (&v->vf, -1);
+	    v->bos = 0;
+	    if (v->rate != v->vi->rate)
+	      {
+		v->rate = v->vi->rate;
+		audio_set_rate (v->audio, v->rate);
+	      }
+	    if (v->channels != v->vi->channels)
+	      {
+		v->channels = v->vi->channels;
+		audio_set_channels (v->audio, v->channels);
+	      }
+	  }
+	
+	old_section = v->current_section;
+	do {
+	  pthread_testcancel ();
+	  ret = ov_read (&v->vf, bufp, OGGBUFSIZ - bytes, 0,
+			 2, 1, &v->current_section);
+	  if (ret > 0) {
+	    bytes += ret;
+	    bufp += ret;
+	  }
+	} while (bytes < OGGBUFSIZ && ret > 0);
+	
+	if (ret == 0) 
+	  {
+	    /* EOF */
+	    v->eos = TRUE;
+	    break;
+	  } 
+	else if (ret == OV_HOLE) 
+	  {
+	  } 
+	else if (ret < 0) 
+	  {
+	  } 
+	else 
+	  {
+	    audio_write (v->audio, buffer, bytes);
+	    
+	    v->time += (bytes / 4);
+	    
+	    /* did we enter a new logical bitstream? */
+	    if (old_section != v->current_section && old_section != -1) 
+	      v->bos = TRUE; /* Read new headers next time through */
+	  }
+      }
 
-      old_section = v->current_section;
-      do {
-	ret = ov_read (&v->vf, bufp, OGGBUFSIZ - bytes, 0,
-		       2, 1, &v->current_section);
-	if (ret > 0) {
-	  bytes += ret;
-	  bufp += ret;
-	}
-      } while (bytes < OGGBUFSIZ && ret > 0);
-
-      if (ret == 0) 
-	{
-	  /* EOF */
-	  v->eos = TRUE;
-	  break;
-	} 
-      else if (ret == OV_HOLE) 
-	{
-	} 
-      else if (ret < 0) 
-	{
-	} 
-      else 
-	{
-	  audio_write (v->audio, buffer, bytes);
-
-	  v->time += (bytes / 4);
-
-	  /* did we enter a new logical bitstream? */
-	  if (old_section != v->current_section && old_section != -1) 
-	    v->bos = TRUE; /* Read new headers next time through */
-	}
-    }
+    ov_clear (&v->vf);
+    v->s = player_next_stream (v->p);
+  } while (v->s);
 
   return NULL;
 }
@@ -171,7 +181,7 @@ static ov_callbacks vorbisfile_callbacks =
   };
 
 static void *
-vorbis_open (struct stream *s, audio_t audio)
+vorbis_open (player_t p, struct stream *s, audio_t audio)
 {
   struct vorbis_context *v = g_malloc (sizeof (struct vorbis_context));
   int ret;
@@ -186,6 +196,7 @@ vorbis_open (struct stream *s, audio_t audio)
   v->bos = 1;
   v->channels = 0;
   v->rate = 0;
+  v->p = p;
   
   ret = pthread_create (&v->thread, 0, vorbis_play_loop, v);
   if (ret < 0)

@@ -7,6 +7,8 @@ LDFLAGS += `pkg-config --libs glib-2.0`
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../../vorbis-fixp/lib
 
+#LVORBIS = -L../../vorbis-fixp/lib
+
 CODECS = d-vorbis.so d-mad.so
 BACKEND = libgpenmf.so.0
 BACKEND_SO = libgpenmf.so
@@ -24,7 +26,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS) $(OGG_MEMBERS) $(MAD_MEMBERS))
 all: $(CODECS) $(BACKEND_SO)
 
 d-vorbis.so: $(OGG_OBJS)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles -lpthread -L../../vorbis-fixp/lib -lvorbis -lvorbisfile
+	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles -lpthread $(LVORBIS) -lvorbis -lvorbisfile
 
 d-mad.so: $(MAD_OBJS)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles -lmad -lpthread -lid3tag

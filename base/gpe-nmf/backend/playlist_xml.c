@@ -9,10 +9,13 @@
 
 #include <glib.h>
 #include <libxml/parser.h>
+#include <libintl.h>
 
 #include <gpe/errorbox.h>
 
 #include "playlist_db.h"
+
+#define _(x) gettext(x)
 
 static struct playlist *
 playlist_parse_xml_track (xmlDocPtr doc, xmlNodePtr cur)
@@ -53,16 +56,21 @@ playlist_parse_xml (xmlDocPtr doc, xmlNodePtr cur)
       else if (!xmlStrcmp (cur->name, "track"))
 	{
 	  struct playlist *p = playlist_parse_xml_track (doc, cur->xmlChildrenNode);
+	  p->parent = i;
 	  i->data.list = g_slist_append (i->data.list, p);
 	}
       else if (!xmlStrcmp (cur->name, "list"))
 	{
 	  struct playlist *p = playlist_parse_xml (doc, cur->xmlChildrenNode);
+	  p->parent = i;
 	  i->data.list = g_slist_append (i->data.list, p);
 	}
 	
       cur = cur->next;
     }
+
+  if (i->title == NULL)
+    i->title = _("<untitled list>");
 
   return i;
 }

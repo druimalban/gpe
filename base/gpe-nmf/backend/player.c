@@ -13,6 +13,7 @@
 
 #include <esd.h>
 #include <libintl.h>
+#include <assert.h>
 
 #define _(x) gettext(x)
 
@@ -73,6 +74,14 @@ player_set_playlist (player_t p, struct playlist *l)
   p->idx = 0;
 }
 
+void
+player_set_index (player_t p, gint idx)
+{
+  assert (idx >= 0);
+  
+  p->idx = idx;
+}
+
 struct playlist *
 player_get_playlist (player_t p)
 {
@@ -116,7 +125,7 @@ player_play (player_t p)
 	  p->cur = NULL;
 	  return FALSE;
 	}
-      p->decoder = decoder_open (p->cur->data.track.url, p->stream, p->audio);
+      p->decoder = decoder_open (p, p->cur->data.track.url, p->stream, p->audio);
       if (p->decoder == NULL)
 	{
 	  player_error (p, _("Cannot decode this stream"));
@@ -129,6 +138,23 @@ player_play (player_t p)
   return TRUE;
 }
 
+struct stream *
+player_next_stream (player_t p)
+{
+  stream_close (p->stream);
+  p->stream = NULL;
+  p->idx++;
+  p->cur = playlist_fetch_item (p->list, p->idx);
+  if (p->cur)
+    {
+      p->stream = stream_open (p->cur->data.track.url);
+      if (p->stream == NULL)
+	p->cur = NULL;
+    }
+      
+  return p->stream;
+}
+
 void
 player_status (player_t p, struct player_status *s)
 {
@@ -139,14 +165,14 @@ player_status (player_t p, struct player_status *s)
       decoder_stats (p->decoder, &ds);
       if (ds.finished)
 	{
-	  s->changed = TRUE;
 	  s->time = 0;
-	  player_next_track (p);
 	}
       else
 	{
 	  s->time = ds.time;
 	  s->total_time = ds.total_time;
+	  s->changed = TRUE;
+	  s->sample_rate = ds.rate;
 	}
     }
   else

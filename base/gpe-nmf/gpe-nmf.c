@@ -133,9 +133,16 @@ update_time (struct nmf_frontend *fe, struct player_status *ps)
 {
   if (ps->total_time)
     {
+      unsigned long seconds = ps->time / ps->sample_rate;
+      unsigned long minutes = seconds / 60;
+      char buf[32];
       double d = (double)ps->time / (double)ps->total_time;
       gtk_adjustment_set_value (fe->progress_adjustment, d);
       gtk_widget_draw (fe->progress_slider, NULL);
+      seconds = seconds % 60;
+      snprintf (buf, sizeof (buf)-1, "%02d:%02d", minutes, seconds);
+      buf[sizeof (buf)-1] = 0;
+      gtk_label_set_text (GTK_LABEL (fe->time_label), buf);
     }
 }
 
@@ -205,7 +212,7 @@ main (int argc, char *argv[])
 
   fe->playlist = playlist_new_list ();
   player_error_handler (fe->player, gpe_error_box);
-  g_timeout_add (20, (GSourceFunc)player_poll_func, fe);
+  g_timeout_add (250, (GSourceFunc)player_poll_func, fe);
 
   fe->playlist_widget = playlist_edit (fe, NULL);
 
@@ -309,8 +316,9 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (exit_button), "clicked",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   gtk_button_set_relief (GTK_BUTTON (exit_button), GTK_RELIEF_NONE);
+  gtk_widget_set_usize (exit_button, 18, 18);
 
-  fe->time_label = gtk_label_new ("");
+  fe->time_label = gtk_label_new ("00:00");
   fe->artist_label = gtk_label_new ("");
   fe->title_label = gtk_label_new ("");
   gtk_misc_set_alignment (GTK_MISC (fe->artist_label), 0.0, 0.5);
@@ -336,8 +344,11 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
   
+  gtk_box_pack_start (GTK_BOX (hbox4), fe->progress_slider, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox4), fe->time_label, FALSE, FALSE, 0);
+
   gtk_box_pack_start (GTK_BOX (vbox), hbox3, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), fe->progress_slider, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox4, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), buttons_hbox, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (hbox3), vbox2, TRUE, TRUE, 0);
@@ -346,10 +357,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox2), fe->title_label, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), fe->artist_label, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox3), hbox4, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox3), fe->time_label, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hbox4), exit_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox3), exit_button, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (buttons_hbox), prev_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), play_button, TRUE, TRUE, 0);
@@ -373,6 +381,8 @@ main (int argc, char *argv[])
   gtk_widget_show (hbox4);
 
   gtk_widget_show (window);
+
+  gtk_widget_set_usize (fe->time_label, fe->time_label->allocation.width, -1);
   
   gtk_main ();
 

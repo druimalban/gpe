@@ -26,6 +26,7 @@ struct player_status
 extern player_t player_new (void);
 extern void player_destroy (player_t);
 extern void player_set_playlist (player_t, struct playlist *);
+extern void player_set_index (player_t, gint i);
 
 extern gboolean player_play (player_t);
 extern void player_stop (player_t);
@@ -39,5 +40,7 @@ extern void player_set_volume (player_t, int);
 extern struct playlist *player_get_playlist (player_t p);
 
 extern void player_error_handler (player_t, void (*func)(gchar *));
+
+extern struct stream *player_next_stream (player_t p);
 
 #endif

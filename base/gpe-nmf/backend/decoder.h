@@ -12,6 +12,7 @@
 
 #include <glib.h>
 
+#include "player.h"
 #include "stream.h"
 #include "audio.h"
 #include "playlist_db.h"
@@ -27,7 +28,7 @@ struct decoder_stats
 };
 
 extern gboolean decoder_fill_in_playlist (struct playlist *);
-extern decoder_t decoder_open (char *name, stream_t in, audio_t out);
+extern decoder_t decoder_open (player_t p, char *name, stream_t in, audio_t out);
 extern void decoder_close (decoder_t);
 extern gboolean decoder_seek (decoder_t, unsigned long long time);
 extern void decoder_pause (decoder_t);

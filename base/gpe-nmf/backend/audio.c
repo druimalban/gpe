@@ -90,7 +90,6 @@ audio_write (audio_t a, void *buf, unsigned int nsamp)
 
   if (a->fd == -1)
     {
-      fprintf (stderr, "warning: stream wasn't open\n");
       if (audio_open_stream (a) == FALSE)
 	{
 	  g_free (a);

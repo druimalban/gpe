@@ -12,7 +12,7 @@ struct decoder_engine
   gchar *extension;
   gchar *mime_type;
 
-  decoder_t (*open)(stream_t in, audio_t out);
+  decoder_t (*open)(player_t p, stream_t in, audio_t out);
   void (*close)(decoder_t);
   gboolean (*seek)(decoder_t, unsigned long long time);
   void (*pause)(decoder_t);
