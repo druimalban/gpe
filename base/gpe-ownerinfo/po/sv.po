@@ -1,0 +1,97 @@
+# Swedish messages for gpe-ownerinfo.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2003-07-06 22:01+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-ownerinfo.c:345
+msgid "Owner"
+msgstr "Ägare"
+
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "sv"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "GPE-ägarinformation"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "Giltiga flaggor:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRI  fönstergeometri (standard: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "   -t           gör fönstret genomskinligt\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           behåll alltid överst (åsidosätt omdirigering)\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "   -h           visa denna hjälptext\n"
+
+#: gpe-ownerinfo.c:433
+msgid "GPE User"
+msgstr "GPE-användare"
+
+#: gpe-ownerinfo.c:434
+msgid "nobody@localhost.localdomain"
+msgstr "ingen@localhost.localdomain"
+
+#: gpe-ownerinfo.c:435
+msgid "+99 (9999) 999-9999"
+msgstr "+46 (0)99 99 99 99"
+
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "Konfigurerbar med"
+
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "Ägarinformation"
+
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "under"
+
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr " Inställningar."
+
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Adress:"
+
+#~ msgid "Owner Info"
+#~ msgstr "Ägarinformation"
+
+#~ msgid "GPE Owner Information"
+#~ msgstr "GPE-ägarinformation"
+
+#~ msgid "User"
+#~ msgstr "Användare"
+
+#~ msgid "Settings."
+#~ msgstr "Inställningar."
+
+#~ msgid "Settings"
+#~ msgstr "Inställningar"
+
+#~ msgid " Settings"
+#~ msgstr " Inställningar"

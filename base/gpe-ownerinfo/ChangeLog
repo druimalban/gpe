@@ -1,3 +1,9 @@
+2003-07-08  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add 'sv'.
+
+	* po/sv.po: New file courtesy Christian Rose.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (install-program): No longer install old-style menu file.

@@ -4,7 +4,7 @@ VERSION = 0.21
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-LINGUAS = de hu id pt fr zh_TW ro
+LINGUAS = de hu id pt fr zh_TW ro sv
 
 MEMBERS = $(PACKAGE)
 
