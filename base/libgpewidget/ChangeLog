@@ -1,5 +1,21 @@
 2003-04-13  Philip Blundell  <philb@gnu.org>
 
+	* gpeiconlist.gob (_recalc_size): Reformat.  Only adjust height;
+	leave width alone.
+	(update_icon_item_with_udata): Pass allocation for drawing area,
+	not enclosing container, to _recalc_size.
+	(remove_item_with_udata): Likewise.
+	(add_item): Likewise.
+	(add_item_pixbuf): Likewise.
+	(clear): Likewise.
+	(set_icon_size): Likewise.
+	(size_allocate): Likewise.
+	(_button_release): Pass event to IconListItem.
+	(_button_press): Likewise.
+	* gpe-iconlist.c: Regenerated.
+
+2003-04-13  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.58 released.
 	
 2003-04-13  Philip Blundell  <philb@gnu.org>

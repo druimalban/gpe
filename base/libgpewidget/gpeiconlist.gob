@@ -422,44 +422,44 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private void _recalc_size (self, GtkAllocation *allocation)
 	{
 		int count;
-    int da_new_width;
-    int da_new_height;
-    GtkAdjustment * adj;
+		int da_new_width;
+		int da_new_height;
+		GtkAdjustment * adj;
 
-    MAYBE_PRINTF("luc> _recalc il w h: %d %d\n", allocation->width, allocation->height);
-    adj = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow *) self);
-    MAYBE_PRINTF("luc> _recalc page  : %f\n", adj->page_size);
-
-    da_new_width = adj->page_size;
+		MAYBE_PRINTF("luc> _recalc il w h: %d %d\n", allocation->width, allocation->height);
+		adj = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow *) self);
+		MAYBE_PRINTF("luc> _recalc page  : %f\n", adj->page_size);
+		
+		da_new_width = allocation->width;  
 		if (da_new_width > il_col_width (self))
 			   self->_priv->cols = da_new_width / il_col_width (self);
 		else self->_priv->cols = 1;
 		count = g_list_length (self->_priv->icons);
 		
 		self->_priv->rows = (count - 1) / self->_priv->cols + 1;
+		
+		MAYBE_PRINTF("luc> _recalc count : %d\n", count);
+		MAYBE_PRINTF("luc> _recalc col   : %d\n", self->_priv->cols);
+		MAYBE_PRINTF("luc> _recalc row   : %d\n", self->_priv->rows);
 
-    MAYBE_PRINTF("luc> _recalc count : %d\n", count);
-    MAYBE_PRINTF("luc> _recalc col   : %d\n", self->_priv->cols);
-    MAYBE_PRINTF("luc> _recalc row   : %d\n", self->_priv->rows);
-
-    //update drawing area
-    da_new_height = self->_priv->rows * il_row_height (self) + 5;//5 = top margin
+		//update drawing area
+		da_new_height = self->_priv->rows * il_row_height (self) + 5;//5 = top margin
 		gtk_drawing_area_size (
-			GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(self), "da")),
-			da_new_width, da_new_height);
-    MAYBE_PRINTF("luc> _recalc da w h: %d %d\n", da_new_width, da_new_height);
+				       GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(self), "da")),
+				       da_new_width, da_new_height);
+		MAYBE_PRINTF("luc> _recalc da w h: %d %d\n", da_new_width, da_new_height);
 
-    //update vertical page_size and value
-    adj = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *) self);
-    adj->upper = da_new_height;
-    gtk_adjustment_changed (adj);
-    if(gtk_adjustment_get_value(adj) > adj->upper - adj->page_size){
-      gtk_adjustment_set_value(adj, adj->upper - adj->page_size);
-      gtk_adjustment_value_changed(adj);
-    }
-    
+		//update vertical page_size and value
+		adj = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *) self);
+		adj->upper = da_new_height;
+		gtk_adjustment_changed (adj);
+		if(gtk_adjustment_get_value(adj) > adj->upper - adj->page_size){
+			gtk_adjustment_set_value(adj, adj->upper - adj->page_size);
+			gtk_adjustment_value_changed(adj);
+		}
+		
 	}
-
+	
 	private GObject *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
 	{
 		GPEIconListItem *ret;
@@ -475,6 +475,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
   /* Update an existing icon found from its udata. */
 	public void update_icon_item_with_udata (self, GdkPixbuf * pixbuf, gpointer udata)
 	{
+	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
     struct _Pack pak;
     pak.udata = udata;
     pak.icon  = NULL;
@@ -495,7 +496,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
     {
       MAYBE_PRINTF("icon to update NOT found :(\n");
     }
-		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		gpe_iconlist__recalc_size (self, &da->allocation);
 	}
 
   private void _find_from_udata (gpointer icon, gpointer data_pak){
@@ -506,6 +507,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
   /** Removes an icon found from its udata. */
 	public void remove_item_with_udata (self, gpointer udata)
 	{
+	  GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
     struct _Pack pak;
     pak.udata = udata;
     pak.icon  = NULL;
@@ -520,26 +522,28 @@ class GPE:IconList from Gtk:Scrolled:Window {
     {
       MAYBE_PRINTF("icon to remove NOT found :(\n");
     }
-		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		gpe_iconlist__recalc_size (self, &da->allocation);
 	}
 
 
 	public GObject *add_item (self, char *title, char *icon, gpointer udata)
 	{
+	        GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
 		GObject *new = gpe_iconlist_new_icon (title, icon, udata, NULL);
 		self->_priv->icons = g_list_append (self->_priv->icons, new);
-		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		gpe_iconlist__recalc_size (self, &da->allocation);
 		return new;
 	}
 
 	public GObject *add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
 	{
 		GObject *new;
+		GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
 		gdk_pixbuf_ref (icon);
 		new = gpe_iconlist_new_icon (title, NULL, udata, icon);
 		self->_priv->icons = g_list_append (self->_priv->icons, new);
 		gpe_iconlist__check_icon_size (self, new);
-		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		gpe_iconlist__recalc_size (self, &da->allocation);
 		return new;
 	}
 
@@ -561,6 +565,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	public void clear (self)
 	{
 		GList *iter;
+		GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
 		for (iter = self->_priv->icons; iter; iter = iter->next) {
 			GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
 			g_object_unref (i);
@@ -569,12 +574,13 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		g_list_free (self->_priv->icons);
 		self->_priv->icons = NULL;
 
-		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		gpe_iconlist__recalc_size (self, &da->allocation);
 	}
 
 	public void set_icon_size (self, guint size)
 	{
 		GList *iter;
+		GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
 
 		for (iter = self->_priv->icons; iter; iter = iter->next) {
 			GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
@@ -585,7 +591,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		self->_priv->icon_size = size;
 
-		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+		gpe_iconlist__recalc_size (self, &da->allocation);
 
 		gtk_widget_draw (GTK_WIDGET (self), NULL);
 	}
@@ -595,6 +601,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	size_allocate (Gtk:Widget *self, GtkAllocation *allocation)
 	{
 		GPEIconList *il;
+		GtkWidget *da = g_object_get_data (G_OBJECT (self), "da");
 		il = GPE_ICONLIST(self);
 
 		MAYBE_PRINTF ("iconlist: size_allocate\n");
@@ -611,7 +618,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
 		
 		PARENT_HANDLER (self, allocation);
-		gpe_iconlist__recalc_size (il, allocation);//luc: recalc *after* the size is allocated :)
+		gpe_iconlist__recalc_size (il, &da->allocation);//luc: recalc *after* the size is allocated :)
 	}
 
 	private void _get_rowcol (GPEIconList *widget, int x, int y, int *col, int *row) {
@@ -665,6 +672,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			GPEIconListItem *data;
 			data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
 			il->_priv->mcol = il->_priv->mrow = -1;
+			gpe_icon_list_item_button_release (data, event);
 			if (data)
 				gpe_iconlist_clicked (il, data->udata);
 		} else
@@ -698,14 +706,18 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 	private gint _button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
 		GPEIconList *il;
+		GPEIconListItem *data;
 
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
 		gpe_iconlist__get_rowcol (il, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
 		gpe_iconlist__refresh_containing (il, il->_priv->mcol, il->_priv->mrow);
 
-		/* Register a popup if there is an icon under the cursor */
-		if (gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow)) {
+		data = gpe_iconlist__get_icon(il, il->_priv->mcol, il->_priv->mrow);
+		if (data) {
+			gpe_icon_list_item_button_press (data, event);
+			
+			/* Register a popup if there is an icon under the cursor */
 			il->_priv->popup_timeout = gtk_timeout_add (500, gpe_iconlist__popup, (gpointer)il);
 		}
 
