@@ -20,6 +20,12 @@
 	(todo_db_stop): Remove category handling.
 	(todo_db_push_item): Categories list holds ID directly.
 
+	* old-db.c (struct todo_list): Deleted.
+	(new_list, list_callback0): Deleted.
+	(item_callback0): Remove old list handling.
+	(convert_old_db): Likewise.
+	(migrate_one_category, migrate_old_categories): New.
+
 	* gpe/todo-db.h (PRIORITY_HIGH, PRIORITY_STANDARD, PRIORITY_LOW):
 	Tweak numbering to fit vEvent range.
 
