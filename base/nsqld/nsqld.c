@@ -87,6 +87,45 @@ puts_encoded (char *s, FILE *fp)
     }
 }
 
+static char *
+decode_string (char *c)
+{
+  char *r, *p;
+
+  r = g_malloc (strlen (c) + 1);
+  p = r;
+
+  while (*c)
+    {
+      if (*c == '%')
+	{
+	  char buf[3];
+	  unsigned long r;
+ 
+	  c++;
+	  buf[0] = *c++;
+	  if (buf[0] == 0)
+	    break;
+	  buf[1] = *c;
+	  if (buf[1] == 0)
+	    break;
+	  buf[2] = 0;
+	  
+	  r = strtoul (buf, NULL, 16);
+	  *p = (char)r;
+	}
+      else
+	*p = *c;
+
+      c++;
+      p++;
+    }
+
+  *p = 0;
+
+  return r;
+}
+
 gboolean
 do_open (struct nsql_context *ctx, char *cmdline, GError **error)
 {
@@ -201,26 +240,32 @@ do_command (struct nsql_context *ctx, char *cmd, GError **error)
 }
 
 gboolean
-process_line (struct nsql_context *ctx, char *line)
+process_line (struct nsql_context *ctx, char *l)
 {
   int p;
   char *id, *cmd;
   GError *error = NULL;
   int rc;
+  char *line;
 
-  while (isspace (*line))
+  line = decode_string(l);
+	
+/*  while (isspace (*line))
     line++;
-
+  
   p = strlen (line);
   while (p > 0 && isspace(line[p - 1]))
     {
       line[p - 1] = 0;
       p--;
     }
-
+*/
+  g_strstrip(line);
   if (line[0] == 0)
+  {
+	g_free(line);
     return TRUE;
-
+  }
   id = line;
   while (*line && !isspace (*line))
     line++;
@@ -248,10 +293,12 @@ process_line (struct nsql_context *ctx, char *line)
 
   ctx->cmd_id = NULL;
   
+  g_free(line);
   return TRUE;
 
  bad_input:
   nsqld_printf (ctx, "! ! Bad input\n");
+  g_free(line);
   return FALSE;
 }
 
