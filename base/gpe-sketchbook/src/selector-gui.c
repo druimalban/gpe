@@ -124,7 +124,7 @@ GtkWidget * create_window_selector(){
   gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_selector_new,    FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_selector_open,   FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_selector_delete, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_sketchpad_view,  FALSE, FALSE, 0);
+  //FIXME: remove related code gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_sketchpad_view,  FALSE, FALSE, 0);
   gtk_box_pack_end   (GTK_BOX (hbox_selector_toolbar), button_selector_about,  FALSE, FALSE, 0);
 
   vbox1 = gtk_vbox_new (FALSE, 0);

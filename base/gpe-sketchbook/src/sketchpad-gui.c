@@ -379,8 +379,8 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
 
   //--packing
   hbox_filetools = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_save,   FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_new,    FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_save,   FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_delete, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_prev,   FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_next,   FALSE, FALSE, 0);

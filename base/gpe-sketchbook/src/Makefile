@@ -15,6 +15,10 @@ CPPFLAGS += -DVERSION=\"$(VERSION)\"
 CPPFLAGS += -DPREFIX=\"$(PREFIX)\"
 #CPPFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
+ifdef DESKTOP #environement variable to set if you want extra code included.
+CPPFLAGS += -DDESKTOP
+endif
+
 #-- base
 LIB_GPE_WIDGET = ../../libgpewidget
 CFLAGS += -I$(LIB_GPE_WIDGET)
