@@ -1,3 +1,12 @@
+2004-03-08  Philip Blundell  <philb@gnu.org>
+
+	* X11, standard.mbdock, gpe-logout.desktop.in, gpe-logout.png,
+	gpe-logout.sh, gpe-xcalibrate.sh, gpe-auto-bluetooth.sh: Moved to
+	../gpe-session-scripts.
+
+	* Makefile: Remove session-scripts stuff.  Use PACKAGE_CFLAGS,
+	etc.
+
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.60 released.
