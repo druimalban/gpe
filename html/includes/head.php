@@ -24,5 +24,5 @@
 </td> 
 </tr>
 </table>
-<!-- #include file="menu.shtml"-->
+<?php include("menu.php"); ?>
 <hr>
