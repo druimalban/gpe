@@ -49,6 +49,8 @@ install: all
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
 	make -C backend clean

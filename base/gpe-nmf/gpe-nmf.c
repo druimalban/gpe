@@ -36,6 +36,9 @@
 static struct gpe_icon my_icons[] = {
   { "ok" },
   { "cancel" },
+  { "close" },
+  { "media-rew" },
+  { "media-fwd" },
   { "media-prev" },
   { "media-next" },
   { "media-play" },
@@ -47,6 +50,7 @@ static struct gpe_icon my_icons[] = {
   { "open" },
   { "delete" },
   { "save" },
+  { "dir-up" },
   { "dir-closed" },
   { NULL, NULL }
 };
@@ -329,7 +333,7 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (eject_button), "clicked", 
 		      GTK_SIGNAL_FUNC (eject_clicked), fe);
 
-  p = gpe_find_icon ("cancel");
+  p = gpe_find_icon ("close");
   w = gpe_render_icon (window->style, p);
   exit_button = gtk_button_new ();
   gtk_widget_show (exit_button);
