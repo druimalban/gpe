@@ -97,6 +97,7 @@ static GtkWidget *view_widget;
 static GtkWidget *dir_view_widget;
 static GtkWidget *view_window;
 static GtkWidget *dir_view_window;
+static GtkWidget *active_view;
 static GtkWidget *vbox, *main_paned;
 
 static GtkWidget *bluetooth_menu_item;
@@ -626,8 +627,9 @@ clip_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
                gpointer data)
 {
   FileInformation *cfi = NULL;
-  
-  gtk_tree_model_get(model, iter, COL_DATA, &cfi, -1);
+  gint col = (gint)data;
+
+  gtk_tree_model_get(model, iter, col, &cfi, -1);
   if (cfi)
   {
     if (GNOME_VFS_FILE_INFO_LOCAL(cfi->vfs))
@@ -642,33 +644,48 @@ static void
 copy_file_clip (void)
 {
   clear_clipboard();
-  GtkTreeSelection *sel;
+  GtkTreeSelection *sel = NULL;
+  gint col;
+
+  if (active_view)
+    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
+  if (active_view == view_widget)
+    col = COL_DATA;
+  else
+    col = COL_DIRDATA;
   
-  sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(view_widget));
+  if (!sel) 
+    return;
   
   gtk_tree_selection_selected_foreach(sel, 
                                      (GtkTreeSelectionForeachFunc)clip_one_file,
-                                     NULL);
+                                     (gpointer)col);
   
   gpe_popup_infoprint(GDK_DISPLAY(), _("File(s) copied to clipboard."));
 }
 
 
-static void 
-paste_file_clip (void)
+static void
+copy_one_file (gpointer file, gpointer userdata)
 {
   gchar *target_file;
-  
-  if (file_clipboard == NULL) 
-    return;
-  
   target_file = 
     g_strdup_printf("%s/%s",
                     current_directory,
-                    g_path_get_basename(file_clipboard));
-  if (strcmp(file_clipboard,target_file)) /* check if not the same */
-    copy_file(file_clipboard,target_file);
+                    g_path_get_basename(file));
+  if (strcmp(file, target_file)) /* check if not the same */
+    copy_file(file, target_file);
   g_free(target_file);
+}
+
+static void 
+paste_file_clip (void)
+{
+  if (file_clipboard == NULL) 
+    return;
+  
+  g_list_foreach(file_clipboard, copy_one_file, NULL);
+  
   refresh_current_directory(); 
 }
 
@@ -857,7 +874,7 @@ static void
 popup_ask_rename_file ()
 {
   GtkWidget *dialog_window;
-  GtkWidget *vbox, *label, *entry;
+  GtkWidget *vbox, *label, *entry, *btnok;
   gchar *label_text;
 
   label_text = g_strdup_printf ("Rename file %s to:", current_popup_file->vfs->name);
@@ -867,9 +884,11 @@ popup_ask_rename_file ()
                                                GTK_DIALOG_MODAL 
                                                  | GTK_DIALOG_DESTROY_WITH_PARENT, 
                                                GTK_STOCK_CANCEL, 
-                                               GTK_RESPONSE_REJECT, 
-                                               GTK_STOCK_OK, 
-                                               GTK_RESPONSE_ACCEPT, NULL);
+                                               GTK_RESPONSE_REJECT, NULL);
+  btnok = gtk_dialog_add_button(GTK_DIALOG(dialog_window), 
+                                GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
+  GTK_WIDGET_SET_FLAGS(btnok, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(btnok);
   g_signal_connect (G_OBJECT (dialog_window), "delete_event", 
                     G_CALLBACK (kill_widget), dialog_window);
   g_signal_connect (G_OBJECT (dialog_window), "response", 
@@ -878,9 +897,11 @@ popup_ask_rename_file ()
   vbox = gtk_vbox_new (FALSE, 0);
 
   label = gtk_label_new (label_text);
+  gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
   g_free (label_text);
 
   entry = gtk_entry_new ();
+  gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
   g_object_set_data (G_OBJECT (dialog_window), "entry", entry);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox), vbox);
@@ -917,7 +938,6 @@ delete_cb_recursive(const gchar *rel_path,
      if (r == GNOME_VFS_OK)
      {
        dirlist = g_list_append(dirlist, fn);
-//     gnome_vfs_remove_directory(fn);
      }
      else
        fprintf(stderr, "Err %s\n", gnome_vfs_result_to_string(r));
@@ -953,47 +973,69 @@ delete_directory_recursive(FileInformation *dir)
     }
   g_list_free(dirlist);
   dirlist = NULL;    
-  return gnome_vfs_remove_directory_from_uri(gnome_vfs_uri_new (current_popup_file->filename));
+  return gnome_vfs_remove_directory_from_uri(gnome_vfs_uri_new (dir->filename));
 }
 
+
 static void
-popup_ask_delete_file ()
+delete_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
+                 gpointer data)
 {
-  gchar *label_text;
   gboolean isdir;
   GnomeVFSURI *uri;
+  GnomeVFSResult r;
+  gint col = (gint)data;
 
-  isdir = (current_popup_file->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY);
+  FileInformation *cfi = NULL;
   
-  if (isdir) 
-    label_text = g_strdup_printf (_("Delete \"%s\" and all its contents?"), 
-                                  current_popup_file->vfs->name);
-  else
-    label_text = g_strdup_printf (_("Delete \"%s\"?"), 
-                                  current_popup_file->vfs->name);
-    
-
-  if (gpe_question_ask (label_text, _("Confirm"), "!gtk-dialog-question", 
-			"!gtk-cancel", NULL, "!gtk-delete", NULL, NULL, NULL) == 1)
-    {
-      GnomeVFSResult r;
-
+  gtk_tree_model_get(model, iter, col, &cfi, -1);
+  if (cfi)
+  {
+    isdir = (cfi->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY);
       if (isdir)
-        r = delete_directory_recursive(current_popup_file);
+        r = delete_directory_recursive(cfi);
       else
         {
-          uri = gnome_vfs_uri_new (current_popup_file->filename);
+          uri = gnome_vfs_uri_new (cfi->filename);
           r = gnome_vfs_unlink_from_uri (uri);
           gnome_vfs_uri_unref(uri);
         }
 
       if (r != GNOME_VFS_OK)
         gpe_error_box (gnome_vfs_result_to_string (r));
-      
-      refresh_current_directory();
-    }
+  }
+}
 
-  g_free (label_text);
+
+static void
+popup_ask_delete_file ()
+{
+  GtkTreeSelection *sel = NULL;
+  gint col;
+  
+  if (active_view)
+    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
+  if (active_view == view_widget)
+    col = COL_DATA;
+  else
+    col = COL_DIRDATA;
+  
+  if (!sel) 
+    return;
+  
+  if (gtk_tree_selection_count_selected_rows(sel))
+  {
+    if (gpe_question_ask (_("Delete selected object(s)?"), 
+                          _("Confirm"), "!gtk-dialog-question", 
+	                     "!gtk-cancel", NULL, "!gtk-delete", NULL, 
+                         NULL, NULL) == 1)
+      {
+        gtk_tree_selection_selected_foreach(sel, 
+                                            (GtkTreeSelectionForeachFunc)delete_one_file,
+                                            (gpointer)col);
+        refresh_current_directory();
+      }
+  }
 }
 
 static void
@@ -1797,8 +1839,11 @@ view_list (GtkWidget *widget)
 
 
 static gboolean
-tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
+tree_button_press (GtkWidget *tree, GdkEventButton *b, gpointer user_data)
 {
+  if (b->button == 1)
+    gtk_widget_grab_focus(tree);
+  
   if ((b->button == 3) || ((b->button == 1) && (b->type == GDK_2BUTTON_PRESS)))
     {
       gint x, y;
@@ -1873,6 +1918,24 @@ tree_button_release (GtkWidget *tree, GdkEventButton *b)
 }
 
 
+static gboolean
+tree_focus_in (GtkWidget *tree, GdkEventFocus *f, gpointer data)
+{
+  active_view = tree;
+  return FALSE;
+}
+
+
+static void
+setup_tabchain(void)
+{
+  GList *chain = NULL;
+  
+  chain = g_list_append(chain, main_paned);
+  gtk_container_set_focus_chain(GTK_CONTAINER(vbox), chain);
+  g_list_free(chain);
+}
+
 static GtkWidget*
 create_view_widget_list(void)
 {
@@ -1938,6 +2001,8 @@ create_view_widget_list(void)
 		G_CALLBACK(tree_button_press), NULL);
 	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
 		G_CALLBACK(tree_button_release), NULL);
+	g_signal_connect (G_OBJECT(treeview), "focus-in-event", 
+		G_CALLBACK(tree_focus_in), NULL);
 	
     gtk_widget_show_all(view_window);
 	return treeview;
@@ -1981,12 +2046,15 @@ create_dir_view_widget(void)
     GtkWidget *treeview;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+    GtkTreeSelection *selection;
 	
 	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (dirstore));
   	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),FALSE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
 	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
 	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(treeview),TRUE);
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
   
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	g_object_set(renderer,"stock-size",GTK_ICON_SIZE_SMALL_TOOLBAR,NULL);
@@ -2020,7 +2088,8 @@ create_dir_view_widget(void)
 		G_CALLBACK(tree_button_press), NULL);
 	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
 		G_CALLBACK(tree_button_release), NULL);
-	
+	g_signal_connect (G_OBJECT(treeview), "focus-in-event", 
+		G_CALLBACK(tree_focus_in), NULL);
     gtk_widget_show_all(dir_view_window);
 	return treeview;
 }
@@ -2092,53 +2161,63 @@ main (int argc, char *argv[])
 
   /* main menu */ 
   mMain = create_mMain(window);
-  gtk_box_pack_start(GTK_BOX(vbox),mMain,FALSE,TRUE,0);
+  gtk_box_pack_start(GTK_BOX(vbox), mMain, FALSE, TRUE, 0);
   
   /* location stuff */
   combo = gtk_combo_new ();
+  GTK_WIDGET_UNSET_FLAGS(combo, GTK_CAN_FOCUS);
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
-    "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
+                                        "activate", 
+                                        GTK_SIGNAL_FUNC (goto_directory), NULL);
   
   view_widget = create_view_widget_list();
-#warning necessary?  
+  
   dir_view_widget = create_dir_view_widget();
   
   storage_menu = build_storage_menu(directory_browser);
-  
+  GTK_WIDGET_UNSET_FLAGS(storage_menu, GTK_CAN_FOCUS);
+
   toolbar = gtk_toolbar_new ();
+  GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   toolbar2 = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
-			    _("Go back in history."), NULL,
-			    G_CALLBACK (history_back), NULL, -1);
+  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
+		                         _("Go back in history."), NULL,
+			                     G_CALLBACK (history_back), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
-			    _("Go forward in history."), NULL,
-			    G_CALLBACK (history_forward), NULL, -1);
+  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
+			                     _("Go forward in history."), NULL,
+			                     G_CALLBACK (history_forward), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
   btnGoUp = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_UP,
 			                          _("Go up one level."), NULL,
 			                          G_CALLBACK (up_one_level), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(btnGoUp, GTK_CAN_FOCUS);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   if (!directory_browser)
     {
-      gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
-	                            _("Goto your home directory."), NULL,
-                                G_CALLBACK (set_directory_home), NULL, -1);
+      pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
+	                                 _("Goto your home directory."), NULL,
+                                     G_CALLBACK (set_directory_home), NULL, -1);
+      GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
     }
                 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
-			    _("Refresh current directory."), NULL,
-			    G_CALLBACK (refresh_current_directory), NULL, -1);
+  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
+                                 _("Refresh current directory."), NULL,
+                                 G_CALLBACK (refresh_current_directory), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);    
                 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
-			    _("Stop the current process."), NULL,
-			    G_CALLBACK (safety_check), NULL, -1);
+  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
+                                 _("Stop the current process."), NULL,
+                                 G_CALLBACK (safety_check), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -2147,6 +2226,7 @@ main (int argc, char *argv[])
   btnIconView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
 			   _("View files as icons"), NULL, pw, 
 			   G_CALLBACK (view_icons), NULL);
+  GTK_WIDGET_UNSET_FLAGS(btnIconView, GTK_CAN_FOCUS);
   
   p = gpe_find_icon ("list-view");
   pw = gtk_image_new_from_pixbuf(p);
@@ -2154,13 +2234,15 @@ main (int argc, char *argv[])
 			   _("View files in a list"), NULL, pw, 
 			   G_CALLBACK (view_list), NULL);
   gtk_widget_set_sensitive(btnListView,FALSE);
+  GTK_WIDGET_UNSET_FLAGS(btnListView, GTK_CAN_FOCUS);
                
   pw = gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, 
                                 gtk_toolbar_get_icon_size(GTK_TOOLBAR(toolbar2)));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Go!"), 
-			   _("Goto Location"), NULL, pw, 
-			   G_CALLBACK (goto_directory), NULL);
-  
+  pw = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Go!"), 
+                                _("Goto Location"), NULL, pw, 
+                                G_CALLBACK (goto_directory), NULL);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   if (directory_browser)
@@ -2214,6 +2296,7 @@ main (int argc, char *argv[])
     }
   else
 	gtk_widget_hide(dir_view_window);
+  gtk_widget_grab_focus(view_widget);
 
   if (argc < 2)
     set_directory_home (NULL);
@@ -2231,6 +2314,7 @@ main (int argc, char *argv[])
         set_directory_home (NULL);
     }
   
+  setup_tabchain();
   initialized = TRUE;  
   gtk_main();
 

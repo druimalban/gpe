@@ -232,6 +232,7 @@ build_storage_menu(gboolean wide)
       item = gtk_radio_button_new_with_label(NULL, storages[0].name);
       storages[0].item = item;
       gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(item), FALSE);
+      GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
       gtk_box_pack_start(GTK_BOX(vmenu), item, FALSE, TRUE, 0);
       g_signal_connect_after(G_OBJECT(item), "clicked", G_CALLBACK(filesystem_toggled), &storages[0]);
       
@@ -240,6 +241,7 @@ build_storage_menu(gboolean wide)
           item = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(item), storages[i].name);
           storages[i].item = item;
           gtk_toggle_button_set_mode(GTK_TOGGLE_BUTTON(item), FALSE);
+          GTK_WIDGET_UNSET_FLAGS(item, GTK_CAN_FOCUS);
           gtk_box_pack_start(GTK_BOX(vmenu), item, FALSE, TRUE, 0);
           g_signal_connect_after(G_OBJECT(item), "clicked", G_CALLBACK(filesystem_toggled), &storages[i]);
         }

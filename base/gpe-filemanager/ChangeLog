@@ -1,3 +1,10 @@
+2004-10-28  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Implemented paste and delete for multiple files.
+              Improved rename dialog.
+              Changed focus behaviour of main window.
+              Removed some old cruft and fixed some formating.
+
 2004-10-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
     *main.c: Added first bits for multi file operations.
