@@ -1,6 +1,7 @@
 08/18/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- Several fixes and tweaks in vcard import
 	- New vcard in tests, Nokia 9210
+	- #define insert(a,b) defined with {} now to avoid ambiguos else constructs.
 
 08/15/2003		Florian Boor <florian.boor@kernelconcepts.de>
 

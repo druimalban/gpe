@@ -120,10 +120,10 @@ gpe_export_vcard (sqlite *db, guint uid)
 }
 
 #define insert(a,b) \
-	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
+	  {if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
 				  NULL, NULL, &err, \
 				  id, a, b)) \
-	    goto error; 
+	    goto error;} 
 
 gchar *
 append_str (gchar *old, gchar *new)
