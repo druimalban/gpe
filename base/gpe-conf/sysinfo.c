@@ -56,6 +56,7 @@
 #define P_CPUINFO 		"/proc/cpuinfo"
 #define P_IPAQ			"/proc/hal/model"
 #define P_PARTITIONS	"/proc/partitions"
+#define P_ROUTE			"/proc/net/route"
 
 #define strpos(a,b) (strstr(a,b)-a)
 
@@ -234,6 +235,43 @@ device_is_wlan(char* ifname)
 }
 
 
+char* 
+network_get_gateway()
+{
+	FILE *froute;
+	int i = 0;
+	unsigned long long gw = 0;
+	unsigned long long dest = 1;	
+	char *result;
+	unsigned char a,b,c,d;
+
+	froute = fopen(P_ROUTE,"r");
+		if (!froute) return NULL;
+	
+	while (i != EOF)
+	{
+		i = fscanf(froute,"%*s %llX %llX %*i %*i %*i %*i %*llX %*i %*i %*i\n", &dest, &gw);
+		if (i > 1)
+		{
+			if (dest == 0)
+				break;
+		}
+	}
+	if (gw)
+	{
+		d = (gw & 0xFF000000)/0xFFFFFF;
+		c = (gw & 0x00FF0000)/0xFFFF;
+		b = (gw & 0x0000FF00)/0xFF;
+		a = gw & 0x000000FF;
+		result = g_strdup_printf("%i.%i.%i.%i",a,b,c,d);
+	}
+	else
+		result = g_strdup("<none>");
+	fclose(froute);
+	return result;
+}
+
+
 GtkWidget*
 network_create_widgets (void)
 {
@@ -251,6 +289,7 @@ network_create_widgets (void)
 		GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	
 	table = gtk_table_new(6,2,FALSE);
+	gtk_container_set_border_width(GTK_CONTAINER(table),gpe_get_border());
 	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw),table);
@@ -304,6 +343,14 @@ network_create_widgets (void)
 		}
 	}
 
+	ts = g_strdup_printf("%s: %s",_("Default Gateway"),network_get_gateway());
+	tw = gtk_label_new(NULL);
+	gtk_label_set_text(GTK_LABEL(tw),ts);
+	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
+	gtk_table_attach(GTK_TABLE(table),tw,0,2,4+pos,5+pos,GTK_FILL,
+          	GTK_FILL,0,0);
+	g_free(ts);
+	
 	return(sw);
 }
 
