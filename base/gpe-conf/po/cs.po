@@ -1,451 +1,454 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# translation of gpe-conf-0.10-pre6.po to Czech
+# translation of gpe-conf.po to Czech
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Libor Klepac <elkropac@students.zcu.cz>, 2003
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.10-pre6\n"
 "POT-Creation-Date: 2003-06-11 18:07+0200\n"
-"PO-Revision-Date: 2003-07-29 22:24+0100\n"
+"PO-Revision-Date: 2003-07-30 20:51+0200\n"
 "Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.1\n"
 
-#: /usr/src/gpe/base/gpe-conf/applets.c:327
+#: /usr/src/familiar/gpe/base/gpe-conf/applets.c:327
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"Některé operace může provádět pouze uživatel root\n"
-"Prosím zadejte heslo."
+"Změnu těchto nastavení může provést\npouze uživatel 'root'\n"
+"Zadejte prosím heslo."
 
-#: /usr/src/gpe/base/gpe-conf/applets.c:363
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/calibrate.c:33
+#: /usr/src/familiar/gpe/base/gpe-conf/applets.c:363
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/calibrate.c:33
 msgid "Sorry, wrong password."
 msgstr "Špatné heslo."
 
-#: /usr/src/gpe/base/gpe-conf/appmgr_setup.c:189
-#: /usr/src/gpe/base/gpe-conf/gpe-admin.c:86
-#: /usr/src/gpe/base/gpe-conf/login-setup.c:152
+#: /usr/src/familiar/gpe/base/gpe-conf/appmgr_setup.c:189
+#: /usr/src/familiar/gpe/base/gpe-conf/gpe-admin.c:86
+#: /usr/src/familiar/gpe/base/gpe-conf/login-setup.c:152
 msgid "General"
 msgstr "Obecné"
 
-#: /usr/src/gpe/base/gpe-conf/appmgr_setup.c:237
+#: /usr/src/familiar/gpe/base/gpe-conf/appmgr_setup.c:237
 msgid "Tab View"
-msgstr "Zobrazit karty"
+msgstr "V záložkách zobrazit"
 
-#: /usr/src/gpe/base/gpe-conf/appmgr_setup.c:252
+#: /usr/src/familiar/gpe/base/gpe-conf/appmgr_setup.c:252
 msgid "Icon"
 msgstr "Ikony"
 
-#: /usr/src/gpe/base/gpe-conf/appmgr_setup.c:256
+#: /usr/src/familiar/gpe/base/gpe-conf/appmgr_setup.c:256
 msgid "List"
 msgstr "Seznam"
 
-#: /usr/src/gpe/base/gpe-conf/appmgr_setup.c:265
+#: /usr/src/familiar/gpe/base/gpe-conf/appmgr_setup.c:265
 msgid "Changes will take effect after relog"
 msgstr "Změny se projeví až po novém přihlášení"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:79
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:79
 #, c-format
 msgid "could not open touchscreen device '%s'\n"
 msgstr "nemohu otevřít soubor obrazovky '%s\"\n"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:127
-#: /usr/src/gpe/base/gpe-conf/battery.c:179
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:127
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:179
 msgid "Status: high"
-msgstr "Úroveň: výsoká"
+msgstr "Úroveň: vysoká"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:130
-#: /usr/src/gpe/base/gpe-conf/battery.c:182
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:130
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:182
 msgid "Status: low"
 msgstr "Úroveň: nízká"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:133
-#: /usr/src/gpe/base/gpe-conf/battery.c:185
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:133
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:185
 msgid "Status: critical"
 msgstr "Úroveň: kritická"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:136
-#: /usr/src/gpe/base/gpe-conf/battery.c:188
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:136
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:188
 msgid "Status: charging"
 msgstr "Úroveň: nabíjí se"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:139
-#: /usr/src/gpe/base/gpe-conf/battery.c:191
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:139
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:191
 msgid "Status: charge main"
 msgstr "Úroveň: hlavní nabita"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:142
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:142
 msgid "Status: dead"
 msgstr "Úroveň: mrtvá"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:145
-#: /usr/src/gpe/base/gpe-conf/battery.c:197
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:145
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:197
 msgid "Status: full"
 msgstr "Úroveň: plná"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:148
-#: /usr/src/gpe/base/gpe-conf/battery.c:200
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:148
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:200
 msgid "Status: no battery"
 msgstr "Úroveň: bez baterie"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:151
-#: /usr/src/gpe/base/gpe-conf/battery.c:203
-#: /usr/src/gpe/base/gpe-conf/battery.c:222
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:151
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:203
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:222
 msgid "Status: unknown"
 msgstr "Úroveň: neznámá"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:155
-#: /usr/src/gpe/base/gpe-conf/battery.c:207
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:155
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:207
 msgid "Voltage"
 msgstr "Napětí"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:159
-#: /usr/src/gpe/base/gpe-conf/battery.c:211
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:159
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:211
 msgid "AC connected"
 msgstr "připojeno k adaptéru"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:161
-#: /usr/src/gpe/base/gpe-conf/battery.c:213
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:161
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:213
 msgid "Lifetime"
 msgstr "Životnost"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:194
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:194
 msgid "Status: not installed"
 msgstr "Úroveň: nenainstalováno"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:220
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:220
 msgid "not installed"
 msgstr "nenainstalováno"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:224
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:224
 msgid "Voltage: unknown"
 msgstr "Napětí: neznámé"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:226
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:226
 msgid "Lifetime: unknown"
 msgstr "Životnost: neznámá"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:265
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:265
 msgid "Internal battery"
 msgstr "Vnitřní baterie"
 
-#: /usr/src/gpe/base/gpe-conf/battery.c:269
+#: /usr/src/familiar/gpe/base/gpe-conf/battery.c:269
 msgid "Jacket battery"
 msgstr "Přídavná baterie"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:145
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:833
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:145
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:833
 msgid "card not recognized"
 msgstr "karta nerozpoznána"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:247
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:318
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:247
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:318
 msgid "Could not write to temporal config file."
 msgstr "Nemohu zapisovat do dočasného konfiguračního souboru:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:524
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:524
 msgid "Could not open pidfile:"
 msgstr "Nemohu otevřít pidfile:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:530
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:530
 msgid "Could not read pidfile"
 msgstr "Nemohu číst pidfile"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:534
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:534
 msgid "Could not signal cardmgr:"
 msgstr "Nemohu poslat signál pro cardmgr:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:609
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:609
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr "gpe-conf musí být setuid pokud chcete používat cardinfo."
+msgstr "gpe-conf musí být 'setuid root' pokud chcete používat cardinfo."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:628
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:628
 msgid "No pcmcia driver in /proc/devices"
 msgstr "V /proc/devices není ovladač pcmcia"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:631
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:631
 msgid "Could not open /proc/devices"
 msgstr "Nemohu otevřít /proc/devices"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:643
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:643
 msgid "No sockets found\n"
 msgstr "Nemohu nalézt zásuvky\n"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:652
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:652
 msgid "Card Services release does not match!"
 msgstr "Verze CS  nesouhlasí!"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:657
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:657
 msgid "Could not get CS revision info!\n"
 msgstr "Nemohu získat číslo revize CS!\n"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:820
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:820
+#, fuzzy
 msgid "flock(stabfile) failed)"
 msgstr "flock(stabfile) failed)"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:839
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:839
 msgid "no driver loaded"
 msgstr "bez ovladače"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:948
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:948
 msgid "ready"
 msgstr "připraveno"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:966
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:966
 msgid "not ready"
 msgstr "není připraveno"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:981
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:981
 msgid "suspended"
 msgstr "uspáno"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1173
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1344
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1345
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1173
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1344
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1345
 msgid "Assign Driver"
 msgstr "Přiřadit ovladač"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1182
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1182
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
-"Tento dialog vám umožňuje\n"
+"Tento dialog umožňuje\n"
 "zvolit si/změnit ovladač přiřazený\n"
 "PCMCIA nebo CF kartě."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1192
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1192
 msgid "Your current card identifies itself as:"
 msgstr "Tato karta se identifikuje jako:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1206
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1212
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1206
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1212
 msgid "Manuf. Id"
 msgstr "Id. výrobce"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1206
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1212
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1206
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1212
 msgid "Class"
 msgstr "Třída"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1285
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1285
 msgid "Insert Card"
 msgstr "Vložit kartu"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1287
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1287
 msgid "Tap here to start card insertion manually."
 msgstr "Ťuknutím zde zahájíte spuštění karty ručně"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1295
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1295
 msgid "Eject Card"
 msgstr "Vysunout kartu"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1297
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1297
 msgid "Tap here to eject card manually."
 msgstr "Ťuknutím zde odstraníte kartu ručně."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1305
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1305
 msgid "Suspend Card"
 msgstr "Uspat kartu"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1307
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1307
 msgid "Tap here to suspend current card."
 msgstr "Ťuknutím zde uspíte zvolenou kartu."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1315
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1315
 msgid "Resume Card"
 msgstr "Probudit kartu"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1317
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1317
 msgid "Tap here to resume current card."
 msgstr "Ťuknutím zde probudíte uspanou kartu."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1325
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1325
 msgid "Reset Card"
 msgstr "Obnovit kartu"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1326
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1326
 msgid "Tap here to reset current card."
 msgstr "Ťuknutím zde obnovíte stav karty."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1334
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1335
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1334
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1335
 msgid "Reset Card Manager"
 msgstr "Obnovit Card Manager"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1337
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1337
 msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
 msgstr "Ťuknutím zde obnovíte card manager. Tímto uložíte všechny změny v nastavení."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1347
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1347
 msgid "Tap here to assign a driver to this card / change current driver assignment."
 msgstr "Ťuknutím zde přiřadíte/změníte ovladače karty."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1354
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1355
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1354
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1355
 msgid "Exit applet"
 msgstr "Konec"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1364
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1377
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1364
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1377
 msgid "PC/CF card socket information."
 msgstr "Informace o PC/CF kartě v této zásuvce."
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1372
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1372
 msgid "Socket"
-msgstr "Zastrcka"
+msgstr "Zásuvka"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1403
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1403
 msgid "Information for socket"
 msgstr "Informace o zásuvce"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1412
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1412
 msgid "State:"
 msgstr "Stav:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1413
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1413
 msgid "Device:"
 msgstr "Zařízení:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1414
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1414
 msgid "Driver:"
 msgstr "Ovladač:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1415
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1415
 msgid "Type:"
 msgstr "Typ:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1416
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1416
 msgid "I/O:"
 msgstr "I/O:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1417
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1417
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1424
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1424
 msgid "Flags:"
 msgstr "Flags:"
 
-#: /usr/src/gpe/base/gpe-conf/cardinfo.c:1441
+#: /usr/src/familiar/gpe/base/gpe-conf/cardinfo.c:1441
 msgid "PCMCIA initialisation failed"
 msgstr "Načtení PCMCIA selhalo"
 
-#: /usr/src/gpe/base/gpe-conf/cfgfile.c:630
+#: /usr/src/familiar/gpe/base/gpe-conf/cfgfile.c:630
 msgid "No write access to network configuration."
 msgstr "Nemohu zapisovat do konfigurace sítě."
 
-#: /usr/src/gpe/base/gpe-conf/gpe-admin.c:93
+#: /usr/src/familiar/gpe/base/gpe-conf/gpe-admin.c:93
 msgid "Allow users to configure everything"
-msgstr "Povolit uživatelům konfiguraci všeho."
+msgstr "Povolit uživatelům konfiguraci\nvšech nastavení."
 
-#: /usr/src/gpe/base/gpe-conf/kbd.c:146
+#: /usr/src/familiar/gpe/base/gpe-conf/kbd.c:146
 msgid "Keyboard Geometry / Layout"
 msgstr "Rozložení kláves"
 
-#: /usr/src/gpe/base/gpe-conf/kbd.c:186
+#: /usr/src/familiar/gpe/base/gpe-conf/kbd.c:186
 msgid "User defined"
 msgstr "Definováno uživatelem"
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:131
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:131
 msgid "Could not read keyboard definition file."
 msgstr "Nemohu přečíst soubor s definicí klávesnice."
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:171
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:171
 msgid "Error reading keyboard definition."
 msgstr "Chyba při čtení definic klávesnice."
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:274
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:274
 msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
-msgstr "Nastavení přídavne klávesnice. Zakázané možnosti\t\t\t\t\tnejsou doposud instalovány."
+msgstr "Nastavení přídavné klávesnice. Zakázané možnosti\t\t\t\t\tnejsou doposud instalovány."
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:279
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:279
 msgid "External Keyboard Type"
 msgstr "Druh přídavné klávesnice"
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:286
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:286
 msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
-msgstr "Zde si můžete zvolit model vaší přídavné klávesnice.\t\t\t\t Pro instalaci softwarové podpory musíte být připojeni k Internetu a stisknout tlačítko \"Přidat\"."
+msgstr "Zde si můžete zvolit model přídavné klávesnice, kterou používáte.\t\t\t\t Pro instalaci softwarové podpory musíte být připojeni k Internetu a stisknout tlačítko \"Přidat\"."
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:308
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:308
 msgid "Tap here to select this keyboard model."
-msgstr "Zvolte si model vaší klávesnice"
+msgstr "Zvolit tento model klávesnice"
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:315
-#: /usr/src/gpe/base/gpe-conf/packages.c:183
-#: /usr/src/gpe/base/gpe-conf/packages.c:364
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:315
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:183
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:364
 msgid "Install"
 msgstr "Přidat"
 
-#: /usr/src/gpe/base/gpe-conf/keyboard.c:321
+#: /usr/src/familiar/gpe/base/gpe-conf/keyboard.c:321
 msgid "Tap here to install support for this keyboard."
 msgstr "Instaluj podporu pro tuto klávesnici."
 
-#: /usr/src/gpe/base/gpe-conf/keyctl.c:151
+#: /usr/src/familiar/gpe/base/gpe-conf/keyctl.c:151
 msgid "Reset button config to default?"
 msgstr "Opravdu chcete vrátit původní nastavení?"
 
-#: /usr/src/gpe/base/gpe-conf/keyctl.c:151
-#: /usr/src/gpe/base/gpe-conf/network.c:227
+#: /usr/src/familiar/gpe/base/gpe-conf/keyctl.c:151
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:227
 msgid "Question"
 msgstr "Otázka"
 
-#: /usr/src/gpe/base/gpe-conf/keyctl.c:188
+#: /usr/src/familiar/gpe/base/gpe-conf/keyctl.c:188
 msgid "Defaults"
 msgstr "Původní"
 
-#: /usr/src/gpe/base/gpe-conf/keyctl.c:293
+#: /usr/src/familiar/gpe/base/gpe-conf/keyctl.c:293
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
-msgstr "CHYBA: Nemohu otevřít keylaunchrc pro zápis!\n"
+msgstr "CHYBA: Nemohu otevřít soubor keylaunchrc pro zápis!\n"
 
-#: /usr/src/gpe/base/gpe-conf/login-setup.c:131
+#: /usr/src/familiar/gpe/base/gpe-conf/login-setup.c:131
 msgid "Some or all of these settings can only be changed by the user 'root'."
-msgstr "Některé nebo všechny volby mohou být změněny pouze uživatelem 'root'."
+msgstr "Změnu těchto nastavení může provést pouze uživatel 'root'."
 
-#: /usr/src/gpe/base/gpe-conf/login-setup.c:167
+#: /usr/src/familiar/gpe/base/gpe-conf/login-setup.c:167
 msgid "Show owner information at login."
 msgstr "Ukázat informace o majiteli na přihlašovací obrazovce."
 
-#: /usr/src/gpe/base/gpe-conf/login-setup.c:169
+#: /usr/src/familiar/gpe/base/gpe-conf/login-setup.c:169
 msgid "Use background image for login screen."
 msgstr "Zobrazit obrázek na pozadí přihlašovací obrazovky."
 
-#: /usr/src/gpe/base/gpe-conf/login-setup.c:171
+#: /usr/src/familiar/gpe/base/gpe-conf/login-setup.c:171
 msgid "Lock display on suspend."
 msgstr "Zamknout obrazovku při uspání."
 
-#: /usr/src/gpe/base/gpe-conf/login-setup.c:184
+#: /usr/src/familiar/gpe/base/gpe-conf/login-setup.c:184
 msgid "Image:"
 msgstr "Obrázek:"
 
-#: /usr/src/gpe/base/gpe-conf/logread.c:140
+#: /usr/src/familiar/gpe/base/gpe-conf/logread.c:140
 msgid "<empty syslog>"
 msgstr "<prázdný syslog>"
 
-#: /usr/src/gpe/base/gpe-conf/logread.c:191
+#: /usr/src/familiar/gpe/base/gpe-conf/logread.c:191
 msgid "System Log"
 msgstr "Systémový záznam"
 
-#: /usr/src/gpe/base/gpe-conf/main.c:288
+#: /usr/src/familiar/gpe/base/gpe-conf/main.c:288
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "'task_nameserver' vyžaduje jméno (pouze) jednoho nameserveru jako parametr.\n"
+msgstr "'task_nameserver' vyžaduje jméno (pouze) jednoho jmenného serveru jako parametr.\n"
 
-#: /usr/src/gpe/base/gpe-conf/main.c:343
+#: /usr/src/familiar/gpe/base/gpe-conf/main.c:348
 msgid "Warning: PCMCIA init failed."
 msgstr "Varování: načtení PCMCIA selhalo."
 
-#: /usr/src/gpe/base/gpe-conf/main.c:371
+#: /usr/src/familiar/gpe/base/gpe-conf/main.c:376
 msgid "This mode is disabled, please try:\n"
 msgstr "Tento mód je zakázán, zkuste prosím:\n"
 
-#: /usr/src/gpe/base/gpe-conf/main.c:372
+#: /usr/src/familiar/gpe/base/gpe-conf/main.c:377
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
@@ -455,12 +458,12 @@ msgstr ""
 "gpe-conf [JmenoAppletu]\n"
 "kde JmenoAppletu vyberte z:\n"
 
-#: /usr/src/gpe/base/gpe-conf/main.c:385
+#: /usr/src/familiar/gpe/base/gpe-conf/main.c:390
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Aplet %s neexistuje!\n"
 
-#: /usr/src/gpe/base/gpe-conf/main.c:386
+#: /usr/src/familiar/gpe/base/gpe-conf/main.c:391
 msgid ""
 "\n"
 "\n"
@@ -472,121 +475,121 @@ msgstr ""
 "Použití: gpe-conf [JmenoAppletu]\n"
 "kde JmenoAppletu vyberte z:\n"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:95
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:95
 msgid "Current Config"
 msgstr "Nynější nastavení"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:173
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:173
 msgid "New interface:"
 msgstr "Nové rozhraní:"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:179
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:179
 msgid "Enter name of new interface"
 msgstr "Zadejte jméno rozhraní"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:186
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:186
 msgid "This interface definition already exists!"
 msgstr "Takové rozhraní již existuje!"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:227
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:227
 msgid "Do you want to delete this interface?"
 msgstr "Chcete smazat toto rozhraní?"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:441
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:441
 msgid "Address"
 msgstr "Adresa"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:444
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:444
 msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Zadejte vaší IP adresu, např 192.168.1.2"
+msgstr "Zadejte IP adresu, např 192.168.1.2"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:446
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:446
 msgid "Netmask"
 msgstr "Maska"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:449
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:449
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Zadejte masku sítě, obvykle 255.255.255.0 ."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:451
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:451
 msgid "Broadcast"
 msgstr "Broadcast"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:454
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:454
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Zadejte broadcast adresu, obvykle je stejná jako vaše IP adresa s posledním číslem rovným 255."
+msgstr "Zadejte broadcast adresu, obvykle je stejná jako zadaná IP adresa,ale s posledním číslem rovným 255."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:456
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:456
 msgid "Gateway"
 msgstr "Brána"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:459
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:459
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Zadejte IP adresu brány."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:541
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:541
 msgid "Hostname"
 msgstr "Hostname"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:544
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:544
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Zde zadejte jméno (hostname) vašeho Ipaqu. Tento parametr je volitelný."
+msgstr "Zde zadejte jméno (hostname) Ipaqu. Tento parametr je volitelný."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:627
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:627
 msgid "Provider"
 msgstr "Poskytovatel"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:630
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:630
 msgid "Here you need to enter the name if the provider configuration to use for this interface."
-msgstr "Zde zadejte jmeno poskytovatele konfigurace pro toto rozhraní."
+msgstr "Zde zadejte jméno poskytovatele konfigurace pro toto rozhraní."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:654
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:654
 msgid "Global Settings"
 msgstr "Obecné nastavení"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:695
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:695
 msgid "Proxy"
 msgstr "Proxy"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:697
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:697
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr "Pokud chcete/musíte používat proxy, zadejte zde název serveru (zatím se vztahuje pouze na prohížeč dillo)."
+msgstr "Pokud chcete/musíte používat proxy, zadejte zde název serveru (zatím se vztahuje pouze na prohlížeč dillo)."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:702
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:702
 msgid "No proxy for"
 msgstr "Žádné proxy pro"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:705
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:705
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Zde zadejte jméno domény,pro kterou nechcete používat proxy server."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:714
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:714
 msgid "Use DHCP in any case (usually not needed)."
 msgstr "Používat DHCP u všech rozhraní (většinou není třeba)."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:716
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:716
 msgid "Use DHCP"
 msgstr "Používat DHCP"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:731
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:160
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:731
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:160
 msgid "on"
-msgstr "ano"
+msgstr "zapnuto"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:742
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:161
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:742
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:161
 msgid "off"
-msgstr "ne"
+msgstr "vypnuto"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:755
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:755
 msgid "DNS server"
 msgstr "DNS server"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:758
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:758
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Zadejte IP adresu DNS serveru."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:939
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:939
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
@@ -594,283 +597,283 @@ msgstr ""
 "Zde můžete změnit základní nastavení tohoto rozhraní.\n"
 "Použijte statické pro ruční konfiguraci, dhcp pokud máte v síti DHCP server a ppp pro vytvoření point to point spojení."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:966
-#: /usr/src/gpe/base/gpe-conf/network.c:967
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:966
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:967
 msgid "Add Interface"
 msgstr "Přidat rozhraní"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:968
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:968
 msgid "Add a new Interface"
 msgstr "Přidat nové rozhraní"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:976
-#: /usr/src/gpe/base/gpe-conf/network.c:977
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:976
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:977
 msgid "Remove Interface"
-msgstr "Oderat rozhraní"
+msgstr "Odebrat rozhraní"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:978
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:978
 msgid "Remove current Interface"
 msgstr "Odebrat vybrané rozhraní"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:991
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:991
 msgid "Information"
 msgstr "Informace"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:992
-#: /usr/src/gpe/base/gpe-conf/network.c:993
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:992
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:993
 msgid "Show current configuration."
-msgstr "Zobrazit nynejší nastavení."
+msgstr "Zobrazit nynější nastavení."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:1004
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:1004
 msgid "Close"
 msgstr "Zavřít"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:1005
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:1005
 msgid "Close  network tool"
 msgstr "Zavřít konfiguraci sítě"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:1006
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:1006
 msgid "Close network tool"
 msgstr "Zavřít konfiguraci sítě"
 
-#: /usr/src/gpe/base/gpe-conf/network.c:1021
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:1021
 msgid "Couldn't read network configuration."
 msgstr "Nemohu načíst konfiguraci sítě."
 
-#: /usr/src/gpe/base/gpe-conf/network.c:1030
+#: /usr/src/familiar/gpe/base/gpe-conf/network.c:1030
 msgid "global"
 msgstr "obecné"
 
-#: /usr/src/gpe/base/gpe-conf/ownerinfo.c:201
+#: /usr/src/familiar/gpe/base/gpe-conf/ownerinfo.c:201
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Pouze uživatel 'root' může měnit tyto informace."
+msgstr "Tyto informace může měnit pouze uživatel 'root' ."
 
-#: /usr/src/gpe/base/gpe-conf/ownerinfo.c:221
+#: /usr/src/familiar/gpe/base/gpe-conf/ownerinfo.c:221
 msgid "Name:"
 msgstr "Jméno:"
 
-#: /usr/src/gpe/base/gpe-conf/ownerinfo.c:236
+#: /usr/src/familiar/gpe/base/gpe-conf/ownerinfo.c:236
 msgid "E-Mail:"
 msgstr "E-Mail:"
 
-#: /usr/src/gpe/base/gpe-conf/ownerinfo.c:251
+#: /usr/src/familiar/gpe/base/gpe-conf/ownerinfo.c:251
 msgid "Phone:"
 msgstr "Telefon:"
 
-#: /usr/src/gpe/base/gpe-conf/ownerinfo.c:266
+#: /usr/src/familiar/gpe/base/gpe-conf/ownerinfo.c:266
 msgid "Address:"
 msgstr "Adresa:"
 
-#: /usr/src/gpe/base/gpe-conf/ownerinfo.c:292
+#: /usr/src/familiar/gpe/base/gpe-conf/ownerinfo.c:292
 msgid "Photofile:"
 msgstr "Fotografie:"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:66
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:66
 msgid "Removing package"
 msgstr "Odebírám balíček"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:71
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:71
 msgid "Installing package"
 msgstr "Instaluji balíček"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:150
-#: /usr/src/gpe/base/gpe-conf/packages.c:324
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:150
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:324
 msgid "Start"
 msgstr "Start"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:155
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:155
 msgid "Update finished. Please check log messages for errors."
 msgstr "Aktualizace dokončena. Zkontrolujte prosím výstup,jestli se nevyskytly chyby."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:184
-#: /usr/src/gpe/base/gpe-conf/packages.c:370
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:184
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:370
 msgid "Remove"
 msgstr "Odebrat"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:185
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:185
 msgid "Install/Removal finished. Please check log messages for errors."
 msgstr "Instalace/Odebrání dokončeno. Zkontrolujte prosím výstup,jestli se nevyskytly chyby."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:205
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:205
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr "Aktualizace pomocí \"ipkg upgrade\" začala.\n"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:229
-#: /usr/src/gpe/base/gpe-conf/packages.c:253
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:229
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:253
 msgid "Running..."
 msgstr "Probíhá..."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:314
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:314
 msgid "Update"
 msgstr "Aktualizace"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:319
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:319
 msgid "Update from network"
 msgstr "Aktualizovat ze sítě"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:328
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:328
 msgid "Update entire system over an internet connection."
-msgstr "Aktualizovat celý systém pomocí připojení k síiti Internet."
+msgstr "Aktualizovat celý systém pomocí připojení k síti Internet."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:332
-#: /usr/src/gpe/base/gpe-conf/packages.c:378
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:332
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:378
 msgid "Activity log"
 msgstr "Výpis postupu"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:340
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:340
 msgid "This window shows all output from the packet manager that performs the update."
 msgstr "Toto okno zobrazuje výstup z manažera balíčků během aktualizace systému."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:350
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:350
 msgid "Install/Remove"
 msgstr "Přidat/Odebrat"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:355
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:355
 msgid "Install/Remove a package"
 msgstr "Přidat/Odebrat balíček"
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:362
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:362
 msgid "Enter name of package to be installed here."
 msgstr "Zadejte jméno balíčku."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:368
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:368
 msgid "Install a package from a configured source."
 msgstr "Instalovat balíček z nakonfigurovaného zdroje."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:374
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:374
 msgid "Remove the package."
 msgstr "Odebrat balíček."
 
-#: /usr/src/gpe/base/gpe-conf/packages.c:386
+#: /usr/src/familiar/gpe/base/gpe-conf/packages.c:386
 msgid "This window shows all output from the packet manager installing the package."
 msgstr "Toto okno zobrazuje výstup z manažera balíčků během instalace balíčku."
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:146
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:146
 msgid "Couldn't find default runlevel!"
 msgstr "Nemohu zjistit úvodní runlevel!"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:268
-#: /usr/src/gpe/base/gpe-conf/serial.c:272
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:268
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:272
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr "Jednoduché rozhraní pro konfiguraci sériového portu. Vypnuté položky nejsou nainstalovány."
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:270
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:270
 msgid "Simple"
 msgstr "Základní"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:275
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:275
 msgid "Serial port default usage"
-msgstr "Použití séríového portu"
+msgstr "Použití sériového portu"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:279
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:279
 msgid "Select desired software to use serial port here."
 msgstr "Zvolte si program,který bude používat sériový port."
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:281
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:281
 msgid "Console"
 msgstr "Konzole"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:283
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:283
 msgid "This option runs console on serial port. (default)"
-msgstr "Na sériovém portu poběží konzole. (standartní volba)"
+msgstr "Na sériovém portu poběží konzole. (standardní volba)"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:285
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:285
 msgid "GPS Daemon"
 msgstr "GPS Daemon"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:288
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:288
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
 msgstr "Na sériovém portu poběží GPSD, který poskytuje data z GPS ostatním aplikacím."
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:290
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:290
 msgid "Nothing (free)"
 msgstr "Nic (port je volný)"
 
-#: /usr/src/gpe/base/gpe-conf/serial.c:292
+#: /usr/src/familiar/gpe/base/gpe-conf/serial.c:292
 msgid "Don't start any software that uses the serial port."
 msgstr "Na sériovém portu nic nepoběží."
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:195
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:195
 msgid "System memory"
 msgstr "Systémová paměť"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:202
-#: /usr/src/gpe/base/gpe-conf/storage.c:464
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:202
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:464
 msgid "Free memory"
 msgstr "Volná paměť"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:209
-#: /usr/src/gpe/base/gpe-conf/storage.c:357
-#: /usr/src/gpe/base/gpe-conf/storage.c:477
-#: /usr/src/gpe/base/gpe-conf/storage.c:595
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:209
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:357
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:477
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:595
 msgid "Total:"
 msgstr "Celkem:"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:321
-#: /usr/src/gpe/base/gpe-conf/storage.c:524
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:321
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:524
 msgid "Internal Flash"
 msgstr "Vnitřní paměť"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:327
-#: /usr/src/gpe/base/gpe-conf/storage.c:530
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:327
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:530
 msgid "MMC"
 msgstr "MMC"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:333
-#: /usr/src/gpe/base/gpe-conf/storage.c:536
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:333
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:536
 msgid "Compact Flash"
 msgstr "Compact Flash"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:339
-#: /usr/src/gpe/base/gpe-conf/storage.c:542
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:339
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:542
 msgid "Network Filesystem"
 msgstr "Síťový svazek"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:359
-#: /usr/src/gpe/base/gpe-conf/storage.c:597
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:359
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:597
 msgid "Mounted at"
 msgstr "Připojeno na"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:367
-#: /usr/src/gpe/base/gpe-conf/storage.c:577
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:367
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:577
 msgid "Free space"
 msgstr "Volné místo"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:444
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:444
 msgid "System Memory"
 msgstr "Systémová paměť"
 
-#: /usr/src/gpe/base/gpe-conf/storage.c:616
+#: /usr/src/familiar/gpe/base/gpe-conf/storage.c:616
 msgid "Couldn't get filesystem info!"
-msgstr "Nemohu získat informace o filesystemu!"
+msgstr "Nemohu získat informace o filesystému!"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:221
-#: /usr/src/gpe/base/gpe-conf/theme.c:225
-#: /usr/src/gpe/base/gpe-conf/theme.c:920
-#: /usr/src/gpe/base/gpe-conf/theme.c:940
-#: /usr/src/gpe/base/gpe-conf/theme.c:1036
-#: /usr/src/gpe/base/gpe-conf/theme.c:1042
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:221
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:225
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:920
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:940
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1036
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1042
 msgid "Color"
 msgstr "Barva"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:393
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:393
 msgid "Red"
 msgstr "Červená"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:398
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:398
 msgid "Green"
 msgstr "Zelená"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:403
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:403
 msgid "Blue"
 msgstr "Modrá"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:654
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:654
 msgid "Select color"
 msgstr "Zvolte barvu"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:680
-#: /usr/src/gpe/base/gpe-conf/theme.c:746
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:680
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:746
 msgid ""
 "You don't have read access\n"
 "to selected background image!"
@@ -878,537 +881,539 @@ msgstr ""
 "Nemáte dostatečné oprávnění\n"
 "pro čtení tohoto obrázku!"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:828
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:828
 msgid "Theme"
 msgstr "Téma"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:837
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:837
 msgid "Desktop Theme"
 msgstr "Téma prostředí"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:849
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:849
 msgid "Name"
-msgstr "Jméno"
+msgstr "Téma"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:865
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:865
 msgid "Icon Size"
 msgstr "Velikost ikon"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:879
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:879
 msgid "Background"
 msgstr "Pozadí"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:890
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:890
 msgid "Background Settings"
 msgstr "Nastavení pozadí"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:897
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:897
 msgid "Solid color"
 msgstr "Plná barva"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:911
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:911
 msgid "Horizontal"
-msgstr "Horizontalní"
+msgstr "Horizontální"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:915
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:915
 msgid "Vertical"
-msgstr "Vertikalní"
+msgstr "Vertikální"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:931
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:931
 msgid "Color gradient"
 msgstr "Barevný přechod"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:951
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:951
 msgid "Image"
 msgstr "Obrázek"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:977
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:977
 msgid "Centered"
 msgstr "Na střed"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:981
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:981
 msgid "Tiled"
 msgstr "Tapeta"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:984
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:984
 msgid "Stretched"
 msgstr "Roztažený"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:989
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:989
 msgid "Fonts"
 msgstr "Písma"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:998
-#: /usr/src/gpe/base/gpe-conf/theme.c:1018
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:998
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1018
 msgid "Desktop Font"
 msgstr "Písmo plochy"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:1005
-#: /usr/src/gpe/base/gpe-conf/theme.c:1060
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1005
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1060
 msgid "Family"
 msgstr "Rodina"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:1025
-#: /usr/src/gpe/base/gpe-conf/theme.c:1080
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1025
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1080
 msgid "Size"
 msgstr "Velikost"
 
-#: /usr/src/gpe/base/gpe-conf/theme.c:1053
-#: /usr/src/gpe/base/gpe-conf/theme.c:1073
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1053
+#: /usr/src/familiar/gpe/base/gpe-conf/theme.c:1073
 msgid "Application Font"
 msgstr "Písmo aplikací"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:349
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:349
 msgid "Time & Date"
 msgstr "Čas a datum"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:365
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:365
 msgid "Date"
 msgstr "Datum"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:379
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:379
 msgid "Enter current date here or use button to select."
 msgstr "Datum lze nastavit zde nebo použitím tlačítka vedle."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:384
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:384
 msgid "Time"
 msgstr "Čas"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:409
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:409
 msgid "Network"
 msgstr "Podle serveru"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:427
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:427
 msgid "Select the timeserver to use to set the clock."
 msgstr "Vyberte časový server pro synchronizaci času."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:429
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:429
 msgid "Get time from network"
 msgstr "Synchronizovat čas z Internetu"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:436
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:436
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Pokud jste připojeni k Internetu, můžete pomocí toho tlačítka nastavit čas z vybraného časového serveru."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:441
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:450
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:441
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:450
 msgid "Timezone"
 msgstr "Časové pásmo"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:478
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:478
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "Vyberte si časové pásmo. Změna se projeví až při dalším přihlášení."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:486
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:486
 msgid "Daylight Saving"
 msgstr "Letní čas"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:493
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:493
 msgid "Use daylight saving time"
 msgstr "Používat letní čas"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:500
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:500
 msgid "Check this box if you want your device to handle daylight saving time for you."
-msgstr "Při zapnutém nastavení bude čas automaticky přesunut pri přechodu na letní/zimní období."
+msgstr "Při zapnutém nastavení bude čas automaticky přesunut při přechodu na letní/zimní čas."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:502
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:502
 msgid "Offset:"
 msgstr "Posun:"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:511
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:511
 msgid "Default"
-msgstr "Standartní"
+msgstr "Standardní"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:518
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:518
 msgid "Use default DST offset of one hour?"
-msgstr "Standartní posun o 1 hodinu."
+msgstr "Standardní posun o 1 hodinu."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:523
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:523
 msgid "Hours"
 msgstr "Hodin"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:526
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:526
 msgid "Select daylight saving time offset hours here."
 msgstr "O kolik hodin se posune čas."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:531
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:531
 msgid "Minutes"
 msgstr "Minut"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:534
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:534
 msgid "Select daylight saving time offset minutes here."
 msgstr "O kolik minut se posune čas."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:540
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:540
 msgid "Advanced Settings"
 msgstr "Pokročilé nastavení"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:546
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:546
 msgid "Use advanced settings"
 msgstr "Používat pokročilé nastavení"
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:549
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:549
 msgid "Check this if you want to use the advanced settings below."
-msgstr "Vyberte pokud chcete používat ookročilé nastavení."
+msgstr "Vyberte pokud chcete používat pokročilé nastavení."
 
-#: /usr/src/gpe/base/gpe-conf/timeanddate.c:646
+#: /usr/src/familiar/gpe/base/gpe-conf/timeanddate.c:646
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Nové nastavení časového pásma se projeví až při novém přihlášení."
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/brightness.c:66
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/brightness.c:122
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/brightness.c:66
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/brightness.c:122
 msgid "Couldn't read screen settings!"
 msgstr "Nemohu načíst nastavení obrazovky!"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:68
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:68
 msgid "Portrait"
-msgstr "Navýšku"
+msgstr "Na výšku"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:69
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:69
 msgid "Landscape (left)"
 msgstr "Otočené, doleva"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:70
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:70
 msgid "Inverted"
-msgstr "Otočené, navýšku"
+msgstr "Otočené, na výšku"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:71
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:71
 msgid "Landscape (right)"
 msgstr "Otočené, doprava"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:92
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:92
 msgid "Light"
 msgstr "Osvětlení"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:98
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:98
 msgid "Brightness"
 msgstr "Jas"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:104
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:104
 msgid "State"
 msgstr "Stav"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:115
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:115
 msgid "Screensaver"
 msgstr "Vypínat display"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:121
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:121
 msgid "Delay until start"
 msgstr "Vypnout po"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:125
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:125
 msgid "Activated"
 msgstr "Zapnuto"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:135
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:135
 msgid "Orientation"
 msgstr "Natočení"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:154
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:154
 msgid "Touchscreen"
 msgstr "Dotykový display"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:158
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:158
 msgid "Calibrate"
 msgstr "Nastavit"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:272
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:272
 msgid "minutes"
 msgstr "minut"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:275
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:275
 msgid "seconds"
 msgstr "sekund"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/main.c:277
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/main.c:277
 msgid "Off"
 msgstr "Vypnuto"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/rotation.c:54
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/rotation.c:54
 msgid "Can't interpret output from xrandr!"
-msgstr "Neznamý výstup z xrandr!"
+msgstr "Neznámý výstup z xrandr!"
 
-#: /usr/src/gpe/base/gpe-conf/ipaqscreen/rotation.c:71
+#: /usr/src/familiar/gpe/base/gpe-conf/ipaqscreen/rotation.c:71
 msgid "Can't set rotation on an x86."
 msgstr "Nemohu otočit obraz na x86 počítači."
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:71
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:71
 msgid "Auto sleep"
 msgstr "Automatické usínání"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:81
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:117
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:81
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:117
 msgid "enabled"
-msgstr "zapnuto po"
+msgstr "povolit po"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:95
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:95
 msgid "sleep timeout"
-msgstr "Interval, po kterém usne"
+msgstr "Interval, po kterém Ipaq usne"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:98
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:132
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:98
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:132
 msgid "idle(sec)"
 msgstr "(sek) nečinnosti"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:107
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:107
 msgid "Auto dim"
 msgstr ""
 "Automatické ztlumení\n"
 " podsvícení"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:130
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:130
 msgid "backlight dim timeout"
 msgstr "Interval pro ztlumení podsvícení"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:139
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:139
 msgid "Auto dim level"
 msgstr ""
 "Ztlumit podsvícení\n"
 " na úroveň"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:157
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:157
 msgid "Auto sleep advanced controls"
 msgstr "Pokročilé nastavení"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:167
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:167
 msgid "CPU"
 msgstr "Procesor"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:174
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:174
 msgid "Sleep on cpu less than load"
 msgstr "Usne pokud má procesor menší zátěž než nastaveno"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:185
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:185
 msgid "load"
 msgstr "zátěž"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:192
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:192
 msgid "APM"
 msgstr "APM"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:198
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:198
 msgid "Sleep on AC"
 msgstr "Usnout při dobíjení (on AC)"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:200
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:200
 msgid "probe IRQs"
 msgstr "sledovat IRQ"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:206
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:206
 msgid "Check IRQ activity"
 msgstr "Sledovat aktivitu IRQ"
 
-#: /usr/src/gpe/base/gpe-conf/sleep/interface.c:208
+#: /usr/src/familiar/gpe/base/gpe-conf/sleep/interface.c:208
 msgid "Choose IRQs"
 msgstr "Vybrat IRQ"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:286
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:486
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:502
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:622
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:286
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:486
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:502
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:622
 msgid "[NONE SET]"
 msgstr "[nic není vybráno]"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:394
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:394
 #, c-format
 msgid "rresolve: unsupport address family %d !\n"
 msgstr "rresolve: %d není podporovaná třída adres! \n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:677
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1650
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:677
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1650
 msgid "UNSPEC"
 msgstr "UNSPEC"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:679
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:679
 msgid "UNIX Domain"
 msgstr "UNIX Domain"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:682
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:682
 msgid "DARPA Internet"
 msgstr "DARPA Internet"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:685
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:685
 msgid "IPv6"
 msgstr "IPv6"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:688
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1671
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:688
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1671
 msgid "AMPR AX.25"
 msgstr "AMPR AX.25"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:691
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1677
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:691
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1677
 msgid "AMPR NET/ROM"
 msgstr "AMPR NET/ROM"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:694
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:694
 msgid "Novell IPX"
 msgstr "Novell IPX"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:697
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:697
 msgid "Appletalk DDP"
 msgstr "Appletalk DDP"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:700
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1712
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:700
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1712
 msgid "Econet"
 msgstr "Econet"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:703
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:703
 msgid "CCITT X.25"
 msgstr "CCITT X.25"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:706
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1674
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:706
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1674
 msgid "AMPR ROSE"
 msgstr "AMPR ROSE"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:709
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1662
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:709
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1662
 msgid "Ash"
 msgstr "Ash"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:736
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:736
 msgid "Too much address family arguments.\n"
 msgstr "Příliš mnoho tříd adres.\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:747
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:747
 #, c-format
 msgid "Unknown address family `%s'.\n"
 msgstr "Neznámá třída adres '%s'.\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:810
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:810
 msgid "Please don't supply more than one address family.\n"
 msgstr "Nezadávejte prosím více než jednu třídu adres.\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:937
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:937
 msgid "No usable address families found.\n"
 msgstr "Nebyla nalezena použitelná třída adres.\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1007
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1007
 #, c-format
 msgid "warning: no inet socket available: %s\n"
-msgstr "Varování: není dostupný inet socket: %s\n"
+msgstr "Varování: není dostupný soket: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1159
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1159
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
 msgstr "Varování: nemohu otevřít %s (%s). Omezený výstup.\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1402
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1402
 msgid "Device not found"
 msgstr "Zařízení nenalezeno"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1406
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1406
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
 msgstr "%s: chyba při získávání informací o: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1480
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1497
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1480
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1497
 #, c-format
 msgid "in_ether(%s): invalid ether address!\n"
 msgstr "in_ether(%s): nesprávná ethernetová adresa!\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1511
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1511
 #, c-format
+#, fuzzy
 msgid "in_ether(%s): trailing : ignored!\n"
 msgstr "in_ether(%s): trailing : ignorováno!\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1523
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1523
 #, c-format
+#, fuzzy
 msgid "in_ether(%s): trailing junk!\n"
 msgstr "in_ether(%s): trailing junk!\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1555
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1555
 msgid "You cannot start PPP with this program.\n"
 msgstr "Nemohu zapnout PPP pomocí tohoto programu.\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1649
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1649
 msgid "Local Loopback"
 msgstr "Místní smyčka"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1652
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1652
 msgid "Serial Line IP"
 msgstr "IP po sériové lince"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1653
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1653
 msgid "VJ Serial Line IP"
 msgstr "VJ IP po sériové lince"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1654
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1654
 msgid "6-bit Serial Line IP"
 msgstr "6bitové IP po sériové lince"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1655
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1655
 msgid "VJ 6-bit Serial Line IP"
 msgstr "6bitový VJ IP po sériové lince"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1656
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1656
 msgid "Adaptive Serial Line IP"
 msgstr "Adaptivní IP po sériové lince"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1659
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1659
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1665
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1665
 msgid "Fiber Distributed Data Interface"
 msgstr "Fiber Distributed Data Interface"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1668
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1668
 msgid "HIPPI"
 msgstr "HIPPI"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1680
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1680
 msgid "generic X.25"
 msgstr "generic X.25"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1683
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1683
 msgid "IPIP Tunnel"
 msgstr "IPIP Tunnel"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1686
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1686
 msgid "Point-to-Point Protocol"
 msgstr "Point-to-Point Protocol"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1689
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1689
 msgid "(Cisco)-HDLC"
 msgstr "(Cisco)-HDLC"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1690
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1690
 msgid "LAPB"
 msgstr "LAPB"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1693
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1693
 msgid "ARCnet"
 msgstr "ARCnet"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1696
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1696
 msgid "Frame Relay DLCI"
 msgstr "Frame Relay DLCI"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1697
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1697
 msgid "Frame Relay Access Device"
 msgstr "Frame Relay Access Device"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1700
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1700
 msgid "IPv6-in-IPv4"
 msgstr "IPv6-in-IPv4"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1703
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1703
 msgid "IrLAP"
 msgstr "IrLAP"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1706
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1706
 msgid "16/4 Mbps Token Ring"
 msgstr "16/4 Mbps Token Ring"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1708
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1708
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "16/4 Mbps Token Ring (New)"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1818
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1818
 #, c-format
 msgid ""
 "<b>Interface %s</b>\n"
@@ -1417,74 +1422,74 @@ msgstr ""
 "<b>Rozhraní %s</b>\n"
 "Zapouzdření: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1826
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1826
 #, c-format
 msgid "HWaddr (MAC): %s\n"
 msgstr "HWaddr (MAC): %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1832
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1832
 #, c-format
 msgid "Media: %s"
 msgstr "Médium: %s"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1837
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1837
 msgid "(auto)"
 msgstr "(auto)"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1849
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1849
 #, c-format
 msgid "Address: %s\n"
 msgstr "Adresa: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1854
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1854
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "P-t-P: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1858
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1858
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "Maska: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1862
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1862
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "Všesměr: %s\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1882
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1882
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "IPv6 adresa: %s/%d\n"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1886
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1886
 msgid "Scope: "
 msgstr "Rozsah:"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1891
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1891
 msgid "Global"
 msgstr "Globál"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1894
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1894
 msgid "Link"
 msgstr "Linka"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1897
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1897
 msgid "Site"
 msgstr "Stanoviště"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1900
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1900
 msgid "Compat"
 msgstr "Compat"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1903
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1903
 msgid "Host"
 msgstr "Počítač"
 
-#: /usr/src/gpe/base/gpe-conf/tools/interface.c:1906
+#: /usr/src/familiar/gpe/base/gpe-conf/tools/interface.c:1906
 msgid "Unknown"
 msgstr "Neznámý"
 
-#: /usr/src/gpe/base/gpe-conf/users/callbacks.c:104
+#: /usr/src/familiar/gpe/base/gpe-conf/users/callbacks.c:104
 msgid ""
 "You can't remove\n"
 " system users!"
@@ -1492,110 +1497,110 @@ msgstr ""
 "Nemůžete odstranit\n"
 "systémový účet!"
 
-#: /usr/src/gpe/base/gpe-conf/users/callbacks.c:138
+#: /usr/src/familiar/gpe/base/gpe-conf/users/callbacks.c:138
 msgid "Please choose a user name."
 msgstr "Zadejte prosím jméno uživatele."
 
-#: /usr/src/gpe/base/gpe-conf/users/callbacks.c:156
+#: /usr/src/familiar/gpe/base/gpe-conf/users/callbacks.c:156
 msgid "Please choose a home directory."
 msgstr "Zadejte prosím domácí adresář."
 
-#: /usr/src/gpe/base/gpe-conf/users/callbacks.c:217
+#: /usr/src/familiar/gpe/base/gpe-conf/users/callbacks.c:217
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
 "Zadaná hesla se liší!\n"
-"Prosím zadejte stejná!"
+"Zadejte prosím stejná!"
 
-#: /usr/src/gpe/base/gpe-conf/users/callbacks.c:220
+#: /usr/src/familiar/gpe/base/gpe-conf/users/callbacks.c:220
 msgid ""
 "Wrong password\n"
 " Please try again!"
 msgstr ""
-"Nespravné heslo\n"
-"Prosím zadejte správné!"
+"Nesprávné heslo\n"
+"Zadejte prosím správné!"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:208
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:208
 msgid "User Name"
 msgstr "Uživatel"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:209
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:209
 msgid "User Info"
 msgstr "Informace"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:211
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:211
 msgid "Home"
 msgstr "Domovský adresář"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:228
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:229
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:228
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:229
 msgid "Add user"
 msgstr "Přidat uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:229
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:229
 msgid "Add a new user"
 msgstr "Přidat nového uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:233
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:234
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:233
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:234
 msgid "Edit user"
 msgstr "Editovat uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:234
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:234
 msgid "Edit existing user"
 msgstr "Editovat existujícího uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:238
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:239
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:238
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:239
 msgid "Delete user"
 msgstr "Smazat uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:239
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:239
 msgid "Delete existing user"
 msgstr "Smazat existujícího uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:283
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:283
 msgid "User settings"
 msgstr "Nastavení uživatele"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:297
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:297
 msgid "User Name:"
 msgstr "Uživatel:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:313
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:313
 msgid "Password:"
 msgstr "Heslo:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:321
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:321
 msgid "User Info:"
 msgstr "Informace:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:337
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:337
 msgid "Shell:"
 msgstr "Shell:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:356
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:356
 msgid "Home:"
 msgstr "Domov:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:374
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:374
 msgid "Change"
 msgstr "Změnit"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:435
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:435
 msgid "Change Password"
 msgstr "Změnit heslo"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:462
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:462
 msgid "Old Password:"
 msgstr "Staré heslo:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:469
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:469
 msgid "New Password:"
 msgstr "Nové heslo:"
 
-#: /usr/src/gpe/base/gpe-conf/users/interface.c:477
+#: /usr/src/familiar/gpe/base/gpe-conf/users/interface.c:477
 msgid "Confirm:"
 msgstr "Potvrdit:"
 
