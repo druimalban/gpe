@@ -46,13 +46,12 @@ gpe-login: gpe-login.o nocursor.o
 gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
-install: install-login install-scripts
+install: install-scripts
 
-install-login: gpe-login
-	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
-	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
+install-program: gpe-login
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -s gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
+	install -s gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	install -d $(DESTDIR)/etc/X11
 	install -m 755 gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
 	install -m 644 gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
@@ -83,16 +82,6 @@ install-scripts: gpe-logout.desktop
 	install gpe-logout.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-logout
 
 ipkg:
-	make PREFIX=/usr clean all
-	rm -rf familiar/dist.gpe-login
-	mkdir -p familiar/dist.gpe-login/CONTROL
-	cp familiar/$(CONTROL_GPE_LOGIN) familiar/dist.gpe-login/CONTROL/control
-	cp familiar/postinst.gpe-login familiar/dist.gpe-login/CONTROL/postinst
-	cp familiar/postrm.gpe-login familiar/dist.gpe-login/CONTROL/postrm
-	make DESTDIR=`pwd`/familiar/dist.gpe-login PREFIX=/usr install-login
-	chown -R root.root familiar/dist.gpe-login
-	ipkg-build familiar/dist.gpe-login
-	#
 	rm -rf familiar/dist.gpe-session-scripts
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
 	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
@@ -104,5 +93,6 @@ ipkg:
 clean: clean-po
 	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o
 
+include ../build/Makefile.dpkg_ipkg
 include ../build/Makefile.translation
 -include $(DEPS)

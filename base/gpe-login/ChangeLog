@@ -4,6 +4,13 @@
 
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Include Makefile.dpkg_ipkg.
+	(install-login): Rename to install-program.  Use install -s not $(STRIP).
+	(install): Don't call install-program.
+	(ipkg): Only handle gpe-session-scripts here.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c (power_button_filter): Translate keycode to keysym.
 
 	* Makefile (ipkg): Remove call to printinfo.
