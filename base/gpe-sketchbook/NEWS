@@ -1,6 +1,8 @@
 GPE sketchbook NEWS
 
-* 0.2.7
+* 
+
+* 0.2.7 2003-10-12
 - insert a default sketch when the .sketchbook folder is created (#984).
 - added czech translation (from Libor Klepac <elkropac@students.zcu.cz>)
 - tooltips are back, thanks to Libor Klepac <elkropac@students.zcu.cz>.
