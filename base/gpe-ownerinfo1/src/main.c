@@ -181,6 +181,7 @@ main (int argc, char *argv[])
 
   /* printf ("photofile: %s, %s\n", ownerphotofile, my_icons[0].filename); */
   
+  //  gtk_rc_add_default_file ("/usr/local/share/gpe/gtkrc");
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -206,13 +207,22 @@ main (int argc, char *argv[])
       gtk_widget_set_uposition (GPE_Ownerinfo, 0, 200);
     }
 
+  /* make the labels grey: */
+  widget = lookup_widget (GPE_Ownerinfo, "owner_name_label");
+  gtk_rc_parse_string ("widget '*owner_name_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (widget, "owner_name_label");
+  widget = lookup_widget (GPE_Ownerinfo, "owner_email_label");
+  gtk_rc_parse_string ("widget '*owner_email_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (widget, "owner_email_label");
+  widget = lookup_widget (GPE_Ownerinfo, "owner_phone_label");
+  gtk_rc_parse_string ("widget '*owner_phone_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (widget, "owner_phone_label");
+  widget = lookup_widget (GPE_Ownerinfo, "owner_address_label");
+  gtk_rc_parse_string ("widget '*owner_address_label' style 'gpe_ownerinfo_labels'");
+  gtk_widget_set_name (widget, "owner_address_label");
+ 
   widget = lookup_widget (GPE_Ownerinfo, "name");
   gtk_label_set_text (GTK_LABEL (widget), ownername);
-
-  /*
-  gtk_rc_parse_string ("widget '*name' style 'gpe_username'");
-  gtk_widget_set_name (widget, "name");
-  */
 
   widget = lookup_widget (GPE_Ownerinfo, "email");
   gtk_label_set_text (GTK_LABEL (widget), owneremail);
@@ -226,12 +236,6 @@ main (int argc, char *argv[])
   widget = lookup_widget (GPE_Ownerinfo, "smallphoto");
   gtk_widget_show (widget);
 
-  /*
-  widget = lookup_widget (GPE_Ownerinfo, "frame1");
-  gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
-  gtk_widget_set_name (widget, "gpe_ownerinfo");
-  */
-
   /* make window transparent if running on the iPAQ: */
   if (flag_transparent) {
     widget = lookup_widget (GPE_Ownerinfo, "viewport1");
@@ -240,7 +244,7 @@ main (int argc, char *argv[])
     
     GPE_Ownerinfo->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
     gtk_widget_set_style (GTK_WIDGET (GPE_Ownerinfo), GPE_Ownerinfo->style);
-    
+ 
     gtk_widget_realize (GPE_Ownerinfo);
     gtk_widget_realize (widget);
     gdk_window_set_back_pixmap (GTK_VIEWPORT (widget)->view_window, NULL, TRUE);
