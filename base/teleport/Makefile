@@ -45,6 +45,10 @@ install: all install-mo
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s teleport $(DESTDIR)$(PREFIX)/bin/
 	install -s tp-keygen $(DESTDIR)$(PREFIX)/bin/
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 teleport.png $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 teleport.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 include ../build/Makefile.dpkg_ipkg
 include ../build/Makefile.translation
