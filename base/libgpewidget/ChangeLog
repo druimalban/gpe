@@ -1,4 +1,18 @@
+2002-08-12  Philip Blundell  <philb@gnu.org>
+
+	* gtkminifilesel.c (button_pressed): Fix return code.
+	(button_released): Likewise.
+
+	* Makefile: Only build "about" for GTK 1.
+	(CPPFLAGS): Search ./gpe for headers.
+	(update-po): Delete, replaced by Makefile.translation.
+
 2002-08-11  Philip Blundell  <philb@gnu.org>
+
+	* smallbox.h (struct box_desc2): New.
+	(smallbox_x2): New prototype.
+	* smallbox.c (make_combo): New function.
+	(smallbox_x2): Likewise.
 
 	* gtkminifilesel.c (menu_timeout_id): Don't initialise explicitly.
 	(rename_file): Reformat slightly.  Use gpe_perror_box.

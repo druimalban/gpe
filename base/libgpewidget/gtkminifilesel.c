@@ -306,7 +306,7 @@ popup_menu_later (int delay, gpointer data)
   menu_timeout_id = gtk_timeout_add (delay, popup_menu_activate, data);
 }
 
-static void
+static int
 button_pressed (GtkButton *button, GdkEventButton *event, gpointer data)
 {
   GtkMiniFileSelection *fs = GTK_MINI_FILE_SELECTION (data);
@@ -322,12 +322,15 @@ button_pressed (GtkButton *button, GdkEventButton *event, gpointer data)
 
   popup_menu_cancel ();
   popup_menu_later (700, (gpointer) fi);
+
+  return 0;
 }
 
-static void
+static int
 button_released (GtkButton *button, GdkEventButton *event, gpointer data)
 {
   popup_menu_cancel ();
+  return 0;
 }
 
 static void
@@ -652,9 +655,9 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
   gtk_signal_connect (GTK_OBJECT (fs->clist), "select_row",
 		      GTK_SIGNAL_FUNC (selection_made), fs);
   gtk_signal_connect( GTK_OBJECT(fs->clist), "button_press_event",
-		      GTK_SIGNAL_FUNC(button_pressed), (gpointer) fs);
+		      GTK_SIGNAL_FUNC (button_pressed), (gpointer) fs);
   gtk_signal_connect( GTK_OBJECT(fs->clist), "button_release_event",
-		      GTK_SIGNAL_FUNC(button_released), (gpointer) fs);
+		      GTK_SIGNAL_FUNC (button_released), (gpointer) fs);
 
   fs->entry = gtk_entry_new ();
   gtk_widget_show (fs->entry);
