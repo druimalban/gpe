@@ -37,10 +37,7 @@
 #ifndef DISABLE_XRANDR
 #include "screen/rotation.h"
 #endif
-#ifdef PACKAGETOOL		
-#include "packages.h"
-#include "keyboard.h"
-#endif
+
 #include "serial.h"
 #include "cardinfo.h"
 #include "timeanddate.h"
@@ -55,14 +52,6 @@ static int know_global_user_access = FALSE;
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
 
-
-#ifdef PACKAGETOOL		
-void
-update_packages ()
-{
-	do_package_update ();
-}
-#endif
 
 void
 update_screen_brightness (int br)
@@ -336,28 +325,6 @@ suidloop (int write, int read)
 					fscanf (in, "%100s", arg2);	// username
 					create_homedir (arg1, arg2);
 				}
-#ifdef PACKAGETOOL		
-				else if (strcmp (cmd, "NWUD") == 0)  // run system packages update
-				{
-					fscanf (in, "%100s", arg1);
-					update_packages ();
-				}
-				else if (strcmp (cmd, "NWIS") == 0)  // run package installation
-				{
-					fscanf (in, "%100s", arg1);
-					do_package_install (arg1,FALSE);
-				}
-				else if (strcmp (cmd, "NWRM") == 0)  // run package uninstall
-				{
-					fscanf (in, "%100s", arg1);
-					do_package_install (arg1,TRUE);
-				}
-				else if (strcmp (cmd, "PAIS") == 0)  // install a ipk package
-				{
-					fscanf (in, "%100s", arg1);
-					do_package_install (arg1,FALSE);
-				}
-#endif				
 				else if (strcmp (cmd, "SERU") == 0)  // change serial port usage
 				{
 					fscanf (in, "%d", &numarg);
@@ -407,13 +374,6 @@ suidloop (int write, int read)
 						       pcmcia_tmpcfgfile);
 					}
 				}
-#ifdef PACKAGETOOL		
-				else if (strcmp (cmd, "KBDC") == 0)  // write a new keyboard config file
-				{
-					fscanf (in, "%255s", arg1);
-					write_keyboard_cfg (arg1);
-				}
-#endif				
 				else if (strcmp (cmd, "GAUA") == 0)  // change user access to gpe-conf
 				{
 					fscanf (in, "%100s", arg1);

@@ -76,10 +76,10 @@ MEMBERS += misc
 MEMBERS += unimplemented
 MEMBERS += timeanddate
 MEMBERS += screen/main screen/brightness  screen/rotation screen/calibrate screen/callbacks screen/xset 
-MEMBERS += kbd
+MEMBERS += keys/kbd
 MEMBERS += network
 MEMBERS += theme
-MEMBERS += keyctl
+MEMBERS += keys/keyctl
 MEMBERS += ownerinfo
 MEMBERS += login-setup
 MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
@@ -95,6 +95,7 @@ MEMBERS += users/passwd
 MEMBERS += sound/sound
 MEMBERS += sound/soundctrl
 MEMBERS += sound/alarmctrl
+MAMBERS += keys/keyboard
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage
@@ -103,14 +104,6 @@ MEMBERS_INFO += tools/interface
 MEMBERS_INFO += battery
 MEMBERS_INFO += sysinfo
 MEMBERS_INFO += parser
-
-
-ifeq ($(PACKAGETOOL),yes)
-EXTRA_DESKTOP += gpe-conf-packages.desktop.in 
-EXTRA_DESKTOP += gpe-conf-keyboard.desktop.in
-MEMBERS += packages keyboard
-PACKAGE_CFLAGS += -D PACKAGETOOL
-endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -147,7 +140,6 @@ PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
 PIXMAPS += pccard-network.png
 PIXMAPS += pccard-usb.png
 PIXMAPS += pccard-serial.png
-PIXMAPS += gpe-config-keyboard.png
 PIXMAPS += gpe-config-battery.png
 PIXMAPS += gpe-config-sysinfo.png
 PIXMAPS += ibutton1.png
@@ -160,11 +152,6 @@ PIXMAPS += distribution.png
 PIXMAPS += device-info.png
 PIXMAPS += ipaq-s1.png
 PIXMAPS += gpe-config-sound.png
-
-ifeq ($(PACKAGETOOL),yes)
-PIXMAPS += gpe-config-packages.png
-endif
-
 
 all: $(PACKAGE) gpe-info
 
@@ -182,7 +169,6 @@ install-program: all all-desktop
 	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
 	$(INSTALL) -m 644 familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
-	$(INSTALL) -m 644 keyboards.def $(DESTDIR)/etc/gpe/
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) -m 4755 $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
@@ -200,8 +186,9 @@ install-program: all all-desktop
 	$(INSTALL) -m755 sound/soundsettings.sh $(DESTDIR)/etc/X11/Xsession.d/55soundsettings
 
 clean:
-	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop *.d
-	rm -f screen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d sound/*.d
+	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.upload.html *.asc *.desktop *.d
+	rm -f screen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d sound/*.d ipaqscreen/*.d
+	rm -f keys/*.d
 	
 	
 	

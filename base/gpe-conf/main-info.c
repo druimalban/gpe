@@ -36,7 +36,7 @@
 
 #define _(x) gettext(x)
 
-GtkWidget *mainw; // for dialogs
+GtkWidget *mainw; /* for some dialogs */
 
 struct gpe_icon my_icons[] = {
   { "save" },

@@ -1,6 +1,12 @@
 2005-02-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
-	* misc.c, kbd.c, kbd.h: Removed old cruft.
+	* keys/keyboard.*: New files for new keyboard support.
+	* packages.*, gpe-conf-keyboard.desktop.in, pixmaps/gpe-config-keyboard.png,
+	  keyboard.*, keyboards.def: Removed obsolete files.
+	* main.c: Changed #includes to match new directory structure.
+	* kbd.*, keyctl.*: Moved to new "keys" subdir.
+	* Makefile: Fixed clean target, updated to build new directory.
+	* misc.c, kbd.c, kbd.h, main.c, suid.c: Removed old cruft.
 	* HACKING: Some minor updates.
 
 2005-02-05	Florian Boor  	<florian.boor@kernelconcepts.de>

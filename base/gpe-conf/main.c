@@ -31,23 +31,20 @@
 #include "appmgr_setup.h"
 #include "screen.h"
 #include "unimplemented.h"
-#include "kbd.h"
 #include "network.h"
 #include "theme.h"
-#include "keyctl.h"
 #include "sleep.h"
 #include "ownerinfo.h"
 #include "login-setup.h"
 #include "users.h"
 #include "gpe-admin.h"
-#include "sleep/conf.h"
 #include "serial.h"
-#ifdef PACKAGETOOL		
-#include "packages.h"
-#include "keyboard.h"
-#endif
 #include "cardinfo.h"
 #include "tasks.h"
+#include "keys/kbd.h"
+#include "keys/keyctl.h"
+#include "keys/keyboard.h"
+#include "sleep/conf.h"
 #include "sound/sound.h"
 
 #include <gpe/init.h>
@@ -82,15 +79,13 @@ static struct {
 
 }self;
 
-GtkWidget *mainw; // for dialogs
+GtkWidget *mainw; /* for some dialogs */
 
 struct Applet applets[]=
   {
     { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , 
 		"Time" ,"time" ,"Time and Date Setup",PREFIX "/share/pixmaps/gpe-config-time.png"},
-/*    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , 
-		"Appmgr" ,"appmgr", "Launcher Setup", PREFIX "/share/pixmaps/gpe-config-appmgr.png"},
-*/    { &screen_Build_Objects, &screen_Free_Objects, &screen_Save, &screen_Restore,
+    { &screen_Build_Objects, &screen_Free_Objects, &screen_Save, &screen_Restore,
 		"Screen" , "screen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-screen.png"},
     { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore ,
 		"vKeyboard" ,"kbd", "Virtual Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-kbd.png"},
@@ -116,12 +111,6 @@ struct Applet applets[]=
 		"Cardinfo" ,"cardinfo","PC/CF Card Info and Config",PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
     { &Sound_Build_Objects, &Sound_Free_Objects, &Sound_Save, &Sound_Restore , 
 		"Sound" ,"sound","Sound Setup",PREFIX "/share/pixmaps/gpe-config-sound.png"},
-#ifdef PACKAGETOOL		
-    { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore ,
-		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
-    { &Keyboard_Build_Objects, &Unimplemented_Free_Objects, &Keyboard_Save, &Keyboard_Restore ,
-		"Keyboard" ,"keyboard", "External Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-keyboard.png"},
-#endif		
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
 		"Task nameserver" ,"task_nameserver","Task for changing nameserver", PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
