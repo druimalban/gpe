@@ -198,6 +198,7 @@ Logread_Build_Objects (void)
   gtk_box_pack_start(GTK_BOX(vbox),tc,TRUE,TRUE,0);
 
   tw = gtk_text_view_new();	
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(tw),GTK_WRAP_WORD);
   gtk_container_add(GTK_CONTAINER(tc),tw);
   txLog = tw;
   logread_main();

@@ -126,13 +126,7 @@ toolbar_set_style (GtkWidget * bar, gint percent)
   rc_style = gtk_rc_style_new ();
   if (astyle)
     {
-/* bar active */		
-//text		
-      rc_style->fg[GTK_STATE_PRELIGHT] = white;
-      rc_style->text[GTK_STATE_PRELIGHT] = white;
-      rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_FG;
-      rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_TEXT;
-//bar
+     /* bar active */		
       if (percent < 80) 
 	  {	  
 	  	rc_style->bg[GTK_STATE_PRELIGHT] = green;
@@ -160,15 +154,14 @@ toolbar_set_style (GtkWidget * bar, gint percent)
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BASE;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BG;
 
-//end		
-
       rc_style->fg[GTK_STATE_SELECTED] = white;
       rc_style->text[GTK_STATE_SELECTED] = white;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_FG;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_TEXT;
       rc_style->text[GTK_STATE_NORMAL] = white;
       rc_style->fg[GTK_STATE_NORMAL] = white;
-/* bar background */	  
+	  
+    /* bar background */	  
       rc_style->base[GTK_STATE_NORMAL] = blue;
       rc_style->bg[GTK_STATE_NORMAL] = blue;
 			  

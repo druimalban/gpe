@@ -115,6 +115,7 @@ PIXMAPS += menu-reset2.png menu-reset.png menu-resume.png menu-suspend.png
 PIXMAPS += pccard-cdrom.png pccard-ide.png pccard-memory.png
 PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
 PIXMAPS += pccard-network.png
+PIXMAPS += gpe-config-logread.png
 
 all: $(PACKAGE) 
 
@@ -136,13 +137,13 @@ install: gpe-conf
 	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-conf
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
-	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
+	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../libgpewidget/
-	$(INSTALL) gpe-conf.menu_tmp $(DESTDIR)$(PREFIX)/lib/menu/gpe-conf
+	$(INSTALL) -m 644 gpe-conf.menu_tmp $(DESTDIR)$(PREFIX)/lib/menu/gpe-conf
 	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
-	$(INSTALL) pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
+	$(INSTALL) -m 644 pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	$(INSTALL) *.desktop $(DESTDIR)$(PREFIX)/share/applications
+	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 ipkg: clean
 	rm -rf familiar/dist

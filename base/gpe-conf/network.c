@@ -74,7 +74,6 @@ get_unconfigured_interfaces()
 	gboolean found;
 	
 	ifnames = if_nameindex();
-	
 	for (j=0;ifnames[j].if_name!=NULL;j++)
 	{
 		found = FALSE;
@@ -105,13 +104,20 @@ add_interface(GtkWidget *widget, gpointer d)
     struct box_desc2 ifbox[2];
 	
 	ifbox[0].suggestions = get_unconfigured_interfaces();
+
+	if (ifbox[0].suggestions == NULL) 
+	{
+		ifbox[0].suggestions = g_list_append(ifbox[0].suggestions,g_strdup("eth0"));
+		ifbox[0].suggestions = g_list_append(ifbox[0].suggestions,g_strdup("wlan0"));
+		ifbox[0].suggestions = g_list_append(ifbox[0].suggestions,g_strdup("bnep0"));
+	}
+	
 	ifbox[0].label = g_strdup(_("New interface:"));
 	ifbox[0].value = ifbox[0].suggestions->data;
 	ifbox[1].suggestions = NULL;
 	ifbox[1].label = NULL;
 	ifbox[1].value = NULL;
 	
-
 	if (smallbox_x2(_("Enter name of new interface"),ifbox))
 	{
 		ifname = g_strdup(ifbox[0].value);

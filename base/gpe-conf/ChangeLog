@@ -1,5 +1,14 @@
 When			Who				Where						What
 
+11.04.2003		Florian			storage.c					Some cleanups.
+								timeanddate.c				Improved updatein of time in GUI (if got from network).
+								Makefile					Changed permissions of installed files. Added missing logread icon.	
+								logread.c					Changed WrapMode for log.
+
+11.04.2003		Florian			network.c					Fixed segfault at start without unconfigured interfaces.
+								timeanddate.c				Fixed theme dependent gui bug.
+								control1					updated libgpewidget dependency to a newer version, new version nr
+
 10.04.2003		Florian			network.c					Network setup suggests new interfaces now.
 
 09.04.2003		Florian			timeanddate.c				Updated GUI, DST setting is now possible.
