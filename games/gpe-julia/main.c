@@ -311,6 +311,7 @@ button_press_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
     {
       zoomx = button->x;
       zoomy = button->y;
+
 /*      choose_centre (zoomx, zoomy); */
       already_zoomed = FALSE;
       if (timeout == 0)
@@ -401,7 +402,7 @@ on_window_destroy                  (GtkObject       *object,
 int
 main(int argc, char *argv[])
 {
-  GtkWidget *image_event_box, *toolbar, *icon, *vbox;
+  GtkWidget *image_event_box, *toolbar, *icon, *vbox, *alignment, *alignment2, *box;
   GdkPixbuf *iconpixbuf;
 
   setlocale (LC_ALL, "");
@@ -476,8 +477,21 @@ main(int argc, char *argv[])
 
   image_widget = gtk_image_new_from_pixbuf (pixbuf);
   image_event_box = gtk_event_box_new ();
+
   gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
-  gtk_container_add (GTK_CONTAINER (vbox), image_event_box);
+
+  alignment = gtk_alignment_new (0., 0., 0., 0.);
+  gtk_alignment_set_padding (GTK_ALIGNMENT(alignment), 0., 0., 0., 0.);
+
+  gtk_container_add (GTK_CONTAINER(alignment), image_event_box);
+
+  box = gtk_hbox_new (TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (box), alignment);
+
+  alignment2 = gtk_alignment_new (0.5, 0.5, 0., 0.);
+  gtk_container_add (GTK_CONTAINER(alignment2), box);
+
+  gtk_container_add (GTK_CONTAINER (vbox), alignment2);
 
   gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_press_event), NULL);
   gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_release_event), NULL);
