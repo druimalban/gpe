@@ -1,3 +1,14 @@
+2003-01-11  Philip Blundell  <philb@gnu.org>
+
+	* src/main.c (edit_person): Cope with GtkTextView widgets.
+	(config_categories_box): Improve tooltips.
+
+	* src/editing.c (create_edit): Use stock buttons.
+	(build_children): Replace GtkText with GtkTextView.  Set vertical
+	size to 64.
+
+	* Makefile (GTKCFLAGS): Remove GTK_ENABLE_BROKEN.
+
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.08 released.
