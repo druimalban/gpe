@@ -1,3 +1,11 @@
+2003-02-12  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install): Don't install obsolete pixmaps.
+	* pixmaps/close.xpm, pixmaps/config.xpm, pixmaps/dayview.xpm,
+	pixmaps/exit.xpm, pixmaps/futureview.xpm, pixmaps/monthview.xpm,
+	pixmaps/new.xpm, pixmaps/save.xpm, pixmaps/today.xpm,
+	pixmaps/weekview.xpm, pixmaps/yearview.xpm: Delete.
+
 2003-01-19  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (edit_finished): Re-enable window cache.

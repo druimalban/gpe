@@ -33,15 +33,12 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-PIXMAPS = close.xpm config.xpm dayview.xpm futureview.xpm monthview.xpm new.xpm save.xpm today.xpm weekview.xpm yearview.xpm exit.xpm
-
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -leventdb -lsqlite $(LDFLAGS)
 
 install: all install-mo
-	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
