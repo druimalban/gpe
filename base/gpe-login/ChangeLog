@@ -1,5 +1,7 @@
 2002-09-22  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-login.setup: Check for /etc/gpe/gpe-login-bg.dontshow and
+	/etc/gpe/gpe-ownerinfo.dontshow files
 	* familiar/control.gpe-login (Suggests): Suggest gpe-setbg.
 
 	* gpe-login.setup: Try to set background image with gpe-setbg.

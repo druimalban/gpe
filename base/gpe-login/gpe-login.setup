@@ -5,8 +5,11 @@ PATH=$PATH:/usr/X11R6/bin:/usr/bin
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
 ipaq-sleep -u 60 -o 30 -n &
 
-if [ -x /usr/bin/gpe-setbg ]; then
-   gpe-setbg /etc/gpe/gpe-login-bg.png
+# check if the user wants a bg image at all:
+if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
+    if [ -x /usr/bin/gpe-setbg ]; then
+	gpe-setbg /etc/gpe/gpe-login-bg.png
+    fi
 fi
 
 if [ $? -gt 1 ]; then
@@ -16,4 +19,7 @@ if [ $? -gt 1 ]; then
    [ -x /usr/X11R6/bin/xsetroot ] && xsetroot -solid "#bbc0d7"
 fi
 
-[ -x /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -t -g 240x120+0+200 &
+# check if the user wants the owner info at all:
+if [ ! -e /etc/gpe/gpe-ownerinfo.dontshow ]; then
+    [ -x /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -t -g 240x120+0+200 &
+fi
