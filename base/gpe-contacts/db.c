@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
@@ -5,6 +14,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <ctype.h>
+#include <time.h>
 
 #include <gpe/errorbox.h>
 
@@ -445,6 +455,9 @@ commit_person (struct person *p)
   int r;
   gchar *err;
   gboolean rollback = FALSE;
+  time_t modified;
+
+  time (&modified);
 
 #ifdef USE_USQLD	
   r = usqld_exec (db, "begin transaction", NULL, NULL, &err);
@@ -499,6 +512,11 @@ commit_person (struct person *p)
       if (r)
 	goto error;
     }
+
+  if (sqlite_exec_printf (db,
+			  "insert into contacts values(%d, 'MODIFIED', %d)",
+			  NULL, NULL, &err, p->id, modified))
+    goto error;
 
 #ifdef USE_USQLD		
   r = usqld_exec (db, "commit transaction", NULL, NULL, &err);
