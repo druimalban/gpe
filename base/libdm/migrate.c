@@ -190,7 +190,7 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
       gdisplay = gdk_x11_lookup_xdisplay (xev->display);
 
       atom = gdk_x11_atom_to_xatom_for_display (gdisplay, display_change_gdkatom);
-      if (xev->xproperty.atom == atom)
+      if (xev->atom == atom)
 	{
 	  GdkWindow *gwindow;
 
@@ -225,10 +225,10 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 
 			  g_free (buf);
 			  generate_response (gdisplay, xev->display, xev->window, rc);
-			}
 
-		      if (rc == DISPLAY_CHANGE_SUCCESS)
-			update_challenge_on_windows ();
+			  if (rc == DISPLAY_CHANGE_SUCCESS)
+			    update_challenge_on_windows ();
+			}
 
 		      reset_state (gwindow);
 		    }
