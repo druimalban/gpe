@@ -8,5 +8,10 @@
 <H2>Function</H2>
 <P>
 Plays multi media files like MP3, Ogg-Vorbis and maybe MPEG-1 Video.
+
+Sometimes (often?), the version at 
+<a href="http://handhelds.org/~mibus/"> http://handhelds.org/~mibus/</a> 
+might be newer than what's in CVS.
+
 </P>
 <!--#include virtual="/includes/foot.shtml"-->
