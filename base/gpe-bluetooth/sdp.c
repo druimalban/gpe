@@ -99,7 +99,7 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 		  
 		  d = iter->data;
 
-		  if (sdp_uuid_cmp (u, &d->uuid) == 0)
+		  if (sdp_uuid16_cmp (u, &d->uuid) == 0)
 		    {
 		      struct bt_service *sv = d->scan (svcrec, bd);
 
