@@ -23,6 +23,7 @@
 
 static GtkWidget *g_table;
 static GtkWidget *cal[12];
+static GtkWidget *datesel;
 
 static const nl_item months[] = { MON_1, MON_2, MON_3, MON_4,
 				  MON_5, MON_6, MON_7, MON_8,
@@ -45,6 +46,9 @@ year_view_update (void)
   tm.tm_min = 0;
   tm.tm_sec = 0;
   basetime = mktime (&tm);
+
+  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
 
   memset (day_event_bits, 0, sizeof (day_event_bits));
 
@@ -101,11 +105,12 @@ year_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
   GtkWidget *table = gtk_table_new (12, 2, FALSE);
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *label;
   guint i;
+
+  datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
   
   for (i = 0; i < 12; i++)
     {
