@@ -925,6 +925,7 @@ Theme_Build_Objects ()
   guint gpe_boxspacing = gpe_get_boxspacing ();
   gchar *tstr; 
   GtkRcStyle* astyle;
+  int isize, minsize;
 
   table_attach_left_col_x = GTK_FILL;
   table_attach_left_col_y = 0;
@@ -991,7 +992,6 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.slIconSize, 0, 4, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-  gtk_range_set_value(GTK_RANGE(self.slIconSize),32.0);  
   gtk_range_set_increments(GTK_RANGE(self.slIconSize),2.0,4.0);
   
   label = gtk_label_new(NULL);
@@ -1294,13 +1294,27 @@ Theme_Build_Objects ()
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
-  
+  /* icon sizes */
+  minsize = (gdk_screen_height() < gdk_screen_width()) 
+            ? gdk_screen_height() : gdk_screen_width();
+  if (minsize < 200) 
+	 isize = 24;
+  else if (minsize < 300)
+	 isize = 36;
+  else 
+	 isize = 48;
+  gtk_range_set_value(GTK_RANGE(self.slIconSize),(float)isize);
+  /* toolbar layout */
+  if (minsize > 400)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolBoth),TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbToolIcons),TRUE);
+
   mb_start_xsettings ();
 
   return notebook;

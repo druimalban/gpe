@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-17 18:05+0200\n"
+"POT-Creation-Date: 2004-08-05 01:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -158,72 +158,68 @@ msgid ""
 "again."
 msgstr ""
 
-#: ipaqscreen/main.c:71
+#: ipaqscreen/main.c:72
 msgid "Portrait"
 msgstr ""
 
-#: ipaqscreen/main.c:72
+#: ipaqscreen/main.c:73
 msgid "Landscape (left)"
 msgstr ""
 
-#: ipaqscreen/main.c:73
+#: ipaqscreen/main.c:74
 msgid "Inverted"
 msgstr ""
 
-#: ipaqscreen/main.c:74
+#: ipaqscreen/main.c:75
 msgid "Landscape (right)"
 msgstr ""
 
-#: ipaqscreen/main.c:98
+#: ipaqscreen/main.c:102
 msgid "Light"
 msgstr ""
 
-#: ipaqscreen/main.c:104
+#: ipaqscreen/main.c:108
 msgid "Brightness"
 msgstr ""
 
-#: ipaqscreen/main.c:110 ipaqscreen/main.c:133
-msgid "State"
-msgstr ""
-
-#: ipaqscreen/main.c:121
+#: ipaqscreen/main.c:119
 msgid "Screensaver"
 msgstr ""
 
-#: ipaqscreen/main.c:127
+#: ipaqscreen/main.c:125
 msgid "Delay until start"
 msgstr ""
 
-#: ipaqscreen/main.c:137 ipaqscreen/main.c:174
+#: ipaqscreen/main.c:131
+msgid "State"
+msgstr ""
+
+#: ipaqscreen/main.c:135
 msgid "on"
 msgstr ""
 
-#: ipaqscreen/main.c:138 ipaqscreen/main.c:175
+#: ipaqscreen/main.c:136
 msgid "off"
 msgstr ""
 
-#: ipaqscreen/main.c:148
+#: ipaqscreen/main.c:146
 msgid "Orientation"
 msgstr ""
 
-#: ipaqscreen/main.c:168
+#: ipaqscreen/main.c:166
 msgid "Touchscreen"
 msgstr ""
 
-#: ipaqscreen/main.c:172
+#: ipaqscreen/main.c:170
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:307
+#: ipaqscreen/main.c:278
 msgid "min"
 msgstr ""
 
-#: ipaqscreen/main.c:310
+#: ipaqscreen/main.c:281
 msgid "sec"
-msgstr ""
-
-#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
-msgid "Couldn't read screen settings!"
 msgstr ""
 
 #: kbd.c:146
@@ -393,131 +389,131 @@ msgstr ""
 msgid "Blue"
 msgstr ""
 
-#: theme.c:739
+#: theme.c:737
 msgid "Select color"
 msgstr ""
 
-#: theme.c:765 theme.c:837
+#: theme.c:763 theme.c:835
 msgid "You don't have read access to selected background image!"
 msgstr ""
 
-#: theme.c:948
+#: theme.c:946
 msgid "Theme"
 msgstr ""
 
-#: theme.c:957
+#: theme.c:955
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:969
+#: theme.c:967
 msgid "Name"
 msgstr ""
 
-#: theme.c:985
+#: theme.c:983
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:1001
+#: theme.c:999
 msgid "Visual Effects"
 msgstr ""
 
-#: theme.c:1007
+#: theme.c:1005
 msgid "Enable Visual Effects"
 msgstr ""
 
-#: theme.c:1014
+#: theme.c:1012
 msgid "Background"
 msgstr ""
 
-#: theme.c:1025
+#: theme.c:1023
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:1032
+#: theme.c:1030
 msgid "Theme Default"
 msgstr ""
 
-#: theme.c:1039
+#: theme.c:1037
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:1053
+#: theme.c:1051
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:1057
+#: theme.c:1055
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:1062 theme.c:1081 theme.c:1234 theme.c:1240
+#: theme.c:1060 theme.c:1079 theme.c:1232 theme.c:1238
 msgid "Color"
 msgstr ""
 
-#: theme.c:1072
+#: theme.c:1070
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:1092
+#: theme.c:1090
 msgid "Image"
 msgstr ""
 
-#: theme.c:1118
+#: theme.c:1116
 msgid "Centered"
 msgstr ""
 
-#: theme.c:1122
+#: theme.c:1120
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:1125
+#: theme.c:1123
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:1131
+#: theme.c:1129
 msgid "Toolbars"
 msgstr ""
 
-#: theme.c:1142
+#: theme.c:1140
 msgid "Toolbar Style"
 msgstr ""
 
-#: theme.c:1149
+#: theme.c:1147
 msgid "Icons"
 msgstr ""
 
-#: theme.c:1154
+#: theme.c:1152
 msgid "Text"
 msgstr ""
 
-#: theme.c:1159
+#: theme.c:1157
 msgid "Both"
 msgstr ""
 
-#: theme.c:1164
+#: theme.c:1162
 msgid "Both H"
 msgstr ""
 
-#: theme.c:1171
+#: theme.c:1169
 msgid "Toolbar Icon Size"
 msgstr ""
 
-#: theme.c:1186
+#: theme.c:1184
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1195 theme.c:1215
+#: theme.c:1193 theme.c:1213
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1202 theme.c:1258
+#: theme.c:1200 theme.c:1256
 msgid "Family"
 msgstr ""
 
-#: theme.c:1222 theme.c:1278
+#: theme.c:1220 theme.c:1276
 msgid "Size"
 msgstr ""
 
-#: theme.c:1251 theme.c:1271
+#: theme.c:1249 theme.c:1269
 msgid "Application Font"
 msgstr ""
 
@@ -657,7 +653,7 @@ msgstr ""
 msgid "Auto sleep advanced controls"
 msgstr ""
 
-#: sleep/interface.c:164 sysinfo.c:592
+#: sleep/interface.c:164 sysinfo.c:623
 msgid "CPU"
 msgstr ""
 
@@ -1360,7 +1356,7 @@ msgid "Free memory"
 msgstr ""
 
 #: storage.c:186 storage.c:193 storage.c:339 storage.c:350 storage.c:455
-#: storage.c:468 sysinfo.c:601 sysinfo.c:610
+#: storage.c:468 sysinfo.c:632 sysinfo.c:641
 msgid "MB"
 msgstr ""
 
@@ -1425,19 +1421,19 @@ msgstr ""
 msgid "could not open touchscreen device '%s'\n"
 msgstr ""
 
-#: battery.c:143 battery.c:200 battery.c:282
+#: battery.c:143 battery.c:200 battery.c:284
 msgid "Status: high"
 msgstr ""
 
-#: battery.c:146 battery.c:203 battery.c:284
+#: battery.c:146 battery.c:203 battery.c:286
 msgid "Status: low"
 msgstr ""
 
-#: battery.c:149 battery.c:206 battery.c:286
+#: battery.c:149 battery.c:206 battery.c:288
 msgid "Status: critical"
 msgstr ""
 
-#: battery.c:152 battery.c:209 battery.c:291
+#: battery.c:152 battery.c:209 battery.c:293
 msgid "Status: charging"
 msgstr ""
 
@@ -1449,7 +1445,7 @@ msgstr ""
 msgid "Status: dead"
 msgstr ""
 
-#: battery.c:161 battery.c:218 battery.c:293
+#: battery.c:161 battery.c:218 battery.c:295
 msgid "Status: full"
 msgstr ""
 
@@ -1457,7 +1453,7 @@ msgstr ""
 msgid "Status: no battery"
 msgstr ""
 
-#: battery.c:167 battery.c:224 battery.c:243 battery.c:280
+#: battery.c:167 battery.c:224 battery.c:243 battery.c:282
 msgid "Status: unknown"
 msgstr ""
 
@@ -1469,11 +1465,11 @@ msgstr ""
 msgid "Voltage"
 msgstr ""
 
-#: battery.c:180 battery.c:232 battery.c:298
+#: battery.c:180 battery.c:232 battery.c:300
 msgid "AC connected"
 msgstr ""
 
-#: battery.c:182 battery.c:234 battery.c:300
+#: battery.c:182 battery.c:234 battery.c:302
 msgid "Lifetime"
 msgstr ""
 
@@ -1493,111 +1489,111 @@ msgstr ""
 msgid "Lifetime: unknown"
 msgstr ""
 
-#: battery.c:351
+#: battery.c:361
 msgid "Internal battery"
 msgstr ""
 
-#: battery.c:355
+#: battery.c:365
 msgid "Jacket battery"
 msgstr ""
 
-#: sysinfo.c:217
+#: sysinfo.c:228
 msgid "ARM"
 msgstr ""
 
-#: sysinfo.c:220
+#: sysinfo.c:231
 msgid "Intel x86 or compatible"
 msgstr ""
 
-#: sysinfo.c:223
+#: sysinfo.c:234
 msgid "Mips"
 msgstr ""
 
-#: sysinfo.c:225
+#: sysinfo.c:236
 msgid "Silicon Graphics Machine"
 msgstr ""
 
-#: sysinfo.c:229
+#: sysinfo.c:240
 msgid "IBM Power or PowerPC"
 msgstr ""
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:257
+#: sysinfo.c:268
 msgid "Familiar"
 msgstr ""
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:266
+#: sysinfo.c:282
 msgid "OpenEmbedded"
 msgstr ""
 
-#: sysinfo.c:298 sysinfo.c:300
+#: sysinfo.c:324 sysinfo.c:326
 msgid "Build"
 msgstr ""
 
-#: sysinfo.c:392
+#: sysinfo.c:423
 msgid "Network Status"
 msgstr ""
 
-#: sysinfo.c:406 sysinfo.c:409
+#: sysinfo.c:437 sysinfo.c:440
 msgid "HWaddr (MAC)"
 msgstr ""
 
-#: sysinfo.c:440
+#: sysinfo.c:471
 msgid "Default Gateway"
 msgstr ""
 
-#: sysinfo.c:483
+#: sysinfo.c:514
 msgid "System information"
 msgstr ""
 
-#: sysinfo.c:494
+#: sysinfo.c:525
 msgid "Version"
 msgstr ""
 
-#: sysinfo.c:528
+#: sysinfo.c:559
 msgid "Distribution"
 msgstr ""
 
-#: sysinfo.c:553
+#: sysinfo.c:584
 msgid "System"
 msgstr ""
 
-#: sysinfo.c:562
+#: sysinfo.c:593
 msgid "Device information"
 msgstr ""
 
-#: sysinfo.c:574
+#: sysinfo.c:605
 msgid "Device Name"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:601
+#: sysinfo.c:632
 msgid "RAM"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: sysinfo.c:610
+#: sysinfo.c:641
 msgid "Flash"
 msgstr ""
 
-#: sysinfo.c:617
+#: sysinfo.c:648
 msgid "Hardware"
 msgstr ""
 
-#: sysinfo.c:622
+#: sysinfo.c:653
 msgid "Battery"
 msgstr ""
 
-#: sysinfo.c:627
+#: sysinfo.c:658
 msgid "Storage"
 msgstr ""
 
-#: sysinfo.c:632
+#: sysinfo.c:663
 msgid "Networks"
 msgstr ""
 
-#: sysinfo.c:637
+#: sysinfo.c:668
 msgid "Log Display"
 msgstr ""
 

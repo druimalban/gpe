@@ -1,3 +1,8 @@
+2004-08-08	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* theme.c: Guessing of better defaults.
+	* applets.c: Fixed typo in widget name.
+
 2004-08-06	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* applets.c: Fixed behaviour of password dialog and enter key.
