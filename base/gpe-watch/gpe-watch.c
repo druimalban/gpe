@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Nils Faerber <nils@kernelconcepts.de>
+ * Copyright (C) 2003,2004 Nils Faerber <nils@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -120,9 +120,9 @@ GtkWidget *ScrolledWindow;
 	gtk_window_set_title (GTK_WINDOW (Watch.window), "Watch");
 	if (Watch.AsDialog) {
 		gtk_window_set_type_hint (GTK_WINDOW (Watch.window), GDK_WINDOW_TYPE_HINT_DIALOG);
-		gtk_window_set_default_size(GTK_WINDOW(Watch.window), 140, 140);
+		gtk_window_set_default_size(GTK_WINDOW(Watch.window), 200, 200);
 	} else
-		gtk_window_set_default_size(GTK_WINDOW(Watch.window), 140, 185);
+		gtk_window_set_default_size(GTK_WINDOW(Watch.window), 200, 240);
 	gtk_widget_realize (Watch.window);
 
 	/* Destroy handler */
