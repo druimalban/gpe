@@ -22,6 +22,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <sys/vfs.h>
+
 #include <gtk/gtk.h>
 
 #include "init.h"
@@ -41,9 +43,11 @@ static struct gpe_icon my_icons[] = {
 
 #define _(x) gettext(x)
 
-GtkWidget *window = NULL;
-GtkWidget *progress_bar = NULL;
+GtkWidget *window = NULL; /* dialog window to show status */
+GtkWidget *progress_bar = NULL; /* progress/activity indicator */
+GtkWidget *label = NULL; /* label for progress_bar */
 GtkWidget *file_selector = NULL;
+
 gboolean gpe_initialised = FALSE;
 
 extern gboolean stop; /* set to TRUE when the sound process is trying to end */
@@ -111,7 +115,17 @@ gint continue_sound (gpointer data)
       time = g_timer_elapsed (timer, NULL);
       if (recording)
         {
+	  struct statfs buf;
+	  int available_time;
           gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, time);
+	  if (statfs (filename, &buf) != 0)
+	    perror ("statfs");
+          /* fprintf (stderr, "%ld KB remaining\n", buf.f_bavail * (buf.f_bsize >> 10)); */
+	  available_time = (int) ((double) (buf.f_bavail * (buf.f_bsize >> 10))) / (1650.*2.);
+	  if (available_time < 7200)
+	    {
+	      gtk_label_set_text (GTK_LABEL(label), g_strdup_printf ("%s (%d:%d %s)", _("Recording"), available_time / 60, available_time % 60, _("available")));
+            }
         }
       else
         {
@@ -325,7 +339,6 @@ main(int argc, char *argv[])
 {
   GtkWidget *fakeparentwindow;
   GtkWidget *hbox, *vbox;
-  GtkWidget *label;
   GtkWidget *buttonok, *buttoncancel;
 
   /* presumably this argument parsing should be done more nicely: */
