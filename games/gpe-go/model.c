@@ -388,7 +388,6 @@ int kill_group_of(int col, int row){
   return count;
 }
 
-void redo_turn();
 void play_at(int col, int row){
   if( col < 1 || go.game.size < col ||
       row < 1 || go.game.size < row ){
