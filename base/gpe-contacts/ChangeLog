@@ -1,5 +1,15 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* editing.c (edit_window): Tweak packing of action buttons.  Add
+	"delete" button (currently inoperative).  Set sensible default
+	size on window.
+
+	* main.c (create_main): Stash pointers to edit, delete and export
+	buttons as properties on main window.  Make all three insensitive.
+	(selection_made): Toggle sensitivity on all three buttons.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* main.c (create_main): Remove "go" button from search panel;
 	replaced with interactive search-as-you-type.
 	(schedule_search): New.

@@ -158,6 +158,7 @@ create_edit (void)
   GtkWidget *label16;
   GtkWidget *edit_cancel;
   GtkWidget *edit_save;
+  GtkWidget *edit_delete;
   GtkWidget *catframe;
   GtkTooltips *tooltips;
   GtkWidget *topvbox;
@@ -298,13 +299,16 @@ create_edit (void)
   label16 = gtk_label_new (_("Personal"));
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook2), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook2), 0), label16);
 
-  edit_cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
-  gtk_container_add (GTK_CONTAINER (action_area), edit_cancel);
-  GTK_WIDGET_SET_FLAGS (edit_cancel, GTK_CAN_DEFAULT);
-
-  edit_save = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
-  gtk_container_add (GTK_CONTAINER (action_area), edit_save);
+  edit_delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+  edit_cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  edit_save = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   GTK_WIDGET_SET_FLAGS (edit_save, GTK_CAN_DEFAULT);
+
+  gtk_widget_set_sensitive (GTK_WIDGET (edit_delete), FALSE);
+
+  gtk_box_pack_start (GTK_BOX (action_area), edit_delete, TRUE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (action_area), edit_cancel, TRUE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (action_area), edit_save, TRUE, FALSE, 4);
 
   gtk_signal_connect (GTK_OBJECT (edit_bt_image), "clicked",
                       GTK_SIGNAL_FUNC (on_edit_bt_image_clicked),
@@ -320,6 +324,8 @@ create_edit (void)
   g_object_set_data (G_OBJECT (edit), "notebook2", notebook2);
   g_object_set_data (G_OBJECT (edit), "name_entry", name_entry);
   g_object_set_data (G_OBJECT (edit), "datecombo", datecombo);
+
+  gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
 
   return edit;
 }

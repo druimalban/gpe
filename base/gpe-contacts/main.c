@@ -46,7 +46,6 @@ GtkWidget *mainw;
 gboolean panel_config_has_changed = FALSE;
 GtkListStore *list_store;
 GtkWidget *list_view;
-static GtkWidget *bExport;
 
 struct gpe_icon my_icons[] = {
   {"edit"},
@@ -717,12 +716,17 @@ show_details (struct person *p)
 }
 
 void
-selection_made (GtkTreeSelection *sel)
+selection_made (GtkTreeSelection *sel, GObject *o)
 {
   GtkTreeIter iter;
   guint id;
   struct person *p;
   GtkTreeModel *model;
+  GtkWidget *edit_button, *delete_button, *export_button;
+
+  edit_button = g_object_get_data (o, "edit-button");
+  delete_button = g_object_get_data (o, "delete-button");
+  export_button = g_object_get_data (o, "export-button");
 
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
@@ -734,11 +738,15 @@ selection_made (GtkTreeSelection *sel)
 
       discard_person (p);
 		
-      gtk_widget_set_sensitive(bExport,TRUE);	
+      gtk_widget_set_sensitive (edit_button, TRUE);
+      gtk_widget_set_sensitive (delete_button, TRUE);
+      gtk_widget_set_sensitive (export_button, TRUE);
     }
   else
     {
-       gtk_widget_set_sensitive(bExport,FALSE);
+      gtk_widget_set_sensitive (edit_button, FALSE);
+      gtk_widget_set_sensitive (delete_button, FALSE);
+      gtk_widget_set_sensitive (export_button, FALSE);
     }
 }
 
@@ -901,6 +909,7 @@ create_main (void)
   GtkWidget *pDetail;
   GtkWidget *tabDetail;
   GtkWidget *toolbar, *pw;
+  GtkWidget *b;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
@@ -928,19 +937,25 @@ create_main (void)
   pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("edit", 
 							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
 
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit"), 
-			   _("Edit contact"), _("Tap here to edit the selected contact."),
-			   pw, (GtkSignalFunc) edit_contact, NULL);
+  b = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit"), 
+			       _("Edit contact"), _("Tap here to edit the selected contact."),
+			       pw, (GtkSignalFunc) edit_contact, NULL);
+  g_object_set_data (G_OBJECT (main_window), "edit-button", b);
+  gtk_widget_set_sensitive (b, FALSE);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-			    _("Delete contact"), _("Tap here to delete the selected contact."),
-			    G_CALLBACK (delete_contact), NULL, -1);
+  b = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+				_("Delete contact"), _("Tap here to delete the selected contact."),
+				G_CALLBACK (delete_contact), NULL, -1);
+  g_object_set_data (G_OBJECT (main_window), "delete-button", b);
+  gtk_widget_set_sensitive (b, FALSE);
 
   pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("export", 
 							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
-  bExport = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Export"),
-			    _("Export"), _("Tap here to export this contact to VCARD."),
-			    pw, G_CALLBACK (export_contact), NULL);
+  b = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Export"),
+			       _("Export"), _("Tap here to export this contact to VCARD."),
+			       pw, G_CALLBACK (export_contact), NULL);
+  g_object_set_data (G_OBJECT (main_window), "export-button", b);
+  gtk_widget_set_sensitive (b, FALSE);
 				
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
 			    _("Properties"), _("Tap here to configure the program."),
@@ -951,8 +966,6 @@ create_main (void)
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
 			    _("Close"), _("Tap here to exit gpe-contacts."),
 			    G_CALLBACK (gtk_main_quit), NULL, -1);
-
-  gtk_widget_set_sensitive(bExport,FALSE);
 
   nbList = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (vbox1), nbList, FALSE, FALSE, 0);
@@ -1018,7 +1031,7 @@ create_main (void)
 		    G_CALLBACK (main_view_switch_page), NULL);
 
   g_signal_connect (G_OBJECT (tree_sel), "changed",
-		    G_CALLBACK (selection_made), NULL);
+		    G_CALLBACK (selection_made), main_window);
  
   displaymigration_mark_window (main_window);
 
