@@ -3,13 +3,8 @@ PACKAGE = minitheme
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-#USE_LIBMBDOCK = yes
 
-MEMBERS = minitheme tray
-
-ifneq ($(USE_LIBMBDOCK),yes)
-MEMBERS += tray
-endif
+MEMBERS = minitheme
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
@@ -29,11 +24,7 @@ LDFLAGS += -L../libgpewidget -L../libxsettings-client -L../libxsettings
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0`
-ifeq ($(USE_LIBMBDOCK),yes)
-LDFLAGS += -lmbdock -L/usr/X11R6/lib 
-endif
-LDFLAGS += -lXsettings-client
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lXsettings-client
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 

@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/dir.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -25,7 +26,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
-#include "tray.h"
+#include <gpe/tray.h>
 
 #include "xsettings-common.h"
 #include "xsettings-client.h"
@@ -70,21 +71,6 @@ static void
 clicked (GtkWidget *w, GdkEventButton *ev)
 {
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, ev->button, ev->time);
-}
-
-static GdkFilterReturn
-filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
-{
-  XEvent *xev = (XEvent *)xevp;
-  
-  if (xev->type == ClientMessage || xev->type == ReparentNotify)
-    {
-      XAnyEvent *any = (XAnyEvent *)xev;
-      tray_handle_event (any->display, any->window, xev);
-      if (xev->type == ReparentNotify)
-	gtk_widget_show (GTK_WIDGET (p));
-    }
-  return GDK_FILTER_CONTINUE;
 }
 
 static void
@@ -161,7 +147,7 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  window = gtk_plug_new (0);
   gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
@@ -194,8 +180,7 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-  tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
-  gdk_window_add_filter (window->window, filter, window);
+  gpe_system_tray_dock (window->window);
 
   gtk_main ();
 
