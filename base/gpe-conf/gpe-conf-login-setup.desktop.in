@@ -6,5 +6,5 @@ Terminal=0
 Type=Application
 Icon=gpe-config-login-setup.png
 Categories=Application;SystemSettings;GPE
-StartupNotify=False
+StartupNotify=True
 SingleInstance=True

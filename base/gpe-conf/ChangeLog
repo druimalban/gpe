@@ -1,11 +1,22 @@
+2004-09-09	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Released V 0.1.18
+	* storage.c: Display status of mtd block devices.
+	* *.desktop.in: Turned on startup notification.
+	* users/passwd.*: New files that provide password changing function.
+	                passwd.c is taken from busybox 1.00-rc3
+	* users/callbacks.c, suid.c: Changed user update to new function instead 
+	                             of pipe.
+	* Makefile: Added new module, changed version number.
+
 2004-09-08	Florian Boor  	<florian.boor@kernelconcepts.de>
 
-	main.c: Moved window title setup.
-	sysinfo.c, logread.c: Several minor GUI design fixes.
-	network.c: Removed obsolete declaration, formating change.
-	sleep/interface.c: Set spinbutton size to proper amount of chars.
-    users/interface.c, callbacks.c: Distinguish between setting and changing 
-	                                a password.	
+	* main.c: Moved window title setup.
+	* sysinfo.c, logread.c: Several minor GUI design fixes.
+	* network.c: Removed obsolete declaration, formating change.
+	* sleep/interface.c: Set spinbutton size to proper amount of chars.
+    * users/interface.c, callbacks.c: Distinguish between setting and changing 
+	                                  a password.	
 
 2004-09-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 

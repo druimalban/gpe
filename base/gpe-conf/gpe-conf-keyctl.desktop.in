@@ -7,5 +7,4 @@ Type=Application
 Icon=gpe-config-keyctl.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=True
-StartupNotify=False
 SingleInstance=True

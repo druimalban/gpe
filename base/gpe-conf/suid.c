@@ -44,6 +44,7 @@
 #include "serial.h"
 #include "cardinfo.h"
 #include "timeanddate.h"
+#include "users/passwd.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -286,6 +287,10 @@ check_user_access (const char *cmd)
 	if (!strcmp (cmd, "NTPD"))
 		return TRUE;
 	
+	/* allow changing password */
+	if (!strcmp (cmd, "CHPW"))
+		return TRUE;
+	
 	return global_user_access;
 }
 
@@ -315,7 +320,6 @@ suidloop (int write, int read)
 		cmd[0] = ' ';
 		fflush (stdout);
 		fscanf (in, "%4s\n%s\n", cmd, passwd);
-		//    if (!feof (in))
 		{
 			cmd[4] = 0;
 			bin = NULL;
@@ -348,8 +352,7 @@ suidloop (int write, int read)
 					strcpy (arg1, "/tmp/passwd");
 					strcpy (arg2, "/etc/passwd");
 					numarg = 2;
-					system_printf ("/bin/cp %s %s", arg1,
-						       arg2);
+					system_printf ("/bin/cp %s %s", arg1, arg2);
 					system_printf ("chmod 0644 %s", arg2);
 					system_printf ("/bin/rm -f %s", arg1);
 				}
@@ -517,6 +520,18 @@ suidloop (int write, int read)
 					cmd = g_strdup_printf("rm -rf /home%s", arg1);
 					system (cmd);
 					g_free(cmd);
+				}
+				else if (strcmp (cmd, "CHPW") == 0)  // change users password
+				{
+					struct passwd *pw;
+					
+					fscanf (in, "%100s %128s", arg2, arg1);
+					/* empty password */
+					if (!strcmp(arg1, "*"))
+						memset(arg1, 0, sizeof(arg1));
+					pw = getpwnam(arg2);
+					if (pw)
+						update_passwd (pw, arg1);
 				}
 			}	// if check_user_access
 			else	// clear buffer

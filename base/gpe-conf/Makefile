@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.17
+VERSION = 0.1.18
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -89,6 +89,7 @@ MEMBERS += serial
 MEMBERS += cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks
+MEMBERS += users/passwd
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage

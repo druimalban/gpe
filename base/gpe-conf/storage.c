@@ -43,11 +43,11 @@ which_fs_type (char *fsline)
 {
 	if (strstr (fsline, "/dev/root"))
 		return FS_T_FLASH;
+	if (strstr (fsline, "mtdblock"))
+		return FS_T_FLASH;
 	if (strstr (fsline, "mmc"))
 		return FS_T_MMC;
-	if (strstr (fsline, "hda"))
-		return FS_T_CF;
-	if (strstr (fsline, "hdb"))
+	if (strstr (fsline, "hd"))
 		return FS_T_CF;
 	if (strstr (fsline, "nfs"))
 		return FS_T_NFS;

@@ -217,40 +217,22 @@ users_on_changepasswd_clicked                (GtkButton       *button,
   if ((old_crypted_pass[0]==0 && oldpasswd[0]==0) // there was no pass!
       || strcmp(crypt(oldpasswd,old_crypted_pass ), old_crypted_pass) == 0)
     {
-      if(strcmp(newpasswd,newpasswd2) == 0)
+      if(strcmp(newpasswd, newpasswd2) == 0)
 		{
+			if ((newpasswd[0]) && strlen(newpasswd)) /* we have a passwd */
+				self->cur->pw.pw_passwd = strdup(crypt(newpasswd,salt));
+			else
+				self->cur->pw.pw_passwd = strdup("");
+			free(old_crypted_pass);
 			if (set_own_password)
 			{
-				FILE *passctl;
-				int ret;
-				
-				passctl = popen("/usr/bin/passwd", "w");
-				if (passctl)
-				{
-					sleep(1);
-					fprintf(passctl, "%s\n", oldpasswd);
-					fflush (passctl);
-					usleep(300000);
-					fprintf(passctl, "%s\n", newpasswd);
-					fflush (passctl);
-					usleep(300000);
-					fprintf(passctl, "%s\n", newpasswd2);
-					fflush (passctl);
-					ret = pclose(passctl);
-					if (ret) 
-						gpe_error_box(_("Bad password!\n" \
-					                     "(too short, too simple,\n" \
-					                     "similar to an old one)\n" \
-					                     "Please try again!"));
-				}
-			}
-			else
-			{
-				if(newpasswd[0])// we have a passwd
-					self->cur->pw.pw_passwd = strdup(crypt(newpasswd,salt));
-				else
-					self->cur->pw.pw_passwd = strdup(newpasswd); // keep it clear
-				free(old_crypted_pass);
+				gchar *pwds = g_strdup_printf("%s %s\n",
+				                              g_get_user_name(),
+				                              strlen(self->cur->pw.pw_passwd)
+				                                ? self->cur->pw.pw_passwd 
+				                                : "*");
+				suid_exec("CHPW", pwds);
+				g_free(pwds);
 			}
 			gtk_widget_destroy(self->w);
 		}
