@@ -6,6 +6,10 @@
 
 2002-07-20  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (install-dm): Use -f when making symbolic link.
+
+2002-07-20  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c: (read_key_events): Delete.
 	(do_login): Set USER too.
 	(login_correct): New function, broken out from enter_callback.
