@@ -24,8 +24,10 @@ CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer-0.6`
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 
@@ -42,7 +44,7 @@ backend:
 $(PACKAGE): $(OBJS) $(LIB)
 	$(CC) -o $@ $^ $(LDFLAGS) -Lbackend -lgpenmf
 
-install: all
+install-program: all $(PACKAGE).desktop
 	make -C backend PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) install
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
@@ -55,6 +57,5 @@ clean:
 	make -C backend clean
 	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
