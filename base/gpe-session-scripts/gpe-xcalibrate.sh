@@ -8,3 +8,6 @@ if test -x /usr/X11R6/bin/xcalibrate; then
     ## but it's maybe too dangerous until ipkg supports versioned dependencies:    
     # /usr/X11R6/bin/xcalibrate && /usr/X11R6/bin/xcalibrate -view >/etc/xcalibrate.conf;
 fi
+if test -x /usr/bin/xtscal; then
+    xtscal >/etc/xcalibrate.conf
+fi

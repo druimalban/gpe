@@ -1,3 +1,17 @@
+2003-07-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add sv.
+	* po/sv.po: New file, courtesy Christian Rose.
+
+2003-07-05  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.46 released.
+
+2003-07-05  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Accept xtscal | xcalibrate.
+	* gpe-xcalibrate.sh: Support xtscal.
+
 2003-06-21  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.45 released.
