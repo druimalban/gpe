@@ -26,18 +26,18 @@ gpe-dm: $(SOURCES)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 install-program: gpe-dm
-	install -Ds gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
-	mkdir -p $(DESTDIR)/etc/init.d
-	mkdir -p $(DESTDIR)/etc/rc2.d
+	install -d $(DESTDIR)$(PREFIX)/bin/
+	install -s gpe-dm $(DESTDIR)$(PREFIX)/bin/
+	install -d $(DESTDIR)/etc/init.d
+	install -d $(DESTDIR)/etc/rc2.d
 	install gpe-dm.init $(DESTDIR)/etc/init.d/gpe-dm
-	ln -sf /etc/init.d/gpe-dm $(DESTDIR)/etc/rc2.d/S99gpe-dm
 	install -d $(DESTDIR)/etc/X11
 	install Xsession $(DESTDIR)/etc/X11/Xsession
 	install Xinit $(DESTDIR)/etc/X11/Xinit
 	install Xserver $(DESTDIR)/etc/X11/Xserver
 
 clean: clean-po
-	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o
+	rm -f gpe-dm gpe-dm.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
