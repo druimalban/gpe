@@ -127,12 +127,8 @@ selection_notify (XEvent *ev)
       memcpy (buf, prop, n);
       bufsiz = n;
 
-      fprintf (stderr, "Copied %d bytes.\n", n);
-
-      //mb_tray_send_message (dpy, win, "Copied", 0);
+      mb_tray_send_message (dpy, win, "Copied", 2000);
     }
-  else
-    fprintf (stderr, "No current selection.\n");
 
   XSetSelectionOwner (dpy, clipboard_atom, win, CurrentTime);
 
