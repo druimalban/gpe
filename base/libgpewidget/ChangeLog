@@ -1,5 +1,9 @@
 2002-07-20  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.13 released
+
+2002-07-20  Philip Blundell  <philb@gnu.org>
+
 	* pixmaps.c (gpe_load_one_icon): Avoid use of NULL theme_dir.
 
 	* init.c (gpe_application_init): Don't attempt to create ~/.gpe when
