@@ -5,6 +5,6 @@ Current unstable GPE binaries for iPAQ-familiar (in .ipk format) can
 be downloaded form handhelds.org ftp : <a
 href="ftp://ftp.handhelds.org/pub/projects/gpe/">ftp://ftp.handhelds.org/pub/projects/gpe/</a>
 <p>
-At present these are unstable active development sources can be found
+At present these are unstable and active development sources can be found
 in the <a href=/cvs.shtml>GPE CVS archive</a>
 <!--#include virtual="includes/foot.shtml"-->
