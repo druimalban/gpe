@@ -93,6 +93,7 @@ destroy_user_data (gpointer p)
   g_free (p);
 }
 
+
 static void
 recalculate_sensitivities (GtkWidget *widget,
                            GtkWidget *d)
@@ -181,6 +182,26 @@ recalculate_sensitivities (GtkWidget *widget,
         gtk_widget_hide (s->yearlybox);
     }
 }
+
+
+static void
+weekly_toggled (GtkWidget *widget,
+                           GtkWidget *d)
+{
+  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
+  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget)))
+  {
+     if (!s->ev || !s->ev->recur || !s->ev->recur->daymask)
+     {
+        time_t t = time(NULL);
+        struct tm *lt = localtime(&t);
+          
+        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->checkbuttonwday[(lt->tm_wday+6)%7]), TRUE);
+     }
+  }
+  recalculate_sensitivities(widget, d);
+}
+
 
 static void
 unschedule_alarm (event_t ev)
@@ -1061,7 +1082,7 @@ build_edit_event_window (void)
   g_signal_connect (G_OBJECT (radiobuttondaily), "toggled",
                     G_CALLBACK (recalculate_sensitivities), window);
   g_signal_connect (G_OBJECT (radiobuttonweekly), "toggled",
-                    G_CALLBACK (recalculate_sensitivities), window);
+                    G_CALLBACK (weekly_toggled), window);
   g_signal_connect (G_OBJECT (radiobuttonmonthly), "toggled",
                     G_CALLBACK (recalculate_sensitivities), window);
   g_signal_connect (G_OBJECT (radiobuttonyearly), "toggled",

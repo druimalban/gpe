@@ -1,3 +1,7 @@
+2004-08-24  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Select current day of week as default for weekly recurrence.
+
 2004-08-18  Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c: Prevent user from accidentally creating more than on new event.
