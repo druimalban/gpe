@@ -1,7 +1,7 @@
 Package: gpe-icons
 Section: x11
 Priority: optional
-Version: 0.12
+Version: 0.13
 Architecture: all
 Maintainer: Phil Blundell <pb@debian.org>
 Description: Common icons for GPE
