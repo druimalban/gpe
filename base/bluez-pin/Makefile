@@ -11,20 +11,21 @@ else
 BUILD = build
 endif
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE -DMAIN
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs dbus-glib-1` -lbluetooth
+CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE -DMAIN
+LDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs dbus-glib-1` -lbluetooth
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-SOURCES = $(PACKAGE).c
+MEMBERS = main dbus ui
+
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: $(PACKAGE)
 
-$(PACKAGE): $(PACKAGE).o
-	$(CC) -o $@ $< $(GTKLDFLAGS) -lsqlite
-
-$(PACKAGE).o: $(PACKAGE).c
-	$(CC) -c -o $@ $< $(CPPFLAGS) $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer
+$(PACKAGE): $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
