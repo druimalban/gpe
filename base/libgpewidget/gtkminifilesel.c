@@ -686,6 +686,7 @@ gtk_mini_file_selection_destroy (GtkObject *fs)
 {
   if (GTK_OBJECT_CLASS (parent_class)->destroy)
     (*GTK_OBJECT_CLASS (parent_class)->destroy) (fs);
+  popup_menu_cancel ();
 }
 
 static void
