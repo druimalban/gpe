@@ -18,10 +18,10 @@
 
 gchar *home_dir;
 
-static GcryMPI
-mpi_from_sexp (GcrySexp r, char *tag)
+static gcry_mpi_t
+mpi_from_sexp (gcry_sexp_t r, char *tag)
 {
-  GcrySexp s = gcry_sexp_find_token (r, tag, 0);
+  gcry_sexp_t s = gcry_sexp_find_token (r, tag, 0);
   return gcry_sexp_nth_mpi (s, 1, GCRYMPI_FMT_STD);
 }
 
@@ -39,7 +39,7 @@ int
 generate_key (struct rsa_key *rv)
 {
   int rc;
-  GcrySexp r, parms;
+  gcry_sexp_t r, parms;
  
   rc = gcry_sexp_build (&parms, NULL, "(genkey (rsa (nbits %d)))", 1024);
   if (rc)

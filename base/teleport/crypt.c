@@ -43,23 +43,23 @@ sign_challenge (gchar *text, int length, gchar *target)
 static gboolean
 parse_key (char *s, struct rsa_key *r)
 {
-  GcryMPI n, e, d, p, q, u;
+  gcry_mpi_t n, e, d, p, q, u;
   char *sp;
 
   sp = strtok (s, " \n");
   key_id = strtoul (sp, NULL, 16);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&e, GCRYMPI_FMT_HEX, sp, 0, NULL);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&d, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&d, GCRYMPI_FMT_HEX, sp, 0, NULL);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&n, GCRYMPI_FMT_HEX, sp, 0, NULL);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&p, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&p, GCRYMPI_FMT_HEX, sp, 0, NULL);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&q, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&q, GCRYMPI_FMT_HEX, sp, 0, NULL);
   sp = strtok (NULL, " \n");
-  gcry_mpi_scan (&u, GCRYMPI_FMT_HEX, sp, NULL);
+  gcry_mpi_scan (&u, GCRYMPI_FMT_HEX, sp, 0, NULL);
 
   r->e = e;
   r->d = d;
