@@ -62,6 +62,16 @@ start_server (gboolean crashed)
   server_started = t;
 }
 
+void
+shutdown (void)
+{
+  if (xserver_pid)
+    kill (xserver_pid, SIGTERM);
+      
+  if (session_pid)
+    kill (session_pid, SIGTERM);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -69,6 +79,8 @@ main(int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+
+  daemon ();
 
   if (argc == 2)
     dpy = argv[1];
@@ -78,6 +90,9 @@ main(int argc, char *argv[])
   start_server (FALSE);
 
   setenv ("DISPLAY", dpy, 1);
+
+  signal (SIGINT, shutdown);
+  signal (SIGTERM, shutdown);
 
   for (;;)
     {
