@@ -228,9 +228,6 @@ void on_iconlist_clicked (GtkWidget * iconlist, gpointer iter, gpointer data) {
   gtk_tree_model_get(model, (GtkTreeIter *)iter,
                      ENTRY_URL, &fullpath_filename, -1);
 
-  sketchpad_open_file(fullpath_filename);
-  switch_to_page(PAGE_SKETCHPAD);
-
   {
     GtkTreePath * path;
     gint * indices;
@@ -242,6 +239,9 @@ void on_iconlist_clicked (GtkWidget * iconlist, gpointer iter, gpointer data) {
     gtk_tree_path_free(path);
   }
   set_current_sketch_selected();
+
+  sketchpad_open_file(fullpath_filename);
+  switch_to_page(PAGE_SKETCHPAD);
 }
 
 //void on_iconlist_show_popup (GtkWidget *il, gpointer note, gpointer data) {
