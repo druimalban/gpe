@@ -421,8 +421,8 @@ irc_cmd_parse_part (IRCServer * server,
 
       if (strlen (str_array[1]))
         {
-          append_to_buffer (server, str_array[0],
-                            g_strdup_printf (" (%s)", str_array[1]), NULL);
+	  append_to_buffer_printf (server,
+		  str_array[0], NULL, " (%s)", str_array[1]);
         }
 
       append_to_buffer (server, str_array[0], "\n", NULL);
