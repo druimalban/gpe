@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"POT-Creation-Date: 2003-09-06 15:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -205,7 +205,7 @@ msgstr ""
 msgid "Yearly"
 msgstr ""
 
-#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+#: event-ui.c:898 event-ui.c:920 event-ui.c:972 event-ui.c:1027
 msgid "Every"
 msgstr ""
 
@@ -213,76 +213,76 @@ msgstr ""
 msgid "weeks, on:"
 msgstr ""
 
-#: event-ui.c:974
+#: event-ui.c:983
 msgid "months"
 msgstr ""
 
-#: event-ui.c:979
+#: event-ui.c:988
 #, c-format
 msgid "on day %d"
 msgstr ""
 
-#: event-ui.c:983
+#: event-ui.c:992
 msgid "on the"
 msgstr ""
 
-#: event-ui.c:991
+#: event-ui.c:1000
 msgid "first"
 msgstr ""
 
-#: event-ui.c:993
+#: event-ui.c:1002
 msgid "second"
 msgstr ""
 
-#: event-ui.c:995
+#: event-ui.c:1004
 msgid "third"
 msgstr ""
 
-#: event-ui.c:997
+#: event-ui.c:1006
 msgid "fourth"
 msgstr ""
 
-#: event-ui.c:999
+#: event-ui.c:1008
 msgid "fifth"
 msgstr ""
 
-#: event-ui.c:1001
+#: event-ui.c:1010
 msgid "last"
 msgstr ""
 
-#: event-ui.c:1028
+#: event-ui.c:1037
 msgid "years"
 msgstr ""
 
-#: event-ui.c:1047
+#: event-ui.c:1056
 msgid "End Date:"
 msgstr ""
 
-#: event-ui.c:1053
+#: event-ui.c:1062
 msgid "forever"
 msgstr ""
 
-#: event-ui.c:1064
+#: event-ui.c:1073
 msgid "end after"
 msgstr ""
 
-#: event-ui.c:1081
+#: event-ui.c:1090
 msgid "end on"
 msgstr ""
 
-#: event-ui.c:1089
+#: event-ui.c:1098
 msgid "events"
 msgstr ""
 
-#: event-ui.c:1188
+#: event-ui.c:1197
 msgid "Calendar: New event"
 msgstr ""
 
-#: event-ui.c:1235
+#: event-ui.c:1244
 msgid "Calendar: Edit event"
 msgstr ""
 
-#: day_popup.c:171
+#: day_popup.c:175
 msgid "No appointments"
 msgstr ""
 
@@ -290,28 +290,28 @@ msgstr ""
 msgid "Cannot create XSettings client"
 msgstr ""
 
-#: gtkdatesel.c:193
+#: gtkdatesel.c:198
 msgid "%Y"
 msgstr ""
 
-#: gtkdatesel.c:202
+#: gtkdatesel.c:207
 msgid "%b"
 msgstr ""
 
-#: gtkdatesel.c:205
+#: gtkdatesel.c:210
 msgid "%B"
 msgstr ""
 
-#: gtkdatesel.c:208
+#: gtkdatesel.c:213
 #, c-format
 msgid "%m"
 msgstr ""
 
-#: gtkdatesel.c:219
+#: gtkdatesel.c:224
 msgid "Week %V"
 msgstr ""
 
-#: gtkdatesel.c:225
+#: gtkdatesel.c:230
 #, c-format
 msgid "%a, %d"
 msgstr ""

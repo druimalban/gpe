@@ -1,5 +1,9 @@
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.46 released.
+	
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
 	* gtkdatesel.c (format_text): Convert format string back to native
 	locale encoding before calling strftime.
 
