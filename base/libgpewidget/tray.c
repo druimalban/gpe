@@ -27,49 +27,28 @@
 
 #include "init.h"
 
-#define SYSTEM_TRAY_OPCODE_ATOM	0
-#define MANAGER_ATOM		1
-static Atom atoms[2];
+#define SYSTEM_TRAY_OPCODE_ATOM	 0
+#define MANAGER_ATOM		 1
+#define SYSTEM_TRAY_MESSAGE_DATA 2
+
+static Atom atoms[3];
 
 static char *atom_names[] = 
   { 
     "_NET_SYSTEM_TRAY_OPCODE", 
-    "MANAGER" 
+    "MANAGER",
+    "SYSTEM_TRAY_MESSAGE_DATA"
   };
 
 static Atom system_tray_atom;
 
 static Window dock;
 
+#define MAX_DATA_BYTES 20
+
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 #define SYSTEM_TRAY_BEGIN_MESSAGE   1
 #define SYSTEM_TRAY_CANCEL_MESSAGE  2
-
-static int (*old_error_handler) (Display *d, XErrorEvent *e);
-
-static int trapped_error_code;
-
-static int
-error_handler (Display     *display,
-	       XErrorEvent *error)
-{
-   trapped_error_code = error->error_code;
-   return 0;
-}
-
-static void
-trap_errors (void)
-{
-   trapped_error_code = 0;
-   old_error_handler = XSetErrorHandler (error_handler);
-}
-
-static int
-untrap_errors (void)
-{
-   XSetErrorHandler (old_error_handler);
-   return trapped_error_code;
-}
 
 static void
 tray_send_opcode (Display *dpy, Window w,
@@ -89,10 +68,12 @@ tray_send_opcode (Display *dpy, Window w,
    ev.xclient.data.l[3] = data2;
    ev.xclient.data.l[4] = data3;
    
-   trap_errors ();
-   XSendEvent (dpy, w, False, NoEventMask, &ev);
-   XSync (dpy, False);
-   untrap_errors ();
+   gdk_error_trap_push ();
+
+   XSendEvent (dpy, dock, False, NoEventMask, &ev);
+
+   gdk_flush ();
+   gdk_error_trap_pop ();
 }
 
 static void
@@ -129,6 +110,57 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 }
 
 void
+gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int timeout)
+{
+  static int id;
+  size_t len, bytes_sent;
+  XEvent ev;
+  char *buf;
+  Display *dpy;
+  Window win;
+
+  if (dock == None)
+    return;		/* not docked */
+
+  dpy = GDK_WINDOW_XDISPLAY (window);
+  win = GDK_WINDOW_XWINDOW (window);
+
+  len = strlen (text);
+
+  tray_send_opcode (dpy, win, SYSTEM_TRAY_BEGIN_MESSAGE, timeout, len, ++id);
+
+  memset (&ev, 0, sizeof (ev));
+
+  ev.xclient.type = ClientMessage;
+  ev.xclient.window = win;
+  ev.xclient.message_type = atoms[SYSTEM_TRAY_MESSAGE_DATA];
+  ev.xclient.format = 8;
+
+  buf = &ev.xclient.data.b[0];
+
+  gdk_error_trap_push ();
+
+  for (bytes_sent = 0; bytes_sent < len; )
+    {
+      size_t s;
+
+      s = len - bytes_sent;
+
+      if (s > MAX_DATA_BYTES)
+	s = MAX_DATA_BYTES;
+      
+      memcpy (buf, text + bytes_sent, s);
+
+      XSendEvent (dpy, dock, False, NoEventMask, &ev);
+
+      bytes_sent += s;
+    }
+
+  gdk_flush ();
+  gdk_error_trap_pop ();
+}
+
+void
 gpe_system_tray_dock (GdkWindow *window)
 {
   Display *dpy = GDK_WINDOW_XDISPLAY (window);
@@ -137,7 +169,7 @@ gpe_system_tray_dock (GdkWindow *window)
   gint argc;
   gchar **argv;
 
-  XInternAtoms (dpy, atom_names, 2, False, atoms);
+  XInternAtoms (dpy, atom_names, 3, False, atoms);
   tray_atom_name = g_strdup_printf ("_NET_SYSTEM_TRAY_S%d", DefaultScreen (dpy));
   system_tray_atom = XInternAtom (dpy, tray_atom_name, False);
   g_free (tray_atom_name);
