@@ -18,6 +18,11 @@
 
 #define VERSION "0.0.10"
 #define MIN(a,b)	(((a)<(b)) ? (a):(b))
+
+#define safe_strcpy(a,b) {siof=sizeof(a);a[siof-1]=0;strncpy(a,b,siof-1);}
+int siof;
+
+
 int fd_out,fd_in;
 int label=0;
 char imap_buf[2000000];
@@ -185,11 +190,11 @@ int tilde(char *file,char * exp)
         if (login == NULL && (pw = getpwuid(getuid())) == NULL)
           return (0);
         if (login != NULL)
-          strcpy(user, login);
+          safe_strcpy(user, login);
       }
       if (pw == NULL && (pw = getpwnam(user)) == NULL)
         return (0);
-      strcpy(exp, pw->pw_dir);
+      safe_strcpy(exp, pw->pw_dir);
     }
     strcat(exp, file);
     return (1);
@@ -316,7 +321,7 @@ void imap_gets(char *s, int size)
 	if (*p=='\r') p++;
 	if (*p=='\n') p++;
 	//while (*p=='\n' || *p== '\r' ) p++;
-	strcpy(buf,p);
+	safe_strcpy(buf,p);
 	len-=p-buf;
 }
 
@@ -446,7 +451,7 @@ char c;
 	c=*end;
 	*end=0;
 	if ((end-imap_buf_ptr)>bufsize-2) error("imap_buf_get: line too long",imap_buf_ptr);
-	strcpy(buf,imap_buf_ptr);
+	safe_strcpy(buf,imap_buf_ptr);
 	*end=c;
 	imap_buf_ptr=end;
 }
@@ -457,7 +462,7 @@ int mkdir_minus_p(char *s)
 	char *sp;
 	int i;
 
-	strcpy(s2,s);
+	safe_strcpy(s2,s);
 	i=mkdir(s2,S_IREAD|S_IWRITE|S_IEXEC);
 	if (!i) return 0; // created successfully
 	if (errno==EEXIST) return 0; // already exists (dir or file)
@@ -481,7 +486,7 @@ FILE *openfile(char *s,char read)
 		if (NULL==(fl=fopen(s,"r"))) error("fopen",s);
 		return fl;
 	}
-	strcpy(s2,s);
+	safe_strcpy(s2,s);
 	if (0!=(sp=rindex(s2,'/')))
 	{
 		*sp=0;
@@ -532,12 +537,12 @@ char from_str[1000],to_str[1000],cc_str[1000],bcc_str[1000],date_str[1000],subje
 						fgets(s2,sizeof(s2),fl);
 						if (s2[strlen(s2)-1]=='\n') s2[strlen(s2)-1]=0;
 						if (s2[strlen(s2)-1]=='\r') s2[strlen(s2)-1]=0;
-						if (starts_with(s2,"From: ")) strcpy(from_str,s2+6);
-						if (starts_with(s2,"To: ")) strcpy(to_str,s2+4);
-						if (starts_with(s2,"Cc: ")) strcpy(cc_str,s2+4);
-						if (starts_with(s2,"Bcc: ")) strcpy(bcc_str,s2+5);
-						if (starts_with(s2,"Date: ")) strcpy(date_str,s2+6);
-						if (starts_with(s2,"Subject: ")) strcpy(subject_str,s2+9);
+						if (starts_with(s2,"From: ")) safe_strcpy(from_str,s2+6);
+						if (starts_with(s2,"To: ")) safe_strcpy(to_str,s2+4);
+						if (starts_with(s2,"Cc: ")) safe_strcpy(cc_str,s2+4);
+						if (starts_with(s2,"Bcc: ")) safe_strcpy(bcc_str,s2+5);
+						if (starts_with(s2,"Date: ")) safe_strcpy(date_str,s2+6);
+						if (starts_with(s2,"Subject: ")) safe_strcpy(subject_str,s2+9);
 					} while (*s2);
 					fclose(fl);
 					if (debug)
@@ -613,7 +618,7 @@ char from_str[1000],to_str[1000],cc_str[1000],bcc_str[1000],date_str[1000],subje
 						}
 						sp=extract_next_email_adress();
 					} while(sp);
-					strcpy(s2,"data");
+					safe_strcpy(s2,"data");
 					send2server(s2);
 					if (!smtp_rcv_ok(s2,0,354))
 					{
@@ -688,7 +693,7 @@ char action;
 
 
 	bzero(&options,sizeof(options));
-	strcpy(options.prefix,"~/.emailsync/");
+	safe_strcpy(options.prefix,"~/.emailsync/");
 	options.cleandir=1;
 	options.timeout=10000; // 10 second timeout between reads
 	argc--;
@@ -701,11 +706,11 @@ char action;
 		if (debug>1) {
 			printf("DEBUG: arg: %s\n",argv[0]);
 		}
-		if (starts_with(argv[0],"server=")) strcpy(options.server,index(argv[0],'=')+1);
-		else if (starts_with(argv[0],"user=")) strcpy(options.user,index(argv[0],'=')+1);
-		else if (starts_with(argv[0],"pass=")) strcpy(options.pass,index(argv[0],'=')+1);
-		else if (starts_with(argv[0],"since=")) strcpy(options.since,index(argv[0],'=')+1);
-		else if (starts_with(argv[0],"prefix=")) strcpy(options.prefix,index(argv[0],'=')+1);
+		if (starts_with(argv[0],"server=")) {safe_strcpy(options.server,index(argv[0],'=')+1);}
+		else if (starts_with(argv[0],"user=")) {safe_strcpy(options.user,index(argv[0],'=')+1);}
+		else if (starts_with(argv[0],"pass=")) {safe_strcpy(options.pass,index(argv[0],'=')+1);}
+		else if (starts_with(argv[0],"since=")) {safe_strcpy(options.since,index(argv[0],'=')+1);}
+		else if (starts_with(argv[0],"prefix=")) {safe_strcpy(options.prefix,index(argv[0],'=')+1);}
 		else if (starts_with(argv[0],"ssl=")) sscanf(index(argv[0],'=')+1,"%d",&options.ssl);
 		else if (starts_with(argv[0],"cleandir=")) sscanf(index(argv[0],'=')+1,"%d",&options.cleandir);
 		else if (starts_with(argv[0],"remove=")) sscanf(index(argv[0],'=')+1,"%d",&options.remove);
@@ -760,7 +765,7 @@ char action;
 			"By Erez Doron <erez@savan.com>\n"
 			"Licenced under the GPL\n\n");
 	if (!tilde(options.prefix,s)) error(options.prefix,"illegle prefix");
-	strcpy(options.prefix,s);
+	safe_strcpy(options.prefix,s);
 	if (*options.prefix) if (options.prefix[strlen(options.prefix)-1]=='/') options.prefix[strlen(options.prefix)]=0;
 	if (options.port==0)
 	{
@@ -817,7 +822,7 @@ char action;
 	if (options.pop3)
 	{
 		if (verbose) printf ("getting msg list\n");
-		strcpy(s,"uidl");
+		safe_strcpy(s,"uidl");
 		send2server(s);
 		pop_rcv_ok(s,1,1);
 		sp=strstr(imap_buf,"\n");
@@ -887,7 +892,7 @@ char action;
 									sprintf(s,"dele %d",msgs[j]);
 									send2server(s);
 									if (!pop_rcv_ok(s,0,0)) if (debug) printf("error deleteing msg#%d uid=%d\n",msgs[j],i);
-									for(i=j;i<num_msgs;i++) {msgs[i]=msgs[i+1];strcpy(msg_ids[i],msg_ids[i+1]);};
+									for(i=j;i<num_msgs;i++) {msgs[i]=msgs[i+1];safe_strcpy(msg_ids[i],msg_ids[i+1]);};
 									num_msgs--;
 									i=0;
 								}
@@ -902,7 +907,7 @@ char action;
 									send2server("close");
 									rcv_ok("close",1);
 								}
-								strcpy(folder,sp);
+								safe_strcpy(folder,sp);
 								if (debug) printf("opening folder '%s'\n",sp);
 								sprintf(s,"select %s",sp);
 								send2server(s);
@@ -966,8 +971,8 @@ char action;
 	}
 	folder[0]=0;
 	
-	strcpy(folder,"inbox");
-	//strcpy(folder,"jojo");
+	safe_strcpy(folder,"inbox");
+	//safe_strcpy(folder,"jojo");
 	if (!options.pop3)
 	{
 		if (verbose) printf("Opening folder '%s'\n",folder);
@@ -1187,9 +1192,13 @@ char action;
 					if (sp)
 					{
 						if (debug>2) printf("flags: %s\n",sp);
-						strcpy(s2+strlen(s2)-4,"flags");
+						siof=sizeof(s2);
+						s2[siof-1]=0;
+						strncpy(s2+strlen(s2)-4,"flags",siof-strlen(s2)+3);
 						fl=openfile(s2,0);
-						strcpy(s2+strlen(s2)-5,"body");
+						siof=sizeof(s2);
+						s2[siof-1]=0;
+						strncpy(s2+strlen(s2)-5,"body",siof+4-strlen(s2));
 						fprintf(fl,"%s",sp);
 						fclose(fl);
 					} else error (s,"flags missing");
@@ -1200,7 +1209,7 @@ char action;
 	if (verbose>1) printf("\n");
 	if (options.pop3)
 	{
-		strcpy(s,"quit");
+		safe_strcpy(s,"quit");
 		send2server(s);
 		if (!pop_rcv_ok(s,0,0)) printf("Warning: could not quit server, msgs will not be deleted\n");
 	}
