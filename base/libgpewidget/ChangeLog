@@ -1,3 +1,9 @@
+2002-10-20  Moray Allan  <moray@handhelds.org>
+
+	* pixmaps.c: Removed unnecessary abort().
+	* question.c: Cope with failure to find an icon;
+	allow NULL icon to signify that a button should be text-only.
+
 2002-10-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.27 released.
@@ -564,7 +570,3 @@
 	* errorbox.c: Likewise.
 	* Makefile: Add gdk-pixbuf flags to compile and link.
 	
-2002-10-20  Moray Allan  <moray@handhelds.org>
-
-	* pixmaps.c: Removed unnecessary abort().
-	* question.c: Cope with failure to find an icon.

@@ -107,8 +107,6 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
 	    break;
 
     btn_icon = va_arg (ap, char *);
-    if (btn_icon == NULL)
-	    break;
 
     add_button (btn_lbl, btn_icon, window, i++);
   }
