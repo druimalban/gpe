@@ -19,13 +19,13 @@ else
 BUILD = build
 endif
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CFLAGS = `pkg-config --cflags gtk+-2.0 libglade-2.0`
+LDFLAGS += `pkg-config --libs gtk+-2.0 libglade-2.0`
 
-CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
+CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS += -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
@@ -37,7 +37,7 @@ LDFLAGS += -L../libgpewidget -lgsm
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget -lgsm $(GTKLDFLAGS)
+LDFLAGS += -lgpewidget -lgsm
 
 ifeq ($(ESD),yes)
 LDFLAGS += -lesd

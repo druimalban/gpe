@@ -25,6 +25,7 @@
 #include <sys/vfs.h>
 
 #include <gtk/gtk.h>
+#include <glade/glade.h>
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -348,6 +349,7 @@ file_chosen_signal (GtkFileSelection *selector, gpointer user_data)
   start_sound ();
 
   gtk_widget_destroy (file_selector);
+
 }
 
 void syntax_message (FILE *f)
@@ -361,6 +363,7 @@ main(int argc, char *argv[])
   GtkWidget *fakeparentwindow;
   GtkWidget *hbox, *vbox;
   GtkWidget *buttonok, *buttoncancel;
+  GladeXML *xml;
 
   /* presumably this argument parsing should be done more nicely: */
 
@@ -510,69 +513,39 @@ main(int argc, char *argv[])
       gtk_exit (1);
     }
 
+    xml = glade_xml_new("gpe-soundbite.glade", NULL, NULL);
+
+    window = glade_xml_get_widget(xml, "window");
+    progress_bar = glade_xml_get_widget(xml, "progressbar");
+    label = glade_xml_get_widget(xml, "label");
+
+    glade_xml_signal_autoconnect(xml);
+
+/*
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
 
   window = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(fakeparentwindow));
   gtk_widget_realize (window);
+*/
   
-  hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox);
-  progress_bar = gtk_progress_bar_new ();
   gtk_progress_set_format_string (GTK_PROGRESS(progress_bar), _("%v s"));
   gtk_progress_set_text_alignment (GTK_PROGRESS(progress_bar), 0.5, 0.5);
   gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), FALSE);
 
-  gtk_widget_show (progress_bar);
   if (playing)
     {
       gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), FALSE);
       gtk_window_set_title (GTK_WINDOW(window), "Play Memo");
-      label = gtk_label_new (_("Playing"));
+      gtk_label_set_text (GTK_LABEL(label), _("Playing"));
     }
   else
     {
       gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
       gtk_window_set_title (GTK_WINDOW(window), "Record Memo");
-      label = gtk_label_new (_("Recording"));
+      gtk_label_set_text (GTK_LABEL(label), _("Recording"));
     }
-  gtk_widget_show (label);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), progress_bar, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
-                      hbox, TRUE, FALSE, 0);
-
-  gtk_widget_realize (window);
-
-  buttonok = gpe_picture_button (window->style, _("OK"), "ok");
-  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
-                      GTK_SIGNAL_FUNC (on_ok_button_clicked),
-                      NULL);
-
-  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
-  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
-                      GTK_SIGNAL_FUNC (on_cancel_button_clicked),
-                      NULL);
-
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
-                     buttoncancel, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
-                      buttonok, TRUE, TRUE, 0);
-
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (on_window_destroy),
-                      NULL);
-
-  gtk_signal_connect (GTK_OBJECT (window), "key-release-event",
-                      GTK_SIGNAL_FUNC (on_key_release_signal),
-                      NULL);
 
   if (filename)
     {
