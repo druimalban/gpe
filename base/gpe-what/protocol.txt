@@ -6,14 +6,13 @@ _GPE_INTERACTIVE_HELP property on themselves.
 
 When a mouse click happens in help mode, the help application will
 send a ClientMessage event to the appropriate window, with type
-_GPE_INTERACTIVE_HELP and payload:
+_GPE_INTERACTIVE_HELP, empty event mask, and payload:
 
 l[0]	a Window
 l[1]	x coordinate of mouse click relative to destination window
 l[2]	y coordinate of mouse click relative to destination window
 l[3]	an Atom
 
-The receiving program should respond to this message by setting a
-property of type STRING with the Window and Atom specified in the
-clientmessage, whose contents is the desired help text.
-
+The receiving program should respond to this message by setting the
+desired help text as the contents of a STRING property named by the
+Window and Atom specified in the clientmessage.
