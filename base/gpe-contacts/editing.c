@@ -82,6 +82,7 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
               g_signal_connect(G_OBJECT(l),"clicked",
                                G_CALLBACK(on_name_clicked),
                                gtk_widget_get_toplevel(pw));
+              GTK_WIDGET_SET_FLAGS(w,GTK_CAN_DEFAULT);
             }
           gtk_table_attach (GTK_TABLE (table),
                     l,
@@ -545,8 +546,15 @@ edit_person (struct person *p)
           if (v && v->value)
             {
               if (GTK_IS_EDITABLE (w))
-                gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
+                {
+                  gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
                           strlen (v->value), &pos);
+                  if (!strcasecmp(v->tag,"NAME"))
+                    {
+                      gtk_widget_grab_default(w);
+                      gtk_widget_grab_focus(w);
+                    }
+                }
               else if (GTK_IS_DATE_COMBO(w))
                 {
                   if (v->value)
