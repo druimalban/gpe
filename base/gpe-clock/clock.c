@@ -429,6 +429,8 @@ alarm_window (void)
   
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), weeklytable, FALSE, FALSE, 0);
 
+  load_alarm_details ();
+
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->active_button), state.active);
   gtk_date_combo_set_date (GTK_DATE_COMBO (ctx->date_combo), state.year, state.month, state.day);
   gpe_time_sel_set_time (GPE_TIME_SEL (ctx->time_sel), state.hour, state.minute);
@@ -489,10 +491,10 @@ main (int argc, char *argv[])
 
   alarm_file = g_strdup_printf ("%s/.gpe/alarm", g_get_home_dir ());
 
-  load_alarm_details ();
-
   if (argc > 1 && !strcmp (argv[1], "--check-alarm"))
     {
+      load_alarm_details ();
+
       do_check_alarm ();
 
       exit (0);
