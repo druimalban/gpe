@@ -66,7 +66,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.9
+VER_gpe-task-base = 0.10
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -76,7 +76,6 @@ DEP_gpe-task-base = \
     gpe-dm, \
     gpe-login2, \
     gpe-session-scripts, \
-    gpe-setbg2, \
     \
     keylaunch, \
     esd, \
@@ -154,11 +153,12 @@ DEP_gpe-task-utils = \
     gpe-taskmanager
 
 #------------------------------------------ Communication apps
-VER_gpe-task-comm = 0.2
+VER_gpe-task-comm = 0.3
 DEP_gpe-task-comm = \
     gpe-task-base, \
     dillo2, \
-    gpe-irc
+    gpe-irc, \
+    linphone
 #FIXME: add email/contacts
 
 #------------------------------------------ Multimedia apps
