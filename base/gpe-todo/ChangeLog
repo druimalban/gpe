@@ -1,3 +1,8 @@
+2003-03-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	* todo-ui.c (change_categories): Swap button order so as to
+	conform to HIG. Make Ok button the default.
+
 2003-03-08  Philip Blundell  <philb@gnu.org>
 
 	* familiar/control1 (Depends): Add gpe-todo-locale*

@@ -263,9 +263,11 @@ change_categories (GtkWidget *w, gpointer p)
   g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (categories_ok), window);
   g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_cancel), window);
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancelbutton, TRUE, TRUE, 0);
-
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
+  GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (okbutton);
+  
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
   gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));
 
