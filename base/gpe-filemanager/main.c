@@ -251,7 +251,7 @@ ask_open_with (char *exec)
                       entry);
   gtk_clist_set_column_width (GTK_CLIST (clist), 0, 12);
 
-  open_button = gpe_picture_button (window->style, "Open with", "open");
+  open_button = gpe_picture_button (window->style, "Open", "open");
   gtk_object_set_data (GTK_OBJECT (open_button), "exec", (gpointer) exec);
   gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
                       GTK_SIGNAL_FUNC (open_with),

@@ -151,8 +151,8 @@ sql_start (void)
       return -1;
     }
 
-  if (rows == 0)
-    add_mime_types ();
+  //if (rows == 0)
+  //  add_mime_types ();
 
   return 0;
 }
