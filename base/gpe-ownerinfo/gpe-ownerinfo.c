@@ -29,6 +29,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 #include <gpe/stylus.h>
+#include <gpe/translabel.h>
 
 #include <rootpixmap.h>
 
@@ -337,7 +338,7 @@ set_address_size (GtkWidget *widget, GtkAllocation *allocation, gpointer user_da
 }
 
 void
-translate_name_label (GtkWidget *namelabel)
+translate_name_label (GtkWidget *namelabel, gpointer data)
 {
   gtk_label_set_markup (GTK_LABEL (namelabel),
 			g_strdup_printf ("<span lang='%s'><b>%s</b></span> ",
@@ -562,7 +563,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, gpe_boxspacing);
 
   namelabel = gtk_label_new (NULL);
-  gtk_widget_add_translation_hook (namelabel, G_CALLBACK (translate_name_label), NULL);
+  gtk_widget_add_translation_hook (namelabel, translate_name_label, NULL);
   gtk_widget_show (namelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), namelabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (namelabel), GTK_JUSTIFY_LEFT);

@@ -1,3 +1,9 @@
+2003-02-26  Philip Blundell  <philb@gnu.org>
+
+	* gpe-ownerinfo2.c (translate_name_label): Add extra argument to
+	avoid warning.
+	(main): Remove spurious typecast.
+
 2003-02-25  Philip Blundell  <philb@gnu.org>
 
 	* gpe-ownerinfo2.c (main): Correct arguments to
