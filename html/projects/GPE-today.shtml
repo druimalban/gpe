@@ -1,5 +1,5 @@
-<!--#set var="addtitle" value="Time Tracker"-->
-<!--#set var="pagename" value="time-tracker"-->
+<!--#set var="addtitle" value="Today"-->
+<!--#set var="pagename" value="today"-->
 <!--#set var="author" value="Phil Blundell"-->
 <!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
