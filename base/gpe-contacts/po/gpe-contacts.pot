@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-16 16:02+0200\n"
+"POT-Creation-Date: 2004-08-04 11:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,15 +28,15 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:164
+#: editing.c:200
 msgid "no year"
 msgstr ""
 
-#: editing.c:259
+#: editing.c:323
 msgid "Edit Contact"
 msgstr ""
 
-#: editing.c:324
+#: editing.c:400
 msgid "Categories"
 msgstr ""
 
@@ -64,63 +64,63 @@ msgstr ""
 msgid "Birthday:"
 msgstr ""
 
-#: main.c:666 gpe-contacts.desktop.in.h:1
+#: main.c:719 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:679
+#: main.c:732
 msgid "New contact"
 msgstr ""
 
-#: main.c:679
+#: main.c:732
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:685
+#: main.c:738
 msgid "Edit"
 msgstr ""
 
-#: main.c:686
+#: main.c:739
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:686
+#: main.c:739
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:692
+#: main.c:745
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:692
+#: main.c:745
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:699
+#: main.c:752
 msgid "Properties"
 msgstr ""
 
-#: main.c:699
+#: main.c:752
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:705
+#: main.c:758
 msgid "Close"
 msgstr ""
 
-#: main.c:705
+#: main.c:758
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:730 main.c:776
+#: main.c:783 main.c:831
 msgid "Contact"
 msgstr ""
 
-#: main.c:742
+#: main.c:795
 msgid "Find:"
 msgstr ""
 
-#: main.c:749
+#: main.c:802
 msgid "in"
 msgstr ""
 
@@ -214,6 +214,26 @@ msgstr ""
 
 #: export.c:118
 msgid "Save as..."
+msgstr ""
+
+#: namedetail.c:38
+msgid "Edit Name Details"
+msgstr ""
+
+#: namedetail.c:55
+msgid "Given name:"
+msgstr ""
+
+#: namedetail.c:56
+msgid "Family name:"
+msgstr ""
+
+#: namedetail.c:57
+msgid "Suffix:"
+msgstr ""
+
+#: namedetail.c:58
+msgid "Title:"
 msgstr ""
 
 #: gpe-contacts.desktop.in.h:2

@@ -60,7 +60,7 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
   if (list)
     {
       guint l = g_slist_length (list);
-      GtkWidget *table = gtk_table_new (l, 2, FALSE);
+      GtkWidget *table = gtk_table_new (l, gpe_get_boxspacing(), FALSE);
       guint x = 0;
     
       while (list)
@@ -74,7 +74,7 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
           if (strcmp(e->tag,"NAME")) /* the name field on a button */
             {
               l = gtk_label_new (e->name);
-              gtk_misc_set_alignment(GTK_MISC(l),1,0.5);
+              gtk_misc_set_alignment(GTK_MISC(l),1.0,0.5);
             }
           else
             {
@@ -86,7 +86,7 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
           gtk_table_attach (GTK_TABLE (table),
                     l,
                     0, 1, x, x + 1,
-                    0, 0, 0, 0);
+                    GTK_FILL, GTK_FILL, 0, 0);
           gtk_table_attach (GTK_TABLE (table),
                     w,
                     1, 2, x, x + 1,

@@ -3,29 +3,29 @@
     <label>Contact</label>
       <single-item>
         <tag>NAME</tag>
-        <label>Name</label>
+        <label>Name:</label>
       </single-item>
       <group>
         <label>Work</label>
         <single-item>
           <tag>WORK.TELEPHONE</tag>
-          <label>Phone</label>
+          <label>Phone:</label>
         </single-item>
         <single-item>
           <tag>WORK.MOBILE</tag>
-          <label>Mobile</label>
+          <label>Mobile:</label>
         </single-item>
         <single-item>
           <tag>WORK.FAX</tag>
-          <label>Fax</label>
+          <label>Fax:</label>
         </single-item>
         <single-item>
           <tag>WORK.EMAIL</tag>
-          <label>Mail</label>
+          <label>Mail:</label>
         </single-item>
         <single-item>
           <tag>WORK.WWW</tag>
-          <label>Web</label>
+          <label>Web:</label>
         </single-item>
         <multi-item>
           <tag>WORK.ADDRESS</tag>
@@ -36,23 +36,23 @@
         <label>Home</label>
         <single-item>
           <tag>HOME.TELEPHONE</tag>
-          <label>Phone</label>
+          <label>Phone:</label>
         </single-item>
         <single-item>
           <tag>HOME.MOBILE</tag>
-          <label>Mobile</label>
+          <label>Mobile:</label>
         </single-item>
         <single-item>
           <tag>HOME.FAX</tag>
-          <label>Fax</label>
+          <label>Fax:</label>
         </single-item>
         <single-item>
           <tag>HOME.EMAIL</tag>
-          <label>Mail</label>
+          <label>Mail:</label>
         </single-item>
         <single-item>
           <tag>HOME.WWW</tag>
-          <label>Web</label>
+          <label>Web:</label>
         </single-item>
         <multi-item>
           <tag>HOME.ADDRESS</tag>
@@ -64,11 +64,11 @@
     <label>About</label>
     <date-item>
       <tag>BIRTHDAY</tag>
-      <label>Birthday</label>
+      <label>Birthday:</label>
     </date-item>
     <image-item>
       <tag>PHOTO</tag>
-      <label>Photo</label>
+      <label>Photo:</label>
     </image-item>
     <multi-item>
       <label>Notes</label>

@@ -1,5 +1,11 @@
 2004-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * editing.c: Layout fixed, labels aligned rigth now, corrected spacing.
+    * contacts-layout-bigscreen.xml: Added ":" to labels, we have enough
+                                     space here.
+
+2004-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
     * Released Version 0.24
     
     * editing.c, *.xml, structure.c: Support for name detail fields hidden in 
