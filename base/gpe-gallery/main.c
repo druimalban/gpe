@@ -91,8 +91,6 @@ show_image (GtkWidget *widget, gpointer *udata)
   image_pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
   scaled_image_pixbuf = NULL;
 
-printf ("IMAGE DATA\n\n%s\n\n", gdk_pixbuf_get_pixels( GDK_PIXBUF( image_pixbuf ) )[3000]);
-
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   gtk_box_pack_start (GTK_BOX (vbox2), image_widget, TRUE, TRUE, 0);
 
