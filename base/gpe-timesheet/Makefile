@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
 VERSION = 0.12
-LINGUAS = id pt zh_TW fr ro
+LINGUAS = id pt zh_TW fr ro cs
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`

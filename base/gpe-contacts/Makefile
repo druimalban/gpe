@@ -5,7 +5,7 @@ pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
 VERSION = 0.15
-LINGUAS = de sv
+LINGUAS = de sv cs
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`

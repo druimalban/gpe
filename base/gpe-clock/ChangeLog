@@ -1,0 +1,15 @@
+2003-10-09  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add cs.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* po/pt.po: New file, courtesy Luis Oliveira.
+	* Makefile (LINGUAS): Add pt.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* po/nl.po: New file, courtesy Elros Cyriatan.
+	* Makefile (LINGUAS): Add nl.
+	
+
