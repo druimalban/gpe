@@ -516,14 +516,17 @@ day_changed_calendar (GtkWidget *widget)
 
   gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
 
-  tm.tm_year = year - 1900;
-  tm.tm_mon = month;
-  tm.tm_mday = day;
+  if (tm.tm_year != (year - 1900) || tm.tm_mon != month || tm.tm_mday != day)
+    {
+      tm.tm_year = year - 1900;
+      tm.tm_mon = month;
+      tm.tm_mday = day;
+      
+      viewtime = mktime (&tm);
 
-  viewtime = mktime (&tm);
-
-  set_time_all_views ();
-  day_view_update ();
+      set_time_all_views ();
+      day_view_update ();
+    }
 }
 
 static void

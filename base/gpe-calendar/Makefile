@@ -1,6 +1,6 @@
 PACKAGE = gpe-calendar
 PREFIX = /usr/local
-DEBUG = no
+DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.57
 

@@ -110,12 +110,15 @@ set_time_all_views(void)
 {
   gpointer ds;
   
-  ds = g_object_get_data(G_OBJECT(main_window),"datesel-week");
-  gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
-  ds = g_object_get_data(G_OBJECT(main_window),"datesel-month");
-  gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
-  ds = g_object_get_data(G_OBJECT(main_window),"datesel-day");
-  gtk_date_sel_set_time(GTK_DATE_SEL(ds),viewtime);
+  ds = g_object_get_data (G_OBJECT (main_window), "datesel-week");
+  if (ds)
+    gtk_date_sel_set_time(GTK_DATE_SEL (ds), viewtime);
+  ds = g_object_get_data (G_OBJECT (main_window), "datesel-month");
+  if (ds)
+    gtk_date_sel_set_time (GTK_DATE_SEL (ds), viewtime);
+  ds = g_object_get_data(G_OBJECT (main_window), "datesel-day");
+  if (ds)
+    gtk_date_sel_set_time (GTK_DATE_SEL (ds), viewtime);
 }
 
 void

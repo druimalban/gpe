@@ -144,7 +144,6 @@ calc_title_height (GtkWidget *widget)
       g_free (s);
     }
 
-  printf ("max height=%d\n", max_height);
   title_height = max_height + 8;
 
   g_object_unref (pl);
