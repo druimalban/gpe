@@ -47,6 +47,13 @@ audio_write (audio_t a, void *buf, unsigned int nsamp)
   unsigned int volume = a->volume;
   int rv;
 
+  if (volume == 256)
+    {
+      /* No scaling required */
+      write (a->fd, buf, nsamp);
+      return TRUE;
+    }
+
   nsamp /= 2;
 
   while (nsamp--)
