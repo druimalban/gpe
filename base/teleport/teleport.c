@@ -55,11 +55,10 @@ void
 send_message (Display *dpy, Window w, char *host, int display, int screen)
 {
   char buf[256];
-  buf[0] = screen;
-  strcpy (buf + 1, host);
-  sprintf (buf + 1 + strlen (host), ":%d", display);
+  memset (buf, 0, 8);
+  sprintf (buf + 8, "%s:%d.%d", host, display, screen);
   
-  XChangeProperty (dpy, w, migrate_atom, string_atom, 8, PropModeReplace, buf, strlen (buf + 1) + 1);
+  XChangeProperty (dpy, w, migrate_atom, migrate_atom, 8, PropModeReplace, buf, 8 + strlen (buf + 8));
 
   XFlush (dpy);
 }
@@ -72,9 +71,9 @@ handle_click (Display *dpy, Window w)
   unsigned long nitems, bytes_after;
   unsigned char *prop = NULL;
 
-  if (XGetWindowProperty (dpy, w, migrate_ok_atom, 0, 0, False,
-			  None, &type, &format, &nitems, &bytes_after, &prop) != Success
-      || type == None)
+  if (XGetWindowProperty (dpy, w, migrate_atom, 0, 0, False,
+			  migrate_atom, &type, &format, &nitems, &bytes_after, &prop) != Success
+      || type != migrate_atom)
     {
       Window root, parent, *children;
       unsigned int nchildren;  
@@ -88,6 +87,9 @@ handle_click (Display *dpy, Window w)
 
       return None;
     }
+
+  if (nitems)
+    return None;
 
   if (prop)
     XFree (prop);
@@ -286,20 +288,20 @@ open_window (void)
 
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
 
-  gtk_box_pack_start (GTK_BOX (hbox), add_button, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox), remove_button, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox), go_button, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), add_button, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), remove_button, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), go_button, TRUE, TRUE, 2);
 
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), scrolled_window, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox, FALSE, FALSE, 0);
 
-  gtk_container_add (GTK_CONTAINER (window), vbox);
+  gtk_container_add (GTK_CONTAINER (window), hbox);
 
-  gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_DIALOG);
+  gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_TOOLBAR);
 
   gtk_window_set_title (GTK_WINDOW (window), _("GPE Teleport"));
 
-  gtk_window_set_default_size (GTK_WINDOW (window), 128, 128);
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 64);
 
   g_signal_connect (G_OBJECT (add_button), "clicked", G_CALLBACK (add_callback), NULL);
   g_signal_connect (G_OBJECT (remove_button), "clicked", G_CALLBACK (remove_callback), list_view);
@@ -324,12 +326,14 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
       w = find_deepest_window (dpy, RootWindow (dpy, 0), RootWindow (dpy, 0),
 			       ev->xbutton.x, ev->xbutton.y);
 
+      XGrabServer (dpy);
       w = handle_click (dpy, w);
+      if (w)
+	send_message (dpy, w, selected_dpy->host, selected_dpy->dpy, selected_dpy->screen);
+      XUngrabServer (dpy);
 
       if (w == None)
-	gpe_error_box (_("This application is not migration-capable"));
-      else
-	send_message (dpy, w, selected_dpy->host, selected_dpy->dpy, selected_dpy->screen);
+	gpe_error_box (_("Cannot migrate this application"));
 
       return GDK_FILTER_REMOVE;
     }
@@ -350,7 +354,6 @@ main (int argc, char *argv[])
 
   dpy = GDK_DISPLAY ();
   string_atom = XInternAtom (dpy, "STRING", False);
-  migrate_ok_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE_OK", False);
   migrate_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE", False);
 
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);

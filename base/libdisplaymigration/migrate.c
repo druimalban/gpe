@@ -7,7 +7,10 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <libintl.h>
+#include <netinet/in.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -19,12 +22,34 @@
 
 #include "libdm.h"
 
-static GdkAtom string_gdkatom, display_change_gdkatom, display_change_ok_gdkatom;
+#define _(x) gettext(x)
+
+static GdkAtom string_gdkatom, display_change_gdkatom;
 
 static gboolean
-do_change_display (GtkWidget *w, char *display_name, int screen_nr)
+do_change_display (GtkWidget *w, char *display_name,  gchar **error)
 {
-  GdkDisplay *newdisplay = gdk_display_open (display_name);
+  GdkDisplay *newdisplay;
+  guint screen_nr = 1;
+  guint i;
+
+  if (display_name[0] == 0)
+    {
+      *error = g_strdup (_("Null display name not permitted"));
+      return FALSE;
+    }
+
+  i = strlen (display_name) - 1;
+  while (i > 0 && isdigit (display_name[i]))
+    i--;
+
+  if (display_name[i] == '.')
+    {
+      screen_nr = atoi (display_name + i + 1);
+      display_name[i] = 0;
+    }
+
+  newdisplay = gdk_display_open (display_name);
   if (newdisplay)
     {
       GdkScreen *screen = gdk_display_get_screen (newdisplay, screen_nr);
@@ -34,10 +59,10 @@ do_change_display (GtkWidget *w, char *display_name, int screen_nr)
 	  return TRUE;
 	}
       else
-	fprintf (stderr, "Couldn't get screen %d\n", screen_nr);
+	*error = g_strdup_printf (_("Screen %d does not exist on target display"), screen_nr);
     }
   else
-    fprintf (stderr, "Couldn't open display %s\n", display_name);
+    *error = g_strdup_printf (_("Couldn't connect to display %s"), display_name);
 
   return FALSE;
 }
@@ -49,44 +74,62 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 
   if (xev->type == PropertyNotify)
     {
-      unsigned char *prop = NULL;
-      Atom actual_type;
-      int actual_format;
-      unsigned long nitems, bytes_after;
       GdkDisplay *gdisplay;
-      Atom string_atom, display_change_atom;
+      GdkWindow *gwindow;
 
       gdisplay = gdk_x11_lookup_xdisplay (xev->display);
-      string_atom = gdk_x11_atom_to_xatom_for_display (gdisplay, string_gdkatom);
-      display_change_atom = gdk_x11_atom_to_xatom_for_display (gdisplay, display_change_gdkatom);
+      gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
 
-      if (XGetWindowProperty (xev->display, xev->window, display_change_atom, 0, 65536, False, 
-			      string_atom, &actual_type, &actual_format, &nitems, &bytes_after,
-			      &prop) == Success)
+      if (gwindow)
 	{
-	  gboolean success = FALSE;
+	  GdkAtom actual_type;
+	  gint actual_format;
+	  gint actual_length;
+	  unsigned char *prop = NULL;
 
-	  if (actual_type == string_atom
-	      && nitems != 0)
+	  if (gdk_property_get (gwindow, display_change_gdkatom, display_change_gdkatom,
+				0, 65536, FALSE, &actual_type, &actual_format,
+				&actual_length, &prop))
 	    {
-	      GtkWidget *widget;
-	      GdkWindow *gwindow;
-	      int screen_nr = *prop;
-
-	      gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
-	      if (gwindow)
+	      if (actual_length != 0)
 		{
-		  gdk_window_get_user_data (gwindow, (gpointer*) &widget);
-		  if (widget)
-		    success = do_change_display (widget, prop + 1, screen_nr);
+		  if (actual_type == display_change_gdkatom
+		      && actual_length > 8)
+		    {
+		      GtkWidget *widget;
+
+		      gdk_window_get_user_data (gwindow, (gpointer*) &widget);
+		      if (widget)
+			{
+			  gchar *error = NULL;
+			  if (do_change_display (widget, prop + 8, &error) == FALSE)
+			    {
+			      Window initiating_window;
+			      Atom error_atom;
+			      Atom string_atom = gdk_x11_atom_to_xatom_for_display (gdisplay, 
+										    string_gdkatom);
+
+			      initiating_window = ntohl (*((uint32_t *)prop));
+			      error_atom = ntohl (*((uint32_t *)(prop + 4)));
+
+			      if (initiating_window && error_atom)
+				XChangeProperty (xev->display, initiating_window, 
+						 error_atom, string_atom,
+						 8, PropModeReplace,
+						 error, strlen (error));
+
+			      g_free (error);
+			    }
+			}
+		    }
+
+		  gdk_property_change (gwindow, display_change_gdkatom, display_change_gdkatom,
+				       32, GDK_PROP_MODE_REPLACE, NULL, 0);
 		}
 	    }
 
-	  if (! success)
-	    XDeleteProperty (xev->display, xev->window, display_change_atom);
-
 	  if (prop)
-	    XFree (prop);
+	    g_free (prop);
 	}
 
       return GDK_FILTER_REMOVE;
@@ -104,7 +147,7 @@ libdm_mark_window (GtkWidget *w)
       
       gdk_window_add_filter (window, filter_func, NULL);
       
-      gdk_property_change (window, display_change_ok_gdkatom, display_change_ok_gdkatom,
+      gdk_property_change (window, display_change_gdkatom, display_change_gdkatom,
 			   32, GDK_PROP_MODE_REPLACE, NULL, 0);
     }
   else
@@ -116,5 +159,4 @@ libdm_init (void)
 {
   string_gdkatom = gdk_atom_intern ("STRING", FALSE);
   display_change_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE", FALSE);
-  display_change_ok_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE_OK", FALSE);
 }
