@@ -1,3 +1,7 @@
+2002-09-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* main.c: Convert to #include <gpe/foo.h> style.
+
 2002-08-10  Robert Mibus  <mibus@handhelds.org>
 
 	* main.c: Fix dc's brain-deadness string handling :)

@@ -19,13 +19,13 @@
 
 #include <gtk/gtk.h>
 
-#include "init.h"
-#include "errorbox.h"
-#include "render.h"
-#include "pixmaps.h"
-#include "picturebutton.h"
-#include "question.h"
-#include "gtkminifilesel.h"
+#include <gpe/init.h>
+#include <gpe/errorbox.h>
+#include <gpe/render.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+#include <gpe/question.h>
+#include <gpe/gtkminifilesel.h>
 
 #define WINDOW_NAME "GPE Edit"
 #define _(_x) gettext (_x)
