@@ -1,0 +1,92 @@
+# Swedish messages for gpe-sketchbook.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2003-07-06 22:05+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
+msgid "Sketchbook"
+msgstr "Skissblock"
+
+#: src/selector.c:87
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Kan inte läsa skissblockskatalogen: %s. Avsluta."
+
+#: src/selector.c:93
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Kan inte skapa %s: %s. Avsluta."
+
+#: src/selector.c:164
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s vid %s"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+msgid "Delete current sketch?"
+msgstr "Ersätta aktuell skiss?"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
+msgid "Question"
+msgstr "Fråga"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+msgid "Delete"
+msgstr "Ta bort"
+
+#: src/sketchpad.c:184
+msgid "new"
+msgstr "ny"
+
+#: src/sketchpad-cb.c:46
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Skissen ändrad,\n"
+"spara innan avslutande?"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
+msgstr "Förkasta"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+msgid "Save"
+msgstr "Spara"
+
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
+msgstr "Spara aktuell skiss?"
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr "Ny"
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "Egenskaper"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE-skissblock"
+
+#~ msgid "%s at %s"
+#~ msgstr "%s vid %s"
+
+#~ msgid "Don't save"
+#~ msgstr "Spara inte"
