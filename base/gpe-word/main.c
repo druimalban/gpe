@@ -44,6 +44,8 @@ GtkWidget *text_view;
 GtkWidget *file_selector;
 GtkWidget *search_replace_vbox;
 
+GHashTable *tag_widgets;
+
 struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "open", "open" },
@@ -592,6 +594,55 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
     }
 }
 
+static void
+toggle_tag (GtkWidget *parent_button, const gchar *tag_name)
+{
+  GtkTextBuffer *text_buffer;
+  GtkTextIter iter_start, iter_end;
+
+  text_buffer = gtk_text_view_get_buffer (text_view);
+  if (gtk_text_buffer_get_selection_bounds (text_buffer, &iter_start, &iter_end))
+  {
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (parent_button)))
+      gtk_text_buffer_apply_tag_by_name (text_buffer, tag_name, &iter_start, &iter_end);
+    else
+      gtk_text_buffer_remove_tag_by_name (text_buffer, tag_name, &iter_start, &iter_end);
+  }
+}
+
+static void
+cursor_position_changed (GtkTextView *text_view, GtkMovementStep movement_step, gint arg2, gboolean arg3)
+{
+  GtkWidget *tag_widget;
+  GtkTextBuffer *text_buffer;
+  GtkTextIter iter_start, iter_end;
+  GSList *applied_tags;
+  gboolean bold, italic, underline, strikethrough = FALSE;
+
+  if (movement_step == GTK_MOVEMENT_VISUAL_POSITIONS)
+  {
+    text_buffer = gtk_text_view_get_buffer (text_view);
+    if (gtk_text_buffer_get_selection_bounds (text_buffer, &iter_start, &iter_end))
+    {
+      applied_tags = gtk_text_iter_get_tags (&iter_end);
+
+      while (applied_tags != NULL)
+      {
+        if (((GtkTextTag *) applied_tags->data)->weight == PANGO_WEIGHT_BOLD)
+          bold = TRUE;
+
+        applied_tags = g_slist_next (applied_tags);
+      }
+
+      tag_widget = g_hash_table_lookup (tag_widgets, (gconstpointer) "bold");
+      if (bold == TRUE)
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tag_widget), TRUE);
+      else
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tag_widget), FALSE);
+    }
+  }
+}
+
 static int
 select_font_popup_cmp_families (const void *a, const void *b)
 {
@@ -917,10 +968,31 @@ popup_menu_button_new (const gchar *stock_id)
   return button;
 }
 
+static void
+add_default_buffer_tags (GtkTextBuffer *buffer)
+{
+  gtk_text_buffer_create_tag (buffer, "blue",
+			      "foreground", "blue", NULL);
+  gtk_text_buffer_create_tag (buffer, "green",
+			      "foreground", "green", NULL);
+  gtk_text_buffer_create_tag (buffer, "red",
+			      "foreground", "red", NULL);
+
+  gtk_text_buffer_create_tag (buffer, "bold",
+			      "weight", PANGO_WEIGHT_BOLD, NULL);
+  gtk_text_buffer_create_tag (buffer, "italic",
+			      "style", PANGO_STYLE_ITALIC, NULL);
+  gtk_text_buffer_create_tag (buffer, "underline",
+			      "underline", PANGO_UNDERLINE_SINGLE, NULL);
+  gtk_text_buffer_create_tag (buffer, "strikethrough",
+			      "strikethrough", TRUE, NULL);
+}
+
 int
 main (int argc, char *argv[])
 {
   GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *scroll, *toolbar_icon;
+  GtkWidget *toolbar_button_bold, *toolbar_button_italic, *toolbar_button_underline, *toolbar_button_strikethrough;
   GtkWidget *justify_button, *color_button, *font_button;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
@@ -945,6 +1017,8 @@ main (int argc, char *argv[])
   
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+
+  tag_widgets = g_hash_table_new (g_str_hash, g_str_equal);
   
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   update_window_title ();
@@ -985,6 +1059,8 @@ main (int argc, char *argv[])
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
+  g_signal_connect (G_OBJECT (text_view), "move-cursor",
+		      GTK_SIGNAL_FUNC (cursor_position_changed), NULL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
@@ -1013,16 +1089,20 @@ main (int argc, char *argv[])
 			   _("Replace a string"), _("Replace a string"), toolbar_icon, replace_string, vbox);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_BOLD, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Bold"), _("Bold"), _("Make the selected text bold."), toolbar_icon, NULL, NULL);
+  toolbar_button_bold = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Bold"), _("Bold"), _("Make the selected text bold."), toolbar_icon, toggle_tag, "bold");
+  g_hash_table_insert (tag_widgets, (gpointer) "bold", (gpointer) toolbar_button_bold);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_ITALIC, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Italic"), _("Italic"), _("Make the selected text italic."), toolbar_icon, NULL, NULL);
+  toolbar_button_italic = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Italic"), _("Italic"), _("Make the selected text italic."), toolbar_icon, toggle_tag, "italic");
+  g_hash_table_insert (tag_widgets, (gpointer) "italic", (gpointer) toolbar_button_italic);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_UNDERLINE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Underline"), _("Underline"), _("Make the selected text underlined."), toolbar_icon, NULL, NULL);
+  toolbar_button_italic = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Underline"), _("Underline"), _("Make the selected text underlined."), toolbar_icon, toggle_tag, "underline");
+  g_hash_table_insert (tag_widgets, (gpointer) "underline", (gpointer) toolbar_button_underline);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_STRIKETHROUGH, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Strikethrough"), _("Strikethrough"), _("Make the selected text have a strike through it."), toolbar_icon, NULL, NULL);
+  toolbar_button_strikethrough = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Strikethrough"), _("Strikethrough"), _("Make the selected text have a strike through it."), toolbar_icon, toggle_tag, "strikethrough");
+  g_hash_table_insert (tag_widgets, (gpointer) "strikethrough", (gpointer) toolbar_button_strikethough);
 
   justify_button = popup_menu_button_new (GTK_STOCK_JUSTIFY_LEFT);
   gtk_signal_connect (GTK_OBJECT (justify_button), "pressed",
@@ -1064,6 +1144,8 @@ main (int argc, char *argv[])
     filename = argv[1];
     open_file (argv[1]);
   }
+
+  add_default_buffer_tags (buf);
 
   gtk_widget_grab_focus (text_view);
 
