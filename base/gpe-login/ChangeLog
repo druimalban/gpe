@@ -1,3 +1,10 @@
+2003-09-15  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (enter_root_callback): New function.
+	(build_new_user_box): Likewise, broken out of main.
+	(build_root_password_box): Likewise.
+	(main): Prompt to set a root password if not already done.
+
 2003-09-07  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.61 released.
