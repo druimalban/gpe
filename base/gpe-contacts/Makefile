@@ -5,13 +5,8 @@ pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 VERSION = 0.10
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-endif
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -19,9 +14,21 @@ else
 BUILD = build
 endif
 
+ifeq ($(DEBUG),yes)
+LDFLAGS += -g
+CFLAGS += -O2 -g
+else
+CFLAGS += -Os -fomit-frame-pointer
+endif
+
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
+CPPFLAGS += -I../libdm
+LDFLAGS += -L../libdm -ldm
+
+LDFLAGS += -lsqlite
+
+CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -34,7 +41,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-contacts all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs libxml-2.0` -g -lsqlite
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs libxml-2.0` $(LDFLAGS)
 
 clean:
 	rm -f gpe-contacts $(OBJS) $(DEPS)

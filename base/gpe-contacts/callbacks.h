@@ -62,12 +62,6 @@ on_nbList_switch_page                  (GtkNotebook     *notebook,
                                         GtkNotebookPage *page,
                                         gint             page_num,
                                         gpointer         user_data);
-void 
-selection_made 	                       (GtkWidget *clist, 
-                                        gint row, 
-										gint column, 
-		                                GdkEventButton *event, 
-										GtkWidget *widget);
 
 void
 on_button1_clicked                     (GtkButton       *button,

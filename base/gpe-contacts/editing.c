@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -7,6 +7,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <signal.h>
 #include <gtk/gtk.h>
 
 #include <gpe/errorbox.h>
@@ -162,102 +163,55 @@ create_edit (void)
 
   tooltips = gtk_tooltips_new ();
 
-  edit = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  edit = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
   gpe_set_window_icon (edit, "icon");
-  gtk_widget_realize (edit);
 
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (edit), vbox);
-  gtk_widget_show (vbox);
-
-  action_area = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), action_area, FALSE, FALSE, 2);
-  gtk_widget_show (action_area);
+  vbox = GTK_DIALOG (edit)->vbox;
+  action_area = GTK_DIALOG (edit)->action_area;
 
   notebook2 = gtk_notebook_new ();
-  gtk_widget_set_name (notebook2, "notebook2");
-  gtk_widget_ref (notebook2);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "notebook2", notebook2,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (notebook2);
   gtk_box_pack_start (GTK_BOX (vbox), notebook2, 
 		      TRUE, TRUE, 0);
 
   topvbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (topvbox);
   gtk_container_add (GTK_CONTAINER (notebook2), topvbox);
 
   table1 = gtk_table_new (4, 2, FALSE);
-  gtk_widget_set_name (table1, "table1");
-  gtk_widget_ref (table1);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "table1", table1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (table1);
   gtk_box_pack_start (GTK_BOX (topvbox), table1, FALSE, FALSE, 2);
   gtk_table_set_row_spacings (GTK_TABLE (table1), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table1), 3);
 
   edit_bt_name = gtk_button_new_with_label (_("Name"));
-  gtk_widget_set_name (edit_bt_name, "edit_bt_name");
-  gtk_widget_ref (edit_bt_name);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_bt_name", edit_bt_name,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_bt_name);
   gtk_table_attach (GTK_TABLE (table1), edit_bt_name, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_tooltips_set_tip (tooltips, edit_bt_name, _("more detailed name options"), NULL);
 
   label19 = gtk_label_new (_("Summary"));
-  gtk_widget_set_name (label19, "label19");
-  gtk_widget_ref (label19);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label19", label19,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label19);
   gtk_table_attach (GTK_TABLE (table1), label19, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label19), 0.5, 0.5);
 
   label20 = gtk_label_new (_("Birthday"));
-  gtk_widget_set_name (label20, "label20");
-  gtk_widget_ref (label20);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label20", label20,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label20);
   gtk_table_attach (GTK_TABLE (table1), label20, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label20), 0.5, 0.5);
 
   label22 = gtk_label_new (_("Image"));
-  gtk_widget_set_name (label22, "label22");
-  gtk_widget_ref (label22);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label22", label22,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label22);
   gtk_table_attach (GTK_TABLE (table1), label22, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label22), 0.5, 0.5);
 
   hbox3 = gtk_hbox_new (FALSE, 0);
-  gtk_widget_set_name (hbox3, "hbox3");
-  gtk_widget_ref (hbox3);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "hbox3", hbox3,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (hbox3);
   gtk_table_attach (GTK_TABLE (table1), hbox3, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
   datecombo = gtk_date_combo_new ();
-  gtk_widget_set_name (datecombo, "datecombo");
-  gtk_widget_ref (datecombo);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "datecombo", datecombo,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (datecombo);
   gtk_box_pack_start (GTK_BOX (hbox3), datecombo, TRUE, TRUE, 0);
   GTK_WIDGET_UNSET_FLAGS (datecombo, GTK_CAN_FOCUS);
   GTK_WIDGET_UNSET_FLAGS (datecombo, GTK_CAN_DEFAULT);
@@ -265,46 +219,25 @@ create_edit (void)
   edit_bt_bdate = gtk_check_button_new_with_label (_("Schedule"));
   gtk_widget_set_name (edit_bt_bdate, "edit_bt_bdate");
   gtk_widget_set_sensitive (edit_bt_bdate, FALSE);		/* XXX */
-  gtk_widget_ref (edit_bt_bdate);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_bt_bdate", edit_bt_bdate,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_bt_bdate);
   gtk_box_pack_start (GTK_BOX (hbox3), edit_bt_bdate, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, edit_bt_bdate, _("automatic appointment"), NULL);
 
   hbox4 = gtk_hbox_new (FALSE, 0);
-  gtk_widget_set_name (hbox4, "hbox4");
-  gtk_widget_ref (hbox4);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "hbox4", hbox4,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (hbox4);
   gtk_table_attach (GTK_TABLE (table1), hbox4, 1, 2, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
   edit_bt_image = gtk_button_new_with_label ("");
-  gtk_widget_set_name (edit_bt_image, "edit_bt_image");
-  gtk_widget_ref (edit_bt_image);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_bt_image", edit_bt_image,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_bt_image);
   gtk_box_pack_start (GTK_BOX (hbox4), edit_bt_image, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, edit_bt_image, _("click to choose file"), NULL);
 
   catframe = gtk_frame_new (_("Categories"));
-  gtk_widget_show (catframe);
   scrolledwindow3 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_name (scrolledwindow3, "scrolledwindow3");
-  gtk_widget_ref (scrolledwindow3);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "scrolledwindow3", scrolledwindow3,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (scrolledwindow3);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow3), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   gtk_container_add (GTK_CONTAINER (catframe), scrolledwindow3);
   gtk_box_pack_start (GTK_BOX (topvbox), catframe, TRUE, TRUE, 2);
 
   cbox = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (cbox);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow3), 
 					 cbox);
 
@@ -332,49 +265,23 @@ create_edit (void)
 
   name_entry = gtk_entry_new ();
   add_tag ("NAME", name_entry, edit);
-  gtk_widget_set_name (name_entry, "name_entry");
-  gtk_widget_ref (name_entry);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "name_entry", name_entry,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (name_entry);
   gtk_table_attach (GTK_TABLE (table1), name_entry, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
   summary_entry = gtk_entry_new ();
-  gtk_widget_set_name (summary_entry, "summary_entry");
-  add_tag ("SUMMARY", summary_entry, edit);
-  gtk_widget_ref (summary_entry);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "summary_entry", summary_entry,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (summary_entry);
   gtk_table_attach (GTK_TABLE (table1), summary_entry, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
   label16 = gtk_label_new (_("Personal"));
-  gtk_widget_set_name (label16, "label16");
-  gtk_widget_ref (label16);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label16", label16,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label16);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook2), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook2), 0), label16);
 
   edit_cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
-  gtk_widget_set_name (edit_cancel, "edit_cancel");
-  gtk_widget_ref (edit_cancel);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_cancel", edit_cancel,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_cancel);
   gtk_container_add (GTK_CONTAINER (action_area), edit_cancel);
   GTK_WIDGET_SET_FLAGS (edit_cancel, GTK_CAN_DEFAULT);
 
   edit_save = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
-  gtk_widget_set_name (edit_save, "edit_save");
-  gtk_widget_ref (edit_save);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_save", edit_save,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_save);
   gtk_container_add (GTK_CONTAINER (action_area), edit_save);
   GTK_WIDGET_SET_FLAGS (edit_save, GTK_CAN_DEFAULT);
 
@@ -388,7 +295,10 @@ create_edit (void)
                       GTK_SIGNAL_FUNC (on_edit_save_clicked),
                       edit);
 
-  gtk_object_set_data (GTK_OBJECT (edit), "tooltips", tooltips);
+  g_object_set_data (G_OBJECT (edit), "tooltips", tooltips);
+  g_object_set_data (G_OBJECT (edit), "notebook2", notebook2);
+  g_object_set_data (G_OBJECT (edit), "name_entry", name_entry);
+  g_object_set_data (G_OBJECT (edit), "datecombo", datecombo);
 
   return edit;
 }
@@ -422,8 +332,6 @@ edit_window (void)
     }
 
 #if 0
-  gtk_widget_show (displayvbox);
-  gtk_widget_show (displaylabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (book), displayvbox, 
 			    displaylabel);
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -228,44 +228,40 @@ edit_structure (void)
   GtkWidget *toolbar;
   GtkWidget *pw;
 
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-#else
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
 
-  gtk_widget_show (vbox);
-  gtk_widget_show (scrolled);
-  gtk_widget_show (tree);
-  gtk_widget_show (toolbar);
-
-  pw = gpe_render_icon (NULL, gpe_find_icon ("notebook"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New page", 
-			   "New page", "New page", pw, 
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("notebook",
+							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Page"), 
+			   _("New page"), _("Tap here to add a page."), pw, 
 			   GTK_SIGNAL_FUNC (structure_new_page), tree);
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("frame"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("frame",
+							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New group", 
 			   "New group", "New group", pw, 
 			   GTK_SIGNAL_FUNC (structure_new_group), tree);
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("entry"));
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("entry",
+							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New field", 
 			   "New field", "New field", pw, 
 			   GTK_SIGNAL_FUNC (structure_new_field), tree);
   
-  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, 
-			   GTK_SIGNAL_FUNC (structure_delete_item), tree);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+			    _("Delete item"), _("Tap here to delete the selected item."),
+			    G_CALLBACK (structure_delete_item), tree, -1);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
 
   gtk_container_add (GTK_CONTAINER (scrolled), tree);
   gtk_clist_column_titles_hide (GTK_CLIST (tree));
+
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   build_edit_tree (GTK_CTREE (tree), edit_pages, NULL);
 

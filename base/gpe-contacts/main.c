@@ -20,6 +20,7 @@
 #include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <libdm.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -40,26 +41,22 @@
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 
 static GtkWidget *categories_smenu;
-GtkWidget *clist;
 gchar *active_chars;
 GtkWidget *mainw;		// how ugly making this global
 gboolean panel_config_has_changed = FALSE;
+GtkListStore *list_store;
+GtkWidget *list_view;
 
 struct gpe_icon my_icons[] = {
-  {"delete"},
-  {"new"},
-  {"save"},
-  {"cancel"},
   {"edit"},
-  {"properties"},
+  {"delete"},
+  {"cancel"},
   {"frame", MY_PIXMAPS_DIR "/frame.png"},
   {"notebook", MY_PIXMAPS_DIR "/notebook.png"},
   {"entry", MY_PIXMAPS_DIR "/entry.png"},
   {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
-
-
 
 void
 load_panel_config ()
@@ -386,7 +383,7 @@ edit_person (struct person *p)
       gtk_object_set_data (GTK_OBJECT (w), "person", p);
     }
   store_special_fields (w, p);
-  gtk_widget_show (w);
+  gtk_widget_show_all (w);
   gtk_widget_grab_focus (entry);
 }
 
@@ -399,11 +396,16 @@ new_contact (GtkWidget * widget, gpointer d)
 static void
 edit_contact (GtkWidget * widget, gpointer d)
 {
-  if (GTK_CLIST (clist)->selection)
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
-      guint row = (guint) (GTK_CLIST (clist)->selection->data);
-      guint uid = (guint) gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      struct person *p = db_get_by_uid (uid);
+      guint uid;
+      struct person *p;
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
+      p = db_get_by_uid (uid);
       edit_person (p);
     }
 }
@@ -411,10 +413,14 @@ edit_contact (GtkWidget * widget, gpointer d)
 static void
 delete_contact (GtkWidget * widget, gpointer d)
 {
-  if (GTK_CLIST (clist)->selection)
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
-      guint row = (guint) (GTK_CLIST (clist)->selection->data);
-      guint uid = (guint) gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      guint uid;
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
       if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
 			    "question", _("Delete"), "delete", _("Cancel"),
 			    "cancel", NULL) == 0)
@@ -468,33 +474,22 @@ config_categories_box (void)
   GtkWidget *clist = gtk_clist_new (1);
   GtkWidget *toolbar;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *pw;
   GSList *categories;
 
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-#else
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
 
   gtk_widget_show (toolbar);
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New category"), 
-			   _("Tap here to create a new category."), pw,
-			   (GtkSignalFunc) new_category, clist);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+			    _("New category"), _("Tap here to create a category."),
+			    G_CALLBACK (new_category), clist, -1);
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete category"),
-			   _("Tap here to delete the selected category."), pw, 
-			   (GtkSignalFunc) delete_category, clist);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+			    _("Delete category"), _("Tap here to delete the selected category."),
+			    G_CALLBACK (delete_category), clist, -1);
 
   categories = db_get_categories ();
   if (categories)
@@ -534,7 +529,7 @@ config_categories_box (void)
 static void
 configure (GtkWidget * widget, gpointer d)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *window = gtk_dialog_new ();
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *editlabel = gtk_label_new (_("Editing Layout"));
   GtkWidget *editbox = edit_structure ();
@@ -542,31 +537,31 @@ configure (GtkWidget * widget, gpointer d)
   GtkWidget *categoriesbox = config_categories_box ();
   GtkWidget *configlabel = gtk_label_new (_("Setup"));
   GtkWidget *configbox = create_pageSetup ();
-
-  gtk_widget_show (notebook);
-  gtk_widget_show (editlabel);
-  gtk_widget_show (editbox);
-  gtk_widget_show (categorieslabel);
-  gtk_widget_show (categoriesbox);
-  gtk_widget_show (configlabel);
-  gtk_widget_show (configbox);
+  GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), editbox, editlabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
 			    categoriesbox, categorieslabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), configbox, configlabel);
 
-  gtk_container_add (GTK_CONTAINER (window), notebook);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), notebook);
+  
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
 
-  gtk_widget_set_usize (window, 240, 300);
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 300);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (on_setup_destroy), NULL);
+  g_signal_connect (G_OBJECT (window), "destroy",
+		    G_CALLBACK (on_setup_destroy), NULL);
+
+  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked",
+			    G_CALLBACK (gtk_widget_destroy), window);
 
   gtk_window_set_title (GTK_WINDOW (window), _("Contacts: Configuration"));
   gpe_set_window_icon (window, "icon");
 
-  gtk_widget_show (window);
+  libdm_mark_window (window);
+
+  gtk_widget_show_all (window);
 }
 
 static int
@@ -579,8 +574,6 @@ show_details (struct person *p)
   gchar *tagname;
   struct tag_value *curtag;
 
-  if (!clist)
-    return -1;
   table = GTK_TABLE (lookup_widget (mainw, "tabDetail"));
 
   for (i = 0; i < table->nrows; i++)
@@ -620,20 +613,23 @@ show_details (struct person *p)
 }
 
 void
-selection_made (GtkWidget * clist, gint row, gint column,
-		GdkEventButton * event, GtkWidget * widget)
+selection_made (GtkTreeSelection *sel)
 {
+  GtkTreeIter iter;
   guint id;
   struct person *p;
+  GtkTreeModel *model;
 
-  id = (guint) gtk_clist_get_row_data (GTK_CLIST (clist), row);
-  p = db_get_by_uid (id);
-  show_details (p);
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      gtk_tree_model_get (model, &iter, 1, &id, -1);
+
+      p = db_get_by_uid (id);
     
-  if (event->type == GDK_2BUTTON_PRESS)
-    edit_person (p);
-  else
-    discard_person (p);
+      show_details (p);
+
+      discard_person (p);
+    }
 }
 
 void
@@ -641,37 +637,222 @@ update_display (void)
 {
   GSList *items = db_get_entries_alpha (active_chars), *iter;
 
-  if (!GTK_IS_CLIST (clist))
-    return;
-
-  gtk_clist_freeze (GTK_CLIST (clist));
-  gtk_clist_clear (GTK_CLIST (clist));
+  gtk_list_store_clear (list_store);
 
   for (iter = items; iter; iter = iter->next)
     {
       struct person *p = iter->data;
-      gchar *text[2];
-      int row;
-      text[0] = p->name;
-      text[1] = NULL;
-      row = gtk_clist_append (GTK_CLIST (clist), text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer) p->id);
+      GtkTreeIter iter;
+
+      gtk_list_store_append (list_store, &iter);
+      gtk_list_store_set (list_store, &iter, 0, p->name, 1, p->id, -1);
+
       discard_person (p);
     }
   
   g_slist_free (items);
-  gtk_clist_thaw (GTK_CLIST (clist));
+}
+
+static void
+main_view_switch_page (GtkNotebook * notebook,
+		       GtkNotebookPage * page,
+		       gint page_num, gpointer user_data)
+{
+  switch (page_num)
+    {
+    case 0:
+      sprintf (active_chars, "ABC");
+      break;	
+    case 1:
+      sprintf (active_chars, "DEF");
+      break;	
+    case 2: 
+      sprintf (active_chars, "GHIJ");
+      break;	
+    case 3:
+      sprintf (active_chars, "KLMN");
+      break;	
+    case 4:
+      sprintf (active_chars, "OPQR");
+      break;	
+    case 5:
+      sprintf (active_chars, "STUV");
+      break;	
+    case 6:
+      sprintf (active_chars, "WXYZ");
+      break;	
+    }
+
+  update_display ();
+}
+
+static GtkWidget*
+create_main (void)
+{
+  GtkWidget *main_window;
+  GtkWidget *vbox1;
+  GtkWidget *nbList;
+  GtkWidget *empty_notebook_page;
+  GtkWidget *label46a;
+  GtkWidget *label47;
+  GtkWidget *label48;
+  GtkWidget *label49;
+  GtkWidget *label50;
+  GtkWidget *label51;
+  GtkWidget *label52;
+  GtkWidget *hbox3;
+  GtkWidget *label83, *label84;
+  GtkWidget *entry1;
+  GtkWidget *pDetail;
+  GtkWidget *tabDetail;
+  GtkWidget *toolbar, *pw;
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;
+  GtkTreeSelection *tree_sel;
+  GtkWidget *scrolled_window;
+
+  main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
+  gtk_window_set_default_size (GTK_WINDOW (main_window), 240, 320);
+
+  vbox1 = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (main_window), vbox1);
+
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
+			       GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
+  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+			    _("New contact"), _("Tap here to add a new contact."),
+			    G_CALLBACK (new_contact), NULL, -1);
+
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("edit", 
+							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
+
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit"), 
+			   _("Edit contact"), _("Tap here to edit the selected contact."),
+			   pw, (GtkSignalFunc) edit_contact, NULL);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+			    _("Delete contact"), _("Tap here to delete the selected contact."),
+			    G_CALLBACK (delete_contact), NULL, -1);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
+			    _("Properties"), _("Tap here to configure the program."),
+			    G_CALLBACK (configure), NULL, -1);
+
+  nbList = gtk_notebook_new ();
+  gtk_box_pack_start (GTK_BOX (vbox1), nbList, FALSE, FALSE, 0);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (nbList), FALSE);
+  gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (nbList), 1);
+  gtk_notebook_set_tab_vborder (GTK_NOTEBOOK (nbList), 0);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label46a = gtk_label_new (_("ABC"));
+  gtk_widget_show (label46a);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 0), label46a);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label47 = gtk_label_new (_("DEF"));
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 1), label47);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label48 = gtk_label_new (_("GHIJ"));
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 2), label48);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label49 = gtk_label_new (_("KLMN"));
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 3), label49);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label50 = gtk_label_new (_("OPQR"));
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 4), label50);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label51 = gtk_label_new (_("STUV"));
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 5), label51);
+
+  empty_notebook_page = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+
+  label52 = gtk_label_new (_("WXYZ"));
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
+			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 6), label52);
+
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), FALSE);
+  tree_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  
+  gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
+  gtk_box_pack_start (GTK_BOX (vbox1), scrolled_window, TRUE, TRUE, 0);
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("Contact"), renderer,
+						     "text", 0, NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
+
+  hbox3 = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
+
+  label83 = gtk_label_new (_("Find:"));
+  gtk_box_pack_start (GTK_BOX (hbox3), label83, FALSE, FALSE, 0);
+
+  entry1 = gtk_entry_new ();
+  gtk_box_pack_start (GTK_BOX (hbox3), entry1, TRUE, TRUE, 0);
+
+  label84 = gtk_label_new (_("in"));
+  gtk_box_pack_start (GTK_BOX (hbox3), label84, FALSE, FALSE, 0);
+
+  categories_smenu = gtk_simple_menu_new ();
+  gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, TRUE, TRUE, 0);
+
+  pDetail = gtk_frame_new (_("Contact"));
+  gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
+
+  tabDetail = gtk_table_new (1, 2, FALSE);
+  gtk_container_add (GTK_CONTAINER (pDetail), tabDetail);
+  gtk_table_set_col_spacings (GTK_TABLE (tabDetail), 6);
+  g_object_set_data (G_OBJECT (main_window), "tabDetail", tabDetail);
+
+  g_signal_connect (G_OBJECT (nbList), "switch_page",
+		    G_CALLBACK (main_view_switch_page), NULL);
+
+  g_signal_connect (G_OBJECT (tree_sel), "changed",
+		    G_CALLBACK (selection_made), NULL);
+
+  libdm_mark_window (main_window);
+
+  return main_window;
 }
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *toolbar;
-  GtkWidget *pw;
-  GtkWidget *vbox1;
-  GtkWidget *hbox1;
-  GtkWidget *smenu;
-
 #ifdef ENABLE_NLS
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
@@ -689,55 +870,18 @@ main (int argc, char *argv[])
   if (db_open ())
     exit (1);
 
+  libdm_init ();
+
   load_well_known_tags ();
 
+  list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
+
   mainw = create_main ();
-  smenu = gtk_simple_menu_new ();
-  hbox1 = lookup_widget (GTK_WIDGET (mainw), "hbox3");
-  gtk_box_pack_start (GTK_BOX (hbox1), smenu, TRUE, TRUE, 0);
-  gtk_widget_show (smenu);
-  categories_smenu = smenu;
   update_categories ();
-  clist = lookup_widget (GTK_WIDGET (mainw), "clist1");
   update_display ();
   show_details (NULL);
-  gtk_signal_connect (GTK_OBJECT (clist), "select_row",
-		      GTK_SIGNAL_FUNC (selection_made), NULL);
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy", gtk_main_quit, NULL);
-
-  vbox1 = lookup_widget (mainw, "vbox1");
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-#else
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
-  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
-  gtk_box_reorder_child (GTK_BOX (vbox1), toolbar, 0);
-  gtk_widget_show (toolbar);
-
-  pw = gpe_render_icon (mainw->style, gpe_find_icon ("new"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
-			   _("New Contact"), _("New Contact"),
-			   pw, (GtkSignalFunc) new_contact, NULL);
-
-  pw = gpe_render_icon (mainw->style, gpe_find_icon ("edit"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit Contact"), 
-			   _("Edit Contact"), _("Edit Contact"),
-			   pw, (GtkSignalFunc) edit_contact, NULL);
-
-  pw = gpe_render_icon (mainw->style, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete Contact"), 
-			   _("Delete Contact"), _("Delete Contact"), 
-			   pw, (GtkSignalFunc) delete_contact, NULL);
-
-  pw = gpe_render_icon (mainw->style, gpe_find_icon ("properties"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Configure"), 
-			   _("Configure"), _("Configure"),
-			   pw, (GtkSignalFunc) configure, NULL);
 
   load_structure ();
 
@@ -745,7 +889,7 @@ main (int argc, char *argv[])
   load_panel_config ();
 
   gpe_set_window_icon (mainw, "icon");
-  gtk_widget_show (mainw);
+  gtk_widget_show_all (mainw);
 
   gtk_main ();
   return 0;

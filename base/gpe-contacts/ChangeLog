@@ -1,3 +1,39 @@
+2003-03-15  Philip Blundell  <philb@gnu.org>
+
+	* structure.c (edit_structure): Remove GTK1 compatibility.  Use
+	stock items.  Remove redundant calls to gtk_widget_show.  Set
+	policy on scrolled window to AUTOMATIC, AUTOMATIC.
+
+	* editing.c (create_edit): Use GtkDialog.  Remove unnecessary
+	Glade remnants.  Use GObject functions.
+	(edit_window): Remove redundant gtk_widget_show calls.
+
+	* main.c (my_icons): Remove new, save, properties.
+	(edit_person): Use gtk_widget_show_all.
+	(edit_contact): Use GtkTreeSelection.
+	(delete_contact): Likewise.
+	(config_categories_box): Remove GTK1 compatibility code.  Use
+	stock items.
+	(configure): Use GtkDialog.  Replace many gtk_widget_show calls
+	with one gtk_widget_show_all.  Only set size hints, not actual
+	window dimensions.  Mark window for migration.  Use GObject signal
+	functions. 
+	(show_details): Remove check for clist.
+	(selection_made): Use GtkTreeSelection.  Don't attempt to handle
+	double clicks.
+	(update_display): Use GtkListView, etc.
+	(main_view_switch_page): New.
+	(create_main): Likewise.
+	(main): Call libdm_init.  Create list store, etc.  Delete widget
+	initialisation now done in create_main.  Use gtk_widget_show_all.
+
+	* adb.glade: Remove "main" window.
+	* interface.c (create_main): Delete.
+	* interface.h (create_main): Likewise.
+
+	* callbacks.c (on_nbList_switch_page): Delete.
+	* callbacks.h (selection_made): Likewise.
+
 2003-03-12  Philip Blundell  <philb@gnu.org>
 
 	* Makefile: Version 0.10 released.
