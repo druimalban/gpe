@@ -77,7 +77,8 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  window = gtk_plug_new (0);
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
   
   if (gpe_load_icons (my_icons) == FALSE)
