@@ -134,6 +134,112 @@ smallbox_x (gchar *title, struct box_desc *d)
   return TRUE;
 }
 
+static GtkWidget *
+make_combo (GList *options)
+{
+  GtkWidget *w = gtk_combo_new ();
+  gtk_combo_set_popdown_strings (GTK_COMBO (w), options);
+  return w;
+}
+
+gboolean
+smallbox_x2 (gchar *title, struct box_desc2 *d)
+{
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *buttonok = gtk_button_new_with_label (_("OK"));
+  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
+  GtkWidget *table;
+  GtkWidget **entry;
+  gboolean destroyed = FALSE;
+  guint i = 0;
+  struct box_desc2 *di = d;
+
+  gtk_widget_show (buttonok);
+  gtk_widget_show (buttoncancel);
+
+  while (di->label)
+    {
+      i++;
+      di++;
+    }
+  
+  table = gtk_table_new (i, 2, FALSE);
+  entry = g_malloc (i * sizeof (GtkEntry *));
+
+  i = 0;
+  di = d;
+  
+  while (di->label)
+    {
+      GtkWidget *label = gtk_label_new (di->label);
+      if (di->suggestions)
+	entry[i] = make_combo (di->suggestions);
+      else
+	entry[i] = gtk_entry_new ();
+
+      if (di->value)
+	gtk_entry_set_text (GTK_ENTRY (entry[i]), di->value);
+
+      gtk_widget_show (entry[i]);
+      gtk_widget_show (label);
+
+      gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, i, i + 1);
+      gtk_table_attach_defaults (GTK_TABLE (table), entry[i], 1, 2, i, i + 1);
+
+      i++;
+      di++;
+    }
+  
+  gtk_widget_show (table);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), table, 
+		      TRUE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
+		      buttoncancel, TRUE, TRUE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
+		      GTK_SIGNAL_FUNC (smallbox_click_ok), NULL);
+  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", 
+		      GTK_SIGNAL_FUNC (smallbox_click_cancel), window);
+
+  gtk_window_set_title (GTK_WINDOW (window), title);
+  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      smallbox_note_destruction, &destroyed);
+
+  gtk_widget_set_usize (window, 200, 100);
+
+  gtk_widget_show (window);
+  gtk_widget_grab_focus (entry[0]);
+
+  gtk_main ();
+
+  if (destroyed)
+    return FALSE;
+
+  destroyed = TRUE;
+
+  i = 0;
+  di = d;
+  
+  while (di->label)
+    {
+      if (di->value)
+	g_free (di->value);
+      di->value = gtk_editable_get_chars (GTK_EDITABLE (entry[i]), 0, -1);
+      di++;
+      i++;
+    }
+
+  gtk_widget_destroy (window);
+
+  return TRUE;
+}
+
 gchar *
 smallbox (gchar *title, gchar *labeltext, gchar *dval)
 {

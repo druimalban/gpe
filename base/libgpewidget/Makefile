@@ -4,14 +4,14 @@ DEBUG = yes
 
 GTKRC = gtkrc
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize question about
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize question 
 
 ifeq ($(GTK2),yes)
-MEMBERS += gpetooltips2 gtkgpepixmap2
+MEMBERS += gpetooltips2 gtkgpepixmap2 
 SONAME = libgpewidget.so.1
 CONTROL = control1
 else
-MEMBERS += gpetooltips gtkgpepixmap
+MEMBERS += gpetooltips gtkgpepixmap about
 SONAME = libgpewidget.so.0
 CONTROL = control
 endif
@@ -32,6 +32,8 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD
 
+CPPFLAGS += -I./gpe
+
 HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -39,11 +41,6 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: libgpewidget.so
-
-update-po: po/$(PACKAGE).pot
-
-po/$(PACKAGE).pot: $(SOURCES)
-	xgettext -k_ -o $@ $^
 
 libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
@@ -83,5 +80,7 @@ ipkg:
 
 clean:
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)
+
+include ../build/Makefile.translation
 
 -include $(DEPS)
