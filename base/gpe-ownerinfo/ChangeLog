@@ -1,3 +1,8 @@
+2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile: Don't provide install target anymore, let
+	Makefile.dpkg_ipkg do it.
+
 2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/hu.po:  Update.
