@@ -21,7 +21,6 @@
 
 #define XSERVER		"/etc/X11/Xserver"
 #define XINIT		"/etc/X11/Xinit"
-#define LOGIN		"/usr/bin/gpe-login"
 
 #define SERVER_CRASH_TIME		5
 #define SERVER_CRASHING_THRESHOLD	3
@@ -118,20 +117,11 @@ main(int argc, char *argv[])
       if (dpy == NULL)
 	continue;
 
-      /* start Xinit and wait for it to finish */
-      xinit_pid = fork ();
-      if (xinit_pid == 0)
-	{
-	  execl (XINIT, XINIT, NULL);
-	  _exit (1);
-	}
-      waitpid (xinit_pid, NULL, 0);
-
-      /* start gpe-login */
+      /* start session */
       session_pid = fork ();
       if (session_pid == 0)
 	{
-	  execl (LOGIN, LOGIN, NULL);
+	  execl (XINIT, XINIT, NULL);
 	  _exit (1);
 	}
 

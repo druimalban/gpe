@@ -437,6 +437,10 @@ main (int argc, char *argv[])
   GdkPixbuf *icon;
   Display *dpy;
   Window root;
+  gboolean geometry_set = FALSE;
+  int i;
+  char *geometry_str = FALSE;
+  gboolean flag_geom = FALSE;
 
   gtk_set_locale ();
 
@@ -448,8 +452,18 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (argc == 2 && !strcmp (argv[1], "--autolock"))
-    autolock_mode = TRUE;
+  for (i = 1; i < argc; i++)
+    {
+      if (flag_geom)
+	{
+	  geometry_str = argv[i];
+	  flag_geom = FALSE;
+	}
+      else if (strcmp (argv[i], "--autolock") == 0)
+	autolock_mode = TRUE;
+      else if (strcmp (argv[i], "--geometry") == 0)
+	flag_geom = TRUE;
+    }
 
   signal (SIGCHLD, SIG_IGN);
 
@@ -509,26 +523,41 @@ main (int argc, char *argv[])
     }
   else
     {
-      gboolean geometry_set = FALSE;
-      FILE *fp = fopen ("/etc/X11/gpe-login.geometry", "r");
-      if (fp)
+      if (geometry_str)
 	{
-	  char buf[1024];
-	  if (fgets (buf, sizeof (buf), fp))
+	  int x = -1, y = -1, h, w;
+	  int val = XParseGeometry (geometry_str, &x, &y, &w, &h);
+	  if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
 	    {
-	      int x = -1, y = -1, h, w;
-	      int val;
-	      buf[strlen(buf)-1] = 0;
-	      val = XParseGeometry (buf, &x, &y, &w, &h);
-	      if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
-		{
-		  gtk_widget_set_usize (window, w, h);
-		  geometry_set = TRUE;
-		}
-	      if (val & (XValue | YValue))
-		gtk_widget_set_uposition (window, x, y);
+	      gtk_widget_set_usize (window, w, h);
+	      geometry_set = TRUE;
 	    }
-	  fclose (fp);
+	  if (val & (XValue | YValue))
+	    gtk_widget_set_uposition (window, x, y);
+	}
+
+      if (geometry_set == FALSE)
+	{
+	  FILE *fp = fopen ("/etc/X11/gpe-login.geometry", "r");
+	  if (fp)
+	    {
+	      char buf[1024];
+	      if (fgets (buf, sizeof (buf), fp))
+		{
+		  int val;
+		  int x = -1, y = -1, h, w;
+		  buf[strlen(buf)-1] = 0;
+		  val = XParseGeometry (buf, &x, &y, &w, &h);
+		  if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
+		    {
+		      gtk_widget_set_usize (window, w, h);
+		      geometry_set = TRUE;
+		    }
+		  if (val & (XValue | YValue))
+		    gtk_widget_set_uposition (window, x, y);
+		}
+	      fclose (fp);
+	    }
 	}
 
       if (geometry_set == FALSE)
@@ -644,7 +673,8 @@ main (int argc, char *argv[])
 
       focus = entry;
       gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
+      if (! autolock_mode)
+	gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
   else
     {
