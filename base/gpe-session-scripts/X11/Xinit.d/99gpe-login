@@ -10,4 +10,4 @@ if [ -x /usr/X11R6/bin/xsetroot ]; then
 fi
 #HARD=--hard
 
-/usr/bin/gpe-login $HARD $TRANSPARENT $GEOMETRY
+GTK2_RC_FILES=/etc/X11/gpe-login.gtkrc /usr/bin/gpe-login $HARD $TRANSPARENT $GEOMETRY

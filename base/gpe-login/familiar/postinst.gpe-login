@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if test -d /etc/X11/Xsession-gpe.d/; then 
+    ln -fs /etc/X11/Xsession.d/50autolock /etc/X11/Xsession-gpe.d/50autolock
+fi
+
+exit 0

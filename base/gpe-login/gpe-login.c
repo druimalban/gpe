@@ -29,7 +29,6 @@
 #include <X11/Xatom.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
 

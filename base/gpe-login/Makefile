@@ -22,7 +22,8 @@ LDFLAGS += -L../libgpewidget -L../librootimage
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget -lrootimage
+LDFLAGS += -lgpewidget
+LDFLAGS_ROOT = -lrootimage
 
 all: gpe-login gpe-logout gpe-dm gpe-lock-display mo
 
@@ -38,7 +39,7 @@ po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot $^
 
 gpe-login: gpe-login.o nocursor.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
+	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_ROOT) -lcrypt
 
 gpe-logout: gpe-logout.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
@@ -58,6 +59,16 @@ install-login: gpe-login install-po
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-logout
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
+	install -d $(DESTDIR)/etc/X11
+	install -m 755 gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
+	install -m 644 gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
+	install -m 644 X11/gpe-login.gtkrc $(DESTDIR)/etc/X11/gpe-login.gtkrc
+	install -m 755 X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
+	install -d $(DESTDIR)/etc/suspend-scripts
+	install -m 755 gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
+	install -d $(DESTDIR)/etc/Xsession.d
+	install -m 755 gpe-login.session $(DESTDIR)/etc/X11/Xsession.d/50autolock
+	install -m 755 X11/10unsetgtkrc $(DESTDIR)/etc/X11/Xsession.d/10unsetgtkrc
 
 install-dm: gpe-dm
 	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
@@ -71,19 +82,17 @@ install-dm: gpe-dm
 	install -D X11/Xserver $(DESTDIR)/etc/X11/Xserver
 
 install-scripts:
-	install -D X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
-	for i in X11/Xsession-gpe.d X11/Xinit.d; do mkdir -p $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; cp $$FILES $(DESTDIR)/etc/$$i/; done
-	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
-	install -D gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
-	install -D gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
-	install -D gpe-login.session $(DESTDIR)/etc/X11/Xsession-gpe.d/50autolock
-	install -D gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
+	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 
 ipkg:
 	make PREFIX=/usr clean all
 	rm -rf familiar/dist.gpe-login
 	mkdir -p familiar/dist.gpe-login/CONTROL
 	cp familiar/$(CONTROL_GPE_LOGIN) familiar/dist.gpe-login/CONTROL/control
+	cp familiar/postinst.gpe-login familiar/dist.gpe-login/CONTROL/postinst
+	cp familiar/postrm.gpe-login familiar/dist.gpe-login/CONTROL/postrm
 	make DESTDIR=`pwd`/familiar/dist.gpe-login PREFIX=/usr install-login
 	chown -R root.root familiar/dist.gpe-login
 	ipkg-build familiar/dist.gpe-login

@@ -1,3 +1,27 @@
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c: Remove spurious include of gdk_imlib.h.
+
+	* familiar/postinst.gpe-login, familiar/postrm.gpe-login: New.
+	* Makefile (install-scripts): Don't install gpe-login.setup,
+	gpe-login.keylaunchrc, gpe-login.suspend, gpe-login.session.
+	(install-login): Install them here instead.  Also ship
+	gpe-login.gtkrc and /etc/X11/Xsession{-gpe}.d10unsetgtkrc.
+	(ipkg): Add postinst and postrm scripts to gpe-login.
+
+	* X11/Xinit.d/20xBacklight: Delete.
+
+	* X11/gpe-login.gtkrc: New.
+	* X11/Xinit.d/99gpe-login: Set GTK2_RC_FILES.
+	* X11/Xsession.d/10unsetgtkrc: New.
+
+	* X11/Xsession-gpe.d/25dotfiles: Use new pixmap for xkbd.  Add
+	minitheme, minilite, gpe-what.
+
+	* Makefile (LDFLAGS): Remove -lrootimage.
+	(LDFLAGS_ROOT): New.  Put it here instead.
+	(gpe-login): Use $(LDFLAGS_ROOT) also.
+
 2002-12-24  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.32 released.
