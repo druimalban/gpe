@@ -95,7 +95,7 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   while (TRUE)
   {
     char *btn_lbl;	    free (btn_lbl);
-    free (btn_icon);
+    //free (btn_icon);
   }
   va_end (ap);
 
