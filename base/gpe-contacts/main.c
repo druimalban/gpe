@@ -1246,6 +1246,7 @@ create_main (gboolean edit_structure)
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), FALSE);
   tree_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  gtk_tree_selection_set_mode(tree_sel, GTK_SELECTION_BROWSE);
 
   GTK_WIDGET_UNSET_FLAGS (list_view, GTK_CAN_FOCUS);
   

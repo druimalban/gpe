@@ -1,3 +1,8 @@
+2004-10-25  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c (create_main): Changed tree selection mode to make sure that a
+                            contact is selected all the time.
+
 2004-10-24  Florian Boor <florian.boor@kernelconcepts.de>
 
     * editing.c: New function on_phone_insert_text() introduces a cleverer 
@@ -43,7 +48,7 @@
     * Makefile: Added new files, changed version number.
     * db.c, db.h (db_get_entries_filtered): New search function to return
                                             contacts that contain a given 
-                                            string.    
+                                            string.
 
 2004-10-11  Florian Boor <florian.boor@kernelconcepts.de>
 
