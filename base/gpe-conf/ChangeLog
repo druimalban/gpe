@@ -1,5 +1,9 @@
-2004-09-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+2004-09-20	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* sleep/callbacks.c,
+	  sleep/main.c: Renamed ipaq-sleep config file to become more generic and
+	                hidden.
+	  
 	* ownerinfo.c: Restart gpe-login to update info.
 
 2004-09-16	Florian Boor  	<florian.boor@kernelconcepts.de>

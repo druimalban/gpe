@@ -213,7 +213,7 @@ start_button (GtkButton       *button,
   sprintf(cmd, "%s stop", ISconf->binCmd); runProg(cmd);
   if(save_ISconf(ISconf, ISconf->confName)) {
     char homeConf[MAXPATHLEN];
-    sprintf(homeConf, "%s/ipaq-sleep.conf", getenv("HOME"));
+    sprintf(homeConf, "%s/.sleep.conf", getenv("HOME"));
     if(!save_ISconf(ISconf, homeConf))
       strcpy(ISconf->confName, homeConf);
   }

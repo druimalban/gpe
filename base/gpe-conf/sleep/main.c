@@ -23,7 +23,7 @@ Sleep_Save ()
   runProg(cmd);
   if(save_ISconf(ISconf, ISconf->confName)) {
     char homeConf[MAXPATHLEN];
-    sprintf(homeConf, "%s/ipaq-sleep.conf", getenv("HOME"));
+    sprintf(homeConf, "%s/.sleep.conf", getenv("HOME"));
     if(!save_ISconf(ISconf, homeConf))
       strcpy(ISconf->confName, homeConf);
   }
@@ -42,7 +42,7 @@ GtkWidget *Sleep_Build_Objects()
   char cname[MAXPATHLEN];
   GtkWidget *GPE_Config_Sleep;
 
-  sprintf(cname,"%s/ipaq-sleep.conf",g_get_home_dir());
+  sprintf(cname,"%s/.sleep.conf",g_get_home_dir());
   ISconf = load_ISconf(cname);
   if(ISconf == NULL) {
     strcpy(cname, "/etc/ipaq-sleep.conf");
