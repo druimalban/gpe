@@ -41,30 +41,30 @@
 #include <bluetooth/sdp_lib.h>
 
 #include "main.h"
-#include "dun.h"
+#include "lap.h"
 
 #define _(x) gettext(x)
 
-struct bt_service_dun
+struct bt_service_lap
 {
   struct bt_service svc;
   unsigned int port;
 };
 
-static struct bt_service_desc dun_service_desc;
+static struct bt_service_desc lap_service_desc;
 
 static struct bt_service *
-dun_scan (sdp_record_t *rec)
+lap_scan (sdp_record_t *rec)
 {
   return NULL;
 }
 
 void
-dun_init (void)
+lap_init (void)
 {
-  sdp_uuid16_create (&dun_service_desc.uuid, DIALUP_NET_SVCLASS_ID);
+  sdp_uuid16_create (&lap_service_desc.uuid, LAN_ACCESS_SVCLASS_ID);
 
-  dun_service_desc.scan = dun_scan;
+  lap_service_desc.scan = lap_scan;
 
-  service_desc_list = g_slist_prepend (service_desc_list, &dun_service_desc);
+  service_desc_list = g_slist_prepend (service_desc_list, &lap_service_desc);
 }

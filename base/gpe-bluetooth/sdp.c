@@ -9,34 +9,16 @@
 
 #include <sys/types.h>
 #include <stdlib.h>
-#include <time.h>
 #include <libintl.h>
 #include <locale.h>
-#include <pty.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <signal.h>
-#include <sys/wait.h>
-#include <pthread.h>
 #include <errno.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
+#include <glib.h>
 
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-
-#include <gpe/init.h>
-#include <gpe/pixmaps.h>
-#include <gpe/errorbox.h>
-#include <gpe/gpe-iconlist.h>
-#include <gpe/tray.h>
-
-#include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/hci_lib.h>
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
 
@@ -45,7 +27,55 @@
 
 #define _(x) gettext(x)
 
-static uuid_t lap_uuid, dun_uuid, rfcomm_uuid, nap_uuid;
+gboolean
+sdp_find_rfcomm (sdp_record_t *svcrec, int *port)
+{
+  sdp_list_t *list;
+  uuid_t rfcomm_uuid;
+
+  sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
+
+  if (sdp_get_access_protos (svcrec, &list) == 0) 
+    {
+      sdp_list_t *next;
+
+      for (; list; list = next)
+	{
+	  gboolean rfcomm = FALSE;
+	  sdp_list_t *protos = (sdp_list_t *)list->data, *nextp;
+	  for (; protos; protos = nextp)
+	    {
+	      sdp_data_t *p = protos->data;
+
+	      switch (p->dtd)
+		{
+		case SDP_UUID16:
+		case SDP_UUID32:
+		case SDP_UUID128:
+		  if (sdp_uuid_cmp (&p->val.uuid, &rfcomm_uuid) == 0)
+		    rfcomm = TRUE;
+		  break;
+		  
+		case SDP_UINT8:
+		  if (rfcomm)
+		    {
+		      *port = p->val.uint8;
+		      return TRUE;
+		    }
+		  break;
+		}
+
+	      nextp = protos->next;
+	      free (protos);
+	    }
+	  
+	  next = list->next;
+	  free (list);
+	}
+    }
+
+  return FALSE;
+}
 
 gboolean
 sdp_browse_device (struct bt_device *bd, uint16_t group_id)
@@ -90,12 +120,15 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 	  for (; list; list = next)
 	    {
 	      uuid_t *u = list->data;
+
+#if 0
 	      if (sdp_uuid_cmp (u, &lap_uuid) == 0)
 		type = BT_LAP;
 	      else if (sdp_uuid_cmp (u, &dun_uuid) == 0)
 		type = BT_DUN;
 	      else if (sdp_uuid_cmp (u, &nap_uuid) == 0)
 		type = BT_NAP;
+#endif
 
 	      next = list->next;
 	      free (list);
@@ -107,39 +140,6 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 	  struct bt_service *sv = g_malloc0 (sizeof (struct bt_service));
 
 	  sv->type = type;
-
-	  if (sdp_get_access_protos (svcrec, &list) == 0) 
-	    {
-	      sdp_list_t *next;
-	      for (; list; list = next)
-		{
-		  gboolean rfcomm = FALSE;
-		  sdp_list_t *protos = (sdp_list_t *)list->data, *nextp;
-		  for (; protos; protos = nextp)
-		    {
-		      sdp_data_t *p = protos->data;
-		      switch (p->dtd)
-			{
-			case SDP_UUID16:
-			case SDP_UUID32:
-			case SDP_UUID128:
-			  if (sdp_uuid_cmp (&p->val.uuid, &rfcomm_uuid) == 0)
-			    rfcomm = TRUE;
-			  break;
-
-			case SDP_UINT8:
-			  if (rfcomm)
-			    sv->port = p->val.uint8;
-			  break;
-			}
-		      nextp = protos->next;
-		      free (protos);
-		    }
-
-		  next = list->next;
-		  free (list);
-		}
-	    }
 
 	  bd->services = g_slist_append (bd->services, sv);
 	}
@@ -155,13 +155,4 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
   sdp_close (sess);
 
   return TRUE;
-}
-
-void
-init_sdp_uuids (void)
-{
-  sdp_uuid16_create (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
-  sdp_uuid16_create (&dun_uuid, DIALUP_NET_SVCLASS_ID);
-  sdp_uuid16_create (&nap_uuid, NAP_SVCLASS_ID);
-  sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
 }

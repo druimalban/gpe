@@ -5,7 +5,7 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.18
 
-MEMBERS = main dun sdp pan bnep
+MEMBERS = main dun sdp pan lap bnep
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1

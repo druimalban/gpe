@@ -1,3 +1,4 @@
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 typedef enum
   {
@@ -19,9 +20,17 @@ struct bt_device
 
 struct bt_service
 {
+  struct bt_device *dev;
   bt_service_type type;
-  guint port;
-  pid_t pid;
+};
+
+struct bt_service_desc
+{
+  uuid_t uuid;
+
+  struct bt_service * (*scan)(sdp_record_t *rec);
 };
 
 extern gboolean radio_is_on;
+
+extern GSList *service_desc_list;

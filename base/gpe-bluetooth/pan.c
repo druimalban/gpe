@@ -22,35 +22,25 @@
 
 #include "main.h"
 
-void
-start_pan (struct bt_device *bd)
+struct bt_service_pan
 {
-  char bdaddr[40];
-  pid_t pid;
-  
-  strcpy (bdaddr, batostr (&bd->bdaddr));
+  struct bt_service svc;
+};
 
-  pid = vfork ();
-  if (pid == 0)
-    {
-      execlp ("pand", "pand", "-c", bdaddr, NULL);
-      _exit (1);
-    }
+static struct bt_service_desc pan_service_desc;
+
+static struct bt_service *
+pan_scan (sdp_record_t *rec)
+{
+  return NULL;
 }
 
 void
-stop_pan (struct bt_device *bd)
+pan_init (void)
 {
-  char bdaddr[40];
-  pid_t pid;
-  
-  strcpy (bdaddr, batostr (&bd->bdaddr));
+  sdp_uuid16_create (&pan_service_desc.uuid, NAP_SVCLASS_ID);  
 
-  pid = vfork ();
-  if (pid == 0)
-    {
-      execlp ("pand", "pand", "-k", bdaddr, NULL);
-      _exit (1);
-    }
+  pan_service_desc.scan = pan_scan;
+
+  service_desc_list = g_slist_prepend (service_desc_list, &pan_service_desc);
 }
-

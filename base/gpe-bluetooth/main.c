@@ -41,8 +41,11 @@
 #include <bluetooth/sdp.h>
 
 #include "main.h"
-#include "dun.h"
 #include "sdp.h"
+
+#include "dun.h"
+#include "lap.h"
+#include "pan.h"
 
 #define _(x) gettext(x)
 
@@ -76,6 +79,8 @@ static GSList *devices;
 static struct bt_device *this_device;
 
 gboolean radio_is_on;
+
+GSList *service_desc_list;
 
 static gboolean
 do_run_scan (void)
@@ -298,42 +303,6 @@ show_device_info (GtkWidget *w, struct bt_device *this_device)
 }
 
 static void
-pan_connect_menu (GtkWidget *w, struct bt_device *this_device)
-{
-  start_pan (this_device);
-}
-
-static void
-pan_disconnect_menu (GtkWidget *w, struct bt_device *this_device)
-{
-  stop_pan (this_device);
-}
-
-static void
-lap_connect_menu (GtkWidget *w, struct bt_device *this_device)
-{
-  start_dun (this_device);
-}
-
-static void
-lap_disconnect_menu (GtkWidget *w, struct bt_device *this_device)
-{
-  stop_dun (this_device);
-}
-
-static void
-dun_connect_menu (GtkWidget *w, struct bt_device *this_device)
-{
-  start_dun (this_device);
-}
-
-static void
-dun_disconnect_menu (GtkWidget *w, struct bt_device *this_device)
-{
-  stop_dun (this_device);
-}
-
-static void
 device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 {
   GSList *iter;
@@ -350,29 +319,8 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
   for (iter = this_device->services; iter; iter = iter->next)
     {
       struct bt_service *sv = iter->data;
-      switch (sv->type)
-	{
-	case BT_DUN:
-	  w = gtk_menu_item_new_with_label (_("Connect DUN"));
-	  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (dun_connect_menu), data);
-	  gtk_widget_show (w);
-	  gtk_menu_append (GTK_MENU (device_menu), w);
-	  break;
 
-	case BT_LAP:
-	  w = gtk_menu_item_new_with_label (_("Connect LAP"));
-	  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (lap_connect_menu), data);
-	  gtk_widget_show (w);
-	  gtk_menu_append (GTK_MENU (device_menu), w);
-	  break;
-
-	case BT_NAP:
-	  w = gtk_menu_item_new_with_label (_("Connect PAN"));
-	  g_signal_connect (G_OBJECT (w), "activate", G_CALLBACK (pan_connect_menu), data);
-	  gtk_widget_show (w);
-	  gtk_menu_append (GTK_MENU (device_menu), w);
-	  break;
-	}
+      /* ... */
     }
 
   g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (g_object_unref), NULL);
@@ -548,7 +496,9 @@ main (int argc, char *argv[])
 
   atexit (do_stop_radio);
 
-  init_sdp_uuids ();
+  dun_init ();
+  lap_init ();
+  pan_init ();
 
   gpe_system_tray_dock (window->window);
 
