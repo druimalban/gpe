@@ -1,3 +1,8 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-todo.menu: Give full path to icon. Move to section PIM (to
+	conform to http://familiar.handhelds.org/policy/menu.html).
+
 2002-07-13  Philip Blundell  <philb@gnu.org>
 
 	* list-ui.c: Fix warnings.

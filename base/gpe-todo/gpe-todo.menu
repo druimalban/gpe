@@ -1,1 +1,7 @@
-?package(gpe-todo): needs=x11 title=To-do command=gpe-todo icon48=gpe-todo.png section=Applications windowtitle=gpe-todo
+?package(gpe-todo): \
+ needs=x11 \
+ title=To-do \
+ command=gpe-todo \
+ icon48=/usr/share/pixmaps/gpe-todo.png \
+ section=PIM \
+ windowtitle=gpe-todo
