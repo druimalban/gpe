@@ -21,6 +21,11 @@ export HOME=/root
 
 ARGS="-dpi 100 -br"
 
+# use ucb 1x00 touchscreen if present
+if [ -e /dev/touchscreen/ucb1x00 ]; then
+  ARGS="$ARGS -mouse /dev/touchscreen/ucb1x00"
+fi
+
 # start off server in conventional location.
 case `module_id` in
 	"HP iPAQ H3100" | "HP iPAQ H3800")
