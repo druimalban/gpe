@@ -1,5 +1,8 @@
 2003-02-13  Philip Blundell  <philb@gnu.org>
 
+	* gpe-logout.sh: Add explicit line break to work around Gtk
+	limitations.
+
 	* X11/xsettings.default: Set Gtk/IconSizes also.
 
 2003-02-12  Philip Blundell  <philb@gnu.org>
