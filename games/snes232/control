@@ -1,0 +1,8 @@
+Package: snes232-modules
+Section: base
+Priority: optional
+Version: 0.1
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Description: Driver module for SNES gamepad adapter
+
