@@ -38,5 +38,12 @@ And here are some screenshots of those two:
 <IMG SRC="/images/gpe-tetris.png">
 <IMG SRC="/images/solitaire.png">
 </P>
+<P>
+There's also, for example, a minesweeper-alike (xdemineur), and a fractal
+generator for you to play with:
+</P>
+<P>
+<IMG SRC="/images/gpe-julia.png">
+</P>
 <!--#include virtual="/includes/foot.shtml"-->
 
