@@ -31,8 +31,18 @@
 
 #include <libsn/sn.h>
 #include <glib.h>
+#include <time.h>
 
 #include "mbpixbuf.h"
+
+#define TIMEOUT		30
+#define POLLTIME	5
+
+struct launch
+{
+  gchar *id;
+  time_t when;
+};
 
 static Window window;
 static Display *xdisplay;
@@ -63,6 +73,8 @@ monitor_event_func (SnMonitorEvent *event,
   SnMonitorContext *context;
   SnStartupSequence *sequence;
   const char *id;
+  struct launch *l;
+  time_t t;
   
   context = sn_monitor_event_get_context (event);
   sequence = sn_monitor_event_get_startup_sequence (event);
@@ -71,7 +83,11 @@ monitor_event_func (SnMonitorEvent *event,
   switch (sn_monitor_event_get_type (event))
     {
     case SN_MONITOR_EVENT_INITIATED:
-      g_slist_append (launch_list, g_strdup (id));
+      l = g_malloc (sizeof (struct launch));
+      l->id = g_strdup (id);
+      t = time (NULL);
+      l->when = t + TIMEOUT;
+      launch_list = g_slist_append (launch_list, l);
       if (! hourglass_shown)
 	show_hourglass ();
       break;
@@ -79,14 +95,18 @@ monitor_event_func (SnMonitorEvent *event,
     case SN_MONITOR_EVENT_COMPLETED:
     case SN_MONITOR_EVENT_CANCELED:
       {
-	GSList *iter;
+	GSList *iter, *next;
 	
-	for (iter = launch_list; iter; iter = iter->next)
+	for (iter = launch_list; iter; iter = next)
 	  {
-	    char *this_id = (char *)iter->data;
-	    if (!strcmp (this_id, id))
+	    struct launch *l = (struct launch *)iter->data;
+
+	    next = iter->next;
+
+	    if (!strcmp (l->id, id))
 	      {
-		g_free (this_id);
+		g_free (l->id);
+		g_free (l);
 		launch_list = g_slist_remove_link (launch_list, iter);
 		g_slist_free_1 (iter);
 	      }
@@ -171,20 +191,31 @@ mbpixbuf_to_mask (MBPixbuf    *pb,
     }
 }
 
+void
+root_window_size (Display *dpy, unsigned int *rx, unsigned int *ry)
+{
+  int x, y;
+  unsigned int w, h, b, d;
+  Window r;
+  XGetGeometry (dpy, DefaultRootWindow (dpy), &r, &x, &y, &w, &h, &b, &d);
+  *rx = w;
+  *ry = h;
+}
+
 int
 main (int argc, char **argv)
 {
   SnDisplay *display;
   SnMonitorContext *context;
-  XSetWindowAttributes attr;
   int x, y, w, h;
-  char *geom = "12x20-4+4";
-  XSizeHints *hints;
   MBPixbufImage *img;
   static char *icon_name = PREFIX "/share/gpe/pixmaps/default/loading.png";
   GC mask_gc_0, mask_gc_1;
   Pixmap mask, pixmap;
- 
+  Atom window_type_atom, window_type_splash_atom;
+  int fd;
+  Window root;
+  
   xdisplay = XOpenDisplay (NULL);
   if (xdisplay == NULL)
     {
@@ -194,11 +225,6 @@ main (int argc, char **argv)
 
   if (getenv ("LIBSN_SYNC") != NULL)
     XSynchronize (xdisplay, True);
-
-  hints = XAllocSizeHints ();
-
-  XWMGeometry (xdisplay, DefaultScreen (xdisplay),
-	       NULL, geom, 0, hints, &x, &y, &w, &h, &attr.win_gravity);
 
   mbpb = mb_pixbuf_new (xdisplay, DefaultScreen (xdisplay));
   img = mb_pixbuf_img_new_from_file (mbpb, icon_name);
@@ -211,13 +237,21 @@ main (int argc, char **argv)
   w = mb_pixbuf_img_get_width (img);
   h = mb_pixbuf_img_get_height (img);
 
-  window = XCreateSimpleWindow (xdisplay, DefaultRootWindow (xdisplay),
-				x, y, w, h, 0, 
+  root_window_size (xdisplay, &x, &y);
+
+  root = DefaultRootWindow (xdisplay);
+
+  window = XCreateSimpleWindow (xdisplay, root,
+				x - (w + 4), 0, w, h, 0, 
 				BlackPixel (xdisplay, DefaultScreen (xdisplay)),
 				WhitePixel (xdisplay, DefaultScreen (xdisplay)));
-  
-  attr.override_redirect = True;
-  XChangeWindowAttributes (xdisplay, window, CWOverrideRedirect | CWWinGravity, &attr);
+
+  window_type_atom = XInternAtom (xdisplay, "_WM_WINDOW_TYPE", False);
+  window_type_splash_atom = XInternAtom (xdisplay, "_WM_WINDOW_TYPE_SPLASH", False);
+
+  XChangeProperty (xdisplay, window, window_type_atom,
+		   XA_ATOM, 32,  PropModeReplace,
+		   (unsigned char *)&window_type_splash_atom, 1);
 
   pixmap = XCreatePixmap (xdisplay, window, w, h,
 			  mbpb->depth);
@@ -240,8 +274,7 @@ main (int argc, char **argv)
    * root window (but not all as INITIATE messages go to
    * all root windows)
    */
-  XSelectInput (xdisplay, DefaultRootWindow (xdisplay),
-                PropertyChangeMask);
+  XSelectInput (xdisplay, root, PropertyChangeMask);
   
   display = sn_display_new (xdisplay,
                             error_trap_push,
@@ -250,15 +283,61 @@ main (int argc, char **argv)
   context = sn_monitor_context_new (display, DefaultScreen (xdisplay),
                                     monitor_event_func,
                                     NULL, NULL);  
+
+  fd = ConnectionNumber (xdisplay);
   
   for (;;)
     {
       XEvent xevent;
 
+      if (launch_list && ! XPending (xdisplay))
+	{
+	  struct timeval tv;
+	  fd_set fds;
+ 
+	  tv.tv_sec = 10;
+	  tv.tv_usec = 0;
+
+	  FD_ZERO (&fds);
+	  FD_SET (fd, &fds);
+
+	  if (select (fd + 1, &fds, NULL, NULL, &tv) == 0)
+	    {
+	      GSList *iter, *next;
+	      time_t t = time (NULL);
+
+	      for (iter = launch_list; iter; iter = next)
+		{
+		  struct launch *l = (struct launch *)iter->data;
+
+		  next = iter->next;
+ 
+		  if ((l->when - t) < 0)
+		    {
+		      g_free (l->id);
+		      g_free (l);
+		      launch_list = g_slist_remove_link (launch_list, iter);
+		      g_slist_free_1 (iter);
+		    }
+		}
+
+	      if (launch_list == NULL && hourglass_shown)
+		hide_hourglass ();
+	    }
+	}
+
       XNextEvent (xdisplay, &xevent);
 
-      if (xevent.type == Expose)
-	XClearWindow (xdisplay, window);
+      switch (xevent.type)
+	{
+	case Expose:
+	  XClearWindow (xdisplay, window);
+	  break;
+	case ConfigureNotify:
+	  if (xevent.xconfigure.window == root)
+	    XMoveWindow (xdisplay, window, xevent.xconfigure.width - (w + 4), 0);
+	  break;
+	}
 
       sn_display_process_event (display, &xevent);
     }

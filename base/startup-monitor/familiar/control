@@ -1,7 +1,7 @@
 Package: startup-monitor
 Section: x11
 Priority: optional
-Version: 0.12
+Version: 0.13
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: xlibs, startup-notification, matchbox, gpe-icons (>= 0.19)
