@@ -1,4 +1,4 @@
-DEBUG = yes
+#DEBUG = yes
 
 MEMBERS = main day_view week_view future_view event-ui about event-db year_view clist_view
 
@@ -19,6 +19,8 @@ gpe-calendar: $(OBJS)
 
 install: all
 	install -D gpe-calendar $(DESTDIR)/usr/bin/gpe-calendar
+	install -D gpe-calendar.png $(DESTDIR)/usr/share/pixmaps/gpe-calendar.png
+	install -D gpe-calendar.menu $(DESTDIR)/usr/lib/menu/gpe-calendar
 	strip $(DESTDIR)/usr/bin/gpe-calendar
 
 ipkg:
