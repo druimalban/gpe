@@ -3,7 +3,7 @@ PACKAGE = gpe-gallery
 DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.6
+VERSION = 0.7
 
 MEMBERS = main image_tools
 

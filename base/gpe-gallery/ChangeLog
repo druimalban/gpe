@@ -1,3 +1,7 @@
+2003-03-15  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.7 released.
+
 2003-03-15  Damien Tanner  <dctanner@gekk>
 
 	* main.c: Removed alot of errors and print statements.
