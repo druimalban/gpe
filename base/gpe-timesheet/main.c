@@ -417,7 +417,6 @@ main(int argc, char *argv[])
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   tree = gtk_ctree_new (2, 0);
   g_signal_connect (G_OBJECT(tree), "tree-select-row",
