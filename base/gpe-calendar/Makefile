@@ -2,7 +2,7 @@ PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.49
+VERSION = 0.50
 
 #FIXME: add: sk sr ru hu
 LINGUAS = id pt de fr zh_TW ro wa sv nl cs
