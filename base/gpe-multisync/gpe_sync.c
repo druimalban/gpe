@@ -80,51 +80,15 @@ gpe_conn*
 sync_connect (sync_pair* handle, connection_type type,
 	      sync_object_type object_types) 
 {
-  GSList *i;
   gpe_conn *conn = NULL;
-  char* errmsg = NULL;
-  gboolean failed = FALSE;
   
   conn = g_malloc0 (sizeof (gpe_conn));
   g_assert (conn);
   conn->sync_pair = handle;
   conn->commondata.object_types = object_types;
 
-  calendar_init (conn);
-  todo_init (conn);
-  contacts_init (conn);
-  
-  GPE_DEBUG(conn, "sync_connect");  
-  
-  /* load the connection attributes */
-  if (! gpe_load_config (conn))
-  {
-    /* failure */
-    errmsg = g_strdup (_("Failed to load configuration"));
-    sync_set_requestfailederror (errmsg, conn->sync_pair);
-    return conn;
-  }  
+  pthread_create (&conn->thread, NULL, gpe_do_connect, conn);
 
-  for (i = conn->db_list; i; i = i->next)
-    {
-      struct db *db = i->data;
-  
-      db->db = gpe_connect_one (conn, db->name, &errmsg);
-
-      if (!db->db)
-	{
-	  failed = TRUE;
-	  break;
-	}
-    }
-
-  if (failed)
-    {
-      sync_set_requestfailederror (g_strdup (errmsg), conn->sync_pair);
-      return conn;
-    }
-
-  sync_set_requestdone (conn->sync_pair);
   return conn;
 }
 

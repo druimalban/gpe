@@ -19,6 +19,8 @@
 
 #include <gpe/tag-db.h>
 
+#define _(x)  gettext(x)
+
 nsqlc *
 gpe_connect_one (gpe_conn *conn, const gchar *db, char **err)
 {
@@ -34,6 +36,58 @@ gpe_connect_one (gpe_conn *conn, const gchar *db, char **err)
   g_free (path);
 
   return r;
+}
+
+void
+gpe_do_connect (gpe_conn *conn)
+{
+  GSList *i;
+  char* errmsg = NULL;
+  gboolean failed = FALSE;
+
+  calendar_init (conn);
+  todo_init (conn);
+  contacts_init (conn);
+  
+  GPE_DEBUG(conn, "sync_connect");  
+  
+  /* load the connection attributes */
+  if (! gpe_load_config (conn))
+  {
+    /* failure */
+    errmsg = g_strdup (_("Failed to load configuration"));
+    sync_set_requestfailederror (errmsg, conn->sync_pair);
+    pthread_exit (0);
+  }  
+
+  for (i = conn->db_list; i; i = i->next)
+    {
+      struct db *db = i->data;
+  
+      db->db = gpe_connect_one (conn, db->name, &errmsg);
+
+      if (!db->db)
+	{
+	  failed = TRUE;
+	  break;
+	}
+    }
+
+  if (failed)
+    {
+      for (i = conn->db_list; i; i = i->next)
+	{
+	  struct db *db = i->data;
+
+	  gpe_disconnect (db);
+	}
+
+      sync_set_requestfailederror (g_strdup (errmsg), conn->sync_pair);
+      pthread_exit (0);
+    }
+
+  sync_set_requestdone (conn->sync_pair);
+  pthread_exit (0);
 }
 
 void

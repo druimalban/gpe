@@ -19,6 +19,8 @@ typedef struct
   char* device_addr;
   char* username;
 
+  pthread_t thread;
+
   GSList *db_list;
 } gpe_conn;
 
@@ -39,7 +41,7 @@ struct db
 
 #define GPE_DEBUG(conn, x) fprintf (stderr, "%s\n", (x))
 
-extern nsqlc *gpe_connect_one (gpe_conn *conn, const gchar *db, char **errmsg);
+extern void gpe_do_connect (gpe_conn *conn);
 extern void gpe_disconnect (struct db *db);
 
 extern gboolean gpe_load_config (gpe_conn *conn);
