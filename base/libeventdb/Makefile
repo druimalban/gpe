@@ -57,7 +57,7 @@ clean:
 	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS)
 
 install-program: $(SONAME)
-	install -d $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 include $(BUILD)/Makefile.translation
