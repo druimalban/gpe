@@ -18,8 +18,11 @@ The application manager is the main window of the PDA. It allows to start-up
 applications and offers a kind of start-menu. Any application that a user
 should be able to access should also be available through the application
 manager. Every application has to provide a name and an icon to be displayed.
-Applications are sorted into different categories so that finding them is easier.
-This is done in a tab-like fashion; see the screenshot below.
+Applications are sorted into different categories so that finding them is
+easier.
+This is done by using 'tabs', much like those in dialog boxes in many GUIs.
+There is a small list of recently-used items in appmgr &gt;= 0.07, which is
+yet to be released. For both, see the screenshot below.
 </P>
 <P>
 For certain application it is necessary that they can only be started once,
@@ -28,19 +31,6 @@ handle anything that a user could want from multiple instances of the
 application. On the old Psions for example I used to have several address
 applications running for different address databases: Home, Work, Private,
 etc. The application itself could handle this by offering proper categories.
-</P>
-
-<H3>Why no status-bar?</H3>
-<P>
-Personally I do not like to waste screen space. The status bar is mostly
-static and only seldomly used. Usually we will get a second bar from the
-application, i.e. a menu-bar. What I would like to see is a flexible
-menu-bar instead of a status-bar. Applications could register menus in it
-and it could also display system global items like time/date.
-</P>
-
-<P>
-There is, however, a small list of recently-used items. This is to be introduced in appmgr 0.07.
 </P>
 
 <H3>Screenshot</H3>
