@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-09 13:43+0000\n"
+"POT-Creation-Date: 2003-03-30 15:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:103 db.c:136 editing.c:201 main.c:431
+#: db.c:103 db.c:136 editing.c:188 main.c:437
 msgid "Name"
 msgstr ""
 
@@ -27,198 +27,211 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:166 main.c:728 main.c:729
+#: editing.c:170
 msgid "Edit Contact"
 msgstr ""
 
-#: editing.c:210
+#: editing.c:192
 msgid "more detailed name options"
 msgstr ""
 
-#: editing.c:212
+#: editing.c:194
 msgid "Summary"
 msgstr ""
 
-#: editing.c:223
+#: editing.c:200
 msgid "Birthday"
 msgstr ""
 
-#: editing.c:234
+#: editing.c:206
 msgid "Image"
 msgstr ""
 
-#: editing.c:265
+#: editing.c:222
 msgid "Schedule"
 msgstr ""
 
-#: editing.c:273
+#: editing.c:226
 msgid "automatic appointment"
 msgstr ""
 
-#: editing.c:292
+#: editing.c:235
 msgid "click to choose file"
 msgstr ""
 
-#: editing.c:294 main.c:541
+#: editing.c:237 main.c:536
 msgid "Categories"
 msgstr ""
 
-#: editing.c:355
+#: editing.c:279
 msgid "Personal"
 msgstr ""
 
-#: interface.c:65
-msgid "Contacts"
-msgstr ""
-
-#: interface.c:99 interface.c:134 interface.c:169 interface.c:204
-#: interface.c:239 interface.c:274 interface.c:310
-msgid "label45"
-msgstr ""
-
-#: interface.c:107 interface.c:142 interface.c:177 interface.c:212
-#: interface.c:247 interface.c:282 interface.c:318
-msgid "label46"
-msgstr ""
-
-#: interface.c:115
-msgid "ABC"
-msgstr ""
-
-#: interface.c:150
-msgid "DEF"
-msgstr ""
-
-#: interface.c:185
-msgid "GHIJ"
-msgstr ""
-
-#: interface.c:220
-msgid "KLMN"
-msgstr ""
-
-#: interface.c:255
-msgid "OPQR"
-msgstr ""
-
-#: interface.c:290
-msgid "STUV"
-msgstr ""
-
-#: interface.c:326
-msgid "WXYZ"
-msgstr ""
-
-#: interface.c:342
-msgid "Find:"
-msgstr ""
-
-#: interface.c:358
-msgid "Contact"
-msgstr ""
-
-#: interface.c:423 main.c:543
+#: interface.c:44 main.c:538
 msgid "Setup"
 msgstr ""
 
-#: interface.c:435 main.c:146
+#: interface.c:56 main.c:143
 msgid "Detail panel"
 msgstr ""
 
-#: interface.c:474 main.c:185
+#: interface.c:95 main.c:182
 msgid "NAME"
 msgstr ""
 
-#: interface.c:484 main.c:195
+#: interface.c:105 main.c:192
 msgid "Add"
 msgstr ""
 
-#: interface.c:492 main.c:203
+#: interface.c:113 main.c:200
 msgid "Remove"
 msgstr ""
 
-#: interface.c:520 main.c:233
+#: interface.c:141 main.c:230
 msgid "Data Field"
 msgstr ""
 
-#: interface.c:528 main.c:241
+#: interface.c:149 main.c:238
 msgid "Label"
 msgstr ""
 
-#: interface.c:536 main.c:249
+#: interface.c:157 main.c:246
 msgid "Pages"
 msgstr ""
 
-#: main.c:301
+#: main.c:298
 msgid "All categories"
 msgstr ""
 
-#: main.c:418
+#: main.c:424
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:418 main.c:451 structure.c:179
+#: main.c:424 main.c:457 structure.c:179
 msgid "Confirm"
 msgstr ""
 
-#: main.c:419 main.c:452 main.c:494 structure.c:180 structure.c:260
-#: structure.c:261
+#: main.c:425 main.c:458 structure.c:180
 msgid "Delete"
 msgstr ""
 
-#: main.c:419 main.c:452 structure.c:180
+#: main.c:425 main.c:458 structure.c:180
 msgid "Cancel"
 msgstr ""
 
-#: main.c:431
+#: main.c:437
 msgid "New Category"
 msgstr ""
 
-#: main.c:451
+#: main.c:457
 msgid "Really delete this category?"
 msgstr ""
 
-#: main.c:488
-msgid "New"
-msgstr ""
-
-#: main.c:489
+#: main.c:487
 msgid "New category"
 msgstr ""
 
-#: main.c:490
-msgid "Tap here to create a new category."
+#: main.c:487
+msgid "Tap here to create a category."
 msgstr ""
 
-#: main.c:495
+#: main.c:491
 msgid "Delete category"
 msgstr ""
 
-#: main.c:496
+#: main.c:491
 msgid "Tap here to delete the selected category."
 msgstr ""
 
-#: main.c:539
+#: main.c:534
 msgid "Editing Layout"
 msgstr ""
 
-#: main.c:566
+#: main.c:559
 msgid "Contacts: Configuration"
 msgstr ""
 
-#: main.c:723 main.c:724
-msgid "New Contact"
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
 msgstr ""
 
-#: main.c:733 main.c:734
-msgid "Delete Contact"
+#: main.c:808
+msgid "New contact"
 msgstr ""
 
-#: main.c:738 main.c:739
-msgid "Configure"
+#: main.c:808
+msgid "Tap here to add a new contact."
 msgstr ""
 
-#: structure.c:108
+#: main.c:814
+msgid "Edit"
+msgstr ""
+
+#: main.c:815
+msgid "Edit contact"
+msgstr ""
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr ""
+
+#: main.c:819
+msgid "Delete contact"
+msgstr ""
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr ""
+
+#: main.c:823
+msgid "Properties"
+msgstr ""
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr ""
+
+#: main.c:835
+msgid "ABC"
+msgstr ""
+
+#: main.c:843
+msgid "DEF"
+msgstr ""
+
+#: main.c:850
+msgid "GHIJ"
+msgstr ""
+
+#: main.c:857
+msgid "KLMN"
+msgstr ""
+
+#: main.c:864
+msgid "OPQR"
+msgstr ""
+
+#: main.c:871
+msgid "STUV"
+msgstr ""
+
+#: main.c:878
+msgid "WXYZ"
+msgstr ""
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr ""
+
+#: main.c:901
+msgid "Find:"
+msgstr ""
+
+#: main.c:907
+msgid "in"
+msgstr ""
+
+#: structure.c:108 structure.c:238
 msgid "New page"
 msgstr ""
 
@@ -246,6 +259,22 @@ msgstr ""
 msgid "Really delete this field?"
 msgstr ""
 
+#: structure.c:237
+msgid "Page"
+msgstr ""
+
+#: structure.c:238
+msgid "Tap here to add a page."
+msgstr ""
+
+#: structure.c:254
+msgid "Delete item"
+msgstr ""
+
+#: structure.c:254
+msgid "Tap here to delete the selected item."
+msgstr ""
+
 #: support.c:121
 #, c-format
 msgid "Couldn't find pixmap file: %s"
@@ -254,4 +283,8 @@ msgstr ""
 #: support.c:130
 #, c-format
 msgid "Error loading pixmap file: %s"
+msgstr ""
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
 msgstr ""
