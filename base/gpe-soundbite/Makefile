@@ -5,6 +5,7 @@ PACKAGE = gpe-soundbite
 DEBUG = yes
 CVSBUILD = yes
 ESD = yes
+GTK2 = yes
 
 MEMBERS = main gsm-codec
 ifeq ($(ESD),yes)

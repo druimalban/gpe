@@ -1,3 +1,7 @@
+2003-04-01  Moray Allan  <moray@handhelds.org>
+
+	* Makefile: Build for GTK2 by default.
+
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is
