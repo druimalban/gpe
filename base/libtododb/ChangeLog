@@ -1,3 +1,12 @@
+2003-02-02  Philip Blundell  <philb@gnu.org>
+
+	* todo-db.c (todo_db_categories, todo_db_items): Make static.
+
+	* Makefile (LDFLAGS): Add -lgpewidget.
+
+	* old-db.c (convert_old_db): Use gpe_error_box in place of printf.
+	(lists): Make static.
+
 2003-01-29  Luis Oliveira  <luis@handhelds.org>
 
 	* todo-db.c (todo_db_get_items_list): New function.

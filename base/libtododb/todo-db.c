@@ -21,7 +21,7 @@
 #include <gpe/todo-db.h>
 
 static sqlite *sqliteh;
-GSList *todo_db_categories, *todo_db_items;
+static GSList *todo_db_categories, *todo_db_items;
 
 static unsigned long dbversion;
 

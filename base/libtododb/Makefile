@@ -10,7 +10,7 @@ SONAME = libtododb.so.0
 CONTROL = control
 
 CFLAGS = `pkg-config --cflags glib-2.0`
-LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite
+LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 

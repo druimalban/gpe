@@ -23,7 +23,7 @@
 extern gboolean converted_item (struct todo_item *i);
 extern int converted_category (const char *title);
 
-GSList *lists;
+static GSList *lists;
 
 static sqlite *sqliteh_here;
 
@@ -134,7 +134,7 @@ convert_old_db (int oldversion, sqlite *sqliteh)
 			  "insert into todo_dbinfo (version) values (%d)", 
 			  NULL, NULL, &err, oldversion))
     {
-      printf ("sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
       return FALSE;
     }
