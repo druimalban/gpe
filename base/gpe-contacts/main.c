@@ -9,6 +9,7 @@
 
 #include <gtk/gtk.h>
 #include <libintl.h>
+#include <stdlib.h>
 
 #include "init.h"
 
@@ -18,6 +19,7 @@
 #include "pixmaps.h"
 #include "structure.h"
 #include "smallbox.h"
+#include "errorbox.h"
 
 #define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
 #define MY_PIXMAPS_DIR "/usr/share/gpe-contacts/pixmaps"
@@ -45,15 +47,42 @@ delete_contact(GtkWidget *widget, gpointer d)
 }
 
 static void
-new_category (void)
+new_category (GtkWidget *w, gpointer p)
 {
   gchar *name = smallbox(_("New category"), _("Name"), "");
+  if (name && name[0])
+    {
+      gchar *line_info[1];
+      guint id;
+      line_info[0] = name;
+      if (db_insert_category (name, &id))
+	gtk_clist_append (GTK_CLIST (p), line_info);
+    }
 }
 
 static void
-new_attribute (void)
+new_attribute (GtkWidget *w, gpointer p)
 {
   gchar *name = smallbox(_("New attribute"), _("Tag"), "");
+  if (name && name[0])
+    {
+      gchar *line_info[1];
+      guint nr = atoi (name);
+      if (nr == 0)
+	{
+	  gpe_error_box (_("Invalid attribute tag"));
+	  return;
+	}
+
+      line_info[0] = name;
+      if (db_insert_attribute (nr))
+	gtk_clist_append (GTK_CLIST (p), line_info);
+    }
+}
+
+static void
+delete_attribute (GtkWidget *w, gpointer p)
+{
 }
 
 static GtkWidget *
@@ -75,7 +104,7 @@ config_categories_box(void)
   p = find_pixmap ("new");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New"), _("New"), pw, new_category, NULL);
+			   _("New"), _("New"), pw, new_category, clist);
 
   p = find_pixmap ("delete");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
@@ -116,12 +145,13 @@ config_attributes_box(void)
   p = find_pixmap ("new");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New"), _("New"), pw, new_attribute, NULL);
+			   _("New"), _("New"), pw, new_attribute, clist);
 
   p = find_pixmap ("delete");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, NULL, NULL);
+			   _("Delete"), _("Delete"), pw, delete_attribute, 
+			   NULL);
   gtk_container_add (GTK_CONTAINER (scrolled), clist);
   gtk_widget_show (clist);
   gtk_widget_show (scrolled);

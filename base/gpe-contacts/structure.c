@@ -187,6 +187,11 @@ edit_structure (void)
 			   "New field", "New field", 
 			   pw, structure_new_field, tree);
 
+  p = find_pixmap ("delete");
+  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
+			   _("Delete"), _("Delete"), pw, NULL, NULL);
+
 #if 0
   p = find_pixmap ("save");
   pw = gtk_pixmap_new (p->pixmap, p->mask);

@@ -47,4 +47,7 @@ extern struct person *new_person (void);
 extern void commit_person (struct person *);
 extern void discard_person (struct person *);
 
+extern gboolean db_insert_category (gchar *, guint *);
+extern gboolean db_insert_attribute (guint);
+
 #endif

@@ -186,3 +186,17 @@ commit_person (struct person *p)
 
   discard_person (p);
 }
+
+gboolean
+db_insert_category (gchar *name, guint *id)
+{
+  *id = 1;
+  return TRUE;
+}
+
+gboolean
+db_insert_attribute (guint id)
+{
+  return TRUE;
+}
+

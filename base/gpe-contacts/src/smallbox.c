@@ -12,26 +12,29 @@
 
 #include "smallbox.h"
 
-static void
-click_ok (GtkWidget *widget, gpointer p)
+void
+smallbox_click_ok (GtkWidget *widget, gpointer p)
 {
   gtk_main_quit ();
 }
 
-static void
-click_cancel (GtkWidget *widget, gpointer p)
+void
+smallbox_click_cancel (GtkWidget *widget, gpointer p)
 {
   gtk_widget_destroy (GTK_WIDGET (p));
 }
 
-static void
-note_destruction (GtkWidget *widget, gpointer p)
+void
+smallbox_note_destruction (GtkWidget *widget, gpointer p)
 {
   gboolean *b = (gboolean *)p;
 
-  *b = TRUE;
-
-  gtk_main_quit ();
+  if (*b == FALSE)
+    {
+      *b = TRUE;
+      
+      gtk_main_quit ();
+    }
 }
 
 gchar *
@@ -66,15 +69,15 @@ smallbox (gchar *title, gchar *labeltext, gchar *dval)
 		      buttoncancel, TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
-		      GTK_SIGNAL_FUNC (click_ok), NULL);
+		      GTK_SIGNAL_FUNC (smallbox_click_ok), NULL);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", 
-		      GTK_SIGNAL_FUNC (click_cancel), window);
+		      GTK_SIGNAL_FUNC (smallbox_click_cancel), window);
 
   gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      note_destruction, &destroyed);
+		      smallbox_note_destruction, &destroyed);
 
   gtk_widget_set_usize (window, 200, 100);
 
@@ -86,7 +89,7 @@ smallbox (gchar *title, gchar *labeltext, gchar *dval)
   if (destroyed)
     return NULL;
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy", NULL, NULL);
+  destroyed = TRUE;
 
   p = gtk_entry_get_text (GTK_ENTRY (entry));
 
