@@ -2,6 +2,7 @@
 
 	* documentation/wireless.shtml: New addtitle and pagename. Use
 	scaps from CVS.
+	Revert "pagename".
 
 	* documentation.shtml: New file.
 	Don't mention GPE in the title.

@@ -1,5 +1,5 @@
 <!--#set var="addtitle" value="Configuring Wireless Networking"-->
-<!--#set var="pagename" value="documentation"-->
+<!--#set var="pagename" value="wireless"-->
 <!--#set var="author" value="Colin Marquardt"-->
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 <!--#include virtual="../includes/head.shtml"-->
