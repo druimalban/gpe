@@ -41,12 +41,10 @@ struct sens
   GtkWidget *radiobuttonnone, *radiobuttondaily, *radiobuttonweekly, 
     *radiobuttonmonthly, *radiobuttonyearly;
 
-  GtkWidget *dailyvbox, *dailylabelevery, *dailyspin, *dailylabels;
-  GtkWidget *monthlyvbox, *monthlylabelevery, *monthlyspin, *monthlylabels;
-  GtkWidget *yearlyvbox, *yearlylabelevery, *yearlyspin, *yearlylabels;
-
-  GtkWidget *weeklyhbox, *weeklyvbox, *weeklyvbox2;
-  GtkWidget *checkbuttonwday[7];
+  GtkWidget *dailybox, *dailyspin;
+  GtkWidget *monthlybox, *monthlyspin;
+  GtkWidget *yearlybox, *yearlyspin;
+  GtkWidget *weeklybox, *checkbuttonwday[7];
 
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, 
     *yearlyspin_adj;
@@ -90,10 +88,10 @@ recalculate_sensitivities(GtkWidget *widget,
   
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone))) 
     {
-      gtk_widget_hide (s->dailyvbox);
-      gtk_widget_hide (s->weeklyhbox);
-      gtk_widget_hide (s->monthlyvbox);
-      gtk_widget_hide (s->yearlyvbox);
+      gtk_widget_hide (s->dailybox);
+      gtk_widget_hide (s->weeklybox);
+      gtk_widget_hide (s->monthlybox);
+      gtk_widget_hide (s->yearlybox);
       gtk_widget_set_sensitive (s->endspin, 0);
       gtk_widget_set_sensitive (s->endlabel, 0);
       gtk_widget_set_sensitive (s->radiobuttonforever, 0);
@@ -119,27 +117,27 @@ recalculate_sensitivities(GtkWidget *widget,
   
   	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
 					  (s->radiobuttondaily))) 
-	  gtk_widget_show (s->dailyvbox);
+	  gtk_widget_show (s->dailybox);
 	else
-	  gtk_widget_hide (s->dailyvbox);
+	  gtk_widget_hide (s->dailybox);
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
 					  (s->radiobuttonweekly))) 
-	  gtk_widget_show (s->weeklyhbox);
+	  gtk_widget_show (s->weeklybox);
 	else
-	  gtk_widget_hide (s->weeklyhbox);
+	  gtk_widget_hide (s->weeklybox);
 
   	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
 					  (s->radiobuttonmonthly))) 
-	  gtk_widget_show (s->monthlyvbox);
+	  gtk_widget_show (s->monthlybox);
 	else
-	  gtk_widget_hide (s->monthlyvbox);
+	  gtk_widget_hide (s->monthlybox);
 	
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
 					  (s->radiobuttonyearly))) 
-	  gtk_widget_show (s->yearlyvbox);
+	  gtk_widget_show (s->yearlybox);
 	else
-	  gtk_widget_hide (s->yearlyvbox);
+	  gtk_widget_hide (s->yearlybox);
     }
 }
 
@@ -232,11 +230,9 @@ edit_event_window(void)
   GtkWidget *recurborder, *recurendborder;
   GtkWidget *vboxrepeattop;
 
-  GtkWidget *dailyvbox, *dailylabelevery, *dailyspin, *dailylabels;
-  GtkWidget *monthlyvbox, *monthlylabelevery, *monthlyspin, *monthlylabels;
-  GtkWidget *yearlyvbox, *yearlylabelevery, *yearlyspin, *yearlylabels;
-
-  GtkWidget *weeklyhbox, *weeklyvbox, *weeklyvbox2;
+  GtkWidget *dailylabelevery, *dailyspin, *dailylabels;
+  GtkWidget *monthlylabelevery, *monthlyspin, *monthlylabels;
+  GtkWidget *yearlylabelevery, *yearlyspin, *yearlylabels;
 
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, *yearlyspin_adj;
    
@@ -402,94 +398,95 @@ edit_event_window(void)
 		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   
 /* daily vbox */
-  dailyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), dailyvbox, 
-			   FALSE, FALSE, 0);
+  s->dailybox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), s->dailybox, 
+			   TRUE, FALSE, 0);
 
   /* "every" label */
   dailylabelevery = gtk_label_new (_("Every"));
-  gtk_box_pack_start_show (GTK_BOX (dailyvbox), dailylabelevery, 
-			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->dailybox), dailylabelevery, 
+			   TRUE, TRUE, 0);
   
   /* daily spinner */
   dailyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   dailyspin = gtk_spin_button_new (GTK_ADJUSTMENT (dailyspin_adj), 1, 0);
-  gtk_widget_set_usize (dailyspin, 50, 20);
-  gtk_box_pack_start_show (GTK_BOX (dailyvbox), dailyspin, FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->dailybox), dailyspin, TRUE, TRUE, 0);
 
   /* days label */
   dailylabels = gtk_label_new (_("day(s)"));
-  gtk_box_pack_start_show (GTK_BOX (dailyvbox), dailylabels, FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->dailybox), dailylabels, TRUE, TRUE, 0);
   
-/* weekly hbox */
-  weeklyhbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), weeklyhbox, FALSE, FALSE, 0);
+/* weekly box */
+  s->weeklybox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), s->weeklybox, TRUE, FALSE, 0);
 
-/* weekly vbox */
-  weeklyvbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (weeklyhbox), weeklyvbox, FALSE, FALSE, 0);
-  for (i = 0; i < 4; i++)
-    {
-      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
-      gtk_box_pack_start_show (GTK_BOX (weeklyvbox), b, FALSE, FALSE, 0);
-      s->checkbuttonwday[i] = b;
-    }
+/* weekly hbox1 */
+  {
+    GtkWidget *weeklyhbox1 = gtk_hbox_new (FALSE, 0);
+    gtk_box_pack_start_show (GTK_BOX (s->weeklybox), weeklyhbox1, FALSE, FALSE, 0);
+    for (i = 0; i < 4; i++)
+      {
+	GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
+	gtk_box_pack_start_show (GTK_BOX (weeklyhbox1), b, FALSE, FALSE, 0);
+	s->checkbuttonwday[i] = b;
+      }
+  }
 
-/* weekly vbox2 */
-  weeklyvbox2 = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (weeklyhbox), weeklyvbox2, FALSE, FALSE, 0);
-  for (i = 4; i < 7; i++)
-    {
-      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
-      gtk_box_pack_start_show (GTK_BOX (weeklyvbox2), b, FALSE, FALSE, 0);
-      s->checkbuttonwday[i] = b;
-    }
+/* weekly hbox2 */
+  {
+    GtkWidget *weeklyhbox2 = gtk_hbox_new (FALSE, 0);
+    gtk_box_pack_start_show (GTK_BOX (s->weeklybox), weeklyhbox2, FALSE, FALSE, 0);
+    for (i = 4; i < 7; i++)
+      {
+	GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
+	gtk_box_pack_start_show (GTK_BOX (weeklyhbox2), b, FALSE, FALSE, 0);
+	s->checkbuttonwday[i] = b;
+      }
+  }    
 
-/* monthly vbox */
-  monthlyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), monthlyvbox, FALSE, FALSE, 0);
+/* monthly hbox */
+  s->monthlybox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), s->monthlybox, TRUE, FALSE, 0);
 
   /* "every" label */
   monthlylabelevery = gtk_label_new (_("Every"));
-  gtk_box_pack_start_show (GTK_BOX (monthlyvbox), monthlylabelevery, 
-			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->monthlybox), monthlylabelevery, 
+			   TRUE, TRUE, 0);
   
   /* monthly spinner */
   monthlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   monthlyspin = gtk_spin_button_new (GTK_ADJUSTMENT (monthlyspin_adj), 1, 0);
-  gtk_widget_set_usize (monthlyspin, 50, 20);
-  gtk_box_pack_start_show (GTK_BOX (monthlyvbox), monthlyspin, 
-			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->monthlybox), monthlyspin, 
+			   TRUE, TRUE, 0);
 
   /* months label */
   monthlylabels = gtk_label_new (_("month(s)"));
-  gtk_box_pack_start_show (GTK_BOX (monthlyvbox), monthlylabels, 
-			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->monthlybox), monthlylabels, 
+			   TRUE, TRUE, 0);
   
 /* yearly hbox */
-  yearlyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), yearlyvbox, FALSE, FALSE, 0);
+  s->yearlybox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), s->yearlybox, TRUE, FALSE, 0);
 
   /* "every" label */
   yearlylabelevery = gtk_label_new (_("Every"));
-  gtk_box_pack_start_show (GTK_BOX (yearlyvbox), yearlylabelevery, 
-			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->yearlybox), yearlylabelevery, 
+			   TRUE, TRUE, 0);
   
   /* yearly spinner */
   yearlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
   yearlyspin = gtk_spin_button_new (GTK_ADJUSTMENT (yearlyspin_adj), 1, 0);
-  gtk_widget_set_usize (yearlyspin, 50, 20);
-  gtk_box_pack_start_show (GTK_BOX (yearlyvbox), yearlyspin, FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->yearlybox), yearlyspin, TRUE, TRUE, 0);
 
   /* years label */
   yearlylabels = gtk_label_new (_("year(s)"));
-  gtk_box_pack_start_show (GTK_BOX (yearlyvbox), yearlylabels, 
-			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->yearlybox), yearlylabels, 
+			   TRUE, TRUE, 0);
   
-  gtk_widget_hide (dailyvbox);
-  gtk_widget_hide (weeklyhbox);
-  gtk_widget_hide (monthlyvbox);
-  gtk_widget_hide (yearlyvbox);
+  gtk_widget_hide (s->dailybox);
+  gtk_widget_hide (s->weeklybox);
+  gtk_widget_hide (s->monthlybox);
+  gtk_widget_hide (s->yearlybox);
 
 /* Begin end-date vbox */
  
@@ -573,21 +570,7 @@ edit_event_window(void)
   s->radiobuttonweekly = radiobuttonweekly;
   s->radiobuttonmonthly = radiobuttonmonthly;
   s->radiobuttonyearly = radiobuttonyearly;
-  s->dailyvbox = dailyvbox;
-  s->dailylabelevery = dailylabelevery;
   s->dailyspin = dailyspin;
-  s->dailylabels = dailylabels;
-  s->monthlyvbox = monthlyvbox;
-  s->monthlylabelevery = monthlylabelevery;
-  s->monthlyspin = monthlyspin;
-  s->monthlylabels = monthlylabels;
-  s->yearlyvbox = yearlyvbox;
-  s->yearlylabelevery = yearlylabelevery;
-  s->yearlyspin = yearlyspin;
-  s->yearlylabels = yearlylabels;
-  s->weeklyhbox = weeklyhbox;
-  s->weeklyvbox = weeklyvbox;
-  s->weeklyvbox2 = weeklyvbox2;
   s->endspin_adj = endspin_adj;
   s->dailyspin_adj = dailyspin_adj;
   s->monthlyspin_adj = monthlyspin_adj;
