@@ -43,9 +43,6 @@ GtkWidget *file_selector;
 GtkWidget *search_replace_vbox;
 
 struct gpe_icon my_icons[] = {
-  { "new", "new" },
-  { "open", "open" },
-  { "save", "save" },
   { "save_as", "save_as" },
   { "cut", "cut" },
   { "copy", "copy" },
@@ -55,11 +52,7 @@ struct gpe_icon my_icons[] = {
   { "right", "right" },
   { "dir-closed", "dir-closed" },
   { "dir-up", "dir-up" },
-  { "ok", "ok" },
-  { "cancel", "cancel" },
   { "stop", "stop" },
-  { "question", "question" },
-  { "error", "error" },
   { "icon", PREFIX "/share/pixmaps/gpe-edit.png" },
   {NULL, NULL}
 };
@@ -324,8 +317,8 @@ ask_save_before_exit (void)
 
   if (file_modified == 1)
   {
-    switch (gpe_question_ask (_("Save current file before exiting?"), _("Question"), "question",
-    _("Don't save"), "stop", _("Save"), "save", NULL))
+    switch (gpe_question_ask (_("Save current file before exiting?"), _("Question"), "!gtk-question",
+    _("Don't save"), "stop", "!gtk-save", NULL, NULL))
     {
     case 1: /* Save */
       save_file ();
@@ -548,8 +541,6 @@ main (int argc, char *argv[])
   GtkWidget *toolbar_icon;
   GdkPixbuf *p;
   GtkWidget *pw;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
   GtkTextBuffer *buf;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -569,6 +560,7 @@ main (int argc, char *argv[])
   
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   update_window_title ();
@@ -635,8 +627,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (text_area));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
 
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
+  gpe_set_window_icon (main_window, "icon");
 
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);

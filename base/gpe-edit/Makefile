@@ -3,7 +3,7 @@ PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.13
+VERSION = 0.14
 
 MEMBERS = main
 LINGUAS = 
