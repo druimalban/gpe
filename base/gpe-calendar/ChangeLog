@@ -1,3 +1,10 @@
+2004-05-28  Phil Blundell  <pb@nexus.co.uk>
+
+	* gtkdatesel.c (struct _GtkDateSel): Add subbox.
+	(make_field): Put widgets into subbox, not top-level box.  Set
+	expand and fill to FALSE when packing.
+	(gtk_date_sel_init): Create subbox and pack it into top level.
+
 2004-03-25  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.52 released.

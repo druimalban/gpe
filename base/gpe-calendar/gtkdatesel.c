@@ -36,6 +36,7 @@ struct elem
 struct _GtkDateSel
 {
   GtkHBox hbox;
+  GtkWidget *subbox;
 
   struct elem day, week, month, year;
 
@@ -255,9 +256,9 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
   g_signal_connect (G_OBJECT (e->arrow_l), "clicked", G_CALLBACK (click), sel);
   g_signal_connect (G_OBJECT (e->arrow_r), "clicked", G_CALLBACK (click), sel);
 
-  gtk_box_pack_start (GTK_BOX (sel), e->arrow_l, TRUE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (sel), e->text, TRUE, TRUE, 1);
-  gtk_box_pack_start (GTK_BOX (sel), e->arrow_r, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (sel->subbox), e->arrow_l, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (sel->subbox), e->text, FALSE, FALSE, 1);
+  gtk_box_pack_start (GTK_BOX (sel->subbox), e->arrow_r, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (update), e->text);
   update (sel, e->text);
@@ -269,12 +270,17 @@ gtk_date_sel_init (GtkDateSel *sel)
   time (&sel->time);
   sel->day_clamped = -1;
 
+  sel->subbox = gtk_hbox_new (FALSE, 0);
+
   make_field (sel, &sel->day, day_click, day_update);
   make_field (sel, &sel->week, week_click, week_update);
   make_field (sel, &sel->month, month_click, month_update);
   make_field (sel, &sel->year, year_click, year_update);
 
   sel->month_style = GTKDATESEL_MONTH_SHORT;
+
+  gtk_widget_show (sel->subbox);
+  gtk_box_pack_start (GTK_BOX (sel), sel->subbox, TRUE, FALSE, 0);
 }
 
 static void
