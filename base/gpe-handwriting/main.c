@@ -42,6 +42,7 @@ gint ruleheight[3] = { 7*3/2, 16*3/2, 27*3/2 };
 #define maxpoints 1024
 gint points[maxpoints][2];
 gint currentpoint = 0;
+gboolean pendown = FALSE;
 
 void redraw (void)
 {
@@ -96,19 +97,24 @@ add_point (gint x, gint y)
 void
 motion_notify (GtkWidget *widget, GdkEventMotion *motion, gpointer *data)
 {
-  add_point (motion->x, motion->y);
+  if (pendown)
+  {
+    add_point (motion->x, motion->y);
+  }
 }
 
 void
 button_press_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
 {
   add_point (button->x, button->y);
+  pendown = TRUE;
 }
 
 void
 button_release_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
 {
   currentpoint = 0;
+  pendown = FALSE;
 }
 
 void
