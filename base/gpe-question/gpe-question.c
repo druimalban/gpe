@@ -80,6 +80,12 @@ main(int argc, char *argv[])
 	}
     }
 
+  if ((question == NULL) || (text[0] == NULL))
+    {
+      fprintf (stderr, "Syntax: gpe-question --question \"Question text\" --buttons [\"cancel:Cancel text\"] [...] \"ok:OK text\"\n");
+      return -1;
+    }
+
   answer = gpe_question_ask (question, "", "question",
                              text[0], icon[0],
                              text[1], icon[1],
