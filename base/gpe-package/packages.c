@@ -93,7 +93,8 @@ ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 
 
 int
-list_entry (char *name, char *desc, char *version, pkg_state_status_t status)
+list_entry (char *name, char *desc, char *version, 
+	pkg_state_status_t status, void *userdata)
 {
 	send_message (PK_LIST, 1, name, desc, version, status);
 	return 0;
@@ -172,13 +173,13 @@ do_command (pkcommand_t command, char *params, char *list)
 //		ipkg_packages_status(&args,list,status_cb);
 	break;
 	case CMD_SEARCH:
-		ipkg_file_search(&args,list,list_entry);
+		ipkg_file_search(&args,list,list_entry, NULL);
 	break;
 	case CMD_LIST:
-		ipkg_packages_list(&args,list,list_entry);
+		ipkg_packages_list(&args,list,list_entry, NULL);
 	break;
 	case CMD_FILES:
-		ipkg_package_files(&args,list,list_entry);
+		ipkg_package_files(&args,list,list_entry, NULL);
 	break;
 	}
 	
