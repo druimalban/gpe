@@ -1,3 +1,9 @@
+
+2004-09-03 Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* Changed title to "Network Shield" to avoid confusion, it 
+          is not really a firewall.
+
 2004-07-29 Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* Released Version 0.6

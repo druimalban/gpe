@@ -1,5 +1,5 @@
 PACKAGE = gpe-shield
-VERSION = 0.6
+VERSION = 0.7
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -12,21 +12,8 @@ MACHINE = other
 LINGUAS = 
 
 
-ifeq ($(MACHINE),ipaq)
-PACKAGE_CPPFLAGS += -DMACH_IPAQ
-PACKAGE_CFLAGS += -DMACH_IPAQ
-endif
-
-ifeq ($(MACHINE),simpad)
-PACKAGE_CPPFLAGS += -DMACH_SIMPAD
-PACKAGE_CFLAGS += -DMACH_SIMPAD
-endif
-
 EXTRA_DESKTOPS = gpe-shield.desktop.in 
 HELPFILE = gpe-shield.html
-
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-2.0`
-GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0`
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_LDFLAGS += -L../libgpewidget -L.
@@ -38,7 +25,7 @@ endif
 
 PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS)
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLDFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS)
 
 
 MEMBERS  = main interface backend editrule
