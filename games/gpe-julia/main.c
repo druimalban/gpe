@@ -429,7 +429,7 @@ main(int argc, char *argv[])
   iconpixbuf = gpe_find_icon ("home");
   if (!iconpixbuf)
     exit (1);
-  icon = gpe_render_icon (window->style, iconpixbuf);
+  icon = gtk_image_new_from_pixbuf (iconpixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR(toolbar), _("Home"),
 			   _("Home"), _("Home"),
 			   icon, home, NULL);
@@ -437,7 +437,7 @@ main(int argc, char *argv[])
   iconpixbuf = gpe_find_icon ("zoom_in");
   if (!iconpixbuf)
     exit (1);
-  icon = gpe_render_icon (window->style, iconpixbuf);
+  icon = gtk_image_new_from_pixbuf (iconpixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR(toolbar), _("In"),
 			   _("Zoom in"), _("Zoom in"),
 			   icon, zoom_in_button, NULL);
@@ -445,7 +445,7 @@ main(int argc, char *argv[])
   iconpixbuf = gpe_find_icon ("zoom_out");
   if (!iconpixbuf)
     exit (1);
-  icon = gpe_render_icon (window->style, iconpixbuf);
+  icon = gtk_image_new_from_pixbuf (iconpixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR(toolbar), _("Out"),
 			   _("Zoom out"), _("Zoom out"),
 			   icon, zoom_out_button, NULL);
@@ -455,7 +455,7 @@ main(int argc, char *argv[])
   iconpixbuf = gpe_find_icon ("exit");
   if (!iconpixbuf)
     exit (1);
-  icon = gpe_render_icon (window->style, iconpixbuf);
+  icon = gtk_image_new_from_pixbuf (iconpixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR(toolbar), _("Exit"),
 			   _("Exit"), _("Exit"),
 			   icon, exit_button, NULL);
