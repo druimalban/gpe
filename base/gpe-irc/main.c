@@ -178,8 +178,9 @@ do_irc_iter ()
     {
       if ((IRCServer *) iter->data == selected_server)
 	update_text_view (text);
-
+      //printf ("--------------------%s\n\n", text);
       ((IRCServer *) iter->data)->text = g_string_append (((IRCServer *) iter->data)->text, text);
+      printf ("--------------------%s\n\n", ((IRCServer *) iter->data)->text);
     }
 
     iter = iter->next;
