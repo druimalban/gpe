@@ -714,6 +714,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fputs (buf, fp);
   fclose (fp);
 
+  current_locale = default_locale;
   do_login (username, uid, gid, home, "/bin/sh");
 
   gtk_main_quit ();
