@@ -76,6 +76,8 @@ main(int argc, char *argv[])
   if (sql_start ())
     exit (1);
 
+  what_init ();
+
   open_window ();
   
   gtk_main ();
