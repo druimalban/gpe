@@ -9,6 +9,7 @@
 
 #include <glib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 
@@ -31,16 +32,15 @@ enum
 
 enum
 {
-  ENTRY_NICK,
-  ENTRY_REAL_NAME,
-  ENTRY_PASSWORD
+  COLUMN_SERVER,
+  COLUMN_PORT,
+  COLUMN_SQL_SERVER,
+  COLUMN_EDITABLE2,
+  NUM_COLUMNS2
 };
 
 GtkTreeView *networks_config_tree_view;
 GtkListStore *networks_config_list_store;
-
-gboolean timer_active = FALSE;
-guint timer_id;
 
 static void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
@@ -63,37 +63,19 @@ networks_config_add_from_sql ()
   }
 }
 
-gboolean
-networks_config_network_idle_save (struct sql_network *network)
-{
-  printf ("Idle save.\n");
-  edit_sql_network (network);
-  timer_active = FALSE;
-  return FALSE;
-}
-
 void
-networks_config_add_save_timer (GtkWidget *entry, int entry_type)
+networks_config_servers_add_from_sql (GtkListStore *list_store, struct sql_network *network)
 {
-  struct sql_network *network;
-  gchar *new_text;
-  
-  new_text = gtk_entry_get_text (GTK_ENTRY (entry));
-  network = g_object_get_data (G_OBJECT (entry), "sql_network");
-  
-  if (entry_type == ENTRY_NICK)
-    network->nick = g_strdup (new_text);
-  if (entry_type == ENTRY_REAL_NAME)
-    network->real_name = g_strdup (new_text);
-  if (entry_type == ENTRY_PASSWORD)
-    network->password = g_strdup (new_text);
-
-  if (timer_active == TRUE)
-    gtk_timeout_remove (timer_id);
-  else
-    timer_active = TRUE;
-    
-  timer_id = gtk_timeout_add (700, networks_config_network_idle_save, (gpointer) network);
+  GSList *iter;
+  GtkTreeIter tree_iter;
+ 
+  iter = network->servers; 
+  while (iter)
+  {
+    gtk_list_store_append (list_store, &tree_iter);
+    gtk_list_store_set (list_store, &tree_iter, COLUMN_SERVER, ((struct sql_network_server *) iter->data)->name, COLUMN_PORT, ((struct sql_network_server *) iter->data)->port, COLUMN_EDITABLE2, TRUE, COLUMN_SQL_SERVER, (gpointer) (struct sql_network *) iter->data, -1);
+    iter = iter->next;
+  }
 }
 
 void
@@ -118,6 +100,41 @@ networks_config_network_cell_edited (GtkCellRendererText *cell, const gchar *pat
 }
 
 void
+networks_config_edit_server_cell_edited (GtkCellRendererText *cell, const gchar *path_string, const gchar *new_text, gpointer data)
+{
+  GtkTreeModel *model = (GtkTreeModel *) data;
+  GtkTreePath *path = gtk_tree_path_new_from_string (path_string);
+  GtkTreeIter iter;
+  gchar *old_text;
+  gint *column;
+  struct sql_network_server *server;
+  
+  column = g_object_get_data (G_OBJECT (cell), "column");
+  
+  gtk_tree_model_get_iter (model, &iter, path);
+
+  if (GPOINTER_TO_INT (column) == COLUMN_SERVER)
+  {
+    gtk_tree_model_get (model, &iter, COLUMN_NETWORK, &old_text, -1);
+    g_free (old_text);
+
+    gtk_tree_model_get (model, &iter, COLUMN_SQL_SERVER, &server, -1);
+    server->name = g_strdup (new_text);
+    edit_sql_network_server (server);
+    
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_SERVER, new_text, -1);
+  }
+  else if (GPOINTER_TO_INT (column) == COLUMN_PORT)
+  {
+    gtk_tree_model_get (model, &iter, COLUMN_SQL_SERVER, &server, -1);
+    server->port = atoi (new_text);
+    edit_sql_network_server (server);
+    
+    gtk_list_store_set (GTK_LIST_STORE (model), &iter, COLUMN_PORT, atoi (new_text), -1);
+  }
+}
+
+void
 networks_config_new ()
 {
   struct sql_network *network;
@@ -127,6 +144,21 @@ networks_config_new ()
 
   gtk_list_store_append (networks_config_list_store, &iter);
   gtk_list_store_set (networks_config_list_store, &iter, COLUMN_NETWORK, "Untitled", COLUMN_EDITABLE, TRUE, COLUMN_SQL_NETWORK, (gpointer) network, -1);
+}
+
+void
+networks_config_new_server (GtkWidget *widget, struct sql_network *network)
+{
+  GtkListStore *list_store;
+  struct sql_network_server *server;
+  GtkTreeIter iter;
+
+  list_store = g_object_get_data (G_OBJECT (widget), "list_store");
+
+  server = new_sql_network_server ("Untitled", 6667, network);
+
+  gtk_list_store_append (list_store, &iter);
+  gtk_list_store_set (list_store, &iter, COLUMN_SERVER, "Untitled", COLUMN_PORT, "6667", COLUMN_EDITABLE, TRUE, COLUMN_SQL_SERVER, (gpointer) server, -1);
 }
 
 void
@@ -147,14 +179,55 @@ networks_config_delete ()
 }
 
 void
+networks_config_delete_server (GtkWidget *widget, struct sql_network *network)
+{
+  GtkListStore *list_store;
+  GtkTreeView *tree_view;
+  GtkTreeSelection *selec;
+  GtkTreeIter iter;
+  struct sql_network_server *server;
+  
+  list_store = g_object_get_data (G_OBJECT (widget), "list_store");
+  tree_view = g_object_get_data (G_OBJECT (widget), "tree_view");
+  
+  selec = gtk_tree_view_get_selection (tree_view);
+  if (gtk_tree_selection_get_selected (selec, NULL, &iter) == TRUE)
+  {
+    gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, COLUMN_SQL_SERVER, &server, -1);
+    del_sql_network_server (network, server);
+
+    gtk_list_store_remove (list_store, &iter);
+  }
+}
+
+void
+networks_config_edit_save (GtkWidget *widget, struct sql_network *network)
+{
+  GtkWidget *window, *nick_entry, *real_name_entry, *password_entry;
+
+  nick_entry = g_object_get_data (G_OBJECT (widget), "nick_entry");
+  real_name_entry = g_object_get_data (G_OBJECT (widget), "real_name_entry");
+  password_entry = g_object_get_data (G_OBJECT (widget), "password_entry");
+  window = g_object_get_data (G_OBJECT (widget), "window");
+  
+  network->nick = g_strdup (gtk_entry_get_text (GTK_ENTRY (nick_entry)));
+  network->real_name = g_strdup (gtk_entry_get_text (GTK_ENTRY (real_name_entry)));
+  network->password = g_strdup (gtk_entry_get_text (GTK_ENTRY (password_entry)));
+  
+  edit_sql_network (network);
+  gtk_widget_destroy (window);
+}
+
+void
 networks_config_edit_window (struct sql_network *network)
 {
-  GtkWidget *window, *table, *vbox, *button_hbox, *label, *hsep;
+  GtkWidget *window, *table, *vbox, *button_hbox, *button_hbox2, *label, *hsep, *scroll;
   GtkWidget *nick_entry, *real_name_entry, *password_entry;
-  GtkWidget *close_button;
-  GtkTreeView *tree_view;
+  GtkWidget *save_button, *close_button, *new_server_button, *delete_server_button;
   GtkTreeViewColumn* column;
   GtkCellRenderer *renderer;
+  GtkTreeView *tree_view;
+  GtkListStore *list_store;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
   
@@ -169,9 +242,13 @@ networks_config_edit_window (struct sql_network *network)
   gtk_widget_realize (window);
 
   vbox = gtk_vbox_new (FALSE, 0);
+  
   button_hbox = gtk_hbox_new (FALSE, 0);
   gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
   gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
+  button_hbox2 = gtk_hbox_new (FALSE, 0);
+  gtk_box_set_spacing (GTK_BOX (button_hbox2), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (button_hbox2), 6);
 
   table = gtk_table_new (2, 3, FALSE);
   gtk_container_set_border_width (GTK_CONTAINER (table), 6);
@@ -195,27 +272,62 @@ networks_config_edit_window (struct sql_network *network)
   nick_entry = gtk_entry_new ();
   real_name_entry = gtk_entry_new ();
   password_entry = gtk_entry_new ();
+  
+  gtk_entry_set_text (GTK_ENTRY (nick_entry), network->nick);
+  gtk_entry_set_text (GTK_ENTRY (real_name_entry), network->real_name);
+  gtk_entry_set_text (GTK_ENTRY (password_entry), network->password);
 
   close_button = gpe_picture_button (button_hbox->style, "Close", "close");
+  save_button = gpe_picture_button (button_hbox->style, "Save", "save");
+  new_server_button = gpe_picture_button (button_hbox->style, "New", "new");
+  delete_server_button = gpe_picture_button (button_hbox->style, "Delete", "delete");
+  
+  list_store = gtk_list_store_new (NUM_COLUMNS2, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN, G_TYPE_POINTER);
+  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+
+  renderer = gtk_cell_renderer_text_new ();
+  g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_edit_server_cell_edited), GTK_TREE_MODEL (list_store));
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *) COLUMN_SERVER);
+  gtk_tree_view_insert_column_with_attributes (tree_view, -1, "Server", renderer, "text", COLUMN_SERVER, "editable", COLUMN_EDITABLE2, NULL);
+
+  renderer = gtk_cell_renderer_text_new ();
+  g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_edit_server_cell_edited), GTK_TREE_MODEL (list_store));
+  g_object_set_data (G_OBJECT (renderer), "column", (gint *) COLUMN_PORT);
+  gtk_tree_view_insert_column_with_attributes (tree_view, -1, "Port", renderer, "text", COLUMN_PORT, "editable", COLUMN_EDITABLE2, NULL);
+
+  gtk_tree_view_set_headers_visible (tree_view, TRUE);
+
+  scroll = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   g_signal_connect (G_OBJECT (close_button), "clicked",
                              G_CALLBACK (kill_widget), window);
-  g_signal_connect (G_OBJECT (nick_entry), "insert-text",
-                             G_CALLBACK (networks_config_add_save_timer), (gpointer) ENTRY_NICK);
-  g_signal_connect (G_OBJECT (real_name_entry), "insert-text",
-                             G_CALLBACK (networks_config_add_save_timer), (gpointer) ENTRY_REAL_NAME);
-  g_signal_connect (G_OBJECT (password_entry), "insert-text",
-                             G_CALLBACK (networks_config_add_save_timer), (gpointer) ENTRY_PASSWORD);
+  g_signal_connect (G_OBJECT (save_button), "clicked",
+                             G_CALLBACK (networks_config_edit_save), network);
+  g_signal_connect (G_OBJECT (new_server_button), "clicked",
+                             G_CALLBACK (networks_config_new_server), network);
+  g_signal_connect (G_OBJECT (delete_server_button), "clicked",
+                             G_CALLBACK (networks_config_delete_server), network);
 
-  g_object_set_data (G_OBJECT (nick_entry), "sql_network", (gpointer) network);
-  g_object_set_data (G_OBJECT (real_name_entry), "sql_network", (gpointer) network);
-  g_object_set_data (G_OBJECT (password_entry), "sql_network", (gpointer) network);
+  g_object_set_data (G_OBJECT (save_button), "window", (gpointer) window);
+  g_object_set_data (G_OBJECT (save_button), "nick_entry", (gpointer) nick_entry);
+  g_object_set_data (G_OBJECT (save_button), "real_name_entry", (gpointer) real_name_entry);
+  g_object_set_data (G_OBJECT (save_button), "password_entry", (gpointer) password_entry);
+  g_object_set_data (G_OBJECT (new_server_button), "list_store", (gpointer) list_store);
+  g_object_set_data (G_OBJECT (delete_server_button), "tree_view", (gpointer) tree_view);
+  g_object_set_data (G_OBJECT (delete_server_button), "list_store", (gpointer) list_store);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
+  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (tree_view));
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_hbox2, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (button_hbox), close_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox), save_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox2), new_server_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox2), delete_server_button, FALSE, FALSE, 0);
 
   gtk_table_attach_defaults (GTK_TABLE (table), nick_entry, 1, 2, 0, 1);
   gtk_table_attach_defaults (GTK_TABLE (table), real_name_entry, 1, 2, 1, 2);
@@ -225,6 +337,7 @@ networks_config_edit_window (struct sql_network *network)
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
 
   gtk_widget_show_all (window);
+  gtk_tree_view_columns_autosize (tree_view);
 }
 
 void
