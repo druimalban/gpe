@@ -175,10 +175,12 @@ void sketchpad_set_brush_s (gchar * _brush){
 
 void sketchpad_reset_title(){
   gchar * title;
-  title = g_strdup_printf("Sketch [%d/%d] %s",
+  title = g_strdup_printf("Sketch [%d/%d]%s%s%s",
                           (is_current_sketch_new)?sketch_list_size+1:current_sketch +1,
                           sketch_list_size,
-                          (is_current_sketch_modified)?"*":(is_current_sketch_new)?_("new"):"");
+                          (is_current_sketch_modified)?" *":"",
+                          (is_current_sketch_new)?_(" "):"",
+                          (is_current_sketch_new)?_("new"):"");
   gtk_window_set_title(GTK_WINDOW (window_sketchpad), title);
   g_free(title);
 }
@@ -192,6 +194,7 @@ void sketchpad_open_file(gchar * fullpath_filename, const gchar * name){
 
 void sketchpad_new_sketch(){
   reset_drawing_area(drawing_area);
+  is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
   sketchpad_refresh_drawing_area(drawing_area);
 }//sketchpad_new_sketch()
