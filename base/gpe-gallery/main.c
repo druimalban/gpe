@@ -234,7 +234,7 @@ image_zoom_in ()
   width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) * 1.5;
   height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) * 1.5;
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
@@ -249,7 +249,7 @@ image_zoom_out ()
   width = gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf)) / 1.5;
   height = gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf)) / 1.5;
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
@@ -289,7 +289,7 @@ image_zoom_fit ()
     height = height * ratio;
   }
 
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
+  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_HYPER);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
