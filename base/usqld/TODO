@@ -1,0 +1,6 @@
+* sort out error codes, sqlite error codes should probably be offset, rather than the protocol errors being offset. 
+* re-write server engine to be single-loop event driven to properly deal with interrupts
+* ditto to support multiple database connections from the same client allong the same connections, i.e. make the whole thing more async. 
+* hack vbde a bit to give the current db status (i.e. in transaction or not) so we can arbitrarily re-use spare sqlite*s)
+* sort out timeouts on dis-used free sqlites* so we can keep malloc to a minimum
+* some form of basic authentication mechanism
