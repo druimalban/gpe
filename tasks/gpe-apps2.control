@@ -3,8 +3,8 @@ Provides: gpe-apps
 Replaces: gpe-apps
 Section: base
 Priority: optional
-Version: 0.42
+Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
-Description: Task package for GPE applications
+Description: Task package for GPE applications.

@@ -7,4 +7,4 @@ Version: _VERSION_
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
-Description: Task package for GPE games
+Description: Task package for GPE games.

@@ -1,6 +1,22 @@
 #------------------------
 # Makefile for GPE tasks
 #------------------------
+#
+# * Change the content of a task:
+#
+#   1. edit       DEP_<task-name>
+#   2. incremente VER_<task-name>
+#
+#
+# * Add a task:
+#
+#   1. create a file <task-name>.control, including _VERSION_ and _DEPS_ variables
+#   2. create a variable DEP_<task-name>
+#   3. create a variable VER_<task-name>
+#   4. add the task to ALL_TASKS
+#
+#   that's it.
+#------------------------
 
 ALL_TASKS = \
     gpe2 \
@@ -31,7 +47,11 @@ TMP_FILE = temporary_file_which_will_be_destroyed_without_warning
 clean:
 	rm -rf dist *.ipk *.ipk.asc *~ .*~
 
+#====================================================
+#================= TASKS DEFINITION =================
+
 #---Meta tasks
+VER_gpe-apps2 = 0.42
 DEP_gpe-apps2 = \
     gpe-task-base, \
     gpe-task-comm, \

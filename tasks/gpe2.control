@@ -7,5 +7,5 @@ Version: 0.02
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: gpe-apps2, gpe-task-games
-Description: Task package for the whole of GPE. Note that it does *not* include extra packages found in gpe-task-extra-apps and gpe-tasks-extra-games, which must be installed separatly.
+Description: Task package for the whole of GPE. Note that it does *not* include extra packages found in gpe-task-extra-apps and gpe-task-extra-games, which must be installed separatly.
 

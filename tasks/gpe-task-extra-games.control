@@ -5,5 +5,4 @@ Version: _VERSION_
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
-Description: Additional GPE games not included in base imag
-
+Description: Additional GPE games not included in base image.
