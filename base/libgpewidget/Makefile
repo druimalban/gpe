@@ -60,9 +60,11 @@ install-program: $(SONAME)
 	install -m 644 pixmaps/clock24.png $(DESTDIR)$(PREFIX)/share/libgpewidget/clock24.png
 	install -m 644 pixmaps/day-night-wheel.png $(DESTDIR)$(PREFIX)/share/libgpewidget/day-night-wheel.png
 
-install-devel:
+install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -sf $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
+	install -d $(PREFIX)/lib/pkg-config
+	install -m 644 $(PACKAGE).pc $(PREFIX)/lib/pkg-config/
 
 clean: clean-po
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)
