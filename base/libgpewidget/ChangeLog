@@ -1,3 +1,7 @@
+2002-12-20  Philip Blundell  <pb@nexus.co.uk>
+
+	* Version 0.32 released.
+
 2002-12-20  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlist.gob (_title_height): Unref PangoLayout to avoid
@@ -31,6 +35,17 @@
 	gtk_widget_show.
 
 2002-12-14  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlist.gob (MAYBE_PRINTF): New macro.  Use it for
+	debug chatter so this can be disabled when not wanted.
+	(GPE:IconList): New member flag_embolden.
+	(_expose): Don't render selected item in bold if above is false.
+	(new_icon): New argument pb.
+	(add_item): Pass extra arg to add_item as NULL.  Refresh screen
+	after adding new item.
+	(add_item_pixbuf): New function.
+	(set_embolden): Likewise.
+	(clear): Likewise.
 
 	* errorbox.c (do_gpe_error_box): Renamed from gpe_error_box.  New
 	argument block.  Don't call gtk_main if this is false, instead
