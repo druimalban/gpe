@@ -4,13 +4,21 @@
 <!--#set var="author" value="Colin Marquardt"-->
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 
+<h2>Getting involved</h2> 
+<P>
+It is easy to become a GPE developer! For a list of open tasks, please
+take a look at the 
+<a href="http://www.handhelds.org/z/wiki/CurrentThingsToDo">CurrentThingsToDo
+wiki page</a>.
+</P>
+
 <h2>Mailing List</h2> 
 <P>
 The main point of contact for the GPE project is the mailing list
 <a href="mailto:gpe@handhelds.org">gpe@handhelds.org</a>.
 </P>
 
-<p> 
+<p>
 To subscribe to the list go to
 <a href="http://handhelds.org/mailman/listinfo/gpe">http://handhelds.org/mailman/listinfo/gpe</a>
 and follow the instructions. 
@@ -23,10 +31,10 @@ You can read past articles in the mailing list archive at
 
 <h2>IRC</h2> 
 <P>
-GPE coders and users can be be found on the #gpe channel of irc.handhelds.org (port 6667).
+GPE developers and users can be be found on the #gpe channel of irc.handhelds.org (port 6667).
+</p>
 
 <h2>GPE around the globe</h2> 
-
 <P>
 GPE team members are spread all around the globe. If you're a GPE
 user/developer/hacker and are headed somewhere, check here to see if
@@ -35,6 +43,7 @@ there's anyone you can visit!
 
 <p>
 <table border="0" width="100%">
+<!-- sorted from north to south -->
 <tr><th width="15%">IRC nick</th><th width="20%">Real name</th><th width="65%">Location</th></tr>
 <tr><td>luc</td>               <td>Luc Pionchon</td>       <td>Helsinki, Finland</td></tr>
 <tr><td>moray</td>             <td>Moray Allan</td>        <td>Edinburgh, Scotland</td></tr>
@@ -46,11 +55,11 @@ there's anyone you can visit!
 <tr><td>colin</td>             <td>Colin Marquardt</td>    <td>Stuttgart, Germany</td></tr>
 <tr><td>pierre</td>            <td>Pierre Tardy</td>       <td>Clermont-Ferrand, France</td></tr>
 <tr><td>jamey</td>             <td>Jamey Hicks</td>        <td>Cambridge, MA, USA</td></tr>
-<tr><td>wizly</td>             <td>Màrius Montón</td>      <td>Barcelona, Spain</td></tr>
+<tr><td>wizly</td>             <td>M&agrave;rius Mont&oacute;n</td>      <td>Barcelona, Spain</td></tr>
 <tr><td>mccarthy</td>          <td>Joseph McCarthy</td>    <td>Pittsburgh, PA, USA</td></tr>
 <tr><td>ED</td>                <td>Erez Doron</td>         <td>Tel Aviv, Israel</td></tr>
 <tr><td>mibus</td>             <td>Robert Mibus</td>       <td>Adelaide, Australia</td></tr>
-<tr><td>spung</td>             <td>Luís Oliveira</td>      <td>Coimbra, Portugal</td></tr>
+<tr><td>spung</td>             <td>Lu&iacute;s Oliveira</td>      <td>Coimbra, Portugal</td></tr>
 </table>
 
 <p>
@@ -59,5 +68,4 @@ there's anyone you can visit!
 <br>
 <img src="images/people_eu.png" width="600" height="300" alt="(There are GPE hackers in several European countries, though the most are probably in the UK.)">
 </p>
-
 <!--#include virtual="includes/foot.shtml"-->

@@ -1,5 +1,7 @@
 <!--#set var="addtitle" value="The GPE Palmtop Environment"-->
 <!--#set var="pagename" value="home"-->
+<!--#set var="author" value="Colin Marquardt"-->
+<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 <!--#include virtual="includes/head.shtml"-->
 
 <p>

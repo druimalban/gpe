@@ -4,24 +4,23 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="includes/head.shtml"-->
 
-<H3>GPE Wiki</H3>
+<H2>GPE Wiki</H2>
 
 <UL>
 <LI><A HREF="http://www.handhelds.org/z/wiki/GPE">http://www.handhelds.org/z/wiki/GPE</A>
 </UL>
 
-<H3>Related projects</H3>
-
+<H2>Related projects</H2>
 <UL>
 <LI>handhelds.org<BR>
 <A HREF="http://handhelds.org/">http://handhelds.org</A>
 <LI>The Familiar Project<BR>
 <A HREF="http://familiar.handhelds.org/">http://familiar.handhelds.org</A>
+<LI>The Matchbox Window Manager<BR>
+<A HREF="http://handhelds.org/~mallum/matchbox/">http://handhelds.org/~mallum/matchbox/</A>
 </UL>
 
-
-<H3>Interesting documentation</H3>
-
+<H2>Related documentation</H2>
 <UL>
 <LI> GNOME Human Interface Guidelines (1.0)<BR>
 <A HREF="http://developer.gnome.org/projects/gup/hig/1.0/">http://developer.gnome.org/projects/gup/hig/1.0/</A>
@@ -31,13 +30,32 @@
 <A HREF="http://www.palmos.com/dev/support/docs/ui/UIGuidelinesTOC.html">http://www.palmos.com/dev/support/docs/ui/UIGuidelinesTOC.html</A>
 </UL>
 
+<h2>Desktop interoperability</h2>
+<p>
+GPE programs aim to meet the relevant <a
+href="http://www.freedesktop.org/standards/">freedesktop.org
+standards</a>.
+</p>
 
-<H3>Interesting applications</H3>
+<p>GPE programs should comply with the <a href="http://developer.gnome.org/projects/gup/hig/1.0/">GNOME Human Interface Guidelines</a> where it is appropriate. Some deviations have to be made to deal with peculiarities of the palmtop environment, such as small screens; some of these changes and additions to the GNOME HIG can be found on the <a href="http://www.handhelds.org/z/wiki/GpeHIG">GPE HIG</a> Wiki page.
+</p>
 
+<h2>SQL schemas</h2> 
+<p>The core storage model for environment-wide data such as PIM data and
+user preferences is that of a relational database, implemented
+through the ubiquitous SQL (Structured Query Language).
+</p>
+
+<h2>Data transfer</h2>
+<p>
+GPE will support the <a href="http://www.imc.org/pdi/">vCard and vCal</a> standards for transferring address book and calendar information. We also plan to follow the <a href="http://www.imc.org/ietf-calendar/">IETF Calendaring and Scheduling</a> standards.
+</p>
+
+<H2>Interesting applications</H2>
 <UL>
-<LI>Sam J. Engstr&ouml;m has a nice collection<BR>
+<LI> Sam J. Engstr&ouml;m has a nice collection<BR>
 <A HREF="http://www.samengstrom.com/ipaq/">http://www.samengstrom.com/ipaq/</A>
-<LI>SQLite is the database engine library used by some applications and usqld<BR>
+<LI> SQLite is the database engine library used by some applications and usqld<BR>
 <A HREF="http://www.sqlite.org/">http://www.sqlite.org/</A>
 <LI> SyncML<BR>
 <A HREF="http://www.syncml.org">http://www.syncml.org</A><BR>

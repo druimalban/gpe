@@ -1,6 +1,5 @@
 <div class="menu">
 <small>
-
 <!--#if expr="x${pagename}=xhome" -->
 <b>Home</b>
 <!--#else -->
@@ -13,13 +12,25 @@
 <A href="/projects/">Projects</a>
 <!--#endif -->
 |
-<!--#if expr="x${pagename}=xstandards" -->
-<b>Standards</b>
+<!--#if expr="x${pagename}=xscreenshots" -->
+<b>Screenshots</b>
 <!--#else -->
-<A href="/standards.shtml">Standards</a>
+<A href="/screenshots.shtml">Screenshots</a>
 <!--#endif -->
 |
-<A href="http://europa.armlinux.org/bugzilla/">Bugs</A>
+<!--#if expr="x${pagename}=xdownload" -->
+<b>Download</b>
+<!--#else -->
+<A href="/download.shtml">Download</a>
+<!--#endif -->
+|
+<!--#if expr="x${pagename}=xcontact" -->
+<b>Mailing list/Contact</b>
+<!--#else -->
+<A href="/contact.shtml">Mailing list/Contact</a>
+<!--#endif -->
+|
+<A href="http://europa.debian.org/bugzilla/">Bugs</A>
 |
 <!--#if expr="x${pagename}=xcvs" -->
 <b>CVS</b>
@@ -31,24 +42,6 @@
 <b>Links/Resources</b>
 <!--#else -->
 <A href="/linkres.shtml">Links/Resources</a>
-<!--#endif -->
-|
-<!--#if expr="x${pagename}=xdownload" -->
-<b>Download</b>
-<!--#else -->
-<A href="/download.shtml">Download</a>
-<!--#endif -->
-|
-<!--#if expr="x${pagename}=xscreenshots" -->
-<b>Screenshots</b>
-<!--#else -->
-<A href="/screenshots.shtml">Screenshots</a>
-<!--#endif -->
-|
-<!--#if expr="x${pagename}=xcontact" -->
-<b>Mailing list/Contact</b>
-<!--#else -->
-<A href="/contact.shtml">Mailing list/Contact</a>
 <!--#endif -->
 </small>
 </div>

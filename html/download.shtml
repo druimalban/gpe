@@ -8,8 +8,11 @@ GPE packages are available for
 <a href="http://familiar.handhelds.org/">Familiar</a>:
 </p>
 <ul>
-<li><a href="ftp://ftp.handhelds.org/pub/projects/gpe/unstable/base/">GPE packages</a> (out of date)</li>
 <li><a href="http://familiar.handhelds.org/familiar/feeds/unstable/packages/armv4l/">Familiar unstable feed</a></li>
+<li><a
+href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List of
+Packages in ipkgfind</a>
+<li><a href="ftp://ftp.handhelds.org/pub/projects/gpe/unstable/base/">GPE packages</a> (out of date)</li>
 </ul>
 
 <h2>Source</h2>

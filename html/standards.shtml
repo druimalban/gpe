@@ -2,39 +2,4 @@
 <!--#set var="pagename" value="standards"-->
 <!--#include virtual="includes/head.shtml"-->
 
-<p>One of the goals of the GPE project is to encourage developers for our platform
-to conform to a number of standards separate from the core GPE
-software.
-</p>
-
-<h2>Desktop interoperability</h2>
-
-<p>GPE programs aim to meet the relevant <a href="http://www.freedesktop.org/standards/">freedesktop.org standards</a>.
-</p>
-
-<p>GPE programs should comply with the <a href="http://developer.gnome.org/projects/gup/hig/1.0/">GNOME Human Interface Guidelines</a> where it is appropriate. Some deviations have to be made to deal with peculiarities of the palmtop environment, such as small screens; some of these changes and additions to the GNOME HIG can be found on the <a href="http://www.handhelds.org/z/wiki/GpeHIG">GPE HIG</a> Wiki page.
-</p>
-
-<h2>SQL schemas</h2> 
-
-<p>The core storage model for environment-wide data such as PIM data and
-user preferences is that of a relational database, implemented
-through the ubiquitous SQL (Structured Query Language). The core SQL
-schemas for this information are currently under development, and the
-current proposals for these standards are listed below.
-</p>
-
-<h3>PIM schema</h3> 
-
-<p>
-A hacked-together version of the bulk of the <a href="pim.sql">PIM schema</a> is available.
-This omits a specification for storing events, and has not yet been finalised. 
-</p>
-
-<h2>Data transfer</h2>
-
-<p>
-GPE will support the <a href="http://www.imc.org/pdi/">vCard and vCal</a> standards for transferring address book and calendar information. We also plan to follow the <a href="http://www.imc.org/ietf-calendar/">IETF Calendaring and Scheduling</a> standards.
-</p>
-
 <!--#include virtual="includes/foot.shtml"-->
