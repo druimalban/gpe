@@ -1,5 +1,18 @@
 2004-05-16  Philip Blundell  <philb@gnu.org>
 
+	* gpeclockface.c (struct _GpeClockFace): Add border, hand_width,
+	use_background_image, label_hours.
+	(draw_hand): Use floating point for all positions.
+	(gpe_clock_face_expose): Allow background image to be configured
+	on/off at runtime.
+	(gpe_clock_face_init): Initialise new struct members.
+	(gpe_clock_face_set_radius): New.
+	(gpe_clock_face_set_use_background_image): Likewise.
+	(gpe_clock_face_set_label_hours): Likewise.
+	* gpe/gpeclockface.h (gpe_clock_face_set_radius): Add prototype.
+	(gpe_clock_face_set_use_background_image): Likewise.
+	(gpe_clock_face_set_label_hours): Likewise.
+	
 	* gpeiconlistview.c: New file.
 	* gpe/gpeiconlistview.h: Likewise.
 

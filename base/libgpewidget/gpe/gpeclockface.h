@@ -26,6 +26,11 @@ GtkType		gpe_clock_face_get_type (void);
 GtkWidget      *gpe_clock_face_new (GtkAdjustment *, GtkAdjustment *, GtkAdjustment *);
 
 void            gpe_clock_face_set_do_grabs (GpeClockFace *clock, gboolean yes);
+void            gpe_clock_face_set_radius (GpeClockFace *clock, guint radius);
+void		gpe_clock_face_set_use_background_image (GpeClockFace *clock, gboolean yes);
+void		gpe_clock_face_set_label_hours (GpeClockFace *clock, gboolean yes);
+
+
 
 GdkBitmap      *gpe_clock_face_get_shape (GpeClockFace *clock);
 

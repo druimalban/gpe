@@ -31,8 +31,6 @@
 #ifdef BACKGROUND_IMAGE
 static GdkPixbuf *clock_background, *clock_background_24;
 static guint background_width, background_height;
-#else
-static int border = 2;
 #endif
 
 static GdkPixbuf *day_night_wheel;
@@ -42,12 +40,18 @@ static XftColor color;
 static GtkWidgetClass *parent_class;
 
 #define DEFAULT_RADIUS 64
+#define DEFAULT_BORDER 2
 
 struct _GpeClockFace
 {
   GtkWidget widget;
 
   guint radius;
+  guint border;
+  double hand_width;
+
+  gboolean use_background_image;
+  gboolean label_hours;
 
   guint x_offset, y_offset;
 
@@ -87,14 +91,13 @@ typedef struct
 static void
 draw_hand (GpeClockFace *clock,
 	   double angle, 
-	   guint length,
-	   guint thick)
+	   double length,
+	   double thick)
 {
-  GdkPoint points[5];
 #ifdef HAVE_XRENDER
-  XPointDouble poly[5];
+  XPointDouble points[5], poly[5];
 #else
-  FakeXPointDouble poly[5];
+  FakeXPointDouble points[5], poly[5];
 #endif
   int i;
   double sa = sin (angle), ca = cos (angle);
@@ -174,13 +177,6 @@ gpe_clock_face_expose (GtkWidget *widget,
   int cur_hour;
   gboolean afternoon;
   GdkGC *white_gc;
-#ifdef BACKGROUND_IMAGE
-  GdkRectangle pixbuf_rect, intersect_rect;
-  GdkPixbuf *current_background;
-#else
-  int i;
-  PangoLayout *pl;
-#endif
 
   g_return_val_if_fail (widget != NULL, TRUE);
 
@@ -210,106 +206,118 @@ gpe_clock_face_expose (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (gc, NULL);
   gdk_gc_set_clip_rectangle (white_gc, NULL);
 
-#ifdef BACKGROUND_IMAGE
-  if (afternoon)
-    current_background = clock_background_24;
-  else
-    current_background = clock_background;
-
-  if (event)
+  if (clock->use_background_image)
     {
-      pixbuf_rect.x = clock->x_offset;
-      pixbuf_rect.y = clock->y_offset;
-      pixbuf_rect.width = background_width;
-      pixbuf_rect.height = background_height;
+      GdkRectangle pixbuf_rect, intersect_rect;
+      GdkPixbuf *current_background;
 
-      if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+      if (afternoon)
+	current_background = clock_background_24;
+      else
+	current_background = clock_background;
+      
+      if (event)
+	{
+	  pixbuf_rect.x = clock->x_offset;
+	  pixbuf_rect.y = clock->y_offset;
+	  pixbuf_rect.width = background_width;
+	  pixbuf_rect.height = background_height;
+	  
+	  if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+	    gdk_pixbuf_render_to_drawable (current_background, 
+					   clock->backing_pixmap,
+					   clock->backing_gc, 
+					   intersect_rect.x - clock->x_offset, intersect_rect.y - clock->y_offset, 
+					   intersect_rect.x, intersect_rect.y,
+					   intersect_rect.width, intersect_rect.height,
+					   GDK_RGB_DITHER_NONE, 0, 0);
+	}
+      else
 	gdk_pixbuf_render_to_drawable (current_background, 
 				       clock->backing_pixmap,
 				       clock->backing_gc, 
-				       intersect_rect.x - clock->x_offset, intersect_rect.y - clock->y_offset, 
-				       intersect_rect.x, intersect_rect.y,
-				       intersect_rect.width, intersect_rect.height,
+				       0, 0, clock->x_offset, clock->y_offset,
+				       gdk_pixbuf_get_width (clock_background), 
+				       gdk_pixbuf_get_height (clock_background), 
 				       GDK_RGB_DITHER_NONE, 0, 0);
+      
+
+      gdk_pixbuf_render_to_drawable (day_night_wheel, 
+				     clock->backing_pixmap, 
+				     clock->backing_gc, 
+				     0, 0, 
+				     (clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2), 
+				     (clock->y_offset + clock->radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2), 
+				     -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+      
+      gdk_draw_arc (clock->backing_pixmap, 
+		    widget->style->white_gc, TRUE,
+		    ((clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2)) - 2,
+		    ((clock->y_offset + clock->radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2)) - 2,
+		    gdk_pixbuf_get_width (day_night_wheel) + 4,
+		    gdk_pixbuf_get_height (day_night_wheel) + 4,
+		    (gtk_adjustment_get_value (clock->hour_adj) * -360 / 24) * 64
+		    + gtk_adjustment_get_value (clock->minute_adj) * -(360 * 64 / 24) / 60,
+		    180 * 64);
     }
   else
-    gdk_pixbuf_render_to_drawable (current_background, 
-				   clock->backing_pixmap,
-				   clock->backing_gc, 
-				   0, 0, clock->x_offset, clock->y_offset,
-				   gdk_pixbuf_get_width (clock_background), 
-				   gdk_pixbuf_get_height (clock_background), 
-				   GDK_RGB_DITHER_NONE, 0, 0);
-
-#else
-  pl = gtk_widget_create_pango_layout (widget, "");
-
-  gdk_draw_arc (clock->backing_pixmap, gc, TRUE,
-		clock->x_offset, clock->y_offset,
-		clock->radius * 2, clock->radius * 2,
-		0, 360 * 64);
-  
-  gdk_draw_arc (clock->backing_pixmap, white_gc, TRUE,
-                clock->x_offset + border, clock->y_offset + border,
-                (clock->radius - border) * 2, (clock->radius - border) * 2,
-                0, 360 * 64);
-
-  for (i = 0; i < 12; i++)
     {
-      double angle, dx, dy;
-      int x, y, width, height;
-      char buf[3];
+      gdk_draw_arc (clock->backing_pixmap, gc, TRUE,
+		    clock->x_offset, clock->y_offset,
+		    clock->radius * 2, clock->radius * 2,
+		    0, 360 * 64);
+  
+      gdk_draw_arc (clock->backing_pixmap, white_gc, TRUE,
+		    clock->x_offset + clock->border, clock->y_offset + clock->border,
+		    (clock->radius - clock->border) * 2, (clock->radius - clock->border) * 2,
+		    0, 360 * 64);
 
-      angle = 2 * M_PI * i / 12;
-      
-      dx = sin (angle) * (clock->radius - border - 10);
-      dy = -cos (angle) * (clock->radius - border - 10);
+      if (clock->label_hours)
+	{
+	  PangoLayout *pl;
+	  int i;
+  
+	  pl = gtk_widget_create_pango_layout (widget, "");
 
-      x = clock->x_offset + clock->radius + dx;
-      y = clock->y_offset + clock->radius + dy;
+	  for (i = 0; i < 12; i++)
+	    {
+	      double angle, dx, dy;
+	      int x, y, width, height;
+	      char buf[3];
+	      
+	      angle = 2 * M_PI * i / 12;
+	      
+	      dx = sin (angle) * (clock->radius - clock->border - 10);
+	      dy = -cos (angle) * (clock->radius - clock->border - 10);
 
-      sprintf (buf, "%d", afternoon ? (i + 12) : i);
+	      x = clock->x_offset + clock->radius + dx;
+	      y = clock->y_offset + clock->radius + dy;
 
-      pango_layout_set_text (pl, buf, strlen (buf));
-      pango_layout_get_size (pl, &width, &height);
-      width /= PANGO_SCALE;
-      height /= PANGO_SCALE;
+	      sprintf (buf, "%d", afternoon ? (i + 12) : i);
 
-      gtk_paint_layout (widget->style,
-			clock->backing_pixmap,
-			GTK_WIDGET_STATE (widget),
-			FALSE,
-			NULL,
-			widget,
-			"label",
-			x - (width / 2), y - (height / 2), pl);
+	      pango_layout_set_text (pl, buf, strlen (buf));
+	      pango_layout_get_size (pl, &width, &height);
+	      width /= PANGO_SCALE;
+	      height /= PANGO_SCALE;
+
+	      gtk_paint_layout (widget->style,
+				clock->backing_pixmap,
+				GTK_WIDGET_STATE (widget),
+				FALSE,
+				NULL,
+				widget,
+				"label",
+				x - (width / 2), y - (height / 2), pl);
+	    }
+	  
+	  g_object_unref (pl);
+	}
     }
-
-  g_object_unref (pl);
-#endif
-
-  gdk_pixbuf_render_to_drawable (day_night_wheel, 
-				 clock->backing_pixmap, 
-				 clock->backing_gc, 
-				 0, 0, 
-				 (clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2), 
-				 (clock->y_offset + clock->radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2), 
-				 -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
-
-  gdk_draw_arc (clock->backing_pixmap, 
-		widget->style->white_gc, TRUE,
-		((clock->x_offset + clock->radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2)) - 2,
-		((clock->y_offset + clock->radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2)) - 2,
-		gdk_pixbuf_get_width (day_night_wheel) + 4,
-		gdk_pixbuf_get_height (day_night_wheel) + 4,
-		(gtk_adjustment_get_value (clock->hour_adj) * -360 / 24) * 64
-		+ gtk_adjustment_get_value (clock->minute_adj) * -(360 * 64 / 24) / 60,
-		180 * 64);
 
   if (clock->second_adj != NULL)
     draw_hand (clock, clock->second_angle, 7 * clock->radius / 8, 1);
-  draw_hand (clock, clock->minute_angle, 7 * clock->radius / 8, 3);
-  draw_hand (clock, clock->hour_angle, 3 * clock->radius / 5, 3);
+  draw_hand (clock, clock->minute_angle, 7 * clock->radius / 8, clock->hand_width);
+  draw_hand (clock, clock->hour_angle, 3 * clock->radius / 5, clock->hand_width);
 
   gdk_draw_drawable (drawable, gc, clock->backing_pixmap, 0, 0, 0, 0, 
 		     widget->allocation.width, widget->allocation.height);
@@ -681,6 +689,10 @@ gpe_clock_face_init (GpeClockFace *clock)
   gtk_widget_set_double_buffered (GTK_WIDGET (clock), FALSE);
 
   clock->radius = DEFAULT_RADIUS;
+  clock->border = DEFAULT_BORDER;
+  clock->use_background_image = TRUE;
+  clock->label_hours = FALSE;
+  clock->hand_width = 1;
 
 #ifdef HAVE_XRENDER
   clock->draw = NULL;
@@ -721,6 +733,26 @@ void
 gpe_clock_face_set_do_grabs (GpeClockFace *clock, gboolean yes)
 {
   clock->do_grabs = yes;
+}
+
+void
+gpe_clock_face_set_radius (GpeClockFace *clock, guint radius)
+{
+  clock->radius = radius;
+  if (clock->radius != DEFAULT_RADIUS)
+    clock->use_background_image = FALSE;
+}
+
+void
+gpe_clock_face_set_use_background_image (GpeClockFace *clock, gboolean yes)
+{
+  clock->use_background_image = yes;
+}
+
+void
+gpe_clock_face_set_label_hours (GpeClockFace *clock, gboolean yes)
+{
+  clock->label_hours = yes;
 }
 
 GType
