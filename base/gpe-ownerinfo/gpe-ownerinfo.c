@@ -12,9 +12,11 @@
 #include <string.h>
 #include <getopt.h>
 #include <ctype.h>
-#include <unistd.h> /* for access() */
 #include <libintl.h>
 #include <locale.h>
+#include <sys/types.h> /* for getpwnam() */
+#include <pwd.h>       /* for getpwnam() */
+#include <unistd.h>    /* for access() */
 
 #include <X11/Xlib.h>
 
@@ -349,6 +351,7 @@ translate_name_label (GtkWidget *namelabel, gpointer data)
 int
 main (int argc, char *argv[])
 {
+  struct passwd *pwd;
   gchar *package_revision = "$Revision$";
   
   GtkWidget *GPE_Ownerinfo;
@@ -386,9 +389,21 @@ main (int argc, char *argv[])
 
   /* TRANSLATORS: please replace this with the Pango code for your own language */
   pango_lang_code = g_strdup (_("en"));
+
+  /* drop root privileges */
+  pwd = getpwnam ("nobody");
+  if (pwd == NULL) {
+    fprintf (stderr, "getpwnam call failed. Exiting.\n");
+    exit (1);
+  }
+  else {
+    if (!seteuid (pwd->pw_uid)) {
+      perror ("seteuid call failed. Exiting.");
+      exit (1);
+    }
+  }
   
   setlocale (LC_ALL, "");
-
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
   bind_textdomain_codeset (PACKAGE, "UTF-8");

@@ -1,3 +1,8 @@
+2003-03-07  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-ownerinfo.c (main): Drop root privileges (seteuid to
+	'nobody').
+
 2003-03-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/hu.po: Update with an abbreviation for the translation for
