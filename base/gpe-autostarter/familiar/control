@@ -1,6 +1,6 @@
 Package: gpe-autostarter
 Version: VERSION
-Architecture: all
+Architecture: arm
 Section: base
 Priority: optional
 Maintainer: Phil Blundell <pb@debian.org>

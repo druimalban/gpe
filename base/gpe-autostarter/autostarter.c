@@ -41,6 +41,7 @@ handle_net_wlan (char *action, char *interface)
       if (pid == 0)
 	{
 	  execlp ("miniwave", "miniwave", NULL);
+	  perror ("miniwave");
 	  _exit (1);
 	}
 
@@ -79,8 +80,6 @@ handle_net_message (DBusMessage *message, DBusMessageIter *iter)
     return;
 
   interface = dbus_message_iter_get_string (iter);
-
-  printf ("net %s %s\n", action, interface);
 
   if (! strncmp (interface, "wlan", 4))
     handle_net_wlan (action, interface);
