@@ -171,8 +171,8 @@ main (int argc, char **argv)
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
   g_signal_connect (G_OBJECT (slider_window), "button-press-event", G_CALLBACK (slider_clicked), NULL);
 
-  gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
-  gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK);
+  gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_widget_show (slider);
 
