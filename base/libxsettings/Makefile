@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = libxsettings0
-DEBUG = yes
+DEBUG = no
 
 .SUFFIXES: .os
 
