@@ -45,6 +45,8 @@ struct gpe_icon my_icons[] = {
   { "copy", "copy" },
   { "paste", "paste" },
   { "exit", "exit" },
+  { "dir-closed", "dir-closed" },
+  { "dir-up", "dir-up" },
   { "ok", "ok" },
   { "cancel", "cancel" },
   {NULL, NULL}

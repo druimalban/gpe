@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <libgen.h>
 
+#include "render.h"
+#include "pixmaps.h"
 #include "gtkminifilesel.h"
 #include "picturebutton.h"
 
@@ -137,21 +139,23 @@ set_directory_menu (GtkWidget *option, char *dir, GtkMiniFileSelection *fs)
 }
 
 static void
-set_members (GtkWidget *clist, char *directory)
+set_members (GtkMiniFileSelection *fs)
 {
   struct dirent *d;
   DIR *dir;
   GSList *files = NULL, *subdirs = NULL, *iter;
-  gchar *buf = g_malloc (strlen (directory) + 256 + 2);
+  gchar *buf = g_malloc (strlen (fs->directory) + 256 + 2);
   gchar *fp;
   gchar *text[2];
+  GdkPixmap *pix;
+  GdkBitmap *mask;
  
-  gtk_clist_clear (GTK_CLIST (clist));
+  gtk_clist_clear (GTK_CLIST (fs->clist));
 
-  sprintf (buf, "%s/", directory);
-  fp = buf + strlen (directory) + 1;
+  sprintf (buf, "%s/", fs->directory);
+  fp = buf + strlen (fs->directory) + 1;
 
-  dir = opendir (directory);
+  dir = opendir (fs->directory);
   if (dir)
     {
       while (d = readdir (dir), d != NULL)
@@ -165,7 +169,7 @@ set_members (GtkWidget *clist, char *directory)
 		  if (strcmp (d->d_name, "..") && strcmp (d->d_name, "."))
 		    {
 		      gchar *fn = g_malloc (strlen (d->d_name) + 3);
-		      sprintf (fn, "[%s]", d->d_name);
+		      sprintf (fn, "%s", d->d_name);
 		      subdirs = g_slist_append (subdirs, fn);
 		    }
 		}
@@ -182,22 +186,28 @@ set_members (GtkWidget *clist, char *directory)
   subdirs = g_slist_sort (subdirs, (GCompareFunc)strcoll);
   files = g_slist_sort (files, (GCompareFunc)strcoll);
 
-  if (strcmp (directory, "/") != 0)
+  gpe_find_icon_pixmap ("dir-up", &pix, &mask);
+
+  if (strcmp (fs->directory, "/") != 0)
     {
       guint row;
       text[0] = NULL;
-      text[1] = "[..]";
-      row = gtk_clist_append (GTK_CLIST (clist), text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)2);
+      text[1] = NULL;
+      row = gtk_clist_append (GTK_CLIST (fs->clist), text);
+      gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, pix, mask);
+      gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)2);
     }
+
+  gpe_find_icon_pixmap ("dir-closed", &pix, &mask);
 
   for (iter = subdirs; iter; iter = iter->next)
     {
       guint row;
       text[1] = iter->data;
       text[0] = NULL;
-      row = gtk_clist_append (GTK_CLIST (clist), text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)1);
+      row = gtk_clist_append (GTK_CLIST (fs->clist), text);
+      gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, pix, mask);
+      gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)1);
       g_free (iter->data);
     }
   for (iter = files; iter; iter = iter->next)
@@ -205,8 +215,8 @@ set_members (GtkWidget *clist, char *directory)
       guint row;
       text[1] = iter->data;
       text[0] = NULL;
-      row = gtk_clist_append (GTK_CLIST (clist), text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer)0);
+      row = gtk_clist_append (GTK_CLIST (fs->clist), text);
+      gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)0);
       g_free (iter->data);
     }
 
@@ -221,7 +231,7 @@ set_directory (GtkMiniFileSelection *fs, char *directory)
   fs->directory = directory;
 
   set_directory_menu (fs->option, fs->directory, fs);
-  set_members (fs->clist, fs->directory);
+  set_members (fs);
 }
 
 static void 
@@ -305,6 +315,7 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   fs->clist = gtk_clist_new (2);
+  gtk_clist_set_column_width (GTK_CLIST (fs->clist), 0, 12);
   gtk_widget_show (fs->clist);
   gtk_container_add (GTK_CONTAINER (scrolled), fs->clist);
 
