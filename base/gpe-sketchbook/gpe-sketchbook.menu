@@ -1,7 +1,8 @@
-?package(gpe-sketchbook):\
- needs=x11\
- section=Applications\
- title=Sketchbook\
- icon48=gpe-sketchbook.png\
- command=gpe-sketchbook\
+?package(gpe-sketchbook): \
+ needs=x11 \
+ section=Graphics \
+ title=Sketchbook \
+ logtitle=Sketchbook \
+ icon48=/usr/share/pixmaps/gpe-sketchbook.png \
+ command=gpe-sketchbook \
  windowtitle=gpe-sketchbook

@@ -1,0 +1,6 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-sketchbook.menu: Give full path for icon. Move to section
+	Graphics (to conform to
+	http://familiar.handhelds.org/policy/menu.html)
+
