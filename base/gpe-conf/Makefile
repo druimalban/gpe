@@ -11,7 +11,7 @@ MACHINE = unknown
 
 CFLAGS += -MD
 
-LINGUAS = pt ro de fr cs nl sv sk ru pt_BR zh_CN
+LINGUAS = pt ro de fr cs nl sv sk ru pt_BR zh_CN vi
 
 ifeq ($(MACHINE),h3600)
 PACKAGE_CPPFLAGS += -DMACH_IPAQ

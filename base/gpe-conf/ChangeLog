@@ -1,5 +1,6 @@
 2005-02-18	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* po/vi.po: Add Vietnamese translation. Update other translations.
 	* keyctl.c: Started to write a dynamic layout loader.
 	            Removed old cruft, fixed issues in command definition loader.
 
