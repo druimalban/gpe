@@ -1,5 +1,24 @@
 2002-08-30  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (struct edit_state): Delete "old_alarm".
+	(click_ok): Replace test of s->old_alarm with direct inspection of
+	ev->flags.
+	(edit_event): Don't set s->old_alarm;
+	(new_event): Likewise.
+	(recalculate_sensitivities): Fix formatting.
+
+2002-08-30  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (click_ok): Reuse old event structure when modifying
+	an existing event.
+	* event-db.c (event_db_write): New function.
+	(event_db_flush): Likewise.
+	(event_db_add): Use event_db_write.
+	(insert_values): Expect err as char**.
+	* event-db.h (event_db_flush): New prototype.
+
+2002-08-30  Philip Blundell  <philb@gnu.org>
+
 	* event-db.h (FLAG_TENTATIVE): New.
 	(calendar_time_t): New type.
 	(event_t): Delete "confirmed".  Change type of "start" to 

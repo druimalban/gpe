@@ -451,16 +451,86 @@ event_db_list_destroy (GSList *l)
 
 #define insert_values(db, id, key, format, value)	\
 	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" ## format ## "')", \
-			    NULL, NULL, &err, id, key, value)
+			    NULL, NULL, err, id, key, value)
+
+/* Dump out an event to the SQL database */
+static gboolean
+event_db_write (event_t ev, char **err)
+{
+  time_t modified;
+  char buf_start[256], buf_end[256], buf_modified[256];
+  struct tm tm;
+
+  gmtime_r (&ev->start, &tm);
+  strftime (buf_start, 256, 
+	    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
+	    &tm);  
+
+  modified = time (NULL);
+  gmtime_r (&modified, &tm);
+  strftime (buf_modified, 256, "%Y-%m-%d %H:%M:%S", &tm); 
+
+  if (insert_values (sqliteh, ev->uid, "summary", "%q", ev->details->summary)
+      || insert_values (sqliteh, ev->uid, "description", "%q", ev->details->description)
+      || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
+      || insert_values (sqliteh, ev->uid, "recur", "%d", ev->recur.type)
+      || insert_values (sqliteh, ev->uid, "rcount", "%d", ev->recur.count)
+      || insert_values (sqliteh, ev->uid, "rincrement", "%d", ev->recur.increment)
+      || insert_values (sqliteh, ev->uid, "rdaymask", "%d", ev->recur.daymask)
+      || insert_values (sqliteh, ev->uid, "modified", "%q", buf_modified)
+      || insert_values (sqliteh, ev->uid, "start", "%q", buf_start))
+    return FALSE;
+
+  if (ev->recur.end != 0)
+    {
+      gmtime_r (&ev->recur.end, &tm);
+      strftime (buf_end, 256, 
+        	(ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
+        	&tm); 
+      if (insert_values (sqliteh, ev->uid, "rend", "%q", buf_end)) 
+        return FALSE;
+    }
+
+  if (ev->flags & FLAG_ALARM)
+    {
+      if (insert_values (sqliteh, ev->uid, "alarm", "%d", ev->alarm))
+	return FALSE;
+    }
+
+  return TRUE;
+}
+
+gboolean
+event_db_flush (event_t ev)
+{
+  char *err;
+
+  if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
+    goto error;
+
+  if (sqlite_exec_printf (sqliteh, "delete from calendar where uid=%d", NULL, NULL, &err,
+			  ev->uid))
+    goto error;
+
+  if (event_db_write (ev, &err) == FALSE
+      || sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
+    goto error_and_rollback;
+
+  return TRUE;
+
+ error_and_rollback:
+  sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
+ error:
+  gpe_error_box (err);
+  free (err);
+  return FALSE;
+}
 
 /* Add an event to both the in-memory list and the SQL database */
 gboolean
 event_db_add (event_t ev)
 {
-  time_t modified;
   char *err;
-  char buf_start[256],buf_end[256],buf_modified[256];
-  struct tm tm;
   gboolean rollback = FALSE;
 
   if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
@@ -480,43 +550,8 @@ event_db_add (event_t ev)
       goto error;
     }
 
-  gmtime_r (&ev->start, &tm);
-  strftime (buf_start, 256, 
-	    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
-	    &tm);  
-
-  modified=time(NULL);
-  gmtime_r (&modified, &tm);
-  strftime (buf_modified, 256, "%Y-%m-%d %H:%M:%S", &tm); 
-
-  if (insert_values (sqliteh, ev->uid, "summary", "%q", ev->details->summary)
-      || insert_values (sqliteh, ev->uid, "description", "%q", ev->details->description)
-      || insert_values (sqliteh, ev->uid, "duration", "%d", ev->duration)
-      || insert_values (sqliteh, ev->uid, "recur", "%d", ev->recur.type)
-      || insert_values (sqliteh, ev->uid, "rcount", "%d", ev->recur.count)
-      || insert_values (sqliteh, ev->uid, "rincrement", "%d", ev->recur.increment)
-      || insert_values (sqliteh, ev->uid, "rdaymask", "%d", ev->recur.daymask)
-      || insert_values (sqliteh, ev->uid, "modified", "%q", buf_modified)
-      || insert_values (sqliteh, ev->uid, "start", "%q", buf_start))
-    goto error;
-
-  if (ev->recur.end != 0)
-    {
-      gmtime_r (&ev->recur.end, &tm);
-      strftime (buf_end, 256, 
-        	(ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
-        	&tm); 
-      if (insert_values (sqliteh, ev->uid, "rend", "%q", buf_end)) 
-        goto error; 
-    }
-
-  if (ev->flags & FLAG_ALARM)
-    {
-      if (insert_values (sqliteh, ev->uid, "alarm", "%d", ev->alarm))
-	goto error;
-    }
-
-  if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
+  if (event_db_write (ev, &err) == FALSE
+      || sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
     goto error;
 
   return TRUE;

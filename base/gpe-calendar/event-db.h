@@ -32,6 +32,13 @@ typedef struct event_details_s
 #define FLAG_ALARM     (1 << 1)
 #define FLAG_TENTATIVE (1 << 2)
 
+struct calendar_time_s
+{
+  u_int16_t year;
+  u_int8_t month, day;
+  u_int8_t hour, minute;
+};
+
 typedef time_t calendar_time_t;
 
 typedef struct event_s
@@ -64,6 +71,8 @@ extern gboolean event_db_stop (void);
 
 extern gboolean event_db_add (event_t);
 extern gboolean event_db_remove (event_t);
+
+extern gboolean event_db_flush (event_t ev);
 
 extern event_t event_db_new (void);
 extern void event_db_destroy (event_t);

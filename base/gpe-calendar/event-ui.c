@@ -30,7 +30,6 @@
 
 struct edit_state
 {
-  gboolean old_alarm;
   GtkWidget *deletebutton;
 
   GtkWidget *startdate, *enddate;
@@ -62,11 +61,11 @@ struct edit_state
 };
 
 static void
-gtk_box_pack_start_show(GtkBox *box,
-			GtkWidget *child,
-			gboolean expand,
-			gboolean fill,
-			guint padding)
+gtk_box_pack_start_show (GtkBox *box,
+			 GtkWidget *child,
+			 gboolean expand,
+			 gboolean fill,
+			 guint padding)
 {
   gtk_widget_show (child);
   gtk_box_pack_start (box, child, expand, fill, padding);
@@ -79,8 +78,8 @@ destroy_user_data (gpointer p)
 }
 
 static void
-recalculate_sensitivities(GtkWidget *widget,
-			  GtkWidget *d)
+recalculate_sensitivities (GtkWidget *widget,
+			   GtkWidget *d)
 {
   struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
 
@@ -148,41 +147,41 @@ recalculate_sensitivities(GtkWidget *widget,
 	  gtk_widget_set_sensitive (s->endlabel, 0);
 	  gtk_widget_set_sensitive (s->datecomboendon, 1);
   	}
-  
-  	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
-					  (s->radiobuttondaily))) 
-	  gtk_widget_show (s->dailybox);
-	else
-	  gtk_widget_hide (s->dailybox);
-
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
-					  (s->radiobuttonweekly))) 
-	  gtk_widget_show (s->weeklybox);
-	else
-	  gtk_widget_hide (s->weeklybox);
-
-  	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
-					  (s->radiobuttonmonthly))) 
-	  gtk_widget_show (s->monthlybox);
-	else
-	  gtk_widget_hide (s->monthlybox);
-	
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
-					  (s->radiobuttonyearly))) 
-	  gtk_widget_show (s->yearlybox);
-	else
-	  gtk_widget_hide (s->yearlybox);
+      
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					(s->radiobuttondaily))) 
+	gtk_widget_show (s->dailybox);
+      else
+	gtk_widget_hide (s->dailybox);
+      
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					(s->radiobuttonweekly))) 
+	gtk_widget_show (s->weeklybox);
+      else
+	gtk_widget_hide (s->weeklybox);
+      
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					(s->radiobuttonmonthly))) 
+	gtk_widget_show (s->monthlybox);
+      else
+	gtk_widget_hide (s->monthlybox);
+      
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					(s->radiobuttonyearly))) 
+	gtk_widget_show (s->yearlybox);
+      else
+	gtk_widget_hide (s->yearlybox);
     }
 }
 
 static void
-schedule_alarm(event_t ev)
+schedule_alarm (event_t ev)
 {
   	      
 }
 
 static void
-unschedule_alarm(gint uid)
+unschedule_alarm (gint uid)	/* FIXME.  This should be event_t too.  --pb */
 {
   
 }
@@ -210,20 +209,24 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   event_details_t ev_d;
   struct tm tm_start, tm_end, tm_rend;
   time_t start_t, end_t, rend_t;
+  gboolean new_event = FALSE;
 
   if (s->ev) 
     {
-      if (s->old_alarm) 
-	unschedule_alarm (s->ev->uid);
-      event_db_remove (s->ev);
-      event_db_destroy (s->ev);
+      ev = s->ev;
+      ev_d = event_db_get_details (ev);
+      if (ev->flags & FLAG_ALARM) 
+	unschedule_alarm (ev->uid);
     }
-  
-  ev = event_db_new ();
-  ev_d = event_db_alloc_details (ev);
+  else
+    {
+      ev = event_db_new ();
+      ev_d = event_db_alloc_details (ev);
+      new_event = TRUE;
+    }
 
-  memset(&tm_start, 0, sizeof (struct tm));
-  memset(&tm_end, 0, sizeof (struct tm));
+  memset (&tm_start, 0, sizeof (struct tm));
+  memset (&tm_end, 0, sizeof (struct tm));
 
   tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
   tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
@@ -278,10 +281,18 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   ev->start = start_t;
   ev->duration = end_t - start_t;
       
+  if (ev_d->description)
+    g_free (ev_d->description);
+
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
 						     0, -1);
+
+  if (ev_d->summary)
+    g_free (ev_d->summary);
+
   ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 
 					  0, -1);
+
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
       ev->flags |= FLAG_ALARM;
@@ -355,31 +366,33 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       else if (gtk_toggle_button_get_active 
 	       (GTK_TOGGLE_BUTTON (s->radiobuttonendon))) 
 	{
-	   char *rend = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
-							(s->endtime)->entry),
-					  0, -1);
-           memset(&tm_rend, 0, sizeof (struct tm));
-	   
-	   tm_rend.tm_year = GTK_DATE_COMBO (s->datecomboendon)->year - 1900;
-  	   tm_rend.tm_mon = GTK_DATE_COMBO (s->datecomboendon)->month;
-	   tm_rend.tm_mday = GTK_DATE_COMBO (s->datecomboendon)->day;
-
-	   strptime (rend, TIMEFMT, &tm_rend);
-      
-           g_free (rend);
-	   
-  	   rend_t = mktime (&tm_rend);
-	   
-	   /* If DST was in effect, mktime will have "helpfully" incremented the
-               hour.  */
-           if (tm_rend.tm_isdst) rend_t -= 60*60;
-	   ev->recur.count=0;
-           ev->recur.end=rend_t;
+	  char *rend = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
+							     (s->endtime)->entry),
+					       0, -1);
+	  memset(&tm_rend, 0, sizeof (struct tm));
+	  
+	  tm_rend.tm_year = GTK_DATE_COMBO (s->datecomboendon)->year - 1900;
+	  tm_rend.tm_mon = GTK_DATE_COMBO (s->datecomboendon)->month;
+	  tm_rend.tm_mday = GTK_DATE_COMBO (s->datecomboendon)->day;
+	  
+	  strptime (rend, TIMEFMT, &tm_rend);
+	  
+	  g_free (rend);
+	  
+	  rend_t = mktime (&tm_rend);
+	  
+	  /* If DST was in effect, mktime will have "helpfully" incremented the
+	     hour.  */
+	  if (tm_rend.tm_isdst) rend_t -= 60*60;
+	  ev->recur.count=0;
+	  ev->recur.end=rend_t;
   	}
     }
     
-  if (event_db_add (ev) == FALSE)
-    event_db_destroy (ev);
+  if (new_event)
+    event_db_add (ev);
+  else
+    event_db_flush (ev);
 
   if (ev->flags & FLAG_ALARM)  
     schedule_alarm (ev);
@@ -391,15 +404,15 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 }
 
 static void
-click_cancel(GtkWidget *widget,
-	   GtkWidget *d)
+click_cancel (GtkWidget *widget,
+	      GtkWidget *d)
 {
   gtk_widget_hide (d);
   gtk_widget_destroy (d);
 }
 
 static GtkWidget *
-edit_event_window(void)
+edit_event_window (void)
 {
   static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
 				  ABDAY_6, ABDAY_7, ABDAY_1 };
@@ -887,7 +900,7 @@ edit_event_window(void)
 }
 
 GtkWidget *
-new_event(time_t t, guint timesel)
+new_event (time_t t, guint timesel)
 {
   GtkWidget *w = edit_event_window ();
   
@@ -898,7 +911,6 @@ new_event(time_t t, guint timesel)
       struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
 						  "edit_state");
       s->ev = NULL;
-      s->old_alarm=FALSE;
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
       
       localtime_r (&t, &tm);
@@ -919,7 +931,7 @@ new_event(time_t t, guint timesel)
 }
 
 GtkWidget *
-edit_event(event_t ev)
+edit_event (event_t ev)
 {
   GtkWidget *w = edit_event_window ();
   event_details_t evd;
@@ -956,15 +968,12 @@ edit_event(event_t ev)
       
       if (ev->flags & FLAG_ALARM) 
 	{
-	  s->old_alarm = TRUE;
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), 
 					TRUE);
 	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), 
 				     ev->alarm);
 	  
 	}
-      else 
-	s->old_alarm = FALSE;
 
       switch (ev->recur.type)
 	{

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar\n"
-"POT-Creation-Date: 2002-08-26 18:29+0100\n"
+"POT-Creation-Date: 2002-08-30 22:18+0100\n"
 "PO-Revision-Date: 2002-06-14 20:14+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -45,168 +45,168 @@ msgstr "Jahresansicht"
 msgid "Exit"
 msgstr "Beenden"
 
-#: event-ui.c:280
+#: event-ui.c:276
 msgid "End time must not be earlier than start time"
 msgstr ""
 
-#: event-ui.c:351
+#: event-ui.c:437
 msgid "Event"
 msgstr "Ereignis"
 
-#: event-ui.c:352
+#: event-ui.c:438
 msgid "Recurrence"
 msgstr "Wiederholung"
 
-#: event-ui.c:353 event-ui.c:394
+#: event-ui.c:439 event-ui.c:480
 msgid "Alarm"
 msgstr "Alarm"
 
-#: event-ui.c:378
+#: event-ui.c:464
 msgid "Start on:"
 msgstr "Beginn:"
 
-#: event-ui.c:379
+#: event-ui.c:465
 msgid "End on:"
 msgstr "Ende:"
 
-#: event-ui.c:380 event-ui.c:381
+#: event-ui.c:466 event-ui.c:467
 msgid "at:"
 msgstr "Zeit:"
 
-#: event-ui.c:385
+#: event-ui.c:471
 msgid "Summary:"
 msgstr "Zusammenfassung:"
 
-#: event-ui.c:387
+#: event-ui.c:473
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: event-ui.c:390
+#: event-ui.c:476
 msgid "All-day event"
 msgstr "Am ganzen Tag"
 
-#: event-ui.c:399
+#: event-ui.c:485
 msgid "before event"
 msgstr "vor Ereignis"
 
-#: event-ui.c:434
-msgid "Save"
-msgstr "Speichern"
-
-#: event-ui.c:435
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: event-ui.c:436
-msgid "Delete"
-msgstr "Löschen"
-
-#: event-ui.c:464
-msgid "Type:"
-msgstr "Typ:"
-
-#: event-ui.c:473
-msgid "No recurrence"
-msgstr "Keine Wiederholung"
-
-#: event-ui.c:479
-msgid "Daily"
-msgstr "Täglich"
-
-#: event-ui.c:484
-msgid "Weekly"
-msgstr "Wöchentlich"
-
-#: event-ui.c:490
-msgid "Monthly"
-msgstr "Monatlich"
-
-#: event-ui.c:495
-msgid "Yearly"
-msgstr "Jährlich"
-
-#: event-ui.c:518 event-ui.c:539 event-ui.c:594 event-ui.c:662
+#: event-ui.c:488 event-ui.c:622 event-ui.c:677 event-ui.c:736
 msgid "Every"
 msgstr "Jeden"
 
-#: event-ui.c:528 event-ui.c:746
-msgid "day(s)"
-msgstr "Tag(e)"
-
-#: event-ui.c:540
+#: event-ui.c:489
 msgid "week(s), on:"
 msgstr "Woche(n), am:"
 
-#: event-ui.c:605 event-ui.c:750
+#: event-ui.c:538
+msgid "Save"
+msgstr "Speichern"
+
+#: event-ui.c:539
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: event-ui.c:540
+msgid "Delete"
+msgstr "Löschen"
+
+#: event-ui.c:568
+msgid "Type:"
+msgstr "Typ:"
+
+#: event-ui.c:577
+msgid "No recurrence"
+msgstr "Keine Wiederholung"
+
+#: event-ui.c:583
+msgid "Daily"
+msgstr "Täglich"
+
+#: event-ui.c:588
+msgid "Weekly"
+msgstr "Wöchentlich"
+
+#: event-ui.c:594
+msgid "Monthly"
+msgstr "Monatlich"
+
+#: event-ui.c:599
+msgid "Yearly"
+msgstr "Jährlich"
+
+#: event-ui.c:632 event-ui.c:820
+msgid "day(s)"
+msgstr "Tag(e)"
+
+#: event-ui.c:688 event-ui.c:824
 msgid "month(s)"
 msgstr "Monat(e)"
 
-#: event-ui.c:610
+#: event-ui.c:693
 #, c-format
 msgid "on day %d"
 msgstr "am Tag %d"
 
-#: event-ui.c:615
+#: event-ui.c:698
 msgid "on the"
 msgstr "am"
 
-#: event-ui.c:631
+#: event-ui.c:706
 msgid "first"
 msgstr "erster"
 
-#: event-ui.c:633
+#: event-ui.c:708
 msgid "second"
 msgstr "zweiter"
 
-#: event-ui.c:635
+#: event-ui.c:710
 msgid "third"
 msgstr "dritter"
 
-#: event-ui.c:637
+#: event-ui.c:712
 msgid "fourth"
 msgstr "vierter"
 
-#: event-ui.c:639
+#: event-ui.c:714
 msgid "fifth"
 msgstr "fünfter"
 
-#: event-ui.c:641
+#: event-ui.c:716
 msgid "last"
 msgstr "letzter"
 
-#: event-ui.c:672 event-ui.c:752
+#: event-ui.c:746 event-ui.c:826
 msgid "year(s)"
 msgstr "Jahr(e)"
 
-#: event-ui.c:685
+#: event-ui.c:759
 msgid "End Date:"
 msgstr "Enddatum:"
 
-#: event-ui.c:692
+#: event-ui.c:766
 msgid "forever"
 msgstr "für immer"
 
-#: event-ui.c:704
+#: event-ui.c:778
 msgid "end after"
 msgstr "Ende nach"
 
-#: event-ui.c:721
+#: event-ui.c:795
 msgid "end on"
 msgstr "Ende am"
 
-#: event-ui.c:729
+#: event-ui.c:803
 msgid "event(s)"
 msgstr "Ereignis(sen)"
 
-#: event-ui.c:742
+#: event-ui.c:816
 msgid "minute(s)"
 msgstr "Minute(n)"
 
-#: event-ui.c:744
+#: event-ui.c:818
 msgid "hour(s)"
 msgstr "Stunde(n)"
 
-#: event-ui.c:748
+#: event-ui.c:822
 msgid "week(s)"
 msgstr "Woche(n)"
 
