@@ -15,7 +15,7 @@ CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = teleport crypt displays keygen
+MEMBERS = teleport crypt displays tp-keygen
 
 CFLAGS += -I../libdisplaymigration `libgcrypt-config --cflags`
 LDFLAGS += -L../libdisplaymigration -ldisplaymigration `libgcrypt-config --libs`
