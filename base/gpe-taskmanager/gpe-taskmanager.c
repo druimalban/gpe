@@ -29,7 +29,7 @@
 
 struct gpe_icon my_icons[] = {
   { "icon", PREFIX "/share/pixmaps/gpe-taskmanager.png" },
-  { "kill", "gpe-taskmanager/xkill.png" },
+  { "kill", "gpe-taskmanager/xkill" },
   { NULL, NULL }
 };
 
@@ -232,9 +232,13 @@ task_manager (void)
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
 
-  list_store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_POINTER);
+  list_store = gtk_list_store_new (3, G_TYPE_STRING, G_TYPE_INT, G_TYPE_OBJECT);
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), FALSE);
+
+  renderer = gtk_cell_renderer_pixbuf_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("Icon"), renderer, "pixbuf", 2, NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes (_("Running programs"), renderer,

@@ -41,8 +41,8 @@ install: all install-mo
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
-	install -d $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-taskmanager
-	install -m 644 xkill.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-taskmanager/
+	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-taskmanager
+	install -m 644 xkill.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-taskmanager/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
