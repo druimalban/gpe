@@ -1,5 +1,6 @@
 2004-08-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* Released Version 0.1.13
 	* applets.c, suid.*: Checks for empty root password now and supresses
 	                     dialog in this case.
 
