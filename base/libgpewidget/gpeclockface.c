@@ -174,9 +174,6 @@ gpe_clock_face_expose (GtkWidget *widget,
   GdkGC *white_gc;
 #ifdef BACKGROUND_IMAGE
   GdkRectangle pixbuf_rect, intersect_rect;
-#ifndef HAVE_XRENDER
-  GdkGC *tmp_gc;
-#endif
   GdkPixbuf *current_background;
 #else
   int i;
@@ -342,22 +339,11 @@ gpe_clock_face_button_press (GtkWidget *w, GdkEventButton *b)
   double start_angle = angle_from_xy (x_start, y_start);
   double hour_angle = ((int)gtk_adjustment_get_value (clock->hour_adj) % 12) * 2 * M_PI / 12;
   double minute_angle = gtk_adjustment_get_value (clock->minute_adj) * 2 * M_PI / 60;
-  double second_angle;
 
-  if (clock->second_adj != NULL)
-    second_angle = gtk_adjustment_get_value (clock->second_adj) * 2 * M_PI / 60;
-  else
-    second_angle = 0; /* just to avoid gcc warning */
-  
   hour_angle -= start_angle;
   minute_angle -= start_angle;
-  if (hour_angle < 0)
-    hour_angle = -hour_angle;
-  if (clock->second_adj != NULL) {
-    second_angle -= start_angle;
-    if (second_angle < 0)
-      second_angle = -second_angle;
-  }
+  hour_angle = fabs (hour_angle);
+  minute_angle = fabs (minute_angle);
 
   if (r > (clock->radius * 3 / 5) || (minute_angle < hour_angle))
     clock->dragging_minute_hand = TRUE;
@@ -427,7 +413,16 @@ gpe_clock_face_motion_notify (GtkWidget *w, GdkEventMotion *m)
     }
   else
     {
+      double old_val = gtk_adjustment_get_value (clock->hour_adj);
+
       val = 12 * angle / (2 * M_PI);
+
+      if ((((old_val > 9 && val < 3)               /* dragging forwards over midday */
+	    || (old_val > 12                       /* still in the afternoon */
+		&& ! (old_val < 15 && val > 9)))   /* dragging backwards over midday */
+	   && ! (old_val > 21 && val < 3))         /* dragging forwards over midnight */
+	  || (old_val < 3 && val > 9))             /* dragging backwards over midnight */
+	val += 12;
 
       gtk_adjustment_set_value (clock->hour_adj, val);
     }
