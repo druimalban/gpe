@@ -31,6 +31,8 @@
 #include "support.h"
 
 GtkWidget	*GPE_WLANCFG;
+static struct gpe_icon icon = {"icon", PREFIX "/share/pixmaps/gpe-wlancfg.png"};
+
 
 int main (int argc, char *argv[])
 {
@@ -38,8 +40,9 @@ int main (int argc, char *argv[])
 	GtkListStore	*liststore;
 	GtkTreeView	*treeview;
 	GtkTreeViewColumn *tcolumn;
-	GtkCellRenderer *renderer;	
-	
+	GtkCellRenderer *renderer;
+	GdkPixmap 	*pmap;
+	GdkBitmap 	*bmap;
 
 	setlocale (LC_ALL, "");
 
@@ -55,6 +58,10 @@ int main (int argc, char *argv[])
 
 	GPE_WLANCFG = create_GPE_WLANCFG ();
   
+	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+		gdk_window_set_icon (GPE_WLANCFG->window, NULL, pmap, bmap);
+
+	
 	treeview=GTK_TREE_VIEW(lookup_widget(GPE_WLANCFG, "tvSchemeList"));
 	
 	liststore=gtk_list_store_new(5, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_POINTER);

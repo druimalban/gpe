@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=WLAN config
+Comment=GPE WLAN config
+Exec=gpe-wlancfg
+Terminal=0
+Type=Application
+Icon=gpe-wlancfg.png
+Categories=Application;Configuration;GPE
+StartupNotify=False
