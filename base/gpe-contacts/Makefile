@@ -4,11 +4,11 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.21
+VERSION = 0.22
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
-LINGUAS = de sv cs nl hu ro ru sr sk
+LINGUAS = de sv cs nl hu ro ru sr sk es
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
