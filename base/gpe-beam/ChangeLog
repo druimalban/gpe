@@ -1,5 +1,6 @@
 08/14/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
+	- Added control file.	
 	- Makefile updates: Tuning, installation of mimedir utils.
 	- New version: 0.2.2
 	- Added import facility for VCARD files.
