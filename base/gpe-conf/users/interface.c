@@ -61,7 +61,7 @@ Users_Build_Objects (void)
   pwent = getpwent();
  while(pwent)
     {
-      if(pwent->pw_uid>500 || pwent->pw_uid ==0)
+      if((pwent->pw_uid>=100 && pwent->pw_uid<65534) || pwent->pw_uid ==0)
 	{
 	  entry[0] = g_strdup_printf("%s",pwent->pw_name);
 	  entry[1] = g_strdup_printf("%s",pwent->pw_gecos);
