@@ -97,10 +97,11 @@ void app_quit(){
   gtk_exit (0);
 }
 
-void sketchbook_reset_title(GtkNotebook * notebook,
-                            GtkNotebookPage * page,
-                            guint page_number,
-                            gpointer unused){
+void on_notebook_switch_page(GtkNotebook * notebook,
+                             GtkNotebookPage * page,
+                             guint page_number,
+                             gpointer unused){
+  //--update window title
   switch (page_number){
   case PAGE_SKETCHPAD:
     sketchpad_reset_title();
@@ -112,14 +113,11 @@ void sketchbook_reset_title(GtkNotebook * notebook,
 }
 
 void gui_init(){
-  GdkPixmap *pixmap;
-  GdkBitmap *bitmap;
-
-  GtkWidget * window;
+  GtkWidget   * window;
   GtkNotebook * notebook;
 
-  GtkWidget * selector;
-  GtkWidget * sketchpad;
+  GtkWidget * selector_ui;
+  GtkWidget * sketchpad_ui;
 
   //--toplevel window
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -132,17 +130,14 @@ void gui_init(){
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (on_window_sketchpad_destroy), NULL);
 
-  if (gpe_find_icon_pixmap ("this_app_icon", &pixmap, &bitmap)){
-    gtk_widget_realize   (window);
-    gdk_window_set_icon (window->window, NULL, pixmap, bitmap);
-  }
+  gpe_set_window_icon (window, "this_app_icon");
 
   //--selector
-  selector  = selector_gui();
+  selector_ui = selector_gui();
   window_selector_init(window);
 
   //--sketchpad
-  sketchpad = sketchpad_gui(window);
+  sketchpad_ui = sketchpad_gui(window);
   window_sketchpad_init(window);
 
   //--packing
@@ -150,10 +145,10 @@ void gui_init(){
   sketchbook.notebook = notebook;
   gtk_notebook_set_show_border(notebook, FALSE);
   gtk_notebook_set_show_tabs  (notebook, FALSE);
-  g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(sketchbook_reset_title), NULL);
+  g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(on_notebook_switch_page), NULL);
 
-  gtk_notebook_insert_page(notebook, selector,  NULL, PAGE_SELECTOR);
-  gtk_notebook_insert_page(notebook, sketchpad, NULL, PAGE_SKETCHPAD);
+  gtk_notebook_insert_page(notebook, selector_ui,  NULL, PAGE_SELECTOR);
+  gtk_notebook_insert_page(notebook, sketchpad_ui, NULL, PAGE_SKETCHPAD);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET(notebook));
 

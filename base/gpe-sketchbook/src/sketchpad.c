@@ -289,7 +289,7 @@ void sketchpad_refresh_drawing_area(){
                   drawing_area_width, drawing_area_height);  
 }
 
-void clear_drawing_area(){
+void clear_drawing_area(){//FIXME: unused ?
   reset_drawing_area();
   sketchpad_refresh_drawing_area();
 }
