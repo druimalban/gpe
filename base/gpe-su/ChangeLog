@@ -1,0 +1,6 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-su.menu: Give full path name for icon. Move to section
+	Utilities (to conform to
+	http://familiar.handhelds.org/policy/menu.html).
+
