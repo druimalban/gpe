@@ -5,7 +5,7 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.18
 
-MEMBERS = main dun sdp pan lap bnep
+MEMBERS = main dun sdp pan lap
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
@@ -34,14 +34,19 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: $(PACKAGE) all-mo
+all: $(PACKAGE) all-mo bnep-helper
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+bnep-helper: bnep-helper.c
+
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth
+	install -s bnep-helper $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/
+	chmod u+s $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth/bnep-helper
 	mkdir -p $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth
 	install -m 644 bt-on.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 bt-off.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/

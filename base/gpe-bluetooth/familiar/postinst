@@ -1,3 +1,3 @@
 #!/bin/sh
 
-chmod u+s /sbin/hcid /sbin/hciattach /sbin/hciconfig
+chmod u+s /sbin/hciattach /sbin/hciconfig /usr/lib/gpe-bluetooth/bnep-helper

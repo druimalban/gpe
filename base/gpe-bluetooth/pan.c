@@ -12,6 +12,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <libintl.h>
+#include <errno.h>
+#include <netinet/in.h>
 
 #include <gtk/gtk.h>
 
@@ -141,6 +143,90 @@ error:
   return -1;
 }
 
+struct __service_16 { 
+	uint16_t dst;
+	uint16_t src;
+} __attribute__ ((packed));
+
+struct __service_32 { 
+	uint16_t unused1;
+	uint16_t dst;
+	uint16_t unused2;
+	uint16_t src;
+} __attribute__ ((packed));
+
+struct __service_128 { 
+	uint16_t unused1;
+	uint16_t dst;
+	uint16_t unused2[8];
+	uint16_t src;
+	uint16_t unused3[7];
+} __attribute__ ((packed));
+
+/* Create BNEP connection 
+ * sk      - Connect L2CAP socket
+ * role    - Local role
+ * service - Remote service
+ * dev     - Network device (contains actual dev name on return)
+ */
+int bnep_create_connection(int sk, uint16_t role, uint16_t svc)
+{
+	struct bnep_setup_conn_req *req;
+	struct bnep_control_rsp *rsp;
+	struct __service_16 *s;
+	unsigned char pkt[BNEP_MTU];
+	int r;
+
+	/* Send request */
+	req = (void *) pkt;
+	req->type = BNEP_CONTROL;
+	req->ctrl = BNEP_SETUP_CONN_REQ;
+	req->uuid_size = 2;	//16bit UUID
+	s = (void *) req->service;
+	s->dst = htons(svc);
+	s->src = htons(role);
+
+	if (send(sk, pkt, sizeof(*req) + sizeof(*s), 0) < 0)
+		return -1;
+
+receive:
+	/* Get response */
+	r = recv(sk, pkt, BNEP_MTU, 0);
+	if (r <= 0)
+		return -1;
+
+	errno = EPROTO;
+
+	if (r < sizeof(*rsp))
+		return -1;
+	
+	rsp = (void *) pkt;
+	if (rsp->type != BNEP_CONTROL)
+		return -1;
+
+	if (rsp->ctrl != BNEP_SETUP_CONN_RSP)
+		goto receive;
+
+	r = ntohs(rsp->resp);
+
+	switch (r) {
+	case BNEP_SUCCESS:
+		break;
+
+	case BNEP_CONN_INVALID_DST:
+	case BNEP_CONN_INVALID_SRC:
+	case BNEP_CONN_INVALID_SVC:
+		errno = EPROTO;
+		return -1;
+
+	case BNEP_CONN_NOT_ALLOWED:
+		errno = EACCES;
+		return -1;
+	}
+
+	return 0;
+}
+
 static struct bt_service_desc pan_service_desc;
 
 static struct bt_service *
@@ -160,11 +246,19 @@ static void
 pan_connect (GtkWidget *w, struct bt_service_pan *svc)
 {
   int fd;
-  char dev[16];
+  char buf[16];
 
   fd = create_connection (&svc->bd->bdaddr);
   
-  bnep_create_connection (fd, BNEP_SVC_PANU, BNEP_SVC_NAP, dev);
+  bnep_create_connection (fd, BNEP_SVC_PANU, BNEP_SVC_NAP);
+
+  sprintf (buf, "%d", fd);
+
+  if (vfork () == 0)
+    {
+      execl (PREFIX "/lib/gpe-bluetooth/bnep-helper", PREFIX "/lib/gpe-bluetooth/bnep-helper", buf, NULL);
+      perror ("exec");
+    }
 }
 
 static void
@@ -190,7 +284,4 @@ pan_init (void)
   pan_service_desc.popup_menu = pan_popup_menu;
 
   service_desc_list = g_slist_prepend (service_desc_list, &pan_service_desc);
-
-  if (bnep_init ())
-    exit (1);
 }
