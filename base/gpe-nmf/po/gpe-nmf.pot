@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-09 19:45+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-07-05 23:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,31 +16,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-nmf.c:203
+#: gpe-nmf.c:215
 msgid "Unable to initialise player"
 msgstr ""
 
-#: playlist_edit.c:175
+#: playlist_edit.c:181
 msgid "Select file"
 msgstr ""
 
-#: playlist_edit.c:255
+#: playlist_edit.c:261
 msgid "Title"
 msgstr ""
 
-#: playlist_edit.c:266
+#: playlist_edit.c:272
 msgid "Open file"
 msgstr ""
 
-#: playlist_edit.c:266
+#: playlist_edit.c:272
 msgid "Tap here to add a file or directory."
 msgstr ""
 
-#: playlist_edit.c:270
+#: playlist_edit.c:276
 msgid "Delete"
 msgstr ""
 
-#: playlist_edit.c:270
+#: playlist_edit.c:276
 msgid "Tap here to remove the selected item."
 msgstr ""
 

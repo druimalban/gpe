@@ -1,3 +1,7 @@
+2004-07-05  Florian Boor  <florian.boor@kernelconcepts.de>
+	
+	* Makefile: Updated to next generation of makefiles.
+
 2003-07-11  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.16 released.
