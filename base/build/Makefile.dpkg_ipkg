@@ -10,15 +10,21 @@ upstream: clean
 dpkg: upstream
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage ; cd ..; rm -rf $$PV )
 
+ifeq ($(GTK2),yes)
+CONTROL = control1
+else
+CONTROL = control
+endif
+
 ipkg: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	if test -e familiar/conffiles; then cp familiar/conffiles familiar/dist/CONTROL; fi
-	if test -e familiar/preinst;   then cp familiar/preinst   familiar/dist/CONTROL; fi
-	if test -e familiar/postinst;  then cp familiar/postinst  familiar/dist/CONTROL; fi
-	if test -e familiar/prerm;     then cp familiar/prerm     familiar/dist/CONTROL; fi
-	if test -e familiar/postrm;    then cp familiar/postrm    familiar/dist/CONTROL; fi
+	cp familiar/$(CONTROL) familiar/dist/CONTROL
+	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
+	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
+	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
+	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
+	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
