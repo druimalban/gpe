@@ -355,7 +355,7 @@ _gpe_icon_list_view_button_press (GtkWidget *widget, GdkEventButton *event)
   switch (event->button)
     {
     case 1:
-      if (data) 
+      if (data)
 	gpe_icon_list_item_button_press (data, event);
       break;
 
@@ -574,20 +574,6 @@ _gpe_icon_list_view_cancel_popup (GPEIconListView *il)
     gtk_timeout_remove (il->popup_timeout);
     il->popup_timeout = 0;
   }
-}
-
-static gint 
-_gpe_icon_list_view_popup (gpointer data) 
-{
-  GPEIconListView *il = data;
-  int row, col;
-  
-  row = il->mrow;
-  col = il->mcol;
-  
-  g_signal_emit (G_OBJECT (il), my_signals[1], 0, _gpe_icon_list_view_get_icon(il,col, row)->udata);
-  
-  return FALSE;
 }
 
 void 
