@@ -1,0 +1,9 @@
+Package: libgpe1
+Section: GPE/libs
+Priority: optional
+Version: VERSION
+Source: SOURCE
+Architecture: arm
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: libglib2.0-0
+Description: Common functions for GPE.

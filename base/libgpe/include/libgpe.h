@@ -14,5 +14,6 @@
 #include <gpe/xsi.h>
 #include <gpe/gpe-soundgen.h>
 #include <gpe/gpe-rtcd.h>
+#include <gpe/gpepreferences.h>
 
 #endif

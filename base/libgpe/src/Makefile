@@ -1,23 +1,66 @@
+PACKAGE = libgpe
+VERSION = 0.2
+LINGUAS = 
+
+MEMBERS = gpe-exec xsi gpe-soundgen gpe-rtcd gpepreferences
+HEADERS = libgpe.h gpe-exec.h xsi.h gpe-soundgen.h gpe-rtcd.h gpepreferences.h 
+
+SONAME = libgpe.so.1
+
+ifndef PREFIX
+PREFIX = /usr/local
+endif
+ifndef DEBUG
+DEBUG = no
+endif
+ifndef CVSBUILD
+CVSBUILD = yes
+endif
+
+OBJS    = $(patsubst %,%.o,$(MEMBERS))
+DEPS    = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+CPPFLAGS += -I../include
+
 CC = gcc
-CFLAGS = -Wall -O2 -I../include `glib-config --cflags`
+CFLAGS   = -Wall -O2 `pkg-config --cflags glib-2.0`
 
-OBJS = gpe-exec.o xsi.o gpe-soundgen.o gpe-rtcd.o
+LDFLAGS += `pkg-config --libs glib-2.0`
+LDFLAGS += -L/usr/X11R6/lib -lX11
+LDFLAGS += -lm      #gpe-soundgen
+LDFLAGS += -lsqlite #preferences
 
-libgpe.so.0: $(OBJS)
-	$(CC) -nostartfiles -shared -Wl,-soname -Wl,libgpe.so.0 -o libgpe.so.0 $(OBJS)
-	ln -s libgpe.so.0 libgpe.so
+all: libgpe.so #$(PACKAGE).pc $(PACKAGE)-uninstalled.pc
 
-install: libgpe.so.0
-	install -D libgpe.so.0 $(DESTDIR)$(PREFIX)/lib/libgpe.so.0
-	strip $(DESTDIR)$(PREFIX)/lib/libgpe.so.0
+libgpe.so: $(SONAME)
+	ln -sf $^ $@
 
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
+$(SONAME): $(OBJS)
+	$(CC) -nostartfiles -shared -Wl,-soname -Wl,$@ -o $@ $^ $(LDFLAGS)
 
-clean:
-	rm -rf *.o *.so *.so.0 *.ipk familiar/dist
+install-program: $(SONAME)
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/
+	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/
+	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+
+install-devel: #$(PACKAGE).pc
+	for i in $(HEADERS); do install -m 644 -D ../include/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	ln -sf $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpe.so
+#	install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
+#	install -m 644 $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
+
+clean: clean-po
+	rm -rf familiar/dist $(OBJS) $(DEPS) $(SONAME) libgpe.so #$(PACKAGE).pc $(PACKAGE)-uninstalled.pc
+
+
+#--GPE Standard Makefiles
+ifeq ($(CVSBUILD),yes)
+BUILD = ../../build
+else
+BUILD = build
+endif
+
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
+-include $(DEPS)
