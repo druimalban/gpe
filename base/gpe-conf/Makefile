@@ -18,6 +18,9 @@ MEMBERS += users/interface users/callbacks
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
+ARM_BINARY= gpe-conf gpe-confsuid
+
+ARM_BINARYPATHED = $(patsubst %,/armbins/%,$(ARM_BINARY))
 all: gpe-conf gpe-confsuid
 
 gpe-conf: $(OBJS)
@@ -29,23 +32,16 @@ gpe-confsuid: gpe-confsuid.c
 	strip gpe-confsuid
 
 install: gpe-conf
+	./gpe-conf jhdgkjhd | ./buildmenu.pl >$(DESTDIR)/usr/lib/menu/gpe-conf #build the menu
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
 	sudo chown root.root gpe-confsuid
 	sudo chmod a+s gpe-confsuid 
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-confsuid
 
-ipkgl:
-	cp $(HOME)/gpe-conf ./
-	cp controll distl/CONTROL/control
-	make DESTDIR=`pwd`/distl install
-	sudo chown -R root.root distl
-	ipkg-build distl
-	sudo chown -R pierre.pierre distl
 ipkg:
-	./gpe-conf jhdgkjhd | ./buildmenu.pl >dist/usr/lib/menu/gpe-conf
-	find dist -name CVS |xargs rm -rf
-	cp $(HOME)/gpe-conf ./
-	sed -e s/VERSION/$(VERSION)/ <control >dist/CONTROL/control
+	find dist -name CVS |xargs rm -rf				#erase CVS stuff
+	cp /armbins/gpe-conf ./ 					#get the arm binary the ipaq sent us.
+	sed -e s/VERSION/$(VERSION)/ <control >dist/CONTROL/control	#change the version of the ipkg
 	make DESTDIR=`pwd`/dist install
 	sudo chown -R root.root dist
 	ipkg-build dist

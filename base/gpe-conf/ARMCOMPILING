@@ -1,0 +1,15 @@
+# here are the few scripts to fastly compile it on ipaq*.handhelds.org
+cat >> $HOME/.bash_profile <<EOF #this file is read by bash when you log, define some envs
+
+#additional path for gdk-pixbuf
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/home/tardyp/bin 
+export PATH
+
+# get the IP of the remote client
+
+export pc=`echo $SSH_CLIENT |cut -d " " -f 1`
+export DISPLAY=$pc:0
+export HOMEUSER=mustchange  # the user you use at home
+export DEFAULTMODULE = gpe-conf #configure your current module
+EOF
+
