@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=Plucker
+_Comment=Plucker Reader
+Exec=gpe-plucker
+Terminal=0
+Type=Application
+Icon=gpe-plucker.png
+Categories=Application;GPE
+SingleInstance=true

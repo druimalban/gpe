@@ -1,0 +1,9 @@
+Package: gpe-plucker
+Section: base
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Nils Faerber <nils@kernelconcepts.de>
+Depends: libgtk2.0-0, libgpewidget1, gpe-icons (>= 0.09)
+Description: Plucker ebook reader
+Source: gpe-plucker-VERSION.tar.gz

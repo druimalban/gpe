@@ -1,0 +1,15 @@
+This is a quite crude hack to get the GTK2 based plucker viewer running
+nicely with GPE.
+Plase send complaints to
+	Nils Faerber <nils@kernelconcepts.de>
+
+It is based on plucker 1.6.1 source and its accompanied plucker viewer.
+
+It is free under the terms of the GNU General Public License, Version 2 
+(or any later version you might like to use) - see the file COPYING for 
+copyright details.
+
+For more information about the orinigal plucker plase see its main web site,
+	http://www.plkr.org/
+
+Have fun!
