@@ -1,3 +1,7 @@
+2003-11-26	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* keyctl.c: Changes icon to symbol for selected button now.
+	* pixmaps/ibutton*: Added preliminary icons for iPAQ buttons.
+	
 2003-11-24	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* keyctl.c: Many fixes, added redefined entrys.
 	

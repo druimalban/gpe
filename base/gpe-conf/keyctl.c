@@ -99,12 +99,12 @@ static int active_button = 0;
 
 struct gpe_icon local_icons[] = {
 	{ "ipaq" , "ipaq-s1"},
-/*	{ "button1", PREFIX "/share/pixmaps/button1.png" }, 
-	{ "button2", PREFIX "/share/pixmaps/button2.png" }, 
-	{ "button3", PREFIX "/share/pixmaps/button3.png" }, 
-	{ "button4", PREFIX "/share/pixmaps/button4.png" }, 
-	{ "button5", PREFIX "/share/pixmaps/button5.png" }, 
-*/	{ NULL, NULL }
+	{ "button1", PREFIX "/share/pixmaps/ibutton1.png" }, 
+	{ "button2", PREFIX "/share/pixmaps/ibutton2.png" }, 
+	{ "button3", PREFIX "/share/pixmaps/ibutton3.png" }, 
+	{ "button4", PREFIX "/share/pixmaps/ibutton4.png" }, 
+	{ "button5", PREFIX "/share/pixmaps/ibutton5.png" }, 
+	{ NULL, NULL }
 };
 	
 	
@@ -177,6 +177,7 @@ on_button_select (GtkButton * button, gpointer user_data)
 {
 	int nr = (int)user_data;
 	int i;
+	char *bname;
 	
 	if ((nr == active_button) ||
 		((active_button < 0) && (active_button >= NUM_BUTTONS)))
@@ -187,7 +188,9 @@ on_button_select (GtkButton * button, gpointer user_data)
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[nr].command);
 	active_button = nr;
-#warning pixmap
+	
+	bname = g_strdup_printf("button%i",nr+1);
+	gtk_image_set_from_pixbuf(GTK_IMAGE(self.icon),gpe_find_icon(bname));
 	
 	for (i=1;i<NUM_COMMANDS;i++)
 		if (!strcmp(buttondef[nr].command,commands[i].command))
@@ -290,7 +293,7 @@ Keyctl_Build_Objects ()
 	
 	self.p = gpe_find_icon ("ipaq");
 	self.edit = gtk_entry_new();
-	self.icon = gtk_image_new_from_pixbuf(gpe_find_icon("icon"));
+	self.icon = gtk_image_new_from_pixbuf(gpe_find_icon("button1"));
 	self.select = gtk_option_menu_new();
 	
 	for (i=0;i<NUM_COMMANDS;i++)

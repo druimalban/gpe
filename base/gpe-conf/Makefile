@@ -137,6 +137,11 @@ PIXMAPS += pccard-usb.png
 PIXMAPS += gpe-config-logread.png
 PIXMAPS += gpe-config-keyboard.png
 PIXMAPS += gpe-config-battery.png
+PIXMAPS += ibutton1.png
+PIXMAPS += ibutton2.png
+PIXMAPS += ibutton3.png
+PIXMAPS += ibutton4.png
+PIXMAPS += ibutton5.png
 
 all: $(PACKAGE)
 
