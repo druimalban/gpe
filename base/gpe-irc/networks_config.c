@@ -283,10 +283,10 @@ networks_config_edit_window (struct sql_network *network)
   gtk_entry_set_text (GTK_ENTRY (real_name_entry), network->real_name);
   gtk_entry_set_text (GTK_ENTRY (password_entry), network->password);
 
-  close_button = gpe_picture_button (button_hbox->style, "Close", "close");
-  save_button = gpe_picture_button (button_hbox->style, "Save", "save");
-  new_server_button = gpe_picture_button (button_hbox->style, "New", "new");
-  delete_server_button = gpe_picture_button (button_hbox->style, "Delete", "delete");
+  close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_BOTH);
+  save_button = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
+  new_server_button = gpe_button_new_from_stock (GTK_STOCK_ADD, GPE_BUTTON_TYPE_ICON);
+  delete_server_button = gpe_button_new_from_stock (GTK_STOCK_REMOVE, GPE_BUTTON_TYPE_ICON);
   
   list_store = gtk_list_store_new (NUM_COLUMNS2, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN, G_TYPE_POINTER);
   tree_view = GTK_TREE_VIEW(gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store)));
@@ -423,11 +423,11 @@ networks_config_window (GtkWidget *widget)
   
   hsep = gtk_hseparator_new ();
 
-  new_button = gpe_picture_button (button_hbox->style, "New", "new");
-  edit_button = gpe_picture_button (button_hbox->style, "Modify", "preferences");
-  delete_button = gpe_picture_button (button_hbox->style, "Delete", "delete");
-  close_button = gpe_picture_button (button_hbox2->style, "Close", "close");
-  save_button = gpe_picture_button (button_hbox2->style, "Save", "save");
+  new_button = gpe_button_new_from_stock (GTK_STOCK_ADD, GPE_BUTTON_TYPE_ICON);
+  edit_button = gpe_button_new_from_stock (GTK_STOCK_PREFERENCES, GPE_BUTTON_TYPE_ICON);
+  delete_button = gpe_button_new_from_stock (GTK_STOCK_REMOVE, GPE_BUTTON_TYPE_ICON);
+  close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_BOTH);
+  save_button = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
   
   g_signal_connect (G_OBJECT (new_button), "clicked",
                              G_CALLBACK (networks_config_new), NULL);

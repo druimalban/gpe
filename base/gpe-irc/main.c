@@ -191,14 +191,12 @@ button_clicked (GtkWidget *button)
     if (gtk_object_get_data (GTK_OBJECT (button), "type") == IRC_SERVER)
     {
       server = gtk_object_get_data (GTK_OBJECT (button), "IRCServer");
-    printf ("----------%s----------\n", server->text->str);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
       selected_button = button;
       selected_server = server;
       selected_channel = NULL;
-      clear_text_view ();
-      update_text_view (server->text);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+      gtk_text_view_set_buffer (main_text_view, server->buffer);
     }
     else
     {
@@ -207,9 +205,8 @@ button_clicked (GtkWidget *button)
       selected_button = button;
       selected_server = channel->server;
       selected_channel = channel;
-      clear_text_view ();
-      update_text_view (channel->text);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+      gtk_text_view_set_buffer (main_text_view, channel->buffer);
     }
   }
 }
@@ -227,6 +224,7 @@ join_channel (IRCServer *server, gchar *channel_name)
     channel = g_malloc (sizeof (*channel));
     channel->name = g_strdup (channel_name);
     channel->text = g_string_new ("");
+    channel->buffer = gtk_text_buffer_new (NULL);
     channel->server = server;
     selected_channel = channel;
 
@@ -550,7 +548,7 @@ new_connection_dialog ()
   password_entry = gtk_entry_new ();
 
   connect_button = gpe_picture_button (button_hbox->style, "Connect", "globe");
-  close_button = gpe_picture_button (button_hbox->style, "Close", "close");
+  close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_BOTH);
   network_properties_button = gpe_picture_button (button_hbox->style, NULL, "properties");
 
   g_object_set_data (G_OBJECT (connect_button), "server_combo_entry", (gpointer) GTK_COMBO (server_combo)->entry);
@@ -698,14 +696,11 @@ main (int argc, char *argv[])
 
   menu = gtk_menu_new ();
 
-  menu_item = gtk_image_menu_item_new_with_label ("Preferences");
+  menu_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
   //g_signal_connect (GTK_OBJECT (menu_item), "activate",
   //		    G_CALLBACK (), NULL);
-  menu_item_image = gpe_render_icon (menu_item->style, gpe_find_icon ("preferences"));
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), menu_item_image);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (menu_item);
-  gtk_widget_show (menu_item_image);
 
   menu_item = gtk_image_menu_item_new_with_label ("New Connection");
   g_signal_connect (GTK_OBJECT (menu_item), "activate",
