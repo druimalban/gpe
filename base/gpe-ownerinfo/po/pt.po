@@ -1,0 +1,80 @@
+# gpe-ownerinfo (Portuguese)
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-ownerinfo package.
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2003-03-18 20:40+0000\n"
+"Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
+"Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-ownerinfo.c:345
+msgid "Owner"
+msgstr "Dono"
+
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
+msgid "en"
+msgstr "pt"
+
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+msgid "GPE Owner Info"
+msgstr "Informações sobre o proprietário GPE"
+
+#: gpe-ownerinfo.c:410
+msgid "Valid options:\n"
+msgstr "Opções disponíveis:\n"
+
+#: gpe-ownerinfo.c:411
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRIA  geometria da janela (por omissão: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -t           make window transparent\n"
+msgstr "   -t           tornar a janela transparente\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           manter a janela sempre no topo\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -h           this help text\n"
+msgstr "   -h           mostrar esta mensagem de ajuda\n"
+
+#: gpe-ownerinfo.c:433
+msgid "GPE User"
+msgstr "Utilizador GPE"
+
+#: gpe-ownerinfo.c:434
+msgid "nobody@localhost.localdomain"
+msgstr "alguem@endereco"
+
+#: gpe-ownerinfo.c:435
+msgid "+99 (9999) 999-9999"
+msgstr "(+351) 999999999"
+
+#: gpe-ownerinfo.c:439
+msgid "Configurable with"
+msgstr "Configurável com"
+
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
+msgid "Owner Information"
+msgstr "Informação acerca do Proprietário"
+
+#: gpe-ownerinfo.c:441
+msgid "under"
+msgstr "em"
+
+#: gpe-ownerinfo.c:441
+msgid " Settings."
+msgstr " Propriedades."
+
+#: gpe-ownerinfo.c:578
+msgid "Address:"
+msgstr "Morada:"
