@@ -39,9 +39,9 @@ GtkWidget *image_widget = NULL;
 gint width = 240;
 gint height = 38*3/2;
 gint ruleheight[3] = { 7*3/2, 16*3/2, 27*3/2 };
-#define maxpoints 1024
+#define maxpoints 10240
 gint points[maxpoints][2];
-gint currentpoint = 0;
+gint currentpoint = -1;
 gboolean pendown = FALSE;
 
 void redraw (void)
@@ -76,6 +76,7 @@ draw_init (void)
 void
 add_point (gint x, gint y)
 {
+  currentpoint++;
   if (currentpoint == 0)
     {
       points[0][0] = x;
@@ -90,7 +91,6 @@ add_point (gint x, gint y)
                      points[currentpoint - 1][0], points[currentpoint - 1][1],
                      x, y);
     }
-  currentpoint++;
   redraw ();
 }
 
@@ -113,7 +113,11 @@ button_press_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
 void
 button_release_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
 {
-  currentpoint = 0;
+  if ((points[currentpoint][0] < 40) && (points[0][0] > 200))
+  {
+    draw_init ();
+  }
+  currentpoint = -1;
   pendown = FALSE;
 }
 
