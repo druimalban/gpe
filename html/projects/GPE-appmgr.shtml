@@ -49,4 +49,15 @@ There is, however, a small list of recently-used items. This is to be introduced
 <P>
 <IMG SRC="../images/gpe-appmgr.png" alt="GPE-Appmgr in action">
 </P>
+
+<H3>FAQ</H3>
+<H2>Why don't I have many programs in the list?</H2>
+<P>
+Programs are only listed if they have 48x48 icons included in their package.
+GPE applications will show up whenever appropriate, but non-GPE software may
+not show up. If you think it should show up, try asking the developer of the
+software to supply an icon and tell the menu to show it. For more information
+on this, email me at mibus@bigpond.com.
+</P>
+
 <!--#include virtual="/includes/foot.shtml"-->
