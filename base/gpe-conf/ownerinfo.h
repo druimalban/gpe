@@ -31,3 +31,6 @@ create_pixmap                          (GtkWidget       *widget,
 
 char
 *my_dirname (char *s);
+
+char
+*my_basename (char *s);

@@ -252,7 +252,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   /* either we can write to the file... */
   if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
       /* ...or we are allowed to write in this directory, and the file does not yet exist */
-      (((access (my_dirname(g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
+      (((access (my_dirname (g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
        (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
     gtk_widget_set_sensitive (table, TRUE);
   else 
@@ -475,7 +475,9 @@ void
 choose_photofile              (GtkWidget     *button,
 			       gpointer       user_data)
 {
-  ask_user_a_file (getenv ("HOME"), NULL, File_Selected, NULL, NULL);
+  ask_user_a_file (my_dirname (ownerphotofile), NULL, File_Selected, NULL, NULL);
+#warning FIXME: update the image in the button here  
+  /* gtk_widget_draw (GTK_WIDGET (button), NULL); */
 }
 
 /* This is an internally used function to create pixmaps. */
@@ -525,9 +527,16 @@ create_pixmap                          (GtkWidget       *widget,
 
 /* MacOS X doesn't have a dirname... */
 char
-*my_dirname(char *s) {
+*my_dirname (char *s) {
   int i;
-  for (i=strlen(s); i && s[i]!='/'; i--);
+  for (i=strlen (s); i && s[i]!='/'; i--);
   s[i] = 0;
   return s;
+}
+
+char
+*my_basename (char *s) {
+  int i;
+  for (i=strlen (s); i && s[i]!='/'; i--);
+  return s+i+1;
 }
