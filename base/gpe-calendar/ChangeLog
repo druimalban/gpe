@@ -1,5 +1,9 @@
 2003-07-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 	
+	* Makefile: released version 0.44
+	
+2003-07-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+	
 	* day_view.c (selction_made): added a search for dat when multiple
 	events are liste3d in the same timeslot (stops the crash)
 	
