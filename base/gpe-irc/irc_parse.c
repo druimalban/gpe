@@ -60,7 +60,12 @@ irc_prefix_to_nick(gchar *prefix)
 static gchar **
 irc_params_split(gchar *params)
 {
-	return g_strsplit(params, ":", 2);
+	gchar **s;
+	if (s = g_strsplit(params, ":", 2))
+	  {
+	    g_strstrip(s[0]);
+	  }
+	return s;
 }
 
 
@@ -180,7 +185,6 @@ irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params)
 		if(!ctcp_parse(server, prefix, str_array[0], str_array[1]))
 		{
 			/* TODO: Parse str_array[0] */
-		  g_strstrip(str_array[0]);
 		  append_to_buffer(server, str_array[0], "<", "tag_nick");
 		  append_to_buffer(server, str_array[0], nick, NULL);
 		  append_to_buffer(server, str_array[0], "> ", "tag_nick");

@@ -23,9 +23,6 @@
 
 #define SERVICE "ircd"
 
-#define DEBUG	1
-
-
 static gboolean
 irc_server_send (IRCServer *server, gchar *command, gchar *param)
 {
@@ -417,10 +414,20 @@ irc_server_channel_get(IRCServer *server, gchar *channel_name)
 {
 	IRCChannel *ircchannel = NULL;
 
+	if (DEBUG)
+	{
+	  fprintf(stderr,"irc_server_channel_get: server &%p name: %s",
+	          server,channel_name);
+	  fprintf(stderr," server->channel: &%p\n",server->channel);
+	}
+
 	if(server && server->channel && channel_name && strlen(channel_name))
 	{
 		ircchannel = g_hash_table_lookup(server->channel, (gconstpointer) channel_name);
 	}
+
+	if (DEBUG)
+	  fprintf(stderr,"irc_server_channel_get: %p\n",ircchannel);
 
 	return ircchannel;
 }

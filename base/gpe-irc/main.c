@@ -163,12 +163,18 @@ append_to_buffer (IRCServer *server, gchar *target, gchar *text, gchar *tag_name
   GtkTextIter start, end;
   GtkTextBuffer *buffer = NULL;
   gchar *tag_value;
+  IRCChannel *chan;
+
+  if (DEBUG)
+   {
+     fprintf(stderr,"append_to_buffer: target %s\n",target);
+   }
 
   if (text != NULL)
   {
-    if (target != NULL)
-      buffer = ((IRCChannel *) irc_server_channel_get(server, target))->buffer;
-    if (buffer == NULL)
+    if (target != NULL && (chan = irc_server_channel_get(server, target)))
+      buffer = chan->buffer;
+    else
       buffer = server->buffer;
 
     gtk_text_buffer_get_bounds (buffer, &start, &end);

@@ -1,0 +1,10 @@
+2003-04-02 Paul Jakma <paul@dishone.st>
+
+	irc.c: remove DEBUG define (moved to irc.h)
+	add DEBUG statements.
+	irc.h: add DEBUG define
+	irc_parse.c: (irc_params_split) always strip s[0]
+	(irc_parse_privmsg) remove g_strstrip() (see above)
+	main.c: (append_to_buffer) add DEBUG statement and
+	robustify this function slightly - if we dont find a matching
+	hash, use the server output buffer by default.
