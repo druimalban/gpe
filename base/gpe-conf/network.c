@@ -6,7 +6,10 @@
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
+  * 2 of the License, or (at your option) any later version.
+ *
+ * Dynamic interface configuration added bv Florian Boor (florian.boor@kernelconcepts.de)
+ *
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,6 +38,9 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/picturebutton.h>
+#include <gpe/render.h>
+#include <gpe/question.h>
+#include <gpe/smallbox.h>
 
 extern NWInterface_t* iflist;
 extern gint iflen;
@@ -44,17 +50,64 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface);
 GtkWidget* create_nwdhcp_widgets(NWInterface_t iface);
 GtkWidget* create_nwppp_widgets(NWInterface_t iface);
 
+static guint not_added = 0;
 
 static void
 add_interface(GtkWidget *widget, gpointer d)
 {
+	gchar* ifname;
+	GtkWidget* ctable = NULL;
+	GtkWidget* label;
+	gint i;
 	
+	ifname = smallbox(_("Please enter name of new interface."), _("New interface:"), "eth1");
+	if (ifname)
+	{
+		for (i=0;i<iflen;i++)
+			if (!strcmp(ifname,iflist[i].name))
+			{
+				gpe_error_box(_("This interface definition already exists!"));
+				return;
+			}
+				
+		iflen++;
+		iflist=(NWInterface_t*)realloc(iflist,iflen*sizeof(NWInterface_t));
+		memset(&iflist[iflen-1],'\0',sizeof(NWInterface_t));
+		iflist[iflen-1].status = NWSTATE_NEW;
+		strcpy(iflist[iflen-1].name,ifname);
+		iflist[iflen-1].isstatic = TRUE;
+		iflist[iflen-1].isinet = TRUE;
+		iflist[iflen-1].isloop = FALSE;
+		iflist[iflen-1].isdhcp = FALSE;
+		iflist[iflen-1].isppp = FALSE;
+		
+		ctable = create_nwstatic_widgets(iflist[iflen-1]);
+		if (ctable)	
+		{
+			label = gtk_label_new(iflist[iflen-1].name);
+			gtk_notebook_append_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label);
+			gtk_widget_show_all(table);
+		}
+		else
+			not_added++;
+		gtk_notebook_set_current_page(GTK_NOTEBOOK(table),-1);
+	}
 }
 
 static void
 remove_interface(GtkWidget *widget, gpointer d)
 {
+	G_CONST_RETURN gchar* ifname;
+	GtkWidget* page;
 	
+	
+	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
+	ifname = gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(table),page);
+	if (gpe_question_ask_yn(_("Do you want to delete this interface?")))
+	{
+		iflist[get_section_nr(ifname)].status = NWSTATE_REMOVED;  
+		gtk_notebook_remove_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
+	}
 }
 
 
@@ -62,7 +115,7 @@ void changed_nwtype(GtkToggleButton *togglebutton,gpointer user_data)
 {
 	GtkWidget *ctable, *label;
 	gchar wname[100];
-	gint row = gtk_notebook_get_current_page(GTK_NOTEBOOK(table))+1; // HACK: add 1 for loop
+	gint row = gtk_notebook_get_current_page(GTK_NOTEBOOK(table))+not_added; // HACK: add 1 for loop
 
 	if (!gtk_toggle_button_get_active(togglebutton)) return;
 
@@ -100,9 +153,9 @@ void changed_nwtype(GtkToggleButton *togglebutton,gpointer user_data)
 	{
 		label = gtk_label_new(iflist[row].name);
 		gtk_notebook_remove_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
-		gtk_notebook_insert_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label,row-1);
+		gtk_notebook_insert_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label,row-not_added);
 		gtk_widget_show_all(table);
-		gtk_notebook_set_page(GTK_NOTEBOOK(table),row-1);
+		gtk_notebook_set_page(GTK_NOTEBOOK(table),row-not_added);
 	}
 }
 
@@ -123,7 +176,7 @@ void create_editable_entry(NWInterface_t* piface, GtkWidget* attach_to, gchar* w
 	strcat(wname,piface->name);  
 	gtk_widget_set_name(GTK_WIDGET(label),wname);
 	gtk_widget_ref(label);
-	gtk_object_remove_data(table,wname);
+	gtk_object_remove_data(GTK_OBJECT(table),wname);
 	gtk_object_set_data_full (GTK_OBJECT (table), wname, label,
                             (GtkDestroyNotify) gtk_widget_unref);
 	gtk_entry_set_text(GTK_ENTRY(label),wdata);
@@ -146,6 +199,7 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface)
 	// page headers
 	
 	ctable=gtk_table_new(3,10,FALSE);
+
 	container = gtk_hbox_new(TRUE,0);  
 	
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
@@ -452,7 +506,6 @@ GtkWidget *Network_Build_Objects()
 	GtkWidget *label, *ctable, *tablebox, *toolbar;
 	gint row = 0;
 	gint num_int = 0;
-	guint gpe_border     = gpe_get_border ();
 	
 	tablebox = gtk_vbox_new(FALSE,0);
 	
@@ -510,7 +563,8 @@ GtkWidget *Network_Build_Objects()
 			label = gtk_label_new(iflist[row].name);
 			gtk_notebook_append_page(GTK_NOTEBOOK(table),GTK_WIDGET(ctable),label);
 		}
+		else
+			not_added++;
 	} 
-
    return tablebox;
 }

@@ -4,8 +4,8 @@
 #include <gtk/gtk.h>
 
 
-#define NET_CONFIGFILE "/etc/network/interfaces"
-//#define NET_CONFIGFILE "/tmp/interfaces"
+//#define NET_CONFIGFILE "/etc/network/interfaces"
+#define NET_CONFIGFILE "/tmp/interfaces"
 
 
 #define Saddress 	1
@@ -16,6 +16,10 @@
 #define Shostname	6
 #define Sclientid 	7
 #define Sprovider	8
+
+#define NWSTATE_REMOVED	1
+#define NWSTATE_NEW		2
+#define NWSTATE_FINISHED	3
 
 typedef struct {
 	gchar name[32];
@@ -34,12 +38,13 @@ typedef struct {
 	gint isppp;
 	gint firstline;
 	gint lastline;
+	gint status;
 } NWInterface_t;
 
 gint set_file_open(gint openon);
 gint get_section_start(gchar* section);
+gint get_section_nr(G_CONST_RETURN gchar* section);
 gint get_section_end(gchar* section);
-void empty_section(gint s_start, gint s_end);
 gint write_sections();
 gint read_section(gint section, NWInterface_t *Scheme);
 gint rewrite_section(NWInterface_t *Scheme, gint startpos);

@@ -1,9 +1,16 @@
 
 /*
-
-	Configfile I/O routines
-
-*/
+ *
+ * Copyright (C) 2002  Florian Boor <florian.boor@kernelconcepts.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ * 
+ * 	Configfile I/O routines, part of dynamic interface configuration.
+ * 
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -22,8 +29,7 @@ gint iflen = 0;
 gint set_file_open(gint openon);
 gint get_section_start(gchar* section);
 gint get_section_end(gchar* section);
-gint get_section_nr(gchar* section);
-void empty_section(gint s_start, gint s_end);
+gint get_section_nr(G_CONST_RETURN gchar* section);
 gint read_section(gint, NWInterface_t *Scheme);
 gint rewrite_section(NWInterface_t *Scheme, gint startpos);
 
@@ -213,16 +219,11 @@ gint get_scheme_list()
 			
 			iflist[l-1].firstline=i;
 			iflist[l-1].lastline=i;
-			//if ((l>1) && (!iflist[l-2].lastline)) iflist[l-1].lastline=i-1;
 		}
 		else // parse rest and find end
 		{
 			if (!iflist) continue; // we are before any sections
-/*			if (!strcmp("auto",paramval))
-			{
-				iflist[l-1].lastline=i-1;
-			}
-*/			if (!strcmp("address",paramval)) {
+			if (!strcmp("address",paramval)) {
 				strcpy(iflist[l-1].address,ifname);
 				iflist[l-1].lastline=i;
 			}
@@ -262,13 +263,7 @@ gint get_scheme_list()
 }
 
 
-void empty_section(gint s_start, gint s_end)
-{
-	
-}
-
-
-gint get_section_nr(gchar* section)
+gint get_section_nr(G_CONST_RETURN gchar* section)
 {
 	gint i;
 	for (i=0;i<iflen;i++)
@@ -318,7 +313,8 @@ void add_line(gint pos, gchar* line)
 	gchar *tmp;
 	configlen++;
 	configtext=realloc(configtext,configlen*sizeof(gchar*));
-	configtext[configlen-1] = (gchar*)malloc(sizeof(gchar)*(strlen(configtext[configlen-2])+1));
+//	configtext[configlen-1] = (gchar*)malloc(sizeof(gchar)*(strlen(configtext[configlen-2])+1));
+	configtext[configlen-1] = (gchar*)malloc(sizeof(gchar)*(strlen(line)+1));
 	tmp = configtext[configlen-1];
 	for (a=configlen-1;a>pos;a--)
 	{
@@ -357,11 +353,19 @@ gint write_sections()
 			if (iflist[l-1].isppp) strcat(outstr," ppp");
 			if (iflist[l-1].isdhcp) strcat(outstr," dhcp");
 			strcat(outstr,"\n\0"); // tm?
-			strcpy(configtext[i],outstr);
+			if (iflist[l-1].status != NWSTATE_REMOVED) strcpy(configtext[i],outstr);
+				else configtext[i][0]='\0';					
 		}
 		else 
 		{
 			if (!in_section) continue; // we are before any sections
+			
+			if (iflist[l-1].status == NWSTATE_REMOVED) // line belongs to a erased section
+			{
+				configtext[i][0]='\0';
+				continue;
+			}
+			
 			if (!strcmp("address",paramval)) 
 			{
 				subst_val(configtext[i],iflist[l-1].address);
@@ -413,7 +417,7 @@ gint write_sections()
 				
 		} // else
 			// handle new parameters at section end
-			if (i == iflist[l-1].lastline)
+			if ((i == iflist[l-1].lastline) && (iflist[l-1].status !=NWSTATE_REMOVED))
 			{
 				last_i = i;
 				in_section = FALSE;
@@ -471,6 +475,62 @@ gint write_sections()
 			} // if last line
 	} // for
 
+	// add new sections
+	for (i=0;i<iflen;i++)
+		if (iflist[i].status==NWSTATE_NEW)
+		{
+			sprintf(outstr,"iface %s",	iflist[i].name);
+			if (iflist[i].isinet) strcat(outstr," inet");
+			if (iflist[i].isstatic) strcat(outstr," static");
+			if (iflist[i].isloop) strcat(outstr," loopback");
+			if (iflist[i].isppp) strcat(outstr," ppp");
+			if (iflist[i].isdhcp) strcat(outstr," dhcp");
+			strcat(outstr,"\n\0"); 
+			add_line(configlen,outstr);
+			if (get_first_char(iflist[i].address)>=0)
+			{
+				sprintf(outstr,"\taddress %s",iflist[i].address);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].netmask)>=0)
+			{
+				sprintf(outstr,"\tnetmask %s",iflist[i].netmask);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].network)>=0)
+			{
+				sprintf(outstr,"\tnetwork %s",iflist[i].network);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].broadcast)>=0)
+			{
+				sprintf(outstr,"\tbroadcast %s",iflist[i].broadcast);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].hostname)>=0)
+			{
+				sprintf(outstr,"\thostname %s",iflist[i].hostname);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].clientid)>=0)
+			{
+				sprintf(outstr,"\tclient %s",iflist[i].clientid);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].provider)>=0)
+			{
+				sprintf(outstr,"\tprovider %s",iflist[i].provider);
+				add_line(configlen,outstr);
+			}
+			if (get_first_char(iflist[i].gateway)>=0)
+			{
+				sprintf(outstr,"\tgateway %s",iflist[i].gateway);
+				add_line(configlen,outstr);
+			}
+		} //if status
+	
+	
+	// write file
 	configfile = fopen(NET_CONFIGFILE,"w");
 	if (configfile)
 	{
