@@ -302,7 +302,8 @@ File_Selected (char *file,
   if (access (file, R_OK) == 0) {
     gtk_entry_set_text (GTK_ENTRY (login_bg_file_entry), file);
     
-    gtk_container_remove (GTK_CONTAINER (login_bg_file_button), login_bg_pixmap);
+	if (login_bg_pixmap != NULL)
+    	gtk_container_remove (GTK_CONTAINER (login_bg_file_button), login_bg_pixmap);
     login_bg_pixmap = gpe_create_pixmap (controlvbox1, file,
 					 buttonwidth,
 					 buttonheight);
@@ -388,7 +389,11 @@ on_login_bg_file_button_size_allocate (GtkWidget       *widget,
      drawn, but this is fine. */
 	
   /* sanity check */
-  if (access(login_bg_filename,R_OK)) return;
+  if (access(login_bg_filename,R_OK)) 
+  {
+	  login_bg_pixmap = NULL;
+	  return;
+  }
 	  
   buttonwidth  = allocation->width;
   buttonheight = allocation->height-hsync;

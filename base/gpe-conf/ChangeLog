@@ -1,5 +1,7 @@
 2004-03-19	Florian Boor  	<florian.boor@kernelconcepts.de>
-	* login-setup.*: Fixed segfault, fixed warning.
+	* Released V 0.1.7
+	* Makefile: Pushed version to 0.1.7.
+	* login-setup.*: Fixed segfaults, fixed warning.
 	* Makefile: Fixed debug builds.
 	
 2004-03-15	Florian Boor  	<florian.boor@kernelconcepts.de>
