@@ -566,7 +566,7 @@ void
 update_display (void)
 {
   GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
-
+  update_categories ();
   selection_made(sel, G_OBJECT(gtk_widget_get_toplevel(search_entry)));
   do_search (G_OBJECT (search_entry), search_entry);
 }

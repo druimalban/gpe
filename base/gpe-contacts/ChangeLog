@@ -1,5 +1,6 @@
 2004-08-23  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * main.c: Fixed category update.
     * Released V 0.27
     * contacts-alternate-bigscreen.xml: New file.
     * Makefile: Added method to install alternate contact layout with broken 
