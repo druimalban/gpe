@@ -26,7 +26,6 @@
 #include <gpe/render.h>
 #include <gpe/picturebutton.h>
 #include <gpe/errorbox.h>
-#include <gpe/gtkminifilesel.h>
 
 #include "frontend.h"
 

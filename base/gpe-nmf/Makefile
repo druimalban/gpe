@@ -3,6 +3,7 @@ PACKAGE = gpe-nmf
 DEBUG = no
 CVSBUILD = yes
 GST = yes
+VERSION = 0.14
 
 MEMBERS = gpe-nmf playlist_edit
 
@@ -18,7 +19,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I./backend
 
-CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer`
+CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer-0.6`
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget

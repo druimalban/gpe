@@ -10,6 +10,7 @@
 #include "player.h"
 #include <gst/gst.h>
 
+#include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
@@ -52,7 +53,7 @@ player_new (void)
 {
   player_t p = g_malloc0 (sizeof (struct player));
   char *src = getenv ("NMF_SRC");
-  char *src = getenv ("NMF_SINK");
+  char *sink = getenv ("NMF_SINK");
 
   if (!src)
     src = "gnomevfssrc";
@@ -267,7 +268,8 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
   if (caps)
     {
       GstProps *props = gst_caps_get_props (caps);
-      
+     
+#if 0 
       if (props)
 	{
 	  gchar *artist = NULL, *title = NULL, *album = NULL;
@@ -290,6 +292,7 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
 	      p->data.track.album = album;
 	    }
 	}
+#endif
     }
 
   /* If the metadata was all we wanted, stop the thread */
