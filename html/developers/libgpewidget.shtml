@@ -48,8 +48,8 @@ An example of this structure is given below.
 <tr><td>
 <code>
 struct gpe_icon my_icons[] = {<br>
-&nbsp;&nbsp;{ "question", "question" },<br>
-&nbsp;&nbsp;{ "error", "error" },<br>
+&nbsp;&nbsp;{ "pear", "/root/pear.png" },<br>
+&nbsp;&nbsp;{ "lemon", "my_lemon_image" },<br>
 &nbsp;&nbsp;{ "icon", PREFIX "/share/pixmaps/gpe-application.png" },<br>
 &nbsp;&nbsp;{NULL, NULL}<br>
 };<br>
@@ -73,7 +73,7 @@ To access these preloaded images in your code you should use the following funct
 </p>
 <p>
 This function will attempt to locate the preloaded image called 'name' and return it as a GdkPixbuf. If the image cannot be found or has not been mentioned in the gpe_icon structure, a graphical error box will be shown describing the error.<br>
-If a graphical error is unalowed (such as in a library) gpe_find_icon's sister function gpe_try_find_icon can be used instead, its prototype is shown below.
+If a graphical error is unalowed (such as in a library) <code>gpe_find_icon</code>'s sister function <code>gpe_try_find_icon</code> can be used instead, its prototype is shown below.
 </p>
 <p>
 <table border="0" bgcolor="#EEEEEE">
@@ -84,6 +84,9 @@ If a graphical error is unalowed (such as in a library) gpe_find_icon's sister f
 </p>
 
 <h2>Window titlebar icons</h2>
+<p>
+<img src="images/window_toolbar_icon.png">
+</p>
 <p>
 <table border="0" bgcolor="#EEEEEE">
 <tr><td>
@@ -98,7 +101,7 @@ When calling this function the <code>icon</code> argument should be the name of 
 
 <h2>Stock button</h2>
 <p>
-Stock buttons are a standard set of commonly used buttons defined in GTK+. They're used mainly as a convenience instead of having to pack buttons manualy, but on cross platform enviorments they can come in alot more use. Libgpewidget contains its own function for creating stock button, which will also resize and align the buttons appropriately for smaller screens. This function is aptly named gpe_button_new_from_stock.
+Stock buttons are a standard set of commonly used buttons defined in GTK+. They're used mainly as a convenience instead of having to pack buttons manualy, but on cross platform enviorments they can come in alot more use. Libgpewidget contains its own function built apon <code>gtk_button_new_from_stock</code> for creating stock button, which will also resize and align the buttons appropriately for smaller screens. This function is aptly named <code>gpe_button_new_from_stock</code>.
 <p>
 <table border="0" bgcolor="#EEEEEE">
 <tr><td>
@@ -106,8 +109,37 @@ Stock buttons are a standard set of commonly used buttons defined in GTK+. They'
 </td></tr>
 </table>
 </p>
+<p>
+When calling <code>gpe_button_new_from_stock</code>, <code>stock_id</code> should be the name of a gtk stock type e.g. <code>GTK_STOCK_NEW</code>, and <code>type</code> is the type of button to construct. There are three different types of gpe stock buttons
+<table border="0">
+<tr>
+<td><code>GPE_BUTTON_TYPE_ICON</code></td>
+<td><img src="images/stock_button_icon.png"></td>
+</tr>
+<tr>
+<td><code>GPE_BUTTON_TYPE_LABEL</code></td>
+<td><img src="images/stock_button_label.png"></td>
+</tr>
+<tr>
+<td><code>GPE_BUTTON_TYPE_BOTH</code></td>
+<td><img src="images/stock_button_both.png"></td>
+</tr>
+</table>
+</p>
+
+<h2>Toolbars</h2>
+<p>
+<img src="images/toolbar.png">
+</p>
 
 <!--#include virtual="/includes/foot.shtml"-->
+
+
+
+
+
+
+
 
 
 
