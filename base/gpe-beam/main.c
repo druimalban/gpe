@@ -667,10 +667,10 @@ show_control (void)
 		gtk_misc_set_alignment (GTK_MISC (lCHint), 0, 0.0);
 		lSaddr = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lSaddr), 0, 0.5);
-		str = g_strdup_printf("<b>%s</b>",_("Peer Information"))
+		str = g_strdup_printf("<b>%s</b>",_("Peer Information"));
 		gtk_label_set_markup (GTK_LABEL(lcPeer), str);
 		g_free(str);			  
-		str = g_strdup_printf("<b>%s</b>",_("Peer Actions"))
+		str = g_strdup_printf("<b>%s</b>",_("Peer Actions"));
 		gtk_label_set_markup (GTK_LABEL
 				      (lcActions), str);
 		g_free(str);			  
