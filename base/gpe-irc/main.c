@@ -54,7 +54,6 @@ GtkWidget *users_button_arrow;
 GtkWidget *users_button_arrow2;
 GtkListStore *users_list_store;
 GtkWidget *users_tree_view, *users_scroll;
-GtkWidget *nick_label;
 GtkTextBuffer *text_buffer;
 GtkWidget *scroll;
 
@@ -88,26 +87,24 @@ kill_widget (GtkWidget *parent, GtkWidget *widget)
   gtk_widget_destroy (widget);
 }
 
+void
+update_window_title ()
+{
+  gchar *new_title;
+
+  new_title = g_strdup_printf ("IRC Client - %s @ %s", selected_server->user_info->nick, selected_server->name);
+  gtk_window_set_title (GTK_WINDOW (main_window), new_title);
+}
+
 gchar *
 remove_invalid_utf8_chars (gchar *text)
 {
-  int char_num = 0;
-  gunichar valid_unicode;
-  gchar *valid_text = NULL, valid_utf8;
+  const gchar *invalid_start;
 
-  while (char_num < strlen (text))
-  {
-    valid_unicode = g_utf8_get_char_validated (text[char_num], -1);
-
-    if (valid_unicode != -1)
-    {
-      g_unichar_to_utf8 (valid_unicode, &valid_utf8);
-      valid_text = g_realloc (valid_text, strlen (valid_text) + 2);
-      valid_text[char_num] = valid_utf8;
-    }
-  }
-
-  return valid_text;
+  if (g_utf8_validate (text, -1, &invalid_start) == TRUE)
+    return text;
+  else
+    return NULL;
 }
 
 void
@@ -117,13 +114,13 @@ update_text_view (gchar *text)
   GtkTextIter start, end;
   GtkAdjustment *vadjust;
 
-  if (text)
+  text = remove_invalid_utf8_chars (text);
+  if (text != NULL)
   {
     //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
     vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
-    text = remove_invalid_utf8_chars (text);
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
     gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
     gtk_adjustment_set_value (vadjust, vadjust->upper);
@@ -190,12 +187,6 @@ do_irc_iter ()
 }
 
 void
-connection_postinit ()
-{
-  gtk_label_set_text (GTK_LABEL (nick_label), selected_server->user_info->nick);
-}
-
-void
 new_connection (GtkWidget *parent, GtkWidget *parent_window)
 {
   GtkWidget *server_combo_entry, *nick_entry, *real_name_entry, *password_entry, *button;
@@ -239,7 +230,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   server->button = button;
   selected_button = button;
 
-  gtk_label_set_text (GTK_LABEL (nick_label), server->user_info->nick);
+  update_window_title ();
 
   gtk_widget_destroy (parent_window);
 
@@ -407,7 +398,6 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (users_button), "clicked",
     		      GTK_SIGNAL_FUNC (toggle_users_list), NULL);
 
-  nick_label = gtk_label_new ("\t");
   users_button_label = gtk_label_new ("u\ns\ne\nr\ns");
   gtk_misc_set_alignment (GTK_MISC (users_button_label), 0.5, 0.5);
 
@@ -426,7 +416,6 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (main_hbox), scroll, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), users_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), users_scroll, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), nick_label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), main_entry, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), new_connection_button, FALSE, FALSE, 0);
 
