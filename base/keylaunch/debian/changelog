@@ -1,3 +1,9 @@
+keylaunch (2.0.5) unstable; urgency=low
+
+  * New 'Combine' action for multiple button presses (patch from pb).
+
+ -- Moray Allan <moray@sermisy.org>  Sun, 14 Sep 2003 23:44:44 +0100
+
 keylaunch (2.0.3) unstable; urgency=low
 
   * Key releases handled differently; fake events are now only generated for
