@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "event-db.h"
+#include <gpe/event-db.h>
 #include "today.h"
 
 #define CALENDAR_DB "/.gpe/calendar"

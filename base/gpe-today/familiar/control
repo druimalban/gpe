@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.01
 Architecture: arm
 Maintainer: Luis Oliveira <luis@handhelds.org>
-Depends: libgtk1.2, libsqlite0, libgpewidget0, libgdk-pixbuf2
+Depends: libc6, libgtk2.0-0, libgpewidget1, libeventdb
 Description: GPE today app 

@@ -3,12 +3,12 @@ PREFIX = /usr/local
 #DEBUG = yes 
 #LINGUAS = pt_PT
 
-MEMBERS = main todo calendar date event-db old-db todo-sql todo-old-db
+MEMBERS = main todo calendar date todo-sql todo-old-db
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CPPFLAGS = -I../libgpewidget -D_GNU_SOURCE
+CPPFLAGS = -I../libgpewidget -I../libeventdb -D_GNU_SOURCE
 
 ifeq ($(DEBUG),yes)
 CFLAGS = -g
@@ -18,7 +18,7 @@ CFLAGS = -Os -fomit-frame-pointer
 endif
 
 CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS)
+LDFLAGS += $(GTKLDFLAGS) -L../libeventdb -leventdb
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 #CFLAGS += -MD
 

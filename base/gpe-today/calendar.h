@@ -10,8 +10,8 @@
 #ifndef HAVE_CALENDAR_H
 #define HAVE_CALENDAR_H
 
+#include <gpe/event-db.h>
 #include "today.h"
-#include "event-db.h"
 
 struct {
 	GtkWidget *toplevel;
