@@ -1,5 +1,13 @@
 2005-01-03  Phil Blundell  <philb@gnu.org>
 
+	* Version 0.75 released.
+
+2005-01-03  Phil Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Fix cut and paste error.
+
+2005-01-03  Phil Blundell  <philb@gnu.org>
+
 	* Version 0.74 released.
 
 2005-01-03  Phil Blundell  <philb@gnu.org>

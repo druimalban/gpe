@@ -1441,7 +1441,7 @@ main (int argc, char *argv[])
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
 
-  gtk_init (argc, argv);
+  gtk_init (&argc, &argv);
   gtk_set_locale ();
 
   display = getenv ("DISPLAY");
