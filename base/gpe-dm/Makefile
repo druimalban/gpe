@@ -10,8 +10,13 @@ else
 BUILD = build
 endif
 
+CFLAGS = `pkg-config --cflags glib-2.0`
+LDFLAGS = `pkg-config --libs glib-2.0`
+
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+
 gpe-dm: gpe-dm.o
-	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 install-program: gpe-dm
 	install -Ds gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm

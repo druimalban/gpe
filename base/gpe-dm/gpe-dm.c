@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <syslog.h>
+#include <locale.h>
 
 #include <glib.h>
 
