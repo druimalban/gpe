@@ -22,13 +22,25 @@ endif
 LDFLAGS += -lgpewidget
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-edit
+all: gpe-edit mo
+
+mo:
+	make -C po
+
+install-po:
+	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
+
+update-po: po/gpe-edit.pot
+
+po/gpe-edit.pot: $(SOURCES)
+	xgettext -k_ -o po/gpe-edit.pot $^
 
 gpe-edit: $(OBJS)
 	$(CC) -o $@ $^ `gtk-config --libs` $(LDFLAGS)
 
-install: all
+install: all install-po
 	install -D gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
 	install -D -m 644 gpe-edit.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
