@@ -1,5 +1,9 @@
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.11 released.
+
+2003-02-20  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (install): Depend on gpe-timesheet.desktop.  Use
 	install -s.  Don't ship menu file.
 	* gpe-timesheet.menu: Deleted.
