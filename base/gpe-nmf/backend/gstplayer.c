@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -127,12 +127,16 @@ player_set_index (player_t p, gint idx)
     {
       int i, len;
       p->idx = 0; /* just in case it's not in the list */
-      len = playlist_get_length(p->list);
-      for (i=0;i<len;i++)
-	if (p->shuffle_list[i] == idx)
-	  p->idx = i;
-    } else  
-      p->idx = idx;
+      len = playlist_get_length (p->list);
+
+      for (i = 0; i < len; i++)
+	{
+	  if (p->shuffle_list[i] == idx)
+	    p->idx = i;
+	}
+    } 
+  else  
+    p->idx = idx;
 }
 
 struct playlist *
@@ -254,8 +258,33 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
   g_object_get_property (G_OBJECT (the_obj), "metadata", &value);
 
   caps = g_value_get_boxed (&value);
-  fprintf (stderr, "player %p: elt %p reports metadata %p\n", p, obj, caps);
-  gst_caps_debug (caps, NULL);
+  if (caps)
+    {
+      GstProps *props = gst_caps_get_props (caps);
+      
+      if (props)
+	{
+	  gchar *artist = NULL, *title = NULL, *album = NULL;
+	  
+	  if (gst_props_get (props, "ARTIST", &artist))
+	    {
+	      g_free (p->data.track.artist);
+	      p->data.track.artist = artist;
+	    }
+
+	  if (gst_props_get (props, "TITLE", &title))
+	    {
+	      g_free (p->title);
+	      p->title = title;
+	    }
+
+	  if (gst_props_get (props, "ALBUM", &album))
+	    {
+	      g_free (p->data.track.album);
+	      p->data.track.album = album;
+	    }
+	}
+    }
 
   /* If the metadata was all we wanted, stop the thread */
   if (p->cur == NULL)

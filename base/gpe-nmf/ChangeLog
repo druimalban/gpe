@@ -1,3 +1,9 @@
+2003-03-01  Philip Blundell  <philb@gnu.org>
+
+	* backend/gstplayer.c (player_set_index): Reformat mibuscode.
+	(metadata_notify): Extract the interesting metadata and stash it
+	in the playlist struct.
+
 2003-02-14  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.12 released.
