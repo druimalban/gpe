@@ -4,7 +4,7 @@
 
 \usepackage[margin=0.8cm,noheadfoot,a4paper]{geometry}
 \usepackage{calc}
-\usepackage[english, french, ngerman, spanish]{babel} % language support
+\usepackage[english, french, italian, ngerman, spanish]{babel} % language support
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{ae}
@@ -152,10 +152,20 @@ for handhelds«.
   \end{tabular}
 \end{table}
 
+\clearpage
+%% input another language file (that is using \renewcommand{\flyertext})
+\input{gpe-flyer_it}
+
+\RaggedRight
+\begin{table}
+  \begin{tabular}{p{\textwidth/2-1cm}p{1cm}p{\textwidth/2-1cm}}%
+    \flyertext{} & & \flyertext{}\\[1cm]
+    \flyertext{} & & \flyertext{}
+%    \\\vspace{1cm}%
+  \end{tabular}
+\end{table}
 
 \end{document}
-
-
 
 % From: Andreas Matthias <amat@KABSI.AT>
 % Subject: Re: Subject: 4 gleiche Flyer auf ein A4-Blatt?
