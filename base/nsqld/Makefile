@@ -1,7 +1,7 @@
 PACKAGE = nsqld
 PREFIX = /usr/local
 DEBUG = no
-VERSION = 0.1
+VERSION = 0.2
 CVSBUILD = yes
 SASL = no
 
@@ -43,6 +43,8 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -lsqlite `pkg-config --libs glib-2.0` $(SASL_LIBS)
 
 install-program: all
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
