@@ -71,6 +71,51 @@ int is_board_position (int x, int y)
         return 1;
 }
 
+int can_move (int fx, int fy, int tx, int ty) {
+	// Need to be on the board
+	if (!is_board_position (fx, fy))
+		return 0;
+	if (!is_board_position (tx, ty))
+		return 0;
+	// Have to move a piece
+	if (!board[fx][fy])
+		return 0;
+	// Have to have a spot to move it to
+	if (board[tx][ty])
+		return 0;
+	
+	// Can move horizontally?
+	if (fy == ty && abs(fx - tx) == 2 && board[(fx+tx)/2][fy] == 1)
+		return 1;
+	// Can move vertically?
+	if (fx == tx && abs(ty - fy) == 2 && board[fx][(fy+ty)/2] == 1)
+		return 1;
+
+	// Nup, can't move :-(
+	return 0;
+}
+
+int has_moves () {
+	int x,y;
+	for (x=0;x<BOARD_SIZE;x++)
+		for (y=0;y<BOARD_SIZE;y++)
+		{
+			// Move up?
+			if (can_move(x,y,x,y-2))
+				return 1;
+			// Move down?
+			if (can_move(x,y,x,y+2))
+				return 1;
+			// Move left?
+			if (can_move(x,y,x-2,y))
+				return 1;
+			// Move right?
+			if (can_move(x,y,x+2,y))
+				return 1;
+		}
+	return 0;
+}
+
 int count_pieces () {
 	int x,y,count=0;
 	for (x=0;x<BOARD_SIZE;x++)
@@ -89,7 +134,12 @@ void update_status ()
 
 	pieces = count_pieces ();
 	
-	msg = g_strdup_printf ("%d moves; %d pieces left", moves, pieces);
+	if (pieces <= 1)
+		msg = g_strdup_printf ("You win!!!");
+	else if (has_moves())
+		msg = g_strdup_printf ("%d moves; %d pieces left", moves, pieces);
+	else
+		msg = g_strdup_printf ("Game Over!");
 	smsg (msg);
 }
 
@@ -98,9 +148,11 @@ void init_board () {
   for (x=0;x<BOARD_SIZE;x++)
     for (y=0;y<BOARD_SIZE;y++)
       board[x][y] = 1;
-
+//
+//
  board[4][4] = 0;
  moves=0;
+ sel_x = sel_y = -1;
 
  if (game_table)
    gtk_widget_queue_draw_area (game_table, 0, 0, game_table->allocation.width, game_table->allocation.height);
@@ -278,6 +330,7 @@ expose_event_callback (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 	  sel_x = anim_x;
 	  sel_y = anim_y;
 	  anim_at_x = anim_at_y = -1;
+	  update_status();
 		  }
   }
 
@@ -317,19 +370,8 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
     sel_x = x, sel_y = y;
     redraw_piece (widget, x,y);
   } else { // Move!
-//	  printf ("Move %d/%d -> %d/%d (taking out %d/%d)\n",
-//			  sel_x,sel_y,x,y,(sel_x+x)/2,(sel_y+y)/2);
-	  if (y == sel_y && abs(sel_x - x) == 2 && board[(sel_x+x)/2][y] == 1)
-	  {
-		// OK
-	  } else if (x == sel_x && abs(sel_y - y) == 2 && board[x][(sel_y+y)/2] == 1)
-	  {
-		// OK
-	  } else
-	  {
-		// Can't move!
+	  if (!can_move (sel_x, sel_y, x, y))
 		  return FALSE;
-	  }
 
 	  moves++;
 
