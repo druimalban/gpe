@@ -1,8 +1,8 @@
 Package: gpe-session-scripts
 Section: x11
 Priority: optional
-Version: 0.17
+Version: 0.18
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: gpe-appmgr, xstroke, matchbox, gpe-login (>= 0.19), gpe-dm
+Depends: gpe-appmgr, xstroke, matchbox, gpe-login (>= 0.19), gpe-dm, xcalibrate
 Description: GPE session startup scripts

@@ -1,3 +1,11 @@
+2002-09-05  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.18 released.
+	
+2002-09-05  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Add xcalibrate.
+
 2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
 
 	* X11/Xinit.d/99gpe-login (TRANSPARENT): Only use transparency if
