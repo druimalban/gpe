@@ -1,7 +1,7 @@
 Package: gpe-dm
 Section: x11
 Priority: optional
-Version: 0.16.1
+Version: 0.17
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: gpe-session-scripts (>= 0.14), xserver

@@ -1,5 +1,10 @@
 2002-11-15  Philip Blundell  <philb@gnu.org>
 
+	* gpe-dm 0.17 released.
+	* gpe-session-scripts 0.23 released.
+
+2002-11-15  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.setup (PATH): Set suspend button to soft mode.
 	* gpe-login.keylaunchrc: Add suspend button handling.
 	
