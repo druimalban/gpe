@@ -10,6 +10,7 @@ MEMBERS += kbd
 MEMBERS += network
 MEMBERS += theme
 MEMBERS += keyctl
+MEMBERS += ownerinfo
 MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
