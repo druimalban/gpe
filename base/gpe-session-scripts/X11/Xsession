@@ -1,0 +1,24 @@
+#!/bin/sh
+# 
+
+. /etc/profile
+
+run_parts () {
+  for F in $(ls $1); do
+    if expr "$F" : '[[:alnum:]_-]\+$' > /dev/null 2>&1; then
+      if [ -f "$1/$F" ]; then
+        echo "$1/$F"
+      fi
+    fi
+  done;
+}
+
+SYSSESSIONDIR=/etc/X11/Xsession.d
+
+SESSIONFILES=$(run_parts $SYSSESSIONDIR)
+if [ -n "$SESSIONFILES" ]; then
+for SESSIONFILE in $SESSIONFILES; do
+    . $SESSIONFILE
+done
+fi
+
