@@ -432,7 +432,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
   GSList *list = NULL;
   struct tm tm_event, tm_display;
   long int check_recur_time, check_recur_month, check_recur_year;
-  long int time_increment=end-start, offset;
+  long int time_increment=end-start;
 	  
   if (end == 0)		/* ??? pb */
     {
@@ -479,7 +479,7 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
   for (iter = recurring_events; iter; iter = g_slist_next (iter))
     {
       event_t ev = iter->data, clone;
-      time_t event_start = ev->start;
+      time_t event_start = ev->start, clone_start;
       recur_t r = ev->recur;
       
       if (untimed_significant)
@@ -507,8 +507,8 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	  abort ();
 	  
 	case RECUR_DAILY:
-	  if (alarms) event_start-=ev->alarm;
-	  check_recur_time = (start-event_start)%(r->increment*SECONDS_IN_DAY);
+	  if (alarms) check_recur_time = (start-event_start-ev->alarm)%(r->increment);
+	  else check_recur_time = (start-event_start)%(r->increment);
 	  if (check_recur_time < time_increment) 
 	    {
 	      gboolean skip=FALSE;
@@ -517,9 +517,9 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	  	  if ((long)iter2->data == (long)event_start) skip=TRUE;
 	       if (!skip)
 	       {
-	  	  offset=(start-event_start)/SECONDS_IN_DAY;
-		  clone = event_db_clone(ev);
-	  	  clone->start = event_start+offset*SECONDS_IN_DAY;
+	  	  clone = event_db_clone(ev);
+	  	  if (alarms) clone->start = start-ev->alarm;
+	  	  else clone->start = start;
 	  	  clone->flags |= FLAG_RECUR;
 	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
 	       }
@@ -528,8 +528,9 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 
 	case RECUR_WEEKLY:
           localtime_r (&start, &tm_display);
-          if (alarms) event_start-=ev->alarm;
-	  check_recur_time = (start-event_start)%SECONDS_IN_DAY;
+          localtime_r (&event_start, &tm_event);
+	  if (alarms) check_recur_time = (start-event_start-ev->alarm)%SECONDS_IN_DAY;
+	  else check_recur_time = (start-event_start)%SECONDS_IN_DAY;
 	  if (((r->daymask & MON && tm_display.tm_wday==1) ||
 	       (r->daymask & TUE && tm_display.tm_wday==2) ||
 	       (r->daymask & WED && tm_display.tm_wday==3) ||
@@ -542,11 +543,16 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	      if (r->exceptions) 
 	  	for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
 	  	  if ((long)iter2->data == (long)event_start) skip=TRUE;
+	       tm_display.tm_hour=tm_event.tm_hour;
+	       tm_display.tm_min=tm_event.tm_min;
+	       tm_display.tm_sec=tm_event.tm_sec;
+	       clone_start=mktime(&tm_display);
+	       if(alarms && start>clone_start-ev->alarm) skip=TRUE;
 	       if (!skip)
 	       {
-	  	  offset=(start-event_start)/SECONDS_IN_DAY;
-		  clone = event_db_clone(ev);
-	  	  clone->start = event_start+offset*SECONDS_IN_DAY;
+	  	  clone = event_db_clone(ev);
+	  	  if (alarms) clone->start = clone_start-ev->alarm;
+	  	  else clone->start = clone_start;
 	  	  clone->flags |= FLAG_RECUR;
 	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
 	       }
@@ -555,9 +561,9 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 
 	case RECUR_MONTHLY:
           localtime_r (&start, &tm_display);
-          if (alarms) event_start-=ev->alarm;
-	  localtime_r (&event_start, &tm_event);
-	  check_recur_time = (start-event_start)%SECONDS_IN_DAY;
+          localtime_r (&event_start, &tm_event);
+	  if (alarms) check_recur_time = (start-event_start-ev->alarm)%SECONDS_IN_DAY;
+	  else check_recur_time = (start-event_start)%SECONDS_IN_DAY;
 	  check_recur_month = (tm_display.tm_mon-tm_event.tm_mon)%(r->increment);
 	  if (tm_display.tm_mday==tm_event.tm_mday && check_recur_time < time_increment
 	        && check_recur_month==0) {
@@ -565,11 +571,16 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	      if (r->exceptions) 
 	  	for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
 	  	  if ((long)iter2->data == (long)event_start) skip=TRUE;
+	       tm_display.tm_hour=tm_event.tm_hour;
+	       tm_display.tm_min=tm_event.tm_min;
+	       tm_display.tm_sec=tm_event.tm_sec;
+	       clone_start=mktime(&tm_display);
+	       if(alarms && start>clone_start-ev->alarm) skip=TRUE;
 	       if (!skip)
 	       {
-	  	  offset=(start-event_start)/SECONDS_IN_DAY;
-		  clone = event_db_clone(ev);
-	  	  clone->start = event_start+offset*SECONDS_IN_DAY;
+	  	  clone = event_db_clone(ev);
+	  	  if (alarms) clone->start = clone_start-ev->alarm;
+	  	  else clone->start = clone_start;
 	  	  clone->flags |= FLAG_RECUR;
 	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
 	       }
@@ -578,9 +589,9 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 
 	case RECUR_YEARLY:
           localtime_r (&start, &tm_display);
-          if (alarms) event_start-=ev->alarm;
-	  localtime_r (&event_start, &tm_event);
-	  check_recur_time = (start-event_start)%SECONDS_IN_DAY;
+          localtime_r (&event_start, &tm_event);
+	  if (alarms) check_recur_time = (start-event_start-ev->alarm)%SECONDS_IN_DAY;
+	  else check_recur_time = (start-event_start)%SECONDS_IN_DAY;
 	  check_recur_year = (tm_display.tm_year-tm_event.tm_year)%(r->increment);	  
           if (tm_display.tm_mon==tm_event.tm_mon && check_recur_time < time_increment &&
 	        tm_display.tm_mday==tm_event.tm_mday && check_recur_year==0) {
@@ -588,11 +599,16 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	      if (r->exceptions) 
 	  	for (iter2 = r->exceptions; iter2; iter2 = g_slist_next (iter2))
 	  	  if ((long)iter2->data == (long)event_start) skip=TRUE;
+	       tm_display.tm_hour=tm_event.tm_hour;
+	       tm_display.tm_min=tm_event.tm_min;
+	       tm_display.tm_sec=tm_event.tm_sec;
+	       clone_start=mktime(&tm_display);
+	       if(alarms && start>clone_start-ev->alarm) skip=TRUE;
 	       if (!skip)
 	       {
-	  	  offset=(start-event_start)/SECONDS_IN_DAY;
-		  clone = event_db_clone(ev);
-	  	  clone->start = event_start+offset*SECONDS_IN_DAY;
+	  	  clone = event_db_clone(ev);
+	  	  if (alarms) clone->start = clone_start-ev->alarm;
+	  	  else clone->start = clone_start;
 	  	  clone->flags |= FLAG_RECUR;
 	  	  list = g_slist_insert_sorted (list, clone, (GCompareFunc)event_sort_func);
 	       }
@@ -632,13 +648,23 @@ GSList *
 event_db_list_alarms_for_period (time_t start, time_t end)
 {
   GSList *return_list = NULL;
+  time_t shifted_end;
+  struct tm tm_shift;
   
-  do
+  localtime_r (&start, &tm_shift);
+  tm_shift.tm_mday++;
+  tm_shift.tm_hour=0;
+  tm_shift.tm_min=0;
+  tm_shift.tm_sec=1;
+  shifted_end=mktime(&tm_shift);
+  return_list=event_db_list_for_period_internal (start, shifted_end, FALSE, FALSE, TRUE, 0);
+  start=shifted_end;
+   
+  while (!return_list && start<end)
   {
     return_list=event_db_list_for_period_internal (start, start+SECONDS_IN_DAY, FALSE, FALSE, TRUE, 0);
     start+=SECONDS_IN_DAY;
-    printf("%x\n", return_list);
-  } while (!return_list && start<end);
+  } 
   return(return_list);
 }
 
