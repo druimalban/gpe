@@ -82,8 +82,8 @@ install: gpe-conf
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../libgpewidget/
 	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl > gpe-conf.menu_tmp
 	$(INSTALL) gpe-conf.menu_tmp $(DESTDIR)$(PREFIX)/lib/menu/gpe-conf
-	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/default
-	$(INSTALL) pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/default/ipaq.png
+	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
+	$(INSTALL) pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
 
 ipkg: clean
 	rm -rf familiar/dist
