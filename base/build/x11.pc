@@ -1,6 +1,6 @@
 prefix=/usr
 exec_prefix=${prefix}
-libdir=${exec_prefix}/lib/X11R6
+libdir=${exec_prefix}/X11R6/lib
 includedir=${prefix}/X11R6/include
 
 Name: X11
