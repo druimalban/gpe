@@ -97,7 +97,7 @@
       </single-item>
       <single-item>
         <tag>FAMILY_NAME</tag>
-        <label>Familiy name</label>
+        <label>Last name</label>
       </single-item>
       <single-item>
         <tag>HONORIFIC_SUFFIX</tag>
