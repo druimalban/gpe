@@ -1,5 +1,5 @@
 <!-- ##### SECTION Title ##### -->
-dirbrowser
+Dirbrowser
 
 <!-- ##### SECTION Short_Description ##### -->
 
@@ -28,5 +28,3 @@ Creates and opens a directory browser dialog.
 @mode: A selection mode to set in directory browser.
 @handler: Function to handle directory selection.
 @Returns: Dialof widget
-
-

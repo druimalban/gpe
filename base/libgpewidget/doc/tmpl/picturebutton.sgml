@@ -1,16 +1,16 @@
 <!-- ##### SECTION Title ##### -->
-picturebutton
+PictureButton
 
 <!-- ##### SECTION Short_Description ##### -->
-
+A small button with label and pixmap.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+GPE uses compact buttons containing a label and a pixmap for dialog buttons.
+The PictureButton widget provides a simple interface dealing with these buttons.
 </para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
