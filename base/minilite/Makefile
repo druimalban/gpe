@@ -8,7 +8,7 @@ LINGUAS =
 
 MEMBERS = minilite
 
-CPPFLAGS = -D_GNU_SOURCE -DIPAQ
+CPPFLAGS = -Wall -D_GNU_SOURCE -DIPAQ
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence

@@ -162,9 +162,7 @@ int
 main (int argc, char **argv)
 {
   GdkBitmap *bitmap;
-  GtkWidget *menu_remove;
   GtkTooltips *tooltips;
-  int dd;
   GtkWidget *icon;
   GtkAdjustment *adj;
 
