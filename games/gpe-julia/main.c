@@ -12,6 +12,7 @@
 #include <locale.h>
 #include <signal.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 
