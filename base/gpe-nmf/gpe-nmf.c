@@ -93,6 +93,8 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *vol_slider;
   GtkWidget *draw, *progress;
   GtkObject *vol_adjust;
+  GtkWidget *hboxlist;
+  GtkWidget *labellist, *buttonlist, *arrowlist;
 
   gchar *color = "gray80";
   Atom window_type_atom, window_type_toolbar_atom;
@@ -214,6 +216,20 @@ main (int argc, char *argv[])
   gtk_widget_show (draw);
   gtk_signal_connect (GTK_OBJECT (draw), "expose-event",
 		      draw_expose_event, NULL);
+
+  hboxlist = gtk_hbox_new (FALSE, 0);
+  labellist = gtk_label_new ("name of playlist here");
+  buttonlist = gtk_button_new ();
+  arrowlist = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
+  gtk_container_add (GTK_CONTAINER (buttonlist), arrowlist);
+  gtk_widget_show (arrowlist);
+  gtk_widget_show (buttonlist);
+  gtk_widget_show (labellist);
+  gtk_widget_show (hboxlist);
+  gtk_box_pack_end (GTK_BOX (hboxlist), buttonlist, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hboxlist), labellist, TRUE, TRUE, 0);
+  
+  gtk_box_pack_start (GTK_BOX (vbox), hboxlist, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
 
