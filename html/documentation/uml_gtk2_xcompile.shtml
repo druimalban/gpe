@@ -18,7 +18,7 @@ href="http://packages.debian.org/unstable/doc/user-mode-linux-doc.html">here</a>
 RPM packages can be found <a 
 href="http://user-mode-linux.sourceforge.net/dl-rpms-sf.html">here</a> on the 
 UML website. As of this writing (2003-07-15), the latest RPM is dated Sep 16 
-2002 and is based on a 2.4.19 kernel. You can also build your own UML 
+2002 and is based on a 2.4.19 kernel [2004-05-13: this is still the latest RPM on that page]. You can also build your own UML 
 executable by following the instructions <a 
 href="http://user-mode-linux.sourceforge.net/compile.html">here</a>.</p>
 
@@ -37,6 +37,27 @@ For Debian systems (and any others that don't use devfs by default), you will
 need to specify "devfs=mount" on the command line. If you didn't create a 
 link or rename your image file, you need to use the "ubd0=" option.<br>
 <code>~/uml$ linux devfs=mount ubd0=gtk2-arm-cross.ext2</code></p>
+
+<p>2004-05-13: It came to my attention some time ago that when you upgrade to
+(or install from the start) a later version of UML than the one I was
+originally using (2.4.20-6um), the image refuses to boot up and generates a 
+kernel panic. This is due to the modules in the image being for an earlier 
+kernel version.<br>
+After installing/upgrading the Debian user-mode-linux package, you can find 
+the modules for the new kernel in /usr/lib/uml/modules. To install these 
+modules into the image file, do this (as root)<br>
+<code>/home/user/uml# modprobe loop<br>
+/home/user/uml# losetup /dev/loop0 gtk2-arm-cross.ext2</code><br>
+If you are using devfs, you should use /dev/loop/0 instead of /dev/loop0<br>
+<code>/home/user/uml# mount -t ext2 /dev/loop0 /mnt<br>
+/home/user/uml# cp -a /usr/lib/uml/modules/. /mnt/lib/modules</code><br>
+You should then be able to start UML as described above (as your normal user). 
+Presumably there is some mechanism by which you can always use the modules 
+from /usr/lib/uml/modules (instead of the ones in the image file's 
+/lib/modules), but I haven't had time to look into this yet. You may also want 
+to delete the obsolete modules directory from the image's /lib/modules 
+directory. You can do that either on the loopback mounted filesystem, or from 
+with the UML session (as the UML root user).</p>
 
 <p>The filesystem image contains a root user and a normal user "toby". Neither 
 have a password, so at the login prompt you only need to type a username to 
