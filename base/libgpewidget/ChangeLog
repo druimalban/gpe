@@ -1,4 +1,12 @@
-2002-12-28  Philip Blundell  <philb@gnu.org>
+2002-12-30  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.37 released.
+
+2002-12-30  Philip Blundell  <philb@gnu.org>
+
+	* gtkminifilesel.c (set_members): Use gpe_try_find_icon.
+
+2002-12-29  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.36 released.
 

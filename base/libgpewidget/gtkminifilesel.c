@@ -442,9 +442,15 @@ set_members (GtkMiniFileSelection *fs)
   GdkBitmap *dirup_mask;
   GdkPixmap *folder_pix;
   GdkBitmap *folder_mask;
+  GdkPixbuf *pixbuf;
 
-  gpe_find_icon_pixmap ("dir-up", &dirup_pix, &dirup_mask);
-  gpe_find_icon_pixmap ("dir-closed", &folder_pix, &folder_mask);
+  pixbuf = gpe_try_find_icon ("dir-up", NULL);
+  if (pixbuf)
+    gdk_pixbuf_render_pixmap_and_mask (pixbuf, &dirup_pix, &dirup_mask, 127);
+
+  pixbuf = gpe_try_find_icon ("dir-closed", NULL);
+  if (pixbuf)
+    gdk_pixbuf_render_pixmap_and_mask (pixbuf, &folder_pix, &folder_mask, 127);
  
   gtk_clist_clear (GTK_CLIST (fs->clist));
 
@@ -554,7 +560,7 @@ selection_made(GtkWidget      *clist,
 	{
 	case 1:
 	  {
-	    gchar *s, *ls;
+	    gchar *s;
 	    if (strcmp (fs->directory, "/"))
 	      s = g_strdup_printf ("%s/%s", fs->directory, text);
 	    else
