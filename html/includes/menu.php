@@ -18,11 +18,11 @@ function menu_entry($page, $title, $link,$thispage)
  |
 <?php menu_entry("projects", "Projects", "/projects/", $pagename); ?>
  |
-<?php menu_entry("documentation", "Documentation", "/documentation.shtml", $pagename); ?>
+<?php menu_entry("documentation", "Documentation", "/documentation.php", $pagename); ?>
  |
 <?php menu_entry("screenshots", "Screenshots", "/screenshots/", $pagename); ?>
  |
-<?php menu_entry("download", "Download", "/download.shtml", $pagename); ?>
+<?php menu_entry("download", "Download", "/download.php", $pagename); ?>
  |
 <?php menu_entry("contact", "Mailing list", "/contact.php", $pagename); ?>
  |
@@ -32,7 +32,7 @@ function menu_entry($page, $title, $link,$thispage)
  |
 <?php menu_entry("cvs", "CVS", "/cvs.php", $pagename); ?>
  |
-<?php menu_entry("linkres", "Links/Resources", "/linkres.shtml", $pagename); ?>
+<?php menu_entry("linkres", "Links/Resources", "/linkres.php", $pagename); ?>
 
 </small>
 </div>

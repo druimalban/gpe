@@ -1,8 +1,11 @@
-<!--#set var="addtitle" value="Documentation"-->
-<!--#set var="pagename" value="documentation"-->
-<!--#set var="author" value="Colin Marquardt"-->
-<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
-<!--#include virtual="includes/head.shtml"-->
+<?php
+$addtitle="Documentation";
+$pagename="documentation";
+$author="Colin Marquardt";
+$authoremail="gpe-web@marquardt-home.de";
+
+include ("includes/head.php");
+?>
 
 <h2>Users</h2>
 
@@ -21,4 +24,4 @@ handhelds.org wiki</a> for now.
     Mode Linux cross compiling environment with GTK2</a>
 </ul>
 
-<!--#include virtual="includes/foot.shtml"-->
+<?php include ("includes/foot.php"); ?>

@@ -1,8 +1,11 @@
-<!--#set var="addtitle" value="Links/Resources"-->
-<!--#set var="pagename" value="linkres"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
-<!--#include virtual="includes/head.shtml"-->
+<?php
+$addtitle="Links/Resources";
+$pagename="linkres";
+$author="Nils Faerber";
+$authoremail="nils@handhelds.org";
+
+include ("includes/head.php");
+?>
 
 <H2>GPE Wiki</H2>
 
@@ -106,4 +109,4 @@ SyncML library<BR>
 
 Please see the <a href="http://gpe.handhelds.org/ChangeLog">ChangeLog</a>.
 
-<!--#include virtual="includes/foot.shtml"-->
+<?php include ("includes/foot.php"); ?>
