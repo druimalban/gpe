@@ -335,7 +335,8 @@ pan_thread (struct bt_service_pan *svc)
       gdk_threads_enter ();
       gpe_error_box_nonblocking (_("Connection failed\n"));
       gdk_threads_leave ();
-      return;
+      svc->thread = NULL;
+      g_thread_exit (0);
     }
 
   for (;;)

@@ -5,9 +5,9 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.22
 
-MEMBERS = main dun sdp pan lap rfcomm
+MEMBERS = main dun sdp pan lap rfcomm bluez-pin
 
-CFLAGS = `pkg-config --cflags gtk+-2.0`
+CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
 CONTROL = control1
 
 CFLAGS += -D_GNU_SOURCE -Wall
@@ -27,12 +27,14 @@ else
 CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0`
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` -lsqlite
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+vpath %.c ../bluez-pin
 
 all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
 

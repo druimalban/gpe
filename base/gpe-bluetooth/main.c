@@ -81,6 +81,8 @@ gboolean radio_is_on;
 GdkWindow *dock_window;
 GSList *service_desc_list;
 
+extern void bluez_pin_dbus_server_run (void);
+
 GtkWidget *
 bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf)
 {
@@ -480,6 +482,8 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
+
+  bluez_pin_dbus_server_run ();
 
   window = gtk_plug_new (0);
   gtk_widget_set_usize (window, 16, 16);
