@@ -1,5 +1,19 @@
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.38 released.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* event-ui.c (build_edit_event_window): Tweak expand and fill
+	arguments for better effect.  Include <gpe/spacing.h>.
+
+2003-03-23  Christian Meyer  <chrisime@gnome.org>
+                                                                        
+	* event-ui.c (build_edit_event_window): Improved layout quite a
+	bit. Removed unnecessary code, deprecated function calls.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
 	* Version 0.37 released.
 
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
