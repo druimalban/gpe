@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Julia
-Comment=Fractal generator
+_Name=Julia
+_Comment=Fractal generator
 Exec=gpe-julia
 Terminal=0
 Type=Application

@@ -37,8 +37,8 @@ static struct gpe_icon my_icons[] = {
 GtkWidget *window = NULL, *statusbar = NULL;
 GdkPixbuf *pixbuf = NULL;
 GtkWidget *image_widget = NULL;
-gint width = 240;
-gint height = 240;
+gint width = 320;
+gint height = 320;
 gint iterations = 20;
 
 guchar *colour[3];
