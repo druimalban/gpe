@@ -9,16 +9,12 @@ LINGUAS = de sv wa nl pt cs fr
 
 CONTROL_GPE_LOGIN = control1
 
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
+CPPFLAGS += $(STANDARD_CPPFLAGS)
+CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
-CFLAGS += $(GPECFLAGS) -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -D_GNU_SOURCE -I../gpe-ownerinfo
-
+# only works if CVSBUILD
+CPPFLAGS += -I../gpe-ownerinfo
 LDFLAGS_OWNERINFO = -L../gpe-ownerinfo -lgpe-ownerinfo
 
 MEMBERS = gpe-login
