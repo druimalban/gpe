@@ -29,8 +29,8 @@ CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 CPPFLAGS += -I.
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 
 MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0
 MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir 
@@ -41,7 +41,7 @@ ifeq ($(NATIVE),yes)
 STRIP=strip
 CC=gcc
 
-CFLAGS +=  -Wall
+CFLAGS +=  -Wall $(GTKCFLAGS)
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 
 else # we do cross-compile...

@@ -1,3 +1,9 @@
+2003-07-27  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (GTKCFLAGS, GTKLDFLAGS): gtk+-2.0 includes gdk-2.0 and
+	gdk-pixbuf-2.0, no need to call them in here.
+	(CFLAGS) [NATIVE=yes]: Include $(GTKCFLAGS).
+
 07/24/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- Reads some information about peer.
