@@ -1,5 +1,8 @@
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (install-program): Install pixmaps for clock face in
+	$PREFIX/share/libgpewidget, not $PREFIX/share/gpe/pixmaps.
+
 	* picturebutton.c (gpe_button_new_from_stock): Fix packing error.
 
 2003-04-07  Philip Blundell  <philb@gnu.org>

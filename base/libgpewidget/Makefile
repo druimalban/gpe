@@ -68,10 +68,10 @@ install-program: $(SONAME)
 ifneq ($(GTK2),yes)
 	install -D $(GTKRC) $(DESTDIR)$(PREFIX)/share/gpe/$(GTKRC)
 endif
-	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
-	install -m 644 pixmaps/clock.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/clock.png
-	install -m 644 pixmaps/clock24.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/clock24.png
-	install -m 644 pixmaps/day-night-wheel.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/day-night-wheel.png
+	install -d $(DESTDIR)$(PREFIX)/share/libgpewidget/
+	install -m 644 pixmaps/clock.png $(DESTDIR)$(PREFIX)/share/libgpewidget/clock.png
+	install -m 644 pixmaps/clock24.png $(DESTDIR)$(PREFIX)/share/libgpewidget/clock24.png
+	install -m 644 pixmaps/day-night-wheel.png $(DESTDIR)$(PREFIX)/share/libgpewidget/day-night-wheel.png
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
