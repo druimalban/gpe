@@ -33,6 +33,7 @@
 
 static GdkAtom help_atom, string_atom;
 static Atom help_xatom, string_xatom;
+static gboolean gpe_what_initialised;
 
 void gpe_what_mark_widget (GtkWidget *widget);
 
@@ -81,20 +82,23 @@ filter_func (GdkXEvent *xev, GdkEvent *ev, gpointer p)
 void
 gpe_what_mark_widget (GtkWidget *widget)
 {
-  if (widget->window)
+  if (gpe_what_initialised)
     {
-      widgets = g_slist_prepend (widgets, widget);
-
-      gdk_property_change (widget->window,
-			   help_atom,
-			   help_atom,
-			   8,
-			   GDK_PROP_MODE_REPLACE,
-			   NULL,
-			   0);
+      if (widget->window)
+	{
+	  widgets = g_slist_prepend (widgets, widget);
+	  
+	  gdk_property_change (widget->window,
+			       help_atom,
+			       help_atom,
+			       8,
+			       GDK_PROP_MODE_REPLACE,
+			       NULL,
+			       0);
+	}
+      else
+	g_signal_connect_after (widget, "realize", G_CALLBACK (gpe_what_mark_widget), NULL);
     }
-  else
-    g_signal_connect_after (widget, "realize", G_CALLBACK (gpe_what_mark_widget), NULL);
 }
 
 void
@@ -107,4 +111,6 @@ gpe_what_init (void)
   string_xatom = gdk_x11_atom_to_xatom (string_atom);
 
   gdk_add_client_message_filter (help_atom, filter_func, NULL);
+
+  gpe_what_initialised = TRUE;
 }
