@@ -1,3 +1,12 @@
+2004-05-31  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.81 released.
+
+2004-05-31  Philip Blundell  <philb@gnu.org>
+
+	* gpeclockface.c (gpe_clock_face_size_request): Add one to radius
+	around all edges.
+
 2004-05-28  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.80 released..
