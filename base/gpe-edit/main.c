@@ -22,6 +22,7 @@
 
 #include "init.h"
 #include "errorbox.h"
+#include "render.h"
 #include "pixmaps.h"
 #include "gtkminifilesel.h"
 
@@ -35,7 +36,7 @@ GtkWidget *main_window;
 GtkWidget *text_area;
 GtkWidget *file_selector;
 
-struct pix my_pix[] = {
+struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "open", "open" },
   { "save", "save" },
@@ -61,7 +62,6 @@ void
 update_window_title (void)
 {
   gchar *window_title;
-  gchar *file_basename;
 
   const char *displayname = filename ? basename (filename) : _("Untitled");
   window_title = g_malloc (strlen (WINDOW_NAME " - ") + strlen (displayname) + 1);
@@ -215,13 +215,13 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *vbox, *toolbar, *scroll;
-  struct pix *p;
+  GdkPixbuf *p;
   GtkWidget *pw;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  if (gpe_load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -244,47 +244,47 @@ main (int argc, char *argv[])
   text_area = gtk_text_new (NULL, NULL);
   gtk_text_set_editable (GTK_TEXT (text_area), TRUE);
 
-  p = gpe_find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("new");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New document"), 
 			   _("New document"), _("New document"), pw, new_file, NULL);
 
-  p = gpe_find_pixmap ("open");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("open");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open file"), 
 			   _("Open file"), _("Open file"), pw, select_open_file, NULL);
 
-  p = gpe_find_pixmap ("save");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("save");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save current file"), 
 			   _("Save current file"), _("Save current file"), pw, save_file, NULL);
 
-  p = gpe_find_pixmap ("save_as");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("save_as");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save current file as"), 
 			   _("Save current file as"), _("Save current file as"), pw, select_save_file_as, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_pixmap ("cut");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("cut");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Cut the selection"), 
 			   _("Cut the selection"), _("Cut the selection"), pw, cut_selection, NULL);
 
-  p = gpe_find_pixmap ("copy");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("copy");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy the selection"), 
 			   _("Copy the selection"), _("Copy the selection"), pw, copy_selection, NULL);
 
-  p = gpe_find_pixmap ("paste");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("paste");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste the clipboard"), 
 			   _("Paste the clipboard"), _("Paste the clipboard"), pw, paste_clipboard, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_pixmap ("exit");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("exit");
+  pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Exit"), pw, gtk_exit, NULL);
 
