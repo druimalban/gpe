@@ -114,7 +114,7 @@ void update_tree(void);
 
 static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_File"),         NULL,         NULL, MI_FILE, "<Branch>" },
-  { N_("/File/_Open"), "", on_load_clicked, MI_OPEN, "<StockItem>", GTK_STOCK_OPEN},
+  { N_("/File/_Load"), "", on_load_clicked, MI_OPEN, "<StockItem>", GTK_STOCK_OPEN},
   { N_("/File/_Save"), "", on_save_clicked, MI_SAVE, "<StockItem>", GTK_STOCK_SAVE},
   { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
   { N_("/File/_Close"),  NULL, do_safe_exit, 0, "<StockItem>", GTK_STOCK_QUIT },
@@ -202,6 +202,15 @@ wait_command_finish()
 
 
 /* --- local intelligence --- */
+
+static gboolean
+rules_can_load(void)
+{
+	if (access(CONFIGFILE, F_OK))
+		return FALSE;
+	else
+		return TRUE;
+}
 
 
 static void
@@ -542,7 +551,7 @@ void do_message_dlg(int type,char *msg)
 
 void do_end_command()
 {
-    gtk_widget_set_sensitive(miLoad,TRUE);
+    gtk_widget_set_sensitive(miLoad, rules_can_load());
     gtk_widget_set_sensitive(miSave,TRUE);
     gtk_widget_set_sensitive(miApply,get_network_control());
     gtk_widget_set_sensitive(bApply,get_network_control());
@@ -908,6 +917,7 @@ create_fMain (void)
 			  G_CALLBACK (change_network_control), NULL);
   
   g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
+  gtk_widget_set_sensitive(miLoad, rules_can_load());
   
   gtk_widget_show_all(fMain);
 }

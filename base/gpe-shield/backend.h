@@ -108,6 +108,7 @@ pkmessage_t;
 
 #define PK_SOCKET "/tmp/.gpe_shield_icm"
 #define LOADRULES_MARK "/etc/gpe/gpe-shield-load"
+#define CONFIGFILE	"/etc/access.conf"
 
 extern int suidloop (int sock);
 extern void do_rules_apply();

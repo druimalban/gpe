@@ -35,7 +35,6 @@ static int sock = -1;
 static rule_t *rule_info = NULL;
 static int rule_count = 0;
 
-#define CONFIGFILE	"/etc/access.conf"
 #define DEFAULT_INTERFACE "!lo"
 
 #define IPTABLES_CMD1 "/usr/sbin/iptables"
