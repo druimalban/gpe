@@ -5,24 +5,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.0-pre4\n"
-"POT-Creation-Date: 2003-06-11 18:07+0200\n"
-"PO-Revision-Date: 2003-07-02 20:07+0200\n"
+"Project-Id-Version: gpe-conf 0.1.0-pre6\n"
+"POT-Creation-Date: 2003-07-08 20:08+0200\n"
+"PO-Revision-Date: 2003-09-13 20:31+0200\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:318
+#: main.c:288
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr ""
+
+#: main.c:343
 msgid "Warning: PCMCIA init failed."
 msgstr "Warnung: PCMCIA-Initialisierung fehlgeschlagen."
 
-#: main.c:345
+#: main.c:371
 msgid "This mode is disabled, please try:\n"
 msgstr "Dieser Mode ist nicht verfügbar, bitte versuchen Sie:\n"
 
-#: main.c:346
+#: main.c:372
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
@@ -32,12 +36,12 @@ msgstr ""
 "gpe-conf [AppletName]\n"
 "mit AppletName:\n"
 
-#: main.c:360
+#: main.c:385
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Applet %s unbekannt!\n"
 
-#: main.c:361
+#: main.c:386
 msgid ""
 "\n"
 "\n"
@@ -49,7 +53,7 @@ msgstr ""
 "Verwendung: gpe-conf [AppletName]\n"
 "mit AppletName:\n"
 
-#: applets.c:332
+#: applets.c:327
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -59,7 +63,7 @@ msgstr ""
 "für root verfügbar.\n"
 "Bitte geben Sie das Paßwort ein."
 
-#: applets.c:368 ipaqscreen/calibrate.c:33
+#: applets.c:363 ipaqscreen/calibrate.c:33
 msgid "Sorry, wrong password."
 msgstr "Falsches Paßword."
 
@@ -157,7 +161,7 @@ msgstr "Auswahl, ob erweiterte Einstellungen angeboten werden sollen."
 
 #: timeanddate.c:646
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr ""
+msgstr "Um die Zeitzonen-Einstellungen zu übernehmen, müssen Sie sich erneut einloggen."
 
 #: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
 msgid "General"
@@ -296,7 +300,7 @@ msgstr ""
 msgid "Tap here to select this keyboard model."
 msgstr "Klicken Sie hier, um dieses Tastaturmodell auszuwählen."
 
-#: keyboard.c:315
+#: keyboard.c:315 packages.c:183 packages.c:364
 msgid "Install"
 msgstr "Installieren"
 
@@ -324,7 +328,7 @@ msgstr "Diese Interface-Definition existiert bereits!"
 msgid "Do you want to delete this interface?"
 msgstr "Wollen sie dieses Interface löschen?"
 
-#: network.c:227 keyctl.c:159
+#: network.c:227 keyctl.c:151
 msgid "Question"
 msgstr "Frage"
 
@@ -386,7 +390,7 @@ msgstr "Proxy"
 
 #: network.c:697
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr ""
+msgstr "Wenn Sie einen Proxy verwenden wollen oder müssen, tragen Sie diesen hier ein. (Im Moment nur in Dillo benutzt.)"
 
 #: network.c:702
 msgid "No proxy for"
@@ -394,7 +398,7 @@ msgstr "Kein Proxy für"
 
 #: network.c:705
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr ""
+msgstr "Tragen Sie hier Ihre lokale Domain ein, für die Sie keinen Proxy verwenden wollen."
 
 #: network.c:714
 msgid "Use DHCP in any case (usually not needed)."
@@ -410,7 +414,7 @@ msgstr "DNS-Server"
 
 #: network.c:758
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr ""
+msgstr "Tragen Sie die IP-Adresse des DNS-(Name-)Servers hier ein"
 
 #: network.c:939
 msgid ""
@@ -418,47 +422,48 @@ msgid ""
 "Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
 msgstr ""
 
-#: network.c:971 network.c:972
+#: network.c:966 network.c:967
 msgid "Add Interface"
 msgstr "Interface hinzufügen"
 
-#: network.c:973
+#: network.c:968
 msgid "Add a new Interface"
 msgstr "Ein neues Interface hinzufügen"
 
-#: network.c:981 network.c:982
+#: network.c:976 network.c:977
 msgid "Remove Interface"
 msgstr "Interface entfernen"
 
-#: network.c:983
+#: network.c:978
 msgid "Remove current Interface"
 msgstr "Aktuelles Interface entfernen"
 
-#: network.c:996
+#: network.c:991
 msgid "Information"
 msgstr "Information"
 
-#: network.c:997 network.c:998
+#: network.c:992 network.c:993
 msgid "Show current configuration."
 msgstr "Zeige aktuelle Konfiguration."
 
-#: network.c:1009
+#: network.c:1004
 msgid "Close"
 msgstr "Schließen"
 
-#: network.c:1010
+# !!!
+#: network.c:1005
 msgid "Close  network tool"
 msgstr ""
 
-#: network.c:1011
+#: network.c:1006
 msgid "Close network tool"
 msgstr "Schließe Netzwerk-Tool"
 
-#: network.c:1026
+#: network.c:1021
 msgid "Couldn't read network configuration."
 msgstr "Konnte Netzwerkkonfiguration nicht lesen."
 
-#: network.c:1035
+#: network.c:1030
 msgid "global"
 msgstr "global"
 
@@ -503,9 +508,8 @@ msgid "Name"
 msgstr "Name"
 
 #: theme.c:865
-#, fuzzy
 msgid "Icon Size"
-msgstr "Icon"
+msgstr "Icon-Größe"
 
 #: theme.c:879
 msgid "Background"
@@ -548,9 +552,8 @@ msgid "Stretched"
 msgstr "Gestreckt"
 
 #: theme.c:989
-#, fuzzy
 msgid "Fonts"
-msgstr "Schrift"
+msgstr "Schriften"
 
 #: theme.c:998 theme.c:1018
 msgid "Desktop Font"
@@ -568,15 +571,15 @@ msgstr "Größe"
 msgid "Application Font"
 msgstr "Anwendungsschrift"
 
-#: keyctl.c:159
+#: keyctl.c:151
 msgid "Reset button config to default?"
-msgstr ""
+msgstr "Button-Konfiguration auf Vorgabe zuruücksetzen?"
 
-#: keyctl.c:196
+#: keyctl.c:188
 msgid "Defaults"
 msgstr "Standard"
 
-#: keyctl.c:301
+#: keyctl.c:293
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr "FEHLER: Kann keylaunchrc nicht zum Schreiben öffnen!\n"
 
@@ -809,48 +812,50 @@ msgstr "Kein Schreibzugriff auf die Netzwerkkonfiguration."
 msgid "Allow users to configure everything"
 msgstr "Normale Benutzer können alles konfigurieren"
 
-#: storage.c:261 storage.c:422
-msgid "Internal Flash"
-msgstr "Interner Flash-Speicher"
-
-#: storage.c:267 storage.c:428
-msgid "MMC"
-msgstr "MMC"
-
-#: storage.c:273 storage.c:434
-msgid "Compact Flash"
-msgstr "Compact Flash"
-
-#: storage.c:279 storage.c:440
-#, fuzzy
-msgid "Network Filesystem"
-msgstr "Netzwerkdateisystem"
-
-#: storage.c:296 storage.c:355 storage.c:477 storage.c:530
-msgid "Total:"
-msgstr "Gesamt:"
-
-#: storage.c:299 storage.c:480
-#, fuzzy
-msgid "Mounted at"
-msgstr "einhängt an"
-
-#: storage.c:305 storage.c:463
-#, fuzzy
-msgid "Free space"
-msgstr "Frei "
-
-#: storage.c:342
+#: storage.c:195
 msgid "System memory"
 msgstr "Systemspeicher"
 
-#: storage.c:349 storage.c:518
+#: storage.c:202 storage.c:464
 msgid "Free memory"
 msgstr "Freier Speicher"
 
-#: storage.c:501
+#: storage.c:209 storage.c:357 storage.c:477 storage.c:595
+msgid "Total:"
+msgstr "Gesamt:"
+
+#: storage.c:321 storage.c:524
+msgid "Internal Flash"
+msgstr "Interner Flash-Speicher"
+
+#: storage.c:327 storage.c:530
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:333 storage.c:536
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:339 storage.c:542
+msgid "Network Filesystem"
+msgstr "Netzwerkdateisystem"
+
+#: storage.c:359 storage.c:597
+msgid "Mounted at"
+msgstr "Eingehängt an"
+
+#: storage.c:367 storage.c:577
+msgid "Free space"
+msgstr "Freier Platz"
+
+#: storage.c:444
 msgid "System Memory"
 msgstr "Systemspeicher"
+
+#: storage.c:616
+#, fuzzy
+msgid "Couldn't get filesystem info!"
+msgstr "Keine CS-Revision-Information verfügbar!\n"
 
 #: serial.c:146
 msgid "Couldn't find default runlevel!"
@@ -904,113 +909,155 @@ msgstr "<leeres System-Log>"
 msgid "System Log"
 msgstr "System-Log"
 
-#: packages.c:62
-msgid "Installing package"
-msgstr ""
+#: packages.c:66
+#, fuzzy
+msgid "Removing package"
+msgstr "Installiere Paket"
 
-#: packages.c:140 packages.c:245
+#: packages.c:71
+msgid "Installing package"
+msgstr "Installiere Paket"
+
+#: packages.c:150 packages.c:324
 msgid "Start"
 msgstr "Start"
 
-#: packages.c:142
+#: packages.c:155
 msgid "Update finished. Please check log messages for errors."
 msgstr "Update beendet. Bitte überprüfen Sie die Logmeldungen auf Fehler."
 
-#: packages.c:163
+#: packages.c:184 packages.c:370
+msgid "Remove"
+msgstr ""
+
+#: packages.c:185
+#, fuzzy
+msgid "Install/Removal finished. Please check log messages for errors."
+msgstr "Update beendet. Bitte überprüfen Sie die Logmeldungen auf Fehler."
+
+#: packages.c:205
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr "Update mittels \"ipkg upgrade\" gestartet.\n"
 
-#: packages.c:186
+#: packages.c:229 packages.c:253
 msgid "Running..."
 msgstr "Läuft..."
 
-#: packages.c:235
+#: packages.c:314
 msgid "Update"
 msgstr "Update"
 
-#: packages.c:240
+#: packages.c:319
 msgid "Update from network"
 msgstr "Update über das Netzwerk"
 
-#: packages.c:249
+#: packages.c:328
 msgid "Update entire system over an internet connection."
 msgstr "Update des gesamten Systems über eine Internetverbindung."
 
-#: packages.c:253
+#: packages.c:332 packages.c:378
 msgid "Activity log"
 msgstr "Aktivitäts-Log"
 
-#: packages.c:261
+#: packages.c:340
 msgid "This window shows all output from the packet manager that performs the update."
 msgstr "Dieses Fenster zeigt die gesamte Ausgabe des Paketmanagers beim Update."
 
-#: cardinfo.c:234
+#: packages.c:350
+#, fuzzy
+msgid "Install/Remove"
+msgstr "Installieren"
+
+#: packages.c:355
+#, fuzzy
+msgid "Install/Remove a package"
+msgstr "Installiere Paket"
+
+#: packages.c:362
+#, fuzzy
+msgid "Enter name of package to be installed here."
+msgstr "Name des neuen Interfaces"
+
+#: packages.c:368
+msgid "Install a package from a configured source."
+msgstr ""
+
+#: packages.c:374
+#, fuzzy
+msgid "Remove the package."
+msgstr "Interface entfernen"
+
+#: packages.c:386
+#, fuzzy
+msgid "This window shows all output from the packet manager installing the package."
+msgstr "Dieses Fenster zeigt die gesamte Ausgabe des Paketmanagers beim Update."
+
+#: cardinfo.c:247 cardinfo.c:318
 msgid "Could not write to temporal config file."
 msgstr "Konnte nicht in temporäre Konfigurationsdatei schreiben."
 
-#: cardinfo.c:426
+#: cardinfo.c:524
 msgid "Could not open pidfile:"
 msgstr "Konnte PID-Datei nicht öffnen:"
 
-#: cardinfo.c:432
+#: cardinfo.c:530
 msgid "Could not read pidfile"
 msgstr "Konnte PID-Datei nicht lesen"
 
-#: cardinfo.c:436
+#: cardinfo.c:534
 msgid "Could not signal cardmgr:"
 msgstr "Konnte cardmgr kein Signal senden:"
 
-#: cardinfo.c:511
+#: cardinfo.c:609
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf muß »setuid root« sein, um die cardinfo-Funktion zu verwenden."
 
-#: cardinfo.c:530
-#, fuzzy
+# !!! PCMCIA
+#: cardinfo.c:628
 msgid "No pcmcia driver in /proc/devices"
 msgstr "Kein PCMCIA-Treiber in »/proc/devices«"
 
-#: cardinfo.c:533
-#, fuzzy
+#: cardinfo.c:631
 msgid "Could not open /proc/devices"
 msgstr "Konnte »/proc/devices« nicht öffnen"
 
-#: cardinfo.c:545
+#: cardinfo.c:643
 msgid "No sockets found\n"
 msgstr "Keine Steckplätze gefunden\n"
 
-#: cardinfo.c:554
+#: cardinfo.c:652
 msgid "Card Services release does not match!"
 msgstr "Card Services-Release paßt nicht!"
 
-#: cardinfo.c:559
+#: cardinfo.c:657
 msgid "Could not get CS revision info!\n"
 msgstr "Keine CS-Revision-Information verfügbar!\n"
 
-#: cardinfo.c:716
+#: cardinfo.c:820
 msgid "flock(stabfile) failed)"
 msgstr "flock(stabfile) fehlgeschlagen)"
 
-#: cardinfo.c:732
+#: cardinfo.c:836
 msgid "no driver loaded"
-msgstr ""
+msgstr "kein Treiber geladen"
 
-#: cardinfo.c:841
+#: cardinfo.c:945
 msgid "ready"
 msgstr "bereit"
 
-#: cardinfo.c:859
+#: cardinfo.c:963
 msgid "not ready"
 msgstr "nicht bereit"
 
-#: cardinfo.c:874
+#: cardinfo.c:978
 msgid "suspended"
 msgstr "abgeschaltet"
 
-#: cardinfo.c:1068 cardinfo.c:1239 cardinfo.c:1240
+#: cardinfo.c:1170 cardinfo.c:1341 cardinfo.c:1342
 msgid "Assign Driver"
 msgstr "Treiber zuweisen"
 
-#: cardinfo.c:1077
+#: cardinfo.c:1179
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1020,122 +1067,122 @@ msgstr ""
 "Treiberzuordnung für die PCMCIA/CF-Karte\n"
 "zu wählen oder zu ändern."
 
-#: cardinfo.c:1087
+#: cardinfo.c:1189
 msgid "Your current card identifies itself as:"
 msgstr "Ihre Karte identifiziert sich als:"
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1203 cardinfo.c:1209
 msgid "Manuf. Id"
 msgstr "Hersteller-ID"
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1203 cardinfo.c:1209
 msgid "Class"
 msgstr "Klasse"
 
-#: cardinfo.c:1180
+#: cardinfo.c:1282
 msgid "Insert Card"
 msgstr "Karte einstecken"
 
-#: cardinfo.c:1182
+#: cardinfo.c:1284
 msgid "Tap here to start card insertion manually."
 msgstr "Klicken Sie hier um das Karteneinstecken manuell zu starten."
 
-#: cardinfo.c:1190
+#: cardinfo.c:1292
 msgid "Eject Card"
 msgstr "Karte auswerfen"
 
-#: cardinfo.c:1192
+#: cardinfo.c:1294
 msgid "Tap here to eject card manually."
 msgstr "Klicken Sie hier um die Karte manuell auszuwerfen."
 
-#: cardinfo.c:1200
+#: cardinfo.c:1302
 msgid "Suspend Card"
 msgstr "Karte abschalten"
 
-#: cardinfo.c:1202
+#: cardinfo.c:1304
 msgid "Tap here to suspend current card."
 msgstr "Klicken Sie hier um die Karte abzuschalten."
 
-#: cardinfo.c:1210
+#: cardinfo.c:1312
 msgid "Resume Card"
 msgstr "Karte einschalten"
 
-#: cardinfo.c:1212
+#: cardinfo.c:1314
 msgid "Tap here to resume current card."
 msgstr "Klicken Sie hier um die Karte einzuschalten."
 
-#: cardinfo.c:1220
+#: cardinfo.c:1322
 msgid "Reset Card"
 msgstr "Karte zurücksetzen"
 
-#: cardinfo.c:1221
+#: cardinfo.c:1323
 msgid "Tap here to reset current card."
 msgstr "Klicken Sie hier um die Karte zurückzusetzen."
 
-#: cardinfo.c:1229 cardinfo.c:1230
+#: cardinfo.c:1331 cardinfo.c:1332
 msgid "Reset Card Manager"
 msgstr "Card Manager zurückzusetzen"
 
-#: cardinfo.c:1232
+#: cardinfo.c:1334
 msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
 msgstr "Klicken Sie hier um Card Manager zurückzusetzen. Dies schreibt alle Einstellungen in die PCMCIA-Konfigurationsdateien."
 
-#: cardinfo.c:1242
+#: cardinfo.c:1344
 msgid "Tap here to assign a driver to this card / change current driver assignment."
 msgstr "Klicken Sie hier um die Treiberzuordnung für die Karte zu wählen oder zu ändern."
 
-#: cardinfo.c:1249 cardinfo.c:1250
+#: cardinfo.c:1351 cardinfo.c:1352
 msgid "Exit applet"
 msgstr "Applet beenden"
 
-#: cardinfo.c:1259 cardinfo.c:1272
+#: cardinfo.c:1361 cardinfo.c:1374
 msgid "PC/CF card socket information."
 msgstr "PC/CF-Seteckplatz-Information."
 
-#: cardinfo.c:1267
+#: cardinfo.c:1369
 msgid "Socket"
 msgstr "Steckplatz"
 
-#: cardinfo.c:1298
+#: cardinfo.c:1400
 msgid "Information for socket"
 msgstr "Information für Steckplatz"
 
-#: cardinfo.c:1307
+#: cardinfo.c:1409
 msgid "State:"
 msgstr "Status:"
 
-#: cardinfo.c:1308
+#: cardinfo.c:1410
 msgid "Device:"
 msgstr "Gerät:"
 
-#: cardinfo.c:1309
+#: cardinfo.c:1411
 msgid "Driver:"
 msgstr "Treiber:"
 
-#: cardinfo.c:1310
+#: cardinfo.c:1412
 msgid "Type:"
 msgstr "Typ:"
 
-#: cardinfo.c:1311
+#: cardinfo.c:1413
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1312
+#: cardinfo.c:1414
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1319
+#: cardinfo.c:1421
 msgid "Flags:"
 msgstr "Flags:"
 
-#: cardinfo.c:1336
+#: cardinfo.c:1438
 msgid "PCMCIA initialisation failed"
 msgstr "PCMCIA-Initialisierung fehlgeschlagen"
 
 #: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
 #: tools/interface.c:622
 msgid "[NONE SET]"
-msgstr ""
+msgstr "[NICHT GESETZT]"
 
 #: tools/interface.c:394
 #, c-format
@@ -1148,31 +1195,31 @@ msgstr ""
 
 #: tools/interface.c:679
 msgid "UNIX Domain"
-msgstr ""
+msgstr "UNIX-Domain"
 
 #: tools/interface.c:682
 msgid "DARPA Internet"
-msgstr ""
+msgstr "DARPA-Internet"
 
 #: tools/interface.c:685
 msgid "IPv6"
-msgstr ""
+msgstr "IPv6"
 
 #: tools/interface.c:688 tools/interface.c:1671
 msgid "AMPR AX.25"
-msgstr ""
+msgstr "AMPR AX.25"
 
 #: tools/interface.c:691 tools/interface.c:1677
 msgid "AMPR NET/ROM"
-msgstr ""
+msgstr "AMPR NET/ROM"
 
 #: tools/interface.c:694
 msgid "Novell IPX"
-msgstr ""
+msgstr "Novell IPX"
 
 #: tools/interface.c:697
 msgid "Appletalk DDP"
-msgstr ""
+msgstr "Appletalk DDP"
 
 #: tools/interface.c:700 tools/interface.c:1712
 msgid "Econet"
@@ -1180,51 +1227,54 @@ msgstr "Econet"
 
 #: tools/interface.c:703
 msgid "CCITT X.25"
-msgstr ""
+msgstr "CCITT X.25"
 
 #: tools/interface.c:706 tools/interface.c:1674
 msgid "AMPR ROSE"
-msgstr ""
+msgstr "AMPR ROSE"
 
 #: tools/interface.c:709 tools/interface.c:1662
 msgid "Ash"
-msgstr ""
+msgstr "Ash"
 
+# !!! many
 #: tools/interface.c:736
 msgid "Too much address family arguments.\n"
-msgstr ""
+msgstr "Zu viele Argumente für Adressfamilie.\n"
 
 #: tools/interface.c:747
 #, c-format
 msgid "Unknown address family `%s'.\n"
-msgstr ""
+msgstr "Unbekannte Adressfamilie »%s«.\n"
 
 #: tools/interface.c:810
 msgid "Please don't supply more than one address family.\n"
-msgstr ""
+msgstr "Bitte geben Sie nur eine Adressfamilie an.\n"
 
 #: tools/interface.c:937
 msgid "No usable address families found.\n"
-msgstr ""
+msgstr "Keine benutzbaren Adressfamilien gefunden.\n"
 
+# !!! Warning
 #: tools/interface.c:1007
 #, c-format
 msgid "warning: no inet socket available: %s\n"
-msgstr ""
+msgstr "Warnung: kein inet-Socket verfügbar: %s\n"
 
+# !!! what is 'limited output'?
 #: tools/interface.c:1159
-#, c-format
+#, fuzzy, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr ""
+msgstr "Warnung: kann %s (%s) nicht öffnen. Limited output.\n"
 
 #: tools/interface.c:1402
 msgid "Device not found"
-msgstr ""
+msgstr "Gerät nicht gefunden"
 
 #: tools/interface.c:1406
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr ""
+msgstr "%s: Fehler beim Holen der Interface-Informationen: %s\n"
 
 #: tools/interface.c:1480 tools/interface.c:1497
 #, c-format
@@ -1243,11 +1293,11 @@ msgstr ""
 
 #: tools/interface.c:1555
 msgid "You cannot start PPP with this program.\n"
-msgstr ""
+msgstr "Sie können PPP nicht mit diesem Programm starten.\n"
 
 #: tools/interface.c:1649
 msgid "Local Loopback"
-msgstr ""
+msgstr "Lokales Loopback"
 
 #: tools/interface.c:1652
 msgid "Serial Line IP"
@@ -1271,63 +1321,63 @@ msgstr ""
 
 #: tools/interface.c:1659
 msgid "Ethernet"
-msgstr ""
+msgstr "Ethernet"
 
 #: tools/interface.c:1665
 msgid "Fiber Distributed Data Interface"
-msgstr ""
+msgstr "Fiber Distributed Data Interface"
 
 #: tools/interface.c:1668
 msgid "HIPPI"
-msgstr ""
+msgstr "HIPPI"
 
 #: tools/interface.c:1680
 msgid "generic X.25"
-msgstr ""
+msgstr "Generisches X.25"
 
 #: tools/interface.c:1683
 msgid "IPIP Tunnel"
-msgstr ""
+msgstr "IPIP-Tunnel"
 
 #: tools/interface.c:1686
 msgid "Point-to-Point Protocol"
-msgstr ""
+msgstr "Point-to-Point Protocol"
 
 #: tools/interface.c:1689
 msgid "(Cisco)-HDLC"
-msgstr ""
+msgstr "(Cisco)-HDLC"
 
 #: tools/interface.c:1690
 msgid "LAPB"
-msgstr ""
+msgstr "LAPB"
 
 #: tools/interface.c:1693
 msgid "ARCnet"
-msgstr ""
+msgstr "ARCnet"
 
 #: tools/interface.c:1696
 msgid "Frame Relay DLCI"
-msgstr ""
+msgstr "Frame Relay DLCI"
 
 #: tools/interface.c:1697
 msgid "Frame Relay Access Device"
-msgstr ""
+msgstr "Frame Relay Access Device"
 
 #: tools/interface.c:1700
 msgid "IPv6-in-IPv4"
-msgstr ""
+msgstr "IPv6-in-IPv4"
 
 #: tools/interface.c:1703
 msgid "IrLAP"
-msgstr ""
+msgstr "IrLAP"
 
 #: tools/interface.c:1706
 msgid "16/4 Mbps Token Ring"
-msgstr ""
+msgstr "16/4 Mbps Token Ring"
 
 #: tools/interface.c:1708
 msgid "16/4 Mbps Token Ring (New)"
-msgstr ""
+msgstr "16/4 Mbps Token Ring (Neu)"
 
 #: tools/interface.c:1818
 #, c-format
@@ -1335,20 +1385,22 @@ msgid ""
 "<b>Interface %s</b>\n"
 "Type: %s\n"
 msgstr ""
+"<b>Interface %s</b>\n"
+"Typ: %s\n"
 
 #: tools/interface.c:1826
 #, c-format
 msgid "HWaddr (MAC): %s\n"
-msgstr ""
+msgstr "HWaddr (MAC): %s\n"
 
 #: tools/interface.c:1832
 #, c-format
 msgid "Media: %s"
-msgstr ""
+msgstr "Medium: %s"
 
 #: tools/interface.c:1837
 msgid "(auto)"
-msgstr ""
+msgstr "(auto)"
 
 #: tools/interface.c:1849
 #, c-format
@@ -1361,7 +1413,7 @@ msgid "P-t-P: %s\n"
 msgstr "P-t-P: %s\n"
 
 #: tools/interface.c:1858
-#, fuzzy, c-format
+#, c-format
 msgid "Netmask: %s\n"
 msgstr "Netzmaske: %s\n"
 
@@ -1385,7 +1437,7 @@ msgstr "Global"
 
 #: tools/interface.c:1894
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #: tools/interface.c:1897
 msgid "Site"
@@ -1402,6 +1454,85 @@ msgstr "Host"
 #: tools/interface.c:1906
 msgid "Unknown"
 msgstr "Unbekannt"
+
+#: battery.c:79
+#, fuzzy, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "Konnte »/proc/devices« nicht öffnen"
+
+#: battery.c:127 battery.c:179
+msgid "Status: high"
+msgstr ""
+
+#: battery.c:130 battery.c:182
+msgid "Status: low"
+msgstr ""
+
+#: battery.c:133 battery.c:185
+msgid "Status: critical"
+msgstr ""
+
+#: battery.c:136 battery.c:188
+msgid "Status: charging"
+msgstr ""
+
+#: battery.c:139 battery.c:191
+msgid "Status: charge main"
+msgstr ""
+
+#: battery.c:142
+msgid "Status: dead"
+msgstr ""
+
+#: battery.c:145 battery.c:197
+msgid "Status: full"
+msgstr ""
+
+#: battery.c:148 battery.c:200
+msgid "Status: no battery"
+msgstr ""
+
+#: battery.c:151 battery.c:203 battery.c:222
+msgid "Status: unknown"
+msgstr ""
+
+#: battery.c:155 battery.c:207
+msgid "Voltage"
+msgstr ""
+
+#: battery.c:159 battery.c:211
+msgid "AC connected"
+msgstr ""
+
+#: battery.c:161 battery.c:213
+msgid "Lifetime"
+msgstr ""
+
+#: battery.c:194
+msgid "Status: not installed"
+msgstr ""
+
+#: battery.c:220
+#, fuzzy
+msgid "not installed"
+msgstr "Installieren"
+
+#: battery.c:224
+msgid "Voltage: unknown"
+msgstr ""
+
+#: battery.c:226
+msgid "Lifetime: unknown"
+msgstr ""
+
+#: battery.c:265
+#, fuzzy
+msgid "Internal battery"
+msgstr "Interner Flash-Speicher"
+
+#: battery.c:269
+msgid "Jacket battery"
+msgstr ""
 
 #~ msgid "Free"
 #~ msgstr "Frei"
