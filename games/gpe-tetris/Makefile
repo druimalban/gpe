@@ -8,11 +8,12 @@ HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.6-1
+GTK2 = yes
 
 CC = gcc
 
 ifeq ($(GTK2),yes)
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CONTROL = control1
 else
@@ -45,7 +46,7 @@ all: $(OBJS)
 clean: 
 	rm -f *.o $(PROGRAM)
 
-install: all
+install-program: all
 	strip $(PROGRAM)
 	install -d $(BIN_PATH)
 	install -d $(DESTDIR)$(HIGHSCORE_PATH)
