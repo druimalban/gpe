@@ -13,6 +13,8 @@
 #include <getopt.h>
 #include <ctype.h>
 #include <unistd.h> /* for access() */
+#include <libintl.h>
+#include <locale.h>
 
 #include <X11/Xlib.h>
 
@@ -33,29 +35,6 @@
 
 // #include "main.h"
 
-/*
- * Standard gettext macros.
- */
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
-
-
 #define CURRENT_DATAFILE_VER 2
 
 /* WARNING: don't mess with this! */
@@ -64,6 +43,8 @@
 
 #define UPGRADE_ERROR      -1
 #define UPGRADE_NOT_NEEDED  0
+
+#define _(_x) gettext(_x)
 
 GtkWidget *GPE_Ownerinfo;
 GtkWidget *name;
@@ -560,6 +541,11 @@ main (int argc, char *argv[])
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
+
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
 
   /* FIXME: check error */
   photopixbuf = gdk_pixbuf_new_from_file (photofile, NULL);

@@ -42,23 +42,26 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 CFLAGS += -MD
 
 .SUFFIXES: .d
+.PHONY: all-mo install-mo update-po extract-po clean-po translation-package dist ipkg dpkg printinfo tag
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: $(PACKAGE)
+all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
-install: all 
+install: install-program install-mo
+
+install-program: all 
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-ownerinfo
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)/etc/gpe/
 
-clean:
+clean: clean-po
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 distclean: clean

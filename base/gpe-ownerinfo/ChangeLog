@@ -1,3 +1,13 @@
+2003-02-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/de.po: First cut at translation.
+
+	* gpe-ownerinfo2.c: Merge with my own version which fixes i18n a
+	bit.
+
+	* Makefile (install-program): New target, since 'install' now
+	depends on both 'install-program' and 'install-po'.
+
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (VERSION): Set to 0.08.
