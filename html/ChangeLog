@@ -1,3 +1,8 @@
+2003-09-18  Colin Marquardt  <colin@marquardt-home.de>
+
+	* index.phtml: Add protest about SW patents taking the HTML from
+	debian.org.
+
 2003-07-31  Philip Blundell  <philb@gnu.org>
 
 	* gpe-news.php: Use 'clean' theme.
