@@ -132,7 +132,8 @@ static void
 new_file (void)
 {
   clear_text_area ();
-  filename = "";
+  if (filename) g_free(filename);
+  filename = NULL;
   file_modified = 0;
   update_window_title ();
 }
@@ -324,7 +325,7 @@ ask_save_before_exit (void)
   if (file_modified == 1)
   {
     switch (gpe_question_ask (_("Save current file before exiting?"), _("Question"), "question",
-    _("Don't save"), "stop", _("Save"), "save"))
+    _("Don't save"), "stop", _("Save"), "save", NULL))
     {
     case 1: /* Save */
       save_file ();
@@ -572,8 +573,8 @@ main (int argc, char *argv[])
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   update_window_title ();
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
-  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+  g_signal_connect (GTK_OBJECT (main_window), "destroy",
+		      GTK_SIGNAL_FUNC (ask_save_before_exit), NULL);
 
   libdm_init ();
 
