@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.01
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: pdamaze, gtktetris, gsoko
+Depends: gpe-tetris, gtksolitaire
 Description: Task package for GPE games
