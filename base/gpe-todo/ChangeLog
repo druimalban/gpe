@@ -1,3 +1,12 @@
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.36 released.
+	
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
+	* po/fr.po: New file, courtesy Luc Pionchon.
+	* Makefile (LINGUAS): Add fr.
+
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add zh_TW.

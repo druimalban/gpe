@@ -2,10 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-todo
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.35
+VERSION = 0.36
 DEBUG = no
 
-LINGUAS = de id pt zh_TW
+LINGUAS = de id pt zh_TW fr
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
