@@ -102,7 +102,7 @@ main (int argc, char *argv[])
       export_one_vcal (uid);
     }
   else
-    sqlite_exec (db, "select urn from calendar_urn", read_one, NULL, NULL);
+    sqlite_exec (db, "select uid from calendar_urn", read_one, NULL, NULL);
 
   exit (0);
 }
