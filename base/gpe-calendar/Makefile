@@ -5,7 +5,7 @@ GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.41
 
-LINGUAS = id pt de fr
+LINGUAS = id pt de fr zh_TW
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
 
