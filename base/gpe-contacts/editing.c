@@ -18,6 +18,7 @@
 #include "gtkdatecombo.h"
 #include "callbacks.h"
 #include "db.h"
+#include "picturebutton.h"
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -150,11 +151,21 @@ create_edit (void)
   GtkTooltips *tooltips;
   GtkWidget *topvbox;
   GSList *categories = db_get_categories ();
+  GtkWidget *vbox, *action_area;
 
   tooltips = gtk_tooltips_new ();
 
-  edit = gtk_dialog_new ();
+  edit = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
+  gtk_widget_realize (edit);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (edit), vbox);
+  gtk_widget_show (vbox);
+
+  action_area = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), action_area, FALSE, FALSE, 2);
+  gtk_widget_show (action_area);
 
   notebook2 = gtk_notebook_new ();
   gtk_widget_set_name (notebook2, "notebook2");
@@ -162,7 +173,7 @@ create_edit (void)
   gtk_object_set_data_full (GTK_OBJECT (edit), "notebook2", notebook2,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (notebook2);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (edit)->vbox), notebook2, 
+  gtk_box_pack_start (GTK_BOX (vbox), notebook2, 
 		      TRUE, TRUE, 0);
 
   topvbox = gtk_vbox_new (FALSE, 0);
@@ -334,31 +345,31 @@ create_edit (void)
   gtk_widget_show (label16);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook2), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook2), 0), label16);
 
+  edit_cancel = gpe_picture_button (edit->style, _("Cancel"), "cancel");
+  gtk_widget_set_name (edit_cancel, "edit_cancel");
+  gtk_widget_ref (edit_cancel);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_cancel", edit_cancel,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (edit_cancel);
+  gtk_container_add (GTK_CONTAINER (action_area), edit_cancel);
+  GTK_WIDGET_SET_FLAGS (edit_cancel, GTK_CAN_DEFAULT);
+
   edit_clear = gtk_button_new_with_label (_("Clear"));
   gtk_widget_set_name (edit_clear, "edit_clear");
   gtk_widget_ref (edit_clear);
   gtk_object_set_data_full (GTK_OBJECT (edit), "edit_clear", edit_clear,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (edit_clear);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (edit)->action_area), edit_clear);
+  gtk_container_add (GTK_CONTAINER (action_area), edit_clear);
   GTK_WIDGET_SET_FLAGS (edit_clear, GTK_CAN_DEFAULT);
 
-  edit_cancel = gtk_button_new_with_label (_("Cancel"));
-  gtk_widget_set_name (edit_cancel, "edit_cancel");
-  gtk_widget_ref (edit_cancel);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_cancel", edit_cancel,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_cancel);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (edit)->action_area), edit_cancel);
-  GTK_WIDGET_SET_FLAGS (edit_cancel, GTK_CAN_DEFAULT);
-
-  edit_save = gtk_button_new_with_label (_("Save"));
+  edit_save = gpe_picture_button (edit->style, _("Save"), "save");
   gtk_widget_set_name (edit_save, "edit_save");
   gtk_widget_ref (edit_save);
   gtk_object_set_data_full (GTK_OBJECT (edit), "edit_save", edit_save,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (edit_save);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (edit)->action_area), edit_save);
+  gtk_container_add (GTK_CONTAINER (action_area), edit_save);
   GTK_WIDGET_SET_FLAGS (edit_save, GTK_CAN_DEFAULT);
 
   gtk_signal_connect (GTK_OBJECT (edit_bt_image), "clicked",
