@@ -30,7 +30,7 @@ static const char *fname = "/.gpe/irc";
 
 GHashTable *sql_general_config;
 
-static gint rows = 0;
+gint general_rows = 0;
 
 static void
 new_sql_general_tag_internal (int id, const char *property, const char *value)
@@ -74,6 +74,7 @@ sql_general_tag_callback (void *arg, int argc, char **argv, char **names)
   if (argc == 3 && argv[0] && argv[1])
   {
     new_sql_general_tag_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]));
+    general_rows++;
   }
   return 0;
 }
@@ -128,7 +129,7 @@ general_sql_start (void)
       return -1;
     }
 
-  if (rows == 0)
+  if (general_rows == 0)
     add_default_sql_tags ();
 
   return 0;

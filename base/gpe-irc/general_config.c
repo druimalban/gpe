@@ -21,6 +21,78 @@
 #include "general_config.h"
 #include "general_config_sql.h"
 
+static void
+window_close (GtkWidget *widget, GtkWidget *window)
+{
+  gtk_widget_destroy (window);
+}
+
+static guint
+get_from_sql (gchar *tag_name)
+{
+  gchar *value;
+
+  value = g_hash_table_lookup (sql_general_config, (gconstpointer) tag_name);
+
+  if (strcmp (value, "black") == 0)
+    return 0;
+  if (strcmp (value, "white") == 0)
+    return 1;
+  if (strcmp (value, "red") == 0)
+    return 2;
+  if (strcmp (value, "blue") == 0)
+    return 3;
+  if (strcmp (value, "green") == 0)
+    return 4;
+  if (strcmp (value, "bold") == 0)
+    return 5;
+  if (strcmp (value, "italic") == 0)
+    return 6;
+}
+
+static void
+save_in_sql (gchar *tag_name, gint value)
+{
+  switch (value)
+  {
+    case 0:
+    {
+      edit_sql_general_tag (tag_name, "black");
+    }
+    break;
+    case 1:
+    {
+      edit_sql_general_tag (tag_name, "white");
+    }
+    break;
+    case 2:
+    {
+      edit_sql_general_tag (tag_name, "red");
+    }
+    break;
+    case 3:
+    {
+      edit_sql_general_tag (tag_name, "blue");
+    }
+    break;
+    case 4:
+    {
+      edit_sql_general_tag (tag_name, "green");
+    }
+    break;
+    case 5:
+    {
+      edit_sql_general_tag (tag_name, "bold");
+    }
+    break;
+    case 6:
+    {
+      edit_sql_general_tag (tag_name, "italic");
+    }
+    break;
+  }
+}
+
 static GtkWidget *
 make_option_menu (gchar *tag_name)
 {
@@ -73,57 +145,9 @@ make_option_menu (gchar *tag_name)
   gtk_widget_show (menu_item);
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), menu);
+  gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), get_from_sql (tag_name));
 
   return option_menu;
-}
-
-static void
-window_close (GtkWidget *widget, GtkWidget *window)
-{
-  gtk_widget_destroy (window);
-}
-
-static void
-save_in_sql (gchar *tag_name, gint value)
-{
-  switch (value)
-  {
-    case 0:
-    {
-      edit_sql_general_tag (tag_name, "black");
-    }
-    break;
-    case 1:
-    {
-      edit_sql_general_tag (tag_name, "white");
-    }
-    break;
-    case 2:
-    {
-      edit_sql_general_tag (tag_name, "red");
-    }
-    break;
-    case 3:
-    {
-      edit_sql_general_tag (tag_name, "blue");
-    }
-    break;
-    case 4:
-    {
-      edit_sql_general_tag (tag_name, "green");
-    }
-    break;
-    case 5:
-    {
-      edit_sql_general_tag (tag_name, "bold");
-    }
-    break;
-    case 6:
-    {
-      edit_sql_general_tag (tag_name, "italic");
-    }
-    break;
-  }
 }
 
 static void

@@ -235,8 +235,6 @@ join_channel (IRCServer *server, gchar *channel_name)
     channel->server = server;
     selected_channel = channel;
 
-    clear_text_view ();
-
     if (selected_button)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
 
@@ -293,7 +291,6 @@ disconnect_from_server (IRCServer *server)
     button_clicked (((IRCServer *) servers->data)->button);
   else
   {
-    clear_text_view ();
     selected_server = NULL;
     selected_channel = NULL;
     selected_button = NULL;
@@ -376,8 +373,6 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 {
   GtkWidget *server_combo_entry, *nick_entry, *real_name_entry, *password_entry, *button;
   IRCServer *server;
-
-  clear_text_view ();
 
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
