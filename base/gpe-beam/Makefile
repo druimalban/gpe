@@ -7,6 +7,7 @@ GTK2 = yes
 INSTALL = install
 PREFIX = /usr
 DESTDIR = /
+CONTROL = control
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
@@ -65,7 +66,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = irda-16.png irda.png
+PIXMAPS = irda-16.png irda.png irda-16-on.png
 
 all: $(PACKAGE) vcard-export vcard-import vcard-import-file
 

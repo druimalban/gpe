@@ -1,5 +1,12 @@
 07/24/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
+	- Interface updates.
+	- Major reformating.
+	- Correct file header for main.c.
+	- Started to implement info/control window.
+
+07/24/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
 	- Several updates, icons hack, switching device on/off works as root.  
 	
 07/07/2003		Florian Boor <florian.boor@kernelconcepts.de>
