@@ -1,3 +1,10 @@
+2003-03-27  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (click_ok): Fix formatting.
+	(build_edit_event_window): Remove unused widgets.  Remove spurious
+	border width on internal boxes; just put it on the top level in
+	each tab.  Correct packing of widgets in reminder table.
+
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.39 released.
