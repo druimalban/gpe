@@ -24,6 +24,8 @@
 #define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
 #define MY_PIXMAPS_DIR "/usr/share/gpe-contacts/pixmaps"
 
+static GtkWidget *combo;
+
 struct pix my_pix[] = {
   { "delete", MY_PIXMAPS_DIR "/trash.png" },
   { "new", MY_PIXMAPS_DIR "/new.png" },
@@ -33,6 +35,33 @@ struct pix my_pix[] = {
   { "entry", MY_PIXMAPS_DIR "/entry.xpm" },
   { NULL, NULL }
 };
+
+static void
+update_combo_categories (void)
+{
+  GSList *categories = db_get_categories (), *iter;
+  GList *list = NULL;
+  
+  list = g_list_append (list, _("*all*"));
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      struct attribute *c = iter->data;
+      list = g_list_append (list, (gpointer)c->name);
+    }
+
+  gtk_combo_set_popdown_strings (GTK_COMBO (combo), list);
+  g_list_free (list);
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      struct attribute *c = iter->data;
+      g_free (c->name);
+      g_free (c);
+    }
+
+  g_slist_free (categories);
+}
 
 static void
 new_contact(GtkWidget *widget, gpointer d)
@@ -60,11 +89,14 @@ new_category (GtkWidget *w, gpointer p)
       if (db_insert_category (name, &id))
 	gtk_clist_append (GTK_CLIST (p), line_info);
     }
+
+  update_combo_categories ();
 }
 
 static void
 delete_category (GtkWidget *w, gpointer p)
 {
+  update_combo_categories ();
 }
 
 static void
@@ -312,6 +344,8 @@ main (int argc, char *argv[])
     exit (1);
 
   mainw = create_main ();
+  combo = lookup_widget (GTK_WIDGET (mainw), "combo1");
+  update_combo_categories ();
   gtk_widget_show (mainw);
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy",
