@@ -382,6 +382,7 @@ suid_exec (const char *cmd, const char *params)
 		gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
 		passwd_entry = gtk_entry_new ();
+		gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
 
 		gtk_entry_set_visibility (GTK_ENTRY (passwd_entry), FALSE);
 

@@ -1,3 +1,6 @@
+2004-08-06	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* applets.c: Fixed behaviour of password dialog and enter key.
 
 2004-08-05	Florian Boor  	<florian.boor@kernelconcepts.de>
 
