@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
 GTK2 = yes
-VERSION = 0.46
+VERSION = 0.47
 CVSBUILD = yes
 
 GTKRC = gtkrc
@@ -66,9 +66,9 @@ gpe-iconlist.c: gpeiconlist.gob
 libgpewidget.a: $(OBJS)
 	ar cq $@ $^
 
-install: $(SONAME) install-mo
-	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
-	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+install: $(SONAME)
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/
+	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/
 ifneq ($(GTK2),yes)
 	install -D $(GTKRC) $(DESTDIR)$(PREFIX)/share/gpe/$(GTKRC)
 endif

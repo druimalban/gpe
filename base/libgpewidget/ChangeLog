@@ -1,5 +1,12 @@
 2003-02-15  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.47 released.
+	
+2003-02-15  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install): Don't call install-mo.  Use install -s
+	rather than install -D.
+
 	* question.c (add_button): Use GObject functions.
 	(gpe_question_ask): Likewise.  If icon name starts with "!", take
 	it as a stock item name.
