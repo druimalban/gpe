@@ -57,7 +57,7 @@ LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
 endif #native or cross-compile
 
 
-MEMBERS  = main
+MEMBERS  = main netlink iwlib
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

@@ -21,6 +21,8 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -33,6 +35,7 @@
 #include <gpe/spacing.h>
 
 #include "main.h"
+#include "netlink.h"
 
 #define _(x) gettext(x)
 
@@ -56,6 +59,13 @@ static GtkWidget *menu;
 gboolean net_is_on = FALSE;
 GtkWidget *dock_window;
 
+static int netlink_fd;
+
+/* Iface   Destination     Gateway         Flags   RefCnt  Use     Metric  Mask   MTU      Window  IRTT
+   eth0    0105A8C0        0102A8C0        0006    0       0       0       FFFFFFF0                     */
+
+#define RTF_UP  0x1
+
 static gboolean
 net_get_status()
 {
@@ -63,15 +73,47 @@ net_get_status()
 	char buffer[256];
 	int result = FALSE;
 	
-	pipe = popen ("/bin/netstat -rn", "r");
+	pipe = fopen ("/proc/net/route", "r");
 
-	if (pipe > 0)
-    {
+	if (pipe)
+	{
   		while ((feof(pipe) == 0))
-    	{
-      		fgets (buffer, 255, pipe);
-			if (g_str_has_prefix(buffer,"0.0.0.0") || g_str_has_prefix(buffer,"default"))
-			  result = TRUE;
+		{
+			if (fgets (buffer, 255, pipe))
+			{
+				char *p, *q;
+				int flags;
+
+				p = strchr (buffer, '\t');
+				if (!p)
+					continue;
+				while (isspace (*p))
+					p++;
+				q = strchr (p, '\t');
+				if (!q)
+					continue;
+				*q++ = 0;
+				if (strcmp (p, "00000000"))
+					continue;	// Not default route
+				while (isspace (*q))
+					q++;
+				p = strchr (q, '\t');	// Skip over gateway
+				if (!p)
+					continue;
+				while (isspace (*p))
+					p++;
+				q = strchr (p, '\t');
+				if (!q)
+					continue;
+				*q = 0;
+				if (!sscanf (p, "%x", &flags))
+					continue;
+				if (flags & RTF_UP)
+				{
+					result = TRUE;
+					break;
+				}
+			}
 		}
 		pclose(pipe);		
 	}
@@ -87,7 +129,7 @@ remove_dock_message (guint id)
 }
 
 
-static gboolean
+gboolean
 update_netstatus (void)
 {
 	GdkBitmap *bitmap;
@@ -179,6 +221,23 @@ clicked (GtkWidget * w, GdkEventButton * ev)
 			w, ev->button, ev->time);
 }
 
+static gboolean
+rtnl_callback (GIOChannel *source, GIOCondition cond, gpointer data)
+{
+	rtnl_process ((int)data);
+
+	return TRUE;
+}
+
+void
+rtnl_connect_glib (int fd)
+{
+	GIOChannel *chan;
+
+	chan = g_io_channel_unix_new (fd);
+
+	g_io_add_watch (chan, G_IO_IN, rtnl_callback, (gpointer)fd);
+}
 
 int
 main (int argc, char *argv[])
@@ -199,6 +258,15 @@ main (int argc, char *argv[])
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
+
+	netlink_fd = rtnl_open ();
+	if (netlink_fd < 0)
+	  {
+	    gpe_error_box (_("Couldn't open netlink device"));
+	    exit (1);
+	  }
+
+	rtnl_connect_glib (netlink_fd);
 
 	window = gtk_plug_new (0);
 	gtk_widget_set_usize (window, 16, 16);
@@ -267,8 +335,6 @@ main (int argc, char *argv[])
 
 	dock_window = window;
 	gpe_system_tray_dock (window->window);
-
-	gtk_timeout_add (2000, (GtkFunction) update_netstatus, NULL);
 
 	gtk_main ();
 	
