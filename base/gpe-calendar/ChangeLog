@@ -1,3 +1,14 @@
+2003-04-11  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (click_delete): Reformat.  Make question string
+	static and mark for translation.  Fix warning about argument
+	shadowed by local var.
+	(unschedule_alarm): Reformat.
+	(schedule_next): Likewise.  Use g_strdup_printf to avoid buffer
+	overrun.
+	(click_ok): Reformat.
+	(edit_event): Likewise.
+
 2003-04-11  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 	
 	* day_view.c (day_view_update): move GSList declares of day_events and

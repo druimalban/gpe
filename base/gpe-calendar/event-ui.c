@@ -171,22 +171,21 @@ recalculate_sensitivities (GtkWidget *widget,
 }
 
 static void
-unschedule_alarm(event_t ev)
+unschedule_alarm (event_t ev)
 {
   event_t ev_real = (event_t)ev->cloned_ev;
 
-  if (!schedule_cancel_alarm (ev_real->uid, ev->start)) printf("ack!\n");
-	     
+  if (!schedule_cancel_alarm (ev_real->uid, ev->start)) 
+    printf("ack!\n");
 }
 
 void
-schedule_next(guint skip, guint uid)
+schedule_next (guint skip, guint uid)
 {
-  GSList *events=NULL, *iter;
+  GSList *events = NULL, *iter;
   struct tm tm;
-  time_t end, start=time(NULL);
+  time_t end, start = time(NULL);
   event_details_t ev_d;
-  gchar action[256];
   
   localtime_r (&start, &tm);
   tm.tm_year++;
@@ -198,17 +197,23 @@ schedule_next(guint skip, guint uid)
     {
       event_t ev_real, ev = iter->data;
 
-      if (ev->flags & FLAG_ALARM) {
-        ev_real = (event_t)ev->cloned_ev;
-        ev_d = event_db_get_details (ev_real);
-	if (((int)(ev->start) != (int)skip) && (uid!=ev_real->uid))
-          {
-             sprintf(action, "/usr/bin/gpe-announce '%s'\n/usr/bin/gpe-calendar -s %ld -e %ld &\n ",
-			     ev_d->summary, (long)ev->start, ev_real->uid);
-    	     if (!schedule_set_alarm (ev->uid, ev->start, action)) printf("ack!\n");
-	     break;
-          }
-      }
+      if (ev->flags & FLAG_ALARM) 
+	{
+	  ev_real = (event_t)ev->cloned_ev;
+	  ev_d = event_db_get_details (ev_real);
+	  if (((int)(ev->start) != (int)skip) && (uid!=ev_real->uid))
+	    {
+	      gchar *action;
+
+	      action = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n/usr/bin/gpe-calendar -s %ld -e %ld &\n ",
+					ev_d->summary, (long)ev->start, ev_real->uid);
+	      if (!schedule_set_alarm (ev->uid, ev->start, action)) 
+		printf("ack!\n");
+
+	      g_free (action);
+	      break;
+	    }
+	}
     }
     event_db_list_destroy (events);
 }
@@ -227,13 +232,11 @@ edit_finished (GtkWidget *d)
 }
 
 static void
-click_delete (GtkWidget *widget, GtkWidget *d)
+click_delete (GtkWidget *widget, GtkWidget *dw)
 {
-  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
-  char *qn = "Delete all recurring entries?\n(If no, delete this instance only)";
   GtkWidget *d = gtk_widget_get_toplevel (widget);
-
-  event_t ev=s->ev, ev_real;
+  struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
+  event_t ev = s->ev, ev_real;
   event_details_t ev_d;
   recur_t r;
   
@@ -241,42 +244,38 @@ click_delete (GtkWidget *widget, GtkWidget *d)
   ev_d = event_db_get_details (ev_real);
      
   if (ev_real->recur)
-  {
-	if (gpe_question_ask_yn (qn))
+    {
+      if (gpe_question_ask_yn (_("Delete all recurring entries?\n(If no, delete this instance only)")))
 	{			  
-		if (ev_real->flags & FLAG_ALARM)
-		{
-	  	unschedule_alarm (ev);
-	  	schedule_next(0,0);
-		}
-
-		event_db_remove (ev_real);
-				
+	  if (ev_real->flags & FLAG_ALARM)
+	    {
+	      unschedule_alarm (ev);
+	      schedule_next (0,0);
+	    }
+	  
+	  event_db_remove (ev_real);
 	}
-	else 
+      else 
 	{
-		r = event_db_get_recurrence (ev_real);
-  		r->exceptions = g_slist_append(r->exceptions,(void *)ev->start);
-		event_db_flush (ev_real);
+	  r = event_db_get_recurrence (ev_real);
+	  r->exceptions = g_slist_append (r->exceptions, (void *)ev->start);
+	  event_db_flush (ev_real);
 	}
-	
-  }
+    }
   else
-  {			  
-	if (ev_real->flags & FLAG_ALARM)
+    {			  
+      if (ev_real->flags & FLAG_ALARM)
 	{
-		unschedule_alarm (ev);
-	  	schedule_next(0,0);
+	  unschedule_alarm (ev);
+	  schedule_next (0,0);
 	}
-
-	event_db_remove (ev_real);
-
+      
+      event_db_remove (ev_real);
   }
   
   update_all_views ();
-  event_db_forget_details(ev_real);
+  event_db_forget_details (ev_real);
   edit_finished (d);
-  
 }
 
 static void
@@ -401,25 +400,26 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
-      int multiplier=1;
+      int multiplier = 1;
       
       ev->flags |= FLAG_ALARM;
-      switch(gtk_option_menu_get_history (GTK_OPTION_MENU (s->alarmoption)))
-      {
-	case(0):
-		multiplier=60;
-		break;
-	case(1):
-		multiplier=60*60;
-		break;
-	case(2):
-		multiplier=24*60*60;
-		break;
-	case(3):
-		multiplier=7*24*60*60;
-		break;
+      switch (gtk_option_menu_get_history (GTK_OPTION_MENU (s->alarmoption)))
+	{
+	case 0:
+	  multiplier = 60;
+	  break;
+	case 1:
+	  multiplier = 60*60;
+	  break;
+	case 2:
+	  multiplier = 24*60*60;
+	  break;
+	case 3:
+	  multiplier = 7*24*60*60;
+	  break;
 	}
-      ev->alarm = multiplier*gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
+
+      ev->alarm = multiplier * gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
     }
   else
     ev->flags &= ~FLAG_ALARM;
@@ -1286,6 +1286,7 @@ edit_event (event_t ev)
             {
             case RECUR_NONE:
               abort ();
+
             case RECUR_DAILY:
               gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
               gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->dailyspin), r->increment);
@@ -1332,12 +1333,10 @@ edit_event (event_t ev)
                                             TRUE);
             }
         }
-	
-	else gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
+	else 
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
 	
 	s->ev = ev;
-        
-      
     }
 
   return w;
