@@ -36,7 +36,7 @@ struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "delete", "delete" },
   { "edit", "edit" },
-  { "save, "save" },
+  { "save", "save" },
   { "properties", "properties" },
   { "preferences", "preferences" },
   { "close", "close" },
@@ -141,7 +141,6 @@ update_text_view (GString *text)
   //text = remove_invalid_utf8_chars (text);
   if (text->str != NULL)
   {
-    //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
 
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
@@ -179,7 +178,6 @@ button_clicked (GtkWidget *button)
       selected_server = server;
       selected_channel = NULL;
       clear_text_view ();
-      //printf ("Button's text passed: %s\n", server->text->str);
       update_text_view (server->text);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
     }
@@ -191,7 +189,6 @@ button_clicked (GtkWidget *button)
       selected_server = channel->server;
       selected_channel = channel;
       clear_text_view ();
-      //printf ("Button's text passed: %s\n", server->text->str);
       update_text_view (channel->text);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
     }
@@ -224,7 +221,7 @@ join_channel (IRCServer *server, gchar *channel_name)
     gtk_box_pack_start (GTK_BOX (main_button_hbox), button, FALSE, FALSE, 0);
     gtk_object_set_data (GTK_OBJECT (button), "type", (gpointer) IRC_CHANNEL);
     gtk_object_set_data (GTK_OBJECT (button), "IRCChannel", (gpointer) channel);
-    gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (button_clicked), NULL);
+    g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (button_clicked), NULL);
     gtk_widget_show (button);
 
     channel->button = button;
@@ -368,7 +365,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   gtk_box_pack_start (GTK_BOX (main_button_hbox), button, FALSE, FALSE, 0);
   gtk_object_set_data (GTK_OBJECT (button), "type", (gpointer) IRC_SERVER);
   gtk_object_set_data (GTK_OBJECT (button), "IRCServer", (gpointer) server);
-  gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (button_clicked), NULL);
+  g_signal_connect (GTK_OBJECT (button), "clicked", G_CALLBACK (button_clicked), NULL);
   gtk_widget_show (button);
 
   server->button = button;
@@ -397,8 +394,8 @@ new_connection_dialog ()
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - New Connection");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_widget_destroy), NULL);
+  g_signal_connect (G_OBJECT (window), "destroy",
+                             G_CALLBACK (gtk_widget_destroy), NULL);
 
   gtk_widget_realize (window);
 
@@ -447,17 +444,17 @@ new_connection_dialog ()
   close_button = gpe_picture_button (button_hbox->style, "Close", "close");
   network_properties_button = gpe_picture_button (button_hbox->style, NULL, "properties");
 
-  gtk_object_set_data (GTK_OBJECT (connect_button), "server_combo_entry", (gpointer) GTK_COMBO (server_combo)->entry);
-  gtk_object_set_data (GTK_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
-  gtk_object_set_data (GTK_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
-  gtk_object_set_data (GTK_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
+  g_object_set_data (G_OBJECT (connect_button), "server_combo_entry", (gpointer) GTK_COMBO (server_combo)->entry);
+  g_object_set_data (G_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
+  g_object_set_data (G_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
+  g_object_set_data (G_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
 
-  gtk_signal_connect (GTK_OBJECT (connect_button), "clicked",
-    		      GTK_SIGNAL_FUNC (new_connection), window);
-  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
-    		      GTK_SIGNAL_FUNC (kill_widget), window);
-  gtk_signal_connect (GTK_OBJECT (network_properties_button), "clicked",
-    		      GTK_SIGNAL_FUNC (networks_config_window), NULL);
+  g_signal_connect (G_OBJECT (connect_button), "clicked",
+                             G_CALLBACK (new_connection), window);
+  g_signal_connect (GTK_OBJECT (close_button), "clicked",
+                             G_CALLBACK (kill_widget), window);
+  g_signal_connect (GTK_OBJECT (network_properties_button), "clicked",
+                             G_CALLBACK (networks_config_window), NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -529,8 +526,8 @@ main (int argc, char *argv[])
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), "IRC Client");
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
-  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+  g_signal_connect (GTK_OBJECT (main_window), "destroy",
+		      G_CALLBACK (gtk_exit), NULL);
 
   gtk_widget_realize (main_window);
 
@@ -569,19 +566,19 @@ main (int argc, char *argv[])
   smiley_button = gpe_picture_button (hbox->style, NULL, "smiley_happy");
   users_button = gtk_button_new ();
 
-  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
-    		      GTK_SIGNAL_FUNC (close_button_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (new_connection_button), "clicked",
-    		      GTK_SIGNAL_FUNC (new_connection_dialog), NULL);
-  gtk_signal_connect (GTK_OBJECT (users_button), "clicked",
-    		      GTK_SIGNAL_FUNC (toggle_users_list), NULL);
+  g_signal_connect (GTK_OBJECT (close_button), "clicked",
+    		      G_CALLBACK (close_button_clicked), NULL);
+  g_signal_connect (GTK_OBJECT (new_connection_button), "clicked",
+    		      G_CALLBACK (new_connection_dialog), NULL);
+  g_signal_connect (GTK_OBJECT (users_button), "clicked",
+    		      G_CALLBACK (toggle_users_list), NULL);
 
   users_button_label = gtk_label_new ("u\ns\ne\nr\ns");
   gtk_misc_set_alignment (GTK_MISC (users_button_label), 0.5, 0.5);
 
   irc_input_create ("dictionary", main_entry, quick_button, "quick_list", smiley_button, "smiley_list");
-  gtk_signal_connect(GTK_OBJECT (main_entry), "key-press-event",
-  	     GTK_SIGNAL_FUNC (entry_key_press), NULL);
+  g_signal_connect(GTK_OBJECT (main_entry), "key-press-event",
+  	     G_CALLBACK (entry_key_press), NULL);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (main_text_view));

@@ -8,6 +8,7 @@
  */
 
 #include <glib.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 
@@ -28,8 +29,18 @@ enum
   NUM_COLUMNS
 };
 
+enum
+{
+  ENTRY_NICK,
+  ENTRY_REAL_NAME,
+  ENTRY_PASSWORD
+};
+
 GtkTreeView *networks_config_tree_view;
 GtkListStore *networks_config_list_store;
+
+gboolean timer_active = FALSE;
+guint timer_id;
 
 static void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
@@ -50,6 +61,38 @@ networks_config_add_from_sql ()
     gtk_list_store_set (networks_config_list_store, &tree_iter, COLUMN_NETWORK, ((struct sql_network *) iter->data)->name, COLUMN_EDITABLE, TRUE, COLUMN_SQL_NETWORK, (gpointer) (struct sql_network *) iter->data, -1);
     iter = iter->next;
   }
+}
+
+gboolean
+networks_config_network_idle_save (data)
+{
+  printf ("Idle save.\n");
+  timer_active = FALSE;
+  return FALSE;
+}
+
+void
+networks_config_add_save_timer (GtkWidget *entry, int entry_type)
+{
+  struct irc_network *network;
+  gchar *new_text;
+  
+  new_text = gtk_entry_get_text (GTK_ENTRY (entry));
+  network = g_object_get_data (G_OBJECT (entry), "sql_network");
+  
+  if (entry_type == ENTRY_NICK)
+    network->nick = g_strdup (new_text);
+  if (entry_type == ENTRY_REAL_NAME)
+    network->real_name = g_strdup (new_text);
+  if (entry_type == ENTRY_PASSWORD)
+    network->password = g_strdup (new_text);
+
+  if (timer_active == TRUE)
+    gtk_timeout_remove (timer_id);
+  else
+    timer_active = TRUE;
+    
+  timer_id = gtk_timeout_add (700, networks_config_network_idle_save, (gpointer) network);
 }
 
 void
@@ -103,6 +146,87 @@ networks_config_delete ()
 }
 
 void
+networks_config_edit_window (struct sql_network *network)
+{
+  GtkWidget *window, *table, *vbox, *button_hbox, *label, *hsep;
+  GtkWidget *nick_entry, *real_name_entry, *password_entry;
+  GtkWidget *close_button;
+  GtkTreeView *tree_view;
+  GtkTreeViewColumn* column;
+  GtkCellRenderer *renderer;
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
+  
+  guint window_x = 240, window_y = 310;
+
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (window), g_strdup_printf ("IRC Client - Modify %s", network->name));
+  gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      G_CALLBACK (kill_widget), window);
+
+  gtk_widget_realize (window);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  button_hbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
+
+  table = gtk_table_new (2, 3, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+
+  label = gtk_label_new ("Nickname");
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
+
+  label = gtk_label_new ("Real Name");
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
+
+  label = gtk_label_new ("Password");
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
+
+  hsep = gtk_hseparator_new ();
+
+  nick_entry = gtk_entry_new ();
+  real_name_entry = gtk_entry_new ();
+  password_entry = gtk_entry_new ();
+
+  close_button = gpe_picture_button (button_hbox->style, "Close", "close");
+
+  g_signal_connect (G_OBJECT (close_button), "clicked",
+                             G_CALLBACK (kill_widget), window);
+  g_signal_connect (G_OBJECT (nick_entry), "insert-text",
+                             G_CALLBACK (networks_config_add_save_timer), (gpointer) ENTRY_NICK);
+  g_signal_connect (G_OBJECT (real_name_entry), "insert-text",
+                             G_CALLBACK (networks_config_add_save_timer), (gpointer) ENTRY_REAL_NAME);
+  g_signal_connect (G_OBJECT (password_entry), "insert-text",
+                             G_CALLBACK (networks_config_add_save_timer), (gpointer) ENTRY_PASSWORD);
+
+  g_object_set_data (G_OBJECT (nick_entry), "sql_network", (gpointer) network);
+  g_object_set_data (G_OBJECT (real_name_entry), "sql_network", (gpointer) network);
+  g_object_set_data (G_OBJECT (password_entry), "sql_network", (gpointer) network);
+
+  gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
+  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox), close_button, FALSE, FALSE, 0);
+
+  gtk_table_attach_defaults (GTK_TABLE (table), nick_entry, 1, 2, 0, 1);
+  gtk_table_attach_defaults (GTK_TABLE (table), real_name_entry, 1, 2, 1, 2);
+  gtk_table_attach_defaults (GTK_TABLE (table), password_entry, 1, 2, 2, 3);
+
+  if (gpe_find_icon_pixmap ("preferences", &pmap, &bmap))
+    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+
+  gtk_widget_show_all (window);
+}
+
+void
 networks_config_edit ()
 {
   GtkTreeSelection *selec;
@@ -115,108 +239,6 @@ networks_config_edit ()
     gtk_tree_model_get (GTK_TREE_MODEL (networks_config_list_store), &iter, COLUMN_SQL_NETWORK, &network, -1);
     networks_config_edit_window (network);
   }
-}
-
-void
-networks_config_edit_window (struct sql_network *network)
-{
-  GtkWidget *window, *table, *vbox, *button_hbox, *label, *hsep;
-  GtkWidget *nick_entry, *real_name_entry, *password_entry;
-  GtkWidget *connect_button, *close_button, *network_properties_button;
-  GtkTreeView *tree_view;
-  GtkTreeViewColumn* column;
-  GtkCellRenderer *renderer;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
-
-  guint window_x = 240, window_y = 310;
-
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (window), g_strdup_printf ("IRC Client - Modify %s", network->name));
-  gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (kill_widget), window);
-
-  gtk_widget_realize (window);
-
-  vbox = gtk_vbox_new (FALSE, 0);
-  hbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_set_spacing (GTK_BOX (hbox), 3);
-  button_hbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
-  gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
-
-  table = gtk_table_new (2, 5, FALSE);
-  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 6);
-  gtk_table_set_col_spacings (GTK_TABLE (table), 6);
-
-  label = gtk_label_new ("Network");
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
-
-  label = gtk_label_new ("Server");
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
-
-  label = gtk_label_new ("Nickname");
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
-
-  label = gtk_label_new ("Real Name");
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 3, 4);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
-
-  label = gtk_label_new ("Password");
-  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 4, 5);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
-
-  hsep = gtk_hseparator_new ();
-
-  network_combo = gtk_combo_new ();
-  server_combo = gtk_combo_new ();
-
-  nick_entry = gtk_entry_new ();
-  real_name_entry = gtk_entry_new ();
-  password_entry = gtk_entry_new ();
-
-  connect_button = gpe_picture_button (button_hbox->style, "Connect", "globe");
-  close_button = gpe_picture_button (button_hbox->style, "Close", "close");
-  network_properties_button = gpe_picture_button (button_hbox->style, NULL, "properties");
-
-  gtk_object_set_data (GTK_OBJECT (connect_button), "server_combo_entry", (gpointer) GTK_COMBO (server_combo)->entry);
-  gtk_object_set_data (GTK_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
-  gtk_object_set_data (GTK_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
-  gtk_object_set_data (GTK_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
-
-/*
-  gtk_signal_connect (GTK_OBJECT (connect_button), "clicked",
-    		      GTK_SIGNAL_FUNC (new_connection), window);
-  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
-    		      GTK_SIGNAL_FUNC (kill_widget), window);
-  gtk_signal_connect (GTK_OBJECT (network_properties_button), "clicked",
-    		      GTK_SIGNAL_FUNC (networks_config_window), NULL);
-*/
-
-  gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
-  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (button_hbox), close_button, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (button_hbox), connect_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), network_combo, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), network_properties_button, FALSE, FALSE, 0);
-
-  gtk_table_attach_defaults (GTK_TABLE (table), hbox, 1, 2, 0, 1);
-  gtk_table_attach_defaults (GTK_TABLE (table), server_combo, 1, 2, 1, 2);
-  gtk_table_attach_defaults (GTK_TABLE (table), nick_entry, 1, 2, 2, 3);
-  gtk_table_attach_defaults (GTK_TABLE (table), real_name_entry, 1, 2, 3, 4);
-  gtk_table_attach_defaults (GTK_TABLE (table), password_entry, 1, 2, 4, 5);
-
-  if (gpe_find_icon_pixmap ("globe", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
-
-  gtk_widget_show_all (window);
 }
 
 void
@@ -235,7 +257,7 @@ networks_config_window ()
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - Configuration");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_widget_destroy), NULL);
+		      G_CALLBACK (gtk_widget_destroy), NULL);
 
   gtk_widget_realize (window);
 
@@ -260,12 +282,12 @@ networks_config_window ()
   edit_button = gpe_picture_button (button_hbox->style, "Modify", "preferences");
   delete_button = gpe_picture_button (button_hbox->style, "Delete", "delete");
   
-  gtk_signal_connect (GTK_OBJECT (new_button), "clicked",
-    		      GTK_SIGNAL_FUNC (networks_config_new), NULL);
-  gtk_signal_connect (GTK_OBJECT (edit_button), "clicked",
-    		      GTK_SIGNAL_FUNC (networks_config_edit), NULL);
-  gtk_signal_connect (GTK_OBJECT (delete_button), "clicked",
-    		      GTK_SIGNAL_FUNC (networks_config_delete), NULL);
+  g_signal_connect (G_OBJECT (new_button), "clicked",
+                             G_CALLBACK (networks_config_new), NULL);
+  g_signal_connect (G_OBJECT (edit_button), "clicked",
+                             G_CALLBACK (networks_config_edit), NULL);
+  g_signal_connect (G_OBJECT (delete_button), "clicked",
+                             G_CALLBACK (networks_config_delete), NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (networks_config_tree_view));
