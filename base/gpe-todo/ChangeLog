@@ -1,3 +1,20 @@
+2003-01-29  Luis Oliveira  <luis@handhelds.org>
+
+	* Makefile (CFLAGS): Add ../libtododb to include path.
+	(MEMBERS): Removed todo-sql and old-db.
+	(gpe-todo): Link against libtododb.
+	* configure.c: Make use of libtododb (add todo_db_ prefix to 
+	new_item(), push_item(), delete_item(), new_category() and
+	del_category(). Also make use of todo_db_get_{categories|list}_list()
+	instead of the old global vars.
+	* list-ui.c: Likewise.
+	* main.c: Likewise.
+	* todo-ui.c: Likewise.
+	* todo.h: Removed structs/functions/enums that are now in libtododb.
+	* old-db.c: Removed file (now in libtododb).
+	* todo-sql.c: Likewise.
+	* todo-sqd.h: Likewise.
+
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.31 released.

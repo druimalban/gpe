@@ -54,7 +54,7 @@ categories_menu (void)
   gtk_signal_connect (GTK_OBJECT (i), "activate", (GtkSignalFunc)set_category, NULL);
   gtk_widget_show (i);
 
-  for (l = categories; l; l = l->next)
+  for (l = todo_db_get_categories_list(); l; l = l->next)
     {
       struct todo_category *t = l->data;
       i = gtk_menu_item_new_with_label (t->title);
@@ -81,14 +81,14 @@ purge_completed (GtkWidget *w, gpointer list)
   if (gpe_question_ask (_("Permanently delete all completed items?"), _("Confirm"), 
 			"question", _("Delete"), "ok", _("Cancel"), "cancel", NULL) == 0)
     {
-      GSList *iter = items;
+      GSList *iter = todo_db_get_items_list();
 
       while (iter)
 	{
 	  struct todo_item *i = iter->data;
 	  GSList *new_iter = iter->next;
 	  if (i->state == COMPLETED)
-	    delete_item (i);
+	    todo_db_delete_item (i);
 	  
 	  iter = new_iter;
 	}
@@ -100,9 +100,9 @@ purge_completed (GtkWidget *w, gpointer list)
 static void
 show_hide_completed (GtkWidget *w, gpointer list)
 {
-  GSList *iter = items;
+  GSList *iter = todo_db_get_items_list();
 
-  for (iter = items; iter; iter = iter->next)
+  for (iter = todo_db_get_items_list(); iter; iter = iter->next)
     {
       struct todo_item *i = iter->data;
       i->was_complete =  (i->state == COMPLETED) ? TRUE : FALSE;
@@ -246,7 +246,7 @@ draw_click_event (GtkWidget *widget,
 	      else
 		ti->state = COMPLETED;
 	      
-	      push_item (ti);
+	      todo_db_push_item (ti);
 	      gtk_widget_draw (g_draw, NULL);
 	      break;
 	    }
@@ -279,7 +279,7 @@ refresh_items (void)
       display_items = NULL;
     }
 
-  for (iter = items; iter; iter = iter->next)
+  for (iter = todo_db_get_items_list(); iter; iter = iter->next)
     {
       struct todo_item *i = iter->data;
       if (selected_category == NULL 

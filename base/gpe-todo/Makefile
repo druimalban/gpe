@@ -14,11 +14,11 @@ endif
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm
+CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm -I../libtododb
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = main todo-ui todo-sql list-ui old-db configure
+MEMBERS = main todo-ui list-ui configure
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -27,7 +27,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-todo all-mo
 
 gpe-todo: $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm -L../libtododb -ltododb
 
 clean:
 	rm -f gpe-todo $(OBJS) $(DEPS)

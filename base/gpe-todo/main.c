@@ -20,7 +20,6 @@
 #include <libdm.h>
 
 #include "todo.h"
-#include "todo-sql.h"
 
 static struct gpe_icon my_icons[] = {
   { "hide" },
@@ -78,7 +77,7 @@ main(int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  if (sql_start ())
+  if (todo_db_start ())
     exit (1);
 
   libdm_init ();

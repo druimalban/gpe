@@ -34,7 +34,7 @@ ui_del_category (GtkWidget *widget,
     {
       guint row = (guint)clist->selection->data;
       struct todo_category *t = gtk_clist_get_row_data (clist, row);
-      del_category (t);
+      todo_db_del_category (t);
       gtk_clist_remove (clist, row);
       gtk_widget_draw (GTK_WIDGET (clist), NULL);
       categories_menu ();
@@ -60,7 +60,7 @@ ui_create_new_category (GtkWidget *widget,
       return;
     }
   
-  for (l = categories; l; l = l->next)
+  for (l = todo_db_get_categories_list(); l; l = l->next)
     {
       struct todo_category *t = l->data;
       if (!strcmp (title, t->title))
@@ -71,7 +71,7 @@ ui_create_new_category (GtkWidget *widget,
 	}
     }
 
-  t = new_category (title);
+  t = todo_db_new_category (title);
   line_info[0] = title;
   row = gtk_clist_append (GTK_CLIST (clist), line_info);
   gtk_clist_set_row_data (GTK_CLIST (clist), row, t);
@@ -185,7 +185,7 @@ configure (GtkWidget *w, gpointer list)
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 #endif
 
-  for (l = categories; l; l = l->next)
+  for (l = todo_db_get_categories_list(); l; l = l->next)
     {
       struct todo_category *t = l->data;
       gchar *line_info[1];

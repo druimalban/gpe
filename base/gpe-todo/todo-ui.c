@@ -21,7 +21,6 @@
 #include <libdm.h>
 
 #include "todo.h"
-#include "todo-sql.h"
 
 #define _(_x) gettext(_x)
 
@@ -77,7 +76,7 @@ click_delete (GtkWidget *widget,
   struct edit_todo *t = gtk_object_get_data (GTK_OBJECT (window), "todo");
   
   if (t->item)
-    delete_item (t->item);
+    todo_db_delete_item (t->item);
 
   refresh_items ();
   
@@ -126,7 +125,7 @@ click_ok (GtkWidget *widget,
 	}
     }
   else
-    t->item = new_item ();
+    t->item = todo_db_new_item ();
 
   t->item->categories = g_slist_copy (t->selected_categories);
 
@@ -136,7 +135,7 @@ click_ok (GtkWidget *widget,
     t->item->summary = summary;
   t->item->time = when;
   t->item->state = t->state;
-  push_item (t->item);
+  todo_db_push_item (t->item);
 
   refresh_items ();
 
@@ -230,7 +229,7 @@ change_categories (GtkWidget *w, gpointer p)
   GSList *widgets = NULL;
   GtkWidget *okbutton, *cancelbutton;
 
-  for (iter = categories; iter; iter = iter->next)
+  for (iter = todo_db_get_categories_list(); iter; iter = iter->next)
     {
       struct todo_category *c = iter->data;
       GtkWidget *w = gtk_check_button_new_with_label (c->title);
@@ -332,7 +331,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 	t->selected_categories = NULL;
     }
 
-  if (categories)
+  if (todo_db_get_categories_list())
     {
       GtkWidget *button = gtk_button_new_with_label (_("Categories:"));
       GtkWidget *label = gtk_label_new ("");
@@ -393,7 +392,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
 
-  if (categories)
+  if (todo_db_get_categories_list())
     gtk_box_pack_start (GTK_BOX (vbox), hbox_categories, FALSE, FALSE, 2);
 
   gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);

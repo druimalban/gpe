@@ -12,51 +12,17 @@
 
 #include <sys/time.h>
 #include <gtk/gtk.h>
-
-typedef enum
-{
-  NOT_STARTED,
-  IN_PROGRESS,
-  COMPLETED
-} item_state;
-
-struct todo_item
-{
-  int id, pos;
-  time_t time;
-  const char *what;
-  const char *summary;
-  item_state state;
-  gboolean was_complete;
-  GSList *categories;
-#if GTK_MAJOR_VERSION >= 2
-  PangoLayout *layout;
-#endif
-};
-
-struct todo_category
-{
-  const char *title;
-  int id;
-};
+#include <gpe/todo-db.h>
 
 extern GtkWidget *g_draw;
 extern GtkWidget *the_notebook;
-extern GSList *categories, *items;
 
-extern struct todo_item *new_item (void);
 extern GtkWidget *edit_item (struct todo_item *item,
                              struct todo_category *initial_category);
-extern gboolean push_item (struct todo_item *i);
-extern void delete_item (struct todo_item *i);
-
-extern struct todo_category *new_category (const char *title);
-extern void del_category (struct todo_category *);
 
 extern void configure (GtkWidget *w, gpointer list);
 
 extern void categories_menu (void);
-
 extern void refresh_items (void);
 
 #endif
