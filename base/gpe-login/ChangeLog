@@ -1,5 +1,14 @@
 2003-02-12  Philip Blundell  <philb@gnu.org>
 
+	Replace C implementation of gpe-logout with shell script:
+	* Makefile (clean): Remove reference to gpe-logout.
+	(install-login): Likewise.
+	(all): Likewise.
+	(gpe-logout): Delete rule.
+	(install-scripts): Install gpe-logout.sh also.
+	* gpe-logout.sh: New file.
+	* gpe-logout.c: Deleted.
+
 	* X11/Xsession-gpe.d/25dotfiles: Remove minitheme.
 
 2003-02-11  Philip Blundell  <philb@gnu.org>

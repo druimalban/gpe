@@ -25,7 +25,7 @@ endif
 LDFLAGS += -lgpewidget
 LDFLAGS_ROOT = -lrootimage
 
-all: gpe-login gpe-logout gpe-dm gpe-lock-display mo
+all: gpe-login gpe-dm gpe-lock-display mo
 
 mo:
 	make -C po
@@ -41,9 +41,6 @@ po/$(PACKAGE).pot: $(SOURCES)
 gpe-login: gpe-login.o nocursor.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_ROOT) -lcrypt
 
-gpe-logout: gpe-logout.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
-
 gpe-dm: gpe-dm.o
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
@@ -54,10 +51,8 @@ install: install-dm install-login
 
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
-	install -D gpe-logout $(DESTDIR)$(PREFIX)/bin/gpe-logout
 	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-logout
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	install -d $(DESTDIR)/etc/X11
 	install -m 755 gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
@@ -94,6 +89,8 @@ install-scripts:
 	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps
 	mkdir -p familiar/dist.gpe-session-scripts/usr/share/applications
 	install -m 644 gpe-logout.desktop familiar/dist.gpe-session-scripts/usr/share/applications
+	mkdir -p familiar/dist.gpe-session-scripts/usr/bin
+	install gpe-logout.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-logout
 
 ipkg:
 	make PREFIX=/usr clean all
@@ -121,4 +118,4 @@ ipkg:
 	ipkg-build familiar/dist.gpe-session-scripts
 
 clean:
-	rm -f gpe-login gpe-login.o gpe-logout gpe-logout.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o
+	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o
