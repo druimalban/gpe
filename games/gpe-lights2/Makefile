@@ -2,7 +2,7 @@ PACKAGE = gpe-lights
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = 
-VERSION = 0.12
+VERSION = 0.13
 
 MEMBERS = gpe-lights
 

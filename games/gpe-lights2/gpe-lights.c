@@ -49,9 +49,7 @@ static GtkWidget *moves_label, *lights_off, *lights_label;
 static GtkWidget *vb, *status_box;
 static GtkWidget *align, *draw_area;
 static GtkWidget *pref_dialog;
-static GdkPixbuf *image;
-static GdkPixmap *lights;
-static GdkBitmap *mask;
+static GdkPixbuf *lights;
 
 static gchar *fname;
 
@@ -93,10 +91,10 @@ draw_light (int x, int y)
       by = 0;
       bx = LIGHT_SIZE * (grid[x][y] - 1);
 
-      gdk_draw_pixmap (draw_area->window,
+      gdk_draw_pixbuf (draw_area->window,
 		       draw_area->style->black_gc, lights,
 		       bx, by, x * LIGHT_SIZE, y * LIGHT_SIZE,
-		       LIGHT_SIZE, LIGHT_SIZE);
+		       LIGHT_SIZE, LIGHT_SIZE, GDK_RGB_DITHER_NORMAL, 0, 0);
     }
   else
     gdk_window_clear_area (draw_area->window, x * LIGHT_SIZE, y * LIGHT_SIZE,
@@ -522,8 +520,6 @@ static void
 load_theme (char *fname)
 {
   char *fn;
-  GdkColor bgcolor;
-  GdkImage *tmpimage;
 
   fn = g_strconcat (PREFIX "/share/" PACKAGE "/", fname, NULL);
 
@@ -538,16 +534,7 @@ load_theme (char *fname)
 
   theme = g_strdup (fname);
 
-  if (image)
-    gdk_pixbuf_unref (image);
-
-  image = gdk_pixbuf_new_from_file (fn, NULL);
-  gdk_pixbuf_render_pixmap_and_mask (image, &lights, &mask, 127);
-
-  tmpimage = gdk_image_get (lights, 0, 0, 1, 1);
-  bgcolor.pixel = gdk_image_get_pixel (tmpimage, 0, 0);
-  gdk_window_set_background (draw_area->window, &bgcolor);
-  gdk_image_destroy (tmpimage);
+  lights = gdk_pixbuf_new_from_file (fn, NULL);
 
   g_free (fn);
 
