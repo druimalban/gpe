@@ -156,7 +156,8 @@ int esd_send_auth( int sock )
     int auth_fd = -1;
     int endian = ESD_ENDIAN_KEY;
     int reply;
-    char *auth_filename = 0, auth_key[ESD_KEY_LEN];
+    char *auth_filename = 0;
+    unsigned char auth_key[ESD_KEY_LEN];
     char *home = NULL;
     int namelen, retval;
     void (*phandler)(int);
@@ -187,7 +188,6 @@ int esd_send_auth( int sock )
     retval = 0;
     /* open the authorization file */
     if ( -1 == (auth_fd = open( auth_filename, O_RDONLY ) ) ) {
-        unsigned char randbuf[ESD_KEY_LEN];
 
 	/* it doesn't exist? create one */
 	auth_fd = open( auth_filename, O_RDWR | O_CREAT | O_EXCL,
@@ -200,7 +200,7 @@ int esd_send_auth( int sock )
 	}
 
 	esound_genrand(auth_key, ESD_KEY_LEN);
-	write( auth_fd, randbuf, ESD_KEY_LEN);
+	write( auth_fd, auth_key, ESD_KEY_LEN);
     } else
       /* read the key from the authorization file */
       if ( ESD_KEY_LEN != read( auth_fd, auth_key, ESD_KEY_LEN ) )
@@ -555,6 +555,15 @@ esd_connect_unix(const char *host)
     return -1;
 }
 
+static int is_host_local(const char* host) 
+{
+    char hnbuf[256]="";
+    if (!host || (*host)) return 1;
+
+    gethostname(hnbuf, sizeof(hnbuf));
+    return (!strcasecmp(host,hnbuf) || !strcasecmp(host, "localhost"));
+}
+
 /**
  * esd_open_sound: open a connection to ESD and get authorization
  * @host: Specifies hostname and port to connect to as "hostname:port"
@@ -583,7 +592,6 @@ esd_connect_unix(const char *host)
 #define min(a,b) ( ( (a)<(b) ) ? (a) : (b) )
 int esd_open_sound( const char *host )
 {
-    int connect_count;
     int socket_out = -1;
     int len;
     char use_unix = 0;
@@ -608,7 +616,7 @@ int esd_open_sound( const char *host )
 	}
     }
 
-    if ( !(host && *host && !strstr(host,"/unix"))) {
+    if ( is_host_local(host) ) {
 	if ( access( ESD_UNIX_SOCKET_NAME, R_OK | W_OK ) == -1 )
 	    use_unix = 0;
 	else
@@ -620,12 +628,13 @@ int esd_open_sound( const char *host )
 
     socket_out = esd_connect_tcpip( host );
     if ( socket_out >= 0 ) goto finish_connect;
+
 #ifndef __EMX__ /* Still in work */
     /* Connections failed, period. Since nobody gave us a remote esd
        to use, let's try spawning one. */
     /* ebm - I think this is an Inherently Bad Idea, but will leave it
        alone until I can get a good look at it */
-    if(! (host && *host)) {
+    if( is_host_local(host)) {
 	int childpid;
 	fd_set fdset;
 	struct timeval timeout;
@@ -651,7 +660,7 @@ int esd_open_sound( const char *host )
 		char *cmd;
 
 		setsid();
-		cmd = malloc(sizeof("esd ") + esd_spawn_options?strlen(esd_spawn_options):0);
+		cmd = malloc(sizeof("esd  -spawnfd 999999") + (esd_spawn_options?strlen(esd_spawn_options):0));
 
 		sprintf(cmd, "esd %s -spawnfd %d", esd_spawn_options?esd_spawn_options:"", esd_pipe[1]);
 

@@ -62,6 +62,7 @@ host_triplet = @host@
 AS = @AS@
 AUDIOFILE_CFLAGS = @AUDIOFILE_CFLAGS@
 AUDIOFILE_CONFIG = @AUDIOFILE_CONFIG@
+AUDIOFILE_LIBS = @AUDIOFILE_LIBS@
 CC = @CC@
 CPP = @CPP@
 DB2HTML = @DB2HTML@
@@ -70,22 +71,23 @@ DISTDOCS = @DISTDOCS@
 DLLTOOL = @DLLTOOL@
 DL_LIB = @DL_LIB@
 DOCS = @DOCS@
-ESDDSP = @ESDDSP@
-ESDPLAY = @ESDPLAY@
+ECHO = @ECHO@
 ESD_MAJOR_VERSION = @ESD_MAJOR_VERSION@
 ESD_MICRO_VERSION = @ESD_MICRO_VERSION@
 ESD_MINOR_VERSION = @ESD_MINOR_VERSION@
 ESD_VERSION = @ESD_VERSION@
 ESD_VERSION_INFO = @ESD_VERSION_INFO@
-LD = @LD@
+EXEEXT = @EXEEXT@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
-USE_SYMBOL_UNDERSCORE = @USE_SYMBOL_UNDERSCORE@
+SOUND_LIBS = @SOUND_LIBS@
+STRIP = @STRIP@
 VERSION = @VERSION@
 WRAP_LIB = @WRAP_LIB@
 have_db2html = @have_db2html@
@@ -161,16 +163,12 @@ esdrec_SOURCES =  	esdrec.c
 esdloop_SOURCES =  	esdloop.c
 
 
-EXTRA_esdplay_SOURCES =  	esdplay.c
+esdplay_SOURCES =  	$(getopt_src) 	esdplay.c
 
 
-LDADD = libesd.la $(AUDIOFILE_LIBS) -lm
+LDADD = libesd.la $(AUDIOFILE_LIBS)
 
-LIBOBJS = @LIBOBJS@
-
-esd_LDADD = $(LIBOBJS) $(WRAP_LIB) $(LDADD)
-esdctl_LDADD = $(LIBOBJS) $(LDADD)
-esdplay_LDADD = $(LIBOBJS) $(LDADD)
+esd_LDADD = $(WRAP_LIB) $(LDADD)
 
 m4datadir = $(datadir)/aclocal
 m4data_DATA = esd.m4
@@ -178,10 +176,11 @@ m4data_DATA = esd.m4
 esdconfdir = $(sysconfdir)
 esdconf_DATA = esd.conf
 
-CLEANFILES = esound.spec esound.pc
-
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = esound.pc
+
+EXTRA_DIST =  	$(getopt_extra)		esddsp			esound.pc.in		esound.spec		esound.spec.in		esd-config.in	        esd.conf        	esd.m4 			TIPS 			test-script 		test.wav 		getopt.h 		TODO			MAINTAINERS		$(AUDIO_BACKENDS)
+
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
@@ -275,7 +274,7 @@ Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
-$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ configure.in  acinclude.m4
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ configure.in 
 	cd $(srcdir) && $(ACLOCAL)
 
 config.status: $(srcdir)/configure.in $(CONFIG_STATUS_DEPENDENCIES)
@@ -344,6 +343,11 @@ uninstall-libLTLIBRARIES:
 	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
 
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
 .s.o:
 	$(COMPILE) -c $<
 
@@ -352,6 +356,7 @@ uninstall-libLTLIBRARIES:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -376,11 +381,11 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-libesddsp.la: $(libesddsp_la_OBJECTS) $(libesddsp_la_DEPENDENCIES)
-	$(LINK)  $(libesddsp_la_LDFLAGS) $(libesddsp_la_OBJECTS) $(libesddsp_la_LIBADD) $(LIBS)
-
 libesd.la: $(libesd_la_OBJECTS) $(libesd_la_DEPENDENCIES)
 	$(LINK) -rpath $(libdir) $(libesd_la_LDFLAGS) $(libesd_la_OBJECTS) $(libesd_la_LIBADD) $(LIBS)
+
+libesddsp.la: $(libesddsp_la_OBJECTS) $(libesddsp_la_DEPENDENCIES)
+	$(LINK) -rpath $(libdir) $(libesddsp_la_LDFLAGS) $(libesddsp_la_OBJECTS) $(libesddsp_la_LIBADD) $(LIBS)
 
 mostlyclean-binPROGRAMS:
 
@@ -566,7 +571,7 @@ maintainer-clean-recursive:
 	dot_seen=no; \
 	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
 	  rev="$$subdir $$rev"; \
-	  test "$$subdir" = "." && dot_seen=yes; \
+	  test "$$subdir" != "." || dot_seen=yes; \
 	done; \
 	test "$$dot_seen" = "no" && rev=". $$rev"; \
 	target=`echo $@ | sed s/-recursive//`; \
@@ -758,7 +763,6 @@ installdirs-am:
 mostlyclean-generic:
 
 clean-generic:
-	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-rm -f Makefile $(CONFIG_CLEAN_FILES)
@@ -837,11 +841,10 @@ doc:
 	done
 
 dist-hook: doc esound.spec
-	cp $(SPEC_FILE) $(distdir)
 	test -d $(distdir)/docs || mkdir $(distdir)/docs 
 	cp $(srcdir)/docs/esound.sgml $(distdir)/docs
-	cp -r $(srcdir)/docs/esound $(distdir)/docs/html
-	cp $(srcdir)/docs/esound.ps $(distdir)/docs
+	-cp -r $(srcdir)/docs/esound $(distdir)/docs/html
+	-cp $(srcdir)/docs/esound.ps $(distdir)/docs
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

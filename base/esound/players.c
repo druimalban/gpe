@@ -287,30 +287,30 @@ int read_player( esd_player_t *player )
 	FD_SET( player->source_id, &rd_fds );
 
 	/* if the data is ready, read a block */
-	can_read = (( player->actual_length < player->buffer_length ) &&
-		select( player->source_id + 1, &rd_fds, NULL, NULL, &timeout ));
-	
+ 	can_read = (( player->actual_length < player->buffer_length ) &&
+ 		select( player->source_id + 1, &rd_fds, NULL, NULL, &timeout ));
+ 	
 	if ( can_read > 0 )
 	{
-	    ESD_READ_BIN( player->source_id, player->data_buffer+player->actual_length, 
-			  player->buffer_length-player->actual_length, actual, "str rd" );
+	    player->actual_length = 0;
+		ESD_READ_BIN( player->source_id,
+			      player->data_buffer + player->actual_length, 
+			      player->buffer_length - player->actual_length,
+			      actual, "str rd" );
+		
+		/* check for end of stream */
+		if ( actual == 0 
+		     || ( actual < 0 && errno != EAGAIN && errno != EINTR ) )
+		    return -1;
 
-	    /* check for end of stream */
-	    if ( actual == 0 
-		 || ( actual < 0 && errno != EAGAIN && errno != EINTR ) )
-		return -1;
- 
 	    /* endian swap multi-byte data if we need to */
 	    client = (esd_client_t *) (player->parent);
 	    if ( client->swap_byte_order 
 		 && ( (player->format & ESD_MASK_BITS) == ESD_BITS16 ) )
 	    {
-		/* this will break if a read doesn't get us 16bit aligned
-		 * data...
-		 */
 		buffer = (unsigned short*) player->data_buffer+player->actual_length;
 		for ( pos = buffer 
-			  ; pos < buffer + actual / sizeof(short)
+			  ; pos < buffer + player->actual_length / sizeof(short)
 			  ; pos ++ )
 		{
 		    data = swap_endian_16( (*pos) );

@@ -2,6 +2,7 @@
    7-19-98: Nick Lopez( kimo_sabe@usa.net ) - it starts!
 */
 #include "esd.h"
+#include <string.h>
 
 /* debugging messages for audio device */
 static int driver_trace = 0;
@@ -209,8 +210,8 @@ int esd_audio_open()
 #endif
 
     /* set the sound driver audio format for playback */
-    alsa_format.format = ( (esd_audio_format & ESD_MASK_BITS) == ESD_BITS16 )
-	? /* 16 bit */ SND_PCM_SFMT_S16_LE : /* 8 bit */ SND_PCM_SFMT_U8;
+    alsa_format.format = ( (esd_audio_format & ESD_MASK_BITS) == ESD_BITS16 )  
+      ? /* 16 bit */ SND_PCM_SFMT_S16 : /* 8 bit */ SND_PCM_SFMT_U8;
     alsa_format.rate = esd_audio_rate;
 
 #ifdef ALSA_5_API
@@ -254,17 +255,17 @@ int esd_audio_open()
     ret = snd_pcm_channel_setup( alsa_sound_handle, &setup );
     if( ret ) {
         fprintf( stderr, "error: %s: in snd_pcm_channel_setup\n", snd_strerror(ret) );
-	esd_audio_close();
-	esd_audio_fd = -1;
+ 	esd_audio_close();
+ 	esd_audio_fd = -1;
         return(-1);
     }
 
     if ( params.format.rate != esd_audio_rate || params.format.voices != 2
-                       || params.format.format != SND_PCM_SFMT_S16_LE ) {
-                      fprintf( stderr, "set format didn't work.");
-			esd_audio_close();
-			esd_audio_fd = -1;
-                      return(-1);
+                       || params.format.format != SND_PCM_SFMT_S16 ) {
+		fprintf( stderr, "set format didn't work.");
+		esd_audio_close();
+		esd_audio_fd = -1;
+		return(-1);
         }
 
 #else
@@ -300,7 +301,7 @@ int esd_audio_open()
 	printf( "error: %s: in snd_pcm_playback_params\n", snd_strerror(ret) );
     }
     if ( alsa_format.rate != esd_audio_rate || alsa_format.channels != 2
-       || alsa_format.format != SND_PCM_SFMT_S16_LE )
+       || alsa_format.format != SND_PCM_SFMT_S16 )
         fprintf( stderr, "set format didn't work.");
 
 #endif /* ALSA_5_API */

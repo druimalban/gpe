@@ -1,4 +1,5 @@
 #include "esd-server.h"
+#include <time.h>
 
 #ifdef HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
@@ -17,7 +18,7 @@ int deny_severity = LOG_WARNING;
 
 /*******************************************************************/
 /* globals */
-extern int esd_use_tcpip;
+extern int esd_use_tcpip; 
 
 /* the list of the currently connected clients */
 esd_client_t *esd_clients_list;
@@ -122,16 +123,17 @@ int get_new_clients( int listen )
     struct sockaddr_in incoming;
     size_t size_in = sizeof(struct sockaddr_in);
     esd_client_t *new_client = NULL;
-    
-    unsigned long addr;
-    short port;
 
     /* see who awakened us */
     do {
 	fd = accept( listen, (struct sockaddr*) &incoming, &size_in );
 	if ( fd > 0 ) {
+
 	    ESDBG_TRACE( 
 	    if (esd_use_tcpip) {
+		unsigned long addr;
+		short port;
+
 		port = ntohs( incoming.sin_port );
 		addr = ntohl( incoming.sin_addr.s_addr );
 
@@ -140,7 +142,7 @@ int get_new_clients( int listen )
 			(unsigned int) (addr >> 16) % 256, 
 			(unsigned int) (addr >> 8) % 256, 
 			(unsigned int) addr % 256, port );
-	    } );
+		} );
 
 #ifdef USE_LIBWRAP
 	    if (esd_use_tcpip)

@@ -30,7 +30,7 @@ void exit_usage( const char *who, int errcode, const char *why, const char *what
 	     "\n"
 	     "options:\n"
 	     "-s, --server=host:port        contact esd server on host at port\n"
-	     "-p, --prefix=string	    prefix for cached samples\n"
+	     "-p, --prefix=string           prefix for cached samples\n"
 	     "\n"
 	     "commands:\n"
 	     "lock                          foreign clients may not use the server\n"
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     /* check the command line areguments */
     do
     {
-	arg = getopt_long(argc, argv, "sp:hv", opts, &option_index);
+	arg = getopt_long(argc, argv, "s:p:hv", opts, &option_index);
 
 	switch (arg)
 	{
