@@ -19,7 +19,9 @@
 #include <fcntl.h>
 #include <math.h>
 #include <time.h>
+#ifdef USE_MCHECK
 #include <mcheck.h>
+#endif
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -1114,7 +1116,9 @@ main (int argc, char *argv[])
   GdkBitmap *bmap;
   struct stat arg_stat;
 
+#ifdef USE_MCHECK
   mtrace ();
+#endif
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
