@@ -3,7 +3,7 @@ PACKAGE = gpe-timesheet
 CVSBUILD = yes
 VERSION = 0.11
 GTK2 = yes
-LINGUAS = id pt zh_TW
+LINGUAS = id pt zh_TW fr
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -54,7 +54,7 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
