@@ -1,0 +1,8 @@
+Package: gpe-sketchbook
+Section: base
+Priority: optional
+Version: 0.1
+Architecture: arm
+Maintainer: Luc Pionchon <luc.pionchon@welho.com>
+Depends: libgtk1.2, xlibs
+Description: sketches notebook program

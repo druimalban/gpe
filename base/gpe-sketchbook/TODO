@@ -1,0 +1,31 @@
+[ ]BUGS
+	[ ]automatic scroll on drawing area is not correct
+	[X]memory leak (each time we save)
+	--
+	[ ]selector: selecting with keybord (TAB, arrows, SPACE) --> crash!
+	[ ]next (or prev), go to selector: the next (or prev) line is selected, but NOT underlined (dark blue) :(
+	[ ]from dialog box to main window, "sometimes" the window go under other applications
+	[ ]when deleting many fast (click click click) seems some value are not updated --> crash | selected_sketch is wrong  | ... ==> freeze the button meanwhile!
+	[ ]check GTK warnings / assertion failed
+[ ]general
+	--
+	[ ]remove all the glade stuff
+	[ ]hierarchical list
+	[ ]add preferences
+	[ ]add cmd line options support (std --version --help)
+[ ]gui
+	[ ]exit/prev/next/new check if current is unsaved, and ask user
+	--
+	[ ]color selector, use gtkwidget.style (color), instead of pixmap
+	[ ]use GtkToolbar, instead of boxes... ! --> horizontal/vertical
+	[ ]in landscape mode, move the toolbar verticaly (right or left)
+	[ ]text field for info/title input (?)
+	[ ]add Preview window (preview frame instead of list in selector)
+	[ ]make drawing area centered if smaller than viewport
+	[ ]review buttons order
+	[ ]use disabled buttons when needed
+	[ ]add preferences window
+[ ]file io
+	[ ]use png instead of xpm
+	[ ]open/save file, check success/failure
+	--
