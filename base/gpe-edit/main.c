@@ -83,7 +83,9 @@ static void
 update_window_title (void)
 {
   gchar *window_title;
-  gchar *displayname;
+  GError *error = NULL;
+  gchar *displayname, *udisplayname;
+  gchar *wname = _(WINDOW_NAME);
 
   if (filename == NULL || strlen (filename) == 0)
   {
@@ -101,10 +103,23 @@ update_window_title (void)
     strcat (displayname, " *");
   }
 
-  window_title = g_malloc (strlen (WINDOW_NAME " - ") + strlen (displayname) + 1);
-  strcpy (stpcpy (window_title, WINDOW_NAME " - "), displayname);
+  udisplayname = g_locale_to_utf8 (displayname, -1, NULL, NULL, &error);
+  if (error)
+    {
+      gpe_error_box (error->message);
+      g_error_free (error);
+    }
+  
+  if (udisplayname)
+    {
+      window_title = g_strdup_printf ("%s - %s", wname, udisplayname);
 
-  gtk_window_set_title (GTK_WINDOW (main_window), window_title);
+      gtk_window_set_title (GTK_WINDOW (main_window), window_title);
+      g_free (udisplayname);
+      g_free (window_title);
+    }
+
+  g_free (displayname);
 }
 
 static void
@@ -591,6 +606,7 @@ main (int argc, char *argv[])
 
   if (argc > 1)
   {
+    filename = argv[1];
     open_file (argv[1]);
   }
 
