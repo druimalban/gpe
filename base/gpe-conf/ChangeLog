@@ -1,5 +1,6 @@
 2004-09-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
+	* soundctl.c: Removed another obsolete ioctl().
 	* soundctrl.c: Fixed segfault and some minor issues.
 	* sound.c: Added some comments.
 	* main.c: Minor fix in applet handling.

@@ -44,7 +44,7 @@ static char* mixer_names[] = SOUND_DEVICE_NAMES;
 static char* mixer_labels[] = SOUND_DEVICE_LABELS;
 static t_mixer mchannels[SOUND_MIXER_NRDEVICES];
 
-static int devmask = 0, recmask = 0;
+static int devmask = 0;
 static int mixfd;
 static int active_channels = 0;
 
@@ -264,10 +264,6 @@ sound_init(void)
 	if ((mixfd = open(DEVNAME_MIXER, O_RDWR)) >= 0) 
 	{
 		if (ioctl(mixfd, SOUND_MIXER_READ_DEVMASK, &devmask) == -1) 
-		{
-			return;
-		}
-		if (ioctl(mixfd, SOUND_MIXER_READ_RECMASK, &recmask) == -1) 
 		{
 			return;
 		}
