@@ -14,8 +14,7 @@ You are welcome to participate at gpe and gpe-conf.
   - Button configuration for Zaurus.
   - Add config wizzard to network config tool.
   - Change date/time setup tool to use timezone definition files.
-  - Update owner information setup to create a personal VCARD.
-  - Login setup needs the ability to configure autologin.
+  - Fix proxy settup to work for all browsers and ipkg.
 
 
 -> Here are some instruction to add a new module (Applet) to gpe-conf.

@@ -41,35 +41,6 @@ int is_network_up()
 	return result;
 }
 
-
-GtkWidget*
-lookup_widget                          (GtkWidget       *widget,
-                                        const gchar     *widget_name)
-{
-  GtkWidget *parent, *found_widget;
-
-  for (;;)
-    {
-      if (widget->parent == NULL) 
-      {
-		  break;
-	  }
-      if (GTK_IS_MENU (widget))
-        parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
-      else
-        parent = widget->parent;
-      if (parent == NULL)
-        break;
-      widget = parent;
-    }
-
-  found_widget = (GtkWidget*) gtk_object_get_data (GTK_OBJECT (widget),
-                                                   widget_name);
-  if (!found_widget)
-    g_warning ("Widget not found: %s", widget_name);
-  return found_widget;
-}
-
 GtkWidget*
 gpe_create_pixmap                      (GtkWidget       *widget,
                                         const gchar     *filename,
@@ -79,9 +50,7 @@ gpe_create_pixmap                      (GtkWidget       *widget,
   GtkWidget *pixmap;
   GdkPixbuf *icon;
   gchar* err;
-#if GDK_PIXBUF_MAJOR >= 2
   GError *g_error = NULL;
-#endif
 	
   guint width, height;
   /* some "random" initial values: */
@@ -91,22 +60,15 @@ gpe_create_pixmap                      (GtkWidget       *widget,
   icon = gpe_try_find_icon (filename, &err);
   if (!icon) { 
 	  g_free(err);
-	  #if GDK_PIXBUF_MAJOR < 2
-  	  icon = gdk_pixbuf_new_from_file (filename);
-      #else
       icon = gdk_pixbuf_new_from_file (filename, &g_error);
-      #endif
 
-      #if GDK_PIXBUF_MAJOR >= 2
       if (icon == NULL)
       {
         g_error_free (g_error);
       }
-      #endif
   }	
   width  = gdk_pixbuf_get_width (icon);
   height = gdk_pixbuf_get_height (icon);
-  /* g_message ("image is %d x %d", width, height); */
 
   maxwidth  = pxwidth;
   maxheight = pxheight;
@@ -121,12 +83,8 @@ gpe_create_pixmap                      (GtkWidget       *widget,
   else
     scale_height = 1.0;
 
-  /* g_message ("scale_width: %f, scale_height: %f", scale_width, scale_height); */
-
   scale = scale_width < scale_height ? scale_width : scale_height;
   scale = scale * 0.90; /* leave some border */
-  
-  /* g_message ("scale: %f", scale); */
   
   pixmap = gtk_image_new_from_pixbuf(
 			    gdk_pixbuf_scale_simple
@@ -144,12 +102,3 @@ char
   s[i] = 0;
   return s;
 }
-
-/* MacOS X doesn't have basename()... */
-char
-*gpe_basename (char *s) {
-  int i;
-  for (i=strlen (s); i && s[i]!='/'; i--);
-  return s+i+1;
-}
-

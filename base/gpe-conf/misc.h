@@ -15,10 +15,6 @@
 int is_network_up();
 
 GtkWidget*
-lookup_widget                          (GtkWidget       *widget,
-                                        const gchar     *widget_name);
-
-GtkWidget*
 gpe_create_pixmap                      (GtkWidget       *widget,
                                         const gchar     *filename,
 					const guint      pxwidth,
@@ -26,8 +22,5 @@ gpe_create_pixmap                      (GtkWidget       *widget,
 
 char
 *gpe_dirname (char *s);
-
-char
-*gpe_basename (char *s);
 
 #endif
