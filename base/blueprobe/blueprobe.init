@@ -1,0 +1,38 @@
+#!/bin/sh
+
+module_id() {
+    echo 'iPAQ' `cat /proc/hal/model`
+}
+
+if [ ! -f /etc/sysconfig/bluetooth ]; then
+  echo -n "Checking for built-in Bluetooth: "
+  case `module_id` in
+    "iPAQ h3900")
+	BLUETOOTH=yes
+	PORT=/dev/tts/1
+	SPEED=921600
+	;;
+    "iPAQ h3800")
+	BLUETOOTH=yes
+	PORT=/dev/ttySB0
+	SPEED=230400
+	;;
+    *)
+	BLUETOOTH=no
+        ;;
+  esac
+
+  if [ $BLUETOOTH = "yes" ]; then
+    if ! blueprobe $PORT $SPEED; then
+      BLUETOOTH=no
+    fi
+  fi
+
+  echo $BLUETOOTH
+  echo "BLUETOOTH=$BLUETOOTH" >/etc/sysconfig/bluetooth
+  if [ $BLUETOOTH = "yes" ]; then
+    echo "BLUETOOTH_PORT=$PORT" >>/etc/sysconfig/bluetooth
+    echo "BLUETOOTH_SPEED=$SPEED" >>/etc/sysconfig/bluetooth
+    echo "BLUETOOTH_PROTOCOL=bcsp" >>/etc/sysconfig/bluetooth
+  fi
+fi
