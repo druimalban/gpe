@@ -1,8 +1,8 @@
 Package: gpe-filemanager2
 Section: base
 Priority: optional
-Version: 0.02
+Version: 0.03
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
-Depends: libgpewidget1 (>= 0.23), gpe-icons (>= 0.10), sqlite
-Description: GPE file manager
+Depends: libgpewidget1 (>= 0.27), gpe-icons (>= 0.15), sqlite
+Description: GPE File Manager

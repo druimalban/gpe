@@ -194,7 +194,7 @@ ask_open_with (char *exec)
 
   int i = 5;
   int row_num = 0;
-  gchar *programs[] = {"GPE Edit", "gpe-edit", "Dillo", "dillo", "Quick Image Viewer", "qiv"};
+  gchar *programs[] = {"GPE Edit", "gpe-edit", "Dillo", "dillo", "GPE Gallery", "gpe-gallery"};
   gchar *row_text[2];
   gchar *pixmap_file;
 

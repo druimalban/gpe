@@ -5,5 +5,5 @@ Version: 0.01
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
 Depends: libgtk1.2, libgpewidget0 (>= 0.23), gpe-icons (>= 0.10), sqlite
-Description: GPE file manager
+Description: GPE File Manager
 
