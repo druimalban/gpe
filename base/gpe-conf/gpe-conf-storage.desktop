@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name= Storage Information
+Comment=Storage Information
+Exec=gpe-conf storage
+Terminal=0
+Type=Application
+Icon=gpe-config-storage.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False

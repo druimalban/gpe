@@ -39,6 +39,7 @@
 #include "users.h"
 #include "gpe-admin.h"
 #include "sleep/conf.h"
+#include "storage.h"
 
 #include "gpe/init.h"
 
@@ -87,6 +88,7 @@ struct Applet applets[]=
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , "GPE" ,"admin","GPE Conf Administration"},
+    { &Storage_Build_Objects, &Storage_Free_Objects, &Storage_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
@@ -198,7 +200,7 @@ void make_container()
 
   GtkWidget *scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   self.viewport = gtk_viewport_new (NULL, NULL);
   gtk_container_add (GTK_CONTAINER (scrolledwindow),self.viewport);

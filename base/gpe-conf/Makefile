@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.0.7
+VERSION = 0.0.8
 NATIVE = no
 CVSBUILD = yes
 DEBUG = no
@@ -74,6 +74,7 @@ MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI
 MEMBERS += users/interface users/callbacks  
 MEMBERS += cfgfile
 MEMBERS += gpe-admin
+MEMBERS += storage
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -98,6 +99,7 @@ PIXMAPS += gpe-config.png
 PIXMAPS += gpe-config-users.png
 PIXMAPS += gpe-config-login-setup.png
 PIXMAPS += gpe-config-admin.png
+PIXMAPS += gpe-config-storage.png
 
 all: $(PACKAGE) 
 

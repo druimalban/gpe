@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <libintl.h>
 
 #include "callbacks.h"
 #include "interface.h"
@@ -152,6 +153,9 @@ users_on_save_clicked                        (GtkButton       *button,
     {
       gpe_error_box(_("Please choose a home."));
       return ;
+    }
+  else // create dir
+    {
     }
 
   free(self->cur->pw.pw_dir);

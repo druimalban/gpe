@@ -29,6 +29,7 @@
 #include "login-setup.h"
 #include "gpe-admin.h"
 #include "cfgfile.h"
+#include "ownerinfo.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -37,9 +38,6 @@ static int know_global_user_access = FALSE;
 
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
-
-#define GPE_OWNERINFO_DATA   "/etc/gpe/gpe-ownerinfo.data"
-#define GPE_OWNERINFO_TMP   "/tmp/gpe-ownerinfo.data"
 
 
 void update_dhcp_status(const gchar* active)

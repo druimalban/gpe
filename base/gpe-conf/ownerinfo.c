@@ -42,9 +42,6 @@ void File_Selected (char *file,
 
 #define CURRENT_DATAFILE_VER 2
 
-/* WARNING: don't mess with this! */
-#define GPE_OWNERINFO_DATA   "/etc/gpe/gpe-ownerinfo.data"
-#define GPE_OWNERINFO_TMP   "/tmp/gpe-ownerinfo.data"
 #define INFO_MATCH           "[gpe-ownerinfo data version "
 
 #define UPGRADE_ERROR      -1
@@ -492,7 +489,6 @@ maybe_upgrade_datafile ()
     return (UPGRADE_ERROR);
   }
   else {
-    /* printf ("Had found version %d.\n", version); */
     return UPGRADE_NOT_NEEDED;
   }
 }
@@ -503,8 +499,6 @@ upgrade_to_v2 (guint new_version)
   gchar *firstline, *oldcontent;
   FILE *fp;
   
-  /* firstline = g_strdup ("Initial firstline"); */
-
   firstline =  g_strdup ("[gpe-ownerinfo data version 2]");
   oldcontent = g_strdup ("Initial oldcontent.");
   

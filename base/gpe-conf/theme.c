@@ -52,7 +52,7 @@ char * get_cur_matchboxtheme()
 {
   FILE *pipe;
   static char cur[256];
-  return 0;
+//  return 0;
   pipe = popen ("mbcontrol -r", "r");
 
   if (pipe > 0)

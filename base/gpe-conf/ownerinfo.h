@@ -7,6 +7,9 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#define GPE_OWNERINFO_DATA   "/etc/gpe/gpe-ownerinfo.data"
+#define GPE_OWNERINFO_TMP   "/tmp/gpe-ownerinfo.data"
+
 GtkWidget *Ownerinfo_Build_Objects();
 void Ownerinfo_Free_Objects();
 void Ownerinfo_Save();

@@ -36,6 +36,7 @@ static int vparse(FILE *f, char *format, va_list ap)
     }
   return 1;
 }
+
 int parse_pipe(char *cmd,char *format,...)
 {
   va_list ap;
@@ -53,6 +54,7 @@ int parse_pipe(char *cmd,char *format,...)
   va_end(ap);
   return rv;
 }
+
 int parse_file(char *file,char *format,...)
 {
   va_list ap;
