@@ -1,3 +1,14 @@
+2003-06-18  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (GTKCFLAGS): Add D-BUS.
+	(GTKLDFLAGS): Add D-BUS and libbluetooth.
+	* bluez-pin.c (dbus_server_run): New function.
+	(handler_func): Likewise.
+	(handle_request): Likewise.
+	(send_reply): Likewise.
+	(ask_user_dialog): Likewise.  Pass window handle to signal handlers.
+	(main): Respect --dbus.
+
 2003-04-22  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add ga.

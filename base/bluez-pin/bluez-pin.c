@@ -20,6 +20,11 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include <dbus/dbus.h>
+#include <dbus/dbus-glib.h>
+
+#include <bluetooth/bluetooth.h>
+
 #define BT_ICON PREFIX "/share/pixmaps/bt-logo.png"
 
 #define _(x) gettext(x)
@@ -28,6 +33,12 @@ static char *address;
 static char *name = "";
 static GtkWidget *check;
 static sqlite *sqliteh;
+
+static gboolean dbus_mode;
+
+struct req_context;
+
+static void send_reply (struct req_context *ctx, const char *pin);
 
 int
 sql_start (void)
@@ -79,18 +90,27 @@ abandon (void)
 }
 
 static void
-click_cancel(GtkWidget *widget,
-	     GtkWidget *window)
+click_cancel (GtkWidget *widget, GtkWidget *window)
 {
-  abandon ();
+  struct req_context *req = g_object_get_data (G_OBJECT (window), "context");
+  if (req)
+    send_reply (req, NULL);
+  else
+    abandon ();
+
+  gtk_widget_destroy (window);
 }
 
 static void
-click_ok(GtkWidget *widget,
-	 GtkWidget *entry)
+click_ok (GtkWidget *widget, GtkWidget *window)
 {
-  const char *pin = gtk_entry_get_text (GTK_ENTRY (entry));
   gboolean save = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check));
+  struct req_context *req = g_object_get_data (G_OBJECT (window), "context");
+  GtkWidget *entry;
+  const char *pin;
+
+  entry = g_object_get_data (G_OBJECT (window), "entry");
+  pin = gtk_entry_get_text (GTK_ENTRY (entry));
 
   if (save && sqliteh)
     {
@@ -104,12 +124,21 @@ click_ok(GtkWidget *widget,
       sqlite_close (sqliteh);
     }
 
-  printf ("PIN:%s\n", pin);
-  exit (0);
+  if (req)
+    {
+      send_reply (req, pin);
+    }
+  else
+    {
+      printf ("PIN:%s\n", pin);
+      exit (0);
+    }
+
+  gtk_widget_destroy (window);
 }
 
 void
-ask_user (int outgoing, const char *address)
+ask_user_dialog (int outgoing, const char *address, struct req_context *ctx)
 {
   GtkWidget *window = gtk_dialog_new ();
   GtkWidget *logo = NULL;
@@ -161,36 +190,159 @@ ask_user (int outgoing, const char *address)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), buttoncancel, TRUE, TRUE, 0);
 
   g_signal_connect (G_OBJECT (buttonok), "clicked",
-		    G_CALLBACK (click_ok), entry);
+		    G_CALLBACK (click_ok), window);
   g_signal_connect (G_OBJECT (buttoncancel), "clicked",
-		    G_CALLBACK (click_cancel), entry);
+		    G_CALLBACK (click_cancel), window);
   g_signal_connect (G_OBJECT (entry), "activate",
-		    G_CALLBACK (click_ok), entry);
+		    G_CALLBACK (click_ok), window);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox_pin, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), check, TRUE, TRUE, 0);
+
+  g_object_set_data (G_OBJECT (window), "entry", entry);
+  g_object_set_data (G_OBJECT (window), "context", ctx);
 
   gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth PIN"));
 
   gtk_widget_show_all (window);
 
   gtk_widget_grab_focus (entry);
+}
+
+void
+ask_user (int outgoing, const char *address)
+{
+  ask_user_dialog (outgoing, address, NULL);
 
   gtk_main ();
 }
 
 void
-usage(char *argv[])
+usage (char *argv[])
 {
   fprintf (stderr, _("Usage: %s <in|out> <address>\n"), argv[0]);
   exit (1);
 }
 
+struct req_context
+{
+  DBusConnection *connection;
+  DBusMessage *message;
+};
+
+static void
+send_reply (struct req_context *ctx, const char *pin)
+{
+  DBusMessageIter iter;
+
+  dbus_message_append_iter_init (ctx->message, &iter);
+  if (pin)
+    dbus_message_iter_append_string (&iter, pin);
+
+  dbus_connection_send (ctx->connection, ctx->message, NULL);
+  dbus_connection_flush (ctx->connection);
+
+  g_free (ctx);
+}
+
+static void
+handle_request (DBusConnection *connection, DBusMessage *message)
+{
+  DBusMessageIter iter;
+  gboolean out;
+  bdaddr_t bdaddr, sbdaddr;
+  int type;
+  int i;
+  char *address;
+  DBusMessage *reply;
+  struct req_context *ctx;
+
+  dbus_message_iter_init (message, &iter);
+  
+  type = dbus_message_iter_get_arg_type (&iter);
+  if (type != DBUS_TYPE_BOOLEAN)
+    {
+      fprintf (stderr, "wrong type for boolean\n");
+      goto error;
+    }
+  out = dbus_message_iter_get_boolean (&iter);
+
+  for (i = 0; i < sizeof (bdaddr); i++)
+    {
+      unsigned char *p = (unsigned char *)&bdaddr;
+
+      if (! dbus_message_iter_next (&iter))
+	goto error;
+
+      type = dbus_message_iter_get_arg_type (&iter);
+      if (type != DBUS_TYPE_BYTE)
+	{
+	  fprintf (stderr, "wrong type for byte %d\n", i);
+	  goto error;
+	}
+      p[i] = dbus_message_iter_get_byte (&iter);
+    }
+
+  reply = dbus_message_new_reply (message);
+
+  ctx = g_malloc (sizeof (*ctx));
+  ctx->message = reply;
+  ctx->connection = connection;
+
+  baswap (&sbdaddr, &bdaddr);
+  address = batostr (&sbdaddr);
+  ask_user_dialog (out, address, ctx);
+  return;
+
+ error:
+  reply = dbus_message_new_error_reply (message, NULL, NULL);
+  dbus_connection_send (connection, reply, NULL);
+}
+
+static DBusHandlerResult
+handler_func (DBusMessageHandler *handler,
+ 	      DBusConnection     *connection,
+	      DBusMessage        *message,
+	      void               *user_data)
+{
+  if (dbus_message_has_name (message, "org.handhelds.gpe.bluez.pin-request"))
+    handle_request (connection, message);
+  
+  if (dbus_message_has_name (message, DBUS_MESSAGE_LOCAL_DISCONNECT))
+    exit (0);
+  
+  return DBUS_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+}
+
+static void
+dbus_server_run (void)
+{
+  DBusConnection *connection;
+  DBusError error;
+  DBusMessageHandler *handler;
+
+  dbus_error_init (&error);
+  connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
+  if (connection == NULL)
+    {
+      fprintf (stderr, "Failed to open connection to system message bus: %s\n",
+               error.message);
+      dbus_error_free (&error);
+      exit (1);
+    }
+
+  dbus_connection_setup_with_g_main (connection, NULL);
+
+  handler = dbus_message_handler_new (handler_func, NULL, NULL);
+  dbus_connection_add_filter (connection, handler);
+
+  gtk_main ();
+}
+
 int 
 main(int argc, char *argv[])
 {
-  int outgoing = 0;
   char *pin;
   gboolean gui_started;
   char *dpy = getenv (dpy);
@@ -200,7 +352,10 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (dpy == NULL)
+  if (argc > 1 && !strcmp (argv[1], "--dbus"))
+    dbus_mode = TRUE;
+
+  if (dbus_mode == FALSE && dpy == NULL)
     {
       char *auth = NULL;
       FILE *fp;
@@ -237,30 +392,39 @@ main(int argc, char *argv[])
   gtk_set_locale ();
   gui_started = gtk_init_check (&argc, &argv);
 
-  if (argc < 3)
-    usage (argv);
-
-  if (strcmp (argv[1], "in") == 0)
-    outgoing = 0;
-  else if (strcmp (argv[1], "out") == 0)
-    outgoing = 1;
-  else
-    usage (argv);
-
-  address = argv[2];
-  if (argc == 4)
-    name = argv[3];
-
-  if (lookup_in_list (outgoing, address, &pin))
+  if (dbus_mode)
     {
-      printf ("PIN:%s\n", pin);
-      exit (0);
+      dbus_server_run ();
     }
-
-  if (gui_started)
-    ask_user (outgoing, address);
   else
-    printf("ERR\n");
+    {
+      int outgoing = 0;
+
+      if (argc < 3)
+	usage (argv);
+
+      if (strcmp (argv[1], "in") == 0)
+	outgoing = 0;
+      else if (strcmp (argv[1], "out") == 0)
+	outgoing = 1;
+      else
+	usage (argv);
+
+      address = argv[2];
+      if (argc == 4)
+	name = argv[3];
+
+      if (lookup_in_list (outgoing, address, &pin))
+	{
+	  printf ("PIN:%s\n", pin);
+	  exit (0);
+	}
+
+      if (gui_started)
+	ask_user (outgoing, address);
+      else
+	printf("ERR\n");
+    }
 
   exit (0);
 }

@@ -11,8 +11,8 @@ else
 BUILD = build
 endif
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs dbus-glib-1` -lbluetooth
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
