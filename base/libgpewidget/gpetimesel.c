@@ -11,6 +11,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
+#include <string.h>
+
 #include "gpetimesel.h"
 #include "gpeclockface.h"
 #include "pixmaps.h"
@@ -25,6 +27,17 @@ struct _GpeTimeSelClass
 static GtkHBoxClass *parent_class;
 
 static GdkPixbuf *popup_button;
+
+static gint
+spin_button_output (GtkSpinButton *spin_button)
+{
+  gchar *buf = g_strdup_printf ("%02d", (int)spin_button->adjustment->value);
+
+  if (strcmp (buf, gtk_entry_get_text (GTK_ENTRY (spin_button))))
+    gtk_entry_set_text (GTK_ENTRY (spin_button), buf);
+  g_free (buf);
+  return TRUE;
+}
 
 static gboolean
 button_press (GtkWidget *w, GdkEventButton *b, GpeTimeSel *sel)
@@ -132,7 +145,10 @@ gpe_time_sel_init (GpeTimeSel *sel)
 
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (sel->hour_spin), TRUE);
   gtk_spin_button_set_wrap (GTK_SPIN_BUTTON (sel->minute_spin), TRUE);
-
+  
+  g_signal_connect (G_OBJECT (sel->hour_spin), "output", G_CALLBACK (spin_button_output), NULL);
+  g_signal_connect (G_OBJECT (sel->minute_spin), "output", G_CALLBACK (spin_button_output), NULL);
+ 
   sel->label = gtk_label_new (":");
 
   if (popup_button == NULL)

@@ -220,8 +220,8 @@ gpe_create_dir_browser (gchar * title, gchar *current_path,
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled_window, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
 
   gtk_widget_show (ok_button);
   gtk_widget_show (cancel_button);

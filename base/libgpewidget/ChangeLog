@@ -1,3 +1,11 @@
+2003-09-27  Philip Blundell  <philb@gnu.org>
+
+	* gpetimesel.c (spin_button_output): New function.
+	(gpe_time_sel_init): Use it as output callback for spinbuttons.
+
+	* dirbrowser.c (gpe_create_dir_browser): Correct order of action
+	buttons.
+
 2003-09-24  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.71 released.
