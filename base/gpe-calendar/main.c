@@ -220,6 +220,23 @@ gpe_cal_exit (void)
   gtk_main_quit ();
 }
 
+static int 
+import_one_file(gchar *filename)
+{
+  GError *err = NULL;
+  gchar *content;
+  gsize count;
+  int result = 0;
+	
+  if (g_file_get_contents(filename,&content,&count,&err))
+    {
+      result = import_vcal(content,count);
+      g_free(content);
+    }
+  else
+    result = -1;
+  return result;
+}
 
 static void
 on_import_vcal (GtkWidget *widget, gpointer data)
@@ -231,29 +248,23 @@ on_import_vcal (GtkWidget *widget, gpointer data)
   
   if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
     {
-      GError *err = NULL;
-      gchar *content, *errstr = NULL;
+      gchar *errstr = NULL;
       int ec = 0, i = 0;
-      gsize count;
       gchar **files = 
         gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
       gtk_widget_hide(filesel); 
       while (files[i])
         {
-          if (g_file_get_contents(files[i],&content,&count,&err))
+          if (import_one_file(files[i]) < 0) 
             {
-              if (import_vcal(content,count) < 0) 
-                {
-                  gchar *tmp;
-                  if (!errstr) 
-                    errstr=g_strdup("");
-                  ec++;
-                  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
-                  if (errstr) 
-                     g_free(errstr);
-                  errstr = tmp;
-                }
-              g_free(content);
+              gchar *tmp;
+              if (!errstr) 
+                errstr=g_strdup("");
+              ec++;
+			  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
+              if (errstr) 
+                 g_free(errstr);
+              errstr = tmp;
             }
           i++;  
         }
@@ -297,6 +308,7 @@ main (int argc, char *argv[])
   int option_letter;
   gboolean schedule_only=FALSE;
   extern char *optarg;
+  gchar *ifile = NULL;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -318,23 +330,42 @@ main (int argc, char *argv[])
   if (gpe_pim_categories_init () == FALSE)
     exit (1);
 
-  while ((option_letter = getopt (argc, argv, "s:e:")) != -1)
+  while ((option_letter = getopt (argc, argv, "s:e:i:")) != -1)
     {
       if (option_letter == 's')
-	{
-	  skip = atol (optarg);
-	  schedule_only = TRUE;
-	}
+        {
+	      skip = atol (optarg);
+	      schedule_only = TRUE;
+        }
 
       if (option_letter == 'e')
-	uid = atol (optarg);
+        uid = atol (optarg);
+	  if (option_letter == 'i')
+		ifile = optarg;
     }
 
   schedule_next (skip, uid);
 
   if (schedule_only)
     exit (EXIT_SUCCESS);
-
+  
+  if (ifile)
+    {
+	  GtkWidget *dialog;
+      if (import_one_file(ifile))
+        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
+	                                    GTK_BUTTONS_OK,
+	                                    _("Could not import file %s."),
+	                                    ifile);
+	  else
+        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
+	                                      GTK_BUTTONS_OK,
+	                                      _("File %s imported sucessfully."),
+	                                      ifile);
+      gtk_dialog_run(GTK_DIALOG(dialog));
+      exit (EXIT_SUCCESS);
+    }
+	
   for (hour = 0; hour < 24; hour++)
     {
       char buf[32];
