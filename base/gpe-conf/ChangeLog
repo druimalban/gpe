@@ -1,6 +1,7 @@
 2005-02-03	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* theme.c: Changed some defaults.
+	* sysinfo.c: Fixed broken display of long adresses.
 
 2005-01-19	Florian Boor  	<florian.boor@kernelconcepts.de>
 

@@ -422,7 +422,7 @@ network_create_widgets (void)
 
 	sw = gtk_scrolled_window_new(NULL,NULL);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),
-		GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(sw), 
 	                                    GTK_SHADOW_NONE);
 	
@@ -484,7 +484,7 @@ network_create_widgets (void)
 			tw = gtk_label_new(NULL);
 			gtk_label_set_markup(GTK_LABEL(tw),nwlong);
 			gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
-			gtk_table_attach(GTK_TABLE(table),tw,0,2,3+pos,4+pos,GTK_FILL,
+			gtk_table_attach(GTK_TABLE(table),tw,0,3,3+pos,4+pos,GTK_FILL,
             	GTK_FILL,0,0);
 			
 			g_free (tmp);
@@ -496,7 +496,7 @@ network_create_widgets (void)
 	tw = gtk_label_new(NULL);
 	gtk_label_set_text(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
-	gtk_table_attach(GTK_TABLE(table),tw,0,2,4+pos,5+pos,GTK_FILL,
+	gtk_table_attach(GTK_TABLE(table),tw,0,3,4+pos,5+pos,GTK_FILL,
           	GTK_FILL,0,0);
 	g_free(ts);
 	
