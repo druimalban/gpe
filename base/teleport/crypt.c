@@ -59,8 +59,6 @@ parse_key (char *s, struct rsa_key *r)
   sp = strtok (NULL, " \n");
   gcry_mpi_scan (&u, GCRYMPI_FMT_HEX, sp, NULL);
 
-  memset (r, 0, sizeof (r));
-
   r->e = e;
   r->d = d;
   r->n = n;
@@ -78,6 +76,8 @@ crypt_init (void)
   gchar *filename = g_strdup_printf ("%s/.gpe/migrate/secret", home_dir);
   FILE *fp = fopen (filename, "r");
 
+  memset (&private_key, 0, sizeof (private_key));
+
   if (fp)
     {
       char buffer[4096];
@@ -87,6 +87,12 @@ crypt_init (void)
     }
 
   g_free (filename);
+
+  if (private_key.n == NULL)
+    {
+      gpe_error_box (_("No secret key found.  Use tp-keygen."));
+      exit (1);
+    }
 
   gcry_control (GCRYCTL_INIT_SECMEM, 1);
   gcry_check_version (NULL);
