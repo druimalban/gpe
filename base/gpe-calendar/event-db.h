@@ -47,6 +47,8 @@ typedef struct event_s
   } recur;
 
   event_details_t details;
+  
+  gboolean mark;
 } *event_t;
 
 extern gboolean event_db_start (void);
