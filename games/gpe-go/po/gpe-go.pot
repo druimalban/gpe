@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-20 19:12+0200\n"
+"POT-Creation-Date: 2004-01-14 16:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,105 +17,104 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: initial of "Comments"
-#. => Small labeled button to open the comment editor.
+#. A small labeled button to open the comment editor.
 #. The surrounding spaces are desired.
-#.
-#: gpe-go.c:808
+#: gpe-go.c:130
 msgid " C "
 msgstr ""
 
 #. TRANSLATORS: B = Black stones, W = White stones
-#: gpe-go.c:860
+#: gpe-go.c:180
 #, c-format
-msgid "B:%d  W:%d "
+msgid "B:%d W:%d"
 msgstr ""
 
-#: gpe-go.c:981
-msgid "Variation choice"
-msgstr ""
-
-#: gpe-go.c:1241
-#, c-format
-msgid "Cannot save the game into %s."
-msgstr ""
-
-#: gpe-go.c:1355
+#: gpe-go.c:232
 msgid "Save game as..."
 msgstr ""
 
-#: gpe-go.c:1361
+#: gpe-go.c:238
 msgid "Load game..."
 msgstr ""
 
 #. TRANSLATORS: keep the <big><b> tags
-#: gpe-go.c:1408
+#: gpe-go.c:300
 msgid "<big><b>New Game</b></big>"
 msgstr ""
 
 #. TRANSLATORS: keep the <b> tags
-#: gpe-go.c:1431
+#: gpe-go.c:325
 msgid "<b>Game Size</b>"
 msgstr ""
 
 #. TRANSLATORS: keep the <big><b> tags
-#: gpe-go.c:1579
+#: gpe-go.c:477
 msgid "<big><b>Comment editor</b></big>"
 msgstr ""
 
-#: gpe-go.c:1653
+#: gpe-go.c:552
 msgid "New..."
 msgstr ""
 
-#: gpe-go.c:1654
+#: gpe-go.c:553
 msgid "Save..."
 msgstr ""
 
-#: gpe-go.c:1655
+#: gpe-go.c:554
 msgid "Load..."
 msgstr ""
 
-#: gpe-go.c:1716
+#: gpe-go.c:612
 msgid "Game menu"
 msgstr ""
 
-#: gpe-go.c:1724
+#: gpe-go.c:620
 msgid "First"
 msgstr ""
 
-#: gpe-go.c:1725 gpe-go.c:1726
+#: gpe-go.c:621 gpe-go.c:622
 msgid "Go to the beginning of the game"
 msgstr ""
 
-#: gpe-go.c:1732
+#: gpe-go.c:628
 msgid "Prev"
 msgstr ""
 
-#: gpe-go.c:1733 gpe-go.c:1734
+#: gpe-go.c:629 gpe-go.c:630
 msgid "Go to the previous step"
 msgstr ""
 
-#: gpe-go.c:1740
+#: gpe-go.c:636
 msgid "Next"
 msgstr ""
 
-#: gpe-go.c:1741 gpe-go.c:1742
+#: gpe-go.c:637 gpe-go.c:638
 msgid "Go to the next step"
 msgstr ""
 
-#: gpe-go.c:1748
+#: gpe-go.c:644
 msgid "Last"
 msgstr ""
 
-#: gpe-go.c:1749 gpe-go.c:1750
+#: gpe-go.c:645 gpe-go.c:646
 msgid "Go to the end of the game"
 msgstr ""
 
-#: gpe-go.c:1768
+#: gpe-go.c:664
 msgid "Pass"
 msgstr ""
 
-#: gpe-go.c:1768
+#: gpe-go.c:664
 msgid "Pass your turn"
+msgstr ""
+
+#: sgf-handler.c:203
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr ""
+
+#: model.c:507
+msgid "Variation choice"
 msgstr ""
 
 #: gpe-go.desktop.in.h:1

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 20:45+0300\n"
+"POT-Creation-Date: 2004-03-02 00:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,110 +16,98 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:115
+#: src/gpe-sketchbook.c:119
 msgid "Sketchbook: preferences"
 msgstr ""
 
-#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+#: src/gpe-sketchbook.c:123
 msgid "Sketchbook"
 msgstr ""
 
-#: src/preferences.c:93
-msgid ""
-"Cannot create XSettings client.\n"
-"Use default preferences."
-msgstr ""
-
-#: src/preferences.c:188
-msgid ""
-"gpe-confd is not running.\n"
-"Cannot save the preferences."
-msgstr ""
-
-#: src/preferences.c:277
+#: src/preferences.c:323
 msgid "Start with"
 msgstr ""
 
-#: src/preferences.c:280
+#: src/preferences.c:326
 msgid "Sketchpad"
 msgstr ""
 
-#: src/preferences.c:282
+#: src/preferences.c:328
 msgid "Selector - list"
 msgstr ""
 
-#: src/preferences.c:284
+#: src/preferences.c:330
 msgid "Selector - icons table"
 msgstr ""
 
-#: src/preferences.c:300
+#: src/preferences.c:346
 msgid "Use joypad scrolling"
 msgstr ""
 
-#: src/preferences.c:307
+#: src/preferences.c:353
 msgid "Grow on scroll"
 msgstr ""
 
-#: src/preferences.c:316
+#: src/preferences.c:362
 msgid "OK"
 msgstr ""
 
-#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
+#: src/preferences.c:363 src/selector-cb.c:67 src/sketchpad-cb.c:250
 msgid "Cancel"
 msgstr ""
 
-#: src/selector.c:88
+#: src/selector.c:110
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
 msgstr ""
 
 #. TRANSLATORS: %s are: [folder name] [error message]
-#: src/selector.c:95
+#: src/selector.c:117
 #, c-format
 msgid "Cannot create %s: %s. Exit."
 msgstr ""
 
 #. TRANSLATORS: default sketch label based on [date] and [time]
 #. example: "2003 10 12  at  18:48:51"
-#: src/selector.c:179
+#: src/selector.c:218
 #, c-format
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:243
+#: src/selector-cb.c:66 src/sketchpad-cb.c:249
 msgid "Delete current sketch?"
 msgstr ""
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
-#: src/sketchpad-cb.c:243
+#: src/selector-cb.c:66 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:249
 msgid "Question"
 msgstr ""
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
+#: src/selector-cb.c:67 src/sketchpad-cb.c:250 src/sketchpad-gui.c:468
 msgid "Delete"
 msgstr ""
 
-#: src/selector-gui.c:102
+#: src/selector-gui.c:99
 msgid "New sketch"
 msgstr ""
 
-#: src/selector-gui.c:107
+#: src/selector-gui.c:104
 msgid "Edit sketch"
 msgstr ""
 
-#: src/selector-gui.c:115
+#: src/selector-gui.c:112
 msgid "Delete selected sketch"
 msgstr ""
 
-#: src/selector-gui.c:123
+#: src/selector-gui.c:120
 msgid "Import from image"
 msgstr ""
 
-#: src/selector-gui.c:132
+#: src/selector-gui.c:129
 msgid "Toggle view"
 msgstr ""
 
-#: src/selector-gui.c:146
+#: src/selector-gui.c:143
 msgid "Preferences"
 msgstr ""
 
@@ -140,21 +128,21 @@ msgstr ""
 msgid "Image to import"
 msgstr ""
 
-#: src/sketchpad-cb.c:47
+#: src/sketchpad-cb.c:46
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 msgid "Discard"
 msgstr ""
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:467
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:76
 msgid "Save current sketch?"
 msgstr ""
 
@@ -200,4 +188,8 @@ msgstr ""
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
+msgstr ""
+
+#: gpe-sketchbook.desktop.in.h:2
+msgid "Sketch Book"
 msgstr ""
