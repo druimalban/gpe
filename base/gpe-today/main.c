@@ -123,7 +123,8 @@ void set_background(const char *spec)
             set_bg_pixmap(spec);
             break;
         case MBDESKTOP_BG:
-            if (xsettings_client_get_setting(conf.xst_client, MATCHBOX_BG,
+            if (conf.xst_client &&
+                xsettings_client_get_setting(conf.xst_client, MATCHBOX_BG,
                                              &setting) == XSETTINGS_SUCCESS
                 && setting->type == XSETTINGS_TYPE_STRING) {
 

@@ -76,7 +76,7 @@ gboolean start_xsettings(void)
     conf.xst_client = xsettings_client_new(dpy, DefaultScreen(dpy),
                                            notify_func, watch_func, NULL);
     
-    if (!conf.xst_client) {
+    if (conf.xst_client == NULL) {
         gpe_error_box (_("Cannot create XSettings client"));
         return FALSE;
     }
