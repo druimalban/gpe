@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Root Shell
-Comment=gpe-su
+_Name=Root shell
+_Comment=gpe-su
 Exec=gpe-su
 Terminal=0
 Type=Application
