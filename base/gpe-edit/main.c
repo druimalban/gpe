@@ -145,7 +145,8 @@ open_file (const char *new_filename)
   if ( (fp = fopen(filename, "r")) == NULL)
   {
     gpe_perror_box (filename);
-	filename = old_filename;
+    g_free (filename);
+    filename = old_filename;
   }
   else
   {
@@ -188,7 +189,7 @@ open_file (const char *new_filename)
     file_modified = 0;
 
     update_window_title ();
-    if (old_filename) free(filename);
+    if (old_filename) g_free(old_filename);
   }
 }
 

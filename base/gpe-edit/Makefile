@@ -2,10 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.19
+VERSION = 0.20
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW fr ro wa sv nl sk
+LINGUAS = id pt de zh_TW fr ro wa sv nl sk cs
 
 CFLAGS += $(GPECFLAGS)
 LDFLAGS += $(GPELIBS)

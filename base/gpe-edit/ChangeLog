@@ -1,3 +1,14 @@
+2003-10-09  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.20 released.
+
+2003-10-09  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add cs.
+
+	* main.c (open_file): Try to fix memory management problems
+	relating to window title.
+
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.19 released.
