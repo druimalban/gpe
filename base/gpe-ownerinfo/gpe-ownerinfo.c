@@ -697,7 +697,8 @@ main (int argc, char *argv[])
   scrollbar = gtk_vscrollbar_new (GTK_ADJUSTMENT (adjustment));
   address = gtk_drawing_area_new ();
 
-  address_layout = gtk_widget_create_pango_layout (address, owneraddress);
+  address_layout = gtk_widget_create_pango_layout (address, NULL);
+  pango_layout_set_markup (address_layout, owneraddress, -1);
 
   g_signal_connect (G_OBJECT (address), "size-allocate", G_CALLBACK (set_address_size), adjustment);
   g_signal_connect (G_OBJECT (address), "expose-event", G_CALLBACK (draw_address), adjustment);
@@ -713,15 +714,6 @@ main (int argc, char *argv[])
   gtk_widget_show (addresshbox);
 
   gtk_box_pack_start (GTK_BOX (rightcolvbox), addresshbox, TRUE, TRUE, 0);
-
-  if (flag_transparent)
-    {
-      GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
-      style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap *)GDK_PARENT_RELATIVE;
-      gtk_widget_set_style (smallphotobutton, style);
-      gtk_widget_set_style (smallphotodrawingarea, style);
-      gtk_widget_set_style (address, style);
-    }
 
   /*
    * The second notebook page
@@ -740,6 +732,16 @@ main (int argc, char *argv[])
   gtk_widget_show (bigphotodrawingarea);
   gtk_container_add (GTK_CONTAINER (bigphotobutton), bigphotodrawingarea);
   
+  if (flag_transparent)
+    {
+      GtkStyle *style = gtk_style_copy (GPE_Ownerinfo->style);
+      style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap *)GDK_PARENT_RELATIVE;
+      gtk_widget_set_style (smallphotobutton, style);
+      gtk_widget_set_style (smallphotodrawingarea, style);
+      gtk_widget_set_style (address, style);
+      gtk_widget_set_style (bigphotobutton, style);
+      gtk_widget_set_style (bigphotodrawingarea, style);
+    }
 
   /* Make sure the labels are all the same height (which might not
    * be the case because of the pango markup for e.g. 'email').

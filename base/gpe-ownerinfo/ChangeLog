@@ -1,5 +1,12 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (VERSION): Set to 0.08.
+
+	* gpe-ownerinfo2.c (main): Make the big photo button transparent
+	also.  Correct handling of Pango markup in default address field.
+
+	* Makefile (install): Install as /usr/bin/gpe-ownerinfo.
+
 	* gpe-ownerinfo2.c (on_configure_event): Delete.
 	(realize): New.
 	(mapped): Clone the style.

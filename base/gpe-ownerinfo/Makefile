@@ -1,5 +1,5 @@
 PACKAGE = gpe-ownerinfo2
-VERSION = 0.07
+VERSION = 0.08
 
 PREFIX = /usr/local
 DEBUG = no
@@ -53,8 +53,8 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
 install: all 
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-ownerinfo
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)/etc/gpe/
 
