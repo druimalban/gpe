@@ -95,12 +95,15 @@ update_text_view (gchar *text)
   GtkTextIter start, end;
   GtkAdjustment *vadjust;
 
-  text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
-  vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
+  if (text)
+  {
+    text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
+    vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
-  gtk_text_buffer_get_bounds (text_buffer, &start, &end);
-  gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
-  gtk_adjustment_set_value (vadjust, vadjust->upper);
+    gtk_text_buffer_get_bounds (text_buffer, &start, &end);
+    gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
+    gtk_adjustment_set_value (vadjust, vadjust->upper);
+  }
 }
 
 void
@@ -130,7 +133,8 @@ button_clicked (GtkWidget *button)
       selected_button = button;
       selected_server = server;
       clear_text_view ();
-      update_text_view (server->text);
+      printf ("Button's text passed: %s\n", server->text->str);
+      //update_text_view (server->text->str);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
     }
   }
@@ -172,6 +176,8 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 {
   GtkWidget *server_combo_entry, *nick_entry, *real_name_entry, *password_entry, *button;
   IRCServer *server;
+
+  clear_text_view ();
 
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
