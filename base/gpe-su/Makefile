@@ -5,7 +5,7 @@ CVSBUILD = yes
 
 MEMBERS = gpe-su
 
-CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall
+CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence

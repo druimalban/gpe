@@ -17,13 +17,45 @@
 
 #include "pixmaps.h"
 #include "init.h"
+#include "render.h"
 
 static struct pix my_pix[] = {
   { "keys", "keys" },
   { NULL, NULL }
 };
 
+static struct gpe_icon my_icons[] = {
+  { "ok", "ok" },
+  { "cancel", "cancel" },
+  { NULL, NULL }
+};
+
 #define _(x) gettext(x)
+
+static GtkWidget *
+picture_button (GtkStyle *style, gchar *text, gchar *icon)
+{
+  GdkPixbuf *p = gpe_find_icon (icon);
+  GtkWidget *button = gtk_button_new ();
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *label = gtk_label_new (text);
+
+  if (p)
+    {
+      GtkWidget *pw = gpe_render_icon (style, p);
+      gtk_box_pack_start (GTK_BOX (hbox), pw, FALSE, FALSE, 4);
+      gtk_widget_show (pw);
+    }
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+  gtk_widget_show (hbox);
+  gtk_widget_show (label);
+  gtk_widget_show (button);
+
+  gtk_container_add (GTK_CONTAINER (button), hbox);
+
+  return button;
+}
 
 int
 main(int argc, char *argv[])
@@ -32,11 +64,15 @@ main(int argc, char *argv[])
   GtkWidget *window;
   GtkWidget *hbox, *vbox;
   GtkWidget *entry, *label;
+  GtkWidget *buttonok, *buttoncancel;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   if (gpe_load_pixmaps (my_pix) == FALSE)
+    exit (1);
+
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   setlocale (LC_ALL, "");
@@ -53,7 +89,7 @@ main(int argc, char *argv[])
   label = gtk_label_new (_("Enter password:"));
   gtk_widget_show (label);
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-  gtk_entry_set_visible (GTK_ENTRY (entry), FALSE);
+  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox);
@@ -71,6 +107,16 @@ main(int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
 		      hbox, TRUE, FALSE, 0);
+
+  gtk_widget_realize (window);
+
+  buttonok = picture_button (window->style, _("OK"), "ok");
+  buttoncancel = picture_button (window->style, _("Cancel"), "cancel");
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
+		      buttoncancel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
+		      buttonok, TRUE, TRUE, 0);
 
   gtk_widget_show (window);
 
