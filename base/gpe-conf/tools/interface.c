@@ -624,17 +624,6 @@ static struct aftype inet_aftype =
 
 #endif				/* HAVE_AFINET */
 
-static struct aftype inet6_aftype =
-{
-    "inet6", "DARPA Internet", AF_INET6, 4 * sizeof(unsigned long),
-    NULL /* UNUSED INET_print */, INET_sprint,
-	NULL /* UNUSED INET_input */, NULL /* UNUSED INET_reserror */,
-    NULL /*INET_rprint */ , NULL /*INET_rinput */ ,
-    NULL /* UNUSED INET_getnetmask */,
-    -1,
-    NULL
-};
-
 /* Display an UNSPEC address. */
 static char *UNSPEC_print(unsigned char *ptr)
 {
@@ -1856,10 +1845,8 @@ char* if_to_infostr(struct interface *ptr)
 #if HAVE_AFINET6x
     FILE *f;
     char addr6[40], devname[20];
-    struct sockaddr_in6 sap;
     int i;
     int plen, scope, dad_status, if_idx;
-    extern struct aftype inet6_aftype;
     char addr6p[8][5];
 #endif
 	

@@ -112,19 +112,23 @@ int logread_main()
 		
 	if ( (log_shmid = shmget(KEY_ID, 0, 0)) == -1)
 	{
-		printlog(txLog,_("Can't find circular buffer, is syslog running?"));
+		printlog(txLog,
+		  _("Can't find circular buffer, is syslog running?\n"));
 		return FALSE;
 	}
 	// Attach shared memory to our char*
 	if ( (buf = shmat(log_shmid, NULL, SHM_RDONLY)) == NULL)
 	{
-		printlog(txLog,_("Can't get access to syslogd's circular buffer."));
+		printlog(txLog,
+		  _("Can't get access to syslogd's circular buffer."));
 		return FALSE;
 	}
 
 	if ( (log_semid = semget(KEY_ID, 0, 0)) == -1)
 	{
-	    printlog(txLog,_("Can't get access to semaphore(s) for syslogd's circular buffer."));
+	    printlog(txLog,
+		         _("Can't get access to semaphore(s) "\
+		         "for syslogd's circular buffer."));
 		return FALSE;
 	}
 
@@ -268,7 +272,8 @@ Logread_Build_Objects (void)
   tstr = g_strdup_printf("%s/.xsession-errors",g_get_home_dir());
   fsession = open(tstr,O_RDONLY);
   fcntl(fsession,O_NONBLOCK);
-  if (fsession < 0) printlog(txLog2,_("Could not open X session log."));
+  if (fsession < 0) 
+	  printlog(txLog2,_("Could not open X session log.\n"));
   g_free(tstr);
  
   logread_main();

@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.13
+VERSION = 0.1.14
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -13,9 +13,14 @@ MACHINE = unknown
 
 LINGUAS = pt ro de fr cs nl sv sk ru
 
-ifeq ($(MACHINE),ipaq)
+ifeq ($(MACHINE),h3600)
 PACKAGE_CPPFLAGS += -DMACH_IPAQ
 PACKAGE_CFLAGS += -DMACH_IPAQ
+endif
+
+ifeq ($(MACHINE),h3900)
+PACKAGE_CPPFLAGS += -DMACH_IPAQ -DMACH_IPAQPXA
+PACKAGE_CFLAGS += -DMACH_IPAQ -DMACH_IPAQPXA
 endif
 
 ifeq ($(MACHINE),simpad)

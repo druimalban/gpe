@@ -253,6 +253,8 @@ gint update_bat_values(gpointer data)
 	{
 		int percent;
 		int remaining; 
+		int status; 
+		int flags; 
 		int ac_connected;
 		
 		/* apm knows only about one battery */
@@ -268,32 +270,49 @@ gint update_bat_values(gpointer data)
 		file_apm = fopen(PROC_APM,"r");
 
 		if (fscanf(file_apm,
-			       "%*f %*f %*s %i %*s %*s %i%% %i",
+			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i",
 		           &ac_connected,
+		           &status,
+		           &flags,
 		           &percent, 
-		           &remaining) >= 2)
+		           &remaining) >= 4)
 		{
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),(float)percent/100.0);
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (batt_int.bar),
+			                               (float)percent/100.0);
 			toolbar_set_style (batt_int.bar,  90 - (percent));
 			sprintf(percstr,"%d %%",percent);
 			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_int.bar),percstr);
 			
-			/* some free interpretations */
-			sprintf(tmp,"%s",_("Status: unknown"));
-			if (percent >= 50)
-				sprintf(tmp,"%s",_("Status: high"));
-			else if ((percent < 50) && (percent > 15))
-				sprintf(tmp,"%s",_("Status: low"));
-			else 
-				sprintf(tmp,"%s",_("Status: critical"));
-			
-			if (remaining < 0)
+			/* apm says: */
+			if (flags & 0x80)
 			{
-				if (percent < 100) 
-					sprintf(tmp,"%s",_("Status: charging"));
-				else
-					sprintf(tmp,"%s",_("Status: full"));
+				sprintf(tmp,"%s",_("No battery"));
 			}
+			else
+			{
+				switch (status)
+				{
+					case 0x00:
+						if (ac_connected)
+							sprintf(tmp,"%s",_("Status: high"));
+						else
+							sprintf(tmp,"%s",_("Status: full"));
+					break;
+					case 0x01:
+						sprintf(tmp,"%s",_("Status: low"));
+					break;
+					case 0x02:
+						sprintf(tmp,"%s",_("Status: critical"));
+					break;
+					case 0x03:
+						sprintf(tmp,"%s",_("Status: charging"));
+					break;
+					case 0xFF:
+						sprintf(tmp,"%s",_("Status: unknown"));
+					break;
+				}
+			}
+			
 			gtk_label_set_text(GTK_LABEL(batt_int.lstate),tmp);
 			
 			if (ac_connected)

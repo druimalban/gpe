@@ -7,7 +7,8 @@
 
 
 GtkWidget *Unimplemented_Build_Objects()
-{  
+{
+	return NULL;
 }
 
 void Unimplemented_Free_Objects()

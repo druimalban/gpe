@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,16 +37,22 @@
 /* --- local types and constants --- */
 
 #define GPE_SERIAL_CONF_DIR "/etc/gpe/gpe-conf-serial"
-#define IPAQ_SERIAL "/dev/ttySA0"
 #define GPSD_STARTUP_SCRIPT "/etc/init.d/gpsd"
 #define GPSD_STARTUP_LINK "/etc/rc2.d/S96gpsd"
+
 #define INITTAB "/etc/inittab"
 #define GPSD_CONFIG "/etc/gpsd.conf"
 
-#define PARAM_BOOL 0
-#define PARAM_INT 1
-#define PARAM_CHAR 2
-#define PARAM_FILE 3
+#ifdef MACH_IPAQPXA
+  #define FIRST_SERIAL "/dev/ttyS0"
+#else
+  #ifdef MACH_IPAQ
+    #define FIRST_SERIAL "/dev/ttyC0"
+  #endif
+#endif
+#ifndef FIRST_SERIAL
+  #define FIRST_SERIAL "/dev/ttyS0"
+#endif
 
 typedef struct
 {
@@ -86,7 +92,7 @@ static struct
 	GtkWidget *cbPort;
 } self;
 
-char *portlist[][2] = {	{"Internal Serial (RS232)", IPAQ_SERIAL},
+char *portlist[][2] = {	{"Internal Serial (RS232)", FIRST_SERIAL},
 	{"PCMCIA / CF Port 1","/dev/tts/0"},
 	{"PCMCIA / CF Port 2","/dev/tts/0"},
 	{"Bluetooth RFCOMM 1","/dev/bluetooth/rfcomm/0"},
@@ -94,6 +100,108 @@ char *portlist[][2] = {	{"Internal Serial (RS232)", IPAQ_SERIAL},
 	};
 
 int num_ports = sizeof(portlist) / sizeof(char*) / 2;
+
+gboolean
+getty_uses_port(const gchar* port)
+{
+	gchar *content;
+	gchar **lines = NULL;
+	gint length;
+	int i = 0;
+	GError *err = NULL;
+	gboolean result = FALSE;
+
+	if (!g_file_get_contents (INITTAB, &content, &length, &err))
+	{
+		fprintf (stderr, "Could not access inittab.\n");
+		return FALSE;
+	}
+	
+	lines = g_strsplit (content, "\n", 2048);
+	g_free (content);
+
+	/* search for line that mentiones getty and our port */
+	while (lines[i])
+	{
+		if ((g_strrstr (g_strchomp (lines[i]), strrchr(port,'/')+1)
+			&& g_strrstr (g_strchomp (lines[i]), "getty")))
+		{
+		    if (!g_str_has_prefix (g_strstrip (lines[i]), "#"))
+			{
+				result = TRUE;
+				break;
+			}
+		}
+		i++;
+	}
+	g_strfreev (lines);
+	return result;
+}
+
+void
+inittab_change_getty(gboolean turniton)
+{
+	gchar *content;
+	gchar **lines = NULL;
+	gint length;
+	FILE *fnew;
+	gint i = 0;
+	gint j = 0;
+	GError *err = NULL;
+	gboolean foundline = FALSE;
+
+	if (!g_file_get_contents (INITTAB, &content, &length, &err))
+	{
+		fprintf (stderr, "Could not access inittab.\n");
+		return;
+	}
+	
+	lines = g_strsplit (content, "\n", 2048);
+	g_free (content);
+
+	/* search for line that mentiones getty and our port */
+	while (lines[i])
+	{
+		if ((g_strrstr (g_strchomp (lines[i]), strrchr(FIRST_SERIAL,'/')+1)
+			&& g_strrstr (g_strchomp (lines[i]), "getty")))
+		{
+			foundline = TRUE;
+		    if (g_str_has_prefix (g_strstrip (lines[i]), "#") == turniton)
+			{
+				gchar *tmp = lines[i];
+				if (turniton)
+					lines[i] = g_strdup(strchr(lines[i], '#')+1);
+				else
+					lines[i] = g_strdup_printf("#%s",lines[i]);
+				g_free(tmp);
+			}
+		}
+		i++;
+	}
+	
+	if (i)
+		i--;
+
+	fnew = fopen (INITTAB, "w");
+	if (!fnew)
+	{
+		fprintf (stderr, "Could not write to inittab.\n");
+		return;
+	}
+
+	for (j = 0; j < i; j++)
+	{
+		fprintf (fnew, "%s\n", lines[j]);
+	}
+	
+	/* didn't find getty line? add it! */
+	if (!foundline && turniton)
+		fprintf(fnew, "S:2345:respawn:/sbin/getty %s 115200 vt100\n",
+		        strrchr(FIRST_SERIAL,'/')+1);
+	
+	fclose (fnew);
+	g_strfreev (lines);
+}
 
 
 /* --- local intelligence --- */
@@ -112,15 +220,14 @@ assign_serial_port (t_serial_assignment type)
 			{
 				system (GPSD_STARTUP_SCRIPT " stop");
 				system ("killall gpsd.bin");
+				system ("killall gpsd");
 			}
 			system ("chmod a-x " GPSD_STARTUP_SCRIPT);
 		}
-		/* we move getty to higher runlevels */
-		change_cfg_value (INITTAB, "T0",
-				  "34:respawn:/sbin/getty -L ttyC0 115200 vt100",
-				  ':');
-		system ("telinit 3");
-		system ("telinit 2");
+		/* we disable getty */
+		inittab_change_getty(FALSE);
+		
+		system ("telinit q");
 		break;
 	case SA_GPSD:
 		if (gpsd_installed)
@@ -133,11 +240,8 @@ assign_serial_port (t_serial_assignment type)
 				system ("ln -s " GPSD_STARTUP_SCRIPT " "
 					GPSD_STARTUP_LINK);
 		}
-		change_cfg_value (INITTAB, "T0",
-				  "34:respawn:/sbin/getty -L ttyC0 115200 vt100",
-				  ':');
-		system ("telinit 3");
-		system ("telinit 2");
+		inittab_change_getty(FALSE);
+		system ("telinit q");
 		break;
 	case SA_CONSOLE:
 		if (gpsd_installed)
@@ -149,34 +253,34 @@ assign_serial_port (t_serial_assignment type)
 			}
 			system ("chmod a-x " GPSD_STARTUP_SCRIPT);
 		}
-		change_cfg_value (INITTAB, "T0",
-				  "23:respawn:/sbin/getty -L ttyC0 115200 vt100",
-				  ':');
-		system ("telinit 3");
-		system ("telinit 2");
+		inittab_change_getty(TRUE);
+		system ("telinit q");
 		break;
 	}
 }
 
+/* identifies what is using the serial port */
 int
 get_serial_port_assignment ()
 {
-	int i;
+	//int runlevel;
+	int result = SA_NONE;
 
-	if (parse_pipe ("cat " INITTAB, "T0:%d", &i))
+/*	if (parse_pipe ("/sbin/runlevel ", "%*s %d", &runlevel))
 	{
-		gpe_error_box (_("Couldn't find default runlevel!"));
+		gpe_error_box (_("Couldn't identify current runlevel!"));
+		runlevel = 0;
 	}
+*/
+	/* S:2345:respawn:/sbin/getty ttyS0 115200 vt100 */
+	if (getty_uses_port(FIRST_SERIAL))
+			result = SA_CONSOLE;
 
-	/* familiar runs getty on ttySA0 in runlevel 2 and 3 */
-	if (i == 23)
-		return SA_CONSOLE;
-
-	/* if not, gpsd strtup might be active */
+	/* check for gpsd startup script */
 	if (!access (GPSD_STARTUP_SCRIPT, X_OK))
-		return SA_GPSD;
+		result = SA_GPSD;
 
-	return SA_NONE;
+	return result;
 }
 
 
@@ -280,13 +384,15 @@ Serial_Build_Objects (void)
 	GSList *bauds = NULL;
 	GSList *ports = NULL;
 	gchar cur_baud[10] = { "4800" };
-	gchar cur_port[33] = { "/dev/ttySA0" };
+	gchar cur_port[33] = { FIRST_SERIAL };
 	gint ibaud = 4800;
 	gchar etmp[10];
 	gboolean emate = FALSE;
+	gboolean getty_installed;
 	int i;
 
 	gpsd_installed = !access (GPSD_STARTUP_SCRIPT, F_OK);
+	getty_installed = !access ("/sbin/getty", F_OK);
 
 	if (!access (GPSD_CONFIG, R_OK))
 	{
@@ -341,6 +447,7 @@ Serial_Build_Objects (void)
 	gtk_tooltips_set_tip (tooltips, self.rbConsole,
 			      _("This option runs console on serial port. (default)"),
 			      NULL);
+	gtk_widget_set_sensitive (self.rbConsole, getty_installed);
 
 	self.rbGPSD =
 		gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON

@@ -29,16 +29,8 @@
 extern char *RotationLabels;
 static Display *dpy = NULL;
 static int screen;
-static int current_rotation;
 
-static char *Rotations[4]=
-  {
-    "normal",
-    "left",
-    "inverted",
-    "right"
-  };
-
+#ifdef MACH_IPAQ
 static char *xmodmaps[4]=
   {
     "/etc/X11/xmodmap-portrait",
@@ -46,6 +38,7 @@ static char *xmodmaps[4]=
     "/etc/X11/xmodmap-invert",
     "/etc/X11/xmodmap-right"
   };
+#endif
 
 static int
 xrr_supported (void)

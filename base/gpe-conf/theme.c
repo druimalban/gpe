@@ -1371,7 +1371,7 @@ on_font_select_desk(GtkWidget * widget, gpointer style)
 	label = g_object_get_data(G_OBJECT(self.bFont),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 	select_font_popup(self.bFont);
-	on_font_size_change(self.spFS,GTK_SCROLL_NONE);
+	on_font_size_change(GTK_SPIN_BUTTON(self.spFS),GTK_SCROLL_NONE);
 }
 
 static void
@@ -1383,7 +1383,7 @@ on_font_select_app(GtkWidget * widget, gpointer style)
 	label = g_object_get_data(G_OBJECT(self.bFontApp),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 	select_font_popup(self.bFontApp);
-	on_font_size_change(self.spFSApp,GTK_SCROLL_NONE);
+	on_font_size_change(GTK_SPIN_BUTTON(self.spFSApp),GTK_SCROLL_NONE);
 }
 
 

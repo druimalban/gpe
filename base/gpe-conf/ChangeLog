@@ -1,3 +1,18 @@
+2004-08-14	Florian Boor  	<florian.boor@kernelconcepts.de>
+	
+	* theme.c: Added casts to fix warnings.
+	* tools/interface.c: Removed obsolete stuff, fixed warnings.
+	* rotation.c: Removed obsolete variables, fixed warnings.
+	* unimplemented.c: Fixed warning.
+	* HACKING: Some minor fixes and reordering.
+	           Added a small section of tasks.
+	* logread.c: Added newline chars to error messages, formating changes.
+	* storage.c: Added simple support for storage size report of IDE harddisks.
+	* sysinfo.c: GUI improvement of hardware tab.
+	* battery.c: Implemented reading of APM status values.
+	* Makefile: Fixed machine depending definitions, increased version number.
+	* serial.c: Some improvements to work on more systems.
+	
 2004-08-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Released Version 0.1.13

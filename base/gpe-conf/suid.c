@@ -268,7 +268,7 @@ check_user_access (const char *cmd)
 		global_user_access = atoi (acstr);
 		know_global_user_access = TRUE;
 	}
-
+	
 	/* allow screen settings */
 	if (!strcmp (cmd, "SCRR"))
 		return TRUE;
