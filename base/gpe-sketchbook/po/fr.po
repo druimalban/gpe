@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-09-13 22:28+0300\n"
+"POT-Creation-Date: 2002-10-20 20:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -13,69 +13,69 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:106
+#: src/gpe-sketchbook.c:107
 msgid "Sketch selector"
 msgstr ""
 
-#: src/selector.c:75
+#: src/selector.c:81
 msgid "Couldn't open the directory"
 msgstr ""
 
-#: src/selector.c:82
+#: src/selector.c:88
 #, c-format
 msgid "Can not create %s, exit.\n"
 msgstr ""
 
-#: src/selector.c:128
+#: src/selector.c:146
 #, c-format
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:123
+#: src/selector-cb.c:65 src/sketchpad-cb.c:150
 msgid "Delete sketch?"
 msgstr "Supprimer le croquis?"
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:71 src/sketchpad-cb.c:110
-#: src/sketchpad-cb.c:123
+#: src/selector-cb.c:65 src/sketchpad-cb.c:73 src/sketchpad-cb.c:137
+#: src/sketchpad-cb.c:150
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:123
+#: src/selector-cb.c:65 src/sketchpad-cb.c:150
 msgid "Delete"
 msgstr "Supprimer"
 
-#: src/selector-cb.c:107
+#: src/selector-cb.c:127
 msgid "a notebook to sketch your notes"
 msgstr ""
 
-#: src/selector-cb.c:109
+#: src/selector-cb.c:129
 msgid ""
 "The application provides two main windows: the Selector, and the Sketchpad.\n"
 "You select your sketchs with the Selector.\n"
 "You sketch your notes with the Sketchpad."
 msgstr ""
 
-#: src/selector-cb.c:114
+#: src/selector-cb.c:134
 msgid ""
 "(c) 2002 Luc Pionchon\n"
 "Distributed under GPL"
 msgstr ""
 
-#: src/sketchpad-cb.c:45
+#: src/sketchpad-cb.c:47
 msgid ""
 "Sketch modified;\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:46
+#: src/sketchpad-cb.c:48
 msgid "Exit"
 msgstr ""
 
-#: src/sketchpad-cb.c:46 src/sketchpad-cb.c:71 src/sketchpad-cb.c:110
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:73 src/sketchpad-cb.c:137
 msgid "Save"
 msgstr "Enregistrer"
 
-#: src/sketchpad-cb.c:71 src/sketchpad-cb.c:110
+#: src/sketchpad-cb.c:73 src/sketchpad-cb.c:137
 msgid "Save last sketch?"
 msgstr "Enregistrer le dernier croquis?"
 

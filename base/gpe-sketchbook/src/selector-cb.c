@@ -68,6 +68,23 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
 
 }
 
+void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){
+  if(icons_mode){
+    //**/g_printerr("switch to LIST view\n");
+    gtk_widget_hide(scrolledwindow_selector_icons);
+    gtk_widget_show(scrolledwindow_selector_clist);
+    icons_mode = FALSE;
+  }
+  else {
+    //**/g_printerr("switch to ICON view\n");
+    gtk_widget_hide(scrolledwindow_selector_clist);
+    gtk_widget_show(scrolledwindow_selector_icons);
+    icons_mode = TRUE;
+  }
+}
+
+
+
 void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
                                    GdkEvent *event, gpointer user_data){
   if(event == NULL) return;//explicit call, user_func does nothing.

@@ -382,6 +382,11 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
+  pixbuf = gpe_find_icon ("list");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           NULL, NULL,
+                           pixmap, on_button_list_view_clicked, NULL);
   pixbuf = gpe_find_icon ("left");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
@@ -392,10 +397,5 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            pixmap, on_button_file_next_clicked, NULL);
-  pixbuf = gpe_find_icon ("list");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
-                           pixmap, on_button_list_view_clicked, NULL);
 
 }

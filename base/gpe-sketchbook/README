@@ -1,16 +1,3 @@
-GPE-Sketchbook, a sketches notebook
+GPE sketchbook: a notebook to sketch your notes
+by Luc Pionchon <luc.pionchon@welho.com>
 
-Note that it is not yet ported to GPE (i.e. it will not appear in the Applications Manager)
-
-Building instruction:
---------------------
-FLAGS=-O2 ./configure --prefix="/usr"
-make
-make strip
-su
-make ipkg
-
--------------------------------------------------------------------
-free add: I handle the TODO file with hnb (Hierarchical NoteBook)
-it is just great! and works fine on iPAQ too, just give it a try ;)
-<http://hnb.sourceforge.net>

@@ -48,8 +48,9 @@ static struct gpe_icon my_icons[] = {
   { "left",   "left"  },
   { "right",  "right" },
   { "about",  "help"  },
-  { "list",      "gpe-sketchbook/list"},
-  { "sketchpad", "gpe-sketchbook/sketchpad" },
+  { "list",      "gpe-sketchbook/view-mode-list"},
+  { "icons",     "gpe-sketchbook/view-mode-icons"},
+  //{ "sketchpad", "gpe-sketchbook/view-mode-sketchpad" },
 
   //own icons
   { "tool_pencil",  "gpe-sketchbook/tool_pencil"},

@@ -25,6 +25,7 @@ Note * note_new(){
   note = (Note *) malloc(sizeof(Note));
   note->fullpath_filename = NULL;
   note->thumbnail         = NULL;
+  note->icon_widget       = NULL;
   return note;
 }
 
@@ -32,6 +33,7 @@ void note_delete(Note * note){
   if(!note) return;
   if(note->fullpath_filename) free(note->fullpath_filename);
   if(note->thumbnail) gtk_widget_destroy(note->thumbnail);
+  if(note->icon_widget) gtk_widget_destroy(note->icon_widget);
   free(note);
 }
 

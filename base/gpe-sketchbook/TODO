@@ -1,34 +1,71 @@
 [ ]BUGS
-	[ ]launch app, select a sketch, open it --> you cannt draw: gc == NULL
-	[X][bgz] automatic scroll on drawing area is not correct
-	--
-	[ ][bgz] selector: selecting with keybord (TAB, arrows, SPACE) --> crash!
-	[ ][bgz] next (or prev), go to selector: the next (or prev) line is selected, but NOT underlined (dark blue) :(
-	[ ][bgz] from dialog box to main window, "sometimes" the window go under other applications
-	[ ]when deleting many fast (click click click) seems some value are not updated --> crash | selected_sketch is wrong  | ... ==> freeze the button meanwhile!
-	[ ]check GTK warnings / assertion failed
+	---
 	[ ]when create/save FAST, (<1s) two files with same name --> overwrite, BUT two entries in the clist!
-[ ]general
-	--
-	[X]remove all the glade stuff
-	[ ]hierarchical list
-	[ ]add preferences
+	[ ]grab keyevent (for joypad scrolling) + xstroke --> mess!
+[ ]GENERAL
+	[ ]thumbnails table
+	[ ]GTK2
+	---
+	[ ]categories (1 level first)
+	[ ]app preferences
+	[ ]note properties
+	[ ]integrate text/voice notes --> gpe-notebook
+	[ ]sketchpad component
+	---
+	[ ]open/save file, check success/failure
+	[ ]check GTK warnings / assertion failed
 	[ ]add cmd line options support (std --version --help)
 	[ ]use release tags in CVS
-[ ]gui
-	[ ]exit/prev/next/new check if current is unsaved, and ask user
+	[ ]when allocation, check if != NULL (limited memory)
+	[ ]code cleaning!!!
+[ ]FEATURES ideas
+	[ ]backgrounds
+		[ ].sketchbook/backgrounds/*.png
+		[ ]Examples: soft gird, go, ???
+		[ ]property: save_as_backgroung
+		[ ]property: background [choice...]
+		[ ]need save background ref with sketch!
+	[ ]duplicate_current function?
+	[ ]stamps
+		[ ].sketchbook/stamps/*.png
+		[ ]property: save_as_stamp --> need extract bouding box! and transparence
+		[ ]tool/toolbox: stamps
+		[ ]when drawing: no lines, just picks
+		[ ]ex: go stones, box, clock, ...
+	[ ]categories
+		[ ]one level first...
+		[ ]choice widget:
+			All categories
+			none
+			--------------
+			a
+			b
+			c
+			--------------
+			Select...      select several(?)
+			Edit...			
+		[ ]note properties: save in [... default to current ...]
+		[ ]global categories
+	[ ]app preferences
+		[ ]-->gpe-sketchbookrc
+		[ ]colorx = "xxxxxx"
+		[ ]brushx = <size> (if eraser cursor parametrable!)
+		[ ]defaultcolor
+		[ ]defaultbrush
+		[ ]defaulttool
+		[ ]confirm_save = yes|no
+		[ ]confirm_delete = yes|no
+		[ ]toolbar_follow_orientation = yes|no
+		[ ]??? save_on_flash = yes|no
+		[ ]open_first = selector|new_sketch|last_sketch
+		[ ]default_background = ... (if use backgrounds!)
+	[ ]note properties
+		[ ]type: text/sketch/voice
+		[ ]category: none/<named>
+		[ ]a line of text??? (=note on note!)
+		[ ]volatile/permanante
+		[ ]date/time (read only?)
+[ ]GUI
 	--
-	[ ]color selector, use gtkwidget.style (color), instead of pixmap
-	[ ]use GtkToolbar, instead of boxes... ! --> horizontal/vertical
-	[ ]in landscape mode, move the toolbar verticaly (right or left)
-	[ ]text field for info/title input (?)
-	[ ]add Preview window (preview frame instead of list in selector)
 	[ ]make drawing area centered if smaller than viewport
-	[ ]review buttons order
 	[ ]use disabled buttons when needed
-	[ ]add preferences window
-	[ ]drawing area size, see dillo: double click toggle hide/show the tool bar and status bar
-[ ]file io
-	[ ]use png instead of xpm
-	[ ]open/save file, check success/failure
-	--

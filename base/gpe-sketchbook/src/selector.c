@@ -26,6 +26,7 @@
 #include <asm/errno.h>//mkdir
 
 #include "selector.h"
+#include "selector-gui.h"
 #include "note.h"
 #include "files.h"
 #include "sketchpad.h"
@@ -38,6 +39,7 @@
 GtkWidget * window_selector;
 GtkCList  * selector_clist; 
 GdkColor bg_color;//alternate color for list cells
+GtkWidget * selector_icons_table;
 
 gint sketch_list_size;
 gint current_sketch;
@@ -51,6 +53,9 @@ void selector_init(){
   current_sketch   = SKETCH_NEW;
 }//selector_init()
 
+void set_selector_icons_table(GtkWidget * table){
+  selector_icons_table = table;
+}
 void set_selector_clist(GtkCList * clist){
   selector_clist = clist;
 }
@@ -99,6 +104,9 @@ void window_selector_init(GtkWidget * window_selector){
       line = gtk_clist_append(selector_clist, line_text);
       note = note_new();
       note->fullpath_filename = fullpath_filename;
+
+      build_thumbnail_widget(note, window_selector->style);
+
       gtk_clist_set_row_data_full(selector_clist, line, note, note_destroy);
       //do NOT g_free(fullpath_filename) now! :)
       if(i%2) gtk_clist_set_background(selector_clist, i, &bg_color);
@@ -106,6 +114,9 @@ void window_selector_init(GtkWidget * window_selector){
 
       g_free(line_text[0]);
     }
+    selector_pack_icons(selector_icons_table);
+    gtk_widget_show_all(selector_icons_table);
+
     free(direntries);
   }//else
 }//window_selector_init()

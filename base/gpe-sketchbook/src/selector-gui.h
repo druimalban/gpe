@@ -18,6 +18,17 @@
 #ifndef SELECTOR_GUI_H
 #define SELECTOR_GUI_H
 
+extern GtkWidget * scrolledwindow_selector_clist;
+extern GtkWidget * scrolledwindow_selector_icons;
+extern gboolean icons_mode;
+
 GtkWidget * create_window_selector (void);
+
+/**/
+GtkWidget * create_window_preview  ();
+#include "note.h"
+void build_thumbnail_widget(Note * note, GtkStyle * style);
+void selector_pack_icons(GtkWidget * table);
+void selector_repack_icon(GtkTable * table, Note * note);
 
 #endif

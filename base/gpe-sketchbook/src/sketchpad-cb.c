@@ -27,6 +27,7 @@
 #include "note.h"
 #include "selector.h"
 #include "selector-cb.h"
+#include "selector-gui.h"//build_thumbnail_widget
 
 #include "dock.h"
 #include "dialog.h"
@@ -88,6 +89,7 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
                             current_sketch, 1,
                             NULL, NULL);//highlight the selected item
   }
+  gtk_widget_show_all(selector_icons_table);
 }
 
 //---------------------------------------------------------
@@ -106,6 +108,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
   }
 
   file_save(note->fullpath_filename); //FIXME: should catch saving errors
+  build_thumbnail_widget(note, window_selector->style);//FIXME: use buffer, do NOT read from file!
   if(is_current_sketch_new){
     gchar * name[1];
 
@@ -117,6 +120,13 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
     g_free(name[0]);
     gtk_clist_set_row_data_full(selector_clist, current_sketch, note, note_destroy);
     if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
+
+    selector_pack_icons(selector_icons_table);
+  }
+  else{
+    //update icon_view
+    selector_repack_icon(GTK_TABLE(selector_icons_table), note);
+
   }
   is_current_sketch_modified = FALSE;
 }

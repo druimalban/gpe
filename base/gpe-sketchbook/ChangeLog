@@ -1,3 +1,8 @@
+2002-10-20  Luc Pionchon  <luc.pionchon@welho.com>
+
+	* src/selector-gui.c: added icons view to the selector, which is
+	an alternative to the clist.
+
 2002-09-13  Luc Pionchon  <luc.pionchon@welho.com>
 
 	* src/sketchpad-gui.c src/sketchpad-cb.[ch]: added support for
