@@ -20,6 +20,7 @@
 #include <libintl.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -32,6 +33,8 @@ GtkWidget *slider_window;
 GtkWidget *window;
 
 #define _(_x)  gettext (_x)
+
+#define SLIDER_HEIGHT	96
 
 struct gpe_icon my_icons[] = {
   { "minilite", PREFIX "/share/pixmaps/minilite.png" },
@@ -102,9 +105,9 @@ clicked (GtkWidget *w, GdkEventButton *ev)
   int level;
   int x, y;
 
-  gpe_popup_menu_position ((GtkMenu *)slider_window, &x, &y, NULL, (gpointer)window);
+  gpe_get_win_position (GDK_WINDOW_XDISPLAY (w->window), GDK_WINDOW_XWINDOW (w->window), &x, &y);
   
-  gtk_widget_set_uposition (GTK_WIDGET (slider_window), x, y);
+  gtk_widget_set_uposition (GTK_WIDGET (slider_window), x, y - SLIDER_HEIGHT);
   
   level = read_old_level ();
   
@@ -156,7 +159,8 @@ main (int argc, char **argv)
   slider = gtk_vscale_new_with_range (0, 255, 10);
 
   gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
-  gtk_widget_set_usize (slider_window, -1, 96);
+  gtk_widget_set_usize (slider_window, -1, SLIDER_HEIGHT);
+  gtk_range_set_inverted (GTK_RANGE (slider), TRUE);
 
   adj = gtk_range_get_adjustment (GTK_RANGE (slider)); 
   g_signal_connect (G_OBJECT (adj), "value-changed", G_CALLBACK (value_changed), NULL);
