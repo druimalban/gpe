@@ -1,3 +1,7 @@
+2004-06-01  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.53 released.
+
 2004-05-28  Phil Blundell  <pb@nexus.co.uk>
 
 	* gtkdatesel.c (struct _GtkDateSel): Add subbox.
