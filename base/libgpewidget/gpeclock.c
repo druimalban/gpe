@@ -142,12 +142,11 @@ get_bg_gc (GdkWindow *window, GdkPixmap *pixmap)
 static void
 gpe_clock_realize (GtkWidget *widget)
 {
-  XRenderPictureAttributes att;
-  GdkDrawable *drawable = widget->window;
   GpeClock *clock = GPE_CLOCK (widget);
-  Display *dpy = GDK_WINDOW_XDISPLAY (drawable);
-  GdkVisual *gv = gdk_window_get_visual (drawable);
-  GdkColormap *gcm = gdk_drawable_get_colormap (drawable);
+  XRenderPictureAttributes att;
+  Display *dpy;
+  GdkVisual *gv;
+  GdkColormap *gcm;
   GdkWindowAttr attributes;
   gint attributes_mask;
 
@@ -176,14 +175,21 @@ gpe_clock_realize (GtkWidget *widget)
   widget->style = gtk_style_attach (widget->style, widget->window);
   gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
 
-  clock->backing_pixmap = gdk_pixmap_new (drawable,
+  clock->backing_pixmap = gdk_pixmap_new (widget->window,
 					  widget->allocation.width, 
 					  widget->allocation.height,
-					  gdk_drawable_get_depth (drawable));
+					  gdk_drawable_get_depth (widget->window));
+
   clock->backing_gc = gdk_gc_new (clock->backing_pixmap);
-  clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (drawable),
+
+  dpy = GDK_WINDOW_XDISPLAY (widget->window);
+  gv = gdk_window_get_visual (widget->window);
+  gcm = gdk_drawable_get_colormap (widget->window);
+
+  clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (widget->window),
 			       gdk_x11_visual_get_xvisual (gv),
 			       gdk_x11_colormap_get_xcolormap (gcm));
+
   clock->image_pict = XftDrawPicture (clock->draw);
   clock->src_pict = XftDrawSrcPicture (clock->draw, &color);
 
@@ -244,7 +250,6 @@ gpe_clock_expose (GtkWidget *widget,
   Display *dpy;
 
   g_return_val_if_fail (widget != NULL, TRUE);
-  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
   drawable = widget->window;
 
@@ -450,8 +455,8 @@ gpe_clock_class_init (GpeClockClass * klass)
   color.color.alpha = 0x8000;
 }
 
-GtkType
-gtk_clock_get_type (void)
+GType
+gpe_clock_get_type (void)
 {
   static GType clock_type = 0;
 
@@ -470,9 +475,18 @@ gtk_clock_get_type (void)
 	(GInstanceInitFunc) gpe_clock_init,
       };
 
-      clock_type = g_type_register_static (GTK_TYPE_HBOX, "GpeClock", &clock_info, (GTypeFlags)0);
+      clock_type = g_type_register_static (GTK_TYPE_WIDGET, "GpeClock", &clock_info, (GTypeFlags)0);
     }
   return clock_type;
+}
+
+GtkWidget *
+gpe_clock_new (GtkAdjustment *hour, GtkAdjustment *minute)
+{
+  GpeClock *clock = g_object_new (gpe_clock_get_type (), NULL);
+  clock->hour_adj = hour;
+  clock->minute_adj = minute;
+  return GTK_WIDGET (clock);
 }
 
 #if 0
