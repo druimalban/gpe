@@ -1,5 +1,12 @@
 2002-08-31  Philip Blundell  <philb@gnu.org>
 
+	* month_view.c (TOTAL_DAYS): New macro.
+	(draw_expose_event): Use it.
+	(month_view_update): Likewise.
+	(rc): Use TOTAL_DAYS as array size.
+
+2002-08-31  Philip Blundell  <philb@gnu.org>
+
 	* event-db.c (event_db_alloc_details): Add refcount.
 	(event_db_forget_details): Likewise.
 	(event_db_get_details): Likewise.

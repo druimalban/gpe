@@ -35,7 +35,9 @@ struct render_ctl
   gboolean valid;
 };
 
-static struct render_ctl rc[35];
+#define TOTAL_DAYS (6 * 7)
+
+static struct render_ctl rc[TOTAL_DAYS];
 
 static gboolean
 button_press(GtkWidget *widget,
@@ -179,7 +181,7 @@ draw_expose_event (GtkWidget *widget,
 		     x + (xs - w) / 2, ys - font->descent,
 		     s, strlen (s));
  
-      for (j = 0; j < 5; j++)
+      for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
 	  guint d = i + (7 * j);
 	  struct render_ctl *c = &rc[d];
@@ -263,7 +265,7 @@ month_view_update ()
 
   days = days_in_month (year, month);
 
-  for (day = 0; day < 35; day++)
+  for (day = 0; day < TOTAL_DAYS; day++)
     {
       struct render_ctl *c = &rc[day];
       if (c->popup.events)
@@ -296,7 +298,7 @@ month_view_update ()
     }
 
   wday = 1 - day_of_week(year, month + 1, 1);
-  for (day = 0; day < 35; day++)
+  for (day = 0; day < TOTAL_DAYS; day++)
     {
       gint rday = day + wday;
       struct render_ctl *c = &rc[day];
