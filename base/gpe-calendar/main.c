@@ -86,6 +86,7 @@ main(int argc, char *argv[])
 
   gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
+  gtk_set_locale ();
   gtk_init(&argc, &argv);
   gdk_imlib_init ();
 

@@ -198,6 +198,7 @@ main(int argc, char *argv[])
 
   setenv ("DISPLAY", ":0", 0);
 
+  gtk_set_locale ();
   gtk_init (&argc, &argv);
   gdk_imlib_init ();
 

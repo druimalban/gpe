@@ -106,6 +106,7 @@ main(int argc, char *argv[])
   GdkPixmap *gpe_pix;
   GdkBitmap *gpe_pix_mask;
 
+  gtk_set_locale ();
   gtk_init (&argc, &argv);
   gdk_imlib_init ();
   
