@@ -53,28 +53,28 @@ gpe_button_new_from_stock (const gchar *stock_id, int type)
   GtkStockItem item;
 
   button = gtk_button_new ();
-
-  if (gtk_stock_lookup (stock_id, &item) == TRUE);
-  {
-    hbox = gtk_hbox_new (FALSE, 2);
-    align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-
-    if (type == GPE_BUTTON_TYPE_ICON || type == GPE_BUTTON_TYPE_BOTH)
+  
+  if (gtk_stock_lookup (stock_id, &item) == TRUE)
     {
-      image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU);
-      gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-    }
-
-    if (type == GPE_BUTTON_TYPE_LABEL || type == GPE_BUTTON_TYPE_BOTH)
-    {
-      label = gtk_label_new_with_mnemonic (item.label);
-      gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-    }
+      hbox = gtk_hbox_new (FALSE, 2);
+      align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
       
-    gtk_container_add (GTK_CONTAINER (button), align);
-    gtk_container_add (GTK_CONTAINER (align), hbox);
-    gtk_widget_show_all (align);
-  }
+      if (type == GPE_BUTTON_TYPE_ICON || type == GPE_BUTTON_TYPE_BOTH)
+	{
+	  image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
+	  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	}
+
+      if (type == GPE_BUTTON_TYPE_LABEL || type == GPE_BUTTON_TYPE_BOTH)
+	{
+	  label = gtk_label_new_with_mnemonic (item.label);
+	  gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+	}
+      
+      gtk_container_add (GTK_CONTAINER (button), align);
+      gtk_container_add (GTK_CONTAINER (align), hbox);
+      gtk_widget_show_all (align);
+    }
 
   return button;
 }
