@@ -1,8 +1,9 @@
 Package: gpe-wlancfg
-Section: base
+Section: x11
 Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
-Depends: libgtk2.0-0, libgpewidget1 (>= 0.24)
+Depends: libgtk2.0-0, libgpewidget1 (>= 0.24), gpe-su
 Description: GPE WLAN config
+Source: gpe-wlancfg-VERSION.tar.gz

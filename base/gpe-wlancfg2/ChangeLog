@@ -1,3 +1,8 @@
+08/13/2003	Florian Boor <florian.boor@kernelconcepts.de>
+
+	- Added "default" checkbox.
+	- Improved help displaying.
+	
 08/12/2003	Florian Boor <florian.boor@kernelconcepts.de>
 
 	- Help for simple gui.

@@ -71,3 +71,7 @@ on_rbFrequency_toggled                 (GtkToggleButton *togglebutton,
 void
 on_rbChannel_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_cbDefault_simple_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

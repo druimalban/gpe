@@ -1070,6 +1070,9 @@ void EditSimple(void)
 		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "sbChannel_simple");
 		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->Channel);	
 
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "cbDefault_simple");
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),!(strlen(CurrentScheme->Channel)));
+
 		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "edESSID_simple");
 		gtk_entry_set_text(GTK_ENTRY(widget),CurrentScheme->ESSID);	
 
@@ -1127,6 +1130,8 @@ void on_btnHelp_clicked(GtkButton *button, gpointer user_data)
 	GtkWidget	*textview;
 	GtkTextBuffer	*buffer;
 	GtkWidget	*notebook;
+	GtkTextIter	iter;
+	GtkTextMark *mark = NULL;
 
 	MainWin=lookup_widget(GTK_WIDGET(button), "GPE_WLANCFG");
 	HelpWin=create_GeneralHelpWin();
@@ -1163,6 +1168,13 @@ void on_btnHelp_clicked(GtkButton *button, gpointer user_data)
 			break;
 		}
 	}
+	
+	/* scroll to first line of text */
+gtk_widget_show_all(HelpWin);	
+	gtk_text_buffer_get_start_iter(buffer,&iter);
+	mark = gtk_text_buffer_create_mark(buffer,"start0",&iter,FALSE);
+	gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW(textview),mark,0,FALSE,0,0);
+
 	gtk_dialog_run(GTK_DIALOG(HelpWin));
 	gtk_widget_destroy(HelpWin);
 }
@@ -1305,4 +1317,20 @@ void on_rbChannel_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 			gtk_widget_set_sensitive(widget, FALSE);			
 		}
 	}
+}
+
+void
+on_cbDefault_simple_toggled            (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+	GtkWidget	*widget;
+
+	widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "sbChannel_simple");
+	gtk_widget_set_sensitive(widget,!gtk_toggle_button_get_active(togglebutton));
+	
+	if (gtk_toggle_button_get_active(togglebutton))
+	{
+		widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG), "sbChannel_simple");
+		gtk_entry_set_text(GTK_ENTRY(widget),"");
+	}		
 }
