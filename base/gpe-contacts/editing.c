@@ -46,17 +46,23 @@ void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data)
 void on_name_clicked (GtkButton *button, gpointer user_data);
 
 
-
 /* this is the filter for phone number edits */
-static gboolean
-phone_key_press_event (GtkWidget *widget, GdkEventKey *k, gpointer p)
+void
+on_phone_insert_text(GtkEditable *editable, gchar *new_text,
+                     gint new_text_length, gint *position,
+                     gpointer user_data)
 {
-  if (!strstr(" +0123456789-/()", k->string) 
-      && !(k->state & GDK_CONTROL_MASK))
-    {
-      return TRUE;
-    }
-  return FALSE;
+  int i;
+  gboolean isok = TRUE;
+  
+  for (i = 0; i < new_text_length; i++)
+    if (!strchr(" +0123456789-/()", new_text[i]))
+      {
+        isok = FALSE;
+        break;
+      }
+  if (!isok)
+    gtk_signal_emit_stop_by_name(GTK_OBJECT(editable), "insert-text");
 }
 
 static void
@@ -91,8 +97,8 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
               || strstr(e->tag,".MOBILE") 
               || strstr(e->tag,".FAX"))
             {
-               g_signal_connect (G_OBJECT (w), "key_press_event", 
-		         G_CALLBACK (phone_key_press_event), NULL);
+              g_signal_connect (G_OBJECT (w), "insert-text", 
+		         G_CALLBACK (on_phone_insert_text), NULL);
             }
           if (strcasecmp(e->tag, "NAME")) /* the name field on a button */
             {

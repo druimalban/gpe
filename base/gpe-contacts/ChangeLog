@@ -1,3 +1,10 @@
+2004-10-24  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * editing.c: New function on_phone_insert_text() introduces a cleverer 
+                 way to filter text in phone entries.
+    * editing.c (pop_singles): Use on_phone_insert_text() instead of 
+                               phone_key_press_event().  
+
 2004-10-20  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* editing.c: Fixed name label position.
