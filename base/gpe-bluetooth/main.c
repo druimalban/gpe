@@ -625,6 +625,7 @@ main (int argc, char *argv[])
   Display *dpy;
   GtkWidget *window;
   GdkBitmap *bitmap;
+  GtkWidget *menu_remove;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -640,25 +641,31 @@ main (int argc, char *argv[])
   gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
+  gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth control"));
+
   signal (SIGCHLD, sigchld_handler);
 
   menu = gtk_menu_new ();
   menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
   menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
   menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
+  menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
 
   g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
   g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off), NULL);
   g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
+  g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
   gtk_widget_set_sensitive (menu_devices, FALSE);
 
   gtk_widget_show (menu_radio_on);
   gtk_widget_show (menu_devices);
+  gtk_widget_show (menu_remove);
 
   gtk_menu_append (GTK_MENU (menu), menu_radio_on);
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
   gtk_menu_append (GTK_MENU (menu), menu_devices);
+  gtk_menu_append (GTK_MENU (menu), menu_remove);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
