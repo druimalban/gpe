@@ -57,6 +57,7 @@ value_changed (GtkAdjustment *adj)
   int value;
   
   value = gtk_adjustment_get_value (adj);
+  value |= (value << 8);
 
   ioctl (mixerfd, SOUND_MIXER_WRITE_VOLUME, &value);
 }
@@ -68,6 +69,8 @@ read_old_level (void)
 
   if (ioctl (mixerfd, SOUND_MIXER_READ_VOLUME, &orig_vol) < 0)
     return 0;
+
+  orig_vol &= 0x7f;
 
   return orig_vol;
 }
