@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -115,55 +115,59 @@ recalculate_sensitivities(GtkWidget *widget,
       gtk_widget_set_sensitive (s->alarmspin, 0);
     }
   
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttonnone))) {
-	gtk_widget_hide (s->dailyvbox);
-  	gtk_widget_hide (s->weeklyhbox);
-  	gtk_widget_hide (s->monthlyvbox);
-  	gtk_widget_hide (s->yearlyvbox);
-	gtk_widget_set_sensitive (s->endspin, 0);
-	gtk_widget_set_sensitive (s->endlabel, 0);
-	gtk_widget_set_sensitive (s->radiobuttonforever, 0);
-	gtk_widget_set_sensitive (s->radiobuttonendafter, 0);
-  }
-  else {
-	  
-	gtk_widget_set_sensitive (s->radiobuttonforever, 1);
-	gtk_widget_set_sensitive (s->radiobuttonendafter, 1);
-	
-	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttonforever))) {
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone))) 
+    {
+      gtk_widget_hide (s->dailyvbox);
+      gtk_widget_hide (s->weeklyhbox);
+      gtk_widget_hide (s->monthlyvbox);
+      gtk_widget_hide (s->yearlyvbox);
+      gtk_widget_set_sensitive (s->endspin, 0);
+      gtk_widget_set_sensitive (s->endlabel, 0);
+      gtk_widget_set_sensitive (s->radiobuttonforever, 0);
+      gtk_widget_set_sensitive (s->radiobuttonendafter, 0);
+    }
+  else 
+    {
+      gtk_widget_set_sensitive (s->radiobuttonforever, 1);
+      gtk_widget_set_sensitive (s->radiobuttonendafter, 1);
+      
+      if (gtk_toggle_button_get_active 
+	  (GTK_TOGGLE_BUTTON (s->radiobuttonforever))) 
+	{
 	  gtk_widget_set_sensitive (s->endspin, 0);
 	  gtk_widget_set_sensitive (s->endlabel, 0);
-  	}
-  	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttonendafter))) {
+	}
+      else if (gtk_toggle_button_get_active 
+	       (GTK_TOGGLE_BUTTON (s->radiobuttonendafter))) 
+	{
 	  gtk_widget_set_sensitive (s->endspin, 1);
 	  gtk_widget_set_sensitive (s->endlabel, 1);
   	}
   
-  	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttondaily))) {
+  	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					  (s->radiobuttondaily))) 
 	  gtk_widget_show (s->dailyvbox);
-	  gtk_widget_hide (s->weeklyhbox);
-	  gtk_widget_hide (s->monthlyvbox);
-	  gtk_widget_hide (s->yearlyvbox);
-  	}
-  	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttonweekly))) {
+	else
 	  gtk_widget_hide (s->dailyvbox);
+
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					  (s->radiobuttonweekly))) 
 	  gtk_widget_show (s->weeklyhbox);
-	  gtk_widget_hide (s->monthlyvbox);
-	  gtk_widget_hide (s->yearlyvbox);
-  	}
-  	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttonmonthly))) {
-	  gtk_widget_hide (s->dailyvbox);
+	else
 	  gtk_widget_hide (s->weeklyhbox);
+
+  	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					  (s->radiobuttonmonthly))) 
 	  gtk_widget_show (s->monthlyvbox);
-	  gtk_widget_hide (s->yearlyvbox);
-  	}
-  	else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(s->radiobuttonyearly))) {
-	  gtk_widget_hide (s->dailyvbox);
-	  gtk_widget_hide (s->weeklyhbox);
+	else
 	  gtk_widget_hide (s->monthlyvbox);
+	
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+					  (s->radiobuttonyearly))) 
 	  gtk_widget_show (s->yearlyvbox);
-  	}
-  }
+	else
+	  gtk_widget_hide (s->yearlyvbox);
+    }
 }
 
 static void
