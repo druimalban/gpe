@@ -68,6 +68,7 @@ void
 usage (char *argv[])
 {
   fprintf (stderr, _("Usage: %s <in|out> <address>\n"), argv[0]);
+  fprintf (stderr, _(" or    %s --dbus\n"), argv[0]);
   exit (1);
 }
 
