@@ -206,6 +206,8 @@ extract_time (struct alarm_state *alarm)
   tm.tm_hour = alarm->hour;
   tm.tm_min = alarm->minute;
 
+  printf ("extracted time %02d:%02d\n", tm.tm_hour, tm.tm_min);
+
   return mktime (&tm);
 }
 
@@ -267,7 +269,17 @@ set_alarm (struct alarm_state *alarm)
 	  alarm->month = tm.tm_mon;
 	  alarm->day = tm.tm_mday;
 	}
-      
+
+      {
+	struct tm ltm, utm;
+
+	localtime_r (&t, &ltm);
+	gmtime_r (&t, &utm);
+
+	printf ("local time %s\n", asctime (&ltm));
+	printf ("universal time %s %x\n", asctime (&utm), t);
+      }
+
       if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm\n") == FALSE)
 	{
 	  gpe_error_box (_("Unable to set alarm"));
@@ -472,8 +484,12 @@ alarm_window (void)
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_NONE);
 
+#if 0
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), scrolled_vbox);
+#else
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), scrolled_vbox, TRUE, TRUE, 0);
+#endif
 
   ctx->date_button = gtk_radio_button_new_with_label (NULL, _("Date:"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (ctx->date_button));
