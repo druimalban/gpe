@@ -61,4 +61,6 @@ void gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpo
 
 void gpe_icon_list_view_set_border_color (GPEIconListView *self, guint32 color);
 
+void gpe_icon_list_view_set_border_width (GPEIconListView *self, int width);
+
 #endif

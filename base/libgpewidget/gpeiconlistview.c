@@ -47,6 +47,7 @@ struct _GPEIconListView
 
   int rows_set;
   t_gpe_textpos textpos;
+  int border_width;
 
   GdkGC *border_gc;
   GdkColor border_color;
@@ -74,7 +75,6 @@ static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int c
 
 #define LABEL_YMARGIN	2
 #define LABEL_XMARGIN   5
-#define TOP_MARGIN	0
 #define ROW_PADDING	8
 
 #define il_label_height(_x)	(GPE_ICON_LIST_VIEW (_x)->label_height)
@@ -115,6 +115,14 @@ void
 gpe_icon_list_view_set_bg_color (GPEIconListView *self, guint32 color)
 {
   self->bgcolor = color;
+}
+
+void
+gpe_icon_list_view_set_border_width (GPEIconListView *self, int width)
+{
+  self->border_width = width;
+
+  gtk_widget_queue_resize (GTK_WIDGET (self));  
 }
 
 void
@@ -348,7 +356,7 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
       icon = icons->data;
       
       cell_x = col * il_col_width (il);
-      cell_y = row * il_row_height (il) + TOP_MARGIN;
+      cell_y = row * il_row_height (il) + il->border_width;
       cell_w = il_col_width (il);
       cell_h = il->icon_size + LABEL_YMARGIN + label_height;
 
@@ -441,14 +449,14 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      if (il->textpos == GPE_TEXT_BELOW)
 		{
 		  r1.x = cell_x;
-		  r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
+		  r1.y = cell_y + il->icon_size + LABEL_YMARGIN;
 		  r1.width = cell_w;
 		  r1.height = label_height;
 		}
 	      else
 		{
 		  r1.x = LABEL_XMARGIN + 2 * il->icon_size;
-		  r1.y = row * il_row_height (il) + LABEL_YMARGIN;
+		  r1.y = cell_y;
 		  r1.width = widget->allocation.width - r1.x;
 		  r1.height = label_height;
 		}
@@ -602,7 +610,8 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self,
   else
     req->width = count * il_col_width (self);
 
-  req->height = self->rows * il_row_height (self) - ROW_PADDING;
+  req->height = self->rows * il_row_height (self) - ROW_PADDING 
+    + (2 * self->border_width);
 }
 	
 static void

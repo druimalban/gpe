@@ -1,3 +1,14 @@
+2004-10-04  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeiconlistview.c (gpe_icon_list_view_set_border_width): New.
+	(struct _GPEIconListView): New member border_width.
+	(_gpe_icon_list_view_expose): Factor border_width into y
+	coordinates.  Position label using cell_y.
+	(_gpe_icon_list_view_recalc_size): Include border width in
+	requested height.
+	* gpe/gpeiconlistview.h (gpe_icon_list_view_set_border_width): New
+	prototype.
+
 2004-10-04  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlistview.c (struct _GPEIconListView): New members
