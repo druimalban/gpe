@@ -26,8 +26,8 @@ install-program: gsoko gsoko.desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s gsoko $(DESTDIR)$(PREFIX)/bin/gsoko
 	install -d $(DESTDIR)$(PREFIX)/share/gsoko/img
-	install -d $(DESTDIR)$(PREFIX)/share/gsoko/lev
-	for i in $(LEVELS); do install -m 644 levels/$$i.lev $(DESTDIR)$(PREFIX)/share/gsoko/lev/$$i.lev; done
+	install -d $(DESTDIR)$(PREFIX)/share/gsoko/levels
+	for i in $(LEVELS); do install -m 644 levels/$$i.lev $(DESTDIR)$(PREFIX)/share/gsoko/levels/$$i.lev; done
 	for i in $(IMGS); do install -m 644 img/$$i $(DESTDIR)$(PREFIX)/share/gsoko/img/$$i; done
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 gsoko.png $(DESTDIR)$(PREFIX)/share/pixmaps/

@@ -16,6 +16,7 @@
  *****************************************************************************/
 
 #include <stdio.h>	/* FILE, sprintf() */
+#include <stdlib.h>	/* exit() */
 
 #include "gsoko.h"
 
@@ -44,6 +45,11 @@ void load_level(int n)
 	/* load the board */
 	sprintf(filename, PREFIX "/share/gsoko/levels/%i.lev", n);
 	file = fopen(filename, "rb");
+	if (!file)
+	{
+		fprintf (stderr, "couldn't open %s\n", filename);
+		exit (1);
+	}
 	for (j = 0; j < H_BOARD; j++)	/* parse the lines */
 	{
 		for (i = 0; i < W_BOARD; i++)
