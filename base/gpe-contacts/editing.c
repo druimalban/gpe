@@ -327,7 +327,7 @@ create_edit (void)
   GtkWidget *notebook2;
   GtkWidget *edit_cancel;
   GtkWidget *edit_save;
-  GtkWidget *edit_delete;
+  GtkWidget *edit_delete = NULL;
   GtkTooltips *tooltips;
   GtkWidget *vbox, *action_area;
 
@@ -357,15 +357,18 @@ create_edit (void)
 
   notebook2 = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (vbox), notebook2, TRUE, TRUE, 0);
-
-  edit_delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+  
+  if (mode_landscape || mode_large_screen)
+    edit_delete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
   edit_cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   edit_save = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   GTK_WIDGET_SET_FLAGS (edit_save, GTK_CAN_DEFAULT);
 
-  gtk_widget_set_sensitive (GTK_WIDGET (edit_delete), FALSE);
-
-  gtk_box_pack_start (GTK_BOX (action_area), edit_delete, TRUE, FALSE, 4);
+  if (mode_landscape || mode_large_screen)
+    {
+      gtk_widget_set_sensitive (GTK_WIDGET (edit_delete), FALSE);
+      gtk_box_pack_start (GTK_BOX (action_area), edit_delete, TRUE, FALSE, 4);
+    }
   gtk_box_pack_start (GTK_BOX (action_area), edit_cancel, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (action_area), edit_save, TRUE, FALSE, 4);
 

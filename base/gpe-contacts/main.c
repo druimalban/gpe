@@ -485,8 +485,6 @@ show_details (struct person *p)
     }
   else /* show configured fields only */
     { 
-      GtkWidget *details_button = g_object_get_data(G_OBJECT(mainw), 
-		                                            "details-button");		
       for (i = 0; i < table->nrows; i++)
       {
         pchild = g_list_nth_data (table->children, 2 * i);
@@ -497,7 +495,6 @@ show_details (struct person *p)
       }
       if (p)
         {
-          gtk_widget_set_sensitive(details_button, TRUE);
           for (i = 0; i < table->nrows; i++)
             {
               pchild = g_list_nth_data (table->children, 2 * i);
@@ -520,10 +517,6 @@ show_details (struct person *p)
               g_free (tagname);
            }
         }
-	  else
-	    {
-          gtk_widget_set_sensitive(details_button, FALSE);
-		}
     }
   return 0;
 }
@@ -531,7 +524,85 @@ show_details (struct person *p)
 static void
 show_details_window(GtkWidget *btn)
 {
+  GtkWidget *dlgDetail;
+  GtkWidget *button, *label;
+  GtkWidget *vbox, *vport, *scrolled_window;
+  gchar *catstring, *text;
+  GtkTreeIter iter;
+  GtkTreeSelection *sel;
+  GtkTreeModel *model;
+  GSList *page;
+  struct person *p;
   
+  /* get person data */
+  sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      gint id;
+      gtk_tree_model_get (model, &iter, 1, &id, -1);
+      p = db_get_by_uid (id);
+    }
+  else
+    return;
+  
+  /* create and set up dialog */
+  dlgDetail = gtk_dialog_new_with_buttons(_("Contact"), GTK_WINDOW(mainw), 
+                                          GTK_DIALOG_MODAL 
+                                          | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                          NULL);
+  gtk_window_set_default_size(GTK_WINDOW(dlgDetail), 220, 300);
+  button = gtk_dialog_add_button(GTK_DIALOG(dlgDetail), 
+                                 GTK_STOCK_CLOSE, 
+                                 GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS(button, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(button);
+  
+  vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
+  scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
+                                 GTK_POLICY_AUTOMATIC,
+                                 GTK_POLICY_AUTOMATIC);
+  vport = gtk_viewport_new(NULL, NULL);
+  gtk_viewport_set_shadow_type(GTK_VIEWPORT(vport), GTK_SHADOW_NONE);
+  gtk_container_add(GTK_CONTAINER(vport), vbox);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), vport);
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dlgDetail)->vbox), 
+                     scrolled_window, TRUE, TRUE, 0);
+  
+  /* create content */
+  catstring = build_categories_string(p);
+    
+  for (page = edit_pages; page; page = page->next) /* we use data layout to structure widgets */
+    {
+       edit_thing_t e = page->data;
+
+      if ((!e->hidden) && (e->children))
+        {
+          text = g_strdup_printf ("<b>%s</b>", e->name);
+          label = gtk_label_new (NULL);
+          gtk_label_set_markup (GTK_LABEL (label), text);
+          gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
+          g_free (text);
+          gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+          if (!build_children (vbox, e->children, p))
+            gtk_container_remove(GTK_CONTAINER(vbox), label);
+        }
+    }
+  if (catstring)
+    {
+      text = g_strdup_printf("%s: %s", _("Categories"), catstring);
+      label = gtk_label_new(NULL);
+      gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+      gtk_label_set_markup(GTK_LABEL(label), text);
+      gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, TRUE, 0);
+      g_free(text);
+    }
+
+  /* show details dialog */
+  gtk_widget_show_all(dlgDetail);
+  gtk_dialog_run(GTK_DIALOG(dlgDetail));
+  gtk_widget_destroy(dlgDetail);
+  discard_person (p);
 }
 
 void
@@ -541,12 +612,13 @@ selection_made (GtkTreeSelection *sel, GObject *o)
   guint id;
   struct person *p;
   GtkTreeModel *model;
-  GtkWidget *edit_button, *delete_button, *new_button;
+  GtkWidget *edit_button, *delete_button, *new_button, *details_button;
 
   edit_button = g_object_get_data (o, "edit-button");
   delete_button = g_object_get_data (o, "delete-button");
   new_button = g_object_get_data (o, "new-button");
-
+  details_button = g_object_get_data (o, "details-button");
+  
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
       gtk_tree_model_get (model, &iter, 1, &id, -1);
@@ -559,11 +631,15 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 		
       gtk_widget_set_sensitive (edit_button, TRUE);
       gtk_widget_set_sensitive (delete_button, TRUE);
+      if (!mode_landscape)
+        gtk_widget_set_sensitive (details_button, TRUE);
     }
   else
     {
       gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_widget_set_sensitive (delete_button, FALSE);
+      if (!mode_landscape)
+        gtk_widget_set_sensitive (details_button, FALSE);
     }
 	/* restore after edit/new */
     gtk_widget_set_sensitive (new_button, TRUE);

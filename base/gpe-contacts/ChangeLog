@@ -1,3 +1,10 @@
+2004-10-09  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Removed redundant delete button in edit window for small 
+                 screens.
+    * main.c: Implemented details window.
+              Fixed activation of details button.    
+
 2004-10-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: New button to show details in small portrait mode.
