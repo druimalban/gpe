@@ -26,8 +26,6 @@ function menu_entry($page, $title, $link,$thispage)
  |
 <?php menu_entry("contact", "Mailing list", "/contact.phtml", $pagename); ?>
  |
-<?php menu_entry("screenshots", "Screenshots", "/screenshots/", $pagename); ?>
- |
 <A href="http://handhelds.org/bugzilla/">Bugs</A>
  |
 <?php menu_entry("cvs", "CVS", "/cvs.phtml", $pagename); ?>
