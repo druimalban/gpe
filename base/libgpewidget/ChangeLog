@@ -1,5 +1,9 @@
 2005-02-07  Florian Boor <florian@kernelconcepts.de>
 
+	* doc/style.css: Added style definition file for documentation.
+	
+2005-02-07  Florian Boor <florian@kernelconcepts.de>
+
 	* Makefile: Don't build documentation per default.
 	* doc/tmpl/gpetimesel.sgml: More documentation.
 	
