@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.0
+VERSION = 0.2.0-1
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -33,8 +33,8 @@ CPPFLAGS += -I.
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0`
 
-MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0
-MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir 
+#MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0
+#MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir 
 
 # setup how to compile
 ifeq ($(NATIVE),yes)
@@ -68,11 +68,11 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
 PIXMAPS = gpe-aerial.png
-PIXMAPS = scan-on-16.png
-PIXMAPS = scan-off-16.png
-#PIXMAPS = scan-err.png
-#PIXMAPS = wlan-net.png
-#PIXMAPS = wlan-adhoc.png
+PIXMAPS += scan-on-16.png
+PIXMAPS += scan-off-16.png
+#PIXMAPS += scan-err.png
+#PIXMAPS += wlan-net.png
+#PIXMAPS += wlan-adhoc.png
 
 all: $(PACKAGE) 
 

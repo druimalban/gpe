@@ -1,3 +1,6 @@
+05/27/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- Makefile	Fixed errors resulting a broken package.
+
 05/26/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- main.c	Changed path to scanner bin.
