@@ -416,7 +416,7 @@ send_data (char *filename, char *data, size_t len)
 
 		gdk_threads_enter ();
 		dlgStatus =
-			bt_progress_dialog (_("IR Receive and Transmit........."),
+			bt_progress_dialog (_("IR Receive and Transmit....."),
 						gpe_find_icon ("irda"));
 		gtk_widget_show_all (dlgStatus);
 		gdk_threads_leave ();
