@@ -3,6 +3,7 @@
 	* main.c: add "skip" time
 	* event-ui.c: same
 	* event-ui.h: same
+	* gpe-calendar.session: same
 	* day_popup.c : add pretty pixmaps
 	* day_view.c : cut space down
 	
