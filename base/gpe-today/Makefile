@@ -2,26 +2,21 @@ PACKAGE = gpe-today
 PREFIX = /usr/local
 #DEBUG = yes 
 #LINGUAS = pt_PT
-GTK2 = yes
 
-MEMBERS = main todo calendar date event-db old-db
+MEMBERS = main todo calendar date event-db old-db todo-sql todo-old-db
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-endif
 
 CPPFLAGS = -I../libgpewidget -D_GNU_SOURCE
 
-#ifeq ($(DEBUG),yes)
+ifeq ($(DEBUG),yes)
 CFLAGS = -g
 #LDFLAGS = -lefence
-#else
-#CFLAGS = -Os -fomit-frame-pointer
-#endif
+else
+CFLAGS = -Os -fomit-frame-pointer
+endif
+
 CFLAGS += -Wall $(GTKCFLAGS)
 LDFLAGS += $(GTKLDFLAGS)
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
@@ -45,7 +40,7 @@ install: all install-mo
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
-	install -D gtkrc $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gtkrc
+	install -m644 -D gtkrc $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gtkrc
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
