@@ -390,6 +390,8 @@ main (int argc, char *argv[])
 	  XEvent ev;
 	  Key *k;
 
+	  waitpid (-1, NULL, WNOHANG);
+
 	  XNextEvent (dpy, &ev);
 	  if (ev.type == KeyPress)
 	    {
