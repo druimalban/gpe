@@ -29,6 +29,7 @@
 #include "week_view.h"
 #include "future_view.h"
 #include "month_view.h"
+#include "import-vcal.h"
 
 #include <libdisplaymigration/displaymigration.h>
 #include <gpe/pim-categories.h>
@@ -169,6 +170,37 @@ gpe_cal_exit (void)
   gtk_main_quit ();
 }
 
+
+static void
+on_import_vcal (GtkWidget *widget, gpointer data)
+{
+  GtkWidget *filesel;
+  
+  filesel = gtk_file_selection_new(_("Choose file"));
+  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel),TRUE);
+  
+  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+    {
+      GError *err = NULL;
+      gchar *content;
+      int i = 0;
+      gsize count;
+      gchar **files = 
+        gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
+#warning todo: count and report success/errors
+      while (files[i])
+        {
+          if (g_file_get_contents(files[i],&content,&count,&err))
+            {
+              import_vcal(content,count);
+              g_free(content);
+            }
+          i++;  
+        }
+    }
+  gtk_widget_destroy(filesel);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -306,6 +338,10 @@ main (int argc, char *argv[])
 					     _("Tap here to select month-at-a-time view."),
 					     pw, GTK_SIGNAL_FUNC (button_toggled), month);
 
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_OPEN,
+			    _("Imort"), _("Open file to import an event from it."),
+			    G_CALLBACK (on_import_vcal), NULL, -1);
+                
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,

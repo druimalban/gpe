@@ -1,3 +1,11 @@
+2004-07-20  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * import-vcal.h: New file.
+    * import-vcal.c: New files taken from gpe-bluetooth by Philip Blundell.
+    * main.c, Makefile: Started to add VCAL import facility.
+    * month_view.c: Improved year handling.
+    * month_view.c: Improved keyboard controls.    
+
 2004-07-19  Florian Boor <florian.boor@kernelconcepts.de>
 
     * month_view.c: Started simple keyboard control.

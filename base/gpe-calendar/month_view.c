@@ -87,18 +87,18 @@ button_press (GtkWidget *widget,
 	}
       
       else if (event->type == GDK_2BUTTON_PRESS)
-	{
-	  struct tm tm;
-	  time_t selected_time;
-	  localtime_r (&viewtime, &tm);
-	  tm.tm_year = c->popup.year - 1900;
-	  tm.tm_mon = c->popup.month;
-	  tm.tm_mday = c->popup.day;
-	  selected_time = mktime (&tm);
-	  if (pop_window) 
-	    gtk_widget_destroy (pop_window);
-	  set_time_and_day_view (selected_time);    
-	}
+        {
+          struct tm tm;
+          time_t selected_time;
+          localtime_r (&viewtime, &tm);
+          tm.tm_year = c->popup.year;
+          tm.tm_mon = c->popup.month;
+          tm.tm_mday = c->popup.day;
+          selected_time = mktime (&tm);
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+          set_time_and_day_view (selected_time);    
+        }
     }
   
   return TRUE;
@@ -357,6 +357,7 @@ month_view_update ()
       struct render_ctl *c = &rc[day];
       if (c->popup.events)
         c->popup.events = NULL;
+      c->active = (day == active_day) ? TRUE : FALSE;
     }
 
   for (day = 1; day <= days; day++)
@@ -393,7 +394,7 @@ month_view_update ()
       gint rday = day + wday;
       struct render_ctl *c = &rc[day];
       c->popup.day = rday;
-      c->popup.year = year;
+      c->popup.year = year - 1900;
       c->popup.month = month;
       if (rday <= 0 || rday > days)
 	{
@@ -469,49 +470,76 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
 printf("kp\n");  
   if (k->keyval == GDK_Escape)
     {
-          c = &rc[active_day];
-          if (c->valid)
+      c = &rc[active_day];
+      if (c->valid)
+        {
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+          if (c != c_old) 
             {
-              if (pop_window) 
-                gtk_widget_destroy (pop_window);
-              if (c != c_old) 
-                {
-                  pop_window = day_popup (main_window, &c->popup, TRUE);
-                  c_old = c;
-                }
-              else 
-                {
-                  pop_window = NULL;
-                  c_old = NULL;
-                }
-            }    
+              pop_window = day_popup (main_window, &c->popup, TRUE);
+              c_old = c;
+            }
+          else 
+            {
+              pop_window = NULL;
+              c_old = NULL;
+            }
+        }    
     }
     
-  if (k->keyval == GDK_Down) 
-  {
-          if (active_day < TOTAL_DAYS) 
-            {
-              active_day++;
-            }
-          else
-            gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-		                         GTK_DIR_DOWN);  
-          month_view_update ();
-    return TRUE;
-  }
-  if (k->keyval == GDK_Up) 
-  {
-          if (active_day) 
-            {
-              active_day--;
-            }
-          else
-            gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-		                         GTK_DIR_UP);  
-          month_view_update ();
-    return TRUE;
-  }
+  if (k->keyval == GDK_Right) 
+    {
+      if ((active_day < TOTAL_DAYS) && (rc[active_day+1].valid))
+        {
+          active_day++;
+        }
+      else
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
+                             GTK_DIR_DOWN);  
+      month_view_update ();
+      return TRUE;
+    }
+    
+  if (k->keyval == GDK_Left) 
+    {
+      if ((active_day) && (rc[active_day-1].valid))
+        {
+          active_day--;
+        }
+      else
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
+                             GTK_DIR_UP);  
+      month_view_update ();
+      return TRUE;
+    }
 
+  if (k->keyval == GDK_Down) 
+    {
+      if ((active_day < TOTAL_DAYS-7) && (rc[active_day+7].valid))
+        {
+          active_day+=7;
+        }
+      else
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
+                             GTK_DIR_DOWN);  
+      month_view_update ();
+      return TRUE;
+    }
+    
+  if (k->keyval == GDK_Up) 
+    {
+      if ((active_day >= 7) && (rc[active_day-7].valid))
+        {
+          active_day-=7;
+        }
+      else
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
+                             GTK_DIR_UP);  
+      month_view_update ();
+      return TRUE;
+    }
+    
   if (k->keyval == GDK_space)
     {
       c = &rc[active_day];
@@ -521,7 +549,7 @@ printf("kp\n");
             gtk_widget_destroy (pop_window);
               if (c != c_old) 
             {
-              pop_window = day_popup (main_window, &c->popup, FALSE);
+              pop_window = day_popup (main_window, &c->popup, TRUE);
               c_old = c;
             }
            else 
