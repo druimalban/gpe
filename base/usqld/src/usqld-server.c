@@ -8,35 +8,13 @@
 #include <unistd.h> 
 #include <string.h>
 #include <pthread.h>
-
+#include "usqld-server.h"
 #define SERVER_PORT 8322
 
 typedef struct 
 {   int fd;
 }USQLD_threadinit;
 
-void *  child_thread(void * param)
-{
-   char ibuf[100],obuf[100];
-   ssize_t nb=0;
-   int csock;
-   csock = ((USQLD_threadinit *)param)->fd;
-   free(param);
-   printf("new thread\n");
-   
-   while(1)
-     {
-	bzero(ibuf,100);
-	if(-1!=(nb =recv(csock,ibuf,100,0))){
-	   printf("got %d bytes : \"%s\" from client\n",nb,ibuf);
-	   snprintf(obuf,100,"Thanks for your %d bytes (%s)\n",nb,ibuf);
-	   send(csock,obuf,strlen(obuf),0);
-	}else
-	  {
-	     pthread_exit(NULL);
-	  }
-     }   
-}
 
 int main(int argc, char ** argv)
 {

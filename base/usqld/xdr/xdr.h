@@ -123,7 +123,7 @@ XDR_schema * XDR_schema_new_typedesc(XDR_type t);
 
 XDR_schema * XDR_schema_new_opaque(size_t len);
 XDR_schema * XDR_schema_new_array(XDR_schema *t,size_t len);
-XDR_schema * XDR_schema_new_struct(size_t num_elems,const XDR_schema **elems);
+XDR_schema * XDR_schema_new_struct(size_t num_elems, XDR_schema **elems);
 XDR_schema * XDR_schema_new_type_union(size_t num_alternatives,const XDR_union_discrim *elems);
 
 #define XDR_schema_new_varopaque() XDR_schema_new_opaque(0)
@@ -191,7 +191,7 @@ XDR_tree * XDR_tree_new_double(double val);
 /*accessors*/
 #define XDR_t_get_union_disc(t)  ((XDR_tree_simple*)\
 					 ((XDR_tree_compound*)\
-					  t)->subelems[0]).val.uintVal
+					  t)->subelems[0])->val.uintVal
 #define XDR_t_get_union_t(t)  ((XDR_tree_compound*)\
 					  t)->subelems[1])
 

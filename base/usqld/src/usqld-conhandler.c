@@ -1,17 +1,19 @@
-#ifndef USQLD_CONHANDLER_H
-#define USQLD_CONHANDLER_H
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h> 
+#include <string.h>
+#include <pthread.h>
 
-//allocated struct passed to each new thread on creation
-//the thread is responsible for freing this struct.
-typedef struct UsqldConHandInit
-{
-   int fd; // the incoming client socket fd. 
-   
-}UsqldConHandInit;
+#include "usqld-conhandler.h"
 
-void * usql_conhandler_main(UsqldConHandInit * );
+void * usql_conhandler_main(UsqldConHandInit * ){
+}
 
 
   
  
-#endif

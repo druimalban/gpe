@@ -10,7 +10,8 @@
 #define PICKLE_ROW 0x7
 #define PICKLE_EOF 0x8
 #define PICKLE_MAX 0x9
-typedef usqld_packet XDR_tree;
+
+typedef XDR_tree usqld_packet;
 
 XDR_schema * usqld_get_protocol();
 int usqld_recv_packet(int fd,usqld_packet ** packet);

@@ -42,7 +42,7 @@ XDR_schema * XDR_schema_new_array(XDR_schema * t,size_t len){
   return (XDR_schema*) r;
 }
 
-XDR_schema * XDR_schema_new_struct(size_t num_elems,const XDR_schema ** elems){
+XDR_schema * XDR_schema_new_struct(size_t num_elems, XDR_schema ** elems){
   XDR_struct * r;
   
   r = mylloc( XDR_struct);

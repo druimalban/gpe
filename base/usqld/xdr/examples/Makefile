@@ -34,9 +34,9 @@ oldincludedir = /usr/include
 
 DESTDIR =
 
-pkgdatadir = $(datadir)/usqlds
-pkglibdir = $(libdir)/usqlds
-pkgincludedir = $(includedir)/usqlds
+pkgdatadir = $(datadir)/usqld
+pkglibdir = $(libdir)/usqld
+pkgincludedir = $(includedir)/usqld
 
 top_builddir = ../..
 
@@ -57,8 +57,12 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_alias = i686-pc-linux-gnu
+build_triplet = i686-pc-linux-gnu
 host_alias = i686-pc-linux-gnu
 host_triplet = i686-pc-linux-gnu
+target_alias = i686-pc-linux-gnu
+target_triplet = i686-pc-linux-gnu
 AS = @AS@
 CC = gcc
 DLLTOOL = @DLLTOOL@
@@ -70,7 +74,7 @@ MAINT =
 MAKEINFO = makeinfo
 OBJDUMP = @OBJDUMP@
 OBJEXT = o
-PACKAGE = usqlds
+PACKAGE = usqld
 RANLIB = ranlib
 STRIP = strip
 VERSION = 0.1.0
@@ -78,7 +82,7 @@ VERSION = 0.1.0
 bin_PROGRAMS = writer_example reader_example 
 LDADD = -lxdr
 LDFLAGS = -L../
-
+CFLAGS = -I../
 writer_example_SOURCES = example-schema.c writer-example.c example-schema.h
 reader_example_SOURCES = example-schema.c reader-example.c example-schema.h
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -87,7 +91,7 @@ bin_PROGRAMS =  writer_example$(EXEEXT) reader_example$(EXEEXT)
 PROGRAMS =  $(bin_PROGRAMS)
 
 
-DEFS =  -DPACKAGE=\"usqlds\" -DVERSION=\"0.1.0\" -DHAVE_DLFCN_H=1  -I. -I$(srcdir) 
+DEFS =  -DPACKAGE=\"usqld\" -DVERSION=\"0.1.0\" -DHAVE_DLFCN_H=1  -I. -I$(srcdir) 
 CPPFLAGS = 
 LIBS = 
 writer_example_OBJECTS =  example-schema.$(OBJEXT) \
@@ -100,7 +104,6 @@ reader-example.$(OBJEXT)
 reader_example_LDADD = $(LDADD)
 reader_example_DEPENDENCIES = 
 reader_example_LDFLAGS = 
-CFLAGS = -g -O2
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
