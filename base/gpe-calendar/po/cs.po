@@ -1,24 +1,87 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# translation of gpe-calendar-0.44.po to Czech
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Libor Klepac <elkropac@students.zcu.cz>, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.40\n"
-"POT-Creation-Date: 2003-03-30 15:42+0100\n"
-"PO-Revision-Date: 2003-07-28 21:14+0100\n"
+"Project-Id-Version: gpe-calendar 0.45\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"PO-Revision-Date: 2003-10-07 23:53+0100\n"
 "Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
-"Language-Team: Czech <cs@li.org>\n"
+"Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /usr/src/gpe/base/gpe-calendar/day_popup.c:171
-msgid "No appointments"
-msgstr "Žádné schůzky"
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "Kalendář"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:251
+#: main.c:261
+msgid "New appointment"
+msgstr "Nová schůzka"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Ťuknutím zde lze přidat novou schůzku nebo připomínku."
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "Vycentrovat na dnes"
+
+#: main.c:276
+msgid "Future"
+msgstr "Náhled"
+
+#: main.c:276
+msgid "Future View"
+msgstr "Nezapomenout"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "Ťuknutím zde zobrazíte všechny blížící se schůzky."
+
+#: main.c:284
+msgid "Day View"
+msgstr "Dnes"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "Ťuknutím zde zobrazíte náhled na tento den."
+
+#: main.c:292
+msgid "Week"
+msgstr "Týden"
+
+#: main.c:292
+msgid "Week View"
+msgstr "Tento týden"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "Ťuknutím zde zobrazíte náhled na tento týden."
+
+#: main.c:300
+msgid "Month"
+msgstr "Měsíc"
+
+#: main.c:300
+msgid "Month View"
+msgstr "Tento měsíc"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "Ťuknutím zde zobrazíte náhled na tento měsíc."
+
+#: main.c:307
+msgid "Exit"
+msgstr "Zavřít"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "Ťuknutím zde ukončíte program."
+
+#: event-ui.c:251
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
@@ -26,302 +89,234 @@ msgstr ""
 "Smazat také opakování této položky?\n"
 "(Pokud zvolíte ne,smaže se pouze tato položka.)"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:383
+#: event-ui.c:383
 msgid "End time must not be earlier than start time"
 msgstr "Schůzka nemůže končit dřív než začala"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:622
+#: event-ui.c:622
 msgid "Event"
 msgstr "Položka"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:623
+#: event-ui.c:623
 msgid "Recurrence"
 msgstr "Opakování"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:624
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:797
+#: event-ui.c:624 event-ui.c:797
 msgid "Alarm"
 msgstr "Upozornění"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:651
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:853
+#: event-ui.c:651 event-ui.c:853
 msgid "Type:"
 msgstr "Typ:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:656
+#: event-ui.c:656
 msgid "Appointment"
 msgstr "Schůzka"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:657
+#: event-ui.c:657
 msgid "Reminder"
 msgstr "Připomínka"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:659
+#: event-ui.c:659
 msgid "Task"
 msgstr "Úkol"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:665
+#: event-ui.c:665
 msgid "Days"
-msgstr ""
+msgstr "Dní"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:666
+#: event-ui.c:666
 msgid "Weeks"
-msgstr ""
+msgstr "Týdnů"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:674
+#: event-ui.c:674
 msgid "Summary:"
 msgstr "Shrnutí:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:690
+#: event-ui.c:690
 msgid "Start:"
 msgstr "Začátek:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:691
+#: event-ui.c:691
 msgid "End:"
 msgstr "Konec:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:692
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:693
+#: event-ui.c:692 event-ui.c:693
 msgid "at:"
 msgstr "v:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:726
+#: event-ui.c:726
 msgid "Date:"
 msgstr "Datum:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:729
+#: event-ui.c:729
 msgid "Time:"
 msgstr "Čas:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:749
+#: event-ui.c:749
 msgid "Due:"
 msgstr "Dokončit do:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:753
+#: event-ui.c:753
 msgid "Allow:"
 msgstr "Povolit:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:768
+#: event-ui.c:768
 msgid "Description:"
 msgstr "Popis:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:801
+#: event-ui.c:801
 msgid "before event"
 msgstr "předem"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:804
+#: event-ui.c:804
 msgid "minutes"
 msgstr "minut"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:806
+#: event-ui.c:806
 msgid "hours"
 msgstr "hodin"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:808
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:908
+#: event-ui.c:808 event-ui.c:908
 msgid "days"
 msgstr "dní"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:810
+#: event-ui.c:810
 msgid "weeks"
 msgstr "týdnů"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:865
+#: event-ui.c:865
 msgid "No recurrence"
 msgstr "Bez opakování"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:868
+#: event-ui.c:868
 msgid "Daily"
 msgstr "Denně"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:871
+#: event-ui.c:871
 msgid "Weekly"
 msgstr "Týdně"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:874
+#: event-ui.c:874
 msgid "Monthly"
 msgstr "Měsíčně"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:877
+#: event-ui.c:877
 msgid "Yearly"
 msgstr "Ročně"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:898
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:920
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:963
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1018
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
 msgid "Every"
 msgstr "Každých"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:921
+#: event-ui.c:921
+#, fuzzy
 msgid "weeks, on:"
-msgstr ""
+msgstr ":"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:974
+#: event-ui.c:974
 msgid "months"
 msgstr "měsíců"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:979
+#: event-ui.c:979
 #, c-format
 msgid "on day %d"
-msgstr ""
+msgstr "dne %d"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:983
+#: event-ui.c:983
 msgid "on the"
-msgstr ""
+msgstr "v"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:991
+#: event-ui.c:991
 msgid "first"
-msgstr ""
+msgstr "prvního"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:993
+#: event-ui.c:993
 msgid "second"
-msgstr ""
+msgstr "druhého"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:995
+#: event-ui.c:995
 msgid "third"
-msgstr ""
+msgstr "třetího"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:997
+#: event-ui.c:997
 msgid "fourth"
 msgstr ""
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:999
+#: event-ui.c:999
 msgid "fifth"
 msgstr ""
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1001
+#: event-ui.c:1001
 msgid "last"
-msgstr ""
+msgstr "posledního"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1028
+#: event-ui.c:1028
 msgid "years"
 msgstr "let"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1047
+#: event-ui.c:1047
 msgid "End Date:"
 msgstr "Konec opakování:"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1053
+#: event-ui.c:1053
 msgid "forever"
 msgstr "nikdy"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1064
+#: event-ui.c:1064
 msgid "end after"
-msgstr ""
+msgstr "skončit po"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1081
+#: event-ui.c:1081
 msgid "end on"
-msgstr ":"
+msgstr "skončit"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1089
+#: event-ui.c:1089
 msgid "events"
-msgstr ""
+msgstr "událostí"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1188
+#: event-ui.c:1188
 msgid "Calendar: New event"
 msgstr "Kalendář: Nová událost"
 
-#: /usr/src/gpe/base/gpe-calendar/event-ui.c:1235
+#: event-ui.c:1235
 msgid "Calendar: Edit event"
 msgstr "Kalendář: Editace události"
 
-#: /usr/src/gpe/base/gpe-calendar/gtkdatesel.c:187
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "Žádné schůzky"
+
+#: xsettings.c:105
+msgid "Cannot create XSettings client"
+msgstr "Cannot create XSettings client"
+
+#: gtkdatesel.c:193
 msgid "%Y"
 msgstr "%Y"
 
-#: /usr/src/gpe/base/gpe-calendar/gtkdatesel.c:196
+#: gtkdatesel.c:202
 msgid "%b"
 msgstr ""
 
-#: /usr/src/gpe/base/gpe-calendar/gtkdatesel.c:199
+#: gtkdatesel.c:205
 msgid "%B"
 msgstr ""
 
-#: /usr/src/gpe/base/gpe-calendar/gtkdatesel.c:202
+#: gtkdatesel.c:208
 #, c-format
 msgid "%m"
 msgstr "%m"
 
-#: /usr/src/gpe/base/gpe-calendar/gtkdatesel.c:213
+#: gtkdatesel.c:219
 msgid "Week %V"
 msgstr "%V. týden"
 
-#: /usr/src/gpe/base/gpe-calendar/gtkdatesel.c:219
+#: gtkdatesel.c:225
 #, c-format
 msgid "%a, %d"
 msgstr ""
 
-#: /usr/src/gpe/base/gpe-calendar/main.c:242
-msgid "Calendar"
-msgstr "Kalendář"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:261
-msgid "New appointment"
-msgstr "Nová schůzka"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:261
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Ťuknutím zde lze přidat novou schůzku nebo připomínku."
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:267
-#: /usr/src/gpe/base/gpe-calendar/main.c:268
-msgid "Today"
-msgstr "Vycentrovat na dnes"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:276
-msgid "Future"
-msgstr ""
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:276
-msgid "Future View"
-msgstr "Nezapomenout"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:277
-msgid "Tap here to see all future events."
-msgstr "Ťuknutím zde zobrazite všechny blížicí se schůzky."
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:284
-msgid "Day View"
-msgstr "Dnes"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:285
-msgid "Tap here to select day-at-a-time view."
-msgstr "Ťuknutím zde zobrazite nahled na tento den."
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:292
-msgid "Week"
-msgstr ""
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:292
-msgid "Week View"
-msgstr "Tento týden"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:293
-msgid "Tap here to select week-at-a-time view."
-msgstr "Ťuknutím zde zobrazíte náhled na tento týden."
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:300
-msgid "Month"
-msgstr ""
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:300
-msgid "Month View"
-msgstr "Tento měsíc"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:301
-msgid "Tap here to select month-at-a-time view."
-msgstr "Ťuknutím zde zobrazíte náhled na tento měsíc."
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:307
-msgid "Exit"
-msgstr "Zavřít"
-
-#: /usr/src/gpe/base/gpe-calendar/main.c:307
-msgid "Tap here to exit the program"
-msgstr "Ťuknutím zde ukončíte program."
-
-#: /usr/src/gpe/base/gpe-calendar/xsettings.c:105
-msgid "Cannot create XSettings client"
-msgstr ""
-
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE Kalendář"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-23 19:59+0100\n"
+"POT-Creation-Date: 2004-02-14 15:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,71 +16,71 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:242 gpe-calendar.desktop.in.h:1
+#: main.c:244 gpe-calendar.desktop.in.h:1
 msgid "Calendar"
 msgstr ""
 
-#: main.c:261
+#: main.c:263
 msgid "New appointment"
 msgstr ""
 
-#: main.c:261
+#: main.c:263
 msgid "Tap here to add a new appointment or reminder"
 msgstr ""
 
-#: main.c:267 main.c:268
+#: main.c:269 main.c:270
 msgid "Today"
 msgstr ""
 
-#: main.c:276
+#: main.c:278
 msgid "Future"
 msgstr ""
 
-#: main.c:276
+#: main.c:278
 msgid "Future View"
 msgstr ""
 
-#: main.c:277
+#: main.c:279
 msgid "Tap here to see all future events."
 msgstr ""
 
-#: main.c:284
+#: main.c:286
 msgid "Day View"
 msgstr ""
 
-#: main.c:285
+#: main.c:287
 msgid "Tap here to select day-at-a-time view."
 msgstr ""
 
-#: main.c:292
+#: main.c:294
 msgid "Week"
 msgstr ""
 
-#: main.c:292
+#: main.c:294
 msgid "Week View"
 msgstr ""
 
-#: main.c:293
+#: main.c:295
 msgid "Tap here to select week-at-a-time view."
 msgstr ""
 
-#: main.c:300
+#: main.c:302
 msgid "Month"
 msgstr ""
 
-#: main.c:300
+#: main.c:302
 msgid "Month View"
 msgstr ""
 
-#: main.c:301
+#: main.c:303
 msgid "Tap here to select month-at-a-time view."
 msgstr ""
 
-#: main.c:307
+#: main.c:309
 msgid "Exit"
 msgstr ""
 
-#: main.c:307
+#: main.c:309
 msgid "Tap here to exit the program"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgstr ""
 msgid "Alarm"
 msgstr ""
 
-#: event-ui.c:651 event-ui.c:853
+#: event-ui.c:651 event-ui.c:858
 msgid "Type:"
 msgstr ""
 
@@ -178,7 +178,7 @@ msgstr ""
 msgid "hours"
 msgstr ""
 
-#: event-ui.c:808 event-ui.c:908
+#: event-ui.c:808 event-ui.c:913
 msgid "days"
 msgstr ""
 
@@ -186,100 +186,100 @@ msgstr ""
 msgid "weeks"
 msgstr ""
 
-#: event-ui.c:865
+#: event-ui.c:870
 msgid "No recurrence"
 msgstr ""
 
-#: event-ui.c:868
+#: event-ui.c:873
 msgid "Daily"
 msgstr ""
 
-#: event-ui.c:871
+#: event-ui.c:876
 msgid "Weekly"
 msgstr ""
 
-#: event-ui.c:874
+#: event-ui.c:879
 msgid "Monthly"
 msgstr ""
 
-#: event-ui.c:877
+#: event-ui.c:882
 msgid "Yearly"
 msgstr ""
 
-#: event-ui.c:898 event-ui.c:920 event-ui.c:972 event-ui.c:1027
+#: event-ui.c:903 event-ui.c:925 event-ui.c:977 event-ui.c:1032
 msgid "Every"
 msgstr ""
 
-#: event-ui.c:921
+#: event-ui.c:926
 msgid "weeks, on:"
 msgstr ""
 
-#: event-ui.c:983
+#: event-ui.c:988
 msgid "months"
 msgstr ""
 
-#: event-ui.c:988
+#: event-ui.c:993
 #, c-format
 msgid "on day %d"
 msgstr ""
 
-#: event-ui.c:992
+#: event-ui.c:997
 msgid "on the"
 msgstr ""
 
-#: event-ui.c:1000
+#: event-ui.c:1005
 msgid "first"
 msgstr ""
 
-#: event-ui.c:1002
+#: event-ui.c:1007
 msgid "second"
 msgstr ""
 
-#: event-ui.c:1004
+#: event-ui.c:1009
 msgid "third"
 msgstr ""
 
-#: event-ui.c:1006
+#: event-ui.c:1011
 msgid "fourth"
 msgstr ""
 
-#: event-ui.c:1008
+#: event-ui.c:1013
 msgid "fifth"
 msgstr ""
 
-#: event-ui.c:1010
+#: event-ui.c:1015
 msgid "last"
 msgstr ""
 
-#: event-ui.c:1037
+#: event-ui.c:1042
 msgid "years"
 msgstr ""
 
-#: event-ui.c:1056
+#: event-ui.c:1061
 msgid "End Date:"
 msgstr ""
 
-#: event-ui.c:1062
+#: event-ui.c:1067
 msgid "forever"
 msgstr ""
 
-#: event-ui.c:1073
+#: event-ui.c:1078
 msgid "end after"
 msgstr ""
 
-#: event-ui.c:1090
+#: event-ui.c:1095
 msgid "end on"
 msgstr ""
 
-#: event-ui.c:1098
+#: event-ui.c:1103
 msgid "events"
 msgstr ""
 
-#: event-ui.c:1197
+#: event-ui.c:1205
 msgid "Calendar: New event"
 msgstr ""
 
-#: event-ui.c:1244
+#: event-ui.c:1252
 msgid "Calendar: Edit event"
 msgstr ""
 
