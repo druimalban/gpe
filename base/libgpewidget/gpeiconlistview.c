@@ -28,7 +28,7 @@ static guint my_signals[2];
 
 struct _GPEIconListViewClass 
 {
-  GtkDrawingAreaClass parent_class;
+  GtkWidgetClass parent_class;
   void (* clicked) (GPEIconListView * self, gpointer udata);
   void (* show_popup) (GPEIconListView * self, gpointer udata);
 };
@@ -40,14 +40,13 @@ struct _Pack
   GPEIconListItem *icon;  //the icon if found, NULL if not found
 };
 
-static GtkDrawingAreaClass *parent_class;
+static GtkWidgetClass *parent_class;
 
 #define PARENT_HANDLER(___self,___allocation) \
 	{ if(GTK_WIDGET_CLASS(parent_class)->size_allocate) \
 		(* GTK_WIDGET_CLASS(parent_class)->size_allocate)(___self,___allocation); }
 
 
-static gint _gpe_icon_list_view_popup (gpointer data);
 static void _gpe_icon_list_view_cancel_popup (GPEIconListView *il);
 static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row);
 
@@ -185,7 +184,6 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
  
       icon = icons->data;
       
-      /* Compute & render the icon */
       cell_x = col * il_col_width (il);
       cell_y = row * il_row_height (il) + 5;
       cell_w = il_col_width (il);
@@ -411,7 +409,6 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocatio
   if (self->rows_set && self->rows > self->rows_set)
     self->rows = self->rows_set;
  
-  // update drawing area
   da_new_height = self->rows * il_row_height (self) + TOP_MARGIN;
   gtk_widget_set_usize (GTK_WIDGET (self), -1, da_new_height);
 }
@@ -537,20 +534,57 @@ gpe_icon_list_view_set_icon_size (GPEIconListView *self, guint size)
 }
 
 static void
-_gpe_icon_list_view_size_allocate (GtkWidget *self, GtkAllocation *allocation)
+_gpe_icon_list_view_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 {
-  GPEIconListView *il;
-  il = GPE_ICON_LIST_VIEW (self);
+  GPEIconListView *view;
+  gboolean size_change = TRUE;
+
+  view = GPE_ICON_LIST_VIEW (widget);
+
+  if (allocation->width == widget->allocation.width
+      && allocation->height == widget->allocation.height)
+    size_change = FALSE;
   
-  if ((int)g_object_get_data (G_OBJECT(il), "size_x") == allocation->width &&
-      (int)g_object_get_data (G_OBJECT(il), "size_y") == allocation->height)
-    return;
+  widget->allocation = *allocation;
+
+  if (GTK_WIDGET_REALIZED (widget))
+    gdk_window_move_resize (widget->window,
+			    allocation->x, allocation->y,
+			    allocation->width, allocation->height);
   
-  g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
-  g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
-  
-  PARENT_HANDLER (self, allocation);
-  _gpe_icon_list_view_recalc_size (il, &self->allocation);	//luc: recalc *after* the size is allocated :)
+  if (size_change)
+    _gpe_icon_list_view_recalc_size (view, &widget->allocation);  //luc: recalc *after* the size is allocated :)
+}
+
+static void
+_gpe_icon_list_view_realize (GtkWidget *widget)
+{
+  GPEIconListView *view = GPE_ICON_LIST_VIEW (widget);
+  GdkWindowAttr attributes;
+  gint attributes_mask;
+
+  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+    
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.x = widget->allocation.x;
+  attributes.y = widget->allocation.y;
+  attributes.width = widget->allocation.width;
+  attributes.height = widget->allocation.height;
+  attributes.wclass = GDK_INPUT_OUTPUT;
+  attributes.visual = gtk_widget_get_visual (widget);
+  attributes.colormap = gtk_widget_get_colormap (widget);
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_EXPOSURE_MASK |
+			    GDK_BUTTON_PRESS_MASK |
+			    GDK_BUTTON_RELEASE_MASK);
+
+  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+
+  widget->window = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
+  gdk_window_set_user_data (widget->window, widget);
+
+  widget->style = gtk_style_attach (widget->style, widget->window);
+  gtk_style_set_background (widget->style, widget->window, GTK_STATE_NORMAL);
 }
 
 static GPEIconListItem *
@@ -564,7 +598,6 @@ _gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row)
     icons = icons->next;
   
   return icons ? icons->data : NULL;
-  
 }
 
 static void 
@@ -607,8 +640,6 @@ gpe_icon_list_view_init (GPEIconListView *self)
   self->flag_show_title = TRUE;
   self->rows_set = 0;
 
-  gtk_widget_add_events (GTK_WIDGET (self), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-
   self->label_height = _gpe_icon_list_view_title_height (self);
 }
 
@@ -616,7 +647,7 @@ static void
 gpe_icon_list_view_class_init (GPEIconListViewClass * klass)
 {
   GtkWidgetClass *widget_class;
-  parent_class = g_type_class_ref (GTK_TYPE_DRAWING_AREA);
+  parent_class = g_type_class_ref (GTK_TYPE_WIDGET);
 
   my_signals[0] = g_signal_new ("clicked",
 				G_TYPE_FROM_CLASS (klass),
@@ -641,6 +672,7 @@ gpe_icon_list_view_class_init (GPEIconListViewClass * klass)
   widget_class->button_press_event = _gpe_icon_list_view_button_press;
   widget_class->button_release_event = _gpe_icon_list_view_button_release;
   widget_class->size_allocate = _gpe_icon_list_view_size_allocate;
+  widget_class->realize = _gpe_icon_list_view_realize;
 }
 
 static void
@@ -668,7 +700,7 @@ gpe_icon_list_view_get_type (void)
 	(GInstanceInitFunc) gpe_icon_list_view_init,
       };
 
-      type = g_type_register_static (GTK_TYPE_DRAWING_AREA, "GPEIconListView", &info, (GTypeFlags)0);
+      type = g_type_register_static (GTK_TYPE_WIDGET, "GPEIconListView", &info, (GTypeFlags)0);
     }
 
   return type;

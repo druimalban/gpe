@@ -1,5 +1,16 @@
 2004-05-21  Philip Blundell  <philb@gnu.org>
 
+	* gpeiconlistview.c: Remove dependency on GtkDrawingArea.
+	(_gpe_icon_list_view_realize): New function.
+	(_gpe_icon_list_size_allocate): Rewrite.
+	(_gpe_icon_list_init): No need to add events.
+	(_gpe_icon_list_class_init): Set ->realize method.  Parent is
+	GTK_TYPE_WIDGET.
+	(gpe_icon_list_view_get_type): Parent is GTK_TYPE_WIDGET.
+	* gpe/gpeiconlistview.h: Keep in step.
+
+2004-05-21  Philip Blundell  <philb@gnu.org>
+
 	* stylus.c (gpe_stylus_mode): Also select stylus mode if
 	GPE_PRETEND_STYLUS is set in the environment.
 

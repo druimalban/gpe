@@ -23,7 +23,7 @@
 
 struct _GPEIconListView
 {
-  GtkDrawingArea class;
+  GtkWidget class;
   
   /* private */
   GList * icons;
