@@ -65,6 +65,8 @@ install: all
 	for i in $(MIME_HANDLERS); do install -D mime-handlers/$$i $(DESTDIR)/etc/mime-handlers/$$i; done
 	for i in $(MIME_PIXMAPS); do install -D pixmaps/document-icons/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/document-icons/$$i; done
 	for i in $(SPINNER_PIXMAPS); do install -D pixmaps/spinner/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/spinner/$$i; done
+	install -m 644 pixmaps/zoom_in.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/zoom_in.png
+	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/zoom_out.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 	strip $(DESTDIR)$(PREFIX)/bin/update_mime_db
 

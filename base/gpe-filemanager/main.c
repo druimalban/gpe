@@ -40,6 +40,7 @@
 #define DEFAULT_TERMINAL "rxvt -e"
 #define FILEMANAGER_ICON_PATH "/share/gpe/pixmaps/default/filemanager/document-icons"
 #define DEFAULT_ICON_PATH "/pixmaps"
+#define ZOOM_INCREMENT 8
 
 GtkWidget *window, *vbox2;
 GtkWidget *combo;
@@ -87,6 +88,8 @@ struct gpe_icon my_icons[] = {
   { "cancel", "cancel" },
   { "question", "question" },
   { "error", "error" },
+  { "zoom_in", "filemanager/zoom_in" },
+  { "zoom_out", "filemanager/zoom_out" },
   { "icon", PREFIX "/share/pixmaps/gpe-filemanager.png" },
   {NULL, NULL}
 };
@@ -713,6 +716,30 @@ history_forward (GtkWidget *widget)
   }
 }
 
+void
+zoom_in ()
+{
+  if (current_zoom < 48)
+  {
+    current_zoom = current_zoom + ZOOM_INCREMENT;
+    printf ("ZOOMING IN!\n");
+    refresh_view ();
+  }
+  printf ("Current zoom is %d\n", current_zoom);
+}
+
+void
+zoom_out ()
+{
+  if (current_zoom > 16)
+  {
+    current_zoom = current_zoom - ZOOM_INCREMENT;
+    printf ("ZOOMING OUT!\n");
+    refresh_view ();
+  }
+  printf ("Current zoom is %d\n", current_zoom);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -815,6 +842,16 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Home"), 
 			   _("Home"), _("Home"), pw, set_directory_home, NULL);
 
+  p = gpe_find_icon ("zoom_in");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Zoom In"), 
+			   _("Zoom In"), _("Zoom In"), pw, zoom_in, NULL);
+
+  p = gpe_find_icon ("zoom_out");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Zoom Out"), 
+			   _("Zoom Out"), _("Zoom Out"), pw, zoom_out, NULL);
+
   p = gpe_find_icon ("dir-up");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Goto Location"), 
@@ -839,8 +876,8 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
   gtk_widget_show (toolbar2);
   gtk_widget_show (combo);
-  gtk_widget_show (view_option_menu);
-  gtk_widget_show (view_menu);
+  //gtk_widget_show (view_option_menu);
+  //gtk_widget_show (view_menu);
   gtk_widget_show (vbox2);
 
   popup_menu = gtk_menu_new ();
