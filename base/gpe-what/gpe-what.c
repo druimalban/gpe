@@ -26,7 +26,6 @@
 #include <pango/pangoxft.h>
 
 #include "mbtray.h"
-#include "mbpixbuf.h"
 
 #define _(x) gettext(x)
 

@@ -24,7 +24,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-LDFLAGS += -lmb
+LDFLAGS += -lmb -lX11 -lXext
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
