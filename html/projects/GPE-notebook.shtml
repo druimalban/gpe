@@ -15,7 +15,7 @@ is a common standard.
 
 <H2>Status</H2>
 <P>
-The easier/faster way to enter/retrieve information on devices with a touchscreen, is sketches. So gpe-sktechbook is the first stone of the GPE notebook. GPE notebook should later integrate voice notes for devices with microphone/speaker (see the <a href="GPE-soundbite.shtml">gpe-soundbit</a> project), and also simple text notes.
+The easier/faster way to enter/retrieve information on devices with a touchscreen, is sketches. So gpe-sktechbook is the first stone of the GPE notebook. GPE notebook should later integrate voice notes for devices with microphone/speaker (see the <a href="GPE-soundbite.shtml">gpe-soundbite</a> project), and also simple text notes.
 <P/>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>,
