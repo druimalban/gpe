@@ -2,14 +2,14 @@ PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
 GTK2 = yes
-VERSION = 0.49
+VERSION = 0.50
 CVSBUILD = yes
 
 GTKRC = gtkrc
 
 LINGUAS = ro de
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel popup
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel popup windows
 
 ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gpe-iconlist

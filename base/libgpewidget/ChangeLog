@@ -1,5 +1,11 @@
 2003-03-02  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (MEMBERS): Add windows.
+	* windows.c: New file.
+	* gpe/windows.h: Likewise.
+
+2003-03-02  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.49 released
 
 2003-03-02  Philip Blundell  <philb@gnu.org>
