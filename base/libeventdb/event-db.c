@@ -507,8 +507,8 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	  abort ();
 	  
 	case RECUR_DAILY:
-	  if (alarms) check_recur_time = (start-event_start-ev->alarm)%(r->increment);
-	  else check_recur_time = (start-event_start)%(r->increment);
+	  if (alarms) check_recur_time = (start-event_start-ev->alarm)%(r->increment*SECONDS_IN_DAY);
+	  else check_recur_time = (start-event_start)%(r->increment*SECONDS_IN_DAY);
 	  if (check_recur_time < time_increment) 
 	    {
 	      gboolean skip=FALSE;
