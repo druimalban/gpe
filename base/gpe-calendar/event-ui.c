@@ -1330,8 +1330,8 @@ edit_event (event_t ev)
       gtk_widget_set_sensitive (s->deletebutton, TRUE);
       evd = event_db_get_details (ev);
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)),
-                                evd->description, -1);
-      gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary);
+				evd->description ? evd->description : "", -1);
+      gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary ? evd->summary : "");
       event_db_forget_details (ev);
 
       localtime_r (&(ev->start), &tm);
