@@ -12,12 +12,13 @@ all:
 	  fakeroot "chown -R root.root familiar/dist; ipkg-build familiar/dist";\
 	done
 
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
 	echo "Package: wallpapers-ayo-all" > familiar/dist/CONTROL/control
 	cat familiar/control >> familiar/dist/CONTROL/control
-	echo -n "Conflicts: " >> familiar/dist/CONTROL/control
+	echo -n "Depends: " >> familiar/dist/CONTROL/control
 	mkdir -p familiar/dist/$(PREFIX)/share/wallpapers/
 	for i in $(WALLPAPERS); do \
-	  install -m 644 ayo_$$i.png familiar/dist/$(PREFIX)/share/wallpapers/ayo_$$i.png; \
 	  echo -n "wallpapers-ayo-$$i, " >> familiar/dist/CONTROL/control; \
 	done
 	cat familiar/dist/CONTROL/control | sed -e "s/, $$//" > familiar/dist/CONTROL/control
