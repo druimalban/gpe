@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-10-12 17:26+0100\n"
+"POT-Creation-Date: 2002-10-14 00:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,10 +45,6 @@ msgstr ""
 
 #: main.c:286 main.c:287
 msgid "Exit"
-msgstr ""
-
-#: week_view.c:146
-msgid "(contd...) "
 msgstr ""
 
 #: event-ui.c:334

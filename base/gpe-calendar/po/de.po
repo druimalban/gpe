@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar\n"
-"POT-Creation-Date: 2002-10-12 17:26+0100\n"
+"POT-Creation-Date: 2002-10-14 00:13+0100\n"
 "PO-Revision-Date: 2002-06-14 20:14+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -44,10 +44,6 @@ msgstr "Jahresansicht"
 #: main.c:286 main.c:287
 msgid "Exit"
 msgstr "Beenden"
-
-#: week_view.c:146
-msgid "(contd...) "
-msgstr ""
 
 #: event-ui.c:334
 msgid "End time must not be earlier than start time"
