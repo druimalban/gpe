@@ -19,6 +19,7 @@
 #include <libdisplaymigration/displaymigration.h>
 #include <unistd.h>
 #include <locale.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -28,6 +29,7 @@
 #include <gpe/question.h>
 #include <gpe/gtksimplemenu.h>
 #include <gpe/picturebutton.h>
+#include <gpe/spacing.h>
 
 #include "support.h"
 #include "db.h"
@@ -49,6 +51,7 @@ GtkWidget *search_entry;
 GtkWidget *popup_menu;
 GtkWidget *bluetooth_menu_item;
 guint menu_uid;
+gboolean mode_landscape;
 
 struct gpe_icon my_icons[] = {
   {"edit"},
@@ -180,6 +183,44 @@ delete_contact (GtkWidget * widget, gpointer d)
     }
 }
 
+const gchar*
+get_tag_name_1(const gchar *tag, edit_thing_t e)
+{
+  GSList *iter;
+  const gchar* ret = NULL;
+
+  switch (e->type)
+    {
+      case GROUP:
+      case PAGE:
+        for (iter = e->children; iter && !ret; iter = iter->next)
+          ret = get_tag_name_1 (tag, iter->data);
+      break;
+
+      case ITEM_SINGLE_LINE:
+      case ITEM_MULTI_LINE:
+        if (!strcmp(tag,e->tag))
+          return e->name;
+      break;
+    } 
+    return ret;
+}
+
+gchar*
+get_tag_name(const gchar* tag)
+{
+  GSList *page;
+
+  for (page = edit_pages; page; page = page->next)
+    {
+      edit_thing_t e = page->data;
+
+      return g_strdup(get_tag_name_1 (tag, e));
+    }
+
+  return NULL;
+}
+
 static int
 show_details (struct person *p)
 {
@@ -189,42 +230,118 @@ show_details (struct person *p)
   gpointer pchild;
   gchar *tagname;
   struct tag_value *curtag;
+  GSList *iter;
+  GList *wlist, *witer;
+  gchar *fieldname, *fielddesc;
 
   table = GTK_TABLE (lookup_widget (mainw, "tabDetail"));
-
-  for (i = 0; i < table->nrows; i++)
+  
+  
+  if (mode_landscape) /* we show all available data */
     {
-      pchild = g_list_nth_data (table->children, 2 * i);
-      if (!pchild)
-	continue;
-      lright = ((GtkTableChild *) pchild)->widget;
-      gtk_label_set_text (GTK_LABEL (lright), "");
+      wlist = gtk_container_get_children (GTK_CONTAINER (table));
+      
+      if (wlist != NULL)
+        {
+          for (witer = wlist; witer; witer = witer->next)
+            gtk_container_remove (GTK_CONTAINER (table), GTK_WIDGET (witer->data));
+          g_list_free (wlist);
+        }
+      i = 1;
+      if (p != NULL)
+        for (iter = p->data; iter; iter = iter->next)
+          {
+            struct tag_value *id = (struct tag_value *) iter->data;
+            fieldname = get_tag_name(id->tag);
+            if (fieldname)
+              {
+                if (strstr(id->tag,"HOME"))
+                  fielddesc = g_strdup_printf("%s (%s):",fieldname,_("home"));
+                else if (strstr(id->tag,"WORK"))
+                  fielddesc = g_strdup_printf("%s (%s):",fieldname,_("work"));
+                else
+                  fielddesc = g_strdup_printf("%s:",fieldname);
+                lleft = gtk_label_new(fielddesc);
+                gtk_misc_set_alignment(GTK_MISC(lleft),0,0);
+                gtk_table_attach(table, lleft, 0, 1, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
+                lright = gtk_label_new(id->value);
+                gtk_misc_set_alignment(GTK_MISC(lright),0,0);
+                gtk_table_attach(table, lright, 1, 2, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
+                i++;
+                g_free(fieldname);
+                g_free(fielddesc);
+              }
+            else /* handle special fields */
+              {
+                gchar *ts;
+                if (!strcmp(id->tag,"NAME")) 
+                 {
+                    lleft = gtk_label_new(NULL);
+                    ts = g_strdup_printf("<b>%s:</b>",_("Name"));
+                    gtk_label_set_markup(GTK_LABEL(lleft),ts);
+                    g_free(ts);
+                    gtk_misc_set_alignment(GTK_MISC(lleft),0,0);
+                    gtk_table_attach(table, lleft, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+                    lright = gtk_label_new(NULL);
+                    ts = g_strdup_printf("<b>%s</b>",id->value);
+                    gtk_label_set_markup(GTK_LABEL(lright),ts);
+                    g_free(ts);
+                    gtk_misc_set_alignment(GTK_MISC(lright),0,0);
+                    gtk_table_attach(table, lright, 1, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
+                 }
+                if (!strcmp(id->tag,"BIRTHDAY") && strlen(id->value)>=8) 
+                  {
+                    int year,month,day;
+                    sscanf(id->value,"%04d%02d%02d",&year,&month,&day);
+                    lleft = gtk_label_new(_("Birthday:"));
+                    gtk_misc_set_alignment(GTK_MISC(lleft),0,0);
+                    gtk_table_attach(table, lleft, 0, 1, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
+                    ts = g_strdup_printf("%04d-%02d-%02d",year,month+1,day);
+                    lright = gtk_label_new(ts);
+                    g_free(ts);
+                    gtk_misc_set_alignment(GTK_MISC(lright),0,0);
+                    gtk_table_attach(table, lright, 1, 2, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
+                    i++;
+                  }
+              }                
+          }
+      gtk_widget_show_all(GTK_WIDGET(table));
     }
-  if (p)
-    {
+  else /* show configured fields only */
+    {    
       for (i = 0; i < table->nrows; i++)
-	{
-	  pchild = g_list_nth_data (table->children, 2 * i);
-	  if (!pchild)
-	    continue;
-	  lright = ((GtkTableChild *) pchild)->widget;
-	  pchild = g_list_nth_data (table->children, 2 * i + 1);
-	  if (!pchild)
-	    continue;
-	  lleft = ((GtkTableChild *) pchild)->widget;
-	  tagname =
-	    db_get_config_tag (CONFIG_PANEL,
-			       g_strdup (gtk_label_get_text
-					 (GTK_LABEL (lleft))));
-	  curtag = db_find_tag (p, tagname);
-	  if (curtag != NULL)
-	    {
-	      gtk_label_set_text (GTK_LABEL (lright), curtag->value);
-	    }
-	  g_free (tagname);
-	}
+      {
+        pchild = g_list_nth_data (table->children, 2 * i);
+        if (!pchild)
+          continue;
+        lright = ((GtkTableChild *) pchild)->widget;
+        gtk_label_set_text (GTK_LABEL (lright), "");
+      }
+      if (p)
+      {
+        for (i = 0; i < table->nrows; i++)
+        {
+          pchild = g_list_nth_data (table->children, 2 * i);
+          if (!pchild)
+            continue;
+          lright = ((GtkTableChild *) pchild)->widget;
+          pchild = g_list_nth_data (table->children, 2 * i + 1);
+          if (!pchild)
+            continue;
+          lleft = ((GtkTableChild *) pchild)->widget;
+          tagname =
+            db_get_config_tag (CONFIG_PANEL,
+                       g_strdup (gtk_label_get_text
+                         (GTK_LABEL (lleft))));
+          curtag = db_find_tag (p, tagname);
+          if (curtag != NULL)
+            {
+              gtk_label_set_text (GTK_LABEL (lright), curtag->value);
+            }
+          g_free (tagname);
+        }
+      }
     }
-
   return 0;
 }
 
@@ -382,11 +499,45 @@ update_display (void)
 }
 
 static gboolean
-list_button_release_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *list_store)
+window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
 {
-  if (b->button == 3)
+  GtkTreePath *path;
+  
+  if (k->keyval == GDK_Up)
+  {
+    gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
+    if (path) 
+      gtk_tree_path_prev(path);
+    else
+      path = gtk_tree_path_new_first();
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
+    gtk_tree_path_free(path);
     return TRUE;
+  }
+  if (k->keyval == GDK_Down)
+  {
+    gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree),&path,NULL);
+    if (path)
+      gtk_tree_path_next(path);
+    else
+      path = gtk_tree_path_new_first();
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree),path,NULL,FALSE);
+    gtk_tree_path_free(path);
+    return TRUE;
+  }
+  
+  return FALSE;
+}
 
+static gboolean
+toolbar_key_press_event (GtkWidget *widget, GdkEventKey *k)
+{
+  
+  if (k->keyval == GDK_Tab)
+  {
+    gtk_widget_grab_focus(search_entry);
+    return TRUE;
+  }
   return FALSE;
 }
 
@@ -429,6 +580,15 @@ list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *lis
   return FALSE;
 }
 
+
+static gboolean
+list_button_release_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *list_store){
+  if (b->button == 3)
+    return TRUE;
+  
+  return FALSE;
+}
+
 static GtkItemFactoryEntry popup_items[] =
 {
   { "/Edit",		    NULL, menu_do_edit,           0, "<Item>" },
@@ -459,7 +619,7 @@ create_main (void)
 {
   GtkWidget *main_window;
   GtkWidget *vbox1;
-  GtkWidget *hbox3;
+  GtkWidget *hbox1 = NULL, *hbox3;
   GtkWidget *label83, *label84;
   GtkWidget *entry1;
   GtkWidget *pDetail;
@@ -470,10 +630,16 @@ create_main (void)
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
+  gint size_x, size_y;
 
+  size_x = gdk_screen_width() / 4;
+  size_y = gdk_screen_height() / 3;  
+  if (size_x < 240) size_x = 240;
+  if (size_y < 320) size_y = 320;
+  mode_landscape = (size_x > size_y);
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
-  gtk_window_set_default_size (GTK_WINDOW (main_window), 240, 320);
+  gtk_window_set_default_size (GTK_WINDOW (main_window), size_x, size_y);
 
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (main_window), vbox1);
@@ -481,7 +647,6 @@ create_main (void)
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
 
@@ -523,29 +688,43 @@ create_main (void)
   tree_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
 
   GTK_WIDGET_UNSET_FLAGS (list_view, GTK_CAN_FOCUS);
- 
+  
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
-  gtk_box_pack_start (GTK_BOX (vbox1), scrolled_window, TRUE, TRUE, 0);
-
+  if (mode_landscape)
+    {
+      hbox1 = gtk_hbox_new(FALSE,gpe_get_boxspacing());
+      gtk_box_pack_start (GTK_BOX (hbox1), scrolled_window, FALSE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox1), hbox1, TRUE, TRUE, 0);
+    }
+  else  
+    {
+      gtk_box_pack_start (GTK_BOX (vbox1), scrolled_window, TRUE, TRUE, 0);
+    }    
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes (_("Contact"), renderer,
 						     "text", 0, NULL);
   gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
   hbox3 = gtk_hbox_new (FALSE, 0);
+  if (mode_landscape)
+    {
+       gtk_container_set_border_width(GTK_CONTAINER(hbox3),gpe_get_border());
+       gtk_box_set_spacing(GTK_BOX(hbox3),gpe_get_boxspacing());
+    }
   gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
 
   label83 = gtk_label_new (_("Find:"));
   gtk_box_pack_start (GTK_BOX (hbox3), label83, FALSE, FALSE, 0);
 
   entry1 = gtk_entry_new ();
-  gtk_box_pack_start (GTK_BOX (hbox3), entry1, TRUE, TRUE, 0);
+  gtk_widget_set_size_request(entry1,60,-1);
+  gtk_box_pack_start (GTK_BOX (hbox3), entry1, FALSE, FALSE, 0);
 
   label84 = gtk_label_new (_("in"));
   gtk_box_pack_start (GTK_BOX (hbox3), label84, FALSE, FALSE, 2);
 
   categories_smenu = gtk_simple_menu_new ();
-  gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (categories_smenu), "changed", 
 		    G_CALLBACK (do_search), entry1);
 
@@ -558,14 +737,31 @@ create_main (void)
   g_signal_connect (G_OBJECT (list_view), "button_release_event", 
 		    G_CALLBACK (list_button_release_event), list_store);
 
+  gtk_widget_set_events (main_window,GDK_KEY_PRESS_MASK);
+  gtk_widget_set_events (entry1,GDK_KEY_PRESS_MASK);
+  g_signal_connect (G_OBJECT (main_window), "key_press_event", 
+		    G_CALLBACK (window_key_press_event), list_view);
+
+  g_signal_connect (G_OBJECT (toolbar), "key_press_event", 
+		    G_CALLBACK (toolbar_key_press_event), NULL);
+            
   search_entry = entry1;
 
   pDetail = gtk_frame_new (_("Contact"));
-  gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
-
+  
+  if (mode_landscape)
+    {
+      gtk_container_set_border_width(GTK_CONTAINER(pDetail),gpe_get_border());
+      gtk_box_pack_start (GTK_BOX (hbox1), pDetail, TRUE, TRUE, 0);
+    }
+  else
+    {
+      gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
+    }
   tabDetail = gtk_table_new (1, 2, FALSE);
+  gtk_table_set_col_spacings(GTK_TABLE(tabDetail),gpe_get_boxspacing()*2);
+  gtk_container_set_border_width(GTK_CONTAINER(tabDetail),gpe_get_border());
   gtk_container_add (GTK_CONTAINER (pDetail), tabDetail);
-  gtk_table_set_col_spacings (GTK_TABLE (tabDetail), 6);
   g_object_set_data (G_OBJECT (main_window), "tabDetail", tabDetail);
   g_object_set_data (G_OBJECT (main_window), "entry", entry1);
 
@@ -614,8 +810,9 @@ main (int argc, char *argv[])
 
   load_structure ();
 
-  // load detail panel config
-  load_panel_config ();
+  /* load detail panel fields, create widgets */
+  if (!mode_landscape)
+    load_panel_config ();
 
   gpe_set_window_icon (mainw, "icon");
   gtk_widget_show_all (mainw);

@@ -1,3 +1,12 @@
+2004-07-09  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Removed toolbar style setting, we use Xsettings for this now.
+    * main.c: Implemented landscape screen layout for main window.
+    * main.c: Improved default window size for systems not using matchbox.
+    * main.c: Implemented field name lookup for landscape layout.
+    * main.c: Up/Down keys select contact now.
+    * main.c: Improved keyboard control in main window.
+
 2004-06-21  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.22 released.
