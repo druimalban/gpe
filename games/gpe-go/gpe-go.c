@@ -27,6 +27,7 @@
 #include "gpe/pixmaps.h"
 #include "gpe/popup_menu.h"
 #include "gpe/picturebutton.h"
+#include "gpe/spacing.h"
 
 //--i18n
 #include <libintl.h>
@@ -254,6 +255,19 @@ void on_spinbutton_value_changed(GtkSpinButton *spinbutton,
   go.ui.selected_game_size = gtk_spin_button_get_value_as_int (spinbutton);
 }
 
+/* FIXME: to include in libgpewidget/indent.c */
+GtkWidget * gpe_indentedbox_new_with_child(const gchar * spacing, GtkWidget * child){
+  GtkWidget * hbox;
+  GtkWidget * spacing_label;
+
+  hbox = gtk_hbox_new(FALSE, 0);
+  spacing_label = gtk_label_new(spacing);
+  gtk_box_pack_start (GTK_BOX(hbox), spacing_label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX(hbox), child, TRUE, TRUE, 0);
+
+  return hbox;
+}
+
 GtkWidget * build_new_game_dialog(){
   GtkWidget * top_level_container;
 
@@ -265,6 +279,8 @@ GtkWidget * build_new_game_dialog(){
   //
   GtkWidget * label;
   GtkWidget * vbox;
+  GtkWidget * indented_box;
+
   GtkWidget * radiobutton1;
   GtkWidget * radiobutton3;
   GtkWidget * radiobutton4;
@@ -300,13 +316,19 @@ GtkWidget * build_new_game_dialog(){
 
 
   //--size choice
-  vbox = gtk_vbox_new (FALSE, 5);
+  vbox = gtk_vbox_new (FALSE, gpe_get_border());
+
+  game_size = vbox;
 
   label = gtk_label_new (NULL);
   /* TRANSLATORS: keep the <b> tags */
   gtk_label_set_markup (GTK_LABEL (label), _("<b>Game Size</b>"));
   gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
+
+  vbox = gtk_vbox_new (FALSE, gpe_get_boxspacing());
+  indented_box = gpe_indentedbox_new_with_child(gpe_get_catindent(), vbox);
+  gtk_box_pack_start (GTK_BOX (game_size), indented_box, TRUE, TRUE, 0);
 
   radiobutton1 = gtk_radio_button_new_with_label (group_game_size_group, "9");
   group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton1));
@@ -348,7 +370,6 @@ GtkWidget * build_new_game_dialog(){
 
   go.ui.game_size_spiner = spinbutton1;
 
-  game_size = vbox;
 
   //[CANCEL][OK] buttons
   {
