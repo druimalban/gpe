@@ -13,7 +13,6 @@ adb_SOURCES = \
 	callbacks.c callbacks.h \
 	structure.c structure.h \
 	db.c db.h \
-	editing.c \
-	smallbox.c smallbox.h
+	editing.c
 
 adb_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
