@@ -29,18 +29,16 @@ else
 BUILD = build
 endif
 
-all: gpe-question
+all: $(PACKAGE)
 
-gpe-question: gpe-question.o
+$(PACKAGE): $(PACKAGE).o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
 
-install: install-question
-
-install-question: gpe-question
-	install -D gpe-question $(DESTDIR)$(PREFIX)/bin/gpe-question
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-question
+install-program: all
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f gpe-question.o gpe-question
+	rm -f $(PACKAGE).o $(PACKAGE)
 
+include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
