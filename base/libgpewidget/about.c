@@ -35,6 +35,8 @@ gpe_about (gchar * app_name,
   GdkPixbuf * icon_pixbuf;
   GtkWidget * icon_gpe;
   GtkWidget * icon_app;
+  GdkPixmap * pixmap;
+  GdkBitmap * bitmap;
   GtkWidget * label_name;
   GtkWidget * label_version;
 
@@ -58,6 +60,10 @@ gpe_about (gchar * app_name,
   gtk_signal_connect (GTK_OBJECT (window_about), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
   gtk_widget_realize (window_about);
+
+  if (gpe_find_icon_pixmap (app_icon, &pixmap, &bitmap)){
+    gdk_window_set_icon (window_about->window,  NULL, pixmap, bitmap);
+  }
 
   //--about header: [icon_gpe] name/version [icon_app]
   icon_pixbuf = gpe_find_icon ("gpe-logo");
