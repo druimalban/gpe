@@ -555,6 +555,9 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
   file_info = (FileInfomation *) udata;
 
+  if (file_info == NULL)
+    return;
+
   printf ("You clicked on %s\n", file_info->filename);
 
   /* Handle Symbolic Links -- CM */
@@ -929,7 +932,7 @@ main (int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "Filemanager");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+  gtk_signal_connect (GTK_OBJECT (window), "delete-event",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   gtk_widget_realize (window);
