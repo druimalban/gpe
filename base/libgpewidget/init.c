@@ -26,7 +26,16 @@ gpe_application_init (int *argc, char **argv[])
   char *buf;
   size_t len;
 
+  static const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
+  /* FIXME: this doesn't work like that... [CM]: */
+  static const gchar *user_gtkrc_file = "~/.gpe/gtkrc";
+	  
   gtk_set_locale ();
+
+  /* FIXME: this doesn't seem to have any effect here [CM]: */
+  gtk_rc_add_default_file (default_gtkrc_file);
+  gtk_rc_add_default_file (user_gtkrc_file);
+
   gtk_init(argc, argv);
 
   home = getenv ("HOME");

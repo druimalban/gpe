@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libgpewidget
 
 SONAME = libgpewidget.so.0
+GTKRC = gtkrc
 
 MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render gtkgpepixmap dirbrowser picturebutton what stylus nocursor gpetooltips screensize gpedialog
 
@@ -45,6 +46,7 @@ dpkg: upstream
 install: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install -D $(GTKRC) $(DESTDIR)$(PREFIX)/share/gpe/$(GTKRC)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done

@@ -1,3 +1,9 @@
+2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile: Install gtkrc file.
+
+	* init.c (main): Add default resource files, doesn't work yet.
+
 2002-07-17  Philip Blundell  <pb@nexus.co.uk>
 
 	* Version 0.12 released
