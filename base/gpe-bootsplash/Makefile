@@ -28,5 +28,5 @@ ipkg:
 	install -m 644 $(SPLASH) dist/usr/share/gpe/splash.png
 	cp gpe-bootsplash dist/usr/bin/
 	cp $(CONTROL) dist/CONTROL/control
-	ln -s ../init.d/gpe-bootsplash dist/etc/rcS.d/S11bootsplash
+	ln -s ../init.d/gpe-bootsplash dist/etc/rcS.d/S00bootsplash
 	ipkg-build dist
