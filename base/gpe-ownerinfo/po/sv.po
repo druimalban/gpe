@@ -4,79 +4,83 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-ownerinfo 0.20\n"
-"POT-Creation-Date: 2003-03-04 00:17+0100\n"
-"PO-Revision-Date: 2003-07-06 22:01+0200\n"
+"Project-Id-Version: gpe-ownerinfo 0.22\n"
+"POT-Creation-Date: 2003-10-10 00:14+0200\n"
+"PO-Revision-Date: 2003-10-11 14:30+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-ownerinfo.c:345
-msgid "Owner"
-msgstr "Ägare"
-
-#. TRANSLATORS: please replace this with the Pango code for your own language
-#: gpe-ownerinfo.c:387
-msgid "en"
-msgstr "sv"
-
-#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
+#: main.c:83 main.c:112
 msgid "GPE Owner Info"
 msgstr "GPE-ägarinformation"
 
-#: gpe-ownerinfo.c:410
+#: main.c:85
 msgid "Valid options:\n"
 msgstr "Giltiga flaggor:\n"
 
-#: gpe-ownerinfo.c:411
+#: main.c:86
 msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
 msgstr "   -g GEOMETRI  fönstergeometri (standard: 240x100+0+220)\n"
 
-#: gpe-ownerinfo.c:412
-msgid "   -t           make window transparent\n"
-msgstr "   -t           gör fönstret genomskinligt\n"
-
-#: gpe-ownerinfo.c:413
+#: main.c:87
 msgid "   -k           always keep window on top (override redirect)\n"
 msgstr "   -k           behåll alltid överst (åsidosätt omdirigering)\n"
 
-#: gpe-ownerinfo.c:414
+#: main.c:88
 msgid "   -h           this help text\n"
 msgstr "   -h           visa denna hjälptext\n"
 
-#: gpe-ownerinfo.c:433
+#. TRANSLATORS: only a short word will look good
+#. here.  If the word is shorter than 5 letters,
+#. please fill it up with spaces.
+#: gpe-ownerinfo.c:326
+msgid "Owner"
+msgstr "Ägare"
+
+#: gpe-ownerinfo.c:356
 msgid "GPE User"
 msgstr "GPE-användare"
 
-#: gpe-ownerinfo.c:434
+#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
+#. which might actually exist (maybe in the future). You can
+#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
+#: gpe-ownerinfo.c:360
 msgid "nobody@localhost.localdomain"
 msgstr "ingen@localhost.localdomain"
 
-#: gpe-ownerinfo.c:435
+#: gpe-ownerinfo.c:361
 msgid "+99 (9999) 999-9999"
 msgstr "+46 (0)99 99 99 99"
 
-#: gpe-ownerinfo.c:439
-msgid "Configurable with"
-msgstr "Konfigurerbar med"
+#. TRANSLATORS: the translations below should match 'Owner
+#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
+#: gpe-ownerinfo.c:364
+msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
+msgstr "Konfigurerbar med <i>Ägarinformation</i> under <i>Inställningar</i>."
 
-#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
-msgid "Owner Information"
-msgstr "Ägarinformation"
+#~ msgid "en"
+#~ msgstr "sv"
 
-#: gpe-ownerinfo.c:441
-msgid "under"
-msgstr "under"
+#~ msgid "   -t           make window transparent\n"
+#~ msgstr "   -t           gör fönstret genomskinligt\n"
 
-#: gpe-ownerinfo.c:441
-msgid " Settings."
-msgstr " Inställningar."
+#~ msgid "Configurable with"
+#~ msgstr "Konfigurerbar med"
 
-#: gpe-ownerinfo.c:578
-msgid "Address:"
-msgstr "Adress:"
+#~ msgid "Owner Information"
+#~ msgstr "Ägarinformation"
+
+#~ msgid "under"
+#~ msgstr "under"
+
+#~ msgid " Settings."
+#~ msgstr " Inställningar."
+
+#~ msgid "Address:"
+#~ msgstr "Adress:"
 
 #~ msgid "Owner Info"
 #~ msgstr "Ägarinformation"
