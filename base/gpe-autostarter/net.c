@@ -32,6 +32,8 @@
 static pid_t miniwave_pid;
 static GSList *wlan_devs;
 
+#define _PATH_PROCNET_DEV               "/proc/net/dev"
+
 static void
 start_miniwave (void)
 {
@@ -134,3 +136,41 @@ handle_net_message (DBusMessage *message, DBusMessageIter *iter)
     }
 }
 
+void
+autostarter_init_net (void)
+{
+  FILE *fp;
+  char buf[256];
+
+  fp = fopen (_PATH_PROCNET_DEV, "r");
+  if (fp)
+    {
+      fgets (buf, sizeof (buf), fp);
+      fgets (buf, sizeof (buf), fp);
+
+      while (!feof (fp))
+	{
+	  if (fgets (buf, sizeof (buf), fp))
+	    {
+	      char *c = strchr (buf, ':');
+	      char *p = buf;
+	      
+	      if (c)
+		*c = 0;
+	      while (*p == ' ')
+		p++;
+	      
+	      if (*p)
+		{
+		  if (device_is_wlan (p))
+		    {
+		      if (!wlan_devs)
+			start_miniwave ();
+		      wlan_devs = g_slist_prepend (wlan_devs, g_strdup (p));
+		    }
+		}
+	    }
+	}
+      fclose (fp);
+    }
+}

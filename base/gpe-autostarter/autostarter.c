@@ -33,6 +33,7 @@
 
 extern DBusHandlerResult handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter);
 extern DBusHandlerResult handle_net_message (DBusMessage *message, DBusMessageIter *iter);
+extern void autostarter_init_net (void);
 
 Display *dpy;
 
@@ -183,6 +184,8 @@ main (int argc, char *argv[])
   g_source_attach ((GSource *)source, g_main_loop_get_context (main_loop));
 
   autostarter_init_dbus ();
+
+  autostarter_init_net ();
 
   g_main_loop_run (main_loop);
 
