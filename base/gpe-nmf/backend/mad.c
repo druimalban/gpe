@@ -33,6 +33,8 @@ struct mad_context
   gboolean finished;
   size_t bufsiz;
 
+  unsigned long bytes_read;
+
   char buffer[MADBUFSIZ];
 };
 
@@ -72,6 +74,7 @@ enum mad_flow input(void *data,
   if (l == 0)
     return MAD_FLOW_STOP;
 
+  c->bytes_read += l;
   c->bufsiz = old_bytes + l;
   mad_stream_buffer (stream, c->buffer, c->bufsiz);
 
@@ -167,11 +170,11 @@ enum mad_flow error(void *data,
 		    struct mad_frame *frame)
 {
   struct mad_context *c = (struct mad_context *)data;
-  fprintf(stderr, "decoding error 0x%04x (%s) at byte offset %u\n",
+  fprintf(stderr, "decoding error 0x%04x (%s) at byte offset %lu\n",
 	  stream->error, mad_stream_errorstr(stream),
-	  (void *)stream->this_frame - (void *)c->buffer);
+	  (void *)stream->this_frame - (void *)c->buffer + c->bytes_read);
 
-  return MAD_FLOW_BREAK;
+  return MAD_FLOW_CONTINUE;
 }
 
 static void *
@@ -179,7 +182,11 @@ mad_play_loop (void *d)
 {
   struct mad_context *c = (struct mad_context *)d;
 
-  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, NULL))
+    perror ("pthread_setcancelstate");
+
+  if (pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL))
+    perror ("pthread_setcanceltype");
 
   /* start decoding */
   mad_decoder_run(&c->decoder, MAD_DECODER_MODE_SYNC);
@@ -199,6 +206,7 @@ mad_open (struct stream *s, int fd)
   c->fd = fd;
   c->s = s;
   c->finished = FALSE;
+  c->bytes_read = 0;
 
   mad_decoder_init (&c->decoder, c,
 		    input, 0 /* header */, 0 /* filter */, output,
@@ -217,8 +225,10 @@ mad_open (struct stream *s, int fd)
 static void 
 mad_close (struct mad_context *c)
 {
-  pthread_cancel (c->thread);
-  pthread_join (c->thread, NULL);
+  if (pthread_cancel (c->thread))
+    perror ("pthread_cancel");
+  if (pthread_join (c->thread, NULL))
+    perror ("pthread_join");
 
   /* release the decoder */
   mad_decoder_finish(&c->decoder);
