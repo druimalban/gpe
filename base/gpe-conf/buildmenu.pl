@@ -22,14 +22,6 @@ while ($_=<STDIN>)
       print "    command=\"gpe-conf $modulename\" \\\n";
       print "    icon48=/usr/share/pixmaps/gpe-config-$modulename.png \\\n";
       print "    section=Configuration/gpe-config\n\n";
-      if(! -e "pixmaps/gpe-config-$modulename.png"  ){
-	
-	print STDERR "Warning:  pixmaps/gpe-config-$modulename.png doesnt exists!\n\n";
-      }
-      else
-	{
-	  system("cp -f pixmaps/gpe-config-$modulename.png dist/usr/share/pixmaps/gpe-config-$modulename.png");
-	}
 	
     }
   }

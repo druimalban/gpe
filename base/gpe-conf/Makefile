@@ -1,8 +1,11 @@
+PACKAGE = gpe-conf
 VERSION = 0.0.5
 
-ifndef PREFIX # simple test to recognise if we are from ipaq
-PREFIX = "/usr/local"
-endif
+PREFIX = /usr/local
+BINDIR=$(PREFIX)/bin
+DEBUG = no
+INSTALL = install
+STRIP = strip
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`-DGTK_ENABLE_BROKEN
@@ -34,42 +37,63 @@ MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI
 MEMBERS += users/interface users/callbacks  
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-ARM_BINARY= gpe-conf 
+PIXMAPS = gpe-config-apm.png
+PIXMAPS += gpe-config-appmgr.png
+PIXMAPS += gpe-config-ipaqscreen.png
+PIXMAPS += gpe-config-keyboard.png
+PIXMAPS += gpe-config-keyctl.png
+PIXMAPS += gpe-config-mixer.png
+PIXMAPS += gpe-config-mouse.png
+PIXMAPS += gpe-config-network.png
+PIXMAPS += gpe-config-ownerinfo.png
+PIXMAPS += gpe-config-screensaver.png
+PIXMAPS += gpe-config-sleep.png
+PIXMAPS += gpe-config-software.png
+PIXMAPS += gpe-config-theme.png
+PIXMAPS += gpe-config-time.png
+PIXMAPS += gpe-config.png
 
-ARM_BINARYPATHED = $(patsubst %,/armbins/%,$(ARM_BINARY))
-all: gpe-conf 
+all: $(PACKAGE) 
 
 gpe-conf: $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
-	strip gpe-conf
+	$(STRIP) gpe-conf
 	cp gpe-conf gpe-conf.pc
-
+	
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
 	strip gpe-confsuid
 
 install: gpe-conf
-	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl >$(DESTDIR)/usr/lib/menu/gpe-conf #build the menu
-	sudo chown root.root gpe-conf
-	sudo chmod a+s gpe-conf 
-	sudo chmod a+x gpe-conf 
-	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
+	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
+	mkdir -p $(DESTDIR)$(BINDIR)
+	$(INSTALL) gpe-conf $(DESTDIR)/$(BINDIR)/gpe-conf
+	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-conf
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../libgpewidget/
+	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl > gpe-conf.menu_tmp
+	$(INSTALL) gpe-conf.menu_tmp $(DESTDIR)$(PREFIX)/lib/menu/gpe-conf
+	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/default
+	$(INSTALL) pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/default/ipaq.png
 
-ipkg:
-	find dist -name CVS |xargs rm -rf				#erase CVS stuff
-	cp /armbins/gpe-conf ./ 					#get the arm binary the ipaq sent us.
-	sed -e s/VERSION/$(VERSION)/ <control >dist/CONTROL/control	#change the version of the ipkg
-	make DESTDIR=`pwd`/dist install
-	sudo chown -R root.root dist
-	ipkg-build dist
-	sudo chown -R pierre.pierre dist
+ipkg: clean
+	rm -rf familiar/dist
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr install
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
+	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
+	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
+	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
+	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
+	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
 
 clean:
 	rm -f gpe-conf $(OBJS) *~ */*~ *.ipk
 
-# to build arm bin on ipaq cluster
-tgz:	clean
-	cd ..;tar czf /tmp/ss.tgz gpe-conf
-send:
-	scp $(ARM_BINARY) $(HOMEUSER)@$(pc):/armbins/
