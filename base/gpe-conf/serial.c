@@ -93,8 +93,8 @@ static struct
 } self;
 
 char *portlist[][2] = {	{"Internal Serial (RS232)", FIRST_SERIAL},
-	{"Bluetooth RFCOMM 1","/dev/bluetooth/rfcomm/0"},
-	{"Bluetooth RFCOMM 2","/dev/bluetooth/rfcomm/1"},
+	{"Bluetooth RFCOMM 0","/dev/bluetooth/rfcomm/0"},
+	{"Bluetooth RFCOMM 1","/dev/bluetooth/rfcomm/1"},
 	{"PCMCIA / CF Port 1","/dev/tts/0"},
 	{"PCMCIA / CF Port 2","/dev/tts/1"}
 	};

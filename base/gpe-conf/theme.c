@@ -147,7 +147,9 @@ get_terminal_fontsize(void)
 	{
 		while (!feof(fxdefaults))
 		{
-			if (fscanf(fxdefaults, PARAM_RXVT_FONTSIZE " xft:Mono:pixelsize=%i", &size))
+			char buf[128];
+			fgets(buf, 128, fxdefaults);
+			if (sscanf(buf, PARAM_RXVT_FONTSIZE " xft:Mono:pixelsize=%i", &size))
 				break;
 		}
 		fclose(fxdefaults);

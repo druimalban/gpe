@@ -1,5 +1,7 @@
 2005-04-01	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* HACKING: Update tasks.
+	* theme.c: Fixed Xdefaults scanning.
 	* main.c: Fixed infoprints.
 	* keys/keyctl.c, data/key-layout: Add parameters to set image position.
 	* data/key-layout, pixmaps/ipaq-s1.png: Adjusted size and positions.

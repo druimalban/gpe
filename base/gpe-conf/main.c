@@ -147,6 +147,8 @@ void Save_Callback()
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
   applets[self.cur_applet].Save();
+  gtk_widget_hide(self.w);
+  sleep(1);
   if(self.alone_applet)
   {
     gtk_main_quit();
@@ -161,6 +163,8 @@ void Restore_Callback()
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
   applets[self.cur_applet].Restore();
+  gtk_widget_hide(self.w);
+  sleep(1);
   if(self.alone_applet)
   {
     gtk_main_quit();
