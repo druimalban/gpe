@@ -889,8 +889,8 @@ build_edit_event_window (void)
 
   s                   = g_malloc0 (sizeof (struct edit_state));
     
-  gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(main_window));
-  gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
+  gtk_window_set_modal (GTK_WINDOW(window), TRUE);
   
   /* Scrolled window for event tab */
   scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);

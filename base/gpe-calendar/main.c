@@ -32,7 +32,6 @@
 
 #include "day_view.h"
 #include "week_view.h"
-#include "future_view.h"
 #include "month_view.h"
 #include "import-vcal.h"
 #include "gtkdatesel.h"
@@ -56,7 +55,6 @@ GtkWidget *notebook;
 extern GtkWidget* day_list;
 
 struct gpe_icon my_icons[] = {
-  { "future_view", "future_view" },
   { "day_view", "day_view" },
   { "week_view", "week_view" },
   { "month_view", "month_view" },
@@ -67,8 +65,8 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-static GtkWidget *day, *week, *month, *future, *current_view;
-static GtkWidget *day_button, *week_button, *month_button, *future_button, *today_button;
+static GtkWidget *day, *week, *month, *current_view;
+static GtkWidget *day_button, *week_button, *month_button, *today_button;
 
 guint window_x = 240, window_y = 310;
 
@@ -147,7 +145,6 @@ update_all_views (void)
   update_view (day);
   update_view (week);
   update_view (month);
-  update_view (future);
 }
 
 static void
@@ -318,7 +315,6 @@ on_import_vcal (GtkWidget *widget, gpointer data)
   day_free_lists();
   week_free_lists();
   month_free_lists();
-  future_free_lists();   
   event_db_refresh();
   update_all_views();  
 }
@@ -482,7 +478,6 @@ main (int argc, char *argv[])
   week = week_view ();
   day = day_view ();
   month = month_view ();
-  future = future_view ();
   toolbar = gtk_toolbar_new ();
 
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
@@ -511,19 +506,10 @@ main (int argc, char *argv[])
   if (window_x > 260) 
     gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_icon_scaled ("future_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  pw = gtk_image_new_from_pixbuf (p);
-  future_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-					      GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
-					      _("Future"), 
-					      _("Tap here to see all future events."), NULL,
-					      pw, GTK_SIGNAL_FUNC (button_toggled), future);
-  GTK_WIDGET_UNSET_FLAGS(future_button, GTK_CAN_FOCUS);
-
   p = gpe_find_icon_scaled ("day_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-					   GTK_TOOLBAR_CHILD_RADIOBUTTON, future_button,
+					   GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
 					   ("Day"), 
 					   _("Tap here to select day-at-a-time view."), NULL,
 					   pw, GTK_SIGNAL_FUNC (button_toggled), day);
@@ -566,12 +552,10 @@ main (int argc, char *argv[])
   gtk_widget_show (day);
   gtk_widget_show (week);
   gtk_widget_show (month);
-  gtk_widget_show (future);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), day, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), week, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), month, NULL);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), future, NULL);
 
   g_signal_connect(G_OBJECT(notebook),"switch-page",
                    G_CALLBACK(notebook_switch_page),NULL);
