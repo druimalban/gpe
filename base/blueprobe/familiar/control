@@ -6,4 +6,3 @@ Maintainer: Phil Blundell <pb@debian.org>
 Depends: libc6
 Architecture: arm
 Description: Bluetooth hardware detection utility
-
