@@ -21,7 +21,6 @@
 #include "package.h"
 #include "popupmenu.h"
 #include "properties.h"
-#include "xsi.h"
 #include "main.h"
 
 static int menu_timeout_id=0;
@@ -30,23 +29,6 @@ static int on_popdown (GtkWidget *menuitem, gpointer data)
 {
 	gpe_iconlist_popup_removed (data);
 	return 0;
-}
-
-static int on_menuitem_force_run (GtkWidget *menuitem, gpointer data)
-{
-	struct package *p;
-
-	p = (struct package *) data;
-	run_program (package_get_data (p, "command"), NULL);
-
-	return FALSE;
-}
-
-static int on_menuitem_raise (GtkWidget *menuitem, gpointer data)
-{
-	raise_window_default ((Window) data);
-
-	return FALSE;
 }
 
 static int on_menuitem_properties (GtkWidget *menuitem, gpointer data)
@@ -84,42 +66,10 @@ int popup_menu_activate (gpointer data, GtkWidget *il)
 {
 	struct package *p;
 	GtkWidget *menu, *mi;
-	GList *l=NULL, *r=NULL;
-	char *window_title;
 
 	p = (struct package *)data;
 
 	menu = gtk_menu_new ();
-
-	window_title = package_get_data (p, "windowtitle");
-	if (window_title)
-		r = l = get_windows_with_name (window_title);
-	while (l)
-	{
-		struct window_info *w;
-
-		w = (struct window_info *) l->data;
-
-		mi = gtk_menu_item_new_with_label (w->name);
-		gtk_signal_connect( GTK_OBJECT(mi), "activate",
-				    GTK_SIGNAL_FUNC(on_menuitem_raise), (gpointer)w->xid);
-		gtk_menu_shell_append (GTK_MENU_SHELL(menu), mi);
-
-		window_info_free (w);
-
-		l=l->next;
-	}
-
-	if (r)
-	{
-		g_list_free (r);
-		gtk_menu_shell_append (GTK_MENU_SHELL(menu), gtk_menu_item_new());
-	}
-
-	mi = gtk_menu_item_new_with_label ("Force run");
-	gtk_signal_connect( GTK_OBJECT(mi), "activate",
-			    GTK_SIGNAL_FUNC(on_menuitem_force_run), p);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), mi);
 
 	mi = gtk_menu_item_new_with_label ("Properties");
 	gtk_signal_connect( GTK_OBJECT(mi), "activate",

@@ -61,7 +61,7 @@
 #include "package.h"
 #include "plugin.h"
 #include "popupmenu.h"
-#include "xsi.h"
+#include "launch.h"
 #include <dlfcn.h>
 #include "tray.h"
 
@@ -141,7 +141,8 @@ char *find_icon (char *base)
   return NULL;
 }
 
-GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
+GtkWidget *
+create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
 	GdkPixbuf *pixbuf, *spixbuf;
 	GtkWidget *w;
@@ -154,8 +155,8 @@ GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 	spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, 
 					   GDK_INTERP_BILINEAR);
 	gdk_pixbuf_unref (pixbuf);
-	w = gpe_render_icon (style, spixbuf);
-	gdk_pixbuf_unref (spixbuf);
+
+	w = gtk_image_new_from_pixbuf (spixbuf);
 	return w;
 }
 
@@ -232,8 +233,7 @@ run_package (struct package *p)
   create_recent_list();
   
   /* Actually run the program */
-  run_program (package_get_data (p, "command"),
-	       cfg_options.use_windowtitle ? package_get_data (p, "windowtitle") : NULL);
+  run_program (package_get_data (p, "command"), package_get_data (p, "title"));
 }
 
 gboolean 
@@ -496,11 +496,9 @@ void cb_package_add (struct package *p)
 /* Reloads the menu files into memory */
 int refresh_list ()
 {
-//	GList *l, *old_items, *old_groups;
 	GList *ignored_items;
 	DIR *dir;
 	struct dirent *entry;
-	int i;
 	char *user_menu=NULL, *home_dir;
 	GSList *j;
 
@@ -645,19 +643,20 @@ void set_window_pixmap ()
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
 }
 
-
-gint 
-on_window_delete (GtkObject *object, gpointer data)
+void
+on_window_delete (GObject *object, gpointer data)
 {
   gtk_main_quit ();
 }
 
 extern GtkWidget * create_tab_view (void);
+extern GtkWidget * create_row_view (void);
 
 /* Create the UI for the main window and
  * stuff
  */
-void create_main_window()
+void 
+create_main_window (void)
 {
   GtkWidget *child;
   int w = 640, h = 480;
@@ -680,7 +679,7 @@ void create_main_window()
     
   set_window_pixmap();
 
-  g_signal_connect (G_OBJECT(window), "delete_event", G_CALLBACK (on_window_delete), NULL);
+  g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (on_window_delete), NULL);
 
   //child = create_tab_view ();
   child = create_row_view ();

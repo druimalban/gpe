@@ -1,17 +1,20 @@
-/* gpe-appmgr - a program launcher
+/*
+ * gpe-appmgr - a program launcher
+ *
+ * Copyright (c) 2004 Phil Blundell
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
 
-   Copyright (c) 2004 Phil Blundell
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-*/
+#include <string.h>
 
 /* Gtk etc. */
 #include <gtk/gtk.h>
@@ -19,14 +22,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkprivate.h>
 #include <gdk/gdkx.h>
-
-/* directory listing */
-#include <sys/types.h>
-#include <dirent.h>
-#include <string.h>
-
-/* catch SIGHUP */
-#include <signal.h>
 
 /* I/O */
 #include <stdio.h>
@@ -36,8 +31,6 @@
 
 /* time() */
 #include <time.h>
-
-#include <X11/Xatom.h>
 
 /* i18n */
 #include <libintl.h>
@@ -56,11 +49,7 @@
 
 #include "cfg.h"
 #include "package.h"
-#include "plugin.h"
 #include "popupmenu.h"
-#include "xsi.h"
-#include <dlfcn.h>
-#include "tray.h"
 
 //#define DEBUG
 #ifdef DEBUG

@@ -47,4 +47,6 @@ void autohide_labels (int page);
 /* (Re)create the recent list */
 void create_recent_box();
 
+char *get_icon_fn (struct package *p, int iconsize);
+
 #endif

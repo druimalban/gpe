@@ -1,14 +1,16 @@
 CVSBUILD = yes
-DEBUG = no
+DEBUG = yes
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libdotdesktop -I../libxsettings -I../libxsettings-client
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libdotdesktop -ldotdesktop -L../libxsettings -L../libxsettings-client -lXsettings-client -lXsettings
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libdotdesktop -I../libxsettings -I../libxsettings-client `pkg-config --cflags libstartup-notification-1.0` -DSN_API_NOT_YET_FROZEN
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libdotdesktop -ldotdesktop -L../libxsettings -L../libxsettings-client -lXsettings-client -lXsettings `pkg-config --libs libstartup-notification-1.0`
 
 DESTDIR=
 PREFIX=/usr
 BINDIR=$(PREFIX)/bin
 ETCDIR=etc
+INSTALL=install
+STRIP=strip
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -16,7 +18,7 @@ else
 BUILD = build
 endif
 
-OBJS=main.o xsi.o popupmenu.o package.o properties.o gnome-exec.o tray.o xsettings.o row_view.o #tab_view.o
+OBJS=main.o popupmenu.o package.o properties.o xsettings.o row_view.o launch.o #tab_view.o
 
 all: gpe-appmgr
 
