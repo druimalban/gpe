@@ -178,11 +178,11 @@ sql_network_callback (void *arg, int argc, char **argv, char **names)
 static guint
 find_network (gconstpointer a, gconstpointer b)
 {
-  if (((struct sql_network *) a)->id < ((struct sql_network *) b)->id)
+  if (((struct sql_network *) a)->id < b)
     return -1;
-  if (((struct sql_network *) a)->id == ((struct sql_network *) b)->id)
+  if (((struct sql_network *) a)->id == b)
     return 0;
-  if (((struct sql_network *) a)->id > ((struct sql_network *) b)->id)
+  if (((struct sql_network *) a)->id > b)
     return 1;
 }
 
