@@ -6,7 +6,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
 OBJS    = $(patsubst %,%.o,$(MEMBERS))
 
-PACKAGE_CFLAGS += -Wall
+PACKAGE_CFLAGS += -Wall -D_GNU_SOURCE
 PACKAGE_CFLAGS += -MD #(deps)
 
 ifeq ($(DEBUG),yes)
