@@ -364,10 +364,8 @@ gpe_clock_face_realize (GtkWidget *widget)
   attributes.colormap = gtk_widget_get_colormap (widget);
   attributes.event_mask = gtk_widget_get_events (widget);
   attributes.event_mask |= (GDK_EXPOSURE_MASK |
-			    GDK_POINTER_MOTION_MASK |
 			    GDK_BUTTON_PRESS_MASK |
-			    GDK_BUTTON_RELEASE_MASK |
-			    GDK_POINTER_MOTION_HINT_MASK);
+			    GDK_BUTTON_RELEASE_MASK);
 
   attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
 

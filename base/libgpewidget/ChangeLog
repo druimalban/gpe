@@ -1,5 +1,8 @@
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
+	* gpeclockface.c (gpe_clock_face_realize): Remove pointer motion
+	bits from event mask.
+
 	* Makefile (install-program): Install pixmaps for clock face in
 	$PREFIX/share/libgpewidget, not $PREFIX/share/gpe/pixmaps.
 	* gpeclockface.c (gpe_clock_face_init): Look for pixmaps in new
