@@ -20,7 +20,8 @@
 
 int main(int argc, char * argv[])
 {
-  struct sockaddr_in myaddr,from_addr;   
+   FILE * pid_file = NULL;
+   struct sockaddr_in myaddr,from_addr;   
    int ssock_fd;
    usqld_config *conf;
    int ssop;
@@ -28,7 +29,7 @@ int main(int argc, char * argv[])
    int single_thread =0;
    char * database_dir = NULL;
    int c;
-
+   
    while((c = getopt(argc,argv,"xd:"))!=EOF){
       switch(c){	 
        case 'x':
@@ -80,7 +81,27 @@ int main(int argc, char * argv[])
       }
    
    listen(ssock_fd,5);
-   printf("listening on port %d\n",USQLD_SERVER_PORT); 
+   printf("listening on port %d\n",USQLD_SERVER_PORT);
+	
+   
+   pid_file =fopen(PID_FILE,"w");
+   if(NULL==pid_file)
+     {
+	fprintf(stderr,"couldn't open pid file: %s\n",PID_FILE);
+	exit(1);
+     }
+   
+   if(fork()!=0)
+     {
+	exit(0);
+     }
+   else
+     {
+	fprintf(pid_file,"%u\n",getpid());
+	fclose(pid_file);
+     }
+   
+   
    while(1)
      {
 	
