@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include <unistd.h>
 #include <gpe/init.h>
@@ -24,6 +25,9 @@
 
 #define BOARD_SIZE 9
 #define PIECE_SIZE 20
+
+#define ANIM_INTERVAL 30
+#define TRAVEL 0.33
 
 #define IMAGEDIR PREFIX "/share/gpe/pixmaps/default/gpe-pegged/"
 
@@ -41,6 +45,10 @@ int moves=0;
 GtkWidget *status;
 guint status_cid;
 
+int is_animating=0;
+int anim_x=0, anim_y=0;
+float anim_at_x=-1,anim_at_y=-1;
+
 void smsg (const char *msg) {
         static guint mid = 0;
         if (mid)
@@ -51,10 +59,14 @@ void smsg (const char *msg) {
 
 int is_board_position (int x, int y)
 {
-      if ( (x<3 && y<3) ||
+      if ( // Corners
+	   (x<3 && y<3) ||
            (x<3 && y>=6) ||
            (x>=6 && y<3) ||
-           (x>=6 && y>=6) )
+           (x>=6 && y>=6) ||
+	   // Boundaries
+	   (x >= 9) || (y >= 9) ||
+	   (x < 0) || (y < 0))
         return 0;
         return 1;
 }
@@ -69,6 +81,7 @@ int count_pieces () {
 		}
 	return count;
 }
+
 void update_status ()
 {
 	char *msg;
@@ -96,7 +109,7 @@ void init_board () {
    smsg ("");
 }
 
-void draw_position (GtkWidget *widget, int x, int y, GdkPixbuf *pixbuf)
+void draw_position (GtkWidget *widget, float x, float y, GdkPixbuf *pixbuf)
 {
   int xoff;
   int yoff;
@@ -104,6 +117,11 @@ void draw_position (GtkWidget *widget, int x, int y, GdkPixbuf *pixbuf)
   xoff = 0;
   yoff = 0;
 
+  /* Account for centering of the board */
+  xoff += (game_table->allocation.width/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+  yoff += (game_table->allocation.height/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+
+  /* Account for differing pixmap sizes */
   xoff += PIECE_SIZE/2 - gdk_pixbuf_get_width (pixbuf) / 2;
   yoff += PIECE_SIZE/2 - gdk_pixbuf_get_height (pixbuf) / 2;
 
@@ -117,15 +135,26 @@ void draw_position (GtkWidget *widget, int x, int y, GdkPixbuf *pixbuf)
                   0,0);
 }
 
-void draw_pieces (GtkWidget *widget)
+void draw_pieces (GtkWidget *widget, GdkRectangle area)
 {
   int x,y;
+  int xoff, yoff;
+  xoff = (widget->allocation.width/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+  yoff = (widget->allocation.height/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+
   for (x=0; x<BOARD_SIZE; x++)
 	for (y=0; y<BOARD_SIZE; y++)
 	{
 		if (is_board_position(x,y))
 		{
-			if (x == sel_x && y == sel_y)
+			GdkRectangle r,t;
+			r.x = x*PIECE_SIZE+xoff;
+			r.y = y*PIECE_SIZE+yoff;
+			r.width = PIECE_SIZE;
+			r.height = PIECE_SIZE;
+			if (!gdk_rectangle_intersect (&area, &r, &t))
+				continue;
+			if (x == sel_x && y == sel_y && !is_animating)
 				draw_position (widget, x, y, pixbuf_peg_sel);
 			else if (board[x][y])
 				draw_position (widget, x, y, pixbuf_peg);
@@ -135,39 +164,123 @@ void draw_pieces (GtkWidget *widget)
 	}
 }
 
+int animBoard (gpointer data) {
+	int xoff, yoff;
+        if (!is_animating)
+                return TRUE;
+	xoff = (game_table->allocation.width/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+	yoff = (game_table->allocation.height/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+
+	gtk_widget_queue_draw_area (GTK_WIDGET(data), MIN(anim_x*PIECE_SIZE,sel_x*PIECE_SIZE)-5+xoff,MIN(anim_y*PIECE_SIZE,sel_y*PIECE_SIZE)-5+yoff, abs(anim_x*PIECE_SIZE-sel_x*PIECE_SIZE)+PIECE_SIZE+10, abs(anim_y*PIECE_SIZE-sel_y*PIECE_SIZE)+PIECE_SIZE+10);
+
+
+	return TRUE;
+}
+
 void
 redraw_piece (GtkWidget *widget, int x, int y) {
-   gtk_widget_queue_draw_area (widget, x*PIECE_SIZE-5, y*PIECE_SIZE-5, PIECE_SIZE+10, PIECE_SIZE+10);
+	int xoff, yoff;
+	xoff = (widget->allocation.width/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+	yoff = (widget->allocation.height/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+	gtk_widget_queue_draw_area (widget, x*PIECE_SIZE-5+xoff, y*PIECE_SIZE-5+yoff, PIECE_SIZE+10, PIECE_SIZE+10);
 }
 
 gboolean
 expose_event_callback (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 {
   int x,y;
+  int xoff, yoff;
+  xoff = (game_table->allocation.width/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+  yoff = (game_table->allocation.height/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
 
-  gdk_draw_pixbuf (widget->window,
-		   widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
- 		   bg_outside,
-		   0,0,
-		   0,0,
-		   -1,-1,
-		   GDK_RGB_DITHER_NORMAL,
-		   0,0);
+  /* Main background */
+ 
+  for (y=0;y<widget->allocation.height;y+=gdk_pixbuf_get_height(bg_outside))
+    for (x=0;x<widget->allocation.width;x+=gdk_pixbuf_get_width (bg_outside)) {
+      GdkRectangle r,r2;
+      /* Pixmap rectangle */
+      r.x = x; r.y = y;
+      r.width = gdk_pixbuf_get_width (bg_outside);
+      r.height = gdk_pixbuf_get_height (bg_outside);
 
+      if (!gdk_rectangle_intersect (&r, &(event->area), &r2))
+	      continue;
+
+      gdk_draw_pixbuf (widget->window,
+		       widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+ 		       bg_outside,
+		       r2.x - r.x, r2.y - r.y,
+		       r2.x,r2.y,
+		       r2.width, r2.height,
+		       GDK_RGB_DITHER_NORMAL,
+		       0,0);
+    }
+  
   // Draw the board BG
   for (x=0; x<BOARD_SIZE; x++) {
     for (y=0; y<BOARD_SIZE; y++) {
-      if (is_board_position (x,y)) 
+      if (is_board_position (x,y)) {
+        GdkRectangle r,t;
+        r.x = x*PIECE_SIZE+xoff;
+        r.y = y*PIECE_SIZE+yoff;
+        r.width = PIECE_SIZE;
+        r.height = PIECE_SIZE;
+	if (!gdk_rectangle_intersect (&r, &(event->area), &t))
+		continue;
         draw_position (widget, x, y, bg_board);
+      }
     }
   }
 
-  draw_pieces (widget);
+  draw_pieces (widget, event->area);
   
-  if (sel_x != -1) {
+  if (sel_x != -1 && !is_animating) {
     draw_position (widget, sel_x, sel_y, pixbuf_peg_sel);
   }
   
+  if (is_animating) {
+	  if (anim_at_x == -1) { // First anim cycle
+		  anim_at_x = sel_x;
+		  anim_at_y = sel_y;
+	  }
+	  if (anim_at_x < anim_x)
+		  anim_at_x += TRAVEL;
+	  if (anim_at_x > anim_x)
+		  anim_at_x -= TRAVEL;
+	  if (anim_at_y < anim_y)
+		  anim_at_y += TRAVEL;
+	  if (anim_at_y > anim_y)
+		  anim_at_y -= TRAVEL;
+
+
+	  draw_position (widget, sel_x, sel_y, pixbuf_hole);
+
+	  if (fabsf (anim_at_x - anim_x) < 1.0f &&
+			  fabsf (anim_at_y - anim_y) < 1.0f)
+		  draw_position (widget, (anim_x+sel_x)/2,
+				  (anim_y+sel_y)/2, pixbuf_hole);
+	  else
+		  draw_position (widget, (anim_x+sel_x)/2,
+				  (anim_y+sel_y)/2, pixbuf_peg);
+
+            draw_position (widget, anim_at_x, anim_at_y, pixbuf_peg_sel);
+
+	  if ( fabs (anim_at_x - (float)anim_x) < TRAVEL &&
+			  fabs (anim_at_y - (float)anim_y) < TRAVEL)
+		  {
+	  is_animating = 0;
+          board[anim_x][anim_y] = 1;
+          board[sel_x][sel_y] = 0;
+          board[(sel_x+anim_x)/2][(sel_y+anim_y)/2] = 0;
+          redraw_piece (widget,anim_x,anim_y);
+          redraw_piece (widget,sel_x,sel_y);
+          redraw_piece (widget,(sel_x+anim_x)/2, (sel_y+anim_y)/2);
+	  sel_x = anim_x;
+	  sel_y = anim_y;
+	  anim_at_x = anim_at_y = -1;
+		  }
+  }
+
   return TRUE;
 }
 
@@ -175,20 +288,31 @@ gboolean
 button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
   int x,y;
+  int xoff, yoff;
 
+  // For some backward reason, we get a btn1 & a btn2 event...
+  if (event->button != 1)
+	  return FALSE;
+  
   if (sel_x != -1)
     redraw_piece (widget, sel_x, sel_y);
   
-  x = event->x / PIECE_SIZE;
-  y = event->y / PIECE_SIZE;
+    /* Account for centering of the board */
+  xoff = (widget->allocation.width/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+  yoff = (widget->allocation.height/2) - ((BOARD_SIZE*PIECE_SIZE))/2;
+
+  x = (event->x - xoff) / PIECE_SIZE;
+  y = (event->y - yoff) / PIECE_SIZE;
 
   if (!is_board_position (x,y))
   {
     sel_x = -1, sel_y = -1;
-    return TRUE;
+    return FALSE;
   }
   
-  if (board[x][y])
+  if (x == sel_x && y == sel_y) {
+    sel_x = sel_y = -1;	  
+  } else if (board[x][y])
   { // Move the selection
     sel_x = x, sel_y = y;
     redraw_piece (widget, x,y);
@@ -204,25 +328,18 @@ button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 	  } else
 	  {
 		// Can't move!
-		  return TRUE;
+		  return FALSE;
 	  }
 
-          board[x][y] = 1;
-          board[sel_x][sel_y] = 0;
-          board[(sel_x+x)/2][(sel_y+y)/2] = 0;
-	  redraw_piece (widget,x,y);
-	  redraw_piece (widget,sel_x,sel_y);
-	  redraw_piece (widget,(sel_x+x)/2, (sel_y+y)/2);
-
-	  // Reset the selection
-	  sel_x = sel_y = -1;
-
 	  moves++;
+
+	  is_animating = 1;
+	  anim_x = x, anim_y = y;
 
 	  update_status();
   }
 
-  return TRUE;
+  return FALSE;
 }
 
 void
@@ -254,7 +371,6 @@ main (int argc, char *argv[])
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkWidget *vbox1;
-  GtkWidget *align;
   GtkWidget *toolbar;
     
   gpe_application_init (&argc, &argv);
@@ -309,9 +425,6 @@ main (int argc, char *argv[])
 			   _("Exit"), _("Exit the program."), pw, 
 			   GTK_SIGNAL_FUNC (on_quitter_activate), NULL);
 
-  align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
-  gtk_box_pack_start (GTK_BOX (vbox1), align, TRUE, TRUE, 0);
-  
   game_table = gtk_drawing_area_new ();
   gtk_widget_set_size_request (game_table, BOARD_SIZE*PIECE_SIZE,
 					BOARD_SIZE*PIECE_SIZE);
@@ -347,6 +460,8 @@ main (int argc, char *argv[])
                       NULL);
  
   gtk_widget_show_all(window);
+
+  gtk_timeout_add (ANIM_INTERVAL,animBoard, game_table);
 
 
   gtk_main ();
