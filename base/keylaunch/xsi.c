@@ -72,6 +72,7 @@ Window Window_With_Name(dpy, top, name)
 
         if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name)) {
 		XFree(window_name);
+		printf ("(choosing this window)\n");
         	return(top);
 	}
 
