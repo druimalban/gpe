@@ -214,7 +214,7 @@ draw_expose_event (GtkWidget *widget,
   return TRUE;
 }
 
-static guint
+guint
 day_of_week(guint year, guint month, guint day)
 {
   guint result;
