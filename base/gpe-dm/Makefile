@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-dm
 CVSBUILD = yes
-VERSION = 0.37
+VERSION = 0.38
    
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build

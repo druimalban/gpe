@@ -39,6 +39,10 @@ case `module_id` in
 		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		ARGS="$ARGS -rgba rgb"
+		chkhinge -e
+		if [ $? = 10 ]; then
+			ARGS="$ARGS -screen 480x640@270"
+		fi
 		export TSLIB_TSDEVICE="/dev/sharp_ts" ;;
 	"Simpad")
 		ARGS="$ARGS -rgba rgb" ;;
