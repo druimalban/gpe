@@ -1,5 +1,9 @@
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
+	* db.c: Remove usqld cruft.
+
+2004-02-16  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (MEMBERS): Add categories.
 	* categories.c: New file.
 	* categories.h: Likewise.
