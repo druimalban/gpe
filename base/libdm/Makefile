@@ -48,7 +48,7 @@ install-program: $(SONAME)
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel:
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/displaymigration/$$i; done
+	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/libdisplaymigration/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
 
 clean:
