@@ -153,6 +153,7 @@ gtk_date_combo_init (GtkDateCombo *combo)
 
   combo->cal = gtk_calendar_new ();
   combo->calw = gtk_window_new (GTK_WINDOW_POPUP);
+  combo->calw->parent = GTK_WIDGET (combo);
   combo->cal_open = FALSE;
   gtk_widget_show (combo->cal);
   gtk_container_add (GTK_CONTAINER (combo->calw), combo->cal);

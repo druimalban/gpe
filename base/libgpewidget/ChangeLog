@@ -1,3 +1,8 @@
+2004-10-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* gtkdatecombo.c (gtk_date_combo_init): Set widget->parent on
+	calendar popup window.
+
 2004-10-04  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.91 released.
