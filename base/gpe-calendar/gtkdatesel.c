@@ -63,7 +63,7 @@ struct _GtkDateSel
 
   time_t time;
 
-  guint week_mode : 1;
+  guint mode;
 };
 
 struct _GtkDateSelClass
@@ -211,13 +211,22 @@ gtk_date_sel_size_request (GtkWidget      *widget,
 
   GTK_WIDGET_CLASS (parent_class)->size_request (widget, requisition);
   
-  requisition->height = widget->style->font->ascent + widget->style->font->descent;
+  requisition->height = widget->style->font->ascent + 
+    widget->style->font->descent;
 
-  if (sel->week_mode)
-    requisition->width = sel->week_width + sel->year_width + 4 * ARROW_SIZE + 6 * PAD;
-  else
-    requisition->width = sel->day_width + sel->month_width + sel->year_width
-      + 6 * ARROW_SIZE + 9 * PAD;
+  switch (sel->mode)
+    {
+    case GTKDATESEL_YEAR:
+      requisition->width = sel->year_width + 2 * ARROW_SIZE + 2 * PAD;
+      break;
+    case GTKDATESEL_WEEK:
+      requisition->width = sel->week_width + sel->year_width + 4 * ARROW_SIZE + 6 * PAD;
+      break;
+    case GTKDATESEL_FULL:
+      requisition->width = sel->day_width + sel->month_width + sel->year_width
+	+ 6 * ARROW_SIZE + 9 * PAD;
+      break;
+    }
 }
 
 static void
@@ -264,8 +273,20 @@ gtk_date_sel_paint (GtkWidget    *widget,
 
       localtime_r (&sel->time, &tm);
 
-      if (sel->week_mode)
+      switch (sel->mode)
 	{
+	case GTKDATESEL_YEAR:
+	  r = sel->year_width + ARROW_SIZE + PAD + PAD;
+	  draw_arrows(widget, 0, r);
+	  strftime(buf, sizeof(buf), "%Y", &tm);
+	  w = gdk_string_width(widget->style->font, buf);
+	  gdk_draw_string(widget->window, widget->style->font,
+			  widget->style->black_gc,
+			  ARROW_SIZE + PAD + ((sel->year_width - w) / 2), 
+			  fy, buf);
+	  break;
+
+	case GTKDATESEL_WEEK:
 	  r = sel->week_width + ARROW_SIZE + PAD + PAD;
 	  draw_arrows(widget, 0, r);
 	  strftime(buf, sizeof(buf), "Week %W", &tm);
@@ -285,9 +306,9 @@ gtk_date_sel_paint (GtkWidget    *widget,
 			  widget->style->black_gc,
 			  l + ARROW_SIZE + PAD + ((sel->year_width - w) / 2), fy,
 			  buf);
-	}
-      else
-	{
+	  break;
+
+	case GTKDATESEL_FULL:
 	  r = sel->day_width + ARROW_SIZE + PAD + PAD;
 	  draw_arrows(widget, 0, r);
 	  strftime(buf, sizeof(buf), "%a, %d", &tm);
@@ -314,6 +335,7 @@ gtk_date_sel_paint (GtkWidget    *widget,
 			  widget->style->black_gc,
 			  l + ARROW_SIZE + PAD + ((sel->year_width - w) / 2), fy,
 			  buf);
+	  break;
 	}
       gdk_gc_set_clip_rectangle (widget->style->black_gc, NULL);
     }
@@ -472,8 +494,17 @@ gtk_date_sel_button_press (GtkWidget      *widget,
 
   sel = GTK_DATE_SEL (widget);
 
-  if (sel->week_mode)
+  switch (sel->mode)
     {
+    case GTKDATESEL_YEAR:
+      if (event->x < ARROW_SIZE)
+	year_click(sel, -1);
+      else if (event->x > (ARROW_SIZE + PAD + sel->year_width + PAD)
+	       && event->x < (ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
+	year_click(sel, 1);
+      break;
+
+    case GTKDATESEL_WEEK:
       if (event->x < ARROW_SIZE)
 	week_click(sel, -1);
       else if (event->x > (ARROW_SIZE + PAD + sel->week_width + PAD)
@@ -485,9 +516,9 @@ gtk_date_sel_button_press (GtkWidget      *widget,
       else if (event->x > (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
 	       && event->x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
 	year_click(sel, 1);
-    }
-  else
-    {
+      break;
+
+    case GTKDATESEL_FULL:
       if (event->x < ARROW_SIZE)
 	day_click(sel, -1);
       else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD)
@@ -505,6 +536,7 @@ gtk_date_sel_button_press (GtkWidget      *widget,
       else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
 	       && event->x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
 	year_click(sel, 1);
+      break;
     }
 
   gtk_grab_add (widget);
@@ -538,13 +570,13 @@ gtk_date_sel_update (GtkDateSel *spin_button)
 
 
 GtkWidget *
-gtk_date_sel_new (guint week_mode)
+gtk_date_sel_new (guint mode)
 {
   GtkDateSel *ds;
 
   ds = gtk_type_new (GTK_TYPE_DATE_SEL);
 
-  ds->week_mode = week_mode;
+  ds->mode = mode;
 
   return GTK_WIDGET (ds);
 }

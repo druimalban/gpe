@@ -58,6 +58,9 @@ time_t		gtk_date_sel_get_time	   (GtkDateSel *sel);
 
 void            gtk_date_sel_set_time      (GtkDateSel *sel, time_t time);
 
+#define GTKDATESEL_FULL	0
+#define GTKDATESEL_WEEK 1
+#define GTKDATESEL_YEAR 2
 
 #ifdef __cplusplus
 }

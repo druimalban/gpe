@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -9,8 +9,11 @@
 
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
+#include <libintl.h>
 
 #include "globals.h"
+
+#define _(_x) gettext (_x)
 
 #define GPE_ICON "/usr/share/pixmaps/gpe-logo.png"
 
@@ -31,7 +34,7 @@ about(void)
   GtkWidget *label_name = gtk_label_new ("GPE-Calendar");
   GtkWidget *label_date = gtk_label_new ("version " VERSION);
   GtkWidget *label_copy = gtk_label_new ("(c) 2002 Phil Blundell");
-  GtkWidget *ok = gtk_button_new_with_label ("OK");
+  GtkWidget *ok = gtk_button_new_with_label (_("OK"));
 
   gtk_signal_connect (GTK_OBJECT (ok), "clicked",
 		      GTK_SIGNAL_FUNC (thanks), window);

@@ -7,6 +7,12 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#ifndef EVENT_DB_H
+#define EVENT_DB_H
+
+#include <glib.h>
+#include <time.h>
+
 typedef enum
 {
   RECUR_NONE,
@@ -16,12 +22,17 @@ typedef enum
   RECUR_YEARLY
 } recur_t;
 
-struct gpe_calendar_event
+typedef struct event_details_s
+{
+  char *description;
+} *event_details_t;
+
+typedef struct event_s
 {
   unsigned long uid;
 
   time_t start;
-  unsigned long duration;	/* -1 == instantaneous */
+  unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* -1 == none */
   
   struct
@@ -31,7 +42,24 @@ struct gpe_calendar_event
     unsigned int count;
     unsigned int daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
 
-    gboolean perpetual;
-    time_t end;
+    time_t end;			/* 0 == perpetual */
   } recur;
-};
+
+  event_details_t details;
+} *event_t;
+
+extern gboolean event_db_start (void);
+extern gboolean event_db_stop (void);
+
+extern gboolean event_db_add (event_t);
+extern gboolean event_db_remove (event_t);
+
+extern event_t event_db_new (void);
+extern void event_db_destroy (event_t);
+
+extern event_details_t event_db_alloc_details (event_t);
+extern event_details_t event_db_get_details (event_t);
+
+extern GSList *event_db_list_for_period (time_t start, time_t end);
+
+#endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,9 +16,9 @@
 #include <gtk/gtk.h>
 
 #include "gtkdatesel.h"
-
-GdkGC *red_gc;
-extern GdkFont *datefont, *timefont;
+#include "globals.h"
+#include "event-db.h"
+#include "week_view.h"
 
 static gint
 draw_expose_event (GtkWidget *widget,
@@ -30,6 +30,7 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *black_gc;
   GdkGC *gray_gc;
   GdkGC *white_gc;
+  GdkGC *red_gc;
   guint max_width;
   guint max_height;
   guint day, y;
@@ -37,25 +38,20 @@ draw_expose_event (GtkWidget *widget,
   guint cell_height = 35;
   struct tm tm, today;
   time_t t;
-  /*guint year, mon, baseday;*/
+  GdkColor red;
+  GdkColormap *colormap;
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
-  if (red_gc == NULL)
-    {
-      GdkColor red;
-      GdkColormap *colormap;
-
-      red_gc = gdk_gc_new(widget->window);
-      gdk_gc_copy(red_gc, widget->style->black_gc);
-      colormap = gdk_window_get_colormap(widget->window);
-      red.red = 0xffff;
-      red.green = 0;
-      red.blue = 0;
-      gdk_colormap_alloc_color(colormap, &red, FALSE, TRUE);
-      gdk_gc_set_foreground(red_gc, &red);
-    }
+  red_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (red_gc, widget->style->black_gc);
+  colormap = gdk_window_get_colormap (widget->window);
+  red.red = 0xffff;
+  red.green = 0;
+  red.blue = 0;
+  gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
+  gdk_gc_set_foreground (red_gc, &red);
 
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
@@ -67,8 +63,8 @@ draw_expose_event (GtkWidget *widget,
 
   h = 7 * cell_height;
   
-  time(&t);
-  localtime_r(&t, &today);
+  time (&t);
+  localtime_r (&t, &today);
 
   t = gtk_date_sel_get_time (GTK_DATE_SEL (user_data));
   localtime_r(&t, &tm);
@@ -81,19 +77,27 @@ draw_expose_event (GtkWidget *widget,
       
       localtime_r (&t, &tm);
 
-      strftime(buf, sizeof(buf), "%a %d %B", &tm);
+      strftime(buf, sizeof (buf), "%a %d %B", &tm);
       y = day * cell_height;
       if (day & 1)
-	gdk_draw_rectangle(drawable, gray_gc, TRUE, 0, y + 1, max_width, cell_height - 2);
+	gdk_draw_rectangle (drawable, gray_gc, TRUE, 0, 
+			    y + 1, max_width, cell_height - 2);
       else
-	gdk_draw_rectangle(drawable, white_gc, TRUE, 0, y + 1, max_width, cell_height - 2);
-      x = max_width - gdk_string_width(datefont, buf) - 4;
-      gdk_draw_text(drawable, datefont, (tm.tm_mday == today.tm_mday && tm.tm_mon == today.tm_mon && tm.tm_year == today.tm_year) ? red_gc : black_gc,
-		    x, y + timefont->ascent + 1, buf, strlen(buf));
-      gdk_draw_line(drawable, black_gc, 0, y + cell_height, max_width, y + cell_height);
+	gdk_draw_rectangle (drawable, white_gc, TRUE, 0, y + 1, 
+			    max_width, cell_height - 2);
+      x = max_width - gdk_string_width (datefont, buf) - 4;
+      gdk_draw_text (drawable, datefont, 
+		     (tm.tm_mday == today.tm_mday 
+		      && tm.tm_mon == today.tm_mon 
+		      && tm.tm_year == today.tm_year) ? red_gc : black_gc,
+		    x, y + timefont->ascent + 1, buf, strlen (buf));
+      gdk_draw_line (drawable, black_gc, 0, y + cell_height, 
+		     max_width, y + cell_height);
 
       t += 60 * 60 * 24;
     }
+
+  gdk_gc_unref (red_gc);
 
   return TRUE;
 }
@@ -102,30 +106,30 @@ static void
 changed_callback(GtkWidget *widget,
 		 GtkWidget *entry)
 {
-  gtk_widget_draw(entry, NULL);
+  gtk_widget_draw (entry, NULL);
 }
 
 GtkWidget *
 week_view(void)
 {
-  GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
-  GtkWidget *draw = gtk_drawing_area_new();
-  GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
-  GtkWidget *datesel = gtk_date_sel_new(1);
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *draw = gtk_drawing_area_new ();
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
 
-  gtk_drawing_area_size(GTK_DRAWING_AREA(draw), 240, 13 * 20);
+  gtk_drawing_area_size(GTK_DRAWING_AREA (draw), 240, 13 * 20);
   gtk_signal_connect (GTK_OBJECT (draw),
 		      "expose_event",
 		      GTK_SIGNAL_FUNC (draw_expose_event),
 		      datesel);
   
-  gtk_box_pack_start(GTK_BOX(hbox), datesel, TRUE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
 
-  gtk_box_pack_start(GTK_BOX(vbox), draw, FALSE, FALSE, 0);
-  gtk_box_pack_end(GTK_BOX(vbox), hbox, FALSE, FALSE, 4);
+  gtk_box_pack_start(GTK_BOX (vbox), draw, FALSE, FALSE, 0);
+  gtk_box_pack_end(GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
 
-  gtk_signal_connect(GTK_OBJECT(datesel), "changed",
-		     GTK_SIGNAL_FUNC(changed_callback), draw);
+  gtk_signal_connect(GTK_OBJECT (datesel), "changed",
+		     GTK_SIGNAL_FUNC (changed_callback), draw);
 
   return vbox;
 }

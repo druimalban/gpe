@@ -16,6 +16,9 @@
 #include <gtk/gtk.h>
 
 #include "gtkdatesel.h"
+#include "globals.h"
+#include "future_view.h"
+#include "event-db.h"
 
 static gint
 draw_expose_event (GtkWidget *widget,
