@@ -179,7 +179,7 @@ schedule_alarm(event_t ev, time_t start)
   ev_d = event_db_get_details (ev);
   
   sprintf(filename, "/var/spool/at/%ld.%ld.%ld", (long)alarm_t, ev->uid,
-		  (long(getuid()));
+		  (long)(getuid()));
   
   if ((f=fopen(filename, "w")))
   {
@@ -213,7 +213,7 @@ unschedule_alarm(event_t ev)
   alarm_t = ev->start-60*ev->alarm;
   
   sprintf(filename, "/var/spool/at/%ld.%ld.%ld", (long)alarm_t, ev->uid,
-		  (long(getuid()));
+		  (long)(getuid()));
   sprintf(command, "rm %s", filename);
   system(command);
   
