@@ -1,6 +1,7 @@
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (install-mo): Add dummy rule.
+	(dist-upload): New rule.
 
 2003-03-27  Philip Blundell  <philb@gnu.org>
 

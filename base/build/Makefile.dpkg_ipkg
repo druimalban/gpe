@@ -18,6 +18,9 @@ dist: clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	$(MAKE) printinfo
 
+dist-upload: dist
+	scp ../$(PACKAGE)-$(VERSION).tar.gz handhelds.org:/home/ftp/pub/projects/gpe/source/
+
 dist-prep:
 install-mo:
 # empty, can be filled in Makefile.translation
