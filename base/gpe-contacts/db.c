@@ -31,7 +31,12 @@ create table person_attr (
 );
 
 create table attr (
-	attr		int NOT NULL,
+	id		int NOT NULL,
+	description	text
+);
+
+create table category (
+	id		int NOT NULL,
 	description	text
 );
 ";
@@ -205,3 +210,53 @@ db_insert_attribute (guint id, gchar *desc)
   return TRUE;
 }
 
+static int
+load_one_attribute (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 2)
+    {
+      GSList **list = (GSList **)arg;
+      struct attribute *c = g_malloc (sizeof (struct attribute));
+
+      c->id = atoi (argv[0]);
+      c->name = g_strdup (argv[1]);
+
+      *list = g_slist_append (*list, c);
+    }
+
+  return 0;
+}
+
+GSList *
+db_get_categories (void)
+{
+  GSList *list = NULL;
+  char *err;
+  if (sqlite_exec (db,
+		   "select id,description from category",
+		   load_one_attribute, &list, &err))
+  {
+    fprintf (stderr, "sqlite: %s\n", err);
+    free (err);
+    return NULL;
+  }
+		
+  return list;
+}
+
+GSList *
+db_get_attributes (void)
+{
+  GSList *list = NULL;
+  char *err;
+  if (sqlite_exec (db,
+		   "select id,description from attr",
+		   load_one_attribute, &list, &err))
+  {
+    fprintf (stderr, "sqlite: %s\n", err);
+    free (err);
+    return NULL;
+  }
+		
+  return list;  
+}

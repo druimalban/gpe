@@ -17,6 +17,7 @@
 #include "pixmaps.h"
 #include "gtkdatecombo.h"
 #include "callbacks.h"
+#include "db.h"
 
 static void
 add_tag (guint tag, GtkWidget *w, GtkWidget *pw)
@@ -138,8 +139,7 @@ create_edit (void)
   GtkWidget *hbox4;
   GtkWidget *edit_bt_image;
   GtkWidget *scrolledwindow3;
-  GtkWidget *viewport1;
-  GtkWidget *edit_catlist;
+  GtkWidget *cbox;
   GtkWidget *name_entry;
   GtkWidget *summary_entry;
   GtkWidget *label16;
@@ -149,6 +149,7 @@ create_edit (void)
   GtkWidget *catframe;
   GtkTooltips *tooltips;
   GtkWidget *topvbox;
+  GSList *categories = db_get_categories ();
 
   tooltips = gtk_tooltips_new ();
 
@@ -282,22 +283,26 @@ create_edit (void)
   gtk_container_add (GTK_CONTAINER (catframe), scrolledwindow3);
   gtk_box_pack_start (GTK_BOX (topvbox), catframe, TRUE, TRUE, 2);
 
-  viewport1 = gtk_viewport_new (NULL, NULL);
-  gtk_widget_set_name (viewport1, "viewport1");
-  gtk_widget_ref (viewport1);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "viewport1", viewport1,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (viewport1);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow3), viewport1);
+  cbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (cbox);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow3), 
+					 cbox);
 
-  edit_catlist = gtk_list_new ();
-  gtk_widget_set_name (edit_catlist, "edit_catlist");
-  gtk_widget_ref (edit_catlist);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "edit_catlist", edit_catlist,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (edit_catlist);
-  gtk_container_add (GTK_CONTAINER (viewport1), edit_catlist);
-  gtk_list_set_selection_mode (GTK_LIST (edit_catlist), GTK_SELECTION_MULTIPLE);
+  if (categories)
+    {
+      GSList *iter;
+      for (iter = categories; iter; iter = iter->next)
+	{
+	  struct attribute *c = iter->data;
+	  GtkWidget *w = gtk_check_button_new_with_label (c->name);
+	  gtk_widget_show (w);
+	  gtk_box_pack_start (GTK_BOX (cbox), w, FALSE, FALSE, 0);
+	  g_free (c->name);
+	  g_free (c);
+	}
+
+      g_slist_free (categories);
+    }
 
   name_entry = gtk_entry_new ();
   gtk_widget_set_name (name_entry, "name_entry");

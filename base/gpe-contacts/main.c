@@ -131,6 +131,7 @@ config_categories_box(void)
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   struct pix *p;
   GtkWidget *pw;
+  GSList *categories;
 
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
@@ -148,6 +149,28 @@ config_categories_box(void)
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, 
 			   delete_category, clist);
+
+  categories = db_get_categories ();
+  if (categories)
+    {
+      GSList *iter;
+      guint row = 0;
+      
+      for (iter = categories; iter; iter = iter->next)
+	{
+	  gchar *line_info[1];
+	  struct attribute *c = iter->data;
+	  line_info[0] = c->name;
+	  gtk_clist_append (GTK_CLIST (clist), line_info);
+	  gtk_clist_set_row_data (GTK_CLIST (clist), row, 
+				  (gpointer) c->id);
+	  g_free (c->name);
+	  g_free (c);
+	  row ++;
+	}
+
+      g_slist_free (categories);
+    }
 
   gtk_container_add (GTK_CONTAINER (scrolled), clist);
   gtk_widget_show (clist);
@@ -173,6 +196,7 @@ config_attributes_box(void)
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   struct pix *p;
   GtkWidget *pw;
+  GSList *attrs;
 
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
@@ -194,6 +218,32 @@ config_attributes_box(void)
   gtk_widget_show (clist);
   gtk_widget_show (scrolled);
 
+  attrs = db_get_attributes ();
+  if (attrs)
+    {
+      GSList *iter;
+      guint row = 0;
+      
+      for (iter = attrs; iter; iter = iter->next)
+	{
+	  gchar *line_info[2];
+	  char buf[10];
+	  struct attribute *c = iter->data;
+	  sprintf (buf, "%d", c->id);
+	  line_info[0] = buf;
+	  line_info[1] = c->name;
+	  gtk_clist_append (GTK_CLIST (clist), line_info);
+	  gtk_clist_set_row_data (GTK_CLIST (clist), row, 
+				  (gpointer) c->id);
+	  g_free (c->name);
+	  g_free (c);
+	  row ++;
+	}
+
+      g_slist_free (attrs);
+    }
+  gtk_clist_columns_autosize (GTK_CLIST (clist));
+
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_AUTOMATIC);
@@ -210,7 +260,7 @@ configure(GtkWidget *widget, gpointer d)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *notebook = gtk_notebook_new ();
-  GtkWidget *editlabel = gtk_label_new (_("Edit layout"));
+  GtkWidget *editlabel = gtk_label_new (_("Editing layout"));
   GtkWidget *editbox = edit_structure ();
   GtkWidget *categorieslabel = gtk_label_new (_("Categories"));
   GtkWidget *attributeslabel = gtk_label_new (_("Attributes"));

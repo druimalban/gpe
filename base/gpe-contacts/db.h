@@ -50,4 +50,13 @@ extern void discard_person (struct person *);
 extern gboolean db_insert_category (gchar *, guint *);
 extern gboolean db_insert_attribute (guint, gchar *);
 
+struct attribute
+{
+  guint id;
+  gchar *name;
+};
+
+extern GSList *db_get_attributes (void);
+extern GSList *db_get_categories (void);
+
 #endif
