@@ -66,6 +66,9 @@ install-program: gpe-login gpe-lock-display
 	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
 	install -d $(DESTDIR)/etc/gpe
 	install -m 644 locale.alias $(DESTDIR)/etc/gpe/
+	install -m 644 standard.mbdock $(DESTDIR)/etc/gpe/
+	install -d $(DESTDIR)/etc/sysconfig
+	install -m 644 gpe-login.sysconfig $(DESTDIR)/etc/sysconfig/gpelogin
 
 install-scripts: gpe-logout.desktop
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done

@@ -1,16 +1,22 @@
 #!/bin/sh
 
-GEOMETRY=
-if [ -x /usr/bin/gpe-ownerinfo ]; then
-  GEOMETRY="-geometry 240x220+0+0"
-fi
-TRANSPARENT=
-if [ -x /usr/X11R6/bin/xsetroot ]; then
-  TRANSPARENT="--transparent"
-fi
-#HARD=--hard
+. /etc/sysconfig/gpelogin
 
-/usr/X11R6/bin/xmodmap -e "keycode 135 = Mode_switch Multi_key"
-
-export GTK2_RC_FILES=/etc/X11/gpe-login.gtkrc
-exec /usr/bin/gpe-login $HARD $TRANSPARENT $GEOMETRY
+if [ "$AUTOLOGIN" == "true" ] ; then
+	exec /etc/X11/Xsession
+else
+	GEOMETRY=
+	if [ -x /usr/bin/gpe-ownerinfo ]; then
+	  GEOMETRY="-geometry 240x220+0+0"
+	fi
+	TRANSPARENT=
+	if [ -x /usr/X11R6/bin/xsetroot ]; then
+	  TRANSPARENT="--transparent"
+	fi
+	#HARD=--hard
+	
+	/usr/X11R6/bin/xmodmap -e "keycode 135 = Mode_switch Multi_key"
+	
+	export GTK2_RC_FILES=/etc/X11/gpe-login.gtkrc
+	exec /usr/bin/gpe-login $HARD $TRANSPARENT $GEOMETRY
+fi

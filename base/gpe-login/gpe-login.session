@@ -1,3 +1,8 @@
 #!/bin/sh
-gpe-login --autolock &
+
+. /etc/sysconfig/gpelogin
+
+if [ "$AUTOLOGIN" != "true" ] ; then
+	gpe-login --autolock &
+fi
 

@@ -3,15 +3,7 @@
 # No action if .mbdock exists
 if [ ! -f $HOME/.mbdock ]; then
 (
-  mbmenu &
-  sleep 5
-  minitime -g -5 &
-  monolaunch -k /usr/share/pixmaps/xkbd.xpm xkbd &
-  xstroke &
-  minibat &
-  minivol &
-  minilite &
-  gpe-what &
+  cp /etc/gpe/standard.mbdock $HOME/.mbdock
 
   gpe-question --icon !gtk-dialog-info --question "<b>Welcome to GPE!</b>
 

@@ -1,0 +1,8 @@
+mbmenu		8
+monolaunch -k /usr/share/pixmaps/xkbd.xpm xkbd		28
+minilite		47
+minivol		63
+minibat		79
+gpe-what		95
+xstroke		111
+minitime -g -5		205
