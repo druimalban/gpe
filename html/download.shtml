@@ -7,4 +7,8 @@ href="ftp://ftp.handhelds.org/pub/projects/gpe/">ftp://ftp.handhelds.org/pub/pro
 <p>
 At present these are unstable and active development sources can be found
 in the <a href=/cvs.shtml>GPE CVS archive</a>
+<p>
+<H3>GPE has made it into Familiar!</H3>
+So if you install the X11 branch of Familiar V0.6-pre1 (or later) you will
+get the latest almost stable GPE packages.
 <!--#include virtual="includes/foot.shtml"-->
