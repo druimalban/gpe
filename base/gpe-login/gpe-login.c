@@ -908,7 +908,8 @@ locale_read_user (const char *username)
 {
   struct passwd *pwe;
   struct stat st;
-  char *fname = NULL, *p, *lbuf = NULL;
+  char *fname = NULL, *p;
+  char lbuf[80];
   locale_item_t *item = NULL;
   FILE *fp;
 
