@@ -50,7 +50,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
 
 install-program: $(PACKAGE).desktop all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
