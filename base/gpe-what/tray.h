@@ -1,8 +1,6 @@
 #ifndef _TRAY_H_
 #define _TRAY_H_
 
-#define DEBUG
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -45,22 +43,24 @@
 #define XEMBED_ACTIVATE_ACCELERATOR     14
 
 #ifdef DEBUG
-#define TRAYDBG(txt, args... ) fprintf(stderr, "gpe-what TRAY-DEBUG: " txt , ##args )
+#define TRAYDBG(txt, args... ) fprintf(stderr, "TRAY-DEBUG: " txt , ##args )
 #else
 #define TRAYDBG(txt, args... ) /* nothing */
 #endif
 
 int  tray_init(Display* dpy, Window win);
+
+Window tray_get_window(void);
+
 void tray_init_session_info(Display *d, Window win, char **argv, int argc);
+
 void tray_handle_event(Display *dpy, Window win, XEvent *an_event);
+
 void tray_send_message(Display *d, Window win, unsigned char* msg);
+
 void tray_map_window (Display* dpy, Window win);
+
+/* probably wont work */
 void tray_unmap_window (Display* dpy, Window win);
-
-/* TODO: below should all be static */
-void tray_set_xembed_info (Display* dpy, Window win, int flags);
-void tray_send_opcode( Display* dpy,  Window w, long message,
-		      long data1, long data2, long data3 );
-
 
 #endif

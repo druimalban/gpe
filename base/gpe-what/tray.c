@@ -1,12 +1,38 @@
 #include "tray.h"
 
 static Atom Atoms[10];
-static Window Dock;
-static Bool   Is_docked;
-static Bool   Found_tray;
+static Window Dock = None;
+static int trapped_error_code = 0;
+static int (*old_error_handler) (Display *d, XErrorEvent *e);
 
-static
-void tray_send_message_data( Display* dpy, Window w, unsigned char *data);
+static void tray_send_message_data( Display* dpy, Window w,
+				    unsigned char *data);
+static int tray_find_dock(Display *dpy, Window win);
+static void tray_set_xembed_info (Display* dpy, Window win, int flags);
+static void tray_send_opcode( Display* dpy,  Window w, long message,
+			      long data1, long data2, long data3 );
+
+static int
+error_handler(Display     *display,
+	      XErrorEvent *error)
+{
+   trapped_error_code = error->error_code;
+   return 0;
+}
+
+static void
+trap_errors(void)
+{
+   trapped_error_code = 0;
+   old_error_handler = XSetErrorHandler(error_handler);
+}
+
+static int
+untrap_errors(void)
+{
+   XSetErrorHandler(old_error_handler);
+   return trapped_error_code;
+}
 
 int
 tray_init(Display* dpy, Window win)
@@ -32,53 +58,36 @@ tray_init(Display* dpy, Window win)
    Atoms[ATOM_NET_SYSTEM_TRAY_MESSAGE_DATA]
       = XInternAtom(dpy, "_NET_SYSTEM_TRAY_MESSAGE_DATA", False);
    
-   /* !!! This could mess events up !!! */
-   XSelectInput(dpy, RootWindow(dpy, DefaultScreen(dpy)), StructureNotifyMask);
-		
-   Is_docked = False;
-		
    /* Find the dock */
+   return tray_find_dock(dpy, win);
+}
+
+static int
+tray_find_dock(Display *dpy, Window win)
+{
+   XGrabServer (dpy);
+
    Dock = XGetSelectionOwner(dpy, Atoms[ATOM_SYSTEM_TRAY]);
-   if (Dock)
-   {
+
+   if (!Dock)
+      XSelectInput(dpy, RootWindow(dpy, DefaultScreen(dpy)),
+		   StructureNotifyMask);
+
+   XUngrabServer (dpy);
+   XFlush (dpy);
+   
+   if (Dock != None) {
       TRAYDBG("found dock, sending opcode\n");
-      tray_unmap_window (dpy, win);
       tray_send_opcode(dpy, Dock, SYSTEM_TRAY_REQUEST_DOCK, win, 0, 0);
-      /*
-	next request map or have this already set ?
-	or wait for XEMBED_EMBEDDED_NOTIFY ? 
-      */
-      Found_tray = True;
       return 1;
-   }
+   } 
 
-   /* -- to fix one day --- 
-   TRAYDBG("cant find dock, checking for kde root prop\n");
-
-   {
-      Atom realType;
-      unsigned long n;
-      unsigned long extra;
-      int format;
-      int status;
-      char * value;
-   
-      status = XGetWindowProperty(dpy, DefaultRootWindow(dpy),
-				  Atoms[ATOM_KDE_SYSTEM_TRAY], 0L, 32L, False,
-				  XA_WINDOW, &realType, &format,
-				  &n, &extra, (unsigned char **) &value);
-      if (status)
-      {
-	 TRAYDBG("found some kde prop gonna message win %i\n", value[0]);
-	 tray_send_opcode(dpy, value[0], SYSTEM_TRAY_REQUEST_DOCK, win, 0, 0);
-	 Found_tray = True;
-	 return 1;
-      }
-   }
-   */
-   
-   Found_tray = False;
    return 0;
+}
+
+Window tray_get_window(void)
+{
+   return Dock; 
 }
 
 void
@@ -115,23 +124,16 @@ tray_send_message(Display *d, Window win, unsigned char* msg)
 void
 tray_handle_event(Display *dpy, Window win, XEvent *an_event)
 {
-   /*
-     tray should handle -
-     ReparentNotify, if parent != Dock then not docked anymore - hide!
-     ClientMessage, XEMBED_EMBEDDED_NOTIFY to set truly docked flag
-                    MANAGER on root -> selection appeared ?
-   */
-
-   //tray_map_window (dpy, win);
-   
    switch (an_event->type)
    {
       case ClientMessage:
-	 TRAYDBG("message recieved\n");
+
 
 	 if (an_event->xclient.message_type
 	     == Atoms[ATOM_XEMBED])
 	 {
+	    TRAYDBG("Xembed message recieved %i \n",
+		    an_event->xclient.data.l[1] );
 	    switch (an_event->xclient.data.l[1])
 	    {
 	       case XEMBED_EMBEDDED_NOTIFY:
@@ -140,29 +142,17 @@ tray_handle_event(Display *dpy, Window win, XEvent *an_event)
 		  break;
 	    }
 	 }
-	 if (an_event->xclient.message_type
-	     == Atoms[ATOM_MANAGER] && !Found_tray)
-	 {   /* dock has appeared  */
+	 if (an_event->xclient.message_type == Atoms[ATOM_MANAGER]
+	     && Dock == None)
+	 { 
 	    if (an_event->xclient.data.l[1] == Atoms[ATOM_SYSTEM_TRAY])
-	    {
-	       Dock = XGetSelectionOwner(dpy, Atoms[ATOM_SYSTEM_TRAY]);
-	       TRAYDBG("got manager message on root\n");
-	       if (Dock)
-	       {
-		  tray_unmap_window (dpy, win);
-		  tray_send_opcode(dpy, Dock, SYSTEM_TRAY_REQUEST_DOCK,
-				   win, 0, 0);
-		  Found_tray = True;
-	       }
-	    }
+	       tray_find_dock(dpy, win);
 	 }
-
 	 break;
       case ReparentNotify:
 	 TRAYDBG("ouch got reparented\n");
 	 break;
    }
-
 }
 
 void
@@ -172,10 +162,8 @@ tray_set_xembed_info (Display* dpy, Window win, int flags)
    
    list[0] = MAX_SUPPORTED_XEMBED_VERSION;
    list[1] = flags;
-   printf("changing win %d\n", win);
    XChangeProperty (dpy, win, Atoms[ATOM_XEMBED_INFO], XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *) list, 2);
-   
 }
 
 void
@@ -190,7 +178,7 @@ tray_unmap_window (Display* dpy, Window win)
    tray_set_xembed_info (dpy, win, 0);
 }
 
-void
+static void
 tray_send_opcode(
 		      Display* dpy,
 		      Window w,    
@@ -212,12 +200,13 @@ tray_send_opcode(
    ev.xclient.data.l[3] = data2;
    ev.xclient.data.l[4] = data3;
    
-   //trap_errors();
+   trap_errors();
    XSendEvent(dpy, Dock, False, NoEventMask, &ev);
    XSync(dpy, False);
-   //if (untrap_errors()) {
-      /* Handle failure */
-   //}
+   if (untrap_errors()) {
+      fprintf(stderr, "Tray.c : X error %i on opcode send\n",
+	      trapped_error_code );
+   }
 }
 
 static void
@@ -227,7 +216,6 @@ tray_send_message_data(
 		      unsigned char *data
 		      ){
    XEvent ev;
-   
    memset(&ev, 0, sizeof(ev));
    ev.xclient.type = ClientMessage;
    ev.xclient.window = w;
@@ -235,12 +223,13 @@ tray_send_message_data(
    ev.xclient.format = 8;
    memcpy(ev.xclient.data.b, data, sizeof(unsigned char)*20);
    
-   //trap_errors();
+   trap_errors();
    XSendEvent(dpy, Dock, False, NoEventMask, &ev);
    XSync(dpy, False);
-   //if (untrap_errors()) {
-      /* Handle failure */
-   //}
+   if (untrap_errors()) {
+      fprintf(stderr, "Tray.c : X error %i on message send\n",
+	      trapped_error_code );
+   }
 }
 
 

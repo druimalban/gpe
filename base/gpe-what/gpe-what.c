@@ -109,9 +109,11 @@ main (int argc, char *argv[])
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
   XSync (dpy, 0);
-  tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
-
-  gdk_window_add_filter (window->window, filter, 0);
+  if (tray_init (dpy, GDK_WINDOW_XWINDOW (window->window)))
+    {
+      gtk_plug_construct (window, tray_get_window ());
+      gtk_widget_show (window);
+    }  
 
   gtk_main ();
 
