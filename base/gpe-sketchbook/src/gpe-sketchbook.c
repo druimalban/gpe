@@ -52,6 +52,8 @@ static struct gpe_icon my_icons[] = {
   { "icons",     "gpe-sketchbook/view-mode-icons"},
   //{ "sketchpad", "gpe-sketchbook/view-mode-sketchpad" },
 
+  { "question",  "question"  },//needed to be loaded for gpe_question ??? //FIXME: !!!
+
   //own icons
   { "tool_pencil",  "gpe-sketchbook/tool_pencil"},
   { "tool_eraser",  "gpe-sketchbook/tool_eraser"},
