@@ -69,6 +69,8 @@
 #define DBG(x) ;
 #endif
 
+#define _(x) gettext(x)
+
 time_t last_update=0;
 
 GdkPixbuf *default_pixbuf;
@@ -86,6 +88,8 @@ gboolean flag_desktop;
 gboolean flag_rows;
 GtkWidget *child;
 Display *dpy;
+gchar *only_group;
+gchar *title_from_dotdesktop;
 
 extern gboolean gpe_appmgr_start_xsettings (void);
 
@@ -148,11 +152,11 @@ get_icon_fn (GnomeDesktopFile *p, int iconsize)
 
   full_fn = find_icon (fn);
 
+  if (full_fn == NULL)
+    printf("couldn't find icon \"%s\"\n", fn);
+  
   g_free (fn);
 
-  if (full_fn == NULL)
-    printf("couldn't find %s\n", fn);
-  
   return full_fn;
 }
 
@@ -336,6 +340,7 @@ on_window_delete (GObject *object, gpointer data)
 
 extern GtkWidget * create_tab_view (void);
 extern GtkWidget * create_row_view (void);
+extern GtkWidget * create_single_view (void);
 
 /* Create the UI for the main window and
  * stuff
@@ -344,12 +349,40 @@ void
 create_main_window (void)
 {
   int w = 640, h = 480;
+  GnomeDesktopFile *d = NULL;
+  gchar *title = NULL;
+  GdkPixbuf *icon = NULL;
 
-  TRACE ("create_main_window");
+  if (title_from_dotdesktop)
+    {
+      GError *err = NULL;
+      d = gnome_desktop_file_load (title_from_dotdesktop, &err);
+      if (!d)
+	{
+	  fprintf (stderr, "couldn't load desktop file \"%s\": %s\n", title_from_dotdesktop, err->message);
+	}
+      if (err)
+	g_error_free (err);
+    }
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  gtk_window_set_title (GTK_WINDOW( window), "Programs");
+  if (d)
+    {
+      gchar *icon_fn = NULL;
+      gnome_desktop_file_get_string (d, NULL, "Name", &title);
+      gnome_desktop_file_get_string (d, NULL, "Icon", &icon_fn);
+      if (icon_fn)
+	icon = gdk_pixbuf_new_from_file (icon_fn, NULL);
+    }
+
+  if (!icon)
+    icon = gpe_find_icon ("icon");
+  if (!title)
+    title = _("Programs");
+
+  gtk_window_set_title (GTK_WINDOW (window), title);
+  gtk_window_set_icon (GTK_WINDOW (window), icon);
   gtk_widget_realize (window);
 
   if (flag_desktop)
@@ -363,12 +396,13 @@ create_main_window (void)
     
   g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (on_window_delete), NULL);
 
-  child = flag_rows ? create_row_view () : create_tab_view ();
+  child = flag_rows ? create_row_view () : only_group ? create_single_view () : create_tab_view ();
   gtk_container_add (GTK_CONTAINER (window), child);
   
-  gpe_set_window_icon (window, "icon");
-
   gtk_widget_show_all (window);
+
+  if (d)
+    gnome_desktop_file_free (d);
 
   refresh_tabs ();
 }
@@ -392,7 +426,6 @@ main (int argc, char *argv[])
 {
   struct package_group *g;
   struct sigaction sa_old, sa_new;
-  TRACE ("main");
 
   /* Hmm */
   items = groups = NULL;
@@ -412,10 +445,11 @@ main (int argc, char *argv[])
       static struct option long_options[] = {
 	{"desktop", 0, 0, 'd'},
 	{"rows", 0, 0, 'r'},
+	{"group", 0, 0, 'g'},
 	{0, 0, 0, 0}
       };
       
-      c = getopt_long (argc, argv, "dr",
+      c = getopt_long (argc, argv, "drg:D:",
 		       long_options, &option_index);
       if (c == -1)
 	break;
@@ -428,10 +462,15 @@ main (int argc, char *argv[])
 	case 'r':
 	  flag_rows = TRUE;
 	  break;
+	case 'g':
+	  only_group = optarg;
+	  break;
+	case 'D':
+	  title_from_dotdesktop = optarg;
+	  break;
 	}
     }
 
-  other_group = make_group ("Other");
   g = make_group ("Office");
   g->categories = g_list_append (g->categories, "Office");
   g = make_group ("Internet");
@@ -440,6 +479,8 @@ main (int argc, char *argv[])
   g->categories = g_list_append (g->categories, "PIM");
   g = make_group ("Games");
   g->categories = g_list_append (g->categories, "Games");
+
+  other_group = make_group ("Other");
 
   /* update the menu data */
   refresh_list ();

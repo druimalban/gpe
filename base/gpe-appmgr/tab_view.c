@@ -159,8 +159,6 @@ create_tab (GList *all_items, char *current_group, tab_view_style style)
 	il = gpe_iconlist_new ();
 
 	gtk_signal_connect (GTK_OBJECT (il), "clicked", (GtkSignalFunc)cb_clicked, NULL);
-	gpe_iconlist_set_bg (GPE_ICONLIST(il), "/usr/share/pixmaps/gpe-default-bg.png");
-
 
 	this_item = all_items;
 	while (this_item)

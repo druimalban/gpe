@@ -1,7 +1,7 @@
 CVSBUILD = yes
 DEBUG = yes
 PACKAGE = gpe-appmgr
-VERSION = 2.0
+VERSION = 2.1
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch
@@ -20,7 +20,7 @@ else
 BUILD = build
 endif
 
-OBJS=main.o row_view.o tab_view.o
+OBJS=main.o row_view.o tab_view.o single_view.o
 
 all: gpe-appmgr
 

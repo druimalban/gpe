@@ -46,4 +46,6 @@ char *get_icon_fn (GnomeDesktopFile *p, int iconsize);
 
 void run_package (GnomeDesktopFile *p);
 
+gchar *only_group;
+
 #endif
