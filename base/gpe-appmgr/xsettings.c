@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,18 @@
 
 static XSettingsClient *client;
 
-#define KEY_BASE "GPE/APPMGR/"
+#define KEY_BASE "GPE/appmgr/"
+
+extern void row_view_set_bg_colour (guint c);
+extern void row_view_set_background (gchar *c);
+extern void row_view_refresh_background (void);
+
+enum image_type
+  {
+    CENTERED,
+    TILED,
+    SCALED
+  };
 
 static void
 notify_func (const char       *name,
@@ -27,59 +38,52 @@ notify_func (const char       *name,
 	     XSettingsSetting *setting,
 	     void             *cb_data)
 {
-//	printf ("notify!\n");
-//	printf ("SET %s\n", name);
-
-#if 0
   if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
       char *p = (char*)name + strlen (KEY_BASE);
 
-      if (!strcmp (p, "SHOW-ALL-GROUP"))
+      if (!strcmp (p, "bgcol") 
+	  && setting->type == XSETTINGS_TYPE_COLOR
+	  && flag_rows)
 	{
-	  if (setting->type == XSETTINGS_TYPE_INT)
-	    {
-
-		    if (cfg_options.show_all_group)
-			    gtk_notebook_remove_page (GTK_NOTEBOOK(notebook), 0);
-
-		    cfg_options.show_all_group = setting->data.v_int;
-
-		    create_all_tab();
-
-		    gtk_notebook_set_page (GTK_NOTEBOOK(notebook), 0);
-	    }
+	  guint c, r, g, b, a;
+	  r = setting->data.v_color.red >> 8;
+	  g = setting->data.v_color.green >> 8;
+	  b = setting->data.v_color.blue >> 8;
+	  a = setting->data.v_color.alpha >> 8;
+	  c = (a << 24) | (r << 16) | (g << 8) | b;
+	  row_view_set_bg_colour (c);
 	}
-
-      if (!strcmp (p, "AUTOHIDE-GROUP-LABELS"))
-      {
-	      if (setting->type == XSETTINGS_TYPE_INT)
-	      {
-		      cfg_options.auto_hide_group_labels = setting->data.v_int;
-		      
-		      /* Refresh view... */
-		      autohide_labels (-1);
-	      }
-      }
-      
-      if (!strcmp (p, "SHOW-RECENT-APPS")) {
-	      if (setting->type == XSETTINGS_TYPE_INT) {
-		      cfg_options.show_recent_apps = setting->data.v_int;
-		      create_recent_box();
-	      }
-      }
-
-      if (!strcmp (p, "ON-WINDOW-CLOSE")) {
-	      if (setting->type == XSETTINGS_TYPE_STRING) {
-		      if (!strcasecmp(setting->data.v_string, "exit"))
-			      cfg_options.on_window_close = WINDOW_CLOSE_EXIT;
-		      else
-			      cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
-	      }
-      }
-
+    } 
+  else if (strcasecmp (name, "matchbox/background") == 0
+	   && flag_rows)
+    {
+      if (setting && setting->type == XSETTINGS_TYPE_STRING)
+	{
+	  enum image_type type = SCALED;
+	  gchar *path = setting->data.v_string;
+	  if (!strncmp (path, "img-tiled:", 10))
+	    {
+	      path += 10;
+	      type = TILED;
+	    }
+	  else if (!strncmp (path, "img-stretched:", 14))
+	    {
+	      path += 14;
+	      type = SCALED;
+	    }
+	  else if (!strncmp (path, "img-centered:", 13))
+	    {
+	      path += 13;
+	      type = CENTERED;
+	    }	  
+	  row_view_set_background (path);
+	}
+      else if (setting == NULL)
+	{
+	  row_view_set_background (NULL);
+	}
     }
-#endif
 }
 
 static GdkFilterReturn
@@ -123,16 +127,6 @@ gpe_appmgr_start_xsettings (void)
 {
   Display *dpy = GDK_DISPLAY ();
 
-	/* Default options */
-	cfg_options.show_all_group = 0;
-	cfg_options.auto_hide_group_labels = 1;
-	cfg_options.tab_view = TAB_VIEW_ICONS;
-	cfg_options.list_icon_size = 48;
-	cfg_options.show_recent_apps = 0;
-	cfg_options.recent_apps_number = 4;
-	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
-	cfg_options.use_windowtitle = 1;
-
   client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_func, watch_func, NULL);
   if (client == NULL)
     {
@@ -140,7 +134,5 @@ gpe_appmgr_start_xsettings (void)
       return FALSE;
     }
 
-//  push_new_changes = TRUE;
-
-	return TRUE;
+  return TRUE;
 }

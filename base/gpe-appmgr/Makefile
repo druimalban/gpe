@@ -4,8 +4,8 @@ PACKAGE = gpe-appmgr
 VERSION = 2.3
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch 
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch -L../libxsettings-client -lXsettings-client
 
 DESTDIR=
 PREFIX=/usr
@@ -20,7 +20,7 @@ else
 BUILD = build
 endif
 
-OBJS=main.o row_view.o tab_view.o single_view.o
+OBJS=main.o row_view.o tab_view.o single_view.o xsettings.o
 
 all: gpe-appmgr
 

@@ -15,6 +15,8 @@
  */
 
 #include <string.h>
+#include <unistd.h>
+#include <sys/signal.h>
 
 /* Gtk etc. */
 #include <gtk/gtk.h>
@@ -29,6 +31,8 @@
 /* malloc / free */
 #include <stdlib.h>
 
+#include <unistd.h>
+
 /* time() */
 #include <time.h>
 
@@ -42,12 +46,16 @@
 #include <gpe/render.h>
 #include <gpe/spacing.h>
 #include <gpe/gpeiconlistview.h>
+#include <gpe/launch.h>
+#include <gpe/infoprint.h>
+#include <gpe/errorbox.h>
 
 /* everything else */
 #include "main.h"
 
-#include "cfg.h"
-#include "popupmenu.h"
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 //#define DEBUG
 #ifdef DEBUG
@@ -58,8 +66,77 @@
 #define DBG(x) ;
 #endif
 
-GtkWidget *bin;
-GtkWidget *table;
+GtkWidget *programs_fixed;
+GdkPixbuf *background;
+GtkWidget *toplevel;
+GdkPixbuf *shutdown_pixbuf, *shutdown_down_pixbuf;
+gboolean shutdown_is_down;
+GtkWidget *tab_notebook;
+
+static GSList *views;
+static gchar *background_filename;
+
+static GSList *rows, *labels;
+
+#define DEFAULT_BACKGROUND PREFIX "/share/gpe/pixmaps/default/gpe-appmgr/desktop-background.png"
+
+#define ICONLIST_WIDTH		576
+#define ICONLIST_XOFFSET	124
+
+#define N_(x)  (x)
+
+#define PANEL_HEIGHT		48
+
+#define SHUTDOWN_Y	(600 - 48 - 20 - 4)
+
+void
+row_view_set_bg_colour (guint c)
+{
+  GSList *v;
+
+  for (v = views; v; v = v->next)
+    {
+      gpe_icon_list_view_set_bg_color (GPE_ICON_LIST_VIEW (v->data), c);
+      gtk_widget_queue_draw (GTK_WIDGET (v->data));
+    }
+}
+
+void
+row_view_refresh_background (void)
+{
+  GSList *ll;
+
+  for (ll = rows; ll; ll = ll->next)
+    gpe_icon_list_view_set_bg_pixmap (GPE_ICON_LIST_VIEW (ll->data), background);
+
+  if (toplevel)
+    gtk_widget_queue_draw (toplevel);
+}
+
+void
+row_view_set_background (gchar *path)
+{
+  GdkPixbuf *pix;
+  int width, height;
+
+  if (background)
+    g_object_unref (background);
+  if (background_filename)
+    g_free (background_filename);
+
+  if (path == NULL || path[0] == 0)
+    path = DEFAULT_BACKGROUND;
+
+  background_filename = g_strdup (path);
+  pix = gdk_pixbuf_new_from_file (background_filename, NULL);
+  if (!pix)
+    pix = gdk_pixbuf_new_from_file (DEFAULT_BACKGROUND, NULL);
+  gdk_drawable_get_size (toplevel->window, &width, &height);
+  height -= PANEL_HEIGHT;
+  background = gdk_pixbuf_scale_simple (pix, width, height, GDK_INTERP_BILINEAR);
+
+  row_view_refresh_background ();
+}
 
 static void
 run_callback (GObject *obj, GdkEventButton *ev, GnomeDesktopFile *p)
@@ -80,7 +157,14 @@ create_row (GList *all_items, char *current_group)
   view = gpe_icon_list_view_new ();
 
   gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view), 32);
-  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view), 32);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view), 24);
+
+  gpe_icon_list_view_set_bg_pixmap (GPE_ICON_LIST_VIEW (view), background);
+  gpe_icon_list_view_set_bg_color (GPE_ICON_LIST_VIEW (view), 0x80ffffff);
+  gpe_icon_list_view_set_border_color (GPE_ICON_LIST_VIEW (view), 0x00bfaea5);
+  gpe_icon_list_view_set_border_width (GPE_ICON_LIST_VIEW (view), 8);
+
+  views = g_slist_append (views, view);
   
   this_item = all_items;
   while (this_item)
@@ -107,19 +191,75 @@ create_row (GList *all_items, char *current_group)
   return view;
 }
 
+static int
+add_row (GtkWidget *row, gint cur_y, gchar *label)
+{
+  GtkAllocation alloc;
+  GtkRequisition req;
+
+  alloc.x = ICONLIST_XOFFSET;
+  alloc.y = cur_y;
+  alloc.width = ICONLIST_WIDTH;
+  alloc.height = 1;
+  gtk_widget_size_allocate (row, &alloc);
+  gtk_widget_size_request (row, &req);
+  alloc.height = req.height;
+  gtk_widget_size_allocate (row, &alloc);
+  gtk_widget_set_usize (row, alloc.width, -1);
+  
+  cur_y += req.height + 8;
+  
+  gtk_fixed_put (GTK_FIXED (programs_fixed), row, alloc.x, alloc.y);
+
+  if (label)
+    {
+      GdkPixbuf *p = gpe_find_icon (label);
+      if (p)
+	{
+	  GtkWidget *w = gtk_image_new_from_pixbuf (p);
+	  alloc.x -= 24;
+	  gtk_widget_size_request (w, &req);
+	  alloc.width = req.width;
+	  alloc.height = req.height;
+	  gtk_widget_size_allocate (w, &alloc);
+	  gtk_fixed_put (GTK_FIXED (programs_fixed), w, alloc.x, alloc.y);
+	  gtk_widget_show (w);
+
+	  labels = g_slist_prepend (labels, w);
+	}
+    }
+
+  return cur_y;
+}
+
 static void 
 refresh_callback (void)
 {
   GList *l;
-  GSList *rows = NULL, *p;
-  int n_rows = 0;
-  int i;
-  GtkWidget *sep;
+  GSList *ll;
+  int cur_y;
+  GtkWidget *row;
+
+  cur_y = 16;
+
+  for (ll = rows; ll; ll = ll->next)
+    {
+      gtk_widget_destroy (ll->data);
+    }
+  g_slist_free (rows);
+  rows = NULL;
+
+  for (ll = labels; ll; ll = ll->next)
+    {
+      gtk_widget_destroy (ll->data);
+    }
+  g_slist_free (labels);
+  rows = NULL;
 
   for (l = groups; l; l = l->next)
     {
       struct package_group *group = l->data;
-      GtkWidget *row;
+      gchar *label = NULL;
 
       if (group->hide)
 	continue;
@@ -127,83 +267,104 @@ refresh_callback (void)
       row = create_row (group->items, group->name);
       g_object_set_data (G_OBJECT (row), "group", group);
 
-      rows = g_slist_append (rows, row);
-      n_rows++;
+      rows = g_slist_prepend (rows, row);
+
+      cur_y = add_row (row, cur_y, NULL);
     }
-
-  table = gtk_table_new (3, n_rows, FALSE);
-  gtk_widget_show (table);
-
-  for (i = 0, p = rows; i < n_rows; i++)
-    {
-      GtkWidget *label;
-      struct package_group *g;
-      GtkWidget *w;
-
-      w = p->data;
-      g = g_object_get_data (G_OBJECT (w), "group");
-
-      label = gtk_label_new (g->name);
-      gtk_widget_show (label);
-
-      gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.0);
-
-      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (label), 0, 1, i, i + 1, 0, GTK_FILL | GTK_SHRINK, 0, 0);
-      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (w), 2, 3, i, i + 1, GTK_EXPAND | GTK_FILL | GTK_SHRINK, GTK_EXPAND | GTK_FILL | GTK_SHRINK, 0, 0);
-      p = p->next;
-    }
-
-  g_slist_free (rows);
-
-  sep = gtk_vseparator_new ();
-  gtk_widget_show (sep);
-  gtk_table_attach (GTK_TABLE (table), sep, 1, 2, 0, n_rows, 0, 0, 0, 0);
-
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (bin), table);
 }
 
-static void
-realize_callback (GtkWidget *widget)
+void
+tab_button_press (GtkWidget *image, GdkEventButton *gev, GtkWidget *notebook)
 {
-  pid_t pid;
-  gchar *id;
+  gint new_tab;
+  GtkWidget *slave_notebook;
 
-  id = g_strdup_printf ("%d", gtk_socket_get_id (GTK_SOCKET (widget)));
-  pid = vfork ();
-  if (pid == 0) {
-    execlp ("gpe-today", "gpe-today", "-s", id, NULL);
-    perror ("gpe-today");
-    exit (1);
-  }
-  g_free (id);
+  if (gev->y < 87.0)
+    new_tab = 0;
+  else if (gev->y < 192.0)
+    new_tab = 1;
+  else if (gev->y < 288.0) 
+    new_tab = 2;
+  else if (gev->y > SHUTDOWN_Y && gev->y <= (SHUTDOWN_Y + 20))
+    {
+      shutdown_is_down = TRUE;
+      gtk_widget_queue_draw (image);
+      return;
+    }
+  else
+    return;
+
+  slave_notebook = g_object_get_data (G_OBJECT (notebook), "slave");
+
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (notebook), new_tab);
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (slave_notebook), new_tab);
+}
+
+void
+tab_button_release (GtkWidget *image, GdkEventButton *gev)
+{
+  if (shutdown_is_down)
+    {
+      shutdown_is_down = FALSE;
+      gtk_widget_queue_draw (image);
+      if (gev->y > SHUTDOWN_Y && gev->y <= (SHUTDOWN_Y + 20))
+	system ("apm -s");
+    }
+}
+
+gboolean
+draw_programs (GtkWidget *widget, GdkEventExpose *ev)
+{
+  GdkRectangle r, br;
+
+  br.x = 0;
+  br.y = 0;
+  br.width = gdk_pixbuf_get_width (background);
+  br.height = gdk_pixbuf_get_height (background);
+
+  gdk_window_clear_area (widget->window, ev->area.x, ev->area.y, ev->area.width, ev->area.height);
+
+  if (gdk_rectangle_intersect (&ev->area, &br, &r))
+    {
+      gdk_draw_pixbuf (widget->window, 
+		       widget->style->fg_gc[widget->state],
+		       background,
+		       r.x, r.y,
+		       r.x, r.y,
+		       r.width, r.height,
+		       GDK_RGB_DITHER_NORMAL, 0, 0);
+    }
+
+  return FALSE;
+}
+
+GtkWidget *
+build_programs (void)
+{
+  GtkWidget *draw;
+
+  draw = gtk_fixed_new ();
+  gtk_widget_set_name (draw, "row-widget");
+  gtk_fixed_set_has_window (GTK_FIXED (draw), TRUE);
+
+  g_signal_connect (G_OBJECT (draw), "expose_event", G_CALLBACK (draw_programs), NULL);
+
+  programs_fixed = draw;
+
+  return draw;
 }
 
 GtkWidget *
 create_row_view (void)
 {
-  GtkWidget *socket;
-  GtkWidget *html;
+  GtkWidget *progs_draw;
 
-  notebook = gtk_notebook_new ();
-  gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_RIGHT);
+  progs_draw = build_programs ();
+  gtk_widget_show (progs_draw);
 
-  socket = gtk_socket_new ();
-  g_signal_connect (G_OBJECT (socket), "realize", G_CALLBACK (realize_callback), NULL);
-  gtk_widget_show (socket);
+  g_object_set_data (G_OBJECT (progs_draw), "refresh_func", refresh_callback);
 
-  bin = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (bin);
+  toplevel = progs_draw;
 
-  html = gtk_html_new ();
-  gtk_widget_show (html);
-
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), socket, gtk_label_new ("Today"));
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), bin, gtk_label_new ("Programs"));
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), html, gtk_label_new ("Wizards"));
-
-  gtk_widget_show (notebook);
-
-  g_object_set_data (G_OBJECT (notebook), "refresh_func", refresh_callback);
-
-  return notebook;
+  return progs_draw;
 }

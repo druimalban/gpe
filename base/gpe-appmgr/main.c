@@ -30,6 +30,7 @@
 
 /* I/O */
 #include <stdio.h>
+#include <unistd.h>
 
 /* Option parsing */
 #include <getopt.h>
@@ -55,11 +56,11 @@
 #include <gpe/gpeiconlistitem.h>
 #include <gpe/tray.h>
 #include <gpe/launch.h>
+#include <gpe/infoprint.h>
 
 /* everything else */
 #include "main.h"
 #include "cfg.h"
-#include "tray.h"
 
 //#define DEBUG
 #ifdef DEBUG
@@ -95,6 +96,14 @@ Display *dpy;
 gchar *only_group;
 gchar *title_from_dotdesktop;
 
+GtkWidget *window;
+GtkWidget *notebook;
+GtkWidget *recent_box;
+
+/* The items */
+GList *items;
+GList *groups;
+
 extern gboolean gpe_appmgr_start_xsettings (void);
 
 char *
@@ -105,7 +114,9 @@ find_icon (char *base)
   
   char *directories[]=
     {
+      "/usr/share/gpe/overrides",
       "/usr/share/pixmaps",
+      "/usr/share/icons",
       NULL
     };
   
@@ -118,6 +129,12 @@ find_icon (char *base)
   for (i=0;directories[i];i++)
     {
       temp = g_strdup_printf ("%s/%s", directories[i], base);
+      if (!access (temp, R_OK))
+	return temp;
+
+      g_free (temp);
+
+      temp = g_strdup_printf ("%s/%s.png", directories[i], base);
       if (!access (temp, R_OK))
 	return temp;
 
@@ -156,9 +173,6 @@ get_icon_fn (GnomeDesktopFile *p, int iconsize)
 
   full_fn = find_icon (fn);
 
-  if (full_fn == NULL)
-    printf("couldn't find icon \"%s\"\n", fn);
-  
   g_free (fn);
 
   return full_fn;
@@ -204,45 +218,60 @@ launch_status_callback (enum launch_status status, void *data)
     }
 }
 
-/* copied from libmatchbox */
-static void
-activate_window (Display *dpy, Window win)
-{
-  static Atom atom_net_active = None;
-  XEvent ev;
-
-  if (atom_net_active == None)
-    atom_net_active = XInternAtom (dpy, "_NET_ACTIVE_WINDOW", False);
-
-  memset (&ev, 0, sizeof ev);
-  ev.xclient.type = ClientMessage;
-  ev.xclient.window = win;
-  ev.xclient.message_type = atom_net_active;
-  ev.xclient.format = 32;
-
-  XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
-}
-
 void 
 run_package (GnomeDesktopFile *p, GObject *item)
 {
   gchar *cmd;
   gchar *title;
+  gchar *s;
   Window w;
+  gboolean single_instance;
+  gboolean startup_notify;
+  gchar *text;
 
   gnome_desktop_file_get_string (p, NULL, "Exec", &cmd);
+
+  /* default single instance on for apps that don't request otherwise */
+  if (gnome_desktop_file_get_boolean (p, NULL, "SingleInstance", &single_instance) == FALSE)
+    single_instance = TRUE;
+
+  if (gnome_desktop_file_get_boolean (p, NULL, "StartupNotify", &startup_notify) == FALSE)
+    startup_notify = TRUE;
+
+  if (gnome_desktop_file_get_string (p, NULL, "Name", &title) == FALSE)
+    title = cmd;
+
+  text = g_strdup_printf ("Starting %s", title);
+  gpe_popup_infoprint (dpy, text);
+  g_free (text);
+
+  /* Can't have single instance without startup notification */
+  if (!startup_notify)
+    single_instance = FALSE;
+
+  s = strstr (cmd, "%U");
+  if (!s)
+    s = strstr (cmd, "%f");
+  if (s)
+    *s = 0;
+
+  if (!single_instance)
+    {
+      gpe_launch_program_with_callback (dpy, cmd, title, startup_notify, 
+					NULL, NULL);
+      return;
+    }
 
   w = gpe_launch_get_window_for_binary (dpy, cmd);
   if (w)
     {
-      activate_window (dpy, w);
+      gpe_launch_activate_window (dpy, w);
     }
   else
     {
       if (! gpe_launch_startup_is_pending (dpy, cmd))
 	{
 	  /* Actually run the program */
-	  gnome_desktop_file_get_string (p, NULL, "Comment", &title);
 	  gpe_launch_program_with_callback (dpy, cmd, title, TRUE, launch_status_callback, item);
 	  g_free (title);
 	}
@@ -267,18 +296,12 @@ clean_up (void)
   g_list_free (items);
   items = NULL;
 
-#if 0
   for (l = groups; l; l = l->next)
     {
       struct package_group *g = l->data;
       g_list_free (g->items);
-      g_free (g->name);
-      g_free (g);
+      g->items = NULL;
     }
-  g_list_free (groups);
-  
-  groups = NULL;
-#endif
 }
 
 static struct package_group *
@@ -358,8 +381,13 @@ load_from (const char *path)
 	  
 	  if (entry->d_name[0] == '.')
 	    continue;
-	  
-	  temp = g_strdup_printf ("%s/%s", PREFIX "/share/applications", entry->d_name);
+	
+	  temp = g_strdup_printf ("%s/%s", PREFIX "/share/gpe/overrides", entry->d_name);
+	  if (access (temp, R_OK) != 0)
+	    {
+	      g_free (temp);
+	      temp = g_strdup_printf ("%s/%s", path, entry->d_name);
+	    }
 	  p = gnome_desktop_file_load (temp, &err);
 	  if (p)
 	    {
@@ -367,10 +395,7 @@ load_from (const char *path)
 	      gnome_desktop_file_get_string (p, NULL, "Type", &type);
 
 	      if (type == NULL || strcmp (type, "Application"))
-		{
-		  fprintf (stderr, "ignoring .desktop with type=\"%s\"\n", type ? type : "<null>");
-		  gnome_desktop_file_free (p);
-		}
+		gnome_desktop_file_free (p);
 	      else
 		add_one_package (p);
 
@@ -397,6 +422,7 @@ refresh_list (void)
   clean_up ();
   
   load_from (PREFIX "/share/applications");
+  load_from ("/opt/applications");
 
   TRACE ("refresh_list: end");
   return FALSE;
@@ -410,17 +436,55 @@ refresh_tabs (void)
   (*func) ();
 }
 
+int signalled;
+
+gboolean
+source_prepare (GSource *source, gint *timeout)
+{
+  *timeout = -1;
+  return signalled;
+}
+
+gboolean
+source_check (GSource *source)
+{
+  return signalled;
+}
+
+gboolean
+source_dispatch (GSource    *source,
+		 GSourceFunc callback,
+		 gpointer    user_data)
+{
+  switch (signalled)
+    {
+    case SIGHUP:
+      refresh_list ();
+      refresh_tabs ();
+      break;
+    }
+
+  signalled = 0;
+  
+  return TRUE;
+}
+
+GSourceFuncs
+source_funcs = 
+  {
+    source_prepare,
+    source_check,
+    source_dispatch,
+    NULL
+  };
+
 /* run on SIGHUP
  * just refreshes the program list, eg. if a new
  * program was just added */
-static void catch_signal (int signo)
+static void 
+catch_signal (int signo)
 {
-  TRACE ("catch_signal");
-  /* FIXME: transfer this if needed */
-
-  refresh_list ();
-  refresh_tabs();
-  last_update = time (NULL);
+  signalled = signo;
 }
 
 void
@@ -464,7 +528,15 @@ create_main_window (void)
       gnome_desktop_file_get_string (d, NULL, "Name", &title);
       gnome_desktop_file_get_string (d, NULL, "Icon", &icon_fn);
       if (icon_fn)
-	icon = gdk_pixbuf_new_from_file (icon_fn, NULL);
+	{
+	  gchar *full_icon_fn = find_icon (icon_fn);
+	  if (full_icon_fn)
+	    {
+	      icon = gdk_pixbuf_new_from_file (full_icon_fn, NULL);
+	      g_free (full_icon_fn);
+	    }
+	  g_free (icon_fn);
+	}
     }
 
   if (!icon)
@@ -475,6 +547,7 @@ create_main_window (void)
   gtk_window_set_title (GTK_WINDOW (window), title);
   gtk_window_set_icon (GTK_WINDOW (window), icon);
   gtk_widget_realize (window);
+  dpy = GDK_WINDOW_XDISPLAY (window->window);
 
   if (flag_desktop)
     {
@@ -517,6 +590,7 @@ main (int argc, char *argv[])
 {
   struct package_group *g;
   struct sigaction sa_old, sa_new;
+  GSource *source;
 
   /* Hmm */
   items = groups = NULL;
@@ -566,12 +640,13 @@ main (int argc, char *argv[])
 
   g = make_group ("Office");
   g->categories = g_list_append (g->categories, "Office");
+  g->categories = g_list_append (g->categories, "Viewer");
   g = make_group ("Internet");
   g->categories = g_list_append (g->categories, "Internet");
+  g->categories = g_list_append (g->categories, "Network");
+  g->categories = g_list_append (g->categories, "PPP");
   g = make_group ("PIM");
   g->categories = g_list_append (g->categories, "PIM");
-  g = make_group ("Games");
-  g->categories = g_list_append (g->categories, "Games");
   g = make_group ("Settings");
   g->categories = g_list_append (g->categories, "SystemSettings");
   g->categories = g_list_append (g->categories, "Settings");
@@ -589,21 +664,21 @@ main (int argc, char *argv[])
   sa_new.sa_handler = catch_signal;
   sigemptyset (&sa_new.sa_mask);
   sa_new.sa_flags = 0;
-  sigaction (SIGHUP,&sa_new,&sa_old);
+  sigaction (SIGHUP, &sa_new, &sa_old);
 
   /* So we don't keep 'defunct' processes in the process table */
   signal (SIGCHLD, SIG_IGN);
   
   last_update = time (NULL);
  
-#if 0 
   gpe_appmgr_start_xsettings ();
-#endif
   
-  dpy = GDK_WINDOW_XDISPLAY (window->window);
   XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask);
   gpe_launch_install_filter ();
   gpe_launch_monitor_display (dpy);
+
+  source = g_source_new (&source_funcs, sizeof (GSource));
+  g_source_attach (source, NULL);
   
   /* start the event loop */
   gtk_main ();

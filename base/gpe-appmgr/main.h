@@ -30,23 +30,28 @@ struct package_group
 };
 
 /* main window */
-GtkWidget *window;
-GtkWidget *notebook;
-GtkWidget *recent_box;
+extern GtkWidget *window;
+extern GtkWidget *notebook;
+extern GtkWidget *recent_box;
 
 /* The items */
-GList *items;
-GList *groups;
+extern GList *items;
+extern GList *groups;
 
 /* Refresh the UI with the icons */
 extern void refresh_tabs (void);
 
 extern GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size);
 
-char *get_icon_fn (GnomeDesktopFile *p, int iconsize);
+extern char *get_icon_fn (GnomeDesktopFile *p, int iconsize);
 
-void run_package (GnomeDesktopFile *p, GObject *item);
+extern void run_package (GnomeDesktopFile *p, GObject *item);
 
-gchar *only_group;
+extern gchar *only_group;
+
+extern Display *dpy;
+
+extern gboolean flag_desktop;
+extern gboolean flag_rows;
 
 #endif
