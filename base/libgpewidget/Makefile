@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
+GTK2 = yes
 
 GTKRC = gtkrc
 

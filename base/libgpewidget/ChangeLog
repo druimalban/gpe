@@ -1,5 +1,7 @@
 2002-11-10  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (GTK2): Default on.
+
 	* gpe/errorbox.h (gpe_error_box, gpe_perror_box): Argument is const.
 	* errorbox.c (gpe_perror_box): Likewise.
 	* errorbox.c (gpe_error_box): Likewise.
