@@ -4,10 +4,9 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.15
+VERSION = 0.16
 
-#FIXME: add: zh_TW cs nl fr hu pt ro ru sr sk
-LINGUAS = de sv
+LINGUAS = de sv zh_TW cs nl fr hu pt ro ru sr sk
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
