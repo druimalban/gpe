@@ -140,6 +140,7 @@ click_ok (GtkWidget *widget,
     t->item->summary = summary;
   t->item->time = when;
   t->item->state = t->state;
+  t->item->priority = t->priority;
   todo_db_push_item (t->item);
 
   refresh_items ();
@@ -747,13 +748,20 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   if (item)
     {
+      int prio_level = 1;
       if (item->what)
 	gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text)), 
 				  item->what, -1);
       if (item->summary)
 	gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
       gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);
+      if (item->priority > PRIORITY_STANDARD)
+	prio_level = 0;
+      else if (item->priority < PRIORITY_STANDARD)
+	prio_level = 2;
+      gtk_option_menu_set_history (GTK_OPTION_MENU (priority_optionmenu), prio_level);
       t->state = item->state;
+      t->priority = item->priority;
 
       if (item->time)
 	{
@@ -769,6 +777,8 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   else
     {
       t->state = NOT_STARTED;
+      t->priority = PRIORITY_STANDARD;
+      gtk_option_menu_set_history (GTK_OPTION_MENU (priority_optionmenu), 1);
       gtk_widget_set_sensitive (buttondelete, FALSE);
       gtk_widget_set_sensitive (t->duedate, FALSE);
       gtk_window_set_title (GTK_WINDOW (window), _("New item"));
