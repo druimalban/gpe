@@ -188,6 +188,7 @@ schedule_alarm(event_t ev)
   f=fopen(filename, "w");
 	
   fprintf(f, "#!/bin/sh\n");
+  fprintf(f, "export DISPLAY=:0.0\n");
   fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
   fprintf(f, "/bin/rm $0\n");
   
