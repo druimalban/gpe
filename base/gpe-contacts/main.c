@@ -374,8 +374,14 @@ edit_person (struct person *p)
 	  struct tag_value *v = db_find_tag (p, tag);
 	  guint pos = 0;
 	  if (v && v->value)
-	    gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
-				      strlen (v->value), &pos);
+	    {
+	      if (GTK_IS_EDITABLE (w))
+		gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
+					  strlen (v->value), &pos);
+	      else
+		gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
+					  v->value, -1);
+	    }
 	}
       gtk_object_set_data (GTK_OBJECT (w), "person", p);
     }
@@ -480,12 +486,14 @@ config_categories_box (void)
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New"), _("New"), pw,
+			   _("New category"), 
+			   _("Tap here to create a new category."), pw,
 			   (GtkSignalFunc) new_category, clist);
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, 
+			   _("Delete category"),
+			   _("Tap here to delete the selected category."), pw, 
 			   (GtkSignalFunc) delete_category, clist);
 
   categories = db_get_categories ();

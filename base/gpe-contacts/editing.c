@@ -97,8 +97,10 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
 	case ITEM_MULTI_LINE:
 	  pop_singles (vbox, singles, pw);
 	  singles = NULL;
-	  ww = gtk_text_new (NULL, NULL);
-	  gtk_text_set_editable (GTK_TEXT (ww), TRUE);
+	  ww = gtk_text_view_new ();
+	  gtk_text_view_set_editable (GTK_TEXT_VIEW (ww), TRUE);
+	  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD);
+	  gtk_widget_set_usize (GTK_WIDGET (ww), -1, 64);
 	  if (e->name)
 	    {
 	      w = gtk_frame_new (e->name);
@@ -358,7 +360,7 @@ create_edit (void)
   gtk_widget_show (label16);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook2), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook2), 0), label16);
 
-  edit_cancel = gpe_picture_button (edit->style, _("Cancel"), "cancel");
+  edit_cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
   gtk_widget_set_name (edit_cancel, "edit_cancel");
   gtk_widget_ref (edit_cancel);
   gtk_object_set_data_full (GTK_OBJECT (edit), "edit_cancel", edit_cancel,
@@ -367,7 +369,7 @@ create_edit (void)
   gtk_container_add (GTK_CONTAINER (action_area), edit_cancel);
   GTK_WIDGET_SET_FLAGS (edit_cancel, GTK_CAN_DEFAULT);
 
-  edit_save = gpe_picture_button (edit->style, _("Save"), "save");
+  edit_save = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
   gtk_widget_set_name (edit_save, "edit_save");
   gtk_widget_ref (edit_save);
   gtk_object_set_data_full (GTK_OBJECT (edit), "edit_save", edit_save,
