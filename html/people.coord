@@ -1,0 +1,10 @@
+# get location info from 
+#    http://www.getty.edu/research/tools/vocabulary/tgn/index.html
+
+ 055.57  -003.13 "moray"    # Edinburgh, .uk
+ 052.12   000.07 "pb"       # Cambridge, .uk
+ 051.30   000.05 "dc"       # London, .uk
+ 051.30   000.05 "mallum"   # East London, .uk
+ 048.47   009.12 "colin"    # Stuttgart, .de
+-034.56   138.36 "mibus"    # Adelaide, .au
+ 040.26  -079.59 "mccarthy" # Pittsburgh, PA, .us
