@@ -22,7 +22,15 @@
 
 #include <glib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 extern gboolean gpe_application_init (int *argc, char **argv[]);
 extern void gpe_saved_args (gint *argc, gchar **argv[]);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif

@@ -17,5 +17,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifndef GPE_POPUP_H
+#define GPE_POPUP_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 extern void gpe_popup_menu_position (GtkMenu *menu, gint *x, gint *y, gboolean *push, gpointer p);
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif

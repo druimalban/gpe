@@ -22,6 +22,10 @@
 
 #include <gtk/gtk.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #define GTK_TYPE_DATE_SEL                  (gtk_date_sel_get_type ())
 #define GTK_DATE_SEL(obj)                  (GTK_CHECK_CAST ((obj), GTK_TYPE_DATE_SEL, GtkDateSel))
 #define GTK_DATE_SEL_CLASS(klass)          (GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_DATE_SEL, GtkDateSelClass))
@@ -54,5 +58,9 @@ GtkWidget      *gtk_date_sel_new (GtkDateSelMode mode);
 time_t		gtk_date_sel_get_time (GtkDateSel *sel);
 void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
 void		gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif

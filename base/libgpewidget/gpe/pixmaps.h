@@ -24,6 +24,10 @@
 #include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct gpe_icon
 {
   const char *shortname;
@@ -39,5 +43,9 @@ extern gboolean gpe_find_icon_pixmap (const char *name,
 				      GdkBitmap **bitmap);
 
 extern void gpe_set_window_icon (GtkWidget *window, gchar *icon);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif

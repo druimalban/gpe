@@ -1,3 +1,11 @@
+2003-03-11  Philip Blundell  <philb@gnu.org>
+
+	* gpe/init.h: Add extern "C" { ... } gunk.
+	* gpe/errorbox.h: Likewise.
+	* gpe/gtkdatesel.h: Likewise.
+	* gpe/pixmaps.h: Likewise.
+	* gpe/popup.h: Likewise.  Also add multiple #include guard.
+
 2003-03-09  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.52 released.
