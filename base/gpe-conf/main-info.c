@@ -103,8 +103,8 @@ void make_container(int whichtab)
   self.applet = Sysinfo_Build_Objects(whichtab);
   gtk_container_add(GTK_CONTAINER(self.vbox),self.applet);
 	
-  gtk_widget_show_all(self.applet);
-  gtk_widget_show(self.dismiss);
+  gtk_widget_show(self.applet);
+  gtk_widget_show_all(hbuttons);
 }
 
 
@@ -144,13 +144,12 @@ void main_one(int argc, char **argv)
   initwindow();
 
   self.vbox = gtk_vbox_new(FALSE,0);
+  gtk_widget_show(self.vbox);
   gtk_container_add(GTK_CONTAINER(self.w),self.vbox);
+  gpe_set_window_icon(self.w,"icon");
+  gtk_widget_show(self.w);
 
   make_container(nrtab);
-
-  gpe_set_window_icon(self.w,"icon");
-  gtk_widget_show_all(self.w);
- 
   gtk_main();
   gtk_exit(0);
 }

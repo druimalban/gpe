@@ -605,6 +605,7 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
   update_enabled_widgets(NULL);
   g_signal_connect_after (G_OBJECT (notebook), "switch-page",
 			G_CALLBACK (do_tabchange), NULL);
+  gtk_widget_show_all(notebook);
   
   return notebook;
 }

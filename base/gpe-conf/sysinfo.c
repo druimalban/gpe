@@ -651,7 +651,6 @@ Sysinfo_Build_Objects (int whichtab)
 	tw = gtk_label_new(NULL);
 	gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
 	
-	
 	/* Storage */
 	tw = gtk_label_new(NULL);
 	gtk_label_set_markup(GTK_LABEL(tw),_("Storage:"));
@@ -668,28 +667,40 @@ Sysinfo_Build_Objects (int whichtab)
 
 	tw = gtk_label_new(_("Hardware"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	gtk_widget_show_all(table);
+	gtk_widget_show(tw);
+	
+	/* important to make pacge change below work */
+	gtk_widget_show_all(notebook);
 	
 	/* battery tab */
 	table = Battery_Build_Objects ();
 	tw = gtk_label_new(_("Battery"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	gtk_widget_show(table);
+	gtk_widget_show(tw);
 	
 	/* storage tab */
 	table = Storage_Build_Objects ();
 	tw = gtk_label_new(_("Storage"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	gtk_widget_show_all(table);
+	gtk_widget_show(tw);
 	
 	/* network tab */
 	table = network_create_widgets();
 	tw = gtk_label_new(_("Networks"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	gtk_widget_show_all(table);
+	gtk_widget_show(tw);
 	
 	/* logfiles tab */
 	table = Logread_Build_Objects();
 	tw = gtk_label_new(_("Log Display"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	gtk_widget_show_all(table);
+	gtk_widget_show(tw);
 	
-	gtk_widget_show_all(notebook);
 	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),whichtab);
 	
 	return notebook;

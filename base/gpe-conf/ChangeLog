@@ -1,4 +1,13 @@
-2004-08-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+2004-08-20	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Released Version 0.1.16
+	* Global changes (gpe-info): All applets need to make sure their widgats are 
+	                             visible. We support applets that may want to 
+								 hide some of them.
+	* battery.c: Changed default visibility of widgets for second battery.
+	* main-info.c, sysinfo.c: Changes how widgets are shown.
+
+2004-08-19	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* timeanddate.c: Fixed bug causing date not set if changed in combo.
 

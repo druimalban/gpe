@@ -190,7 +190,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.screensaverl), table_justify_left_col);
 
- gtk_table_attach (GTK_TABLE (self.table), self.screensaverl3, 0, 1, 4, 5,
+  gtk_table_attach (GTK_TABLE (self.table), self.screensaverl3, 0, 1, 4, 5,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
   gtk_misc_set_padding (GTK_MISC (self.screensaverl3),
@@ -255,6 +255,8 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_timeout_add(2000,(GtkFunction)on_light_check,(gpointer)adjLight);
     
   initialising = 0;
+
+  gtk_widget_show_all(self.table);
 
   return self.table;
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-18 11:54+0200\n"
+"POT-Creation-Date: 2004-08-20 00:57+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,7 +152,7 @@ msgstr ""
 msgid "Select daylight saving time offset minutes here."
 msgstr ""
 
-#: timeanddate.c:703
+#: timeanddate.c:705
 msgid ""
 "To make timezone settings take effect,you'll need to log out and log in "
 "again."
@@ -214,11 +214,11 @@ msgstr ""
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:281 sleep/callbacks.c:47
+#: ipaqscreen/main.c:283 sleep/callbacks.c:47
 msgid "min"
 msgstr ""
 
-#: ipaqscreen/main.c:284 sleep/callbacks.c:50
+#: ipaqscreen/main.c:286 sleep/callbacks.c:50
 msgid "sec"
 msgstr ""
 
@@ -1360,7 +1360,7 @@ msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
 #: storage.c:186 storage.c:193 storage.c:339 storage.c:350 storage.c:455
-#: storage.c:468 sysinfo.c:646 sysinfo.c:663
+#: storage.c:468 sysinfo.c:646 sysinfo.c:662
 msgid "MB"
 msgstr ""
 
@@ -1583,27 +1583,27 @@ msgstr ""
 msgid "RAM:"
 msgstr ""
 
-#: sysinfo.c:657
+#: sysinfo.c:656
 msgid "Storage:"
 msgstr ""
 
-#: sysinfo.c:669
+#: sysinfo.c:668
 msgid "Hardware"
 msgstr ""
 
-#: sysinfo.c:674
+#: sysinfo.c:678
 msgid "Battery"
 msgstr ""
 
-#: sysinfo.c:679
+#: sysinfo.c:685
 msgid "Storage"
 msgstr ""
 
-#: sysinfo.c:684
+#: sysinfo.c:692
 msgid "Networks"
 msgstr ""
 
-#: sysinfo.c:689
+#: sysinfo.c:699
 msgid "Log Display"
 msgstr ""
 

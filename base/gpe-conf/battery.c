@@ -425,7 +425,15 @@ Battery_Build_Objects (void)
 		else
 			batt_ext = batt;
 	}
-	gtk_widget_show_all(vbox);
+	gtk_widget_show_all(sw);
+	
+	/* they will be activated if necessary */
+	gtk_widget_hide(batt_ext.bar);
+	gtk_widget_hide(batt_ext.label);
+	gtk_widget_hide(batt_ext.lstate);
+	gtk_widget_hide(batt_ext.lchem);
+	gtk_widget_hide(batt_ext.lvoltage);
+	gtk_widget_hide(batt_ext.llifetime);
 	
 	update_bat_values(NULL);
 	
