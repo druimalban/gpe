@@ -361,9 +361,8 @@ int
 main(int argc, char *argv[])
 {
   GtkWidget *fakeparentwindow;
-  GtkWidget *hbox, *vbox;
-  GtkWidget *buttonok, *buttoncancel;
   GladeXML *xml;
+  char *gladefile;
 
   /* presumably this argument parsing should be done more nicely: */
 
@@ -513,7 +512,10 @@ main(int argc, char *argv[])
       gtk_exit (1);
     }
 
-    xml = glade_xml_new("gpe-soundbite.glade", NULL, NULL);
+    gladefile = g_build_filename (PREFIX, "/share/gpe-soundbite",
+                  "gpe-soundbite.glade", NULL);
+
+    xml = glade_xml_new(gladefile, NULL, NULL);
 
     window = glade_xml_get_widget(xml, "window");
     progress_bar = glade_xml_get_widget(xml, "progressbar");

@@ -60,6 +60,7 @@ install-program: all $(PACKAGE)-play.desktop  $(PACKAGE)-record.desktop
 	install -m 644 $(PACKAGE)-record.desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-record.desktop
 	install -D -m 644 gpe-soundbite-play.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-play.png
 	install -D -m 644 gpe-soundbite-record.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-record.png
+	install -m 644 $(PACKAGE).glade $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gpe-soundbite.glade
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
