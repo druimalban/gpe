@@ -2,8 +2,8 @@ CVSBUILD = yes
 DEBUG = yes
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch -I../libxsettings -I../libxsettings-client `pkg-config --cflags libstartup-notification-1.0` -DSN_API_NOT_YET_FROZEN
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libxsettings -L../libxsettings-client -lXsettings-client -lXsettings `pkg-config --libs libstartup-notification-1.0` -L../libgpelaunch/.libs -lgpelaunch
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lgpelaunch
 
 DESTDIR=
 PREFIX=/usr
@@ -18,7 +18,7 @@ else
 BUILD = build
 endif
 
-OBJS=main.o xsettings.o row_view.o tab_view.o
+OBJS=main.o row_view.o tab_view.o
 
 all: gpe-appmgr
 

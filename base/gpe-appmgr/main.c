@@ -431,8 +431,10 @@ main (int argc, char *argv[])
   signal (SIGCHLD, SIG_IGN);
   
   last_update = time (NULL);
-  
+ 
+#if 0 
   gpe_appmgr_start_xsettings ();
+#endif
   
   dpy = GDK_WINDOW_XDISPLAY (window->window);
   
