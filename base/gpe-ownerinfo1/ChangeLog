@@ -1,3 +1,7 @@
+2002-07-30  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.am (install-data-local): Use $DESTDIR for /etc/gpe/.
+
 2002-07-28  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.am (install-data-local): Don't install geometry file.

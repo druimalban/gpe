@@ -18,9 +18,9 @@ install-data-local:
 	    fi \
 	  done \
 	fi
-	$(mkinstalldirs) /etc/gpe/
-	if test ! -e /etc/gpe/gpe-ownerinfo.data; then \
-	  $(INSTALL_DATA) gpe-ownerinfo.data /etc/gpe/gpe-ownerinfo.data; \
+	$(mkinstalldirs) $(DESTDIR)/etc/gpe/
+	if test ! -e $(DESTDIR)/etc/gpe/gpe-ownerinfo.data; then \
+	  $(INSTALL_DATA) gpe-ownerinfo.data $(DESTDIR)/etc/gpe/gpe-ownerinfo.data; \
 	fi
 
 dist-hook:
