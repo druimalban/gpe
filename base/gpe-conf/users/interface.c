@@ -1,3 +1,16 @@
+/*
+ * gpe-conf
+ *
+ * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+ *               2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ *
+ * User manager module.
+ */
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -38,27 +51,16 @@ guint widget_padding_y;
 guint widget_padding_y_even;
 guint widget_padding_y_odd;
 GtkWidget *user_list;
+gboolean have_access = FALSE;
 
 void
 InitSpacings () {
-  /* 
-   * GTK_EXPAND  the widget should expand to take up any extra space
-                 in its container that has been allocated.
-   * GTK_SHRINK  the widget should shrink as and when possible.
-   * GTK_FILL    the widget should fill the space allocated to it.
-   */
   
   table_attach_left_col_x = GTK_FILL; 
   table_attach_left_col_y = 0;
   table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
   table_attach_right_col_y = GTK_FILL;
   
-  /*
-   * GTK_JUSTIFY_LEFT
-   * GTK_JUSTIFY_RIGHT
-   * GTK_JUSTIFY_CENTER (the default)
-   * GTK_JUSTIFY_FILL
-   */
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
@@ -74,8 +76,9 @@ InitSpacings () {
 
 int IsHidden(pwlist *cur)
 {
-  return     !((cur->pw.pw_uid>=MINUSERUID && cur->pw.pw_uid<65534) || cur->pw.pw_uid ==0);
-
+  return  !((cur->pw.pw_uid>=MINUSERUID 
+	         && cur->pw.pw_uid<65534) 
+	         || cur->pw.pw_uid ==0);
 }
 
 void InitPwList()
@@ -121,12 +124,10 @@ void ReloadList()
 	{
 	  entry[0] = g_strdup_printf("%s",cur->pw.pw_name);
 	  entry[1] = g_strdup_printf("%s",cur->pw.pw_gecos);
-//	  entry[2] = g_strdup_printf("%s",cur->pw.pw_shell);
 	  entry[2] = g_strdup_printf("%s",cur->pw.pw_dir);
 	  gtk_clist_append( GTK_CLIST(user_list), entry);
 	  g_free(entry[0]);
 	  g_free(entry[1]);
-//	  g_free(entry[2]);
 	  g_free(entry[2]);
 	}
       cur = cur->next;
@@ -155,7 +156,12 @@ void Users_Save()
 {
   pwlist *cur = pwroot;
   gchar *tmp;
-  FILE *f = fopen("/tmp/passwd","w");
+  FILE *f;
+
+  if (!have_access) 
+	  return;
+
+  f = fopen("/tmp/passwd","w");
 
   while(cur != NULL)
     {
@@ -249,7 +255,18 @@ Users_Build_Objects (void)
   gtk_widget_show (user_list);
  
   gtk_box_pack_start (GTK_BOX (vbox1), pw, TRUE, TRUE, 0);
-
+  
+  /* check if we have the permissions to change users */
+  if (suid_exec("CHEK",""))
+  {
+	  gtk_widget_set_sensitive(user_list, FALSE);
+	  gtk_widget_set_sensitive(toolbar, FALSE);
+	  have_access = FALSE;
+  }
+  else
+  {
+	  have_access = TRUE;
+  }
   return vbox1;
 }
 

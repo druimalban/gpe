@@ -1,5 +1,8 @@
 2004-08-15	Florian Boor  	<florian.boor@kernelconcepts.de>
-
+	
+	* users/interface.c: Improved access control checks.
+	* users/interface.c: Added standard headers. Some cleanups.
+	  users/callbaks.c
 	* battery.c: Minor fix to compensate broken APM emulation.
 	
 2004-08-14	Florian Boor  	<florian.boor@kernelconcepts.de>

@@ -1,5 +1,12 @@
 You are welcome to participate at gpe and gpe-conf.
 
+-> Who is who?
+   I want to help with gpe-conf, have a patch or want to ask questions.
+   - Current maintainer is Florian Boor <florian.boor@kernelconcepts.de>,
+     open discussion may be done at GPE mailinglist (gpe@handhelds.org) or
+	 in #gpe on freenode.net.
+
+
 -> What is missing?
 
 * Adaption to other hardware platforms than iPAQ. 
