@@ -1,4 +1,5 @@
 PREFIX = /usr/local
+SYSCONFDIR=$(PREFIX)/etc
 PACKAGE = bluez-pin
 CVSBUILD = yes
 GTK2 = yes
@@ -21,9 +22,9 @@ MEMBERS = main pin-dbus pin-ui
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
-SOURCES = $(patsubst %,%.c,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS)) bluez.conf
 
-all: $(PACKAGE)
+all: $(PACKAGE) bluez.conf
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
@@ -31,6 +32,8 @@ $(PACKAGE): $(OBJS)
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
+	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 bt-logo.png $(DESTDIR)$(PREFIX)/share/pixmaps/bt-logo.png
 

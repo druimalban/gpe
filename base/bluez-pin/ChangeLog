@@ -1,3 +1,9 @@
+2003-10-16  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile: install the new bluez.conf file
+	* bluez.conf: punch holes through the d-bus firewall, works with
+	d-bus 0.13
+
 2003-10-09  Philip Blundell  <philb@gnu.org>
 
 	* main.c (main): Fix warnings.
