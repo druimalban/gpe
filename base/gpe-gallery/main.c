@@ -269,6 +269,8 @@ main (int argc, char *argv[])
 
   hbox = gtk_hbox_new (FALSE, 0);
 
+  view_widget = gtk_vbox_new (FALSE, 0);
+
   view_option_menu = gtk_option_menu_new ();
   view_menu = gtk_menu_new ();
   gtk_option_menu_set_menu(GTK_OPTION_MENU (view_option_menu) ,view_menu);
@@ -381,7 +383,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (view_widget));
+  gtk_scrolled_window_add_with_viewport (scroll, GTK_WIDGET (view_widget));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar2, FALSE, FALSE, 0);
 
