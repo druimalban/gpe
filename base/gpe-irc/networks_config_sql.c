@@ -176,7 +176,7 @@ sql_network_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-static guint
+static gint
 find_network (gconstpointer a, gconstpointer b)
 {
   if (((struct sql_network *) a)->id < b)

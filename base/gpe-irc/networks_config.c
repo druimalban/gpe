@@ -285,7 +285,7 @@ networks_config_edit_window (struct sql_network *network)
   delete_server_button = gpe_picture_button (button_hbox->style, "Delete", "delete");
   
   list_store = gtk_list_store_new (NUM_COLUMNS2, G_TYPE_STRING, G_TYPE_INT, G_TYPE_BOOLEAN, G_TYPE_POINTER);
-  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+  tree_view = GTK_TREE_VIEW(gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store)));
 
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_edit_server_cell_edited), GTK_TREE_MODEL (list_store));
@@ -395,7 +395,7 @@ networks_config_window (GtkWidget *widget)
   networks_config_list_store = gtk_list_store_new (NUM_COLUMNS, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_POINTER);
   renderer = gtk_cell_renderer_text_new ();
   g_signal_connect (renderer, "edited", G_CALLBACK (networks_config_network_cell_edited), GTK_TREE_MODEL (networks_config_list_store));
-  networks_config_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (networks_config_list_store));
+  networks_config_tree_view = GTK_TREE_VIEW(gtk_tree_view_new_with_model (GTK_TREE_MODEL (networks_config_list_store)));
   gtk_tree_view_insert_column_with_attributes (networks_config_tree_view, -1, "Network", renderer, "text", COLUMN_NETWORK, "editable", COLUMN_EDITABLE, NULL);
   gtk_tree_view_set_headers_visible (networks_config_tree_view, TRUE);
 

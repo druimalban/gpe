@@ -4,6 +4,7 @@
 
 #include "ctcp.h"
 #include "irc_parse.h"
+#include "main.h"
 
 #define GPEIRC_NAME			"GPE IRC"
 #define GPEIRC_VERSION		"0.1"

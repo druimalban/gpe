@@ -183,15 +183,15 @@ clear_text_view ()
 void
 button_clicked (GtkWidget *button)
 {
-  IRCServer *server;
+  IRCServer *server = NULL;
   IRCChannel *channel;
 
   if (button != selected_button)
   {
     if (gtk_object_get_data (GTK_OBJECT (button), "type") == IRC_SERVER)
     {
-    printf ("----------%s----------\n", server->text->str);
       server = gtk_object_get_data (GTK_OBJECT (button), "IRCServer");
+    printf ("----------%s----------\n", server->text->str);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
       selected_button = button;
       selected_server = server;
@@ -396,7 +396,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
     server->user_info->password = NULL;
 
   servers = g_list_append (servers, (gpointer) server);
-  gtk_text_view_set_buffer (main_text_view, server->buffer);
+  gtk_text_view_set_buffer (GTK_TEXT_VIEW(main_text_view), server->buffer);
   add_default_buffer_tags (server->buffer);
   selected_server = server;
 
@@ -451,7 +451,7 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
   GList *popdown_strings = NULL;
   GSList *iter = NULL;
   
-  struct sql_network *network;
+  struct sql_network *network = NULL;
 
   entry = g_object_get_data (G_OBJECT (widget), "entry");
   server_combo = g_object_get_data (G_OBJECT (widget), "server_combo");
@@ -465,6 +465,11 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
     network = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
     iter = network->servers;
   }
+  else
+  {
+	  return;
+  }
+
   if (iter != NULL)
   {
     while (iter)

@@ -288,7 +288,7 @@ GtkListStore* input_popup_create_list_from_file( char* filename ) {
 
     if( ( file = fopen( filename, "r" ) ) == NULL ) {
 
-        fprintf( stderr, "Error loading list from %s\n" );
+        fprintf( stderr, "Error loading list from %s\n", filename );
         return NULL;
 
     }
@@ -347,6 +347,8 @@ gboolean input_popup_list_button_press_event( GtkWidget* widget, GdkEventButton*
 
     }
 
+	/* TODO: Check */
+	return TRUE;
 }
 
 GtkWidget* input_popup( GtkListStore* store ) {
@@ -363,7 +365,7 @@ GtkWidget* input_popup( GtkListStore* store ) {
 
 
     if( store == NULL )
-        return;
+        return NULL;
     
     popup_list = gtk_tree_view_new_with_model( GTK_TREE_MODEL( store ) );
     gtk_signal_connect( GTK_OBJECT( popup_list ), "button-press-event",

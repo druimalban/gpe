@@ -6,6 +6,7 @@
 #include "irc.h"
 #include "irc_parse.h"
 #include "ctcp.h"
+#include "main.h"
 
 #define NICK_MAXLEN			30
 
