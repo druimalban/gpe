@@ -117,7 +117,8 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
 
   gdk_pixbuf_render_to_drawable_alpha (scaledpixbuf, widget->window,
 				       0, 0,                      /* src_x, src_y */
-				       (gint) ((maxwidth - resultwidth)/2), 0.5, /* dest_x, dest_y */
+				       (gint) ((maxwidth - resultwidth)/2),   /* dest_x */
+				       (gint) ((maxheight - resultheight)/2), /* dest_y */
 				       -1, -1,                    /* use the pixbuf size */
 				       GDK_PIXBUF_ALPHA_BILEVEL,  /* ignored */
 				       128,                       /* ignored */
