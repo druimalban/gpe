@@ -343,6 +343,34 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
 	fputs ("  ", fp);
       fprintf (fp, "</multi-item>\n");
       break;
+    
+    case ITEM_DATE:
+      fprintf (fp, "<date-item>\n");
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<tag>%s</tag>\n", e->tag);
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      if (e->name)
+	fprintf (fp, "<label>%s</label>\n", e->name);
+      for (i = 0; i < level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "</date-item>\n");
+      break;
+      
+    case ITEM_IMAGE:
+      fprintf (fp, "<image-item>\n");
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<tag>%s</tag>\n", e->tag);
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      if (e->name)
+	fprintf (fp, "<label>%s</label>\n", e->name);
+      for (i = 0; i < level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "</image-item>\n");
+      break;
     }
 }
 
@@ -400,6 +428,14 @@ structure_parse_xml_group (xmlDocPtr doc, xmlNodePtr cur,
 	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
 				  ITEM_SINGLE_LINE, e);
 
+      if (!xmlStrcmp (cur->name, "date-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_DATE, e);
+      
+      if (!xmlStrcmp (cur->name, "image-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_IMAGE, e);
+      
       cur = cur->next;
     }
 }
@@ -425,6 +461,13 @@ structure_parse_xml_page (xmlDocPtr doc, xmlNodePtr cur)
 	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
 				  ITEM_SINGLE_LINE, e);
 
+      if (!xmlStrcmp (cur->name, "date-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_DATE, e);
+      
+      if (!xmlStrcmp (cur->name, "image-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_IMAGE, e);
       cur = cur->next;
     }
 

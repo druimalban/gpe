@@ -1,3 +1,16 @@
+2004-07-12  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Improved keyboard navigation in edit dialog.
+    * editing.c: Fixed image selection.
+    * editing.c: Some formating changes. 
+    * main.c, main.h: Detect and publish information flags about screen.
+    * editing.c: edit_window() Removed old cruft.
+    * editing.c, structure.c, Makefile: Added alternate layout for larger 
+                                        screens.
+    * contacts-layout-bigscreen.xml: New file.
+    * structure.*: New item types: Images and dates.
+    * editing.c: several changes for a more flexible layout.
+
 2004-07-09  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Removed toolbar style setting, we use Xsettings for this now.

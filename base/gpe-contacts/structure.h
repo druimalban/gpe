@@ -19,7 +19,9 @@ typedef enum
   PAGE,
   GROUP,
   ITEM_MULTI_LINE,
-  ITEM_SINGLE_LINE
+  ITEM_SINGLE_LINE,
+  ITEM_DATE,
+  ITEM_IMAGE
 } edit_thing_type;
 
 struct edit_thing
@@ -45,4 +47,3 @@ extern GSList *edit_pages;
 extern void load_well_known_tags (void);
 
 #endif
-

@@ -21,12 +21,15 @@
 #include "db.h"
 #include "structure.h"
 #include "support.h"
+#include "main.h"
 
 #define DB_NAME "/.gpe/contacts"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
+#define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/contacts-layout-bigscreen.xml"
 
 #include <sqlite.h>
+
 static sqlite *db;
 
 extern void migrate_old_categories (sqlite *db);
@@ -35,7 +38,7 @@ static const char *schema_str = "create table contacts (urn INTEGER NOT NULL, ta
 
 static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY KEY);";
 
-// this one is for config data
+/* this one is for config data */
 static const char *schema4_str = "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
 
 int 
@@ -67,7 +70,7 @@ db_open (void)
 
   sqlite_exec (db, schema_str, NULL, NULL, NULL);
   sqlite_exec (db, schema2_str, NULL, NULL, NULL);
-  // if we can create this table, we should add some defaults
+  /* if we can create this table, we should add some defaults */
   if (sqlite_exec (db, schema4_str, NULL, NULL, NULL) == SQLITE_OK)
     {
       db_add_config_values (CONFIG_PANEL, _("Name"), "NAME");
@@ -98,7 +101,12 @@ load_structure (void)
   strcat (buf, LAYOUT_NAME);
   
   if (access (buf, F_OK))
-    rc = read_structure (DEFAULT_STRUCTURE);
+    {
+      if (mode_large_screen)
+        rc = read_structure (LARGE_STRUCTURE);
+      else
+        rc = read_structure (DEFAULT_STRUCTURE);
+    }
   else
     rc = read_structure (buf);
   
@@ -645,4 +653,3 @@ db_free_result (char **table)
 {
   sqlite_free_table (table);
 }
-
