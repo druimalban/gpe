@@ -23,11 +23,11 @@ msgstr "Inga att-göra-objekt"
 
 #: calendar.c:104
 msgid "No events today"
-msgstr "Inga evenemang idag"
+msgstr "Inga händelser idag"
 
 #: calendar.c:132
 msgid "All day event"
-msgstr "Heldagsevenemang"
+msgstr "Heldagshändelser"
 
 #: xsettings.c:80
 msgid "Cannot create XSettings client"
