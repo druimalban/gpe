@@ -51,16 +51,6 @@ loops back to step 2.</LI>
 </OL>
 </P>
 
-<H3>Button mapping</H3>
-<P>
-<CODE>gpe-login</CODE> can be set up to run an external program if the
-user presses a button at the login screen.  By default, pressing the
-Record button will launch the touchscreen calibration program.
-Associations between buttons and commands are stored in the file
-<CODE>/etc/X11/gpe-login.buttons</CODE>.  Each line consists of an X
-keysym and a command line, separated by whitespace.
-</P>
-
 <H2>Status</H2>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>,
