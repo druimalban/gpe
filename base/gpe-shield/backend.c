@@ -48,7 +48,7 @@ static const char* IPTABLES_CMD = NULL;
 
 static void do_command (pkcommand_t command, rule_t rule);
 static int wait_message ();
-static void send_message (pkcontent_t ctype, rule_t *rule);
+static void send_message (pkcontent_t ctype, pkcommand_t cmd, rule_t *rule);
 
 
 /* iptables control routines */
@@ -129,11 +129,11 @@ do_load_rules(void)
 		if (ret >= 9)
 		{
 			rule_count++;
-			rule_info = realloc(rule_info,rule_count*sizeof(rule_t));
-			memset(&rule_info[rule_count-1],0,sizeof(rule_t));
-			translate_name(arule.name,0);
+			rule_info = realloc(rule_info, rule_count * sizeof(rule_t));
+			memset(&rule_info[rule_count-1], 0, sizeof(rule_t));
+			translate_name(arule.name, 0);
 			rule_info[rule_count - 1] = arule;
-			send_message(PK_RULE,&rule_info[rule_count-1]);
+			send_message(PK_RULE, CMD_NONE, &rule_info[rule_count-1]);
 		}
 	}
 	fclose(cfgfile);
@@ -359,13 +359,14 @@ do_rule_change(rule_t *rule)
 /* message send and receive */
 
 static void
-send_message (pkcontent_t ctype, rule_t *rule)
+send_message (pkcontent_t ctype, pkcommand_t cmd,rule_t *rule)
 {
 	pkmessage_t msg;
 	
 	if (sock < 0) return; /* no connection active */
 	msg.type = PK_FRONT;
 	msg.ctype = ctype;
+	msg.content.tf.command = cmd;
 	if (rule) 
 		msg.content.tf.rule = *rule;
 	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
@@ -490,12 +491,14 @@ do_command (pkcommand_t command, rule_t rule)
 	break;
 	}
 	
-	send_message(PK_FINISHED,NULL);
+	send_message(PK_FINISHED, CMD_NONE, NULL);
 }
 
-void
+gboolean
 find_iptables ()
 {
+	gchar *test;
+	
 	if (!access(IPTABLES_CMD1,X_OK))
 		IPTABLES_CMD = IPTABLES_CMD1;
 	else if (!access(IPTABLES_CMD2,X_OK))
@@ -504,25 +507,31 @@ find_iptables ()
 		IPTABLES_CMD = IPTABLES_CMD3;
 	else if (!access(IPTABLES_CMD4,X_OK))
 		IPTABLES_CMD = IPTABLES_CMD4;
+	if (!IPTABLES_CMD)
+		return FALSE;
+	test = g_strdup_printf("%s -L", IPTABLES_CMD);
+	if (system(test) != EXIT_SUCCESS)
+	{
+		g_free(test);
+		return FALSE;
+	}
+	g_free(test);
+	return TRUE;
 }
 
 /* app mainloop */
 
 int
 suidloop (int csock)
-{
-	find_iptables();
-	
-	if (IPTABLES_CMD == NULL)
-	{
-		fprintf(stderr, "Iptables not found, exiting.\n");
-		close (sock);
-		unlink (PK_SOCKET);
-		exit (2);
-	}
-	
+{	
 	sock = csock;
 
+	if (!find_iptables())
+	{
+		fprintf(stderr, "Iptables support not found, exiting.\n");
+		send_message(PK_STATUS, CMD_NO_IPTABLES, NULL);
+	}
+	
 	while (wait_message ()) ;
 		
 	close (sock);

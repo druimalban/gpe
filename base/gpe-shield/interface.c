@@ -478,7 +478,6 @@ update_tree(void)
 	int i;
 	GtkTreeIter iter;
 
-#warning improve this
 	gtk_tree_store_clear(GTK_TREE_STORE(store));
 	
 	for (i=0;i<rule_count;i++)
@@ -586,6 +585,19 @@ void do_safe_exit()
 	gtk_main_quit();
 }
 
+static void
+do_status(pkcommand_t cmd)
+{
+	if (cmd == CMD_NO_IPTABLES)
+		show_message(GTK_MESSAGE_WARNING, _("This system does not " \
+	                                        "support firewalling or you"\
+	                                        " don't have the right to "\
+	                                        "change firewall rules, this" \
+	                                        " application will exit now."));
+	do_shutdown();
+	gtk_main_quit();
+	exit(0);
+}
 
 gboolean
 get_pending_messages ()
@@ -599,7 +611,8 @@ get_pending_messages ()
 		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP))
 		{
 			perror ("ERR: connection lost: ");
-			do_message_dlg(GTK_MESSAGE_ERROR,_("Backend failure, cannot continue."));
+			do_message_dlg(GTK_MESSAGE_ERROR,
+			               _("Backend failure, cannot continue."));
 			close(sock);
 			exit(1);
 		}
@@ -607,7 +620,8 @@ get_pending_messages ()
 		{
 			perror ("ERR: receiving data packet");
 			close (sock);
-			do_message_dlg(GTK_MESSAGE_ERROR,_("Communication error, cannot continue."));
+			do_message_dlg(GTK_MESSAGE_ERROR,
+			               _("Communication error, cannot continue."));
 			exit (1);
 		}
 		else
@@ -622,8 +636,13 @@ get_pending_messages ()
 				do_end_command();
 				break;
 				case PK_RULE:
+#ifdef DEBUG				
 					printf("got rule\n");
+#endif				
 					do_rule_add(&msg.content.tf.rule);
+				break;
+				case PK_STATUS:
+					do_status(msg.content.tf.command);
 				break;
 			default:
 				break;

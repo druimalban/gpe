@@ -1,3 +1,10 @@
+2004-10-24 Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* backend.*: Changed messaging to signalise errors to frontend.
+	             find_iptables() returns returns success/failure now.
+	* interface.c: Show error message and exit if backend detects problems
+ 	               with iptables.
+
 2004-09-21 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* interface.c, backend.*: Changed "Open" menu item to "Load" and activate

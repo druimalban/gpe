@@ -68,7 +68,8 @@ typedef enum
 	CMD_SAVE,
 	CMD_CHANGE,
 	CMD_CFG_LOAD,
-	CMD_CFG_DONTLOAD
+	CMD_CFG_DONTLOAD,
+	CMD_NO_IPTABLES
 }
 pkcommand_t;
 
@@ -77,13 +78,14 @@ typedef enum
 	PK_STATUS,
 	PK_COMMAND,
 	PK_RULE,
-	PK_FINISHED	
+	PK_FINISHED
 }
 pkcontent_t;
 
 typedef struct
 {
 	rule_t rule;
+	pkcommand_t command;
 }
 msg2front_t;
 
@@ -114,5 +116,6 @@ extern int suidloop (int sock);
 extern void do_rules_apply();
 extern int do_load_rules();
 extern void do_clear();
+extern gboolean find_iptables ();
 
 #endif

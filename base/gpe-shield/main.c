@@ -24,6 +24,7 @@
 #include <errno.h>
 #include <unistd.h>
 
+#include <gdk/gdk.h>
 #include <libintl.h>
 #define _(x) gettext(x)
 
@@ -49,11 +50,18 @@ main (int argc, char *argv[])
 	/* command line paramater tells us just to do setup and exit */
 	if (activate_rules)
 	{
-		find_iptables();
-	 	do_clear();
-		do_load_rules();
-		do_rules_apply();
-		exit(0);
+		if (find_iptables())
+		{
+	 		do_clear();
+			do_load_rules();
+			do_rules_apply();
+			exit(0);
+		}
+		else
+		{
+			fprintf(stderr, "Iptables support not found, exiting.\n");
+			exit (2);
+		}
 	}
 	
 	/* fork frontend process */
