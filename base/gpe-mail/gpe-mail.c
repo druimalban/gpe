@@ -34,7 +34,7 @@ struct {
          "root@localhost","smtp","auto","\2","","","","","",""
       },
       {
-         "","","","","","","","","",""
+         "\1","","","","","","","","",""
       }
    }
 };
@@ -47,7 +47,7 @@ struct {
    {
       {"Username","Password","Server","Port","Use pop3 instead of imap","SSL","Size (bytes)","Since (days), imap only ",NULL,NULL},
       {"Email Adress","Smtp Server","Port","SSL",NULL,NULL,NULL,NULL,NULL,NULL},
-      {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
+      {"Mark msgs as seen when viewed",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
    }
 };
 
@@ -436,6 +436,14 @@ char *get_config(char *section,char *param)
    }
    printf("section '%s' not found\n",section);
    return NULL;
+}
+
+char get_config_boolean(char *section,char *param)
+{
+	char c;
+	
+	c=*get_config(section,param);
+	return 2-c;
 }
 
 GtkWidget *mkbutton(char *xpm_name, char *but_name,char *text)
@@ -1113,7 +1121,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    {
 	   fgets(s2,sizeof(s2),f);
 	   fclose(f);
-	   if (NULL==strstr(s2,"Seen"))
+	   if (NULL==strstr(s2,"Seen") && (get_config_boolean("Misc","Mark msgs as seen when viewed")))
 	   {
 		   strcat(s2," \\Seen");
 		   sprintf(s2+strlen(s2)+1,"%s/%s/%s.flags",config.expanded_path,self.current_folder,self.cur_msg);
