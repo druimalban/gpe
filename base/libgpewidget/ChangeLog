@@ -1,5 +1,9 @@
 2003-03-15  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.53 released.
+	
+2003-03-15  Philip Blundell  <philb@gnu.org>
+
 	* pixmaps.c (gpe_find_icon_scaled): New.
 	* gpe/pixmaps.h (gpe_find_icon_scaled): Add prototype.	
 
