@@ -27,4 +27,8 @@ module <b>gpe-todo</b>.  Precompiled binaries for iPAQ are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 </P>
 
+<H2>Screenshot</H2>
+<P>
+<IMG SRC="/images/gpe-todo.png" ALT="gpe-todo">
+</P>
 <!--#include virtual="/includes/foot.shtml"-->
