@@ -1,3 +1,8 @@
+2003-03-10  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/98standard-apps: Reword conditional to avoid
+	"exit 0" causing whole session to exit.
+
 2003-03-09  Philip Blundell  <philb@gnu.org>
 
 	* X11/xsettings.default: Set MATCHBOX/Background.
