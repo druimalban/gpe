@@ -1,2 +1,4 @@
 gpe-bootsplash
+*.ipk*
+dist
 
