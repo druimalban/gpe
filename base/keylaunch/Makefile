@@ -30,8 +30,10 @@ $(OBJS): %.o: %.c $(HEADERS)
 install: all
 	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	install -D $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
-	install -D 90$(PROG)  $(DESTDIR)/etc/X11/Xsession-gpe.d/90$(PROG)
-	install -D 90norepeat  $(DESTDIR)/etc/X11/Xinit.d/90norepeat
+        install -d $(DESTDIR)/etc/X11/Xsession.d
+	install 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
+        install -d $(DESTDIR)/etc/X11/Xinit.d
+	install 90norepeat  $(DESTDIR)/etc/X11/Xinit.d/90norepeat
 
 clean:
 	rm -f $(PROG) $(OBJS)
