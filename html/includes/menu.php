@@ -18,21 +18,21 @@ function menu_entry($page, $title, $link,$thispage)
  |
 <?php menu_entry("projects", "Projects", "/projects/", $pagename); ?>
  |
-<?php menu_entry("documentation", "Documentation", "/documentation.php", $pagename); ?>
+<?php menu_entry("documentation", "Documentation", "/documentation.phtml", $pagename); ?>
  |
 <?php menu_entry("screenshots", "Screenshots", "/screenshots/", $pagename); ?>
  |
-<?php menu_entry("download", "Download", "/download.php", $pagename); ?>
+<?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
  |
-<?php menu_entry("contact", "Mailing list", "/contact.php", $pagename); ?>
+<?php menu_entry("contact", "Mailing list", "/contact.phtml", $pagename); ?>
  |
 <?php menu_entry("screenshots", "Screenshots", "/screenshots/", $pagename); ?>
  |
 <A href="http://handhelds.org/bugzilla/">Bugs</A>
  |
-<?php menu_entry("cvs", "CVS", "/cvs.php", $pagename); ?>
+<?php menu_entry("cvs", "CVS", "/cvs.phtml", $pagename); ?>
  |
-<?php menu_entry("linkres", "Links/Resources", "/linkres.php", $pagename); ?>
+<?php menu_entry("linkres", "Links/Resources", "/linkres.phtml", $pagename); ?>
 
 </small>
 </div>
