@@ -32,7 +32,7 @@ function menu_entry($page, $title, $link,$thispage)
  |
 <?php menu_entry("cvs", "CVS", "/cvs.shtml", $pagename); ?>
  |
-<?php menu_entry("Links/Resources", "linkres", "/linkres.shtml", $pagename); ?>
+<?php menu_entry("linkres", "Links/Resources", "/linkres.shtml", $pagename); ?>
 
 </small>
 </div>
