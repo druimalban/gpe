@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -7,15 +7,23 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#define USE_SVG
+
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
 #include <linux/fb.h>
 #include <stdio.h>
+#ifdef USE_SVG
+#include <librsvg/rsvg.h>
+#endif
 
 #define FB "/dev/fb/0"
+
 #define IMAGE "/usr/share/gpe/splash.png"
+#define SVG_NAME_LANDSCAPE "/usr/share/gpe/splash-l.png"
+#define SVG_NAME_PORTRAIT "/usr/share/gpe/splash-p.png"
 
 #define SIZE 240 * 320 * 2
 
@@ -43,16 +51,14 @@ main(int argc, char *argv[])
   int fb_x, fb_y;
   int xoff, yoff;
   int ostride;
-  struct fb_cursorstate curs;
   int tty;
   int mat[2][3];
   int i;
+#ifdef USE_SVG
+  const char *svg_name;
+#endif
 
   g_type_init ();
-  buf =  gdk_pixbuf_new_from_file (IMAGE, NULL);
-
-  if (buf == NULL)
-    exit (1);
 
   fd = open (FB, O_RDWR);
   if (fd < 0)
@@ -84,22 +90,37 @@ main(int argc, char *argv[])
       var.red.offset == 11 && 
       var.green.offset == 5 &&
       var.blue.offset == 0)
-  {
-    depth16 = TRUE;
-    mono = FALSE;
-  }
+    {
+      depth16 = TRUE;
+      mono = FALSE;
+    }
+  else if (fix.visual == FB_VISUAL_MONO10 && 
+	   var.bits_per_pixel == 1)
+    {
+      depth16 = FALSE;
+      mono = TRUE;
+    }
   else
-  if (fix.visual == FB_VISUAL_MONO10 && 
-      var.bits_per_pixel == 1)
-  {
-    depth16 = FALSE;
-    mono = TRUE;
-  }
+    {
+      fprintf (stderr, "%s: frame buffer neither 565 nor monochrome\n", argv[0]);
+      exit (1);
+    }
+
+  landscape_fb = var.xres >= var.yres;
+
+#ifdef USE_SVG
+  if (var.xres > var.yres)
+    svg_name = SVG_NAME_LANDSCAPE;
   else
-  {
-    fprintf (stderr, "%s: frame buffer neither 565 nor monochrome\n", argv[0]);
+    svg_name = SVG_NAME_PORTRAIT;
+
+  buf = rsvg_pixbuf_from_file_at_size (svg_name, var.xres, var.yres, NULL);
+#else
+  buf =  gdk_pixbuf_new_from_file (IMAGE, NULL);
+#endif
+
+  if (buf == NULL)
     exit (1);
-  }
 
   tty = open ("/dev/tty0", O_RDWR);
   if (tty < 0)
@@ -115,7 +136,6 @@ main(int argc, char *argv[])
   xsize = gdk_pixbuf_get_width (buf);
   ysize = gdk_pixbuf_get_height(buf);
   
-  landscape_fb = var.xres >= var.yres;
   landscape_image = xsize >= ysize;
   rot = landscape_fb != landscape_image;
 
