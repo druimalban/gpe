@@ -1,3 +1,7 @@
+2003-01-09  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.dpkg_ipkg (dist): New.
+
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation: Don't rebuild .pot from sources

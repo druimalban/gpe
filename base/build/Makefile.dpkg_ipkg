@@ -16,6 +16,9 @@ else
 CONTROL = control
 endif
 
+dist: clean
+	( cd ..; tar cf - --exclude "*/CVS" --exclude "*~" --exclude "#*#" --exclude "$(PACKAGE)/debian" --exclude "$(PACKAGE)/familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" $(PACKAGE) | bzip2 -9 >$(PACKAGE).tar.bz2 )
+
 ipkg: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
