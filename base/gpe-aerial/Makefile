@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.0-1
+VERSION = 0.2.1
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no

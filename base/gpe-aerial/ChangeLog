@@ -1,3 +1,10 @@
+05/30/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c	Reduced icon size - is GTK_ICON_SIZE_DIALOG now which will be 
+				set to 30x30 in future.
+				Added scrollbars to treeview.
+				Reduced strength of colors.
+	- Makefile	Version update.
+
 05/27/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- Makefile	Fixed errors resulting a broken package.
 

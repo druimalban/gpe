@@ -50,9 +50,11 @@
 /* we use the prismstumbler scan engine */
 #define SCANNER_EXEC "/usr/bin/prismstumbler"
 
-#define CL_RED 		"red"
-#define CL_GREEN 	"green"
-#define CL_YELLOW 	"yellow"
+#define CL_RED 		"#FF6666"
+#define CL_GREEN 	"#66FF66"
+#define CL_YELLOW 	"#FFFF66"
+
+#define PIXMAP_SIZE  GTK_ICON_SIZE_DIALOG
 
 static GThread *scan_thread;
 
@@ -299,6 +301,7 @@ static void
 show_networks (void)
 {
 	static GtkTreeViewColumn *column;
+	GtkWidget *sw; 
 
 	if (devices_window == NULL)
 	{
@@ -309,13 +312,16 @@ show_networks (void)
 		gpe_set_window_icon (devices_window, "gpe-aerial");
 
 		/* Create a view */
+		sw = gtk_scrolled_window_new(NULL,NULL);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
 		tree = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
-		gtk_container_add (GTK_CONTAINER (devices_window), tree);
+		gtk_container_add(GTK_CONTAINER(sw),tree);
+		gtk_container_add (GTK_CONTAINER (devices_window), sw);
 		g_signal_connect (G_OBJECT (tree), "button-release-event",
 				  G_CALLBACK (device_clicked), NULL);
 
 		renderer = gtk_cell_renderer_pixbuf_new ();
-		column = gtk_tree_view_column_new_with_attributes (_("State"),
+		column = gtk_tree_view_column_new_with_attributes (_("Mode"),
 								   renderer,
 								   "pixbuf",
 								   COL_ICON,
@@ -365,7 +371,7 @@ show_networks (void)
 		g_thread_create ((GThreadFunc) run_scan, NULL, FALSE, NULL);
 
 	if (scan_thread == NULL)
-		gpe_perror_box (_("Unable to scan for devices"));
+		gpe_perror_box (_("Unable to scan for devices."));
 
 }
 
@@ -420,9 +426,9 @@ update_display (netinfo_t * ni)
 	gdk_pixbuf_unref (ni->pix);
 
 	if (ni->netinfo.mode)
-		ni->pix = gpe_find_icon ("network");
+		ni->pix = gpe_find_icon_scaled ("network",PIXMAP_SIZE);
 	else
-		ni->pix = gpe_find_icon ("gpe-aerial");
+		ni->pix = gpe_find_icon_scaled ("gpe-aerial",PIXMAP_SIZE);
 	gdk_pixbuf_ref (ni->pix);
 
 	gtk_tree_store_set (store, &ni->iter,
@@ -738,9 +744,9 @@ list_add_net (netinfo_t * ni)
 	GtkTreeIter iter;
 
 	if (ni->netinfo.mode)
-		ni->pix = gpe_find_icon ("network");
+		ni->pix = gpe_find_icon_scaled ("network",PIXMAP_SIZE);
 	else
-		ni->pix = gpe_find_icon ("gpe-aerial");
+		ni->pix = gpe_find_icon_scaled ("gpe-aerial",PIXMAP_SIZE);
 	gdk_pixbuf_ref (ni->pix);
 
 	devices = g_slist_append (devices, ni);
