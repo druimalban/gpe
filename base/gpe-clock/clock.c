@@ -24,7 +24,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/gtkdatecombo.h>
-#include <gpe/gtktimesel.h>
+#include <gpe/gpetimesel.h>
 #include <gpe/gpeclockface.h>
 
 GtkWidget *panel_window, *time_label;
@@ -140,7 +140,7 @@ alarm_window (void)
   GtkWidget *date_entry = gtk_date_combo_new ();
   GtkWidget *date_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *time_sel = gtk_time_sel_new ();
+  GtkWidget *time_sel = gpe_time_sel_new ();
   GtkWidget *weeklytable;
   int spacing = gpe_get_boxspacing ();
   GSList *radiogroup;
