@@ -77,41 +77,37 @@ update_list (Display *dpy)
   char *p;
 
   if (gpe_get_client_window_list (dpy, &list, &nr) == FALSE)
-    exit (1);
+    return;
 
   p = g_malloc0 (nr);
 
   if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
     {
-      for (;;)
-	{
-	  gboolean found = FALSE, more;
-	  Window w;
-	  gchar *name;
+      gboolean more;
 
-	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &name, 1, &w, -1);
+      do 
+	{
+	  gboolean found = FALSE;
+	  Window w;
+
+	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &w, -1);
 
 	  for (i = 0; i < nr; i++)
-	    if (list[i] == w)
-	      {
-		p[i] = 1;
-		found = TRUE;
-		break;
-	      }
-
-	  if (found)
 	    {
-	      if (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter) == FALSE)
-		break;
+	      if (list[i] == w)
+		{
+		  p[i] = 1;
+		  found = TRUE;
+		  break;
+		}
 	    }
 
-	  more = gtk_list_store_remove (list_store, &iter);
-
-	  g_free (name);
-
-	  if (!more)
-	    break;
+	  if (found)
+	    more = gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter);
+	  else
+	    more = gtk_list_store_remove (list_store, &iter);
 	} 
+      while (more);
     }
 
   for (i = 0; i < nr; i++)
