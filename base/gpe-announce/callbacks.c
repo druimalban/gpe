@@ -46,55 +46,52 @@ static gboolean PlayAlarmStop = TRUE;
 
 int fd;
 int curl, curr;	
-pthread_t mythread;
+pthread_t SoundThread;
 
 int buzzerfd = -1;
 
 #define BUZZER_FILE "/dev/misc/buzzer"
 
-void
-open_buzzer (void)
+void open_buzzer (void)
 {
-  buzzerfd = open (BUZZER_FILE, O_WRONLY);
+	buzzerfd = open (BUZZER_FILE, O_WRONLY);
 }
 
-int
-set_buzzer (int on, int off)
+int set_buzzer (int on, int off)
 {
-  struct buzzer_time t;
+	struct buzzer_time t;
 
-  if (buzzerfd == -1)
-    return 0;
+	if (buzzerfd == -1)
+		return 0;
 
-  t.on_time = on;
-  t.off_time = off;
+	t.on_time = on;
+	t.off_time = off;
 
-  if (ioctl (buzzerfd, IOC_SETBUZZER, &t))
-    {
-      perror ("IOC_SETBUZZER");
-      return -1;
-    }
+	if (ioctl (buzzerfd, IOC_SETBUZZER, &t))
+	{
+		perror ("IOC_SETBUZZER");
+		return -1;
+	}
 
-  return 0;
+	return 0;
 }
 
-void
-buzzer_off (int sig)
+void buzzer_off (int sig)
 {
-  set_buzzer (0, 0);
-  exit (128 + sig);
+	set_buzzer (0, 0);
+	exit (128 + sig);
 }
-	
+
 int get_vol(int *left, int *right)
 {
-int vol;
-int err;
-char *mixer = MIXER;
-  	
+	int vol;
+	int err;
+	char *mixer = MIXER;
+
 	fd = open(mixer, O_RDONLY);
-  	if(fd == -1) 
-    		printf("Unable to open mixer device: %s\n", mixer);
-	err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol); 
+	if(fd == -1)
+		printf("Unable to open mixer device: %s\n", mixer);
+	err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol);
 	if(err != -1) {
 		*left = vol & 0xff;
 		*right = (vol >> 8) & 0xff;
@@ -106,38 +103,39 @@ char *mixer = MIXER;
 
 int set_vol(int left, int right)
 {
-int vol = left | (right << 8);
-int err;
-char *mixer = MIXER;
+	int vol = left | (right << 8);
+	int err;
+	char *mixer = MIXER;
 
 	fd = open(mixer, O_RDONLY);
-  	if(fd == -1) 
-    		printf("Unable to open mixer device: %s\n", mixer);
-	err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);  
+	if(fd == -1)
+		printf("Unable to open mixer device: %s\n", mixer);
+	err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);
 	close(fd);
 
 return err;
 }
 
-static void
-schedule_alarm(char *buf, time_t when)
+static void schedule_alarm(const gchar *buf, time_t when)
 {
-  gchar *text;
+	gchar *text;
 
-  if (buf) text = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n", buf);
-  else text = g_strdup_printf ("/usr/bin/gpe-announce\n");
-  schedule_set_alarm (1234, when, text);
-  g_free (text);
+	if (buf)
+		text = g_strdup_printf ("/usr/bin/gpe-announce '%s'\n", buf);
+	else
+		text = g_strdup_printf ("/usr/bin/gpe-announce\n");
+	schedule_set_alarm (1234, when, text);
+	g_free (text);
 }
-	
+
 void play_melody(guint Tone1Pitch, guint Tone1Duration,
-		guint Tone2Enable, guint Tone2Pitch, guint Tone2Duration,
-		guint ToneAltCount, guint TonePause)
+		 guint Tone2Enable, guint Tone2Pitch, guint Tone2Duration,
+		 guint ToneAltCount, guint TonePause)
 {
-int snd_dev=-1;
-int i;
-extern int times;
-	
+	int snd_dev=-1;
+	int i;
+	extern int times;
+
 	for (i=0; i<5; i++) {
 		if ((snd_dev=soundgen_init()) == -1) {
 			g_print("Couldn't init soundgen\n");
@@ -147,18 +145,20 @@ extern int times;
 	}
 	if (snd_dev == -1)
 		return;
-	
+
 	while (!PlayAlarmStop) {
 		for (i = 0; i < ToneAltCount; i++) {
 			if (PlayAlarmStop)
 				break;
-			else soundgen_play_tone1(snd_dev, Tone1Pitch, Tone1Duration);
+			else soundgen_play_tone1(snd_dev, Tone1Pitch,
+						 Tone1Duration);
 			if (PlayAlarmStop)
 				break;
-			else soundgen_play_tone2(snd_dev, Tone2Pitch, Tone2Duration);
+			else soundgen_play_tone2(snd_dev, Tone2Pitch,
+						 Tone2Duration);
 		}
 		soundgen_pause(snd_dev, TonePause);
-		
+
 		switch (times) {
 				case 0:
 					set_vol(50,50);
@@ -199,7 +199,7 @@ extern int times;
 					
 			times++;
 			if (times>20) PlayAlarmStop = TRUE;
-			
+
 	}
 	soundgen_final(snd_dev);
 	
@@ -208,7 +208,7 @@ extern int times;
 
 void *play_alarm()
 {
-int test=6;
+	int test=6;
 
 	switch (test) {
 		case 1:
@@ -242,58 +242,65 @@ gint bells_and_whistles ()
 	open_buzzer ();
   
 	if(get_vol(&curl, &curr) == -1)
-    		printf("Unable to get volume\n");
+		printf("Unable to get volume\n");
 
 	signal (SIGINT, buzzer_off);
-   	
+
 	set_buzzer (1000, 500);
 
 	set_vol(50,50);
 	PlayAlarmStop = FALSE;
-	if (pthread_create(&mythread, NULL, play_alarm, NULL) != 0) {
+	if (pthread_create(&SoundThread, NULL, play_alarm, NULL) != 0) {
 		g_print("pthread_create() failed\n");
 		gtk_main_quit();
-	} 
-return(1);
+	}
+	return(1);
 }
 
-gint
-on_snooze_clicked                     (GtkButton       *button,
-                                        char         *user_data)
+gint on_snooze_clicked (GtkButton *button, gpointer user_data)
 {
+	GtkObject *AlarmWin = GTK_OBJECT (user_data);
+	gpointer AlarmComment;
+	GtkSpinButton *HoursSpin, *MinutesSpin;
 	time_t viewtime;
-	
+
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);
-	pthread_join(mythread, NULL);		
+	pthread_join(SoundThread, NULL);
 	set_vol(curl, curr);
-	
-  time (&viewtime);
-  viewtime+=SNOOZE*60;
-		      
-	schedule_alarm(user_data, viewtime);
-  
+
+	AlarmComment = gtk_object_get_data (AlarmWin, "AlarmComment");
+	HoursSpin = GTK_SPIN_BUTTON (gtk_object_get_data (AlarmWin,
+				     "HoursSpin"));
+	MinutesSpin = GTK_SPIN_BUTTON (gtk_object_get_data (AlarmWin,
+				       "MinutesSpin"));
+	time (&viewtime);
+	viewtime += gtk_spin_button_get_value_as_int(HoursSpin) * 60*60 +
+		    gtk_spin_button_get_value_as_int(MinutesSpin) * 60;
+
+	if (AlarmComment)
+		schedule_alarm(gtk_entry_get_text (GTK_ENTRY (AlarmComment)),
+			       viewtime);
+	else
+		schedule_alarm(NULL, viewtime);
+
 	gtk_main_quit();
 	return(FALSE);
 }
 
 
-gint
-on_ok_clicked                     (GtkButton       *button,
-                                        gpointer         user_data)
+gint on_ok_clicked (GtkButton *button, gpointer user_data)
 {
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);
-	pthread_join(mythread, NULL);		
+	pthread_join(SoundThread, NULL);
 	set_vol(curl, curr);
 	
 	gtk_main_quit();
 	return(FALSE);
 }
 
-gint
-on_mute_clicked                     (GtkButton       *button,
-                                        gpointer         user_data)
+gint on_mute_clicked (GtkButton *button, gpointer user_data)
 {
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);

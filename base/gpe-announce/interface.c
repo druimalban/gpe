@@ -35,24 +35,32 @@ GtkWidget*
 create_window (char *announcetext)
 {
   GtkWidget *AlarmWin;
-  GtkWidget *dialog_vbox3;
-  GtkWidget *frame4;
-  GtkWidget *table6;
-  GdkPixbuf *p;
-  GtkWidget *pw;
-  GtkWidget *label38;
-  GtkWidget *label37;
-  GtkWidget *label36;
+  GtkWidget *DialogVBox;
+  GtkWidget *InfoFrame;
+  GtkWidget *InfoTable;
+  GdkPixbuf *BellPixbuf;
+  GtkWidget *BellImage;
+  GtkWidget *CommentLabel;
+  GtkWidget *TimeLabel;
+  GtkWidget *DateLabel;
   GtkWidget *AlarmComment;
   GtkWidget *AlarmTime;
   GtkWidget *AlarmDate;
-  GtkWidget *label32;
-  GtkWidget *dialog_action_area3;
-  GtkWidget *vbox6;
-  GtkWidget *hbuttonbox8;
+  GtkWidget *HeadingLabel;
+  GtkWidget *SnoozeHBox;
+  GtkWidget *SnoozeLabel;
+  GtkObject *HoursAdj;
+  GtkWidget *HoursSpin;
+  GtkWidget *HoursLabel;
+  GtkObject *MinutesAdj;
+  GtkWidget *MinutesSpin;
+  GtkWidget *MinutesLabel;
+  GtkWidget *DialogActionArea;
+  GtkWidget *ActionVbox;
+  GtkWidget *TopButtonBox;
   GtkWidget *AlarmMute;
-  GtkWidget *AlarmDelay;
-  GtkWidget *hbuttonbox7;
+  GtkWidget *AlarmSnooze;
+  GtkWidget *BtmButtonBox;
   GtkWidget *AlarmACK;
   char buf[32];
   struct tm tm;
@@ -69,77 +77,79 @@ create_window (char *announcetext)
   gtk_window_set_position (GTK_WINDOW (AlarmWin), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (AlarmWin), TRUE);
 
-  dialog_vbox3 = GTK_DIALOG (AlarmWin)->vbox;
-  gtk_widget_set_name (dialog_vbox3, "dialog_vbox3");
-  gtk_object_set_data (GTK_OBJECT (AlarmWin), "dialog_vbox3", dialog_vbox3);
+  DialogVBox = GTK_DIALOG (AlarmWin)->vbox;
+  gtk_widget_set_name (DialogVBox, "DialogVBox");
+  gtk_object_set_data (GTK_OBJECT (AlarmWin), "DialogVBox", DialogVBox);
 
-  frame4 = gtk_frame_new (NULL);
-  gtk_widget_set_name (frame4, "frame4");
-  gtk_widget_ref (frame4);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "frame4", frame4,
+  InfoFrame = gtk_frame_new (NULL);
+  gtk_widget_set_name (InfoFrame, "InfoFrame");
+  gtk_widget_ref (InfoFrame);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "InfoFrame", InfoFrame,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_box_pack_start (GTK_BOX (dialog_vbox3), frame4, TRUE, TRUE, 3);
+  gtk_box_pack_start (GTK_BOX (DialogVBox), InfoFrame, TRUE, TRUE, 3);
 
-  table6 = gtk_table_new (5, 2, FALSE);
-  gtk_widget_set_name (table6, "table6");
-  gtk_widget_ref (table6);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "table6", table6,
+  InfoTable = gtk_table_new (5, 2, FALSE);
+  gtk_widget_set_name (InfoTable, "InfoTable");
+  gtk_widget_ref (InfoTable);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "InfoTable", InfoTable,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_container_add (GTK_CONTAINER (frame4), table6);
+  gtk_container_add (GTK_CONTAINER (InfoFrame), InfoTable);
 
-  p = gpe_find_icon ("bell");
-  pw = gtk_image_new_from_pixbuf(p);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "bell", pw,
+  BellPixbuf = gpe_find_icon ("bell");
+  BellImage = gtk_image_new_from_pixbuf(BellPixbuf);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "bell", BellImage,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_table_attach (GTK_TABLE (table6), pw, 0, 2, 0, 1,
+  gtk_table_attach (GTK_TABLE (InfoTable), BellImage, 0, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 6);
 
   if (announcetext)
     {
-      label38 = gtk_label_new (_("Comment"));
-      gtk_widget_set_name (label38, "label38");
-      gtk_widget_ref (label38);
-      gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "label38", label38,
+      CommentLabel = gtk_label_new (_("Comment"));
+      gtk_widget_set_name (CommentLabel, "CommentLabel");
+      gtk_widget_ref (CommentLabel);
+      gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "CommentLabel",
+				CommentLabel,
 				(GtkDestroyNotify) gtk_widget_unref);
-      gtk_table_attach (GTK_TABLE (table6), label38, 0, 1, 4, 5,
+      gtk_table_attach (GTK_TABLE (InfoTable), CommentLabel, 0, 1, 4, 5,
 			(GtkAttachOptions) (GTK_FILL),
 			(GtkAttachOptions) (0), 2, 0);
-      gtk_misc_set_alignment (GTK_MISC (label38), 0, 0.5);
+      gtk_misc_set_alignment (GTK_MISC (CommentLabel), 0, 0.5);
     }
 
-  label37 = gtk_label_new (_("Time"));
-  gtk_widget_set_name (label37, "label37");
-  gtk_widget_ref (label37);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "label37", label37,
+  TimeLabel = gtk_label_new (_("Time"));
+  gtk_widget_set_name (TimeLabel, "TimeLabel");
+  gtk_widget_ref (TimeLabel);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "TimeLabel", TimeLabel,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label37);
-  gtk_table_attach (GTK_TABLE (table6), label37, 0, 1, 3, 4,
+  gtk_widget_show (TimeLabel);
+  gtk_table_attach (GTK_TABLE (InfoTable), TimeLabel, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 2, 0);
-  gtk_misc_set_alignment (GTK_MISC (label37), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (TimeLabel), 0, 0.5);
 
-  label36 = gtk_label_new (_("Date"));
-  gtk_widget_set_name (label36, "label36");
-  gtk_widget_ref (label36);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "label36", label36,
+  DateLabel = gtk_label_new (_("Date"));
+  gtk_widget_set_name (DateLabel, "DateLabel");
+  gtk_widget_ref (DateLabel);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "DateLabel", DateLabel,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_table_attach (GTK_TABLE (table6), label36, 0, 1, 2, 3,
+  gtk_table_attach (GTK_TABLE (InfoTable), DateLabel, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 2, 0);
-  gtk_misc_set_alignment (GTK_MISC (label36), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (DateLabel), 0, 0.5);
 
   if (announcetext)
     {
       AlarmComment = gtk_entry_new ();
       gtk_widget_set_name (AlarmComment, "AlarmComment");
       gtk_widget_ref (AlarmComment);
-      gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmComment", AlarmComment,
+      gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmComment",
+				AlarmComment,
 				(GtkDestroyNotify) gtk_widget_unref);
-      gtk_table_attach (GTK_TABLE (table6), AlarmComment, 1, 2, 4, 5,
+      gtk_table_attach (GTK_TABLE (InfoTable), AlarmComment, 1, 2, 4, 5,
 			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 			(GtkAttachOptions) (0), 2, 4);
-      
+
       gtk_entry_set_text(GTK_ENTRY(AlarmComment),announcetext);
       gtk_entry_set_editable (GTK_ENTRY (AlarmComment), FALSE);
     }
@@ -150,7 +160,7 @@ create_window (char *announcetext)
   gtk_widget_ref (AlarmTime);
   gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmTime", AlarmTime,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_table_attach (GTK_TABLE (table6), AlarmTime, 1, 2, 3, 4,
+  gtk_table_attach (GTK_TABLE (InfoTable), AlarmTime, 1, 2, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 2, 2);
   gtk_label_set_justify (GTK_LABEL (AlarmTime), GTK_JUSTIFY_LEFT);
@@ -162,84 +172,134 @@ create_window (char *announcetext)
   gtk_widget_ref (AlarmDate);
   gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmDate", AlarmDate,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_table_attach (GTK_TABLE (table6), AlarmDate, 1, 2, 2, 3,
+  gtk_table_attach (GTK_TABLE (InfoTable), AlarmDate, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 2, 2);
   gtk_label_set_justify (GTK_LABEL (AlarmDate), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (AlarmDate), 0, 0.5);
 
-  label32 = gtk_label_new (_("Alarm time has been reached for:"));
-  gtk_widget_set_name (label32, "label32");
-  gtk_widget_ref (label32);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "label32", label32,
+  HeadingLabel = gtk_label_new (_("Alarm time has been reached for:"));
+  gtk_widget_set_name (HeadingLabel, "HeadingLabel");
+  gtk_widget_ref (HeadingLabel);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "HeadingLabel", HeadingLabel,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_table_attach (GTK_TABLE (table6), label32, 0, 2, 1, 2,
+  gtk_table_attach (GTK_TABLE (InfoTable), HeadingLabel, 0, 2, 1, 2,
                     (GtkAttachOptions) (0),
                     (GtkAttachOptions) (0), 2, 5);
-  gtk_label_set_justify (GTK_LABEL (label32), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label32), 0, 0.5);
+  gtk_label_set_justify (GTK_LABEL (HeadingLabel), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (HeadingLabel), 0, 0.5);
 
-  dialog_action_area3 = GTK_DIALOG (AlarmWin)->action_area;
-  gtk_widget_set_name (dialog_action_area3, "dialog_action_area3");
-  gtk_object_set_data (GTK_OBJECT (AlarmWin), "dialog_action_area3", dialog_action_area3);
-  gtk_widget_show (dialog_action_area3);
-  gtk_container_set_border_width (GTK_CONTAINER (dialog_action_area3), 10);
-
-  vbox6 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_set_name (vbox6, "vbox6");
-  gtk_widget_ref (vbox6);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "vbox6", vbox6,
+  SnoozeHBox = gtk_hbox_new (FALSE, 1);
+  gtk_widget_set_name (SnoozeHBox, "SnoozeHBox");
+  gtk_widget_ref (SnoozeHBox);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "SnoozeHBox", SnoozeHBox,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_box_pack_start (GTK_BOX (dialog_action_area3), vbox6, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (DialogVBox), SnoozeHBox, FALSE, TRUE, 3);
 
-  hbuttonbox8 = gtk_hbutton_box_new ();
-  gtk_widget_set_name (hbuttonbox8, "hbuttonbox8");
-  gtk_widget_ref (hbuttonbox8);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "hbuttonbox8", hbuttonbox8,
+  SnoozeLabel = gtk_label_new (_("Snooze for"));
+  gtk_widget_set_name (SnoozeLabel, "SnoozeLabel");
+  gtk_widget_ref (SnoozeLabel);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "SnoozeLabel",
+			    SnoozeLabel,
+			    (GtkDestroyNotify) gtk_widget_unref);
+  gtk_box_pack_start (GTK_BOX (SnoozeHBox), SnoozeLabel, FALSE, FALSE, 1);
+
+  HoursAdj = gtk_adjustment_new (0.0, 0.0, 23.0, 1.0, 6.0, 6.0);
+  HoursSpin = gtk_spin_button_new (GTK_ADJUSTMENT (HoursAdj), 1.0, 0);
+  gtk_widget_set_name (HoursSpin, "HoursSpin");
+  gtk_widget_ref (HoursSpin);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "HoursSpin",
+			    HoursSpin,
+			    (GtkDestroyNotify) gtk_widget_unref);
+  gtk_box_pack_start (GTK_BOX (SnoozeHBox), HoursSpin, FALSE, FALSE, 1);
+
+  HoursLabel = gtk_label_new (_("hrs"));
+  gtk_widget_set_name (HoursLabel, "HoursLabel");
+  gtk_widget_ref (HoursLabel);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "HoursLabel",
+			    HoursLabel,
+			    (GtkDestroyNotify) gtk_widget_unref);
+  gtk_box_pack_start (GTK_BOX (SnoozeHBox), HoursLabel, FALSE, FALSE, 1);
+
+  MinutesAdj = gtk_adjustment_new (5.0, 0.0, 59.0, 1.0, 5.0, 5.0);
+  MinutesSpin = gtk_spin_button_new (GTK_ADJUSTMENT (MinutesAdj), 1.0, 0);
+  gtk_widget_set_name (MinutesSpin, "MinutesSpin");
+  gtk_widget_ref (MinutesSpin);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "MinutesSpin",
+			    MinutesSpin,
+			    (GtkDestroyNotify) gtk_widget_unref);
+  gtk_box_pack_start (GTK_BOX (SnoozeHBox), MinutesSpin, FALSE, FALSE, 1);
+
+  MinutesLabel = gtk_label_new (_("mins"));
+  gtk_widget_set_name (MinutesLabel, "MinutesLabel");
+  gtk_widget_ref (MinutesLabel);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "MinutesLabel",
+			    MinutesLabel,
+			    (GtkDestroyNotify) gtk_widget_unref);
+  gtk_box_pack_start (GTK_BOX (SnoozeHBox), MinutesLabel, FALSE, FALSE, 1);
+
+  DialogActionArea = GTK_DIALOG (AlarmWin)->action_area;
+  gtk_widget_set_name (DialogActionArea, "DialogActionArea");
+  gtk_object_set_data (GTK_OBJECT (AlarmWin), "DialogActionArea",
+		       DialogActionArea);
+  gtk_widget_show (DialogActionArea);
+  gtk_container_set_border_width (GTK_CONTAINER (DialogActionArea), 10);
+
+  ActionVbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (ActionVbox, "ActionVbox");
+  gtk_widget_ref (ActionVbox);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "ActionVbox", ActionVbox,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox8, TRUE, TRUE, 0);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbuttonbox8), 20);
-  gtk_button_box_set_child_size (GTK_BUTTON_BOX (hbuttonbox8), 65, 25);
-  gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (hbuttonbox8), 3, 0);
+  gtk_box_pack_start (GTK_BOX (DialogActionArea), ActionVbox, TRUE, TRUE, 0);
+
+  TopButtonBox = gtk_hbutton_box_new ();
+  gtk_widget_set_name (TopButtonBox, "TopButtonBox");
+  gtk_widget_ref (TopButtonBox);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "TopButtonBox", TopButtonBox,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_box_pack_start (GTK_BOX (ActionVbox), TopButtonBox, TRUE, TRUE, 0);
+  gtk_button_box_set_spacing (GTK_BUTTON_BOX (TopButtonBox), 20);
+  gtk_button_box_set_child_size (GTK_BUTTON_BOX (TopButtonBox), 65, 25);
+  gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (TopButtonBox), 3, 0);
 
   AlarmMute = gtk_button_new_with_label (_("Mute"));
   gtk_widget_set_name (AlarmMute, "AlarmMute");
   gtk_widget_ref (AlarmMute);
   gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmMute", AlarmMute,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox8), AlarmMute);
+  gtk_container_add (GTK_CONTAINER (TopButtonBox), AlarmMute);
   GTK_WIDGET_SET_FLAGS (AlarmMute, GTK_CAN_DEFAULT);
 
-  AlarmDelay = gpe_picture_button (NULL, _("Snooze"), "clock-popup");
-  gtk_widget_set_name (AlarmDelay, "AlarmDelay");
-  gtk_widget_ref (AlarmDelay);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmDelay", AlarmDelay,
+  AlarmSnooze = gpe_picture_button (NULL, _("Snooze"), "clock-popup");
+  gtk_widget_set_name (AlarmSnooze, "AlarmSnooze");
+  gtk_widget_ref (AlarmSnooze);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmSnooze", AlarmSnooze,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox8), AlarmDelay);
-  GTK_WIDGET_SET_FLAGS (AlarmDelay, GTK_CAN_DEFAULT);
+  gtk_container_add (GTK_CONTAINER (TopButtonBox), AlarmSnooze);
+  GTK_WIDGET_SET_FLAGS (AlarmSnooze, GTK_CAN_DEFAULT);
 
-  hbuttonbox7 = gtk_hbutton_box_new ();
-  gtk_widget_set_name (hbuttonbox7, "hbuttonbox7");
-  gtk_widget_ref (hbuttonbox7);
-  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "hbuttonbox7", hbuttonbox7,
+  BtmButtonBox = gtk_hbutton_box_new ();
+  gtk_widget_set_name (BtmButtonBox, "BtmButtonBox");
+  gtk_widget_ref (BtmButtonBox);
+  gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "BtmButtonBox", BtmButtonBox,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_box_pack_start (GTK_BOX (vbox6), hbuttonbox7, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (ActionVbox), BtmButtonBox, TRUE, TRUE, 0);
 
   AlarmACK = gpe_picture_button (NULL, _("Dismiss"), "!gtk-close");
   gtk_widget_set_name (AlarmACK, "AlarmACK");
   gtk_widget_ref (AlarmACK);
   gtk_object_set_data_full (GTK_OBJECT (AlarmWin), "AlarmACK", AlarmACK,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox7), AlarmACK);
+  gtk_container_add (GTK_CONTAINER (BtmButtonBox), AlarmACK);
   gtk_container_set_border_width (GTK_CONTAINER (AlarmACK), 4);
   GTK_WIDGET_SET_FLAGS (AlarmACK, GTK_CAN_DEFAULT);
 
+  gtk_signal_connect (GTK_OBJECT (AlarmSnooze), "clicked",
+                      GTK_SIGNAL_FUNC (on_snooze_clicked),
+                      AlarmWin);
   gtk_signal_connect (GTK_OBJECT (AlarmMute), "clicked",
                       GTK_SIGNAL_FUNC (on_mute_clicked),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (AlarmDelay), "clicked",
-                      GTK_SIGNAL_FUNC (on_snooze_clicked),
-                      announcetext);
   gtk_signal_connect (GTK_OBJECT (AlarmACK), "clicked",
                       GTK_SIGNAL_FUNC (on_ok_clicked),
                       NULL);
