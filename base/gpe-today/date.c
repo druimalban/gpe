@@ -52,10 +52,6 @@ void date_init(void)
 
 	/* TODO: listen for HUP signal? */
 
-	/* it should also be updated from calendar.c when it
-	 * starts displaying a new day
-	 */
-
 	/* gtkrc */
 	gtk_rc_parse_string("widget '*date_box' style 'date_box'");
 	gtk_rc_parse_string("widget '*date_label' style 'date_label'");

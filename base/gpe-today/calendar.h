@@ -17,8 +17,10 @@ struct {
 	GtkWidget *toplevel;
 
 	GtkWidget *vboxlogo;
-	  GtkWidget *logo;
+	GtkWidget *logo;
 
+	PangoLayout *noevent;
+	
 	struct myscroll *scroll;
 } calendar;
 
