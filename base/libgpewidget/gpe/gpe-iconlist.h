@@ -51,8 +51,7 @@ struct _GPEIconListClass {
 /*
  * Public methods
  */
-GType	gpe_iconlist_get_type	(void);
-void 	gpe_iconlist_clicked	(GPEIconList * self,
+GType	gpe_iconlist_get_type	(void);void 	gpe_iconlist_clicked	(GPEIconList * self,
 					gpointer udata);
 void 	gpe_iconlist_show_popup	(GPEIconList * self,
 					gpointer udata);

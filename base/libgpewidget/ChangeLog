@@ -1,6 +1,14 @@
+2003-03-09  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlist.gob (_expose): Don't cache full-size images that are
+	backed by files on disk.
+	* gpe-iconlist.c: Regenerate.
+
 2003-03-09  Damien Tanner  <dctanner@gekk>
 
-	* dirbrowser.c (ok_clicked): The window will hide itself before calling the handler, this is so the user will recieve some visual feedback that something is being done about loading the path.
+	* dirbrowser.c (ok_clicked): The window will hide itself before
+	calling the handler, this is so the user will recieve some visual
+	feedback that something is being done about loading the path.
 
 2003-03-08  Colin Marquardt  <colin@marquardt-home.de>
 
@@ -17,7 +25,8 @@
 
 2003-03-07  Damien Tanner  <dctanner@gekk>
 
-	* gpe/popup_menu.h (popup_menu_button_new_type_color): new color popup menu.
+	* gpe/popup_menu.h (popup_menu_button_new_type_color): new color
+	popup menu.
 
 	* popup_menu.c: Add code popup and if the child's height is larger
 	than the screen size it will be packed into a GtkScrolledWindow.
