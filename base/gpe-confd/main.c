@@ -10,41 +10,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <gtk/gtk.h>
-#include <gdk/gdkx.h>
-
-#include <db.h>
-
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xmd.h>
 
+#include <glib.h>
+
 #include "xsettings-manager.h"
 
 XSettingsManager *manager;
+
+#ifdef GPE_CONF_DB
+#include <db.h>
 DB *database;
+#else
+#include <sqlite.h>
+sqlite *database;
+#endif
 
 Atom gpe_settings_update_atom;
-
-DB *
-database_open (void)
-{
-  DB *db;
-  char *home = getenv ("HOME"), *file;
-
-  if (!home)
-    home = "";
-
-  file = g_strdup_printf ("%s/.gpe/settings.db", home);
- 
-  if (db_create (&db, NULL, 0))
-    return NULL;
-
-  if (db->open (db, file, NULL, DB_BTREE, DB_CREATE, 0600))
-    return NULL;
-
-  return db;
-}
 
 char *
 xsetting_stringize (XSettingsSetting *setting)
@@ -113,6 +97,8 @@ xsetting_unstringize (char *s, XSettingsSetting *setting)
   return TRUE;
 }
 
+#ifdef GPE_CONF_DB
+
 gboolean
 suck_in_settings (XSettingsManager *manager, DB *db)
 {
@@ -158,6 +144,103 @@ db_store_setting (DB *db, XSettingsSetting *setting)
 
   free (data.data);
 }
+
+DB *
+database_open (void)
+{
+  DB *db;
+  char *home = g_get_home_dir (), *file;
+
+  file = g_strdup_printf ("%s/.gpe/settings.db", home);
+ 
+  if (db_create (&db, NULL, 0))
+    return NULL;
+
+  if (db->open (db, file, NULL, DB_BTREE, DB_CREATE, 0600))
+    return NULL;
+
+  g_free (file);
+
+  return db;
+}
+
+#else
+
+static int
+read_one_setting (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 2)
+    {
+      XSettingsSetting setting;
+      if (xsetting_unstringize (argv[1], &setting))
+	{
+	  setting.name = g_strdup (argv[0]);
+	  xsettings_manager_set_setting (manager, &setting);
+	}
+    }
+
+  return 0;
+}
+
+gboolean
+suck_in_settings (XSettingsManager *manager, sqlite *db)
+{
+  char *err;
+
+  if (sqlite_exec (db, "select key, value from xsettings", read_one_setting,
+		   NULL, &err))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+      return FALSE;
+    }
+
+  return TRUE;
+}
+
+void
+db_store_setting (sqlite *db, XSettingsSetting *setting)
+{
+  gchar *str =  xsetting_stringize (setting);
+  char *err;
+
+  if (sqlite_exec_printf (db, "insert into xsettings values ('%q', '%q')", NULL, NULL, &err,
+			  setting->name, str))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+    }
+
+  g_free (str);
+}
+
+sqlite *
+database_open (void)
+{
+  sqlite *db;
+  const char *home = g_get_home_dir ();
+  char *err, *file;
+
+  file = g_strdup_printf ("%s/.gpe/settings", home);
+ 
+  db = sqlite_open (file, 0, &err);
+  g_free (file);
+
+  if (db)
+    {
+      static const char *schema_info = "create table xsettings (key text, value text)";
+      sqlite_exec (db, schema_info, NULL, NULL, &err);
+    }
+  else
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+    }
+
+  return db;
+}
+
+#endif
 
 void
 write_setting (Display *dpy, Window w, unsigned long prop)

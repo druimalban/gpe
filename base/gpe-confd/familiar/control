@@ -1,0 +1,8 @@
+Package: gpe-confd
+Section: x11
+Priority: optional
+Version: 0.10
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: sqlite, libglib2.0-0, libxsettings0
+Description: Persistent Xsettings storage daemon
