@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -320,7 +320,7 @@ main (int argc, char *argv[])
   XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
   XClearWindow (dpy, win_panel);
 
-  help_atom = XInternAtom (dpy, "GPE_INTERACTIVE_HELP", False);
+  help_atom = XInternAtom (dpy, "_GPE_INTERACTIVE_HELP", False);
   string_atom = XInternAtom (dpy, "STRING", False);
   
   pango_ctx = pango_xft_get_context (dpy, DefaultScreen (dpy));
@@ -329,8 +329,8 @@ main (int argc, char *argv[])
   fontmap = pango_xft_get_font_map (dpy, DefaultScreen (dpy));
   fontdes = pango_font_description_new ();
 
-  pango_font_description_set_family (fontdes, "Verdana");
-  pango_font_description_set_size (fontdes, 6 * PANGO_SCALE);
+  pango_font_description_set_family (fontdes, "Sans");
+  pango_font_description_set_size (fontdes, 8 * PANGO_SCALE);
   
   pango_font = pango_font_map_load_font (fontmap, pango_ctx, fontdes);
   pango_metrics = pango_font_get_metrics (pango_font, NULL);

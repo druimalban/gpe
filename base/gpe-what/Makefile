@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-what
 #DEBUG = yes
 CVSBUILD = yes
+VERSION = 0.25
 
 MEMBERS = gpe-what
 
