@@ -1,5 +1,5 @@
 
-<!--#set var="addtitle" value="Todo"-->
+<!--#set var="addtitle" value="Todo List"-->
 <!--#set var="pagename" value="todo"-->
 <!--#set var="author" value="Nils Faerber"-->
 <!--#set var="authoremail" value="nils@handhelds.org"-->
