@@ -3,4 +3,4 @@
  title="Appmgr Setup" \
  command=gpe-appmgr-setup \
  icon48=/usr/share/pixmaps/gpe-appmgr-setup.png \
- section=Utilities
+ section=Configuration
