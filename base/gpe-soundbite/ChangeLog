@@ -1,3 +1,9 @@
+2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install-program): New name for 'install' ('install' is
+	now provided by Makefile.dpkg_ipkg).  
+	Use -s option for installing the binary, get rid of the strip call.
+
 2003-03-22  Moray Allan  <moray@handhelds.org>
 
 	* Makefile: Now uses CVSBUILD to decide where to look for external

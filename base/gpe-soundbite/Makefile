@@ -57,8 +57,8 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all install-mo $(PACKAGE)-play.desktop  $(PACKAGE)-record.desktop
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+install-program: all $(PACKAGE)-play.desktop  $(PACKAGE)-record.desktop
+	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE)-play $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)-play
 	install -D $(PACKAGE)-record $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)-record
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
@@ -68,7 +68,6 @@ install: all install-mo $(PACKAGE)-play.desktop  $(PACKAGE)-record.desktop
 	install -m 644 $(PACKAGE)-record.desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-record.desktop
 	install -D gpe-soundbite-play.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-play.png
 	install -D gpe-soundbite-record.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-record.png
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
