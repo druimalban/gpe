@@ -1,5 +1,11 @@
 2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* week_view.c: fix declaration locations so it builds on ipaq cluster
+	* event-ui.c: likewise
+	* month_view.c: likewise
+	
+2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* main.c: change set_day_view to set_time_and_day_view and change
 	original call to be new_view(day) so set_day_view becomes unnecessary
 	* event-ui.c: get rid of find_by_uid since I have added a pointer in
