@@ -35,11 +35,16 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 MIMECFLAGS =`pkg-config --cflags mimedir-1.0` -I/usr/local/include/mimedir-1.0
 MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite -lmimedir 
 
+libircp_a_OBJECTS =  ircp/ircp_client.o ircp/ircp_server.o ircp/ircp_io.o ircp/dirtraverse.o
+IRFLAGS = -lopenobex libircp.a
+
 # setup how to compile
 ifeq ($(NATIVE),yes)
 
 STRIP=strip
 CC=gcc
+AR = ar
+RANLIB = ranlib
 
 CFLAGS +=  -Wall $(GTKCFLAGS)
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)
@@ -48,6 +53,8 @@ else # we do cross-compile...
 
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
+AR = arm-linux-ar
+RANLIB = arm-linux-ranlib
 
 CFLAGS +=  -Wall $(GTKCFLAGS)
 LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
@@ -70,8 +77,8 @@ PIXMAPS = irda-16.png irda.png irda-16-on.png
 
 all: $(PACKAGE) vcard-export vcard-import vcard-import-file
 
-$(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
+$(PACKAGE): libircp.a $(OBJS)
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(IRFLAGS)
 
 CFLAGS += $(MIMECFLAGS)
 
@@ -84,6 +91,10 @@ vcard-import: import-vcard.o vcard.o
 vcard-import-file: import-vcard-file.o vcard.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
+libircp.a: $(libircp_a_OBJECTS) $(libircp_a_DEPENDENCIES)
+	-rm -f libircp.a
+	$(AR) cru libircp.a $(libircp_a_OBJECTS) $(libircp_a_LIBADD)
+	$(RANLIB) libircp.a
 
 install-program: $(PACKAGE)
 	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
@@ -96,7 +107,7 @@ install-program: $(PACKAGE)
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE)  vcard-export vcard-import vcard-import-file  $(OBJS) *~ */*~ *.ipk *.o
+	rm -f $(PACKAGE)  vcard-export vcard-import vcard-import-file  $(OBJS) *~ */*~ *.ipk *.o *.a ircp/*.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

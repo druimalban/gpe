@@ -1,3 +1,9 @@
+07/28/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- Added ircp stuff, fixed it's initialisation
+	- Changed Makefile to deal with ircp.
+	- Added IR receive and status info routines.
+
 2003-07-27  Phil Blundell  <pb@nexus.co.uk>
 
 	* main.c: Include string.h to suppress warning.

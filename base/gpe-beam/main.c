@@ -16,15 +16,18 @@
 //#include <sys/types.h>
 #include <stdlib.h>
 #include <libintl.h>
+#include <locale.h>
+#include <unistd.h>
 #include <string.h>
 
-/*#include <locale.h>
+/*
 #include <pty.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <errno.h>
+#include <sys/wait.h>
 */
+
+
 #include <signal.h>
 #include <stdio.h>
 
@@ -44,12 +47,16 @@
 
 #include <sys/socket.h>
 #include "main.h"
+#include "ircp/ircp.h"
+#include "ircp/ircp_server.h"
+#include "ircp/ircp_client.h"
 
 #define _(x) gettext(x)
 
 #define COMMAND_IR_ON  "ifconfig irda0 up ; echo 1 > /proc/sys/net/irda/discovery"
 #define COMMAND_IR_OFF  "echo 0 > /proc/sys/net/irda/discovery ; ifconfig irda0 down"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
+static char *IR_INBOX = "/tmp" ;
 
 struct gpe_icon my_icons[] = {
 	{"irda-on", "/usr/share/pixmaps/irda-on-16.png"},
@@ -66,10 +73,94 @@ static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_vcard, *menu_control;
 static GtkWidget *control_window;
 static GtkWidget *lDevice, *lCHint, *lSaddr;
+static GThread *scan_thread;
 
 gboolean radio_is_on;
 GdkWindow *dock_window;
 static guint timeout_id = 0;
+static ircp_client_t *cli;
+GtkWidget *lStatus = NULL;
+
+
+GtkWidget *
+bt_progress_dialog (gchar * text, GdkPixbuf * pixbuf)
+{
+	GtkWidget *window;
+	GtkWidget *label;
+	GtkWidget *image;
+	GtkWidget *hbox;
+
+	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	hbox = gtk_hbox_new (FALSE, 0);
+	image = gtk_image_new_from_pixbuf (pixbuf);
+	label = gtk_label_new (text);
+
+	gtk_window_set_type_hint (GTK_WINDOW (window),
+				  GDK_WINDOW_TYPE_HINT_DIALOG);
+
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+
+	gtk_container_set_border_width (GTK_CONTAINER (hbox),
+					gpe_get_border ());
+
+	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+
+	gtk_container_add (GTK_CONTAINER (window), hbox);
+	lStatus = label;
+	
+	return window;
+}
+
+
+void
+ircp_info_cb (int event, char *param)
+{
+	char *ts;
+	
+	if (lStatus == NULL)
+		return;
+
+	gdk_threads_enter ();
+	switch (event)
+	{
+	case IRCP_EV_ERRMSG:
+		ts = g_strdup_printf ("%s: %s", _("Error"), param);
+		gtk_label_set_text (GTK_LABEL (lStatus), ts);
+		free (ts);
+		break;
+	case IRCP_EV_ERR:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("failed"));
+		break;
+	case IRCP_EV_OK:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("done"));
+		break;
+	case IRCP_EV_CONNECTING:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Connecting..."));
+		break;
+	case IRCP_EV_DISCONNECTING:
+		gtk_label_set_text (GTK_LABEL (lStatus),
+				    _("Disconnecting..."));
+		break;
+	case IRCP_EV_SENDING:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Sending..."));
+		break;
+	case IRCP_EV_RECEIVING:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Receiving..."));
+		break;
+	case IRCP_EV_LISTENING:
+		gtk_label_set_text (GTK_LABEL (lStatus),
+				    _("Waiting for incoming connection"));
+		break;
+	case IRCP_EV_CONNECTIND:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Connected"));
+		break;
+	case IRCP_EV_DISCONNECTIND:
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Disconnecting"));
+		break;
+	}
+	gdk_threads_leave ();
+}
 
 
 /*
@@ -78,87 +169,88 @@ static guint timeout_id = 0;
  *    Parse and print the names of the various hint bits if they are set
  *
  */
-char*
+char *
 parse_hints (int hint)
 {
-	char *str = g_strdup("");
+	char *str = g_strdup ("");
 	char *str1;
-	
+
 	if (hint & HINT_TELEPHONY)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("Telephony"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("Telephony"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_FILE_SERVER)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("File Server"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("File Server"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_COMM)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("IrCOMM"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("IrCOMM"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_OBEX)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("IrOBEX"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("IrOBEX"));
+		free (str);
 		str = str1;
 	}
 
 	hint >>= 8;
-	
+
 	if (hint & HINT_PNP)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("PnP"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("PnP"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_PDA)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("PDA/Palmtop"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("PDA/Palmtop"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_COMPUTER)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("Computer"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("Computer"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_PRINTER)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("Printer"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("Printer"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_MODEM)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("Modem"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("Modem"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_FAX)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("Fax"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("Fax"));
+		free (str);
 		str = str1;
 	}
 	if (hint & HINT_LAN)
 	{
-		str1 = g_strdup_printf ("%s%s\n",str, _("LAN Access"));
-		free(str);
+		str1 = g_strdup_printf ("%s%s\n", str, _("LAN Access"));
+		free (str);
 		str = str1;
 	}
-	
-	if (strlen(str))
-		str[strlen(str)-1] = 0;
-	
+
+	if (strlen (str))
+		str[strlen (str) - 1] = 0;
+
 	return str;
 }
+
 
 static int
 vparse (FILE * f, char *format, va_list ap)
@@ -198,6 +290,73 @@ parse_file (char *file, char *format, ...)
 
 
 static void
+send_file (void)
+{
+/*	cli = ircp_cli_open(ircp_info_cb);
+	if(cli == NULL) {
+		printf("Error opening ircp-client\n");
+		return -1;
+	}
+		
+	// Connect
+	if(ircp_cli_connect(cli) >= 0) {
+		// Send all files
+		for(i = 1; i < argc; i++) {
+			ircp_put(cli, argv[i]);
+		}
+			// Disconnect
+		ircp_cli_disconnect(cli);
+	}
+	ircp_cli_close(cli);
+*/
+}
+
+
+static void
+do_receive_file (void)
+{
+	ircp_server_t *srv = NULL;
+	GtkWidget *dlgStatus = NULL;
+
+	gdk_threads_enter ();
+	dlgStatus = bt_progress_dialog (_("IR Receive"), gpe_find_icon("irda"));
+	gtk_widget_show_all(dlgStatus);
+	gtk_window_present(GTK_WINDOW(dlgStatus));
+	gdk_threads_leave ();
+
+	srv = ircp_srv_open (ircp_info_cb);
+	if (srv == NULL)
+	{
+	gdk_threads_enter ();
+		gtk_label_set_text (GTK_LABEL (lStatus), _("Error opening IR server."));
+	gdk_threads_leave ();
+	}
+	else
+	{
+		ircp_srv_recv (srv, IR_INBOX);
+		ircp_srv_close (srv);
+	}
+	sleep(3);
+	gdk_threads_enter ();
+	gtk_widget_destroy(dlgStatus);
+	lStatus = NULL;
+	gdk_threads_leave ();
+}
+
+
+static void
+receive_file (void)
+{
+	scan_thread =
+		g_thread_create ((GThreadFunc) do_receive_file, NULL, FALSE, NULL);
+
+	if (scan_thread == NULL)
+		gpe_perror_box (_("Unable to scan for devices."));
+
+}
+
+
+static void
 send_vcard (void)
 {
 
@@ -211,7 +370,7 @@ get_irstatus (void)
 	static unsigned int chint = 0;
 	unsigned long long saddr = 0;
 	unsigned long long daddr = 0;
-	char* ts;
+	char *ts;
 
 	if (!parse_file
 	    (IR_DISCOVERY,
@@ -223,10 +382,10 @@ get_irstatus (void)
 		gtk_label_set_text (GTK_LABEL (lDevice), nick);
 		snprintf (nick, 32, "0x%8llx", saddr);
 		gtk_label_set_text (GTK_LABEL (lSaddr), nick);
-		
-		ts = parse_hints(chint);
+
+		ts = parse_hints (chint);
 		gtk_label_set_text (GTK_LABEL (lCHint), ts);
-		free(ts);
+		free (ts);
 	}
 	else
 	{
@@ -257,7 +416,8 @@ control_window_destroyed (void)
 static void
 show_control (void)
 {
-	char *ts;
+	GtkWidget *img;
+	GtkWidget *tw, *hb;
 
 	if (control_window == NULL)
 	{
@@ -265,7 +425,8 @@ show_control (void)
 		GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
 		GtkWidget *vbox = gtk_vbox_new (FALSE, gpe_get_boxspacing ());
 		GtkWidget *hbox = gtk_hbutton_box_new ();
-		GtkWidget *bOK = gtk_button_new_from_stock (GTK_STOCK_OK);
+		GtkWidget *bSend = gtk_button_new ();
+		GtkWidget *bReceive = gtk_button_new ();
 		GtkWidget *bClose =
 			gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 		GtkWidget *table = gtk_table_new (6, 3, FALSE);
@@ -286,7 +447,28 @@ show_control (void)
 		gtk_misc_set_alignment (GTK_MISC (lSaddr), 0, 0.5);
 
 		gtk_label_set_markup (GTK_LABEL (lcPeer),
-				     _("<b>Peer Information</b>"));
+				      _("<b>Peer Information</b>"));
+
+		hb = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
+		img = gtk_image_new_from_stock (GTK_STOCK_GO_UP,
+						GTK_ICON_SIZE_BUTTON);
+		gtk_container_add (GTK_CONTAINER (hb), img);
+		tw = gtk_label_new (_("Send File"));
+		gtk_misc_set_alignment (GTK_MISC (tw), 0, 0.5);
+		gtk_container_add (GTK_CONTAINER (hb), tw);
+		gtk_container_add (GTK_CONTAINER (bSend), hb);
+
+		hb = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
+		img = gtk_image_new_from_stock (GTK_STOCK_GO_DOWN,
+						GTK_ICON_SIZE_BUTTON);
+		gtk_container_add (GTK_CONTAINER (hb), img);
+		tw = gtk_label_new (_("Receive File"));
+		gtk_misc_set_alignment (GTK_MISC (tw), 0, 0.5);
+		gtk_container_add (GTK_CONTAINER (hb), tw);
+		gtk_container_add (GTK_CONTAINER (bReceive), hb);
+
+		gtk_box_pack_start (GTK_BOX (hbox), bSend, FALSE, TRUE, 0);
+		gtk_box_pack_start (GTK_BOX (hbox), bReceive, FALSE, TRUE, 0);
 
 		gtk_misc_set_alignment (GTK_MISC (lcPeer), 0, 0.5);
 		gtk_misc_set_alignment (GTK_MISC (l1), 0, 0.5);
@@ -306,11 +488,23 @@ show_control (void)
 				  GTK_FILL, 0, 0);
 		gtk_table_attach (GTK_TABLE (table), lSaddr, 1, 2, 2, 3,
 				  GTK_FILL, GTK_FILL, 0, 0);
-				  
+
 		gtk_table_attach (GTK_TABLE (table), l2, 0, 1, 3, 4, GTK_FILL,
 				  GTK_FILL, 0, 0);
 		gtk_table_attach (GTK_TABLE (table), lCHint, 1, 2, 3, 4,
-				  GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+				  GTK_FILL | GTK_EXPAND,
+				  GTK_FILL | GTK_EXPAND, 0, 0);
+
+		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 4, 5,
+				  GTK_FILL | GTK_EXPAND,
+				  GTK_FILL | GTK_EXPAND, 0, 0);
+
+	lStatus = gtk_label_new("Status");
+	gtk_table_attach (GTK_TABLE (table), lStatus, 0, 3, 5, 6,
+				  GTK_FILL | GTK_EXPAND,
+				  GTK_FILL | GTK_EXPAND, 0, 0);
+				  
+		hbox = gtk_hbutton_box_new ();
 
 		control_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
@@ -338,17 +532,18 @@ show_control (void)
 		gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, TRUE, 0);
 
 		gtk_box_pack_start (GTK_BOX (hbox), bClose, FALSE, TRUE, 0);
-		gtk_box_pack_start (GTK_BOX (hbox), bOK, FALSE, TRUE, 0);
 
 		gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
 		gtk_widget_realize (control_window);
 		gtk_widget_show_all (control_window);
 
-/*		
-	g_signal_connect (G_OBJECT (bOK), "clicked",
-				  G_CALLBACK (ok_clicked), window);
-*/
+
+		g_signal_connect (G_OBJECT (bSend), "clicked",
+				  G_CALLBACK (send_file), control_window);
+		g_signal_connect (G_OBJECT (bReceive), "clicked",
+				  G_CALLBACK (receive_file), control_window);
+
 		g_signal_connect_swapped (G_OBJECT (bClose), "clicked",
 					  G_CALLBACK (gtk_widget_destroy),
 					  control_window);
