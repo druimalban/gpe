@@ -394,8 +394,6 @@ get_networks (GtkWidget *combo, GHashTable *network_hash)
   GList *popdown_strings = NULL;
   GSList *iter;
 
-  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
-
   iter = sql_networks; 
   while (iter)
   {
