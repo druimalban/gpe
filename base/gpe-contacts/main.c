@@ -484,7 +484,9 @@ show_details (struct person *p)
       gtk_widget_show_all(GTK_WIDGET(table));
     }
   else /* show configured fields only */
-    {    
+    { 
+      GtkWidget *details_button = g_object_get_data(G_OBJECT(mainw), 
+		                                            "details-button");		
       for (i = 0; i < table->nrows; i++)
       {
         pchild = g_list_nth_data (table->children, 2 * i);
@@ -494,31 +496,42 @@ show_details (struct person *p)
         gtk_label_set_text (GTK_LABEL (lright), "");
       }
       if (p)
-      {
-        for (i = 0; i < table->nrows; i++)
         {
-          pchild = g_list_nth_data (table->children, 2 * i);
-          if (!pchild)
-            continue;
-          lright = ((GtkTableChild *) pchild)->widget;
-          pchild = g_list_nth_data (table->children, 2 * i + 1);
-          if (!pchild)
-            continue;
-          lleft = ((GtkTableChild *) pchild)->widget;
-          tagname =
-            db_get_config_tag (CONFIG_PANEL,
-                       g_strdup (gtk_label_get_text
-                         (GTK_LABEL (lleft))));
-          curtag = db_find_tag (p, tagname);
-          if (curtag != NULL)
+          gtk_widget_set_sensitive(details_button, TRUE);
+          for (i = 0; i < table->nrows; i++)
             {
-              gtk_label_set_text (GTK_LABEL (lright), curtag->value);
-            }
-          g_free (tagname);
+              pchild = g_list_nth_data (table->children, 2 * i);
+              if (!pchild)
+                continue;
+              lright = ((GtkTableChild *) pchild)->widget;
+              pchild = g_list_nth_data (table->children, 2 * i + 1);
+              if (!pchild)
+                continue;
+              lleft = ((GtkTableChild *) pchild)->widget;
+              tagname =
+                db_get_config_tag (CONFIG_PANEL,
+                           g_strdup (gtk_label_get_text
+                             (GTK_LABEL (lleft))));
+              curtag = db_find_tag (p, tagname);
+              if (curtag != NULL)
+                {
+                  gtk_label_set_text (GTK_LABEL (lright), curtag->value);
+                }
+              g_free (tagname);
+           }
         }
-      }
+	  else
+	    {
+          gtk_widget_set_sensitive(details_button, FALSE);
+		}
     }
   return 0;
+}
+
+static void
+show_details_window(GtkWidget *btn)
+{
+  
 }
 
 void
@@ -1012,7 +1025,7 @@ create_main (gboolean show_config_button)
   GtkWidget *pDetail;
   GtkWidget *tabDetail;
   GtkWidget *toolbar, *pw;
-  GtkWidget *b, *btnNew;
+  GtkWidget *b, *btnNew, *btnDetails;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
@@ -1045,7 +1058,7 @@ create_main (gboolean show_config_button)
   gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
 
   btnNew = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
-			    _("New contact"), _("Tap here to add a new contact."),
+			    _("Tap this button to add a new contact."), NULL,
 			    G_CALLBACK (new_contact), NULL, -1);
   g_object_set_data (G_OBJECT (main_window), "new-button", btnNew);
 
@@ -1053,16 +1066,26 @@ create_main (gboolean show_config_button)
 							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
 
   b = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit"), 
-			       _("Edit contact"), _("Tap here to edit the selected contact."),
+			       _("Tap here to edit the selected contact."), NULL,
 			       pw, (GtkSignalFunc) edit_contact, NULL);
   g_object_set_data (G_OBJECT (main_window), "edit-button", b);
   gtk_widget_set_sensitive (b, FALSE);
 
   b = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-				_("Delete contact"), _("Tap here to delete the selected contact."),
+				_("Tap here to delete the selected contact."), NULL,
 				G_CALLBACK (delete_contact), NULL, -1);
   g_object_set_data (G_OBJECT (main_window), "delete-button", b);
   gtk_widget_set_sensitive (b, FALSE);
+
+  if (!mode_landscape)
+    {
+      pw = gtk_image_new_from_stock (GTK_STOCK_INDEX,
+                                     gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+      btnDetails = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Details"), 
+                                      _("Tap here to show contacts details."), 
+                                      NULL, pw, G_CALLBACK (show_details_window), NULL);
+      g_object_set_data (G_OBJECT (main_window), "details-button", btnDetails);
+    }
 
   if (show_config_button)
     gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,

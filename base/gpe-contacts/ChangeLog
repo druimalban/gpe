@@ -1,3 +1,9 @@
+2004-10-06  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: New button to show details in small portrait mode.
+              Fixed button help texts to make sure the long help text is
+              shown at all.
+    
 2004-10-05  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Makefile: Version is 0.30 now.
