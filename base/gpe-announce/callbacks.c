@@ -11,7 +11,7 @@
 #include <linux/soundcard.h>
 #include <pthread.h>
 
-#include <gpe/libgpe.h>
+#include <gpe/soundgen.h>
 
 #define MIXER "/dev/mixer"
 
@@ -23,35 +23,61 @@ static gboolean PlayAlarmStop = TRUE;
 
 int fd;
 int curl, curr;	
+
+static void
+schedule_alarm(char *buf, time_t when)
+{
+  char filename[256], command[256];
+  FILE *f;
+	
+  sprintf(filename, "/var/spool/at/%d.1234", (int)when);
+  
+  f=fopen(filename, "w");
+	
+  fprintf(f, "#!/bin/sh\n");
+  fprintf(f, "/usr/bin/gpe-announce '%s'\n", buf);
+  fprintf(f, "/bin/rm $0\n");
+  
+  fclose(f);
+  
+  sprintf(command, "chmod 755 %s", filename);
+  		  
+  system(command);
+  
+  sprintf(command, "echo >/var/spool/at/trigger");
+  		  
+  system(command);
+  
+}
 	
 void play_melody(guint Tone1Pitch, guint Tone1Duration,
 		guint Tone2Enable, guint Tone2Pitch, guint Tone2Duration,
 		guint ToneAltCount, guint TonePause)
 {
-int gpe_snd_dev=-1;
+int snd_dev=-1;
 int i;
 
 	for (i=0; i<5; i++) {
-		if ((gpe_snd_dev=gpe_soundgen_init()) == -1) {
-			g_print("Couldn't init gpe_soundgen\n");
+		if ((snd_dev=soundgen_init()) == -1) {
+			g_print("Couldn't init soundgen\n");
 			sleep (1);
 		} else
 			break;
 	}
-	if (gpe_snd_dev == -1)
+	if (snd_dev == -1)
 		return;
 	
 	while (!PlayAlarmStop) {
 		for (i = 0; i < ToneAltCount; i++) {
 			if (PlayAlarmStop)
 				break;
-			gpe_soundgen_play_tone1(gpe_snd_dev, Tone1Pitch, Tone1Duration);
-			gpe_soundgen_play_tone2(gpe_snd_dev, Tone2Pitch, Tone2Duration);
+			soundgen_play_tone1(snd_dev, Tone1Pitch, Tone1Duration);
+			soundgen_play_tone2(snd_dev, Tone2Pitch, Tone2Duration);
 		
 		}
-		gpe_soundgen_pause(gpe_snd_dev, TonePause);
+		soundgen_pause(snd_dev, TonePause);
 	}
-	gpe_soundgen_final(gpe_snd_dev);
+	soundgen_final(snd_dev);
 	
 }
 
@@ -134,26 +160,12 @@ gint
 on_snooze_clicked                     (GtkButton       *button,
                                         char         *user_data)
 {
-	struct tm tm;
 	time_t viewtime;
 
   	time (&viewtime);
-  	gmtime_r(&viewtime, &tm);
-   
-	CurrentAlarm=(struct Alarm_t *)malloc(sizeof(struct Alarm_t));
-	memset(CurrentAlarm,0,sizeof(struct Alarm_t));
-	CurrentAlarm->year=tm.tm_year + 1900;
-	CurrentAlarm->month=tm.tm_mon;
-	CurrentAlarm->day=tm.tm_mday;
-	CurrentAlarm->hour=tm.tm_hour;
-	CurrentAlarm->minute=tm.tm_min+5;
-	CurrentAlarm->AlarmType=6; /* melody 3 */
-	CurrentAlarm->AlarmReoccurence=0; /* once */
-	CurrentAlarm->Tone2Enable=TRUE;
-	tm.tm_isdst=1;
-	tm.tm_min+=5;
+  	viewtime+=5*60;
 		      
-	rtcd_set_alarm_tm("gpe-announce", user_data, &tm, sizeof(struct Alarm_t),CurrentAlarm);
+	schedule_alarm(user_data, viewtime);
   
 	PlayAlarmStop = TRUE;
 	set_vol(fd, curl, curr);
@@ -179,4 +191,5 @@ on_mute_clicked                     (GtkButton       *button,
 	PlayAlarmStop = TRUE;
 	return(FALSE);
 }
+
 

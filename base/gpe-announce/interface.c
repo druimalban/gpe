@@ -46,7 +46,13 @@ create_window (char *announcetext)
   gtk_widget_set_name (AlarmWin, "AlarmWin");
   gtk_object_set_data (GTK_OBJECT (AlarmWin), "AlarmWin", AlarmWin);
   gtk_window_set_title (GTK_WINDOW (AlarmWin), ("Alarm!"));
+  
+#if GTK_MAJOR_VERSION >= 2
+  GTK_WINDOW (AlarmWin)->type = GTK_WINDOW_TOPLEVEL;
+#else
   GTK_WINDOW (AlarmWin)->type = GTK_WINDOW_DIALOG;
+#endif
+  
   gtk_window_set_position (GTK_WINDOW (AlarmWin), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (AlarmWin), TRUE);
 

@@ -5,7 +5,17 @@ LINGUAS = de pt_PT
 
 MEMBERS = main interface callbacks
 
-CPPFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -I../libgpewidget -I../libgpe/include
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
+CONTROL = control1
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs` -lgthread -lpthread 
+CONTROL = control
+endif
+
+CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget -I../libsoundgen
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -27,7 +37,7 @@ PIXMAPS = bell.xpm
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -L../libgpe/src -lgpe `gtk-config --libs` -lsqlite -lgthread -lpthread $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -L../libsoundgen -lsoundgen $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
 
 install: all install-mo
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
