@@ -1,6 +1,10 @@
 When			Who				Where						What
 
-22.04.2003		Colin				timeanddate.c				Change wording a bit.
+22.04.2003		Florian			keyboard.c					Restore routine and soem bugfixes.
+								pixmaps/gpe-conf-cardinfo.png
+															jimmac created a great pcmcia icon - thanks!
+	
+22.04.2003		Colin			timeanddate.c				Change wording a bit.
 
 22.04.2003		Florian			users/interface.c			Changed to use correct buttons.
 								network.c					Ignore auto stuff.

@@ -80,6 +80,31 @@ write_keyboard_cfg (int whichkbd)
 	return FALSE;
 }
 
+
+// reads the config file
+static char *
+read_keyboard_cfg ()
+{
+	FILE *fnew;
+	char *ident;
+	
+	ident = malloc(40);
+	
+	fnew = fopen (KBDCFG_FILE, "r");
+	if (!fnew)
+	{
+		fprintf (stderr, "Could not read from file: %s.\n", KBDCFG_FILE);
+		sprintf(ident,"none");
+		return ident;
+	}
+
+	if (!fscanf (fnew, "KBD_IDENT=%40s\n", ident))
+		sprintf(ident,"none");
+	fclose (fnew);
+	return ident;
+}
+
+
 // reads keyboard definition file
 static int
 get_keyboard_defs ()
@@ -95,7 +120,7 @@ get_keyboard_defs ()
 	i = 1;			// !
 	if (!g_file_get_contents (KBD_FILE, &content, &length, &err))
 	{
-		gpe_error_box ("Could not read keyboard definition file.");
+		gpe_error_box (_("Could not read keyboard definition file."));
 	}
 	lines = g_strsplit (content, "[", 42);
 	g_free (content);
@@ -135,16 +160,18 @@ get_keyboard_defs ()
 		if (j < 4)
 		{
 			snprintf (buf, 255, "%s: %s",
-				  _("Error reading keyboard definition)"),
+				  _("Error reading keyboard definition."),
 				  kbds[i].identifier);
 			gpe_error_box (buf);
 		}
 		g_strfreev (el);
 		i++;
 	}
+	kbds = realloc (kbds, (i) * sizeof (t_kbd));
+	kbds[i - 1].identifier = g_strdup("none");
 	kbds[i - 1].package_name = g_strdup("");
 	kbds[i - 1].module_name = NULL;
-	kbds[i - 1].device_name = g_strdup("none");
+	kbds[i - 1].device_name = NULL;
 	kbds[i - 1].support_package = NULL;
 	numkbds = i;
 	g_strfreev (lines);
@@ -227,7 +254,8 @@ Keyboard_Build_Objects (void)
 			      NULL);
 
 	get_keyboard_defs ();
-
+	g_free(buf);
+	buf = read_keyboard_cfg();
 	label = NULL;
 
 	for (i = 0; i < numkbds; i++)
@@ -244,7 +272,7 @@ Keyboard_Build_Objects (void)
 				      _
 				      ("Tap here to select this keyboard model."),
 				      NULL);
-		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON
+		if (!strcmp(kbds[i].identifier,buf)) gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON
 					      (kbds[i].rbSelect), TRUE);
 		
 		if (kbds[i].support_package)
