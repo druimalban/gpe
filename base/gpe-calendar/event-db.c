@@ -81,7 +81,9 @@ parse_date (char *s, time_t *t, gboolean *date_only)
     }
 
   p = strptime (p, " %H:%M", &tm);
-  *date_only = (p == NULL) ? TRUE : FALSE;
+
+  if (date_only)
+    *date_only = (p == NULL) ? TRUE : FALSE;
 
   *t = timegm (&tm);
   return TRUE;
@@ -105,17 +107,11 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	}
       else if (!strcasecmp (argv[0], "rend"))
 	{
-	  gboolean untimed;
-
-	  parse_date (argv[1], &ev->recur.end, &untimed);
-
+	  parse_date (argv[1], &ev->recur.end, NULL);
 	}
       else if (!strcasecmp (argv[0], "modified"))
 	{
-	  gboolean untimed;
-
-	  parse_date (argv[1], &ev->modified, &untimed);
-
+	  parse_date (argv[1], &ev->modified, NULL);
 	}
       else if (!strcasecmp (argv[0], "rcount"))
 	{
@@ -514,7 +510,7 @@ event_db_add (event_t ev)
         goto error; 
     }
 
-      if (ev->flags & FLAG_ALARM)
+  if (ev->flags & FLAG_ALARM)
     {
       if (insert_values (sqliteh, ev->uid, "alarm", "%d", ev->alarm))
 	goto error;

@@ -193,7 +193,7 @@ click_delete (GtkWidget *widget, event_t ev)
   GtkWidget *d = gtk_widget_get_toplevel (widget);
   
   event_db_remove (ev);
-  if (ev->alarm != -1) 
+  if (ev->flags & FLAG_ALARM) 
     unschedule_alarm (ev->uid);
   
   update_current_view ();
@@ -283,9 +283,12 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 
 					  0, -1);
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
-    ev->alarm = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
+    {
+      ev->flags |= FLAG_ALARM;
+      ev->alarm = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
+    }
   else
-    ev->alarm = -1;
+    ev->flags &= ~FLAG_ALARM;
   
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone)))
     { 
@@ -378,7 +381,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (event_db_add (ev) == FALSE)
     event_db_destroy (ev);
 
-  if (ev->alarm != -1)  
+  if (ev->flags & FLAG_ALARM)  
     schedule_alarm (ev);
   
   update_current_view ();
@@ -951,7 +954,7 @@ edit_event(event_t ev)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       
-      if (ev->alarm != -1) 
+      if (ev->flags & FLAG_ALARM) 
 	{
 	  s->old_alarm = TRUE;
 	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), 

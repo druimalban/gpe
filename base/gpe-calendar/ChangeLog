@@ -1,4 +1,14 @@
+2002-08-30  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (click_delete): Test for flags & FLAG_ALARM.
+	(edit_event): Likewise.
+	(click_ok): Likewise.  Set FLAG_ALARM bit appropriately.
+
 2002-08-29  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c (parse_date): Don't dereference date_only if NULL.
+	(load_data_callback): Pass "date_only" as NULL to above function
+	when not interested in that information.
 
 	* globals.h (timefont, datefont, yearfont, DO_RECURRENCE): Delete
 	obsolete cruft.
