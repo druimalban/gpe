@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Record Memo
-Comment=GPE Soundbite
+_Name=Record Memo
+_Comment=GPE Soundbite
 Exec=gpe-soundbite-record
 Terminal=0
 Type=Application

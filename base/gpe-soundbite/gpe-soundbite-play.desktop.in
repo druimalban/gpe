@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Play Memo
-Comment=GPE Soundbite
+_Name=Play Memo
+_Comment=GPE Soundbite
 Exec=gpe-soundbite-play
 Terminal=0
 Type=Application
