@@ -2,6 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002   Moray Allan <moray@sermisy.org>,Pierre TARDY <tardyp@free.fr>
+ *               2003   Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,6 +25,7 @@
 #include "calibrate.h"
 #include "rotation.h"
 
+extern tself self;
 
 void
 on_light_on (GtkWidget *sender, gpointer user_data)
@@ -36,7 +38,15 @@ on_light_on (GtkWidget *sender, gpointer user_data)
 
 gint on_light_check(gpointer adj)
 {
-  gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),(gfloat) get_brightness() / 2.55);
+  if (get_light_state())
+  {
+    gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),(gfloat) get_brightness() / 2.55);
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),TRUE);
+  }
+  else
+  {
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch2),TRUE);
+  }
   return TRUE;	
 }
 
@@ -107,6 +117,6 @@ void
 on_calibrate_button_clicked            (GtkButton       *button,
                                         gpointer         user_data)
 {
-  calibrate ();
+  calibrate();
 }
 

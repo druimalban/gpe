@@ -33,24 +33,19 @@
 
 int initialising = 1;
 char *RotationLabels[4];
-   
+
 static struct
 {
-  GtkWidget *table;
-  GtkWidget *hbox2;
-  GtkWidget *lightl, *lightstl;
-  GtkWidget *brightnessl;
-  GtkWidget *brightness;
-  GtkWidget *screensaverl;
-  GtkWidget *screensaverl2;
-  GtkWidget *screensaver;
-  GtkWidget *screensaverbt;
-  GtkWidget *rotation;
-  GtkWidget *rotationl;
-  GtkWidget *touchscreen;
-  GtkWidget *calibrate;
-  GtkWidget *rbLightswitch1, *rbLightswitch2;
-}self;
+	int brightness;
+	int light;
+	int orientation;
+	
+	/* unused
+	int screensaver;
+	*/
+}initval;
+// type moved to callbacks.h
+tself self;
 
 GtkWidget *ipaqscreen_Build_Objects()
 {
@@ -165,8 +160,8 @@ GtkWidget *ipaqscreen_Build_Objects()
 	
   self.calibrate = gtk_button_new_with_label(_("Calibrate"));
 	
-  self.rbLightswitch1 = gtk_radio_button_new_with_label(NULL,_("Light on"));
-  self.rbLightswitch2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.rbLightswitch1),_("Light off"));
+  self.rbLightswitch1 = gtk_radio_button_new_with_label(NULL,_("on"));
+  self.rbLightswitch2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.rbLightswitch1),_("off"));
 
 	
   gtk_table_attach (GTK_TABLE (self.table), self.lightl, 0, 1, 0, 1,
@@ -249,16 +244,19 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_signal_connect (GTK_OBJECT (self.calibrate), "clicked",
                       GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
                       NULL);
-
-  gtk_signal_connect (GTK_OBJECT (self.screensaverbt), "clicked",
-                      GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
-                      NULL);
   
   gtk_signal_connect (GTK_OBJECT (self.rbLightswitch1), "toggled",
                       GTK_SIGNAL_FUNC (on_light_on),
                       (gpointer)self.rbLightswitch1);
 
-  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),get_light_state());
+  initval.brightness = get_brightness();
+  initval.light = get_light_state();
+  initval.orientation = get_rotation();
+  
+  if (initval.light)
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),TRUE);
+  else
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch2),TRUE);
   
   gtk_timeout_add(2500,(GtkFunction)on_light_check,(gpointer)adjLight);
     
@@ -294,5 +292,8 @@ void ipaqscreen_Save()
 
 void ipaqscreen_Restore()
 {
+  set_brightness(initval.brightness);
+  turn_light(initval.light);
+  set_rotation(initval.orientation);
 }
 

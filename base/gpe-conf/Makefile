@@ -77,6 +77,7 @@ MEMBERS += cfgfile
 MEMBERS += gpe-admin
 MEMBERS += storage
 MEMBERS += widgets/sp-color-slider
+MEMBERS += serial
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -102,6 +103,7 @@ PIXMAPS += gpe-config-users.png
 PIXMAPS += gpe-config-login-setup.png
 PIXMAPS += gpe-config-admin.png
 PIXMAPS += gpe-config-storage.png
+PIXMAPS += gpe-config-serial.png
 
 all: $(PACKAGE) 
 

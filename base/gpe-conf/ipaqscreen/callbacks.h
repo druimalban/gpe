@@ -1,3 +1,21 @@
+typedef struct
+{
+  GtkWidget *table;
+  GtkWidget *hbox2;
+  GtkWidget *lightl, *lightstl;
+  GtkWidget *brightnessl;
+  GtkWidget *brightness;
+  GtkWidget *screensaverl;
+  GtkWidget *screensaverl2;
+  GtkWidget *screensaver;
+  GtkWidget *screensaverbt;
+  GtkWidget *rotation;
+  GtkWidget *rotationl;
+  GtkWidget *touchscreen;
+  GtkWidget *calibrate;
+  GtkWidget *rbLightswitch1, *rbLightswitch2;
+}tself;
+
 void
 on_brightness_hscale_draw              (GtkObject       *adjustment,
                                         gpointer         user_data);

@@ -90,6 +90,12 @@ void update_dns_server(const gchar* server)
 	change_cfg_value("/etc/resolv.conf","nameserver",server,' ');
 }
 
+void update_time_from_net(const gchar* server)
+{
+	system_printf("/usr/sbin/ntpdate -b %s",server);
+}
+
+
 void
 change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gchar seperator)
 {
@@ -303,7 +309,6 @@ suidloop (int write, int read)
       cmd[0] = ' ';
       fflush (stdout);
       fscanf (in, "%4s\n%s\n", cmd, passwd);
-      printf ("cmd: \"%s\", pid %i\n", cmd, getpid());
       //    if (!feof (in))
       {
 	cmd[4] = 0;
@@ -314,10 +319,8 @@ suidloop (int write, int read)
 
 	    if (strcmp (cmd, "NTPD") == 0)
 	      {
-		bin = "/usr/sbin/ntpdate";
-		sprintf (arg1, "-b");
-		fscanf (in, "%100s", arg2);
-		numarg = 2;
+		    fscanf (in, "%100s", arg2); // get timeserver
+			update_time_from_net(arg2);
 	      }
 	    else if (strcmp (cmd, "STIM") == 0)
 	      {

@@ -33,15 +33,23 @@ static char *Rotations[4]=
     "right"
   };
 
+static char *xmodmaps[4]=
+  {
+    "/etc/X11/xmodmap-portrait",
+    "/etc/X11/xmodmap-left",
+    "/etc/X11/xmodmap-invert",
+    "/etc/X11/xmodmap-right"
+  };
+  
 int get_rotation ()
 {
   int rotation = 0,i;
   char buffer2[20];
 #ifdef __i386__
-  return 0; // xrandr doesnt exit on i386 dev machines!
+  return 0;
 #else
 
-  if(parse_pipe("xrandr" , "Current rotation - %20s" , buffer2))
+  if(parse_pipe("/usr/X11R6/bin/xrandr" , "Current rotation - %20s" , buffer2))
     {
       gpe_error_box (_("Can't interpret output from xrandr!"));
       rotation = 0;
@@ -51,7 +59,6 @@ int get_rotation ()
       for(i=0;i<4;i++)
 	if (strcmp (buffer2, Rotations[i]) == 0)
 	  rotation = i;
-
     }	
   return rotation;
 #endif	
@@ -64,6 +71,7 @@ void set_rotation (int rotation)
       gpe_error_box(_("Can't set rotation on an x86."));
       return ; 
 #else
-    system_printf("xrandr -o %s",Rotations[rotation]);
+    system_printf("/usr/X11R6/bin/xrandr -o %s",Rotations[rotation]);
+    system_printf("/usr/X11R6/bin/xmodmap %s",xmodmaps[rotation]);
 #endif  
 }

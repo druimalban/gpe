@@ -2,6 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+ *               2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -320,7 +321,7 @@ int suid_exec(const char* cmd,const char* params)
                                                   GTK_RESPONSE_REJECT,
                                                   NULL);
 	  label =
-		gtk_label_new (_("Some options are only accessible for\n user root.\nPlease enter password."));
+		gtk_label_new (_("Some options are only\naccessible for user root.\nPlease enter password."));
 	  hbox = gtk_hbox_new (FALSE, 4);
 	
 	  gtk_widget_realize (dialog);
