@@ -16,7 +16,7 @@ endif
 LDFLAGS += -lgpewidget -lrootimage
 
 ifeq ($(GTK2),yes)
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CONTROL = control1
 else
