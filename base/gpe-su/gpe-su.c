@@ -12,6 +12,7 @@
 #include <time.h>
 #include <libintl.h>
 #include <locale.h>
+#include <pty.h>
 
 #include <gtk/gtk.h>
 
@@ -27,16 +28,87 @@ static struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
+static GtkWidget *entry;
+static GtkWidget *window;
+
 #define _(x) gettext(x)
 
+#define SU "/bin/su"
+
+void
+do_su (void)
+{
+  gchar *password = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  int pty;
+  pid_t pid;
+  size_t pwlen = strlen (password), n;
+  char buf[256];
+  size_t rlen = 256;
+  char *result, *rp;
+  gboolean newline = FALSE;
+  char cr = 10;
+
+  result = g_malloc (rlen);
+  rp = result;
+
+  gtk_entry_set_text (GTK_ENTRY (entry), "");
+
+  pid = forkpty (&pty, NULL, NULL, NULL);
+  
+  if (pid == 0)
+    {
+      execl (SU, SU, "-c", "x-terminal-emulator &", NULL);
+      exit (1);
+    }
+
+  if (read (pty, buf, 1) < 0)
+    {
+      gpe_error_box (_("Unable to log in"));
+      return;
+    }
+
+  write (pty, password, pwlen);
+  write (pty, &cr, 1);
+  memset (password, 0, pwlen);
+  g_free (password);
+
+  while (n = read (pty, buf, sizeof (buf)), n > 0)
+    {
+      guint i;
+      for (i = 0; i < n; i++)
+	{
+	  if (buf[i] == '\n')
+	    newline = TRUE;
+	  else
+	    {
+	      if (newline)
+		{
+		  rp = result;
+		  newline = FALSE;
+		}
+	      *rp++ = buf[i];
+	      if ((rp - result) == rlen)
+		{
+		  size_t roff = rp - result;
+		  rlen *= 2;
+		  result = g_realloc (result, rlen);
+		  rp = result + roff;
+		}
+	    }
+	}
+    }
+  *rp = 0;
+  printf ("%s\n", result);
+}
+
 int
-main(int argc, char *argv[])
+main (int argc, char *argv[])
 {
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkWidget *window;
   GtkWidget *hbox, *vbox;
-  GtkWidget *entry, *label;
+  GtkWidget *label;
   GtkWidget *buttonok, *buttoncancel;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -85,6 +157,12 @@ main(int argc, char *argv[])
 		      buttoncancel, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
 		      buttonok, TRUE, TRUE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy", 
+		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+
+  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", do_su, NULL);
+  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", gtk_main_quit, NULL);
 
   gtk_widget_show (window);
 

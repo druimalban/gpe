@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-su
-#DEBUG = yes
+DEBUG = yes
 CVSBUILD = yes
 
 MEMBERS = gpe-su
@@ -20,7 +20,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `gtk-config --libs`
+LDFLAGS += -lgpewidget `gtk-config --libs` -lutil
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
