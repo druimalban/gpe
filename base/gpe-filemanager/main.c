@@ -985,7 +985,6 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
   if (file_info == NULL)
     return;
-printf("mt: %s\n",file_info->vfs->mime_type);
   
   /* Handle Symbolic Links -- CM */
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK) {

@@ -1,4 +1,5 @@
 2004-07-01  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: Removed debug output.
 	* main.c: Added support for application registry.
 	* main.c, Makefile: Fixed several warnings and minor bugs.
 	
