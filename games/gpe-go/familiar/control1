@@ -1,0 +1,8 @@
+Package: gpe-go
+Version: VERSION
+Section: GPE/games
+Priority: optional
+Architecture: arm
+Depends: libgtk2.0-0, libgpewidget1, gpe-icons
+Maintainer: Luc Pionchon <luc@handhelds.org>
+Description: A Go Board for GPE.
