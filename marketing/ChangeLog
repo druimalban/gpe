@@ -1,5 +1,7 @@
 2004-04-13  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-flyer.pdf: All translations in one file, update.
+
 	* gpe-flyer.tex: Use rcsinfo.sty, pull in all translations into
 	one document.
 
