@@ -17,11 +17,17 @@
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <gdk/gdkx.h>
+
+/* librootimage */
+#include <rootpixmap.h>
+
 #include "today.h"
 #include "today-prefs.h"
 
 /* Private functions, public ones are in today.h */
-static void resize_callback (GtkWidget *, gpointer);
 static void init_main_window (void);
 static void load_modules (void);
 
@@ -42,8 +48,11 @@ int main(int argc, char **argv)
 	exit(0);
 }
 
-static void resize_callback(GtkWidget *widget, gpointer data)
+static gboolean resize_callback(GtkWidget *widget, GdkEventConfigure *event,
+				gpointer data)
 {
+	Pixmap rmap;
+	static GdkPixmap *pix = NULL;
 	gint new_height, new_width;
 
 	/* check if window got resized (eg: screen rotation) */
@@ -56,6 +65,33 @@ static void resize_callback(GtkWidget *widget, gpointer data)
 
 	window.height = new_height;
 	window.width = new_width;
+	
+	if (pix) {
+		g_object_unref(pix);
+		g_object_unref(pix);
+		g_object_unref(pix);
+	}
+
+	rmap = GetRootPixmap(GDK_DISPLAY());
+
+	if (rmap != None) {
+		Pixmap pmap;
+		pmap = CutWinPixmap(GDK_DISPLAY(),
+		GDK_WINDOW_XWINDOW(widget->window), rmap,
+		GDK_GC_XGC(widget->style->black_gc));
+
+		if (pmap != None) {
+			pix = gdk_pixmap_foreign_new(pmap);
+			widget->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
+			g_object_ref(pix);
+			widget->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
+			g_object_ref(pix);
+			widget->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
+			gtk_widget_set_style(widget, widget->style);
+		}
+	}
+
+	return FALSE;
 }
 
 static void init_main_window(void)
@@ -73,7 +109,7 @@ static void init_main_window(void)
 	g_signal_connect(GTK_OBJECT(window.toplevel), "destroy",
 			   G_CALLBACK(gtk_exit), NULL);
 
-	g_signal_connect(G_OBJECT(window.toplevel), "size_allocate",
+	g_signal_connect(G_OBJECT(window.toplevel), "configure-event",
 			   G_CALLBACK(resize_callback), NULL);
 }
 

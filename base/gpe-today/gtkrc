@@ -3,10 +3,10 @@
 #   bg_pixmap[NORMAL] = "background.xpm"
 #}
 
-#style "transparent"
-#{
-#	bg_pixmap[NORMAL] = "<parent>"
-#}
+style "transparent"
+{
+	bg_pixmap[NORMAL] = "<parent>"
+}
 
 style "date_box"
 {
@@ -18,3 +18,5 @@ style "date_label"
 	font_name = "Sans 9"
 	fg[NORMAL] = { 1.0, 1.0, 1.0 }
 }
+
+widget "*GtkDrawingArea*" style "transparent"

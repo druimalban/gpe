@@ -8,7 +8,7 @@ MEMBERS = main todo calendar date
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CPPFLAGS = -I../libgpewidget -I../libeventdb -D_GNU_SOURCE
+CPPFLAGS = -I../libgpewidget -I../libeventdb -I../librootimage -D_GNU_SOURCE
 
 ifeq ($(DEBUG),yes)
 CFLAGS = -g
@@ -18,7 +18,7 @@ CFLAGS = -Os -fomit-frame-pointer
 endif
 
 CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS) -L../libeventdb -leventdb
+LDFLAGS += $(GTKLDFLAGS) -L../libeventdb -leventdb -L../librootimage -lrootimage
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 #CFLAGS += -MD
 
