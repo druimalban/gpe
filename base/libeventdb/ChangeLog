@@ -1,3 +1,7 @@
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.12 released.
+
 2004-02-21  Phil Blundell  <pb@nexus.co.uk>
 
 	* event-db.c (event_db_write): Write out categories.
