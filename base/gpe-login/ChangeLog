@@ -1,3 +1,7 @@
+2003-02-12  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/25dotfiles: Remove minitheme.
+
 2003-02-11  Philip Blundell  <philb@gnu.org>
 
 	* X11/Xsession-gpe.d/25dotfiles: Use stock "yes" and "no" buttons.

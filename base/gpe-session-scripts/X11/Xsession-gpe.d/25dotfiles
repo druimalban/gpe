@@ -8,7 +8,6 @@ gpe-question --question "Add default applications to dock?" --buttons !gtk-no !g
  minibat &
  minivol &
  minilite &
- minitheme &
  gpe-what &
  minitime &
 )
