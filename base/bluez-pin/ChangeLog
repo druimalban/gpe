@@ -1,3 +1,8 @@
+2003-04-22  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add ga.
+	* po/ga.po: New file, courtesy Kevin Patrick Scannell.
+
 2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is
