@@ -53,8 +53,6 @@ static Pixmap pixmap;
 #define XPADDING 8
 #define YPADDING 4
 
-static gboolean active;
-
 static struct timeval close_time;
 
 #define TIMEOUT 10
@@ -264,6 +262,7 @@ main (int argc, char *argv[])
   int last_x = 0, last_y = 0;
   Atom string_atom;
   int xfd;
+  int state = 0;
 
   g_type_init ();
 
@@ -310,6 +309,7 @@ main (int argc, char *argv[])
 
   prepare_icon (img_icon, pixmap);
   XSetWindowBackgroundPixmap (dpy, win_panel, pixmap);
+  XClearWindow (dpy, win_panel);
 
   help_atom = XInternAtom (dpy, "GPE_INTERACTIVE_HELP", False);
   string_atom = XInternAtom (dpy, "STRING", False);
@@ -395,12 +395,10 @@ main (int argc, char *argv[])
 	case ButtonPress:
 	  if (xev.xbutton.window == win_panel)
 	    {
-	      if (active)
+	      if (state == 1)
 		{
 		  Window w;
 		  int x, y;
-		  
-		  XUngrabPointer (dpy, xev.xbutton.time);
 		  
 		  w = find_deepest_window (dpy, DefaultRootWindow (dpy), DefaultRootWindow (dpy),
 					   xev.xbutton.x_root, xev.xbutton.y_root, &x, &y);
@@ -410,19 +408,27 @@ main (int argc, char *argv[])
 		  
 		  if (handle_click (w, w, x, y) == FALSE)
 		    popup_box (_("No help available."), -1, xev.xbutton.x_root, xev.xbutton.y_root);
-		  
-		  active = FALSE;
+
+		  state = 2;
 		}
 	      else
 		{
-		  active = TRUE;
-		  XGrabPointer (dpy, win_panel, False, ButtonPressMask,
+		  XGrabPointer (dpy, win_panel, False, ButtonPressMask | ButtonReleaseMask,
 				GrabModeAsync, GrabModeAsync,
 				None, None, xev.xbutton.time);
+		  state = 1;
 		}
 	    }
 	  else
 	    close_popup ();
+	  break;
+
+	case ButtonRelease:
+	  if (state == 2)
+	    {
+	      XUngrabPointer (dpy, xev.xbutton.time);
+	      state = 0;
+	    }
 	  break;
 
 	case ClientMessage:
