@@ -1,9 +1,11 @@
 #!/bin/sh
 
 if [ ! -f $HOME/.mbdock ]; then
-mbmenu &
-monolaunch -k /usr/share/xkbd/img/kbd.xpm gpe-kbd &
-xstroke &
-miniapm &
-minivol &
+gpe-question --question "Add default applications to dock?" --buttons cancel:Cancel ok:Add || (
+ mbmenu &
+ monolaunch -k /usr/share/xkbd/img/kbd.xpm gpe-kbd &
+ xstroke &
+ miniapm &
+ minivol &
+)
 fi
