@@ -1,5 +1,10 @@
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
+	* week_view.c (draw_expose_event): Remove GTK1 compatibility.
+	Recode strings obtained from nl_langinfo into UTF8 for display.
+	* month_view.c (draw_expose_event): Likewise.
+	Patch from Christian Meyer <chrisime@gnome-de.org>.
+	
 	* event-ui.c (build_edit_event_window): Remove frame around
 	description.  Put start/end dates and times in a table.  Patch
 	from Christian Meyer <chrisime@gnome-de.org>.

@@ -1,6 +1,5 @@
-
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -119,12 +118,8 @@ draw_expose_event (GtkWidget *widget,
   GdkColor red;
   GdkColormap *colormap;
   guint i, j;
-#if GTK_MAJOR_VERSION < 2
-  GdkFont *font = widget->style->font;
-#else
   PangoLayout *pl;
   PangoRectangle pr;
-#endif
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
@@ -163,7 +158,7 @@ draw_expose_event (GtkWidget *widget,
   white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
-  
+
   gdk_gc_set_clip_rectangle (black_gc, &event->area);
   gdk_gc_set_clip_rectangle (gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
@@ -172,10 +167,8 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (dark_gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (red_gc, &event->area);
 
-#if GTK_MAJOR_VERSION >= 2
   pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
-#endif
-  
+
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
 
@@ -193,21 +186,16 @@ draw_expose_event (GtkWidget *widget,
 
   for (i = 0; i < 7; i++)
     {
-      guint x = xp + (i * xs);
-      static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
-				      ABDAY_6, ABDAY_7, ABDAY_1 };
-      gchar *s = nl_langinfo (days[i]);
       guint w;
-#if GTK_MAJOR_VERSION < 2
-      w = gdk_string_width (font, s);
-      gdk_draw_text (drawable, font, black_gc,
-		     x + (xs - w) / 2, ys - font->descent,
-		     s, strlen (s));
-#else
+      guint x = xp + (i * xs);
+      static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
+				      ABDAY_6, ABDAY_7, ABDAY_1 };
+      gchar *s = g_locale_to_utf8 (nl_langinfo (days[i]), -1,
+                                   NULL, NULL, NULL);
       pango_layout_set_text (pl, s, strlen (s));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
       w = pr.width;
-      
+
       gtk_paint_layout (widget->style,
 			widget->window,
 			GTK_WIDGET_STATE (widget),
@@ -217,8 +205,7 @@ draw_expose_event (GtkWidget *widget,
 			"label",
 			x + (xs - w) / 2, ys / 2,
 			pl);
-#endif
- 
+
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
 	  guint d = i + (7 * j);
@@ -229,23 +216,17 @@ draw_expose_event (GtkWidget *widget,
 	    {
 	      char buf[10];
 	      guint w;
-	      
+	
 	      gdk_draw_rectangle (drawable, c->popup.events ? dark_gray_gc : cream_gc, 
 				  TRUE,
 				  x, y, xs, ys);
-	      
+
 	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
 				  x, y, xs, ys);
-	      
+
 	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
-#if GTK_MAJOR_VERSION < 2
-	      w = gdk_string_width (font, buf);
-	      
-	      gdk_draw_text (drawable, font, c->popup.events ? white_gc : black_gc, 
-			     x + (xs - w) / 2, y + (ys / 2) + font->ascent,
-			     buf, strlen (buf));
-#else
-	      pango_layout_set_text (pl, buf, strlen (buf));
+	      gchar *buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+	      pango_layout_set_text (pl, buffer, strlen (buffer));
 	      pango_layout_get_pixel_extents (pl, &pr, NULL);
 	      w = pr.width;
 	      gtk_paint_layout (widget->style,
@@ -257,19 +238,20 @@ draw_expose_event (GtkWidget *widget,
 				"label",
 				x + (xs - w) / 2, y + (ys / 2)/* + font->ascent*/,
 				pl);
-#endif
-	    } 
-	  else 
-	    {	      
-	      gdk_draw_rectangle (drawable, gray_gc, 
+	      g_free (buffer);
+	    }
+	  else
+	    {
+	      gdk_draw_rectangle (drawable, gray_gc,
 				  TRUE,
 				  x, y, xs, ys);
-	      
+
 	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
 				  x, y, xs, ys);
 	    }
 
 	}
+      g_free (s);
     }
 
   for (i = 0; i < 7; i++)
@@ -300,9 +282,7 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_unref (light_gray_gc);
   gdk_gc_unref (dark_gray_gc);
 
-#if GTK_MAJOR_VERSION >= 2
   g_object_unref (pl);
-#endif
 
   return TRUE;
 }
@@ -312,7 +292,7 @@ day_of_week(guint year, guint month, guint day)
 {
   guint result;
 
-  if (month < 3) 
+  if (month < 3)
     {
       month += 12;
       --year;
@@ -376,9 +356,9 @@ month_view_update ()
 	      start+=60*60;
 	      end+=60*60;
       }
-      
+
       day_events[day] = event_db_list_for_period (start, end);
-      
+
       for (iter = day_events[day]; iter; iter = iter->next)
 	((event_t)iter->data)->mark = FALSE;
     }
@@ -400,14 +380,14 @@ month_view_update ()
 	  c->valid = TRUE;
 	  c->popup.events = day_events[rday];
 	}
-      
+
       c->today = ((year == today.tm_year + 1900
 		   && month == today.tm_mon
 		   && rday == today.tm_mday)) ? TRUE : FALSE;
     }
 
   gtk_widget_draw (draw, NULL);
-  
+
   return TRUE;
 }
 
@@ -424,7 +404,7 @@ update_hook_callback()
 {
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
   gtk_widget_draw (datesel, NULL);
-      
+
   month_view_update ();
 }
 
@@ -444,7 +424,7 @@ resize_table (GtkWidget *widget,
       xs = width / 7;
       ys = height / 7;
 
-      if (ys > xs) 
+      if (ys > xs)
 	ys = xs;
 
       gtk_widget_draw (draw, NULL);
