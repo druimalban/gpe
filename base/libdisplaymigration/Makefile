@@ -1,12 +1,12 @@
 PREFIX = /usr/local
 PACKAGE = libdisplaymigration
-DEBUG = yes
+#DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.28
+VERSION = 0.99
 
 LINGUAS = 
 
-MEMBERS = migrate auth crypt
+MEMBERS = migrate
 
 SONAME = $(PACKAGE).so.0
 
@@ -14,7 +14,7 @@ PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) -fPIC
 PACKAGE_CPPFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\"
 PACKAGE_LDFLAGS += $(GTKLIBS) -lgcrypt
 
-HEADERS = libdisplaymigration/displaymigration.h libdisplaymigration/auth.h libdisplaymigration/crypt.h
+HEADERS = libdisplaymigration/displaymigration.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
