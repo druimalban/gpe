@@ -1,7 +1,7 @@
 ## Use this snippet like: include ../build/Makefile.dpkg_ipkg
 ##
 ## Add the following line in your Makefile: 
-## .PHONY: dist ipkg dpkg printinfo tag
+## .PHONY: dist dist-prep ipkg dpkg printinfo tag
 
 # Let's use whatever clean target the specific app provides
 
@@ -11,13 +11,16 @@ else
 CONTROL = control
 endif
 
-dist: clean
+dist: clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	mkdir ../$(PACKAGE)-$(VERSION)
 	( tar cf - --exclude "*/CVS" --exclude CVS --exclude "*~" --exclude "#*#" --exclude "debian" --exclude "familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" --exclude "*.mo" --exclude "*.d" * ) | (cd ../$(PACKAGE)-$(VERSION); tar xf -)
 	( cd ../$(PACKAGE)-$(VERSION); mkdir build; cp ../build/Makefile.dpkg_ipkg ../build/Makefile.translation build/ ; sed 's:^CVSBUILD.*:CVSBUILD = no:' < Makefile > Makefile.new; mv Makefile.new Makefile )
 	( cd .. ; tar cf - $(PACKAGE)-$(VERSION) | gzip -9 >$(PACKAGE)-$(VERSION).tar.gz )
 	rm -rf ../$(PACKAGE)-$(VERSION)
+
+dist-prep:
+# empty, can be filled in Makefile.translation
 
 ipkg: clean
 	rm -rf familiar/dist

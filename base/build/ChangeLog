@@ -1,3 +1,12 @@
+2003-03-07  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.translation (dist-prep): New target, depending on
+	update-po. Will ultimately get updated from dist target in
+	Makefile.dpkg_ipkg.
+	
+	* Makefile.dpkg_ipkg (dist-prep): New, empty target.
+	(dist): Depend on dist-prep.
+
 2003-02-26  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.translation (extract-po): Add
