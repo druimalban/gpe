@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-13 18:57+0200\n"
+"POT-Creation-Date: 2004-10-13 19:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -225,12 +225,12 @@ msgstr ""
 msgid "This is the infrared communications control."
 msgstr ""
 
-#: dbus.c:77
+#: dbus.c:76
 #, c-format
 msgid "Failed to acquire service: %s"
 msgstr ""
 
-#: dbus.c:83
+#: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
 msgstr ""

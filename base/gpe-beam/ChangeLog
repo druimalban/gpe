@@ -1,3 +1,7 @@
+2004-10-16	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Released V 0.2.5
+	
 2004-10-14	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Implemented transmit of personal vcard.
