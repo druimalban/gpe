@@ -45,9 +45,9 @@ static struct gpe_icon my_icons[] = {
   { "open",   "open"  },
   { "delete", "delete"},
   { "save",   "save"  },
-  { "left",      "left"},
-  { "right",    "right"},
-  { "about",  "about" },
+  { "left",   "left"  },
+  { "right",  "right" },
+  { "about",  "help"  },
   { "list",      "gpe-sketchbook/list"},
   { "sketchpad", "gpe-sketchbook/sketchpad" },
 
