@@ -7,16 +7,15 @@ VERSION = 0.51
 #FIXME: add: sk sr ru hu
 LINGUAS = id pt de fr zh_TW ro wa sv nl cs
 
-CPPFLAGS += $(STANDARD_CPPFLAGS)
-CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
-LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc
+PACKAGE_LDFLAGS += -L../libxsettings -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libdisplaymigration -L../libeventdb -L../libschedule -L../libgpepimc
+endif
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lXsettings-client -ldisplaymigration -leventdb -lschedule -lgpepimc
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
-
-CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc
-LDFLAGS += -L../libxsettings -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libdisplaymigration -L../libeventdb -L../libschedule -L../libgpepimc -lgpepimc
-
-LDFLAGS += -lXsettings-client -ldisplaymigration -leventdb -lschedule
 
 .SUFFIXES: .d
 
@@ -33,7 +32,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

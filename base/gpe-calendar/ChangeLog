@@ -1,3 +1,8 @@
+2004-03-08  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (PACKAGE_LDFLAGS, PACKAGE_CFLAGS, PACKAGE_CPPFLAGS):
+	Define and use instead of LDFLAGS, CFLAGS and CPPFLAGS.
+
 2004-03-06  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.51 released
