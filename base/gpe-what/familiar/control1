@@ -1,0 +1,8 @@
+Package: gpe-what2
+Section: x11
+Priority: optional
+Version: 0.03
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk2.0-0, gpe-icons (>= 0.05), libgpewidget1 (>= 0.08)
+Description: GPE interactive help

@@ -23,9 +23,9 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
-#include "init.h"
-#include "pixmaps.h"
-#include "render.h"
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
 #include "tray.h"
 
 #define _(x) gettext(x)
