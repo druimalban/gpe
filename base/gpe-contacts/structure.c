@@ -142,8 +142,9 @@ structure_new_field (GtkWidget *widget,
       GtkWidget *box = gtk_dialog_new ();
       GtkWidget *label1 = gtk_label_new (_("Label:"));
       GtkWidget *label2 = gtk_label_new (_("Tag:"));
-      GtkWidget *radio1 = gtk_radio_button_new_with_label (_("Single line"));
-      GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget ();
+      GtkWidget *radio1 = gtk_radio_button_new_with_label (NULL, 
+							   _("Single line"));
+      GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget (radio1, _("Multiple line"));
       
 #if 0
       gchar *t = smallbox (_("New field"), _("Title"), "");
