@@ -289,7 +289,7 @@ get_distribution_version()
 	/* check for OpenEmbedded */
 	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
 	{
-	   	/*TRANSLATORS: "Familiar" is the name of a linux distribution.*/
+	   	/*TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.*/
 		result = g_strdup_printf(_("OpenEmbedded"));
 		g_free(tmp);
 	 	return (result);
