@@ -3,7 +3,7 @@ PACKAGE = gpe-what
 #DEBUG = yes
 CVSBUILD = yes
 
-MEMBERS = gpe-what
+MEMBERS = gpe-what tray
 
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)

@@ -23,12 +23,20 @@
 #include <X11/Xatom.h>
 
 #include "init.h"
+#include "pixmaps.h"
+#include "render.h"
+#include "tray.h"
 
 #define _(x) gettext(x)
 
 static Atom atom;
 static Display *dpy;
 static Window root;
+
+struct gpe_icon my_icons[] = {
+  { "what" },
+  { NULL }
+};
 
 static void
 clicked (GtkWidget *w)
@@ -41,6 +49,8 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *window, *button;
+  GtkWidget *icon;
+  Atom window_type_atom, window_type_dock_atom;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -53,8 +63,15 @@ main (int argc, char *argv[])
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (window);
 
-  button = gtk_button_new_with_label ("What?");
+  if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
+
+  icon = gpe_render_icon (window->style, gpe_find_icon ("what"));
+  gtk_widget_show (icon);
+  button = gtk_button_new ();
+  gtk_container_add (GTK_CONTAINER (button), icon);
   gtk_widget_show (button);
+
   gtk_signal_connect (GTK_OBJECT (button), "clicked", clicked, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), button);
@@ -64,6 +81,16 @@ main (int argc, char *argv[])
   atom = XInternAtom (dpy, "GPE_WHAT", 0);
 
   gtk_widget_show (window);
+
+  window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
+  window_type_dock_atom = XInternAtom (dpy,
+				       "_NET_WM_WINDOW_TYPE_DOCK", False);
+
+  XChangeProperty (dpy, GDK_WINDOW_XWINDOW (window->window), 
+		   window_type_atom, XA_ATOM, 32, 
+		   PropModeReplace, (unsigned char *)
+		   &window_type_dock_atom, 1);
+  tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
 
   gtk_main ();
 
