@@ -68,6 +68,8 @@
 		[ ]volatile/permanante
 		[ ]date/time (read only?)
 		[ ]background/template
+	[ ]resizable sketch
+		[ ]need tools: pan mode, zoom+ zoom-, fit, grown, shrink
 	[ ]misc
 		[ ]duplicate_current function?
 		[ ]e-mail note (!)
