@@ -1,0 +1,65 @@
+# taken from http://handhelds.org/z/wiki/WellKnownDBTags
+#
+given_name         # how to handle "J. Edgar Hoover"?
+middle_initial
+family_name        # nb family name is written first in many cultures
+maiden_name
+honorific_suffix   # PhD, CBE etc. 
+title              # Dr., Ms., etc.
+nickname
+summary            # one line description, e.g. "Sheila's second cousin"
+gender
+birthday           # date in ISO form (http://www.cl.cam.ac.uk/~mgk25/iso-time.html)
+anniversary        # the wedding anniversary
+social_sec_no      # important for US citizens at least
+marital_status     # married or not
+photo
+spouse
+children
+profession
+comment            # free-form notes
+home_address       # should this be split in street, number, city, zip, country?
+home_zipcode
+home_country
+home_email         # multiple addresses, separated by commas
+home_webpage
+home_gpg_key_id
+home_pgp_key_id
+home_x_509_certificate
+home_mobile
+home_pager
+home_fax
+home_phone
+home_driving_directions # textual
+home_coordinates        # long/lat
+home_jabber_id          # all the instant messaging systems
+home_icq_id
+home_aim_id
+home_msn_id
+home_yahoo_im_id
+work_organization
+work_department
+work_address       # should this be split in street, number, city, zip, country?
+work_zipcode
+work_country
+work_occupation    # what that contact works as
+work_jobtitle
+work_office
+work_email         # multiple addresses, separated by commas
+work_webpage
+work_manager
+work_assistants
+work_gpg_key_id
+work_pgp_key_id
+work_x_509_certificate
+work_mobile
+work_pager
+work_fax
+work_phone
+work_driving_directions # textual
+work_coordinates        # long/lat
+work_jabber_id          # all the instant messaging systems
+work_icq_id
+work_aim_id
+work_msn_id
+work_yahoo_im_id
