@@ -146,12 +146,14 @@ void about(void)
 
 		/* put another label inside the vbox */
 		label = gtk_label_new(
-			"(C) 2000-2001 Jean-Michel Grimaldi\n"
-			"Author: Jean-Michel Grimaldi (jm@via.ecp.fr)\n"
-			"Contributor: Gilles Arnaud\n\n"
+			"(C) 2000-2003 Jean-Michel Grimaldi\n"
+			"Author: Jean-Michel Grimaldi <jm@via.ecp.fr>\n"
+                        "Contributors:\n"
+                        "  Gilles Arnaud\n"
+                        "  Göran Uddeborg <goeran@uddeborg.pp.se>\n"
+			"  Christopher Gautier\n\n"
 			"Sokoban for Gtk+\n"
 			"Homepage: http://www.via.ecp.fr/~jm/gsoko.html");
-		gtk_widget_set_usize(label, 280, 0);
 		gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
 		gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_LEFT);
 		gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 10);
@@ -262,7 +264,9 @@ void udidit(void)
 /* updates the title of the main window */
 void make_title(void)
 {
-	char stitle[100];
-	sprintf(stitle, W_TITLE " / level %i - moves %i - boxes %i", level, nmoves, nbox);
+#define STITLE_LENGTH (sizeof(W_TITLE)+ 27* 3* 8+ 1) /* 27 is the length of the text below, 8 the size of a reasonably long integer */
+	char stitle[STITLE_LENGTH]; 
+	snprintf(stitle, STITLE_LENGTH, W_TITLE " / level %i - moves %i - boxes %i", level, nmoves, nbox);
+	stitle[STITLE_LENGTH- 1]= 0;
 	gtk_window_set_title(GTK_WINDOW(window), stitle);
 }

@@ -43,7 +43,8 @@ void load_level(int n)
 	GdkRectangle rect;
 
 	/* load the board */
-	sprintf(filename, PREFIX "/share/gsoko/levels/%i.lev", n);
+	snprintf(filename, FILENAME_SIZE, PREFIX "/share/gsoko/levels/%i.lev", n);
+	filename[FILENAME_SIZE- 1]= 0;
 	file = fopen(filename, "rb");
 	if (!file)
 	{

@@ -59,7 +59,7 @@
 
 /* other */
 #define FILENAME_SIZE 128
-#define HIST_SIZE     1024
+#define HIST_SIZE     4096
 
 /*------------------------------------*/
 /* Structure                          */
