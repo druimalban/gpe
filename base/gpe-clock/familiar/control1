@@ -1,0 +1,8 @@
+Package: gpe-clock
+Section: base
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgpewidget1 (>= 0.56)
+Description: GPE clock applet

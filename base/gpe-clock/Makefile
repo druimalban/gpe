@@ -3,7 +3,7 @@ PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.10
+VERSION = 0.0
 
 LINGUAS = 
 
@@ -41,7 +41,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -leventdb $(LDFLAGS)
 
-install-program: all $(PACKAGE).desktop
+install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
