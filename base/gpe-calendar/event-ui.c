@@ -278,6 +278,8 @@ new_event(time_t t, guint timesel)
   GtkWidget *endspin, *endlabel;
   GtkWidget *radiobuttonnone, *radiobuttondaily, *radiobuttonweekly, 
     *radiobuttonmonthly, *radiobuttonyearly;
+  GtkWidget *recurborder, *recurendborder;
+  GtkWidget *vboxrepeattop;
 
   GtkWidget *dailyvbox, *dailylabelevery, *dailyspin, *dailylabels;
   GtkWidget *monthlyvbox, *monthlylabelevery, *monthlyspin, *monthlylabels;
@@ -292,7 +294,6 @@ new_event(time_t t, guint timesel)
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *labeleventpage = gtk_label_new ("Event");
   GtkWidget *labelrecurpage = gtk_label_new ("Recurrence");
-  GtkWidget *labelendpage = gtk_label_new ("End Date");
   
   GtkWidget *vboxevent = gtk_vbox_new (FALSE, 0);
   GtkWidget *hboxrepeat = gtk_hbox_new (FALSE, 0);
@@ -588,10 +589,13 @@ new_event(time_t t, guint timesel)
   gtk_widget_hide (monthlyvbox);
   gtk_widget_hide (yearlyvbox);
 
+  recurborder = gtk_frame_new (NULL);
+  gtk_container_add (GTK_CONTAINER (recurborder), hboxrepeat);
+
 /* Begin end-date vbox */
  
   /* forever radio button */
-  radiobuttonforever = gtk_radio_button_new_with_label (NULL, "Repeat Forever");
+  radiobuttonforever = gtk_radio_button_new_with_label (NULL, "forever");
   gtk_widget_show (radiobuttonforever );
   gtk_box_pack_start (GTK_BOX (vboxend), radiobuttonforever , FALSE, FALSE, 0);
   gtk_widget_set_sensitive (radiobuttonforever , FALSE);
@@ -603,7 +607,7 @@ new_event(time_t t, guint timesel)
 
   /* end after radio button */
   vboxend_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonforever));
-  radiobuttonendafter = gtk_radio_button_new_with_label (vboxend_group, "End After");
+  radiobuttonendafter = gtk_radio_button_new_with_label (vboxend_group, "end after");
   gtk_widget_show (radiobuttonendafter);
   gtk_box_pack_start (GTK_BOX (hboxendafter), radiobuttonendafter, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (radiobuttonendafter, FALSE);
@@ -623,6 +627,9 @@ new_event(time_t t, guint timesel)
   gtk_box_pack_start (GTK_BOX (hboxendafter), endlabel, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endlabel, FALSE);
 
+  recurendborder = gtk_frame_new (NULL);
+  gtk_container_add (GTK_CONTAINER (recurendborder), vboxend);
+
   gtk_signal_connect (GTK_OBJECT (radiobuttonforever), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   gtk_signal_connect (GTK_OBJECT (radiobuttonendafter), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   		  
@@ -633,15 +640,16 @@ new_event(time_t t, guint timesel)
   gtk_container_add (GTK_CONTAINER (window), notebook);
   gtk_widget_show (labeleventpage);
   gtk_widget_show (labelrecurpage);
-  gtk_widget_show (labelendpage);
   
   gtk_widget_show_all (vboxevent);
   gtk_widget_show (hboxrepeat);
-  gtk_widget_show (vboxend);
-  
+
+  vboxrepeattop = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurborder, FALSE, FALSE, 0); 
+  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurendborder, FALSE, FALSE, 0);
+ 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, labeleventpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), hboxrepeat, labelrecurpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxend, labelendpage);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, labelrecurpage);
   
   s->frombutton = frombutton;
   s->startentry = startcombo;
