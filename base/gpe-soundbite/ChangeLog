@@ -1,6 +1,7 @@
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
-	* Makefile (install-program): Install menu with correct permissions.
+	* Makefile (install-program), gpe-soundbite.menu,
+	gpe-soundbite-record.menu: no longer install old-style menu files.
 
 2003-06-10  Moray Allan  <moray@handhelds.org>
 

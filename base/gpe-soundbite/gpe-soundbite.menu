@@ -1,7 +1,0 @@
-?package(gpe-soundbite): \
- needs=x11 \
- title="Play Memo" \
- command="gpe-soundbite play" \
- icon48=/usr/share/pixmaps/gpe-soundbite-play.png \
- section=Audio \
- windowtitle=gpe-soundbite

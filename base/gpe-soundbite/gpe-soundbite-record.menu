@@ -1,7 +1,0 @@
-?package(gpe-soundbite): \
- needs=x11 \
- title="Record Memo" \
- command="gpe-soundbite record" \
- icon48=/usr/share/pixmaps/gpe-soundbite-record.png \
- section=Audio \
- windowtitle=gpe-soundbite
