@@ -71,7 +71,7 @@ categories_menu (void)
 static void
 new_todo_item (GtkWidget *w, gpointer user_data)
 {
-  GtkWidget *todo = edit_item (NULL);
+  GtkWidget *todo = edit_item (NULL, selected_category);
   gtk_widget_show_all (todo);
 }
 
@@ -261,7 +261,7 @@ draw_click_event (GtkWidget *widget,
 	    }
 	}
     }
-  else if (event->type == GDK_2BUTTON_PRESS && event->x > 18)
+  else if (event->type == GDK_BUTTON_PRESS && event->x > 18)
     {
       GSList *iter;
       for (iter = display_items; iter; iter = iter->next)
@@ -269,7 +269,7 @@ draw_click_event (GtkWidget *widget,
 	  struct todo_item *ti = iter->data;
 	  if (idx == ti->pos)
 	    {
-	      gtk_widget_show_all (edit_item (ti));
+	      gtk_widget_show_all (edit_item (ti, NULL));
 	      break;
 	    }
 	}

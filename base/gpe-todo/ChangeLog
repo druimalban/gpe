@@ -1,3 +1,11 @@
+2002-11-25  Philip Blundell  <philb@gnu.org>
+
+	* todo-ui.c (edit_item): New argument initial_category.
+	* todo.h (edit_item): Keep prototype in step.
+	* list-ui.c: Update calls to above function.
+	(draw_click_event): Open item on single not double click.
+	Patch from Michael Smith <michael@hurts.ca>
+	
 2002-10-06  Philip Blundell  <philb@gnu.org>
 
 	* main.c (open_window): Set window title.

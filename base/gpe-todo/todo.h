@@ -45,7 +45,8 @@ extern GtkWidget *the_notebook;
 extern GSList *categories, *items;
 
 extern struct todo_item *new_item (void);
-extern GtkWidget *edit_item (struct todo_item *item);
+extern GtkWidget *edit_item (struct todo_item *item,
+                             struct todo_category *initial_category);
 extern gboolean push_item (struct todo_item *i);
 extern void delete_item (struct todo_item *i);
 

@@ -176,8 +176,13 @@ state_func_2(GtkMenuItem *w, gpointer p)
   t->state = COMPLETED;
 }
 
+
+/*
+ * Pass item=NULL to create a new item;
+ * if item=NULL, you may pass the item's initial category.
+ */
 GtkWidget *
-edit_item (struct todo_item *item)
+edit_item (struct todo_item *item, struct todo_category *initial_category)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
@@ -234,8 +239,11 @@ edit_item (struct todo_item *item)
 	  GtkWidget *w = gtk_check_button_new_with_label (c->title);
 	  m->c = c;
 	  m->w = w;
-	  if (item && category_matches (item->categories, c->id))
+	  if ((item && category_matches (item->categories, c->id))
+              || (initial_category && initial_category->id == c->id))
+          {
 	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+          }
 	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
 	  t->category_map = g_slist_append (t->category_map, m);
 	}
