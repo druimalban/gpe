@@ -6,6 +6,10 @@ export HOME_VOLATILE
 
 . /etc/profile
 
+if [ -f $HOME/.profile ]; then
+ . $HOME/.profile
+fi
+
 SYSSESSIONDIR=/etc/X11/Xsession-gpe.d
 
 if [ ! -d $SYSSESSIONDIR ]; then
