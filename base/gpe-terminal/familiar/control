@@ -1,7 +1,8 @@
 Package: gpe-terminal
 Section: base
 Priority: optional
-Version: 0.0.2
+Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: rxvt-aa
