@@ -248,6 +248,8 @@ process_line (struct nsql_context *ctx, char *l)
   char *line;
 
   line = decode_string (l);
+
+  g_strstrip (line);
 	
   if (line[0] == 0)
     {
