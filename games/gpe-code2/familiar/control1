@@ -3,6 +3,6 @@ Version: 0.2
 Section: games
 Priority: optional
 Architecture: arm
-Depends: libgtk2.0-0
+Depends: libgtk2.0-0, libgpewidget1
 Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
 Description: A Master Mind clone using GTK
