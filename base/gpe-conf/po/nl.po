@@ -1,0 +1,1523 @@
+# Dutch translation of gpe-conf.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-conf package.
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.1.0-pre6\n"
+"POT-Creation-Date: 2003-07-08 20:08+0200\n"
+"PO-Revision-Date: 2003-08-01 11:34+0100\n"
+"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
+"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:288
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "'task_nameserver' heeft een nieuwe (en slechts één) naamserver als argument.\n"
+
+#: main.c:343
+msgid "Warning: PCMCIA init failed."
+msgstr "Waarschuwing: PCMCIA init mislukt."
+
+#: main.c:371
+msgid "This mode is disabled, please try:\n"
+msgstr "Deze modus is uitgeschakeld, probeer a.u.b.:\n"
+
+#: main.c:372
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf [AppletNaam]\n"
+"waarbij AppletName een is van:\n"
+
+#: main.c:385
+#, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Applet %s onbekend!\n"
+
+#: main.c:386
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Gebruik: gpe-conf [AppletNaam]\n"
+"waarbij AppletNaam een is van:\n"
+
+#: applets.c:327
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Sommige opties zijn alleen voor\n"
+"gebruiker root toegankelijk.\n"
+"Geef a.u.b. het wachtwoord."
+
+#: applets.c:363 ipaqscreen/calibrate.c:33
+msgid "Sorry, wrong password."
+msgstr "Sorry, verkeerd wachtwoord."
+
+#: timeanddate.c:349
+msgid "Time & Date"
+msgstr "Tijd & Datum"
+
+#: timeanddate.c:365
+msgid "Date"
+msgstr "Datum"
+
+#: timeanddate.c:379
+msgid "Enter current date here or use button to select."
+msgstr "Voer hier de huidige datum in of gebruik de knop om te selecteren."
+
+#: timeanddate.c:384
+msgid "Time"
+msgstr "Tijd"
+
+#: timeanddate.c:409
+msgid "Network"
+msgstr "Netwerk"
+
+#: timeanddate.c:427
+msgid "Select the timeserver to use to set the clock."
+msgstr "Selecteer de tijdserver waarmee de klok moet worden ingesteld."
+
+#: timeanddate.c:429
+msgid "Get time from network"
+msgstr "Tijd opvragen van netwerk"
+
+#: timeanddate.c:436
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Als u verbonden bent met Internet, kunt u op de bovenstaande knop drukken om de tijd op dit apparaat in te stellen, met de bovenstaande tijdserver."
+
+#: timeanddate.c:441 timeanddate.c:450
+msgid "Timezone"
+msgstr "Tijdzone"
+
+#: timeanddate.c:478
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Selecteer hier uw huidige tijdzone. Deze instelling treedt bij de volgende login in werking."
+
+#: timeanddate.c:486
+msgid "Daylight Saving"
+msgstr "Zomertijd"
+
+#: timeanddate.c:493
+msgid "Use daylight saving time"
+msgstr "Zomertijd gebruiken"
+
+#: timeanddate.c:500
+msgid "Check this box if you want your device to handle daylight saving time for you."
+msgstr "Selecteer deze optie als u wilt dat het apparaat voor u zomertijd regelt."
+
+#: timeanddate.c:502
+msgid "Offset:"
+msgstr "Positie:"
+
+#: timeanddate.c:511
+msgid "Default"
+msgstr "Standaard"
+
+#: timeanddate.c:518
+msgid "Use default DST offset of one hour?"
+msgstr "Wilt u de standaard DST positie van 1 uur gebruiken?"
+
+#: timeanddate.c:523
+msgid "Hours"
+msgstr "Uren"
+
+#: timeanddate.c:526
+msgid "Select daylight saving time offset hours here."
+msgstr "Selecteer hier de positie in uren voor zomertijd."
+
+#: timeanddate.c:531
+msgid "Minutes"
+msgstr "Minuten"
+
+#: timeanddate.c:534
+msgid "Select daylight saving time offset minutes here."
+msgstr "Selecteer hier de positie in minuten voor zomertijd."
+
+#: timeanddate.c:540
+msgid "Advanced Settings"
+msgstr "Geavanceerde instellingen"
+
+#: timeanddate.c:546
+msgid "Use advanced settings"
+msgstr "Geavanceerde instellingen gebruiken"
+
+#: timeanddate.c:549
+msgid "Check this if you want to use the advanced settings below."
+msgstr "Selecteer dit als u de geavanceerde instellingen hieronder wilt gebruiken."
+
+#: timeanddate.c:646
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
+msgstr "Om de zorgen dat de tijdzone instellingen actief worden, dient u uit te loggen en opnieuw in te loggen."
+
+#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
+msgid "General"
+msgstr "Algemeen"
+
+#: appmgr_setup.c:237
+msgid "Tab View"
+msgstr "Tabblad weergave"
+
+#: appmgr_setup.c:252
+msgid "Icon"
+msgstr "Pictogram"
+
+#: appmgr_setup.c:256
+msgid "List"
+msgstr "Lijst"
+
+#: appmgr_setup.c:265
+msgid "Changes will take effect after relog"
+msgstr "Wijzigingen zullen effektief worden na opnieuw inloggen"
+
+#: ipaqscreen/main.c:68
+msgid "Portrait"
+msgstr "Portret"
+
+#: ipaqscreen/main.c:69
+msgid "Landscape (left)"
+msgstr "Landschap (links)"
+
+#: ipaqscreen/main.c:70
+msgid "Inverted"
+msgstr "Omgekeerd"
+
+#: ipaqscreen/main.c:71
+msgid "Landscape (right)"
+msgstr "Landschap (rechts)"
+
+#: ipaqscreen/main.c:92
+msgid "Light"
+msgstr "Licht"
+
+#: ipaqscreen/main.c:98
+msgid "Brightness"
+msgstr "Helderheid"
+
+#: ipaqscreen/main.c:104
+msgid "State"
+msgstr "Status"
+
+#: ipaqscreen/main.c:115
+msgid "Screensaver"
+msgstr "Schermbeveiliging"
+
+#: ipaqscreen/main.c:121
+msgid "Delay until start"
+msgstr "Uitstellen tot start"
+
+#: ipaqscreen/main.c:125
+msgid "Activated"
+msgstr "Geactiveerd"
+
+#: ipaqscreen/main.c:135
+msgid "Orientation"
+msgstr "Oriëntatie"
+
+#: ipaqscreen/main.c:154
+msgid "Touchscreen"
+msgstr "Aanraakscherm"
+
+#: ipaqscreen/main.c:158
+msgid "Calibrate"
+msgstr "Kalibreren"
+
+#: ipaqscreen/main.c:160 network.c:731
+msgid "on"
+msgstr "aan"
+
+#: ipaqscreen/main.c:161 network.c:742
+msgid "off"
+msgstr "uit"
+
+#: ipaqscreen/main.c:272
+msgid "minutes"
+msgstr "minuten"
+
+#: ipaqscreen/main.c:275
+msgid "seconds"
+msgstr "seconden"
+
+#: ipaqscreen/main.c:277
+msgid "Off"
+msgstr "Uit"
+
+#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:124
+msgid "Couldn't read screen settings!"
+msgstr "Kon scherminstellingen niet lezen!"
+
+#: ipaqscreen/rotation.c:54
+msgid "Can't interpret output from xrandr!"
+msgstr "Kan uitvoer van xrandr niet verwerken!"
+
+#: ipaqscreen/rotation.c:71
+msgid "Can't set rotation on an x86."
+msgstr "Kan rotatie op een x86 niet instellen."
+
+#: kbd.c:146
+msgid "Keyboard Geometry / Layout"
+msgstr "Toetsenbord afmetingen / indeling"
+
+#: kbd.c:186
+msgid "User defined"
+msgstr "Door gebruiker bepaald"
+
+#: keyboard.c:131
+msgid "Could not read keyboard definition file."
+msgstr "Kon toetsenbord-definitie bestand niet lezen."
+
+#: keyboard.c:171
+msgid "Error reading keyboard definition."
+msgstr "Fout bij lezen toetsenbord-definitie."
+
+#: keyboard.c:274
+msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
+msgstr "Extern toetsenbord configuratie. Uitgeschakelde toetsen \t\t\t\t\tzijn momenteel niet geïnstalleerd."
+
+#: keyboard.c:279
+msgid "External Keyboard Type"
+msgstr "Extern soort toetsenbord"
+
+#: keyboard.c:286
+msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
+msgstr "Hier kunt u uw model extern toetsenbord selecteren. \t\t\t\t  Om software-ondersteuning te installeren kunt u \t\t\t\t uw apparaat met internet verbinden en op \"Installeren\" klikken."
+
+#: keyboard.c:308
+msgid "Tap here to select this keyboard model."
+msgstr "Druk hier om dit model toetsenbord te selecteren."
+
+#: keyboard.c:315 packages.c:183 packages.c:364
+msgid "Install"
+msgstr "Installeren"
+
+#: keyboard.c:321
+msgid "Tap here to install support for this keyboard."
+msgstr "Druk hier om ondersteuning voor dit toetsenbord te installeren."
+
+#: network.c:95
+msgid "Current Config"
+msgstr "Huidige config"
+
+#: network.c:173
+msgid "New interface:"
+msgstr "Nieuwe gebruikersinterface:"
+
+#: network.c:179
+msgid "Enter name of new interface"
+msgstr "Geef naam van nieuwe interface"
+
+#: network.c:186
+msgid "This interface definition already exists!"
+msgstr "Deze gebruikersinterface bestaat al!"
+
+#: network.c:227
+msgid "Do you want to delete this interface?"
+msgstr "Wilt u deze gebruikersinterface verwijderen?"
+
+#: network.c:227 keyctl.c:151
+msgid "Question"
+msgstr "Vraag"
+
+#: network.c:441
+msgid "Address"
+msgstr "Adres"
+
+#: network.c:444
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "Voer hier uw IP-adres in, bijv. 192.168.1.2"
+
+#: network.c:446
+msgid "Netmask"
+msgstr "Netmasker"
+
+#: network.c:449
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Voer hier uw netmasker in, bijv. meestal 255.255.255.0"
+
+#: network.c:451
+msgid "Broadcast"
+msgstr "Broadcast"
+
+#: network.c:454
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Voer hier uw broadcast adres in, meestal hetzelfde als uw IP maar met 255 als laatste getal."
+
+#: network.c:456
+msgid "Gateway"
+msgstr "Gateway"
+
+#: network.c:459
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Voer hier het IP-adres van uw standaard gateway in."
+
+#: network.c:541
+msgid "Hostname"
+msgstr "Hostnaam"
+
+#: network.c:544
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Voer hier de gewenste hostnaam in. Deze parameter is optioneel."
+
+#: network.c:627
+msgid "Provider"
+msgstr "Aanbieder"
+
+#: network.c:630
+msgid "Here you need to enter the name if the provider configuration to use for this interface."
+msgstr "Hier dient u de naam van de aanbiederconfiguratie in te voeren die voor deze interface gebruikt moet worden."
+
+#: network.c:654
+msgid "Global Settings"
+msgstr "Algemene instellingen"
+
+#: network.c:695
+msgid "Proxy"
+msgstr "Proxy"
+
+#: network.c:697
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Als u een proxy wilt/moet gebruiken, kunt u die hier invoeren. (Voorlopig alleen van toepassing voor dillo.)"
+
+#: network.c:702
+msgid "No proxy for"
+msgstr "Geen proxy voor"
+
+#: network.c:705
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Hier dient u uw lokale domein in te voeren, als u geen proxy wilt gebruiken."
+
+#: network.c:714
+msgid "Use DHCP in any case (usually not needed)."
+msgstr "In ieder geval DHCP gebruiken (meestal niet nodig)."
+
+#: network.c:716
+msgid "Use DHCP"
+msgstr "DHCP gebruiken"
+
+#: network.c:755
+msgid "DNS server"
+msgstr "DNS server"
+
+#: network.c:758
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Voer hier het IP-adres van uw DNS(naam-) server in."
+
+#: network.c:939
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
+msgstr ""
+"Hier kunt u uw basisconfiguratie soort van uw apparaat wijzigen.\n"
+"Gebruik statisch voor handmatige interface configuratie, dhcp om DHCP te gebruiken, en ppp voor punt-naar-punt."
+
+#: network.c:966 network.c:967
+msgid "Add Interface"
+msgstr "Interface toevoegen"
+
+#: network.c:968
+msgid "Add a new Interface"
+msgstr "Een nieuwe interface toevoegen"
+
+#: network.c:976 network.c:977
+msgid "Remove Interface"
+msgstr "Interface verwijderen"
+
+#: network.c:978
+msgid "Remove current Interface"
+msgstr "Huidige interface verwijderen"
+
+#: network.c:991
+msgid "Information"
+msgstr "Informatie"
+
+#: network.c:992 network.c:993
+msgid "Show current configuration."
+msgstr "Huidige configuratie weergeven."
+
+#: network.c:1004
+msgid "Close"
+msgstr "Sluiten"
+
+#: network.c:1005
+msgid "Close  network tool"
+msgstr "Netwerkgereedschap sluiten"
+
+#: network.c:1006
+msgid "Close network tool"
+msgstr "Netwerkgereedschap sluiten"
+
+#: network.c:1021
+msgid "Couldn't read network configuration."
+msgstr "Kon netwerkconfiguratie niet lezen."
+
+#: network.c:1030
+msgid "global"
+msgstr "algemeen"
+
+#: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
+msgid "Color"
+msgstr "Kleur"
+
+#: theme.c:393
+msgid "Red"
+msgstr "Rood"
+
+#: theme.c:398
+msgid "Green"
+msgstr "Groen"
+
+#: theme.c:403
+msgid "Blue"
+msgstr "Blauw"
+
+#: theme.c:654
+msgid "Select color"
+msgstr "Selecteer kleur"
+
+#: theme.c:680 theme.c:746
+msgid ""
+"You don't have read access\n"
+"to selected background image!"
+msgstr ""
+"U heeft geen leestoegang tot de\n"
+"gekozen achtergrondafbeelding!"
+
+#: theme.c:828
+msgid "Theme"
+msgstr "Thema"
+
+#: theme.c:837
+msgid "Desktop Theme"
+msgstr "Bureaublad thema"
+
+#: theme.c:849
+msgid "Name"
+msgstr "Naam"
+
+#: theme.c:865
+msgid "Icon Size"
+msgstr "Pictogramgrootte"
+
+#: theme.c:879
+msgid "Background"
+msgstr "Achtergrond"
+
+#: theme.c:890
+msgid "Background Settings"
+msgstr "Achtergrondinstellingen"
+
+#: theme.c:897
+msgid "Solid color"
+msgstr "Effen kleur"
+
+#: theme.c:911
+msgid "Horizontal"
+msgstr "Horizontaal"
+
+#: theme.c:915
+msgid "Vertical"
+msgstr "Verticaal"
+
+#: theme.c:931
+msgid "Color gradient"
+msgstr "Kleurgradiënt"
+
+#: theme.c:951
+msgid "Image"
+msgstr "Afbeelding"
+
+#: theme.c:977
+msgid "Centered"
+msgstr "Gecentreerd"
+
+#: theme.c:981
+msgid "Tiled"
+msgstr ""
+
+#: theme.c:984
+msgid "Stretched"
+msgstr "Uitgerekt"
+
+#: theme.c:989
+msgid "Fonts"
+msgstr "Lettertypen"
+
+#: theme.c:998 theme.c:1018
+msgid "Desktop Font"
+msgstr "Bureaublad lettertype"
+
+#: theme.c:1005 theme.c:1060
+msgid "Family"
+msgstr "Familie"
+
+#: theme.c:1025 theme.c:1080
+msgid "Size"
+msgstr "Grootte"
+
+#: theme.c:1053 theme.c:1073
+msgid "Application Font"
+msgstr "Toepassingen lettertype"
+
+#: keyctl.c:151
+msgid "Reset button config to default?"
+msgstr ""
+
+#: keyctl.c:188
+msgid "Defaults"
+msgstr "Standaardwaarden"
+
+#: keyctl.c:293
+msgid "ERROR: Can't open keylaunchrc for writing!\n"
+msgstr "ERROR: Kan keylaunchrc niet openen om te schrijven!\n"
+
+#: ownerinfo.c:201
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Alleen gebruiker 'root' mag deze informatie wijzigen"
+
+#: ownerinfo.c:221
+msgid "Name:"
+msgstr "Naam:"
+
+#: ownerinfo.c:236
+msgid "E-Mail:"
+msgstr "E-mail:"
+
+#: ownerinfo.c:251
+msgid "Phone:"
+msgstr "Telefoon:"
+
+#: ownerinfo.c:266
+msgid "Address:"
+msgstr "Adres:"
+
+#: ownerinfo.c:292
+msgid "Photofile:"
+msgstr "Fotobestand:"
+
+#: login-setup.c:131
+msgid "Some or all of these settings can only be changed by the user 'root'."
+msgstr "Sommige of al deze instellingen kunnen alleen door gebruiker 'root' worden gewijzigd."
+
+#: login-setup.c:167
+msgid "Show owner information at login."
+msgstr "Eigenaarsinformatie weergeven bij inloggen."
+
+#: login-setup.c:169
+msgid "Use background image for login screen."
+msgstr "Achtergrondafbeelding gebruiken voor inlogscherm."
+
+#: login-setup.c:171
+msgid "Lock display on suspend."
+msgstr ""
+
+#: login-setup.c:184
+msgid "Image:"
+msgstr "Afbeelding:"
+
+#: sleep/interface.c:71
+msgid "Auto sleep"
+msgstr "Auto slapen"
+
+#: sleep/interface.c:81 sleep/interface.c:117
+msgid "enabled"
+msgstr "aangezet"
+
+#: sleep/interface.c:95
+msgid "sleep timeout"
+msgstr "slaap time-out"
+
+#: sleep/interface.c:98 sleep/interface.c:132
+msgid "idle(sec)"
+msgstr ""
+
+#: sleep/interface.c:107
+msgid "Auto dim"
+msgstr "Auto dimmen"
+
+#: sleep/interface.c:130
+msgid "backlight dim timeout"
+msgstr "achterlicht dim time-out"
+
+#: sleep/interface.c:139
+msgid "Auto dim level"
+msgstr "Auto dimmen niveau"
+
+#: sleep/interface.c:157
+msgid "Auto sleep advanced controls"
+msgstr "Auto-slapen geavanceerde mogelijkheden"
+
+#: sleep/interface.c:167
+msgid "CPU"
+msgstr "Processor"
+
+#: sleep/interface.c:174
+msgid "Sleep on cpu less than load"
+msgstr "Slapen bij processorbelasting minder dan"
+
+#: sleep/interface.c:185
+msgid "load"
+msgstr "belasting"
+
+#: sleep/interface.c:192
+msgid "APM"
+msgstr "APM"
+
+#: sleep/interface.c:198
+msgid "Sleep on AC"
+msgstr "Slapen op AC"
+
+#: sleep/interface.c:200
+msgid "probe IRQs"
+msgstr "IRQs onderzoeken"
+
+#: sleep/interface.c:206
+msgid "Check IRQ activity"
+msgstr "IRQ activiteit controleren"
+
+#: sleep/interface.c:208
+msgid "Choose IRQs"
+msgstr "Kies IRQs"
+
+#: users/interface.c:208
+msgid "User Name"
+msgstr "Gebruikersnaam"
+
+#: users/interface.c:209
+msgid "User Info"
+msgstr "Gebruikersinfo"
+
+#: users/interface.c:211
+msgid "Home"
+msgstr "Persoonlijke map"
+
+#: users/interface.c:228 users/interface.c:229
+msgid "Add user"
+msgstr "Gebruiker toevoegen"
+
+#: users/interface.c:229
+msgid "Add a new user"
+msgstr "Een nieuwe gebruiker toevoegen"
+
+#: users/interface.c:233 users/interface.c:234
+msgid "Edit user"
+msgstr "Gebruiker bewerken"
+
+#: users/interface.c:234
+msgid "Edit existing user"
+msgstr "Bestaande gebruiker bewerken"
+
+#: users/interface.c:238 users/interface.c:239
+msgid "Delete user"
+msgstr "Gebruiker verwijderen"
+
+#: users/interface.c:239
+msgid "Delete existing user"
+msgstr "Bestaande gebruiker verwijderen"
+
+#: users/interface.c:283
+msgid "User settings"
+msgstr "Gebruikersinstellingen"
+
+#: users/interface.c:297
+msgid "User Name:"
+msgstr "Gebruikersnaam:"
+
+#: users/interface.c:313
+msgid "Password:"
+msgstr "Wachtwoord:"
+
+#: users/interface.c:321
+msgid "User Info:"
+msgstr "Gebruikersinfo:"
+
+#: users/interface.c:337
+msgid "Shell:"
+msgstr "Shell:"
+
+#: users/interface.c:356
+msgid "Home:"
+msgstr "Persoonlijke map:"
+
+#: users/interface.c:374
+msgid "Change"
+msgstr "Wijzigen"
+
+#: users/interface.c:435
+msgid "Change Password"
+msgstr "Wachtwoord wijzigen"
+
+#: users/interface.c:462
+msgid "Old Password:"
+msgstr "Oude wachtwoord:"
+
+#: users/interface.c:469
+msgid "New Password:"
+msgstr "Nieuwe wachtwoord:"
+
+#: users/interface.c:477
+msgid "Confirm:"
+msgstr "Bevestigen:"
+
+#: users/callbacks.c:104
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"U kunt geen systeem-\n"
+"gebruikers verwijderen!"
+
+#: users/callbacks.c:138
+msgid "Please choose a user name."
+msgstr "Kies alstublieft een gebruikersnaam."
+
+#: users/callbacks.c:156
+msgid "Please choose a home directory."
+msgstr "Kies alstublieft een persoonlijke map."
+
+#: users/callbacks.c:217
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"De twee nieuwe wachtwoorden verschillen!\n"
+" Probeer a.u.b. opnieuw!"
+
+#: users/callbacks.c:220
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Verkeerd wachtwoord\n"
+" Probeer a.u.b. opnieuw!"
+
+#: cfgfile.c:630
+msgid "No write access to network configuration."
+msgstr "Geen schrijftoegang tot netwerkconfiguratie."
+
+#: gpe-admin.c:93
+msgid "Allow users to configure everything"
+msgstr "Gebruikers toestaan om alles in te stellen"
+
+#: storage.c:195
+msgid "System memory"
+msgstr "Systeemgeheugen"
+
+#: storage.c:202 storage.c:464
+msgid "Free memory"
+msgstr "Vrij geheugen"
+
+#: storage.c:209 storage.c:357 storage.c:477 storage.c:595
+msgid "Total:"
+msgstr "Totaal:"
+
+#: storage.c:321 storage.c:524
+msgid "Internal Flash"
+msgstr "Intern flash"
+
+#: storage.c:327 storage.c:530
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:333 storage.c:536
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:339 storage.c:542
+msgid "Network Filesystem"
+msgstr "Netwerk bestandssysteem"
+
+#: storage.c:359 storage.c:597
+msgid "Mounted at"
+msgstr "Aangekoppeld op"
+
+#: storage.c:367 storage.c:577
+msgid "Free space"
+msgstr "Vrije ruimte"
+
+#: storage.c:444
+msgid "System Memory"
+msgstr "Systeemgeheugen"
+
+#: storage.c:616
+msgid "Couldn't get filesystem info!"
+msgstr "Kon geen bestandssysteem info verkrijgen!"
+
+#: serial.c:146
+#, fuzzy
+msgid "Couldn't find default runlevel!"
+msgstr "Kon geen standaard runlevel vinden!"
+
+#: serial.c:268 serial.c:272
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Eenvoudige interface voor seriële poort configuratie. Uitgeschakelde componeten zijn niet geïnstalleerd."
+
+#: serial.c:270
+msgid "Simple"
+msgstr "Eenvoudig"
+
+#: serial.c:275
+msgid "Serial port default usage"
+msgstr "Seriële poort standaard gebruik"
+
+#: serial.c:279
+msgid "Select desired software to use serial port here."
+msgstr "Selecteer hier de gewenste software voor gebruik seriële poort."
+
+#: serial.c:281
+msgid "Console"
+msgstr "Console"
+
+#: serial.c:283
+msgid "This option runs console on serial port. (default)"
+msgstr "Deze optie start een console op de seriële poort. (standaard)"
+
+#: serial.c:285
+msgid "GPS Daemon"
+msgstr "GPS daemon"
+
+#: serial.c:288
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Deze optie schakelt het starten van GPSD in, wat gegevens van een GPS-ontvanger beschikbaar maakt voor toepassingen."
+
+#: serial.c:290
+msgid "Nothing (free)"
+msgstr "Niets (vrij)"
+
+#: serial.c:292
+msgid "Don't start any software that uses the serial port."
+msgstr "Geen software starten die de seriële poort gebruikt."
+
+#: logread.c:140
+msgid "<empty syslog>"
+msgstr "<leeg syslog>"
+
+#: logread.c:191
+msgid "System Log"
+msgstr "Systeemlog"
+
+#: packages.c:66
+msgid "Removing package"
+msgstr "Bezig pakket te verwijderen"
+
+#: packages.c:71
+msgid "Installing package"
+msgstr "Bezig pakket te installeren"
+
+#: packages.c:150 packages.c:324
+msgid "Start"
+msgstr "Starten"
+
+#: packages.c:155
+msgid "Update finished. Please check log messages for errors."
+msgstr "Bijwerken voltooid. Controleer alstublieft de logberichten voor fouten."
+
+#: packages.c:184 packages.c:370
+msgid "Remove"
+msgstr "Verwijderen"
+
+#: packages.c:185
+msgid "Install/Removal finished. Please check log messages for errors."
+msgstr "Installeren/Verwijderen voltooid. Controleer alstublieft de logbestanden voor fouten."
+
+#: packages.c:205
+msgid "Update using \"ipkg upgrade\" started.\n"
+msgstr "Bijwerken met \"ipkg upgrade\" gestart.\n"
+
+#: packages.c:229 packages.c:253
+msgid "Running..."
+msgstr "Bezig..."
+
+#: packages.c:314
+msgid "Update"
+msgstr "Bijwerken"
+
+#: packages.c:319
+msgid "Update from network"
+msgstr "Bijwerken vanaf het netwerk"
+
+#: packages.c:328
+msgid "Update entire system over an internet connection."
+msgstr "Het gehele systeem over een Internetverbinding bijwerken."
+
+#: packages.c:332 packages.c:378
+msgid "Activity log"
+msgstr "Activiteitenlog"
+
+#: packages.c:340
+msgid "This window shows all output from the packet manager that performs the update."
+msgstr "Dit venster toont alle uitvoer van de pakketbeheerder die zorgt voor het bijwerken."
+
+#: packages.c:350
+msgid "Install/Remove"
+msgstr "Installeren/Verwijderen"
+
+#: packages.c:355
+msgid "Install/Remove a package"
+msgstr "Een pakket installeren of verwijderen"
+
+#: packages.c:362
+msgid "Enter name of package to be installed here."
+msgstr "Geef hier de naam van het pakket dat geïnstalleerd moet worden."
+
+#: packages.c:368
+msgid "Install a package from a configured source."
+msgstr "Een pakket installeren vanaf de ingestelde bron."
+
+#: packages.c:374
+msgid "Remove the package."
+msgstr "Het pakket verwijderen."
+
+#: packages.c:386
+msgid "This window shows all output from the packet manager installing the package."
+msgstr "Dit venster toont alle uitvoer van de pakketbeheerder die het pakket installeert."
+
+#: cardinfo.c:247 cardinfo.c:318
+msgid "Could not write to temporal config file."
+msgstr "Kon niet schrijven naar tijdelijk config bestand."
+
+#: cardinfo.c:524
+msgid "Could not open pidfile:"
+msgstr "Kon pidbestand niet openen:"
+
+#: cardinfo.c:530
+msgid "Could not read pidfile"
+msgstr "Kon pidbestand niet lezen"
+
+#: cardinfo.c:534
+msgid "Could not signal cardmgr:"
+msgstr "Kon cardmgr niet bereiken:"
+
+#: cardinfo.c:609
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "gpe-conf moet setuid root zijn om de cardinfo mogelijkheid te gebruiken."
+
+#: cardinfo.c:628
+msgid "No pcmcia driver in /proc/devices"
+msgstr "Geen pcmcia stuurprogramma in /proc/devices"
+
+#: cardinfo.c:631
+msgid "Could not open /proc/devices"
+msgstr "Kon /proc/devices niet openen"
+
+#: cardinfo.c:643
+msgid "No sockets found\n"
+msgstr "Geen sockets gevonden\n"
+
+#: cardinfo.c:652
+msgid "Card Services release does not match!"
+msgstr "Kaartvoorzieningen versie komt niet overeen!"
+
+#: cardinfo.c:657
+msgid "Could not get CS revision info!\n"
+msgstr "Kon CS revisie info niet verkrijgen!\n"
+
+#: cardinfo.c:820
+msgid "flock(stabfile) failed)"
+msgstr "flock(stabbestand) mislukt)"
+
+#: cardinfo.c:836
+msgid "no driver loaded"
+msgstr "geen stuurprogramma geladen"
+
+#: cardinfo.c:945
+msgid "ready"
+msgstr "gereed"
+
+#: cardinfo.c:963
+msgid "not ready"
+msgstr "niet gereed"
+
+#: cardinfo.c:978
+msgid "suspended"
+msgstr ""
+
+#: cardinfo.c:1170 cardinfo.c:1341 cardinfo.c:1342
+msgid "Assign Driver"
+msgstr "Stuurprogramma toewijzen"
+
+#: cardinfo.c:1179
+msgid ""
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
+msgstr ""
+"Deze dialoog laat u de stuurprogramma-\n"
+"toewijzing voor een PCMCIA- of CF-kaart\n"
+"selecteren of wijzigen."
+
+#: cardinfo.c:1189
+msgid "Your current card identifies itself as:"
+msgstr "Uw huidige kaart identificeert zichzelf als:"
+
+#: cardinfo.c:1203 cardinfo.c:1209
+msgid "Manuf. Id"
+msgstr "Maker id"
+
+#: cardinfo.c:1203 cardinfo.c:1209
+msgid "Class"
+msgstr "Klasse"
+
+#: cardinfo.c:1282
+msgid "Insert Card"
+msgstr "Kaart insteken"
+
+#: cardinfo.c:1284
+msgid "Tap here to start card insertion manually."
+msgstr "Druk hier om handmatig te beginnen met het insteken van de kaart."
+
+#: cardinfo.c:1292
+msgid "Eject Card"
+msgstr "Kaart uitwerpen"
+
+#: cardinfo.c:1294
+msgid "Tap here to eject card manually."
+msgstr "Druk hier om handmatig de kaart uit te werpen."
+
+#: cardinfo.c:1302
+msgid "Suspend Card"
+msgstr ""
+
+#: cardinfo.c:1304
+msgid "Tap here to suspend current card."
+msgstr ""
+
+#: cardinfo.c:1312
+msgid "Resume Card"
+msgstr "Kaart hervatten"
+
+#: cardinfo.c:1314
+msgid "Tap here to resume current card."
+msgstr "Druk hier om de huidige kaart te hervatten."
+
+#: cardinfo.c:1322
+msgid "Reset Card"
+msgstr "Kaart opnieuw instellen"
+
+#: cardinfo.c:1323
+msgid "Tap here to reset current card."
+msgstr "Druk hier om de huidige kaart opnieuw in te stellen."
+
+#: cardinfo.c:1331 cardinfo.c:1332
+msgid "Reset Card Manager"
+msgstr "Kaartbeheerder opnieuw instellen"
+
+#: cardinfo.c:1334
+msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
+msgstr "Druk hier om de kaartbeheerder opnieuw in te stellen. Dit past alle bijwerkingen toe op de pcmcia config bestanden."
+
+#: cardinfo.c:1344
+msgid "Tap here to assign a driver to this card / change current driver assignment."
+msgstr "Druk hier om een stuurprogramma aan deze kaart toe te wijzen of om de huidige toewijzing te wijzigen."
+
+#: cardinfo.c:1351 cardinfo.c:1352
+msgid "Exit applet"
+msgstr "Applet afsluiten"
+
+#: cardinfo.c:1361 cardinfo.c:1374
+msgid "PC/CF card socket information."
+msgstr "PC/CF-kaart socket informatie."
+
+#: cardinfo.c:1369
+msgid "Socket"
+msgstr "Socket"
+
+#: cardinfo.c:1400
+msgid "Information for socket"
+msgstr "Informatie over socket"
+
+#: cardinfo.c:1409
+msgid "State:"
+msgstr "Status:"
+
+#: cardinfo.c:1410
+msgid "Device:"
+msgstr "Apparaat:"
+
+#: cardinfo.c:1411
+msgid "Driver:"
+msgstr "Stuurprogramma:"
+
+#: cardinfo.c:1412
+msgid "Type:"
+msgstr "Soort:"
+
+#: cardinfo.c:1413
+msgid "I/O:"
+msgstr "I/O:"
+
+#: cardinfo.c:1414
+msgid "IRQ:"
+msgstr "IRQ:"
+
+#: cardinfo.c:1421
+msgid "Flags:"
+msgstr "Opties:"
+
+#: cardinfo.c:1438
+msgid "PCMCIA initialisation failed"
+msgstr "PCMCIA initialisatie mislukt"
+
+#: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
+#: tools/interface.c:622
+msgid "[NONE SET]"
+msgstr "[GEEN INGESTELD]"
+
+#: tools/interface.c:394
+#, c-format
+msgid "rresolve: unsupport address family %d !\n"
+msgstr "rresolve: niet-ondersteunde adresfamilie %d !\n"
+
+#: tools/interface.c:677 tools/interface.c:1650
+msgid "UNSPEC"
+msgstr ""
+
+#: tools/interface.c:679
+msgid "UNIX Domain"
+msgstr "UNIX domein"
+
+#: tools/interface.c:682
+msgid "DARPA Internet"
+msgstr "DARPA Internet"
+
+#: tools/interface.c:685
+msgid "IPv6"
+msgstr "IPv6"
+
+#: tools/interface.c:688 tools/interface.c:1671
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: tools/interface.c:691 tools/interface.c:1677
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: tools/interface.c:694
+msgid "Novell IPX"
+msgstr "Novell IPX"
+
+#: tools/interface.c:697
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: tools/interface.c:700 tools/interface.c:1712
+msgid "Econet"
+msgstr "Econet"
+
+#: tools/interface.c:703
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: tools/interface.c:706 tools/interface.c:1674
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: tools/interface.c:709 tools/interface.c:1662
+msgid "Ash"
+msgstr "Ash"
+
+#: tools/interface.c:736
+msgid "Too much address family arguments.\n"
+msgstr "Teveel adresfamilie argumenten.\n"
+
+#: tools/interface.c:747
+#, c-format
+msgid "Unknown address family `%s'.\n"
+msgstr "Onbekende adresfamilie `%s'.\n"
+
+#: tools/interface.c:810
+msgid "Please don't supply more than one address family.\n"
+msgstr "Geef alstublieft niet meer dan één adresfamilie aan.\n"
+
+#: tools/interface.c:937
+msgid "No usable address families found.\n"
+msgstr "Geen bruikbare adresfamilies gevonden.\n"
+
+#: tools/interface.c:1007
+#, c-format
+msgid "warning: no inet socket available: %s\n"
+msgstr "waarschuwing: geen inet socket beschikbaar: %s\n"
+
+#: tools/interface.c:1159
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Waarschuwing: kan %s niet openen (%s). Beperkte uitvoer.\n"
+
+#: tools/interface.c:1402
+msgid "Device not found"
+msgstr "Apparaat niet gevonden"
+
+#: tools/interface.c:1406
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: fout bij verkrijgen interface informatie: %s\n"
+
+#: tools/interface.c:1480 tools/interface.c:1497
+#, c-format
+msgid "in_ether(%s): invalid ether address!\n"
+msgstr "in_ether(%s): onjuist ether adres!\n"
+
+#: tools/interface.c:1511
+#, c-format
+msgid "in_ether(%s): trailing : ignored!\n"
+msgstr "in_ether(%s): afsluitende : genegeerd!\n"
+
+#: tools/interface.c:1523
+#, c-format
+msgid "in_ether(%s): trailing junk!\n"
+msgstr "in_ether(%s): afsluitende troep!\n"
+
+#: tools/interface.c:1555
+msgid "You cannot start PPP with this program.\n"
+msgstr "U kunt PPP niet met dit programma starten.\n"
+
+#: tools/interface.c:1649
+#, fuzzy
+msgid "Local Loopback"
+msgstr "Lokale lus"
+
+#: tools/interface.c:1652
+msgid "Serial Line IP"
+msgstr "Seriële lijn IP"
+
+#: tools/interface.c:1653
+msgid "VJ Serial Line IP"
+msgstr "VJ Seriële lijn IP"
+
+#: tools/interface.c:1654
+msgid "6-bit Serial Line IP"
+msgstr "6-bit seriële lijn IP"
+
+#: tools/interface.c:1655
+msgid "VJ 6-bit Serial Line IP"
+msgstr "VJ 6-bit seriële lijn IP"
+
+#: tools/interface.c:1656
+msgid "Adaptive Serial Line IP"
+msgstr "Aanpassende seriële lijn IP"
+
+#: tools/interface.c:1659
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: tools/interface.c:1665
+msgid "Fiber Distributed Data Interface"
+msgstr ""
+
+#: tools/interface.c:1668
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: tools/interface.c:1680
+msgid "generic X.25"
+msgstr "algemeen X.25"
+
+#: tools/interface.c:1683
+msgid "IPIP Tunnel"
+msgstr "IPIP tunnel"
+
+#: tools/interface.c:1686
+msgid "Point-to-Point Protocol"
+msgstr "Punt-naar-punt protocol"
+
+#: tools/interface.c:1689
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: tools/interface.c:1690
+msgid "LAPB"
+msgstr "LAPB"
+
+#: tools/interface.c:1693
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: tools/interface.c:1696
+msgid "Frame Relay DLCI"
+msgstr ""
+
+#: tools/interface.c:1697
+msgid "Frame Relay Access Device"
+msgstr ""
+
+#: tools/interface.c:1700
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-in-IPv4"
+
+#: tools/interface.c:1703
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: tools/interface.c:1706
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps token ring"
+
+#: tools/interface.c:1708
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "16/4 Mbps token ring (nieuw)"
+
+#: tools/interface.c:1818
+#, c-format
+msgid ""
+"<b>Interface %s</b>\n"
+"Type: %s\n"
+msgstr ""
+"<b>Interface %s</b>\n"
+"Soort: %s\n"
+
+#: tools/interface.c:1826
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
+
+#: tools/interface.c:1832
+#, c-format
+msgid "Media: %s"
+msgstr "Media: %s"
+
+#: tools/interface.c:1837
+msgid "(auto)"
+msgstr "(auto)"
+
+#: tools/interface.c:1849
+#, c-format
+msgid "Address: %s\n"
+msgstr "Adres: %s\n"
+
+#: tools/interface.c:1854
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-n-P: %s\n"
+
+#: tools/interface.c:1858
+#, c-format
+msgid "Netmask: %s\n"
+msgstr "Netmasker: %s\n"
+
+#: tools/interface.c:1862
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr "Broadcast: %s\n"
+
+#: tools/interface.c:1882
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "IPv6 adres: %s/%d\n"
+
+#: tools/interface.c:1886
+msgid "Scope: "
+msgstr "Bereik:"
+
+#: tools/interface.c:1891
+msgid "Global"
+msgstr "Algemeen"
+
+#: tools/interface.c:1894
+msgid "Link"
+msgstr "Verbinding"
+
+#: tools/interface.c:1897
+msgid "Site"
+msgstr "Site"
+
+#: tools/interface.c:1900
+msgid "Compat"
+msgstr "Compat"
+
+#: tools/interface.c:1903
+msgid "Host"
+msgstr "Host"
+
+#: tools/interface.c:1906
+msgid "Unknown"
+msgstr "Onbekend"
+
+#: battery.c:79
+#, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "kon aanraakscherm-apparaat '%s' niet openen\n"
+
+#: battery.c:127 battery.c:179
+msgid "Status: high"
+msgstr "Status: hoog"
+
+#: battery.c:130 battery.c:182
+msgid "Status: low"
+msgstr "Status: laag"
+
+#: battery.c:133 battery.c:185
+msgid "Status: critical"
+msgstr "Status: kritisch"
+
+#: battery.c:136 battery.c:188
+msgid "Status: charging"
+msgstr "Status: opladend"
+
+#: battery.c:139 battery.c:191
+#, fuzzy
+msgid "Status: charge main"
+msgstr "Status: opladen hoofd"
+
+#: battery.c:142
+msgid "Status: dead"
+msgstr "Status: dood"
+
+#: battery.c:145 battery.c:197
+msgid "Status: full"
+msgstr "Status: vol"
+
+#: battery.c:148 battery.c:200
+msgid "Status: no battery"
+msgstr "Status: geen batterij"
+
+#: battery.c:151 battery.c:203 battery.c:222
+msgid "Status: unknown"
+msgstr "Status: onbekend"
+
+#: battery.c:155 battery.c:207
+msgid "Voltage"
+msgstr "Voltage"
+
+#: battery.c:159 battery.c:211
+msgid "AC connected"
+msgstr "AC verbonden"
+
+#: battery.c:161 battery.c:213
+msgid "Lifetime"
+msgstr "Levensduur"
+
+#: battery.c:194
+msgid "Status: not installed"
+msgstr "Status: niet geïnstalleerd"
+
+#: battery.c:220
+msgid "not installed"
+msgstr "niet geïnstalleerd"
+
+#: battery.c:224
+msgid "Voltage: unknown"
+msgstr "Voltage: onbekend"
+
+#: battery.c:226
+msgid "Lifetime: unknown"
+msgstr "Levensduur: onbekend"
+
+#: battery.c:265
+msgid "Internal battery"
+msgstr "Interne batterij"
+
+#: battery.c:269
+msgid "Jacket battery"
+msgstr ""
