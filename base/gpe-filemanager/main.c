@@ -461,13 +461,20 @@ add_icon (gchar *base_filename, gchar *filename)
   gpe_iconlist_add_item (GPE_ICONLIST (view_widget), base_filename, image_filename, (gpointer) file_info);
 }
 
+gint
+sort_filenames (gconstpointer *a, gconstpointer *b)
+{
+  return (strcoll ((char *) a, (char *) b));
+}
+
 /* Render the contents for the current directory. */
 static void
 make_view (gchar *view)
 {
   struct dirent *d;
   DIR *dir;
-  gchar *filename, *base_filename;
+  gchar *filename;
+  GList *filenames = NULL;
   loading_directory = 1;
 
   if (view_widget)
@@ -488,13 +495,13 @@ make_view (gchar *view)
         break;
 
       filename = g_strdup_printf ("%s/%s", current_directory, d->d_name);
-      base_filename = basename (filename);
 
-      if (base_filename[0] != '.')
+      if (basename (filename)[0] != '.')
       {
 
 	printf ("Found file %s\n", filename);
-	add_icon (base_filename, filename);
+	filenames = g_list_append (filenames, filename);
+	//add_icon (basename (filename), filename);
 
         /*
         gtk_signal_connect( GTK_OBJECT (button), "button_release_event", GTK_SIGNAL_FUNC (button_released), NULL);
@@ -505,6 +512,15 @@ make_view (gchar *view)
       }
     }
     closedir (dir);
+
+    filenames = g_list_sort (filenames, sort_filenames);
+    filenames = g_list_first (filenames);
+
+    while (filenames)
+    {
+      add_icon (basename ((gchar *) filenames->data), (gchar *) filenames->data);
+      filenames = filenames->next;
+    }
   }
   loading_directory = 0;
 }
