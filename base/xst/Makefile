@@ -17,7 +17,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-LDFLAGS += -lsqlite $(GTKLDFLAGS) -L../libxsettings-client -lXsettings-client
+LDFLAGS += $(GTKLDFLAGS) -L../libxsettings-client -lXsettings-client
 CPPFLAGS += $(GTKCFLAGS) -I../libxsettings -I../libxsettings-client
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))

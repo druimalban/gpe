@@ -22,28 +22,6 @@
 Display *dpy;
 XSettingsClient *client;
 
-struct _XSettingsClient
-{
-  Display *display;
-  int screen;
-  XSettingsNotifyFunc notify;
-  XSettingsWatchFunc watch;
-  void *cb_data;
-
-  Window manager_window;
-  Atom manager_atom;
-  Atom selection_atom;
-  Atom xsettings_atom;
-
-  XSettingsList *settings;
-};
-
-Window
-xsettings_client_manager_window (XSettingsClient *client)
-{
-  return ((struct _XSettingsClient *)client)->manager_window;
-}
-
 static void
 print_xsetting (XSettingsSetting *setting)
 {
@@ -174,87 +152,117 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-  if (flag_read && (prop == NULL))
-    notify_fp = notify_func;
-
-  client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_fp, NULL, NULL);
-  if (client == NULL)
+  if (flag_read)
     {
-      fprintf (stderr, "Cannot create XSettings client\n");
-      exit (1);
-    }
+      if (prop == NULL)
+	notify_fp = notify_func;
 
-  if (prop)
-    {
-      XSettingsSetting *setting;
-      
-      if (flag_read)
+      client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_fp, NULL, NULL);
+      if (client == NULL)
 	{
-	  xsettings_client_get_setting (client, prop, &setting);
-	  print_xsetting (setting);
+	  fprintf (stderr, "Cannot create XSettings client\n");
+	  exit (1);
+	}
+
+      if (prop)
+	{
+	  XSettingsSetting *setting;
+      
+	  if (xsettings_client_get_setting (client, prop, &setting) == XSETTINGS_SUCCESS)
+	    print_xsetting (setting);
+	}
+    }
+      
+  if (flag_write)
+    {
+      Atom gpe_settings_update_atom = XInternAtom (dpy, "_GPE_SETTINGS_UPDATE", 0);
+      Window manager = XGetSelectionOwner (dpy, gpe_settings_update_atom);
+      XSettingsType type;
+      size_t length, name_len;
+      gchar *buffer;
+      XClientMessageEvent ev;
+      gboolean done = FALSE;
+      Window win;
+
+      if (manager == None)
+	{
+	  fprintf (stderr, "gpe-confd not running.\n");
+	  exit (1);
+	}
+
+      win = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 1, 1, 1, 1, 0, 0, 0);
+      
+      if (!strcmp (format, "int"))
+	{
+	  type = XSETTINGS_TYPE_INT;
+	  length = 4;
+	}
+      else if (!strcmp (format, "col"))
+	{
+	  type = XSETTINGS_TYPE_COLOR;
+	  length = 8;
+	}
+      else if (!strcmp (format, "str"))
+	{
+	  type = XSETTINGS_TYPE_STRING;
+	  length = 4 + (strlen (value) + 3) & ~3;
+	}
+      else
+	{
+	  fprintf (stderr, "Format \"%s\" not recognised (try int/col/str)\n", format);
+	  exit (1);
 	}
       
-      if (flag_write)
+      name_len = strlen (prop);
+      name_len = (name_len + 3) & ~3;
+      buffer = g_malloc (length + 4 + name_len);
+      *buffer = type;
+      buffer[1] = 0;
+      buffer[2] = name_len & 0xff;
+      buffer[3] = (name_len >> 8) & 0xff;
+      memcpy (buffer + 4, prop, name_len);
+      
+      switch (type)
 	{
-	  Atom gpe_settings_update_atom = XInternAtom (dpy, "GPE_SETTINGS_UPDATE", 0);
-	  Window win = xsettings_client_manager_window (client);
-	  XSettingsType type;
-	  size_t length, name_len;
-	  gchar *buffer;
-	  XClientMessageEvent ev;
+	case XSETTINGS_TYPE_INT:
+	  *((unsigned long *)(buffer + 4 + name_len)) = atoi (value);
+	  break;
+	case XSETTINGS_TYPE_STRING:
+	  *((unsigned long *)(buffer + 4 + name_len)) = strlen (value);
+	  memcpy (buffer + 8 + name_len, value, strlen (value));
+	  break;
+	case XSETTINGS_TYPE_COLOR:
+	  break;
+	}
+      
+      XChangeProperty (dpy, win, gpe_settings_update_atom, gpe_settings_update_atom,
+		       8, PropModeReplace, buffer, length + 4 + name_len);
+      
+      g_free (buffer);
 
-	  if (!strcmp (format, "int"))
-	    {
-	      type = XSETTINGS_TYPE_INT;
-	      length = 4;
-	    }
-	  else if (!strcmp (format, "col"))
-	    {
-	      type = XSETTINGS_TYPE_COLOR;
-	      length = 8;
-	    }
-	  else if (!strcmp (format, "str"))
-	    {
-	      type = XSETTINGS_TYPE_STRING;
-	      length = 4 + (strlen (value) + 3) & ~3;
-	    }
-	  else
-	    {
-	      fprintf (stderr, "Format \"%s\" not recognised (try int/col/str)\n", format);
-	      exit (1);
-	    }
+      XSelectInput (dpy, win, PropertyChangeMask);
+      
+      ev.type = ClientMessage;
+      ev.window = win;
+      ev.message_type = gpe_settings_update_atom;
+      ev.format = 32;
+      ev.data.l[0] = gpe_settings_update_atom;
+      XSendEvent (dpy, manager, FALSE, 0, (XEvent *)&ev);
 
-	  name_len = strlen (prop);
-	  name_len = (name_len + 3) & ~3;
-	  buffer = g_malloc (length + 4 + name_len);
-	  *buffer = type;
-	  buffer[1] = 0;
-	  buffer[2] = name_len & 0xff;
-	  buffer[3] = (name_len >> 8) & 0xff;
-	  memcpy (buffer + 4, prop, name_len);
+      while (! done)
+	{
+	  XEvent ev;
 
-	  switch (type)
+	  XNextEvent (dpy, &ev);
+
+	  switch (ev.xany.type)
 	    {
-	    case XSETTINGS_TYPE_INT:
-	      *((unsigned long *)(buffer + 4 + name_len)) = atoi (value);
-	      break;
-	    case XSETTINGS_TYPE_STRING:
-	      *((unsigned long *)(buffer + 4 + name_len)) = strlen (value);
-	      memcpy (buffer + 8 + name_len, value, strlen (value));
-	      break;
-	    case XSETTINGS_TYPE_COLOR:
+	    case PropertyNotify:
+	      if (ev.xproperty.window == win
+		  && ev.xproperty.atom == gpe_settings_update_atom)
+		done = TRUE;
 	      break;
 	    }
-
-	  XChangeProperty (dpy, win, gpe_settings_update_atom, gpe_settings_update_atom,
-			   8, PropModeReplace, buffer, length + 4 + name_len);
-
-	  ev.type = ClientMessage;
-	  ev.window = win;
-	  ev.message_type = gpe_settings_update_atom;
-	  ev.format = 32;
-	  ev.data.l[0] = gpe_settings_update_atom;
-	  XSendEvent (dpy, win, FALSE, 0, (XEvent *)&ev);
 	}
     }
 
