@@ -8,7 +8,9 @@
 #include "usqld-protocol.h"
 #include "xdr.h"
 
-int test_print_results(void * f,int nrows,char ** heads,char ** vals){
+int test_print_results(void * f,int nrows,
+		       const char ** heads,
+		       const char ** vals){
   int i;
   for(i = 0;i<nrows;i++){
     printf("%s\t|",heads[i]);
@@ -30,7 +32,7 @@ int main (int argc, char ** argv)
   
   s = usqld_get_protocol();
   XDR_dump_schema(s);
-  if(NULL==(con=usqld_connect("occ2.cs.bath.ac.uk",
+  if(NULL==(con=usqld_connect("localhost",
 			      "test",&errstring))){
     fprintf(stderr,"couldn't connect to database: %s\n",errstring);
     exit(1);
@@ -41,7 +43,7 @@ int main (int argc, char ** argv)
 		"CREATE TABLE foo(x int, y int)",
 		NULL,NULL,&errstring)){
     fprintf(stderr,"couldn't query database: %s\n",errstring);
-    exit(1);
+
   }
 
   if(USQLD_OK!=
@@ -49,7 +51,6 @@ int main (int argc, char ** argv)
 		"INSERT INTO foo VALUES(1,2)",
 		NULL,NULL,&errstring)){
     fprintf(stderr,"couldn't query database: %s\n",errstring);
-    exit(1);
   }
 
   if(USQLD_OK!=
@@ -57,7 +58,6 @@ int main (int argc, char ** argv)
 		"INSERT INTO foo VALUES(2,3)",
 		NULL,NULL,&errstring)){
     fprintf(stderr,"couldn't query database: %s\n",errstring);
-    exit(1);
   }
   
   if(USQLD_OK!=

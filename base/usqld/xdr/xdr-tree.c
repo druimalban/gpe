@@ -3,29 +3,34 @@
 #include "xdr.h"
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
+
 int  XDR_tree_new_compound(XDR_type type,
 			   size_t nelems,
 			   XDR_tree_compound ** out_t){
   XDR_tree_compound * t;
   assert(NULL!=out_t);
 
-  t = mylloc(XDR_tree_compound);
+  t = XDR_malloc(XDR_tree_compound);
   assert(NULL!=t);
   t->type = type;
-  t->subelems = myllocn(XDR_tree*,nelems);
+  t->subelems = XDR_mallocn(XDR_tree*,nelems);
+
+  
   if(NULL==t->subelems){
-    free(t);
+    XDR_free(t);
     return XDR_PMALLOC;
   }
   bzero(t->subelems,sizeof(XDR_tree*) * nelems);
   t->nelems = nelems;
+  assert(t->subelems!=NULL);
   *out_t   = t;
   return XDR_OK;
 }
 
 
 void XDR_tree_new_simple(XDR_type type,XDR_tree_simple **out_t){
-  XDR_tree_simple * t = mylloc(XDR_tree_simple);
+  XDR_tree_simple * t = XDR_malloc(XDR_tree_simple);
   assert(NULL!=t);
   t->type = type;
   bzero(&(t->val),sizeof(XDR_tree_simple_val));
@@ -36,7 +41,7 @@ int  XDR_tree_new_str (XDR_type type,
 		       size_t len,
 		       XDR_tree_str** out_t){
   
-  XDR_tree_str * t = mylloc(XDR_tree_str);
+  XDR_tree_str * t = XDR_malloc(XDR_tree_str);
   assert(NULL!=t);
   t->type = type;
   t->len = len;
@@ -44,9 +49,9 @@ int  XDR_tree_new_str (XDR_type type,
   if(type==XDR_STRING)
     len++; //null char;
 
-  t->data = myllocn(unsigned char,len);
+  t->data = XDR_mallocn(unsigned char,len);
   if(NULL==t->data){
-    free(t);
+    XDR_free(t);
     return XDR_PMALLOC;
   }
   bzero(t->data,len);
@@ -67,7 +72,7 @@ void XDR_tree_free(XDR_tree * t){
     {
       XDR_tree_str * o = (XDR_tree_str*) t;
       if(NULL!=o->data)
-	free(o->data);    
+	XDR_free(o->data);    
     }
     break;
   case XDR_STRUCT:
@@ -75,28 +80,31 @@ void XDR_tree_free(XDR_tree * t){
   case XDR_VARARRAY:
   case XDR_UNION:
     {
-      XDR_tree_compound * c = (XDR_tree_compound *)t;
       int i;
+      XDR_tree_compound * c = (XDR_tree_compound *)t;
       
-      for(i==0;i<c->nelems;i++){
+      for(i=0;i<c->nelems;i++){
 	if(NULL!=c->subelems[i])
 	  XDR_tree_free(c->subelems[i]);
       }
       
       if(c->subelems!=NULL){
-	free(c->subelems);
+	XDR_free(c->subelems);
       }
     }
+    break;
+  default:
+    
   }
   
-  free(t);
+  XDR_free(t);
 }
 
 
 XDR_tree*  XDR_tree_new_union (unsigned int disc,
 			       XDR_tree * val){
   XDR_tree_compound * t = NULL; 
-  XDR_tree_simple * s = NULL;
+
   if(XDR_OK!=XDR_tree_new_compound(XDR_UNION,2,&t)){
     return NULL;
   }
@@ -123,7 +131,6 @@ XDR_tree* XDR_tree_new_mult (XDR_type type,
 
 
 XDR_tree * XDR_tree_new_opaque(XDR_type type,
-			       int fixed_size,
 			       size_t length,
 			       unsigned char * data){
   XDR_tree_str *t;
@@ -134,7 +141,7 @@ XDR_tree * XDR_tree_new_opaque(XDR_type type,
 }
 
 
-XDR_tree * XDR_tree_new_string(char * data){
+XDR_tree * XDR_tree_new_string(const char * data){
   XDR_tree_str  * t = NULL;
   
   if(XDR_OK!=XDR_tree_new_str(XDR_STRING,strlen(data),&t))
@@ -178,8 +185,11 @@ void do_tabs(int n){
 }
 
 void XDR_tree_dump_r(XDR_tree*t,int indent){
-  printf("%s:",XDR_find_type_name(t->type));
-  
+
+   
+   printf("%s:",t==NULL?"NULL":XDR_find_type_name(t->type));
+   if(t==NULL)
+     return;
   switch(t->type){
   case XDR_HYPER:
   case XDR_INT:
@@ -193,10 +203,12 @@ void XDR_tree_dump_r(XDR_tree*t,int indent){
     break;
   case XDR_DOUBLE:
   case XDR_FLOAT: 
-    printf("%f",((XDR_tree_simple*)t)->val.uintVal);
+    printf("%f",((XDR_tree_simple*)t)->val.floatVal);
+     break;
   case XDR_FIXEDOPAQUE:
   case XDR_VAROPAQUE:
     printf("[%u]",((XDR_tree_str*)t)->len);
+    break;
   case XDR_STRING:
     printf("\"%s\"",((XDR_tree_str*)t)->data);;
     break;
@@ -206,9 +218,9 @@ void XDR_tree_dump_r(XDR_tree*t,int indent){
     {
       int i;
       printf("[%d]{\n",((XDR_tree_compound*)t)->nelems);
-      do_tab(indent+1);
+      do_tabs(indent+1);
       for(i = 0;i<((XDR_tree_compound*)t)->nelems;i++){
-	do_tab(indent);
+	do_tabs(indent);
 	XDR_tree_dump_r(((XDR_tree_compound*)t)->subelems[i],indent+1);
       }
       printf("}");
@@ -217,16 +229,15 @@ void XDR_tree_dump_r(XDR_tree*t,int indent){
 
   case XDR_UNION:
     {
-      int i;
-      
-      printf("(%d)=>",((XDR_tree_simple*)
-		       ((XDR_tree_compound*)t)->subelems[0])->val.uintVal);
-      XDR_tree_dump_r(((XDR_tree_compound*)t)->subelems[1],indent+1);
-      
+       printf("(%d)=>",((XDR_tree_simple*)
+			((XDR_tree_compound*)t)->subelems[0])->val.uintVal);
+       XDR_tree_dump_r(((XDR_tree_compound*)t)->subelems[1],indent+1);
+       
     }
+  break;
   default:    
   }
-  printf("\n");
+   printf("\n");
 }
 
 void XDR_tree_dump(XDR_tree*t){
@@ -235,8 +246,106 @@ void XDR_tree_dump(XDR_tree*t){
 
 XDR_tree * XDR_tree_new_void(){
   XDR_tree * tree;
-  tree = mylloc(XDR_tree);
+  tree = XDR_malloc(XDR_tree);
   bzero(tree,sizeof(XDR_tree));
   tree->type = XDR_VOID;
   return tree;
 }
+
+
+int XDR_tree_is_simple(XDR_tree * t){
+  assert(t!=NULL);
+  return(t->type==XDR_INT||
+	 t->type==XDR_UINT||
+	 t->type==XDR_ENUM||
+	 t->type==XDR_BOOL||
+	 t->type==XDR_FLOAT||
+	 t->type==XDR_DOUBLE);
+	
+}
+
+int XDR_tree_is_compound(XDR_tree * t){
+  assert(t!=NULL);
+  return (t->type==XDR_STRUCT || 
+	  t->type==XDR_FIXEDARRAY ||
+	  t->type==XDR_VARARRAY || 
+	  t->type==XDR_UNION);
+}
+
+int XDR_tree_is_str(XDR_tree * t){
+  assert(t!=NULL);
+  return(t->type==XDR_STRING||
+	 t->type==XDR_VAROPAQUE||
+	 t->type==XDR_FIXEDOPAQUE);
+  
+}
+/**
+   retrieves an arbitray compound element from a compound. 
+ */
+XDR_tree *  XDR_t_get_comp_elem(XDR_tree_compound * t,unsigned int  n){
+  assert(t!=NULL);
+  assert(n <t->nelems);
+  return t->subelems[n];
+}
+
+/**
+   inserts an arbitrary (optionally NULL XDR_tree into a compound) 
+   Does not do schema checking. 
+ */
+void  XDR_t_set_comp_elem(XDR_tree_compound * t, 
+			  unsigned int n, XDR_tree * val){
+  assert(t!=NULL);
+  assert(n <t->nelems);
+  t->subelems[n] =val;
+}
+unsigned int XDR_t_get_comp_len(XDR_tree_compound * t){
+  assert(t!=NULL);
+  return t->nelems;
+}
+
+unsigned int XDR_t_get_union_disc(XDR_tree_compound * t){
+  assert(t!=NULL);
+  assert(t->type ==XDR_UNION);
+  assert(t->nelems ==2);
+  assert(t->subelems[0] !=NULL);
+  assert(t->subelems[0]->type==XDR_UINT);
+  
+  return ((XDR_tree_simple*) t->subelems[0])->val.uintVal;
+  
+}
+
+XDR_tree * XDR_t_get_union_t(XDR_tree_compound * t){
+  assert(t!=NULL);
+  assert(t->type ==XDR_UNION);
+  assert(t->nelems ==2);
+  return t->subelems[1];
+}
+
+char *  XDR_t_get_string(XDR_tree_str * t){
+  assert(t!=NULL);
+  assert(t->type ==XDR_STRING);
+  return t->data;
+}
+
+unsigned char *  XDR_t_get_data(XDR_tree_str * t){
+  assert(t!=NULL);
+  assert(t->type ==XDR_FIXEDOPAQUE || 
+	 t->type== XDR_VAROPAQUE);
+  return t->data;
+}
+
+size_t XDR_t_get_data_len(XDR_tree_str * t){
+  assert(t!=NULL);
+  assert(t->type ==XDR_FIXEDOPAQUE || 
+	 t->type== XDR_VAROPAQUE);
+  return t->len;
+}
+
+unsigned int XDR_t_get_uint(XDR_tree_simple * t){
+  assert(t->type==XDR_UINT || 
+	 t->type==XDR_INT || 
+	 t->type==XDR_ENUM );
+  return t->val.uintVal;
+}
+
+     

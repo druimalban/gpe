@@ -11,7 +11,7 @@ usqld_conn * usqld_connect(const char * server,
 			   char ** errmsg);
 
 
-typedef int (*usqld_callback)(void*,int,char**, char**);
+typedef int (*usqld_callback)(void*,int,const char**,const char**);
 
 int usqld_exec(
   usqld_conn*,                      /* An open database */
@@ -32,6 +32,7 @@ int usqld_exec(
 #define SQLITE_NOMEM        7   /* A malloc() failed */
 #define SQLITE_READONLY     8   /* Attempt to write a readonly database */
 #define SQLITE_INTERRUPT    9   /* Operation terminated by sqlite_interrupt() */
+
 #define SQLITE_IOERR       10   /* Some kind of disk I/O error occurred */
 #define SQLITE_CORRUPT     11   /* The database disk image is malformed */
 #define SQLITE_NOTFOUND    12   /* (Internal Only) Table or record not found */

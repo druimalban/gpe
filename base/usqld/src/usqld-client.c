@@ -55,13 +55,14 @@ struct usqld_conn * usqld_connect(const char * server,
   }
 
   
-  //sock_fd = open("/tmp/op",O_WRONLY| O_CREAT,0644);
-  XDR_tree_new_compound(XDR_STRUCT,
-			2,
-			(XDR_tree_compound**)&elems);
+  assert(USQLD_OK==XDR_tree_new_compound(XDR_STRUCT,
+					 2,
+					 (XDR_tree_compound**)&elems));
   
-  XDR_t_set_comp_elem(elems,0,XDR_tree_new_string(USQLD_PROTOCOL_VERSION));
-  XDR_t_set_comp_elem(elems,1,XDR_tree_new_string((char *)database));
+  XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),0,
+		      XDR_tree_new_string(USQLD_PROTOCOL_VERSION));
+  XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),1,
+		      XDR_tree_new_string((char *)database));
   
   p = XDR_tree_new_union(PICKLE_CONNECT,
 			 elems);
@@ -86,8 +87,16 @@ struct usqld_conn * usqld_connect(const char * server,
     {
       unsigned int errcode;
       char * error_str;
-      errcode = XDR_t_get_uint(XDR_t_get_comp_elem(XDR_t_get_union_t(p),0));
-      error_str = XDR_t_get_string(XDR_t_get_comp_elem(XDR_t_get_union_t(p),1));
+      errcode = XDR_t_get_uint
+        (XDR_TREE_SIMPLE
+	 (XDR_t_get_comp_elem
+	  (XDR_TREE_COMPOUND(XDR_t_get_union_t
+			     (XDR_TREE_COMPOUND(p))),0)));
+      
+      error_str = XDR_t_get_string
+	(XDR_TREE_STR((XDR_t_get_comp_elem
+		       (XDR_TREE_COMPOUND(XDR_t_get_union_t
+					  (XDR_TREE_COMPOUND(p))),1)))); 
       *errmsg = error_str;
       XDR_tree_free(p);
       return NULL;
@@ -126,7 +135,7 @@ int usqld_exec(
   char **errmsg                 /* Error msg written here */
   ){
 
-  usqld_packet * p;
+  usqld_packet * out_p = NULL,*in_p = NULL;
   int rv,complete,aborted = 0;
   char ** heads=  NULL,**rowdata = NULL;
   unsigned int nrows;
@@ -136,18 +145,18 @@ int usqld_exec(
     return SQLITE_ERROR;
   }
   
-  p = XDR_tree_new_union(PICKLE_QUERY,
+  out_p = XDR_tree_new_union(PICKLE_QUERY,
 			 XDR_tree_new_string((char*)sql));
   
-  if(USQLD_OK!=(rv=usqld_send_packet(con->server_fd,p))){
+  if(USQLD_OK!=(rv=usqld_send_packet(con->server_fd,out_p))){
     *errmsg = strdup("usqld network: unable to send query packet");
-    XDR_tree_free(p);
+    XDR_tree_free(out_p);
     return rv;
   }
 
-  //  XDR_tree_free(p);
+  XDR_tree_free(out_p);
   
-  if(USQLD_OK!=(rv=usqld_recv_packet(con->server_fd,&p))){
+  if(USQLD_OK!=(rv=usqld_recv_packet(con->server_fd,&in_p))){
     *errmsg = strdup("usqld network: unable to get a response from query");
     return rv;
   }
@@ -155,14 +164,15 @@ int usqld_exec(
   complete = 0;
 
   while(!complete){
-    switch(usqld_get_packet_type(p)){
+    switch(usqld_get_packet_type(in_p)){
     case PICKLE_OK:
       complete =1;
       break;
     case PICKLE_STARTROWS:
       {
 	int i;
-	nrows = XDR_t_get_comp_len(XDR_t_get_union_t(p));
+	nrows = XDR_t_get_comp_len
+	  (XDR_TREE_COMPOUND(XDR_t_get_union_t(XDR_TREE_COMPOUND(in_p))));
 	
 	heads = XDR_mallocn(char*,nrows);
 	bzero(heads,sizeof(char *)*nrows);
@@ -172,7 +182,12 @@ int usqld_exec(
 	bzero(rowdata,sizeof(char *)*nrows);
 	
 	for(i =0;i<nrows;i++){
-	  heads[i] = strdup(XDR_t_get_string(XDR_t_get_comp_elem(XDR_t_get_union_t(p),i)));
+	  heads[i] = strdup(XDR_t_get_string
+			    (XDR_TREE_STR
+			     (XDR_t_get_comp_elem
+			      (XDR_TREE_COMPOUND
+			       (XDR_t_get_union_t
+				(XDR_TREE_COMPOUND(in_p))),i))));
 	}	
       }
       break;
@@ -186,16 +201,24 @@ int usqld_exec(
 	  break;
 	}
 	
-	if(nrows!=XDR_t_get_comp_len(XDR_t_get_union_t(p))){
+	if(nrows!=XDR_t_get_comp_len(XDR_TREE_COMPOUND
+				     (XDR_t_get_union_t
+				      (XDR_TREE_COMPOUND(in_p))))){
 	  rv = USQLD_PROTOCOL_ERROR;
 	  *errmsg = strdup("usqld protocol: number of rows != number of heads, wierd");
 	  break;
 	}
+
 	if(cb!=NULL && !aborted){ //HACK HACK HACK should actually interrupt on protocol
 	  
 	  int i;
 	  for(i =0;i<nrows;i++){
-	    rowdata[i] = XDR_t_get_string(XDR_t_get_comp_elem(XDR_t_get_union_t(p),i));
+	    rowdata[i] = XDR_t_get_string
+	      (XDR_TREE_STR
+	       (XDR_t_get_comp_elem
+		(XDR_TREE_COMPOUND
+		 (XDR_t_get_union_t
+		  (XDR_TREE_COMPOUND(in_p))),i)));
 	  }
 	  
 	  if(0!=cb(arg,nrows,heads,rowdata)){
@@ -209,9 +232,13 @@ int usqld_exec(
      case PICKLE_ERROR:
 	 {
 	   complete =1;
-	   *errmsg = strdup(XDR_t_get_string(
-			   XDR_t_get_comp_elem(XDR_t_get_union_t(p),1)));
-	   rv =XDR_t_get_uint(XDR_t_get_comp_elem(XDR_t_get_union_t(p),0));
+	   *errmsg = strdup(XDR_t_get_string(XDR_TREE_STR(XDR_t_get_comp_elem(XDR_TREE_COMPOUND(XDR_t_get_union_t(XDR_TREE_COMPOUND(in_p))),1))));
+	   
+	   rv =XDR_t_get_uint
+	     (XDR_TREE_SIMPLE
+	      (XDR_t_get_comp_elem
+	       (XDR_TREE_COMPOUND(XDR_t_get_union_t
+				  (XDR_TREE_COMPOUND(in_p))),0)));
 	   
 	 }
 	 break;
@@ -222,7 +249,7 @@ int usqld_exec(
 	*errmsg = strdup("usqld protocol: huh? what");
       }
     }
-    XDR_tree_free(p);
+    XDR_tree_free(in_p);
   }
   
   if(heads!=NULL){

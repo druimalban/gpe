@@ -1,3 +1,3 @@
-SUBDIRS = xdr src
+SUBDIRS = xdr src test
 
 

@@ -2,13 +2,15 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
+#include <unistd.h> 
+#include <netinet/in.h>
+#include <string.h>
 #include "xdr.h"
-
 
 int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
   unsigned char buf[4];
   int rv = XDR_OK;
-  char * reason;
+
   fprintf(stderr,"deserialize:about to try and read a %s\n",
 	  XDR_find_type_name(s->type));
   switch(s->type){
@@ -119,10 +121,10 @@ int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
   case XDR_UNION:
     {
       int i;
-      unsigned int d_val;
+      unsigned int d_val = 0;
       XDR_schema * d_t = NULL;
-      XDR_tree_compound * t;
-      XDR_tree_simple *disc;
+      XDR_tree_compound * t = NULL;
+      XDR_tree_simple *disc =NULL;
       if(-1==read(fd,buf,4))
 	return XDR_IO_ERROR;
       
@@ -145,7 +147,7 @@ int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
       XDR_tree_new_simple(XDR_UINT,&disc);
       disc->val.uintVal = d_val;
       t->subelems[0] = (XDR_tree*)disc;
-      if( XDR_OK!=(rv=(XDR_deserialize_elem(d_t,fd,t->subelems+1)))){
+      if( XDR_OK!=(rv=(XDR_deserialize_elem(d_t,fd,&(t->subelems[1]))))){
 	XDR_tree_free((XDR_tree*)t);
 	return rv;
       }

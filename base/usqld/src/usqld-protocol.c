@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "xdr.h"
 #include <pthread.h>
-#define USQLD_PROTOCOL_VERSION "0.2.0"
+
 #include "usqld-protocol.h"
 
 struct {
@@ -65,9 +65,9 @@ XDR_schema * usqld_make_protocol(){
   elems[0].t = eof_packet = XDR_schema_new_void();
   elems[0].d = PICKLE_EOF;
 
-  elems[1].t = rows_packet = XDR_schema_new_array(XDR_schema_new_string(),5);
+  elems[1].t = rows_packet = XDR_schema_new_array(XDR_schema_new_string(),0);
   elems[1].d = PICKLE_ROW;
-
+  
   elems[2].t = start_rows_packet = 
     XDR_schema_new_array(XDR_schema_new_string(),0);
   elems[2].d = PICKLE_STARTROWS;
@@ -88,11 +88,10 @@ XDR_schema * usqld_make_protocol(){
   elems[6].d =PICKLE_ERROR;
 
   elems[7].t = XDR_schema_new_void();
-  elems[7].d =PICKLE_OK;
+  elems[7].d = PICKLE_OK;
   
   protocol = XDR_schema_new_type_union(8,elems);   
   
-
   return protocol;
 }
 
@@ -126,10 +125,11 @@ int usqld_recv_packet(int fd,XDR_tree ** packet){
    int rv = XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
    if(rv==USQLD_OK)
      {
-	fprintf(stderr,"got a %s packet\n",
-		usqld_find_packet_name(XDR_t_get_union_disc(*packet)));
-
-	XDR_tree_dump(*packet);
+       fprintf(stderr,"got a %s packet\n",
+	       usqld_find_packet_name(
+		 XDR_t_get_union_disc(XDR_TREE_COMPOUND(*packet))));
+       
+       XDR_tree_dump(*packet);
      }else
      {
 	fprintf(stderr,"packet recieve failed with code %d\n",rv);
@@ -141,13 +141,13 @@ int usqld_recv_packet(int fd,XDR_tree ** packet){
 int usqld_send_packet(int fd,XDR_tree* packet){
 
   fprintf(stderr,"about to send a %s packet\n",
-	  usqld_find_packet_name(XDR_t_get_union_disc(packet)));
+	  usqld_find_packet_name(XDR_t_get_union_disc(XDR_TREE_COMPOUND(packet))));
    XDR_tree_dump(packet);
   return XDR_serialize_elem(usqld_get_protocol(),packet,fd);
 }
 
-int usqld_get_packet_type(usqld_packet *packet){
-  return XDR_t_get_union_disc(packet);
+int usqld_get_packet_type(XDR_tree*packet){
+  return XDR_t_get_union_disc(XDR_TREE_COMPOUND(packet));
 }
 
 usqld_packet * usqld_error_packet(int errcode, const char * str){
