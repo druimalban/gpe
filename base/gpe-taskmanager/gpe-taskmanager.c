@@ -35,6 +35,8 @@ struct gpe_icon my_icons[] = {
 
 Display *dpy;
 GtkListStore *list_store;
+GtkWidget *list_view;
+Window my_w;
 
 Atom atoms[4];
 
@@ -43,13 +45,15 @@ char *atom_names[] =
     "WM_PROTOCOLS",
     "_NET_WM_PING",
     "WM_DELETE_WINDOW",
-    "_NET_CLIENT_LIST"
+    "_NET_CLIENT_LIST",
+    "_NET_ACTIVE_WINDOW"
   };
 
 #define WM_PROTOCOLS 0
 #define _NET_WM_PING 1
 #define WM_DELETE_WINDOW 2
 #define _NET_CLIENT_LIST 3
+#define _NET_ACTIVE_WINDOW 4
 
 void
 add_window (Display *dpy, Window w)
@@ -65,6 +69,57 @@ add_window (Display *dpy, Window w)
       GdkPixbuf *icons = gdk_pixbuf_scale_simple (icon, 16, 16, GDK_INTERP_BILINEAR);
       gdk_pixbuf_unref (icon);
       gtk_list_store_set (list_store, &iter, 2, icons, -1);      
+    }
+}
+
+void
+set_highlight (Display *dpy)
+{
+  Window *wp;
+  Atom type;
+  int format;
+  unsigned long nitems;
+  unsigned long bytes_after;
+  
+  if (XGetWindowProperty (dpy, DefaultRootWindow (dpy), atoms[_NET_ACTIVE_WINDOW],
+			  0, 4, False, XA_WINDOW, &type, &format, &nitems, &bytes_after, 
+			  (unsigned char **)&wp) == Success)
+    {
+      if (wp)
+	{
+	  Window w;
+
+	  w = *wp;
+	  if (w != 0 && w != my_w)
+	    {
+	      GtkTreeIter iter;
+
+	      if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+		{
+		  Window iw;
+
+		  do
+		    {
+		      gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &iw, -1);
+
+		      if (iw == w)
+			{
+			  GtkTreePath *path;
+
+			  path = gtk_tree_model_get_path (GTK_TREE_MODEL (list_store), &iter);
+
+			  gtk_tree_view_set_cursor (list_view, path, NULL, FALSE);
+
+			  gtk_tree_path_free (path);
+			  break;
+			}
+		    }
+		  while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+		}
+	    }
+
+	  XFree (wp);
+	}
     }
 }
 
@@ -112,7 +167,7 @@ update_list (Display *dpy)
 
   for (i = 0; i < nr; i++)
     {
-      if (p[i] == 0)
+      if (p[i] == 0 && list[i] != my_w)
 	add_window (dpy, list[i]);
     }
 
@@ -126,9 +181,13 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
   Display *dpy = ev->xany.display;
 
   if (ev->xany.type == PropertyNotify
-      && ev->xproperty.window == DefaultRootWindow (dpy)
-      && ev->xproperty.atom == atoms[_NET_CLIENT_LIST])
-    update_list (dpy);
+      && ev->xproperty.window == DefaultRootWindow (dpy))
+    {
+      if (ev->xproperty.atom == atoms[_NET_CLIENT_LIST])
+	update_list (dpy);
+      else if (ev->xproperty.atom == atoms[_NET_ACTIVE_WINDOW])
+	set_highlight (dpy);
+    }
 
   return GDK_FILTER_CONTINUE;
 }
@@ -228,7 +287,6 @@ void
 task_manager (void)
 {
   GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *list_view;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *kill_button, *close_button;
   GtkCellRenderer *renderer;
@@ -273,6 +331,8 @@ task_manager (void)
   gpe_set_window_icon (window, "icon");
 
   gtk_widget_show_all (window);
+
+  my_w = GDK_WINDOW_XWINDOW (window->window);
 }
 
 int
