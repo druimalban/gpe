@@ -50,8 +50,13 @@ Keys_Free_Objects ()
 void
 Keys_Save ()
 {
-#warning todo params	
-	suid_exec("KBDD", "");
+	const char *model, *port;
+	char *str;
+
+	keyboard_get_config(&model, &port);
+	str = g_strdup_printf("%s %s", model, port);
+	suid_exec("KBDD", str);
+	g_free(str);
 }
 
 void

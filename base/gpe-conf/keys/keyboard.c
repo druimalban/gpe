@@ -30,6 +30,7 @@
 #include <gpe/pixmaps.h>
 
 #include "../applets.h"
+#include "../serial.h"
 
 
 /* --- local types and constants --- */
@@ -63,6 +64,8 @@ typedef struct
 
 int keyboard_type = KBD_TYPE_NONE;
 gchar keyboard_port[PATH_MAX] = {0};
+static GtkWidget *cbPort;
+
 t_keyboard ktable[] = {
 	{"none", KBD_TYPE_NONE},
 	{"foldable", KBD_TYPE_FOLDABLE},
@@ -71,9 +74,9 @@ t_keyboard ktable[] = {
 	{"stowawayxt", KBD_TYPE_STOWAWAYXT},
 	{"hpslim", KBD_TYPE_HPSLIM},
 	{"smartbt", KBD_TYPE_SMARTBT},
-	{"flexis", KBD_TYPE_FLEXIS},
 	{"lirc", KBD_TYPE_LIRC},
 	{"belkinir", KBD_TYPE_BELKINIR},
+	{"flexis", KBD_TYPE_FLEXIS},
 	{"g250", KBD_TYPE_BENQ_GAMEPAD},
 	{"pocketvik", KBD_TYPE_POCKETVIK},
 	{"microfold", KBD_TYPE_MICRO_FOLDAWAY},
@@ -82,6 +85,27 @@ t_keyboard ktable[] = {
 };	
 
 /* --- local intelligence --- */
+
+void 
+keyboard_get_config(const char **model, const char **port)
+{
+	const char *text;
+	int i;
+	const char* kport = NULL;
+	
+	text = gtk_entry_get_text (GTK_ENTRY(GTK_COMBO(cbPort)->entry));
+	for (i=0; i<num_ports; i++)
+	{
+		if (!strcmp(portlist[i][0], text))
+			kport = portlist[i][1];
+	}
+	if (kport == NULL) 
+		kport = gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(cbPort)->entry));
+	snprintf(keyboard_port, PATH_MAX, "%s", kport);
+	
+	*model = ktable[keyboard_type].idstr;
+	*port = keyboard_port;
+}
 
 int 
 find_kbd_type(const char *ktype)
@@ -154,7 +178,7 @@ keyboard_selected(GtkToggleButton *tb, gpointer data)
 }
 
 void
-keyboard_save(char *type, char* port)
+keyboard_save(char *type, char *port)
 {
 	change_cfg_value (KBDD_CONFIG, "type:", type, ' ');
 	change_cfg_value (KBDD_CONFIG, "port:", port, ' ');
@@ -184,7 +208,9 @@ Keyboard_Build_Objects (void)
 	GtkWidget *table, *vp, *sw;
 	gchar *buf;
 	GtkTooltips *tooltips;
-		
+	GSList *ports = NULL;
+	int i;
+	
 	parse_config(KBDD_CONFIG, &keyboard_type, &keyboard_port);
 	tooltips = gtk_tooltips_new ();
 	buf = g_malloc (255);
@@ -319,6 +345,25 @@ Keyboard_Build_Objects (void)
 	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
 	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_MICRO_DATAPAD);
 
+	/* port selector */
+	label = gtk_label_new(_("Port"));
+	gtk_table_attach (GTK_TABLE(table), label, 0, 1, 16, 17,
+	                  GTK_FILL, GTK_FILL, 0, 0);
+	for (i=0; i<num_ports; i++)
+		ports = g_slist_append(ports, portlist[i][0]);
+	cbPort = gtk_combo_new ();
+	gtk_combo_set_popdown_strings(GTK_COMBO(cbPort), (GList *)ports);
+	gtk_table_attach(GTK_TABLE(table), cbPort, 1, 2, 16, 17,
+	                 GTK_FILL, GTK_FILL, 0, 0);
+	gtk_combo_set_value_in_list(GTK_COMBO(cbPort), FALSE, FALSE);
+	gtk_entry_set_text (GTK_ENTRY(GTK_COMBO(cbPort)->entry), keyboard_port);
+	for (i=0; i<num_ports; i++)
+	{
+		if (!strcmp(portlist[i][1], keyboard_port))
+			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(cbPort)->entry),
+			                   portlist[i][0]);
+	}
+	
 	g_free(buf);
 	return sw;
 }

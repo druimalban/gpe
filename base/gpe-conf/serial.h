@@ -16,4 +16,7 @@ void Serial_Free_Objects();
 void Serial_Save();
 void Serial_Restore();
 
+extern char *portlist[][2];
+extern int num_ports;
+
 #endif
