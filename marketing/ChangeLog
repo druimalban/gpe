@@ -1,5 +1,10 @@
 2004-06-16  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-flyer.tex: Relax spacing again for french version.
+
+	* gpe-flyer_fr.tex: Shorten sentence as suggested by Hubert
+	Figuiere; fix typo.
+
 	* gpe-flyer*.tex: Fix \rcsInfo usage by moving it outside the
 	\flyertext (re-)definition.
 
