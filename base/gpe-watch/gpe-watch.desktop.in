@@ -5,5 +5,5 @@ Exec=gpe-watch
 Terminal=0
 Type=Application
 Icon=gpe-watch.png
-Categories=Application;GPE
+Categories=Application;Utility;GPE
 SingleInstance=true
