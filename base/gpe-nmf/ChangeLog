@@ -1,3 +1,9 @@
+2003-04-08  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Added some lines to allow opening the fileselector only once.
+	frontend.h: added fs_open to frontend struct.
+	playlist-edit.c: locks opening selector by setting fs_open.
+
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is

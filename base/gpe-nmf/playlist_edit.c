@@ -67,6 +67,8 @@ store_playlist (GtkTreeStore *store, struct playlist *p, GtkTreeIter *parent)
 static void
 close_file_sel (GtkWidget *w, gpointer d)
 {
+  struct nmf_frontend *fe = g_object_get_data (G_OBJECT (d), "frontend");
+  fe->fs_open = FALSE;
   gtk_widget_destroy (GTK_WIDGET (d));
 }
 
@@ -166,13 +168,21 @@ select_file_done (GtkWidget *w, GtkWidget *fs)
   
   add_playlist_item (fe, s);
 
+  fe->fs_open = FALSE;
+
   gtk_widget_destroy (fs);
 }
 
 static void
 new_entry (GtkWidget *w, struct nmf_frontend *fe)
-{
-  GtkWidget *fs = gtk_file_selection_new (_("Select file"));
+{  
+  GtkWidget *fs;
+	
+  /* check is selector is already open */
+  if (fe->fs_open) return; 
+  fe->fs_open = TRUE;
+  
+  fs = gtk_file_selection_new (_("Select file"));
   
   g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (fs)->cancel_button), 
 		    "clicked", G_CALLBACK (close_file_sel), fs);
@@ -281,7 +291,8 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 
   fe->model = GTK_TREE_MODEL (store);
   fe->view = GTK_TREE_VIEW (treeview);
-
+  fe->fs_open = FALSE;
+  
   g_signal_connect (G_OBJECT (treeview), "row-activated",
 		    G_CALLBACK (row_signal), fe);
 
