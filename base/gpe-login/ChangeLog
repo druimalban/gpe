@@ -1,5 +1,10 @@
 2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* X11/Xinit.d/99gpe-login (TRANSPARENT): Only use transparency if
+	xsetroot is there and executable.
+
+	* gpe-login.setup: Check if files are executable, not just existant.
+
 	* X11/Xinit.d/99gpe-login: Run gpe-login with the --transparent
 	option.
 	(GEOMETRY): Remove --no-logo option.
