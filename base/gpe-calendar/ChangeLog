@@ -1,5 +1,13 @@
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control1 (Version): Version 0.31 released.
+
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c (event_db_clone): Add missing memcpy, duh.
+
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
 	* familiar/control1 (Version): Version 0.30 released.
 
 2003-01-05  Philip Blundell  <philb@gnu.org>

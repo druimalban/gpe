@@ -388,6 +388,7 @@ event_t
 event_db_clone (event_t ev)
 {
   event_t n = event_db__alloc_event ();
+  memcpy (n, ev, sizeof (*ev));
   n->flags |= FLAG_CLONE;
   return n;
 }
