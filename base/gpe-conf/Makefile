@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.0-pre3
+VERSION = 0.1.0-pre4
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -9,7 +9,7 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 
-LINGUAS = pt ro de
+LINGUAS = pt ro de fr
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdm -ldm -L.

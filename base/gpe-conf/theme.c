@@ -61,6 +61,7 @@ static struct
   GtkWidget *demolabel2;
   GtkWidget *spFS, *bFont, *bColorFont;
   GtkWidget *spFSApp, *bFontApp;
+  GtkWidget *slIconSize;
 }
 self;
 
@@ -511,7 +512,16 @@ notify_func (const char *name,
  	    update_enabled_widgets();			
 	}
       
-	if (!strcmp (p, "DesktopFont"))
+	
+	if (!strcmp (p, "Desktop/IconSize"))
+	{
+	  if (setting->type == XSETTINGS_TYPE_INT)
+	    {
+			gtk_range_set_value(GTK_RANGE(self.slIconSize),(float)setting->data.v_int);
+		}
+	}
+	
+	if (!strcmp (p, "Desktop/Font"))
 	{
 	  if (setting->type == XSETTINGS_TYPE_STRING)
 	    {
@@ -529,7 +539,7 @@ notify_func (const char *name,
 		}
 	}
 	
-	if (!strcmp (p, "DesktopFontColor"))
+	if (!strcmp (p, "Desktop/FontColor"))
 	{
 	  if (setting->type == XSETTINGS_TYPE_STRING)
 	    {
@@ -739,10 +749,10 @@ Theme_Save ()
 		}
 		free(par1);
 	}
-  	
+
+	/* background style*/  	
 	if (confstr)
 	{
-		printf ("xst write %s%s str %s\n", KEY_MATCHBOX, "Background", confstr);
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
 	}
@@ -751,15 +761,15 @@ Theme_Save ()
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
 	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS));
-	confstr = g_strdup_printf("xst write %s%s str \"%s-%i\"", KEY_MATCHBOX, "DesktopFont", clabel,fs);
-	printf ("xst write %s%s str \"%s-%i\"\n", KEY_MATCHBOX, "DesktopFont", clabel,fs);
+	confstr = g_strdup_printf("xst write %s%s str \"%s-%i\"", KEY_MATCHBOX, "Desktop/Font", clabel,fs);
 	system(confstr);
 	free(confstr);
-	/* font color */
+	
+	/* desktop font color */
 	confstr = get_color_from_widget(self.bColorFont);
-	printf ("xst write %s%s str \"%s\"\n", KEY_MATCHBOX, "DesktopFontColor", confstr);
-	system_printf ("xst write %s%s str \"%s\"", KEY_MATCHBOX, "DesktopFontColor", confstr);
+	system_printf ("xst write %s%s str \"%s\"", KEY_MATCHBOX, "Desktop/FontColor", confstr);
 	free(confstr);
+	
 	/* application font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
 	clabel = gtk_label_get_text(GTK_LABEL(label));
@@ -767,6 +777,10 @@ Theme_Save ()
 	confstr = g_strdup_printf("xst write %s%s str \"%s %i\"", KEY_GTK, "FontName", clabel,fs);
 	system(confstr);
 	free(confstr);	
+	
+	/* desktop icon size */
+	fs = (int)gtk_range_get_value(GTK_RANGE(self.slIconSize));
+	system_printf ("xst write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
 }
 
 void
@@ -818,7 +832,7 @@ Theme_Build_Objects ()
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
 
-  label = gtk_label_new("none");
+  label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Desktop Theme"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
@@ -845,6 +859,21 @@ Theme_Build_Objects ()
 
   gtk_signal_connect (GTK_OBJECT (GTK_COMBO (self.cbTheme)->entry), "changed",
 		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
+			  
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Icon Size"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 2, 3,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  
+  self.slIconSize = gtk_hscale_new_with_range(12.0,48.0,2.0);
+  gtk_table_attach (GTK_TABLE (table), self.slIconSize, 0, 4, 3, 4,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+			  
  /*---------------------------------------------*/
 
   label = gtk_label_new (_("Background"));
@@ -957,14 +986,14 @@ Theme_Build_Objects ()
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
 			
  /*---------------------------------------------*/
-  label = gtk_label_new (_("Font"));
+  label = gtk_label_new (_("Fonts"));
   table = gtk_table_new (2, 2, FALSE);
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
   gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
   gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
   gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
  
-  label = gtk_label_new("none");
+  label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Desktop Font"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
@@ -1019,7 +1048,7 @@ Theme_Build_Objects ()
   
  /*---------------------------------------------*/
  
-  label = gtk_label_new("none");
+  label = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Application Font"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);

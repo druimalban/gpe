@@ -1,5 +1,11 @@
 When			Who				Where						What
 
+11.06.2003		Florian			po/gpe-conf.pot				Updated pot file.
+								po/fr.po					Added French language file.  
+								Makefile					New version, released 0.1.0-pre4
+								theme.c						New feature for matchbox 0.6: Icon size changing.
+															Changed some xsettings values.
+															Removed some obsolete cruft...
 29.05.2003		Florian			
 								timeanddate.c				Added warning message for TZ changes.
 

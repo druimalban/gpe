@@ -1,0 +1,1046 @@
+# gpe-conf (french)
+# Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+#               2003  Florian Boor <florian.boor@kernelconcepts.de>
+# This file is distributed under GPL.
+# Luc Pionchon <luc@handhelds.org>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.0.9\n"
+"POT-Creation-Date: 2003-04-22 11:20+0200\n"
+"PO-Revision-Date: 2003-06-07 22:25+0300\n"
+"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:318
+msgid "Warning: PCMCIA init failed."
+msgstr "Attention : échec de l'initialisation PCMCIA."
+
+#: main.c:345
+msgid "This mode is disabled, please try:\n"
+msgstr "Ce mode n'est pas activé, essayez :\n"
+
+#: main.c:346
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf [Module]\n"
+"\"Module\" pouvant être :\n"
+
+#: main.c:360
+#, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Le module %s est inconnu!\n"
+
+#: main.c:361
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Usage : gpe-conf [Module]\n"
+"\"Module\" pouvant être :\n"
+
+#: applets.c:332
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Certaines options ne sont\n"
+"modifiables que par le\n"
+"super-utilisateur (root).\n"
+"Entrez le mot de passe."
+
+#: applets.c:368 ipaqscreen/calibrate.c:33
+msgid "Sorry, wrong password."
+msgstr "Désolé, mauvais mot de passe"
+
+#: timeanddate.c:350
+msgid "Time & Date"
+msgstr "Date & Heure"
+
+#: timeanddate.c:364
+msgid "Date"
+msgstr "Date"
+
+#: timeanddate.c:385
+msgid "Enter current date here or use button to select."
+msgstr "Entrez la date ici, ou bien pressez le boutton pour la sélectionner."
+
+#: timeanddate.c:392
+msgid "Time"
+msgstr "Heure"
+
+#: timeanddate.c:429 network.c:340
+msgid "Network"
+msgstr "Mise à jour réseau"
+
+#: timeanddate.c:455
+msgid "Here you may select which timeserver i use to set my clock."
+msgstr "Sélectionnez ici le serveur à utiliser pour mettre à jour la date et l'heure par le réseau."
+
+#: timeanddate.c:457
+msgid "Get time from network"
+msgstr "Mettre à jour"
+
+#: timeanddate.c:463
+msgid "If i'm connected to the Internet, you may press this butten to set the time on this device using the timeserver above."
+msgstr "Si vous êtes connectés à internet, vous pouvez presser ce bouton pour mettre à jour la date et l'heure."
+
+#: timeanddate.c:468 timeanddate.c:474
+msgid "Timezone"
+msgstr "Fuseau horaire"
+
+#: timeanddate.c:512
+msgid "Select your current timezone here. The setting applies after after next login."
+msgstr ""
+"Sélectionnez ici votre fuseau horaire.\n"
+"Les paramètres seront pris en compte lors de votre prochaine session."
+
+#: timeanddate.c:518
+msgid "Daylight Saving"
+msgstr "Heure d'été/hivers"
+
+#: timeanddate.c:524
+msgid "Use daylight saving time"
+msgstr "Prendre en compte"
+
+#: timeanddate.c:529
+msgid "Check this box if you want your device to handle daylight saving time for you."
+msgstr "Cochez cette case si vous voulez que le système gère les changements d'heure."
+
+#: timeanddate.c:531
+msgid "Offset"
+msgstr "Décalage"
+
+#: timeanddate.c:538
+msgid "Default"
+msgstr "Défaut"
+
+#: timeanddate.c:543
+msgid "Use default DST offset of one hour?"
+msgstr "Utiliser un décalage d'une heure ?"
+
+#: timeanddate.c:548
+msgid "Hours"
+msgstr "Heures"
+
+#: timeanddate.c:551
+msgid "Select daylight saving time offset hours here."
+msgstr "Sélectionnez ici la valeur du décalage horaire. (heures)"
+
+#: timeanddate.c:556
+msgid "Minutes"
+msgstr "Minutes"
+
+#: timeanddate.c:559
+msgid "Select daylight saving time offset minutes here."
+msgstr "Sélectionnez ici la valeur du décalage horaire. (minutes)"
+
+#: timeanddate.c:565
+msgid "Advanced Settings"
+msgstr "Paramètres avancés"
+
+#: timeanddate.c:570
+msgid "Use advanced settings"
+msgstr "Utiliser les paramètres avancés"
+
+#: timeanddate.c:572
+msgid "Check this if you want to use the advanced settings below."
+msgstr "Cocher cette case si vous voulez utiliser les paramètres avancés ci-dessous."
+
+#: timeanddate.c:637
+msgid "Could not set timezone."
+msgstr "Impossible de paramètrer le fuseau horaire."
+
+#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:74
+msgid "General"
+msgstr "Général"
+
+#: appmgr_setup.c:237
+msgid "Tab View"
+msgstr "Onglets"
+
+#: appmgr_setup.c:252
+msgid "Icon"
+msgstr "Icones"
+
+#: appmgr_setup.c:256
+msgid "List"
+msgstr "Liste"
+
+#: appmgr_setup.c:265
+msgid "Changes will take effect after relog"
+msgstr "Les changements seront pris en compte lors de votre prochaine session."
+
+#: ipaqscreen/main.c:68
+msgid "Portrait"
+msgstr "Portrait"
+
+# à l'italienne ???
+#: ipaqscreen/main.c:69
+msgid "Landscape (left)"
+msgstr "Paysage (gauche)"
+
+#: ipaqscreen/main.c:70
+msgid "Inverted"
+msgstr "Inversé"
+
+#: ipaqscreen/main.c:71
+msgid "Landscape (right)"
+msgstr "Paysage (droite)"
+
+#: ipaqscreen/main.c:92
+msgid "Light"
+msgstr "Lumière"
+
+#: ipaqscreen/main.c:98
+msgid "Brightness"
+msgstr "Luminosité"
+
+#: ipaqscreen/main.c:104
+msgid "State"
+msgstr "Allumé"
+
+#: ipaqscreen/main.c:115
+msgid "Screensaver"
+msgstr "Économiseur"
+
+#: ipaqscreen/main.c:121
+msgid "Delay until start"
+msgstr "Délais"
+
+#: ipaqscreen/main.c:125
+msgid "Activated"
+msgstr "Activé"
+
+#: ipaqscreen/main.c:135
+msgid "Orientation"
+msgstr "Orientation"
+
+#: ipaqscreen/main.c:154
+msgid "Touchscreen"
+msgstr "Écran tactile"
+
+#: ipaqscreen/main.c:158
+msgid "Calibrate"
+msgstr "Recalibrer"
+
+#: ipaqscreen/main.c:160 network.c:553
+msgid "on"
+msgstr "oui"
+
+#: ipaqscreen/main.c:161 network.c:561
+msgid "off"
+msgstr "non"
+
+#: ipaqscreen/main.c:272
+msgid "minutes"
+msgstr "minutes"
+
+#: ipaqscreen/main.c:275
+msgid "seconds"
+msgstr "secondes"
+
+#: ipaqscreen/main.c:277
+msgid "Off"
+msgstr "Désactivé"
+
+#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:124
+msgid "Couldn't read screen settings!"
+msgstr "Impossible de lire les prarmètres de l'écran!"
+
+#: ipaqscreen/rotation.c:54
+msgid "Can't interpret output from xrandr!"
+msgstr "Impossible d'interpréter la réponse de xrandr!"
+
+#: ipaqscreen/rotation.c:71
+msgid "Can't set rotation on an x86."
+msgstr "La rotation de l'écran n'est pas paramètrable sur cette plateforme."
+
+#: kbd.c:146
+msgid "Keyboard Geometry / Layout"
+msgstr "Type de clavier"
+
+#: kbd.c:186
+msgid "User defined"
+msgstr "Défini par l'utilisateur"
+
+#: keyboard.c:138
+msgid "Error reading keyboard definition)"
+msgstr "Erreur de lecture dans la définition des claviers"
+
+#: keyboard.c:212
+msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
+msgstr "Configuration d'un clavier externe. Les boutons inaccessibles ne sont pas encore installés."
+
+#: keyboard.c:217
+msgid "External Keyboard Type"
+msgstr "Type de clavier externe"
+
+#: keyboard.c:224
+msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
+msgstr ""
+"Ici vous pouvez sélectionner le modèle de votre clavier externe.\n"
+"Pour installer les pilotes du clavier, connectez votre appareil à internet et appuyez sur le boutton \"Installer\"."
+
+#: keyboard.c:245
+msgid "Tap here to select this keyboard model."
+msgstr "Cliquer ici pour sélectionner le modèle de votre clavier."
+
+#: keyboard.c:252
+msgid "Install"
+msgstr "Installer"
+
+#: keyboard.c:258
+msgid "Tap here to install support for this keyboard."
+msgstr "Cliquer ici pour installer les pilotes de votre clavier."
+
+#: network.c:115
+msgid "New interface:"
+msgstr "Nom :"
+
+#: network.c:121
+msgid "Enter name of new interface"
+msgstr "Nouvelle interface"
+
+#: network.c:127
+msgid "This interface definition already exists!"
+msgstr "Il y a déjà une interface définie avec ce nom !"
+
+#: network.c:163
+msgid "Do you want to delete this interface?"
+msgstr "Voulez vous détruire cette définition d'interface ?"
+
+#: network.c:163
+msgid "Question"
+msgstr "Question"
+
+#: network.c:337
+msgid "Address"
+msgstr "Adresse IP"
+
+#: network.c:338
+msgid "Netmask"
+msgstr "Masque réseau"
+
+#: network.c:339
+msgid "Broadcast"
+msgstr "Broadcast"
+
+#: network.c:341
+msgid "Gateway"
+msgstr "Gateway"
+
+#: network.c:407
+msgid "Hostname"
+msgstr ""
+
+#: network.c:473
+msgid "Provider"
+msgstr ""
+
+#: network.c:527
+msgid "Proxy"
+msgstr "Proxy"
+
+#: network.c:531
+msgid "No proxy for"
+msgstr "Pas de proxy pour"
+
+#: network.c:539
+msgid "Use DHCP"
+msgstr "Utiliser DHCP"
+
+#: network.c:572
+msgid "DNS server"
+msgstr "Serveur DNS"
+
+#: network.c:752 network.c:753
+msgid "Add Interface"
+msgstr "Ajouter une interface réseau."
+
+#: network.c:758 network.c:759
+msgid "Remove Interface"
+msgstr "Détruire une interface réseau."
+
+#: network.c:775
+msgid "Couldn't read network configuration."
+msgstr "Impossible de lire la configuration réseau."
+
+#: network.c:784
+msgid "global"
+msgstr "global"
+
+#: theme.c:220 theme.c:224 theme.c:888 theme.c:908 theme.c:1004 theme.c:1010
+msgid "Color"
+msgstr "Couleur"
+
+#: theme.c:392
+msgid "Red"
+msgstr "Rouge"
+
+#: theme.c:397
+msgid "Green"
+msgstr "Vert"
+
+#: theme.c:402
+msgid "Blue"
+msgstr "Bleu"
+
+#: theme.c:641
+msgid "Select color"
+msgstr "Sélectionner la couleur"
+
+#: theme.c:667 theme.c:733
+msgid ""
+"You don't have read access\n"
+"to selected background image!"
+msgstr ""
+"Vous n'avez pas les droits d'accès\n"
+"pour sélectionner l'image de fond!"
+
+#: theme.c:811
+msgid "Theme"
+msgstr "Thème"
+
+#: theme.c:820
+msgid "Desktop Theme"
+msgstr "Thème du bureau"
+
+#: theme.c:832
+msgid "Name"
+msgstr "Nom"
+
+#: theme.c:847
+msgid "Background"
+msgstr "Fond"
+
+#: theme.c:858
+msgid "Background Settings"
+msgstr "Paramètres du fond d'écran"
+
+#: theme.c:865
+msgid "Solid color"
+msgstr "Couleur pleine"
+
+#: theme.c:879
+msgid "Horizontal"
+msgstr "Horizontal"
+
+#: theme.c:883
+msgid "Vertical"
+msgstr "Vertical"
+
+#: theme.c:899
+msgid "Color gradient"
+msgstr "Dégradé"
+
+#: theme.c:919
+msgid "Image"
+msgstr "Image"
+
+#: theme.c:945
+msgid "Centered"
+msgstr "Centrée"
+
+#: theme.c:949
+msgid "Tiled"
+msgstr "Répétée"
+
+#: theme.c:952
+msgid "Stretched"
+msgstr "Étirée"
+
+#: theme.c:957
+msgid "Font"
+msgstr "Fontes"
+
+#: theme.c:966 theme.c:986
+msgid "Desktop Font"
+msgstr "Fonte du Bureau"
+
+#: theme.c:973 theme.c:1028
+msgid "Family"
+msgstr "Famille"
+
+#: theme.c:993 theme.c:1048
+msgid "Size"
+msgstr "Taille"
+
+#: theme.c:1021 theme.c:1041
+msgid "Application Font"
+msgstr "Fonte des Applications"
+
+#: keyctl.c:231
+msgid "ERROR: Can't open keylaunchrc for writing!\n"
+msgstr "ERREUR : impossible d'ouvrir en écriture \"keylaunchrc\" !\n"
+
+#: ownerinfo.c:201
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Seul le super-utilisateur (root) peut changer ce paramètre."
+
+#: ownerinfo.c:221
+msgid "Name:"
+msgstr "Nom"
+
+#: ownerinfo.c:236
+msgid "E-Mail:"
+msgstr "E-Mail"
+
+#: ownerinfo.c:251
+msgid "Phone:"
+msgstr "Téléphone"
+
+#: ownerinfo.c:266
+msgid "Address:"
+msgstr "Addresse"
+
+#: ownerinfo.c:292
+msgid "Photofile:"
+msgstr "Photo"
+
+#: login-setup.c:131
+msgid "Some or all of these settings can only be changed by the user 'root'."
+msgstr "Certains paramètres ne peuvent être changés que par le super-utilisateur (root)."
+
+#: login-setup.c:167
+msgid "Show owner information at login."
+msgstr ""
+"Afficher les coordonées du propriétaire\n"
+"sur l'écran d'ouverture de session."
+
+#: login-setup.c:169
+msgid "Use background image for login screen."
+msgstr ""
+"Utiliser une image de fond pour\n"
+"l'écran d'ouverture de session."
+
+#: login-setup.c:171
+msgid "Lock display on suspend."
+msgstr "Bloquer l'écran lors de la mise en veille de l'appareil."
+
+#: login-setup.c:184
+msgid "Image:"
+msgstr "Image :"
+
+#: sleep/interface.c:71
+msgid "Auto sleep"
+msgstr "Mise en veille automatique"
+
+#: sleep/interface.c:81 sleep/interface.c:117
+msgid "enabled"
+msgstr "activée après"
+
+#: sleep/interface.c:95
+msgid "sleep timeout"
+msgstr "délais avant la mise en veille"
+
+#: sleep/interface.c:98 sleep/interface.c:132
+msgid "idle(sec)"
+msgstr "secondes"
+
+#: sleep/interface.c:107
+msgid "Auto dim"
+msgstr "Réduction automatique de la luminosité"
+
+#: sleep/interface.c:130
+msgid "backlight dim timeout"
+msgstr "délais avant la réduction de la luminosité"
+
+#: sleep/interface.c:139
+msgid "Auto dim level"
+msgstr ""
+"Niveau de\n"
+"luminosité"
+
+#: sleep/interface.c:157
+msgid "Auto sleep advanced controls"
+msgstr "Controle avancé de mise en veille"
+
+#: sleep/interface.c:167
+msgid "CPU"
+msgstr "CPU"
+
+#: sleep/interface.c:174
+msgid "Sleep on cpu less than load"
+msgstr "Mettre en veille lorsque le CPU a une charge inférieure à celle spécifiée."
+
+#: sleep/interface.c:185
+msgid "load"
+msgstr "charge"
+
+#: sleep/interface.c:192
+msgid "APM"
+msgstr "APM"
+
+#: sleep/interface.c:198
+msgid "Sleep on AC"
+msgstr "Mise en veille automatique même lorsque l'appareil est branché au courant alternatif."
+
+#: sleep/interface.c:200
+msgid "probe IRQs"
+msgstr "sonder les IRQs"
+
+#: sleep/interface.c:206
+msgid "Check IRQ activity"
+msgstr "Surveille l'activité des IRQs"
+
+#: sleep/interface.c:208
+msgid "Choose IRQs"
+msgstr "Choix des IRQs"
+
+#: users/interface.c:208
+msgid "User Name"
+msgstr "Login"
+
+#: users/interface.c:209
+msgid "User Info"
+msgstr "Nom"
+
+#: users/interface.c:211
+msgid "Home"
+msgstr ""
+
+#: users/interface.c:228 users/interface.c:229
+msgid "Add user"
+msgstr "Ajouter un utilisateur"
+
+#: users/interface.c:229
+msgid "Add a new user"
+msgstr "Ajouter un utilisateur"
+
+#: users/interface.c:233 users/interface.c:234
+msgid "Edit user"
+msgstr "Éditer un utilisateur"
+
+#: users/interface.c:234
+msgid "Edit existing user"
+msgstr "Éditer un utilisateur"
+
+#: users/interface.c:238 users/interface.c:239
+msgid "Delete user"
+msgstr "Effacer un utilisateur"
+
+#: users/interface.c:239
+msgid "Delete existing user"
+msgstr "Effacer un utilisateur"
+
+#: users/interface.c:283
+msgid "User settings"
+msgstr "Paramètres utilsateur"
+
+#: users/interface.c:297
+msgid "User Name:"
+msgstr "Login"
+
+#: users/interface.c:313
+msgid "Password:"
+msgstr "Mot de passe"
+
+#: users/interface.c:321
+msgid "User Info:"
+msgstr "Nom"
+
+#: users/interface.c:337
+msgid "Shell:"
+msgstr "Shell"
+
+#: users/interface.c:356
+msgid "Home:"
+msgstr "Home"
+
+#: users/interface.c:374
+msgid "Change"
+msgstr "Changer"
+
+#: users/interface.c:435
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: users/interface.c:462
+msgid "Old Password:"
+msgstr "Ancien"
+
+#: users/interface.c:469
+msgid "New Password:"
+msgstr "Nouveau"
+
+#: users/interface.c:477
+msgid "Confirm:"
+msgstr "Confirmer"
+
+#: users/callbacks.c:104
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr "Impossible d'effacer cet utilisateur."
+
+#: users/callbacks.c:138
+msgid "Please choose a user name."
+msgstr "Vous devez entrer un login."
+
+#: users/callbacks.c:156
+msgid "Please choose a home directory."
+msgstr "Vous devez entrer un répertoire \"home\""
+
+#: users/callbacks.c:217
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"Les deux mots de passe sont différents!\n"
+"Essayez encore une fois."
+
+#: users/callbacks.c:220
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Mauvais mot de passe!\n"
+"Essayez encore une fois."
+
+#: cfgfile.c:630
+msgid "No write access to network configuration."
+msgstr "Pas d'accès en écriture pour les paramètres réseaux."
+
+#: gpe-admin.c:45
+msgid "This setting can only be changed by user root!"
+msgstr "Ce paramètre ne peut être changé que par le super-utilisateur (root)."
+
+#: gpe-admin.c:81
+msgid "Allow users to configure everything"
+msgstr "Permètre à tout utilisateur de tout configurer"
+
+#: storage.c:261 storage.c:422
+msgid "Internal Flash"
+msgstr "Mémoire Flash interne"
+
+#: storage.c:267 storage.c:428
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:273 storage.c:434
+msgid "Compact Flash"
+msgstr "Carte Compact Flash (CF)"
+
+#: storage.c:279 storage.c:440
+msgid "Network Filesystem"
+msgstr "Système de ficher réseau (NFS)"
+
+#: storage.c:296 storage.c:355 storage.c:477 storage.c:530
+msgid "Total:"
+msgstr "Total : "
+
+#: storage.c:299 storage.c:480
+msgid "Mounted at"
+msgstr "monté à "
+
+#: storage.c:305 storage.c:463
+msgid "Free space"
+msgstr "Espace libre"
+
+#: storage.c:342
+msgid "System memory"
+msgstr "Mémoire système"
+
+#: storage.c:349 storage.c:518
+msgid "Free memory"
+msgstr "Mémoire libre"
+
+#: storage.c:501
+msgid "System Memory"
+msgstr "Mémoire Système"
+
+#: serial.c:143
+msgid "Couldn't find default runlevel!"
+msgstr "Impossible de trouver le niveau d'exécution (runlevel) par défaut!"
+
+#: serial.c:265 serial.c:269
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr ""
+"Simple interface pour configurer le port série.\n"
+"Les composants non sélectionables ne sont pas installés."
+
+#: serial.c:267
+msgid "Simple"
+msgstr "Simple"
+
+#: serial.c:272
+msgid "Serial port default usage"
+msgstr "Utilisation par défaut du port série"
+
+#: serial.c:276
+msgid "Select desired software to use serial port here."
+msgstr "Sélectionner ici le logiciel qui utilise le port série."
+
+#: serial.c:278
+msgid "Console"
+msgstr "Console"
+
+#: serial.c:280
+msgid "This option runs console on serial port. (default)"
+msgstr "Cette option connecte la console sur le port série. (défaut)"
+
+# ouaip, "deamon" n'est pas "demon" mais n'est-ce pas la traduction française commune ?
+#: serial.c:282
+msgid "GPS Daemon"
+msgstr "Démon GPS"
+
+#: serial.c:285
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Cette option permet d'utiliser GPSd, qui met à disposition des applications les données reçues par une antenne GPS."
+
+#: serial.c:287
+msgid "Nothing (free)"
+msgstr "Rien (port série libre)"
+
+#: serial.c:289
+msgid "Don't start any software that uses the serial port."
+msgstr "Ne lancer aucun logiciel qui utilise le port série."
+
+# log... ou journal? ou carnet de bord?
+#: logread.c:140
+msgid "<empty syslog>"
+msgstr "<log système vide>"
+
+#: logread.c:191
+msgid "System Log"
+msgstr "Log Système"
+
+#: packages.c:80 packages.c:185
+msgid "Start"
+msgstr "Démarrer"
+
+#: packages.c:82
+msgid "Update finished. Please check log messages for errors."
+msgstr ""
+"Mise à jour terminée.\n"
+"Examinez les messages de la session, à la recherche d'erreurs éventuelles."
+
+#: packages.c:103
+msgid "Update using \"ipkg upgrade\" started.\n"
+msgstr "Mise à jour commencée. (ipkg upgrade)\n"
+
+#: packages.c:126
+msgid "Running..."
+msgstr "En cours ..."
+
+#: packages.c:175
+msgid "Update"
+msgstr "Mise à jour"
+
+#: packages.c:180
+msgid "Update from network"
+msgstr "Mise à jour par le réseau"
+
+#: packages.c:189
+msgid "Update entire system over an internet connection."
+msgstr ""
+"Met à jour le système par le réseau.\n"
+"Nécessite une connection à internet."
+
+#: packages.c:193
+msgid "Activity log"
+msgstr "Rapport d'activité"
+
+#: packages.c:201
+msgid "This window shows all output from the packet manager that performs the update."
+msgstr "Cette fenêtre affiche les messages du gestionnaire de paquets (ipkg)."
+
+#: cardinfo.c:224
+msgid "Could not write to temporal config file."
+msgstr "Impossible d'écrire le fichier de configuration temporaire."
+
+#: cardinfo.c:394
+msgid "Could not open pidfile:"
+msgstr "Impossible d'ouvrir le pidfile :"
+
+#: cardinfo.c:398
+msgid "Could not read pidfile"
+msgstr "Impossible de lire le pidfile"
+
+#: cardinfo.c:402
+msgid "Could not signal cardmgr:"
+msgstr ""
+
+#: cardinfo.c:467
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "gpe-conf doit être \"setuid root\" pour utiliser les fonctionnalités de cardinfo."
+
+#: cardinfo.c:480
+msgid "No pcmcia driver in /proc/devices"
+msgstr "Pas de driver PCMCIA dans /proc/devices"
+
+#: cardinfo.c:482
+msgid "Could not open /proc/devices"
+msgstr "Impossible d'ouvrir /proc/devices"
+
+#: cardinfo.c:491
+msgid "No sockets found\n"
+msgstr "Aucune socket trouvée\n"
+
+#: cardinfo.c:497
+msgid "Card Services release does not match!"
+msgstr ""
+
+#: cardinfo.c:499
+msgid "Could not get CS revision info!\n"
+msgstr ""
+
+#: cardinfo.c:629
+msgid "flock(stabfile) failed)"
+msgstr ""
+
+#: cardinfo.c:714
+msgid "ready"
+msgstr "prêt"
+
+#: cardinfo.c:722
+msgid "not ready"
+msgstr "pas prêt"
+
+#: cardinfo.c:729
+msgid "suspended"
+msgstr "en veille"
+
+#: cardinfo.c:786
+msgid "Operation failed"
+msgstr "L'opération a échoué"
+
+#: cardinfo.c:861 cardinfo.c:983 cardinfo.c:984
+msgid "Assign Driver"
+msgstr "Assigner le Driver"
+
+#: cardinfo.c:868
+msgid ""
+"This dialog allows you to select/change\n"
+"the driver assignment for a\n"
+"PCMCIA/CF card."
+msgstr ""
+"Vous pouvez changer/sélectionner ici\n"
+"le driver d'une carte PCMCIA."
+
+#: cardinfo.c:875
+msgid "Your current card identifies itself as:"
+msgstr "Votre carte s'identifie en tant que :"
+
+#: cardinfo.c:884
+msgid "Manuf. Id"
+msgstr "Manuf. Id"
+
+#: cardinfo.c:884
+msgid "Class"
+msgstr "Classe"
+
+#: cardinfo.c:952 cardinfo.c:953
+msgid "Insert Card"
+msgstr "Insérer la carte"
+
+#: cardinfo.c:953
+msgid "Tap here to start card insertion manually."
+msgstr "Cliquer ici pour insérer la carte à la main."
+
+#: cardinfo.c:957 cardinfo.c:958
+msgid "Eject Card"
+msgstr "Éjecter la carte"
+
+#: cardinfo.c:958
+msgid "Tap here to eject card manually."
+msgstr "Cliquer ici pour éjecter la carte à la main."
+
+#: cardinfo.c:962 cardinfo.c:963
+msgid "Suspend Card"
+msgstr "Suspendre la carte"
+
+#: cardinfo.c:963
+msgid "Tap here to suspend current card."
+msgstr "Cliquer ici pour suspendre la carte."
+
+#: cardinfo.c:967 cardinfo.c:968
+msgid "Resume Card"
+msgstr "Réactiver la carte"
+
+#: cardinfo.c:968
+msgid "Tap here to resume current card."
+msgstr "Cliquer ici pour réactiver la carte."
+
+#: cardinfo.c:972 cardinfo.c:973
+msgid "Reset Card"
+msgstr "Réinitialise la carte"
+
+#: cardinfo.c:973
+msgid "Tap here to reset current card."
+msgstr "Cliquer ici pour réinitialiser la carte."
+
+#: cardinfo.c:978 cardinfo.c:979
+msgid "Reset Card Manager"
+msgstr "Relancer le Gestionnaire de Cartes"
+
+#: cardinfo.c:979
+msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
+msgstr "Cliquer ici pour relancer le gestionanire de cartes. Cette action enregistre toutes les mises à jour de la configuration PCMCIA."
+
+#: cardinfo.c:984
+msgid "Tap here to assign a driver to this card / change current driver assignment."
+msgstr "Cliquer ici pour assigner un driver à cette carte, ou changer le driver actuel."
+
+#: cardinfo.c:989 cardinfo.c:990
+msgid "Exit applet"
+msgstr "Quitter le module"
+
+#: cardinfo.c:998 cardinfo.c:1006
+msgid "PC/CF card socket information."
+msgstr "Information sur la carte PC/CF."
+
+#: cardinfo.c:1003
+msgid "Socket"
+msgstr ""
+
+#: cardinfo.c:1026
+msgid "Information for socket"
+msgstr ""
+
+#: cardinfo.c:1035
+msgid "State:"
+msgstr "État :"
+
+#: cardinfo.c:1036
+msgid "Device:"
+msgstr "Carte :"
+
+# NOTE: driver --> pilote (de prériphérique)
+#       à changer de partout (...)
+#: cardinfo.c:1037
+msgid "Driver:"
+msgstr "Driver"
+
+#: cardinfo.c:1038
+msgid "Type:"
+msgstr "Type :"
+
+#: cardinfo.c:1039
+msgid "I/O:"
+msgstr "E/S :"
+
+#: cardinfo.c:1040
+msgid "IRQ:"
+msgstr "IRQ :"
+
+#: cardinfo.c:1046
+msgid "Flags:"
+msgstr ""
+
+#: cardinfo.c:1059
+msgid "PCMCIA initialisation failed"
+msgstr "Echec de l'initialisation PCMCIA"

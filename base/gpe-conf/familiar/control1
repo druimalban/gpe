@@ -1,7 +1,7 @@
 Package: gpe-conf2
 Section: base
 Priority: optional
-Version: 0.1.0-pre1
+Version: VERSION
 Architecture: arm
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
 Depends: libgpewidget1 (>= 0.40), libdotdesktop
