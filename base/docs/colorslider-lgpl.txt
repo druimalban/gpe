@@ -1,0 +1,25 @@
+Subject:
+Re: SPColorSlider widget
+From:
+Lauris Kaplinski <lauris@kaplinski.com>
+Date:
+03 Mar 2003 23:32:42 +0200
+To:
+Florian Boor <florian.boor@kernelconcepts.de>
+
+Hello!
+
+Statement:
+I allow the distribution of SPColorSlider code under GNU Lesser
+General Publick License.
+
+Actually I changed the license notice for these files in sodipodi
+code as well, so the code synchronization can be easier, if
+needed.
+Btw,
+it is possible it has some nasty rendering bug, that causes
+crashes under pixmap Gtk+ theme. If you happen to find and fix
+it, let me know also ;-)
+
+Best wishes,
+Lauris Kaplinski
