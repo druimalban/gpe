@@ -14,9 +14,8 @@
 extern GList *times;
 extern time_t viewtime;
 
-#define VERSION "0.04"
-
 extern void update_current_view (void);
+extern void update_all_views (void);
 
 extern guint days_in_month (guint year, guint month);
 extern gboolean week_starts_monday;

@@ -1,3 +1,19 @@
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* globals.h (VERSION): Delete.
+	(update_all_views): Add prototype.
+
+	* event-ui.c (click_elete): Call update_all_views not
+	update_current_view.
+	(click_ok): Likewise.
+
+	* main.c (update_view): New function.
+	(update_current_view): Use it.
+	(update_all_views): New function.
+	(init_views): Deleted.
+	(main): Use update_all_views.
+	(set_day_view): Remove update_current_view call.
+
 2003-03-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.36 released.

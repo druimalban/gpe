@@ -332,8 +332,7 @@ week_view_update (void)
 }
 
 static void
-changed_callback(GtkWidget *widget,
-		 GtkWidget *entry)
+changed_callback (GtkWidget *widget, GtkWidget *entry)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
 

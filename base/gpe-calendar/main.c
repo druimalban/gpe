@@ -79,17 +79,30 @@ days_in_month (guint year, guint month)
 }
 
 void
+update_view (GtkWidget *view)
+{
+  gpointer p = g_object_get_data (G_OBJECT (view), "update_hook");
+  if (p)
+    {
+      void (*f)(void) = p;
+      f ();
+    }
+}
+
+void
 update_current_view (void)
 {
   if (current_view)
-    {
-      gpointer p = g_object_get_data (G_OBJECT (current_view), "update_hook");
-      if (p)
-	{
-	  void (*f)(void) = p;
-	  f ();
-	}
-    }
+    update_view (current_view);
+}
+
+void
+update_all_views (void)
+{
+  update_view (day);
+  update_view (week);
+  update_view (month);
+  update_view (future);
 }
 
 static void
@@ -119,20 +132,6 @@ set_day_view (void)
 {
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
-  update_current_view ();
-}
-
-void
-init_views (void)
-{
-  new_view (day);
-  update_current_view ();
-  new_view (week);
-  update_current_view ();
-  new_view (month);
-  update_current_view ();
-  new_view (future);
-  update_current_view ();
 }
 
 static void
@@ -328,7 +327,7 @@ main (int argc, char *argv[])
 
   gpe_calendar_start_xsettings ();
 
-  init_views();
+  update_all_views ();
 
   set_day_view ();
 

@@ -280,7 +280,7 @@ click_delete (GtkWidget *widget, event_t ev)
     }
 
   event_db_remove (ev);
-  update_current_view ();
+  update_all_views ();
 
   edit_finished (d);
 }
@@ -505,7 +505,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
   event_db_forget_details (ev);
 
-  update_current_view ();
+  update_all_views ();
 
   edit_finished (d);
 }
@@ -575,6 +575,10 @@ build_edit_event_window (void)
   GtkWidget *enddatelabel = gtk_label_new (_("End:"));
   GtkWidget *starttimelabel = gtk_label_new (_("at:"));
   GtkWidget *endtimelabel = gtk_label_new (_("at:"));
+  gtk_misc_set_alignment(GTK_MISC (startdatelabel), 0.0, 0.5);
+  gtk_misc_set_alignment(GTK_MISC (enddatelabel), 0.0, 0.5);
+  gtk_misc_set_alignment(GTK_MISC (starttimelabel), 0.0, 0.5);
+  gtk_misc_set_alignment(GTK_MISC (endtimelabel), 0.0, 0.5);
 
   GtkWidget *descriptionlabel = gtk_label_new (_("Description:"));
   gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0.015, 0.0);
