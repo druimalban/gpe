@@ -66,7 +66,6 @@ install-program: gpe-login gpe-lock-display
 	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
 	install -d $(DESTDIR)/etc/gpe
 	install -m 644 locale.alias $(DESTDIR)/etc/gpe/
-	install -m 644 standard.mbdock $(DESTDIR)/etc/gpe/
 	install -d $(DESTDIR)/etc/sysconfig
 	install -m 644 gpe-login.sysconfig $(DESTDIR)/etc/sysconfig/gpelogin
 
@@ -76,6 +75,7 @@ install-scripts: gpe-logout.desktop
 	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 	install -d $(DESTDIR)/etc/gpe
 	install -m 644 X11/xsettings.default $(DESTDIR)/etc/gpe/
+	install -m 644 standard.mbdock $(DESTDIR)/etc/gpe/gpe.mbdock
 	install -m 644 X11/Xdefaults $(DESTDIR)/etc/X11/
 	mkdir -p familiar/dist.gpe-session-scripts/usr/share/pixmaps
 	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps
@@ -83,6 +83,7 @@ install-scripts: gpe-logout.desktop
 	install -m 644 gpe-logout.desktop familiar/dist.gpe-session-scripts/usr/share/applications
 	mkdir -p familiar/dist.gpe-session-scripts/usr/bin
 	install gpe-logout.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-logout
+	install gpe-auto-bluetooth.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-auto-bluetooth
 
 scripts-ipkg:
 	rm -rf familiar/dist.gpe-session-scripts

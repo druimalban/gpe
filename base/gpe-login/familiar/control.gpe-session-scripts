@@ -1,9 +1,9 @@
 Package: gpe-session-scripts
 Section: x11
 Priority: optional
-Version: 0.41
+Version: 0.42
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: matchbox, gpe-session-starter, xcalibrate (>= 0.2-2), keylaunch, ipaq-sleep, gpe-question, apmd
+Depends: matchbox, gpe-session-starter, xcalibrate (>= 0.2-2), keylaunch, ipaq-sleep, gpe-question, apmd, blueprobe, gpe-bluetooth
 Suggests: gpe-setbg
 Description: GPE session startup scripts
