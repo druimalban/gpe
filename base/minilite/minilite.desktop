@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Frontlight control
-Comment=Panel based frontlight control
+Name=Light control
+Comment=Panel based screen light control
 Exec=minilite
 Type=PanelApp
 Icon=minilite.png
