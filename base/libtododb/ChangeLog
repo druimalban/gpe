@@ -1,3 +1,10 @@
 2003-01-29  Luis Oliveira  <luis@handhelds.org>
 
+	* todo-db.c (todo_db_get_items_list): New function.
+	(todo_db_get_categories_list): New function.
+	* todo-db.h: Added the two new functions and removed the
+	global exportation of the items/categories lists.
+
+2003-01-29  Luis Oliveira  <luis@handhelds.org>
+
 	* Initial import.

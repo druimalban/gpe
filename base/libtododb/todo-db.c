@@ -42,6 +42,18 @@ new_category_internal (int id, const char *title)
   return t;
 }
 
+GSList *
+todo_db_get_items_list(void)
+{
+  return todo_db_items;
+}
+
+GSList *
+todo_db_get_categories_list(void)
+{
+  return todo_db_categories;
+}
+	
 int 
 converted_category (const char *title)
 {
