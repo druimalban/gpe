@@ -3,5 +3,5 @@ Name=IrDa control
 Comment=Panel based infrared communications control
 Exec=gpe-beam
 Type=PanelApp
-Icon=/usr/share/gpe/pixmaps/default/irda-16.png
+Icon=irda-16.png
 Categories=Panel;Utility;GPE;Infrared
