@@ -96,7 +96,7 @@ load_alarm_details (void)
 		{
 		  *p++ = 0;
 
-		  while (isspace (p))
+		  while (isspace (*p))
 		    p++;
  
 		  if (!strcasecmp (buf, "ACTIVE"))
@@ -428,6 +428,20 @@ alarm_window (void)
     }
   
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), weeklytable, FALSE, FALSE, 0);
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->active_button), state.active);
+  gtk_date_combo_set_date (GTK_DATE_COMBO (ctx->date_combo), state.year, state.month, state.day);
+  gpe_time_sel_set_time (GPE_TIME_SEL (ctx->time_sel), state.hour, state.minute);
+  if (state.date_flag)
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->date_button), TRUE);
+  else
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->days_button), TRUE);
+
+  for (i = 0; i < 7; i++)
+    {
+      if (state.day_mask & (1 << i))
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (ctx->day_button[i]), TRUE);
+    }
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
   cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
