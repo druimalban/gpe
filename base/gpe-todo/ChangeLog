@@ -1,5 +1,7 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control1 (Depends): Demand libtododb >= 0.03.
+
 	* todo-ui.c (edit_item): Move action buttons outside of scrolled
 	window.  Rewrite handling of "state" menu; add ABANDONED.  Add new
 	optionmenu for priority.

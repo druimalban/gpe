@@ -5,7 +5,7 @@ Version: VERSION
 Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgpewidget1 (>= 0.33), gpe-icons (>= 0.15), libdisplaymigration0, libtododb0, gpe-todo-locale*
+Depends: libgpewidget1 (>= 0.33), gpe-icons (>= 0.15), libdisplaymigration0, libtododb0 (>= 0.03), gpe-todo-locale*
 Description: GPE to-do list
 Provides: gpe-todo
 Replaces: gpe-todo
