@@ -28,7 +28,7 @@ ifdef DESKTOP #environement variable to set if you want extra code included.
 CPPFLAGS += -DDESKTOP
 endif
 
-#-- GPE widgets
+#-- GPE libs
 ifndef CVSBUILD
 CVBUILD = no
 endif
@@ -36,25 +36,18 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS  += -I../../libgpewidget
 LDFLAGS += -L../../libgpewidget
+
+CFALGS  += -I../../libgpe/include
+LDFLAGS += -L../../libgpe/src
 endif
 
-
+LDFLAGS += -lgpe
 LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 
 #-- GTK2
 CFLAGS  +=  #-DGTK_ENABLE_BROKEN
 CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
 LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
-
-#-- XSettings
-ifeq ($(CVSBUILD),yes)
-CFLAGS  += -I../../libxsettings -I../../libxsettings-client
-LDFLAGS += -L../../libxsettings -L../../libxsettings-client -lXsettings-client
-LDFLAGS += -Wl,-rpath-link,../../libxsettings
-else
-LDFLAGS += -lXsettings-client
-endif
-
 
 #-- SQLite
 ifdef USE_SQLITE

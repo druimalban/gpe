@@ -20,6 +20,7 @@
 //--GPE libs
 #include "gpe/init.h"
 #include "gpe/pixmaps.h"
+#include "gpe/gpepreferences.h"
 
 //--own headers
 #include "gpe-sketchbook.h"
@@ -82,6 +83,8 @@ int main (int argc, char ** argv){
   textdomain (PACKAGE);
   setlocale (LC_ALL, "");
 
+  gpe_prefs_init("sketchbook_v1");
+  
   app_init (argc, argv);
   gui_init ();
   gtk_main ();
@@ -99,6 +102,7 @@ void app_init(int argc, char ** argv){
 
 void app_quit(){
   prefs_save_settings();
+  gpe_prefs_exit();
   gtk_exit (0);
 }
 
