@@ -257,14 +257,10 @@ radio_on (void)
 }
 
 static void
-radio_off (void)
+do_stop_radio (void)
 {
   GSList *iter;
-  gtk_widget_hide (menu_radio_off);
-  gtk_widget_show (menu_radio_on);
-  gtk_widget_set_sensitive (menu_devices, FALSE);
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
   radio_is_on = FALSE;
   for (iter = devices; iter; iter = iter->next)
     {
@@ -285,6 +281,18 @@ radio_off (void)
       hciattach_pid = 0;
     }
   system ("hciconfig hci0 down");
+}
+
+static void
+radio_off (void)
+{
+  gtk_widget_hide (menu_radio_off);
+  gtk_widget_show (menu_radio_on);
+  gtk_widget_set_sensitive (menu_devices, FALSE);
+
+  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
+
+  do_stop_radio ();
 }
 
 static gboolean
@@ -536,6 +544,7 @@ show_devices (void)
       devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
       gtk_window_set_title (GTK_WINDOW (devices_window), _("Bluetooth devices"));
+      gpe_set_window_icon (devices_window, "bt-logo");
 
       iconlist = gpe_iconlist_new ();
       gtk_widget_show (iconlist);
@@ -669,6 +678,8 @@ main (int argc, char *argv[])
 
   tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
   gdk_window_add_filter (window->window, filter, window);
+
+  atexit (do_stop_radio);
 
   gtk_main ();
 
