@@ -75,8 +75,6 @@ $(PACKAGE): $(OBJS)
 install: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
-	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
