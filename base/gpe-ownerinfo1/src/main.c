@@ -37,7 +37,6 @@ main (int argc, char *argv[])
 {
   GtkWidget *GPE_Ownerinfo;
   GtkWidget *widget;
-  guint num_char = 0;
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   FILE *fp;
   gchar * geometry = NULL;
@@ -97,7 +96,6 @@ main (int argc, char *argv[])
 
   if (geometry)
     {
-      printf ("set!");
       val = XParseGeometry (geometry, &x, &y, &w, &h);
       if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
 	gtk_widget_set_usize (GPE_Ownerinfo, w, h);
@@ -106,8 +104,6 @@ main (int argc, char *argv[])
     }
   else
     {
-      printf ("not set!");
-      
       gtk_widget_set_usize (GPE_Ownerinfo, 240, 120);
       gtk_widget_set_uposition (GPE_Ownerinfo, 0, 200);
     }
@@ -158,24 +154,16 @@ main (int argc, char *argv[])
   gtk_label_set_text (GTK_LABEL (widget), owneremail);
 
   widget = lookup_widget (GPE_Ownerinfo, "address");
-  num_char = gtk_text_get_length (GTK_TEXT (widget));
-  if( num_char > 0 )
-  {
-    gtk_text_freeze (GTK_TEXT (widget));
-    gtk_text_backward_delete(GTK_TEXT(widget), num_char);
-    gtk_text_thaw (GTK_TEXT (widget));
-  }
-
-  gtk_text_freeze (GTK_TEXT (widget));
-  gtk_text_insert (GTK_TEXT (widget), NULL, &widget->style->black, NULL,
-                   owneraddress,
-                   -1);
-  gtk_text_thaw (GTK_TEXT (widget));
+  gtk_label_set_text (GTK_LABEL (widget), owneraddress);
 
   widget = lookup_widget (GPE_Ownerinfo, "phone");
   gtk_label_set_text (GTK_LABEL (widget), ownerphone);
 
-  
+
+  widget = lookup_widget (GPE_Ownerinfo, "frame1");
+  gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
+  gtk_widget_set_name (widget, "gpe_ownerinfo");
+
   gtk_widget_show (GPE_Ownerinfo);
 
   gtk_main ();

@@ -32,6 +32,7 @@ create_GPE_Ownerinfo (void)
   GtkWidget *phone;
   GtkWidget *owner_address_label;
   GtkWidget *scrolledwindow1;
+  GtkWidget *viewport1;
   GtkWidget *address;
 
   GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -48,6 +49,7 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (frame1);
   gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), frame1);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame1), GTK_SHADOW_NONE);
 
   table1 = gtk_table_new (4, 2, FALSE);
   gtk_widget_set_name (table1, "table1");
@@ -155,21 +157,29 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (scrolledwindow1);
   gtk_table_attach (GTK_TABLE (table1), scrolledwindow1, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (scrolledwindow1), 3);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  address = gtk_text_new (NULL, NULL);
+  viewport1 = gtk_viewport_new (NULL, NULL);
+  gtk_widget_set_name (viewport1, "viewport1");
+  gtk_widget_ref (viewport1);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "viewport1", viewport1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (viewport1);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport1), GTK_SHADOW_NONE);
+
+  address = gtk_label_new (_("Nosuch Lane 42\nX-12345 Quux\nFoobarland"));
   gtk_widget_set_name (address, "address");
   gtk_widget_ref (address);
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "address", address,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (address);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow1), address);
-  gtk_widget_set_usize (address, -2, 50);
-  gtk_text_insert (GTK_TEXT (address), NULL, NULL, NULL,
-                   _("Nosuch Lane 42\nX-12345 Quux\nFoobarland"), strlen(_("Nosuch Lane 42\nX-12345 Quux\nFoobarland")));
+  gtk_container_add (GTK_CONTAINER (viewport1), address);
+  gtk_label_set_justify (GTK_LABEL (address), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (address), 7.45058e-09, 0.5);
+  gtk_misc_set_padding (GTK_MISC (address), 5, 0);
 
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit),

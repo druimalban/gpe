@@ -38,7 +38,7 @@
     <name>frame1</name>
     <label>Owner Info</label>
     <label_xalign>0</label_xalign>
-    <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
+    <shadow_type>GTK_SHADOW_NONE</shadow_type>
 
     <widget>
       <class>GtkTable</class>
@@ -234,7 +234,6 @@
       <widget>
 	<class>GtkScrolledWindow</class>
 	<name>scrolledwindow1</name>
-	<border_width>3</border_width>
 	<hscrollbar_policy>GTK_POLICY_AUTOMATIC</hscrollbar_policy>
 	<vscrollbar_policy>GTK_POLICY_AUTOMATIC</vscrollbar_policy>
 	<hupdate_policy>GTK_UPDATE_CONTINUOUS</hupdate_policy>
@@ -246,7 +245,7 @@
 	  <bottom_attach>3</bottom_attach>
 	  <xpad>0</xpad>
 	  <ypad>0</ypad>
-	  <xexpand>True</xexpand>
+	  <xexpand>False</xexpand>
 	  <yexpand>False</yexpand>
 	  <xshrink>False</xshrink>
 	  <yshrink>False</yshrink>
@@ -255,14 +254,23 @@
 	</child>
 
 	<widget>
-	  <class>GtkText</class>
-	  <name>address</name>
-	  <height>50</height>
-	  <can_focus>True</can_focus>
-	  <editable>False</editable>
-	  <text>Nosuch Lane 42
+	  <class>GtkViewport</class>
+	  <name>viewport1</name>
+	  <shadow_type>GTK_SHADOW_NONE</shadow_type>
+
+	  <widget>
+	    <class>GtkLabel</class>
+	    <name>address</name>
+	    <label>Nosuch Lane 42
 X-12345 Quux
-Foobarland</text>
+Foobarland</label>
+	    <justify>GTK_JUSTIFY_LEFT</justify>
+	    <wrap>False</wrap>
+	    <xalign>7.45058e-09</xalign>
+	    <yalign>0.5</yalign>
+	    <xpad>5</xpad>
+	    <ypad>0</ypad>
+	  </widget>
 	</widget>
       </widget>
     </widget>
