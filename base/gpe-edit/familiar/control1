@@ -4,7 +4,7 @@ Priority: optional
 Version: 0.10
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
-Depends: gpe-icons (>= 0.15), libgpewidget1 (>= 0.27)
+Depends: gpe-icons (>= 0.15), libgpewidget1 (>= 0.27), libdm0
 Description: GPE text editor
 Provides: gpe-edit
 Replaces: gpe-edit, gpe-edit-gtk2
