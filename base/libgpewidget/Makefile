@@ -19,3 +19,15 @@ libgpewidget.so: $(SONAME)
 
 $(SONAME): $(OBJS)
 	gcc -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME)
+
+install: $(SONAME)
+	install -D $(SONAME) $(DESTDIR)/usr/lib/$(SONAME)
+	strip $(DESTDIR)/usr/lib/$(SONAME)
+
+ipkg:
+	make DESTDIR=`pwd`/dist install
+	ipkg-build dist
+
+clean:
+	rm -f $(OBJS) $(SONAME)
+
