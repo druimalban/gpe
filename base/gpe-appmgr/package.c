@@ -26,7 +26,7 @@
 #include <unistd.h>
 
 /* For .desktop files */
-#include <dotdesktop.h>
+#include <gpe/dotdesktop.h>
 
 #include "package.h"
 
