@@ -11,20 +11,19 @@
 </td><td>
 <img src="images/calendar-month.png">
 </td></tr><tr><td>
-<img src="images/calendar-day.png">
 <p>
+<img src="images/calendar-day.png">
+</td><td>
 <img src="images/calendar-week.png">
 </td><td>
 <img src="images/cotidie-appt.png">
-</td><td>
-<img src="images/cotidie-todo.png">
 </td></tr><tr><td>
-<img src="images/gpe-appmgr.png">
 <p>
+<img src="images/gpe-appmgr.png">
+</td><td>
 <img src="images/gtktetris.png">
 </td><td>
 <img src="images/solitaire.png">
-</td><td>
 </td></tr>
 </table>
 
