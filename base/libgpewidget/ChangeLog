@@ -1,5 +1,9 @@
 2003-01-04  Robert Mibus  <mibus@handhelds.org>
 
+	* gpeiconlist.gob, gpe-iconlist.[ch]: Oops, fix it right this time!
+
+2003-01-04  Robert Mibus  <mibus@handhelds.org>
+
 	* gpeiconlist.gob: Use the _obvious_ rendering fix pb suggested.
 	(ie. back out my last change)
 
