@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-06 18:31+0000\n"
+"POT-Creation-Date: 2004-06-03 22:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,102 +16,110 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:819
+#: main.c:864
 msgid "Start"
 msgstr ""
 
-#: main.c:858
+#: main.c:903
 msgid "Select directory"
 msgstr ""
 
-#: main.c:931
+#: main.c:973
 msgid "Open"
 msgstr ""
 
-#: main.c:932
+#: main.c:974
 msgid "Open file"
 msgstr ""
 
-#: main.c:937
+#: main.c:979
 msgid "Previous"
 msgstr ""
 
-#: main.c:938
+#: main.c:980
 msgid "Previous image"
 msgstr ""
 
-#: main.c:941
+#: main.c:983
 msgid "Next"
 msgstr ""
 
-#: main.c:942
+#: main.c:984
 msgid "Next image"
 msgstr ""
 
-#: main.c:945 main.c:946
+#: main.c:987 main.c:988
 msgid "Close image"
 msgstr ""
 
-#: main.c:952 main.c:953
+#: main.c:994 main.c:995
 msgid "Slideshow"
 msgstr ""
 
-#: main.c:959 main.c:960
+#: main.c:1001 main.c:1002
 msgid "Icon view"
 msgstr ""
 
-#: main.c:964 main.c:965
+#: main.c:1006 main.c:1007
 msgid "List view"
 msgstr ""
 
-#: main.c:969
-msgid "Fullscreen"
+#: main.c:1010
+msgid "Exit"
 msgstr ""
 
-#: main.c:970
-msgid "Toggle fullscreen"
-msgstr ""
-
-#: main.c:976 main.c:977
-msgid "Zoom In"
-msgstr ""
-
-#: main.c:981 main.c:982
-msgid "Zoom Out"
-msgstr ""
-
-#: main.c:986 main.c:987
-msgid "Zoom 1:1"
-msgstr ""
-
-#: main.c:991 main.c:992
-msgid "Zoom to Fit"
-msgstr ""
-
-#: main.c:998 main.c:999
-msgid "Sharpen"
-msgstr ""
-
-#: main.c:1003 main.c:1004
-msgid "Blur"
-msgstr ""
-
-#: main.c:1008
-msgid "Rotate"
-msgstr ""
-
-#: main.c:1009
-msgid "Toggle Rotate"
-msgstr ""
-
-#: main.c:1012
-msgid "Loading..."
+#: main.c:1010
+msgid "Tap here to exit the program"
 msgstr ""
 
 #: main.c:1015
+msgid "Fullscreen"
+msgstr ""
+
+#: main.c:1016
+msgid "Toggle fullscreen"
+msgstr ""
+
+#: main.c:1022 main.c:1023
+msgid "Zoom In"
+msgstr ""
+
+#: main.c:1027 main.c:1028
+msgid "Zoom Out"
+msgstr ""
+
+#: main.c:1032 main.c:1033
+msgid "Zoom 1:1"
+msgstr ""
+
+#: main.c:1037 main.c:1038
+msgid "Zoom to Fit"
+msgstr ""
+
+#: main.c:1044 main.c:1045
+msgid "Sharpen"
+msgstr ""
+
+#: main.c:1049 main.c:1050
+msgid "Blur"
+msgstr ""
+
+#: main.c:1054
+msgid "Rotate"
+msgstr ""
+
+#: main.c:1055
+msgid "Toggle Rotate"
+msgstr ""
+
+#: main.c:1058
+msgid "Loading..."
+msgstr ""
+
+#: main.c:1061
 msgid "Progress"
 msgstr ""
 
-#: main.c:1019 main.c:1020
+#: main.c:1065 main.c:1066
 msgid "Stop Loading"
 msgstr ""
