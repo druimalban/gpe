@@ -6,7 +6,7 @@ VERSION = 0.1
 
 LINGUAS = 
 
-MEMBERS = ui
+MEMBERS = ui db
 
 SONAME = $(PACKAGE).so.0
 

@@ -234,33 +234,49 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
   window = GTK_WIDGET (p);
   list_store = g_object_get_data (G_OBJECT (window), "list_store");
 
-  old_categories = g_slist_copy (gpe_pim_categories_list ());
+  old_categories = gpe_pim_categories_list ();
 
   if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
     {
       do 
 	{
-	  struct gpe_pim_category *c;
+	  gint id;
 	  gchar *title;
 	  gboolean selected;
 	  
-	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &selected, 1, &title, 2, &c, -1);
+	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &selected, 1, &title, 2, &id, -1);
 
-	  if (c == NULL)
-	    c = gpe_pim_category_new (title);
+	  if (id == -1)
+	    gpe_pim_category_new (title, &id);
 	  else
 	    {
-	      old_categories = g_slist_remove (old_categories, c);
+	      struct gpe_pim_category *c = NULL;
 
-	      if (strcmp (c->name, title))
+	      for (i = old_categories; i; i = i->next)
 		{
-		  g_free ((void *)c->name);
-		  c->name = g_strdup (title);
+		  c = i->data;
+		  
+		  if (c->id == id)
+		    break;
 		}
+
+	      if (i)
+		{
+		  old_categories = g_slist_remove_link (old_categories, i);
+		  g_slist_free (i);
+		  
+		  if (strcmp (c->name, title))
+		    {
+		      g_free ((void *)c->name);
+		      c->name = g_strdup (title);
+		    }
+		}
+	      else
+		selected = FALSE;		/* category was deleted by second party */
 	    }
 
 	  if (selected)
-	    selected_categories = g_slist_append (selected_categories, (gpointer)c->id);
+	    selected_categories = g_slist_append (selected_categories, (gpointer)id);
 
 	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
     }
