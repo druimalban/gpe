@@ -39,11 +39,10 @@
 
 #include <gpe/spacing.h>
 
-
-char buttons[9][1024];
-char *keylaunchrc = NULL;
-
+static char *keylaunchrc = NULL;
+static gboolean menuselect = FALSE;
 #define NUM_BUTTONS 5
+#define NUM_COMMANDS 9
 
 /* local types */
 
@@ -58,6 +57,12 @@ typedef struct
 }
 t_buttondef;
 
+typedef struct
+{
+	char *title;
+	char *command;
+}
+t_scommand;
 
 /* local variables */
 
@@ -71,12 +76,24 @@ static struct
 }
 self;
 
+
 t_buttondef buttondef[NUM_BUTTONS] = {
 	{NULL, "XF86AudioRecord","???Pressed","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
     {NULL, "XF86Calendar","???Pressed","gpe-calendar",0},
 	{NULL, "telephone","???Pressed","gpe-contacts",0},
 	{NULL, "XF86Mail","???Pressed","gpe-taskmanager",0},
 	{NULL, "XF86Start","???Pressed","mbcontrol -desktop",0}};
+
+t_scommand commands[NUM_COMMANDS] =	{
+	{NULL,""},
+	{NULL,"gpe-soundbite record --autogenerate-filename $HOME_VOLATILE"},
+	{NULL,"gpe-calendar"},
+	{NULL,"gpe-contacts"},
+	{NULL,"gpe-taskmanager"},
+	{NULL,"gpe-nmf"},
+	{NULL,"dillo"},
+	{NULL,"gpe-todo"},
+	{NULL,"mbcontrol -desktop"}};
 
 static int active_button = 0;
 
@@ -129,12 +146,15 @@ init_buttons ()
 		{
 			for (i=0;i<NUM_BUTTONS;i++)
 				if (strlen(buffer) && (buffer[0] !='#') && 
-					strstr(buffer,buttondef[i].ident))
+					strstr(buffer,buttondef[i].ident) &&
+					!strstr(buffer,"???Combine"))
 				{
-					slash = strchr (buffer, ':');
+					slash = strrchr (buffer, ':');
 					if (slash && ((slash - buffer) > 0))
 					{
 						slash++;
+						if (slash[strlen(slash)-1] == '\n')
+							slash[strlen(slash)-1] = 0;
 						g_free(buttondef[i].command);
 						buttondef[i].command = g_strdup(slash);
 					}
@@ -156,6 +176,8 @@ void
 on_button_select (GtkButton * button, gpointer user_data)
 {
 	int nr = (int)user_data;
+	int i;
+	
 	if ((nr == active_button) ||
 		((active_button < 0) && (active_button >= NUM_BUTTONS)))
 		return;	
@@ -164,8 +186,36 @@ on_button_select (GtkButton * button, gpointer user_data)
 	buttondef[active_button].command = 
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[nr].command);
-#warning pixmap
 	active_button = nr;
+#warning pixmap
+	
+	for (i=1;i<NUM_COMMANDS;i++)
+		if (!strcmp(buttondef[nr].command,commands[i].command))
+		{
+			gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),i);
+			return;
+		}
+	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),0);
+}
+
+
+void
+on_edit_changed (GtkWidget * edit, gpointer user_data)
+{
+	int i;
+	
+	if (menuselect)
+	{
+		return;
+	}
+	
+	for (i=1;i<NUM_COMMANDS;i++)
+		if (!strcmp(buttondef[active_button].command,commands[i].command))
+		{
+			gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),i);
+			return;
+		}
+	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),0);
 }
 
 
@@ -188,6 +238,33 @@ on_defaults_clicked (GtkButton * button, gpointer user_data)
 }
 
 
+void 
+fill_commands(void)
+{
+	commands[0].title = g_strdup(_("User Defined"));
+	commands[1].title = g_strdup(_("Record Memo"));
+	commands[2].title = g_strdup(_("Calendar"));
+	commands[3].title = g_strdup(_("Contacts"));
+	commands[4].title = g_strdup(_("Taskmanager"));
+	commands[5].title = g_strdup(_("Audio Player"));
+	commands[6].title = g_strdup(_("Web Browser"));
+	commands[7].title = g_strdup(_("To-do List"));
+	commands[8].title = g_strdup(_("Toggle Desktop"));
+}
+
+
+void 
+on_menu_select (GtkOptionMenu *menu,  gpointer user_data)
+{
+	int pos = gtk_option_menu_get_history(menu);
+	
+	menuselect = TRUE;	
+	if (pos)
+		gtk_entry_set_text(GTK_ENTRY(self.edit),commands[pos].command);	
+	menuselect = FALSE;	
+}
+
+
 GtkWidget *
 Keyctl_Build_Objects ()
 {
@@ -197,16 +274,31 @@ Keyctl_Build_Objects ()
 	GtkWidget *scroll =	gtk_scrolled_window_new (NULL,NULL);
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
 	GtkWidget *table = gtk_table_new(3,2,FALSE);
+	GtkWidget *cmenu = gtk_menu_new();
+	int i;
 	
 	gpe_load_icons(local_icons);
 	
+	fill_commands();
+	
+	gtk_menu_set_screen(GTK_MENU(cmenu),NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
+	gtk_table_set_col_spacings(GTK_TABLE(table),2);
+	gtk_container_set_border_width (GTK_CONTAINER (table), 2);
+	
 	self.p = gpe_find_icon ("ipaq");
 	self.edit = gtk_entry_new();
 	self.icon = gtk_image_new_from_pixbuf(gpe_find_icon("icon"));
-	self.select = gtk_combo_new();
+	self.select = gtk_option_menu_new();
+	
+	for (i=0;i<NUM_COMMANDS;i++)
+		gtk_menu_shell_append(GTK_MENU_SHELL(cmenu),
+			gtk_menu_item_new_with_label(commands[i].title));
+	
+	gtk_option_menu_set_menu(GTK_OPTION_MENU(self.select),cmenu);
+	gtk_option_menu_set_history(GTK_OPTION_MENU(self.select),0);
 	
 	gtk_box_pack_start(GTK_BOX(vbox),scroll,TRUE,TRUE,0);
 	gtk_box_pack_start(GTK_BOX(vbox),table,FALSE,TRUE,0);
@@ -224,7 +316,7 @@ Keyctl_Build_Objects ()
 
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
 
-	gtk_container_set_border_width (GTK_CONTAINER (scroll), 2);
+	gtk_container_set_border_width (GTK_CONTAINER (layout1), 1);
 
 	if (self.p)
 	{
@@ -238,7 +330,7 @@ Keyctl_Build_Objects ()
 	gtk_layout_put (GTK_LAYOUT (layout1), self.button[2], 75, 170);
 	gtk_layout_put (GTK_LAYOUT (layout1), self.button[3], 125, 169);
 	gtk_layout_put (GTK_LAYOUT (layout1), self.button[4], 175, 152);
-	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 182, 1);
+	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 174, 3);
 
 	g_signal_connect_after (G_OBJECT (bFile), "clicked",
 				   G_CALLBACK(on_button_clicked),bFile);
@@ -255,6 +347,10 @@ Keyctl_Build_Objects ()
 				   G_CALLBACK(on_button_select),(void *)4);
 	g_signal_connect (G_OBJECT (bDefault), "clicked",
 				   G_CALLBACK(on_defaults_clicked), NULL);
+	g_signal_connect (G_OBJECT (self.select), "changed",
+				   G_CALLBACK(on_menu_select), NULL);
+	g_signal_connect_after (G_OBJECT (self.edit), "changed",
+				   G_CALLBACK(on_edit_changed), NULL);
 	
 	gtk_widget_grab_focus(self.button[0]);
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
@@ -310,7 +406,8 @@ Keyctl_Save ()
 		for (i=0;i<NUM_BUTTONS;i++)
 		{
 			if (strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
-				strstr(cfglines[j],buttondef[i].ident))
+				strstr(cfglines[j],buttondef[i].ident) &&
+				!strstr(cfglines[j],"???Combine"))
 			{
 				g_free(cfglines[j]);
 				cfglines[j] = 
@@ -337,7 +434,7 @@ Keyctl_Save ()
 	fd = fopen (keylaunchrc, "w");
 	if (fd == NULL)
 	{
-		gpe_error_box (_("ERROR: Can't open keylaunchrc for writing!\n"));
+		gpe_error_box (_("Critical: Can't open keylaunchrc for writing!\n"));
 		return;
 	}
 	
@@ -363,6 +460,8 @@ FileSelected (char *file, gpointer data)
 {
 	if (!strlen (file))
 		return;
-	
-	gtk_entry_set_text (GTK_ENTRY (self.edit), file);
+	if (access(file,X_OK))
+		gpe_error_box(_("The file you selected is not executable."));
+	else
+		gtk_entry_set_text (GTK_ENTRY (self.edit), file);
 }

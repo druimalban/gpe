@@ -1,3 +1,6 @@
+2003-11-24	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* keyctl.c: Many fixes, added redefined entrys.
+	
 2003-11-21	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* keyctl.c: Fixed reading code, added config file writing.
 	
