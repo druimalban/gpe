@@ -66,7 +66,7 @@ static int	log_semid = -1;	// ipc semaphore id
 
 static GtkWidget *txLog, *txLog2;
 static int logtail = -1;
-static FILE *psession;
+static int fsession;
 
 /* --- local intelligence --- */
 
@@ -156,12 +156,15 @@ int logread_main()
 		shmdt(buf);
 	
 	/* read session file */
-	
-	while( (i = fread(buffer,sizeof(char),255,psession)) > 0 )
+printf("reading\n");	
+	if (fsession > 0)
 	{
-		buffer[i] = 0;
-		printlog(txLog2,buffer);
-	}		
+		while ((i = read(fsession,buffer,255)) > 0)
+		{
+			buffer[i] = 0;
+			printlog(txLog2,buffer);
+		}
+	}	
 	return TRUE;		
 }
 
@@ -171,7 +174,7 @@ int logread_main()
 void
 Logread_Free_Objects ()
 {
-	pclose(psession);
+	close(fsession);
 }
 
 void
@@ -240,9 +243,9 @@ Logread_Build_Objects (void)
   tw = gtk_label_new(_("Session Log"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,tw);
   
-  tstr = g_strdup_printf("tail -n100 -f %s/.xsession-errors",g_get_home_dir());
-  psession = popen(tstr,"r");
-  fcntl(fileno(psession), F_SETFL, O_NONBLOCK);
+  tstr = g_strdup_printf("%s/.xsession-errors",g_get_home_dir());
+  fsession = open(tstr,O_RDONLY | O_NONBLOCK);
+  if (fsession < 0) printlog(txLog2,_("Could not open X session log."));
   g_free(tstr);
  
   logread_main();
