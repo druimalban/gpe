@@ -1,3 +1,7 @@
+2003-02-24  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/postinst: Always return true.
+
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.13 released.
