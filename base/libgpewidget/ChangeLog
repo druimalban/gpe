@@ -1,3 +1,7 @@
+2002-09-08  Robert Mibus  <mibus@handhelds.org>
+
+	* question.[ch]: Fix bug #85 (dc's mis-commit ;-)
+
 2002-09-07  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gtkrc: Add gpe_labels style. This is just black for now, until

@@ -11,6 +11,8 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
+#include <glib.h>
+
 extern gint gpe_question_ask (char *qn, char *title, char *iconname, ...);
 extern gint gpe_question_ask_yn (char *qn);
 

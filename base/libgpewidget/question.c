@@ -97,8 +97,17 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   va_start (ap, iconname);
   while (TRUE)
   {
-    char *btn_lbl;	    free (btn_lbl);
-    //free (btn_icon);
+    char *btn_lbl=NULL, *btn_icon=NULL;
+
+    btn_lbl = va_arg (ap, char *);
+    if (btn_lbl == NULL)
+	    break;
+
+    btn_icon = va_arg (ap, char *);
+    if (btn_icon == NULL)
+	    break;
+
+    add_button (btn_lbl, btn_icon, window, i++);
   }
   va_end (ap);
 
@@ -113,6 +122,6 @@ gint
 gpe_question_ask_yn (char *qn)
 {
   return gpe_question_ask (qn, _("Question"), "question",
-  _("No"), "cancel", _("Yes"), "ok");
+  _("No"), "cancel", _("Yes"), "ok", NULL);
 }
 
