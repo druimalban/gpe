@@ -4,7 +4,7 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.34
+VERSION = 0.35
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 

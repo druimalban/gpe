@@ -1,5 +1,6 @@
 2005-02-16  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Version 0.35 released.
     * db.c (db_open): Close database if it is already open.
     * main.c (on_import_vcard): Ensure database is refreshed.
     * editing.c (create_edit): Mark edit window for migration.
