@@ -18,7 +18,7 @@ endif
 
 LDFLAGS += -ltododb -ldisplaymigration
 
-MEMBERS = main todo-ui list-ui configure
+MEMBERS = main todo-ui list-ui
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))

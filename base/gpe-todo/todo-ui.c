@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/spacing.h>
+#include <gpe/errorbox.h>
 
 #include <libdisplaymigration/displaymigration.h>
 
@@ -220,39 +221,164 @@ categories_ok (GtkWidget *w, gpointer p)
   gtk_widget_destroy (window);
 }
 
-static void
+void
+ui_create_new_category (GtkWidget *widget, GtkWidget *d)
+{
+  GtkWidget *entry = gtk_object_get_data (GTK_OBJECT (d), "entry");
+  char *title = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  GSList *l;
+  struct todo_category *t;
+
+  if (title[0] == 0)
+    {
+      gpe_error_box (_("Category name must not be blank"));
+      gtk_widget_destroy (d);
+      return;
+    }
+  
+  for (l = todo_db_get_categories_list(); l; l = l->next)
+    {
+      struct todo_category *t = l->data;
+      if (!strcmp (title, t->title))
+	{
+	  gpe_error_box (_("A category by that name already exists"));
+	  gtk_widget_destroy (d);
+	  return;
+	}
+    }
+
+  t = todo_db_new_category (title);
+
+  categories_menu ();
+  gtk_widget_destroy (d);
+}
+
+void
+new_category (GtkWidget *w, GtkListStore *list_store)
+{
+  GtkWidget *window;
+  GtkWidget *vbox;
+  GtkWidget *ok;
+  GtkWidget *cancel;
+  GtkWidget *label;
+  GtkWidget *name;
+  GtkWidget *hbox;
+  guint spacing;
+
+  spacing = gpe_get_boxspacing ();
+
+  window = gtk_dialog_new ();
+
+  displaymigration_mark_window (window);
+
+  vbox = GTK_DIALOG (window)->vbox;
+
+  hbox = gtk_hbox_new (FALSE, 0);
+
+  label = gtk_label_new (_("Name:"));
+  name = gtk_entry_new ();
+  
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
+
+  ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+  cancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel, 
+		      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok, 
+		      FALSE, FALSE, 0);
+
+  GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (ok);
+
+  g_signal_connect (G_OBJECT (ok), "clicked", 
+		    G_CALLBACK (ui_create_new_category), window);
+  
+  g_signal_connect_swapped (G_OBJECT (cancel), "clicked", 
+			    G_CALLBACK (gtk_widget_destroy), window);
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, spacing);
+
+  gtk_object_set_data (GTK_OBJECT (window), "entry", name);
+  
+  gtk_window_set_title (GTK_WINDOW (window), _("New category"));
+
+  gpe_set_window_icon (window, "icon");
+
+  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
+
+  gtk_widget_show_all (window);
+  gtk_widget_grab_focus (name);
+}
+
+void
+delete_category (GtkWidget *w, GtkListStore *list_store)
+{
+}
+
+void
 change_categories (GtkWidget *w, gpointer p)
 {
-  GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *toolbar;
+  GtkWidget *window;
+  GtkWidget *sw;
   GSList *iter;
   struct edit_todo *t = (struct edit_todo *)p;
-  GSList *widgets = NULL;
   GtkWidget *okbutton, *cancelbutton;
+  GtkListStore *list_store;
+  GtkWidget *tree_view;
+  gint nitems = 0;
+
+  window = gtk_dialog_new ();
+
+  list_store = gtk_list_store_new (2, G_TYPE_BOOLEAN, G_TYPE_STRING);
+
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+			    _("New category"), 
+			    _("Tap here to add a new category."),
+			    G_CALLBACK (new_category), list_store, -1);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+			    _("New item"), _("Tap here to add a new item."),
+			    G_CALLBACK (delete_category), list_store, -1);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
+		      toolbar, FALSE, FALSE, 0);
+
+  sw = gtk_scrolled_window_new (NULL, NULL);
 
   for (iter = todo_db_get_categories_list(); iter; iter = iter->next)
     {
       struct todo_category *c = iter->data;
-      GtkWidget *w = gtk_check_button_new_with_label (c->title);
+      GtkTreeIter iter;
+      gboolean selected = FALSE;
+
+      gtk_list_store_insert (list_store, &iter, nitems);
 
       if (g_slist_find (t->selected_categories, c))
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+	selected = TRUE;
+      
+      gtk_list_store_insert (list_store, &iter, nitems);
 
-      gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+      gtk_list_store_set (list_store, &iter, 0, selected, 1, c->title, -1);
 
-      g_object_set_data (G_OBJECT (w), "category", c);
-      widgets = g_slist_append (widgets, w);
+      nitems ++;
     }
 
-  g_object_set_data (G_OBJECT (window), "widgets", widgets);
+  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+
   g_object_set_data (G_OBJECT (window), "edit_data", t);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_AUTOMATIC);
 
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (sw), vbox);
+  gtk_container_add (GTK_CONTAINER (sw), tree_view);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), sw, TRUE, TRUE, 0);
 
@@ -296,7 +422,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   GtkWidget *label_details = gtk_label_new (_("Details:"));
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
-  GtkWidget *hbox_categories;
+  GtkWidget *hbox_categories = NULL;
   GtkWidget *scrolled_window;
   struct edit_todo *t = g_malloc (sizeof (struct edit_todo));
 
@@ -338,32 +464,31 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 	t->selected_categories = NULL;
     }
 
-  if (todo_db_get_categories_list())
-    {
-      GtkWidget *button = gtk_button_new_with_label (_("Categories:"));
-      GtkWidget *label = gtk_label_new ("");
-      gchar *s = NULL;
+  {
+    GtkWidget *button = gtk_button_new_with_label (_("Categories:"));
+    GtkWidget *label = gtk_label_new ("");
+    gchar *s = NULL;
 
-      s = build_categories_string (t->selected_categories);
-
-      if (s)
-	{
-	  gtk_label_set_text (GTK_LABEL (label), s);
-	  g_free (s);
-	}
-	
-      gtk_widget_show (label);
-      gtk_widget_show (button);
-      hbox_categories = gtk_hbox_new (FALSE, 0);
-      gtk_widget_show (hbox_categories);
-      gtk_box_pack_start (GTK_BOX (hbox_categories), button, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (hbox_categories), label, TRUE, TRUE, 4);
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-
-      g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (change_categories), t);
-
-      t->categories_label = label;
-    }
+    s = build_categories_string (t->selected_categories);
+    
+    if (s)
+      {
+	gtk_label_set_text (GTK_LABEL (label), s);
+	g_free (s);
+      }
+    
+    gtk_widget_show (label);
+    gtk_widget_show (button);
+    hbox_categories = gtk_hbox_new (FALSE, 0);
+    gtk_widget_show (hbox_categories);
+    gtk_box_pack_start (GTK_BOX (hbox_categories), button, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox_categories), label, TRUE, TRUE, 4);
+    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+    
+    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (change_categories), t);
+    
+    t->categories_label = label;
+  }
 
   t->item = item;
   
@@ -392,8 +517,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
 
-  if (todo_db_get_categories_list())
-    gtk_box_pack_start (GTK_BOX (vbox), hbox_categories, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox_categories, FALSE, FALSE, 2);
   
   gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.5);
   gtk_box_pack_start (GTK_BOX (vbox), label_details, FALSE, FALSE, 2);
@@ -457,3 +581,4 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   return window;
 }
+

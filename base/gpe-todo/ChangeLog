@@ -1,3 +1,15 @@
+2004-02-14  Phil Blundell  <pb@nexus.co.uk>
+
+
+2004-02-14  Phil Blundell  <pb@nexus.co.uk>
+
+	* todo-ui.c (edit_item): Make categories box unconditional.
+
+	* configure.c: Deleted.
+	* todo.h (configure): Delete prototype.	
+	* list-ui.c (top_level): Delete "configure" button.
+	* Makefile (MEMBERS): Remove configure.
+
 2004-02-14  Philip Blundell  <philb@gnu.org>
 
 	* list-ui.c (item_do_edit, item_do_move, item_do_delete): New.

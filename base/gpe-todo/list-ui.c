@@ -253,7 +253,6 @@ top_level (GtkWidget *window)
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *toolbar;
   GtkWidget *option = gtk_option_menu_new ();
-  GtkWidget *pw;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *list_view;
   GtkAccelGroup *accel_group;
@@ -281,25 +280,6 @@ top_level (GtkWidget *window)
 			    G_CALLBACK (new_todo_item), NULL, -1);
 
   /* New */
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
-
-  /* | */
-  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
-
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-
-  pw = gtk_image_new_from_stock (GTK_STOCK_PROPERTIES, 
-		  gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Configure"), 
-			   _("Configure categories"), 
-			   _("Tap here to configure categories."),
-			   pw, GTK_SIGNAL_FUNC (configure), NULL);
-
-  /* Conf */
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
 
   /* | */
