@@ -23,5 +23,6 @@
 #include <glib.h>
 
 extern gboolean gpe_application_init (int *argc, char **argv[]);
+extern void gpe_saved_args (gint *argc, gchar **argv[]);
 
 #endif

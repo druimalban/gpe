@@ -1,3 +1,14 @@
+2003-03-01  Philip Blundell  <philb@gnu.org>
+
+	* tray.c (gpe_system_tray_dock): Call XSetCommand with saved
+	arguments.  Use XInternAtoms.
+	(filter): Adjust appropriately.
+	(tray_send_opcode): Likewise.
+
+	* init.c (gpe_saved_args): New function.
+	(gpe_application_init): Save a copy of argument list.
+	* gpe/init.h (gpe_saved_args): Add prototype.
+
 2003-02-23  Philip Blundell <philb@gnu.org>
 
 	* Version 0.48 released

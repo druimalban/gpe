@@ -25,9 +25,19 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
+#include "init.h"
+
+#define SYSTEM_TRAY_OPCODE_ATOM	0
+#define MANAGER_ATOM		1
+static Atom atoms[2];
+
+static char *atom_names[] = 
+  { 
+    "_NET_SYSTEM_TRAY_OPCODE", 
+    "MANAGER" 
+  };
+
 static Atom system_tray_atom;
-static Atom system_tray_opcode_atom;
-static Atom manager_atom;
 
 static Window dock;
 
@@ -71,7 +81,7 @@ tray_send_opcode (Display *dpy, Window w,
 
    ev.xclient.type = ClientMessage;
    ev.xclient.window = w;
-   ev.xclient.message_type = system_tray_opcode_atom;
+   ev.xclient.message_type = atoms[SYSTEM_TRAY_OPCODE_ATOM];
    ev.xclient.format = 32;
    ev.xclient.data.l[0] = CurrentTime;
    ev.xclient.data.l[1] = message;
@@ -110,7 +120,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   Window win = (Window)p;
 
   if (xev->type == ClientMessage
-      && xev->xclient.message_type == manager_atom
+      && xev->xclient.message_type == atoms[MANAGER_ATOM]
       && dock == None
       && xev->xclient.data.l[1] == system_tray_atom)
     find_tray (xev->xany.display, win);
@@ -124,12 +134,16 @@ gpe_system_tray_dock (GdkWindow *window)
   Display *dpy = GDK_WINDOW_XDISPLAY (window);
   Window win = GDK_WINDOW_XWINDOW (window);
   gchar *tray_atom_name;
+  gint argc;
+  gchar **argv;
 
-  manager_atom = XInternAtom (dpy, "MANAGER", False);
-  system_tray_opcode_atom = XInternAtom (dpy, "_NET_SYSTEM_TRAY_OPCODE", False);
+  XInternAtoms (dpy, atom_names, 2, False, atoms);
   tray_atom_name = g_strdup_printf ("_NET_SYSTEM_TRAY_S%d", DefaultScreen (dpy));
   system_tray_atom = XInternAtom (dpy, tray_atom_name, False);
   g_free (tray_atom_name);
+
+  gpe_saved_args (&argc, &argv);
+  XSetCommand (dpy, win, argv, argc);
 
   gdk_window_add_filter (GDK_ROOT_PARENT (), filter, (gpointer)win);
 

@@ -29,6 +29,9 @@
 #include "tap.h"
 #include "stylus.h"
 
+gint saved_argc;
+gchar **saved_argv;
+
 gboolean
 gpe_application_init (int *argc, char **argv[])
 {
@@ -37,7 +40,13 @@ gpe_application_init (int *argc, char **argv[])
   gchar *user_gtkrc_file;
   const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
   const gchar *home_dir = g_get_home_dir ();
-	  
+  gint i;
+
+  saved_argc = *argc;
+  saved_argv = g_malloc (*argc * sizeof (gchar *));
+  for (i = 0; i < saved_argc; i++)
+    saved_argv[i] = g_strdup ((*argv)[i]);
+
   gtk_rc_add_default_file (default_gtkrc_file);
   user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", home_dir);
   gtk_rc_add_default_file (user_gtkrc_file);
@@ -79,4 +88,11 @@ gpe_application_init (int *argc, char **argv[])
     tap_hold_init ();
 
   return TRUE;
+}
+
+void
+gpe_saved_args (gint *argc, gchar **argv[])
+{
+  *argc = saved_argc;
+  *argv = saved_argv;
 }
