@@ -3,9 +3,10 @@ PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
+VERSION = 0.13
 
 MEMBERS = main
-LINGUAS = de
+LINGUAS = 
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -52,10 +53,10 @@ gpe-edit: $(OBJS)
 
 install: install-program install-mo
 
-install-program: all
-	install -D gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
+install-program: all gpe-edit.desktop
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -s gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
-	install -D -m 644 gpe-edit.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
 	install -D -m 644 gpe-edit.mime $(DESTDIR)/etc/mime-handlers/gpe-edit.mime
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)

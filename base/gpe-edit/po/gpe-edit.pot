@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-04 20:53+0000\n"
+"POT-Creation-Date: 2003-02-20 20:31+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,118 +15,102 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:87 main.c:88
+#: main.c:88 main.c:89
 msgid "Untitled"
 msgstr ""
 
-#: main.c:258
+#: main.c:260
 msgid "Open File ..."
 msgstr ""
 
-#: main.c:286
+#: main.c:289
 msgid "Save as .."
 msgstr ""
 
-#: main.c:324
+#: main.c:327
 msgid "Save current file before exiting?"
 msgstr ""
 
-#: main.c:324
+#: main.c:327
 msgid "Question"
 msgstr ""
 
-#: main.c:325
+#: main.c:328
 msgid "Don't save"
 msgstr ""
 
-#: main.c:325 main.c:611
+#: main.c:328 main.c:616
 msgid "Save"
 msgstr ""
 
-#: main.c:387
+#: main.c:390
 msgid "Text not found"
 msgstr ""
 
-#: main.c:426
+#: main.c:429
 msgid "Unable to replace text"
 msgstr ""
 
-#: main.c:440 main.c:489
+#: main.c:443 main.c:492
 msgid "Search for:"
 msgstr ""
 
-#: main.c:443 main.c:495
+#: main.c:446 main.c:498
 msgid "Find"
 msgstr ""
 
-#: main.c:490
+#: main.c:493
 msgid "Replace with:"
 msgstr ""
 
-#: main.c:494 main.c:645
+#: main.c:497 main.c:630
 msgid "Replace"
 msgstr ""
 
-#: main.c:601
+#: main.c:608
 msgid "New"
 msgstr ""
 
-#: main.c:602
+#: main.c:609
 msgid "New document"
 msgstr ""
 
-#: main.c:606
+#: main.c:612
 msgid "Open"
 msgstr ""
 
-#: main.c:607
+#: main.c:613
 msgid "Open file"
 msgstr ""
 
-#: main.c:612
+#: main.c:617
 msgid "Save current file"
 msgstr ""
 
-#: main.c:616
+#: main.c:620
 msgid "Save as"
 msgstr ""
 
-#: main.c:617
+#: main.c:621
 msgid "Save current file as"
 msgstr ""
 
-#: main.c:623
-msgid "Cut"
-msgstr ""
-
-#: main.c:624
-msgid "Cut the selection"
-msgstr ""
-
-#: main.c:628
-msgid "Copy"
-msgstr ""
-
-#: main.c:629
-msgid "Copy the selection"
-msgstr ""
-
-#: main.c:633
-msgid "Paste"
-msgstr ""
-
-#: main.c:634
-msgid "Paste the clipboard"
-msgstr ""
-
-#: main.c:640
+#: main.c:626
 msgid "Search"
 msgstr ""
 
-#: main.c:641
+#: main.c:627
 msgid "Search for a string"
 msgstr ""
 
-#: main.c:646
+#: main.c:631
 msgid "Replace a string"
+msgstr ""
+
+#: gpe-edit.desktop.in.h:1
+msgid "GPE Text Editor"
+msgstr ""
+
+#: gpe-edit.desktop.in.h:2
+msgid "Text Editor"
 msgstr ""
