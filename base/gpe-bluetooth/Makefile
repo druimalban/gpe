@@ -45,6 +45,8 @@ pin-dbus.c: ../bluez-pin/pin-dbus.c
 	cp $< $@
 	chmod a-w $@
 
+extract-po: pin-ui.c pin-dbus.c
+
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
