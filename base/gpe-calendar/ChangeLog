@@ -1,6 +1,15 @@
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (CPPFLAGS, LDFLAGS): Add libgpepimc.
+	* main.c (main): Call gpe_pim_categories_init().
+	* event-ui.c (struct edit_state): Add categories,
+	categories_label.
+	(destroy_user_data): Handle categories.
+	(click_ok): Stash new categories.
+	(build_categories_string): New.
+	(update_categories): Likewise.
+	(click_categories): Likewise.
+	(build_edit_event_window): Add categories handling.	
 
 2004-02-20  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
