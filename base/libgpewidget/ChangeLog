@@ -1,3 +1,15 @@
+1904-01-01  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeiconlist.gob: Reformat.
+	(set_item_icon, remove_item): New.
+	(remove_item_with_udata, update_icon_item_with_udata): Note
+	obsoletion.
+	(MAYBE_PRINTF): Delete macro and all uses.
+ 	(TOP_MARGIN): Define.
+	(_recalc_size): Use it.  Don't touch X size.
+	(COL_WIDTH): Delete.
+	* gpe-iconlist.c, gpe/gpe-iconlist.h: Regenerate.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* gtksimplemenu.c (gtk_simple_menu_class_init): Removed legacy GTK1
