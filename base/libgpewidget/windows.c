@@ -24,21 +24,11 @@ gpe_get_client_window_list (Display *dpy, Window **list, guint *nr)
   int actual_format;
   unsigned long nitems, bytes_after = 0;
   unsigned char *prop = NULL;
-  unsigned long length = 65536;
   
-  do 
-    {
-      length += bytes_after;
-      
-      if (prop)
-	XFree (prop);
-      
-      if (XGetWindowProperty (dpy, DefaultRootWindow (dpy), net_client_list_atom,
-			      0, length, False, XA_WINDOW, &actual_type, &actual_format,
-			      &nitems, &bytes_after, &prop) != Success)
-	return FALSE;
-    }
-  while (bytes_after);
+  if (XGetWindowProperty (dpy, DefaultRootWindow (dpy), net_client_list_atom,
+			  0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
+			  &nitems, &bytes_after, &prop) != Success)
+    return FALSE;
 
   *list = (Window *)prop;
   *nr = (guint)nitems;
@@ -61,7 +51,7 @@ gpe_get_window_name (Display *dpy, Window w)
   gdk_error_trap_push ();
 
   rc = XGetWindowProperty (dpy, w, net_wm_name_atom,
-			  0, 65536, False, utf8_string_atom, &actual_type, &actual_format,
+			  0, G_MAXLONG, False, utf8_string_atom, &actual_type, &actual_format,
 			  &nitems, &bytes_after, &prop);
 
   gdk_error_trap_pop ();
@@ -79,7 +69,7 @@ gpe_get_window_name (Display *dpy, Window w)
       gdk_error_trap_push ();
 
       rc = XGetWindowProperty (dpy, w, XA_WM_NAME,
-			       0, 65536, False, XA_STRING, &actual_type, &actual_format,
+			       0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
 			       &nitems, &bytes_after, &prop);
 
       gdk_error_trap_pop ();
