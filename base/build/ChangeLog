@@ -1,3 +1,7 @@
+2003-03-27  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (.desktop): Use intltool -u.
+
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.translation (real-translation-package): Write out list
