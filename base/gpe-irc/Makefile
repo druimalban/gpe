@@ -1,10 +1,11 @@
 PREFIX = /usr/local
 PACKAGE = gpe-irc
+VERSION = 0.01
 DEBUG = yes
 CVSBUILD = yes
 
 MEMBERS = main irc irc_input dictionary general_config general_config_sql networks_config networks_config_sql irc_parse ctcp
-LINGUAS = de
+LINGUAS = 
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
@@ -20,8 +21,10 @@ endif
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 LDFLAGS += -lgpewidget -lsqlite
 
@@ -32,16 +35,14 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-irc
+all: $(PACKAGE)
 
-gpe-irc: $(OBJS)
+$(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: install-program
-
 install-program: all
-	install -D gpe-irc $(DESTDIR)$(PREFIX)/bin/gpe-irc
-	install -D -m 644 gpe-irc.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-irc.png
+	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc/smileys
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc/colors
@@ -55,10 +56,10 @@ install-program: all
 	install -m 644 pixmaps/colors/blue.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/irc/colors/blue.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-irc
+	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f gpe-irc $(OBJS)
+	rm -f $(PACKAGE) $(OBJS)
 
-include ../build/Makefile.dpkg_ipkg
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg

@@ -1,9 +1,8 @@
 Package: gpe-irc
 Section: x11
 Priority: optional
-Version: 0.01
+Version: VERSION
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@handhelds.org>
 Depends: libgtk2.0-0
-Description: 31337 irc client
-
+Description: 31337 IRC client.
