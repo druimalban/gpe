@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+23.03.2003		Florian			ipaqscreen/callbacks.c		Changed sleep conf to use suid task.
+								ipaqscreen/interface.*		Fixed several bugs in light/dim stuff.
+								suid.c						
+
 22.03.2003		Florian			ipaqscreen/callbacks.*		Fixed screensaver tool, works now, doesn't cause conf to hang.
 								ipaqscreen/xset.c			Updated icon.
 								ipaqscreen/main.c

@@ -9,14 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef READ_BACKLIGHT
-#  include <stdio.h>
-#  include <string.h>
-#  include <fcntl.h>
-#  include <linux/ioctl.h>
-#  include <linux/h3600_ts.h>
-#endif
-
 #include <gtk/gtk.h>
 
 #include "callbacks.h"
@@ -179,29 +171,12 @@ bl_vscale_changed (GtkWidget       *widget,
 		   gpointer         user_data)
 {
   int		power;
-#ifdef READ_BACKLIGHT
-  struct h3600_ts_backlight bl;
-#else
-  char 		cmd[32];
-#endif
+  char 		val[32];
   GtkAdjustment	*adj = GTK_ADJUSTMENT(widget);
 
   power = (int)adj->value;
-#ifdef	READ_BACKLIGHT
-  bl.power = (power ? FLITE_PWR_ON : FLITE_PWR_OFF);
-  bl.brightness = power;
-  if ( ioctl( ISconf->blFD, TS_SET_BACKLIGHT, bl ) < 0 ) {
-    perror("Unable to write backlight");
-  }
-#else
-  if(power) {
-    sprintf(cmd, "bl %d", (int)adj->value);
-  }
-  else {
-    sprintf(cmd, "bl off");
-  }
-  runProg(cmd);
-#endif
+  snprintf(val,32,"%d",power);
+  suid_exec("SCRB",val);
 }
 
 
@@ -281,6 +256,15 @@ on_dim_spin_focus_out_event            (GtkWidget       *widget,
                                         gpointer         user_data)
 {
   on_dim_spin_changed(GTK_EDITABLE(widget), user_data);
+  return FALSE;
+}
+
+gboolean
+on_dim_scale_focus_out_event            (GtkWidget       *widget,
+                                        GdkEventFocus   *event,
+                                        gpointer         user_data)
+{
+  set_brightness(user_data);
   return FALSE;
 }
 

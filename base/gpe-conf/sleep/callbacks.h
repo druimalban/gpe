@@ -1,9 +1,9 @@
 #ifndef _CALLBACKS_H
-#define _CALLBACKS_h
+#define _CALLBACKS_H
 
 #include <gtk/gtk.h>
 
-#include "conf.h"
+//#include "conf.h"
 
 void
 start_button (GtkButton       *button,
@@ -56,6 +56,11 @@ on_dim_spin_activate (GtkEditable     *editable,
 void
 on_dim_spin_changed (GtkEditable     *editable,
 		     gpointer         user_data);
+			 
+gboolean
+on_dim_scale_focus_out_event            (GtkWidget       *widget,
+                                        GdkEventFocus   *event,
+                                        gpointer         user_data);
 
 void
 on_sleep_cpu_spin_activate (GtkEditable     *editable,

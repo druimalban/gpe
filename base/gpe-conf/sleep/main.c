@@ -54,11 +54,6 @@ GtkWidget *Sleep_Build_Objects()
   strcpy(ISconf->binCmd, "/etc/init.d/ipaq-sleep");
   load_IRQs(ISconf, "/proc/interrupts");
 
-  /*
-   * The following code was added by Glade to create one of each component
-   * (except popup menus), just so that you see something after building
-   * the project. Delete any components that you don't want shown initially.
-   */
   GPE_Config_Sleep = create_GPE_Config_Sleep (ISconf);
 
   set_conf_defaults(GPE_Config_Sleep, ISconf);

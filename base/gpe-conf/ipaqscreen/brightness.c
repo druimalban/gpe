@@ -88,6 +88,10 @@ void set_brightness (int brightness)
 #else
   int fd;
 	
+  if (brightness) 
+  {
+      bl.pwr= 1;
+  }
   bl.mode=1;
   fd = open(TS_DEV, O_RDWR);
   if (fd == -1)
