@@ -84,47 +84,50 @@ load_tab_config ()
   chars = malloc(33);
   num_tabs = 0;
 
-  localfile = g_strdup_printf("%s/%s",g_get_home_dir(),TAB_CONFIG_LOCAL);
-  if (!access(localfile,R_OK))
+  localfile = g_strdup_printf ("%s/%s", g_get_home_dir (), TAB_CONFIG_LOCAL);
+  if (!access (localfile, R_OK))
     fnew = fopen (localfile, "r");
-  else if (!access(TAB_CONFIG_GLOBAL,R_OK))
+  else if (!access (TAB_CONFIG_GLOBAL, R_OK))
     fnew = fopen (TAB_CONFIG_GLOBAL, "r");
+  else
+    fnew = NULL;
 
   /* scans config file */  
   /* TAB=<label> <charlist> */
   if (fnew)
-  {
-    while (!feof(fnew) && (2 == fscanf (fnew, "TAB=%32s %32s\n", label, chars)))
     {
-      num_tabs++;
-      tabdefs = realloc(tabdefs,num_tabs*sizeof(t_tabdef));
-      tabdefs[num_tabs-1].label=g_strdup(label);
-      tabdefs[num_tabs-1].chars=g_strdup(chars);
+      while (!feof (fnew) && (2 == fscanf (fnew, "TAB=%32s %32s\n", label, chars)))
+	{
+	  num_tabs++;
+	  tabdefs = realloc(tabdefs,num_tabs*sizeof(t_tabdef));
+	  tabdefs[num_tabs-1].label = g_strdup (label);
+	  tabdefs[num_tabs-1].chars = g_strdup (chars);
+	}
+      fclose (fnew);
     }
-    fclose (fnew);
-  }
   else  // defaults
-  {
-    tabdefs = malloc(7*sizeof(t_tabdef));
-    tabdefs[0].label=g_strdup("abcd");
-    tabdefs[0].chars=tabdefs[0].label;
-    tabdefs[1].label=g_strdup("efgh");
-    tabdefs[1].chars=tabdefs[1].label;
-    tabdefs[2].label=g_strdup("ijkl");
-    tabdefs[2].chars=tabdefs[2].label;
-    tabdefs[3].label=g_strdup("mnop");
-    tabdefs[3].chars=tabdefs[3].label;
-    tabdefs[4].label=g_strdup("qrstu");
-    tabdefs[4].chars=tabdefs[4].label;
-    tabdefs[5].label=g_strdup("vwxyz");
-    tabdefs[5].chars=tabdefs[5].label;
-    tabdefs[6].label=g_strdup("other");
-    tabdefs[6].chars=g_strdup("1234567890+-?!$");
-    num_tabs = 7;
-  }
-  free(label);
-  free(chars);
-  free(localfile);
+    {
+      tabdefs = g_malloc (7*sizeof (t_tabdef));
+      tabdefs[0].label = g_strdup ("abcd");
+      tabdefs[0].chars = tabdefs[0].label;
+      tabdefs[1].label = g_strdup ("efgh");
+      tabdefs[1].chars = tabdefs[1].label;
+      tabdefs[2].label = g_strdup ("ijkl");
+      tabdefs[2].chars = tabdefs[2].label;
+      tabdefs[3].label = g_strdup ("mnop");
+      tabdefs[3].chars = tabdefs[3].label;
+      tabdefs[4].label = g_strdup ("qrstu");
+      tabdefs[4].chars = tabdefs[4].label;
+      tabdefs[5].label = g_strdup ("vwxyz");
+      tabdefs[5].chars = tabdefs[5].label;
+      tabdefs[6].label = g_strdup ("other");
+      tabdefs[6].chars = g_strdup ("1234567890+-?!$");
+      num_tabs = 7;
+    }
+
+  free (label);
+  free (chars);
+  free (localfile);
   active_chars = tabdefs[0].chars;
   return num_tabs;
 }

@@ -1,3 +1,8 @@
+2003-04-27  Philip Blundell  <philb@gnu.org>
+
+	* main.c (load_tab_config): Reformat.  Avoid
+	uninitialised-variable crash if tab file is missing.
+
 2003-04-25	Florian Boor	<florian.boor@kernelconcepts.de>
 
 	* main.c, some fixes for new tab handling, some cleanups
