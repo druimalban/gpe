@@ -1,0 +1,24 @@
+<!--#set var="addtitle" value="Time Tracker"-->
+<!--#set var="pagename" value="time-tracker"-->
+<!--#set var="author" value="Phil Blundell"-->
+<!--#set var="authoremail" value="philb@gnu.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<H2>Coordinator</H2>
+<P>
+The coordinator for this sub-project is Luis Oliveira
+(<A HREF="mailto:luismbo@netcabo.pt">luismbo@netcabo.pt</A>). If you want to 
+contribute to this project, please contact him directly.
+</P>
+
+<H2>Function</H2>
+<P>
+This is the friendly face of GPE that greets the user when they log in.
+It displays a summary of appointments and tasks for the day ahead.
+</P>
+
+<H2>Screenshot</H2>
+<P>
+<IMG SRC="/images/today.png" ALT="Today">
+</P>
+<!--#include virtual="/includes/foot.shtml"-->
