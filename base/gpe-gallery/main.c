@@ -17,7 +17,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
+#include <math.h>
+
 #include <gtk/gtk.h>
+#include <gdk/gdk.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -35,6 +38,7 @@
 GtkWidget *window, *vbox2;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget, *image_widget, *image_pixbuf, *scaled_image_pixbuf;
+GtkWidget *image_event_box;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
 GList *image_filenames;
@@ -69,6 +73,9 @@ struct gpe_icon my_icons[] = {
 
 guint window_x = 240, window_y = 310;
 
+static double starting_angle;	// for rotating drags
+static GdkPixbuf *rotate_pixbuf;
+
 static void
 update_window_title (void)
 {
@@ -76,6 +83,52 @@ update_window_title (void)
 
   window_title = g_strdup_printf ("%s", WINDOW_NAME);
   gtk_window_set_title (GTK_WINDOW (window), window_title);
+}
+
+double
+angle (GtkWidget *w, int x, int y)
+{
+  int dx = x - (w->allocation.width / 2),
+    dy = y - (w->allocation.height / 2);
+
+  double a = atan2 ((double)dy, (double)dx);
+
+  return a;
+}
+
+void
+button_down (GtkWidget *w, GdkEventButton *b)
+{
+  int x = b->x, y = b->y;
+  double a = angle (w, x, y);
+
+  starting_angle = a;
+
+  gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+		    NULL, NULL, b->time);
+}
+
+void
+button_up (GtkWidget *w, GdkEventButton *b)
+{
+  gdk_pointer_ungrab (b->time);
+}
+
+void
+motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
+{
+  int x = m->x, y = m->y;
+  double a = angle (w, x, y);
+  int deg = (int)((a - starting_angle) * 360 / (2 * M_PI));
+
+  if (rotate_pixbuf)
+    gdk_pixbuf_unref (rotate_pixbuf);
+
+  if (deg < 0) deg += 360;
+
+  rotate_pixbuf = image_rotate (image_pixbuf, deg);
+
+  gtk_image_set_from_pixbuf (image_widget, rotate_pixbuf);
 }
 
 void
@@ -92,9 +145,17 @@ show_image (GtkWidget *widget, gpointer *udata)
   scaled_image_pixbuf = NULL;
 
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
-  gtk_box_pack_start (GTK_BOX (vbox2), image_widget, TRUE, TRUE, 0);
+  image_event_box = gtk_event_box_new ();
+  gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
+  gtk_box_pack_start (GTK_BOX (vbox2), image_event_box, TRUE, TRUE, 0);
+  gtk_signal_connect (image_event_box, "button-press-event", button_down, NULL);
+  gtk_signal_connect (image_event_box, "button-release-event", button_up, NULL);
+  gtk_signal_connect (image_event_box, "motion-notify-event", motion, image_pixbuf);
+
+  gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_widget_show (tools_toolbar);
+  gtk_widget_show (image_event_box);
   gtk_widget_show (image_widget);
 
   printf ("You just clicked on an image called %s\n", filename);
@@ -196,6 +257,7 @@ hide_image ()
   if (view_widget)
   {
     gtk_widget_destroy (image_widget);
+    gtk_widget_destroy (image_event_box);
     gtk_widget_hide (tools_toolbar);
     gtk_widget_show (view_widget);
   }
