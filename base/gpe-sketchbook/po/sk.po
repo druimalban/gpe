@@ -1,0 +1,86 @@
+# Slovak translations for gpe-sketchbook package
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Marcel Telka <marcel@telka.sk>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2003-09-09 23:21+0200\n"
+"Last-Translator: Marcel Telka <marcel@telka.sk>\n"
+"Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
+msgid "Sketchbook"
+msgstr "Náčrtník"
+
+#: src/selector.c:87
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Nepodarilo sa načítať priečinok náčrtníka: %s. Koniec."
+
+#: src/selector.c:93
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Nepodarilo sa vytvoriť %s: %s. Koniec."
+
+#: src/selector.c:164
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s v %s"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+msgid "Delete current sketch?"
+msgstr "Odstrániť aktuálny náčrtok?"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
+msgid "Question"
+msgstr "Otázka"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "Zrušiť"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+msgid "Delete"
+msgstr "Odstrániť"
+
+#: src/sketchpad.c:184
+msgid "new"
+msgstr "nový"
+
+#: src/sketchpad-cb.c:46
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Náčrtok zmenený,\n"
+"uložiť pred ukončením?"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
+msgstr "Zahodiť"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+msgid "Save"
+msgstr "Uložiť"
+
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
+msgstr "Uložiť aktuálny náčrtok?"
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr "Nový"
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "Vlastnosti"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE Náčrtník"
