@@ -238,9 +238,12 @@ edit_event_window(void)
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *labeleventpage = gtk_label_new (_("Event"));
   GtkWidget *labelrecurpage = gtk_label_new (_("Recurrence"));
-  
+  GtkWidget *labelalarmpage = gtk_label_new (_("Alarm"));
+
   GtkWidget *vboxevent = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxrepeat = gtk_vbox_new (FALSE, 0);
+  GtkWidget *vboxalarm = gtk_vbox_new (FALSE, 0);
+  
   GtkWidget *vboxend = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
   
@@ -281,6 +284,7 @@ edit_event_window(void)
   GtkWidget *alarmspin = gtk_spin_button_new (GTK_ADJUSTMENT (alarmadj), 
 					      1.0, 0);
   GtkWidget *alarmoption = gtk_option_menu_new ();
+  GtkWidget *alarmbefore = gtk_label_new (_("before event"));
 
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   struct edit_state *s = g_malloc (sizeof (struct edit_state));
@@ -288,22 +292,6 @@ edit_event_window(void)
   memset (s, 0, sizeof (*s));
 
 /* Begin event vbox */
-  gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("minutes before")));
-  gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("hours before")));
-  gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("days before")));
-  gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("weeks before")));
-  gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("months before")));
-  gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("years before")));
-		
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
-  gtk_widget_set_usize (alarmoption, 120, -1);
-
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
 
@@ -324,13 +312,6 @@ edit_event_window(void)
   gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
   gtk_widget_set_usize (text, -1, 88);
 
-  gtk_signal_connect (GTK_OBJECT (alarmbutton), "clicked",
-		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-
-  gtk_box_pack_start (GTK_BOX (alarmhbox), alarmbutton, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (alarmhbox), alarmoption, TRUE, TRUE, 2);
-
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
@@ -345,7 +326,6 @@ edit_event_window(void)
   gtk_box_pack_start (GTK_BOX (vboxevent), startdatebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), enddatebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), alldaybutton, FALSE, FALSE, 2);  
-  gtk_box_pack_start (GTK_BOX (vboxevent), alarmhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionframe, TRUE, TRUE, 2);
   
@@ -416,7 +396,7 @@ edit_event_window(void)
   /* "every" label */
   dailylabelevery = gtk_label_new (_("Every"));
   gtk_box_pack_start_show (GTK_BOX (s->dailybox), dailylabelevery, 
-			   TRUE, TRUE, 0);
+			   FALSE, FALSE, 0);
   
   /* daily spinner */
   dailyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
@@ -425,7 +405,8 @@ edit_event_window(void)
 
   /* days label */
   dailylabels = gtk_label_new (_("day(s)"));
-  gtk_box_pack_start_show (GTK_BOX (s->dailybox), dailylabels, TRUE, TRUE, 0);
+  gtk_box_pack_start_show (GTK_BOX (s->dailybox), dailylabels, 
+			   FALSE, FALSE, 0);
   
 /* weekly box */
   s->weeklybox = gtk_vbox_new (FALSE, 0);
@@ -462,7 +443,7 @@ edit_event_window(void)
   /* "every" label */
   monthlylabelevery = gtk_label_new (_("Every"));
   gtk_box_pack_start_show (GTK_BOX (s->monthlybox), monthlylabelevery, 
-			   TRUE, TRUE, 0);
+			   FALSE, FALSE, 0);
   
   /* monthly spinner */
   monthlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
@@ -473,7 +454,7 @@ edit_event_window(void)
   /* months label */
   monthlylabels = gtk_label_new (_("month(s)"));
   gtk_box_pack_start_show (GTK_BOX (s->monthlybox), monthlylabels, 
-			   TRUE, TRUE, 0);
+			   FALSE, FALSE, 0);
   
 /* yearly hbox */
   s->yearlybox = gtk_hbox_new (FALSE, 0);
@@ -482,7 +463,7 @@ edit_event_window(void)
   /* "every" label */
   yearlylabelevery = gtk_label_new (_("Every"));
   gtk_box_pack_start_show (GTK_BOX (s->yearlybox), yearlylabelevery, 
-			   TRUE, TRUE, 0);
+			   FALSE, FALSE, 0);
   
   /* yearly spinner */
   yearlyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 365, 1, 5, 5);
@@ -492,7 +473,7 @@ edit_event_window(void)
   /* years label */
   yearlylabels = gtk_label_new (_("year(s)"));
   gtk_box_pack_start_show (GTK_BOX (s->yearlybox), yearlylabels, 
-			   TRUE, TRUE, 0);
+			   FALSE, FALSE, 0);
   
   gtk_widget_hide (s->dailybox);
   gtk_widget_hide (s->weeklybox);
@@ -547,7 +528,37 @@ edit_event_window(void)
   		  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonforever), TRUE);
 
+  /* begin alarm page */
+  gtk_menu_append (GTK_MENU (alarmmenu), 
+		   gtk_menu_item_new_with_label (_("minutes")));
+  gtk_menu_append (GTK_MENU (alarmmenu), 
+		   gtk_menu_item_new_with_label (_("hours")));
+  gtk_menu_append (GTK_MENU (alarmmenu), 
+		   gtk_menu_item_new_with_label (_("days")));
+  gtk_menu_append (GTK_MENU (alarmmenu), 
+		   gtk_menu_item_new_with_label (_("weeks")));
+  gtk_menu_append (GTK_MENU (alarmmenu), 
+		   gtk_menu_item_new_with_label (_("months")));
+  gtk_menu_append (GTK_MENU (alarmmenu), 
+		   gtk_menu_item_new_with_label (_("years")));
+		
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
+  gtk_widget_set_usize (alarmoption, 120, -1);
+
+  gtk_signal_connect (GTK_OBJECT (alarmbutton), "clicked",
+		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+
+  gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (alarmhbox), alarmoption, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (alarmhbox), alarmbefore, FALSE, FALSE, 0);
+
+  gtk_box_pack_start (GTK_BOX (vboxalarm), alarmbutton, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxalarm), alarmhbox, FALSE, FALSE, 0);
+
+  gtk_widget_show_all (vboxalarm);
+
   gtk_widget_show (labeleventpage);
+  gtk_widget_show (labelalarmpage);
   gtk_widget_show (labelrecurpage);
   
   gtk_box_pack_start_show (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
@@ -560,8 +571,12 @@ edit_event_window(void)
   gtk_widget_show (vboxtop);
   gtk_container_add (GTK_CONTAINER (window), vboxtop);
   
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, labeleventpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, labelrecurpage);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, 
+			    labeleventpage);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxalarm,
+			    labelalarmpage);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, 
+			    labelrecurpage);
 
   gtk_widget_grab_focus (text);
 
