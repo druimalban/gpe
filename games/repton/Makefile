@@ -13,6 +13,7 @@ LIBS=		`sdl-config --libs`
 PREFIX = /usr
 BUILD = ../../base/build
 VERSION = 1.3
+PACKAGE = repton
 
 BINDIR=		$(DESTDIR)$(PREFIX)/bin
 LIBDIR=		$(DESTDIR)$(PREFIX)/lib
