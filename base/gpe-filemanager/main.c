@@ -292,7 +292,7 @@ on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
   limited_view = 
     gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(set_myfiles_menu_item));
   enabled = (!limited_view || strcmp(current_directory,g_get_home_dir()));
-  gtk_widget_set_sensitive(btnGoUp,enabled);
+  gtk_widget_set_sensitive(btnGoUp, enabled);
 }
 
 void
@@ -1870,12 +1870,13 @@ main (int argc, char *argv[])
                                  G_TYPE_STRING,
                                  G_TYPE_POINTER);
   /* main window */
-  size_x = gdk_screen_width() / 2;
-  size_y = gdk_screen_height() * 2 / 3;
+  size_x = gdk_screen_width();
+  size_y = gdk_screen_height();
    /* if screen is large enough and landscape or if it is really large */
   directory_browser = (((size_x > 240) && (size_y > 320) && (size_x > size_y))
                       || (size_x > 600));
-  
+  size_x = size_x / 2;
+  size_y = size_y * 2 / 3;
   if (size_x < 240) size_x = 240;
   if (size_y < 320) size_y = 320;
   
@@ -1982,13 +1983,12 @@ main (int argc, char *argv[])
 
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
+			
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item), directory_browser);
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_myfiles_menu_item), limited_view);
+
   gtk_widget_show_all (window);
   
-  if (directory_browser)
-    gtk_widget_show_all(dir_view_window);
-  else
-	gtk_widget_hide(dir_view_window);
-
   gnome_vfs_init ();
   gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,
 						  (GnomeVFSModuleCallback) auth_callback,
@@ -1998,6 +1998,11 @@ main (int argc, char *argv[])
   gnome_vfs_mime_info_reload();
   gnome_vfs_application_registry_reload();
   
+  if (directory_browser)
+    gtk_widget_show_all(dir_view_window);
+  else
+	gtk_widget_hide(dir_view_window);
+
   if (argc < 2)
     set_directory_home (NULL);
   else

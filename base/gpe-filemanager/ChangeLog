@@ -1,3 +1,8 @@
+2004-08-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: create_fMain() Fixed detections depending on screen size.
+	* main.c: main() Added missing initialisations, fixed orders.
+
 2004-08-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Directory create dialog closes correcty on enter now.
