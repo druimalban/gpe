@@ -131,28 +131,33 @@ draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct
 #endif
   guint width, height;
 
+  if (i->summary)
+    {
 #if GTK_MAJOR_VERSION < 2
-  gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-		 i->summary, strlen (i->summary));
-  width = gdk_string_width (font, i->summary);
-  height = font->ascent + font->descent;
+      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
+		     i->summary, strlen (i->summary));
+      width = gdk_string_width (font, i->summary);
+      height = font->ascent + font->descent;
 #else
-  PangoLayout *l = item_layout (i);
-  
-  gtk_paint_layout (widget->style,
-		    widget->window,
-		    GTK_WIDGET_STATE (widget),
-		    FALSE,
-		    &event->area,
-		    widget,
-		    "label",
-		    xcol, y,
-		    l);
-
-  pango_layout_get_size (l, &width, &height);
-  width /= PANGO_SCALE;
-  height /= PANGO_SCALE;
+      PangoLayout *l = item_layout (i);
+      
+      gtk_paint_layout (widget->style,
+			widget->window,
+			GTK_WIDGET_STATE (widget),
+			FALSE,
+			&event->area,
+			widget,
+			"label",
+			xcol, y,
+			l);
+      
+      pango_layout_get_size (l, &width, &height);
+      width /= PANGO_SCALE;
+      height /= PANGO_SCALE;
 #endif
+    }
+  else
+    width = 0;
   
   gdk_draw_rectangle (drawable, widget->style->black_gc, FALSE, 2, y + skew, 12, 12);
   if (i->state == COMPLETED)

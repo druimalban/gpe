@@ -1,9 +1,18 @@
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Provides, Replaces): Add.
+
+	* list-ui.c (draw_item): Cope with NULL summary.
+	* todo-sql.c (push_item): Only write out summary and description
+	if not NULL.
+
+	* gpe-todo.png: Revert Colin's last change.
+
 2002-10-03  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-todo.png: New icon from
 	http://art.gnome.org/show_icons.php?type=other&page=14.
         The old one really looked out of place.
-
 
 2002-09-30  Philip Blundell  <philb@gnu.org>
 

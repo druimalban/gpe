@@ -289,8 +289,8 @@ push_item (struct todo_item *i)
   
   if (sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
 			  NULL, NULL, &err, i->id)
-      || insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary)
-      || insert_values (sqliteh, i->id, "DESCRIPTION", "%q", i->what)
+      || (i->summary && insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary))
+      || (i->what && insert_values (sqliteh, i->id, "DESCRIPTION", "%q", i->what))
       || insert_values (sqliteh, i->id, "STATE", "%d", i->state))
     goto error;
 
