@@ -14,6 +14,7 @@
 #include <locale.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 
 #include <bluetooth/bluetooth.h>
@@ -24,6 +25,7 @@
 
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
+#include <gpe/tray.h>
 
 #include "main.h"
 #include "sdp.h"
@@ -41,7 +43,7 @@ struct bt_service_lap
   int port;
   
   GThread *thread;
-  gboolean terminate;
+  volatile gboolean terminate;
   GtkWidget *w;
   int fd;
   pid_t pppd_pid;
@@ -128,44 +130,49 @@ lap_thread (struct bt_service_lap *svc)
       return;
     }
 
-#if 0
   for (;;)
     {
-      int err;
       gchar *text;
       gboolean rc;
       guint id;
-      
-      err = wait_for_hup (svc);
-      
-      if (err < 0)
-	text = g_strdup_printf (_("LAP connection to %s lost: %s"),
-				batostr (&svc->bd->bdaddr),
-				strerror (-err));
-      else
-	text = g_strdup_printf (_("LAP connection to %s lost"),
-				batostr (&svc->bd->bdaddr));
+      int status;
 
-      id = gpe_system_tray_send_message (dock_window, text, 0);
-      schedule_message_delete (id, 5000);
+      rc = waitpid (svc->pppd_pid, &status, 0);
 
-      g_free (text);
+      fprintf (stderr, "waitpid returns %d\n", rc);
 
-      do
+      if (svc->terminate)
+	g_thread_exit (0);
+
+      if (rc > 0)
 	{
-	  sleep (5);
-	  rc = lap_connect (svc, &error);	  
-	} while (rc == FALSE);
+	  text = g_strdup_printf (_("LAP connection to %s lost"),
+			      batostr (&svc->bd->bdaddr));
 
-      text = g_strdup_printf (_("LAP connection to %s re-established"),
+	  gdk_threads_enter ();
+	  id = gpe_system_tray_send_message (dock_window, text, 0);
+	  gdk_threads_leave ();
+	  schedule_message_delete (id, 5000);
+
+	  g_free (text);
+	  
+	  do
+	    {
+	      sleep (5);
+	      rc = lap_connect (svc, &error);	  
+	    } while (rc == FALSE);
+	  
+	  text = g_strdup_printf (_("LAP connection to %s re-established"),
 			      batostr (&svc->bd->bdaddr));
 			      
-      id = gpe_system_tray_send_message (dock_window, text, 0);
-      schedule_message_delete (id, 5000);
+	  gdk_threads_enter ();
+	  id = gpe_system_tray_send_message (dock_window, text, 0);
+	  gdk_threads_leave ();
+	  schedule_message_delete (id, 5000);
 
-      g_free (text);
+	  g_free (text);
+	}
     }
-#endif
 }
 
 static void
@@ -177,6 +184,9 @@ lap_menu_connect (GtkWidget *w, struct bt_service_lap *svc)
 static void
 lap_menu_disconnect (GtkWidget *w, struct bt_service_lap *svc)
 {
+  svc->terminate = TRUE;
+  kill (svc->pppd_pid, SIGTERM);
+  svc->thread = NULL;
 }
 
 static void

@@ -44,7 +44,8 @@ struct bt_service_pan
   struct bt_device *bd;
 
   GThread *thread;
-  gboolean terminate;
+  pid_t pid;
+  volatile gboolean terminate;
   GtkWidget *w;
   int fd;
 };
@@ -277,11 +278,41 @@ pan_connect (struct bt_service_pan *svc, GError *error)
 }
 
 static void
+pan_disconnect (bdaddr_t *bd)
+{
+  pid_t pid;
+  int status;
+  gchar *text;
+
+  text = g_strdup (batostr (bd));
+  
+  pid = vfork ();
+  if (pid == 0)
+    {
+      execl (PREFIX "/lib/gpe-bluetooth/bnep-helper", PREFIX "/lib/gpe-bluetooth/bnep-helper", "-k", text, NULL);
+      perror ("exec");
+      _exit (1);
+    }
+
+  g_free (text);
+
+  waitpid (pid, &status, 0);
+}
+
+static void
+usr1_handler (void)
+{
+}
+
+static void
 pan_thread (struct bt_service_pan *svc)
 {
   char *text;
   GError error;
   gboolean rc;
+
+  svc->pid = getpid ();
+  signal (SIGUSR1, usr1_handler);
 
   text = g_strdup_printf (_("Connecting to %s"), batostr (&svc->bd->bdaddr));
 
@@ -315,7 +346,14 @@ pan_thread (struct bt_service_pan *svc)
       guint id;
       
       err = wait_for_hup (svc);
-      
+
+      if (err == 0)
+	{
+	  fprintf (stderr, "pan: thread exiting.\n");
+	  pan_disconnect (&svc->bd->bdaddr);
+	  g_thread_exit (0);
+	}
+
       if (err < 0)
 	text = g_strdup_printf (_("PAN connection to %s lost: %s"),
 				batostr (&svc->bd->bdaddr),
@@ -358,6 +396,9 @@ pan_menu_connect (GtkWidget *w, struct bt_service_pan *svc)
 static void
 pan_menu_disconnect (GtkWidget *w, struct bt_service_pan *svc)
 {
+  svc->terminate = TRUE;
+  kill (svc->pid, SIGUSR1);
+  svc->thread = NULL;
 }
 
 static void

@@ -273,7 +273,7 @@ run_scan (void)
     {
       gdk_threads_enter ();
       gtk_widget_destroy (w);
-      gpe_perror_box (_("Inquiry failed"));
+      gpe_perror_box_nonblocking (_("Inquiry failed"));
       gdk_threads_leave ();
       close (dev_id);
       return FALSE;
@@ -284,7 +284,7 @@ run_scan (void)
     {
       gdk_threads_enter ();
       gtk_widget_destroy (w);
-      gpe_perror_box (_("HCI device open failed"));
+      gpe_perror_box_nonblocking (_("HCI device open failed"));
       gdk_threads_leave ();
       close (dev_id);
       free(info);
@@ -463,6 +463,7 @@ main (int argc, char *argv[])
     }
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
   window = gtk_plug_new (0);

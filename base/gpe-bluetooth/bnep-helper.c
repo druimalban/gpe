@@ -18,7 +18,7 @@
 int ctl;
 
 static int 
-bnep_connadd(int sk, uint16_t role)
+bnep_connadd (int sk, uint16_t role)
 {
   struct bnep_connadd_req req;
 
@@ -28,14 +28,35 @@ bnep_connadd(int sk, uint16_t role)
   req.role = role;
 
   if (ioctl(ctl, BNEPCONNADD, &req))
-    return -1;
+    {
+      perror ("BNEPCONNADD");
+      return -1;
+    }
 
   return 0;
 }
 
-int bnep_init(void)
+static int 
+bnep_conndel (bdaddr_t *dst)
 {
-  ctl = socket(PF_BLUETOOTH, SOCK_RAW, BTPROTO_BNEP);
+  struct bnep_conndel_req req;
+
+  memset (&req, 0, sizeof (req));
+  memcpy (req.dst, dst, ETH_ALEN);
+
+  if (ioctl(ctl, BNEPCONNDEL, &req))
+    {
+      perror ("BNEPCONNDEL");
+      return -1;
+    }
+
+  return 0;
+}
+
+int 
+bnep_init (void)
+{
+  ctl = socket (PF_BLUETOOTH, SOCK_RAW, BTPROTO_BNEP);
   if (ctl < 0) 
     {
       perror("Failed to open control socket");
@@ -49,6 +70,11 @@ int
 main (int argc, char *argv[])
 {
   bnep_init ();
+
+  if (argc > 2 && !strcmp (argv[1], "-k"))
+    {
+      return bnep_conndel (strtoba (argv[2]));
+    }
 
   if (argc < 2)
     exit (1);
