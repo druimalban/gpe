@@ -425,6 +425,7 @@ int load_sgf_file(const char * filename){
 
       //change the scanner config on specific context
       //FIXME: create 2 static GScannerConfig, and switch them.
+      scanner->config->cset_skip_characters  = "";
       scanner->config->scan_identifier_1char = FALSE;
       scanner->config->char_2_token          = FALSE; /* return G_TOKEN_CHAR? */
 
@@ -447,6 +448,7 @@ int load_sgf_file(const char * filename){
       }      
 
       //revert scanner config
+      scanner->config->cset_skip_characters  = "\t\r\n";
       scanner->config->scan_identifier_1char = TRUE;
       scanner->config->char_2_token          = TRUE; /* return G_TOKEN_CHAR? */
       scanner->config->scan_float            = TRUE;

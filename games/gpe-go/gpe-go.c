@@ -11,6 +11,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h> //exit()
 #include <stdio.h>  //sscanf()
+#include <string.h> //strlen()
 
 #include "model.h"
 #include "sgf.h"
@@ -763,6 +764,7 @@ int kill_group_of(int col, int row){
 }
 
 void status_update(char * message){
+  g_strdelimit(message, "\n\t\r", ' ');//make message a "flat" string
   gtk_statusbar_pop (GTK_STATUSBAR(go.status), 0);
   gtk_statusbar_push(GTK_STATUSBAR(go.status), 0, message);
 }
@@ -1131,7 +1133,30 @@ void _save_hitem_sgf(FILE * f, Hitem * hitem){
                                          hitem->col + 'a' -1,
                                          hitem->row + 'a' -1);
   if(hitem->comment){
-    fprintf(f, "C[%s]", hitem->comment);//FIXME: escape string!!!
+    gchar * s;
+    GString * string;
+
+    string = g_string_sized_new(1000);
+
+    g_string_append(string, "C[");
+
+    s = hitem->comment;
+    while(*s){
+      switch(*s){
+        case '[':
+        case ']':
+        case '\\':
+          g_string_append_c (string, '\\');
+      }
+      g_string_append_c(string, *s);
+      s++;
+    }
+
+    g_string_append_c(string, ']');
+
+    fprintf(f, "%s", string->str);
+
+    g_string_free(string, TRUE);
   }
 }
 
@@ -1453,7 +1478,12 @@ void on_button_edit_comment_clicked(){
   else{
     gtk_text_buffer_set_text (go.comment_buffer, "", -1);
   }
+  go.comment_edited = FALSE;
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_COMMENT_EDITOR);
+}
+
+void on_textbuffer_changed (GtkTextBuffer * textbuffer, gpointer unused){
+  go.comment_edited = TRUE;
 }
 
 void on_button_comment_cancel_clicked (void){
@@ -1461,24 +1491,25 @@ void on_button_comment_cancel_clicked (void){
 }
 
 void on_button_comment_ok_clicked (void){
-  gchar * s;
-  GtkTextIter it_start;
-  GtkTextIter it_end;
+  if(go.comment_edited){
+    gchar * s;
+    GtkTextIter it_start;
+    GtkTextIter it_end;
+    
+    gtk_text_buffer_get_bounds   (go.comment_buffer, &it_start, &it_end);
+    s = gtk_text_buffer_get_text (go.comment_buffer, &it_start, &it_end, FALSE);
+    TRACE("Got -->%s<--", s);
 
-  gtk_text_buffer_get_bounds (go.comment_buffer, &it_start, &it_end);
-  s = gtk_text_buffer_get_text (go.comment_buffer, &it_start, &it_end, FALSE);
-  TRACE("Got -->%s<--", s);
+    g_strstrip(s);
 
-  if(go.history->data){
-    Hitem * hitem;
-    hitem = go.history->data;
-    if(hitem->comment) free(hitem->comment);
-    //FIXME: dont if s is empty...
-    //FIXME: dont if s is unchanged
-    //FIXME: strip s, escape \n
-    hitem->comment = s;
+    if( strlen(s) > 0 && go.history->data ){
+      Hitem * hitem;
+      hitem = go.history->data;
+      if(hitem->comment) free(hitem->comment);
+      hitem->comment = s;
+    }
+    status_update_current();
   }
-  status_update_current();
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
 }
 
@@ -1524,6 +1555,8 @@ GtkWidget * build_comment_editor(){
   comment_text_view = gtk_text_view_new ();
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW(comment_text_view), GTK_WRAP_CHAR);
   go.comment_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (comment_text_view));
+  g_signal_connect (G_OBJECT (go.comment_buffer), "changed",
+                    G_CALLBACK (on_textbuffer_changed), NULL);
 
   //scrolled window
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
