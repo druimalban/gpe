@@ -1,9 +1,12 @@
 PREFIX = /usr/local
+SYSCONFDIR = /etc
 PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.27-1
+VERSION = 0.30
+
+GLADE = bluez-pin-gpe.glade
 
 MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset
 
@@ -50,6 +53,16 @@ pin-dbus.c: ../bluez-pin/pin-dbus.c
 	cp $< $@
 	chmod a-w $@
 
+$(GLADE): ../bluez-pin/$(GLADE)
+	rm -f $@
+	cp $< $@
+	chmod a-w $@
+
+bluez.conf: ../bluez-pin/bluez.conf
+	rm -f $@
+	cp $< $@
+	chmod a-w $@
+
 extract-po: pin-ui.c pin-dbus.c
 
 $(PACKAGE): pin-ui.h $(OBJS)
@@ -59,7 +72,7 @@ bnep-helper: bnep-helper.c
 
 rfcomm-helper: rfcomm-helper.c
 
-install-program: all
+install-program: all $(GLADE) bluez.conf
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)$(PREFIX)/lib/gpe-bluetooth
@@ -80,6 +93,10 @@ install-program: all
 	install hciattach.sh $(DESTDIR)/etc/bluetooth/hciattach
 	install -d $(DESTDIR)/etc/ppp/peers/
 	install -m 644 peers/lap $(DESTDIR)/etc/ppp/peers/lap
+	mkdir -p $(DESTDIR)$(PREFIX)/share/bluez-pin/
+	install -m 644 $(GLADE) $(DESTDIR)$(PREFIX)/share/bluez-pin/
+	mkdir -p $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
+	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) pin-ui.c pin-dbus.c pin-ui.h
