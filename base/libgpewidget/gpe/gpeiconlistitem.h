@@ -39,4 +39,8 @@ GtkType		gpe_icon_list_item_get_type (void);
 
 GObject        *gpe_icon_list_item_new ();
 
+void           gpe_icon_list_item_button_press (GPEIconListItem *i, GdkEventButton *b);
+
+void           gpe_icon_list_item_button_release (GPEIconListItem *i, GdkEventButton *b);
+
 #endif

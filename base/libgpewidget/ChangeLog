@@ -1,3 +1,14 @@
+2003-04-05  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpe/gpeiconlistitem.h (gpe_icon_list_item_button_press,
+	gpe_icon_list_item_button_release): Add prototypes.
+
+	* gpeiconlistitem.c (gpe_icon_list_item_class_init): Register
+	signals.
+	(gpe_icon_list_item_button_press): New function.
+	(gpe_icon_list_item_button_release): New function.
+	(_GPEIconListItemClass): Add button_press, button_release.
+
 2003-04-01  Philip Blundell  <philb@gnu.org>
 
 	* gpeclockface.c: New file.

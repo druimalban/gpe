@@ -19,9 +19,13 @@
 
 #include "gpeiconlistitem.h"
 
+static guint my_signals[2];
+
 struct _GPEIconListItemClass 
 {
   GObjectClass parent_class;
+  void (*button_press)      (GPEIconListItem *sm, GdkEventButton *);
+  void (*button_release)    (GPEIconListItem *sm, GdkEventButton *);
 };
 
 static void
@@ -29,9 +33,38 @@ gpe_icon_list_item_init (GPEIconListItem *item)
 {
 }
 
+void
+gpe_icon_list_item_button_press (GPEIconListItem *i, GdkEventButton *b)
+{
+  g_signal_emit (G_OBJECT (i), my_signals[0], 0, b);
+}
+
+void
+gpe_icon_list_item_button_release (GPEIconListItem *i, GdkEventButton *b)
+{
+  g_signal_emit (G_OBJECT (i), my_signals[1], 0, b);
+}
+
 static void
 gpe_icon_list_item_class_init (GPEIconListItemClass * klass)
 {
+  my_signals[0] = g_signal_new ("button-press",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (struct _GPEIconListItemClass, button_press),
+				NULL, NULL,
+				gtk_marshal_VOID__BOXED,
+				G_TYPE_NONE, 1,
+				GDK_TYPE_EVENT);
+
+  my_signals[1] = g_signal_new ("button-release",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (struct _GPEIconListItemClass, button_release),
+				NULL, NULL,
+				gtk_marshal_VOID__BOXED,
+				G_TYPE_NONE, 1,
+				GDK_TYPE_EVENT);
 }
 
 static void
