@@ -18,15 +18,17 @@
 
 struct tag_map
 {
+  GType type;
   gchar *tag;
   gchar *vc;
 };
 
 static struct tag_map map[] =
   {
-    { "summary", NULL },
-    { "description", NULL },
-    { NULL, NULL }
+    { G_TYPE_STRING, "summary", NULL },
+    { G_TYPE_STRING, "description", NULL },
+    { G_TYPE_INT, "duration", NULL },
+    { G_TYPE_INVALID, NULL, NULL }
   };
 
 static gboolean
@@ -56,7 +58,12 @@ vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
     {
       if (!strcasecmp (t->tag, tag))
 	{
-	  g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value, NULL);
+	  if (t->type == G_TYPE_STRING)
+	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, value, NULL);
+	  else if (t->type == G_TYPE_INT)
+	    g_object_set (G_OBJECT (event), t->vc ? t->vc : t->tag, atoi (value), NULL);
+	  else
+	    abort ();
 	  return TRUE;
 	}
       t++;
@@ -104,17 +111,46 @@ vevent_to_tags (MIMEDirVEvent *vevent)
 {
   GSList *data = NULL;
   struct tag_map *t = &map[0];
+  MIMEDirDateTime *date;
 
   while (t->tag)
     {
-      gchar *value;
+      if (t->type == G_TYPE_STRING)
+	{
+	  gchar *value;
 
-      g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
+	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
 
-      if (value)
-	data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+	  if (value)
+	    data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
+	}
+      else if (t->type == G_TYPE_INT)
+	{
+	  gint value;
+
+	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
+
+	  data = gpe_tag_list_prepend (data, t->tag, g_strdup_printf ("%d", value));
+	}
+      else
+	abort ();
 
       t++;
+    }
+
+  g_object_get (G_OBJECT (vevent), "dtstart", &date, NULL);
+  if (date)
+    {
+      struct tm tm;
+      gchar buf[256];
+  
+      mimedir_datetime_get_struct_tm (date, &tm);
+
+      strftime (buf, sizeof (buf), 
+		(date->flags & MIMEDIR_DATETIME_TIME) ? "%Y-%m-%d %H:%M" : "%Y-%m-%d",
+		&tm); 
+      
+      data = gpe_tag_list_prepend (data, "start", g_strdup (buf));
     }
 
   return data;
