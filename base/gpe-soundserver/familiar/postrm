@@ -1,0 +1,3 @@
+#!/bin/sh
+
+rm -f /etc/X11/Xsession-gpe.d/50sound-server

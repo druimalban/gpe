@@ -48,15 +48,15 @@ main ()
       exit (1);
     }
 
-  pid = fork ();
+  signal (SIGCHLD, child_dead);
+  pid = vfork ();
   if (pid == 0)
     {
       execlp ("esd", "esd", "-nobeeps", NULL);
       perror ("exec");
-      exit (1);
+      _exit (1);
     }
 
-  signal (SIGCHLD, child_dead);
   signal (SIGTERM, fatal_signal);
   signal (SIGINT, fatal_signal);
   signal (SIGQUIT, fatal_signal);

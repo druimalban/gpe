@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if test -d /etc/X11/Xsession-gpe.d/; then 
+    ln -fs /etc/X11/Xsession.d/50sound-server /etc/X11/Xsession-gpe.d/50sound-server
+fi
+
+exit 0
