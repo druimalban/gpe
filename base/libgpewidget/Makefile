@@ -77,7 +77,7 @@ install-devel:
 	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
 
-clean:
+clean: clean-po
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)
 
 include $(BUILD)/Makefile.translation
