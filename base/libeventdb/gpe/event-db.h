@@ -84,12 +84,6 @@ typedef struct event_s
   
 } *event_t;
 
-typedef struct event_display_s
-{
-  calendar_time_t start;
-  event_t *pevent;
-} *event_display_t;
-
 #define EVENT_DB_USE_MEMCHUNK
 
 #ifdef EVENT_DB_USE_MEMCHUNK
