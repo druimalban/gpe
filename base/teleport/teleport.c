@@ -20,6 +20,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/pixmaps.h>
 #include <gpe/smallbox.h>
+#include <gpe/errorbox.h>
 
 #define _(x) gettext(x)
 
@@ -36,6 +37,16 @@ my_icons[] =
     { "ok" },
     { NULL }
   };
+
+struct display
+{
+  gchar *host;
+  guint dpy;
+  guint screen;
+  gchar *str;
+};
+
+static GSList *displays;
 
 void
 send_message (Display *dpy, Window w, char *host, int screen)
@@ -102,6 +113,85 @@ find_deepest_window (Display *dpy, Window grandfather, Window parent,
 }
 
 void
+add_cancel (GtkWidget *w, GtkWidget *window)
+{
+  gtk_widget_destroy (window);
+}
+
+void
+add_ok (GtkWidget *w, GtkWidget *window)
+{
+  GtkWidget *host_entry = g_object_get_data (G_OBJECT (window), "entry");
+  GtkWidget *dpy_spin = g_object_get_data (G_OBJECT (window), "dpy_spin");
+  GtkWidget *screen_spin = g_object_get_data (G_OBJECT (window), "screen_spin");
+  GtkAdjustment *dpy_adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (dpy_spin));
+  GtkAdjustment *screen_adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (screen_spin));
+  const gchar *host = gtk_entry_get_text (GTK_ENTRY (host_entry));
+  guint dpy = (guint)gtk_adjustment_get_value (dpy_adjustment);
+  guint screen = (guint)gtk_adjustment_get_value (screen_adjustment);
+  struct display *d = g_malloc (sizeof (struct display));
+  GtkTreeIter iter;
+
+  if (host[0] == 0)
+    {
+      gpe_error_box (_("Must specify hostname"));
+      return;
+    }
+
+  d->host = g_strdup (host);
+  d->dpy = dpy;
+  d->screen = screen;
+  d->str = g_strdup_printf ("%s:%d.%d", host, dpy, screen);
+
+  displays = g_slist_append (displays, d);
+
+  gtk_list_store_append (list_store, &iter);
+  gtk_list_store_set (list_store, &iter, 0, d->str, 1, d, -1);
+ 
+  gtk_widget_destroy (window);
+}
+
+void
+remove_callback (GtkWidget *button, GtkWidget *list_view)
+{
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      struct display *d;
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &d, -1);
+      displays = g_slist_remove (displays, d);
+      gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
+      g_free (d->host);
+      g_free (d->str);
+      g_free (d);
+    }
+  else
+    gpe_error_box (_("No display selected"));
+}
+
+void
+go_callback (GtkWidget *button, GtkWidget *list_view)
+{
+  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+
+  if (gtk_tree_selection_get_selected (sel, &model, &iter))
+    {
+      struct display *d;
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &d, -1);
+
+      /* ... */
+    }
+  else
+    gpe_error_box (_("No display selected"));
+}
+
+
+void
 add_callback (void)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -138,6 +228,15 @@ add_callback (void)
   gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 3);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
 
+  g_object_set_data (G_OBJECT (window), "entry", host_entry);
+  g_object_set_data (G_OBJECT (window), "dpy_spin", dpy_spin);
+  g_object_set_data (G_OBJECT (window), "screen_spin", screen_spin);
+
+  g_signal_connect (G_OBJECT (ok), "clicked", G_CALLBACK (add_ok), window);
+  g_signal_connect (G_OBJECT (cancel), "clicked", G_CALLBACK (add_cancel), window);
+
+  gtk_window_set_title (GTK_WINDOW (window), _("New display"));
+
   gtk_container_add (GTK_CONTAINER (window), vbox);
   
   gtk_widget_show_all (window);
@@ -154,6 +253,8 @@ open_window (void)
   GtkWidget *vbox;
   GtkWidget *scrolled_window;
   GtkWidget *list_view;
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
@@ -163,8 +264,6 @@ open_window (void)
   remove_button = gpe_button_new_from_stock (GTK_STOCK_REMOVE, GPE_BUTTON_TYPE_ICON);
   go_button = gpe_button_new_from_stock (GTK_STOCK_YES, GPE_BUTTON_TYPE_ICON);
 
-  g_signal_connect (G_OBJECT (add_button), "clicked", G_CALLBACK (add_callback), NULL);
-
   hbox = gtk_hbox_new (FALSE, 0);
   vbox = gtk_vbox_new (FALSE, 0);
 
@@ -173,6 +272,11 @@ open_window (void)
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes (_("Displays"), renderer,
+						     "text", 0, NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
 
@@ -187,6 +291,13 @@ open_window (void)
 
   gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_DIALOG);
 
+  gtk_window_set_title (GTK_WINDOW (window), _("GPE Teleport"));
+
+  gtk_window_set_default_size (GTK_WINDOW (window), 128, 128);
+
+  g_signal_connect (G_OBJECT (add_button), "clicked", G_CALLBACK (add_callback), NULL);
+  g_signal_connect (G_OBJECT (remove_button), "clicked", G_CALLBACK (remove_callback), list_view);
+
   gtk_widget_show_all (window);
 }
 
@@ -199,7 +310,7 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  list_store = gtk_list_store_new (1, G_TYPE_STRING);
+  list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
 
   open_window ();
 
