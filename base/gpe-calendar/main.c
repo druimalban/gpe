@@ -30,7 +30,7 @@
 #include "future_view.h"
 #include "month_view.h"
 
-#include <libdm.h>
+#include <libdisplaymigration/displaymigration.h>
 
 #define _(_x) gettext (_x)
 
@@ -190,7 +190,7 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  libdm_init ();
+  displaymigration_init ();
 
   if (event_db_start () == FALSE)
     exit (1);
@@ -243,7 +243,7 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_exit), NULL);
 
-  libdm_mark_window (main_window);
+  displaymigration_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 

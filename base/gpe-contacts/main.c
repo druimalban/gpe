@@ -20,7 +20,7 @@
 #include <libintl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libdm.h>
+#include <libdisplaymigration/displaymigration.h>
 #include <unistd.h>
 
 #include <gpe/init.h>
@@ -633,7 +633,7 @@ configure (GtkWidget * widget, gpointer d)
   gtk_window_set_title (GTK_WINDOW (window), _("Contacts: Configuration"));
   gpe_set_window_icon (window, "icon");
 
-  libdm_mark_window (window);
+  displaymigration_mark_window (window);
 
   gtk_widget_show_all (window);
 }
@@ -944,7 +944,7 @@ create_main (void)
   g_signal_connect (G_OBJECT (tree_sel), "changed",
 		    G_CALLBACK (selection_made), NULL);
 
-  libdm_mark_window (main_window);
+  displaymigration_mark_window (main_window);
 
   return main_window;
 }
@@ -966,7 +966,7 @@ main (int argc, char *argv[])
   if (db_open ())
     exit (1);
 
-  libdm_init ();
+  displaymigration_init ();
 
   load_well_known_tags ();
 
