@@ -8,7 +8,7 @@ VERSION = 0.33
 
 GLADE = bluez-pin-gpe.glade
 
-MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown obexclient
+MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown obexclient obex-glib
 
 CFLAGS += -MD `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` -Wall `pkg-config --cflags mimedir-1.0` -I../libgpevtype
 

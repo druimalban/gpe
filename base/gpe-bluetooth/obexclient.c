@@ -39,6 +39,8 @@
 
 #define _(x) gettext(x)
 
+typedef void (*obex_push_callback)(gboolean success, gpointer data);
+
 struct obex_push_req
 {
   const gchar *filename;
@@ -49,6 +51,41 @@ struct obex_push_req
   GCallback callback;
   gpointer cb_data;
 };
+
+static void
+run_callback (struct obex_push_req *req, gboolean result)
+{
+  obex_push_callback cb;
+  
+  cb = (obex_push_callback)req->callback;
+
+  (*cb)(result, req->cb_data);
+}
+
+static void
+cancel_clicked (GtkWidget *w, GtkWidget *dialog)
+{
+  struct obex_push_req *req;
+
+  req = g_object_get_data (G_OBJECT (dialog), "req");
+
+  gdk_threads_enter ();
+  gtk_widget_destroy (dialog);
+  gdk_flush ();
+  gdk_threads_leave ();
+
+  run_callback (req, FALSE);
+}
+
+static void
+ok_clicked (GtkWidget *w, GtkWidget *dialog)
+{
+  struct obex_push_req *req;
+
+  req = g_object_get_data (G_OBJECT (dialog), "req");
+
+  gtk_widget_destroy (dialog);
+}
 
 static gboolean
 obex_choose_destination (gpointer data)
@@ -158,6 +195,10 @@ obex_choose_destination (gpointer data)
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area), cancel_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area), ok_button, FALSE, FALSE, 0);
+
+  g_object_set_data (G_OBJECT (dialog), "req", req);
+  g_signal_connect (G_OBJECT (ok_button), "clicked", G_CALLBACK (ok_clicked), dialog);
+  g_signal_connect (G_OBJECT (cancel_button), "clicked", G_CALLBACK (cancel_clicked), dialog);  
 
   gtk_window_set_default_size (GTK_WINDOW (dialog), 240, 320);
   gtk_window_set_title (GTK_WINDOW (dialog), _("Select destination"));

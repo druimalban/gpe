@@ -25,19 +25,11 @@
 #include <openobex/obex.h>
 
 #include "obexserver.h"
+#include "obex-glib.h"
 
 #define OBEX_PUSH_HANDLE	10
 
 #define _(x)  (x)
-
-struct chan
-{
-  GIOChannel *chan;
-  int fd;
-  int source;
-};
-
-static GList *channels;
 
 static void
 file_received (gchar *name, const uint8_t *data, size_t data_len)
@@ -126,48 +118,6 @@ handle_request (obex_t *handle, obex_object_t *object, int event, int cmd)
     }
 }
 
-static void
-handle_disconnect (obex_t *handle)
-{
-  int fd;
-  GList *i;
-
-  fd = OBEX_GetFD (handle);
-
-  for (i = channels; i; i = i->next)
-    {
-      struct chan *chan = i->data;
-
-      chan = i->data;
-
-      if (chan->fd == fd)
-	{
-	  channels = g_list_remove (channels, chan);
-
-	  g_source_remove (chan->source);
-
-	  g_io_channel_unref (chan->chan);
-
-	  g_free (chan);
-
-	  return;
-	}
-    }
-
-  fprintf (stderr, "Couldn't find channel in list.\n");
-  abort ();
-}
-
-static gboolean
-io_callback (GIOChannel *source, GIOCondition cond, gpointer data)
-{
-  obex_t *obex = (obex_t *)data;
-
-  OBEX_HandleInput (obex, 0);
-
-  return TRUE;
-}
-
 void
 obex_conn_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex_cmd, int obex_rsp)
 {
@@ -193,7 +143,7 @@ obex_conn_event (obex_t *handle, obex_object_t *object, int mode, int event, int
       break;
 
     case OBEX_EV_LINKERR:
-      handle_disconnect (handle);
+      obex_disconnect_input (handle);
       break;
     }
 }
@@ -207,12 +157,8 @@ obex_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex
   switch (event)
     {
     case OBEX_EV_ACCEPTHINT:
-      chan = g_malloc (sizeof (*chan));
       obex = OBEX_ServerAccept (handle, obex_conn_event, NULL);
-      chan->fd = OBEX_GetFD (obex);
-      chan->chan = g_io_channel_unix_new (chan->fd);
-      chan->source = g_io_add_watch (chan->chan, G_IO_IN | G_IO_ERR | G_IO_HUP, io_callback, obex);
-      channels = g_list_prepend (channels, chan);
+      obex_connect_input (obex);
       break;
 
     default:
@@ -324,10 +270,8 @@ obex_init (void)
     return FALSE;
 
   BtOBEX_ServerRegister (obex, NULL, OBEX_PUSH_HANDLE);
-  
-  chan = g_io_channel_unix_new (OBEX_GetFD (obex));
 
-  g_io_add_watch (chan, G_IO_IN | G_IO_ERR | G_IO_HUP, io_callback, obex);
+  obex_connect_input (obex);
 
   add_service ();
 
