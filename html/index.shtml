@@ -3,14 +3,16 @@
 <!--#include virtual="includes/head.shtml"-->
 
 <p>
-This is the web page of GPE, a project whose aim is to provide a Free
-Software GUI environment for Palmtop/Handheld computers running the
-GNU/Linux&trade; operating system.  
+
+This is the web page of GPE. GPE is a project whose aim is to provide a
+Free Software GUI environment for Palmtop/Handheld computers running
+the GNU/Linux&trade; operating system.
+GPE uses the X Window system with the GTK+ toolkit.
 </p>
 
 <p>
 GPE is not about a single piece of software, but about building an
-entire environment consisisting of a number of components which make
+entire environment consisting of a number of components which make
 it both possible to use your Linux Handheld for standard tasks such as
 PIM (Personal Information Management) and to make it easy for
 developers to create powerful programs, by providing the necessary
@@ -19,7 +21,7 @@ infrastructure.
 
 <p>
 Part of the GPE environment is about core software such as the GUI
-toolkit, and necesary libraries which largely already exist.  The
+toolkit, and necessary libraries which largely already exist.  The
 other, perhaps more important part is fixing standards for program
 interaction, such as SQL, XML and other data schemas.
 </p>
