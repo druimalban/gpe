@@ -653,11 +653,8 @@ select_new_format (int new_format)
       g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
       gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
     }
-
-  gdk_window_resize (panel_window->window, panel_window->allocation.width, panel_window->allocation.height);
-  gtk_window_resize (GTK_WINDOW (panel_window), panel_window->allocation.width, panel_window->allocation.height);
-  if (format == FORMAT_ANALOGUE)
-    gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
+					       
+  gtk_widget_queue_resize (panel_window);
 }
 
 /* handle resizing */
