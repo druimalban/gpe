@@ -1,4 +1,4 @@
-VERSION = 0.0.4-1
+VERSION = 0.0.5
 
 ifndef PREFIX # simple test to recognise if we are from ipaq
 PREFIX = "/usr/local"

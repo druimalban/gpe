@@ -204,7 +204,7 @@ void make_container()
   self.cancel = gpe_picture_button (self.w->style, ("Cancel"), "cancel");
   gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,TRUE, TRUE, 0);
 
-  self.save = gpe_picture_button (self.w->style, ("Save"), "save");
+  self.save = gpe_picture_button (self.w->style, ("Apply"), "save");
   gtk_box_pack_start(GTK_BOX(hbuttons),self.save,TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
