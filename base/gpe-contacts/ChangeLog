@@ -1,3 +1,9 @@
+2004-10-19  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* editing.c: Applied patch to fix diabled button if window is closed.
+	             Courtesy by Philippe De Swert - many thanks.
+				 Fixed another bug causing the same effect.
+
 2004-10-16  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Released Version 0.32

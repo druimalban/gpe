@@ -28,6 +28,7 @@
 #include "namedetail.h"
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
+void on_edit_window_closed_clicked (gpointer user_data);
 void on_edit_save_clicked (GtkButton * button, gpointer user_data);
 void on_edit_bt_image_clicked (GtkWidget *image, gpointer user_data);
 void on_categories_clicked (GtkButton *button, gpointer user_data);
@@ -307,7 +308,7 @@ edit_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_
 {
   if (k->keyval == GDK_Escape) 
   {
-    gtk_widget_destroy (GTK_WIDGET (user_data));
+    on_edit_window_closed_clicked(GTK_WIDGET (user_data));
     return TRUE;
   }
   if (k->keyval == GDK_Return) 
@@ -377,6 +378,11 @@ create_edit (void)
 		    G_CALLBACK (on_edit_cancel_clicked), edit);
   g_signal_connect (G_OBJECT (edit_save), "clicked",
 		    G_CALLBACK (on_edit_save_clicked), edit);
+
+  /* Call the on_edit_window_closed_clicked function when the window is destroyed,
+   * otherwise the new button gets disabled */
+  g_signal_connect (G_OBJECT (edit), "delete_event",
+		  	G_CALLBACK (on_edit_window_closed_clicked), edit);
             
   g_signal_connect (G_OBJECT (action_area), "key_press_event", 
 		    G_CALLBACK (action_area_key_press_event), notebook2);
@@ -1005,6 +1011,19 @@ on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
     {
       update_display ();
     }
+  gtk_widget_destroy (GTK_WIDGET (edit));
+}
+
+void
+on_edit_window_closed_clicked (gpointer user_data)
+{
+  GtkWidget *edit = user_data;
+  if (g_object_get_data(G_OBJECT(edit), "isdialog"))
+    {
+      gtk_main_quit();
+      exit(EXIT_SUCCESS);
+    }
+  update_display ();
   gtk_widget_destroy (GTK_WIDGET (edit));
 }
 
