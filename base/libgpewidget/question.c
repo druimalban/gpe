@@ -30,6 +30,7 @@
 #include "render.h"
 #include "picturebutton.h"
 #include "pixmaps.h"
+#include "link-warning.h"
 
 #define _(x) dgettext(PACKAGE, x)
 

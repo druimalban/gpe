@@ -1,5 +1,8 @@
 2003-02-12  Philip Blundell  <philb@gnu.org>
 
+	* gtkdatecombo.c (gtk_date_combo_init): Use "month_view" pixmap
+	for the button if it exists.
+
 	* question.c (add_button): New parameter box.  Pack buttons into
 	this container.
 	(gpe_question_ask): Use plain GtkWindow in place of GtkDialog.  If

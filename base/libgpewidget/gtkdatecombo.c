@@ -23,7 +23,7 @@
 #include <gtk/gtk.h>
 
 #include "stylus.h"
-
+#include "pixmaps.h"
 #include "gtkdatecombo.h"
 
 static void
@@ -91,6 +91,7 @@ gtk_date_combo_init (GtkDateCombo *combo)
   GtkWidget *arrow;
   time_t t;
   struct tm tm;
+  GdkPixbuf *pixbuf = gpe_try_find_icon ("month_view", NULL);
   
   time (&t);
   localtime_r (&t, &tm);
@@ -100,7 +101,10 @@ gtk_date_combo_init (GtkDateCombo *combo)
   combo->month = tm.tm_mon;
   combo->day = tm.tm_mday;
 
-  arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
+  if (pixbuf)
+    arrow = gtk_image_new_from_pixbuf (pixbuf);
+  else
+    arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT);
   gtk_widget_show (arrow);
 
   combo->button = gtk_button_new ();
