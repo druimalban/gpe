@@ -58,5 +58,8 @@ install: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
+distclean: clean
+	rm -rf familiar/dist/
+
 include ../../base/build/Makefile.dpkg_ipkg
 -include $(DEPS)

@@ -1,6 +1,7 @@
 2003-02-05  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (VERSION): Define VERSION variable.
+	(distclean): New target distclean which removes familiar/dist/.
 
 	* familiar/control1 (Version): Replace the version number by the
 	string "VERSION" so that the new Makefile.dpkg_ipkg can replace it
