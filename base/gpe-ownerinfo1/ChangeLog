@@ -1,3 +1,8 @@
+2002-09-07  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/main.c (main): Check that photofile can be read before
+	trying to display it, use default otherwise.
+
 2002-09-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/control (Depends): libgpewidget0 (>= 0.23), to

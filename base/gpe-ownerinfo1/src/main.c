@@ -16,6 +16,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <ctype.h>
+#include <unistd.h> /* for access() */
 
 #include <X11/Xlib.h>
 
@@ -138,7 +139,11 @@ main (int argc, char *argv[])
 	  {
 	    ownerphotofile = g_strdup (buf);
 	    ownerphotofile[strlen (ownerphotofile)-1]='\0';
-	    my_icons[0].filename = g_strdup (ownerphotofile);
+	    if (access (ownerphotofile, R_OK) == 0)
+	      my_icons[0].filename = g_strdup (ownerphotofile);
+	    else
+	      fprintf (stderr, "gpe-ownerinfo: file '%s' could not be found, using default.\n",
+		       ownerphotofile);
 	  }
       }
       else {

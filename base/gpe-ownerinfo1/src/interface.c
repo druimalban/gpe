@@ -63,7 +63,7 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (frame1);
   gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), frame1);
-      gtk_container_set_border_width (GTK_CONTAINER (frame1), 5);
+  gtk_container_set_border_width (GTK_CONTAINER (frame1), 5);
 
   notebook = gtk_notebook_new ();
   gtk_widget_set_name (notebook, "notebook");
