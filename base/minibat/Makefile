@@ -1,22 +1,25 @@
 PACKAGE = minibat
 PREFIX = /usr/local
-DEBUG = no
+DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.18
 
+PKGS = x11 cairo libmb xext
+
 LINGUAS = 
 
-MEMBERS = minibat mbtray
+MEMBERS = minibat mbtray findargb
 
-CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config $(PKG_CONFIG) --cflags x11` `pkg-config --cflags xft`
+CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config $(PKG_CONFIG) --cflags $(PKGS)`
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
+CFLAGS += -Wall
 
-LDFLAGS = `pkg-config --libs x11` -lXext -lmb `pkg-config --libs xft` -lapm -lm
+LDFLAGS = `pkg-config $(PKG_CONFIG) --libs $(PKGS)` -lapm -lm
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
