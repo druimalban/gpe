@@ -1,0 +1,8 @@
+Package: libschedule0
+Section: base
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libc6, libglib2.0-0, atd
+Description: Event scheduling library
