@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.40\n"
 "POT-Creation-Date: 2003-03-30 15:42+0100\n"
-"PO-Revision-Date: 2003-07-06 17:49+0200\n"
+"PO-Revision-Date: 2003-07-10 15:01+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "Dagsvy"
 
 #: main.c:282
 msgid "Tap here to select day-at-a-time view."
-msgstr "Tryck här för att välja endagsvy."
+msgstr "Tryck här för att välja dag-för-dag-vy."
 
 #: main.c:289
 msgid "Week"
@@ -59,7 +59,7 @@ msgstr "Veckovy"
 
 #: main.c:290
 msgid "Tap here to select week-at-a-time view."
-msgstr "Tryck här för att välja enveckasvy."
+msgstr "Tryck här för att välja vecka-för-vecka-vy."
 
 #: main.c:297
 msgid "Month"
@@ -71,7 +71,7 @@ msgstr "Månadsvy"
 
 #: main.c:298
 msgid "Tap here to select month-at-a-time view."
-msgstr "Tryck här för att välja enmånadsvy."
+msgstr "Tryck här för att välja månad-för-månad-vy."
 
 #: main.c:304
 msgid "Exit"
@@ -115,7 +115,7 @@ msgstr "Uppgift"
 
 #: event-ui.c:655
 msgid "Days"
-msgstr "dag"
+msgstr "Dagar"
 
 #: event-ui.c:656
 msgid "Weeks"
@@ -273,7 +273,7 @@ msgstr "Kalender: Ny händelse"
 
 #: event-ui.c:1229
 msgid "Calendar: Edit event"
-msgstr "Kalender: Redigera händelser"
+msgstr "Kalender: Redigera händelse"
 
 #: day_popup.c:172
 msgid "No appointments"
@@ -312,3 +312,6 @@ msgstr "%a %d"
 #: gpe-calendar.desktop.in.h:2
 msgid "GPE Calendar"
 msgstr "GPE-kalender"
+
+#~ msgid "Calendar: Edit events"
+#~ msgstr "Kalender: Redigera händelser"

@@ -4,7 +4,7 @@ DEBUG = no
 CVSBUILD = yes
 VERSION = 0.45
 
-LINGUAS = id pt de fr zh_TW ro wa sv
+LINGUAS = id pt de fr zh_TW ro wa sv nl
 
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
 
