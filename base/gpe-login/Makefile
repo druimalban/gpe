@@ -82,7 +82,7 @@ install-scripts: gpe-logout.desktop
 scripts-ipkg:
 	rm -rf familiar/dist.gpe-session-scripts
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
-	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
+	sed 's$$SOURCE$$$(SOURCE)$$' < familiar/control.gpe-session-scripts > familiar/dist.gpe-session-scripts/CONTROL/control
 	install familiar/postinst.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/postinst
 	make DESTDIR=`pwd`/familiar/dist.gpe-session-scripts PREFIX=/usr install-scripts
 	chown -R root.root familiar/dist.gpe-session-scripts
