@@ -30,8 +30,8 @@ CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 CPPFLAGS += -I.
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 libmb` 
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0 libmb`
 
 # setup how to compile
 ifeq ($(NATIVE),yes)
