@@ -48,6 +48,7 @@
 #include "cardinfo.h"
 #include "tasks.h"
 #include "battery.h"
+#include "sysinfo.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -123,6 +124,8 @@ struct Applet applets[]=
 		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
     { &Battery_Build_Objects, &Battery_Free_Objects, &Unimplemented_Save, &Battery_Restore ,
 		"Battery" ,"battery","Battery info", PREFIX "/share/pixmaps/gpe-config-battery.png"},
+    { &Sysinfo_Build_Objects, &Sysinfo_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+		"System info" ,"sysinfo","System information", PREFIX "/share/pixmaps/gpe-config-sysinfo.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
 		"Task nameserver" ,"task_nameserver","Task for changing nameserver", NULL}
   };

@@ -1,3 +1,8 @@
+2003-11-27	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile, main.c: Added sysinfo applet.
+	* Added files *sysinfo*.
+	* Added pixmaps (icon, symbols for Linux and Familiar)
+	
 2003-11-26	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* keyctl.c: Changes icon to symbol for selected button now.
 	* pixmaps/ibutton*: Added preliminary icons for iPAQ buttons.

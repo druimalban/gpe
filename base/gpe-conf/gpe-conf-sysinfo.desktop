@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=System Information
+_Comment=System Information
+Exec=gpe-conf sysinfo
+Terminal=0
+Type=Application
+Icon=gpe-config-sysinfo.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

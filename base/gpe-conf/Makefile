@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.3
+VERSION = 0.1.4
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -27,7 +27,8 @@ EXTRA_DESKTOPS = \
 	gpe-conf-storage.desktop.in \
 	gpe-conf-theme.desktop.in \
 	gpe-conf-time.desktop.in \
-	gpe-conf-users.desktop.in	
+	gpe-conf-users.desktop.in \
+	gpe-conf-sysinfo.desktop.in	
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdisplaymigration -ldisplaymigration -L.
@@ -101,6 +102,7 @@ MEMBERS += packages cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks
 MEMBERS += battery
+MEMBERS += sysinfo
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -137,6 +139,7 @@ PIXMAPS += pccard-usb.png
 PIXMAPS += gpe-config-logread.png
 PIXMAPS += gpe-config-keyboard.png
 PIXMAPS += gpe-config-battery.png
+PIXMAPS += gpe-config-sysinfo.png
 PIXMAPS += ibutton1.png
 PIXMAPS += ibutton2.png
 PIXMAPS += ibutton3.png
