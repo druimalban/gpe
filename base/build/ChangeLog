@@ -1,5 +1,10 @@
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.dpkg_ipkg (retag): New.
+	* Makefile.translation (dist-prep): Also depend on freshen-po.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.translation (all-desktop): New.  Patch from libor
 	klepac.
 

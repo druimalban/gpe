@@ -67,4 +67,7 @@ printinfo:
 tag: check-source
 	cvs tag $(CVSTAG)
 
+retag: check-source
+	cvs tag -F $(CVSTAG)
+
 source: tag dist-upload

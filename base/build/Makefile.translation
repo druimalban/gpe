@@ -43,7 +43,7 @@ install-mo: all-mo
 
 update-po: $(po-files) extract-po
 
-dist-prep: update-po
+dist-prep: update-po freshen-po
 # empty
 
 extract-po:
