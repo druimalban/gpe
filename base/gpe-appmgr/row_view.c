@@ -42,7 +42,6 @@
 #include <gpe/render.h>
 #include <gpe/spacing.h>
 #include <gpe/gpeiconlistview.h>
-#include <gpe/tray.h>
 
 /* everything else */
 #include "main.h"
@@ -80,7 +79,7 @@ create_row (GList *all_items, char *current_group)
 
   view = gpe_icon_list_view_new ();
 
-  gpe_icon_list_view_set_rows (GPE_ICON_LIST_VIEW (view), 1);
+  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view), 32);
   gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view), 32);
   
   this_item = all_items;
@@ -147,8 +146,10 @@ refresh_callback (void)
       label = gtk_label_new (g->name);
       gtk_widget_show (label);
 
-      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (label), 0, 1, i, i + 1, 0, 0, 0, 0);
-      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (w), 2, 3, i, i + 1, GTK_EXPAND | GTK_FILL, 0, 0, 0);
+      gtk_misc_set_alignment (GTK_MISC (label), 1.0, 0.0);
+
+      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (label), 0, 1, i, i + 1, 0, GTK_FILL | GTK_SHRINK, 0, 0);
+      gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (w), 2, 3, i, i + 1, GTK_EXPAND | GTK_FILL | GTK_SHRINK, GTK_EXPAND | GTK_FILL | GTK_SHRINK, 0, 0);
       p = p->next;
     }
 
@@ -158,17 +159,51 @@ refresh_callback (void)
   gtk_widget_show (sep);
   gtk_table_attach (GTK_TABLE (table), sep, 1, 2, 0, n_rows, 0, 0, 0, 0);
 
-  gtk_container_add (GTK_CONTAINER (bin), table);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (bin), table);
+}
+
+static void
+realize_callback (GtkWidget *widget)
+{
+  pid_t pid;
+  gchar *id;
+
+  id = g_strdup_printf ("%d", gtk_socket_get_id (GTK_SOCKET (widget)));
+  pid = vfork ();
+  if (pid == 0) {
+    execlp ("gpe-today", "gpe-today", "-s", id, NULL);
+    perror ("gpe-today");
+    exit (1);
+  }
+  g_free (id);
 }
 
 GtkWidget *
 create_row_view (void)
 {
-  bin = gtk_vbox_new (FALSE, 0);
+  GtkWidget *socket;
+  GtkWidget *html;
 
+  notebook = gtk_notebook_new ();
+  gtk_notebook_set_tab_pos (GTK_NOTEBOOK (notebook), GTK_POS_RIGHT);
+
+  socket = gtk_socket_new ();
+  g_signal_connect (G_OBJECT (socket), "realize", G_CALLBACK (realize_callback), NULL);
+  gtk_widget_show (socket);
+
+  bin = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_show (bin);
 
-  g_object_set_data (G_OBJECT (bin), "refresh_func", refresh_callback);
+  html = gtk_html_new ();
+  gtk_widget_show (html);
 
-  return bin;
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), socket, gtk_label_new ("Today"));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), bin, gtk_label_new ("Programs"));
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), html, gtk_label_new ("Wizards"));
+
+  gtk_widget_show (notebook);
+
+  g_object_set_data (G_OBJECT (notebook), "refresh_func", refresh_callback);
+
+  return notebook;
 }
