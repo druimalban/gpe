@@ -187,7 +187,7 @@ FILE *search_email_open_file(char *key, char *database_path)
 	{
 		if (!i) printf("sqlite not found\n");
 		i=1;
-		//return NULL;
+		return NULL;
 	}
 	//sprintf(s,"'echo \"select * from contacts where tag like '\"'\"'%%EMAIL'\"'\"' and urn = ( select urn from contacts where (tag='\"'\"'NAME'\"'\"' and value like '\"'\"'%s%%'\"'\"') or ( tag like '\"'\"'%%EMAIL'\"'\"' and value like '\"'\"'%s%%'\"'\"'));\" |/usr/bin/sqlite %s|sed '\"'\"'s/|.*//'\"'\"' '",key,key,database_path);
 	//printf("key='%s'\n",key);
