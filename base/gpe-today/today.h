@@ -10,6 +10,7 @@
 #ifndef HAVE_TODAY_H
 #define HAVE_TODAY_H
 
+#include <stdlib.h>
 #include <libintl.h>
 #include <gtk/gtk.h>
 

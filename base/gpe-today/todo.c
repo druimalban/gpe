@@ -11,7 +11,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gpe/errorbox.h>
 #include "today.h"
-#ifdef 0
+/*
 void todo_init(void)
 {
 	GtkWidget *vboxlogo, *logo, *label;
@@ -21,7 +21,7 @@ void todo_init(void)
 
 	todo_module.toplevel = gtk_hbox_new(FALSE, 0);
 
-	/* todo icon */
+	// todo icon
 	vboxlogo = gtk_vbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(todo_module.toplevel), vboxlogo,
 	                   FALSE, FALSE, 5);
@@ -39,7 +39,7 @@ void todo_init(void)
 
 	gtk_widget_show_all(todo_module.toplevel);
 }
-#endif
+*/
 void todo_free(void)
 {
 

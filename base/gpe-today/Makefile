@@ -1,9 +1,12 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
+VERSION = 0.01
 #DEBUG = yes 
 #LINGUAS = pt_PT
 
 MEMBERS = main todo calendar date
+
+STRIP = strip
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
@@ -12,7 +15,7 @@ CPPFLAGS = -I../libgpewidget -I../libeventdb -I../librootimage -D_GNU_SOURCE
 
 ifeq ($(DEBUG),yes)
 CFLAGS = -g
-#LDFLAGS = -lefence
+LDFLAGS = -lefence
 else
 CFLAGS = -Os -fomit-frame-pointer
 endif
@@ -46,7 +49,7 @@ install: all install-mo
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 	install -m 644 -D gtkrc $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gtkrc
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) *~

@@ -22,7 +22,7 @@
 #define CALENDAR_DB "/.gpe/calendar"
 #define UPDATE_INTERVAL 60000 /* 1 minute */
 
-static GSList *calendar_entries = NULL;
+static GSList *calendar_entries;
 char *db_fname;
 static int calendar_update_tag = 0;
 
@@ -34,6 +34,8 @@ struct calevent {
 	event_t ev;
 	PangoLayout *pl;
 	gboolean in_progress;
+	char *summary;
+	char *description;
 };
 
 int calendar_init(void)
@@ -46,9 +48,6 @@ int calendar_init(void)
 	db_fname = g_malloc(strlen(home) + strlen(CALENDAR_DB) + 1);
 	strcpy(db_fname, home);
 	strcat(db_fname, CALENDAR_DB);
-
-	/* fire db up */
-	event_db_start();
 
 	calendar.toplevel = gtk_hbox_new(FALSE, 0);
 
@@ -67,14 +66,15 @@ int calendar_init(void)
 	calendar.scroll = myscroll_new(TRUE);
 	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->draw,
 			   TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->scrollbar,
-			   FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(calendar.toplevel),
+	                   calendar.scroll->scrollbar, FALSE, FALSE, 0);
 
 	gtk_widget_show_all(calendar.toplevel);
 
 	/* update and set regular update intervals */
 	calendar_update(NULL);
-	calendar_update_tag = g_timeout_add(UPDATE_INTERVAL, calendar_update, NULL);
+	calendar_update_tag = g_timeout_add(UPDATE_INTERVAL, calendar_update,
+	                                    NULL);
 
 	return 1;
 }
@@ -85,7 +85,33 @@ void calendar_free(void)
 	gtk_container_remove(GTK_CONTAINER(window.vbox1), calendar.toplevel);
 	g_free(db_fname);
 	g_source_remove(calendar_update_tag);
-	event_db_stop();
+}
+
+static void refresh_event_markup(struct calevent *cev)
+{
+	/* FIXME: how big should these be? */
+	char strtimestart[25], strtimeend[25], timestr[50];
+	char *color, *black = "black", *red = "red";
+	
+	if (!(cev->ev->flags & FLAG_UNTIMED)) {
+		calendar_time_t end = cev->ev->start + cev->ev->duration;
+		
+		strftime(strtimestart, sizeof strtimestart, "%H:%M",
+		         localtime(&cev->ev->start));
+		strftime(strtimeend, sizeof strtimeend, "%H:%M",
+		         localtime(&end));
+		snprintf(timestr, sizeof timestr, "%s - %s", strtimestart,
+		         strtimeend);
+	} else {
+		snprintf(timestr, sizeof timestr, "<i>%s</i>",
+		         _("All day event"));
+	}
+
+	/* TODO: LOCATION / NOTES labels */
+	color = (cev->in_progress ? red : black);
+		
+	markup_printf(cev->pl, "<span foreground=\"%s\"><b>%s</b>\n%s</span>",
+	              color, cev->summary, timestr);
 }
 
 gboolean calendar_update(gpointer data)
@@ -125,17 +151,13 @@ gboolean calendar_update(gpointer data)
 			if (event->in_progress == TRUE)
 				continue;
 
-			if (event->ev->recur) { /* recurring event */
-				/* TODO: must check better if it is in progress */
-				/* same problem with finished recurring events */
-			}
-
-			/* event is in progress */
 			event->in_progress = TRUE;
-
-			continue;
+			refresh_event_markup(event);			
 		}
 	}
+
+	gtk_widget_queue_draw(calendar.scroll->draw);
+	gtk_widget_queue_draw(calendar.toplevel);
 
 	return TRUE;
 }
@@ -149,7 +171,7 @@ void calendar_events_db_update(void)
 	event_t ev;
 	static GSList *events = NULL;
 	
-	if (!event_db_refresh())
+	if (!event_db_start())
 	 	return; /* could not load the db */
 
 	free_calendar_entries();
@@ -163,52 +185,46 @@ void calendar_events_db_update(void)
 	midnight = mktime(midtm);
 
 	/* TODO: show/not show All day events */
-	/* FIXME: all day events are not getting displayed */
-/*	events = event_db_untimed_list_for_period(current_time, midnight, TRUE);
+	events = event_db_untimed_list_for_period(midnight - 86400, midnight,
+	                                          TRUE);
 	for (i = 0; (ev = (event_t) g_slist_nth_data(events, i)); i++)
 		calendar_add_event(ev);
+//	g_slist_free(events);
 	event_db_list_destroy(events);
-*/
+	
 	events = event_db_list_for_period(current_time, midnight);
 	for (i = 0; (ev = (event_t) g_slist_nth_data(events, i)); i++)
 		calendar_add_event(ev);
-//      event_db_list_destroy(events);
+//	g_slist_free(events);
+	event_db_list_destroy(events);
 
+	gtk_widget_queue_draw(calendar.scroll->draw);
+	gtk_widget_queue_draw(calendar.toplevel);
+
+	event_db_stop();
 }
 
 static void calendar_add_event(event_t event)
 {
 	struct calevent *cal = g_malloc(sizeof(struct calevent));
 	event_details_t details;
-	/* FIXME: how big should these be? */
-	char strtimestart[25], strtimeend[25], timestr[50];
 
-	cal->ev = event;
+	cal->ev = g_malloc(sizeof(struct event_s));
+	memcpy(cal->ev, event, sizeof(struct event_s));
 	cal->in_progress = FALSE;
 	calendar_entries = g_slist_append(calendar_entries, cal);
 
 	details = event_db_get_details(event);
-
+	cal->summary = g_strdup(details->summary);
+	cal->description = g_strdup(details->description);
+	event_db_forget_details(event);
+	
 	cal->pl = gtk_widget_create_pango_layout(calendar.scroll->draw, NULL);
 	pango_layout_set_wrap(cal->pl, PANGO_WRAP_WORD);
 	calendar.scroll->list = g_slist_append(calendar.scroll->list, cal->pl);
 
-	if (!(event->flags & FLAG_UNTIMED)) {
-		calendar_time_t end = event->start + event->duration;
-
-		strftime(strtimestart, sizeof strtimestart, "%H:%M",
-		         localtime(&event->start));
-		strftime(strtimeend, sizeof strtimeend, "%H:%M",
-		         localtime(&end));
-		snprintf(timestr, sizeof timestr, "%s - %s", strtimestart, strtimeend);
-
-	} else {
-		snprintf(timestr, sizeof timestr, "<i>%s</i>", _("All day event"));
-	}
-
-	/* TODO: LOCATION / NOTES labels */
-	markup_printf(cal->pl, "<b>%s</b>\n%s", details->summary, timestr);
-
+	refresh_event_markup(cal);
+	
 	/* change event->start for recurring events */
 	if (event->recur) {
 		int min, sec, hour;
@@ -227,8 +243,6 @@ static void calendar_add_event(event_t event)
 
 		event->start = mktime(ev);
 	}
-
-	event_db_forget_details(event);
 }
 
 static void free_calendar_entries(void)
@@ -237,6 +251,8 @@ static void free_calendar_entries(void)
 	struct calevent *event;
 
 	for (i = 0; (event = g_slist_nth_data(calendar_entries, i)); i++) {
+		g_free(event->summary);
+		g_free(event->description);
 		g_object_unref(event->pl);
 		g_free(event);
 	}
@@ -245,3 +261,4 @@ static void free_calendar_entries(void)
 	g_slist_free(calendar_entries);
 	calendar_entries = calendar.scroll->list = NULL;
 }
+
