@@ -2,7 +2,10 @@
 
 	* Makefile (install-program): Install pixmaps for clock face in
 	$PREFIX/share/libgpewidget, not $PREFIX/share/gpe/pixmaps.
-
+	* gpeclockface.c (gpe_clock_face_init): Mark widget as
+	windowless.  Look for pixmaps in new location.
+	(gpe_clock_face_realize): Don't create a window.
+	
 	* picturebutton.c (gpe_button_new_from_stock): Fix packing error.
 
 2003-04-07  Philip Blundell  <philb@gnu.org>
