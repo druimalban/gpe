@@ -280,7 +280,7 @@ sn_display_for_display (Display *dpy)
   map = g_malloc (sizeof (*map));
   map->dpy = dpy;
   map->sn_dpy = sn_display_new (dpy, NULL, NULL);
-  map->client_map_atom = XInternAtom (dpy, "_MB_CLIENT_MAP", False);
+  map->client_map_atom = XInternAtom (dpy, "_MB_CLIENT_EXEC_MAP", False);
   map->client_map = NULL;
   map->pending_startups = NULL;
   read_client_map (map);
