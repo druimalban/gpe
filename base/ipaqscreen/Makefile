@@ -57,8 +57,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = armv4l-unknown-linux-gnu
-host_triplet = armv4l-unknown-linux-gnu
+host_alias = i686-pc-linux-gnu
+host_triplet = i686-pc-linux-gnu
 BUILD_INCLUDED_LIBINTL = no
 CATALOGS = 
 CATOBJEXT = .gmo
@@ -68,16 +68,16 @@ GENCAT = gencat
 GLIBC21 = yes
 GMOFILES = 
 GMSGFMT = /usr/bin/msgfmt
-GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
+GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include
 GTK_CONFIG = /usr/bin/gtk-config
 GTK_LIBS = -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
 INSTOBJEXT = .mo
-INTLBISON = :
+INTLBISON = bison
 INTLLIBS = 
 INTLOBJS = 
 INTL_LIBTOOL_SUFFIX_PREFIX = 
 LIBICONV = 
-MAKEINFO = /home/moray/Projects/gpe/base/ipaqscreen/missing makeinfo
+MAKEINFO = makeinfo
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
 PACKAGE = ipaqscreen
@@ -86,7 +86,7 @@ POSUB = po
 RANLIB = ranlib
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 0.1
+VERSION = 0.0.1
 
 SUBDIRS = intl po src
 
@@ -389,6 +389,8 @@ install-data-local:
 	    fi \
 	  done \
 	fi
+	$(INSTALL_DATA) $(srcdir)/ipaqscreen.png $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -D $(srcdir)/ipaqscreen.menu $(DESTDIR)$(PREFIX)/lib/menu/ipaqscreen
 
 dist-hook:
 	if test -d pixmaps; then \

@@ -1,7 +1,7 @@
 # Generated automatically from Makefile.in by configure.
-# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -57,8 +57,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = armv4l-unknown-linux-gnu
-host_triplet = armv4l-unknown-linux-gnu
+host_alias = i686-pc-linux-gnu
+host_triplet = i686-pc-linux-gnu
 BUILD_INCLUDED_LIBINTL = no
 CATALOGS = 
 CATOBJEXT = .gmo
@@ -68,16 +68,16 @@ GENCAT = gencat
 GLIBC21 = yes
 GMOFILES = 
 GMSGFMT = /usr/bin/msgfmt
-GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
+GTK_CFLAGS = -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include
 GTK_CONFIG = /usr/bin/gtk-config
 GTK_LIBS = -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm
 INSTOBJEXT = .mo
-INTLBISON = :
+INTLBISON = bison
 INTLLIBS = 
 INTLOBJS = 
 INTL_LIBTOOL_SUFFIX_PREFIX = 
 LIBICONV = 
-MAKEINFO = /home/moray/Projects/gpe/base/ipaqscreen/missing makeinfo
+MAKEINFO = makeinfo
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
 PACKAGE = ipaqscreen
@@ -86,9 +86,9 @@ POSUB = po
 RANLIB = ranlib
 USE_INCLUDED_LIBINTL = no
 USE_NLS = yes
-VERSION = 0.1
+VERSION = 0.0.1
 
-INCLUDES =  	-I$(top_srcdir)/intl 	-I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include
+INCLUDES =  	-I$(top_srcdir)/intl 	-I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/X11R6/include
 
 
 bin_PROGRAMS = ipaqscreen
@@ -201,7 +201,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags  $$unique $(LISP))
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
 
 mostlyclean-tags:
 
