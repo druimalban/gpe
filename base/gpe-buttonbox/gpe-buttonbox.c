@@ -24,6 +24,9 @@
 #include <gpe/gpewindowlist.h>
 #include <gpe/popup.h>
 
+#include <gpe/launch.h>
+#include <gpe/desktop_file.h>
+
 #include <locale.h>
 
 #include "config.h"
@@ -42,6 +45,7 @@ int xpos;
 gboolean other_button_visible;
 GList *other_windows;
 GtkWidget *other_button;
+GdkPixbuf *other_icon;
 
 #define NR_SLOTS 4
 #define SLOT_WIDTH 72
@@ -81,7 +85,17 @@ struct class_record
   gchar *name;
   GList *windows;
   GtkWidget *widget;
+  gchar *exec;
 };
+
+#define MY_PIXMAPS_DIR "gpe-buttonbox/"
+
+struct gpe_icon my_icons[] = 
+  {
+    { "desktop", MY_PIXMAPS_DIR "show-desktop" },
+    { "other", MY_PIXMAPS_DIR "other-app" },
+    { NULL }
+  };
 
 /* copied from libmatchbox */
 static void
@@ -149,13 +163,22 @@ popup_window_list (GtkWidget *widget, GdkEventButton *button, GList *windows)
 void
 button_release_event (GtkWidget *widget, GdkEventButton *button, struct class_record *c)
 {
-  if (c->windows == NULL)
-    abort ();
-
-  if (c->windows->next != NULL)
-    popup_window_list (widget, button, c->windows);
+  if (c->windows)
+    {
+      if (c->windows->next != NULL)
+	popup_window_list (widget, button, c->windows);
+      else
+	raise_window (c->windows->data);
+    }
+  else if (c->exec)
+    {
+      gpe_launch_program (dpy, c->exec, c->name);
+    }
   else
-    raise_window (c->windows->data);
+    {
+      fprintf (stderr, "no windows and nothing to exec!\n");
+      return;
+    }
 }
 
 void
@@ -301,7 +324,7 @@ delete_window_record (struct window_record *r)
   c = find_class_record (r->class);
 
   c->windows = g_list_remove (c->windows, r);
-  if (c->windows == NULL)
+  if (c->windows == NULL && c->exec == NULL)
     {
       int slot;
 
@@ -375,6 +398,8 @@ window_added (GPEWindowList *list, Window w)
   if (r->name == NULL)
     r->name = gpe_get_window_name (dpy, w);
   r->icon = gpe_get_window_icon (dpy, w);
+  if (r->icon == NULL)
+    r->icon = other_icon;
   r->class = class;
 
   add_window_record (r);
@@ -415,6 +440,126 @@ add_initial_windows (GPEWindowList *list)
     }
 }
 
+gboolean
+add_fixed_button (gchar *name, gchar *icon, gchar *exec)
+{
+  GdkPixbuf *pix;
+  gchar *pix_fn;
+  int i;
+  int slot = -1;
+  struct class_record *c;
+
+  if (!name || !icon || !exec)
+    return FALSE;
+
+  for (i = 0; i < NR_SLOTS; i++)
+    {
+      if (class_slot[i] == NULL)
+	{
+	  slot = i;
+	  break;
+	}
+    }
+
+  if (slot == -1)
+    {
+      fprintf (stderr, "no free slots available\n");
+      return FALSE;
+    }
+
+  pix_fn = g_strdup_printf (PREFIX "/share/pixmaps/%s", icon);
+  pix = gdk_pixbuf_new_from_file (pix_fn, NULL);
+  if (pix == NULL)
+    {
+      fprintf (stderr, "couldn't load icon \"%s\"\n", pix_fn);
+      g_free (pix_fn);
+      return FALSE;
+    }
+
+  g_free (pix_fn);
+
+  c = g_malloc0 (sizeof (*c));
+  class_slot[slot] = c;
+  c->slot = slot;
+  c->widget = do_build_icon (name, pix);
+  c->exec = exec;
+  c->name = name;
+  classes = g_list_append (classes, c);
+
+  g_signal_connect (G_OBJECT (c->widget), "button_release_event", G_CALLBACK (button_release_event), c);
+  gtk_fixed_put (GTK_FIXED (box), c->widget, (slot + 1) * SLOT_WIDTH, 0);
+  gtk_widget_show (c->widget);
+
+  return TRUE;
+}
+
+void
+load_one_preset (gchar *name)
+{
+  gchar *path;
+  GnomeDesktopFile *d;
+  GError *error = NULL;
+
+  path = g_strdup_printf (PREFIX "/share/applications/%s.desktop", name);
+  d = gnome_desktop_file_load (path, &error);
+  if (d)
+    {
+      gchar *name = NULL;
+      gchar *icon = NULL;
+      gchar *exec = NULL;
+
+      gnome_desktop_file_get_string (d, NULL, "Name", &name);
+      gnome_desktop_file_get_string (d, NULL, "Icon", &icon);
+      gnome_desktop_file_get_string (d, NULL, "Exec", &exec);
+      
+      gnome_desktop_file_free (d);
+
+      printf ("name=%s icon=%s exec=%s\n", name, icon, exec);
+
+      if (add_fixed_button (name, icon, exec) == FALSE)
+	{
+	  if (name)
+	    g_free (name);
+	  if (icon)
+	    g_free (icon);
+	  if (exec)
+	    g_free (exec);
+	}
+    }
+  else
+    {
+      fprintf (stderr, "couldn't read \"%s\": %s\n", path, error ? error->message : "");
+    }
+  if (error)
+    g_error_free (error);
+  g_free (path);
+}
+
+void
+load_presets (void)
+{
+  FILE *fp;
+  gchar *fn;
+
+  fn = g_strdup_printf ("%s/.gpe/button-box.apps", g_get_home_dir ());
+  fp = fopen (fn, "r");
+  if (fp)
+    {
+      char buf[256];
+      while (fgets (buf, 255, fp))
+	{
+	  if (buf[0] != 0 && buf[0] != '\n')
+	    {
+	      buf[strlen(buf)-1] = 0;
+	      printf("loading preset %s\n", buf);
+	      load_one_preset (buf);
+	    }
+	}
+      fclose (fp);
+    }
+  g_free (fn);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -424,6 +569,9 @@ main (int argc, char *argv[])
   gboolean flag_panel = FALSE;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
+
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   while (1)
@@ -470,16 +618,18 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (list), "window-added", G_CALLBACK (window_added), NULL);
   g_signal_connect (G_OBJECT (list), "window-removed", G_CALLBACK (window_removed), NULL);
 
-  desk_icon = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/gnome-show-desktop.png", NULL);
-
+  desk_icon = gpe_find_icon ("desktop");
   desktop_button = do_build_icon ("Desktop", desk_icon);
   gtk_fixed_put (GTK_FIXED (box), desktop_button, 0, 0);
   g_signal_connect (G_OBJECT (desktop_button), "button_release_event", G_CALLBACK (desktop_button_release), NULL);
   gtk_widget_show (desktop_button);
 
-  other_button = do_build_icon ("Other", NULL);
+  other_icon = gpe_find_icon ("other");
+  other_button = do_build_icon ("Other", other_icon);
   gtk_fixed_put (GTK_FIXED (box), other_button, (NR_SLOTS + 1) * SLOT_WIDTH, 0);
   g_signal_connect (G_OBJECT (other_button), "button_release_event", G_CALLBACK (other_button_release), NULL);
+
+  load_presets ();
 
   add_initial_windows (GPE_WINDOW_LIST (list));
 

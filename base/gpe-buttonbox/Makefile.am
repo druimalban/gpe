@@ -1,8 +1,11 @@
 bin_PROGRAMS = gpe-buttonbox
 
-INCLUDES = @BUTTONBOX_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
-
+INCLUDES = @BUTTONBOX_CFLAGS@
 LDADD = @BUTTONBOX_LIBS@
 
-include gpe-dist.am
+install-data-local:
+	mkdir -p $(datadir)/gpe/pixmaps/default/gpe-buttonbox
+	install -m 0644 show-desktop.png $(datadir)/gpe/pixmaps/default/gpe-buttonbox/
+	install -m 0644 other-app.png $(datadir)/gpe/pixmaps/default/gpe-buttonbox/
 
+include gpe-dist.am

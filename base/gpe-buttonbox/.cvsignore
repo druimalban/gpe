@@ -1,0 +1,16 @@
+.deps
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache
+config.h
+config.h.in
+gpe-buttonbox
+install-sh
+missing
+depcomp
+config.log
+config.status
+configure
+stamp-h1
+
