@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+#include "gpe-sketchbook.h"
 #include "sketchpad.h"
 #include "sketchpad-cb.h"
 #include "files.h"
@@ -26,7 +27,6 @@
 
 Sketchpad sketchpad;
 
-GtkWidget * window_sketchpad;
 GtkWidget * drawing_area;
 GdkPixmap * drawing_area_pixmap_buffer;
 
@@ -185,7 +185,7 @@ void sketchpad_reset_title(){
                           (is_current_sketch_modified)?" *":"",
                           (is_current_sketch_new)?_(" "):"",
                           (is_current_sketch_new)?_("new"):"");
-  gtk_window_set_title(GTK_WINDOW (window_sketchpad), title);
+  gtk_window_set_title(GTK_WINDOW (sketchbook.window), title);
   g_free(title);
 }
 

@@ -63,7 +63,7 @@ GtkWidget * selector_gui(){
   GtkWidget *hbox; //toolbar + help button
 
   //--Toolbar
-  hbox = build_selector_toolbar(window_selector);
+  hbox = build_selector_toolbar();
 
   //--Clist
   scrolledwindow_selector_clist = build_scrollable_clist();
@@ -86,7 +86,7 @@ GtkWidget * selector_gui(){
   return vbox;
 }
 
-GtkWidget * build_selector_toolbar(GtkWidget * window){
+GtkWidget * build_selector_toolbar(){
   GtkWidget * toolbar;
   GtkWidget * button;
   GdkPixbuf * pixbuf;

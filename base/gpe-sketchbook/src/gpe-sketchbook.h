@@ -18,6 +18,8 @@
 #ifndef GPE_SKETCHBOOK_H
 #define GPE_SKETCHBOOK_H
 
+#include <gtk/gtk.h>
+
 //--main
 typedef struct _sketchbook {
   GtkWidget   * window;

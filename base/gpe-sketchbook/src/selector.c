@@ -39,7 +39,6 @@
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
-GtkWidget * window_selector;
 GtkCList  * selector_clist; 
 GdkColor bg_color;//alternate color for list cells
 GtkWidget * selector_icons_table;

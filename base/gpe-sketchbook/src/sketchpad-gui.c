@@ -72,8 +72,8 @@ GtkWidget * sketchpad_gui(GtkWidget * toplevel_window){
                       GTK_SIGNAL_FUNC (on_window_size_allocate),
                       dock);
 
-  drawing_toolbar         = sketchpad_build_drawing_toolbar(window_sketchpad);
-  //files_toolbar           = sketchpad_build_files_toolbar(window_sketchpad);
+  drawing_toolbar         = sketchpad_build_drawing_toolbar(toplevel_window);
+  //files_toolbar           = sketchpad_build_files_toolbar(toplevel_window);
   scrollable_drawing_area = sketchpad_build_scrollable_drawing_area(drawing_area_width,
                                                                     drawing_area_height);
 

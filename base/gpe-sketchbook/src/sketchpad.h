@@ -43,7 +43,6 @@ typedef struct _sketchpad {
 } Sketchpad;
 extern Sketchpad sketchpad;
 
-extern GtkWidget * window_sketchpad;
 extern GtkWidget * drawing_area;
 
 extern gboolean is_current_sketch_modified;

@@ -133,7 +133,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   }
 
   file_save(note->fullpath_filename); //FIXME: should catch saving errors
-  build_thumbnail_widget(note, window_selector->style);//FIXME: use buffer, do NOT read from file!
+  build_thumbnail_widget(note, sketchbook.window->style);//FIXME: use buffer, do NOT read from file!
   if(is_current_sketch_new){
     gchar * name[1];
 

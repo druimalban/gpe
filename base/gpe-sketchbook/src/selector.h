@@ -20,7 +20,6 @@
 
 #include <gtk/gtk.h>
 
-extern GtkWidget * window_selector;
 extern GtkCList  * selector_clist; 
 extern GdkColor bg_color;
 void set_selector_clist(GtkCList * clist);

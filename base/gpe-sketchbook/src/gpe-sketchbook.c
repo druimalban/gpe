@@ -107,7 +107,7 @@ void sketchbook_reset_title(GtkNotebook * notebook,
     break;
   case PAGE_SELECTOR:
   default:
-    gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketchbook"));
+    gtk_window_set_title (GTK_WINDOW (sketchbook.window), _("Sketchbook"));
   }
 }
 
@@ -123,8 +123,7 @@ void gui_init(){
 
   //--toplevel window
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  /**/window_sketchpad = window; //FIXME: to be removed
-  /**/window_selector  = window; //FIXME: to be removed
+  sketchbook.window = window;
 
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 280);
@@ -148,6 +147,7 @@ void gui_init(){
 
   //--packing
   notebook = (GtkNotebook *) gtk_notebook_new();
+  sketchbook.notebook = notebook;
   gtk_notebook_set_show_border(notebook, FALSE);
   gtk_notebook_set_show_tabs  (notebook, FALSE);
   g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(sketchbook_reset_title), NULL);
@@ -156,10 +156,6 @@ void gui_init(){
   gtk_notebook_insert_page(notebook, sketchpad, NULL, PAGE_SKETCHPAD);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET(notebook));
-
-  //--references
-  sketchbook.window   = window;
-  sketchbook.notebook = notebook;
 
   //--show up
   //NOTE: could be defined by preference, or command line argument
