@@ -409,6 +409,9 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 					  widget->allocation.height,
 					  gdk_drawable_get_depth (widget->window));
 
+  gdk_draw_rectangle (clock->backing_pixmap, widget->style->bg_gc[GTK_STATE_NORMAL], 
+		      TRUE, 0, 0, widget->allocation.width, widget->allocation.height);
+
   clock->backing_gc = gdk_gc_new (clock->backing_pixmap);
 
   if (clock->can_render)

@@ -1,3 +1,8 @@
+2003-08-29  Philip Blundell  <philb@gnu.org>
+
+	* gpeclockface.c (gpe_clock_face_prepare_xrender): Clear backing
+	pixmap to widget background colour.
+
 2003-08-22  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.65 released.
