@@ -27,20 +27,20 @@
 #define TRACE(message...) 
 #endif
 
-Hitem * new_hitem(){
-  Hitem * hitem;
-  hitem = (Hitem *) malloc (sizeof(Hitem));
-  return hitem;
+GoNode * new_go_node(){
+  GoNode * go_node;
+  go_node = (GoNode *) malloc (sizeof(GoNode));
+  return go_node;
 }
 
-void free_hitem(Hitem * hitem){
-  if(hitem){
-    if(hitem->comment) free(hitem->comment);
-    free(hitem);
+void free_go_node(GoNode * go_node){
+  if(go_node){
+    if(go_node->comment) free(go_node->comment);
+    free(go_node);
   }
 }
 
-gboolean is_same_hitem(Hitem * a, Hitem * b){
+gboolean is_same_go_node(GoNode * a, GoNode * b){
   if(1
      && a->col    == b->col
      && a->row    == b->row
@@ -49,19 +49,19 @@ gboolean is_same_hitem(Hitem * a, Hitem * b){
   return FALSE;
 }
 
-void append_hitem(GoAction action, GoItem item, int col, int row){
-  Hitem * hitem;
-  Hitem * citem; //item to compare to
+void append_go_node(GoAction action, GoItem item, int col, int row){
+  GoNode * go_node;
+  GoNode * citem; //item to compare to
   GNode * node;
   gboolean found;
 
-  hitem = new_hitem();
+  go_node = new_go_node();
 
-  hitem->action = action;
-  hitem->item   = item;
-  hitem->col   = col;
-  hitem->row   = row;
-  hitem->comment = NULL;
+  go_node->action = action;
+  go_node->item   = item;
+  go_node->col   = col;
+  go_node->row   = row;
+  go_node->comment = NULL;
 
   // if the node/data exist, move to this node,
   // do NOT create a new branch (child) (== no twins!)
@@ -70,18 +70,18 @@ void append_hitem(GoAction action, GoItem item, int col, int row){
   found = FALSE;
   while(node && !found){
     citem = node->data;
-    if(is_same_hitem(hitem, citem)){
+    if(is_same_go_node(go_node, citem)){
       go.game.history = node; //and that's it
       found = TRUE;
     }
     node = node->next;
   }
-  if(!found) go.game.history = g_node_append_data(go.game.history, hitem);
+  if(!found) go.game.history = g_node_append_data(go.game.history, go_node);
 
 }
 
-gboolean delete_hitem(GNode * node, gpointer unused_data){
-  if(node->data) free_hitem(node->data);
+gboolean delete_go_node(GNode * node, gpointer unused_data){
+  if(node->data) free_go_node(node->data);
   return FALSE;
 }
 
@@ -91,7 +91,7 @@ GoItem color_to_play(){
 
 void update_last_played_mark_to(int next_col, int next_row);
 void pass_turn(){
-  append_hitem(PASS, color_to_play(), 0, 0);
+  append_go_node(PASS, color_to_play(), 0, 0);
   go.game.turn++;
   update_last_played_mark_to(0, 0);
 
@@ -135,7 +135,6 @@ void free_table(char ** table, int size){
 }
 
 void init_new_game(int game_size){
-  int free_space;
   int old_game_size;
 
   old_game_size = go.game.size;
@@ -145,22 +144,7 @@ void init_new_game(int game_size){
 
   status_update_fmt("New game %dx%d", go.game.size, go.game.size);
 
-  //dimensions //CLEAN move to go_board_init()
-  go.board.size = BOARD_SIZE;
-  go.board.stone_space = 1;
-  go.board.grid_stroke = 1;
-
-  go.board.cell_size = go.board.size / go.game.size;
-  if ((go.board.cell_size - go.board.grid_stroke - go.board.stone_space) %2) go.board.cell_size--;
-
-  free_space = go.board.size - go.game.size * go.board.cell_size;
-  if(free_space < 2){
-    go.board.cell_size--;
-    free_space += go.game.size;
-  }
-  go.board.margin = free_space / 2;
-  
-  go.board.stone_size = go.board.cell_size - go.board.stone_space;
+  go_board_resize(game_size);
 
   //stones grid
   if(go.game.grid != NULL) free_table(go.game.grid, old_game_size);
@@ -176,7 +160,7 @@ void init_new_game(int game_size){
                       G_PRE_ORDER,
                       G_TRAVERSE_ALL,
                       -1, //gint max_depth,
-                      delete_hitem,
+                      delete_go_node,
                       NULL);
     g_node_destroy (go.game.history_root);
   }
@@ -196,7 +180,7 @@ void init_new_game(int game_size){
   go.board.lock_variation_choice = FALSE;
 
   scale_graphics();
-  paint_board(go.board.drawing_area);//CLEAN give the board
+  paint_board();
 }
 
 
@@ -221,27 +205,27 @@ void _print_grid(){
   }
 }
 
-void _print_hitem(Hitem * hitem){
+void _print_go_node(GoNode * go_node){
   char action;
   char item;
 
-  if(!hitem){
-    g_print("hitem NULL");
+  if(!go_node){
+    g_print("go_node NULL");
     return;
   }
 
-  switch(hitem->action){
+  switch(go_node->action){
   case PASS   : action = '='; break;
   case PLAY   : action = '+'; break;
   case CAPTURE: action = '-'; break;
   default: action = ' ';
   }
-  switch(hitem->item){
+  switch(go_node->item){
   case BLACK_STONE: item = 'B'; break;
   case WHITE_STONE: item = 'W'; break;
   default: item = ' ';
   }
-  g_print("%c %c: %d %d", action, item, hitem->col, hitem->row);
+  g_print("%c %c: %d %d", action, item, go_node->col, go_node->row);
 }
 
 gboolean _print_node(GNode *node, gpointer unused_data){
@@ -249,7 +233,7 @@ gboolean _print_node(GNode *node, gpointer unused_data){
   int depth;
   depth = g_node_depth(node);
   for(i=1; i<depth; i++) g_print("| ");
-  _print_hitem(node->data);
+  _print_go_node(node->data);
   g_print ("\n");
   return FALSE;
 }
@@ -392,7 +376,7 @@ int kill_group_of(int col, int row){
     for(j=1; j<=go.game.size; j++){
       if(go.game.stamps[i][j]){
 
-        append_hitem(CAPTURE, go.game.grid[i][j], i, j);
+        append_go_node(CAPTURE, go.game.grid[i][j], i, j);
 
         remove_stone(i,j);
 
@@ -428,7 +412,7 @@ void play_at(int col, int row){
     GoItem color;
     color = color_to_play();
     put_stone(color, col, row);
-    append_hitem(PLAY, color, col, row);
+    append_go_node(PLAY, color, col, row);
   }
 
   {//--check if groups to kill
@@ -482,7 +466,7 @@ void play_at(int col, int row){
     {
       GNode * node = go.game.history;
       go.game.history = go.game.history->parent;
-      delete_hitem(node, NULL);
+      delete_go_node(node, NULL);
       g_node_destroy(node);
     }
   }
@@ -508,7 +492,7 @@ void variation_choice(){
   
   clear_stamps();
   for(i=0; i<children; i++){
-    Hitem * item;
+    GoNode * item;
     child = g_node_nth_child (go.game.history, i);
     item = child->data;
     
@@ -532,7 +516,7 @@ void clear_variation_choice(){
     children = g_node_n_children(go.game.history);
     //unpaint SPOTS
     for(i=0; i<children; i++){
-      Hitem * item;
+      GoNode * item;
       child = g_node_nth_child (go.game.history, i);
       item = child->data;
       unpaint_stone(item->col, item->row);
@@ -543,7 +527,7 @@ void clear_variation_choice(){
 }
 
 void undo_turn(){
-  Hitem * hitem;
+  GoNode * go_node;
 
   if(go.board.lock_variation_choice){
     clear_variation_choice();
@@ -555,24 +539,24 @@ void undo_turn(){
   //keep a ref to the leaf of the main branch
   if(G_NODE_IS_LEAF(go.game.history)) go.game.main_branch = go.game.history;
 
-  hitem = go.game.history->data;
+  go_node = go.game.history->data;
 
-  while(hitem->action == CAPTURE){
-    put_stone(hitem->item, hitem->col, hitem->row);
+  while(go_node->action == CAPTURE){
+    put_stone(go_node->item, go_node->col, go_node->row);
 
-    if(hitem->item == BLACK_STONE) go.game.white_captures--;
+    if(go_node->item == BLACK_STONE) go.game.white_captures--;
     else go.game.black_captures--;
 
     if(go.game.history->parent) go.game.history = go.game.history->parent;
-    hitem = go.game.history->data;
+    go_node = go.game.history->data;
   }
   update_capture_label();
 
-  if(hitem->action == PLAY){
-    remove_stone(hitem->col, hitem->row);
+  if(go_node->action == PLAY){
+    remove_stone(go_node->col, go_node->row);
     go.game.turn--;
   }
-  else if(hitem->action == PASS){
+  else if(go_node->action == PASS){
     go.game.turn--;
   }
 
@@ -581,7 +565,7 @@ void undo_turn(){
     
     if(!G_NODE_IS_ROOT(go.game.history)){
       GNode * hist;
-      Hitem * item;
+      GoNode * item;
       hist = go.game.history;
       item = hist->data;
       while(item->action == CAPTURE){
@@ -601,7 +585,7 @@ void undo_turn(){
 
 void redo_turn(){
   int children;
-  Hitem * hitem = NULL;
+  GoNode * go_node = NULL;
 
   if(!go.game.history || G_NODE_IS_LEAF(go.game.history)){
     TRACE("================do nothing");
@@ -633,7 +617,7 @@ void redo_turn(){
         }
         else{
           for(i=0; i<children; i++){
-            Hitem * item;
+            GoNode * item;
             child = g_node_nth_child (go.game.history, i);
             item = child->data;
             if(item->col == go.game.col && item->row == go.game.row){
@@ -652,18 +636,18 @@ void redo_turn(){
     go.game.history = choosen_child;
   }
 
-  hitem = go.game.history->data;
+  go_node = go.game.history->data;
 
-  if(hitem->action == PASS){
+  if(go_node->action == PASS){
     TRACE("***> rePASS");
     update_last_played_mark_to(0, 0);
     go.game.turn++;
   }
-  else if(hitem->action == PLAY){
-    TRACE("***> rePLAY %d %d", hitem->col, hitem->row);
-    put_stone(hitem->item, hitem->col, hitem->row);
+  else if(go_node->action == PLAY){
+    TRACE("***> rePLAY %d %d", go_node->col, go_node->row);
+    put_stone(go_node->item, go_node->col, go_node->row);
 
-    update_last_played_mark_to(hitem->col, hitem->row);
+    update_last_played_mark_to(go_node->col, go_node->row);
 
     go.game.turn++;
 
@@ -672,20 +656,20 @@ void redo_turn(){
       if(g_node_n_children(go.game.history) >= 1){
 
         node = g_node_nth_child (go.game.history, 0);
-        hitem = node->data;
+        go_node = node->data;
 
-        while(hitem && hitem->action == CAPTURE){
-          TRACE("***> remove %d %d", hitem->col, hitem->row);
-          remove_stone(hitem->col, hitem->row);
-          if(hitem->item == BLACK_STONE) go.game.white_captures++;
+        while(go_node && go_node->action == CAPTURE){
+          TRACE("***> remove %d %d", go_node->col, go_node->row);
+          remove_stone(go_node->col, go_node->row);
+          if(go_node->item == BLACK_STONE) go.game.white_captures++;
           else go.game.black_captures++;
           
           go.game.history = node;
           if(g_node_n_children(go.game.history) >= 1){
             node = g_node_nth_child (go.game.history, 0);
-            hitem = node->data;
+            go_node = node->data;
           }
-          else hitem = NULL;
+          else go_node = NULL;
         }
         update_capture_label();
       }
@@ -712,12 +696,12 @@ void goto_first(){
     clear_grid();
   }
 
-  paint_board(go.board.drawing_area);
+  paint_board();
 }
 
 void goto_last(){
   GNode * node;
-  Hitem * hitem;
+  GoNode * go_node;
 
   if(G_NODE_IS_LEAF(go.game.history)) return;
   do{
@@ -725,12 +709,12 @@ void goto_last(){
     while(!is_on_main_branch(node)){
       node = node->next;
     }
-    hitem = node->data;
-    if(hitem->action == PASS){
+    go_node = node->data;
+    if(go_node->action == PASS){
       pass_turn();
     }
     else{
-      play_at(hitem->col, hitem->row);
+      play_at(go_node->col, go_node->row);
     }
     node = go.game.history;
   }while(!G_NODE_IS_LEAF(node));

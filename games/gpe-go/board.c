@@ -190,10 +190,10 @@ void scale_graphics(){
 }
 
 
-void paint_board(GtkWidget * widget){
+void paint_board(){
   GdkRectangle rect;
   gdk_draw_drawable (go.board.drawing_area_pixmap_buffer,
-                     widget->style->black_gc,
+                     go.board.drawing_area->style->black_gc,
                      go.board.pixmap_empty_board,
                      0, 0, 0, 0, BOARD_SIZE, BOARD_SIZE);
   rect.x = rect.y = 0;
@@ -415,4 +415,24 @@ void go_board_init(){
   go.board.drawing_area = drawing_area;
   go.board.widget       = drawing_area;//the top level widget
 
+}
+
+void go_board_resize(int game_size){
+  int free_space;
+
+  go.board.size = BOARD_SIZE;
+  go.board.stone_space = 1;
+  go.board.grid_stroke = 1;
+
+  go.board.cell_size = go.board.size / game_size;
+  if ((go.board.cell_size - go.board.grid_stroke - go.board.stone_space) %2) go.board.cell_size--;
+
+  free_space = go.board.size - game_size * go.board.cell_size;
+  if(free_space < 2){
+    go.board.cell_size--;
+    free_space += game_size;
+  }
+  go.board.margin = free_space / 2;
+  
+  go.board.stone_size = go.board.cell_size - go.board.stone_space;
 }

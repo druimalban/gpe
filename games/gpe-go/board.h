@@ -17,7 +17,7 @@
 
 #include "model.h"
 
-#define BOARD_SIZE 240 //pixels CLEAN: remove
+#define BOARD_SIZE 240 //pixels
 
 extern GdkColor red;
 extern GdkColor blue;
@@ -50,11 +50,12 @@ typedef struct {
 } GoBoard;
 
 void go_board_init();
+void go_board_resize(int game_size);
 
 void load_graphics();
 void scale_graphics();
 
-void paint_board(GtkWidget * widget);
+void paint_board();
 
 /* optional last args for specific marks */
 void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...);

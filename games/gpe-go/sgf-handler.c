@@ -98,9 +98,9 @@ void sgf_parsed_prop_string(PropIdent prop_id, const char * s){
   switch(prop_id){
   case SYMBOL_C:
     if(go.game.history && go.game.history->data){
-      Hitem * hitem;
-      hitem = go.game.history->data;
-      hitem->comment = g_strdup(s);
+      GoNode * go_node;
+      go_node = go.game.history->data;
+      go_node->comment = g_strdup(s);
     }
     break;
   case SYMBOL_RU:
@@ -137,17 +137,17 @@ void sgf_parsed_prop_move(PropIdent prop_id, char row, char col){
 /* ################################################################ */
 /* ########################## save game ########################### */
 
-void _save_hitem_sgf(FILE * f, Hitem * hitem){
+void _save_go_node_sgf(FILE * f, GoNode * go_node){
 //  ;B[am]BL[1791];W[al]WL[1799]
   char item;
 
-  if(!hitem) return;
-  if(hitem->item == BLACK_STONE) item = 'B'; else item = 'W';
-  if     (hitem->action == PASS) fprintf(f, ";%c[tt]", item);//FIXME: support "[]"
-  else if(hitem->action == PLAY) fprintf(f, ";%c[%c%c]", item,
-                                         hitem->col + 'a' -1,
-                                         hitem->row + 'a' -1);
-  if(hitem->comment){
+  if(!go_node) return;
+  if(go_node->item == BLACK_STONE) item = 'B'; else item = 'W';
+  if     (go_node->action == PASS) fprintf(f, ";%c[tt]", item);//FIXME: support "[]"
+  else if(go_node->action == PLAY) fprintf(f, ";%c[%c%c]", item,
+                                         go_node->col + 'a' -1,
+                                         go_node->row + 'a' -1);
+  if(go_node->comment){
     gchar * s;
     GString * string;
 
@@ -155,7 +155,7 @@ void _save_hitem_sgf(FILE * f, Hitem * hitem){
 
     g_string_append(string, "C[");
 
-    s = hitem->comment;
+    s = go_node->comment;
     while(*s){
       switch(*s){
         case '[':
@@ -183,7 +183,7 @@ void _save_tree_to_sgf_from (GNode *node, FILE * f){
     fprintf(f, "\n (");
   }
 
-  if(node->data) _save_hitem_sgf(f, node->data);
+  if(node->data) _save_go_node_sgf(f, node->data);
 
   node = node->children;
   while (node){

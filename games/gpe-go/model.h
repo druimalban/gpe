@@ -26,11 +26,13 @@ void pass_turn();
 void goto_first();
 void goto_last ();
 
+//NOTE: typedef char Stamp;
+//NOTE: Stamp  ** stamps;
+//NOTE: GoItem ** grid;
 typedef struct {
 
   int size; //9, 13, 19, ...
 
-  //CLEAN typedef char GridItem;
   char ** grid;   //current state of the board
   char ** stamps;
 
@@ -48,7 +50,7 @@ typedef struct {
   int row;
 
   //Game Tree
-  GNode * history_root; //root node //CLEAN: GNode * tree;
+  GNode * history_root; //root node
   GNode * history;      //current pointer
   GNode * main_branch;  //ref to the leaf of the main branch
   GNode * variation_main_branch_node;
@@ -89,6 +91,6 @@ typedef struct {//FIXME: match SGF specs
   //...
 
   //char * unknown_properties;
-} Hitem;//CLEAN: GoNode
+} GoNode;
 
 #endif

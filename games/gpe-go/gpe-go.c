@@ -15,6 +15,7 @@
 #include <stdlib.h> //exit()
 #include <stdio.h>  //sscanf()
 #include <string.h> //strlen()
+#include <stdarg.h> //va_list
 
 #include "gpe-go.h"
 #include "model.h"
@@ -130,7 +131,6 @@ void status_update(char * message){
   }
 }
 
-#include <stdarg.h>
 void status_update_fmt(const char * format, ...){
   gchar * message;
   va_list ap;
@@ -142,30 +142,30 @@ void status_update_fmt(const char * format, ...){
 }
 
 void status_update_current(){
-  Hitem * hitem;
+  GoNode * go_node;
   char item;
   gchar * message;
 
-  hitem = go.game.history->data;
-  if(!hitem){
+  go_node = go.game.history->data;
+  if(!go_node){
     return;
   }
 
-  switch(hitem->item){
+  switch(go_node->item){
     case BLACK_STONE: item = 'B'; break;
     case WHITE_STONE: item = 'W'; break;
     default: item = '-';
   }
 
-  if(hitem->action == PASS){
+  if(go_node->action == PASS){
     message = g_strdup_printf(" %c PASS", item);
   }
-  else /*if(hitem->action == PLAY)*/{
-    message = g_strdup_printf(" %c (%d,%d) ", item, hitem->row, hitem->col);
+  else /*if(go_node->action == PLAY)*/{
+    message = g_strdup_printf(" %c (%d,%d) ", item, go_node->row, go_node->col);
   }
 
-  if(hitem->comment){
-    status_update_fmt("%s - %s", message, hitem->comment);
+  if(go_node->comment){
+    status_update_fmt("%s - %s", message, go_node->comment);
   }
   else{
     status_update(message);
@@ -176,7 +176,7 @@ void update_capture_label(){
   free(go.ui.capture_string);
   go.ui.capture_string = (char *) malloc (20 * sizeof(char));
   /* TRANSLATORS: B = Black stones, W = White stones */
-  sprintf(go.ui.capture_string, _("B:%d  W:%d "), go.game.black_captures, go.game.white_captures);
+  sprintf(go.ui.capture_string, _("B:%d W:%d"), go.game.black_captures, go.game.white_captures);
   gtk_label_set_text (GTK_LABEL (go.ui.capture_label), go.ui.capture_string);
 }
 
@@ -207,24 +207,8 @@ void on_file_selection_ok(GtkWidget *widget, gpointer file_selector){
   }
 }
 
-//CLEAN: connect directly to the called function
-void on_button_first_pressed(GtkWidget *widget, gpointer unused){
-  goto_first();
-}
-
-void on_button_last_pressed(GtkWidget *widget, gpointer unused){
-  goto_last();
-}
-
-void on_button_prev_pressed (void){
-  undo_turn();
-}
-void on_button_next_pressed (void){
-  redo_turn();
-}
-
 void on_button_pass_clicked (void){
-  if(go.board.lock_variation_choice) return;//CLEAN go.board.lock...
+  if(go.board.lock_variation_choice) return;
   pass_turn();
 }
 
@@ -248,18 +232,18 @@ void on_button_game_save_clicked(GtkButton *button, gpointer unused){
   gtk_widget_show (go.ui.file_selector);
 }
 void on_button_game_load_clicked(GtkButton *button, gpointer unused){
-  popup_menu_close(go.ui.game_menu_popup_button);//FIXME: connect function on "clicked"
+  popup_menu_close(go.ui.game_menu_popup_button);//NOTE: may connect function on "clicked"
   go.ui.save_game = FALSE;
   gtk_window_set_title( GTK_WINDOW(go.ui.file_selector), _("Load game..."));
   gtk_widget_show (go.ui.file_selector);
 }
 
 void on_radiobutton_size_clicked (GtkButton *button, gpointer size){
-  if(size == NULL){
+  if(size == NULL){/* specified size */
     go.ui.selected_game_size =
       gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(go.ui.game_size_spiner));
   }
-  else{
+  else{/* std size (9/13/19) */
     go.ui.selected_game_size = GPOINTER_TO_INT(size);
   }
 }
@@ -366,7 +350,7 @@ GtkWidget * build_new_game_dialog(){
 
   game_size = vbox;
 
-  //[OK] button
+  //[CANCEL][OK] buttons
   {
     GtkWidget * button;
     GtkWidget * hbox;
@@ -387,7 +371,7 @@ GtkWidget * build_new_game_dialog(){
 
     buttons = hbox;
   }
-    
+
   //--Packing
   top_level_container = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (top_level_container), 5);
@@ -401,13 +385,13 @@ GtkWidget * build_new_game_dialog(){
 }
 
 void on_button_edit_comment_clicked(){
-  Hitem * hitem;
+  GoNode * go_node;
 
   if(go.board.lock_variation_choice) return;
 
-  hitem = go.game.history->data;
-  if(hitem && hitem->comment){
-    gtk_text_buffer_set_text (go.ui.comment_buffer, hitem->comment, -1);
+  go_node = go.game.history->data;
+  if(go_node && go_node->comment){
+    gtk_text_buffer_set_text (go.ui.comment_buffer, go_node->comment, -1);
   }
   else{
     gtk_text_buffer_set_text (go.ui.comment_buffer, "", -1);
@@ -438,10 +422,10 @@ void on_button_comment_ok_clicked (void){
     g_strstrip(s);
 
     if( strlen(s) > 0 && go.game.history->data ){
-      Hitem * hitem;
-      hitem = go.game.history->data;
-      if(hitem->comment) free(hitem->comment);
-      hitem->comment = s;
+      GoNode * go_node;
+      go_node = go.game.history->data;
+      if(go_node->comment) free(go_node->comment);
+      go_node->comment = s;
     }
     status_update_current();
   }
@@ -615,7 +599,7 @@ void gui_init(){
                            _("First"),
                            _("Go to the beginning of the game"),
                            _("Go to the beginning of the game"),
-                           image, GTK_SIGNAL_FUNC (on_button_first_pressed), NULL);
+                           image, GTK_SIGNAL_FUNC (goto_first), NULL);
 
   //[PREV] button
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
@@ -623,7 +607,7 @@ void gui_init(){
                            _("Prev"),
                            _("Go to the previous step"),
                            _("Go to the previous step"),
-                           image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
+                           image, GTK_SIGNAL_FUNC (undo_turn), NULL);
 
   //[NEXT] button
   image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
@@ -631,7 +615,7 @@ void gui_init(){
                            _("Next"),
                            _("Go to the next step"),
                            _("Go to the next step"),
-                           image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
+                           image, GTK_SIGNAL_FUNC (redo_turn), NULL);
 
   //[LAST] button
   image = gtk_image_new_from_stock (GTK_STOCK_GOTO_LAST, GTK_ICON_SIZE_SMALL_TOOLBAR);
@@ -639,7 +623,7 @@ void gui_init(){
                            _("Last"),
                            _("Go to the end of the game"),
                            _("Go to the end of the game"),
-                           image, GTK_SIGNAL_FUNC (on_button_last_pressed), NULL);
+                           image, GTK_SIGNAL_FUNC (goto_last), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
