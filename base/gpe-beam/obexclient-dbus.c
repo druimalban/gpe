@@ -28,8 +28,6 @@
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
 
-#include "obex-glib.h"
-
 #define WRONG_ARGS_ERROR "org.handhelds.gpe.irda.Error.WrongArgs"
 
 #define _(x) gettext(x)
