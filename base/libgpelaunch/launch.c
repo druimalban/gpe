@@ -349,12 +349,10 @@ global_monitor_event (SnMonitorEvent *event, void *user_data)
       
     case SN_MONITOR_EVENT_COMPLETED:
       kill_pending_startup (map, id);
-      sn_monitor_context_unref (context);
       break;
       
     case SN_MONITOR_EVENT_CANCELED:
       kill_pending_startup (map, id);
-      sn_monitor_context_unref (context);
       break;
     }
 }
