@@ -438,6 +438,7 @@ void
 show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 {
 	GtkWidget *dialog, *btnok;
+	GtkWidget *scrolledwindow;
 	GtkWidget *label, *rb, *container, *ctable;
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border = gpe_get_border ();
@@ -451,6 +452,8 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 					GTK_STOCK_CANCEL,
 					GTK_RESPONSE_REJECT,
 					NULL);
+	
+	gtk_window_set_default_size(GTK_WINDOW(dialog), 200, 290);
 
 	btnok = gtk_dialog_add_button(GTK_DIALOG(dialog), 
 	                              GTK_STOCK_OK, GTK_RESPONSE_OK);
@@ -459,9 +462,16 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	
 	// page headers
 
+	scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow), 
+				GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+				
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), scrolledwindow, TRUE, TRUE, 0);
+	
 	ctable = gtk_table_new (8, 2, FALSE);
 
-	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), ctable, FALSE, FALSE, 0);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow), ctable);
+
 	gtk_container_set_border_width (GTK_CONTAINER (ctable), gpe_border);
 
 	label = gtk_label_new (NULL);
@@ -693,7 +703,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
 
-/*
+
 	rb = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(rb), _("Key 4"));
 	gtk_tooltips_set_tip (tooltips, rb, help_selectkey, NULL);
 	gtk_widget_set_name (GTK_WIDGET (rb), "key4select");
@@ -722,7 +732,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (GTK_FILL),
 			  gpe_boxspacing, gpe_boxspacing);
-*/
+
 			       
 	gtk_widget_show_all(dialog);
 	response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -743,10 +753,10 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key3");
 		strncpy(iface->key[2], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
-/*		
+		
 		label = gtk_object_get_data (GTK_OBJECT (table), "key4");
 		strncpy(iface->key[3], gtk_editable_get_chars(GTK_EDITABLE (label), 0, -1), 127);
-*/
+
 		label = gtk_object_get_data (GTK_OBJECT (table), "mode_managed");
 		iface->mode = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON (label)) ? MODE_MANAGED : MODE_ADHOC;
 		
