@@ -1,8 +1,8 @@
 PREFIX = /usr/local
 
 install:
-	install -D gpe-terminal.png $(DESTDIR)/usr/share/pixmaps/gpe-terminal.png
-	install -D gpe-terminal.menu $(DESTDIR)/usr/lib/menu/gpe-terminal
+	install -D gpe-terminal.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-terminal.png
+	install -D gpe-terminal.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-terminal
 
 ipkg:
 	rm -rf dist
