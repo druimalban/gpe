@@ -1685,6 +1685,8 @@ main (int argc, char *argv[])
 
       ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
+      GTK_WIDGET_UNSET_FLAGS (ok_button, GTK_CAN_FOCUS);
+
       if (autolock_mode) 
 	{
 	  lock_label = gtk_label_new (NULL);
