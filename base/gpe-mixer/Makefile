@@ -3,7 +3,7 @@ PACKAGE = gpe-mixer
 DEBUG = yes
 CVSBUILD = yes
 GST = yes
-VERSION = 0.36
+VERSION = 0.37
 
 MEMBERS = gpe-mixer
 

@@ -1,4 +1,8 @@
 2004-08-21	Florian Boor <florian@kernelconcepts.de>
+	- Makefile: Increased version to 0.37
+	- gpe-mixer.c: Set speaker symbol to "phout" channel.
+
+2004-08-21	Florian Boor <florian@kernelconcepts.de>
 	- Released V 0.36
 	- Makefile: Version -> 0.36
 	- Implemented channel selection from command line for easier adaption

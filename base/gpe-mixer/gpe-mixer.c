@@ -44,6 +44,7 @@ static struct gpe_icon my_icons[] = {
 	{ "treble" , PREFIX "/share/gpe-mixer/treble.png"},
 	{ "synth" , PREFIX "/share/gpe-mixer/synth.png"},
 	{ "speaker" , PREFIX "/share/gpe-mixer/speaker.png"},
+	{ "phout" , PREFIX "/share/gpe-mixer/speaker.png"},
 	{ "pcm" , PREFIX "/share/gpe-mixer/pcm.png"},
 	{ "pcm2" , PREFIX "/share/gpe-mixer/pcm.png"},
 	{ "mic" , PREFIX "/share/gpe-mixer/mic.png"},
