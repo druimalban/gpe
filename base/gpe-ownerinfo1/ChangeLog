@@ -1,3 +1,15 @@
+2002-08-18  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.am (install-data-local): Remove
+	/etc/gpe/gpe-ownerinfo.data. Needs to be written when installing
+	if necessary.
+	(install-data-local): Install gpe-ownerinfo-bg.png
+	(PREFIX): Add this variable.
+
+	* familiar/conffiles: Remove /etc/gpe/gpe-ownerinfo.data from this
+	file. One just wants to have gpe-ownerinfo.data created initially,
+	and not being asked if it should be updated all the time.
+
 2002-08-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c: Make it use the new libgpewidget layout.

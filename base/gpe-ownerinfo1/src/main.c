@@ -156,10 +156,9 @@ main (int argc, char *argv[])
   widget = lookup_widget (GPE_Ownerinfo, "phone");
   gtk_label_set_text (GTK_LABEL (widget), ownerphone);
 
-
-  // widget = lookup_widget (GPE_Ownerinfo, "frame1");
-  // gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
-  // gtk_widget_set_name (widget, "gpe_ownerinfo");
+  widget = lookup_widget (GPE_Ownerinfo, "frame1");
+  gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
+  gtk_widget_set_name (widget, "gpe_ownerinfo");
 
   gtk_widget_show (GPE_Ownerinfo);
 
