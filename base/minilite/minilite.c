@@ -39,7 +39,8 @@ typedef enum
 	P_ZAURUS,
 	P_CORGI,
 	P_INTEGRAL,
-	P_SIMPAD
+	P_SIMPAD,
+	P_SIMPAD_NEW
 }t_platform;
 
 
@@ -78,9 +79,11 @@ char IpaqModel = -1;
 
 /* Simpad, a little bit nasty - PWM reg. is set directly */
 
-#define SIMPAD_BACKLIGHT_REG	"/proc/driver/mq200/registers/PWM_CONTROL"
-#define SIMPAD_BACKLIGHT_MASK	0x00a10044
+#define SIMPAD_BACKLIGHT_REG		"/proc/driver/mq200/registers/PWM_CONTROL"
+#define SIMPAD_BACKLIGHT_MASK		0x00a10044
 
+/* Simpad, new interface */
+#define SIMPAD_BACKLIGHT_REG_NEW	"/proc/driver/mq200/backlight"
 
 
 GtkWidget *slider_window;
@@ -110,10 +113,45 @@ detect_platform(void)
 		return P_CORGI;
 	if (!access(ZAURUS_FL,R_OK))
 		return P_ZAURUS;
+	if (!access(SIMPAD_BACKLIGHT_REG_NEW,R_OK)) /* preserve order */
+		return P_SIMPAD_NEW;
 	if (!access(SIMPAD_BACKLIGHT_REG,R_OK))
 		return P_SIMPAD;
 	return P_NONE;
 }
+
+
+int 
+simpad_new_set_level(int level)
+{
+  FILE *f_light;
+  
+  f_light = fopen(SIMPAD_BACKLIGHT_REG_NEW,"w");
+  if (f_light != NULL)
+  {
+    fprintf(f_light,"%d\n", level);
+  	fclose(f_light);
+	return level;
+  }
+  else
+	  return -1;
+}
+
+int 
+simpad_new_get_level(void)
+{
+  FILE *f_light;
+  int level;
+  
+  f_light = fopen(SIMPAD_BACKLIGHT_REG_NEW,"r");
+  if (f_light != NULL)
+  {
+  	fscanf(f_light,"%d", &level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+}  
 
 
 int 
@@ -345,6 +383,9 @@ set_level (int level)
 	case P_INTEGRAL:
 		return integral_set_level(level);
 	break;
+	case P_SIMPAD_NEW:
+		return simpad_new_set_level(level);
+	break;
 	case P_SIMPAD:
 		return simpad_set_level(level);
 	break;
@@ -380,6 +421,12 @@ read_old_level (void)
 	break;
 	case P_INTEGRAL:
 		return integral_get_level();
+	break;
+	case P_SIMPAD_NEW:
+		return simpad_new_get_level();
+	break;
+	case P_SIMPAD:
+		return simpad_get_level();
 	break;
 	default:
 		return 0;
