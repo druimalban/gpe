@@ -35,7 +35,6 @@ install-program: all
 	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-appmgr
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/pixmaps
 	$(INSTALL) -D dist/usr/share/pixmaps/*.png  $(DESTDIR)/$(PREFIX)/share/pixmaps
-	$(INSTALL) -D appmgr.session $(DESTDIR)/etc/X11/Xsession.d/90GpeAppMgr
 
 clean:
 	rm -f *.o gpe-appmgr
