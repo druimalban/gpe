@@ -1,5 +1,11 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* todo-ui.c (categories_ok): Commit changes to category list here.
+	(do_new_category): Don't call todo_db_new_category.
+	(delete_category): Fill in implementation.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* todo-ui.c (change_categories): Unref list store when window
 	deleted.  Add cell renderers.
 	(categories_button_press_event): New.

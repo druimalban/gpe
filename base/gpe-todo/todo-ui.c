@@ -202,6 +202,7 @@ categories_ok (GtkWidget *w, gpointer p)
   struct edit_todo *t;
   GtkTreeIter iter;
   GtkListStore *list_store;
+  GSList *old_categories, *i;
 
   window = GTK_WIDGET (p);
   t = g_object_get_data (G_OBJECT (window), "edit_data");
@@ -209,6 +210,8 @@ categories_ok (GtkWidget *w, gpointer p)
 
   g_slist_free (t->selected_categories);
   t->selected_categories = NULL;
+
+  old_categories = g_slist_copy (todo_db_get_categories_list ());
 
   if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
     {
@@ -220,10 +223,17 @@ categories_ok (GtkWidget *w, gpointer p)
 	  
 	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &selected, 1, &title, 2, &c, -1);
 
-	  if (strcmp (c->title, title))
+	  if (c == NULL)
+	    c = todo_db_new_category (title);
+	  else
 	    {
-	      g_free ((void *)c->title);
-	      c->title = g_strdup (title);
+	      old_categories = g_slist_remove (old_categories, c);
+
+	      if (strcmp (c->title, title))
+		{
+		  g_free ((void *)c->title);
+		  c->title = g_strdup (title);
+		}
 	    }
 
 	  if (selected)
@@ -231,8 +241,19 @@ categories_ok (GtkWidget *w, gpointer p)
 	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
     }
 
+  for (i = old_categories; i; i = i->next)
+    {
+      struct todo_category *c = i->data;
+
+      todo_db_del_category (c);
+    }
+
+  g_slist_free (old_categories);
+
   gtk_label_set_text (GTK_LABEL (t->categories_label),
 				 build_categories_string (t->selected_categories));
+
+  categories_menu ();
 
   gtk_widget_destroy (window);
 }
@@ -243,7 +264,6 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
   GtkWidget *entry = gtk_object_get_data (GTK_OBJECT (d), "entry");
   char *title = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
   GSList *l;
-  struct todo_category *t;
   GtkTreeIter iter;
   GtkListStore *list_store;
 
@@ -256,7 +276,7 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
       return;
     }
   
-  for (l = todo_db_get_categories_list(); l; l = l->next)
+  for (l = todo_db_get_categories_list (); l; l = l->next)
     {
       struct todo_category *t = l->data;
       if (!strcmp (title, t->title))
@@ -267,12 +287,9 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
 	}
     }
 
-  t = todo_db_new_category (title);
-
   gtk_list_store_append (list_store, &iter);
-  gtk_list_store_set (list_store, &iter, 0, FALSE, 1, t->title, 2, t, -1);
+  gtk_list_store_set (list_store, &iter, 0, FALSE, 1, title, 2, NULL, -1);
 
-  categories_menu ();
   gtk_widget_destroy (d);
 }
 
@@ -338,8 +355,52 @@ new_category (GtkWidget *w, GtkListStore *list_store)
 }
 
 void
-delete_category (GtkWidget *w, GtkListStore *list_store)
+delete_category (GtkWidget *w, GtkWidget *tree_view)
 {
+  GtkTreeSelection *sel;
+  GList *list, *iter;
+  GtkTreeModel *model;
+  GSList *refs = NULL, *riter;
+
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+
+  list = gtk_tree_selection_get_selected_rows (sel, &model);
+
+  for (iter = list; iter; iter = iter->next)
+    {
+      GtkTreePath *path;
+      GtkTreeRowReference *ref;
+
+      path = list->data;
+      ref = gtk_tree_row_reference_new (model, path);
+      gtk_tree_path_free (path);
+
+      refs = g_slist_prepend (refs, ref);
+    }
+
+  g_list_free (list);
+
+  for (riter = refs; riter; riter = riter->next)
+    {
+      GtkTreeRowReference *ref;
+      GtkTreePath *path;
+
+      ref = riter->data;
+      path = gtk_tree_row_reference_get_path (ref);
+      if (path)
+	{
+	  GtkTreeIter it;
+	  
+	  if (gtk_tree_model_get_iter (model, &it, path))
+	    gtk_list_store_remove (GTK_LIST_STORE (model), &it);
+
+	  gtk_tree_path_free (path);
+	}
+
+      gtk_tree_row_reference_free (ref);
+    }
+
+  g_slist_free (refs);
 }
 
 static gboolean
@@ -406,6 +467,8 @@ change_categories (GtkWidget *w, gpointer p)
 
   list_store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_POINTER);
 
+  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
@@ -418,7 +481,7 @@ change_categories (GtkWidget *w, gpointer p)
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
 			    _("Delete category"), 
 			    _("Tap here to delete the selected category."),
-			    G_CALLBACK (delete_category), list_store, -1);
+			    G_CALLBACK (delete_category), tree_view, -1);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
 		      toolbar, FALSE, FALSE, 0);
@@ -438,8 +501,6 @@ change_categories (GtkWidget *w, gpointer p)
       
       gtk_list_store_set (list_store, &iter, 0, selected, 1, c->title, 2, c, -1);
     }
-
-  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
 
   renderer = gtk_cell_renderer_toggle_new ();
   g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);
