@@ -6,13 +6,17 @@ application to migrate.  The property has the format "TARGET-DISPLAY
 AUTH-TYPE AUTH-DATA", where TARGET-DISPLAY is the desired destination
 in "host:display.screen" notation; AUTH-TYPE is the authentication
 method in use (see below); and AUTH-DATA is the appropriate
-authentication information.
+authentication information.  
 
-Following successful migration, the migrated window should reset its
-_GPE_DISPLAY_CHANGE property to zero length, indicating that it is
-safe to request further migrations.
+Prior to setting this property on a window, the requesting application
+should inspect its current value.  Anything other than zero length
+indicates that the migration attempt has collided with one made by
+another requestor, and should be aborted.  Once a migration request
+has been processed, the migrated window should reset its
+_GPE_DISPLAY_CHANGE property to zero length, indicating readiness to
+receive further requests.
 
-The outcome of the migration attempt is signalled by sending a
+The outcome of a migration attempt is signalled by sending a
 ClientMessage of type _GPE_DISPLAY_CHANGE to the original display's
 root window with event mask SubstructureNotify and payload as follows:
 
