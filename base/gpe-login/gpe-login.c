@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +29,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#include <X11/XF86keysym.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -129,7 +130,7 @@ static key_map_t keymap[] =
 static void cleanup_children (void);
 static void add_menu_callback (GtkWidget * menu, const char *label,
 			       void *func, gpointer * data);
-static void parse_xkbd_args (char *cmd, char **argv);
+static void parse_xkbd_args (const char *cmd, char **argv);
 static void spawn_xkbd (void);
 static void cleanup_children_and_exit (int s);
 static void set_username (GtkWidget * widget, gpointer data);
@@ -184,9 +185,9 @@ add_menu_callback (GtkWidget * menu, const char *label, void *func,
 }
 
 static void
-parse_xkbd_args (char *cmd, char **argv)
+parse_xkbd_args (const char *cmd, char **argv)
 {
-  char *p = cmd;
+  const char *p = cmd;
   char *buf = alloca (strlen (cmd) + 1), *bufp = buf;
   int nargs = 0;
   int escape = 0, squote = 0, dquote = 0;
@@ -478,6 +479,24 @@ enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
   
   memset (pwstr, 0, strlen (pwstr));
   g_free (pwstr);
+}
+
+static GdkFilterReturn
+power_button_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+{
+  XEvent *xev = (XEvent *)xevp;
+
+  if (xev->type == KeyPress || xev->type == KeyRelease)
+    {
+      if (xev->xkey.keycode == XF86XK_PowerDown)
+	{
+	  xev->xkey.window = DefaultRootWindow (xev->xany.display);
+	  XSendEvent (xev->xany.display, DefaultRootWindow (xev->xany.display),
+		      True, KeyPressMask | KeyReleaseMask, xev);
+	}
+    }
+
+  return GDK_FILTER_CONTINUE;
 }
 
 static GdkFilterReturn
@@ -1501,6 +1520,7 @@ main (int argc, char *argv[])
     {
       XSelectInput (dpy, root, PropertyChangeMask);
       gdk_window_add_filter (GDK_ROOT_PARENT (), filter, 0);
+      gdk_window_add_filter (focus->window, power_button_filter, 0);
     }
   else
     {
