@@ -5,10 +5,26 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
+<H2>Coordinator</H2>
+<p>
+The coordinator for this sub-project is Philip Blundell
+(<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) . If you want to 
+contribute to this project, please contact him directly.
+</p>
+
 <H2>Function</H2>
 <P>
-I have never really understood the need for a todo list application so maybe
-someone else can comment on this ;)
+This is fairly straightforward.  The program keeps track of outstanding 
+tasks, arranged in one or more distinct lists (e.g. one for work and one
+for personal items).  Each item can be assigned a priority and a date by 
+which it must be completed.
+</P>
+
+<H2>Status</H2>
+<P>
+The source code can be found in <A href="../cvs.shtml">CVS</A>,
+module <b>gpe-todo</b>.  Precompiled binaries for iPAQ are available
+in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 </P>
 
 <!--#include virtual="/includes/foot.shtml"-->
