@@ -1,3 +1,8 @@
+2003-08-07  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xinit.d/30xTs_Calibrate: If xtscal is installed, use it in
+	preference to xcalibrate.
+
 2003-08-03  Philip Blundell  <philb@gnu.org>
 
 	* familiar/gpe-logout.menu: Deleted.

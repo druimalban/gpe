@@ -1,6 +1,11 @@
 if [ -f /etc/xcalibrate.conf ]; then
-	echo "Restoring touch screen calibration"
-	/usr/X11R6/bin/xcalibrate -cal `cat /etc/xcalibrate.conf`
+	if [ -x /usr/bin/xtscal ]; then
+		xtscal -cal `cat /etc/xcalibrate.conf`
+	else
+		if [ -x /usr/X11R6/bin/xcalibrate ]; then
+			/usr/X11R6/bin/xcalibrate -cal `cat /etc/xcalibrate.conf`
+		fi
+	endif
 else
 	sh /usr/bin/gpe-xcalibrate.sh
 fi
