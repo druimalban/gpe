@@ -28,11 +28,11 @@
 static const guint window_x = 240, window_y = 320;
 
 struct pix my_pix[] = {
-  { "delete", PIXMAPS_DIR "/delrecord.xpm" },
-  { "new", PIXMAPS_DIR "/new.xpm" },
-  { "start", MY_PIXMAPS_DIR "/clock.png" },
-  { "stop", MY_PIXMAPS_DIR "/xclock.png" },
-  { "tick", PIXMAPS_DIR "/tick.xpm" },
+  { "new", "new" },
+  { "delete", "delete" },
+  { "clock", "watch" },
+  { "stop_clock", "pause_watch" },
+  { "ok", "ok" },
   { NULL, NULL }
 };
 
@@ -176,13 +176,13 @@ main(int argc, char *argv[])
 			   _("Delete task"), _("Delete task"),
 			   pw, ui_delete_task, tree);
 
-  p = find_pixmap ("start");
+  p = find_pixmap ("clock");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Start timing"),
 			   _("Start timing"), _("Start timing"),
 			   pw, start_timing, tree);
   
-  p = find_pixmap ("stop");
+  p = find_pixmap ("stop_clock");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop timing"),
 			   _("Stop timing"), _("Stop timing"),
