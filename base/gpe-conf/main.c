@@ -59,21 +59,21 @@ static struct {
 
 struct Applet applets[]=
   {
-    { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time" ,"Time and Date:"},
-    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr", "Gpe-appmgr Setup:"},
-    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup:"},
-    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Unimplemented_Restore , "vKeyboard" ,"keyboard", "Virtual Keyboard type:"},
-    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Unimplemented_Restore , "Buttons" ,"keyctl", "Buttons Configuration:"},
-    { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Adresses:"},
-    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global apparence:"},
-    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Config:"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup:"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Config:"},
+    { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time" ,"Time and Date"},
+    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr", "Launcher Setup"},
+    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup"},
+    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Unimplemented_Restore , "vKeyboard" ,"keyboard", "Virtual Keyboard Type"},
+    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Unimplemented_Restore , "Buttons" ,"keyctl", "Button Configuration"},
+    { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Adresses"},
+    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance"},
+    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver config:"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software","Adding and Removing Program:"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WallPaper" ,"wallpaper","Wallpaper:"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WindowMgr" ,"windowmanager","WindowManager:"}
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software","Adding and Removing Programs"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WallPaper" ,"wallpaper","Wallpaper"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WindowMgr" ,"windowmanager","Window Manager"}
   };
 struct gpe_icon my_icons[] = {
   { "save" },
@@ -164,7 +164,7 @@ void make_container()
   //  gtk_widget_show (scrolledwindow);
   //  gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
 
-  self.frame = gtk_frame_new ("About GPE-Conf:");
+  self.frame = gtk_frame_new ("About GPE Configuration");
 
   //  gtk_container_add(GTK_CONTAINER(scrolledwindow),self.frame);
   gtk_container_add(GTK_CONTAINER(self.vbox),self.frame);
@@ -218,7 +218,7 @@ void main_all()
   
   make_container();
 
-  self.applet = gtk_label_new("Gpe Configuration \n by Pierre Tardy\n\n inspired of sysset \nby James Weatheral..");
+  self.applet = gtk_label_new("GPE Configuration\nby Pierre Tardy\n\nInspired by sysset \nby James Weatherall.");
   gtk_container_add(GTK_CONTAINER(self.frame),self.applet);
 
   ntree =  gtk_tree_new();
@@ -299,7 +299,7 @@ int main(int argc, char **argv)
       if (i ==applets_nb)
 	{
 	  fprintf(stderr,"Applet %s unknown!\n",argv[1]);
-	  printf("\n\nUsage : gpe-conf [AppletName]\nwhere AppletName is in :\n");
+	  printf("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n");
 	  for( i = 0 ; i< applets_nb ; i++)
 	    if(applets[i].Build_Objects != Unimplemented_Build_Objects)
 	      fprintf(stderr,"%s\n",applets[i].name);
