@@ -50,7 +50,7 @@ GtkWidget *Time_Build_Objects()
     ts.tm_year=2002;
 
   self.applet = gtk_vbox_new(FALSE,0);
-  self.datel = gtk_label_new("date:");
+  self.datel = gtk_label_new("Date:");
   gtk_box_pack_start(GTK_BOX(self.applet),self.datel,TRUE, TRUE, 0);
 
   self.cal = gtk_calendar_new();
@@ -60,7 +60,7 @@ GtkWidget *Time_Build_Objects()
 
   gtk_box_pack_start(GTK_BOX(self.applet),self.cal,TRUE, TRUE, 0);
 
-  self.timel = gtk_label_new("time:");
+  self.timel = gtk_label_new("Time:");
   gtk_box_pack_start(GTK_BOX(self.applet),self.timel,TRUE, TRUE, 0);
 
   self.hbox = gtk_hbox_new(FALSE,0);
@@ -83,7 +83,7 @@ GtkWidget *Time_Build_Objects()
 
   gtk_box_pack_start(GTK_BOX(self.applet),self.internetserver,TRUE, TRUE, 0);
 
-  self.internet = gtk_button_new_with_label("Get from network");
+  self.internet = gtk_button_new_with_label("Get time from network");
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
 		      (GtkSignalFunc) GetInternetTime, NULL);
 

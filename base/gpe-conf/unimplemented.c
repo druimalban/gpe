@@ -19,7 +19,7 @@
 
 GtkWidget *Unimplemented_Build_Objects()
 {  
-  return gtk_label_new("this applet is not yet implemented\n Wait the next update..");;
+  return gtk_label_new("This applet is not yet implemented.\nPlease wait for the next update.");;
 
 }
 void Unimplemented_Free_Objects()
