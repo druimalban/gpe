@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "SDL.h"
 #include "SDL_image.h"
 
@@ -13,6 +15,7 @@ AnimatedImage :: AnimatedImage( string file, int nFrames )
 	image = IMG_Load( (const char *)file.c_str() );
 	if ( !image )
 	{
+		cerr << "Couldn't load " << file << "\n";
 		nrFrames = 0;
 		image = 0;
 		return;
