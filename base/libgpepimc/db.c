@@ -92,10 +92,12 @@ gboolean
 gpe_pim_category_new (const gchar *name, gint *id)
 {
   char *err;
-  int r =
-    sqlite_exec_printf (db,
-			"insert into category values (NULL, '%q')",
-			      NULL, NULL, &err, name);
+  int r;
+  struct gpe_pim_category *c;
+  
+  r = sqlite_exec_printf (db,
+			  "insert into category values (NULL, '%q')",
+			  NULL, NULL, &err, name);
   if (r)
     {
       gpe_error_box (err);
@@ -104,6 +106,14 @@ gpe_pim_category_new (const gchar *name, gint *id)
     }
   
   *id = sqlite_last_insert_rowid (db);
+
+  c = g_malloc (sizeof (*c));
+
+  c->id = *id;
+  c->name = g_strdup (name);
+
+  categories = g_slist_prepend (categories, c);
+      
   return TRUE;
 }
 
