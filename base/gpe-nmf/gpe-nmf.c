@@ -26,12 +26,13 @@
 #include "picturebutton.h"
 
 static struct gpe_icon my_icons[] = {
-  { "ok", "ok" },
-  { "cancel", "cancel" },
-  { "media-play", "media-play" },
-  { "media-stop", "media-stop" },
-  { "media-rew", "media-rew" },
-  { "media-fwd", "media-fwd" },
+  { "ok" },
+  { "cancel" },
+  { "stock_media-prev" },
+  { "stock_media-next" },
+  { "stock_media-play" },
+  { "stock_media-pause" },
+  { "stock_media-stop" },
   { NULL, NULL }
 };
 
@@ -42,9 +43,14 @@ main (int argc, char *argv[])
 {
   GdkPixbuf *p;
   GtkWidget *window, *w;
-  GtkWidget *hbox;
+  GtkWidget *hbox, *hbox2;
   GdkColor col;
   GtkStyle *style;
+  GtkWidget *prev, *play, *pause, *stop, *next;
+  GtkWidget *rewind, *forward;
+  GtkWidget *vbox, *vol_slider;
+  GtkObject *vol_adjust;
+
   gchar *color = "gray80";
   Atom window_type_atom, window_type_toolbar_atom;
   Display *dpy;
@@ -79,34 +85,92 @@ main (int argc, char *argv[])
 		   window_type_atom, XA_ATOM, 32, PropModeReplace, 
 		  (unsigned char *) &window_type_toolbar_atom, 1);
 
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox);
+
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
 
   style = gtk_style_copy (hbox->style);
   style->bg[0] = col;
-  gtk_widget_set_style (window, style);
   
-  p = gpe_find_icon ("media-rew");
+  p = gpe_find_icon ("stock_media-prev");
   w = gpe_render_icon (window->style, p);
   gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox), w, TRUE, FALSE, 8);
+  prev = gtk_button_new ();
+  gtk_widget_show (prev);
+  gtk_widget_set_style (prev, style);
+  gtk_container_add (GTK_CONTAINER (prev), w);
+  gtk_box_pack_start (GTK_BOX (hbox), prev, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("media-stop");
+  p = gpe_find_icon ("stock_media-rew");
   w = gpe_render_icon (window->style, p);
   gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox), w, TRUE, FALSE, 8);
+  rewind = gtk_button_new ();
+  gtk_widget_show (rewind);
+  gtk_widget_set_style (rewind, style);
+  gtk_container_add (GTK_CONTAINER (rewind), w);
+  gtk_box_pack_start (GTK_BOX (hbox), rewind, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("media-play");
+  p = gpe_find_icon ("stock_media-play");
   w = gpe_render_icon (window->style, p);
+  play = gtk_button_new ();
+  gtk_widget_show (play);
+  gtk_widget_set_style (play, style);
+  gtk_container_add (GTK_CONTAINER (play), w);
   gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox), w, TRUE, FALSE, 8);
+  gtk_box_pack_start (GTK_BOX (hbox), play, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("media-fwd");
+  p = gpe_find_icon ("stock_media-pause");
   w = gpe_render_icon (window->style, p);
+  pause = gtk_button_new ();
+  gtk_widget_show (pause);
+  gtk_widget_set_style (pause, style);
+  gtk_container_add (GTK_CONTAINER (pause), w);
   gtk_widget_show (w);
-  gtk_box_pack_start (GTK_BOX (hbox), w, TRUE, FALSE, 8);
+  gtk_box_pack_start (GTK_BOX (hbox), pause, TRUE, TRUE, 0);
 
-  gtk_container_add (GTK_CONTAINER (window), hbox);
+  p = gpe_find_icon ("stock_media-stop");
+  w = gpe_render_icon (window->style, p);
+  stop = gtk_button_new ();
+  gtk_widget_show (stop);
+  gtk_widget_set_style (stop, style);
+  gtk_container_add (GTK_CONTAINER (stop), w);
+  gtk_widget_show (w);
+  gtk_box_pack_start (GTK_BOX (hbox), stop, TRUE, TRUE, 0);
+
+  p = gpe_find_icon ("stock_media-fwd");
+  w = gpe_render_icon (window->style, p);
+  forward = gtk_button_new ();
+  gtk_widget_show (forward);
+  gtk_widget_set_style (forward, style);
+  gtk_container_add (GTK_CONTAINER (forward), w);
+  gtk_widget_show (w);
+  gtk_box_pack_start (GTK_BOX (hbox), forward, TRUE, TRUE, 0);
+
+  p = gpe_find_icon ("stock_media-next");
+  w = gpe_render_icon (window->style, p);
+  next = gtk_button_new ();
+  gtk_widget_show (next);
+  gtk_widget_set_style (next, style);
+  gtk_container_add (GTK_CONTAINER (next), w);
+  gtk_widget_show (w);
+  gtk_box_pack_start (GTK_BOX (hbox), next, TRUE, TRUE, 0);
+
+  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  vol_adjust = gtk_adjustment_new (0.0, 0.0, 1.0, 0.1, 0.2, 0.2);
+  vol_slider = gtk_vscale_new (GTK_ADJUSTMENT (vol_adjust));
+  gtk_scale_set_draw_value (GTK_SCALE (vol_slider), FALSE);
+  gtk_widget_show (vol_slider);
+
+  hbox2 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox2);
+
+  gtk_box_pack_end (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
+
+  gtk_container_add (GTK_CONTAINER (window), hbox2);
 
   gtk_widget_show (window);
 
