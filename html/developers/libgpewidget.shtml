@@ -156,17 +156,30 @@ gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 </table>
 </p>
 
+<h2>Application help interface</h2>
+<p>
+</p>
+<p>
+Libgpewidget provides a simple interface to access help information from applications.
+It is intended to be used for providing full text help and background information 
+in more complex applications. The help information is stored in a defined 
+location and uses a defined file format that is opened by an external application. <br>
+Current implementation uses help information that is stored HTML files. The
+location in filesystem is $PREFIX/share/doc/gpe. The default prefix in GPE is "/usr".
+</p>
+<p>
+The help interface consists of only one call:<br>
+<pre>
+gboolean gpe_show_help(const char* book, const char* topic)
+</pre>
+Return value is FALSE if help is found and displayed, TRUE if an error occurs.
+The parameters "book" and "topic" are used to specify the help source and 
+location of the topic in the source. Current implementation in libgpewidget
+will create an URL if this type:
+<pre>
+file:///$PREFIX/share/doc/gpe/<book>.html#<topic>
+</pre>
+This URL is opened with a known help viewer. Currently this defaults to dillo 
+HTML browser, but this may change in future.
+</p>
 <!--#include virtual="/includes/foot.shtml"-->
-
-
-
-
-
-
-
-
-
-
-
-
-
