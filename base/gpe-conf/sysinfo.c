@@ -57,6 +57,7 @@
 #define P_IPAQ			"/proc/hal/model"
 #define P_PARTITIONS	"/proc/partitions"
 #define P_ROUTE			"/proc/net/route"
+#define P_MTD			"/proc/mtd"
 
 #define strpos(a,b) (strstr(a,b)-a)
 
@@ -112,6 +113,29 @@ get_flash_size()
 	}
 	
 	result /= 2048;
+
+	/* nothing in partitions, try mtd */
+	if (result == 0)
+	{
+		i=0;
+		if (g_file_get_contents(P_MTD,&str,&len,&err))
+		{
+			strv = g_strsplit(str,"\n",32);
+			g_free(str);
+			while (strv[i])
+			{
+				/* check mtd partitions, masq mtd ram stuff */
+				if (strstr(strv[i],"mtd") && !strstr(strv[i],"ram")) 
+				{
+					sscanf(strv[i],"%*i %0x %*0x %*s",&v);
+					result += v;
+				}
+				i++;
+			}
+			g_strfreev(strv);
+		}
+		result /= 1024;
+	}
 	
 	return result;
 }
