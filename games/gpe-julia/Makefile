@@ -1,5 +1,5 @@
 PACKAGE = gpe-julia
-VERSION = 0.0.5
+VERSION = 0.0.6
 DEBUG = no
 CVSBUILD = yes
 PREFIX = /usr/local
