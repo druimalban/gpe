@@ -572,8 +572,7 @@ main (int argc, char *argv[])
 	  for (kp = &keys_down; *kp; kp = &(*kp)->next)
 	    {
 	      struct key_event *k = *kp;
-	      if (k->ev.xkey.keycode == ev.xkey.keycode
-		  && k->ev.xkey.state == ev.xkey.state)
+	      if (k->ev.xkey.keycode == ev.xkey.keycode)
 		{
 		  type = 0;
 		  *kp = k->next;
