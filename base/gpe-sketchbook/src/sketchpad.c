@@ -73,10 +73,34 @@ void sketchpad_init(){
 
 void window_sketchpad_init(GtkWidget * window_sketchpad){
   GtkWidget * widget;
+//  GtkAdjustment * adj;
 
   //--drawing area ref
   drawing_area = lookup_widget(window_sketchpad, "drawing_area");
-
+//  widget       = lookup_widget(window_sketchpad, "scrolledwindow_drawing_area");
+//  adj          = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow*)widget);
+//  if(!adj){
+//    adj = (GtkAdjustment*) gtk_adjustment_new(drawing_area_width, 10, 500, 1, 10, drawing_area_width);
+//    gtk_scrolled_window_set_hadjustment((GtkScrolledWindow*)widget, adj);
+//  }
+//  gtk_adjustment_set_value(adj, drawing_area_width);
+//
+//  adj          = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow*)widget);
+//  if(!adj){
+//    adj = (GtkAdjustment*) gtk_adjustment_new(drawing_area_height, 10, 500, 1, 10, drawing_area_height);
+//    gtk_scrolled_window_set_vadjustment((GtkScrolledWindow*)widget, adj);
+//  }
+//  gtk_adjustment_set_value(adj, drawing_area_height);
+//
+//GtkObject*  gtk_adjustment_new              (gfloat value,
+//                                             gfloat lower,
+//                                             gfloat upper,
+//                                             gfloat step_increment,
+//                                             gfloat page_increment,
+//                                             gfloat page_size);
+//void        gtk_adjustment_set_value        (GtkAdjustment *adjustment,
+//                                             gfloat value);
+//
   //--default tools
   widget = lookup_widget(window_sketchpad, "radiobutton_tools_pen");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);

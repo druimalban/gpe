@@ -2,10 +2,11 @@
 
 tchi:
 	cd src && make tchi
+strip: 
+	cd src && make strip
+
 arm: 
 	cd src && make arm
-strip:
-	cd src && make strip
 ipkg:
 	cd src && make ipkg
 

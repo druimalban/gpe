@@ -1,10 +1,10 @@
 [ ]BUGS
-	[ ]automatic scroll on drawing area is not correct
+	[ ][bgz] automatic scroll on drawing area is not correct
 	[X]memory leak (each time we save)
 	--
-	[ ]selector: selecting with keybord (TAB, arrows, SPACE) --> crash!
-	[ ]next (or prev), go to selector: the next (or prev) line is selected, but NOT underlined (dark blue) :(
-	[ ]from dialog box to main window, "sometimes" the window go under other applications
+	[ ][bgz] selector: selecting with keybord (TAB, arrows, SPACE) --> crash!
+	[ ][bgz] next (or prev), go to selector: the next (or prev) line is selected, but NOT underlined (dark blue) :(
+	[ ][bgz] from dialog box to main window, "sometimes" the window go under other applications
 	[ ]when deleting many fast (click click click) seems some value are not updated --> crash | selected_sketch is wrong  | ... ==> freeze the button meanwhile!
 	[ ]check GTK warnings / assertion failed
 [ ]general

@@ -31,6 +31,8 @@
 #include "selector.h"
 #include "sketchpad.h"
 
+#include "dialog.h"
+
 //---------------------------------------------------------
 //--------------------- GENERAL ---------------------------
 void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
@@ -80,9 +82,10 @@ void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) return;
   //--ask confirmation (maybe a preference)
-  dialog_set_text("Delete sketch?");
-  dialog_set_action(DELETE);
-  gtk_widget_show(window_dialog);
+  _confirm_action_dialog_box("Delete sketch?",
+                             "Delete",
+                             &delete_current_sketch,
+                             NULL);
 }
 
 

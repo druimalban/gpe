@@ -697,7 +697,7 @@ fi
 
 PACKAGE=gpe-sketchbook
 
-VERSION=0.1.1
+VERSION=0.1.2
 
 if test "`cd $srcdir && pwd`" != "`pwd`" && test -f $srcdir/config.status; then
   { echo "configure: error: source directory already configured; run "make distclean" there first" 1>&2; exit 1; }
@@ -1585,6 +1585,8 @@ rm -f conftest*
 CPPFLAGS="$CPPFLAGS -I/usr/X11R6/include"
 CPPFLAGS="$CPPFLAGS -I../.."  LIBS="$LIBS -L/usr/X11R6/lib -lXpm -L."
 LIBS="$LIBS -lXpm -L../.."  
+CPPFLAGS="$CPPFLAGS -I../../libgpewidget"
+LIBS="-L../../libgpewidget -lgpewidget $LIBS"
 
 if test "x${datadir}" = 'x${prefix}/share'; then
   if test "x${prefix}" = "xNONE"; then

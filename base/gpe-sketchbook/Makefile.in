@@ -74,8 +74,9 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES = 
 DIST_COMMON =  README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
-Makefile.am Makefile.in NEWS TODO acconfig.h aclocal.m4 config.h.in \
-configure configure.in install-sh missing mkinstalldirs
+Makefile.am Makefile.in NEWS TODO acconfig.h aclocal.m4 config.guess \
+config.h.in config.sub configure configure.in install-sh missing \
+mkinstalldirs
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -358,10 +359,11 @@ mostlyclean distclean maintainer-clean
 
 tchi:
 	cd src && make tchi
+strip: 
+	cd src && make strip
+
 arm: 
 	cd src && make arm
-strip:
-	cd src && make strip
 ipkg:
 	cd src && make ipkg
 

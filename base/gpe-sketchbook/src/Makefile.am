@@ -14,6 +14,8 @@ gpe_sketchbook_SOURCES = \
 	sketchpad-cb.c   sketchpad-cb.h \
 	files.c          files.h \
 	callbacks.c      callbacks.h \
+	dialog.c         dialog.h \
+	about.c          about.h \
 	cursor_eraser_data.h
 
 gpe_sketchbook_LDADD = @GTK_LIBS@
@@ -36,13 +38,25 @@ x: $(PROG)
 DIST_NAME = $(PACKAGE)-$(VERSION)
 IPKG_NAME = $(PACKAGE)_$(VERSION)_arm.ipk
 
-strip: $(PROG)
-	strip $(PROG)
+arm: $(PROG) strip
+	cp $(PROG) $(PACKAGE)-$(VERSION)-arm-striped
 	@echo "WARNING: take care that it is the right architecture!"
 
+strip: $(PROG)
+	strip $(PROG)
+
 ipkg:
+	cp $(PACKAGE)-$(VERSION)-arm-striped $(PROG)
 	cd .. && rm -rf familiar/dist
 	cd .. && mkdir -p familiar/dist/CONTROL
+	cd .. && echo "Package: " $(PACKAGE)  > familiar/control
+	cd .. && echo "Section: base"        >> familiar/control
+	cd .. && echo "Priority: optional"   >> familiar/control
+	cd .. && echo "Version: " $(VERSION) >> familiar/control
+	cd .. && echo "Architecture: arm"    >> familiar/control
+	cd .. && echo "Maintainer: Luc Pionchon <luc.pionchon@welho.com>" >> familiar/control
+	cd .. && echo "Depends: libgtk1.2, libgpewidget0" >> familiar/control
+	cd .. && echo "Description: a notebook to sketch your notes" >> familiar/control
 	cd .. && cp familiar/control familiar/postinst familiar/dist/CONTROL
 	cd .. && make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
 	cd .. && mkdir -v -p familiar/dist/usr/lib/menu
@@ -61,5 +75,5 @@ trans-pc-to-handheld:
 	cd .. && ~/bin/move-TO-handhelds.org `pwd` $(DIST_NAME).tar.gz
 
 trans-handheld-to-pc:
-	~/bin/move-FROM-handhelds.org $(DIST_NAME) src/$(PROG)
+	~/bin/move-FROM-handhelds.org $(DIST_NAME) src/$(PACKAGE)-$(VERSION)-arm-striped
 #	~/bin/move-FROM-handhelds.org $(DIST_NAME) $(IPKG_NAME)

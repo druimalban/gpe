@@ -25,6 +25,8 @@
 #include <asm/errno.h>//mkdir
 
 #include "selector.h"
+#include "files.h"
+#include "sketchpad.h"
 #include "gpe-sketchbook.h"
 #include "_support.h" //lookup_widget
 
@@ -37,6 +39,7 @@ gint current_sketch;
 gboolean is_current_sketch_selected;
 
 int _direntry_selector(const struct dirent * direntry);
+void _clist_update_alternate_colors_from(GtkCList * clist, gint index);
 
 void selector_init(){
   sketch_list_size = 0;
@@ -140,4 +143,45 @@ int _direntry_selector (const struct dirent * direntry){
   // ...
 
   return 1;
+}
+
+void delete_current_sketch(gpointer __unused){
+  gchar    * fullpath_filename;
+  gboolean is_deleted = FALSE;
+  
+  fullpath_filename = gtk_clist_get_row_data(selector_clist, current_sketch);
+  is_deleted = file_delete(fullpath_filename);
+
+  if(is_deleted){
+    _clist_update_alternate_colors_from(selector_clist, current_sketch);
+    gtk_clist_remove(selector_clist, current_sketch);
+    if(is_current_sketch_last) current_sketch--;
+    sketch_list_size--;
+
+    if(is_sketch_list_empty){
+      current_sketch = SKETCH_NEW;
+      sketchpad_new_sketch();//...
+    }
+    else{
+      open_indexed_sketch(current_sketch);//...
+    }
+
+  }
+}
+
+void open_indexed_sketch(gint index){
+  gchar * fullpath_filename;
+  gchar * title;
+
+  fullpath_filename = (gchar *) gtk_clist_get_row_data(selector_clist, index);
+  gtk_clist_get_text(selector_clist, index, 0, &title);
+  sketchpad_open_file(fullpath_filename , title);
+}
+
+void _clist_update_alternate_colors_from(GtkCList * clist, gint index){
+  gint i;
+  for(i = index; i < sketch_list_size; i++){
+    if(i%2) gtk_clist_set_background(clist, i, &white);
+    else    gtk_clist_set_background(clist, i, &bg_color);
+  }
 }

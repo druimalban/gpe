@@ -37,13 +37,6 @@ void on_clist_selector_unselect_row    (GtkCList  *clist,  gint row, gint column
 void on_list_sketch_files_select_child (GtkList   *list,   GtkWidget *widget, gpointer user_data);
 void on_clist_selector_click_column    (GtkCList  *clist,  gint column,  gpointer user_data);
 
-//--dialog
-void on_button_dialog_cancel_clicked   (GtkButton *button, gpointer  user_data);
-void on_button_dialog_ok_clicked       (GtkButton *button, gpointer  user_data);
-
-//--about
-void on_button_about_ok_clicked        (GtkButton *button, gpointer  user_data);
-
 //------------------------------------------------------------
 //----------------------below is freshly kindly added by glade
 

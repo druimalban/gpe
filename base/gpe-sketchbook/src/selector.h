@@ -42,4 +42,7 @@ void selector_init();
 void window_selector_init (GtkWidget * window_selector);
 gchar * make_label_from_filename(const gchar * filename);
 
+void open_indexed_sketch(gint index);
+void delete_current_sketch(gpointer __unused);
+
 #endif

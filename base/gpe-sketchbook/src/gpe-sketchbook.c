@@ -19,8 +19,18 @@
 #  include <config.h>
 #endif
 
+#ifndef PREFIX
+#  define PREFIX "/usr"
+#endif
+
 #include <gtk/gtk.h>
 
+//--GPE libs
+#include "init.h"
+#include "pixmaps.h"
+//#include "picturebutton.h"
+
+//--own headers
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
 #include "selector.h"
@@ -28,16 +38,12 @@
 #include "_support.h"
 
 gchar * sketchdir;
-
-GtkWidget *window_about;
-GtkWidget *window_dialog;
-gint     dialog_action;
-
 #define SKETCHPAD_HOME_DIR ".sketchbook"
-#define ABOUT_TEXT \
-        "sketchbook\n"\
-        "a sketchbook program for PDA,\n"\
-        "distributed under GPL"
+
+static struct gpe_icon my_icons[] = {
+  { "icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" }, //app icon
+  { NULL, NULL }
+};
 
 void app_init(int argc, char ** argv);
 void app_about();
@@ -45,17 +51,17 @@ void gui_init();
 
 int main (int argc, char ** argv){
 
-#ifdef ENABLE_NLS
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
-#endif
-  gtk_set_locale();
-
-  /* ... */
   add_pixmap_directory (PACKAGE_DATA_DIR   "/pixmaps");
   /**/add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
 
-  gtk_init (&argc, &argv);
+  if (gpe_application_init (&argc, &argv) == FALSE) exit (1);
+
+//  setlocale (LC_ALL, "");
+//  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+//  textdomain (PACKAGE);
+
+  if (gpe_load_icons (my_icons) == FALSE) exit (1);
+
   app_init (argc, argv);
   gui_init ();
   gtk_main ();
@@ -70,7 +76,7 @@ void app_init(int argc, char ** argv){
 }
 
 void app_about(){
-  /**/g_print("%s\n", ABOUT_TEXT);
+  //**/g_print("%s\n", ABOUT_TEXT);
 }//app_quit()
 
 void app_quit(){
@@ -79,8 +85,6 @@ void app_quit(){
 }//app_quit()
 
 void gui_init(){
-  GtkWidget * label_about;
-
 
   window_selector = create_window_selector();
   window_selector_init(window_selector);
@@ -95,20 +99,4 @@ void gui_init(){
   if(1) gtk_widget_show   (window_selector);
   else  gtk_widget_show   (window_sketchpad);
 
-  //--about
-  window_about = create_window_about();
-  gtk_window_set_title (GTK_WINDOW (window_about), "About Sketch");
-  label_about = lookup_widget(window_about, "label_about_text");
-  gtk_label_set_text((GtkLabel *)label_about, ABOUT_TEXT);
-
-  //--generic dialog
-  window_dialog = create_window_dialog();
-  gtk_window_set_title (GTK_WINDOW (window_dialog), "Sketch - dialog");
-
 }//gui_init()
-
-void dialog_set_text(gchar * text){
-  GtkWidget * label_dialog;
-  label_dialog = lookup_widget(window_dialog, "label_dialog_text");
-  gtk_label_set_text((GtkLabel *)label_dialog, text);
-}

@@ -4,5 +4,3 @@
 
 GtkWidget* create_window_sketchpad (void);
 GtkWidget* create_window_selector (void);
-GtkWidget* create_window_about (void);
-GtkWidget* create_window_dialog (void);
