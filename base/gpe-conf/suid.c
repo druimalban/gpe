@@ -88,17 +88,25 @@ update_dns_server (const gchar * server)
 void
 update_time_from_net (const gchar * server)
 {
+	
+	if (setvbuf(nsreturn,NULL,_IONBF,0) != 0) 
+		fprintf(stderr,"gpe-conf: error setting buffer size!");
+	
 	char *tstr = g_strdup_printf ("ntpdate -b %s", server);
 	if (system(tstr))
 	{
 		fprintf (stderr, "failed to execute ntpdate\n");
+		fprintf(nsreturn,"<failed>\n");
 	}
-	else			// if ok, update rtc time
+	else			/* if ok, update rtc time */
 	{
+		fprintf(nsreturn,"<success>\n");
 		system("/sbin/hwclock --systohc");
 		system ("echo > /var/spool/at/trigger");
 	}
 	g_free(tstr);
+	fflush(nsreturn);
+	fsync(nsreturnfd);
 }
 
 

@@ -17,18 +17,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
-#include <pwd.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <signal.h>
 #include <time.h>
 #include <libintl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <gtk/gtk.h>
 #include <time.h>
 #include <ctype.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/poll.h>
+
+#include <X11/Xlib.h>
+#include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 #include "applets.h"
 #include "timeanddate.h"
@@ -39,6 +41,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/gpetimesel.h>
+#include <gpe/infoprint.h>
 
 
 /* --- local types and constants --- */
@@ -402,23 +405,48 @@ tzinfo get_tz_info(char *tzstr)
 
 gboolean refresh_time()
 {
+	static char str[256];
+	struct pollfd pfd[1];
+	gboolean ret = FALSE;
+	Display *dpy = GDK_DISPLAY();
+		
 	Time_Restore();
-	trc--;
-	if (!trc)  
+	memset(str, 0, 256);
+	
+	pfd[0].fd = suidinfd;
+	pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
+	while (poll(pfd, 1, 0))
 	{
-		gtk_widget_set_sensitive(self.internet,TRUE);
-		gtk_timeout_remove(tid);
+		if (fgets (str, 255, suidin))
+		{
+			if (strstr(str, "<success>"))
+				gpe_popup_infoprint (dpy, 
+			                         _("Time adjusted from network."));
+			else
+				gpe_error_box(_("Adjusting time from network failed."));
+
+		}
+		ret = TRUE;
+	}
+
+	trc--;
+	if (!trc) 
+		ret = TRUE;
+	if (ret)
+	{
+		gtk_widget_set_sensitive(self.internet, TRUE);
+		return FALSE;
 	}
 	system (SCREENSAVER_RESET_CMD);
-	return (trc ? TRUE : FALSE);
+	return (TRUE);
 }
 
 void GetInternetTime()
 {
   gtk_widget_set_sensitive(self.internet,FALSE);
   suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
-  trc = 10;
-  tid = gtk_timeout_add(500,refresh_time,NULL);
+  trc = 60;
+  tid = gtk_timeout_add(500, refresh_time, NULL);
 }
 
 

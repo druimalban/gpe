@@ -1416,7 +1416,9 @@ Network_Save ()
 	if (entry)
 	{
 		newval = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-		suid_exec ("SDNS", newval);
+		if (strlen(newval))
+			suid_exec ("SDNS", newval);
+		g_free(newval);
 	}
 }
 

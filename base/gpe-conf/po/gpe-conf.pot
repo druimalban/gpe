@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-13 21:48+0200\n"
+"POT-Creation-Date: 2004-10-12 23:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,26 +16,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:314
+#: main.c:313
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: main.c:327
+#: main.c:326
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
 msgstr ""
 
-#: main.c:386
+#: main.c:385
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:418
+#: main.c:417
 #, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:419
+#: main.c:418
 #, c-format
 msgid ""
 "\n"
@@ -43,12 +43,12 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:435
+#: main.c:434
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:436
+#: main.c:435
 #, c-format
 msgid ""
 "\n"
@@ -68,7 +68,7 @@ msgid ""
 "Please enter password."
 msgstr ""
 
-#: applets.c:417 ipaqscreen/calibrate.c:32
+#: applets.c:417 screen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -163,67 +163,55 @@ msgid ""
 "again."
 msgstr ""
 
-#: ipaqscreen/main.c:74
+#: screen/main.c:74
 msgid "Portrait"
 msgstr ""
 
-#: ipaqscreen/main.c:75
+#: screen/main.c:75
 msgid "Landscape (left)"
 msgstr ""
 
-#: ipaqscreen/main.c:76
+#: screen/main.c:76
 msgid "Inverted"
 msgstr ""
 
-#: ipaqscreen/main.c:77
+#: screen/main.c:77
 msgid "Landscape (right)"
 msgstr ""
 
-#: ipaqscreen/main.c:104
+#: screen/main.c:104
 msgid "Light"
 msgstr ""
 
-#: ipaqscreen/main.c:110
+#: screen/main.c:110
 msgid "Brightness"
 msgstr ""
 
-#: ipaqscreen/main.c:121
-msgid "Screensaver"
+#: screen/main.c:152
+msgid "Display"
 msgstr ""
 
-#: ipaqscreen/main.c:127
-msgid "Delay until start"
+#: screen/main.c:156
+msgid "Rotation"
 msgstr ""
 
-#: ipaqscreen/main.c:133
-msgid "State"
-msgstr ""
-
-#: ipaqscreen/main.c:137
-msgid "on"
-msgstr ""
-
-#: ipaqscreen/main.c:139 network.c:579
-msgid "off"
-msgstr ""
-
-#: ipaqscreen/main.c:152
-msgid "Orientation"
-msgstr ""
-
-#: ipaqscreen/main.c:173
+#: screen/main.c:176
 msgid "Touchscreen"
 msgstr ""
 
-#: ipaqscreen/main.c:177
+#: screen/main.c:180
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:291 sleep/callbacks.c:47
+#: screen/main.c:182
+msgid "Start"
+msgstr ""
+
+#: screen/main.c:304 sleep/callbacks.c:47
 msgid "min"
 msgstr ""
 
-#: ipaqscreen/main.c:294 sleep/callbacks.c:50
+#: screen/main.c:307 sleep/callbacks.c:50
 msgid "sec"
 msgstr ""
 
@@ -239,7 +227,7 @@ msgstr ""
 msgid "Current Config"
 msgstr ""
 
-#: network.c:208 ownerinfo.c:226
+#: network.c:208 ownerinfo.c:237
 msgid "Name:"
 msgstr ""
 
@@ -255,7 +243,7 @@ msgstr ""
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:297 keyctl.c:230 users/callbacks.c:117
+#: network.c:297 keyctl.c:230 users/callbacks.c:115
 msgid "Question"
 msgstr ""
 
@@ -290,6 +278,10 @@ msgstr ""
 
 #: network.c:569
 msgid "WEP"
+msgstr ""
+
+#: network.c:579
+msgid "off"
 msgstr ""
 
 #: network.c:591
@@ -535,95 +527,103 @@ msgstr ""
 msgid "Background"
 msgstr ""
 
-#: theme.c:1072
+#: theme.c:1075 theme.c:1077
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:1081 theme.c:1092
+#: theme.c:1087 theme.c:1098
 msgid "Theme Default"
 msgstr ""
 
-#: theme.c:1100
+#: theme.c:1106
 msgid "Solid colour"
 msgstr ""
 
-#: theme.c:1114
+#: theme.c:1120
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:1118
+#: theme.c:1124
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:1123 theme.c:1142 theme.c:1321 theme.c:1327
+#: theme.c:1129 theme.c:1148 theme.c:1331 theme.c:1337
 msgid "Colour"
 msgstr ""
 
-#: theme.c:1133
+#: theme.c:1139
 msgid "Colour gradient"
 msgstr ""
 
-#: theme.c:1152
+#: theme.c:1158
 msgid "Image"
 msgstr ""
 
-#: theme.c:1178
+#: theme.c:1184
 msgid "Centered"
 msgstr ""
 
-#: theme.c:1182
+#: theme.c:1188
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:1185
+#: theme.c:1191
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:1192
+#: theme.c:1198
 msgid "Toolbars"
 msgstr ""
 
-#: theme.c:1203
+#: theme.c:1210 theme.c:1212
 msgid "Toolbar Style"
 msgstr ""
 
-#: theme.c:1211 theme.c:1240
+#: theme.c:1221 theme.c:1250
 msgid "Icons"
 msgstr ""
 
-#: theme.c:1216 theme.c:1244
+#: theme.c:1226 theme.c:1254
 msgid "Text"
 msgstr ""
 
-#: theme.c:1221 theme.c:1247
+#: theme.c:1231
 msgid "Both"
 msgstr ""
 
-#: theme.c:1226 theme.c:1250
+#: theme.c:1236
 msgid "Both H"
 msgstr ""
 
 #: theme.c:1257
+msgid "Both (icon above text)"
+msgstr ""
+
+#: theme.c:1260
+msgid "Both (icon left of text)"
+msgstr ""
+
+#: theme.c:1267
 msgid "Toolbar Icon Size"
 msgstr ""
 
-#: theme.c:1273
+#: theme.c:1283
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1282 theme.c:1302
+#: theme.c:1292 theme.c:1312
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1289 theme.c:1345 theme.c:1380
+#: theme.c:1299 theme.c:1359 theme.c:1394
 msgid "Family"
 msgstr ""
 
-#: theme.c:1309 theme.c:1365 theme.c:1400
+#: theme.c:1319 theme.c:1379 theme.c:1414
 msgid "Size"
 msgstr ""
 
-#: theme.c:1337 theme.c:1358 theme.c:1393
+#: theme.c:1348 theme.c:1350 theme.c:1372 theme.c:1407
 msgid "Application Font"
 msgstr ""
 
@@ -683,52 +683,50 @@ msgstr ""
 msgid "The file you selected is not executable."
 msgstr ""
 
-#: ownerinfo.c:199
+#: ownerinfo.c:210
 msgid "Information about the Owner"
 msgstr ""
 
-#: ownerinfo.c:207
+#: ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
 msgstr ""
 
-#: ownerinfo.c:241
+#: ownerinfo.c:252
 msgid "E-Mail:"
 msgstr ""
 
-#: ownerinfo.c:256
+#: ownerinfo.c:267
 msgid "Phone:"
 msgstr ""
 
-#: ownerinfo.c:271
+#: ownerinfo.c:282
 msgid "Address:"
 msgstr ""
 
-#: ownerinfo.c:297
+#: ownerinfo.c:308
 msgid "Photofile:"
 msgstr ""
 
-#: login-setup.c:128
-msgid "Some or all of these settings can only be changed by the user 'root'."
+#: login-setup.c:118
+msgid "Some of these settings can only be changed by the user 'root'."
 msgstr ""
 
-#: login-setup.c:151 gpe-admin.c:86
+#: login-setup.c:141 gpe-admin.c:86
 msgid "General"
 msgstr ""
 
-#: login-setup.c:168
+#: login-setup.c:158
 msgid "Show owner information at login."
 msgstr ""
 
-#: login-setup.c:170
-msgid "Use background image for login screen."
-msgstr ""
-
-#: login-setup.c:172
+#: login-setup.c:162
 msgid "Lock display on suspend."
 msgstr ""
 
-#: login-setup.c:185
-msgid "Image:"
+#: login-setup.c:166
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
 msgstr ""
 
 #: sleep/interface.c:67
@@ -883,34 +881,34 @@ msgstr ""
 msgid "Confirm:"
 msgstr ""
 
-#: users/callbacks.c:115
+#: users/callbacks.c:113
 msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
 
-#: users/callbacks.c:117
+#: users/callbacks.c:115
 msgid ""
 "Delete user and all its data?\n"
 "This action is not revertable\n"
 "and is executed instantly."
 msgstr ""
 
-#: users/callbacks.c:153
+#: users/callbacks.c:151
 msgid "Please choose a user name."
 msgstr ""
 
-#: users/callbacks.c:171
+#: users/callbacks.c:169
 msgid "Please choose a home directory."
 msgstr ""
 
-#: users/callbacks.c:240
+#: users/callbacks.c:256
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
 
-#: users/callbacks.c:243
+#: users/callbacks.c:259
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -950,63 +948,67 @@ msgstr ""
 msgid "This option runs console on serial port. (default)"
 msgstr ""
 
-#: serial.c:456
+#: serial.c:457
 msgid "GPS Daemon"
 msgstr ""
 
-#: serial.c:460
+#: serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr ""
+
+#: serial.c:467
 msgid ""
 "This option enables the start of GPSD, which provides data from a GPS "
 "reciver to applications."
 msgstr ""
 
-#: serial.c:467
+#: serial.c:474
 msgid "Nothing (free)"
 msgstr ""
 
-#: serial.c:470
+#: serial.c:477
 msgid "Don't start any software that uses the serial port."
 msgstr ""
 
-#: serial.c:507 serial.c:514
+#: serial.c:514 serial.c:521
 msgid "This page configures the GPS receiver software."
 msgstr ""
 
-#: serial.c:511
+#: serial.c:518
 msgid "GPS Receiver"
 msgstr ""
 
-#: serial.c:518
+#: serial.c:525
 msgid "GPS settings"
 msgstr ""
 
-#: serial.c:524
+#: serial.c:531
 msgid "Receiver Type"
 msgstr ""
 
-#: serial.c:529
+#: serial.c:536
 msgid "NMEA"
 msgstr ""
 
-#: serial.c:534
+#: serial.c:541
 msgid ""
 "The GPS receiver sends NMEA data (default, no need to change for most "
 "receivers)."
 msgstr ""
 
-#: serial.c:540
+#: serial.c:547
 msgid "Earthmate"
 msgstr ""
 
-#: serial.c:546
+#: serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
 msgstr ""
 
-#: serial.c:550
+#: serial.c:557
 msgid "Baud Rate"
 msgstr ""
 
-#: serial.c:566
+#: serial.c:573
 msgid "Serial Port"
 msgstr ""
 
@@ -1457,16 +1459,32 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: sound/sound.c:169 gpe-conf-sound.desktop.in.h:1
-msgid "Sound Settings"
+#: sound/sound.c:252
+msgid "Audio Settings"
 msgstr ""
 
-#: sound/sound.c:176
-msgid "Mute everything"
+#: sound/sound.c:259
+msgid "Mute Everything"
 msgstr ""
 
-#: sound/soundctrl.c:291
+#: sound/sound.c:300
+msgid "Alarm Settings"
+msgstr ""
+
+#: sound/sound.c:307
+msgid "Enable Alarm Sound"
+msgstr ""
+
+#: sound/sound.c:314
+msgid "Automatic Volume (rising)"
+msgstr ""
+
+#: sound/sound.c:324 sound/soundctrl.c:283
 msgid "Volume"
+msgstr ""
+
+#: sound/sound.c:331
+msgid "Test"
 msgstr ""
 
 #: main-info.c:67
@@ -1766,7 +1784,7 @@ msgstr ""
 msgid "PC/CF Cards info and config"
 msgstr ""
 
-#: gpe-conf-ipaqscreen.desktop.in.h:1
+#: gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
 msgstr ""
 
@@ -1840,6 +1858,10 @@ msgstr ""
 
 #: gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
+msgstr ""
+
+#: gpe-conf-sound.desktop.in.h:1
+msgid "Sound Settings"
 msgstr ""
 
 #: gpe-conf-sound.desktop.in.h:2

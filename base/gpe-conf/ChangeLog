@@ -1,3 +1,9 @@
+2004-10-28	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* suid.c, network.c: Don't set nameserver if entry is empty.
+	* timeanddate.c, suid.c: Return feedback if ntpdate was successful.
+	* Makefile: Version increased.
+
 2004-10-26	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Makefile: Version++
