@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-word
+VERSION=0.2
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
