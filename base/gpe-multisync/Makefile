@@ -18,7 +18,7 @@ LDFLAGS = -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GLADECFLAGS)
+CFLAGS += -fPIC -Wall $(GLADECFLAGS)
 LDFLAGS += $(GLADELDFLAGS) -L../libnsqlc -lnsqlc
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
