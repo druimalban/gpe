@@ -98,7 +98,7 @@ main (int argc, char *argv[])
       export_one_vcard (uid);
     }
   else
-    sqlite_exec (db, "select urn from contacts_urn", read_one, NULL, NULL);
+    sqlite_exec (db, "select urn from contacts_urn", (sqlite_callback)read_one, NULL, NULL);
 
   exit (0);
 }

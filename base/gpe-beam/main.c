@@ -112,7 +112,7 @@ set_image(int sx, int sy)
 	    	                  (have_peer ? "irda-conn48" : "irda-on48") : "irda");
 	
 	dbuf = gdk_pixbuf_scale_simple(sbuf, sx, sy, GDK_INTERP_HYPER);
-	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
+	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 60);
 	gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
 	gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
 	gdk_bitmap_unref (bitmap);

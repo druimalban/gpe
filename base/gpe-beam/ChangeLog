@@ -1,6 +1,11 @@
 2004-10-16	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Released V 0.2.6
+	* filesel*: Fixed declaration to avoid warning.
+	  dbus.h: Fixed another declaration.
+	  vcard-export.c: Fixed another warning.
 	* main.c: main() Make sure correct menu item is shown.
+	          Improved icon rendering.
 	* Makefile: Added icon files.
 	* Removed gpe-beam.desktop from cvs. (generated file)
 	* Makefile: New version.

@@ -28,6 +28,8 @@
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
 
+#include "main.h"
+
 #define WRONG_ARGS_ERROR "org.handhelds.gpe.irda.Error.WrongArgs"
 
 #define _(x) gettext(x)
@@ -109,7 +111,8 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   ctx->connection = connection;
 #warning this is a hack
   send_data (filename, data, len);
-
+  push_done(TRUE, ctx);
+  
   return DBUS_HANDLER_RESULT_HANDLED;
 
  wrong_args:
