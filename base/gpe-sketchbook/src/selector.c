@@ -40,9 +40,10 @@
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
+Selector selector;
+
 GtkCList  * selector_clist; 
 GdkColor bg_color;//alternate color for list cells
-GtkWidget * selector_icons_table;
 
 gint sketch_list_size;
 gint current_sketch;
@@ -56,9 +57,6 @@ void selector_init(){
   current_sketch   = SKETCH_NEW;
 }//selector_init()
 
-void set_selector_icons_table(GtkWidget * table){
-  selector_icons_table = table;
-}
 void set_selector_clist(GtkCList * clist){
   selector_clist = clist;
 }
@@ -117,16 +115,16 @@ void window_selector_init(GtkWidget * window_selector){
         GdkPixbuf * pixbuf;
         GdkPixbuf * pixbuf_scaled;
         pixbuf = gdk_pixbuf_new_from_file(note->fullpath_filename, NULL); //GError **error
-        pixbuf_scaled = gdk_pixbuf_scale_simple (pixbuf,
+        pixbuf_scaled = gdk_pixbuf_scale_simple (pixbuf, //FIXME: let iconlist do that!
                                                  THUMBNAIL_SIZE, THUMBNAIL_SIZE,
                                                  GDK_INTERP_BILINEAR);
         gdk_pixbuf_unref(pixbuf);
         note->thumbnail = pixbuf_scaled;
       }
-      gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(scrolledwindow_selector_icons),//li
-                                    "Sketch",//FIXME: does not allow NULL title
-                                    note->thumbnail,
-                                    note);
+      gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+                                    NULL,//"Sketch",
+                                    note->thumbnail,//icon
+                                    note);//udata
       gtk_clist_set_row_data_full(selector_clist, line, note, note_destroy);
       //do NOT g_free(fullpath_filename) now! :)
       if(i%2) gtk_clist_set_background(selector_clist, i, &bg_color);
@@ -134,8 +132,6 @@ void window_selector_init(GtkWidget * window_selector){
 
       g_free(line_text[0]);
     }
-    //li selector_pack_icons(selector_icons_table);
-    //li gtk_widget_show_all(selector_icons_table);
 
     free(direntries);
   }//else
@@ -199,7 +195,7 @@ void delete_current_sketch(){
   is_deleted = file_delete(note->fullpath_filename);
 
   if(is_deleted){
-    gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(scrolledwindow_selector_icons), note);
+    gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(selector.iconlist), note);
 
     _clist_update_alternate_colors_from(selector_clist, current_sketch);
     gtk_clist_remove(selector_clist, current_sketch);

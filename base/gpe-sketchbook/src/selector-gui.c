@@ -33,7 +33,6 @@
 
 //list clist/icons views
 GtkWidget * scrolledwindow_selector_clist;
-GtkWidget * scrolledwindow_selector_icons;
 
 gboolean icons_mode;
 
@@ -68,20 +67,20 @@ GtkWidget * selector_gui(){
 
   //--Clist
   scrolledwindow_selector_clist = build_scrollable_clist();
-  scrolledwindow_selector_icons = build_scrollable_icons();
+  selector.iconlist = build_scrollable_icons();
 
   //--packing
   vbox = gtk_vbox_new (FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox,                          FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolledwindow_selector_clist, TRUE,  TRUE,  0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolledwindow_selector_icons, TRUE,  TRUE,  0);
+  gtk_box_pack_start (GTK_BOX (vbox), selector.iconlist, TRUE,  TRUE,  0);
 
   //--show all except top level window AND one view
   gtk_widget_show(vbox);//top box
   gtk_widget_show_all(hbox);//toolbar
   icons_mode = FALSE;
-  if(icons_mode) gtk_widget_show_all(scrolledwindow_selector_icons);
+  if(icons_mode) gtk_widget_show_all(selector.iconlist);
   else           gtk_widget_show_all(scrolledwindow_selector_clist);
 
   return vbox;
@@ -197,35 +196,4 @@ void on_iconlist_clicked (GtkWidget * iconlist, gpointer note, gpointer data) {
 //void on_iconlist_show_popup (GtkWidget *il, gpointer note, gpointer data) {
 //  /**/g_printerr("ICONLIST> %s", data);
 //}
-
-void build_thumbnail_widget(Note * note, GtkStyle * style){
-  GtkWidget * button;
-  GdkPixbuf * pixbuf;
-  GdkPixbuf * pixbuf_scaled;
-  GtkWidget * pixmap;
-
-  button = gtk_button_new();
-  gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-  //li gtk_signal_connect (GTK_OBJECT (button), "clicked",
-  //li                     GTK_SIGNAL_FUNC (on_iconsview_icon_clicked), note);
-
-#ifdef GTK2
-  pixbuf = gdk_pixbuf_new_from_file(note->fullpath_filename, NULL); //GError **error
-#else
-  pixbuf = gdk_pixbuf_new_from_file(note->fullpath_filename);
-#endif
-  pixbuf_scaled = gdk_pixbuf_scale_simple (pixbuf,
-                                           THUMBNAIL_SIZE, THUMBNAIL_SIZE,
-                                           //GDK_INTERP_NEAREST);
-                                           //GDK_INTERP_TILES);
-                                           GDK_INTERP_BILINEAR);
-                                           //GDK_INTERP_HYPER);
-  gdk_pixbuf_unref(pixbuf);
-  pixmap = gtk_image_new_from_pixbuf (pixbuf_scaled);
-  note->thumbnail = pixbuf_scaled;//li
-  gdk_pixbuf_unref(pixbuf_scaled);
-  gtk_container_add (GTK_CONTAINER (button), pixmap);
-  if(note->icon_widget != NULL) gtk_widget_destroy(note->icon_widget);
-  note->icon_widget = button;
-}
 

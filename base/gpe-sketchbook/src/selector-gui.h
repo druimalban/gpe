@@ -19,13 +19,9 @@
 #define SELECTOR_GUI_H
 
 extern GtkWidget * scrolledwindow_selector_clist;
-extern GtkWidget * scrolledwindow_selector_icons;
 extern gboolean icons_mode;
 
 GtkWidget * create_window_selector (void);
 GtkWidget * selector_gui();
-
-#include "note.h"
-void build_thumbnail_widget(Note * note, GtkStyle * style);
 
 #endif

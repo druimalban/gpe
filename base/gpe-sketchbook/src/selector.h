@@ -22,12 +22,15 @@
 
 #define THUMBNAIL_SIZE 64
 
+typedef struct _selector {
+  GtkWidget * iconlist;
+} Selector;
+extern Selector selector;
+
 extern GtkCList  * selector_clist; 
 extern GdkColor bg_color;
 void set_selector_clist(GtkCList * clist);
 void set_selector_icons_table(GtkWidget * table);
-
-extern GtkWidget * selector_icons_table;
 
 extern gint sketch_list_size;
 #define is_sketch_list_empty (sketch_list_size == 0)

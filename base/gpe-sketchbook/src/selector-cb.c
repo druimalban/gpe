@@ -96,14 +96,14 @@ void _switch_icon(GtkButton * button){
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){
   if(icons_mode){
     //**/g_printerr("switch to LIST view\n");
-    gtk_widget_hide(scrolledwindow_selector_icons);
+    gtk_widget_hide(selector.iconlist);
     gtk_widget_show(scrolledwindow_selector_clist);
     icons_mode = FALSE;
   }
   else {
     //**/g_printerr("switch to ICON view\n");
     gtk_widget_hide(scrolledwindow_selector_clist);
-    gtk_widget_show(scrolledwindow_selector_icons);
+    gtk_widget_show(selector.iconlist);
     icons_mode = TRUE;
   }
   _switch_icon(button);
