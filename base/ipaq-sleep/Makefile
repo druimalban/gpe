@@ -2,6 +2,10 @@ PACKAGE = ipaq-sleep
 
 PREFIX = /usr/local
 
+VERSION = 0.7-7
+
+CVSBUILD = yes
+
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
 else

@@ -567,8 +567,8 @@ int check_cpu() {
 #endif
                 	}
 #ifdef DEBUG
-			else if (debug) fprintf(dgfp,"CPU load is %f lower than %f,
-				its all good...\n", load, load_check);
+			else if (debug) fprintf(dgfp,"CPU load is %f lower than %f,\n"
+				"its all good...\n", load, load_check);
 #endif
 			fclose(f);
 		}

@@ -1,5 +1,6 @@
 Package: ipaq-sleep
-Version: 0.7-6
+Version: VERSION
+Source: SOURCE
 Priority: optional
 Section: base
 Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
