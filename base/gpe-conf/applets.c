@@ -207,4 +207,5 @@ int system_and_gfree(gchar *cmd)
       g_free(buf);
     }
   g_free(cmd);
+  return rv;
 }
