@@ -1,3 +1,4 @@
+PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = yes
 
@@ -11,7 +12,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -Wall
-CPPFLAGS += -DPACKAGE=\"gpe-calendar\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
 .SUFFIXES: .d
@@ -22,7 +23,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = close.xpm config.xpm dayview.xpm futureview.xpm monthview.xpm new.xpm save.xpm today.xpm weekview.xpm yearview.xpm exit.xpm
 
-all: gpe-calendar mo
+all: $(PACKAGE) mo
 
 mo:
 	make -C po
@@ -30,20 +31,20 @@ mo:
 install-po:
 	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
 
-update-po: po/gpe-calendar.pot
+update-po: po/$(PACKAGE).pot
 
-po/gpe-calendar.pot: $(SOURCES)
-	xgettext -k_ -o po/gpe-calendar.pot $^
+po/$(PACKAGE).pot: $(SOURCES)
+	xgettext -k_ -o po/$(PACKAGE).pot $^
 
-gpe-calendar: $(OBJS)
+$(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -lsqlite $(LDFLAGS)
 
 install: all install-po
-	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/gpe-calendar/pixmaps/$$i; done
-	install -D gpe-calendar $(DESTDIR)$(PREFIX)/bin/gpe-calendar
-	install -D gpe-calendar.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-calendar.png
-	install -D gpe-calendar.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-calendar
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-calendar
+	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
+	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 ipkg:
 	rm -rf familiar/dist
@@ -54,6 +55,9 @@ ipkg:
 	ipkg-build familiar/dist
 
 clean:
-	rm -f gpe-calendar $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+
+translation-package: mo
+	make -C po translation-package PREFIX=$(PREFIX) PACKAGE=$(PACKAGE)
 
 -include $(DEPS)
