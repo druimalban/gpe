@@ -86,16 +86,10 @@ draw_hand (GpeClockFace *clock,
     {
       /* Xrotated = X * COS(angle) - Y * SIN(angle)        
 	 Yrotated = X * SIN(angle) + Y * COS(angle) */
-      int x = points[i].x * ca - points[i].y * sa;
-      int y = points[i].x * sa + points[i].y * ca;
-      points[i].x = -x;
-      points[i].y = -y;
-    }
-
-  for (i = 0; i < 5; i++)
-    {
-      poly[i].x = points[i].x + clock->x_offset + clock->radius;
-      poly[i].y = points[i].y + clock->y_offset + clock->radius;
+      double x = (double)points[i].x * ca - (double)points[i].y * sa;
+      double y = (double)points[i].x * sa + (double)points[i].y * ca;
+      poly[i].x = -x + clock->x_offset + clock->radius;
+      poly[i].y = -y + clock->y_offset + clock->radius;
     }
 
   XRenderCompositeDoublePoly (GDK_WINDOW_XDISPLAY (clock->widget.window),
@@ -244,7 +238,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 }
 
 static double
-calc_angle (int x, int y)
+angle_from_xy (int x, int y)
 {
   double r;
   double quad = M_PI_2;;
@@ -263,7 +257,7 @@ gpe_clock_face_button_press (GtkWidget *w, GdkEventButton *b)
   gint x_start = b->x - clock->x_offset - clock->radius;
   gint y_start = b->y - clock->y_offset - clock->radius;
   double r = sqrt (x_start * x_start + y_start * y_start);
-  double start_angle = calc_angle (x_start, y_start);
+  double start_angle = angle_from_xy (x_start, y_start);
   double hour_angle = gtk_adjustment_get_value (clock->hour_adj) * 2 * M_PI / 12;
   double minute_angle = gtk_adjustment_get_value (clock->minute_adj) * 2 * M_PI / 60;
   
@@ -303,11 +297,39 @@ gpe_clock_face_motion_notify (GtkWidget *w, GdkEventMotion *m)
   int val;
   double angle;
 
-  angle = calc_angle (x, y);
-  
-  val = (clock->dragging_minute_hand ? 60 : 12) * angle / (2 * M_PI);
+  angle = angle_from_xy (x, y);
 
-  gtk_adjustment_set_value (clock->dragging_minute_hand ? clock->minute_adj : clock->hour_adj, val);
+  if (clock->dragging_minute_hand)
+    {  
+      double old_val = gtk_adjustment_get_value (clock->minute_adj);
+
+      val = 60 * angle / (2 * M_PI);
+
+      if (old_val > 45 && val < 15)
+	{
+	  double hour = gtk_adjustment_get_value (clock->hour_adj);
+	  hour++;
+	  if (hour > 23)
+	    hour = 0;
+	  gtk_adjustment_set_value (clock->hour_adj, hour);
+	}
+      else if (old_val < 15 && val > 45)
+	{
+	  double hour = gtk_adjustment_get_value (clock->hour_adj);
+	  hour--;
+	  if (hour < 0)
+	    hour = 23;
+	  gtk_adjustment_set_value (clock->hour_adj, hour);
+	}
+
+      gtk_adjustment_set_value (clock->minute_adj, val);
+    }
+  else
+    {
+      val = 12 * angle / (2 * M_PI);
+
+      gtk_adjustment_set_value (clock->hour_adj, val);
+    }
 
   hand_angles (clock);
 

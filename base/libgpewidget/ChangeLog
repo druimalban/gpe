@@ -1,9 +1,17 @@
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
+	* gpeclockface.c (gpe_clock_face_motion_notify): Advance hour hand
+	when minute hand is dragged past midnight.
+	(draw_hand): Optimise calculation of vertices for polygon.
+	(calc_angle): Rename to ...
+	(angle_from_xy): ... this.  All callers updated.
+
+2003-04-12  Philip Blundell  <philb@gnu.org>
+
 	* gpeclockface.c (gpe_clock_face_realize): Remove pointer motion
 	bits from event mask.
 	(gpe_clock_face_unrealize): Disable call to XftDrawDestroy.
-	
+
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
 	* gpeclockface.c (struct _GpeClockFace): Add hour_angle,
