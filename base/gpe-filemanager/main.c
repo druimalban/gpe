@@ -1,5 +1,6 @@
  /*
  * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
+ *               2004 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1198,11 +1199,10 @@ make_view ()
 
     if (result != GNOME_VFS_OK)
     {
+      gnome_vfs_directory_close (handle);
       break;
     }
   }
-  
-  gnome_vfs_directory_close (handle);
 
   if (open_dir_result != GNOME_VFS_OK)
   {
@@ -1259,7 +1259,7 @@ browse_directory (gchar *directory)
   if (current_directory) 
     g_free(current_directory);
   current_directory = g_strdup (directory);
-  add_history (directory);
+  add_history (g_strdup(directory));
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
   make_view ();
 }
@@ -1286,7 +1286,8 @@ up_one_level (GtkWidget *widget)
 
   safety_check ();
 
-  new_directory = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
+  new_directory = 
+	gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
 
   for (i = strlen (new_directory); i > 0; i--)
   {
@@ -1304,8 +1305,8 @@ up_one_level (GtkWidget *widget)
       new_directory[i] = 0;
     }
   }
-
   browse_directory (new_directory);
+  g_free(new_directory);
 }
 
 static void
@@ -1334,7 +1335,7 @@ history_forward (GtkWidget *widget)
 
   safety_check ();
 
-  if (history_place < g_list_length (history) - 1)
+  if (history_place < (g_list_length (history) - 1))
   {
     history_place++;
 
