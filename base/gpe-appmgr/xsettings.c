@@ -68,6 +68,15 @@ notify_func (const char       *name,
 	      }
       }
 
+      if (!strcmp (p, "ON-WINDOW-CLOSE")) {
+	      if (setting->type == XSETTINGS_TYPE_STRING) {
+		      if (!strcasecmp(setting->data.v_string, "exit"))
+			      cfg_options.on_window_close = WINDOW_CLOSE_EXIT;
+		      else
+			      cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
+	      }
+      }
+
     }
 }
 
