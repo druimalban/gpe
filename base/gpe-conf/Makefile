@@ -1,4 +1,5 @@
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
+VERSION = 0.0.2
+CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\"
 CC = gcc
 MEMBERS  = main applets parser
 MEMBERS += unimplemented
@@ -37,8 +38,10 @@ ipkgl:
 	ipkg-build distl
 	sudo chown -R pierre.pierre distl
 ipkg:
+	./gpe-conf jhdgkjhd | ./buildmenu.pl >dist/usr/lib/menu/gpe-conf
+	find dist -name CVS |xargs rm -rf
 	cp $(HOME)/gpe-conf ./
-	cp control dist/CONTROL/control
+	sed -e s/VERSION/$(VERSION)/ <control >dist/CONTROL/control
 	make DESTDIR=`pwd`/dist install
 	sudo chown -R root.root dist
 	ipkg-build dist

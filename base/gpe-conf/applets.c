@@ -20,6 +20,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <gtk/gtk.h>
 #define _XOPEN_SOURCE /* Pour GlibC2 */
 #include <time.h>
@@ -195,11 +196,38 @@ void ask_user_a_file(char *path, char *prompt,
 /***************************************************************************************/
 
 
+static int runProg(char *cmd)
+{
+  int	status;
+  pid_t	pid;
+
+  char	*c, *argv[5];
+  int	argc = 0;
+  while(cmd && (*cmd != (char)NULL)) {
+    if((c = strchr(cmd, ' ')) != NULL) *c++ = (char)NULL;
+    argv[argc++] = cmd; cmd = c;
+  }
+  argv[argc++] = NULL;
+
+  if((pid = fork()) < 0) {
+    perror("fork");
+    return(1);
+  }
+  if(pid == 0) {
+    execvp(*argv, argv);
+    perror(*argv);
+    return(2);
+  }
+  while(wait(&status) != pid) /* do nothing */;
+
+  return status;
+}
+
 int system_and_gfree(gchar *cmd)
 {
   int rv;
   gchar *buf;
-  rv = system(cmd);
+  rv = runProg(cmd);
   if(rv != 0)
     {
       buf = g_strdup_printf("%s\n failed with return code %d\nperhaps you have \nmisinstalled something",cmd, rv);
