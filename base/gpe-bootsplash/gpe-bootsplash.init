@@ -6,6 +6,8 @@ module_id() {
     echo ' iPAQ' `cat /proc/hal/model`
 }
 
+depmod
+
 case $1 in
 'start')
 	modprobe h3600_hal
