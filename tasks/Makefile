@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.6
+VER_gpe-task-base = 0.7
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -92,6 +92,7 @@ DEP_gpe-task-base = \
     \
     xstroke, \
     xkbd, \
+    mbmerlin, \
     \
     startup-monitor, \
     \
