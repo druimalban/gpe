@@ -42,7 +42,7 @@
 #define DEFAULT_ICON_PATH "/pixmaps"
 #define ZOOM_INCREMENT 8
 
-GtkWidget *window, *vbox2;
+GtkWidget *window;
 GtkWidget *combo;
 GtkWidget *view_scrolld;
 GtkWidget *view_widget;
@@ -379,8 +379,6 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
   {
-    printf ("Mime type is %s\n", file_info->vfs->mime_type);
-
     if (file_info->vfs->mime_type)
     {
       default_mime_application = gnome_vfs_mime_get_default_application (file_info->vfs->mime_type);
@@ -429,8 +427,6 @@ find_icon_path (gchar *mime_type)
   mime_icon = g_strdup (mime_type);
   while ((p = strchr(mime_icon, '/')) != NULL)
     *p = '-';
-
-  printf ("\n\nMIME FOO = %s\n\n", mime_icon);
 
   mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICON_PATH "/%s.png", mime_icon);
   if (stat (mime_path, &s) == 0)
@@ -483,7 +479,6 @@ add_icon (FileInfomation *file_info)
   else
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 
-  //printf ("Image Filename: %s\n", mime_icon);
   pixbuf = get_pixbuf (mime_icon);
   gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
 }
@@ -508,20 +503,8 @@ make_view (gchar *view)
   GnomeVFSResult result, open_dir_result;
   loading_directory = 1;
 
-  if (view_widget)
-    gtk_widget_destroy (view_widget);
-
-  view_widget = gpe_iconlist_new ();
-  gpe_iconlist_set_icon_size (view_widget, current_zoom);
-  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
-		      GTK_SIGNAL_FUNC (button_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
-		      GTK_SIGNAL_FUNC (show_popup), NULL);
-
-  gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
-  gtk_widget_show (view_widget);
-  gpe_iconlist_set_icon_size (view_widget, 32);
-
+  loaded_icons = g_hash_table_new (NULL, NULL);
+  gpe_iconlist_clear (view_widget);
 
   uri = gnome_vfs_uri_new (current_directory);
 
@@ -531,7 +514,6 @@ make_view (gchar *view)
   {
     vfs_file_info = gnome_vfs_file_info_new ();
     result = gnome_vfs_directory_read_next (handle, vfs_file_info);
-    printf ("Gnome VFS FileInfo->Name: %s\n", vfs_file_info->name);
 
     if (loading_directory == 0)
       break;
@@ -553,46 +535,8 @@ make_view (gchar *view)
     if (result != GNOME_VFS_OK)
       break;
   }
-  printf ("Got here (1)\n");
   gnome_vfs_directory_close (handle);
-  printf ("Got here (2)\n");
-
-  /*
-  dir = opendir (current_directory);
-  if (dir)
-  {
-    while (d = readdir (dir), d != NULL)
-    {
-      if (loading_directory == 0)
-        break;
-
-      if (strcmp (current_directory, "/"))
-        filename = g_strdup_printf ("%s/%s", current_directory, d->d_name);
-     else
-        filename = g_strdup_printf ("/%s", d->d_name);
-
-      if (basename (filename)[0] != '.')
-      {
-
-	//printf ("Found file %s\n", filename);
-	filenames = g_list_append (filenames, filename);
-	//add_icon (basename (filename), filename);
-      }
-    }
-    closedir (dir);
-
-    filenames = g_list_sort (filenames, sort_filenames);
-    filenames = g_list_first (filenames);
-
-    while (filenames)
-    {
-      add_icon (basename ((gchar *) filenames->data), (gchar *) filenames->data);
-      filenames = filenames->next;
-    }
-  }
-  */
   loading_directory = 0;
-  printf ("Got here (3)\n");
 }
 
 static void
@@ -649,10 +593,8 @@ browse_directory (gchar *directory)
     if (S_ISDIR (s.st_mode))
     {
       current_directory = g_strdup (directory);
-      //printf ("Current directory: %s\n", current_directory);
       add_history (directory);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
-      loaded_icons = g_hash_table_new (NULL, NULL);
       refresh_view ();
     }
     else
@@ -793,7 +735,6 @@ main (int argc, char *argv[])
   gtk_widget_realize (window);
 
   vbox = gtk_vbox_new (FALSE, 0);
-  vbox2 = gtk_vbox_new (FALSE, 0);
 
   hbox = gtk_hbox_new (FALSE, 0);
   hbox2 = gtk_hbox_new (FALSE, 0);
@@ -817,6 +758,11 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
      (GtkSignalFunc) set_view, "list");
 
+  view_widget = gpe_iconlist_new ();
+  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
+		      GTK_SIGNAL_FUNC (button_clicked), NULL);
+  gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
+		      GTK_SIGNAL_FUNC (show_popup), NULL);
 
 #if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
@@ -888,7 +834,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), toolbar2, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), view_widget, TRUE, TRUE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
@@ -902,7 +848,7 @@ main (int argc, char *argv[])
   gtk_widget_show (combo);
   //gtk_widget_show (view_option_menu);
   //gtk_widget_show (view_menu);
-  gtk_widget_show (vbox2);
+  gtk_widget_show (view_widget);
 
   popup_menu = gtk_menu_new ();
   {
@@ -918,31 +864,9 @@ main (int argc, char *argv[])
 
   gnome_vfs_init ();
 
-  if (sql_start ())
-    exit (1);
-
-  if (programs_sql_start ())
-    exit (1);
-
   gtk_option_menu_set_history (GTK_OPTION_MENU (view_option_menu), 0);
 
-  
-  if (mime_programs)
-  {
-    GSList *iter;
-
-    //printf ("|\tname\t\t|\tmime\t|\tcommand\t|\n\n");
-
-    for (iter = mime_programs; iter; iter = iter->next)
-    {
-      struct mime_program *c = iter->data;
-
-      //printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->name, c->mime, c->command);
-    }
-  }
-
   set_directory_home (NULL);
-  //history_place--;
 
   gtk_main();
 
