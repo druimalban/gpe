@@ -25,10 +25,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: libdm.so mt
-
-mt: mt.c
-	$(CC) -o $@ $^ -I/usr/X11R6/include -L/usr/X11R6/lib -lX11
+all: libdm.so
 
 libdm.so: $(SONAME)
 	ln -sf $^ $@
@@ -48,7 +45,7 @@ install-devel:
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libdm.so
 
 clean:
-	rm -f $(OBJS) $(SONAME) libdm.so $(DEPS) mt
+	rm -f $(OBJS) $(SONAME) libdm.so $(DEPS)
 
 -include $(DEPS)
 -include ../build/Makefile.dpkg_ipkg
