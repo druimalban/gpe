@@ -51,8 +51,8 @@ install: all install-mo gpe-today.desktop
 	install -m 644 -D gtkrc $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gtkrc
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
-clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) gpe-today.desktop.in.h *~
+clean: clean-po
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) *~
 
 include ../build/Makefile.translation
 include ../build/Makefile.dpkg_ipkg
