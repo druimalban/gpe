@@ -844,7 +844,7 @@ Theme_Save ()
 	/* background style*/  	
 	if (confstr != NULL)
 	{
-		system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
+		system_printf (CMD_XST " write %s%s str '%s'", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
 	}
 	else /* theme default - erase settings */

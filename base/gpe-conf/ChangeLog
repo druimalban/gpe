@@ -1,3 +1,7 @@
+2004-08-24	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* theme.c: Fixed background image setup for pathes that need shell escapes.
+
 2004-08-23	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* timeanddate.c: Read current TZ from file instead of environment.
