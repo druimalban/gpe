@@ -9,7 +9,6 @@ gpe-login.o: gpe-login.c
 install:
 	install -D gpe-login $(DESTDIR)/usr/bin/gpe-login
 	install -D gpe-login-setup $(DESTDIR)/etc/X11/gpe-login-setup
-	install -D 99GpeLogin $(DESTDIR)/etc/X11/Xsession.d/99GpeLogin
 	strip $(DESTDIR)/usr/bin/gpe-login
 
 ipkg:
