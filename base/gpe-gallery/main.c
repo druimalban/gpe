@@ -35,12 +35,13 @@
 
 #define WINDOW_NAME "Gallery"
 #define _(_x) gettext (_x)
-GtkWidget *window, *vbox2;
+GtkWidget *window, *vbox2, *scrolled_window;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget, *image_widget, *image_pixbuf, *scaled_image_pixbuf;
 GtkWidget *image_event_box;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
+GtkAdjustment *h_adjust, *v_adjust;
 GList *image_filenames;
 
 // 0 = Detailed list
@@ -49,6 +50,8 @@ gint current_view = 0;
 gint loading_directory = 0;
 
 guint slideshow_timer = 0;
+
+guint x_start, y_start;
 
 struct gpe_icon my_icons[] = {
   { "open", "open" },
@@ -97,12 +100,22 @@ angle (GtkWidget *w, int x, int y)
 }
 
 void
-button_down (GtkWidget *w, GdkEventButton *b)
+rotate_button_down (GtkWidget *w, GdkEventButton *b)
 {
   int x = b->x, y = b->y;
   double a = angle (w, x, y);
 
   starting_angle = a;
+
+  gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+		    NULL, NULL, b->time);
+}
+
+void
+button_down (GtkWidget *w, GdkEventButton *b)
+{
+  x_start = b->x;
+  y_start = b->y;
 
   gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
 		    NULL, NULL, b->time);
@@ -132,6 +145,18 @@ motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 }
 
 void
+pan (GtkWidget *w, GdkEventMotion *m)
+{
+  gint x = m->x - x_start, y = m->y - y_start;
+
+  if ((x < (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 10)) && (y < (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10)))
+  {
+    gtk_adjustment_set_value (h_adjust, (double) x);
+    gtk_adjustment_set_value (v_adjust, (double) y);
+  }
+}
+
+void
 show_image (GtkWidget *widget, gpointer *udata)
 {
   gchar *filename;
@@ -142,21 +167,14 @@ show_image (GtkWidget *widget, gpointer *udata)
   gtk_widget_hide (view_widget);
 
   image_pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-  scaled_image_pixbuf = NULL;
+  scaled_image_pixbuf = image_pixbuf;
 
-  image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
-  image_event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
-  gtk_box_pack_start (GTK_BOX (vbox2), image_event_box, TRUE, TRUE, 0);
-  gtk_signal_connect (image_event_box, "button-press-event", button_down, NULL);
-  gtk_signal_connect (image_event_box, "button-release-event", button_up, NULL);
-  gtk_signal_connect (image_event_box, "motion-notify-event", motion, image_pixbuf);
-
-  gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), image_pixbuf);
 
   gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_event_box);
   gtk_widget_show (image_widget);
+  gtk_widget_show (scrolled_window);
 
   printf ("You just clicked on an image called %s\n", filename);
 }
@@ -256,9 +274,10 @@ hide_image ()
 {
   if (view_widget)
   {
-    gtk_widget_destroy (image_widget);
-    gtk_widget_destroy (image_event_box);
+    gtk_widget_hide (image_widget);
+    gtk_widget_hide (image_event_box);
     gtk_widget_hide (tools_toolbar);
+    gtk_widget_hide (scrolled_window);
     gtk_widget_show (view_widget);
   }
 }
@@ -309,7 +328,7 @@ render_images ()
 void
 add_directory (gchar *directory)
 {
-  gchar *filename, *imagename, *buf;
+  gchar *filename;
   struct dirent *d;
   DIR *dir;
 
@@ -319,8 +338,10 @@ add_directory (gchar *directory)
 
   if (image_widget)
   {
-    gtk_widget_destroy (image_widget);
+    gtk_widget_hide (image_widget);
+    gtk_widget_hide (image_event_box);
     gtk_widget_hide (tools_toolbar);
+    gtk_widget_hide (scrolled_window);
   }
 
   gtk_widget_show (loading_toolbar);
@@ -369,7 +390,6 @@ next_image ()
   if (image_widget)
   {
     buf = image_filenames;
-    gtk_widget_destroy (image_widget);
     buf = g_list_next (image_filenames);
 
     if (buf == NULL)
@@ -387,7 +407,6 @@ previous_image ()
   if (image_widget)
   {
     buf = image_filenames;
-    gtk_widget_destroy (image_widget);
     buf = g_list_previous (image_filenames);
 
     if (buf == NULL)
@@ -515,6 +534,23 @@ main (int argc, char *argv[])
   hbox = gtk_hbox_new (FALSE, 0);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
+
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+  h_adjust = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+  v_adjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+
+  image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
+  image_event_box = gtk_event_box_new ();
+  gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), image_event_box);
+
+  gtk_signal_connect (image_event_box, "button-press-event", button_down, NULL);
+  gtk_signal_connect (image_event_box, "button-release-event", button_up, NULL);
+  gtk_signal_connect (image_event_box, "motion-notify-event", pan, NULL);
+
+  gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   view_option_menu = gtk_option_menu_new ();
   view_menu = gtk_menu_new ();
@@ -656,6 +692,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), loading_toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), tools_toolbar, FALSE, FALSE, 0);
 
