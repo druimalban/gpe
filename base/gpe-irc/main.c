@@ -33,6 +33,10 @@
 #include "networks_config_sql.h"
 #include "networks_config.h"
 
+
+#include "main.h"
+
+
 #define WINDOW_NAME "IRC Client"
 #define _(_x) gettext (_x)
 
@@ -164,6 +168,30 @@ update_text_view (GString * text)
      }
    */
 }
+
+
+void append_nick_to_buffer (IRCServer * server, gchar * target, gchar * nick)
+{
+  gchar *tag = NULL;
+  gchar *str = NULL;
+
+  if (g_ascii_strcasecmp(server->user_info->nick, nick) == 0)
+    {
+      tag = g_strdup("tag_own_nick");
+    }
+  else
+    {
+      tag = g_strdup("tag_nick");
+    }
+
+  str = g_strdup_printf("<%s> ", nick);
+
+  append_to_buffer (server, target, str, tag);
+  
+  g_free(str);
+  g_free(tag);
+}
+
 
 void
 append_to_buffer (IRCServer * server, gchar * target, gchar * text,
@@ -730,12 +758,8 @@ entry_key_press (GtkWidget * widget, GdkEventKey * event, gpointer data)
           display_text =
             g_strdup_printf ("%s: %s\n", selected_server->user_info->nick,
                              entry_text);
-          append_to_buffer (selected_server, selected_channel->name, "<",
-                            NULL);
-          append_to_buffer (selected_server, selected_channel->name,
-                            selected_server->user_info->nick, NULL);
-          append_to_buffer (selected_server, selected_channel->name, "> ",
-                            NULL);
+	  append_nick_to_buffer (selected_server, selected_channel->name,
+				    selected_server->user_info->nick);
           append_to_buffer (selected_server, selected_channel->name,
                             entry_text, NULL);
           append_to_buffer (selected_server, selected_channel->name, "\n",
