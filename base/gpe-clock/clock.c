@@ -13,6 +13,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <libintl.h>
@@ -26,8 +27,7 @@
 #include <gpe/gtkdatecombo.h>
 #include <gpe/gpetimesel.h>
 #include <gpe/gpeclockface.h>
-
-#include <sqlite.h>
+#include <gpe/schedule.h>
 
 GtkWidget *panel_window, *time_label;
 
@@ -36,7 +36,9 @@ GtkWidget *panel_window, *time_label;
 static gboolean show_seconds;
 static gboolean format_24 = TRUE;
 
-struct alarm_context
+static gchar *alarm_file;
+
+struct alarm_state
 {
   gboolean active;
 
@@ -45,12 +47,103 @@ struct alarm_context
   gboolean date_flag;
   int day, month, year;
   guint day_mask;
+};
 
+struct alarm_context
+{
+  struct alarm_state state;
+
+  GtkWidget *window;
   GtkWidget *active_button;
   GtkWidget *date_combo, *time_sel;
   GtkWidget *date_button, *days_button;
   GtkWidget *day_button[7];
 };
+
+static struct alarm_state state;
+
+static time_t
+extract_time (struct alarm_state *alarm)
+{
+  struct tm tm;
+
+  memset (&tm, 0, sizeof (tm));
+
+  tm.tm_year = alarm->year - 1900;
+  tm.tm_mon = alarm->month;
+  tm.tm_mday = alarm->day;
+  tm.tm_hour = alarm->hour;
+  tm.tm_min = alarm->minute;
+
+  return mktime (&tm);
+}
+
+static void
+cancel_alarm (struct alarm_state *alarm)
+{
+  if (alarm->active)
+    {
+      time_t t;
+
+      t = extract_time (alarm);
+
+      schedule_cancel_alarm (1, t);
+    }
+}
+
+static gboolean
+day_matches (struct alarm_state *alarm, int day)
+{
+  day = (day + 6) % 7;
+
+  return (alarm->day_mask & (1 << day)) ? TRUE : FALSE;
+}
+
+static void
+set_alarm (struct alarm_state *alarm)
+{
+  if (alarm->active)
+    {
+      time_t t;
+
+      if (alarm->date_flag)
+	{
+	  t = extract_time (alarm);
+	}
+      else
+	{
+	  struct tm tm;
+	  time_t now;
+
+	  if (alarm->day_mask == 0)
+	    return;
+
+	  time (&now);
+	  localtime_r (&now, &tm);
+	  
+	  tm.tm_hour = alarm->hour;
+	  tm.tm_min = alarm->minute;
+
+	  t = mktime (&tm);
+
+	  while (t < now || !day_matches (alarm, tm.tm_mday))
+	    {
+	      t += 24 * 60 * 60;
+	      localtime_r (&t, &tm);
+	    }
+
+	  alarm->year = tm.tm_year + 1900;
+	  alarm->month = tm.tm_mon;
+	  alarm->day = tm.tm_mday;
+	}
+      
+      if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm") == FALSE)
+	{
+	  gpe_error_box (_("Unable to set alarm"));
+	  alarm->active = FALSE;
+	}
+    }
+}
 
 static void
 update_time (GtkWidget *label)
@@ -145,24 +238,65 @@ static void
 button_toggled (GtkWidget *w, struct alarm_context *ctx)
 {
   int i;
-  gboolean days_selected;
+  gboolean days_selected, active;
   
-  ctx->active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ctx->active_button));
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ctx->active_button));
   days_selected = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ctx->days_button));
  
-  gtk_widget_set_sensitive (ctx->time_sel, ctx->active);
-  gtk_widget_set_sensitive (ctx->date_combo, ctx->active);
-  gtk_widget_set_sensitive (ctx->date_button, ctx->active);
-  gtk_widget_set_sensitive (ctx->days_button, ctx->active);
+  gtk_widget_set_sensitive (ctx->time_sel, active);
+  gtk_widget_set_sensitive (ctx->date_combo, active);
+  gtk_widget_set_sensitive (ctx->date_button, active);
+  gtk_widget_set_sensitive (ctx->days_button, active);
 
   for (i = 0; i < 7; i++)
-    gtk_widget_set_sensitive (ctx->day_button[i], ctx->active && days_selected);
+    gtk_widget_set_sensitive (ctx->day_button[i], active && days_selected);
 }
 
 static void
-do_set_alarm (GtkWidget *window)
+free_alarm_context (struct alarm_context *ctx)
 {
-  gtk_widget_destroy (window);
+  gtk_widget_destroy (ctx->window);
+  
+  g_free (ctx);
+}
+
+static void
+do_set_alarm (struct alarm_context *ctx)
+{
+  gboolean days_selected, active;
+  
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ctx->active_button));
+  days_selected = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ctx->days_button));
+
+  cancel_alarm (&state);
+
+  state.active = active;
+  state.date_flag = !days_selected;
+
+  gpe_time_sel_get_time (GPE_TIME_SEL (ctx->time_sel), &state.hour, &state.minute);
+
+  if (days_selected)
+    {
+      int i;
+
+      state.day_mask = 0;
+
+      for (i = 0; i < 7; i++)
+	{
+	  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (ctx->day_button[i])))
+	    state.day_mask |= (1 << i);
+	}
+    }
+  else
+    {
+      state.year = GTK_DATE_COMBO (ctx->date_combo)->year;
+      state.month = GTK_DATE_COMBO (ctx->date_combo)->month;
+      state.day = GTK_DATE_COMBO (ctx->date_combo)->day;
+    }
+
+  set_alarm (&state);
+
+  free_alarm_context (ctx);
 }
 
 static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
@@ -171,7 +305,6 @@ static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
 static void
 alarm_window (void)
 {
-  GtkWidget *window;
   GtkWidget *ok_button, *cancel_button;
   GtkWidget *time_label = gtk_label_new (_("Time:"));
   GtkWidget *date_hbox;
@@ -185,15 +318,15 @@ alarm_window (void)
   spacing = gpe_get_boxspacing ();
   ctx = g_malloc0 (sizeof (struct alarm_context));
 
-  window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (window), _("Set alarm"));
-  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
+  ctx->window = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (ctx->window), _("Set alarm"));
+  gtk_container_set_border_width (GTK_CONTAINER (ctx->window), gpe_get_border ());
 
-  gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (window)->vbox), spacing);
-  gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (window)->vbox), gpe_get_border ());
+  gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), spacing);
+  gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (ctx->window)->vbox), gpe_get_border ());
 
   ctx->active_button = gtk_check_button_new_with_label (_("Alarm active"));
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), ctx->active_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), ctx->active_button, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (ctx->active_button), "toggled", G_CALLBACK (button_toggled), ctx);
 
   ctx->date_button = gtk_radio_button_new_with_label (NULL, _("Date:"));
@@ -211,9 +344,9 @@ alarm_window (void)
   gtk_box_pack_start (GTK_BOX (time_hbox), time_label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (time_hbox), ctx->time_sel, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), time_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), ctx->days_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), time_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), date_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), ctx->days_button, FALSE, FALSE, 0);
 
   weeklytable = gtk_table_new (2, 4, FALSE);
   for (i = 0; i < 4; i++)
@@ -229,17 +362,17 @@ alarm_window (void)
       ctx->day_button[i] = b;
     }
   
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), weeklytable, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->vbox), weeklytable, FALSE, FALSE, 0);
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
   cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->action_area), cancel_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->action_area), ok_button, FALSE, FALSE, 0);
 
-  gtk_widget_show_all (window);
+  gtk_widget_show_all (ctx->window);
 
-  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (do_set_alarm), window);
-  g_signal_connect_swapped (G_OBJECT (cancel_button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
+  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (do_set_alarm), ctx);
+  g_signal_connect_swapped (G_OBJECT (cancel_button), "clicked", G_CALLBACK (free_alarm_context), ctx);
 
   button_toggled (NULL, ctx);
 }
@@ -250,18 +383,33 @@ clicked (GtkWidget *w, GdkEventButton *ev, GtkWidget *menu)
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
+static void
+do_check_alarm (void)
+{
+}
+
 int
 main (int argc, char *argv[])
 {
   GtkWidget *menu, *menu_set_time, *menu_alarm, *menu_remove, *menu_prefs;
+  GtkTooltips *tooltips;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
   
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
+
+  alarm_file = g_strdup_printf ("%s/.gpe/alarm", g_get_home_dir ());
+
+  if (argc > 1 && !strcmp (argv[1], "--check-alarm"))
+    {
+      do_check_alarm ();
+
+      exit (0);
+    }
 
   panel_window = gtk_plug_new (0);
 
@@ -300,6 +448,9 @@ main (int argc, char *argv[])
 
   g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
   gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
+  tooltips = gtk_tooltips_new ();
+  gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, change the display format, or remove this program from the panel."), NULL);
 
   g_timeout_add (1000, (GtkFunction) update_time, time_label);
 
