@@ -1,14 +1,11 @@
 #!/bin/sh
 
-case `cat /proc/hal/model` in
-	3800)
-		exec hciattach -n /dev/ttySB0 bcsp 230400
-		;;
-	3900)
-		exec hciattach -n /dev/tts/1 bcsp 921600
-		;;
-	*)
-		echo "unknown machine type" >&2
-		exit 1
-		;;
-esac
+if [ -f /etc/sysconfig/bluetooth ]; then
+  . /etc/sysconfig/bluetooth
+
+  exec hciattach -n $BLUETOOTH_PORT $BLUETOOTH_PROTOCOL $BLUETOOTH_SPEED
+else
+  echo "Bluetooth not configured"
+  exit 1
+fi
+
