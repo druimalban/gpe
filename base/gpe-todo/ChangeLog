@@ -2,6 +2,8 @@
 
 	* familiar/control (Depends): Require libgpewidget 0.08.
 
+	* Version 0.08 released.
+
 2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* main.c (main): Call what_init.
