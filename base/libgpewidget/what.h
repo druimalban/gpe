@@ -10,6 +10,6 @@
 #ifndef WHAT_H
 #define WHAT_H
 
-extern void what_init (void);
+extern void gpe_what_init (void);
 
 #endif

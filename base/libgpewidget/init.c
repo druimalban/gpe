@@ -15,6 +15,7 @@
 #include <gtk/gtk.h>
 
 #include "errorbox.h"
+#include "what.h"
 
 static const char *dname = "/.gpe";
 
@@ -54,6 +55,8 @@ gpe_application_init (int *argc, char **argv[])
     }
 
   g_free (buf);
+
+  gpe_what_init ();
 
   return TRUE;
 }

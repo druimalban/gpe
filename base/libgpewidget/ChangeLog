@@ -1,3 +1,10 @@
+2002-07-13  Philip Blundell  <philb@gnu.org>
+
+	* init.c (gpe_application_init): Call gpe_what_init.
+	* what.c (what_init): Rename to gpe_what_init; replace
+	with dummy function that does nothing.
+	* what.h (what_init): Rename prototype appropriately.
+	
 2002-07-11  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (MEMBERS): Add screensize, gpedialog.

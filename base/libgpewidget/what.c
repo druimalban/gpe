@@ -96,7 +96,7 @@ close_clicked (GtkWidget *w, GdkEventButton *ev, GtkWidget *ww)
 }
 
 void
-what_init (void)
+gpe_what_init (void)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
   GtkStyle *style;
@@ -146,4 +146,9 @@ what_init (void)
 
   gtk_signal_connect (GTK_OBJECT (close), "clicked",
 		      close_clicked, window);
+}
+
+void
+what_init (void)
+{
 }
