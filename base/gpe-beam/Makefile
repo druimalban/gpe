@@ -97,7 +97,7 @@ install-program: $(PACKAGE)
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f gpe-conf $(OBJS) *~ */*~ *.ipk *.o
+	rm -f $(PACKAGE)  vcard-export vcard-import vcard-import-file  $(OBJS) *~ */*~ *.ipk *.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
