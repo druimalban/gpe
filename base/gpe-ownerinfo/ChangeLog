@@ -1,3 +1,9 @@
+2003-08-15  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add 'nl'.
+
+	* po/nl.po: New file courtesy Elros Cyriatan.
+
 2003-07-19  Philip Blundell  <philb@gnu.org>
 
 	* main.c (main): Create toplevel window here.
