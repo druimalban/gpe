@@ -1,3 +1,17 @@
+2005-01-09  Phil Blundell  <philb@gnu.org>
+
+	Apply patches from Peter Naulls:
+	* week_view.c (draw_expose_event): Use different background colours
+	for weekdays, weekends, and days with events.
+	* month_view.c (draw_expose_event): Likewise.	
+
+2005-01-09  Phil Blundell  <philb@gnu.org>
+
+	* event-ui.c (build_edit_event_window): Avoid GtkButtonBox.  Allow
+	start and end time fields to expand horizontally.
+
+	* Makefile (LIBGPEVTYPE_PC_EXTRA): Prepend to PKG_CONFIG_PATH,
+	don't replace it.
 
 2004-12-21  Florian Boor <florian.boor@kernelconcepts.de>
 	

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -157,15 +157,18 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *white_gc;
   GdkGC *cream_gc;
   GdkGC *light_gray_gc;
-  GdkGC *dark_gray_gc;
+  GdkGC *yellow_gc;
+  GdkGC *salmon_gc;
   GdkGC *blue_gc;
   GdkColor cream;
   GdkColor light_gray;
-  GdkColor dark_gray;
+  GdkColor yellow;
+  GdkColor salmon;
   GdkColor blue;
   GdkColormap *colormap;
   guint i, j;
   PangoLayout *pl;
+  PangoLayout *pl_evt;
   PangoRectangle pr;
   nl_item *days;
 
@@ -198,11 +201,17 @@ draw_expose_event (GtkWidget *widget,
   gdk_colormap_alloc_color (colormap, &blue, FALSE, TRUE);
   gdk_gc_set_foreground (blue_gc, &blue);
 
-  dark_gray_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (dark_gray_gc, widget->style->black_gc);
-  gdk_color_parse ("gray40", &dark_gray);
-  gdk_colormap_alloc_color (colormap, &dark_gray, FALSE, TRUE);
-  gdk_gc_set_foreground (dark_gray_gc, &dark_gray);
+  yellow_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (yellow_gc, widget->style->black_gc);
+  gdk_color_parse ("palegoldenrod", &yellow);
+  gdk_colormap_alloc_color (colormap, &yellow, FALSE, TRUE);
+  gdk_gc_set_foreground (yellow_gc, &yellow);
+
+  salmon_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (salmon_gc, widget->style->black_gc);
+  gdk_color_parse ("light salmon", &salmon);
+  gdk_colormap_alloc_color (colormap, &salmon, FALSE, TRUE);
+  gdk_gc_set_foreground (salmon_gc, &salmon);
 
   white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
@@ -213,10 +222,12 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
   gdk_gc_set_clip_rectangle (cream_gc, &event->area);
   gdk_gc_set_clip_rectangle (light_gray_gc, &event->area);
-  gdk_gc_set_clip_rectangle (dark_gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (yellow_gc, &event->area);
+  gdk_gc_set_clip_rectangle (salmon_gc, &event->area);
   gdk_gc_set_clip_rectangle (blue_gc, &event->area);
 
   pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
+  pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
 
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
@@ -253,6 +264,7 @@ draw_expose_event (GtkWidget *widget,
 
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
+	  guint height = 0;
 	  gchar *buffer;
 	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
@@ -262,12 +274,13 @@ draw_expose_event (GtkWidget *widget,
 	    {
 	      char buf[10];
 	      guint w;
-	
-	      gdk_draw_rectangle (drawable, c->popup.events ? dark_gray_gc : cream_gc, 
+
+	      gdk_draw_rectangle (drawable, c->popup.events ? cream_gc :
+	                         (i < 5 ? yellow_gc : salmon_gc), 
 				  TRUE,
 				  x, y, xs, ys);
 
-	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
+	      gdk_draw_rectangle (drawable, black_gc, FALSE,
 				  x, y, xs, ys);
 
 	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
@@ -285,15 +298,43 @@ draw_expose_event (GtkWidget *widget,
 				x + 2, y,
 				pl);
 	      g_free (buffer);
+
+              if (c->popup.events)
+                {
+                  GSList *iter;
+
+                  for (iter = c->popup.events; iter; iter = iter->next)
+                    {
+	              y += pr.height + 2;
+
+	              event_t ev = iter->data;
+	              event_details_t evd = event_db_get_details (ev);
+
+	              pango_layout_set_width (pl_evt, xs * PANGO_SCALE);
+	              pango_layout_set_text (pl_evt, evd->summary, -1);
+	              gtk_paint_layout (widget->style,
+				        widget->window,
+				        GTK_WIDGET_STATE (widget),
+				        FALSE,
+				        &event->area,
+				        widget,
+				        "label",
+				        x + 2, y,
+				        pl_evt);
+                    }
+                }
 	    }
 	  else
 	    {
 	      gdk_draw_rectangle (drawable, gray_gc,
 				  TRUE,
-				  x, y, xs, ys);
+				  x + 1, y + 1, xs - 1, ys - 1);
 
-	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
-				  x, y, xs, ys);
+              if (i == 0)
+                gdk_draw_line (drawable, light_gray_gc, x, y + 1, x, y + ys);
+
+              gdk_draw_line (drawable, light_gray_gc, x + 1, y + ys, x + xs, y + ys);
+              gdk_draw_line (drawable, light_gray_gc, x + xs, y + 1, x + xs, y + ys); 
 	    }
 
 	}
@@ -326,7 +367,8 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_unref (blue_gc);
   gdk_gc_unref (cream_gc);
   gdk_gc_unref (light_gray_gc);
-  gdk_gc_unref (dark_gray_gc);
+  gdk_gc_unref (yellow_gc);
+  gdk_gc_unref (salmon_gc);
 
   g_object_unref (pl);
 

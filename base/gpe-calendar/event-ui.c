@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -928,7 +928,7 @@ build_edit_event_window (void)
   summaryentry        = gtk_entry_new ();
   summarylabel        = gtk_label_new (_("Text:"));
   
-  gtk_misc_set_alignment(GTK_MISC(summarylabel),0,0.5);
+  gtk_misc_set_alignment (GTK_MISC (summarylabel),0,0.5);
 
   gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (summaryhbox), summaryentry, TRUE, TRUE, 0);
@@ -951,8 +951,8 @@ build_edit_event_window (void)
   starttimelabel      = gtk_label_new (_("on:"));
   endtimelabel        = gtk_label_new (_("on:"));
   
-  gtk_misc_set_alignment(GTK_MISC(startdatelabel),0,0.5);
-  gtk_misc_set_alignment(GTK_MISC(enddatelabel),0,0.5);
+  gtk_misc_set_alignment (GTK_MISC (startdatelabel), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (enddatelabel), 0, 0.5);
 
   s->startdate        = gtk_date_combo_new ();
   s->enddate          = gtk_date_combo_new ();
@@ -967,7 +967,7 @@ build_edit_event_window (void)
   gtk_table_attach (GTK_TABLE (startendtable), startdatelabel, 0, 1, 0, 1,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), starttime, 1, 2, 0, 1,
-                    GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), starttimelabel, 2, 3, 0, 1,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->startdate, 3, 4, 0, 1,
@@ -975,7 +975,7 @@ build_edit_event_window (void)
   gtk_table_attach (GTK_TABLE (startendtable), enddatelabel, 0, 1, 1, 2,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), endtime, 1, 2, 1, 2,
-                    GTK_FILL, GTK_FILL, 0, 0);
+                    GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), endtimelabel, 2, 3, 1, 2,
                     0, 0, 0, boxspacing);
   gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 3, 4, 1, 2,
@@ -1110,14 +1110,14 @@ build_edit_event_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (vboxrecur), border);
 
   /* Button box */
-  buttonbox           = gtk_hbutton_box_new ();
+  /* using GtkHBox here since GtkHButtonBox packs the widgets in a way
+     that stop them fitting on a 240x320 screen.  */
+  buttonbox           = gtk_hbox_new (FALSE, 2);
   buttonok            = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel        = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete        = gtk_button_new_from_stock (GTK_STOCK_DELETE);
 
   gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border);
-  gtk_button_box_set_layout(GTK_BUTTON_BOX(buttonbox),GTK_BUTTONBOX_END);
-  gtk_box_set_spacing(GTK_BOX(buttonbox),4);
 
   gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);

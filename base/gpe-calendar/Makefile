@@ -8,7 +8,7 @@ LINGUAS = id pt de fr zh_TW ro wa sv nl cs es sk sr ru hu zh_CN
 
 ifeq ($(CVSBUILD),yes)
 LIBGPEVTYPE_PC = libgpevtype-uninstalled
-LIBGPEVTYPE_PC_EXTRA=PKG_CONFIG_PATH=../../base/libgpevtype
+LIBGPEVTYPE_PC_EXTRA=PKG_CONFIG_PATH=../../base/libgpevtype:$$PKG_CONFIG_PATH
 PACKAGE_CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc
 PACKAGE_LDFLAGS += -L../libxsettings -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libdisplaymigration -L../libeventdb -L../libschedule -L../libgpepimc
 else

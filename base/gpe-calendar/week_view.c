@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2004 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2004, 2005 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,10 +65,14 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *black_gc;
   GdkGC *white_gc;
   GdkGC *blue_gc;
+  GdkGC *yellow_gc;
+  GdkGC *salmon_gc;
   guint max_width;
   guint max_height;
   guint day;
   GdkColor blue;
+  GdkColor yellow;
+  GdkColor salmon;
   GdkColormap *colormap;
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
   PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
@@ -91,6 +95,18 @@ draw_expose_event (GtkWidget *widget,
   gdk_colormap_alloc_color (colormap, &blue, FALSE, TRUE);
   gdk_gc_set_foreground (blue_gc, &blue);
 
+  yellow_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (yellow_gc, widget->style->black_gc);
+  gdk_color_parse ("palegoldenrod", &yellow);
+  gdk_colormap_alloc_color (colormap, &yellow, FALSE, TRUE);
+  gdk_gc_set_foreground (yellow_gc, &yellow);
+
+  salmon_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (salmon_gc, widget->style->black_gc);
+  gdk_color_parse ("light salmon", &salmon);
+  gdk_colormap_alloc_color (colormap, &salmon, FALSE, TRUE);
+  gdk_gc_set_foreground (salmon_gc, &salmon);
+
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
   white_gc = widget->style->white_gc;
@@ -101,6 +117,8 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (black_gc, &event->area);
   gdk_gc_set_clip_rectangle (blue_gc, &event->area);
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
+  gdk_gc_set_clip_rectangle (yellow_gc, &event->area);
+  gdk_gc_set_clip_rectangle (blue_gc, &event->area);
 
   for (day = 0; day < 7; day++)
     {
@@ -132,7 +150,8 @@ draw_expose_event (GtkWidget *widget,
       if (draw_sep)
         gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
 
-      gdk_draw_rectangle (drawable, white_gc, 
+      gdk_draw_rectangle (drawable, week_days[day].events ? white_gc :
+                          (day < 5 ? yellow_gc : salmon_gc), 
 			  TRUE, 0, y + 1, max_width, max_height);
 
       pango_layout_set_width (pl, max_width * PANGO_SCALE);
@@ -213,7 +232,7 @@ draw_expose_event (GtkWidget *widget,
 
       if (week_days[day].is_today)
         {
-	  gdk_draw_rectangle (drawable, blue_gc, FALSE, 0, 
+          gdk_draw_rectangle (drawable, blue_gc, FALSE, 0,
                               week_days[day].y0, max_width, 
                               week_days[day].y1 - week_days[day].y0);
           gdk_draw_rectangle (drawable, blue_gc, FALSE, 1, 
@@ -225,7 +244,17 @@ draw_expose_event (GtkWidget *widget,
        draw_sep = TRUE;
   }
 
+  {
+    guint y = week_days[6].y1;
+
+    if (draw_sep)
+      gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
+    gdk_draw_rectangle (drawable, white_gc, TRUE, 0, y + 1, max_width, max_height);
+  }
+
   gdk_gc_unref (blue_gc);
+  gdk_gc_unref (yellow_gc);
+  gdk_gc_unref (salmon_gc);
 
   g_object_unref (pl);
   g_object_unref (pl_evt);
