@@ -3,7 +3,6 @@ VERSION = 0.1.6
 NATIVE ?= yes
 CVSBUILD = yes
 DEBUG = no
-IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
@@ -62,7 +61,7 @@ else # we do cross-compile...
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
 
-CFLAGS += $(IPAQ_INCLUDES) -march=armv4 -mtune=strongarm
+CFLAGS += -march=armv4 -mtune=strongarm
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
 LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
 LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
