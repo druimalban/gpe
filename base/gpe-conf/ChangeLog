@@ -1,3 +1,7 @@
+2003-08-10	Florian Boor	<florian.boor@kernelconcepts.de>
+	* control1 Added libdisplaymigration to the dependencies 
+	* released V 0.1.0-pre7
+
 2003-08-06  Luis Oliveira  <luis@handhelds.org>
 
 	* familiar/control1: changed package name to gpe-conf, added
@@ -30,7 +34,7 @@ When			Who				Where						What
 14.07.2003		Florian			cardinfo.c					Changed text for cards with no known driver.
 
 08.07.2003		Florian			battery.c					Swapped labels...
-															Releases V 0.1.0-pre6
+															Released V 0.1.0-pre6
 
 07.07.2003		Florian			battery.c					Changed offset, removed obsolete stuff.
 								po/gpe-conf.pot				Updated pot.
