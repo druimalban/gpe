@@ -1,0 +1,44 @@
+Some comments about how to use the Makefiles collected here.
+
+
+Makefile.dpkg_ipkg
+------------------
+
+Use a dynamic path to the "build/" directory, since the tarball
+created by 'make dist' will contain the Makefile.dpkg_ipkg in
+"foo-0.23/build/". Define it as follows:
+
+,----
+| CVSBUILD = yes
+| ifeq ($(CVSBUILD),yes)
+| BUILD = ../build
+| else
+| BUILD = build
+| endif
+`----
+
+Then use this Makefile.dpkg_ipkg in your application's Makefile like
+this:
+
+,----
+| include $(BUILD)/Makefile.dpkg_ipkg
+`----
+
+Define a variable VERSION in your application Makefile:
+
+,----
+| VERSION = 0.23
+`----
+
+This will be used by Makefile.dpkg_ipkg to build a tarball with a
+version number. E.g., if your application is called "foo" (defined
+in your app's Makefile in the variable PACKAGE), then 'make dist'
+will create "foo-0.23.tar.gz".
+
+Look at gpe/base/libgpewidget/Makefile for a real-world example.
+
+
+Makefile.translation
+--------------------
+
+<nothing here yet>
