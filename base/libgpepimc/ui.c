@@ -19,6 +19,8 @@
 
 #include "gpe/pim-categories.h"
 
+#include "internal.h"
+
 #define _(x) (x)
 
 static void
@@ -227,25 +229,25 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
   GtkTreeIter iter;
   GtkListStore *list_store;
   GSList *old_categories, *i;
+  GSList *selected_categories = NULL;
 
   window = GTK_WIDGET (p);
   list_store = g_object_get_data (G_OBJECT (window), "list_store");
 
   old_categories = g_slist_copy (gpe_pim_categories_list ());
 
-#if 0
   if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
     {
       do 
 	{
-	  struct todo_category *c;
+	  struct gpe_pim_category *c;
 	  gchar *title;
 	  gboolean selected;
 	  
 	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &selected, 1, &title, 2, &c, -1);
 
 	  if (c == NULL)
-	    c = categories_new_category (title);
+	    c = gpe_pim_category_new (title);
 	  else
 	    {
 	      old_categories = g_slist_remove (old_categories, c);
@@ -258,30 +260,25 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 	    }
 
 	  if (selected)
-	    t->selected_categories = g_slist_append (t->selected_categories, c);
+	    selected_categories = g_slist_append (selected_categories, (gpointer)c->id);
+
 	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
     }
 
   for (i = old_categories; i; i = i->next)
     {
-      struct todo_category *c = i->data;
+      struct gpe_pim_category *c = i->data;
 
-      db_del_category (c);
+      gpe_pim_category_delete (c);
     }
 
   g_slist_free (old_categories);
-
-  gtk_label_set_text (GTK_LABEL (t->categories_label),
-				 build_categories_string (t->selected_categories));
-
-  categories_menu ();
-#endif
 
   gtk_widget_destroy (window);
 }
 
 GtkWidget *
-gpe_pim_categories_dialog (GSList *selected_categories)
+gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data)
 {
   GtkWidget *toolbar;
   GtkWidget *window;
@@ -292,10 +289,11 @@ gpe_pim_categories_dialog (GSList *selected_categories)
   GtkWidget *tree_view;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *col;
+  GSList *list;
 
   window = gtk_dialog_new ();
 
-  list_store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_POINTER);
+  list_store = gtk_list_store_new (3, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT);
 
   tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
 
@@ -318,7 +316,8 @@ gpe_pim_categories_dialog (GSList *selected_categories)
 
   sw = gtk_scrolled_window_new (NULL, NULL);
 
-  for (iter = gpe_pim_categories_list (); iter; iter = iter->next)
+  list = gpe_pim_categories_list ();
+  for (iter = list; iter; iter = iter->next)
     {
       struct gpe_pim_category *c = iter->data;
       GtkTreeIter iter;
@@ -326,8 +325,9 @@ gpe_pim_categories_dialog (GSList *selected_categories)
       gtk_list_store_append (list_store, &iter);
 
       gtk_list_store_set (list_store, &iter, 0, g_slist_find (selected_categories, (gpointer)c->id), 
-			  1, c->name, 2, c, -1);
+			  1, c->name, 2, c->id, -1);
     }
+  g_slist_free (list);
 
   renderer = gtk_cell_renderer_toggle_new ();
   g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);

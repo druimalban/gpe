@@ -28,6 +28,8 @@ struct gpe_pim_category
 
 extern gboolean gpe_pim_categories_init (void);
 extern GSList *gpe_pim_categories_list (void);
-extern GtkWidget *gpe_pim_categories_dialog (GSList *selected);
+
+extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data);
+extern GSList *gpe_pim_categories_get_selected (GtkWidget *w);
 
 #endif
