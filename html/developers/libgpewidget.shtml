@@ -24,7 +24,7 @@ Copyright 2003 Damien Tannner
 </p>
 <p>
 Before any operations are done in your <code>main</code> function, you should first call <code>gpe_application_init</code>.
-This will set any locale varibles or such that are needed before any other libgpewidget functions are called.
+This will set any locale varibles or such that are needed before any other libgpewidget functions are called. The <code>gtk_init</code> function is also called so there is no need for it to be called seperately.
 </p>
 
 <h2>Icon loading</h2>
@@ -72,8 +72,8 @@ To access these preloaded images in your code you should use the following funct
 </table>
 </p>
 <p>
-This function will attempt to locate the preloaded image called 'name' and return it as a GdkPixbuf. If the image cannot be found or has not been mentioned in the gpe_icon structure, a graphical error box will be shown describing the error.<br>
-If a graphical error is unalowed (such as in a library) <code>gpe_find_icon</code>'s sister function <code>gpe_try_find_icon</code> can be used instead, its prototype is shown below.
+This function will attempt to locate the preloaded image called 'name' and return it as a GdkPixbuf. If the image cannot be found or has not been mentioned in the gpe_icon structure, a graphical error box will be shown describing the error and terminating the application after its acknolagment.<br>
+If a graphical error is unallowed or the application needs to stay alive in the event of an error (such as in a library), <code>gpe_find_icon</code>'s sister function <code>gpe_try_find_icon</code> can be used instead. Its prototype is shown below.
 </p>
 <p>
 <table border="0" bgcolor="#EEEEEE">
@@ -131,8 +131,34 @@ When calling <code>gpe_button_new_from_stock</code>, <code>stock_id</code> shoul
 <p>
 <img src="images/toolbar.png">
 </p>
+<p>
+In GPE, toolbars should be an important part of every application. For users they offer quick and simple access to commonly used functions. Most standard GPE applications should only need one toolbar for the main window. Authough other more complicated applications may require more than one toolbar or possibly even a menubar.<br>
+All GPE applications should try to follow the precedure defined in the example below. This ensures that the applications have a similar look and feel that benifits the user.
+</p>
+<p>
+<table border="0" bgcolor="#EEEEEE">
+<tr><td>
+<code>
+toolbar = gtk_toolbar_new ();<br>
+gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);<br>
+gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);<br>
+<br>
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);<br>
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), _("New document"), _("New document"), toolbar_icon, new_file, NULL);<br>
+<br>
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);<br>
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), _("Open file"), _("Open file"), toolbar_icon, select_open_file, NULL);<br>
+<br>
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_SMALL_TOOLBAR);<br>
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save"), _("Save current file"), _("Save current file"), toolbar_icon, save_file, NULL);</code>
+</td></tr>
+</table>
+</p>
 
 <!--#include virtual="/includes/foot.shtml"-->
+
+
+
 
 
 
