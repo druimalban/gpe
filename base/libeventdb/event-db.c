@@ -123,7 +123,10 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	  parse_date (argv[1], &ev->start, &untimed);
 
 	  if (untimed)
-	    ev->flags |= FLAG_UNTIMED;
+	    {
+	      ev->flags |= FLAG_UNTIMED;
+	      ev->start += 12 * 60 * 60;
+	    }
 	}
       else if (!strcasecmp (argv[0], "rend"))
 	{

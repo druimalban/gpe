@@ -1,3 +1,13 @@
+2003-09-05  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.08 released.
+
+2003-09-05  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c (load_data_callback): Add 12 hours to notional start
+	time for untimed events in attempt to avoid problems with
+	timezones.
+
 2003-04-25  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.07 released.
