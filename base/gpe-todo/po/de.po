@@ -1,0 +1,74 @@
+# German translation for gpe-todo
+# Copyright (C) 2002 Phil Blundell <pb@debian.org>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-todo\n"
+"POT-Creation-Date: 2002-06-14 13:14+0100\n"
+"PO-Revision-Date: 2002-06-14 17:47+0200\n"
+"Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: list-ui.c:91
+msgid "A list by that name already exists"
+msgstr "Eine Liste diesen Namens existiert bereits"
+
+#: list-ui.c:143 list-ui.c:177 list-ui.c:178
+msgid "New list"
+msgstr "Neue Liste"
+
+#: list-ui.c:183 list-ui.c:184
+msgid "Delete list"
+msgstr "Lösche Liste"
+
+#: list-ui.c:387 list-ui.c:388 list-ui.c:393 list-ui.c:394
+msgid "New Contact"
+msgstr "Neuer Kontakt"
+
+#: todo-ui.c:141
+msgid "Save"
+msgstr "Speichern"
+
+#: todo-ui.c:142
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: todo-ui.c:143
+msgid "Delete"
+msgstr "Löschen"
+
+#: todo-ui.c:146
+msgid "Summary:"
+msgstr "Zusammenfassung:"
+
+#: todo-ui.c:147
+msgid "Details"
+msgstr "Details"
+
+#: todo-ui.c:152
+msgid "Not started"
+msgstr "Nicht begonnen"
+
+# Pretty ugly... [CM]
+#: todo-ui.c:152
+msgid "In progress"
+msgstr "Verlaufend"
+
+#: todo-ui.c:153
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: todo-ui.c:167
+msgid "Due:"
+msgstr "Fällig:"
+
+#: todo-ui.c:234
+msgid "Edit item"
+msgstr "Editiere Eintrag"
+
+#: todo-ui.c:241
+msgid "New item"
+msgstr "Neuer Eintrag"
