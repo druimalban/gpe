@@ -37,7 +37,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-#define GTK_TYPE_GPE_PIXMAP		 (gtk_pixmap_get_type ())
+#define GTK_TYPE_GPE_PIXMAP		 (gtk_gpe_pixmap_get_type ())
 #define GTK_GPE_PIXMAP(obj)		 (GTK_CHECK_CAST ((obj), GTK_TYPE_GPE_PIXMAP, GtkGpePixmap))
 #define GTK_GPE_PIXMAP_CLASS(klass)	 (GTK_CHECK_CLASS_CAST ((klass), GTK_TYPE_GPE_PIXMAP, GtkGpePixmapClass))
 #define GTK_IS_GPE_PIXMAP(obj)		 (GTK_CHECK_TYPE ((obj), GTK_TYPE_GPE_PIXMAP))

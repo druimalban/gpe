@@ -123,7 +123,7 @@ gtk_gpe_pixmap_set (GtkGpePixmap *pixmap,
   gint oldheight;
 
   g_return_if_fail (pixmap != NULL);
-  g_return_if_fail (GTK_IS_PIXMAP (pixmap));
+  g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   if (pixmap->pixmap != val)
     {
@@ -175,7 +175,7 @@ gtk_gpe_pixmap_get (GtkGpePixmap  *pixmap,
 		GdkBitmap **mask)
 {
   g_return_if_fail (pixmap != NULL);
-  g_return_if_fail (GTK_IS_PIXMAP (pixmap));
+  g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   if (val)
     *val = pixmap->pixmap;
@@ -192,7 +192,7 @@ gtk_gpe_pixmap_expose (GtkWidget      *widget,
   gint x, y;
 
   g_return_val_if_fail (widget != NULL, FALSE);
-  g_return_val_if_fail (GTK_IS_PIXMAP (widget), FALSE);
+  g_return_val_if_fail (GTK_IS_GPE_PIXMAP (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
 
   if (GTK_WIDGET_DRAWABLE (widget))
@@ -254,7 +254,7 @@ void
 gtk_gpe_pixmap_set_build_insensitive (GtkGpePixmap *pixmap, guint build)
 {
   g_return_if_fail (pixmap != NULL);
-  g_return_if_fail (GTK_IS_PIXMAP (pixmap));
+  g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   pixmap->build_insensitive = build;
 
@@ -268,7 +268,7 @@ void
 gtk_gpe_pixmap_set_prelight (GtkGpePixmap *pixmap, GdkPixmap *val)
 {
   g_return_if_fail (pixmap != NULL);
-  g_return_if_fail (GTK_IS_PIXMAP (pixmap));
+  g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   if (pixmap->pixmap_prelight)
     gdk_pixmap_unref (pixmap->pixmap_prelight);

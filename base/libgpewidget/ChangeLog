@@ -1,5 +1,12 @@
 2002-06-16  Philip Blundell  <pb@debian.org>
 
+	* render.c (gpe_render_icon): Use GtkGpePixmap in place of GtkPixmap.
+
+	* gtkgpepixmap.h (GTK_TYPE_GPE_PIXMAP): Correct definition.
+	* gtkgpepixmap.h: Replace GTK_IS_PIXMAP with GTK_IS_GPE_PIXMAP.
+
+2002-06-16  Philip Blundell  <pb@debian.org>
+
 	* Makefile (MEMBERS): Add gtkgpepixmap.
 	* gtkgpepixmap.c: New file.
 	* gtkgpepixmap.h: Likewise.

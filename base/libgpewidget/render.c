@@ -10,6 +10,7 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#include "gtkgpepixmap.h"
 #include "render.h"
 
 static void
@@ -98,11 +99,11 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
   gpe_render_pixmap (&style->bg[GTK_STATE_NORMAL], pixbuf,
 		     &pixmap, &bitmap);
   
-  widget = gtk_pixmap_new (pixmap, bitmap);
+  widget = gtk_gpe_pixmap_new (pixmap, bitmap);
   
   gpe_render_pixmap (&style->bg[GTK_STATE_PRELIGHT], pixbuf,
 		     &pixmap, &bitmap);
-  gtk_pixmap_set_prelight (GTK_PIXMAP (widget), pixmap);
+  gtk_gpe_pixmap_set_prelight (GTK_GPE_PIXMAP (widget), pixmap);
   
   return widget;
 }
