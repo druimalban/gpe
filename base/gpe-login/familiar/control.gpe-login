@@ -4,6 +4,6 @@ Priority: optional
 Version: 0.16.1
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, gpe-icons (>= 0.05), libgpewidget0 (>= 0.07)
+Depends: libgtk1.2, gpe-icons (>= 0.05), libgpewidget0 (>= 0.07), keylaunch, ipaq-sleep
 Suggests: xkbd, gpe-session-scripts
 Description: Gtk-based login program for GPE

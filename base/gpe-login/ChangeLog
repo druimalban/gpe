@@ -1,5 +1,7 @@
 2002-07-22  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control.gpe-login (Depends): Add keylaunch, ipaq-sleep.
+	* gpe-login.setup: Add call to ipaq-sleep.
 	* gpe-login.keylaunchrc: Use full pathname for xcalibrate.
 
 2002-07-21  Philip Blundell  <philb@gnu.org>
