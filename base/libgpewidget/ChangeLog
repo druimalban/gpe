@@ -1,5 +1,9 @@
 2004-10-18  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.95 released.
+
+2004-10-18  Phil Blundell  <pb@nexus.co.uk>
+
 	* popup.c (gpe_popup_menu_position): Only factor allocation.x into
 	coordinates if widget is windowless.
 
