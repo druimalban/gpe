@@ -1,3 +1,10 @@
+
+2004-10-30	Florian Boor <florian@kernelconcepts.de>
+
+	- Released V 0.39 
+	- Moved mixer icons to gpe-icons package.
+        - control: Changed dependency to gpe-icons 0.23.
+
 2004-09-13	Florian Boor <florian@kernelconcepts.de>
 	- Removed obsolete ioctl() causing failure on Collie.
 	- Released  V 0.38
