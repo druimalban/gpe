@@ -236,5 +236,5 @@ void
 gtk_date_combo_clear (GtkDateCombo *dp)
 {
   dp->set = FALSE;
-  gtk_entry_set_text (dp->entry, "");
+  gtk_entry_set_text (GTK_ENTRY (dp->entry), "");
 }
