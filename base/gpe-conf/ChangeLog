@@ -1,4 +1,5 @@
 2003-11-28	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Added flash info.
 	* Fixed several issues in CVS (wrong/missing files)
 	* We now read familiar version info.
 	* storage.*: Moved stuff to header file.

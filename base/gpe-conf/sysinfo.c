@@ -42,6 +42,7 @@
 #define PIC_FAMILIAR 	PREFIX "/share/pixmaps/familiar.png"
 #define P_CPUINFO 		"/proc/cpuinfo"
 #define P_IPAQ			"/proc/hal/model"
+#define P_PARTITIONS	"/proc/partitions"
 
 /* local types and structs */
 typedef enum
@@ -65,7 +66,41 @@ t_deviceinfo;
 
 /* local functions */
 
-t_deviceinfo get_device_info()
+int
+get_flash_size()
+{
+	char **strv;
+	int len = 0;
+	GError *err;
+	int i = 0;
+	char *str = NULL;
+	int result = 0;
+	int v = 0;
+	
+	/* read partition info */
+	if (g_file_get_contents(P_PARTITIONS,&str,&len,&err))
+	{
+		strv = g_strsplit(str,"\n",32);
+		g_free(str);
+		while (strv[i])
+		{
+			if (strstr(strv[i],"mtdblock"))
+			{
+				sscanf(strv[i],"%*i %*i %i %*s",&v);
+				result += v;
+			}
+			i++;
+		}
+		g_strfreev(strv);
+	}
+	
+	result /= 2048;
+	
+	return result;
+}
+
+t_deviceinfo 
+get_device_info()
 {
 	t_deviceinfo result;
 	char **strv;
@@ -118,11 +153,11 @@ t_deviceinfo get_device_info()
 		g_strfreev(strv);
 	}
 #endif
-	/* memory size */
 	
+	/* memory and flash size */
 	system_memory();
 	result.ram = meminfo.total / 1024 + 1;
-	
+	result.flash = get_flash_size();
 	return result;
 }
 
@@ -296,7 +331,8 @@ Sysinfo_Build_Objects (void)
                      GTK_FILL,2,0);
 	tw = gtk_label_new(NULL);
 	gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
-	ts = g_strdup_printf("%s:\t%i MB",_("RAM"),devinfo.ram);
+	/* TRANSLATORS: MB == Mega Bytes*/
+	ts = g_strdup_printf("%s:\t%i %s",_("RAM"),devinfo.ram,_("MB"));
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 	g_free(ts);
@@ -304,7 +340,8 @@ Sysinfo_Build_Objects (void)
                      GTK_FILL,2,0);
 	tw = gtk_label_new(NULL);
 	gtk_label_set_line_wrap(GTK_LABEL(tw),TRUE);
-	ts = g_strdup_printf("%s:\t%i MB",_("Flash"),devinfo.flash);
+	/* TRANSLATORS: MB == Mega Bytes*/
+	ts = g_strdup_printf("%s:\t%i %s",_("Flash"),devinfo.flash,_("MB"));
 	gtk_label_set_markup(GTK_LABEL(tw),ts);
 	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 	g_free(ts);
