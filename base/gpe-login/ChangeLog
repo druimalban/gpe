@@ -1,5 +1,9 @@
 2003-02-05  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.35 released.
+
+2003-02-05  Philip Blundell  <philb@gnu.org>
+
 	* X11/xsettings.default (Gtk/FontName): Set to Sans 8.
 
 2003-02-02  Philip Blundell  <philb@gnu.org>
