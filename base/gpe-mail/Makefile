@@ -4,7 +4,7 @@
 #CFLAGS = `gtk-config --cflags` -g
 GTK2=yes
 
-CFLAGS2 = `pkg-config --cflags gtk+-2.0` -g
+CFLAGS2 = `pkg-config --cflags gtk+-2.0` -g -Wall -Werror
 LDFLAGS2 = `pkg-config --libs gtk+-2.0`
 
 CFLAGS1 = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -DGTK1

@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 #include "gtkcolombo.h"
+#include <stdio.h>
+#include <string.h>
 
 #ifdef TEST
 #include <stdio.h>
