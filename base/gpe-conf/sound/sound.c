@@ -258,14 +258,14 @@ Sound_Build_Objects (void)
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, i + 3, i + 4, 
 	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	
-	tw = gtk_check_button_new_with_label(_("Enable Alarm"));
+	tw = gtk_check_button_new_with_label(_("Enable Alarm Sound"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, i + 4, i + 5, 
 	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tw), get_alarm_enabled());
 	g_signal_connect_after(G_OBJECT(tw), "toggled", 
 	                       G_CALLBACK(on_alarm_toggled), NULL);
 	
-	tw = gtk_check_button_new_with_label(_("Automatic Volume"));
+	tw = gtk_check_button_new_with_label(_("Automatic Volume (rising)"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, i + 5, i + 6, 
 	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tw), get_alarm_automatic());

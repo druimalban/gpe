@@ -1,5 +1,6 @@
 2004-10-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* sound.c: Changed labels to become more descriptive.
 	* sound/sound.c, alarmctl*: Switch for automatic volume setting.
 	                            Added icon for alarm volume slider.
 	* sound/sound.c, alarmctl*: Implemented alarm settings.
