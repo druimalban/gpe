@@ -1,7 +1,7 @@
 PACKAGE   = keylaunch
 VERSION   = 1.3.0-5gpe9
 
-DEBUG     = 1
+DEBUG     = 0
 
 CC        = gcc
 #CFLAGS    = -g -O2 -Wall

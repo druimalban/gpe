@@ -167,7 +167,7 @@ grab_key (int keycode, unsigned int modifiers, Window w)
 void
 create_new_key (char *key_string)
 {
-  Key *k;
+  Key *k, *prevkey;
   char *key_str;
   char *sep1, *sep2;
 
@@ -190,9 +190,15 @@ create_new_key (char *key_string)
   k->next = NULL;
 
   if (key == NULL)
-    key = k;
+    {
+      key = k;
+      prevkey = NULL;
+    }
   else
-    lastkey->next = k;
+    {
+      lastkey->next = k;
+      prevkey = lastkey;
+    }
 
   lastkey = k;
 
@@ -253,7 +259,21 @@ create_new_key (char *key_string)
   if (k->keycode == 0)
     {
       fprintf (stderr, "Keysym not found, for key definition '%s'\n", key_str);
-      exit(1);
+      free (key_str);
+      free (k->window);
+      free (k->command);
+      free (k);
+      if (prevkey)
+	{
+	  prevkey->next = NULL;
+	  lastkey = prevkey;
+	}
+      else
+	{
+	  key = NULL;
+	  lastkey = NULL;
+	}
+      return;
     }
 
   grab_key (k->keycode, k->modifier, root);
