@@ -3,28 +3,25 @@
 <!--#include virtual="includes/head.shtml"-->
 
 <p>
-
-This is the web page for the GPE Palmtop Environment.  GPE aims to
-provide a Free Software GUI environment for Palmtop/Handheld computers
+The GPE Palmtop Environment aims to
+provide a Free Software GUI environment for palmtop/handheld computers
 running the GNU/Linux&trade; operating system.  GPE uses the <A
-href="http://www.xfree86.org">X Window System</A> with the <A
-href="http://www.gtk.org/">GTK+ toolkit</A>.
+href="http://www.xfree86.org">X Window System</A>, and the <A
+href="http://www.gtk.org/">GTK+ widget toolkit</A>.
 </p>
 
 <p>
-GPE is not about a single piece of software, but about building an
-entire environment consisting of a number of components which make
-it possible to use your Linux Handheld for standard tasks such as
-Personal Information Management (PIM), and make it easy for
-developers to create powerful programs, by providing the necessary
-infrastructure.
+GPE is not a single piece of software, but an entire environment of components
+which make it possible to use your GNU/Linux handheld
+for standard tasks such as Personal Information Management (PIM). GPE
+makes it easy for developers to create powerful programs, by giving
+them the infrastructure they need.
 </p>
 
 <p>
-Part of the GPE environment is about core software such as the GUI
-toolkit, and necessary libraries which largely already exist.  The
-other, perhaps more important part is fixing standards for program
-interaction, such as SQL, XML, and other data schemas.
+Besides providing core software such as shared libraries, and perhaps more
+importantly, the GPE environment fixes standards for program interaction,
+such as SQL, XML, and other data schemas.
 </p>
 
 <!--#include virtual="includes/foot.shtml"-->
