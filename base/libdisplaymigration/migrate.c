@@ -17,6 +17,8 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
+#include "libdm.h"
+
 static GdkAtom string_gdkatom, display_change_gdkatom, display_change_ok_gdkatom;
 
 static gboolean
