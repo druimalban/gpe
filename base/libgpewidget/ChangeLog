@@ -1,5 +1,9 @@
 2002-08-03  Philip Blundell  <philb@gnu.org>
 
+	* dirbrowser.c (gpe_create_dir_browser): Use GTK_WINDOW_TOPLEVEL
+	instead of GTK_WINDOW_DIALOG.
+	* gpetooltips2.c: New file.
+
 	* pixmaps.c (gpe_load_one_icon): Add conditionals for GTK 2.
 	* pixmaps.h: Include gdk.h.
 	* gtkdatecombo.c (gtk_date_combo_get_type): Correct type of return
