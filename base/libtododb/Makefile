@@ -1,6 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libtododb
 #DEBUG = yes 
+CVSBUILD = yes
 VERSION = 0.02
 
 LINGUAS =
@@ -31,6 +32,12 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: libtododb.so
 
 libtododb.so: $(SONAME)
@@ -49,10 +56,9 @@ install-devel:
 clean:
 	rm -f $(OBJS) $(SONAME) libtododb.so $(DEPS)
 
-install: $(SONAME) install-mo
-	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
-	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+install-program: $(SONAME)
+	install -Ds $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
