@@ -1,3 +1,10 @@
+2003-04-07  Philip Blundell  <philb@gnu.org>
+
+	* po/fr.po: New file from Translation Project, courtesy Luc Pionchon.
+	* Makefile (LINGUAS): Add fr.
+
+	* po/pt_PT.po: Deleted.
+
 2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* future_view.c: delete old clone-checking cruft
