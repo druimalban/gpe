@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ ! -f $HOME/.mbdock ]; then
+cat >$HOME/.mbdock <<END
+mmenu -r
+monolaunch -k /usr/share/xkbd/img/kbd.xpm gpe-kbd
+xstroke
+miniapm -r
+minivol -r
+END
+fi
