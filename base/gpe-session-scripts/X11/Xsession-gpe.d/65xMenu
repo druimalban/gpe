@@ -1,5 +1,0 @@
-if [ -x /usr/bin/x-menu-manager ]; then 
-x-menu-manager &
-sleep 1;
-fi
-

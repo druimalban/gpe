@@ -76,6 +76,9 @@ ipkg:
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
 	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
 	make DESTDIR=`pwd`/familiar/dist.gpe-session-scripts PREFIX=/usr install-scripts
+	mkdir -p familiar/dist.gpe-session-scripts/usr/lib/menu
+	cp familiar/gpe-logout.menu familiar/dist.gpe-session-scripts/usr/lib/menu/gpe-logout
+	#
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
 

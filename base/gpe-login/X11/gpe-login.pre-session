@@ -1,0 +1,10 @@
+#!/bin/sh
+
+USER=$1
+
+if [ -e /dev/sound/dsp ]; then
+chown $USER /dev/sound/dsp
+fi
+if [ -e /dev/sound/mixer ]; then
+chown $USER /dev/sound/mixer
+fi

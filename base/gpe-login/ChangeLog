@@ -1,3 +1,15 @@
+2002-07-19  Philip Blundell  <philb@gnu.org>
+
+	* familiar/gpe-logout.menu: New file.
+	* X11/gpe-login.pre-session: Likewise.
+	* Makefile (install-scripts): Ship them.
+
+	* X11/Xsession-gpe.d/65xMenu: Deleted.
+
+	* familiar/control.gpe-session-scripts: Remove dependency on xkbd.
+
+	* gpe-session-scripts 0.11.4 released.
+
 2002-07-18  Philip Blundell  <philb@gnu.org>
 
 	* X11/gpe-login.pre-session: New file.
