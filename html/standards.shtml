@@ -31,4 +31,10 @@ A hacked-together version of the bulk of the <a href="pim.sql">PIM schema</a> is
 This omits a specification for storing events, and has not yet been finalised. 
 </p>
 
+<h3>Data transfer</h3>
+
+<p>
+GPE will support the <a href="http://www.imc.org/pdi/">vCard and vCal</a> standards for transferring address book and calendar information. We also plan to follow the <a href="http://www.imc.org/ietf-calendar/">IETF Calendaring and Scheduling</a> standards.
+</p>
+
 <!--#include virtual="includes/foot.shtml"-->

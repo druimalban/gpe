@@ -10,28 +10,17 @@
 <LI><A HREF="http://www.handhelds.org/z/wiki/GPE">http://www.handhelds.org/z/wiki/GPE</A>
 </UL>
 
-<H3>The handhelds.org site</H3>
+<H3>Related projects</H3>
 
 <UL>
-<LI><A HREF="http://www.handhelds.org">http://www.handhelds.org</A>
+<LI>handhelds.org<BR>
+<A HREF="http://handhelds.org/">http://handhelds.org</A>
+<LI>The Familiar Project<BR>
+<A HREF="http://familiar.handhelds.org/">http://familiar.handhelds.org</A>
 </UL>
 
-<H3>Useful standards</H3>
 
-<UL>
-<LI> IETF/IMC iCalendar<BR>
-<A HREF="http://www.imc.org/ietf-calendar/">http://www.imc.org/ietf-calendar/</A>
-<LI> IETF/IMC vCard and vCalendar<BR>
-<A HREF="http://www.imc.org/pdi/">http://www.imc.org/pdi/</A>
-<LI> SyncML<BR>
-<A HREF="http://www.syncml.org">http://www.syncml.org</A><BR>
-SyncML library<BR>
-<A HREF="http://libsyncml.sourceforge.net/">http://libsyncml.sourceforge.net/</A>
-<LI> freedesktop / XDG<BR>
-<A HREF="http://www.freedesktop.org/">http://www.freedesktop.org</A>
-</UL>
-
-<H3>Useful documentation</H3>
+<H3>Interesting documentation</H3>
 
 <UL>
 <LI> GNOME Human Interface Guidelines (1.0)<BR>
@@ -50,6 +39,10 @@ SyncML library<BR>
 <A HREF="http://www.samengstrom.com/ipaq/">http://www.samengstrom.com/ipaq/</A>
 <LI>sqlite is the database engine library used by some applications and usqld<BR>
 <A HREF="http://www.hwaci.com/sqlite/">http://www.hwaci.com/sqlite/</A>
+<LI> SyncML<BR>
+<A HREF="http://www.syncml.org">http://www.syncml.org</A><BR>
+SyncML library<BR>
+<A HREF="http://libsyncml.sourceforge.net/">http://libsyncml.sourceforge.net/</A>
 </UL>
 
 <!--#include virtual="includes/foot.shtml"-->
