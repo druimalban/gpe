@@ -244,8 +244,10 @@ do_save_file (gchar *filename)
 }
 
 static void
-save_file_as (GtkFileSelection *selector, gpointer user_data)
+save_file_as (GtkWidget *w, gpointer user_data)
 {
+  GtkFileSelection *file_selector = GTK_FILE_SELECTION (user_data);
+
   filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
   
   do_save_file (filename);
@@ -287,7 +289,7 @@ select_save_file_as (void)
   file_selector = gtk_file_selection_new (_("Save as .."));
 
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
-			     "clicked", GTK_SIGNAL_FUNC (save_file_as), NULL);
+			     "clicked", GTK_SIGNAL_FUNC (save_file_as), file_selector);
   
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
