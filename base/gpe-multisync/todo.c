@@ -65,7 +65,30 @@ gboolean
 todo_push_object (struct db *db, const char *obj, const char *uid, 
 		  char *returnuid, int *returnuidlen, GError **err)
 {
-  return FALSE;
+  GSList *list, *tags;
+  MIMEDirVTodo *vtodo;
+  MIMEDirVCal *vcal;
+  int id;
+
+  vcal = mimedir_vcal_new_from_string (obj, err);
+  if (vcal == NULL)
+    return FALSE;
+
+  list = mimedir_vcal_get_todo_list (vcal);
+  vtodo = MIMEDIR_VTODO (list->data);
+
+  tags = vtodo_to_tags (vtodo);
+
+  if (uid)
+    id = atoi (uid);
+  else
+    id = 0;
+   
+  mimedir_vcal_free_component_list (list);
+   
+  store_tag_data (db->db, "todo", id, tags, TRUE);
+
+  return TRUE;
 }
 
 gboolean
