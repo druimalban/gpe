@@ -140,7 +140,7 @@ GtkWidget *Time_Build_Objects()
   self.catvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox2, TRUE, TRUE, 0);
 
-  self.catlabel2 = gtk_label_new (NULL); /* FIXME: GTK2: make this bold */
+  self.catlabel2 = gtk_label_new (NULL); 
   fstr = g_strdup_printf("%s %s %s","<b>",_("Time"),"</b>");
   gtk_label_set_markup (GTK_LABEL(self.catlabel2),fstr); 
   g_free(fstr);

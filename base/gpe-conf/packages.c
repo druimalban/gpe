@@ -19,6 +19,8 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <stropts.h>
+#include <poll.h>
 
 #include <libintl.h>
 #define _(x) gettext(x)
@@ -40,9 +42,82 @@
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
+static GtkWidget *txLog;
+static GtkWidget *bUpdate;
 
 /* --- local intelligence --- */
 
+gboolean poll_log_pipe()
+{
+  static char str[256];
+  struct pollfd pfd[1];
+
+  pfd[0].fd = suidinfd;
+  pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
+    
+  while (poll(pfd,1,0))
+  {
+     fgets (str, 255, suidin);
+     if (strstr(str,"<end>")) 
+     {
+       gtk_button_set_label(GTK_BUTTON(bUpdate),_("Start"));
+	   gtk_widget_set_sensitive(bUpdate,TRUE);
+       printlog(txLog,_("Update finished. Please check log messages for errors."));
+	 }
+	 else
+	 {
+       printlog(txLog,str);
+	 }
+  }
+  return TRUE;	
+}
+
+/*
+ *  This function is called from suid task to perform the update.  
+ *  Any output is returned through pipe.
+*/
+void do_package_update()
+{
+  FILE *pipe;
+  static char cur[256];
+		
+  if (setvbuf(nsreturn,NULL,_IONBF,0) != 0) 
+    fprintf(stderr,"gpe-conf: error setting buffer size!");
+  fprintf(nsreturn,_("Update using \"ipkg upgrade\" started.\n"));
+  pipe = popen("ipkg update 2>&1 && ipkg upgrade 2>&1", "r");
+
+  if (pipe > 0)
+    {
+      while (!feof (pipe))
+	  {
+	    fgets (cur, 255, pipe);
+		fprintf(nsreturn,"%s",cur);
+	  }
+	  pclose(pipe);
+    } 
+	
+  fprintf(nsreturn,"<end>\n");
+  fflush(nsreturn);
+  fsync(nsreturnfd);
+}
+
+void on_network_update_clicked(GtkButton *button, gpointer user_data)
+{
+  GtkTextBuffer *logbuf;
+  GtkTextIter start,end;
+	
+  gtk_button_set_label(button,_("Running..."));
+  gtk_widget_set_sensitive(bUpdate,FALSE);
+	
+  /* clear log */	
+  logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
+  gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
+  gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
+  gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
+	
+  suid_exec("NWUD","NWUD");
+	
+}
 
 /* --- gpe-conf interface --- */
 
@@ -66,8 +141,57 @@ Packages_Restore ()
 GtkWidget *
 Packages_Build_Objects (void)
 {
-  notebook = gtk_notebook_new();
+  GtkWidget *vbox;
+  GtkWidget *cur;
+  GtkTooltips *tooltips;
+  char *tmp;
+		
+  tooltips = gtk_tooltips_new ();
+	
+  notebook = gtk_notebook_new();	
   gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
   
+  gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
+	
+  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+
+  cur = gtk_label_new(_("Update"));
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
+
+  cur = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+  tmp = g_strdup_printf("<b>%s</b>",_("Update from network"));
+  gtk_label_set_markup(GTK_LABEL(cur),tmp);
+  free(tmp);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+	
+  cur = gtk_button_new_with_label(_("Start"));
+  bUpdate = cur;
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,FALSE,gpe_get_boxspacing());	
+  g_signal_connect(G_OBJECT (cur), "clicked",G_CALLBACK(on_network_update_clicked),NULL);
+  gtk_tooltips_set_tip (tooltips, cur, _("Update entire system over an internet connection."), NULL);
+  
+  cur = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+  tmp = g_strdup_printf("<b>%s</b>",_("Activity log"));
+  gtk_label_set_markup(GTK_LABEL(cur),tmp);
+  free(tmp);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+  
+  cur = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
+  gtk_tooltips_set_tip (tooltips, cur, _("This window shows all output from the packet manager that performs the update."), NULL);
+  
+  txLog = gtk_text_view_new();
+  gtk_container_add(GTK_CONTAINER(cur),txLog);
+  gtk_box_pack_start_defaults(GTK_BOX(vbox),cur);	
+   
+  gtk_timeout_add (1000, (GtkFunction) poll_log_pipe, NULL);
+
+  /* change buffering of suid process input pipe */
+  if (setvbuf(suidin,NULL,_IONBF,0) != 0) 
+    fprintf(stderr,"gpe-conf: error setting buffer size!");
+
   return notebook;
 }

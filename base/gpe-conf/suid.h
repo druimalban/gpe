@@ -4,8 +4,15 @@
 #include <stdio.h>
 #include <glib.h>
 
-FILE *suidout;
+/* file pointers for non-suid side and according file descriptors*/
+FILE *suidout; 
+int suidoutfd; 
 FILE *suidin;
+int suidinfd;
+
+/* file pointer for suid side data return */
+FILE *nsreturn;
+int nsreturnfd;
 
 void suidloop();
 int ask_root_passwd();

@@ -17,8 +17,10 @@ struct Applet
 /* When translation will be implemented...*/
 #define _(x) gettext(x)
 
-/* Return 1 if a file exists & can be read, 0 otherwise.*/
 
+void printlog(GtkWidget *textview, gchar *str);
+
+/* Return 1 if a file exists & can be read, 0 otherwise.*/
 int file_exists (char *fn);
 GtkWidget *make_menu_from_dir(char *path, int(*entrytest)(char* path), char *current);
 GList *make_items_from_dir(char *path);

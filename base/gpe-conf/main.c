@@ -183,7 +183,7 @@ void item_select(GtkWidget *ignored, gpointer user_data)
 int killchild()
 {
   kill(suidPID,SIGTERM);
- return 0; 
+  return 0; 
 }
 
 void initwindow()
@@ -226,13 +226,14 @@ void make_container()
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons, FALSE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_border());
 
-  self.cancel = gpe_picture_button (self.w->style, _("Cancel"), _("cancel"));
+  self.cancel = gpe_button_new_from_stock(GTK_STOCK_CANCEL,GPE_BUTTON_TYPE_BOTH);
   gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,FALSE, TRUE, 0);
 
-  self.save = gpe_picture_button (self.w->style, _("Apply"), _("save"));
+  self.save = gpe_button_new_from_stock(GTK_STOCK_OK,GPE_BUTTON_TYPE_BOTH);
+  
   gtk_box_pack_start(GTK_BOX(hbuttons),self.save,FALSE, TRUE, 0);
 
-  self.dismiss = gpe_picture_button (self.w->style, _("Dismiss"), _("close"));
+  self.dismiss = gpe_button_new_from_stock(GTK_STOCK_CLOSE,GPE_BUTTON_TYPE_BOTH);
   gtk_box_pack_start(GTK_BOX(hbuttons),self.dismiss,FALSE, TRUE, 0);
   
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
@@ -289,19 +290,19 @@ int main(int argc, char **argv)
 
   if(pipe(pipe1))
     {
-      fprintf(stderr, "cant pipe\n");
+      fprintf(stderr, "Can't open pipe\n");
       exit(errno);
     }
   if(pipe(pipe2))
     {
-      fprintf(stderr, "cant pipe\n");
+      fprintf(stderr, "Can't open pipe\n");
       exit(errno);
     }
 
   switch(suidPID = fork())
     {
     case -1:
-      fprintf(stderr, "cant fork\n");
+      fprintf(stderr, "Can't fork\n");
       exit(errno);
     case 0:
       close(pipe1[0]);
@@ -311,6 +312,10 @@ int main(int argc, char **argv)
     default:
       close(pipe2[0]);
       close(pipe1[1]);
+	
+	  suidoutfd = pipe2[1];
+	  suidinfd = pipe1[0];
+	
       suidout = fdopen(pipe2[1],"w");
       suidin = fdopen(pipe1[0],"r");
 
@@ -344,5 +349,5 @@ int main(int argc, char **argv)
       fclose(suidin);
       kill(suidPID,SIGTERM);
     }
-      return 0;
+  return 0;
 }

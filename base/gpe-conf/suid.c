@@ -33,6 +33,7 @@
 #include "ownerinfo.h"
 #include "ipaqscreen/brightness.h"
 #include "ipaqscreen/rotation.h"
+#include "packages.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -41,6 +42,11 @@ static int know_global_user_access = FALSE;
 
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
+
+void update_packages()
+{
+	do_package_update();
+}
 
 void update_light_status (int state)
 {
@@ -310,7 +316,8 @@ check_user_access (const char *cmd)
 		acstr = "0";
 	global_user_access = atoi(acstr);
 	know_global_user_access = TRUE;
-  }	
+  }
+  
   // allow screen settings
   if (!strcmp(cmd,"SCRR")) return TRUE;
   if (!strcmp(cmd,"SCRB")) return TRUE;
@@ -334,6 +341,8 @@ suidloop (int write, int read)
   int numarg = 0;
 
   setuid (0);
+  nsreturnfd = write;
+  nsreturn = fdopen (write,"w");
 
   while (!feof (in))		// the prg exits with sigpipe
     {
@@ -358,7 +367,7 @@ suidloop (int write, int read)
 		time_t t;
 		fscanf (in, "%ld", &t);
 		if (stime (&t) == -1)
-		  fprintf (stderr, "error while setting the time: %d\n",
+		  fprintf (stderr, "Error while setting the time: %d\n",
 			   errno);
 		else // if ok, update rtc time
 		{
@@ -455,6 +464,11 @@ suidloop (int write, int read)
 		fscanf (in, "%100s", arg2); // username
 		create_homedir (arg1, arg2);
 	      }
+	    else if (strcmp (cmd, "NWUD") == 0)
+	      {
+		fscanf (in, "%100s", arg1);
+		update_packages ();
+	      }
 #if 0
 	    if (bin)		// fork and exec
 	      {
@@ -496,7 +510,9 @@ suidloop (int write, int read)
 	  }
       }				//if !feof
     }
-//      gtk_exit(0);
+	fclose(in);
+	fclose(nsreturn);
+	exit(0);
 }
 
 int

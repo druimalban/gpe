@@ -40,6 +40,14 @@ static int selector_open = FALSE;
 static gchar *password = NULL;
 
 
+void printlog(GtkWidget *textview, gchar *str)
+{
+	GtkTextBuffer* log;
+	log = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
+	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(log),str,-1);
+}
+
+
 /***************************************************************************************/
 /* Return 1 if a file exists & can be read, 0 otherwise.*/
 

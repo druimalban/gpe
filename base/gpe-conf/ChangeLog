@@ -1,5 +1,13 @@
 When			Who				Where						What
 
+26.03.2003		Florian			packages.c					Added some interactive help to package management utility.
+															Improved pipe behaviour.
+
+25.03.2003		Florian			packages.c					Package management applet is now able to do 
+								storage.c 					a network update. 
+								applets.*								
+								suid.c
+								
 23.03.2003		Florian			main.c						New (still empty) package management applet. 
 								packages.*
 								gpe-conf-packages.desktop

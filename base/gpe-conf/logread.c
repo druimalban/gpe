@@ -69,14 +69,6 @@ static int logtail = -1;
 
 /* --- local intelligence --- */
 
-void printlog(gchar* str)
-{
-	GtkTextBuffer* log;
-	log = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
-	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(log),str,-1);
-}
-
-
 /*
  * sem_up - up()'s a semaphore.
  */
@@ -141,11 +133,11 @@ int logread_main()
 	}
 	
 	if (buf->head == buf->tail) {
-		printlog(_("<empty syslog>"));
+		printlog(txLog,_("<empty syslog>"));
 	}
 	
 	while ( i != buf->tail) {
-		printlog(buf->data+i);
+		printlog(txLog,buf->data+i);
 		i+= strlen(buf->data+i) + 1;
 		if (i >= buf->size )
 			i=0;
