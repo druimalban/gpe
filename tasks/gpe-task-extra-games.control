@@ -1,8 +1,8 @@
 Package: gpe-task-extra-games
-Section: games
+Section: GPE/tasks
 Priority: optional
 Version: _VERSION_
-Architecture: arm
+Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Recommends: _DEPS_
 Description: Additional GPE games not included in base image.
