@@ -1,3 +1,11 @@
+2002-09-05  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* todo-sql.c : add "converted" subroutines to add stuff from old schema
+
+	* todo-sql.c : implemented upgrade from old schema and versioning table
+
+	* old-db.c : add this to do the upgrade
+
 2002-09-01  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.21 released.

@@ -25,10 +25,13 @@
 #include "todo-sql.h"
 
 static sqlite *sqliteh;
+GSList *categories, *items;
+
+static unsigned long dbversion;
 
 static const char *fname = "/.gpe/todo";
 
-GSList *categories, *items;
+extern gboolean convert_old_db (int oldversion, sqlite *);
 
 static struct todo_category *
 new_category_internal (int id, const char *title)
@@ -41,6 +44,22 @@ new_category_internal (int id, const char *title)
   categories = g_slist_append (categories, t);
 
   return t;
+}
+
+int converted_category (const char *title)
+{
+  char *err;
+
+  if (sqlite_exec_printf (sqliteh, "insert into todo_categories values (NULL, '%q')",
+			  NULL, NULL, &err, title))
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
+  return (sqlite_last_insert_rowid (sqliteh));
 }
 
 struct todo_category *
@@ -120,6 +139,17 @@ item_callback (void *arg, int argc, char **argv, char **names)
 }
 
 static int
+dbinfo_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 1)
+    {
+      dbversion = atoi (argv[0]);
+    }
+
+  return 0;
+}
+
+static int
 category_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 2 && argv[0] && argv[1])
@@ -138,6 +168,8 @@ sql_start (void)
     "create table todo (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)";
   static const char *schema3_str = 
     "create table todo_urn (uid INTEGER PRIMARY KEY)";
+  static const char *schema_info = 
+    "create table todo_dbinfo (version integer NOT NULL)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -158,23 +190,59 @@ sql_start (void)
       return -1;
     }
 
+  sqlite_exec (sqliteh, schema_info, NULL, NULL, &err);
+  
+  if (sqlite_exec (sqliteh, "select version from todo_dbinfo", dbinfo_callback, NULL, &err))
+    {
+      dbversion=0;
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err);
-
-  if (sqlite_exec (sqliteh, "select uid,description from todo_categories",
+     
+  if (dbversion==1) 
+    {
+      
+      if (sqlite_exec (sqliteh, "select uid,description from todo_categories",
 		   category_callback, NULL, &err))
-    {
-      gpe_error_box (err);
-      free (err);
-      return -1;
+      {
+        gpe_error_box (err);
+        free (err);
+        return -1;
+      }
+      
+      if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+      {
+        gpe_error_box (err);
+        free (err);
+        return -1;
+      }
+      
     }
-
-  if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+    
+  else if (dbversion==0) 
     {
-      gpe_error_box (err);
-      free (err);
-      return -1;
+      if (sqlite_exec (sqliteh, "select uid,description from todo_categories",
+		   category_callback, NULL, &err))
+      {
+        gpe_error_box (err);
+        free (err);
+        return -1;
+      }
+      
+      if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
+      {
+        gpe_error_box (err);
+        free (err);
+        return -1;
+      }
+      
+      convert_old_db (dbversion, sqliteh);
+      dbversion=1;
     }
 
   return 0;
@@ -251,6 +319,20 @@ push_item (struct todo_item *i)
     sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
   gpe_error_box (err);
   free (err);
+}
+
+void converted_item (struct todo_item *i)
+{
+  char *err;
+  if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
+		   NULL, NULL, &err))
+    return NULL;
+  
+  i->id = sqlite_last_insert_rowid (sqliteh);
+
+  items = g_slist_append (items, i);
+  push_item(i);
+  
 }
 
 struct todo_item *

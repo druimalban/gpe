@@ -13,7 +13,7 @@ CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = main todo-ui todo-sql list-ui configure
+MEMBERS = main todo-ui todo-sql list-ui old-db configure
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
