@@ -35,7 +35,8 @@ typedef struct event_s
 {
   unsigned long uid;
 
-  time_t start;
+  time_t start, modified;
+  unsigned long confirmed;	/* 0 == tentative */
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
   unsigned long flags;
@@ -45,13 +46,13 @@ typedef struct event_s
     recur_t type;
 
     unsigned int count;
-    unsigned int daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
+    unsigned int increment;
+    unsigned long daymask;	/* bit 0 = Mon, bit 1 = Tue, etc */
 
     time_t end;			/* 0 == perpetual */
   } recur;
 
   event_details_t details;
-  
   gboolean mark;
 } *event_t;
 

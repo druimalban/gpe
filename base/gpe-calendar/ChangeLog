@@ -1,5 +1,17 @@
 2002-08-25  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* old-db.c: fix for when no db exists.
+	
+	* event-db.c: include recurrence and fix deleting.
+	
+	* event-db.h: small schema change for recurrence.
+	
+	* event-ui.c: include recurrence.
+	
+	* globals.h: include recurrence bit thingies.
+	
+2002-08-25  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* old-db.c: write new schema version to db after update.
 	
 	* event-db.c: Use new database schema versioning.

@@ -69,9 +69,7 @@ convert_old_db (int oldversion, sqlite *sqliteh)
     {
       if (sqlite_exec (sqliteh, "select uid, start, duration, alarmtime, recurring, summary, description from events", load_callback0, NULL, &err))
         {
-          gpe_error_box (err);
           free (err);
-          return FALSE;
         }
 
     }
