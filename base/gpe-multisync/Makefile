@@ -49,7 +49,7 @@ install-program: all
 	install -m 644 gpe_sync.glade $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gpe_sync.glade
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
+	rm -f $(PACKAGE) $(TARGET) $(OBJS) $(DEPS) $(PACKAGE).desktop
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

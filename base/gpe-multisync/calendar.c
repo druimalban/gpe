@@ -77,7 +77,10 @@ calendar_push_object (struct db *db, const char *obj, const char *uid,
   if (vcal == NULL)
     return FALSE;
 
-  list = mimedir_vcal_get_todo_list (vcal);
+  list = mimedir_vcal_get_event_list (vcal);
+  if(list == NULL)
+    return FALSE;
+  
   vevent = MIMEDIR_VEVENT (list->data);
 
   tags = vevent_to_tags (vevent);
