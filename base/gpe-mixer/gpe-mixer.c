@@ -46,7 +46,7 @@ GtkStyle *style;
 #define _(x) gettext(x)
 
 /* mixer handling */
-char *names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_NAMES;
+char *names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_LABELS;
 int devmask = 0, recmask = 0, recsrc = 0;
 int mixfd;
 
