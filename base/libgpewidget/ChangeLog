@@ -1,5 +1,8 @@
 2003-04-13  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Remove GTK 1 support.
+	* gtkrc: Obsolete; deleted.
+
 	* gpeiconlist.gob (_recalc_size): Reformat.  Only adjust height;
 	leave width alone.
 	(update_icon_item_with_udata): Pass allocation for drawing area,

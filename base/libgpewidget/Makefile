@@ -5,8 +5,6 @@ GTK2 = yes
 VERSION = 0.58
 CVSBUILD = yes
 
-GTKRC = gtkrc
-
 LINGUAS = ro de id pt fr
 
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu gpetimesel gpeiconlistitem gpeclockface
@@ -23,13 +21,9 @@ else
 BUILD = build
 endif
 
-ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 LDFLAGS = `pkg-config --libs gtk+-2.0`
-else
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags`
-LDFLAGS =`gtk-config --libs` `gdk-pixbuf-config --libs` 
-endif
+
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
@@ -65,9 +59,6 @@ libgpewidget.a: $(OBJS)
 install-program: $(SONAME)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/
-ifneq ($(GTK2),yes)
-	install -D $(GTKRC) $(DESTDIR)$(PREFIX)/share/gpe/$(GTKRC)
-endif
 	install -d $(DESTDIR)$(PREFIX)/share/libgpewidget/
 	install -m 644 pixmaps/clock.png $(DESTDIR)$(PREFIX)/share/libgpewidget/clock.png
 	install -m 644 pixmaps/clock24.png $(DESTDIR)$(PREFIX)/share/libgpewidget/clock24.png
