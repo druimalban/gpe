@@ -1,6 +1,6 @@
 SONAME = libgpewidget.so.0
 
-MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel
+MEMBERS = gtkdatesel gtkdatecombo errorbox init pixmaps gtksmallentry smallbox gtkminifilesel render
 
 CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)

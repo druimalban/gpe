@@ -1,4 +1,8 @@
-2002-06-15  Philip Blundell  <pb@kc.cam.armlinux.org>
+2002-06-15  Philip Blundell  <pb@debian.org>
+
+	* render.c: New file.
+	* render.h: Likewise.
+	* Makefile (MEMBERS): Add render.
 
 	* init.c (gpe_application_init): Don't call gdk_imlib_init.
 	* pixmaps.c: Use gdk_pixbuf rather than gdk_imlib.
