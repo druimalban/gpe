@@ -86,11 +86,22 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
   if (uid)
     id = atoi (uid);
   else
-    id = 0;
+    {
+      char *errmsg;
+
+      if (nsqlc_exec (db->db, "insert into todo_urn values (NULL)",
+		      NULL, NULL, &errmsg))
+	return FALSE;
+      
+      id = nsqlc_last_insert_rowid (db->db);
+    }
    
   mimedir_vcal_free_component_list (list);
    
   store_tag_data (db->db, "todo", id, tags, TRUE);
+
+  sprintf (returnuid, "%d", id);
+  *returnuidlen = strlen (returnuid);
 
   return TRUE;
 }
