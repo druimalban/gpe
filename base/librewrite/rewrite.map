@@ -1,0 +1,14 @@
+GLIBC_2.0 {
+global:
+  open; opendir;
+};
+
+GLIBC_2.2 {
+global:
+  __xstat; __lxstat; __xstat64; __lxstat64;
+};
+
+REWRITE_0_0 {
+local:
+  *;
+};
