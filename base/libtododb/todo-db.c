@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -336,6 +336,9 @@ todo_db_push_item (struct todo_item *i)
   char *err;
   gboolean rollback = FALSE;
   GSList *iter;
+  time_t modified;
+
+  modified = time (NULL);
 
   if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
     goto error;
@@ -364,6 +367,9 @@ todo_db_push_item (struct todo_item *i)
       if (insert_values (sqliteh, i->id, "CATEGORY", "%d", ((struct todo_category *)iter->data)->id))
 	goto error;
     }
+
+  if (insert_values (sqliteh, i->id, "MODIFIED", "%d", (int)modified))
+    goto error;
 
   if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
     goto error;
