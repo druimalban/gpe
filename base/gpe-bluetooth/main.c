@@ -274,6 +274,7 @@ run_scan (void)
       gdk_threads_enter ();
       gtk_widget_destroy (w);
       gpe_perror_box_nonblocking (_("Inquiry failed"));
+      gtk_widget_show_all (devices_window);
       gdk_threads_leave ();
       close (dev_id);
       return FALSE;
@@ -285,6 +286,7 @@ run_scan (void)
       gdk_threads_enter ();
       gtk_widget_destroy (w);
       gpe_perror_box_nonblocking (_("HCI device open failed"));
+      gtk_widget_show_all (devices_window);
       gdk_threads_leave ();
       close (dev_id);
       free(info);
@@ -454,6 +456,14 @@ main (int argc, char *argv[])
     exit (1);
 
   setlocale (LC_ALL, "");
+
+  dd = socket (PF_BLUETOOTH, SOCK_RAW, BTPROTO_L2CAP);
+  if (dd < 0)
+    {
+      gpe_error_box (_("No kernel support for Bluetooth on this machine"));
+      exit (1);
+    }
+  close (dd);
 
   dd = hci_open_dev (0);
   if (dd != -1)
