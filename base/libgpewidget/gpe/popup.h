@@ -24,7 +24,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
-extern void gpe_popup_menu_position (GtkMenu *menu, gint *x, gint *y, gboolean *push, gpointer p);
+int gpe_get_win_position (Display *dpy, Window win, int *x, int *y);
+void gpe_popup_menu_position (GtkMenu *menu, gint *x, gint *y, gboolean *push, gpointer p);
 
 #ifdef __cplusplus
 }
