@@ -4,3 +4,4 @@
 
 GtkWidget* create_main (void);
 GtkWidget* create_detailview (void);
+GtkWidget* create_wSetup (void);

@@ -55,16 +55,8 @@ create_main (void)
   GtkWidget *hbox3;
   GtkWidget *label83;
   GtkWidget *entry1;
-  GtkWidget *frame1;
-  GtkWidget *table1;
-  GtkWidget *label73;
-  GtkWidget *label74;
-  GtkWidget *label75;
-  GtkWidget *label76;
-  GtkWidget *lPhone;
-  GtkWidget *lMail;
-  GtkWidget *lMobile;
-  GtkWidget *lFAX;
+  GtkWidget *pDetail;
+  GtkWidget *tabDetail;
 
   main = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (main, "main");
@@ -363,118 +355,22 @@ create_main (void)
   gtk_widget_show (entry1);
   gtk_box_pack_start (GTK_BOX (hbox3), entry1, TRUE, TRUE, 0);
 
-  frame1 = gtk_frame_new (_("Contact"));
-  gtk_widget_set_name (frame1, "frame1");
-  gtk_widget_ref (frame1);
-  gtk_object_set_data_full (GTK_OBJECT (main), "frame1", frame1,
+  pDetail = gtk_frame_new (_("Contact"));
+  gtk_widget_set_name (pDetail, "pDetail");
+  gtk_widget_ref (pDetail);
+  gtk_object_set_data_full (GTK_OBJECT (main), "pDetail", pDetail,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (frame1);
-  gtk_box_pack_start (GTK_BOX (vbox1), frame1, FALSE, TRUE, 0);
+  gtk_widget_show (pDetail);
+  gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
 
-  table1 = gtk_table_new (4, 2, FALSE);
-  gtk_widget_set_name (table1, "table1");
-  gtk_widget_ref (table1);
-  gtk_object_set_data_full (GTK_OBJECT (main), "table1", table1,
+  tabDetail = gtk_table_new (1, 2, FALSE);
+  gtk_widget_set_name (tabDetail, "tabDetail");
+  gtk_widget_ref (tabDetail);
+  gtk_object_set_data_full (GTK_OBJECT (main), "tabDetail", tabDetail,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (table1);
-  gtk_container_add (GTK_CONTAINER (frame1), table1);
-  gtk_table_set_col_spacings (GTK_TABLE (table1), 6);
-
-  label73 = gtk_label_new (_("Phone"));
-  gtk_widget_set_name (label73, "label73");
-  gtk_widget_ref (label73);
-  gtk_object_set_data_full (GTK_OBJECT (main), "label73", label73,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label73);
-  gtk_table_attach (GTK_TABLE (table1), label73, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (label73), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label73), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label73), 2, 0);
-
-  label74 = gtk_label_new (_("Mail"));
-  gtk_widget_set_name (label74, "label74");
-  gtk_widget_ref (label74);
-  gtk_object_set_data_full (GTK_OBJECT (main), "label74", label74,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label74);
-  gtk_table_attach (GTK_TABLE (table1), label74, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (label74), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label74), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label74), 2, 0);
-
-  label75 = gtk_label_new (_("Mobile"));
-  gtk_widget_set_name (label75, "label75");
-  gtk_widget_ref (label75);
-  gtk_object_set_data_full (GTK_OBJECT (main), "label75", label75,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label75);
-  gtk_table_attach (GTK_TABLE (table1), label75, 0, 1, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (label75), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label75), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label75), 2, 0);
-
-  label76 = gtk_label_new (_("FAX"));
-  gtk_widget_set_name (label76, "label76");
-  gtk_widget_ref (label76);
-  gtk_object_set_data_full (GTK_OBJECT (main), "label76", label76,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label76);
-  gtk_table_attach (GTK_TABLE (table1), label76, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (label76), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (label76), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (label76), 2, 0);
-
-  lPhone = gtk_label_new (_("label77"));
-  gtk_widget_set_name (lPhone, "lPhone");
-  gtk_widget_ref (lPhone);
-  gtk_object_set_data_full (GTK_OBJECT (main), "lPhone", lPhone,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (lPhone);
-  gtk_table_attach (GTK_TABLE (table1), lPhone, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (lPhone), 0, 0.5);
-
-  lMail = gtk_label_new (_("label78"));
-  gtk_widget_set_name (lMail, "lMail");
-  gtk_widget_ref (lMail);
-  gtk_object_set_data_full (GTK_OBJECT (main), "lMail", lMail,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (lMail);
-  gtk_table_attach (GTK_TABLE (table1), lMail, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (lMail), 0, 0.5);
-
-  lMobile = gtk_label_new (_("label79"));
-  gtk_widget_set_name (lMobile, "lMobile");
-  gtk_widget_ref (lMobile);
-  gtk_object_set_data_full (GTK_OBJECT (main), "lMobile", lMobile,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (lMobile);
-  gtk_table_attach (GTK_TABLE (table1), lMobile, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (lMobile), 0, 0.5);
-
-  lFAX = gtk_label_new (_("label80"));
-  gtk_widget_set_name (lFAX, "lFAX");
-  gtk_widget_ref (lFAX);
-  gtk_object_set_data_full (GTK_OBJECT (main), "lFAX", lFAX,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (lFAX);
-  gtk_table_attach (GTK_TABLE (table1), lFAX, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (lFAX), 0, 0.5);
+  gtk_widget_show (tabDetail);
+  gtk_container_add (GTK_CONTAINER (pDetail), tabDetail);
+  gtk_table_set_col_spacings (GTK_TABLE (tabDetail), 6);
 
   gtk_signal_connect (GTK_OBJECT (nbList), "switch_page",
                       GTK_SIGNAL_FUNC (on_nbList_switch_page),
@@ -766,7 +662,7 @@ create_detailview (void)
   gtk_widget_show (det_notes);
   gtk_container_add (GTK_CONTAINER (det_notesscroll), det_notes);
   gtk_text_insert (GTK_TEXT (det_notes), NULL, NULL, NULL,
-                   _("\n\n\nThere's some space here for arbitrary notes\nabout a contact.\n\n"), strlen(_("\n\n\nThere's some space here for arbitrary notes\nabout a contact.\n\n")));
+                   _("\n\n\nThere's some space here for arbitrary notes\nabout a contact.\n\n"), -1);
 
   label8 = gtk_label_new (_("Notes"));
   gtk_widget_set_name (label8, "label8");
@@ -777,5 +673,166 @@ create_detailview (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 2), label8);
 
   return detailview;
+}
+
+GtkWidget*
+create_wSetup (void)
+{
+  GtkWidget *wSetup;
+  GtkWidget *vbox9;
+  GtkWidget *frame2;
+  GtkWidget *vbox10;
+  GtkWidget *hbox4;
+  GtkWidget *cbField;
+  GtkWidget *combo_entry1;
+  GtkWidget *entry2;
+  GtkWidget *bDetAdd;
+  GtkWidget *bDetRemove;
+  GtkWidget *scrolledwindow1;
+  GtkWidget *clist8;
+  GtkWidget *label86;
+  GtkWidget *label87;
+  GtkWidget *frame3;
+
+  wSetup = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_set_name (wSetup, "wSetup");
+  gtk_object_set_data (GTK_OBJECT (wSetup), "wSetup", wSetup);
+  gtk_widget_set_usize (wSetup, 240, 320);
+  gtk_window_set_title (GTK_WINDOW (wSetup), _("Setup"));
+  gtk_window_set_modal (GTK_WINDOW (wSetup), TRUE);
+  gtk_window_set_policy (GTK_WINDOW (wSetup), FALSE, FALSE, FALSE);
+
+  vbox9 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox9, "vbox9");
+  gtk_widget_ref (vbox9);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "vbox9", vbox9,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox9);
+  gtk_container_add (GTK_CONTAINER (wSetup), vbox9);
+
+  frame2 = gtk_frame_new (_("Detail panel"));
+  gtk_widget_set_name (frame2, "frame2");
+  gtk_widget_ref (frame2);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "frame2", frame2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (frame2);
+  gtk_box_pack_start (GTK_BOX (vbox9), frame2, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame2), GTK_SHADOW_NONE);
+
+  vbox10 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox10, "vbox10");
+  gtk_widget_ref (vbox10);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "vbox10", vbox10,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox10);
+  gtk_container_add (GTK_CONTAINER (frame2), vbox10);
+
+  hbox4 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox4, "hbox4");
+  gtk_widget_ref (hbox4);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "hbox4", hbox4,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox4);
+  gtk_box_pack_start (GTK_BOX (vbox10), hbox4, FALSE, TRUE, 0);
+
+  cbField = gtk_combo_new ();
+  gtk_widget_set_name (cbField, "cbField");
+  gtk_widget_ref (cbField);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "cbField", cbField,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (cbField);
+  gtk_box_pack_start (GTK_BOX (hbox4), cbField, TRUE, TRUE, 0);
+
+  combo_entry1 = GTK_COMBO (cbField)->entry;
+  gtk_widget_set_name (combo_entry1, "combo_entry1");
+  gtk_widget_ref (combo_entry1);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "combo_entry1", combo_entry1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (combo_entry1);
+  gtk_entry_set_text (GTK_ENTRY (combo_entry1), _("NAME"));
+
+  entry2 = gtk_entry_new ();
+  gtk_widget_set_name (entry2, "entry2");
+  gtk_widget_ref (entry2);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "entry2", entry2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (entry2);
+  gtk_box_pack_start (GTK_BOX (hbox4), entry2, TRUE, TRUE, 0);
+
+  bDetAdd = gtk_button_new_with_label (_("Add"));
+  gtk_widget_set_name (bDetAdd, "bDetAdd");
+  gtk_widget_ref (bDetAdd);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "bDetAdd", bDetAdd,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (bDetAdd);
+  gtk_box_pack_start (GTK_BOX (hbox4), bDetAdd, FALSE, FALSE, 0);
+
+  bDetRemove = gtk_button_new_with_label (_("Remove"));
+  gtk_widget_set_name (bDetRemove, "bDetRemove");
+  gtk_widget_ref (bDetRemove);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "bDetRemove", bDetRemove,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (bDetRemove);
+  gtk_box_pack_start (GTK_BOX (hbox4), bDetRemove, FALSE, FALSE, 0);
+
+  scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_name (scrolledwindow1, "scrolledwindow1");
+  gtk_widget_ref (scrolledwindow1);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "scrolledwindow1", scrolledwindow1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (scrolledwindow1);
+  gtk_box_pack_start (GTK_BOX (vbox10), scrolledwindow1, TRUE, TRUE, 0);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  clist8 = gtk_clist_new (2);
+  gtk_widget_set_name (clist8, "clist8");
+  gtk_widget_ref (clist8);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "clist8", clist8,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (clist8);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow1), clist8);
+  gtk_clist_set_column_width (GTK_CLIST (clist8), 0, 126);
+  gtk_clist_set_column_width (GTK_CLIST (clist8), 1, 80);
+  gtk_clist_column_titles_show (GTK_CLIST (clist8));
+
+  label86 = gtk_label_new (_("Data Field"));
+  gtk_widget_set_name (label86, "label86");
+  gtk_widget_ref (label86);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "label86", label86,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label86);
+  gtk_clist_set_column_widget (GTK_CLIST (clist8), 0, label86);
+
+  label87 = gtk_label_new (_("Label"));
+  gtk_widget_set_name (label87, "label87");
+  gtk_widget_ref (label87);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "label87", label87,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label87);
+  gtk_clist_set_column_widget (GTK_CLIST (clist8), 1, label87);
+
+  frame3 = gtk_frame_new (_("Pages"));
+  gtk_widget_set_name (frame3, "frame3");
+  gtk_widget_ref (frame3);
+  gtk_object_set_data_full (GTK_OBJECT (wSetup), "frame3", frame3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (frame3);
+  gtk_box_pack_start (GTK_BOX (vbox9), frame3, TRUE, TRUE, 0);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame3), GTK_SHADOW_NONE);
+
+  gtk_signal_connect (GTK_OBJECT (bDetAdd), "clicked",
+                      GTK_SIGNAL_FUNC (on_bDetAdd_clicked),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (bDetRemove), "clicked",
+                      GTK_SIGNAL_FUNC (on_bDetRemove_clicked),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (clist8), "select_row",
+                      GTK_SIGNAL_FUNC (on_clist8_select_row),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (clist8), "unselect_row",
+                      GTK_SIGNAL_FUNC (on_clist8_unselect_row),
+                      NULL);
+
+  return wSetup;
 }
 

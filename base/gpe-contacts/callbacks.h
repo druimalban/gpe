@@ -98,24 +98,52 @@ on_nbList_switch_page                  (GtkNotebook     *notebook,
                                         GtkNotebookPage *page,
                                         gint             page_num,
                                         gpointer         user_data);
+void 
+selection_made 	                       (GtkWidget *clist, 
+                                        gint row, 
+										gint column, 
+		                                GdkEventButton *event, 
+										GtkWidget *widget);
 
 void
-selection_made                         (GtkCList        *clist,
+on_button1_clicked                     (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_bDetAdd_clicked                     (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_bDetRemove_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_clist8_select_row                   (GtkCList        *clist,
                                         gint             row,
                                         gint             column,
                                         GdkEvent        *event,
                                         gpointer         user_data);
 
 void
-selection_made                         (GtkCList        *clist,
+on_clist8_unselect_row                 (GtkCList        *clist,
                                         gint             row,
                                         gint             column,
                                         GdkEvent        *event,
                                         gpointer         user_data);
 
 void
-selection_made                         (GtkCList        *clist,
+on_clist8_select_row                   (GtkCList        *clist,
                                         gint             row,
                                         gint             column,
                                         GdkEvent        *event,
+                                        gpointer         user_data);
+
+void
+on_clist8_unselect_row                 (GtkCList        *clist,
+                                        gint             row,
+                                        gint             column,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);
+void
+on_setup_destroy                       (GtkObject       *object,
                                         gpointer         user_data);

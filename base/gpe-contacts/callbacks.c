@@ -9,32 +9,35 @@
 #include <gpe/gtkdatecombo.h>
 
 extern GtkWidget *clist;
-extern gchar* active_chars;
+extern gchar *active_chars;
 extern void edit_person (struct person *p);
+extern GtkWidget *mainw;
+extern gboolean panel_config_has_changed;
 	
+static gint panel_active_row = -1;
 
 void 
-store_filename(GtkWidget *w, GtkFileSelection *selector) 
+store_filename (GtkWidget * w, GtkFileSelection * selector)
 {
-  gchar *selected_filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (selector));
+  gchar *selected_filename =
+    gtk_file_selection_get_filename (GTK_FILE_SELECTION (selector));
 }
 
 void
-on_edit_bt_image_clicked (GtkButton       *button,
-			  gpointer         user_data)
+on_edit_bt_image_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *filesel = gtk_file_selection_new ("Select image");
 
   gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
 		      "clicked", GTK_SIGNAL_FUNC (store_filename), filesel);
 
-  gtk_signal_connect_object (GTK_OBJECT (
-				 GTK_FILE_SELECTION (filesel)->ok_button),
+  gtk_signal_connect_object (GTK_OBJECT
+			     (GTK_FILE_SELECTION (filesel)->ok_button),
 			     "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			     (gpointer) filesel);
 
-  gtk_signal_connect_object (GTK_OBJECT (
-				 GTK_FILE_SELECTION (filesel)->cancel_button),
+  gtk_signal_connect_object (GTK_OBJECT
+			     (GTK_FILE_SELECTION (filesel)->cancel_button),
 			     "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 			     (gpointer) filesel);
 
@@ -43,24 +46,21 @@ on_edit_bt_image_clicked (GtkButton       *button,
 
 #if 0
 void
-structure_add_clicked                  (GtkButton       *button,
-                                        gpointer         user_data)
+structure_add_clicked (GtkButton * button, gpointer user_data)
 {
 
 }
 
 
 void
-structure_edit_clicked                 (GtkButton       *button,
-                                        gpointer         user_data)
+structure_edit_clicked (GtkButton * button, gpointer user_data)
 {
 
 }
 
 
 void
-structure_delete_clicked               (GtkButton       *button,
-                                        gpointer         user_data)
+structure_delete_clicked (GtkButton * button, gpointer user_data)
 {
 
 }
@@ -69,8 +69,7 @@ structure_delete_clicked               (GtkButton       *button,
 
 
 void
-on_structure_save_clicked              (GtkButton       *button,
-                                        gpointer         user_data)
+on_structure_save_clicked (GtkButton * button, gpointer user_data)
 {
 
 }
@@ -78,22 +77,20 @@ on_structure_save_clicked              (GtkButton       *button,
 /* ... */
 
 void
-on_edit_clear_clicked                  (GtkButton       *button,
-                                        gpointer         user_data)
+on_edit_clear_clicked (GtkButton * button, gpointer user_data)
 {
 
 }
 
 
 void
-on_edit_cancel_clicked                 (GtkButton       *button,
-                                        gpointer         user_data)
+on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
 {
   gtk_widget_destroy (GTK_WIDGET (user_data));
 }
 
 void
-retrieve_special_fields (GtkWidget *edit, struct person *p)
+retrieve_special_fields (GtkWidget * edit, struct person *p)
 {
   GSList *cl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
   db_delete_tag (p, "CATEGORY");
@@ -118,7 +115,8 @@ retrieve_special_fields (GtkWidget *edit, struct person *p)
     if (c->set)
       {
 	char buf[32];
-	snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", c->year, c->month, c->day);
+	snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", c->year, c->month,
+		  c->day);
 	buf[sizeof (buf) - 1] = 0;
 	db_set_data (p, "BIRTHDAY", g_strdup (buf));
       }
@@ -126,10 +124,9 @@ retrieve_special_fields (GtkWidget *edit, struct person *p)
 }
 
 void
-on_edit_save_clicked                   (GtkButton       *button,
-                                        gpointer         user_data)
+on_edit_save_clicked (GtkButton * button, gpointer user_data)
 {
-  GtkWidget *edit = (GtkWidget *)user_data;
+  GtkWidget *edit = (GtkWidget *) user_data;
   GtkWidget *w;
   GSList *data = NULL;
   GSList *tags;
@@ -139,8 +136,7 @@ on_edit_save_clicked                   (GtkButton       *button,
     p = new_person ();
   
   for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
-       tags;
-       tags = tags->next)
+       tags; tags = tags->next)
     {
       GtkWidget *w = tags->data;
       gchar *text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
@@ -161,47 +157,118 @@ on_edit_save_clicked                   (GtkButton       *button,
 
 
 void
-on_nbList_switch_page                  (GtkNotebook     *notebook,
-                                        GtkNotebookPage *page,
-                                        gint             page_num,
-                                        gpointer         user_data)
+on_nbList_switch_page (GtkNotebook * notebook,
+		       GtkNotebookPage * page,
+		       gint page_num, gpointer user_data)
 {
   switch (page_num)
     {
        case 0:
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist1");
-         sprintf(active_chars,"ABC");
-         update_display();
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist1");
+      sprintf (active_chars, "ABC");
+      update_display ();
        break;	
        case 1:
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist2");
-         sprintf(active_chars,"DEF");
-         update_display();
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist2");
+      sprintf (active_chars, "DEF");
+      update_display ();
        break;	
        case 2: 
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist3");
-         sprintf(active_chars,"GHIJ");
-         update_display();
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist3");
+      sprintf (active_chars, "GHIJ");
+      update_display ();
        break;	
        case 3:
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist4");
-         sprintf(active_chars,"KLMN");
-         update_display();
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist4");
+      sprintf (active_chars, "KLMN");
+      update_display ();
        break;	
        case 4:
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist5");
-         sprintf(active_chars,"OPQR");
-         update_display();
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist5");
+      sprintf (active_chars, "OPQR");
+      update_display ();
        break;	
        case 5:
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist6");
-         sprintf(active_chars,"STUV");
-         update_display();
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist6");
+      sprintf (active_chars, "STUV");
+      update_display ();
        break;	
        case 6:
-         clist = lookup_widget(GTK_WIDGET(notebook),"clist7");
-         sprintf(active_chars,"WXYZ");
-         update_display(); 
+      clist = lookup_widget (GTK_WIDGET (notebook), "clist7");
+      sprintf (active_chars, "WXYZ");
+      update_display ();
        break;	
     }
+}
+
+
+// configuration 
+
+void
+on_bDetAdd_clicked (GtkButton * button, gpointer user_data)
+{
+  GtkWidget *clist;
+  GtkWidget *entry;
+  GtkWidget *cbox;
+  gchar *strvec[2];
+
+  clist = lookup_widget (mainw, "clist8");
+  entry = lookup_widget (mainw, "entry2");
+  cbox = lookup_widget (mainw, "cbField");
+  strvec[1] = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+
+  if (strlen (strvec[1]) > 0)
+    {
+      strvec[0] =
+	gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (cbox)->entry), 0,
+				-1);
+      gtk_clist_append (GTK_CLIST (clist), strvec);
+      gtk_entry_set_text (GTK_ENTRY (entry), "");
+      db_add_config_values (CONFIG_PANEL, strvec[1], strvec[0]);
+      g_free (strvec[0]);
+      g_free (strvec[1]);
+      panel_config_has_changed = TRUE;
+    }
+}
+
+
+void
+on_bDetRemove_clicked (GtkButton * button, gpointer user_data)
+{
+  GtkWidget *clist;
+  gchar *identifier;
+  if (panel_active_row > 0)
+    {
+      clist = lookup_widget (mainw, "clist8");
+      gtk_clist_get_text (GTK_CLIST (clist), panel_active_row, 1,
+			  &identifier);
+      db_delete_config_values (CONFIG_PANEL, identifier);
+      gtk_clist_remove (GTK_CLIST (clist), panel_active_row);
+      panel_config_has_changed = TRUE;
+    }
+}
+
+
+void
+on_clist8_select_row (GtkCList * clist,
+		      gint row,
+		      gint column, GdkEvent * event, gpointer user_data)
+{
+  panel_active_row = row;
+}
+
+
+void
+on_clist8_unselect_row (GtkCList * clist,
+			gint row,
+			gint column, GdkEvent * event, gpointer user_data)
+{
+  panel_active_row = -1;
+}
+
+void
+on_setup_destroy (GtkObject * object, gpointer user_data)
+{
+  if (panel_config_has_changed)
+    load_panel_config ();
 }

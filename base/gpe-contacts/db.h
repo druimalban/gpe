@@ -3,6 +3,8 @@
 
 #include <glib.h>
 
+#define CONFIG_PANEL 0
+
 extern int db_open (void);
 extern gboolean load_structure (void);
 
@@ -37,6 +39,13 @@ extern void db_delete_tag (struct person *p, gchar *tag);
 extern gboolean db_insert_category (gchar *, guint *);
 extern GSList *db_get_entries_alpha (const gchar* alphalist);
 extern gboolean db_delete_category (guint id);
+extern gint db_get_tag_list (gchar ***list);
+extern gint db_get_config_values (gint group, gchar ***list);
+extern void db_add_config_values (gint group, gchar *identifier, gchar *value);
+extern void db_delete_config_values (gint group, gchar *identifier);
+extern gchar* db_get_config_tag (gint group, const gchar *tagname);
+extern void db_free_result(char** table);
+
 
 struct category
 {

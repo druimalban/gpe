@@ -1,3 +1,43 @@
+2002-12-09  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* adb.glade: Undocumented changes.
+
+	* src/callbacks.c: (on_bDetAdd_clicked): New Function.
+	(on_bDetRemove_clicked): New Function.
+	(on_clist8_select_row): New Function.
+	(on_clist8_unselect_row): New Function.
+	(on_setup_destroy): New Function.
+
+	* src/callbacks.h: (on_bDetAdd_clicked): Prototype.
+	(on_bDetRemove_clicked): Prototype.
+	(on_clist8_select_row): Prototype.
+	(on_clist8_unselect_row): Prototype.
+	(on_setup_destroy): Prototype.
+
+	* src/db.c (db_get_tag_list): New Function.                        
+	(db_get_config_values): New Function.
+	(db_add_config_values): New Function.
+	(db_delete_config_values): New Function.
+	(db_get_config_tag): New Function.
+	(db_free_result): New Function.
+	(db_open): Added creation and initialisatzion for config table.
+
+	* src/db.h (db_get_tag_list): New Prototype.                       
+	(db_get_config_values): New Prototype.
+	(db_add_config_values): New Prototype.
+	(db_delete_config_values): New Prototype.
+	(db_get_config_tag): New Prototype.
+	(db_free_result): New Prototype.
+
+	* src/main.c (mainw): Make global.
+	(load_panel_config): New Function.
+	(create_pageSetup): New Function.
+	(update_categories): Added some casts.
+	(configure): Added code for new page creation.
+	(show_details): Changed for changing content.
+	(selection_made): Added code for panel update and fix for some
+	warnings).
+
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
 	* src/editing.c (create_edit): Mark "Schedule" button insensitive,

@@ -10,6 +10,7 @@
 
 #include "db.h"
 #include "structure.h"
+#include "support.h"
 
 #define DB_NAME "/.gpe/contacts"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
@@ -27,30 +28,35 @@ static sqlite *db;
 
 extern GtkWidget *clist;
 
-static const char *schema_str = 
-"create table contacts (
+static const char *schema_str = "create table contacts (
 	urn		INTEGER NOT NULL,
 	tag		TEXT NOT NULL,
 	value		TEXT NOT NULL
 );
 ";
 
-static const char *schema2_str = 
-"create table contacts_urn (
+static const char *schema2_str = "create table contacts_urn (
         urn             INTEGER PRIMARY KEY
 );
 ";
 
-static const char *schema3_str =
-"create table contacts_category (
+static const char *schema3_str = "create table contacts_category (
 	id		INTEGER PRIMARY KEY,
 	description	TEXT
 );
 ";
 
+// this one is for config data
+static const char *schema4_str = "create table contacts_config (
+	id		INTEGER PRIMARY KEY,
+	cgroup INTEGER NOT NULL,
+	cidentifier TEXT NOT NULL,
+	cvalue TEXT
+);
+";
 
 int 
-db_open(void) 
+db_open (void)
 {
   /* open persistent connection */
   char *errmsg;
@@ -69,20 +75,35 @@ db_open(void)
   ret = usqld_exec (db, schema_str, NULL, NULL, &errmsg);
   if (ret != SQLITE_OK)
     {
-      printf("err: %s\n",errmsg);
-      free(errmsg);
+      printf ("err: %s\n", errmsg);
+      free (errmsg);
     }
   ret = usqld_exec (db, schema2_str, NULL, NULL, &errmsg);
   if (ret != SQLITE_OK)
     {
-      printf("err: %s\n",errmsg);
-      free(errmsg);
+      printf ("err: %s\n", errmsg);
+      free (errmsg);
     }
   ret = usqld_exec (db, schema3_str, NULL, NULL, &errmsg);
-  if (ret != SQLITE_OK){
-    printf("err: %s\n",errmsg);
-    free(errmsg);
+  if (ret != SQLITE_OK)
+    {
+      printf ("err: %s\n", errmsg);
+      free (errmsg);
+    }
+  // if we can create this table, we should add some defaults
+  ret = usqld_exec (db, schema4_str, NULL, NULL, &errmsg);
+  if (ret != SQLITE_OK)
+    {
+      printf ("err: %s\n", errmsg);
+      free (errmsg);
   }
+  else
+    {
+      db_add_config_values (CONFIG_PANEL, _("Name"), "NAME");
+      db_add_config_values (CONFIG_PANEL, _("Phone"), "HOME.TELEPHONE");
+      db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
+    }
+
 #else
   char *buf;
   size_t len;
@@ -108,6 +129,13 @@ db_open(void)
   sqlite_exec (db, schema_str, NULL, NULL, NULL);
   sqlite_exec (db, schema2_str, NULL, NULL, NULL);
   sqlite_exec (db, schema3_str, NULL, NULL, NULL);
+  // if we can create this table, we should add some defaults
+  if (sqlite_exec (db, schema4_str, NULL, NULL, NULL) == SQLITE_OK)
+    {
+      db_add_config_values (CONFIG_PANEL, _("Name"), "NAME");
+      db_add_config_values (CONFIG_PANEL, _("Phone"), "HOME.TELEPHONE");
+      db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
+    }
 #endif
   return 0;
 }
@@ -137,7 +165,7 @@ load_structure (void)
 }
 
 struct tag_value *
-new_tag_value (gchar *tag, gchar *value)
+new_tag_value (gchar * tag, gchar * value)
 {
   struct tag_value *t = g_malloc (sizeof (struct tag_value));
   t->tag = tag;
@@ -146,7 +174,7 @@ new_tag_value (gchar *tag, gchar *value)
 }
 
 void
-free_tag_values (GSList *list)
+free_tag_values (GSList * list)
 {
   GSList *i;
   for (i = list; i; i = i->next)
@@ -160,7 +188,7 @@ free_tag_values (GSList *list)
 }
 
 void
-update_tag_value (struct tag_value *t, gchar *value)
+update_tag_value (struct tag_value *t, gchar * value)
 {
   g_free (t->value);
   t->value = value;
@@ -183,7 +211,7 @@ discard_person (struct person *p)
 }
 
 gboolean
-new_person_id (guint *id)
+new_person_id (guint * id)
 {
   char *err;
 #ifdef USE_USQLD	
@@ -209,7 +237,7 @@ new_person_id (guint *id)
 }
 
 gint 
-sort_entries (struct person *a, struct person *b)
+sort_entries (struct person * a, struct person * b)
 {
   return strcoll (a->name, b->name);
 }
@@ -218,11 +246,11 @@ static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
-  GSList **list = (GSList **)arg;
+  GSList **list = (GSList **) arg;
 
   p->id = atoi (argv[0]);
   p->name = g_strdup (argv[1]);
-  *list = g_slist_insert_sorted (*list, p, (GCompareFunc)sort_entries);
+  *list = g_slist_insert_sorted (*list, p, (GCompareFunc) sort_entries);
 
   return 0;
 }
@@ -296,24 +324,20 @@ db_delete_by_uid (guint uid)
 
 #ifdef USE_USQLD	
   r = usqld_exec_printf (db, "delete from contacts where urn='%d'",
-			  NULL, NULL, &err,
-			  uid);
+			 NULL, NULL, &err, uid);
 #else
   r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
-			  NULL, NULL, &err,
-			  uid);
+			  NULL, NULL, &err, uid);
 #endif
   if (r)
     goto error;
   
 #ifdef USE_USQLD	
   r = usqld_exec_printf (db, "delete from contacts_urn where urn='%d'",
-			  NULL, NULL, &err,
-			  uid);
+			 NULL, NULL, &err, uid);
 #else
   r = sqlite_exec_printf (db, "delete from contacts_urn where urn='%d'",
-			  NULL, NULL, &err,
-			  uid);
+			  NULL, NULL, &err, uid);
 #endif
   if (r)
     goto error;
@@ -328,7 +352,7 @@ db_delete_by_uid (guint uid)
 
   return TRUE;
 
- error:
+error:
   if (rollback)
 #ifdef USE_USQLD	
     usqld_exec (db, "rollback transaction", NULL, NULL, NULL);
@@ -341,13 +365,13 @@ db_delete_by_uid (guint uid)
 }
 
 struct tag_value *
-db_find_tag (struct person *p, gchar *tag)
+db_find_tag (struct person *p, gchar * tag)
 {
   struct tag_value *t = NULL;
   GSList *iter;
   for (iter = p->data; iter; iter = iter->next)
     {
-      struct tag_value *id = (struct tag_value *)iter->data;
+      struct tag_value *id = (struct tag_value *) iter->data;
       if (!strcmp (id->tag, tag))
 	{
 	  t = id;
@@ -358,14 +382,14 @@ db_find_tag (struct person *p, gchar *tag)
 }
 
 void
-db_set_multi_data (struct person *p, gchar *tag, gchar *value)
+db_set_multi_data (struct person *p, gchar * tag, gchar * value)
 {
   struct tag_value *t = new_tag_value (g_strdup (tag), value);
   p->data = g_slist_append (p->data, t);
 }
 
 void
-db_set_data (struct person *p, gchar *tag, gchar *value)
+db_set_data (struct person *p, gchar * tag, gchar * value)
 {
   struct tag_value *t = db_find_tag (p, tag);
 
@@ -381,11 +405,11 @@ db_set_data (struct person *p, gchar *tag, gchar *value)
 }
 
 void
-db_delete_tag (struct person *p, gchar *tag)
+db_delete_tag (struct person *p, gchar * tag)
 {
   GSList *l;
   
-  for (l = p->data; l; )
+  for (l = p->data; l;)
     {
       GSList *n = l->next;
       struct tag_value *t = l->data;
@@ -422,12 +446,10 @@ commit_person (struct person *p)
     {
 #ifdef USE_USQLD		
       r = usqld_exec_printf (db, "delete from contacts where urn='%d'",
-			      NULL, NULL, &err,
-			      p->id);
+			     NULL, NULL, &err, p->id);
 #else
       r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
-			      NULL, NULL, &err,
-			      p->id);
+			      NULL, NULL, &err, p->id);
 #endif		
       if (r)
 	goto error;
@@ -453,13 +475,11 @@ commit_person (struct person *p)
 #ifdef USE_USQLD		
 	  r = usqld_exec_printf (db,
 				  "insert into contacts values(%d,'%q','%q')",
-				  NULL, NULL, &err,
-				  p->id, v->tag, v->value);
+				 NULL, NULL, &err, p->id, v->tag, v->value);
 #else
 	  r = sqlite_exec_printf (db,
 				  "insert into contacts values(%d,'%q','%q')",
-				  NULL, NULL, &err,
-				  p->id, v->tag, v->value);
+				  NULL, NULL, &err, p->id, v->tag, v->value);
 #endif		
 	}
       if (r)
@@ -476,7 +496,7 @@ commit_person (struct person *p)
 
   return TRUE;
 
- error:
+error:
   if (rollback)
 #ifdef USE_USQLD		
     usqld_exec (db, "rollback transaction", NULL, NULL, NULL);
@@ -489,14 +509,18 @@ commit_person (struct person *p)
 }
 
 gboolean
-db_insert_category (gchar *name, guint *id)
+db_insert_category (gchar * name, guint * id)
 {
   char *err;
 #ifdef USE_USQLD		
-  int r = usqld_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
+  int r =
+    usqld_exec_printf (db,
+		       "insert into contacts_category values (NULL, '%q')",
 			      NULL, NULL, &err, name);
 #else
-  int r = sqlite_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
+  int r =
+    sqlite_exec_printf (db,
+			"insert into contacts_category values (NULL, '%q')",
 			      NULL, NULL, &err, name);
 #endif		
   if (r)
@@ -540,7 +564,7 @@ load_one_attribute (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 2)
     {
-      GSList **list = (GSList **)arg;
+      GSList **list = (GSList **) arg;
       struct category *c = g_malloc (sizeof (struct category));
 
       c->id = atoi (argv[0]);
@@ -575,25 +599,178 @@ db_get_categories (void)
 }
 
 GSList *
-db_get_entries_alpha (const gchar* alphalist)
+db_get_entries_alpha (const gchar * alphalist)
 {
   GSList *list = NULL;
-  char *err;
-  char *statement;
-  int r;
+  gchar *err = NULL;
+  gchar *statement;
+  gint r;
 
-  statement=malloc(sizeof(gchar)*100);
-  for (r=0;r<strlen(alphalist);r++)
+  statement = g_malloc (sizeof (gchar) * 100);
+  for (r = 0; r < strlen (alphalist); r++)
     {
-      sprintf(statement,"select urn,value from contacts where (tag='NAME') and ((value like \'%c%%\') or (value like \'%c%%\'))",alphalist[r],tolower(alphalist[r]));
+      sprintf (statement,
+	       "select urn,value from contacts where (tag='NAME') and ((value like \'%c%%\') or (value like \'%c%%\'))",
+	       toupper (alphalist[r]), tolower (alphalist[r]));
 #ifdef USE_USQLD		
       usqld_exec (db, statement, read_one_entry, &list, &err);
 #else
       sqlite_exec (db, statement, read_one_entry, &list, &err);
 #endif		
     }
-  free(statement);
+  if (err)
+    g_free (err);
+  g_free (statement);
   return list;
 }
 
 
+gint
+db_get_tag_list (gchar *** list)
+{
+  gchar *err;
+  gint r, c;
+
+#ifdef USE_USQLD
+  usqld_get_table (db, "select distinct tag from contacts", list, &r, &c,
+		   &err);
+#else
+  sqlite_get_table (db, "select distinct tag from contacts", list, &r, &c,
+		    &err);
+#endif
+  if (err)
+    g_free (err);
+  return r;
+}
+
+
+gint
+db_get_config_values (gint group, gchar *** list)
+{
+  gchar *err, *statement;
+  gint r, c;
+
+  statement = g_malloc (sizeof (gchar) * 100);
+  sprintf (statement,
+	   "select cidentifier,cvalue from contacts_config where cgroup=%i",
+	   group);
+#ifdef USE_USQLD
+  usqld_get_table (db, statement, list, &r, &c, &err);
+#else
+  sqlite_get_table (db, statement, list, &r, &c, &err);
+#endif
+  if (err)
+    {
+      fprintf (stderr,"e: %s\n", err);
+      g_free (err);
+    }
+  g_free (statement);
+  return r;
+}
+
+void
+db_add_config_values (gint group, gchar * identifier, gchar * value)
+{
+  gchar *err;
+  gint r, c;
+  gchar **list;
+#ifdef USE_USQLD
+  usqld_get_table_printf (db,
+			  "insert into contacts_config (cgroup,cidentifier,cvalue) values(%i,'%q','%q')",
+			  &list, &r, &c, &err, group, identifier, value);
+#else
+  sqlite_get_table_printf (db,
+			   "insert into contacts_config (cgroup,cidentifier,cvalue) values(%i,'%q','%q')",
+			   &list, &r, &c, &err, group, identifier, value);
+#endif
+  if (err)
+    {
+      fprintf (stderr,"e: %s\n", err);
+      g_free (err);
+    }
+  if (r)
+    {
+#ifdef USE_USQLD
+      usqld_free_table (list);
+#else
+      sqlite_free_table (list);
+#endif
+    }
+}
+
+
+void
+db_delete_config_values (gint group, gchar * identifier)
+{
+  gchar *err;
+  gint r = 0;
+  gint c = 0;
+  gchar **list;
+#ifdef USE_USQLD
+  usqld_get_table_printf (db,
+			  "delete from contacts_config where (cgroup=%i) and (cidentifier='%q')",
+			  &list, &r, &c, &err, group, identifier);
+#else
+  sqlite_get_table_printf (db,
+			   "delete from contacts_config where (cgroup=%i) and (cidentifier='%q')",
+			   &list, &r, &c, &err, group, identifier);
+#endif
+  if (err)
+    {
+      fprintf (stderr,"e: %s\n", err);
+      g_free (err);
+    }
+  if (r)
+    {
+#ifdef USE_USQLD
+      usqld_free_table (list);
+#else
+      sqlite_free_table (list);
+#endif
+    }
+}
+
+
+gchar *
+db_get_config_tag (gint group, const gchar * tagname)
+{
+  gchar *err = NULL;
+  gchar **list = NULL;
+  gint r, c;
+
+#ifdef USE_USQLD
+  usqld_get_table_printf (db,
+			  "select cvalue from contacts_config where (cgroup=%i) and (cidentifier='%q')",
+			  &list, &r, &c, &err, group, tagname);
+#else
+  sqlite_get_table_printf (db,
+			   "select cvalue from contacts_config where (cgroup=%i) and (cidentifier='%q')",
+			   &list, &r, &c, &err, group, tagname);
+#endif
+  if (err)
+    {
+      fprintf (stderr,"e: %s\n", err);
+      g_free (err);
+      return NULL;
+    }
+  if (list != NULL)
+    {
+      err = g_strdup (list[1]);
+#ifdef USE_USQLD
+      usqld_free_table (list);
+#else
+      sqlite_free_table (list);
+#endif
+    }
+  return err;
+}
+
+void
+db_free_result (char **table)
+{
+#ifdef USE_USQLD
+  usqld_free_table (table);
+#else
+  sqlite_free_table (table);
+#endif
+}
