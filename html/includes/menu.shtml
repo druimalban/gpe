@@ -30,7 +30,7 @@
 <A href="/contact.shtml">Mailing list/Contact</a>
 <!--#endif -->
 |
-<A href="http://europa.debian.org/bugzilla/">Bugs</A>
+<A href="http://handhelds.org/bugzilla/">Bugs</A>
 |
 <!--#if expr="x${pagename}=xcvs" -->
 <b>CVS</b>
