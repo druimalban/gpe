@@ -1,0 +1,9 @@
+Package: libdotdesktop
+Section: base
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Depends: libc6 
+Description: Contains functions for parsing .desktop files, and extracting mime data from them.
+Source:  ftp://ftp.handhelds.org/pub/projects/gpe/libdotdesktop-VERSION.tar.gz

@@ -1,10 +1,12 @@
-PREFIX = /usr/local
+PREFIX = /usr
 PACKAGE = libdotdesktop
 DEBUG = no
-
+VERSION = 0.11
 CC=gcc
+STRIP=strip
+BUILD = ../build
 
-LINGUAS = en_AU
+LINGUAS = 
 
 MEMBERS = dotdesktop hash
 
@@ -48,25 +50,28 @@ upstream: clean
 dpkg: upstream
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage -sa ; cd ..; rm -rf $$PV)
 
-install: $(SONAME)
+install-program: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
-	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	$(STRIP) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libdotdesktop.so
 
-ipkg: clean
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
-	cp familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
+#ipkg: clean
+#	rm -rf familiar/dist
+#	mkdir -p familiar/dist/CONTROL
+#	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
+#	cp familiar/postinst familiar/dist/CONTROL
+#	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
+#	chown -R root.root familiar/dist
+#	ipkg-build familiar/dist
 
 clean:
 	rm -f $(OBJS) $(SONAME) libdotdesktop.so $(DEPS)
 
 
 -include $(DEPS)
+
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
