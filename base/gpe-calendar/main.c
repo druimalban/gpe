@@ -41,7 +41,7 @@ GdkFont *yearfont;
 GList *times;
 time_t viewtime;
 
-GtkWidget *main_window;
+GtkWidget *main_window, *pop_window;
 
 struct gpe_icon my_icons[] = {
   { "new", "new" },
@@ -102,6 +102,9 @@ new_view (GtkWidget *widget)
   if (current_view)
     gtk_widget_hide (current_view);
 
+  if (pop_window)
+    gtk_widget_destroy (pop_window);
+  
   gtk_widget_show_all (widget);
   current_view = widget;
 

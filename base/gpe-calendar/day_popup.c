@@ -28,6 +28,7 @@ destroy_popup(GtkWidget *widget,
 	      GtkWidget *parent)
 {
   gtk_object_set_data (GTK_OBJECT (parent), "popup-handle", NULL);
+  pop_window=NULL;
 }
 
 static void

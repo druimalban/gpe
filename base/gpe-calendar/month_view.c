@@ -24,7 +24,7 @@
 #include "month_view.h"
 #include "day_popup.h"
 
-static GtkWidget *datesel, *draw, *popup;
+static GtkWidget *datesel, *draw;
 static guint xp, xs, ys;
 struct render_ctl *c_old;
 
@@ -56,13 +56,13 @@ button_press(GtkWidget *widget,
 	      
     if (event->type == GDK_BUTTON_PRESS)
     {
-      if (popup) gtk_widget_destroy (popup);
+      if (pop_window) gtk_widget_destroy (pop_window);
       if (c!=c_old) {
-		popup=day_popup (main_window, &c->popup);
+		pop_window=day_popup (main_window, &c->popup);
 		c_old=c;
       }
       else {
-		popup=NULL;
+		pop_window=NULL;
 		c_old=NULL;
       }
     }
@@ -75,7 +75,7 @@ button_press(GtkWidget *widget,
 	tm.tm_mon = c->popup.month;
 	tm.tm_mday = c->popup.day;
 	viewtime = mktime (&tm);
-	if (popup) gtk_widget_destroy (popup);
+	if (pop_window) gtk_widget_destroy (pop_window);
         set_day_view ();    
     }
   }
