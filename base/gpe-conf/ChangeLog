@@ -1,5 +1,6 @@
 2004-08-29	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* users/interface.c: Disable unchangable fields.
 	* Released V 0.1.17
 	* network.c: Fixed some labels, set button defaults, dialog size.
 	* Makefile: Some minor fixes.

@@ -413,11 +413,6 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   if(strcmp(init->pw.pw_name,"newuser"))
     {
-      gtk_entry_set_editable(GTK_ENTRY(self->username),FALSE);
-      gtk_entry_set_editable(GTK_ENTRY(self->home),FALSE);
-    }
-  else	
-    {
       gtk_widget_set_sensitive(self->username,FALSE);
       gtk_widget_set_sensitive(self->home,FALSE);
     }
