@@ -1,10 +1,18 @@
 <!--#set var="addtitle" value="Downloads"-->
 <!--#set var="pagename" value="download"-->
 <!--#include virtual="includes/head.shtml"-->
-Current unstable GPE binaries for iPAQ-Familiar (in .ipk format) can
-be downloaded from the handhelds.org FTP site: <a
-href="ftp://ftp.handhelds.org/pub/projects/gpe/">ftp://ftp.handhelds.org/pub/projects/gpe/</a>
+
+<h2>Binaries</h2>
 <p>
-At present these are unstable, and active development sources can be found
-in the <a href="/cvs.shtml">GPE CVS archive</a>.
+Current unstable GPE binaries for
+<a href="http://familiar.handhelds.org">Familiar</a> (in .ipk format) can
+be downloaded from the handhelds.org: <a
+href="ftp://ftp.handhelds.org/pub/projects/gpe/">ftp://ftp.handhelds.org/pub/projects/gpe/</a>
+</p>
+
+<h2>Source</h2>
+<p>
+The latest development sources for GPE components can be found in the
+<a href="/cvs.shtml">GPE CVS archive</a>.
+</p>
 <!--#include virtual="includes/foot.shtml"-->
