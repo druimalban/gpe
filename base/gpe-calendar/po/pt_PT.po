@@ -1,15 +1,15 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# gpe-calendar Portuguese translation 
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Luis Oliveira <luis@handhelds.org>, 2002.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-15 20:12+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: gpe-calendar\n"
+"POT-Creation-Date: 2002-12-15 23:05+0000\n"
+"PO-Revision-Date: 2002-12-15 22:14+0000\n"
+"Last-Translator: Luis Oliveira <luis@handhelds.org>\n"
+"Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -20,36 +20,35 @@ msgstr ""
 
 #: main.c:245 main.c:246
 msgid "Today"
-msgstr ""
+msgstr "Hoje"
 
 #: main.c:254
 msgid "Future View"
-msgstr ""
+msgstr "Vista Futura"
 
 #: main.c:261
 msgid "Day View"
-msgstr ""
+msgstr "Vista Diária"
 
 #: main.c:268
 msgid "Week View"
-msgstr ""
+msgstr "Vista Semanal"
 
 #: main.c:275
-#, fuzzy
 msgid "Month View"
-msgstr "no"
+msgstr "Vista Mensal"
 
 #: main.c:282
 msgid "Year View"
-msgstr ""
+msgstr "Vista Anual"
 
 #: main.c:289 main.c:290
 msgid "Exit"
-msgstr ""
+msgstr "Sair"
 
 #: event-ui.c:346
 msgid "End time must not be earlier than start time"
-msgstr ""
+msgstr "Hora do final não pode ser anterior à data de começo"
 
 #: event-ui.c:522
 msgid "Event"
@@ -57,7 +56,7 @@ msgstr "Evento"
 
 #: event-ui.c:523
 msgid "Recurrence"
-msgstr "Reocurrncia"
+msgstr "Reocurrência"
 
 #: event-ui.c:524 event-ui.c:566
 msgid "Alarm"
@@ -65,7 +64,7 @@ msgstr "Alarme"
 
 #: event-ui.c:553
 msgid "Start on:"
-msgstr "Comear em:"
+msgstr "Começar em:"
 
 #: event-ui.c:554
 msgid "End on:"
@@ -73,19 +72,19 @@ msgstr "Acabar em:"
 
 #: event-ui.c:555 event-ui.c:556
 msgid "at:"
-msgstr "em:"
+msgstr "às:"
 
 #: event-ui.c:560
 msgid "Summary:"
-msgstr "Sumrio:"
+msgstr "Sumário:"
 
 #: event-ui.c:562
 msgid "Description:"
-msgstr "Descrio"
+msgstr "Descrição"
 
 #: event-ui.c:571
 msgid "before event"
-msgstr "evento anterior"
+msgstr "antes"
 
 #: event-ui.c:574 event-ui.c:766 event-ui.c:821 event-ui.c:880
 msgid "Every"
@@ -97,44 +96,39 @@ msgstr "semana(s), em:"
 
 #: event-ui.c:605
 msgid "Appointment"
-msgstr ""
+msgstr "Evento"
 
 #: event-ui.c:606
 msgid "Reminder"
-msgstr ""
+msgstr "Lembrança"
 
 #: event-ui.c:607
 msgid "Task"
-msgstr ""
+msgstr "Tarefa"
 
 #: event-ui.c:612
-#, fuzzy
 msgid "Day(s)"
-msgstr "dia(s)"
+msgstr "Dia(s)"
 
 #: event-ui.c:613
-#, fuzzy
 msgid "Week(s)"
-msgstr "semana(s)"
+msgstr "Semana(s)"
 
 #: event-ui.c:638
-#, fuzzy
 msgid "Date:"
-msgstr "Data do Final:"
+msgstr "Data:"
 
 #: event-ui.c:641
-#, fuzzy
 msgid "Time:"
-msgstr "Tipo:"
+msgstr "Hora:"
 
 #: event-ui.c:655
-#, fuzzy
 msgid "Due:"
 msgstr "Data do Final:"
 
 #: event-ui.c:658
 msgid "Allow:"
-msgstr ""
+msgstr "Prazo"
 
 #: event-ui.c:683
 msgid "Save"
@@ -154,11 +148,11 @@ msgstr "Tipo:"
 
 #: event-ui.c:721
 msgid "No recurrence"
-msgstr "No h reocurrncia"
+msgstr "Não há reocurrência"
 
 #: event-ui.c:727
 msgid "Daily"
-msgstr "Diriamente"
+msgstr "Diáriamente"
 
 #: event-ui.c:732
 msgid "Weekly"
@@ -211,7 +205,7 @@ msgstr "quinto"
 
 #: event-ui.c:860
 msgid "last"
-msgstr "ltimo"
+msgstr "último"
 
 #: event-ui.c:890 event-ui.c:969
 msgid "year(s)"
@@ -223,11 +217,11 @@ msgstr "Data do Final:"
 
 #: event-ui.c:910
 msgid "forever"
-msgstr "indefenidamente"
+msgstr "sem fim"
 
 #: event-ui.c:921
 msgid "end after"
-msgstr "acabar aps"
+msgstr "acabar após"
 
 #: event-ui.c:938
 msgid "end on"
@@ -248,13 +242,3 @@ msgstr "hora(s)"
 #: event-ui.c:965
 msgid "week(s)"
 msgstr "semana(s)"
-
-#, fuzzy
-#~ msgid "at"
-#~ msgstr "em:"
-
-#~ msgid "All-day event"
-#~ msgstr "Evento do dia"
-
-#~ msgid "OK"
-#~ msgstr "OK"
