@@ -703,8 +703,9 @@ main (int argc, char *argv[])
 
   gdk_window_resize (panel_window->window, panel_window->allocation.width, panel_window->allocation.height);
   gtk_window_resize (GTK_WINDOW (panel_window), panel_window->allocation.width, panel_window->allocation.height);
-  gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
-
+  if (flag_graphical)
+    gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
+  
   gpe_system_tray_dock (panel_window->window);
 
   tooltips = gtk_tooltips_new ();
