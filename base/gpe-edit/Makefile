@@ -7,16 +7,9 @@ VERSION = 0.20
 MEMBERS = main
 LINGUAS = id pt de zh_TW fr ro wa sv nl sk cs
 
-CFLAGS += $(GPECFLAGS)
-LDFLAGS += $(GPELIBS)
-
-CFLAGS += -D_GNU_SOURCE -Wall
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
+CPPFLAGS += $(STANDARD_CPPFLAGS)
+CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libdisplaymigration
@@ -24,8 +17,7 @@ LDFLAGS += -L../libdisplaymigration
 endif
 LDFLAGS += -ldisplaymigration
 
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
@@ -53,3 +45,4 @@ clean: clean-po
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
+-include $(DEPS)
