@@ -10,6 +10,10 @@
 	(struct todo_item): Add priority.
 	(PRIORITY_STANDARD, PRIORITY_HIGH, PRIORITY_LOW): New.
 
+	* todo-db.c (item_data_callback): Compare tags case-insensitive.
+	Handle PRIORITY.
+	(todo_db_push_item): Write out PRIORITY.
+
 2004-02-13  Phil Blundell  <pb@nexus.co.uk>
 
 	* todo-db.c (todo_db_push_item): Write out MODIFIED tag.

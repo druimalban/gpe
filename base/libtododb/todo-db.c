@@ -135,19 +135,21 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
 
   if (argc == 2 && argv[0] && argv[1])
     {
-      if (!strcmp (argv[0], "SUMMARY"))
+      if (!strcasecmp (argv[0], "SUMMARY"))
 	i->summary = g_strdup (argv[1]);
-      else if (!strcmp (argv[0], "DESCRIPTION"))
+      else if (!strcasecmp (argv[0], "DESCRIPTION"))
 	i->what = g_strdup (argv[1]);
-      else if (!strcmp (argv[0], "STATE"))
+      else if (!strcasecmp (argv[0], "STATE"))
 	i->state = atoi (argv[1]);
-      else if (!strcmp (argv[0], "CATEGORY"))
+      else if (!strcasecmp (argv[0], "PRIORITY"))
+	i->state = atoi (argv[2]);
+      else if (!strcasecmp (argv[0], "CATEGORY"))
 	{
 	  struct todo_category *c = todo_db_category_find_by_id (atoi (argv[1]));
 	  if (c)
 	    i->categories = g_slist_append (i->categories, c);;
 	}
-      else if (!strcmp (argv[0], "DUE"))
+      else if (!strcasecmp (argv[0], "DUE"))
 	{
 	  struct tm tm;
 	  memset (&tm, 0, sizeof (tm));
@@ -367,6 +369,9 @@ todo_db_push_item (struct todo_item *i)
       if (insert_values (sqliteh, i->id, "CATEGORY", "%d", ((struct todo_category *)iter->data)->id))
 	goto error;
     }
+
+  if (insert_values (sqliteh, i->id, "PRIORITY", "%d", i->priority)
+    goto error;
 
   if (insert_values (sqliteh, i->id, "MODIFIED", "%d", (int)modified))
     goto error;
