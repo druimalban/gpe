@@ -28,32 +28,14 @@ static sqlite *db;
 
 extern GtkWidget *clist;
 
-static const char *schema_str = "create table contacts (
-	urn		INTEGER NOT NULL,
-	tag		TEXT NOT NULL,
-	value		TEXT NOT NULL
-);
-";
+static const char *schema_str = "create table contacts (urn INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT NOT NULL);";
 
-static const char *schema2_str = "create table contacts_urn (
-        urn             INTEGER PRIMARY KEY
-);
-";
+static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY KEY);";
 
-static const char *schema3_str = "create table contacts_category (
-	id		INTEGER PRIMARY KEY,
-	description	TEXT
-);
-";
+static const char *schema3_str = "create table contacts_category (id INTEGER PRIMARY KEY, description TEXT);";
 
 // this one is for config data
-static const char *schema4_str = "create table contacts_config (
-	id		INTEGER PRIMARY KEY,
-	cgroup INTEGER NOT NULL,
-	cidentifier TEXT NOT NULL,
-	cvalue TEXT
-);
-";
+static const char *schema4_str = "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
 
 int 
 db_open (void)
