@@ -14,6 +14,7 @@
 #include <stdio.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -53,7 +54,7 @@ GtkWidget *main_window;
 GtkWidget *main_button_hbox;
 GtkWidget *main_entry;
 GtkWidget *main_text_view;
-GtkWidget *main_hbox;
+GtkWidget *main_hpaned;
 GtkWidget *users_button_arrow;
 GtkWidget *users_button_arrow2;
 GtkListStore *users_list_store;
@@ -136,7 +137,7 @@ update_text_view (GString *text)
   //text = remove_invalid_utf8_chars (text);
   if (text->str != NULL)
   {
-    printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
+    //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
 
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
@@ -180,7 +181,7 @@ button_clicked (GtkWidget *button)
     }
     else
     {
-      channel = gtk_object_get_data (GTK_OBJECT (button), "IRChannel");
+      channel = gtk_object_get_data (GTK_OBJECT (button), "IRCChannel");
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
       selected_button = button;
       selected_server = channel->server;
@@ -201,11 +202,12 @@ join_channel (IRCServer *server, gchar *channel_name)
 
   if (channel_name[0] == '#' || channel_name[0] == '&')
   {
-    irc_server_join_channel (server, channel_name);
+    irc_join (server, channel_name);
 
     channel = g_malloc (sizeof (*channel));
     channel->name = g_strdup (channel_name);
-    server->text = g_string_new ("");
+    channel->text = g_string_new ("");
+    channel->server = server;
     selected_channel = channel;
 
     clear_text_view ();
@@ -248,7 +250,7 @@ quit_channel_from_hash (gpointer key, gpointer value, gpointer data)
 void
 update_channel_text_from_hash (gpointer key, gpointer value, gpointer data)
 {
-  ((IRCServer *) value)->text = g_string_append (((IRCServer *) value)->text, ((GString *) data)->str);
+  ((IRCChannel *) value)->text = g_string_append (((IRCChannel *) value)->text, ((GString *) data)->str);
 }
 
 void
@@ -375,6 +377,8 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   irc_server_connect (server);
   g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, (gpointer) server);
   g_io_add_watch (server->io_channel, G_IO_HUP, watch_disconnect_from_server, (gpointer) server);
+
+  join_channel (server, "#gpe");
 }
 
 void
@@ -470,6 +474,24 @@ new_connection_dialog ()
   gtk_widget_show_all (window);
 }
 
+gboolean
+entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
+{
+  gchar *entry_text;
+
+  if (selected_channel != NULL)
+  {
+    entry_text = gtk_entry_get_text (main_entry);
+
+    if (event->keyval == GDK_Return && strlen (entry_text) > 0)
+    {
+      irc_privmsg (selected_server, selected_channel->name, entry_text);
+    }
+  }
+
+  return TRUE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -499,7 +521,7 @@ main (int argc, char *argv[])
 
   vbox = gtk_vbox_new (FALSE, 0);
   hbox = gtk_hbox_new (FALSE, 0);
-  main_hbox = gtk_hbox_new (FALSE, 0);
+  main_hpaned = gtk_hpaned_new ();
   main_button_hbox = gtk_hbox_new (FALSE, 0);
   users_button_vbox = gtk_vbox_new (FALSE, 0);
 
@@ -519,6 +541,8 @@ main (int argc, char *argv[])
   gtk_text_view_set_editable (GTK_TEXT_VIEW (main_text_view), FALSE);
 
   main_entry = gtk_entry_new ();
+  //gtk_signal_connect(GTK_OBJECT (main_entry), "key-press-event",
+  //	     GTK_SIGNAL_FUNC (entry_key_press), NULL);
 
   users_list_store = gtk_list_store_new (1, G_TYPE_STRING);
   users_tree_view = gtk_tree_view_new_with_model (users_list_store);
@@ -553,12 +577,11 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (users_button_vbox), users_button_arrow2, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), main_button_hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), main_hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), main_hpaned, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (main_button_hbox), close_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (main_hbox), scroll, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (main_hbox), users_button, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (main_hbox), users_scroll, TRUE, TRUE, 0);
+  gtk_paned_pack1 (GTK_PANED (main_hpaned), scroll, FALSE, TRUE);
+  gtk_paned_pack2 (GTK_PANED (main_hpaned), users_scroll, FALSE, FALSE);
   gtk_box_pack_start (GTK_BOX (hbox), quick_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), smiley_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), main_entry, TRUE, TRUE, 0);

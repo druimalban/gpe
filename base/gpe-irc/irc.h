@@ -35,17 +35,15 @@ enum irc_type
   IRC_CHANNEL
 };
 
-extern gint irc_server_read (IRCServer *server, gchar **passback_message);
-
-extern gboolean irc_channel_send_message (IRCServer *server, gchar *message);
-
-extern gboolean irc_server_join_channel (IRCServer *server, gchar *channel);
+extern gboolean irc_join (IRCServer *server, gchar *channel);
 
 extern gboolean irc_server_login (IRCServer *server);
 
 extern gboolean irc_server_connect (IRCServer *server);
 
 extern gboolean irc_server_disconnect (IRCServer *server);
+
+extern gboolean irc_privmsg (IRCServer *server, gchar *target, gchar *msg);
 
 extern gboolean irc_quit (IRCServer *server, gchar *reason);
 
