@@ -1,3 +1,13 @@
+2003-02-27  Luis Oliveira  <luis@handhelds.org>
+
+	* todo-db.c (todo_db_destroy_category): New function.
+	(todo_db_del_category): Use it.
+	(todo_db_stop): Free category and item lists.
+	(todo_db_destroy_item): New function.
+	(todo_db_delete_item): Use it.
+	* todo-db.h: Added prototypes for the new function as well as
+	todo_db_stop().
+
 2003-02-16  Philip Blundell  <philb@gnu.org>
 
 	* todo-db.c (item_callback): Use g_malloc0.

@@ -103,6 +103,13 @@ todo_db_category_find_by_id (int i)
 }
 
 void
+todo_db_destroy_category (struct todo_category *c)
+{
+  g_free ((gpointer)c->title);
+  g_free (c);
+}
+
+void
 todo_db_del_category (struct todo_category *c)
 {
   char *err;
@@ -116,6 +123,7 @@ todo_db_del_category (struct todo_category *c)
     }
 
   todo_db_categories = g_slist_remove (todo_db_categories, c);
+  todo_db_destroy_category (c);
 }
 
 /* ------ */
@@ -287,6 +295,18 @@ todo_db_start (void)
 void
 todo_db_stop (void)
 {
+  GSList *iter;
+
+  for (iter = todo_db_items; iter; iter = g_slist_next (iter))
+    todo_db_destroy_item (iter->data);
+  g_slist_free (todo_db_items);
+  todo_db_items = NULL;
+
+  for (iter = todo_db_categories; iter; iter = g_slist_next (iter))
+    todo_db_destroy_category (iter->data);
+  g_slist_free (todo_db_categories);
+  todo_db_categories = NULL;
+	
   sqlite_close (sqliteh);
 }
 
@@ -390,6 +410,15 @@ todo_db_new_item (void)
   return i;
 }
 
+void
+todo_db_destroy_item (struct todo_item *i)
+{
+  g_free ((gpointer)i->what);
+  g_free ((gpointer)i->summary);
+  g_slist_free (i->categories);
+  g_free (i);
+}
+
 void 
 todo_db_delete_item (struct todo_item *i)
 {
@@ -402,7 +431,5 @@ todo_db_delete_item (struct todo_item *i)
 
   todo_db_items = g_slist_remove (todo_db_items, i);
 
-  g_free ((gpointer)i->what);
-  g_free ((gpointer)i->summary);
-  g_free (i);
+  todo_db_destroy_item (i);
 }
