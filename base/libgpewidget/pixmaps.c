@@ -151,16 +151,17 @@ gpe_try_find_icon (const char *name, gchar **error)
 GdkPixbuf *
 gpe_find_icon (const char *name)
 {
-  gchar *error;
-  GdkPixbuf *p = gpe_try_find_icon (name, &error);
-  
+  struct gpe_icon *p = g_datalist_get_data (&pbdata, name);
+
   if (p == NULL)
     {
+      gchar *error = g_strdup_printf (_("Icon \"%s\" not loaded"), name);
       gpe_error_box (error);
       g_free (error);
+      exit (1);
     }
 
-  return p;
+  return p->pixbuf;
 }
 
 gboolean

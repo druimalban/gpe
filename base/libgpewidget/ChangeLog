@@ -1,5 +1,22 @@
 2002-12-22  Philip Blundell  <philb@gnu.org>
 
+	* pixmaps.c (gpe_find_icon): Don't attempt lazy loading.  If the
+	icon isn't in the cache, give an error.
+	
+2002-12-22  Philip Blundell  <philb@gnu.org>
+
+	* pixmaps.c (gpe_try_find_icon): New function.
+	(gpe_find_icon): Implement in terms of above.  Display error box
+	and halt the program if icon cannot be found.
+
+	* gpe/pixmaps.h (gpe_try_find_icon): New prototype.
+	* errorbox.c (do_gpe_error_box): Use gpe_try_find_icon rather than
+	gpe_find_icon.  Cope with missing pixmap.
+	* picturebutton.c (gpe_picture_button): Likewise.
+	* question.c (gpe_question_ask): Likewise.
+	
+2002-12-22  Philip Blundell  <philb@gnu.org>
+
 	* pixmaps.c (gpe_load_one_icon): Improve error handling.
 	(gpe_load_icons): Allow multiple calls.
 	(gpe_find_icon): Reformat.
