@@ -34,6 +34,21 @@ static GtkWidget *eChannel;
 static GtkWidget *rbTypeAdHoc;
 
 
+static int 
+is_valid_key(char* key)
+{
+	int len;
+	
+	if (!key) return FALSE;
+	len = strlen(key);
+	if (!len) return FALSE;
+	if (key[0] == '<') return TRUE; // assume default
+	if (((key[0] == 's') || (key[0] == 'S')) && (key[0] == ':')) return TRUE; // assume string
+	if (len==26) return TRUE; // should be a 104 bit hex key	
+	if (len==10) return TRUE; // should be a 56 bit hex key	
+	return FALSE;
+}
+
 static void
 ok_clicked (GtkWidget * w, GtkWidget * window)
 {
@@ -80,7 +95,12 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eWEPKey),0,-1);
 	if (strcmp(ni->netinfo.wep_key,tmp))
 	{
-		snprintf(ni->netinfo.wep_key,32,tmp);
+		if ((ni->netinfo.wep) && !is_valid_key(tmp))
+		{
+			gpe_error_box(_("The key you entered\nis not valid."));
+			return;
+		}
+		snprintf(ni->netinfo.wep_key,27,tmp);
 		ni->netinfo.userset |= USET_WEPKEY;
 	}
 	free(tmp);
@@ -88,7 +108,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eIP),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The IP address you entered is not valid."));
+		gpe_error_box(_("The IP address you entered\nis not valid."));
 		return;
 	}
 	else
@@ -107,7 +127,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eSubnet),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The subnet mask address you entered is not valid."));
+		gpe_error_box(_("The subnet mask address you\nentered is not valid."));
 		return;
 	}
 	else
@@ -126,7 +146,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eGateway),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The gateway address you entered is not valid."));
+		gpe_error_box(_("The gateway address you\nentered is not valid."));
 		return;
 	}
 	else
@@ -142,6 +162,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	}
 	free(tmp);
 	
+	update_display(ni);
 	gtk_widget_destroy(window);
 }
 

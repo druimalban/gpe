@@ -1,3 +1,10 @@
+05/23/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- main.c	Colored rows.
+				Some bugfixes.
+				Added WEP support.
+				Basic WEP key checking.
+
 05/22/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- main.c	Added database functions.
