@@ -14,7 +14,7 @@ PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0`
 
-HEADERS = event-db.h
+HEADERS = nsqlc.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
