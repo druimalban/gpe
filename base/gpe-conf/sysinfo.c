@@ -450,7 +450,15 @@ network_create_widgets (void)
 
 			/* create widgets */
 			if (device_is_wlan(ife->name))
+			{
+				gchar *p = strstr(nwshort,"Ethernet");
+				if (p)
+				{
+					sprintf(p,_("Wireless"));
+					p[strlen(_("Wireless"))] = '\n';
+				}
 				tw = gtk_image_new_from_file(PIC_WLAN); 
+			}
 			else
 				tw = gtk_image_new_from_file(PIC_NET);
 			gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.0);
