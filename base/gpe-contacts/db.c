@@ -248,7 +248,7 @@ read_name (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = (struct person *)arg;
 
-  if (strcasecmp (argv[0], "NAME") == 0)
+  //if (strcasecmp (argv[0], "NAME") == 0)
     p->name = g_strdup (argv[1]);
 
   return 0;
@@ -261,15 +261,16 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   GSList **list = (GSList **) arg;
 
   p->id = atoi (argv[0]);
-
+/*
 #ifdef USE_USQLD	
-  usqld_exec_printf (db, "select tag,value from contacts where urn=%d",
+  usqld_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
 		     read_name, p, NULL, p->id);
 #else
-  sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
+  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
 		      read_name, p, NULL, p->id);
 #endif  
-
+*/
+  p->name = g_strdup (argv[1]);
   if (p->name)
     *list = g_slist_prepend (*list, p);
   else
@@ -661,7 +662,7 @@ db_get_entries_alpha (const gchar * alphalist)
 	   command = g_strdup_printf("%s or",tmp);					 
   }
 
-  command = g_strdup_printf("select urn from  \
+  command = g_strdup_printf("select urn, value from  \
   		contacts where ((( tag = 'NAME') or ( tag = 'name')) and%s(%s))",modifier,tmp);
   free(tmp);
 #ifdef USE_USQLD	

@@ -1,4 +1,7 @@
 2003-04-28  Florian Boor <florian.boor@kernelconcepts.de>
+	* db.c, a speedup for read_one_entry - should be treated as a test
+
+2003-04-28  Florian Boor <florian.boor@kernelconcepts.de>
 	* db.c (db_get_entries_alpha): SQL code bugfixes, speedup.
 	  Supports inverse char lists now. (first char='!')
 	* main.c, contacts-tab.conf.de: new defaults.
