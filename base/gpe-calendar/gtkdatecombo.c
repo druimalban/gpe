@@ -90,7 +90,7 @@ gtk_date_combo_init (GtkDateCombo *combo)
 
   update_text (combo);
 
-  gtk_box_pack_start (GTK_BOX (combo), combo->entry, TRUE, TRUE, 5);
+  gtk_box_pack_start (GTK_BOX (combo), combo->entry, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (combo), combo->button, FALSE, FALSE, 0);
 
   gtk_entry_set_editable (GTK_ENTRY (combo->entry), FALSE);
