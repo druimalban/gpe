@@ -526,7 +526,7 @@ make_view (gchar *view)
   struct mime_type *file_mime = NULL;
   DIR *dir;
   int i = 0;
-  int cols;
+  int cols, rows;
   int loop_num = 0;
   gchar *fp, *buf, *extension, *file_type;
   gchar *previous_extension = "";
@@ -545,11 +545,17 @@ make_view (gchar *view)
   /* Get the number of columns assuming 70px per item, 20px scrollbar */
   /* This should really find out how much space it *can* use */
   if (window->allocation.width - 20 > 70 && strcmp (view, "icons") == 0)
+  {
     cols = (window->allocation.width - 20) / 70;
+    rows = 5;
+  }
   else
+  {
     cols = 1;
+    rows = 15;
+  }
 
-  table = gtk_table_new (5, cols, TRUE);
+  table = gtk_table_new (rows, cols, TRUE);
   view_widget = table;
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (view_scrolld), view_widget);
   gtk_widget_show (view_widget);
@@ -953,6 +959,7 @@ main (int argc, char *argv[])
   hbox2 = gtk_hbox_new (FALSE, 0);
 
   combo = gtk_combo_new ();
+  combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry), "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
 
   view_scrolld = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (view_scrolld), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);

@@ -111,7 +111,7 @@ add_mime_types (void)
   e = new_mime_type ("text/x-python", "Python Text Document", "py", "gpe-edit", "text-x-python");
   e = new_mime_type ("video/mpeg", "MPEG Video File", "mpg", "mplayer", "video-mpeg");
   e = new_mime_type ("video/mpeg", "MPEG Video File", "mpeg", "mplayer", "video-mpeg");
-  e = new_mime_type ("video/avi", "AVI Video File", "avi", "mplayer", "video-avi");
+  e = new_mime_type ("video/avi", "AVI Video File", "avi", "mplayer", "video-x-msvideo");
 }
 
 int
