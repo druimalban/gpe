@@ -190,9 +190,10 @@ void
 on_button_select (GtkButton * button, gpointer user_data)
 {
 	int nr = (int)user_data;
-	
-	if ((active_button < 0) && (active_button >= NUM_BUTTONS))
+	if ((nr == active_button) ||
+		((active_button < 0) && (active_button >= NUM_BUTTONS)))
 		return;	
+	printf("bnr: %i\n",nr);
 	g_free(buttondef[active_button].command);
 	buttondef[active_button].command = 
 		g_strdup(gtk_entry_get_text(GTK_ENTRY(self.edit)));
@@ -247,6 +248,7 @@ Keyctl_Build_Objects ()
 	GtkWidget *scroll =	gtk_scrolled_window_new (NULL,NULL);
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
 	GtkWidget *table = gtk_table_new(3,2,FALSE);
+	int i;
 	
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 					GTK_POLICY_NEVER,
@@ -269,9 +271,6 @@ Keyctl_Build_Objects ()
 	self.button[2] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
 	self.button[3] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
 	self.button[4] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-	self.button[5] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-	self.button[6] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
-	self.button[7] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
 
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
 
@@ -291,33 +290,29 @@ Keyctl_Build_Objects ()
 	gtk_layout_put (GTK_LAYOUT (layout1), self.button[4], 175, 152);
 	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 182, 1);
 
-	gtk_signal_connect_object (GTK_OBJECT (bFile), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_clicked),
-				   bFile);
+	g_signal_connect_after (G_OBJECT (bFile), "clicked",
+				   G_CALLBACK(on_button_clicked),bFile);
 	
-	gtk_signal_connect_object (GTK_OBJECT (self.button[0]), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_select),0);
-	gtk_signal_connect_object (GTK_OBJECT (self.button[1]), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_select),1);
-	gtk_signal_connect_object (GTK_OBJECT (self.button[2]), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_select),2);
-	gtk_signal_connect_object (GTK_OBJECT (self.button[3]), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_select),3);
-	gtk_signal_connect_object (GTK_OBJECT (self.button[4]), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_select),4);
-	gtk_signal_connect_object (GTK_OBJECT (bDefault), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_defaults_clicked), NULL);
+	g_signal_connect_after (G_OBJECT (self.button[0]), "clicked",
+				   G_CALLBACK(on_button_select),(void *)0);
+	g_signal_connect_after (G_OBJECT (self.button[1]), "clicked",
+				   G_CALLBACK(on_button_select),(void *)1);
+	g_signal_connect_after (G_OBJECT (self.button[2]), "clicked",
+				   G_CALLBACK(on_button_select),(void *)2);
+	g_signal_connect_after (G_OBJECT (self.button[3]), "clicked",
+				   G_CALLBACK(on_button_select),(void *)3);
+	g_signal_connect_after (G_OBJECT (self.button[4]), "clicked",
+				   G_CALLBACK(on_button_select),(void *)4);
+	g_signal_connect (G_OBJECT (bDefault), "clicked",
+				   G_CALLBACK(on_defaults_clicked), NULL);
 	
 	gtk_widget_grab_focus(self.button[0]);
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
 	active_button = 0;
+	/* make string variables from initial constants */
+	for (i=0;i<NUM_BUTTONS;i++)
+		buttondef[i].command = g_strdup(buttondef[i].command);
+	
 //	init_buttons ();
 	
 	return vbox;

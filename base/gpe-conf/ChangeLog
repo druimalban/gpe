@@ -1,4 +1,11 @@
 2003-11-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* keyctl.c: Fixed several bugs in data handling. Still open:
+	            - Pixmaps
+				- Loading of configuration
+				- Saving
+				- Special functions
+	
+2003-11-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* keyctl.c: Third step of major design changes, currently broken.
 	
 2003-11-14	Florian Boor  	<florian.boor@kernelconcepts.de>
