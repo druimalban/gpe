@@ -225,7 +225,7 @@ open_with (GtkButton *button, gpointer data)
 {
   char *command, *program, *exec;
 
-  program = gtk_entry_get_text (GTK_ENTRY (data));
+  program = gtk_editable_get_chars (GTK_EDITABLE (data), 0, -1);
   exec = gtk_object_get_data (GTK_OBJECT (button), "exec");
 
   command = g_strdup_printf ("%s %s &", program, exec);
@@ -662,7 +662,7 @@ goto_directory (GtkWidget *widget)
 
   safety_check ();
 
-  new_directory = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo)->entry));
+  new_directory = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
   browse_directory (new_directory);
 }
 
@@ -714,7 +714,7 @@ up_one_level (GtkWidget *widget)
 
   safety_check ();
 
-  new_directory = gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (combo)->entry));
+  new_directory = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (combo)->entry), 0, -1);
 
   for (i = strlen (new_directory); i > 0; i--)
   {
