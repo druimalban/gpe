@@ -210,7 +210,7 @@ Sound_Build_Objects (void)
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 0, 1, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
 	
-	tw = gtk_check_button_new_with_label(_("Mute everything"));
+	tw = gtk_check_button_new_with_label(_("Mute Everything"));
 	gtk_table_attach(GTK_TABLE(table), tw, 0, 3, 1, 2, GTK_FILL | GTK_EXPAND,
                      GTK_FILL, 0, 0);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tw), mute);
