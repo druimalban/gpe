@@ -87,9 +87,9 @@ struct Applet applets[]=
   {
     { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , 
 		"Time" ,"time" ,"Time and Date Setup",PREFIX "/share/pixmaps/gpe-config-time.png"},
-    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , 
+/*    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , 
 		"Appmgr" ,"appmgr", "Launcher Setup", PREFIX "/share/pixmaps/gpe-config-appmgr.png"},
-    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore,
+*/    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore,
 		"Screen" , "ipaqscreen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-ipaqscreen.png"},
     { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore ,
 		"vKeyboard" ,"kbd", "Virtual Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-kbd.png"},

@@ -138,8 +138,6 @@ void main_one(int argc, char **argv)
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-printf("Using SHM %i\n",gdk_get_use_xshm());
-
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
   
