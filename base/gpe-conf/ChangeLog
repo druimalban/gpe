@@ -1,5 +1,6 @@
 2004-10-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* Released Version 0.1.20
 	* sound.c: Implemented alarm test function.
 	* ownerinfo.c: Introduced defines for image size. Increased size to 64x64.
 	* screen/main.c, callbacks.h: disabled screensaver setting. (Currently
