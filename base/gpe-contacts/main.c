@@ -40,6 +40,7 @@
 #include "main.h"
 #include "export.h"
 #include "import-vcard.h"
+#include "finddlg.h"
 
 #define SYSTEM_PIXMAPS_DIR PREFIX "/share/pixmaps/"
 #define MY_PIXMAPS_DIR "gpe-contacts/"
@@ -658,50 +659,53 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   if ((text == NULL) && (cat == NULL)) /* some speedup */
     return TRUE;
   
-  if (p->given_name)
-    gn = g_utf8_strdown(p->given_name, -1);
-  else
-    gn = g_strdup("");
-  
-  if (p->middle_name)
-    mn = g_utf8_strdown(p->middle_name, -1);
-  else
-    mn = g_strdup("");
-  
-  if (p->family_name)
-    fn = g_utf8_strdown(p->family_name, -1);
-  else
-    fn = g_strdup("");
-  
-  if ((p->name) && strlen(p->name))
-    name = g_utf8_strdown(p->name, -1);
-  else
-    name = g_strdup("");
-  
-  if (p->company)
-    company = g_utf8_strdown(p->company, -1);
-  else
-    company = g_strdup("");
-  
-  if (!g_str_has_prefix(gn, text) 
-      && !g_str_has_prefix(fn, text) 
-      && !g_str_has_prefix(name, text)
-      && !g_str_has_prefix(mn, text)
-      && !g_str_has_prefix(company, text))
+  if (text)
     {
+      if (p->given_name)
+        gn = g_utf8_strdown(p->given_name, -1);
+      else
+        gn = g_strdup("");
+      
+      if (p->middle_name)
+        mn = g_utf8_strdown(p->middle_name, -1);
+      else
+        mn = g_strdup("");
+      
+      if (p->family_name)
+        fn = g_utf8_strdown(p->family_name, -1);
+      else
+        fn = g_strdup("");
+      
+      if ((p->name) && strlen(p->name))
+        name = g_utf8_strdown(p->name, -1);
+      else
+        name = g_strdup("");
+      
+      if (p->company)
+        company = g_utf8_strdown(p->company, -1);
+      else
+        company = g_strdup("");
+      
+      if (!g_str_has_prefix(gn, text) 
+          && !g_str_has_prefix(fn, text) 
+          && !g_str_has_prefix(name, text)
+          && !g_str_has_prefix(mn, text)
+          && !g_str_has_prefix(company, text))
+        {
+          if (gn) g_free(gn);
+          if (mn) g_free(mn);
+          if (fn) g_free(fn);
+          if (name) g_free(name);
+          if (company) g_free(company);
+          return FALSE;
+        }
       if (gn) g_free(gn);
       if (mn) g_free(mn);
       if (fn) g_free(fn);
       if (name) g_free(name);
       if (company) g_free(company);
-      return FALSE;
     }
-  if (gn) g_free(gn);
-  if (mn) g_free(mn);
-  if (fn) g_free(fn);
-  if (name) g_free(name);
-  if (company) g_free(company);
-    
+
   if (cat)
     {
       GSList *l;
@@ -770,6 +774,52 @@ do_search (GObject *obj, GtkWidget *entry)
   g_slist_free (all_entries);
   if (text) 
     g_free (text);
+  
+  /* select first */
+  path = gtk_tree_path_new_first();
+  gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view), path, NULL, FALSE);
+  gtk_tree_path_free(path);
+}
+
+static void
+do_find (void)
+{
+  guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
+  GSList *all_entries = do_find_contacts(GTK_WINDOW(mainw)), *iter = NULL;
+  struct gpe_pim_category *c = NULL;
+  GtkTreePath *path;
+
+  if (category)
+    {
+      GSList *l = gpe_pim_categories_list ();
+      GSList *ll = g_slist_nth (l, category - 1);
+
+      if (ll)
+        c = ll->data;
+
+      g_slist_free (l);
+    }
+
+  all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
+
+  gtk_list_store_clear (list_store);
+  show_details(NULL);
+
+  for (iter = all_entries; iter; iter = iter->next)
+    {
+      struct person *p = iter->data;
+      GtkTreeIter titer;
+      
+      if (match_for_search (p, NULL, c))
+        {
+	      gtk_list_store_append (list_store, &titer);
+	      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
+        }
+
+      discard_person (p);
+    }
+  
+  g_slist_free (all_entries);
   
   /* select first */
   path = gtk_tree_path_new_first();
@@ -869,7 +919,7 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
         switch (k->keyval)
           {
             case GDK_f:
-              gtk_widget_grab_focus(search_entry);
+              do_find();
               return TRUE;
             break;
             case GDK_q:
@@ -995,7 +1045,8 @@ search_entry_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *tool
   }
   if (k->keyval == GDK_Escape)
   {
-    gtk_editable_delete_text(GTK_EDITABLE(widget),0,-1);
+    gtk_entry_set_text(GTK_ENTRY(widget), " ");
+    gtk_editable_delete_text(GTK_EDITABLE(widget), 0, -1);
     return TRUE;
   }
   return FALSE;
@@ -1163,7 +1214,15 @@ create_main (gboolean edit_structure)
                                       NULL, pw, G_CALLBACK (show_details_window), NULL);
       g_object_set_data (G_OBJECT (main_window), "details-button", btnDetails);
     }
-
+  else
+    {
+      gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+    
+      b = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_FIND,
+				_("Find a contact by searching for any data."), NULL,
+				G_CALLBACK (do_find), NULL, -1);
+    }
+  
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
 			    _("Properties"), _("Tap here to configure this program."),
   			    G_CALLBACK (configure), (gpointer)edit_structure, -1);

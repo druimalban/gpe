@@ -4,7 +4,7 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.30
+VERSION = 0.31
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
@@ -32,7 +32,7 @@ else
 endif
 
 
-MEMBERS = db editing main structure support configure old-db export namedetail import-vcard
+MEMBERS = db editing main structure support configure old-db export namedetail import-vcard finddlg
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))

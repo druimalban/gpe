@@ -279,11 +279,11 @@ db_get_entries (void)
 }
 
 GSList *
-db_get_entries_filtered (gchar *str)
+db_get_entries_filtered (const gchar *str)
 {
   GSList *list = NULL;
   char *err;
-  int r, i;
+  int r;
   gchar *strsearch;
 
   if ((!str) || !strlen(str)) 
