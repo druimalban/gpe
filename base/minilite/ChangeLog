@@ -1,3 +1,6 @@
+2004-08-06	Florian Boor <florian.boor@kernelconcepts.de>
+	* Do not set level to 0 on platforms that my have a 
+          non-transflective display.
 
 2004-08-04	Florian Boor <florian.boor@kernelconcepts.de>
 	* Fixed light level setting on generic interface.

@@ -163,6 +163,7 @@ simpad_new_set_level(int level)
 {
   FILE *f_light;
   
+  if (level < 1) level = 1;
   f_light = fopen(SIMPAD_BACKLIGHT_REG_NEW,"w");
   if (f_light != NULL)
   {
@@ -197,6 +198,7 @@ simpad_set_level(int level)
   int val;
   FILE *f_light;
   
+  if (level < 1) level = 1;
   f_light = fopen(SIMPAD_BACKLIGHT_REG,"w");
   if (f_light != NULL)
   {
@@ -609,7 +611,7 @@ main (int argc, char **argv)
       break;
   }
   else if (platform == P_GENERIC)
-         slider = gtk_vscale_new_with_range (0, 32, 1);
+         slider = gtk_vscale_new_with_range (1, 32, 1);
        else  
   	     slider = gtk_vscale_new_with_range (0, 255, 1);
 
