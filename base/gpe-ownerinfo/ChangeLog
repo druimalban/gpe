@@ -1,3 +1,9 @@
+2003-03-20  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install): Don't make the install target depend on
+	install-mo since it will end up in the ipkg eventually.
+	(VERSION): Bump up to 0.21.
+
 2003-03-19  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/pt.po: New file courtesy of Luis Oliveira.
