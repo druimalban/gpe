@@ -1,5 +1,19 @@
 2002-10-08  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.20-1 released.
+
+2002-10-08  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Remove
+	versioning on gpe-login.
+
+2002-10-08  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.20 released.
+	* gpe-login, gpe-login2 0.23 released.
+
+2002-10-08  Philip Blundell  <philb@gnu.org>
+
 	* familiar/control.session-scripts (Suggest): Add gpe-setbg.
 	(Depends): Remove gpe-appmgr, gpe-dm.  Add keylaunch, ipaq-sleep.
 	* familiar/control.gpe-login (Suggests): Remove gpe-setbg.
