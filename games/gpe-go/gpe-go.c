@@ -1106,11 +1106,13 @@ void gui_init(){
 
   {// [PASS] button
     GtkWidget * button;
+    /* TRANSLATORS: button's label, use a short word.
+     * proposals for a meaningful icon are warmly welcome! */
     button = gtk_button_new_with_label (_("PASS"));
     gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
     g_signal_connect (G_OBJECT (button), "clicked",
                       G_CALLBACK (on_button_pass_clicked), NULL);
-
+    //FIXME: add tooltip!
     gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), button, NULL, NULL);
   }
 

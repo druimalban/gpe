@@ -1,4 +1,4 @@
-VERSION = 0.05-pre
+VERSION = 0.04
 
 PACKAGE = gpe-go
 
@@ -15,7 +15,7 @@ CVSBUILD = yes
 endif
 
 
-LINGUAS = #cs
+LINGUAS = cs de pl ro sv
 
 EXTRA_DESKTOPS = \
     gpe-go-9.desktop.in \
