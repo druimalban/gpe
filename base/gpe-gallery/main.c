@@ -747,6 +747,29 @@ render_view (GtkWidget *parent, gint view)
   gtk_widget_hide (loading_toolbar);
 }
 
+static
+gboolean is_image_file(const gchar* filename)
+{
+  gchar *fn = g_utf8_strdown(filename,-1);
+  gboolean result = FALSE;
+
+  if (strstr (fn, ".png")) 
+	  result = TRUE;
+  if (strstr (fn, ".jpg") || strstr (filename, ".jpeg"))
+	  result = TRUE;
+  if (strstr (fn, ".gif"))
+	  result = TRUE;
+  if (strstr (fn, ".ico"))
+	  result = TRUE;
+  if (strstr (fn, ".bmp"))
+	  result = TRUE;
+  if (strstr (fn, ".xpm"))
+	  result = TRUE;
+  g_free(fn);
+  
+  return result;
+}
+
 static void
 add_directory (gchar *directory)
 {
@@ -778,7 +801,7 @@ add_directory (gchar *directory)
 
         if (stat (filename, &s) == 0)
         {
-	      if (strstr (filename, ".png") || strstr (filename, ".jpg") || strstr (filename, ".jpeg"))
+	      if (is_image_file(filename))
 	      {
 	        image_filenames = g_list_append (image_filenames, (gpointer) filename);
           }

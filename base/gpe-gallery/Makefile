@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-gallery
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.91
+VERSION = 0.92
 
 MEMBERS = main image_tools
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`

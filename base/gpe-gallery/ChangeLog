@@ -1,3 +1,8 @@
+2004-08-09  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Released V 0.92
+	* main.c: Improved file type checking.
+	* gpe-gallery.applications: Updated MIME types.
+	* Makefile: Version is 0.92
 
 2004-07-12  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Fixed segfault due to missing check.
