@@ -1,3 +1,9 @@
+2002-07-30  Moray Allan  <moray@handhelds.org>
+
+        * X11/Xsession: Now sets HOME_VOLATILE environment variable to
+        location of ramdisk portion of user's home direcory.
+        * X11/gpe-login.pre-session: Added comment about HOME_VOLATILE.
+
 2002-07-30  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/gpe-logout.png (Module): New icon.
