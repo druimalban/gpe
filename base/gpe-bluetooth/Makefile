@@ -20,7 +20,7 @@ endif
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` `pkg-config --cflags mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --cflags $(LIBGPEVTYPE_PC)`
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
 PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-PACKAGE_LDFLAGS += $(GPELIBS) -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex `pkg-config --libs mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --libs $(LIBGPEVTYPE_PC)` -lsqlite
+PACKAGE_LDFLAGS += $(GPELIBS) -lbluetooth `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex `pkg-config --libs mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --libs $(LIBGPEVTYPE_PC)` -lsqlite
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -87,16 +87,18 @@ install-program: all $(GLADE) bluez.conf
 	install -m 644 pixmaps/network.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/Computer.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 pixmaps/Printer.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
-	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)/etc/bluetooth/
-	install hciattach.sh $(DESTDIR)/etc/bluetooth/hciattach
+	install -m 755 hciattach.sh $(DESTDIR)/etc/bluetooth/hciattach
 	install -d $(DESTDIR)/etc/ppp/peers/
 	install -m 644 peers/lap $(DESTDIR)/etc/ppp/peers/lap
-	mkdir -p $(DESTDIR)$(PREFIX)/share/bluez-pin/
+	install -d $(DESTDIR)$(PREFIX)/share/bluez-pin/
 	install -m 644 $(GLADE) $(DESTDIR)$(PREFIX)/share/bluez-pin/
-	mkdir -p $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
+	install -d $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
+	install -d $(DESTDIR)$(SYSCONFDIR)/apm/resume.d/
+	install -m 755 gpe-bluetooth-resume.sh $(DESTDIR)$(SYSCONFDIR)/apm/resume.d/50gpe-bluetooth
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) bnep-helper rfcomm-helper bnep-helper.o rfcomm-helper.o
