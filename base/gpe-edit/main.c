@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdlib.h>
+#include <libgen.h>
+#include <string.h>
 #include <libintl.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -59,12 +61,15 @@ new_file (void)
 {
   clear_text_area ();
   filename = "";
+  gtk_window_set_title (GTK_WINDOW (main_window), "GPE Edit - Untitled");
 }
 
 void
 open_file (GtkFileSelection *selector, gpointer user_data)
 {
   struct stat file_stat;
+  gchar *window_title = "GPE Edit - ";
+  gchar *buf;
   FILE *fp;
   int pos = 0;
 
@@ -84,6 +89,11 @@ open_file (GtkFileSelection *selector, gpointer user_data)
     clear_text_area ();
 
     gtk_editable_insert_text (GTK_EDITABLE (text_area), buffer, file_stat.st_size, &pos);
+
+    buf = g_malloc (strlen (window_title) + strlen (basename (filename)) + 1);
+    strcpy (buf, window_title);
+    strcat (buf, basename (filename));
+    gtk_window_set_title (GTK_WINDOW (main_window), buf);
   }
 
   gtk_widget_destroy (file_selector);
@@ -204,7 +214,7 @@ main (int argc, char *argv[])
     exit (1);
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (main_window), "GPE Edit");
+  gtk_window_set_title (GTK_WINDOW (main_window), "GPE Edit - Untitled");
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
