@@ -1,3 +1,11 @@
+2004-06-21  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.15 released.
+
+2004-06-21  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add ru, sr, es.
+
 2004-06-18  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Released V 0.14
