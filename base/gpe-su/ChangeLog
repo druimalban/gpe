@@ -1,5 +1,10 @@
 2004-06-07  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Undo Florian's earlier change; gpe-su should not be
+	setuid root.
+
+2004-06-07  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.12 released.
 
 2004-06-07  Philip Blundell  <philb@gnu.org>
