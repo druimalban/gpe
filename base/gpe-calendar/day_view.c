@@ -8,13 +8,18 @@
  */
 
 #include <sys/types.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include <gtk/gtk.h>
 
 #include "gtkdatesel.h"
 #include "cotidie.h"
+
+extern GtkWidget *new_event(time_t t, guint timesel);
+extern GdkFont *timefont, *datefont;
 
 guint cell_height = 22;
 guint bias = 8;
@@ -88,7 +93,7 @@ click_callback (GtkWidget *widget,
       tm.tm_hour = hour;
       tm.tm_min = 0;
       appt = new_event (mktime (&tm), 1);
-      gtk_widget_show_all (appt);
+      gtk_widget_show (appt);
     }
 }
 

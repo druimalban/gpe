@@ -8,13 +8,17 @@
  */
 
 #include <sys/types.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include <stdio.h>
 #include <gtk/gtk.h>
 
 #include "cotidie.h"
+
+extern GtkWidget *new_event(time_t t, guint timesel);
+extern GtkWidget *future_view(void);
+extern GtkWidget *new_todo(void);
 
 GdkFont *timefont;
 GdkFont *datefont;
@@ -97,7 +101,7 @@ main(int argc, char *argv[])
       printf("Couldn't get time font\n");
       abort();
     }
-  datefont = gdk_font_load("-*-*-medium-r-normal--8-*-*-*-c-*-*");
+  datefont = gdk_font_load("-*-*-medium-r-normal--9-*-*-*-c-*-*");
   if (datefont == NULL)
     {
       printf("Couldn't get date font\n");
@@ -110,6 +114,8 @@ main(int argc, char *argv[])
   menubar = gtk_item_factory_get_widget (item_factory, "<main>");
 
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   week = week_view();
   day = day_view();

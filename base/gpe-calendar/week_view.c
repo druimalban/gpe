@@ -8,7 +8,9 @@
  */
 
 #include <sys/types.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #include <gtk/gtk.h>
@@ -17,6 +19,7 @@
 #include "cotidie.h"
 
 GdkGC *red_gc;
+extern GdkFont *datefont, *timefont;
 
 static gint
 draw_expose_event (GtkWidget *widget,
@@ -30,12 +33,12 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *white_gc;
   guint max_width;
   guint max_height;
-  guint day, y, baseday;
+  guint day, y;
   guint h;
   guint cell_height = 35;
   struct tm tm, today;
   time_t t;
-  guint year, mon;
+  /*guint year, mon, baseday;*/
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
