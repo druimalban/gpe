@@ -1,5 +1,7 @@
 2003-04-18  Philip Blundell  <philb@gnu.org>
 
+	* gpe/tray.h (gpe_system_tray_send_message): Add prototype.
+
 	* tray.c (atom_names): Add SYSTEM_TRAY_MESSAGE_DATA.
 	(SYSTEM_TRAY_MESSAGE_DATA): Define.
 	(atoms): Add another slot.
