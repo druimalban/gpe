@@ -9,9 +9,9 @@ LINGUAS = nl cs fr de pt ro ru sr sk sv
 
 MEMBERS = gpe-taskmanager
 
-CPPFLAGS += $(STANDARD_CPPFLAGS)
-CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
-LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 .SUFFIXES: .d
 
@@ -28,7 +28,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin

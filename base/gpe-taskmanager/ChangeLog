@@ -5,6 +5,7 @@
 2004-06-21  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add de pt ro ru sr sk sv.
+	Use PACKAGE_CFLAGS, etc.
 
 2003-10-19  Philip Blundell  <philb@gnu.org>
 
