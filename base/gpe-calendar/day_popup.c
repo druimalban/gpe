@@ -13,6 +13,7 @@
 #include <string.h>
 #include <time.h>
 #include <langinfo.h>
+#include <libintl.h>
 
 #include <gtk/gtk.h>
 
@@ -23,6 +24,8 @@
 #include "event-db.h"
 #include "event-ui.h"
 #include "day_popup.h"
+
+#define _(x) gettext(x)
 
 static void
 destroy_popup (GtkWidget *widget, GtkWidget *parent)

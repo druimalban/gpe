@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar\n"
-"POT-Creation-Date: 2003-01-04 00:23+0000\n"
+"POT-Creation-Date: 2003-01-04 15:53+0000\n"
 "PO-Revision-Date: 2002-06-14 20:14+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -303,6 +303,11 @@ msgstr ""
 #: event-ui.c:1138
 msgid "Calendar: Edit event"
 msgstr ""
+
+#: day_popup.c:148
+#, fuzzy
+msgid "No appointments"
+msgstr "Neuer Termin"
 
 #: xsettings.c:101
 msgid "Cannot create XSettings client"

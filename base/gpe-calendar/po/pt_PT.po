@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar\n"
-"POT-Creation-Date: 2003-01-04 00:23+0000\n"
+"POT-Creation-Date: 2003-01-04 15:53+0000\n"
 "PO-Revision-Date: 2002-12-15 22:14+0000\n"
 "Last-Translator: Luis Oliveira <luis@handhelds.org>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
@@ -298,6 +298,11 @@ msgstr ""
 #: event-ui.c:1138
 msgid "Calendar: Edit event"
 msgstr ""
+
+#: day_popup.c:148
+#, fuzzy
+msgid "No appointments"
+msgstr "Evento"
 
 #: xsettings.c:101
 msgid "Cannot create XSettings client"
