@@ -2,6 +2,7 @@ Package: keylaunch
 Section: base
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libc6 (>= 2.2.4-4), xlibs (>> 4.1.0)
