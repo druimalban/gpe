@@ -1,0 +1,1 @@
+?package(gpe-edit): needs=x11 title="GPE Edit" command=gpe-edit icon=gpe-edit.png section="Apps/Editors"
