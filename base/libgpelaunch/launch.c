@@ -67,6 +67,8 @@ struct client_map
   const gchar *binary;
 };
 
+static void read_client_map (struct sn_display_map *map);
+
 gboolean
 gpe_launch_startup_is_pending (Display *dpy, const gchar *binary)
 {
@@ -135,6 +137,8 @@ gpe_launch_get_binary_for_window (Display *dpy, Window w)
 
   if (l == NULL)
     return NULL;
+
+  read_client_map (map);
 
   for (l = map->client_map; l; l = l->next)
     {
