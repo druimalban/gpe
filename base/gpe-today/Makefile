@@ -3,7 +3,7 @@ PREFIX = /usr/local
 VERSION = 0.02
 CVSBUILD = yes
 #DEBUG = yes 
-LINGUAS = pt
+LINGUAS = pt de
 
 MEMBERS = main todo calendar date
 

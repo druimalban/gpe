@@ -1,0 +1,39 @@
+# German translation for gpe-today.
+# Copyright (C) 2002, 2003 Luis 'spung' Oliveira <luis@handhelds.org>
+# This file is distributed under the same license as the gpe-today package.
+# Colin Marquardt <colin@marquardt-home.de>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.02\n"
+"POT-Creation-Date: 2003-03-28 15:54+0000\n"
+"PO-Revision-Date: 2003-04-08 21:43+0200\n"
+"Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:107 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+#: todo.c:143
+msgid "Error stating todo DB"
+msgstr "Fehler beim stat der Todo-DB"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "Keine Termine für heute"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "Ganztägiger Termin"
+
+#: calendar.c:153
+msgid "Error stating calendar DB"
+msgstr "Fehler beim stat der Kalender-DB"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "GPE-Heute"
