@@ -18,27 +18,3 @@ style "date_label"
 	font_name = "Sans 9"
 	fg[NORMAL] = { 1.0, 1.0, 1.0 }
 }
-
-style "event_in_progress-summary"
-{
-	font_name = "Sans Bold 9"
-	fg[NORMAL] = { 1.0, 0, 0 }
-}
-
-style "event_in_progress-time"
-{
-	font_name = "Sans 9"
-        fg[NORMAL] = { 1.0, 0, 0 }
-}
-
-style "calendar_time"
-{
-	font_name = "Sans 9"	
-	fg[NORMAL] = { 0.0, 0.0, 0.0 }
-}
-
-style "calendar_summary"
-{
-	font_name = "Sans Bold 9"
-        fg[NORMAL] = { 0.0, 0.0, 0.0 }
-}
