@@ -426,7 +426,9 @@ clicked (GtkWidget *w, GdkEventButton *ev)
 static void
 cancel_dock_message (guint id)
 {
+  gdk_threads_enter ();
   gpe_system_tray_cancel_message (dock_window, id);
+  gdk_threads_leave ();
 }
 
 void

@@ -324,7 +324,9 @@ pan_thread (struct bt_service_pan *svc)
 	text = g_strdup_printf (_("PAN connection to %s lost"),
 				batostr (&svc->bd->bdaddr));
 
+      gdk_threads_enter ();
       id = gpe_system_tray_send_message (dock_window, text, 0);
+      gdk_threads_leave ();
       schedule_message_delete (id, 5000);
 
       g_free (text);
@@ -338,7 +340,9 @@ pan_thread (struct bt_service_pan *svc)
       text = g_strdup_printf (_("PAN connection to %s re-established"),
 			      batostr (&svc->bd->bdaddr));
 			      
+      gdk_threads_enter ();
       id = gpe_system_tray_send_message (dock_window, text, 0);
+      gdk_threads_leave ();
       schedule_message_delete (id, 5000);
 
       g_free (text);
