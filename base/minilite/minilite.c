@@ -90,11 +90,19 @@ char IpaqModel = -1;
 #define GENERIC_PROC_DRIVER "/proc/driver/backlight"
 
 /* Linux 2.6 sysfs interface */
-#define SYS_POWER "/sys/class/backlight/fb0/power"
-#define SYS_BRIGHTNESS "/sys/class/backlight/fb0/brightness"
-#define SYS_LCDPOWER "/sys/class/lcd/fb0/power"
 #define SYS_STATE_ON  0
 #define SYS_STATE_OFF 4
+static char *SYS_BRIGHTNESS = NULL;
+static char *SYS_POWER = NULL;
+static char *SYS_LCDPOWER = NULL;
+
+const char *sysbdevs[] = 
+{
+	"/sys/class/backlight/sa1100fb",
+	"/sys/class/backlight/pxafb",
+	NULL
+};
+
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -115,6 +123,8 @@ t_platform platform = P_NONE;
 static t_platform
 detect_platform(void)
 {
+	int i = 0;
+	
 	if (!access(TS_DEV,R_OK))
 		return P_IPAQ;
 	if (!access(PROC_LIGHT,R_OK))
@@ -129,8 +139,17 @@ detect_platform(void)
 		return P_SIMPAD;
 	if (!access(GENERIC_PROC_DRIVER,R_OK))
 		return P_GENERIC;
-	if (!access(SYS_BRIGHTNESS,R_OK))
-		return P_SYSFS;
+	while (sysbdevs[i])
+	{
+		if (!access(sysbdevs[i], R_OK))
+		{
+			SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", sysbdevs[i]);
+			SYS_POWER = g_strdup_printf("%s/power", sysbdevs[i]);
+			SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", strrchr(sysbdevs[i],'/')+1);
+			return P_SYSFS;
+		}
+		i++;
+	}
 	return P_NONE;
 }
 

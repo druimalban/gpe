@@ -1,4 +1,8 @@
 2004-10-07	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Fixed sysfs interface to find the correct interface.
+
+2004-10-07	Florian Boor <florian.boor@kernelconcepts.de>
     * Added support for sysfs interface in kernel 2.6.
 	
 2004-08-06	Florian Boor <florian.boor@kernelconcepts.de>
