@@ -6,7 +6,7 @@
 
 <H2>Accessing the GPE CVS repository</H2>
 <p>
-In short, if you are not (yet?) a developer, you do the following:
+In short, if you are not (yet?) a developer, you do the following to get an initial copy of the GPE sources:
    <pre>
       $ cd gpe_cvs
       $ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
@@ -15,11 +15,11 @@ In short, if you are not (yet?) a developer, you do the following:
       CVS Password: anoncvs
       $ cvs checkout gpe
    </pre>
-You only have to do this one time. The next time you want to update
-your CVS, do:
+You only have to do this once. The next time you want to update
+your copy of the sources, do:
    <pre>
       $ cd gpe_cvs
-      $ cvs up
+      $ cvs update
    </pre>
 </p>
 <P>
@@ -28,25 +28,26 @@ For a more detailed description about how to use handhelds.org CVS, please see
 here</a>.
 </P>
 <P>
-You can watch the CVS repository directly by following
-<A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">this link</A>.
+You can examine the CVS repository directly 
+<A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">here</A>.
 </P>
 
 <H2>Building GPE CVS applications</H2>
 <p>
 There is no easy recipe for building GPE applications for the ARM
-architecture yet. It can be built like any other application for your
-desktop though.
+architecture yet. However, it can be built like any other application for your
+desktop.
 
 Prerequisites for building GPE applications are libgpewidget, gpe-icons
-and, for some applications, libsqlite (not in GPE CVS, but most likely
-available as a package for your distribution -- you need to get the
-libsqlite-dev(el) package in that case).
+and, for some applications, libsqlite. libsqlite is not in GPE CVS, but 
+is likely to be available as a package for your distribution, perhaps called
+'libsqlite-dev' or 'libsqlite-devel').
 
 So do the following before you attempt to compile one of the GPE
 applications:
 
    <pre>
+      $ cd gpe_cvs/base
       $ cd libgpewidget
       $ make
       $ make install
