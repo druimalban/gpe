@@ -249,7 +249,6 @@ process_line (struct nsql_context *ctx, char *l)
 
   line = decode_string (l);
 	
-  g_strstrip (line);
   if (line[0] == 0)
     {
       g_free(line);
@@ -282,12 +281,12 @@ process_line (struct nsql_context *ctx, char *l)
 
   ctx->cmd_id = NULL;
   
-  g_free(line);
+  g_free(id);
   return TRUE;
 
  bad_input:
   nsqld_printf (ctx, "! ! Bad input\n");
-  g_free(line);
+  g_free(id);
   return FALSE;
 }
 
