@@ -50,19 +50,18 @@ gpe_error_box (char *text)
 
   dialog = gtk_dialog_new ();
   label = gtk_label_new (text);
-  ok = gpe_picture_button (dialog->style, _("OK"), "ok");
   hbox = gtk_hbox_new (FALSE, 4);
 
+  gtk_widget_realize (dialog);
+
+  ok = gpe_picture_button (dialog->style, _("OK"), "ok");
   gtk_signal_connect_object (GTK_OBJECT (ok), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
 			     (gpointer)dialog);
 
-  gtk_widget_realize (dialog);
-
   p = gpe_find_icon ("error");
   icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, p);
   gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
-
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);

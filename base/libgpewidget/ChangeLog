@@ -1,5 +1,11 @@
 2002-06-20  Philip Blundell  <pb@debian.org>
 
+	* picturebutton.c (gpe_picture_button): Tweak packing so that icon
+	and text stay close together.
+
+	* errorbox.c (gpe_error_box): Realize window before creating
+	picture button.
+
 	* gtkminifilesel.c (menu_change_directory): Fix warning.
 	(gtk_mini_file_selection_size_request): Likewise.
 	* picturebutton.c (gpe_picture_button): Likewise.
