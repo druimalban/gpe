@@ -4,8 +4,8 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.76
 DEBUG = no
+LINGUAS = 
 
-#LINGUAS = pt_BR nl sr pt ro ru sv sk zh_TW cs vi de wa es fr zh_CN hu
 CONTROL_GPE_LOGIN = control1
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
