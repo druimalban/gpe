@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.01
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox
+Depends: gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox, gtk-engines-xenophilia
 Description: Task package for GPE applications
