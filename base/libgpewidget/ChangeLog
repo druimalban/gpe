@@ -1,3 +1,7 @@
+2005-02-07  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/tmpl/gpetimesel.sgml: More documentation.
+	
 2005-02-02  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/*.sgml: More documentation (GpeIconList*).
