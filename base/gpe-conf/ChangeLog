@@ -1,4 +1,7 @@
 2004-01-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* main-info.c, battery.c, storage.c: Fixed scrollbar handling.
+
+2004-01-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Makefile, main-info.c: gpe-info target, main for gpe-info.
 	* sysinfo.c, applets.h: Some minor additions, fixes.
 	* unimplemented.c: Removed obsolete stuff.

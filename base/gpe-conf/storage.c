@@ -407,11 +407,18 @@ Storage_Build_Objects (void)
 	gchar *fstr = NULL;
 	static char cnew2[255];
 	static GtkWidget *bar_flash;
+	GtkWidget *viewport = gtk_viewport_new (NULL, NULL);
+	GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
+	
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_container_add (GTK_CONTAINER (sw),viewport);
+	gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
 
 	vbox = gtk_vbox_new (FALSE, 1);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox),
 					gpe_get_border ());
-
+	gtk_container_add (GTK_CONTAINER (viewport), vbox);
 
 /* first get memory info - this is fast - our users want feedback! */
 
@@ -468,8 +475,8 @@ Storage_Build_Objects (void)
 		gtk_box_pack_start (GTK_BOX (vbox), meminfo.dummy, FALSE, FALSE, 0);
 	}
 
-	gtk_widget_show_all(vbox);
+	gtk_widget_show_all(sw);
 	
 	gtk_timeout_add (1600, (GtkFunction) update_status, NULL);
-	return vbox;
+	return sw;
 }

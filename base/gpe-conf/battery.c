@@ -254,13 +254,21 @@ Battery_Build_Objects (void)
 	static GtkWidget *bar_batt_int;
 	t_infowidgets batt;
 	int i;
+	GtkWidget *viewport = gtk_viewport_new (NULL, NULL);
+	GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
 	
-	init_device();
-	
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_container_add (GTK_CONTAINER (sw),viewport);
+	gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
+
 	vbox = gtk_vbox_new (FALSE, 1);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox),
 					gpe_get_border ());
-
+	gtk_container_add (GTK_CONTAINER (viewport), vbox);
+	
+	init_device();
+	
 	for (i=0;i<2;i++)
 	{
 		if (i==0) 
@@ -317,5 +325,5 @@ Battery_Build_Objects (void)
 	update_bat_values(NULL);
 	
 	gtk_timeout_add (4000, (GtkFunction) update_bat_values, NULL);
-	return vbox;
+	return sw;
 }
