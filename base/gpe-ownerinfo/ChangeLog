@@ -4,7 +4,7 @@
 
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
-	* Makefile: Use $(PACKAGE_CFLAGS) et al.
+	* Makefile: Use $(PACKAGE_CFLAGS) et al.  Remove more stuff when cleaning.
 
 2004-01-27  Colin Marquardt  <colin@marquardt-home.de>
 

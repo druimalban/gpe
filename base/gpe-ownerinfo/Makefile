@@ -46,7 +46,7 @@ install-program: all
 	install -d $(DESTDIR)/etc/gpe/
 
 clean: clean-po
-	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(LIB_OBJS) libgpe-ownerinfo.a
 
 distclean: clean
 	rm -rf familiar/dist/
