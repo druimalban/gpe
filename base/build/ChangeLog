@@ -1,3 +1,12 @@
+2003-02-12  Colin Marquardt  <colin@marquardt-home.de>
+
+	* README (this): Tell people about
+	http://handhelds.org/z/wiki/IpkgHackForLocales.
+
+	* Makefile.dpkg_ipkg (tag): New target for making cvs tags.
+	(printtaginfo): Print info about cvs tags, 
+	including a nice tag name.
+
 2003-02-01  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (extract-po): Use $(SOURCES).

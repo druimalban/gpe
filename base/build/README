@@ -41,4 +41,4 @@ Look at gpe/base/libgpewidget/Makefile for a real-world example.
 Makefile.translation
 --------------------
 
-<nothing here yet>
+See http://handhelds.org/z/wiki/IpkgHackForLocales
