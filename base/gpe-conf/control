@@ -4,5 +4,5 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Pierre Tardy <tardyp@free.fr>
-Depends: libgpewidget0 (>= 0.24), gpe-icons (>= 0.13)
+Depends: libgpewidget0 (>= 0.25), gpe-icons (>= 0.13)
 Description: A set of configuration GUI

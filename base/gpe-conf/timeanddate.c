@@ -16,6 +16,8 @@
 #include "timeanddate.h"
 #include "suid.h"
 
+#include <gpe/spacing.h>
+
 static struct 
 {
   GtkWidget *categories;
@@ -43,11 +45,6 @@ static struct
   GtkWidget *internet;
 }self;
 
-guint gpe_catspacing = 18/2;
-guint gpe_border = 12/2;
-guint gpe_boxspacing = 6/2;
-gchar *gpe_catindent = "  "; /* Gnome 2 uses four spaces */
-
 void GetInternetTime()
 {
   fprintf(suidout,"NTPD\n%s\n",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
@@ -66,10 +63,16 @@ GtkWidget *Time_Build_Objects()
   struct tm ts = *tsptr;     /* gtk_cal seems to modify the ptr
 				returned by localtime, so we duplicate it.. */
 
+  guint gpe_catspacing = gpe_get_catspacing ();
+  gchar *gpe_catindent = gpe_get_catindent ();
+  guint gpe_border     = gpe_get_border ();
+  guint gpe_boxspacing = gpe_get_boxspacing ();
+  
   ts.tm_year+=1900;
 
   if(ts.tm_year < 2002)
     ts.tm_year=2002;
+
 
   self.categories = gtk_vbox_new (FALSE, gpe_catspacing);
   gtk_container_set_border_width (GTK_CONTAINER (self.categories), gpe_border);
