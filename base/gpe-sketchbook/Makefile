@@ -1,11 +1,6 @@
 include ./config.makefile
 
-ifeq ($(GTK2),yes)
 CONTROL_FILE = familiar/control1
-else
-CONTROL_FILE = familiar/control
-endif
-
 
 SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
 

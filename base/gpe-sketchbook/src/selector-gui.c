@@ -92,17 +92,9 @@ GtkWidget * build_selector_toolbar(){
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
 
-#ifdef GTK2
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-  //gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  //gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-#else
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-#endif
 
   pixbuf = gpe_find_icon ("new");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);

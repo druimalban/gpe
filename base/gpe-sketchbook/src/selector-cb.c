@@ -71,7 +71,6 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
 
 
 void _switch_icon(GtkButton * button){
-#ifdef GTK2
   GtkWidget * old_icon;
   GtkWidget * new_icon;
 
@@ -90,7 +89,6 @@ void _switch_icon(GtkButton * button){
   gtk_container_remove (GTK_CONTAINER (vbox), old_icon );
   gtk_container_add    (GTK_CONTAINER (vbox), new_icon );
   gtk_widget_show_now(new_icon);
-#endif
 }
 
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){

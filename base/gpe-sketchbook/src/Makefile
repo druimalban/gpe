@@ -1,10 +1,6 @@
 include ../config.makefile
 
-ifeq ($(GTK2),yes)
 CONTROL_FILE = ../familiar/control1
-else
-CONTROL_FILE = ../familiar/control
-endif
 
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
@@ -26,35 +22,16 @@ CPPFLAGS += -DDESKTOP
 endif
 
 #-- GPE widgets
-LIB_GPE_WIDGET = ../../libgpewidget
-CFLAGS  += -I$(LIB_GPE_WIDGET)
-ifeq ($(GTK2),yes)
-LDFLAGS += `ln -sf ../../libgpewidget/libgpewidget.so.1 libgpewidget.so`
-else
-LDFLAGS += `ln -sf ../../libgpewidget/libgpewidget.so.0 libgpewidget.so`
-endif
-LDFLAGS += -L.
+
+CFLAGS  += -I../../libgpewidget
+LDFLAGS += -L../../libgpewidget
 
 LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 
 #-- GTK
-ifeq ($(GTK2),yes)
-CFLAGS  +=  -DGTK2 #-DGTK_ENABLE_BROKEN
+CFLAGS  +=  #-DGTK_ENABLE_BROKEN
 CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
 LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
-else
-CFLAGS  += `gtk-config --cflags`
-LDFLAGS += `gtk-config --libs`
-CFLAGS  += `gdk-pixbuf-config --cflags`
-LDFLAGS += `gdk-pixbuf-config --libs`
-#libpng
-CPPFLAGS += -I/usr/include
-LDFLAGS  += -L/usr/lib -lpng
-#-- @ handhelds.org
-CPPFLAGS += -I../../include
-LDFLAGS  += -L../../lib
-LDFLAGS  += -lgdk_pixbuf
-endif
 
 #-- SQLite
 ifdef USE_SQLITE
