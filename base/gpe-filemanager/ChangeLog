@@ -1,4 +1,15 @@
+2004-09-27  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * main.c: Changed message on failing to display help to something
+              more friendly.
+              Improved file info flags: Links are handled correctly now.
+              Finished implementing if recursive directory deleting.
+              Fixed memory leak in deletion code.
+    * Removed unused files: mime-programs-sql.c mime-programs-sql.h 
+                            update_mime_db.c update_mime_db.h 
+                            mime-sql.h mime.c mime.h mime-sql.c
+    * familiar/control1: Removed dependency to libsqlite0.
+        
 2004-09-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Makefile: Removed obsolete -lsqlite.

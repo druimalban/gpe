@@ -64,7 +64,7 @@
 		"\nGPE File Manager\n\ndctanner@magenet.com"\
 		"\nflorian@handhelds.org"
 
-#define NOHELPMESSAGE N_("Displaying help failed.")
+#define NOHELPMESSAGE N_("Help for this application is not installed.")
 
 
 /* IDs for data storage fields */
@@ -145,7 +145,9 @@ static gchar *file_clipboard = NULL;
 static GHashTable *loaded_icons;
 static GtkWidget *progress_dialog = NULL;
 static gboolean abort_transfer = FALSE;
+static GList *dirlist = NULL;
 static gboolean initialized = FALSE;
+
 
 typedef struct
 {
@@ -303,7 +305,7 @@ on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
 void
 on_about_clicked (GtkWidget * w)
 {
-	show_message(GTK_MESSAGE_INFO,HELPMESSAGE);
+	show_message(GTK_MESSAGE_INFO, HELPMESSAGE);
 }
 
 
@@ -311,7 +313,7 @@ void
 on_help_clicked (GtkWidget * w)
 {
 	if (gpe_show_help(PACKAGE,NULL))
-		show_message(GTK_MESSAGE_ERROR,NOHELPMESSAGE);
+		show_message(GTK_MESSAGE_INFO, NOHELPMESSAGE);
 }
 
 
@@ -849,19 +851,102 @@ popup_ask_rename_file ()
   gtk_widget_show_all (dialog_window);
 }
 
+gboolean 
+delete_cb_recursive(const gchar *rel_path,
+                   GnomeVFSFileInfo *info,
+                   gboolean recursing_will_loop,
+                   gpointer data,
+                   gboolean *recurse)
+{
+   gchar *path = data;
+   gchar *fn = g_strdup_printf("%s/%s", path, rel_path);
+  
+   if (info->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
+   {
+     *recurse = TRUE;
+     GnomeVFSResult r = 0;
+     if (!recursing_will_loop)
+     r = gnome_vfs_directory_visit (fn,
+                                GNOME_VFS_FILE_INFO_DEFAULT,
+                                GNOME_VFS_DIRECTORY_VISIT_DEFAULT,
+                                (GnomeVFSDirectoryVisitFunc) delete_cb_recursive,
+                                strdup(fn)); 
+     /* HACK: We collect the empty directories in a list to delete after 
+              visiting the complete tree to prevent gnome-vfs from stopping
+              visiting directories 
+     */
+     if (r == GNOME_VFS_OK)
+     {
+       dirlist = g_list_append(dirlist, fn);
+//     gnome_vfs_remove_directory(fn);
+     }
+     else
+       fprintf(stderr, "Err %s\n", gnome_vfs_result_to_string(r));
+
+   }
+   else
+   {
+     gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (fn));
+     g_free(fn);
+   }
+   
+   return TRUE;
+}
+
+
+static GnomeVFSResult
+delete_directory_recursive(FileInformation *dir)
+{
+  gchar *path = g_strdup(dir->filename);
+  GList *iter;
+  gnome_vfs_directory_visit    (dir->filename,
+                                GNOME_VFS_FILE_INFO_DEFAULT,
+                                GNOME_VFS_DIRECTORY_VISIT_DEFAULT,
+                                (GnomeVFSDirectoryVisitFunc) delete_cb_recursive,
+                                path); 
+  g_free(path);
+  iter = dirlist;
+  while (iter)
+    {
+      gnome_vfs_remove_directory(iter->data);
+      g_free(iter->data);
+      iter=iter->next;
+    }
+  g_list_free(dirlist);
+  dirlist = NULL;    
+  return gnome_vfs_remove_directory_from_uri(gnome_vfs_uri_new (current_popup_file->filename));
+}
+
 static void
 popup_ask_delete_file ()
 {
   gchar *label_text;
+  gboolean isdir;
+  GnomeVFSURI *uri;
 
-  label_text = g_strdup_printf (_("Delete \"%s\"?"), current_popup_file->vfs->name);
+  isdir = (current_popup_file->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY);
+  
+  if (isdir) 
+    label_text = g_strdup_printf (_("Delete \"%s\" and all its contents?"), 
+                                  current_popup_file->vfs->name);
+  else
+    label_text = g_strdup_printf (_("Delete \"%s\"?"), 
+                                  current_popup_file->vfs->name);
+    
 
   if (gpe_question_ask (label_text, _("Confirm"), "!gtk-dialog-question", 
 			"!gtk-cancel", NULL, "!gtk-delete", NULL, NULL, NULL) == 1)
     {
       GnomeVFSResult r;
 
-      r = gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (current_popup_file->filename));
+      if (isdir)
+        r = delete_directory_recursive(current_popup_file);
+      else
+        {
+          uri = gnome_vfs_uri_new (current_popup_file->filename);
+          r = gnome_vfs_unlink_from_uri (uri);
+          gnome_vfs_uri_unref(uri);
+        }
 
       if (r != GNOME_VFS_OK)
         gpe_error_box (gnome_vfs_result_to_string (r));
@@ -1324,7 +1409,7 @@ compare_file_info (FileInformation *a, FileInformation *b)
 
 /* Render the contents for the current directory. */
 static void
-make_view ()
+make_view (void)
 {
   GnomeVFSDirectoryHandle *handle = NULL;
   GnomeVFSFileInfo *vfs_file_info = NULL;
@@ -1361,7 +1446,9 @@ make_view ()
 
   open_dir_result = 
     gnome_vfs_directory_open (&handle, current_directory, 
-                              GNOME_VFS_FILE_INFO_DEFAULT);
+                              GNOME_VFS_FILE_INFO_DEFAULT 
+                                | GNOME_VFS_FILE_INFO_FOLLOW_LINKS 
+                                | GNOME_VFS_FILE_INFO_GET_MIME_TYPE );
 
   while (open_dir_result == GNOME_VFS_OK)
   {
