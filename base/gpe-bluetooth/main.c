@@ -289,6 +289,7 @@ run_scan (gpointer data)
   int i, dd;
   GtkWidget *w;
   GSList *iter;
+  const char *text;
 
   gdk_threads_enter ();
   w = bt_progress_dialog (_("Scanning for devices"), gpe_find_icon ("bt-logo"));
@@ -302,24 +303,16 @@ run_scan (gpointer data)
   num_rsp = hci_inquiry (dev_id, length, num_rsp, NULL, &info, flags);
   if (num_rsp < 0) 
     {
-      gdk_threads_enter ();
-      gtk_widget_destroy (w);
-      gpe_perror_box_nonblocking (_("Inquiry failed"));
-      gtk_widget_show_all (devices_window);
-      gdk_threads_leave ();
-      return FALSE;
+      text = _("Inquiry failed");
+      goto error;
     }
 
-  dd = hci_open_dev(0/*dev_id*/);
+  dd = hci_open_dev (0/*dev_id*/);
   if (dd < 0) 
     {
-      gdk_threads_enter ();
-      gtk_widget_destroy (w);
-      gpe_perror_box_nonblocking (_("HCI device open failed"));
-      gtk_widget_show_all (devices_window);
-      gdk_threads_leave ();
-      free(info);
-      return FALSE;
+      free (info);
+      text = _("HCI device open failed");
+      goto error;
     }
 
   for (i = 0; i < num_rsp; i++) 
@@ -412,6 +405,14 @@ run_scan (gpointer data)
   gdk_threads_leave ();
 
   return TRUE;
+
+ error:
+  gdk_threads_enter ();
+  gtk_widget_destroy (w);
+  gpe_perror_box_nonblocking (text);
+  gtk_widget_show_all (devices_window);
+  gdk_threads_leave ();
+  return FALSE;
 }
 
 static void
