@@ -146,8 +146,13 @@ button_down (GtkWidget *w, GdkEventButton *b, GtkWidget *scrolled_window)
 {
   gint x_start = b->x - x_offset - clock_radius;
   gint y_start = b->y - y_offset - clock_radius;
-
+  double r = sqrt (x_start * x_start + y_start * y_start);
   double start_angle = calc_angle (x_start, y_start);
+
+  if (r > (clock_radius * 2 / 3))
+    hand = TRUE;
+  else
+    hand = FALSE;
 
   gdk_pointer_grab (w->window, 
 		    FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
