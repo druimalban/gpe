@@ -89,7 +89,7 @@ irc_channel_send_message (IRCServer *server, gchar *message)
   return TRUE;
 }
 
-/* Join secified channel on specified server */
+/* Join secified channel on specified server
 gboolean
 irc_server_join_channel (IRCServer *server, gchar *channel)
 {
@@ -107,7 +107,6 @@ irc_server_join_channel (IRCServer *server, gchar *channel)
     printf ("Channel joined.\n");
     irc_channel = g_malloc (sizeof (*irc_channel));
     irc_channel->name = g_strdup (channel);
-    irc_channel->queue_in = g_queue_new ();
     g_list_append (server->channels, (gpointer) irc_channel);
     return TRUE;
   }
@@ -115,6 +114,7 @@ irc_server_join_channel (IRCServer *server, gchar *channel)
   printf ("Unable to join channel.\n");
   return FALSE;
 }
+*/
 
 /* Autojoin any enabled channels */
 gboolean
