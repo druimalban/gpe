@@ -2,6 +2,8 @@ PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
 VERSION = 0.13
+
+#FIXME: add: nl ga ru sr sk sv
 LINGUAS = id pt zh_TW fr ro cs
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
