@@ -37,7 +37,7 @@ static char *atom_names[] =
   { 
     "_NET_SYSTEM_TRAY_OPCODE", 
     "MANAGER",
-    "SYSTEM_TRAY_MESSAGE_DATA"
+    "_NET_SYSTEM_TRAY_MESSAGE_DATA"
   };
 
 static Atom system_tray_atom;
@@ -109,7 +109,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   return GDK_FILTER_CONTINUE;
 }
 
-void
+guint
 gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int timeout)
 {
   static int id;
@@ -120,14 +120,16 @@ gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int
   Window win;
 
   if (dock == None)
-    return;		/* not docked */
+    return -1;		/* not docked */
 
   dpy = GDK_WINDOW_XDISPLAY (window);
   win = GDK_WINDOW_XWINDOW (window);
 
+  ++id;
+
   len = strlen (text);
 
-  tray_send_opcode (dpy, win, SYSTEM_TRAY_BEGIN_MESSAGE, timeout, len, ++id);
+  tray_send_opcode (dpy, win, SYSTEM_TRAY_BEGIN_MESSAGE, timeout, len, id);
 
   memset (&ev, 0, sizeof (ev));
 
@@ -158,6 +160,15 @@ gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int
 
   gdk_flush ();
   gdk_error_trap_pop ();
+
+  return id;
+}
+
+void
+gpe_system_tray_cancel_message (GdkWindow *window, guint id)
+{
+  tray_send_opcode (GDK_WINDOW_XDISPLAY (window), GDK_WINDOW_XWINDOW (window),
+		    SYSTEM_TRAY_CANCEL_MESSAGE, id, 0, 0);
 }
 
 void

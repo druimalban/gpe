@@ -1,6 +1,7 @@
 2003-04-18  Philip Blundell  <philb@gnu.org>
 
 	* gpe/tray.h (gpe_system_tray_send_message): Add prototype.
+	(gpe_system_tray_cancel_message): Likewise.
 
 	* tray.c (atom_names): Add SYSTEM_TRAY_MESSAGE_DATA.
 	(SYSTEM_TRAY_MESSAGE_DATA): Define.
@@ -11,8 +12,9 @@
 	(tray_send_opcode): Use gdk_error_trap_push and gdk_error_trap_pop
 	in place of above functions.  Use gdk_flush instead of XSync.
 	(gpe_system_tray_send_message): New.
+	(gpe_system_tray_cancel_message): Likewise.
 	(gpe_system_tray_dock): Intern extra atom.
-
+	
 2003-04-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.59 released.

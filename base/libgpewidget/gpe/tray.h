@@ -22,6 +22,7 @@
 
 extern void gpe_system_tray_dock (GdkWindow *window);
 
-extern void gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int timeout);
+extern guint gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int timeout);
+extern void gpe_system_tray_cancel_message (GdkWindow *window, guint id);
 
 #endif
