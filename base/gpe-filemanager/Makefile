@@ -11,7 +11,7 @@ MEMBERS = main mime-sql mime-programs-sql
 MEMBERS2 = update_mime_db hash mime-sql mime-programs-sql
 
 ifeq ($(GTK2),yes)
-CFLAGS = `pkg-config --cflags gtk+-2.0 gnome-vfs-2.0` -DGTK_ENABLE_BROKEN
+CFLAGS = `pkg-config --cflags gtk+-2.0 gnome-vfs-2.0`
 CONTROL = control1
 else
 CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
