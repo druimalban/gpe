@@ -1,20 +1,21 @@
 PREFIX = /usr/local
 PACKAGE = detect-stylus
-#DEBUG = yes
+STRIP = strip
+DEBUG = no
 CVSBUILD = yes
-VERSION = 0.09
+VERSION = 0.10
 
 MEMBERS = detect-stylus
 
-CFLAGS = -D_GNU_SOURCE -Wall
+PACKAGE_CFLAGS = -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+PACKAGE_CFLAGS += -O2 -g
+PACKAGE_LDFLAGS = -g #-lefence
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-LDFLAGS += `pkg-config --libs x11`
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_LDFLAGS += `pkg-config --libs x11`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
@@ -24,16 +25,17 @@ else
 BUILD = build
 endif
 
-export PKG_CONFIG_PATH = $(BUILD)
+#export PKG_CONFIG_PATH = $(BUILD)
 
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(STANDARD_LDFLAGS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin/
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	$(STRIP) $(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/X11/Xinit.d
 	install 70detect-stylus $(DESTDIR)/etc/X11/Xinit.d
 

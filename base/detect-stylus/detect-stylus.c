@@ -23,7 +23,11 @@ main (int argc, char *argv[])
   Display *dpy;
   Window root;
   int fd = open ("/dev/touchscreen/0", O_RDONLY);
-
+  
+  /* if neccessary probe others */
+  if (fd < 0) 
+	fd = open ("/dev/touchscreen/ucb1x00", O_RDONLY);
+  
   if (fd >= 0)
     {
       close (fd);
@@ -40,7 +44,10 @@ main (int argc, char *argv[])
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
       XCloseDisplay (dpy);
-      system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
+	  if (!access("/usr/X11R6/bin/xrdb", X_OK))
+        system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
+	  else
+        system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/bin/xrdb -nocpp -merge");
     }
       
   exit (0);
