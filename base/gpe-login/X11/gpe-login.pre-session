@@ -9,6 +9,10 @@ if [ -e /dev/sound/mixer ]; then
 chown $USER /dev/sound/mixer
 fi
 
+if [ -e /dev/misc/apm_bios ]; then
+chown $USER /dev/misc/apm_bios
+fi
+
 mkdir -p /mnt/ramfs/home/$USER
 chown $USER /mnt/ramfs/home/$USER
 
