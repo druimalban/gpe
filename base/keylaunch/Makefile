@@ -1,7 +1,7 @@
 PACKAGE   = keylaunch
 VERSION   = 2.0.2
 
-DEBUG     = 0
+#DEBUG     = 1
 CVSBUILD  = yes
 
 CC        = gcc
