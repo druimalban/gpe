@@ -52,6 +52,9 @@ install: all install-mo
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -D $(PACKAGE)-record.menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)-record
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE)-play.desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-play
+	install -m 644 $(PACKAGE)-record.desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-record
 	install -D gpe-soundbite-play.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-play.png
 	install -D gpe-soundbite-record.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-record.png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

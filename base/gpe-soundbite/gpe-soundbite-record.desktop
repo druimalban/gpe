@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Play Memo
+Comment=GPE Soundbite
+Exec=gpe-soundbite record
+Terminal=0
+Type=Application
+Icon=gpe-soundbite-record.png
+Categories=Application;Utility;AudioVideo;GPE
+StartupNotify=True
