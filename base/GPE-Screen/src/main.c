@@ -8,12 +8,17 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
 #include <linux/h3600_ts.h>
 
 #include "interface.h"
 #include "support.h"
 
-
+#define TS_DEV "/dev/h3600_ts"
 extern FLITE_IN bl;
 void on_LightLevel_changed  (GtkAdjustment *adj, gpointer user_data);
                                         
@@ -23,6 +28,8 @@ main (int argc, char *argv[])
 {
   GtkWidget *window1;
   GtkWidget *LightLevel;
+  struct h3600_ts_backlight tsbl;
+  int fd;
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
@@ -42,10 +49,16 @@ main (int argc, char *argv[])
   
 
   window1 = create_gpe_screen ();
-  gtk_widget_show (window1);
   LightLevel=lookup_widget(window1, "LightLevel");
   gtk_signal_connect(GTK_OBJECT(GTK_RANGE(LightLevel)->adjustment),"value_changed",GTK_SIGNAL_FUNC(on_LightLevel_changed),NULL);
+  fd = open(TS_DEV, O_RDWR);
+  if (fd != -1) {
+    ioctl(fd,TS_GET_BACKLIGHT,(void *)&tsbl);
+    close(fd);
+    gtk_adjustment_set_value(GTK_ADJUSTMENT(GTK_RANGE(LightLevel)->adjustment), tsbl.brightness);
+  }
 
+  gtk_widget_show (window1);
   gtk_main ();
   return 0;
 }

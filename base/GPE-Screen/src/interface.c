@@ -54,9 +54,13 @@ create_gpe_screen (void)
   GtkWidget *table1;
   GSList *Viewmode_group = NULL;
   GtkWidget *radiobutton4;
+  GtkWidget *pixmap4;
   GtkWidget *radiobutton2;
+  GtkWidget *pixmap2;
   GtkWidget *radiobutton3;
+  GtkWidget *pixmap3;
   GtkWidget *radiobutton1;
+  GtkWidget *pixmap1;
   GtkWidget *label10;
   GtkWidget *ViewmodeApply;
   GtkWidget *label3;
@@ -327,7 +331,7 @@ create_gpe_screen (void)
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (ScreenBook), table1);
 
-  radiobutton4 = gtk_radio_button_new_with_label (Viewmode_group, "Upside\ndown");
+  radiobutton4 = gtk_radio_button_new (Viewmode_group);
   Viewmode_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton4));
   gtk_widget_set_name (radiobutton4, "radiobutton4");
   gtk_widget_ref (radiobutton4);
@@ -338,7 +342,15 @@ create_gpe_screen (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  radiobutton2 = gtk_radio_button_new_with_label (Viewmode_group, "Landscape\nright");
+  pixmap4 = create_pixmap (gpe_screen, "upsdown.xpm");
+  gtk_widget_set_name (pixmap4, "pixmap4");
+  gtk_widget_ref (pixmap4);
+  gtk_object_set_data_full (GTK_OBJECT (gpe_screen), "pixmap4", pixmap4,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (pixmap4);
+  gtk_container_add (GTK_CONTAINER (radiobutton4), pixmap4);
+
+  radiobutton2 = gtk_radio_button_new (Viewmode_group);
   Viewmode_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
   gtk_widget_set_name (radiobutton2, "radiobutton2");
   gtk_widget_ref (radiobutton2);
@@ -349,7 +361,15 @@ create_gpe_screen (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  radiobutton3 = gtk_radio_button_new_with_label (Viewmode_group, "Landscape\nleft");
+  pixmap2 = create_pixmap (gpe_screen, "right.xpm");
+  gtk_widget_set_name (pixmap2, "pixmap2");
+  gtk_widget_ref (pixmap2);
+  gtk_object_set_data_full (GTK_OBJECT (gpe_screen), "pixmap2", pixmap2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (pixmap2);
+  gtk_container_add (GTK_CONTAINER (radiobutton2), pixmap2);
+
+  radiobutton3 = gtk_radio_button_new (Viewmode_group);
   Viewmode_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton3));
   gtk_widget_set_name (radiobutton3, "radiobutton3");
   gtk_widget_ref (radiobutton3);
@@ -360,7 +380,15 @@ create_gpe_screen (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  radiobutton1 = gtk_radio_button_new_with_label (Viewmode_group, "Normal");
+  pixmap3 = create_pixmap (gpe_screen, "left.xpm");
+  gtk_widget_set_name (pixmap3, "pixmap3");
+  gtk_widget_ref (pixmap3);
+  gtk_object_set_data_full (GTK_OBJECT (gpe_screen), "pixmap3", pixmap3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (pixmap3);
+  gtk_container_add (GTK_CONTAINER (radiobutton3), pixmap3);
+
+  radiobutton1 = gtk_radio_button_new (Viewmode_group);
   Viewmode_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton1));
   gtk_widget_set_name (radiobutton1, "radiobutton1");
   gtk_widget_ref (radiobutton1);
@@ -372,7 +400,15 @@ create_gpe_screen (void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton1), TRUE);
 
-  label10 = gtk_label_new ("Select display direction");
+  pixmap1 = create_pixmap (gpe_screen, "normal.xpm");
+  gtk_widget_set_name (pixmap1, "pixmap1");
+  gtk_widget_ref (pixmap1);
+  gtk_object_set_data_full (GTK_OBJECT (gpe_screen), "pixmap1", pixmap1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (pixmap1);
+  gtk_container_add (GTK_CONTAINER (radiobutton1), pixmap1);
+
+  label10 = gtk_label_new ("Select display orientation");
   gtk_widget_set_name (label10, "label10");
   gtk_widget_ref (label10);
   gtk_object_set_data_full (GTK_OBJECT (gpe_screen), "label10", label10,
