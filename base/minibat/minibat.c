@@ -72,8 +72,7 @@ struct apm_reply {
 #define BATTERY_STATUS_CHARGING 1
 #endif
 
-#include <mb/mbtray.h>
-#include <mb/mbpixbuf.h>
+#include "mbtray.h"
 
 #include <X11/Xft/Xft.h>
 

@@ -2,11 +2,11 @@ PACKAGE = minibat
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.17
+VERSION = 0.18
 
 LINGUAS = 
 
-MEMBERS = minibat
+MEMBERS = minibat mbtray
 
 CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config --cflags xft`
 ifeq ($(DEBUG),yes)
