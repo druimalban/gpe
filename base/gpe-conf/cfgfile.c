@@ -288,6 +288,10 @@ is_present_interface(gchar *ifname)
 {
 	struct interface *int_list, *ife;
 
+	/* show devices for pan connections */
+	if (g_str_has_prefix(ifname, "bnep"))
+		return TRUE;
+	
 	int_list = if_getlist ();
 	g_strstrip(ifname);
 
