@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.51
+VERSION = 0.52
 DEBUG = no
 
 LINGUAS = de sv
@@ -18,9 +18,8 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CPPFLAGS += -D_GNU_SOURCE
-CFLAGS += $(GTKCFLAGS) -Wall -I../librootimage
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += $(GTKCFLAGS) -Wall
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -D_GNU_SOURCE
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget -I../librootimage

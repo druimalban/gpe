@@ -1,3 +1,12 @@
+2003-07-16  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.52 released.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (CFLAGS): Remove duplicate -I for librootimage.  Move
+	defines to CPPFLAGS.
+
 2003-07-16 Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Added hack to gpe-logout for killing metacity on simpad.
