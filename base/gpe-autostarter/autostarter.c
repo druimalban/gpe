@@ -96,6 +96,15 @@ autostarter_init_dbus (void)
 
   dbus_connection_setup_with_g_main (connection, NULL);
 
+  dbus_bus_add_match (connection,
+                      "type='signal'",
+                      &error);
+  if (dbus_error_is_set (&error))
+    {
+      fprintf (stderr, "Error: %s\n", error.message);
+      exit (1);
+    }
+
   dbus_connection_add_filter (connection, dbus_handler_func, NULL, NULL);
 }
 
