@@ -1,0 +1,10 @@
+Package: gpe-bootsplash2
+Provides: gpe-bootsplash
+Replaces: gpe-bootsplash
+Section: base
+Priority: optional
+Version: 0.0-3
+Architecture: arm
+Maintainer: Robert Mibus <mibus@bigpond.com>
+Depends: libgtk2.0-0
+Description: A GPE splashscreen while booting
