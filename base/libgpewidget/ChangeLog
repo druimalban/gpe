@@ -1,3 +1,9 @@
+2003-03-02  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (MEMBERS): Add popup.
+	* popup.c: New file.
+	* gpe/popup.h: Likewise.
+
 2003-03-01  Philip Blundell  <philb@gnu.org>
 
 	* render.c: Include <stdlib.h> to quash warning.

@@ -9,7 +9,7 @@ GTKRC = gtkrc
 
 LINGUAS = ro de
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel popup
 
 ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gpe-iconlist
