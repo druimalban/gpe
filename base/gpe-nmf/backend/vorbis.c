@@ -44,11 +44,12 @@ struct vorbis_context
 static void *
 vorbis_play_loop (void *vv)
 {
-  int i;
   int ret;
   int old_section = -1;
   unsigned char buffer[OGGBUFSIZ];
   struct vorbis_context *v = (struct vorbis_context *)vv;
+
+  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
   ret = ov_open_callbacks (v, &v->vf, NULL, 0, vorbisfile_callbacks);
   if (ret < 0)
@@ -160,6 +161,8 @@ vorbis_open (struct stream *s, int fd)
 static void 
 vorbis_close (struct vorbis_context *v)
 {
+  pthread_cancel (v->thread);
+  pthread_join (v->thread, NULL);
 }
 
 static void

@@ -47,6 +47,7 @@ player_set_playlist (player_t p, struct playlist *l)
   player_stop (p);
 
   p->list = l;
+  p->idx = 0;
 }
 
 void
@@ -70,7 +71,6 @@ player_play (player_t p)
 {
   player_stop (p);
 
-  p->idx = 0;
   p->cur = playlist_fetch_item (p->list, p->idx);
   if (p->cur)
     {
@@ -104,4 +104,26 @@ player_status (player_t p, struct player_status *s)
     }
   else
     s->finished = TRUE;
+}
+
+void 
+player_next_track (player_t p)
+{
+  if (p->cur)
+    {
+      player_stop (p);
+      p->idx++;
+      player_play (p);
+    }
+}
+
+void 
+player_prev_track (player_t p)
+{
+  if (p->idx)
+    {
+      player_stop (p);
+      p->idx--;
+      player_play (p);
+    }
 }

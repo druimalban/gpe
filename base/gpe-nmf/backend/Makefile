@@ -31,7 +31,7 @@ $(BACKEND_SO): $(BACKEND)
 	ln -sf $^ $@
 
 $(BACKEND): $(OBJS)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles `pkg-config --libs libxml-2.0` -Wl,-soname -Wl,$(BACKEND) -lesd
+	$(CC) -shared -o $@ $^ $(LDFLAGS) -nostartfiles `pkg-config --libs libxml-2.0` -Wl,-soname -Wl,$(BACKEND) -lesd -g
 
 -include $(DEPS)
 

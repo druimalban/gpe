@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-nmf
-#DEBUG = yes
+DEBUG = yes
 CVSBUILD = yes
 
 MEMBERS = gpe-nmf playlist_edit

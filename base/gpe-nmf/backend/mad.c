@@ -179,11 +179,10 @@ mad_play_loop (void *d)
 {
   struct mad_context *c = (struct mad_context *)d;
 
+  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
   /* start decoding */
   mad_decoder_run(&c->decoder, MAD_DECODER_MODE_SYNC);
-
-  /* release the decoder */
-  mad_decoder_finish(&c->decoder);
 
   c->finished = TRUE;
 
@@ -218,6 +217,11 @@ mad_open (struct stream *s, int fd)
 static void 
 mad_close (struct mad_context *c)
 {
+  pthread_cancel (c->thread);
+  pthread_join (c->thread, NULL);
+
+  /* release the decoder */
+  mad_decoder_finish(&c->decoder);
 }
 
 static void

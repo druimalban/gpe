@@ -92,7 +92,7 @@ close_file_sel (GtkWidget *w, gpointer d)
 static void
 select_file_done (GtkWidget *fs, gpointer d)
 {
-  char *s = gtk_mini_file_selection_get_filename (fs);
+  char *s = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (fs));
   player_t player = (player_t)d;
 
   if (strstr (s, ".npl") || strstr (s, ".xml"))
@@ -148,6 +148,24 @@ stop_clicked (GtkWidget *w, player_t p)
   player_stop (p);
   update_track_info (NULL);
   playing = FALSE;
+}
+
+static void
+next_clicked (GtkWidget *w, player_t p)
+{
+  struct player_status ps;
+  player_next_track (p);
+  player_status (p, &ps);
+  update_track_info (ps.item);
+}
+
+static void
+prev_clicked (GtkWidget *w, player_t p)
+{
+  struct player_status ps;
+  player_prev_track (p);
+  player_status (p, &ps);
+  update_track_info (ps.item);
 }
 
 int
@@ -221,6 +239,8 @@ main (int argc, char *argv[])
   gtk_widget_show (prev_button);
   gtk_widget_set_style (prev_button, style);
   gtk_container_add (GTK_CONTAINER (prev_button), w);
+  gtk_signal_connect (GTK_OBJECT (prev_button), "clicked",
+		      GTK_SIGNAL_FUNC (prev_clicked), player);
 
   p = gpe_find_icon ("media-rew");
   w = gpe_render_icon (window->style, p);
@@ -273,6 +293,8 @@ main (int argc, char *argv[])
   gtk_widget_set_style (next_button, style);
   gtk_container_add (GTK_CONTAINER (next_button), w);
   gtk_widget_show (w);
+  gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
+		      GTK_SIGNAL_FUNC (next_clicked), player);
 
   p = gpe_find_icon ("media-eject");
   w = gpe_render_icon (window->style, p);
