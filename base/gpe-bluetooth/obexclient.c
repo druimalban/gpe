@@ -230,11 +230,8 @@ obex_do_connect (gpointer data)
 
   if (find_obex_service (&req->bdaddr, &port) == FALSE)
     {
-      gdk_threads_enter ();
-      gpe_error_box_nonblocking (_("Selected device lacks OBEX support"));
-      gdk_threads_leave ();
-      run_callback (req, FALSE);	   
-      return;
+      text = _("Selected device lacks OBEX support");
+      goto error;
     }
 
   req->obex = OBEX_Init (OBEX_TRANS_BLUETOOTH, obex_event, 0);
