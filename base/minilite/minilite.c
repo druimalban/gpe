@@ -145,6 +145,10 @@ main (int argc, char **argv)
   gtk_window_set_title (GTK_WINDOW (window), _("Frontlight control"));
   gpe_set_window_icon (GTK_WIDGET (window), "minilite");
 
+  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("minilite"), NULL, &bitmap, 255);
+  gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
+  gdk_bitmap_unref (bitmap);
+
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the frontlight control.  Tap here and drag the slider to change the brightness."), NULL);
 
