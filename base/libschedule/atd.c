@@ -66,9 +66,9 @@ schedule_set_alarm (guint id, time_t start, const gchar *action)
     }
 
   write (fd, boilerplate_1, strlen (boilerplate_1));
-  write (fd, action, strlen (action));
   write (fd, condensorplate_1, strlen (condensorplate_1));
-
+  write (fd, action, strlen (action));
+  
   close (fd);
 
   g_free (filename);

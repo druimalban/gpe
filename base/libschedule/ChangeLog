@@ -1,3 +1,7 @@
+2004-02-23  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+	
+	* atd.c : using Nils fix for re-scheduling issues
+
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* atd.c: Tolerate actions with no trailing newline.

@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libschedule
 #DEBUG = yes 
-VERSION = 0.10
+VERSION = 0.11
 
 LINGUAS = 
 
