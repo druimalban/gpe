@@ -48,7 +48,7 @@ set_level (int level)
 {
   char buf[64];
 
-  if (level < 0)
+  if (level == 0)
     {
       system ("bl off");
       return -1;
