@@ -349,11 +349,9 @@ void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
 	g_free (title);
 }
 
-GtkWidget *create_icon_pixmap (char *fn, int size)
+GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
 	GdkPixbuf *pixbuf, *spixbuf;
-	GdkPixmap *pixmap;
-	GdkBitmap *bitmap;
 	GtkWidget *w;
 	pixbuf = gdk_pixbuf_new_from_file (fn);
 	if (pixbuf == NULL)
@@ -361,23 +359,8 @@ GtkWidget *create_icon_pixmap (char *fn, int size)
 	spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, 
 					   GDK_INTERP_BILINEAR);
 	gdk_pixbuf_unref (pixbuf);
-	gdk_pixbuf_render_pixmap_and_mask (spixbuf, &pixmap, &bitmap, 127);
+	w = gpe_render_icon (style, spixbuf);
 	gdk_pixbuf_unref (spixbuf);
-	w = gtk_pixmap_new (pixmap, bitmap);
-	return w;
-}
-
-GtkWidget *pixmap_from_file (char *fn)
-{
-	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (fn);
-	GdkPixmap *pixmap;
-	GdkBitmap *bitmap;
-	GtkWidget *w;
-	if (pixbuf == NULL)
-		return NULL;
-	gdk_pixbuf_render_pixmap_and_mask (pixbuf, &pixmap, &bitmap, 127);
-	w = gtk_pixmap_new (pixmap, bitmap);
-	gdk_pixbuf_unref (pixbuf);
 	return w;
 }
 
@@ -461,11 +444,13 @@ void create_recent_list ()
 		icon = find_icon (get_closest_icon (p, 16));
 		if (icon)
 		{
-			img = create_icon_pixmap (icon, 16);
+			img = create_icon_pixmap (recent_tab->style, icon, 16);
 			free (icon);
 		}
 		if (!img)
-			img = pixmap_from_file("/usr/share/pixmaps/menu_unknown_program16.png");
+			img = create_icon_pixmap (recent_tab->style,
+						 "/usr/share/pixmaps/menu_unknown_program16.png",
+						 16);
 
 		/* The button itself */
 		btn = gtk_event_box_new ();
@@ -601,11 +586,13 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			icon = find_icon (get_closest_icon (p, 16));
 			if (icon)
 			{
-				img = create_icon_pixmap (icon, 16);
+				img = create_icon_pixmap (tbl->style, icon, 16);
 				free (icon);
 			}
 			if (!img)
-				img = pixmap_from_file ("/usr/share/pixmaps/menu_unknown_program16.png");
+				img = create_icon_pixmap (tbl->style,
+							  "/usr/share/pixmaps/menu_unknown_program16.png",
+							  16);
 
 			/* Button label */
 			lbl = gtk_label_new(package_get_data (p, "title"));
@@ -654,14 +641,13 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 
 /* Creates the image/label combo for a tab.
  */
-GtkWidget *create_tab_label (char *name, char *icon_file)
+GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style)
 {
 	GtkWidget *img=NULL,*lbl,*hb;
 
-	img = pixmap_from_file(icon_file);
-
+	img = create_icon_pixmap (style, icon_file, 16);
 	if (!img)
-		img = pixmap_from_file("/usr/share/pixmaps/menu_unknown_group16.png");
+		img = create_icon_pixmap (style, "/usr/share/pixmaps/menu_unknown_group16.png", 16);
 
 	lbl = gtk_label_new (name);
 
@@ -680,13 +666,13 @@ GtkWidget *create_tab_label (char *name, char *icon_file)
 /* Creates the image/label combo for the tab
  * of a specified group.
  */
-GtkWidget *create_group_tab_label (char *group)
+GtkWidget *create_group_tab_label (char *group, GtkStyle *style)
 {
 	GtkWidget *hb;
 	char *icon_file;
 
 	icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", group);
-	hb = create_tab_label (group, icon_file);
+	hb = create_tab_label (group, icon_file, style);
 	g_free (icon_file);
 
 	return hb;
@@ -724,7 +710,7 @@ void refresh_tabs ()
 	if (cfg_options.show_all_group)
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook),
 					  create_tab (items, NULL, cfg_options.tab_view, NULL),
-					  create_group_tab_label("All"));
+					  create_group_tab_label("All", notebook->style));
 
 	/* Create the normal tabs if wanted */
 	l = groups;
@@ -734,7 +720,7 @@ void refresh_tabs ()
 			gtk_notebook_append_page (
 				GTK_NOTEBOOK(notebook),
 				create_tab (items, l->data, cfg_options.tab_view, NULL),
-				create_group_tab_label(l->data));
+				create_group_tab_label(l->data, notebook->style));
 
 		l = l->next;
 	}

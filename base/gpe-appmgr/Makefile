@@ -12,13 +12,13 @@ endif
 ifeq ($(FINAL),yes)
 CFLAGS += -Os -fomit-frame-pointer
 else
-CFLAGS += -g
+CFLAGS += -g 
 endif
 
 ifeq ($(NATIVE),yes)
 LDFLAGS += -lgpewidget `gtk-config --libs` `gdk-pixbuf-config --libs`
 STRIP=strip
-CFLAGS += -Os -fomit-frame-pointer `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Wall
+CFLAGS += `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Wall
 else
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
