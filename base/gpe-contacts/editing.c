@@ -891,51 +891,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
           db_set_data(p, "FAMILY_NAME", g_strdup(last));
           db_set_data(p, "TITLE", g_strdup(title));
           db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(suffix));
-
-          printf("t_%s_\n",title);
-printf("f_%s_\n",first);
-printf("m_%s_\n",middle);
-printf("l_%s_\n",last);
-printf("s_%s_\n",suffix);
-          g_free(sp);
-   /*       
-          if (num_elements == 2)
-            {
-              if (strstr(nametext, ","))
-                {
-                  if (strstr(e1,",")) 
-                    strstr(e1,",")[0] = 0;
-                  db_set_data(p, "GIVEN_NAME", g_strdup(e2));
-                  db_set_data(p, "FAMILY_NAME", g_strdup(e1));
-                }
-              else
-                {
-                  db_set_data(p, "GIVEN_NAME", g_strdup(e1));
-                  db_set_data(p, "FAMILY_NAME", g_strdup(e2));
-                }
-            }
-              
-          if (num_elements > 2)
-            {
-              db_set_data(p, "TITLE", g_strdup(e1));
-              if (strstr(nametext, ","))
-                {
-                  if (strstr(e2,",")) 
-                    strstr(e2,",")[0] = 0;
-                  db_set_data(p, "GIVEN_NAME", g_strdup(e3));
-                  db_set_data(p, "FAMILY_NAME", g_strdup(e2));
-                }
-              else
-                {
-                  db_set_data(p, "GIVEN_NAME", g_strdup(e2));
-                  db_set_data(p, "FAMILY_NAME", g_strdup(e3));
-                }
-            }
-          if (num_elements > 3)
-            {
-              db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(e4));
-            }
-*/      }
+      }
   
   
   if (commit_person (p))

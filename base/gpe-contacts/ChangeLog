@@ -1,5 +1,6 @@
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
-
+    
+    * namedetail.c: Removed debug code and old name splitter.
     * *.xml: Some more design tweaks and naming changes.
     * editing.c: Implemented new name splitter.
     * namedetail.*: Implemented selection lists for titles and suffixes.
