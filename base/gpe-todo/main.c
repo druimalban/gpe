@@ -13,6 +13,7 @@
 #include <libintl.h>
 
 #include <gtk/gtk.h>
+#include <gdk_imlib.h>
 
 #include "todo.h"
 #include "todo-sql.h"
@@ -25,43 +26,6 @@ GtkWidget *the_notebook;
 GtkWidget *window;
 
 extern GtkWidget *top_level (void);
-
-GSList *lists;
-
-int
-new_list_id (void)
-{
-  int id = 0;
-  int found;
-  do 
-    {
-      GSList *t;
-      id ++;
-      found = 0;
-      for (t = lists; t; t = t->next)
-	{
-	  if (((struct todo_list *)t->data)->id == id)
-	    {
-	      found = 1;
-	      break;
-	    }
-	}
-    } while (found);
-
-  return id;
-}
-
-struct todo_list *
-new_list (int id, const char *title)
-{
-  struct todo_list *t = g_malloc (sizeof (struct todo_list));
-  t->items = NULL;
-  t->title = title;
-  t->id = id;
-
-  lists = g_slist_append (lists, t);
-  return t;
-}
 
 static void
 open_window (void)
@@ -84,8 +48,10 @@ main(int argc, char *argv[])
 {
   gtk_set_locale ();
   gtk_init (&argc, &argv);
+  gdk_imlib_init ();
 
-  sql_start ();
+  if (sql_start ())
+    exit (1);
 
   open_window ();
   

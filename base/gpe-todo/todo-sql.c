@@ -15,15 +15,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <sqlite.h>
+#include <unistd.h>
+#include <sys/stat.h>
+
+#include "errorbox.h"
 
 #include "todo.h"
 #include "todo-sql.h"
 
 static sqlite *sqliteh;
 
-static char *dname = "/.gpe/todo";
+static const char *dname = "/.gpe";
+static const char *fname = "/todo";
 
 static int next_uid;
+
+GSList *lists;
 
 struct todo_item *
 add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
@@ -91,6 +98,41 @@ new_unique_id (void)
 }
 
 int
+new_list_id (void)
+{
+  int id = 0;
+  int found;
+  do 
+    {
+      GSList *t;
+      id ++;
+      found = 0;
+      for (t = lists; t; t = t->next)
+	{
+	  if (((struct todo_list *)t->data)->id == id)
+	    {
+	      found = 1;
+	      break;
+	    }
+	}
+    } while (found);
+
+  return id;
+}
+
+struct todo_list *
+new_list (int id, const char *title)
+{
+  struct todo_list *t = g_malloc (sizeof (struct todo_list));
+  t->items = NULL;
+  t->title = title;
+  t->id = id;
+
+  lists = g_slist_append (lists, t);
+  return t;
+}
+
+int
 sql_start (void)
 {
   static const char *schema1_str = 
@@ -99,6 +141,8 @@ sql_start (void)
     "create table todo_items (uid integer NOT NULL, list integer NOT NULL, "
     "summary text, description text, state integer NOT NULL, " 
     "due_by text, completed_at text)";
+  static const char *schema3_str = 
+    "create table next_uid (uid integer NOT NULL)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -106,25 +150,37 @@ sql_start (void)
   size_t len;
   if (home == NULL) 
     home = "";
-  len = strlen (home) + strlen (dname);
+  len = strlen (home) + strlen (dname) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, dname);
+  if (access (buf, F_OK))
+    {
+      if (mkdir (buf, 0700))
+	{
+	  gpe_perror_box (buf);
+	  g_free (buf);
+	  return -1;
+	}
+    }
+  strcat (buf, fname);
   sqliteh = sqlite_open (buf, 0, &err);
   if (sqliteh == NULL)
     {
-      fprintf (stderr, "sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
+      g_free (buf);
       return -1;
     }
 
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
+  sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err);
 
   if (sqlite_exec (sqliteh, "select uid,description from todo_lists",
 		   list_callback, NULL, &err))
     {
-      fprintf (stderr, "sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
       return -1;
     }
@@ -133,7 +189,7 @@ sql_start (void)
 		   "select uid,list,summary,description,state,due_by from todo_items",
 		   item_callback, NULL, &err))
     {
-      fprintf (stderr, "sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
       return -1;
     }
@@ -262,7 +318,7 @@ delete_item (struct todo_list *list, struct todo_item *i)
 
   list->items = g_list_remove (list->items, i);
 
-  g_free (i->what);
-  g_free (i->summary);
+  g_free ((gpointer)i->what);
+  g_free ((gpointer)i->summary);
   g_free (i);
 }

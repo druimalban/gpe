@@ -37,4 +37,5 @@ extern void sql_add_item (struct todo_item *i, int list_id);
 extern gint list_sort_func (gconstpointer a, gconstpointer b);
 extern void push_item (struct todo_item *i);
 extern void delete_item (struct todo_list *list, struct todo_item *i);
-
+extern int new_list_id (void);
+extern void sql_add_list (int id, const char *title);

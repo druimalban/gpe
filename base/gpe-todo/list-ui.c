@@ -107,7 +107,7 @@ draw_expose_event (GtkWidget *widget,
       struct todo_item *i = iter->data;
 
       gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-		    i->summary, strlen(i->summary));
+		    i->summary, strlen (i->summary));
 
       if (i->state == COMPLETED)
 	{
