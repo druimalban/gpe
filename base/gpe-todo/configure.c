@@ -17,8 +17,8 @@
 
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/picturebutton.h>
+#include <gpe/spacing.h>
 
 #include <libdm.h>
 
@@ -90,101 +90,65 @@ close_window(GtkWidget *widget,
 static void
 new_category_box (GtkWidget *w, gpointer data)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *vbox = GTK_DIALOG (window)->vbox;
   GtkWidget *ok;
   GtkWidget *cancel;
-  GtkWidget *buttons = gtk_hbox_new (FALSE, 0);
   GtkWidget *label = gtk_label_new ("Name:");
   GtkWidget *name = gtk_entry_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  guint x, y;
-  guint screen_width, screen_height;
-  GtkRequisition requisition;
+  guint spacing = gpe_get_boxspacing ();
+
+  libdm_mark_window (window);
+
+  ok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
+
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok, FALSE, FALSE, 0);
+
+  GTK_WIDGET_SET_FLAGS (ok, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (ok);
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, spacing);
+
+  gtk_object_set_data (GTK_OBJECT (window), "entry", name);
+  gtk_object_set_data (GTK_OBJECT (window), "clist", data);
+  
+  g_signal_connect (G_OBJECT (ok), "clicked", G_CALLBACK (ui_create_new_category), window);
+  
+  g_signal_connect (G_OBJECT (cancel), "clicked", G_CALLBACK (close_window), window);
+
+  gtk_window_set_title (GTK_WINDOW (window), _("New category"));
+  gpe_set_window_icon (window, "icon");
+
+  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
+
+  gtk_widget_show_all (window);
+  gtk_widget_grab_focus (name);
+}
+
+void
+configure (GtkWidget *w, gpointer list)
+{
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *toolbar;
+  GtkWidget *vbox = GTK_DIALOG (window)->vbox;
+  GtkWidget *clist = gtk_clist_new (1);
+  GtkWidget *okbutton;
+  GSList *l;
 
   libdm_mark_window (window);
 
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list: Categories"));
   gpe_set_window_icon (window, "icon");
 
-  ok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
-  cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
-
-  gtk_widget_show (ok);
-  gtk_widget_show (cancel);
-  gtk_widget_show (buttons);
-  gtk_widget_show (label);
-  gtk_widget_show (hbox);
-  gtk_widget_show (name);
-
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), name, TRUE, TRUE, 2);
-
-  gtk_box_pack_end (GTK_BOX (buttons), ok, FALSE, FALSE, 2);
-  gtk_box_pack_end (GTK_BOX (buttons), cancel, FALSE, FALSE, 2);
-
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), buttons, FALSE, FALSE, 0);
-
-  gtk_object_set_data (GTK_OBJECT (window), "entry", name);
-  gtk_object_set_data (GTK_OBJECT (window), "clist", data);
-  
-  gtk_signal_connect (GTK_OBJECT (ok), "clicked",
-		      GTK_SIGNAL_FUNC (ui_create_new_category), window);
-  
-  gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
-		      GTK_SIGNAL_FUNC (close_window), window);
-
-  gtk_widget_show (vbox);
-
-  gtk_window_set_title (GTK_WINDOW (window), _("New category"));
-
-  gtk_container_add (GTK_CONTAINER (window), vbox);
-
-  gtk_widget_realize (window);
-  gtk_widget_size_request (window, &requisition);  
-  gdk_window_get_pointer (NULL, &x, &y, NULL);
-  screen_width = gdk_screen_width ();
-  screen_height = gdk_screen_height ();
-
-  x = CLAMP (x - (requisition.width / 2), 0, MAX (0, screen_width - requisition.width));
-  y = CLAMP (y - 24, 0, MAX (0, screen_height - requisition.height));
-  gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
-
-  gtk_widget_show (window);
-  gtk_widget_grab_focus (name);
-}
-
-
-static void
-close_configure (GtkWidget *w, gpointer data)
-{
-  gtk_widget_destroy (data);
-}
-
-void
-configure (GtkWidget *w, gpointer list)
-{
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *toolbar;
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *clist = gtk_clist_new (1);
-  GtkWidget *pw;
-  GtkWidget *frame = gtk_frame_new (_("Categories"));
-  GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
-  GtkWidget *okbutton;
-  GSList *l;
-
-  libdm_mark_window (window);
-
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-			     GTK_TOOLBAR_ICONS);
-#else
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
 
   for (l = todo_db_get_categories_list(); l; l = l->next)
     {
@@ -196,45 +160,25 @@ configure (GtkWidget *w, gpointer list)
       row = gtk_clist_append (GTK_CLIST (clist), line_info);
       gtk_clist_set_row_data (GTK_CLIST (clist), row, t);
     }
-  
-#if GTK_MAJOR_VERSION < 2
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-#endif
 
-  gtk_widget_realize (window);
+  okbutton = gtk_button_new_from_stock (GTK_STOCK_OK);
+  g_signal_connect_swapped (G_OBJECT (okbutton), "clicked", G_CALLBACK (gtk_widget_destroy), window);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, FALSE, FALSE, 0);
+  GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (okbutton);
 
-  okbutton = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
-  gtk_signal_connect (GTK_OBJECT (okbutton), "clicked", GTK_SIGNAL_FUNC (close_configure), window);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+			    _("New category"), _("Tap here to add a new category."),
+			    G_CALLBACK (new_category_box), clist, -1);
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("New"), 
-			   _("Create a new category"), 
-			   _("Create a new category"),
-			   pw, new_category_box, clist);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
+			    _("Delete category"), _("Tap here to delete the selected category."),
+			    G_CALLBACK (ui_del_category), clist, -1);
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Delete"),
-			   _("Delete the selected category"), 
-			   _("Delete the selected category"),
-			   pw, ui_del_category, clist);
-
-  gtk_widget_show (toolbar);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-
-  gtk_widget_show (clist);
   gtk_box_pack_start (GTK_BOX (vbox), clist, TRUE, TRUE, 0);
 
-  gtk_widget_show (vbox);
-  gtk_container_add (GTK_CONTAINER (frame), vbox);
-  gtk_widget_show (frame);
-  gtk_box_pack_start (GTK_BOX (vboxtop), frame, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxtop), okbutton, FALSE, FALSE, 0);
-  gtk_widget_show (vboxtop);
-  gtk_container_add (GTK_CONTAINER (window), vboxtop);
-  
-  gtk_widget_set_usize (window, 240, 320);
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
 }

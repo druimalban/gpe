@@ -1,3 +1,11 @@
+2003-03-16  Philip Blundell  <philb@gnu.org>
+
+	* configure.c (new_category_box): Use GtkDialog.  Reorder buttons
+	per HIG.  Make "OK" default.
+	(configure): Remove GTK 1 support.  Use GtkDialog.  Remove useless
+	frame.  Use stock items.  Replace gtk_widget_set_usize with
+	gtk_window_set_default_size.
+
 2003-03-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* todo-ui.c (change_categories): Swap button order so as to
