@@ -2,4 +2,3 @@ Gtk/FontName:S:Sans 8
 Net/ThemeName:S:Angelistic
 Gtk/IconSizes:S:gtk-dialog=32,32:gtk-button=16,16
 Gtk/ToolbarIconSize:I:2
-MATCHBOX/Background:S:col-gradient-horizontal:#6a7ff2,#a2f2f2
