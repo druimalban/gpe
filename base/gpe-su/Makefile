@@ -4,7 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.09
 
-LINGUAS = nl
+LINGUAS = nl pt
 
 MEMBERS = gpe-su
 
