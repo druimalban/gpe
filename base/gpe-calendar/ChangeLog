@@ -1,5 +1,10 @@
 2002-08-31  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (edit_event_window): Put event box in a
+	GtkScrolledWindow.
+
+2002-08-31  Philip Blundell  <philb@gnu.org>
+
 	* month_view.c (c_old): Make static.
 	(button_press): Fix formatting.
 	(struct render_ctl): Add "today".

@@ -503,6 +503,7 @@ edit_event_window (void)
   GtkWidget *daybutton, *weekbutton;
   GtkWidget *optionmenu1, *optionmenu2;
   char buf[64];
+  GtkWidget *scrolledwindowevent;
   
   GtkWidget *menu1 = gtk_menu_new ();
   GtkWidget *menu2 = gtk_menu_new ();
@@ -856,8 +857,15 @@ edit_event_window (void)
 
   gtk_widget_show (vboxtop);
   gtk_container_add (GTK_CONTAINER (window), vboxtop);
-  
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, 
+
+  scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_show (scrolledwindowevent);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowevent),
+					 vboxevent);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowevent),
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scrolledwindowevent, 
 			    labeleventpage);
   /*gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxalarm,
 			    labelalarmpage);*/
