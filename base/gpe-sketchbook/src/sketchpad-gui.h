@@ -19,6 +19,7 @@
 #define SKETCHPAD_GUI_H
 
 GtkWidget * sketchpad_build_window();
+GtkWidget * sketchpad_gui(GtkWidget * toplevel_window);
 
 /** WARNING: will destroy button->child if any */
 void colorbox_button_set_color(GtkWidget * button, GdkColor * color);

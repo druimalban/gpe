@@ -41,12 +41,9 @@ GtkWidget * build_scrollable_clist();
 GtkWidget * build_scrollable_icons();
 
 GtkWidget * create_window_selector(){
-
   GtkWidget *window_selector;
-  GtkWidget *vbox; //hbox + list_view + (alt) icon_view
-  GtkWidget *hbox; //toolbar + help button
+  GtkWidget * selector;
 
-  //--Main window
   window_selector = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window_selector), 240, 280);
@@ -54,6 +51,16 @@ GtkWidget * create_window_selector(){
 #endif
   gtk_signal_connect (GTK_OBJECT (window_selector), "destroy",
                       GTK_SIGNAL_FUNC (on_window_selector_destroy), NULL);
+
+  selector = selector_gui();
+  gtk_container_add (GTK_CONTAINER (window_selector), selector);
+
+  return window_selector;
+}
+
+GtkWidget * selector_gui(){
+  GtkWidget *vbox; //hbox + list_view + (alt) icon_view
+  GtkWidget *hbox; //toolbar + help button
 
   //--Toolbar
   hbox = build_selector_toolbar(window_selector);
@@ -69,8 +76,6 @@ GtkWidget * create_window_selector(){
   gtk_box_pack_start (GTK_BOX (vbox), scrolledwindow_selector_clist, TRUE,  TRUE,  0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolledwindow_selector_icons, TRUE,  TRUE,  0);
 
-  gtk_container_add (GTK_CONTAINER (window_selector), vbox);
-
   //--show all except top level window AND one view
   gtk_widget_show(vbox);//top box
   gtk_widget_show_all(hbox);//toolbar
@@ -78,7 +83,7 @@ GtkWidget * create_window_selector(){
   if(icons_mode) gtk_widget_show_all(scrolledwindow_selector_icons);
   else           gtk_widget_show_all(scrolledwindow_selector_clist);
 
-  return window_selector;
+  return vbox;
 }
 
 GtkWidget * build_selector_toolbar(GtkWidget * window){

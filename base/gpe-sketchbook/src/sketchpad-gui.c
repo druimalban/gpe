@@ -44,13 +44,8 @@ void        sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window
  **/
 GtkWidget * sketchpad_build_window(){
   GtkWidget * window_sketchpad;
-  GpeDock   * dock;
+  GtkWidget * sketchpad;
 
-  GtkWidget * scrollable_drawing_area;
-  GtkWidget * drawing_toolbar;
-  //GtkWidget * files_toolbar; temporarily disabled (all buttons in drawing_toolbar)
-
-  //--building
   window_sketchpad = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);
@@ -59,8 +54,21 @@ GtkWidget * sketchpad_build_window(){
   gtk_signal_connect (GTK_OBJECT (window_sketchpad), "delete_event",
                       GTK_SIGNAL_FUNC (on_window_sketchpad_destroy), NULL);
 
+  sketchpad = sketchpad_gui(window_sketchpad);
+  gtk_container_add (GTK_CONTAINER (window_sketchpad), sketchpad);
+
+  return window_sketchpad;
+}
+
+GtkWidget * sketchpad_gui(GtkWidget * toplevel_window){
+  GpeDock   * dock;
+
+  GtkWidget * scrollable_drawing_area;
+  GtkWidget * drawing_toolbar;
+  //GtkWidget * files_toolbar; temporarily disabled (all buttons in drawing_toolbar)
+
   dock = gpe_dock_new();
-	gtk_signal_connect (GTK_OBJECT(window_sketchpad), "size-allocate",
+	gtk_signal_connect (GTK_OBJECT(toplevel_window), "size-allocate",
                       GTK_SIGNAL_FUNC (on_window_size_allocate),
                       dock);
 
@@ -72,11 +80,9 @@ GtkWidget * sketchpad_build_window(){
   gpe_dock_add_app_content(dock, scrollable_drawing_area);
   gpe_dock_add_toolbar    (dock, (GtkToolbar*)drawing_toolbar, GTK_ORIENTATION_HORIZONTAL);
 
-  gtk_container_add (GTK_CONTAINER (window_sketchpad), gpe_dock(dock));
-
   gtk_widget_show_all(gpe_dock(dock));
-  return window_sketchpad;
-}//sketchpad_build_window()
+  return gpe_dock(dock);
+}
 
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
   GtkWidget *scrolledwindow;

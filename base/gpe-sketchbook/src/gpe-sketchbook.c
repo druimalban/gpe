@@ -25,6 +25,7 @@
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
 #include "sketchpad-gui.h"
+#include "sketchpad-cb.h" //on_window_sketchpad_destroy()
 #include "selector.h"
 #include "selector-gui.h"
 
@@ -32,6 +33,8 @@
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
+
+Sketchbook sketchbook;
 gchar * sketchdir;
 #define SKETCHPAD_HOME_DIR ".sketchbook"
 
@@ -94,26 +97,75 @@ void app_quit(){
   gtk_exit (0);
 }
 
+void sketchbook_reset_title(GtkNotebook * notebook,
+                            GtkNotebookPage * page,
+                            guint page_number,
+                            gpointer unused){
+  switch (page_number){
+  case PAGE_SKETCHPAD:
+    sketchpad_reset_title();
+    break;
+  case PAGE_SELECTOR:
+  default:
+    gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketchbook"));
+  }
+}
+
 void gui_init(){
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
 
-  window_selector = create_window_selector();
-  window_selector_init(window_selector);
+  GtkWidget * window;
+  GtkNotebook * notebook;
 
-  window_sketchpad = sketchpad_build_window();
-  window_sketchpad_init(window_sketchpad);
+  GtkWidget * selector;
+  GtkWidget * sketchpad;
 
-  gtk_widget_realize   (window_selector);
-  gtk_widget_realize   (window_sketchpad);
+  //--toplevel window
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  /**/window_sketchpad = window; //FIXME: to be removed
+  /**/window_selector  = window; //FIXME: to be removed
+
+#ifdef DESKTOP
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 280);
+  gtk_window_set_position     (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
+#endif
+  g_signal_connect (G_OBJECT (window), "delete_event",
+                    G_CALLBACK (on_window_sketchpad_destroy), NULL);
+
   if (gpe_find_icon_pixmap ("this_app_icon", &pixmap, &bitmap)){
-    gdk_window_set_icon (window_selector->window,  NULL, pixmap, bitmap);
-    gdk_window_set_icon (window_sketchpad->window, NULL, pixmap, bitmap);
+    gtk_widget_realize   (window);
+    gdk_window_set_icon (window->window, NULL, pixmap, bitmap);
   }
 
-  //the window to show first
+  //--selector
+  selector  = selector_gui();
+  window_selector_init(window);
+
+  //--sketchpad
+  sketchpad = sketchpad_gui(window);
+  window_sketchpad_init(window);
+
+  //--packing
+  notebook = (GtkNotebook *) gtk_notebook_new();
+  gtk_notebook_set_show_border(notebook, FALSE);
+  gtk_notebook_set_show_tabs  (notebook, FALSE);
+  g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(sketchbook_reset_title), NULL);
+
+  gtk_notebook_insert_page(notebook, selector,  NULL, PAGE_SELECTOR);
+  gtk_notebook_insert_page(notebook, sketchpad, NULL, PAGE_SKETCHPAD);
+
+  gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET(notebook));
+
+  //--references
+  sketchbook.window   = window;
+  sketchbook.notebook = notebook;
+
+  //--show up
   //NOTE: could be defined by preference, or command line argument
-  if(0) gtk_widget_show   (window_sketchpad);
-  else  gtk_widget_show   (window_selector);
+  gtk_notebook_set_page(notebook, PAGE_SELECTOR);
+
+  gtk_widget_show (GTK_WIDGET(notebook));
+  gtk_widget_show (window);
 
 }//gui_init()

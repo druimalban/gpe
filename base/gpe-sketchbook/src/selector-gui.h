@@ -23,6 +23,7 @@ extern GtkWidget * scrolledwindow_selector_icons;
 extern gboolean icons_mode;
 
 GtkWidget * create_window_selector (void);
+GtkWidget * selector_gui();
 
 /**/
 GtkWidget * create_window_preview  ();

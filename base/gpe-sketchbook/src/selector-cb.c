@@ -33,8 +33,12 @@
 #define _(_x) gettext (_x)
 
 void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show){
-  gtk_widget_hide (window_to_hide);
-  gtk_widget_show (window_to_show);
+  if(gtk_notebook_get_current_page(sketchbook.notebook) == PAGE_SELECTOR){
+    gtk_notebook_set_page(sketchbook.notebook, PAGE_SKETCHPAD);
+  }
+  else{
+    gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
+  }
 }
 
 

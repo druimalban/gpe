@@ -79,9 +79,6 @@ void sketchpad_init(){
 
 void window_sketchpad_init(GtkWidget * window_sketchpad){
 
-  //--window title
-  sketchpad_reset_title();
-
   //--colors
   colormap = gdk_colormap_get_system();
 
@@ -196,7 +193,7 @@ void sketchpad_open_file(gchar * fullpath_filename){
   //**/g_printerr("sketchpad open: %s\n", fullpath_filename);
   file_load(fullpath_filename);
   is_current_sketch_modified = FALSE;
-  sketchpad_reset_title();//NOTE: needed?
+  sketchpad_reset_title();
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){

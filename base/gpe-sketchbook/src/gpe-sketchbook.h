@@ -19,6 +19,21 @@
 #define GPE_SKETCHBOOK_H
 
 //--main
+typedef struct _sketchbook {
+  GtkWidget   * window;
+  GtkNotebook * notebook;
+
+  //Selector  * selector;
+  //Sketchpad * sketchpad;
+} Sketchbook;
+
+extern Sketchbook sketchbook;
+
+enum {
+  PAGE_SELECTOR,
+  PAGE_SKETCHPAD,
+};
+
 extern gchar * sketchdir;
 void app_quit();
 
