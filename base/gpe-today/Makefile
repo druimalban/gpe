@@ -1,6 +1,6 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
-VERSION = 0.06
+VERSION = 0.07
 CVSBUILD = yes
 #DEBUG = yes
 #EFENCE = yes
@@ -60,6 +60,10 @@ install-program: all $(PACKAGE).desktop
 clean: clean-po
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop *~
 	rm -rf familiar/dist
+
+mrproper: clean
+	rm -f *.ipk translation-ipkgs.txt
+	rm -rf familiar/dist-translation
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
