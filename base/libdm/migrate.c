@@ -185,49 +185,58 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   if (xev->type == PropertyNotify)
     {
       GdkDisplay *gdisplay;
-      GdkWindow *gwindow;
+      Atom atom;
 
       gdisplay = gdk_x11_lookup_xdisplay (xev->display);
-      gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
 
-      if (gwindow)
+      atom = gdk_x11_atom_to_xatom_for_display (gdisplay, display_change_gdkatom);
+      if (xev->xproperty.atom == atom)
 	{
-	  GdkAtom actual_type;
-	  gint actual_format;
-	  gint actual_length;
-	  unsigned char *prop = NULL;
+	  GdkWindow *gwindow;
 
-	  if (gdk_property_get (gwindow, display_change_gdkatom, string_gdkatom,
-				0, 65536, FALSE, &actual_type, &actual_format,
-				&actual_length, &prop))
+	  gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
+
+	  if (gwindow)
 	    {
-	      if (actual_length != 0)
+	      GdkAtom actual_type;
+	      gint actual_format;
+	      gint actual_length;
+	      unsigned char *prop = NULL;
+	      
+	      if (gdk_property_get (gwindow, display_change_gdkatom, string_gdkatom,
+				    0, 65536, FALSE, &actual_type, &actual_format,
+				    &actual_length, &prop))
 		{
-		  if (actual_type == string_gdkatom && actual_length > 8)
+		  if (actual_length != 0)
 		    {
-		      gchar *buf = g_malloc (actual_length + 1);
-		      int rc;
-		      
-		      memcpy (buf, prop, actual_length);
-		      buf[actual_length] = 0;
-
-		      rc = handle_request (gwindow, buf);
+		      if (actual_type == string_gdkatom && actual_length > 8)
+			{
+			  gchar *buf = g_malloc (actual_length + 1);
+			  int rc;
+			  
+			  memcpy (buf, prop, actual_length);
+			  buf[actual_length] = 0;
+			  
+			  rc = handle_request (gwindow, buf);
 
 #ifdef DEBUG
-		      fprintf ("return code is %d\n", rc);
+			  fprintf ("return code is %d\n", rc);
 #endif
 
-		      g_free (buf);
-		      generate_response (gdisplay, xev->display, xev->window, rc);
+			  g_free (buf);
+			  generate_response (gdisplay, xev->display, xev->window, rc);
+			}
+
+		      if (rc == DISPLAY_CHANGE_SUCCESS)
+			update_challenge_on_windows ();
+
+		      reset_state (gwindow);
 		    }
-
-		  update_challenge_on_windows ();
-		  reset_state (gwindow);
 		}
-	    }
 
-	  if (prop)
-	    g_free (prop);
+	      if (prop)
+		g_free (prop);
+	    }
 	}
 
       return GDK_FILTER_REMOVE;
