@@ -75,7 +75,7 @@ set_volume (GtkObject *o, void *t)
 #endif
   volume |= (volume << 8);
   if (ioctl(mixfd, MIXER_WRITE(*(int *)t), &volume) == -1)
-  	perror("WRITE_MIXER");
+  	gpe_perror_box("WRITE_MIXER");
 }
 
 
@@ -116,7 +116,7 @@ GtkTooltips *mixer_tips;
 			gtk_table_attach(GTK_TABLE(table), slider, n,n+1,1,2,(GtkAttachOptions) (GTK_FILL),(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 			gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(slider),mixer_names[i],mixer_names[i]);
 			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get initial setting */
-				perror("MIXER_READ");
+				gpe_perror_box("MIXER_READ");
 			else
 				gtk_adjustment_set_value(GTK_ADJUSTMENT(MixerAdjuster[n]), 100 - (gdouble)(mval & 0x7f));
 			g_signal_connect (G_OBJECT (MixerAdjuster[n]), "value-changed",G_CALLBACK (set_volume), devnum);
@@ -183,19 +183,19 @@ gchar *color = "gray80";
   
 	/* mixer init */
 	if ((mixfd = open("/dev/mixer", O_RDWR)) < 0) {
-		perror("opening mixer");
+		gpe_perror_box("opening mixer");
 		exit(1);
 	}
 	if (ioctl(mixfd, SOUND_MIXER_READ_DEVMASK, &devmask) == -1) {
-		perror("SOUND_MIXER_READ_DEVMASK");
+		gpe_perror_box("SOUND_MIXER_READ_DEVMASK");
 		exit(1);
 	}
 	if (ioctl(mixfd, SOUND_MIXER_READ_RECMASK, &recmask) == -1) {
-		perror("SOUND_MIXER_READ_RECMASK");
+		gpe_perror_box("SOUND_MIXER_READ_RECMASK");
 		exit(1);
 	}
 	if (ioctl(mixfd, SOUND_MIXER_READ_RECSRC, &recsrc) == -1) {
-		perror("SOUND_MIXER_READ_RECSRC");
+		gpe_perror_box("SOUND_MIXER_READ_RECSRC");
 		exit(1);
 	}
 
@@ -210,6 +210,7 @@ gchar *color = "gray80";
 	g_signal_connect (G_OBJECT (window), "destroy",
 			G_CALLBACK (gtk_main_quit), NULL);
 
+	/* Create the table of mixer widgets */
 	table = NULL;
 	create_mixers(table);
 
@@ -217,6 +218,7 @@ gchar *color = "gray80";
 	gpe_set_window_icon (window, "icon");
 #endif
 
+	/* Auto update mixer settings */
 	gtk_timeout_add(500 /*ms*/, mixer_idle, NULL);
 
 	gtk_widget_show (window);
