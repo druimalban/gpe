@@ -1,0 +1,90 @@
+# Mesajele în limba românã pentru gpe-sketchbook.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-sketchbook.
+# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+#
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
+"PO-Revision-Date: 2003-05-05 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
+msgid "Sketchbook"
+msgstr "Caiet schiþe"
+
+#: src/selector.c:87
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Nu pot citi directorul caiet schiþe: %s. Termin."
+
+#: src/selector.c:93
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Nu pot crea %s:  %s. Termin."
+
+#: src/selector.c:164
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s  la  %s"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
+msgid "Delete current sketch?"
+msgstr "Nu pot ºterge schiþa curentã"
+
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
+msgid "Question"
+msgstr "Întrebare"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "Renunþã"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
+msgid "Delete"
+msgstr "ªterge"
+
+#: src/sketchpad.c:184
+msgid "new"
+msgstr "nou"
+
+#: src/sketchpad-cb.c:46
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Schiþã modificatã,\n"
+"salveazã înainte de a termina?"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
+msgstr "Aruncã"
+
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
+msgid "Save"
+msgstr "Salveazã"
+
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
+msgstr "Salveazã schiþa curentã?"
+
+#: src/sketchpad-gui.c:426
+msgid "New"
+msgstr "Nou"
+
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "Proprietãþi"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE Sketchbook"
