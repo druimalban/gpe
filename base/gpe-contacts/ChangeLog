@@ -1,3 +1,8 @@
+2005-02-15  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c (build_children): Add basic support for displaying images.
+                               Some formating fixes.
+
 2005-02-14  Florian Boor <florian.boor@kernelconcepts.de>
 
     * db.c (sort_entries): Sort by family name.

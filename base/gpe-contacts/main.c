@@ -394,7 +394,7 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
                 l = gtk_label_new (e->name);
                 gtk_misc_set_alignment(GTK_MISC(l), 0.0, 0.5);
                 memset(&tm, 0, sizeof(tm));
-                sscanf(tv->value,"%04d%02d%02d",&year,&month,&day);
+                sscanf(tv->value,"%04d%02d%02d", &year, &month, &day);
                 if (year)
                   { 
                     tm.tm_year = year - 1900;
@@ -403,7 +403,7 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
                     strftime(buf, sizeof(buf), "%x", &tm);
                   }
                 else 
-                  snprintf(buf,sizeof(buf),"%02d/%02d",month+1,day);
+                  snprintf(buf,sizeof(buf),"%02d/%02d", month+1, day);
                 w = gtk_label_new(buf);
                 gtk_misc_set_alignment(GTK_MISC(w), 0.0, 0.5);
                 hbox = gtk_hbox_new(FALSE, gpe_get_boxspacing());
@@ -413,6 +413,35 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
               }
           }
           break;
+          case ITEM_IMAGE:
+          {
+            GtkWidget *l = gtk_label_new (e->name);
+            GtkWidget *hbox, *image, *sw, *vp;
+            
+            if (!(tv && tv->value))
+              continue;
+            result |= pop_singles (vbox, singles, p);
+            singles = NULL;
+            hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+            gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.0);
+            gtk_box_pack_start (GTK_BOX (hbox), l, FALSE, TRUE, 0);
+  
+            image = gtk_image_new();
+            gtk_image_set_from_file(GTK_IMAGE(image), tv->value);
+            /* todo: image size check */
+/*            vp = gtk_viewport_new(NULL, NULL);
+            gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
+            sw = gtk_scrolled_window_new(NULL, NULL);
+            gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), 
+                                           GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+            gtk_container_add(GTK_CONTAINER(vp), image);
+            gtk_container_add(GTK_CONTAINER(sw), vp);
+            gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
+*/ 
+            gtk_box_pack_start (GTK_BOX (hbox), image, TRUE, TRUE, 0);
+            gtk_widget_show_all(hbox);
+            gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+          }
           default:
             /* just ignore */
           break;
@@ -457,8 +486,10 @@ show_details (struct person *p)
           GtkWidget *vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
           gchar *catstring = build_categories_string(p);
         
-          gtk_table_attach(GTK_TABLE(table), vbox, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
-          for (page = edit_pages; page; page = page->next) /* we use data layout to structure widgets */
+          gtk_table_attach(GTK_TABLE(table), vbox, 0, 1, 0, 1, 
+                           GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+          /* we use data layout to structure widgets */
+          for (page = edit_pages; page; page = page->next) 
             {
                edit_thing_t e = page->data;
                /* add section content */
@@ -1359,8 +1390,8 @@ create_main (gboolean edit_structure)
       gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
     }
   tabDetail = gtk_table_new (1, 2, FALSE);
-  gtk_table_set_col_spacings(GTK_TABLE(tabDetail),gpe_get_boxspacing()*2);
-  gtk_container_set_border_width(GTK_CONTAINER(tabDetail),gpe_get_border());
+  gtk_table_set_col_spacings(GTK_TABLE(tabDetail), gpe_get_boxspacing() * 2);
+  gtk_container_set_border_width(GTK_CONTAINER(tabDetail), gpe_get_border());
   if (mode_large_screen)
     {
       GtkWidget *vport;
@@ -1381,12 +1412,10 @@ create_main (gboolean edit_structure)
 
   g_signal_connect (G_OBJECT (tree_sel), "changed",
 		    G_CALLBACK (selection_made), main_window);
- 
   g_signal_connect (G_OBJECT (main_window), "focus-in-event",
 		    G_CALLBACK (on_main_focus), entry1);
 
   displaymigration_mark_window (main_window);
-
   
   return main_window;
 }
