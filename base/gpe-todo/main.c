@@ -31,6 +31,7 @@ static struct gpe_icon my_icons[] = {
   { "delete", "delete" },
   { "cancel", "cancel" },
   { "exit", "exit" },
+  { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { NULL, NULL }
 };
 
@@ -82,6 +83,9 @@ main(int argc, char *argv[])
 
   open_window ();
   
+  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
+
   gtk_main ();
 
   return 0;

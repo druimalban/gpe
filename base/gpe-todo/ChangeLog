@@ -1,5 +1,9 @@
 2002-06-21  Philip Blundell  <pb@debian.org>
 
+	* main.c: Set icon for window manager.
+
+2002-06-21  Philip Blundell  <pb@debian.org>
+
 	* familiar/control (Depends): Require libgpewidget 0.08.
 
 	* Version 0.08 released.
