@@ -3,7 +3,7 @@ PACKAGE = gpe-mixer
 DEBUG = yes
 CVSBUILD = yes
 GST = yes
-VERSION = 0.10
+VERSION = 0.20
 
 MEMBERS = gpe-mixer
 
@@ -42,6 +42,8 @@ install-program: all $(PACKAGE).desktop
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
+	install -m 644 pixmaps/*.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 

@@ -32,8 +32,19 @@
 #include <gpe/errorbox.h>
 #endif
 
+
 static struct gpe_icon my_icons[] = {
 	{ "icon", PREFIX "/share/pixmaps/gpe-mixer.png" },
+	{ "line" , PREFIX "/share/gpe-mixer/line.png"},
+	{ "cd" , PREFIX "/share/gpe-mixer/cd.png"},
+	{ "bass" , PREFIX "/share/gpe-mixer/bass.png"},
+	{ "vol" , PREFIX "/share/gpe-mixer/volume.png"},
+	{ "unkn" , PREFIX "/share/gpe-mixer/unkn.png"},
+	{ "treble" , PREFIX "/share/gpe-mixer/treble.png"},
+	{ "synth" , PREFIX "/share/gpe-mixer/synth.png"},
+	{ "speaker" , PREFIX "/share/gpe-mixer/speaker.png"},
+	{ "pcm" , PREFIX "/share/gpe-mixer/pcm.png"},
+	{ "mic" , PREFIX "/share/gpe-mixer/mic.png"},
 	{ NULL, NULL }
 };
 
@@ -46,7 +57,8 @@ GtkStyle *style;
 #define _(x) gettext(x)
 
 /* mixer handling */
-char *names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_LABELS;
+char *mixer_labels[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_LABELS;
+char *mixer_names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_NAMES;
 int devmask = 0, recmask = 0, recsrc = 0;
 int mixfd;
 
@@ -71,6 +83,7 @@ int mval;
 GtkWidget *slider;
 GtkObject *adjuster;
 GtkWidget *label;
+GtkWidget *w;
 int *devnum;
 
 	/* count mixers */
@@ -100,10 +113,16 @@ int *devnum;
 				gtk_adjustment_set_value(GTK_ADJUSTMENT(adjuster), 100 - (gdouble)(mval & 0x7f));
 			g_signal_connect (G_OBJECT (adjuster), "value-changed",G_CALLBACK (set_volume), devnum);
 			gtk_widget_show(slider);
-			label=gtk_label_new(_(names[i]));
-			gtk_widget_set_style (label, style);
-			gtk_table_attach(GTK_TABLE(table), label, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
-			gtk_widget_show(label);
+			if ((w = gtk_image_new_from_pixbuf (gpe_find_icon (mixer_names[i])))) {
+				gtk_widget_set_style (w, style);
+				gtk_table_attach(GTK_TABLE(table), w, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
+				gtk_widget_show(w);
+			} else {
+				label=gtk_label_new(_(mixer_labels[i]));
+				gtk_widget_set_style (label, style);
+				gtk_table_attach(GTK_TABLE(table), label, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
+				gtk_widget_show(label);
+			}
 			n++;
 		}
 	}
