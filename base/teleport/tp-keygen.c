@@ -39,9 +39,7 @@ int
 generate_key (struct rsa_key *rv)
 {
   int rc;
-  size_t len;
-  GcrySexp r, parms, s;
-  char *p;
+  GcrySexp r, parms;
  
   rc = gcry_sexp_build (&parms, NULL, "(genkey (rsa (nbits %d)))", 1024);
   if (rc)

@@ -30,20 +30,21 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: teleport all-mo keygen
+all: teleport all-mo tp-keygen
 
 teleport: $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) $(LDFLAGS)
 
-keygen: keygen.o
+tp-keygen: tp-keygen.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:
-	rm -f teleport $(OBJS) $(DEPS)
+	rm -f teleport tp-keygen tp-keygen.o $(OBJS) $(DEPS)
 
 install: all install-mo
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s teleport $(DESTDIR)$(PREFIX)/bin/
+	install -s tpkeygen $(DESTDIR)$(PREFIX)/bin/
 
 include ../build/Makefile.dpkg_ipkg
 include ../build/Makefile.translation
