@@ -29,6 +29,9 @@
 #include <gpe/tray.h>
 #include <gpe/popup.h>
 
+#include <linux/ioctl.h>
+#include <sys/ioctl.h>
+
 typedef enum
 {
 	P_NONE,
@@ -39,8 +42,22 @@ typedef enum
 	P_SIMPAD
 }t_platform;
 
+
 /* for iPAQ touchscreen */
-#include <linux/h3600_ts.h>
+#define IOC_H3600_TS_MAGIC  'f'
+#define TS_GET_BACKLIGHT        _IOR(IOC_H3600_TS_MAGIC, 20, struct h3600_ts_backlight)
+#define TS_SET_BACKLIGHT        _IOW(IOC_H3600_TS_MAGIC, 20, struct h3600_ts_backlight)
+
+enum flite_pwr {
+        FLITE_PWR_OFF = 0,
+        FLITE_PWR_ON  = 1
+};
+
+struct h3600_ts_backlight {
+        enum flite_pwr power;          /* 0 = off, 1 = on */
+        unsigned char  brightness;     /* 0 - 255         */
+};
+
 #define TS_DEV "/dev/touchscreen/0raw"
 #define H36XX 0
 #define H38XX 1
@@ -93,7 +110,7 @@ detect_platform(void)
 int 
 corgi_set_level(int level)
 {
-	int fd, val, len, res;
+	int fd, val, len, res = -1;
 	gchar buf[20];
 	
 	if ((fd = open(CORGI_FL, O_WRONLY)) >= 0)
@@ -125,8 +142,7 @@ corgi_get_level(void)
 int 
 zaurus_set_level(int level)
 {
-	int fd, val, len, res;
-	gchar buf[20];
+	int fd, val, res = -1;
 	
 	if ((fd = open(ZAURUS_FL, O_WRONLY)) >= 0)
 	{
@@ -142,8 +158,8 @@ zaurus_set_level(int level)
 int 
 zaurus_get_level(void)
 {
-	int fd, val;
-/*	
+/*	int fd, val;
+	
 	if ((fd = open(ZAURUS_FL, O_WRONLY )) >= 0 )
 	{
 		res = ioctl(fd, FL_IOCTL_GET_STEP_CONTRAST, &val);
@@ -213,8 +229,8 @@ integral_set_level(int level)
   	fclose(f_light);
 	return level;
   }
-  return -1;
-return level;
+  else
+	  return -1;
 }
 
 int 
@@ -278,6 +294,9 @@ set_level (int level)
 	case P_INTEGRAL:
 		return integral_set_level(level);
 	break;
+	default:
+		return 0;
+	break;
 	}
 }
 
@@ -307,6 +326,9 @@ read_old_level (void)
 	break;
 	case P_INTEGRAL:
 		return integral_get_level();
+	break;
+	default:
+		return 0;
 	break;
 	}
   return 0;

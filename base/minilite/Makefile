@@ -2,29 +2,29 @@ PACKAGE = minilite
 PREFIX = /usr
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.40
+VERSION = 0.41
 INSTALL = install
 LINGUAS = 
 
 MEMBERS = minilite
 
 ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+PACKAGE_CFLAGS += -O2 -g
+PACKAGE_LDFLAGS = -g 
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
 ifeq ($(CVSBUILD),yes)
-CPPFLAGS +=  -I../libgpewidget
-LDFLAGS += -L../libgpewidget
+PACKAGE_CFLAGS +=  -I../libgpewidget
+PACKAGE_LDFLAGS += -L../libgpewidget
 endif
 
-CFLAGS += `pkg-config --cflags gtk+-2.0`
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0`
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) $(GTKCFLAGS)
+LDFLAGS += $(STANDARD_LIBS) $(GPELIBS) $(GTKLIBS) 
 
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -MD
 
 .SUFFIXES: .d
 
@@ -41,7 +41,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
