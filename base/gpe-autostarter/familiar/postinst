@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if test -d /etc/X11/Xsession-gpe.d/; then 
-    ln -fs /etc/X11/Xsession.d/50autostarter /etc/X11/Xsession-gpe.d/50autostarter
+    ln -fs /etc/X11/Xsession.d/50gpe-autostarter /etc/X11/Xsession-gpe.d/50gpe-autostarter
 fi
 
 exit 0

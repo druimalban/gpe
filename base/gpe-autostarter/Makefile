@@ -3,7 +3,7 @@ PACKAGE = gpe-autostarter
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.1
+VERSION = 0.2
 
 MEMBERS = autostarter
 
@@ -36,10 +36,10 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
-	mkdir -p $(DESTDIR)/etc/X11/Xsession.d
-	install $(PACKAGE).xsession $(DESTDIR)$(PREFIX)/50$(PACKAGE)
+	install -d $(DESTDIR)/etc/X11/Xsession.d
+	install $(PACKAGE).xsession $(DESTDIR)/etc/X11/Xsession.d/50$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
