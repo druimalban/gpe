@@ -378,9 +378,9 @@ suidloop (int write, int read)
 					system_printf ("/bin/rm -f %s",
 						       GPE_OWNERINFO_TMP);
 				}
-				else if (strcmp (cmd, "XCAL") == 0)  // runs xcalibrate
+				else if (strcmp (cmd, "XCAL") == 0)  // runs screen calibration tool
 				{
-					system ("/usr/bin/gpe-xcalibrate.sh");
+					system ("/usr/bin/xtscal");
 				}
 				else if (strcmp (cmd, "STZO") == 0)  // changes the timezone setting 
 				{
