@@ -1,3 +1,15 @@
+2003-10-19  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.39 released.
+
+2003-10-19  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (GTKCFLAGS, GTKLDFLAGS): Don't define.
+	Use STANDARD_*FLAGS, GPECFLAGS, GPELIBS.
+
+	* todo-ui.c (edit_item): Put whole dialog inside a
+	GtkScrolledWindow.  [Bug #1024, reported by J.Manrique]
+
 2003-10-09  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add cs.

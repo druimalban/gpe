@@ -297,6 +297,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   GtkWidget *hbox_categories;
+  GtkWidget *scrolled_window;
   struct edit_todo *t = g_malloc (sizeof (struct edit_todo));
 
   const char *state_strings[] = { _("Not started"), _("In progress"),
@@ -308,6 +309,10 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   time_t the_time;
 
   displaymigration_mark_window (window);
+
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
   buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
@@ -401,7 +406,8 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   gtk_container_set_border_width (GTK_CONTAINER (window),
 				  gpe_get_border ());
-  gtk_container_add (GTK_CONTAINER (window), vbox);
+  gtk_container_add (GTK_CONTAINER (window), scrolled_window);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), vbox);
 
   gtk_widget_grab_focus (entry_summary);
 
