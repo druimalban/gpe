@@ -1,3 +1,7 @@
+2004-11-17 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* interface.c: Removed unused and duplicate headers.
+
 2004-10-24 Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* backend.*: Changed messaging to signalise errors to frontend.

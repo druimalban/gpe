@@ -18,26 +18,6 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <stropts.h>
-#include <poll.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/signal.h>
-#include <sys/un.h>
-
-#include <locale.h>
-#include <libintl.h>
-#define _(x) gettext(x)
-
-#include <gtk/gtk.h>
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <stropts.h>
 #include <poll.h>
 #include <sys/types.h>
 #include <sys/socket.h>
