@@ -6,7 +6,8 @@
 <HTML> 
 <HEAD> 
 <TITLE> GPE: <!--#echo var="addtitle"--></TITLE> 
-</HEAD> 
+<LINK REL="stylesheet" HREF="/css/style.css" TYPE="text/css">
+</HEAD>
 <BODY bgcolor="#ffffff" fgcolor="#000000">
 <table cols=2 rows=1 border=0>
 <tr>
