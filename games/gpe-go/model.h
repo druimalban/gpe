@@ -38,6 +38,8 @@ typedef struct _go {
 
   gboolean save_game;
 
+  GtkTextBuffer * comment_buffer;
+
 #ifdef TURN_LABEL
   GtkWidget * turn_label;
   char      * turn_string;

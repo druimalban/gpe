@@ -49,7 +49,8 @@ GdkColor blue = {0,     0, 0, 65535};
 
 enum page_names{
   PAGE_BOARD = 0,
-  PAGE_GAME_SETTINGS
+  PAGE_GAME_SETTINGS,
+  PAGE_COMMENT_EDITOR,
 };
 
 Hitem * new_hitem(){
@@ -1273,6 +1274,7 @@ GtkWidget * build_new_game_dialog(){
   //image
   pixbuf = gpe_find_icon ("this_app_icon");
   image = gtk_image_new_from_pixbuf(pixbuf);
+  g_object_unref(G_OBJECT(pixbuf));
   frame = gtk_frame_new (NULL);
   gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
   gtk_container_add (GTK_CONTAINER (frame), image);
@@ -1370,6 +1372,104 @@ GtkWidget * build_new_game_dialog(){
   return top_level_container;
 }
 
+void on_button_edit_comment_clicked(){
+  //gtk_text_buffer_set_text (go.comment_buffer, "Hello, this is some text", -1);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_COMMENT_EDITOR);
+}
+
+void on_button_comment_cancel_clicked (void){
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+}
+
+void on_button_comment_ok_clicked (void){
+  TRACE("******* COmment OK -- need to save changes");
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+}
+
+GtkWidget * build_comment_editor(){
+  GtkWidget * top_level_container;
+
+  //containers
+  GtkWidget * title;
+  GtkWidget * buttons;
+
+  //
+  GtkWidget * label;
+  GtkWidget * hbox;
+
+  GtkWidget * frame;
+  GtkWidget * image;
+  GdkPixbuf * pixbuf;
+
+  GtkWidget * comment_text_view;
+  GtkWidget * scrolled_window;
+
+  //--title
+  label = gtk_label_new (NULL);
+  /* TRANSLATORS: keep the <big><b> tags */
+  gtk_label_set_markup (GTK_LABEL (label), _("<big><b>Comment editor</b></big>"));
+
+  //image
+  pixbuf = gpe_find_icon ("this_app_icon");
+  image = gtk_image_new_from_pixbuf(pixbuf);
+  g_object_unref(G_OBJECT(pixbuf));
+  frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_ETCHED_IN);
+  gtk_container_add (GTK_CONTAINER (frame), image);
+
+  //packing
+  hbox = gtk_hbox_new (FALSE, 20);
+  gtk_box_pack_start (GTK_BOX (hbox), frame, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+  title = hbox;
+
+  //--Text editor
+  comment_text_view = gtk_text_view_new ();
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW(comment_text_view), GTK_WRAP_CHAR);
+  go.comment_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (comment_text_view));
+
+  //scrolled window
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_ETCHED_IN);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+                                  GTK_POLICY_AUTOMATIC,
+                                  GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), comment_text_view);
+
+  //--[CANCEL][OK] buttons
+  {
+    GtkWidget * button;
+    GtkWidget * hbox;
+
+    hbox = gtk_hbox_new(TRUE, 0);
+    
+    button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+    g_signal_connect (G_OBJECT (button), "clicked",
+                      G_CALLBACK (on_button_comment_cancel_clicked), NULL);
+
+    gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 4);
+
+    button = gtk_button_new_from_stock (GTK_STOCK_OK);
+    g_signal_connect (G_OBJECT (button), "clicked",
+                      G_CALLBACK (on_button_comment_ok_clicked), NULL);
+    
+    gtk_box_pack_start (GTK_BOX (hbox), button, TRUE, TRUE, 4);
+
+    buttons = hbox;
+  }
+
+  //--Packing
+  top_level_container = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (top_level_container), 5);
+
+  gtk_box_pack_start (GTK_BOX (top_level_container), title, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (top_level_container), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (top_level_container), buttons, FALSE, FALSE, 4);
+
+  return top_level_container;
+}
+
 GtkWidget * _game_popup_menu_new (GtkWidget *parent_button){
   GtkWidget *vbox;//to return
 
@@ -1406,15 +1506,17 @@ void gui_init(){
 
   GtkWidget * window;
   GtkWidget * vbox;
+  GtkWidget * hbox;
 
   GtkWidget * new_game_dialog;
+  GtkWidget * comment_editor;
 
   GtkWidget * toolbar;
   GtkWidget * image;
 
   GtkWidget * capture_label;
 
-  GtkWidget   * drawing_area;
+  GtkWidget * drawing_area;
 
 
   //--toplevel window
@@ -1436,7 +1538,7 @@ void gui_init(){
                               GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  //[game] popup menu ici
+  //[game] popup menu
   widget = popup_menu_button_new_from_stock (GTK_STOCK_NEW,
                                              _game_popup_menu_new, NULL);
   gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
@@ -1531,11 +1633,28 @@ void gui_init(){
   g_signal_connect (G_OBJECT (drawing_area), "button_release_event",
                     G_CALLBACK (on_drawing_area_button_release_event), NULL);
 
+
   //--Status bar
+  hbox = gtk_hbox_new(FALSE, 0);
+
+  //Status
   widget = gtk_statusbar_new();
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(widget), FALSE);
   gtk_statusbar_push(GTK_STATUSBAR(widget), 0, "let's go!");
   go.status = widget;
+
+  gtk_box_pack_start (GTK_BOX (hbox), widget, TRUE, TRUE, 0);
+
+  //Status expansion
+  widget = gtk_button_new_with_label("...");
+  //NOTE: reduce height!!!
+  gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
+  g_signal_connect (G_OBJECT (widget), "clicked",
+                    G_CALLBACK (on_button_edit_comment_clicked), NULL);
+  gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 0);
+
+  //--Comment editor
+  comment_editor = build_comment_editor();
 
   //--New game settings page
   new_game_dialog = build_new_game_dialog();
@@ -1547,7 +1666,7 @@ void gui_init(){
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
-  gtk_box_pack_start (GTK_BOX (vbox), go.status,    FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0); //go.status,    FALSE, FALSE, 0);
 
   widget = gtk_notebook_new();
   go.notebook = widget;
@@ -1556,6 +1675,7 @@ void gui_init(){
 
   gtk_notebook_insert_page(GTK_NOTEBOOK(widget), vbox,  NULL, PAGE_BOARD);
   gtk_notebook_insert_page(GTK_NOTEBOOK(widget), new_game_dialog, NULL, PAGE_GAME_SETTINGS);
+  gtk_notebook_insert_page(GTK_NOTEBOOK(widget), comment_editor, NULL, PAGE_COMMENT_EDITOR);
 
   gtk_container_add (GTK_CONTAINER (window), widget);
 
