@@ -3,9 +3,11 @@ by Luc Pionchon <luc@handhelds.org>
 
 Building:
 --------
-variables to set,
+variables to set:
 
-DESKTOP=1  -- includes extra code for desktop use
-GTK2=yes   -- use GTK2 libs
+DESKTOP=1   -- include extra code for test on desktop
+CSBUILD=yes -- build within cvs tree.
+DEBUG=yes   -- include debug flags/code
 
 then make.
+

@@ -7,9 +7,15 @@ DEPS    = $(patsubst %,%.d,$(MEMBERS))
 OBJS    = $(patsubst %,%.o,$(MEMBERS))
 
 CC      = gcc
-CFLAGS += -Wall #-g
-CFLAGS += -Os
+CFLAGS += -Wall
 CFLAGS += -MD #(deps)
+
+ifeq ($(DEBUG),yes)
+CFLAGS  += -O2 -g
+LDFLAGS += -g
+else
+CFLAGS += -Os -fomit-frame-pointer
+endif
 
 #-- variables
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\"
@@ -22,13 +28,19 @@ CPPFLAGS += -DDESKTOP
 endif
 
 #-- GPE widgets
+ifndef CVSBUILD
+CVBUILD = no
+endif
 
+ifeq ($(CVSBUILD),yes)
 CFLAGS  += -I../../libgpewidget
 LDFLAGS += -L../../libgpewidget
+endif
+
 
 LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 
-#-- GTK
+#-- GTK2
 CFLAGS  +=  #-DGTK_ENABLE_BROKEN
 CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
 LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
@@ -47,7 +59,7 @@ arm: $(ARM_BIN)
 
 #--package
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -g $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 $(ARM_BIN):
 	../utils/dummy-arm-bin &> /dev/null && make $(PACKAGE)
@@ -62,36 +74,20 @@ x: $(PACKAGE)
 clean:
 	rm -f *~
 	rm -f $(OBJS) $(DEPS)
-
+rc: realclean
 realclean: clean
 	rm -f $(PACKAGE) #$(ARM_BIN)
 
 -include $(DEPS)
 
-
-#--handhelds.org
-trans-pc-to-handheld: dist
-	~/bin/move-TO-handhelds.org `pwd` $(DIST_NAME).tar.gz
-
-trans-handheld-to-pc:
-	~/bin/move-FROM-handhelds.org $(DIST_NAME) src/$(PACKAGE)-$(VERSION)-arm-striped
-
-
 #--reminders
 fix: fixme
 fixme:
 	@echo "NO! that does NOT fix anything! ;)"
-	grep 'FIXME:' *.h *.c -n
+	echo "" && grep 'FIXME:' *.h *.c -n
 	@echo "+----------------+"
 	@echo ' Left to fix: ' `grep 'FIXME:' *.h *.c|wc -l`
 	@echo "+----------------+"
 note:
 	grep 'NOTE:' *.h *.c -n
-
-
-#-- hooks to main makefile targets
-dist:
-	cd .. && make dist
-ipkg:
-	cd .. && make ipkg
 

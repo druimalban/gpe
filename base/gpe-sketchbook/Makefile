@@ -30,6 +30,17 @@ clean: clean-po
 	rm -rf *~ .*~
 	cd src && make clean
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+#--include GPE generic Makefiles
+ifndef CVSBUILD
+CVBUILD = no
+endif
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
 

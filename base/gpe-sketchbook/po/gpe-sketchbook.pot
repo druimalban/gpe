@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-14 02:44+0200\n"
+"POT-Creation-Date: 2003-03-16 16:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,79 +14,66 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-sketchbook.desktop.in.h:2 src/selector.c:72
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:110
 msgid "Sketchbook"
 msgstr ""
 
-#: src/selector.c:92
+#: src/selector.c:87
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
 msgstr ""
 
-#: src/selector.c:98
+#: src/selector.c:93
 #, c-format
 msgid "Cannot create %s: %s. Exit."
 msgstr ""
 
-#: src/selector.c:159
+#: src/selector.c:164
 #, c-format
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:61 src/sketchpad-cb.c:183
+#: src/selector-cb.c:66 src/sketchpad-cb.c:195
 msgid "Delete current sketch?"
 msgstr ""
 
-#: src/selector-cb.c:61 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
-#: src/sketchpad-cb.c:183
+#: src/selector-cb.c:66 src/sketchpad-cb.c:45 src/sketchpad-cb.c:75
+#: src/sketchpad-cb.c:195
 msgid "Question"
 msgstr ""
 
-#: src/selector-cb.c:62 src/sketchpad-cb.c:184
+#: src/selector-cb.c:67 src/sketchpad-cb.c:196
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:62 src/sketchpad-cb.c:184
+#: src/selector-cb.c:67 src/sketchpad-cb.c:196
 msgid "Delete"
 msgstr ""
 
-#: src/sketchpad.c:189
+#: src/sketchpad.c:183
 msgid " "
 msgstr ""
 
-#: src/sketchpad.c:190
+#: src/sketchpad.c:184
 msgid "new"
 msgstr ""
 
-#: src/sketchpad-cb.c:46
+#: src/sketchpad-cb.c:45
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
 msgid "Discard"
 msgstr ""
 
-#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:75
 msgid "Save current sketch?"
-msgstr ""
-
-#: src/files-png.c:151
-msgid ""
-"Keys for PNG tEXt chunks must have at least 1 and at most 79 characters."
-msgstr ""
-
-#: src/files-png.c:159
-msgid "Keys for PNG tEXt chunks must be ASCII characters."
-msgstr ""
-
-#: src/files-png.c:180
-msgid "Value for PNG tEXt chunk can not be converted to ISO-8859-1 encoding."
 msgstr ""
 
 #: gpe-sketchbook.desktop.in.h:1
