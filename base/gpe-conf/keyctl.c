@@ -22,13 +22,20 @@
 
 
 
-char buttons[6][1024];
+char buttons[5][1024];
 static struct{
 
   GtkWidget *button[5];
   GdkPixbuf *p;  
 }self;
 
+char * default_keyctl_conf[] = {
+  "/usr/bin/record",
+  "/usr/bin/schedule",
+  "/usr/bin/mingle",
+  "/usr/bin/x-terminal-emulator",
+  "/usr/bin/fmenu"
+};
 void FileSelected(char *file, gpointer data);
 
 void init_buttons()
@@ -46,29 +53,18 @@ void init_buttons()
     fd=fopen("/etc/keyctl.conf","r");
     if (fd==NULL) {
 	/* defaults */
-	strcpy(buttons[1],"/usr/bin/record");
-        target=GTK_BUTTON(self.button[0]);
-	gtk_label_set_text(GTK_LABEL(target->child),"record");
-
-	strcpy(buttons[2],"/usr/bin/schedule");
-        target=GTK_BUTTON(self.button[1]);
-	gtk_label_set_text(GTK_LABEL(target->child),"schedule");
-
-	strcpy(buttons[3],"/usr/bin/mingle");
-        target=GTK_BUTTON(self.button[2]);
-	gtk_label_set_text(GTK_LABEL(target->child),"mingle");
-
-	strcpy(buttons[4],"/usr/bin/x-terminal-emulator");
-        target=GTK_BUTTON(self.button[3]);
-	gtk_label_set_text(GTK_LABEL(target->child),"terminal");
-
-	strcpy(buttons[5],"/usr/bin/fmenu");
-        target=GTK_BUTTON(self.button[4]);
-	gtk_label_set_text(GTK_LABEL(target->child),"fmenu");
-
+	for (i=0;i<5;i++) {
+	    strcpy(buttons[i],default_keyctl_conf[i]);
+	    slash=strrchr(buttons[i],'/')+1;
+	    if (slash==NULL) { slash=buttons[i]; }
+	    strncpy(btext,slash,15);
+	    btext[15]='\x0';
+	    target=GTK_BUTTON(self.button[i]);
+	    gtk_label_set_text(GTK_LABEL(target->child),btext);
+	}
     } else {
 	/* load from configfile */
-	for (i=1;i<6;i++) {
+	for (i=0;i<5;i++) {
 	    fgets(buffer, 1023, fd);
 	    slash=strchr(buffer,'\n');
 	    if (slash!=NULL) { *slash='\x0'; }
@@ -77,7 +73,7 @@ void init_buttons()
 	    if (slash==NULL) { slash=buffer; }
 	    strncpy(btext,slash,15);
 	    btext[15]='\x0';
-	    target=GTK_BUTTON(self.button[i-1]);
+	    target=GTK_BUTTON(self.button[i]);
 	    gtk_label_set_text(GTK_LABEL(target->child),btext);
 	}
         fclose(fd);
@@ -213,7 +209,7 @@ void Keyctl_Save()
 	return;
 	//        exit(1);
     }
-    for (i=1;i<6;i++) {
+    for (i=0;i<5;i++) {
 #ifdef DEBUG
 	printf("button #%d => %s\n",i,buttons[i]);
 #endif

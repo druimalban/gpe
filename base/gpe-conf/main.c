@@ -102,7 +102,7 @@ void item_select(GtkWidget *ignored, gpointer user_data)
 
   if(self.cur_applet != - 1)
     {
-      applets[self.cur_applet].Save();
+      applets[self.cur_applet].Restore(); // for the time and date
       applets[self.cur_applet].Free_Objects();      
     }
   if(self.applet)
