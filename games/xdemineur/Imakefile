@@ -1,0 +1,18 @@
+XCOMM Copyright © 1993-1999 Marc Baudoin <babafou@babafou.eu.org>
+XCOMM
+XCOMM Permission to use, copy, modify, and distribute this software and
+XCOMM its documentation for any purpose and without fee is hereby
+XCOMM granted, provided that the above copyright notice appear in all
+XCOMM copies and that both that copyright notice and this permission
+XCOMM notice appear in supporting documentation.  The author makes no
+XCOMM representations about the suitability of this software for any
+XCOMM purpose.  It is provided "as is" without express or implied
+XCOMM warranty.
+
+XCOMM        DEFINES = -Wall
+LOCAL_LIBRARIES = -lXpm $(XLIB)
+        DEPLIBS = $(DEPXLIB)
+           SRCS = demineur.c main.c util.c xdemineur.c
+           OBJS = demineur.o main.o util.o xdemineur.o
+
+ComplexProgramTarget(xdemineur)

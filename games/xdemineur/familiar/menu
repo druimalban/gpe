@@ -1,0 +1,2 @@
+?package(xdemineur):needs=x11 section="Games" title="Xdemineur" \
+	icon="/usr/share/pixmaps/xdemineur.png" command=xdemineur

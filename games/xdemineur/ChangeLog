@@ -1,0 +1,45 @@
+1999-08-12  Marc Baudoin  <babafou@babafou.eu.org>
+
+	* ANNOUNCE: Version 2.1.1 released.
+
+1999-07-29  Marc Baudoin  <babafou@babafou.eu.org>
+
+	* xdemineur.c (xdemineur_initialize): now generates an appicon to
+	be used by the Window Maker window manager.
+
+1998-02-09  Marc Baudoin  <babafou@agm-ita.ensta.fr>
+
+	* ANNOUNCE: Version 2.1 released.
+
+	* xdemineur.c: #include <errno.h> instead of <sys/errno.h>.
+
+	* main.c (main): SA_RESTART is used only if defined (it doesn't
+	exist on SunOS).
+
+1998-02-08  Marc Baudoin  <babafou@agm-ita.ensta.fr>
+
+	* xdemineur.c (xdemineur_event_loop): Don't change the face icon
+	when button 2 is pressed over an already uncovered square or a
+	square which don't have all its flags placed around yet.
+
+	* main.c (main): Added -v option, which shows version number and
+	copyright notice before exiting.
+
+1998-02-07  Marc Baudoin  <babafou@agm-ita.ensta.fr>
+
+	* xdemineur.xbm: Some changes in the face icons and the window
+	icon, from <tfs@st-andrews.ac.uk>.
+
+	* main.c: CVS is now used to manage the source tree.
+
+1998-02-04  Marc Baudoin  <babafou@agm-ita.ensta.fr>
+
+	* xdemineur.c (xdemineur_event_loop): Stop the timer when the
+	window is iconified or fully obscured and start it again when the
+	window is deiconified or unobscured.
+
+1998-01-29  Marc Baudoin  <babafou@agm-ita.ensta.fr>
+
+	* xdemineur.c: #include <sys/time.h> needed on Linux.  It is
+	needed by select(2) anyway.
+

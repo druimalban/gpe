@@ -1,0 +1,73 @@
+INSTALL file for xdémineur
+==========================
+
+Requirements
+------------
+
+To compile and install xdémineur, you need:
+
+* An ANSI C compiler such as the GNU C compiler, GCC.  You can
+  get an up to date list of the existing GNU archives at:
+
+  <URL:http://www.gnu.org/order/ftp.html>
+
+* The X Window System (X11R4 or higher).
+
+* The XPM library by Arnaud Le Hors.  You can get the latest
+  version from the following locations:
+
+  <URL:ftp://koala.inria.fr/pub/xpm/>
+  <URL:ftp://ftp.x.org/contrib/libraries/>
+
+Compilation and installation
+----------------------------
+
+You should normally not need to edit the Imakefile but feel free
+to have a look at it (there's not much to see anyway).  Then do
+the usual:
+
+   xmkmf
+
+to generate a Makefile from the Imakefile.  Then:
+
+   make
+
+to compile xdémineur.  It should compile OK on most systems.
+Anyway, if you have any difficulties, please send me a report (my
+e-mail adress is <babafou@babafou.eu.org>) stating your
+environment (operating system type and version, compiler, X
+version and every information you find relevant) and a copy of
+the errror messages from the compiler.
+
+If the compilation was successful, you can try xdémineur by
+typing:
+
+   ./xdemineur
+
+If you're happy with it, you can install the binary:
+
+   make install
+
+and the manual page:
+
+   make install.man
+
+These two commands should be run as root on most systems.
+
+Copyright
+---------
+
+Copyright © 1993-1999 Marc Baudoin <babafou@babafou.eu.org>
+
+Permission to use, copy, modify, and distribute this software and
+its documentation for any purpose and without fee is hereby
+granted, provided that the above copyright notice appear in all
+copies and that both that copyright notice and this permission
+notice appear in supporting documentation.  The author makes no
+representations about the suitability of this software for any
+purpose.  It is provided "as is" without express or implied
+warranty.
+
+-- 
+Marc Baudoin
+<babafou@babafou.eu.org>

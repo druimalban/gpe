@@ -1,0 +1,48 @@
+I'm pleased to announce the release of xdémineur 2.1.1, a
+minesweeper game for the X Window System.
+
+This release only includes appicon support for the Window Maker
+window manager <URL:http://www.windowmaker.org/>.
+
+You can get xdémineur source code from:
+
+<URL:ftp://ftp.babafou.eu.org/pub/babafou/>   (primary site)
+<URL:ftp://ftp.x.org/contrib/games/>
+
+Precompiled packages (not necessarily up to date) are also
+available for various operating systems:
+
+* NetBSD <URL:http://www.netbsd.org/>
+
+  <URL:ftp://ftp.netbsd.org/pub/NetBSD/packages/pkgsrc/games/xdemineur/README.html>
+  maintained by Manuel Bouyer <bouyer@netbsd.org>
+
+* FreeBSD <URL:http://www.freebsd.org/>
+
+  <URL:http://www.freebsd.org/ports/games.html>
+  maintained by <ports@FreeBSD.ORG>
+
+* Linux Debian <URL:http://www.debian.org/>
+
+  <URL:http://www.debian.org/Packages/stable/games/xdemineur.html>
+  maintained by Mark Baker <mbaker@iee.org>
+
+* Linux Red Hat <URL:http://www.redhat.com/>
+  Linux Suse <URL:http://www.suse.com/>
+
+  <URL:http://rufus.w3.org/linux/RPM/xdemineur.html>
+  maintained by <feedback@suse.de>
+
+* Tru64 UNIX <URL:http://www.unix.digital.com/>
+
+  <URL:http://www.unix.digital.com/demos/freekit/html/index.htm>
+  maintained by <freeware@zk3.dec.com>
+
+* HP-UX <URL:http://www.hp.com/>
+
+  <URL:http://hpux.csc.liv.ac.uk/hppd/hpux/Games/Arcade/>
+  maintained by <hpux@connect.org.uk>
+
+You can also have some information about xdémineur by visiting:
+
+<URL:http://www.spinne.com/x/games/xdemineur/>
