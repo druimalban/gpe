@@ -62,14 +62,6 @@ style "gpe_appt_ongoing" = "gpe_bold"
   fg[NORMAL] = { 0.0, 0.0, 0.6 }
 }
 
-# Used in the Today view:
-#    the "Info for <foo>" text
-style "gpe_username" = "gpe_bold"
-{
-  fg[NORMAL] = { 0.3, 0.3, 0.3 }
-}
-
-
 # gpe-login:
 #    "Login incorrect" only for the time being
 style "gpe_login_result"

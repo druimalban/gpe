@@ -26,16 +26,16 @@ gpe_application_init (int *argc, char **argv[])
   const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
   gchar *home_dir = g_get_home_dir ();
 	  
+  gtk_rc_add_default_file (default_gtkrc_file);
+  user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", home_dir);
+  gtk_rc_add_default_file (user_gtkrc_file);
+  g_free (user_gtkrc_file);
+
   gtk_init (argc, argv);
   gtk_set_locale ();
 
-  gtk_rc_add_default_file (default_gtkrc_file);
-
   if (home_dir[0] && strcmp (home_dir, "/"))
     {
-      user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", home_dir);
-      gtk_rc_add_default_file (user_gtkrc_file);
-      g_free (user_gtkrc_file);
 
       /* Maybe this belongs somewhere else */
       fn = g_strdup_printf ("%s/.gpe", home_dir);
