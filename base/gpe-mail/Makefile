@@ -7,7 +7,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 all: gpe-mail
 
 gpe-mail: $(OBJS)
-	$(CC) -o $@ $< `gtk-config --libs` -lcrypt -lgdk_imlib -L../libgpewidget -lgpewidget
+	$(CC) -o $@ $< `gtk-config --libs` -L../libgpewidget -lgpewidget -lsqlite -lgdk_imlib
 
 install:
 	install -D gpe-mail $(DESTDIR)/usr/bin/gpe-mail

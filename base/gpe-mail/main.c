@@ -16,6 +16,7 @@
 #include <errno.h>
 
 #include <gtk/gtk.h>
+#include <gdk_imlib.h>
 
 #include "errorbox.h"
 
@@ -25,6 +26,40 @@ static guint window_x = 240, window_y = 300;
 
 static GtkWidget *clist_messages;
 static GtkWidget *ctree_folders;
+static GSList *identities;
+
+static void
+enter_password_box (gchar *server)
+{
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *buttonok = gtk_button_new_with_label (_("OK"));
+  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
+  GtkWidget *entry = gtk_entry_new ();
+  GtkWidget *label1 = gtk_label_new (_("Enter password for"));
+  GtkWidget *label2 = gtk_label_new (server);
+
+  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
+		      buttoncancel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label1, 
+		      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label2, 
+		      FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), entry, 
+		      FALSE, FALSE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
+  gtk_widget_show_all (window);
+  gtk_widget_grab_focus (entry);
+
+  gtk_main ();
+}
 
 static GtkWidget *
 config_ident_box (void)
@@ -55,7 +90,7 @@ config_ident_box (void)
 }
 
 static GtkWidget *
-config_servers_box (void)
+config_incoming_box (void)
 {
   gchar *titles[2];
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
@@ -82,18 +117,37 @@ config_servers_box (void)
   return vbox;
 }
 
+static GtkWidget *
+config_outgoing_box (void)
+{
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *label = gtk_label_new (_("Server"));
+  GtkWidget *entry = gtk_entry_new ();
+
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox), entry, TRUE, TRUE, 2);
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 2);
+
+  return vbox;
+}
+
 static void
 configure (void)
 {
   GtkWidget *cfgwin = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *labelident = gtk_label_new (_("Identities"));
-  GtkWidget *labelserver = gtk_label_new (_("Servers"));
+  GtkWidget *labelin = gtk_label_new (_("Incoming"));
+  GtkWidget *labelout = gtk_label_new (_("Outgoing"));
   GtkWidget *vboxident = config_ident_box ();
-  GtkWidget *vboxserver = config_servers_box ();
+  GtkWidget *vboxin = config_incoming_box ();
+  GtkWidget *vboxout = config_outgoing_box ();
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxident, labelident);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxserver, labelserver);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxin, labelin);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxout, labelout);
 
   gtk_widget_set_usize (cfgwin, window_x, window_y);
 
@@ -105,48 +159,55 @@ configure (void)
 static void
 do_write (void)
 {
-  GtkWidget *writewin = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *text = gtk_text_new (NULL, NULL);
-  GtkWidget *optionfrom = gtk_option_menu_new ();
-  GtkWidget *comboto = gtk_combo_new ();
-  GtkWidget *entrysubject = gtk_entry_new ();
-  GtkWidget *labelfrom = gtk_label_new (_("From:"));
-  GtkWidget *labelto = gtk_label_new (_("To:"));
-  GtkWidget *labelsubject = gtk_label_new (_("Subject:"));
-  GtkWidget *table = gtk_table_new (3, 2, FALSE);
-  GtkWidget *hboxfrom = gtk_hbox_new (FALSE, 0);
-  GtkWidget *hboxto = gtk_hbox_new (FALSE, 0);
-  GtkWidget *hboxsubject = gtk_hbox_new (FALSE, 0);
-  GtkWidget *buttonsend = gtk_button_new_with_label (_("Send"));
-  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
-  GtkWidget *hboxbutton = gtk_hbox_new (FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (hboxfrom), labelfrom, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hboxto), labelto, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hboxsubject), labelsubject, FALSE, FALSE, 0);
-
-  gtk_table_attach_defaults (GTK_TABLE (table), hboxfrom,     0, 1, 0, 1);
-  gtk_table_attach_defaults (GTK_TABLE (table), hboxto,       0, 1, 1, 2);
-  gtk_table_attach_defaults (GTK_TABLE (table), hboxsubject,  0, 1, 2, 3);
-  gtk_table_attach_defaults (GTK_TABLE (table), optionfrom,   1, 2, 0, 1);
-  gtk_table_attach_defaults (GTK_TABLE (table), comboto,      1, 2, 1, 2);
-  gtk_table_attach_defaults (GTK_TABLE (table), entrysubject, 1, 2, 2, 3);
-  gtk_container_set_border_width (GTK_CONTAINER (table), 4);
-  gtk_table_set_row_spacings (GTK_TABLE (table), 2);
-
-  gtk_box_pack_start (GTK_BOX (hboxbutton), buttoncancel, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (hboxbutton), buttonsend, TRUE, TRUE, 2);
-
-  gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), text, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hboxbutton, FALSE, FALSE, 2);
-
-  gtk_container_add (GTK_CONTAINER (writewin), vbox);
-
-  gtk_widget_show_all (writewin);
-
-  gtk_widget_grab_focus (GTK_COMBO (comboto)->entry);
+  if (identities)
+    {
+      GtkWidget *writewin = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+      GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+      GtkWidget *text = gtk_text_new (NULL, NULL);
+      GtkWidget *optionfrom = gtk_option_menu_new ();
+      GtkWidget *comboto = gtk_combo_new ();
+      GtkWidget *entrysubject = gtk_entry_new ();
+      GtkWidget *labelfrom = gtk_label_new (_("From:"));
+      GtkWidget *labelto = gtk_label_new (_("To:"));
+      GtkWidget *labelsubject = gtk_label_new (_("Subject:"));
+      GtkWidget *table = gtk_table_new (3, 2, FALSE);
+      GtkWidget *hboxfrom = gtk_hbox_new (FALSE, 0);
+      GtkWidget *hboxto = gtk_hbox_new (FALSE, 0);
+      GtkWidget *hboxsubject = gtk_hbox_new (FALSE, 0);
+      GtkWidget *buttonsend = gtk_button_new_with_label (_("Send"));
+      GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
+      GtkWidget *hboxbutton = gtk_hbox_new (FALSE, 0);
+      
+      gtk_box_pack_start (GTK_BOX (hboxfrom), labelfrom, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hboxto), labelto, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hboxsubject), labelsubject, FALSE, FALSE, 0);
+      
+      gtk_table_attach_defaults (GTK_TABLE (table), hboxfrom,     0, 1, 0, 1);
+      gtk_table_attach_defaults (GTK_TABLE (table), hboxto,       0, 1, 1, 2);
+      gtk_table_attach_defaults (GTK_TABLE (table), hboxsubject,  0, 1, 2, 3);
+      gtk_table_attach_defaults (GTK_TABLE (table), optionfrom,   1, 2, 0, 1);
+      gtk_table_attach_defaults (GTK_TABLE (table), comboto,      1, 2, 1, 2);
+      gtk_table_attach_defaults (GTK_TABLE (table), entrysubject, 1, 2, 2, 3);
+      gtk_container_set_border_width (GTK_CONTAINER (table), 4);
+      gtk_table_set_row_spacings (GTK_TABLE (table), 2);
+      
+      gtk_box_pack_start (GTK_BOX (hboxbutton), buttoncancel, TRUE, TRUE, 2);
+      gtk_box_pack_start (GTK_BOX (hboxbutton), buttonsend, TRUE, TRUE, 2);
+      
+      gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), text, TRUE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), hboxbutton, FALSE, FALSE, 2);
+      
+      gtk_container_add (GTK_CONTAINER (writewin), vbox);
+      
+      gtk_widget_show_all (writewin);
+      
+      gtk_widget_grab_focus (GTK_COMBO (comboto)->entry);
+    }
+  else
+    {
+      gpe_error_box (_("No identity configured"));
+    }
 }
 
 static GtkItemFactoryEntry menu_items[] = {
@@ -172,6 +233,7 @@ main (int argc, char *argv[])
 
   gtk_set_locale ();
   gtk_init (&argc, &argv);
+  gdk_imlib_init ();
 
   window  = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
