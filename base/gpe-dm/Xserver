@@ -38,7 +38,7 @@ case `module_id` in
 	"HP iPAQ H5400")
 		ARGS="$ARGS -rgba rgb" ;;
 	# both 'Sharp-Collie' and just 'Collie' have been reported
-	*Collie)
+	*Collie | *Poodle)
 		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		ARGS="$ARGS -rgba rgb"
