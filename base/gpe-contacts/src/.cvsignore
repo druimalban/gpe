@@ -1,4 +1,4 @@
 gpe-contacts
 Makefile
-.deps
+*.d
 
