@@ -77,7 +77,8 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
       gint x, y;
       gint screen_width;
       gint screen_height;
-      
+      GdkBitmap *bitmap;
+
       sel->popup = gtk_window_new (GTK_WINDOW_POPUP);
 
       clock = gpe_clock_face_new (GTK_ADJUSTMENT (sel->hour_adj), 
@@ -102,6 +103,14 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
 			G_CALLBACK (button_press), sel);
       g_signal_connect (G_OBJECT (clock), "button_release_event", 
 			G_CALLBACK (button_release), sel);
+      
+      gtk_widget_realize (sel->popup);
+
+      bitmap = gpe_clock_face_get_shape (GPE_CLOCK_FACE (clock));
+
+      gtk_widget_shape_combine_mask (sel->popup, bitmap, 0, 0);
+
+      g_object_unref (bitmap);
 
       gtk_widget_show_all (sel->popup);
 

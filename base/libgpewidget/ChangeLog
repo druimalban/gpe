@@ -1,3 +1,14 @@
+2003-07-26  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeclockface.c (BACKGROUND_IMAGE): New macro, not defined.
+	(gpe_clock_face_get_shape): New function.
+	(get_bg_gc): Deleted.
+	(gpe_clock_expose): Draw clock manually if !BACKGROUND_IMAGE.
+	(gpe_clock_face_init): Only load background images if BACKGROUND_IMAGE.
+	* gpe/gpeclockface.h (gpe_clock_face_get_shape): New prototype.
+	
+	* gpetimesel.c (do_popup): Set shape of popup window.
+
 2003-07-16  Moray Allan  <moray@sermisy.org>
 
 	* Makefile: Added gtksimplemenu.h to HEADERS.
