@@ -1,0 +1,9 @@
+Package: minitheme
+Section: x11
+Priority: optional
+Version: 0.19
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.32), libxsettings-client0
+Description: Panel app to switch Matchbox themes
+
