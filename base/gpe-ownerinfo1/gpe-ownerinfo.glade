@@ -212,7 +212,7 @@
 	<justify>GTK_JUSTIFY_LEFT</justify>
 	<wrap>False</wrap>
 	<xalign>0</xalign>
-	<yalign>0.5</yalign>
+	<yalign>0</yalign>
 	<xpad>5</xpad>
 	<ypad>0</ypad>
 	<child>
@@ -227,14 +227,13 @@
 	  <xshrink>False</xshrink>
 	  <yshrink>False</yshrink>
 	  <xfill>True</xfill>
-	  <yfill>False</yfill>
+	  <yfill>True</yfill>
 	</child>
       </widget>
 
       <widget>
 	<class>GtkScrolledWindow</class>
 	<name>scrolledwindow1</name>
-	<width>176</width>
 	<hscrollbar_policy>GTK_POLICY_AUTOMATIC</hscrollbar_policy>
 	<vscrollbar_policy>GTK_POLICY_AUTOMATIC</vscrollbar_policy>
 	<hupdate_policy>GTK_UPDATE_CONTINUOUS</hupdate_policy>
@@ -246,8 +245,8 @@
 	  <bottom_attach>3</bottom_attach>
 	  <xpad>0</xpad>
 	  <ypad>0</ypad>
-	  <xexpand>False</xexpand>
-	  <yexpand>False</yexpand>
+	  <xexpand>True</xexpand>
+	  <yexpand>True</yexpand>
 	  <xshrink>False</xshrink>
 	  <yshrink>False</yshrink>
 	  <xfill>True</xfill>
@@ -268,7 +267,7 @@ Foobarland</label>
 	    <justify>GTK_JUSTIFY_LEFT</justify>
 	    <wrap>False</wrap>
 	    <xalign>7.45058e-09</xalign>
-	    <yalign>0.5</yalign>
+	    <yalign>0</yalign>
 	    <xpad>5</xpad>
 	    <ypad>0</ypad>
 	  </widget>

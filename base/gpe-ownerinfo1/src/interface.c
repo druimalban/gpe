@@ -144,9 +144,9 @@ create_GPE_Ownerinfo (void)
   gtk_widget_show (owner_address_label);
   gtk_table_attach (GTK_TABLE (table1), owner_address_label, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
   gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
@@ -156,9 +156,8 @@ create_GPE_Ownerinfo (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (scrolledwindow1);
   gtk_table_attach (GTK_TABLE (table1), scrolledwindow1, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_widget_set_usize (scrolledwindow1, 176, -2);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   viewport1 = gtk_viewport_new (NULL, NULL);
@@ -178,7 +177,7 @@ create_GPE_Ownerinfo (void)
   gtk_widget_show (address);
   gtk_container_add (GTK_CONTAINER (viewport1), address);
   gtk_label_set_justify (GTK_LABEL (address), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (address), 7.45058e-09, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (address), 7.45058e-09, 0);
   gtk_misc_set_padding (GTK_MISC (address), 5, 0);
 
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
