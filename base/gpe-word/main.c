@@ -38,7 +38,7 @@ int last_found = 0;
 gboolean utf8_mode;
 
 GtkWidget *main_window;
-GtkWidget *text_area;
+GtkWidget *text_view;
 GtkWidget *file_selector;
 GtkWidget *search_replace_vbox;
 
@@ -60,7 +60,7 @@ struct gpe_icon my_icons[] = {
   { "stop", "stop" },
   { "question", "question" },
   { "error", "error" },
-  { "icon", PREFIX "/share/pixmaps/gpe-edit.png" },
+  { "icon", PREFIX "/share/pixmaps/gpe-word.png" },
   {NULL, NULL}
 };
 
@@ -77,24 +77,44 @@ gtk_ifactory_cb (gpointer   callback_data,
 
 static GtkItemFactoryEntry menu_items[] =
 {
-  { "/_File",		 NULL,	       0,		      0, "<Branch>" },
-  { "/File/tearoff1",	 NULL,	       gtk_ifactory_cb,	      0, "<Tearoff>" },
-  { "/File/_New",	 "<control>N", gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_NEW },
-  { "/File/_Open",	 "<control>O", gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_OPEN },
-  { "/File/_Save",	 "<control>S", gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_SAVE },
-  { "/File/Save _As...", NULL,	       gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_SAVE_AS  },
-  { "/File/sep1",	 NULL,	       gtk_ifactory_cb,	      0, "<Separator>" },
-  { "/File/_Quit",	 "<control>Q", gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_QUIT },
+  { "/_File",		 NULL, 0,		      0, "<Branch>" },
+  { "/File/_New",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_NEW },
+  { "/File/_Open",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_OPEN },
+  { "/File/_Save",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_SAVE },
+  { "/File/Save _As...", NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_SAVE_AS  },
+  { "/File/sep1",	 NULL, gtk_ifactory_cb,	      0, "<Separator>" },
+  { "/File/_Quit",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_QUIT },
 
-  { "/_Format", 			NULL, 0,	       0, "<Branch>" },
-  { "/_Format/_Align",                  NULL, 0,	       0, "<Branch>" },
-  { "/_Format/_Align/_Left",		NULL, gtk_ifactory_cb, 0, "<RadioItem>" },
-  { "/_Format/_Align/_Center",	        NULL, gtk_ifactory_cb, 0, "/Format/Align/Left" },
-  { "/_Format/_Align/_Right",           NULL, gtk_ifactory_cb, 0, "/Format/Align/Left" },
-  { "/_Format/_Align/_Justify",           NULL, gtk_ifactory_cb, 0, "/Format/Align/Left" },
+  { "/_Edit",		 NULL, 0,		      0, "<Branch>" },
+  { "/Edit/_Undo",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_UNDO },
+  { "/Edit/_Redo",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_REDO },
+  { "/Edit/sep1",	 NULL, gtk_ifactory_cb,	      0, "<Separator>" },
+  { "/Edit/Cu_t",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_CUT },
+  { "/Edit/_Copy",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_COPY },
+  { "/Edit/_Paste",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_PASTE },
+  { "/Edit/sep2",	 NULL, gtk_ifactory_cb,	      0, "<Separator>" },
+  { "/Edit/Cle_ar",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_CLEAR },
+  { "/Edit/Select A_ll", NULL, gtk_ifactory_cb,	      0, },
+  { "/Edit/sep3",	 NULL, gtk_ifactory_cb,	      0, "<Separator>" },
+  { "/Edit/_Find...",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_FIND },
+  { "/Edit/R_eplace...", NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_FIND_AND_REPLACE },
+
+  { "/_Format", 	 NULL, 0,	              0, "<Branch>" },
+  { "/Format/_Bold",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_BOLD },
+  { "/Format/_Italic",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_ITALIC },
+  { "/Format/_Underline",NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_UNDERLINE },
+  { "/Format/Stri_ke",   NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_STRIKETHROUGH },
+  { "/Format/sep1",	 NULL, gtk_ifactory_cb,	      0, "<Separator>" },
+  { "/Format/_Left",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_JUSTIFY_LEFT },
+  { "/Format/_Center",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_JUSTIFY_CENTER },
+  { "/Format/_Right",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_JUSTIFY_RIGHT },
+  { "/Format/_Fill",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_JUSTIFY_FILL },
+  { "/Format/sep2",	 NULL, gtk_ifactory_cb,	      0, "<Separator>" },
+  { "/Format/_Color",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_SELECT_COLOR },
+  { "/Format/F_ont",	 NULL, gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_SELECT_FONT },
 
   { "/_Help",		 NULL,	       0,		      0, "<LastBranch>" },
-  { "/Help/_About",	 NULL,	       gtk_ifactory_cb,	      0 },
+  { "/Help/_About",	 NULL,	       gtk_ifactory_cb,	      0, "<StockItem>", GTK_STOCK_DIALOG_INFO },
 };
 
 static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
@@ -103,7 +123,7 @@ static void
 clear_text_area (void)
 {
   GtkTextIter start, end;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   gtk_text_buffer_get_bounds (buf, &start, &end);
   gtk_text_buffer_delete (buf, &start, &end);
 }
@@ -185,7 +205,7 @@ open_file (char *new_filename)
   else
   {
     GtkTextIter start, end;
-    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
     gchar *text, *buffer;
     gsize size;
 
@@ -250,7 +270,7 @@ do_save_file (gchar *filename)
   else
   {
     GtkTextIter start, end;
-    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
     gchar *text;
 
     gtk_text_buffer_get_bounds (buf, &start, &end);
@@ -307,7 +327,7 @@ select_save_file_as (void)
   guint text_length;
   GtkTextIter start, end;
   gint offset;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
 
   offset = gtk_text_iter_get_offset (&start);
   text_length = gtk_text_iter_get_offset (&end) - offset;
@@ -374,7 +394,7 @@ ask_save_before_exit (void)
 static void
 cut_selection (void)
 {
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
   gtk_text_buffer_cut_clipboard (GTK_TEXT_BUFFER (buf), clipboard, TRUE);
@@ -383,7 +403,7 @@ cut_selection (void)
 static void
 copy_selection (void)
 {
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
   gtk_text_buffer_copy_clipboard (GTK_TEXT_BUFFER (buf), clipboard);
@@ -392,7 +412,7 @@ copy_selection (void)
 static void
 paste_clipboard (void)
 {
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   GtkClipboard *clipboard = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
 
   gtk_text_buffer_paste_clipboard (GTK_TEXT_BUFFER (buf), clipboard, NULL, TRUE);
@@ -404,7 +424,7 @@ do_find_string (GtkWidget *widget)
   gchar *found, *find;
   gint found_start;
   GtkWidget *entry;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   GtkTextIter start, end;
   gchar *buffer;
     
@@ -442,7 +462,7 @@ do_replace_string (GtkWidget *widget)
 {
   gchar *replace_with;
   GtkWidget *entry;
-  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   GtkTextIter sel_start, sel_end, at;
 
   entry = gtk_object_get_data (GTK_OBJECT (widget), "entry");
@@ -572,13 +592,132 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
     }
 }
 
+static void
+select_justification_popup (GtkWidget *parent_button)
+{
+  GtkWidget *popup_window, *frame, *vbox, *button;
+  GtkWidget *parent_arrow;
+  GtkRequisition requisition;
+  gint x, y;
+  gint window_x, window_y;
+  gint screen_width;
+  gint screen_height;
+
+  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
+
+  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
+  {
+    gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
+    g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+  }
+  else
+  {
+    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
+
+    popup_window = gtk_window_new (GTK_WINDOW_POPUP);
+    vbox = gtk_vbox_new (FALSE, 0);
+    frame = gtk_frame_new (NULL);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
+
+    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_LEFT, GPE_BUTTON_TYPE_BOTH);
+    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_CENTER, GPE_BUTTON_TYPE_BOTH);
+    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_RIGHT, GPE_BUTTON_TYPE_BOTH);
+    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_FILL, GPE_BUTTON_TYPE_BOTH);
+    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+    gtk_container_add (GTK_CONTAINER (frame), vbox);
+    gtk_container_add (GTK_CONTAINER (popup_window), frame);
+    gtk_widget_show_all (frame);
+
+    gdk_window_get_pointer (NULL, &x, &y, NULL);
+    gtk_widget_size_request (vbox, &requisition);
+      
+    screen_width = gdk_screen_width ();
+    screen_height = gdk_screen_height ();
+      
+    //x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
+    //y = CLAMP (y + 4, 0, MAX (0, screen_height - requisition.height));
+
+    printf ("Widget x allocation: %d\n", parent_button->allocation.x);
+    printf ("Widget y allocation: %d\n", parent_button->allocation.y);
+
+    printf ("Widget x requisition: %d\n", requisition.width);
+    printf ("Widget y requisition: %d\n", requisition.height);
+
+    printf ("Window x: %d\n", popup_window->allocation.x);
+    printf ("Window y: %d\n", popup_window->allocation.y);
+
+    //x = parent_button->allocation.x + requisition.width;
+    //y = parent_button->allocation.y + requisition.height;
+    x = parent_button->allocation.x + popup_window->allocation.x;
+    y = parent_button->allocation.y + popup_window->allocation.y;
+
+    printf ("x: %d\n", x);
+    printf ("y: %d\n", y);
+
+    gtk_widget_set_uposition (popup_window, MAX (x, 0), MAX (y, 0));
+      
+    g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
+
+    gtk_widget_show (popup_window);
+  }
+
+  gtk_widget_grab_focus (text_view);
+}
+
+static GtkWidget *
+popup_menu_button_new (const gchar *stock_id)
+{
+  GtkWidget *button, *arrow, *hbox, *image;
+  GtkRequisition requisition;
+  gint width = 0, height;
+
+  button = gtk_button_new ();
+  arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+  hbox = gtk_hbox_new (FALSE, 0);
+  image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
+
+  gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
+
+  g_object_set_data (G_OBJECT (button), "active", FALSE);
+  g_object_set_data (G_OBJECT (button), "hbox", hbox);
+  g_object_set_data (G_OBJECT (button), "image", image);
+  g_object_set_data (G_OBJECT (button), "arrow", arrow);
+
+  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), arrow, FALSE, FALSE, 0);
+
+  gtk_widget_size_request (image, &requisition);
+  width = width + requisition.width;
+  height = requisition.height;
+
+  gtk_widget_size_request (arrow, &requisition);
+  width = (width + requisition.width) - 5;
+
+  gtk_widget_set_size_request (hbox, width, height);
+  gtk_container_add (GTK_CONTAINER (button), hbox);
+  gtk_widget_show_all (button);
+
+  return button;
+}
+
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *toolbar, *toolbar2, *scroll;
-  GtkWidget *toolbar_icon;
-  GdkPixbuf *p;
-  GtkWidget *pw;
+  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *scroll, *toolbar_icon;
+  GtkWidget *justify_button, *color_button, *font_button;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
   GtkTextBuffer *buf;
@@ -616,6 +755,7 @@ main (int argc, char *argv[])
   gtk_widget_realize (main_window);
 
   vbox = gtk_vbox_new (FALSE, 0);
+  hbox = gtk_hbox_new (FALSE, 0);
 
   accel_group = gtk_accel_group_new ();
   item_factory = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>", accel_group);
@@ -635,10 +775,10 @@ main (int argc, char *argv[])
   scroll = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-  text_area = gtk_text_view_new ();
-  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_area), GTK_WRAP_WORD);
-  gtk_text_view_set_editable (GTK_TEXT_VIEW (text_area), TRUE);
-  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
+  text_view = gtk_text_view_new ();
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), TRUE);
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
 
@@ -668,7 +808,6 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Replace"), 
 			   _("Replace a string"), _("Replace a string"), toolbar_icon, replace_string, vbox);
 
-  
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_BOLD, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Bold"), _("Bold"), _("Make the selected text bold."), toolbar_icon, NULL, NULL);
 
@@ -678,11 +817,30 @@ main (int argc, char *argv[])
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_UNDERLINE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Underline"), _("Underline"), _("Make the selected text underlined."), toolbar_icon, NULL, NULL);
 
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_STRIKETHROUGH, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Strikethrough"), _("Strikethrough"), _("Make the selected text have a strike through it."), toolbar_icon, NULL, NULL);
+
+  justify_button = popup_menu_button_new (GTK_STOCK_JUSTIFY_LEFT);
+  gtk_signal_connect (GTK_OBJECT (justify_button), "pressed",
+		      GTK_SIGNAL_FUNC (select_justification_popup), NULL);
+
+  color_button = popup_menu_button_new (GTK_STOCK_SELECT_COLOR);
+  gtk_signal_connect (GTK_OBJECT (color_button), "pressed",
+		      GTK_SIGNAL_FUNC (select_justification_popup), NULL);
+
+  font_button = popup_menu_button_new (GTK_STOCK_SELECT_FONT);
+  gtk_signal_connect (GTK_OBJECT (font_button), "pressed",
+		      GTK_SIGNAL_FUNC (select_justification_popup), NULL);
+
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), gtk_item_factory_get_widget (item_factory, "<main>"), FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), toolbar2, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), font_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), color_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), justify_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar2, FALSE, FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (text_area));
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (text_view));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
@@ -690,11 +848,12 @@ main (int argc, char *argv[])
 
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);
+  gtk_widget_show (hbox);
   gtk_widget_show (gtk_item_factory_get_widget (item_factory, "<main>"));
   gtk_widget_show (toolbar);
   gtk_widget_show (toolbar2);
   gtk_widget_show (scroll);
-  gtk_widget_show (text_area);
+  gtk_widget_show (text_view);
 
   if (argc > 1)
   {
@@ -702,7 +861,7 @@ main (int argc, char *argv[])
     open_file (argv[1]);
   }
 
-  gtk_widget_grab_focus (text_area);
+  gtk_widget_grab_focus (text_view);
 
   gtk_main();
   return 0;
