@@ -980,6 +980,33 @@ void undo_turn(){
       update_last_played_mark_to(item->col, item->row);
     }
   }
+
+  //mark variations
+  {
+    int children;
+    children = g_node_n_children(go.history);
+    if(children > 1){
+      //--display possible variations, and restrict input to them (lock)
+      int i;
+      GNode * child;
+      
+      clear_stamps();
+      for(i=0; i<children; i++){
+        Hitem * item;
+        child = g_node_nth_child (go.history, i);
+        item = child->data;
+        
+        stamp(item->col, item->row);
+        paint_mark(item->col, item->row, MARK_SPOT, &red);
+        if(is_on_main_branch(child)){
+          //add extra mark on main branch's move
+          paint_mark(item->col, item->row, MARK_SQUARE, &blue);
+          go.variation_main_branch_node = child;
+        }
+      }
+      go.lock_variation_choice = TRUE;
+    }
+  }
 }
 
 void redo_turn(){
