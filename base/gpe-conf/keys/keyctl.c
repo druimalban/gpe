@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *	             2003, 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,9 +41,11 @@
 
 static char *keylaunchrc = NULL;
 static gboolean menuselect = FALSE;
-#define NUM_BUTTONS 5
-#define NUM_COMMANDS 9
+static int NUM_COMMANDS = 0;
+
 #define KEYLAUNCH_BIN PREFIX "/bin/keylaunch"
+#define FILE_COMMANDS "/etc/gpe/key-commands"
+#define NUM_BUTTONS 5
 
 /* local types */
 
@@ -107,9 +109,39 @@ struct gpe_icon local_icons[] = {
 	{ "button5", PREFIX "/share/pixmaps/ibutton5.png" }, 
 	{ NULL, NULL }
 };
+
+static gboolean
+commands_load(void)
+{
+	GKeyFile *cmdfile;
+	GError *err = NULL;
+	gchar **keys;
+	int i;
 	
+	cmdfile = g_keyfile_new();
+	
+	if (!g_key_file_load_from_file (G_KEY_FILE(cmdfile), FILE_COMMANDS,
+                                             G_KEY_FILE_KEEP_COMMENTS,
+                                             &err)
+	{
+		g_error_free(err);
+		return FALSE;
+	}
+	
+	keys = g_key_file_get_keys (cmdfile, "Commands",  &NUM_COMMANDS, &err);
+	if (keys)
+	{
+		for (i=0; i<NUM_COMMANDS; i++)
+		{
+			commands = realloc(commands, i * sizeof(t_scommand));
+			
+		}
+		g_strfreev(keys);
+	}
+}
 	
 void FileSelected (char *file, gpointer data);
+
 
 void
 init_buttons ()
@@ -283,7 +315,7 @@ Keyctl_Build_Objects ()
 	
 	gpe_load_icons(local_icons);
 	
-	fill_commands();
+	commands_load();
 	
 	gtk_menu_set_screen(GTK_MENU(cmenu),NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),

@@ -1,3 +1,7 @@
+2005-02-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* keyctl.c: Add some lines of code to read commands from file.
+
 2005-02-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Makefile: Fixed typo, updated .desktop generation and MEMBERS.
