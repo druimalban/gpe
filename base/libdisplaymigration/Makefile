@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libdm
 DEBUG = yes
-VERSION = 0.22
+VERSION = 0.23
 
 LINGUAS = 
 
