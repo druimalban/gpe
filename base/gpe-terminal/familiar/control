@@ -1,0 +1,11 @@
+Package: gpe-terminal
+Section: base
+Priority: optional
+Version: 0.0.1
+Architecture: arm
+Maintainer: Moray Allan <moray@handhelds.org>
+Depends: rxvt-aa, xfonts-ttf
+Description: Terminal emulator for GPE.
+ This package provides a terminal emulator for the GPE palmtop environment,
+ using rxvt-aa.
+ .
