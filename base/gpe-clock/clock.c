@@ -336,12 +336,14 @@ update_time (void)
   return TRUE;
 }
 
+#ifdef DO_SECONDS
 static void
 set_seconds (GtkWidget *w, GtkWidget *time_label)
 {
   show_seconds = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
   update_time ();
 }
+#endif
 
 static void
 set_format (GtkWidget *w, void *value)
@@ -368,7 +370,9 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   GtkWidget *format_12_button;
   GtkWidget *format_24_button;
   GtkWidget *format_analogue_button;
+#ifdef DO_SECONDS
   GtkWidget *seconds_button;
+#endif
   GSList    *radiogroup;
   int spacing = gpe_get_boxspacing ();
 
@@ -383,26 +387,33 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (format_12_button));
   format_analogue_button = gtk_radio_button_new_with_label (radiogroup, _("Analogue format"));
 
+#ifdef DO_SECONDS
   seconds_button = gtk_check_button_new_with_label (_("Show seconds"));
-
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (seconds_button), show_seconds);
+#endif
+
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_24_button), format == FORMAT_24);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_analogue_button), format == FORMAT_ANALOGUE);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_analogue_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_12_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_24_button, FALSE, FALSE, 0);
+#ifdef DO_SECONDS
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), seconds_button, FALSE, FALSE, 0);
+#endif
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
 
   gtk_widget_show_all (window);
 
+#ifdef DO_SECONDS
   g_signal_connect (G_OBJECT (seconds_button), "toggled", G_CALLBACK (set_seconds), time_label);
+#endif
   g_signal_connect (G_OBJECT (format_24_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_24);
   g_signal_connect (G_OBJECT (format_12_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_12);
   g_signal_connect (G_OBJECT (format_analogue_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_ANALOGUE);
  
+  gtk_widget_grab_default (ok_button);
   g_signal_connect (G_OBJECT (ok_button), "clicked", G_CALLBACK (click_ok), window);
 }
 
@@ -584,6 +595,8 @@ alarm_window (void)
   cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->action_area), cancel_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->action_area), ok_button, FALSE, FALSE, 0);
+
+  gtk_widget_grab_default (ok_button);
 
   gtk_widget_show_all (ctx->window);
 

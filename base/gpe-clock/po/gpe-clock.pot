@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-22 15:52+0100\n"
+"POT-Creation-Date: 2004-08-23 22:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,19 +60,19 @@ msgstr ""
 msgid "Weekly, on:"
 msgstr ""
 
-#: clock.c:739
+#: clock.c:736
 msgid "Preferences"
 msgstr ""
 
-#: clock.c:740
+#: clock.c:737
 msgid "Set the time"
 msgstr ""
 
-#: clock.c:741
+#: clock.c:738
 msgid "Alarm ..."
 msgstr ""
 
-#: clock.c:801
+#: clock.c:798
 msgid ""
 "This is the clock.\n"
 "Tap here to set the alarm, set the time, or change the display format."
