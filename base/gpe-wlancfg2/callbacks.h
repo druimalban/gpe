@@ -21,7 +21,6 @@
 
 gboolean
 on_GPE_WLANCFG_de_event                (GtkWidget       *widget,
-                                        GdkEvent        *event,
                                         gpointer         user_data);
 
 void

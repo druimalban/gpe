@@ -16,7 +16,7 @@ PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.2.6
+VERSION = 0.2.7
 LINGUAS = cs
 
 ifeq ($(CVSBUILD),yes)

@@ -139,9 +139,11 @@ int main (int argc, char *argv[])
 
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_simple));
 
-	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_simple), GTK_STOCK_QUIT,_("Exit"),
-		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
+	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_simple), GTK_STOCK_APPLY,_("Save settings"),
+		NULL, (GtkSignalFunc) on_GPE_WLANCFG_de_event, (gpointer)FALSE, -1);
 
+	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_simple), GTK_STOCK_QUIT,_("Exit"),
+		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, (gpointer)TRUE, -1);
 
 	
 	treeview=GTK_TREE_VIEW(lookup_widget(GPE_WLANCFG, "tvSchemeList"));

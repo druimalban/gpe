@@ -1,3 +1,6 @@
+08/19/2004	Florian Boor <florian.boor@kernelconcepts.de>
+	- Added button to apply changes.
+	- Released V 0.2.7
 
 06/03/2004	Florian Boor <florian.boor@kernelconcepts.de>
 	- Major Makefile update.

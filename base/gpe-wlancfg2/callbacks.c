@@ -547,7 +547,7 @@ void get_changes_simple(void)
 }
 
 
-gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer user_data)
+gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, gpointer user_data)
 {
 	
 	GtkWidget 	*MainWindow;
@@ -556,6 +556,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
  	GtkTreeIter	iter;
 	GtkListStore	*liststore;
 	GtkTreeSelection *selection;
+	gboolean quit_app = (gboolean) user_data;
 	
 	gchar      	*ListEntry[4];
 	gint            answer;
@@ -563,6 +564,8 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 	Scheme_t*	Scheme;
 	Scheme_t*	OrigScheme;
 
+	save_config = !quit_app;
+	
 	treeview = lookup_widget(GPE_WLANCFG, "tvSchemeList");
 	liststore = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
 
@@ -575,18 +578,25 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 		get_changes();
 		if (HasChanged) 
 		{
+			if (quit_app)
+			{
 	       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_QUESTION,
                                                  GTK_BUTTONS_YES_NO,
                                                  _("Settings have been changed.\nDo you want to save the settings?"));
-			answer = gtk_dialog_run(GTK_DIALOG(dialog));
-			gtk_widget_destroy(dialog);
-
+				answer = gtk_dialog_run(GTK_DIALOG(dialog));
+				gtk_widget_destroy(dialog);
+			}
+			else
+			{
+				answer = GTK_RESPONSE_YES;
+			}
 			if (answer != GTK_RESPONSE_YES) 
 			{
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
-			} else
+			} 
+			else
 			{
 				save_config = TRUE;
 				if (CurrentScheme->NewScheme)
@@ -611,9 +621,6 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 					gtk_list_store_append(liststore, &iter);
 					gtk_list_store_set(liststore, &iter, 0, ListEntry[0], 1, ListEntry[1], 2 , ListEntry[2], 3, ListEntry[3], 4, CurrentScheme, -1);
 
-					for (count = 0; count < 4; count++) 
-						free(ListEntry[count]);
-
 				} else
 				{
 
@@ -634,11 +641,9 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 					if(gtk_tree_selection_get_selected (selection, (GtkTreeModel**)&liststore, &iter))
 						gtk_list_store_set(liststore, &iter, 0, ListEntry[0], 1, ListEntry[1], 2 , ListEntry[2], 3, ListEntry[3], 4, CurrentScheme, -1);
 					
-					for (count = 0; count < 4; count++) 
-						free(ListEntry[count]);
 				}
 			}
-			//kc-or: Only ask if realy changed
+			//kc-or: Only ask if really changed
 			HasChanged = FALSE;
 		} else 
 		{
@@ -653,13 +658,20 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 		get_changes_simple();
 		if (HasChanged) 
 		{
+			if (quit_app)
+			{
 	       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_QUESTION,
                                                  GTK_BUTTONS_YES_NO,
                                                  _("Settings have been changed.\nDo you want to save the settings?"));
-			answer = gtk_dialog_run(GTK_DIALOG(dialog));
-			gtk_widget_destroy(dialog);
+				answer = gtk_dialog_run(GTK_DIALOG(dialog));
+				gtk_widget_destroy(dialog);
+			}
+			else
+			{
+				answer = GTK_RESPONSE_YES;
+			}
 			if (answer != GTK_RESPONSE_YES) 
 			{
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
@@ -683,8 +695,6 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 				if(gtk_tree_selection_get_selected (selection, (GtkTreeModel**)&liststore, &iter))
 					gtk_list_store_set(liststore, &iter, 0, ListEntry[0], 1, ListEntry[1], 2 , ListEntry[2], 3, ListEntry[3], 4, CurrentScheme, -1);
 					
-				for (count = 0; count < 4; count++) 
-					free(ListEntry[count]);
 			}
 			
 			gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
@@ -695,25 +705,29 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 				gtk_tree_model_get (GTK_TREE_MODEL(liststore), &iter, 4, &Scheme, -1);
 				gtk_tree_model_iter_next(GTK_TREE_MODEL(liststore), &iter);
 				memcpy(&schemelist[count], Scheme, sizeof(Scheme_t));
-				free(Scheme);
 			}
 			
 			if (save_config) write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
 		}
 		free(OrigScheme);
-		gtk_main_quit();
+		if (quit_app) 
+			gtk_main_quit();
 	} else 
 	{
-		if (HasChanged) 
+		if (HasChanged && quit_app)
 		{
-	       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
-                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                 GTK_MESSAGE_QUESTION,
-                                                 GTK_BUTTONS_YES_NO,
+	       	dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+                                                GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                GTK_MESSAGE_QUESTION,
+                                                GTK_BUTTONS_YES_NO,
                                                  _("Settings have been changed.\nDo you want to save the settings?"));
 			answer = gtk_dialog_run(GTK_DIALOG(dialog));
 			gtk_widget_destroy(dialog);
 			if (answer == GTK_RESPONSE_YES) save_config = TRUE; 
+		}
+		else
+		{
+			save_config = HasChanged;
 		}
 
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
@@ -724,13 +738,14 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 			gtk_tree_model_get (GTK_TREE_MODEL(liststore), &iter, 4, &Scheme, -1);
 			gtk_tree_model_iter_next(GTK_TREE_MODEL(liststore), &iter);
 			memcpy(&schemelist[count], Scheme, sizeof(Scheme_t));
-			free(Scheme);
 		}
 			
 		if (save_config) write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
-		gtk_main_quit();
+		if (quit_app)
+			gtk_main_quit();
 	}
 
+	HasChanged = FALSE;
 	return TRUE;
 }
 
