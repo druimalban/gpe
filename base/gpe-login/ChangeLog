@@ -1,5 +1,14 @@
 2003-08-14  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.59 released.
+
+2003-08-14  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Call locale_try_user for initial user.
+	(build_language_menu): Set default locale to C if none configured.
+
+2003-08-14  Philip Blundell  <philb@gnu.org>
+
 	* gpe-session-scripts 0.50 released.
 
 2003-08-14  Philip Blundell  <philb@gnu.org>

@@ -960,17 +960,17 @@ static void
 build_language_menu ()
 {
   GtkWidget *m = gtk_menu_new ();
-  locale_item_t *item;
+  locale_item_t *c_locale, *item;
   GSList *filelist;
   GSList *iter;
   int i;
 
   language_menu = gtk_option_menu_new ();
 
-  item = g_malloc (sizeof (locale_item_t));
-  item->name = "English";
-  item->locale = "C";
-  locale_system_list = g_slist_append (NULL, item);
+  c_locale = g_malloc (sizeof (locale_item_t));
+  c_locale->name = "English";
+  c_locale->locale = "C";
+  locale_system_list = g_slist_append (NULL, c_locale);
 
   /* get list of locale files */
   filelist = locale_get_files ();
@@ -997,6 +997,8 @@ build_language_menu ()
     
   /* initialise the default_locale, if it exists */
   default_locale = locale_get_file_single (GPE_LOCALE_DEFAULT);
+  if (default_locale == NULL)
+    default_locale = c_locale;
 
   for (i = 0, iter = locale_system_list; iter; iter = iter->next, i++)
     {
@@ -1370,6 +1372,7 @@ main (int argc, char *argv[])
 
   menu = gtk_menu_new ();
   slurp_passwd (menu);
+  locale_try_user (current_username);
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
