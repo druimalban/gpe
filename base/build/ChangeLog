@@ -1,5 +1,9 @@
 2003-02-12  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile.dpkg_ipkg (printtaginfo): Add info about uploading a
+	tarball.
+	(printinfo): New target, renamed from printtaginfo.
+
 	* README (this): Tell people about
 	http://handhelds.org/z/wiki/IpkgHackForLocales.
 

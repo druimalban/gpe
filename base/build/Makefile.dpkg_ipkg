@@ -1,7 +1,7 @@
 ## Use this snippet like: include ../build/Makefile.dpkg_ipkg
 ##
 ## Add the following line in your Makefile: 
-## .PHONY: dist ipkg dpkg printtaginfo tag
+## .PHONY: dist ipkg dpkg printinfo tag
 
 # Let's use whatever clean target the specific app provides
 
@@ -31,21 +31,24 @@ ipkg: clean
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
-	$(MAKE) printtaginfo
+	$(MAKE) printinfo
 
 dpkg: dist
 	mkdir -p ../deb
 	( cd ../deb; rm -rf $(PACKAGE)-$(VERSION); ln -s ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; tar xzf $(PACKAGE)_$(VERSION).orig.tar.gz )
 	mkdir -p ../deb/$(PACKAGE)-$(VERSION)/debian
 	for i in debian/*; do if test -f $$i; then cp $$i ../deb/$(PACKAGE)-$(VERSION)/debian/; fi; done
-	$(MAKE) printtaginfo
+	$(MAKE) printinfo
 
 CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
-printtaginfo:
+printinfo:
 	@printf '-------------------------------------------------------------------------------\n'
 	@printf "If this becomes a package release, please add a CVS tag.\n"
 	@printf "You can use 'make tag' for that, it will execute\n"
 	@printf "   cvs tag %s\n" $(CVSTAG)
+	@printf "Please upload a tarball (created with 'make dist') to\n"
+	@printf "   ftp://ftp.handhelds.org/pub/projects/gpe/\n"
+	@printf "   (handhelds.org:~ftp/pub/projects/gpe/source)\n"
 	@printf '-------------------------------------------------------------------------------\n'
 
 tag: 
