@@ -1,3 +1,9 @@
+
+2004-06-07 Florian Boor <florian.boor@kernelconceps.de>
+	* control: Added iptables to dependencies.
+	* Makefile: New version number.
+	* Released V 0.2
+
 2004-06-05 Florian Boor <florian.boor@kernelconceps.de>
 	* interface.c: Set config flag to make network app restore rules.
 	
