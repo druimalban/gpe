@@ -416,14 +416,14 @@ commit_person (struct person *p)
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *v = iter->data;
-      if (v->value && v->value[0])
-	{
-	  r = sqlite_exec_printf (db,
+      if (v->value && v->value[0] && (strcmp(v->tag,"MODIFIED")))
+        {
+	      r = sqlite_exec_printf (db,
 				  "insert into contacts values(%d,'%q','%q')",
 				  NULL, NULL, &err, p->id, v->tag, v->value);
-	}
-      if (r)
-	goto error;
+          if (r)
+	        goto error;
+        }
     }
 
   if (sqlite_exec_printf (db,

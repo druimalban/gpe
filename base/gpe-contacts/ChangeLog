@@ -1,3 +1,11 @@
+2004-08-23  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * Makefile: V 0.27
+    * db.c: Fixed "MODIFIED" tag multiplication.
+    * editing.c: Removed obsolete store_special_fields(), retrieve_special_fields()
+    * main.c, editing.c, db.c: Several major bugfixes in category handling.
+    * main.c: Automatic update of display after edit and deleting.
+
 2004-08-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Released V 0.26

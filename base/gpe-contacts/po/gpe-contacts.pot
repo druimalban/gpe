@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-17 16:22+0200\n"
+"POT-Creation-Date: 2004-08-20 16:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,15 +28,15 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:200
+#: editing.c:221
 msgid "no year"
 msgstr ""
 
-#: editing.c:323
+#: editing.c:344
 msgid "Edit Contact"
 msgstr ""
 
-#: editing.c:400
+#: editing.c:421
 msgid "Categories"
 msgstr ""
 

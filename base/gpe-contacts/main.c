@@ -172,6 +172,7 @@ delete_contact (GtkWidget * widget, gpointer d)
   GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
   GtkTreeIter iter;
   GtkTreeModel *model;
+  GtkTreePath *path = NULL;
 
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
@@ -179,10 +180,22 @@ delete_contact (GtkWidget * widget, gpointer d)
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
       if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
 			    "question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
-	{
-	  if (db_delete_by_uid (uid))
-	    update_display ();
-	}
+        {
+          if (db_delete_by_uid (uid))
+            {
+              gtk_tree_view_get_cursor(GTK_TREE_VIEW(list_view),&path,NULL);
+              if (path) 
+                {
+                  if (!gtk_tree_path_prev(path))
+                    gtk_tree_path_next(path);
+                }
+              else
+                path = gtk_tree_path_new_first();
+              gtk_tree_view_set_cursor(GTK_TREE_VIEW(list_view),path,NULL,FALSE);
+              gtk_tree_path_free(path);
+              update_display ();
+            }
+        }
     }
 }
 
@@ -451,8 +464,8 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
     {
       GSList *l;
       gboolean found = FALSE;
-
-      for (l = p->data; l; l = l->next)
+      struct person *per = db_get_by_uid (p->id);
+      for (l = per->data; l; l = l->next)
         {
           struct tag_value *v = l->data;
           if (!strcasecmp (v->tag, "CATEGORY") && v->value)
@@ -465,7 +478,7 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
                 }
             }
         }
-
+      discard_person(per);
       if (!found)
         return FALSE;
     }
@@ -552,6 +565,9 @@ schedule_search (GObject *obj)
 void
 update_display (void)
 {
+  GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+
+  selection_made(sel, G_OBJECT(gtk_widget_get_toplevel(search_entry)));
   do_search (G_OBJECT (search_entry), search_entry);
 }
 

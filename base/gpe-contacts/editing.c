@@ -434,26 +434,6 @@ edit_window (void)
   return w;
 }
 
-void
-retrieve_special_fields (GtkWidget * edit, struct person *p)
-{
-  GSList *cl = g_object_get_data (G_OBJECT (edit), "category-widgets");
-  db_delete_tag (p, "CATEGORY");
-  while (cl)
-    {
-      GtkWidget *w = cl->data;
-      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
-	{
-	  guint c = (guint) g_object_get_data (G_OBJECT (w), "category");
-	  char buf[32];
-	  snprintf (buf, sizeof (buf) - 1, "%d", c);
-	  buf[sizeof (buf) - 1] = 0;
-	  db_set_multi_data (p, "CATEGORY", g_strdup (buf));
-	}
-      cl = cl->next;
-    }
-}
-
 static GSList *
 get_categories_list (struct person *p)
 {
@@ -515,7 +495,6 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
   GSList *iter;
 
   p = g_object_get_data (G_OBJECT (edit), "person");
-
   db_delete_tag (p, "category");
 
   for (iter = selected; iter; iter = iter->next)
@@ -528,24 +507,6 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
   w = lookup_widget (edit, "categories-label");
   gtk_label_set_text (GTK_LABEL (w), str);
   g_free (str);
-}
-
-static void
-store_special_fields (GtkWidget *edit, struct person *p)
-{
-  GtkWidget *w;
-  gchar *str;
-
-  if (p)
-    {
-      str = build_categories_string (p);
-      if (str)
-	    {
-          w = lookup_widget (edit, "categories-label");
-          gtk_label_set_text (GTK_LABEL (w), str);
-          g_free (str);
-        }
-    }
 }
 
 void
@@ -613,7 +574,6 @@ edit_person (struct person *p)
         }
       gtk_object_set_data (GTK_OBJECT (w), "person", p);
     }
-  store_special_fields (w, p);
   gtk_widget_show (w);
 }
 
@@ -691,7 +651,7 @@ update_edit (struct person *p, GtkWidget *w)
             }
         }
     }
-  store_special_fields (w, p);
+
   if (namenum)
     {
       gchar *ts = g_strdup(n1);
@@ -774,8 +734,6 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
             nametext = text;
         }
     }
-
-  retrieve_special_fields (edit, p);
 
     /* handle name details */
     if (nametext)
