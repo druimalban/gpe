@@ -1,6 +1,7 @@
 #ifndef _TRAY_H_
 #define _TRAY_H_
 
+#define DEBUG
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@
 #define XEMBED_ACTIVATE_ACCELERATOR     14
 
 #ifdef DEBUG
-#define TRAYDBG(txt, args... ) fprintf(stderr, "TRAY-DEBUG: " txt , ##args )
+#define TRAYDBG(txt, args... ) fprintf(stderr, "gpe-what TRAY-DEBUG: " txt , ##args )
 #else
 #define TRAYDBG(txt, args... ) /* nothing */
 #endif

@@ -32,6 +32,7 @@
 static Atom atom;
 static Display *dpy;
 static Window root;
+static Window mywindow;
 
 struct gpe_icon my_icons[] = {
   { "what" },
@@ -53,7 +54,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   if (xev->type == ClientMessage)
     {
       XAnyEvent *any = (XAnyEvent *)xev;
-      tray_handle_event (any->display, any->window, xev);
+      tray_handle_event (any->display, mywindow, xev);
     }
   return GDK_FILTER_CONTINUE;
 }
@@ -98,13 +99,18 @@ main (int argc, char *argv[])
   window_type_dock_atom = XInternAtom (dpy,
 				       "_NET_WM_WINDOW_TYPE_DOCK", False);
 
-  XChangeProperty (dpy, GDK_WINDOW_XWINDOW (window->window), 
+  gtk_widget_realize (window);
+
+  mywindow = GDK_WINDOW_XWINDOW (window->window);
+
+  printf ("my window is %d\n", mywindow);
+  XChangeProperty (dpy, mywindow, 
 		   window_type_atom, XA_ATOM, 32, 
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
+  XSync (dpy, 0);
   tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
 
-  XSelectInput (dpy, GDK_WINDOW_XWINDOW (window->window), ClientMessageMask);
   gdk_window_add_filter (window->window, filter, 0);
 
   gtk_main ();

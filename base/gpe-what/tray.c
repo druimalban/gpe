@@ -172,6 +172,7 @@ tray_set_xembed_info (Display* dpy, Window win, int flags)
    
    list[0] = MAX_SUPPORTED_XEMBED_VERSION;
    list[1] = flags;
+   printf("changing win %d\n", win);
    XChangeProperty (dpy, win, Atoms[ATOM_XEMBED_INFO], XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *) list, 2);
    
