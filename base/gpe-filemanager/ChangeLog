@@ -1,4 +1,5 @@
 2004-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: Change widgets, disable zooming in list mode.
 	* main.c: Started implementing a proper list mode using GtkTreeView.
     * main.c: Added buttons to change view.
     * main.c: Some minor fixes.

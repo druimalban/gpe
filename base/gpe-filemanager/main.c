@@ -70,8 +70,9 @@ static GtkTreeStore *store = NULL;
 
 static GtkWidget *window;
 static GtkWidget *combo;
-static GtkWidget *view_scrolld;
 static GtkWidget *view_widget;
+static GtkWidget *view_window;
+static GtkWidget *view_port;
 
 static GtkWidget *bluetooth_menu_item;
 static GtkWidget *copy_menu_item;
@@ -107,7 +108,6 @@ gchar *current_directory = NULL;
 gchar *current_view = "icons";
 gint current_zoom = 20;
 static gboolean view_is_icons = FALSE;
-GtkTreeStore *store = NULL;
 
 static gchar *file_clipboard = NULL;
 
@@ -157,6 +157,8 @@ static void send_with_bluetooth (void);
 static void copy_file_clip (void);
 static void paste_file_clip (void);
 static void create_directory_interactive(void);
+static GtkWidget* create_view_widget_icons(void);
+static GtkWidget* create_view_widget_list(void);
 
 static GtkItemFactoryEntry menu_items[] =
 {
@@ -195,7 +197,7 @@ progress_dialog_create(gchar *title)
          gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
                             progress,FALSE,TRUE,0);
          g_object_set_data(G_OBJECT(dialog),"bar",progress);
-         g_signal_connect(G_OBJECT(dialog),"response",progress_response,NULL);
+         g_signal_connect(G_OBJECT(dialog),"response",G_CALLBACK(progress_response),NULL);
          gtk_widget_show_all(dialog);
   return dialog;
 }
@@ -1098,12 +1100,15 @@ add_icon (FileInformation *file_info)
   else
   {
 	GtkTreeIter iter;
+    GdkPixbuf *pb;
+	pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
 	gtk_tree_store_append (store, &iter, NULL);
 	gtk_tree_store_set (store, &iter,
 	    COL_NAME, file_info->vfs->name,
-		COL_ICON, pixbuf,
+		COL_ICON, pb,
 		COL_DATA, (gpointer) file_info,
     	-1);
+//	g_free(pb);
   }	  
 }
 
@@ -1337,35 +1342,36 @@ zoom_out ()
 static void
 view_icons (GtkWidget *widget)
 {
-//  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_BELOW);
-  gtk_widget_destroy(view_widget);
   gtk_tree_store_clear(GTK_TREE_STORE(store));
   view_widget = create_view_widget_icons();
   gtk_widget_set_sensitive(btnListView,TRUE);
   gtk_widget_set_sensitive(btnIconView,FALSE);
   view_is_icons = TRUE;
+  refresh_current_directory ();
 }
 
 
 static void
 view_list (GtkWidget *widget)
 {
-//  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_RIGHT);
-  gtk_widget_destroy(view_widget);
   view_widget = create_view_widget_list();
   gtk_widget_set_sensitive(btnListView,FALSE);
   gtk_widget_set_sensitive(btnIconView,TRUE);
   view_is_icons = FALSE;
+  refresh_current_directory ();
 }
 
 
 
 static GtkWidget*
-create_view_widget_list()
+create_view_widget_list(void)
 {
     GtkWidget *treeview;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+	
+  if (GTK_IS_WIDGET(view_widget)) gtk_widget_destroy(view_widget);
+  if (GTK_IS_WIDGET(view_port)) gtk_widget_destroy(view_port);
 	
 	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
 	
@@ -1373,6 +1379,7 @@ create_view_widget_list()
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
   
 	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set(renderer,"stock-size",GTK_ICON_SIZE_SMALL_TOOLBAR,NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Icon"),
 							   renderer,
 							   "pixbuf",
@@ -1397,34 +1404,42 @@ create_view_widget_list()
 							   NULL);
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-
+	gtk_container_add(GTK_CONTAINER(view_window),treeview);
+    gtk_widget_show(treeview);
 	return treeview;
 }
 
 
 static GtkWidget*
-create_view_widget_icons()
+create_view_widget_icons(void)
 {
-  GtkWidget *view_widget;
-  
-  view_widget = gpe_icon_list_view_new ();
-  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
+  GtkWidget *view_icons;
+  	
+  if (GTK_IS_WIDGET(view_widget)) 
+	  gtk_widget_destroy(view_widget);
+	
+  view_icons = gpe_icon_list_view_new ();
+  gtk_signal_connect (GTK_OBJECT (view_icons), "clicked",
 		      GTK_SIGNAL_FUNC (button_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
+  gtk_signal_connect (GTK_OBJECT (view_icons), "show-popup",
 		      GTK_SIGNAL_FUNC (show_popup), NULL);
                              
-  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
-  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view_widget), 30);
-  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_RIGHT);
-  
-  return view_widget;
+  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_icons), current_zoom);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view_icons), 30);
+  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_icons), GPE_TEXT_BELOW);  
+	
+  view_port = gtk_viewport_new(NULL,NULL);
+  gtk_container_add(GTK_CONTAINER(view_port),view_icons);
+  gtk_container_add(GTK_CONTAINER(view_window),view_port);
+  gtk_widget_show_all(view_port);  
+  return view_icons;
 }
 
 
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *sw;
+  GtkWidget *vbox, *hbox, *toolbar, *toolbar2;
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
@@ -1444,11 +1459,11 @@ main (int argc, char *argv[])
 
 	/* init tree storage stuff */
 	store = gtk_tree_store_new (N_COLUMNS,
-  		G_TYPE_POINTER,
+  		G_TYPE_OBJECT,
 		G_TYPE_STRING,
 	 	G_TYPE_LONG,
-		G_TYPE_INTEGER,
-		G_TYPE_DATE,
+		G_TYPE_INT,
+		G_TYPE_LONG,
 		G_TYPE_STRING,
 		G_TYPE_POINTER);
   
@@ -1474,12 +1489,11 @@ main (int argc, char *argv[])
   combo = gtk_combo_new ();
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
     "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
-
-  view_widget = create_view_widget_list();
   
-  sw = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),GTK_POLICY_ALWAYS,GTK_POLICY_ALWAYS);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(sw),view_widget);
+  view_window = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
+  		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+  view_widget = create_view_widget_list();
   
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
@@ -1541,7 +1555,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), view_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
 
