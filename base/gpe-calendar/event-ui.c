@@ -300,6 +300,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       if (ev->flags & FLAG_ALARM)
         unschedule_alarm (s->ev);
       ev_d->sequence++;
+      ev_d->modified=time(NULL);
     }
   else
     {
