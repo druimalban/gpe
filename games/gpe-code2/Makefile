@@ -5,9 +5,15 @@ LINGUAS =
 
 MEMBERS = gpe-code
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+ifeq ($(GTK1),yes)
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
 CONTROL = control
+else
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CONTROL = control1
+endif
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
 ifeq ($(DEBUG),yes)
@@ -41,7 +47,7 @@ install: all
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
-	install -m 644 pixmaps/* $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
+	install -m 644 pixmaps/*.xpm $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 	
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
