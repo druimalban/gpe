@@ -105,24 +105,26 @@ create_dialog()
 	                                GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 	                                GTK_STOCK_OK,GTK_RESPONSE_OK,
 	                                NULL);
-	table = gtk_table_new(4,2,FALSE);
+	table = gtk_table_new(4,3,FALSE);
 	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+	gtk_container_set_border_width(GTK_CONTAINER(table),gpe_get_border());
 	
-	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),table,FALSE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),table,TRUE,TRUE,0);
 	
 	label = gtk_label_new(NULL);
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	text = g_strdup_printf("<b>%s</b>",_("Edit rule parameters"));
 	gtk_label_set_markup(GTK_LABEL(label),text);
 	g_free(text);
-	gtk_table_attach(GTK_TABLE(table),label,0,2,0,1,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),label,0,2,0,1,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	
 	label = gtk_label_new(_("Name"));
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	gtk_table_attach(GTK_TABLE(table),label,0,1,1,2,GTK_FILL,GTK_FILL,0,0);
 	
 	eName = gtk_entry_new_with_max_length(254);
-	gtk_table_attach(GTK_TABLE(table),eName,1,2,1,2,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),eName,1,3,1,2,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 
 	label = gtk_label_new(_("Direction"));
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
@@ -131,7 +133,7 @@ create_dialog()
 	cbChain = gtk_combo_new();
 	gtk_combo_set_value_in_list(GTK_COMBO(cbChain),TRUE,FALSE);
 	gtk_combo_set_popdown_strings(GTK_COMBO(cbChain),slChain);
-	gtk_table_attach(GTK_TABLE(table),cbChain,1,2,2,3,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),cbChain,1,3,2,3,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	
 	label = gtk_label_new(_("Action"));
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
@@ -140,7 +142,7 @@ create_dialog()
 	cbTarget = gtk_combo_new();
 	gtk_combo_set_value_in_list(GTK_COMBO(cbTarget),TRUE,FALSE);
 	gtk_combo_set_popdown_strings(GTK_COMBO(cbTarget),slTarget);
-	gtk_table_attach(GTK_TABLE(table),cbTarget,1,2,3,4,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),cbTarget,1,3,3,4,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	
 	label = gtk_label_new(_("Protocol"));
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
@@ -149,7 +151,7 @@ create_dialog()
 	cbProtocol = gtk_combo_new();
 	gtk_combo_set_value_in_list(GTK_COMBO(cbProtocol),TRUE,FALSE);
 	gtk_combo_set_popdown_strings(GTK_COMBO(cbProtocol),slProtocol);
-	gtk_table_attach(GTK_TABLE(table),cbProtocol,1,2,4,5,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),cbProtocol,1,3,4,5,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	g_signal_connect_after(G_OBJECT(GTK_COMBO(cbProtocol)->entry),"changed",
 		G_CALLBACK(update_widgets),NULL);
 		
@@ -158,14 +160,14 @@ create_dialog()
 	gtk_table_attach(GTK_TABLE(table),label,0,1,5,6,GTK_FILL,GTK_FILL,0,0);
 	
 	eSPort = gtk_entry_new_with_max_length(5);
-	gtk_table_attach(GTK_TABLE(table),eSPort,1,2,5,6,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),eSPort,1,3,5,6,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	
 	label = gtk_label_new(_("Destination port"));
 	gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
 	gtk_table_attach(GTK_TABLE(table),label,0,1,6,7,GTK_FILL,GTK_FILL,0,0);
 	
 	eDPort = gtk_entry_new_with_max_length(5);
-	gtk_table_attach(GTK_TABLE(table),eDPort,1,2,6,7,GTK_FILL,GTK_FILL,0,0);
+	gtk_table_attach(GTK_TABLE(table),eDPort,1,3,6,7,GTK_FILL | GTK_EXPAND,GTK_FILL,0,0);
 	return dialog;
 }
 

@@ -1,4 +1,8 @@
 2004-06-09 Florian Boor <florian.boor@kernelconceps.de>
+	* Released V 0.3
+	* editrule.c: Gui updates to look better on small displays.
+	* backend.c, Makefile: Use different iptables commands on different 
+		platforms.
 	* backend.c: send_message() Add check for connection is active.
 	* backend.h: Export some more functions.
 	* main.c: Added command line switch "--active" that triggers activating 

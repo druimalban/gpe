@@ -35,9 +35,14 @@ static int sock = -1;
 static rule_t *rule_info = NULL;
 static int rule_count = 0;
 
-#define IPTABLES_CMD "/sbin/iptables"
 #define CONFIGFILE	"/etc/access.conf"
 #define DEFAULT_INTERFACE "! lo"
+
+#ifdef MACH_IPAQ
+#define IPTABLES_CMD "/usr/sbin/iptables"
+#else
+#define IPTABLES_CMD "/sbin/iptables"
+#endif
 
 /* forwared definitions */
 
@@ -258,8 +263,10 @@ do_rules_apply()
 								  prot,
 								  portspec,
 								  target);
+#ifdef DEBUG			
+			printf("exec: %s\n",cmd);
+#endif
 			/* call iptables to add rule */
-printf("exec: %s\n",cmd);
 			system(cmd);
 			
 			g_free(cmd);

@@ -1,13 +1,25 @@
 PACKAGE = gpe-shield
-VERSION = 0.3
+VERSION = 0.3-1
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
 PREFIX = /usr/local
 DESTDIR = /
+MACHINE = other
 
 LINGUAS = 
+
+
+ifeq ($(MACHINE),ipaq)
+PACKAGE_CPPFLAGS += -DMACH_IPAQ
+PACKAGE_CFLAGS += -DMACH_IPAQ
+endif
+
+ifeq ($(MACHINE),simpad)
+PACKAGE_CPPFLAGS += -DMACH_SIMPAD
+PACKAGE_CFLAGS += -DMACH_SIMPAD
+endif
 
 EXTRA_DESKTOPS = gpe-shield.desktop.in 
 HELPFILE = gpe-shield.html
