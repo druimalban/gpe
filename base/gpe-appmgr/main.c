@@ -48,9 +48,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 #include <gpe/spacing.h>
-
-//#include "gpeiconlist.h"
-#include "gpe-iconlist.h"
+#include <gpe/gpe-iconlist.h>
 
 /* everything else */
 #include "main.h"
