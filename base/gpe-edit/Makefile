@@ -38,7 +38,8 @@ install-program: all gpe-edit.desktop
 	install -s gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
 	install -D -m 644 gpe-edit.mime $(DESTDIR)/etc/mime-handlers/gpe-edit.mime
-	install -D -m 644 gpe-edit.applications $(DESTDIR)$(PREFIX)/share/application-registry/
+	install -d $(DESTDIR)$(PREFIX)/share/application-registry/
+	install -D -m 644 gpe-edit.applications $(DESTDIR)$(PREFIX)/share/application-registry/gpe-edit.applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-12 17:14+0200\n"
+"POT-Creation-Date: 2004-08-17 00:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,117 +24,117 @@ msgstr ""
 msgid "Current file is modified, save?"
 msgstr ""
 
-#: main.c:135 main.c:345
+#: main.c:135 main.c:350
 msgid "Question"
 msgstr ""
 
-#: main.c:136 main.c:346
+#: main.c:136 main.c:351
 msgid "Don't save"
 msgstr ""
 
-#: main.c:278
+#: main.c:283
 msgid "Open File ..."
 msgstr ""
 
-#: main.c:307
+#: main.c:312
 msgid "Save as ..."
 msgstr ""
 
-#: main.c:345
+#: main.c:350
 msgid "Save current file before exiting?"
 msgstr ""
 
-#: main.c:407
+#: main.c:416
 msgid "Text not found"
 msgstr ""
 
-#: main.c:446
+#: main.c:455
 msgid "Unable to replace text"
 msgstr ""
 
-#: main.c:459
+#: main.c:468
 msgid "Search for: "
 msgstr ""
 
-#: main.c:462 main.c:516
+#: main.c:471 main.c:525
 msgid "Find"
 msgstr ""
 
-#: main.c:508
+#: main.c:517
 msgid "Search for:"
 msgstr ""
 
-#: main.c:510
+#: main.c:519
 msgid "Replace with:"
 msgstr ""
 
-#: main.c:515 main.c:636
+#: main.c:524 main.c:645
 msgid "Replace"
 msgstr ""
 
-#: main.c:607
+#: main.c:616
 msgid ""
 "File editing field, additional functions are available by tap&hold or right "
 "click."
 msgstr ""
 
-#: main.c:614
+#: main.c:623
 msgid "New"
 msgstr ""
 
-#: main.c:615
+#: main.c:624
 msgid "New document"
 msgstr ""
 
-#: main.c:618
+#: main.c:627
 msgid "Open"
 msgstr ""
 
-#: main.c:619
+#: main.c:628
 msgid "Open file"
 msgstr ""
 
-#: main.c:622
+#: main.c:631
 msgid "Save"
 msgstr ""
 
-#: main.c:623
+#: main.c:632
 msgid "Save current file"
 msgstr ""
 
-#: main.c:626
+#: main.c:635
 msgid "Save as"
 msgstr ""
 
-#: main.c:627
+#: main.c:636
 msgid "Save current file as"
 msgstr ""
 
-#: main.c:632
+#: main.c:641
 msgid "Search"
 msgstr ""
 
-#: main.c:633
+#: main.c:642
 msgid "Search text for a string"
 msgstr ""
 
-#: main.c:637
+#: main.c:646
 msgid "Replace a string"
 msgstr ""
 
-#: main.c:642
+#: main.c:651
 msgid "Copy"
 msgstr ""
 
-#: main.c:643
+#: main.c:652
 msgid "Copy selected, paste is possible by tap&hold"
 msgstr ""
 
-#: main.c:650
+#: main.c:659
 msgid "Quit"
 msgstr ""
 
-#: main.c:651
+#: main.c:660
 msgid "Exit gpe-edit"
 msgstr ""
 
