@@ -41,6 +41,7 @@
 #include "sleep/conf.h"
 #include "storage.h"
 #include "serial.h"
+#include "logread.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -90,7 +91,7 @@ struct Applet applets[]=
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , "GPE" ,"admin","GPE Conf Administration"},
     { &Storage_Build_Objects, &Storage_Free_Objects, &Storage_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore , "Serial" ,"serial","Serial Port Configuration"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
+    { &Logread_Build_Objects, &Logread_Free_Objects, &Logread_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software","Adding and Removing Programs"},
   };

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Show Log
+Comment=Accesss System Log 
+Exec=gpe-conf logread
+Terminal=0
+Type=Application
+Icon=gpe-config-logread.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

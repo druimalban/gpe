@@ -33,6 +33,9 @@
 #include "applets.h"
 #include "suid.h"
 
+
+/* --- local types and constants --- */
+
 #define GPE_SERIAL_CONF_DIR "/etc/gpe/gpe-conf-serial"
 
 #define PARAM_BOOL 0
@@ -63,14 +66,72 @@ typedef struct
 t_serial_item;
 
 
+/* --- module global variables --- */
 
 static GtkWidget *notebook;
+static t_serial_item *serial_items;
+static gint num_items;
+
 
 /* --- local intelligence --- */
 
-GtkWidget *create_device_interface(const gchar* infile,gchar **iname)
+gint serial_get_items(gchar *file)
+{
+  gchar *content, *tmpval;
+  gchar **lines = NULL;
+  const gchar seperator = '='; 
+  gint length;
+  gchar *delim;
+  gint i = 0;
+  gint j = 0;
+  GError *err = NULL;
+
+  tmpval = "";
+  delim = g_strdup ("\n");
+  if (!g_file_get_contents (file, &content, &length, &err))
+  {
+	  fprintf(stderr,"Could not access file: %s.\n",file);
+	  if (access(file,F_OK)) // file exists, but access is denied
+	  {
+		  i = 0;
+		  delim = NULL;
+		  return 0;
+	  }
+  }
+  lines = g_strsplit (content, delim, 1024);
+  g_free (delim);
+  delim = NULL;
+  g_free (content);
+/*
+  while (lines[i])
+    {
+      if ((g_strrstr (g_strchomp (lines[i]), var))
+	  && (!g_str_has_prefix (g_strchomp (lines[i]), "#")))
+	{
+	  delim = lines[i];
+	  j=get_first_char(delim);
+	  if (j>0) {
+		  tmpval = g_malloc(j);
+		  strncpy(tmpval,delim,j);
+	  	  lines[i] = g_strdup_printf ("%s%s%c%s", tmpval,var,seperator,val);
+	  	  g_free(tmpval);
+	  }
+	  else
+	  {
+	  	lines[i] = g_strdup_printf ("%s%c%s", var,seperator, val);
+	  }
+	}
+      i++;
+    }
+*/
+}
+
+
+GtkWidget *serial_create_device_interface(const gchar* infile,gchar **iname)
 {
 	gchar *cfgfile = g_strdup_printf("%s/%s",GPE_SERIAL_CONF_DIR,infile);
+	
+	num_items = serial_get_items(cfgfile);
 	
 	return NULL;
 }
@@ -117,7 +178,7 @@ Serial_Build_Objects (void)
 		  if (entry->d_name[0] == '.') 
 			continue;
 		  
-          ainterface = create_device_interface(entry->d_name,&iname);
+          ainterface = serial_create_device_interface(entry->d_name,&iname);
 		  label = gtk_label_new(iname);
 		  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),ainterface,label);
 		  i++;

@@ -34,7 +34,7 @@ The construction of these is simple:
   ITEMNAME : Name to be displayed in GUI.
   TITLETEXT : Describing text to be displayed above configuration widgets.
   ENABLED : Guess..
-
+  EXCLUSIVE : 
 
 
 -> Here are some instruction to add a new module (Applet) to gpe conf.

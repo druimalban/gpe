@@ -78,6 +78,7 @@ MEMBERS += gpe-admin
 MEMBERS += storage
 MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
+MEMBERS += logread
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
