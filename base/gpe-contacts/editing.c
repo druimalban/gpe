@@ -137,26 +137,23 @@ create_edit (void)
   GtkWidget *edit_bt_bdate;
   GtkWidget *hbox4;
   GtkWidget *edit_bt_image;
-  GtkWidget *label33;
   GtkWidget *scrolledwindow3;
   GtkWidget *viewport1;
   GtkWidget *edit_catlist;
   GtkWidget *name_entry;
   GtkWidget *summary_entry;
-  GtkWidget *label34;
-  GtkWidget *label35;
   GtkWidget *label16;
-  GtkWidget *hbuttonbox3;
   GtkWidget *edit_clear;
   GtkWidget *edit_cancel;
   GtkWidget *edit_save;
+  GtkWidget *catframe;
   GtkTooltips *tooltips;
+  GtkWidget *topvbox;
 
   tooltips = gtk_tooltips_new ();
 
   edit = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
-  gtk_window_set_policy (GTK_WINDOW (edit), FALSE, FALSE, FALSE);
 
   notebook2 = gtk_notebook_new ();
   gtk_widget_set_name (notebook2, "notebook2");
@@ -167,13 +164,17 @@ create_edit (void)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (edit)->vbox), notebook2, 
 		      TRUE, TRUE, 0);
 
-  table1 = gtk_table_new (6, 2, FALSE);
+  topvbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (topvbox);
+  gtk_container_add (GTK_CONTAINER (notebook2), topvbox);
+
+  table1 = gtk_table_new (4, 2, FALSE);
   gtk_widget_set_name (table1, "table1");
   gtk_widget_ref (table1);
   gtk_object_set_data_full (GTK_OBJECT (edit), "table1", table1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (table1);
-  gtk_container_add (GTK_CONTAINER (notebook2), table1);
+  gtk_box_pack_start (GTK_BOX (topvbox), table1, FALSE, FALSE, 2);
   gtk_table_set_row_spacings (GTK_TABLE (table1), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table1), 3);
 
@@ -197,7 +198,7 @@ create_edit (void)
   gtk_table_attach (GTK_TABLE (table1), label19, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label19), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label19), 0.5, 0.5);
 
   label20 = gtk_label_new (_("Birthday"));
   gtk_widget_set_name (label20, "label20");
@@ -208,7 +209,7 @@ create_edit (void)
   gtk_table_attach (GTK_TABLE (table1), label20, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label20), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label20), 0.5, 0.5);
 
   label22 = gtk_label_new (_("Image"));
   gtk_widget_set_name (label22, "label22");
@@ -219,7 +220,7 @@ create_edit (void)
   gtk_table_attach (GTK_TABLE (table1), label22, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label22), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label22), 0.5, 0.5);
 
   hbox3 = gtk_hbox_new (FALSE, 0);
   gtk_widget_set_name (hbox3, "hbox3");
@@ -269,27 +270,17 @@ create_edit (void)
   gtk_box_pack_start (GTK_BOX (hbox4), edit_bt_image, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, edit_bt_image, _("click to choose file"), NULL);
 
-  label33 = gtk_label_new (_("Categories"));
-  gtk_widget_set_name (label33, "label33");
-  gtk_widget_ref (label33);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label33", label33,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label33);
-  gtk_table_attach (GTK_TABLE (table1), label33, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label33), 0, 0.5);
-
+  catframe = gtk_frame_new (_("Categories"));
+  gtk_widget_show (catframe);
   scrolledwindow3 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_set_name (scrolledwindow3, "scrolledwindow3");
   gtk_widget_ref (scrolledwindow3);
   gtk_object_set_data_full (GTK_OBJECT (edit), "scrolledwindow3", scrolledwindow3,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (scrolledwindow3);
-  gtk_table_attach (GTK_TABLE (table1), scrolledwindow3, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow3), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (catframe), scrolledwindow3);
+  gtk_box_pack_start (GTK_BOX (topvbox), catframe, TRUE, TRUE, 2);
 
   viewport1 = gtk_viewport_new (NULL, NULL);
   gtk_widget_set_name (viewport1, "viewport1");
@@ -327,28 +318,6 @@ create_edit (void)
   gtk_table_attach (GTK_TABLE (table1), summary_entry, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-
-  label34 = gtk_label_new (_("label34"));
-  gtk_widget_set_name (label34, "label34");
-  gtk_widget_ref (label34);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label34", label34,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label34);
-  gtk_table_attach (GTK_TABLE (table1), label34, 0, 1, 5, 6,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label34), 0, 0.5);
-
-  label35 = gtk_label_new (_("label35"));
-  gtk_widget_set_name (label35, "label35");
-  gtk_widget_ref (label35);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label35", label35,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label35);
-  gtk_table_attach (GTK_TABLE (table1), label35, 1, 2, 5, 6,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_misc_set_alignment (GTK_MISC (label35), 0, 0.5);
 
   label16 = gtk_label_new (_("Personal"));
   gtk_widget_set_name (label16, "label16");
