@@ -33,7 +33,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 .PHONY: backend
 
-all: backend $(PACKAGE)
+all: all-mo backend $(PACKAGE)
 
 backend:
 	make -C backend PREFIX=$(PREFIX) GST=$(GST)
@@ -54,28 +54,6 @@ clean:
 	make -C backend clean
 	rm -f $(PACKAGE) $(OBJS)
 
-codec-ipkg:
-	rm -rf familiar/dist-mp3 familiar/dist-ogg
-	mkdir -p familiar/dist-mp3/CONTROL
-	mkdir -p familiar/dist-ogg/CONTROL
-	cp familiar/control.mp3 familiar/dist-mp3/CONTROL/control
-	cp familiar/control.ogg familiar/dist-ogg/CONTROL/control
-	mkdir -p familiar/dist-mp3/usr/lib/gpe-nmf/decoders
-	mv familiar/dist/usr/lib/gpe-nmf/decoders/d-mad.so familiar/dist-mp3/usr/lib/gpe-nmf/decoders
-	mkdir -p familiar/dist-ogg/usr/lib/gpe-nmf/decoders
-	mv familiar/dist/usr/lib/gpe-nmf/decoders/d-vorbis.so familiar/dist-ogg/usr/lib/gpe-nmf/decoders
-	chown -R root.root familiar/dist-mp3
-	ipkg-build familiar/dist-mp3
-	chown -R root.root familiar/dist-ogg
-	ipkg-build familiar/dist-ogg
-
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	cp familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 include ../build/Makefile.translation
+include ../build/Makefile.dpkg_ipkg
+

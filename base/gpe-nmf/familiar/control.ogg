@@ -1,8 +1,0 @@
-Package: gpe-nmf-ogg
-Section: base
-Priority: optional
-Version: 0.06
-Architecture: arm
-Maintainer: Phil Blundell <pb@debian.org>
-Depends: libvorbis-fixp0, libvorbisfile-fixp0
-Description: GPE music player: Ogg Vorbis decoder
