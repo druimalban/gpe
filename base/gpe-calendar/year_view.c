@@ -32,25 +32,31 @@ static unsigned int day_event_bits[(366 / sizeof(unsigned int)) + 1];
 static guint day_pitch, month_width, yoff;
 static guint months_across, month_height, space;
 static guint day_vpitch;
+static guint old_x;
 
 static void
 calc_geometry (GtkWidget *widget)
 {
   guint rows;
   guint x = widget->allocation.width;
+  guint y;
+
+  if (x == old_x)
+    return;
+
+  old_x = x;
 
   months_across = x / month_width;
 
   if (months_across == 0)
-    {
-      months_across = 1;
-      x = month_width;
-    }
+    months_across = 1;
 
   space = (x - (months_across * month_width)) / (months_across + 1);
   rows = (12 + (months_across - 1)) / months_across;
+  y = rows * month_height + yoff + 4;
 
-  gtk_widget_set_usize (widget, x, rows * month_height + yoff + 4);
+  if (widget->allocation.height != y)
+    gtk_widget_set_usize (widget, -1, y);
 }
 
 static guint
@@ -71,8 +77,8 @@ day_of_week(guint year, guint month, guint day)
 
 static gint
 draw_expose_event (GtkWidget *widget,
-		   GdkEvent  *event,
-		   gpointer   user_data)
+		   GdkEventExpose *event,
+		   gpointer user_data)
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
@@ -126,6 +132,11 @@ draw_expose_event (GtkWidget *widget,
   red_col.pixel = gdk_rgb_xpixel_from_rgb(0xffff0000);
   gdk_gc_set_foreground(red_gc, &red_col);
 
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (red_gc, &event->area);
+  gdk_gc_set_clip_rectangle (grey_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+
   gdk_draw_rectangle (drawable, white_gc, TRUE, 0, 0, max_width, max_height);
 
   for (m = 0; m < 12; m++)
@@ -133,7 +144,7 @@ draw_expose_event (GtkWidget *widget,
       const char *s = nl_langinfo(months[m]);
       guint i = m % months_across, j = m / months_across;
       guint x = space + (i * (space + month_width));
-      guint y = 4 + yoff + (j * month_height);
+      guint y = 4 + (j * month_height);
       guint w = gdk_string_width (datefont, s);
       guint d, dy;
       guint y1 = y + yoff;
@@ -237,6 +248,10 @@ year_view(void)
   gtk_signal_connect (GTK_OBJECT (g_draw),
 		      "expose_event",
 		      GTK_SIGNAL_FUNC (draw_expose_event),
+		      NULL);
+  gtk_signal_connect (GTK_OBJECT (g_draw),
+		      "configure_event",
+		      GTK_SIGNAL_FUNC (calc_geometry),
 		      NULL);
 
   gtk_signal_connect (GTK_OBJECT (datesel), "changed",
