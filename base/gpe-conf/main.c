@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <gtk/gtk.h>
 #include <libintl.h>
+#include <locale.h>
 #include "suid.h"
 #include "applets.h"
 #include "timeanddate.h"

@@ -1,3 +1,10 @@
+2004-01-08	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* info.c: Started merging info applets.
+	* info.c: Added network info.
+	* packages.c: Minor GUI improvements.
+	* storage.c: Some other small tweaks and fixes.
+	* tools/interface.c: Removed some obsolete stuff, minor fixes.
+
 2003-12-27	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* gpe-conf-theme.desktop.in: Renamed to "Appearance".
 	* theme.c: Changed some size limits (fonts, icons)

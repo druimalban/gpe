@@ -194,10 +194,9 @@ update_status ()
 		g_free (fstr);
 		toolbar_set_style (meminfo.bar,
 				   (int) ((float) meminfo.used /
-					  (float) meminfo.total * 100.0) +
-				   20);
+					  (float) meminfo.total * 100.0) + 20);
 	}
-
+	
 /* now look at mounted filesystems */
 
 	pipe = popen ("/bin/df -k", "r");
@@ -418,7 +417,10 @@ Storage_Build_Objects (void)
 
 /* first get memory info - this is fast - our users want feedback! */
 
-	if (!system_memory ())
+	while (system_memory ()) /* why does this fail? */
+	{
+		usleep(10000);
+	}
 	{
 		fstr = g_strdup_printf ("%s%s %s",
 					"<b><span foreground=\"black\">",
@@ -464,7 +466,7 @@ Storage_Build_Objects (void)
 		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
 		
 		meminfo.dummy = gtk_label_new (NULL);
-		gtk_widget_set_size_request(meminfo.dummy,-1,5);
+		gtk_widget_set_size_request(meminfo.dummy,-1,4);
 		gtk_box_pack_start (GTK_BOX (vbox), meminfo.dummy, FALSE, FALSE, 0);
 	}
 
@@ -586,7 +588,7 @@ Storage_Build_Objects (void)
 				gtk_box_pack_start (GTK_BOX (vbox), label1,
 						    FALSE, FALSE, 0);
 				filesystems[fs_count - 1].dummy = gtk_label_new (NULL);
-				gtk_widget_set_size_request(filesystems[fs_count - 1].dummy,-1,5);
+				gtk_widget_set_size_request(filesystems[fs_count - 1].dummy,-1,3);
 				gtk_box_pack_start (GTK_BOX (vbox), filesystems[fs_count - 1].dummy, FALSE, FALSE, 0);
 			}
 		}

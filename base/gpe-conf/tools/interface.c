@@ -1865,8 +1865,8 @@ char* if_to_infostr(struct interface *ptr)
 	
 	char *tmp = NULL;
 	char *buffer = strdup("");
-
-	tmp = (char *)  malloc(256);
+	tmp = (char *)  malloc(512);
+	memset(tmp,0,512*sizeof(char));
 	
     ap = get_afntype(ptr->addr.sa_family);
     if (ap == NULL)
@@ -1941,12 +1941,6 @@ char* if_to_infostr(struct interface *ptr)
 		      addr6p[4], addr6p[5], addr6p[6], addr6p[7],
 		  &if_idx, &plen, &scope, &dad_status, devname) != EOF) {
 	    if (!strcmp(devname, ptr->name)) {
-		/*
-		sprintf(addr6, "%s:%s:%s:%s:%s:%s:%s:%s",
-			addr6p[0], addr6p[1], addr6p[2], addr6p[3],
-			addr6p[4], addr6p[5], addr6p[6], addr6p[7]);
-		*/
-		//inet6_aftype.input(1, addr6, (struct sockaddr *) &sap);
 		addr6[0] = '\0';
 		for (i = 0; i < 8; i++) {
 		    if (! strcmp(addr6p[i], "0000")) {
@@ -1963,18 +1957,11 @@ char* if_to_infostr(struct interface *ptr)
 			}
 
 		    }
-		    printf("%s\n", addr6);
 		}
-		//sprintf(tmp, _("IPv6 Address: %s/%d\n"), addr6, plen);
-		sprintf(tmp, _("IPv6 Address: %s/%d\n"), addr6, plen);
+		/* add a newline before adress because of it's length.*/
+		sprintf(tmp, _("IPv6 Address:\n  %s/%d\n"), addr6, plen);
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
-		/*
-		sprintf(tmp,_("IPv6 Address: %s/%d\n"), addr6, scope);
-		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
-		strcat(buffer,tmp);
-		// inet6_aftype.sprint((struct sockaddr *) &sap, 1), plen);
-		*/
 		sprintf(tmp,_("Scope: "));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
@@ -2000,7 +1987,6 @@ char* if_to_infostr(struct interface *ptr)
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+3);
 		strcat(buffer,tmp);
 		strcat(buffer,"\n\n");
-		
 	    }
 	}
 	fclose(f);
@@ -2008,7 +1994,7 @@ char* if_to_infostr(struct interface *ptr)
 #endif
 	buffer = realloc(buffer,strlen(buffer)+2);
 	strcat(buffer,"\n");
-	
 	free(tmp);
+
 	return buffer;
 }

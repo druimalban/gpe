@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,7 +23,8 @@
 #include <fcntl.h>   
 #include <sys/types.h>
 #include <sys/utsname.h>
- 
+#include <net/if.h>
+	
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
@@ -32,6 +33,9 @@
 #include "sysinfo.h"
 #include "applets.h"
 #include "storage.h"
+#include "battery.h"
+#include "storage.h"
+#include "tools/interface.h"
 
 /* local definitions */
 #define MODEL_INFO 		"/proc/hal/model"
@@ -40,6 +44,7 @@
 #define PIC_LINUX 		PREFIX "/share/pixmaps/system-info.png"
 #define PIC_DEVICE 		PREFIX "/share/pixmaps/device-info.png"
 #define PIC_FAMILIAR 	PREFIX "/share/pixmaps/familiar.png"
+#define PIC_NET			PREFIX "/share/pixmaps/gpe-config-network.png"
 #define P_CPUINFO 		"/proc/cpuinfo"
 #define P_IPAQ			"/proc/hal/model"
 #define P_PARTITIONS	"/proc/partitions"
@@ -63,6 +68,7 @@ typedef struct
 	int flash;
 }
 t_deviceinfo;
+
 
 /* local functions */
 
@@ -98,6 +104,7 @@ get_flash_size()
 	
 	return result;
 }
+
 
 t_deviceinfo 
 get_device_info()
@@ -161,6 +168,7 @@ get_device_info()
 	return result;
 }
 
+
 char *
 get_familiar_version()
 {
@@ -192,12 +200,83 @@ get_familiar_time()
 	return g_strstrip(result);
 }
 
+GtkWidget*
+network_create_widgets (void)
+{
+	char *buffer = g_strdup ("");
+	char *tmp = NULL;
+	struct interface *ife;
+	struct interface *int_list;
+	GtkWidget *table, *label, *tw;
+	char *ts;
+
+	int_list = if_getlist ();
+
+	for (ife = int_list; ife->next; ife = ife->next)
+	{
+		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
+		{
+			tmp = if_to_infostr (ife);
+			buffer = realloc (buffer,
+					  strlen (tmp) + strlen (buffer) + 1);
+			buffer[strlen(buffer)] = 0;
+			strcat (buffer, tmp);
+			free (tmp);
+		}
+	}
+
+	table = gtk_table_new(6,2,FALSE);
+	gtk_table_set_row_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+	gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+	
+	tw = gtk_label_new(NULL);
+	ts = g_strdup_printf("<b>%s</b>",_("Network Status"));
+	gtk_label_set_markup(GTK_LABEL(tw),ts);
+	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
+	g_free(ts);
+	gtk_table_attach(GTK_TABLE(table),tw,0,2,0,1,GTK_FILL | GTK_EXPAND,
+                     GTK_FILL,2,2);
+	
+	tw = gtk_image_new_from_file(PIC_NET);
+	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.0);
+	gtk_table_attach(GTK_TABLE(table),tw,0,1,1,2,GTK_FILL | GTK_EXPAND,
+                     GTK_FILL,0,0);
+/*	tw = gtk_label_new(NULL);
+	ts = g_strdup_printf("<i>%s</i>",_("Device"));
+	gtk_label_set_markup(GTK_LABEL(tw),ts);
+	gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.8);
+	g_free(ts);
+	gtk_table_attach(GTK_TABLE(table),tw,1,2,1,2,GTK_FILL | GTK_EXPAND,
+                     GTK_FILL,0,0);
+*/					 
+	tw = gtk_label_new(NULL);
+//!
+ts = g_strdup_printf("%s",buffer);
+	gtk_label_set_markup(GTK_LABEL(tw),ts);
+	gtk_misc_set_alignment(GTK_MISC(tw),0,0.5);
+	g_free(ts);
+	gtk_table_attach(GTK_TABLE(table),tw,1,2,1,3,GTK_FILL,
+                     GTK_FILL,0,0);
+
+
+/*	vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+	label = gtk_label_new (NULL);
+	gtk_label_set_markup (GTK_LABEL (label), buffer);
+	gtk_label_set_selectable(GTK_LABEL(label),TRUE);
+	gtk_box_pack_start(GTK_BOX (vbox), label, TRUE, TRUE, 0);
+*/	
+	g_free (buffer);
+	return(table);
+}
+
+
 /* gpe-conf interface */
 
 void
 Sysinfo_Free_Objects ()
 {
 }
+
 
 GtkWidget *
 Sysinfo_Build_Objects (void)
@@ -211,8 +290,9 @@ Sysinfo_Build_Objects (void)
 	
 	uname(&uinfo);
 	notebook = gtk_notebook_new();
+	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),TRUE);
 	gtk_container_set_border_width (GTK_CONTAINER (notebook),
-					gpe_get_border ());
+					0 /*gpe_get_border ()*/);
 	
 	/* globals tab */
 	
@@ -351,6 +431,22 @@ Sysinfo_Build_Objects (void)
 	tw = gtk_label_new(_("Hardware"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
 	
+	/* battery tab */
+	table = Battery_Build_Objects ();
+	tw = gtk_label_new(_("Battery"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	
+	/* storage tab */
+	table = Storage_Build_Objects ();
+	tw = gtk_label_new(_("Storage"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	
+	/* network tab */
+	table = network_create_widgets();
+	tw = gtk_label_new(_("Network"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,tw);
+	
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(notebook),0);
 	gtk_widget_show_all(notebook);
 	
 	return notebook;

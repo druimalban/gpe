@@ -1,7 +1,7 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -287,8 +287,7 @@ Battery_Build_Objects (void)
 		bar_batt_int = gtk_progress_bar_new ();
 		batt.bar = bar_batt_int;
 		gtk_widget_set_sensitive (bar_batt_int, TRUE);
-		gtk_box_pack_start (GTK_BOX (vbox), bar_batt_int, FALSE, FALSE,
-				    0);
+		gtk_box_pack_start (GTK_BOX (vbox), bar_batt_int, FALSE, FALSE, 0);
 		label1 = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		batt.lstate = label1;
@@ -303,12 +302,13 @@ Battery_Build_Objects (void)
 		batt.lvoltage = label1;
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
-		
-		label1 = gtk_label_new (NULL);
-		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
-		
-		if (i==0) 
+			
+		if (i==0)
+		{			
 			batt_int = batt;
+			label1 = gtk_label_new (NULL);
+			gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
+		}
 		else
 			batt_ext = batt;
 	}
