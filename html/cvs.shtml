@@ -5,8 +5,8 @@
 <h2>Acessing the GPE CVS repository</h2> For a more detailed
 description about how to use Handhelds.org CVS please see <a
 href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
-here</a>
+here.</a>
 
-the GPE CVSROOT is: <b>/cvs/GPE</b> 
+The GPE CVSROOT is: <b>/cvs/gpe</b>, not <b>/cvs</b> as used in the examples.
 
  <!--#include virtual="includes/foot.shtml"-->
