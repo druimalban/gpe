@@ -1,6 +1,7 @@
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (build_edit_event_window): Use GtkDialog.
+	(recalculate_sensitivities): Fix typo.
 
 	* main.c (main): Use gtk_window_set_default_size not
 	gtk_widget_set_usize.

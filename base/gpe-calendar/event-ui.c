@@ -86,7 +86,7 @@ recalculate_sensitivities (GtkWidget *widget,
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
-      gtk_widget_set_sensitive (s->alarmoption, 0);
+      gtk_widget_set_sensitive (s->alarmoption, 1);
       gtk_widget_set_sensitive (s->alarmspin, 1);
     }
   else
