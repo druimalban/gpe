@@ -29,7 +29,7 @@ static struct gpe_icon my_icons[] = {
   { "left",       "left"  },
   { "right",      "right" },
 
-  { "remove",     "gpe-go/stock_clear_24"},
+  //{ "remove",     "gpe-go/stock_clear_24"},
 
   { NULL, NULL }
 };
@@ -45,6 +45,8 @@ typedef struct _go {
   GdkPixbuf * pixbuf_black_stone;
   GdkPixbuf * pixbuf_white_stone;
   GdkPixmap * pixmap_empty_board;
+
+  GtkWidget * capture_label;
 
   int grid_margin;//px
   int grid_space; //px
@@ -680,8 +682,14 @@ void play_at(int gox, int goy){
     }
   }
 
-  g_printerr("Capture points: white %d - black %d\n",
-             go.white_captures, go.black_captures);
+  {//--update capture label
+    char * new_label_string = NULL;
+    new_label_string = (char *) malloc (100 * sizeof(char));
+    g_printerr("Capture points: W %d - B %d\n", go.white_captures, go.black_captures);
+    sprintf(new_label_string, "B: %d W: %d", go.black_captures, go.white_captures);
+    g_printerr("Capture points: %s\n", new_label_string);
+    gtk_label_set_text (GTK_LABEL (go.capture_label), new_label_string);
+  }
   //--next turn
   go.turn++;
 }
@@ -705,16 +713,13 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
 
 void on_button_pref_pressed (void){
   /**/g_printerr("Preferences.\n");
+  _print_gird();
 }
 void on_button_prev_pressed (void){
   /**/g_printerr("prev\n");
 }
 void on_button_next_pressed (void){
   /**/g_printerr("next\n");
-}
-void on_button_remove_pressed (void){
-  /**/g_printerr("remove mode\n");
-  _print_gird();
 }
 
 void gui_init(){
@@ -724,6 +729,8 @@ void gui_init(){
   GtkWidget * toolbar;
   GdkPixbuf * pixbuf;
   GtkWidget * image;
+
+  GtkWidget * capture_label;
 
   GtkWidget   * drawing_area;
 
@@ -762,13 +769,6 @@ void gui_init(){
 			   image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
   gdk_pixbuf_unref(pixbuf);
 
-  pixbuf = gpe_find_icon ("remove");
-  image = gtk_image_new_from_pixbuf(pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   NULL, NULL, NULL,
-			   image, GTK_SIGNAL_FUNC (on_button_remove_pressed), NULL);
-  gdk_pixbuf_unref(pixbuf);
-
   pixbuf = gpe_find_icon ("prefs");
   image = gtk_image_new_from_pixbuf(pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
@@ -776,6 +776,12 @@ void gui_init(){
 			   image, GTK_SIGNAL_FUNC (on_button_pref_pressed), NULL);
   gdk_pixbuf_unref(pixbuf);
 
+  //--Capture label
+  capture_label = gtk_label_new(NULL);
+  
+  //let put it in the toolbar. Will find a better place later
+  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), capture_label, NULL, NULL);
+  go.capture_label = capture_label;
 
   //--drawing area (Go Board)
   drawing_area = gtk_drawing_area_new ();
