@@ -161,6 +161,7 @@ check_fullscreen_pointer ()
   }
   
   gdk_display_get_pointer (gdk_display_get_default (), NULL, &pointer_x, &pointer_y, NULL);
+  gtk_window_present(GTK_WINDOW(fullscreen_toggle_popup));
   
   return TRUE;
 }
@@ -942,8 +943,8 @@ show_new_slideshow (void)
   gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), spin_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label2, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox2), start_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), close_button, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox2), start_button, TRUE, TRUE, 0);
 
   gtk_window_set_default_size (GTK_WINDOW (slideshow_dialog), 1, 1);
 
@@ -1003,7 +1004,7 @@ toggle_fullscreen ()
     gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
     gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
-    //gtk_container_add (GTK_CONTAINER (fullscreen_window), scrolled_window);
+
     gtk_widget_reparent (main_scrolled_window, fullscreen_window);
 
     gtk_widget_set_size_request (fullscreen_window, gdk_screen_width (), gdk_screen_height ());
@@ -1012,6 +1013,7 @@ toggle_fullscreen ()
     gdk_window_fullscreen (GDK_WINDOW (fullscreen_window->window));
 
     fullscreen_toggle_popup = gtk_window_new (GTK_WINDOW_POPUP);
+	
     close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
     g_signal_connect (G_OBJECT (close_button), "clicked",
 		      G_CALLBACK (toggle_fullscreen), NULL);
