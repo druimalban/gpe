@@ -19,23 +19,15 @@
 
 #define _(x) gettext(x)
 
-static GtkWidget *error_icon;
+static GdkPixmap *error_pix;
+static GdkBitmap *error_pix_mask;
+static gboolean error_pix_loaded;
 
 void
 gpe_error_box (char *text)
 {
   GtkWidget *label, *ok, *dialog;
   GtkWidget *hbox;
-
-  if (error_icon == NULL)
-    {
-      GdkPixmap *error_pix;
-      GdkBitmap *error_pix_mask;
-
-      if (gdk_imlib_load_file_to_pixmap (ERROR_ICON, &error_pix, 
-					 &error_pix_mask))
-	error_icon = gtk_pixmap_new (error_pix, error_pix_mask);
-    }
 
   dialog = gtk_dialog_new ();
   label = gtk_label_new (text);
@@ -46,8 +38,19 @@ gpe_error_box (char *text)
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
 			     (gpointer)dialog);
 
-  if (error_icon)
-    gtk_box_pack_start (GTK_BOX (hbox), error_icon, TRUE, TRUE, 0);
+  if (!error_pix_loaded)
+    {
+      error_pix_loaded = TRUE;
+      gdk_imlib_load_file_to_pixmap (ERROR_ICON, &error_pix, 
+				     &error_pix_mask);
+    }
+
+  if (error_pix)
+    {
+      GtkWidget *icon = gtk_pixmap_new (error_pix, error_pix_mask);
+      gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+    }
+
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);
