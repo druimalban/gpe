@@ -412,7 +412,7 @@ static int do_update(GtkWidget *widget)
 		fl_set_menu_item_mode(st[i].menu, 2, FL_PUP_NONE);
 		fl_set_menu_item_mode(st[i].menu, 3, FL_PUP_NONE);
 		fl_set_menu_item_mode(st[i].menu, 5, FL_PUP_NONE);
-*/		snprintf(d,80,"<span foreground=\"#00FF00\">%s</span>",_("ready"));
+*/		snprintf(d,80,"<span foreground=\"#00A000\">%s</span>",_("ready"));
 		update_field(&st[i].state, d);
 		break;
 	    case S_BUSY:
@@ -420,7 +420,7 @@ static int do_update(GtkWidget *widget)
 		fl_set_menu_item_mode(st[i].menu, 2, FL_PUP_NONE);
 		fl_set_menu_item_mode(st[i].menu, 3, FL_PUP_NONE);
 		fl_set_menu_item_mode(st[i].menu, 5, FL_PUP_NONE);
-*/		snprintf(d,80,"<span foreground=\"#FF0000\">%s</span>",_("not ready"));
+*/		snprintf(d,80,"<span foreground=\"#B00000\">%s</span>",_("not ready"));
 		update_field(&st[i].state, d);
 		break;
 	    case S_SUSPEND:
