@@ -291,10 +291,10 @@ show_image (GtkWidget *widget, GList *image_filename)
       g_object_unref (image_pixbuf);
 	  image_pixbuf = NULL;
 	}
-  gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_event_box);
   gtk_widget_show (image_widget);
   gtk_widget_show (main_scrolled_window);
+  gtk_widget_show (tools_toolbar);
 }
 
 static void
@@ -416,8 +416,8 @@ image_zoom_fit ()
 
   if (fullscreen_state == 1)
   {
-    widget_width = main_scrolled_window->allocation.width - 5;
-    widget_height = main_scrolled_window->allocation.height - 5;
+    widget_width = gdk_screen_width () - 5;
+    widget_height = gdk_screen_height () - 5;
   }
   else
  {
@@ -638,12 +638,15 @@ render_list_view ()
   struct stat file_stats;
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   gtk_widget_size_request (scrolled_window, &scrolled_window_requisition);
 
   drawing_area = gtk_drawing_area_new ();
-  gtk_widget_set_size_request (GTK_WIDGET (drawing_area), scrolled_window_requisition.width, num_items * (MAX_ICON_SIZE + (MARGIN_Y * 2) + 1));
+  gtk_widget_set_size_request (GTK_WIDGET (drawing_area), 
+                               scrolled_window_requisition.width - 1, 
+                               num_items * (MAX_ICON_SIZE + (MARGIN_Y * 2) + 1));
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), drawing_area);
   gtk_widget_show_all (scrolled_window);
@@ -1005,7 +1008,8 @@ toggle_fullscreen ()
     fullscreen_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
     scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
+                                    GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
     image_widget = gtk_image_new_from_pixbuf (scaled_image_pixbuf);
     image_event_box = gtk_event_box_new ();
@@ -1021,7 +1025,7 @@ toggle_fullscreen ()
 
     gtk_widget_reparent (main_scrolled_window, fullscreen_window);
 
-    gtk_widget_set_size_request (fullscreen_window, gdk_screen_width (), gdk_screen_height ());
+//    gtk_widget_set_size_request (fullscreen_window, gdk_screen_width (), gdk_screen_height ());
     gtk_widget_show_all (fullscreen_window);
 
     gdk_window_fullscreen (GDK_WINDOW (fullscreen_window->window));
@@ -1137,7 +1141,7 @@ main (int argc, char *argv[])
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   main_scrolled_window = scrolled_window;
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+//  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   image_event_box = gtk_event_box_new ();
@@ -1283,7 +1287,8 @@ main (int argc, char *argv[])
   gtk_widget_hide (main_scrolled_window);
     while (gtk_events_pending ())
       gtk_main_iteration ();
-
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(main_scrolled_window), 
+                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   if (argc > 1)
   {
     stat (argv[1], &arg_stat);

@@ -1,3 +1,9 @@
+2004-09-07  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Added scrollbars if necessary.
+    * main.c: Fixed several displaying issues.
+    * Makefile: V 0.95
+
 2004-09-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c: Make images that fit in size unmovable.
