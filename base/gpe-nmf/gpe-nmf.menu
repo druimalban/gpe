@@ -1,7 +1,0 @@
-?package(gpe-nmf): \
- needs=x11 \
- title="NMF" \
- command=gpe-nmf \
- icon48=/usr/share/pixmaps/gpe-nmf.png \
- section=Audio \
- windowtitle=gpe-nmf
