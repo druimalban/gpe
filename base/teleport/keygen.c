@@ -26,7 +26,7 @@ mpi_from_sexp (gcry_sexp_t r, char *tag)
 }
 
 static char *
-hex_from_mpi (GcryMPI m)
+hex_from_mpi (gcry_mpi_t m)
 {
   char *buf;
 
