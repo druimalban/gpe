@@ -1,3 +1,7 @@
+2004-10-27  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    *main.c: Added first bits for multi file operations.
+
 2004-10-19  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c (toplevel): Delete if delete key is pressed. 

@@ -88,6 +88,7 @@ enum
 	COL_DIRDATA,
 	N_DIRCOLUMNS
 };
+
 static GtkTreeStore *dirstore = NULL;
 
 static GtkWidget *window;
@@ -135,13 +136,12 @@ gchar *current_directory = NULL;
 static GnomeVFSMonitorHandle *dir_monitor = NULL;
 static gboolean refresh_scheduled = FALSE;
 
-gchar *current_view = "icons";
 gint current_zoom = 36;
 static gboolean view_is_icons = FALSE;
 static gboolean directory_browser = TRUE;
 static gboolean limited_view = FALSE;
 
-static gchar *file_clipboard = NULL;
+static GList *file_clipboard = NULL;
 
 static GHashTable *loaded_icons;
 static GtkWidget *progress_dialog = NULL;
@@ -605,16 +605,52 @@ copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
 }
 
 static void 
+clear_clipboard (void)
+{
+  GList *iter = file_clipboard;
+  
+  if (!file_clipboard) 
+    return;
+  
+  while (iter)
+  {
+    g_free(iter->data);
+    iter = iter->next;
+  }
+  g_list_free(file_clipboard);
+  file_clipboard = NULL;
+}
+
+static void
+clip_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
+               gpointer data)
+{
+  FileInformation *cfi = NULL;
+  
+  gtk_tree_model_get(model, iter, COL_DATA, &cfi, -1);
+  if (cfi)
+  {
+    if (GNOME_VFS_FILE_INFO_LOCAL(cfi->vfs))
+      file_clipboard = g_list_append(file_clipboard, 
+                                     gnome_vfs_get_uri_from_local_path(cfi->filename));
+    else
+      file_clipboard = g_list_append(file_clipboard, g_strdup(cfi->filename));
+  }
+}
+
+static void 
 copy_file_clip (void)
 {
-  if (file_clipboard) 
-    g_free(file_clipboard);
-  if (GNOME_VFS_FILE_INFO_LOCAL(current_popup_file->vfs))
-    file_clipboard = 
-      gnome_vfs_get_uri_from_local_path(current_popup_file->filename);
-  else
-    file_clipboard = g_strdup(current_popup_file->filename);
-  gpe_popup_infoprint(GDK_DISPLAY(), _("File copied to clipboard."));
+  clear_clipboard();
+  GtkTreeSelection *sel;
+  
+  sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(view_widget));
+  
+  gtk_tree_selection_selected_foreach(sel, 
+                                     (GtkTreeSelectionForeachFunc)clip_one_file,
+                                     NULL);
+  
+  gpe_popup_infoprint(GDK_DISPLAY(), _("File(s) copied to clipboard."));
 }
 
 
@@ -1380,7 +1416,9 @@ add_icon (FileInformation *file_info)
   else
     { /* add to iconlist or normal browser */
 	  if (view_is_icons)
-		gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
+		gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), 
+                                            file_info->vfs->name, pixbuf, 
+                                            (gpointer) file_info);
 	  else
 	  {
 		GtkTreeIter iter;
@@ -1841,6 +1879,7 @@ create_view_widget_list(void)
     GtkWidget *treeview;
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
+    GtkTreeSelection *selection;
 	
     if (GTK_IS_WIDGET(view_widget)) gtk_widget_destroy(view_widget);
     if (GTK_IS_WIDGET(view_window)) gtk_widget_destroy(view_window);
@@ -1849,7 +1888,10 @@ create_view_widget_list(void)
   	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
 	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
-  
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+    
+    
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	g_object_set(renderer,"stock-size",GTK_ICON_SIZE_SMALL_TOOLBAR,NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Icon"),
