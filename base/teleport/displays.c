@@ -79,7 +79,7 @@ displays_init (void)
   if (sqliteh)
     {
       sqlite_exec (sqliteh, schema_info, NULL, NULL, NULL);
-      sqlite_exec (sqliteh, "select from display",
+      sqlite_exec (sqliteh, "select * from display",
 		   &display_callback, NULL, NULL);
     }
   else
