@@ -67,6 +67,8 @@ do_change_display (GtkWidget *w, char *display_name)
       if (screen)
 	{
 	  gtk_window_set_screen (GTK_WINDOW (w), screen);
+	  gdk_display_manager_set_default_display (gdk_display_manager_get (),
+						   newdisplay);
 	  return DISPLAY_CHANGE_SUCCESS;
 	}
       else
