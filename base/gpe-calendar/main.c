@@ -33,9 +33,6 @@
 
 extern void about (void);
 
-GdkFont *timefont;
-GdkFont *datefont;
-GdkFont *yearfont;
 GList *times;
 time_t viewtime;
 
@@ -196,25 +193,6 @@ main(int argc, char *argv[])
     }
 
   vbox = gtk_vbox_new (FALSE, 0);
-
-  timefont = gdk_font_load ("-*-*-medium-r-normal--10-*-*-*-*-*-*");
-  if (timefont == NULL)
-    {
-      printf ("Couldn't get time font\n");
-      abort ();
-    }
-  datefont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-c-*-*");
-  if (datefont == NULL)
-    {
-      printf ("Couldn't get date font\n");
-      abort ();
-    }
-  yearfont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-*-*-*");
-  if (yearfont == NULL)
-    {
-      printf ("Couldn't get year font\n");
-      abort ();
-    }
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");

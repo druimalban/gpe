@@ -1,6 +1,6 @@
 PACKAGE = gpe-calendar
 PREFIX = /usr/local
-DEBUG = yes
+DEBUG = no
 LINGUAS = de pt_PT
 
 MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup
