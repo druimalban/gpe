@@ -25,7 +25,6 @@
 
 #include <gpe/pixmaps.h>
 #include <gpe/init.h>
-#include <gpe/render.h>
 #include <gpe/picturebutton.h>
 #include <gpe/errorbox.h>
 
