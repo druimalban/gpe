@@ -39,6 +39,11 @@
 
 2003-03-16  Luc Pionchon  <luc@handhelds.org>
 
+	* picturebutton.c (gpe_picture_button_aligned): New function, adds
+	alignment to gpe_picture_button.
+	* gpe/picturebutton.h : Likewise.
+	(GpePositionType) New type to handle position, same as
+	GtkPositionType, add _POS_CENTER
 	* gpeiconlist.gob (set_show_title): New public function to allow
 	titleless iconlist
 	(_expose): render title only with show_title mode, and if non NULL
