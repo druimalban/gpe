@@ -42,6 +42,7 @@ ifeq ($(NATIVE),yes)
 STRIP=strip
 CC=gcc
 
+CFLAGS += /usr/include/linux/
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` -ldotdesktop 
 
