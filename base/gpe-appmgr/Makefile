@@ -1,7 +1,7 @@
 CVSBUILD = yes
 DEBUG = yes
 PACKAGE = gpe-appmgr
-VERSION = 2.7
+VERSION = 2.8
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch -I../libxsettings-client -I../libxsettings
