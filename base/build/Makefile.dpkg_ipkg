@@ -91,6 +91,7 @@ printinfo:
 	@printf "   ftp://ftp.handhelds.org/pub/projects/gpe/\n"
 	@printf "   (handhelds.org:~ftp/pub/projects/gpe/source)\n"
 	@printf "You can use 'make dist-upload' to do that.\n"
+	@printf "You are currently known as USER %s.\n" $(USER)
 	@printf '-------------------------------------------------------------------------------\n'
 
 tag: check-source

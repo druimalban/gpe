@@ -1,3 +1,7 @@
+2004-02-22  Luc Pionchon <luc@handhelds.org>
+
+	* Makefile.dpkg_ipkg (printinfo): remind the current value of $USER
+
 2004-02-08  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile.dpkg_ipkg (GPECFLAGS, GPELIBS): Only define if not
