@@ -47,14 +47,13 @@ clean:
 	rm -f *.o $(PROGRAM)
 
 install-program: all
-	strip $(PROGRAM)
 	install -d $(BIN_PATH)
 	install -d $(DESTDIR)$(HIGHSCORE_PATH)
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris
 	install -m 644 pixmaps/stop.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/stop.png
 	install -m 644 pixmaps/pause.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/pause.png
 	install -m 644 pixmaps/highscores.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/highscores.png
-	install $(PROGRAM) $(BIN_PATH)/$(PROGRAM)
+	install -s $(PROGRAM) $(BIN_PATH)/$(PROGRAM)
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 gpe-tetris.desktop $(DESTDIR)$(PREFIX)/share/applications/
