@@ -1,3 +1,14 @@
+2004-08-25	Ole Reinhardt   <ole.reinhardt@kernelconcepts.de>
+	* network.c: Support for Wireless LAN devices, automatically WiFi detection,
+	             improved automaticaly device detection (add device command)
+	* cfgfile.*: Support for Wireless LAN devices. Writes and reads the following
+		     parameters in /etc/network/interfaces:
+		     
+		     - wireless_essid 
+		     - wireless_mode
+		     - wireless_channel
+		     - wireless_key
+
 2004-08-24	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* theme.c: Fixed background image setup for pathes that need shell escapes.
