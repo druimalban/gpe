@@ -557,3 +557,20 @@ gpe_launch_program (Display *dpy, char *exec, char *name)
   return gpe_launch_program_with_callback (dpy, exec, name, FALSE, NULL, NULL);
 }
 
+void
+gpe_launch_activate_window (Display *dpy, Window win)
+{
+  static Atom atom_net_active = None;
+  XEvent ev;
+
+  if (atom_net_active == None)
+    atom_net_active = XInternAtom (dpy, "_NET_ACTIVE_WINDOW", False);
+
+  memset (&ev, 0, sizeof ev);
+  ev.xclient.type = ClientMessage;
+  ev.xclient.window = win;
+  ev.xclient.message_type = atom_net_active;
+  ev.xclient.format = 32;
+
+  XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
+}
