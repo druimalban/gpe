@@ -289,14 +289,14 @@ Battery_Build_Objects (void)
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		batt.lstate = label1;
 		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
-
+		
 		label1 = gtk_label_new (NULL);
-		batt.lvoltage = label1;
+		batt.llifetime = label1;
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
 		
 		label1 = gtk_label_new (NULL);
-		batt.llifetime = label1;
+		batt.lvoltage = label1;
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
 		

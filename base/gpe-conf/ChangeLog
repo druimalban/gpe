@@ -1,5 +1,8 @@
 When			Who				Where						What
 
+08.07.2003		Florian			battery.c					Swapped labels...
+															Releases V 0.1.0-pre6
+
 07.07.2003		Florian			battery.c					Changed offset, removed obsolete stuff.
 								po/gpe-conf.pot				Updated pot.
 
