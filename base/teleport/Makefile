@@ -6,19 +6,23 @@ VERSION = 0.32
 
 LINGUAS = 
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall
+CFLAGS = $(GPECFLAGS) -Wall
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
+LDFLAGS += $(GPELIBS)
 
 MEMBERS = teleport crypt displays keygen tp-keygen
 
-CFLAGS += -I../libdisplaymigration `libgcrypt-config --cflags`
-LDFLAGS += -L../libdisplaymigration -ldisplaymigration `libgcrypt-config --libs`
+ifeq ($(CVSBUILD),yes)
+# temporary hack to work around lack of pkg-config for libdisplaymigration
+CFLAGS += -I../libdisplaymigration
+LDFLAGS += -L../libdisplaymigration
+endif
+
+CFLAGS += `libgcrypt-config --cflags`
+LDFLAGS += -ldisplaymigration `libgcrypt-config --libs`
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O -g
@@ -41,7 +45,7 @@ endif
 all: teleport all-mo tp-keygen
 
 teleport: teleport.o crypt.o displays.o keygen.o
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) $(LDFLAGS) -lsqlite
+	$(CC) -o $@ $^ $(LDFLAGS) -lsqlite
 
 tp-keygen: tp-keygen.o keygen.o
 	$(CC) -o $@ $^ $(LDFLAGS)
