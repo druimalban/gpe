@@ -50,7 +50,8 @@ void plugin_load (char *name)
 	gtk_notebook_append_page (GTK_NOTEBOOK(notebook),
 				  sock,
 				  create_tab_label (package_get_data (p,"title"),
-						    package_get_data (p, "icon")));
+						    package_get_data (p, "icon"), 
+						    notebook->style));
 	gtk_widget_realize (sock);
 
 	plugin_exec (sock, p);
