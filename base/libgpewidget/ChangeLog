@@ -1,5 +1,11 @@
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* what.c (gpe_what_init): Don't lookup X atoms.  Don't intern
+	STRING.
+	(send_text): Use XA_STRING.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
 	* what.c (gpe_what_init): Note that gpe-what is initialized.
 	(gpe_what_mark_widget): Do nothing if this isn't the case.
 

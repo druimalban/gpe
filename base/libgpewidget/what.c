@@ -31,8 +31,7 @@
 
 #define _(x) dgettext(PACKAGE, x)
 
-static GdkAtom help_atom, string_atom;
-static Atom help_xatom, string_xatom;
+static GdkAtom help_atom;
 static gboolean gpe_what_initialised;
 
 void gpe_what_mark_widget (GtkWidget *widget);
@@ -42,9 +41,11 @@ GSList *widgets;
 static void
 send_text (Display *dpy, Window w, char *text)
 {
+  Atom help_xatom = gdk_x11_atom_to_xatom (help_atom);
+
   gdk_error_trap_push ();
 
-  XChangeProperty (dpy, w, help_xatom, string_xatom, 8, PropModeReplace, text, strlen (text));
+  XChangeProperty (dpy, w, help_xatom, XA_STRING, 8, PropModeReplace, text, strlen (text));
 
   XFlush (dpy);
 
@@ -105,10 +106,6 @@ void
 gpe_what_init (void)
 {
   help_atom = gdk_atom_intern ("_GPE_INTERACTIVE_HELP", FALSE);
-  string_atom = gdk_atom_intern ("STRING", False);
-
-  help_xatom = gdk_x11_atom_to_xatom (help_atom);
-  string_xatom = gdk_x11_atom_to_xatom (string_atom);
 
   gdk_add_client_message_filter (help_atom, filter_func, NULL);
 
