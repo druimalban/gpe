@@ -6,4 +6,5 @@ gpe-lock-display
 *.ipk.asc
 *.ipk.upload.html
 translation-ipkgs.txt
+*.d
 
