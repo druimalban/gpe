@@ -25,6 +25,7 @@ char *rfparams_help;
 char *wep_help;
 char *enckey_help;
 char *expert_help;
+char *general_help_simple;
 
 void init_help();
 

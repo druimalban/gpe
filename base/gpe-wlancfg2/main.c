@@ -17,7 +17,7 @@
 */
 
 #include <gtk/gtk.h>
-//#include <libintl.h>
+#include <libintl.h>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -108,6 +108,13 @@ int main (int argc, char *argv[])
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("Delete profile"),
 		_("Delete profile"), _("Delete profile"), pw,
 		 (GtkSignalFunc) on_btnDelete_clicked, NULL);
+	
+	/* to switch to basic settings */
+	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("preferences"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("Basic settings"),
+		_("Basic settings"), _("Basic settings"), pw,
+		 (GtkSignalFunc) on_btnExpert_clicked, (void*)1);
+	
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_main));
 	
 	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_main), GTK_STOCK_QUIT,_("Exit"),
@@ -123,12 +130,17 @@ int main (int argc, char *argv[])
 	gtk_box_reorder_child (GTK_BOX (vbSimple), toolbar_simple, 0);
 	gtk_widget_show (toolbar_simple);
 	
+	/* to switch to expert settings */
 	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("preferences"));
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_simple), _("Expert settings"),
 		_("Expert settings"), _("Expert settings"), pw,
-		 (GtkSignalFunc) on_btnExpert_clicked, NULL);
+		 (GtkSignalFunc) on_btnExpert_clicked, (void*)0);
+
+	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_simple), GTK_STOCK_HELP,_("Help"),
+		_("Fulltext help"), (GtkSignalFunc) on_btnHelp_clicked, NULL, -1);
+
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_simple));
-	
+
 	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_simple), GTK_STOCK_QUIT,_("Exit"),
 		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
 

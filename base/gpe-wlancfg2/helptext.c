@@ -191,4 +191,41 @@ void init_help()
 	\
 	For more information on the iwconfig, iwspy and iwpriv \
 	utilities please consult the extra documentation."));
+	
+	general_help_simple=g_strdup(
+	_("Basic Settings\n\n \
+	Info:\n\n \
+	\
+	Free form informational string, has no function.\n\n \
+	\
+	ESSID:\n\n \
+	\
+	Network name, sometimes also called Domain ID. Identifies your network, most \
+	WLAN cards get this automatically from the access point in managed mode, other \
+	cards require to specify a name. In Ad-Hoc mode the same name \
+	should be specified on all participating nodes.\n\n \
+	\
+	Mode:\n\n\
+	\
+	Valid choices are:\n\n \
+	\
+	Ad-Hoc\n\n\
+	\
+	\tSometimes also called\n \
+	\tDemo mode, nodes\n \
+	\twithout access point\n\n \
+	\
+	Managed\n\n \
+	\
+	\tManaged network with\n \
+	\taccess point\n\n \
+	\
+	Channel:\n\n \
+	\
+	Usually the wireless LAN card detects the channel automatically in \
+	infrastructure mode. \
+	In Ad-Hoc you need to set it to the same setting like any other \
+	node in the desired net.\
+	\
+	"));
 }

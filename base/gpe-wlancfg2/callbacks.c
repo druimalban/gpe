@@ -1137,17 +1137,32 @@ void on_btnHelp_clicked(GtkButton *button, gpointer user_data)
 	textview=lookup_widget(HelpWin, "twHelp");
 	buffer=gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
 
-	notebook = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbConfigSelection");
-	switch (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)))
+	notebook = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbPseudoMain");
+
+	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)) == 0) // advanced view
 	{
-		case 0:	gtk_text_buffer_set_text(buffer, scheme_help, -1); break;
-		case 1:	gtk_text_buffer_set_text(buffer, general_help, -1); break;
-		case 2: gtk_text_buffer_set_text(buffer, rfparams_help, -1); break;
-		case 3: gtk_text_buffer_set_text(buffer, wep_help, -1); break;
-		case 4: gtk_text_buffer_set_text(buffer, enckey_help, -1); break;
-		case 5: gtk_text_buffer_set_text(buffer, expert_help, -1); break;
+		notebook = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbConfigSelection");
+		switch (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)))
+		{
+			case 0:	gtk_text_buffer_set_text(buffer, scheme_help, -1); break;
+			case 1:	gtk_text_buffer_set_text(buffer, general_help, -1); break;
+			case 2: gtk_text_buffer_set_text(buffer, rfparams_help, -1); break;
+			case 3: gtk_text_buffer_set_text(buffer, wep_help, -1); break;
+			case 4: gtk_text_buffer_set_text(buffer, enckey_help, -1); break;
+			case 5: gtk_text_buffer_set_text(buffer, expert_help, -1); break;
+		}
 	}
-	
+	else
+	{
+		notebook = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbSimple");
+		switch (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)))
+		{
+			case 0:	gtk_text_buffer_set_text(buffer, general_help_simple, -1); break;
+			case 1:	gtk_text_buffer_set_text(buffer, wep_help, -1);
+					gtk_text_buffer_insert_at_cursor(buffer,enckey_help,-1);					
+			break;
+		}
+	}
 	gtk_dialog_run(GTK_DIALOG(HelpWin));
 	gtk_widget_destroy(HelpWin);
 }
@@ -1164,7 +1179,8 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 	
 	gchar      	*ListEntry[4];
 	gint            answer;
-
+	gint 		switch_to_simple = (gint)user_data;
+	
 	int 		count;
 	Scheme_t*	OrigScheme;
 
@@ -1175,7 +1191,11 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 	
 	OrigScheme=malloc(sizeof(Scheme_t));
 	memcpy(OrigScheme, CurrentScheme, sizeof(Scheme_t));
-	get_changes_simple();
+	if (switch_to_simple)
+		get_changes_simple();
+	else
+		get_changes();
+	
 	if (HasChanged) 
 	{
 		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
@@ -1216,7 +1236,7 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 	}
 	free(OrigScheme);
 
-	gtk_notebook_set_page(GTK_NOTEBOOK(MainWindow), 0);	
+	gtk_notebook_set_page(GTK_NOTEBOOK(MainWindow), switch_to_simple ? 2 : 0);	
 }
 
 
