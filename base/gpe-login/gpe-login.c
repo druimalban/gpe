@@ -39,8 +39,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/init.h>
 #include <gpe/spacing.h>
-#include <gpe/render.h>
-#include <gpe/gtksimplemenu.h>
 #include <gpe/translabel.h>
 
 #include "gpe-ownerinfo.h"
@@ -95,13 +93,14 @@ typedef struct
   gchar *name;
   gchar *locale;
   guint menu_pos;
-}
-locale_item_t;
+} locale_item_t;
 
 static locale_item_t *current_locale;
 static locale_item_t *default_locale;
+static locale_item_t *old_locale;
 static GSList *locale_system_list;
 static GtkWidget *language_menu;
+gboolean locale_changed;
 
 typedef struct
 {
@@ -134,7 +133,7 @@ static key_map_t keymap[] =
 /* function protos */
 static void cleanup_children (void);
 static void add_menu_callback (GtkWidget * menu, const char *label,
-			       void *func, gpointer * data);
+			       void *func, gpointer data);
 static void parse_xkbd_args (const char *cmd, char **argv);
 static void spawn_xkbd (void);
 static void cleanup_children_and_exit (int s);
@@ -155,40 +154,16 @@ static gboolean key_press_event (GtkWidget * window, GdkEventKey * event);
 static locale_item_t *locale_parse_line (char *p);
 static GSList *locale_get_list (const char *flocale);
 static GSList *locale_get_files (void);
-static void set_current_locale (GtkWidget * widget, gpointer * data);
+static void set_current_locale (GtkWidget * widget, gpointer data);
 static void build_language_menu (void);
 static locale_item_t *locale_read_user (const char *username);
 static int locale_set_xprop (const char *locale);
 static int locale_set (const char *locale);
-static void locale_free_item (locale_item_t *item);
-static int locale_item_cmp (locale_item_t *a, locale_item_t *b);
-static int locale_try_user (const char *user);
-static void locale_update_menu (GtkOptionMenu *optionmenu, gpointer *data);
+static void locale_try_user (const char *user);
+static void locale_update_menu (GtkOptionMenu *optionmenu, gpointer data);
 static locale_item_t *locale_get_file_single (const char *fname);
 
-static void
-cleanup_children (void)
-{
-  if (setup_pid)
-    kill (-setup_pid, 15);
-
-  if (kbd_pid)
-    kill (kbd_pid, 15);
-}
-
 #define MAX_ARGS 8
-
-
-static void
-add_menu_callback (GtkWidget * menu, const char *label, void *func,
-		   gpointer * data)
-{
-  GtkWidget *entry;
-  entry = gtk_menu_item_new_with_label (label);
-  g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (func), 
-  		    data);
-  gtk_menu_append (GTK_MENU (menu), entry);
-}
 
 static void
 parse_xkbd_args (const char *cmd, char **argv)
@@ -303,6 +278,25 @@ spawn_xkbd (void)
 }
 
 static void
+add_menu_callback (GtkWidget * menu, const char *label, void *func, gpointer data)
+{
+  GtkWidget *entry;
+  entry = gtk_menu_item_new_with_label (label);
+  g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (func), data);
+  gtk_menu_append (GTK_MENU (menu), entry);
+}
+
+static void
+cleanup_children (void)
+{
+  if (setup_pid)
+    kill (-setup_pid, 15);
+
+  if (kbd_pid)
+    kill (kbd_pid, 15);
+}
+
+static void
 cleanup_children_and_exit (int s)
 {
   cleanup_children ();
@@ -312,11 +306,8 @@ cleanup_children_and_exit (int s)
 static void
 set_username (GtkWidget *widget, gpointer data)
 {
-
   current_username = (const char *)data;
-
 }
-
 
 static void
 slurp_passwd (GtkWidget *menu)
@@ -331,13 +322,13 @@ slurp_passwd (GtkWidget *menu)
 
       have_users = TRUE;
       name = g_strdup (pw->pw_name);
-      add_menu_callback (menu, name, &set_username, (gpointer *) name);
+      add_menu_callback (menu, name, &set_username, (gpointer)name);
 
       if (current_username == NULL)
 	current_username = name;
     }
 
-  add_menu_callback (menu, "root", &set_username, (gpointer *) "root");
+  add_menu_callback (menu, "root", &set_username, "root");
 }
 
 static void
@@ -375,7 +366,6 @@ static void
 do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 {
   int fd;
-  FILE *fp;
   cleanup_children ();
 
   pre_session (name);
@@ -403,25 +393,19 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
   setenv ("SHELL", shell, 1);
   setenv ("HOME", dir, 1);
   setenv ("USER", name, 1);
+  setenv ("LANG", current_locale->locale, 1);
 
   chdir (dir);
 
-  if (current_locale && current_locale->locale)
+  if (locale_changed && current_locale != old_locale)
     {
-      if (locale_set(current_locale->locale))
-      	fprintf(stderr,"Error setting supplied locale\n");
+      FILE *fp;
       fp = fopen (GPE_LOCALE_USER_FILE, "w");
       if (fp)
 	{
-	  fprintf (fp, "\"%s\" %s\n", current_locale->name,
-		   current_locale->locale);
+	  fprintf (fp, "%s\n", current_locale->locale);
 	  fclose (fp);
 	}
-    }
-  else
-    {
-      fprintf(stderr,"No locale supplied, using C default\n");
-      locale_set("C");
     }
 
   fd = open (".xsession-errors", O_WRONLY | O_CREAT | O_TRUNC, 0600);
@@ -722,96 +706,47 @@ locale_set_xprop (const char *locale)
 static int
 locale_set (const char *locale)
 {
-  int ret=0;
-  
-  setenv("LANG",locale,1);
-  setlocale(LC_ALL, locale);
-  locale_set_xprop(locale);
-  return ret;
+  setlocale (LC_ALL, locale);
+  return locale_set_xprop (locale);
 }  
-
-static int 
-locale_item_cmp (locale_item_t *a, locale_item_t *b)
-{
-  if (DEBUG)
-      fprintf(stderr,"&a: %p &b: %p\n",a,b);
-
-  if (a && b) 
-    {
-      if (DEBUG)
-          fprintf(stderr,"a-l: %s, b-l: %s\n",a->locale,b->locale);
-      return (strncmp( a->locale, b->locale, 10));
-    } 
-  else
-    return -1;
-}
-
-static void
-locale_free_item(locale_item_t *item)
-{
-  free(item->name);
-  free(item->locale);
-  free(item);
-  return;
-}
 
 /* Try and set the best locale for a user to, in order:
  * - A valid user supplied locale
  * - The system default locale
  * If neither are found, the current_locale is left unchanged.
  */
-static int
+static void
 locale_try_user (const char *user)
 {
-  locale_item_t *item = NULL,
-  		*user_item = NULL;
-  GSList *entry;
+  locale_item_t *item = NULL;
   
   if (DEBUG)
     fprintf(stderr,"locale_try_user: user &%p\n",user);
  
   /* Check for a valid user supplied item */ 
-  if ( (user_item = locale_read_user (user)) )
-    {
-      /* is user supplied locale valid? */
-      if ( (entry = g_slist_find_custom(locale_system_list, 
-                                     (gconstpointer *) (user_item),
-                                     (GCompareFunc) &locale_item_cmp)) )
-        {
-          /* set working item to validated system item */
-          item = entry->data;
-        }
-      
-      /* free the user supplied item */
-      locale_free_item(user_item);
-    }
-  /* Otherwise, the default_locale, if its valid */
-  else if ( default_locale && default_locale->locale &&
-            (entry = g_slist_find_custom(locale_system_list, 
-                                        (gconstpointer *) (default_locale),
-                                        (GCompareFunc) &locale_item_cmp)) )
-    {
-      item = entry->data;
-    }
-  
+  item = locale_read_user (user);
+
+  /* Otherwise, the default_locale */
+  if (item == NULL)
+    item = default_locale;
+
   if (item)
     {
       if (DEBUG) 
-        {
-      	  fprintf(stderr,"locale_try_user: got locale %s",item->name);
-      	  fprintf(stderr," menu_pos: %d\n",item->menu_pos);
-        }      
-
+	{
+	  fprintf(stderr,"locale_try_user: got locale %s",item->name);
+	  fprintf(stderr," menu_pos: %d\n",item->menu_pos);
+	}      
+  
       /* update state */
-      locale_set(item->locale);
+      locale_set (item->locale);
+  
       current_locale = item;
-      return 0;
-    } 
+      old_locale = item;
+      locale_changed = FALSE;
 
-  if (DEBUG)
-    fprintf(stderr,"locale_try_user: no locale\n");
-
-  return -1;
+      gtk_option_menu_set_history (GTK_OPTION_MENU (language_menu), current_locale->menu_pos);
+    }
 }
 
 /* Attempt to parse the given locale line and return an appropriate
@@ -918,7 +853,7 @@ locale_get_list (const char *flocale)
         {
 	  item = locale_parse_line (p);
 	  if (item)
-	    list = g_slist_append (list, (gpointer *) item);
+	    list = g_slist_append (list, item);
 	}
     }    
   fclose (fp);
@@ -1008,23 +943,16 @@ locale_get_files (void)
 
 /* Set current_locale based on entry selected by user */
 static void
-set_current_locale (GtkWidget * widget, gpointer * data)
+set_current_locale (GtkWidget * widget, gpointer data)
 {
-
   locale_item_t *item = (locale_item_t *) data;
  
-  if (DEBUG)
-    fprintf(stderr,"set_current_locale: item &%p\n",item);
-        
   if (item)
     {
-      if (DEBUG)
-        fprintf(stderr,"set_current_locale: setting %s\n",item->name);
       current_locale = item;
       locale_set (item->locale);
+      locale_changed = TRUE;
     }
-    
-  return;
 }
 
 /* Initialise locale handling and build the language drop-down menu */
@@ -1034,114 +962,67 @@ build_language_menu ()
   GtkWidget *m = gtk_menu_new ();
   locale_item_t *item;
   GSList *filelist;
+  GSList *iter;
+  int i;
 
   language_menu = gtk_option_menu_new ();
 
-  /* initialise the default_locale, if it exists */
-  default_locale = locale_get_file_single (GPE_LOCALE_DEFAULT);
-  if (DEBUG)
-    fprintf(stderr,"default_locale is %s %s\n", default_locale->name,
-            default_locale->locale);
+  item = g_malloc (sizeof (locale_item_t));
+  item->name = "English";
+  item->locale = "C";
+  locale_system_list = g_slist_append (NULL, item);
 
   /* get list of locale files */
-  if ( (filelist = locale_get_files ()) ) 
+  filelist = locale_get_files ();
+  if (filelist)
     {
-      int i=0, nitems;
+      GSList *iter;
       
-      nitems = g_slist_length (filelist);
-      while (i < nitems)
+      for (iter = filelist; iter; iter = iter->next)
         {
           gchar *file;
-          GSList *tmplist;
-          
-          if ( !(file = g_slist_nth_data(filelist,i)) )
-            {
-              i++;
-              continue;
-            }  
-          
-          if (DEBUG)
-            fprintf(stderr,"build_language_menu: file %s\n",file);
-          
-          if ( (tmplist = locale_get_list (file)) );
-            {
-              locale_system_list = g_slist_concat (locale_system_list,tmplist);
-            }
+	  GSList *tmplist;
+
+	  file = iter->data;
+          tmplist = locale_get_list (file);
+          if (tmplist)
+	    locale_system_list = g_slist_concat (locale_system_list, tmplist);
+
           /* no longer need the file name */
-          free(file);
-          i++;
+          g_free (file);
         }
+
       g_slist_free (filelist);
     }
     
-  if (!locale_system_list)
-    /* Hmm.. No system list */
+  /* initialise the default_locale, if it exists */
+  default_locale = locale_get_file_single (GPE_LOCALE_DEFAULT);
+
+  for (i = 0, iter = locale_system_list; iter; iter = iter->next, i++)
     {
-      /* use default_locale if we have it */
-      if (default_locale)
-        add_menu_callback (m, default_locale->name, &set_current_locale,
-                           (gpointer *) default_locale);
-      else
-        add_menu_callback (m, "English", &set_current_locale, NULL);
-    }
-  else
-    {
-      int i=0, nitems;
-      nitems = g_slist_length (locale_system_list);
-      while (i < nitems)
-	{
-	  item = g_slist_nth_data (locale_system_list, i);
-	  item->menu_pos = i;
-	  if (DEBUG) 
-            {
-	      fprintf(stderr,"build_lang: menu_pos for");
-	      fprintf(stderr," locale %s &%p set to %d\n",item->name,
-                      item,item->menu_pos);
-            }
-	  add_menu_callback (m, item->name, &set_current_locale,
-			     (gpointer *) item);
-	  i++;
-	}
+      item = iter->data;
+      item->menu_pos = i;
+      add_menu_callback (m, item->name, set_current_locale, item);
     }
     
   gtk_option_menu_set_menu (GTK_OPTION_MENU (language_menu), m);    
-    
-  if (current_username)
-    {
-      locale_update_menu(NULL,NULL);
-    }
-
-  return;
 }
 
 static void
-locale_update_menu (GtkOptionMenu *optionmenu, gpointer *data)
+locale_update_menu (GtkOptionMenu *optionmenu, gpointer data)
 {
   if (DEBUG)
     fprintf(stderr,"locale_update: changed, current user: %s\n",
             current_username);
-  if (!locale_try_user(current_username))
-    {
-      if (DEBUG)
-      {
-        fprintf(stderr,"locale_update_menu: setting pos %d",
-                current_locale->menu_pos);
-        fprintf(stderr," current_locale: %s &%p\n",
-                current_locale->name, current_locale);
-      }
-      gtk_option_menu_set_history(GTK_OPTION_MENU(language_menu),
-                                  current_locale->menu_pos);
-    }
+
+  locale_try_user (current_username);
 }
 
 static locale_item_t *
 locale_get_file_single (const char *fname)
 {
-  char lbuf[80],
-  	*p;
   FILE *fp;
   locale_item_t *item = NULL;
-
   
   fp = fopen (fname, "r");
 
@@ -1151,9 +1032,32 @@ locale_get_file_single (const char *fname)
       return NULL;
     }
 
-  if ((p = fgets (lbuf, sizeof (lbuf), fp)))
+  while (!item && !feof (fp))
     {
-      item = locale_parse_line (p);
+      char *p;
+      char lbuf[80];
+
+      p = fgets (lbuf, sizeof (lbuf), fp);
+      if (p)
+	{
+	  GSList *iter;
+
+	  while (isspace (*p))
+	    p++;
+	  while (p[0] && isspace (p[strlen (p) - 1]))
+	    p[strlen (p) - 1] = 0;
+	  
+	  for (iter = locale_system_list; iter; iter = iter->next)
+	    {
+	      locale_item_t *ip = iter->data;
+	      
+	      if (!strcmp (ip->locale, lbuf))
+		{
+		  item = ip;
+		  break;
+		}
+	    }
+	}
     }
 
   fclose (fp);
@@ -1169,11 +1073,8 @@ locale_read_user (const char *username)
   char *fname = NULL;
   locale_item_t *item = NULL;
 
-
-  if (DEBUG)
-    fprintf(stderr,"locale_read_user: user %s\n",username);
-
-  if (!(pwe = getpwnam (username)))
+  pwe = getpwnam (username);
+  if (! pwe)
     return NULL;
 
   if (lstat (pwe->pw_dir, &st))
@@ -1181,7 +1082,8 @@ locale_read_user (const char *username)
       perror (pwe->pw_dir);
       return NULL;
     }
-  else if (! S_ISDIR (st.st_mode))
+
+  if (! S_ISDIR (st.st_mode))
     {
       fprintf (stderr, "locale_read_user: %s not a directory\n", pwe->pw_dir);
       return NULL;
@@ -1195,7 +1097,8 @@ locale_read_user (const char *username)
       g_free (fname);
       return NULL;
     }
-  else if (! S_ISREG (st.st_mode))
+
+  if (! S_ISREG (st.st_mode))
     {
       fprintf (stderr, "read_user_locale: %s not a regular file!\n", fname);
       g_free (fname);
@@ -1683,8 +1586,11 @@ main (int argc, char *argv[])
       gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
 
-  ownerinfo = gpe_owner_info ();
-  gtk_box_pack_start (GTK_BOX (vbox2), ownerinfo, TRUE, TRUE, 0);
+  if (autolock_mode || have_users)
+    {
+      ownerinfo = gpe_owner_info ();
+      gtk_box_pack_start (GTK_BOX (vbox2), ownerinfo, TRUE, TRUE, 0);
+    }
 
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 

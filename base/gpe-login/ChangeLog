@@ -1,3 +1,17 @@
+2003-08-09  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Don't show ownerinfo at new-user screen.
+	(do_login): Don't call locale_set, but do setenv(LANG).  Only write
+	out locale file if contents have changed.
+	(locale_set): Don't call setenv.
+	(add_menu_callback): Last arg is gpointer, not gpointer*.
+	(locale_free_item): Deleted.
+	(locale_try_user): User and default locales are pre-validated.
+	Return void.
+	(locale_get_file_single): Return validated entry from system
+	list.  Contents of file is just the locale name.
+	(locale_item_cmp): Deleted.
+
 2003-08-08  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.48 released.
