@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <libintl.h>
+#include <stdlib.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -35,18 +36,20 @@ struct gpe_icon my_icons[] = {
 Display *dpy;
 GtkListStore *list_store;
 
-Atom atoms[3];
+Atom atoms[4];
 
 char *atom_names[] = 
   {
     "WM_PROTOCOLS",
     "_NET_WM_PING",
     "WM_DELETE_WINDOW",
+    "_NET_CLIENT_LIST"
   };
 
 #define WM_PROTOCOLS 0
 #define _NET_WM_PING 1
 #define WM_DELETE_WINDOW 2
+#define _NET_CLIENT_LIST 3
 
 void
 add_window (Display *dpy, Window w)
@@ -161,7 +164,7 @@ gboolean
 kill_window (Window w)
 {
   Atom *protocols;
-  int count, i, rc;
+  int count, rc;
 
   gdk_error_trap_push ();
 
@@ -243,7 +246,7 @@ task_manager (void)
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), scrolled, TRUE, TRUE, 0);
 
-  kill_button = gpe_picture_button (_("Kill program"), "kill");
+  kill_button = gpe_picture_button (NULL, _("Kill program"), "kill");
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), kill_button, TRUE, FALSE, 0);
   
