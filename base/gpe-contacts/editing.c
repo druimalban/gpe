@@ -691,7 +691,7 @@ update_edit (struct person *p, GtkWidget *w)
           ts = n1;
         }
       for (i=0;i<namenum;i++)
-        gtk_entry_set_text(GTK_ENTRY(nameentry[i]),ts);
+        gtk_entry_set_text(GTK_ENTRY(nameentry[i]),g_strstrip(ts));
       g_free(ts);
     }
 }

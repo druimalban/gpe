@@ -97,6 +97,7 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
     db_set_data(p, "GIVEN_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(egiven))));
     db_set_data(p, "FAMILY_NAME", g_strdup(gtk_entry_get_text(GTK_ENTRY(efamily))));
     db_set_data(p, "HONORIFIC_SUFFIX", g_strdup(gtk_entry_get_text(GTK_ENTRY(esuffix))));
+    db_set_data(p, "NAME", g_strdup(""));
     update_edit(p, parent);
     gtk_widget_destroy(dialog);
     return TRUE;
