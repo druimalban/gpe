@@ -86,8 +86,8 @@ GtkWidget*
 create_GPE_WLANCFG (void)
 {
   GtkWidget *GPE_WLANCFG;
-  GtkWidget *scrolledwindow2;
-  GtkWidget *viewport1;
+  GtkWidget *swMain;
+  GtkWidget *vpMain;
   GtkWidget *nbPseudoMain;
   GtkWidget *vbSchemes;
   GtkWidget *tvSchemeList;
@@ -204,7 +204,6 @@ create_GPE_WLANCFG (void)
   GtkWidget *rbInfrastructure;
   GSList *rbInfrastructure_group = NULL;
   GtkWidget *rbAdHoc;
-  GtkWidget *button1;
   GtkWidget *lblGeneral_simple;
   GtkWidget *tbWEP_simple;
   GtkWidget *hseparator6;
@@ -238,23 +237,24 @@ create_GPE_WLANCFG (void)
   GPE_WLANCFG = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_WLANCFG, "GPE_WLANCFG");
   gtk_window_set_title (GTK_WINDOW (GPE_WLANCFG), _("GPE WLAN config"));
+  gtk_window_set_default_size (GTK_WINDOW (GPE_WLANCFG), 230, 300);
 
-  scrolledwindow2 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_name (scrolledwindow2, "scrolledwindow2");
-  gtk_widget_show (scrolledwindow2);
-  gtk_container_add (GTK_CONTAINER (GPE_WLANCFG), scrolledwindow2);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow2), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  swMain = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_name (swMain, "swMain");
+  gtk_widget_show (swMain);
+  gtk_container_add (GTK_CONTAINER (GPE_WLANCFG), swMain);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (swMain), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  viewport1 = gtk_viewport_new (NULL, NULL);
-  gtk_widget_set_name (viewport1, "viewport1");
-  gtk_widget_show (viewport1);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow2), viewport1);
-  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport1), GTK_SHADOW_NONE);
+  vpMain = gtk_viewport_new (NULL, NULL);
+  gtk_widget_set_name (vpMain, "vpMain");
+  gtk_widget_show (vpMain);
+  gtk_container_add (GTK_CONTAINER (swMain), vpMain);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (vpMain), GTK_SHADOW_NONE);
 
   nbPseudoMain = gtk_notebook_new ();
   gtk_widget_set_name (nbPseudoMain, "nbPseudoMain");
   gtk_widget_show (nbPseudoMain);
-  gtk_container_add (GTK_CONTAINER (viewport1), nbPseudoMain);
+  gtk_container_add (GTK_CONTAINER (vpMain), nbPseudoMain);
   GTK_WIDGET_UNSET_FLAGS (nbPseudoMain, GTK_CAN_FOCUS);
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (nbPseudoMain), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (nbPseudoMain), FALSE);
@@ -263,11 +263,13 @@ create_GPE_WLANCFG (void)
   gtk_widget_set_name (vbSchemes, "vbSchemes");
   gtk_widget_show (vbSchemes);
   gtk_container_add (GTK_CONTAINER (nbPseudoMain), vbSchemes);
+  gtk_notebook_set_tab_label_packing (GTK_NOTEBOOK (nbPseudoMain), vbSchemes,
+                                      TRUE, TRUE, GTK_PACK_START);
 
   tvSchemeList = gtk_tree_view_new ();
   gtk_widget_set_name (tvSchemeList, "tvSchemeList");
   gtk_widget_show (tvSchemeList);
-  gtk_box_pack_start (GTK_BOX (vbSchemes), tvSchemeList, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbSchemes), tvSchemeList, TRUE, TRUE, 0);
 
   lblTab1 = gtk_label_new (_("Tab1"));
   gtk_widget_set_name (lblTab1, "lblTab1");
@@ -279,6 +281,8 @@ create_GPE_WLANCFG (void)
   gtk_widget_set_name (vbConfigSelection, "vbConfigSelection");
   gtk_widget_show (vbConfigSelection);
   gtk_container_add (GTK_CONTAINER (nbPseudoMain), vbConfigSelection);
+  gtk_notebook_set_tab_label_packing (GTK_NOTEBOOK (nbPseudoMain), vbConfigSelection,
+                                      TRUE, TRUE, GTK_PACK_START);
 
   nbConfigSelection = gtk_notebook_new ();
   gtk_widget_set_name (nbConfigSelection, "nbConfigSelection");
@@ -958,11 +962,13 @@ create_GPE_WLANCFG (void)
   gtk_widget_set_name (vbSimple, "vbSimple");
   gtk_widget_show (vbSimple);
   gtk_container_add (GTK_CONTAINER (nbPseudoMain), vbSimple);
+  gtk_notebook_set_tab_label_packing (GTK_NOTEBOOK (nbPseudoMain), vbSimple,
+                                      TRUE, TRUE, GTK_PACK_START);
 
   nbSimple = gtk_notebook_new ();
   gtk_widget_set_name (nbSimple, "nbSimple");
   gtk_widget_show (nbSimple);
-  gtk_box_pack_start (GTK_BOX (vbSimple), nbSimple, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbSimple), nbSimple, TRUE, TRUE, 0);
   gtk_notebook_set_scrollable (GTK_NOTEBOOK (nbSimple), TRUE);
 
   tbGerenral_simple = gtk_table_new (7, 2, FALSE);
@@ -1041,14 +1047,6 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (0), 0, 2);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAdHoc), rbInfrastructure_group);
   rbInfrastructure_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbAdHoc));
-
-  button1 = gtk_button_new_from_stock ("gtk-help");
-  gtk_widget_set_name (button1, "button1");
-  gtk_widget_show (button1);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), button1, 0, 2, 5, 6,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  GTK_WIDGET_SET_FLAGS (button1, GTK_CAN_DEFAULT);
 
   lblGeneral_simple = gtk_label_new (_("General"));
   gtk_widget_set_name (lblGeneral_simple, "lblGeneral_simple");
@@ -1280,14 +1278,11 @@ create_GPE_WLANCFG (void)
   g_signal_connect ((gpointer) btnBack, "clicked",
                     G_CALLBACK (on_GPE_WLANCFG_de_event),
                     NULL);
-  g_signal_connect ((gpointer) button1, "clicked",
-                    G_CALLBACK (on_btnHelp_clicked),
-                    NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (GPE_WLANCFG, GPE_WLANCFG, "GPE_WLANCFG");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, scrolledwindow2, "scrolledwindow2");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, viewport1, "viewport1");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, swMain, "swMain");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vpMain, "vpMain");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, nbPseudoMain, "nbPseudoMain");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, vbSchemes, "vbSchemes");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, tvSchemeList, "tvSchemeList");
@@ -1395,7 +1390,6 @@ create_GPE_WLANCFG (void)
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, sbChannel_simple, "sbChannel_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbInfrastructure, "rbInfrastructure");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbAdHoc, "rbAdHoc");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, button1, "button1");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblGeneral_simple, "lblGeneral_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, tbWEP_simple, "tbWEP_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hseparator6, "hseparator6");
@@ -1422,116 +1416,7 @@ create_GPE_WLANCFG (void)
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblWEP_simple, "lblWEP_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblTab3, "lblTab3");
 
+  gtk_widget_grab_focus (nbSimple);
   return GPE_WLANCFG;
-}
-
-GtkWidget*
-create_dlgSaveChanges (void)
-{
-  GtkWidget *dlgSaveChanges;
-  GtkWidget *vbSaveChanges;
-  GtkWidget *lblSaveChanges;
-  GtkWidget *hbbSaveChanges;
-  GtkWidget *btnSaveNo;
-  GtkWidget *btnSaveYes;
-
-  dlgSaveChanges = gtk_dialog_new ();
-  gtk_widget_set_name (dlgSaveChanges, "dlgSaveChanges");
-  gtk_window_set_title (GTK_WINDOW (dlgSaveChanges), _("Save changes?"));
-  gtk_window_set_position (GTK_WINDOW (dlgSaveChanges), GTK_WIN_POS_CENTER);
-  gtk_window_set_modal (GTK_WINDOW (dlgSaveChanges), TRUE);
-
-  vbSaveChanges = GTK_DIALOG (dlgSaveChanges)->vbox;
-  gtk_widget_set_name (vbSaveChanges, "vbSaveChanges");
-  gtk_widget_show (vbSaveChanges);
-
-  lblSaveChanges = gtk_label_new (_("\nSettings have been changed.\n\nDo you want to save the settings?\n"));
-  gtk_widget_set_name (lblSaveChanges, "lblSaveChanges");
-  gtk_widget_show (lblSaveChanges);
-  gtk_box_pack_start (GTK_BOX (vbSaveChanges), lblSaveChanges, TRUE, TRUE, 0);
-  gtk_label_set_line_wrap (GTK_LABEL (lblSaveChanges), TRUE);
-  gtk_misc_set_padding (GTK_MISC (lblSaveChanges), 10, 0);
-
-  hbbSaveChanges = GTK_DIALOG (dlgSaveChanges)->action_area;
-  gtk_widget_set_name (hbbSaveChanges, "hbbSaveChanges");
-  gtk_widget_show (hbbSaveChanges);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbbSaveChanges), GTK_BUTTONBOX_SPREAD);
-
-  btnSaveNo = gtk_button_new_with_mnemonic (_("No"));
-  gtk_widget_set_name (btnSaveNo, "btnSaveNo");
-  gtk_widget_show (btnSaveNo);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dlgSaveChanges), btnSaveNo, GTK_RESPONSE_NO);
-  GTK_WIDGET_SET_FLAGS (btnSaveNo, GTK_CAN_DEFAULT);
-
-  btnSaveYes = gtk_button_new_with_mnemonic (_("Yes"));
-  gtk_widget_set_name (btnSaveYes, "btnSaveYes");
-  gtk_widget_show (btnSaveYes);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dlgSaveChanges), btnSaveYes, GTK_RESPONSE_YES);
-  GTK_WIDGET_SET_FLAGS (btnSaveYes, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dlgSaveChanges, dlgSaveChanges, "dlgSaveChanges");
-  GLADE_HOOKUP_OBJECT_NO_REF (dlgSaveChanges, vbSaveChanges, "vbSaveChanges");
-  GLADE_HOOKUP_OBJECT (dlgSaveChanges, lblSaveChanges, "lblSaveChanges");
-  GLADE_HOOKUP_OBJECT_NO_REF (dlgSaveChanges, hbbSaveChanges, "hbbSaveChanges");
-  GLADE_HOOKUP_OBJECT (dlgSaveChanges, btnSaveNo, "btnSaveNo");
-  GLADE_HOOKUP_OBJECT (dlgSaveChanges, btnSaveYes, "btnSaveYes");
-
-  return dlgSaveChanges;
-}
-
-GtkWidget*
-create_dlgDeleteEntry (void)
-{
-  GtkWidget *dlgDeleteEntry;
-  GtkWidget *vbDeleteEntry;
-  GtkWidget *lblDeleteEntry;
-  GtkWidget *hbbDeleteEntry;
-  GtkWidget *btnDeleteNo;
-  GtkWidget *btnDeleteYes;
-
-  dlgDeleteEntry = gtk_dialog_new ();
-  gtk_widget_set_name (dlgDeleteEntry, "dlgDeleteEntry");
-  gtk_window_set_title (GTK_WINDOW (dlgDeleteEntry), _("Delete entry?"));
-  gtk_window_set_position (GTK_WINDOW (dlgDeleteEntry), GTK_WIN_POS_CENTER);
-  gtk_window_set_modal (GTK_WINDOW (dlgDeleteEntry), TRUE);
-
-  vbDeleteEntry = GTK_DIALOG (dlgDeleteEntry)->vbox;
-  gtk_widget_set_name (vbDeleteEntry, "vbDeleteEntry");
-  gtk_widget_show (vbDeleteEntry);
-
-  lblDeleteEntry = gtk_label_new (_("\nDo you really want to \n\ndelete this enry?\n"));
-  gtk_widget_set_name (lblDeleteEntry, "lblDeleteEntry");
-  gtk_widget_show (lblDeleteEntry);
-  gtk_box_pack_start (GTK_BOX (vbDeleteEntry), lblDeleteEntry, TRUE, TRUE, 0);
-  gtk_label_set_line_wrap (GTK_LABEL (lblDeleteEntry), TRUE);
-  gtk_misc_set_padding (GTK_MISC (lblDeleteEntry), 10, 0);
-
-  hbbDeleteEntry = GTK_DIALOG (dlgDeleteEntry)->action_area;
-  gtk_widget_set_name (hbbDeleteEntry, "hbbDeleteEntry");
-  gtk_widget_show (hbbDeleteEntry);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbbDeleteEntry), GTK_BUTTONBOX_SPREAD);
-
-  btnDeleteNo = gtk_button_new_with_mnemonic (_("No"));
-  gtk_widget_set_name (btnDeleteNo, "btnDeleteNo");
-  gtk_widget_show (btnDeleteNo);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dlgDeleteEntry), btnDeleteNo, GTK_RESPONSE_NO);
-  GTK_WIDGET_SET_FLAGS (btnDeleteNo, GTK_CAN_DEFAULT);
-
-  btnDeleteYes = gtk_button_new_with_mnemonic (_("Yes"));
-  gtk_widget_set_name (btnDeleteYes, "btnDeleteYes");
-  gtk_widget_show (btnDeleteYes);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dlgDeleteEntry), btnDeleteYes, GTK_RESPONSE_YES);
-  GTK_WIDGET_SET_FLAGS (btnDeleteYes, GTK_CAN_DEFAULT);
-
-  /* Store pointers to all widgets, for use by lookup_widget(). */
-  GLADE_HOOKUP_OBJECT_NO_REF (dlgDeleteEntry, dlgDeleteEntry, "dlgDeleteEntry");
-  GLADE_HOOKUP_OBJECT_NO_REF (dlgDeleteEntry, vbDeleteEntry, "vbDeleteEntry");
-  GLADE_HOOKUP_OBJECT (dlgDeleteEntry, lblDeleteEntry, "lblDeleteEntry");
-  GLADE_HOOKUP_OBJECT_NO_REF (dlgDeleteEntry, hbbDeleteEntry, "hbbDeleteEntry");
-  GLADE_HOOKUP_OBJECT (dlgDeleteEntry, btnDeleteNo, "btnDeleteNo");
-  GLADE_HOOKUP_OBJECT (dlgDeleteEntry, btnDeleteYes, "btnDeleteYes");
-
-  return dlgDeleteEntry;
 }
 

@@ -4,5 +4,3 @@
 
 GtkWidget* create_GeneralHelpWin (void);
 GtkWidget* create_GPE_WLANCFG (void);
-GtkWidget* create_dlgSaveChanges (void);
-GtkWidget* create_dlgDeleteEntry (void);
