@@ -1,4 +1,3 @@
-
 -- GPE Pim Schema v0.1.0 
 -- There are an infinite number of ways of storing PIM data
 -- this is supposed to be one of them
@@ -9,6 +8,7 @@
 
 -- NB this schema does not include elements required for 
 -- Syncing, these will be added later
+-- 
 
 -- Base Pim Schema
 -- ---------------
