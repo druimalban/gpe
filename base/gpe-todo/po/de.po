@@ -1,4 +1,4 @@
-# German translation for gpe-todo
+# German translation for gpe-todo.
 # Copyright (C) 2002, 2003 Phil Blundell <pb@debian.org>
 # Colin Marquardt <colin@marquardt-home.de>, 2003
 #
@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.32\n"
 "POT-Creation-Date: 2003-02-14 19:50+0000\n"
-"PO-Revision-Date: 2003-02-15 13:18+0100\n"
+"PO-Revision-Date: 2003-04-24 00:18+0200\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 
 #: main.c:60
 msgid "To-do list"
-msgstr "Zu-Tun-Liste"
+msgstr "Aufgabenliste"
 
 #: todo-ui.c:269
 msgid "Select categories"
@@ -127,7 +127,7 @@ msgstr "Eine Kategorie diesen Namens existiert bereits"
 
 #: configure.c:106
 msgid "To-do list: Categories"
-msgstr "Zu-Tun-Liste: Kategorien"
+msgstr "Aufgabenliste: Kategorien"
 
 #: configure.c:139
 msgid "New category"
@@ -144,18 +144,3 @@ msgstr "Eine neue Kategorie anlegen"
 #: configure.c:218 configure.c:219
 msgid "Delete the selected category"
 msgstr "Lösche ausgewählte Kategorie"
-
-#~ msgid "Save"
-#~ msgstr "Speichern"
-
-#~ msgid "New list"
-#~ msgstr "Neue Liste"
-
-#~ msgid "Close"
-#~ msgstr "Schließen"
-
-#~ msgid "Close this window"
-#~ msgstr "Schließe dieses Fenster"
-
-#~ msgid "New Contact"
-#~ msgstr "Neuer Kontakt"
