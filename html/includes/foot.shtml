@@ -1,5 +1,16 @@
-<div class="footer">
 <HR>
+<p>
+GPE Quick Links: 
+<a href="http://handhelds.org/z/wiki/GPE">Wiki Page</a> 
+| 
+<a href="http://handhelds.org/pipermail/gpe/">Mailing List Archive</a> 
+|
+<a href="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">ViewCVS</a>
+| 
+<a href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List
+Packages</a>
+</p>
+<div class="footer">
 <SMALL>
 Last modified: <!--#echo var="LAST_MODIFIED"-->. 
 Page maintained by <!--#echo var="author"--> <a href='mailto:<!--#echo var="authoremail"-->'>&lt;<!--#echo var="authoremail"-->&gt;</a>.

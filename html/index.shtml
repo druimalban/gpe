@@ -24,15 +24,4 @@ importantly, the GPE environment fixes standards for program interaction,
 such as SQL, XML, and other data schemas.
 </p>
 
-<p>
-GPE Quick Links: 
-<a href="http://handhelds.org/z/wiki/GPE">Wiki Page</a> 
-| 
-<a href="http://handhelds.org/pipermail/gpe/">Mailing List Archive</a> 
-|
-<a href="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">ViewCVS</a>
-| 
-<a href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List
-Packages</a>
-</p>
 <!--#include virtual="includes/foot.shtml"-->
