@@ -23,21 +23,23 @@ static const char *fname = "/.gpe/timesheet";
 
 static const char *schema_str = 
 "create table tasks (id integer, description text, cftime integer, parent integer);
-create table log (task integer, time integer, start boolean);";
+create table log (action text, task integer, time integer, info text);";
 
 static sqlite *sqliteh;
 static guint max_task_id;
 
 GSList *tasks, *root;
 
+static const char *actions[] = { "START", "STOP", "NOTE" };
+
 gboolean
-log_entry (gboolean start, time_t time, struct task *task)
+log_entry (action_t action, time_t time, struct task *task, char *info)
 {
   char *err;
   if (sqlite_exec_printf (sqliteh,
-			  "insert into log values (%d, %d, %d)",
+			  "insert into log values ('%s', %d, %d, '%q')",
 			  NULL, NULL, &err,
-			  task->id, time, start))
+			  actions[action], task->id, time, info))
     {
       gpe_error_box (err);
       free (err);
@@ -140,12 +142,17 @@ scan_log_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 2)
     {
-      unsigned long time = atoi (argv[0]);
-      int start = atoi (argv[1]);
       struct task *t = arg;
-      if (start)
-	t->started = TRUE;
-      return 1;
+      if (argv[1])
+	{
+	  if (!strcmp (argv[1], "START"))
+	    {
+	      t->started = TRUE;
+	      return 1;
+	    }
+	  else if (!strcmp (argv[1], "STOP"))
+	    return 1;
+	}
     }
   return 0;
 }
@@ -167,7 +174,7 @@ scan_logs (GSList *list)
 	  char *err;
 	  int r;
 
-	  r = sqlite_exec_printf (sqliteh, "select time, start from log where task=%d order by time desc", 
+	  r = sqlite_exec_printf (sqliteh, "select time, action from log where task=%d order by time desc", 
 				  scan_log_callback, t, &err,
 				  t->id);
 	  if (r != 0 && r != SQLITE_ABORT)

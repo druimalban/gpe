@@ -19,6 +19,7 @@
 #include <gpe/render.h>
 #include <gpe/init.h>
 #include <gpe/smallbox.h>
+#include <gpe/picturebutton.h>
 
 #include "sql.h"
 
@@ -28,12 +29,18 @@ static const guint window_x = 240, window_y = 320;
 
 struct gpe_icon my_icons[] = {
   { "new", "new" },
-  { "delete", "delete" },
-  { "clock", "clock" },
-  { "stop_clock", "stop_clock" },
-  { "tick", "tick" },
+  { "delete", },
+  { "clock", },
+  { "stop_clock", },
+  { "tick", },
+  { "ok" },
+  { "cancel" },
+  { "gpe-alarm" },
+  { "edit" },
   { NULL, NULL }
 };
+
+static GdkWindow *top_level_window;
 
 static void
 mark_started (GtkCTree *ct, GtkCTreeNode *node)
@@ -45,35 +52,189 @@ mark_started (GtkCTree *ct, GtkCTreeNode *node)
 }
 
 static void
-start_timing(GtkWidget *w, gpointer user_data)
+confirm_click_ok (GtkWidget *widget, gpointer p)
+{
+  gtk_main_quit ();
+}
+
+static void
+confirm_click_cancel (GtkWidget *widget, gpointer p)
+{
+  gtk_widget_destroy (GTK_WIDGET (p));
+}
+
+static void
+confirm_note_destruction (GtkWidget *widget, gpointer p)
+{
+  gboolean *b = (gboolean *)p;
+
+  if (*b == FALSE)
+    {
+      *b = TRUE;
+      
+      gtk_main_quit ();
+    }
+}
+
+static gboolean
+confirm_dialog (gchar **text, gchar *action, gchar *action2)
+{
+  GtkWidget *w = gtk_dialog_new ();
+  gboolean destroyed = FALSE;
+  GtkWidget *buttonok, *buttoncancel;
+  GdkPixbuf *pixbuf;
+  GtkWidget *icon;
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
+  GtkWidget *action_label, *action2_label;
+  GtkWidget *frame, *entry;
+
+  gtk_widget_realize (w);
+  gdk_window_set_transient_for (w->window, top_level_window);
+
+  gtk_widget_show (hbox);
+  gtk_widget_show (vbox);
+  gtk_widget_show (vbox2);
+
+  if (action)
+    {
+      action_label = gtk_label_new (action);
+      gtk_box_pack_start (GTK_BOX (vbox), action_label, FALSE, FALSE, 0);
+      gtk_widget_show (action_label);
+      gtk_misc_set_alignment (GTK_MISC (action_label), 0.0, 0.5);
+    }
+  action2_label = gtk_label_new (action2);
+  gtk_box_pack_start (GTK_BOX (vbox), action2_label, FALSE, FALSE, 0);
+  gtk_widget_show (action2_label);
+
+  gtk_misc_set_alignment (GTK_MISC (action2_label), 0.0, 0.5);
+  
+  gtk_box_pack_start (GTK_BOX (vbox2), vbox, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), vbox2, FALSE, FALSE, 8);
+
+  pixbuf = gpe_find_icon ("gpe-alarm");
+  if (pixbuf)
+    {
+      icon = gpe_render_icon (w->style, pixbuf);
+      gtk_box_pack_end (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
+      gtk_widget_show (icon);
+    }
+
+  frame = gtk_frame_new (_("Notes"));
+  gtk_widget_show (frame);
+#if GTK_MAJOR_VERSION < 2
+  entry = gtk_text_new ();
+#else
+  entry = gtk_text_view_new ();
+#endif
+  gtk_widget_show (entry);
+  gtk_container_add (GTK_CONTAINER (frame), entry);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), frame, TRUE, TRUE, 0);
+
+  buttonok = gpe_picture_button (w->style, _("OK"), "ok");
+  buttoncancel = gpe_picture_button (w->style, _("Cancel"), "cancel");
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
+		      buttonok, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->action_area), 
+		      buttoncancel, TRUE, TRUE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", 
+		      GTK_SIGNAL_FUNC (confirm_click_ok), NULL);
+  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", 
+		      GTK_SIGNAL_FUNC (confirm_click_cancel), w);
+
+  gtk_signal_connect (GTK_OBJECT (w), "destroy",
+		      (GtkSignalFunc)confirm_note_destruction, &destroyed);
+
+  gtk_window_set_modal (GTK_WINDOW (w), TRUE);
+  gtk_widget_show (w);
+
+  gtk_widget_grab_focus (GTK_WIDGET (entry));
+
+  gtk_main ();
+
+  if (destroyed)
+    return FALSE;
+
+#if GTK_MAJOR_VERSION < 2
+  *text = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+#else
+  {
+    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (entry));
+    GtkTextIter start, end;
+    gtk_text_buffer_get_bounds (buf, &start, &end);
+    *text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+  }
+#endif
+
+  destroyed = TRUE;
+  gtk_widget_destroy (w);
+
+  return TRUE;
+}
+
+static void
+start_timing (GtkWidget *w, gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       struct task *t;
+      gchar *text;
       t = gtk_ctree_node_get_row_data (ct, node);
-      log_entry (TRUE, time (NULL), t);
-      mark_started (ct, node);
+      if (confirm_dialog (&text, _("Clocking in:"), t->description))
+	{
+	  log_entry (START, time (NULL), t, text);
+	  mark_started (ct, node);
+	  g_free (text);
+	}
     }
 }
 
 static void
-stop_timing(GtkWidget *w, gpointer user_data)
+stop_timing (GtkWidget *w, gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       struct task *t;
-      gtk_ctree_node_set_text (ct, node, 1, "");
+      gchar *text;
       t = gtk_ctree_node_get_row_data (ct, node);
-      log_entry (FALSE, time (NULL), t);
+      if (confirm_dialog (&text, _("Clocking out:"), t->description))
+	{
+	  gtk_ctree_node_set_text (ct, node, 1, "");
+	  log_entry (STOP, time (NULL), t, text);
+	  g_free (text);
+	}
     }
 }
 
 static void
-ui_delete_task(GtkWidget *w, gpointer user_data)
+note (GtkWidget *w, gpointer user_data)
+{
+  GtkCTree *ct = GTK_CTREE (user_data);
+  if (GTK_CLIST (ct)->selection)
+    {
+      GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      struct task *t;
+      gchar *text;
+      t = gtk_ctree_node_get_row_data (ct, node);
+      if (confirm_dialog (&text, NULL, t->description))
+	{
+	  log_entry (NOTE, time (NULL), t, text);
+	  g_free (text);
+	}
+    }
+}
+
+static void
+ui_delete_task (GtkWidget *w, gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
@@ -86,7 +247,7 @@ ui_delete_task(GtkWidget *w, gpointer user_data)
 }
 
 static void
-ui_new_task(GtkWidget *w, gpointer p)
+ui_new_task (GtkWidget *w, gpointer p)
 {
   GtkCTree *ctree = GTK_CTREE (p);
   GtkCTreeNode *parent = NULL;
@@ -188,6 +349,7 @@ main(int argc, char *argv[])
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (window);
+  top_level_window = window->window;
 
   p = gpe_find_icon ("new");
   pw = gpe_render_icon (window->style, p);
@@ -203,15 +365,21 @@ main(int argc, char *argv[])
 
   p = gpe_find_icon ("clock");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Start timing"),
-			   _("Start timing"), _("Start timing"),
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock on"),
+			   _("Clock on"), _("Clock on"),
 			   pw, (GtkSignalFunc)start_timing, tree);
   
   p = gpe_find_icon ("stop_clock");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop timing"),
-			   _("Stop timing"), _("Stop timing"),
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Clock off"),
+			   _("Clock off"), _("Clock off"),
 			   pw, (GtkSignalFunc)stop_timing, tree);
+
+  p = gpe_find_icon ("edit");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Note"),
+			   _("Note"), _("Note"),
+			   pw, (GtkSignalFunc)note, tree);
 
   gtk_widget_show (toolbar);
   gtk_widget_show (vbox_top);

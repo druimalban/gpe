@@ -22,13 +22,20 @@ struct task
   gboolean started;
 };
 
+typedef enum
+  {
+    START,
+    STOP,
+    NOTE
+  } action_t;
+
 extern gboolean sql_start (void);
 extern GSList *tasks, *root;
 
 extern struct task *new_task (gchar *description, struct task *parent);
 extern void delete_task (struct task *t);
 
-extern gboolean log_entry (gboolean start, time_t time, struct task *task);
+extern gboolean log_entry (action_t action, time_t time, struct task *task, char *info);
 extern void scan_logs (GSList *);
 
 #endif
