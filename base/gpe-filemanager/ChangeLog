@@ -1,5 +1,12 @@
+2004-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * main.c: Impemented limiting access to homedir.
+    * main.c: Changed order of buttons in main toolbar.
+    * main.c: Changed "Goto Location" button to "Go!" and use stock item.
+
 2004-07-26  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Makefile: Working on V 0.17 now.
 	* main.c: Added main menu.
 	* main.c: We have a directory browser now.
     * main.c: Directory browser default auto-activation via display size and 

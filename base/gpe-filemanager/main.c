@@ -113,11 +113,12 @@ static GtkWidget *set_myfiles_menu_item;
 
 static GtkWidget *btnListView;
 static GtkWidget *btnIconView;
+static GtkWidget *btnGoUp;
 
 GdkPixbuf *default_pixbuf;
 
-GtkWidget *current_button=NULL;
-int current_button_is_down=0;
+GtkWidget *current_button = NULL;
+int current_button_is_down = 0;
 
 GtkItemFactory *item_factory;
 
@@ -135,6 +136,7 @@ gchar *current_view = "icons";
 gint current_zoom = 36;
 static gboolean view_is_icons = FALSE;
 static gboolean directory_browser = TRUE;
+static gboolean limited_view = FALSE;
 
 static gchar *file_clipboard = NULL;
 
@@ -284,6 +286,13 @@ on_dirbrowser_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
 void
 on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
 {
+  gboolean enabled;
+  if (!initialized) 
+    return;
+  limited_view = 
+    gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(set_myfiles_menu_item));
+  enabled = (!limited_view || strcmp(current_directory,g_get_home_dir()));
+  gtk_widget_set_sensitive(btnGoUp,enabled);
 }
 
 void
@@ -1450,6 +1459,11 @@ add_history (gchar *directory)
 static void
 browse_directory (gchar *directory)
 {
+  gboolean enabled;
+  /* disable "up" button if we are in homedir and view is limited */
+  enabled = (!limited_view || strcmp(directory,g_get_home_dir()));
+  gtk_widget_set_sensitive(btnGoUp,enabled);
+  
   /* some hacks to handle nasty smb urls */
   if (g_str_has_prefix(directory,"smb:"))
   {
@@ -1902,19 +1916,19 @@ main (int argc, char *argv[])
 			    _("Forward"), _("Go forward in history."),
 			    G_CALLBACK (history_forward), NULL, -1);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_UP,
-			    _("Up one level"), _("Go up one level."),
-			    G_CALLBACK (up_one_level), NULL, -1);
+  btnGoUp = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_UP,
+			                          _("Up one level"), _("Go up one level."),
+			                          G_CALLBACK (up_one_level), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
-			    _("Stop"), _("Stop the current process."),
-			    G_CALLBACK (safety_check), NULL, -1);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
 			    _("Home"), _("Goto your home directory."),
 			    G_CALLBACK (set_directory_home), NULL, -1);
+                
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
+			    _("Stop"), _("Stop the current process."),
+			    G_CALLBACK (safety_check), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -1931,9 +1945,9 @@ main (int argc, char *argv[])
 			   G_CALLBACK (view_list), NULL);
   gtk_widget_set_sensitive(btnListView,FALSE);
                
-  p = gpe_find_icon ("dir-up");
-  pw = gtk_image_new_from_pixbuf(p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Goto Location"), 
+  pw = gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, 
+                                gtk_toolbar_get_icon_size(GTK_TOOLBAR(toolbar2)));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Go!"), 
 			   _("Goto Location"), _("Goto Location"), pw, 
 			   G_CALLBACK (goto_directory), NULL);
   
