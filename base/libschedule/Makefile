@@ -38,10 +38,10 @@ install-devel:
 	install -d $(DESTDIR)$(PREFIX)/include/gpe
 	for i in $(HEADERS); do install -m 644 gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	install -d $(DESTDIR)$(PREFIX)/lib
-	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libeventdb.so
+	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libschedule.so
 
 clean:
-	rm -f $(OBJS) $(SONAME) libeventdb.so $(DEPS)
+	rm -f $(OBJS) $(SONAME) libschedule.so $(DEPS)
 
 install-program: $(SONAME) install-mo
 	install -d $(DESTDIR)$(PREFIX)/lib
