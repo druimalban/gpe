@@ -28,6 +28,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/gpe-iconlist.h>
+#include <gpe/dirbrowser.h>
 
 #include "mime-sql.h"
 #include "mime-programs-sql.h"
@@ -54,7 +55,7 @@ guint screen_w, screen_h;
 GtkWidget *current_button=NULL;
 int current_button_is_down=0;
 
-GtkWidget *popup_menu;
+GtkItemFactory *item_factory;
 
 /* For not starting an app twice after a double click */
 int ignore_press = 0;
@@ -76,6 +77,8 @@ typedef struct
   gchar *filename;
   GnomeVFSFileInfo *vfs;
 } FileInfomation;
+
+FileInfomation *current_popup_file;
 
 struct gpe_icon my_icons[] = {
   { "left", "left" },
@@ -106,6 +109,24 @@ struct gpe_icon my_icons[] = {
 guint window_x = 240, window_y = 310;
 
 static void browse_directory (gchar *directory);
+static void popup_ask_open_with (void);
+static void popup_ask_move_file (void);
+static void popup_ask_rename_file (void);
+static void popup_ask_delete_file (void);
+static void show_file_properties (void);
+
+static GtkItemFactoryEntry menu_items[] =
+{
+  { "/Open Wit_h",	 NULL, popup_ask_open_with,  0, "<StockItem>", GTK_STOCK_OPEN },
+  { "/sep1",	         NULL, NULL,	             0, "<Separator>" },
+  { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
+  { "/_Rename",          NULL, popup_ask_rename_file,          0, "<Item>" },
+  { "/_Delete",          NULL, popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
+  { "/sep2",	         NULL, NULL,	             0, "<Separator>" },
+  { "/_Properties",      NULL, show_file_properties, 0, "<StockItem>", GTK_STOCK_PROPERTIES },
+};
+
+static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
 static void
 hide_menu (void)
@@ -211,7 +232,7 @@ run_program (gchar *exec, gchar *mime_name)
   }
 }
 
-void static
+static void
 open_with (GtkButton *button, gpointer data)
 {
   GnomeVFSMimeApplication *application;
@@ -229,7 +250,7 @@ open_with (GtkButton *button, gpointer data)
   system (command);
 }
 
-void static
+static void
 open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *event, gpointer entry)
 {
   GnomeVFSMimeApplication *application;
@@ -239,33 +260,189 @@ open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *
   gtk_entry_set_text (GTK_ENTRY (entry), application->name);
 }
 
-void static
+static void
+rename_file (GtkDialog *dialog_window, gint response_id)
+{
+  gchar *dest, *error;
+  GnomeVFSResult result;
+
+  if (response_id == GTK_RESPONSE_ACCEPT)
+  {
+  dest = g_strdup_printf ("%s/%s", dirname (current_popup_file->filename), gtk_entry_get_text (GTK_ENTRY (g_object_get_data (G_OBJECT (dialog_window), "entry"))));
+  printf ("Rename dest: %s\n", dest);
+  result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
+
+  if (result != GNOME_VFS_OK)
+  {
+    switch (result)
+    {
+    case GNOME_VFS_ERROR_READ_ONLY:
+      error = g_strdup ("File is read only.");
+      break;
+    case GNOME_VFS_ERROR_ACCESS_DENIED:
+      error = g_strdup ("Access denied.");
+      break;
+    case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
+      error = g_strdup ("Read only file system.");
+      break;
+    case GNOME_VFS_ERROR_FILE_EXISTS:
+      error = g_strdup ("Destination file already exists.");
+      break;
+    default:
+      error = g_strdup_printf ("Error code %d", result);
+      break;
+    }
+
+    gpe_error_box (error);
+    g_free (error);
+  }
+
+  g_free (dest);
+  }
+
+  gtk_widget_destroy (dialog_window);
+}
+
+static void
+delete_file (GtkDialog *dialog_window, gint response_id)
+{
+  if (response_id == GTK_RESPONSE_ACCEPT)
+  {
+    gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (current_popup_file->filename));
+  }
+
+  gtk_widget_destroy (dialog_window);
+}
+
+static void
+move_file (gchar *directory)
+{
+  gchar *dest, *error;
+  GnomeVFSResult result;
+
+  printf ("dir: %s\n", directory);
+  dest = g_strdup_printf ("%s/%s", directory, current_popup_file->vfs->name);
+
+  result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
+
+  if (result != GNOME_VFS_OK)
+  {
+    switch (result)
+    {
+    case GNOME_VFS_ERROR_NO_SPACE:
+      error = g_strdup ("No space left on device.");
+      break;
+    case GNOME_VFS_ERROR_READ_ONLY:
+      error = g_strdup ("Destination is read only.");
+      break;
+    case GNOME_VFS_ERROR_ACCESS_DENIED:
+      error = g_strdup ("Access denied.");
+      break;
+    case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
+      error = g_strdup ("Read only file system.");
+      break;
+    default:
+      error = g_strdup_printf ("Error code %d", result);
+      break;
+    }
+
+    gpe_error_box (error);
+    g_free (error);
+  }
+
+  g_free (dest);
+}
+
+static void
+popup_ask_move_file ()
+{
+  GtkWidget *dirbrowser_window;
+
+  dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), (gchar *) g_get_home_dir (), GTK_SELECTION_SINGLE, move_file);
+  gtk_signal_connect (GTK_OBJECT (dirbrowser_window), "destroy", GTK_SIGNAL_FUNC (gtk_widget_destroyed), &dirbrowser_window);
+  gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
+
+  gtk_widget_show_all (dirbrowser_window);
+}
+
+static void
+popup_ask_rename_file ()
+{
+  GtkWidget *dialog_window;
+  GtkWidget *vbox, *label, *entry;
+  gchar *label_text;
+
+  label_text = g_strdup_printf ("Rename file %s to:", current_popup_file->vfs->name);
+
+  dialog_window = gtk_dialog_new_with_buttons ("Rename file", window, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+  g_signal_connect (G_OBJECT (dialog_window), "delete_event", GTK_SIGNAL_FUNC (kill_widget), dialog_window);
+  g_signal_connect (G_OBJECT (dialog_window), "response", GTK_SIGNAL_FUNC (rename_file), NULL);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  label = gtk_label_new (label_text);
+  g_free (label_text);
+
+  entry = gtk_entry_new ();
+  g_object_set_data (G_OBJECT (dialog_window), "entry", entry);
+
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox), vbox);
+  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
+
+  gtk_widget_show_all (dialog_window);
+}
+
+static void
+popup_ask_delete_file ()
+{
+  GtkWidget *dialog_window;
+  GtkWidget *label;
+  gchar *label_text;
+
+  label_text = g_strdup_printf ("Delete %s?", current_popup_file->vfs->name);
+
+  dialog_window = gtk_dialog_new_with_buttons ("Rename file", window, GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+  g_signal_connect (G_OBJECT (dialog_window), "delete_event", GTK_SIGNAL_FUNC (kill_widget), dialog_window);
+  g_signal_connect (G_OBJECT (dialog_window), "response", GTK_SIGNAL_FUNC (delete_file), NULL);
+
+  label = gtk_label_new (label_text);
+
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox), label);
+
+  gtk_widget_show_all (dialog_window);
+}
+
+static void
+show_file_properties ()
+{
+  printf ("Show file properties\n");
+}
+
+static void
 ask_open_with (FileInfomation *file_info)
 {
-  GtkWidget *window, *fakeparentwindow, *clist, *entry, *label;
+  GtkWidget *dialog_window, *fakeparentwindow, *clist, *entry, *label;
   GtkWidget *open_button, *cancel_button;
-  GdkPixbuf *pixbuf = NULL, *spixbuf;
-  GdkPixmap *pixmap;
-  GdkBitmap *bitmap;
-  GList *iter, *applications;
+  GList *applications;
   GnomeVFSMimeApplication *application;
   int row_num = 0;
-  gchar *pixmap_file, *row_text[1];
+  gchar *row_text[1];
 
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
 
-  window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW(window), "Open With...");
-  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(fakeparentwindow));
-  gtk_widget_realize (window);
+  dialog_window = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW(dialog_window), "Open With...");
+  gtk_window_set_transient_for (GTK_WINDOW(dialog_window), GTK_WINDOW(fakeparentwindow));
+  gtk_widget_realize (dialog_window);
  
-  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
-  gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
+  gtk_window_set_modal (GTK_WINDOW (dialog_window), TRUE);
+  gtk_window_set_position (GTK_WINDOW (dialog_window), GTK_WIN_POS_CENTER);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+  gtk_signal_connect (GTK_OBJECT (dialog_window), "destroy",
                       GTK_SIGNAL_FUNC (kill_widget),
-                      window);
+                      dialog_window);
 
   label = gtk_label_new ("Open with program");
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
@@ -277,28 +454,28 @@ ask_open_with (FileInfomation *file_info)
                       GTK_SIGNAL_FUNC (open_with_row_selected),
                       entry);
 
-  open_button = gpe_picture_button (window->style, "Open", "open");
+  open_button = gpe_picture_button (dialog_window->style, "Open", "open");
   gtk_object_set_data (GTK_OBJECT (open_button), "FileInfomation", (gpointer) file_info);
   gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
                       GTK_SIGNAL_FUNC (open_with),
                       entry);
   gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
                       GTK_SIGNAL_FUNC (kill_widget),
-                      window);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
+                      dialog_window);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
                       open_button);
 
-  cancel_button = gpe_picture_button (window->style, "Cancel", "cancel");
+  cancel_button = gpe_picture_button (dialog_window->style, "Cancel", "cancel");
   gtk_signal_connect (GTK_OBJECT (cancel_button), "clicked",
                       GTK_SIGNAL_FUNC (kill_widget),
-                      window);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
+                      dialog_window);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
                       cancel_button);
 
-  //gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clist, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), entry, TRUE, TRUE, 4);
+  //gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox), hbox);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), label, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), clist, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), entry, TRUE, TRUE, 4);
 
   if (file_info->vfs->mime_type)
     applications = gnome_vfs_mime_get_short_list_applications (file_info->vfs->mime_type);
@@ -351,7 +528,13 @@ ask_open_with (FileInfomation *file_info)
     gtk_label_set_text (GTK_LABEL (label), "No avalible applications.");
   }
 
-  gtk_widget_show_all (window);	
+  gtk_widget_show_all (dialog_window);	
+}
+
+static void
+popup_ask_open_with ()
+{
+  ask_open_with (current_popup_file);
 }
 
 void
@@ -360,10 +543,11 @@ show_popup (GtkWidget *widget, gpointer udata)
   FileInfomation *file_info;
 
   file_info = (FileInfomation *) udata;
+  current_popup_file = file_info;
 
   printf ("popup for %s\n", file_info->filename);
 
-  gtk_menu_popup (popup_menu, NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
+  gtk_menu_popup (gtk_item_factory_get_widget (item_factory, "<main>"), NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
 }
 
 void
@@ -372,7 +556,6 @@ button_clicked (GtkWidget *widget, gpointer udata)
   GnomeVFSMimeApplication *default_mime_application;
   FileInfomation *file_info;
   gchar *command;
-  GList *applications;
 
   file_info = (FileInfomation *) udata;
 
@@ -405,10 +588,11 @@ gchar *
 find_icon_path (gchar *mime_type)
 {
   struct stat s;
-  gchar *mime_icon, *mime_path, *p;
+  const gchar *mime_icon;
+  gchar *mime_path, *p;
 
   mime_icon = gnome_vfs_mime_get_icon (mime_type);
-  if (mime_icon != NULL)
+  if (mime_icon)
   {
     if (mime_icon[0] == '/')
     {
@@ -462,10 +646,8 @@ get_pixbuf (gchar *filename)
 void
 add_icon (FileInfomation *file_info)
 {
-  struct stat file_stats;
-  GSList *iter;
   GdkPixbuf *pixbuf;
-  gchar *mime_icon, *mime_type;
+  gchar *mime_icon;
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/directory.png");
@@ -494,10 +676,6 @@ sort_filenames (gconstpointer *a, gconstpointer *b)
 static void
 make_view ()
 {
-  struct dirent *d;
-  DIR *dir;
-  gchar *filename;
-  GList *filenames = NULL;
   GnomeVFSDirectoryHandle *handle;
   GnomeVFSFileInfo *vfs_file_info;
   GnomeVFSURI *uri;
@@ -509,6 +687,7 @@ make_view ()
   gtk_widget_draw (view_widget, NULL);
 
   uri = gnome_vfs_uri_new (current_directory);
+  printf ("GnomeVFS URI: %s\n", gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_NONE));
 
   open_dir_result = gnome_vfs_directory_open_from_uri (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
 
@@ -600,7 +779,7 @@ browse_directory (gchar *directory)
 static void
 set_directory_home (GtkWidget *widget)
 {
-  browse_directory (g_get_home_dir ());
+  browse_directory ((gchar *) g_get_home_dir ());
 }
 
 static void
@@ -704,6 +883,7 @@ main (int argc, char *argv[])
   GtkWidget *pw;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
+  GtkAccelGroup *accel_group;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -803,6 +983,16 @@ main (int argc, char *argv[])
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
 
+  accel_group = gtk_accel_group_new ();
+  item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
+  g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
+  gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
+  gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (gtk_item_factory_get_item (item_factory, "/Preferences/Shape/Oval")), TRUE);
+
+  g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
+		    GTK_SIGNAL_FUNC (hide_menu), NULL);
+
   gtk_widget_show (window);
   gtk_widget_show (vbox);
   gtk_widget_show (hbox);
@@ -810,18 +1000,6 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar2);
   gtk_widget_show (combo);
   gtk_widget_show (view_widget);
-
-  popup_menu = gtk_menu_new ();
-  {
-    GtkWidget *i;
-    i = gtk_menu_item_new_with_label (_("Delete"));
-    gtk_widget_show (i);
-    gtk_menu_append (GTK_MENU (popup_menu), i);
-    i = gtk_menu_item_new_with_label (_("Rename"));
-    gtk_widget_show (i);
-    gtk_menu_append (GTK_MENU (popup_menu), i);
-  }
-  gtk_signal_connect (GTK_OBJECT (popup_menu), "hide", hide_menu, NULL);
 
   gnome_vfs_init ();
   set_directory_home (NULL);
