@@ -38,6 +38,12 @@
 <A href="/download.shtml">Download</a>
 <!--#endif -->
 |
+<!--#if expr="x${pagename}=xscreenshots" -->
+<b>Screenshots</b>
+<!--#else -->
+<A href="/screenshots.shtml">Screenshots</a>
+<!--#endif -->
+|
 <!--#if expr="x${pagename}=xcontact" -->
 <b>Contact</b>
 <!--#else -->
