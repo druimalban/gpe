@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-16 18:25+0200\n"
+"POT-Creation-Date: 2004-08-18 11:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -174,27 +174,27 @@ msgstr ""
 msgid "Landscape (right)"
 msgstr ""
 
-#: ipaqscreen/main.c:102
+#: ipaqscreen/main.c:101
 msgid "Light"
 msgstr ""
 
-#: ipaqscreen/main.c:108
+#: ipaqscreen/main.c:107
 msgid "Brightness"
 msgstr ""
 
-#: ipaqscreen/main.c:119
+#: ipaqscreen/main.c:118
 msgid "Screensaver"
 msgstr ""
 
-#: ipaqscreen/main.c:125
+#: ipaqscreen/main.c:124
 msgid "Delay until start"
 msgstr ""
 
-#: ipaqscreen/main.c:131
+#: ipaqscreen/main.c:130
 msgid "State"
 msgstr ""
 
-#: ipaqscreen/main.c:135
+#: ipaqscreen/main.c:134
 msgid "on"
 msgstr ""
 
@@ -202,23 +202,23 @@ msgstr ""
 msgid "off"
 msgstr ""
 
-#: ipaqscreen/main.c:146
+#: ipaqscreen/main.c:148
 msgid "Orientation"
 msgstr ""
 
-#: ipaqscreen/main.c:166
+#: ipaqscreen/main.c:168
 msgid "Touchscreen"
 msgstr ""
 
-#: ipaqscreen/main.c:170
+#: ipaqscreen/main.c:172
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:278 sleep/callbacks.c:47
+#: ipaqscreen/main.c:281 sleep/callbacks.c:47
 msgid "min"
 msgstr ""
 
-#: ipaqscreen/main.c:281 sleep/callbacks.c:50
+#: ipaqscreen/main.c:284 sleep/callbacks.c:50
 msgid "sec"
 msgstr ""
 
@@ -621,60 +621,64 @@ msgstr ""
 msgid "Image:"
 msgstr ""
 
-#: sleep/interface.c:66
+#: sleep/interface.c:67
 msgid "Auto sleep"
 msgstr ""
 
-#: sleep/interface.c:76 sleep/interface.c:115
+#: sleep/interface.c:77 sleep/interface.c:116
 msgid "enabled"
 msgstr ""
 
-#: sleep/interface.c:94
+#: sleep/interface.c:95
 msgid "sleep timeout"
 msgstr ""
 
-#: sleep/interface.c:105
+#: sleep/interface.c:106
 msgid "Auto dim"
 msgstr ""
 
-#: sleep/interface.c:132
+#: sleep/interface.c:133
 msgid "backlight dim timeout"
 msgstr ""
 
-#: sleep/interface.c:141
+#: sleep/interface.c:142
 msgid "Auto dim level"
 msgstr ""
 
-#: sleep/interface.c:159
+#: sleep/interface.c:162
 msgid "Advanced Controls"
 msgstr ""
 
-#: sleep/interface.c:169
+#: sleep/interface.c:172
 msgid "CPU"
 msgstr ""
 
-#: sleep/interface.c:175
+#: sleep/interface.c:178
 msgid "Sleep on cpu less than load"
 msgstr ""
 
-#: sleep/interface.c:179
+#: sleep/interface.c:182
 msgid "load below"
 msgstr ""
 
-#: sleep/interface.c:194
+#: sleep/interface.c:197
 msgid "APM"
 msgstr ""
 
-#: sleep/interface.c:200
+#: sleep/interface.c:203
 msgid "Sleep on AC"
 msgstr ""
 
-#: sleep/interface.c:202
+#: sleep/interface.c:205
 msgid "probe IRQs"
 msgstr ""
 
-#: sleep/interface.c:208
+#: sleep/interface.c:211
 msgid "Check IRQ activity"
+msgstr ""
+
+#: sleep/callbacks.c:59
+msgid "%"
 msgstr ""
 
 #: users/interface.c:214
