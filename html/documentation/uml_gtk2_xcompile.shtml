@@ -1,0 +1,84 @@
+<!--#set var="addtitle" value="UML GTK 2 cross compiling environment"-->
+<!--#set var="pagename" value="uml_gtk2_xcompile"-->
+<!--#set var="author" value="Colin Marquardt"-->
+<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
+<!--#include virtual="../includes/head.shtml"-->
+
+<p>The file "<a 
+href="http://handhelds.org/~luis/gtk2-arm-cross.ext2.bz2">gtk2-arm-cross.ext2.bz2</a>" 
+contains a bzip2ed image of a complete ext2 filesystem. It is intended for 
+use with <a href="http://user-mode-linux.sourceforge.net/">User Mode 
+Linux</a> (UML).</p>
+
+<p>There are RPM and Debian packages of UML available. UML is now part of the 
+"official" Debian distro: the Sid package can be found <a 
+href="http://packages.debian.org/unstable/misc/user-mode-linux.html">here</a> 
+and documentation <a 
+href="http://packages.debian.org/unstable/doc/user-mode-linux-doc.html">here</a>. 
+RPM packages can be found <a 
+href="http://user-mode-linux.sourceforge.net/dl-rpms-sf.html">here</a> on the 
+UML website. As of this writing (2003-07-15), the latest RPM is dated Sep 16 
+2002 and is based on a 2.4.19 kernel. You can also build your own UML 
+executable by following the instructions <a 
+href="http://user-mode-linux.sourceforge.net/compile.html">here</a>.</p>
+
+<p>Once you have UML installed, use bunzip2 to extract gtk2-arm-cross.ext2 
+into the directory from which you will be running your UML session (~/uml in 
+this example)<br>
+<code>~/uml$ bunzip2 -kc /path/to/gtk2-arm-cross.ext2.bz2 > 
+gtk2-arm-cross.ext2</code><br>
+In order for UML to find this image, you either need to give it this filename 
+on the command line, or create a symbolic link called root_fs (you could  
+rename the file, but that's a less flexible option).<br>
+<code>~/uml$ ln -s gtk2-arm-cross.ext2 root_fs</code><br>
+Now you can run UML.<br>
+<code>~/uml$ linux</code><br>
+For Debian systems (and any others that don't use devfs by default), you will 
+need to specify "devfs=mount" on the command line. If you didn't create a 
+link or rename your image file, you need to use the "ubd0=" option.<br>
+<code>~/uml$ linux devfs=mount ubd0=gtk2-arm-cross.ext2</code></p>
+
+<p>The filesystem image contains a root user and a normal user "toby". Neither 
+have a password, so at the login prompt you only need to type a username to 
+gain access to the virtual machine. You will probably want to login as root 
+first to delete the user "toby" (unless I happen to be your namesake)<br>
+<code># deluser toby</code><br>
+and then add a user with the same username as the one you use on your "real" 
+machine<br>
+<code># adduser </code>&lt;username&gt;<br>
+You will also need to edit /etc/fstab. The "vi" editor is available on the 
+virtual machine for this purpose<br>
+<code># vi /etc/fstab</code><br>
+Change both occurences of "toby" to whatever your username is. This allows you 
+to mount your real home directory in the virtual machine's filesystem so that 
+you can access all your source code etc. from both inside and outside the 
+virtual machine. I set it up this way so that you can use your favourite 
+editors and stuff on your real machine to create your sources, then use the 
+UML machine to do the compiling and such.<br>
+<code>/$ mount /home/</code>&lt;username&gt;<br>
+If your real machine is not running Debian, you can also delete the line that 
+refers to /var/cache/apt/archives. I used this to gain access to the real 
+machine's archive of Debian packages.</p>
+
+<p>The guts of the cross compiling environment is under /usr/arm-linux. There 
+are also some files and links in /usr/bin. The compilier executable is called 
+"arm-linux-gcc", as usual. If you set up your makefiles for an "arm" target, 
+you shouldn't have any problems there. There is a set of libraries for 
+building GTK 2 applications under /usr/arm-linux/lib. If you want some other 
+libraries (or need to upgrade or downgrade the existing ones), use the 
+tpkg-install-libc script from the dpkg-cross package as explained <a 
+href="http://people.debian.org/~debacle/cross.html#id2796494">here</a>. I 
+forgot to install dpkg-cross before creating this image file, but it's simple 
+enough to do it for yourself. First, <a 
+href="http://packages.debian.org/unstable/utils/dpkg-cross.html">download the 
+.deb file</a> to somewhere in your home directory so that the file will be 
+accessible from the UML machine. Then login to the UML machine as root, mount 
+your home directory and run<br>
+<code># dpkg -i /home/&lt;user&gt;/path/to/dpkg-cross_*.deb</code></p>
+
+<em>Contributed by Toby Gray &lt;toby(dot)gray(at)analyticoutcomes(dot)com&gt;</em>
+
+<hr>
+Keywords: User Mode Linux, cross compiling, cross compile, GTK2
+
+<!--#include virtual="../includes/foot.shtml"-->

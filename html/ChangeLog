@@ -1,3 +1,11 @@
+2003-07-15  Colin Marquardt  <colin@marquardt-home.de>
+
+	* documentation/uml_gtk2_xcompile.shtml: First version. Many
+	thanks to Toby Gray.
+
+	* documentation.shtml: Add link to 
+	"User Mode Linux cross compiling environment with GTK2".
+
 2003-07-13  Colin Marquardt  <colin@marquardt-home.de>
 
 	* linkres.shtml: Add link to art.gnome.org.
