@@ -1,0 +1,7 @@
+2002-06-15  Philip Blundell  <pb@kc.cam.armlinux.org>
+
+	* Makefile: Don't link with gdk-imlib.
+	(MEMBERS): Remove about.
+	* about.c: Obsolete, deleted.
+	
+

@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 DEBUG = yes
 
-MEMBERS = main day_view week_view future_view event-ui about event-db year_view month_view day_popup
+MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup
 
 CPPFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -I../libgpewidget
 ifeq ($(DEBUG),yes)
@@ -36,7 +36,7 @@ po/gpe-calendar.pot: $(SOURCES)
 	xgettext -k_ -o po/gpe-calendar.pot $^
 
 gpe-calendar: $(OBJS)
-	$(CC) -o $@ $^ `gtk-config --libs` -lgdk_imlib -lsqlite -L../libgpewidget -lgpewidget $(LDFLAGS)
+	$(CC) -o $@ $^ `gtk-config --libs` -lsqlite -L../libgpewidget -lgpewidget $(LDFLAGS)
 
 install: all install-po
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/gpe-calendar/pixmaps/$$i; done
