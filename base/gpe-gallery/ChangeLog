@@ -1,3 +1,9 @@
+2004-08-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Released V 0.94
+	* main.c: Fixed various sources of warnings and segfaults.
+	* Makefile: Turn off debug per default.
+
 2004-08-11  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Released V 0.93

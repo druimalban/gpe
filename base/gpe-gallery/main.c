@@ -47,8 +47,8 @@
 
 GtkWidget *window, *main_scrolled_window, *fullscreen_window, *fullscreen_toggle_popup, *fullscreen_toolbar_popup, *vbox2;
 GtkWidget *dirbrowser_window;
-GtkWidget *view_widget = NULL, *image_widget;
-GdkPixbuf *image_pixbuf, *scaled_image_pixbuf = NULL;
+GtkWidget *view_widget = NULL, *image_widget = NULL;
+GdkPixbuf *image_pixbuf = NULL, *scaled_image_pixbuf = NULL;
 GtkWidget *image_event_box;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
@@ -133,7 +133,7 @@ static gboolean
 hide_fullscreen_toolbar ()
 {
   gtk_widget_hide (fullscreen_toolbar_popup);
-
+  fullscreen_toolbar_timer = 0;
   return FALSE;
 }
 
@@ -237,7 +237,11 @@ show_image (GtkWidget *widget, GList *image_filename)
 
   widget_width = main_scrolled_window->allocation.width - 5;
   widget_height = main_scrolled_window->allocation.height - 5;
-
+  if (widget_width <= 0)
+	widget_width = 100;
+  if (widget_height <= 0) 
+	widget_height = 100;
+  
   width = gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf));
   height = gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf));
 
@@ -255,14 +259,25 @@ show_image (GtkWidget *widget, GList *image_filename)
     scale_width_ratio = (float) width_ratio / (float) height_ratio;
   }
   
-  if (scaled_image_pixbuf != NULL) 
-	  g_object_unref(G_OBJECT(scaled_image_pixbuf));
-	  
-  scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+  if (scaled_image_pixbuf != NULL)
+    {	  
+      g_object_unref(G_OBJECT(scaled_image_pixbuf));
+	  scaled_image_pixbuf = NULL;
+	}
 
-  g_object_unref (image_pixbuf);
-
+  scaled_image_pixbuf = 
+    gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), 
+                             (int)(widget_width * scale_width_ratio), 
+                             (int)(widget_height * scale_height_ratio), 
+                             GDK_INTERP_BILINEAR);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), 
+                             GDK_PIXBUF (scaled_image_pixbuf));
+  
+  if (image_pixbuf != NULL)
+    {
+      g_object_unref (image_pixbuf);
+	  image_pixbuf = NULL;
+	}
   gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_event_box);
   gtk_widget_show (image_widget);
@@ -367,7 +382,8 @@ image_zoom_out ()
 void
 image_zoom_1 ()
 {
-  g_object_unref (scaled_image_pixbuf);
+  if (scaled_image_pixbuf)
+    g_object_unref (scaled_image_pixbuf);
   scaled_image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
@@ -380,7 +396,8 @@ image_zoom_fit ()
   float width_ratio, height_ratio;
   float scale_width_ratio, scale_height_ratio;
 
-  g_object_unref (scaled_image_pixbuf);
+  if (scaled_image_pixbuf)
+    g_object_unref (scaled_image_pixbuf);
   image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
 
   if (fullscreen_state == 1)
@@ -412,7 +429,11 @@ image_zoom_fit ()
 
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
-  g_object_unref (image_pixbuf);
+  if (image_pixbuf)
+    {
+      g_object_unref (image_pixbuf);
+	  image_pixbuf = NULL;
+	}
 }
 
 static void
@@ -432,7 +453,11 @@ hide_image ()
   stop_slideshow ();
   if (view_widget)
   {
-    g_object_unref (scaled_image_pixbuf);
+	if (scaled_image_pixbuf)
+	  {
+        g_object_unref (scaled_image_pixbuf);
+		scaled_image_pixbuf = NULL;
+	  }
 
     gtk_widget_hide (image_widget);
     gtk_widget_hide (image_event_box);
@@ -723,8 +748,8 @@ render_view (GtkWidget *parent, gint view)
   {
     if (scaled_image_pixbuf)
       {
-	g_object_unref (scaled_image_pixbuf);
-	scaled_image_pixbuf = NULL;
+        g_object_unref (scaled_image_pixbuf);
+        scaled_image_pixbuf = NULL;
       }
 
     gtk_widget_hide (image_widget);
@@ -939,17 +964,15 @@ toggle_fullscreen ()
 {
   GtkWidget *scrolled_window, *image_widget, *image_event_box, *close_button, *fullscreen_toolbar, *toolbar_icon;
   GdkPixbuf *p;
-
+	
   if (fullscreen_state == 1)
   {
-    //gtk_widget_hide (main_scrolled_window);
     hide_image ();
     gtk_widget_reparent (main_scrolled_window, vbox2);
     show_image (NULL, image_filenames);
-    //gtk_widget_realize (main_scrolled_window);
-    //gtk_widget_show (main_scrolled_window);
 
-    g_source_remove (fullscreen_toolbar_timer);
+    if (fullscreen_toolbar_timer) 
+	  g_source_remove (fullscreen_toolbar_timer);
     g_source_remove (fullscreen_pointer_timer);
     
     gtk_widget_destroy (fullscreen_window);

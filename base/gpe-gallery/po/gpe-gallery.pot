@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-09 15:37+0200\n"
+"POT-Creation-Date: 2004-08-11 19:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,110 +16,110 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:898
+#: main.c:903
 msgid "Start"
 msgstr ""
 
-#: main.c:999 main.c:1129
+#: main.c:1004 main.c:1134
 msgid "Previous"
 msgstr ""
 
-#: main.c:1000 main.c:1130
+#: main.c:1005 main.c:1135
 msgid "Previous image"
 msgstr ""
 
-#: main.c:1003 main.c:1133
+#: main.c:1008 main.c:1138
 msgid "Next"
 msgstr ""
 
-#: main.c:1004 main.c:1134
+#: main.c:1009 main.c:1139
 msgid "Next image"
 msgstr ""
 
-#: main.c:1010 main.c:1011 main.c:1172 main.c:1173
+#: main.c:1015 main.c:1016 main.c:1177 main.c:1178
 msgid "Zoom In"
 msgstr ""
 
-#: main.c:1015 main.c:1016 main.c:1177 main.c:1178
+#: main.c:1020 main.c:1021 main.c:1182 main.c:1183
 msgid "Zoom Out"
 msgstr ""
 
-#: main.c:1020 main.c:1021 main.c:1182 main.c:1183
+#: main.c:1025 main.c:1026 main.c:1187 main.c:1188
 msgid "Zoom 1:1"
 msgstr ""
 
-#: main.c:1025 main.c:1026 main.c:1187 main.c:1188
+#: main.c:1030 main.c:1031 main.c:1192 main.c:1193
 msgid "Zoom to Fit"
 msgstr ""
 
-#: main.c:1032 main.c:1204
+#: main.c:1037 main.c:1209
 msgid "Rotate"
 msgstr ""
 
-#: main.c:1033 main.c:1205
+#: main.c:1038 main.c:1210
 msgid "Toggle Rotate"
 msgstr ""
 
-#: main.c:1053
+#: main.c:1058
 msgid "Select directory"
 msgstr ""
 
-#: main.c:1123
+#: main.c:1128
 msgid "Open"
 msgstr ""
 
-#: main.c:1124
+#: main.c:1129
 msgid "Open file"
 msgstr ""
 
-#: main.c:1137 main.c:1138
+#: main.c:1142 main.c:1143
 msgid "Close image"
 msgstr ""
 
-#: main.c:1144 main.c:1145
+#: main.c:1149 main.c:1150
 msgid "Slideshow"
 msgstr ""
 
-#: main.c:1151 main.c:1152
+#: main.c:1156 main.c:1157
 msgid "Icon view"
 msgstr ""
 
-#: main.c:1156 main.c:1157
+#: main.c:1161 main.c:1162
 msgid "List view"
 msgstr ""
 
-#: main.c:1160
+#: main.c:1165
 msgid "Exit"
 msgstr ""
 
-#: main.c:1160
+#: main.c:1165
 msgid "Tap here to exit the program"
 msgstr ""
 
-#: main.c:1165
+#: main.c:1170
 msgid "Fullscreen"
 msgstr ""
 
-#: main.c:1166
+#: main.c:1171
 msgid "Toggle fullscreen"
 msgstr ""
 
-#: main.c:1194 main.c:1195
+#: main.c:1199 main.c:1200
 msgid "Sharpen"
 msgstr ""
 
-#: main.c:1199 main.c:1200
+#: main.c:1204 main.c:1205
 msgid "Blur"
 msgstr ""
 
-#: main.c:1208
+#: main.c:1213
 msgid "Loading..."
 msgstr ""
 
-#: main.c:1211
+#: main.c:1216
 msgid "Progress"
 msgstr ""
 
-#: main.c:1215 main.c:1216
+#: main.c:1220 main.c:1221
 msgid "Stop Loading"
 msgstr ""
