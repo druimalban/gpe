@@ -204,17 +204,51 @@ launch_status_callback (enum launch_status status, void *data)
     }
 }
 
+/* copied from libmatchbox */
+static void
+activate_window (Display *dpy, Window win)
+{
+  static Atom atom_net_active = None;
+  XEvent ev;
+
+  if (atom_net_active == None)
+    atom_net_active = XInternAtom (dpy, "_NET_ACTIVE_WINDOW", False);
+
+  memset (&ev, 0, sizeof ev);
+  ev.xclient.type = ClientMessage;
+  ev.xclient.window = win;
+  ev.xclient.message_type = atom_net_active;
+  ev.xclient.format = 32;
+
+  XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
+}
+
 void 
 run_package (GnomeDesktopFile *p, GObject *item)
 {
   gchar *cmd;
   gchar *title;
+  Window w;
 
   gnome_desktop_file_get_string (p, NULL, "Exec", &cmd);
-  gnome_desktop_file_get_string (p, NULL, "Comment", &title);
 
-  /* Actually run the program */
-  gpe_launch_program_with_callback (dpy, cmd, title, TRUE, launch_status_callback, item);
+  w = gpe_launch_get_window_for_binary (dpy, cmd);
+  if (w)
+    {
+      activate_window (dpy, w);
+    }
+  else
+    {
+      if (! gpe_launch_startup_is_pending (dpy, cmd))
+	{
+	  /* Actually run the program */
+	  gnome_desktop_file_get_string (p, NULL, "Comment", &title);
+	  gpe_launch_program_with_callback (dpy, cmd, title, TRUE, launch_status_callback, item);
+	  g_free (title);
+	}
+    }
+
+  g_free (cmd);
 }
 
 /* clean_up():
@@ -569,6 +603,7 @@ main (int argc, char *argv[])
   dpy = GDK_WINDOW_XDISPLAY (window->window);
   XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask);
   gpe_launch_install_filter ();
+  gpe_launch_monitor_display (dpy);
   
   /* start the event loop */
   gtk_main ();
