@@ -18,8 +18,8 @@ BUILD = build
 endif
 
 CPPFLAGS = $(STANDARD_CPPFLAGS)
-CFLAGS = $(STANDARD_CFLAGS) $(GTKCFLAGS) $(shell pkg-config --cflags xrender)) 
-LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrender))
+CFLAGS = $(STANDARD_CFLAGS) $(GTKCFLAGS) $(shell pkg-config --cflags xrender)
+LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrender)
 
 CFLAGS += -fPIC
 CPPFLAGS += -I./gpe
