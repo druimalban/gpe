@@ -1,5 +1,6 @@
 2004-08-02	Florian Boor <florian.boor@kernelconcepts.de>
-
+    
+    * Released V 0.44
     * minilite.c: Added generic backlight setting that uses 
                   /proc/driver/backlight (for new devices) and values 
                   from 0 (off) to 32 (maximum).
