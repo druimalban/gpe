@@ -1,0 +1,8 @@
+
+ GPE-DB
+--------
+
+GPE-DB is a generic sqlite database browser application. At the moment you
+can choose a database file and then query the tables for their contents. An
+edit function will be added later as well as support for usqld.
+
