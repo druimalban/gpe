@@ -30,6 +30,13 @@
 <A HREF="http://www.palmos.com/dev/support/docs/ui/UIGuidelinesTOC.html">http://www.palmos.com/dev/support/docs/ui/UIGuidelinesTOC.html</A>
 </UL>
 
+<LI> XSETTINGS - configuration of settings for all applications running within a desktop<BR>
+<A HREF="http://www.freedesktop.org/standards/xsettings.html">http://www.freedesktop.org/standards/xsettings.html</A>
+</UL>
+<LI> D-BUS - a system for low-latency, low-overhead, easy to use interprocess communication (IPC)<BR>
+<A HREF="http://www.freedesktop.org/software/dbus/">http://www.freedesktop.org/software/dbus/</A>
+</UL>
+
 <h2>Desktop interoperability</h2>
 <p>
 GPE programs aim to meet the relevant <a
