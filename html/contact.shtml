@@ -54,9 +54,9 @@ there's anyone you can visit!
 
 <p>
 <!-- see people.coord for information on how to generate the images: -->
-<img src="images/people.png" width="700" height="350">
+<img src="images/people.png" width="700" height="350" alt="There are GPE hackers in the US, Europe, and Australia.">
 <br>
-<img src="images/people_eu.png" width="600" height="300">
+<img src="images/people_eu.png" width="600" height="300" alt="(There are GPE hackers in several European countries, though the most are probably in the UK.)">
 </p>
 
 <!--#include virtual="includes/foot.shtml"-->
