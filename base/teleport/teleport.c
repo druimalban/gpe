@@ -38,6 +38,8 @@ gboolean grabbed;
 
 struct display *selected_dpy;
 
+extern gchar *sign_challenge (gchar *text, int length, gchar *target);
+
 static void
 send_message (Display *dpy, Window w, char *host, gchar *method, gchar *data)
 {
@@ -358,6 +360,20 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
   return GDK_FILTER_CONTINUE;
 }
 
+void
+add_initial_displays ()
+{
+  GSList *i;
+
+  for (i = displays; i; i = i->next)
+    {
+      GtkTreeIter iter;
+      struct display *d = i->data;
+      gtk_list_store_append (list_store, &iter);
+      gtk_list_store_set (list_store, &iter, 0, d->str, 1, d, -1);
+    }
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -378,6 +394,7 @@ main (int argc, char *argv[])
   crypt_init ();
 
   displays_init ();
+  add_initial_displays ();
 
   open_window ();
 

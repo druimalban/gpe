@@ -24,7 +24,7 @@ extern GSList *displays;
 
 extern void displays_init (void);
 
-extern struct display *add_display (gchar *host, int dpy, int screen);
+extern struct display *add_display (const gchar *host, int dpy, int screen);
 
 extern void remove_display (struct display *d);
 

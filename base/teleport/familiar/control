@@ -1,8 +1,8 @@
 Package: teleport
 Section: x11
 Priority: optional
-Version: 0.20
+Version: 0.21
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: xlibs, libgtk2.0-0, libdm0, libgcrypt1
+Depends: xlibs, libgtk2.0-0, libdm0, libgcrypt1, libsqlite0
 Description: Move Gtk apps between displays

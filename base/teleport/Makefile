@@ -33,7 +33,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: teleport all-mo tp-keygen
 
 teleport: $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) $(LDFLAGS) -lsqlite
 
 tp-keygen: tp-keygen.o keygen.o
 	$(CC) -o $@ $^ $(LDFLAGS)
