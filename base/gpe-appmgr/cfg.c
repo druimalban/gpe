@@ -39,7 +39,9 @@ void cfg_load ()
 	cfg_options.show_all_group = 0;
 	cfg_options.auto_hide_group_labels = 1;
 	cfg_options.tab_view = TAB_VIEW_ICONS;
+	cfg_options.list_icon_size = 48;
 	cfg_options.show_recent_apps = 0;
+	cfg_options.recent_apps_number = 4;
 	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
 	cfg_options.use_windowtitle = 1;
 
@@ -121,9 +123,6 @@ void cfg_load ()
 			break;
 		}
 	}
-
-	cfg_options.recent_apps_number = 4;
-	cfg_options.list_icon_size = 48;
 
 	if ((s = package_get_data (p, "tab_view")))
 	{

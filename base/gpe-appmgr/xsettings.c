@@ -56,16 +56,22 @@ notify_func (const char       *name,
 	}
 
       if (!strcmp (p, "AUTOHIDE-GROUP-LABELS"))
-	{
-	  if (setting->type == XSETTINGS_TYPE_INT)
-	    {
-		    cfg_options.auto_hide_group_labels = setting->data.v_int;
-
-		    /* Refresh view... */
-		    autohide_labels (-1);
-	    }
-	}
-
+      {
+	      if (setting->type == XSETTINGS_TYPE_INT)
+	      {
+		      cfg_options.auto_hide_group_labels = setting->data.v_int;
+		      
+		      /* Refresh view... */
+		      autohide_labels (-1);
+	      }
+      }
+      
+      if (!strcmp (p, "SHOW-RECENT-APPS")) {
+	      if (setting->type == XSETTINGS_TYPE_INT) {
+		      cfg_options.show_recent_apps = setting->data.v_int;
+		      create_recent_box();
+	      }
+      }
 
     }
 }

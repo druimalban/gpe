@@ -49,6 +49,7 @@
 #include <gpe/render.h>
 #include <gpe/spacing.h>
 #include <gpe/gpe-iconlist.h>
+#include <gpe/tray.h>
 
 /* everything else */
 #include "main.h"
@@ -94,7 +95,6 @@ struct gpe_icon my_icons[] = {
 };
 
 void create_recent_list ();
-void create_recent_box(GtkBox *cont);
 char *translate_group_name (char *name);
 
 extern gboolean gpe_appmgr_start_xsettings (void);
@@ -268,9 +268,40 @@ int has_icon (struct package *p)
 		return 0;
 }
 
+void run_package (struct package *p) {
+	GList *l;
+
+	printf ("Running: %s\n", package_get_data (p, "title"));
+
+	/* Add it to the recently-run list
+	   Remove it first if it's already there
+	   (so it moves to the front) */
+	if ((l = g_list_find (recent_items, p)))
+		recent_items = g_list_remove_link(recent_items, l);
+	recent_items = g_list_prepend (recent_items, p);
+
+	/* Trim the list to the right length */
+	while (g_list_length (recent_items) > cfg_options.recent_apps_number)
+		recent_items = g_list_remove_link(recent_items,
+						  g_list_last (recent_items));
+
+	/* Show the list */
+	create_recent_list();
+
+	/* Actually run the program */
+	run_program (package_get_data (p, "command"),
+		     cfg_options.use_windowtitle ? package_get_data (p, "windowtitle") : NULL);
+}
+
+gboolean btn_clicked (GtkWidget *widget,
+		      GdkEventButton *event,
+		      gpointer user_data)
+{
+	run_package ((struct package *)user_data);
+}
+
 void create_recent_list ()
 {
-#if 0
 	GtkWidget *hb;
 	GList *this_item;
 	GList *cl;
@@ -278,6 +309,7 @@ void create_recent_list ()
 
 	TRACE("create_recent_list");
 
+	printf ("recent_tab = %ld\n", recent_tab);
 	if (recent_tab == NULL)
 		return;
 
@@ -295,6 +327,7 @@ void create_recent_list ()
 			  hb);
 
 	this_item = recent_items;
+	printf ("recent_items = %ld\n", recent_items);
 	while (this_item)
 	{
 		struct package *p;
@@ -320,15 +353,8 @@ void create_recent_list ()
 		btn = gtk_event_box_new ();
 
 		gtk_container_add (GTK_CONTAINER(btn),img);
-		gtk_object_set_data (GTK_OBJECT(btn), "program", (gpointer)p);
-		gtk_signal_connect( GTK_OBJECT(btn), "button_release_event",
-				    GTK_SIGNAL_FUNC(btn_released), NULL);
-		gtk_signal_connect( GTK_OBJECT(btn), "button_press_event",
-				    GTK_SIGNAL_FUNC(btn_pressed), NULL);
-		gtk_signal_connect( GTK_OBJECT(btn), "enter_notify_event",
-				    GTK_SIGNAL_FUNC(btn_enter), NULL);
-		gtk_signal_connect( GTK_OBJECT(btn), "leave_notify_event",
-				    GTK_SIGNAL_FUNC(btn_leave), NULL);
+		gtk_signal_connect (GTK_OBJECT (btn), "button_release_event",
+				    (GtkSignalFunc)btn_clicked, (gpointer)p);
 
 		gtk_box_pack_start (GTK_BOX(hb), btn, 0, 0, 0);
 
@@ -336,15 +362,13 @@ void create_recent_list ()
 	}
 
 	gtk_widget_show_all (recent_tab);
-#endif
 }
 
 void cb_clicked (GtkWidget *il, gpointer udata, gpointer data) {
 	struct package *p;
 	p = udata;
-	printf ("Clicked: %s\n", package_get_data (p, "title"));
-	run_program (package_get_data (p, "command"),
-		     cfg_options.use_windowtitle ? package_get_data (p, "windowtitle") : NULL);
+
+	run_package (p);
 }
 
 void cb_popup (GtkWidget *il, gpointer udata, gpointer data) {
@@ -817,7 +841,7 @@ static void catch_signal (int signo)
 {
 	TRACE ("catch_signal");
 	/* FIXME: transfer this if needed */
-	recent_items = NULL;
+	recent_items = NULL; /* won't this leak? */
 
 	cfg_load_if_newer (last_update);
 	refresh_list ();
@@ -841,52 +865,32 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 }
 
 /* Create the 'recent' list as a dock app or normal widget */
-void create_recent_box(GtkBox *cont)
+void create_recent_box()
 {
-#if 0
-	GdkAtom window_type;
-	GdkAtom window_type_dock;
-	static GtkWidget *w=NULL;
-	int can_dock=0;
-
+	static GtkWidget *w=NULL, *l;
 	TRACE ("create_recent_box");
 
-	if (w != NULL) {
+	if (cfg_options.show_recent_apps) {
+		if (w)
+			return;
+
+		w = gtk_plug_new (0);
+
+		gtk_widget_set_usize (w, 16*cfg_options.recent_apps_number, 16);
+		gtk_widget_realize (w);
+		gtk_container_add (GTK_CONTAINER(w), recent_tab = gtk_vbox_new(0,0));
+		gtk_window_set_title (GTK_WINDOW (w), "Recent apps");
+		gtk_widget_show_all (w);
+
+		gpe_system_tray_dock (w->window);
+	} else {
+		if (w)
+			gtk_widget_destroy (w);
 		w = NULL;
-	} else if (recent_tab != NULL) {
-		gtk_widget_destroy (recent_tab);
-		w = recent_tab = NULL;
-	}
-
-	if (cfg_options.show_recent_apps == 0)
-		return;
-
-        recent_tab = gtk_vbox_new(0,0);
-
-	w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_container_set_border_width(GTK_CONTAINER (w), 0);
-	gtk_container_add(GTK_CONTAINER(w), recent_tab);
-	gtk_widget_set_usize (w, 16*cfg_options.recent_apps_number, 16);
-
-	window_type = gdk_atom_intern("_NET_WM_WINDOW_TYPE", FALSE);
-	window_type_dock = gdk_atom_intern("_NET_WM_WINDOW_TYPE_DOCK", FALSE);
-	gtk_widget_realize(w);
-	//gtk_widget_show_all(recent_tab);
-	gdk_property_change(w->window, window_type, XA_ATOM, 32, GDK_PROP_MODE_REPLACE, (guchar *) &window_type_dock, 1);
-	can_dock = tray_init (GDK_WINDOW_XDISPLAY (w->window), GDK_WINDOW_XWINDOW (w->window));
-	gdk_window_add_filter (w->window, filter, w);
-
-	if (!can_dock)
-	{
-		//gtk_container_remove (GTK_CONTAINER(w), recent_box);
-		gtk_widget_destroy (w);
-		recent_tab = gtk_vbox_new(0,0);
-		gtk_box_pack_start (GTK_BOX(cont), recent_tab,0,0,0);
-		gtk_widget_show (recent_tab);
+		recent_tab = NULL;
 	}
 
 	TRACE ("create_recent_box: end");
-#endif
 }
 
 void icons_page_up_down (int down)
@@ -980,7 +984,6 @@ gint on_window_delete (GtkObject *object, gpointer data)
 void create_main_window()
 {
 	GtkWidget *vbox;
-//	GtkWidget *widget, *sw;
 	TRACE ("create_main_window");
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -1004,13 +1007,6 @@ void create_main_window()
 	gtk_notebook_set_tab_border (GTK_NOTEBOOK(notebook), 0);
 	gtk_signal_connect (GTK_OBJECT(notebook), "switch_page",
 			    (GtkSignalFunc)nb_switch, NULL);
-
-	/* If a person releases the stylus when over the table, we want
-	   current_button etc. to get cleared properly, so: */
-	/*
-	gtk_signal_connect( GTK_OBJECT(notebook), "button_release_event",
-			    GTK_SIGNAL_FUNC(btn_released), NULL);
-	*/
 
 	vbox = gtk_vbox_new(0,0);
 	gtk_container_add (GTK_CONTAINER (window), vbox);

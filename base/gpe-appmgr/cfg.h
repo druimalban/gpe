@@ -16,7 +16,7 @@
 #ifndef CFG_H
 #define CFG_H
 
-#include "main.h"
+//#include "main.h"
 
 /* View types for the tabs */
 typedef enum

@@ -42,4 +42,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 /* Refreshes the tab labels for autohide */
 void autohide_labels (int page);
 
+/* (Re)create the recent list */
+void create_recent_box();
+
 #endif
