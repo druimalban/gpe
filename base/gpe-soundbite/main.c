@@ -11,6 +11,7 @@
 #include <fcntl.h>
 #include <libintl.h>
 #include <locale.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,7 +53,7 @@ gchar *filename;
 guint timeout_handler;
 
 void
-sigint (void)
+sigint (int signal)
 {
   stop = TRUE;
 }
@@ -62,6 +63,7 @@ void stop_sound (void)
   if (sound_process > 0)
     {
       kill (sound_process, SIGINT);
+      waitpid (sound_process, 0, 0);
     }
   if (timer > 0)
     {
