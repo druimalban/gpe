@@ -625,7 +625,8 @@ db_get_config_tag (gint group, const gchar * tagname)
     }
   if (list != NULL)
     {
-      err = g_strdup (list[1]);
+      if (c == 1 && r >= 1)
+	err = g_strdup (list[1]);
       sqlite_free_table (list);
     }
   return err;
