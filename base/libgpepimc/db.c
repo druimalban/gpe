@@ -88,6 +88,22 @@ gpe_pim_categories_list (void)
   return g_slist_copy (categories);
 }
 
+const gchar *
+gpe_pim_category_name (gint id)
+{
+  GSList *iter;
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      struct gpe_pim_category *c = iter->data;
+
+      if (c->id == id)
+	return c->name;
+    }
+
+  return NULL;
+}
+
 gboolean
 gpe_pim_category_new (const gchar *name, gint *id)
 {

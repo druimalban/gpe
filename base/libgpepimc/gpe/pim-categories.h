@@ -32,6 +32,7 @@ extern gboolean gpe_pim_categories_init (void);
 extern GSList *gpe_pim_categories_list (void);
 
 extern gboolean gpe_pim_category_new (const gchar *title, gint *id);
+extern const gchar *gpe_pim_category_name (gint id);
 
 extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data);
 
