@@ -1,5 +1,10 @@
 2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-ownerinfo.glade (Module): Make border for frame1 wider.
+
+	* src/interface.c (create_GPE_Ownerinfo): Make border 5 pixels
+	wide to match gpe-login.
+
 	* familiar/control (Version): Bump up to 0.04-1.
 
 	* src/main.c (main): Make usage text (the default address) a bit

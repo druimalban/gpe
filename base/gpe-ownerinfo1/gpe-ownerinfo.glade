@@ -36,7 +36,7 @@
   <widget>
     <class>GtkFrame</class>
     <name>frame1</name>
-    <sensitive>False</sensitive>
+    <border_width>5</border_width>
     <label>Owner Information</label>
     <label_xalign>0</label_xalign>
     <shadow_type>GTK_SHADOW_ETCHED_IN</shadow_type>
