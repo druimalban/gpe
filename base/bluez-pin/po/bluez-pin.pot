@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"POT-Creation-Date: 2003-06-22 20:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,27 +15,23 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: bluez-pin.c:127
+#: main.c:70
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr ""
+
+#: ui.c:82
 msgid "Outgoing connection to"
 msgstr ""
 
-#: bluez-pin.c:128
+#: ui.c:83
 msgid "Incoming connection from"
 msgstr ""
 
-#: bluez-pin.c:134
+#: ui.c:91
 msgid "PIN:"
 msgstr ""
 
-#: bluez-pin.c:137
-msgid "Save in database"
-msgstr ""
-
-#: bluez-pin.c:179
+#: ui.c:138
 msgid "Bluetooth PIN"
-msgstr ""
-
-#: bluez-pin.c:191
-#, c-format
-msgid "Usage: %s <in|out> <address>\n"
 msgstr ""
