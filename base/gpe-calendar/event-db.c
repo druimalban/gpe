@@ -197,7 +197,8 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed)
 	break;
 
       /* Skip events that have finished already */
-      if (ev->duration && (ev->start + ev->duration <= start))
+      if ((ev->start + ev->duration < start)
+	  || (ev->duration && ((ev->start + ev->duration == start))))
 	continue;
 
       list = g_slist_append (list, ev);
