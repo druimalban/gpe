@@ -28,6 +28,9 @@ struct todo_item
   const char *summary;
   item_state state;
   GSList *categories;
+#if GTK_MAJOR_VERSION >= 2
+  PangoLayout *layout;
+#endif
 };
 
 struct todo_category

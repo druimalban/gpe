@@ -14,11 +14,12 @@
 
 #include <gtk/gtk.h>
 
-#include "gtkdatecombo.h"
+#include <gpe/gtkdatecombo.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+
 #include "todo.h"
 #include "todo-sql.h"
-#include "pixmaps.h"
-#include "picturebutton.h"
 
 #define _(_x) gettext(_x)
 
@@ -251,8 +252,10 @@ edit_item (struct todo_item *item)
 
   t->item = item;
   
+#if GTK_MAJOR_VERSION < 2
   gtk_widget_set_usize (state, -1, state->style->font->ascent + 
 			state->style->font->descent + 4);
+#endif
 
   gtk_box_pack_start (GTK_BOX (duebox), t->duetoggle, FALSE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (duebox), t->duedate, TRUE, TRUE, 1);

@@ -1,7 +1,15 @@
 PREFIX = /usr/local
 PACKAGE = gpe-todo
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -g -I../libgpewidget -Wall
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
+endif
+
+CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -20,7 +28,7 @@ install-po:
 	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
 
 gpe-todo: $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -g -lsqlite
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite
 
 update-po: po/$(PACKAGE).pot
 

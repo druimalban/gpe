@@ -14,11 +14,12 @@
 
 #include <gtk/gtk.h>
 
+#include <gpe/pixmaps.h>
+#include <gpe/errorbox.h>
+#include <gpe/render.h>
+#include <gpe/picturebutton.h>
+
 #include "todo.h"
-#include "pixmaps.h"
-#include "errorbox.h"
-#include "render.h"
-#include "picturebutton.h"
 
 #include "tick.xpm"
 #include "box.xpm"
@@ -102,9 +103,20 @@ show_hide_completed (GtkWidget *w, gpointer list)
   refresh_items ();
 }
 
+#if GTK_MAJOR_VERSION >= 2
+PangoLayout *
+item_layout (struct todo_item *i)
+{
+  if (i->layout == NULL)
+    i->layout = gtk_widget_create_pango_layout (g_draw, i->summary);
+
+  return i->layout;
+}
+#endif
+
 static gint
 draw_expose_event (GtkWidget *widget,
-		   GdkEvent  *event,
+		   GdkEventExpose  *event,
 		   gpointer   user_data)
 {
   GtkDrawingArea *darea;
@@ -117,7 +129,9 @@ draw_expose_event (GtkWidget *widget,
   guint y;
   guint skew = 2;
   GSList *iter;
+#if GTK_MAJOR_VERSION < 2
   GdkFont *font = widget->style->font;
+#endif
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
@@ -130,9 +144,7 @@ draw_expose_event (GtkWidget *widget,
   max_width = widget->allocation.width;
   max_height = widget->allocation.height;
 
-  ystep = font->ascent + font->descent;
-  if (ystep < 14)
-    ystep = 14;
+  ystep = 14;
 
   if (! tick_pixmap)
     {
@@ -156,8 +168,23 @@ draw_expose_event (GtkWidget *widget,
       
       if (i->state != COMPLETED)
 	{
+#if GTK_MAJOR_VERSION < 2
 	  gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
 			 i->summary, strlen (i->summary));
+#else
+	  PangoLayout *l = item_layout (i);
+
+	  gtk_paint_layout (widget->style,
+			    widget->window,
+			    GTK_WIDGET_STATE (widget),
+			    FALSE,
+			    &event->area,
+			    widget,
+			    "label",
+			    xcol, y,
+			    l);
+#endif
+	  
 	  gdk_draw_pixmap (drawable, black_gc, box_pixmap,
 			   2, 0, 2, y - skew, 14, 14);
 	  i->pos=y/ystep;
@@ -165,7 +192,7 @@ draw_expose_event (GtkWidget *widget,
 	}
       
     }
-  
+
   if (!hide) 
     {
       for (iter = display_items; iter; iter = iter->next)
@@ -174,13 +201,27 @@ draw_expose_event (GtkWidget *widget,
 	  
 	  if (i->state == COMPLETED)
 	    {
+#if GTK_MAJOR_VERSION < 2
 	      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
 			     i->summary, strlen (i->summary));
 	      
 	      gdk_draw_line (drawable, black_gc, xcol, 
-			     y + (font->ascent + font->descent) / 2, 
+			     y + ystep / 2, 
 			     18 + gdk_string_width (font, i->summary), 
-			     y + (font->ascent + font->descent) / 2);
+			     y + ystep / 2);
+#else
+	      PangoLayout *l = item_layout (i);
+
+	      gtk_paint_layout (widget->style,
+				widget->window,
+				GTK_WIDGET_STATE (widget),
+				FALSE,
+				&event->area,
+				widget,
+				"label",
+				xcol, y,
+				l);
+#endif
 	      gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
 			       2, 0, 2, y - skew, 14, 14);
 	      i->pos=y/ystep;
@@ -273,20 +314,33 @@ top_level (GtkWidget *window)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *sep = gtk_vseparator_new ();
-  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
-  GtkWidget *toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
+  GtkWidget *toolbar, *toolbar2;
   GtkWidget *option = gtk_option_menu_new ();
   GtkWidget *pw;
   GtkWidget *draw = gtk_drawing_area_new();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  
+
+#if GTK_MAJOR_VERSION < 2  
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
+  toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+					GTK_TOOLBAR_ICONS);
+#else
+  toolbar = gtk_toolbar_new ();
+  toolbar2 = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
+#endif
+
   g_option = option;
   categories_menu ();
 
+#if GTK_MAJOR_VERSION < 2
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
+#endif
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 

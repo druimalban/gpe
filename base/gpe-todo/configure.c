@@ -14,14 +14,12 @@
 
 #include <gtk/gtk.h>
 
-#include "todo.h"
-#include "pixmaps.h"
-#include "errorbox.h"
-#include "render.h"
-#include "picturebutton.h"
+#include <gpe/pixmaps.h>
+#include <gpe/errorbox.h>
+#include <gpe/render.h>
+#include <gpe/picturebutton.h>
 
-#include "tick.xpm"
-#include "box.xpm"
+#include "todo.h"
 
 #define _(_x) gettext(_x)
 
@@ -89,7 +87,7 @@ close_window(GtkWidget *widget,
 static void
 new_category_box (GtkWidget *w, gpointer data)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *ok;
   GtkWidget *cancel;
@@ -160,8 +158,7 @@ void
 configure (GtkWidget *w, gpointer list)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
+  GtkWidget *toolbar;
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *clist = gtk_clist_new (1);
   GtkWidget *pw;
@@ -169,6 +166,15 @@ configure (GtkWidget *w, gpointer list)
   GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
   GtkWidget *okbutton;
   GSList *l;
+
+#if GTK_MAJOR_VERSION < 2
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
+			     GTK_TOOLBAR_ICONS);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   for (l = categories; l; l = l->next)
     {
@@ -181,7 +187,9 @@ configure (GtkWidget *w, gpointer list)
       gtk_clist_set_row_data (GTK_CLIST (clist), row, t);
     }
   
+#if GTK_MAJOR_VERSION < 2
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+#endif
 
   gtk_widget_realize (window);
 

@@ -14,11 +14,11 @@
 #include <locale.h>
 
 #include <gtk/gtk.h>
+#include <gpe/pixmaps.h>
+#include <gpe/init.h>
 
 #include "todo.h"
 #include "todo-sql.h"
-#include "pixmaps.h"
-#include "init.h"
 
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },

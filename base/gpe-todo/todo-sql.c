@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 #include <glib.h>
 
-#include "errorbox.h"
+#include <gpe/errorbox.h>
 
 #include "todo.h"
 #include "todo-sql.h"
