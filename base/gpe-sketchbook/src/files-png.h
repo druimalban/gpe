@@ -18,7 +18,7 @@
 #ifndef FILES_PNG_H
 #define FILES_PNG_H
 
-void file_save_png(const gchar * fullpath_filename);
-void file_load_png(const gchar * fullpath_filename);
+gint file_save_png(const gchar * fullpath_filename);
+gint file_load_png(const gchar * fullpath_filename);
 
 #endif
