@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.0-pre6
+VERSION = 0.1.0-pre7
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no

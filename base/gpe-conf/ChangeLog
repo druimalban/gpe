@@ -1,5 +1,8 @@
 When			Who				Where						What
 
+30.07.2003		Florian			main.c						Added missing UTF8 binding.
+						Makefile					New version.
+
 14.07.2003		Florian			cardinfo.c					Changed text for cards with no known driver.
 
 08.07.2003		Florian			battery.c					Swapped labels...

@@ -325,6 +325,8 @@ int main(int argc, char **argv)
   int pipe1[2];
   int pipe2[2];
 
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
+
   if(pipe(pipe1))
     {
       fprintf(stderr, "Can't open pipe\n");
