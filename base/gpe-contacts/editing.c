@@ -43,6 +43,19 @@ gboolean tv_focus_out (GtkWidget *widget,
 void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data);
 void on_name_clicked (GtkButton *button, gpointer user_data);
 
+
+
+/* this is the filter for phone number edits */
+static gboolean
+phone_key_press_event (GtkWidget *widget, GdkEventKey *k, gpointer p)
+{
+  if (!strstr(" +0123456789-/()",k->string)) 
+    {
+      return TRUE;
+    }
+  return FALSE;
+}
+
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
 {
@@ -71,6 +84,13 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
           GtkWidget *l;
           
           add_tag (e->tag, w, pw);
+          if (strstr(e->tag,".TELEPHONE")
+              || strstr(e->tag,".MOBILE") 
+              || strstr(e->tag,".FAX"))
+            {
+               g_signal_connect (G_OBJECT (w), "key_press_event", 
+		         G_CALLBACK (phone_key_press_event), NULL);
+            }
           if (strcmp(e->tag,"NAME")) /* the name field on a button */
             {
               l = gtk_label_new (e->name);

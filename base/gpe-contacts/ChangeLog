@@ -1,5 +1,7 @@
 2004-08-17  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * editing.c: Implemented filter to allow not to enter everythign in 
+                 number fields.
 	* editing.c, namedetail.c: Fixed name setup for new contacts.
     * editing.c: Make name field activated per default.
     * Released Version 0.25
