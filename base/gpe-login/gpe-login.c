@@ -1418,6 +1418,7 @@ main (int argc, char *argv[])
   gboolean flag_force_new_user = FALSE;
   FILE *cfp;
   GdkCursor *cursor;
+  GtkWidget *socket_frame;
 
   /* gchar *gpe_catindent = gpe_get_catindent ();  */
   /* guint gpe_catspacing = gpe_get_catspacing (); */
@@ -1669,6 +1670,10 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (window), "delete_event",
 		    G_CALLBACK (gtk_main_quit), NULL);
 
+  socket_frame = gtk_aspect_frame_new (NULL, 0, 0, 3.0, FALSE);
+  gtk_frame_set_shadow_type (GTK_FRAME (socket_frame), GTK_SHADOW_NONE);
+  gtk_container_set_border_width (GTK_FRAME (socket_frame), 0);
+
   if (autolock_mode || have_users)
     {
       GtkWidget *hbox_password;
@@ -1753,12 +1758,16 @@ main (int argc, char *argv[])
 	}
 
       if (socket)
-	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
+	{
+	  gtk_container_add (GTK_CONTAINER (socket_frame), socket);
+	  gtk_box_pack_start (GTK_BOX (vbox), socket_frame, TRUE, TRUE, 0);
+	}
       else
 	{
 	  socket_box = gtk_event_box_new ();
 	  gtk_widget_show (socket_box);
-	  gtk_box_pack_start (GTK_BOX (vbox), socket_box, TRUE, TRUE, 0);
+	  gtk_container_add (GTK_CONTAINER (socket_box), socket);
+	  gtk_box_pack_start (GTK_BOX (vbox), socket_frame, TRUE, TRUE, 0);
 	}
 
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
@@ -1812,7 +1821,10 @@ main (int argc, char *argv[])
       gtk_box_pack_start (GTK_BOX (vbox2), vbox, FALSE, FALSE, 0);
 
       if (socket)
-	gtk_box_pack_end (GTK_BOX (vbox2), socket, TRUE, TRUE, 0);
+	{
+	  gtk_container_add (GTK_CONTAINER (socket_frame), socket);
+	  gtk_box_pack_end (GTK_BOX (vbox2), socket_frame, TRUE, TRUE, 0);
+	}
       
 #if 0
       gtk_box_pack_end (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
