@@ -61,10 +61,22 @@ update_window_title (void)
 {
   gchar *window_title = "GPE Edit - ";
   gchar *buf;
+  gchar *file_path;
 
-  buf = g_malloc (strlen (window_title) + strlen (basename (filename)) + 1);
+  if (filename == "")
+  {
+    file_path = g_malloc (strlen("Untitled"));
+    file_path = "Untitled";
+  }
+  else
+  {
+    file_path = g_malloc (strlen(basename (filename)));
+    file_path = basename (filename);
+  }
+
+  buf = g_malloc (strlen (window_title) + strlen (basename (file_path)) + 1);
   strcpy (buf, window_title);
-  strcat (buf, basename (filename));
+  strcat (buf, basename (file_path));
   gtk_window_set_title (GTK_WINDOW (main_window), buf);
 }
 
