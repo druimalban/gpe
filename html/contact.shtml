@@ -2,7 +2,7 @@
 <!--#set var="pagename" value="contact"-->
 <!--#include virtual="includes/head.shtml"-->
 <!--#set var="author" value="Colin Marquardt"-->
-<!--#set var="authoremail" value="colin@marquardt-home.de"-->
+<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 
 <P>
 <h2>Mailing List</h2> 
