@@ -235,8 +235,11 @@ main (int argc, char *argv[])
   widget = lookup_widget (GPE_Ownerinfo, "address");
   gtk_label_set_text (GTK_LABEL (widget), owneraddress);
 
+  /*
+    this widget is shown in the on_smallphotobutton_size_allocate() callback
   widget = lookup_widget (GPE_Ownerinfo, "smallphoto");
   gtk_widget_show (widget);
+  */
 
   /* make window transparent if option -t is given: */
   if (flag_transparent) {
