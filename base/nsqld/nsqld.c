@@ -21,7 +21,9 @@
 #include <sqlite.h>
 #include <netdb.h>
 
+#ifdef USE_SASL
 #include <sasl/sasl.h>
+#endif
 
 #include <glib.h>
 
@@ -45,7 +47,9 @@ struct nsql_context
   FILE *ifp, *ofp;
   int quit;
   sqlite *sqliteh;
+#ifdef USE_SASL
   sasl_conn_t *conn;
+#endif
   
   char *cmd_id;
 };
@@ -230,6 +234,7 @@ process_line (struct nsql_context *ctx, char *line)
   return FALSE;
 }
 
+#ifdef USE_SASL
 /* do the sasl negotiation; return -1 if it fails */
 int mysasl_negotiate(FILE *in, FILE *out, sasl_conn_t *conn)
 {
@@ -327,6 +332,7 @@ int mysasl_negotiate(FILE *in, FILE *out, sasl_conn_t *conn)
   
   return 0;
 }
+#endif
 
 int
 main_loop (int fd)
@@ -336,64 +342,77 @@ main_loop (int fd)
   socklen_t salen;
   int fd2;
   int r;
+#ifdef USE_SASL
   sasl_security_properties_t secprops;
   char localaddr[NI_MAXHOST | NI_MAXSERV],
     remoteaddr[NI_MAXHOST | NI_MAXSERV];
   char myhostname[1024+1];
   char hbuf[NI_MAXHOST], pbuf[NI_MAXSERV];
+#endif
 
-  fd2 = dup (fd);
-  if (fd2 < 0)
-    {
-      perror ("dup");
-      return errno;
-    }
-  
   ctx = g_malloc0 (sizeof (*ctx));
 
-  ctx->ifp = fdopen (fd, "r");
-  ctx->ofp = fdopen (fd2, "w");
+  if (fd != -1)
+    {
+      fd2 = dup (fd);
+      if (fd2 < 0)
+	{
+	  perror ("dup");
+	  return errno;
+	}
+      
+      ctx->ifp = fdopen (fd, "r");
+      ctx->ofp = fdopen (fd2, "w");
 
-  r = gethostname(myhostname, sizeof(myhostname)-1);
-  if(r == -1) saslfail(r, "getting hostname");
+#ifdef USE_SASL
+      r = gethostname (myhostname, sizeof(myhostname)-1);
+      if(r == -1) 
+	saslfail (r, "getting hostname");
 
-  /* set ip addresses */
-  salen = sizeof(local_ip);
-  if (getsockname(fd, (struct sockaddr *)&local_ip, &salen) < 0) {
-    perror("getsockname");
-  }
-  getnameinfo((struct sockaddr *)&local_ip, salen,
-	      hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
-	      NI_NUMERICHOST | NI_NUMERICSERV);
-  snprintf(localaddr, sizeof(localaddr), "%s;%s", hbuf, pbuf);
-
-  salen = sizeof(remote_ip);
-  if (getpeername(fd, (struct sockaddr *)&remote_ip, &salen) < 0) {
-    perror("getpeername");
-  }
-  getnameinfo((struct sockaddr *)&remote_ip, salen,
-	      hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
-	      NI_NUMERICHOST | NI_NUMERICSERV);
-  snprintf(remoteaddr, sizeof(remoteaddr), "%s;%s", hbuf, pbuf);
-
-  r = sasl_server_new ("nsql", myhostname, NULL, localaddr, remoteaddr,
-		       NULL, 0, &ctx->conn);
-  if (r != SASL_OK) 
-    saslfail (r, "allocating connection state");
-
-  memset (&secprops, 0, sizeof (secprops));
-  secprops.min_ssf = 0;
-  secprops.max_ssf = 1024;
-  secprops.maxbufsize = 1024;  
-  secprops.property_names = NULL;
-  secprops.property_values = NULL;
-  secprops.security_flags = 0;
-  
-  r = sasl_setprop (ctx->conn, SASL_SEC_PROPS, &secprops);
-  if (r != SASL_OK) saslfail(r, "setting security props");
-
-  r = mysasl_negotiate (ctx->ifp, ctx->ofp, ctx->conn);
-  if (r != SASL_OK) saslfail(r, "SASL negotiation");
+      /* set ip addresses */
+      salen = sizeof(local_ip);
+      if (getsockname(fd, (struct sockaddr *)&local_ip, &salen) < 0) {
+	perror("getsockname");
+      }
+      getnameinfo((struct sockaddr *)&local_ip, salen,
+		  hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
+		  NI_NUMERICHOST | NI_NUMERICSERV);
+      snprintf(localaddr, sizeof(localaddr), "%s;%s", hbuf, pbuf);
+      
+      salen = sizeof(remote_ip);
+      if (getpeername(fd, (struct sockaddr *)&remote_ip, &salen) < 0) {
+	perror("getpeername");
+      }
+      getnameinfo((struct sockaddr *)&remote_ip, salen,
+		  hbuf, sizeof(hbuf), pbuf, sizeof(pbuf),
+		  NI_NUMERICHOST | NI_NUMERICSERV);
+      snprintf(remoteaddr, sizeof(remoteaddr), "%s;%s", hbuf, pbuf);
+      
+      r = sasl_server_new ("nsql", myhostname, NULL, localaddr, remoteaddr,
+			   NULL, 0, &ctx->conn);
+      if (r != SASL_OK) 
+	saslfail (r, "allocating connection state");
+      
+      memset (&secprops, 0, sizeof (secprops));
+      secprops.min_ssf = 0;
+      secprops.max_ssf = 1024;
+      secprops.maxbufsize = 1024;  
+      secprops.property_names = NULL;
+      secprops.property_values = NULL;
+      secprops.security_flags = 0;
+      
+      r = sasl_setprop (ctx->conn, SASL_SEC_PROPS, &secprops);
+      if (r != SASL_OK) saslfail(r, "setting security props");
+      
+      r = mysasl_negotiate (ctx->ifp, ctx->ofp, ctx->conn);
+      if (r != SASL_OK) saslfail(r, "SASL negotiation");
+#endif
+    }
+  else
+    {
+      ctx->ofp = stdout;
+      ctx->ifp = stdin;
+    }
 
   while (!ctx->quit && !feof (ctx->ifp))
     {
@@ -403,8 +422,11 @@ main_loop (int fd)
 	process_line (ctx, line);
     }
 
-  fclose (ctx->ifp);
-  fclose (ctx->ofp);
+  if (fd != -1)
+    {
+      fclose (ctx->ifp);
+      fclose (ctx->ofp);
+    }
 
   g_free (ctx);
 
@@ -420,6 +442,7 @@ new_connection (int fd, struct sockaddr *sin, socklen_t slen)
   close (fd);
 }
 
+#ifdef USE_SASL
 static int
 getuser(void *context __attribute__((unused)),
 	char ** path) 
@@ -445,6 +468,7 @@ static sasl_callback_t callbacks[] = {
     SASL_CB_LIST_END, NULL, NULL
   }
 };
+#endif
 
 int
 main (int argc, char *argv[])
@@ -454,23 +478,30 @@ main (int argc, char *argv[])
   int sopt;
   int r;
 
+  if (argc == 2 && !strcmp (argv[1], "--stdout"))
+    {
+      main_loop (-1);
+      exit (0);
+    }
+
   signal (SIGCHLD, SIG_IGN);
 
   sock = socket (AF_INET6, SOCK_STREAM, 0);    
-
-  /* Initialize SASL */
-  r = sasl_server_init (callbacks,      /* Callbacks supported */
-			"nsqld");  /* Name of the application */
-
-  if (r != SASL_OK) 
-    saslfail (r, "initializing libsasl");
-
   if (sock < 0)
     {
       perror ("socket");
       exit (1);
     }
   
+#ifdef USE_SASL
+  /* Initialize SASL */
+  r = sasl_server_init (callbacks,      /* Callbacks supported */
+			"nsqld");  /* Name of the application */
+
+  if (r != SASL_OK) 
+    saslfail (r, "initializing libsasl");
+#endif
+
   sopt = 1;
   if (setsockopt (sock, SOL_SOCKET, SO_REUSEADDR, (char *)&sopt, sizeof (sopt)))
     {

@@ -3,6 +3,7 @@ PREFIX = /usr/local
 DEBUG = no
 VERSION = 0.1
 CVSBUILD = yes
+SASL = no
 
 LINGUAS = 
 
@@ -19,6 +20,11 @@ CFLAGS += -Wall `pkg-config --cflags glib-2.0`
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
+ifeq ($(SASL),yes)
+SASL_LIBS = -lsasl2
+CPPFLAGS += -DUSE_SASL
+endif
+
 .SUFFIXES: .d
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -34,7 +40,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -lsqlite `pkg-config --libs glib-2.0` -lsasl2
+	$(CC) -o $@ $^ -lsqlite `pkg-config --libs glib-2.0` $(SASL_LIBS)
 
 install-program: all
 

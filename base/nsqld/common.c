@@ -44,7 +44,9 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+#ifdef USE_SASL
 #include <sasl/sasl.h>
+#endif
 
 /* send/recv library for IMAP4 style literals.
 
@@ -140,6 +142,7 @@ int dprintf(int lvl, const char *fmt, ...)
     return ret;
 }
 
+#ifdef USE_SASL
 void saslerr(int why, const char *what)
 {
   fprintf(stderr, "%s: %s", what, sasl_errstring(why, NULL, NULL));
@@ -150,4 +153,4 @@ void saslfail(int why, const char *what)
     saslerr(why, what);
     exit(EXIT_FAILURE);
 }
-
+#endif
