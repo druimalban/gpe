@@ -1,3 +1,15 @@
+2002-09-09  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-logout.c (main): Don't set window title, in accordance to
+	the Gnome HIG (see pg. 22 of HIG 1.0).
+	(main): Set the border width for the hbox.
+	(main): Use a Gnome stock icon (question.png).
+	(main): Wrap log out text so that even user with a huge font see
+	all of it.
+	(main): Align label and icon so that it conforms to the Gnome 2
+	HIG (icon aligned on top, text aligned left), see pg. 22 of HIG
+	1.0.
+
 2002-09-05  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.22 released.

@@ -26,7 +26,7 @@
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
   { "cancel", "cancel" },
-  { "logout", PREFIX "/share/pixmaps/gpe-logout.png" },
+  { "question", "question" },
   { NULL, NULL }
 };
 
@@ -76,12 +76,13 @@ main(int argc, char *argv[])
       gtk_exit (1);
     }
 
-  fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  fakeparentwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
 
   window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW(window), _("Confirmation"));
-  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(fakeparentwindow));
+  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW (fakeparentwindow));
+  /* set no window title in accordance to the Gnome 2 HIG */
+  gtk_window_set_title (GTK_WINDOW(window), "");
   gtk_widget_realize (window);
  
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
@@ -93,15 +94,19 @@ main(int argc, char *argv[])
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
 
-  label = gtk_label_new (_("Are you sure you want to log out?"));
+  /* FIXME: GTK2: set this text in bold */
+  label = gtk_label_new (_("Are you sure you\nwant to log out?"));
 
   gtk_widget_show (label);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
+  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 1);
 
-  p = gpe_find_icon ("logout");
-  icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);
+  p = gpe_find_icon ("question");
+  icon = gpe_render_icon (GTK_DIALOG (window)->vbox->style, p);
+  gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
   gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
+  /* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
   gtk_widget_realize (window);
 
@@ -121,6 +126,9 @@ main(int argc, char *argv[])
                       buttonok);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
+
+  /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (on_window_destroy),
