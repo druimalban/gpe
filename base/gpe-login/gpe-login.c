@@ -40,7 +40,6 @@
 
 #define _(x) gettext(x)
 
-#define GPE_ICON PREFIX "/share/gpe/pixmaps/gpe-logo.png"
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login.setup"
 #define PRE_SESSION "/etc/X11/gpe-login.pre-session"
 #define PASSWORD_FILE "/etc/passwd"
@@ -69,8 +68,9 @@ static guint xkbd_xid;
 
 static Atom suspended_atom;
 
+static GtkStyle *style;
+
 static struct gpe_icon my_icons[] = {
-  { "logo", GPE_ICON },
   { "ok", "ok" },
   { NULL, NULL }
 };
@@ -433,7 +433,6 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *vbox2;
   GtkWidget *ok_button;
   GtkWidget *frame;
-  GtkWidget *logo = NULL;
   GtkWidget *calibrate_hint;
   Display *dpy;
   Window root;
@@ -441,7 +440,7 @@ main (int argc, char *argv[])
   int i;
   char *geometry_str = FALSE;
   gboolean flag_geom = FALSE;
-  gboolean flag_no_logo = FALSE;
+  gboolean flag_transparent = FALSE;
 
   gtk_set_locale ();
 
@@ -464,8 +463,8 @@ main (int argc, char *argv[])
 	autolock_mode = TRUE;
       else if (strcmp (argv[i], "--geometry") == 0 || strncmp (argv[i], "-g", 2) == 0)
 	flag_geom = TRUE;
-      else if (strcmp (argv[i], "--no-logo") == 0)
-	flag_no_logo = TRUE;
+      else if (strcmp (argv[i], "--transparent") == 0)
+	flag_transparent = TRUE;
     }
 
   signal (SIGCHLD, SIG_IGN);
@@ -587,22 +586,12 @@ main (int argc, char *argv[])
 	}
     }
 
-  if (! flag_no_logo)
-    {
-      GdkPixbuf *icon = gpe_find_icon ("logo");
-      if (icon)
-	logo = gpe_render_icon (window->style, icon);
-    }
-
   menu = gtk_menu_new ();
   slurp_passwd (menu);
 
   ok_button = gpe_picture_button (window->style, _("OK"), "ok");
 
   vbox2 = gtk_vbox_new (FALSE, 0);
-
-  if (logo)
-    gtk_box_pack_start (GTK_BOX (vbox2), logo, FALSE, FALSE, 0);
 
   calibrate_hint = gtk_label_new (_("Press Record to recalibrate touchscreen"));
 
@@ -771,6 +760,13 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), vbox2);
 
   gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
+
+  if (flag_transparent)
+    {
+      style = gtk_style_copy (window->style);
+      style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap *)GDK_PARENT_RELATIVE;
+      gtk_widget_set_style (window, style);
+    }
 
   if (autolock_mode)
     {

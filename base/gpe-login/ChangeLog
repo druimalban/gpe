@@ -1,3 +1,8 @@
+2002-09-04  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c: Remove support for logo.  Add new option
+	"--transparent".
+
 2002-09-03  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (gpe-login): Depend on nocursor.
