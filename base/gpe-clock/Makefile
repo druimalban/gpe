@@ -1,6 +1,6 @@
 PACKAGE = gpe-clock
 PREFIX = /usr/local
-DEBUG = yes
+DEBUG = no
 GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.3
