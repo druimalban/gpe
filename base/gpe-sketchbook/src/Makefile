@@ -1,5 +1,8 @@
 include ../config.makefile
 
+VERSION = $(shell grep 'Version: ' ../familiar/control | cut -d ' ' -f 2)
+PACKAGE = $(shell grep 'Package: ' ../familiar/control | cut -d ' ' -f 2)
+
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
 OBJS    = $(patsubst %,%.o,$(MEMBERS))
@@ -31,7 +34,9 @@ CFLAGS += `gdk-pixbuf-config --cflags`
 LIBS   += `gdk-pixbuf-config --libs`
 
 #-- SQLite
-#LIBS += -lsqlite
+ifdef USE_SQLITE
+LIBS += -lsqlite
+endif
 
 #-- libpng support
 CPPFLAGS += -I/usr/include

@@ -1,24 +1,10 @@
-#include ./config.makefile
-PREFIX  = /usr/local
+include ./config.makefile
 
-LINGUAS = fr
-MEMBERS = \
-	gpe-sketchbook       \
-	dialog               \
-	selector	     \
-	selector-cb	     \
-	selector-gui	     \
-	sketchpad	     \
-	sketchpad-cb	     \
-	sketchpad-gui	     \
-	files		     \
-	files-png	     
+VERSION = $(shell grep 'Version: ' familiar/control | cut -d ' ' -f 2)
+PACKAGE = $(shell grep 'Package: ' familiar/control | cut -d ' ' -f 2)
 SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
 
 PIXMAPS = `cd pixmaps && ls *.png`
-
-PACKAGE = $(shell grep 'Package: ' familiar/control | cut -d ' ' -f 2)
-VERSION = $(shell grep 'Version: ' familiar/control | cut -d ' ' -f 2)
 
 all: $(PACKAGE) all-mo
 
@@ -71,7 +57,10 @@ dist:
 	mkdir $(DIST_NAME)/pixmaps
 	cp pixmaps/*.png $(DIST_NAME)/pixmaps
 	mkdir $(DIST_NAME)/familiar
+	cp familiar/control  $(DIST_NAME)/familiar
 	cp familiar/postinst $(DIST_NAME)/familiar
+	mkdir $(DIST_NAME)/po
+	cp po/*.po po/*.pot $(DIST_NAME)/po
 	tar zcf $(DIST_NAME).tgz $(DIST_NAME)
 	rm -rf $(DIST_NAME)
 
