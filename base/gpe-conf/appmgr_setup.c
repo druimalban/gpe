@@ -82,9 +82,9 @@ void page_add (GtkVBox *vb)
 				      cfg_options.show_recent_apps);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), show_recent_check);
 
-	/* Dont lauch at startup */
+	/* Don't launch at startup */
 	dont_launch_check =
-		gtk_check_button_new_with_label ("Dont launch at startup");
+		gtk_check_button_new_with_label ("Do not launch at startup");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( dont_launch_check),
 				      dont_launch_exists());
 	gtk_box_pack_start_defaults (GTK_BOX(vb), dont_launch_check);
@@ -107,7 +107,7 @@ void page_add (GtkVBox *vb)
 				      cfg_options.tab_view == TAB_VIEW_LIST);
 
 	/*  Label */
-	label = gtk_label_new("Changes will take effect\n after relog");
+	label = gtk_label_new("Changes will take effect\nafter relog");
 	gtk_box_pack_start_defaults (GTK_BOX(vb), label);
 
 	gtk_widget_show_all (GTK_WIDGET(vb));
