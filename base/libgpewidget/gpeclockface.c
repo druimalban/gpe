@@ -20,6 +20,10 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/Xft/Xft.h>
 
+#ifdef HAVE_CAIRO
+#include <cairo.h>
+#endif
+
 #if RENDER_MAJOR > 0 || RENDER_MINOR >= 5
 #define HAVE_XRENDER
 #endif
@@ -61,6 +65,11 @@ struct _GpeClockFace
   gboolean can_render;
   XftDraw *draw;
   Picture image_pict, src_pict;
+#endif
+
+#ifdef HAVE_CAIRO
+  cairo_t *cr;
+  cairo_surface_t *surface;
 #endif
 
   GdkPixmap *backing_pixmap;
@@ -142,16 +151,18 @@ draw_hand (GpeClockFace *clock,
   else
 #endif
     {
+      GdkPoint gpoints[5];
+
       for (i = 0; i < 5; i++)
 	{
-	  points[i].x = poly[i].x;
-	  points[i].y = poly[i].y;
+	  gpoints[i].x = poly[i].x;
+	  gpoints[i].y = poly[i].y;
 	}
 
       gdk_draw_polygon (clock->backing_pixmap,
 			clock->backing_poly_gc,
 			TRUE,
-			points,
+			gpoints,
 			5);
     }
 }
@@ -262,6 +273,24 @@ gpe_clock_face_expose (GtkWidget *widget,
     }
   else
     {
+#ifdef HAVE_CAIRO
+      cairo_set_rgb_color (clock->cr, 1, 1, 1);
+      cairo_arc (clock->cr,
+		 clock->x_offset + clock->radius,
+		 clock->y_offset + clock->radius,
+		 clock->radius,
+		 0,
+		 2 * M_PI);
+      cairo_fill (clock->cr);
+      cairo_set_rgb_color (clock->cr, 0, 0, 0);
+      cairo_arc (clock->cr,
+		 clock->x_offset + clock->radius,
+		 clock->y_offset + clock->radius,
+		 clock->radius,
+		 0,
+		 2 * M_PI);
+      cairo_stroke (clock->cr);
+#else
       gdk_draw_arc (clock->backing_pixmap, gc, TRUE,
 		    clock->x_offset, clock->y_offset,
 		    clock->radius * 2, clock->radius * 2,
@@ -271,6 +300,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 		    clock->x_offset + clock->border, clock->y_offset + clock->border,
 		    (clock->radius - clock->border) * 2, (clock->radius - clock->border) * 2,
 		    0, 360 * 64);
+#endif
 
       if (clock->label_hours)
 	{
@@ -460,6 +490,9 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   GdkGCValues gcv;
+  Display *dpy;
+  GdkVisual *gv;
+  GdkColormap *gcm;
 
   clock->backing_pixmap = gdk_pixmap_new (widget->window,
 					  widget->allocation.width, 
@@ -470,18 +503,16 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
   gdk_gc_get_values (widget->style->bg_gc[GTK_STATE_NORMAL], &gcv);
   gdk_gc_set_foreground (clock->backing_gc, &gcv.foreground);
 
+  dpy = GDK_WINDOW_XDISPLAY (widget->window);
+  gv = gdk_window_get_visual (widget->window);
+  gcm = gdk_drawable_get_colormap (widget->window);
+      
+
 #ifdef HAVE_XRENDER
   if (clock->can_render)
     {
       XRenderPictureAttributes att;
-      Display *dpy;
-      GdkVisual *gv;
-      GdkColormap *gcm;
 
-      dpy = GDK_WINDOW_XDISPLAY (widget->window);
-      gv = gdk_window_get_visual (widget->window);
-      gcm = gdk_drawable_get_colormap (widget->window);
-      
       clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap),
 				   gdk_x11_visual_get_xvisual (gv),
 				   gdk_x11_colormap_get_xcolormap (gcm));
@@ -497,6 +528,14 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
     {
       clock->backing_poly_gc = gdk_gc_new (clock->backing_pixmap);
     }
+
+#ifdef HAVE_CAIRO
+  clock->cr = cairo_create ();
+  clock->surface = cairo_xlib_surface_create (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap), 
+					      gdk_x11_visual_get_xvisual (gv), 0, 
+					      gdk_x11_colormap_get_xcolormap (gcm));
+  cairo_set_target_surface (clock->cr, clock->surface);
+#endif
 }
 
 static void

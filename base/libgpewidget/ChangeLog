@@ -1,5 +1,10 @@
 2004-05-16  Philip Blundell  <philb@gnu.org>
 
+	* gpeclockface.c: Add Cairo support.
+	(draw_hand): Fix data type in non-RENDER case.
+
+2004-05-16  Philip Blundell  <philb@gnu.org>
+
 	* gpeclockface.c (struct _GpeClockFace): Add border, hand_width,
 	use_background_image, label_hours.
 	(draw_hand): Use floating point for all positions.
@@ -9,6 +14,7 @@
 	(gpe_clock_face_set_radius): New.
 	(gpe_clock_face_set_use_background_image): Likewise.
 	(gpe_clock_face_set_label_hours): Likewise.
+
 	* gpe/gpeclockface.h (gpe_clock_face_set_radius): Add prototype.
 	(gpe_clock_face_set_use_background_image): Likewise.
 	(gpe_clock_face_set_label_hours): Likewise.
