@@ -11,9 +11,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <dirent.h>
+#include <string.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+
+#include <linux/input.h>
 
 int
 main (int argc, char *argv[])
@@ -26,7 +30,44 @@ main (int argc, char *argv[])
   
   /* if neccessary probe others */
   if (fd < 0) 
-	fd = open ("/dev/touchscreen/ucb1x00", O_RDONLY);
+    fd = open ("/dev/touchscreen/ucb1x00", O_RDONLY);
+
+  if (fd < 0)
+    {
+      DIR *d;
+
+      d = opendir ("/dev/input");
+      if (d)
+	{
+	  struct dirent *de;
+	  
+	  while (fd < 0)
+	    {
+	      de = readdir (d);
+	      if (!de)
+		break;
+	      if (!strncmp (de->d_name, "event", 5))
+		{
+		  char buf[512];
+		  int fd;
+		  sprintf (buf, "/dev/input/%s", de->d_name);
+		  fd = open (buf, O_RDONLY);
+		  if (fd >= 0)
+		    {
+		      char c;
+		      if (ioctl (fd, EVIOCGBIT(EV_ABS, 0), &c) < 0)
+			c = 0;
+		      if ((c & 3) != 3)
+			{
+			  close (fd);
+			  fd = -1;
+			}
+		    }
+		}
+	    }
+	  closedir (d);
+	}
+    }
   
   if (fd >= 0)
     {
@@ -44,9 +85,9 @@ main (int argc, char *argv[])
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
       XCloseDisplay (dpy);
-	  if (!access("/usr/X11R6/bin/xrdb", X_OK))
+      if (!access("/usr/X11R6/bin/xrdb", X_OK))
         system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
-	  else
+      else
         system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/bin/xrdb -nocpp -merge");
     }
       
