@@ -15,12 +15,29 @@
 #include <stdlib.h>
 
 #include "xdr.h"
+#include "usql.h"
 #include "usqld-protocol.h"
 
 
 struct usqld_conn{
   int server_fd;
+  int awaiting_interrupted;
 };
+
+void usqld_interrupt(usqld_conn * conn){
+  XDR_tree * interrupt_packet;
+  assert(conn!=NULL);
+  if(conn->server_fd==-1)
+    return;
+  
+  interrupt_packet = XDR_tree_new_union(PICKLE_INTERRUPT,
+					XDR_tree_new_void());
+  
+  usqld_send_packet(conn->server_fd,interrupt_packet);
+  XDR_tree_free(interrupt_packet);
+  conn->awaiting_interrupted =1;
+  
+}
 
 struct usqld_conn * usqld_connect(const char * server,
 				  const char * database,
@@ -33,27 +50,27 @@ struct usqld_conn * usqld_connect(const char * server,
   struct hostent * he;
   int sock_fd;
   int rv;
+  
+  saddr.sin_family = PF_INET;
+  saddr.sin_port = htons(USQLD_SERVER_PORT);
    
-   saddr.sin_family = PF_INET;
-   saddr.sin_port = htons(USQLD_SERVER_PORT);
-   
-   saddr.sin_addr.s_addr = inet_addr(server);
-   if(saddr.sin_addr.s_addr == INADDR_NONE)
-     {
+  saddr.sin_addr.s_addr = inet_addr(server);
+  if(saddr.sin_addr.s_addr == INADDR_NONE)
+    {
+      
+      if(NULL==(he=gethostbyname(server))|| 
+	 NULL==he->h_addr){
+	*errmsg = strdup("host name lookup failure");
+	return NULL;
+      }
+      
 	
-	if(NULL==(he=gethostbyname(server))|| 
-	   NULL==he->h_addr){
-	   *errmsg = strdup("host name lookup failure");
-	   return NULL;
-	}
-	
-	
-	memcpy(&saddr.sin_addr,
-	       *he->h_addr_list,
-	       sizeof(struct in_addr));
-	
-     }
-   
+      memcpy(&saddr.sin_addr,
+	     *he->h_addr_list,
+	     sizeof(struct in_addr));
+      
+    }
+  
    sock_fd = socket(PF_INET,SOCK_STREAM,0);
    if(sock_fd==-1){
       *errmsg = strdup("unable to allocate local socket");    
@@ -68,34 +85,34 @@ struct usqld_conn * usqld_connect(const char * server,
    
    assert(USQLD_OK==XDR_tree_new_compound(XDR_STRUCT,
 					  2,
-					 (XDR_tree_compound**)&elems));
-  
-  XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),0,
-		      XDR_tree_new_string(USQLD_PROTOCOL_VERSION));
-  XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),1,
-		      XDR_tree_new_string((char *)database));
-  
-  p = XDR_tree_new_union(PICKLE_CONNECT,
-			 elems);
-  
-  if(USQLD_OK!=usqld_send_packet(sock_fd,
-				 p)){
-    *errmsg = strdup("usqld network: error while sending connect");
-    XDR_tree_free(p);
-    return NULL;
-  }
-  fprintf(stderr,"connect sent\n");
-  XDR_tree_free(p);  
-  fprintf(stderr,"waiting for reply\n");
-  if(USQLD_OK!=(rv=usqld_recv_packet(sock_fd,
-				     &p))){
-    *errmsg = strdup("usqld network: error while receiving response");    
-    return NULL;
-  }
-  fprintf(stderr,"got a reply\n");
-  switch(usqld_get_packet_type(p)){
-  case PICKLE_ERROR:
-    {
+					  (XDR_tree_compound**)&elems));
+   
+   XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),0,
+		       XDR_tree_new_string(USQLD_PROTOCOL_VERSION));
+   XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),1,
+		       XDR_tree_new_string((char *)database));
+   
+   p = XDR_tree_new_union(PICKLE_CONNECT,
+			  elems);
+   
+   if(USQLD_OK!=usqld_send_packet(sock_fd,
+				  p)){
+     *errmsg = strdup("usqld network: error while sending connect");
+     XDR_tree_free(p);
+     return NULL;
+   }
+   fprintf(stderr,"connect sent\n");
+   XDR_tree_free(p);  
+   fprintf(stderr,"waiting for reply\n");
+   if(USQLD_OK!=(rv=usqld_recv_packet(sock_fd,
+				      &p))){
+     *errmsg = strdup("usqld network: error while receiving response");    
+     return NULL;
+   }
+   fprintf(stderr,"got a reply\n");
+   switch(usqld_get_packet_type(p)){
+   case PICKLE_ERROR:
+     {
       unsigned int errcode;
       char * error_str;
       errcode = XDR_t_get_uint
@@ -117,6 +134,7 @@ struct usqld_conn * usqld_connect(const char * server,
       new_conn = XDR_malloc(struct usqld_conn);
       assert(new_conn!=NULL);
       new_conn->server_fd = sock_fd;
+      new_conn->awaiting_interrupted = 0;
       XDR_tree_free(p);
       return new_conn;
     }
@@ -132,7 +150,7 @@ struct usqld_conn * usqld_connect(const char * server,
 }
 
 
-typedef int (*usqld_callback)(void*,int,char**, char**);
+//typedef int (*usqld_callback)(void*,int,char**, char**);
 
 /*
   fairly icky hack probably will freeze, 
@@ -147,7 +165,7 @@ int usqld_exec(
   ){
 
   usqld_packet * out_p = NULL,*in_p = NULL;
-  int rv,complete,aborted = 0;
+  int rv,complete;
   char ** heads=  NULL,**rowdata = NULL;
   unsigned int nrows;
 
@@ -170,7 +188,7 @@ int usqld_exec(
 
   complete = 0;
 
-  while(!complete){
+  while(!complete || con->awaiting_interrupted){
     if(USQLD_OK!=(rv=usqld_recv_packet(con->server_fd,&in_p))){
       *errmsg = strdup("usqld network: unable to get a response from query");
       return rv;
@@ -179,6 +197,11 @@ int usqld_exec(
     switch(usqld_get_packet_type(in_p)){
     case PICKLE_OK:
       complete =1;
+      break;
+    case PICKLE_INTERRUPTED:
+      con->awaiting_interrupted =0;
+      complete =1;
+      rv = SQLITE_INTERRUPT;
       break;
     case PICKLE_STARTROWS:
       {
@@ -220,8 +243,8 @@ int usqld_exec(
 	  *errmsg = strdup("usqld protocol: number of rows != number of heads, wierd");
 	  break;
 	}
-
-	if(cb!=NULL && !aborted){ //HACK HACK HACK should actually interrupt on protocol
+	
+	if(cb!=NULL && !con->awaiting_interrupted){ //HACK HACK HACK should actually interrupt on protocol
 	  
 	  int i;
 	  for(i =0;i<nrows;i++){
@@ -235,7 +258,10 @@ int usqld_exec(
 	  
 	  if(0!=cb(arg,nrows,heads,rowdata)){
 	    rv = SQLITE_ABORT;
-	    aborted = 1;
+	    if(!con->awaiting_interrupted)
+	      usqld_interrupt(con);
+
+				     
 	  }
 	}
 	bzero(rowdata,sizeof(char *) * nrows);

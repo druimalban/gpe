@@ -2,7 +2,8 @@
 #ifndef _USQLD_CLIENT_H_
 #define _USQLD_CLIENT_H_
 
-#include "usqld-protocol.h"
+extern char * USQLD_VERSION;
+extern char * USQLD_PROTOCOL_VERSION;
 
 typedef struct usqld_conn usqld_conn;
 
@@ -11,7 +12,9 @@ usqld_conn * usqld_connect(const char * server,
 			   char ** errmsg);
 
 
-typedef int (*usqld_callback)(void*,int,const char**,const char**);
+void usqld_interrupt(usqld_conn*);
+
+typedef int (*usqld_callback)(void*,int, char*const*,  char*const*);
 
 int usqld_exec(
   usqld_conn*,                      /* An open database */

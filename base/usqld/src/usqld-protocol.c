@@ -3,10 +3,14 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdio.h>
-#include "xdr.h"
 #include <pthread.h>
-
+#include <signal.h>
+#include "xdr.h"
 #include "usqld-protocol.h"
+char * USQLD_PROTOCOL_VERSION = "USQLD_0.2.0";
+char * USQLD_VERSION = "USQLD_0.2.0";
+
+
 
 struct {
   char * name;
@@ -36,10 +40,6 @@ char * usqld_find_packet_name(int packet_type){
   return NULL;
 }
 
-/*
-  a lock to prevent simultaneous instantiation of the protocol
- */
-pthread_mutex_t protocol_schema_lock = PTHREAD_MUTEX_INITIALIZER;
 
 /**
    the one and only instance of the usqld protocol
@@ -49,8 +49,8 @@ XDR_schema * usqld_protocol_schema = NULL;
 /**
    creates a new instance of the usqld protcol
  */
-XDR_schema * usqld_make_protocol(){
-  XDR_schema * protocol,
+void  usqld_init_protocol(){
+  XDR_schema 
     *connect_packet,
     *disconnect_packet,
     *query_packet,
@@ -94,12 +94,11 @@ XDR_schema * usqld_make_protocol(){
   
   elems[8].t = XDR_schema_new_void();
   elems[8].d = PICKLE_INTERRUPT;
-
-  protocol = XDR_schema_new_type_union(9,elems);   
   
-  return protocol;
+  usqld_protocol_schema = XDR_schema_new_type_union(9,elems);
 }
 
+pthread_once_t init_protocol_once = PTHREAD_ONCE_INIT;
 /**
    returns an instance of the usqld protocol
    we only bother to instantiate the protocol once per session
@@ -107,13 +106,13 @@ XDR_schema * usqld_make_protocol(){
    this does rather assume pthreads...
 */
 XDR_schema * usqld_get_protocol(){
-   assert(0==pthread_mutex_lock(&protocol_schema_lock));
-   {  
-     if(usqld_protocol_schema==NULL)
-       usqld_protocol_schema=usqld_make_protocol();
-   }
-   assert(0==pthread_mutex_unlock(&protocol_schema_lock));
-   return usqld_protocol_schema;
+  
+  pthread_once(&init_protocol_once,
+	       usqld_init_protocol);
+  
+  
+  
+  return usqld_protocol_schema;
 }
 
 /**
@@ -128,8 +127,13 @@ XDR_schema * usqld_get_protocol(){
    one of the possible XDR error codes for deserialization
  */
 int usqld_recv_packet(int fd,XDR_tree ** packet){
-   int rv = XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
 
+ void (*handler) (int);
+  int rv;
+
+  handler = signal(SIGPIPE,SIG_IGN);
+  rv  = XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
+  signal(SIGPIPE,handler);
 #ifdef VERBOSE_DEBUG
    if(rv==USQLD_OK)
      {
@@ -149,14 +153,17 @@ int usqld_recv_packet(int fd,XDR_tree ** packet){
 
 
 int usqld_send_packet(int fd,XDR_tree* packet){
-
+ void (*handler) (int);
+ int rv;
 #ifdef VERBOSE_DEBUG
   fprintf(stderr,"about to send a %s packet\n",
 	  usqld_find_packet_name(XDR_t_get_union_disc(XDR_TREE_COMPOUND(packet))));
    XDR_tree_dump(packet);
 #endif
-
-   return XDR_serialize_elem(usqld_get_protocol(),packet,fd);
+   handler = signal(SIGPIPE,SIG_IGN);
+   rv =  XDR_serialize_elem(usqld_get_protocol(),packet,fd);
+   signal(SIGPIPE,handler);
+   return rv;
 }
 
 int usqld_get_packet_type(XDR_tree*packet){

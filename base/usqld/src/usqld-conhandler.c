@@ -11,13 +11,17 @@
 #include <sqlite.h>
 #include <assert.h>
 #include <stdlib.h>
+#include "usql.h"
 #include "usqld-server.h"
 #include "usqld-conhandler.h"
 #include "usqld-protocol.h"
-#include <error.h>
-
+#include <errno.h>
+#include <signal.h>
 #define FILENAME_MAX 512
 
+void sigpipe_handler(int sig){
+  fprintf(stderr,"Broken pipe on FD \n");
+}
 /*
   configuration structure for a thread
  */
@@ -29,16 +33,17 @@ typedef struct{
 }usqld_tc;
 
 /*
-  checks the incoming stream to see if a packet header is there
+  checks Incoming stream to see if a packet header is there
   return the the start (i.e. the type) of the incomming packet
   used to deal with an interrupt send during a packet transmit
  */
 unsigned int usqld_peek_next_packet(int fd){
   unsigned char header[4];
   
-  if(EAGAIN != recv(fd,header,4,MSG_DONTWAIT)){
+  if(4== recv(fd,header,4,MSG_DONTWAIT|MSG_PEEK)){
     return ntohl(*((unsigned int *)header));
   }
+  return 0;
 }
 
 /*
@@ -51,7 +56,7 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
   usqld_packet * reply = NULL;
   int rv = USQLD_OK;
   char * errmsg = NULL;
-  char fn_buf[512];
+  char fn_buf[FILENAME_MAX];
 
   if(tc->db!=NULL){
     reply = usqld_error_packet(SQLITE_CANTOPEN,"database already open");
@@ -108,18 +113,25 @@ typedef struct{
 }usqld_row_context;
 
 int usqld_send_row(usqld_row_context * rc,
-		   int nfields,
-		   char ** fields,
+		   int nfields,		   char ** fields,
 		   char ** heads){
   
   XDR_tree *rowpacket = NULL;
   XDR_tree_compound *field_elems;
   int i;
   int rv;
-  
-  if(PICKLE_INTERRUPT=usqld_peek_next_packet(rc->tc->client_fd)){
-    rc->interrupted = 1;
-    return 1;
+  fprintf(stderr,"about to try sending a row\n");  
+  if(PICKLE_INTERRUPT==usqld_peek_next_packet(rc->tc->client_fd)){
+    usqld_packet * p;
+    fprintf(stderr,"Interupted!\n");
+    
+    usqld_recv_packet(rc->tc->client_fd,&p);
+    XDR_tree_free(p);
+    p=XDR_tree_new_union(PICKLE_INTERRUPTED,XDR_tree_new_void());
+    usqld_send_packet(rc->tc->client_fd,p);
+    
+    rc->interrupted = 1;//we have been sent an interrupt, give up now
+    return -1;
   }
   
 #ifdef VERBOSE_DEBUG
@@ -212,11 +224,11 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
 				&errmsg))){
     
     
-    
     if(rc.interrupted){
-      reply  = XDR_tree_new_union(PICKLE_INTERRUPTED,
-				  XDR_tree_new_void());
-    }else if(rc.terminate_now)
+      rv = 0;
+      goto query_send_reply;// no reply no error
+    }
+    if(rc.terminate_now)
       goto query_send_reply; //fatal error
     if(errmsg==NULL){
       reply = usqld_error_packet(rv,"Unknown sql error");
@@ -247,7 +259,10 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
   int rv = USQLD_OK,resp_rv = USQLD_OK;
 
   bzero(&tc,sizeof(usqld_tc));
+
+
   
+   
   tc.db =NULL;
   tc.client_fd = init->fd;
   tc.config = init->config;
@@ -265,7 +280,7 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
 	XDR_tree  * out_p;
 	out_p = XDR_tree_new_union(PICKLE_INTERRUPTED,
 				   XDR_tree_new_void());
-	repsp_rv = usqld_send_packet(tc.client_fd,out_p);
+	resp_rv = usqld_send_packet(tc.client_fd,out_p);
 	XDR_tree_free(out_p);
       }
     case PICKLE_CONNECT:
