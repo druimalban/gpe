@@ -145,6 +145,7 @@ pre_session (const char *name)
 	{
 	case 0:
 	  execl (PRE_SESSION, PRE_SESSION, name, NULL);
+	  perror (PRE_SESSION);
 	  _exit (1);
 	  break;
 
@@ -162,6 +163,8 @@ pre_session (const char *name)
 static void
 do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 {
+  int fd;
+
   cleanup_children ();
 
   pre_session (name);
@@ -171,16 +174,24 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
     perror ("setsid");
   
   /* establish the user's environment */
-  if (setuid (uid))
-    perror ("setuid");
-  
   if (setgid (gid))
     perror ("setgid");
 
+  if (setuid (uid))
+    perror ("setuid");
+  
   setenv ("SHELL", shell, 1);
   setenv ("HOME", dir, 1);
   setenv ("USER", name, 1);
   chdir (dir);
+
+  fd = open (".xsession-errors", O_WRONLY | O_CREAT | O_TRUNC);
+  if (fd)
+    {
+      dup2 (fd, 1);
+      dup2 (fd, 2);
+      close (fd);
+    }
   
   if (access (".xsession", X_OK) == 0)
     execl (".xsession", ".xsession", NULL);

@@ -1,5 +1,12 @@
 2002-07-21  Philip Blundell  <philb@gnu.org>
 
+	* X11/gpe-login.pre-session: Symlink .xsession-errors into
+	ramdisk.
+	
+	* gpe-login.c (do_login): Redirect output from session to
+	.xsession-errors file.  Call setgid before setuid.
+	(pre_session): Call perror if exec fails.
+
 	* gpe-login.setup (PATH): Include /usr/X11R6/bin.
 
 	* gpe-dm.c (main): Don't create dummy window.  Remove useless
