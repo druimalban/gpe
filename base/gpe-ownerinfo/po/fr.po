@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.22\n"
 "POT-Creation-Date: 2003-10-10 00:14+0200\n"
-"PO-Revision-Date: 2003-10-16 19:37+0300\n"
+"PO-Revision-Date: 2004-01-25 00:19+0200\n"
 "Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgstr "+33 (0) x xx xx xx xx"
 #. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
 #: gpe-ownerinfo.c:364
 msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
-msgstr ""
+msgstr "Configurable depuis l'application <i>Propriétaire</i> dans les outils de configuration."
 
 # proprio
 #~ msgid "en"
