@@ -518,7 +518,8 @@ void unpaint_stone(int col, int row){
   gtk_widget_draw (go.drawing_area, &rect);
 }
 
-void paint_mark(int col, int row, GoMark mark, GdkColor * color){
+/* optional last args for specific marks */
+void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
   GdkRectangle rect;
   int position;
   int size;
@@ -531,6 +532,7 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color){
         (go.grid[col][row] == BLACK_STONE)?"black":"white");
 
   gdk_gc_set_foreground(gc, color);
+
   switch(mark){
     case MARK_SQUARE:
       position = go.stone_size / 4;
@@ -556,6 +558,58 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color){
                    rect.y + position,
                    size, size,
                    0, 23040);//23040 == 360*64
+      break;
+    case MARK_LABEL:
+      {
+        va_list ap;
+        char * s;
+        char * font_name;
+        int    font_size;
+        PangoFontDescription * font;
+        PangoContext * context;
+        PangoLayout  * layout;
+        GdkGC * gc;
+        int text_width;
+        int text_heigh;
+
+        //Pango context and layout
+        context = gtk_widget_create_pango_context(go.drawing_area);
+        //pango_context_set_
+        layout = pango_layout_new (context);
+
+        //font
+        font_size = (int)(go.stone_size * (1 - 0.6)); //stone -x%
+        if(font_size < 6)  font_size = 6; //min
+        if(font_size > 10) font_size = 10;//max NOTE: check desktop default
+        font_name = g_strdup_printf("Mono %d", font_size);
+        TRACE("FONT %s (stone: %d)", font_name, go.stone_size);
+        font = pango_font_description_from_string (font_name);
+        pango_layout_set_font_description (layout, font);
+
+        //label
+        va_start (ap, color);
+        s = va_arg(ap, char *);
+        va_end (ap);
+        TRACE("LABEL: ->%s<-\n", s);
+        pango_layout_set_text (layout, s, -1);
+
+        //color
+        if(go.grid[col][row] == BLACK_STONE)
+          gc = go.drawing_area->style->white_gc;
+        else
+          gc = go.drawing_area->style->black_gc;
+
+        //rendering
+        text_width = text_heigh = 0;
+        pango_layout_get_pixel_size (layout, &text_width, &text_heigh);
+        TRACE("LABEL w %d h %d", text_width, text_heigh);
+        gdk_draw_layout(go.drawing_area_pixmap_buffer,
+                        gc,
+                        rect.x + (go.stone_size - text_width) / 2,//layout's left
+                        rect.y + (go.stone_size - text_heigh) / 2,//layout's top
+                        layout);
+        g_free(context); g_free(layout);//NOTE: allocate once.
+      }
       break;
     case NO_MARK:
     default:

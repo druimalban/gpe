@@ -1,7 +1,7 @@
 GPE go NEWS
 
 * cvs
-- 
+- added support for label marks 
 - show an "expander" if the message is longer than the statusbar.
 - remove all duplicated spaces in the message for maximal display in the status bar.
 - basic comment support:

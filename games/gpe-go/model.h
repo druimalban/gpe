@@ -98,6 +98,7 @@ typedef enum {
   MARK_SQUARE,
   MARK_SPOT,
   //MARK_TRIANGLE
+  MARK_LABEL,
 } GoMark;
 
 typedef enum {
