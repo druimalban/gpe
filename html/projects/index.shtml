@@ -5,16 +5,14 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="../includes/head.shtml"-->
 
-The following projects are relevant to GPE: 
-<p>
-Base software/libraries:<br>
+<h2>Base software/libraries</h2>
 <ul> 
 <LI> <I><A HREF="GPE-usqld.shtml">uSQLd Database Engine</A></I> A minimimalist database engine base upon <a href="http://www.hwaci.com/sw/sqlite/"> SQLite</a>
 <LI> <I><A HREF="http://www.gtk.org">GTK+ Toolkit</A></I> Graphical User
 Interface (GUI) toolkit for X11 (not maintained by the GPE project)
 </ul>
 
- Applications:<BR>
+<h2>Applications</h2>
  	<UL>
 	<LI> <I><A HREF="GPE-appmgr.shtml">Application Manager</A></I>, the so to say main menu of the PDA user
 	interface. It launches applications and ensures that certain applications
@@ -38,7 +36,7 @@ Interface (GUI) toolkit for X11 (not maintained by the GPE project)
 	<LI> ... and for sure many more to come
 </UL>
 
-Utilities:<br>	
+<h2>Utilities</h2>
 <UL>
 	<LI> <I><A HREF="GPE-login.shtml">Multi-user login</A></I>
 	<LI> <I><A HREF="bluez-pin.shtml">Bluetooth PIN
@@ -46,7 +44,7 @@ Utilities:<br>
 	<LI> <I><A HREF="GPE-what.shtml">Modal help system</A></I>
 </UL>
 
-Libraries:<br>
+<h2>Libraries</h2>
 <UL>
 	<LI> <I><A HREF="libgpewidget.shtml">libgpewidget</A></I>
 </UL>
