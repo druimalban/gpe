@@ -1,5 +1,12 @@
 2002-09-02  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (new_event): Fix calculation of end time when
+	wrapping from one day to the next.
+	(struct edit_state): Add notebooktype, page.
+	(click_ok): Distinguish appointments and reminders.
+	(set_notebook_page): Set s->page.
+	(edit_event_window): Pass edit_state as argument to above
+	function.
 	* main.c (new_appointment): Use viewtime, not current time.
 
 2002-09-01  Philip Blundell  <philb@gnu.org>

@@ -31,6 +31,7 @@
 struct edit_state
 {
   GtkWidget *deletebutton;
+  GtkWidget *notebooktype;
 
   GtkWidget *startdate, *enddate;
   GtkWidget *starttime, *endtime;
@@ -56,6 +57,8 @@ struct edit_state
 
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, 
     *yearlyspin_adj;
+
+  guint page;
   
   event_t ev;
 };
@@ -218,34 +221,28 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       new_event = TRUE;
     }
 
-  memset (&tm_start, 0, sizeof (struct tm));
-  memset (&tm_end, 0, sizeof (struct tm));
-
-  tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
-  tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
-  tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
-
-  tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
-  tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
-  tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
-
   ev->flags = 0;
-  if (0/*gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alldaybutton))*/)
-    {
-      ev->flags |= FLAG_UNTIMED;
 
-      /* NB: all-day events use UTC here */
-      start_t = timegm (&tm_start);
-      end_t = timegm (&tm_end);
-    }
-  else
+  if (s->page == 0)
     {
+      /* Appointment */
       char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
 							  (s->starttime)->entry), 
 					    0, -1);
       char *end = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
 							(s->endtime)->entry),
 					  0, -1);
+
+      memset (&tm_start, 0, sizeof (struct tm));
+      tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+      tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+      tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+
+      memset (&tm_end, 0, sizeof (struct tm));
+      tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
+      tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
+      tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
+
       strptime (start, TIMEFMT, &tm_start);
       strptime (end, TIMEFMT, &tm_end);
       
@@ -262,6 +259,36 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
       g_free (end);
       g_free (start);
+    }
+  else
+    {
+      /* Reminder */
+      memset (&tm_start, 0, sizeof (struct tm));
+      tm_start.tm_year = GTK_DATE_COMBO (s->reminderdate)->year - 1900;
+      tm_start.tm_mon = GTK_DATE_COMBO (s->reminderdate)->month;
+      tm_start.tm_mday = GTK_DATE_COMBO (s->reminderdate)->day;
+
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->remindertimebutton)))
+	{
+	  char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
+							      (s->remindertime)->entry), 
+						0, -1);
+	  strptime (start, TIMEFMT, &tm_start);
+	}
+      else
+	{
+	  ev->flags |= FLAG_UNTIMED;
+	  tm_start.tm_hour = 12;
+	}
+
+      start_t = mktime (&tm_start);
+
+      /* If DST was in effect, mktime will have "helpfully" incremented the
+         hour.  */
+      if (tm_start.tm_isdst)
+	start_t -= 60*60;
+
+      end_t = start_t;
     }
 
   if (end_t < start_t)
@@ -407,11 +434,12 @@ click_cancel (GtkWidget *widget,
 }
 
 static gboolean
-set_notebook_page (GtkWidget *w, GtkWidget *notebook)
+set_notebook_page (GtkWidget *w, struct edit_state *s)
 {
   guint i = (guint)gtk_object_get_data (GTK_OBJECT (w), "page");
-  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
-  gtk_widget_draw (notebook, NULL);
+  gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), i);
+  s->page = i;
+  gtk_widget_draw (s->notebooktype, NULL);
   return FALSE;
 }
 
@@ -506,7 +534,6 @@ edit_event_window (void)
   GtkWidget *menutype = gtk_menu_new ();
   GtkWidget *vboxappointment = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxreminder = gtk_vbox_new (FALSE, 0);
-  GtkWidget *notebooktype = gtk_notebook_new ();
   GtkWidget *hboxreminder1 = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxreminder2 = gtk_hbox_new (FALSE, 0);
   GtkWidget *mi;
@@ -518,11 +545,11 @@ edit_event_window (void)
   memset (s, 0, sizeof (*s));
 
   mi = gtk_menu_item_new_with_label (_("Appointment"));
-  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), notebooktype);
+  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), s);
   gtk_object_set_data (GTK_OBJECT (mi), "page", (gpointer)0);
   gtk_menu_append (GTK_MENU (menutype), mi);
   mi = gtk_menu_item_new_with_label (_("Reminder"));
-  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), notebooktype);
+  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), s);
   gtk_object_set_data (GTK_OBJECT (mi), "page", (gpointer)1);
   gtk_menu_append (GTK_MENU (menutype), mi);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenutype), menutype);
@@ -563,11 +590,12 @@ edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxreminder), hboxreminder1, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxreminder), hboxreminder2, FALSE, FALSE, 0);
   gtk_widget_show_all (vboxreminder);
-
-  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebooktype), FALSE);
-  gtk_notebook_set_show_border (GTK_NOTEBOOK (notebooktype), FALSE);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebooktype), vboxappointment, NULL);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebooktype), vboxreminder, NULL);
+  
+  s->notebooktype = gtk_notebook_new ();
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (s->notebooktype), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (s->notebooktype), FALSE);
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxappointment, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxreminder, NULL);
 
   gtk_text_set_editable (GTK_TEXT (description), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
@@ -591,7 +619,7 @@ edit_event_window (void)
 
   gtk_box_pack_start (GTK_BOX (vboxevent), optionmenutype, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxevent), notebooktype, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxevent), s->notebooktype, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionframe, TRUE, TRUE, 2);
   
   gtk_widget_show_all (vboxevent);
@@ -960,12 +988,12 @@ new_event (time_t t, guint timesel)
       localtime_r (&t, &tm);
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
-      tm.tm_hour++;
-      strftime (buf, sizeof(buf), TIMEFMT, &tm);
-      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
-      
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      t += 60 * 60;
+      localtime_r (&t, &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       
