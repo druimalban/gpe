@@ -23,7 +23,7 @@ install-program:  $(PACKAGE).desktop #all
 	done
 	install -D src/$(ARM_BIN)  $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
-	install -D $(PACKAGE).png  $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	install -D -m 644 $(PACKAGE).png  $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -D -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 
 clean: clean-po
