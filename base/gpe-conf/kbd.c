@@ -103,7 +103,8 @@ GtkWidget *Kbd_Build_Objects()
   char *user_kbdrc;
 
   vbox = gtk_vbox_new (0,0);
-
+  /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 
   opt1 = setup_kb (vbox, NULL, _("Standard"), XKBD_DIR "kbdconfig");
   setup_kb (vbox, opt1, _("Tiny"), XKBD_DIR "kbdconfig.tiny");
@@ -113,7 +114,7 @@ GtkWidget *Kbd_Build_Objects()
   /* If the user has a config in ~/.kbdconfig, add it */
   user_kbdrc = g_strdup_printf ("%s/.kbdconfig", g_get_home_dir());
   if (file_exists(user_kbdrc))
-    setup_kb (vbox, opt1, _("User Defined"), user_kbdrc);
+    setup_kb (vbox, opt1, _("User defined"), user_kbdrc);
   g_free (user_kbdrc);
 
   return vbox;
