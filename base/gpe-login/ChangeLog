@@ -1,3 +1,11 @@
+2003-03-22 Paul Jakma <paul@dishone.st>
+
+	* gpe-login.c: (locale_is_system): rename to locale_item_cmp and
+	  add a small sanity check
+	(locale_try_user): fix sense of g_slist_find_custom
+	  and pass the correct argument to search list for
+	add DEBUG flag and some debug statements  
+
 2003-03-20  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.46 released.

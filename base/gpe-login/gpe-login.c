@@ -52,6 +52,7 @@
 #define GPE_LOGIN_CONF "/etc/gpe/gpe-login.conf"
 #define GPE_LOCALE_ALIAS "/etc/gpe/locale.alias"
 #define GPE_LOCALE_USER_FILE ".gpe/locale"
+#define DEBUG 0
 
 #define bin_to_ascii(c) ((c)>=38?((c)-38+'a'):(c)>=12?((c)-12+'A'):(c)+'.')
 
@@ -152,7 +153,7 @@ static locale_item_t *locale_read_user (const char *username);
 static int locale_set_xprop (const char *locale);
 static int locale_set (const char *locale);
 static void locale_free_item (locale_item_t *item);
-static int locale_is_system (locale_item_t *a, locale_item_t *b);
+static int locale_item_cmp (locale_item_t *a, locale_item_t *b);
 static int locale_try_user (const char *user);
 
 static void
@@ -305,6 +306,8 @@ set_username (GtkWidget *widget, gpointer data)
   current_username = (const char *)data;
   if (locale_try_user(current_username))
     {
+      if (DEBUG)
+        fprintf(stderr,"set_username: tried user\n");
       /* TODO - need to update the GTK language menu entry to item->name */
     }
 }
@@ -721,9 +724,19 @@ locale_set (const char *locale)
 }  
 
 static int 
-locale_is_system (locale_item_t *a, locale_item_t *b)
-{  
-  return (strncmp( a->locale, b->locale, 10));
+locale_item_cmp (locale_item_t *a, locale_item_t *b)
+{
+  if (DEBUG)
+      fprintf(stderr,"&a: %p &b: %p\n",a,b);
+
+  if (a && b) 
+    {
+      if (DEBUG)
+          fprintf(stderr,"a-l: %s, b-l: %s\n",a->locale,b->locale);
+      return (strncmp( a->locale, b->locale, 10));
+    } 
+  else
+    return -1;
 }
 
 static void
@@ -738,13 +751,19 @@ locale_free_item(locale_item_t *item)
 static int 
 locale_try_user (const char *user)
 {
-  locale_item_t *item;
+  locale_item_t *item = NULL;
+  
+  if (DEBUG)
+    fprintf(stderr,"locale_try_user: user &%p\n",user);
   
   if ( (item = locale_read_user (user)) &&
-  	(!g_slist_find_custom(locale_system_list, 
-                            (gconstpointer *) (item->locale),
-                            (GCompareFunc) &locale_is_system)))
+  	(g_slist_find_custom(locale_system_list, 
+                            (gconstpointer *) (item),
+                            (GCompareFunc) &locale_item_cmp)))
     {
+      if (DEBUG) {
+      	fprintf(stderr,"locale_try_user: got locale %s\n",item->name);
+      }
       locale_set(item->locale);
       if (current_locale)
         locale_free_item(current_locale);
@@ -753,6 +772,8 @@ locale_try_user (const char *user)
     } 
   else
     {
+      if (DEBUG)
+        fprintf(stderr,"locale_try_user: no locale\n");
       if (item)
         locale_free_item(item);
       return -1;
@@ -858,9 +879,14 @@ set_current_locale (GtkWidget * widget, gpointer * data)
 {
 
   locale_item_t *item = (locale_item_t *) data;
-  
+ 
+  if (DEBUG)
+        fprintf(stderr,"set_current_locale: item &%p\n",item);
+        
   if (item)
     {
+      if (DEBUG)
+        fprintf(stderr,"set_current_locale: setting %s\n",item->name);
       current_locale = item;
       locale_set (item->locale);
     }
@@ -913,6 +939,9 @@ locale_read_user (const char *username)
   locale_item_t *item = NULL;
   FILE *fp;
 
+  if (DEBUG)
+    fprintf(stderr,"locale_read_user: user %s\n",username);
+
   if (!(pwe = getpwnam (username)))
     return NULL;
 
@@ -923,7 +952,7 @@ locale_read_user (const char *username)
     }
   else if (! S_ISDIR (st.st_mode))
     {
-      fprintf (stderr, "%s not a directory\n", pwe->pw_dir);
+      fprintf (stderr, "locale_read_user: %s not a directory\n", pwe->pw_dir);
       return NULL;
     }
 
@@ -956,6 +985,9 @@ locale_read_user (const char *username)
     {
       item = parse_locale_line (p);
     }
+
+  if (DEBUG)
+    fprintf(stderr,"locale_read_user: got locale %s\n",item->name);
 
   fclose (fp);
   return item;
