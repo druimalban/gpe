@@ -21,13 +21,13 @@
 
 <widget>
   <class>GtkWindow</class>
-  <name>GPE-ISgui</name>
+  <name>GPE-Config-Sleep</name>
   <signal>
     <name>delete_event</name>
     <handler>gtk_main_quit</handler>
     <last_modification_time>Fri, 02 Aug 2002 17:32:16 GMT</last_modification_time>
   </signal>
-  <title>GPE-ISgui</title>
+  <title>GPE Config Sleep</title>
   <type>GTK_WINDOW_TOPLEVEL</type>
   <position>GTK_WIN_POS_NONE</position>
   <modal>False</modal>

@@ -1,6 +1,6 @@
 ?package(gpe-config-sleep): \
  needs=x11 \
- title=GPE-Config-Sleep \
+ title="Sleep Config"\
  longtitle="GPE Config Sleep" \
  command=gpe-config-sleep \
  icon48=/usr/share/pixmaps/gpe-config-sleep.png \

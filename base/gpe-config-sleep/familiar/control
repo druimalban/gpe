@@ -1,5 +1,5 @@
 Package: gpe-config-sleep
-Version: 0.1
+Version: 0.1.2
 Priority: optional
 Section: base
 Maintainer: Erik Karlin <e_karlin@yahoo.com>

@@ -19,7 +19,7 @@ int
 main (int argc, char *argv[])
 {
   char cname[MAXPATHLEN];
-  GtkWidget *GPE_ISgui;
+  GtkWidget *GPE_Config_Sleep;
   ipaq_conf_t *ISconf;
 
   strcpy(cname, "/etc/ipaq-sleep.conf");
@@ -43,12 +43,12 @@ main (int argc, char *argv[])
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
-  GPE_ISgui = create_GPE_ISgui (ISconf);
+  GPE_Config_Sleep = create_GPE_Config_Sleep (ISconf);
 
-  set_conf_defaults(GPE_ISgui, ISconf);
+  set_conf_defaults(GPE_Config_Sleep, ISconf);
   check_configurable(ISconf);
 
-  gtk_widget_show (GPE_ISgui);
+  gtk_widget_show (GPE_Config_Sleep);
 
   gtk_main ();
   return 0;
