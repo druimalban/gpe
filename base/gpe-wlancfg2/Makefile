@@ -56,7 +56,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = 
 
-all: $(PACKAGE)
+all: $(PACKAGE) $(PACKAGE).desktop
 	
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
