@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-16 20:12+0100\n"
+"POT-Creation-Date: 2003-04-17 14:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,16 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:108 gpe-today.desktop.in.h:2
+#: main.c:101 gpe-today.desktop.in.h:2
 msgid "Summary"
 msgstr ""
 
-#: todo.c:153
+#: todo.c:40
 msgid "No todo items"
-msgstr ""
-
-#: todo.c:181
-msgid "Error stating todo DB"
 msgstr ""
 
 #: calendar.c:104
@@ -33,10 +29,6 @@ msgstr ""
 
 #: calendar.c:132
 msgid "All day event"
-msgstr ""
-
-#: calendar.c:153
-msgid "Error stating calendar DB"
 msgstr ""
 
 #: gpe-today.desktop.in.h:1

@@ -58,7 +58,7 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 -D gtkrc $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gtkrc
 
 clean: clean-po
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop *~
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop $(PACKAGE).desktop.in.h *~
 	rm -rf familiar/dist
 
 include $(BUILD)/Makefile.translation
