@@ -6,13 +6,13 @@
 
 gchar *s = N_("GPE Owner Info");
 gchar *s = N_("Owner Info");
-gchar *s = N_("Name:");
+gchar *s = N_("Name");
 gchar *s = N_("Foo Bar");
-gchar *s = N_("E-Mail:");
+gchar *s = N_("E-Mail");
 gchar *s = N_("nobody@localhost");
-gchar *s = N_("Phone:");
+gchar *s = N_("Phone");
 gchar *s = N_("+99 (9999) 999-9999");
-gchar *s = N_("Address:");
+gchar *s = N_("Address");
 gchar *s = N_("Nosuch Lane 42\n"
               "X-12345 Quux\n"
               "Foobarland");

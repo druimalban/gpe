@@ -85,7 +85,7 @@ main (int argc, char *argv[])
   ownername    = g_strdup ("GPE User");
   owneremail   = g_strdup ("nobody@localhost.localdomain");
   ownerphone   = g_strdup ("+99 (9999) 999-9999");
-  owneraddress = g_strdup ("Use\n\"GPE Configuration\"\nto change this data.");
+  owneraddress = g_strdup ("Please use\n\"GPE Configuration\"\nto change this data.");
 
   GPE_Ownerinfo = create_GPE_Ownerinfo ();
 
@@ -135,28 +135,35 @@ main (int argc, char *argv[])
     }
   else /* fp == NULL */
     {
+      /* show default info: */
+      /*
       gpe_perror_box (GPE_OWNERINFO_DATA);
       exit (1);
+      */
     }
 
   widget = lookup_widget (GPE_Ownerinfo, "name");
   gtk_label_set_text (GTK_LABEL (widget), ownername);
 
+  /*
   gtk_rc_parse_string ("widget '*name' style 'gpe_username'");
   gtk_widget_set_name (widget, "name");
+  */
 
   widget = lookup_widget (GPE_Ownerinfo, "email");
   gtk_label_set_text (GTK_LABEL (widget), owneremail);
 
-  widget = lookup_widget (GPE_Ownerinfo, "address");
-  gtk_label_set_text (GTK_LABEL (widget), owneraddress);
-
   widget = lookup_widget (GPE_Ownerinfo, "phone");
   gtk_label_set_text (GTK_LABEL (widget), ownerphone);
 
+  widget = lookup_widget (GPE_Ownerinfo, "address");
+  gtk_label_set_text (GTK_LABEL (widget), owneraddress);
+
+  /*
   widget = lookup_widget (GPE_Ownerinfo, "frame1");
   gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
   gtk_widget_set_name (widget, "gpe_ownerinfo");
+  */
 
   gtk_widget_show (GPE_Ownerinfo);
 
