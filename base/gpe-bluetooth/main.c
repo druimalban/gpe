@@ -462,11 +462,19 @@ sigchld_handler (int sig)
 
   if (p == hciattach_pid)
     {
-      hciattach_pid = 0;
-      if (radio_is_on)
+      if (WIFSIGNALED (status) && (WTERMSIG (status) == SIGHUP))
 	{
-	  gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
-	  radio_off ();
+	  /* restart hciattach after hangup */
+	  hciattach_pid = fork_hciattach ();
+	}
+      else
+	{
+	  hciattach_pid = 0;
+	  if (radio_is_on)
+	    {
+	      gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
+	      radio_off ();
+	    }
 	}
     }
   else if (p > 0)
