@@ -1,5 +1,13 @@
 2002-07-13  Philip Blundell  <philb@gnu.org>
 
+	* what.c (close_clicked): Remove spurious argument.
+	(gpe_what_init): Set style[GTK_STATE_PRELIGHT] too.
+	(do_widget): Display private text too, if it's different from the
+	normal tip.
+	(gpe_what_init): Create second label and pack it into a vbox.
+
+2002-07-13  Philip Blundell  <philb@gnu.org>
+
 	* init.c (gpe_application_init): Call gpe_what_init.
 	* what.c (what_init): Rename to gpe_what_init; replace
 	with dummy function that does nothing.

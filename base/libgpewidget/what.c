@@ -24,7 +24,7 @@ static Window root;
 static Atom atom;
 
 static GtkWidget *widget;
-static GtkWidget *label;
+static GtkWidget *label, *label2;
 
 static gboolean query_on, showing;
 
@@ -68,6 +68,13 @@ do_widget (GtkWidget *tips, GtkWidget *widget, gchar *text, gchar *text_private,
   guint x, y;
 
   gtk_label_set_text (GTK_LABEL (label), text);
+  if (text_private && strcmp (text, text_private))
+    {
+      gtk_label_set_text (GTK_LABEL (label2), text_private);
+      gtk_widget_show (label2);
+    }
+  else
+    gtk_widget_hide (label2);
 
   gdk_window_get_pointer (NULL, &x, &y, NULL);
   y += 16;
@@ -90,7 +97,7 @@ stop_query (GtkWidget *w, GtkWidget *window)
 }
 
 static void
-close_clicked (GtkWidget *w, GdkEventButton *ev, GtkWidget *ww)
+close_clicked (GtkWidget *w, GtkWidget *ww)
 {
   gtk_widget_hide (ww);
 }
@@ -101,7 +108,7 @@ gpe_what_init (void)
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
   GtkStyle *style;
   GdkColor col;
-  GtkWidget *hbox;
+  GtkWidget *hbox, *vbox, *sep;
   GtkWidget *close, *closei;
 
   dpy = GDK_DISPLAY ();
@@ -116,6 +123,7 @@ gpe_what_init (void)
 
   style = gtk_style_copy (window->style);
   style->bg[GTK_STATE_NORMAL] = col;
+  style->bg[GTK_STATE_PRELIGHT] = col;
   gtk_widget_set_style (window, style);
 
   widget = gtk_tips_query_new ();
@@ -135,7 +143,19 @@ gpe_what_init (void)
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), close, FALSE, FALSE, 0);
 
-  gtk_container_add (GTK_CONTAINER (window), hbox);
+  sep = gtk_vseparator_new ();
+  gtk_widget_show (sep);
+
+  label2 = gtk_label_new ("");
+  gtk_widget_show (label2);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), label2, FALSE, FALSE, 0);
+
+  gtk_container_add (GTK_CONTAINER (window), vbox);
   gtk_widget_realize (window);
   gtk_widget_realize (widget);
 
