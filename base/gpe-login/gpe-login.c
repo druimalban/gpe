@@ -31,7 +31,7 @@
 
 #define _(x) gettext(x)
 
-#define GPE_ICON "/usr/share/gpe/pixmaps/gpe-logo.png"
+#define GPE_ICON PREFIX "/share/gpe/pixmaps/gpe-logo.png"
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login-setup"
 #define PASSWORD_FILE "/etc/passwd"
 #define GROUP_FILE "/etc/group"

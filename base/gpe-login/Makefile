@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 
 CFLAGS = `gtk-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
-CFLAGS += -DPACKAGE=\"gpe-login\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += -DPACKAGE=\"gpe-login\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 all: gpe-login mo
 
