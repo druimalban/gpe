@@ -274,7 +274,7 @@ edit_finished (GtkWidget *d)
 static void
 click_delete (GtkWidget *widget, event_t ev)
 {
-  char *qn = "Delete only this entry or all recurring entries?";
+  char *qn = "Delete all recurring entries?\n(If no, delete this instance only)";
   GtkWidget *d = gtk_widget_get_toplevel (widget);
 
   event_t ev_real;
