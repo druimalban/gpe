@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <time.h>
 #include <fcntl.h>
 #include <gtk/gtk.h>
@@ -78,9 +79,10 @@ set_buzzer (int on, int off)
 }
 
 void
-buzzer_off (void)
+buzzer_off (int sig)
 {
   set_buzzer (0, 0);
+  exit (128 + sig);
 }
 	
 int get_vol(int *left, int *right)
@@ -242,7 +244,7 @@ gint bells_and_whistles ()
 	if(get_vol(&curl, &curr) == -1)
     		printf("Unable to get volume\n");
 
-	atexit (buzzer_off);
+	signal (SIGINT, buzzer_off);
    	
 	set_buzzer (1000, 500);
 
