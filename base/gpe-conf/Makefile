@@ -41,7 +41,7 @@ endif
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG
 else
-CFLAGS += -Os -fomit-frame-pointer -march=armv4 -mtune=strongarm
+CFLAGS += -Os -fomit-frame-pointer
 endif
 
 LDFLAGS += -lXsettings -lXsettings-client -lcrypt
@@ -65,7 +65,7 @@ else # we do cross-compile...
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
 
-CFLAGS += $(IPAQ_INCLUDES)
+CFLAGS += $(IPAQ_INCLUDES) -march=armv4 -mtune=strongarm
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
 LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
 LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
