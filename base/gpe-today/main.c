@@ -47,24 +47,17 @@ int main(int argc, char **argv)
 	exit(0);
 }
 
-static gboolean resize_callback(GtkWidget *widget, GdkEventConfigure *event,
+static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 				gpointer data)
 {
 	Pixmap rmap;
+	static Pixmap pmap = None;
 	static GdkPixmap *pix = NULL;
-	gint new_height, new_width;
 
-	/* check if window got resized (eg: screen rotation) */
-
-	gdk_window_get_size(window.toplevel->window, &new_width, &new_height);
-
-	if ((new_height >= new_width) == window.mode) { /* screen got rotated */
+	if ((wid->allocation.height >= wid->allocation.width) == window.mode) {
 		window.mode = !window.mode;
 	}
 
-	window.height = new_height;
-	window.width = new_width;
-	
 	if (pix) {
 		g_object_unref(pix);
 		g_object_unref(pix);
@@ -76,20 +69,23 @@ static gboolean resize_callback(GtkWidget *widget, GdkEventConfigure *event,
 	g_print("ROOT PIXMAP: %ld\n", rmap);
 	
 	if (rmap != None) {
-		Pixmap pmap = CutWinPixmap(GDK_DISPLAY(),
-		                    GDK_WINDOW_XWINDOW(widget->window), rmap,
-		                    GDK_GC_XGC(widget->style->black_gc));
+		if (pmap != None)
+			XFreePixmap(GDK_DISPLAY(), pmap);
+
+		pmap = CutWinPixmap(GDK_DISPLAY(),
+		                    GDK_WINDOW_XWINDOW(wid->window), rmap,
+		                    GDK_GC_XGC(wid->style->black_gc));
 
 		g_print("PIXMAP: %ld\n", pmap);
 		
 		if (pmap != None) {
 			pix = gdk_pixmap_foreign_new(pmap);
-			widget->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
+			wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
 			g_object_ref(pix);
-			widget->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
+			wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
 			g_object_ref(pix);
-			widget->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
-			gtk_widget_set_style(widget, widget->style);
+			wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
+			gtk_widget_set_style(wid, wid->style);
 		}
 	}
 
