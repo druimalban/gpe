@@ -1,3 +1,6 @@
+2003-11-11	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* main.c: Fixed misnamed filename.
+	
 2003-11-04	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* network.c: Allow users to view config. Some minor cleanups.
 	* cfgfile.c: Fixed bug causing wrong parameters for some interfaces.

@@ -106,7 +106,7 @@ struct Applet applets[]=
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
 		"Owner", "ownerinfo", "Owner Information",PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore,
-		"Login", "login-setup", "Login Setup",PREFIX "/share/pixmaps/gpe-config-login.png"},
+		"Login", "login-setup", "Login Setup",PREFIX "/share/pixmaps/gpe-config-login-setup.png"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore ,
 		"Users" ,"users","User Administration",PREFIX "/share/pixmaps/gpe-config-users.png"},
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , 
