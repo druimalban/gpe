@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-10 00:06+0200\n"
+"POT-Creation-Date: 2003-03-14 02:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,63 +14,47 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-sketchbook.desktop.in.h:2 src/selector.c:68
+#: gpe-sketchbook.desktop.in.h:2 src/selector.c:72
 msgid "Sketchbook"
 msgstr ""
 
-#: src/selector.c:84
-msgid "Couldn't open the directory"
-msgstr ""
-
-#: src/selector.c:91
+#: src/selector.c:92
 #, c-format
-msgid "Can not create %s, exit.\n"
+msgid "Cannot read the sketchbook directory: %s. Exit."
 msgstr ""
 
-#: src/selector.c:149
+#: src/selector.c:98
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr ""
+
+#: src/selector.c:159
 #, c-format
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:63 src/sketchpad-cb.c:183
+#: src/selector-cb.c:61 src/sketchpad-cb.c:183
 msgid "Delete current sketch?"
 msgstr ""
 
-#: src/selector-cb.c:63 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/selector-cb.c:61 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
 #: src/sketchpad-cb.c:183
 msgid "Question"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:184
+#: src/selector-cb.c:62 src/sketchpad-cb.c:184
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:184
+#: src/selector-cb.c:62 src/sketchpad-cb.c:184
 msgid "Delete"
 msgstr ""
 
-#: src/selector-cb.c:126
-msgid "a notebook to sketch your notes"
-msgstr ""
-
-#: src/selector-cb.c:128
-msgid ""
-"The application provides two main windows: the Selector, and the Sketchpad.\n"
-"You select your sketchs with the Selector.\n"
-"You sketch your notes with the Sketchpad."
-msgstr ""
-
-#: src/selector-cb.c:133
-msgid ""
-"(c) 2002 Luc Pionchon\n"
-"Distributed under GPL"
-msgstr ""
-
-#: src/sketchpad.c:182
+#: src/sketchpad.c:189
 msgid " "
 msgstr ""
 
-#: src/sketchpad.c:183
+#: src/sketchpad.c:190
 msgid "new"
 msgstr ""
 
@@ -92,16 +76,16 @@ msgstr ""
 msgid "Save current sketch?"
 msgstr ""
 
-#: src/files-png.c:180
+#: src/files-png.c:151
 msgid ""
 "Keys for PNG tEXt chunks must have at least 1 and at most 79 characters."
 msgstr ""
 
-#: src/files-png.c:188
+#: src/files-png.c:159
 msgid "Keys for PNG tEXt chunks must be ASCII characters."
 msgstr ""
 
-#: src/files-png.c:209
+#: src/files-png.c:180
 msgid "Value for PNG tEXt chunk can not be converted to ISO-8859-1 encoding."
 msgstr ""
 

@@ -1,5 +1,10 @@
 GPE sketchbook NEWS
 
+* 0.2.3 2003-03-14
+- toggle icon when changing between list/icon mode
+- list-view is now default view at launch time
+- minor bug fixes
+
 * 0.2.2 2003-03-10
 - improved window title
 - fixed colorbox bug)
