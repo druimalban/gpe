@@ -5,7 +5,7 @@ CVSBUILD = yes
 GTK2 = yes
 VERSION = 0.24
 
-MEMBERS = main dun sdp pan lap rfcomm bluez-pin
+MEMBERS = main dun sdp pan lap rfcomm ui dbus
 
 CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -DDBUS_API_SUBJECT_TO_CHANGE
 

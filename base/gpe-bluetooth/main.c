@@ -42,6 +42,7 @@
 
 #include "main.h"
 #include "sdp.h"
+#include "dbus.h"
 
 #include "dun.h"
 #include "lap.h"
@@ -487,7 +488,7 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  bluez_pin_dbus_server_run ();
+  gpe_bluetooth_init_dbus ();
 
   window = gtk_plug_new (0);
   gtk_widget_set_usize (window, 16, 16);
