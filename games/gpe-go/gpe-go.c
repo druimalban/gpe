@@ -213,6 +213,13 @@ gboolean is_on_main_branch(GNode * node){
   return FALSE;
 }
 
+GNode * get_first_leaf(GNode * node){
+  while(!G_NODE_IS_LEAF(node)){
+    node = node->children;//children point on the first child.
+  }
+  return node;
+}
+
 char ** new_table(int size){
   int i,j;
   char ** table;
@@ -1132,7 +1139,10 @@ void redo_turn(){
               i = children;
             }
           }
+          //change the main branch
+          go.main_branch = get_first_leaf(choosen_child);
         }
+
         //unpaint SPOTS
         for(i=0; i<children; i++){
           Hitem * item;
@@ -1671,10 +1681,10 @@ void gui_init(){
   {
     GtkWidget * status;
     status = gtk_statusbar_new();
-    gtk_statusbar_set_has_resize_grip(status, FALSE);
+    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(status), FALSE);
     gtk_box_pack_start (GTK_BOX (vbox), status, FALSE, FALSE, 0);
    
-    gtk_statusbar_push(status,0,"let's go!");
+    gtk_statusbar_push(GTK_STATUSBAR(status), 0, "let's go!");
 
   }
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
