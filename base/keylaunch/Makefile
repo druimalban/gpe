@@ -1,5 +1,5 @@
 PACKAGE   = keylaunch
-VERSION   = 2.0.6
+VERSION   = 2.0.7
 
 #DEBUG     = 1
 CVSBUILD  = yes
@@ -7,8 +7,8 @@ CVSBUILD  = yes
 CC        = gcc
 PACKAGE_CFLAGS    = -Os -fomit-frame-pointer -Wall
 XROOT     = /usr/X11R6
-PACKAGE_CFLAGS  += $(STANDARD_CFLAGS) `pkg-config --cflags xtst`
-LIBS      = `pkg-config --libs xtst`
+PACKAGE_CFLAGS  += $(STANDARD_CFLAGS) `pkg-config --cflags xtst xau`
+LIBS      = `pkg-config --libs xtst xau`
 
 PROG      = keylaunch
 
