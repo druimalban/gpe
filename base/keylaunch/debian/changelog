@@ -1,3 +1,10 @@
+keylaunch (2.0.1) unstable; urgency=low
+
+  * Added XSelectInput call.
+  * Changes to Makefile for latest GPE build system.
+
+ -- Moray Allan <moray@sermisy.org>  Sun, 23 Mar 2003 18:40:11 +0000
+
 keylaunch (2.0.0) unstable; urgency=low
 
   * New parser for keylaunchrc files.
