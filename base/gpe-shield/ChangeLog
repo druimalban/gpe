@@ -1,3 +1,7 @@
+2004-06-11 Florian Boor <florian.boor@kernelconceps.de>
+	* main.c: Moved stupdly misplaced kill() call. 
+	          Thanks to Phil for finding this.
+
 2004-06-10 Florian Boor <florian.boor@kernelconceps.de>
 	* backend.c: Fixed missing unlink of socket endpoint.
 	* interface.c: Fixed handling of config flag. Fixed small memory leak.
