@@ -4,6 +4,6 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
-Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), gpe-conf (>= 0.1.0)
+Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), gpe-conf (>=0.1.0), libmb1
 Description: GPE network connection checker
 Source: ftp://ftp.handhelds.org/pub/projects/gpe/gpe-mininet-VERSION-.tar.gz
