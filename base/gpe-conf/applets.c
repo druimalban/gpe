@@ -342,7 +342,7 @@ int
 suid_exec (const char *cmd, const char *params)
 {
 	GtkWidget *label, *dialog, *icon, *passwd_entry;
-	GtkWidget *hbox;
+	GtkWidget *hbox, *btn;
 	GdkPixbuf *p;
 	gint res = 0;
 
@@ -362,11 +362,16 @@ suid_exec (const char *cmd, const char *params)
 						      GTK_DIALOG_DESTROY_WITH_PARENT,
 						      GTK_STOCK_CANCEL,
 						      GTK_RESPONSE_REJECT,
-						      GTK_STOCK_OK,
-						      GTK_RESPONSE_ACCEPT,
 						      NULL);
-		label = gtk_label_new (_
-				       ("Some options are only\naccessible for user root.\nPlease enter password."));
+		btn = gtk_dialog_add_button(GTK_DIALOG(dialog),
+				GTK_STOCK_OK,
+				GTK_RESPONSE_ACCEPT);
+		GTK_WIDGET_SET_FLAGS (btn, GTK_CAN_DEFAULT);
+		gtk_widget_grab_default(btn);
+
+		
+		label = gtk_label_new (_ ("Some options are only\n"\
+			"accessible for user root.\nPlease enter password."));
 		hbox = gtk_hbox_new (FALSE, 4);
 
 		gtk_widget_realize (dialog);
