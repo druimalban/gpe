@@ -93,7 +93,7 @@ gpe_what_mark_widget (GtkWidget *widget)
 void
 gpe_what_init (void)
 {
-  help_atom = gdk_atom_intern ("GPE_INTERACTIVE_HELP", FALSE);
+  help_atom = gdk_atom_intern ("_GPE_INTERACTIVE_HELP", FALSE);
   string_atom = gdk_atom_intern ("STRING", False);
 
   help_xatom = gdk_x11_atom_to_xatom (help_atom);
