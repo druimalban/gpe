@@ -1,19 +1,19 @@
 <!--#set var="addtitle" value="Standards"-->
 <!--#set var="pagename" value="standards"-->
 <!--#include virtual="includes/head.shtml"-->
-One of the goals of the GPE project is encouraging developers for our platform
+One of the goals of the GPE project is to encourage developers for our platform
 to conform to a number of standards separate from the core GPE
 software.
 
 <h2> SQL schemas</h2> 
 The core storage model for environment-wide data such as PIM data and
-user prefferences is that of a relational database, implemented
+user preferences is that of a relational database, implemented
 through the ubiquitous SQL (Structured Query Language). The core SQL
-schemas for this information are currently under development and the
-current proposals for these standards are listed here: 
+schemas for this information are currently under development, and the
+current proposals for these standards are listed here:
 
-<h2> PIM schema</h2> 
-A hacked-together version of the bulk of the GPE schema is available <a href=pim.sql>here</a> this ommits a specification for storing events and has not yet been finalised. 
+<h3> PIM schema</h3> 
+A hacked-together version of the bulk of the GPE schema is available <a href=pim.sql>here</a>. This omits a specification for storing events, and has not yet been finalised. 
 
 
 
