@@ -745,6 +745,8 @@ void refresh_tabs ()
 
 	old_tab = gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook));
 
+	gtk_widget_hide (notebook);
+
 	clear_appmgr_tabs ();
 
 	/* Create the 'All' tab if wanted */
@@ -765,14 +767,14 @@ void refresh_tabs ()
 		l = l->next;
 	}
 
-	gtk_widget_show_all (notebook);
-
 	if (old_tab != -1)
 		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
 
 	l =  gtk_container_children (GTK_CONTAINER(window));
 	if (l && l->data)
 		create_recent_box (l->data);
+
+	gtk_widget_show_all (notebook);
 
 	TRACE ("refresh_tabs: <end>");
 }
