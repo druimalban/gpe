@@ -175,8 +175,6 @@ send_message (pkcontent_t ctype, pkcommand_t command, rule_t *rule)
 		running_command = command;
 		switch (command)
 		{
-			case CMD_DUMP:
-			break;
 			default:
 			break;
 		}
@@ -205,6 +203,14 @@ wait_command_finish()
 
 
 /* --- local intelligence --- */
+
+
+static void
+do_shutdown(void)
+{
+	send_message(PK_COMMAND, CMD_SHUTDOWN, NULL);
+	wait_command_finish();
+}
 
 static char 
 *get_color(rule_t *rule)
@@ -257,15 +263,7 @@ do_rule_add(rule_t *rule)
 {
 	rule_count++;
 	rule_info = realloc(rule_info,rule_count*sizeof(rule_t));
-	memset(&rule_info[rule_count-1],0,sizeof(rule_t));
-	snprintf(rule_info[rule_count-1].name,254,"%s",rule->name);
-	rule_info[rule_count-1].status = rule->status;
-	rule_info[rule_count-1].target = rule->target;
-	rule_info[rule_count-1].protocol = rule->protocol;
-	rule_info[rule_count-1].chain = rule->chain;
-	rule_info[rule_count-1].d_port = rule->d_port;
-	rule_info[rule_count-1].s_port = rule->s_port;
-	rule_info[rule_count-1].is_policy = rule->is_policy;
+	rule_info[rule_count-1] = *rule;
 }
 
 
@@ -302,6 +300,22 @@ add_default_policies()
 	rule_info[rule_count-1].is_policy = FALSE;
 	send_message(PK_COMMAND,CMD_ADD,&rule_info[rule_count-1]);
 	wait_command_finish();
+	
+	rule_count++;
+	rule_info = realloc(rule_info,rule_count*sizeof(rule_t));
+	memset(&rule_info[rule_count-1],0,sizeof(rule_t));
+	snprintf(rule_info[rule_count-1].name,254,"%s",_("Allow established connections"));
+	rule_info[rule_count-1].status = 1;
+	rule_info[rule_count-1].target = TARGET_ACCEPT;
+	rule_info[rule_count-1].protocol = PROT_ALL;
+	rule_info[rule_count-1].chain = CHAIN_INPUT;
+	rule_info[rule_count-1].d_port = 0;
+	rule_info[rule_count-1].s_port = 0;
+	rule_info[rule_count-1].state = STATE_ESTABLISHED | STATE_RELATED;
+	rule_info[rule_count-1].is_policy = FALSE;
+	send_message(PK_COMMAND,CMD_ADD,&rule_info[rule_count-1]);
+	wait_command_finish();
+	
 	rule_count++;
 	rule_info = realloc(rule_info,rule_count*sizeof(rule_t));
 	memset(&rule_info[rule_count-1],0,sizeof(rule_t));
@@ -507,7 +521,7 @@ void do_end_command()
     gtk_widget_set_sensitive(miSave,TRUE);
     gtk_widget_set_sensitive(miApply,TRUE);
     gtk_widget_set_sensitive(bApply,TRUE);
-	if ((running_command == CMD_DUMP) || (running_command == CMD_ADD)) 
+	if (running_command == CMD_ADD) 
 		update_tree();
 	running_command = CMD_NONE;
 }
@@ -534,6 +548,7 @@ void do_safe_exit()
 			gtk_widget_destroy(dialog);
 		}
 	}
+	do_shutdown();
 	gtk_main_quit();
 }
 

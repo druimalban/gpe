@@ -73,7 +73,7 @@ do_save_rules(void)
 	for (i=0;i<rule_count;i++)
 	{
 		translate_name(rule_info[i].name,1);
-		fprintf(cfgfile,"%s %d %d %d %d %d %d %d\n",
+		fprintf(cfgfile,"%s %d %d %d %d %d %d %d %d\n",
 		        rule_info[i].name,
 	            rule_info[i].status,
 	            rule_info[i].target,
@@ -81,6 +81,7 @@ do_save_rules(void)
 	            rule_info[i].chain,
 	            rule_info[i].d_port,
 	            rule_info[i].s_port,
+	            rule_info[i].state,
 	            rule_info[i].is_policy);
 	}
 	fclose(cfgfile);
@@ -100,7 +101,7 @@ do_load_rules(void)
 		return -1;
 	while (ret != EOF)
 	{
-		ret = fscanf(cfgfile,"%254s %d %d %d %d %d %d %d\n",
+		ret = fscanf(cfgfile,"%254s %d %d %d %d %d %d %d %d\n",
 		       (char*)arule.name,
 	           &arule.status,
 	           (int*)&arule.target,
@@ -108,8 +109,9 @@ do_load_rules(void)
 	           (int*)&arule.chain,
 	           &arule.d_port,
 	           &arule.s_port,
+		       &arule.state,
 	           &arule.is_policy);
-		if (ret == 8)
+		if (ret == 9)
 		{
 			rule_count++;
 			rule_info = realloc(rule_info,rule_count*sizeof(rule_t));
@@ -137,7 +139,7 @@ do_clear(void)
 void
 do_rules_apply()
 {
-	gchar *cmd, *portspec;
+	gchar *cmd, *portspec, *states, *tmp;
 	const gchar *dir;
 	const gchar *prot;
 	const gchar *target;
@@ -153,13 +155,13 @@ do_rules_apply()
 			switch (rule_info[i].target)
 			{
 				case TARGET_ACCEPT:
-					target = "-j ACCEPT";
+					target = "ACCEPT";
 				break;
 				case TARGET_DROP:
-					target = "-j DROP";
+					target = "DROP";
 				break;
 				default:
-					target = "-j REJECT";
+					target = "REJECT";
 				break;
 			}
 			
@@ -192,6 +194,52 @@ do_rules_apply()
 				break;
 			}
 			
+			states = NULL;
+			if (rule_info[i].state)
+			{
+				tmp = g_strdup("-m state --state ");
+				if (rule_info[i].state & STATE_ESTABLISHED)
+				{
+					states = g_strdup_printf("%s ESTABLISHED",tmp);
+					tmp = states;
+				}
+				if (rule_info[i].state & STATE_RELATED)
+				{
+					if (states) 
+					{
+						states = g_strdup_printf("%s,RELATED",tmp);
+						g_free(tmp);
+					}
+					else
+						states = g_strdup_printf("%s RELATED",tmp);						
+					tmp = states;
+				}
+				if (rule_info[i].state & STATE_NEW)
+				{
+					if (states) 
+					{
+						states = g_strdup_printf("%s,NEW",tmp);
+						g_free(tmp);
+					}
+					else
+						states = g_strdup_printf("%s NEW",tmp);						
+					tmp = states;
+				}
+				if (rule_info[i].state & STATE_INVALID)
+				{
+					if (states) 
+					{
+						states = g_strdup_printf("%s,INVALID",tmp);
+						g_free(tmp);
+					}
+					else
+						states = g_strdup_printf("%s INVALID",tmp);						
+					tmp = states;
+				}
+			}
+			else
+				states = g_strdup("");
+			
 			if (rule_info[i].s_port)
 				portspec = g_strdup_printf("--sport %d",rule_info[i].s_port);
 			else if (rule_info[i].d_port)
@@ -202,18 +250,21 @@ do_rules_apply()
 			if (rule_info[i].is_policy)
 				cmd = g_strdup_printf("%s %s %s %s",IPTABLES_CMD, "-P", dir, target);
 			else	
-				cmd = g_strdup_printf("%s %s %s %s %s %s %s %s",
+				cmd = g_strdup_printf("%s %s %s %s %s %s %s %s -j %s",
 								  IPTABLES_CMD, 
 								  "-A", dir,
-								  "-i", DEFAULT_INTERFACE,
+								  (rule_info[i].chain == CHAIN_OUTPUT) ? "-o" : "-i", DEFAULT_INTERFACE,
+				                  states,
 								  prot,
 								  portspec,
 								  target);
 			/* call iptables to add rule */
+printf("exec: %s\n",cmd);
 			system(cmd);
 			
 			g_free(cmd);
 			g_free(portspec);
+			g_free(states);
 		}
 	}		
 }
@@ -281,6 +332,13 @@ send_message (pkcontent_t ctype, rule_t *rule)
 	}
 }
 
+
+static void
+do_shutdown()
+{
+	system(IPTABLES_CMD " --flush"); /* cleans all existing iptables settings */
+	system(IPTABLES_CMD " -P INPUT ACCEPT"); /* reset input policy */
+}
 
 static int
 wait_message ()
@@ -356,6 +414,9 @@ do_command (pkcommand_t command, rule_t rule)
 	break;
 	case CMD_SET:
 		do_rules_apply();
+	break;
+	case CMD_SHUTDOWN:
+		do_shutdown();
 	break;
 	default:
 	break;

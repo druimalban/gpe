@@ -1,6 +1,11 @@
 #ifndef GPE_SHIELD_BACKEND_H
 #define GPE_SHIELD_BACKEND_H
 
+#define STATE_RELATED 		(1<<0)
+#define STATE_ESTABLISHED 	(1<<1)
+#define STATE_INVALID	 	(1<<2)
+#define STATE_NEW		 	(1<<3)
+
 typedef enum
 {
 	TARGET_ACCEPT,
@@ -36,6 +41,7 @@ typedef struct
 	rule_protocol_t protocol;
 	rule_chain_t chain;
 	u_int d_port, s_port;
+	int state;
 	int is_policy;
 }
 rule_t;
@@ -54,7 +60,7 @@ typedef enum
 	CMD_NONE,
 	CMD_ADD,
 	CMD_REMOVE,
-	CMD_DUMP,
+	CMD_SHUTDOWN,
 	CMD_SET,
 	CMD_CLEAR,
 	CMD_LOAD,
