@@ -17,10 +17,12 @@
  */
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
+#include <string.h>
 
 #include "selector-gui.h"
 #include "selector-cb.h"
 #include "selector.h"
+#include "db.h"
 
 //gpe libs
 #include "gpe/pixmaps.h"
@@ -145,6 +147,35 @@ GtkWidget * build_selector_toolbar(){
   return toolbar;
 }
 
+static void on_title_edited (GtkCellRendererText *cell,
+                             const gchar         *path_string,
+                             const gchar         *new_title,
+                             gpointer             unused_userdata)
+{
+  GtkTreeModel *model;
+  GtkTreePath *path;
+  GtkTreeIter iter;
+  gchar * old_title;
+
+  model = selector.listmodel;
+  path  = gtk_tree_path_new_from_string (path_string);
+  gtk_tree_model_get_iter (model, &iter, path);
+
+  gtk_tree_model_get(model, &iter, ENTRY_TITLE, &old_title, -1);
+
+  if(strcmp(old_title, new_title) != 0){
+    gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_TITLE, new_title, -1);   
+    
+    {//update DB
+      int id;
+      gtk_tree_model_get(model, &iter, ENTRY_ID, &id, -1);
+      db_update_title(id, new_title);
+    }
+  }
+
+  g_free(old_title);
+  gtk_tree_path_free(path);
+}
 
 GtkWidget * build_scrollable_textlist(){
   GtkWidget * scrolledwindow;//to return
@@ -178,8 +209,8 @@ GtkWidget * build_scrollable_textlist(){
   column = gtk_tree_view_column_new_with_attributes ("title", renderer,
                                                      "text", ENTRY_TITLE,
                                                      NULL);
-  //g_object_set(renderer, "editable", TRUE, NULL);
-  //g_signal_connect (G_OBJECT (renderer), "edited", G_CALLBACK (on_title_edited), model);
+  g_object_set(renderer, "editable", TRUE, NULL);
+  g_signal_connect (G_OBJECT (renderer), "edited", G_CALLBACK (on_title_edited), model);
   gtk_tree_view_column_set_sort_column_id (column, ENTRY_TITLE);
   gtk_tree_view_append_column (treeview, column);
 

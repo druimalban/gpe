@@ -1,6 +1,7 @@
 GPE sketchbook NEWS
 
 * cvs
+- added editable titles
 - store notes into sqlite DB (open door to many improvements :)
 
 * 0.2.7 2003-10-12

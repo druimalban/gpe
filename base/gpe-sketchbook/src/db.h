@@ -24,4 +24,6 @@ int  db_load_notes();
 int  db_insert_note(const Note *note);
 void db_delete_note(const gint id); /* before using it, delete associated file! */
 
+void db_update_title(const gint id, const gchar *title);
+
 #endif

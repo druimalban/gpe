@@ -105,7 +105,7 @@ void db_update_note_timestamp (const gint id, const int timestamp){//FIXME: use 
   gint   result;
   gchar *errmsg;
 
-  result = sqlite_exec_printf (db, "UPDATE notes SET updated='%d' WHERE id='%d'",
+  result = sqlite_exec_printf (db, "UPDATE notes SET updated='%d' WHERE ROWID='%d'",
                                NULL, NULL,
                                &errmsg,
                                timestamp,
@@ -116,20 +116,21 @@ void db_update_note_timestamp (const gint id, const int timestamp){//FIXME: use 
   }  
 }
 
-void db_update_title(const gint id, const gchar *title){//FIXME: use it
+void db_update_title(const gint id, const gchar *title){
   gint result;
   gchar *errmsg;
 
-  result = sqlite_exec_printf (db, "UPDATE notes SET title='%q' WHERE id='%d'",
+  result = sqlite_exec_printf (db, "UPDATE notes SET title='%q' WHERE ROWID='%d'",
                                NULL, NULL,
                                &errmsg,
                                title,
                                id);
 
+  TRACE("SQL> [%d] update title >>%s<<", id, title);
+
   if(result != SQLITE_OK){
     report_error(result, errmsg);
   }
-
 }
 
 int db_insert_note(const Note *note){
