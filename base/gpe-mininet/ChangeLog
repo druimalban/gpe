@@ -1,3 +1,8 @@
+
+2004-07-09		Florian Boor <florian.boor@kernelconcepts.de>
+	* netlink.c: Removed include causing compile to fail in some
+                     environments.
+
 2004-06-09		Florian Boor <florian.boor@kernelconcepts.de>
 	* Released V 0.4
 	* Makefile: new version, removed old cruft, made oe compatible

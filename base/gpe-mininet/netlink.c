@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include <sys/socket.h>
 #include <linux/types.h>
-#include <linux/uio.h>
 
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
