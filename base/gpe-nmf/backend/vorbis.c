@@ -70,6 +70,9 @@ vorbis_play_loop (void *vv)
   while (!v->eos)
     {
       /* Read comments and audio info at the start of a logical bitstream */
+      unsigned int bytes = 0;
+      unsigned char *bufp = buffer;
+
       if (v->bos) 
 	{
 	  v->vc = ov_comment(&v->vf, -1);
@@ -79,8 +82,14 @@ vorbis_play_loop (void *vv)
 	}
 
       old_section = v->current_section;
-      ret = ov_read (&v->vf, buffer, OGGBUFSIZ, 0,
-		     2, 1, &v->current_section);
+      do {
+	ret = ov_read (&v->vf, bufp, OGGBUFSIZ - bytes, 0,
+		       2, 1, &v->current_section);
+	if (ret > 0) {
+	  bytes += ret;
+	  bufp += ret;
+	}
+      } while (bytes < OGGBUFSIZ && ret > 0);
 
       if (ret == 0) 
 	{
@@ -96,9 +105,9 @@ vorbis_play_loop (void *vv)
 	} 
       else 
 	{
-	  audio_write (v->audio, buffer, ret);
+	  audio_write (v->audio, buffer, bytes);
 
-	  v->time += (ret / 4);
+	  v->time += (bytes / 4);
 
 	  /* did we enter a new logical bitstream? */
 	  if (old_section != v->current_section && old_section != -1) 
