@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-14 21:07+0200\n"
+"POT-Creation-Date: 2004-08-16 18:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -214,11 +214,11 @@ msgstr ""
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:278
+#: ipaqscreen/main.c:278 sleep/callbacks.c:47
 msgid "min"
 msgstr ""
 
-#: ipaqscreen/main.c:281
+#: ipaqscreen/main.c:281 sleep/callbacks.c:50
 msgid "sec"
 msgstr ""
 
@@ -250,7 +250,7 @@ msgstr ""
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:241 keyctl.c:230 users/callbacks.c:107
+#: network.c:241 keyctl.c:230 users/callbacks.c:119
 msgid "Question"
 msgstr ""
 
@@ -621,174 +621,170 @@ msgstr ""
 msgid "Image:"
 msgstr ""
 
-#: sleep/interface.c:69
+#: sleep/interface.c:66
 msgid "Auto sleep"
 msgstr ""
 
-#: sleep/interface.c:79 sleep/interface.c:115
+#: sleep/interface.c:76 sleep/interface.c:115
 msgid "enabled"
 msgstr ""
 
-#: sleep/interface.c:93
+#: sleep/interface.c:94
 msgid "sleep timeout"
-msgstr ""
-
-#: sleep/interface.c:96 sleep/interface.c:130
-msgid "idle(sec)"
 msgstr ""
 
 #: sleep/interface.c:105
 msgid "Auto dim"
 msgstr ""
 
-#: sleep/interface.c:128
+#: sleep/interface.c:132
 msgid "backlight dim timeout"
 msgstr ""
 
-#: sleep/interface.c:137
+#: sleep/interface.c:141
 msgid "Auto dim level"
 msgstr ""
 
-#: sleep/interface.c:154
-msgid "Auto sleep advanced controls"
+#: sleep/interface.c:159
+msgid "Advanced Controls"
 msgstr ""
 
-#: sleep/interface.c:164
+#: sleep/interface.c:169
 msgid "CPU"
 msgstr ""
 
-#: sleep/interface.c:171
+#: sleep/interface.c:175
 msgid "Sleep on cpu less than load"
 msgstr ""
 
-#: sleep/interface.c:182
-msgid "load"
+#: sleep/interface.c:179
+msgid "load below"
 msgstr ""
 
-#: sleep/interface.c:189
+#: sleep/interface.c:194
 msgid "APM"
 msgstr ""
 
-#: sleep/interface.c:195
+#: sleep/interface.c:200
 msgid "Sleep on AC"
 msgstr ""
 
-#: sleep/interface.c:197
+#: sleep/interface.c:202
 msgid "probe IRQs"
 msgstr ""
 
-#: sleep/interface.c:203
+#: sleep/interface.c:208
 msgid "Check IRQ activity"
 msgstr ""
 
-#: users/interface.c:208
+#: users/interface.c:214
 msgid "User Name"
 msgstr ""
 
-#: users/interface.c:209
+#: users/interface.c:215
 msgid "User Info"
 msgstr ""
 
-#: users/interface.c:210
+#: users/interface.c:216
 msgid "Home"
 msgstr ""
 
-#: users/interface.c:226 users/interface.c:227
+#: users/interface.c:232 users/interface.c:233
 msgid "Add user"
 msgstr ""
 
-#: users/interface.c:227
+#: users/interface.c:233
 msgid "Add a new user"
 msgstr ""
 
-#: users/interface.c:231 users/interface.c:232
+#: users/interface.c:237 users/interface.c:238
 msgid "Edit user"
 msgstr ""
 
-#: users/interface.c:232
+#: users/interface.c:238
 msgid "Edit existing user"
 msgstr ""
 
-#: users/interface.c:236 users/interface.c:237
+#: users/interface.c:242 users/interface.c:243
 msgid "Delete user"
 msgstr ""
 
-#: users/interface.c:237
+#: users/interface.c:243
 msgid "Delete existing user"
 msgstr ""
 
-#: users/interface.c:281
+#: users/interface.c:298
 msgid "User settings"
 msgstr ""
 
-#: users/interface.c:295
+#: users/interface.c:312
 msgid "User Name:"
 msgstr ""
 
-#: users/interface.c:311
+#: users/interface.c:328
 msgid "Password:"
 msgstr ""
 
-#: users/interface.c:319
+#: users/interface.c:336
 msgid "User Info:"
 msgstr ""
 
-#: users/interface.c:335
+#: users/interface.c:352
 msgid "Shell:"
 msgstr ""
 
-#: users/interface.c:354
+#: users/interface.c:371
 msgid "Home:"
 msgstr ""
 
-#: users/interface.c:372
+#: users/interface.c:389
 msgid "Change"
 msgstr ""
 
-#: users/interface.c:433
+#: users/interface.c:450
 msgid "Change Password"
 msgstr ""
 
-#: users/interface.c:460
+#: users/interface.c:477
 msgid "Old Password:"
 msgstr ""
 
-#: users/interface.c:467
+#: users/interface.c:484
 msgid "New Password:"
 msgstr ""
 
-#: users/interface.c:475
+#: users/interface.c:492
 msgid "Confirm:"
 msgstr ""
 
-#: users/callbacks.c:105
+#: users/callbacks.c:117
 msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
 
-#: users/callbacks.c:107
+#: users/callbacks.c:119
 msgid ""
 "Delete user and all its data?\n"
 "This action is not revertable\n"
 "and is executed instantly."
 msgstr ""
 
-#: users/callbacks.c:143
+#: users/callbacks.c:155
 msgid "Please choose a user name."
 msgstr ""
 
-#: users/callbacks.c:161
+#: users/callbacks.c:173
 msgid "Please choose a home directory."
 msgstr ""
 
-#: users/callbacks.c:222
+#: users/callbacks.c:234
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
 
-#: users/callbacks.c:225
+#: users/callbacks.c:237
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -1429,15 +1425,15 @@ msgstr ""
 msgid "Status: high"
 msgstr ""
 
-#: battery.c:146 battery.c:203 battery.c:302
+#: battery.c:146 battery.c:203 battery.c:301 battery.c:304
 msgid "Status: low"
 msgstr ""
 
-#: battery.c:149 battery.c:206 battery.c:305
+#: battery.c:149 battery.c:206 battery.c:307
 msgid "Status: critical"
 msgstr ""
 
-#: battery.c:152 battery.c:209 battery.c:308
+#: battery.c:152 battery.c:209 battery.c:310
 msgid "Status: charging"
 msgstr ""
 
@@ -1457,7 +1453,7 @@ msgstr ""
 msgid "Status: no battery"
 msgstr ""
 
-#: battery.c:167 battery.c:224 battery.c:243 battery.c:311
+#: battery.c:167 battery.c:224 battery.c:243 battery.c:313
 msgid "Status: unknown"
 msgstr ""
 
@@ -1469,11 +1465,11 @@ msgstr ""
 msgid "Voltage"
 msgstr ""
 
-#: battery.c:180 battery.c:232 battery.c:319
+#: battery.c:180 battery.c:232 battery.c:321
 msgid "AC connected"
 msgstr ""
 
-#: battery.c:182 battery.c:234 battery.c:321
+#: battery.c:182 battery.c:234 battery.c:323
 msgid "Lifetime"
 msgstr ""
 
@@ -1497,11 +1493,11 @@ msgstr ""
 msgid "No battery"
 msgstr ""
 
-#: battery.c:380
+#: battery.c:382
 msgid "Internal battery"
 msgstr ""
 
-#: battery.c:384
+#: battery.c:386
 msgid "Jacket battery"
 msgstr ""
 

@@ -1,7 +1,12 @@
+2004-08-18	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* sleep/*: Implemented dim level setting for ipaq-sleep 0.8.
+	
 2004-08-17	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* brightness.c: Fixed bug causing screensaver to turn on.
 	* theme.c: Fixed issue caused failure if gconf is installed.
-
+	
 2004-08-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Released Version 0.1.14

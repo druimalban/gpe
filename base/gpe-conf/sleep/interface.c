@@ -17,6 +17,7 @@
 #include "interface.h"
 #include "../applets.h"
 #include "../ipaqscreen/brightness.h"
+#include "conf.h"
 
 GtkWidget *sleep_idle_spin;
 GtkWidget *dim_spin;
@@ -26,6 +27,7 @@ GtkWidget *dim_enable;
 GtkWidget *sleep_apm;
 GtkWidget *sleep_cpu;
 GtkWidget *sleep_probe_irq;
+GtkWidget *dim_scale;
 
 extern GtkStyle *wstyle;
 GtkWidget*
@@ -43,7 +45,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GtkObject *sleep_cpu_spin_adj;
   GtkWidget *sleep_cpu_label;
   GtkWidget *frame6;
-  GtkWidget *dim_scale;
   GtkObject *dim_adj;
   GtkTooltips *tooltips;
 
@@ -145,14 +146,16 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  dim_adj = gtk_adjustment_new (blVal, 0, 255, 1, 5, 0);
+  dim_adj = gtk_adjustment_new (blVal, 0, 255, DIM_STEP, 5, 0);
   dim_scale = gtk_hscale_new (GTK_ADJUSTMENT (dim_adj));
-
   gtk_widget_show (dim_scale);
   gtk_scale_set_digits (GTK_SCALE (dim_scale), 0);
   gtk_table_attach (GTK_TABLE (table1),dim_scale, 1, 3, 5, 6,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_signal_connect (GTK_OBJECT (dim_scale), "format-value",
+                      GTK_SIGNAL_FUNC (change_dim_scale_label),
+                      NULL);
 
 
   frame5 = gtk_label_new (NULL);
@@ -227,6 +230,14 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_signal_connect (GTK_OBJECT (dim_spin), "focus_out_event",
                       GTK_SIGNAL_FUNC (on_dim_spin_focus_out_event),
                       ISconf);
+
+  gtk_signal_connect (GTK_OBJECT (dim_scale), "value-changed",
+                      GTK_SIGNAL_FUNC (on_dim_scale_changed),
+                      ISconf);
+					  
+  gtk_signal_connect (GTK_OBJECT (dim_scale), "focus_out_event",
+                      GTK_SIGNAL_FUNC (on_dim_scale_focus_out_event),
+                      (gpointer) blVal);
 					  
   gtk_signal_connect (GTK_OBJECT (dim_enable), "toggled",
                       GTK_SIGNAL_FUNC (AD_checked),
@@ -245,9 +256,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
                       ISconf);
   gtk_signal_connect (GTK_OBJECT (sleep_probe_irq), "toggled",
                       GTK_SIGNAL_FUNC (on_sleep_probe_irq_toggled),
-                      ISconf);
-  gtk_signal_connect (GTK_OBJECT (dim_adj), "value_changed",
-                      GTK_SIGNAL_FUNC (bl_vscale_changed),
                       ISconf);
   gtk_signal_connect (GTK_OBJECT (dim_scale), "focus_out_event",
                       GTK_SIGNAL_FUNC (on_dim_scale_focus_out_event),

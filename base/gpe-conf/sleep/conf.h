@@ -10,6 +10,8 @@
 
 #define	CONF_BLOCK	5
 
+#define DIM_STEP 1
+
 #ifndef	TRUE
 #define	TRUE	1
 #define	FALSE	0

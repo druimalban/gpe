@@ -356,6 +356,10 @@ void set_brightness (int brightness)
 		brightness = 0;
 	if (brightness > 255)
 		brightness = 255;
+	
+	if (platform == P_NONE)
+		init_light();
+	
 	switch (platform)
 	{
 	case P_IPAQ:
@@ -387,6 +391,10 @@ void set_brightness (int brightness)
 
 int get_brightness ()
 {
+	
+	if (platform == P_NONE)
+		init_light();
+	
 	switch (platform)
 	{
 	case P_IPAQ:

@@ -6,6 +6,9 @@
 gchar*
 change_scale_label (GtkScale *scale, gdouble val);
 
+gchar*
+change_dim_scale_label (GtkScale *scale, gdouble val);
+
 void
 start_button (GtkButton       *button,
 	      gpointer         user_data);
@@ -35,8 +38,7 @@ irq_choose_but (GtkButton       *button,
 		gpointer         user_data);
 
 void
-bl_vscale_changed (GtkWidget       *widget,
-		   gpointer         user_data);
+on_dim_scale_changed (GtkRange  *range, gpointer user_data);
 
 void
 irq_done_clicked (GtkButton       *button,

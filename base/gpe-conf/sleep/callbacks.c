@@ -23,7 +23,7 @@ extern GtkWidget *sleep_idle_spin;
 extern GtkWidget *dim_spin;
 extern GtkWidget *sleep_cpu_spin;
 
-
+#warning TODO: this file needs cleanups!
 gchar*
 change_scale_label (GtkScale *scale, gdouble val)
 {
@@ -49,6 +49,14 @@ change_scale_label (GtkScale *scale, gdouble val)
   else 
     buf = g_strdup_printf("%d %s",sec,_("sec"));
   
+  return buf;
+}
+
+gchar*
+change_dim_scale_label (GtkScale *scale, gdouble val)
+{
+  gchar *buf;
+  buf = g_strdup_printf("%d %s",(int)(val/2.55),_("%"));
   return buf;
 }
 
@@ -180,16 +188,19 @@ on_sleep_probe_irq_toggled (GtkToggleButton *togglebutton,
 
 
 void
-bl_vscale_changed (GtkWidget       *widget,
-		   gpointer         user_data)
+on_dim_scale_changed (GtkRange  *range, gpointer user_data)
 {
   int		power;
   char 		val[32];
-  GtkAdjustment	*adj = GTK_ADJUSTMENT(widget);
+  ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
 
-  power = (int)adj->value;
-  snprintf(val,32,"%d",power);
-  suid_exec("SCRB",val);
+  if (GTK_WIDGET_HAS_FOCUS(GTK_WIDGET(range)))
+    {
+      power = (int)gtk_range_get_value(range);
+      snprintf(val,32,"%d",power);
+      suid_exec("SCRB",val);
+      setConfigInt(ISconf, "dim_level", power/DIM_STEP);
+    }
 }
 
 

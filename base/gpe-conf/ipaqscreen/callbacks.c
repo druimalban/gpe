@@ -33,7 +33,7 @@ on_light_check(gpointer adj)
 {
 	gtk_adjustment_set_value(GTK_RANGE(self.brightness)->adjustment,
 		(gfloat) get_brightness() / 2.55);
-  return TRUE;	
+ 	return TRUE;	
 }
 
 

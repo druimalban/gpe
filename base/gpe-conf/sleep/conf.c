@@ -225,7 +225,8 @@ ipaq_conf_t *load_ISconf(const char *fname)
 
 ipaq_conf_t *default_ISconf()
 {
-	printf("Defaults are not implemented.\nPlease copy a valid ipaqsleep.conf to your home directory.\n");
+	printf("Defaults are not implemented.\n" \
+	       "Please copy a valid ipaqsleep.conf to your home directory.\n");
 	exit(1);
 	return 0;
 }
