@@ -88,7 +88,6 @@ int main (int argc, char *argv[])
 
 	toolbar_main = gtk_toolbar_new ();
 	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar_main), GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar_main), GTK_TOOLBAR_ICONS);
 	
 	gtk_box_pack_start (GTK_BOX (vbSchemes), toolbar_main, FALSE, FALSE, 0);
 	gtk_box_reorder_child (GTK_BOX (vbSchemes), toolbar_main, 0);
@@ -124,7 +123,6 @@ int main (int argc, char *argv[])
 
 	toolbar_simple = gtk_toolbar_new ();
 	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar_simple), GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar_simple), GTK_TOOLBAR_ICONS);
 	
 	gtk_box_pack_start (GTK_BOX (vbSimple), toolbar_simple, FALSE, FALSE, 0);
 	gtk_box_reorder_child (GTK_BOX (vbSimple), toolbar_simple, 0);
