@@ -42,9 +42,11 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) -Wl,-Bsymbolic -Wl,--version-script,gpe_sync.map
 
-install-program: all $(PACKAGE).desktop
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+install-program: all
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/multisync
+	install -s $(TARGET) $(DESTDIR)$(PREFIX)/lib/multisync/$(TARGET)
+	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
+	install -m 644 gpe_sync.glade $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/gpe_sync.glade
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop

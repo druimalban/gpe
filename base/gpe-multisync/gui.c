@@ -10,15 +10,44 @@
 #include <gtk/gtk.h>
 #include <glade/glade.h>
 
-#include "multisync.h"
+#include "gpe_sync.h"
 
-GtkWidget *config_window;
+void
+cancel_clicked (GtkWidget *w, GtkWidget *data)
+{
+  gtk_widget_destroy (data);
+}
 
-gboolean
-create_config_window (void)
+void
+ok_clicked (GtkWidget *w, GtkWidget *data)
+{
+  gpe_conn *conn;
+
+  conn = g_object_get_data (G_OBJECT (w), "conn");
+  gpe_save_config (conn);
+
+  gtk_widget_destroy (data);
+}
+
+void
+delete_window (GtkWidget *w)
+{
+  gpe_conn *conn;
+
+  conn = g_object_get_data (G_OBJECT (w), "conn");
+  g_free (conn);
+
+  sync_plugin_window_closed ();
+}
+
+GtkWidget* 
+open_option_window (sync_pair *pair, connection_type type)
 {
   GladeXML *xml;
   gchar *filename;
+  GtkWidget *config_window;
+  GtkWidget *w;
+  gpe_conn *conn;
 
   filename = g_build_filename (PREFIX, "share", PACKAGE,
 			       "gpe_sync.glade", NULL);
@@ -30,19 +59,23 @@ create_config_window (void)
   if (xml == NULL)
     return FALSE;
 
+  conn = g_malloc0 (sizeof (*conn));
+
   config_window = glade_xml_get_widget (xml, "gpe_config");
 
-  return TRUE;
-}
+  gpe_load_config (conn);
 
-GtkWidget* 
-open_option_window (sync_pair *pair, connection_type type)
-{
-  if (! config_window)
-    {
-      if (create_config_window () == FALSE)
-	return NULL;
-    }
+  g_object_set_data (G_OBJECT (config_window), "conn", conn);
+
+  g_signal_connect (G_OBJECT (config_window), "destroy", G_CALLBACK (delete_window), NULL);
+
+  w = glade_xml_get_widget (xml, "cancelbutton1");
+  g_signal_connect (G_OBJECT (w), "clicked", G_CALLBACK (cancel_clicked), config_window);
+
+  w = glade_xml_get_widget (xml, "okbutton1");
+  g_signal_connect (G_OBJECT (w), "clicked", G_CALLBACK (ok_clicked), config_window);
+
+  g_object_unref (G_OBJECT (xml));
 
   return config_window;
 }
