@@ -56,7 +56,12 @@ gpe_error_box (char *text)
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
+  gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
+		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+
   gtk_widget_show_all (dialog);
+
+  gtk_main ();
 }
 
 void
