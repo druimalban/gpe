@@ -1,5 +1,9 @@
 2003-10-19  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (LDFLAGS): Remove -lsqlite.
+
+2003-10-19  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.39 released.
 
 2003-10-19  Philip Blundell  <philb@gnu.org>

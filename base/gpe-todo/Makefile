@@ -16,7 +16,7 @@ CPPFLAGS += -I../libdisplaymigration -I../libtododb
 LDFLAGS += -L../libdisplaymigration -L../libtododb
 endif
 
-LDFLAGS += -lsqlite -ltododb -ldisplaymigration
+LDFLAGS += -ltododb -ldisplaymigration
 
 MEMBERS = main todo-ui list-ui configure
 
