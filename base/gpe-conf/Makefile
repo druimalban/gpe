@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.0-pre9
+VERSION = 0.1.0
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -34,7 +34,7 @@ LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../li
 CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
 BUILD = ../build
 else
-CFLAGS += -I/usr/local/include/gpe
+CFLAGS += -I/usr/local/include/gpe -Wall
 BUILD = build
 endif
 

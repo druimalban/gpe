@@ -147,19 +147,19 @@ get_keyboard_defs ()
 
 		while (el[j])
 		{
-			if (val = strstr (el[j], "module-package"))
+			if ((val = strstr (el[j], "module-package")))
 				kbds[i - 1].package_name =
 					g_strdup (g_strchomp
 						  (strstr (val, "=") + 1));
-			else if (val = strstr (el[j], "module-name"))
+			else if ((val = strstr (el[j], "module-name")))
 				kbds[i - 1].module_name =
 					g_strdup (g_strchomp
 						  (strstr (val, "=") + 1));
-			else if (val = strstr (el[j], "device"))
+			else if ((val = strstr (el[j], "device")))
 				kbds[i - 1].device_name =
 					g_strdup (g_strchomp
 						  (strstr (val, "=") + 1));
-			else if (val = strstr (el[j], "support-package"))
+			else if ((val = strstr (el[j], "support-package")))
 				kbds[i - 1].support_package =
 					g_strdup (g_strchomp
 						  (strstr (val, "=") + 1));
@@ -296,9 +296,8 @@ Keyboard_Build_Objects (void)
 	for (i = 0; i < numkbds; i++)
 	{
 		kbds[i].rbSelect =
-			gtk_radio_button_new_with_label_from_widget (label,
-								     kbds[i].
-								     identifier);
+			gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(label),
+								     kbds[i].identifier);
 		label = kbds[i].rbSelect;
 		gtk_table_attach (GTK_TABLE (table), kbds[i].rbSelect, 0, 1,
 				  i + 1, i + 2, GTK_FILL | GTK_EXPAND,

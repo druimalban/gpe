@@ -38,6 +38,7 @@
 #include "packages.h"
 #include "serial.h"
 #include "cardinfo.h"
+#include "keyboard.h"
 
 static GtkWidget *passwd_entry;
 static int retv;

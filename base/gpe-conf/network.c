@@ -146,6 +146,7 @@ get_unconfigured_interfaces ()
 	return (result);
 }
 
+
 static void
 add_interface (GtkWidget * widget, gpointer d)
 {

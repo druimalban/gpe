@@ -142,13 +142,13 @@ users_on_save_clicked                        (GtkButton       *button,
   free(self->cur->pw.pw_name);
   self->cur->pw.pw_name = strdup(user); 
 
-  tmp = gtk_entry_get_text(GTK_ENTRY(self->gecos));
+  tmp = strdup(gtk_entry_get_text(GTK_ENTRY(self->gecos)));
   free(self->cur->pw.pw_gecos);
-  self->cur->pw.pw_gecos = strdup(tmp);
+  self->cur->pw.pw_gecos = tmp;
 
-  tmp = gtk_entry_get_text(GTK_ENTRY(self->shell));
+  tmp = strdup(gtk_entry_get_text(GTK_ENTRY(self->shell)));
   free(self->cur->pw.pw_shell);
-  self->cur->pw.pw_shell = strdup(tmp);
+  self->cur->pw.pw_shell = tmp;
 
   homedir = gtk_entry_get_text(GTK_ENTRY(self->home));
   if(strcmp(homedir,"/home/newuser")==0)
@@ -188,9 +188,9 @@ users_on_changepasswd_clicked                (GtkButton       *button,
 {
 
   passw *self=(passw *)user_data;
-  gchar *oldpasswd = gtk_entry_get_text(GTK_ENTRY(self->oldpasswd));
-  gchar *newpasswd2 = gtk_entry_get_text(GTK_ENTRY(self->newpasswd2));
-  gchar *newpasswd = gtk_entry_get_text(GTK_ENTRY(self->newpasswd));
+  gchar *oldpasswd = g_strdup(gtk_entry_get_text(GTK_ENTRY(self->oldpasswd)));
+  gchar *newpasswd2 = g_strdup(gtk_entry_get_text(GTK_ENTRY(self->newpasswd2)));
+  gchar *newpasswd = g_strdup(gtk_entry_get_text(GTK_ENTRY(self->newpasswd)));
   char salt[2];
   time_t tm;
   char *old_crypted_pass = self->cur->pw.pw_passwd; 
@@ -230,4 +230,3 @@ users_on_passwdcancel_clicked                (GtkButton       *button,
   gtk_widget_destroy(self->w);
 
 }
-

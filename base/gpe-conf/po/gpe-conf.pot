@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-30 16:29+0200\n"
+"POT-Creation-Date: 2003-09-11 17:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,104 +63,104 @@ msgstr ""
 msgid "Sorry, wrong password."
 msgstr ""
 
-#: timeanddate.c:349
+#: timeanddate.c:348
 msgid "Time & Date"
 msgstr ""
 
-#: timeanddate.c:365
+#: timeanddate.c:364
 msgid "Date"
 msgstr ""
 
-#: timeanddate.c:379
+#: timeanddate.c:378
 msgid "Enter current date here or use button to select."
 msgstr ""
 
-#: timeanddate.c:384
+#: timeanddate.c:383
 msgid "Time"
 msgstr ""
 
-#: timeanddate.c:409
+#: timeanddate.c:397
 msgid "Network"
 msgstr ""
 
-#: timeanddate.c:427
+#: timeanddate.c:415
 msgid "Select the timeserver to use to set the clock."
 msgstr ""
 
-#: timeanddate.c:429
+#: timeanddate.c:417
 msgid "Get time from network"
 msgstr ""
 
-#: timeanddate.c:436
+#: timeanddate.c:424
 msgid ""
 "If connected to the Internet, you may press this button to set the time on "
 "this device using the timeserver above."
 msgstr ""
 
-#: timeanddate.c:441 timeanddate.c:450
+#: timeanddate.c:429 timeanddate.c:438
 msgid "Timezone"
 msgstr ""
 
-#: timeanddate.c:478
+#: timeanddate.c:466
 msgid ""
 "Select your current timezone here. The setting applies after the next login."
 msgstr ""
 
-#: timeanddate.c:486
+#: timeanddate.c:474
 msgid "Daylight Saving"
 msgstr ""
 
-#: timeanddate.c:493
+#: timeanddate.c:481
 msgid "Use daylight saving time"
 msgstr ""
 
-#: timeanddate.c:500
+#: timeanddate.c:488
 msgid ""
 "Check this box if you want your device to handle daylight saving time for "
 "you."
 msgstr ""
 
-#: timeanddate.c:502
+#: timeanddate.c:490
 msgid "Offset:"
 msgstr ""
 
-#: timeanddate.c:511
+#: timeanddate.c:499
 msgid "Default"
 msgstr ""
 
-#: timeanddate.c:518
+#: timeanddate.c:506
 msgid "Use default DST offset of one hour?"
 msgstr ""
 
-#: timeanddate.c:523
+#: timeanddate.c:511
 msgid "Hours"
 msgstr ""
 
-#: timeanddate.c:526
+#: timeanddate.c:514
 msgid "Select daylight saving time offset hours here."
 msgstr ""
 
-#: timeanddate.c:531
+#: timeanddate.c:519
 msgid "Minutes"
 msgstr ""
 
-#: timeanddate.c:534
+#: timeanddate.c:522
 msgid "Select daylight saving time offset minutes here."
 msgstr ""
 
-#: timeanddate.c:540
+#: timeanddate.c:528
 msgid "Advanced Settings"
 msgstr ""
 
-#: timeanddate.c:546
+#: timeanddate.c:534
 msgid "Use advanced settings"
 msgstr ""
 
-#: timeanddate.c:549
+#: timeanddate.c:537
 msgid "Check this if you want to use the advanced settings below."
 msgstr ""
 
-#: timeanddate.c:646
+#: timeanddate.c:633
 msgid ""
 "To make timezone settings take effect, you'll need to log out and log in "
 "again."
@@ -334,170 +334,170 @@ msgstr ""
 msgid "Current Config"
 msgstr ""
 
-#: network.c:173 ownerinfo.c:221
+#: network.c:174 ownerinfo.c:221
 msgid "Name:"
 msgstr ""
 
-#: network.c:179
+#: network.c:180
 msgid "New Interface"
 msgstr ""
 
-#: network.c:186
+#: network.c:187
 msgid "This interface definition already exists!"
 msgstr ""
 
-#: network.c:227
+#: network.c:228
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:227 keyctl.c:162
+#: network.c:228 keyctl.c:162
 msgid "Question"
 msgstr ""
 
-#: network.c:441
+#: network.c:442
 msgid "Address"
 msgstr ""
 
-#: network.c:444
+#: network.c:445
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr ""
 
-#: network.c:446
+#: network.c:447
 msgid "Netmask"
 msgstr ""
 
-#: network.c:449
+#: network.c:450
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr ""
 
-#: network.c:451
+#: network.c:452
 msgid "Broadcast"
 msgstr ""
 
-#: network.c:454
+#: network.c:455
 msgid ""
 "Enter your broadcast address here, usually the same like your IP with 255 as "
 "last number."
 msgstr ""
 
-#: network.c:456
+#: network.c:457
 msgid "Gateway"
 msgstr ""
 
-#: network.c:459
+#: network.c:460
 msgid "Enter the IP Address of your default gateway here."
 msgstr ""
 
-#: network.c:541
+#: network.c:542
 msgid "Hostname"
 msgstr ""
 
-#: network.c:544
+#: network.c:545
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr ""
 
-#: network.c:627
+#: network.c:628
 msgid "Provider"
 msgstr ""
 
-#: network.c:630
+#: network.c:631
 msgid ""
 "Here you need to enter the name of the provider configuration to use for "
 "this interface."
 msgstr ""
 
-#: network.c:654
+#: network.c:655
 msgid "Global Settings"
 msgstr ""
 
-#: network.c:695
+#: network.c:696
 msgid "Proxy"
 msgstr ""
 
-#: network.c:697
+#: network.c:698
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
 msgstr ""
 
-#: network.c:702
+#: network.c:703
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:705
+#: network.c:706
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
 msgstr ""
 
-#: network.c:714
+#: network.c:715
 msgid "Use DHCP in any case (usually not needed)."
 msgstr ""
 
-#: network.c:716
+#: network.c:717
 msgid "Use DHCP"
 msgstr ""
 
-#: network.c:731
+#: network.c:732
 msgid "yes"
 msgstr ""
 
-#: network.c:742
+#: network.c:743
 msgid "no"
 msgstr ""
 
-#: network.c:755
+#: network.c:756
 msgid "DNS server"
 msgstr ""
 
-#: network.c:758
+#: network.c:759
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:939
+#: network.c:940
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use static for manual interface configuration, dhcp to use DHCP and ppp to "
 "make the device a point to point device."
 msgstr ""
 
-#: network.c:966 network.c:967
+#: network.c:967 network.c:968
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:968
+#: network.c:969
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:976 network.c:977
+#: network.c:977 network.c:978
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:978
+#: network.c:979
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:991
+#: network.c:992
 msgid "Information"
 msgstr ""
 
-#: network.c:992 network.c:993
+#: network.c:993 network.c:994
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1004
+#: network.c:1005
 msgid "Close"
 msgstr ""
 
-#: network.c:1005 network.c:1006
+#: network.c:1006 network.c:1007
 msgid "Close network tool"
 msgstr ""
 
-#: network.c:1021
+#: network.c:1022
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1030
+#: network.c:1031
 msgid "global"
 msgstr ""
 

@@ -358,16 +358,20 @@ void Ownerinfo_Save()
       firstline = g_strdup ("[gpe-ownerinfo data version 2]");
       fputs (firstline, fp);
       fputs ("\n", fp);
-      ownerphotofile = gtk_entry_get_text (GTK_ENTRY (photofile));
+	  g_free(ownerphotofile);
+      ownerphotofile = g_strdup(gtk_entry_get_text (GTK_ENTRY (photofile)));
       fputs (ownerphotofile, fp);
       fputs ("\n", fp);
-      ownername = gtk_entry_get_text (GTK_ENTRY (name));
+	  g_free(ownername);
+      ownername = g_strdup(gtk_entry_get_text (GTK_ENTRY (name)));
       fputs (ownername,  fp);
       fputs ("\n", fp);
-      owneremail = gtk_entry_get_text (GTK_ENTRY (email));
+	  g_free(owneremail);
+      owneremail = g_strdup(gtk_entry_get_text (GTK_ENTRY (email)));
       fputs (owneremail, fp);
       fputs ("\n", fp);
-      ownerphone = gtk_entry_get_text (GTK_ENTRY (phone));
+	  g_free(ownerphone);
+      ownerphone = g_strdup(gtk_entry_get_text (GTK_ENTRY (phone)));
       fputs (ownerphone, fp);
       fputs ("\n", fp);
 	

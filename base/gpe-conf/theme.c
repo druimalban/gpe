@@ -1227,7 +1227,7 @@ select_font_popup (GtkWidget *parent_button)
   gint screen_height;
 
   parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
-  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
+  if ((gboolean)g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
   {
     gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
     g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
@@ -1235,7 +1235,7 @@ select_font_popup (GtkWidget *parent_button)
   }
   else
   {
-    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
+    g_object_set_data (G_OBJECT (parent_button), "active", (gpointer)TRUE);
     gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
 
     popup_window = gtk_window_new (GTK_WINDOW_POPUP);

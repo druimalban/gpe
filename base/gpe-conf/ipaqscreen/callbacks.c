@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include <math.h>
-#include "../suid.h"
+#include "../applets.h"
 #include "callbacks.h"
 #include "xset.h"
 
@@ -117,4 +117,3 @@ on_calibrate_button_clicked            (GtkButton       *button,
 {
   calibrate();
 }
-
