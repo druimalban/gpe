@@ -1,7 +1,7 @@
 PACKAGE = gpe-code
 PREFIX = /usr/local
 DEBUG = no
-LINGUAS = de pt_PT
+LINGUAS = 
 
 MEMBERS = code_breaker gtk_graphic_funcs gtk_style_funcs gtk_timer gtk_usefull_funcs usefull_funcs
 
@@ -46,7 +46,8 @@ install: all
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
-
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
