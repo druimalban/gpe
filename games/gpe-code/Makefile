@@ -2,7 +2,7 @@ PACKAGE = gpe-code
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = 
-
+VERSION = 0.1-1
 MEMBERS = code_breaker gtk_graphic_funcs gtk_style_funcs gtk_timer gtk_usefull_funcs usefull_funcs
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
