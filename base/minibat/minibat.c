@@ -304,153 +304,163 @@ pixelColorWeightNolock (MBPixbufImage *dst, int x, int y, uint32_t color, int a)
 void
 draw_ellipse (MBPixbufImage *dst, int xc, int yc, int rx, int ry, uint32_t color)
 {
-    int i;
-    int a2, b2, ds, dt, dxt, t, s, d;
-    short x, y, xs, ys, dyt, xx, yy, xc2, yc2;
-    float cp;
-    unsigned char weight, iweight;
+  int i;
+  int a2, b2, ds, dt, dxt, t, s, d;
+  short x, y, xs, ys, dyt, xx, yy, xc2, yc2;
+  float cp;
+  unsigned char weight, iweight;
 
-    /* Sanity check radius */
-    if (rx < 1)
-	rx = 1;
-    if (ry < 1)
-	ry = 1;
+  /* Sanity check radius */
+  if (rx < 1)
+    rx = 1;
+  if (ry < 1)
+    ry = 1;
+  
+  /* Variable setup */
+  a2 = rx * rx;
+  b2 = ry * ry;
 
-    /* Variable setup */
-    a2 = rx * rx;
-    b2 = ry * ry;
+  ds = 2 * a2;
+  dt = 2 * b2;
 
-    ds = 2 * a2;
-    dt = 2 * b2;
+  xc2 = 2 * xc;
+  yc2 = 2 * yc;
 
-    xc2 = 2 * xc;
-    yc2 = 2 * yc;
+  dxt = (int) (a2 / sqrt(a2 + b2));
 
-    dxt = (int) (a2 / sqrt(a2 + b2));
+  t = 0;
+  s = -2 * a2 * ry;
+  d = 0;
 
-    t = 0;
-    s = -2 * a2 * ry;
-    d = 0;
+  x = xc;
+  y = yc - ry;
 
-    x = xc;
-    y = yc - ry;
-
-    /* "End points" */
-    pixelColorWeightNolock(dst, x, y, color, 255);
-    pixelColorWeightNolock(dst, xc2 - x, y, color, 255);
-    pixelColorWeightNolock(dst, x, yc2 - y, color, 255);
-    pixelColorWeightNolock(dst, xc2 - x, yc2 - y, color, 255);
+  /* "End points" */
+  pixelColorWeightNolock(dst, x, y, color, 255);
+  pixelColorWeightNolock(dst, xc2 - x, y, color, 255);
+  pixelColorWeightNolock(dst, x, yc2 - y, color, 255);
+  pixelColorWeightNolock(dst, xc2 - x, yc2 - y, color, 255);
+  {
+    int yi;
+    for (yi = y; yi <= yc; yi++)
+      {
+	pixelColorWeightNolock(dst, xc, yi, color, 255);
+	pixelColorWeightNolock(dst, xc, yc2 - yi, color, 255);
+      }
+  }
+  
+  for (i = 1; i <= dxt; i++) 
     {
-      int yi;
-      for (yi = y; yi <= yc; yi++)
+      x--;
+      d += t - b2;
+    
+      if (d >= 0)
+	ys = y - 1;
+      else if ((d - s - a2) > 0) 
 	{
-	  pixelColorWeightNolock(dst, xc, yi, color, 255);
-	  pixelColorWeightNolock(dst, xc, yc2 - yi, color, 255);
-	}
-    }
-
-    for (i = 1; i <= dxt; i++) {
-	x--;
-	d += t - b2;
-
-	if (d >= 0)
-	    ys = y - 1;
-	else if ((d - s - a2) > 0) {
-	    if ((2 * d - s - a2) >= 0)
-		ys = y + 1;
-	    else {
-		ys = y;
-		y++;
-		d -= s + a2;
-		s += ds;
-	    }
-	} else {
-	    y++;
+	  if ((2 * d - s - a2) >= 0)
 	    ys = y + 1;
-	    d -= s + a2;
-	    s += ds;
-	}
-
-	t -= dt;
-
-	/* Calculate alpha */
-	if (s != 0.0) {
-	    cp = (float) abs(d) / (float) abs(s);
-	    if (cp > 1.0) {
-		cp = 1.0;
+	  else 
+	    {
+	      ys = y;
+	      y++;
+	      d -= s + a2;
+	      s += ds;
 	    }
-	} else {
+	} 
+      else 
+	{
+	  y++;
+	  ys = y + 1;
+	  d -= s + a2;
+	  s += ds;
+	}
+      
+      t -= dt;
+      
+      /* Calculate alpha */
+      if (s != 0.0) 
+	{
+	  cp = (float) abs(d) / (float) abs(s);
+	  if (cp > 1.0)
 	    cp = 1.0;
 	}
+      else 
+	cp = 1.0;
 
-	/* Calculate weights */
-	weight = (unsigned char) (cp * 255);
-	iweight = 255 - weight;
+      /* Calculate weights */
+      weight = (unsigned char) (cp * 255);
+      iweight = 255 - weight;
 
-	/* Upper half */
-	xx = xc2 - x;
-	pixelColorWeightNolock(dst, x, y, color, iweight);
-	pixelColorWeightNolock(dst, xx, y, color, iweight);
+      /* Upper half */
+      xx = xc2 - x;
+      pixelColorWeightNolock(dst, x, y, color, iweight);
+      pixelColorWeightNolock(dst, xx, y, color, iweight);
 
-	pixelColorWeightNolock(dst, x, ys, color, weight);
-	pixelColorWeightNolock(dst, xx, ys, color, weight);
+      pixelColorWeightNolock(dst, x, ys, color, weight);
+      pixelColorWeightNolock(dst, xx, ys, color, weight);
 
-	/* Lower half */
-	yy = yc2 - y;
-	pixelColorWeightNolock(dst, x, yy, color, iweight);
-	pixelColorWeightNolock(dst, xx, yy, color, iweight);
+      /* Lower half */
+      yy = yc2 - y;
+      pixelColorWeightNolock(dst, x, yy, color, iweight);
+      pixelColorWeightNolock(dst, xx, yy, color, iweight);
 
-	yy = yc2 - ys;
-	pixelColorWeightNolock(dst, x, yy, color, weight);
-	pixelColorWeightNolock(dst, xx, yy, color, weight);
+      yy = yc2 - ys;
+      pixelColorWeightNolock(dst, x, yy, color, weight);
+      pixelColorWeightNolock(dst, xx, yy, color, weight);
 
-	{
-	  int yi;
-	  for (yi = y; yi < yc; yi++)
-	    {
-	      pixelColorWeightNolock(dst, x, yi, color, 255);
-	      pixelColorWeightNolock(dst, x, yc2 - yi, color, 255);
-	      pixelColorWeightNolock(dst, xx, yi, color, 255);
-	      pixelColorWeightNolock(dst, xx, yc2 - yi, color, 255);
-	    }
-	}
+      {
+	int yi;
+	for (yi = y; yi < yc; yi++)
+	  {
+	    pixelColorWeightNolock(dst, x, yi, color, 255);
+	    pixelColorWeightNolock(dst, x, yc2 - yi, color, 255);
+	    pixelColorWeightNolock(dst, xx, yi, color, 255);
+	    pixelColorWeightNolock(dst, xx, yc2 - yi, color, 255);
+	  }
+      }
     }
 
     dyt = abs(y - yc);
 
-    for (i = 1; i <= dyt; i++) {
+    for (i = 1; i <= dyt; i++) 
+      {
 	y++;
 	d -= s + a2;
 
 	if (d <= 0)
-	    xs = x + 1;
-	else if ((d + t - b2) < 0) {
+	  xs = x + 1;
+	else if ((d + t - b2) < 0) 
+	  {
 	    if ((2 * d + t - b2) <= 0)
-		xs = x - 1;
-	    else {
+	      xs = x - 1;
+	    else 
+	      {
 		xs = x;
 		x--;
 		d += t - b2;
 		t -= dt;
-	    }
-	} else {
+	      }
+	  } 
+	else 
+	  {
 	    x--;
 	    xs = x - 1;
 	    d += t - b2;
 	    t -= dt;
-	}
-
+	  }
+	
 	s += ds;
-
+	
 	/* Calculate alpha */
-	if (t != 0.0) {
+	if (t != 0.0) 
+	  {
 	    cp = (float) abs(d) / (float) abs(t);
-	    if (cp > 1.0) {
-		cp = 1.0;
-	    }
-	} else {
-	    cp = 1.0;
-	}
+	    if (cp > 1.0)
+	      cp = 1.0;
+	  } 
+	else 
+	  cp = 1.0;
 
 	/* Calculate weight */
 	weight = (unsigned char) (cp * 255);
