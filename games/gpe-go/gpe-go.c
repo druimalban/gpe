@@ -1282,8 +1282,13 @@ void on_button_game_load_clicked(GtkButton *button, gpointer unused){
 }
 
 void on_radiobutton_size_clicked (GtkButton *button, gpointer size){
-  if(size == NULL) return; //NOTE: should not come here.
-  go.selected_game_size = GPOINTER_TO_INT(size);
+  if(size == NULL){
+    go.selected_game_size =
+      gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(go.game_size_spiner));
+  }
+  else{
+    go.selected_game_size = GPOINTER_TO_INT(size);
+  }
 }
 
 void on_spinbutton_value_changed(GtkSpinButton *spinbutton,
