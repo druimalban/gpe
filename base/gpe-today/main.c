@@ -12,7 +12,6 @@
 #include <time.h>
 
 #include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -141,11 +140,8 @@ int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
 {
 	GdkPixbuf *img;
 
-#if GTK_MAJOR_VERSION >= 2
 	img = gdk_pixbuf_new_from_file(path, NULL);
-#else
-	img = gdk_pixbuf_new_from_file(path);
-#endif
+	
 	if (!img)
 		return 0;
 
