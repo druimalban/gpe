@@ -48,6 +48,8 @@ static struct
 	GtkWidget *button[8];
 	GdkPixbuf *p;
 	GtkWidget *edit;
+	GtkWidget *icon;
+	GtkWidget *select;
 }
 self;
 
@@ -156,8 +158,16 @@ init_buttons ()
 void
 on_button_clicked (GtkButton * button, gpointer user_data)
 {
-//	ask_user_a_file ("/usr/bin", NULL, FileSelected, NULL, button);
+	ask_user_a_file ("/usr/bin", NULL, FileSelected, NULL, button);
 }
+
+void
+on_button_select (GtkButton * button, gpointer user_data)
+{
+	int nr = user_data;
+	
+}
+
 
 void
 on_defaults_clicked (GtkButton * button, gpointer user_data)
@@ -202,16 +212,24 @@ Keyctl_Build_Objects ()
 	GtkWidget *layout1 = gtk_layout_new (NULL, NULL);
 	GtkWidget *bDefault = gtk_button_new_with_label (_("Defaults"));
 	GtkWidget *scroll =	gtk_scrolled_window_new (NULL,NULL);
-
+	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
+	GtkWidget *table = gtk_table_new(3,2,FALSE);
 	
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
 	self.p = gpe_find_icon ("ipaq");
 	self.edit = gtk_entry_new();
+	self.icon = gtk_image_new_from_pixbuf(gpe_find_icon("icon"));
+	self.select = gtk_combo_new();
 	
 	gtk_box_pack_start(GTK_BOX(vbox),scroll,TRUE,TRUE,0);
-	gtk_box_pack_start(GTK_BOX(vbox),self.edit,FALSE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),table,FALSE,TRUE,0);
+	
+	gtk_table_attach(GTK_TABLE(table),self.icon,0,1,0,2,GTK_FILL,GTK_EXPAND,0,0);
+	gtk_table_attach(GTK_TABLE(table),self.edit,1,2,1,2,GTK_FILL | GTK_EXPAND,GTK_FILL | GTK_EXPAND,0,0);
+	gtk_table_attach(GTK_TABLE(table),self.select,1,4,0,1,GTK_FILL | GTK_EXPAND ,GTK_FILL | GTK_EXPAND,0,0);
+	gtk_table_attach(GTK_TABLE(table),bFile,3,4,1,2,GTK_FILL ,GTK_FILL ,0,0);
 	
 	self.button[0] = gtk_radio_button_new(NULL);
 	self.button[1] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
@@ -223,7 +241,6 @@ Keyctl_Build_Objects ()
 	self.button[7] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
 
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
-	gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 210);
 
 	gtk_container_set_border_width (GTK_CONTAINER (scroll), 2);
 
@@ -231,38 +248,36 @@ Keyctl_Build_Objects ()
 	{
 		GtkWidget *pixmap1 = gtk_image_new_from_pixbuf (self.p);
 		gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 30, 5);
-		gtk_widget_set_usize (pixmap1, 188, 210);
 
 	}
 
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[0], 15, 35);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[1], 46, 176);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[2], 86, 200);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[3], 142, 199);
-	gtk_layout_put (GTK_LAYOUT (layout1), self.button[4], 198, 174);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[0], 17, 33);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[1], 44, 150);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[2], 75, 170);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[3], 125, 169);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[4], 175, 152);
 	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 182, 1);
-//	gtk_widget_set_usize (bDefault, 70, 20);
 
+	gtk_signal_connect_object (GTK_OBJECT (bFile), "clicked",
+				   GTK_SIGNAL_FUNC
+				   (on_button_clicked),
+				   bFile);
+	
 	gtk_signal_connect_object (GTK_OBJECT (self.button[0]), "clicked",
 				   GTK_SIGNAL_FUNC
-				   (on_button_clicked),
-				   GTK_OBJECT (self.button[0]));
+				   (on_button_select),0);
 	gtk_signal_connect_object (GTK_OBJECT (self.button[1]), "clicked",
 				   GTK_SIGNAL_FUNC
-				   (on_button_clicked),
-				   GTK_OBJECT (self.button[1]));
-	gtk_signal_connect_object (GTK_OBJECT (self.button[4]), "clicked",
-				   GTK_SIGNAL_FUNC
-				   (on_button_clicked),
-				   GTK_OBJECT (self.button[4]));
+				   (on_button_select),1);
 	gtk_signal_connect_object (GTK_OBJECT (self.button[2]), "clicked",
 				   GTK_SIGNAL_FUNC
-				   (on_button_clicked),
-				   GTK_OBJECT (self.button[2]));
+				   (on_button_select),2);
 	gtk_signal_connect_object (GTK_OBJECT (self.button[3]), "clicked",
 				   GTK_SIGNAL_FUNC
-				   (on_button_clicked),
-				   GTK_OBJECT (self.button[3]));
+				   (on_button_select),3);
+	gtk_signal_connect_object (GTK_OBJECT (self.button[4]), "clicked",
+				   GTK_SIGNAL_FUNC
+				   (on_button_select),4);
 	gtk_signal_connect_object (GTK_OBJECT (bDefault), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_defaults_clicked), NULL);
@@ -324,7 +339,7 @@ FileSelected (char *file, gpointer data)
 
 	if (!strlen (file))
 		return;
-
+/*
 	for (button_nr = 0;
 	     button_nr < 5
 	     && self.button[button_nr] != GTK_WIDGET (target); button_nr++) ;
@@ -355,5 +370,6 @@ FileSelected (char *file, gpointer data)
 #ifdef DEBUG
 	printf ("setting label to %s\n", btext);
 #endif
-	gtk_button_set_label (GTK_BUTTON (target), btext);
+*/
+	gtk_entry_set_text (GTK_ENTRY (self.edit), file);
 }
