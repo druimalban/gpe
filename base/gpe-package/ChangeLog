@@ -1,6 +1,7 @@
 
 2004-09-22 Florian Boor <florian.boor@kernelconcepts.de>
 
+        * removed obsolete gpe-packages.desktop
 	* gpe-package.desktop.in: Turn startup notification on.
 	* interface.c: Fixed duplicate shortcuts.
 	* Makefile: Version update.
