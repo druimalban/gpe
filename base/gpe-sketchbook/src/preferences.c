@@ -52,7 +52,6 @@ void prefs_fetch_settings(){
 
 void prefs_save_settings(){
    GpePrefsResult res;
-   res = gpe_prefs_set ("tototojo",  G_TYPE_INT, &(sketchbook.prefs.joypad_scroll));
    res = gpe_prefs_set ("joypad-scroll",  G_TYPE_INT, &(sketchbook.prefs.joypad_scroll));
    res = gpe_prefs_set ("grow-on-scroll", G_TYPE_INT, &(sketchbook.prefs.grow_on_scroll));
    res = gpe_prefs_set ("start-with",     G_TYPE_INT, &(sketchbook.prefs.start_with));
