@@ -11,7 +11,7 @@ MEMBERS = ui db
 SONAME = $(PACKAGE).so.0
 
 CFLAGS = $(GPECFLAGS) -DG_DISABLE_DEPRECATED -I../libdisplaymigration
-LDFLAGS = $(GPELIBS)
+LDFLAGS = $(GPELIBS) -L../libdisplaymigration -ldisplaymigration
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 
