@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Audio player
-Comment=NMF
+_Name=Audio player
+_Comment=NMF
 Exec=gpe-nmf
 Terminal=0
 Type=Application

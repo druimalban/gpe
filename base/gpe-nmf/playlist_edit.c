@@ -263,11 +263,11 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_OPEN,
-			    _("Open"), _("Open"),
+			    _("Open file"), _("Tap here to add a file or directory."),
 			    G_CALLBACK (new_entry), fe, -1);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-			    _("Delete"), _("Delete"),
+			    _("Delete"), _("Tap here to remove the selected item."),
 			    G_CALLBACK (delete), fe, -1);
   
   g_object_set_data (G_OBJECT (window), "store", store);

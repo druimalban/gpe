@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-11-11 00:06+0000\n"
+"POT-Creation-Date: 2003-03-09 13:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,22 +15,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-nmf.c:215
+#: gpe-nmf.c:203
 msgid "Unable to initialise player"
 msgstr ""
 
-#: playlist_edit.c:181
+#: playlist_edit.c:175
 msgid "Select file"
 msgstr ""
 
-#: playlist_edit.c:263
+#: playlist_edit.c:255
 msgid "Title"
 msgstr ""
 
-#: playlist_edit.c:275 playlist_edit.c:276
+#: playlist_edit.c:266
 msgid "Open"
 msgstr ""
 
-#: playlist_edit.c:280 playlist_edit.c:281
+#: playlist_edit.c:270
 msgid "Delete"
+msgstr ""
+
+#: gpe-nmf.desktop.in.h:1
+msgid "Audio player"
+msgstr ""
+
+#: gpe-nmf.desktop.in.h:2
+msgid "NMF"
 msgstr ""

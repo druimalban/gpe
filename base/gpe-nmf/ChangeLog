@@ -1,3 +1,14 @@
+2003-03-09  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control (Conflicts, Replaces): Mention gpe-nmf-mp3 not
+	gpe-nmf-mad.
+
+	* gpe-nmf.c: Add "icon".  Remove "close".
+	(main): Use stock icon for close button.  Set icon for window.
+
+	* gpe-nmf.desktop.in: New file.
+	* gpe-nmf.desktop: Deleted.
+
 2003-03-08  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.15 released.

@@ -30,7 +30,6 @@
 #include "frontend.h"
 
 static struct gpe_icon my_icons[] = {
-  { "close" },
   { "media-rew" },
   { "media-fwd" },
   { "media-prev" },
@@ -46,6 +45,7 @@ static struct gpe_icon my_icons[] = {
   { "save" },
   { "dir-up" },
   { "dir-closed" },
+  { "icon", PREFIX "/share/pixmaps/gpe-nmf.png" },
   { NULL, NULL }
 };
 
@@ -304,7 +304,7 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (eject_button), "clicked", 
 		    G_CALLBACK (eject_clicked), fe);
 
-  w = gtk_image_new_from_pixbuf (gpe_find_icon ("close"));
+  w = gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   exit_button = gtk_button_new ();
   gtk_widget_show (exit_button);
   gtk_widget_set_style (exit_button, style);
@@ -380,6 +380,8 @@ main (int argc, char *argv[])
   gtk_widget_show (hbox2);
   gtk_widget_show (hbox3);
   gtk_widget_show (hbox4);
+
+  gpe_set_window_icon (window, "icon");
 
   gtk_widget_show (window);
 
