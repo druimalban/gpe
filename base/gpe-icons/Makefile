@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-icons
-PIXMAPS = copy.png cut.png exit.png new.png open.png paste.png save.png save_as.png home.png future_view.png day_view.png week_view.png month_view.png year_view.png cancel.png empty.png properties.png search.png search_and_replace.png watch.png pause_watch.png delete.png ok.png
+PIXMAPS = copy.png cut.png exit.png new.png open.png paste.png save.png save_as.png home.png future_view.png day_view.png week_view.png month_view.png year_view.png cancel.png empty.png properties.png search.png search_and_replace.png delete.png ok.png error.png lock.png clock.png stop_clock.png
 
 SPIXMAPS = delrecord.xpm new.xpm tick.xpm
 
@@ -9,7 +9,6 @@ all:
 install:
 	for i in $(PIXMAPS); do install -m 644 -D default/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
 	install -D -m 644 gpe-logo.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-logo.png
-	install -D -m 644 error.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/error.png
 
 clean:
 
