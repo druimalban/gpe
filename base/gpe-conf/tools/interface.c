@@ -1891,20 +1891,20 @@ char* if_to_infostr(struct interface *ptr)
 
 #if HAVE_AFINET
     if (ptr->has_ip) {
-	sprintf(tmp,_("Address:\t%s\n"),
+	sprintf(tmp,_("Address: %s\n"),
 	       ap->sprint(&ptr->addr, 1));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	if (ptr->flags & IFF_POINTOPOINT) {
-	    sprintf(tmp,_("P-t-P:\t%s\n"), ap->sprint(&ptr->dstaddr, 1));
+	    sprintf(tmp,_("P-t-P: %s\n"), ap->sprint(&ptr->dstaddr, 1));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
-	sprintf(tmp,_("Netmask:\t%s\n"), ap->sprint(&ptr->netmask, 1));
+	sprintf(tmp,_("Netmask: %s\n"), ap->sprint(&ptr->netmask, 1));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	if (ptr->flags & IFF_BROADCAST) {
-	    sprintf(tmp,_("Broadcast:\t%s\n"), ap->sprint(&ptr->broadaddr, 1));
+	    sprintf(tmp,_("Broadcast: %s\n"), ap->sprint(&ptr->broadaddr, 1));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}

@@ -1,5 +1,6 @@
 2004-09-10	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* tools/interface.c: Removed tabs from messages. Fixing #1188
 	* sleep/confGUI.c: Fixed bug causing slider to become disabled.
 	  sleep/callbacks.c
 	* sound/sound*, gpe-conf-sound.desktop.in, gpe-conf-sound.png: new files.
