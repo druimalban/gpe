@@ -114,7 +114,7 @@ month_click (GtkWidget *w, GtkDateSel *sel)
 	  tm.tm_mon = 0;
 	}
     }
-  mdays = days_in_month(&tm);
+  mdays = days_in_month (&tm);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -141,7 +141,7 @@ year_click (GtkWidget *w, GtkDateSel *sel)
   guint mdays;
   localtime_r (&sel->time, &tm);
   tm.tm_year += d;
-  mdays = days_in_month(&tm);
+  mdays = days_in_month (&tm);
   if (tm.tm_mday > mdays)
     {
       sel->day_clamped = tm.tm_mday;
@@ -166,7 +166,7 @@ format_text (time_t *time, GtkWidget *w, char *fmt)
   struct tm tm;
   char buf[64];
   localtime_r (time, &tm);
-  strftime (buf, sizeof(buf), fmt, &tm);
+  strftime (buf, sizeof (buf), fmt, &tm);
   gtk_label_set_text (GTK_LABEL (w), buf);
 }
 
@@ -231,6 +231,7 @@ static void
 gtk_date_sel_init (GtkDateSel *sel)
 {
   time (&sel->time);
+  sel->day_clamped = -1;
 
   make_field (sel, &sel->day, day_click, day_update);
   make_field (sel, &sel->week, week_click, week_update);
