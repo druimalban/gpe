@@ -1,5 +1,10 @@
 2003-08-02  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.dpkg_ipkg (ipkg): Refuse to build packages with no
+	Source: field.
+
+2003-08-02  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.dpkg_ipkg (SOURCE): Define.
 	(ipkg): Substitute it into control file.
 

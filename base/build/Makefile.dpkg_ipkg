@@ -30,6 +30,7 @@ install-mo:
 install: install-program install-mo
 
 ipkg: clean
+	@if ! grep -q '^Source:' familiar/$(CONTROL); then echo -e "\nNo Source: field in control file.  Aborting.\n"; exit 1; fi
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	sed 's:VERSION:$(VERSION):;s$$SOURCE$$$(SOURCE)$$' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
