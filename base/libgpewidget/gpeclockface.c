@@ -17,15 +17,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
-#include <X11/extensions/Xrender.h>
-#include <X11/Xft/Xft.h>
-
 #ifdef HAVE_CAIRO
 #include <cairo.h>
-#endif
-
-#if RENDER_MAJOR > 0 || RENDER_MINOR >= 5
-#define HAVE_XRENDER
 #endif
 
 #include "gpeclockface.h"
@@ -38,8 +31,6 @@ static guint background_width, background_height;
 #endif
 
 static GdkPixbuf *day_night_wheel;
-
-static XftColor color;
 
 static GtkWidgetClass *parent_class;
 
@@ -60,12 +51,6 @@ struct _GpeClockFace
   guint x_offset, y_offset;
 
   GtkAdjustment *hour_adj, *minute_adj, *second_adj;
-
-#ifdef HAVE_XRENDER
-  gboolean can_render;
-  XftDraw *draw;
-  Picture image_pict, src_pict;
-#endif
 
 #ifdef HAVE_CAIRO
   cairo_t *cr;
@@ -90,12 +75,10 @@ struct _GpeClockFaceClass
   GtkWidgetClass parent_class;
 };
 
-#ifndef HAVE_XRENDER
 typedef struct
 {
   double x, y;
 } FakeXPointDouble;
-#endif
 
 static void
 draw_hand (GpeClockFace *clock,
@@ -103,11 +86,7 @@ draw_hand (GpeClockFace *clock,
 	   double length,
 	   double thick)
 {
-#ifdef HAVE_XRENDER
-  XPointDouble points[5], poly[5];
-#else
   FakeXPointDouble points[5], poly[5];
-#endif
   int i;
   double sa = sin (angle), ca = cos (angle);
 
@@ -136,20 +115,18 @@ draw_hand (GpeClockFace *clock,
       poly[i].y = -y + clock->y_offset + clock->radius;
     }
 
-#ifdef HAVE_XRENDER
-  if (clock->can_render)
-    {
-      XRenderCompositeDoublePoly (GDK_WINDOW_XDISPLAY (clock->widget.window),
-				  PictOpOver,
-				  clock->src_pict, 
-				  clock->image_pict,
-				  None,
-				  0, 0, 0, 0,
-				  poly, 5, 
-				  EvenOddRule);
-    }
-  else
-#endif
+#ifdef HAVE_CAIRO
+  cairo_set_rgb_color (clock->cr, 0, 0, 0.8);
+  cairo_set_alpha (clock->cr, 0.5);
+
+  cairo_move_to (clock->cr, poly[0].x, poly[0].y);
+  cairo_line_to (clock->cr, poly[1].x, poly[1].y);
+  cairo_line_to (clock->cr, poly[2].x, poly[2].y);
+  cairo_line_to (clock->cr, poly[3].x, poly[3].y);
+  cairo_line_to (clock->cr, poly[4].x, poly[4].y);
+
+  cairo_fill (clock->cr);
+#else
     {
       GdkPoint gpoints[5];
 
@@ -165,6 +142,7 @@ draw_hand (GpeClockFace *clock,
 			gpoints,
 			5);
     }
+#endif
 }
 
 static void
@@ -274,6 +252,8 @@ gpe_clock_face_expose (GtkWidget *widget,
   else
     {
 #ifdef HAVE_CAIRO
+      cairo_set_alpha (clock->cr, 1.0);
+
       cairo_set_rgb_color (clock->cr, 1, 1, 1);
       cairo_arc (clock->cr,
 		 clock->x_offset + clock->radius,
@@ -507,34 +487,14 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
   gv = gdk_window_get_visual (widget->window);
   gcm = gdk_drawable_get_colormap (widget->window);
       
-
-#ifdef HAVE_XRENDER
-  if (clock->can_render)
-    {
-      XRenderPictureAttributes att;
-
-      clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap),
-				   gdk_x11_visual_get_xvisual (gv),
-				   gdk_x11_colormap_get_xcolormap (gcm));
-      
-      clock->image_pict = XftDrawPicture (clock->draw);
-      clock->src_pict = XftDrawSrcPicture (clock->draw, &color);
-
-      att.poly_edge = PolyEdgeSmooth;
-      XRenderChangePicture (dpy, clock->image_pict, CPPolyEdge, &att);
-    }
-  else
-#endif
-    {
-      clock->backing_poly_gc = gdk_gc_new (clock->backing_pixmap);
-    }
-
 #ifdef HAVE_CAIRO
   clock->cr = cairo_create ();
   clock->surface = cairo_xlib_surface_create (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap), 
 					      gdk_x11_visual_get_xvisual (gv), 0, 
 					      gdk_x11_colormap_get_xcolormap (gcm));
   cairo_set_target_surface (clock->cr, clock->surface);
+#else
+  clock->backing_poly_gc = gdk_gc_new (clock->backing_pixmap);
 #endif
 }
 
@@ -543,28 +503,22 @@ gpe_clock_face_unprepare_xrender (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
 
-#ifdef HAVE_XRENDER
-  if (clock->can_render)
-    {
-      XftDrawDestroy (clock->draw);
-      
-      clock->image_pict = 0;
-      clock->src_pict = 0;
-      clock->draw = NULL;
-    }
-#endif
-      
   if (clock->backing_gc)
     {
       g_object_unref (clock->backing_gc);
       clock->backing_gc = NULL;
     }
 
+#ifdef HAVE_CAIRO
+  cairo_destroy (clock->cr);
+  cairo_surface_destroy (clock->surface);
+#else
   if (clock->backing_poly_gc)
     {
       g_object_unref (clock->backing_poly_gc);
       clock->backing_poly_gc = NULL;
     }
+#endif
       
   if (clock->backing_pixmap)
     {
@@ -596,9 +550,6 @@ gpe_clock_face_realize (GtkWidget *widget)
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   GdkWindowAttr attributes;
   gint attributes_mask;
-#ifdef HAVE_XRENDER
-  int major, minor;
-#endif
 
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
     
@@ -622,15 +573,6 @@ gpe_clock_face_realize (GtkWidget *widget)
 
   widget->style = gtk_style_attach (widget->style, widget->window);
   gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
-
-#ifdef HAVE_XRENDER
-  if (XRenderQueryVersion (GDK_WINDOW_XDISPLAY (widget->window), &major, &minor) &&
-      (major > 0 ||
-       (major == 0 && minor >= 4)))
-    clock->can_render = TRUE;
-  else
-    clock->can_render = FALSE;
-#endif
 
   gpe_clock_face_prepare_xrender (widget);
 
@@ -733,10 +675,6 @@ gpe_clock_face_init (GpeClockFace *clock)
   clock->label_hours = FALSE;
   clock->hand_width = 3;
 
-#ifdef HAVE_XRENDER
-  clock->draw = NULL;
-  clock->image_pict = clock->src_pict = 0;
-#endif
   clock->backing_pixmap = NULL;
   clock->backing_gc = NULL;
   clock->backing_poly_gc = NULL;
@@ -762,10 +700,6 @@ gpe_clock_face_class_init (GpeClockFaceClass * klass)
   widget_class->button_press_event = gpe_clock_face_button_press;
   widget_class->button_release_event = gpe_clock_face_button_release;
   widget_class->motion_notify_event = gpe_clock_face_motion_notify;
-
-  color.color.blue = 0xc000;
-  color.color.red = color.color.green = 0;
-  color.color.alpha = 0x8000;
 }
 
 void
