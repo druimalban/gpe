@@ -41,7 +41,7 @@ etc. The application itself could handle this by offering proper categories.
 <H3>FAQ</H3>
 <H2>Why don't I have many programs in the list?</H2>
 <P>
-Programs are only listed if they have 48x48 icons included in their package.
+Programs are only listed if they have icons included in their package.
 GPE applications will show up whenever appropriate, but non-GPE software may
 not show up. If you think it should show up, try asking the developer of the
 software to supply an icon and tell the menu to show it. For more information
@@ -52,7 +52,7 @@ on this, email me at mibus@bigpond.com.
 I sometimes make notes of what's happening with appmgr at <a href="http://www.handhelds.org/~mibus/">my hh.org page</a>, feel free to look around.
 </P>
 <P>
-gpe-appmgr is in the GPE CVS, in the module "base/gpe-appmgr". ATM only version 0.06 is in CVS (it hasn't been released yet, but will be soonish). After the 0.06 release, I'll update CVS to include all my bits &amp; pieces I've been doing since. (I've posted a tgz and ipk at my hh.org page (see above) in the meantime).
+gpe-appmgr is in the GPE CVS, in the module "base/gpe-appmgr".
 </P>
 <P>
 If you have any questions or comments, email me!
