@@ -17,19 +17,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef PIM_CATEGORIES_H
-#define PIM_CATEGORIES_H
+#ifndef PIM_CATEGORIES_UI_H
+#define PIM_CATEGORIES_UI_H
 
-struct gpe_pim_category
-{
-  const gchar *name;
-  guint id;
-};
+#include <gtk/gtk.h>
 
-extern gboolean gpe_pim_categories_init (void);
-extern GSList *gpe_pim_categories_list (void);
-
-extern gboolean gpe_pim_category_new (const gchar *title, gint *id);
-extern const gchar *gpe_pim_category_name (gint id);
+extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data);
 
 #endif
