@@ -40,6 +40,11 @@ $no_sessions_please = 1;
 
 require_once('/home/httpd/html/geeklog/lib-common.php');
 
+$_CONF['theme'] = 'clean';
+$_CONF['path_layout'] = '/var/www/html/geeklog/layout/' . $_CONF['theme'] . '/';
+$_CONF['layout_url'] = 'http://handhelds.org/geeklog/layout/' . $_CONF['theme'];
+$_USER['noicons'] = 1;
+
 $display = '';
 
 $maxstories = 0;
