@@ -34,6 +34,12 @@ main()
       exit (1);
     }
 
+  if (nsqlc_exec_printf (ctx, "insert into test values('%s')", callback, NULL, &err, "hello"))
+    {
+      fprintf (stderr, "Couldn't run query: %s\n", err);
+      exit (1);
+    }
+
   nsqlc_close (ctx);
 
   exit (0);

@@ -6,7 +6,7 @@ VERSION = 0.1
 
 LINGUAS = 
 
-MEMBERS = nsqlc
+MEMBERS = nsqlc printf
 
 SONAME = $(PACKAGE).so.0
 
