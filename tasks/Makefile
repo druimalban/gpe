@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.3
+VER_gpe-task-base = 0.4
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -107,7 +107,8 @@ DEP_gpe-task-base = \
     \
     gpe-wlancfg, \
     gpe-aerial, \
-    hotplug-dbus
+    hotplug-dbus, \
+    gpe-autostarter
 #FIXME: could be refined (contains hardware dependant packages)
 
 VER_gpe-collateral-gtk2 = 0.05
