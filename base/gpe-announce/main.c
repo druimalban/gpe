@@ -35,7 +35,7 @@ struct gpe_icon my_icons[] = {
   { NULL, }
 };
 
-int times;
+int times=0;
 
 int
 main (int argc, char *argv[])

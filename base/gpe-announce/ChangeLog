@@ -1,3 +1,10 @@
+2003-04-20  Joe McCarthy <jjmcc@pitt.edu>
+
+	* callbacks.c : Move fd open calls, add fd close calls, have the alarm
+	volume crescendo and then stop after 20 beaps (10 loud ones)
+	* main.c : initialize times so that crescendo works properly
+	* Version 0.05 released.
+	
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.04 released.

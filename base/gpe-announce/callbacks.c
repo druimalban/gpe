@@ -41,6 +41,40 @@ static gboolean PlayAlarmStop = TRUE;
 int fd;
 int curl, curr;	
 
+int get_vol(int *left, int *right)
+{
+int vol;
+int err;
+char *mixer = MIXER;
+  	
+	fd = open(mixer, O_RDONLY);
+  	if(fd == -1) 
+    		printf("Unable to open mixer device: %s\n", mixer);
+	err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol); 
+	if(err != -1) {
+		*left = vol & 0xff;
+		*right = (vol >> 8) & 0xff;
+	}
+	close(fd);
+	return err;
+}
+
+
+int set_vol(int left, int right)
+{
+int vol = left | (right << 8);
+int err;
+char *mixer = MIXER;
+
+	fd = open(mixer, O_RDONLY);
+  	if(fd == -1) 
+    		printf("Unable to open mixer device: %s\n", mixer);
+	err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);  
+	close(fd);
+
+return err;
+}
+
 static void
 schedule_alarm(char *buf, time_t when)
 {
@@ -57,7 +91,8 @@ void play_melody(guint Tone1Pitch, guint Tone1Duration,
 {
 int snd_dev=-1;
 int i;
-
+extern int times;
+	
 	for (i=0; i<5; i++) {
 		if ((snd_dev=soundgen_init()) == -1) {
 			g_print("Couldn't init soundgen\n");
@@ -77,6 +112,48 @@ int i;
 		
 		}
 		soundgen_pause(snd_dev, TonePause);
+		
+		switch (times) {
+				case 0:
+					set_vol(50,50);
+					break;
+				case 1:
+					set_vol(55,55);
+					break;
+				case 2:
+					set_vol(60,60);
+					break;
+				case 3:
+					set_vol(65,65);
+					break;
+				case 4:
+					set_vol(70,70);
+					break;
+				case 5:
+					set_vol(75,75);
+					break;
+				case 6:
+					set_vol(80,80);
+					break;
+				case 7:
+					set_vol(85,85);
+					break;
+				case 8:
+					set_vol(90,90);
+					break;
+				case 9:
+					set_vol(95,95);
+					break;
+				case 10:
+					set_vol(100,100);
+					break;
+				default:
+					break;
+			}
+					
+			times++;
+			if (times>20) PlayAlarmStop = TRUE;
+			
 	}
 	soundgen_final(snd_dev);
 	
@@ -114,42 +191,14 @@ int test=6;
 return (NULL);
 }
 
-int get_vol(int fd, int *left, int *right)
+gint bells_and_whistles ()
 {
-int vol;
-int err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol);  
-
-	if(err != -1) {
-		*left = vol & 0xff;
-		*right = (vol >> 8) & 0xff;
-	}
-
-	return err;
-}
-
-
-int set_vol(int fd, int left, int right)
-{
-int vol = left | (right << 8);
-int err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);  
-
-return err;
-}
-
-gint bells_and_whistles ( )
-{
-	char *mixer = MIXER;
-  	pthread_t mythread;
+	pthread_t mythread;
 	
-	fd = open(mixer, O_RDONLY);
-  	if(fd == -1) 
-    		printf("Unable to open mixer device: %s\n", mixer);
-  	
-  	if(get_vol(fd, &curl, &curr) == -1)
+	if(get_vol(&curl, &curr) == -1)
     		printf("Unable to get volume\n");
    	
-	set_vol(fd, 100, 100);
-	
+	set_vol(50,50);
 	PlayAlarmStop = FALSE;
 	if (pthread_create(&mythread, NULL, play_alarm, NULL) != 0) {
 		g_print("pthread_create() failed\n");
@@ -164,14 +213,15 @@ on_snooze_clicked                     (GtkButton       *button,
                                         char         *user_data)
 {
 	time_t viewtime;
-
+	
+	set_vol(curl, curr);
+	
   	time (&viewtime);
   	viewtime+=SNOOZE*60;
 		      
 	schedule_alarm(user_data, viewtime);
   
 	PlayAlarmStop = TRUE;
-	set_vol(fd, curl, curr);
 	gtk_main_quit();
 	return(FALSE);
 }
@@ -182,7 +232,7 @@ on_ok_clicked                     (GtkButton       *button,
                                         gpointer         user_data)
 {
 	PlayAlarmStop = TRUE;
-	set_vol(fd, curl, curr);
+	set_vol(curl, curr);
 	gtk_main_quit();
 	return(FALSE);
 }
