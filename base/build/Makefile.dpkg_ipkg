@@ -61,7 +61,7 @@ clean-dist:
 clean: clean-dist
 
 check-source:
-	@if ! grep -q '^Source:' familiar/$(CONTROL); then echo -e "\nNo Source: field in control file.  Aborting.\n"; exit 1; fi
+	@if [ -e familiar ] && ! grep -q '^Source:' familiar/$(CONTROL); then echo -e "\nNo Source: field in control file.  Aborting.\n"; exit 1; fi
 
 ipkg: check-source ipkg-prep clean
 	rm -rf familiar/dist
