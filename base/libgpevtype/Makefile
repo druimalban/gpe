@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libgpevtype
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.2
+VERSION = 0.3
 
 LINGUAS = 
 
@@ -10,20 +10,11 @@ MEMBERS = tag-db vcard vtodo vevent
 
 SONAME = $(PACKAGE).so.0
 
-CFLAGS = $(shell pkg-config --cflags glib-2.0) $(shell pkg-config --cflags mimedir-1.0) -DG_DISABLE_DEPRECATED
-LDFLAGS = $(shell pkg-config --libs glib-2.0) $(shell pkg-config --libs mimedir-1.0)
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(shell pkg-config --cflags glib-2.0) $(shell pkg-config --cflags mimedir-1.0) -DG_DISABLE_DEPRECATED
+PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(shell pkg-config --libs glib-2.0) $(shell pkg-config --libs mimedir-1.0)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\"
 
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -g #-O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD
-
-CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += -I.
 
 HEADERS = tag-db.h vcard.h
 
@@ -43,10 +34,7 @@ $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
