@@ -178,7 +178,7 @@ format_text (time_t *time, GtkWidget *w, char *fmt)
   char buf[64];
   gchar *sbuf, *sfmt;
   localtime_r (time, &tm);
-  sfmt = g_locale_from_utf8 (buf, -1, NULL, NULL, NULL);
+  sfmt = g_locale_from_utf8 (fmt, -1, NULL, NULL, NULL);
   if (sfmt)
     {
       strftime (buf, sizeof (buf), sfmt, &tm);
