@@ -1,5 +1,3 @@
-2002-06-16  Philip Blundell  <pb@kc.cam.armlinux.org>
-
 2002-06-16  Philip Blundell  <pb@debian.org>
 
 	* Makefile (MEMBERS): Add gtkgpepixmap.
