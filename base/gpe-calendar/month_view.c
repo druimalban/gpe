@@ -112,7 +112,13 @@ draw_expose_event (GtkWidget *widget,
   GdkColor red;
   GdkColormap *colormap;
   guint i, j;
+#if GTK_MAJOR_VERSION < 2
   GdkFont *font = widget->style->font;
+#else
+  PangoContext *pc;
+  PangoLayout *pl;
+  PangoRectangle pr;
+#endif
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
@@ -159,6 +165,10 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (light_gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (dark_gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (red_gc, &event->area);
+
+#if GTK_MAJOR_VERSION >= 2
+  pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
+#endif
   
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
@@ -181,10 +191,27 @@ draw_expose_event (GtkWidget *widget,
       static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
 				      ABDAY_6, ABDAY_7, ABDAY_1 };
       gchar *s = nl_langinfo (days[i]);
-      guint w = gdk_string_width (font, s);
+      guint w;
+#if GTK_MAJOR_VERSION < 2
+      w = gdk_string_width (font, s);
       gdk_draw_text (drawable, font, black_gc,
 		     x + (xs - w) / 2, ys - font->descent,
 		     s, strlen (s));
+#else
+      pango_layout_set_text (pl, s, strlen (s));
+      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      w = pr.width;
+      
+      gtk_paint_layout (widget->style,
+			widget->window,
+			GTK_WIDGET_STATE (widget),
+			FALSE,
+			&event->area,
+			widget,
+			"label",
+			x + (xs - w) / 2, ys / 2,
+			pl);
+#endif
  
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
@@ -205,11 +232,26 @@ draw_expose_event (GtkWidget *widget,
 				  x, y, xs, ys);
 	      
 	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
+#if GTK_MAJOR_VERSION < 2
 	      w = gdk_string_width (font, buf);
 	      
 	      gdk_draw_text (drawable, font, c->popup.events ? white_gc : black_gc, 
 			     x + (xs - w) / 2, y + (ys / 2) + font->ascent,
 			     buf, strlen (buf));
+#else
+	      pango_layout_set_text (pl, buf, strlen (buf));
+	      pango_layout_get_pixel_extents (pl, &pr, NULL);
+	      w = pr.width;
+	      gtk_paint_layout (widget->style,
+				widget->window,
+				GTK_WIDGET_STATE (widget),
+				FALSE,
+				&event->area,
+				widget,
+				"label",
+				x + (xs - w) / 2, y + (ys / 2)/* + font->ascent*/,
+				pl);
+#endif
 	    } 
 	  else 
 	    {	      
@@ -251,6 +293,8 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_unref (cream_gc);
   gdk_gc_unref (light_gray_gc);
   gdk_gc_unref (dark_gray_gc);
+
+  g_object_unref (pl);
 
   return TRUE;
 }

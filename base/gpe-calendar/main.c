@@ -60,6 +60,7 @@ struct gpe_icon my_icons[] = {
 };
 
 static GtkWidget *day, *week, *month, *future, *year, *current_view;
+static GtkWidget *day_button, *week_button, *month_button, *year_button, *future_button;
 
 guint window_x = 240, window_y = 310;
 
@@ -91,7 +92,7 @@ update_current_view (void)
       if (p)
 	{
 	  void (*f)(void) = p;
-	  f();
+	  f ();
 	}
     }
 }
@@ -112,37 +113,14 @@ new_view (GtkWidget *widget)
 }
 
 void
-set_day_view(void)
+set_day_view (void)
 {
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
 }
 
 static void
-set_week_view(void)
-{
-  new_view (week);
-}
-
-static void
-set_month_view(void)
-{
-  new_view (month);
-}
-
-static void
-set_future_view(void)
-{
-  new_view (future);
-}
-
-static void
-set_year_view(void)
-{
-  new_view (year);
-}
-
-static void
-new_appointment(void)
+new_appointment (void)
 {
   GtkWidget *appt = new_event (viewtime, 0);
   gtk_widget_show (appt);
@@ -155,8 +133,14 @@ set_today(void)
   update_current_view ();
 }
 
+static void
+button_toggled (GtkWidget *widget, gpointer data)
+{
+  new_view (data);
+}
+
 int
-main(int argc, char *argv[])
+main (int argc, char *argv[])
 {
   GtkWidget *vbox, *toolbar;
   GdkPixbuf *p;
@@ -212,6 +196,13 @@ main(int argc, char *argv[])
 
   vbox = gtk_vbox_new (FALSE, 0);
 
+  time (&viewtime);
+  week = week_view ();
+  day = day_view ();
+  month = month_view ();
+  future = future_view ();
+  year = year_view ();
+
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
@@ -219,9 +210,15 @@ main(int argc, char *argv[])
 
   gtk_widget_realize (main_window);
 
+#if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   p = gpe_find_icon ("new");
   pw = gpe_render_icon (main_window->style, p);
@@ -239,28 +236,38 @@ main(int argc, char *argv[])
 
   p = gpe_find_icon ("future_view");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Future View"), 
-			   _("Future View"), _("Future View"), pw, set_future_view, NULL);
+  future_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+		  GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
+		  _("Future View"), _("Future View"), _("Future View"),
+		  pw, button_toggled, future);
 
   p = gpe_find_icon ("day_view");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Day View"), 
-			   _("Day View"), _("Day View"), pw, set_day_view, NULL);
+  day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+		  GTK_TOOLBAR_CHILD_RADIOBUTTON, future_button,
+		  ("Day View"), _("Day View"), _("Day View"),
+		  pw, button_toggled, day);
 
   p = gpe_find_icon ("week_view");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Week View"), 
-			   _("Week View"), _("Week View"), pw, set_week_view, NULL);
+  week_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+		  GTK_TOOLBAR_CHILD_RADIOBUTTON, day_button,
+		  _("Week View"), _("Week View"), _("Week View"),
+		  pw, button_toggled, week);
 
   p = gpe_find_icon ("month_view");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Month View"), 
-			   _("Month View"), _("Month View"), pw, set_month_view, NULL);
+  month_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+		  GTK_TOOLBAR_CHILD_RADIOBUTTON, week_button,
+		  _("Month View"), _("Month View"), _("Month View"),
+		  pw, button_toggled, month);
 
   p = gpe_find_icon ("year_view");
   pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Year View"), 
-			   _("Year View"), _("Year View"), pw, set_year_view, NULL);
+  year_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
+		  GTK_TOOLBAR_CHILD_RADIOBUTTON, month_button,
+		  _("Year View"), _("Year View"), _("Year View"),
+		  pw, button_toggled, year);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -268,13 +275,6 @@ main(int argc, char *argv[])
   pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Exit"), pw, gtk_exit, NULL);
-
-  time (&viewtime);
-  week = week_view ();
-  day = day_view ();
-  month = month_view ();
-  future = future_view ();
-  year = year_view ();
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), day, TRUE, TRUE, 0);
@@ -294,8 +294,8 @@ main(int argc, char *argv[])
   gtk_widget_show (vbox);
   gtk_widget_show (toolbar);
 
-  new_view (day);
-  
+  set_day_view ();
+
   gtk_main ();
 
   return 0;

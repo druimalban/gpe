@@ -16,9 +16,11 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
+#include <gpe/gtkdatesel.h>
+#include <gpe/pixmaps.h>
+
 #include "event-db.h"
 #include "event-ui.h"
-#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "day_view.h"
 
@@ -115,8 +117,12 @@ day_view_update ()
   GSList *day_events[24], *untimed_events;
   GSList *iter;
   guint i, width = 0, widget_width;
+#if GTK_MAJOR_VERSION >= 2
+  PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (day_list), NULL);
+  PangoRectangle pr;
+#endif
      
-  widget_width=day_list->allocation.width;
+  widget_width = day_list->allocation.width;
 
   if (! light_style)
     {
@@ -237,8 +243,14 @@ day_view_update ()
 
       line_info[1] = text;
       line_info[0] = buf;
-     
+
+#if GTK_MAJOR_VERSION < 2     
       w = gdk_string_width (time_style->font, buf);
+#else
+      pango_layout_set_text (pl, buf, strlen (buf));
+      pango_layout_get_pixel_extents (pl, &pr, NULL);
+      w = pr.width;
+#endif
       if (w > width) width = w;
 	
       gtk_clist_append (GTK_CLIST (day_list), line_info);
@@ -253,14 +265,14 @@ day_view_update ()
 	  if ((ev->flags & FLAG_ALARM) && ev->recur)
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
-		gtk_clist_set_pixtext(GTK_CLIST (day_list), row, 1, text, 10,
-				      pmap, bmap);
+		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 10,
+				       pmap, bmap);
 	    }
 	  else if (ev->flags & FLAG_ALARM)
 	    { 
 	      if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
-		gtk_clist_set_pixtext(GTK_CLIST (day_list), row, 1, text, 10,
-				      pmap, bmap);
+		gtk_clist_set_pixtext (GTK_CLIST (day_list), row, 1, text, 10,
+				       pmap, bmap);
 	    }
 	  else if (ev->recur)
 	    {
@@ -316,6 +328,8 @@ day_view_update ()
   gtk_clist_set_column_width (GTK_CLIST (day_list), 1, widget_width - 20 - (width + 4));
 
   gtk_clist_thaw (GTK_CLIST (day_list));
+
+  g_object_unref (pl);
   
   return TRUE;
 }

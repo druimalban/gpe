@@ -1,3 +1,11 @@
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Add support for GTK 2.
+	* day_view.c (day_view_update): Likewise.
+	* future_view.c (future_view_update): Likewise.
+	* month_view.c (draw_expose_event): Likewise.
+	* main.c (main): Likewise.
+
 2002-10-04  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* event-db.c (event_db_list_for_period_internal: erase
