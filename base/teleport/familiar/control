@@ -4,5 +4,5 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: xlibs, libgtk2.0-0, libdisplaymigration0, libgcrypt1, libsqlite0
+Depends: xlibs, libgtk2.0-0, libdisplaymigration0, libgcrypt1, libsqlite0, libgpewidget1, libsqlite0
 Description: Move Gtk apps between displays
