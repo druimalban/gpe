@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <gtk/gtk.h>
+#include <assert.h>
 
 void image_convolve( GdkPixbuf* pixbuf, int* mask, int mask_size, int mask_divisor ) {
 
@@ -220,7 +221,10 @@ GdkPixbuf* image_rotate( GdkPixbuf* pixbuf, int degrees ) {
 
             new_x = temp_x * cos_value - temp_y * sin_value + new_center_x;  
             new_y = temp_x * sin_value + temp_y * cos_value + new_center_y;  
-           
+
+	    assert (new_x < new_width);
+	    assert (new_y < new_height);
+
             for( b = 0; b < channels; b++ ) {
 
                 return_image[ new_y * new_rowstride + new_x * channels +  b ] =
