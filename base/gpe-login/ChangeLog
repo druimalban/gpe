@@ -1,3 +1,13 @@
+2002-07-17  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install-dm): Install initscript too.
+	* familiar/control.gpe-dm: Provide x-display-manager; depend on
+	xserver not xserver-tiny-h3600.
+	* gpe-dm.init: New file.
+	* 99GpeLogin: Deleted.
+
+	* gpe-dm 0.13-3 released.
+
 2002-06-22  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (do_login): New argument `shell'.  Set $SHELL to this.

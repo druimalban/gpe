@@ -1,8 +1,9 @@
 Package: gpe-dm
 Section: x11
 Priority: optional
-Version: 0.12
+Version: 0.13-3
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: gpe-login, xserver-tiny-h3600
+Depends: gpe-login, xserver
+Provides: x-display-manager
 Description: Minimal X display manager

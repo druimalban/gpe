@@ -45,6 +45,10 @@ install-login: gpe-login install-po
 install-dm: gpe-dm
 	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-dm
+	mkdir -p $(DESTDIR)/etc/init.d
+	mkdir -p $(DESTDIR)/etc/rc2.d
+	install gpe-dm.init $(DESTDIR)/etc/init.d/gpe-dm
+	ln -s /etc/init.d/gpe-dm $(DESTDIR)/etc/rc2.d/S99gpe-dm
 
 install-scripts:
 	install -D X11/Xsession $(DESTDIR)/etc/X11/Xsession
