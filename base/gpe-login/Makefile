@@ -1,8 +1,17 @@
 PREFIX = /usr/local
 PACKAGE = gpe-login
+CVSBUILD = yes
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
+CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+
+ifeq ($(CVSBUILD),yes)
+CFLAGS += -I../libgpewidget
+LDFLAGS += -L../libgpewidget
+else
+CFLAGS += -I/usr/include/gpe
+endif
+LDFLAGS += -lgpewidget
 
 all: $(PACKAGE) mo
 
@@ -20,7 +29,7 @@ po/$(PACKAGE).pot: $(SOURCES)
 all: gpe-login gpe-dm
 
 gpe-login: gpe-login.o
-	$(CC) -o $@ $< -L../libgpewidget -lgpewidget `gtk-config --libs` -lcrypt
+	$(CC) -o $@ $< $(LDFLAGS) `gtk-config --libs` -lcrypt
 
 gpe-dm: gpe-dm.o
 	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
