@@ -1,3 +1,19 @@
+2002-06-23  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* main.c : Include a global "hide" (to become a "preference" eventually)
+
+	* todo.h : add position integer to todo_item for new sorting
+	
+	* list-ui.c (top-level): add show/hide menu icon (show_hide_completed
+	toggles "hide" global)
+	
+	* list-ui.c (draw_expose_event): iterate twice so that completed
+	events are either not drawn or drawn at bottom (set item->pos for
+	clicking)
+
+	* list-ui.c (draw_click_event): Scroll through since items are no
+	longer sorted in the same way
+
 2002-06-23  Philip Blundell  <philb@gnu.org>
 
 	* main.c (open_window): Set icon before mapping window so WM

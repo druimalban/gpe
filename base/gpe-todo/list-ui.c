@@ -253,6 +253,14 @@ purge_completed(GtkWidget *w, gpointer list)
   gtk_widget_draw (g_draw, NULL);
 }
 
+static void
+show_hide_completed(GtkWidget *w, gpointer list)
+{
+  if (hide) hide=0;
+  else hide=1;
+  gtk_widget_draw (g_draw, NULL);
+}
+
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEvent  *event,
@@ -307,28 +315,41 @@ draw_expose_event (GtkWidget *widget,
 	{
 	  struct todo_item *i = iter->data;
 	  
-	  gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
+	  if (i->state != COMPLETED)
+	    {
+	      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
 			 i->summary, strlen (i->summary));
-	  
-	  if (i->state == COMPLETED)
-	    {
-	      gdk_draw_line (drawable, black_gc, xcol, 
-			     y + (font->ascent + font->descent) / 2, 
-			     18 + gdk_string_width (font, i->summary), 
-			     y + (font->ascent + font->descent) / 2);
-	      gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
-			       2, 0, 2, y - skew, 14, 14);
-	    }
-	  else
-	    {
 	      gdk_draw_pixmap (drawable, black_gc, box_pixmap,
 			       2, 0, 2, y - skew, 14, 14);
+	      i->pos=y/ystep;
+	      y += ystep;
 	    }
 	  
-	  y += ystep;
+	}
+    
+      if (!hide) 
+      {
+        for (iter = curr_list->items; iter; iter = iter->next)
+	  {
+	   struct todo_item *i = iter->data;
+	   
+	   if (i->state == COMPLETED)
+	     {
+	       gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
+	  		  i->summary, strlen (i->summary));
+	   
+	       gdk_draw_line (drawable, black_gc, xcol, 
+	  		      y + (font->ascent + font->descent) / 2, 
+	  		      18 + gdk_string_width (font, i->summary), 
+	  		      y + (font->ascent + font->descent) / 2);
+	       gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
+	  			2, 0, 2, y - skew, 14, 14);
+	       i->pos=y/ystep;
+	       y += ystep;
+	     }
+           }
 	}
     }
-
   return TRUE;
 }
 
@@ -337,40 +358,41 @@ draw_click_event (GtkWidget *widget,
 		  GdkEventButton *event,
 		  gpointer user_data)
 {
-  unsigned int idx = event->y / ystep;
+  unsigned int idx = event->y/ystep;
 
   if (curr_list)
     {
       if (event->type == GDK_BUTTON_PRESS && event->x < xcol)
 	{
-	  GList *i = curr_list->items;
-	  while (idx && i)
+	  GList *iter=NULL;
+  	  for (iter = curr_list->items; iter; iter = iter->next)
 	    {
-	      i = i->next;
-	      idx--;
-	    }
-	  if (i)
-	    {
-	      struct todo_item *ti = i->data;
-	      if (ti->state == COMPLETED)
-		ti->state = NOT_STARTED;
-	      else
-		ti->state = COMPLETED;
-	      
-	      push_item (ti);
-      	      gtk_widget_draw (g_draw, NULL);
-	    }
+	      struct todo_item *ti = iter->data;
+	      if (idx == ti->pos)
+	      {
+	        if (ti->state == COMPLETED)
+	          ti->state = NOT_STARTED;
+	        else
+	          ti->state = COMPLETED;
+	        
+	        push_item (ti);
+	        gtk_widget_draw (g_draw, NULL);
+		break;
+	      }
+            }
 	}
       else if (event->type == GDK_2BUTTON_PRESS)
 	{
-	  GList *i = curr_list->items;
-	  while (idx && i)
-	    {
-	      i = i->next;
-	      idx--;
-	    }
-	  if (i)
-	    gtk_widget_show_all (edit_todo (curr_list, i->data));
+	  GList *iter=NULL;
+  	  for (iter = curr_list->items; iter; iter = iter->next)
+	   {
+	     struct todo_item *ti = iter->data;
+	     if (idx == ti->pos)
+	      {
+	        gtk_widget_show_all (edit_todo (curr_list, ti));
+	        break;
+              }
+           }
 	}
     }
 }
@@ -439,6 +461,13 @@ top_level (GtkWidget *window)
 			   _("Purge completed"), 
 			   _("Purge completed"),
 			   pw, purge_completed, NULL);
+
+  pw = gpe_render_icon (window->style, gpe_find_icon ("hide"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
+			   _("Show/Hide completed"), 
+			   _("Show/Hide completed"), 
+			   _("Show/Hide completed"),
+			   pw, show_hide_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 

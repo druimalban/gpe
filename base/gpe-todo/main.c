@@ -43,6 +43,8 @@ GtkWidget *window;
 
 extern GtkWidget *top_level (GtkWidget *window);
 
+int hide=0;
+  
 static void
 open_window (void)
 {

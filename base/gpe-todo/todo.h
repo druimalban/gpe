@@ -10,7 +10,7 @@ typedef enum
 
 struct todo_item
 {
-  int id;
+  int id, pos;
   time_t time;
   const char *what;
   const char *summary;
@@ -40,3 +40,5 @@ extern void delete_item (struct todo_list *list, struct todo_item *i);
 extern int new_list_id (void);
 extern void sql_add_list (int id, const char *title);
 extern void del_list (struct todo_list *);
+
+extern int hide;
