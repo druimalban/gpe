@@ -139,10 +139,11 @@ main (int argc, char **argv)
   gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
-  gtk_window_set_title (GTK_WINDOW (window), _("Bluetooth control"));
-
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
+
+  gtk_window_set_title (GTK_WINDOW (window), _("Frontlight control"));
+  gpe_set_window_icon (GTK_WIDGET (window), "minilite");
 
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the frontlight control.  Tap here and drag the slider to change the brightness."), NULL);
