@@ -36,6 +36,16 @@ style "gpe_bold_italic"
 
 # ------------------------------------------------------------------------
 
+# GPE common:
+#    Set describing labels in this style.
+style "gpe_labels"
+{
+# for now, this is just the regular black
+
+  # light blue:
+#   fg[NORMAL] = { 0.3, 0.3, 0.6 }
+}
+
 # Used as the Today frame title:
 style "gpe_today_title" = "gpe_bold"
 {
