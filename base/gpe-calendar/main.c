@@ -339,6 +339,28 @@ notebook_switch_page (GtkNotebook *notebook,
 static gboolean
 main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 {
+  if (k->state & GDK_CONTROL_MASK)
+    switch (k->keyval)
+      {
+        case GDK_n:
+          new_appointment();
+        break;	
+        case GDK_o:
+        case GDK_i:
+          on_import_vcal(widget, NULL);
+        break;	
+        case GDK_t:
+          set_today();
+        break;	
+        case GDK_q:
+          gpe_cal_exit();
+        break;	
+      }
+  /* ignore if ctrl or alt pressed */    
+  if ((k->state & GDK_CONTROL_MASK) 
+       || (k->state & GDK_MOD1_MASK))
+    return FALSE;
+  /* automatic event */
   if (k->string && isalpha(k->string[0]))
     {
         if (!just_new) 
@@ -466,20 +488,24 @@ main (int argc, char *argv[])
   toolbar = gtk_toolbar_new ();
 
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  GTK_WIDGET_UNSET_FLAGS(toolbar, GTK_CAN_FOCUS);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
 			    _("New appointment"), _("Tap here to add a new appointment or reminder"),
 			    G_CALLBACK (new_appointment), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
   if (window_x > 260) 
     gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   pw = gtk_image_new_from_stock (GTK_STOCK_HOME, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   today_button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"),
-			   _("Today"), _("Today"), pw, set_today, NULL);
+			   _("Switch to today and stay there/return to day selecting."), 
+               NULL, pw, set_today, NULL);
+  GTK_WIDGET_UNSET_FLAGS(today_button, GTK_CAN_FOCUS);
 
   if (window_x > 260) 
     gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -488,43 +514,51 @@ main (int argc, char *argv[])
   pw = gtk_image_new_from_pixbuf (p);
   future_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					      GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
-					      _("Future"), _("Future View"),
-					      _("Tap here to see all future events."),
+					      _("Future"), 
+					      _("Tap here to see all future events."), NULL,
 					      pw, GTK_SIGNAL_FUNC (button_toggled), future);
+  GTK_WIDGET_UNSET_FLAGS(future_button, GTK_CAN_FOCUS);
 
   p = gpe_find_icon_scaled ("day_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					   GTK_TOOLBAR_CHILD_RADIOBUTTON, future_button,
-					   ("Day"), _("Day View"),
-					   _("Tap here to select day-at-a-time view."),
+					   ("Day"), 
+					   _("Tap here to select day-at-a-time view."), NULL,
 					   pw, GTK_SIGNAL_FUNC (button_toggled), day);
-  
+  GTK_WIDGET_UNSET_FLAGS(day_button, GTK_CAN_FOCUS);
+
   p = gpe_find_icon_scaled ("week_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   week_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_RADIOBUTTON, day_button,
-					    _("Week"), _("Week View"),
-					    _("Tap here to select week-at-a-time view."),
+					    _("Week"),
+					    _("Tap here to select week-at-a-time view."), NULL,
 					    pw, GTK_SIGNAL_FUNC (button_toggled), week);
+  GTK_WIDGET_UNSET_FLAGS(week_button, GTK_CAN_FOCUS);
 
   p = gpe_find_icon_scaled ("month_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   month_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					     GTK_TOOLBAR_CHILD_RADIOBUTTON, week_button,
-					     _("Month"), _("Month View"),
-					     _("Tap here to select month-at-a-time view."),
+					     _("Month"), 
+					     _("Tap here to select month-at-a-time view."), NULL,
 					     pw, GTK_SIGNAL_FUNC (button_toggled), month);
+  GTK_WIDGET_UNSET_FLAGS(month_button, GTK_CAN_FOCUS);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_OPEN,
-			    _("Imort"), _("Open file to import an event from it."),
-			    G_CALLBACK (on_import_vcal), NULL, -1);
-                
+  pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
+                                gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
+  pw = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
+			    _("Import"), _("Open file to import an event from it."), 
+                NULL, pw, G_CALLBACK (on_import_vcal), NULL);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
+              
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
-			    _("Exit"), _("Tap here to exit the program"),
-			    G_CALLBACK (gpe_cal_exit), NULL, -1);
+  pw = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
+		                 	     _("Tap here to exit the program"), NULL, 
+			                     G_CALLBACK (gpe_cal_exit), NULL, -1);
+  GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
 
@@ -542,7 +576,8 @@ main (int argc, char *argv[])
                    G_CALLBACK(notebook_switch_page),NULL);
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
-  gtk_widget_add_events (GTK_WIDGET (main_window), GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+  gtk_widget_add_events (GTK_WIDGET (main_window), 
+                         GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
   gtk_widget_show (notebook);
 

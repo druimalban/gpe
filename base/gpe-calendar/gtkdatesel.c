@@ -243,6 +243,8 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
 
   gtk_widget_set_size_request(e->arrow_l, 20, 20);
   gtk_widget_set_size_request(e->arrow_r, 20, 20);
+  GTK_WIDGET_UNSET_FLAGS(e->arrow_l, GTK_CAN_FOCUS);
+  GTK_WIDGET_UNSET_FLAGS(e->arrow_r, GTK_CAN_FOCUS);
   gtk_widget_show (arrow_l);
   gtk_widget_show (arrow_r);
 

@@ -1,5 +1,9 @@
-2004-09-02  Florian Boor <florian.boor@kernelconcepts.de>
+2004-09-03 Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Released V 0.56
+    * main.c: Fixed tooltips, changed button label.
+    * main.c: Added some hotkeys for common operations.
+    * main.c: Some GUI tuning.
     * gtkdatesel.c: Increasing the arrow button sizes a little bit.
 
 2004-09-01  Florian Boor <florian.boor@kernelconcepts.de>
