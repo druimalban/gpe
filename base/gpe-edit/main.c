@@ -593,7 +593,7 @@ main (int argc, char *argv[])
   text_area = gtk_text_view_new ();
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_area), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text_area), TRUE);
-  gtk_tooltips_set_tip(tooltips,text_area,_("File editing field, additional functions are available by tab&hold or right click."),NULL);
+  gtk_tooltips_set_tip(tooltips,text_area,_("File editing field, additional functions are available by tap&hold or right click."),NULL);
 
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
   g_signal_connect (G_OBJECT (buf), "changed",
@@ -629,7 +629,7 @@ main (int argc, char *argv[])
   
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_COPY, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
-			   _("Copy selected, paste is possible by tab&hold"), _("Copy selected, paste is possible by tab&hold"), toolbar_icon, copy_selection, vbox);
+			   _("Copy selected, paste is possible by tap&hold"), _("Copy selected, paste is possible by tap&hold"), toolbar_icon, copy_selection, vbox);
 /*
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_PASTE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
