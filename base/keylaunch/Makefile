@@ -47,14 +47,5 @@ install-program: all
 clean:
 	rm -f $(PROG) $(OBJS)
 
-old-ipkg:
-	strip $(PROG)
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
