@@ -134,7 +134,7 @@ ini_get (IniFile *ini, char *field)
   if (n)
     return (unsigned char *)n->value;
   else
-    return NULL;
+    return "";
 }
 
 void
