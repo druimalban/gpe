@@ -96,3 +96,23 @@ playlist_new_track (void)
   i->type = ITEM_TYPE_TRACK;
   return i;
 }
+
+
+void playlist_free (struct playlist *playlist)
+{
+  if (playlist) {
+    g_free(playlist->title);
+    
+    if (playlist->type == ITEM_TYPE_LIST) {
+      /* free the children */
+      g_slist_foreach(playlist->data.list, playlist_free, NULL);
+      g_slist_free(playlist->data.list);
+    } else {
+      // these three cause gpe-nmf to hang
+      //g_free(playlist->data.track.url);
+      //g_free(playlist->data.track.artist);
+      //g_free(playlist->data.track.album);
+    }
+    g_free(playlist);
+  }
+}

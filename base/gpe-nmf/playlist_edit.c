@@ -194,14 +194,24 @@ void
 delete (GtkWidget *w, struct nmf_frontend *fe)
 {
   GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (fe->view));
+  GtkTreeStore *store = g_object_get_data (G_OBJECT (fe->view), "store");
   GtkTreeModel *model;
   GtkTreeIter iter;
 
-  if (gtk_tree_selection_get_selected (sel, &model, &iter))
-    {
-      struct playlist *item;
-      gtk_tree_model_get (model, &iter, DATA_COLUMN, &item, -1);
+  if (gtk_tree_selection_get_selected (sel, &model, &iter)) {
+    struct playlist *item;
+    gtk_tree_model_get (model, &iter, DATA_COLUMN, &item, -1);
+
+    if (item) {
+      struct playlist *parent = item->parent;
+      if (parent) {
+	parent->data.list = g_slist_remove (parent->data.list, item);
+      }
+      // now free the subtree
+      playlist_free (item);
     }
+    gtk_tree_store_remove (store, &iter);
+  }
 }
 
 void
@@ -277,6 +287,7 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 			    G_CALLBACK (delete), fe, -1);
   
   g_object_set_data (G_OBJECT (window), "store", store);
+  g_object_set_data (G_OBJECT (treeview), "store", store);
   store_playlist (store, p, NULL);
 
   gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);

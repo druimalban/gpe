@@ -45,6 +45,8 @@ extern        int       playlist_get_length (struct playlist *);
 extern struct playlist *playlist_new_list (void);
 extern struct playlist *playlist_new_track (void);
 
+extern             void playlist_free (struct playlist *);
+
 extern struct playlist *playlist_xml_load (gchar *);
 extern struct playlist *playlist_m3u_load (gchar *);
 
