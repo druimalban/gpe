@@ -1,5 +1,6 @@
 
 2004-06-07 Florian Boor <florian.boor@kernelconceps.de>
+	* Makefile: Another fix: Install binary suid root.
 	* Makefile: Some improvements to be oe-compatible.
 	* control: Added iptables to dependencies.
 	* Makefile: New version number.
