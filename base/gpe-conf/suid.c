@@ -39,6 +39,7 @@
 #include "serial.h"
 #include "cardinfo.h"
 #include "keyboard.h"
+#include "timeanddate.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -258,58 +259,6 @@ update_login_background (char *file)
 		g_warning ("Could not create link to %s\n", file);
 }
 
-void
-set_timezone (gchar * zone)
-{
-	gchar *profile;
-	gchar **proflines;
-	gint length;
-	gchar *delim;
-	FILE *profnew;
-	gint i = 0;
-	gint j = 0;
-
-	GError *err = NULL;
-
-	delim = g_strdup ("\n");
-	g_file_get_contents ("/etc/profile", &profile, &length, &err);
-	proflines = g_strsplit (profile, delim, 255);
-	g_free (delim);
-	delim = NULL;
-	g_free (profile);
-
-	while (proflines[i])
-	{
-		if ((g_strrstr (proflines[i], "TZ"))
-		    && (g_strrstr (proflines[i], "export"))
-		    && (!g_strrstr (proflines[i], "#")))
-		{
-			delim = proflines[i];
-			proflines[i] = g_strdup_printf ("export TZ=%s", zone);
-		}
-		i++;
-	}
-
-	i--;
-
-	if (delim == NULL)
-	{
-		proflines = realloc (proflines, i * sizeof (gchar *));
-		proflines[i] = g_strdup_printf ("export TZ=%s", zone);
-		i++;
-	}
-	else
-		free (delim);
-
-	profnew = fopen ("/etc/profile", "w");
-
-	for (j = 0; j < i; j++)
-	{
-		fprintf (profnew, "%s\n", proflines[j]);
-	}
-	fclose (profnew);
-	g_strfreev (proflines);
-}
 
 /* 
 	Creating a new homedir for a user.
@@ -457,7 +406,7 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "STZO") == 0)  // changes the timezone setting 
 				{
 					fscanf (in, "%100s", arg2);
-					set_timezone (arg2);
+					set_timezone ("/etc/profile",arg2);
 				}
 				else if (strcmp (cmd, "ULBS") == 0)  // turn login bg on/off
 				{

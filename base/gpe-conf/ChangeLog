@@ -2,6 +2,11 @@
 	* serial.c: Reformated, added check if gpsd config file exists.
 	* parser.c: Fixed bug that caused parse_file to segfault.
 	* new german translation, thanks Colin!
+	* suid.c: moved TZ stuff to timeanddate.c, added mode to set user mode 
+	          settings only.
+	* timeanddate.c: Added TZ setting, fixed some bugs, added TZ only setting
+	                 Changed location of TZ to .profile.
+					 Removed obsolete stuff.
 	
 2003-09-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* updated *.desktop

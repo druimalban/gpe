@@ -133,13 +133,15 @@ struct gpe_icon my_icons[] = {
 
 int applets_nb = sizeof(applets) / sizeof(struct Applet);
 
+
 void Save_Callback()
 {
   applets[self.cur_applet].Save();
   if(self.alone_applet)
     gtk_exit(0);
-
 }
+
+
 void Restore_Callback()
 {
   applets[self.cur_applet].Restore();
@@ -147,7 +149,8 @@ void Restore_Callback()
     gtk_exit(0);
 }
 
-void item_select(GtkWidget *ignored, gpointer user_data)
+
+void item_select(int useronly, gpointer user_data)
 {
   int i = (int) user_data;
 
@@ -164,7 +167,7 @@ void item_select(GtkWidget *ignored, gpointer user_data)
     }
   self.cur_applet = i;
 
-  self.applet = applets[i].Build_Objects();
+  self.applet = applets[i].Build_Objects(useronly);
   gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
 	
   gtk_widget_show_all(self.applet);
@@ -267,6 +270,7 @@ void make_container()
 void main_one(int argc, char **argv,int applet)
 {
   int handled = FALSE;
+  gboolean user_only_setup = FALSE; /* Don't change to suid mode. */  
 	
   self.alone_applet = 1;
 	
@@ -277,7 +281,7 @@ void main_one(int argc, char **argv,int applet)
     exit (1);
 
   /* check if we are called to do a command line task */
-  if (argc > 1)
+  if (argc > 2)
   {
 	  if (!strcmp(argv[1],"task_nameserver"))
 	  {
@@ -287,6 +291,10 @@ void main_one(int argc, char **argv,int applet)
 		  else
 			  fprintf(stderr,_("'task_nameserver' needs a new (and only one) nameserver as argument.\n"));
 		  exit(0);
+	  }
+	  if (!strcmp(argv[2],"user_only"))
+	  {
+		  user_only_setup = TRUE;
 	  }
   }
   
@@ -309,7 +317,7 @@ void main_one(int argc, char **argv,int applet)
   gtk_widget_show(self.w);
 
    
-  item_select(NULL, (gpointer)applet);
+  item_select(user_only_setup, (gpointer)applet);
   gtk_main();
   gtk_exit(0);
   }
