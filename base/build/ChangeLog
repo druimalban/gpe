@@ -1,3 +1,7 @@
+2003-09-14  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.dpkg_ipkg (GTKCFLAGS, GTKLIBS): Define.
+
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (GPECFLAGS, GPELIBS): Define.
