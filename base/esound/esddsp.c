@@ -287,6 +287,11 @@ dspctl (int fd, request_t request, void *argp)
       fmt |= (*arg) ? ESD_STEREO : ESD_MONO;
       break;
 
+    case SNDCTL_DSP_CHANNELS:
+      fmt &= ~ESD_MONO;
+      fmt |= (*arg == 2) ? ESD_STEREO : ESD_MONO;
+      break;
+
     case SNDCTL_DSP_GETBLKSIZE:
       *arg = ESD_BUF_SIZE;
       break;
