@@ -1,5 +1,5 @@
 #!/bin/sh
 
-chmod +s /usr/bin/gpe-shield
+chmod a+s /usr/bin/gpe-shield
 
 update-rc.d ipshield defaults

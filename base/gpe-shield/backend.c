@@ -38,11 +38,11 @@ static int rule_count = 0;
 #define CONFIGFILE	"/etc/access.conf"
 #define DEFAULT_INTERFACE "! lo"
 
-#ifdef MACH_IPAQ
-#define IPTABLES_CMD "/usr/sbin/iptables"
-#else
-#define IPTABLES_CMD "/sbin/iptables"
-#endif
+#define IPTABLES_CMD1 "/usr/sbin/iptables"
+#define IPTABLES_CMD2 "/sbin/iptables"
+#define IPTABLES_CMD3 "/usr/local/sbin/iptables"
+
+static const char* IPTABLES_CMD = NULL;
 
 /* forwared definitions */
 
@@ -134,7 +134,12 @@ do_load_rules(void)
 void
 do_clear(void)
 {
-	system(IPTABLES_CMD " --flush");
+	char* cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"--flush");
+	system(cmd);
+	g_free(cmd);
+	cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"-P INPUT ACCEPT"); /* reset input policy */
+	system(cmd);
+	g_free(cmd);
 	g_free(rule_info);
 	rule_info = NULL;
 	rule_count = 0;
@@ -150,7 +155,13 @@ do_rules_apply()
 	const gchar *target;
 	int i;
 	
-	system(IPTABLES_CMD " --flush"); /* cleans all existing iptables settings */
+	/* cleans all existing iptables settings */
+	cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"--flush");
+	system(cmd);
+	g_free(cmd);
+	cmd = g_strdup_printf("%s %s",IPTABLES_CMD,"-P INPUT ACCEPT"); /* reset input policy */
+	system(cmd);
+	g_free(cmd);
 
 	for (i=0;i<rule_count;i++)
 	{	
@@ -467,6 +478,13 @@ suidloop (int csock)
 {
 	sock = csock;
 
+	if (!access(IPTABLES_CMD1,X_OK))
+		IPTABLES_CMD = IPTABLES_CMD1;
+	else if (!access(IPTABLES_CMD2,X_OK))
+		IPTABLES_CMD = IPTABLES_CMD2;
+	else if (!access(IPTABLES_CMD3,X_OK))
+		IPTABLES_CMD = IPTABLES_CMD3;
+	
 	while (wait_message ()) ;
 		
 	close (sock);

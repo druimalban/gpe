@@ -1,3 +1,10 @@
+2004-06-18 Florian Boor <florian.boor@kernelconceps.de>
+	* Released V 0.5
+	* improved postinst.
+	* backend.c: Improved rule handling. Removes policies now. 
+	* backend.c: Iptables autoprobing.
+	* interface.c: Minor fixes.	
+
 2004-06-11 Florian Boor <florian.boor@kernelconceps.de>
 	* Released V 0.4
 	* Makefile: Install new stuff.

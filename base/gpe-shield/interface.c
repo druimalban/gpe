@@ -905,7 +905,7 @@ create_fMain (void)
   free(tmp);
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
   
-  cur = gtk_check_button_new_with_label(_("Start network control on login"));
+  cur = gtk_check_button_new_with_label(_("Start network control on system start"));
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cur),get_network_control());
   g_signal_connect_after (G_OBJECT (cur), "toggled",
