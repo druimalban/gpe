@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-minicalc
-DEBUG = yes
+DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
 
