@@ -1,4 +1,14 @@
-		  GNU LIBRARY GENERAL PUBLIC LICENSE
+** NB ** 
+
+portions of this code are derrived from D. Richard. Hipp's sqlite
+library.
+
+I suggest you read the copyright statement for sqlite. 
+
+** 
+
+
+	       GNU LIBRARY GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
  Copyright (C) 1991 Free Software Foundation, Inc.
