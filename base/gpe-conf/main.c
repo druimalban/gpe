@@ -143,23 +143,28 @@ int applets_nb = sizeof(applets) / sizeof(struct Applet);
 
 void Save_Callback()
 {
-  applets[self.cur_applet].Save();
   gpe_popup_infoprint(GDK_DISPLAY(), _("Settings saved"));
+  while (gtk_events_pending())
+	  gtk_main_iteration_do(FALSE);
+  applets[self.cur_applet].Save();
   if(self.alone_applet)
   {
     gtk_main_quit();
-    gtk_exit(0);
+    exit(0);
   }
 }
 
 
 void Restore_Callback()
 {
+  gpe_popup_infoprint(GDK_DISPLAY(), _("Aborted"));
+  while (gtk_events_pending())
+	  gtk_main_iteration_do(FALSE);
   applets[self.cur_applet].Restore();
   if(self.alone_applet)
   {
     gtk_main_quit();
-    gtk_exit(0);
+    exit(0);
   }
 }
 
@@ -433,11 +438,11 @@ int main(int argc, char **argv)
       suidout = fdopen(pipe2[1],"w");
       suidin = fdopen(pipe1[0],"r");
 
-      setresuid(getuid(),getuid(),getuid()); // abandon privilege..
-      setresgid(getgid(),getgid(),getgid()); // abandon privilege..
+      setresuid(getuid(), getuid(), getuid()); // abandon privilege..
+      setresgid(getgid(), getgid(), getgid()); // abandon privilege..
 	
-	signal(SIGINT,Restore_Callback);
-	signal(SIGTERM,Restore_Callback);
+	signal(SIGINT, Restore_Callback);
+	signal(SIGTERM, Restore_Callback);
 	
       if(argc == 1)
 	{

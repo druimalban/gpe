@@ -1319,7 +1319,7 @@ msgstr "Trình này không thể khởi động giao thức PPP.\n"
 
 #: tools/interface.c:1703
 msgid "Local Loopback"
-msgstr ""
+msgstr "Mạch nội bộ"
 
 #: tools/interface.c:1706
 msgid "Serial Line IP"

@@ -1,3 +1,9 @@
+2005-04-01	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* main.c: Fixed infoprints.
+	* keys/keyctl.c, data/key-layout: Add parameters to set image position.
+	* data/key-layout, pixmaps/ipaq-s1.png: Adjusted size and positions.
+
 2005-03-30	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* gpe-admin.c, storage.c, battery.c: Don't use render.h.

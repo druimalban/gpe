@@ -5,6 +5,8 @@
 
 [Global]
 image = /usr/share/pixmaps/ipaq-s1.png
+offset_x = 50
+offset_y = 10
 
 [Power]
 title = Power Button
@@ -12,8 +14,8 @@ symbol = gpe-config-apm.png
 key = XF86Power
 modificator = ???Pressed
 command = apm --suspend
-xpos = 130
-ypos = 5
+xpos = 155
+ypos = 0
 
 [Record]
 title = Audio Record
@@ -21,8 +23,8 @@ symbol = ibutton1.png
 key = XF86Record
 modificator = ???Pressed
 command = gpe-soundbite record --autogenerate-filename $HOME_VOLATILE
-xpos = 17
-ypos = 48
+xpos = 30
+ypos = 30
 
 [Calendar]
 title = Calendar
@@ -30,8 +32,8 @@ symbol = ibutton2.png
 key = XF86Calendar
 modificator = ???Pressed
 command = gpe-calendar
-xpos = 44
-ypos = 165
+xpos = 57
+ypos = 131
 
 [Contacts]
 title = Calendar
@@ -39,8 +41,8 @@ symbol = ibutton3.png
 key = telephone
 modificator = ???Pressed
 command = gpe-contacts
-xpos = 75
-ypos = 185
+xpos = 84
+ypos = 143
 
 [Mail]
 title = Mail
@@ -49,7 +51,7 @@ key = XF86Mail
 modificator = ???Pressed
 command = gpe-taskmgr
 xpos = 125
-ypos = 184
+ypos = 144
 
 [Start]
 title = Calendar
@@ -57,5 +59,5 @@ symbol = ibutton5.png
 key = XF86Start
 modificator = ???Pressed
 command = mbcontrol --desktop
-xpos = 175
-ypos = 167
+xpos = 168
+ypos = 130

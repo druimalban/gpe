@@ -35,6 +35,7 @@
 
 static char *keylaunchrc = NULL;
 static char *bg_image = NULL;
+static int bg_x = 0, bg_y = 0;
 static gboolean menuselect = FALSE;
 static int NUM_COMMANDS = 0;
 static int NUM_BUTTONS = 0;
@@ -153,6 +154,12 @@ layout_load(void)
 	if (g_key_file_has_group(layoutfile, "Global"))
 	{
 		bg_image = g_key_file_get_string(layoutfile, "Global", "image", &err);
+		if (err)
+			g_error_free(err);
+		bg_x = g_key_file_get_integer(layoutfile, "Global", "offset_x", &err);
+		if (err)
+			g_error_free(err);
+		bg_y = g_key_file_get_integer(layoutfile, "Global", "offset_y", &err);
 		if (err)
 			g_error_free(err);
 	}
@@ -408,7 +415,7 @@ Keyctl_Build_Objects ()
 	{
 		GtkWidget *pixmap1 = gtk_image_new_from_file(bg_image);
 		if (pixmap1) 
-			gtk_layout_put(GTK_LAYOUT(layout1), pixmap1, 30, 20);
+			gtk_layout_put(GTK_LAYOUT(layout1), pixmap1, bg_x, bg_y);
 	}
 
 	for (i = 0; i < NUM_BUTTONS; i++)
