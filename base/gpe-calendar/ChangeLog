@@ -1,5 +1,11 @@
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (build_edit_event_window): Remove frame around
+	description.  Put start/end dates and times in a table.  Patch
+	from Christian Meyer <chrisime@gnome-de.org>.
+
+2003-03-19  Philip Blundell  <philb@gnu.org>
+
 	* xsettings.c (notify_func): Add missing const. Patch from
 	Christian Meyer <chrisime@gnome-de.org>.
 
