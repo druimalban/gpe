@@ -678,6 +678,8 @@ main (int argc, char *argv[])
       gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
       gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
       gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
+
+      gtk_widget_show (face);
       
       gtk_container_add (GTK_CONTAINER (panel_window), face);
 
@@ -691,15 +693,17 @@ main (int argc, char *argv[])
 
       gtk_container_add (GTK_CONTAINER (panel_window), time_label);
 
+      gtk_widget_show (time_label);
+
       g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
       gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
     }
 
-  gtk_widget_realize (panel_window);
+  gtk_widget_show (panel_window);
 
-  gtk_widget_show_all (panel_window);
-
-  printf("allocation: %d %d\n", panel_window->allocation.width, panel_window->allocation.height);
+  gdk_window_resize (panel_window->window, panel_window->allocation.width, panel_window->allocation.height);
+  gtk_window_resize (GTK_WINDOW (panel_window), panel_window->allocation.width, panel_window->allocation.height);
+  gdk_window_resize (face->window, face->allocation.width, face->allocation.height);
 
   gpe_system_tray_dock (panel_window->window);
 
