@@ -1,17 +1,17 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
-VERSION = 0.05
+VERSION = 0.06-pre1
 CVSBUILD = yes
 #DEBUG = yes
 #EFENCE = yes
-LINGUAS = pt de
+LINGUAS = pt de zh_TW
 
-MEMBERS = main todo calendar date
+MEMBERS = main todo calendar date xsettings
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CPPFLAGS = -I../libgpewidget -I../libeventdb -I../libtododb -I../librootimage -D_GNU_SOURCE
+CPPFLAGS = -I../libgpewidget -I../libeventdb -I../libtododb -I../libxsettings -I../libxsettings-client -D_GNU_SOURCE
 
 ifeq ($(EFENCE),yes)
 LDFLAGS = -lefence
@@ -24,7 +24,7 @@ CFLAGS = -Os -fomit-frame-pointer
 endif
 
 CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS) -L/usr/local/lib -L../libeventdb -leventdb -L../libtododb -ltododb -L../librootimage -lrootimage
+LDFLAGS += $(GTKLDFLAGS) -L/usr/local/lib -L../libeventdb -leventdb -L../libtododb -ltododb -L../libxsettings -L../libxsettings-client -lXsettings-client -Wl,-rpath-link,../libxsettings 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 #CFLAGS += -MD
 

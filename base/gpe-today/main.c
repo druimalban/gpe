@@ -11,37 +11,35 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <gtk/gtk.h>
-
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
-
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-#include <gdk/gdkx.h>
-
-/* librootimage */
-#include <rootpixmap.h>
-
+#include "xsettings-client.h"
 #include "today.h"
-#include "today-prefs.h"
+
+extern gboolean start_xsettings (void);
 
 /* Private functions, public ones are in today.h */
 static void init_main_window (void);
 static void load_modules (void);
-static void set_bg_pixmap (GtkWidget *);
+static void set_bg_pixmap(const char *path);
+static void set_bg_color(const char *color);
 
 int main(int argc, char **argv)
 {
 	if (!gpe_application_init(&argc, &argv))
 		exit(1);
-
+        
 	gtk_rc_parse(DATAPATH(gtkrc));
 	
 	init_main_window();
 	load_modules();
-	set_bg_pixmap(window.toplevel);	
+        
+        conf.bg = NO_BG_SET;
+        start_xsettings();
+
+        if (conf.bg == NO_BG_SET)
+            set_background("<mbdesktop>");
 
 	gtk_widget_show_all(window.toplevel);
 	
@@ -51,48 +49,120 @@ int main(int argc, char **argv)
 }
 
 static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
-				gpointer data)
+                                gpointer data)
 {
-	if ((wid->allocation.height >= wid->allocation.width) == window.mode) {
+	if ((gdk_screen_height() >= gdk_screen_width()) == window.mode) {
 		window.mode = !window.mode;
-		set_bg_pixmap(wid);
 		g_print("ROTATION\n");
 	}
 
-	/* refresh various modules */
+	/* refresh various modules, not sure why this is necessary */
 	/* weird stuff going on here, MUST draw scroll's BEFORE toplevel */
-/*	gtk_widget_queue_draw(calendar.scroll->draw);
+	gtk_widget_queue_draw(calendar.scroll->draw);
 	gtk_widget_queue_draw(todo.scroll->draw);
 	gtk_widget_queue_draw(todo.toplevel);
 	gtk_widget_queue_draw(calendar.toplevel);
-	gtk_widget_queue_draw(window.vpan1);*/
+	gtk_widget_queue_draw(window.vpan1);
 
 	return FALSE;
 }
 
-static void set_bg_pixmap(GtkWidget *wid)
+#define MATCHBOX_BG "MATCHBOX/Background"
+
+/* some code adpated from mbdesktop.c copyright matthew allum */
+void set_background(const char *spec)
 {
-	Pixmap rmap;
-	GdkPixmap *old_pix = g_object_get_data(G_OBJECT(wid), "bg-pixmap");
+        /* img-tiled:<filename>
+         * img-streched:<filename> -- will be tiled too
+         * col-solid:<filename>
+         * <mbdesktop>
+         *
+         * TODO:
+         *  proper img-streched
+         *  col-gradient-{vertical|horizontal}
+         */
 
-	rmap = GetRootPixmap(GDK_DISPLAY());
+        struct cms {
+            char *pat;
+            int t;
+        } cm[] = {
+            { "<mbdesktop>", MBDESKTOP_BG },
+            { "img-tiled:", TILED_BG_IMG },
+            { "img-streched:", STRECHED_BG_IMG },
+            { "col-solid:", SOLID_BG_COL }
+        };
 
-	if (rmap != None) {
-		GdkPixmap *pix = gdk_pixmap_foreign_new(rmap);
-		wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
-		wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
-		wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
-		g_object_ref(pix);
-		g_object_ref(pix);
-		gtk_widget_set_style(wid, wid->style);
-		g_object_set_data(G_OBJECT(wid), "bg-pixmap", pix);
+        int type, offset, i, nt = (sizeof(cm)/sizeof(struct cms));
+        XSettingsSetting *setting;
+        const char *arg = NULL;
+
+        if (!spec)
+            return;
+
+        for (i=0, type=NO_BG_SET; i < nt; i++) {
+            offset = strlen(cm[i].pat);
+            if (offset <= strlen(spec) && !strncmp(cm[i].pat, spec, offset)) {
+                type = cm[i].t;
+                break;
+            }
+        }
+
+        conf.bg = type;
+        if (type) {
+            arg = spec + offset;
+        }
+
+        switch (type) {
+        case NO_BG_SET: /* assume spec == filename */
+            set_bg_pixmap(spec);
+            break;
+        case MBDESKTOP_BG:
+            if (xsettings_client_get_setting(conf.xst_client, MATCHBOX_BG,
+                                             &setting) == XSETTINGS_SUCCESS
+                && setting->type == XSETTINGS_TYPE_STRING) {
+
+                /* possible loop here if mb's setting is "<matchbox>" */
+                set_background(setting->data.v_string);
+            }
+            break;
+        case TILED_BG_IMG:
+        case STRECHED_BG_IMG:
+            set_bg_pixmap(arg);
+            break;
+        case SOLID_BG_COL:
+            set_bg_color(arg);
+            break;
+        }
+}
+
+static void set_bg_pixmap(const char *path)
+{
+    GtkWidget *wid = window.toplevel;
+    GdkPixmap *old_pix, *pix;
+    GdkBitmap *mask;
+        
+    if (load_pixmap_non_critical(path, &pix, &mask, 0xFF)) {
+        old_pix = g_object_get_data(G_OBJECT(wid), "bg-pixmap");
+
+        wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
+        wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
+        wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
+        g_object_ref(pix);
+        g_object_ref(pix);
+        gtk_widget_set_style(wid, wid->style);
+        g_object_set_data(G_OBJECT(wid), "bg-pixmap", pix);
+    
+        if (old_pix) {
+            g_object_unref(old_pix);
+            g_object_unref(old_pix);
+            g_object_unref(old_pix);
 	}
+    }
+}
 
-	if (old_pix) {
-		g_object_unref(old_pix);
-		g_object_unref(old_pix);
-		g_object_unref(old_pix);
-	}
+static void set_bg_color(const char *color)
+{
+
 }
 
 static void init_main_window(void)
@@ -101,8 +171,8 @@ static void init_main_window(void)
 	gtk_window_set_title(GTK_WINDOW(window.toplevel), _("Summary"));
 	gtk_widget_set_name(window.toplevel, "main_window");
 	gtk_widget_realize(window.toplevel);
-	window.height = window.width = 0;
-
+	window.mode = PORTRAIT;
+	
 	window.vbox1 = gtk_vbox_new(FALSE, 0);
 	gtk_container_add(GTK_CONTAINER(window.toplevel), window.vbox1);
 
@@ -123,10 +193,10 @@ static void load_modules(void)
 	gtk_box_pack_start(GTK_BOX(window.vbox1), window.vpan1, TRUE, TRUE, 0);
 
 	calendar_init();
-	gtk_paned_pack1 (GTK_PANED(window.vpan1), calendar.toplevel, FALSE, FALSE);
+	gtk_paned_pack1(GTK_PANED(window.vpan1), calendar.toplevel, FALSE, FALSE);
 
 	todo_init();
-	gtk_paned_pack2 (GTK_PANED(window.vpan1), todo.toplevel, FALSE, FALSE);
+	gtk_paned_pack2(GTK_PANED(window.vpan1), todo.toplevel, FALSE, FALSE);
 }
 
 void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask, int alpha)

@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <libintl.h>
 #include <gtk/gtk.h>
+#include "xsettings-client.h"
 
 #include "calendar.h"
 #include "todo.h"
@@ -30,20 +31,23 @@
 #endif
 
 #define IMAGEPATH(file) PREFIX "/share/" PACKAGE "/pixmaps/" #file
-//#define IMAGEPATH(file) "./pixmaps/" #file
 #define DATAPATH(file) PREFIX "/share/" PACKAGE "/" #file
 
 enum { PORTRAIT, LANDSCAPE };
+enum { NO_BG_SET, TILED_BG_IMG, STRECHED_BG_IMG, SOLID_BG_COL, MBDESKTOP_BG };
 
 struct {
 	GtkWidget *toplevel;            /* top-level window */
 	  GtkWidget *vbox1;             /* top-level vertical box */
 	    GtkWidget *vpan1;
 
-	gint height;  /* window height */
-	gint width;   /* window width */
 	gint mode;    /* either PORTRAIT or LANDSCAPE */
 } window;
+
+struct {
+    int bg;
+    XSettingsClient *xst_client;
+} conf;
 
 struct myscroll {
 	GtkAdjustment *adjust;
@@ -64,5 +68,7 @@ int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
 
 void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask,
                  int alpha);
+
+void set_background(const char *spec);
 
 #endif /* !HAVE_TODAY_H */
