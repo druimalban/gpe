@@ -7,12 +7,14 @@
 # May 23, 2001 - September 4, 2001
 
 PREFIX = /usr/local
+PACKAGE = pdamaze
+VERSION = 0.2
 
 CC=$(PROGPREFIX)gcc
 STRIP=$(PROGPREFIX)strip
 
-CFLAGS=-Os -fomit-frame-pointer -Wall -I/usr/include $(EXTRA_CFLAGS) `gdk-pixbuf-config --cflags` -DPREFIX=\"$(PREFIX)\"
-XLIB=-L$(LIBDIR) -lX11 `gdk-pixbuf-config --libs`
+CFLAGS=-Os -fomit-frame-pointer -Wall -I/usr/include $(EXTRA_CFLAGS) `pkg-config --cflags gdk-pixbuf-2.0` `pkg-config --cflags gdk-2.0` -DPREFIX=\"$(PREFIX)\"
+XLIB=-L$(LIBDIR) -lX11 `pkg-config --libs gdk-pixbuf-2.0` `pkg-config --libs gdk-2.0`
 
 
 all:	host

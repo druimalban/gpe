@@ -21,7 +21,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 
-#include <gdk/gdkprivate.h>
+#include <gdk/gdk.h>
+#include <gdk/gdkx.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 
@@ -128,7 +129,7 @@ XKeyboardState kbstate;
 
 int timer_mode, map_mode, maze_size, sound, timer;
 
-int epos, ypos, dir;
+int xpos, ypos, dir;
 
 
 int maze[MAX_SIZE][MAX_SIZE],
@@ -180,7 +181,7 @@ load_pixmaps (void)
 
       buf = g_strdup_printf (PREFIX "/share/pdamaze/%s.png", loadpix[i].name);
 
-      p = gdk_pixbuf_new_from_file (buf);
+      p = gdk_pixbuf_new_from_file (buf, NULL);
       if (!p)
 	{
 	  fprintf (stderr, "Couldn't load %s\n", buf);
@@ -188,7 +189,9 @@ load_pixmaps (void)
 	}
       free (buf);
       gdk_pixbuf_render_pixmap_and_mask (p, &pmap, &bmap, 127);
-      *loadpix[i].map = ((GdkWindowPrivate *)pmap)->xwindow;
+      *loadpix[i].map = GDK_PIXMAP_XID (pmap);
+      if (bmap)
+	gdk_bitmap_unref (bmap);
     }
 }
 
