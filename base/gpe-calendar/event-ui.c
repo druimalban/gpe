@@ -433,7 +433,19 @@ new_event(time_t t, guint timesel)
   gtk_box_pack_start (GTK_BOX (vboxevent), text, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), buttonbox, FALSE, FALSE, 2);
   
+  gtk_widget_show_all (vboxevent);
+  
 /* Begin repeat vbox */
+
+  gtk_widget_show (hboxrepeat);
+  
+  vboxrepeattop = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vboxrepeattop);
+  
+  recurborder = gtk_frame_new ("Type:");
+  gtk_widget_show (recurborder);
+  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurborder, FALSE, FALSE, 0); 
+  gtk_container_add (GTK_CONTAINER (recurborder), hboxrepeat);
    
   vboxrecur = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vboxrecur);
@@ -589,10 +601,14 @@ new_event(time_t t, guint timesel)
   gtk_widget_hide (monthlyvbox);
   gtk_widget_hide (yearlyvbox);
 
-  recurborder = gtk_frame_new (NULL);
-  gtk_container_add (GTK_CONTAINER (recurborder), hboxrepeat);
-
 /* Begin end-date vbox */
+ 
+  gtk_widget_show (vboxend);
+
+  recurendborder = gtk_frame_new ("End Date:");
+  gtk_widget_show (recurendborder);
+  gtk_container_add (GTK_CONTAINER (recurendborder), vboxend);
+  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurendborder, FALSE, FALSE, 0);
  
   /* forever radio button */
   radiobuttonforever = gtk_radio_button_new_with_label (NULL, "forever");
@@ -627,27 +643,18 @@ new_event(time_t t, guint timesel)
   gtk_box_pack_start (GTK_BOX (hboxendafter), endlabel, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endlabel, FALSE);
 
-  recurendborder = gtk_frame_new (NULL);
-  gtk_container_add (GTK_CONTAINER (recurendborder), vboxend);
-
   gtk_signal_connect (GTK_OBJECT (radiobuttonforever), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   gtk_signal_connect (GTK_OBJECT (radiobuttonendafter), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   		  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonforever), TRUE);
 
-  gtk_widget_show(notebook);
-  
-  gtk_container_add (GTK_CONTAINER (window), notebook);
   gtk_widget_show (labeleventpage);
   gtk_widget_show (labelrecurpage);
   
-  gtk_widget_show_all (vboxevent);
-  gtk_widget_show (hboxrepeat);
-
-  vboxrepeattop = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurborder, FALSE, FALSE, 0); 
-  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurendborder, FALSE, FALSE, 0);
- 
+  gtk_widget_show(notebook);
+  
+  gtk_container_add (GTK_CONTAINER (window), notebook);
+  
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, labeleventpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, labelrecurpage);
   

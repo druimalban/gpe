@@ -55,7 +55,7 @@ static void
 new_appointment(void)
 {
   GtkWidget *appt = new_event(time(NULL), 0);
-  gtk_widget_show_all (appt);
+  gtk_widget_show (appt);
 }
 
 static GtkItemFactoryEntry menu_items[] = {
