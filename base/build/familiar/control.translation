@@ -1,5 +1,5 @@
 Package: <package>-<language>
-Provides: apps-locale-<language>
+Provides: apps-locale-<language>, <package>-locale
 Section: base
 Priority: optional
 Version: <version>

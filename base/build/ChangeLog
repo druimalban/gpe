@@ -1,5 +1,7 @@
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control.translation (Provides): Add <package>-locale.
+
 	* Makefile.translation (real-translation-package): Replace
 	$(PACKAGE) with $(BINPACKAGE).
 	(BINPACKAGE): Set to $(PACKAGE) if not already defined.
