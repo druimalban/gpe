@@ -33,8 +33,10 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
 LDFLAGS += -L../libgpewidget
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -47,7 +49,7 @@ $(PACKAGE): $(OBJS)
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-install: all $(PACKAGE).desktop
+install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
@@ -55,5 +57,5 @@ install: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
