@@ -12,49 +12,34 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-CROSSCOMPILE = yes
 PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
-DEBUG = yes
+DEBUG = no
+CVSBUILD = yes
+VERSION = 0.2.6
 LINGUAS = cs
 
-VERSION = 0.2.5
-GTK2 = yes
+ifeq ($(CVSBUILD),yes)
 BUILD = ../build
+else
+BUILD = build
+endif
 
 YACC = byacc
 LEX  = flex
-CC   = gcc
-STRIP = strip
 
-ifeq ($(CROSSCOMPILE),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0`
 
-CC      = arm-linux-gcc
-STRIP   = arm-linux-strip
+PACKAGE_CFLAGS += -Os -Wall $(STANDARD_CFLAGS) $(GTKCFLAGS) 
+PACKAGE_CFLAGS += -MD $(OPTIONS) -g  
+PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" 
+PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" 
+PACKAGE_CFLAGS += -DPACKAGE_DATA_DIR=\"$(PREFIX)/share/\"
+PACKAGE_CFLAGS += -DENABLE_NLS
+PACKAGE_CFLAGS += $(GPECFLAGS)
 
-PKG_CONFIG_PATH=/skiff/local/arm-linux/lib/pkgconfig/
-
-LDFLAGS     += -L/skiff/local/arm-linux/lib
-LDFLAGS     += -L/skiff/local/arm-linux/lib/X11
-LDFLAGS     += -lX11 -lXtst -lXext -lm 
-
-else
-
-CC      = gcc
-STRIP   = strip
-
-LDFLAGS     += -L/usr/X11R6/lib -lX11 -lXtst -lm 
-
-endif
-
-
-CFLAGS += -Os -Wall
-CFLAGS += -MD $(OPTIONS) -g  
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" 
-CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" 
-CFLAGS += -DPACKAGE_DATA_DIR=\"$(PREFIX)/share/\"
-CFLAGS += -DENABLE_NLS
-CFLAGS += $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lfl
 
 CONTROL = control1
 

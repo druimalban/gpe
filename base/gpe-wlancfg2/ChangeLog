@@ -1,3 +1,8 @@
+
+06/03/2004	Florian Boor <florian.boor@kernelconcepts.de>
+	- Major Makefile update.
+	- Released V 0.2.6
+
 05/25/2004	Florian Boor <florian.boor@kernelconcepts.de>
 	- Removed hardcoded toolbar style. 
 
