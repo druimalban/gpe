@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if test -d /etc/X11/Xsession-gpe.d/; then 
+    ln -fs /etc/X11/Xsession.d/90GpeAppMgr /etc/X11/Xsession-gpe.d/90GpeAppMgr
+fi
+
+exit 0
