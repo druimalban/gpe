@@ -178,9 +178,24 @@ image_zoom_fit ()
 void
 hide_image ()
 {
-  gtk_widget_destroy (image_widget);
-  gtk_widget_hide (tools_toolbar);
-  gtk_widget_show (view_widget);
+  if (view_widget)
+  {
+    gtk_widget_destroy (image_widget);
+    gtk_widget_hide (tools_toolbar);
+    gtk_widget_show (view_widget);
+  }
+}
+
+void
+enable_fullscreen ()
+{
+  //gdk_window_fullscreen (GDK_WINDOW (window));
+}
+
+void
+disable_fullscreen ()
+{
+  //gdk_window_unfullscreen (GDK_WINDOW (window));
 }
 
 GtkWidget *
@@ -482,7 +497,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("fullscreen");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Fullscreen"), 
-			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, NULL, NULL);
+			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, enable_fullscreen, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
@@ -544,6 +559,11 @@ main (int argc, char *argv[])
   gtk_widget_show (loading_progress_bar);
   gtk_widget_show (view_option_menu);
   gtk_widget_show (view_menu);
+
+  if (argc > 1)
+  {
+    show_image (NULL, (gpointer) argv[1]);
+  }
 
   gtk_main();
   return 0;
