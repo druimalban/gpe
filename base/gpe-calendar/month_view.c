@@ -62,7 +62,7 @@ button_press (GtkWidget *widget,
   y /= ys;
   y -= 1;
 
-  c = &rc[x + (y * 7)];
+  c = &rc[x + (y * 7) - week_offset];
   if (c->valid)
     {
       if (event->type == GDK_BUTTON_PRESS)
@@ -123,7 +123,28 @@ draw_expose_event (GtkWidget *widget,
   guint i, j;
   PangoLayout *pl;
   PangoRectangle pr;
-
+  static nl_item days[7];
+  
+  if (week_starts_monday) 
+  {
+  	  days[0] = ABDAY_2;
+  	  days[1] = ABDAY_3;
+  	  days[2] = ABDAY_4;
+  	  days[3] = ABDAY_5;
+  	  days[4] = ABDAY_6;
+  	  days[5] = ABDAY_7;
+  	  days[6] = ABDAY_1;
+  }
+  else {
+  	  days[0] = ABDAY_1;
+  	  days[1] = ABDAY_2;
+  	  days[2] = ABDAY_3;
+  	  days[3] = ABDAY_4;
+  	  days[4] = ABDAY_5;
+  	  days[5] = ABDAY_6;
+  	  days[6] = ABDAY_7;
+  }
+  
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
@@ -191,14 +212,12 @@ draw_expose_event (GtkWidget *widget,
     {
       guint w;
       guint x = xp + (i * xs);
-      static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
-				      ABDAY_6, ABDAY_7, ABDAY_1 };
       gchar *s = g_locale_to_utf8 (nl_langinfo (days[i]), -1,
                                    NULL, NULL, NULL);
       pango_layout_set_text (pl, s, strlen (s));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
       w = pr.width;
-
+      
       gtk_paint_layout (widget->style,
 			widget->window,
 			GTK_WIDGET_STATE (widget),
@@ -212,7 +231,7 @@ draw_expose_event (GtkWidget *widget,
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
 	  gchar *buffer;
-	  guint d = i + (7 * j);
+	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
 	  guint y = (j + 1) * ys;
 
@@ -263,7 +282,7 @@ draw_expose_event (GtkWidget *widget,
       guint x = xp + (i * xs);
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
 	{
-	  guint d = i + (7 * j);
+	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
 	  guint y = (j + 1) * ys;
 

@@ -59,6 +59,7 @@ static GtkWidget *day_button, *week_button, *month_button, *future_button;
 
 guint window_x = 240, window_y = 310;
 
+guint week_offset = 0;
 gboolean week_starts_monday = TRUE;
 gboolean day_view_combined_times;
 

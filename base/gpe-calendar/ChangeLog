@@ -1,3 +1,14 @@
+2003-07-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+	
+	* main.c : add new global week_offset to allow week_starts_monday to
+	affect month-view
+	* month_view.c (draw_expose_event): Move days declaration and setting
+	as well as add several week_offset changes so that week_starts_monday
+	works in month-view
+	* xsettings (notify_func): change week_offset along with
+	week_starts_monday
+	* globals.h : add week_offset
+	
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* day_view.c (day_view_update), future_view (future_view_update),

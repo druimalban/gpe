@@ -42,6 +42,8 @@ notify_func (const char *name, XSettingsAction action,
 	  if (setting->type == XSETTINGS_TYPE_INT)
 	    {
 	      week_starts_monday = setting->data.v_int ? TRUE : FALSE;
+	      if (week_starts_monday) week_offset=0;
+	      else week_offset=1;
 	      if (push_new_changes)
 		update_current_view ();
 	    }
