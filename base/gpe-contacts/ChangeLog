@@ -1,3 +1,35 @@
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
+	Patch from Florian Boor:
+
+	* adb.glade: updated gui
+
+	* src/callbacks.c:
+	- added active_chars to hold active selection
+	- added some externals
+	- on_nbList_switch_page is new handler for page/selection change
+	- selection_made now handles editing via doubleclick here
+	
+	* src/db.c
+	- added definition of USE_USQLD to switch
+	- usqld usage
+	- db_get_entries_alpha selects only entys starting with listed chars
+	- read_detail_fields / read detail / db_detail_by_uid data to
+	update some details shown in the main form
+
+	* src/db.h
+	- db_get_entries_alpha
+
+	* src/interface.c
+	- some interface changes, use glade...
+
+	* src/main.c
+	- some changes in startup behaviour to use features of changed interface
+	- update_display changed call/added freeze for speedup
+
+	* src/structure.c
+	- added some . :-)
+
 2002-10-02  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (SUBDIRS): Add m4.

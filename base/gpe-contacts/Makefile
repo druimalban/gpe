@@ -11,7 +11,7 @@ endif
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../../libgpewidget -Wall `pkg-config --cflags xml2`
+CFLAGS = $(GTKCFLAGS) -g -I../../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -24,7 +24,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-contacts all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs xml2` -g -lsqlite
+	$(CC) -o $@ $^ -L../../libgpewidget -lgpewidget $(GTKLDFLAGS) `pkg-config --libs libxml-2.0` -g -lsqlite
 
 clean:
 	rm -f gpe-contacts $(OBJS) $(DEPS)

@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#include <sqlite.h>
-
 #include <gpe/errorbox.h>
 
 #include "db.h"
@@ -16,7 +14,17 @@
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 
+#define USE_USQLD
+
+#ifdef USE_USQLD
+#include <usql.h>
+static usqld_conn *db;
+#else
+#include <sqlite.h>
 static sqlite *db;
+#endif
+
+extern GtkWidget *clist;
 
 static const char *schema_str = 
 "create table contacts (
@@ -39,11 +47,42 @@ static const char *schema3_str =
 );
 ";
 
+
 int 
 db_open(void) 
 {
   /* open persistent connection */
   char *errmsg;
+  int ret;
+  
+#ifdef USE_USQLD
+  db = usqld_connect ("localhost", "contacts", &errmsg);
+  
+  if (db == NULL) 
+    {
+      gpe_error_box (errmsg);
+      free (errmsg);
+      return -1;
+    }
+  
+  ret = usqld_exec (db, schema_str, NULL, NULL, &errmsg);
+  if (ret != SQLITE_OK)
+    {
+      printf("err: %s\n",errmsg);
+      free(errmsg);
+    }
+  ret = usqld_exec (db, schema2_str, NULL, NULL, &errmsg);
+  if (ret != SQLITE_OK)
+    {
+      printf("err: %s\n",errmsg);
+      free(errmsg);
+    }
+  ret = usqld_exec (db, schema3_str, NULL, NULL, &errmsg);
+  if (ret != SQLITE_OK){
+    printf("err: %s\n",errmsg);
+    free(errmsg);
+  }
+#else
   char *buf;
   size_t len;
   char *home = getenv ("HOME");
@@ -57,7 +96,7 @@ db_open(void)
   
   db = sqlite_open (buf, 0, &errmsg);
   g_free (buf);
-  
+	
   if (db == NULL) 
     {
       gpe_error_box (errmsg);
@@ -68,7 +107,7 @@ db_open(void)
   sqlite_exec (db, schema_str, NULL, NULL, NULL);
   sqlite_exec (db, schema2_str, NULL, NULL, NULL);
   sqlite_exec (db, schema3_str, NULL, NULL, NULL);
-
+#endif
   return 0;
 }
 
@@ -146,7 +185,11 @@ gboolean
 new_person_id (guint *id)
 {
   char *err;
+#ifdef USE_USQLD	
+  int r = usqld_exec (db, "insert into contacts_urn values (NULL)",
+#else	
   int r = sqlite_exec (db, "insert into contacts_urn values (NULL)",
+#endif
 		       NULL, NULL, &err);
   if (r)
     {
@@ -155,8 +198,12 @@ new_person_id (guint *id)
       return FALSE;
     }
 
+#ifdef USE_USQLD	
+  *id = usqld_last_insert_rowid (db);
+#else
   *id = sqlite_last_insert_rowid (db);
-  return TRUE;
+#endif	
+	return TRUE;
 }
 
 gint 
@@ -173,7 +220,6 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
 
   p->id = atoi (argv[0]);
   p->name = g_strdup (argv[1]);
-
   *list = g_slist_insert_sorted (*list, p, (GCompareFunc)sort_entries);
 
   return 0;
@@ -186,9 +232,12 @@ db_get_entries (void)
   char *err;
   int r;
 
+#ifdef USE_USQLD	
+  r = usqld_exec (db, "select urn,value from contacts where tag='NAME'",
+#else
   r = sqlite_exec (db, "select urn,value from contacts where tag='NAME'",
-		   read_one_entry, &list, &err);
-
+#endif
+	read_one_entry, &list, &err);
   return list;
 }
 
@@ -208,8 +257,12 @@ db_get_by_uid (guint uid)
   int r;
 
   p->id = uid;
+#ifdef USE_USQLD	
+  r = usqld_exec_printf (db, "select tag,value from contacts where urn=%d",
+#else
   r = sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
-			  read_entry_data, p, &err, uid);
+#endif  
+  read_entry_data, p, &err, uid);
   if (r)
     {
       gpe_error_box (err);
@@ -228,25 +281,41 @@ db_delete_by_uid (guint uid)
   gchar *err;
   gboolean rollback = FALSE;
 
+#ifdef USE_USQLD	
+  r = usqld_exec (db, "begin transaction", NULL, NULL, &err);
+#else
   r = sqlite_exec (db, "begin transaction", NULL, NULL, &err);
+#endif
   if (r)
     goto error;
 
   rollback = TRUE;
 
+#ifdef USE_USQLD	
+  r = usqld_exec_printf (db, "delete from contacts where urn='%d'",
+#else
   r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
+#endif
 			  NULL, NULL, &err,
 			  uid);
   if (r)
     goto error;
   
+#ifdef USE_USQLD	
+  r = usqld_exec_printf (db, "delete from contacts_urn where urn='%d'",
+#else
   r = sqlite_exec_printf (db, "delete from contacts_urn where urn='%d'",
+#endif
 			  NULL, NULL, &err,
 			  uid);
   if (r)
     goto error;
 
+#ifdef USE_USQLD	
+  r = usqld_exec (db, "commit transaction", NULL, NULL, &err);
+#else
   r = sqlite_exec (db, "commit transaction", NULL, NULL, &err);
+#endif
   if (r)
     goto error;
 
@@ -254,7 +323,11 @@ db_delete_by_uid (guint uid)
 
  error:
   if (rollback)
+#ifdef USE_USQLD	
+    usqld_exec (db, "rollback transaction", NULL, NULL, NULL);
+#else
     sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+#endif  
   gpe_error_box (err);
   free (err);
   return FALSE;
@@ -328,7 +401,11 @@ commit_person (struct person *p)
   gchar *err;
   gboolean rollback = FALSE;
 
+#ifdef USE_USQLD	
+  r = usqld_exec (db, "begin transaction", NULL, NULL, &err);
+#else
   r = sqlite_exec (db, "begin transaction", NULL, NULL, &err);
+#endif	
   if (r)
     goto error;
 
@@ -336,7 +413,11 @@ commit_person (struct person *p)
 
   if (p->id)
     {
+#ifdef USE_USQLD		
+      r = usqld_exec_printf (db, "delete from contacts where urn='%d'",
+#else
       r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
+#endif		
 			      NULL, NULL, &err,
 			      p->id);
       if (r)
@@ -346,7 +427,11 @@ commit_person (struct person *p)
     {
       if (new_person_id (&p->id) == FALSE)
 	{
+#ifdef USE_USQLD		
+	  usqld_exec (db, "rollback transaction", NULL, NULL, NULL);
+#else
 	  sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+#endif		
 	  return FALSE;
 	}
     }
@@ -356,7 +441,11 @@ commit_person (struct person *p)
       struct tag_value *v = iter->data;
       if (v->value && v->value[0])
 	{
+#ifdef USE_USQLD		
+	  r = usqld_exec_printf (db,
+#else
 	  r = sqlite_exec_printf (db,
+#endif		
 				  "insert into contacts values(%d,'%q','%q')",
 				  NULL, NULL, &err,
 				  p->id, v->tag, v->value);
@@ -365,7 +454,11 @@ commit_person (struct person *p)
 	goto error;
     }
 
+#ifdef USE_USQLD		
+  r = usqld_exec (db, "commit transaction", NULL, NULL, &err);
+#else
   r = sqlite_exec (db, "commit transaction", NULL, NULL, &err);
+#endif		
   if (r)
     goto error;
 
@@ -373,7 +466,11 @@ commit_person (struct person *p)
 
  error:
   if (rollback)
+#ifdef USE_USQLD		
+    usqld_exec (db, "rollback transaction", NULL, NULL, NULL);
+#else
     sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+#endif		
   gpe_error_box (err);
   free (err);
   return FALSE;
@@ -383,7 +480,11 @@ gboolean
 db_insert_category (gchar *name, guint *id)
 {
   char *err;
+#ifdef USE_USQLD		
+  int r = usqld_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
+#else
   int r = sqlite_exec_printf (db, "insert into contacts_category values (NULL, '%q')", 
+#endif		
 			      NULL, NULL, &err, name);
   if (r)
     {
@@ -392,7 +493,7 @@ db_insert_category (gchar *name, guint *id)
       return FALSE;
     }
   
-  *id = sqlite_last_insert_rowid (db);
+  *id = usqld_last_insert_rowid (db);
   return TRUE;
 }
 
@@ -418,7 +519,11 @@ db_get_categories (void)
 {
   GSList *list = NULL;
   char *err;
+#ifdef USE_USQLD		
+  if (usqld_exec (db,
+#else
   if (sqlite_exec (db,
+#endif		
 		   "select id,description from contacts_category",
 		   load_one_attribute, &list, &err))
   {
@@ -429,3 +534,74 @@ db_get_categories (void)
 		
   return list;
 }
+
+GSList *
+db_get_entries_alpha (const gchar* alphalist)
+{
+  GSList *list = NULL;
+  char *err;
+  char *statement;
+  int r;
+
+  statement=malloc(sizeof(gchar)*100);
+  for (r=0;r<strlen(alphalist);r++)
+  {
+    sprintf(statement,"select urn,value from contacts where (tag='NAME') and ((value like \'%c%%\') or (value like \'%c%%\'))",alphalist[r],tolower(alphalist[r]));
+#ifdef USE_USQLD		
+    usqld_exec (db, statement, read_one_entry, &list, &err);
+#else
+    sqlite_exec (db, statement, read_one_entry, &list, &err);
+#endif		
+  }
+  free(statement);
+  return list;
+}
+
+
+static int
+read_detail_fields (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = new_person ();
+  GSList **list = (GSList **)arg;
+
+  p->id = atoi (argv[0]);
+  p->name = g_strdup (argv[1]);
+  *list = g_slist_insert_sorted (*list, p, (GCompareFunc)sort_entries);
+
+  return 0;
+}
+
+
+static int
+read_detail_data (void *arg, int argc, char **argv, char **names)
+{
+  if (strstr(argv[0],"TELEPHONE") != NULL)
+    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lPhone")),argv[1]);
+  if (strstr(argv[0],"MOBILE") != NULL)
+    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lMobile")),argv[1]);
+  if (strstr(argv[0],"EMAIL") != NULL)
+    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lMail")),argv[1]);
+  if (strstr(argv[0],"FAX") != NULL)
+    gtk_label_set_text(GTK_LABEL(lookup_widget(GTK_WIDGET(clist),"lFAX")),argv[1]);
+  return 0;
+}
+
+void
+db_detail_by_uid (guint uid)
+{
+  char *err;
+  int r;
+	
+#ifdef USE_USQLD		
+  r = usqld_exec_printf (db, "select tag,value from contacts where urn=%d",
+#else
+  r = sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
+#endif		
+			  read_detail_data, NULL, &err, uid);
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+}
+

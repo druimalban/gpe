@@ -37,7 +37,8 @@
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 
 static GtkWidget *combo;
-static GtkWidget *clist;
+GtkWidget *clist;
+gchar *active_chars;
 
 struct gpe_icon my_icons[] = {
   { "delete" },
@@ -118,7 +119,7 @@ store_special_fields (GtkWidget *edit, struct person *p)
     }
 }
 
-static void
+void
 edit_person (struct person *p)
 {
   GtkWidget *w = edit_window ();
@@ -291,6 +292,9 @@ selection_made( GtkWidget      *clist,
 		GtkWidget      *widget)
 {
   guint id;
+
+	id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+	db_detail_by_uid (id);
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
@@ -304,7 +308,8 @@ selection_made( GtkWidget      *clist,
 void
 update_display (void)
 {
-  GSList *items = db_get_entries (), *iter;
+  GSList *items = db_get_entries_alpha (active_chars), *iter;
+	gtk_clist_freeze(GTK_CLIST(clist));
   gtk_clist_clear (GTK_CLIST (clist));
   for (iter = items; iter; iter = iter->next)
     {
@@ -318,6 +323,7 @@ update_display (void)
       discard_person (p);
     }
   g_slist_free (items);
+	gtk_clist_thaw(GTK_CLIST(clist));
 }
 
 int
@@ -331,6 +337,9 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 #endif
+	
+  active_chars = malloc (5*sizeof (gchar));
+  sprintf (active_chars, "ABCD");
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);

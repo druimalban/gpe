@@ -12,7 +12,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <parser.h>
+#include <libxml/parser.h>
 
 #include "callbacks.h"
 
@@ -269,8 +269,6 @@ edit_structure (void)
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
 
   gtk_container_add (GTK_CONTAINER (scrolled), tree);
-  gtk_clist_set_column_width (GTK_CLIST (tree), 0, 80);
-  gtk_clist_set_column_width (GTK_CLIST (tree), 1, 80);
   gtk_clist_column_titles_hide (GTK_CLIST (tree));
 
   build_edit_tree (GTK_CTREE (tree), edit_pages, NULL);
@@ -473,14 +471,13 @@ read_structure (gchar *name)
   cur = xmlDocGetRootElement (doc);
   if (cur == NULL)
     {
-      gpe_error_box ("Layout description is empty");
+      gpe_error_box ("Layout description is empty.");
       xmlFreeDoc (doc);
       return FALSE;
     }
-
   if (xmlStrcmp (cur->name, "layout")) 
     {
-      gpe_error_box ("Layout description has wrong document type");
+      gpe_error_box ("Layout description has wrong document type.");
       xmlFreeDoc (doc);
       return FALSE;
     }

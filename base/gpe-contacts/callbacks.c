@@ -1,5 +1,4 @@
 #include <gtk/gtk.h>
-#include <sqlite.h>
 #include <stdio.h>
 
 #include "interface.h"
@@ -8,6 +7,11 @@
 #include "proto.h"
 
 #include <gpe/gtkdatecombo.h>
+
+extern GtkWidget *clist;
+extern gchar* active_chars;
+extern void edit_person (struct person *p);
+	
 
 void 
 store_filename(GtkWidget *w, GtkFileSelection *selector) 
@@ -153,3 +157,72 @@ on_edit_save_clicked                   (GtkButton       *button,
       update_display ();
     }
 }
+
+
+
+void
+on_nbList_switch_page                  (GtkNotebook     *notebook,
+                                        GtkNotebookPage *page,
+                                        gint             page_num,
+                                        gpointer         user_data)
+{
+  switch (page_num)
+    {
+       case 0:
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist1");
+         sprintf(active_chars,"ABC");
+         update_display();
+       break;	
+       case 1:
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist2");
+         sprintf(active_chars,"DEF");
+         update_display();
+       break;	
+       case 2: 
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist3");
+         sprintf(active_chars,"GHIJ");
+         update_display();
+       break;	
+       case 3:
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist4");
+         sprintf(active_chars,"KLMN");
+         update_display();
+       break;	
+       case 4:
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist5");
+         sprintf(active_chars,"OPQR");
+         update_display();
+       break;	
+       case 5:
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist6");
+         sprintf(active_chars,"STUV");
+         update_display();
+       break;	
+       case 6:
+         clist = lookup_widget(GTK_WIDGET(notebook),"clist7");
+         sprintf(active_chars,"WXYZ");
+         update_display(); 
+       break;	
+    }
+}
+
+
+
+void
+selection_made                         (GtkCList        *clist,
+                                        gint             row,
+                                        gint             column,
+                                        GdkEvent        *event,
+                                        gpointer         user_data)
+{
+  guint id;
+	
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      struct person *p;
+      id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      p = db_get_by_uid (id);
+      edit_person (p);
+    }
+}
+

@@ -35,6 +35,7 @@ extern void db_set_multi_data (struct person *p, gchar *tag, gchar *value);
 extern void db_delete_tag (struct person *p, gchar *tag);
 
 extern gboolean db_insert_category (gchar *, guint *);
+extern GSList *db_get_entries_alpha (const gchar* alphalist);
 
 struct category
 {
