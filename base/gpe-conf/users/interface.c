@@ -17,7 +17,7 @@
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
-static gchar *listTitles[] = { _("username"),_("User Info"),_("Shell"),_("Home")};
+static gchar *listTitles[] = { _("User Name"),_("User Info"),_("Shell"),_("Home")};
 
 pwlist *pwroot = NULL;
 int IsHidden(pwlist *cur)
@@ -215,7 +215,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (vbox2), table1);
 
-  label1 = gtk_label_new (_("Username"));
+  label1 = gtk_label_new (_("User Name:"));
 
   gtk_widget_show (label1);
   gtk_table_attach (GTK_TABLE (table1), label1, 0, 1, 0, 1,
@@ -231,7 +231,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  label2 = gtk_label_new (_("Passwd"));
+  label2 = gtk_label_new (_("Password:"));
 
   gtk_widget_show (label2);
   gtk_table_attach (GTK_TABLE (table1), label2, 0, 1, 1, 2,
@@ -239,7 +239,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
 
-  label3 = gtk_label_new (_("User Info"));
+  label3 = gtk_label_new (_("User Info:"));
 
   gtk_widget_show (label3);
   gtk_table_attach (GTK_TABLE (table1), label3, 0, 1, 2, 3,
@@ -255,7 +255,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  label4 = gtk_label_new (_("Shell"));
+  label4 = gtk_label_new (_("Shell:"));
 
   gtk_widget_show (label4);
   gtk_table_attach (GTK_TABLE (table1), label4, 0, 1, 3, 4,
@@ -274,7 +274,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
   gtk_entry_set_text(GTK_ENTRY(self->shell),init->pw.pw_shell);
 
 
-  label5 = gtk_label_new (_("home"));
+  label5 = gtk_label_new (_("Home:"));
 
   gtk_widget_show (label5);
   gtk_table_attach (GTK_TABLE (table1), label5, 0, 1, 4, 5,
@@ -304,7 +304,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
   gtk_widget_show (cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), cancel);
 
-  save = gpe_picture_button (wstyle,_("Ok"),"ok");
+  save = gpe_picture_button (wstyle,_("OK"),"ok");
   gtk_widget_show (save);
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), save);
 
@@ -425,7 +425,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   gtk_container_add (GTK_CONTAINER (hbuttonbox3), cancel);
   GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
 
-  changepasswd = gpe_picture_button (wstyle,_("Ok"),"ok");
+  changepasswd = gpe_picture_button (wstyle,_("OK"),"ok");
 
   gtk_widget_show (changepasswd);
   gtk_container_add (GTK_CONTAINER (hbuttonbox3), changepasswd);

@@ -73,7 +73,7 @@ struct Applet applets[]=
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance Setup"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore , "Owner" ,"ownerinfo","Owner Information"},
-    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","Users Administration"},
+    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
