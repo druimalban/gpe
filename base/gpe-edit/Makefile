@@ -2,11 +2,11 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.25
+VERSION = 0.26
 
 MEMBERS = main
 #FIXME: add: cs ru sr ('de' is not on TP?)
-LINGUAS = id pt de zh_TW fr ro wa sv nl sk
+LINGUAS = id pt de zh_TW fr ro wa sv nl sk cs ru sr
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
@@ -38,6 +38,7 @@ install-program: all gpe-edit.desktop
 	install -s gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
 	install -D -m 644 gpe-edit.mime $(DESTDIR)/etc/mime-handlers/gpe-edit.mime
+	install -D -m 644 gpe-edit.applications $(DESTDIR)$(PREFIX)/share/application-registry/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 

@@ -1,0 +1,114 @@
+# Serbian translation of `gpe-edit'.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the `gpe-edit' package.
+# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-edit 0.13\n"
+"POT-Creation-Date: 2003-02-20 20:31+0000\n"
+"PO-Revision-Date: 2003-12-06 21:39-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"Language-Team: Serbian <sr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:88 main.c:89
+msgid "Untitled"
+msgstr "Безимена"
+
+#: main.c:260
+msgid "Open File ..."
+msgstr "Отвори датотеку ..."
+
+#: main.c:289
+msgid "Save as .."
+msgstr "Снимити као ..."
+
+#: main.c:327
+msgid "Save current file before exiting?"
+msgstr "Снимити тренутну датотеку пре завршетка?"
+
+#: main.c:327
+msgid "Question"
+msgstr "Питање"
+
+#: main.c:328
+msgid "Don't save"
+msgstr "Немој снимити"
+
+#: main.c:328 main.c:616
+msgid "Save"
+msgstr "Сними"
+
+#: main.c:390
+msgid "Text not found"
+msgstr "Текст није нађен"
+
+#: main.c:429
+msgid "Unable to replace text"
+msgstr "Немоћан да заменим текст"
+
+#: main.c:443 main.c:492
+msgid "Search for:"
+msgstr "Тражи се:"
+
+#: main.c:446 main.c:498
+msgid "Find"
+msgstr "Нађи"
+
+#: main.c:493
+msgid "Replace with:"
+msgstr "Замена је:"
+
+#: main.c:497 main.c:630
+msgid "Replace"
+msgstr "Замени"
+
+#: main.c:608
+msgid "New"
+msgstr "Нов"
+
+#: main.c:609
+msgid "New document"
+msgstr "Нови документ"
+
+#: main.c:612
+msgid "Open"
+msgstr "Отвори"
+
+#: main.c:613
+msgid "Open file"
+msgstr "Отвори датотеку"
+
+#: main.c:617
+msgid "Save current file"
+msgstr "Сними тренутну датотеку"
+
+#: main.c:620
+msgid "Save as"
+msgstr "Сними као"
+
+#: main.c:621
+msgid "Save current file as"
+msgstr "Сними тренутну датотеку као"
+
+#: main.c:626
+msgid "Search"
+msgstr "Тражи"
+
+#: main.c:627
+msgid "Search for a string"
+msgstr "Тражи се ниска"
+
+#: main.c:631
+msgid "Replace a string"
+msgstr "Замени ниску"
+
+#: gpe-edit.desktop.in.h:1
+msgid "GPE Text Editor"
+msgstr "GPE Уређивач текста"
+
+#: gpe-edit.desktop.in.h:2
+msgid "Text Editor"
+msgstr "Уређивач текста"

@@ -1,3 +1,9 @@
+2004-08-16  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpe-edit.applications: Application registry file for gpe-edit.
+	* Makefile: Installation of registry file, new version.
+	* Makefile: Added some translations.
+	
 2004-08-13  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Version 0.25 released
