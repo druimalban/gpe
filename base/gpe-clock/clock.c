@@ -37,7 +37,7 @@ GtkWidget *panel_window, *time_label;
 static gboolean show_seconds;
 static gboolean format_24 = TRUE;
 
-static gchar *alarm_file;
+static gchar *alarm_file, *prefs_file;
 
 struct alarm_state
 {
@@ -82,9 +82,44 @@ set_defaults (void)
 }
 
 static void
+flush_prefs (void)
+{
+  FILE *fp;
+
+  fp = fopen (prefs_file, "w");
+  
+  if (fp)
+    {
+      fprintf (fp, "%d %d\n", show_seconds, format_24);
+      fclose (fp);
+    }
+}
+
+static void
+load_prefs (void)
+{
+ FILE *fp;
+
+  fp = fopen (prefs_file, "r");
+  
+  if (fp)
+    {
+      int seconds, hours;
+
+      fscanf (fp, "%d %d", &seconds, &hours);
+      show_seconds = (seconds != 0) ? TRUE : FALSE;
+      format_24 = (hours != 0) ? TRUE : FALSE;
+      fclose (fp);
+    }
+}
+
+static void
 flush_alarm_details (void)
 {
-  FILE *fp = fopen (alarm_file, "w");
+  FILE *fp;
+
+  fp = fopen (alarm_file, "w");
+
   if (fp)
     {
       fprintf (fp, "ACTIVE: %d\n", state.active);
@@ -100,7 +135,10 @@ flush_alarm_details (void)
 static void
 load_alarm_details (void)
 {
-  FILE *fp = fopen (alarm_file, "r");
+  FILE *fp;
+
+  fp = fopen (alarm_file, "r");
+
   if (fp)
     {
       while (!feof (fp))
@@ -255,6 +293,7 @@ set_seconds (GtkWidget *w, GtkWidget *time_label)
 {
   show_seconds = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
   update_time (time_label);
+  flush_prefs ();
 }
 
 static void
@@ -262,6 +301,7 @@ set_format (GtkWidget *w, GtkWidget *time_label)
 {
   format_24 = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
   update_time (time_label);
+  flush_prefs ();
 }
 
 static void
@@ -508,6 +548,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   alarm_file = g_strdup_printf ("%s/.gpe/alarm", g_get_home_dir ());
+  prefs_file = g_strdup_printf ("%s/.gpe/clock_prefs", g_get_home_dir ());
 
   if (argc > 1 && !strcmp (argv[1], "--check-alarm"))
     {
@@ -519,6 +560,7 @@ main (int argc, char *argv[])
     }
 
   set_defaults ();
+  load_prefs ();
 
   panel_window = gtk_plug_new (0);
 
