@@ -1,3 +1,7 @@
+2003-09-15  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.70 released.
+
 2003-09-13  Philip Blundell  <philb@gnu.org>
 
 	* gpeclockface.c (struct _GpeClockFace): Add backing_poly_gc.

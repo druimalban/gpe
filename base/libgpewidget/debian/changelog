@@ -1,3 +1,10 @@
+libgpewidget (0.70-1) unstable; urgency=low
+
+  * New upstream release.
+  * Make libgpewidget-dev depend on libgtk2.0-dev.
+
+ -- Philip Blundell <pb@nexus.co.uk>  Tue, 16 Sep 2003 00:24:50 +0100
+
 libgpewidget (0.66-1) unstable; urgency=low
 
   * New upstream version.
