@@ -26,7 +26,7 @@ CFLAGS = -Os -fomit-frame-pointer
 endif
 
 CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS) -L/usr/local/lib -L../libeventdb -leventdb -L../libtododb -ltododb -L../libxsettings -L../libxsettings-client -lXsettings-client -Wl,-rpath-link,../libxsettings 
+LDFLAGS += $(GTKLDFLAGS) -L/usr/local/lib -L../libeventdb -leventdb -L../libtododb -ltododb -L../libxsettings -L../libxsettings-client -lXsettings-client -Wl,-rpath-link,../libxsettings -Wl,-rpath-link,../libgpepimc -Wl,-rpath-link,../libdisplaymigration
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 #CFLAGS += -MD
 
