@@ -400,7 +400,7 @@ main (int argc, char *argv[])
 	printf (g_strdup_printf ("%s %s", _("GPE Owner Info"), package_revision));
 	printf ("\n");
 	printf (_("Valid options:\n"));
-	printf (_("   -g GEOMETRY  window geometry (default: 240x120+0+200)\n"));
+	printf (_("   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"));
 	printf (_("   -t           make window transparent\n"));
 	printf (_("   -k           always keep window on top (override redirect)\n"));
 	printf (_("   -h           this help text\n"));

@@ -1,3 +1,7 @@
+2003-02-19  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-ownerinfo2.c (main): Fix default GEOMETRY in usage info.
+
 2003-02-18  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/de.po: Update.
