@@ -224,6 +224,11 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  setlocale (LC_ALL, "");
+  
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+  
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   update_window_title ();
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
