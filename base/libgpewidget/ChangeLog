@@ -1,3 +1,25 @@
+2004-07-12  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeiconlistview.c: (PARENT_HANDLER): Delete.
+	(_gpe_icon_list_view_expose): Reformat.
+	(_gpe_icon_list_view_button_release): Likewise.
+	(_gpe_icon_list_view_recalc_size): Make second parameter
+	GtkRequisition*, and fill this in.  Take allocation from
+	widget->allocation.
+	(_gpe_icon_list_view_resize): New function.
+	(gpe_icon_list_view_add_item): Call _gpe_icon_list_view_resize,
+	not _gpe_icon_list_view_recalc_size.
+	(gpe_icon_list_view_add_item_pixbuf): Likewise.
+	(gpe_icon_list_view_remove_item): Likewise.
+	(gpe_icon_list_view_clear): Likewise.
+	(gpe_icon_list_view_set_icon_size): Likewise.
+	(gpe_icon_list_view_set_textpos): Likewise.
+	(_gpe_icon_list_view_size_request): New function.
+	(_gpe_icon_list_view_size_allocate): Ignore changes of height.
+	Call _gpe_icon_list_view_resize, not
+	_gpe_icon_list_view_recalc_size.
+	(gpe_icon_list_view_class_init): Set up size_request method.
+	
 2004-07-05  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Makefile: Added "-I." to PACKAGE_CPPFLAGS avoiding compile

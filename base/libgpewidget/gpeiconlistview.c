@@ -65,11 +65,6 @@ struct _Pack
 
 static GtkWidgetClass *parent_class;
 
-#define PARENT_HANDLER(___self,___allocation) \
-	{ if(GTK_WIDGET_CLASS(parent_class)->size_allocate) \
-		(* GTK_WIDGET_CLASS(parent_class)->size_allocate)(___self,___allocation); }
-
-
 static void _gpe_icon_list_view_cancel_popup (GPEIconListView *il);
 static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row);
 
@@ -304,13 +299,13 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      
 	      pixbuf_w = gdk_pixbuf_get_width (pixbuf);
 	      pixbuf_h = gdk_pixbuf_get_height (pixbuf);
-
+	      
 	      // adjust X position for actual size
 	      if (il->textpos == GPE_TEXT_BELOW)
-		x_offset = (il_col_width (il) - pixbuf_w) / 2;
+	        x_offset = (il_col_width (il) - pixbuf_w) / 2;
 	      else 
 		x_offset = LABEL_XMARGIN;
-	      
+          
 	      r1.x = cell_x + x_offset;
 	      r1.y = cell_y;
 	      r1.width = pixbuf_w;
@@ -449,22 +444,26 @@ _gpe_icon_list_view_button_release (GtkWidget *widget, GdkEventButton *event)
   _gpe_icon_list_view_refresh_containing (il, il->mcol, il->mrow);
   
   _gpe_icon_list_view_get_rowcol (il, event->x, event->y, &(col), &(row));
-  if (col == il->mcol && row == il->mrow) {
-    GPEIconListItem *data;
-    data = _gpe_icon_list_view_get_icon(il, il->mcol, il->mrow);
-    il->mcol = il->mrow = -1;
-    if (data) {
-      gpe_icon_list_item_button_release (data, event);
-      g_signal_emit (G_OBJECT (widget), my_signals[0], 0, data->udata);
-    }
-  } else
+  if (col == il->mcol && row == il->mrow) 
+    {
+      GPEIconListItem *data;
+      data = _gpe_icon_list_view_get_icon(il, il->mcol, il->mrow);
+      il->mcol = il->mrow = -1;
+      if (data) 
+	{
+	  gpe_icon_list_item_button_release (data, event);
+	  g_signal_emit (G_OBJECT (widget), my_signals[0], 0, data->udata);
+	}
+    } 
+  else
     il->mcol = il->mrow = -1;
   
   return TRUE;
 }
 
 static void 
-_gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocation)
+_gpe_icon_list_view_recalc_size (GPEIconListView *self, 
+				 GtkRequisition *req)
 {
   int count;
 
@@ -473,8 +472,9 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocatio
     self->cols = 1;
   else
     {  
-      /* calculate number of columns that will fit.  If none will, use one anyway */
-      self->cols = allocation->width / il_col_width (self);
+      /* calculate number of columns that will fit.  
+	 If none will, use one anyway */
+      self->cols = GTK_WIDGET (self)->allocation.width / il_col_width (self);
       if (self->cols == 0)
 	self->cols = 1;
     }  
@@ -484,10 +484,16 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocatio
   if (self->rows_set && self->rows > self->rows_set)
     self->rows = self->rows_set;
 
-  GTK_WIDGET (self)->requisition.height = self->rows * il_row_height (self) + TOP_MARGIN;
-  gtk_widget_queue_resize (GTK_WIDGET (self));
+  req->height = self->rows * il_row_height (self) + TOP_MARGIN;
 }
 	
+static void
+_gpe_icon_list_view_resize (GPEIconListView *self)
+{
+  _gpe_icon_list_view_recalc_size (self, &GTK_WIDGET (self)->requisition);
+  gtk_widget_queue_resize (GTK_WIDGET (self));
+}
+
 static GObject *
 _gpe_icon_list_view_new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
 {
@@ -504,11 +510,11 @@ _gpe_icon_list_view_new_icon (char *title, char *icon, gpointer udata, GdkPixbuf
 GObject *
 gpe_icon_list_view_add_item (GPEIconListView *self, char *title, char *icon, gpointer udata)
 {
-  GtkWidget *da = GTK_WIDGET (self);
   GObject *new = _gpe_icon_list_view_new_icon (title, icon, udata, NULL);
   gpe_icon_list_item_set_parent (GPE_ICON_LIST_ITEM (new), self);
   self->icons = g_list_append (self->icons, new);
-  _gpe_icon_list_view_recalc_size (self, &da->allocation);
+  if (GTK_WIDGET_REALIZED (self))
+    _gpe_icon_list_view_resize (self);
   return new;
 }
 
@@ -516,24 +522,22 @@ GObject *
 gpe_icon_list_view_add_item_pixbuf (GPEIconListView *self, char *title, GdkPixbuf *icon, gpointer udata)
 {
   GObject *new;
-  GtkWidget *da = GTK_WIDGET (self);
   gdk_pixbuf_ref (icon);
   new = _gpe_icon_list_view_new_icon (title, NULL, udata, icon);
   gpe_icon_list_item_set_parent (GPE_ICON_LIST_ITEM (new), self);
   self->icons = g_list_append (self->icons, new);
   _gpe_icon_list_view_check_icon_size (self, new);
-  _gpe_icon_list_view_recalc_size (self, &da->allocation);
+  _gpe_icon_list_view_resize (self);
   return new;
 }
 
 void 
 gpe_icon_list_view_remove_item (GPEIconListView *self, GObject *item)
 {
-  GtkWidget *da;
-  da = GTK_WIDGET (self);
   self->icons = g_list_remove (self->icons, item);
   g_object_unref (item);
-  _gpe_icon_list_view_recalc_size (self, &da->allocation);
+  if (GTK_WIDGET_REALIZED (self))
+    _gpe_icon_list_view_resize (self);
 }
 
 void 
@@ -576,7 +580,6 @@ void
 gpe_icon_list_view_clear (GPEIconListView *self)
 {
   GList *iter;
-  GtkWidget *da = GTK_WIDGET (self);
   for (iter = self->icons; iter; iter = iter->next) 
     {
       GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
@@ -586,14 +589,14 @@ gpe_icon_list_view_clear (GPEIconListView *self)
   g_list_free (self->icons);
   self->icons = NULL;
   
-  _gpe_icon_list_view_recalc_size (self, &da->allocation);
+  if (GTK_WIDGET_REALIZED (self))
+    _gpe_icon_list_view_resize (self);
 }
 
 void 
 gpe_icon_list_view_set_icon_size (GPEIconListView *self, guint size)
 {
   GList *iter;
-  GtkWidget *da = GTK_WIDGET (self);
   
   for (iter = self->icons; iter; iter = iter->next) 
     {
@@ -605,9 +608,17 @@ gpe_icon_list_view_set_icon_size (GPEIconListView *self, guint size)
   
   self->icon_size = size;
   
-  _gpe_icon_list_view_recalc_size (self, &da->allocation);
+  if (GTK_WIDGET_REALIZED (self))
+    _gpe_icon_list_view_resize (self);
   
   gtk_widget_draw (GTK_WIDGET (self), NULL);
+}
+
+static void
+_gpe_icon_list_view_size_request (GtkWidget *widget, GtkRequisition *requisition)
+{
+  _gpe_icon_list_view_recalc_size (GPE_ICON_LIST_VIEW (widget),
+				   requisition);
 }
 
 static void
@@ -618,8 +629,7 @@ _gpe_icon_list_view_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 
   view = GPE_ICON_LIST_VIEW (widget);
 
-  if (allocation->width == widget->allocation.width
-      && allocation->height == widget->allocation.height)
+  if (allocation->width == widget->allocation.width)
     size_change = FALSE;
   
   widget->allocation = *allocation;
@@ -629,8 +639,9 @@ _gpe_icon_list_view_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 			    allocation->x, allocation->y,
 			    allocation->width, allocation->height);
   
+  //luc: recalc *after* the size is allocated :)
   if (size_change)
-    _gpe_icon_list_view_recalc_size (view, &widget->allocation);  //luc: recalc *after* the size is allocated :)
+    _gpe_icon_list_view_resize (view);
 }
 
 static void
@@ -638,6 +649,8 @@ _gpe_icon_list_view_realize (GtkWidget *widget)
 {
   GdkWindowAttr attributes;
   gint attributes_mask;
+
+  _gpe_icon_list_view_resize (GPE_ICON_LIST_VIEW (widget));
 
   GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
     
@@ -707,11 +720,11 @@ gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows)
 void
 gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpos)
 {
-  GtkWidget *da = GTK_WIDGET (self);
   if (self->textpos == textpos) 
       return;
   self->textpos = textpos;
-  _gpe_icon_list_view_recalc_size (self, &da->allocation);
+  if (GTK_WIDGET_REALIZED (self))
+    _gpe_icon_list_view_resize (self);
 }
 
 static void
@@ -759,6 +772,7 @@ gpe_icon_list_view_class_init (GPEIconListViewClass * klass)
   widget_class->button_press_event = _gpe_icon_list_view_button_press;
   widget_class->button_release_event = _gpe_icon_list_view_button_release;
   widget_class->size_allocate = _gpe_icon_list_view_size_allocate;
+  widget_class->size_request = _gpe_icon_list_view_size_request;
   widget_class->realize = _gpe_icon_list_view_realize;
 }
 
