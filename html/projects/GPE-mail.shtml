@@ -11,7 +11,8 @@
 <H2>Function</H2>
 <P>
 The Mail client currently supports offline reading and writing of mail.
-It supports SMTP, IMAPv4 and POP3, optionally via SSL.
+It supports SMTP, IMAPv4 and POP3 protocols, optionally via SSL.
+also, basic mime implementation, and basic hebrew reading support.
 </P>
 
 <!--#include virtual="/includes/foot.shtml"-->
