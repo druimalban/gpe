@@ -1,41 +1,17 @@
-/*
- * usqld-conhandler.c
- * implements the connection handler for a threaded server connection
- * this thread is spawned and awaits a connect from the client using the 
- * protocol primitves.
- * 
- */
+#ifndef USQLD_CONHANDLER_H
+#define USQLD_CONHANDLER_H
 
-#include <pthread.h> 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h> 
-#include <string.h>
-#include <pthread.h>
-#include <sqlite.h>
-
-#include "usqld-protocol.h"
-
-
-void * usql_conhandler_main(UsqldConHandInit * init)
+//allocated struct passed to each new thread on creation
+//the thread is responsible for freing this struct.
+typedef struct UsqldConHandInit
 {
-   int sock_fd;
+   int fd; // the incoming client socket fd. 
    
-   sock_fd = init->fd;
-   free(init);
-   usqld_pickle * p;
-   
-   
-   while(USQLD_OK=usqld_recv_pickle(fd,
-				    &p)){
-     
-   }
-   
-}
+}UsqldConHandInit;
 
-   
+void * usql_conhandler_main(UsqldConHandInit * );
+
+
+  
+ 
+#endif
