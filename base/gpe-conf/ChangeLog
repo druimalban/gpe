@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+07.04.2003		Florian			kbd.c						Changed to current layout file name style.
+
 07.04.2003		Florian			kbd.c						Fixed bug #716, config file names are now read from directory.
 								Makefile					Added missing pccard-network.png.
 								cardinfo.c					Updateted driver assignment dialog, some minor fixes.

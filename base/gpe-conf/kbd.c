@@ -125,7 +125,7 @@ GtkWidget *Kbd_Build_Objects()
 
   GtkWidget *opt1;
   char *user_kbdrc;
-  char *tmp;
+  char *tmp, tmp2[100];
   
   guint gpe_catspacing = gpe_get_catspacing ();
   gchar *gpe_catindent = gpe_get_catindent ();
@@ -160,8 +160,7 @@ GtkWidget *Kbd_Build_Objects()
   controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (catconthbox1), controlvbox1, TRUE, TRUE, 0);
   
-  opt1 = setup_kb (controlvbox1, NULL, _("standard"), XKBD_DIR "kbdconfig");
-  
+  opt1 = NULL;
   dir = opendir (XKBD_DIR);
   if(dir)
     {
@@ -171,12 +170,11 @@ GtkWidget *Kbd_Build_Objects()
 
 	  if (entry->d_name[0] == '.') 
 	    continue;
-	  if (!strcmp(entry->d_name,"kbdconfig")) 
-	    continue;
-      if (!strstr(entry->d_name,"kbdconfig."))
+      if (!strstr(entry->d_name,".xkbd"))
 		continue;	  
-	  tmp = g_strdup_printf ("%s/%s",XKBD_DIR , entry->d_name);
-      setup_kb (controlvbox1, opt1, strstr(entry->d_name,".")+1, tmp);
+	  tmp = g_strdup_printf ("%s/%s", XKBD_DIR, entry->d_name);
+	  snprintf(tmp2,strlen(entry->d_name)-4,"%s",entry->d_name);
+      opt1 = setup_kb (controlvbox1, opt1, tmp2 , tmp);
 	  free(tmp);
 	}
       closedir (dir);
