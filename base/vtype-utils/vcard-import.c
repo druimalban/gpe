@@ -48,7 +48,7 @@ gboolean
 gpe_import_vcard (sqlite *db, MIMEDirVCard *card)
 {
   GSList *tags, *iter;
-  gchar *err;
+  gchar *err = NULL;
   guint id;
 
   if (sqlite_exec (db, "begin transaction", NULL, NULL, &err))
@@ -69,22 +69,22 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *card)
   for (iter = tags; iter; iter = iter->next)
     {
       gpe_tag_pair *t = iter->data;
-
       if (sqlite_exec_printf (db, "insert into contacts values ('%d', '%q', '%q')", NULL, NULL, &err, id, t->tag, t->value))
-	{
-	  gpe_tag_list_free (tags);
-	  goto error;
-	}
+        {
+          gpe_tag_list_free (tags);
+          goto error;
+        }
     }
-
-  gpe_tag_list_free (tags);
 
   if (sqlite_exec (db, "commit transaction", NULL, NULL, &err))
     {
       fprintf (stderr, "%s\n", err);
       free (err);
+      gpe_tag_list_free (tags);
       return FALSE;
     }
+	
+  gpe_tag_list_free (tags);
 
   return TRUE;
 

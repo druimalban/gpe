@@ -1,3 +1,5 @@
 2005-02-04  Florian Boor <florian@kernelconcepts.de>
 
+	* vcard-import.c (gpe_import_vcard): Fixed freeze on transaction
+	                                     commit.
 	* Makefile: new file.
