@@ -21,7 +21,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
 
-#include "event-db.h"
+#include <gpe/event-db.h>
 #include "event-ui.h"
 #include "globals.h"
 
