@@ -1,3 +1,7 @@
+2004-06-08  Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* gpeiconlistview.c: Fixed widget updating on text position change.
+
 2004-06-07  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlistview.c (_gpe_icon_list_view_recalc_size): Don't call

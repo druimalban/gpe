@@ -655,10 +655,11 @@ gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows)
 void
 gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpos)
 {
+  GtkWidget *da = GTK_WIDGET (self);
   if (self->textpos == textpos) 
       return;
   self->textpos = textpos;
-  gtk_widget_draw (GTK_WIDGET (self), NULL);
+  _gpe_icon_list_view_recalc_size (self, &da->allocation);
 }
 
 static void
