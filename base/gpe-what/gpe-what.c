@@ -189,8 +189,17 @@ handle_click (Window w, Window orig_w, int x, int y)
       XQueryTree (dpy, w, &root, &parent, &children, &nchildren);
       if (children)
 	XFree (children);
-      
-      return (root == w || root == parent) ? FALSE : handle_click (parent, orig_w, x, y);
+
+      if (root != w && root != parent)
+	{      
+	  unsigned int px, py, b, d, root_w, root_h;
+	  Window r;
+	  XGetGeometry (dpy, w, &r, &px, &py, &root_w, &root_h, &b, &d);
+
+	  return handle_click (parent, orig_w, x + px, y + py);
+	}
+
+      return FALSE;
     }
 
   if (prop)
