@@ -239,7 +239,13 @@ update_categories (GtkWidget *w, GSList *new, struct edit_todo *t)
 static void
 change_categories (GtkWidget *w, struct edit_todo *t)
 {
-  gpe_pim_categories_dialog (t->selected_categories, G_CALLBACK (update_categories), t);
+  GtkWidget *dialog;
+    
+  dialog = gpe_pim_categories_dialog (t->selected_categories, 
+                                      G_CALLBACK (update_categories), t);
+  gtk_window_set_transient_for(GTK_WINDOW(dialog), 
+                               GTK_WINDOW(gtk_widget_get_toplevel(w)));
+  gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 }
 
 /*
