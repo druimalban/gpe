@@ -73,8 +73,7 @@ void about_box(gchar * app_name,
     }
   }
 
-  label_version = NULL;
-  if(app_version) label_version = gtk_label_new(app_version);
+  label_version = gtk_label_new(app_version);//creates an empty one if NULL string
 
 
   //--short description
@@ -110,12 +109,12 @@ void about_box(gchar * app_name,
 
   //--packing
   {
-    GtkWidget * vbox;  //all
-    GtkWidget * hbox;  //icon labels icons
-    GtkWidget * vbox2; //name/version labels
-    GtkWidget * scrolled_window; //minihelp legal
-    GtkWidget * vbox3; //minihelp/legal 
-    GtkWidget * empty_label;
+    GtkWidget * vbox;            // all
+    GtkWidget * hbox;            // icon labels icons
+    GtkWidget * vbox2;           // name/version labels
+    GtkWidget * scrolled_window; // minihelp legal
+    GtkWidget * vbox3;           // minihelp/legal 
+    GtkWidget * empty_label;     //FIXME: use GtkTable or GtkFixed or...
 
     //all "about" info in vbox
     vbox  = gtk_vbox_new(FALSE, 5);
@@ -127,9 +126,8 @@ void about_box(gchar * app_name,
     vbox2 = gtk_vbox_new (TRUE, 5);
     empty_label = gtk_label_new(NULL);
     gtk_box_pack_start (GTK_BOX (vbox2), empty_label,    FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (vbox2), label_name,     TRUE, TRUE, 0);
-    if(label_version)
-      gtk_box_pack_start(GTK_BOX (vbox2), label_version,  TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox2), label_name,     TRUE, TRUE,   0);
+    gtk_box_pack_start (GTK_BOX (vbox2), label_version,  TRUE, TRUE,   0);
 
     hbox  = gtk_hbox_new (FALSE, 5);
     gtk_box_pack_start (GTK_BOX (hbox), icon_gpe,  FALSE, FALSE, 0);
