@@ -1,3 +1,6 @@
+2004-03-08	Florian Boor <florian.boor@kernelconcepts.de>
+	* Added serbian translation.	
+
 2004-02-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* vcard-import.c: Rewrite with libgpevtype.

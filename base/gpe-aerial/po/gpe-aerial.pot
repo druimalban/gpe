@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-20 22:49+0100\n"
+"POT-Creation-Date: 2004-03-04 17:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:377
+#: main.c:379
 msgid "Wireless networks"
 msgstr ""
 
-#: main.c:393
+#: main.c:395
 msgid ""
 "This window shows all detected networks. It will be updated while the "
 "scanner is running. The colors tell you something about the possibility to "
@@ -28,237 +28,237 @@ msgid ""
 "possible."
 msgstr ""
 
-#: main.c:401 netedit.c:230 netedit.c:421 netedit.c:423
+#: main.c:403 netedit.c:231 netedit.c:422 netedit.c:424
 msgid "Mode"
 msgstr ""
 
-#: main.c:411
+#: main.c:413
 msgid "ESSID"
 msgstr ""
 
-#: main.c:422
+#: main.c:424
 msgid "CH"
 msgstr ""
 
-#: main.c:433
+#: main.c:435
 msgid "WEP"
 msgstr ""
 
-#: main.c:454
+#: main.c:456
 msgid "Unable to scan for devices."
 msgstr ""
 
-#: main.c:588
+#: main.c:590
 msgid "Successfully connected."
 msgstr ""
 
-#: main.c:602
+#: main.c:604
 msgid "Ad-Hoc connections setup complete."
 msgstr ""
 
-#: main.c:611
+#: main.c:613
 msgid "Could not connect to wireless LAN."
 msgstr ""
 
-#: main.c:691
+#: main.c:693
 msgid "Details..."
 msgstr ""
 
-#: main.c:697
+#: main.c:699
 msgid "Enter additional info"
 msgstr ""
 
-#: main.c:704
+#: main.c:706
 msgid "Try connect..."
 msgstr ""
 
-#: main.c:759
+#: main.c:761
 msgid "Scanning for networks..."
 msgstr ""
 
-#: main.c:858
+#: main.c:860
 msgid "scanner died unexpectedly"
 msgstr ""
 
-#: main.c:956
+#: main.c:958
 msgid "Wireless LAN control"
 msgstr ""
 
-#: main.c:962
+#: main.c:964
 msgid "Switch scanner on"
 msgstr ""
 
-#: main.c:964
+#: main.c:966
 msgid "Switch scanner off"
 msgstr ""
 
-#: main.c:965
+#: main.c:967
 msgid "Networks..."
 msgstr ""
 
-#: main.c:966
+#: main.c:968
 msgid "Remove from dock"
 msgstr ""
 
-#: main.c:1008
+#: main.c:1009
 msgid "This is gpe-aerial - the wireless LAN selector."
 msgstr ""
 
-#: netedit.c:102
+#: netedit.c:103
 msgid "The key you entered is not valid."
 msgstr ""
 
-#: netedit.c:113
+#: netedit.c:114
 msgid "The IP address you entered is not valid."
 msgstr ""
 
-#: netedit.c:132
+#: netedit.c:133
 msgid "The subnet mask address you entered is not valid."
 msgstr ""
 
-#: netedit.c:151
+#: netedit.c:152
 msgid "The gateway address you entered is not valid."
 msgstr ""
 
-#: netedit.c:170
+#: netedit.c:171
 msgid "The DNS server address you entered is not valid."
 msgstr ""
 
-#: netedit.c:226
+#: netedit.c:227
 msgid "SSID"
 msgstr ""
 
-#: netedit.c:231
+#: netedit.c:232
 msgid "Managed"
 msgstr ""
 
-#: netedit.c:232 netedit.c:440
+#: netedit.c:233 netedit.c:441
 msgid "Channel"
 msgstr ""
 
-#: netedit.c:233 netedit.c:444 netedit.c:446
+#: netedit.c:234 netedit.c:445 netedit.c:447
 msgid "WEP enabled"
 msgstr ""
 
-#: netedit.c:234
+#: netedit.c:235
 msgid "Use DHCP"
 msgstr ""
 
-#: netedit.c:235
+#: netedit.c:236
 msgid "DNS Server"
 msgstr ""
 
-#: netedit.c:239
+#: netedit.c:240
 msgid "Ad-Hoc"
 msgstr ""
 
-#: netedit.c:243
+#: netedit.c:244
 msgid "Gateway"
 msgstr ""
 
-#: netedit.c:245
+#: netedit.c:246
 msgid "Subnet mask"
 msgstr ""
 
-#: netedit.c:247
+#: netedit.c:248
 msgid "IP Address"
 msgstr ""
 
-#: netedit.c:250
+#: netedit.c:251
 msgid "WEP key"
 msgstr ""
 
-#: netedit.c:254
+#: netedit.c:255
 msgid "Enter your desired IP address here, e.g. 192.168.1.2"
 msgstr ""
 
-#: netedit.c:255
+#: netedit.c:256
 msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
 msgstr ""
 
-#: netedit.c:256
+#: netedit.c:257
 msgid "This field needs to contain the name of this wireless LAN."
 msgstr ""
 
-#: netedit.c:257 netedit.c:258
+#: netedit.c:258 netedit.c:259
 msgid ""
 "Here you select the type of your net, if you have an accesspoint select "
 "\"managed\", for direct connections \"ad-hoc\""
 msgstr ""
 
-#: netedit.c:259
+#: netedit.c:260
 msgid ""
 "Select channel here, only needed in ad-hoc mode. Note: Not all channels are "
 "allowed in all countries."
 msgstr ""
 
-#: netedit.c:260
+#: netedit.c:261
 msgid "Get IP setup using DHCP."
 msgstr ""
 
-#: netedit.c:261
+#: netedit.c:262
 msgid "Enter the IP of the default gateway to use."
 msgstr ""
 
-#: netedit.c:262
-msgid "Check this if WEP encryption is activated in this LAN."
-msgstr ""
-
 #: netedit.c:263
-msgid ""
-"Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgid "Check this if WEP encryption is activated in this LAN."
 msgstr ""
 
 #: netedit.c:264
 msgid ""
+"Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr ""
+
+#: netedit.c:265
+msgid ""
 "Enter the IP address of the primary nameserver to be used in this net here."
 msgstr ""
 
-#: netedit.c:267
+#: netedit.c:268
 msgid "Network editor"
 msgstr ""
 
-#: netedit.c:406
+#: netedit.c:407
 msgid "This dialog provides some information about the selected wireless LAN."
 msgstr ""
 
-#: netedit.c:408
+#: netedit.c:409
 msgid "Network information"
 msgstr ""
 
-#: netedit.c:428
+#: netedit.c:429
 msgid "Max. signal"
 msgstr ""
 
-#: netedit.c:433 netedit.c:436
+#: netedit.c:434 netedit.c:437
 msgid "Speed"
 msgstr ""
 
-#: netedit.c:437
+#: netedit.c:438
 msgid "unknown"
 msgstr ""
 
-#: netedit.c:444 netedit.c:451 netedit.c:459
+#: netedit.c:445 netedit.c:452 netedit.c:460
 msgid "yes"
 msgstr ""
 
-#: netedit.c:446 netedit.c:454 netedit.c:461
+#: netedit.c:447 netedit.c:455 netedit.c:462
 msgid "no"
 msgstr ""
 
-#: netedit.c:450 netedit.c:453
+#: netedit.c:451 netedit.c:454
 msgid "IPSec detected"
 msgstr ""
 
-#: netedit.c:458 netedit.c:461
+#: netedit.c:459 netedit.c:462
 msgid "DHCP detected"
 msgstr ""
 
-#: netedit.c:465 netedit.c:471
+#: netedit.c:466 netedit.c:472
 msgid "Subnet"
 msgstr ""
 
-#: netedit.c:472
+#: netedit.c:473
 msgid "<i>unknown</i>"
 msgstr ""
 
