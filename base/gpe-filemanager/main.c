@@ -150,10 +150,36 @@ get_file_extension (gchar *filename)
 }
 
 static void
-run_program (char *exec, char *program)
+run_program (gchar *exec, gchar *mime_name)
 {
-  char *command;
+  gchar *command, *search_mime, *program;
+  GSList *iter;
   //char *cmd[] = {"/bin/sh", "-c", ""};
+
+  if (mime_programs)
+  {
+    for (iter = mime_programs; iter; iter = iter->next)
+    {
+      struct mime_program *program = iter->data;
+
+      if (program->mime)
+      {
+        if ((program->mime[strlen (program->mime)] - 1) == '*')
+        {
+	  search_mime = g_strdup (program->mime);
+	  search_mime[strlen (search_mime) - 1] = 0;
+
+          if (strstr (mime_name, search_mime))
+	    program = g_strdup (program->command);
+        }
+        else
+        {
+	if (strcmp (mime_name, program->mime) == 0)
+	  program = g_strdup (program->mime);
+        }
+      }
+    }
+  }
 
   command = g_strdup_printf ("%s %s &", program, exec);
   //printf ("%s %s\n", program, exec);
@@ -192,7 +218,6 @@ ask_open_with (char *exec)
   GdkPixbuf *pixbuf = NULL, *spixbuf;
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
-  struct mime_program *file_program = NULL;
   GSList *iter;
   int row_num = 0;
   gchar *pixmap_file, *row_text[2];
