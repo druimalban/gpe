@@ -1,3 +1,7 @@
+2005-03-16  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c: Fix segfault in detail display code. Add some sanity checks.
+
 2005-03-12  Florian Boor <florian.boor@kernelconcepts.de>
 
     * db.c (sort_entries): Add sanity check to avoid segfault if names are 

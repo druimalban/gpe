@@ -277,7 +277,7 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
           GtkWidget *l;
           gchar *name;
 
-          if (e->tag) 
+          if (e && e->tag) 
              tv = db_find_tag(p, e->tag);
           if (tv && tv->value)
             {
@@ -290,7 +290,7 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
                                       ((e->type == ITEM_MULTI_LINE) 
                                        || mode_landscape) ? TRUE : FALSE);
           
-              if (e->name[0] && e->name[strlen(e->name)-1] != ':')
+              if (e && e->name && e->name[strlen(e->name)-1] != ':')
                 {
                   name = g_strdup_printf("%s:", e->name);
                   l = gtk_label_new (name);
@@ -360,7 +360,8 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
                   gtk_label_set_markup (GTK_LABEL (w), markup);
                   gtk_misc_set_alignment (GTK_MISC (w), 0, 0.5);
                   g_free (markup);
-                  result = pop_singles (vbox, singles, p);
+                  if (vbox && singles)
+                    result = pop_singles (vbox, singles, p);
                   singles = NULL;
                   gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
                   res = build_children (vbox, e->children, p);
@@ -382,7 +383,8 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
           {
             GtkWidget *l;
             GtkWidget *hbox;
-            result |= pop_singles (vbox, singles, p);
+            if (vbox && singles)
+              result |= pop_singles (vbox, singles, p);
             singles = NULL;
             if (tv && tv->value)
               {
@@ -420,7 +422,8 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
             
             if (!(tv && tv->value))
               continue;
-            result |= pop_singles (vbox, singles, p);
+            if (vbox && singles)
+              result |= pop_singles (vbox, singles, p);
             singles = NULL;
             hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
             gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.0);
@@ -448,7 +451,8 @@ build_children (GtkWidget *vbox, GSList *children, struct person *p)
         }
     }
 
-  result |= pop_singles (vbox, singles, p);
+  if (vbox && singles)
+    result |= pop_singles (vbox, singles, p);
   singles = NULL;
   
   return result;
