@@ -25,6 +25,8 @@
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
 
+
+#ifndef GTK2
 //--------------------------------------------------------------------
 // Adjustments to use GTK+ 2.0 png save function (gdkpixbuf/io-png.c)
 //
@@ -41,17 +43,22 @@ gdk_pixbuf__png_image_save (FILE          *f,
                             gchar        **values,
                             GError       **error);
 //----------------------------------------------------------------------------
+#endif //GTK2
 
 gint file_save_png(const gchar * fullpath_filename){
+#ifndef GTK2
     FILE * fp;
+#endif
 
     GdkColormap * colormap;
     GdkPixbuf   * pixbuf;
 
     gboolean success;
 
+#ifndef GTK2
     fp = fopen(fullpath_filename, "wb");
     if (!fp) return 0;
+#endif
 
     //--retrieve image data
     colormap = gdk_colormap_get_system();
@@ -65,12 +72,18 @@ gint file_save_png(const gchar * fullpath_filename){
                                           drawing_area_width,//int width,
                                           drawing_area_height);//int height);
 
+#ifdef GTK2
+    success = gdk_pixbuf_save (pixbuf, fullpath_filename, "png", NULL /*&error*/, NULL);
+#else
     success = gdk_pixbuf__png_image_save (fp, pixbuf, NULL, NULL, NULL);
+#endif
     if(!success){
       return 0;
     }
 
+#ifndef GTK2
     fclose(fp);
+#endif
     gdk_pixbuf_unref(pixbuf);
 
     return 1;
@@ -114,6 +127,7 @@ gint file_load_png(const gchar * fullpath_filename){
 }//file_load_png()
 
 
+#ifndef GTK2
 #define _(x) (x) //do not translate gdk-pixbuf error messages
 //-----------------------------------------------------------
 // The following is borrowed to GTK+ 2.0 (gdkpixbuf/io-png.c)
@@ -270,3 +284,4 @@ cleanup:
 
        return success;
 }
+#endif //GTK2
