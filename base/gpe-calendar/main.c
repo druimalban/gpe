@@ -139,7 +139,7 @@ set_year_view(void)
 static void
 new_appointment(void)
 {
-  GtkWidget *appt = new_event (time (NULL), 0);
+  GtkWidget *appt = new_event (viewtime, 0);
   gtk_widget_show (appt);
 }
 

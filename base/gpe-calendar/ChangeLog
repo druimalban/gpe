@@ -1,3 +1,7 @@
+2002-09-02  Philip Blundell  <philb@gnu.org>
+
+	* main.c (new_appointment): Use viewtime, not current time.
+
 2002-09-01  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (struct edit_state): Delete alldaybutton.  Add
