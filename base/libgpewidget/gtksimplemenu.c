@@ -68,18 +68,11 @@ gtk_simple_menu_class_init (GtkSimpleMenuClass * klass)
 
   my_signals[0] = gtk_signal_new ("item-changed",
 				  GTK_RUN_LAST,
-#if GTK_MAJOR_VERSION < 2
-				  oclass->type,
-#else
 				  GTK_CLASS_TYPE (oclass),				  
-#endif
 				  GTK_SIGNAL_OFFSET (GtkSimpleMenuClass, changed),
 				  gtk_marshal_NONE__NONE,
 				  GTK_TYPE_NONE, 0);
 
-#if GTK_MAJOR_VERSION < 2
-  gtk_object_class_add_signals (oclass, my_signals, 1);
-#endif
 }
 
 GtkType

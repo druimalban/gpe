@@ -76,22 +76,12 @@ future_view_update ()
       strftime (buf, sizeof (buf), "%x " TIMEFMT, &tm);
       line_info[0] = buf;
 
-#if GTK_MAJOR_VERSION < 2
-      w = gdk_string_width (future_list->style->font, buf);
-      if (w > width)
-	width = w;
-#endif
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
       gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
     	
       row++;
     } 
-
-#if GTK_MAJOR_VERSION < 2       
-  gtk_clist_set_column_width (GTK_CLIST (future_list), 0, width + 4);
-  gtk_clist_set_column_width (GTK_CLIST (future_list), 1, widget_width - 20 - (width + 4));
-#endif
 
   gtk_clist_sort (GTK_CLIST (future_list));
   gtk_clist_thaw (GTK_CLIST (future_list));

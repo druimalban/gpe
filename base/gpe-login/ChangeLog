@@ -1,3 +1,7 @@
+2003-07-06  Moray Allan  <moray@sermisy.org>
+
+	* nocursor.c (_gdk_window_set_cursor): Removed legacy GTK1 code.
+
 2003-07-06  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add sv.

@@ -1,3 +1,7 @@
+2003-07-06  Moray Allan  <moray@sermisy.org>
+
+	* list-ui.c (draw_item): Removed legacy GTK1 code.
+
 2003-06-22  Philip Blundell  <philb@gnu.org>
 
 	* main.c (open_window): Hook delete-event signal, not destroy.

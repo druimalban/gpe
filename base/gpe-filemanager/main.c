@@ -100,12 +100,6 @@ struct gpe_icon my_icons[] = {
   {NULL, NULL}
 };
 
-#if GTK_MAJOR_VERSION < 2
-#define gdk1_pixbuf_new_from_file(x)  gdk_pixbuf_new_from_file (x)
-#else
-#define gdk1_pixbuf_new_from_file(x)  gdk_pixbuf_new_from_file (x, NULL)
-#endif
-
 guint window_x = 240, window_y = 310;
 
 static void browse_directory (gchar *directory);
@@ -154,7 +148,7 @@ GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
   GdkPixbuf *pixbuf, *spixbuf;
   GtkWidget *w;
-  pixbuf = gdk1_pixbuf_new_from_file (fn);
+  pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
   if (pixbuf == NULL)
     return NULL;
 
@@ -510,7 +504,7 @@ ask_open_with (FileInfomation *file_info)
       gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) program->command);
 
       pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, program->command);
-      pixbuf = gdk1_pixbuf_new_from_file (pixmap_file);
+      pixbuf = gdk_pixbuf_new_from_file (pixmap_file, NULL);
       if (pixbuf != NULL)
       {
         spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
@@ -920,15 +914,6 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (show_popup), NULL);
   gpe_iconlist_set_icon_size (view_widget, current_zoom);
 
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-
-  toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_SPACE_LINE);
-#else
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
@@ -936,7 +921,6 @@ main (int argc, char *argv[])
   toolbar2 = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
-#endif
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
 			    _("Back"), _("Go back in history."),

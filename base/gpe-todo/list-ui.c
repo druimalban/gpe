@@ -115,19 +115,10 @@ static void
 draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct todo_item *i, guint skew, GdkEventExpose *event)
 {
   GdkGC *black_gc = widget->style->black_gc;
-#if GTK_MAJOR_VERSION < 2
-  GdkFont *font = widget->style->font;
-#endif
   guint width, height;
 
   if (i->summary)
     {
-#if GTK_MAJOR_VERSION < 2
-      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-		     i->summary, strlen (i->summary));
-      width = gdk_string_width (font, i->summary);
-      height = font->ascent + font->descent;
-#else
       PangoLayout *l = gtk_widget_create_pango_layout (g_draw, i->summary);
       
       gtk_paint_layout (widget->style,
@@ -145,7 +136,6 @@ draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct
       height /= PANGO_SCALE;
 
       g_object_unref (l);
-#endif
     }
   else
     width = 0;

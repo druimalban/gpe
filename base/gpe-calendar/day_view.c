@@ -127,10 +127,8 @@ day_view_update ()
   gchar *line_info[2];
   GSList *iter;
   guint i, width = 0, widget_width;
-#if GTK_MAJOR_VERSION >= 2
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (day_list), NULL);
   PangoRectangle pr;
-#endif
   double pos;
      
   widget_width = day_list->allocation.width;
@@ -260,13 +258,10 @@ day_view_update ()
       line_info[1] = text;
       line_info[0] = buf;
 
-#if GTK_MAJOR_VERSION < 2     
-      w = gdk_string_width (time_style->font, buf);
-#else
       pango_layout_set_text (pl, buf, strlen (buf));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
       w = pr.width;
-#endif
+
       if (w > width) width = w;
 	
       gtk_clist_append (GTK_CLIST (day_list), line_info);
@@ -340,9 +335,7 @@ day_view_update ()
 
   gtk_clist_thaw (GTK_CLIST (day_list));
 
-#if GTK_MAJOR_VERSION >= 2
   g_object_unref (pl);
-#endif
   
   return TRUE;
 }

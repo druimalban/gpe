@@ -1,3 +1,7 @@
+2003-07-06  Moray Allan  <moray@sermisy.org>
+
+	* playlist_edit.c: Removed GTK1 warning.
+
 2003-06-28  Robert Mibus  <mibus@handhelds.org>
 
 	* gpe-nmf.c: Add shuffle and loop toggles.

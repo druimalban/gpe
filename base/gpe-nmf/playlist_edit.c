@@ -25,10 +25,6 @@
 
 #define _(x) gettext(x)
 
-#if GTK_MAJOR_VERSION < 2
-#error Eat flaming death, GTK 1 users!
-#endif
-
 enum
   {
     TITLE_COLUMN,

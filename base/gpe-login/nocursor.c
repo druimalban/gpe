@@ -23,23 +23,6 @@ _gdk_window_set_cursor (GdkWindow *window,
 {
   Cursor xcursor;
 
-#if GTK_MAJOR_VERSION < 2
-  GdkWindowPrivate *window_private;
-  GdkCursorPrivate *cursor_private;
-
-  g_return_if_fail (window != NULL);
-
-  window_private = (GdkWindowPrivate*) window;
-  cursor_private = (GdkCursorPrivate*) cursor;
-  
-  if (!cursor)
-    xcursor = None;
-  else
-    xcursor = cursor_private->xcursor;
-
-  if (!window_private->destroyed)
-    XDefineCursor (window_private->xdisplay, window_private->xwindow, xcursor);
-#else
   if (!cursor)
     xcursor = None;
   else
@@ -47,7 +30,6 @@ _gdk_window_set_cursor (GdkWindow *window,
   
   if (!GDK_WINDOW_DESTROYED (window))
     XDefineCursor (GDK_WINDOW_XDISPLAY (window), GDK_WINDOW_XWINDOW (window), xcursor);
-#endif
 }
 
 void
