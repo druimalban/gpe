@@ -22,6 +22,7 @@ void switch_to_page(guint page);
 
 //--toolbar
 void on_window_selector_destroy        (GtkObject *object, gpointer  user_data);
+void on_button_selector_exit_clicked   (GtkButton *button, gpointer user_data);
 void on_button_selector_new_clicked    (GtkButton *button, gpointer  user_data);
 void on_button_selector_open_clicked   (GtkButton *button, gpointer  user_data);
 void on_button_selector_delete_clicked (GtkButton *button, gpointer  user_data);

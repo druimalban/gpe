@@ -39,10 +39,10 @@
 
 //---------------------------------------------------------
 //--------------------- GENERAL ---------------------------
-void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
+static void sketchpad_exit(GtkWidget *top_level){
   if(is_current_sketch_modified){
     int ret;
-    gtk_widget_show (GTK_WIDGET(object));
+    if(top_level) gtk_widget_show (top_level);
 
     ret = gpe_question_ask (_("Sketch modified,\nsave before exiting?"), _("Question"), "question", 
                             _("Discard"), "!gtk-no", _("Save"), "!gtk-yes", NULL);
@@ -51,6 +51,10 @@ void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
     }
   }
   app_quit();
+}
+
+void on_window_sketchpad_destroy(GtkObject *object, gpointer unused){
+  sketchpad_exit(GTK_WIDGET(object));
 }
 
 void on_window_size_allocate (GtkWidget     * widget,
@@ -156,6 +160,10 @@ gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
 
 //---------------------------------------------------------
 //--------------------- FILE TOOLBAR ----------------------
+void on_button_file_exit_clicked(GtkButton *button, gpointer unused){
+  popup_menu_close (sketchpad.files_popup_button);
+  sketchpad_exit(NULL);
+}
 
 void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   gchar     * filename  = NULL;

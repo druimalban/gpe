@@ -1,5 +1,5 @@
 /* gpe-sketchbook -- a sketches notebook program for PDA
- * Copyright (C) 2002 Luc Pionchon
+ * Copyright (C) 2002, 2003, 2004, 2005 Luc Pionchon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,10 @@ void switch_to_page(guint page){
 }
 
 void on_window_selector_destroy (GtkObject *object, gpointer user_data){
+  app_quit();
+}
+
+void on_button_selector_exit_clicked (GtkButton *button, gpointer user_data){
   app_quit();
 }
 

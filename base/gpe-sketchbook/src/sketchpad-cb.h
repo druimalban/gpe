@@ -32,6 +32,8 @@ void on_button_file_new_clicked    (GtkButton *button, gpointer user_data);
 void on_button_file_import_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_properties_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data);
+void on_button_file_exit_clicked   (GtkButton *button, gpointer unused);
+
 void on_button_file_prev_clicked   (GtkButton *button, gpointer user_data);
 void on_button_file_next_clicked   (GtkButton *button, gpointer user_data);
 

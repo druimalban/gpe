@@ -95,6 +95,7 @@ GtkWidget * _selector_popup_new (GtkWidget *parent_button){
   GtkWidget * button_import;
   GtkWidget * button_delete;
   //GtkWidget * button_properties;
+  GtkWidget * button_exit;
 
   GtkStyle * style ;//FIXME !!! = sketchpad.window->style;
 
@@ -103,6 +104,7 @@ GtkWidget * _selector_popup_new (GtkWidget *parent_button){
   button_import     = gpe_picture_button_aligned (style, _("Import"), "import", GPE_POS_LEFT);
   button_delete     = gpe_picture_button_aligned (style, _("Delete"), "delete", GPE_POS_LEFT);
   //button_properties = gpe_picture_button_aligned (style, _("Properties"), "properties", GPE_POS_LEFT);
+  button_exit       = gpe_picture_button_aligned (style, _("Exit"),   "exit",   GPE_POS_LEFT);
 
 #define _BUTTON_SETUP(action) \
               gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
@@ -114,6 +116,7 @@ GtkWidget * _selector_popup_new (GtkWidget *parent_button){
   _BUTTON_SETUP(open);
   _BUTTON_SETUP(delete);
   //_BUTTON_SETUP(properties);
+  _BUTTON_SETUP(exit);
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_new,        FALSE, FALSE, 0);
@@ -121,6 +124,7 @@ GtkWidget * _selector_popup_new (GtkWidget *parent_button){
   gtk_box_pack_start (GTK_BOX (vbox), button_delete,     FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_import,     FALSE, FALSE, 0);
   //gtk_box_pack_start (GTK_BOX (vbox), button_properties, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_exit,     FALSE, FALSE, 0);
 
   if(is_current_sketch_selected){//selector.sketch_is_selected){
     gtk_widget_set_sensitive(button_open,   TRUE);
