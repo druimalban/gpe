@@ -28,7 +28,6 @@
 //--GPE libs
 #include "init.h"
 #include "pixmaps.h"
-//#include "picturebutton.h"
 
 //--own headers
 #include "gpe-sketchbook.h"
@@ -37,13 +36,37 @@
 #include "selector.h"
 #include "selector-gui.h"
 
-#include "_support.h"
-
 gchar * sketchdir;
 #define SKETCHPAD_HOME_DIR ".sketchbook"
 
 static struct gpe_icon my_icons[] = {
-  { "this_app_icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" }, //app icon
+  //Apps icon
+  { "this_app_icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" },
+
+  //GPE stock icons
+  { "new",    "new"   },
+  { "open",   "open"  },
+  { "delete", "delete"},
+  { "save",   "save"  },
+  //might be moved to GPE stock
+  { "prev",      PREFIX "/share/gpe-sketchbook/pixmaps/gprev.png"},
+  { "next",      PREFIX "/share/gpe-sketchbook/pixmaps/gnext.png"},
+  { "about",     PREFIX "/share/gpe-sketchbook/pixmaps/about.png" },
+  { "list",      PREFIX "/share/gpe-sketchbook/pixmaps/glist.png"},
+  { "sketchpad", PREFIX "/share/gpe-sketchbook/pixmaps/sketchpad.png" },
+
+  //own icons
+  { "pencil",       PREFIX "/share/gpe-sketchbook/pixmaps/tool_pencil.png"},
+  { "eraser",       PREFIX "/share/gpe-sketchbook/pixmaps/tool_eraser.png"},
+  { "brush_small",  PREFIX "/share/gpe-sketchbook/pixmaps/brush_small.png"},
+  { "brush_medium", PREFIX "/share/gpe-sketchbook/pixmaps/brush_medium.png"},
+  { "brush_large",  PREFIX "/share/gpe-sketchbook/pixmaps/brush_large.png"},
+  { "brush_xlarge", PREFIX "/share/gpe-sketchbook/pixmaps/brush_xlarge.png"},
+  { "color_black",  PREFIX "/share/gpe-sketchbook/pixmaps/color_black.png"},
+  { "color_red",    PREFIX "/share/gpe-sketchbook/pixmaps/color_red.png"},
+  { "color_green",  PREFIX "/share/gpe-sketchbook/pixmaps/color_green.png"},
+  { "color_blue",   PREFIX "/share/gpe-sketchbook/pixmaps/color_blue.png"},
+
   { NULL, NULL }
 };
 
@@ -52,9 +75,6 @@ void app_about();
 void gui_init();
 
 int main (int argc, char ** argv){
-
-  add_pixmap_directory (PACKAGE_DATA_DIR   "/pixmaps");
-  /**/add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
 
   if (gpe_application_init (&argc, &argv) == FALSE) exit (1);
 

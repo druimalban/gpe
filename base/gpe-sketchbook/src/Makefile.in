@@ -70,7 +70,7 @@ INCLUDES =  	@GTK_CFLAGS@
 
 bin_PROGRAMS = gpe-sketchbook
 
-gpe_sketchbook_SOURCES =  	gpe-sketchbook.c gpe-sketchbook.h 	_support.c       _support.h 						selector.c       selector.h 	selector-cb.c    selector-cb.h 	selector-gui.c   selector-gui.h 						sketchpad.c      sketchpad.h 	sketchpad-cb.c   sketchpad-cb.h 	sketchpad-gui.c  sketchpad-gui.h 	cursor_eraser_data.h							files.c          files.h 						dialog.c         dialog.h 	about.c          about.h
+gpe_sketchbook_SOURCES =  	gpe-sketchbook.c gpe-sketchbook.h 						selector.c       selector.h 	selector-cb.c    selector-cb.h 	selector-gui.c   selector-gui.h 						sketchpad.c      sketchpad.h 	sketchpad-cb.c   sketchpad-cb.h 	sketchpad-gui.c  sketchpad-gui.h 	cursor_eraser_data.h							files.c          files.h 						dialog.c         dialog.h 	about.c          about.h
 
 
 gpe_sketchbook_LDADD = @GTK_LIBS@
@@ -89,9 +89,9 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-gpe_sketchbook_OBJECTS =  gpe-sketchbook.o _support.o selector.o \
-selector-cb.o selector-gui.o sketchpad.o sketchpad-cb.o sketchpad-gui.o \
-files.o dialog.o about.o
+gpe_sketchbook_OBJECTS =  gpe-sketchbook.o selector.o selector-cb.o \
+selector-gui.o sketchpad.o sketchpad-cb.o sketchpad-gui.o files.o \
+dialog.o about.o
 gpe_sketchbook_DEPENDENCIES = 
 gpe_sketchbook_LDFLAGS = 
 CFLAGS = @CFLAGS@
@@ -105,7 +105,7 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/_support.P .deps/about.P .deps/dialog.P .deps/files.P \
+DEP_FILES =  .deps/about.P .deps/dialog.P .deps/files.P \
 .deps/gpe-sketchbook.P .deps/selector-cb.P .deps/selector-gui.P \
 .deps/selector.P .deps/sketchpad-cb.P .deps/sketchpad-gui.P \
 .deps/sketchpad.P

@@ -21,8 +21,6 @@
 
 #include <gtk/gtk.h>
 
-#include "_support.h"
-
 #include "selector.h"
 #include "selector-cb.h"
 #include "selector-gui.h"

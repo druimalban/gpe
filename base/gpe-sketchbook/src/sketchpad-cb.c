@@ -21,8 +21,6 @@
 
 #include <gtk/gtk.h>
 
-#include "_support.h"
-
 #include "sketchpad-cb.h"
 #include "sketchpad-gui.h"
 #include "sketchpad.h"

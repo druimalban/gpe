@@ -2,19 +2,16 @@
 #  include <config.h>
 #endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
-
-#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "selector-gui.h"
 #include "selector-cb.h"
 #include "selector.h"
 
-#include "_support.h" //FIXME: pixmaps, to be removed
+//gpe libs
+#include "pixmaps.h"
+#include "render.h"
 
 
 GtkWidget * create_window_selector(){
@@ -24,11 +21,13 @@ GtkWidget * create_window_selector(){
 
   //toolbar
   GtkWidget *hbox_selector_toolbar;
-  GtkWidget *button_selector_new;    GtkWidget *pixmap18;
-  GtkWidget *button_selector_open;   GtkWidget *pixmap16;
-  GtkWidget *button_selector_delete; GtkWidget *pixmap21;
-  GtkWidget *button_sketchpad_view;  GtkWidget *pixmap20;
-  GtkWidget *button_selector_about;  GtkWidget *pixmap19;
+  GtkWidget *button_selector_new;    
+  GtkWidget *button_selector_open;   
+  GtkWidget *button_selector_delete; 
+  GtkWidget *button_sketchpad_view;
+  GtkWidget *button_selector_about;
+  GdkPixbuf *pixbuf;
+  GtkWidget *pixmap;
 
   //clist
   GtkWidget *scrolledwindow_selector_clist;
@@ -76,17 +75,22 @@ GtkWidget * create_window_selector(){
   gtk_button_set_relief (GTK_BUTTON (button_selector_open),   GTK_RELIEF_NONE);
   gtk_button_set_relief (GTK_BUTTON (button_selector_new),    GTK_RELIEF_NONE);
 
-  //FIXME: pixmaps
-  pixmap18 = create_pixmap (window_selector, "gnew.xpm");
-  gtk_container_add (GTK_CONTAINER (button_selector_new), pixmap18);
-  pixmap16 = create_pixmap (window_selector, "gopen.xpm");
-  gtk_container_add (GTK_CONTAINER (button_selector_open), pixmap16);
-  pixmap21 = create_pixmap (window_selector, "gdelete.xpm");
-  gtk_container_add (GTK_CONTAINER (button_selector_delete), pixmap21);
-  pixmap20 = create_pixmap (window_selector, "gsketchpad.xpm");
-  gtk_container_add (GTK_CONTAINER (button_sketchpad_view), pixmap20);
-  pixmap19 = create_pixmap (window_selector, "gabout.xpm");
-  gtk_container_add (GTK_CONTAINER (button_selector_about), pixmap19);
+  //pixmaps
+  pixbuf = gpe_find_icon ("new");
+  pixmap = gpe_render_icon (window_selector->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_selector_new), pixmap);
+  pixbuf = gpe_find_icon ("open");
+  pixmap = gpe_render_icon (window_selector->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_selector_open), pixmap);
+  pixbuf = gpe_find_icon ("delete");
+  pixmap = gpe_render_icon (window_selector->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_selector_delete), pixmap);
+  pixbuf = gpe_find_icon ("sketchpad");
+  pixmap = gpe_render_icon (window_selector->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_sketchpad_view), pixmap);
+  pixbuf = gpe_find_icon ("about");
+  pixmap = gpe_render_icon (window_selector->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_selector_about), pixmap);
 
   //signals connection
   gtk_signal_connect (GTK_OBJECT (button_selector_new), "clicked",

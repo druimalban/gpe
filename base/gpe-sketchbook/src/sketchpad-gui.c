@@ -2,23 +2,15 @@
 #  include <config.h>
 #endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
-
-#include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "sketchpad.h"
 #include "sketchpad-gui.h"
 #include "sketchpad-cb.h"
 
-#include "_support.h"
-
-//void _do_nothing(GtkObject * obj, ...){}
-//#define gtk_object_set_data      _do_nothing
-//#define gtk_object_set_data_full _do_nothing
+#include "pixmaps.h"
+#include "render.h"
 
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height);
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window);
@@ -122,25 +114,28 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   //draw toolbar
   GtkWidget * hbox_drawtools;
 
+  GdkPixbuf *pixbuf;
+  GtkWidget *pixmap;
+
   //tools
   GSList *tool_group;
-  GtkWidget *radiobutton_tools_eraser;  GtkWidget *pixmap7;
-  GtkWidget *radiobutton_tools_pen;     GtkWidget *pixmap5;
+  GtkWidget *radiobutton_tools_eraser;
+  GtkWidget *radiobutton_tools_pen;   
 
   //brushes
   GSList *brush_group;
-  GtkWidget *radiobutton_brush_medium;  GtkWidget *pixmap8;
-  GtkWidget *radiobutton_brush_large;   GtkWidget *pixmap25;
-  GtkWidget *radiobutton_brush_xlarge;  GtkWidget *pixmap26;
-  GtkWidget *radiobutton_brush_small;   GtkWidget *pixmap6;
+  GtkWidget *radiobutton_brush_medium;
+  GtkWidget *radiobutton_brush_large; 
+  GtkWidget *radiobutton_brush_xlarge;
+  GtkWidget *radiobutton_brush_small; 
   GtkWidget *table2;
 
   //colors
   GSList *color_group;
-  GtkWidget *radiobutton_color_blue;   GtkWidget *pixmap2;
-  GtkWidget *radiobutton_color_green;  GtkWidget *pixmap4;
-  GtkWidget *radiobutton_color_red;    GtkWidget *pixmap14;
-  GtkWidget *radiobutton_color_black;  GtkWidget *pixmap1;
+  GtkWidget *radiobutton_color_blue; 
+  GtkWidget *radiobutton_color_green;
+  GtkWidget *radiobutton_color_red;  
+  GtkWidget *radiobutton_color_black;
   GtkWidget *table1;
 
   //--tools
@@ -150,11 +145,13 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   radiobutton_tools_eraser = gtk_radio_button_new (tool_group);
   tool_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_tools_eraser));
 
-  //FIXME: pixmaps
-  pixmap7 = create_pixmap (window, "geraser.xpm");
-  pixmap5 = create_pixmap (window, "gpencil.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_tools_eraser), pixmap7);
-  gtk_container_add (GTK_CONTAINER (radiobutton_tools_pen), pixmap5);
+  //pixmaps
+  pixbuf = gpe_find_icon ("eraser");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_tools_eraser), pixmap);
+  pixbuf = gpe_find_icon ("pencil");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_tools_pen), pixmap);
 
   //--brushes
   brush_group = NULL;
@@ -172,15 +169,19 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_widget_set_usize (radiobutton_brush_large,  10, 10);
   gtk_widget_set_usize (radiobutton_brush_xlarge, 10, 10);
 
-  //FIXME: pixmaps
-  pixmap6 = create_pixmap (window, "brush_small.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_small), pixmap6);
-  pixmap8 = create_pixmap (window, "brush_medium.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_medium), pixmap8);
-  pixmap25 = create_pixmap (window, "brush_large.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_large), pixmap25);
-  pixmap26 = create_pixmap (window, "brush_xlarge.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_brush_xlarge), pixmap26);
+  //pixmaps
+  pixbuf = gpe_find_icon ("brush_small");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_brush_small), pixmap);
+  pixbuf = gpe_find_icon ("brush_medium");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_brush_medium), pixmap);
+  pixbuf = gpe_find_icon ("brush_large");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_brush_large), pixmap);
+  pixbuf = gpe_find_icon ("brush_xlarge");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_brush_xlarge), pixmap);
 
   //pre-packing
   table2 = gtk_table_new (2, 2, FALSE);
@@ -207,15 +208,19 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_widget_set_usize (radiobutton_color_black, 10, 10);
   //what's about the others? ...
 
-  //FIXME: pixmaps
-  pixmap1 = create_pixmap (window, "color_black.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_black), pixmap1);
-  pixmap14 = create_pixmap (window, "color_red.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_red), pixmap14);
-  pixmap4 = create_pixmap (window, "color_green.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_green), pixmap4);
-  pixmap2 = create_pixmap (window, "color_blue.xpm");
-  gtk_container_add (GTK_CONTAINER (radiobutton_color_blue), pixmap2);
+  //pixmaps
+  pixbuf = gpe_find_icon ("color_black");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_color_black), pixmap);
+  pixbuf = gpe_find_icon ("color_red");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_color_red), pixmap);
+  pixbuf = gpe_find_icon ("color_green");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_color_green), pixmap);
+  pixbuf = gpe_find_icon ("color_blue");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (radiobutton_color_blue), pixmap);
 
   //pre-packing
   table1 = gtk_table_new (2, 2, FALSE);
@@ -296,12 +301,15 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   //file toolbar
   GtkWidget *hbox_filetools;
 
-  GtkWidget *button_file_save;   GtkWidget *pixmap10;
-  GtkWidget *button_file_new;    GtkWidget *pixmap12;
-  GtkWidget *button_file_delete; GtkWidget *pixmap24;
-  GtkWidget *button_file_prev;   GtkWidget *pixmap23;
-  GtkWidget *button_file_next;   GtkWidget *pixmap22;
-  GtkWidget *button_list_view;   GtkWidget *pixmap15;
+  GdkPixbuf *pixbuf;
+  GtkWidget *pixmap;
+
+  GtkWidget *button_file_save;  
+  GtkWidget *button_file_new;   
+  GtkWidget *button_file_delete;
+  GtkWidget *button_file_prev;  
+  GtkWidget *button_file_next;  
+  GtkWidget *button_list_view;  
 
   //buttons
   button_file_save   = gtk_button_new ();
@@ -311,19 +319,25 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   button_file_next   = gtk_button_new ();
   button_list_view   = gtk_button_new ();
 
-  //FIXME: pixmaps
-  pixmap10 = create_pixmap (window, "gsave.xpm");
-  gtk_container_add (GTK_CONTAINER (button_file_save), pixmap10);
-  pixmap12 = create_pixmap (window, "gnew.xpm");
-  gtk_container_add (GTK_CONTAINER (button_file_new), pixmap12);
-  pixmap24 = create_pixmap (window, "gdelete.xpm");
-  gtk_container_add (GTK_CONTAINER (button_file_delete), pixmap24);
-  pixmap23 = create_pixmap (window, "gprev.xpm");
-  gtk_container_add (GTK_CONTAINER (button_file_prev), pixmap23);
-  pixmap22 = create_pixmap (window, "gnext.xpm");
-  gtk_container_add (GTK_CONTAINER (button_file_next), pixmap22);
-  pixmap15 = create_pixmap (window, "glist.xpm");
-  gtk_container_add (GTK_CONTAINER (button_list_view), pixmap15);
+  //pixmaps
+  pixbuf = gpe_find_icon ("save");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_file_save), pixmap);
+  pixbuf = gpe_find_icon ("new");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_file_new), pixmap);
+  pixbuf = gpe_find_icon ("delete");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_file_delete), pixmap);
+  pixbuf = gpe_find_icon ("prev");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_file_prev), pixmap);
+  pixbuf = gpe_find_icon ("next");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_file_next), pixmap);
+  pixbuf = gpe_find_icon ("list");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_container_add (GTK_CONTAINER (button_list_view), pixmap);
 
   //no relief
   gtk_button_set_relief (GTK_BUTTON (button_file_save),   GTK_RELIEF_NONE);

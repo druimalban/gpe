@@ -7,7 +7,6 @@ bin_PROGRAMS = gpe-sketchbook
 
 gpe_sketchbook_SOURCES = \
 	gpe-sketchbook.c gpe-sketchbook.h \
-	_support.c       _support.h \
 					\
 	selector.c       selector.h \
 	selector-cb.c    selector-cb.h \
