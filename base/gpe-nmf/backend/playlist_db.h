@@ -40,6 +40,7 @@ struct playlist
 };
 
 extern struct playlist *playlist_fetch_item (struct playlist *, guint);
+extern        int       playlist_get_length (struct playlist *);
 
 extern struct playlist *playlist_new_list (void);
 extern struct playlist *playlist_new_track (void);

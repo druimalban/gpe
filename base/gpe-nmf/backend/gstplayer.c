@@ -10,6 +10,8 @@
 #include "player.h"
 #include <gst/gst.h>
 
+#include <stdlib.h>
+#include <time.h>
 #include <libintl.h>
 #include <assert.h>
 
@@ -28,12 +30,16 @@ struct player
   struct playlist *list;
   struct playlist *cur;
   guint idx;
+  int *shuffle_list;
   gboolean new_track;
 
   player_state state;
   GstElement *filesrc, *decoder, *audiosink, *thread;
   GstScheduler *sched;
   GstClock *clock;
+
+  int opt_shuffle;
+  int opt_loop;
 };
 
 static gboolean play_track (player_t p, struct playlist *t);
@@ -55,6 +61,44 @@ player_destroy (player_t p)
   g_free (p);
 }
 
+static void
+create_shuffle_list (player_t p)
+{
+  int len;
+  int *arr;
+  int i;
+
+  assert (p);
+
+  if (p->shuffle_list)
+    {
+      free (p->shuffle_list);
+      p->shuffle_list = NULL;
+    }
+
+  len = playlist_get_length (p->list);
+  if (len == 0)
+    return;
+
+  srandom (time(NULL));
+
+  arr = malloc (sizeof(int) * len);
+
+  for (i=0;i<len;i++)
+    arr[i] = i;
+
+  for (i=0;i<len-1;i++)
+    {
+      int num, tmp;
+      num = (random() % (len-i)) + i;
+      tmp = arr[i];
+      arr[i] = arr[num];
+      arr[num] = tmp;
+    }
+
+  p->shuffle_list = arr;
+}
+
 void
 player_set_playlist (player_t p, struct playlist *l)
 {
@@ -62,14 +106,25 @@ player_set_playlist (player_t p, struct playlist *l)
 
   p->list = l;
   p->idx = 0;
+
+  create_shuffle_list (p);
 }
 
 void
 player_set_index (player_t p, gint idx)
 {
   assert (idx >= 0);
-  
-  p->idx = idx;
+
+  if (p->opt_shuffle)
+    {
+      int i, len;
+      p->idx = 0; /* just in case it's not in the list */
+      len = playlist_get_length(p->list);
+      for (i=0;i<len;i++)
+	if (p->shuffle_list[i] == idx)
+	  p->idx = i;
+    } else  
+      p->idx = idx;
 }
 
 struct playlist *
@@ -98,6 +153,40 @@ player_stop (player_t p)
 }
 
 static void
+step_track (player_t p, int n)
+{
+  assert (p);
+  assert (n != 0);
+
+  /* This handles playing - what about paused? */
+  if (p->state == PLAYER_STATE_PLAYING)
+    abandon_track (p);
+
+  if (n > 0)
+    {
+      p->idx++;
+    }
+  else if (n < 0)
+    {
+      if (p->idx)
+	p->idx--;
+      else if (p->opt_loop)
+	p->idx = playlist_get_length(p->list) - 1;
+    }
+
+  if (p->opt_loop && playlist_get_length(p->list) == p->idx)
+    p->idx = 0;
+
+  if (p->opt_shuffle)
+    p->cur = playlist_fetch_item (p->list, p->shuffle_list[p->idx]);
+  else
+    p->cur = playlist_fetch_item (p->list, p->idx);
+
+  if (p->cur)
+    play_track (p, p->cur);
+}
+
+static void
 error_callback (GObject *object, GstObject *orig, gchar *error, player_t p)
 {
   g_print ("ERROR: %s: %s\n", GST_OBJECT_NAME (orig), error);
@@ -118,17 +207,8 @@ thread_shutdown (GstElement *elt, player_t p)
   if (old_player_state == PLAYER_STATE_NEXT_TRACK)
     {
       fprintf (stderr, "player %p: next track.\n", p);
-      
-      p->idx++;
-      p->cur = playlist_fetch_item (p->list, p->idx);
-      
-      if (p->cur)
-	play_track (p, p->cur);
-      else
-	{
-	  p->idx = 0;
-	  fprintf (stderr, "player %p: no more tracks.\n", p);
-	}
+
+      step_track (p, 1);
     }
 }
 
@@ -222,7 +302,10 @@ player_play (player_t p)
 {
   if (p->list)
     {
-      p->cur = playlist_fetch_item (p->list, p->idx);
+      if (p->opt_shuffle)
+	p->cur = playlist_fetch_item (p->list, p->shuffle_list[p->idx]);
+      else
+	p->cur = playlist_fetch_item (p->list, p->idx);
       
       if (p->cur)
 	play_track (p, p->cur);
@@ -247,33 +330,6 @@ player_status (player_t p, struct player_status *s)
       s->time = t;
     }
 }
-
-static void
-step_track (player_t p, int n)
-{
-  assert (p);
-  assert (n != 0);
-
-  if (p->state == PLAYER_STATE_PLAYING)
-    {
-      abandon_track (p);
-      
-      if (n > 0)
-	{
-	  p->idx++;
-	}
-      else if (n < 0)
-	{
-	  if (p->idx)
-	    p->idx--;
-	}
-
-      p->cur = playlist_fetch_item (p->list, p->idx);
-      if (p->cur)
-	play_track (p, p->cur);
-    }
-}
-
 void 
 player_next_track (player_t p)
 {
@@ -324,4 +380,16 @@ player_fill_in_playlist (struct playlist *t)
   
   gst_object_unref (GST_OBJECT (p->thread));
 #endif
+}
+
+void
+player_set_loop (player_t p, int on)
+{
+  p->opt_loop = on;
+}
+
+void
+player_set_shuffle (player_t p, int on)
+{
+  p->opt_shuffle = on;
 }

@@ -47,6 +47,38 @@ playlist_fetch_item (struct playlist *l, guint idx)
   return playlist_fetch_item_internal (l, &idx);
 }
 
+int
+playlist_get_length (struct playlist *l)
+{
+  struct playlist *v = NULL;
+  GSList *i;
+  int length = 0;
+
+  if (!l)
+    return 0;
+
+  if (l->type != ITEM_TYPE_LIST)
+    return 1;
+
+  i = l->data.list;
+  while (v == NULL && i != NULL)
+    {
+      struct playlist *p = i->data;
+      switch (p->type) 
+	{
+	case ITEM_TYPE_TRACK:
+	  length++;
+	  break;
+	case ITEM_TYPE_LIST:
+	  length += playlist_get_length (p);
+	  break;
+	}
+      i = i->next;
+    }
+
+  return length;
+}
+
 struct playlist *
 playlist_new_list (void)
 {

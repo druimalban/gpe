@@ -38,6 +38,9 @@ extern void player_prev_track (player_t);
 extern void player_status (player_t, struct player_status *);
 
 extern void player_set_volume (player_t, int);
+extern void player_set_loop (player_t, int);
+extern void player_set_shuffle (player_t, int);
+
 extern struct playlist *player_get_playlist (player_t p);
 
 extern void player_error_handler (player_t, void (*func)(gchar *));
