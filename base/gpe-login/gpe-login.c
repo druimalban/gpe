@@ -138,13 +138,15 @@ move_callback (GtkWidget *widget, GtkWidget *entry)
 static void
 do_login (uid_t uid, gid_t gid, char *dir)
 {
+  cleanup_children ();
+
   setuid (uid);
   setgid (gid);
   setenv ("HOME", dir, 1);
   chdir (dir);
 
-  cleanup_children ();
-
+  if (access (".xsession", X_OK) == 0)
+    execl (".xsession", ".xsession", NULL);
   execl ("/etc/X11/Xsession", "/etc/X11/Xsession", NULL);
 }
 
@@ -235,7 +237,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
 
   while (pwe = getpwent (), pwe != NULL)
     {
-      if (pwe->pw_uid >= uid)
+      if (pwe->pw_uid < 60000 && pwe->pw_uid >= uid)
 	uid = pwe->pw_uid + 1;
     }
   endpwent ();
@@ -248,7 +250,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   endgrent ();
 
   snprintf (home, sizeof (home), "/home/%s", username);
-  mkdir (home, 0660);
+  mkdir (home, 0770);
   chown (home, uid, gid);
 
   fp = fopen (PASSWORD_FILE, "a");
