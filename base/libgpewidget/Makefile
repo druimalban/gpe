@@ -9,7 +9,7 @@ GTKRC = gtkrc
 
 LINGUAS = ro de id pt
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu gtktimesel
 
 MEMBERS += gpetooltips2 gpe-iconlist
 HEADERS += gpe-iconlist.h

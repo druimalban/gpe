@@ -1,3 +1,9 @@
+2003-03-28  Philip Blundell  <philb@gnu.org>
+
+	* gtktimesel.c: New file.
+	* gpe/gtktimesel.h: Likewise.
+	* Makefile (MEMBERS): Add gtktimesel.	
+
 2003-03-28  Luc Pionchon  <luc@handhelds.org>
 
 	* gpeiconlist.gob (size_allocate): recalc *after* the size is allocated.
