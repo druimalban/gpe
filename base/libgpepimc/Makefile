@@ -15,7 +15,7 @@ PACKAGE_CPPFLAGS += -I../libdisplaymigration
 PACKAGE_LDFLAGS += -L../libdisplaymigration 
 endif
 PACKAGE_CFLAGS = $(GPECFLAGS) -fPIC
-PACKAGE_LDFLAGS = $(GPELIBS) -ldisplaymigration
+PACKAGE_LDFLAGS += $(GPELIBS) -ldisplaymigration
 PACKAGE_CPPFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -DG_DISABLE_DEPRECATED -I.
 
 HEADERS = gpe/pim-categories.h gpe/pim-categories-ui.h
