@@ -1,5 +1,11 @@
 2003-02-16  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.33 released.
+
+2003-02-16  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install): Don't depend on install-mo.  Use install -s.
+
 	* list-ui.c (purge_completed): Use stock items for question dialog.
 
 	* main.c (open_window): Use g_main_loop_quit in place of gtk_exit.
