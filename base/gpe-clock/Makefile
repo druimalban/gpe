@@ -3,7 +3,7 @@ PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.3
+VERSION = 0.4
 
 LINGUAS = 
 
@@ -42,8 +42,12 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -L../libschedule -lgpewidget -lschedule $(LDFLAGS)
 
 install-program: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
+	install -d $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
