@@ -64,10 +64,14 @@ gboolean confine_pointer_to_window;
 
 guint slideshow_timer = 0;
 guint fullscreen_toolbar_timer = 0;
+guint fullscreen_pointer_timer = 0;
 
 guint x_start, y_start, x_max, y_max;
+gint pointer_x, pointer_y = 0;
 double xadj_start, yadj_start;
 guint zoom_timer_id;
+
+static void toggle_fullscreen ();
 
 struct gpe_icon my_icons[] = {
   { "open", "open" },
@@ -134,12 +138,30 @@ hide_fullscreen_toolbar ()
 }
 
 static gboolean
-show_fullscreen_toolbar ()
+check_fullscreen_pointer ()
 {
-  gtk_widget_show_all (fullscreen_toolbar_popup);
-  g_source_remove (fullscreen_toolbar_timer);
-  fullscreen_toolbar_timer = g_timeout_add (TOOLBAR_TIMEOUT, hide_fullscreen_toolbar, NULL);
-
+  gint x, y;
+  
+  gdk_display_get_pointer (gdk_display_get_default (), NULL, &x, &y, NULL);
+  
+  if ((x != pointer_x) || (y != pointer_y))
+  {
+    if (fullscreen_toolbar_timer != 0)
+    {
+      g_source_remove (fullscreen_toolbar_timer);
+      fullscreen_toolbar_timer = 0;
+    }
+    gtk_widget_show_all (fullscreen_toolbar_popup);
+    gtk_widget_set_uposition (fullscreen_toolbar_popup, 0, fullscreen_window->allocation.height - fullscreen_toolbar_popup->allocation.height);
+  }
+  else
+  {
+    if (fullscreen_toolbar_timer == 0)
+      fullscreen_toolbar_timer = g_timeout_add (TOOLBAR_TIMEOUT, hide_fullscreen_toolbar, NULL);
+  }
+  
+  gdk_display_get_pointer (gdk_display_get_default (), NULL, &pointer_x, &pointer_y, NULL);
+  
   return TRUE;
 }
 
@@ -164,9 +186,6 @@ static void
 button_down (GtkWidget *w, GdkEventButton *b, GtkWidget *scrolled_window)
 {
   pan_button_down (w, b, scrolled_window);
-
-  if (fullscreen_state == 1)
-    show_fullscreen_toolbar ();
 }
 
 static void
@@ -288,9 +307,6 @@ image_rotate () // BROKEN
   scaled_image_pixbuf = pixbuf;
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
-
-  if (fullscreen_state == 1)
-    show_fullscreen_toolbar ();
 }
 
 static void
@@ -325,9 +341,6 @@ image_zoom_in ()
   g_object_unref (image_pixbuf);
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
-
-  if (fullscreen_state == 1)
-    show_fullscreen_toolbar ();
 }
 
 void
@@ -348,9 +361,6 @@ image_zoom_out ()
   g_object_unref (image_pixbuf);
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
-
-  if (fullscreen_state == 1)
-    show_fullscreen_toolbar ();
 }
 
 void
@@ -359,9 +369,6 @@ image_zoom_1 ()
   g_object_unref (scaled_image_pixbuf);
   scaled_image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
-
-  if (fullscreen_state == 1)
-    show_fullscreen_toolbar ();
 }
 
 void
@@ -405,9 +412,6 @@ image_zoom_fit ()
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
   g_object_unref (image_pixbuf);
-
-  if (fullscreen_state == 1)
-    show_fullscreen_toolbar ();
 }
 
 static void
@@ -797,9 +801,6 @@ next_image (gpointer data)
 
     show_image (NULL, image_filenames);
 
-    if (fullscreen_state == 1)
-      show_fullscreen_toolbar ();
-
     return TRUE;
   }
   else
@@ -818,9 +819,6 @@ previous_image ()
 
     show_image (NULL, image_filenames);
 
-    if (fullscreen_state == 1)
-      show_fullscreen_toolbar ();
-
     return TRUE;
   }
   else
@@ -835,7 +833,8 @@ start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
     image_filenames = g_list_first (image_filenames);
     show_image (NULL, image_filenames);
     slideshow_timer = gtk_timeout_add (gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin_button)) * 1000, next_image, NULL);
-  }
+    toggle_fullscreen ();
+    }
   else
   {
     stop_slideshow ();
@@ -915,14 +914,22 @@ toggle_fullscreen ()
   if (fullscreen_state == 1)
   {
     //gtk_widget_hide (main_scrolled_window);
+    hide_image ();
     gtk_widget_reparent (main_scrolled_window, vbox2);
+    show_image (NULL, image_filenames);
     //gtk_widget_realize (main_scrolled_window);
     //gtk_widget_show (main_scrolled_window);
 
+    g_source_remove (fullscreen_toolbar_timer);
+    g_source_remove (fullscreen_pointer_timer);
+    
     gtk_widget_destroy (fullscreen_window);
     gtk_widget_destroy (fullscreen_toggle_popup);
+    gtk_widget_destroy (fullscreen_toolbar_popup);
 
     fullscreen_state = 0;
+    fullscreen_toolbar_timer = 0;
+    fullscreen_pointer_timer = 0;
 
     image_zoom_fit ();
   }
@@ -962,7 +969,6 @@ toggle_fullscreen ()
   fullscreen_toolbar_popup = gtk_window_new (GTK_WINDOW_POPUP);
 
   fullscreen_toolbar = gtk_toolbar_new ();
-  gtk_signal_connect (GTK_OBJECT (fullscreen_toolbar), "button-press-event", GTK_SIGNAL_FUNC (show_fullscreen_toolbar), NULL);
   gtk_toolbar_set_orientation (GTK_TOOLBAR (fullscreen_toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_GO_BACK , GTK_ICON_SIZE_SMALL_TOOLBAR);
@@ -1003,12 +1009,14 @@ toggle_fullscreen ()
 			   _("Toggle Rotate"), _("Toggle Rotate"), toolbar_icon, image_rotate, NULL);
 
     gtk_container_add (GTK_CONTAINER (fullscreen_toolbar_popup), fullscreen_toolbar);
-    show_fullscreen_toolbar ();
-
+    gtk_widget_show_all (fullscreen_toolbar_popup);
+    gtk_widget_grab_focus (toolbar_icon);
+    fullscreen_pointer_timer = g_timeout_add (200, check_fullscreen_pointer, NULL);
     gtk_widget_set_uposition (fullscreen_toolbar_popup, 0, fullscreen_window->allocation.height - fullscreen_toolbar_popup->allocation.height);
 
     fullscreen_state = 1;
 
+    
     image_zoom_fit ();
   }
 }
