@@ -34,6 +34,7 @@ BUILD = build
 endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: $(PACKAGE)
 

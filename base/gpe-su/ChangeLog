@@ -6,6 +6,8 @@
 
 	* familiar/control1 (Source): Added.
 
+	* Makefile (SOURCES): Define.
+
 2003-08-07  Philip Blundell  <philb@gnu.org>
 
 	Bug #940:
