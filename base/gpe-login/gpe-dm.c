@@ -15,6 +15,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <errno.h>
+#include <X11/Xlib.h>
 
 #include <glib.h>
 
@@ -29,7 +30,8 @@ static pid_t xserver_pid;
 static pid_t xinit_pid;
 static pid_t session_pid;
 
-static char *dpy;
+static char *dpyname;
+static Display *dpy;
 
 static time_t server_started;
 
@@ -56,7 +58,7 @@ start_server (gboolean crashed)
   xserver_pid = fork ();
   if (xserver_pid == 0)
     {
-      execl (XSERVER, XSERVER, dpy, NULL);
+      execl (XSERVER, XSERVER, dpyname, NULL);
       _exit (1);
     }
   server_started = t;
@@ -85,13 +87,13 @@ main(int argc, char *argv[])
   daemon (0, 0);
 
   if (argc == 2)
-    dpy = argv[1];
+    dpyname = argv[1];
   else
-    dpy = ":0";
+    dpyname = ":0";
 
   start_server (FALSE);
 
-  setenv ("DISPLAY", dpy, 1);
+  setenv ("DISPLAY", dpyname, 1);
 
   signal (SIGINT, shutdown);
   signal (SIGTERM, shutdown);
@@ -100,6 +102,18 @@ main(int argc, char *argv[])
     {
       pid_t wpid;
       gboolean f = FALSE;
+      Window win;
+
+      dpy = XOpenDisplay (dpyname);
+      if (dpy == NULL)
+	continue;
+
+      win = XCreateSimpleWindow(dpy,
+				RootWindow (dpy, DefaultScreen (dpy)),
+				0, 0,
+				0, 0,
+				0, BlackPixel(dpy, DefaultScreen (dpy)),
+				WhitePixel(dpy, DefaultScreen (dpy)));
 
       /* start Xinit and wait for it to finish */
       sleep (1);

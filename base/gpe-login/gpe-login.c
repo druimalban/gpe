@@ -215,7 +215,7 @@ pre_session (const char *name)
 }
 
 static void
-do_login (const char *name, uid_t uid, gid_t gid, char *dir)
+do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 {
   cleanup_children ();
 
@@ -232,6 +232,7 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir)
   if (setgid (gid))
     perror ("setgid");
 
+  setenv ("SHELL", shell, 1);
   setenv ("HOME", dir, 1);
   chdir (dir);
   
@@ -268,7 +269,7 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
   if (strcmp (p, pwe->pw_passwd))
     goto login_incorrect;
   
-  do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir);
+  do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
   gtk_main_quit ();
   return;
 
@@ -368,7 +369,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fputs (buf, fp);
   fclose (fp);
 
-  do_login (username, uid, gid, home);
+  do_login (username, uid, gid, home, "/bin/sh");
 
   gtk_main_quit ();
 }

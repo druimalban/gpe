@@ -1,6 +1,20 @@
+2002-06-22  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (do_login): New argument `shell'.  Set $SHELL to this.
+	(enter_callback): Pass shell to do_login.
+	(enter_newuser_callback): Likewise.
+
+	* gpe-login 0.14 released.
+
+	* Makefile (gpe-dm): Link with -lX11.
+	* gpe-dm.c (main): Create a private window to stop the server
+	resetting after Xinit.
+
+	* gpe-dm 0.12 released.
+	
 2002-06-21  Philip Blundell  <pb@debian.org>
 
-	* Version 0.13 released.
+	* gpe-login 0.13 released.
 
 2002-06-20  Philip Blundell  <pb@debian.org>
 

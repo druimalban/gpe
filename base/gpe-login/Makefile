@@ -23,7 +23,7 @@ gpe-login: gpe-login.o
 	$(CC) -o $@ $< -L../libgpewidget -lgpewidget `gtk-config --libs` -lcrypt
 
 gpe-dm: gpe-dm.o
-	$(CC) -o $@ $<
+	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
 
 install: install-dm install-login
 
