@@ -1,3 +1,33 @@
+2003-03-16  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (build_language_menu): Create and return
+	GtkOptionMenu.
+	(locale_read_user): Use g_strdup_printf in place of
+	alloca/snprintf.  Apply S_ISDIR to st_mode, not st_rdev.  Correct
+	sense of test on stat() return value.  Don't call perror when
+	errno would be meaningless.
+	(build_language_menu): Don't attempt to dereference current_locale
+	if no locales exist.
+
+2003-03-16  Paul Jakma <paul@dishone.st>
+	
+	* gpe-login.c: Add defines for system and user locale files,
+	locale_item_t struct and prototypes for functions.  Use
+	g_signal_connect in place of gtk_signal_connect.
+	(add_menu_callback): New function.
+	(add_one_user): Deleted. replaced by above
+	(locale_set_xprop): New function.
+	(locale_is_system): New function.
+	(locale_free_item): New function.
+	(locale_try_user): New function.
+	(parse_locale_line): New function; parses a line of a locale file.
+	(get_locale_list): New function; attempts to open and parse a
+	locale file.
+	(set_current_locale): Add callback for language menu.  Set locale.
+	(locale_read_user): New function.  Locates and attempts to parse
+	user locale file
+	(build_language_menu): Modified; fleshed out.
+
 2003-03-11  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.38 released.

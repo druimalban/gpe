@@ -24,6 +24,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
+#include <locale.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -48,10 +50,11 @@
 #define GROUP_FILE "/etc/group"
 #define SHELL "/bin/sh"
 #define GPE_LOGIN_CONF "/etc/gpe/gpe-login.conf"
+#define GPE_LOCALE_ALIAS "/etc/gpe/locale.alias"
+#define GPE_LOCALE_USER_FILE ".gpe/locale"
 
 #define bin_to_ascii(c) ((c)>=38?((c)-38+'a'):(c)>=12?((c)-12+'A'):(c)+'.')
 
-static const char *current_username;
 static GtkWidget *label_result;
 static gboolean have_users;
 static pid_t setup_pid;
@@ -79,6 +82,17 @@ static int hard_key_length = 4;
 static gchar *hard_key_buf;
 
 static gchar *pango_lang_code;
+static const char *current_username;
+
+typedef struct
+{
+  gchar *name;
+  gchar *locale;
+}
+locale_item_t;
+
+static locale_item_t *current_locale;
+static GSList *locale_system_list;
 
 typedef struct
 {
@@ -107,6 +121,39 @@ static key_map_t keymap[] =
     { "E", 'E' },
     { NULL }
   };
+ 
+/* function protos */
+static void cleanup_children (void);
+static void add_menu_callback (GtkWidget * menu, const char *label,
+			       void *func, gpointer * data);
+static void parse_xkbd_args (char *cmd, char **argv);
+static void spawn_xkbd (void);
+static void cleanup_children_and_exit (int s);
+static void set_username (GtkWidget * widget, gpointer data);
+static void slurp_passwd (GtkWidget * menu);
+static void move_callback (GtkWidget * widget, GtkWidget * entry);
+static void pre_session (const char *name);
+static void do_login (const char *name, uid_t uid, gid_t gid, char *dir,
+		      char *shell);
+static gboolean login_correct (const gchar * pwstr, struct passwd **pwe_ret);
+static void enter_lock_callback (GtkWidget * widget, GtkWidget * entry);
+static GdkFilterReturn filter (GdkXEvent * xevp, GdkEvent * ev, gpointer p);
+static void enter_callback (GtkWidget * widget, GtkWidget * entry);
+static void enter_newuser_callback (GtkWidget * widget, gpointer h);
+static void hard_key_insert (gchar c);
+static gboolean key_press_event (GtkWidget * window, GdkEventKey * event);
+static void mapped (GtkWidget * window);
+
+static locale_item_t *parse_locale_line (char *p);
+static GSList *get_locale_list (const char *flocale);
+static void set_current_locale (GtkWidget * widget, gpointer * data);
+static GtkWidget *build_language_menu (void);
+static locale_item_t *locale_read_user (const char *username);
+static int locale_set_xprop (const char *locale);
+static int locale_set (const char *locale);
+static void locale_free_item (locale_item_t *item);
+static int locale_is_system (locale_item_t *a, locale_item_t *b);
+static int locale_try_user (const char *user);
 
 static void
 cleanup_children (void)
@@ -119,6 +166,18 @@ cleanup_children (void)
 }
 
 #define MAX_ARGS 8
+
+
+static void
+add_menu_callback (GtkWidget * menu, const char *label, void *func,
+		   gpointer * data)
+{
+  GtkWidget *entry;
+  entry = gtk_menu_item_new_with_label (label);
+  g_signal_connect (G_OBJECT (entry), "activate", G_CALLBACK (func), 
+  		    data);
+  gtk_menu_append (GTK_MENU (menu), entry);
+}
 
 static void
 parse_xkbd_args (char *cmd, char **argv)
@@ -242,18 +301,14 @@ cleanup_children_and_exit (int s)
 static void
 set_username (GtkWidget *widget, gpointer data)
 {
+
   current_username = (const char *)data;
+  if (locale_try_user(current_username))
+    {
+      /* TODO - need to update the GTK language menu entry to item->name */
+    }
 }
 
-static void
-add_one_user (const char *name, GtkWidget *menu)
-{
-  GtkWidget *item;
-  item = gtk_menu_item_new_with_label (name);
-  gtk_signal_connect (GTK_OBJECT(item), "activate", 
-		      GTK_SIGNAL_FUNC (set_username), (gpointer)name);
-  gtk_menu_append (GTK_MENU (menu), item);
-}
 
 static void
 slurp_passwd (GtkWidget *menu)
@@ -268,13 +323,13 @@ slurp_passwd (GtkWidget *menu)
 
       have_users = TRUE;
       name = g_strdup (pw->pw_name);
-      add_one_user (name, menu);
+      add_menu_callback (menu, name, &set_username, (gpointer *) name);
 
       if (current_username == NULL)
 	current_username = name;
     }
 
-  add_one_user ("root", menu);
+  add_menu_callback (menu, "root", &set_username, (gpointer *) "root");
 }
 
 static void
@@ -312,7 +367,7 @@ static void
 do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 {
   int fd;
-
+  FILE *fp;
   cleanup_children ();
 
   pre_session (name);
@@ -325,16 +380,41 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
   if (initgroups (name, gid))
     perror ("initgroups");
 
-  if (setgid (gid))
-    perror ("setgid");
+  if (setgid (gid)) 
+    {
+      perror ("setgid");
+      exit(1);
+    }
 
   if (setuid (uid))
-    perror ("setuid");
-  
+    {
+      perror ("setuid");
+      exit(1);
+    }
+
   setenv ("SHELL", shell, 1);
   setenv ("HOME", dir, 1);
   setenv ("USER", name, 1);
+
   chdir (dir);
+
+  if (current_locale && current_locale->locale)
+    {
+      if (locale_set(current_locale->locale))
+      	fprintf(stderr,"Error setting supplied locale\n");
+      fp = fopen (GPE_LOCALE_USER_FILE, "w");
+      if (fp)
+	{
+	  fprintf (fp, "\"%s\" %s\n", current_locale->name,
+		   current_locale->locale);
+	  fclose (fp);
+	}
+    }
+  else
+    {
+      fprintf(stderr,"No locale supplied, using C default\n");
+      locale_set("C");
+    }
 
   fd = open (".xsession-errors", O_WRONLY | O_CREAT | O_TRUNC, 0600);
   if (fd)
@@ -611,14 +691,273 @@ mapped (GtkWidget *window)
     }
 }
 
+static int
+locale_set_xprop (const char *locale)
+{
+  Atom atom;
+  Display *dpy;
+  Window root;
+
+  dpy = GDK_DISPLAY ();
+
+  root = RootWindow (dpy, 0);
+  atom = XInternAtom (dpy, "_GPE_LOCALE", 0);
+
+  XChangeProperty (dpy, root, atom, XA_STRING, 8, PropModeReplace,
+		   locale, strlen (locale));
+
+  return 0;
+}
+
+static int
+locale_set (const char *locale)
+{
+  int ret=0;
+  
+  setenv("LANG",locale,1);
+  setlocale(LC_ALL, locale);
+  locale_set_xprop(locale);
+  return ret;
+}  
+
+static int 
+locale_is_system (locale_item_t *a, locale_item_t *b)
+{  
+  return (strncmp( a->locale, b->locale, 10));
+}
+
+static void
+locale_free_item(locale_item_t *item)
+{
+  free(item->name);
+  free(item->locale);
+  free(item);
+  return;
+}
+
+static int 
+locale_try_user (const char *user)
+{
+  locale_item_t *item;
+  
+  if ( (item = locale_read_user (user)) &&
+  	(!g_slist_find_custom(locale_system_list, 
+                            (gconstpointer *) (item->locale),
+                            (GCompareFunc) &locale_is_system)))
+    {
+      locale_set(item->locale);
+      if (current_locale)
+        locale_free_item(current_locale);
+      current_locale = item;
+      return 0;
+    } 
+  else
+    {
+      if (item)
+        locale_free_item(item);
+      return -1;
+    } 
+}
+
+locale_item_t *
+parse_locale_line (char *p)
+{
+
+  locale_item_t *item = NULL;
+  char *name = NULL, *locale = NULL;
+
+  while (*p && isspace (p[strlen (p) - 1]))
+    p[strlen (p) - 1] = 0;
+  while (isspace (*p))
+    p++;
+  if (*p != '"')
+    return NULL;
+  else
+    {
+      int i = 0;
+      p++;
+      /* quoted string is the name */
+      while (*(p + i) != '\0' && *(p + i) != '"')
+	{
+	  i++;
+	}
+      if (i)
+	{
+	  name = (gchar *) malloc (i + 1);
+	  memcpy (name, p, i);
+	  name[i] = '\0';
+	  //printf("p: %s got name %s\n",p,name);
+	}
+      /* point past the " */
+      p = &p[i + 1];
+      i = 0;
+
+      /* chomp whitespace */
+      while (isspace (*p))
+	p++;
+      /* remaining text is locale */
+      while (*(p + i))
+	{
+	  i++;
+	}
+      if (i)
+	{
+	  locale = (gchar *) malloc (i + 1);
+	  memcpy (locale, p, i);
+	  locale[i] = '\0';
+	  //printf("got locale %s\n",locale);
+	}
+      if (name && locale)
+	{
+	  item = (locale_item_t *) calloc (1, sizeof (locale_item_t));
+	  item->name = (gchar *) strdup (name);
+	  item->locale = (gchar *) strdup (locale);
+
+	}
+      if (name)
+	{
+	  free (name);
+	  name = NULL;
+	}
+      if (locale)
+	{
+	  free (locale);
+	  locale = NULL;
+	}
+    }
+  return item;
+}
+
+GSList *
+get_locale_list (const char *flocale)
+{
+
+  FILE *fp;
+  GSList *list=NULL;
+  locale_item_t *item = NULL;
+  gchar lbuf[256], *p;
+
+  if (!(fp = fopen (flocale, "r")))
+    return 0;
+
+  while (!feof (fp))
+    {
+      if ((p = fgets (lbuf, sizeof (lbuf), fp)))
+	{
+	  item = parse_locale_line (p);
+	  if (item)
+	    list = g_slist_append (list, (gpointer *) item);
+	}
+    }
+  fclose (fp);
+  return list;
+}
+
+static void
+set_current_locale (GtkWidget * widget, gpointer * data)
+{
+
+  locale_item_t *item = (locale_item_t *) data;
+  
+  if (item)
+    {
+      current_locale = item;
+      locale_set (item->locale);
+    }
+    
+  return;
+}
+
 static GtkWidget *
 build_language_menu (void)
 {
-  GtkWidget *m = gtk_simple_menu_new ();
+  GtkWidget *m = gtk_menu_new ();
+  GtkWidget *option_menu = gtk_option_menu_new ();
+  locale_item_t *item;
+  int i = 0, nitems;
 
-  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (m), "English");
+  locale_system_list = get_locale_list (GPE_LOCALE_ALIAS);
 
-  return m;
+  if (!locale_system_list)
+    {
+      add_menu_callback (m, "English", &set_current_locale, NULL);
+    }
+  else
+    {
+      nitems = g_slist_length (locale_system_list);
+      while (i < nitems)
+	{
+	  item = g_slist_nth_data (locale_system_list, i);
+	  add_menu_callback (m, item->name, &set_current_locale,
+			     (gpointer *) item);
+	  i++;
+	}
+    }
+  if (current_username && locale_try_user(current_username))
+    {
+      /* TODO - need to update the GTK language menu entry to item->name */
+    }
+
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), m);
+
+  return option_menu;
+}
+
+locale_item_t *
+locale_read_user (const char *username)
+{
+  struct passwd *pwe;
+  struct stat st;
+  char *fname = NULL, *p, *lbuf = NULL;
+  locale_item_t *item = NULL;
+  FILE *fp;
+
+  if (!(pwe = getpwnam (username)))
+    return NULL;
+
+  if (stat (pwe->pw_dir, &st))
+    {
+      perror (pwe->pw_dir);
+      return NULL;
+    }
+  else if (! S_ISDIR (st.st_mode))
+    {
+      fprintf (stderr, "%s not a directory\n", pwe->pw_dir);
+      return NULL;
+    }
+
+  fname = g_strdup_printf ("%s/%s", pwe->pw_dir, GPE_LOCALE_USER_FILE);
+
+  if (stat (fname, &st))
+    {
+      perror (fname);
+      g_free (fname);
+      return NULL;
+    }
+  else if (! S_ISREG (st.st_mode))
+    {
+      fprintf (stderr, "read_user_locale: %s not a regular file!\n", fname);
+      g_free (fname);
+      return NULL;
+    }
+
+  fp = fopen (fname, "r");
+
+  g_free (fname);
+
+  if (!fp)
+    {
+      perror (fname);
+      return NULL;
+    }
+
+  if ((p = fgets (lbuf, sizeof (lbuf), fp)))
+    {
+      item = parse_locale_line (p);
+    }
+
+  fclose (fp);
+  return item;
 }
 
 int
@@ -906,9 +1245,9 @@ main (int argc, char *argv[])
 	  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
 	}
 
-      gtk_signal_connect (GTK_OBJECT (window), "delete_event",
-			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
-      
+      g_signal_connect (G_OBJECT (window), "delete_event",
+			  G_CALLBACK (gtk_main_quit), NULL);
+
       table = gtk_table_new (3, 2, FALSE);
 
       if (! hard_keys_mode)
@@ -969,24 +1308,24 @@ main (int argc, char *argv[])
 	{
 	  if (autolock_mode)
 	    {
-	      gtk_signal_connect (GTK_OBJECT (entry), "activate",
-				  GTK_SIGNAL_FUNC (enter_lock_callback), entry);
-	      gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-				  GTK_SIGNAL_FUNC (enter_lock_callback), entry);
+	      g_signal_connect (G_OBJECT (entry), "activate",
+				  G_CALLBACK (enter_lock_callback), entry);
+	      g_signal_connect (G_OBJECT (ok_button), "clicked",
+				  G_CALLBACK (enter_lock_callback), entry);
 	    }
 	  else
 	    {
-	      gtk_signal_connect (GTK_OBJECT (entry), "activate",
-				  GTK_SIGNAL_FUNC (enter_callback), entry);
-	      gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-				  GTK_SIGNAL_FUNC (enter_callback), entry);
+	      g_signal_connect (G_OBJECT (entry), "activate",
+				  G_CALLBACK (enter_callback), entry);
+	      g_signal_connect (G_OBJECT (ok_button), "clicked",
+				  G_CALLBACK (enter_callback), entry);
 	    }
 	  focus = entry;
 	}
       else
 	{
-	  gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
-			      GTK_SIGNAL_FUNC (key_press_event), window);
+	  g_signal_connect (G_OBJECT (window), "key-press-event",
+			      G_CALLBACK (key_press_event), window);
 	  focus = window;
 	}
 
@@ -1051,16 +1390,16 @@ main (int argc, char *argv[])
       gtk_table_attach_defaults (GTK_TABLE (table), entry_confirm, 
 				 1, 2, 3, 4);
 
-      gtk_signal_connect (GTK_OBJECT (entry_username), "activate",
-			 GTK_SIGNAL_FUNC (move_callback), entry_fullname);
-      gtk_signal_connect (GTK_OBJECT (entry_fullname), "activate",
-			 GTK_SIGNAL_FUNC (move_callback), entry_password);
-      gtk_signal_connect (GTK_OBJECT (entry_password), "activate",
-			 GTK_SIGNAL_FUNC (move_callback), entry_confirm);
-      gtk_signal_connect (GTK_OBJECT (entry_confirm), "activate",
-			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
-      gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
+      g_signal_connect (G_OBJECT (entry_username), "activate",
+			  G_CALLBACK (move_callback), entry_fullname);
+      g_signal_connect (G_OBJECT (entry_fullname), "activate",
+			  G_CALLBACK (move_callback), entry_password);
+      g_signal_connect (G_OBJECT (entry_password), "activate",
+			  G_CALLBACK (move_callback), entry_confirm);
+      g_signal_connect (G_OBJECT (entry_confirm), "activate",
+			  G_CALLBACK (enter_newuser_callback), NULL);
+      g_signal_connect (G_OBJECT (ok_button), "clicked",
+			  G_CALLBACK (enter_newuser_callback), NULL);
 
       frame = gtk_frame_new (_("New user"));
 
@@ -1086,8 +1425,8 @@ main (int argc, char *argv[])
   gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
 
   if (flag_transparent)
-    gtk_signal_connect (GTK_OBJECT (window), "map-event",
-			GTK_SIGNAL_FUNC (mapped), NULL);
+    g_signal_connect (G_OBJECT (window), "map-event",
+			G_CALLBACK (mapped), NULL);
 
   if (autolock_mode)
     {
