@@ -44,6 +44,7 @@ void File_Selected (char *file,
 
 /* WARNING: don't mess with this! */
 #define GPE_OWNERINFO_DATA   "/etc/gpe/gpe-ownerinfo.data"
+#define GPE_OWNERINFO_TMP   "/tmp/gpe-ownerinfo.data"
 #define INFO_MATCH           "[gpe-ownerinfo data version "
 
 #define UPGRADE_ERROR      -1
@@ -99,22 +100,11 @@ GtkWidget *Ownerinfo_Build_Objects()
    * GTK_FILL    the widget should fill the space allocated to it.
    */
   
-  /*
-   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
-   * let it fill on the left side (so that the right alignment
-   * works:
-   */ 
   table_attach_left_col_x = GTK_SHRINK | GTK_FILL; 
   table_attach_left_col_y = 0;
   table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
   table_attach_right_col_y = GTK_FILL;
   
-  /*
-   * GTK_JUSTIFY_LEFT
-   * GTK_JUSTIFY_RIGHT
-   * GTK_JUSTIFY_CENTER (the default)
-   * GTK_JUSTIFY_FILL
-   */
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_LEFT;
 
@@ -188,10 +178,10 @@ GtkWidget *Ownerinfo_Build_Objects()
    */
 
   /* either we can write to the file... */
+  
   if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
-      /* ...or we are allowed to write in this directory, and the file does not yet exist */
       (((access (gpe_dirname (g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
-       (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
+       (access (GPE_OWNERINFO_DATA, F_OK) != 0)) || !suid_exec("CHEK",""))
     datafile_writable = TRUE;
   else
     datafile_writable = FALSE;
@@ -365,7 +355,7 @@ void Ownerinfo_Save()
   gchar *firstline;
   GtkTextIter pstart, pend;
 	
-  fp = fopen (GPE_OWNERINFO_DATA, "w");
+  fp = fopen (GPE_OWNERINFO_TMP, "w");
   if (fp)
     {
       firstline = g_strdup ("[gpe-ownerinfo data version 2]");
@@ -394,12 +384,12 @@ void Ownerinfo_Save()
       gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(address)),owneraddress,-1);
       fputs (owneraddress, fp);
       fclose (fp);
+	  suid_exec("CPOI","");
     }
   else /* fp == NULL, something went wrong */
     {
 	  // don't bother our user with this
       //gpe_perror_box (GPE_OWNERINFO_DATA);
-      /* don't exit, it might be "just" permission denied: */
     }
 }
 

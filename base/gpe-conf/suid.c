@@ -26,11 +26,9 @@
 
 #include "suid.h"
 #include "applets.h"
-//#include "gpe/pixmaps.h"
-//#include "gpe/render.h"
-//#include "gpe/picturebutton.h"
 #include "login-setup.h"
 #include "gpe-admin.h"
+#include "cfgfile.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -39,6 +37,9 @@ static int know_global_user_access = FALSE;
 
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
+
+#define GPE_OWNERINFO_DATA   "/etc/gpe/gpe-ownerinfo.data"
+#define GPE_OWNERINFO_TMP   "/tmp/gpe-ownerinfo.data"
 
 
 void update_dhcp_status(const gchar* active)
@@ -76,7 +77,7 @@ void
 change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gchar seperator)
 {
   gchar *content, *tmpval;
-  gchar **lines;
+  gchar **lines = NULL;
   gint length;
   gchar *delim;
   FILE *fnew;
@@ -328,6 +329,13 @@ suidloop (int write, int read)
 		system_printf ("chmod 0644 %s", arg2);
 		system_printf ("/bin/rm -f %s", arg1);
 		system ("/etc/init.d/networking restart");
+	      }
+	    else if (strcmp (cmd, "CPOI") == 0)
+	      {
+		bin = "/bin/cp";
+		system_printf ("/bin/cp %s %s", GPE_OWNERINFO_TMP, GPE_OWNERINFO_DATA);
+		system_printf ("chmod 0644 %s", GPE_OWNERINFO_DATA);
+		system_printf ("/bin/rm -f %s", GPE_OWNERINFO_TMP);
 	      }
 	    else if (strcmp (cmd, "XCAL") == 0)
 	      {

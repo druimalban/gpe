@@ -52,5 +52,6 @@ gint get_section_text(gchar* section);
 gint get_file_text();
 gint get_scheme_list();
 gchar* get_file_var(const gchar *file, const gchar *var);
+gint get_first_char(gchar* s);
 
 #endif
