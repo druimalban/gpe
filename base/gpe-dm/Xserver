@@ -11,7 +11,9 @@ fi
 module_id() {
     ## used to read from assets, but sometimes assets is corrupted
     # grep "Module ID" /proc/hal/assets | sed "s/.*://"
-    echo ' iPAQ' `cat /proc/hal/model`
+    ## used to read from /proc/hal/model, but that is removed in 2.6
+    # echo ' iPAQ' `cat /proc/hal/model`
+    awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
 }
 
 export USER=root
@@ -21,11 +23,11 @@ ARGS="-dpi 100 -br"
 
 # start off server in conventional location.
 case `module_id` in
-	" iPAQ 3100" | " iPAQ 3800")
+	"HP iPAQ 3100" | "HP iPAQ 3800")
 		ARGS="$ARGS -screen 240x320@90 -rgba vrgb" ;;
-	" iPAQ 3600" | " iPAQ 3700" | " iPAQ 3900")
+	"HP iPAQ 3600" | "HP iPAQ 3700" | "HP iPAQ 3900")
 		ARGS="$ARGS -screen 240x320@270 -rgba vbgr" ;;
-	" iPAQ 5400")
+	"HP iPAQ 5400")
 		ARGS="$ARGS -rgba rgb" ;;
 esac
 
