@@ -217,12 +217,27 @@ main (int argc, char *argv[])
 
   widget = lookup_widget (GPE_Ownerinfo, "smallphoto");
   gtk_widget_show (widget);
-  //  gtk_label_set_text (GTK_LABEL (widget), owneraddress);
 
   /*
   widget = lookup_widget (GPE_Ownerinfo, "frame1");
   gtk_rc_parse_string ("widget '*gpe_ownerinfo' style 'gpe_ownerinfo_bg'");
   gtk_widget_set_name (widget, "gpe_ownerinfo");
+  */
+
+  /* make window transparent */
+  /*
+  widget = lookup_widget (GPE_Ownerinfo, "address");
+  widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
+  gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
+  widget = lookup_widget (GPE_Ownerinfo, "scrolledwindow1");
+  widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
+  gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
+  widget = lookup_widget (GPE_Ownerinfo, "viewport1");
+  widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
+  gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
+  
+  GPE_Ownerinfo->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
+  gtk_widget_set_style (GTK_WIDGET (GPE_Ownerinfo), GPE_Ownerinfo->style);
   */
 
   gtk_widget_show (GPE_Ownerinfo);
@@ -233,8 +248,7 @@ main (int argc, char *argv[])
 
 
 /*
- *  Return value: The old version number found in the data file.
- *  FIXME: do this only when success, neg value when error! 
+ *  Return value: upgrade status
  *
  *  The data file format is described in the file HACKING.
  */
@@ -316,10 +330,6 @@ maybe_upgrade_datafile ()
   }
 }
 
-/*
- *  FIXME: we don't really use fp as it's unsafe to reuse it
- */
-
 gint
 upgrade_to_v2 (guint new_version)
 {
@@ -329,6 +339,7 @@ upgrade_to_v2 (guint new_version)
   /* firstline = g_strdup ("Initial firstline"); */
 #warning FIXME: Why doesnt this work?
   /* sprintf (firstline, "%s %d]", INFO_MATCH, new_version); */
+  /* sprintf (firstline, INFO_MATCH "%d]", INFO_MATCH, new_version); maybe??? */
   firstline =  g_strdup ("[gpe-ownerinfo data version 2]");
   oldcontent = g_strdup ("Initial oldcontent.");
   
@@ -353,15 +364,14 @@ upgrade_to_v2 (guint new_version)
       perror (GPE_OWNERINFO_DATA);
     }
   
-
   fp = fopen (GPE_OWNERINFO_DATA, "w");
   if (fp)
     {
       fputs (firstline, fp);
       fputs ("\n", fp);
 
-#define PREFIX "/usr/local/"      
-      fputs (PREFIX "share/gpe/pixmaps/default/tux-48.png", fp);
+#warning FIXME: need to get the right prefix here somewhere!      
+      fputs (PREFIX "/share/gpe/pixmaps/default/tux-48.png", fp);
       fputs ("\n", fp);
 
       fputs (oldcontent, fp);

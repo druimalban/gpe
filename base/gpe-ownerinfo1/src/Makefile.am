@@ -3,7 +3,7 @@
 INCLUDES = \
 	-I$(top_srcdir)/intl \
 	-I$(top_srcdir)/../libgpewidget `gdk-pixbuf-config --cflags` \
-	@GTK_CFLAGS@
+	@GTK_CFLAGS@ -DPREFIX=\"@prefix@\"
 
 bin_PROGRAMS = gpe-ownerinfo
 
@@ -17,4 +17,3 @@ gpe_ownerinfo_LDFLAGS = `gdk-pixbuf-config --libs`
 
 gpe_ownerinfo_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget \
 	@GTK_LIBS@ $(INTLLIBS)
-

@@ -1,3 +1,15 @@
+2002-09-02  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/main.c: No transparency for now. Print warning for PREFIX
+	problem.
+
+	* src/Makefile.am (INCLUDES): Add PREFIX.
+
+	* familiar/control (Version): 0.04 now.
+	(Suggests): Added Suggests: for gpe-conf (> 0.0.2).
+
+	* Makefile.am (install-data-local): Make pixmap dir.
+
 2002-09-01  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c (Module): Small comment tweaks.
