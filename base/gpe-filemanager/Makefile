@@ -1,16 +1,24 @@
 PREFIX = /usr/local
 PACKAGE = gpe-filemanager
-DEBUG = yes
+DEBUG = no
 CVSBUILD = yes
 VERSION = 0.11
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 
-MEMBERS = main mime-sql mime-programs-sql
+MEMBERS = main mime-sql mime-programs-sql bluetooth
 
-CFLAGS = `pkg-config --cflags gtk+-2.0 gnome-vfs-2.0`
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
+CFLAGS += $(GPECFLAGS) `pkg-config --cflags gnome-vfs-2.0 dbus-glib-1`
+CPPFLAGS += -DDBUS_API_SUBJECT_TO_CHANGE
 
 CFLAGS += -D_GNU_SOURCE -Wall
+
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -18,17 +26,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
-BUILD = ../build
-else
-CFLAGS += -I/usr/include/gpe
-BUILD = build
-endif
-LDFLAGS += -lgpewidget -lsqlite -lgnomevfs-2
-
-LDFLAGS += `pkg-config --libs gtk+-2.0`
+LDFLAGS += $(GPELIBS) -lsqlite `pkg-config --libs gnome-vfs-2.0 dbus-glib-1`
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 

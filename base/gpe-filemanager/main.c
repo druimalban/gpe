@@ -33,6 +33,8 @@
 #include "mime-sql.h"
 #include "mime-programs-sql.h"
 
+#include "bluetooth.h"
+
 #define _(x) dgettext(PACKAGE, x)
 
 #define COMPLETED 0
@@ -49,6 +51,7 @@ GtkWidget *window;
 GtkWidget *combo;
 GtkWidget *view_scrolld;
 GtkWidget *view_widget;
+GtkWidget *bluetooth_menu_item;
 
 GdkPixbuf *default_pixbuf;
 
@@ -111,11 +114,13 @@ static void popup_ask_rename_file (void);
 static void popup_ask_delete_file (void);
 static void show_file_properties (void);
 static void refresh_current_directory (void);
+static void send_with_bluetooth (void);
 
 static GtkItemFactoryEntry menu_items[] =
 {
   { "/Open Wit_h",	 NULL, popup_ask_open_with,  0, "<StockItem>", GTK_STOCK_OPEN },
   { "/sep1",	         NULL, NULL,	             0, "<Separator>" },
+  { "/Send via Bluetooth", NULL, send_with_bluetooth, 0, "<Item>" },
   { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
   { "/_Rename",          NULL, popup_ask_rename_file,          0, "<Item>" },
   { "/_Delete",          NULL, popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
@@ -526,6 +531,12 @@ ask_open_with (FileInformation *file_info)
 }
 
 static void
+send_with_bluetooth (void)
+{
+  bluetooth_send_file (current_popup_file->filename, current_popup_file->vfs);
+}
+
+static void
 popup_ask_open_with ()
 {
   ask_open_with (current_popup_file);
@@ -539,7 +550,10 @@ show_popup (GtkWidget *widget, gpointer udata)
   file_info = (FileInformation *) udata;
   current_popup_file = file_info;
 
-  printf ("popup for %s\n", file_info->filename);
+  if (bluetooth_available ())
+    gtk_widget_show (bluetooth_menu_item);
+  else
+    gtk_widget_hide (bluetooth_menu_item);
 
   gtk_menu_popup (GTK_MENU (gtk_item_factory_get_widget (item_factory, "<main>")), 
 		  NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
@@ -708,7 +722,6 @@ make_view ()
 {
   GnomeVFSDirectoryHandle *handle;
   GnomeVFSFileInfo *vfs_file_info;
-  GnomeVFSURI *uri;
   GnomeVFSResult result, open_dir_result;
   loading_directory = 1;
   GList *list = NULL, *iter;
@@ -717,10 +730,7 @@ make_view ()
   gpe_iconlist_clear (GPE_ICONLIST (view_widget));
   gtk_widget_draw (view_widget, NULL);
 
-  uri = gnome_vfs_uri_new (current_directory);
-  printf ("GnomeVFS URI: %s\n", gnome_vfs_uri_to_string (uri, GNOME_VFS_URI_HIDE_NONE));
-
-  open_dir_result = gnome_vfs_directory_open_from_uri (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
+  open_dir_result = gnome_vfs_directory_open (&handle, current_directory, GNOME_VFS_FILE_INFO_DEFAULT);
 
   while (open_dir_result == GNOME_VFS_OK)
   {
@@ -939,6 +949,8 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
+  bluetooth_init ();
+
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "Filemanager");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
@@ -1021,6 +1033,8 @@ main (int argc, char *argv[])
   g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
   gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
   gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
+
+  bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
 
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
