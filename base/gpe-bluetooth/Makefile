@@ -3,8 +3,13 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
+#USE_LIBMBDOCK = yes
 
-MEMBERS = main tray
+MEMBERS = main
+
+ifneq ($(USE_LIBMBDOCK),yes)
+MEMBERS += tray
+endif
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
@@ -25,6 +30,9 @@ else
 CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0`
+ifeq ($(USE_LIBMBDOCK),yes)
+LDFLAGS += -lmbdock -L/usr/X11R6/lib 
+endif
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
