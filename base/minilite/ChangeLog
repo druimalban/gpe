@@ -1,6 +1,7 @@
 
 2004-07-03	Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Released Version 0.43
 	* minilite.c: Added support for new Simpad kernel interface.
 
 2004-07-02	Florian Boor <florian.boor@kernelconcepts.de>
