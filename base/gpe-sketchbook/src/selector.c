@@ -60,6 +60,8 @@ void selector_init(){
                               );
   selector.listmodel = GTK_TREE_MODEL(store);
 
+  selector.thumbnails_notloaded = TRUE;
+
   sketch_list_size = 0;
   current_sketch   = SKETCH_NEW;
 
@@ -68,7 +70,6 @@ void selector_init(){
 void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
   GtkListStore * store;
   GtkTreeIter iter;
-  GObject * item;
 
   store = GTK_LIST_STORE(selector.listmodel);
   gtk_list_store_append (store, &iter);
@@ -79,15 +80,18 @@ void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
                       -1);
   g_free(url);  //liststore take a copy
   g_free(title);//liststore take a copy
-  
+
   //gpe-iconlist is not linked to the model, so update it
-  item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
-                                       NULL, //title
-                                       thumbnail,//icon
-                                       gtk_tree_iter_copy(&iter));//udata
-  gtk_list_store_set (store, &iter,
-                      ENTRY_ICONLISTITEM, item,
-                      -1);  
+  if(thumbnail){
+    GObject * item;
+    item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+                                         NULL, //title
+                                         thumbnail,//icon
+                                         gtk_tree_iter_copy(&iter));//udata
+    gtk_list_store_set (store, &iter,
+                        ENTRY_ICONLISTITEM, item,
+                        -1);  
+  }
 }
 
 void window_selector_init(GtkWidget * window_selector){
@@ -129,24 +133,12 @@ void window_selector_init(GtkWidget * window_selector){
   /*else*/{ //if empty, added a dummy sketch so do it in any case
     gchar * fullpath_filename;
     gchar * title;
-    GdkPixbuf * thumbnail;
     int i;
     for(i = 0; i < scandir_nb_entries; i++){
 
       title = make_label_from_filename(direntries[i]->d_name);
       fullpath_filename = g_strdup_printf("%s%s", sketchbook.save_dir, direntries[i]->d_name);
-
-      //FIXME: do not load all the sketches now
-      {//--update thumbnail
-        GdkPixbuf * pixbuf;
-        pixbuf = gdk_pixbuf_new_from_file(fullpath_filename, NULL); //GError **error
-        thumbnail = gdk_pixbuf_scale_simple (pixbuf, //FIXME: let iconlist do that!
-                                             THUMBNAIL_SIZE, THUMBNAIL_SIZE,
-                                             GDK_INTERP_BILINEAR);
-        gdk_pixbuf_unref(pixbuf);
-      }
-
-      selector_add_note(title, fullpath_filename, thumbnail);
+      selector_add_note(title, fullpath_filename, NULL /*thumbnail*/);
 
       sketch_list_size++;
     }
@@ -154,6 +146,48 @@ void window_selector_init(GtkWidget * window_selector){
     free(direntries);
   }//else
 }//window_selector_init()
+
+void load_thumbnails(){
+  GtkTreeModel * model;
+  GtkTreeIter iter;
+  gboolean is_node;
+
+  gchar     * filename;
+  GdkPixbuf * pixbuf;
+  GdkPixbuf * thumbnail;
+  GObject   * item;
+ 
+
+  model = GTK_TREE_MODEL(selector.listmodel);
+
+  is_node = gtk_tree_model_get_iter_first(model, &iter);
+
+  while (is_node) {
+    gtk_tree_model_get(model, &iter, ENTRY_URL, &filename, -1);
+
+    /**/g_printerr("loading %s...", filename);
+
+    pixbuf    = gdk_pixbuf_new_from_file(filename, NULL); //GError **error
+    thumbnail = gdk_pixbuf_scale_simple (pixbuf, THUMBNAIL_SIZE, THUMBNAIL_SIZE,
+                                         GDK_INTERP_BILINEAR);
+    gdk_pixbuf_unref(pixbuf);
+    gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_THUMBNAIL, thumbnail, -1);
+
+    item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+                                         NULL, //title
+                                         thumbnail,//icon
+                                         gtk_tree_iter_copy(&iter));//udata
+    gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_ICONLISTITEM, item, -1);  
+
+    while (gtk_events_pending ()) gtk_main_iteration ();
+
+    /**/g_printerr("done.\n");
+
+    is_node = gtk_tree_model_iter_next(model, &iter);
+  }
+
+  selector.thumbnails_notloaded = FALSE;
+}
 
 void selector_refresh_list(){}
 

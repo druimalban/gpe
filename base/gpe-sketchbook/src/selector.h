@@ -33,6 +33,8 @@ typedef struct _selector {
   GtkWidget * button_edit;  //to set unsensitive
   GtkWidget * button_delete;//to set unsensitive
   GtkWidget * button_view;  //to switch the icon (from gpe-sketchbook.c)
+
+  gboolean thumbnails_notloaded;
 } Selector;
 extern Selector selector;
 
@@ -45,6 +47,7 @@ enum{//Entry id for the list store
 };
 
 void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail);
+void load_thumbnails();
 
 extern gint sketch_list_size;
 #define is_sketch_list_empty (sketch_list_size == 0)

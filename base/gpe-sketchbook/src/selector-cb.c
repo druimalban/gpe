@@ -34,10 +34,11 @@
 void switch_to_page(guint page){
   switch(page){
     case PAGE_SELECTOR:
-      if(icons_mode){//FIXME: to remove if iconlist can select
+      if(icons_mode){
+        //FIXME: to remove if iconlist can select
         gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: to remove
         gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: to remove
-      }//FIXME: to remove
+      }
   }
   gtk_notebook_set_page(sketchbook.notebook, page);
 }
@@ -110,6 +111,7 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
     icons_mode = TRUE;
     gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: remove if iconlist can select
     gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: remove if iconlist can select
+    if(selector.thumbnails_notloaded) load_thumbnails();
   }
   if(button) _switch_icon(button);
 }

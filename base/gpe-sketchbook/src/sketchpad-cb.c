@@ -185,7 +185,8 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   }
 
   file_save(filename); //FIXME: should catch saving errors
-  {//--make thumbnail
+
+  if(selector.thumbnails_notloaded == FALSE){//--make thumbnail
     GdkPixbuf * pixbuf;
     GdkPixbuf * pixbuf_scaled;
     pixbuf = sketchpad_get_current_sketch_pixbuf();
@@ -203,7 +204,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 
     selector_add_note(make_label_from_filename(filename), filename, thumbnail);
   }
-  else{
+  else if(selector.thumbnails_notloaded == FALSE){
     //update icon_view
   	gpe_iconlist_set_item_icon(GPE_ICONLIST(selector.iconlist), iconlist_item, thumbnail);
   }
