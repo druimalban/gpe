@@ -1,4 +1,8 @@
 2004-08-19	Florian Boor <florian@kernelconcepts.de>
+	- gpe-mixer.c: Removed some obsolete stuff.
+	               Unknown channels show the correct icon now.
+	
+2004-08-18	Florian Boor <florian@kernelconcepts.de>
 	- Version to 0.34
 	- Fixed startup if pixmap for a channel is not found.
 
