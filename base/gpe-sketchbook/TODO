@@ -1,18 +1,20 @@
 [ ]BUGS
-	[ ][bgz] automatic scroll on drawing area is not correct
-	[X]memory leak (each time we save)
+	[ ]launch app, select a sketch, open it --> you cannt draw: gc == NULL
+	[X][bgz] automatic scroll on drawing area is not correct
 	--
 	[ ][bgz] selector: selecting with keybord (TAB, arrows, SPACE) --> crash!
 	[ ][bgz] next (or prev), go to selector: the next (or prev) line is selected, but NOT underlined (dark blue) :(
 	[ ][bgz] from dialog box to main window, "sometimes" the window go under other applications
 	[ ]when deleting many fast (click click click) seems some value are not updated --> crash | selected_sketch is wrong  | ... ==> freeze the button meanwhile!
 	[ ]check GTK warnings / assertion failed
+	[ ]when create/save FAST, (<1s) two files with same name --> overwrite, BUT two entries in the clist!
 [ ]general
 	--
-	[ ]remove all the glade stuff
+	[X]remove all the glade stuff
 	[ ]hierarchical list
 	[ ]add preferences
 	[ ]add cmd line options support (std --version --help)
+	[ ]use release tags in CVS
 [ ]gui
 	[ ]exit/prev/next/new check if current is unsaved, and ask user
 	--
@@ -25,6 +27,7 @@
 	[ ]review buttons order
 	[ ]use disabled buttons when needed
 	[ ]add preferences window
+	[ ]drawing area size, see dillo: double click toggle hide/show the tool bar and status bar
 [ ]file io
 	[ ]use png instead of xpm
 	[ ]open/save file, check success/failure

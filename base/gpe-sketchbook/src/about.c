@@ -72,7 +72,7 @@ void about_box(gchar * app_name,
     }
   }
 
-  label_version = gtk_label_new(app_version);//creates an empty one if NULL string
+  label_version = gtk_label_new(app_version);//this creates an empty one if NULL string
 
   //--short description
   label_description = gtk_label_new (app_short_description);
@@ -140,8 +140,8 @@ void about_box(gchar * app_name,
     gtk_box_pack_start (GTK_BOX (hbox), icon_gpe,  FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox), vbox2,     TRUE,  TRUE,  0);
     gtk_box_pack_end   (GTK_BOX (hbox), icon_app,  FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-    
+
+    gtk_box_pack_start (GTK_BOX (vbox), hbox,                 FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), gtk_hseparator_new(), FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), label_description,    FALSE, FALSE, 0);
     
@@ -162,7 +162,7 @@ void about_box(gchar * app_name,
     gtk_box_pack_start (GTK_BOX (vbox),  scrolled_window, TRUE, TRUE, 0);
 
     //button OK
-    hbox  = gtk_hbox_new (TRUE, 5);
+    hbox  = gtk_hbox_new (FALSE, 0);
     gtk_container_set_border_width(GTK_CONTAINER(hbox), 10);
     gtk_box_pack_start (GTK_BOX (hbox), button_ok, TRUE, TRUE, 0);
     

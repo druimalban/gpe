@@ -1,4 +1,4 @@
-VERSION = pre0.1.3
+VERSION = 0.1.3
 
 DEPENDS = libgtk1.2, libgpewidget0
 

@@ -33,7 +33,6 @@
 void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
   app_quit();
 }
-//FIXME: maybe connect "delete_event"
 
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   switch_windows(window_sketchpad, window_selector);
