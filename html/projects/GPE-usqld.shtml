@@ -4,7 +4,8 @@
 
 <h2> uSQLd a micro-sql server</h2> 
 
-uSQLd is basically a network RPC wrapper for D Righard Hipp's fantastic open source sql library SQLite: <a href="http://www.hwaci.com/sw/sqlite/">http://www.hwaci.com/sw/sqlite/</a>
+uSQLd is basically a network RPC wrapper for D. Richard Hipp's fantastic open source sql library SQLite: <a href="http://www.hwaci.com/sw/sqlite/">http://www.hwaci.com/sw/sqlite/</a>
+
 <p> 
 
 At time of writing (26 March 2002)  uSQLD is under  heavy development heading for a release. code can be found in <a href="/cvs.shtml">GPE cvs</a>.
