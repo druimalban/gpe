@@ -194,7 +194,7 @@ main(int argc, char *argv[])
   gtk_widget_show (tree);
   gtk_widget_show (chatter);
 
-  load_tasks (tasks, GTK_CTREE (tree), NULL);
+  load_tasks (root, GTK_CTREE (tree), NULL);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_add (GTK_CONTAINER (window), vbox_top);

@@ -22,6 +22,6 @@ struct task
 };
 
 extern gboolean sql_start (void);
-extern GSList *tasks;
+extern GSList *tasks, *root;
 
 #endif

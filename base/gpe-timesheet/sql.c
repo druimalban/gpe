@@ -27,7 +27,7 @@ create table log (task integer, time integer, start boolean);";
 static sqlite *sqliteh;
 static guint max_task_id;
 
-GSList *tasks;
+GSList *tasks, *root;
 
 struct task *find_by_id (guint id)
 {
@@ -56,6 +56,8 @@ internal_note_task (guint id, gchar *text, guint elapsed, struct task *pt)
   t->parent = pt;
   if (pt)
     pt->children = g_slist_append (pt->children, t);
+  else
+    root = g_slist_append (root, t);
   tasks = g_slist_append (tasks, t);
   if (id > max_task_id)
     max_task_id = id;
@@ -164,6 +166,8 @@ delete_task (struct task *t)
   tasks = g_slist_remove (tasks, t);
   if (t->parent)
     t->parent->children = g_slist_remove (t->parent->children, t);
+  else
+    root = g_slist_remove (root, t);
   g_free (t->description);
   g_free (t);
 }
