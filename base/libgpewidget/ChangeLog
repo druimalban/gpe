@@ -1,3 +1,7 @@
+2003-03-29  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.56 released.
+
 2003-03-28  Philip Blundell  <philb@gnu.org>
 
 	* gtktimesel.c: New file.
