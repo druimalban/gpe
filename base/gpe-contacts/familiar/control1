@@ -4,6 +4,6 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgpewidget1 (>= 0.53), gpe-icons (>= 0.04), libxml2, libdm0
+Depends: libgpewidget1 (>= 0.53), gpe-icons (>= 0.04), libxml2, libdisplaymigration0
 Conflicts: gpe-contacts
 Description: Contacts manager

@@ -27,7 +27,7 @@
 #include <gpe/question.h>
 #include <gpe/spacing.h>
 
-#include <libdm.h>
+#include <libdisplaymigration/displaymigration.h>
 
 #define WINDOW_NAME "Editor"
 #define _(_x) gettext (_x)
@@ -566,9 +566,9 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (main_window), "delete-event",
 		      GTK_SIGNAL_FUNC (ask_save_before_exit), NULL);
 
-  libdm_init ();
+  displaymigration_init ();
 
-  libdm_mark_window (main_window);
+  displaymigration_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 

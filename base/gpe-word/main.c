@@ -27,7 +27,7 @@
 #include <gpe/question.h>
 #include <gpe/popup_menu.h>
 
-#include <libdm.h>
+#include <displaymigration.h>
 
 #define WINDOW_NAME "Word"
 #define _(_x) gettext (_x)
@@ -766,9 +766,9 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
-  libdm_init ();
+  displaymigration_init ();
 
-  libdm_mark_window (main_window);
+  displaymigration_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 

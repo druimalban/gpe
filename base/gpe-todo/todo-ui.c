@@ -20,7 +20,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/spacing.h>
 
-#include <libdm.h>
+#include <libdisplaymigration/displaymigration.h>
 
 #include "todo.h"
 
@@ -307,7 +307,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   struct tm tm;
   time_t the_time;
 
-  libdm_mark_window (window);
+  displaymigration_mark_window (window);
 
   buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
   buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);

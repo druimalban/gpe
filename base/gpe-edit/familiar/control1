@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
-Depends: gpe-icons (>= 0.15), libgpewidget1 (>= 0.27), libdm0, gpe-edit-locale*
+Depends: gpe-icons (>= 0.15), libgpewidget1 (>= 0.27), libdisplaymigration0, gpe-edit-locale*
 Description: GPE text editor
 Provides: gpe-edit
 Replaces: gpe-edit, gpe-edit-gtk2

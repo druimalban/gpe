@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0 (>= 0.06), libdm0, libschedule0, gpe-calendar-locale*
+Depends: gpe-icons (>= 0.14), libgpewidget1 (>= 0.08), atd, libxsettings-client0, libeventdb0 (>= 0.06), libdisplaymigration0, libschedule0, gpe-calendar-locale*
 Description: GPE calendar
 Provides: gpe-calendar
 Replaces: gpe-calendar

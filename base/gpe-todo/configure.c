@@ -20,7 +20,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/spacing.h>
 
-#include <libdm.h>
+#include <libdisplaymigration/displaymigration.h>
 
 #include "todo.h"
 
@@ -99,7 +99,7 @@ new_category_box (GtkWidget *w, gpointer data)
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   guint spacing = gpe_get_boxspacing ();
 
-  libdm_mark_window (window);
+  displaymigration_mark_window (window);
 
   ok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
   cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
@@ -141,7 +141,7 @@ configure (GtkWidget *w, gpointer list)
   GtkWidget *okbutton;
   GSList *l;
 
-  libdm_mark_window (window);
+  displaymigration_mark_window (window);
 
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list: Categories"));
   gpe_set_window_icon (window, "icon");

@@ -14,9 +14,9 @@
 
 #include <gcrypt.h>
 
-#include "libdisplaymigration/auth.h"
-#include "libdisplaymigration/crypt.h"
-#include "libdisplaymigration/keygen.h"
+#include <libdisplaymigration/auth.h>
+#include <libdisplaymigration/crypt.h>
+#include <libdisplaymigration/keygen.h>
 
 static struct rsa_key private_key;
 static u_int32_t key_id;
@@ -29,8 +29,8 @@ sign_challenge (gchar *text, int length, gchar *target)
 
   memset (hash, 0, sizeof (hash));
 
-  libdm_crypt_create_hash (target, text, length, hash);
-  if (libdm_crypt_sign_hash (&private_key, hash, &sig) == FALSE)
+  displaymigration_crypt_create_hash (target, text, length, hash);
+  if (displaymigration_crypt_sign_hash (&private_key, hash, &sig) == FALSE)
     return NULL;
 
   result = g_strdup_printf ("%08x %s", key_id, sig);
