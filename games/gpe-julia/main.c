@@ -27,6 +27,7 @@ static struct gpe_icon my_icons[] = {
   { "home", "home" },
   { "zoom_in", "gpe-julia/zoom_in" },
   { "zoom_out", "gpe-julia/zoom_out" },
+  { "icon", PREFIX "/share/pixmaps/gpe-julia.png" },
   { "exit", "exit" },
   { NULL, NULL }
 };
@@ -248,10 +249,17 @@ motion_notify (GtkWidget *widget, GdkEventMotion *motion, gpointer *data)
       draw_julia ();
       redraw ();
     }
+  gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
 }
 
 void
-button_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
+button_press_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
+{
+  gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
+}
+
+void
+button_release_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
 {
   if (current_mode == mode_julia)
     {
@@ -345,6 +353,7 @@ main(int argc, char *argv[])
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "Julia");
+  gpe_set_window_icon (window, "icon");
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (on_window_destroy),
                       NULL);
@@ -403,11 +412,11 @@ main(int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
   gtk_container_add (GTK_CONTAINER (vbox), image_event_box);
 
-  // gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_event), NULL);
-  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_event), NULL);
- gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_press_event), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_release_event), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), NULL);
 
-  gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_HINT_MASK);
 
   //  gtk_widget_set_usize (image_widget, width, height*2);
   gtk_widget_set_size_request (image_widget, width, height);
