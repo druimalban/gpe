@@ -1,0 +1,3 @@
+2003-04-16  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+	
+	* atd.c : re-arrange the order of script operations and add an "export" before DISPLAY':0 
