@@ -2,8 +2,8 @@
 
 # Broadcast hotplug events on D-BUS and then call the appropriate agent
 
-PATH="/org/handhelds/gpe/hotplug/"
-MESSAGE="event"
+PATH="/org/handhelds/gpe/hotplug"
+MESSAGE="HotplugEvent"
 
 invoke_dbus () 
 {
