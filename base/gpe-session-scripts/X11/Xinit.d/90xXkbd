@@ -1,2 +1,5 @@
-xmodmap -e "keycode 135 = Mode_switch Multi_key"
+#!/bin/sh
 
+PATH=$PATH:/usr/X11R6/bin
+
+xmodmap -e "keycode 135 = Mode_switch Multi_key"

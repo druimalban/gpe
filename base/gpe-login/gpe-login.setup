@@ -1,8 +1,7 @@
 #!/bin/sh
 
-PATH=$PATH:/usr/X11R6/bin
+PATH=$PATH:/usr/X11R6/bin:/usr/bin
 
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
-xmodmap -e "keycode 135 = Mode_switch Multi_key"                                
 ipaq-sleep -u 60 -o 30 -n &
-
+[ -f /usr/bin/gpe-ownerinfo ] && gpe-ownerinfo -g 240x120+0+200 &

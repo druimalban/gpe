@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <string.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -434,13 +435,13 @@ main (int argc, char *argv[])
   GtkWidget *frame;
   GtkWidget *logo = NULL;
   GtkWidget *calibrate_hint;
-  GdkPixbuf *icon;
   Display *dpy;
   Window root;
   gboolean geometry_set = FALSE;
   int i;
   char *geometry_str = FALSE;
   gboolean flag_geom = FALSE;
+  gboolean flag_no_logo = FALSE;
 
   gtk_set_locale ();
 
@@ -461,8 +462,10 @@ main (int argc, char *argv[])
 	}
       else if (strcmp (argv[i], "--autolock") == 0)
 	autolock_mode = TRUE;
-      else if (strcmp (argv[i], "--geometry") == 0)
+      else if (strcmp (argv[i], "--geometry") == 0 || strncmp (argv[i], "-g", 2) == 0)
 	flag_geom = TRUE;
+      else if (strcmp (argv[i], "--no-logo") == 0)
+	flag_no_logo = TRUE;
     }
 
   signal (SIGCHLD, SIG_IGN);
@@ -584,9 +587,12 @@ main (int argc, char *argv[])
 	}
     }
 
-  icon = gpe_find_icon ("logo");
-  if (icon)
-    logo = gpe_render_icon (window->style, icon);
+  if (! flag_no_logo)
+    {
+      GdkPixbuf *icon = gpe_find_icon ("logo");
+      if (icon)
+	logo = gpe_render_icon (window->style, icon);
+    }
 
   menu = gtk_menu_new ();
   slurp_passwd (menu);

@@ -1,3 +1,8 @@
 #!/bin/sh
 
-/usr/bin/gpe-login
+GEOMETRY=
+if [ -x /usr/bin/gpe-ownerinfo ]; then
+  GEOMETRY="-geometry 240x200+0+0 --no-logo"
+fi
+
+/usr/bin/gpe-login $GEOMETRY

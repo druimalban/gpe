@@ -40,12 +40,6 @@ install: install-dm install-login
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
 	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
-	install -D gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
-	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
-	install -D gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
-	install -D -m 644 gpe-login.buttons $(DESTDIR)/etc/X11/gpe-login.buttons
-	install -D gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
-	install -D gpe-login.session $(DESTDIR)/etc/X11/Xsession-gpe.d/50autolock
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 
@@ -63,6 +57,11 @@ install-dm: gpe-dm
 install-scripts:
 	install -D X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do mkdir -p $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; cp $$FILES $(DESTDIR)/etc/$$i/; done
+	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
+	install -D gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
+	install -D gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
+	install -D gpe-login.session $(DESTDIR)/etc/X11/Xsession-gpe.d/50autolock
+	install -D gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 
 ipkg:
 	make PREFIX=/usr clean all

@@ -1,5 +1,28 @@
 2002-07-30  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.19 released.
+	* gpe-session-scripts 0.15 released.
+
+2002-07-30  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Add gpe-dm.
+	Require gpe-login 0.19 or newer.
+
+	* X11/Xinit.d/99gpe-login: Set smaller geometry and suppress logo
+	if gpe-ownerinfo is found.
+	* X11/Xinit.d/90xXkbd: Ensure /usr/X11R6/bin is in $PATH.
+	* gpe-login.setup: Remove call to xmodmap.  Ensure /usr/bin is in
+	$PATH.
+	* gpe-login.c: Add --no-logo option.  Accept -g as alias for
+	--geometry.
+	* gpe-login.setup: Run gpe-ownerinfo if it exists.
+
+	* Makefile: Move gpe-login.setup, gpe-login.keylaunchrc,
+	gpe-login.suspend, gpe-login.session, gpe-xcalibrate.sh from
+	gpe-login to gpe-session-scripts.
+	
+2002-07-30  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.18 released.
 	* gpe-session-scripts 0.14 released.
 	* gpe-dm 0.16 released.
