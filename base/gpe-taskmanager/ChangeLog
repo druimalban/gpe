@@ -1,0 +1,15 @@
+2003-09-14  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Source): Added.
+
+	* Makefile (install-program): Depend on all-desktop.
+
+	* gpe-taskmanager.desktop: Deleted.
+	* gpe-taskmanager.desktop.in: New.
+
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* po/nl.po: New file, courtesy Elros Cyriatan.
+	* Makefile (LINGUAS): Add nl.
+	
+

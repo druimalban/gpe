@@ -41,7 +41,7 @@ all: $(PACKAGE) all-mo
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(LDFLAGS)
 
-install-program: all
+install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps

@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Program manager
-Comment=Lists running programs
+_Name=Program manager
+_Comment=Lists running programs
 Exec=gpe-taskmanager
 Terminal=0
 Type=Application

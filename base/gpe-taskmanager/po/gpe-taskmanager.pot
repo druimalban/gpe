@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-08-17 14:08+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-09-14 14:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,4 +30,12 @@ msgstr ""
 
 #: gpe-taskmanager.c:260
 msgid "Kill program"
+msgstr ""
+
+#: gpe-taskmanager.desktop.in.h:1
+msgid "Lists running programs"
+msgstr ""
+
+#: gpe-taskmanager.desktop.in.h:2
+msgid "Program manager"
 msgstr ""
