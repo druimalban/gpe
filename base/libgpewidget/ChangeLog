@@ -1,3 +1,10 @@
+2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gtkrc: Removed the gpe-ownerinfo bg image.
+	New style 'gpe_ownerinfo_labels': give labels like "Name",
+	"E-Mail" etc. a special style.
+
+
 2002-08-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gtkrc: Add some info about font specs in pixels vs. points.

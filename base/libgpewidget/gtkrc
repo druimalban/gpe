@@ -78,8 +78,10 @@ style "gpe_login_result"
   fg[NORMAL] = { 0.6, 0.0, 0.0 }
 }
 
-# the background image for GPE Owner Info
-style "gpe_ownerinfo_bg"
- {
-  bg_pixmap[NORMAL] = "gpe-ownerinfo-bg.png"
- }
+# gpe-ownerinfo:
+#    Set the labels like "Name", "E-Mail" etc.
+style "gpe_ownerinfo_labels"
+{
+  # grey color:
+  fg[NORMAL] = { 0.3, 0.3, 0.3 }
+}
