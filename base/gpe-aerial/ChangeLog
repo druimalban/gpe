@@ -1,3 +1,6 @@
+07/01/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- netdb.c	Fixed bug causing netmask to be saved wrong.
+
 06/30/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- prismstumbler.h Changes to handle a DNS server.
 	- netedit.c

@@ -107,7 +107,7 @@ int save_network(usernetinfo_t* my_net)
 	if (netdb)
 	{
 		sprintf(ip,"%hhu.%hhu.%hhu.%hhu",my_net->ip[0],my_net->ip[1],my_net->ip[2],my_net->ip[3]);
-		sprintf(netmask,"%hhu.%hhu.%hhu.%hhu",my_net->netmask[0],my_net->netmask[1],my_net->netmask[2],my_net->gateway[3]);
+		sprintf(netmask,"%hhu.%hhu.%hhu.%hhu",my_net->netmask[0],my_net->netmask[1],my_net->netmask[2],my_net->netmask[3]);
 		sprintf(gateway,"%hhu.%hhu.%hhu.%hhu",my_net->gateway[0],my_net->gateway[1],my_net->gateway[2],my_net->gateway[3]);
 		sprintf(nameserver,"%hhu.%hhu.%hhu.%hhu",my_net->nameserver[0],my_net->nameserver[1],my_net->nameserver[2],my_net->nameserver[3]);
 		#ifdef DEBUG
