@@ -4,7 +4,7 @@ PACKAGE = bluez-pin
 CVSBUILD = yes
 GTK2 = yes
 LINGUAS = eo fr id ga wa sv cs
-VERSION = 0.20
+VERSION = 0.21
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build

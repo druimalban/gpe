@@ -1,3 +1,11 @@
+bluez-pin (0.21-1) unstable; urgency=low
+
+  * New upstream release.
+  * Correctly query for $DISPLAY, thanks to Sjoerd Simons.  
+    (Closes: #217625, #205023)
+
+ -- Philip Blundell <pb@handhelds.org>  Sun, 26 Oct 2003 11:32:34 +0000
+
 bluez-pin (0.20-1) unstable; urgency=low
 
   * Initial Release.
