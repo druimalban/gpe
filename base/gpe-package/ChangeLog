@@ -1,3 +1,5 @@
+2004-01-23 Florian Boor <florian.boor@kernelconcepts.de>
+	* Packaged 0.0.8-2
 
 2004-01-19 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c, *.desktop.in: Fixed some other bugs due to filename change.
