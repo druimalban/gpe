@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.22
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, sqlite, gpe-icons (>= 0.05), libgpewidget0 (>= 0.08), atd
+Depends: libgtk1.2, sqlite, gpe-icons (>= 0.14), libgpewidget0 (>= 0.08), atd
 Description: GPE calendar

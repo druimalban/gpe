@@ -21,7 +21,6 @@
 #include <gpe/picturebutton.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/errorbox.h>
-#include <gpe/libgpe.h>
 #include <gpe/gtksimplemenu.h>
 
 #include "globals.h"
@@ -177,41 +176,47 @@ static void
 schedule_alarm(event_t ev)
 {
   time_t alarm_t;
-  struct tm tm;
   event_details_t ev_d;
-   
+  char filename[256], command[256];
+  FILE *f;
+	
   alarm_t = ev->start-60*ev->alarm;
-  gmtime_r (&alarm_t, &tm);
   ev_d = event_db_get_details (ev);
   
-  CurrentAlarm=(struct Alarm_t *)malloc(sizeof(struct Alarm_t));
-  memset(CurrentAlarm,0,sizeof(struct Alarm_t));
-  CurrentAlarm->year=tm.tm_year + 1900;
-  CurrentAlarm->month=tm.tm_mon;
-  CurrentAlarm->day=tm.tm_mday;
-  CurrentAlarm->hour=tm.tm_hour;
-  CurrentAlarm->minute=tm.tm_min;
-  CurrentAlarm->AlarmType=6; /* melody 3 */
-  CurrentAlarm->AlarmReoccurence=0; /* once */
-  CurrentAlarm->Tone2Enable=TRUE;
-  tm.tm_isdst=1;
-  			
-  rtcd_set_alarm_tm("gpe-calendar", ev_d->summary, &tm, sizeof(struct Alarm_t),CurrentAlarm);
+  sprintf(filename, "/var/spool/at/%d.1234", (int)alarm_t);
+  
+  f=fopen(filename, "w");
+	
+  fprintf(f, "#!/bin/sh\n");
+  fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
+  fprintf(f, "/bin/rm $0\n");
+  
+  fclose(f);
+  
+  sprintf(command, "chmod 755 %s", filename);
+  		  
+  system(command);
+  
+  sprintf(command, "echo >/var/spool/at/trigger");
+  		  
+  system(command);
+  
 }
 
 static void
 unschedule_alarm(event_t ev)
 {
   time_t alarm_t;
-  struct tm tm;
-  event_details_t ev_d;
-   
+  char filename[256], command[256];
+  	
   alarm_t = ev->start-60*ev->alarm;
-  gmtime_r (&alarm_t, &tm);
-  ev_d = event_db_get_details (ev);
-  tm.tm_isdst=1;
   
-  rtcd_del_alarm_tm("gpe-calendar", ev_d->summary, &tm);
+  sprintf(filename, "/var/spool/at/%d.1234", (int)alarm_t);
+  sprintf(command, "rm %s", filename);
+  system(command);
+  
+  sprintf(command, "echo >/var/spool/at/trigger");
+  system(command);
 }
 
 static void

@@ -52,6 +52,9 @@ struct gpe_icon my_icons[] = {
   { "delete", "delete" },
   { "save", "save" },
   { "cancel", "cancel" },
+  { "bell", "bell" },
+  { "recur", "recur" },
+  { "bell_recur", "bell_recur" },
   { "icon", PREFIX "/share/pixmaps/gpe-calendar.png" },
   {NULL, NULL}
 };

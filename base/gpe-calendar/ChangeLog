@@ -1,3 +1,13 @@
+2002-09-26  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* Makefile: drop libgpe dependencies	
+	* event-ui.h: change to atd for alarms	
+	* event-ui.c: change to atd for alarms	
+	* day-view.c: add pixmaps for recurring and alarms	
+	* year-view.c: delete unused variable	
+
+	* Version 0.22 released.
+
 2002-09-09  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* month-view.c: fix daylight savings glitch

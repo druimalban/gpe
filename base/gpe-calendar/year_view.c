@@ -215,7 +215,6 @@ year_view_update (void)
 
   for (i = 0; i < 367; i++)
     {
-      int already=0;
       struct tm *newtm;
       time_t newbasetime;
       GSList *l;
