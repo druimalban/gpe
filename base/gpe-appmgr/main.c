@@ -288,6 +288,7 @@ char *find_icon (char *base)
 		"/usr/X11R6/include/X11/pixmaps",
 		"/mnt/ramfs/share/pixmaps",
 		"/mnt/hda/usr/share/pixmaps",
+		"/mnt/hda",
 		NULL
 	};
 
