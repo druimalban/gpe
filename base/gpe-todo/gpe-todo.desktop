@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Todo List
-Comment=GPE Todo List
+Name=To-do list
+Comment=GPE To-do List
 Exec=gpe-todo
 Terminal=0
 Type=Application
