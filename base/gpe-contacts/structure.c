@@ -270,12 +270,17 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
 	case ITEM_MULTI_LINE:
 	  pop_singles (vbox, singles, pw);
 	  singles = NULL;
-	  w = gtk_frame_new (e->name);
 	  ww = gtk_text_new (NULL, NULL);
 	  gtk_text_set_editable (GTK_TEXT (ww), TRUE);
-	  gtk_container_add (GTK_CONTAINER (w), ww);
-	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
-	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
+	  if (e->name)
+	    {
+	      w = gtk_frame_new (e->name);
+	      gtk_container_add (GTK_CONTAINER (w), ww);
+	      gtk_container_set_border_width (GTK_CONTAINER (w), 2);
+	    }
+	  else
+	    w = ww;
+	  gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 4);
 	  add_tag (e->tag, pw, ww);
 	  break;
 
@@ -298,7 +303,6 @@ edit_window (void)
   GtkWidget *w = create_edit ();
   GtkWidget *book = lookup_widget (w, "notebook2");
   GSList *page;
-  GtkWidget *text, *notes_label;
 
   for (page = edit_pages; page; page = page->next)
     {
@@ -313,14 +317,6 @@ edit_window (void)
 
       gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
     }
-
-  text = gtk_text_new (NULL, NULL);
-  gtk_text_set_editable (GTK_TEXT (text), TRUE);
-  gtk_widget_show (text);
-  notes_label = gtk_label_new ("Notes");
-  gtk_widget_show (notes_label);
-
-  gtk_notebook_append_page (GTK_NOTEBOOK (book), text, notes_label);  
 
   return w;
 }

@@ -506,8 +506,8 @@ create_edit (void)
   edit = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (edit, "edit");
   gtk_object_set_data (GTK_OBJECT (edit), "edit", edit);
-  gtk_widget_set_usize (edit, 240, 320);
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
+  gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
   gtk_window_set_policy (GTK_WINDOW (edit), FALSE, FALSE, FALSE);
 
   vbox7 = gtk_vbox_new (FALSE, 0);
@@ -533,6 +533,7 @@ create_edit (void)
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (notebook2), table1);
+  gtk_widget_set_usize (table1, 240, -2);
   gtk_table_set_row_spacings (GTK_TABLE (table1), 2);
   gtk_table_set_col_spacings (GTK_TABLE (table1), 3);
 

@@ -20,10 +20,6 @@ static const char *schema_str =
 "create table person (
 	id		int NOT NULL,
 	name		text NOT NULL,
-	summary		text,
-	birthday	text,
-	categories	text,
-	notes		text,
 	PRIMARY KEY(id)
 );
 
@@ -87,4 +83,33 @@ load_structure (void)
   
   g_free (buf);
   return rc;
+}
+
+struct tag_value *
+new_tag_value (guint tag, gchar *value)
+{
+  struct tag_value *t = g_malloc (sizeof (struct tag_value));
+  t->tag = tag;
+  t->value = value;
+  return t;
+}
+
+void
+free_tag_values (GSList *list)
+{
+  GSList *i;
+  for (i = list; i; i = i->next)
+    {
+      struct tag_value *t = i->data;
+      g_free (t->value);
+      g_free (t);
+    }
+  g_slist_free (list);
+}
+
+void
+update_tag_value (struct tag_value *t, gchar *value)
+{
+  g_free (t->value);
+  t->value = value;
 }

@@ -38,7 +38,7 @@ main (int argc, char *argv[])
   gtk_widget_show (mainw);
 
   load_structure ();
-  edit_structure ();
+  //  edit_structure ();
 
   gtk_main ();
   return 0;

@@ -114,6 +114,7 @@ on_edit_save_clicked                   (GtkButton       *button,
                                         gpointer         user_data)
 {
   GtkWidget *edit = (GtkWidget *)user_data;
+  GSList *data = NULL;
   GSList *tags;
 
   for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
@@ -122,8 +123,17 @@ on_edit_save_clicked                   (GtkButton       *button,
     {
       GtkWidget *w = tags->data;
       gchar *text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
-      guint tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
-
+      guint tag = (guint)gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+      struct tag_value *t = gtk_object_get_data (GTK_OBJECT (w), "tag-value");
+      if (t)
+	{
+	  update_tag_value (t, text);
+	}
+      else
+	{
+	  t = new_tag_value (tag, text);
+	  data = g_slist_append (data, t);
+	}
     }
 
   gtk_widget_destroy (edit);
