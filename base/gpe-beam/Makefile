@@ -19,5 +19,5 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 
 LDFLAGS += $(GTKLDFLAGS) -lsqlite
 
-send-vcard: send-vcard.o
+send-vcard: send-vcard.o vcard.o
 	$(CC) -o $@ $^ $(LDFLAGS) -lopenobex
