@@ -104,6 +104,39 @@ update_text_view (gchar *text)
 }
 
 void
+clear_text_view ()
+{
+  GtkTextBuffer *text_buffer;
+  GtkTextIter start, end;
+
+  text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
+
+  gtk_text_buffer_get_bounds (text_buffer, &start, &end);
+  gtk_text_buffer_delete (text_buffer, &start, &end);
+}
+
+void
+button_clicked (GtkWidget *button)
+{
+  IRCServer *server;
+  //IRCChannel *channel;
+
+  if (button != selected_button)
+  {
+    if (gtk_object_get_data (GTK_OBJECT (button), "type") == IRC_SERVER)
+    {
+      server = gtk_object_get_data (GTK_OBJECT (button), "IRCServer");
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
+      selected_button = button;
+      selected_server = server;
+      clear_text_view ();
+      update_text_view (server->text);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+    }
+  }
+}
+
+void
 do_irc_iter ()
 {
   gchar *text = NULL;
@@ -118,8 +151,8 @@ do_irc_iter ()
 
     if (text)
     {
-      //if ((IRCServer *) iter->data == selected_server)
-      //update_text_view (text);
+      if ((IRCServer *) iter->data == selected_server)
+	update_text_view (text);
 
       ((IRCServer *) iter->data)->text = g_string_append (((IRCServer *) iter->data)->text, text);
     }
@@ -137,7 +170,7 @@ connection_postinit ()
 void
 new_connection (GtkWidget *parent, GtkWidget *parent_window)
 {
-  GtkWidget *server_combo_entry, *nick_entry, *real_name_entry, *password_entry;
+  GtkWidget *server_combo_entry, *nick_entry, *real_name_entry, *password_entry, *button;
   IRCServer *server;
 
   server = g_malloc (sizeof (*server));
@@ -165,10 +198,16 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   if (selected_button)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
 
-  selected_button = gtk_toggle_button_new_with_label (server->name);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), TRUE);
-  gtk_box_pack_start (GTK_BOX (main_button_hbox), selected_button, FALSE, FALSE, 0);
-  gtk_widget_show (selected_button);
+  button = gtk_toggle_button_new_with_label (server->name);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+  gtk_box_pack_start (GTK_BOX (main_button_hbox), button, FALSE, FALSE, 0);
+  gtk_object_set_data (GTK_OBJECT (button), "type", (gpointer) IRC_SERVER);
+  gtk_object_set_data (GTK_OBJECT (button), "IRCServer", (gpointer) server);
+  gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (button_clicked), NULL);
+  gtk_widget_show (button);
+
+  server->button = button;
+  selected_button = button;
 
   gtk_label_set_text (GTK_LABEL (nick_label), server->user_info->nick);
 

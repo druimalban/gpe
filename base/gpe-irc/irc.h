@@ -12,6 +12,7 @@ typedef struct
   gchar *name;
   GString *text;
   gchar *topic;
+  GtkWidget *button;
   GList *users;
 } IRCChannel;
 
@@ -22,8 +23,15 @@ typedef struct
   int fd;
   gboolean connected;
   GHashTable *channel;
+  GtkWidget *button;
   IRCUserInfo *user_info;
 } IRCServer;
+
+enum irc_type
+{
+  IRC_SERVER,
+  IRC_CHANNEL
+};
 
 extern gchar *irc_server_read (IRCServer *server);
 
