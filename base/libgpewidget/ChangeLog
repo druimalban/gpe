@@ -1,3 +1,20 @@
+2002-08-11  Philip Blundell  <philb@gnu.org>
+
+	* gtkminifilesel.c (menu_timeout_id): Don't initialise explicitly.
+	(rename_file): Reformat slightly.  Use gpe_perror_box.
+	(create_new_directory): Likewise.  Fix memory leak.  Make new
+	directory with mode 777.
+	(popup_menu_activate): Reformat slightly.  Mark strings for
+	translation.  Remove unused variables.
+	(popup_menu_later): Delete dead assignment.
+	(popup_menu_cancel): Reformat "if" statement.
+	(selection_made): Don't refer to widget after emitting COMPLETED
+	signal, in case it was destroyed.
+	(ask_delete_file): Correct window title.  Mark strings for
+	translation.  Reformat slightly.
+	(ask_rename_file): Grab focus into entry widget.  Mark strings for
+	translation.
+
 2002-08-05  Damien Tanner <dc@magenet.com>
 
 	* gtkminifilesel.c: Add tap-n-hold

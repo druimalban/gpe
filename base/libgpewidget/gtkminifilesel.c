@@ -34,7 +34,7 @@
 static GtkWindowClass *parent_class;
 static guint signals[LAST_SIGNAL] = { 0 };
 
-static int menu_timeout_id = 0;
+static int menu_timeout_id;
 
 struct file_info
 {
@@ -56,45 +56,41 @@ static void set_directory (GtkMiniFileSelection *fs, char *directory);
 static void
 create_new_directory (GtkWidget *widget, gpointer data)
 {
-  struct file_info *fi;
+  struct file_info *fi = (struct file_info *)data;
   gchar *dir_name;
   gchar *full_dir_name;
-  gchar *error;
-  fi = (struct file_info *)data;
 
-  dir_name = gtk_entry_get_text (GTK_ENTRY (gtk_object_get_data(GTK_OBJECT(widget),"entry")));
+  dir_name = gtk_entry_get_text (GTK_ENTRY (gtk_object_get_data (GTK_OBJECT (widget),"entry")));
   full_dir_name = g_strdup_printf ("%s/%s", fi->directory, dir_name);
-  if (mkdir (full_dir_name, 0744) != 0) {
-    error = g_strdup_printf ("Couldn't create new directory %s", dir_name);
-    gpe_error_box (error);
-  }
-  gtk_widget_destroy (GTK_WIDGET(gtk_object_get_data(GTK_OBJECT(widget), "window")));
-  set_directory (GTK_MINI_FILE_SELECTION(fi->fs), fi->directory);
+  if (mkdir (full_dir_name, 0777) != 0) 
+    gpe_perror_box (dir_name);
+  g_free (full_dir_name);
+  gtk_widget_destroy (GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (widget), "window")));
+  set_directory (GTK_MINI_FILE_SELECTION (fi->fs), fi->directory);
 }
 
 static void
 rename_file (GtkWidget *widget, gpointer data)
 {
-  struct file_info *fi;
+  struct file_info *fi = (struct file_info *)data;
   gchar *old_name;
   gchar *new_name;
   gchar *new_filename;
   gchar *error;
-  fi = (struct file_info *)data;
 
-  new_filename = gtk_entry_get_text (GTK_ENTRY (gtk_object_get_data(GTK_OBJECT(widget),"entry")));
+  new_filename = gtk_entry_get_text (GTK_ENTRY (gtk_object_get_data (GTK_OBJECT (widget),"entry")));
   old_name = g_strdup_printf ("%s/%s", fi->directory, fi->filename);
   new_name = g_strdup_printf ("%s/%s", fi->directory, new_filename);
 
   if (rename (old_name, new_name) != 0)
-  {
-    error = g_strdup_printf ("Couldn't rename %s to %s", fi->filename, new_filename);
-    gpe_error_box (error);
-    g_free (error);
-  }
+    {
+      error = g_strdup_printf ("Couldn't rename %s to %s: ", fi->filename, new_filename);
+      gpe_perror_box (error);
+      g_free (error);
+    }
 
-  gtk_widget_destroy (GTK_WIDGET(gtk_object_get_data(GTK_OBJECT(widget), "window")));
-  set_directory (GTK_MINI_FILE_SELECTION(fi->fs), fi->directory);
+  gtk_widget_destroy (GTK_WIDGET (gtk_object_get_data (GTK_OBJECT (widget), "window")));
+  set_directory (GTK_MINI_FILE_SELECTION (fi->fs), fi->directory);
 
   g_free (old_name);
   g_free (new_name);
@@ -144,7 +140,7 @@ ask_rename_file (GtkWidget *widget, gpointer data)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (gtk_false), NULL);
 
-  label = gtk_label_new ("New name:");
+  label = gtk_label_new (_("New name:"));
   entry = gtk_entry_new ();
 
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
@@ -170,6 +166,7 @@ ask_rename_file (GtkWidget *widget, gpointer data)
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), entry);
 
   gtk_widget_show_all (window);
+  gtk_widget_grab_focus (entry);
 }
 
 static void
@@ -182,7 +179,7 @@ ask_delete_file (GtkWidget *widget, gpointer data)
   fi = (struct file_info *)data;
 
   window = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW(window), _("Rename"));
+  gtk_window_set_title (GTK_WINDOW (window), _("Delete"));
   gtk_widget_realize (window);
  
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
@@ -191,7 +188,7 @@ ask_delete_file (GtkWidget *widget, gpointer data)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (gtk_false), NULL);
 
-  label_text = g_strdup_printf ("Do you really want to delete %s", fi->filename);
+  label_text = g_strdup_printf (_("Do you really want to delete %s"), fi->filename);
   label = gtk_label_new (label_text);
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
 
@@ -206,8 +203,8 @@ ask_delete_file (GtkWidget *widget, gpointer data)
   buttondelete = gpe_picture_button (window->style, _("Delete"), "ok");
   gtk_signal_connect (GTK_OBJECT (buttondelete), "clicked",
                       GTK_SIGNAL_FUNC (delete_file), data);
-  gtk_object_set_data (GTK_OBJECT(buttondelete), "window", window);
-  gtk_object_set_data (GTK_OBJECT(buttondelete), "checkbutton", checkbutton);
+  gtk_object_set_data (GTK_OBJECT (buttondelete), "window", window);
+  gtk_object_set_data (GTK_OBJECT (buttondelete), "checkbutton", checkbutton);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
                       buttoncancel);
@@ -268,33 +265,25 @@ static int
 popup_menu_activate (gpointer data)
 {
   GtkWidget *menu, *mi;
-  GdkFont *font; /* Font in the menu label */
-  struct file_info *fi;
 
-  fi = (struct file_info *)data;
   menu = gtk_menu_new ();
 
-  if (gtk_rc_get_style (menu))
-    font = gtk_rc_get_style (menu)->font;
-  else
-    font = gtk_widget_get_style (menu)->font;
+  mi = gtk_menu_item_new_with_label (_("New directory"));
+  gtk_menu_append (GTK_MENU (menu), mi);
+  gtk_signal_connect (GTK_OBJECT (mi), "activate",
+		      GTK_SIGNAL_FUNC (ask_new_directory), data);
 
-  mi = gtk_menu_item_new_with_label ("New Directory");
-  gtk_menu_append (GTK_MENU(menu), mi);
-  gtk_signal_connect( GTK_OBJECT(mi), "activate",
-		      GTK_SIGNAL_FUNC(ask_new_directory), data);
+  mi = gtk_menu_item_new_with_label (_("Rename"));
+  gtk_menu_append (GTK_MENU (menu), mi);
+  gtk_signal_connect (GTK_OBJECT (mi), "activate",
+		      GTK_SIGNAL_FUNC (ask_rename_file), data);
 
-  mi = gtk_menu_item_new_with_label ("Rename");
-  gtk_menu_append (GTK_MENU(menu), mi);
-  gtk_signal_connect( GTK_OBJECT(mi), "activate",
-		      GTK_SIGNAL_FUNC(ask_rename_file), data);
+  mi = gtk_menu_item_new_with_label (_("Delete"));
+  gtk_menu_append (GTK_MENU (menu), mi);
+  gtk_signal_connect (GTK_OBJECT (mi), "activate",
+		      GTK_SIGNAL_FUNC (ask_delete_file), data);
 
-  mi = gtk_menu_item_new_with_label ("Delete");
-  gtk_menu_append (GTK_MENU(menu), mi);
-  gtk_signal_connect( GTK_OBJECT(mi), "activate",
-		      GTK_SIGNAL_FUNC(ask_delete_file), data);
-
-  gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, 0);
+  gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL, 0, 0);
 
   gtk_widget_show_all (menu);
 
@@ -305,16 +294,15 @@ static void
 popup_menu_cancel (void)
 {
   if (menu_timeout_id != 0)
-  {
-    gtk_timeout_remove (menu_timeout_id);
-    menu_timeout_id = 0;
-  }
+    {
+      gtk_timeout_remove (menu_timeout_id);
+      menu_timeout_id = 0;
+    }
 }
 
 static void
 popup_menu_later (int delay, gpointer data)
 {
-  menu_timeout_id = 1;
   menu_timeout_id = gtk_timeout_add (delay, popup_menu_activate, data);
 }
 
@@ -581,6 +569,7 @@ selection_made(GtkWidget      *clist,
 	    *p++ = '/';
 	    strcpy (p, text);
 	    set_directory (fs, s);
+	    gtk_widget_grab_focus (fs->entry);
 	    break;
 	  }
 	case 2:
@@ -590,6 +579,7 @@ selection_made(GtkWidget      *clist,
 	    strcpy (p, fs->directory);
 	    d = dirname (p);
 	    set_directory (fs, strdup (d));
+	    gtk_widget_grab_focus (fs->entry);
 	    break;
 	  }
 	case 0:
@@ -604,9 +594,9 @@ selection_made(GtkWidget      *clist,
     {
       if (type == 0)
 	gtk_entry_set_text (GTK_ENTRY (fs->entry), text);
-    }
 
-  gtk_widget_grab_focus (fs->entry);
+      gtk_widget_grab_focus (fs->entry);
+    }
 }
 
 static void
