@@ -37,9 +37,14 @@ struct nsqlc
   const gchar *filename;
 };
 
+#define TYPE_SQL	1
+#define TYPE_TIME	2
+
 struct nsqlc_query_context
 {
   struct nsqlc *ctx;
+
+  int type;
 
   nsqlc_callback callback;
   void *cb_data;
@@ -111,6 +116,17 @@ decode_string (unsigned char *c)
   *p = 0;
 
   return r;
+}
+
+static void
+time_line (struct nsqlc_query_context *q, char *p)
+{
+  time_t *t = (time_t *)q->cb_data;
+  int i;
+
+  sscanf (p, "%d", &i);
+  
+  *t = i;
 }
 
 static void
@@ -208,7 +224,12 @@ read_response (struct nsqlc_query_context *q)
       if (*p == '+')
 	ctx->busy = 0;
       else if (*p == '-')
-	data_line (q, p + 1);
+	{
+	  if (q->type == TYPE_SQL)
+	    data_line (q, p + 1);
+	  else if (q->type == TYPE_TIME)
+	    time_line (q, p + 1);
+	}
       else if (*p == '!')
 	{
 	  ctx->busy = 0;
@@ -427,12 +448,15 @@ nsqlc_exec (nsqlc *ctx, const char *sql, nsqlc_callback cb, void *cb_data, char 
 {
   struct nsqlc_query_context query;
 
+  memset (&query, 0, sizeof (query));
+
   query.ctx = ctx;
   query.callback = cb;
   query.cb_data = cb_data;
   query.aborting = FALSE;
   query.result = 0;
   query.error = NULL;
+  query.type = TYPE_SQL;
 
   ctx->busy = 1;
 
@@ -444,5 +468,29 @@ nsqlc_exec (nsqlc *ctx, const char *sql, nsqlc_callback cb, void *cb_data, char 
   if (err)
     *err = query.error;
 
+  return query.result;
+}
+
+int
+nsqlc_get_time (nsqlc *ctx, time_t *t, char **err)
+{
+  struct nsqlc_query_context query;
+
+  memset (&query, 0, sizeof (query));
+
+  query.ctx = ctx;
+  query.aborting = FALSE;
+  query.result = 0;
+  query.error = NULL;
+  query.type = TYPE_TIME;
+  query.cb_data = t;
+
+  ctx->busy = 1;
+
+  write_command (ctx, ".time");
+
+  while (ctx->busy)
+    read_response (&query);
+					       
   return query.result;
 }

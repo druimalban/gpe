@@ -506,6 +506,8 @@ int nsqlc_aggregate_count(nsqlc_func*);
 */
 int nsqlc_open_aux_file(nsqlc *db, const char *zName, char **pzErrMsg);
 
+int nsqlc_get_time (nsqlc *ctx, time_t *t, char **err);
+
 #ifdef __cplusplus
 }  /* End of the 'extern "C"' block */
 #endif

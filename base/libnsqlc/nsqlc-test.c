@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "nsqlc.h"
 
@@ -20,6 +21,7 @@ main()
 {
   nsqlc *ctx;
   char *err;
+  time_t t = 0;
 
   ctx = nsqlc_open_ssh ("localhost:test", 0, &err);
   if (ctx == NULL)
@@ -27,6 +29,9 @@ main()
       fprintf (stderr, "Couldn't open: %s\n", err);
       exit (1);
     }
+
+  nsqlc_get_time (ctx, &t, &err);
+  printf ("%d %d", t, time (NULL));
 
   if (nsqlc_exec (ctx, "select * from test", callback, NULL, &err))
     {
