@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <libintl.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
@@ -27,12 +29,11 @@ select_file_done (GtkWidget *w, GtkWidget *filesel)
 {
   gchar *data;
   size_t len;
-  gchar *filename;
+  const gchar *filename;
   int fd;
-  gboolean error = FALSE;
 
   data = g_object_get_data (G_OBJECT (filesel), "data");
-  len = g_object_get_data (G_OBJECT (filesel), "data_length");
+  len = (size_t)g_object_get_data (G_OBJECT (filesel), "data_length");
 
   filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
 
@@ -61,8 +62,8 @@ import_unknown (const char *name, const gchar *data, size_t len)
   if (gpe_question_ask (query, NULL, "bt-logo", "!gtk-cancel", NULL, "!gtk-ok", NULL, NULL))
     {
       GtkWidget *filesel;
-      gchar *home, *default_name;
-      gchar *datap;
+      const gchar *home;
+      gchar *datap, *default_name;
 
       datap = g_malloc (len);
       memcpy (datap, data, len);
@@ -86,10 +87,10 @@ import_unknown (const char *name, const gchar *data, size_t len)
       g_signal_connect_swapped (G_OBJECT (filesel), "destroy", G_CALLBACK (g_free), datap);
 
       g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button), 
-			"clicked", G_CALLBACK (select_file_done), fs);
+			"clicked", G_CALLBACK (select_file_done), filesel);
 
       g_object_set_data (G_OBJECT (filesel), "data", datap);
-      g_object_set_data (G_OBJECT (filesel), "data_length", len);
+      g_object_set_data (G_OBJECT (filesel), "data_length", (gpointer)len);
 
       gtk_widget_show (filesel);
     }

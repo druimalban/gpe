@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <libintl.h>
 #include <errno.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
