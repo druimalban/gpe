@@ -42,6 +42,40 @@ static GdkWindow *top_level_window;
 
 static GtkWidget *btn_con, *btn_coff;
 
+
+/*
+ * stop any clocked in task 
+ * not efficient, but works
+ */
+static void
+stop_timing_all(GtkCTree *ct)
+{
+  GSList *aitem;
+  struct task *t;
+
+  for (aitem=root;aitem;aitem=aitem->next)
+    {
+      t = aitem->data;  
+      if (t->started)
+	    {
+          GtkCTreeNode *node = gtk_ctree_find_by_row_data(ct,NULL,t);
+		  gtk_ctree_node_set_text (ct, node, 1, "");
+          log_entry (STOP, time (NULL), t, "");
+          t->started = FALSE;
+        }
+    }
+}
+
+static gboolean
+exit_app (GtkWidget *w, GdkEvent *evt, gpointer user_data)
+{
+  GtkCTree *ct = GTK_CTREE(user_data);
+	
+  stop_timing_all(ct);	
+	
+  return FALSE;
+}
+
 static void
 journal (GtkWidget *w, gpointer user_data)
 {
@@ -213,6 +247,7 @@ start_timing (GtkWidget *w, gpointer user_data)
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       struct task *t;
       gchar *text;
+	  stop_timing_all(ct); /* we allow only one task to be clocked in */
       t = gtk_ctree_node_get_row_data (ct, node);
       if (confirm_dialog (&text, _("Clocking in:"), t->description))
 	{
@@ -233,9 +268,9 @@ stop_timing (GtkWidget *w, gpointer user_data)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       struct task *t;
-      gchar *text;
+      gchar *text = " ";
       t = gtk_ctree_node_get_row_data (ct, node);
-      if (confirm_dialog (&text, _("Clocking out:"), t->description))
+/*      if (confirm_dialog (&text, _("Clocking out:"), t->description))*/
 	{
 	  gtk_ctree_node_set_text (ct, node, 1, "");
 	  log_entry (STOP, time (NULL), t, text);
@@ -430,13 +465,11 @@ main(int argc, char *argv[])
 			   _("Note"), _("Note"),
 			   pw, (GtkSignalFunc)note, tree);
 
-#if 1
   p = gpe_find_icon ("journal");
   pw = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Journal"),
 			   _("Show journal"), _("Show journal"),
 			   pw, (GtkSignalFunc)journal, tree);
-#endif
 			   
   gtk_widget_show (toolbar);
   gtk_widget_show (vbox_top);
@@ -450,8 +483,11 @@ main(int argc, char *argv[])
   gtk_widget_set_usize (window, window_x, window_y);
 
   g_signal_connect (G_OBJECT (window), "delete-event", 
-		    G_CALLBACK (gtk_main_quit), NULL);
+		    G_CALLBACK (exit_app), (void *)tree);
 
+  g_signal_connect_after (G_OBJECT (window), "delete-event", 
+		    G_CALLBACK (gtk_exit), NULL);
+			
   gtk_widget_realize (window);
 
   gpe_set_window_icon (window, "gpe-timesheet");

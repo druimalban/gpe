@@ -15,6 +15,8 @@
 #include <gpe/errorbox.h>
 #include <libintl.h>
 #include <unistd.h>
+#include <time.h>
+
 #include "sql.h"
 #include "html.h"
 
@@ -31,7 +33,7 @@ int
 journal_add_header(char* title)
 {
   /* if you change len here, change return value too */
-  myjournal = malloc(3 * sizeof(char*));
+  myjournal = malloc(5 * sizeof(char*));
   if (!myjournal) 
     return -1;
   myjournal[0] = 
@@ -39,19 +41,26 @@ journal_add_header(char* title)
       title);
   myjournal[1] = g_strdup_printf("<body>\n<h1>%s %s</h1>\n<p>",
     _("Journal for"), title);
-  myjournal[2] = NULL;
-  jlen = 3;
+  myjournal[2] = g_strdup("<table WIDTH=100% BORDER=0 CELLPADDING=0 CELLSPACING=0>\n");
+  myjournal[3] = g_strdup_printf("<tr><th align=\"left\">%s</th><th " \
+    "align=\"left\">%s</th><th align=\"left\">%s</th><th align=\"left\">%s</th></tr>",
+  	_("Start"), _("Comment"), _("End"), _("Duration"));
+  myjournal[4] = NULL;
+  jlen = 5;
   return jlen; /* curent length */
+
 }
 
 
 /* this one adds a data line to journal list */
 int 
-journal_add_line(const char *action, const char *info, const char *time)
+journal_add_line(time_t tstart, time_t tstop, 
+                 const char *istart, const char *istop)
 {
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
-    g_strdup_printf("%s  %s  %s<br>\n",action, info, time);
+    g_strdup_printf("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>\n",
+	  ctime(&tstart), istart, ctime(&tstop), istop);
   myjournal[jlen - 1] = NULL;
   return jlen;
 }
@@ -63,7 +72,7 @@ journal_add_footer(int length)
 {
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
-    g_strdup_printf("</p>\n</body>\n</html>");
+    g_strdup_printf("</table>\n</p>\n</body>\n</html>");
   myjournal[jlen - 1] = NULL;
   return jlen;
 }

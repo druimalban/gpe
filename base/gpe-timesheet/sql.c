@@ -14,11 +14,14 @@
 #include <glib.h>
 #include <string.h>
 #include <sqlite.h>
+#include <libintl.h>
 
 #include <gpe/errorbox.h>
 
 #include "sql.h"
 #include "html.h"
+
+#define _(x) gettext(x)
 
 static const char *fname = "/.gpe/timesheet";
 
@@ -28,6 +31,8 @@ static const char *schema_str =
 
 static sqlite *sqliteh;
 static guint max_task_id;
+static time_t time_start = 0;
+static gchar *note_start = NULL;
 
 GSList *tasks, *root;
 
@@ -176,7 +181,8 @@ scan_logs (GSList *list)
 	  char *err;
 	  int r;
 
-	  r = sqlite_exec_printf (sqliteh, "select time, action from log where task=%d order by time desc", 
+	  r = sqlite_exec_printf (sqliteh, 
+		          "select time, action from log where task=%d order by time desc", 
 				  scan_log_callback, t, &err,
 				  t->id);
 	  if (r != 0 && r != SQLITE_ABORT)
@@ -198,8 +204,17 @@ journal_callback (void *arg, int argc, char **argv, char **names)
     {
 //      struct task *t = arg;
       ti = atol(argv[0]);
-      if (argv[1])
-        journal_add_line(argv[2],argv[1],ctime(&ti));
+      if (!strcmp(argv[1],"START"))
+	    {
+          if (time_start != 0)
+              journal_add_line(time_start, ti, note_start, _("open"));
+          time_start = ti;
+		  note_start = g_strdup(argv[2]);
+        }
+	    else
+        if (!strcmp(argv[1],"STOP"))
+          if (time_start) 
+            journal_add_line(time_start, ti,note_start, argv[2]);
     }
   return 0;
 }
