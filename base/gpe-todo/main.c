@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,11 +21,14 @@
 
 #include "todo.h"
 
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo"
+
 static struct gpe_icon my_icons[] = {
   { "hide" },
   { "clean" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
-  { "tick" },
+  { "tick-box", MY_PIXMAPS_DIR "/tick-box.png" },
+  { "notick-box", MY_PIXMAPS_DIR "/notick-box.png" },
   { NULL, NULL }
 };
 

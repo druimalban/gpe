@@ -1,3 +1,15 @@
+2004-02-14  Philip Blundell  <philb@gnu.org>
+
+	* tick-box.png, notick-box.png: New files.
+	* Makefile (install-program): Install them.
+	* main.c (my_icons): Remove tick.  Add tick-box, notick-box.
+	* list-ui.c (purge_completed, show_hide_completed, draw_item,
+	draw_expose_event, draw_click_event): Delete.
+	(button_press_event, button_release_event, toggle_completed,
+	open_editing_window): New.
+	(refresh_items, top_level): Use GtkTreeView to render list of
+	items.
+
 2004-01-17  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.40 released.

@@ -47,6 +47,9 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
+	mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
+	install -m 644 tick-box.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/tick-box.png
+	install -m 644 notick-box.png $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/notick-box.png
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 
@@ -24,16 +25,10 @@
 
 #define _(_x) gettext(_x)
 
-static GdkPixbuf *tick_image;
-
-static guint ystep;
-static guint xcol = 18;
-
-static GtkWidget *g_draw;
-
 static GtkWidget *g_option;
-static GSList *display_items;
 static struct todo_category *selected_category;
+
+GtkListStore *list_store;
 
 static void
 set_category (GtkWidget *w, gpointer user_data)
@@ -72,189 +67,49 @@ static void
 new_todo_item (GtkWidget *w, gpointer user_data)
 {
   GtkWidget *todo = edit_item (NULL, selected_category);
+
   gtk_widget_show_all (todo);
 }
 
-static void
-purge_completed (GtkWidget *w, gpointer list)
+void
+open_editing_window (GtkTreePath *path)
 {
-  if (gpe_question_ask (_("Are you sure you want to delete all completed items permanently?"), _("Confirm"), 
-			"!gtk-dialog-question", "!gtk-cancel", NULL, _("Delete"), "clean", NULL) == 1)
-    {
-      GSList *iter = todo_db_get_items_list();
+  GtkTreeIter iter;
+  struct todo_item *i;
 
-      while (iter)
-	{
-	  struct todo_item *i = iter->data;
-	  GSList *new_iter = iter->next;
-	  if (i->state == COMPLETED)
-	    todo_db_delete_item (i);
-	  
-	  iter = new_iter;
-	}
-    }
-  
-  refresh_items ();
+  gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
+
+  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 3, &i, -1);
+
+  gtk_widget_show_all (edit_item (i, NULL));
 }
 
-static void
-show_hide_completed (GtkWidget *w, gpointer list)
+void
+toggle_completed (GtkTreePath *path)
 {
-  GSList *iter = todo_db_get_items_list();
+  GtkTreeIter iter;
+  struct todo_item *i;
+  gboolean complete;
 
-  for (iter = todo_db_get_items_list(); iter; iter = iter->next)
-    {
-      struct todo_item *i = iter->data;
-      i->was_complete =  (i->state == COMPLETED) ? TRUE : FALSE;
-    }
-    
-  refresh_items ();
-}
+  gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
 
-static void
-draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct todo_item *i, guint skew, GdkEventExpose *event)
-{
-  GdkGC *black_gc = widget->style->black_gc;
-  guint width, height;
-
-  if (i->summary)
-    {
-      PangoLayout *l = gtk_widget_create_pango_layout (g_draw, i->summary);
-      
-      gtk_paint_layout (widget->style,
-			widget->window,
-			GTK_WIDGET_STATE (widget),
-			FALSE,
-			&event->area,
-			widget,
-			"label",
-			xcol, y,
-			l);
-      
-      pango_layout_get_size (l, &width, &height);
-      width /= PANGO_SCALE;
-      height /= PANGO_SCALE;
-
-      g_object_unref (l);
-    }
-  else
-    width = 0;
-  
-  gdk_draw_rectangle (drawable, widget->style->black_gc, FALSE, 2, y + skew, 12, 12);
+  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 3, &i, -1);
+		      
   if (i->state == COMPLETED)
-    {
-      gdk_draw_line (drawable, black_gc, xcol, 
-		     y + height / 2, 
-		     18 + width, 
-		     y + height / 2);
-
-      gdk_pixbuf_render_to_drawable_alpha (tick_image, drawable, 
-					   0, 0, 3, y + skew + 1, 10, 10, GDK_PIXBUF_ALPHA_BILEVEL, 128,
-					   GDK_RGB_DITHER_NONE, 0, 0);
-    }
-}
-
-static gint
-draw_expose_event (GtkWidget *widget,
-		   GdkEventExpose  *event,
-		   gpointer   user_data)
-{
-  GtkDrawingArea *darea;
-  GdkDrawable *drawable;
-  GdkGC *white_gc;
-  guint max_width;
-  guint max_height;
-  guint y;
-  guint skew = 2;
-  GSList *iter;
-
-  g_return_val_if_fail (widget != NULL, TRUE);
-  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
-
-  darea = GTK_DRAWING_AREA (widget);
-  drawable = widget->window;
-  white_gc = widget->style->white_gc;
-  max_width = widget->allocation.width;
-  max_height = widget->allocation.height;
-
-  ystep = 14;
-
-  if (! tick_image)
-    tick_image = gpe_find_icon ("tick");
+    i->state = NOT_STARTED;
+  else
+    i->state = COMPLETED;
   
-  gdk_draw_rectangle (drawable, white_gc, TRUE, 0, 0, max_width, max_height);
+  complete = (i->state == COMPLETED) ? TRUE : FALSE;
 
-  y = skew;
+  gtk_list_store_set (list_store, &iter, 
+		      0, complete ? gpe_find_icon ("tick-box") : gpe_find_icon ("notick-box"),
+		      1, i->summary,  
+		      2, complete, 
+		      3, i,
+		      -1);
 
-  for (iter = display_items; iter; iter = iter->next)
-    {
-      struct todo_item *i = iter->data;
-
-      if (! i->was_complete)
-	{
-	  draw_item (drawable, widget, xcol, y, i, skew, event);
-	  
-	  i->pos=y/ystep;
-	  y += ystep;
-	}
-    }
-
-  for (iter = display_items; iter; iter = iter->next)
-    {
-      struct todo_item *i = iter->data;
-
-      if (i->was_complete)
-	{
-	  draw_item (drawable, widget, xcol, y, i, skew, event);
-	  
-	  i->pos=y/ystep;
-	  y += ystep;
-	}
-    }
-
-
-  return TRUE;
-}
-
-static void
-draw_click_event (GtkWidget *widget,
-		  GdkEventButton *event,
-		  gpointer user_data)
-{
-  unsigned int idx = event->y/ystep;
-
-  if (event->type == GDK_BUTTON_PRESS && event->button == 1 && event->x < xcol)
-    {
-      GSList *iter;
-      for (iter = display_items; iter; iter = iter->next)
-	{
-	  struct todo_item *ti = iter->data;
-	  if (idx == ti->pos)
-	    {
-	      if (ti->state == COMPLETED)
-		ti->state = NOT_STARTED;
-	      else
-		ti->state = COMPLETED;
-	      
-	      todo_db_push_item (ti);
-	      gtk_widget_draw (g_draw, NULL);
-	      break;
-	    }
-	}
-    }
-  else if (event->type == GDK_BUTTON_PRESS && event->button == 1 && event->x > 18)
-    {
-      GSList *iter;
-      for (iter = display_items; iter; iter = iter->next)
-	{
-	  struct todo_item *ti = iter->data;
-	  if (idx == ti->pos)
-	    {
-	      gtk_widget_show_all (edit_item (ti, NULL));
-	      break;
-	    }
-	}
-    }
+  todo_db_push_item (i);
 }
 
 void
@@ -263,11 +118,7 @@ refresh_items (void)
   GSList *iter;
   guint nitems = 0;
 
-  if (display_items)
-    {
-      g_slist_free (display_items);
-      display_items = NULL;
-    }
+  gtk_list_store_clear (list_store);
 
   for (iter = todo_db_get_items_list(); iter; iter = iter->next)
     {
@@ -275,13 +126,64 @@ refresh_items (void)
       if (selected_category == NULL 
 	  || g_slist_find (i->categories, selected_category))
 	{
-	  display_items = g_slist_append (display_items, i);
+	  GtkTreeIter iter;
+	  gboolean complete;
+
+	  complete = (i->state == COMPLETED) ? TRUE : FALSE;
+
+	  gtk_list_store_insert (list_store, &iter, nitems);
+
+	  gtk_list_store_set (list_store, &iter, 
+			      0, complete ? gpe_find_icon ("tick-box") : gpe_find_icon ("notick-box"),
+			      1, i->summary,  
+			      2, complete, 
+			      3, i,
+			      -1);
+
 	  nitems++;
 	}
     }
+}
 
-  gtk_widget_set_usize (g_draw, -1, 14 * nitems);
-  gtk_widget_draw (g_draw, NULL);
+gboolean
+button_press_event (GtkWidget *widget, GdkEventButton *b)
+{
+  /* Just swallow the events to stop the TreeView seeing them.  */
+
+  return TRUE;
+}
+
+gboolean
+button_release_event (GtkWidget *widget, GdkEventButton *b)
+{
+  gint x, y;
+  GtkTreeViewColumn *col;
+  GtkTreePath *path;
+  
+  x = b->x;
+  y = b->y;
+
+  if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+				     x, y,
+				     &path, &col,
+				     NULL, NULL))
+    {
+      if (b->button == 1)
+	{
+	  GtkTreeViewColumn *pix_col;
+	  
+	  pix_col = g_object_get_data (G_OBJECT (widget), "pixmap-column");
+	  
+	  if (pix_col == col)
+	    toggle_completed (path);
+	  else
+	    open_editing_window (path);
+	}
+
+      gtk_tree_path_free (path);
+    }
+
+  return TRUE;
 }
 
 GtkWidget *
@@ -289,12 +191,11 @@ top_level (GtkWidget *window)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *sep = gtk_vseparator_new ();
   GtkWidget *toolbar;
   GtkWidget *option = gtk_option_menu_new ();
   GtkWidget *pw;
-  GtkWidget *draw = gtk_drawing_area_new();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *list_view;
 
   g_option = option;
   categories_menu ();
@@ -334,30 +235,6 @@ top_level (GtkWidget *window)
   /* | */
   gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
 
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-
-  pw = gtk_image_new_from_stock (GTK_STOCK_CLEAR, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Purge"), 
-			   _("Purge completed items"), 
-			   _("Tap here to purge completed items from the list."),
-			   pw, GTK_SIGNAL_FUNC (purge_completed), NULL);
-
-  pw = gtk_image_new_from_stock (GTK_STOCK_GOTO_BOTTOM, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Re-sort"), 
-			   _("Move completed items to the end of the list"), 
-			   _("Tap here to move completed items to the end of the list."),
-			   pw, GTK_SIGNAL_FUNC (show_hide_completed), NULL);
-
-  /* Purge Down */
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
-
-  /* | */
-  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
-
   /* List */
   gtk_box_pack_start (GTK_BOX (hbox), option, FALSE, FALSE, 0);
 
@@ -376,25 +253,45 @@ top_level (GtkWidget *window)
   gtk_box_pack_end (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+  list_store = gtk_list_store_new (4, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_POINTER);
+  list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+
+  {
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *col;
+
+    renderer = gtk_cell_renderer_pixbuf_new ();
+    col = gtk_tree_view_column_new_with_attributes ("...", renderer,
+						    "pixbuf", 0,
+						    NULL);
+
+    gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+
+    g_object_set_data (G_OBJECT (list_view), "pixmap-column", col);
+
+    renderer = gtk_cell_renderer_text_new ();
+    col = gtk_tree_view_column_new_with_attributes ("...", renderer,
+						    "text", 1,
+						    "strikethrough", 2,
+						    NULL);
+
+    gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+
+    gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), FALSE);
+    gtk_tree_view_set_reorderable (GTK_TREE_VIEW (list_view), TRUE);
+  }
+
+  g_signal_connect (G_OBJECT (list_view), "button_press_event", G_CALLBACK (button_press_event), NULL);
+  g_signal_connect (G_OBJECT (list_view), "button_release_event", G_CALLBACK (button_release_event), NULL);
   
-  g_signal_connect (G_OBJECT (draw), "expose_event",
-		    G_CALLBACK (draw_expose_event),
-		    NULL);
+  gtk_container_add (GTK_CONTAINER (scrolled), list_view);
 
-  g_signal_connect (G_OBJECT (draw), "button_press_event",
-		    G_CALLBACK (draw_click_event), NULL);
-
-  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled),
-					 draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_NEVER,
 				  GTK_POLICY_AUTOMATIC);
 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
-
-  g_draw = draw;
 
   refresh_items ();
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-19 18:45+0100\n"
+"POT-Creation-Date: 2004-01-17 22:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -56,7 +56,7 @@ msgstr ""
 msgid "Edit to-do item"
 msgstr ""
 
-#: todo-ui.c:442 list-ui.c:310
+#: todo-ui.c:442 list-ui.c:309
 msgid "New item"
 msgstr ""
 
@@ -76,51 +76,51 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: list-ui.c:310
+#: list-ui.c:309
 msgid "Tap here to add a new item."
 msgstr ""
 
-#: list-ui.c:315
+#: list-ui.c:326
 msgid "Configure"
 msgstr ""
 
-#: list-ui.c:316
+#: list-ui.c:327
 msgid "Configure categories"
 msgstr ""
 
-#: list-ui.c:317
+#: list-ui.c:328
 msgid "Tap here to configure categories."
 msgstr ""
 
-#: list-ui.c:322
+#: list-ui.c:343
 msgid "Purge"
 msgstr ""
 
-#: list-ui.c:323
+#: list-ui.c:344
 msgid "Purge completed items"
 msgstr ""
 
-#: list-ui.c:324
+#: list-ui.c:345
 msgid "Tap here to purge completed items from the list."
 msgstr ""
 
-#: list-ui.c:329
+#: list-ui.c:350
 msgid "Re-sort"
 msgstr ""
 
-#: list-ui.c:330
+#: list-ui.c:351
 msgid "Move completed items to the end of the list"
 msgstr ""
 
-#: list-ui.c:331
+#: list-ui.c:352
 msgid "Tap here to move completed items to the end of the list."
 msgstr ""
 
-#: list-ui.c:335
+#: list-ui.c:372
 msgid "Quit"
 msgstr ""
 
-#: list-ui.c:335
+#: list-ui.c:372
 msgid "Tap here to quit the program."
 msgstr ""
 
