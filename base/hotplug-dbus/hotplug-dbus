@@ -14,5 +14,13 @@ invoke_dbus ()
   eval $cmd
 }
 
-invoke_dbus $*
+case $1 in
+net)
+	invoke_dbus net $ACTION $INTERFACE
+	;;
+*)
+	invoke_dbus $*
+	;;
+esac
+
 exec /sbin/hotplug $*
