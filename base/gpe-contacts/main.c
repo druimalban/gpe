@@ -49,9 +49,9 @@ struct gpe_icon my_icons[] = {
   { "cancel" },
   { "edit" },
   { "properties" },
-  { "frame", MY_PIXMAPS_DIR "/frame.xpm" },
-  { "notebook", MY_PIXMAPS_DIR "/notebook.xpm" },
-  { "entry", MY_PIXMAPS_DIR "/entry.xpm" },
+  { "frame", MY_PIXMAPS_DIR "/frame.png" },
+  { "notebook", MY_PIXMAPS_DIR "/notebook.png" },
+  { "entry", MY_PIXMAPS_DIR "/entry.png" },
   { NULL, NULL }
 };
 

@@ -4,6 +4,10 @@
 	(my_icons): Add edit.
 	(main): Add "edit" icon to toolbar.
 	(selection_made): Remove redundant code.
+	
+	* icons/entry.xpm, icons/frame.xpm, icons/notebook.xpm: Deleted.
+	* icons/entry.png, icons/frame.png, icons/notebook.png: New.
+	* src/main.c (my_icons): Adjust filenames accordingly.
 
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
