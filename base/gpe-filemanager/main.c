@@ -37,6 +37,7 @@
 #define COMPLETED 0
 #define LAST_SIGNAL 1
 
+#define DEFAULT_TERMINAL "rxvt -e"
 #define FILEMANAGER_ICON_PATH "/share/gpe/pixmaps/default/filemanager/document-icons"
 #define DEFAULT_ICON_PATH "/pixmaps"
 
@@ -198,22 +199,29 @@ run_program (gchar *exec, gchar *mime_name)
 void static
 open_with (GtkButton *button, gpointer data)
 {
-  char *command, *program, *exec;
+  GnomeVFSMimeApplication *application;
+  FileInfomation *file_info;
+  char *command;
 
-  program = gtk_editable_get_chars (GTK_EDITABLE (data), 0, -1);
-  exec = gtk_object_get_data (GTK_OBJECT (button), "exec");
+  file_info = gtk_object_get_data (GTK_OBJECT (button), "FileInfomation");
+  application = gtk_object_get_data (GTK_OBJECT (data), "GnomeVFSMimeApplication");
 
-  command = g_strdup_printf ("%s %s &", program, exec);
+  if (application->requires_terminal)
+    command = g_strdup_printf (DEFAULT_TERMINAL " %s %s &", application->command, file_info->filename);
+  else
+    command = g_strdup_printf ("%s %s &", application->command, file_info->filename);
+
   system (command);
 }
 
 void static
-open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *event, gpointer data)
+open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *event, gpointer entry)
 {
-  gchar *program;
+  GnomeVFSMimeApplication *application;
 
-  program = gtk_clist_get_row_data (GTK_CLIST (clist), row);
-  gtk_entry_set_text (GTK_ENTRY (data), program);
+  application = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+  gtk_object_set_data (GTK_OBJECT (entry), "GnomeVFSMimeApplication", (gpointer) application);
+  gtk_entry_set_text (GTK_ENTRY (entry), application->name);
 }
 
 void static
@@ -227,7 +235,7 @@ ask_open_with (FileInfomation *file_info)
   GList *iter, *applications;
   GnomeVFSMimeApplication *application;
   int row_num = 0;
-  gchar *pixmap_file, *row_text[2];
+  gchar *pixmap_file, *row_text[1];
 
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
@@ -248,16 +256,14 @@ ask_open_with (FileInfomation *file_info)
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
 
   entry = gtk_entry_new ();
-  gtk_entry_set_text (GTK_ENTRY (entry), "gpe-edit");
 
-  clist = gtk_clist_new (2);
+  clist = gtk_clist_new (1);
   gtk_signal_connect (GTK_OBJECT (clist), "select-row",
                       GTK_SIGNAL_FUNC (open_with_row_selected),
                       entry);
-  gtk_clist_set_column_width (GTK_CLIST (clist), 0, 12);
 
   open_button = gpe_picture_button (window->style, "Open", "open");
-  gtk_object_set_data (GTK_OBJECT (open_button), "exec", (gpointer) exec);
+  gtk_object_set_data (GTK_OBJECT (open_button), "FileInfomation", (gpointer) file_info);
   gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
                       GTK_SIGNAL_FUNC (open_with),
                       entry);
@@ -288,23 +294,13 @@ ask_open_with (FileInfomation *file_info)
   {
     application = (GnomeVFSMimeApplication *)(((GList *)applications)->data);
 
-    row_text[0] = "";
-    row_text[1] = application->name;
+    row_text[0] = application->name;
     gtk_clist_append (GTK_CLIST (clist), row_text);
-    gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application->command);
-
-    pixmap_file = g_strdup_printf (PREFIX "/share/pixmaps/%s.png", application->command);
-    pixbuf = gdk1_pixbuf_new_from_file (pixmap_file);
-    if (pixbuf != NULL)
-    {
-      spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
-      gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
-      gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
-    }
-    row_num++;
+    gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application);
 
     printf ("Got application %s\n", ((GnomeVFSMimeApplication *)(((GList *)applications)->data))->command);
     applications = applications->next;
+    row_num ++;
   }
 
 /*
@@ -359,12 +355,15 @@ button_clicked (GtkWidget *widget, gpointer udata)
   {
     printf ("Mime type is %s\n", file_info->vfs->mime_type);
 
-    if file_info->vfs->mime_type)
+    if (file_info->vfs->mime_type)
     {
-      default_mime_application = gnome_vfs_get_default_application (file_info->vfs->mime_type);
+      default_mime_application = gnome_vfs_mime_get_default_application (file_info->vfs->mime_type);
       if (default_mime_application != NULL)
       {
-        command = g_strdup_printf ("%s %s &", default_mime_application->command, file_info->filename);
+        if (default_mime_application->requires_terminal)
+          command = g_strdup_printf (DEFAULT_TERMINAL " %s %s &", default_mime_application->command, file_info->filename);
+        else
+          command = g_strdup_printf ("%s %s &", default_mime_application->command, file_info->filename);
         system (command);
       }
       else
