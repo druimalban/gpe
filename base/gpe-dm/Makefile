@@ -1,7 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-dm
 CVSBUILD = yes
-GTK2 = yes
 VERSION = 0.21
 
 ifeq ($(CVSBUILD),yes)

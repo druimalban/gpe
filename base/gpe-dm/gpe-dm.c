@@ -20,6 +20,7 @@
 
 #include <glib.h>
 
+#define XSERVER_NEW	"/etc/X11/X"
 #define XSERVER		"/etc/X11/Xserver"
 #define XINIT		"/etc/X11/Xinit"
 
@@ -40,6 +41,7 @@ static int server_crashing_count;
 void
 start_server (gboolean crashed)
 {
+  gchar *xserver;
   time_t t;
   time (&t);
 
@@ -53,10 +55,15 @@ start_server (gboolean crashed)
 	}
     }
 
+  if (access (XSERVER_NEW, X_OK) == 0)
+    xserver = XSERVER_NEW;
+  else
+    xserver = XSERVER;
+
   xserver_pid = vfork ();
   if (xserver_pid == 0)
     {
-      execl (XSERVER, XSERVER, dpyname, "-noreset", NULL);
+      execl (xserver, xserver, dpyname, "-noreset", NULL);
       _exit (1);
     }
   server_started = t;
