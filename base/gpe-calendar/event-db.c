@@ -670,13 +670,7 @@ event_db_new (void)
 void
 event_db_destroy (event_t ev)
 {
-  if (ev->details)
-    {
-      event_details_t ev_d = ev->details;
-      if (ev_d->description)
-	g_free (ev_d->description);
-      g_free (ev_d);
-    }
+  event_db_forget_details (ev);
 
   if (ev->recur)
     g_free (ev->recur);
