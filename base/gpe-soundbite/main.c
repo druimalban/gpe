@@ -207,6 +207,7 @@ on_cancel_button_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
   stop_sound();
+  remove (filename);
   gtk_exit(0);
 }
 
