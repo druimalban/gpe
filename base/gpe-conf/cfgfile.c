@@ -1,6 +1,7 @@
 /*
  *
  * Copyright (C) 2002, 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2004  Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -8,6 +9,8 @@
  * 2 of the License, or (at your option) any later version.
  * 
  * 	Configfile I/O routines, part of dynamic interface configuration.
+ *
+ * Wireless LAN support added by Ole Reinhardt (ole.reinhardt@kernelconcepts.de)
  * 
  */
 
@@ -18,6 +21,7 @@
 #include <gpe/errorbox.h>
 
 #include "cfgfile.h"
+#include "network.h"
 
 #define _(x) gettext(x)
 
@@ -185,6 +189,97 @@ gint get_file_text()
 	return i;	
 }
 
+void parse_key(NWInterface_t *iface, gchar* key)
+{
+	gchar* token;
+	token = strtok(key, " ");
+	gint key_was_last = TRUE;
+	gint index_was_last = FALSE;
+	gint keynr = 1;
+	gchar lastkey[64] = "";
+	
+	while (token)
+	{
+		if (strcasecmp(token, "off") == 0) 
+		{
+			if (strlen(lastkey) > 0)
+			{
+				strncpy(iface->key[keynr-1], lastkey, 63);
+				lastkey[0] = 0;
+			}
+			iface->encmode = ENC_OFF;
+			key_was_last = FALSE;
+			index_was_last = FALSE;
+		} else
+		if ((strcasecmp(token, "open") == 0) || (strcmp(token, "on")== 0))
+		{
+			if (strlen(lastkey) > 0)
+			{
+				strncpy(iface->key[keynr-1], lastkey, 63);
+				lastkey[0] = 0;
+			}
+			iface->encmode = ENC_OPEN;
+			key_was_last = FALSE;
+			index_was_last = FALSE;
+		} else
+		if (strcasecmp(token, "restricted") == 0)
+		{
+			if (strlen(lastkey) > 0)
+			{
+				strncpy(iface->key[keynr-1], lastkey, 63);
+				lastkey[0] = 0;
+			}
+			iface->encmode = ENC_RESTRICTED;
+			key_was_last = FALSE;
+			index_was_last = FALSE;
+		} else
+		if ((token[0] == '[') && (token[2] == ']'))
+		{
+			keynr = token[1] - '0';
+			if (keynr < 1) keynr = 1;
+			if (keynr > 4) keynr = 4;
+			if (key_was_last)
+			{
+				iface->keynr = keynr;
+			}
+			else
+			if (strlen(lastkey) > 0)
+			{
+				strncpy(iface->key[keynr-1], lastkey, 63);
+				lastkey[0] = 0;
+			}
+			{
+				index_was_last = TRUE;
+			}
+			key_was_last = FALSE;
+		} else
+		if ((strcasecmp(token, "key") == 0) || (strncasecmp(token, "enc", 3) == 0))
+		{
+			keynr = 1;
+			if (strlen(lastkey) > 0)
+			{
+				strncpy(iface->key[keynr-1], lastkey, 63);
+				lastkey[0] = 0;
+			}
+			key_was_last = TRUE;
+			index_was_last = FALSE;
+		} else
+		{
+			if (index_was_last)
+			{
+				strncpy(iface->key[keynr-1], token, 63);
+			} else 
+			{
+				strncpy(lastkey, token, 63);
+			}
+			
+			key_was_last = FALSE;
+			index_was_last = FALSE;
+		}
+		
+		token = strtok(NULL, " ");
+	}
+}
 
 gint get_scheme_list()
 {
@@ -195,6 +290,12 @@ gint get_scheme_list()
 	gchar option2[32] = {0};
 	gint i, j, k;
 	gint l=0;
+	
+	gchar buffer[256];
+	gchar *sep;
+	gchar *name;
+	FILE *fd;	
+	
 	for (i=0;i<configlen;i++)
 	{
 		if (get_param_val(configtext[i],paramval,ifname) == -1) continue; 	// find interface definition?
@@ -268,46 +369,94 @@ gint get_scheme_list()
 			
 			iflist[l-1].firstline=i;
 			iflist[l-1].lastline=i;
+			
+			iflist[l-1].iswireless = FALSE;
+			strcpy(iflist[l-1].essid, "any");
+			iflist[l-1].mode = MODE_MANAGED;
+			iflist[l-1].encmode = ENC_OFF;
+			iflist[l-1].keynr = 1;
 		}
 		else // parse rest and find end
 		{
 			if (!iflist) continue; // we are before any sections
 			if (!strcmp("address",paramval)) {
-				strcpy(iflist[l-1].address,ifname);
+				strncpy(iflist[l-1].address,ifname, 31);
 				iflist[l-1].lastline=i;
-			}
+			} else
 			if (!strcmp("netmask",paramval)) {
-				strcpy(iflist[l-1].netmask,ifname);
+				strncpy(iflist[l-1].netmask,ifname, 31);
 				iflist[l-1].lastline=i;
-			}
+			} else
 			if (!strcmp("gateway",paramval)) {
-				strcpy(iflist[l-1].gateway,ifname);
+				strncpy(iflist[l-1].gateway,ifname, 31);
 					iflist[l-1].lastline=i;
-			}
+			} else
 			if (!strcmp("broadcast",paramval)) {
-				strcpy(iflist[l-1].broadcast,ifname);
+				strncpy(iflist[l-1].broadcast,ifname, 31);
 					iflist[l-1].lastline=i;
-			}
+			} else
 			if (!strcmp("network",paramval)) {
-				strcpy(iflist[l-1].network,ifname);
+				strncpy(iflist[l-1].network,ifname, 31);
 					iflist[l-1].lastline=i;
-			}
+			} else
 			if (!strcmp("hostname",paramval)) {
-				strcpy(iflist[l-1].hostname,ifname);
+				strncpy(iflist[l-1].hostname,ifname, 254);
 				iflist[l-1].lastline=i;
-			}
+			} else
 			if (!strcmp("client",paramval)) {
-				strcpy(iflist[l-1].clientid,ifname);
-					iflist[l-1].lastline=i;
-			}
+				strncpy(iflist[l-1].clientid,ifname, 39);
+				iflist[l-1].lastline=i;
+			} else
 			if (!strcmp("provider",paramval)) {
-				strcpy(iflist[l-1].provider,ifname);
-					iflist[l-1].lastline=i;
-			}
-						
+				strncpy(iflist[l-1].provider,ifname, 39);
+				iflist[l-1].lastline=i;
+			} else
+			if (!strcmp(paramval, "wireless_essid")) {
+				strncpy(iflist[l-1].essid, ifname, 31);		
+				iflist[l-1].lastline=i;
+			} else
+			if (!strcmp(paramval, "wireless_channel")) {
+				strncpy(iflist[l-1].channel, ifname, 31);
+				iflist[l-1].lastline=i;
+			} else
+			if (!strcmp(paramval, "wireless_mode")) {
+				if (strcasecmp(ifname, "managed") == 0)
+					iflist[l-1].mode = MODE_MANAGED; else 
+					iflist[l-1].mode = MODE_ADHOC;
+				iflist[l-1].lastline=i;
+			} else
+			if ((strcmp(paramval, "wireless_key")==0) || 
+			    (strcmp(paramval, "wireless_enc")==0))
+			{
+				parse_key(&iflist[l-1], ifname);
+				iflist[l-1].lastline=i;
+			} 
 		} // else
 	} // for
+
 	iflen = l;
+
+	fd = fopen(_PATH_PROCNET_WIRELESS, "r");
+	fgets(buffer, 256, fd);		// chuck first two lines;
+	fgets(buffer, 256, fd);
+	while (!feof(fd)) {
+		if (fgets(buffer, 256, fd) == NULL)
+			break;
+		name = buffer;
+		sep = strrchr(buffer, ':');
+		if (sep) *sep = 0;
+		while(*name == ' ') name++;
+
+		for (i = 0; i < iflen; i++)
+		{
+			if (!strcmp (name, iflist[i].name))
+			{
+				iflist[i].iswireless = TRUE;
+			}
+		}
+	}
+	fclose(fd);
+
 	return l;
 }
 
@@ -387,6 +536,45 @@ gchar *get_iflist()
 	return result;
 }
 
+void get_wifikey_string(NWInterface_t iface, char* key)
+{
+	gint nokeys = FALSE;
+	gint count;
+	gchar temp[42];
+	
+	if ((strlen(iface.key[0]) == 0) && 
+	    (strlen(iface.key[1]) == 0) && 
+	    (strlen(iface.key[2]) == 0) && 
+	    (strlen(iface.key[3]) == 0)) 
+	{
+		iface.encmode = ENC_OFF;
+		nokeys = TRUE;
+	}
+	
+	if (strlen(iface.key[iface.keynr-1]) == 0)
+		for (iface.keynr = 1; iface.keynr <=4; iface.keynr++)
+			if (strlen(iface.key[iface.keynr-1]) != 0) break;
+				
+	switch (iface.encmode)
+	{
+		case ENC_OFF: strcpy(key, "off"); break;
+		case ENC_OPEN: strcpy(key, "open"); break;
+		case ENC_RESTRICTED: strcpy(key, "restricted"); break;
+	}
+	
+	if (!nokeys)
+	{
+		for (count = 0; count < 4; count++)
+			if (strlen(iface.key[count]) > 0)
+			{
+				sprintf(temp, " key %s [%d]", iface.key[count], count+1);
+				strcat(key, temp);
+			}
+		
+		sprintf(temp, " key [%d]", iface.keynr);
+		strcat(key, temp);
+	}
+}
 
 gint write_sections()
 {
@@ -396,10 +584,10 @@ gint write_sections()
 	gchar outstr[255];
 	gchar paramval[255];
 	gchar ifname[255];
-	gint svd[10];
+	gint svd[14];
 	gint lastwpos = 0;
 	gint last_i;
-	
+	gchar key[128];
 	
 	for (i=0;i<configlen;i++)
 	{
@@ -416,7 +604,7 @@ gint write_sections()
 		{
 			in_section = TRUE;
 			l++;
-			memset(&svd,(gint)0,10*sizeof(gint));
+			memset(&svd,(gint)0,14*sizeof(gint));
 			lastwpos = i;
 			sprintf(outstr,"iface %s",	iflist[l-1].name);
 			if (iflist[l-1].isinet) strcat(outstr," inet");
@@ -440,57 +628,82 @@ gint write_sections()
 			{
 				configtext[i][0]='\0';
 				continue;
-			}
+			} else
 			
 			if (!strcmp("address",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].address);
 				svd[Saddress]=TRUE;
 				lastwpos = i;
-			}
+			} else
 			if (!strcmp("netmask",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].netmask);
 				svd[Snetmask]=TRUE;
 				lastwpos = i;
-			}
+			} else
 			if (!strcmp("gateway",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].gateway);
 				svd[Sgateway]=TRUE;
 				lastwpos = i;
-			}
+			} else
 			if (!strcmp("broadcast",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].broadcast);
 				svd[Sbroadcast]=TRUE;
 				lastwpos = i;
-			}
+			} else
 			if (!strcmp("network",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].network);			
 				svd[Snetwork]=TRUE;
 				lastwpos = i;
-			}
+			} else
 			if (!strcmp("hostname",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].hostname);
 				svd[Shostname]=TRUE;
 				lastwpos = i;
-			}			
+			} else			
 			if (!strcmp("client",paramval))
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].clientid);
 				svd[Sclientid]=TRUE;
 				lastwpos = i;
-			}
+			} else
 			if (!strcmp("provider",paramval)) 
 			{
 				configtext[i] = subst_val(configtext[i],iflist[l-1].provider);
 				svd[Sprovider]=TRUE;
 				lastwpos = i;
+			} else
+			if (!strcmp("wireless_essid", paramval))
+			{
+				configtext[i] = subst_val(configtext[i], iflist[l-1].essid);
+				svd[Swifiessid] = TRUE;
+				lastwpos = i;
+			} else
+			if (!strcmp("wireless_mode", paramval))
+			{
+				configtext[i] = subst_val(configtext[i], iflist[l-1].mode == MODE_MANAGED ? "managed" : "ad-hoc");
+				svd[Swifimode] = TRUE;
+				lastwpos = i;
 			}
-				
+			if (!strcmp("wireless_channel", paramval))
+			{
+				configtext[i] = subst_val(configtext[i], iflist[l-1].channel);
+				svd[Swifichannel] = TRUE;
+				lastwpos = i;
+			} else
+			if (!strcmp("wireless_key", paramval))
+			{
+				get_wifikey_string(iflist[l-1], key);
+				configtext[i] = subst_val(configtext[i], key); 
+				svd[Swifikey] = TRUE;
+				lastwpos = i;
+			}
+			
 		} // else
 			// handle new parameters at section end
 			if ((i == iflist[l-1].lastline) && (iflist[l-1].status !=NWSTATE_REMOVED))
@@ -546,6 +759,34 @@ gint write_sections()
 					add_line(lastwpos,outstr);
 					i++;
 				}
+				if (iflist[l-1].iswireless)
+				{
+					if (!svd[Swifiessid])
+					{
+						sprintf(outstr,"\twireless_essid %s",iflist[l-1].essid);
+						add_line(lastwpos,outstr);
+						i++;
+					}
+					if (!svd[Swifimode]) 
+					{
+						sprintf(outstr,"\twireless_mode %s",iflist[l-1].mode == MODE_MANAGED ? "managed" : "ad-hoc");
+						add_line(lastwpos,outstr);
+						i++;
+					} 
+					if ((!svd[Swifichannel]) && (strlen (iflist[l-1].channel) > 0))
+					{
+						sprintf(outstr,"\twireless_channel %s",iflist[l-1].channel);
+						add_line(lastwpos,outstr);
+						i++;
+					} 
+					if (!svd[Swifikey])
+					{
+						get_wifikey_string(iflist[l-1], key);
+						sprintf(outstr,"\twireless_key %s",key);
+						add_line(lastwpos,outstr);
+						i++;
+					} 
+				}					
 				for (j=l;j<iflen;j++)
 					iflist[j].lastline+=(i-last_i);
 			} // if last line
@@ -603,6 +844,24 @@ gint write_sections()
 				sprintf(outstr,"\tgateway %s",iflist[i].gateway);
 				add_line(configlen,outstr);
 			}
+			if (iflist[l-1].iswireless)
+			{
+				sprintf(outstr,"\twireless_essid %s",iflist[l-1].essid);
+				add_line(configlen,outstr);
+				
+				sprintf(outstr,"\twireless_mode %s",iflist[l-1].mode == MODE_MANAGED ? "managed" : "ad-hoc");
+				add_line(configlen,outstr);
+	
+				if (strlen (iflist[l-1].channel) > 0)
+				{
+					sprintf(outstr,"\twireless_channel %s",iflist[l-1].channel);
+					add_line(configlen,outstr);
+				} 
+				get_wifikey_string(iflist[l-1], key);
+				sprintf(outstr,"\twireless_key %s",key);
+				add_line(configlen,outstr);
+			}					
+			
 		} //if status
 	
 	/* handle auto line if not yet done */

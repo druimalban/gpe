@@ -16,21 +16,48 @@
 #define Shostname	6
 #define Sclientid 	7
 #define Sprovider	8
+#define Swifiessid      9
+#define Swifimode       10
+#define Swifichannel    11
+#define Swifikey        12
+
 
 #define NWSTATE_REMOVED		1
 #define NWSTATE_NEW			2
 #define NWSTATE_FINISHED	3
 
+typedef enum 
+{
+	ENC_OFF	= 0x00,
+	ENC_OPEN,
+	ENC_RESTRICTED
+} t_encmode;
+
+typedef enum
+{
+	MODE_MANAGED = 0x00,
+	MODE_ADHOC
+} t_wifimode;
+
 typedef struct {
 	gchar name[32];
 	gchar address[32];
 	gchar netmask[32];
-    gchar network[32];
+	gchar network[32];
 	gchar broadcast[32];
-	gchar gateway[255];
+	gchar gateway[32];
 	gchar hostname[255];
 	gchar clientid[40];
 	gchar provider[40];
+	
+	gchar essid[32];
+	gchar channel[32];
+	gchar key[4][128];
+	gint  keynr;
+	t_encmode  encmode;
+	t_wifimode mode;
+	gint iswireless;
+	
 	gint isstatic;
 	gint isinet;
 	gint isloop;
