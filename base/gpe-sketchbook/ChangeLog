@@ -1,3 +1,6 @@
+2005-03-31  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Don't use render.h.
+
 2004-07-12  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Set default sketch size to something related to screen size.
 

@@ -26,7 +26,6 @@
 
 //gpe libs
 #include "gpe/pixmaps.h"
-#include "gpe/render.h"
 #include "gpe/popup_menu.h"
 #include "gpe/picturebutton.h"
 
