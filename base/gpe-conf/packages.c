@@ -43,7 +43,7 @@
 
 static GtkWidget *notebook;
 static GtkWidget *txLog, *txLog2;
-static GtkWidget *bUpdate, *bInstall;
+static GtkWidget *bUpdate, *bInstall, *bRemove;
 static GtkWidget *ePackage;
 static int timeout = -1;
 
@@ -54,15 +54,23 @@ static int timeout = -1;
  *  This function is called from suid task to perform a package install.  
  *  Any output is returned through pipe.
  */
-int do_package_install(const char *package)
+int do_package_install(const char *package,int remove)
 {
   FILE *pipe;
   static char cur[256];
 		
   if (setvbuf(nsreturn,NULL,_IONBF,0) != 0) 
     fprintf(stderr,"gpe-conf: error setting buffer size!");
-  fprintf(nsreturn,"%s %s\n",_("Installing package"),package);
-  snprintf(cur,256,"ipkg -force-defaults install %s 2>&1",package);
+  if (remove)
+  {
+    fprintf(nsreturn,"%s %s\n",_("Removing package"),package);
+    snprintf(cur,256,"ipkg -force-defaults remove %s 2>&1",package);
+  }
+  else
+  {	
+   fprintf(nsreturn,"%s %s\n",_("Installing package"),package);
+   snprintf(cur,256,"ipkg -force-defaults install %s 2>&1",package);
+  }
   pipe = popen(cur, "r");
 
   if (pipe > 0)
@@ -143,6 +151,7 @@ static gboolean poll_log_pipe_update()
        gtk_timeout_remove(timeout);
        gtk_widget_set_sensitive(bInstall,TRUE);
        gtk_widget_set_sensitive(bUpdate,TRUE);
+       gtk_widget_set_sensitive(bRemove,TRUE);
        printlog(txLog,_("Update finished. Please check log messages for errors."));
 	 }
 	 else
@@ -170,8 +179,10 @@ static gboolean poll_log_pipe_install()
        gtk_timeout_remove(timeout);
        gtk_widget_set_sensitive(bInstall,TRUE);
        gtk_widget_set_sensitive(bUpdate,TRUE);
+       gtk_widget_set_sensitive(bRemove,TRUE);
        gtk_button_set_label(GTK_BUTTON(bInstall),_("Install"));
-       printlog(txLog2,_("Install finished. Please check log messages for errors."));
+       gtk_button_set_label(GTK_BUTTON(bRemove),_("Remove"));
+       printlog(txLog2,_("Install/Removal finished. Please check log messages for errors."));
 	 }
 	 else
 	 {
@@ -218,6 +229,7 @@ void on_network_update_clicked(GtkButton *button, gpointer user_data)
   gtk_button_set_label(button,_("Running..."));
   gtk_widget_set_sensitive(bUpdate,FALSE);
   gtk_widget_set_sensitive(bInstall,FALSE);
+  gtk_widget_set_sensitive(bRemove,FALSE);
 	
   /* clear log */	
   logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
@@ -241,6 +253,7 @@ void on_package_install_clicked(GtkButton *button, gpointer user_data)
   gtk_button_set_label(button,_("Running..."));
   gtk_widget_set_sensitive(bInstall,FALSE);
   gtk_widget_set_sensitive(bUpdate,FALSE);
+  gtk_widget_set_sensitive(bRemove,FALSE);
 	
   /* clear log */	
   logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog2));
@@ -251,11 +264,15 @@ void on_package_install_clicked(GtkButton *button, gpointer user_data)
   pname = gtk_editable_get_chars(GTK_EDITABLE(ePackage),0,-1);
 
   timeout = gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_install, NULL);
-	
-  suid_exec("NWIS",pname);
+  
+  if (user_data) // install or remove?
+    suid_exec("NWRM",pname);
+  else
+    suid_exec("NWIS",pname);
 
   g_free(pname);	
 }
+
 
 /* --- gpe-conf interface --- */
 
@@ -330,12 +347,12 @@ Packages_Build_Objects (void)
   /* install tab */
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
-  cur = gtk_label_new(_("Install"));
+  cur = gtk_label_new(_("Install/Remove"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
 
   cur = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
-  tmp = g_strdup_printf("<b>%s</b>",_("Install a package"));
+  tmp = g_strdup_printf("<b>%s</b>",_("Install/Remove a package"));
   gtk_label_set_markup(GTK_LABEL(cur),tmp);
   free(tmp);
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
@@ -347,8 +364,14 @@ Packages_Build_Objects (void)
   cur = gtk_button_new_with_label(_("Install"));
   bInstall = cur;
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,FALSE,gpe_get_boxspacing());	
-  g_signal_connect(G_OBJECT (cur), "clicked",G_CALLBACK(on_package_install_clicked),NULL);
+  g_signal_connect(G_OBJECT (cur), "clicked",G_CALLBACK(on_package_install_clicked),(gpointer)FALSE);
   gtk_tooltips_set_tip (tooltips, cur, _("Install a package from a configured source."), NULL);
+  
+  cur = gtk_button_new_with_label(_("Remove"));
+  bRemove = cur;
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,FALSE,gpe_get_boxspacing());	
+  g_signal_connect(G_OBJECT (cur), "clicked",G_CALLBACK(on_package_install_clicked),(gpointer)TRUE);
+  gtk_tooltips_set_tip (tooltips, cur, _("Remove the package."), NULL);
   
   cur = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);

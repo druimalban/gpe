@@ -1,5 +1,8 @@
 When			Who				Where						What
 
+30.06.2003		Florian			packages.*					Added feature to remove a package.
+								suid.c
+
 27.06.2003		Florian			theme.c						Set desktop font unsing rgb:xx/xx/xx now.
 								packages.c					Added package install tab to update applet.
 								suid.c

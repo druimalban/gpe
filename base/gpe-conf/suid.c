@@ -506,12 +506,17 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "NWIS") == 0)  // run package installation
 				{
 					fscanf (in, "%100s", arg1);
-					do_package_install (arg1);
+					do_package_install (arg1,FALSE);
+				}
+				else if (strcmp (cmd, "NWRM") == 0)  // run package uninstall
+				{
+					fscanf (in, "%100s", arg1);
+					do_package_install (arg1,TRUE);
 				}
 				else if (strcmp (cmd, "PAIS") == 0)  // install a ipk package
 				{
 					fscanf (in, "%100s", arg1);
-					do_package_install (arg1);
+					do_package_install (arg1,FALSE);
 				}
 				else if (strcmp (cmd, "SERU") == 0)  // change serial port usage
 				{
