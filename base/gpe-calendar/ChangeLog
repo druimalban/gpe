@@ -1,3 +1,11 @@
+2002-09-08  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (struct edit_state): Add taskdate, taskspin,
+	optionmenutype, optionmenutask.
+	(set_notebook_page): Operate on GtkSimpleMenu.
+	(edit_event_window): Use GtkSimpleMenu for type selection.  Add
+	preliminary support for "tasks".
+
 2002-09-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* event-ui.c: add rtcd support for alarms and re-show alarm notepage

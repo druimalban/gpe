@@ -21,11 +21,12 @@
 #include <gpe/picturebutton.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/errorbox.h>
+#include <gpe/libgpe.h>
+#include <gpe/gtksimplemenu.h>
 
 #include "globals.h"
 #include "event-db.h"
 #include "event-ui.h"
-#include <gpe/libgpe.h>
 
 #define _(_x) gettext (_x)
 
@@ -37,6 +38,8 @@ struct edit_state
   GtkWidget *startdate, *enddate;
   GtkWidget *starttime, *endtime;
   GtkWidget *reminderdate, *remindertime, *remindertimebutton;
+  GtkWidget *taskdate, *taskspin;
+  GtkWidget *optionmenutype, *optionmenutask;
   
   GtkWidget *alarmbutton;
   GtkWidget *alarmspin;
@@ -466,7 +469,7 @@ click_cancel (GtkWidget *widget,
 static gboolean
 set_notebook_page (GtkWidget *w, struct edit_state *s)
 {
-  guint i = (guint)gtk_object_get_data (GTK_OBJECT (w), "page");
+  guint i = gtk_simple_menu_get_result (GTK_SIMPLE_MENU (w));
   gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), i);
   s->page = i;
   gtk_widget_draw (s->notebooktype, NULL);
@@ -494,6 +497,7 @@ edit_event_window (void)
   GtkWidget *yearlylabelevery, *yearlyspin, *yearlylabels;
 
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, *yearlyspin_adj;
+  GtkAdjustment *taskadj;
    
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *labeleventpage = gtk_label_new (_("Event"));
@@ -560,13 +564,13 @@ edit_event_window (void)
   GtkWidget *optionmenu1, *optionmenu2;
   char buf[64];
   GtkWidget *scrolledwindowevent;
-  GtkWidget *optionmenutype = gtk_option_menu_new ();
-  GtkWidget *menutype = gtk_menu_new ();
   GtkWidget *vboxappointment = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxreminder = gtk_vbox_new (FALSE, 0);
+  GtkWidget *vboxtask = gtk_vbox_new (FALSE, 0);
   GtkWidget *hboxreminder1 = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxreminder2 = gtk_hbox_new (FALSE, 0);
-  GtkWidget *mi;
+  GtkWidget *hboxtask1 = gtk_hbox_new (FALSE, 0);
+  GtkWidget *hboxtask2 = gtk_hbox_new (FALSE, 0);
   
   GtkWidget *menu1 = gtk_menu_new ();
   GtkWidget *menu2 = gtk_menu_new ();
@@ -574,16 +578,17 @@ edit_event_window (void)
   
   memset (s, 0, sizeof (*s));
 
-  mi = gtk_menu_item_new_with_label (_("Appointment"));
-  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), s);
-  gtk_object_set_data (GTK_OBJECT (mi), "page", (gpointer)0);
-  gtk_menu_append (GTK_MENU (menutype), mi);
-  mi = gtk_menu_item_new_with_label (_("Reminder"));
-  gtk_signal_connect (GTK_OBJECT (mi), "activate", GTK_SIGNAL_FUNC (set_notebook_page), s);
-  gtk_object_set_data (GTK_OBJECT (mi), "page", (gpointer)1);
-  gtk_menu_append (GTK_MENU (menutype), mi);
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenutype), menutype);
+  s->optionmenutype = gtk_simple_menu_new ();
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Appointment"));
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Reminder"));
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Task"));
+  gtk_signal_connect (GTK_OBJECT (s->optionmenutype), "changed", 
+		      GTK_SIGNAL_FUNC (set_notebook_page), s);
 
+  s->optionmenutask = gtk_simple_menu_new ();
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Day(s)"));
+  gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutask), _("Week(s)"));
+  
 /* Begin event vbox */
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
@@ -591,7 +596,8 @@ edit_event_window (void)
   s->startdate = gtk_date_combo_new ();
   s->enddate = gtk_date_combo_new ();
   s->reminderdate = gtk_date_combo_new ();
-  
+  s->taskdate = gtk_date_combo_new ();
+ 
   gtk_box_pack_end (GTK_BOX (startdatebox), starttime, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (startdatebox), starttimelabel, FALSE, FALSE, 2);
   gtk_box_pack_end (GTK_BOX (startdatebox), s->startdate, TRUE, TRUE, 2);
@@ -620,12 +626,26 @@ edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxreminder), hboxreminder1, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxreminder), hboxreminder2, FALSE, FALSE, 0);
   gtk_widget_show_all (vboxreminder);
+
+  taskadj = (GtkAdjustment *)gtk_adjustment_new (1, 1, 100, 1, 10, 10);
+  s->taskspin = gtk_spin_button_new (taskadj, 1, 0);
+  gtk_box_pack_start (GTK_BOX (hboxtask1), gtk_label_new (_("Due:")), FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hboxtask1), s->taskdate, TRUE, TRUE, 2);
   
+  gtk_box_pack_start (GTK_BOX (hboxtask2), gtk_label_new (_("Allow:")), FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hboxtask2), s->taskspin, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (hboxtask2), s->optionmenutask, TRUE, TRUE, 2);
+
+  gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask1, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vboxtask), hboxtask2, FALSE, FALSE, 0);
+  gtk_widget_show_all (vboxtask);
+
   s->notebooktype = gtk_notebook_new ();
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (s->notebooktype), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (s->notebooktype), FALSE);
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxappointment, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxreminder, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (s->notebooktype), vboxtask, NULL);
 
   gtk_text_set_editable (GTK_TEXT (description), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
@@ -647,7 +667,7 @@ edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (summaryhbox), summaryentry, TRUE, TRUE, 2);
 
-  gtk_box_pack_start (GTK_BOX (vboxevent), optionmenutype, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), s->optionmenutype, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), summaryhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), s->notebooktype, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionframe, TRUE, TRUE, 2);
