@@ -8,7 +8,7 @@ Call external help browser.
 <para>
 Simple interface to provide a call for an external application 
 to display help information. Currently this is fixed to a list
-of HTML browsers.
+of HTML browsers (gpe-helpviewer, dillo, minimo).
 </para>
 
 <!-- ##### SECTION See_Also ##### -->

@@ -1,3 +1,8 @@
+2005-02-13  Florian Boor <florian@kernelconcepts.de>
+
+	* gpehelp.c: Add support for gpe-helpviewer. Use PREFIX for apps to call.
+	* doc/tmpl/*.sgml: More documentation (GpeDateCombo).
+
 2005-02-07  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/style.css: Added style definition file for documentation.

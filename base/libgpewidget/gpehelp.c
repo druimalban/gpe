@@ -25,8 +25,9 @@
 #define GPE_HELP_PATH PREFIX "/share/doc/gpe"
 #define GPE_HELP_FILE_SUFFIX ".html"
 #define GPE_HELP_FILE_PREFIX "file://"
-#define GPE_HELP_APP1 "/usr/bin/dillo"
-#define GPE_HELP_APP2 "/usr/bin/minimo"
+#define GPE_HELP_APP0 PREFIX "/bin/gpe-helpviewer"
+#define GPE_HELP_APP1 PREFIX "/bin/dillo"
+#define GPE_HELP_APP2 PREFIX"/bin/minimo"
 
 /*
  *	This function provides a generic interface for displaying
@@ -55,7 +56,8 @@ gpe_show_help(const char* book, const char* topic)
 		return TRUE;
 	
 	/* check if we are able to execute one of the displaying applications */
-	if (!access(GPE_HELP_APP1, X_OK)) app = GPE_HELP_APP1;
+	if (!access(GPE_HELP_APP0, X_OK)) app = GPE_HELP_APP0;
+	else if (!access(GPE_HELP_APP1, X_OK)) app = GPE_HELP_APP1;
 	else if (!access(GPE_HELP_APP2, X_OK)) app = GPE_HELP_APP2;
 	
 	/* return if no app is available */

@@ -30,9 +30,11 @@ for a time value and an extra button which opens a time selection popup.
 @popup: 
 
 <!-- ##### STRUCT GpeTimeSelClass ##### -->
+<!--
 <para>
 
 </para>
+-->
 
 
 <!-- ##### FUNCTION gpe_time_sel_new ##### -->
