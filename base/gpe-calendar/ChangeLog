@@ -1,3 +1,13 @@
+2003-03-30  Philip Blundell  <philb@gnu.org>
+
+	* gtkdatesel.c: New file.
+	* gtkdatesel.h: Likewise.
+	* Makefile (MEMBERS): Add gtkdatesel.
+	* day_view.c: Adjust path to gtkdatesel.h.
+	* week_view.c: Likewise.
+	* month_view.c: Likewise.
+	* year_view.c: Likewise.
+
 2003-03-29  Luis Oliveira  <luis@handhelds.org>
 
 	* event-ui.c (edit_event): Set type menu to Appointment/Reminder.

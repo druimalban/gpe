@@ -19,10 +19,11 @@
 
 #include <gpe/event-db.h>
 #include "event-ui.h"
-#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "month_view.h"
 #include "day_popup.h"
+
+#include "gtkdatesel.h"
 
 static GtkWidget *datesel, *draw;
 static guint xp, xs, ys;

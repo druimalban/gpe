@@ -16,13 +16,14 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
-#include <gpe/gtkdatesel.h>
 #include <gpe/pixmaps.h>
 #include <gpe/event-db.h>
 
 #include "event-ui.h"
 #include "globals.h"
 #include "day_view.h"
+
+#include "gtkdatesel.h"
 
 static GSList *strings;
 static GtkWidget *day_list;

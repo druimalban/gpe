@@ -16,11 +16,12 @@
 
 #include <gtk/gtk.h>
 
-#include <gpe/gtkdatesel.h>
 #include <gpe/event-db.h>
 
 #include "globals.h"
 #include "week_view.h"
+
+#include "gtkdatesel.h"
 
 #define _(x) gettext(x)
 
