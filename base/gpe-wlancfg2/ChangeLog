@@ -1,3 +1,7 @@
+09/08/2004	Florian Boor <florian.boor@kernelconcepts.de>
+
+	- main.c: Changed value passed to callback fixing exit button.
+
 08/20/2004	Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- callbacks.c: Improved change detection.

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-06-03 23:28+0200\n"
+"POT-Creation-Date: 2004-08-19 22:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgstr ""
 msgid "Basic settings"
 msgstr ""
 
-#: main.c:119 main.c:120 main.c:142 main.c:143
+#: main.c:119 main.c:120 main.c:145 main.c:146
 msgid "Exit"
 msgstr ""
 
@@ -48,19 +48,23 @@ msgstr ""
 msgid "Fulltext help"
 msgstr ""
 
-#: main.c:155
+#: main.c:142
+msgid "Save settings"
+msgstr ""
+
+#: main.c:157
 msgid "Scheme"
 msgstr ""
 
-#: main.c:164
+#: main.c:166
 msgid "Socket"
 msgstr ""
 
-#: main.c:173
+#: main.c:175
 msgid "Instance"
 msgstr ""
 
-#: main.c:182
+#: main.c:184
 msgid "MAC"
 msgstr ""
 
@@ -598,13 +602,13 @@ msgstr ""
 msgid "Locking stabfile failed."
 msgstr ""
 
-#: callbacks.c:582 callbacks.c:660 callbacks.c:713 callbacks.c:1231
+#: callbacks.c:587 callbacks.c:667 callbacks.c:723 callbacks.c:1246
 msgid ""
 "Settings have been changed.\n"
 "Do you want to save the settings?"
 msgstr ""
 
-#: callbacks.c:825
+#: callbacks.c:840
 msgid "Do you realy want to delete this entry??"
 msgstr ""
 

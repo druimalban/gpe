@@ -571,7 +571,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, gpointer user_data)
 	liststore = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
 
 	MainWindow = lookup_widget(GPE_WLANCFG, "nbPseudoMain");
-	
+
 	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(MainWindow)) == 1) 
 	{
 		OrigScheme=malloc(sizeof(Scheme_t));

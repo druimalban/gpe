@@ -117,7 +117,7 @@ int main (int argc, char *argv[])
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_main));
 	
 	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_main), GTK_STOCK_QUIT,_("Exit"),
-		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
+		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, (gpointer)TRUE, -1);
 	
 	vbSimple = lookup_widget (GPE_WLANCFG, "vbSimple");
 
