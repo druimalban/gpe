@@ -46,12 +46,13 @@ void turn_light(int status)
 
 int get_light_state ()
 {
-  struct h3600_ts_backlight tsbl;
-  int fd;
-  char state[5];
 #ifdef __i386__
   return 10; // bl doesnt exit on i386 dev machines!
 #else
+  struct h3600_ts_backlight tsbl;
+  int fd;
+  char state[5];
+  
   tsbl.power = 0;
   fd = open(TS_DEV, O_RDONLY);  // if we are allowed, we read bl setting direct from device
   if (fd != -1) {
@@ -82,10 +83,11 @@ int get_light_state ()
 
 void set_brightness (int brightness)
 {
-  int fd;
 #ifdef __i386__
   return ; // bl doesnt exit on i386 dev machines!
 #else
+  int fd;
+	
   bl.mode=1;
   fd = open(TS_DEV, O_RDWR);
   if (fd == -1)
