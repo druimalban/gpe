@@ -39,6 +39,8 @@ static GtkWidget *window, *day, *week, *month, *future, *year, *current_view;
 
 guint window_x = 240, window_y = 310;
 
+gboolean week_starts_monday = TRUE;
+
 static guint nr_days[] = { 31, 28, 31, 30, 31, 30, 
 			   31, 31, 30, 31, 30, 31 };
 

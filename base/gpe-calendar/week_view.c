@@ -158,9 +158,8 @@ week_view_update (void)
 
   t = viewtime;
   localtime_r (&t, &tm);
-#ifdef WEEK_STARTS_ON_MONDAY
-  tm.tm_wday = (tm.tm_wday + 6) % 7;
-#endif
+  if (week_starts_monday)
+    tm.tm_wday = (tm.tm_wday + 6) % 7;
   t -= SECONDS_IN_DAY * tm.tm_wday;
   t -= tm.tm_sec + (60 * tm.tm_min) + (60 * 60 * tm.tm_hour);
 
