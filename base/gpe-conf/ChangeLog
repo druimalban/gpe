@@ -1,3 +1,6 @@
+2004-05-27	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile, control1: Removed obsolete libdotdesktop stuff.
+
 2004-05-24	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c: New setting: toolbar style via xsettings.
 

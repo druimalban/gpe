@@ -26,8 +26,8 @@ EXTRA_DESKTOPS = \
 	gpe-conf-sysinfo.desktop.in	
 
 ifeq ($(CVSBUILD),yes)
-LIBS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop  -L.
-CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
+LIBS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L.
+CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings 
 BUILD = ../build
 else
 CFLAGS += -I/usr/local/include/gpe -Wall
@@ -54,7 +54,7 @@ STRIP=strip
 CC=gcc
 
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
-LIBS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` -ldotdesktop 
+LIBS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0`
 
 else # we do cross-compile...
 
@@ -66,7 +66,7 @@ CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
 LIBS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
 LIBS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
 LIBS += -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 
-LIBS += -lgmodule-2.0 -ldl -lglib-2.0 -ldotdesktop -lXinerama
+LIBS += -lgmodule-2.0 -ldl -lglib-2.0 -lXinerama
 LIBS += -lX11 -lXext -lXrender -lgdk-x11-2.0
 
 endif #native or cross-compile
