@@ -1,3 +1,7 @@
+2003-01-18  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.09 released.
+
 2003-01-11  Philip Blundell  <philb@gnu.org>
 
 	* src/main.c (edit_person): Cope with GtkTextView widgets.
