@@ -21,6 +21,7 @@ struct player
   struct playlist *cur;
   guint idx;
 
+  gboolean stopping;
   GstElement *filesrc, *decoder, *audiosink, *thread;
 };
 
@@ -69,7 +70,9 @@ player_get_playlist (player_t p)
 static void
 abandon_track (player_t p)
 {
-  gst_element_set_state (p->thread, GST_STATE_NULL);  
+  p->stopping = TRUE;
+  gst_element_set_state (p->thread, GST_STATE_NULL);
+  p->thread = NULL;
 }
 
 void
@@ -100,7 +103,7 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
       gst_element_set_state (elt, GST_STATE_NULL);
       p->thread = NULL;
     }
-  else if (new_state == GST_STATE_NULL)
+  else if (new_state == GST_STATE_NULL && !p->stopping)
     {
       printf ("Next track.\n");
       
@@ -117,6 +120,21 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
     }
 }
 
+static void
+metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec)
+{
+  GstCaps *caps;
+  GValue value;
+
+  memset (&value, 0, sizeof (value));
+  g_value_init (&value, GST_TYPE_CAPS);
+  g_object_get_property (G_OBJECT (the_obj), "metadata", &value);
+
+  caps = g_value_get_boxed (&value);
+  printf("have metadata %08x\n", caps);
+  gst_caps_debug (caps, NULL);
+}
+
 static gboolean
 play_track (player_t p, struct playlist *t)
 {
@@ -125,10 +143,12 @@ play_track (player_t p, struct playlist *t)
 
   fprintf (stderr, "play %s\n", t->data.track.url);
 
+  p->stopping = FALSE;
+
   p->thread = gst_thread_new ("thread");
   g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
-
   g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
+  g_signal_connect (p->thread, "deep_notify::metadata", G_CALLBACK (metadata_notify), p);
 
   p->filesrc = gst_element_factory_make ("filesrc", "disk_source");
   g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
