@@ -149,6 +149,21 @@ void gui_init(){
   gtk_notebook_insert_page(notebook, selector_ui,  NULL, PAGE_SELECTOR);
   gtk_notebook_insert_page(notebook, sketchpad_ui, NULL, PAGE_SKETCHPAD);
 
+#ifdef DEBUG
+  {
+    GtkWidget * w;
+    w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size (GTK_WINDOW (w), 240, 280);
+    gtk_container_add (GTK_CONTAINER (w), GTK_WIDGET(selector_ui));
+    gtk_widget_show (w);
+    w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size (GTK_WINDOW (w), 240, 280);
+    gtk_container_add (GTK_CONTAINER (w), GTK_WIDGET(sketchpad_ui));
+    gtk_widget_show (w);
+    return;
+  }
+#endif
+
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET(notebook));
 
   //--show up
