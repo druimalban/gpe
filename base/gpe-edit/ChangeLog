@@ -1,3 +1,18 @@
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.18 released.
+	
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add fr.
+	* po/fr.po: New file, courtesy Luc Pionchon.
+
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (clean): Also remove .desktop file.
+
+	* familiar/postinst: Deleted.
+
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add zh_TW.

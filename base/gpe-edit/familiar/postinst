@@ -1,6 +1,0 @@
-#!/bin/sh
-
-update_mime_db
-
-# always return true:
-exit 0

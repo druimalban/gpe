@@ -3,10 +3,10 @@ PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.17
+VERSION = 0.18
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW
+LINGUAS = id pt de zh_TW fr
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -71,7 +71,7 @@ install-program: all gpe-edit.desktop
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 
 clean: clean-po
-	rm -f gpe-edit $(OBJS)
+	rm -f gpe-edit $(OBJS) $(PACKAGE).desktop
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
