@@ -5,5 +5,5 @@ Version: 0.01
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: gpe2
-Conflicts: libglib1.2, libgtk1.2, libgpewidget0, gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox, gpe-what, gpe-edit, gpe-soundbite, keylaunch, esd, detect-stylus, xstroke, dillo, gpe-soundserver, gpe-bootsplash, gpe-minicalc, gpe-terminal, xcalibrate, xfonts-ttf, update-menus, gpe-setbg, gpe-conf, gpe-confd, xst, gpe-filemanager, gpe-sketchbook, gpe-collateral, gpe-tetris, gtksolitaire
+Conflicts: libglib1.2, libgtk1.2, libgpewidget0, gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-what, gpe-edit, gpe-soundbite, dillo, gpe-bootsplash, gpe-minicalc, update-menus, gpe-setbg, gpe-conf, gpe-filemanager, gpe-sketchbook, gpe-tetris, gtksolitaire
 Description: Upgrade from GPE1 to GPE2
