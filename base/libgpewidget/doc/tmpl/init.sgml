@@ -1,5 +1,5 @@
 <!-- ##### SECTION Title ##### -->
-Init 
+Init
 
 <!-- ##### SECTION Short_Description ##### -->
 Initialisation of applications
@@ -32,4 +32,6 @@ application. It replaces gtk_init() which is used in normal GTK applications.
 </para>
 
 @argc: 
-@argv:
+@argv: 
+
+
