@@ -368,13 +368,13 @@ edit_item (struct todo_item *item, gint initial_category)
 
   hbox_state = gtk_hbox_new (FALSE, 0);
 
-  priority_label = gtk_label_new (_("Priority:"));
+  priority_label = gtk_label_new (_("Pri:"));
   priority_optionmenu = gtk_option_menu_new ();
   gtk_option_menu_set_menu (GTK_OPTION_MENU (priority_optionmenu), priority_menu);
 
-  gtk_box_pack_start (GTK_BOX (hbox_state), state, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox_state), state, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox_state), priority_label, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox_state), priority_optionmenu, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox_state), priority_optionmenu, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);

@@ -1,3 +1,12 @@
+2004-02-25  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.44 released.
+
+2004-02-25  Phil Blundell  <pb@nexus.co.uk>
+
+	* todo-ui.c (edit_item): Cosmetic tweaks to avoid over-wide
+	dialog.
+
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.43 released.

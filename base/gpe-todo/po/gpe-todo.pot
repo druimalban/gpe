@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-15 01:17+0000\n"
+"POT-Creation-Date: 2004-02-22 16:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,91 +16,79 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:59 gpe-todo.desktop.in.h:2
+#: main.c:60 gpe-todo.desktop.in.h:2
 msgid "To-do list"
 msgstr ""
 
-#: todo-ui.c:274
-msgid "Category name must not be blank"
-msgstr ""
-
-#: todo-ui.c:284
-msgid "A category by that name already exists"
-msgstr ""
-
-#: todo-ui.c:318
-msgid "Name:"
-msgstr ""
-
-#: todo-ui.c:345 todo-ui.c:477
-msgid "New category"
-msgstr ""
-
-#: todo-ui.c:478
-msgid "Tap here to add a new category."
-msgstr ""
-
-#: todo-ui.c:482
-msgid "Delete category"
-msgstr ""
-
-#: todo-ui.c:483
-msgid "Tap here to delete the selected category."
-msgstr ""
-
-#: todo-ui.c:554
-msgid "Select categories"
-msgstr ""
-
-#: todo-ui.c:578
-msgid "Summary:"
-msgstr ""
-
-#: todo-ui.c:579
-msgid "Details:"
-msgstr ""
-
-#: todo-ui.c:586
+#: todo-ui.c:161
 msgid "Not started"
 msgstr ""
 
-#: todo-ui.c:586
+#: todo-ui.c:162
 msgid "In progress"
 msgstr ""
 
-#: todo-ui.c:587
+#: todo-ui.c:163
 msgid "Completed"
 msgstr ""
 
-#: todo-ui.c:611
+#: todo-ui.c:164
+msgid "Abandoned"
+msgstr ""
+
+#: todo-ui.c:170
+msgid "High"
+msgstr ""
+
+#: todo-ui.c:171
+msgid "Standard"
+msgstr ""
+
+#: todo-ui.c:172
+msgid "Low"
+msgstr ""
+
+#: todo-ui.c:263
+msgid "Summary:"
+msgstr ""
+
+#: todo-ui.c:264
+msgid "Details:"
+msgstr ""
+
+#: todo-ui.c:307
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:625
+#: todo-ui.c:321
 msgid "Categories:"
 msgstr ""
 
-#: todo-ui.c:716
+#: todo-ui.c:371
+msgid "Priority:"
+msgstr ""
+
+#: todo-ui.c:432
 msgid "Edit to-do item"
 msgstr ""
 
-#: todo-ui.c:723 list-ui.c:276
+#: todo-ui.c:441 list-ui.c:293
 msgid "New item"
 msgstr ""
 
-#: list-ui.c:73
+#: list-ui.c:71
 msgid "All items"
 msgstr ""
 
-#: list-ui.c:276
+#: list-ui.c:293
 msgid "Tap here to add a new item."
 msgstr ""
 
-#: list-ui.c:296
+#: list-ui.c:313
 msgid "Quit"
 msgstr ""
 
-#: list-ui.c:296
+#: list-ui.c:313
 msgid "Tap here to quit the program."
 msgstr ""
 
