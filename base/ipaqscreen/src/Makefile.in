@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4-p4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -93,7 +93,7 @@ INCLUDES =  	-I$(top_srcdir)/intl 	@GTK_CFLAGS@
 
 bin_PROGRAMS = ipaqscreen
 
-ipaqscreen_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h
+ipaqscreen_SOURCES =  	main.c 	support.c support.h 	interface.c interface.h 	callbacks.c callbacks.h 	brightness.c brightness.h 	calibrate.c calibrate.h 	rotation.c rotation.h
 
 
 ipaqscreen_LDADD = @GTK_LIBS@ $(INTLLIBS)
@@ -107,7 +107,8 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-ipaqscreen_OBJECTS =  main.o support.o interface.o callbacks.o
+ipaqscreen_OBJECTS =  main.o support.o interface.o callbacks.o \
+brightness.o calibrate.o rotation.o
 ipaqscreen_DEPENDENCIES = 
 ipaqscreen_LDFLAGS = 
 CFLAGS = @CFLAGS@
@@ -121,8 +122,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/callbacks.P .deps/interface.P .deps/main.P \
-.deps/support.P
+DEP_FILES =  .deps/brightness.P .deps/calibrate.P .deps/callbacks.P \
+.deps/interface.P .deps/main.P .deps/rotation.P .deps/support.P
 SOURCES = $(ipaqscreen_SOURCES)
 OBJECTS = $(ipaqscreen_OBJECTS)
 
@@ -200,7 +201,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || (cd $(srcdir) && etags -o $$here/TAGS $(ETAGS_ARGS) $$tags  $$unique $(LISP))
 
 mostlyclean-tags:
 
