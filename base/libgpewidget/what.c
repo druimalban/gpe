@@ -18,6 +18,7 @@
 #include "render.h"
 #include "pixmaps.h"
 #include "what.h"
+#include "errorbox.h"
 
 static Display *dpy;
 static Window root;
@@ -110,6 +111,8 @@ gpe_what_init (void)
   GdkColor col;
   GtkWidget *hbox, *vbox, *sep;
   GtkWidget *close, *closei;
+  GdkPixbuf *closep;
+  gchar *error;
 
   dpy = GDK_DISPLAY ();
   root = GDK_ROOT_WINDOW ();
@@ -130,7 +133,14 @@ gpe_what_init (void)
   label = gtk_label_new ("");
   gtk_widget_show (label);
 
-  closei = gpe_render_icon (window->style, gpe_find_icon ("cancel"));
+  closep = gpe_try_find_icon ("cancel", &error);
+  if (closep == NULL)
+    {
+      gpe_error_box (error);
+      g_free (error);
+      return;
+    }
+  closei = gpe_render_icon (window->style, closep);
   gtk_widget_show (closei);
   close = gtk_button_new ();
   gtk_container_add (GTK_CONTAINER (close), closei);

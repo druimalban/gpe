@@ -1,5 +1,9 @@
 2002-12-22  Philip Blundell  <philb@gnu.org>
 
+	* what.c (gpe_what_init): Use gpe_try_find_icon rather than
+	gpe_find_icon.  On failure, display an error and give up
+	initialisation.
+
 	* pixmaps.c (gpe_find_icon): Don't attempt lazy loading.  If the
 	icon isn't in the cache, give an error.
 	
