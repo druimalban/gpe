@@ -70,8 +70,8 @@ load_decoder (char *fn)
 void
 decoder_init (void)
 {
-  load_decoder ("./decoder/mad.so");
-  load_decoder ("./decoder/vorbis.so");
+  load_decoder ("./backend/d-mad.so");
+  load_decoder ("./backend/d-vorbis.so");
 }
 
 decoder_t
