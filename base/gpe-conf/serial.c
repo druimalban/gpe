@@ -326,17 +326,18 @@ void
 Serial_Save ()
 {
 	char *tmp;
-	char *port = NULL;
+	const char *text;
+	const char *port = NULL;
 	int i;
 
 	/* this first, gpsd is reloaded in next step */
 	if (gpsd_installed)
 	{
-		tmp = gtk_entry_get_text (GTK_ENTRY
+		text = gtk_entry_get_text (GTK_ENTRY
 					     (GTK_COMBO (self.cbPort)->entry));
 		for (i=0;i<num_ports;i++)
 		{
-			if (!strcmp(portlist[i][0],tmp))
+			if (!strcmp(portlist[i][0],text))
 				port = portlist[i][1];
 		}
 		if (port == NULL) port = gtk_entry_get_text (GTK_ENTRY
