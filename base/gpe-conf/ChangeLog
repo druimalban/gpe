@@ -1,3 +1,11 @@
+2004-09-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* sleep/confGUI.c: Fixed bug causing slider to become disabled.
+	  sleep/callbacks.c
+	* sound/sound*, gpe-conf-sound.desktop.in, gpe-conf-sound.png: new files.
+	* Makefile, main.c: Added new module: Sound settings.
+	* Makefile: V 0.1.19
+
 2004-09-09	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Released V 0.1.18

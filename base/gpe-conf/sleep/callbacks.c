@@ -20,7 +20,7 @@
 #include "../ipaqscreen/brightness.h"
 
 extern GtkWidget *sleep_idle_spin;
-extern GtkWidget *dim_spin;
+extern GtkWidget *dim_spin, *dim_scale;
 extern GtkWidget *sleep_cpu_spin;
 
 #warning TODO: this file needs cleanups!
@@ -132,7 +132,7 @@ AD_checked (GtkToggleButton *togglebutton,
   }
   else setConfigInt(ISconf, "dim_time", (int)gtk_range_get_value(GTK_RANGE(dimSpin)));
   gtk_widget_set_sensitive(dimSpin, gtk_toggle_button_get_active(togglebutton));
-
+  gtk_widget_set_sensitive(dim_scale, gtk_toggle_button_get_active(togglebutton));
 }
 
 void

@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Sound Settings
+_Comment=Sound defaults and setup
+Exec=gpe-conf sound
+Terminal=0
+Type=Application
+Icon=gpe-config-sound.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True
+SingleInstance=True

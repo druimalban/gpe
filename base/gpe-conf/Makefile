@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.18
+VERSION = 0.1.19
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -42,7 +42,8 @@ EXTRA_DESKTOPS = \
 	gpe-conf-theme.desktop.in \
 	gpe-conf-time.desktop.in \
 	gpe-conf-users.desktop.in \
-	gpe-conf-sysinfo.desktop.in	
+	gpe-conf-sysinfo.desktop.in \
+	gpe-conf-sound.desktop.in
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CPPFLAGS += -I../libxsettings -I../libxsettings-client
@@ -90,6 +91,7 @@ MEMBERS += cardinfo
 MEMBERS += tools/interface
 MEMBERS += tasks
 MEMBERS += users/passwd
+MEMBERS += sound/sound
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage
@@ -154,6 +156,7 @@ PIXMAPS += system-info.png
 PIXMAPS += distribution.png
 PIXMAPS += device-info.png
 PIXMAPS += ipaq-s1.png
+PIXMAPS += gpe-config-sound.png
 
 ifeq ($(PACKAGETOOL),yes)
 PIXMAPS += gpe-config-packages.png

@@ -48,6 +48,7 @@
 #endif
 #include "cardinfo.h"
 #include "tasks.h"
+#include "sound/sound.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -113,6 +114,8 @@ struct Applet applets[]=
 		"Serial" ,"serial","Serial Port Configuration",PREFIX "/share/pixmaps/gpe-config-serial.png"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
 		"Cardinfo" ,"cardinfo","PC/CF Card Info and Config",PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
+    { &Sound_Build_Objects, &Sound_Free_Objects, &Sound_Save, &Sound_Restore , 
+		"Sound" ,"sound","Sound Setup",PREFIX "/share/pixmaps/gpe-config-sound.png"},
 #ifdef PACKAGETOOL		
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore ,
 		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
