@@ -64,6 +64,10 @@ install: all
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery
 	install -m 644 pixmaps/slideshow.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/slideshow.png
 	install -m 644 pixmaps/fullscreen.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/fullscreen.png
+	install -m 644 pixmaps/zoom_in.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/zoom_in.png
+	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/zoom_out.png
+	install -m 644 pixmaps/zoom_1.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/zoom_1.png
+	install -m 644 pixmaps/zoom_fit.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/zoom_fit.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-gallery
 
 upstream: clean

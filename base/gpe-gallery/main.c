@@ -27,19 +27,21 @@
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/dirbrowser.h>
+#include <gpe/gpe-iconlist.h>
 
 #define WINDOW_NAME "Gallery"
 #define _(_x) gettext (_x)
 GtkWidget *window;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget;
+GList *image_filenames;
 
 // 0 = Detailed list
 // 1 = Thumbs
 gint current_view = 0;
 gint loading_directory = 0;
 
-guint screensaver_timer = 0;
+guint slideshow_timer = 0;
 
 struct gpe_icon my_icons[] = {
   { "open", "open" },
@@ -47,6 +49,10 @@ struct gpe_icon my_icons[] = {
   { "right", "right" },
   { "slideshow", "gallery/slideshow" },
   { "fullscreen", "gallery/fullscreen" },
+  { "zoom_in", "gallery/zoom_in" },
+  { "zoom_out", "gallery/zoom_out" },
+  { "zoom_1", "gallery/zoom_1" },
+  { "zoom_fit", "gallery/zoom_fit" },
   { "ok", "ok" },
   { "cancel", "cancel" },
   { "stop", "stop" },
@@ -67,6 +73,33 @@ update_window_title (void)
   gtk_window_set_title (GTK_WINDOW (window), window_title);
 }
 
+GtkWidget *
+render_images ()
+{
+  GtkWidget *il;
+  GList *this_item;
+  gchar *image_filename;
+
+  il = gpe_iconlist_new ();
+  printf ("Starting rendering...\n");
+  //gpe_iconlist_set_bg (il, (gchar *) all_items->data);
+  this_item = image_filenames;
+  while (this_item)
+  {
+    image_filename = (gchar *) this_item->data;
+
+    printf ("Rendering image %s\n", image_filename);
+
+    gpe_iconlist_add_item (GPE_ICONLIST(il), "Image", image_filename, NULL);
+
+    this_item = this_item->next;
+
+  }
+
+  gtk_widget_show (il);
+  return il;
+}
+
 void
 add_directory (gchar *directory)
 {
@@ -76,17 +109,13 @@ add_directory (gchar *directory)
 
   loading_directory = 1;
   printf ("Selected directory: %s\n", directory);
+  g_list_free (image_filenames);
 
   dir = opendir (directory);
   if (dir)
   {
     if (view_widget)
       gtk_widget_destroy (view_widget);
-
-    if (current_view == 0) // Detailed list
-    {
-      view_widget = gtk_vbox_new (FALSE, 0);
-    }
 
     while (d = readdir (dir), d != NULL)
     {
@@ -96,35 +125,56 @@ add_directory (gchar *directory)
       if (d->d_name[0] != '.')
       {
         struct stat s;
-        filename = g_strdup (d->d_name);
+        filename = g_strdup_printf ("%s%s", directory, g_strdup (d->d_name));
+	printf ("Seen %s\n", filename);
 
-        if (stat (buf, &s) == 0)
+        if (stat (filename, &s) == 0)
         {
-        }
+	  printf ("Added %s\n", filename);
+	  image_filenames = g_list_append (image_filenames, (gpointer) filename);
+	}
       }
     }
+    view_widget = render_images (image_filenames);
+    gtk_widget_show (view_widget);
+  }
+}
+
+void
+next_image ()
+{
+  printf ("Displaying next image...\n");
+}
+
+void
+previous_image ()
+{
+  printf ("Displaying previous image...\n");
+}
+
+void
+stop_slideshow ()
+{
+  if (slideshow_timer != 0)
+  {
+    gtk_timeout_remove (slideshow_timer);
   }
 }
 
 void
 start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
 {
-  if (slideshow_timer == NULL)
+  guint delay;
+
+  delay = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin_button));
+
+  if (slideshow_timer == 0)
   {
     slideshow_timer = gtk_timeout_add (delay, next_image, NULL);
   }
   else
   {
     stop_slideshow ();
-  }
-}
-
-void
-stop_slideshow ()
-{
-  if (slideshow_timer != NULL)
-  {
-    gtk_timeout_remove (slideshow_timer);
   }
 }
 
@@ -149,6 +199,7 @@ show_new_slideshow (void)
 
   spin_button_adjustment = (GtkAdjustment *) gtk_adjustment_new (3.0, 1.0, 59.0, 1.0, 1.0, 1.0);
   spin_button = gtk_spin_button_new (spin_button_adjustment, 1.0, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spin_button), TRUE);
 
   start_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Start"), "slideshow");
   close_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Cancel"), "cancel");
@@ -188,7 +239,7 @@ show_dirbrowser (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *scroll;
+  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *scroll, *info_label;
   GtkWidget *view_option_menu, *view_menu, *view_menu_item;
   GdkPixbuf *p;
   GtkWidget *pw;
@@ -234,6 +285,8 @@ main (int argc, char *argv[])
   //gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
   //   (GtkSignalFunc) set_view, "list");
 
+  info_label = gtk_label_new ("No Image");
+
 #if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
@@ -242,6 +295,16 @@ main (int argc, char *argv[])
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
+
+#if GTK_MAJOR_VERSION < 2
+  toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_SPACE_LINE);
+#else
+  toolbar2 = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
 #endif
 
   scroll = gtk_scrolled_window_new (NULL, NULL);
@@ -271,22 +334,56 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_icon ("fullscreen");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Fullscreen"), 
-			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, NULL, NULL);
-
   p = gpe_find_icon ("slideshow");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Slideshow"), 
 			   _("Slideshow"), _("Slideshow"), pw, show_new_slideshow, NULL);
 
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), view_option_menu,
+			   _("Select View"), _("Select View"));
+
+  p = gpe_find_icon ("fullscreen");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Fullscreen"), 
+			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, NULL, NULL);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar2));
+
+  p = gpe_find_icon ("zoom_in");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom In"), 
+			   _("Zoom In"), _("Zoom In"), pw, NULL, NULL);
+
+  p = gpe_find_icon ("zoom_out");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom Out"), 
+			   _("Zoom Out"), _("Zoom Out"), pw, NULL, NULL);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar2));
+
+  p = gpe_find_icon ("zoom_1");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom 1:1"), 
+			   _("Zoom 1:1"), _("Zoom 1:1"), pw, NULL, NULL);
+
+  p = gpe_find_icon ("zoom_fit");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom to Fit"), 
+			   _("Zoom to Fit"), _("Zoom to Fit"), pw, NULL, NULL);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar2));
+
+  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar2), info_label,
+			   _("Image Infomation"), _("Image Infomation"));
+
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), view_option_menu, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  //gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (text_area));
+  gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (view_widget));
   gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar2, FALSE, FALSE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
@@ -295,6 +392,8 @@ main (int argc, char *argv[])
   gtk_widget_show (vbox);
   gtk_widget_show (hbox);
   gtk_widget_show (toolbar);
+  gtk_widget_show (toolbar2);
+  gtk_widget_show (info_label);
   gtk_widget_show (view_option_menu);
   gtk_widget_show (view_menu);
   gtk_widget_show (scroll);
