@@ -8,6 +8,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <libintl.h>
 
 #include "gtk_style_funcs.h"
 #include "gtk_timer.h"
@@ -37,6 +38,7 @@
 #define BUTTON_WIDTH  24 
 #define BUTTON_HEIGHT 16 
 
+#define _(x) gettext(x)
 
 /* Define the colors to use for the codes */
 GdkColor color_black  = {0, 0x0000, 0x0000, 0x0000};
@@ -140,6 +142,11 @@ int main (int argc, char *argv[])
   int row, col;
   int color;
 
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
+
   /* Store all the game data in here */
   game_data game_board;
 
@@ -198,36 +205,36 @@ int main (int argc, char *argv[])
   gtk_widget_show (menubar);
 
   /* "Game" pulldown menu */
-  submenu = create_submenu (menubar, "Game", FALSE);
+  submenu = create_submenu (menubar, _("Game"), FALSE);
 
-  menu_item = create_menu_item (submenu, "New Game", 
+  menu_item = create_menu_item (submenu, _("New Game"), 
 				new_game_dialog, &game_board);
   gtk_widget_show (menu_item);
 
   menu_item = create_menu_item (submenu, NULL, NULL, NULL);
   gtk_widget_show (menu_item);
 
-  menu_item = create_menu_item (submenu, "Quit", gtk_main_quit, NULL);
+  menu_item = create_menu_item (submenu, _("Quit"), gtk_main_quit, NULL);
   gtk_widget_show (menu_item);
 
   /* "Skill Level" pulldown menu */
-  submenu = create_submenu (menubar, "Skill Level", FALSE);
+  submenu = create_submenu (menubar, _("Skill Level"), FALSE);
 
-  menu_item = create_menu_radio (submenu, "Beginner (6 colors)", 
+  menu_item = create_menu_radio (submenu, _("Beginner (6 colors)"), 
 				 &skill_group,
 				 set_skill_level, (gpointer) 6);
   gtk_signal_connect (GTK_OBJECT (menu_item), "toggled",
 		      GTK_SIGNAL_FUNC (reset_color_area), &game_board);
   gtk_widget_show (menu_item);
 
-  menu_item = create_menu_radio (submenu, "Intermediate (7 colors)", 
+  menu_item = create_menu_radio (submenu, _("Intermediate (7 colors)"), 
 				 &skill_group,
 				 set_skill_level, (gpointer) 7);
   gtk_signal_connect (GTK_OBJECT (menu_item), "toggled",
 		      GTK_SIGNAL_FUNC (reset_color_area), &game_board);
   gtk_widget_show (menu_item);
 
-  menu_item = create_menu_radio (submenu, "Advanced (8 colors)", 
+  menu_item = create_menu_radio (submenu, _("Advanced (8 colors)"), 
 				 &skill_group,
 				 set_skill_level, (gpointer) 8);
   gtk_signal_connect (GTK_OBJECT (menu_item), "toggled",
@@ -235,9 +242,9 @@ int main (int argc, char *argv[])
   gtk_widget_show (menu_item);
 
   /* "Help" pulldown menu */
-  submenu = create_submenu (menubar, "Help", TRUE);
+  submenu = create_submenu (menubar, _("Help"), TRUE);
 
-  menu_item = create_menu_item (submenu, "About", about, NULL);
+  menu_item = create_menu_item (submenu, _("About"), about, NULL);
   gtk_widget_show (menu_item);
 
   /* ------------------------------------------------------------
@@ -260,7 +267,7 @@ int main (int argc, char *argv[])
    * ------------------------------------- */
 
   /* Key area above result area --------------------------------- */
-  frame = gtk_frame_new("Key");
+  frame = gtk_frame_new(_("Key"));
   gtk_container_border_width (GTK_CONTAINER (frame), SPACING);
   gtk_table_attach_defaults(GTK_TABLE(main_table), frame, 0, 1, 0, 1);
   gtk_widget_show (frame);
@@ -288,7 +295,7 @@ int main (int argc, char *argv[])
 
 
   /* Secret Code area ------------------------------------------- */
-  frame = gtk_frame_new("Crack this Code");
+  frame = gtk_frame_new(_("Crack this Code"));
   gtk_container_border_width (GTK_CONTAINER (frame), SPACING);
   gtk_table_attach_defaults(GTK_TABLE(main_table), frame, 1, 2, 0, 1);
   gtk_widget_show (frame);
@@ -313,14 +320,14 @@ int main (int argc, char *argv[])
 
 
   /* Timer area ------------------------------------------------- */
-  frame = gtk_frame_new("Timer");
+  frame = gtk_frame_new(_("Timer"));
   gtk_container_border_width (GTK_CONTAINER (frame), SPACING);
   gtk_table_attach_defaults(GTK_TABLE(main_table), frame, 2, 3, 0, 1);
   gtk_widget_show (frame);
 
   label = gtk_label_new ("");
   gtk_container_add (GTK_CONTAINER (frame), label);
-  initialize_timer (&game_board.game_timer, label, "seconds");
+  initialize_timer (&game_board.game_timer, label, _("seconds"));
   gtk_widget_show (label);
 
   /* Result area - below Key area ------------------------------- */
@@ -399,7 +406,7 @@ int main (int argc, char *argv[])
   gtk_widget_show (vbox);
 
   /* Color selector palete frame */
-  frame = gtk_frame_new("Colors");
+  frame = gtk_frame_new(_("Colors"));
   gtk_container_border_width (GTK_CONTAINER (frame), SPACING);
   gtk_box_pack_end (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
   gtk_widget_show (frame);
@@ -450,7 +457,7 @@ int main (int argc, char *argv[])
 
 
   /* "Guess" button */
-  button = button_new_with_properties(" Guess ", -1, 
+  button = button_new_with_properties(_(" Guess "), -1, 
 				      BUTTON_HEIGHT + 12, TRUE);
   gtk_signal_connect(GTK_OBJECT(button), "clicked", 
 		     GTK_SIGNAL_FUNC(check_code_guess), &game_board);
@@ -460,7 +467,7 @@ int main (int argc, char *argv[])
   
 
   /* "New Game" button */
-  button = button_new_with_properties("New Game", -1, 
+  button = button_new_with_properties(_("New Game"), -1, 
 				      BUTTON_HEIGHT + 12, TRUE);
   gtk_signal_connect(GTK_OBJECT(button), "clicked", 
 		     GTK_SIGNAL_FUNC(new_game_dialog), &game_board);
@@ -511,13 +518,13 @@ void new_game_dialog (GtkWidget *widget, game_data *board)
       gtk_box_pack_start (GTK_BOX (hbox), question_pixmap, FALSE, FALSE, 0);
 
       /* Make the question message and put it in the hbox */
-      message = gtk_label_new ("Do you really want to quit this\n"
-			       "round and start a new game?");
+      message = gtk_label_new (_("Do you really want to quit this\n"
+			       "round and start a new game?"));
       gtk_widget_show (message);
       gtk_box_pack_start (GTK_BOX (hbox), message, FALSE, FALSE, 0);
 
       /* Display everything is a popup dialog box */
-      display_yes_no_dialog ("Start New Game?", hbox, MESSAGE_SPACING,
+      display_yes_no_dialog (_("Start New Game?"), hbox, MESSAGE_SPACING,
 			     start_new_game, board, 
 			     NULL, NULL, 
 			     FALSE, TRUE);
@@ -592,10 +599,10 @@ void reset_color_area (GtkWidget *widget, game_data *board)
     {
       if (GTK_CHECK_MENU_ITEM (widget)->active)
 	{
-	  sprintf (message, "When you start a New Game, %d colors\n"
-		   "will be available to you and in the code", skill_level);
+	  sprintf (message, _("When you start a New Game, %d colors\n"
+		   "will be available to you and in the code"), skill_level);
 	  message_label = gtk_label_new (message);
-	  display_ok_dialog ("Skill Level", message_label, MESSAGE_SPACING, 
+	  display_ok_dialog (_("Skill Level"), message_label, MESSAGE_SPACING, 
 			     NULL, NULL, FALSE, TRUE);
 	}
     }
@@ -735,10 +742,10 @@ void check_code_guess (GtkWidget *widget, game_data *board)
 
   if (code_not_complete)
     {
-      message = gtk_label_new ("Your code is not complete yet!\n\n"
+      message = gtk_label_new (_("Your code is not complete yet!\n\n"
 			       "Assigned a color to each button in\n"
-			       "this row and click \"Guess\" again");
-      display_ok_dialog ("Warning", message, MESSAGE_SPACING, 
+			       "this row and click \"Guess\" again"));
+      display_ok_dialog (_("Warning"), message, MESSAGE_SPACING, 
 			 NULL, NULL, FALSE, TRUE);
     }
 
@@ -879,19 +886,19 @@ void player_wins_message (game_data *board)
 
   if (board->active_skill_level == 8)
     {
-      sprintf (skill_string, "Advanced");
+      sprintf (skill_string, _("Advanced"));
     }
   else if (board->active_skill_level == 7)
     {
-      sprintf (skill_string, "Intermediate");
+      sprintf (skill_string, _("Intermediate"));
     }
   else
     {
-      sprintf (skill_string, "Beginner");
+      sprintf (skill_string, _("Beginner"));
     }
 
-  sprintf (message_string, "Congratulations, you cracked the %s\n"
-	   "code in %d seconds with %d guesses", 
+  sprintf (message_string, _("Congratulations, you cracked the %s\n"
+	   "code in %d seconds with %d guesses"), 
 	   skill_string, timer_count, player_guesses);
 
   message = gtk_label_new (message_string);
@@ -900,7 +907,7 @@ void player_wins_message (game_data *board)
   gtk_box_pack_start (GTK_BOX (hbox), message, FALSE, FALSE, 0);
 
   /* Display everthing in a nice popup dialog window */
-  display_ok_dialog ("We Have a Winner!!", hbox, MESSAGE_SPACING, 
+  display_ok_dialog (_("We Have a Winner!!"), hbox, MESSAGE_SPACING, 
 		     NULL, NULL, FALSE, TRUE);
 
   /* Reveal the secret code for the players inspection */
@@ -924,15 +931,15 @@ void player_loses_message (game_data *board)
   gtk_box_pack_start (GTK_BOX (hbox), loser_pixmap, FALSE, FALSE, 0);
 
   /* Make the loser message and put it in the hbox */
-  message = gtk_label_new ("Sorry, but you didn't crack the code this time\n"
+  message = gtk_label_new (_("Sorry, but you didn't crack the code this time\n"
 			   "The secret code has been\n"
-			   "revealed for your inspection");
+			   "revealed for your inspection"));
   gtk_widget_show (message);
 
   gtk_box_pack_start (GTK_BOX (hbox), message, FALSE, FALSE, 0);
 
   /* Display everthing in a nice popup dialog window */
-  display_ok_dialog ("Too Bad - You Lose!", hbox, MESSAGE_SPACING, 
+  display_ok_dialog (_("Too Bad - You Lose!"), hbox, MESSAGE_SPACING, 
 		     NULL, NULL, FALSE, TRUE);
 
   /* Reveal the secret code for the players inspection */

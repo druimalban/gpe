@@ -1,7 +1,7 @@
 PACKAGE = gpe-code
 PREFIX = /usr/local
 DEBUG = no
-LINGUAS = 
+LINGUAS = cs
 VERSION = 0.1-1
 MEMBERS = code_breaker gtk_graphic_funcs gtk_style_funcs gtk_timer gtk_usefull_funcs usefull_funcs
 
@@ -46,5 +46,6 @@ install: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
+include ../../base/build/Makefile.translation
 include ../../base/build/Makefile.dpkg_ipkg
 -include $(DEPS)

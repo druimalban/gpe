@@ -8,6 +8,7 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <libintl.h>
 #include "gtk_usefull_funcs.h"
 
 #define TEXT_DISPLAY_SPACING 3
@@ -17,7 +18,7 @@
 #define BUTTON_WIDTH  128
 #define BUTTON_HEIGHT 32
 
-
+#define _(x) gettext(x)
 
 /* -------------------------------------------------------------------
  * This function creates a new button with the specified label (NULL 
@@ -142,7 +143,7 @@ void display_ok_dialog (const gchar *title, GtkWidget *widget,
   gtk_widget_show (widget);
 
   /* OK button - dismisses this window */
-  button = button_new_with_properties (" Ok ", BUTTON_WIDTH, 
+  button = button_new_with_properties (_(" Ok "), BUTTON_WIDTH, 
 				       BUTTON_HEIGHT, TRUE);
 
   if (extra_ok_func)
@@ -206,7 +207,7 @@ void display_yes_no_dialog (const gchar *title, GtkWidget *widget,
   gtk_widget_show (widget);
 
   /* Yes button */
-  button = button_new_with_properties (" Yes ", BUTTON_WIDTH, 
+  button = button_new_with_properties (_(" Yes "), BUTTON_WIDTH, 
 				       BUTTON_HEIGHT, TRUE);
   if (yes_func)
     {
@@ -223,7 +224,7 @@ void display_yes_no_dialog (const gchar *title, GtkWidget *widget,
   gtk_widget_show (button);
 
   /* No button */
-  button = button_new_with_properties (" No ", BUTTON_WIDTH, 
+  button = button_new_with_properties (_(" No "), BUTTON_WIDTH, 
 				       BUTTON_HEIGHT, TRUE);
   if (no_func)
     {
