@@ -481,14 +481,17 @@ notify_func (const char *name,
 				  break;
 				case BG_TILED_PXM:
 				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImgTiled),TRUE);
+				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImage),TRUE);
 				  gtk_entry_set_text(GTK_ENTRY(self.eImage),mb_back.data.filename);
 				  break;
    				case BG_CENTERED_PXM:
  				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImgCent),TRUE);
+				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImage),TRUE);
 				  gtk_entry_set_text(GTK_ENTRY(self.eImage),mb_back.data.filename);
 				  break;
 				case BG_STRETCHED_PXM:
  				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImgStr),TRUE);
+				  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbImage),TRUE);
 				  gtk_entry_set_text(GTK_ENTRY(self.eImage),mb_back.data.filename);
 				  break;
 				case BG_GRADIENT_HORIZ:

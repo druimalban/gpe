@@ -304,6 +304,7 @@ GtkWidget *Time_Build_Objects()
   GList *ntpsrv = NULL;
   GList *tzones = NULL;
  
+  GtkWidget *table;
   GtkObject *adj;
   GtkTooltips *tooltips;
   GtkWidget *notebook, *label, *hbox;
@@ -338,7 +339,11 @@ GtkWidget *Time_Build_Objects()
   gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_border);
 
   label = gtk_label_new(_("Time & Date"));
-  self.categories = gtk_vbox_new (FALSE, gpe_catspacing);
+  self.categories =  table = gtk_table_new (6, 3, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_widget_set_size_request(notebook,140,-1);
   
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),self.categories,label);
   
@@ -347,92 +352,59 @@ GtkWidget *Time_Build_Objects()
   gtk_container_set_border_width (GTK_CONTAINER (self.categories), 0);
 
   /* -------------------------------------------------------------------------- */
-  self.catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox1, TRUE, TRUE, 0);
 
   self.catlabel1 = gtk_label_new (NULL); 
   fstr = g_strdup_printf("%s %s %s","<b>",_("Date"),"</b>");
   gtk_label_set_markup (GTK_LABEL(self.catlabel1),fstr); 
   g_free(fstr);
-  gtk_box_pack_start (GTK_BOX (self.catvbox1), self.catlabel1, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (self.catlabel1), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (self.catlabel1), 0, 0.5);
+  gtk_table_attach (GTK_TABLE (table), self.catlabel1, 0, 3, 0, 1,
+		    GTK_FILL  | GTK_EXPAND,GTK_FILL  | GTK_EXPAND,0,0);
 
-  self.catconthbox1 = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (self.catvbox1), self.catconthbox1, TRUE, TRUE, 0);
-
-  self.catindentlabel1 = gtk_label_new (gpe_catindent);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox1), self.catindentlabel1, FALSE, FALSE, 0);
-
-  self.controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox1), self.controlvbox1, TRUE, TRUE, 0);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel1), 0.0, 0.9);
   
   self.cal = gtk_date_combo_new ();
   gtk_calendar_select_month (GTK_CALENDAR (GTK_DATE_COMBO(self.cal)->cal), ts.tm_mon, ts.tm_year);
   gtk_calendar_select_day (GTK_CALENDAR (GTK_DATE_COMBO(self.cal)->cal), ts.tm_mday);
+  gtk_table_attach (GTK_TABLE (table), self.cal, 0, 3, 1, 2,
+		    GTK_FILL,0,3,0);
   
-  gtk_box_pack_start (GTK_BOX (self.controlvbox1), self.cal, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, self.cal, _("Enter current date here or use button to select."), NULL);
 
   /* -------------------------------------------------------------------------- */
-  self.catvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox2, TRUE, TRUE, 0);
 
   self.catlabel2 = gtk_label_new (NULL); 
   fstr = g_strdup_printf("%s %s %s","<b>",_("Time"),"</b>");
   gtk_label_set_markup (GTK_LABEL(self.catlabel2),fstr); 
   g_free(fstr);
-  gtk_box_pack_start (GTK_BOX (self.catvbox2), self.catlabel2, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (self.catlabel2), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (self.catlabel2), 0, 0.5);
-
-  self.catconthbox2 = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (self.catvbox2), self.catconthbox2, TRUE, TRUE, 0);
-
-  self.catindentlabel2 = gtk_label_new (gpe_catindent);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox2), self.catindentlabel2, FALSE, FALSE, 0);
-
-  self.controlvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox2), self.controlvbox2, TRUE, TRUE, 0);
-  
-  self.hbox = gtk_hbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.controlvbox2), self.hbox, FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.catlabel2, 0, 3, 2, 3,
+		    GTK_FILL,GTK_FILL  | GTK_EXPAND,0,0);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel2), 0.0, 0.9);
 
   adj = gtk_adjustment_new(ts.tm_hour,0,24,1,6,6);
   self.h = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_container_add(GTK_CONTAINER(self.hbox),self.h);
+  gtk_table_attach (GTK_TABLE (table), self.h, 0, 1, 3, 4,
+		    GTK_FILL,0,3,0);
 
   adj = gtk_adjustment_new(ts.tm_min,0,60,1,15,15);
   self.m = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_container_add(GTK_CONTAINER(self.hbox),self.m);
+  gtk_table_attach (GTK_TABLE (table), self.m, 1, 2, 3, 4,
+		    GTK_FILL,0,0,0);
 
   adj = gtk_adjustment_new(ts.tm_sec,0,60,1,15,15);
   self.s = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_container_add(GTK_CONTAINER(self.hbox),self.s);
+  gtk_table_attach (GTK_TABLE (table), self.s, 2, 3, 3, 4,
+		    GTK_FILL,0,0,0);
 
   /* -------------------------------------------------------------------------- */
-
-  self.catvbox3 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.categories), self.catvbox3, TRUE, TRUE, 0);
 
   self.catlabel3 = gtk_label_new (NULL);
   fstr = g_strdup_printf("%s %s %s","<b>",_("Network"),"</b>");
   gtk_label_set_markup (GTK_LABEL(self.catlabel3),fstr); 
   g_free(fstr);
   
-  gtk_box_pack_start (GTK_BOX (self.catvbox3), self.catlabel3, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (self.catlabel3), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (self.catlabel3), 0, 0.5);
-
-  self.catconthbox3 = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (self.catvbox3), self.catconthbox3, TRUE, TRUE, 0);
-
-  self.catindentlabel3 = gtk_label_new (gpe_catindent);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox3), self.catindentlabel3, FALSE, FALSE, 0);
-
-  self.controlvbox3 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox3), self.controlvbox3, TRUE, TRUE, 0);
-
+  gtk_table_attach (GTK_TABLE (table), self.catlabel3, 0, 3, 4, 5,
+		    GTK_FILL,GTK_FILL  | GTK_EXPAND,0,0);
+  gtk_misc_set_alignment (GTK_MISC (self.catlabel3), 0.0, 0.9);
 
   self.ntpserver = gtk_combo_new ();
 
@@ -441,7 +413,9 @@ GtkWidget *Time_Build_Objects()
   }
 
   gtk_combo_set_popdown_strings (GTK_COMBO (self.ntpserver), ntpsrv);
-  gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.ntpserver, FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.ntpserver, 0, 3, 5, 6,
+		    GTK_FILL,0,3,0);
+  
   gtk_tooltips_set_tip (tooltips, self.ntpserver, _("Select the timeserver to use to set the clock."), NULL);
 
   self.internet = gtk_button_new_with_label(_("Get time from network"));
@@ -449,34 +423,29 @@ GtkWidget *Time_Build_Objects()
 		      (GtkSignalFunc) GetInternetTime, NULL);
   gtk_widget_set_sensitive(self.internet,is_network_up());
   
-  gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.internet, FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.internet, 0, 3, 6, 7,
+		    GTK_FILL,0,gpe_border,gpe_border);
   gtk_tooltips_set_tip (tooltips, self.internet, _("If connected to the Internet, you may press this button to set the time on this device using the timeserver above."), NULL);
 
   
    /*------------------------------*/
 
   label = gtk_label_new(_("Timezone"));
-  self.catvbox4 = gtk_vbox_new (FALSE, gpe_boxspacing);
+  self.catvbox4 = table = gtk_table_new (8, 3, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
   
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),self.catvbox4,label);
 
   self.catlabel4 = gtk_label_new (NULL);
-  fstr = g_strdup_printf("%s %s %s","<b>",_("Timezone"),"</b>");
+  fstr = g_strdup_printf("<b>%s</b>",_("Timezone"));
   gtk_label_set_markup (GTK_LABEL(self.catlabel4),fstr); 
   g_free(fstr);
   
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.catlabel4, FALSE, FALSE, 0);
   gtk_misc_set_alignment (GTK_MISC (self.catlabel4), 0.0, 0.9);
-
-  self.catconthbox4 = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.catconthbox4, FALSE, TRUE, 0);
-
-  self.catindentlabel4 = gtk_label_new (gpe_catindent);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox4), self.catindentlabel4, FALSE, TRUE, 0);
-
-  self.controlvbox4 = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.catconthbox4), self.controlvbox4, TRUE, TRUE, 0);
-
+  gtk_table_attach (GTK_TABLE (table), self.catlabel4, 0, 3, 0, 1,
+		    GTK_FILL,GTK_FILL | GTK_EXPAND,0,0);
 
   self.timezone = gtk_combo_new ();
   tzi = get_tz_info(getenv("TZ"));
@@ -498,8 +467,9 @@ GtkWidget *Time_Build_Objects()
 
   g_free(fstr);
   gtk_combo_set_popdown_strings (GTK_COMBO (self.timezone), tzones);
-  gtk_box_pack_start(GTK_BOX(self.controlvbox4), self.timezone, FALSE, FALSE, 0); 
   gtk_tooltips_set_tip (tooltips, self.timezone, _("Select your current timezone here. The setting applies after the next login."), NULL);
+  gtk_table_attach (GTK_TABLE (table), self.timezone, 0, 3, 1, 2,
+		    GTK_FILL,0,gpe_boxspacing,0);
 
   gtk_list_select_item(GTK_LIST(GTK_COMBO(self.timezone)->list),mark);
 
@@ -508,25 +478,32 @@ GtkWidget *Time_Build_Objects()
   fstr = g_strdup_printf("<b>%s</b>",_("Daylight Saving"));
   gtk_label_set_markup (GTK_LABEL(label),fstr); 
   g_free(fstr);
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), label, FALSE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 3, 2, 3,
+		    GTK_FILL,GTK_FILL  | GTK_EXPAND,0,0);
 
   /* ---- */  
   self.usedst = gtk_check_button_new_with_label(_("Use daylight saving time"));
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.usedst, FALSE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.usedst, 0, 3, 3, 4,
+		    GTK_FILL,0,gpe_boxspacing,0);
+  
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.usedst), strlen(tzi.dstname));
   g_signal_connect (G_OBJECT(self.usedst), "toggled",
 		      G_CALLBACK(update_enabled_widgets), NULL);
   gtk_tooltips_set_tip (tooltips, self.usedst, _("Check this box if you want your device to handle daylight saving time for you."), NULL);
 
-  self.offsetlabel = gtk_label_new(_("Offset"));
+  self.offsetlabel = gtk_label_new(_("Offset:"));
   gtk_misc_set_alignment(GTK_MISC(self.offsetlabel),0.0,0.5);
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.offsetlabel, FALSE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.offsetlabel, 0, 1, 4, 5,
+		    GTK_FILL,GTK_FILL,gpe_boxspacing,0);
 
   hbox = gtk_hbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), hbox, FALSE, TRUE, 0);
-    
+  gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 5, 6,
+		    GTK_FILL,0,gpe_boxspacing,0);
+      
   self.defaultdst = gtk_check_button_new_with_label(_("Default"));
-  gtk_box_pack_start (GTK_BOX (hbox), self.defaultdst, FALSE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.defaultdst, 1, 3, 4, 5,
+		    GTK_FILL,0,gpe_boxspacing,0);
+			
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.defaultdst), !(tzi.utcdstofs_h || tzi.utcdstofs_m));
   g_signal_connect (G_OBJECT(self.defaultdst), "toggled",
 		      G_CALLBACK(update_enabled_widgets), NULL);
@@ -534,10 +511,10 @@ GtkWidget *Time_Build_Objects()
 
   adj = gtk_adjustment_new(tzi.utcdstofs_h,-12,12,1,6,6);
   self.dsth = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_box_pack_start (GTK_BOX (hbox), self.dsth, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), self.dsth, FALSE, TRUE, gpe_boxspacing);
   self.dstlh = gtk_label_new(_("Hours"));
   gtk_misc_set_alignment(GTK_MISC(self.dstlh),0.0,0.5);
-  gtk_box_pack_start (GTK_BOX (hbox), self.dstlh, FALSE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), self.dstlh, FALSE, TRUE, gpe_boxspacing);
   gtk_tooltips_set_tip (tooltips, self.dsth, _("Select daylight saving time offset hours here."), NULL);
 
   adj = gtk_adjustment_new(tzi.utcdstofs_m,0,55,5,15,15);
@@ -555,10 +532,12 @@ GtkWidget *Time_Build_Objects()
   fstr = g_strdup_printf("<b>%s</b>",_("Advanced Settings"));
   gtk_label_set_markup (GTK_LABEL(label),fstr); 
   g_free(fstr);
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), label, FALSE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 3, 7, 8,
+		    GTK_FILL,GTK_FILL  | GTK_EXPAND,0,0);
   
   self.advanced = gtk_check_button_new_with_label(_("Use advanced settings"));
-  gtk_box_pack_start (GTK_BOX (self.catvbox4), self.advanced, FALSE, TRUE, 0);
+  gtk_table_attach (GTK_TABLE (table), self.advanced, 0, 3, 8, 9,
+		    GTK_FILL,0,gpe_boxspacing,0);
   gtk_tooltips_set_tip (tooltips, self.advanced, _("Check this if you want to use the advanced settings below."), NULL);
   
   

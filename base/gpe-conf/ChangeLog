@@ -1,5 +1,9 @@
 When			Who				Where						What
 
+29.04.2003		Florian			timeanddate.c				Some GUI rework, fixes bug #753
+
+28.04.2003		Florian			theme.c						Fixed missing activation of "rbImage" if a bg image is set.
+
 26.04.2003		Florian			*.dotdesktop				Changed some names.
 								cardinfo.*					Updated to call ioctls from suid process.
 								suid.c
