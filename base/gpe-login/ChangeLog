@@ -1,3 +1,7 @@
+2004-10-07  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile: Install lock script non-executable to make screen 
+                    locking default to off.
 
 2004-09-09  Florian Boor <florian@kernelconcepts.de>
 
