@@ -6,21 +6,16 @@ VERSION = 0.48
 
 LINGUAS = id pt de fr zh_TW ro wa sv nl cs
 
+CPPFLAGS += $(STANDARD_CPPFLAGS)
+CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+
 MEMBERS = main day_view week_view future_view event-ui month_view day_popup xsettings gtkdatesel
 
-CPPFLAGS = -D_GNU_SOURCE -I../libeventdb -I../libschedule
+CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration
+LDFLAGS += -L../libxsettings -L../libxsettings-client -Wl,-rpath-link,../libxsettings -L../libdisplaymigration -L../libeventdb -L../libschedule 
 
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g 
-else
-CFLAGS += -Os -fomit-frame-pointer
-CPPFLAGS += -DG_DISABLE_CAST_CHECKS
-endif
-CFLAGS += -Wall $(GPECFLAGS) -I../libxsettings -I../libxsettings-client -I../libdisplaymigration
-LDFLAGS += $(GPELDFLAGS) -L../libxsettings -L../libxsettings-client -lXsettings-client -L../libdisplaymigration -ldisplaymigration -Wl,-rpath-link,../libxsettings
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+LDFLAGS += -lXsettings-client -ldisplaymigration -leventdb -lschedule
 
 .SUFFIXES: .d
 
@@ -37,7 +32,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -L../libeventdb -leventdb -L../libschedule -lschedule -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
