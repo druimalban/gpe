@@ -1,0 +1,116 @@
+# Translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Marcus Moreira de Souza <marcus@frb.br>, 2004.
+# based on the translation to Portuguese (pt) by
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-edit 0.13\n"
+"POT-Creation-Date: 2003-02-20 20:31+0000\n"
+"PO-Revision-Date: 2004-09-02 17:21-0300\n"
+"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:88 main.c:89
+msgid "Untitled"
+msgstr "Sem nome"
+
+#: main.c:260
+msgid "Open File ..."
+msgstr "Abrir arquivo ..."
+
+#: main.c:289
+msgid "Save as .."
+msgstr "Salvar como .."
+
+#: main.c:327
+msgid "Save current file before exiting?"
+msgstr "Deseja salvar o documento antes de sair?"
+
+#: main.c:327
+msgid "Question"
+msgstr "Questão"
+
+#: main.c:328
+msgid "Don't save"
+msgstr "Não salvar"
+
+#: main.c:328 main.c:616
+msgid "Save"
+msgstr "Salvar"
+
+#: main.c:390
+msgid "Text not found"
+msgstr "Texto não encontrado"
+
+#: main.c:429
+msgid "Unable to replace text"
+msgstr "Não foi possível substituir o texto"
+
+#: main.c:443 main.c:492
+msgid "Search for:"
+msgstr "Procurar:"
+
+#: main.c:446 main.c:498
+msgid "Find"
+msgstr "Procurar"
+
+#: main.c:493
+msgid "Replace with:"
+msgstr "Substituir:"
+
+#: main.c:497 main.c:630
+msgid "Replace"
+msgstr "Substituir"
+
+#: main.c:608
+msgid "New"
+msgstr "Novo"
+
+#: main.c:609
+msgid "New document"
+msgstr "Novo documento"
+
+#: main.c:612
+msgid "Open"
+msgstr "Abrir"
+
+#: main.c:613
+msgid "Open file"
+msgstr "Abrir arquivo"
+
+#: main.c:617
+msgid "Save current file"
+msgstr "Salvar o documento aberto"
+
+#: main.c:620
+msgid "Save as"
+msgstr "Salvar como"
+
+#: main.c:621
+msgid "Save current file as"
+msgstr "Salvar o documento aberto como"
+
+#: main.c:626
+msgid "Search"
+msgstr "Procurar"
+
+#: main.c:627
+msgid "Search for a string"
+msgstr "Procurar texto"
+
+#: main.c:631
+msgid "Replace a string"
+msgstr "Substituir texto"
+
+#: gpe-edit.desktop.in.h:1
+msgid "GPE Text Editor"
+msgstr "Editor de texto GPE"
+
+#: gpe-edit.desktop.in.h:2
+msgid "Text Editor"
+msgstr "Editor de texto"

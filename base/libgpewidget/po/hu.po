@@ -1,0 +1,41 @@
+# libgpewidget Hungarian Translation
+# Copyright (C) 2003 Free Sotfware Foundation, Inc.
+# This file is distributed under the same license as the libgpewidget package.
+# Hegedus Gabor <hygy@freemail.hu>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: libgpewidget 0.56 \n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2003-11-28 23:47+0100\n"
+"Last-Translator: Hegedus Gabor <hygy@freemail.hu>\n"
+"Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "GPE-HIBA: %s\n"
+
+#: pixmaps.c:82
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr "Nem tudom betölteni a(z) \"%s\" ikont"
+
+#: pixmaps.c:168
+#, c-format
+msgid "Icon \"%s\" not loaded"
+msgstr "A(z) \"%s\" icon nincs betöltve"
+
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Nincs könyvtár kiválasztva."
+
+#: what.c:78
+msgid "No help available."
+msgstr "Nincs elérhetõ súgó."
+
+#: question.c:175
+msgid "Question"
+msgstr "Kérdés"

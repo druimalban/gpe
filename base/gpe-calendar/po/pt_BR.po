@@ -1,0 +1,323 @@
+# Translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Marcus Moreira de Souza <marcus@frb.br>, 2004.
+# based on the translation to Portuguese (pt) by
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-calendar 0.45\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"PO-Revision-Date: 2004-09-02 20:13-0300\n"
+"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "Calendário"
+
+#: main.c:261
+msgid "New appointment"
+msgstr "Novo compromisso"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Clique aqui para criar um novo compromisso ou lembrete"
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "Hoje"
+
+#: main.c:276
+msgid "Future"
+msgstr "Futuro"
+
+#: main.c:276
+msgid "Future View"
+msgstr "Próximos Eventos"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "Clique aqui para ver todos os eventos futuros."
+
+#: main.c:284
+msgid "Day View"
+msgstr "Visão Diária"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "Clique aqui para selecionar a visão diária"
+
+#: main.c:292
+msgid "Week"
+msgstr "Semana"
+
+#: main.c:292
+msgid "Week View"
+msgstr "Visão Semanal"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "Clique aqui para selecionar a visão semanal"
+
+#: main.c:300
+msgid "Month"
+msgstr "Mês"
+
+#: main.c:300
+msgid "Month View"
+msgstr "Visão Mensal"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "Clique aqui para seleccionar a visão mensal"
+
+#: main.c:307
+msgid "Exit"
+msgstr "Sair"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "Clique aqui para sair do programa"
+
+#: event-ui.c:251
+msgid ""
+"Delete all recurring entries?\n"
+"(If no, delete this instance only)"
+msgstr ""
+"Apagar todas os compromissos recorrentes?\n"
+"(Se não, apagar apenas esta instância)"
+
+#: event-ui.c:383
+msgid "End time must not be earlier than start time"
+msgstr "A data do final não pode ser anterior à data de início"
+
+#: event-ui.c:622
+msgid "Event"
+msgstr "Evento"
+
+#: event-ui.c:623
+msgid "Recurrence"
+msgstr "Recorrência"
+
+#: event-ui.c:624 event-ui.c:797
+msgid "Alarm"
+msgstr "Alarme"
+
+#: event-ui.c:651 event-ui.c:853
+msgid "Type:"
+msgstr "Tipo:"
+
+#: event-ui.c:656
+msgid "Appointment"
+msgstr "Compromisso"
+
+#: event-ui.c:657
+msgid "Reminder"
+msgstr "Lembrete"
+
+#: event-ui.c:659
+msgid "Task"
+msgstr "Tarefa"
+
+#: event-ui.c:665
+msgid "Days"
+msgstr "Dias"
+
+#: event-ui.c:666
+msgid "Weeks"
+msgstr "Semanas"
+
+#: event-ui.c:674
+msgid "Summary:"
+msgstr "Assunto:"
+
+#: event-ui.c:690
+msgid "Start:"
+msgstr "Início:"
+
+#: event-ui.c:691
+msgid "End:"
+msgstr "Fim:"
+
+#: event-ui.c:692 event-ui.c:693
+msgid "at:"
+msgstr "à:"
+
+#: event-ui.c:726
+msgid "Date:"
+msgstr "Data:"
+
+#: event-ui.c:729
+msgid "Time:"
+msgstr "Hora:"
+
+#: event-ui.c:749
+msgid "Due:"
+msgstr "Fim:"
+
+#: event-ui.c:753
+msgid "Allow:"
+msgstr "Permitir:"
+
+#: event-ui.c:768
+msgid "Description:"
+msgstr "Descrição:"
+
+#: event-ui.c:801
+msgid "before event"
+msgstr "antes do evento"
+
+#: event-ui.c:804
+msgid "minutes"
+msgstr "minutos"
+
+#: event-ui.c:806
+msgid "hours"
+msgstr "horas"
+
+#: event-ui.c:808 event-ui.c:908
+msgid "days"
+msgstr "dias"
+
+#: event-ui.c:810
+msgid "weeks"
+msgstr "semanas"
+
+#: event-ui.c:865
+msgid "No recurrence"
+msgstr "Nenhuma recorrência"
+
+#: event-ui.c:868
+msgid "Daily"
+msgstr "Diariamente"
+
+#: event-ui.c:871
+msgid "Weekly"
+msgstr "Mensalmente"
+
+#: event-ui.c:874
+msgid "Monthly"
+msgstr "Mensalmente"
+
+#: event-ui.c:877
+msgid "Yearly"
+msgstr "Anualmente"
+
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+msgid "Every"
+msgstr "Todos"
+
+#: event-ui.c:921
+msgid "weeks, on:"
+msgstr "semanas, em:"
+
+#: event-ui.c:974
+msgid "months"
+msgstr "meses"
+
+#: event-ui.c:979
+#, c-format
+msgid "on day %d"
+msgstr "no dia %d"
+
+#: event-ui.c:983
+msgid "on the"
+msgstr "em"
+
+#: event-ui.c:991
+msgid "first"
+msgstr "primeiro"
+
+#: event-ui.c:993
+msgid "second"
+msgstr "segundo"
+
+#: event-ui.c:995
+msgid "third"
+msgstr "terceiro"
+
+#: event-ui.c:997
+msgid "fourth"
+msgstr "quarto"
+
+#: event-ui.c:999
+msgid "fifth"
+msgstr "quinto"
+
+#: event-ui.c:1001
+msgid "last"
+msgstr "último"
+
+#: event-ui.c:1028
+msgid "years"
+msgstr "anos"
+
+#: event-ui.c:1047
+msgid "End Date:"
+msgstr "Data final:"
+
+#: event-ui.c:1053
+msgid "forever"
+msgstr "indefinidamente"
+
+#: event-ui.c:1064
+msgid "end after"
+msgstr "acabar depois de"
+
+#: event-ui.c:1081
+msgid "end on"
+msgstr "acabar em"
+
+#: event-ui.c:1089
+msgid "events"
+msgstr "eventos"
+
+#: event-ui.c:1188
+msgid "Calendar: New event"
+msgstr "Calendário: Novo evento"
+
+#: event-ui.c:1235
+msgid "Calendar: Edit event"
+msgstr "Calendário: Editar evento"
+
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "Nenhum compromisso"
+
+#: xsettings.c:105
+msgid "Cannot create XSettings client"
+msgstr "Impossível criar o cliente XSettings"
+
+#: gtkdatesel.c:193
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:202
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:205
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:208
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:219
+msgid "Week %V"
+msgstr "Semana %V"
+
+#: gtkdatesel.c:225
+#, c-format
+msgid "%a, %d"
+msgstr "%a, %d"
+
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "Calendário GPE"

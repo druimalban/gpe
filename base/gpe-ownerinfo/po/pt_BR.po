@@ -1,0 +1,72 @@
+# Translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Marcus Moreira de Souza <marcus@frb.br>, 2004.
+# based on the translation to Portuguese (pt) by
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo 0.22\n"
+"POT-Creation-Date: 2003-10-10 00:14+0200\n"
+"PO-Revision-Date: 2004-09-02 17:24-0300\n"
+"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:83 main.c:112
+msgid "GPE Owner Info"
+msgstr "Informações do Proprietário GPE"
+
+#: main.c:85
+msgid "Valid options:\n"
+msgstr "Opções disponíveis:\n"
+
+#: main.c:86
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRIA  geometria da janela (padrão: 240x100+0+220)\n"
+
+#: main.c:87
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           manter a janela sempre no topo\n"
+
+#: main.c:88
+msgid "   -h           this help text\n"
+msgstr "   -h           mostrar esta mensagem de ajuda\n"
+
+#  TRANSLATORS: only a short word will look good
+#  here.  If the word is shorter than 5 letters,
+#  please fill it up with spaces.
+#. TRANSLATORS: only a short word will look good
+#. here.  If the word is shorter than 5 letters,
+#. please fill it up with spaces.
+#: gpe-ownerinfo.c:326
+msgid "Owner"
+msgstr "Dono"
+
+#: gpe-ownerinfo.c:356
+msgid "GPE User"
+msgstr "Usuário GPE"
+
+#  TRANSLATORS: you should make sure to not use a 'fantasy' domain
+#  which might actually exist (maybe in the future). You can
+#  replace the 'nobody' though, or use '@example.org' (see RFC 2606)
+#. TRANSLATORS: you should make sure to not use a 'fantasy' domain
+#. which might actually exist (maybe in the future). You can
+#. replace the 'nobody' though, or use '@example.org' (see RFC 2606)
+#: gpe-ownerinfo.c:360
+msgid "nobody@localhost.localdomain"
+msgstr "alguem@example.org"
+
+#: gpe-ownerinfo.c:361
+msgid "+99 (9999) 999-9999"
+msgstr "+55(99)99999999"
+
+#  TRANSLATORS: the translations below should match 'Owner
+#  Information' (in gpe-conf) and 'Settings' (in mbdesktop)
+#. TRANSLATORS: the translations below should match 'Owner
+#. Information' (in gpe-conf) and 'Settings' (in mbdesktop)
+#: gpe-ownerinfo.c:364
+msgid "Configurable with <i>Owner Information</i> under <i>Settings</i>."
+msgstr "Configurável via <i>Informações do Proprietário</i> na categoria <i>Preferências</i>."

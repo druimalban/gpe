@@ -1,79 +1,43 @@
-# Romanian translation of GNU tar
-# Copyright (C) 2003 Free Software Foundation, Inc.
-# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+# Mesajele Ón limba rom‚n„ pentru libgpewidget.
+# Copyright (C) 2004, Free Software Foundation, Inc.
+# Acest fi∫ier este distribuit sub aceea∫i licen˛„ ca ∫i libgpewidget.
+# Laurentiu Buzdugan <lbuz@rolix.org>, 2003,2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpewidget 0.46\n"
-"POT-Creation-Date: 2003-02-01 16:44+0000\n"
-"PO-Revision-Date: 2003-02-13 21:42-0500\n"
-"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Project-Id-Version: libgpewidget-0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2004-12-29 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 0.9.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: errorbox.c:58
-msgid "Error"
-msgstr "Eroare"
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "EROARE GPE: %s\n"
 
-#: pixmaps.c:81
+#: pixmaps.c:82
 #, c-format
 msgid "Unable to load icon \"%s\""
-msgstr "Nu pot √Ænc√£rca iconul \"%s\""
+msgstr "Nu am putut Ónc„rca iconul \"%s\""
 
-#: pixmaps.c:167
+#: pixmaps.c:168
 #, c-format
 msgid "Icon \"%s\" not loaded"
-msgstr "Iconul \"%s\" nu a fost √Ænc√£rcat"
+msgstr "Iconul \"%s\" neÓnc„rcat"
 
-#: dirbrowser.c:307
-msgid "OK"
-msgstr "OK"
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Nici un director nu este selectat."
 
-#: dirbrowser.c:315
-msgid "Cancel"
-msgstr "Renun√æ√£"
-
-#: what.c:69
+#: what.c:78
 msgid "No help available."
-msgstr "Nu este disponibil nici un ajutor."
+msgstr "Nici un ajutor disponibil."
 
-#: gtkdatesel.c:187
-msgid "%Y"
-msgstr "%Y"
-
-#: gtkdatesel.c:196
-msgid "%b"
-msgstr "%b"
-
-#: gtkdatesel.c:199
-msgid "%B"
-msgstr "%B"
-
-#: gtkdatesel.c:202
-#, c-format
-msgid "%m"
-msgstr "%m"
-
-#: gtkdatesel.c:213
-msgid "Week %V"
-msgstr "S√£pt√£m√¢na %V"
-
-#: gtkdatesel.c:219
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: question.c:136
+#: question.c:175
 msgid "Question"
-msgstr "√éntrebare"
-
-#: question.c:137
-msgid "No"
-msgstr "Nu"
-
-#: question.c:137
-msgid "Yes"
-msgstr "Da"
+msgstr "Œntrebare"
