@@ -24,7 +24,7 @@
 #include "picturebutton.h"
 
 GtkWidget *
-gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon)
+gpe_picture_button_aligned (GtkStyle *style, gchar *text, gchar *icon, GpePositionType pos)
 {
   GtkWidget *button = gtk_button_new ();
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
@@ -58,9 +58,23 @@ gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon)
   gtk_widget_show (hbox);
   gtk_widget_show (button);
 
-  gtk_box_pack_start (GTK_BOX (hbox2), hbox, TRUE, FALSE, 0);
-
-  gtk_container_add (GTK_CONTAINER (button), hbox2);
+  {//packing
+    GtkWidget * alignment;
+    switch(pos){
+      case GPE_POS_LEFT:
+        alignment = gtk_alignment_new (0.0, 0.5, 0, 0);
+        break;
+      case GPE_POS_RIGHT:
+        alignment = gtk_alignment_new (1.0, 0.5, 0, 0);
+        break;
+      case GPE_POS_CENTER:
+      default:
+        alignment = gtk_alignment_new (0.5, 0.5, 0, 0);
+    }
+    gtk_box_pack_start (GTK_BOX (hbox2), hbox, TRUE, FALSE, 0);
+    gtk_container_add (GTK_CONTAINER (alignment), hbox2);
+    gtk_container_add (GTK_CONTAINER (button), alignment);
+  }
 
   return button;
 }
