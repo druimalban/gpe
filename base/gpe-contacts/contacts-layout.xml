@@ -37,10 +37,6 @@
     <page>
       <label>Home</label>
       <single-item>
-        <tag>NAME</tag>
-        <label>Name</label>
-      </single-item>
-      <single-item>
         <tag>HOME.TELEPHONE</tag>
         <label>Phone</label>
       </single-item>

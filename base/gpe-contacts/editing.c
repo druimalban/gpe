@@ -104,6 +104,7 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
               GtkWidget *b, *h;
               h = gtk_hbox_new(FALSE, gpe_get_boxspacing());
               l = gtk_label_new (e->name);
+              gtk_misc_set_alignment(GTK_MISC(l),1.0,0.5);
               gtk_box_pack_start(GTK_BOX(h), w, TRUE, TRUE, 0);
               GTK_WIDGET_SET_FLAGS(w, GTK_CAN_DEFAULT);
               b = gtk_button_new_with_label(_("Details"));
