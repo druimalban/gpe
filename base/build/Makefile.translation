@@ -93,8 +93,7 @@ real-translation-package: all-mo
 		install -m 644 po/$$LINGUA.mo $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/$(PACKAGE).mo; \
 		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(BINPACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/;s!<source>!$(SOURCE)!" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
 		install $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
-		chown -R root.root $(transdist)/$$i; \
-		$(IPKG_BUILD) $(transdist)/$$i | sed 's/^Packaged .*into //; t 1; d; : 1; s:.*/::' >> $(ipkglist); \
+		$(IPKG_BUILD) -g 0 -o 0 $(transdist)/$$i | sed 's/^Packaged .*into //; t 1; d; : 1; s:.*/::' >> $(ipkglist); \
 	done
 
 translation-ipkg:

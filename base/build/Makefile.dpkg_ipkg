@@ -30,10 +30,10 @@ STANDARD_CPPFLAGS = -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\
 STANDARD_CFLAGS = -MD -Wall
 
 ifeq ($(DEBUG),yes)
-STANDARD_CFLAGS += -O2 -g
-STANDARD_LDFLAGS = -g
+CFLAGS += -O2 -g
+LDFLAGS = -g
 else
-STANDARD_CFLAGS += -Os -fomit-frame-pointer
+CFLAGS += -Os -fomit-frame-pointer
 endif
 
 dist: check-source clean dist-prep
@@ -104,3 +104,6 @@ source: tag dist-upload
 
 %.pc: %.pc.in
 	sed 's:PREFIX:$(PREFIX):;s:BUILDDIR:$(shell pwd):;s:VERSION:$(VERSION):' < $< > $@
+
+.c.o:;
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(PACKAGE_CFLAGS) $(PACKAGE_CPPFLAGS) -c $< -o $@

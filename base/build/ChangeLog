@@ -1,3 +1,12 @@
+2004-03-07  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (real-translation-package): Pass "-g 0 -o 0"
+	to ipkg-build.  Remove chown command.
+
+	* Makefile.dpkg_ipkg (LDFLAGS): Put debug/optimisation stuff in
+	CFLAGS/LDFLAGS, not STANDARD_CFLAGS/STANDARD_LDFLAGS.
+	(.c.o): New rule.  Use $(PACKAGE_CFLAGS) and $(PACKAGE_CPPFLAGS).
+
 2004-02-22  Luc Pionchon <luc@handhelds.org>
 
 	* extract-linguas: New file, extract linguas from a 'postats' file from TP
