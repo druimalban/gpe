@@ -28,25 +28,26 @@
 
 #include "question.h"
 #include "render.h"
+#include "spacing.h"
 #include "picturebutton.h"
 #include "pixmaps.h"
 #include "link-warning.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
-void
+static void
 on_qn_button_clicked (GtkButton *button, gpointer user_data)
 {
   gint *ret = gtk_object_get_data (GTK_OBJECT (user_data), "return");
-  *ret = (gint)gtk_object_get_data (GTK_OBJECT(button), "value");
+  *ret = (gint)gtk_object_get_data (GTK_OBJECT (button), "value");
 
   gtk_widget_destroy (user_data);
 
   gtk_main_quit();
 }
 
-void
-add_button (char *text, char *icon, GtkWidget *dialog, GtkWidget *box, int value)
+static void
+add_button (char *text, char *icon, GtkWidget *dialog, GtkWidget *box, int spacing, int value)
 {
   GtkWidget *btn;
 
@@ -55,49 +56,57 @@ add_button (char *text, char *icon, GtkWidget *dialog, GtkWidget *box, int value
   else
     btn = gpe_picture_button (dialog->style, text, icon);
 
-  g_object_set_data (G_OBJECT (btn), "value", (gpointer)value);
+  g_object_set_data (G_OBJECT (btn), "value", (gpointer) value);
   g_signal_connect (G_OBJECT (btn), "clicked",
 		    G_CALLBACK (on_qn_button_clicked),
 		    dialog);
+  gtk_box_set_spacing (GTK_BOX (box), spacing);
   gtk_box_pack_start (GTK_BOX (box), btn, TRUE, FALSE, 0);
 }
 
 gint
 gpe_question_ask (char *qn, char *title, char *iconname, ...)
 {
-  GtkWidget *window, *hbox, *label, *vbox, *buttonhbox, *sep;
+  GtkWidget *window, *hbox, *label;
   GdkPixbuf *p;
   gint button_pressed = -1;
   int i = 0;
   va_list ap;
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  /* alerts seem to use some non-standard values
+   *  (http://developer.gnome.org/projects/gup/hig/1.0/windows.html#alert-spacing)
+   */
+  guint gpe_boxspacing = 12/GPE_GNOME_SCALING;
+  guint gpe_border     = gpe_boxspacing/2;
 
+  /* -------------------------------------------------- */
+  /* top level window
+   */
+  window = gtk_dialog_new ();
+  gtk_dialog_set_has_separator (GTK_DIALOG (window), FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_border);
+  gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (window)->vbox), gpe_boxspacing);
   gtk_window_set_modal (GTK_WINDOW (window), TRUE);
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
-
-  vbox = gtk_vbox_new (FALSE, 0);
-  buttonhbox = gtk_hbox_new (FALSE, 0);
-
-  /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-
-  sep = gtk_hseparator_new ();
-
   g_signal_connect (G_OBJECT (window), "destroy",
 		    G_CALLBACK (gtk_main_quit),
 		    NULL);
-
   gtk_object_set_data (GTK_OBJECT (window), "return", &button_pressed);
 
-  /* icon / label */
-  hbox = gtk_hbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (vbox), hbox);
+  /* -------------------------------------------------- */
+  /* hbox: left column: icon
+   *       right column: label
+   */
+  hbox = gtk_hbox_new (FALSE, gpe_boxspacing);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), gpe_border);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
 
+  /* icon / label */
   if (iconname[0] == '!')
     {
       GtkWidget *icon = gtk_image_new_from_stock (iconname + 1, GTK_ICON_SIZE_DIALOG);
-      gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+      gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
     }
   else
     {
@@ -105,33 +114,21 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
       if (p != NULL)
 	{
 	  GtkWidget *icon = gtk_image_new_from_pixbuf (p);
-	  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+	  gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
+	  gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
 	}
     }
 
-  label = gtk_label_new (qn);
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
+  label = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (label), qn);
+  gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), sep, FALSE, FALSE, 6);
-  gtk_box_pack_start (GTK_BOX (vbox), buttonhbox, FALSE, FALSE, 0);
-
-  if (title && title[0])
-    {
-      gtk_window_set_title (GTK_WINDOW (window), title);
-      gtk_container_add (GTK_CONTAINER (window), vbox);
-    }
-  else
-    {
-      GtkWidget *frame = gtk_frame_new (NULL);
-      gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
-      gtk_window_set_title (GTK_WINDOW (window), "");
-      gtk_container_add (GTK_CONTAINER (frame), vbox);
-      gtk_container_add (GTK_CONTAINER (window), frame);
-    }
-
-  /* buttons */
+  /* -------------------------------------------------- */
+  /* put a user-defined number of buttons into the button box
+   */
   va_start (ap, iconname);
   for (;;)
     {
@@ -143,9 +140,23 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
       
       btn_icon = va_arg (ap, char *);
       
-      add_button (btn_lbl, btn_icon, window, buttonhbox, i++);
+      add_button (btn_lbl, btn_icon, window, GTK_DIALOG (window)->action_area, gpe_boxspacing/2, i++);
     }
   va_end (ap);
+
+  /* -------------------------------------------------- */
+  if (title && title[0])
+    {
+      gtk_window_set_title (GTK_WINDOW (window), title);
+    }
+  else
+    {
+      gtk_window_set_title (GTK_WINDOW (window), "");
+      gtk_widget_realize (window);
+      gdk_window_set_decorations (window->window, GDK_DECOR_BORDER);
+      /* Maybe also set
+	 gdk_window_set_functions (); */
+  }
 
   gtk_widget_show_all (window);
 

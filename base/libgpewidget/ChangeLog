@@ -1,3 +1,13 @@
+2003-02-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* question.c (gpe_question_ask): Allow pango markup in label.
+	(gpe_question_ask): Make conform to Gnome HIG.
+	(gpe_question_ask): Set decorations so that it doesn't even get a
+	title bar when no title is requested.
+	(on_qn_button_clicked): Make static.
+	(add_button): Make static.
+	(gpe_question_ask): Convert to GtkDialog.
+
 2003-02-23  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (HEADERS): Add translabel.h
