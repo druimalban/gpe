@@ -8,7 +8,7 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 
-LINGUAS = pt ro de fr
+LINGUAS = pt ro de fr cs
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdisplaymigration -ldisplaymigration -L.
