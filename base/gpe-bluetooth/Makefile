@@ -97,7 +97,7 @@ install-program: all $(GLADE) bluez.conf
 	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) pin-ui.c pin-dbus.c pin-ui.h
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
