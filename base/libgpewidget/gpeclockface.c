@@ -335,7 +335,7 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
   gv = gdk_window_get_visual (widget->window);
   gcm = gdk_drawable_get_colormap (widget->window);
 
-  clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (widget->window),
+  clock->draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap),
 			       gdk_x11_visual_get_xvisual (gv),
 			       gdk_x11_colormap_get_xcolormap (gcm));
 
