@@ -1,5 +1,7 @@
 2003-09-09  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/control1 (Source): Add 'Source: SOURCE'.
+
 	* Makefile (LINGUAS): Add 'sk'.
 
 	* po/sk.po: New file courtesy Marcel Telka.
