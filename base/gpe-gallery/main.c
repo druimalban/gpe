@@ -54,6 +54,7 @@ gboolean confine_pointer_to_window;
 guint slideshow_timer = 0;
 
 guint x_start, y_start, x_max, y_max;
+double xadj_start, yadj_start;
 
 struct gpe_icon my_icons[] = {
   { "open", "open" },
@@ -118,8 +119,11 @@ rotate_button_down (GtkWidget *w, GdkEventButton *b)
 void
 button_down (GtkWidget *w, GdkEventButton *b)
 {
-  x_start = b->x;
-  y_start = b->y;
+  x_start = b->x_root;
+  y_start = b->y_root;
+
+  xadj_start = gtk_adjustment_get_value (h_adjust);
+  yadj_start = gtk_adjustment_get_value (v_adjust);
 
   x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 4);
   y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 4);
@@ -154,14 +158,11 @@ motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 void
 pan (GtkWidget *w, GdkEventMotion *m)
 {
-  gint dx = m->x - x_start, dy = m->y - y_start;
+  gint dx = m->x_root - x_start, dy = m->y_root - y_start;
   double x, y;
 
-  x = gtk_adjustment_get_value (h_adjust);
-  y = gtk_adjustment_get_value (v_adjust);
-
-  x -= dx;
-  y -= dy;
+  x = xadj_start - dx;
+  y = yadj_start - dy;
 
   if (x > x_max)
     x = x_max;
