@@ -6,6 +6,7 @@ BINDIR=$(PREFIX)/bin
 DEBUG = no
 INSTALL = install
 STRIP = strip
+GTK2 = yes
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`-DGTK_ENABLE_BROKEN
@@ -35,10 +36,12 @@ MEMBERS += ownerinfo
 MEMBERS += login-setup
 MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
 MEMBERS += users/interface users/callbacks  
+MEMBERS += cfgfile
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
 
 PIXMAPS = gpe-config-apm.png
 PIXMAPS += gpe-config-appmgr.png
@@ -59,9 +62,9 @@ PIXMAPS += gpe-config.png
 all: $(PACKAGE) 
 
 gpe-conf: $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDFLAGS)
-	$(STRIP) gpe-conf
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
 	cp gpe-conf gpe-conf.pc
+	$(STRIP) gpe-conf
 	
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 

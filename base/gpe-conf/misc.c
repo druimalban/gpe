@@ -21,6 +21,10 @@ lookup_widget                          (GtkWidget       *widget,
 
   for (;;)
     {
+      if (widget->parent == NULL) 
+      {
+		  break;
+	  }
       if (GTK_IS_MENU (widget))
         parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
       else
