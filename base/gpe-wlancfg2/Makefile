@@ -53,7 +53,7 @@ LEX_OUTPUT_ROOT = lex.yy
 
 .SUFFIXES: .d .c .l .y
 
-MEMBERS = main interface support config-parser callbacks confpars_wl confscan_wl
+MEMBERS = main interface support helptext config-parser callbacks confpars_wl confscan_wl
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 

@@ -29,6 +29,7 @@
 
 #include "interface.h"
 #include "support.h"
+#include "helptext.h"
 
 GtkWidget	*GPE_WLANCFG;
 static struct gpe_icon icon[] = {{"icon", PREFIX "/share/pixmaps/gpe-wlancfg.png"},{NULL,NULL}};
@@ -101,6 +102,8 @@ int main (int argc, char *argv[])
 						     NULL);
 						     
 	gtk_tree_view_append_column (treeview, tcolumn);
+
+	init_help();
 
 	gtk_widget_show (GPE_WLANCFG);
 

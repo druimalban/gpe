@@ -269,7 +269,7 @@ create_GPE_WLANCFG (void)
   gtk_widget_show (arDown);
   gtk_container_add (GTK_CONTAINER (btnDown), arDown);
 
-  lblScheme = gtk_label_new (_("Scheme"));
+  lblScheme = gtk_label_new (_("Profile"));
   gtk_widget_set_name (lblScheme, "lblScheme");
   gtk_widget_show (lblScheme);
   gtk_frame_set_label_widget (GTK_FRAME (frame1), lblScheme);
@@ -328,7 +328,7 @@ create_GPE_WLANCFG (void)
   gtk_table_set_row_spacings (GTK_TABLE (tblScheme), 5);
   gtk_table_set_col_spacings (GTK_TABLE (tblScheme), 10);
 
-  lblRowScheme = gtk_label_new (_("Scheme:"));
+  lblRowScheme = gtk_label_new (_("Profile:"));
   gtk_widget_set_name (lblRowScheme, "lblRowScheme");
   gtk_widget_show (lblRowScheme);
   gtk_table_attach (GTK_TABLE (tblScheme), lblRowScheme, 0, 1, 0, 1,
@@ -396,7 +396,7 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_entry_set_text (GTK_ENTRY (edMAC), _("*"));
 
-  lblTabScheme = gtk_label_new (_("Scheme"));
+  lblTabScheme = gtk_label_new (_("Profile"));
   gtk_widget_set_name (lblTabScheme, "lblTabScheme");
   gtk_widget_show (lblTabScheme);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbConfigSelection), gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbConfigSelection), 0), lblTabScheme);
