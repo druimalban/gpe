@@ -7,7 +7,9 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 PACKAGETOOL = no
+STRIP = strip
 MACHINE = other
+
 
 LINGUAS = pt ro de fr cs nl sv sk ru
 

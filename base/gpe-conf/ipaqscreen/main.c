@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>, Moray Allan <moray@sermisy.org>
- *               2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,6 +33,7 @@
 
 int initialising = 1;
 char *RotationLabels[4];
+static int rotation_available;
 
 static struct
 {
@@ -82,6 +83,9 @@ GtkWidget *ipaqscreen_Build_Objects()
 
   ss_sec = xset_get_ss_sec();
   initval.screensaver = ss_sec;
+  
+  rotation_available = check_init_rotation();
+  
   /* ======================================================================== */
   /* draw the GUI */
 
@@ -146,6 +150,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   g_free(tstr);
   
   self.rotation = gtk_option_menu_new ();
+  gtk_widget_set_sensitive(self.rotation,rotation_available);
 
   menu =  gtk_menu_new ();
 

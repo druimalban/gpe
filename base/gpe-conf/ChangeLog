@@ -1,5 +1,7 @@
 
 2004-06-07	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* ipaqscreen/rotation.c: Start implementing using Xrandr extensions
+                                 directly.
 	* Makefile: Install gpe-conf binary suid root. Removed old cruft.
 
 2004-06-04	Florian Boor  	<florian.boor@kernelconcepts.de>

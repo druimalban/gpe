@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002   Moray Allan <moray@sermisy.org>,Pierre TARDY <tardyp@free.fr>
- *               2003   Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003,2004   Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,12 +18,18 @@
 #include <string.h>
 #include <libintl.h>
 
+#include <X11/X.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xrandr.h>
+
 #include "rotation.h"
 #include "gpe/errorbox.h"
-#include "../parser.h"
 #include "../applets.h"
 
 extern char *RotationLabels;
+static Display *dpy;
+static int screen;
+static int current_rotation;
 
 static char *Rotations[4]=
   {
@@ -40,38 +46,116 @@ static char *xmodmaps[4]=
     "/etc/X11/xmodmap-invert",
     "/etc/X11/xmodmap-right"
   };
+
+static int
+xrr_supported (void)
+{
+  int xrr_event_base, xrr_error_base;
+  int xrr_major, xrr_minor;
+
+  if (XRRQueryExtension (dpy, &xrr_event_base, &xrr_error_base) == False
+      || XRRQueryVersion (dpy, &xrr_major, &xrr_minor) == 0
+      || xrr_major != 1
+      || xrr_minor < 1)
+    return 0;
+
+  return 1;
+}
+
+
+int
+check_init_rotation(void)
+{
+	dpy = XOpenDisplay (NULL);
+	if (dpy == NULL)
+ 	{
+		fprintf (stderr, "Couldn't open display\n");
+		return FALSE;
+	}
+	screen = DefaultScreen (dpy);
+	
+	return xrr_supported ();	
+}
   
+
 int get_rotation ()
 {
-  int rotation = 0,i;
-  char buffer2[20];
-#ifndef __arm__
-  return 0;
-#else
+	int rotation;
+	XRRScreenConfiguration *rr_screen;
+	Rotation current_rotation;
+	
+	rr_screen = XRRGetScreenInfo (dpy, RootWindow (dpy, screen));
+	XRRRotations (dpy, screen, &current_rotation);
+	XRRFreeScreenConfigInfo (rr_screen);
 
-  if(parse_pipe("/usr/X11R6/bin/xrandr" , "Current rotation - %20s" , buffer2))
-    {
-      gpe_error_box (_("Can't interpret output from xrandr!"));
-      rotation = 0;
-    }
-  else
-    {
-      for(i=0;i<4;i++)
-	if (strcmp (buffer2, Rotations[i]) == 0)
-	  rotation = i;
-    }	
+	fprintf (stderr, "Current RANDR rotation is %d\n", current_rotation);
+	
+	switch (current_rotation)
+	{
+	case RR_Rotate_270:
+		rotation = 3;
+	break;
+	case RR_Rotate_180:
+		rotation = 2;
+	break;
+	case RR_Rotate_90:
+		rotation = 1;
+	break;
+	case RR_Rotate_0:
+		rotation = 0;
+	break;
+	default:
+		fprintf (stderr, "Unknown RANDR rotation: %d\n", current_rotation);
+		rotation = 0;
+	break;
+	}
+	
   return rotation;
-#endif	
 }
 
 
 void set_rotation (int rotation)
 {
-#ifndef __arm__
-      gpe_error_box(_("Can't set rotation on an x86."));
-      return ; 
-#else
-    system_printf("/usr/X11R6/bin/xrandr -o %s",Rotations[rotation]);
+	Rotation sc_rotation;
+	XRRScreenConfiguration *rr_screen;
+	Rotation current_rotation;
+
+	rr_screen =  XRRGetScreenInfo (dpy,RootWindow (dpy, screen));
+	
+//	rr_screen = XRRGetScreenInfo (dpy, RootWindow (dpy, screen));
+//	XRRRotations (dpy, screen, &current_rotation);
+//	XRRFreeScreenConfigInfo (rr_screen);
+
+	switch (rotation)
+	{
+	case 3:
+		sc_rotation = RR_Rotate_270;
+	break;
+	case 2:
+		sc_rotation = RR_Rotate_180;
+	break;
+	case 1:
+		sc_rotation = RR_Rotate_90;
+	break;
+	case 0:
+		sc_rotation = RR_Rotate_0;
+	break;
+	default:
+		fprintf (stderr, "Unknown RANDR rotation: %d\n", rotation);
+		sc_rotation = RR_Rotate_0;
+	break;
+	}
+	XRRSetScreenConfig (dpy, 
+			   rr_screen,
+			   RootWindow (dpy, screen),
+			   (int)rr_screen->current_size,
+			   sc_rotation,
+			   CurrentTime);
+	
+	XRRFreeScreenConfigInfo (rr_screen);
+	
+/* on ipaq rotate keypad as well */	
+#ifdef MACH_IPAQ
     system_printf("/usr/X11R6/bin/xmodmap %s",xmodmaps[rotation]);
 #endif  
 }
