@@ -1,3 +1,8 @@
+2004-05-02  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-flyer*.tex: Clean up a bit. Don't give full local path for
+	the image.
+
 2004-04-26  Michael Opdenacker <michaelo@handhelds.org>
 
 	* gpe-flyer_fr.tex: new French translation
