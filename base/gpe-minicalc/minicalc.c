@@ -41,6 +41,9 @@ static gboolean in_error;
 static char binop;
 static gboolean point;
 
+static GtkStyle *button_style;
+static GtkStyle *clear_button_style;
+
 void
 update_display (void)
 {
@@ -232,6 +235,8 @@ number_button (int n)
   gtk_signal_connect (GTK_OBJECT (w), "clicked",
 		      GTK_SIGNAL_FUNC (push_digit),
 		      (gpointer)n);
+  gtk_widget_set_style (w, button_style);
+  gtk_widget_set_style (GTK_BIN (w)->child, button_style);
   return w;
 }
 
@@ -258,6 +263,8 @@ base_button (GtkWidget *box, char *string, int n)
   gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (set_base), (gpointer)n);
   gtk_widget_show (w);
   gtk_box_pack_start (GTK_BOX (box), w, FALSE, FALSE, 0);
+  gtk_widget_set_style (w, button_style);
+  gtk_widget_set_style (GTK_BIN (w)->child, button_style);
 }
 
 void
@@ -350,6 +357,16 @@ make_button (GtkWidget *table, char *str, int x, int y, void *func, int arg)
       if (func)
 	gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (func), (gpointer)arg);
       gtk_widget_show (w);
+      if (!strcmp (str, "AC"))
+	{
+	  gtk_widget_set_style (w, clear_button_style);
+	  gtk_widget_set_style (GTK_BIN (w)->child, clear_button_style);
+	}
+      else
+	{
+	  gtk_widget_set_style (w, button_style);
+	  gtk_widget_set_style (GTK_BIN (w)->child, button_style);
+	}
     }
 }
 
@@ -377,15 +394,21 @@ main (int argc, char *argv[])
   Atom window_type_atom, window_type_dock_atom;
   Display *dpy;
   Window xwindow;
-  int x, y;
+  int x, y, i;
   GtkWidget *vbox_base;
   GtkWidget *optable;
+  GtkStyle *black_style;
+  GdkColor col;
+  GtkWidget *display_box;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (window);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   dpy = GDK_WINDOW_XDISPLAY (window->window);
   xwindow = GDK_WINDOW_XWINDOW (window->window);
@@ -399,13 +422,29 @@ main (int argc, char *argv[])
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
 
+  button_style = gtk_style_copy (window->style);
+  gdk_color_parse ("gray40", &col);
+  for (i = 0; i < 5; i++)
+    button_style->bg[i] = col;
+  gdk_color_parse ("white", &col);
+  for (i = 0; i < 5; i++)
+    button_style->fg[i] = col;
+  clear_button_style = gtk_style_copy (button_style);
+  gdk_color_parse ("#d00000", &col);
+  for (i = 0; i < 5; i++)
+    clear_button_style->bg[i] = col;
+
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
+  display_box = gtk_event_box_new ();
+  gtk_widget_show (display_box);
   display = gtk_label_new ("");
   gtk_widget_show (display);
   gtk_misc_set_alignment (GTK_MISC (display), 1.0, 0.5);
-  gtk_box_pack_start (GTK_BOX (vbox), display, FALSE, FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (window), 2);
+  gtk_container_add (GTK_CONTAINER (display_box), display);
+  gtk_box_pack_start (GTK_BOX (vbox), display_box, FALSE, FALSE, 2);
   table = gtk_table_new (4, 4, TRUE);
   gtk_widget_show (table);
   hbox = gtk_hbox_new (FALSE, 0);
@@ -441,6 +480,11 @@ main (int argc, char *argv[])
   clear (TRUE);
   mpf_init (dv);
   mpf_init (accum);
+
+  black_style = gtk_style_copy (window->style);
+  gdk_color_parse ("black", &col);
+  black_style->bg[GTK_STATE_NORMAL] = col;
+  gtk_widget_set_style (window, black_style);
 
   gtk_widget_show (window);
   
