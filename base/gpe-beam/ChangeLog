@@ -1,3 +1,8 @@
+09/16/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c: Applied patch fixing typo.
+	- added translation stuff to cvs
+	- added Czech translation (contributed by Libor Klepac)
+	
 08/19/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- send-vcard.c: Fixed bug that causes crash if any command line argument 

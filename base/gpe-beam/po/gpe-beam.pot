@@ -1,0 +1,209 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-07-30 12:32+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:128
+msgid "Error"
+msgstr ""
+
+#: main.c:133
+msgid "Failed"
+msgstr ""
+
+#: main.c:136
+msgid "Done"
+msgstr ""
+
+#: main.c:139
+msgid "Connecting..."
+msgstr ""
+
+#: main.c:143
+msgid "Disconnecting..."
+msgstr ""
+
+#: main.c:146
+msgid "Sending..."
+msgstr ""
+
+#: main.c:149
+msgid "Receiving"
+msgstr ""
+
+#: main.c:157
+msgid "Waiting for incoming connection"
+msgstr ""
+
+#: main.c:160
+msgid "Connected"
+msgstr ""
+
+#: main.c:163
+msgid "Disconnecting"
+msgstr ""
+
+#: main.c:184
+msgid "Telephony"
+msgstr ""
+
+#: main.c:190
+msgid "File Server"
+msgstr ""
+
+#: main.c:196
+msgid "IrCOMM"
+msgstr ""
+
+#: main.c:202
+msgid "IrOBEX"
+msgstr ""
+
+#: main.c:211
+msgid "PnP"
+msgstr ""
+
+#: main.c:217
+msgid "PDA/Palmtop"
+msgstr ""
+
+#: main.c:223
+msgid "Computer"
+msgstr ""
+
+#: main.c:229
+msgid "Printer"
+msgstr ""
+
+#: main.c:235
+msgid "Modem"
+msgstr ""
+
+#: main.c:241
+msgid "Fax"
+msgstr ""
+
+#: main.c:247
+msgid "LAN Access"
+msgstr ""
+
+#: main.c:320
+msgid "Transmitted file"
+msgstr ""
+
+#: main.c:328
+msgid "Could not transmit file"
+msgstr ""
+
+#: main.c:352 main.c:373
+msgid "Unable to start file transmit."
+msgstr ""
+
+#: main.c:385
+msgid "IR Receive and Transmit........."
+msgstr ""
+
+#: main.c:392 main.c:393
+msgid "Error opening IR client."
+msgstr ""
+
+#: main.c:399
+msgid "Select file to transmit"
+msgstr ""
+
+#: main.c:415 main.c:467
+msgid "Unable to start receiver."
+msgstr ""
+
+#: main.c:428
+msgid "IR Receive and Transmit......."
+msgstr ""
+
+#: main.c:437 main.c:438
+msgid "Error opening IR server."
+msgstr ""
+
+#: main.c:447
+msgid "Received file"
+msgstr ""
+
+#: main.c:566
+msgid "Name:"
+msgstr ""
+
+#: main.c:567
+msgid "Services:"
+msgstr ""
+
+#: main.c:568
+msgid "Address:"
+msgstr ""
+
+#: main.c:579
+msgid "<b>Peer Information</b>"
+msgstr ""
+
+#: main.c:581
+msgid "<b>Peer Actions</b>"
+msgstr ""
+
+#: main.c:587
+msgid "Send File"
+msgstr ""
+
+#: main.c:596
+msgid "Receive File"
+msgstr ""
+
+#: main.c:639 main.c:721
+msgid "IR transceiver on"
+msgstr ""
+
+#: main.c:641 main.c:745
+msgid "IR transceiver off"
+msgstr ""
+
+#: main.c:652
+msgid "Infrared Control"
+msgstr ""
+
+#: main.c:799
+msgid "IrDa control"
+msgstr ""
+
+#: main.c:802
+msgid "Switch IR on"
+msgstr ""
+
+#: main.c:803
+msgid "Switch IR off"
+msgstr ""
+
+#: main.c:804
+msgid "Send vcard"
+msgstr ""
+
+#: main.c:805
+msgid "Controls..."
+msgstr ""
+
+#: main.c:806
+msgid "Remove from dock"
+msgstr ""
+
+#: main.c:859
+msgid "This is the infrared communications control."
+msgstr ""
