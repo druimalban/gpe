@@ -141,16 +141,12 @@ alarm_window (void)
   GtkWidget *date_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_sel = gtk_time_sel_new ();
-  GtkWidget *clock;
   GtkWidget *weeklytable;
   int spacing = gpe_get_boxspacing ();
   GSList *radiogroup;
   static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
                                   ABDAY_6, ABDAY_7, ABDAY_1 };
   int i;
-
-  clock = gpe_clock_face_new (GTK_ADJUSTMENT (GTK_TIME_SEL (time_sel)->hour_adj), 
-			      GTK_ADJUSTMENT (GTK_TIME_SEL (time_sel)->minute_adj));
 
   gtk_window_set_title (GTK_WINDOW (window), _("Set alarm"));
 
@@ -167,12 +163,10 @@ alarm_window (void)
   gtk_box_pack_start (GTK_BOX (time_hbox), time_label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (time_hbox), time_sel, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clock, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), time_hbox, FALSE, FALSE, 0);
-  //gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, 0);
-  //gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, 0);
 
-/* weekly hbox1 */
   weeklytable = gtk_table_new (2, 4, FALSE);
   for (i = 0; i < 4; i++)
     {
@@ -184,8 +178,8 @@ alarm_window (void)
       GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo (days[i]));
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 4, i - 3, 1, 2);
     }
-
-  //gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), weeklytable, FALSE, FALSE, 0);
+  
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), weeklytable, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
