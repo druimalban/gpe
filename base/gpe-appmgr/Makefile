@@ -1,11 +1,18 @@
 NATIVE = no
 CVSBUILD = yes
+FINAL = no
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget
 CFLAGS += -I../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
+endif
+
+ifeq ($(FINAL),yes)
+CFLAGS += -Os -fomit-frame-pointer
+else
+CFLAGS += -g
 endif
 
 ifeq ($(NATIVE),yes)
@@ -15,8 +22,8 @@ CFLAGS += -Os -fomit-frame-pointer `gtk-config --cflags` `gdk-pixbuf-config --cf
 else
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
-LDFLAGS=-L../libgpewidget -lgpewidget -L/usr/local/arm/arm-linux/lib -L/usr/local/arm/arm-linux/lib/X11 -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm -lgdk_pixbuf
-CFLAGS=-g -I/usr/local/arm/arm-linux/include `gtk-config --cflags` -I/usr/include -Wall `gdk-pixbuf-config --cflags` -I../libgpewidget -I/usr/local/arm/arm-linux/include/X11/extensions #-Os -fomit-frame-pointer
+LDFLAGS += -L../libgpewidget -lgpewidget -L/usr/local/arm/arm-linux/lib -L/usr/local/arm/arm-linux/lib/X11 -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm -lgdk_pixbuf
+CFLAGS += -I/usr/local/arm/arm-linux/include `gtk-config --cflags` -I/usr/include -Wall `gdk-pixbuf-config --cflags` -I../libgpewidget -I/usr/local/arm/arm-linux/include/X11/extensions
 endif
 
 INSTALL=install
