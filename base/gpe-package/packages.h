@@ -28,7 +28,8 @@ typedef enum
 	CMD_LIST,
 	CMD_FILES,
 	CMD_SEARCH,
-	CMD_STATUS
+	CMD_STATUS,
+	CMD_INFO
 }
 pkcommand_t;
 
@@ -40,6 +41,7 @@ typedef enum
 	PK_LIST,
 	PK_ERROR,
 	PK_INFO,
+	PK_PKGINFO,
 	PK_PACKAGESTATE,
 	PK_COMMAND,
 	PK_FINISHED	

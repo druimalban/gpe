@@ -55,6 +55,7 @@
 #define MI_PACKAGES_APPLY   7
 #define MI_FILTER_INST		8
 #define MI_FILTER_NOTINST	9
+#define MI_PACKAGES_INFO    10
 
 #define TREE_SHOW_ALL		0x00
 #define TREE_SHOW_INST		0x01
@@ -98,6 +99,8 @@ static GtkWidget *miFilterInst, *miFilterNotInst;
 static GtkWidget *sbar;
 static GtkWidget *fMain;
 static GtkWidget *dlgAction = NULL;
+static GtkWidget *dlgInfo = NULL;
+static GtkTextBuffer *infobuffer = NULL;
 static GtkWidget *mMain;
 
 
@@ -111,6 +114,7 @@ void on_system_update_clicked(GtkButton *button, gpointer user_data);
 void on_package_install_clicked(GtkButton *button, gpointer user_data);
 void on_about_clicked (GtkWidget * w);
 void on_help_clicked (GtkWidget * w);
+void on_package_info_clicked(GtkButton *button, gpointer user_data);
 
 
 static GtkItemFactoryEntry mMain_items[] = {
@@ -122,6 +126,8 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/Packages/Show _Installed"), "", on_tree_filter_changed, MI_FILTER_INST , "<CheckItem>"},
   { N_("/Packages/Show _Not Installed"), "", on_tree_filter_changed, MI_FILTER_NOTINST, "<CheckItem>"},
   { N_("/_Packages/s2"), NULL , NULL,    0, "<Separator>"},
+  { N_("/Packages/Show _Info"), "<Control> I", on_package_info_clicked, MI_PACKAGES_INFO , "<Item>"},
+  { N_("/_Packages/s3"), NULL , NULL,    0, "<Separator>"},
   { N_("/Packages/_Update lists"), "<Control> U", on_packages_update_clicked, MI_PACKAGES_UPDATE , "<Item>"},
   { N_("/Packages/Upgrade _System"), "", on_system_update_clicked, MI_PACKAGES_UPGRADE, "<Item>"},
   { N_("/_Packages/s3"), NULL , NULL,    0, "<Separator>"},
@@ -148,7 +154,7 @@ struct gpe_icon my_icons[] = {
 
 
 /* dialogs */
-#warning todo info dialog, icons, verbose dialogs
+#warning todo: status icons, verbose dialogs
 
 void
 destroy_package_list(description_t *list, int len)
@@ -161,6 +167,54 @@ destroy_package_list(description_t *list, int len)
 		len--;
 	}
 	if (list) g_free(list);
+}
+
+
+gboolean
+dialog_destroy()
+{
+	gtk_widget_destroy(dlgInfo);
+	dlgInfo = NULL;
+	infobuffer = NULL;
+	return TRUE;
+}
+
+
+void
+do_package_info(const char* name, const char *info)
+{
+	GtkWidget *sw;
+	GtkWidget *textview;
+	GtkTextBuffer *buffer;
+	
+	if (dlgInfo == NULL)
+	{
+		dlgInfo = gtk_dialog_new_with_buttons(_("Package information"),GTK_WINDOW(fMain),
+				   GTK_DIALOG_DESTROY_WITH_PARENT,
+				   GTK_STOCK_OK,
+				   GTK_RESPONSE_ACCEPT,
+				   NULL);
+		sw = gtk_scrolled_window_new(NULL,NULL);
+		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),
+			GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+		buffer = gtk_text_buffer_new(NULL);
+		infobuffer = buffer;
+		gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(buffer),info,strlen(info));
+		textview = gtk_text_view_new_with_buffer(buffer);
+		gtk_text_view_set_editable(GTK_TEXT_VIEW(textview),FALSE);
+		gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(textview),GTK_WRAP_WORD);
+		gtk_container_add(GTK_CONTAINER(sw),textview);
+		gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dlgInfo)->vbox),sw,TRUE,TRUE,0);
+		gtk_widget_set_size_request(textview,220,250);
+		gtk_widget_show_all(dlgInfo);
+		g_signal_connect_swapped(dlgInfo,"response",G_CALLBACK(dialog_destroy),NULL);
+	}
+	else
+	{
+		if (!infobuffer) return;
+		gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(infobuffer),
+			info,strlen(info));
+	}
 }
 
 
@@ -240,6 +294,9 @@ send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 			break;
 			case CMD_INSTALL:
 				desc = g_strdup_printf("%s %s", _("Installing"), list);
+			break;
+			case CMD_INFO:
+				desc = g_strdup_printf("%s", _("Retrieving package information"));
 			break;
 			default:
 				desc = _("Working...");			
@@ -548,10 +605,15 @@ get_pending_messages ()
 			case PK_INFO:
 				do_info(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
 			break;	
+			case PK_PKGINFO:
+				do_package_info(msg.content.tf.str1, msg.content.tf.str2);
+			break;	
 			case PK_PACKAGESTATE:
 //				do_state(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
 			case PK_FINISHED:
+#ifdef DEBUG				
 				printf("finished\n");
+#endif			
 				do_end_command();
 			default:
 				break;
@@ -700,6 +762,23 @@ on_select_local(GtkButton *button, gpointer user_data)
 
 
 void
+on_package_info_clicked(GtkButton *button, gpointer user_data)
+{
+	GtkTreeIter iter;
+	GtkTreeSelection *sel;
+	char *name = NULL;
+	
+	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+	
+	if (gtk_tree_selection_get_selected(sel, (GtkTreeModel**)(&store), &iter))
+	{
+		gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_NAME, &name, -1);
+		send_message(PK_COMMAND,CMD_INFO,name,name);
+	}
+}
+
+
+void
 on_system_update_clicked(GtkButton *button, gpointer user_data)
 {
 	GtkTextBuffer *logbuf;
@@ -812,12 +891,18 @@ create_mMain(GtkWidget  *window)
 		mMain_items, NULL);
 	gtk_window_add_accel_group (GTK_WINDOW (window), accelgroup);
 
-	miUpdate = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_UPDATE);
-	miSysUpgrade = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_UPGRADE);
-	miSelectLocal = gtk_item_factory_get_item_by_action(itemfactory,MI_FILE_INSTALL);
-	miApply = gtk_item_factory_get_item_by_action(itemfactory,MI_PACKAGES_APPLY);
-	miFilterInst = gtk_item_factory_get_item_by_action(itemfactory,MI_FILTER_INST);
-	miFilterNotInst = gtk_item_factory_get_item_by_action(itemfactory,MI_FILTER_NOTINST);
+	miUpdate = gtk_item_factory_get_item_by_action(itemfactory,
+		MI_PACKAGES_UPDATE);
+	miSysUpgrade = gtk_item_factory_get_item_by_action(itemfactory,
+		MI_PACKAGES_UPGRADE);
+	miSelectLocal = gtk_item_factory_get_item_by_action(itemfactory,
+		MI_FILE_INSTALL);
+	miApply = gtk_item_factory_get_item_by_action(itemfactory,
+		MI_PACKAGES_APPLY);
+	miFilterInst = gtk_item_factory_get_item_by_action(itemfactory,
+		MI_FILTER_INST);
+	miFilterNotInst = gtk_item_factory_get_item_by_action(itemfactory,
+		MI_FILTER_NOTINST);
 	
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(miFilterInst),TRUE); 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(miFilterNotInst),TRUE); 
@@ -901,20 +986,21 @@ create_fMain (void)
   /* installed tab */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
-  cur = gtk_label_new(_("Installed"));
+  cur = gtk_label_new(_("List"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
 
   cur = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
-  tmp = g_strdup_printf("<b>%s</b>",_("Installed Packages"));
+  tmp = g_strdup_printf("<b>%s</b>",_("Package List"));
   gtk_label_set_markup(GTK_LABEL(cur),tmp);
   free(tmp);
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
 	
   cur = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
-  gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),
+  	GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur), GTK_SHADOW_IN);
+  gtk_box_pack_start(GTK_BOX(vbox), cur, TRUE, TRUE, 0);	
 
   /* packages tree */
   treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
@@ -964,9 +1050,11 @@ create_fMain (void)
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
 
   cur = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),
+  	GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
-  gtk_tooltips_set_tip (tooltips, cur, _("This window shows all messages from the packet manager."), NULL);
+  gtk_tooltips_set_tip (tooltips, cur, 
+  	_("This window shows all messages from the packet manager."), NULL);
   
   txLog = gtk_text_view_new();
   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txLog),GTK_WRAP_WORD);

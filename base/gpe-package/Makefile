@@ -34,8 +34,8 @@ CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -DIPKG_LIB
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` 
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0 gdk-pixbuf-2.0`
 
 # setup how to compile
 ifeq ($(NATIVE),yes)
@@ -43,9 +43,9 @@ ifeq ($(NATIVE),yes)
 STRIP=strip
 CC=gcc
 
-CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall
+CFLAGS += $(GTKCFLAGS) -Wall
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` 
-LDFLAGS += -lipkg /home/fuchs/Projekte/gpe/familiar/dist/ipkg/C/libbb/libbb.a
+LDFLAGS += -lipkg 
 
 else # we do cross-compile...
 
@@ -53,13 +53,10 @@ CC=arm-linux-gcc
 STRIP=arm-linux-strip
 
 CFLAGS += -march=armv4 -mtune=strongarm
-CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
-LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
-LDFLAGS += -lipkg /home/fuchs/Projekte/gpe/familiar/dist/ipkg/C/libbb/libbb.a
-LDFLAGS += -lgpewidget 
-LDFLAGS += -lgdk_pixbuf-2.0 -lm -lgobject-2.0 
-LDFLAGS += -lgmodule-2.0 -ldl -lglib-2.0 
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0 -lXinerama
+CFLAGS += $(GTKCFLAGS) -Wall 
+LDFLAGS += -lgpewidget $(GTKLDFLAGS) -Wall 
+LDFLAGS += -lipkg 
+LDFLAGS += -lXinerama 
 
 endif #native or cross-compile
 
@@ -88,7 +85,7 @@ install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/doc/gpe
-	$(INSTALL) -m 644 HELPFILE $(DESTDIR)$(PREFIX)/share/doc/gpe/
+	$(INSTALL) -m 644 $(HELPFILE) $(DESTDIR)$(PREFIX)/share/doc/gpe/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) *~ */*~ *.ipk *.o

@@ -100,6 +100,21 @@ list_entry (char *name, char *desc, char *version,
 }
 
 
+int 
+package_info(char *name, int istatus, char *desc, void *userdata)
+{
+	send_message (PK_PKGINFO, 1, name, desc, NULL, 0);
+	return 0;
+}
+
+
+int 
+package_status(char *name, int istatus, char *desc, void *userdata)
+{
+	
+}
+
+
 static int
 wait_message ()
 {
@@ -178,7 +193,10 @@ do_command (pkcommand_t command, char *params, char *list)
 		ipkg_packages_upgrade(&args);
 	break;
 	case CMD_STATUS:
-//		ipkg_packages_status(&args,list,status_cb);
+		ipkg_packages_status(&args,list,package_status,NULL);
+	break;
+	case CMD_INFO:
+		ipkg_packages_info(&args,list,package_info,NULL);
 	break;
 	case CMD_SEARCH:
 		ipkg_file_search(&args,list,list_entry, NULL);
