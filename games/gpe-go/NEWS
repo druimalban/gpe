@@ -1,0 +1,9 @@
+GPE go NEWS
+
+* 0.04 
+- added basic save feature (.sgf)
+
+* 0.03 2003-08-02
+- added undo/redo support
+- added PASS feature
+- display number of stones captured

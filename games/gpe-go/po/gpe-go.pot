@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-26 17:09+0200\n"
+"POT-Creation-Date: 2003-10-12 22:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,25 +16,38 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-go.c:731
+#: gpe-go.c:734
 #, c-format
 msgid "B:%d  W:%d "
 msgstr ""
 
-#: gpe-go.c:986
+#: gpe-go.c:967
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr ""
+
+#: gpe-go.c:1066
 msgid "Undo"
 msgstr ""
 
-#: gpe-go.c:1000
+#: gpe-go.c:1080
 msgid "Redo"
 msgstr ""
 
-#: gpe-go.c:1008
+#: gpe-go.c:1088
 msgid "B:0  W:0 "
 msgstr ""
 
-#: gpe-go.c:1028
+#: gpe-go.c:1109
 msgid "PASS"
+msgstr ""
+
+#: gpe-go.c:1122
+msgid "Save"
+msgstr ""
+
+#: gpe-go.c:1126
+msgid "Save as..."
 msgstr ""
 
 #: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1

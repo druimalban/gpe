@@ -1,4 +1,4 @@
-VERSION = 0.04-pre
+VERSION = 0.04
 
 PACKAGE = gpe-go
 
@@ -10,7 +10,7 @@ ifndef DEBUG
 DEBUG = no
 endif
 
-LINGUAS = cs
+LINGUAS = #cs
 EXTRA_DESKTOPS = \
     gpe-go-9.desktop.in \
     gpe-go-13.desktop.in \

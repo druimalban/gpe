@@ -15,6 +15,7 @@
 //--GPE libs
 #include "gpe/init.h"
 #include "gpe/pixmaps.h"
+#include "gpe/errorbox.h"
 
 //--i18n
 #include <libintl.h>
@@ -32,7 +33,7 @@ static struct gpe_icon my_icons[] = {
   { "this_app_icon", PREFIX "/share/pixmaps/gpe-go.png" },
 
   //{ "new",        "new"   },
-  { "prefs",      "preferences"  },
+  //{ "prefs",      "preferences"  },
 
   //{ "remove",     "gpe-go/stock_clear_24"},
 
@@ -948,15 +949,25 @@ void _save_hitem(FILE * f, Hitem * hitem){
 void save_game(){
   FILE * f;
   char * filename;
+  char * filename_sgf;
   GList * c;
 
   filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
-  f = fopen(filename, "w");
+  if(g_str_has_suffix(filename, ".sgf") == FALSE){
+    filename_sgf = g_strconcat (filename, ".sgf", NULL);
+    g_free(filename);
+  }
+  else{
+    filename_sgf = filename;
+  }
+  f = fopen(filename_sgf, "w");
   if(!f){
     //error
+    gtk_widget_hide (go.file_selector);
+    gpe_error_box_fmt (_("Cannot save the game into %s."), filename_sgf);
     return;
   }
-  g_free(filename);
+  g_free(filename_sgf);
 
   c = g_list_first(go.history);
   if(!c) return;
@@ -1017,7 +1028,9 @@ void gui_init(){
   GtkWidget * vbox;
 
   GtkWidget * toolbar;
+#ifdef PREFS
   GdkPixbuf * pixbuf;
+#endif
   GtkWidget * image;
 
   GtkWidget * capture_label;
@@ -1118,7 +1131,7 @@ void gui_init(){
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(widget)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_hide),
 		             (gpointer) widget);
-  gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf");
+  //gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf"); //FIXME...
   go.file_selector = widget;
 
   //--drawing area (Go Board)
