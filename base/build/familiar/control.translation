@@ -1,0 +1,8 @@
+Package: <package>-<language>
+Section: base
+Priority: optional
+Version: <version>
+Architecture: all
+Maintainer: <maintainer>
+Depends: ipkg (>= 0.99.xx), <package>, locales-base-<language>
+Description: Translation into <language> for <package>.
