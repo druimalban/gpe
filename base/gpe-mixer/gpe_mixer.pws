@@ -4,3 +4,23 @@ RunInTerminal=true
 
 [Project DBase]
 ShowLocals=true
+
+[filenumbers]
+0=92
+1=14
+
+[filemarkers]
+0=
+1=
+
+[Project State]
+clean before build=false
+
+[File View]
+filter.file.unmatch=*.so *.o *.a *.la
+filter.file.ignore.hidden=0
+filter.dir.ignore.hidden=0
+
+[filelist]
+0=/home/fuchs/Projekte/simpad/kernel/linux-2.4.25/drivers/misc/switches-core.c
+1=/home/fuchs/Projekte/gpe/todo.txt

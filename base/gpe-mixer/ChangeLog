@@ -1,4 +1,6 @@
 2004-08-19	Florian Boor <florian@kernelconcepts.de>
+	- Released V 0.35
+	- Makefile: Version -> 0.35
 	- gpe-mixer.c: Removed some obsolete stuff.
 	               Unknown channels show the correct icon now.
 	

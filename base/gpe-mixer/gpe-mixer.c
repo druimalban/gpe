@@ -36,6 +36,7 @@
 static struct gpe_icon my_icons[] = {
 	{ "icon", PREFIX "/share/pixmaps/gpe-mixer.png" },
 	{ "line" , PREFIX "/share/gpe-mixer/line.png"},
+	{ "line1" , PREFIX "/share/gpe-mixer/line.png"},
 	{ "cd" , PREFIX "/share/gpe-mixer/cd.png"},
 	{ "bass" , PREFIX "/share/gpe-mixer/bass.png"},
 	{ "vol" , PREFIX "/share/gpe-mixer/volume.png"},
@@ -44,6 +45,7 @@ static struct gpe_icon my_icons[] = {
 	{ "synth" , PREFIX "/share/gpe-mixer/synth.png"},
 	{ "speaker" , PREFIX "/share/gpe-mixer/speaker.png"},
 	{ "pcm" , PREFIX "/share/gpe-mixer/pcm.png"},
+	{ "pcm2" , PREFIX "/share/gpe-mixer/pcm.png"},
 	{ "mic" , PREFIX "/share/gpe-mixer/mic.png"},
 	{ NULL, NULL }
 };
@@ -86,10 +88,11 @@ int mval;
 GtkWidget *slider;
 GtkWidget *label;
 GtkWidget *w;
-gchar *err = NULL;
 int *devnum;
 GtkTooltips *mixer_tips;
-
+gchar *err = NULL;
+GdkPixbuf *pbuf = NULL;
+	
 	/* count mixers */
 	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
 		if ((1 << i) & devmask)
@@ -114,7 +117,7 @@ GtkTooltips *mixer_tips;
 			slider = gtk_vscale_new (GTK_ADJUSTMENT (MixerAdjuster[n]));
 			gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
 			gtk_widget_set_style (slider, style);
-			gtk_table_attach(GTK_TABLE(table), slider, n,n+1,1,2,(GtkAttachOptions) (GTK_FILL),(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+			gtk_table_attach(GTK_TABLE(table), slider, n, n+1, 1, 2, GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
 			gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(slider),mixer_names[i],mixer_names[i]);
 			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get initial setting */
 				gpe_perror_box("MIXER_READ");
@@ -122,15 +125,19 @@ GtkTooltips *mixer_tips;
 				gtk_adjustment_set_value(GTK_ADJUSTMENT(MixerAdjuster[n]), 100 - (gdouble)(mval & 0x7f));
 			g_signal_connect (G_OBJECT (MixerAdjuster[n]), "value-changed",G_CALLBACK (set_volume), devnum);
 			gtk_widget_show(slider);
-			if ((w = gtk_image_new_from_pixbuf (gpe_try_find_icon (mixer_names[i], &err)))) {
+			pbuf = gpe_try_find_icon (mixer_names[i], &err);
+			if (!pbuf)
+				pbuf = gpe_try_find_icon ("unkn", &err);
+			w = gtk_image_new_from_pixbuf (pbuf);
+			if (w) {
 				gtk_widget_set_style (w, style);
-				gtk_table_attach(GTK_TABLE(table), w, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
+				gtk_table_attach(GTK_TABLE(table), w, n, n+1, 0, 1, 0, 0, 1, 0);
 				gtk_widget_show(w);
 				gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(w),mixer_names[i],mixer_names[i]);
 			} else {
 				label=gtk_label_new(_(mixer_labels[i]));
 				gtk_widget_set_style (label, style);
-				gtk_table_attach(GTK_TABLE(table), label, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
+				gtk_table_attach(GTK_TABLE(table), label, n, n+1, 0, 1, 0, 0, 1, 0);
 				gtk_widget_show(label);
 				gtk_tooltips_set_tip(GTK_TOOLTIPS(mixer_tips),GTK_WIDGET(label),mixer_names[i],mixer_names[i]);
 			}
