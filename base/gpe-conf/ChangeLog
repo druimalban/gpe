@@ -1,3 +1,9 @@
+2004-02-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile: Added icon for serial devices.
+	* serial.*, suid.c: Implemented serial port selection for gpsd.
+	* cardinfo.c: Changed bar to menu.
+	* Makefile: Removed absolete icons.
+	
 2004-02-09	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Makefile: Compile without package tool per default.
 	* suid.c: Some minor fixes.

@@ -482,8 +482,8 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "SGPS") == 0)  // change gps settings
 				{
-					fscanf (in, "%100s", arg1);
-					update_gpsd_settings(arg1+1, (arg1[0] == '1') ? 1 : 0);
+					fscanf (in, "%100s %100s", arg1, arg2);
+					update_gpsd_settings(arg1+1, (arg1[0] == '1') ? 1 : 0, arg2);
 				}
 				else if (strcmp (cmd, "CMID") == 0)  // identify pcmcia card
 				{

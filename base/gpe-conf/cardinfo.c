@@ -58,6 +58,7 @@
 
 extern gchar *PCMCIA_ERROR;
 #define MAX_SOCK 4
+#define N_(x) (x)
 
 typedef enum s_state
 {
@@ -88,11 +89,41 @@ static event_tag_t event_tag[] = {
 
 #define NTAGS (sizeof(event_tag)/sizeof(event_tag_t))
 
+#define MI_CARD_INSERT 	1
+#define MI_CARD_EJECT 	2
+#define MI_CARD_SUSPEND	3
+#define MI_CARD_RESUME	4
+#define MI_CARD_RESET	5
+#define MI_ASSIGN		6
+#define MI_CLOSE		7
+
+static void do_menu (GtkWidget * button, int op);
+static void do_driver_dialog (GtkWidget * parent_button);
+
+static GtkItemFactoryEntry mMain_items[] = {
+  { N_("/_Card"),         NULL,         NULL, 0, "<Branch>" },
+  { N_("/Card/_Insert"), "", do_menu, MI_CARD_INSERT, "<Item>",(void *) 6},
+  { N_("/Card/_Eject"), "", do_menu, MI_CARD_EJECT, "<Item>",(void *) 5},
+  { N_("/Card/_Suspend"), "", do_menu, MI_CARD_SUSPEND, "<Item>",(void *) 3},
+  { N_("/Card/_Resume"), "", do_menu, MI_CARD_RESUME, "<Item>",(void *) 4},
+  { N_("/Card/_Reset"), "", do_menu, MI_CARD_RESET, "<Item>",(void *) 2},
+  { N_("/Card/s1"), NULL , NULL,    0, "<Separator>"},
+  { N_("/Card/_Assign Driver"), "", do_driver_dialog, MI_ASSIGN, "<StockItem>",GTK_STOCK_JUMP_TO},
+  { N_("/Card/s2"), NULL , NULL,    0, "<Separator>"},
+  { N_("/Card/_Close"),  NULL, gtk_main_quit, MI_CLOSE, "<StockItem>", GTK_STOCK_QUIT },
+  { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
+  { N_("/_Help/Index"),   NULL,         NULL,    0, "<StockItem>",GTK_STOCK_HELP },
+  { N_("/_Help/About"),   NULL,         NULL,    0, "<Item>" },
+};
+
+int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
+
 
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
 static GtkWidget *bookbox;
+static GtkWidget *mMain;
 
 static GtkWidget *toolicons[7];
 
@@ -1230,6 +1261,32 @@ do_driver_dialog (GtkWidget * parent_button)
 }
 
 
+/* create menus from description */
+GtkWidget *
+create_mMain(GtkWidget  *window)
+{
+	GtkItemFactory *itemfactory;
+	GtkAccelGroup *accelgroup;
+
+	accelgroup = gtk_accel_group_new ();
+
+	itemfactory = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>",
+                                       accelgroup);
+	gtk_item_factory_create_items (itemfactory, mMain_items_count, 
+		mMain_items, NULL);
+	gtk_window_add_accel_group (GTK_WINDOW (window), accelgroup);
+
+	toolicons[1] = gtk_item_factory_get_item_by_action(itemfactory,MI_ASSIGN);
+	toolicons[2] = gtk_item_factory_get_item_by_action(itemfactory,MI_CARD_RESET);
+	toolicons[3] = gtk_item_factory_get_item_by_action(itemfactory,MI_CARD_SUSPEND);
+	toolicons[4] = gtk_item_factory_get_item_by_action(itemfactory,MI_CARD_RESUME);
+	toolicons[5] = gtk_item_factory_get_item_by_action(itemfactory,MI_CARD_EJECT);
+	toolicons[6] = gtk_item_factory_get_item_by_action(itemfactory,MI_CARD_INSERT);
+	
+	return (gtk_item_factory_get_widget (itemfactory, "<main>"));
+}
+
+
 /* --- gpe-conf interface --- */
 
 void
@@ -1255,7 +1312,6 @@ Cardinfo_Build_Objects (void)
 {
 	GtkWidget *label, *ctype_pixmap;
 	GtkWidget *table, *hbox;
-	GtkWidget *toolbar;
 	gchar iname[100];
 	GtkTooltips *tooltips;
 	int i;
@@ -1266,95 +1322,19 @@ Cardinfo_Build_Objects (void)
 	bookbox = gtk_vbox_new (FALSE, gpe_get_boxspacing ());
 	gtk_container_set_border_width (GTK_CONTAINER (bookbox), 0);
 
+	/* main menu */ 
+	mMain = create_mMain(mainw);
+	gtk_box_pack_start(GTK_BOX(bookbox),mMain,FALSE,TRUE,0);
+	
 	notebook = gtk_notebook_new ();
 	gtk_container_set_border_width (GTK_CONTAINER (notebook), 0);
 	gtk_object_set_data (GTK_OBJECT (notebook), "tooltips", tooltips);
 
 	/* toolbar and packing */
-	toolbar = gtk_toolbar_new ();
-	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-				     GTK_ORIENTATION_HORIZONTAL);
-	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-	gtk_box_pack_start (GTK_BOX (bookbox), toolbar, FALSE, FALSE, 0);
-	gtk_box_pack_start (GTK_BOX (bookbox), notebook, TRUE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (bookbox), notebook, TRUE, TRUE, 0);
 
 	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
 					   ("menu-insert", 16));
-	toolicons[6] =
-		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					 _("Insert Card"), _("Insert Card"),
-					 _
-					 ("Click here to start card insertion manually."),
-					 label, (GtkSignalFunc) do_menu,
-					 (void *) 6);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-eject", 16));
-	toolicons[5] =
-		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					 _("Eject Card"), _("Eject Card"),
-					 _
-					 ("Click here to eject card manually."),
-					 label, (GtkSignalFunc) do_menu,
-					 (void *) 5);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-suspend", 16));
-	toolicons[3] =
-		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					 _("Suspend Card"), _("Suspend Card"),
-					 _
-					 ("Click here to suspend current card."),
-					 label, (GtkSignalFunc) do_menu,
-					 (void *) 3);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-resume", 16));
-	toolicons[4] =
-		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					 _("Resume Card"), _("Resume Card"),
-					 _
-					 ("Click here to resume current card."),
-					 label, (GtkSignalFunc) do_menu,
-					 (void *) 4);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-reset", 16));
-	toolicons[2] =
-		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					 _("Reset Card"), _("Reset Card"),
-					 _("Click here to reset current card."),
-					 label, (GtkSignalFunc) do_menu,
-					 (void *) 2);
-	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-reset2", 16));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-				 _("Reset Card Manager"),
-				 _("Reset Card Manager"),
-				 _
-				 ("Click here to reset card manager. This commits all updates to PCMCIA config files."),
-				 label, (GtkSignalFunc) reset_cardmgr, NULL);
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-assign", 16));
-	toolicons[1] =
-		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-					 _("Assign Driver"),
-					 _("Assign Driver"),
-					 _
-					 ("Click here to assign a driver to this card or change current driver assignment."),
-					 label,
-					 (GtkSignalFunc) do_driver_dialog,
-					 NULL);
-	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-	label = gtk_image_new_from_pixbuf (gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit applet"),
-				 _("Exit applet"), _("Exit applet"), label,
-				 (GtkSignalFunc) gtk_main_quit, NULL);
-
 
 	/* socket tabs */
 	for (i = 0; i < ns; i++)

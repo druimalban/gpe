@@ -83,7 +83,17 @@ static struct
 	GtkWidget *rbEarthmate;
 	GtkWidget *rbNMEA;
 	GtkWidget *cbBaudrate;
+	GtkWidget *cbPort;
 } self;
+
+char *portlist[][2] = {	{"Internal Serial (RS232)", IPAQ_SERIAL},
+	{"PCMCIA / CF Port 1","/dev/tts/0"},
+	{"PCMCIA / CF Port 2","/dev/tts/0"},
+	{"Bluetooth RFCOMM 1","/dev/bluetooth/rfcomm/0"},
+	{"Bluetooth RFCOMM 2","/dev/bluetooth/rfcomm/1"}
+	};
+
+int num_ports = sizeof(portlist) / sizeof(char*) / 2;
 
 
 /* --- local intelligence --- */
@@ -171,7 +181,7 @@ get_serial_port_assignment ()
 
 
 void
-update_gpsd_settings (char *baud, int emate)
+update_gpsd_settings (char *baud, int emate, char* port)
 {
 	if (emate)
 	{
@@ -183,6 +193,7 @@ update_gpsd_settings (char *baud, int emate)
 	}
 
 	change_cfg_value (GPSD_CONFIG, "-s", baud, ' ');
+	change_cfg_value (GPSD_CONFIG, "-p", port, ' ');
 }
 
 
@@ -210,31 +221,46 @@ Serial_Free_Objects ()
 void
 Serial_Save ()
 {
-	char tmp[10];
+	char *tmp;
+	char *port = NULL;
+	int i;
 
 	/* this first, gpsd is reloaded in next step */
 	if (gpsd_installed)
 	{
-		sprintf (tmp, " %s",
+		tmp = gtk_entry_get_text (GTK_ENTRY
+					     (GTK_COMBO (self.cbPort)->entry));
+		for (i=0;i<num_ports;i++)
+		{
+			if (!strcmp(portlist[i][0],tmp))
+				port = portlist[i][1];
+		}
+		if (port == NULL) port = gtk_entry_get_text (GTK_ENTRY
+					     (GTK_COMBO (self.cbPort)->entry));
+			
+		tmp = g_strdup_printf(" %s %s",
 			 gtk_entry_get_text (GTK_ENTRY
-					     (GTK_COMBO (self.cbBaudrate)->entry)));
+					     (GTK_COMBO (self.cbBaudrate)->entry)),port);
 		if (gtk_toggle_button_get_active
 		    (GTK_TOGGLE_BUTTON (self.rbEarthmate)))
 			tmp[0] = '1';
 		else
 			tmp[0] = '0';
+		
 		suid_exec ("SGPS", tmp);
+		g_free(tmp);
 	}
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self.rbConsole)))
-		snprintf (tmp, 2, "%d", SA_CONSOLE);
+		tmp = g_strdup_printf("%d", SA_CONSOLE);
 	else if (gtk_toggle_button_get_active
 		 (GTK_TOGGLE_BUTTON (self.rbGPSD)))
-		snprintf (tmp, 2, "%d", SA_GPSD);
+		tmp = g_strdup_printf("%d", SA_GPSD);
 	else
-		snprintf (tmp, 2, "%d", SA_NONE);
+		tmp = g_strdup_printf("%d", SA_NONE);
 
 	suid_exec ("SERU", tmp);
+	g_free(tmp);
 }
 
 void
@@ -252,10 +278,13 @@ Serial_Build_Objects (void)
 	gchar iname[100];
 	GtkTooltips *tooltips;
 	GSList *bauds = NULL;
+	GSList *ports = NULL;
 	gchar cur_baud[10] = { "4800" };
+	gchar cur_port[33] = { "/dev/ttySA0" };
 	gint ibaud = 4800;
 	gchar etmp[10];
 	gboolean emate = FALSE;
+	int i;
 
 	gpsd_installed = !access (GPSD_STARTUP_SCRIPT, F_OK);
 
@@ -265,6 +294,7 @@ Serial_Build_Objects (void)
 		    !parse_file (GPSD_CONFIG, "-T%c", etmp))
 			emate = TRUE;
 		parse_file (GPSD_CONFIG, "-s %d", &ibaud);
+		parse_file (GPSD_CONFIG, "-p %32s", cur_port);
 	}
 	snprintf (cur_baud, 10, "%d", ibaud);
 	bauds = g_slist_append (bauds, "1200");
@@ -275,6 +305,8 @@ Serial_Build_Objects (void)
 	bauds = g_slist_append (bauds, "38400");
 	bauds = g_slist_append (bauds, "115000");
 
+	for (i=0;i<num_ports;i++)
+		ports = g_slist_append (ports,portlist[i][0]);
 	tooltips = gtk_tooltips_new ();
 
 	notebook = gtk_notebook_new ();
@@ -361,7 +393,6 @@ Serial_Build_Objects (void)
   -d host      [ set dgps server ]
   -r port      [ set dgps rtcm-sc104 port ]
 */
-#warning missing: port
 	table = gtk_table_new (3, 3, FALSE);
 
 	gtk_tooltips_set_tip (tooltips, table,
@@ -424,5 +455,25 @@ Serial_Build_Objects (void)
 	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (self.cbBaudrate)->entry),
 			    cur_baud);
 
+	label = gtk_label_new (_("Serial Port"));
+	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 5, 6, GTK_FILL,
+			  GTK_FILL, 0, 0);
+
+	self.cbPort = gtk_combo_new ();
+	gtk_combo_set_popdown_strings (GTK_COMBO (self.cbPort),
+				       (GList *) ports);
+	gtk_table_attach (GTK_TABLE (table), self.cbPort, 0, 2, 6, 7,
+			  GTK_FILL, GTK_FILL, gpe_get_boxspacing (),
+			  gpe_get_boxspacing ());
+	gtk_combo_set_value_in_list (GTK_COMBO (self.cbPort), FALSE,
+				     FALSE);
+	gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (self.cbPort)->entry),cur_port);
+	for (i=0;i<num_ports;i++)
+	{
+		if (!strcmp(portlist[i][1],cur_port))
+			gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (self.cbPort)->entry),
+			    portlist[i][0]);
+	}
 	return notebook;
 }
