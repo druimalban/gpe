@@ -27,6 +27,7 @@ install: all
 	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	install -D $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
 	install -D 90$(PROG)  $(DESTDIR)/etc/X11/Xsession-gpe.d/90$(PROG)
+	install -D 90norepeat  $(DESTDIR)/etc/X11/Xsession-gpe.d/90norepeat
 
 clean:
 	rm -f $(PROG) $(OBJS)
