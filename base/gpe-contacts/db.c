@@ -126,6 +126,8 @@ new_person (void)
 void
 discard_person (struct person *p)
 {
+  free_tag_values (p->data);
+  g_free (p->name);
   g_free (p);
 }
 
