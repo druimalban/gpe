@@ -37,31 +37,35 @@ future_view_update ()
   struct tm tm;
   char buf[256];
   gchar *line_info[2];
-  GSList *future_events[1];
+  GSList *events;
   GSList *iter;
+  guint width = 0;
      
-  gtk_clist_freeze(GTK_CLIST(future_list));
-  gtk_clist_clear(GTK_CLIST(future_list));
+  gtk_clist_freeze (GTK_CLIST (future_list));
+  gtk_clist_clear (GTK_CLIST (future_list));
 
-  gtk_clist_set_column_width (GTK_CLIST(future_list), 0, 100);
-  gtk_clist_set_column_width (GTK_CLIST(future_list), 1, 55);
-  gtk_clist_set_sort_column (GTK_CLIST(future_list), 0);
+  gtk_clist_set_sort_column (GTK_CLIST (future_list), 0);
   
   localtime_r (&start, &tm);
   tm.tm_year++;
-  end=mktime (&tm);
+  end = mktime (&tm);
       
-  future_events[0] = event_db_list_for_period (start, end);
+  events = event_db_list_for_period (start, end);
       
-  for (iter = future_events[0]; iter; iter = iter->next)
+  for (iter = events; iter; iter = iter->next)
     {
+      guint w;
       ev = (event_t) iter->data;
       evd = event_db_get_details (ev);
       
       line_info[1] = evd->summary;
       localtime_r (&(ev->start), &tm);
-      strftime (buf, sizeof (buf), "%x %R", &tm);
+      strftime (buf, sizeof (buf), "%x " TIMEFMT, &tm);
       line_info[0] = buf;
+
+      w = gdk_string_width (future_list->style->font, buf);
+      if (w > width)
+	width = w;
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
       gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
@@ -69,8 +73,10 @@ future_view_update ()
       row++;
     } 
        
-  gtk_clist_sort (GTK_CLIST(future_list));
-  gtk_clist_thaw(GTK_CLIST(future_list));
+  gtk_clist_set_column_width (GTK_CLIST (future_list), 0, width + 4);
+
+  gtk_clist_sort (GTK_CLIST (future_list));
+  gtk_clist_thaw (GTK_CLIST (future_list));
   
   return TRUE;
 }
