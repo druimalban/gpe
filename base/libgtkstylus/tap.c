@@ -37,6 +37,8 @@ struct tap
 static struct tap *t;
 static int do_fn;
 
+#define TIMEOUT 500
+
 static gboolean
 timeout (gpointer p)
 {
@@ -49,6 +51,7 @@ timeout (gpointer p)
       if ((abs (x - tt->x) < THRESHOLD)
 	  && (abs (y - tt->y) < THRESHOLD))
 	{
+	  tt->ev.button.time += TIMEOUT;
 	  tt->ev.button.button = 3;
 	  tt->ev.button.type = GDK_BUTTON_PRESS;
 	  gtk_main_do_event (&tt->ev);
@@ -81,7 +84,7 @@ filter (GdkEvent *ev, gpointer data)
       && t == NULL)
     {
       struct tap *tt = g_malloc (sizeof (struct tap));
-      g_timeout_add (500, timeout, tt);
+      g_timeout_add (TIMEOUT, timeout, tt);
       tt->flag = TRUE;
       memcpy (&tt->ev, ev, sizeof (*ev));
       t = tt;
