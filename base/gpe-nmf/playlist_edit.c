@@ -91,7 +91,7 @@ add_playlist_file (struct nmf_frontend *fe, char *s)
       player_fill_in_playlist (p);
 
       if (p->title == NULL)
-	p->title = p->data.track.url;
+	p->title = g_path_get_basename (p->data.track.url);
     }
 
   if (p)

@@ -1,3 +1,35 @@
+2003-02-14  Philip Blundell  <philb@gnu.org>
+
+	* playlist_edit.c (add_playlist_file): Just use the basename as
+	the default title.
+
+	* backend/gstplayer.c (player_set_volume): Fill in implementation.
+	(player_next_track): Reduce verbosity of debug spew.
+
+	* gpe-nmf.c (main): Disable progress slider.
+
+2003-02-13  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (GTKCFLAGS): Add -DGTK_DISABLE_DEPRECATED.
+
+	* backend/Makefile (LDFLAGS, CPPFLAGS): Select GStreamer 0.6.
+	
+	* backend/gstplayer.c (struct player): New members volume,
+	source_elem.
+	(player_new): Fill in source_elem.
+	(build_pipeline): Use source_elem.  Create volume elt and plumb it
+	in.  Print an error if element creation fails.
+
+	* gpe-nmf.c (my_icons): Remove ok, cancel.
+	(main): Use stock items.  Replace Xlib cruft with GTK call to set
+	window type.  Use GObject functions where appropriate.  Use
+	gtk_image_new_from_pixbuf in place of gpe_render_icon.
+	* playlist_edit.c (new_entry): Use GObject functions where
+	appropriate.
+	(playlist_edit_push): Remove call to gtk_widget_draw.
+	(playlist_edit): Use gtk_image_new_from_pixbuf in place of
+	gpe_render_icon.  Use GObject functions where appropriate.
+	
 2003-01-11  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.11 released.

@@ -341,8 +341,10 @@ main (int argc, char *argv[])
 
   gtk_box_pack_start (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
-  
+
+#if SLIDER_WORKS
   gtk_box_pack_start (GTK_BOX (hbox4), fe->progress_slider, TRUE, TRUE, 0);
+#endif
   gtk_box_pack_start (GTK_BOX (hbox4), fe->time_label, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox3, TRUE, TRUE, 0);
@@ -367,7 +369,9 @@ main (int argc, char *argv[])
   gtk_widget_show (fe->time_label);
   gtk_widget_show (fe->artist_label);
   gtk_widget_show (fe->title_label);
+#if SLIDER_WORKS
   gtk_widget_show (fe->progress_slider);
+#endif
   gtk_widget_show (vol_slider);
 
   gtk_widget_show (vbox);

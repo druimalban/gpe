@@ -1,6 +1,6 @@
 .SUFFIXES: .so
 
-CFLAGS = -O2 -g -Wall
+CFLAGS = -Os -g -Wall
 
 CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags libxml-2.0` -DFILE_OFFSET_BITS=64 -I../../libgpewidget
 LDFLAGS += `pkg-config --libs glib-2.0`

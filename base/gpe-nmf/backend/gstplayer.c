@@ -269,13 +269,17 @@ static void
 build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 {
   p->filesrc = gst_element_factory_make (p->source_elem, "disk_source");
-  g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
-  
   p->decoder = gst_element_factory_make ("spider", "decoder");
-
   p->volume = gst_element_factory_make ("volume", "volume");
-
   p->audiosink = gst_element_factory_make (really_play ? "esdsink" : "fakesink", "play_audio");
+
+  if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink)
+    {
+      fprintf (stderr, "Element creation failed\n");
+      return;
+    }
+
+  g_object_set (G_OBJECT (p->filesrc), "location", t->data.track.url, NULL);
 
   gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
 
@@ -337,7 +341,9 @@ player_status (player_t p, struct player_status *s)
   if (p->state == PLAYER_STATE_PLAYING)
     {
       GstClockTime t = gst_clock_get_time (p->clock);
+#if 0
       fprintf (stderr, "player %p: tick %llx\n", p, t);
+#endif
       s->time = t;
     }
 }
@@ -356,6 +362,13 @@ player_prev_track (player_t p)
 void 
 player_set_volume (player_t p, int v)
 {
+  GValue value;
+
+  memset (&value, 0, sizeof (value));
+  g_value_init (&value, G_TYPE_FLOAT);
+  g_value_set_float (&value, (float)v / 256);
+  
+  g_object_set_property (G_OBJECT (p->volume), "volume", &value);
 }
 
 #if 0
