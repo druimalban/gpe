@@ -24,9 +24,9 @@
 
 #include "gpe/pixmaps.h"
 #include "gpe/init.h"
-#include "gpe/render.h"
 #include "gpe/picturebutton.h"
 #include "gpe/errorbox.h"
+#include <gpe/spacing.h>
 
 static struct gpe_icon my_icons[] = {
   { "lock", PREFIX "/share/pixmaps/gpe-su.png" },
@@ -70,7 +70,7 @@ do_su (void)
   
   if (pid == 0)
     {
-      execl (SU, SU, "-c", command, NULL);
+      execl (SU, SU, "-", "-c", command, NULL);
       exit (1);
     }
 
@@ -157,27 +157,26 @@ main (int argc, char *argv[])
     }
 
   window = gtk_dialog_new ();
-  gtk_widget_realize (window);
   
   hbox = gtk_hbox_new (FALSE, 0);
   entry = gtk_entry_new ();
-  label = gtk_label_new (_("Enter password:"));
+  label = gtk_label_new (_("Enter password for root:"));
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
   gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
+
+  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 
   p = gpe_find_icon ("lock");
-  pw = gpe_render_icon (window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
   gtk_box_pack_start (GTK_BOX (hbox), pw, FALSE, FALSE, 4);
 
   gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
 		      hbox, FALSE, FALSE, 0);
-
-  gtk_widget_realize (window);
 
   buttonok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
   buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
@@ -186,6 +185,9 @@ main (int argc, char *argv[])
 		      buttoncancel, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
 		      buttonok, TRUE, TRUE, 0);
+
+  GTK_WIDGET_SET_FLAGS (buttonok, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (buttonok);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", 
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);

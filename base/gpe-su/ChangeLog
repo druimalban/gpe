@@ -1,3 +1,20 @@
+2003-03-17  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.08 released.
+	
+2003-03-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-su.c (do_su): Add "-" to su command line.
+
+	* gpe-su.desktop.in: New file.
+	* gpe-su.desktop: Deleted.
+	* Makefile (install): Depend on .desktop file.
+
+	* gpe-su.c (main): Use gtk_image_new_from_pixbuf in place of
+	gpe_render_icon.  No need to realize the window.  Set border width
+	on dialog.  Make OK button default.  Say explicitly that it's the
+	root password which is wanted.
+
 2003-02-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.07 released.

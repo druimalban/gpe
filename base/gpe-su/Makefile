@@ -3,7 +3,7 @@ PACKAGE = gpe-su
 DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.07
+VERSION = 0.08
 
 MEMBERS = gpe-su
 
@@ -47,7 +47,7 @@ $(PACKAGE): $(OBJS)
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-install: all
+install: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
