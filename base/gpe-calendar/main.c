@@ -55,6 +55,7 @@ struct gpe_icon my_icons[] = {
   { "delete", "delete" },
   { "save", "save" },
   { "cancel", "cancel" },
+  { "icon", PREFIX "/share/pixmaps/gpe-calendar.png" },
   {NULL, NULL}
 };
 
@@ -157,6 +158,8 @@ main(int argc, char *argv[])
   GtkWidget *vbox, *toolbar;
   GdkPixbuf *p;
   GtkWidget *pw;
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
 
   guint hour;
 
@@ -285,6 +288,9 @@ main(int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
+
+  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
 
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);
