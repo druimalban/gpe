@@ -1,0 +1,58 @@
+<!--#set var="addtitle" value="Screenshots"-->
+<!--#set var="pagename" value="screenshots"-->
+<!--#include virtual="includes/head.shtml"-->
+
+<p>
+<table border=0><tr><td>
+<p>
+<img src="gpe-login.png">
+</td><td>
+<img src="today.png">
+</td><td>
+<img src="address1.gif">
+</td></tr><tr><td>
+<p>
+<img src="address2.gif">
+</td><td>
+<img src="bluez-pin.png">
+</td><td>
+<img src="calendar-month.png">
+</td></tr><tr><td>
+<p>
+<img src="calendar-day.png">
+</td><td>
+<img src="calendar-week.png">
+</td><td>
+<img src="cotidie-appt.png">
+</td></tr><tr><td>
+<p>
+<img src="cotidie-todo.png">
+</td><td>
+<img src="gpe-appmgr.png">
+</td><td>
+<img src="gpe-logo-lr.jpg">
+</td></tr><tr><td>
+<p>
+<img src="gpe_logo.png">
+</td><td>
+<img src="gpe-logo.png">
+</td><td>
+<img src="gtktetris.png">
+</td></tr><tr><td>
+<p>
+<img src="menu.gif">
+</td><td>
+<img src="solitaire.png">
+</td><td>
+<img src="status.png">
+</td></tr><tr><td>
+<p>
+<img src="wm-shot1.png">
+</td><td>
+<img src="wm-shot2.png">
+</td><td>
+<img src="wm-shot3.png">
+</td></tr>
+</table>
+
+<!--#include virtual="includes/foot.shtml"-->
