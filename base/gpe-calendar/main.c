@@ -27,7 +27,8 @@
 #include "year_view.h"
 #include "month_view.h"
 
-#define PIXMAPS_DIR "/usr/share/gpe-calendar/pixmaps"
+#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
+#define MY_PIXMAPS_DIR "/usr/share/gpe-calendar/pixmaps"
 
 extern void about (void);
 
@@ -198,22 +199,22 @@ main(int argc, char *argv[])
   tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/new.xpm");
   new_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/today.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/today.xpm");
   today_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/futureview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/futureview.xpm");
   future_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  day_pix = gdk_pixmap_create_from_xpm (main_window->window, &day_mask, NULL, PIXMAPS_DIR "/dayview.xpm");
+  day_pix = gdk_pixmap_create_from_xpm (main_window->window, &day_mask, NULL, MY_PIXMAPS_DIR "/dayview.xpm");
   day_pixmap = gtk_pixmap_new (day_pix, day_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/weekview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/weekview.xpm");
   week_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/monthview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/monthview.xpm");
   month_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/yearview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/yearview.xpm");
   year_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
   close_pix = gdk_pixmap_create_from_xpm (main_window->window, &close_mask, NULL, PIXMAPS_DIR "/close.xpm");

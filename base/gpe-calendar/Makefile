@@ -1,4 +1,4 @@
-#DEBUG = yes
+DEBUG = yes
 
 MEMBERS = main day_view week_view future_view event-ui about event-db year_view month_view day_popup
 
