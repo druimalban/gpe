@@ -25,4 +25,9 @@ the iPAQ, the record button should start and stop recording.
 <A HREF="mailto:moray@handhelds.org">Moray Allan</a> is currently
 developing this module.
 
+<H2>Screenshot</H2>
+<P>
+<IMG SRC="/images/gpe-soundbite.png" ALT="gpe-soundbite">
+</P>
+
 <!--#include virtual="/includes/foot.shtml"-->
