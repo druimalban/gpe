@@ -336,7 +336,8 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
       fprintf (fp, "<page>\n");
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, "<label>%s</label>\n", e->name);
+      if (e->name)
+	fprintf (fp, "<label>%s</label>\n", e->name);
       for (iter = e->children; iter; iter = iter->next)
 	print_structure_1 (fp, iter->data, level + 1);
       for (i = 0; i < level; i++)
@@ -348,7 +349,8 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
       fprintf (fp, "<group>\n");
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, "<label>%s</label>\n", e->name);
+      if (e->name)
+	fprintf (fp, "<label>%s</label>\n", e->name);
       for (iter = e->children; iter; iter = iter->next)
 	print_structure_1 (fp, iter->data, level + 1);
       for (i = 0; i < level; i++)
@@ -363,7 +365,8 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
       fprintf (fp, "<tag>%d</tag>\n", e->tag);
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, "<label>%s</label>\n", e->name);
+      if (e->name)
+	fprintf (fp, "<label>%s</label>\n", e->name);
       for (i = 0; i < level; i++)
 	fputs ("  ", fp);
       fprintf (fp, "</single-item>\n");
@@ -376,7 +379,8 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
       fprintf (fp, "<tag>%d</tag>\n", e->tag);
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, "<label>%s</label>\n", e->name);
+      if (e->name)
+	fprintf (fp, "<label>%s</label>\n", e->name);
       for (i = 0; i < level; i++)
 	fputs ("  ", fp);
       fprintf (fp, "</multi-item>\n");
