@@ -92,19 +92,25 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
                g_signal_connect (G_OBJECT (w), "key_press_event", 
 		         G_CALLBACK (phone_key_press_event), NULL);
             }
-          if (strcmp(e->tag,"NAME")) /* the name field on a button */
+          if (strcasecmp(e->tag, "NAME")) /* the name field on a button */
             {
               l = gtk_label_new (e->name);
               gtk_misc_set_alignment(GTK_MISC(l),1.0,0.5);
             }
           else
             {
-              l = gtk_button_new_with_label(e->name);
-              g_signal_connect(G_OBJECT(l),"clicked",
+              GtkWidget *b, *h;
+              h = gtk_hbox_new(FALSE, gpe_get_boxspacing());
+              l = gtk_label_new (e->name);
+              gtk_box_pack_start(GTK_BOX(h), w, TRUE, TRUE, 0);
+              GTK_WIDGET_SET_FLAGS(w, GTK_CAN_DEFAULT);
+              b = gtk_button_new_with_label(_("Details"));
+              gtk_box_pack_start(GTK_BOX(h), b, FALSE, TRUE, 0);
+              g_object_set_data(G_OBJECT(b), "edit", w);
+              w = h;
+              g_signal_connect(G_OBJECT(b),"clicked",
                                G_CALLBACK(on_name_clicked),
                                gtk_widget_get_toplevel(pw));
-              g_object_set_data(G_OBJECT(l), "edit", w);
-              GTK_WIDGET_SET_FLAGS(w,GTK_CAN_DEFAULT);
             }
           gtk_table_attach (GTK_TABLE (table),
                     l,
@@ -533,7 +539,7 @@ edit_person (struct person *p, gboolean isnew)
           guint pos = 0;
           if (tag)
             {
-               if (!strcasecmp(tag,"NAME"))
+               if (!strcasecmp(tag, "NAME"))
                  {
                    gtk_widget_grab_default(w);
                    gtk_widget_grab_focus(w);
@@ -610,17 +616,17 @@ update_edit (struct person *p, GtkWidget *w)
           if (v && v->value)
             {
                /* collect data for name field update */
-              if (!strcmp(v->tag,"TITLE"))
+              if (!strcasecmp(v->tag,"TITLE"))
                 n1 = v->value;
-              if (!strcmp(v->tag,"GIVEN_NAME"))
+              if (!strcasecmp(v->tag,"GIVEN_NAME"))
                 n2 = v->value;
-              if (!strcmp(v->tag,"MIDDLE_NAME"))
+              if (!strcasecmp(v->tag,"MIDDLE_NAME"))
                 n3 = v->value;
-              if (!strcmp(v->tag,"FAMILY_NAME"))
+              if (!strcasecmp(v->tag,"FAMILY_NAME"))
                 n4 = v->value;
-              if (!strcmp(v->tag,"HONORIFIC_SUFFIX"))
+              if (!strcasecmp(v->tag,"HONORIFIC_SUFFIX"))
                 n5 = v->value;
-              if (!strcmp(v->tag,"NAME"))
+              if (!strcasecmp(v->tag,"NAME"))
               {
                 nameentry[namenum] = w;
                 namenum++;
@@ -628,7 +634,7 @@ update_edit (struct person *p, GtkWidget *w)
 
               if (GTK_IS_EDITABLE (w))
                 {
-                  gtk_editable_delete_text(GTK_EDITABLE(w),0,-1);
+                  gtk_editable_delete_text(GTK_EDITABLE(w), 0, -1);
                   gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
                                             strlen (v->value), &pos);
                 }
@@ -660,7 +666,7 @@ update_edit (struct person *p, GtkWidget *w)
                     gtk_image_set_from_stock(GTK_IMAGE(w), 
                       GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
                 }
-              else  
+              else if (GTK_IS_TEXT_VIEW(w))
                 gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
                           v->value, -1);
             }
@@ -670,32 +676,33 @@ update_edit (struct person *p, GtkWidget *w)
   if (namenum)
     {
       gchar *ts = g_strdup(n1);
-      if (n2) 
+      if (n2)
         {
-          n1 = g_strdup_printf("%s %s",ts,n2);
+          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n2));
           g_free(ts);
           ts = n1;
         }
       if (n3) 
         {
-          n1 = g_strdup_printf("%s %s",ts,n3);
+          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n3));
           g_free(ts);
           ts = n1;
         }
       if (n4) 
         {
-          n1 = g_strdup_printf("%s %s",ts,n4);
+          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n4));
           g_free(ts);
           ts = n1;
         }
       if (n5) 
         {
-          n1 = g_strdup_printf("%s %s",ts,n5);
+          n1 = g_strdup_printf("%s %s", ts, g_strstrip(n5));
           g_free(ts);
           ts = n1;
         }
+
       for (i=0;i<namenum;i++)
-        gtk_entry_set_text(GTK_ENTRY(nameentry[i]),g_strstrip(ts));
+        gtk_entry_set_text(GTK_ENTRY(nameentry[i]), g_strstrip(ts));
       g_free(ts);
     }
 }

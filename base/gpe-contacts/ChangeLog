@@ -1,3 +1,13 @@
+2004-09-16  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * editing.c: Fixed bug causing name update to fail.
+                 Changed layout of name editing widgets.
+                 Fixed growing whitespace in some names.
+                 Doubleclick on contacts opens editing window.
+                 
+    * main.c: Added position status display for large screens.
+              Limited size of list in large screen mode.
+
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
     
     * main.c: Wrap around if up key is pressed and we are at first item.

@@ -628,6 +628,34 @@ scroll_timeout(gpointer d)
   return FALSE;
 }
 
+void
+list_view_cursor_changed (GtkTreeView *treeview, gpointer user_data)
+{
+  GtkWidget *lStatus = user_data;
+  int pos;
+  int count =
+      gtk_tree_model_iter_n_children(GTK_TREE_MODEL(list_store), NULL);
+  GtkTreePath *path;
+  
+  if (lStatus)
+    {
+      gtk_tree_view_get_cursor(treeview, &path, NULL);
+      if (path)
+        {
+          gchar *text;
+          gint *index = gtk_tree_path_get_indices(path);
+          if (index)
+            {
+              pos = index[0] + 1;
+              text = g_strdup_printf("%d / %d", pos, count);
+              gtk_label_set_text(GTK_LABEL(lStatus), text);
+              g_free(text);
+            }
+          gtk_tree_path_free(path);
+        }
+    }
+}
+
 static gboolean
 window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
 {
@@ -757,7 +785,7 @@ search_entry_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *tool
 static gboolean
 list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *list_store)
 {
-  if (b->button == 3)
+  if ((b->button == 3) || ((b->button == 1) && (b->type == GDK_2BUTTON_PRESS)))
     {
       gint x, y;
       GtkTreePath *path;
@@ -769,25 +797,33 @@ list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *lis
 					 x, y,
 					 &path, NULL,
 					 NULL, NULL))
-	{
-	  GtkTreeIter iter;
-	  guint id;
-
-	  gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
-
-	  gtk_tree_path_free (path);
-
-	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &id, -1);
-
-	  menu_uid = id;
-
-	  if (export_bluetooth_available ())
-	    gtk_widget_show (bluetooth_menu_item);
-	  else
-	    gtk_widget_hide (bluetooth_menu_item);
-
-	  gtk_menu_popup (GTK_MENU (popup_menu), NULL, NULL, NULL, widget, b->button, b->time);
-	}
+        {
+          GtkTreeIter iter;
+          guint id;
+      
+          gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
+      
+          gtk_tree_path_free (path);
+          
+          if (b->button == 3)
+            {
+              gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &id, -1);
+          
+              menu_uid = id;
+          
+              if (export_bluetooth_available ())
+                gtk_widget_show (bluetooth_menu_item);
+              else
+                gtk_widget_hide (bluetooth_menu_item);
+          
+              gtk_menu_popup (GTK_MENU (popup_menu), 
+                              NULL, NULL, NULL, widget, b->button, b->time);
+            }
+          else
+            {
+                edit_contact(widget, NULL);
+            }
+        }
     }
 
   return FALSE;
@@ -852,6 +888,7 @@ create_main (gboolean show_config_button)
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
+  GtkWidget *lStatus = NULL;
   gint size_x, size_y;
 
   /* screen layout detection */
@@ -933,6 +970,14 @@ create_main (gboolean show_config_button)
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes (_("Contact"), renderer,
 						     "text", 0, NULL);
+  if (mode_landscape)
+    {
+      /* min width = 20% */
+      gtk_tree_view_column_set_min_width(column, size_x / 5);
+      /* max width = 50% */
+      gtk_tree_view_column_set_max_width(column, size_x / 2); 
+    }
+  gtk_tree_view_column_set_sizing(column, GTK_TREE_VIEW_COLUMN_AUTOSIZE);
   gtk_tree_view_append_column (GTK_TREE_VIEW (list_view), column);
 
   hbox3 = gtk_hbox_new (FALSE, 0);
@@ -943,11 +988,17 @@ create_main (gboolean show_config_button)
     }
   gtk_box_pack_start (GTK_BOX (vbox1), hbox3, FALSE, FALSE, 0);
 
+  if (mode_large_screen)
+    {
+      lStatus = gtk_label_new (NULL);
+      gtk_misc_set_alignment(GTK_MISC(lStatus), 1.0, 0.5);
+      gtk_box_pack_end (GTK_BOX (hbox3), lStatus, FALSE, FALSE, 3);
+    }
   label83 = gtk_label_new (_("Find:"));
   gtk_box_pack_start (GTK_BOX (hbox3), label83, FALSE, FALSE, 0);
 
   entry1 = gtk_entry_new ();
-  gtk_widget_set_size_request(entry1,60,-1);
+  gtk_widget_set_size_request(entry1, 60, -1);
   gtk_box_pack_start (GTK_BOX (hbox3), entry1, FALSE, FALSE, 0);
 
   label84 = gtk_label_new (_("in"));
@@ -966,6 +1017,10 @@ create_main (gboolean show_config_button)
 
   g_signal_connect (G_OBJECT (list_view), "button_release_event", 
 		    G_CALLBACK (list_button_release_event), list_store);
+  
+  if (mode_large_screen)
+    g_signal_connect (G_OBJECT (list_view), "cursor-changed", 
+		    G_CALLBACK (list_view_cursor_changed), lStatus);
 
   gtk_widget_set_events (main_window,GDK_KEY_PRESS_MASK);
   gtk_widget_set_events (entry1,GDK_KEY_PRESS_MASK);
