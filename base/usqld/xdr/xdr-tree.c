@@ -90,3 +90,32 @@ void XDR_tree_free(XDR_tree * t){
   
   free(t);
 }
+
+
+XDR_tree*  XDR_tree_new_union (unsigned int disc,
+			       XDR_tree * val){
+  XDR_compound * t = NULL; 
+  
+  
+}
+
+XDR_tree* XDR_tree_new_struct (size_t num_elems,
+			       XDR_tree ** elems);
+
+XDR_tree * XDR_tree_new_array(int fixed_size,
+			      size_t num_elems,
+			      XDR_tree **elems);
+
+XDR_tree * XDR_tree_new_compound(int fixed_size,
+				 size_t length,
+				 unsigned char * data);
+
+XDR_tree * XDR_tree_new_string(size_t length,
+			       unsigned char * data);
+
+XDR_tree * XDR_tree_new_num(XDR_type t,u_int32_t val);
+
+XDR_tree * XDR_tree_new_uhyper(u_int64_t val);
+
+XDR_tree * XDR_tree_new_float(float val);
+XDR_tree * XDR_tree_new_double(double val);

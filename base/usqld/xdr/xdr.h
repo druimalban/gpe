@@ -147,16 +147,53 @@ int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t);
 int  XDR_serialize_elem(XDR_typedesc *s, XDR_tree *t,int fd);
 
 
+/*base constructors for tree elements*/
 int  XDR_tree_new_compound(XDR_type type,
 			   size_t nelems,
 			   XDR_tree_compound ** out_t);
-
-void XDR_tree_new_simple(XDR_type type,XDR_tree_simple ** out_t);
-
 int  XDR_tree_new_str (XDR_type type,
 		       size_t len,
 		       XDR_tree_str** out_t);
-			 
+
+void XDR_tree_new_simple(XDR_type type,XDR_tree_simple ** out_t);
+
+/*
+  API constructors for XDR tree elements
+ */
+XDR_tree*  XDR_tree_new_union (unsigned int disc,
+			       XDR_tree * val);
+
+XDR_tree* XDR_tree_new_struct (size_t num_elems,
+			       XDR_tree ** elems);
+
+XDR_tree * XDR_tree_new_array(int fixed_size,
+			      size_t num_elems,
+			      XDR_tree **elems);
+
+XDR_tree * XDR_tree_new_compound(int fixed_size,
+				 size_t length,
+				 unsigned char * data);
+
+XDR_tree * XDR_tree_new_string(size_t length,
+			       unsigned char * data);
+
+XDR_tree * XDR_tree_new_num(XDR_type t,u_int32_t val);
+#define XDR_tree_new_int(v) XDR_tree_new_uint(XDR_INT,(u_int32_t)v)
+#define XDR_tree_new_uint(v) XDR_tree_new_uint(XDR_UINT,(u_int32_t)v)
+#define XDR_tree_new_bool(v) XDR_tree_new_uint(XDR_BOOL,(u_int32_t)v)
+#define XDR_tree_new_enum(v) XDR_tree_new_uint(XDR_ENUM,(u_int32_t)v)
+
+XDR_tree * XDR_tree_new_uhyper(u_int64_t val);
+#define  XDR_tree_new_hyper(val) XDR_tree_new_uhyper((u_int64_t)val)
+
+XDR_tree * XDR_tree_new_float(float val);
+XDR_tree * XDR_tree_new_double(double val);
+
+
+
+
+
+
 void XDR_tree_free(XDR_tree * t);
 
 #endif 

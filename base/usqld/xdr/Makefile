@@ -18,8 +18,6 @@ xdr-deserialize.lo: xdr.h xdr-deserialize.c
 	gcc $(CFLAGS) -c xdr-deserialize.c -o xdr-deserialize.lo
 
 
-example: libxdr example.c
-	gcc -L./ -lxdr example.c -o example
 
 clean:
 	rm -f *.o *.lo *.so example *~
