@@ -1,4 +1,7 @@
 2004-02-06		Florian Boor <florian.boor@kernelconcepts.de>
+	* main.c: Fixed major memory leak.
+
+2004-02-06		Florian Boor <florian.boor@kernelconcepts.de>
 	* Updated header, released V 0.2.8.
 2004-01-20		Florian Boor <florian.boor@kernelconcepts.de>
 	* Some minor fixes and formating changes.

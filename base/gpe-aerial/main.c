@@ -9,6 +9,7 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
+ *
  */
 
 #include <sys/types.h>
@@ -82,12 +83,14 @@ static GtkWidget *icon;
 
 static pid_t scanner_pid;
 static int sock;
-static psconfig_t cfg = { 1, "eth0", DT_ORINOCO, 40000, 0, 0, FALSE, "\0" };
+static psconfig_t cfg = { 0, "eth0", DT_ORINOCO, 40000, 0 ,0, FALSE,
+		"/tmp/spotkoord.txt", "/tmp/psdump.pcap", FALSE};
 static netinfo_t **netlist = NULL;
 static int netcount = 0;
 static guint timeout_id = 0;
 static int net_request_mode = -1;
-
+static gboolean cfg_changed = FALSE; 
+		
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
@@ -132,6 +135,7 @@ draw_signal (int signal)
 	gdk_draw_rectangle (GDK_DRAWABLE (dock_window), gc, TRUE, 0,
 			    (16 + 2) - signal * 30 / 255, 16,
 			    signal * 30 / 255 + 2);
+	gtk_gc_release(gc);
 }
 
 
@@ -650,6 +654,7 @@ get_networks (void)
 			case msg_config:
 				memcpy (&cfg, &msg.content.cfg,
 					sizeof (psconfig_t));
+				cfg_changed = TRUE;
 				break;
 			case msg_info:
 				do_message_info (&msg.content.info);
@@ -767,17 +772,6 @@ run_scan (void)
 	cfg.autosend = TRUE;
 	send_config ();
 
-/*	if (netcount <= 0)
-	{
-		gdk_threads_enter ();
-		gtk_widget_destroy (w);
-		gpe_perror_box_nonblocking (_("No nets available...\nScanning will continue."));
-		gtk_widget_show_all (devices_window);
-		timeout_id = gtk_timeout_add(1000,(GtkFunction)get_networks,NULL);
-		gdk_threads_leave ();
-		return FALSE;
-	}
-*/
 	gdk_threads_enter ();
 	gtk_widget_destroy (w);
 	gtk_widget_show_all (devices_window);
@@ -809,7 +803,7 @@ radio_on (void)
 		sigprocmask (SIG_BLOCK, &sigs, NULL);
 		scanner_pid = fork_scanner ();
 		sigprocmask (SIG_UNBLOCK, &sigs, NULL);
-
+		/* wait for scanner to come up */
 		usleep (200000);
 		sock = socket (AF_UNIX, SOCK_STREAM, 0);
 		if (sock < 0)
@@ -831,7 +825,14 @@ radio_on (void)
 	}
 	cfg.autosend = (gboolean) devices_window;
 	send_command (C_DETECT_CARD, 0);
-	usleep(200000);
+	
+	/* wait for prismstumbler to send config update */
+	while (!cfg_changed)
+	{
+		usleep(200000);
+		get_networks();
+	}
+	cfg_changed = FALSE;
 	cfg.scan = TRUE;
 	send_config ();
 }
@@ -900,7 +901,7 @@ aerial_shutdown ()
 	{
 		cfg.scan = FALSE;
 		send_config ();
-		kill (scanner_pid, 15);
+		kill (scanner_pid, SIGTERM);
 		scanner_pid = 0;
 	}
 
