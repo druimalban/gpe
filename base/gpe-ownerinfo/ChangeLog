@@ -1,3 +1,5 @@
 2003-01-18  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-ownerinfo2.c (main): Add notebook and use the second page for the bigger photo.
+
 	* Makefile (GTKCFLAGS): Remove -DGTK_ENABLE_BROKEN.
