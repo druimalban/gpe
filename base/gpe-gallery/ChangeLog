@@ -1,3 +1,8 @@
+
+2004-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Removed obsolete icons: list_view.png, icon_view.png.
+	* main.c: Use icons provided by gpe-icons.
+
 2004-06-03  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Released V 0.91
 	* Pushed version to 0.91
