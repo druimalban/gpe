@@ -32,6 +32,7 @@ static GtkWidget *eWEPKey;
 static GtkWidget *eSsid;
 static GtkWidget *eChannel;
 static GtkWidget *rbTypeAdHoc;
+static GtkWidget *eNameServer;
 
 
 static int 
@@ -162,6 +163,25 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	}
 	free(tmp);
 	
+	tmp = gtk_editable_get_chars(GTK_EDITABLE(eNameServer),0,-1);
+	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
+	{
+		gpe_error_box(_("The DNS server address you\nentered is not valid."));
+		return;
+	}
+	else
+	{
+		if (strlen(tmp))
+		{
+			ni->netinfo.userset |= USET_NAMESERVER;
+			ni->netinfo.nameserver[0] = i1;
+			ni->netinfo.nameserver[1] = i2;
+			ni->netinfo.nameserver[2] = i3;
+			ni->netinfo.nameserver[3] = i4;
+		}
+	}
+	free(tmp);
+	
 	update_display(ni);
 	gtk_widget_destroy(window);
 }
@@ -211,6 +231,7 @@ network_edit (netinfo_t * ni)
 	GtkWidget *lChannel = gtk_label_new (_("Channel"));
 	GtkWidget *lWEP = gtk_label_new (_("WEP enabled"));
 	GtkWidget *lDhcp = gtk_label_new (_("Use DHCP"));
+	GtkWidget *lNameServer = gtk_label_new (_("DNS Server"));
 	GtkWidget *table = gtk_table_new (6, 3, FALSE);
 	GtkTooltips *tooltips = gtk_tooltips_new ();
 	
@@ -227,6 +248,7 @@ network_edit (netinfo_t * ni)
 	tbWEP = gtk_check_button_new();
 	lWEPKey = gtk_label_new (_("WEP-Key"));
 	eWEPKey = gtk_entry_new ();
+	eNameServer = gtk_entry_new ();
 
 	gtk_tooltips_set_tip(tooltips,eIP,_("Enter your desired IP address here, e.g. 192.168.1.2"),NULL);
 	gtk_tooltips_set_tip(tooltips,eSubnet,_("Enter your desired subnet mask here, usually it is set to 255.255.255.0"),NULL);
@@ -238,6 +260,7 @@ network_edit (netinfo_t * ni)
 	gtk_tooltips_set_tip(tooltips,eGateway,_("Enter the IP of the default gateway to use."),NULL);
 	gtk_tooltips_set_tip(tooltips,tbWEP,_("Check this if WEP encryption is activated in this LAN."),NULL);
 	gtk_tooltips_set_tip(tooltips,eWEPKey,_("Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."),NULL);
+	gtk_tooltips_set_tip(tooltips,eNameServer,_("Enter the IP address of the primary nameserver to be used in this net here."),NULL);
 	
 	g_object_set_data(G_OBJECT(window),"netinfo",ni);
 	gtk_window_set_title (GTK_WINDOW (window), _("Network editor"));
@@ -269,6 +292,7 @@ network_edit (netinfo_t * ni)
 	gtk_misc_set_alignment (GTK_MISC (lIP), 0.0, 0.5);
 	gtk_misc_set_alignment (GTK_MISC (lGateway), 0.0, 0.5);
 	gtk_misc_set_alignment (GTK_MISC (lWEPKey), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lNameServer), 0.0, 0.5);
 
 	
 	gtk_table_attach(GTK_TABLE (table), lname, 0, 2, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
@@ -280,16 +304,18 @@ network_edit (netinfo_t * ni)
 	gtk_table_attach(GTK_TABLE (table), rbTypeAdHoc, 2, 3, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE (table), lChannel, 0, 1, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE (table), eChannel, 1, 2, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), lWEP, 0, 1, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), tbWEP, 1, 2, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), lDhcp, 0, 1, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), tbDhcp, 1, 2, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), lIP, 0, 1, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), eIP, 1, 3, 7, 8, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), lSubnet, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), eSubnet, 1, 3, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), lGateway, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
-	gtk_table_attach(GTK_TABLE (table), eGateway, 1, 3, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), lWEP, 2, 3, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), tbWEP, 3, 4, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), lDhcp, 0, 1, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), tbDhcp, 1, 2, 5, 6, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), lIP, 0, 1, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), eIP, 1, 3, 6, 7, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), lSubnet, 0, 1, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), eSubnet, 1, 3, 8, 9, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), lGateway, 0, 1, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), eGateway, 1, 3, 9, 10, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), lNameServer, 0, 1, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE (table), eNameServer, 1, 3, 10, 11, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE (table), lWEPKey, 0, 1, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE (table), eWEPKey, 1, 3, 11, 12, GTK_FILL, GTK_FILL, 0, 0);
 
@@ -326,6 +352,12 @@ network_edit (netinfo_t * ni)
 	free(tmp);
 	tmp=g_strdup_printf("%hhu.%hhu.%hhu.%hhu",ni->netinfo.gateway[0],ni->netinfo.gateway[1],ni->netinfo.gateway[2],ni->netinfo.gateway[3]);
 	gtk_entry_set_text(GTK_ENTRY(eGateway),tmp);
+	free(tmp);
+	if (ni->netinfo.nameserver[0])	
+		tmp=g_strdup_printf("%hhu.%hhu.%hhu.%hhu",ni->netinfo.nameserver[0],ni->netinfo.nameserver[1],ni->netinfo.nameserver[2],ni->netinfo.nameserver[3]);
+	else
+		tmp=g_strdup("");
+	gtk_entry_set_text(GTK_ENTRY(eNameServer),tmp);
 	free(tmp);
 	gtk_entry_set_text(GTK_ENTRY(eWEPKey),ni->netinfo.wep_key);
 	

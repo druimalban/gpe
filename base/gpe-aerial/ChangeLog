@@ -1,3 +1,10 @@
+06/30/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- prismstumbler.h Changes to handle a DNS server.
+	- netedit.c
+	- netdb.c
+	- control1	Changed dependencies for gpe-conf and prismstumbler.
+	- Makefile	Version update.
+
 06/27/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- prismstumbler.h	Updated from recent ps.

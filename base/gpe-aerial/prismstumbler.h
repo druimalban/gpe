@@ -176,6 +176,7 @@ typedef struct
 	unsigned char ip[4];
 	unsigned char netmask[4];
 	unsigned char gateway[4];
+	unsigned char nameserver[4];
 	char wep_key[48];
 	int inrange;	
 	ulong userset;
@@ -192,6 +193,7 @@ usernetinfo_t;
 #define USET_NETMASK	0x0040
 #define USET_GATEWAY	0x0080
 #define USET_WEPKEY		0x0100
+#define USET_NAMESERVER	0x0200
 
 typedef struct
 {
