@@ -632,7 +632,7 @@ receive_file (void)
 
 
 static void
-send_vcard (void)
+do_send_vcard (void)
 {
 	if (!radio_is_on)
 		radio_on ();
@@ -649,6 +649,16 @@ send_vcard (void)
 	
 		tx_file_select (MY_VCARD, NULL);
 	}
+}
+
+static void
+send_vcard (void)
+{
+	scan_thread =
+		g_thread_create ((GThreadFunc)
+				 do_send_vcard, NULL, FALSE, NULL);
+	if (scan_thread == NULL)
+		gpe_perror_box (_("Unable to start sender."));
 }
 
 

@@ -1,7 +1,11 @@
+2004-10-17	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Fixed vcard sending, forgot to create a thread for sending.
+
 2004-10-17  Phil Blundell  <pb@nexus.co.uk>
 
 	* vcard-export.c, vcard-import.c, vcal-export.c: Moved to
-	vtype-utils package.
+	  vtype-utils package.
 	* Makefile: Remove references to these files.
 
 2004-10-16	Florian Boor <florian.boor@kernelconcepts.de>
