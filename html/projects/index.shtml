@@ -42,5 +42,10 @@ Utilities:<br>
 	<LI> <I><A HREF="GPE-login.shtml">Multi-user login</A></I>
 	<LI> <I><A HREF="bluez-pin.shtml">Bluetooth PIN manager</A></I>
 </UL>
+</p>
+
+<p>
+See the Wiki page <A href="http://www.handhelds.org/z/wiki/CurrentThingsToDo">CurrentThingsToDo</A> for a list of things that particularly need attention.
+</p>
 
 <!--#include virtual="/includes/foot.shtml"-->
