@@ -1,3 +1,6 @@
+2004-01-17	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Added missing ipaq-s1.png to installed bitmaps, removed logread
+icon from list.
 2004-01-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* main-info.c, battery.c, storage.c: Fixed scrollbar handling.
 

@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.4
+VERSION = 0.1.5
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -145,7 +145,6 @@ PIXMAPS += pccard-cdrom.png pccard-ide.png pccard-memory.png
 PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
 PIXMAPS += pccard-network.png
 PIXMAPS += pccard-usb.png
-PIXMAPS += gpe-config-logread.png
 PIXMAPS += gpe-config-keyboard.png
 PIXMAPS += gpe-config-battery.png
 PIXMAPS += gpe-config-sysinfo.png
@@ -157,6 +156,7 @@ PIXMAPS += ibutton5.png
 PIXMAPS += system-info.png
 PIXMAPS += familiar.png
 PIXMAPS += device-info.png
+PIXMAPS += ipaq-s1.png
 
 ifeq ($(PACKAGETOOL),yes)
 PIXMAPS += gpe-config-packages.png
