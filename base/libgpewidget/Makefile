@@ -17,8 +17,8 @@ else
 BUILD = build
 endif
 
-CFLAGS = `pkg-config --cflags gtk+-2.0`
-LDFLAGS = `pkg-config --libs gtk+-2.0`
+$(eval CFLAGS = $(shell pkg-config --cflags gtk+-2.0))
+$(eval LDFLAGS = $(shell pkg-config --libs gtk+-2.0))
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)

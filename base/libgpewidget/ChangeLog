@@ -1,3 +1,8 @@
+2003-09-08  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Pre-expand CFLAGS and LDFLAGS to avoid repeated
+	invocations of pkg-config.
+
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.67 released.
