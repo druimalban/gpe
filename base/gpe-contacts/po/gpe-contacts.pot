@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-25 23:05+0000\n"
+"POT-Creation-Date: 2004-02-29 19:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:73 editing.c:202
+#: db.c:73 editing.c:203
 msgid "Name"
 msgstr ""
 
@@ -28,141 +28,115 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:180
+#: editing.c:181
 msgid "Edit Contact"
 msgstr ""
 
-#: editing.c:206
+#: editing.c:207
 msgid "more detailed name options"
 msgstr ""
 
-#: editing.c:208
+#: editing.c:209
 msgid "Summary"
 msgstr ""
 
-#: editing.c:214
+#: editing.c:215
 msgid "Birthday"
 msgstr ""
 
-#: editing.c:220
+#: editing.c:221
 msgid "Image"
 msgstr ""
 
-#: editing.c:236
+#: editing.c:237
 msgid "Schedule"
 msgstr ""
 
-#: editing.c:239
+#: editing.c:240
 msgid "automatic appointment"
 msgstr ""
 
-#: editing.c:248
+#: editing.c:249
 msgid "click to choose file"
 msgstr ""
 
-#: editing.c:251
+#: editing.c:252
 msgid "Categories:"
 msgstr ""
 
-#: editing.c:271
+#: editing.c:272
 msgid "Personal"
 msgstr ""
 
-#: main.c:103
-msgid "All categories"
-msgstr ""
-
-#: main.c:133
-msgid "Export of VCARD failed."
-msgstr ""
-
-#: main.c:137
-msgid ""
-"VCARD exported to\n"
-"/tmp/vcard.vcf."
-msgstr ""
-
-#: main.c:181
+#: main.c:74 main.c:173
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:181 structure.c:176
+#: main.c:74 main.c:173 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:182 structure.c:177
-msgid "Delete"
+#: main.c:126
+msgid "All categories"
 msgstr ""
 
-#: main.c:182 structure.c:177
-msgid "Cancel"
-msgstr ""
-
-#: main.c:413 gpe-contacts.desktop.in.h:1
+#: main.c:474 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:427
+#: main.c:488
 msgid "New contact"
 msgstr ""
 
-#: main.c:427
+#: main.c:488
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:433
+#: main.c:494
 msgid "Edit"
 msgstr ""
 
-#: main.c:434
+#: main.c:495
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:434
+#: main.c:495
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:440
+#: main.c:501
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:440
+#: main.c:501
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:447 main.c:448
-msgid "Export"
-msgstr ""
-
-#: main.c:448
-msgid "Tap here to export this contact to VCARD."
-msgstr ""
-
-#: main.c:454
+#: main.c:507
 msgid "Properties"
 msgstr ""
 
-#: main.c:454
+#: main.c:507
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:460
+#: main.c:513
 msgid "Close"
 msgstr ""
 
-#: main.c:460
+#: main.c:513
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:477 main.c:503
+#: main.c:530 main.c:562
 msgid "Contact"
 msgstr ""
 
-#: main.c:484
+#: main.c:537
 msgid "Find:"
 msgstr ""
 
-#: main.c:490
+#: main.c:543
 msgid "in"
 msgstr ""
 
@@ -192,6 +166,14 @@ msgstr ""
 
 #: structure.c:176
 msgid "Really delete this field?"
+msgstr ""
+
+#: structure.c:177
+msgid "Delete"
+msgstr ""
+
+#: structure.c:177
+msgid "Cancel"
 msgstr ""
 
 #: structure.c:234
@@ -244,6 +226,10 @@ msgstr ""
 
 #: configure.c:357
 msgid "Contacts: Configuration"
+msgstr ""
+
+#: export.c:118
+msgid "Save as..."
 msgstr ""
 
 #: gpe-contacts.desktop.in.h:2

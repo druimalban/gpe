@@ -68,5 +68,5 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 icons/export.png $(DESTDIR)$(PREFIX)/share/pixmaps/
 
 include $(BUILD)/Makefile.dpkg_ipkg
-include $(BUILD)/Makefile.translation-auto-linguas
+include $(BUILD)/Makefile.translation
 -include $(DEPS)
