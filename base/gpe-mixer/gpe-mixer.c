@@ -86,6 +86,7 @@ int mval;
 GtkWidget *slider;
 GtkWidget *label;
 GtkWidget *w;
+gchar *err = NULL;
 int *devnum;
 GtkTooltips *mixer_tips;
 
@@ -121,7 +122,7 @@ GtkTooltips *mixer_tips;
 				gtk_adjustment_set_value(GTK_ADJUSTMENT(MixerAdjuster[n]), 100 - (gdouble)(mval & 0x7f));
 			g_signal_connect (G_OBJECT (MixerAdjuster[n]), "value-changed",G_CALLBACK (set_volume), devnum);
 			gtk_widget_show(slider);
-			if ((w = gtk_image_new_from_pixbuf (gpe_find_icon (mixer_names[i])))) {
+			if ((w = gtk_image_new_from_pixbuf (gpe_try_find_icon (mixer_names[i], &err)))) {
 				gtk_widget_set_style (w, style);
 				gtk_table_attach(GTK_TABLE(table), w, n,n+1,0,1, (GtkAttachOptions) (0),(GtkAttachOptions) (0), 1, 0);
 				gtk_widget_show(w);

@@ -1,3 +1,7 @@
+2004-08-19	Florian Boor <florian@kernelconcepts.de>
+	- Version to 0.34
+	- Fixed startup if pixmap for a channel is not found.
+
 2003-04-11	Nils Faerber <nils@kernelconcepts.de>
 	- Initial release 0.10
 2004-04-19	Nils Faerber <nils@kernelconcepts.de>
