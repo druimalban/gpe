@@ -1,20 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-gpeiconlistview
+GpeIconListView
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Widget to arrange icons in columns and rows.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+This widget is used to arrange icons in columns and rows. It provides functions 
+for user interactive actions clicking on a particular icon and methods to
+manage icons in the list.
 </para>
-
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### MACRO GPE_ICON_LIST_VIEW_CONST ##### -->
 <para>
@@ -26,11 +26,11 @@ gpeiconlistview
 
 <!-- ##### ENUM t_gpe_textpos ##### -->
 <para>
-
+Data type to define text postioning relative to a displayed icon.
 </para>
 
-@GPE_TEXT_BELOW: 
-@GPE_TEXT_RIGHT: 
+@GPE_TEXT_BELOW: Show text below the icon.
+@GPE_TEXT_RIGHT: Show text right besides the icon.
 
 <!-- ##### STRUCT GPEIconListView ##### -->
 <para>
@@ -46,143 +46,144 @@ gpeiconlistview
 
 <!-- ##### FUNCTION gpe_icon_list_view_new ##### -->
 <para>
-
+This function creates a new GpeIconListView widget.
 </para>
 
-@Returns: 
+@Returns: New widget
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_bg ##### -->
 <para>
-
+Change widget background to a pixmap from a file.
 </para>
 
-@self: 
-@bg: 
+@self: Widget
+@bg: Bitmap file to display in background.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_bg_pixmap ##### -->
 <para>
-
+Set the widget background from a GdkPixbuf.
 </para>
 
-@self: 
-@bg: 
+@self: Widget
+@bg: Pixbuf to use for background.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_bg_color ##### -->
 <para>
-
+Change background color of icon list.
 </para>
 
-@self: 
-@color: 
+@self: Widget
+@color: 32 bit integer defining the color.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_remove_item_with_udata ##### -->
 <para>
-
+Removes an item from an icon list identified by its user data.
 </para>
 
-@self: 
-@udata: 
+@self: Widget
+@udata: Data pointer to identify item.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_update_icon_item_with_udata ##### -->
 <para>
-
+Updates the icon of an item identified by its user data.
 </para>
 
-@self: 
-@pixbuf: 
-@udata: 
+@self: Widget
+@pixbuf: GdkPixbuf containing the new icon.
+@udata: Data pointer to identify item.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_add_item ##### -->
 <para>
-
+Add a new icon item to a GpeIconList widget.
 </para>
 
-@self: 
-@title: 
-@icon: 
-@udata: 
-@Returns: 
+@self: Widget
+@title: Short text to label the icon.
+@icon: Icon bitmap file.
+@udata: Pointer to user data passed to signal handlers.
+@Returns: New item widget
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_add_item_pixbuf ##### -->
 <para>
-
+Add a new icon item to a GpeIconList widget using a GdkPixbuf for icon
+data instead of a file.
 </para>
 
-@self: 
-@title: 
-@icon: 
-@udata: 
-@Returns: 
+@self: Widget
+@title: Short text to label the icon.
+@icon: Icon pixbuf.
+@udata: Pointer to user data passed to signal handlers.
+@Returns: New item widget
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_remove_item ##### -->
 <para>
-
+Remove an item from a GpeIconListView.
 </para>
 
-@self: 
-@item: 
+@self: Widget
+@item: Item widget
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_item_icon ##### -->
 <para>
-
+Updates the icon of a list view item.
 </para>
 
-@self: 
-@item: 
-@new_pixbuf: 
+@self: Widget
+@item: Item of icon list to become updated.
+@new_pixbuf: GdkPixbuf containing the new icon.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_embolden ##### -->
 <para>
-
+Turn bold text for selected items on/off.
 </para>
 
-@self: 
-@yes: 
+@self: Widget
+@yes: Set TRUE to enable bold text, FALSE to disable.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_show_title ##### -->
 <para>
-
+Turn titles on/off.
 </para>
 
-@self: 
-@yes: 
+@self: Widget
+@yes: Set TRUE to enable, FALSE to disable.
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_icon_xmargin ##### -->
 <para>
-
+Change margin in X dimension for icons inside a GpeIconListView.
 </para>
 
-@self: 
-@margin: 
+@self: Widget
+@margin: Margin in pixels
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_clear ##### -->
 <para>
-
+Removes all items from an icon list.
 </para>
 
-@self: 
+@self: Widget to clear
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_icon_size ##### -->
 <para>
-
+Changes the size of the icons displayed in the icon list view.
 </para>
 
-@self: 
-@size: 
+@self: Widget
+@size: Size in pixels
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_popup_removed ##### -->
@@ -195,37 +196,37 @@ gpeiconlistview
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_rows ##### -->
 <para>
-
+Sets the number of rows used for arranging icons.
 </para>
 
-@self: 
-@rows: 
+@self: Widget
+@rows: Number of rows
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_textpos ##### -->
 <para>
-
+This function sets the position of the descriptive text of items.
 </para>
 
-@self: 
-@textpos: 
+@self: Widget
+@textpos: Text position
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_border_color ##### -->
 <para>
-
+This function is used to set the colour of the icon lists border.
 </para>
 
-@self: 
-@color: 
+@self: Widget
+@color: New border color
 
 
 <!-- ##### FUNCTION gpe_icon_list_view_set_border_width ##### -->
 <para>
-
+This function is used to change the width of the icon lists border.
 </para>
 
-@self: 
-@width: 
+@self: Widget
+@width: New width in pixels
 
 

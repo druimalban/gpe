@@ -1,5 +1,9 @@
 2005-04-06  Florian Boor <florian@kernelconcepts.de>
 
+	* Fixed broken documentation.
+
+2005-04-06  Florian Boor <florian@kernelconcepts.de>
+
     * stylus.c: Documentation, some formating fixes.
     * doc/tmpl/stylus.sgml: Some documentation.
 

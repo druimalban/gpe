@@ -1,30 +1,32 @@
 <!-- ##### SECTION Title ##### -->
-dirbrowser
+Dirbrowser
 
 <!-- ##### SECTION Short_Description ##### -->
 
+Directory browser
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
-</para>
+This interface provides a simple function to open a directory browser
+dialog.
 
+</para>
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### FUNCTION gpe_create_dir_browser ##### -->
 <para>
-
+Creates and opens a directory browser dialog.
 </para>
 
-@title: 
-@current_path: 
-@mode: 
-@handler: 
-@Returns: 
+@title: Dialog title
+@current_path: Path to start with.
+@mode: A selection mode to set in directory browser.
+@handler: Function to handle directory selection.
+@Returns: Dialof widget
 
 

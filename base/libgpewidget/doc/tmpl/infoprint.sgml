@@ -1,27 +1,29 @@
 <!-- ##### SECTION Title ##### -->
-infoprint
+Infoprints
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Displaying infoprints
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-
+Infoprints are short text messages usually displayed in a corner of the screen
+to provide additional information for the user to show what is going on. These
+messages are displayed for a short time and disappear from screen without 
+user interaction. 
 </para>
-
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### FUNCTION gpe_popup_infoprint ##### -->
 <para>
-
+Displays an infoprint on a given X display. Usually you want to use current
+X display which is determined by GDK_DISPLAY().
 </para>
 
-@dpy: 
-@s: 
+@dpy: Xlib display
+@s: Message to show
 
 
