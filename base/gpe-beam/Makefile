@@ -55,7 +55,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = irda-16.png irda.png irda-on-16.png irda-conn-16.png
+PIXMAPS = irda-16.png irda.png irda-on-16.png irda-conn-16.png irda-on-48.png irda-conn-48.png
 
 all: $(PACKAGE) vcard-export vcard-import irsw vcal-export
 
