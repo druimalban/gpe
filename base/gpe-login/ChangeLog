@@ -1,5 +1,14 @@
 2003-04-05  Phil Blundell  <pb@nexus.co.uk>
 
+	* gpe-login 0.50 released.
+
+2003-04-05  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpe-login.sysconfig: Only set USER and ROOT when autologin
+	requested.
+
+2003-04-05  Phil Blundell  <pb@nexus.co.uk>
+
 	* gpe-login 0.49 released.
 	* gpe-session-scripts 0.40 released.
 
