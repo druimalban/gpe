@@ -1400,7 +1400,7 @@ event_ui_init (void)
 GtkWidget *
 new_event (time_t t, guint timesel)
 {
-  GtkWidget *w = edit_event_window ();
+  GtkWidget *entry, *w = edit_event_window ();
 
   if (w)
     {
@@ -1437,7 +1437,14 @@ new_event (time_t t, guint timesel)
       gtk_option_menu_set_history (GTK_OPTION_MENU (s->optionmenutype), 0);
       s->page = 0;
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
-    }
+	  
+      entry = g_object_get_data(G_OBJECT(w), "default-entry");
+      if (entry)
+        {
+	      gtk_widget_grab_focus(entry);
+          gtk_editable_select_region(GTK_EDITABLE(entry), 0, 0);
+        }
+	}
 
   return w;
 }

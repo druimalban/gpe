@@ -1,3 +1,8 @@
+2004-09-01  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c, event-ui.c: Make sure the correct widget has focus if we start 
+	                      a new event.
+
 2004-08-30  Florian Boor <florian.boor@kernelconcepts.de>
 
     * main.c, event-ui.c: Buffer characters to add in a new event.
