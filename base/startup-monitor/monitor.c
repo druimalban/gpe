@@ -35,8 +35,8 @@
 
 #include "mbpixbuf.h"
 
-#define TIMEOUT		30
-#define POLLTIME	5
+#define TIMEOUT		20
+#define POLLTIME	10
 
 struct launch
 {
@@ -51,6 +51,8 @@ static GSList *launch_list;
 static gboolean hourglass_shown;
 
 static MBPixbuf *mbpb;
+
+#define wy 2
 
 static void
 show_hourglass (void)
@@ -242,12 +244,12 @@ main (int argc, char **argv)
   root = DefaultRootWindow (xdisplay);
 
   window = XCreateSimpleWindow (xdisplay, root,
-				x - (w + 4), 0, w, h, 0, 
+				x - (w + 4), wy, w, h, 0, 
 				BlackPixel (xdisplay, DefaultScreen (xdisplay)),
 				WhitePixel (xdisplay, DefaultScreen (xdisplay)));
 
-  window_type_atom = XInternAtom (xdisplay, "_WM_WINDOW_TYPE", False);
-  window_type_splash_atom = XInternAtom (xdisplay, "_WM_WINDOW_TYPE_SPLASH", False);
+  window_type_atom = XInternAtom (xdisplay, "_NET_WM_WINDOW_TYPE", False);
+  window_type_splash_atom = XInternAtom (xdisplay, "_NET_WM_WINDOW_TYPE_SPLASH", False);
 
   XChangeProperty (xdisplay, window, window_type_atom,
 		   XA_ATOM, 32,  PropModeReplace,
@@ -290,12 +292,12 @@ main (int argc, char **argv)
     {
       XEvent xevent;
 
-      if (launch_list && ! XPending (xdisplay))
+      while (launch_list && ! XPending (xdisplay))
 	{
 	  struct timeval tv;
 	  fd_set fds;
  
-	  tv.tv_sec = 10;
+	  tv.tv_sec = POLLTIME;
 	  tv.tv_usec = 0;
 
 	  FD_ZERO (&fds);
@@ -312,7 +314,7 @@ main (int argc, char **argv)
 
 		  next = iter->next;
  
-		  if ((l->when - t) < 0)
+		  if ((l->when - t) <= 0)
 		    {
 		      g_free (l->id);
 		      g_free (l);
@@ -324,6 +326,8 @@ main (int argc, char **argv)
 	      if (launch_list == NULL && hourglass_shown)
 		hide_hourglass ();
 	    }
+	  else
+	    break;
 	}
 
       XNextEvent (xdisplay, &xevent);
@@ -335,7 +339,7 @@ main (int argc, char **argv)
 	  break;
 	case ConfigureNotify:
 	  if (xevent.xconfigure.window == root)
-	    XMoveWindow (xdisplay, window, xevent.xconfigure.width - (w + 4), 0);
+	    XMoveWindow (xdisplay, window, xevent.xconfigure.width - (w + 4), wy);
 	  break;
 	}
 
