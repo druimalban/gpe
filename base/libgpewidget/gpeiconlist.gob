@@ -433,9 +433,9 @@ class GPE:IconList from Gtk:Scrolled:Window {
     int da_new_height;
     GtkAdjustment * adj;
 
-    LUC_SAYS("luc> _recalc il w h: %d %d\n", allocation->width, allocation->height);
+    MAYBE_PRINTF("luc> _recalc il w h: %d %d\n", allocation->width, allocation->height);
     adj = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow *) self);
-    LUC_SAYS("luc> _recalc page  : %f\n", adj->page_size);
+    MAYBE_PRINTF("luc> _recalc page  : %f\n", adj->page_size);
 
     da_new_width = adj->page_size;
 		if (da_new_width > il_col_width (self))
@@ -618,9 +618,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
 		g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
 		
-		gpe_iconlist__recalc_size (il, allocation);
-
 		PARENT_HANDLER (self, allocation);
+		gpe_iconlist__recalc_size (il, allocation);//luc: recalc *after* the size is allocated :)
 	}
 
 	private void _get_rowcol (GPEIconList *widget, int x, int y, int *col, int *row) {

@@ -1,3 +1,9 @@
+2003-03-28  Luc Pionchon  <luc@handhelds.org>
+
+	* gpeiconlist.gob (size_allocate): recalc *after* the size is allocated.
+	(_recalc): base drawing area size on adj->page_size.
+	(gpe-iconlist.[ch]): regenerate.
+
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
 	* what.c (gpe_what_init): Don't lookup X atoms.  Don't intern
