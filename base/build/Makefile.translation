@@ -24,6 +24,9 @@ po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot.new $^
 	if cmp -s po/$(PACKAGE).pot.new $(PACKAGE).pot; then rm po/$(PACKAGE).pot.new; else mv po/$(PACKAGE).pot.new po/$(PACKAGE).pot; fi
 
+clean-po:
+	rm -rf po/*.mo
+
 # ------------------------------------------------------------------------
 
 VERSION    = $(shell grep 'Version: '    familiar/control | cut -d ' ' -f 2)
