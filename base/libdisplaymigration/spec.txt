@@ -1,24 +1,35 @@
 A Simple Spec for Application Display/Screen Migration. 
 
 A window capable of migration sets a property _GPE_DISPLAY_CHANGE on
-itself.  Its type is also _GPE_DISPLAY_CHANGE and it is initially set
-to zero length.
+itself.  Its type is STRING and it is initially set to zero length.
 
 Changing this property to a non-empty value will signal the
-application to migrate.  The format for the property is:
+application to migrate.  The property has the format "TARGET-DISPLAY
+AUTH-TYPE AUTH-DATA", where TARGET-DISPLAY is the desired destination
+in "host:display.screen" notation; AUTH-TYPE is the authentication
+method in use (see below); and AUTH-DATA is the appropriate
+authentication information.
 
- 0  initiating window handle (32 bits, network byte order)
- 4  property to be used for error response (32 bits, network byte order)
- 8  destination screen (string in "host:display.screen" notation)
+Following successful migration, the application must reset the
+_GPE_DISPLAY_CHANGE property to zero length to indicate that it is
+safe to request further migrations. 
 
-A successful migration will result in the application generating a
-destroyNotify event on its original display.  Following successful
-migration, the application must reset the _GPE_DISPLAY_CHANGE
-property to zero length to indicate that it is safe to request further
-migrations.
+The outcome of the migration attempt is signalled by sending a
+ClientMessage of type _GPE_DISPLAY_CHANGE to the original display's
+root window with event mask SubstructureNotify and payload as follows:
 
-If migration fails, the application generates a textual error message
-and deposits this as a STRING property using the window handle and
-atom that were specified in the original migration request.
-Initiating applications can set these fields to None, in which case
-errors are not reported.
+l[0]	window handle for which status is being reported
+l[1]	status code, one of:
+
+0	success
+1	unable to connect to display
+2	requested screen does not exist
+3	invalid authentication
+4	indeterminate failure
+
+In the RSA-SIG authentication scheme, the migrating application reads
+a challenge string from the _GPE_DISPLAY_CHANGE_RSA_CHALLENGE property
+on the migrated window and computes the PKCS-1 signature of the target
+display name, followed by a NUL delimeter, followed by the challenge
+string.  The authentication data string consists of the key ID used
+for signature, followed by a space, followed by the signature text.

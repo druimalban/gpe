@@ -4,7 +4,7 @@ DEBUG = yes
 
 LINGUAS = 
 
-MEMBERS = migrate
+MEMBERS = migrate auth
 
 SONAME = libdm.so.0
 CONTROL = control
@@ -17,7 +17,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD `pkg-config --cflags gtk+-2.0`
-LDFLAGS += `pkg-config --libs gtk+-2.0`
+LDFLAGS += `pkg-config --libs gtk+-2.0` -lgcrypt
 
 HEADERS = 
 
