@@ -67,9 +67,6 @@
 #define DBG(x) ;
 #endif
 
-/* For not starting an app twice after a double click */
-static int ignore_press = 0;
-
 static void
 run_callback (GObject *obj, GdkEventButton *ev, GnomeDesktopFile *p)
 {
@@ -119,13 +116,6 @@ nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
   autohide_labels (pagenum);
 }
 
-static gint 
-unignore_press (gpointer data)
-{
-  ignore_press = 0;
-  return FALSE;
-}
-
 /* Remove the appmgr (not plugin) tabs from the notebook */
 static void 
 clear_appmgr_tabs (void)
@@ -163,7 +153,7 @@ create_tab (GList *all_items, char *current_group, tab_view_style style)
 	while (this_item)
 	{
 	  GnomeDesktopFile *p;
-	  GPEIconListItem *item;
+	  GObject *item;
 	  gchar *name;
 
 	  p = (GnomeDesktopFile *) this_item->data;

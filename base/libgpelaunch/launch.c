@@ -574,3 +574,35 @@ gpe_launch_activate_window (Display *dpy, Window win)
 
   XSendEvent (dpy, RootWindow (dpy, DefaultScreen (dpy)), False, SubstructureRedirectMask, &ev);
 }
+
+#define MY_LD_PRELOAD "/usr/lib/librewrite.so.0"
+
+void
+gpe_launch_set_root (const gchar *root)
+{
+  static gboolean initialised;
+  static gchar *old_ld_preload, *new_ld_preload;
+
+  if (!initialised)
+    {
+      old_ld_preload = getenv ("LD_PRELOAD");
+      if (old_ld_preload)
+	new_ld_preload = g_strdup_printf ("%s:%s", old_ld_preload, MY_LD_PRELOAD);
+      else
+	new_ld_preload = MY_LD_PRELOAD;
+    }
+
+  if (root)
+    {
+      setenv ("REWRITE_ROOT", root, 1);
+      setenv ("LD_PRELOAD", new_ld_preload, 1);
+    }
+  else
+    {
+      unsetenv ("REWRITE_ROOT");
+      if (old_ld_preload)
+	setenv ("LD_PRELOAD", old_ld_preload, 1);
+      else
+	unsetenv ("LD_PRELOAD");
+    }
+}

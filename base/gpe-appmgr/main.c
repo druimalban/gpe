@@ -62,6 +62,8 @@
 #include "main.h"
 #include "cfg.h"
 
+#define X_APPMGR_SECTION  "X-GPE-Appmgr"
+
 //#define DEBUG
 #ifdef DEBUG
 #define DBG(x) {fprintf x ;}
@@ -228,6 +230,7 @@ run_package (GnomeDesktopFile *p, GObject *item)
   gboolean single_instance;
   gboolean startup_notify;
   gchar *text;
+  gchar *root;
 
   gnome_desktop_file_get_string (p, NULL, "Exec", &cmd);
 
@@ -244,6 +247,9 @@ run_package (GnomeDesktopFile *p, GObject *item)
   text = g_strdup_printf ("Starting %s", title);
   gpe_popup_infoprint (dpy, text);
   g_free (text);
+
+  if (gnome_desktop_file_get_raw (p, X_APPMGR_SECTION, "Root", NULL, &root))
+    gpe_launch_set_root (root);
 
   /* Can't have single instance without startup notification */
   if (!startup_notify)
@@ -354,9 +360,12 @@ package_compare (GnomeDesktopFile *a, GnomeDesktopFile *b)
 }
 
 static void 
-add_one_package (GnomeDesktopFile *p)
+add_one_package (GnomeDesktopFile *p, gchar *root)
 {
   struct package_group *group;
+
+  if (root)
+    gnome_desktop_file_set_raw (p, X_APPMGR_SECTION, "Root", NULL, root);
 
   group = find_group_for_package (p);
 
@@ -365,7 +374,7 @@ add_one_package (GnomeDesktopFile *p)
 }
 
 static void
-load_from (const char *path)
+load_from (const char *path, const char *root)
 {
   DIR *dir;
   struct dirent *entry;
@@ -397,7 +406,7 @@ load_from (const char *path)
 	      if (type == NULL || strcmp (type, "Application"))
 		gnome_desktop_file_free (p);
 	      else
-		add_one_package (p);
+		add_one_package (p, root);
 
 	      if (type)
 		g_free (type);
@@ -421,8 +430,10 @@ refresh_list (void)
 {
   clean_up ();
   
-  load_from (PREFIX "/share/applications");
-  load_from ("/opt/applications");
+  load_from (PREFIX "/share/applications", NULL);
+  load_from ("/opt/applications", NULL);
+  load_from ("/media/cf" PREFIX "/share/applications", "/media/cf");
+  load_from ("/media/sd" PREFIX "/share/applications", "/media/sd");
 
   TRACE ("refresh_list: end");
   return FALSE;
