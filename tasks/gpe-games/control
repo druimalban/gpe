@@ -1,0 +1,8 @@
+Package: gpe-games
+Section: games
+Priority: optional
+Version: 0.01
+Architecture: arm
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: pdamaze, gtktetris, gsoko
+Description: Task package for GPE games
