@@ -88,7 +88,7 @@ get_flash_size()
 {
 	char **strv;
 	int len = 0;
-	GError *err;
+	GError *err = NULL;
 	int i = 0;
 	char *str = NULL;
 	int result = 0;
@@ -123,7 +123,7 @@ get_device_info()
 	t_deviceinfo result;
 	char **strv;
 	int len = 0;
-	GError *err;
+	GError *err = NULL;
 	int i = 0;
 	char *str = NULL;
 	
@@ -185,7 +185,7 @@ get_familiar_version()
 {
 	char *result = NULL;
 	int len = 0;
-	GError *err;
+	GError *err = NULL;
 	
 	if (g_file_get_contents(FAMILIAR_VINFO,&result,&len,&err))
 	{
@@ -201,7 +201,7 @@ get_familiar_time()
 {
 	char *result = NULL;
 	int len = 0;
-	GError *err;
+	GError *err = NULL;
 	
 	if (g_file_get_contents(FAMILIAR_TIME,&result,&len,&err))
 	{

@@ -693,7 +693,7 @@ create_global_widgets ()
 			gchar *content;
 			FILE *fnew;
 			gint length;
-			GError *err;
+			GError *err = NULL;
 
 			mkdir (g_strdup_printf
 			       ("%s/.dillo", g_get_home_dir ()), S_IRWXU);

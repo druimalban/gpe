@@ -1,4 +1,6 @@
 2004-06-04	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* network.c, sysinfo.c: Fixed some missing initialisations of
+	  GErrors that caused segfaults if they are used.
 	* applets.c: Made OK button default.
 
 2004-06-04  Philip Blundell  <philb@gnu.org>
