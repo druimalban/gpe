@@ -4,8 +4,7 @@ DEBUG = no
 CVSBUILD = yes
 VERSION = 0.53
 
-#FIXME: add: sk sr ru hu
-LINGUAS = id pt de fr zh_TW ro wa sv nl cs
+LINGUAS = id pt de fr zh_TW ro wa sv nl cs es sk sr ru hu
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CPPFLAGS += -I../libeventdb -I../libschedule -I../libxsettings -I../libxsettings-client -I../libdisplaymigration -I../libgpepimc

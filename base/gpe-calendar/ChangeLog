@@ -1,3 +1,7 @@
+2004-06-21  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add es, sk, sr, ru, hu.
+
 2004-06-01  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.53 released.
