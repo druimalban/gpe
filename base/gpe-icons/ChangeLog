@@ -1,0 +1,14 @@
+2002-06-16  Philip Blundell  <pb@debian.org>
+
+	* Makefile (ipkg): Expect files in familiar subdir.  Set prefix 
+	to /usr.
+	(install): Use mode 644.
+
+	* control: Moved to ...
+	* familiar/control: ... here:
+
+	* storm: Obsolete, deleted.
+
+	* debian/changelog, debian/control, debian/rules,
+	debian/copyright, debian/dirs: New files.
+	

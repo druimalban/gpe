@@ -1,18 +1,26 @@
 PREFIX = /usr/local
+PACKAGE = gpe-icons
 PIXMAPS = copy.png cut.png exit.png new.png open.png paste.png save.png save_as.png home.png future_view.png day_view.png week_view.png month_view.png year_view.png cancel.png empty.png properties.png search.png search_and_replace.png watch.png pause_watch.png delete.png ok.png
 
 SPIXMAPS = delrecord.xpm new.xpm tick.xpm
 
 install:
-	for i in $(PIXMAPS); do install -D default/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
-	#for i in $(SPIXMAPS); do install -D storm/$$i $(DESTDIR)/usr/share/gpe/pixmaps/$$i; done
-	install -D gpe-logo.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-logo.png
-	install -D error.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/error.png
+	for i in $(PIXMAPS); do install -m 644 -D default/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
+	install -D -m 644 gpe-logo.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-logo.png
+	install -D -m 644 error.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/error.png
+
+clean:
+
+upstream: clean
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar --exclude=$(PACKAGE)-$$VERSION.orig/default/CVS $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
+
+dpkg: upstream
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
 
 ipkg:
-	rm -rf dist
-	mkdir -p dist/CONTROL
-	cp control dist/CONTROL/control
-	make DESTDIR=`pwd`/dist install
-	chown -R root.root dist
-	ipkg-build dist
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/control familiar/dist/CONTROL/control
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
