@@ -1,10 +1,11 @@
 PREFIX = /usr/local
 PACKAGE = gpe-edit
 #DEBUG = yes
+CVSBUILD = yes
 
 MEMBERS = main
 
-CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall -I../libgpewidget
+CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -12,18 +13,32 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
+ifeq ($(CVSBUILD),yes)
+CFLAGS += -I../libgpewidget
+LDFLAGS += -L../libgpewidget
+else
+CFLAGS += -I/usr/include/gpe
+endif
+LDFLAGS += -lgpewidget
+
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
 all: gpe-edit
 
 gpe-edit: $(OBJS)
-	$(CC) -o $@ $^ `gtk-config --libs` -L../libgpewidget -lgpewidget $(LDFLAGS)
+	$(CC) -o $@ $^ `gtk-config --libs` $(LDFLAGS)
 
 install: all
 	install -D gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
 	install -D -m 644 gpe-edit.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
 	install -D -m 644 gpe-edit.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-edit
+
+upstream: clean
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
+
+dpkg: upstream
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
 
 ipkg:
 	rm -rf familiar/dist

@@ -7,5 +7,8 @@ Standards-Version: 3.5.2
 
 Package: gpe-edit
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: gpe-icons, ${shlibs:Depends}
 Description: GNU Palmtop Environment text editor
+ GPE-Edit is a simple programmer's editor for use on palmtop systems. 
+ The simple GUI means it will run with ease on many different systems,
+ including embedded linux devices such as the HP iPAQ.
