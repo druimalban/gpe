@@ -324,6 +324,94 @@ nsqlc_open (const char *database, int mode, char **errmsg)
   return ctx;
 }
 
+nsqlc *
+nsqlc_open_ssh (const char *database, int mode, char **errmsg)
+{
+  nsqlc *ctx;
+  gchar *filename;
+  gchar *hostname = NULL;
+  const gchar *username = NULL;
+  gchar *str;
+  gchar *p;
+  struct nsqlc_query_context query;
+  int in_fds[2], out_fds[2];
+  pid_t pid;
+
+  str = g_strdup (database);
+
+  p = strchr (str, ':');
+  if (p)
+    {
+      *p = 0;
+      filename = p + 1;
+      p = strchr (str, '@');
+      if (0)
+	{
+	  *p = 0;
+	  hostname = p + 1;
+	  username = str;
+	}
+      else
+	hostname = str;
+    }
+  else
+    filename = str;
+
+  if (hostname == NULL)
+    hostname = "localhost";
+
+  if (username == NULL)
+    username = g_get_user_name ();
+
+  ctx = g_malloc0 (sizeof (struct nsqlc));
+
+  pipe (in_fds);
+  pipe (out_fds);
+
+  pid = fork ();
+  if (pid == 0)
+    {
+      dup2 (out_fds[0], 0);
+      dup2 (in_fds[1], 1);
+      close (out_fds[1]);
+      close (in_fds[0]);
+      execlp ("ssh", "ssh", "-l", username, "hostname", "nsqld", "--stdin", NULL);
+      perror ("exec");
+    }
+
+  close (out_fds[0]);
+  close (in_fds[1]);
+
+  ctx->outfd = out_fds[1];
+  ctx->infd = in_fds[0];
+
+  ctx->hostname = g_strdup (hostname);
+  ctx->username = g_strdup (username);
+  ctx->filename = g_strdup (filename);
+
+  ctx->busy = 1;
+
+  write_command (ctx, ".open %s", filename);
+
+  memset (&query, 0, sizeof (query));
+  query.ctx = ctx;
+
+  while (ctx->busy)
+    read_response (&query);
+
+  if (query.result)
+    {
+      nsqlc_close (ctx);
+
+      if (*errmsg)
+	*errmsg = query.error;
+
+      return NULL;
+    }
+
+  return ctx;
+}
+
 void
 nsqlc_close (nsqlc *ctx)
 {
