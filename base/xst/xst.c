@@ -171,6 +171,8 @@ main (int argc, char *argv[])
 	  if (xsettings_client_get_setting (client, prop, &setting) == XSETTINGS_SUCCESS)
 	    print_xsetting (setting);
 	}
+
+      xsettings_client_destroy (client);
     }
       
   if (flag_write)
@@ -266,7 +268,6 @@ main (int argc, char *argv[])
 	}
     }
 
-  xsettings_client_destroy (client);
   XCloseDisplay (dpy);
   
   exit (0);
