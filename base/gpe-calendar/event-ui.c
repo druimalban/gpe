@@ -552,8 +552,10 @@ build_edit_event_window (void)
   GtkWidget *vboxrepeat = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxalarm = gtk_vbox_new (FALSE, 0);
 
+  GtkWidget *window = gtk_dialog_new ();
+
   GtkWidget *vboxend = gtk_vbox_new (FALSE, 0);
-  GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
+  GtkWidget *vboxtop = GTK_DIALOG (window)->vbox;
 
   GtkWidget *vboxrecur = gtk_vbox_new (FALSE, 0);
   GtkWidget *hboxrecurtypes = gtk_hbox_new (FALSE, 0);
@@ -598,7 +600,6 @@ build_edit_event_window (void)
   GtkAdjustment *weeklyspin_adj = (GtkAdjustment *) gtk_adjustment_new (1, 1, 52, 1, 5, 5);
   GtkWidget *weeklyspin = gtk_spin_button_new (GTK_ADJUSTMENT (weeklyspin_adj), 1, 0);
 
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *weeklyhbox1 = gtk_hbox_new (FALSE, 0);
   GtkWidget *weeklyhbox2 = gtk_hbox_new (FALSE, 0);
   GtkWidget *monthlyhbox1 = gtk_hbox_new (FALSE, 4);
@@ -616,7 +617,7 @@ build_edit_event_window (void)
   GtkWidget *hboxtask1 = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxtask2 = gtk_hbox_new (FALSE, 0);
 
-  GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *buttonbox = GTK_DIALOG (window)->action_area;
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
   GtkWidget *buttondelete;
@@ -1013,8 +1014,6 @@ build_edit_event_window (void)
 
   gtk_box_pack_start (GTK_BOX (vboxtop), notebookedit, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 2);
-
-  gtk_container_add (GTK_CONTAINER (window), vboxtop);
 
   scrolledwindowevent = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowevent),
