@@ -31,11 +31,10 @@
 typedef struct _GtkSimpleMenu	   GtkSimpleMenu;
 typedef struct _GtkSimpleMenuClass GtkSimpleMenuClass;
 
-GtkType		gtk_simple_menu_get_type	(void);
-GtkWidget      *gtk_simple_menu_new		(void);
+GtkType	gtk_simple_menu_get_type (void);
+GtkWidget *gtk_simple_menu_new (void);
 
-guint		gtk_simple_menu_get_result	(GtkSimpleMenu *sel);
-void            gtk_simple_menu_append_item	(GtkSimpleMenu *sel, const gchar *items);
-void		gtk_simple_menu_flush		(GtkSimpleMenu *sel);
+void gtk_simple_menu_append_item(GtkSimpleMenu *sel, const gchar *item);
+void gtk_simple_menu_flush (GtkSimpleMenu *sel);
 
 #endif

@@ -96,3 +96,11 @@
 @pixmap: 
 @val: 
 
+<!-- ##### FUNCTION gtk_simple_menu_get_result ##### -->
+<para>
+
+</para>
+
+@sel: 
+@Returns: 
+

@@ -1,5 +1,9 @@
 2005-04-06  Florian Boor <florian@kernelconcepts.de>
 
+	* gtksimplemenu.c, gpe/gtksimplemenu.h: 
+	  Removed obsolete gtk_simple_menu_get_result. Unified some names.
+    * gtksimplemenu.c, doc/tmpl/gtksimplemenu.sgml: 
+	  Some more documentation and formating fixes.
     * tray.c, doc/tmpl/tray.sgml: Some documentation.
 	* Fixed broken documentation.
 

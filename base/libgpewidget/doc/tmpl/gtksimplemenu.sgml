@@ -34,21 +34,14 @@ This widget provides a simple selection menu with an easy to use interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION gtk_simple_menu_get_result ##### -->
-<para>
-
-</para>
-
-@sel: 
-@Returns: 
-
-
 <!-- ##### FUNCTION gtk_simple_menu_append_item ##### -->
 <para>
 
 </para>
 
 @sel: 
+@item: 
+<!-- # Unused Parameters # -->
 @items: 
 
 

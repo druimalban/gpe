@@ -73,13 +73,13 @@ gtk_simple_menu_get_type (void)
     {
       static const GtkTypeInfo simple_menu_info =
       {
-	"GtkSimpleMenu",
-	sizeof (GtkSimpleMenu),
-	sizeof (GtkSimpleMenuClass),
-	(GtkClassInitFunc) gtk_simple_menu_class_init,
-	(GtkObjectInitFunc) gtk_simple_menu_init,
-	/* reserved_1 */ NULL,
-	/* reserved_2 */ NULL,
+        "GtkSimpleMenu",
+        sizeof (GtkSimpleMenu),
+        sizeof (GtkSimpleMenuClass),
+        (GtkClassInitFunc) gtk_simple_menu_class_init,
+        (GtkObjectInitFunc) gtk_simple_menu_init,
+        /* reserved_1 */ NULL,
+        /* reserved_2 */ NULL,
         (GtkClassInitFunc) NULL,
       };
       simple_menu_type = gtk_type_unique (gtk_option_menu_get_type (), 
@@ -100,15 +100,15 @@ gtk_simple_menu_new (void)
   return GTK_WIDGET (gtk_type_new (gtk_simple_menu_get_type ()));
 }
 
-guint
-gtk_simple_menu_get_result (GtkSimpleMenu *sm)
-{
-  return gtk_option_menu_get_history (GTK_OPTION_MENU (sm));
-}
-link_warning(gtk_simple_menu_get_result, "warning: gtk_simple_menu_get_result is obsolescent; use gtk_option_menu_get_history instead.");
-
+/**
+ * gtk_simple_menu_append_item:
+ * @sel: Menu to add an item to.
+ * @item: Title for menu item.
+ *
+ * Adds a new menu item to a #GtkSimpleMenu.
+ */
 void
-gtk_simple_menu_append_item (GtkSimpleMenu *sm, const gchar *s)
+gtk_simple_menu_append_item (GtkSimpleMenu *sel, const gchar *item)
 {
   GtkWidget *mi = gtk_menu_item_new_with_label (s);
   gtk_widget_show (mi);
@@ -118,8 +118,14 @@ gtk_simple_menu_append_item (GtkSimpleMenu *sm, const gchar *s)
     gtk_option_menu_set_history (GTK_OPTION_MENU (sm), 0);
 }
 
+/**
+ * gtk_simple_menu_flush:
+ * @sel: Menu to flush.
+ *
+ * Cleans up a #GtkSimpleMenu and removes all its items.
+ */
 void
-gtk_simple_menu_flush (GtkSimpleMenu *sm)
+gtk_simple_menu_flush (GtkSimpleMenu *sel)
 {
   gtk_simple_menu_init (sm);
 }
