@@ -1,5 +1,5 @@
 PACKAGE = gpe-bootsplash
-VERSION = 1.12
+VERSION = 1.13
 CVSBUILD = yes
 
 PACKAGE_CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0 librsvg-2.0` `pkg-config --libs gdk-pixbuf-2.0 librsvg-2.0` -DGTK2

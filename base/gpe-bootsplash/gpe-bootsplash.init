@@ -12,7 +12,7 @@ case $1 in
 	case `module_id` in
 		"HP IPAQ H3100" )
 			ARGS="--mono --force-portrait" ;;
-		"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" | *COLLIE)
+		"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" | *COLLIE | *POODLE)
 		    	ARGS="--flip --force-portrait" ;;
 		"HP IPAQ H3800")
 			ARGS="--force-portrait" ;;
