@@ -19,6 +19,8 @@
 #include <gpe/vtodo.h>
 #include <gpe/tag-db.h>
 
+#include <mimedir/mimedir-vcal.h>
+
 GList *
 sync_todo (GList *data, gpe_conn *conn, int newdb)
 {
@@ -29,6 +31,7 @@ sync_todo (GList *data, gpe_conn *conn, int newdb)
   for (i = list; i; i = i->next)
     {
       GSList *tags;
+      MIMEDirVCal *vcal;
       MIMEDirVTodo *vtodo;
       gchar *string;
       changed_object *obj;
@@ -37,8 +40,11 @@ sync_todo (GList *data, gpe_conn *conn, int newdb)
       tags = fetch_tag_data (conn->todo, "select tag,value from todo where uid=%d", urn);
       vtodo = vtodo_from_tags (tags);
       gpe_tag_list_free (tags);
-      string = mimedir_vtodo_write_to_string (vtodo);
+      vcal = mimedir_vcal_new ();
+      mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vtodo));
       g_object_unref (vtodo);
+      string = mimedir_vcal_write_to_string (vcal);
+      g_object_unref (vcal);
 
       obj = g_malloc0 (sizeof (*obj));
       obj->comp = string;
