@@ -35,10 +35,10 @@ int main(int argc, char **argv)
 	init_main_window();
 	load_modules();
         
-        conf.bg = NO_BG_SET;
+        conf.bg = -1;
         start_xsettings();
 
-        if (conf.bg == NO_BG_SET)
+        if (conf.bg == -1)
             set_background("<mbdesktop>");
 
 	gtk_widget_show_all(window.toplevel);
@@ -99,7 +99,7 @@ void set_background(const char *spec)
         if (!spec)
             return;
 
-        for (i=0, type=NO_BG_SET, offset=0; i < nt; i++) {
+        for (i=0, type=NO_SPEC, offset=0; i < nt; i++) {
             offset = strlen(cm[i].pat);
             if (offset <= strlen(spec) && !strncmp(cm[i].pat, spec, offset)) {
                 type = cm[i].t;
@@ -113,7 +113,7 @@ void set_background(const char *spec)
         }
 
         switch (type) {
-        case NO_BG_SET: /* assume spec == filename */
+        case NO_SPEC: /* assume spec == filename */
             set_bg_pixmap(spec);
             break;
         case MBDESKTOP_BG:

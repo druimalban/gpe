@@ -34,7 +34,7 @@
 #define DATAPATH(file) PREFIX "/share/" PACKAGE "/" #file
 
 enum { PORTRAIT, LANDSCAPE };
-enum { NO_BG_SET, TILED_BG_IMG, STRECHED_BG_IMG, SOLID_BG_COL, MBDESKTOP_BG };
+enum { NO_SPEC, TILED_BG_IMG, STRECHED_BG_IMG, SOLID_BG_COL, MBDESKTOP_BG };
 
 struct {
 	GtkWidget *toplevel;            /* top-level window */
