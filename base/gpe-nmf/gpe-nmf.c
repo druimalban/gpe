@@ -47,6 +47,8 @@ static struct gpe_icon my_icons[] = {
   { "new" },
   { "delete" },
   { "exit" },
+  { "save" },
+  { "dir-closed" },
   { NULL, NULL }
 };
 
@@ -59,7 +61,15 @@ GtkWidget *buttons_hbox;			/* Container for playback buttons */
 
 GtkWidget *time_label, *artist_label, *title_label;
 
+GtkWidget *playlist_widget;
+
 #define _(x) gettext(x)
+
+extern GtkWidget *playlist_edit (struct playlist *);
+extern void playlist_edit_push (GtkWidget *w, struct playlist *);
+extern void playlist_edit_double_click_hook (void *, player_t);
+
+struct playlist *top_level_playlist;
 
 static void
 update_track_info (struct playlist *p)
@@ -81,6 +91,27 @@ update_track_info (struct playlist *p)
 static void
 playlist_toggle (GtkWidget *w, gpointer d)
 {
+  if (playlist_widget)
+    {
+      gtk_widget_destroy (playlist_widget);
+      playlist_widget = NULL;
+    }
+  else
+    {
+      playlist_widget = playlist_edit (top_level_playlist);
+      gtk_widget_show (playlist_widget);
+    }
+}
+
+static void
+double_click_hook (player_t p, struct playlist_item *i)
+{
+  struct player_status ps;
+  player_set_playlist (p, i);
+  player_play (p);
+  player_status (p, &ps);
+  update_track_info (ps.item);
+  playing = TRUE;
 }
 
 static void
@@ -99,7 +130,12 @@ select_file_done (GtkWidget *fs, gpointer d)
     {
       struct playlist *p = playlist_xml_load (s);
       if (p)
-	player_set_playlist (player, p);
+	{
+	  player_set_playlist (player, p);
+	  top_level_playlist = p;
+	  if (playlist_widget)
+	    playlist_edit_push (playlist_widget, p);
+	}
     }
   else
     {
@@ -114,6 +150,9 @@ select_file_done (GtkWidget *fs, gpointer d)
       p->data.list = g_slist_append (p->data.list, t);
 
       player_set_playlist (player, p);
+      top_level_playlist = p;
+      if (playlist_widget)
+	playlist_edit_push (playlist_widget, p);
     }
 
   gtk_widget_destroy (fs);
@@ -224,6 +263,8 @@ main (int argc, char *argv[])
   decoder_init ();
   player = player_new ();
 
+  playlist_edit_double_click_hook (double_click_hook, player);
+
   /* Destroy handler */
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
@@ -332,7 +373,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (playlist_button), w);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (playlist_button), "clicked",
-		      GTK_SIGNAL_FUNC (playlist_toggle), NULL);
+		      GTK_SIGNAL_FUNC (playlist_toggle), player);
 
   time_label = gtk_label_new ("");
   artist_label = gtk_label_new ("");

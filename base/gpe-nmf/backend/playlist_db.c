@@ -17,26 +17,27 @@ playlist_fetch_item_internal (struct playlist *l, int *idx)
 {
   struct playlist *v = NULL;
   GSList *i;
-  assert (l->type == ITEM_TYPE_LIST);
 
-  i = l->data.list;
-  while (v == NULL && i != NULL)
+  switch (l->type)
     {
-      struct playlist *p = i->data;
-      switch (p->type)
+    case ITEM_TYPE_TRACK:
+      if (*idx == 0)
+	v = l;
+      else
+	(*idx)--;
+      break;
+
+    case ITEM_TYPE_LIST:
+      i = l->data.list;
+      while (v == NULL && i != NULL)
 	{
-	case ITEM_TYPE_LIST:
+	  struct playlist *p = i->data;
 	  v = playlist_fetch_item_internal (p, idx);
-	  break;
-	case ITEM_TYPE_TRACK:
-	  if (*idx == 0)
-	    v = p;
-	  else
-	    (*idx)--;
-	  break;
+	  i = i->next;
 	}
-      i = i->next;
+      break;
     }
+
   return v;
 }
 

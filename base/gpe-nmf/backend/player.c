@@ -51,6 +51,12 @@ player_set_playlist (player_t p, struct playlist *l)
   p->idx = 0;
 }
 
+struct playlist *
+player_get_playlist (player_t p)
+{
+  return p->list;
+}
+
 void
 player_stop (player_t p)
 {
