@@ -1,3 +1,8 @@
+2004-06-09  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: Fixed several memory leaks.
+	* main.c, Makefile: Removed zoom stuff.
+	* main.c: Implemented context menu and click handling in list view.
+
 2004-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: Change widgets, disable zooming in list mode.
 	* main.c: Started implementing a proper list mode using GtkTreeView.

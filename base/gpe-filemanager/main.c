@@ -72,7 +72,7 @@ static GtkWidget *window;
 static GtkWidget *combo;
 static GtkWidget *view_widget;
 static GtkWidget *view_window;
-static GtkWidget *view_port;
+static GtkWidget *vbox;
 
 static GtkWidget *bluetooth_menu_item;
 static GtkWidget *copy_menu_item;
@@ -106,7 +106,7 @@ GList *history = NULL;
 
 gchar *current_directory = NULL;
 gchar *current_view = "icons";
-gint current_zoom = 20;
+gint current_zoom = 36;
 static gboolean view_is_icons = FALSE;
 
 static gchar *file_clipboard = NULL;
@@ -136,9 +136,6 @@ struct gpe_icon my_icons[] = {
   { "cancel", "cancel" },
   { "question", "question" },
   { "error", "error" },
-  { "preferences", "preferences" },
-  { "zoom_in", "filemanager/zoom_in" },
-  { "zoom_out", "filemanager/zoom_out" },
   { "list-view" },
   { "icon-view" },
   { "icon", PREFIX "/share/pixmaps/gpe-filemanager.png" },
@@ -482,7 +479,8 @@ paste_file_clip (void)
 static void
 hide_menu (void)
 {
-  gpe_icon_list_view_popup_removed (GPE_ICON_LIST_VIEW (view_widget));
+  if (view_is_icons)
+    gpe_icon_list_view_popup_removed (GPE_ICON_LIST_VIEW (view_widget));
 }
 
 static void
@@ -1009,14 +1007,14 @@ button_clicked (GtkWidget *widget, gpointer udata)
       }
       else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
         browse_directory (file_info->filename);
-  
 }
+
 
 const gchar *
 find_icon_path (gchar *mime_type)
 {
   struct stat s;
-  const gchar *mime_icon;
+  gchar *mime_icon;
   gchar *mime_path, *p;
 
   mime_icon = gnome_vfs_mime_get_icon (mime_type);
@@ -1043,12 +1041,18 @@ find_icon_path (gchar *mime_type)
 
   mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICON_PATH "/%s.png", mime_icon);
   if (stat (mime_path, &s) == 0)
+  {
+	g_free(mime_icon);
     return mime_path;
-
+  }
   mime_path = g_strdup_printf (PREFIX DEFAULT_ICON_PATH "/%s.png", mime_icon);
   if (stat (mime_path, &s) == 0)
+  {
+	g_free(mime_icon);
     return mime_path;
-
+  }
+  
+  g_free(mime_icon);
   return g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 }
 
@@ -1059,9 +1063,9 @@ get_pixbuf (const gchar *filename)
 
   pixbuf = g_hash_table_lookup (loaded_icons, (gconstpointer) filename);
 
-  if ((GdkPixbuf *) pixbuf)
+  if (pixbuf)
   {
-    return (GdkPixbuf *) pixbuf;
+    return pixbuf;
   }
   else
   {
@@ -1074,7 +1078,7 @@ get_pixbuf (const gchar *filename)
 void
 add_icon (FileInformation *file_info)
 {
-  GdkPixbuf *pixbuf;
+  GdkPixbuf *pixbuf = NULL;
   const gchar *mime_icon;
   
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
@@ -1101,14 +1105,21 @@ add_icon (FileInformation *file_info)
   {
 	GtkTreeIter iter;
     GdkPixbuf *pb;
+	gchar *size;
+	  
 	pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
+	size = gnome_vfs_format_file_size_for_display(file_info->vfs->size); 
 	gtk_tree_store_append (store, &iter, NULL);
-	gtk_tree_store_set (store, &iter,
+	  
+    gtk_tree_store_set (store, &iter,
 	    COL_NAME, file_info->vfs->name,
+	    COL_SIZE, size,
+	    COL_CHANGED, ctime(&file_info->vfs->ctime),
 		COL_ICON, pb,
 		COL_DATA, (gpointer) file_info,
     	-1);
-//	g_free(pb);
+	g_free(size);
+	gdk_pixbuf_unref(pb);
   }	  
 }
 
@@ -1128,9 +1139,9 @@ compare_file_info (FileInformation *a, FileInformation *b)
 static void
 make_view ()
 {
-  GnomeVFSDirectoryHandle *handle;
-  GnomeVFSFileInfo *vfs_file_info;
-  GnomeVFSResult result, open_dir_result;
+  GnomeVFSDirectoryHandle *handle = NULL;
+  GnomeVFSFileInfo *vfs_file_info = NULL;
+  GnomeVFSResult result = GNOME_VFS_OK, open_dir_result;
   GList *list = NULL, *iter;
   gchar *error = NULL;
   loading_directory = 1;
@@ -1139,8 +1150,24 @@ make_view ()
   if (view_is_icons)
     gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (view_widget));
   else
+  {
+	GtkTreeIter iter;
+	FileInformation *i;
+	GdkPixbuf *buf;
+ 
+	if (gtk_tree_model_get_iter_first(GTK_TREE_MODEL(store),&iter))
+	{
+		do
+		{
+			gtk_tree_model_get(GTK_TREE_MODEL(store),&iter,COL_DATA,&i,COL_ICON,&buf,-1);
+			gnome_vfs_file_info_unref(i->vfs);
+			gdk_pixbuf_unref(buf);
+			g_free(i->filename);
+		}while (gtk_tree_model_iter_next(GTK_TREE_MODEL(store),&iter));
+	}
     gtk_tree_store_clear(GTK_TREE_STORE(store));
-
+  }
+  
   gtk_widget_draw (view_widget, NULL); // why?
 
   open_dir_result = 
@@ -1149,11 +1176,11 @@ make_view ()
 
   while (open_dir_result == GNOME_VFS_OK)
   {
-    vfs_file_info = gnome_vfs_file_info_new ();
-    result = gnome_vfs_directory_read_next (handle, vfs_file_info);
-
     if (loading_directory == 0)
       break;
+	
+    vfs_file_info = gnome_vfs_file_info_new ();
+    result = gnome_vfs_directory_read_next (handle, vfs_file_info);
 
     if (vfs_file_info->name != NULL && vfs_file_info->name[0] != '.')
     {
@@ -1171,10 +1198,11 @@ make_view ()
 
     if (result != GNOME_VFS_OK)
     {
-      gnome_vfs_directory_close (handle);
       break;
     }
   }
+  
+  gnome_vfs_directory_close (handle);
 
   if (open_dir_result != GNOME_VFS_OK)
   {
@@ -1318,27 +1346,6 @@ history_forward (GtkWidget *widget)
   }
 }
 
-void
-zoom_in ()
-{
-  if (current_zoom < 48)
-  {
-    current_zoom = current_zoom + ZOOM_INCREMENT;
-    gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
-  }
-}
-
-void
-zoom_out ()
-{
-  if (current_zoom > 16)
-  {
-    current_zoom = current_zoom - ZOOM_INCREMENT;
-    gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
-  }
-}
-
-
 static void
 view_icons (GtkWidget *widget)
 {
@@ -1362,6 +1369,75 @@ view_list (GtkWidget *widget)
 }
 
 
+static gboolean
+tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
+{
+  if (b->button == 3)
+    {
+      gint x, y;
+      GtkTreeViewColumn *col;
+      GtkTreePath *path;
+  
+      x = b->x;
+      y = b->y;
+      
+      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (tree),
+					 x, y,
+					 &path, &col,
+					 NULL, NULL))
+      {
+	    GtkTreeIter iter;
+	    FileInformation *i;
+
+	    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
+
+	    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_DATA, &i, -1);
+		
+	    gtk_tree_path_free (path);
+        show_popup (NULL, i);
+	  }
+	  else
+        show_popup (NULL, NULL);
+  }
+
+  return TRUE;
+}
+
+
+static gboolean
+tree_button_release (GtkWidget *tree, GdkEventButton *b)
+{
+  if (b->button == 1)
+    {
+      gint x, y;
+      GtkTreeViewColumn *col;
+      GtkTreePath *path;
+  
+      x = b->x;
+      y = b->y;
+
+      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (tree),
+					 x, y,
+					 &path, &col,
+					 NULL, NULL))
+	{
+	  GtkTreeIter iter;
+	  FileInformation *i;
+
+	  gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
+
+	  gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_DATA, &i, -1);
+		
+	  gtk_tree_path_free (path);
+		
+      button_clicked (NULL, i);
+
+	}
+  }
+
+  return TRUE;
+}
+
 
 static GtkWidget*
 create_view_widget_list(void)
@@ -1370,13 +1446,13 @@ create_view_widget_list(void)
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
 	
-  if (GTK_IS_WIDGET(view_widget)) gtk_widget_destroy(view_widget);
-  if (GTK_IS_WIDGET(view_port)) gtk_widget_destroy(view_port);
+    if (GTK_IS_WIDGET(view_widget)) gtk_widget_destroy(view_widget);
+    if (GTK_IS_WIDGET(view_window)) gtk_widget_destroy(view_window);
 	
 	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
-	
-	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
+  	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
 	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
   
 	renderer = gtk_cell_renderer_pixbuf_new ();
 	g_object_set(renderer,"stock-size",GTK_ICON_SIZE_SMALL_TOOLBAR,NULL);
@@ -1404,8 +1480,28 @@ create_view_widget_list(void)
 							   NULL);
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-	gtk_container_add(GTK_CONTAINER(view_window),treeview);
-    gtk_widget_show(treeview);
+
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Changed"),
+							   renderer,
+							   "text",
+							   COL_CHANGED,
+							   NULL);
+	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+	
+    view_window = gtk_scrolled_window_new(NULL,NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
+  		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+    gtk_container_add(GTK_CONTAINER(view_window),treeview);
+    gtk_box_pack_end (GTK_BOX (vbox), view_window, TRUE, TRUE, 0);
+
+	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
+		G_CALLBACK(tree_button_press), NULL);
+	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
+		G_CALLBACK(tree_button_release), NULL);
+	
+    gtk_widget_show_all(view_window);
 	return treeview;
 }
 
@@ -1417,6 +1513,8 @@ create_view_widget_icons(void)
   	
   if (GTK_IS_WIDGET(view_widget)) 
 	  gtk_widget_destroy(view_widget);
+  if (GTK_IS_WIDGET(view_window)) 
+	  gtk_widget_destroy(view_window);
 	
   view_icons = gpe_icon_list_view_new ();
   gtk_signal_connect (GTK_OBJECT (view_icons), "clicked",
@@ -1428,10 +1526,13 @@ create_view_widget_icons(void)
   gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view_icons), 30);
   gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_icons), GPE_TEXT_BELOW);  
 	
-  view_port = gtk_viewport_new(NULL,NULL);
-  gtk_container_add(GTK_CONTAINER(view_port),view_icons);
-  gtk_container_add(GTK_CONTAINER(view_window),view_port);
-  gtk_widget_show_all(view_port);  
+  view_window = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
+  	GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(view_window),view_icons);
+  gtk_box_pack_end (GTK_BOX (vbox), view_window, TRUE, TRUE, 0);
+  
+  gtk_widget_show_all(view_window);  
   return view_icons;
 }
 
@@ -1439,7 +1540,7 @@ create_view_widget_icons(void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *toolbar2;
+  GtkWidget *hbox, *toolbar, *toolbar2;
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
@@ -1461,9 +1562,9 @@ main (int argc, char *argv[])
 	store = gtk_tree_store_new (N_COLUMNS,
   		G_TYPE_OBJECT,
 		G_TYPE_STRING,
-	 	G_TYPE_LONG,
+	 	G_TYPE_STRING,
 		G_TYPE_INT,
-		G_TYPE_LONG,
+		G_TYPE_STRING,
 		G_TYPE_STRING,
 		G_TYPE_POINTER);
   
@@ -1490,9 +1591,6 @@ main (int argc, char *argv[])
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
     "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
   
-  view_window = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
-  		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
   view_widget = create_view_widget_list();
   
   toolbar = gtk_toolbar_new ();
@@ -1525,14 +1623,6 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_IN,
-			    _("Zoom in"), _("Zoom in."),
-			    G_CALLBACK (zoom_in), NULL, -1);
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_OUT,
-			    _("Zoom out"), _("Zoom out."),
-			    G_CALLBACK (zoom_out), NULL, -1);
-
   p = gpe_find_icon ("icon-view");
   pw = gtk_image_new_from_pixbuf(p);
   btnIconView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
@@ -1555,7 +1645,6 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), view_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
 
