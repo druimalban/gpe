@@ -3,7 +3,7 @@ PREFIX = /usr/local
 #DEBUG = yes 
 #LINGUAS = pt_PT
 
-MEMBERS = main todo calendar date todo-sql todo-old-db
+MEMBERS = main todo calendar date
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
