@@ -26,7 +26,6 @@
 #include "note.h"
 #include "sketchpad.h"
 
-#include "gpe/about.h"
 #include "gpe/question.h"
 
 //--i18n
@@ -44,7 +43,6 @@ void on_window_selector_destroy (GtkObject *object, gpointer user_data){
 }
 
 void on_button_selector_new_clicked (GtkButton *button, gpointer user_data){
-  //FIXME: maybe save the previous one if unsaved
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
   switch_windows(window_selector, window_sketchpad);
@@ -111,24 +109,5 @@ void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) sketchpad_new_sketch();
   else open_indexed_sketch(current_sketch);
   switch_windows(window_selector, window_sketchpad);
-}
-
-void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
-#ifdef NOT_DEF
-  gpe_about(PACKAGE,
-            VERSION,
-            //icon
-            "this_app_icon",
-            //short description
-            _("a notebook to sketch your notes"),
-            //minihelp
-            _("The application provides two main windows: "
-            "the Selector, and the Sketchpad.\n"
-            "You select your sketchs with the Selector.\n"
-            "You sketch your notes with the Sketchpad."),
-            //legal
-            _("(c) 2002 Luc Pionchon\n" //FIXME: use build variables
-            "Distributed under GPL"));
-#endif
 }
 

@@ -50,7 +50,6 @@ gint file_save_png(const gchar * fullpath_filename){
     FILE * fp;
 #endif
 
-    GdkColormap * colormap;
     GdkPixbuf   * pixbuf;
 
     gboolean success;
@@ -61,16 +60,7 @@ gint file_save_png(const gchar * fullpath_filename){
 #endif
 
     //--retrieve image data
-    colormap = gdk_colormap_get_system();
-    pixbuf = gdk_pixbuf_get_from_drawable(NULL,//GdkPixbuf *dest,
-                                          drawing_area_pixmap_buffer,//GdkDrawable *src,
-                                          colormap,//GdkColormap *cmap,
-                                          0,//int src_x,
-                                          0,//int src_y,
-                                          0,//int dest_x,
-                                          0,//int dest_y,
-                                          drawing_area_width,//int width,
-                                          drawing_area_height);//int height);
+    pixbuf = sketchpad_get_current_sketch_pixbuf();
 
 #ifdef GTK2
     success = gdk_pixbuf_save (pixbuf, fullpath_filename, "png", NULL /*&error*/, NULL);
@@ -90,12 +80,7 @@ gint file_save_png(const gchar * fullpath_filename){
 }//file_save_png()
 
 gint file_load_png(const gchar * fullpath_filename){
-  //FIXME: drawing_area/drawing_area_pixmap_buffer should be a parameter
-  GdkGC * gc;
   GdkPixbuf * pixbuf = NULL;
-  gint width, height;
-
-  gc = gdk_gc_new(drawing_area->window);
 
 #ifdef GTK2
   pixbuf = gdk_pixbuf_new_from_file(fullpath_filename, NULL); //GError **error
@@ -105,22 +90,8 @@ gint file_load_png(const gchar * fullpath_filename){
   if(pixbuf == NULL){
     return 0;
   }
-  width  = gdk_pixbuf_get_width (pixbuf);
-  height = gdk_pixbuf_get_height(pixbuf);
-  gdk_pixbuf_render_to_drawable(pixbuf,//GdkPixbuf *pixbuf,
-                                drawing_area_pixmap_buffer,//GdkDrawable *drawable,
-                                gc,//GdkGC *gc,
-                                0,//int src_x,
-                                0,//int src_y,
-                                0,//int dest_x,
-                                0,//int dest_y,
-                                width,//int width,
-                                height,//int height,
-                                GDK_RGB_DITHER_NONE,//GdkRgbDither dither,
-                                0,//int x_dither,
-                                0);//int y_dither);
 
-  sketchpad_refresh_drawing_area(drawing_area);
+  sketchpad_set_current_sketch_from_pixbuf(pixbuf);
   gdk_pixbuf_unref(pixbuf);
 
   return 1; 

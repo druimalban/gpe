@@ -54,6 +54,7 @@ GtkWidget * sketchpad_build_window(){
   window_sketchpad = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);
+  gtk_window_set_position     (GTK_WINDOW (window_sketchpad), GTK_WIN_POS_CENTER);
 #endif
   gtk_signal_connect (GTK_OBJECT (window_sketchpad), "delete_event",
                       GTK_SIGNAL_FUNC (on_window_sketchpad_destroy), NULL);
@@ -419,7 +420,7 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_files_clicked, filesbox);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_files_clicked), filesbox);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -427,16 +428,16 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_list_view_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_list_view_clicked), NULL);
   pixbuf = gpe_find_icon ("left");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_file_prev_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_file_prev_clicked), NULL);
   pixbuf = gpe_find_icon ("right");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_file_next_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_file_next_clicked), NULL);
 
 }

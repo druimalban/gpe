@@ -50,6 +50,7 @@ GtkWidget * create_window_selector(){
   window_selector = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window_selector), 240, 280);
+  gtk_window_set_position     (GTK_WINDOW (window_selector), GTK_WIN_POS_CENTER);
 #endif
   gtk_signal_connect (GTK_OBJECT (window_selector), "destroy",
                       GTK_SIGNAL_FUNC (on_window_selector_destroy), NULL);
@@ -81,12 +82,9 @@ GtkWidget * create_window_selector(){
 }
 
 GtkWidget * build_selector_toolbar(GtkWidget * window){
-  GtkWidget * hbox;//to return
   GtkWidget * toolbar;
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
-
-  GtkWidget * button_help;
 
 #ifdef GTK2
   toolbar = gtk_toolbar_new ();
@@ -104,18 +102,18 @@ GtkWidget * build_selector_toolbar(GtkWidget * window){
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_selector_new_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_new_clicked), NULL);
   pixbuf = gpe_find_icon ("open");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_selector_open_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_open_clicked), NULL);
   pixbuf = gpe_find_icon ("delete");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
                            //_("Delete selected sketch"), _("Delete selected sketch"),
-                           pixmap, on_button_selector_delete_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_delete_clicked), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -123,25 +121,9 @@ GtkWidget * build_selector_toolbar(GtkWidget * window){
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_selector_change_view_clicked, NULL);
+                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_change_view_clicked), NULL);
 
-
-  //--help button
-  button_help = gtk_button_new ();
-  gtk_button_set_relief (GTK_BUTTON (button_help),  GTK_RELIEF_NONE);
-
-  pixbuf = gpe_find_icon ("about");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_help), pixmap);
-  gtk_signal_connect (GTK_OBJECT (button_help), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_selector_about_clicked), NULL);
-
-  //--packing
-  hbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar,      FALSE, FALSE, 0);
-  gtk_box_pack_end   (GTK_BOX (hbox), button_help,  FALSE, FALSE, 0);
-
-  return hbox;
+  return toolbar;
 }
 
 GtkWidget * build_scrollable_clist(){

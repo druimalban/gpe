@@ -32,6 +32,8 @@ void reset_drawing_area();
 
 void sketchpad_set_drawing_area(GtkWidget * a_drawing_area);
 void sketchpad_refresh_drawing_area();
+void sketchpad_set_current_sketch_from_pixbuf(GdkPixbuf * pixbuf);
+GdkPixbuf * sketchpad_get_current_sketch_pixbuf();
 
 void sketchpad_open_file(gchar * fullpath_filename);
 void sketchpad_new_sketch();

@@ -25,8 +25,6 @@ void on_window_selector_destroy        (GtkObject *object, gpointer  user_data);
 void on_button_selector_new_clicked    (GtkButton *button, gpointer  user_data);
 void on_button_selector_open_clicked   (GtkButton *button, gpointer  user_data);
 void on_button_selector_delete_clicked (GtkButton *button, gpointer  user_data);
-void on_button_selector_about_clicked  (GtkButton *button, gpointer  user_data);
-//void on_button_sketchpad_view_clicked  (GtkButton *button, gpointer  user_data);
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data);
 
 //--clist

@@ -290,3 +290,33 @@ void clear_drawing_area(){
   sketchpad_refresh_drawing_area();
 }
 
+
+GdkPixbuf * sketchpad_get_current_sketch_pixbuf(){
+  return gdk_pixbuf_get_from_drawable(NULL,//GdkPixbuf *dest,
+                                      drawing_area_pixmap_buffer,//GdkDrawable *src,
+                                      colormap,//GdkColormap *cmap,
+                                      0,//int src_x,
+                                      0,//int src_y,
+                                      0,//int dest_x,
+                                      0,//int dest_y,
+                                      drawing_area_width,//int width,
+                                      drawing_area_height);//int height);
+}
+
+void sketchpad_set_current_sketch_from_pixbuf(GdkPixbuf * pixbuf){
+  drawing_area_width  = gdk_pixbuf_get_width (pixbuf);
+  drawing_area_height = gdk_pixbuf_get_height(pixbuf);
+  gdk_pixbuf_render_to_drawable(pixbuf,//GdkPixbuf *pixbuf,
+                                drawing_area_pixmap_buffer,//GdkDrawable *drawable,
+                                graphical_context,//GdkGC *gc,
+                                0,//int src_x,
+                                0,//int src_y,
+                                0,//int dest_x,
+                                0,//int dest_y,
+                                drawing_area_width,//int width,
+                                drawing_area_height,//int height,
+                                GDK_RGB_DITHER_NONE,//GdkRgbDither dither,
+                                0,//int x_dither,
+                                0);//int y_dither);
+  sketchpad_refresh_drawing_area(drawing_area);
+}

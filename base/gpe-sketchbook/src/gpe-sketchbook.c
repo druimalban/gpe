@@ -48,7 +48,6 @@ static struct gpe_icon my_icons[] = {
   { "properties",   "properties"  },
   { "left",   "left"  },
   { "right",  "right" },
-  { "about",  "help"  },
 
   { "list",      "gpe-sketchbook/view-mode-list"},
   { "icons",     "gpe-sketchbook/view-mode-icons"},
@@ -67,7 +66,6 @@ static struct gpe_icon my_icons[] = {
 };
 
 void app_init(int argc, char ** argv);
-void app_about();
 void gui_init();
 
 int main (int argc, char ** argv){
@@ -92,14 +90,9 @@ void app_init(int argc, char ** argv){
   sketchpad_init();
 }
 
-void app_about(){
-  //**/g_print("%s\n", ABOUT_TEXT);
-}//app_quit()
-
 void app_quit(){
-  //NOTE: may ask for unsaved sketch
   gtk_exit (0);
-}//app_quit()
+}
 
 void gui_init(){
   GdkPixmap *pixmap;
@@ -117,11 +110,6 @@ void gui_init(){
     gdk_window_set_icon (window_selector->window,  NULL, pixmap, bitmap);
     gdk_window_set_icon (window_sketchpad->window, NULL, pixmap, bitmap);
   }
-
-#ifdef DESKTOP //FIXME: to move into related -gui.c
-  gtk_window_set_position (GTK_WINDOW (window_selector),  GTK_WIN_POS_CENTER);
-  gtk_window_set_position (GTK_WINDOW (window_sketchpad), GTK_WIN_POS_CENTER);
-#endif
 
   //the window to show first
   //NOTE: could be defined by preference, or command line argument

@@ -139,16 +139,18 @@ gchar * make_label_from_filename(const gchar * filename){
   //label   : "yyyy mm dd  at  hh:mm:ss"
   gchar * label;
 
-  char * s;
+  G_CONST_RETURN gchar * file_basename_ref;
+  gchar * file_basename;
   char * date_token;
   char * time_token;
 
-  s = g_basename((char *) g_strdup(filename));
+  file_basename_ref = g_basename(filename);
+  file_basename     = g_strdup(file_basename_ref);
 
   //NOTE: May use: g_strsplit()
   //gchar** g_strsplit(const gchar *string, const gchar *delimiter, gint max_tokens)
   //Returns :	a newly-allocated array of strings. Use g_strfreev() to free it. 
-  date_token = strtok(s, "_");
+  date_token = strtok(file_basename, "_");
   if(!date_token) return g_strdup(filename);
 
   time_token = strtok(NULL, ".");
@@ -157,7 +159,7 @@ gchar * make_label_from_filename(const gchar * filename){
   label = g_strdup_printf(_("%s  at  %s"),
                           g_strdelimit(date_token, "-", ' '), //FIXME: localize date/time
                           g_strdelimit(time_token, "-", ':'));
-  free(s);
+  free(file_basename);
   return label;
 }//make_label_from_filename()
 
