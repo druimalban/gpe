@@ -5,4 +5,4 @@
  command=gpe-calendar \
  icon48=/usr/share/pixmaps/gpe-calendar.png \
  section=PIM \
- windowtitle=gpe-calendar
+ windowtitle=Calendar
