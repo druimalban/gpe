@@ -213,7 +213,7 @@ Users_Build_Objects (void)
 
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), button2);
 
-  button3 = gpe_picture_button (wstyle, _("Del"), "delete");
+  button3 = gpe_picture_button (wstyle, _("Remove"), "delete");
 
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), button3);
 
