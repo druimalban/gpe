@@ -24,14 +24,7 @@
 
 #define _(x)  gettext(x)
 
-
-/* functions */
-void sync_cancelled(void);
-char* check_user_cancelled_sync();
-
-/* globals */
-gboolean user_cancelled_sync = FALSE;
-
+GSList *db_list;
 
 /******************************************************************
    The following functions are called by the syncengine thread, and
@@ -106,7 +99,7 @@ sync_disconnect (gpe_conn *conn)
       
   GPE_DEBUG(conn, "sync_disconnect");    
   
-  for (i = conn->db_list; i; i = i->next)
+  for (i = db_list; i; i = i->next)
     {
       struct db *db = i->data;
 
@@ -185,7 +178,7 @@ syncobj_modify (gpe_conn *conn, char* object, char *uid,
 
   GPE_DEBUG (conn, "syncobj_modify");  
   
-  for (i = conn->db_list; i; i = i->next)
+  for (i = db_list; i; i = i->next)
     {
       struct db *db = i->data;
 
@@ -218,7 +211,7 @@ syncobj_delete (gpe_conn *conn, char *uid,
     return;
   }
   
-  for (i = conn->db_list; i; i = i->next)
+  for (i = db_list; i; i = i->next)
     {
       struct db *db = i->data;
 
@@ -274,9 +267,8 @@ sync_done (gpe_conn *conn, gboolean success)
 ************************************************************************/
 
 /* always_connected()
-  Return TRUE if this client does not have to be polled (i.e. can be 
-  constantly connected).
-*/
+   Return TRUE if this client does not have to be polled (i.e. can be 
+   constantly connected).  */
 gboolean 
 always_connected (void) 
 {
@@ -285,9 +277,7 @@ always_connected (void)
 
 
 /* short_name()
-
- Return a short plugin name for internal use.
-*/
+   Return a short plugin name for internal use.  */
 char *
 short_name (void)
 {
@@ -296,9 +286,7 @@ short_name (void)
 
 
 /* long_name()
-
-   Return a long name which can be shown to the user.
-*/
+   Return a long name which can be shown to the user.  */
 char *
 long_name (void)
 {
@@ -307,10 +295,8 @@ long_name (void)
 
 
 /* plugin_info()
-
-  Return an even longer description of what this plugin does. This will
-  be shown next to the drop-down menu in the sync pair options.
-*/
+   Return an even longer description of what this plugin does. This will
+   be shown next to the drop-down menu in the sync pair options.  */
 char * 
 plugin_info (void) 
 {
@@ -318,20 +304,20 @@ plugin_info (void)
 }
 
 /* plugin_init()
-
    Initialize the plugin. Called once upon loading of the plugin (NOT
-   once per sync pair).
-*/
+   once per sync pair).  */
 void 
 plugin_init (void) 
 {
+  calendar_init ();
+  todo_init ();
+  contacts_init ();
 }
 
 
 /* object_types()
 
-   Return the data types this plugin can handle.
-*/
+   Return the data types this plugin can handle.  */
 sync_object_type 
 object_types (void)
 {
@@ -341,30 +327,13 @@ object_types (void)
 
 
 /* plugin_API_version()
-                                                                                                                  
-  Return the MultiSync API version for which the plugin was compiled.
-  It is defined in multisync.h as MULTISYNC_API_VER.
-  Do not use return(MULTISYNC_API_VER), though, as the plugin will then
-  get valid after a simple recompilation. This may not be all that is needed.
-*/                                                                                   
+   
+   Return the MultiSync API version for which the plugin was compiled.
+   It is defined in multisync.h as MULTISYNC_API_VER.
+   Do not use return(MULTISYNC_API_VER), though, as the plugin will then
+   get valid after a simple recompilation. This may not be all that is needed.  */
 int 
 plugin_API_version (void)
 {
   return GPE_MULTISYNC_API_VER;
-}
-
-/* check_user_cancelled_sync()
- * 
- * Check to see if the user cancelled the sync and return
- * an appropriate error message.
- */
-char* 
-check_user_cancelled_sync (void)
-{
-  if(user_cancelled_sync)
-  {
-    return g_strdup(_("User has cancelled the sync."));
-  }
-  
-  return NULL;
 }

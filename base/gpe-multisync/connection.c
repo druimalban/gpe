@@ -48,10 +48,6 @@ gpe_do_connect (void *_conn)
 
   conn = (gpe_conn *)_conn;
 
-  calendar_init (conn);
-  todo_init (conn);
-  contacts_init (conn);
-  
   GPE_DEBUG(conn, "sync_connect");  
   
   /* load the connection attributes */
@@ -63,7 +59,7 @@ gpe_do_connect (void *_conn)
     pthread_exit (0);
   }  
 
-  for (i = conn->db_list; i; i = i->next)
+  for (i = db_list; i; i = i->next)
     {
       struct db *db = i->data;
   
@@ -78,7 +74,7 @@ gpe_do_connect (void *_conn)
 
   if (failed)
     {
-      for (i = conn->db_list; i; i = i->next)
+      for (i = db_list; i; i = i->next)
 	{
 	  struct db *db = i->data;
 
@@ -116,7 +112,7 @@ gpe_do_get_changes (void *_conn)
 
   GPE_DEBUG(conn, "get_changes"); 
 
-  for (i = conn->db_list; i; i = i->next)
+  for (i = db_list; i; i = i->next)
     {
       struct db *db = i->data;
 

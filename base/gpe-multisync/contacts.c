@@ -95,7 +95,7 @@ struct db contacts_db =
 };
 
 void
-contacts_init (gpe_conn *conn)
+contacts_init (void)
 {
-  conn->db_list = g_slist_append (conn->db_list, &contacts_db);
+  db_list = g_slist_append (db_list, &contacts_db);
 }

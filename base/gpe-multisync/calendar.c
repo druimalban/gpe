@@ -88,7 +88,7 @@ struct db calendar_db =
 };
 
 void
-calendar_init (gpe_conn *conn)
+calendar_init (void)
 {
-  conn->db_list = g_slist_append (conn->db_list, &calendar_db);
+  db_list = g_slist_append (db_list, &calendar_db);
 }

@@ -21,8 +21,6 @@ typedef struct
 
   pthread_t thread;
   sync_object_type newdbs;		/* XXX */
-
-  GSList *db_list;
 } gpe_conn;
 
 struct db
@@ -42,6 +40,8 @@ struct db
 
 #define GPE_DEBUG(conn, x) fprintf (stderr, "%s\n", (x))
 
+extern GSList *db_list;
+
 extern void gpe_disconnect (struct db *db);
 
 extern gboolean gpe_load_config (gpe_conn *conn);
@@ -52,9 +52,9 @@ extern GSList *fetch_tag_data (nsqlc *db, const gchar *query_str, guint id);
 
 extern gboolean store_tag_data (nsqlc *db, const gchar *table, guint id, GSList *tags, gboolean delete);
 
-extern void calendar_init (gpe_conn *conn);
-extern void todo_init (gpe_conn *conn);
-extern void contacts_init (gpe_conn *conn);
+extern void calendar_init (void);
+extern void todo_init (void);
+extern void contacts_init (void);
 
 extern void *gpe_do_get_changes (void *conn);
 extern void *gpe_do_connect (void *conn);

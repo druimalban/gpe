@@ -84,7 +84,7 @@ struct db todo_db =
 };
 
 void
-todo_init (gpe_conn *conn)
+todo_init (void)
 {
-  conn->db_list = g_slist_append (conn->db_list, &todo_db);
+  db_list = g_slist_append (db_list, &todo_db);
 }
