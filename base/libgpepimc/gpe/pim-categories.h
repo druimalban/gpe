@@ -20,6 +20,8 @@
 #ifndef PIM_CATEGORIES_H
 #define PIM_CATEGORIES_H
 
+#include <glib.h>
+
 struct gpe_pim_category
 {
   const gchar *name;
