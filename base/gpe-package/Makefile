@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.8-2
+VERSION = 0.0.9
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no

@@ -1,7 +1,7 @@
 /*
  * gpe-package
  *
- * Copyright (C) 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +25,7 @@
 #include <sys/signal.h>
 #include <sys/un.h>
 
- #include <locale.h>
+#include <locale.h>
 #include <libintl.h>
 #define _(x) gettext(x)
 
@@ -61,10 +61,23 @@ void on_packages_update_clicked(GtkButton *button, gpointer user_data);
 void on_system_update_clicked(GtkButton *button, gpointer user_data);
 void on_package_install_clicked(GtkButton *button, gpointer user_data);
 
+
+
+typedef struct
+{
+	char *name;
+	char *version;
+	char *description;
+	char *color;
+	pkg_state_status_t status;
+}
+description_t;
+
+description_t *pkg_info = NULL;
+int pkg_count = 0;
+
 int sock;
 static pkcommand_t running_command = CMD_NONE;
-static char *last_pkgname = NULL;
-static GtkTreeIter last_pkgiter;
 static int pkg_selection_changed = 0;
 static int error = 0;
 
@@ -72,8 +85,7 @@ static int error = 0;
 static GtkWidget *notebook;
 static GtkWidget *txLog;
 static GtkWidget *treeview;
-static GtkTreeStore *store_inst = NULL;
-static GtkTreeStore *store_notinst = NULL;
+static GtkTreeStore *store = NULL;
 static GtkWidget *bApply;
 static GtkWidget *miUpdate, *miSysUpgrade, *miSelectLocal, *miApply;
 static GtkWidget *sbar;
@@ -116,6 +128,20 @@ gboolean get_pending_messages ();
 
 /* dialogs */
 #warning todo info dialog, icons, verbose dialogs
+
+void
+destroy_package_list(description_t *list, int len)
+{
+	while (len)
+	{
+		if (list[len-1].name) g_free(list[len-1].name);
+		if (list[len-1].description) g_free(list[len-1].description);
+		if (list[len-1].version) g_free(list[len-1].version);
+		len--;
+	}
+	if (list) g_free(list);
+}
+
 
 GtkWidget *
 progress_dialog (gchar * text, GdkPixbuf * pixbuf)
@@ -166,8 +192,9 @@ send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 		{
 			case CMD_LIST:
 				desc = _("Reading packages list...");
-				gtk_tree_store_clear(GTK_TREE_STORE(store_inst));
-				gtk_tree_store_clear(GTK_TREE_STORE(store_notinst));			
+				destroy_package_list(pkg_info,pkg_count);
+				pkg_count = 0;
+				pkg_info = NULL;			
 			break;
 			case CMD_UPDATE:
 				desc = _("Updating package lists");
@@ -274,59 +301,71 @@ void do_question(int nr, char *question)
 }
 
 
+void
+update_tree(void)
+{
+	int i;
+	GtkTreeIter iter;
+	
+#warning improve this
+	gtk_tree_store_clear(GTK_TREE_STORE(store));
+	
+	for (i=0;i<pkg_count;i++)
+	{
+		gtk_tree_store_append (store, &iter, NULL);
+	
+		gtk_tree_store_set (store, &iter,
+		    COL_NAME, pkg_info[i].name,
+		    COL_DESCRIPTION, pkg_info[i].description,
+			COL_VERSION, pkg_info[i].version,
+			COL_INSTALLED, pkg_info[i].status == SS_INSTALLED,
+			COL_DESIREDSTATE, SW_UNKNOWN,
+			COL_COLOR, pkg_info[i].color,
+	    	-1);
+	}
+}
+
+
 void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t status)
 {
-	GtkTreeIter iter;
-	gboolean isinstalled = FALSE;
 	gboolean updatev;
-	char *color = NULL;
-	char *lversion;
 	char *nversion = NULL;
-#error this more work, we need to move entrys	
-	updatev = (last_pkgname != NULL) && !strcmp(pkgname,last_pkgname);
-	
-	if (updatev) 
+
+	updatev = (pkg_count && !strcmp(pkgname,pkg_info[pkg_count-1].name));
+
+	if (!updatev)
 	{
-		iter = last_pkgiter;
-		gtk_tree_model_get(GTK_TREE_MODEL(store),&iter,
-	                       COL_VERSION, &lversion, 
-		                   COL_INSTALLED, &isinstalled, 
-		                   COL_COLOR, &color, -1);
-		nversion = g_strdup_printf("%s\n%s",lversion,version);
-		version = nversion;
+		pkg_info = realloc(pkg_info,sizeof(description_t) * (pkg_count + 1));		
+		pkg_info[pkg_count].name = g_strdup(pkgname);
+		pkg_info[pkg_count].version = g_strdup(version);
+		pkg_info[pkg_count].description = g_strdup(desc);
+		pkg_info[pkg_count].status = status;
+		pkg_info[pkg_count].color = NULL;
+		if ((status != SS_INSTALLED) && (status != SS_NOT_INSTALLED))
+			pkg_info[pkg_count].color = C_INCOMPLETE;
+		pkg_count++;
 	}
 	else
 	{
-		if (last_pkgname != NULL) 
-			g_free(last_pkgname);
-		last_pkgname = g_strdup(pkgname);
-	}
+		nversion = pkg_info[pkg_count-1].version;
+		pkg_info[pkg_count-1].version = g_strdup_printf("%s\n%s",nversion,version);
+		if (pkg_info[pkg_count-1].status != SS_INSTALLED)
+			pkg_info[pkg_count-1].status = status;
+		if (nversion) g_free(nversion);
+		if ((status != SS_INSTALLED) && (status != SS_NOT_INSTALLED))
+			pkg_info[pkg_count-1].color = C_INCOMPLETE;
+	}		
 	
-	if ((status != SS_INSTALLED) && (status != SS_NOT_INSTALLED))
-		color = C_INCOMPLETE;
-	isinstalled = isinstalled || (status==SS_INSTALLED);
-	
+		
 	switch (running_command)
 	{
 		case CMD_LIST:
-			if (!updatev)
-			{				
-				gtk_tree_store_append (store, &iter, NULL);
-				last_pkgiter = iter;
-			}
-			gtk_tree_store_set (store, &iter,
-			    COL_NAME, pkgname,
-			    COL_DESCRIPTION, desc,
-				COL_VERSION, version,
-				COL_INSTALLED, isinstalled,
-				COL_DESIREDSTATE, SW_UNKNOWN,
-				COL_COLOR, color,
-			    -1);
+		{
+		}
 		break;
 		default:
 			printlog(txLog,pkgname);
 	}
-	if (updatev) g_free(nversion);
 }
 
 
@@ -364,6 +403,8 @@ void do_end_command()
 		gtk_widget_destroy(dlgAction);
 		dlgAction = NULL;
 	}
+	if (running_command == CMD_LIST) 
+		update_tree();
 	running_command = CMD_NONE;
 }
 
@@ -530,7 +571,7 @@ mainloop (int argc, char *argv[])
 	
 	signal (SIGINT, do_safe_exit);
 	signal (SIGTERM, do_safe_exit);
- 
+ 	
 	/* Create socket from which to read. */
 	sock = socket (AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0)

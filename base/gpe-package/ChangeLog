@@ -1,3 +1,8 @@
+2004-02-10 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c: Made basic frontend work again. We create a package list to 
+	  filter now. 
+	* Makefile: We work on V 0.0.9.
+	
 2004-01-23 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Started to split list into installed/not installed packages.
 	* interface.c: Enable / Disable menu items.
