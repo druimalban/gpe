@@ -3,7 +3,7 @@ Version: VERSION
 Section: GPE/games
 Priority: optional
 Architecture: arm
-Depends: libgtk2.0-0, libgpewidget1, gpe-icons
+Depends: libgtk2.0-0, libgpewidget1, gpe-icons, gpe-go-locale*
 Maintainer: Luc Pionchon <luc@handhelds.org>
 Description: A Go Board for GPE.
 Source: gpe-go-VERSION.tar.gz
