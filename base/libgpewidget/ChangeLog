@@ -1,5 +1,7 @@
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
+	* gtkdatesel.c (week_update): Format week number with %V not %W.
+
 	* what.c (gpe_what_handle_event): Delete.
 	(filter_func): Use tip_private if not NULL.
 

@@ -185,7 +185,7 @@ month_update (GtkDateSel *sel, GtkWidget *w)
 static void
 week_update (GtkDateSel *sel, GtkWidget *w)
 {
-  format_text (&sel->time, w, _("Week %W"));
+  format_text (&sel->time, w, _("Week %V"));
 }
 
 static void
