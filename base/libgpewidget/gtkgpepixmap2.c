@@ -5,28 +5,29 @@
  * Copyright (C) 1997, 1998 Free Software Foundation
  *
  * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
+ * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Library General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Library General Public
+ * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
 
 /*
- * Modified by the GTK+ Team and others 1997-1999.  See the AUTHORS
+ * Modified by the GTK+ Team and others 1997-2000.  See the AUTHORS
  * file for a list of people on the GTK+ Team.  See the ChangeLog
  * files for a list of changes.  These files are distributed with
  * GTK+ at ftp://ftp.gtk.org/pub/gtk/. 
  */
 
+#include <math.h>
 #include <gtk/gtk.h>
 #include "gtkgpepixmap.h"
 
@@ -35,7 +36,7 @@ static void gtk_gpe_pixmap_class_init (GtkGpePixmapClass  *klass);
 static void gtk_gpe_pixmap_init       (GtkGpePixmap       *pixmap);
 static gint gtk_gpe_pixmap_expose     (GtkWidget       *widget,
 				   GdkEventExpose  *event);
-static void gtk_gpe_pixmap_finalize   (GtkObject       *object);
+static void gtk_gpe_pixmap_finalize   (GObject         *object);
 static void build_insensitive_pixmap (GtkGpePixmap *gtkpixmap);
 
 static GtkWidgetClass *parent_class;
@@ -68,14 +69,16 @@ gtk_gpe_pixmap_get_type (void)
 static void
 gtk_gpe_pixmap_class_init (GtkGpePixmapClass *class)
 {
+  GObjectClass *gobject_class = G_OBJECT_CLASS (class);
   GtkObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
   object_class = (GtkObjectClass*) class;
   widget_class = (GtkWidgetClass*) class;
-  parent_class = gtk_type_class (gtk_widget_get_type ());
+  parent_class = gtk_type_class (gtk_misc_get_type ());
 
-  object_class->finalize = gtk_gpe_pixmap_finalize;
+  gobject_class->finalize = gtk_gpe_pixmap_finalize;
+
   widget_class->expose_event = gtk_gpe_pixmap_expose;
 }
 
@@ -86,8 +89,6 @@ gtk_gpe_pixmap_init (GtkGpePixmap *pixmap)
 
   pixmap->pixmap = NULL;
   pixmap->mask = NULL;
-  pixmap->pixmap_prelight = NULL;
-  pixmap->pixmap_active = NULL;
 }
 
 GtkWidget*
@@ -107,10 +108,11 @@ gtk_gpe_pixmap_new (GdkPixmap *val,
 }
 
 static void
-gtk_gpe_pixmap_finalize (GtkObject *object)
+gtk_gpe_pixmap_finalize (GObject *object)
 {
   gtk_gpe_pixmap_set (GTK_GPE_PIXMAP (object), NULL, NULL);
-  (* GTK_OBJECT_CLASS (parent_class)->finalize) (object);
+
+  G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
 void
@@ -123,7 +125,6 @@ gtk_gpe_pixmap_set (GtkGpePixmap *pixmap,
   gint oldwidth;
   gint oldheight;
 
-  g_return_if_fail (pixmap != NULL);
   g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   if (pixmap->pixmap != val)
@@ -175,7 +176,6 @@ gtk_gpe_pixmap_get (GtkGpePixmap  *pixmap,
 		GdkPixmap **val,
 		GdkBitmap **mask)
 {
-  g_return_if_fail (pixmap != NULL);
   g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   if (val)
@@ -191,8 +191,8 @@ gtk_gpe_pixmap_expose (GtkWidget      *widget,
   GtkGpePixmap *pixmap;
   GtkMisc *misc;
   gint x, y;
+  gfloat xalign;
 
-  g_return_val_if_fail (widget != NULL, FALSE);
   g_return_val_if_fail (GTK_IS_GPE_PIXMAP (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
 
@@ -201,15 +201,18 @@ gtk_gpe_pixmap_expose (GtkWidget      *widget,
       pixmap = GTK_GPE_PIXMAP (widget);
       misc = GTK_MISC (widget);
 
-      x = (widget->allocation.x * (1.0 - misc->xalign) +
-	   (widget->allocation.x + widget->allocation.width
-	    - (widget->requisition.width - misc->xpad * 2)) *
-	   misc->xalign) + 0.5;
-      y = (widget->allocation.y * (1.0 - misc->yalign) +
-	   (widget->allocation.y + widget->allocation.height
-	    - (widget->requisition.height - misc->ypad * 2)) *
-	   misc->yalign) + 0.5;
-
+      if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
+	xalign = misc->xalign;
+      else
+	xalign = 1.0 - misc->xalign;
+  
+      x = floor (widget->allocation.x + misc->xpad
+		 + ((widget->allocation.width - widget->requisition.width) * xalign)
+		 + 0.5);
+      y = floor (widget->allocation.y + misc->ypad 
+		 + ((widget->allocation.height - widget->requisition.height) * misc->yalign)
+		 + 0.5);
+      
       if (pixmap->mask)
 	{
 	  gdk_gc_set_clip_mask (widget->style->black_gc, pixmap->mask);
@@ -226,22 +229,6 @@ gtk_gpe_pixmap_expose (GtkWidget      *widget,
 		           pixmap->pixmap_insensitive,
 		           0, 0, x, y, -1, -1);
         }
-      else if (GTK_WIDGET_STATE (widget) == GTK_STATE_PRELIGHT
-	       && pixmap->pixmap_prelight)
-	{
-          gdk_draw_pixmap (widget->window,
-	   	           widget->style->black_gc,
-		           pixmap->pixmap_prelight,
-		           0, 0, x, y, -1, -1);
-	}
-      else if (GTK_WIDGET_STATE (widget) == GTK_STATE_ACTIVE
-	       && pixmap->pixmap_active)
-	{
-          gdk_draw_pixmap (widget->window,
-	   	           widget->style->black_gc,
-		           pixmap->pixmap_active,
-		           0, 0, x, y, -1, -1);
-	}
       else
 	{
           gdk_draw_pixmap (widget->window,
@@ -262,7 +249,6 @@ gtk_gpe_pixmap_expose (GtkWidget      *widget,
 void
 gtk_gpe_pixmap_set_build_insensitive (GtkGpePixmap *pixmap, gboolean build)
 {
-  g_return_if_fail (pixmap != NULL);
   g_return_if_fail (GTK_IS_GPE_PIXMAP (pixmap));
 
   pixmap->build_insensitive = build;
@@ -300,100 +286,45 @@ gtk_gpe_pixmap_set_active (GtkGpePixmap *pixmap, GdkPixmap *val)
 }
 
 static void
-build_insensitive_pixmap(GtkGpePixmap *gtkpixmap)
+build_insensitive_pixmap (GtkGpePixmap *gtkpixmap)
 {
-  GdkGC *gc;
   GdkPixmap *pixmap = gtkpixmap->pixmap;
   GdkPixmap *insensitive;
-  gint w, h, x, y;
-  GdkGCValues vals;
-  GdkVisual *visual;
-  GdkImage *image;
-  GdkColorContext *cc;
-  GdkColor color;
-  GdkColormap *cmap;
-  gint32 red, green, blue;
-  GtkStyle *style;
-  GtkWidget *window;
-  GdkColor c;
-  int failed;
+  gint w, h;
+  GdkPixbuf *pixbuf;
+  GdkPixbuf *stated;
+  
+  gdk_window_get_size (pixmap, &w, &h);
 
-  window = GTK_WIDGET (gtkpixmap);
+  pixbuf = gdk_pixbuf_get_from_drawable (NULL,
+                                         pixmap,
+                                         gtk_widget_get_colormap (GTK_WIDGET(gtkpixmap)),
+                                         0, 0,
+                                         0, 0,
+                                         w, h);
+  
+  stated = gdk_pixbuf_copy (pixbuf);
+  
+  gdk_pixbuf_saturate_and_pixelate (pixbuf, stated,
+                                    0.8, TRUE);
 
-  g_return_if_fail(window != NULL);
+  g_object_unref (G_OBJECT (pixbuf));
+  pixbuf = NULL;
+  
+  insensitive = gdk_pixmap_new (GTK_WIDGET (gtkpixmap)->window, w, h, -1);
 
-  gdk_window_get_size(pixmap, &w, &h);
-  image = gdk_image_get(pixmap, 0, 0, w, h);
-  insensitive = gdk_pixmap_new(GTK_WIDGET (gtkpixmap)->window, w, h, -1);
-  gc = gdk_gc_new (pixmap);
-
-  visual = gtk_widget_get_visual(GTK_WIDGET(gtkpixmap));
-  cmap = gtk_widget_get_colormap(GTK_WIDGET(gtkpixmap));
-  cc = gdk_color_context_new(visual, cmap);
-
-  if ((cc->mode != GDK_CC_MODE_TRUE) && (cc->mode != GDK_CC_MODE_MY_GRAY)) 
-    {
-      gdk_draw_image(insensitive, gc, image, 0, 0, 0, 0, w, h);
-
-      style = gtk_widget_get_style(window);
-      color = style->bg[0];
-      gdk_gc_set_foreground (gc, &color);
-      for (y = 0; y < h; y++) 
-        {
-          for (x = y % 2; x < w; x += 2) 
-	    {
-              gdk_draw_point(insensitive, gc, x, y);
-            }
-        }
-    }
-  else
-    {
-      gdk_gc_get_values(gc, &vals);
-      style = gtk_widget_get_style(window);
-
-      color = style->bg[0];
-      red = color.red;
-      green = color.green;
-      blue = color.blue;
-
-      for (y = 0; y < h; y++) 
-	{
-	  for (x = 0; x < w; x++) 
-	    {
-	      c.pixel = gdk_image_get_pixel(image, x, y);
-	      gdk_color_context_query_color(cc, &c);
-	      c.red = (((gint32)c.red - red) >> 1) + red;
-	      c.green = (((gint32)c.green - green) >> 1) + green;
-	      c.blue = (((gint32)c.blue - blue) >> 1) + blue;
-	      c.pixel = gdk_color_context_get_pixel(cc, c.red, c.green, c.blue,
-						    &failed);
-	      gdk_image_put_pixel(image, x, y, c.pixel);
-	    }
-	}
-
-      for (y = 0; y < h; y++) 
-	{
-	  for (x = y % 2; x < w; x += 2) 
-	    {
-	      c.pixel = gdk_image_get_pixel(image, x, y);
-	      gdk_color_context_query_color(cc, &c);
-	      c.red = (((gint32)c.red - red) >> 1) + red;
-	      c.green = (((gint32)c.green - green) >> 1) + green;
-	      c.blue = (((gint32)c.blue - blue) >> 1) + blue;
-	      c.pixel = gdk_color_context_get_pixel(cc, c.red, c.green, c.blue,
-						    &failed);
-	      gdk_image_put_pixel(image, x, y, c.pixel);
-	    }
-	}
-
-      gdk_draw_image(insensitive, gc, image, 0, 0, 0, 0, w, h);
-    }
+  gdk_pixbuf_render_to_drawable (stated,
+                                 insensitive,
+                                 GTK_WIDGET (gtkpixmap)->style->white_gc,
+                                 0, 0,
+                                 0, 0,
+                                 w, h,
+                                 GDK_RGB_DITHER_NORMAL,
+                                 0, 0);
 
   gtkpixmap->pixmap_insensitive = insensitive;
 
-  gdk_image_destroy(image);
-  gdk_color_context_free(cc);
-  gdk_gc_destroy(gc);
+  g_object_unref (G_OBJECT (stated));
 }
 
 

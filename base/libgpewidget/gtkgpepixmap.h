@@ -77,7 +77,7 @@ void	   gtk_gpe_pixmap_get	 (GtkGpePixmap  *pixmap,
 				  GdkBitmap **mask);
 
 void       gtk_gpe_pixmap_set_build_insensitive (GtkGpePixmap *pixmap,
-		                             guint build);
+						 gboolean build);
 
 void	   gtk_gpe_pixmap_set_prelight (GtkGpePixmap *pixmap, GdkPixmap *val);
 

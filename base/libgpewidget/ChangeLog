@@ -1,5 +1,10 @@
 2002-08-03  Philip Blundell  <philb@gnu.org>
 
+	* gtkgpepixmap.h (gtk_gpe_pixmap_set_build_insensitive): Second
+	argument is gboolean.
+	* gtkgpepixmap.c (gtk_gpe_pixmap_set_build_insensitive): Likewise.
+	* gtkgpepixmap2.c: New file.
+
 	* dirbrowser.c (gpe_create_dir_browser): Use GTK_WINDOW_TOPLEVEL
 	instead of GTK_WINDOW_DIALOG.
 	* gpetooltips2.c: New file.
