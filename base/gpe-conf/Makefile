@@ -157,12 +157,9 @@ all: $(PACKAGE) gpe-info
 
 $(PACKAGE): $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
-	cp $(PACKAGE) gpe-conf.pc
-	$(STRIP) $(PACKAGE)
 
 gpe-info: $(OBJS_INFO)
 	$(CC) -g -o $@ $(OBJS_INFO) $(LDFLAGS) $(PACKAGE_LDFLAGS)
-	$(STRIP) gpe-info
 	
 install-program: all all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
@@ -179,7 +176,6 @@ install-program: all all-desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
-	$(INSTALL) -m 644 pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/gpe-conf
@@ -188,7 +184,7 @@ install-program: all all-desktop
 	$(INSTALL) -m755 sound/soundsettings.sh $(DESTDIR)/etc/X11/Xsession.d/55soundsettings
 
 clean:
-	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.upload.html *.asc *.desktop *.d
+	rm -f $(PACKAGE) gpe-info $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.upload.html *.asc *.desktop *.d
 	rm -f screen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d sound/*.d ipaqscreen/*.d
 	rm -f keys/*.d
 	

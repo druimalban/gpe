@@ -26,7 +26,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 
 #include "storage.h"
 #include "applets.h"

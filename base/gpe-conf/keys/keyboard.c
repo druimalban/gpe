@@ -188,9 +188,8 @@ keyboard_save(char *type, char *port)
 {
 	change_cfg_value (KBDD_CONFIG, "type:", type, ' ');
 	change_cfg_value (KBDD_CONFIG, "port:", port, ' ');
-/* not nice, but kbdd doesn't have another mechanism */
-	system("killall kbdd");
-	runProg(KBDD_CMD);
+	system("/etc/init.d/kbdd stop");
+	system("/etc/init.d/kbdd start");
 }
 
 /* --- gpe-conf interface --- */

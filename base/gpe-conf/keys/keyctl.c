@@ -474,40 +474,45 @@ Keyctl_Save ()
 	else
 		keylaunchrc = g_strdup ("/etc/keylaunchrc");
 
-	g_file_get_contents(keylaunchrc, &cont, &len, &err);
-	cfglines = g_strsplit(cont,"\n",255);
-	g_free(cont);
-	
+	if (g_file_get_contents(keylaunchrc, &cont, &len, &err))
+	{
+		cfglines = g_strsplit(cont, "\n", 255);
+		g_free(cont);
+		if (err) 
+			g_error_free(err);
+	}
 	i = 0;
 	j = 0;
-	while (cfglines[j])
-	{
-		for (i=0; i<NUM_BUTTONS; i++)
+	
+	if (cfglines)
+		while (cfglines[j])
 		{
-			if (cfglines[j] && strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
-				strstr(cfglines[j], buttondefs[i].key) &&
-				!strstr(cfglines[j], "???Held") &&
-				!strstr(cfglines[j], "???Combine"))
+			for (i=0; i<NUM_BUTTONS; i++)
 			{
-				g_free(cfglines[j]);
-				if ((buttondefs[i].command && strlen(buttondefs[i].command)))
-					cfglines[j] = 
-						g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
-					    	            buttondefs[i].key, buttondefs[i].command);
-				else
-					cfglines[j] = NULL;
-				buttondefs[i].type = 0xff;
+				if (cfglines[j] && strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
+					strstr(cfglines[j], buttondefs[i].key) &&
+					!strstr(cfglines[j], "???Held") &&
+					!strstr(cfglines[j], "???Combine"))
+				{
+					g_free(cfglines[j]);
+					if ((buttondefs[i].command && strlen(buttondefs[i].command)))
+						cfglines[j] = 
+							g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
+											buttondefs[i].key, buttondefs[i].command);
+					else
+						cfglines[j] = NULL;
+					buttondefs[i].type = 0xff;
+				}
 			}
+			j++;	
 		}
-		j++;	
-	}
 	
 	for (i=0; i<NUM_BUTTONS; i++)
 	{
 		if (buttondefs[i].type != 0xff)
 		{
 			j++;
-			cfglines = realloc(cfglines,(j+1) * sizeof(char*));
+			cfglines = realloc(cfglines, (j+1) * sizeof(char*));
 			cfglines[j-1] =
 				g_strdup_printf("key=%s %s:-:%s", buttondefs[i].modificator,
 				                buttondefs[i].key, buttondefs[i].command);
@@ -521,15 +526,16 @@ Keyctl_Save ()
 		return;
 	}
 	
-	for (i=0;i<j;i++)
+	for (i=0; i<j; i++)
 	{
 		if (strlen(cfglines[i]) && (cfglines[i][strlen(cfglines[i])-1] == '\n'))
-			fprintf(fd,"%s",cfglines[i]);
+			fprintf(fd, "%s", cfglines[i]);
 		else
-			fprintf(fd,"%s\n",cfglines[i]);
+			fprintf(fd, "%s\n", cfglines[i]);
 	}
 	fclose (fd);
-	g_strfreev(cfglines);
+	if (cfglines)
+		g_strfreev(cfglines);
 	
 	/* try to get rid of running keylaunch */
 	system("/usr/bin/killall keylaunch");
@@ -543,6 +549,7 @@ Keyctl_Save ()
 		break;
 		case  0: 
 			execlp(KEYLAUNCH_BIN, NULL);
+			exit(0);
 		break;
 		default: 
 		break;

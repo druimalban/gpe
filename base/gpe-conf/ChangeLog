@@ -1,6 +1,16 @@
+2005-03-30	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* gpe-admin.c, storage.c, battery.c: Don't use render.h.
+	* keyctl.c: Add sanity checks.
+	* Makefile: Don't install obsolete ipaq.png, don't strip binaries.
+
+2005-03-25	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* keyboard.c: Change kbdd restart to use the new script.
+
 2005-03-15	Florian Boor  	<florian.boor@kernelconcepts.de>
 
-	* keys.c: Implemented restarting of kbdd. 
+	* keys.c, keyboard.c: Implemented restarting of kbdd. 
 	* keyctl.c: Fixed some minor bugs, implemented removing of definitions.
 	* key-commands: Added definition for "no command".
 	* network.c: Removed possebility to remove global tab.
