@@ -1,5 +1,14 @@
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.39 released.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* main.c (main): Rearrange order of packing to get toolbar icon
+	sizes right.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
 	* Version 0.38 released.
 
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>

@@ -244,9 +244,15 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (main_window);
 
+  gtk_container_add (GTK_CONTAINER (main_window), vbox);
+
   toolbar = gtk_toolbar_new ();
+
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
 			    _("New appointment"), _("Tap here to add a new appointment or reminder"),
@@ -298,9 +304,6 @@ main (int argc, char *argv[])
 			    _("Exit"), _("Tap here to exit the program"),
 			    G_CALLBACK (gpe_cal_exit), NULL, -1);
 
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
-
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
 
   gtk_widget_show (day);
@@ -314,8 +317,6 @@ main (int argc, char *argv[])
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), future, NULL);
 
   gtk_widget_show (notebook);
-
-  gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
   gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 
