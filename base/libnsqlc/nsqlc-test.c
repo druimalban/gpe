@@ -21,7 +21,7 @@ main()
   nsqlc *ctx;
   char *err;
 
-  ctx = nsqlc_open ("localhost:test", 0, &err);
+  ctx = nsqlc_open_ssh ("localhost:test", 0, &err);
   if (ctx == NULL)
     {
       fprintf (stderr, "Couldn't open: %s\n", err);

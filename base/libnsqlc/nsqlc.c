@@ -375,7 +375,7 @@ nsqlc_open_ssh (const char *database, int mode, char **errmsg)
       dup2 (in_fds[1], 1);
       close (out_fds[1]);
       close (in_fds[0]);
-      execlp ("ssh", "ssh", "-l", username, "hostname", "nsqld", "--stdin", NULL);
+      execlp ("ssh", "ssh", "-l", username, hostname, "nsqld", "--stdin", NULL);
       perror ("exec");
     }
 
