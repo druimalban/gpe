@@ -454,4 +454,31 @@ void
 player_set_shuffle (player_t p, int on)
 {
   p->opt_shuffle = on;
+
+  if (!p->shuffle_list)
+    return;
+
+  if (on)
+    {
+      /* Reset the shuffle list & put the current track at
+       * the start of the list, then select it. */
+      int len, i;
+      create_shuffle_list (p);
+      len = playlist_get_length (p->list);
+      for (i=0;i<len;i++)
+	{
+	  if (p->shuffle_list[i] == p->idx)
+            {
+	      p->shuffle_list[i] = p->shuffle_list[0];
+	      p->shuffle_list[0] = p->idx;
+	      break;
+	    }
+	}
+      player_set_index (p, p->idx);
+    } 
+  else 
+    {
+      /* Find the right un-shuffled spot */
+      player_set_index (p, p->shuffle_list[p->idx]);
+    }
 }

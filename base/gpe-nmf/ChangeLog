@@ -1,3 +1,10 @@
+2003-06-28  Robert Mibus  <mibus@handhelds.org>
+
+	* gpe-nmf.c: Add shuffle and loop toggles.
+
+	* backend/gstplayer.c: Map shuffle/non-shuffle indexes when turning
+	shuffle on/off.
+
 2003-04-08  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Added some lines to allow opening the fileselector only once.

@@ -162,12 +162,24 @@ player_poll_func (struct nmf_frontend *fe)
   return TRUE;
 }
 
+static void 
+toggle_shuffle (GtkToggleButton *tb, struct nmf_frontend *fe)
+{
+  player_set_shuffle (fe->player, gtk_toggle_button_get_active (tb));
+}
+
+static void
+toggle_loop (GtkToggleButton *tb, struct nmf_frontend *fe)
+{
+  player_set_loop (fe->player, gtk_toggle_button_get_active (tb));
+}
+
 int
 main (int argc, char *argv[])
 {
   /* GTK Widgets */
   GtkWidget *w;
-  GtkWidget *hbox2, *hbox3, *hbox4;
+  GtkWidget *hbox1, *hbox2, *hbox3, *hbox4;
   GtkWidget *vbox, *vbox2, *vbox3;
   GdkColor col;
   GtkStyle *style;
@@ -175,7 +187,7 @@ main (int argc, char *argv[])
   GtkWidget *rewind_button, *forward_button;
   GtkWidget *vol_slider;
   GtkObject *vol_adjust;
-  struct nmf_frontend *fe = g_malloc (sizeof (struct nmf_frontend));
+  struct nmf_frontend *fe = g_malloc0 (sizeof (struct nmf_frontend));
   gint button_height = 20;
   gchar *color = "gray80";
 
@@ -223,6 +235,7 @@ main (int argc, char *argv[])
   vbox2 = gtk_vbox_new (FALSE, 0);
   vbox3 = gtk_vbox_new (FALSE, 0);
   buttons_hbox = gtk_hbox_new (FALSE, 0);
+  hbox1 = gtk_hbox_new (FALSE, 0);
   hbox2 = gtk_hbox_new (FALSE, 0);
   hbox3 = gtk_hbox_new (FALSE, 0);
   hbox4 = gtk_hbox_new (FALSE, 0);
@@ -230,6 +243,7 @@ main (int argc, char *argv[])
   style = gtk_style_copy (buttons_hbox->style);
   style->bg[0] = col;
   
+  /* Main controls */
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-prev"));
   gtk_widget_show (w);
   prev_button = gtk_button_new ();
@@ -304,6 +318,33 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (eject_button), "clicked", 
 		    G_CALLBACK (eject_clicked), fe);
 
+  /* Shuffle / Loop */
+  w = gtk_toggle_button_new_with_label ("S");
+  gtk_widget_show (w);
+  gtk_box_pack_start (GTK_BOX (hbox1), w, FALSE, FALSE, 0);
+  gtk_widget_set_style (w, style);
+  gtk_button_set_relief (GTK_BUTTON (w), GTK_RELIEF_NONE);
+  gtk_widget_set_usize (w, 18, 18);
+  g_signal_connect (G_OBJECT (w), "toggled",
+		    G_CALLBACK (toggle_shuffle), fe);
+
+  w = gtk_toggle_button_new_with_label ("L");
+  gtk_widget_show (w);
+  gtk_box_pack_start (GTK_BOX (hbox1), w, FALSE, FALSE, 0);
+  gtk_widget_set_style (w, style);
+  gtk_button_set_relief (GTK_BUTTON (w), GTK_RELIEF_NONE);
+  gtk_widget_set_usize (w, 18, 18);
+  g_signal_connect (G_OBJECT (w), "toggled",
+		    G_CALLBACK (toggle_loop), fe);
+
+
+  /* padding */
+  w = gtk_label_new ("");
+  gtk_widget_show (w);
+  gtk_box_pack_start (GTK_BOX (hbox1), w, TRUE, FALSE, 0);
+
+
+  /* Itty-bitty close button */
   w = gtk_image_new_from_stock (GTK_STOCK_CLOSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   exit_button = gtk_button_new ();
   gtk_widget_show (exit_button);
@@ -314,6 +355,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (gtk_main_quit), NULL);
   gtk_button_set_relief (GTK_BUTTON (exit_button), GTK_RELIEF_NONE);
   gtk_widget_set_usize (exit_button, 18, 18);
+  gtk_box_pack_start (GTK_BOX (hbox1), exit_button, FALSE, FALSE, 0);
 
   fe->time_label = gtk_label_new ("00:00");
   fe->artist_label = gtk_label_new ("");
@@ -351,12 +393,12 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), buttons_hbox, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (hbox3), vbox2, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox3), vbox3, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox3), vbox3, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox2), fe->title_label, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), fe->artist_label, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox3), exit_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox3), hbox1, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (buttons_hbox), prev_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), play_button, TRUE, TRUE, 0);
@@ -377,6 +419,7 @@ main (int argc, char *argv[])
   gtk_widget_show (vbox2);
   gtk_widget_show (vbox3);
   gtk_widget_show (buttons_hbox);
+  gtk_widget_show (hbox1);
   gtk_widget_show (hbox2);
   gtk_widget_show (hbox3);
   gtk_widget_show (hbox4);
