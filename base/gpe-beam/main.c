@@ -54,11 +54,12 @@
 #define COMMAND_VCARD_IMPORT PREFIX "/bin/vcard-import < " IR_INBOX "/%s"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
 #define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
-
+static const gchar *MY_VCARD;
 
 struct gpe_icon my_icons[] = {
 	{"irda-on", PREFIX "/share/pixmaps/irda-on-16.png"},
 	{"irda-off", PREFIX "/share/pixmaps/irda-16.png"},
+	{"irda-conn", PREFIX "/share/pixmaps/irda-conn-16.png"},
 	{"irda", PREFIX "/share/pixmaps/irda.png"},
 	{NULL, NULL}
 };
@@ -68,11 +69,13 @@ static GtkWidget *icon;
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_vcard, *menu_control;
+static GtkWidget *menu_send, *menu_receive;
 static GtkWidget *control_window;
 static GtkWidget *lDevice, *lCHint, *lSaddr;
 static GThread *scan_thread;
 
-gboolean radio_is_on;
+static gboolean radio_is_on;
+static gboolean have_peer = FALSE;
 GdkWindow *dock_window;
 static guint timeout_id = 0;
 static GtkWidget *lStatus = NULL;
@@ -99,7 +102,8 @@ set_image(int sx, int sy)
 	}
 	
 	size = (sx > sy) ? sx : sy;
-	sbuf = gpe_find_icon (radio_is_on ? "irda-on" : "irda-off");
+	sbuf = gpe_find_icon (radio_is_on ? 
+	                      (have_peer ? "irda-conn" : "irda-on") : "irda-off");
 	dbuf = gdk_pixbuf_scale_simple(sbuf, sx, sy, GDK_INTERP_HYPER);
 	gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
 	gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
@@ -375,7 +379,7 @@ exec_file_tx (char *filename)
 
 
 void
-tx_file_select (char *filename, gpointer data)
+tx_file_select (const gchar *filename, gpointer data)
 {
 	scan_thread =
 		g_thread_create ((GThreadFunc) exec_file_tx,
@@ -448,7 +452,7 @@ do_send_file (void)
 
 	gdk_threads_enter ();
 	dlgStatus =
-		bt_progress_dialog (_("IR Receive and Transmit........."),
+		bt_progress_dialog (_("IR Receive and Transmit....."),
 				    gpe_find_icon ("irda"));
 	gtk_widget_show_all (dlgStatus);
 	gdk_threads_leave ();
@@ -469,7 +473,6 @@ do_send_file (void)
 				 _("Select file to transmit"), tx_file_select,
 				 tx_file_cancel, NULL);
 		gdk_threads_leave();
-		printf ("exit do send...\n");
 	}
 }
 
@@ -624,7 +627,21 @@ receive_file (void)
 static void
 send_vcard (void)
 {
+	if (!radio_is_on)
+		radio_on ();
 
+	cli = ircp_cli_open (ircp_info_cb);
+	if (cli)
+	{
+		gdk_threads_enter ();
+		dlgStatus =
+			bt_progress_dialog (_("Transmitting VCard"),
+			                    gpe_find_icon ("irda"));
+		gtk_widget_show_all (dlgStatus);
+		gdk_threads_leave ();
+	
+		tx_file_select (MY_VCARD, NULL);
+	}
 }
 
 
@@ -667,6 +684,11 @@ get_irstatus (void)
 		gtk_label_set_text (GTK_LABEL (lDevice), "");
 		gtk_label_set_text (GTK_LABEL (lSaddr), "");
 		gtk_label_set_text (GTK_LABEL (lCHint), "");
+	}
+	if (have_peer != success)
+	{
+		set_image(0, 0);
+		have_peer = success;
 	}
 	return TRUE;
 }
@@ -928,6 +950,9 @@ main (int argc, char *argv[])
 	GtkWidget *menu_remove;
 	GtkTooltips *tooltips;
 	GdkBitmap *bitmap;
+	GtkWidget *s1, *s2;
+	
+	MY_VCARD = g_strdup_printf("%s/.gpe/user.vcf", g_get_home_dir());
 	
 	g_thread_init (NULL);
 	gdk_threads_init ();
@@ -944,11 +969,16 @@ main (int argc, char *argv[])
 	window = gtk_plug_new (0);
 	gtk_widget_set_usize (window, 16, 16);
 	gtk_widget_realize (window);
-	gtk_window_set_title (GTK_WINDOW (window), _("IrDa control"));
+	gtk_window_set_title (GTK_WINDOW (window), _("IrDa tool"));
 	menu = gtk_menu_new ();
+	s1 = gtk_separator_menu_item_new();
+	s2 = gtk_separator_menu_item_new();
+	
 	menu_radio_on = gtk_menu_item_new_with_label (_("Switch IR on"));
 	menu_radio_off = gtk_menu_item_new_with_label (_("Switch IR off"));
 	menu_vcard = gtk_menu_item_new_with_label (_("Send vCard"));
+	menu_send = gtk_menu_item_new_with_label (_("Send File"));
+	menu_receive = gtk_menu_item_new_with_label (_("Receive File"));
 	menu_control = gtk_menu_item_new_with_label (_("Controls..."));
 	menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
 	g_signal_connect (G_OBJECT
@@ -961,13 +991,19 @@ main (int argc, char *argv[])
 			  (menu_vcard),
 			  "activate", G_CALLBACK (send_vcard), NULL);
 	g_signal_connect (G_OBJECT
+			  (menu_send),
+			  "activate", G_CALLBACK (send_file), NULL);
+	g_signal_connect (G_OBJECT
+			  (menu_receive),
+			  "activate", G_CALLBACK (receive_file), NULL);
+	g_signal_connect (G_OBJECT
 			  (menu_control),
 			  "activate", G_CALLBACK (show_control), NULL);
 	g_signal_connect (G_OBJECT
 			  (menu_remove),
 			  "activate", G_CALLBACK (gtk_main_quit), NULL);
 	radio_is_on = irda_is_on ();
-	if (!radio_is_on)
+	if (access(MY_VCARD, R_OK))
 	{
 		gtk_widget_set_sensitive (menu_vcard, FALSE);
 		gtk_widget_show (menu_radio_on);
@@ -981,9 +1017,22 @@ main (int argc, char *argv[])
 	gtk_widget_show (menu_control);
 	gtk_widget_show (menu_vcard);
 	gtk_widget_show (menu_remove);
+	gtk_widget_show (menu_send);
+	gtk_widget_show (menu_receive);
+    gtk_widget_show (s1);
+    gtk_widget_show (s2);
+
 	gtk_menu_append (GTK_MENU (menu), menu_radio_on);
 	gtk_menu_append (GTK_MENU (menu), menu_radio_off);
+
+	gtk_menu_append (GTK_MENU (menu), s1);
+	
 	gtk_menu_append (GTK_MENU (menu), menu_vcard);
+	gtk_menu_append (GTK_MENU (menu), menu_send);
+	gtk_menu_append (GTK_MENU (menu), menu_receive);
+
+	gtk_menu_append (GTK_MENU (menu), s2);
+	
 	gtk_menu_append (GTK_MENU (menu), menu_control);
 	gtk_menu_append (GTK_MENU (menu), menu_remove);
 	
@@ -1011,9 +1060,11 @@ main (int argc, char *argv[])
 	atexit (do_stop_radio);
 	dock_window = window->window;
 	gpe_system_tray_dock (window->window);
+	
 	gdk_threads_enter ();
 	gpe_beam_init_dbus();
 	gtk_main ();
 	gdk_threads_leave ();
+	
 	exit (0);
 }

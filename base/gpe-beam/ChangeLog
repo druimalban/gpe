@@ -1,3 +1,10 @@
+2004-10-14	Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Implemented transmit of personal vcard.
+	          Added displaying of connection status.
+	* Makefile: New icon added. Changed version number.
+	* pixmaps/irda-conn-16.png: New icon.
+
 2004-10-13	Florian Boor <florian.boor@kernelconcepts.de>
 
 	* irsw.c: Fixed path causing ifconfig not called to bring device down.
@@ -25,7 +32,7 @@
 	* Added Spanish translation.
 
 2004-03-08	Florian Boor <florian.boor@kernelconcepts.de>
-	* Added serbian translation.	
+	* Added Serbian translation.	
 
 2004-02-23  Phil Blundell  <pb@nexus.co.uk>
 

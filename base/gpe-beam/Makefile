@@ -1,5 +1,5 @@
 PACKAGE = gpe-beam
-VERSION = 0.2.4
+VERSION = 0.2.5
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -55,7 +55,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = irda-16.png irda.png irda-on-16.png
+PIXMAPS = irda-16.png irda.png irda-on-16.png irda-conn-16.png
 
 all: $(PACKAGE) vcard-export vcard-import irsw vcal-export
 
