@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.16
+VERSION = 0.17
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 
@@ -17,7 +17,7 @@ BUILD = build
 endif
 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1 gnome-vfs-2.0 gtk+-2.0 gnome-vfs-module-2.0` 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DVERSION=\"$(VERSION)\"
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs dbus-glib-1 gtk+-2.0` -pthread -Wl --export-dynamic -lgnomevfs-2 -lgobject-2.0 -lgthread-2.0  
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))

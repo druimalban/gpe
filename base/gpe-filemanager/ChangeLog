@@ -1,3 +1,9 @@
+2004-07-26  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: Added main menu.
+	* main.c: We have a directory browser now.
+    * main.c: Directory browser default auto-activation via display size and 
+              manually via menu.
 
 2004-07-14  Florian Boor  <florian.boor@kernelconcepts.de>
 

@@ -41,6 +41,7 @@
 #include <gpe/gpeiconlistview.h>
 #include <gpe/dirbrowser.h>
 #include <gpe/spacing.h>
+#include <gpe/gpehelp.h>
 
 #include "mime-sql.h"
 #include "mime-programs-sql.h"
@@ -59,6 +60,15 @@
 
 #define MAX_SYM_DEPTH 256
 
+#define N_(x) (x)
+
+#define HELPMESSAGE "GPE-Filemanager\nVersion " VERSION \
+		"\nGPE File Manager\n\ndctanner@magenet.com"\
+		"\nflorian@handhelds.org"
+
+#define NOHELPMESSAGE N_("Displaying help failed.")
+
+
 /* IDs for data storage fields */
 enum
 {
@@ -73,11 +83,22 @@ enum
 };
 static GtkTreeStore *store = NULL;
 
+enum
+{
+	COL_DIRICON,
+	COL_DIRNAME,
+	COL_DIRDATA,
+	N_DIRCOLUMNS
+};
+static GtkTreeStore *dirstore = NULL;
+
 static GtkWidget *window;
 static GtkWidget *combo;
 static GtkWidget *view_widget;
+static GtkWidget *dir_view_widget;
 static GtkWidget *view_window;
-static GtkWidget *vbox;
+static GtkWidget *dir_view_window;
+static GtkWidget *vbox, *main_hbox;
 
 static GtkWidget *bluetooth_menu_item;
 static GtkWidget *copy_menu_item;
@@ -87,13 +108,13 @@ static GtkWidget *move_menu_item;
 static GtkWidget *rename_menu_item;
 static GtkWidget *properties_menu_item;
 static GtkWidget *delete_menu_item;
+static GtkWidget *set_dirbrowser_menu_item;
+static GtkWidget *set_myfiles_menu_item;
 
 static GtkWidget *btnListView;
 static GtkWidget *btnIconView;
 
 GdkPixbuf *default_pixbuf;
-
-guint screen_w, screen_h;
 
 GtkWidget *current_button=NULL;
 int current_button_is_down=0;
@@ -113,12 +134,14 @@ gchar *current_directory = NULL;
 gchar *current_view = "icons";
 gint current_zoom = 36;
 static gboolean view_is_icons = FALSE;
+static gboolean directory_browser = TRUE;
 
 static gchar *file_clipboard = NULL;
 
 static GHashTable *loaded_icons;
 static GtkWidget *progress_dialog = NULL;
 static gboolean abort_transfer = FALSE;
+static gboolean initialized = FALSE;
 
 typedef struct
 {
@@ -148,6 +171,8 @@ struct gpe_icon my_icons[] = {
 };
 
 
+/* some forward declarations */
+
 static void browse_directory (gchar *directory);
 static void popup_ask_open_with (void);
 static void popup_ask_move_file (void);
@@ -161,7 +186,13 @@ static void paste_file_clip (void);
 static void create_directory_interactive(void);
 static GtkWidget* create_view_widget_icons(void);
 static GtkWidget* create_view_widget_list(void);
+void on_about_clicked (GtkWidget * w);
+void on_help_clicked (GtkWidget * w);
+void on_dirbrowser_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
+void on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
 
+
+/* items of the context menu */
 static GtkItemFactoryEntry menu_items[] =
 {
   { "/Open Wit_h",	 NULL, popup_ask_open_with,  0, "<StockItem>", GTK_STOCK_OPEN },
@@ -178,6 +209,96 @@ static GtkItemFactoryEntry menu_items[] =
 };
 
 static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
+
+/* items of the main menu */
+static GtkItemFactoryEntry mMain_items[] = {
+  { N_("/_File"),         NULL,         NULL, 0, "<Branch>" },
+  { N_("/_File/_Create Directory"),NULL, create_directory_interactive, 0, "<Item>"},
+  { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
+  { N_("/_File/_Close"),  NULL, gtk_main_quit, 0, "<StockItem>", GTK_STOCK_QUIT },
+  { N_("/_Settings"),         NULL,         NULL, 0, "<Branch>" },
+  { N_("/_Settings/Directory Browser"), NULL, on_dirbrowser_setting_changed, 0, "<CheckItem>"},
+  { N_("/_Settings/My Files only"), NULL, on_myfiles_setting_changed, 0, "<CheckItem>"},
+  { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
+  { N_("/_Help/Index"),   NULL,         on_help_clicked,    0, "<StockItem>",GTK_STOCK_HELP },
+  { N_("/_Help/About"),   NULL,         on_about_clicked,    0, "<Item>" },
+};
+
+int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
+
+/* create menu from description */
+GtkWidget *
+create_mMain(GtkWidget  *window)
+{
+  GtkItemFactory *itemfactory;
+  GtkAccelGroup *accelgroup;
+  
+  accelgroup = gtk_accel_group_new ();
+  
+  itemfactory = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>",
+                                     accelgroup);
+  gtk_item_factory_create_items (itemfactory, mMain_items_count, 
+      mMain_items, NULL);
+  gtk_window_add_accel_group (GTK_WINDOW (window), accelgroup);
+  
+  set_dirbrowser_menu_item = 
+    gtk_item_factory_get_item (itemfactory, N_("/Settings/Directory Browser"));
+  set_myfiles_menu_item = 
+    gtk_item_factory_get_item (itemfactory, N_("/Settings/My Files only"));
+
+  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item),
+                                 directory_browser); 
+  
+  return (gtk_item_factory_get_widget (itemfactory, "<main>"));
+}
+
+
+void
+show_message(GtkMessageType type, char* message)
+{
+	GtkWidget* dialog;
+	
+	dialog = gtk_message_dialog_new (GTK_WINDOW(window),
+					 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+					 type,
+					 GTK_BUTTONS_OK,
+					 message);
+	gtk_dialog_run (GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+}
+
+void
+on_dirbrowser_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+  if (!initialized) 
+    return;
+  directory_browser = 
+    gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item));
+  if (directory_browser)
+    gtk_widget_show_all(dir_view_window);
+  else
+	gtk_widget_hide(dir_view_window);
+  refresh_current_directory();
+}
+
+void
+on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
+{
+}
+
+void
+on_about_clicked (GtkWidget * w)
+{
+	show_message(GTK_MESSAGE_INFO,HELPMESSAGE);
+}
+
+
+void
+on_help_clicked (GtkWidget * w)
+{
+	if (gpe_show_help(PACKAGE,NULL))
+		show_message(GTK_MESSAGE_ERROR,NOHELPMESSAGE);
+}
 
 
 static void
@@ -1139,34 +1260,53 @@ add_icon (FileInformation *file_info)
   pixbuf = get_pixbuf (mime_icon);
   g_free(mime_icon);
   
-  /* now be careful */
-  if (view_is_icons)
-  	gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
+  /* now be careful, we sort the items into the view widgets */
+  if ((directory_browser) && (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY))
+    { /* add to directory browser */
+		GtkTreeIter iter;
+		GdkPixbuf *pb;
+		  
+		gtk_tree_store_append (dirstore, &iter, NULL);
+		pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
+		
+		gtk_tree_store_set (dirstore, 
+		                    &iter,
+		                    COL_DIRICON, pb,
+			                COL_DIRNAME, file_info->vfs->name,
+			                COL_DIRDATA, (gpointer) file_info,
+			                -1);
+		gdk_pixbuf_unref(pb);
+    }
   else
-  {
-	GtkTreeIter iter;
-    GdkPixbuf *pb;
-	gchar *size;
-	gchar *time;
-	  
-	pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
-	size = gnome_vfs_format_file_size_for_display(file_info->vfs->size); 
-	time = g_strdup(ctime(&file_info->vfs->ctime));
-	time[strlen(time)-1] = 0; /* strip newline */
-	  
-	gtk_tree_store_append (store, &iter, NULL);
-	
-    gtk_tree_store_set (store, &iter,
-	    COL_NAME, file_info->vfs->name,
-	    COL_SIZE, size,
-	    COL_CHANGED, time,
-		COL_ICON, pb,
-		COL_DATA, (gpointer) file_info,
-    	-1);
-	g_free(size);
-	g_free(time);
-	gdk_pixbuf_unref(pb);
-  }	  
+    { /* add to iconlist or normal browser */
+	  if (view_is_icons)
+		gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
+	  else
+	  {
+		GtkTreeIter iter;
+		GdkPixbuf *pb;
+		gchar *size;
+		gchar *time;
+		  
+		pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
+		size = gnome_vfs_format_file_size_for_display(file_info->vfs->size); 
+		time = g_strdup(ctime(&file_info->vfs->ctime));
+		time[strlen(time)-1] = 0; /* strip newline */
+		  
+		gtk_tree_store_append (store, &iter, NULL);
+		
+		gtk_tree_store_set (store, &iter,
+			COL_NAME, file_info->vfs->name,
+			COL_SIZE, size,
+			COL_CHANGED, time,
+			COL_ICON, pb,
+			COL_DATA, (gpointer) file_info,
+			-1);
+		g_free(size);
+		g_free(time);
+		gdk_pixbuf_unref(pb);
+	  }
+  }  
 }
 
 gint
@@ -1212,6 +1352,8 @@ make_view ()
 		}while (gtk_tree_model_iter_next(GTK_TREE_MODEL(store),&iter));
 	}
     gtk_tree_store_clear(GTK_TREE_STORE(store));
+	if (directory_browser)
+        gtk_tree_store_clear(GTK_TREE_STORE(dirstore));
   }
   
   gtk_widget_draw (view_widget, NULL); // why?
@@ -1266,7 +1408,8 @@ make_view ()
 	case GNOME_VFS_ERROR_GENERIC:
 	break;
     default:
-      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(open_dir_result));
+      error = g_strdup_printf ("Error: %s", 
+	                           gnome_vfs_result_to_string(open_dir_result));
     break;
     }
 	if (error)
@@ -1466,6 +1609,7 @@ tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
       gint x, y;
       GtkTreeViewColumn *col;
       GtkTreePath *path;
+      GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
   
       x = b->x;
       y = b->y;
@@ -1480,7 +1624,7 @@ tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
 
 	    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
 
-	    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_DATA, &i, -1);
+	    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
 		
 	    gtk_tree_path_free (path);
         show_popup (NULL, i);
@@ -1511,19 +1655,18 @@ tree_button_release (GtkWidget *tree, GdkEventButton *b)
 					 NULL, NULL))
 	{
 	  GtkTreeIter iter;
+      GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
 	  FileInformation *i;
 
 	  gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
 
-	  gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_DATA, &i, -1);
+	  gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
 		
 	  gtk_tree_path_free (path);
 		
       button_clicked (NULL, i);
-
 	}
   }
-
   return TRUE;
 }
 
@@ -1583,7 +1726,7 @@ create_view_widget_list(void)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
   		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
     gtk_container_add(GTK_CONTAINER(view_window),treeview);
-    gtk_box_pack_end (GTK_BOX (vbox), view_window, TRUE, TRUE, 0);
+    gtk_box_pack_end (GTK_BOX (main_hbox), view_window, TRUE, TRUE, 0);
 
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
@@ -1619,17 +1762,63 @@ create_view_widget_icons(void)
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(view_window),
   	GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(view_window),view_icons);
-  gtk_box_pack_end (GTK_BOX (vbox), view_window, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (main_hbox), view_window, TRUE, TRUE, 0);
   
   gtk_widget_show_all(view_window);  
   return view_icons;
 }
 
 
+static GtkWidget*
+create_dir_view_widget(void)
+{
+    GtkWidget *treeview;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	
+	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (dirstore));
+  	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),FALSE);
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(treeview),TRUE);
+  
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	g_object_set(renderer,"stock-size",GTK_ICON_SIZE_SMALL_TOOLBAR,NULL);
+	column = gtk_tree_view_column_new_with_attributes (_("Icon"),
+							   renderer,
+							   "pixbuf",
+							   COL_ICON,
+							   NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Directory"),
+							   renderer,
+							   "text",
+							   COL_DIRNAME,
+							   NULL);
+	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+    dir_view_window = gtk_scrolled_window_new(NULL,NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(dir_view_window),
+  		GTK_POLICY_NEVER,GTK_POLICY_AUTOMATIC);
+    gtk_container_add(GTK_CONTAINER(dir_view_window),treeview);
+    gtk_box_pack_start (GTK_BOX (main_hbox), dir_view_window, FALSE, TRUE, 0);
+
+	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
+		G_CALLBACK(tree_button_press), NULL);
+	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
+		G_CALLBACK(tree_button_release), NULL);
+	
+    gtk_widget_show_all(dir_view_window);
+	return treeview;
+}
+
+
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *hbox, *toolbar, *toolbar2;
+  GtkWidget *hbox, *toolbar, *toolbar2, *mMain;
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
@@ -1657,9 +1846,17 @@ main (int argc, char *argv[])
                               G_TYPE_STRING,
                               G_TYPE_POINTER);
   
+  dirstore = gtk_tree_store_new (N_DIRCOLUMNS,
+                                 G_TYPE_OBJECT,
+                                 G_TYPE_STRING,
+                                 G_TYPE_POINTER);
   /* main window */
   size_x = gdk_screen_width() / 2;
-  size_y = gdk_screen_height() * 2 / 3;  
+  size_y = gdk_screen_height() * 2 / 3;
+   /* if screen is large enough and landscape or if it is really large */
+  directory_browser = (((size_x > 240) && (size_y > 320) && (size_x > size_y))
+                      || (size_x > 600));
+  
   if (size_x < 240) size_x = 240;
   if (size_y < 320) size_y = 320;
   
@@ -1672,15 +1869,24 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (window);
 
+  main_hbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
+  
   vbox = gtk_vbox_new (FALSE, 0);
 
   hbox = gtk_hbox_new (FALSE, 0);
 
+  /* main menu */ 
+  mMain = create_mMain(window);
+  gtk_box_pack_start(GTK_BOX(vbox),mMain,FALSE,TRUE,0);
+  
+  /* location stuff */
   combo = gtk_combo_new ();
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
     "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
   
   view_widget = create_view_widget_list();
+  
+  dir_view_widget = create_dir_view_widget();
   
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
@@ -1730,12 +1936,13 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Goto Location"), 
 			   _("Goto Location"), _("Goto Location"), pw, 
 			   G_CALLBACK (goto_directory), NULL);
-
+  
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), main_hbox, TRUE, TRUE, 0);
 
   gpe_set_window_icon (window, "icon");
 
@@ -1782,6 +1989,7 @@ main (int argc, char *argv[])
       else
         set_directory_home (NULL);
     }
+  initialized = TRUE;  
   gtk_main();
 
   return 0;
