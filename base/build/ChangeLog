@@ -1,3 +1,9 @@
+2003-02-26  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.translation (extract-po): Add
+	"--add-comments=TRANSLATORS:" to xgettext call, so that comments
+	starting with "TRANSLATORS:" get copied to the .pot file.
+ 
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (%.desktop): Generalize from

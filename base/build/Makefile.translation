@@ -35,7 +35,7 @@ update-po: $(po-files) $(DIR_PO)/$(PACKAGE).pot extract-po
 
 extract-po:
 	mkdir -p $(DIR_PO)
-	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; xgettext -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES )
+	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; xgettext --add-comments=TRANSLATORS: -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES )
 	if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi
 
 clean-po:
