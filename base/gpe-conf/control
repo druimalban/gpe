@@ -1,0 +1,8 @@
+Package: gpe-conf
+Section: base
+Priority: optional
+Version: 0.0.1
+Architecture: arm
+Maintainer: Pierre Tardy <tardyp@free.fr>
+Depends: libgtk1.2, libgpewidget0, libgdk-pixbuf2
+Description: A set of configuration GUI
