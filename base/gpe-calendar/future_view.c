@@ -54,21 +54,20 @@ future_view_update ()
   future_events[0] = event_db_list_for_period (start, end);
       
   for (iter = future_events[0]; iter; iter = iter->next)
-  {
-	  ev = (event_t) iter->data;
-	  evd = event_db_get_details (ev);
-
-          line_info[1]=evd->description;
-          localtime_r (&(ev->start), &tm);
-  	  strftime (buf, sizeof (buf), "%F %R", &tm);
-          line_info[0]=buf;
+    {
+      ev = (event_t) iter->data;
+      evd = event_db_get_details (ev);
       
-          gtk_clist_append(GTK_CLIST(future_list), line_info);
-	  gtk_clist_set_row_data(GTK_CLIST(future_list), row, ev);
-	
-	  row++;
-	  
-  } 
+      line_info[1] = evd->summary;
+      localtime_r (&(ev->start), &tm);
+      strftime (buf, sizeof (buf), "%x %R", &tm);
+      line_info[0] = buf;
+      
+      gtk_clist_append (GTK_CLIST (future_list), line_info);
+      gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
+      
+      row++;
+    } 
        
   gtk_clist_sort (GTK_CLIST(future_list));
   gtk_clist_thaw(GTK_CLIST(future_list));
