@@ -8,17 +8,24 @@ GPE packages are available for
 <a href="http://familiar.handhelds.org/">Familiar</a>:
 </p>
 <ul>
+
 <li><a href="http://familiar.handhelds.org/familiar/feeds/unstable/packages/armv4l/">Familiar unstable feed</a></li>
+
 <li><a
-href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List of
-packages in ipkgfind</a>
+href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List
+of GPE packages</a> in <a href="http://ipkgfind.handhelds.org/">ipkgfind</a>.
+
 <li><a href="http://handhelds.org/~pb/unstable/">bootgpe2 images</a>
 (marked unstable, but work quite well)</li>
+
 </ul>
 
 <h2>Source</h2>
 <p>
 The latest development sources for GPE components can be found in the
-<a href="/cvs.shtml">GPE CVS archive</a>.
+<a href="/cvs.shtml">GPE CVS archive</a>. 
+
+Some tarballs are collected 
+<a href="ftp://ftp.handhelds.org/pub/projects/gpe/source">here</a>.
 </p>
 <!--#include virtual="includes/foot.shtml"-->
