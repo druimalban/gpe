@@ -1,3 +1,8 @@
+2003-06-21  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (extract-po): Don't blow up if there are no
+	translatable files.
+
 2003-06-12  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (update-po): Don't depend on POT file.

@@ -42,7 +42,7 @@ dist-prep: update-po
 
 extract-po:
 	mkdir -p $(DIR_PO)
-	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; xgettext --add-comments=TRANSLATORS: -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES )
+	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; if [ "x$$SOURCES" != "x" ]; then xgettext --add-comments=TRANSLATORS: -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES; fi )
 	if [ -f $(DIR_PO)/$(PACKAGE).pot.new ]; then if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi; fi
 
 clean-po:
