@@ -1,3 +1,17 @@
+2003-03-23 Paul Jakma <paul@dishone.st>
+
+        * gpe-login.c: 
+        (global): Add menu position element to locale_item_t and
+        add pointer for language option menu
+        (locale_try_user): use the found system locale item rather 
+        than the user supplied item.
+        (locale_update_menu): new function to update the lanuage menu
+        to the approriate entry for the current_locale
+        (build_lanuage_menu): adjust to use locale_update_menu
+        (set_username): remove locale stuff
+        (main): add callback to add locale_update_menu for 
+        "changed" event on username menu.
+
 2003-03-22 Paul Jakma <paul@dishone.st>
 
 	* gpe-login.c: (locale_is_system): rename to locale_item_cmp and

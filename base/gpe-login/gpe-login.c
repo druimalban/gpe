@@ -89,11 +89,13 @@ typedef struct
 {
   gchar *name;
   gchar *locale;
+  guint menu_pos;
 }
 locale_item_t;
 
 static locale_item_t *current_locale;
 static GSList *locale_system_list;
+static GtkWidget *language_menu;
 
 typedef struct
 {
@@ -155,6 +157,7 @@ static int locale_set (const char *locale);
 static void locale_free_item (locale_item_t *item);
 static int locale_item_cmp (locale_item_t *a, locale_item_t *b);
 static int locale_try_user (const char *user);
+static void locale_update_menu (GtkOptionMenu *optionmenu, gpointer *data);
 
 static void
 cleanup_children (void)
@@ -304,12 +307,7 @@ set_username (GtkWidget *widget, gpointer data)
 {
 
   current_username = (const char *)data;
-  if (locale_try_user(current_username))
-    {
-      if (DEBUG)
-        fprintf(stderr,"set_username: tried user\n");
-      /* TODO - need to update the GTK language menu entry to item->name */
-    }
+
 }
 
 
@@ -752,21 +750,29 @@ static int
 locale_try_user (const char *user)
 {
   locale_item_t *item = NULL;
+  GSList *entry;
   
   if (DEBUG)
     fprintf(stderr,"locale_try_user: user &%p\n",user);
   
   if ( (item = locale_read_user (user)) &&
-  	(g_slist_find_custom(locale_system_list, 
+  	(entry = g_slist_find_custom(locale_system_list, 
                             (gconstpointer *) (item),
                             (GCompareFunc) &locale_item_cmp)))
-    {
+    {      
+      /* free the user supplied item */
+      locale_free_item(item);
+      
+      /* set working item to validated system item */
+      item = entry->data;
+
       if (DEBUG) {
-      	fprintf(stderr,"locale_try_user: got locale %s\n",item->name);
-      }
+      	fprintf(stderr,"locale_try_user: got locale %s",item->name);
+      	fprintf(stderr," menu_pos: %d\n",item->menu_pos);
+      }      
+
+      /* update state */
       locale_set(item->locale);
-      if (current_locale)
-        locale_free_item(current_locale);
       current_locale = item;
       return 0;
     } 
@@ -774,6 +780,7 @@ locale_try_user (const char *user)
     {
       if (DEBUG)
         fprintf(stderr,"locale_try_user: no locale\n");
+      /* free user supplied item */
       if (item)
         locale_free_item(item);
       return -1;
@@ -895,13 +902,13 @@ set_current_locale (GtkWidget * widget, gpointer * data)
 }
 
 static GtkWidget *
-build_language_menu (void)
+build_language_menu ()
 {
   GtkWidget *m = gtk_menu_new ();
-  GtkWidget *option_menu = gtk_option_menu_new ();
   locale_item_t *item;
   int i = 0, nitems;
 
+  language_menu = gtk_option_menu_new ();
   locale_system_list = get_locale_list (GPE_LOCALE_ALIAS);
 
   if (!locale_system_list)
@@ -914,19 +921,46 @@ build_language_menu (void)
       while (i < nitems)
 	{
 	  item = g_slist_nth_data (locale_system_list, i);
+	  item->menu_pos = i;
+	  if (DEBUG) 
+	  	fprintf(stderr,"build_lang: menu_pos for");
+	  	fprintf(stderr," locale %s &%p set to %d\n",item->name,
+	  	        item,item->menu_pos);
 	  add_menu_callback (m, item->name, &set_current_locale,
 			     (gpointer *) item);
 	  i++;
 	}
     }
-  if (current_username && locale_try_user(current_username))
+    
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (language_menu), m);    
+    
+  if (current_username)
     {
-      /* TODO - need to update the GTK language menu entry to item->name */
+      locale_update_menu(NULL,NULL);
     }
 
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (option_menu), m);
+  /* TODO: this is now a global. no point returning it. Clean up! */
+  return language_menu;
+}
 
-  return option_menu;
+static void
+locale_update_menu (GtkOptionMenu *optionmenu, gpointer *data)
+{
+  if (DEBUG)
+    fprintf(stderr,"locale_update: changed, current user: %s\n",
+            current_username);
+  if (!locale_try_user(current_username))
+    {
+      if (DEBUG)
+      {
+        fprintf(stderr,"locale_update_menu: setting pos %d",
+                current_locale->menu_pos);
+        fprintf(stderr," current_locale: %s &%p\n",
+                current_locale->name, current_locale);
+      }
+      gtk_option_menu_set_history(GTK_OPTION_MENU(language_menu),
+                                  current_locale->menu_pos);
+    }
 }
 
 locale_item_t *
@@ -1276,6 +1310,8 @@ main (int argc, char *argv[])
 	{
 	  option = gtk_option_menu_new ();
 	  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
+	  g_signal_connect (G_OBJECT (option), "changed", 
+	                    G_CALLBACK (locale_update_menu),NULL);
 	}
 
       g_signal_connect (G_OBJECT (window), "delete_event",
