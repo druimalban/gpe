@@ -1,6 +1,6 @@
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
 CC = gcc
-MEMBERS  = main applets 
+MEMBERS  = main applets parser
 MEMBERS += unimplemented
 MEMBERS += timeanddate
 MEMBERS += appmgr_setup ../gpe-appmgr/package ../gpe-appmgr/cfg
@@ -8,6 +8,7 @@ MEMBERS += ipaqscreen/main ipaqscreen/brightness  ipaqscreen/rotation ipaqscreen
 MEMBERS += kbd
 MEMBERS += network
 MEMBERS += theme
+MEMBERS += keyctl
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
@@ -20,6 +21,13 @@ gpe-conf: $(OBJS)
 install: gpe-conf
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
 
+ipkgl:
+	cp $(HOME)/gpe-conf ./
+	cp controll distl/CONTROL/control
+	make DESTDIR=`pwd`/distl install
+	sudo chown -R root.root distl
+	ipkg-build distl
+	sudo chown -R pierre.pierre distl
 ipkg:
 	cp $(HOME)/gpe-conf ./
 	cp control dist/CONTROL/control

@@ -26,8 +26,10 @@
 
 #include "../gpe-appmgr/package.h"
 #include "../gpe-appmgr/cfg.h"
+#include "applets.h"
 
 #include "appmgr_setup.h"
+#include "gpe/errorbox.h"
 
 struct package *config=NULL;
 
@@ -36,6 +38,20 @@ GtkWidget *tab_view_icon=NULL;
 GtkWidget *tab_view_list=NULL;
 GtkWidget *auto_hide_group_labels_check=NULL;
 GtkWidget *show_recent_check=NULL;
+GtkWidget *dont_launch_check=NULL;
+
+char dont_launch_file[255];
+
+int dont_launch_exists()
+{
+  char *home = getenv("HOME");
+  if(strlen(home) > 230)
+      gpe_error_box( "bad $HOME !!");
+
+  sprintf(dont_launch_file,"%s/.dont_launch_appmgr",home);
+  
+  return file_exists(dont_launch_file);
+}
 
 void page_add (GtkVBox *vb)
 {
@@ -66,11 +82,19 @@ void page_add (GtkVBox *vb)
 				      cfg_options.show_recent_apps);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), show_recent_check);
 
+	/* Dont lauch at startup */
+	dont_launch_check =
+		gtk_check_button_new_with_label ("Dont launch at startup");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON( dont_launch_check),
+				      dont_launch_exists());
+	gtk_box_pack_start_defaults (GTK_BOX(vb), dont_launch_check);
+
 	/* Tab view type */
 	frame = gtk_frame_new ("Tab view");
 	gtk_box_pack_start_defaults (GTK_BOX(vb), frame);
 	lvbox = gtk_vbox_new (0,0);
 	gtk_container_add (GTK_CONTAINER(frame), lvbox);
+
 
 	/* ->Icon */
 	tab_view_icon = gtk_radio_button_new_with_label (NULL, "Icon");
@@ -116,6 +140,14 @@ void Appmgr_Save (void)
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(show_recent_check)))
 		package_set_data (config, "show_recent_apps", "yes");
 	else
+		package_set_data (config, "show_recent_apps", "no");
+
+
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(dont_launch_check)))
+	  system_printf("touch %s",dont_launch_file);
+	else if(file_exists(dont_launch_file))
+	  system_printf("rm %s",dont_launch_file);
+
 		package_set_data (config, "show_recent_apps", "no");
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(tab_view_icon)))

@@ -24,20 +24,6 @@ void calibrate ()
 	gpe_error_box ("you are on 386 machine!!");
 	return ; // xrandr doesnt exit on i386 dev machines!
 #endif
-
-	pid = fork();
-	if (pid == 0)
-	{
-                 execlp ("xcalibrate", "xcalibrate", 0);
-                 exit (0);
-	}
-	else if (pid > 0)
-	{
-		int status;
-	        waitpid (pid, &status, 0);
-		if (!WIFEXITED(status))
-		{
-			gpe_error_box ("xcalibrate exited abnormally");
-		}
-	}
+	if(system("xcalibrate"))
+	  gpe_error_box ("xcalibrate exited abnormally");
 }

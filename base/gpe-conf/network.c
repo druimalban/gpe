@@ -25,6 +25,7 @@
 #include "applets.h"
 #include "network.h"
 #include "gpe/errorbox.h"
+#include "parser.h"
 
 
 GtkWidget *Network_Build_Objects()
@@ -32,14 +33,11 @@ GtkWidget *Network_Build_Objects()
   FILE *pipe;
   GtkWidget *label;
   GtkWidget *table;
-  GtkWidget *frame;
   gint row = 0,col=2;
   int new=1,i, shift;
 
-  frame = gtk_frame_new (_("network interfaces:"));
 
   table = gtk_table_new(row,2,FALSE);
-  gtk_container_add (GTK_CONTAINER (frame), table);
 
   pipe = popen ("/sbin/ifconfig", "r");
   
@@ -91,6 +89,6 @@ GtkWidget *Network_Build_Objects()
       gpe_error_box( "couldn't read ifconfig stats\n");
     }
   
-  return frame;
+  return table;
 
 }

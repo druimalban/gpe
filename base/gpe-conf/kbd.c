@@ -100,22 +100,15 @@ GtkWidget *Kbd_Build_Objects()
 {  
   GtkWidget *vbox;
   GtkWidget *opt1;
-  GtkWidget *frame;
-  GtkWidget *vbox_type;
   char *user_kbdrc;
 
   vbox = gtk_vbox_new (0,0);
 
-  frame = gtk_frame_new (_("Keyboard type:"));
-  vbox_type = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (frame), vbox_type);
 
-  gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
-
-  opt1 = setup_kb (vbox_type, NULL, _("Standard"), XKBD_DIR "kbdconfig");
-  setup_kb (vbox_type, opt1, _("Tiny"), XKBD_DIR "kbdconfig.tiny");
-  setup_kb (vbox_type, opt1, _("US"), XKBD_DIR "kbdconfig.us");
-  setup_kb (vbox_type, opt1, _("Fitaly"), XKBD_DIR "kbdconfig.fitaly");
+  opt1 = setup_kb (vbox, NULL, _("Standard"), XKBD_DIR "kbdconfig");
+  setup_kb (vbox, opt1, _("Tiny"), XKBD_DIR "kbdconfig.tiny");
+  setup_kb (vbox, opt1, _("US"), XKBD_DIR "kbdconfig.us");
+  setup_kb (vbox, opt1, _("Fitaly"), XKBD_DIR "kbdconfig.fitaly");
 
   /* If the user has a config in ~/.kbdconfig, add it */
   user_kbdrc = g_strdup_printf ("%s/.kbdconfig", g_get_home_dir());

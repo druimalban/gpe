@@ -14,44 +14,26 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
+#include "gpe/errorbox.h"
 #include "xset.h"
+#include "../parser.h"
+#include "../applets.h"
 
 
 int xset_get_ss_sec()
 {
-  FILE *pipe;
-  int sec = 60,found=0;
-  pipe = popen ("xset q", "r");
-  if (pipe > 0)
+  int sec = 60;
+  if(parse_pipe("xset q","  timeout:  %5d",&sec))
     {
-      while ((feof(pipe) == 0) && ! found)
-	{
-	  char buffer[256];
-
-	  fgets (buffer, 255, pipe);
-	  if (sscanf (buffer, "  timeout:  %5d", &sec) > 0)
-	      found=1;
-	}
-      if (!found)
-	{
-	  fprintf (stderr, "can't interpret output from xset\n");
-	}
-      pclose (pipe);
-    }
-  else
-    {
-      fprintf (stderr, "couldn't read screen saver time\n");
+       gpe_error_box( "couldn't read screen saver time");
     }
   return sec;
 
 }
 void xset_set_ss_sec(int sec)
 {
-  char buf[20];
   if(sec)
-    sprintf(buf,"xset s %d",sec);
+    system_printf("xset s %d",sec);
   else
-    sprintf(buf,"xset s off");
-
-  system(buf);
+    system("xset s off");
 }

@@ -17,61 +17,11 @@
 #include <string.h>
 #include "rotation.h"
 #include "gpe/errorbox.h"
+#include "../parser.h"
+#include "../applets.h"
 
 extern int initialising;
 extern char *RotationLabels;
-int get_rotation ()
-{
-  FILE *pipe;
-  int rotation;
-#ifdef __i386__
-  return 0; // xrandr doesnt exit on i386 dev machines!
-#endif
-  pipe = popen ("xrandr", "r");
-
-  if (pipe > 0)
-    {
-      char buffer[256], buffer2[20];
-      fgets (buffer, 255, pipe);
-      rotation = -1;
-      while ((feof(pipe) == 0) && (rotation < 0))
-	{
-	  if (sscanf (buffer, "Current rotation - %20s", buffer2) > 0)
-	    {
-	      if (strcmp (buffer2, "normal") == 0)
-		{
-		  rotation = 0;
-		}
-	      else if (strcmp (buffer2, "left") == 0)
-		{
-		  rotation = 1;
-		}
-	      else if (strcmp (buffer2, "inverted") == 0)
-		{
-		  rotation = 2;
-		}
-	      else if (strcmp (buffer2, "right") == 0)
-		{
-		  rotation = 3;
-		}
-	    }
-	  fgets (buffer, 255, pipe);
-	}
-      if (rotation < 0)
-	{
-	  gpe_error_box ("can't interpret output from xrandr\n");
-	  rotation = 0;
-	}
-      pclose (pipe);
-    }
-  else
-    {
-      gpe_error_box( "couldn't read rotation\n");
-      rotation = 0;
-    }
-
-  return rotation;
-}
 
 static char *Rotations[4]=
   {
@@ -81,6 +31,30 @@ static char *Rotations[4]=
     "right"
   };
 
+int get_rotation ()
+{
+  int rotation = 0,i;
+  char buffer2[20];
+#ifdef __i386__
+  return 0; // xrandr doesnt exit on i386 dev machines!
+#endif
+
+  if(parse_pipe("xrandr" , "Current rotation - %20s" , buffer2))
+    {
+      gpe_error_box ("can't interpret output from xrandr\n");
+      rotation = 0;
+    }
+  else
+    {
+      for(i=0;i<4;i++)
+	if (strcmp (buffer2, Rotations[i]) == 0)
+	  rotation = i;
+
+    }
+  return rotation;
+}
+
+
 void set_rotation (int rotation)
 {
 #ifdef __i386__
@@ -88,17 +62,5 @@ void set_rotation (int rotation)
       return ; // xrandr doesnt exit on i386 dev machines!
 #endif
   if (initialising == 0)
-    {
-      int pid;
-       pid = fork();
-      if (pid == 0)
-	{
-	  execlp ("xrandr", "xrandr", "-o", Rotations[rotation], 0);
-	  exit (0);
-	}
-      else if (pid > 0)
-	{
-	  waitpid (pid, NULL, 0);
-	}
-    }
+    system_printf("xrandr -o %s",Rotations[rotation]);
 }

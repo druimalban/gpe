@@ -31,9 +31,8 @@ static struct
 
 void GetInternetTime()
 {
-  char buf[40];
-  sprintf(buf,"ntpdate %s",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
-  system(buf);
+  system_printf("ntpdate %s",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
+  Time_Restore();
 }
 
 GtkWidget *Time_Build_Objects()

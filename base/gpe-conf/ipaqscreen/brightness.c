@@ -23,60 +23,32 @@
 void set_brightness (int brightness)
 {
 #ifdef __i386__
-	return ; // bl doesnt exit on i386 dev machines!
+  return ; // bl doesnt exit on i386 dev machines!
 #endif
-	if (brightness == 0)
-	{
-		system ("bl off\n");
-	}
-	else
-	{
-		int pid;
-		pid = fork ();
-		if (pid == 0)
-		{
-			char s[10];
-			sprintf (s, "%d", brightness);
-			execlp ("bl", "bl", s, 0);
-			exit(0);
-		}
-		else if (pid > 0)
-		{
-			waitpid (pid, NULL, 0);
-		}
-	}
+  if (brightness == 0)
+    system ("bl off\n");
+  else
+    system_printf("bl %d",brightness);
 }
 
 int get_brightness ()
 {
   
-        FILE *pipe;
-        int brightness;
-	char state[5];
+  FILE *pipe;
+  int brightness;
+  char state[5];
 #ifdef __i386__
-	return 10; // bl doesnt exit on i386 dev machines!
+  return 10; // bl doesnt exit on i386 dev machines!
 #endif
-        pipe = popen ("bl", "r");
-
-        if (pipe > 0)
-        {
-                if (fscanf (pipe, "%4s %d", state, &brightness) <= 0)
-                {
-                        gpe_error_box ( "can't interpret output from bl\n");
-			strcpy (state, "on");
-			brightness = 255;
-                }
-                pclose (pipe);
-        }
-        else
-        {
-                gpe_error_box ( "couldn't read brightness");
-                brightness = 255;
-        }
-
-	if (strcmp (state, "off") == 0)
-	{
-		brightness = 0;
-	}
-	return brightness;
+  if( parse_pipe("bl","%4s %d",state,&brightness))
+    {
+      gpe_error_box ( "couldn't read brightness");
+      strcpy (state, "on");
+      brightness = 255;
+    }
+  if (strcmp (state, "off") == 0)
+    {
+      brightness = 0;
+    }
+  return brightness;
 }

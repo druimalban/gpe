@@ -34,15 +34,26 @@ static struct
   GtkWidget *WallPaper;
 }self;
 
+static char * matchboxpath = "/usr/share/matchbox/themes";
+static char * gtkpath = "/usr/share/themes";
+
+
+/*******************/
+/*   init stuff    */
+/*******************/
+
 char * get_cur_matchboxtheme()
 {
   FILE *pipe;
   static char cur[256];
+  return 0;
   pipe = popen ("mbcontrol -r", "r");
   
   if (pipe > 0)
     {
       fgets (cur, 255, pipe);
+      if(feof(pipe) || strlen(cur)==0) //test if mcontrol is here
+	return 0;
       cur[strlen(cur)-1] = 0; //remove the last \n
       pclose (pipe);
     }
@@ -63,11 +74,21 @@ void get_gtkrc(char *cur)
   sprintf(cur,"%s/.gtkrc",home);
 
 }
+void get_wallpaper_filename(char *cur)
+{
+  char *home = getenv("HOME");
+  if(strlen(home) > 240)
+      gpe_error_box( "bad $HOME !!");
+
+  sprintf(cur,"%s/.wallpaper",home);
+
+}
 char * get_cur_gtktheme()
 {
   FILE *f;
   static char cur[256];
   int found = 0;
+  return 0;
   get_gtkrc(cur);
   f = fopen (cur, "r");
   
@@ -102,20 +123,45 @@ char * get_cur_gtktheme()
 
 }
 
+char*
+get_wallpaper              ()
+{
+  static char buf[255];
+  FILE *f;
+  get_wallpaper_filename(buf);
+  f = fopen(buf,"r");
+  buf[0]=0;
+  if(f>0)
+    {
+      fgets(buf,255,f);
+      fclose(f);
+    }
+  return buf;
+}
+int gtk_entry_test(char *path)
+{
+  char buf[256];
+  if(strlen(path)< 256 - 10)
+    {
+      sprintf(buf,"%s/gtk/gtkrc",path);
+      return file_exists(buf);
+    }
+  return 0;
+}
+
+
+/*******************/
+/*  Changing stuff */
+/*******************/
+
 void
 on_matchbox_entry_changed              (GtkWidget     *menu,
                                         gpointer         user_data)
 {
-
-  GtkWidget *active=gtk_menu_get_active(GTK_MENU(menu));
-  char * fullpath= gtk_object_get_data(GTK_OBJECT(active),"fullpath");
-  char buf[255];
-  //  fork_exec("mbcontrol" "-t" fullpath); TODO
-  sprintf(buf,"mbcontrol -t %s",fullpath);
-#if __i386__
-  printf("%s\n",buf);
-#else
-  system(buf);
+#if ! __i386__
+  system_printf("mbcontrol -t %s",gtk_object_get_data(GTK_OBJECT(
+								 gtk_menu_get_active(GTK_MENU(menu))
+								 ),"fullpath"));
 #endif
 
 }
@@ -149,26 +195,43 @@ on_gtk_entry_changed              (GtkWidget     *menu,
       gdk_flush ();
     }
 }
-int gtk_entry_test(char *path)
+
+static void File_Selected(char *file, gpointer data)
 {
-  char buf[256];
-  if(strlen(path)< 256 - 10)
+  gtk_entry_set_text(GTK_ENTRY(self.WallPaper),file);
+}
+void
+choose_wallpaper              (GtkWidget     *button,
+			       gpointer         user_data)
+{
+  ask_user_a_file(getenv("HOME"),NULL,File_Selected,NULL,NULL);
+
+}
+void Theme_Save()
+{
+  char *file = gtk_entry_get_text(GTK_ENTRY(self.WallPaper));
+  char configfile[255];
+  FILE * f;
+  get_wallpaper_filename(configfile);
+  if(file[0])
     {
-      sprintf(buf,"%s/gtk/gtkrc",path);
-      return file_exists(buf);
+      f = fopen (configfile,"w");
+      printf("%s<-%s\n",configfile,file);
+      if(f>0)
+	{
+	  fprintf(f,file);
+	  fclose(f);
+	}
     }
-  return 0;
 }
-int void_entry_test(char *path)
-{
-  return 1;
-}
-static char * matchboxpath = "/usr/share/matchbox/themes";
-static char * gtkpath = "/usr/share/themes";
+
+
+/****************/
+/*  interface   */
+/****************/
 
 GtkWidget *Theme_Build_Objects()
 {
-  GtkWidget *frame;
   GtkWidget *table;
   GtkWidget *label;
   GtkWidget *button;
@@ -176,11 +239,8 @@ GtkWidget *Theme_Build_Objects()
   GtkWidget *hbox2;
   GtkWidget *menu ;
  
-  frame = gtk_frame_new (_("global apparence:"));
 
   table = gtk_table_new(3,2,FALSE);
-  gtk_container_add (GTK_CONTAINER (frame), table);
-    
   label = gtk_label_new(_("Matchbox Theme:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
 		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
@@ -190,8 +250,7 @@ GtkWidget *Theme_Build_Objects()
   self.MatchboxMenu = gtk_option_menu_new();
   gtk_container_add(GTK_CONTAINER(hbox2),self.MatchboxMenu);
 
-  menu =  make_menu_from_dir (matchboxpath, &void_entry_test, get_cur_matchboxtheme() );
-
+  menu =  make_menu_from_dir (matchboxpath, NULL, get_cur_matchboxtheme() );
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.MatchboxMenu),menu);
 
   gtk_table_attach (GTK_TABLE (table), hbox2, 1, 2, 0, 1,
@@ -226,22 +285,26 @@ GtkWidget *Theme_Build_Objects()
                       NULL);
 
 
+
   label = gtk_label_new(_("WallPaper:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+ 		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
   hbox = gtk_hbox_new(FALSE,0);
   gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 2, 3,
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
-/*
-  self.WallPaper = gtk_entry_new();
-  gtk_entry_set_text(GTK_ENTRY(self.WallPaper),"/home/pierre/toto.png");
+	 	    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+		     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+  self.WallPaper  = gtk_entry_new();
+  gtk_entry_set_text(GTK_ENTRY(self.WallPaper),get_wallpaper());
   gtk_container_add(GTK_CONTAINER(hbox),self.WallPaper);
-  hbox2 = gtk_hbutton_box_new();
   button = gtk_button_new_with_label("...");
-  gtk_container_add(GTK_CONTAINER(hbox2),button);
-  gtk_container_add(GTK_CONTAINER(hbox),hbox2);
-*/
-  return frame;
+
+  gtk_container_add(GTK_CONTAINER(hbox),button);
+  gtk_widget_set_usize (button, 20, 20);
+
+  gtk_signal_connect (GTK_OBJECT (button), "clicked",
+                      GTK_SIGNAL_FUNC (choose_wallpaper),
+                      NULL);
+
+  return table;
 }

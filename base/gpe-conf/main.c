@@ -29,6 +29,7 @@
 #include "kbd.h"
 #include "network.h"
 #include "theme.h"
+#include "keyctl.h"
 
 
 #include "gpe/init.h"
@@ -39,11 +40,13 @@
 
 #define VERSION "0.0.1"
 
+GtkStyle *wstyle;
 static struct {
   GtkWidget *w;
 
   GtkWidget *applet;
   GtkWidget *vbox;
+  GtkWidget *frame;
 
   GtkWidget *save;
   GtkWidget *cancel;
@@ -55,23 +58,25 @@ static struct {
 
 struct Applet applets[]=
   {
-    { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time"},
-    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr"},
-    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm"},
-    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Unimplemented_Restore , "Keyboard" ,"keyboard"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse"},
-    { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software"},
-    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Theme" ,"theme"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WallPaper" ,"wallpaper"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WindowMgr" ,"windowmanager"}
+    { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time" ,"Time and Date:"},
+    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr", "Gpe-appmgr Setup:"},
+    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup:"},
+    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Unimplemented_Restore , "vKeyboard" ,"keyboard", "Virtual Keyboard type:"},
+    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Unimplemented_Restore , "Buttons" ,"keyctl", "Buttons Configuration:"},
+    { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Adresses:"},
+    { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global apparence:"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup:"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Config:"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver config:"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software","Adding and Removing Program:"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WallPaper" ,"wallpaper","Wallpaper:"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "WindowMgr" ,"windowmanager","WindowManager:"}
   };
-static struct gpe_icon my_icons[] = {
+struct gpe_icon my_icons[] = {
   { "save" },
   { "cancel" },
+  { "ipaq" },
   { NULL, NULL }
 };
 
@@ -104,13 +109,13 @@ void item_select(GtkWidget *ignored, gpointer user_data)
     {
       gtk_widget_hide(self.applet);
       // TODO there must be a memory leak here..
-      gtk_container_remove(GTK_CONTAINER(self.vbox),self.applet);
+      gtk_container_remove(GTK_CONTAINER(self.frame),self.applet);
     }
   self.cur_applet = i;
 
   self.applet = applets[i].Build_Objects();
-  gtk_box_pack_start(GTK_BOX(self.vbox),self.applet,TRUE, TRUE, 0);
-
+  gtk_container_add(GTK_CONTAINER(self.frame),self.applet);
+  gtk_frame_set_label(GTK_FRAME(self.frame),applets[i].frame_label);
   gtk_widget_show_all(self.applet);
   gtk_widget_show(self.save);
   gtk_widget_show(self.cancel);
@@ -126,6 +131,7 @@ void initwindow()
 
    // main window
    self.w=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+   wstyle = self.w->style;
    gtk_window_set_title(GTK_WINDOW(self.w),"GPE-Conf " VERSION);
    gtk_widget_set_usize(GTK_WIDGET(self.w),240, 300);
 
@@ -138,17 +144,23 @@ void initwindow()
 
 
 }
-void make_buttons()
+void make_container()
 {
   GtkWidget *hbuttons;
-  hbuttons = gtk_hbutton_box_new();
+
+  self.frame = gtk_frame_new ("About GPE-Conf:");
+  gtk_widget_set_usize (self.frame, 240, 250);
+
+  gtk_box_pack_start(GTK_BOX(self.vbox),self.frame,TRUE, TRUE, 0);
+
+  hbuttons = gtk_hbox_new(TRUE,0);
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons,TRUE, TRUE, 0);
 
-  self.save = gpe_picture_button (self.w->style, ("Save"), "save");
-  gtk_container_add(GTK_CONTAINER(hbuttons),self.save);
-
   self.cancel = gpe_picture_button (self.w->style, ("Cancel"), "cancel");
-  gtk_container_add(GTK_CONTAINER(hbuttons),self.cancel);
+  gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,TRUE, TRUE, 0);
+
+  self.save = gpe_picture_button (self.w->style, ("Save"), "save");
+  gtk_box_pack_start(GTK_BOX(hbuttons),self.save,TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
 		      (GtkSignalFunc) Save_Callback, NULL);
@@ -186,10 +198,11 @@ void main_all()
   self.vbox = gtk_vbox_new(FALSE,0);
   gtk_paned_add2(GTK_PANED(split),self.vbox);
 
-  self.applet = gtk_label_new("Gpe Configuration \n by Pierre Tardy\n\n inspired of sysset \nby James Weatheral..");
-  gtk_box_pack_start(GTK_BOX(self.vbox),self.applet,TRUE, TRUE, 0);
   
-  make_buttons();
+  make_container();
+
+  self.applet = gtk_label_new("Gpe Configuration \n by Pierre Tardy\n\n inspired of sysset \nby James Weatheral..");
+  gtk_container_add(GTK_CONTAINER(self.frame),self.applet);
 
   ntree =  gtk_tree_new();
   gtk_widget_show(ntree);
@@ -235,7 +248,7 @@ void main_one(int argc, char **argv,int applet)
   self.cur_applet = -1;
   self.applet = NULL;
 
-  make_buttons();
+  make_container();
 
 
   gtk_widget_show_all(self.w);
