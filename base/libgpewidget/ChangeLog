@@ -1,3 +1,33 @@
+2004-05-27  Philip Blundell  <philb@gnu.org>
+
+	* gpewindowbits.c (gpe_get_wm_leader): New function.
+	(gpe_get_window_property): Likewise.
+	* gpewindowlist.c (struct _GPEWindowListClass): Add window-added
+	and window-removed signals.
+	(gpe_window_list_emit_list_changed,
+	gpe_window_list_emit_active_window_changed,
+	gpe_window_list_emit_window_added,
+	gpe_window_list_emit_window_removed): New functions.
+	(window_cmp, add_window_before, remove_window, do_get_clients,
+	gpe_window_list_changed): Likewise.
+	(gpe_window_list_list_changed,
+	gpe_window_list_active_window_changed): Deleted.
+	(gpe_window_list_class_init): Register new signals.
+	(gpe_window_list_get_clients): Return GList*.
+	(gpe_window_list_new): Call gpe_window_list_changed.
+	(window_filter): Keep in step with signal changes.
+	* gpe/gpewindowlist.h (gpe_get_wm_leader,
+	gpe_get_window_property): New prototypes.
+	(struct _GPEWindowList): Add windows.
+	(gpe_window_list_get_clients): Return GList*.
+
+2004-05-23  Philip Blundell  <philb@gnu.org>
+
+	* gpewindowbits.c (gpe_get_wm_class): New function.
+	(gpe_get_window_name): Improve error handling.
+	(gpe_get_window_icon): Likewise.
+	* gpe/gpewindowlist.h (gpe_get_wm_class): New prototype.
+
 2004-05-22  Philip Blundell  <philb@gnu.org>
 
 	* gpewindowlist.c (gpe_window_list_get_clients): New function.

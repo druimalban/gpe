@@ -30,6 +30,8 @@ struct _GPEWindowList
   GdkScreen *screen;
   Atom net_client_list_atom;
   Atom net_active_window_atom;
+
+  GList *windows;
 };
 
 typedef struct _GPEWindowList	      GPEWindowList;
@@ -39,12 +41,18 @@ GtkType		 gpe_window_list_get_type (void);
 
 GObject         *gpe_window_list_new (GdkScreen *);
 
-gboolean         gpe_window_list_get_clients (GPEWindowList *, Window **, guint *nr);
+extern GList    *gpe_window_list_get_clients (GPEWindowList *);
 
 extern gboolean  gpe_get_client_window_list (Display *dpy, Window **list, guint *nr);
 
 extern gchar    *gpe_get_window_name (Display *dpy, Window w);
 
 extern GdkPixbuf *gpe_get_window_icon (Display *dpy, Window w);
+
+extern gboolean	 gpe_get_wm_class (Display *dpy, Window w, gchar **instance, gchar **class);
+
+extern Atom      gpe_get_window_property (Display *dpy, Window w, Atom property);
+
+extern Window	 gpe_get_wm_leader (Display *dpy, Window w);
 
 #endif

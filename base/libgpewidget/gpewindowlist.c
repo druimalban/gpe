@@ -18,6 +18,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include <glib.h>
 #include <gdk/gdk.h>
@@ -29,16 +30,139 @@
 
 #include "gpewindowlist.h"
 
-static guint my_signals[2];
+static guint my_signals[4];
 
 struct _GPEWindowListClass 
 {
   GObjectClass parent_class;
-  void (*list_changed)           (GPEWindowList *sm);
-  void (*active_window_changed)  (GPEWindowList *sm);
+
+  void (*list_changed)           (GPEWindowList *);
+  void (*active_window_changed)  (GPEWindowList *);
+
+  void (*window_added)		 (GPEWindowList *, Window w);
+  void (*window_removed)	 (GPEWindowList *, Window w);
 };
 
 static GdkFilterReturn window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d);
+
+static void
+gpe_window_list_emit_list_changed (GPEWindowList *i)
+{
+  g_signal_emit (G_OBJECT (i), my_signals[0], 0);
+}
+
+static void
+gpe_window_list_emit_active_window_changed (GPEWindowList *i)
+{
+  g_signal_emit (G_OBJECT (i), my_signals[1], 0);
+}
+
+static void
+gpe_window_list_emit_window_added (GPEWindowList *i, Window w)
+{
+  g_signal_emit (G_OBJECT (i), my_signals[2], 0, w);
+}
+
+static void
+gpe_window_list_emit_window_removed (GPEWindowList *i, Window w)
+{
+  g_signal_emit (G_OBJECT (i), my_signals[3], 0, w);
+}
+
+static int
+window_cmp (const void *a, const void *b)
+{
+  return (*(Window *)a) - (*(Window *)b);
+}
+
+static GList *
+remove_window (GPEWindowList *list, GList *link)
+{
+  GList *next = link->next;
+
+  gpe_window_list_emit_window_removed (list, (Window)link->data);
+
+  list->windows = g_list_remove_link (list->windows, link);
+  g_list_free (link);
+
+  return next;
+}
+
+static void
+add_window_before (GPEWindowList *list, GList *p, Window x)
+{
+  list->windows = g_list_insert_before (list->windows, p, (void *)x);
+
+  gpe_window_list_emit_window_added (list, x);
+}
+
+static gboolean
+do_get_clients (GPEWindowList *list, Window **ret, guint *nr)
+{
+  GdkWindow *root;
+  Atom actual_type;
+  int actual_format;
+  unsigned long nitems, bytes_after = 0;
+  char *prop = NULL;
+
+  root = gdk_screen_get_root_window (list->screen);
+
+  if (XGetWindowProperty (GDK_WINDOW_XDISPLAY (root), GDK_WINDOW_XID (root), 
+			  list->net_client_list_atom,
+			  0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
+			  &nitems, &bytes_after, (unsigned char **)&prop) != Success)
+    return FALSE;
+
+  *nr = (guint)nitems;
+  *ret = g_malloc0 (sizeof (Window) * nitems);
+  memcpy (*ret, prop, sizeof (Window) * nitems);
+
+  XFree (prop);
+  return TRUE;
+}
+
+static void
+gpe_window_list_changed (GPEWindowList *list)
+{
+  Window *new_list;
+  guint nr, i;
+  GList *p;
+
+  if (do_get_clients (list, &new_list, &nr) == FALSE)
+    return;
+
+  qsort (new_list, nr, sizeof (Window), window_cmp);
+
+  for (i = 0, p = list->windows; i < nr;)
+    {
+      Window x;
+      Window y;
+
+      x = new_list[i];
+      y = p ? ((Window)p->data) : None;
+
+      if (x == y)
+	{
+	  i++;
+	  p = p->next;
+	  continue;
+	}
+
+      if (x < y || y == None)
+	{
+	  add_window_before (list, p, x);
+	  i++;
+	  continue;
+	}
+
+      p = remove_window (list, p);
+    }
+
+  while (p)
+    p = remove_window (list, p);
+
+  g_free (new_list);
+}
 
 static void
 gpe_window_list_init (GPEWindowList *list)
@@ -75,18 +199,6 @@ gpe_window_list_fini (GPEWindowList *list)
 }
 
 static void
-gpe_window_list_list_changed (GPEWindowList *i)
-{
-  g_signal_emit (G_OBJECT (i), my_signals[0], 0);
-}
-
-static void
-gpe_window_list_active_window_changed (GPEWindowList *i)
-{
-  g_signal_emit (G_OBJECT (i), my_signals[1], 0);
-}
-
-static void
 gpe_window_list_class_init (GPEWindowListClass * klass)
 {
   my_signals[0] = g_signal_new ("list-changed",
@@ -101,6 +213,22 @@ gpe_window_list_class_init (GPEWindowListClass * klass)
 				G_TYPE_FROM_CLASS (klass),
 				G_SIGNAL_RUN_LAST,
 				G_STRUCT_OFFSET (struct _GPEWindowListClass, active_window_changed),
+				NULL, NULL,
+				gtk_marshal_VOID__INT,
+				G_TYPE_NONE, 0);
+
+  my_signals[2] = g_signal_new ("window-added",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (struct _GPEWindowListClass, window_added),
+				NULL, NULL,
+				gtk_marshal_VOID__INT,
+				G_TYPE_NONE, 1, G_TYPE_INT);
+
+  my_signals[3] = g_signal_new ("window-removed",
+				G_TYPE_FROM_CLASS (klass),
+				G_SIGNAL_RUN_LAST,
+				G_STRUCT_OFFSET (struct _GPEWindowListClass, window_removed),
 				NULL, NULL,
 				gtk_marshal_VOID__INT,
 				G_TYPE_NONE, 1, G_TYPE_INT);
@@ -135,10 +263,15 @@ GObject *
 gpe_window_list_new (GdkScreen *screen)
 {
   GObject *obj;
+  GPEWindowList *list;
 
   obj = g_object_new (gpe_window_list_get_type (), NULL);
 
-  gpe_window_list_setup_for_screen (GPE_WINDOW_LIST (obj), screen);
+  list = GPE_WINDOW_LIST (obj);
+
+  gpe_window_list_setup_for_screen (list, screen);
+
+  gpe_window_list_changed (list);
 
   return obj;
 }
@@ -152,35 +285,19 @@ window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
   if (ev->xany.type == PropertyNotify)
     {
       if (ev->xproperty.atom == list->net_client_list_atom)
-	gpe_window_list_list_changed (list);
+	{
+	  gpe_window_list_changed (list);
+	  gpe_window_list_emit_list_changed (list);
+	}
       else if (ev->xproperty.atom == list->net_active_window_atom)
-	gpe_window_list_active_window_changed (list);
+	gpe_window_list_emit_active_window_changed (list);
     }
 
   return GDK_FILTER_CONTINUE;
 }
 
-gboolean
-gpe_window_list_get_clients (GPEWindowList *list, Window **ret, guint *nr)
+GList *
+gpe_window_list_get_clients (GPEWindowList *list)
 {
-  GdkWindow *root;
-  Atom actual_type;
-  int actual_format;
-  unsigned long nitems, bytes_after = 0;
-  unsigned char *prop = NULL;
-
-  root = gdk_screen_get_root_window (list->screen);
-
-  if (XGetWindowProperty (GDK_WINDOW_XDISPLAY (root), GDK_WINDOW_XID (root), 
-			  list->net_client_list_atom,
-			  0, G_MAXLONG, False, XA_WINDOW, &actual_type, &actual_format,
-			  &nitems, &bytes_after, &prop) != Success)
-    return FALSE;
-
-  *nr = (guint)nitems;
-  *ret = g_malloc0 (sizeof (Window) * nitems);
-  memcpy (*ret, prop, sizeof (Window) * nitems);
-
-  XFree (prop);
-  return TRUE;
+  return list->windows;
 }

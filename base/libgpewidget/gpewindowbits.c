@@ -31,14 +31,15 @@
 
 static gboolean initialized;
 
-static Atom atoms[5];
+static Atom atoms[6];
 static char *atom_names[] = 
   {
     "_NET_CLIENT_LIST",
     "_NET_WM_NAME",
     "_NET_WM_ICON",
     "UTF8_STRING",
-    "_NET_ACTIVE_WINDOW"
+    "_NET_ACTIVE_WINDOW",
+    "WM_CLIENT_LEADER"
   };
 
 #define _NET_CLIENT_LIST 0
@@ -46,6 +47,7 @@ static char *atom_names[] =
 #define _NET_WM_ICON 2
 #define UTF8_STRING 3
 #define _NET_ACTIVE_WINDOW 4
+#define WM_CLIENT_LEADER 5
 
 static void
 initialize (Display *dpy)
@@ -53,7 +55,7 @@ initialize (Display *dpy)
   if (initialized)
     return;
 
-  XInternAtoms (dpy, atom_names, 5, False, atoms);
+  XInternAtoms (dpy, atom_names, sizeof (atoms) / sizeof (atoms[0]), False, atoms);
 
   initialized = TRUE;
 }
@@ -84,6 +86,92 @@ gpe_get_client_window_list (Display *dpy, Window **list, guint *nr)
 
 link_warning (gpe_get_client_window_list, "gpe_get_client_window_list is obsolescent: use GPEWindowList instead");
 
+gboolean
+gpe_get_wm_class (Display *dpy, Window w, gchar **instance, gchar **class)
+{
+  Atom actual_type;
+  int actual_format;
+  unsigned long nitems, bytes_after;
+  unsigned char *prop = NULL;
+  int rc;
+
+  initialize (dpy);
+
+  gdk_error_trap_push ();
+
+  rc = XGetWindowProperty (dpy, w, XA_WM_CLASS,
+			  0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
+			  &nitems, &bytes_after, &prop);
+
+  if (gdk_error_trap_pop () || rc != Success)
+    return FALSE;
+
+  if (instance)
+    *instance = g_strdup (prop);
+  if (class)
+    *class = g_strdup (prop + strlen (prop) + 1);
+  XFree (prop);
+  return TRUE;
+}
+
+Window
+gpe_get_wm_leader (Display *dpy, Window w)
+{
+  Window result = None;
+  Atom actual_type;
+  int actual_format;
+  unsigned long nitems, bytes_after;
+  unsigned char *prop = NULL;
+  int rc;
+
+  initialize (dpy);
+
+  gdk_error_trap_push ();
+
+  rc = XGetWindowProperty (dpy, w, atoms[WM_CLIENT_LEADER],
+			  0, 1, False, XA_WINDOW, &actual_type, &actual_format,
+			  &nitems, &bytes_after, &prop);
+
+  if (gdk_error_trap_pop () || rc != Success)
+    return None;
+
+  if (prop)
+    {
+      memcpy (&result, prop, sizeof (result));
+      XFree (prop);
+    }
+  return result;
+}
+
+Atom
+gpe_get_window_property (Display *dpy, Window w, Atom property)
+{
+  Atom result = None;
+  Atom actual_type;
+  int actual_format;
+  unsigned long nitems, bytes_after;
+  unsigned char *prop = NULL;
+  int rc;
+
+  initialize (dpy);
+
+  gdk_error_trap_push ();
+
+  rc = XGetWindowProperty (dpy, w, property,
+			  0, 1, False, XA_ATOM, &actual_type, &actual_format,
+			  &nitems, &bytes_after, &prop);
+
+  if (gdk_error_trap_pop () || rc != Success)
+    return None;
+
+  if (prop)
+    {
+      memcpy (&result, prop, sizeof (result));
+      XFree (prop);
+    }
+  return result;
+}
+
 gchar *
 gpe_get_window_name (Display *dpy, Window w)
 {
@@ -102,10 +190,8 @@ gpe_get_window_name (Display *dpy, Window w)
 			  0, G_MAXLONG, False, atoms[UTF8_STRING], &actual_type, &actual_format,
 			  &nitems, &bytes_after, &prop);
 
-  gdk_error_trap_pop ();
-
-  if (rc != Success)
-    return FALSE;
+  if (gdk_error_trap_pop () || rc != Success)
+    return NULL;
 
   if (nitems)
     {
@@ -120,10 +206,7 @@ gpe_get_window_name (Display *dpy, Window w)
 			       0, G_MAXLONG, False, XA_STRING, &actual_type, &actual_format,
 			       &nitems, &bytes_after, &prop);
 
-      if (gdk_error_trap_pop ())
-	return FALSE;
-
-      if (rc != Success)
+      if (gdk_error_trap_pop () || rc != Success)
 	return FALSE;
 
       if (nitems)
@@ -142,7 +225,7 @@ gpe_get_window_icon (Display *dpy, Window w)
   Atom actual_type;
   int actual_format;
   unsigned long nitems, bytes_after;
-  gulong *prop = NULL;
+  unsigned char *data = NULL;
   int rc;
   GdkPixbuf *pixbuf = NULL;
 
@@ -152,16 +235,14 @@ gpe_get_window_icon (Display *dpy, Window w)
 
   rc = XGetWindowProperty (dpy, w, atoms[_NET_WM_ICON],
 			  0, G_MAXLONG, False, XA_CARDINAL, &actual_type, &actual_format,
-			  &nitems, &bytes_after, (guchar **)&prop);
+			  &nitems, &bytes_after, &data);
 
-  if (gdk_error_trap_pop ())
-    return FALSE;
-
-  if (rc != Success)
-    return FALSE;
+  if (gdk_error_trap_pop () || rc != Success)
+    return NULL;
 
   if (nitems)
     {
+      guint *prop = (guint *)data;
       guint w = prop[0], h = prop[1];
       guint i;
       guchar *pixels = g_malloc (w * h * 4);
@@ -186,8 +267,8 @@ gpe_get_window_icon (Display *dpy, Window w)
 					 NULL);
     }
 
-  if (prop)
-    XFree (prop);
+  if (data)
+    XFree (data);
 
   return pixbuf;
 }
