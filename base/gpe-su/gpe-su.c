@@ -18,6 +18,7 @@
 #include "pixmaps.h"
 #include "init.h"
 #include "render.h"
+#include "picturebutton.h"
 
 static struct pix my_pix[] = {
   { "keys", "keys" },
@@ -31,31 +32,6 @@ static struct gpe_icon my_icons[] = {
 };
 
 #define _(x) gettext(x)
-
-static GtkWidget *
-picture_button (GtkStyle *style, gchar *text, gchar *icon)
-{
-  GdkPixbuf *p = gpe_find_icon (icon);
-  GtkWidget *button = gtk_button_new ();
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *label = gtk_label_new (text);
-
-  if (p)
-    {
-      GtkWidget *pw = gpe_render_icon (style, p);
-      gtk_box_pack_start (GTK_BOX (hbox), pw, FALSE, FALSE, 4);
-      gtk_widget_show (pw);
-    }
-  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
-
-  gtk_widget_show (hbox);
-  gtk_widget_show (label);
-  gtk_widget_show (button);
-
-  gtk_container_add (GTK_CONTAINER (button), hbox);
-
-  return button;
-}
 
 int
 main(int argc, char *argv[])
@@ -110,8 +86,8 @@ main(int argc, char *argv[])
 
   gtk_widget_realize (window);
 
-  buttonok = picture_button (window->style, _("OK"), "ok");
-  buttoncancel = picture_button (window->style, _("Cancel"), "cancel");
+  buttonok = gpe_picture_button (window->style, _("OK"), "ok");
+  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
 		      buttoncancel, TRUE, TRUE, 0);
