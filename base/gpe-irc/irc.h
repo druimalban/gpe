@@ -11,15 +11,6 @@ typedef struct
 {
   gchar *name;
   GString *text;
-  gchar *topic;
-  GtkWidget *button;
-  GList *users;
-} IRCChannel;
-
-typedef struct
-{
-  gchar *name;
-  GString *text;
   int fd;
   GIOChannel *io_channel;
   gboolean connected;
@@ -27,6 +18,16 @@ typedef struct
   GtkWidget *button;
   IRCUserInfo *user_info;
 } IRCServer;
+
+typedef struct
+{
+  gchar *name;
+  IRCServer *server;
+  GString *text;
+  gchar *topic;
+  GtkWidget *button;
+  GList *users;
+} IRCChannel;
 
 enum irc_type
 {

@@ -23,6 +23,8 @@
 #include <gpe/question.h>
 
 #include "irc.h"
+#include "irc_input.h"
+#include "dictionary.h"
 
 #define WINDOW_NAME "IRC Client"
 #define _(_x) gettext (_x)
@@ -36,6 +38,8 @@ struct gpe_icon my_icons[] = {
   { "stop", "stop" },
   { "error", "error" },
   { "globe", "irc/globe" },
+  { "quote", "irc/quote" },
+  { "smiley_happy", "irc/smileys/happy" },
   { "icon", PREFIX "/share/pixmaps/gpe-irc.png" },
   {NULL, NULL}
 };
@@ -57,6 +61,10 @@ GtkWidget *users_tree_view, *users_scroll;
 GtkTextBuffer *text_buffer;
 GtkWidget *scroll;
 
+IRCServer *selected_server;
+IRCChannel *selected_channel;
+GtkWidget *selected_button;
+
 void
 toggle_users_list ()
 {
@@ -75,11 +83,6 @@ toggle_users_list ()
     users_list_visible = TRUE;
   }
 }
-
-gchar *selected_type;
-IRCServer *selected_server;
-IRCChannel *selected_channel;
-GtkWidget *selected_button;
 
 void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
@@ -159,7 +162,7 @@ void
 button_clicked (GtkWidget *button)
 {
   IRCServer *server;
-  //IRCChannel *channel;
+  IRCChannel *channel;
 
   if (button != selected_button)
   {
@@ -169,11 +172,59 @@ button_clicked (GtkWidget *button)
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
       selected_button = button;
       selected_server = server;
+      selected_channel = NULL;
       clear_text_view ();
       //printf ("Button's text passed: %s\n", server->text->str);
       update_text_view (server->text);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
     }
+    else
+    {
+      channel = gtk_object_get_data (GTK_OBJECT (button), "IRChannel");
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
+      selected_button = button;
+      selected_server = channel->server;
+      selected_channel = channel;
+      clear_text_view ();
+      //printf ("Button's text passed: %s\n", server->text->str);
+      update_text_view (channel->text);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+    }
+  }
+}
+
+void
+join_channel (IRCServer *server, gchar *channel_name)
+{
+  IRCChannel *channel;
+  GtkWidget *button;
+
+  if (channel_name[0] == '#' || channel_name[0] == '&')
+  {
+    irc_server_join_channel (server, channel_name);
+
+    channel = g_malloc (sizeof (*channel));
+    channel->name = g_strdup (channel_name);
+    server->text = g_string_new ("");
+    selected_channel = channel;
+
+    clear_text_view ();
+
+    if (selected_button)
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (selected_button), FALSE);
+
+    button = gtk_toggle_button_new_with_label (channel->name);
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
+    gtk_box_pack_start (GTK_BOX (main_button_hbox), button, FALSE, FALSE, 0);
+    gtk_object_set_data (GTK_OBJECT (button), "type", (gpointer) IRC_CHANNEL);
+    gtk_object_set_data (GTK_OBJECT (button), "IRCChannel", (gpointer) channel);
+    gtk_signal_connect (GTK_OBJECT (button), "clicked", GTK_SIGNAL_FUNC (button_clicked), NULL);
+    gtk_widget_show (button);
+
+    channel->button = button;
+    selected_button = button;
+
+    g_hash_table_insert (server->channel, (gpointer) channel->name, (gpointer) channel);
   }
 }
 
@@ -182,6 +233,9 @@ quit_channel (IRCServer *server, IRCChannel *channel)
 {
   irc_part (server, channel->name, "GPE IRC");
   gtk_widget_destroy (channel->button);
+  g_hash_table_remove (server->channel, (gconstpointer) channel->name);
+  g_free (channel);
+  selected_channel = NULL;
   button_clicked (server->button);
 }
 
@@ -189,6 +243,12 @@ void
 quit_channel_from_hash (gpointer key, gpointer value, gpointer data)
 {
   quit_channel ((IRCServer *) data, (IRCChannel *) value);
+}
+
+void
+update_channel_text_from_hash (gpointer key, gpointer value, gpointer data)
+{
+  ((IRCServer *) value)->text = g_string_append (((IRCServer *) value)->text, ((GString *) data)->str);
 }
 
 void
@@ -249,11 +309,16 @@ get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 
   if (g_io_channel_read_line_string (source, new_text, NULL, NULL) == G_IO_STATUS_NORMAL)
   {
+    ((IRCServer *) data)->text = g_string_append (((IRCServer *) data)->text, new_text->str);
+    g_hash_table_foreach (((IRCServer *) data)->channel, update_channel_text_from_hash, (gpointer) new_text);
+
     if (data == selected_server)
     {
-      update_text_view (new_text);
+      if (selected_channel == NULL)
+        update_text_view (new_text);
+      else
+	update_text_view (selected_channel->text);
     }
-    ((IRCServer *) data)->text = g_string_append (((IRCServer *) data)->text, new_text->str);
   }
 
   return TRUE;
@@ -409,7 +474,7 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *vbox, *hbox, *users_button_vbox, *users_button_label, *hsep;
-  GtkWidget *users_button, *close_button, *new_connection_button;
+  GtkWidget *users_button, *close_button, *new_connection_button, *quick_button, *smiley_button;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
 
@@ -463,6 +528,8 @@ main (int argc, char *argv[])
 
   close_button = gpe_picture_button (main_button_hbox->style, NULL, "close");
   new_connection_button = gpe_picture_button (hbox->style, NULL, "globe");
+  quick_button = gpe_picture_button (hbox->style, NULL, "quote");
+  smiley_button = gpe_picture_button (hbox->style, NULL, "smiley_happy");
   users_button = gtk_button_new ();
 
   gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
@@ -474,6 +541,8 @@ main (int argc, char *argv[])
 
   users_button_label = gtk_label_new ("u\ns\ne\nr\ns");
   gtk_misc_set_alignment (GTK_MISC (users_button_label), 0.5, 0.5);
+
+  irc_input_create ("dictionary", quick_button, smiley_button, main_entry);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (main_text_view));
@@ -490,6 +559,8 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (main_hbox), scroll, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), users_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_hbox), users_scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), quick_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), smiley_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), main_entry, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), new_connection_button, FALSE, FALSE, 0);
 
