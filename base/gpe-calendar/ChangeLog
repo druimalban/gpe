@@ -1,3 +1,11 @@
+2004-02-08  Howell Tam	<pigeon@pigeond.net>
+	* event-ui.c: Recurring page now shows corresponding fields properly.
+	* day_popup.c: Likewise.
+	* day_view.c: Likewise.
+	* future_view.c: Likewise.
+	* main.c: Likewise.
+	* event-ui.c: Recurrence page now in a scrolled window.
+
 2003-10-19  Philip Blundell  <philb@gnu.org>
 
 	* Makefile: Don't link with -lsqlite.  Use STANDARD_CFLAGS,
