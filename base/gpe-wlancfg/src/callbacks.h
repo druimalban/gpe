@@ -284,3 +284,7 @@ gboolean
 on_SchemeList_button_press_event       (GtkWidget       *widget,
                                         GdkEventButton  *event,
                                         gpointer         user_data);
+
+void
+on_ChannelNr_changed                   (GtkEditable     *editable,
+                                        gpointer         user_data);

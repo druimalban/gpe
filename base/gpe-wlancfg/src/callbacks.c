@@ -636,7 +636,6 @@ void
 on_Channe_lNr_changed                  (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-	HasChanged = TRUE;
 }
 
 
@@ -1014,6 +1013,12 @@ on_HWAddress_changed                   (GtkEditable     *editable,
 	HasChanged = TRUE;
 }
 
+void
+on_ChannelNr_changed                   (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+	HasChanged = TRUE;
+}
 
 void
 on_SchemeList_select_row               (GtkCList        *clist,
@@ -1113,4 +1118,6 @@ on_SchemeList_button_press_event       (GtkWidget       *widget,
 	
 	return FALSE;
 }
+
+
 

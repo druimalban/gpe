@@ -2069,7 +2069,7 @@ create_GPE_WLANCFG (void)
                       GTK_SIGNAL_FUNC (on_Frequency_changed),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (ChannelNr), "changed",
-                      GTK_SIGNAL_FUNC (on_Channe_lNr_changed),
+                      GTK_SIGNAL_FUNC (on_ChannelNr_changed),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (Rate), "clicked",
                       GTK_SIGNAL_FUNC (on_Rate_clicked),
