@@ -145,12 +145,12 @@ gpe_clock_face_expose (GtkWidget *widget,
   GdkGC *gc;
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   Display *dpy;
+  GdkGC *white_gc;
 #ifdef BACKGROUND_IMAGE
   GdkRectangle pixbuf_rect, intersect_rect;
   GdkGC *tmp_gc;
   GdkPixbuf *current_background;
 #else
-  GdkGC *white_gc;
   int i;
   PangoLayout *pl;
 #endif
@@ -160,6 +160,7 @@ gpe_clock_face_expose (GtkWidget *widget,
   drawable = widget->window;
 
   gc = widget->style->black_gc;
+  white_gc = widget->style->white_gc;
 
   clock->x_offset = (widget->allocation.width / 2) - clock->radius;
   clock->y_offset = (widget->allocation.height / 2) - clock->radius;
@@ -167,10 +168,10 @@ gpe_clock_face_expose (GtkWidget *widget,
   dpy = GDK_WINDOW_XDISPLAY (drawable);
 
   if (event)
-    {
-      gdk_gc_set_clip_rectangle (gc, &event->area);
-      gdk_gc_set_clip_rectangle (clock->backing_gc, &event->area);
-    }
+    gdk_gc_set_clip_rectangle (clock->backing_gc, &event->area);
+
+  gdk_gc_set_clip_rectangle (gc, NULL);
+  gdk_gc_set_clip_rectangle (white_gc, NULL);
 
 #ifdef BACKGROUND_IMAGE
   if (gtk_adjustment_get_value (clock->hour_adj) >= 12)
@@ -205,8 +206,6 @@ gpe_clock_face_expose (GtkWidget *widget,
 
 #else
   pl = gtk_widget_create_pango_layout (widget, "");
-
-  white_gc = widget->style->white_gc;
 
   gdk_draw_arc (clock->backing_pixmap, gc, TRUE,
 		clock->x_offset, clock->y_offset,
@@ -243,7 +242,7 @@ gpe_clock_face_expose (GtkWidget *widget,
 			clock->backing_pixmap,
 			GTK_WIDGET_STATE (widget),
 			FALSE,
-			event ? &event->area : NULL,
+			NULL,
 			widget,
 			"label",
 			x - (width / 2), y - (height / 2), pl);
@@ -276,7 +275,6 @@ gpe_clock_face_expose (GtkWidget *widget,
   gdk_draw_drawable (drawable, gc, clock->backing_pixmap, 0, 0, 0, 0, 
 		     widget->allocation.width, widget->allocation.height);
 
-  gdk_gc_set_clip_rectangle (gc, NULL);
   gdk_gc_set_clip_rectangle (clock->backing_gc, NULL);
 
   return TRUE;
@@ -398,7 +396,7 @@ adjustment_value_changed (GObject *a, GtkWidget *w)
 {
   hand_angles (GPE_CLOCK_FACE (w));
 
-  gpe_clock_face_expose (w, NULL);
+  gtk_widget_queue_draw (w);
 }
 
 static void

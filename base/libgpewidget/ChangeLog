@@ -5,6 +5,9 @@
 	(gpe_clock_face_unprepare_xrender): ... here.  New function.
 	(gpe_clock_face_size_allocate): New function.
 	(gpe_clock_face_class_init): Register above in method structure.
+	(adjustment_value_changed): Use gtk_widget_queue_draw.
+	(gpe_clock_face_expose): Only use clip rectangle on the backing
+	pixmap.
 
 2003-08-05  Philip Blundell  <philb@gnu.org>
 
