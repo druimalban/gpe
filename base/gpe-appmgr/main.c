@@ -400,9 +400,12 @@ char *get_icon_fn (struct package *p, int iconsize)
 
 int has_icon (struct package *p)
 {
-	if (get_icon_fn(p,0))
+	char *tmp;
+	if ((tmp = get_icon_fn(p,0)))
+	{
+		free (tmp);
 		return 1;
-	else
+	} else
 		return 0;
 }
 
@@ -897,21 +900,23 @@ int refresh_list ()
 	return FALSE;
 }
 
-
 /* refresh_tabs() is called through GTK so that
    the window already exists; thus we can get it's
    size and determine the number of columns available.
    It's also called when XRANDR does its job.
 */
-void cb_win_draw (GtkWidget *widget,
-		  gpointer user_data)
+/* NB. temporarily moved from void to int return
+   because it's a timeout fn not a draw callback */
+int cb_win_draw (GtkWidget *widget,
+		 gpointer user_data)
 {
 	static int last_width = 0;
+
 	TRACE ("cb_win_draw");
 	DBG((stderr, "window: %p\n", window));
 	DBG((stderr, "last_width: %d\n", last_width));
 	DBG((stderr, "window->allocation.width: %d\n",
-				window->allocation.width));
+	     window->allocation.width));
 
 	if (window && last_width != window->allocation.width)
 	{
@@ -919,6 +924,8 @@ void cb_win_draw (GtkWidget *widget,
 		refresh_tabs();
 	}
 	TRACE("cb_win_draw: end");
+
+	return TRUE;
 }
 
 /* run on SIGHUP
@@ -975,13 +982,24 @@ void create_main_window()
 
 #ifndef DEBUG
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
-			    (GtkSignalFunc)gtk_widget_show, NULL);
+			    (GtkSignalFunc)gtk_true, NULL);
 #else
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
 			    (GtkSignalFunc)gtk_main_quit, NULL);
 #endif
-	gtk_signal_connect (GTK_OBJECT(window), "draw",
-			    (GtkSignalFunc)cb_win_draw, NULL);
+	/* This has been removed temporarily to stop a
+	   crasher. When the window is being resized, it is
+	   possible to get two "draw" events in a row;
+	   this mixed with refresh_tabs() seems to kill GTK.
+
+	   Original code:
+	   gtk_signal_connect (GTK_OBJECT(window), "draw",
+	                       (GtkSignalFunc)cb_win_draw, NULL);
+
+	   Now we use a timeout to make sure it doesn't happen.
+	   We need to come up with a "real" solution.
+	*/
+	gtk_timeout_add (1000, (GtkFunction)cb_win_draw, NULL);
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_homogeneous_tabs(GTK_NOTEBOOK(notebook), FALSE);
@@ -1072,5 +1090,8 @@ int main(int argc, char *argv[]) {
 	gtk_main();
 
 	clean_up();
+
+	gtk_exit (0);
+
 	return 0;
 }
