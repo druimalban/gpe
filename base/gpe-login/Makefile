@@ -9,7 +9,7 @@ all: $(PACKAGE) mo
 mo:
 	make -C po
 
-install-po:
+install-po: mo
 	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
 
 update-po: po/$(PACKAGE).pot
@@ -27,19 +27,19 @@ gpe-dm: gpe-dm.o
 
 install: install-dm install-login
 
-install-login: install-po
+install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
 	install -D gpe-login-setup $(DESTDIR)/etc/X11/gpe-login-setup
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
 
-install-dm:
+install-dm: gpe-dm
 	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-dm
 
 install-scripts:
-	install -D -m 644 X11/Xsession $(DESTDIR)/etc/X11/Xsession
-	install -D -m 644 X11/Xinit $(DESTDIR)/etc/X11/Xinit
-	install -D -m 644 X11/Xserver $(DESTDIR)/etc/X11/Xserver
+	install -D X11/Xsession $(DESTDIR)/etc/X11/Xsession
+	install -D X11/Xinit $(DESTDIR)/etc/X11/Xinit
+	install -D X11/Xserver $(DESTDIR)/etc/X11/Xserver
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do mkdir -p $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; cp $$FILES $(DESTDIR)/etc/$$i/; done
 
 ipkg:
