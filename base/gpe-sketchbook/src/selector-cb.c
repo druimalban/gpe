@@ -28,7 +28,6 @@
 
 #include "gpe/about.h"
 #include "gpe/question.h"
-#include "dialog.h"
 
 //--i18n
 #include <libintl.h>

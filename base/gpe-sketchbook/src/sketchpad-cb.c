@@ -30,7 +30,6 @@
 #include "selector-gui.h"//build_thumbnail_widget
 
 #include "dock.h"
-#include "dialog.h"
 #include "gpe/question.h"
 #include "gpe/gtkgpepixmap.h"
 
