@@ -1,0 +1,47 @@
+PREFIX = /usr/local
+PACKAGE = libxsettings-client0
+DEBUG = no
+
+.SUFFIXES: .os
+
+LIBXSETTINGS_SO = libXsettings-client.so.0
+XSETTINGS_MEMBERS = xsettings-client
+
+CPPFLAGS += -D_GNU_SOURCE
+
+ifeq ($(DEBUG),yes)
+CFLAGS += -O2 -g
+LDFLAGS = -g #-lefence
+else
+CFLAGS += -Os -fomit-frame-pointer
+endif
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CPPFLAGS += -I../libxsettings
+
+XSETTINGS_OBJS = $(patsubst %,%.os,$(XSETTINGS_MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS) $(XSETTINGS_MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS) $(XSETTINGS_MEMBERS))
+
+.c.os:;
+	$(CC) -o $@ -c $^ $(CFLAGS) $(CPPFLAGS) -fPIC
+
+all: libXsettings-client.so
+
+libXsettings-client.so: $(LIBXSETTINGS_SO)
+	ln -sf $^ $@
+
+$(LIBXSETTINGS_SO): $(XSETTINGS_OBJS)
+	$(CC) -o $@ $^ -shared -Wl,-soname -Wl,$(LIBXSETTINGS_SO) -nostartfiles -L/usr/X11R6/lib -lX11 -L../libxsettings -lXsettings
+
+install: $(LIBXSETTINGS_SO)
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	install $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
+	strip $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
+
+clean:
+	rm -f $(LIBXSETTINGS_SO) libXsettings-client.so
+	rm -f $(XSETTINGS_OBJS) $(DEPS)
+
+include ../build/Makefile.translation
+include ../build/Makefile.dpkg_ipkg
+-include $(DEPS)
