@@ -1,6 +1,5 @@
 #set up the symlinks for the package
 
-CONTROL = control1
 CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0` `pkg-config --libs gdk-pixbuf-2.0` -DGTK2
 SPLASH = splash2.png
 
@@ -18,7 +17,6 @@ install-program: gpe-bootsplash
 	cp gpe-bootsplash.init $(DESTDIR)/etc/init.d/gpe-bootsplash
 	install -m 644 $(SPLASH) $(DESTDIR)/usr/share/gpe/splash.png
 	install -s gpe-bootsplash $(DESTDIR)/usr/bin/
-	cp $(CONTROL) $(DESTDIR)/CONTROL/control
 	ln -sf ../init.d/gpe-bootsplash $(DESTDIR)/etc/rcS.d/S00bootsplash
 
 clean:
