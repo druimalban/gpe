@@ -641,8 +641,8 @@ on_color_select (GtkWidget * widget, GdkEvent * event)
   w = gtk_dialog_new_with_buttons (_("Select color"), GTK_WINDOW (mainw),
 				   GTK_DIALOG_MODAL |
 				   GTK_DIALOG_DESTROY_WITH_PARENT,
-				   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 				   GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+				   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 				   NULL);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), build_colorbox ());

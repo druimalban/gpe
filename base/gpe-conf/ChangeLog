@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+13.04.2003		Colin			theme.c						Fix button order.
+
 12.04.2003		Florian			main.c						Updated error handling, added error message if PCMCIA init fails.
 								cardinfo.c					Fixes Bug #742.
 								*.desktop					Changed that all to make applets are only allowed in one instance. Fixes bug #743
