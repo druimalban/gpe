@@ -131,7 +131,9 @@ draw_expose_event (GtkWidget *widget,
 	      struct tm tm;
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
-
+	      gchar *summary = g_locale_to_utf8 (evd->summary, -1, NULL,
+	                                         NULL, NULL);
+	      
 	      if ((ev->flags & FLAG_UNTIMED) == 0)
 		{
 		  if (ev->mark == FALSE)
@@ -161,8 +163,6 @@ draw_expose_event (GtkWidget *widget,
 		}
 
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
-	      gchar *summary = g_locale_to_utf8 (evd->summary, -1, NULL,
-	                                         NULL, NULL);
 	      pango_layout_set_text (pl_evt, summary, strlen (summary));
 	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 	      gtk_paint_layout (widget->style,
@@ -262,6 +262,7 @@ week_view_update (void)
 	  char buf[32];
 	  char *p = buf;
 	  size_t l = sizeof (buf) - 1;
+	  gchar *s;
 	  if ((ev->flags & FLAG_UNTIMED) == 0)
 	    {
 	      if (ev->mark == FALSE)
@@ -274,7 +275,7 @@ week_view_update (void)
 		}
 
 	      ev->mark = TRUE;
-	      gchar *s = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+	      s = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 	      pango_layout_set_text (pl_evt, s, strlen (s));
 	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 	      if (time_width < pr.width)
@@ -300,13 +301,11 @@ week_view_update (void)
 
       if (week_days[day].events)
 	{
-	  event_t ev;
-	  event_details_t evd;
 
 	  for (iter = week_days[day].events; iter; iter = iter->next)
 	    {
-	      ev = iter->data;
-	      evd = event_db_get_details (ev);
+	      event_t ev = iter->data;
+	      event_details_t evd = event_db_get_details (ev);
 	      gchar *summary = g_locale_to_utf8 (evd->summary, -1, NULL,
 	                                         NULL, NULL);
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);

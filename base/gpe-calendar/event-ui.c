@@ -285,7 +285,6 @@ click_delete (GtkWidget *widget, event_t ev)
   ev_d = event_db_get_details (ev_real);
   r = event_db_get_recurrence (ev_real);
      
-  printf("%d\n", ev_real->flags);				
   if (r)
   {
 	if (gpe_question_ask_yn (qn))
@@ -331,7 +330,9 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   struct tm tm_start, tm_end, tm_rend;
   time_t start_t, end_t, rend_t;
   gboolean new_event = FALSE;
-
+  GtkTextIter start, end;
+  GtkTextBuffer *buf;
+    
   if (s->ev)
     {
       ev = (event_t)(s->ev->cloned_ev);
@@ -430,8 +431,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (ev_d->description)
     g_free (ev_d->description);
 
-    GtkTextIter start, end;
-    GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
+    buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description));
     gtk_text_buffer_get_bounds (buf, &start, &end);
     ev_d->description = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
