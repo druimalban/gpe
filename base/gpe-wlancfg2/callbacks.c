@@ -38,7 +38,7 @@ static gboolean		HasChanged = FALSE;
 
 Scheme_t 		*CurrentScheme;
 gint 			SchemeCount; 
-
+int			save_config;
 void   			EditSimple(void);
 
 void get_changes(void)
@@ -588,6 +588,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
 			} else
 			{
+				save_config = TRUE;
 				if (CurrentScheme->NewScheme)
 				{
 					CurrentScheme->NewScheme = FALSE;
@@ -662,6 +663,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
 			} else
 			{
+				save_config = TRUE;
 				treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
 				selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
@@ -694,7 +696,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 				free(Scheme);
 			}
 			
-			write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
+			if (save_config) write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
 		}
 		free(OrigScheme);
 		gtk_main_quit();
@@ -711,7 +713,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 			free(Scheme);
 		}
 			
-		write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
+		if (save_config) write_back_configfile(WLAN_CONFIGFILE, schemelist, SchemeCount);
 		gtk_main_quit();
 	}
 
@@ -990,14 +992,14 @@ void EditScheme(void)
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 		}
 	
-		if (!strcmp(CurrentScheme->EncMode, "open"))
+		if (!strcmp(CurrentScheme->EncMode, "shared"))
 		{
-			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbOpen");
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbRestricted");
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 		}
 		else
 		{
-			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbRestricted");
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbOpen");
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 		}
 	
@@ -1082,14 +1084,14 @@ void EditSimple(void)
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 		}
 	
-		if (!strcmp(CurrentScheme->EncMode, "open"))
+		if (!strcmp(CurrentScheme->EncMode, "shared"))
 		{
-			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbAuthOpen");
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbAuthShared");
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 		}
 		else
 		{
-			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbAuthShared");
+			widget=lookup_widget(GTK_WIDGET(GPE_WLANCFG),"rbAuthOpen");
 			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),TRUE);		
 		}
 	
@@ -1188,6 +1190,7 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 			memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
 		} else
 		{
+			save_config = TRUE;
 			treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
 			selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 

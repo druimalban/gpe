@@ -105,6 +105,8 @@ extern int	delete_list_count;
 extern int      input_file_error;
 extern GtkWidget	*GPE_WLANCFG;
 
+extern int      save_config;
+
 int yylex(void);
 int yyparse(void);
 int wl_get_next_token(void);
