@@ -62,8 +62,8 @@ install-program: all $(PACKAGE)-play.desktop  $(PACKAGE)-record.desktop
 	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE)-play $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)-play
 	install -D $(PACKAGE)-record $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)-record
-	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
-	install -D $(PACKAGE)-record.menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)-record
+	install -D -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	install -D -m 644 $(PACKAGE)-record.menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)-record
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE)-play.desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-play.desktop
 	install -m 644 $(PACKAGE)-record.desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-record.desktop
