@@ -581,7 +581,8 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 			if (gtk_dialog_run(GTK_DIALOG(SaveWindow)) != GTK_RESPONSE_YES) 
 			{
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
-			} else
+			} 
+			else
 			{
 				if (CurrentScheme->NewScheme)
 				{
