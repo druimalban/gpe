@@ -25,7 +25,6 @@
 
 struct edit_state
 {
-  gint old_ev_uid;
   gboolean old_alarm;
   GtkWidget *deletebutton;
 
@@ -36,7 +35,8 @@ struct edit_state
   GtkWidget *alarmspin;
   GtkWidget *alarmoption;
 
-  GtkWidget *text;
+  GtkWidget *description;
+  GtkWidget *summary;
   
   GtkWidget *radiobuttonforever, *radiobuttonendafter;
   GtkWidget *endspin, *endlabel;
@@ -152,15 +152,16 @@ schedule_alarm(event_t ev)
   char uscheduleidcmd [300], uschedulecmd[135];
     
   /* set uschedule cmd */
-  sprintf(uscheduleidcmd, "/usr/bin/uschedulecmd --id=%d \"export DISPLAY=:0.0\n/usr/bin/announce \'You have an appointment\'\"\n", ev->uid);
-  system(uscheduleidcmd);
+  snprintf (uscheduleidcmd, sizeof (uscheduleidcmd), 
+	   "/usr/bin/uschedulecmd --id=%ld \"export DISPLAY=:0.0\n/usr/bin/announce \'You have an appointment\'\"\n", ev->uid);
+  system (uscheduleidcmd);
   localtime_r (&(ev->start), &tm);
-  strftime (alrm_date, sizeof(alrm_date), "%Y-%m-%d", &tm);
-  alarm_t=ev->start-60*ev->alarm;
+  strftime (alrm_date, sizeof (alrm_date), "%Y-%m-%d", &tm);
+  alarm_t = ev->start-60*ev->alarm;
   localtime_r (&alarm_t, &tm);
-  strftime (alrm_time, sizeof(alrm_time), "%H:%M:%S", &tm);
-  sprintf(uschedulecmd, "/usr/bin/uschedule %d \'%s %s\'\n", ev->uid, alrm_date, alrm_time);
-  system(uschedulecmd);    	      
+  strftime (alrm_time, sizeof (alrm_time), "%H:%M:%S", &tm);
+  snprintf (uschedulecmd, sizeof (uscheduleidcmd), "/usr/bin/uschedule %ld \'%s %s\'\n", ev->uid, alrm_date, alrm_time);
+  system (uschedulecmd);    	      
 }
 
 static void
@@ -168,11 +169,12 @@ unschedule_alarm(gint uid)
 {
   char uschedulerm[30];
   
-  sprintf(uschedulerm,"/usr/bin/uschedulerm %d\n", uid);
-  system(uschedulerm);
-  sprintf(uschedulerm,"/usr/bin/uschedulerm -c %d\n", uid);
-  system(uschedulerm);
-  
+  snprintf (uschedulerm, sizeof (uschedulerm), 
+	    "/usr/bin/uschedulerm %d\n", uid);
+  system (uschedulerm);
+  snprintf (uschedulerm, sizeof (uschedulerm),
+	    "/usr/bin/uschedulerm -c %d\n", uid);
+  system (uschedulerm);
 }
 
 static void
@@ -205,15 +207,21 @@ click_ok(GtkWidget *widget,
 						    (s->endtime)->entry),
 				      0, -1);
 
-  if (s->old_ev_uid!=-1) {
-	  if (s->old_alarm) unschedule_alarm(s->old_ev_uid);
-	  event_db_remove_by_uid(s->old_ev_uid);
-  }
+  if (s->ev) 
+    {
+      if (s->old_alarm) 
+	unschedule_alarm (s->ev->uid);
+      event_db_remove (s->ev);
+      event_db_destroy (s->ev);
+    }
   
   ev = event_db_new ();
   ev_d = event_db_alloc_details (ev);
-  ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->text), 
+  ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
 						     0, -1);
+  ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 
+					  0, -1);
+
   memset(&tm, 0, sizeof(tm));
 
   tm.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
@@ -288,7 +296,7 @@ click_cancel(GtkWidget *widget,
 }
 
 static GtkWidget *
-edit_event_window(event_t ev)
+edit_event_window(void)
 {
   static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, 
 				  ABDAY_6, ABDAY_7, ABDAY_1 };
@@ -324,7 +332,7 @@ edit_event_window(event_t ev)
   GtkWidget *hboxrecurtypes = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxendafter = gtk_hbox_new (FALSE, 0);
   
-  GtkWidget *text = gtk_text_new (NULL, NULL);
+  GtkWidget *description = gtk_text_new (NULL, NULL);
 
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok = gtk_button_new_with_label (_("Save"));
@@ -381,18 +389,16 @@ edit_event_window(event_t ev)
   gtk_box_pack_end (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 2);
 
-  gtk_text_set_editable (GTK_TEXT (text), TRUE);
-  gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
-  gtk_widget_set_usize (text, -1, 88);
+  gtk_text_set_editable (GTK_TEXT (description), TRUE);
+  gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
+  gtk_widget_set_usize (description, -1, 88);
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
-  gtk_signal_connect (GTK_OBJECT (buttondelete), "clicked",
-		      GTK_SIGNAL_FUNC (click_delete), ev);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
 		      GTK_SIGNAL_FUNC (click_cancel), window);
 
-  gtk_container_add (GTK_CONTAINER (descriptionframe), text);
+  gtk_container_add (GTK_CONTAINER (descriptionframe), description);
   gtk_container_set_border_width (GTK_CONTAINER (descriptionframe), 2);
 
   gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 2);
@@ -654,7 +660,7 @@ edit_event_window(event_t ev)
   /*gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, 
 			    labelrecurpage);*/
 
-  gtk_widget_grab_focus (text);
+  gtk_widget_grab_focus (summaryentry);
 
   s->deletebutton = buttondelete;
   s->starttime = starttime;
@@ -662,7 +668,8 @@ edit_event_window(event_t ev)
   s->alarmbutton = alarmbutton;
   s->alarmspin = alarmspin;
   s->alarmoption = alarmoption;
-  s->text = text;
+  s->description = description;
+  s->summary = summaryentry;
   s->radiobuttonforever = radiobuttonforever;
   s->radiobuttonendafter = radiobuttonendafter;
   s->endspin = endspin;
@@ -689,9 +696,41 @@ edit_event_window(event_t ev)
 }
 
 GtkWidget *
-new_event(time_t t, guint timesel, event_t ev)
+new_event(time_t t, guint timesel)
 {
-  GtkWidget *w = edit_event_window (ev);
+  GtkWidget *w = edit_event_window ();
+  
+  if (w)
+    {
+      struct tm tm;
+      char buf[32];
+      struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
+						  "edit_state");
+      s->ev = NULL;
+      s->old_alarm=FALSE;
+      gtk_widget_set_sensitive (s->deletebutton, FALSE);
+      
+      localtime_r (&t, &tm);
+      strftime (buf, sizeof(buf), "%X", &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
+      tm.tm_hour++;
+      strftime (buf, sizeof(buf), "%X", &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+      
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      
+    }
+
+  return w;
+}
+
+GtkWidget *
+edit_event(event_t ev)
+{
+  GtkWidget *w = edit_event_window ();
   event_details_t evd;
   
   if (w)
@@ -701,76 +740,60 @@ new_event(time_t t, guint timesel, event_t ev)
       char buf[32];
       struct edit_state *s = gtk_object_get_data (GTK_OBJECT (w), 
 						  "edit_state");
-      if (ev==NULL) {
-	      
-	      s->old_ev_uid=-1;
-	      s->old_alarm=FALSE;
-	      gtk_widget_set_sensitive (s->deletebutton, FALSE);
-
-	      localtime_r (&t, &tm);
-	      strftime (buf, sizeof(buf), "%X", &tm);
-	      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
-	      tm.tm_hour++;
-	      strftime (buf, sizeof(buf), "%X", &tm);
-	      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
-
-	      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
-	        		       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-	      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
-	        		       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-      }
+      gtk_widget_set_sensitive (s->deletebutton, TRUE);
+      gtk_signal_connect (GTK_OBJECT (s->deletebutton), "clicked",
+			  GTK_SIGNAL_FUNC (click_delete), ev);
+      evd = event_db_get_details (ev);
+      gtk_text_insert (GTK_TEXT (s->description), NULL, NULL, NULL, 
+		       evd->description, -1);
+      gtk_entry_set_text (GTK_ENTRY (s->summary), evd->summary);
+      event_db_forget_details (ev);
       
-      else {
-     
-	      s->old_ev_uid=ev->uid;
-	      gtk_widget_set_sensitive (s->deletebutton, TRUE);
-	      evd=event_db_get_details (ev);
-              gtk_text_insert (GTK_TEXT (s->text), NULL, NULL, NULL, evd->description, -1);
-	      
-	      localtime_r (&(ev->start), &tm);
-	      strftime (buf, sizeof(buf), "%X", &tm);
-	      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
-	      end=ev->start+ev->duration;
-	      localtime_r (&end, &tm);
-	      strftime (buf, sizeof(buf), "%X", &tm);
-	      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+      localtime_r (&(ev->start), &tm);
+      strftime (buf, sizeof(buf), "%X", &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
+      end=ev->start+ev->duration;
+      localtime_r (&end, &tm);
+      strftime (buf, sizeof(buf), "%X", &tm);
+      gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
+      
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
+			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      
+      if (ev->alarm != -1) 
+	{
+	  s->old_alarm = TRUE;
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), 
+					TRUE);
+	  gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), 
+				     ev->alarm);
+	  
+	}
+      else 
+	s->old_alarm = FALSE;
 
-	      gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
-	        		       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-	      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
-	        		       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-	      
-	      if(ev->alarm!=-1) {
-		      
-	        s->old_alarm=TRUE;
-	        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(s->alarmspin), ev->alarm);
-		
-	      }
-  	      else s->old_alarm=FALSE;
+      s->ev = ev;
+   
+      switch (ev->recur.type)
+	{
+	case RECUR_NONE:
+	  break;
+	case RECUR_DAILY:
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
+	  break;
+	case RECUR_WEEKLY:
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
+	  break;
+	case RECUR_MONTHLY:
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), TRUE);
+	  break;
+	case RECUR_YEARLY:
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), TRUE);
+	  break;
+	}
+    }    
   
-	      switch(ev->recur.type)
-	      	{
-			case RECUR_NONE:
-			  break;
-			case RECUR_DAILY:
-			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
-			  break;
-			case RECUR_WEEKLY:
-			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
-			  break;
-			case RECUR_MONTHLY:
-			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), TRUE);
-			  break;
-			case RECUR_YEARLY:
-			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), TRUE);
-			  break;
-		}
-  
-      }    
-
-     
-    }
-
   return w;
 }
