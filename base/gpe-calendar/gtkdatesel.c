@@ -176,9 +176,15 @@ format_text (time_t *time, GtkWidget *w, char *fmt)
 {
   struct tm tm;
   char buf[64];
+  gchar *sbuf;
   localtime_r (time, &tm);
   strftime (buf, sizeof (buf), fmt, &tm);
-  gtk_label_set_text (GTK_LABEL (w), buf);
+  sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  if (sbuf)
+    {
+      gtk_label_set_text (GTK_LABEL (w), sbuf);
+      g_free (sbuf);
+    }
 }
 
 static void

@@ -1,3 +1,10 @@
+2003-07-29  Philip Blundell  <philb@gnu.org>
+
+	* gtkdatesel.c (format_text): Convert strftime() output to UTF-8.
+	* week_view.c (week_view_update): Likewise.	
+	* future_view.c (future_view_update): Likewise.
+	(future_view): Likewise.
+
 2003-07-13  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (CFLAGS): Use libdisplaymigration in place of libdm.

@@ -74,12 +74,13 @@ future_view_update ()
       line_info[1] = evd->summary;
       localtime_r (&(ev->start), &tm);
       strftime (buf, sizeof (buf), "%x " TIMEFMT, &tm);
-      line_info[0] = buf;
-
+      line_info[0] = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
       
       gtk_clist_append (GTK_CLIST (future_list), line_info);
       gtk_clist_set_row_data (GTK_CLIST (future_list), row, ev);
-    	
+
+      g_free (line_info[0]);
+      
       row++;
     } 
 
@@ -95,6 +96,7 @@ future_view(void)
   time_t t = time (NULL);
   struct tm tm;
   char buf[64];
+  gchar *sbuf;
 
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -105,7 +107,9 @@ future_view(void)
   localtime_r(&t, &tm);
   strftime (buf, sizeof (buf), "%A, %d %b %Y", &tm);
 
-  label = gtk_label_new (buf);
+  sbuf = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
+  label = gtk_label_new (sbuf);
+  g_free (sbuf);
   gtk_widget_show (label);
 
   future_list = gtk_clist_new (2);

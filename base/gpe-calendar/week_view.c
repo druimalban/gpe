@@ -240,7 +240,7 @@ week_view_update (void)
       strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
       if (d->string)
 	g_free (d->string);
-      d->string = g_strdup (buf);
+      d->string = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 
       t += SECONDS_IN_DAY;
 
