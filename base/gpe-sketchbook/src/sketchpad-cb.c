@@ -194,16 +194,22 @@ void on_radiobutton_brush_clicked (GtkButton *button, gpointer brush){
   GtkWidget * brushbox;
   GtkWidget * topbutton;
   GtkGpePixmap * topbutton_pixmap;
+#ifndef GTK2 //GTK1
   GdkPixmap * button_image;
   GdkBitmap * button_mask;
+#endif
 
   sketchpad_set_brush_s((gchar *) brush);
 
   brushbox  = gtk_widget_get_toplevel((GtkWidget *)button);
   topbutton = gtk_object_get_data((GtkObject *) brushbox, "calling_button");
   topbutton_pixmap = gtk_object_get_data((GtkObject *) topbutton, "pixmap");
+#ifdef GTK2
+  //FIXME: need to switch icon
+#else
   gtk_gpe_pixmap_get(GTK_GPE_PIXMAP(GTK_BIN (button)->child), &button_image, &button_mask);
   gtk_gpe_pixmap_set(topbutton_pixmap, button_image, button_mask);
+#endif
 
   gtk_widget_hide(GTK_WIDGET (brushbox));
 }
