@@ -31,7 +31,7 @@ install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -m 664 bt-logo.png $(DESTDIR)$(PREFIX)/share/pixmaps/bt-logo.png
+	install -m 644 bt-logo.png $(DESTDIR)$(PREFIX)/share/pixmaps/bt-logo.png
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
