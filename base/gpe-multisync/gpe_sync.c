@@ -102,7 +102,7 @@ sync_connect (sync_pair* handle, connection_type type,
   /* connect to the device and pull the required data back */
   if (! gpe_connect (conn))
     {
-      errmsg = g_strdup_printf (_("Failed to load data from device %s"), conn->device_addr);
+      errmsg = g_strdup_printf (_("Failed to connect to %s"), conn->device_addr);
       sync_set_requestfailederror (errmsg, conn->sync_pair);
       return conn;
     }

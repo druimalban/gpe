@@ -6,7 +6,7 @@ VERSION = 0.1
 
 LINGUAS = 
 
-MEMBERS = gui gpe_sync
+MEMBERS = gui gpe_sync config connection
 
 GLADECFLAGS = `pkg-config --cflags libglade-2.0`
 GLADELDFLAGS += `pkg-config --libs libglade-2.0`
