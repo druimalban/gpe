@@ -3,7 +3,7 @@ PACKAGE = gpe-todo
 GTK2 = yes
 VERSION = 0.33
 
-LINGUAS = de
+LINGUAS = de id pt
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`

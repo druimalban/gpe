@@ -1,3 +1,10 @@
+2003-03-19  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add pt.
+
+ 	* po/pt.po: New file from Translation Project, courtesy Luis
+	Oliveira.
+
 2003-03-16  Philip Blundell  <philb@gnu.org>
 
 	* configure.c (new_category_box): Use GtkDialog.  Reorder buttons
