@@ -16,6 +16,7 @@
 
 #include <gtk/gtk.h>
 #include <libintl.h>
+#include <langinfo.h>
 
 #include <gpe/tray.h>
 #include <gpe/init.h>
@@ -83,6 +84,9 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
 
   gtk_window_set_title (GTK_WINDOW (window), _("Clock preferences"));
 
+  gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (window)->vbox), spacing);
+  gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (window)->vbox), gpe_get_border ());
+
   format_12_button = gtk_radio_button_new_with_label (NULL, _("12-hour format"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (format_12_button));
   format_24_button = gtk_radio_button_new_with_label (radiogroup, _("24-hour format"));
@@ -92,13 +96,11 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (seconds_button), show_seconds);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_24_button), format_24);
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_12_button, FALSE, FALSE, spacing);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_24_button, FALSE, FALSE, spacing);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), seconds_button, FALSE, FALSE, spacing);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_12_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_24_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), seconds_button, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
-
-  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
 
   gtk_widget_show_all (window);
 
@@ -139,14 +141,21 @@ alarm_window (void)
   GtkWidget *time_sel = gtk_time_sel_new ();
   GtkWidget *clock = clock_widget (GTK_TIME_SEL (time_sel)->hour_adj, 
 				   GTK_TIME_SEL (time_sel)->minute_adj);
+  GtkWidget *weeklytable;
   int spacing = gpe_get_boxspacing ();
   GSList *radiogroup;
+  static const nl_item days[] = { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5,
+                                  ABDAY_6, ABDAY_7, ABDAY_1 };
+  int i;
 
   gtk_window_set_title (GTK_WINDOW (window), _("Set alarm"));
 
+  gtk_box_set_spacing (GTK_BOX (GTK_DIALOG (window)->vbox), spacing);
+  gtk_container_set_border_width (GTK_CONTAINER (GTK_DIALOG (window)->vbox), gpe_get_border ());
+
   date_button = gtk_radio_button_new_with_label (NULL, _("Date:"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (date_button));
-  days_button = gtk_radio_button_new_with_label (radiogroup, _("Each week, on:"));
+  days_button = gtk_radio_button_new_with_label (radiogroup, _("Weekly, on:"));
 
   gtk_box_pack_start (GTK_BOX (date_hbox), date_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (date_hbox), date_entry, TRUE, TRUE, 0);
@@ -154,15 +163,28 @@ alarm_window (void)
   gtk_box_pack_start (GTK_BOX (time_hbox), time_label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (time_hbox), time_sel, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clock, TRUE, TRUE, spacing);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), time_hbox, FALSE, FALSE, spacing);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, spacing);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, spacing);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clock, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), time_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, 0);
+
+/* weekly hbox1 */
+  weeklytable = gtk_table_new (2, 4, FALSE);
+  for (i = 0; i < 4; i++)
+    {
+      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo (days[i]));
+      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i, i + 1, 0, 1);
+    }
+  for (i = 4; i < 7; i++)
+    {
+      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo (days[i]));
+      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 4, i - 3, 1, 2);
+    }
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), weeklytable, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
-
-  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
 
   gtk_widget_show_all (window);
 
