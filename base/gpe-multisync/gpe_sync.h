@@ -18,6 +18,9 @@ typedef struct {
   char* device_addr;
   char* username;
 
+  time_t last_timestamp;
+  time_t current_timestamp;
+
   nsqlc *calendar, *contacts, *todo;
 } gpe_conn;
 

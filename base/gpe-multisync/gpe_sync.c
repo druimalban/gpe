@@ -172,6 +172,8 @@ get_changes (gpe_conn *conn, sync_object_type newdbs)
   change_info *chinfo;
 
   GPE_DEBUG(conn, "get_changes"); 
+
+  nsqlc_get_time (conn->calendar, &conn->current_timestamp, NULL);
   
   if (conn->commondata.object_types & SYNC_OBJECT_TYPE_CALENDAR)
     changes = sync_calendar (changes, conn, newdbs & SYNC_OBJECT_TYPE_CALENDAR);

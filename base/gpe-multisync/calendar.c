@@ -26,7 +26,11 @@ sync_calendar (GList *data, gpe_conn *conn, int newdb)
 {
   GSList *list, *i;
   
-  list = fetch_uid_list (conn->calendar, "select distinct uid from calendar_urn");
+  if (newdb)
+    list = fetch_uid_list (conn->calendar, "select distinct uid from calendar_urn");
+  else
+    list = fetch_uid_list (conn->calendar, "select uid from calendar where tag='modified' and value>%d",
+			   conn->last_timestamp);
 
   for (i = list; i; i = i->next)
     {
