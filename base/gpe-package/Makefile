@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.1.0
+VERSION = 0.0.10
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install

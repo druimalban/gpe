@@ -75,6 +75,7 @@ main (int argc, char *argv[])
 		{
 			suidloop(csock);
 			close(csock);
+			close(lsock);
 		}
 	}
 	else
@@ -86,7 +87,6 @@ main (int argc, char *argv[])
 		signal(SIGTERM, do_safe_exit);
 		signal(SIGINT, do_safe_exit);
 		mainloop(argc, argv);	
-		kill(suidPID,SIGTERM);
 	}
 	
 	unlink(PK_SOCKET);

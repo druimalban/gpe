@@ -141,12 +141,7 @@ int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
 
 
 struct gpe_icon my_icons[] = {
-  { "save" },
-  { "cancel" },
-  { "delete" },
-  { "properties" },
   { "exit" },
-  { "refresh" },
   { "local-package", PREFIX "/share/pixmaps/local-package-16.png" },
   { "icon", PREFIX "/share/pixmaps/gpe-package.png" }
 };

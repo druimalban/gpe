@@ -1,3 +1,7 @@
+2004-07-29 Florian Boor <florian.boor@kernelconcepts.de>
+	* Released V 0.0.10
+	* Makefile: Fixed version. 
+	* main.c, interface.c, packages.c: Several minor fixes.
 
 2004-07-27 Florian Boor <florian.boor@kernelconcepts.de>
 	* po/gpe-package.pot: Added translation files.

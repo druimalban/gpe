@@ -142,8 +142,7 @@ wait_message ()
 	#ifdef DEBUG
 				perror ("err receiving data packet");
 	#endif
-				close (sock);
-				exit (1);
+				return FALSE;
 			}
 			else if (msg.type == PK_BACK)
 			{
@@ -227,7 +226,6 @@ suidloop (int csock)
 	while (wait_message ()) ;
 		
 	ipkg_deinit(&args);
-	close (sock);
 
 	return 0;
 }
