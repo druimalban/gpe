@@ -45,8 +45,8 @@ sql_open (char *dbtoopen)
   );
   ";
 
-  char *err;
-  char *buf;
+  char *err = NULL;
+  char *buf = NULL;
   t_sql_handle *sqlh;
 	
 #ifdef USE_USQLD
@@ -67,13 +67,15 @@ sql_open (char *dbtoopen)
     {
       gpe_error_box (err);
       free (err);
-      g_free (buf);
+      if (buf) g_free (buf);
       return NULL;
     }
 
-  // create control table if it doesn't exist
+#ifndef USE_USQLD
+	// create control table if it doesn't exist
   // we just want to be shure :-)
   sql_exec (sqlh, create_control_str, NULL, NULL, &err);
+#endif
   return sqlh;
 }
 

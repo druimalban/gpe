@@ -1,0 +1,71 @@
+--------------------------------------------------------------------------------
+libgpedb													Florian Boor 2003
+
+SQL interface abstraction layer 				florian.boor@kernelconcepts.de
+--------------------------------------------------------------------------------
+
+What?
+
+This small library is to make it easy to access gpe databases in a quite easy 
+way and makes it possible to switch between usqld and sqlite at compile time. 
+Therefore it's only necessary to define USE_USQLD. If it's not defined, 
+sqlite is used. 
+
+
+
+
+Interface description:
+
+t_sql_handle
+This is a wrapper for a connection to a database and is defined as sqlite or 
+usqld_conn depending on USE_USQLD compiler cirective. 
+
+t_sql_handle* sql_open (char *dbtoopen)
+Open a database connection to query or change permissions of a database. 
+The single parameter dbtoopen is the name of this database. libgpedb opens this 
+database in $HOME/.gpe/ if sqlite is used. The function returns a handle to an 
+sql connection on success or NULL if the database could not be opened. 
+t_sql_handle is defined as usqld_conn if usqld is used or as sqlite database 
+connection structure for sqlite usage. 
+
+int sql_list_tables(t_sql_handle* sqlh, char*** resvec)
+This function is used to get a list of tables that is part of the given 
+database. It is needed e.g. for a table selector in a access control managment 
+application. The parameter sqlh is a database connection that needs to be open 
+(see above). resvec is a pointer to a string(char**)-vector that is allocated 
+and filled inside the function with the names of the resulting tables. 
+The calling application needs to free this structure calling sql_free_table(). 
+Return value is the number of entrys in resvec. 
+
+void sql_close (t_sql_handle* sqlh) 
+Closes a database connection given by the parameter. 
+
+sql_callback
+Generic type for sql callback functions. This is used for sql commands that 
+return data line by line using a callback function. It is defined in this way:
+typedef int (*sql_callback)(void*,int,char**, char**)
+
+sql_exec_printf(a,b,c,d,e...)
+sql_get_table_printf(a,b,c,d,e,f,g...) 
+sql_get_table(a,b,c,d,e,f) 
+sql_last_insert_rowid(a) 
+sql_exec(a,b,c,d,e)
+sql_free_table(a)
+
+These six macros are wrappers for their respective interfaces in sqlite or 
+usqld backend. They have the same parameters as their origins but a 
+t_sql_handle* as first parameter instead of sqlite* or usqld_conn* in the 
+original functions. 
+
+Note on usage
+To build software that uses libgpedb you should consider these additions to the 
+makefile. If needed define USE_USQLD at the top of the makefile above the 
+folowing lines. 
+
+ifdef USE_USQLD
+CFLAGS += -lusqld -lgpedb
+else
+CFLAGS += -lsqlite -lgpedb
+endif
+
+Add  -I../../libgpedb/includeto your includes (e.g. CFLAGS).
