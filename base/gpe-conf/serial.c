@@ -72,8 +72,6 @@ t_serial_item;
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
-//static t_serial_item *serial_items;
-//static gint num_items;
 
 static struct 
 {
@@ -157,63 +155,12 @@ int get_serial_port_assignment()
 
 gint serial_get_items(gchar *file)
 {
-/*  gchar *content, *tmpval;
-  gchar **lines = NULL;
-  const gchar seperator = '='; 
-  gint length;
-  gchar *delim;
-  gint i = 0;
-  gint j = 0;
-  GError *err = NULL;
-
-  tmpval = "";
-  delim = g_strdup ("\n");
-  if (!g_file_get_contents (file, &content, &length, &err))
-  {
-	  fprintf(stderr,"Could not access file: %s.\n",file);
-	  if (access(file,F_OK)) // file exists, but access is denied
-	  {
-		  i = 0;
-		  delim = NULL;
-		  return 0;
-	  }
-  }
-  lines = g_strsplit (content, delim, 1024);
-  g_free (delim);
-  delim = NULL;
-  g_free (content);
-
-  while (lines[i])
-    {
-      if ((g_strrstr (g_strchomp (lines[i]), var))
-	  && (!g_str_has_prefix (g_strchomp (lines[i]), "#")))
-	{
-	  delim = lines[i];
-	  j=get_first_char(delim);
-	  if (j>0) {
-		  tmpval = g_malloc(j);
-		  strncpy(tmpval,delim,j);
-	  	  lines[i] = g_strdup_printf ("%s%s%c%s", tmpval,var,seperator,val);
-	  	  g_free(tmpval);
-	  }
-	  else
-	  {
-	  	lines[i] = g_strdup_printf ("%s%c%s", var,seperator, val);
-	  }
-	}
-      i++;
-    }
-*/
-return 0;
+	return 0;
 }
 
 
 GtkWidget *serial_create_device_interface(const gchar* infile,gchar **iname)
 {
-/*	gchar *cfgfile = g_strdup_printf("%s/%s",GPE_SERIAL_CONF_DIR,infile);
-	
-	num_items = serial_get_items(cfgfile);
-*/	
 	return NULL;
 }
 
@@ -248,10 +195,7 @@ Serial_Restore ()
 GtkWidget *
 Serial_Build_Objects (void)
 {
-/*  DIR *serialdir;
-  struct dirent *entry;
-  int i = 0;
-*/GtkWidget *label;
+  GtkWidget *label;
   GtkWidget *vbox;
   gchar iname[100];
   GtkTooltips *tooltips;
@@ -264,10 +208,12 @@ Serial_Build_Objects (void)
   gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
   gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
   
+  /* port settings */
+
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
   gtk_tooltips_set_tip(tooltips,vbox,_("Simple interface to serial port configuration. Disabled components are not installed."),NULL);
   
-  label = gtk_label_new(_("Simple"));
+  label = gtk_label_new(_("Port A"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,label);
   gtk_tooltips_set_tip(tooltips,label,_("Simple interface to serial port configuration. Disabled components are not installed."),NULL);
 	
@@ -304,29 +250,35 @@ Serial_Build_Objects (void)
 	  break;
   }
   
-/*  if (access(GPE_SERIAL_CONF_DIR,R_OK))
-	{
-      serialdir = opendir (GPE_SERIAL_CONF_DIR);
-	  if(serialdir)
-		{
-		  while ((entry = readdir (serialdir)))
-		{
+  /* gpsd settings */
+
+/* THAT ARE: 
+    	-D integer   [ set debug level ]
+  -L longitude [ set longitude ]
+  		-S integer   [ set port for daemon ]
+  -T e         [ earthmate flag ]
+  		-h           [ help message ]
+  -l latitude  [ set latitude ]
+  		-p string    [ set gps device name ]
+  -s baud_rate [ set baud rate on gps device ]
+  -c           [ use dgps service for corrections ]
+  -d host      [ set dgps server ]
+  -r port      [ set dgps rtcm-sc104 port ]
+*/
+  
+  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+  gtk_tooltips_set_tip(tooltips,vbox,_("This page configures the GPS receiver software."),NULL);
+  
+  label = gtk_label_new(_("GPS Receiver"));
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,label);
+  gtk_tooltips_set_tip(tooltips,label,_("This page configures the GPS receiver software."),NULL);
 	
-		  if (entry->d_name[0] == '.') 
-			continue;
-		  
-          ainterface = serial_create_device_interface(entry->d_name,&iname);
-		  label = gtk_label_new(iname);
-		  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),ainterface,label);
-		  i++;
-		}
-		  closedir (serialdir);
-		}
-    }
-  else
-    {
-      gpe_error_box ("Couldn't get serial devices info!");
-    }
-*/	
+  label = gtk_label_new(NULL);
+  snprintf(iname,100,"<b>%s</b>",_("GPS settings"));
+  gtk_label_set_markup(GTK_LABEL(label),iname);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,TRUE,0);
+    
+  
   return notebook;
 }

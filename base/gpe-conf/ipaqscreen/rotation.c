@@ -45,7 +45,7 @@ int get_rotation ()
 {
   int rotation = 0,i;
   char buffer2[20];
-#ifdef __i386__
+#ifndef __arm__
   return 0;
 #else
 
@@ -67,7 +67,7 @@ int get_rotation ()
 
 void set_rotation (int rotation)
 {
-#ifdef __i386__
+#ifndef __arm__
       gpe_error_box(_("Can't set rotation on an x86."));
       return ; 
 #else

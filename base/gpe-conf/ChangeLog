@@ -1,3 +1,11 @@
+2003-08-18	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Started adding gpsd setup to serial module (for now).
+	* fixed calibrate.c, rotation.c for correct build on non-arm platforms
+	* Try to toggle mbdock before calibrating, but seems to be broken.
+	* keyctl.c has a nice header now.
+	* suid.c: Start /usr/bin/gpe-xcalibrate.sh for screen calibration in future.
+	* serial.c: Cleanup and removal of never implemented universal interface.
+
 2003-08-17	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Updated swedish translation, contributed by Christian Rose
 		

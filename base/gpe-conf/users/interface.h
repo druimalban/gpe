@@ -1,7 +1,7 @@
 #include <pwd.h>
 #include <sys/types.h>
 
-#ifdef __i386__
+#ifndef __arm__
 #define MINUSERUID 500
 #else
 #define MINUSERUID 100

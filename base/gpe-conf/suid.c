@@ -440,7 +440,7 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "XCAL") == 0)  // runs xcalibrate
 				{
-					system ("/usr/X11R6/bin/xcalibrate");
+					system ("/usr/bin/gpe-xcalibrate.sh");
 				}
 				else if (strcmp (cmd, "STZO") == 0)  // changes the timezone setting 
 				{
