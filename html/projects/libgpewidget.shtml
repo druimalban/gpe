@@ -118,7 +118,7 @@ In the commonest case, only the <CODE>shortname</CODE> needs to be
 </p>
 
 <p>If the <CODE>filename</CODE> is specified, and does not begin with
-    a slash character, libgpewidget searches for <CODE>filename</CODE>
+    a slash character, libgpewidget searches for <CODE>filename.png</CODE>
     in the same directories described above.  If <CODE>filename</CODE>
     does start with a slash character, libgpewidget interprets it as
     an absolute pathname and looks only at the specified location.
