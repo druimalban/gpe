@@ -1,3 +1,7 @@
+2003-10-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	* netedit.c (network_edit): Fix typo.
+
 10/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- Registered to translation project.
 	- Added po/gpe-aerial.pot to cvs.

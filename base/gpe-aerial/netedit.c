@@ -247,7 +247,7 @@ network_edit (netinfo_t * ni)
 	lIP = gtk_label_new (_("IP Address"));
 	eIP = gtk_entry_new ();
 	tbWEP = gtk_check_button_new();
-	lWEPKey = gtk_label_new (_("WEP-Key"));
+	lWEPKey = gtk_label_new (_("WEP key"));
 	eWEPKey = gtk_entry_new ();
 	eNameServer = gtk_entry_new ();
 
