@@ -57,10 +57,13 @@ po/gpe-gallery.pot: $(SOURCES)
 gpe-gallery: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all install-po
-	install -D gpe-gallery $(DESTDIR)$(PREFIX)/bin/gpe-edit
-	install -D -m 644 gpe-gallery.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-edit.png
-	install -D -m 644 gpe-gallery.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-edit
+install: all
+	install -D gpe-gallery $(DESTDIR)$(PREFIX)/bin/gpe-gallery
+	install -D -m 644 gpe-gallery.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-gallery.png
+	install -D -m 644 gpe-gallery.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-gallery
+	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery
+	install -m 644 pixmaps/slideshow.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/slideshow.png
+	install -m 644 pixmaps/fullscreen.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/fullscreen.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-gallery
 
 upstream: clean

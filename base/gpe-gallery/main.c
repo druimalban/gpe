@@ -9,6 +9,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/dir.h>
 #include <stdlib.h>
 #include <libgen.h>
 #include <string.h>
@@ -27,7 +28,7 @@
 #include <gpe/question.h>
 #include <gpe/dirbrowser.h>
 
-#define WINDOW_NAME "GPE Gallery"
+#define WINDOW_NAME "Gallery"
 #define _(_x) gettext (_x)
 GtkWidget *window;
 GtkWidget *dirbrowser_window;
@@ -38,12 +39,14 @@ GtkWidget *view_widget;
 gint current_view = 0;
 gint loading_directory = 0;
 
+guint screensaver_timer = 0;
+
 struct gpe_icon my_icons[] = {
   { "open", "open" },
   { "left", "left" },
   { "right", "right" },
-  { "slideshow", "gpe-gallery/slideshow" },
-  { "fullscreen", "gpe-gallery/fullscreen" },
+  { "slideshow", "gallery/slideshow" },
+  { "fullscreen", "gallery/fullscreen" },
   { "ok", "ok" },
   { "cancel", "cancel" },
   { "stop", "stop" },
@@ -67,13 +70,14 @@ update_window_title (void)
 void
 add_directory (gchar *directory)
 {
+  gchar *filename, *buf;
   struct dirent *d;
   DIR *dir;
 
   loading_directory = 1;
   printf ("Selected directory: %s\n", directory);
 
-  dir = opendir (current_directory);
+  dir = opendir (directory);
   if (dir)
   {
     if (view_widget)
@@ -101,7 +105,73 @@ add_directory (gchar *directory)
     }
   }
 }
- 
+
+void
+start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
+{
+  if (slideshow_timer == NULL)
+  {
+    slideshow_timer = gtk_timeout_add (delay, next_image, NULL);
+  }
+  else
+  {
+    stop_slideshow ();
+  }
+}
+
+void
+stop_slideshow ()
+{
+  if (slideshow_timer != NULL)
+  {
+    gtk_timeout_remove (slideshow_timer);
+  }
+}
+
+void
+show_new_slideshow (void)
+{
+  GtkWidget *slideshow_dialog;
+  GtkWidget *spin_button, *hbox, *label1, *label2;
+  GtkAdjustment *spin_button_adjustment;
+  GtkWidget *start_button, *close_button;
+
+  slideshow_dialog = gtk_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW (slideshow_dialog), GTK_WINDOW (window));
+  gtk_widget_realize (slideshow_dialog);
+  gtk_signal_connect (GTK_OBJECT (slideshow_dialog), "destroy",
+		      GTK_SIGNAL_FUNC (start_slideshow), spin_button);
+
+  hbox = gtk_hbox_new (FALSE, 0);
+
+  label1 = gtk_label_new ("Delay ");
+  label2 = gtk_label_new (" seconds");
+
+  spin_button_adjustment = (GtkAdjustment *) gtk_adjustment_new (3.0, 1.0, 59.0, 1.0, 1.0, 1.0);
+  spin_button = gtk_spin_button_new (spin_button_adjustment, 1.0, 0);
+
+  start_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Start"), "slideshow");
+  close_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Cancel"), "cancel");
+
+  gtk_signal_connect (GTK_OBJECT (start_button), "destroy",
+		      GTK_SIGNAL_FUNC (start_slideshow), spin_button);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (slideshow_dialog)->vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), spin_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (slideshow_dialog)->action_area), start_button, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (slideshow_dialog)->action_area), close_button, TRUE, TRUE, 4);
+
+  gtk_widget_show (slideshow_dialog);
+  gtk_widget_show (hbox);
+  gtk_widget_show (label1);
+  gtk_widget_show (spin_button);
+  gtk_widget_show (label2);
+  gtk_widget_show (start_button);
+  gtk_widget_show (close_button);
+}
+
 void
 show_dirbrowser (void)
 {
@@ -194,7 +264,7 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Next"), 
 			   _("Next image"), _("Next image"), pw, NULL, NULL);
 
-  p = gpe_find_icon ("stop");
+  p = gpe_find_icon ("cancel");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close image"), 
 			   _("Close image"), _("Close image"), pw, NULL, NULL);
@@ -209,7 +279,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("slideshow");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Slideshow"), 
-			   _("Slideshow"), _("Slideshow"), pw, NULL, NULL);
+			   _("Slideshow"), _("Slideshow"), pw, show_new_slideshow, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
