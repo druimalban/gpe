@@ -17,7 +17,7 @@ arm:
 #--deployment
 #ARM_BIN = $(PACKAGE)-$(VERSION)-arm-striped
 ARM_BIN = $(PACKAGE)
-install:  install-mo $(PACKAGE).desktop #all
+install-program:  $(PACKAGE).desktop #all
 	for i in $(PIXMAPS); do \
 	install -D pixmaps/$$i     $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/$$i;\
 	done
@@ -32,7 +32,7 @@ clean: clean-po
 
 #--include GPE generic Makefiles
 ifndef CVSBUILD
-CVBUILD = no
+CVSBUILD = no
 endif
 
 ifeq ($(CVSBUILD),yes)
@@ -43,4 +43,3 @@ endif
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
-
