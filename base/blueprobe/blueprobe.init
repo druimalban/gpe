@@ -4,10 +4,6 @@ module_id() {
     awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo
 }
 
-module_id() {
-    echo 'iPAQ' `cat /proc/hal/model`
-}
-
 if [ ! -f /etc/sysconfig/bluetooth ]; then
   echo -n "Checking for built-in Bluetooth: "
   case `module_id` in
