@@ -1,5 +1,14 @@
 2003-01-07  Philip Blundell  <philb@gnu.org>
 
+	* picturebutton.c (gpe_button_new_from_stock): Remove stray debug.
+
+2003-01-07  Damien Tanner  <dctanner@handhelds.org>
+
+	* picturebutton.c (gpe_button_new_from_stock): Avoid mnemonic
+	problem.
+	
+2003-01-07  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.42 released.
 
 2003-01-06  Damien Tanner  <dctanner@handhelds.org>

@@ -7,7 +7,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <stdio.h>
 #include <gtk/gtk.h>
 
 #include "render.h"
@@ -68,7 +67,6 @@ gpe_button_new_from_stock (const gchar *stock_id, int type)
 
     if (type == GPE_BUTTON_TYPE_LABEL || type == GPE_BUTTON_TYPE_BOTH)
     {
-      printf ("item.label = %s\n", item.label);
       label = gtk_label_new_with_mnemonic (item.label);
       gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
     }
