@@ -1,3 +1,6 @@
+2003-09-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* timeanddate.c: Changed file permissions and made root edit global profile.
+	
 2003-09-15	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* serial.c: Reformated, added check if gpsd config file exists.
 	* parser.c: Fixed bug that caused parse_file to segfault.

@@ -247,7 +247,7 @@ set_timezone (gchar *fprofile, gchar *zone)
 	{
 		fprintf (profnew, "%s\n", proflines[j]);
 	}
-	fchmod(fileno(profnew),S_IRUSR | S_IWUSR);
+	fchmod(fileno(profnew),S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	fclose (profnew);
 	
 	g_strfreev (proflines);
@@ -642,7 +642,12 @@ void Time_Save()
   char* par = malloc(100);
   tzinfo tz;
   GtkWidget *dialog;	
-  char* fprof = g_strdup_printf("%s/.profile",g_get_home_dir());
+  char* fprof;
+
+  if (geteuid()) 
+	  fprof = g_strdup_printf("%s/.profile",g_get_home_dir());
+  else
+	  fprof = g_strdup("/etc/profile");	  
   
    /* set timezone */
     
