@@ -1,0 +1,161 @@
+# German translation for gpe-todo
+# Copyright (C) 2002, 2003 Phil Blundell <pb@debian.org>
+# Colin Marquardt <colin@marquardt-home.de>, 2003
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-todo 0.32\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
+"PO-Revision-Date: 2003-02-15 13:18+0100\n"
+"Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:60
+msgid "To-do list"
+msgstr "Zu-Tun-Liste"
+
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "Wähle Kategorien"
+
+#: todo-ui.c:291
+msgid "Summary:"
+msgstr "Zusammenfassung:"
+
+#: todo-ui.c:292
+msgid "Details"
+msgstr "Details"
+
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "Nicht begonnen"
+
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "Im Verlauf begriffen"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: todo-ui.c:321
+msgid "Due:"
+msgstr "Fällig:"
+
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "Kategorien:"
+
+#: todo-ui.c:429
+msgid "Edit to-do item"
+msgstr "Editiere Eintrag"
+
+#: todo-ui.c:436
+msgid "New item"
+msgstr "Neuer Eintrag"
+
+#: list-ui.c:52
+msgid "All items"
+msgstr "Alle Einträge"
+
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "Alle bearbeiteten Einträge permanent löschen?"
+
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Löschen"
+
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Neu"
+
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "Neuen Eintrag hinzufügen"
+
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Konfigurieren"
+
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "Konfiguriere Kategorien"
+
+#: list-ui.c:347
+msgid "Purge"
+msgstr "Aufräumen"
+
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "Räume alle bearbeiteten Einträge auf"
+
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "Erneut sortieren"
+
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "Verschiebe bearbeitete Einträge an das Listenende"
+
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Beenden"
+
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "Beenden des Programms"
+
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "Der Kategoriename darf nicht leer sein"
+
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "Eine Kategorie diesen Namens existiert bereits"
+
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "Zu-Tun-Liste: Kategorien"
+
+#: configure.c:139
+msgid "New category"
+msgstr "Neue Kategorie"
+
+#: configure.c:172
+msgid "Categories"
+msgstr "Kategorien"
+
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "Eine neue Kategorie anlegen"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "Lösche ausgewählte Kategorie"
+
+#~ msgid "Save"
+#~ msgstr "Speichern"
+
+#~ msgid "New list"
+#~ msgstr "Neue Liste"
+
+#~ msgid "Close"
+#~ msgstr "Schließen"
+
+#~ msgid "Close this window"
+#~ msgstr "Schließe dieses Fenster"
+
+#~ msgid "New Contact"
+#~ msgstr "Neuer Kontakt"
