@@ -136,7 +136,7 @@ int logread_main()
 		else 						// nothing to do
 		{
 			shmdt(buf);
-			return TRUE;
+			goto next;
 		}
 	}
 	
@@ -156,16 +156,19 @@ int logread_main()
 
 	if (log_shmid != -1) 
 		shmdt(buf);
-	
+next: 	
 	/* read session file */
-printf("reading\n");	
 	if (fsession > 0)
 	{
 		pfd.fd = fsession;
 		pfd.events = POLLIN;
-		while (poll(&pfd,1,10) > 0)
+		while ((i = poll(&pfd,1,10)) > 0)
 		{
+		pfd.fd = fsession;
+		pfd.events = POLLIN;
+		pfd.revents = 0;
 			i = read(fsession,buffer,255);
+			if (!i) break;
 			buffer[i] = 0;
 			printlog(txLog2,buffer);
 		}

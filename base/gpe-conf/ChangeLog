@@ -1,3 +1,6 @@
+2003-08-29	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Improved logfile viewer.
+	
 2003-08-27	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Logfile viewer shows users .xsession-errors now
 
