@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.8
+VER_gpe-task-base = 0.9
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -99,7 +99,7 @@ DEP_gpe-task-base = \
     \
     xtscal, \
     gpe-su2, \
-    gpe-conf2, \
+    gpe-conf, \
     gpe-confd, \
     xst, \
     \
