@@ -20,7 +20,6 @@
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
@@ -568,8 +567,6 @@ new_connection_dialog ()
   GtkWidget *network_combo, *server_combo, *nick_entry, *real_name_entry,
     *password_entry;
   GtkWidget *connect_button, *close_button, *network_properties_button;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
 
   GHashTable *network_hash;
   network_hash = g_hash_table_new (g_str_hash, g_str_equal);
@@ -678,8 +675,7 @@ new_connection_dialog ()
   gtk_table_attach_defaults (GTK_TABLE (table), real_name_entry, 1, 2, 3, 4);
   gtk_table_attach_defaults (GTK_TABLE (table), password_entry, 1, 2, 4, 5);
 
-  if (gpe_find_icon_pixmap ("globe", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  gpe_set_window_icon (window, "globe");
 
   get_networks (network_combo, network_hash);
 
@@ -706,8 +702,6 @@ join_channel_dialog ()
 {
   GtkWidget *window, *vbox, *hbox, *button_hbox, *label, *hsep, *entry;
   GtkWidget *join_button, *close_button;
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - Join Channel");
@@ -751,8 +745,7 @@ join_channel_dialog ()
   gtk_box_pack_end (GTK_BOX (button_hbox), close_button, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (button_hbox), join_button, FALSE, FALSE, 0);
 
-  if (gpe_find_icon_pixmap ("globe", &pmap, &bmap))
-    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  gpe_set_window_icon (window, "globe");
 
   gtk_widget_show_all (window);
 }
@@ -899,7 +892,7 @@ main (int argc, char *argv[])
   g_signal_connect (GTK_OBJECT (menu_item), "activate",
                     G_CALLBACK (new_connection_dialog), NULL);
   menu_item_image =
-    gpe_render_icon (menu_item->style, gpe_find_icon ("globe"));
+    gtk_image_new_from_pixbuf (gpe_find_icon ("globe"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),
                                  menu_item_image);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
