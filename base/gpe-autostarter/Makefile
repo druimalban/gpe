@@ -10,8 +10,6 @@ CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags dbus-glib-1` -DDBU
 
 CFLAGS += -D_GNU_SOURCE -Wall
 
-export PKG_CONFIG_PATH = $(BUILD)
-
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -25,6 +23,8 @@ else
 BUILD = build
 endif
 LDFLAGS += `pkg-config --libs glib-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs x11`
+
+export PKG_CONFIG_PATH := $(BUILD):$(PKG_CONFIG_PATH)
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
