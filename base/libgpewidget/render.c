@@ -64,9 +64,9 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
 		  guint r1 = (guint)sr * sa;
 		  guint b1 = (guint)sb * sa;
 		  guint g1 = (guint)sg * sa;
-		  guint r2 = (guint)br * (256 - sa);
-		  guint g2 = (guint)bg * (256 - sa);
-		  guint b2 = (guint)bb * (256 - sa);
+		  guint r2 = (guint)br * (255 - sa);
+		  guint g2 = (guint)bg * (255 - sa);
+		  guint b2 = (guint)bb * (255 - sa);
 		  
 		  red = (r1 + r2) / 256;
 		  green = (g1 + g2) / 256;

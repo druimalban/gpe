@@ -1,5 +1,11 @@
 2002-06-15  Philip Blundell  <pb@debian.org>
 
+	* errorbox.c (gpe_error_box): Use gpe_render_icon to alpha-blend
+	pixmap.
+	* render.c (gpe_render_icon): Correct alpha calculation.
+
+2002-06-15  Philip Blundell  <pb@debian.org>
+
 	* render.c: New file.
 	* render.h: Likewise.
 	* Makefile (MEMBERS): Add render.

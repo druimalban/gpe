@@ -14,14 +14,13 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "errorbox.h"
+#include "render.h"
 
 #define ERROR_ICON "/usr/share/pixmaps/error.png"
 
 #define _(x) gettext(x)
 
 static GdkPixbuf *pixbuf;
-static GdkPixmap *error_pix;
-static GdkBitmap *error_pix_mask;
 static gboolean error_pix_loaded;
 
 void
@@ -43,13 +42,14 @@ gpe_error_box (char *text)
     {
       error_pix_loaded = TRUE;
       pixbuf = gdk_pixbuf_new_from_file (ERROR_ICON);
-      if (pixbuf)
-        gdk_pixbuf_render_pixmap_and_mask (pixbuf, &error_pix, &error_pix_mask, 1);
     }
 
-  if (error_pix)
+  gtk_widget_realize (dialog);
+
+  if (pixbuf)
     {
-      GtkWidget *icon = gtk_pixmap_new (error_pix, error_pix_mask);
+      GtkWidget *icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, 
+					 pixbuf);
       gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
     }
 
