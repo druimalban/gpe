@@ -463,7 +463,8 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
   if (strlen (network_name) > 0)
   {
     network = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
-    iter = network->servers;
+    if (network != NULL)
+      iter = network->servers;
   }
   else
   {
@@ -623,11 +624,30 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
   return FALSE;
 }
 
+static void
+popup_menu (GtkWidget *widget, GdkEvent *event)
+{
+  GtkMenu *menu;
+  GdkEventButton *event_button;
+
+  menu = GTK_MENU (widget);
+
+  if (event->type == GDK_BUTTON_PRESS)
+  {
+    event_button = (GdkEventButton *) event;
+    if (event_button->button == 1)
+    {
+      gtk_menu_popup (menu, NULL, NULL, NULL, NULL, event_button->button, event_button->time);
+    }
+  }
+}
+
 int
 main (int argc, char *argv[])
 {
   GtkWidget *vbox, *hbox, *users_button_vbox, *users_button_label, *hsep;
-  GtkWidget *users_button, *close_button, *new_connection_button, *quick_button, *smiley_button;
+  GtkWidget *users_button, *close_button, *menu_button, *quick_button, *smiley_button;
+  GtkWidget *menu, *menu_item, *menu_item_image;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
 
@@ -676,6 +696,26 @@ main (int argc, char *argv[])
 
   main_entry = gtk_entry_new ();
 
+  menu = gtk_menu_new ();
+
+  menu_item = gtk_image_menu_item_new_with_label ("Preferences");
+  //g_signal_connect (GTK_OBJECT (menu_item), "activate",
+  //		    G_CALLBACK (), NULL);
+  menu_item_image = gpe_render_icon (menu_item->style, gpe_find_icon ("preferences"));
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), menu_item_image);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  gtk_widget_show (menu_item);
+  gtk_widget_show (menu_item_image);
+
+  menu_item = gtk_image_menu_item_new_with_label ("New Connection");
+  g_signal_connect (GTK_OBJECT (menu_item), "activate",
+		    G_CALLBACK (new_connection_dialog), NULL);
+  menu_item_image = gpe_render_icon (menu_item->style, gpe_find_icon ("globe"));
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), menu_item_image);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  gtk_widget_show (menu_item);
+  gtk_widget_show (menu_item_image);
+
   users_list_store = gtk_list_store_new (1, G_TYPE_STRING);
   users_tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (users_list_store));
 
@@ -683,17 +723,17 @@ main (int argc, char *argv[])
   users_button_arrow2 = gtk_arrow_new (GTK_ARROW_LEFT, GTK_SHADOW_NONE);
 
   close_button = gpe_picture_button (main_button_hbox->style, NULL, "close");
-  new_connection_button = gpe_picture_button (hbox->style, NULL, "globe");
+  menu_button = gpe_picture_button (hbox->style, NULL, "globe");
   quick_button = gpe_picture_button (hbox->style, NULL, "quote");
   smiley_button = gpe_picture_button (hbox->style, NULL, "smiley_happy");
   users_button = gtk_button_new ();
 
   g_signal_connect (GTK_OBJECT (close_button), "clicked",
-    		      G_CALLBACK (close_button_clicked), NULL);
-  g_signal_connect (GTK_OBJECT (new_connection_button), "clicked",
-    		      G_CALLBACK (new_connection_dialog), NULL);
+		    G_CALLBACK (close_button_clicked), NULL);
+  g_signal_connect_swapped (GTK_OBJECT (menu_button), "button_press_event",
+		    G_CALLBACK (popup_menu), GTK_OBJECT (menu));
   g_signal_connect (GTK_OBJECT (users_button), "clicked",
-    		      G_CALLBACK (toggle_users_list), NULL);
+		    G_CALLBACK (toggle_users_list), NULL);
 
   users_button_label = gtk_label_new ("u\ns\ne\nr\ns");
   gtk_misc_set_alignment (GTK_MISC (users_button_label), 0.5, 0.5);
@@ -719,7 +759,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), quick_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), smiley_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), main_entry, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), new_connection_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), menu_button, FALSE, FALSE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
