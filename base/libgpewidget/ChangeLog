@@ -1,3 +1,13 @@
+2004-03-07  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.78 released.
+
+2004-03-07  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (ipkg): Also depend on all.
+	(PACKAGE_CPPFLAGS, PACKAGE_CFLAGS, PACKAGE_LDFLAGS): Set instead
+	of CPPFLAGS, CFLAGS, LDFLAGS.
+
 2004-03-01  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.77 released.

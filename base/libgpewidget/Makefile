@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
-VERSION = 0.77
+VERSION = 0.78
 CVSBUILD = yes
 
 IN_LIBGPEWIDGET = yes
@@ -19,12 +19,12 @@ else
 BUILD = build
 endif
 
-CPPFLAGS = $(STANDARD_CPPFLAGS)
-CFLAGS = $(STANDARD_CFLAGS) $(GTKCFLAGS) $(shell pkg-config --cflags xrender)
-LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrender)
+PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(GTKCFLAGS) $(shell pkg-config --cflags xrender)
+PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrender)
 
-CFLAGS += -fPIC
-CPPFLAGS += -I./gpe
+PACKAGE_CFLAGS += -fPIC
+PACKAGE_CPPFLAGS += -I./gpe
 
 HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h
 
@@ -63,6 +63,8 @@ install-devel: $(PACKAGE).pc
 
 clean: clean-po
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
+
+ipkg: all
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
