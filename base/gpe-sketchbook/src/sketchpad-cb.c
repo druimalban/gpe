@@ -135,7 +135,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
                                              THUMBNAIL_SIZE, THUMBNAIL_SIZE,
                                              GDK_INTERP_BILINEAR);
     gdk_pixbuf_unref(pixbuf);
-    gdk_pixbuf_unref(note->thumbnail);
+    if(note->thumbnail) gdk_pixbuf_unref(note->thumbnail);
     note->thumbnail = pixbuf_scaled;
   }
 
