@@ -35,7 +35,7 @@ gint button_press_event_handler  (GtkWidget *_drawing_area, GdkEventButton *even
 gint button_release_event_handler(GtkWidget *_drawing_area, GdkEventButton *event );
 gint motion_notify_event_handler (GtkWidget *_drawing_area, GdkEventMotion *event);
 
-void sketchpad_set_darwing_area(GtkWidget * a_drawing_area);
+void sketchpad_set_drawing_area(GtkWidget * a_drawing_area);
 void sketchpad_refresh_drawing_area();
 
 void sketchpad_open_file(gchar * fullpath_filename, const gchar * title);

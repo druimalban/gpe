@@ -112,7 +112,7 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
                                         drawing_area);
 
   //--set a ref to the drawing area
-  sketchpad_set_darwing_area(drawing_area);
+  sketchpad_set_drawing_area(drawing_area);
 
   return scrolledwindow;
 }//sketchpad_build_scrollable_drawing_area()

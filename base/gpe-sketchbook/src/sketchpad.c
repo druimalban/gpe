@@ -187,7 +187,7 @@ void sketchpad_new_sketch(){
   sketchpad_refresh_drawing_area(drawing_area);
 }//sketchpad_new_sketch()
 
-void sketchpad_set_darwing_area(GtkWidget * a_drawing_area){
+void sketchpad_set_drawing_area(GtkWidget * a_drawing_area){
   drawing_area = a_drawing_area;
 }
 
