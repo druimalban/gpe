@@ -1,5 +1,8 @@
 .SUFFIXES: .mo .po .pot
 
+# use ipkg-build or ipkg-deb-build
+IPKG_BUILD := ipkg-build
+
 mo-files = $(patsubst %,po/%.mo,$(LINGUAS))
 po-files = $(patsubst %,po/%.po,$(LINGUAS))
 
@@ -29,7 +32,8 @@ MAINTAINER = $(shell grep 'Maintainer: ' familiar/control | cut -d ' ' -f 2-)
 transdist := familiar/dist-translation
 templates := ../build/familiar
 
-translation-package: install-mo
+translation-package:
+	make DESTDIR=$(transdist) install-mo
 	rm -rf $(transdist)
 	for LINGUA in $(LINGUAS); do \
 		i=$$(echo $$LINGUA | tr '[A-Z_]' '[a-z-]'); \
@@ -39,6 +43,6 @@ translation-package: install-mo
 		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(PACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
 		cp $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
 		chown -R root.root $(transdist)/$$i; \
-		ipkg-build $(transdist)/$$i; \
-		mv *.ipk ..; \
+		$(IPKG_BUILD) $(transdist)/$$i; \
 	done
+
