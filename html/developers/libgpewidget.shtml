@@ -46,14 +46,14 @@ An example of this structure is given below.
 <p>
 <table border="0" bgcolor="#EEEEEE">
 <tr><td>
-<code>
-struct gpe_icon my_icons[] = {<br>
-&nbsp;&nbsp;{ "pear", "/root/pear.png" },<br>
-&nbsp;&nbsp;{ "lemon", "my_lemon_image" },<br>
-&nbsp;&nbsp;{ "icon", PREFIX "/share/pixmaps/gpe-application.png" },<br>
-&nbsp;&nbsp;{NULL, NULL}<br>
-};<br>
-</code>
+<pre>
+struct gpe_icon my_icons[] = {
+  { "pear", "/root/pear.png" },
+  { "lemon", "my_lemon_image" },
+  { "icon", PREFIX "/share/pixmaps/gpe-application.png" },
+  {NULL, NULL}
+};
+</pre>
 </td></tr>
 </table>
 </p>
@@ -138,19 +138,20 @@ All GPE applications should try to follow the precedure defined in the example b
 <p>
 <table border="0" bgcolor="#EEEEEE">
 <tr><td>
-<code>
-toolbar = gtk_toolbar_new ();<br>
-gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);<br>
-gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);<br>
+<pre>
+toolbar = gtk_toolbar_new ();
+gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), _("New document"), _("New document"), toolbar_icon, new_file, NULL);
 <br>
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);<br>
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), _("New document"), _("New document"), toolbar_icon, new_file, NULL);<br>
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), _("Open file"), _("Open file"), toolbar_icon, select_open_file, NULL);
 <br>
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);<br>
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), _("Open file"), _("Open file"), toolbar_icon, select_open_file, NULL);<br>
-<br>
-  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_SMALL_TOOLBAR);<br>
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save"), _("Save current file"), _("Save current file"), toolbar_icon, save_file, NULL);</code>
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_SAVE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Save"), _("Save current file"), _("Save current file"), toolbar_icon, save_file, NULL);
+</pre>
 </td></tr>
 </table>
 </p>
