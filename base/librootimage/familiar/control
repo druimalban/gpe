@@ -1,0 +1,8 @@
+Package: librootimage0
+Section: x11
+Priority: optional
+Version: 0.10
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: xlibs
+Description: X root image handling library
