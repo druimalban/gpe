@@ -24,7 +24,7 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
-#define THRESHOLD 2
+#define THRESHOLD 4
 
 struct tap
 {

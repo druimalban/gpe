@@ -1,4 +1,10 @@
+2004-02-29  Philip Blundell  <philb@gnu.org>
+
+	* tap.c (THRESHOLD): Set to 4 for better behaviour on jittery
+	touchscreens.
+
 2004-02-21  Florian Boor <florian.boor@kernelconcepts.de>
+
 	* gpehelp.c: Some minor improvements and comments.
 	* gpehelp.c, gpehelp.h: New files implementing gpe_show_help().
 	* removed gpe/about.h: Obsolete header file.
