@@ -62,4 +62,6 @@ install-program: all
 clean:
 	rm -f gpe-word $(OBJS)
 
+include ../build/Makefile.dpkg_ipkg
+include ../build/Makefile.translation
 
