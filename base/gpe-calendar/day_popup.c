@@ -163,22 +163,26 @@ day_popup(GtkWidget *parent, struct day_popup *p)
 
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
+  gtk_window_set_transient_for (GTK_WINDOW (window), GTK_WINDOW (parent));
+
   gdk_window_get_pointer (NULL, &x, &y, NULL);
+
+  gtk_widget_show_all (vbox);
+
+  gtk_widget_realize (window);
   gtk_widget_size_request (window, &requisition);
   
   screen_width = gdk_screen_width ();
   screen_height = gdk_screen_height ();
-  
+
   x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
   y = CLAMP (y + 4, 0, MAX (0, screen_height - requisition.height));
   
   gtk_widget_set_uposition (window, MAX (x, 0), MAX (y, 0));
 
-  gtk_window_set_transient_for (GTK_WINDOW (window), GTK_WINDOW (parent));
-
   gtk_object_set_data (GTK_OBJECT (parent), "popup-handle", window);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      destroy_popup, parent);
 
-  gtk_widget_show_all (window);
+  gtk_widget_show (window);
 }
