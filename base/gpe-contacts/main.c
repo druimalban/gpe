@@ -384,12 +384,46 @@ update_categories (void)
   g_slist_free (categories);
 }
 
+static gchar *
+build_categories_string (struct person *p)
+{
+  gchar *s = NULL;
+  GSList *iter = p->data;
+
+  for (; iter; iter = iter->next)
+    {
+      struct tag_value *t = iter->data;
+      if (!strcasecmp (t->tag, "category"))
+	{
+	  gchar *cat;
+	  cat = db_get_category_name (atoi (t->value));
+
+	  if (cat)
+	    {
+	      if (s)
+		{
+		  char *ns = g_strdup_printf ("%s, %s", s, cat);
+		  g_free (s);
+		  s = ns;
+		}
+	      else
+		s = g_strdup (cat);
+	    }
+	}
+    }
+
+  return s;
+}
+
 static void
 store_special_fields (GtkWidget * edit, struct person *p)
 {
-  GSList *l, *bl;
-  GtkWidget *w = lookup_widget (edit, "datecombo");
-  struct tag_value *v = p ? db_find_tag (p, "BIRTHDAY") : NULL;
+  GtkWidget *w;
+  struct tag_value *v;
+  gchar *str;
+
+  w = lookup_widget (edit, "datecombo");
+  v = p ? db_find_tag (p, "BIRTHDAY") : NULL;
   if (v && v->value)
     {
       guint year, month, day;
@@ -399,30 +433,12 @@ store_special_fields (GtkWidget * edit, struct person *p)
   else
     gtk_date_combo_clear (GTK_DATE_COMBO (w));
 
-  if (p)
+  str = build_categories_string (p);
+  if (str)
     {
-      bl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
-      if (bl)
-	{
-	  for (l = p->data; l; l = l->next)
-	    {
-	      v = l->data;
-	      if (!strcasecmp (v->tag, "CATEGORY") && v->value)
-		{
-		  guint c = atoi (v->value);
-		  GSList *i;
-		  for (i = bl; i; i = i->next)
-		    {
-		      GtkWidget *w = i->data;
-		      if ((guint)
-			  gtk_object_get_data (GTK_OBJECT (w),
-					       "category") == c)
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w),
-						      TRUE);
-		    }
-		}
-	    }
-	}
+      w = lookup_widget (edit, "categories-label");
+      gtk_label_set_text (GTK_LABEL (w), str);
+      g_free (str);
     }
 }
 

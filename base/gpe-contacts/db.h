@@ -55,5 +55,6 @@ struct category
 };
 
 extern GSList *db_get_categories (void);
+extern gchar *db_get_category_name (guint id);
 
 #endif

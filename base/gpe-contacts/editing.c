@@ -25,11 +25,11 @@ static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
 {
   GSList *tags;
-  gtk_object_set_data (GTK_OBJECT (w), "db-tag", tag);
+  g_object_set_data (G_OBJECT (w), "db-tag", tag);
 
   tags = gtk_object_get_data (GTK_OBJECT (pw), "tag-widgets");
   tags = g_slist_append (tags, w);
-  gtk_object_set_data (GTK_OBJECT (pw), "tag-widgets", tags);
+  g_object_set_data (G_OBJECT (pw), "tag-widgets", tags);
 }
 
 static void
@@ -130,12 +130,6 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
   singles = NULL;
 }
 
-static void
-destroy_category_widgets (gpointer p)
-{
-  g_slist_free ((GSList *)p);
-}
-
 static GtkWidget*
 create_edit (void)
 {
@@ -151,19 +145,17 @@ create_edit (void)
   GtkWidget *edit_bt_bdate;
   GtkWidget *hbox4;
   GtkWidget *edit_bt_image;
-  GtkWidget *scrolledwindow3;
-  GtkWidget *cbox;
+  GtkWidget *cathbox;
   GtkWidget *name_entry;
   GtkWidget *summary_entry;
   GtkWidget *label16;
   GtkWidget *edit_cancel;
   GtkWidget *edit_save;
   GtkWidget *edit_delete;
-  GtkWidget *catframe;
+  GtkWidget *catlabel, *catbutton;
   GtkTooltips *tooltips;
   GtkWidget *topvbox;
   GtkWidget *topscrolledwindow;
-  GSList *categories = db_get_categories ();
   GtkWidget *vbox, *action_area;
 
   tooltips = gtk_tooltips_new ();
@@ -237,7 +229,6 @@ create_edit (void)
   GTK_WIDGET_UNSET_FLAGS (datecombo, GTK_CAN_DEFAULT);
 
   edit_bt_bdate = gtk_check_button_new_with_label (_("Schedule"));
-  gtk_widget_set_name (edit_bt_bdate, "edit_bt_bdate");
   gtk_widget_set_sensitive (edit_bt_bdate, FALSE);		/* XXX */
   gtk_box_pack_start (GTK_BOX (hbox3), edit_bt_bdate, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, edit_bt_bdate, _("automatic appointment"), NULL);
@@ -251,39 +242,15 @@ create_edit (void)
   gtk_box_pack_start (GTK_BOX (hbox4), edit_bt_image, TRUE, TRUE, 0);
   gtk_tooltips_set_tip (tooltips, edit_bt_image, _("click to choose file"), NULL);
 
-  catframe = gtk_frame_new (_("Categories"));
-  scrolledwindow3 = gtk_scrolled_window_new (NULL, NULL);
+  cathbox = gtk_hbox_new (FALSE, 0);
+  catbutton = gtk_button_new_with_label (_("Categories:"));
+  catlabel = gtk_label_new (NULL);
 
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow3), 
-				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-  gtk_container_add (GTK_CONTAINER (catframe), scrolledwindow3);
-  gtk_box_pack_start (GTK_BOX (topvbox), catframe, TRUE, TRUE, 2);
-
-  cbox = gtk_vbox_new (FALSE, 0);
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindow3), 
-					 cbox);
-
-  if (categories)
-    {
-      GSList *iter;
-      GSList *category_widgets = NULL;
-      for (iter = categories; iter; iter = iter->next)
-	{
-	  struct category *c = iter->data;
-	  GtkWidget *w = gtk_check_button_new_with_label (c->name);
-	  gtk_object_set_data (GTK_OBJECT (w), "category", (gpointer)c->id);
-	  gtk_box_pack_start (GTK_BOX (cbox), w, FALSE, FALSE, 0);
-	  g_free (c->name);
-	  g_free (c);
-	  category_widgets = g_slist_append (category_widgets, w);
-	}
-      
-      gtk_object_set_data_full (GTK_OBJECT (edit), "category-widgets", category_widgets,
-				(GtkDestroyNotify) destroy_category_widgets);
-
-      g_slist_free (categories);
-    }
+  gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 4);
+  gtk_misc_set_alignment (GTK_MISC (catlabel), 0.0, 0.5);  
+  
+  gtk_box_pack_start (GTK_BOX (topvbox), cathbox, FALSE, FALSE, 2);
 
   name_entry = gtk_entry_new ();
   add_tag ("NAME", name_entry, edit);
@@ -310,20 +277,20 @@ create_edit (void)
   gtk_box_pack_start (GTK_BOX (action_area), edit_cancel, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (action_area), edit_save, TRUE, FALSE, 4);
 
-  gtk_signal_connect (GTK_OBJECT (edit_bt_image), "clicked",
-                      GTK_SIGNAL_FUNC (on_edit_bt_image_clicked),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (edit_cancel), "clicked",
-                      GTK_SIGNAL_FUNC (on_edit_cancel_clicked),
-                      edit);
-  gtk_signal_connect (GTK_OBJECT (edit_save), "clicked",
-                      GTK_SIGNAL_FUNC (on_edit_save_clicked),
-                      edit);
+  g_signal_connect (G_OBJECT (edit_bt_image), "clicked",
+		    G_CALLBACK (on_edit_bt_image_clicked), NULL);
+  g_signal_connect (G_OBJECT (edit_cancel), "clicked",
+		    G_CALLBACK (on_edit_cancel_clicked), edit);
+  g_signal_connect (G_OBJECT (edit_save), "clicked",
+		    G_CALLBACK (on_edit_save_clicked), edit);
+  g_signal_connect (G_OBJECT (catbutton), "clicked",
+		    G_CALLBACK (on_categories_clicked), edit);
 
   g_object_set_data (G_OBJECT (edit), "tooltips", tooltips);
   g_object_set_data (G_OBJECT (edit), "notebook2", notebook2);
   g_object_set_data (G_OBJECT (edit), "name_entry", name_entry);
   g_object_set_data (G_OBJECT (edit), "datecombo", datecombo);
+  g_object_set_data (G_OBJECT (edit), "categories-label", catlabel);
 
   gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
 

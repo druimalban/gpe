@@ -29,43 +29,9 @@ void
 on_edit_save_clicked                   (GtkButton       *button,
                                         gpointer         user_data);
 
-void
-on_b1_clicked                          (GtkButton       *button,
-                                        gpointer         user_data);
 
 void
-on_button2_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_button3_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_button4_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_button5_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_button7_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_button8_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_nbList_switch_page                  (GtkNotebook     *notebook,
-                                        GtkNotebookPage *page,
-                                        gint             page_num,
-                                        gpointer         user_data);
-
-void
-on_button1_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
+on_categories_clicked (GtkButton *button, gpointer data);
 
 void
 on_bDetAdd_clicked                     (GtkButton       *button,
@@ -89,19 +55,6 @@ on_clist8_unselect_row                 (GtkCList        *clist,
                                         GdkEvent        *event,
                                         gpointer         user_data);
 
-void
-on_clist8_select_row                   (GtkCList        *clist,
-                                        gint             row,
-                                        gint             column,
-                                        GdkEvent        *event,
-                                        gpointer         user_data);
-
-void
-on_clist8_unselect_row                 (GtkCList        *clist,
-                                        gint             row,
-                                        gint             column,
-                                        GdkEvent        *event,
-                                        gpointer         user_data);
 void
 on_setup_destroy                       (GtkObject       *object,
                                         gpointer         user_data);

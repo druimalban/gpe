@@ -1,3 +1,21 @@
+2004-02-16  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (MEMBERS): Add categories.
+	* categories.c: New file.
+	* categories.h: Likewise.
+	* db.c (db_get_category_name): New function.
+	* db.h (db_get_category_name): New prototype.
+	* main.c (store_special_fields): Revamp category list handling.
+	(build_categories_string): New.
+	* callbacks.c (on_categories_clicked): New.
+	(retrieve_special_fields): Use GObject.
+	(edit_bt_image_clicked): Likewise.
+	* callbacks.h: Delete outdated prototypes.
+	(on_categories_clicked): Added.
+	* editing.c (add_tag): Use GObject.
+	(destroy_category_widgets): Deleted.
+	(create_edit): Use GObject.  Revamp category list handling.
+
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
 	* main.c (create_main): Re-run search when selection made from

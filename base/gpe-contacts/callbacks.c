@@ -15,6 +15,7 @@
 #include "support.h"
 #include "db.h"
 #include "proto.h"
+#include "categories.h"
 
 #include <gpe/gtkdatecombo.h>
 
@@ -38,18 +39,16 @@ on_edit_bt_image_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *filesel = gtk_file_selection_new ("Select image");
 
-  gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
-		      "clicked", GTK_SIGNAL_FUNC (store_filename), filesel);
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
+		      "clicked", G_CALLBACK (store_filename), filesel);
 
-  gtk_signal_connect_object (GTK_OBJECT
-			     (GTK_FILE_SELECTION (filesel)->ok_button),
-			     "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			     (gpointer) filesel);
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
+		    "clicked", G_CALLBACK (gtk_widget_destroy),
+		    (gpointer) filesel);
 
-  gtk_signal_connect_object (GTK_OBJECT
-			     (GTK_FILE_SELECTION (filesel)->cancel_button),
-			     "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-			     (gpointer) filesel);
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button),
+		    "clicked", G_CALLBACK (gtk_widget_destroy),
+		    (gpointer) filesel);
 
   gtk_widget_show_all (filesel);
 }
@@ -63,14 +62,14 @@ on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
 void
 retrieve_special_fields (GtkWidget * edit, struct person *p)
 {
-  GSList *cl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
+  GSList *cl = g_object_get_data (G_OBJECT (edit), "category-widgets");
   db_delete_tag (p, "CATEGORY");
   while (cl)
     {
       GtkWidget *w = cl->data;
       if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
 	{
-	  guint c = (guint) gtk_object_get_data (GTK_OBJECT (w), "category");
+	  guint c = (guint) g_object_get_data (G_OBJECT (w), "category");
 	  char buf[32];
 	  snprintf (buf, sizeof (buf) - 1, "%d", c);
 	  buf[sizeof (buf) - 1] = 0;
@@ -98,11 +97,11 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *edit = (GtkWidget *) user_data;
   GSList *tags;
-  struct person *p = gtk_object_get_data (GTK_OBJECT (edit), "person");
+  struct person *p = g_object_get_data (G_OBJECT (edit), "person");
   if (p == NULL)
     p = new_person ();
   
-  for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
+  for (tags = g_object_get_data (G_OBJECT (edit), "tag-widgets");
        tags; tags = tags->next)
     {
       GtkWidget *w = tags->data;
@@ -116,7 +115,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
 	  gtk_text_buffer_get_bounds (buf, &start, &end);
 	  text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 	}
-      tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+      tag = g_object_get_data (G_OBJECT (w), "db-tag");
       db_set_data (p, tag, text);
     }
 
@@ -128,6 +127,16 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
       discard_person (p);
       update_display ();
     }
+}
+
+void
+on_categories_clicked (GtkButton *button, gpointer user_data)
+{
+  struct person *p;
+
+  p = g_object_get_data (G_OBJECT (user_data), "person");
+
+  change_categories (p);
 }
 
 // configuration 

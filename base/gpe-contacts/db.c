@@ -626,6 +626,22 @@ db_get_categories (void)
   return list;
 }
 
+gchar *
+db_get_category_name (guint id)
+{
+  GSList *iter;
+
+  for (iter = db_get_categories (); iter; iter = iter->next)
+    {
+      struct category *c = iter->data;
+
+      if (c->id == id)
+	return c->name;
+    }
+
+  return NULL;
+}
+
 static int
 read_one_entry_alpha (void *arg, int argc, char **argv, char **names)
 {
