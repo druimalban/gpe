@@ -99,20 +99,20 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("new");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
+                           _("New sketch"), _("New sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_new_clicked), NULL);
   pixbuf = gpe_find_icon ("open");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
+                           _("Edit sketch"), _("Edit sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_open_clicked), NULL);
   gtk_widget_set_sensitive(button, FALSE);
   selector.button_edit = button;
   pixbuf = gpe_find_icon ("delete");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
-                           //_("Delete selected sketch"), _("Delete selected sketch"),
+                           //NULL, NULL,
+                           _("Delete selected sketch"), _("Delete selected sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_selector_delete_clicked), NULL);
   gtk_widget_set_sensitive(button, FALSE);
   selector.button_delete = button;
@@ -120,7 +120,7 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("import");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    NULL, NULL,
+                                    _("Import from png"), _("Import from png"),
 				    pixmap,
 				    GTK_SIGNAL_FUNC(on_button_selector_import_clicked), NULL);
 
@@ -129,7 +129,7 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("icons");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    NULL, NULL,
+                                    _("Toggle view"), _("Toggle view"),
                                     pixmap,
                                     GTK_SIGNAL_FUNC(on_button_selector_change_view_clicked), NULL);
   g_object_set_data((GObject *) button, "icon_mode_icon", pixmap);
@@ -143,7 +143,7 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("prefs");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    NULL, NULL,
+                                    _("Preferences"), _("Preferences"),
 				    pixmap,
 				    GTK_SIGNAL_FUNC(on_button_selector_preferences_clicked), NULL);
 

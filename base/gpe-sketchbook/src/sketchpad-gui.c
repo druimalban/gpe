@@ -263,12 +263,12 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
 
   //--packing
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                            radiobutton_tool_eraser, NULL, NULL);
+                            radiobutton_tool_eraser, _("Select eraser"), _("Select eraser"));
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                            radiobutton_tool_pencil, NULL, NULL);
+                            radiobutton_tool_pencil, _("Select pencil"), _("Select pencil"));
   //gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_brushes, NULL, NULL);
-  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_colors,  NULL, NULL);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_brushes, _("Brush size"), _("Brush size"));
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), button_colors,  _("Brush color"), _("Brush color"));
 
   return toolbar;
 }//sketchpad_build_drawing_toolbar()
@@ -427,7 +427,7 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   //files_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW, _files_popup_new, NULL);
   gtk_button_set_relief (GTK_BUTTON (files_popup_button), GTK_RELIEF_NONE);
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                            files_popup_button, NULL, NULL);
+                            files_popup_button, _("Sketch menu"), _("Sketch menu"));
   //keep a ref
   sketchpad.files_popup_button = files_popup_button;
 
@@ -436,17 +436,17 @@ void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   pixbuf = gpe_find_icon ("list");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
+                           _("Show list"), _("Show list"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_list_view_clicked), NULL);
   pixbuf = gpe_find_icon ("left");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
+                           _("Previous sketch"), _("Previous sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_file_prev_clicked), NULL);
   pixbuf = gpe_find_icon ("right");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
+                           _("Next sketch"), _("Next sketch"),
                            pixmap, GTK_SIGNAL_FUNC(on_button_file_next_clicked), NULL);
 
 }
