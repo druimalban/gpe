@@ -25,7 +25,7 @@ $(PACKAGE): $(OBJS)
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/X11/Xinit.d
-	install 10detect-stylus $(DESTDIR)/etc/X11/Xinit.d
+	install 70detect-stylus $(DESTDIR)/etc/X11/Xinit.d
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 upstream: clean
