@@ -19,16 +19,9 @@
 
 #include "globals.h"
 #include "event-db.h"
+#include "gtkdatecombo.h"
 
 #define _(_x) gettext (_x)
-
-struct date
-{
-  guint year, month, day;
-  GtkWidget *entry;
-  GtkWidget *cal;
-  GtkWidget *button;
-};
 
 struct sens
 {
@@ -37,7 +30,10 @@ struct sens
   GtkWidget *startcombo;
   GtkWidget *endcombo;
   GtkWidget *timeend;
+  GtkWidget *deletebutton;
 
+  GtkWidget *startdate, *enddate;
+  
   GtkWidget *alarmbutton;
   GtkWidget *alarmspin;
   GtkWidget *alarmoption;
@@ -59,8 +55,6 @@ struct sens
   GtkAdjustment *endspin_adj, *dailyspin_adj, *monthlyspin_adj, 
     *yearlyspin_adj;
   
-  struct date start, end;
-
   event_t ev;
 };
 
@@ -78,21 +72,6 @@ gtk_box_pack_start_show(GtkBox *box,
 static void
 destroy_user_data (gpointer p)
 {
-  struct sens *s = (struct sens *)p;
-
-  if (s->start.cal)
-    {
-      gtk_widget_hide (s->start.cal);
-      gtk_widget_destroy (s->start.cal);
-      s->start.cal = NULL;
-    }
-  if (s->end.cal)
-    {
-      gtk_widget_hide (s->end.cal);
-      gtk_widget_destroy (s->end.cal);
-      s->start.cal = NULL;
-    }
-
   g_free (p);
 }
 
@@ -194,9 +173,11 @@ click_ok(GtkWidget *widget,
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->text), 
 						     0, -1);
   memset(&tm, 0, sizeof(tm));
+#if 0
   tm.tm_year = s->start.year - 1900;
   tm.tm_mon = s->start.month;
   tm.tm_mday = s->start.day;
+#endif
   tm.tm_sec = 0;
 
   tm.tm_hour = 0;
@@ -252,75 +233,6 @@ click_cancel(GtkWidget *widget,
   gtk_widget_destroy(d);
 }
 
-static void
-click_calendar(GtkWidget *widget,
-	       struct date *dp)
-{
-  struct tm tm;
-  char buf[256];
-  
-  gtk_calendar_get_date (GTK_CALENDAR (widget), &dp->year, 
-			 &dp->month, &dp->day);
-  memset(&tm, 0, sizeof(tm));
-  tm.tm_year = dp->year - 1900;
-  tm.tm_mon = dp->month;
-  tm.tm_mday = dp->day;
-  strftime (buf, sizeof(buf), "%x", &tm);
-  gtk_entry_set_text (GTK_ENTRY (dp->entry), buf);
-
-  gtk_widget_hide (widget);
-  gtk_widget_destroy (widget);
-}
-
-static void
-drop_calendar(GtkWidget *widget,
-	      GtkWidget *window)
-{
-  struct sens *s = gtk_object_get_data (GTK_OBJECT (window), "sens_list");
-
-  struct date *dp = (widget == s->start.button) ? &s->start : &s->end;
-
-  if (dp->cal)
-    {
-      gtk_widget_hide (dp->cal);
-      gtk_widget_destroy (dp->cal);
-
-      dp->cal = NULL;
-    }
-  else
-    {
-      GtkWidget *cal = gtk_calendar_new ();
-      GtkWidget *calw = gtk_window_new (GTK_WINDOW_POPUP);
-      GtkRequisition requisition;
-      gint x, y;
-      gint screen_width;
-      gint screen_height;
-
-      gtk_calendar_select_month (GTK_CALENDAR (cal), dp->month, dp->year);
-      gtk_calendar_select_day (GTK_CALENDAR (cal), dp->day);
- 
-      gtk_container_add (GTK_CONTAINER (calw), cal);
-      gtk_window_set_policy (GTK_WINDOW (calw),
-			     FALSE, FALSE, TRUE);
-      
-      gdk_window_get_pointer (NULL, &x, &y, NULL);
-      gtk_widget_size_request (cal, &requisition);
-      
-      screen_width = gdk_screen_width ();
-      screen_height = gdk_screen_height ();
-      
-      x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
-      y = CLAMP (y - 2, 0, MAX (0, screen_height - requisition.height));
-      
-      gtk_widget_set_uposition (calw, MAX (x, 0), MAX (y, 0));
-      
-      gtk_widget_show_all (calw);
-      dp->cal = calw;
-      gtk_signal_connect (GTK_OBJECT (cal), "day-selected-double-click",
-			  GTK_SIGNAL_FUNC (click_calendar), dp);
-    }
-}
-
 static GtkWidget *
 edit_event_window(void)
 {
@@ -349,22 +261,15 @@ edit_event_window(void)
   GtkWidget *labelrecurpage = gtk_label_new (_("Recurrence"));
   
   GtkWidget *vboxevent = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hboxrepeat = gtk_hbox_new (FALSE, 0);
+  GtkWidget *vboxrepeat = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxend = gtk_vbox_new (FALSE, 0);
+  GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
   
   GtkWidget *vboxrecur = gtk_vbox_new (FALSE, 0);
+  GtkWidget *hboxrecurtypes = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxendafter = gtk_hbox_new (FALSE, 0);
   
   GtkWidget *text = gtk_text_new (NULL, NULL);
-
-  GtkWidget *startdatebox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *enddatebox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *startdatebutton = gtk_button_new ();
-  GtkWidget *enddatebutton = gtk_button_new ();
-  GtkWidget *startdateentry = gtk_entry_new ();
-  GtkWidget *enddateentry = gtk_entry_new ();
-  GtkWidget *startdatelabel = gtk_label_new(_("Start date"));
-  GtkWidget *enddatelabel = gtk_label_new(_("End date"));
 
   GtkWidget *frombutton = gtk_radio_button_new_with_label (NULL, _("From"));
   GtkWidget *alldaybutton = 
@@ -382,6 +287,11 @@ edit_event_window(void)
 
   GtkWidget *startcombo = gtk_combo_new ();
   GtkWidget *endcombo = gtk_combo_new ();
+
+  GtkWidget *startdatebox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *enddatebox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *startdatelabel = gtk_label_new (_("Start date:"));
+  GtkWidget *enddatelabel = gtk_label_new (_("End date:"));
 
   GtkWidget *alarmhbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *alarmmenu = gtk_menu_new ();
@@ -418,33 +328,22 @@ edit_event_window(void)
   gtk_combo_set_popdown_strings (GTK_COMBO (startcombo), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endcombo), times);
 
-  gtk_container_add (GTK_CONTAINER (startdatebutton), 
-		     gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT));
-  gtk_container_add (GTK_CONTAINER (enddatebutton), 
-		     gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_OUT));
+  s->startdate = gtk_date_combo_new ();
+  s->enddate = gtk_date_combo_new ();
+  
+  gtk_box_pack_start (GTK_BOX (startdatebox), startdatelabel, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (startdatebox), s->startdate, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 0);
 
-  gtk_text_set_editable (GTK_TEXT(text), TRUE);
-  gtk_text_set_word_wrap (GTK_TEXT(text), TRUE);
+  gtk_text_set_editable (GTK_TEXT (text), TRUE);
+  gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
   gtk_widget_set_usize (text, -1, 88);
 
   gtk_signal_connect (GTK_OBJECT (frombutton), "clicked",
 		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   gtk_signal_connect (GTK_OBJECT (alarmbutton), "clicked",
 		     GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-
-  gtk_signal_connect (GTK_OBJECT (startdatebutton), "clicked",
-		      GTK_SIGNAL_FUNC (drop_calendar), window);
-  gtk_signal_connect (GTK_OBJECT (enddatebutton), "clicked",
-		      GTK_SIGNAL_FUNC (drop_calendar), window);
-  gtk_entry_set_editable (GTK_ENTRY (startdateentry), FALSE);
-  gtk_entry_set_editable (GTK_ENTRY (enddateentry), FALSE);
-
-  gtk_box_pack_start (GTK_BOX (startdatebox), startdatelabel, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (startdatebox), startdateentry, TRUE, TRUE, 5);
-  gtk_box_pack_start (GTK_BOX (enddatebox), enddateentry, TRUE, TRUE, 5);
-  gtk_box_pack_start (GTK_BOX (startdatebox), startdatebutton, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (enddatebox), enddatebutton, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (alldayhbox), alldaybutton, FALSE, FALSE, 5);
 
@@ -457,10 +356,6 @@ edit_event_window(void)
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmspin, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (alarmhbox), alarmoption, TRUE, TRUE, 2);
 
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
-
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
@@ -468,68 +363,73 @@ edit_event_window(void)
 
   gtk_box_pack_start (GTK_BOX (vboxevent), startdatebox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), enddatebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), alldayhbox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), timehbox, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), alldayhbox, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vboxevent), alarmhbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), text, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (vboxevent), buttonbox, FALSE, FALSE, 2);
   
   gtk_widget_show_all (vboxevent);
   
 /* Begin repeat vbox */
 
-  gtk_widget_show (hboxrepeat);
+  gtk_widget_show (vboxrepeat);
   
   vboxrepeattop = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vboxrepeattop);
   
   recurborder = gtk_frame_new (_("Type:"));
   gtk_box_pack_start_show (GTK_BOX (vboxrepeattop), recurborder, 
-			   FALSE, FALSE, 0); 
-  gtk_container_add (GTK_CONTAINER (recurborder), hboxrepeat);
+			   TRUE, TRUE, 0); 
+  gtk_container_add (GTK_CONTAINER (recurborder), vboxrepeat);
    
   vboxrecur = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (hboxrepeat), vboxrecur, FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), vboxrecur, FALSE, FALSE, 0);
 
 /* recurrence radio buttons */
-  radiobuttonnone = gtk_radio_button_new_with_label (NULL, _("None"));
+  radiobuttonnone = gtk_radio_button_new_with_label (NULL, _("No recurrence"));
   gtk_box_pack_start_show (GTK_BOX (vboxrecur), radiobuttonnone, 
 			   FALSE, FALSE, 0);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonnone), TRUE);
   
   vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonnone));
   radiobuttondaily = gtk_radio_button_new_with_label (vboxrecur_group, _("Daily"));
-  gtk_box_pack_start_show (GTK_BOX (vboxrecur), radiobuttondaily, 
+  gtk_box_pack_start_show (GTK_BOX (hboxrecurtypes), radiobuttondaily, 
 			   FALSE, FALSE, 0);
 
   vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttondaily));
   radiobuttonweekly = gtk_radio_button_new_with_label (vboxrecur_group, _("Weekly"));
-  gtk_box_pack_start_show (GTK_BOX (vboxrecur), radiobuttonweekly, 
+  gtk_box_pack_start_show (GTK_BOX (hboxrecurtypes), radiobuttonweekly, 
 			   FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrecur), hboxrecurtypes, FALSE, FALSE, 0);
 
   vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonweekly));
   radiobuttonmonthly = gtk_radio_button_new_with_label (vboxrecur_group, _("Monthly"));
-  gtk_box_pack_start_show (GTK_BOX (vboxrecur), radiobuttonmonthly, 
+  gtk_box_pack_start_show (GTK_BOX (hboxrecurtypes), radiobuttonmonthly, 
 			   FALSE, FALSE, 0);
 
   vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonmonthly));
   radiobuttonyearly = gtk_radio_button_new_with_label (vboxrecur_group, _("Yearly"));
-  gtk_box_pack_start_show (GTK_BOX (vboxrecur), radiobuttonyearly, 
+  gtk_box_pack_start_show (GTK_BOX (hboxrecurtypes), radiobuttonyearly, 
 			   FALSE, FALSE, 0);
 
   vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonyearly));
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonnone), TRUE);
 
-  gtk_signal_connect (GTK_OBJECT (radiobuttonnone), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttondaily), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonweekly), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonmonthly), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonyearly), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttonnone), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttondaily), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttonweekly), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttonmonthly), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttonyearly), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   
 /* daily vbox */
   dailyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (hboxrepeat), dailyvbox, 
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), dailyvbox, 
 			   FALSE, FALSE, 0);
 
   /* "every" label */
@@ -548,11 +448,11 @@ edit_event_window(void)
   gtk_box_pack_start_show (GTK_BOX (dailyvbox), dailylabels, FALSE, FALSE, 0);
   
 /* weekly hbox */
-  weeklyhbox = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (hboxrepeat), weeklyhbox, FALSE, FALSE, 0);
+  weeklyhbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), weeklyhbox, FALSE, FALSE, 0);
 
 /* weekly vbox */
-  weeklyvbox = gtk_vbox_new (FALSE, 0);
+  weeklyvbox = gtk_hbox_new (FALSE, 0);
   gtk_box_pack_start_show (GTK_BOX (weeklyhbox), weeklyvbox, FALSE, FALSE, 0);
   for (i = 0; i < 4; i++)
     {
@@ -562,7 +462,7 @@ edit_event_window(void)
     }
 
 /* weekly vbox2 */
-  weeklyvbox2 = gtk_vbox_new (FALSE, 0);
+  weeklyvbox2 = gtk_hbox_new (FALSE, 0);
   gtk_box_pack_start_show (GTK_BOX (weeklyhbox), weeklyvbox2, FALSE, FALSE, 0);
   for (i = 4; i < 7; i++)
     {
@@ -573,7 +473,7 @@ edit_event_window(void)
 
 /* monthly vbox */
   monthlyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (hboxrepeat), monthlyvbox, FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), monthlyvbox, FALSE, FALSE, 0);
 
   /* "every" label */
   monthlylabelevery = gtk_label_new (_("Every"));
@@ -594,7 +494,7 @@ edit_event_window(void)
   
 /* yearly hbox */
   yearlyvbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start_show (GTK_BOX (hboxrepeat), yearlyvbox, FALSE, FALSE, 0);
+  gtk_box_pack_start_show (GTK_BOX (vboxrepeat), yearlyvbox, FALSE, FALSE, 0);
 
   /* "every" label */
   yearlylabelevery = gtk_label_new (_("Every"));
@@ -623,9 +523,10 @@ edit_event_window(void)
 
   recurendborder = gtk_frame_new (_("End Date:"));
   gtk_container_add (GTK_CONTAINER (recurendborder), vboxend);
-  gtk_box_pack_start_show (GTK_BOX (vboxrepeattop), recurendborder, 
-			   FALSE, FALSE, 0);
- 
+  gtk_box_pack_end (GTK_BOX (vboxrepeattop), recurendborder, 
+		    FALSE, FALSE, 0);
+  gtk_widget_show (recurendborder);
+  
   /* forever radio button */
   radiobuttonforever = gtk_radio_button_new_with_label (NULL, _("forever"));
   gtk_box_pack_start_show (GTK_BOX (vboxend), radiobuttonforever, 
@@ -657,23 +558,32 @@ edit_event_window(void)
   gtk_box_pack_start_show (GTK_BOX (hboxendafter), endlabel, FALSE, FALSE, 0);
   gtk_widget_set_sensitive (endlabel, FALSE);
 
-  gtk_signal_connect (GTK_OBJECT (radiobuttonforever), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
-  gtk_signal_connect (GTK_OBJECT (radiobuttonendafter), "toggled", GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttonforever), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
+  gtk_signal_connect (GTK_OBJECT (radiobuttonendafter), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
   		  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonforever), TRUE);
 
   gtk_widget_show (labeleventpage);
   gtk_widget_show (labelrecurpage);
   
-  gtk_widget_show(notebook);
-  
-  gtk_container_add (GTK_CONTAINER (window), notebook);
+  gtk_box_pack_start_show (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
+  gtk_box_pack_start_show (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
+  gtk_box_pack_start_show (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
+
+  gtk_box_pack_start_show (GTK_BOX (vboxtop), notebook, TRUE, TRUE, 2);
+  gtk_box_pack_start_show (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 2);
+
+  gtk_widget_show (vboxtop);
+  gtk_container_add (GTK_CONTAINER (window), vboxtop);
   
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxevent, labeleventpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, labelrecurpage);
 
   gtk_widget_grab_focus (text);
-  
+
+  s->deletebutton = buttondelete;
   s->frombutton = frombutton;
   s->alldaybutton = alldaybutton;
   s->startcombo = startcombo;
@@ -683,10 +593,6 @@ edit_event_window(void)
   s->alarmspin = alarmspin;
   s->alarmoption = alarmoption;
   s->text = text;
-  s->start.button = startdatebutton;
-  s->end.button = enddatebutton;
-  s->start.entry = startdateentry;
-  s->end.entry = enddateentry;
   s->radiobuttonforever = radiobuttonforever;
   s->radiobuttonendafter = radiobuttonendafter;
   s->endspin = endspin;
@@ -736,6 +642,8 @@ new_event(time_t t, guint timesel)
       char buf[32];
       struct sens *s = gtk_object_get_data (GTK_OBJECT (w), "sens_list");
 
+      gtk_widget_set_sensitive (s->deletebutton, FALSE);
+
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->frombutton), 
 				    timesel);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alldaybutton), 
@@ -748,11 +656,13 @@ new_event(time_t t, guint timesel)
       strftime (buf, sizeof(buf), "%X", &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endcombo)->entry), buf);
       strftime (buf, sizeof(buf), "%x", &tm);
+#if 0
       gtk_entry_set_text (GTK_ENTRY (s->start.entry), buf);
       gtk_entry_set_text (GTK_ENTRY (s->end.entry), buf);
       s->start.year = s->end.year = 1900 + tm.tm_year;
       s->start.month = s->end.month = tm.tm_mon;
       s->start.day = s->end.day = tm.tm_mday;
+#endif
     }
 
   return w;

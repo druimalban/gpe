@@ -1,6 +1,6 @@
 DEBUG = yes
 
-MEMBERS = main gtkdatesel day_view week_view future_view event-ui about event-db year_view
+MEMBERS = main gtkdatesel day_view week_view future_view event-ui about event-db year_view gtkdatecombo
 
 CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
