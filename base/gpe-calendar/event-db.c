@@ -84,6 +84,7 @@ load_callback (void *arg, int argc, char **argv, char **names)
       ev->start = timegm (&tm);
       ev->duration = argv[2] ? atoi(argv[2]) : 0;
       ev->alarm = atoi (argv[3]);
+      ev->recur.type = RECUR_NONE;
       
       if (event_db_add_internal (ev) == FALSE)
 	return 1;
