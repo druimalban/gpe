@@ -1,5 +1,9 @@
 2003-03-03 Joe McCarthy <jjmcc@pitt.edu>
 
+        * version 0.05
+
+2003-03-03 Joe McCarthy <jjmcc@pitt.edu>
+
         * event-db.c (event_db_stop): Use g_slist_free() instead of destroy. 
 
 2003-02-16  Philip Blundell  <philb@gnu.org>
