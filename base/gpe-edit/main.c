@@ -18,7 +18,6 @@
 #include <fcntl.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 
 #include "init.h"
 #include "errorbox.h"
