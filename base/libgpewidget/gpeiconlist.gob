@@ -114,7 +114,6 @@ class GPE:IconList from Gtk:Scrolled:Window {
 				    GTK_SIGNAL_FUNC(gpe_iconlist__button_press), NULL);
 		gtk_container_add (GTK_CONTAINER(vp), da);
 
-		gtk_object_set_data (GTK_OBJECT (self), "vp", vp); //luc
 		gtk_object_set_data (GTK_OBJECT (self), "da", da);
 		gtk_object_set_data (GTK_OBJECT (da), "il", self);
 		gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment(GTK_VIEWPORT(vp)));
@@ -430,22 +429,18 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private void _recalc_size (self, GtkAllocation *allocation)
 	{
 		int count;
-    GtkAllocation * il_allocation; //iconlist's allocation
-    GtkAllocation * vp_allocation; //viewport's allocation (does not include scrollbar)
+    int da_new_width;
+    int da_new_height;
+    GtkAdjustment * adj;
 
-    il_allocation = allocation; //NOT: &GTK_WIDGET(self)->allocation (!?!)
-    vp_allocation = & (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(self), "vp"))->allocation);
-    MAYBE_PRINTF("luc> _recalc il w h: %d %d\n", il_allocation->width, il_allocation->height);
-    MAYBE_PRINTF("luc> _recalc vp w h: %d %d\n", vp_allocation->width, vp_allocation->height);
+    LUC_SAYS("luc> _recalc il w h: %d %d\n", allocation->width, allocation->height);
+    adj = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow *) self);
+    LUC_SAYS("luc> _recalc page  : %f\n", adj->page_size);
 
-    //luc: I believe 15 was for the scrollbar's size
-		//if (allocation->width > 15 + il_col_width (self)) 
-		//	self->_priv->cols = (allocation->width - 15) / il_col_width (self);
-		if (il_allocation->width > il_col_width (self)) //check according listicon's allocation
-			self->_priv->cols = (il_allocation->width) / il_col_width (self);
-		else
-			self->_priv->cols = 1;
-
+    da_new_width = adj->page_size;
+		if (da_new_width > il_col_width (self))
+			   self->_priv->cols = da_new_width / il_col_width (self);
+		else self->_priv->cols = 1;
 		count = g_list_length (self->_priv->icons);
 		
 		self->_priv->rows = ((count+self->_priv->cols-1)/self->_priv->cols);
@@ -454,12 +449,22 @@ class GPE:IconList from Gtk:Scrolled:Window {
     MAYBE_PRINTF("luc> _recalc col   : %d\n", self->_priv->cols);
     MAYBE_PRINTF("luc> _recalc row   : %d\n", self->_priv->rows);
 
-		gtk_drawing_area_size (//use viewport's allocation
+    //update drawing area
+    da_new_height = self->_priv->rows * il_row_height (self) + 5;//5 = top margin
+		gtk_drawing_area_size (
 			GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(self), "da")),
-			vp_allocation->width, self->_priv->rows * il_row_height (self) + 5);
+			da_new_width, da_new_height);
+    MAYBE_PRINTF("luc> _recalc da w h: %d %d\n", da_new_width, da_new_height);
 
-    MAYBE_PRINTF("luc> _recalc da w h: %d %d\n",
-      vp_allocation->width, self->_priv->rows * il_row_height (self) + 5);
+    //update vertical page_size and value
+    adj = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *) self);
+    adj->upper = da_new_height;
+    gtk_adjustment_changed (adj);
+    if(gtk_adjustment_get_value(adj) > adj->upper - adj->page_size){
+      gtk_adjustment_set_value(adj, adj->upper - adj->page_size);
+      gtk_adjustment_value_changed(adj);
+    }
+    
 	}
 
 	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
