@@ -1,5 +1,9 @@
 2004-03-01  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.77 released.
+
+2004-03-01  Phil Blundell  <pb@nexus.co.uk>
+
 	* dirbrowser.c (scan_dir): Sort the entries.  Remove debugging
 	spew when opendir fails.
 	(gpe_create_dir_browser): Make "OK" button the default.
