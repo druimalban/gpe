@@ -21,7 +21,7 @@
 <!--#if expr="x${pagename}=xscreenshots" -->
 <b>Screenshots</b>
 <!--#else -->
-<A href="/screenshots.shtml">Screenshots</a>
+<A href="/screenshots/">Screenshots</a>
 <!--#endif -->
 |
 <!--#if expr="x${pagename}=xdownload" -->
