@@ -1,5 +1,9 @@
 2002-08-04  Philip Blundell  <philb@gnu.org>
 
+	* gtkdatesel.c: Rewrite using label and button widgets.
+	* gtkdatesel.h (GtkDateSelMode): New enum.
+	(gtk_date_sel_new): Argument is GtkDateSelMode.
+
 	* render.c (gpe_render_pixmap): Correct alpha in composited image.
 
 2002-08-03  Philip Blundell  <philb@gnu.org>
