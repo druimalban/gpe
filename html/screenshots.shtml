@@ -6,14 +6,14 @@
   <colgroup span="3" style=""></colgroup>
   <tr>
     <td>
-      <img width="240" height="320" src="images/gpe-login.png" alt="gpe-login">
-      <p>Login dialog
+      <img width="240" height="320" src="images/gpe-login-ownerinfo.png" alt="gpe-login-ownerinfo">
+      <p>Login dialog with owner info
     </td><td>
-      <img width="240" height="320" src="images/gpe-appmgr.png" alt="gpe-appmgr">
-      <p>Application manager
+      <img width="240" height="320" src="images/mbdesktop.png" alt="mbdesktop">
+      <p>Application manager (mbdesktop)
     </td><td>
       <img width="240" height="320" src="images/terminal.png" alt="rxvt">
-      <p>Terminal, rxvt
+      <p>Terminal (rxvt)
     </td>
   </tr><tr>
     <td>
