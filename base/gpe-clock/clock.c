@@ -79,9 +79,10 @@ set_defaults (void)
   memset (&state, 0, sizeof (state));
 
   time (&t);
-  t += 24 * 60 * 60;
   localtime_r (&t, &tm);
 
+  state.hour = tm.tm_hour;
+  state.minute = tm.tm_min;
   state.date_flag = TRUE;
   state.year = tm.tm_year + 1900;
   state.month = tm.tm_mon;
@@ -413,6 +414,7 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   g_signal_connect (G_OBJECT (format_12_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_12);
   g_signal_connect (G_OBJECT (format_analogue_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_ANALOGUE);
  
+  GTK_WIDGET_SET_FLAGS (ok_button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (ok_button);
   g_signal_connect (G_OBJECT (ok_button), "clicked", G_CALLBACK (click_ok), window);
 }
@@ -596,6 +598,7 @@ alarm_window (void)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->action_area), cancel_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (ctx->window)->action_area), ok_button, FALSE, FALSE, 0);
 
+  GTK_WIDGET_SET_FLAGS (ok_button, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (ok_button);
 
   gtk_widget_show_all (ctx->window);
