@@ -14,7 +14,6 @@
 #include <locale.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
 
 #include "todo.h"
 #include "todo-sql.h"
