@@ -1,3 +1,10 @@
+2004-05-21  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: Added some stuff to make copying remote files work.
+    * main.c: Added progress dialog and option to cancel a running transfer.
+    * main.c: Some minor bugfixes.
+    * main.c: transfer_callback() Removed wrong stock icons from error dialog.
+    * main.c: paste_file_clip() Check if src != dest before start copy.
+
 2004-05-20  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: main(): Set default size cleverer, set window icon.
 	* main.c: create_directory_interactive(): improved dialog

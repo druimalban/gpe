@@ -86,7 +86,9 @@ gint current_zoom = 28;
 
 static gchar *file_clipboard = NULL;
 
-GHashTable *loaded_icons;
+static GHashTable *loaded_icons;
+static GtkWidget *progress_dialog = NULL;
+static gboolean abort_transfer = FALSE;
 
 typedef struct
 {
@@ -116,7 +118,6 @@ struct gpe_icon my_icons[] = {
   {NULL, NULL}
 };
 
-guint window_x = 240, window_y = 310;
 
 static void browse_directory (gchar *directory);
 static void popup_ask_open_with (void);
@@ -148,6 +149,30 @@ static GtkItemFactoryEntry menu_items[] =
 static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
 
+static void
+progress_response(GtkDialog *dialog, gint arg1, gpointer user_data)
+{
+  /* check and break */
+  abort_transfer = TRUE;  
+}
+
+static GtkWidget*
+progress_dialog_create(gchar *title)
+{
+  GtkWidget *dialog;
+  GtkWidget *progress;
+  dialog = gtk_dialog_new_with_buttons (title, GTK_WINDOW (window), 
+             GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
+             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+         progress = gtk_progress_bar_new();
+         gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
+                            progress,FALSE,TRUE,0);
+         g_object_set_data(G_OBJECT(dialog),"bar",progress);
+         g_signal_connect(G_OBJECT(dialog),"response",progress_response,NULL);
+         gtk_widget_show_all(dialog);
+  return dialog;
+}
+
 static gint 
 transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
 {
@@ -157,10 +182,32 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
   int response;
   gboolean applytoall;
 
+  if (abort_transfer)
+  {
+    gtk_widget_destroy(progress_dialog);
+    progress_dialog = NULL;
+    abort_transfer = FALSE;
+    return 0;
+  }
   switch (info->status)
   {
 	  case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
-		  return 1;
+          if (progress_dialog == NULL)
+              progress_dialog = progress_dialog_create("Transfer progress");
+          else if (info->bytes_total)
+          {
+            GtkWidget *bar = g_object_get_data(G_OBJECT(progress_dialog),"bar");
+            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(bar),
+                                          (gdouble)info->total_bytes_copied
+                                          /(gdouble)(info->bytes_total));
+          }
+          if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED)
+          {
+            gtk_widget_destroy(progress_dialog);
+            progress_dialog = NULL;
+          }
+          gtk_main_iteration_do(FALSE);
+          return 1;
 	  break;
 	  case GNOME_VFS_XFER_PROGRESS_STATUS_VFSERROR:
 		  /* error query dialog */
@@ -168,11 +215,12 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
             gnome_vfs_result_to_string(info->vfs_status));
           dialog = gtk_dialog_new_with_buttons ("Error", GTK_WINDOW (window), 
              GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
-             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, 
-             GTK_STOCK_HELP, GTK_RESPONSE_HELP,
-             GTK_STOCK_REDO, GTK_RESPONSE_APPLY, NULL);
+             "_Skip", GTK_RESPONSE_HELP,
+             "_Retry", GTK_RESPONSE_APPLY, 
+             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
          label = gtk_label_new(text);
          g_free(text);
+         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
          gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),label,FALSE,TRUE,0);
          gtk_widget_show_all(dialog);
          response = gtk_dialog_run(GTK_DIALOG(dialog));
@@ -180,6 +228,8 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
          switch (response)
          {
              case GTK_RESPONSE_CANCEL: 
+                 gtk_widget_destroy(progress_dialog);
+                 progress_dialog = NULL;
                  return GNOME_VFS_XFER_ERROR_ACTION_ABORT;
              break;
              case GTK_RESPONSE_HELP: 
@@ -189,6 +239,8 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
                  return GNOME_VFS_XFER_ERROR_ACTION_RETRY;
              break;
              default: 
+                 gtk_widget_destroy(progress_dialog);
+                 progress_dialog = NULL;
                  return GNOME_VFS_XFER_ERROR_ACTION_ABORT;
              break;
          }
@@ -214,6 +266,8 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
          switch (response)
          {
            case GTK_RESPONSE_CANCEL:
+             gtk_widget_destroy(progress_dialog);
+             progress_dialog = NULL;
              return GNOME_VFS_XFER_OVERWRITE_ACTION_ABORT;
            break;
            case GTK_RESPONSE_YES:
@@ -229,6 +283,8 @@ transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
                  return GNOME_VFS_XFER_OVERWRITE_ACTION_SKIP;
            break;
            default:
+             gtk_widget_destroy(progress_dialog);
+             progress_dialog = NULL;
              return GNOME_VFS_XFER_OVERWRITE_ACTION_ABORT;
            break;
          }
@@ -342,7 +398,8 @@ copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
   GnomeVFSURI *uri_dest = gnome_vfs_uri_new(dest_uri_txt);
   GnomeVFSResult result;
   gchar *error;
-    
+  
+      
   result = gnome_vfs_xfer_uri (uri_src,
                                uri_dest,
                                GNOME_VFS_XFER_FOLLOW_LINKS 
@@ -352,7 +409,7 @@ copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
                                GNOME_VFS_XFER_OVERWRITE_MODE_QUERY,
                                (GnomeVFSXferProgressCallback) transfer_callback,
                                NULL);
-  if (result != GNOME_VFS_OK)
+  if ((result != GNOME_VFS_OK) && (result != GNOME_VFS_ERROR_INTERRUPTED))
   {
     error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
     gpe_error_box (error);
@@ -367,19 +424,29 @@ copy_file_clip (void)
 {
   if (file_clipboard) 
     g_free(file_clipboard);
-  file_clipboard = gnome_vfs_get_uri_from_local_path(current_popup_file->filename);
+  if (GNOME_VFS_FILE_INFO_LOCAL(current_popup_file->vfs))
+    file_clipboard = 
+      gnome_vfs_get_uri_from_local_path(current_popup_file->filename);
+  else
+    file_clipboard = g_strdup(current_popup_file->filename);
 }
 
 
 static void 
 paste_file_clip (void)
 {
-  gchar *target_file, *tmp;
+  gchar *target_file;
   
-  tmp = gnome_vfs_get_local_path_from_uri(file_clipboard);
-  target_file = g_strdup_printf("%s/%s",current_directory,g_path_get_basename(tmp));
-  g_free(tmp);
-  copy_file(file_clipboard,target_file);
+  if (file_clipboard == NULL) 
+    return;
+  
+  target_file = 
+    g_strdup_printf("%s/%s",
+                    current_directory,
+                    g_path_get_basename(file_clipboard));
+  if (strcmp(file_clipboard,target_file)) /* check if not the same */
+    copy_file(file_clipboard,target_file);
+  g_free(target_file);
   refresh_current_directory(); 
 }
 
@@ -1309,7 +1376,8 @@ main (int argc, char *argv[])
 		      GTK_SIGNAL_FUNC (show_popup), NULL);
                              
   gpe_iconlist_set_icon_size (GPE_ICONLIST (view_widget), current_zoom);
-
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICONLIST (view_widget), 30);
+  
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
