@@ -28,6 +28,7 @@ ifeq ($(CVSBUILD),yes)
 BUILD = ../build
 else
 BUILD = build
-fi
+endif
+
 include $(BUILD)/Makefile.dpkg-ipkg
 
