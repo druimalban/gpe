@@ -16,7 +16,7 @@
 //#include <math.h>
 
 
-#define VERSION "0.0.8"
+#define VERSION "0.0.9"
 #define MIN(a,b)	(((a)<(b)) ? (a):(b))
 int fd_out,fd_in;
 int label=0;
@@ -493,6 +493,7 @@ FILE *openfile(char *s,char read)
 int do_smtp()
 {
 char s[200];
+char prefix[200];
 char s2[20000];
 char *sp;
 char connected;
@@ -501,8 +502,9 @@ char from_str[1000],to_str[1000],cc_str[1000],bcc_str[1000],date_str[1000],subje
 	connected=0;
 	if (verbose) printf("looking for messages to send\n");
 	sprintf(s,"%s/OUTBOX",options.prefix);
-	dir=opendir(s);
-	if (!dir) {perror("opendir");exit(0);} 
+	snprintf(prefix,sizeof(prefix),"%s/OUTBOX",options.prefix);
+	dir=opendir(prefix);
+	if (!dir) {perror(prefix);exit(0);} 
 	direntptr=(void *)1;
 	do
 	{
@@ -511,7 +513,7 @@ char from_str[1000],to_str[1000],cc_str[1000],bcc_str[1000],date_str[1000],subje
 		{
 			if (ends_with(direntptr->d_name,".head"))
 			{
-				sprintf(s,"%s/%s",s,direntptr->d_name);
+				sprintf(s,"%s/%s",prefix,direntptr->d_name);
 				*rindex(s,'.')=0;
 				strcat(s,".body");
 				if (!file_exists(s))
@@ -1167,7 +1169,7 @@ char flag;
 		if (verbose) printf("cleaning old msgs\n");
 		sprintf(s,"%s/%s",options.prefix,folder);
 		dir=opendir(s);
-		if (!dir) {perror("opendir");exit(1);}
+		if (!dir) {perror(s);exit(1);}
 		do
 		{
 			direntptr=readdir(dir);
