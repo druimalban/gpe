@@ -41,15 +41,17 @@ void selection_made( GtkWidget      *clist,
       GtkWidget *appt;
       struct tm tm;
       
-      ev=gtk_clist_get_row_data(GTK_CLIST(clist), row);
-      if (ev) localtime_r (&(ev->start), &tm);
-      else {
-	      localtime_r (&viewtime, &tm);
-              tm.tm_hour = hour+1;
-      	      tm.tm_min = 0;
-	      tm.tm_sec = 0;
-      }
-      appt = new_event (mktime (&tm), 1, ev);
+      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      if (ev) 
+	appt = edit_event (ev);
+      else 
+	{
+	  localtime_r (&viewtime, &tm);
+	  tm.tm_hour = hour+1;
+	  tm.tm_min = 0;
+	  tm.tm_sec = 0;
+	  appt = new_event (mktime (&tm), 1);
+	}
       gtk_widget_show (appt);
     }
     return;
@@ -123,9 +125,9 @@ day_view_update ()
 	  ev = (event_t) iter->data;
 	  evd = event_db_get_details (ev);
 
-          line_info[1]=evd->description;
+          line_info[1] = evd->summary;
           strftime (buf, sizeof (buf), "%l:%M%p", &tm_start);
-          line_info[0]=buf;
+          line_info[0] = buf;
       
           gtk_clist_append(GTK_CLIST(day_list), line_info);
 	  gtk_clist_set_row_data(GTK_CLIST(day_list), row, ev);
