@@ -4,11 +4,13 @@
 
 <h2>Binaries</h2>
 <p>
-Current unstable GPE binaries for
-<a href="http://familiar.handhelds.org">Familiar</a> (in .ipk format) can
-be downloaded from the handhelds.org: <a
-href="ftp://ftp.handhelds.org/pub/projects/gpe/">ftp://ftp.handhelds.org/pub/projects/gpe/</a>
+GPE packages are available for
+<a href="http://familiar.handhelds.org">Familiar</a>:
 </p>
+<ul>
+<li><a href="ftp://ftp.handhelds.org/pub/projects/gpe/unstable/base/">GPE packages</a> (out of date)</li>
+<li><a href="http://familiar.handhelds.org/familiar/feeds/unstable/packages/armv4l/">Familiar unstable feed</a></li>
+</ul>
 
 <h2>Source</h2>
 <p>
