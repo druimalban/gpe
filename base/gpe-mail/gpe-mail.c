@@ -23,7 +23,7 @@ struct {
    char expanded_path[100];
    char conf[3][10][100];
 } config={
-   "~/.emailsync/imap",
+   "~/.emailsync",
    "",
    {
       {
@@ -101,7 +101,7 @@ struct {
       GtkWidget *t;
    } sync;
 
-   int cur_msg;
+   char cur_msg[32];
    int cl1_row;
    int sigchild;
    char sortby_last;
@@ -598,6 +598,8 @@ void configbutton_ok(GtkButton *button, gpointer user_data)
    }
    gtk_widget_hide(self.conf.win);
    saveconfig();
+   tilde(config.path,config.expanded_path);
+   strcat(config.expanded_path,(1-((*get_config("Incoming","Use pop3 instead of imap"))-1)) ? "/pop":"/imap");
    gtk_widget_destroy(self.conf.win);
    self.conf.win=NULL;
 }
@@ -800,14 +802,14 @@ void do_delete(GtkButton *button, gpointer user_data)
 {
    char s[200];
 
-   if (!self.cur_msg) return;
-   //printf("delete: %d\n",self.cur_msg);
-   sprintf(s,"/bin/rm -f %s/%s/%d.*",config.expanded_path,self.current_folder,self.cur_msg);
+   if (!self.cur_msg[0]) return;
+   //printf("delete: %s\n",self.cur_msg[0]);
+   sprintf(s,"/bin/rm -f %s/%s/%s.*",config.expanded_path,self.current_folder,self.cur_msg);
    if (0!=strcmp(self.current_folder,"OUTBOX"))
-      sprintf(s+strlen(s),";echo 'delete %d \"%s\"' >> %s/.onsync",self.cur_msg,self.current_folder,config.expanded_path);
+      sprintf(s+strlen(s),";echo 'delete %s \"%s\"' >> %s/.onsync",self.cur_msg,self.current_folder,config.expanded_path);
    //printf("system('%s')\n",s);
    system(s);
-   self.cur_msg=0;
+   self.cur_msg[0]=0;
    gtk_text_freeze((GtkText *)self.mt);
    gtk_text_forward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
    gtk_text_backward_delete((GtkText *)self.mt,gtk_text_get_length((GtkText *)self.mt));
@@ -1029,10 +1031,13 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    //printf("row=%d\n",row);
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,3,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
    //printf("s=%s\n",*sp);
-   sscanf(*sp,"%d.",&self.cur_msg);
-   //printf("num=%d\n",self.cur_msg);
+   //sscanf(*sp,"%s.",&self.cur_msg);
+   sscanf(*sp,"%s",&self.cur_msg);
+   if (ends_with(self.cur_msg,".head")) self.cur_msg[strlen(self.cur_msg)-5]=0;
+   else printf("%s does not end withe '.head'\n",self.cur_msg);
+   //printf("num=%s\n",self.cur_msg);
    self.cl1_row=row;
-   sprintf(s2,"%s/%s/%d.head",config.expanded_path,self.current_folder,self.cur_msg);
+   sprintf(s2,"%s/%s/%s.head",config.expanded_path,self.current_folder,self.cur_msg);
    //printf("openning: '%s'\n",s2);
    f=(FILE *)fopen(s2,"r");
    boundary[0]=0;
@@ -1063,7 +1068,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    }
 
 
-   sprintf(s2,"%s/%s/%d.body",config.expanded_path,self.current_folder,self.cur_msg);
+   sprintf(s2,"%s/%s/%s.body",config.expanded_path,self.current_folder,self.cur_msg);
    strcpy(s3,self.fromto);
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,1,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
    strcat(s3,*sp);
@@ -1160,7 +1165,7 @@ int open_mailfolder()
 
    int i;
 
-   self.cur_msg=0;
+   self.cur_msg[0]=0;
    self.cl1_row=-1;
    usleep(10000);
    gtk_clist_clear(GTK_CLIST(self.cl1));
@@ -1261,8 +1266,9 @@ int main(int argc, char **argv)
    gchar *titles[]={"Subject","From","Sent","filename","uid"};
    GtkStyle *gtk_style;
 
-   tilde(config.path,config.expanded_path);
    loadconfig();
+   tilde(config.path,config.expanded_path);
+   strcat(config.expanded_path,(1-((*get_config("Incoming","Use pop3 instead of imap"))-1)) ? "/pop":"/imap");
 
    // set locale
    gtk_set_locale();

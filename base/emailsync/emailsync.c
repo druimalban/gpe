@@ -23,7 +23,8 @@ int label=0;
 char imap_buf[2000000];
 char *imap_buf_ptr;
 int msgs[5000];
-int msg_ids[5000];
+typedef char str32t[32];
+str32t  msg_ids[5000];
 int debug=0;
 int verbose=0;
 char rcv_buf[100000];
@@ -820,18 +821,22 @@ char flag;
 		sp=strstr(imap_buf,"\n");
 		for(i=0;sp;)
 		{
-			j=msg_ids[i]=0;
+			j=msg_ids[i][0]=0;
 			s[0]=0;
 			sscanf(sp+1,"%d %s\n",&msgs[i],s);
 			if (strstr(s,"\n")) *strstr(s,"\n")=0;
+			/*
 			lowstr(s);
 			for (j=0;j<strlen(s)&&is_hexchar(s[j]);j++);
 			if (j==strlen(s) && j==16 ) sscanf(s+8,"%x",&msg_ids[i]);
+			*/
+			strncpy(msg_ids[i],s,31);
+			msg_ids[i][31]=0;
 			sp=index(sp+1,'\n');
-			if (msgs[i]&& msg_ids[i])
+			if (msgs[i]&& msg_ids[i][0])
 			{
 				if (debug>1) {
-					printf("DEBUG: msg_ids[%d]=0x%x\n",msgs[i],msg_ids[i]);
+					printf("DEBUG: msg_ids[%d]=%s\n",msgs[i],msg_ids[i]);
 				}
 				i++;
 			} else sp=0;
@@ -855,9 +860,10 @@ char flag;
 			if (strncmp(s,"delete ",7)==0)
 			{
 				sp=s+7;
-				i=0;
-				sscanf(sp,"%d ",&i);
-				if (i)
+				s2[0]=0;
+				sscanf(sp,"%s ",s2);
+				i=s2[0];
+				if (s2[0])
 				{
 					sp=index(sp,'"');
 					if (sp) 
@@ -868,20 +874,20 @@ char flag;
 					if (sp) 
 					{
 						*index(sp,'"')=0;
-						if (debug>1) printf(" remove uid=%d, folder='%s'\n",i,sp);
+						if (debug>1) printf(" remove uid=%s, folder='%s'\n",s2,sp);
 						if (options.pop3)
 						{
-							for(j=0;i&&j<num_msgs;j++)
-								if (msg_ids[j]==i)
+							for(j=0;s2[0]&&j<num_msgs;j++)
+								if (0==strcmp(msg_ids[j],s2))
 								{
 									sprintf(s,"dele %d",msgs[j]);
 									send2server(s);
 									if (!pop_rcv_ok(s,0,0)) if (debug) printf("error deleteing msg#%d uid=%d\n",msgs[j],i);
-									for(i=j;i<num_msgs;i++) {msgs[i]=msgs[i+1];msg_ids[i]=msg_ids[i+1];};
+									for(i=j;i<num_msgs;i++) {msgs[i]=msgs[i+1];strcpy(msg_ids[i],msg_ids[i+1]);};
 									num_msgs--;
 									i=0;
 								}
-							if (i&&debug) printf("couldn't find msg with uid=%d",i);
+							if (s2[0]&&debug) printf("couldn't find msg with uid=%s",s2);
 						} else { // imap
 							if (strcmp(sp,folder)!=0)
 							{
@@ -896,17 +902,17 @@ char flag;
 								if (debug) printf("opening folder '%s'\n",sp);
 								sprintf(s,"select %s",sp);
 								send2server(s);
-								if (!rcv_ok(s,0)) i=0;
-								if (!i) if (debug) printf("error on %s \n",s);
+								if (!rcv_ok(s,0)) s2[0]=0;
+								if (!s2[0]) if (debug) printf("error on %s \n",s);
 							}
-							if (i)
+							if (s2[0])
 							{
 								 
-								sprintf(s,"search uid %d",i);
+								sprintf(s,"search uid %s",s2);
 								send2server(s);
-								if (!rcv_ok(s,0)) i=0;
+								if (!rcv_ok(s,0)) s2[0]=0;
 								
-								if (!i) {
+								if (!s2[0]) {
 									if (debug) printf("error on %s \n",s);
 									folder[0]=0;
 								} else {
@@ -1049,30 +1055,31 @@ char flag;
 			send2server(s);
 			rcv_ok("fetch uid",1);
 			sp=strstr(imap_buf,"UID ");
-			msg_ids[i]=0;
+			msg_ids[i][0]=0;
 		}
 		if (sp)
 		{
 			if (!options.pop3)
 			{
 				sp+=4;
-				sscanf(sp,"%d",&msg_ids[i]);
+				sscanf(sp,"%s",msg_ids[i]);
+				if (index(msg_ids[i],')')) *index(msg_ids[i],')')=0;
 			}
 			if (index(sp,')')||options.pop3)
 			{
 				//*index(sp,')')=0;
-				sprintf(s,"%s/%s/%d.head",options.prefix,folder,msg_ids[i]);
+				sprintf(s,"%s/%s/%s.head",options.prefix,folder,msg_ids[i]);
 				if (debug>1) {
 					printf("DEBUG: filename: \"%s\"\n",s);
 				}
-				sprintf(s2,"%s/%s/%d.body",options.prefix,folder,msg_ids[i]);
+				sprintf(s2,"%s/%s/%s.body",options.prefix,folder,msg_ids[i]);
 
 				if (!size) fprintf(stderr,"Warning: error reading size\n");
 				get_body=size&&(size<=options.size);
 				get_body=get_body||!options.size;
 				if (!file_exists(s)||(!file_exists(s2)&&get_body))
 				{
-					if (debug) printf("downloading msg %d uid=%d\n",msgs[i],msg_ids[i]);
+					if (debug) printf("downloading msg %d uid=%s\n",msgs[i],msg_ids[i]);
 					if (!options.pop3)
 					{
 						fl=openfile(s,0);
@@ -1089,7 +1096,7 @@ char flag;
 						} else error ("","head missing");
 						fclose(fl);
 					} else { // pop3
-						fl=openfile(s,0);
+						if (get_body) fl=openfile(s,0);
 						/*
 						if (!get_body)
 						{
@@ -1177,10 +1184,10 @@ char flag;
 			{
 				for(i=flag=0;i<num_msgs&&!flag;i++)
 				{
-					sprintf(s2,"%d.head",msg_ids[i]);
+					sprintf(s2,"%s.head",msg_ids[i]);
 					if (strcmp(s2,direntptr->d_name)==0) flag=1;
 					else {
-						sprintf(s2,"%d.body",msg_ids[i]);
+						sprintf(s2,"%s.body",msg_ids[i]);
 						if (strcmp(s2,direntptr->d_name)==0) flag=1;
 					}
 				}
