@@ -1,3 +1,11 @@
+2002-08-07  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control (Version): Set to 0.2.
+
+	* gpe-su.c (do_su): Call gtk_main_iter so window has a chance to
+	go away.  Don't hard code command string.
+	(main): Add "-c" option.
+
 2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-su.menu: Give full path name for icon. Move to section

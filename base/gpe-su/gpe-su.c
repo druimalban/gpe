@@ -38,6 +38,8 @@ static struct gpe_icon my_icons[] = {
 static GtkWidget *entry;
 static GtkWidget *window;
 
+static char *command = "x-terminal-emulator";
+
 #define _(x) gettext(x)
 
 #define SU "/bin/su"
@@ -61,13 +63,15 @@ do_su (void)
   rp = result;
 
   gtk_entry_set_text (GTK_ENTRY (entry), "");
-  gtk_widget_hide (window);
+  gdk_window_withdraw (window->window);
+
+  gtk_main_iteration ();
 
   pid = forkpty (&pty, NULL, NULL, NULL);
   
   if (pid == 0)
     {
-      execl (SU, SU, "-c", "x-terminal-emulator", NULL);
+      execl (SU, SU, "-c", command, NULL);
       exit (1);
     }
 
@@ -113,7 +117,7 @@ do_su (void)
     {
       gpe_error_box (result);
       kill (pid, 15);
-      gtk_widget_show (window);
+      gdk_window_show (window->window);
     }
   else
     gtk_main_quit ();
@@ -127,6 +131,8 @@ main (int argc, char *argv[])
   GtkWidget *hbox, *vbox;
   GtkWidget *label;
   GtkWidget *buttonok, *buttoncancel;
+  int i;
+  gboolean flag_c = FALSE;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -138,6 +144,17 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+
+  for (i = 1; i < argc; i++)
+    {
+      if (flag_c)
+	{
+	  command = argv[i];
+	  flag_c = FALSE;
+	}
+      else if (!strcmp (argv[i], "-c"))
+	flag_c = TRUE;
+    }
 
   window = gtk_dialog_new ();
   gtk_widget_realize (window);
