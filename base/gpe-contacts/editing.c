@@ -24,6 +24,7 @@
 #include "structure.h"
 #include "db.h"
 #include "main.h"
+#include "namedetail.h"
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
 void on_edit_save_clicked (GtkButton * button, gpointer user_data);
@@ -40,6 +41,7 @@ gboolean tv_focus_out (GtkWidget *widget,
                        GdkEventFocus *event,
                        gpointer user_data);
 void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data);
+void on_name_clicked (GtkButton *button, gpointer user_data);
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -69,8 +71,18 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw)
           GtkWidget *l;
         
           add_tag (e->tag, w, pw);
-          l = gtk_label_new (e->name);
-          gtk_misc_set_alignment(GTK_MISC(l),0.0,0.5);
+          if (strcmp(e->tag,"NAME")) /* the name field on a button */
+            {
+              l = gtk_label_new (e->name);
+              gtk_misc_set_alignment(GTK_MISC(l),1,0.5);
+            }
+          else
+            {
+              l = gtk_button_new_with_label(e->name);
+              g_signal_connect(G_OBJECT(l),"clicked",
+                               G_CALLBACK(on_name_clicked),
+                               gtk_widget_get_toplevel(pw));
+            }
           gtk_table_attach (GTK_TABLE (table),
                     l,
                     0, 1, x, x + 1,
@@ -548,6 +560,103 @@ edit_person (struct person *p)
 }
 
 void
+update_edit (struct person *p, GtkWidget *w)
+{
+  GtkWidget *nameentry = NULL;
+  gchar *n1 = NULL, *n2 = NULL, *n3 = NULL, *n4 = NULL;
+  if (p)
+    {
+      GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
+      GSList *iter;
+      for (iter = tags; iter; iter = iter->next)
+        {
+          GtkWidget *w = iter->data;
+          gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+          struct tag_value *v = db_find_tag (p, tag);
+          guint pos = 0;
+          if (v && v->value)
+            {
+               /* collect data for name field update */
+              if (!strcmp(v->tag,"TITLE"))
+                n1 = v->value;
+              if (!strcmp(v->tag,"GIVEN_NAME"))
+                n2 = v->value;
+              if (!strcmp(v->tag,"FAMILY_NAME"))
+                n3 = v->value;
+              if (!strcmp(v->tag,"HONORIFIC_SUFFIX"))
+                n4 = v->value;
+              if (!strcmp(v->tag,"NAME"))
+                nameentry = w;
+
+              if (GTK_IS_EDITABLE (w))
+                {
+                  gtk_editable_delete_text(GTK_EDITABLE(w),0,-1);
+                  gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
+                                            strlen (v->value), &pos);
+                }
+              else if (GTK_IS_DATE_COMBO(w))
+                {
+                  if (v->value)
+                    {
+                      guint year, month, day;
+                      GtkToggleButton *cbnoyear;
+                      
+                      sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
+                      gtk_date_combo_set_date (GTK_DATE_COMBO (w), year, month, day);
+                      if (year == 0)
+                        {
+                          gtk_date_combo_ignore_year(GTK_DATE_COMBO(w),TRUE);
+                          cbnoyear = g_object_get_data(G_OBJECT(w),"cbnoyear");
+                          gtk_toggle_button_set_active(cbnoyear,TRUE);
+                        }
+                    }
+                  else
+                    gtk_date_combo_clear (GTK_DATE_COMBO (w));
+                }
+              else if (GTK_IS_IMAGE(w))
+                {
+                  g_object_set_data(G_OBJECT(w),"filename",v->value);
+                  if ((v->value) && !access(v->value,R_OK))
+                    gtk_image_set_from_file(GTK_IMAGE(w), v->value);
+                  else
+                    gtk_image_set_from_stock(GTK_IMAGE(w), 
+                      GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
+                }
+              else  
+                gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
+                          v->value, -1);
+            }
+        }
+    }
+  store_special_fields (w, p);
+  if (nameentry)
+    {
+      gchar *ts = g_strdup(n1);
+      if (n2) 
+        {
+          n1 = g_strdup_printf("%s %s",ts,n2);
+          g_free(ts);
+          ts = n1;
+        }
+      if (n3) 
+        {
+          n1 = g_strdup_printf("%s %s",ts,n3);
+          g_free(ts);
+          ts = n1;
+        }
+      if (n4) 
+        {
+          n1 = g_strdup_printf("%s %s",ts,n4);
+          g_free(ts);
+          ts = n1;
+        }
+      gtk_entry_set_text(GTK_ENTRY(nameentry),ts);  
+      g_free(ts);
+    }
+}
+
+
+void
 on_edit_save_clicked (GtkButton * button, gpointer user_data)
 {
   GtkWidget *edit = (GtkWidget *) user_data;
@@ -727,4 +836,14 @@ on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data)
   GtkDateCombo *cb = user_data;
   
   gtk_date_combo_ignore_year(cb, gtk_toggle_button_get_active(togglebutton));
+}
+
+void
+on_name_clicked (GtkButton *button, gpointer user_data)
+{
+  GtkWindow *edit = user_data;
+  struct person *p;
+
+  p = g_object_get_data (G_OBJECT (edit), "person");
+  do_edit_name_detail(edit, p);
 }

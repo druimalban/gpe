@@ -4,7 +4,7 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.23
+VERSION = 0.24
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
@@ -25,7 +25,7 @@ PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LO
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags libxml-2.0` `pkg-config --cflags mimedir-1.0` `pkg-config --cflags dbus-glib-1`
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs libxml-2.0` `pkg-config --libs mimedir-1.0` `pkg-config --libs dbus-glib-1` -ldisplaymigration -lgpepimc -lgpevtype
 
-MEMBERS = db editing main structure support configure old-db export
+MEMBERS = db editing main structure support configure old-db export namedetail
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))

@@ -157,6 +157,8 @@ discard_person (struct person *p)
 {
   free_tag_values (p->data);
   g_free (p->name);
+  g_free (p->given_name);
+  g_free (p->family_name);
   g_free (p);
 }
 
@@ -193,6 +195,24 @@ read_name (void *arg, int argc, char **argv, char **names)
 }
 
 static int
+read_given_name (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+  p->given_name = g_strdup (argv[1]);
+
+  return 0;
+}
+
+static int
+read_family_name (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+  p->family_name = g_strdup (argv[1]);
+
+  return 0;
+}
+
+static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
@@ -201,6 +221,10 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
   p->id = atoi (argv[0]);
   sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='NAME') or (tag='name'))",
 		      read_name, p, NULL, p->id);
+  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='GIVEN_NAME') or (tag='given_name'))",
+		      read_given_name, p, NULL, p->id);
+  sqlite_exec_printf (db, "select tag,value from contacts where (urn=%d) and ((tag='FAMILY_NAME') or (tag='family_name'))",
+		      read_family_name, p, NULL, p->id);
 
   if (p->name)
     *list = g_slist_prepend (*list, p);

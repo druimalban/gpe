@@ -24,6 +24,8 @@ struct person
 {
   guint id;
   gchar *name;
+  gchar *given_name;
+  gchar *family_name;
   GSList *data;
 };
 

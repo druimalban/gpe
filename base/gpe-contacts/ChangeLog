@@ -1,3 +1,13 @@
+2004-07-30  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: match_for_search(): Implemeted improved search algorithm.
+    * db.c: Load given name and family name into person struct (for search).
+    * main.c: Some formating fixes.
+    * editing.c: Automatic update of name field.
+    * editing.c, proto.h: Added update routine.
+    * namedetail.c: Finished implementing detail editor.
+    * Makefile: Updated version number to 0.24.
+
 2004-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * contacts-layout-bigscreen.xml: Added fields for name details.

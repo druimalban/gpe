@@ -395,37 +395,64 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 static gboolean
 match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *cat)
 {
-  gchar *lname = g_utf8_strdown (p->name, -1);
-
-  if (strstr (lname, text) == NULL)
+  gchar *gn;
+  gchar *fn;
+  
+  if (p->given_name)
+     gn = g_utf8_strdown(p->given_name, -1);
+  else
+    gn = g_strdup("");
+  
+  if (p->family_name)
+     fn = g_utf8_strdown(p->family_name, -1);
+  else
+    fn = g_strdup("");
+  
+  if (!g_str_has_prefix(gn,text) && !g_str_has_prefix(fn,text))
     {
-      g_free (lname);
-      return FALSE;
+      if (gn) g_free(gn);
+      if (fn) g_free(fn);
+        return FALSE;
+    }
+  if (gn) g_free(gn);
+  if (fn) g_free(fn);
+    
+/*  if ...
+    
+  else
+    {
+      gchar *lname = g_utf8_strdown (p->name, -1);
+    
+      if (strstr (lname, text) == NULL)
+        {
+          g_free (lname);
+          return FALSE;
+        }
     }
 
   g_free (lname);
-
+*/
   if (cat)
     {
       GSList *l;
       gboolean found = FALSE;
 
       for (l = p->data; l; l = l->next)
-	{
-	  struct tag_value *v = l->data;
-	  if (!strcasecmp (v->tag, "CATEGORY") && v->value)
-	    {
-	      guint c = atoi (v->value);
-	      if (c == cat->id)
-		{
-		  found = TRUE;
-		  break;
-		}
-	    }
-	}
+        {
+          struct tag_value *v = l->data;
+          if (!strcasecmp (v->tag, "CATEGORY") && v->value)
+            {
+              guint c = atoi (v->value);
+              if (c == cat->id)
+                {
+                  found = TRUE;
+                  break;
+                }
+            }
+        }
 
       if (!found)
-	return FALSE;
+        return FALSE;
     }
 
   return TRUE;
@@ -445,7 +472,7 @@ do_search (GObject *obj, GtkWidget *entry)
       GSList *ll = g_slist_nth (l, category - 1);
 
       if (ll)
-	c = ll->data;
+        c = ll->data;
 
       g_slist_free (l);
     }
@@ -460,10 +487,10 @@ do_search (GObject *obj, GtkWidget *entry)
       GtkTreeIter iter;
 
       if (match_for_search (p, text, c))
-	{
-	  gtk_list_store_append (list_store, &iter);
-	  gtk_list_store_set (list_store, &iter, 0, p->name, 1, p->id, -1);
-	}
+        {
+	      gtk_list_store_append (list_store, &iter);
+	      gtk_list_store_set (list_store, &iter, 0, p->name, 1, p->id, -1);
+        }
 
       discard_person (p);
     }
