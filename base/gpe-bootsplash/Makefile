@@ -1,4 +1,5 @@
-#set up the symlinks for the package
+PACKAGE = gpe-bootsplash
+VERSION = 0.0-5
 
 CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0` `pkg-config --libs gdk-pixbuf-2.0` -DGTK2
 SPLASH = splash2.png

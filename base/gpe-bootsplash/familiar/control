@@ -3,7 +3,7 @@ Provides: gpe-bootsplash
 Replaces: gpe-bootsplash
 Section: base
 Priority: optional
-Version: 0.0-5
+Version: VERSION
 Architecture: arm
 Maintainer: Robert Mibus <mibus@bigpond.com>
 Depends: libgtk2.0-0

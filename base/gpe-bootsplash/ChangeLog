@@ -4,6 +4,8 @@
 
 	* Makefile (clean): New target.
 
+	* Makefile, familiar/control: Set version in Makefile.
+
 2002-12-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.0-4 released.
