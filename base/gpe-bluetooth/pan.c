@@ -20,6 +20,7 @@
 
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
+#include <gpe/tray.h>
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/l2cap.h>
@@ -50,14 +51,14 @@ struct bt_service_pan
 
 /* Wait for disconnect or error condition on the socket */
 static int 
-wait_for_hup (struct bt_service_pan *svc, int sk)
+wait_for_hup (struct bt_service_pan *svc)
 {
   struct pollfd pf;
   int n;
 
   while (!svc->terminate) 
     {
-      pf.fd = sk;
+      pf.fd = svc->fd;
       pf.events = POLLERR | POLLHUP;
       n = poll (&pf, 1, -1);
       if (n < 0) 
@@ -69,11 +70,11 @@ wait_for_hup (struct bt_service_pan *svc, int sk)
       
       if (n) 
 	{
-	  int err = 0, olen = sizeof(err);
-	  getsockopt (sk, SOL_SOCKET, SO_ERROR, &err, &olen);
-	  
-	  close (sk);
-	  return 0;
+	  int err = 0, olen = sizeof (err);
+	  getsockopt (svc->fd, SOL_SOCKET, SO_ERROR, &err, &olen);
+
+	  close (svc->fd);
+	  return -err;
 	}
     }
 
@@ -301,6 +302,43 @@ pan_thread (struct bt_service_pan *svc)
       gpe_error_box_nonblocking (_("Connection failed\n"));
       gdk_threads_leave ();
       return;
+    }
+
+  for (;;)
+    {
+      int err;
+      gchar *text;
+      gboolean rc;
+      guint id;
+      
+      err = wait_for_hup (svc);
+      
+      if (err < 0)
+	text = g_strdup_printf (_("PAN connection to %s lost: %s"),
+				batostr (&svc->bd->bdaddr),
+				strerror (-err));
+      else
+	text = g_strdup_printf (_("PAN connection to %s lost"),
+				batostr (&svc->bd->bdaddr));
+
+      id = gpe_system_tray_send_message (dock_window, text, 0);
+      schedule_message_delete (id, 5000);
+
+      g_free (text);
+
+      do
+	{
+	  sleep (5);
+	  rc = pan_connect (svc, &error);	  
+	} while (rc == FALSE);
+
+      text = g_strdup_printf (_("PAN connection to %s re-established"),
+			      batostr (&svc->bd->bdaddr));
+			      
+      id = gpe_system_tray_send_message (dock_window, text, 0);
+      schedule_message_delete (id, 5000);
+
+      g_free (text);
     }
 }
 

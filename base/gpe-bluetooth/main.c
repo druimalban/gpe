@@ -77,7 +77,7 @@ static GtkWidget *iconlist;
 static GSList *devices;
 
 gboolean radio_is_on;
-
+GdkWindow *dock_window;
 GSList *service_desc_list;
 
 GtkWidget *
@@ -420,7 +420,21 @@ sigchld_handler (int sig)
 static void
 clicked (GtkWidget *w, GdkEventButton *ev)
 {
+  gpe_system_tray_send_message (dock_window, "Hello world of dock messages", 0);
+
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
+}
+
+static void
+cancel_dock_message (guint id)
+{
+  gpe_system_tray_cancel_message (dock_window, id);
+}
+
+void
+schedule_message_delete (guint id, guint time)
+{
+  g_timeout_add (time, (GSourceFunc) cancel_dock_message, (gpointer)id);
 }
 
 int
@@ -513,6 +527,7 @@ main (int argc, char *argv[])
   lap_init ();
   pan_init ();
 
+  dock_window = window->window;
   gpe_system_tray_dock (window->window);
 
   gdk_threads_enter ();

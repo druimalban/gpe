@@ -30,3 +30,6 @@ extern GSList *service_desc_list;
 extern bdaddr_t src_addr;
 
 extern GtkWidget *bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf);
+
+extern GdkWindow *dock_window;
+extern void schedule_message_delete (guint id, guint time);
