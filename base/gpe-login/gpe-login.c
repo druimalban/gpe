@@ -32,6 +32,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "errorbox.h"
+#include "init.h"
 #include "pixmaps.h"
 #include "picturebutton.h"
 #include "render.h"
@@ -225,11 +226,8 @@ enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
       gdk_keyboard_ungrab (GDK_CURRENT_TIME);
       gtk_widget_hide (window);
     }
-  else {
-    gtk_rc_parse_string ("widget '*login_result_label*' style 'gpe_login_incorrect'");
+  else
     gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
-    gtk_widget_set_name (label_result, "login_result_label");
-  }
 }
 
 static GdkFilterReturn
@@ -265,11 +263,8 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
       do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
       gtk_main_quit ();
     }
-  else {
-    gtk_rc_parse_string ("widget '*login_result_label*' style 'gpe_login_incorrect'");
+  else
     gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
-    gtk_widget_set_name (label_result, "login_result_label");
-  }
 }
 
 static void
@@ -430,16 +425,10 @@ main (int argc, char *argv[])
   Display *dpy;
   Window root;
 
-  static const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
-  /* FIXME: this doesn't work like that... [CM]: */
-  static const gchar *user_gtkrc_file = "~/.gpe/gtkrc";
-	  
   gtk_set_locale ();
 
-  gtk_rc_add_default_file (default_gtkrc_file);
-  gtk_rc_add_default_file (user_gtkrc_file);
-
-  gtk_init (&argc, &argv);
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
 
   setlocale (LC_ALL, "");
 
@@ -557,6 +546,8 @@ main (int argc, char *argv[])
       login_label = gtk_label_new (_("Username"));
       password_label = gtk_label_new (_("Password"));
       label_result = gtk_label_new ("");
+      gtk_rc_parse_string ("widget '*login_result_label*' style 'gpe_login_result'");
+      gtk_widget_set_name (label_result, "login_result_label");
 
       if (autolock_mode)
 	{

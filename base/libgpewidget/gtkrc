@@ -65,8 +65,9 @@ style "gpe_username" = "gpe_bold"
 
 
 # gpe-login:
-#    "Login incorrect"
-style "gpe_login_incorrect" = "gpe_bold"
+#    "Login incorrect" only for the time being
+style "gpe_login_result" = "gpe_bold"
 {
+  # red color:
   fg[NORMAL] = { 0.6, 0.0, 0.0 }
 }

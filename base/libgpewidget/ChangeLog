@@ -1,5 +1,9 @@
 2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gtkrc: Rename gpe_login_incorrect to gpe_login_result.
+
+	* init.c: Fix user gtkrc file.
+
 	* Makefile: Install gtkrc file.
 
 	* init.c (main): Add default resource files, doesn't work yet.

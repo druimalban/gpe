@@ -25,19 +25,18 @@ gpe_application_init (int *argc, char **argv[])
   const char *home;
   char *buf;
   size_t len;
-
-  static const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
-  /* FIXME: this doesn't work like that... [CM]: */
-  static const gchar *user_gtkrc_file = "~/.gpe/gtkrc";
+  const gchar *user_gtkrc_file;
+  const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
 	  
-  gtk_set_locale ();
-
-  /* FIXME: this doesn't seem to have any effect here [CM]: */
   gtk_rc_add_default_file (default_gtkrc_file);
+  user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", g_get_home_dir());
   gtk_rc_add_default_file (user_gtkrc_file);
+
+  gtk_set_locale ();
 
   gtk_init(argc, argv);
 
+  /* FIXME: use g_get_home_dir(), move directory creation away [CM]: */
   home = getenv ("HOME");
   if (home == NULL) 
     home = "";
