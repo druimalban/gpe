@@ -2,6 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>, Moray Allan <moray@sermisy.org>
+ *               2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,6 +38,7 @@ static struct
 {
   GtkWidget *table;
   GtkWidget *hbox2;
+  GtkWidget *lightl, *lightstl;
   GtkWidget *brightnessl;
   GtkWidget *brightness;
   GtkWidget *screensaverl;
@@ -56,7 +58,9 @@ GtkWidget *ipaqscreen_Build_Objects()
   GtkWidget *glade_menuitem = NULL;
   guint i;
   int ss_sec;
-
+  gchar *tstr;
+  GtkWidget* hbox;
+	
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
 
@@ -91,15 +95,42 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_widget_set_name (self.table, "table");
   gtk_container_set_border_width (GTK_CONTAINER (self.table), gpe_border);
 
-  self.brightnessl = gtk_label_new("Brightness:");
+  self.lightl = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.lightl),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Light"));
+  gtk_label_set_markup (GTK_LABEL (self.lightl), tstr);
+  g_free(tstr);
+  
+  self.brightnessl = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.brightnessl),0.0,0.5);
+  tstr = g_strdup_printf ("<span foreground=\"#000000\"> %s </span>", _("Brightness"));
+  gtk_label_set_markup (GTK_LABEL (self.brightnessl), tstr);
+  g_free(tstr);
+  
+  self.lightstl = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.lightstl),0.0,0.5);
+  tstr = g_strdup_printf ("<span foreground=\"#000000\"> %s </span>", _("State"));
+  gtk_label_set_markup (GTK_LABEL (self.lightstl), tstr);
+  g_free(tstr);
+  
   adjLight = gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0);
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (adjLight));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_RIGHT);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
-  self.screensaverl = gtk_label_new("Screensaver:");
-  self.screensaverl2 = gtk_label_new("Screensaver:");
 
-  self.screensaverbt = gtk_check_button_new_with_label ("On");
+  self.screensaverl = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.screensaverl),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Screensaver"));
+  gtk_label_set_markup (GTK_LABEL (self.screensaverl), tstr);
+  g_free(tstr);
+  
+  self.screensaverl2 = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.screensaverl2),0.0,0.5);
+  tstr = g_strdup_printf ("<span foreground=\"#000000\"> %s </span>", _("Delay until start"));
+  gtk_label_set_markup (GTK_LABEL (self.screensaverl2), tstr);
+  g_free(tstr);
+
+  self.screensaverbt = gtk_check_button_new_with_label (_("Activated"));
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), TRUE);
 
   adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0);
@@ -107,7 +138,12 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
 
-  self.rotationl = gtk_label_new("Rotation:");
+  self.rotationl = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.rotationl),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Orientation"));
+  gtk_label_set_markup (GTK_LABEL (self.rotationl), tstr);
+  g_free(tstr);
+  
   self.rotation = gtk_option_menu_new ();
 
   menu =  gtk_menu_new ();
@@ -121,81 +157,82 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.rotation),menu);
   gtk_option_menu_set_history(GTK_OPTION_MENU (self.rotation),get_rotation());
  
-  self.touchscreen = gtk_label_new("Touchscreen:");
-  self.calibrate = gtk_button_new_with_label("Calibrate");
+  self.touchscreen = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.touchscreen),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Touchscreen"));
+  gtk_label_set_markup (GTK_LABEL (self.touchscreen), tstr);
+  g_free(tstr);
+	
+  self.calibrate = gtk_button_new_with_label(_("Calibrate"));
+	
+  self.rbLightswitch1 = gtk_radio_button_new_with_label(NULL,_("Light on"));
+  self.rbLightswitch2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.rbLightswitch1),_("Light off"));
 
-  gtk_table_attach (GTK_TABLE (self.table), self.brightnessl, 0, 1, 0, 1,
+	
+  gtk_table_attach (GTK_TABLE (self.table), self.lightl, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
-  gtk_label_set_justify (GTK_LABEL (self.brightnessl), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.brightnessl), 0, 0.5);
+	
+  gtk_table_attach (GTK_TABLE (self.table), self.brightnessl, 0, 1, 1, 2,
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_misc_set_padding (GTK_MISC (self.brightnessl),
 			gpe_boxspacing, gpe_boxspacing);
 	
-  /* make the label grey: */
-//  gtk_rc_parse_string ("widget '*self.brightnessl' style 'gpe_labels'");
-  gtk_widget_set_name (self.brightnessl, "self.brightnessl");
-
-  gtk_table_attach (GTK_TABLE (self.table), self.brightness, 1, 2, 0, 1,
+  gtk_table_attach (GTK_TABLE (self.table), self.brightness, 1, 2, 1, 2,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+					
+  gtk_table_attach (GTK_TABLE (self.table), self.lightstl, 0, 1, 2, 3,
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+  gtk_misc_set_padding (GTK_MISC (self.lightstl),
+			gpe_boxspacing, gpe_boxspacing);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.screensaverl, 0, 1, 1, 3,
+  hbox = gtk_hbox_new(FALSE,gpe_boxspacing);
+  gtk_box_pack_start(GTK_BOX(hbox),self.rbLightswitch1,FALSE,TRUE,0);
+  gtk_box_pack_start_defaults(GTK_BOX(hbox),self.rbLightswitch2);
+  gtk_table_attach (GTK_TABLE (self.table), hbox, 1, 2, 2, 3,
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+					
+  gtk_table_attach (GTK_TABLE (self.table), self.screensaverl, 0, 1, 3, 4,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.screensaverl), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.screensaverl), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (self.screensaverl),
+
+  gtk_table_attach (GTK_TABLE (self.table), self.screensaverbt, 1, 2, 3, 4,
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+
+  gtk_table_attach (GTK_TABLE (self.table), self.screensaverl2, 0, 1, 5, 6,
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+  gtk_misc_set_padding (GTK_MISC (self.screensaverl2),
 			gpe_boxspacing, gpe_boxspacing);
-  /* make the label grey: */
-//  gtk_rc_parse_string ("widget '*self.screensaverl' style 'gpe_labels'");
-  gtk_widget_set_name (self.screensaverl, "self.screensaverl");
-
-  gtk_table_attach (GTK_TABLE (self.table), self.screensaverl2, 1, 2, 1, 2,
+					
+  gtk_table_attach (GTK_TABLE (self.table), self.screensaver, 1, 2, 5, 6,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.screensaver, 1, 2, 2, 3,
-                    (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-
-  gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 3, 4,
+  gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 6, 7,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.rotationl), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.rotationl), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (self.rotationl),
-			gpe_boxspacing, gpe_boxspacing);
-  /* make the label grey: */
-//  gtk_rc_parse_string ("widget '*self.rotationl' style 'gpe_labels'");
-  gtk_widget_set_name (self.rotationl, "self.rotationl");
-
-  gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 3, 4,
+ 
+  gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 6, 7,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 4, 5,
+  gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 7, 8,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.touchscreen), table_justify_left_col);
-  gtk_misc_set_alignment (GTK_MISC (self.touchscreen), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (self.touchscreen),
-			gpe_boxspacing, gpe_boxspacing);
-  /* make the label grey: */
-// gtk_rc_parse_string ("widget '*self.touchscreen' style 'gpe_labels'");
-  gtk_widget_set_name (self.touchscreen, "self.touchscreen");
 
-  gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 4, 5,
+  gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 7, 8,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-  self.rbLightswitch1 = gtk_radio_button_new_with_label(NULL,_("Light on"));
-  gtk_table_attach (GTK_TABLE (self.table), self.rbLightswitch1, 0, 1, 5, 6,
-                    (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-  self.rbLightswitch2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.rbLightswitch1),_("Light off"));
-  gtk_table_attach (GTK_TABLE (self.table), self.rbLightswitch2, 1, 2, 5, 6,
-                    (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+
 
   gtk_signal_connect (GTK_OBJECT (adjLight), "value_changed",
                       GTK_SIGNAL_FUNC (on_brightness_hscale_draw),
@@ -217,14 +254,10 @@ GtkWidget *ipaqscreen_Build_Objects()
                       GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
                       NULL);
   
-  gtk_signal_connect (GTK_OBJECT (self.rbLightswitch1), "clicked",
+  gtk_signal_connect (GTK_OBJECT (self.rbLightswitch1), "toggled",
                       GTK_SIGNAL_FUNC (on_light_on),
                       (gpointer)self.rbLightswitch1);
 
-  gtk_signal_connect (GTK_OBJECT (self.rbLightswitch2), "clicked",
-                      GTK_SIGNAL_FUNC (on_light_on),
-                      (gpointer)self.rbLightswitch1); // yes, this is correct!
- 					  
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),get_light_state());
   
   gtk_timeout_add(2500,(GtkFunction)on_light_check,(gpointer)adjLight);

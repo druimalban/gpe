@@ -35,7 +35,6 @@ void turn_light(int status)
 {
 #ifndef __i386__
   int fd;
-printf("sw %d\n",status);
   bl.mode=1;
   bl.pwr=status;
   fd = open(TS_DEV, O_RDWR);
