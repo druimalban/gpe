@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+23.03.2003		Florian			users/interface.c			User list now has automatic scrollbars :-)
+
 23.03.2003		Florian			ipaqscreen/callbacks.c		Changed sleep conf to use suid task.
 								ipaqscreen/interface.*		Fixed several bugs in light/dim stuff.
 								suid.c						

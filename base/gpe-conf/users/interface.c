@@ -238,14 +238,19 @@ Users_Build_Objects (void)
   button3 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete user"),
 			   _("Delete user"), _("Delete existing user"), pw,
 			   GTK_SIGNAL_FUNC (users_on_delete_clicked), NULL);
+
 			   
   user_list = gtk_clist_new_with_titles (3,listTitles);
+  pw = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pw),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (pw), user_list);
+  
   InitPwList();
   ReloadList();
 
   gtk_widget_show (user_list);
  
-  gtk_box_pack_start (GTK_BOX (vbox1), user_list, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), pw, TRUE, TRUE, 0);
 
   return vbox1;
 }
