@@ -10,6 +10,8 @@
 #ifndef EVENT_DB_H
 #define EVENT_DB_H
 
+#define SECONDS_IN_DAY (24*60*60)
+
 #include <glib.h>
 #include <time.h>
 

@@ -1,3 +1,8 @@
+2003-09-05  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+	
+	* event-db.c: change to modulo method of recur checking
+	* event-db.h: add SECONDS_IN_DAY definition 
+                                                                                
 2003-10-19  Luis Oliveira  <luis@handhelds.org>
 
 	* Makefile: Generate .pc files.
