@@ -1,3 +1,7 @@
+2003-11-13	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* keyctl.c: First step of major design changes.
+	* sleep/confGUI.c: Fixed accidentally commented out section.
+	
 2003-11-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c: Enabled removing of background settings.
 	* control1: Added dependency to new version of xst.

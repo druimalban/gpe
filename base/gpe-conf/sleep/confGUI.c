@@ -56,9 +56,9 @@ void set_conf_defaults(GtkWidget *top, ipaq_conf_t *conf)
 }
 
 /* lifted from gpe-todo */
-/*#include "tick.xpm"
+#include "tick.xpm"
 #include "box.xpm"
-*/
+
 static GdkPixmap *tick_pixmap, *box_pixmap;
 static GdkBitmap *tick_bitmap, *box_bitmap;
 
@@ -87,7 +87,7 @@ void init_irq_list(GtkWidget *top, GdkWindow *win, ipaq_conf_t *conf)
     for(j = 0; j < nIrq; j++)
       if(conf->ilist[i].num == irqL[j]) { found = TRUE; break; }
     gtk_clist_append(GTK_CLIST(wgt), temp);
-#if 0
+#if 1
     if(found)	gtk_clist_set_pixmap(GTK_CLIST(wgt), i, 0, tick_pixmap, tick_bitmap);
     else	gtk_clist_set_pixmap(GTK_CLIST(wgt), i, 0, box_pixmap, box_bitmap);
 #else

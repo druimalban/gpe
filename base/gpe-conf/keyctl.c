@@ -47,6 +47,7 @@ static struct
 {
 	GtkWidget *button[8];
 	GdkPixbuf *p;
+	GtkWidget *edit;
 }
 self;
 
@@ -155,7 +156,7 @@ init_buttons ()
 void
 on_button_clicked (GtkButton * button, gpointer user_data)
 {
-	ask_user_a_file ("/usr/bin", NULL, FileSelected, NULL, button);
+//	ask_user_a_file ("/usr/bin", NULL, FileSelected, NULL, button);
 }
 
 void
@@ -197,97 +198,77 @@ on_defaults_clicked (GtkButton * button, gpointer user_data)
 GtkWidget *
 Keyctl_Build_Objects ()
 {
+	GtkWidget *vbox = gtk_vbox_new(FALSE,0);
 	GtkWidget *layout1 = gtk_layout_new (NULL, NULL);
-	GtkWidget *button_1 = gtk_button_new_with_label ("Record");
-	GtkWidget *button_2 = gtk_button_new_with_label ("Calendar");
-	GtkWidget *button_5 = gtk_button_new_with_label ("Menu");
-	GtkWidget *button_3 = gtk_button_new_with_label ("Contacts");
-	GtkWidget *button_4 = gtk_button_new_with_label ("Q");
 	GtkWidget *bDefault = gtk_button_new_with_label (_("Defaults"));
-	GtkWidget *scroll =
-		gtk_scrolled_window_new (GTK_ADJUSTMENT
-					 (gtk_adjustment_new
-					  (0, 0, 230, 1, 10, 240)),
-					 GTK_ADJUSTMENT
-					 (gtk_adjustment_new
-					  (0, 0, 220, 1, 10, 240)));
+	GtkWidget *scroll =	gtk_scrolled_window_new (NULL,NULL);
+
+	
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 					GTK_POLICY_NEVER,
 					GTK_POLICY_AUTOMATIC);
 	self.p = gpe_find_icon ("ipaq");
+	self.edit = gtk_entry_new();
 	
+	gtk_box_pack_start(GTK_BOX(vbox),scroll,TRUE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),self.edit,FALSE,TRUE,0);
 	
-	self.button[0] = button_1;
-	self.button[1] = button_2;
-	self.button[2] = button_3;
-	self.button[3] = button_4;
-	self.button[4] = button_5;
-	self.button[5] = gtk_button_new();
-	self.button[6] = gtk_button_new();
-	self.button[7] = gtk_button_new();
+	self.button[0] = gtk_radio_button_new(NULL);
+	self.button[1] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
+	self.button[2] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
+	self.button[3] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
+	self.button[4] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
+	self.button[5] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
+	self.button[6] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
+	self.button[7] = gtk_radio_button_new_from_widget(GTK_RADIO_BUTTON(self.button[0]));
 
 	gtk_container_add (GTK_CONTAINER (scroll), layout1);
-	gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 220);
+	gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 210);
 
 	gtk_container_set_border_width (GTK_CONTAINER (scroll), 2);
-
-	GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->hadjustment)->
-		step_increment = 10;
-	GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->vadjustment)->
-		step_increment = 10;
 
 	if (self.p)
 	{
 		GtkWidget *pixmap1 = gtk_image_new_from_pixbuf (self.p);
 		gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 30, 5);
-		gtk_widget_set_usize (pixmap1, 188, 205);
+		gtk_widget_set_usize (pixmap1, 188, 210);
 
 	}
 
-	gtk_layout_put (GTK_LAYOUT (layout1), button_1, 3, 54);
-	gtk_widget_set_usize (button_1, 70, 20);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[0], 15, 35);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[1], 46, 176);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[2], 86, 200);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[3], 142, 199);
+	gtk_layout_put (GTK_LAYOUT (layout1), self.button[4], 198, 174);
+	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 182, 1);
+//	gtk_widget_set_usize (bDefault, 70, 20);
 
-	gtk_layout_put (GTK_LAYOUT (layout1), button_2, 3, 176);
-	gtk_widget_set_usize (button_2, 70, 20);
-
-	gtk_layout_put (GTK_LAYOUT (layout1), button_3, 38, 198);
-	gtk_widget_set_usize (button_3, 70, 20);
-
-	gtk_layout_put (GTK_LAYOUT (layout1), button_4, 118, 200);
-	gtk_widget_set_usize (button_4, 70, 20);
-
-	gtk_layout_put (GTK_LAYOUT (layout1), button_5, 162, 178);
-	gtk_widget_set_usize (button_5, 70, 20);
-
-	gtk_layout_put (GTK_LAYOUT (layout1), bDefault, 164, 3);
-	gtk_widget_set_usize (bDefault, 70, 20);
-
-	gtk_signal_connect_object (GTK_OBJECT (button_1), "clicked",
+	gtk_signal_connect_object (GTK_OBJECT (self.button[0]), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_button_clicked),
-				   GTK_OBJECT (button_1));
-	gtk_signal_connect_object (GTK_OBJECT (button_2), "clicked",
+				   GTK_OBJECT (self.button[0]));
+	gtk_signal_connect_object (GTK_OBJECT (self.button[1]), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_button_clicked),
-				   GTK_OBJECT (button_2));
-	gtk_signal_connect_object (GTK_OBJECT (button_5), "clicked",
+				   GTK_OBJECT (self.button[1]));
+	gtk_signal_connect_object (GTK_OBJECT (self.button[4]), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_button_clicked),
-				   GTK_OBJECT (button_5));
-	gtk_signal_connect_object (GTK_OBJECT (button_3), "clicked",
+				   GTK_OBJECT (self.button[4]));
+	gtk_signal_connect_object (GTK_OBJECT (self.button[2]), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_button_clicked),
-				   GTK_OBJECT (button_3));
-	gtk_signal_connect_object (GTK_OBJECT (button_4), "clicked",
+				   GTK_OBJECT (self.button[2]));
+	gtk_signal_connect_object (GTK_OBJECT (self.button[3]), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_button_clicked),
-				   GTK_OBJECT (button_4));
+				   GTK_OBJECT (self.button[3]));
 	gtk_signal_connect_object (GTK_OBJECT (bDefault), "clicked",
 				   GTK_SIGNAL_FUNC
 				   (on_defaults_clicked), NULL);
-	init_buttons ();
+//	init_buttons ();
 	
-	return scroll;
+	return vbox;
 }
 
 
