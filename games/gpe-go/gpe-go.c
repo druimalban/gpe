@@ -813,7 +813,6 @@ void status_update_fmt(const char * format, ...){
   gchar * message;
   va_list ap;
   va_start (ap, format);
-  va_start (ap, format);
   vasprintf (&message, format, ap);
   va_end (ap);
 
