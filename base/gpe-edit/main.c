@@ -145,7 +145,9 @@ open_file (GtkFileSelection *selector, gpointer user_data)
 
     clear_text_area ();
 
+    file_modified = 1;
     gtk_editable_insert_text (GTK_EDITABLE (text_area), buffer, file_stat.st_size, &pos);
+    file_modified = 0;
 
     update_window_title ();
   }
@@ -275,8 +277,11 @@ ask_save_before_exit (void)
       gtk_exit (0);
       default:
     }
-  } else
-    gtk_exit(0);
+  }
+  else
+  {
+    gtk_exit (0);
+  }
 }
 
 static void
