@@ -1,0 +1,67 @@
+% This German version from Colin Marquardt is translated against
+% gpe-flyer.tex Revision: 1.7
+
+\renewcommand{\flyertext}{%
+\selectlanguage{german}
+%
+%\AddToShipoutPicture{%
+%\includegraphics[width=\textwidth/2-1cm]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}}
+\textbf{\large
+  \includegraphics[height=\lineheight*3/5]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}
+GPE: The GPE Palmtop Environment
+  \includegraphics[height=\lineheight*3/5]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}
+}
+
+\smallskip
+\small{
+  \href{http://gpe.handhelds.org}{\texttt{http://gpe.handhelds.org}} --
+  \href{mailto:gpe@handhelds.org}{\texttt{mailto:gpe@handhelds.org}} -- 
+  \href{irc://freenode.net:ircd/\#gpe}{\texttt{irc://freenode.net:ircd/\#gpe}}
+}
+
+\smallskip
+
+Eine GUI-Umgebung, die auf Palmtops und Handheld-Computer wie den HP
+iPAQ und den Sharp Zaurus abzielt. »GNOME für Handhelds« ist nicht
+weit weg von der Wahrheit. GPE ist Freie Software.
+
+\smallskip
+\textbf{Eigenschaften}
+\begin{compactitem}
+   \item Eigene GTK-basierte Widget Library (LGPL)
+   \item Applikationen: Kalendar, To-do-Liste, Adreßbuch,
+     Medienspieler, Notizbuch, Spiele und mehr (GPL)
+   \item Systemwerkzeuge wie Wi-Fi- und Bluetooth-Verwaltung
+   \item Internationalisierung
+   \item »Display migration«: laufende Anwendungen auf andere
+  Displays verschieben
+\end{compactitem}
+
+\smallskip
+\textbf{Technik}
+\begin{compactitem}
+   \item X Window System{\texttrademark}{}-Server mit Render- und
+     Resize/Rotate-Erweiterungen (z.\,B. XFree86, kdrive)
+   \item fontconfig
+   \item XFT2 mit Subpixel-anti-aliasing für Schriften
+   \item GTK+~2.2, bidirektionaler Text, »display migration«
+     usw.
+   \item Unterstützung von freedesktop.org-Standards
+   \item Matchbox, ein schlanker Fenstermanager, der für
+     Embedded-Geräte entworfen wurde
+   \item SQLite zur Datenspeicherung
+   \item GStreamer Multimedia-Framework
+   \item Pakete für Familiar Linux verfügbar;
+     OpenEmbedded-Unterstützung in Arbeit.
+   \item \textbf{NEU! Synchronisierung für Kontakte, To-Do und
+     Kalender} in beide Richtungen mittels multisync.
+\end{compactitem}
+
+\smallskip
+\textit{Anwender und Entwickler willkommen!}\hfill\tiny{\$Revision$}
+}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "gpe-flyer"
+%%% End: 
