@@ -14,7 +14,7 @@ install-mo: all-mo
 .po.mo:;
 	msgfmt -o $@ $<
 
-update-po: $(po-files)
+update-po: $(po-files) po/$(PACKAGE).pot
 
 po/%.po: po/$(PACKAGE).pot
 	msgmerge -o $@.new $@ $^
