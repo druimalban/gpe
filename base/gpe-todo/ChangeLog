@@ -1,3 +1,8 @@
+2003-07-13  Moray Allan  <moray@sermisy.org>
+
+	* Version 0.36.1.
+	* Changes for new name of libdisplaymigration.
+
 2003-07-07  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (clean): Depend on clean-po target.
