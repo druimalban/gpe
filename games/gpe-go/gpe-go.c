@@ -150,6 +150,7 @@ void free_table(char ** table, int size){
   if(table) free(table);
 }
 
+void update_capture_label();
 void scale_graphics();
 void paint_board(GtkWidget * widget);
 
@@ -203,6 +204,7 @@ void init_new_game(int game_size){
 
   go.white_captures = 0;
   go.black_captures = 0;
+  update_capture_label();
 
   go.turn = 0;
 
@@ -751,6 +753,7 @@ int kill_group_of(int col, int row){
 void update_capture_label(){
   free(go.capture_string);
   go.capture_string = (char *) malloc (20 * sizeof(char));
+  /* TRANSLATORS: B = Black stones, W = White stones */
   sprintf(go.capture_string, _("B:%d  W:%d "), go.black_captures, go.white_captures);
   gtk_label_set_text (GTK_LABEL (go.capture_label), go.capture_string);
 }
@@ -1244,7 +1247,7 @@ GtkWidget * build_new_game_dialog(){
 
   //--title
   label = gtk_label_new (NULL);
-  /* TRANSLATORS: ignore <xxx> tags */
+  /* TRANSLATORS: keep the <big><b> tags */
   gtk_label_set_markup (GTK_LABEL (label), _("<big><b>New Game</b></big>"));
 
   //image
@@ -1266,6 +1269,7 @@ GtkWidget * build_new_game_dialog(){
   vbox = gtk_vbox_new (FALSE, 5);
 
   label = gtk_label_new (NULL);
+  /* TRANSLATORS: keep the <b> tags */
   gtk_label_set_markup (GTK_LABEL (label), _("<b>Game Size</b>"));
   gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
@@ -1455,7 +1459,7 @@ void gui_init(){
 
   //Capture label, 
   //let put it in the toolbar. Will find a better place later
-  capture_label = gtk_label_new(_("B:0  W:0 "));
+  capture_label = gtk_label_new("");
   
   gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), capture_label, NULL, NULL);
   go.capture_label = capture_label;
