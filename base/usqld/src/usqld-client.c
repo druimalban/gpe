@@ -382,10 +382,11 @@ int usqld_complete(const char *zSql){
 int usqld_last_insert_rowid(usqld_conn *con)
 {
   usqld_packet *out_p,*in_p;
-	int ret;
+  int ret;
+  
   out_p= XDR_tree_new_union(PICKLE_REQUEST_ROWID,
 			    XDR_tree_new_void());
-
+  
   if(USQLD_OK!=usqld_send_packet(con->server_fd,out_p)){
     XDR_tree_free(out_p);
     return -1;
@@ -394,12 +395,8 @@ int usqld_last_insert_rowid(usqld_conn *con)
     return -1;
   }
   
-	XDR_tree_dump(in_p);
-
- ret = XDR_t_get_uint(
-          XDR_TREE_SIMPLE(
-	    XDR_t_get_comp_elem(XDR_TREE_COMPOUND(in_p),1)));
-
+  ret = XDR_t_get_uint(XDR_TREE_SIMPLE(XDR_t_get_comp_elem(XDR_TREE_COMPOUND(in_p),1)));
+  
   XDR_tree_free(in_p);
   return ret;
 }

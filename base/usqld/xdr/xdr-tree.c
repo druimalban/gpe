@@ -94,6 +94,7 @@ void XDR_tree_free(XDR_tree * t){
     }
     break;
   default:
+    ;
     
   }
   
@@ -236,6 +237,7 @@ void XDR_tree_dump_r(XDR_tree*t,int indent){
     }
   break;
   default:    
+    ;
   }
    printf("\n");
 }

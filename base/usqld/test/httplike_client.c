@@ -24,6 +24,7 @@ void packet_callback(httplike_socket * sock, httplike_packet *packet){
 }
 
 void error_callback(httplike_socket * sock, int errcode, const char * msg){
+  fprintf(stderr,"an error occured in httplike:(%d):%s\n",errcode,msg);
 }
 
 int main(int argc, char ** argv){
@@ -71,16 +72,20 @@ int main(int argc, char ** argv){
   }
   
   sock =httplike_new_socket(sock_fd);
-
+  bzero(&req,sizeof(httplike_packet));
+  
   req.operation = "usqld_app";
   req.operand = "REQUEST";
   req.version= "HTTPLIKE/0.4";
   httplike_packet_add_header(&req,"Content-type","text/plain");
-
+  
   httplike_socket_set_message_func(sock,packet_callback);
   httplike_socket_set_error_func(sock,error_callback);
 
-  httplike_socket_send_packet(sock,&req);
+  if(!httplike_socket_send_packet(sock,&req)){
+    perror("couldn't send packet");
+    exit(1);
+  };
  
   httplike_socket_set_data(sock,(void*)&finished);
   
@@ -98,5 +103,6 @@ int main(int argc, char ** argv){
     }
   }while(!finished);
   printf("all done\n");
+  sleep(1000);
   return 0;
 }

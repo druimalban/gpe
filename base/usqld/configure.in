@@ -1,6 +1,6 @@
 AC_INIT(xdr/xdr.h)
-VERSION=0.2.1
-PACKAGE=usqld
+VERSION=4.23.0
+PACKAGE=csound
 
 AC_PROG_CC
 AC_CANONICAL_SYSTEM
@@ -26,4 +26,4 @@ AC_ARG_WITH(sqlite,[ --with-sqlite=prefix prefix for sqlite includes and libs],
 			   AC_SUBST(SQLITEPREFIX)])
 			   
 AC_OUTPUT(Makefile src/Makefile xdr/Makefile xdr/examples/Makefile \
-test/Makefile usqldsh/Makefile ipkg/control ipkg/Makefile)
+test/Makefile usqldsh/Makefile ipkg/control ipkg/Makefile httplike/Makefile)

@@ -182,12 +182,11 @@ void XDR_dump_schema_r(XDR_schema *elem,int indent){
       do_tab(indent);
       printf("}\n");
     }
-
   default:
-    
+    ;
   }
 }
-  
+
 
 void XDR_dump_schema( XDR_schema *elem){
   XDR_dump_schema_r(elem,0);

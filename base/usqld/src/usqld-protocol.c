@@ -7,8 +7,8 @@
 #include <signal.h>
 #include "xdr.h"
 #include "usqld-protocol.h"
-char * USQLD_PROTOCOL_VERSION = "USQLD_0.2.1";
-char * USQLD_VERSION = "USQLD_0.2.1";
+char * USQLD_PROTOCOL_VERSION = "USQLD_0.3.0";
+char * USQLD_VERSION = "USQLD_0.3.0";
 
 struct {
   char * name;
@@ -58,11 +58,12 @@ void  usqld_init_protocol(){
     *rows_packet,
     *eof_packet,
     *error_packet,
-	*rowid_packet;
+    *rowid_packet;
   
   XDR_schema * connect_elems[2];
   XDR_schema * err_elems[2];
-  
+  XDR_schema * top_elems[2];
+
   XDR_union_discrim  elems[12];
   
   elems[0].t = eof_packet = XDR_schema_new_void();
@@ -92,23 +93,29 @@ void  usqld_init_protocol(){
 
   elems[7].t = XDR_schema_new_void();
   elems[7].d = PICKLE_OK;
+  
+  elems[8].t = XDR_schema_new_void();
+  elems[8].d = PICKLE_INTERRUPT;
+  
+  elems[9].t = XDR_schema_new_void();
+  elems[9].d = PICKLE_INTERRUPTED;
+  
+  elems[10].t = rowid_packet = XDR_schema_new_void();
+  elems[10].d = PICKLE_REQUEST_ROWID;
+  
+  elems[11].t = rowid_packet = XDR_schema_new_uint();
+  elems[11].d = PICKLE_ROWID;
    
-   elems[8].t = XDR_schema_new_void();
-   elems[8].d = PICKLE_INTERRUPT;
+  top_elems[0] = XDR_schema_new_uint();
+  top_elems[1] =XDR_schema_new_type_union(12,elems);
+  
+  usqld_protocol_schema = XDR_schema_new_struct(2,top_elems);
    
-   elems[9].t = XDR_schema_new_void();
-   elems[9].d = PICKLE_INTERRUPTED;
-
-   elems[10].t = rowid_packet = XDR_schema_new_void();
-   elems[10].d = PICKLE_REQUEST_ROWID;
-
-   elems[11].t = rowid_packet = XDR_schema_new_uint();
-   elems[11].d = PICKLE_ROWID;
-
-	usqld_protocol_schema = XDR_schema_new_type_union(12,elems);
 }
 
 pthread_once_t init_protocol_once = PTHREAD_ONCE_INIT;
+
+
 /**
    returns an instance of the usqld protocol
    we only bother to instantiate the protocol once per session
@@ -126,60 +133,8 @@ XDR_schema * usqld_get_protocol(){
 }
 
 /**
-   recieves a protocol packet using the usqld protocol schema
-   
-   fd : a file descriptor to read from
-   packet where to put the recieved packet will always be NULL
-   if the function returns anything  byt USQLD_OK;
-   
-   return value: 
-   USQLD_OK (0) on success. 
-   one of the possible XDR error codes for deserialization
+   constructs an error packet. 
  */
-int usqld_recv_packet(int fd,XDR_tree ** packet){
-
- void (*handler) (int);
-  int rv;
-
-  handler = signal(SIGPIPE,SIG_IGN);
-  rv  = XDR_deserialize_elem(usqld_get_protocol(),fd,packet);
-  signal(SIGPIPE,handler);
-#ifdef VERBOSE_DEBUG
-   if(rv==USQLD_OK)
-     {
-
-       fprintf(stderr,"got a %s packet\n",
-	       usqld_find_packet_name(
-		 XDR_t_get_union_disc(XDR_TREE_COMPOUND(*packet))));
-       
-       XDR_tree_dump(*packet);
-     }else
-     {
-	fprintf(stderr,"packet recieve failed with code %d\n",rv);
-     }
-#endif   
-   return rv;
-}
-
-
-int usqld_send_packet(int fd,XDR_tree* packet){
- void (*handler) (int);
- int rv;
-#ifdef VERBOSE_DEBUG
-  fprintf(stderr,"about to send a %s packet\n",
-	  usqld_find_packet_name(XDR_t_get_union_disc(XDR_TREE_COMPOUND(packet))));
-   XDR_tree_dump(packet);
-#endif
-   handler = signal(SIGPIPE,SIG_IGN);
-   rv =  XDR_serialize_elem(usqld_get_protocol(),packet,fd);
-   signal(SIGPIPE,handler);
-   return rv;
-}
-
-int usqld_get_packet_type(XDR_tree*packet){
-  return XDR_t_get_union_disc(XDR_TREE_COMPOUND(packet));
-}
-
 usqld_packet * usqld_error_packet(int errcode, const char * str){
   XDR_tree * p;
   XDR_tree * ep[2];
@@ -190,14 +145,27 @@ usqld_packet * usqld_error_packet(int errcode, const char * str){
 			 XDR_tree_new_struct(2,ep));
   return p;
 }
+
+
+/**
+   constructs an acknowledgement packet packet
+ */
 usqld_packet * usqld_ok_packet(){
   XDR_tree * p;
   p = XDR_tree_new_union(PICKLE_OK,XDR_tree_new_void());
   return p;
 }
 
+/**
+   constructs a rowid packet
+ */
 usqld_packet * usqld_rowid_packet(int rowid){
   XDR_tree * p;
 	p = XDR_tree_new_union(PICKLE_ROWID, XDR_tree_new_uint(rowid));
   return p;
+}
+
+usqld_packet * usqld_env_get_packet(usqld_envelope * env){
+  assert(NULL!=env);
+  return XDR_t_get_comp_elem(XDR_TREE_COMPOUND(env),1);
 }

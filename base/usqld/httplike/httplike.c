@@ -4,19 +4,56 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/socket.h>
+#include <fcntl.h>
 #include <xdr/xdr.h>
+#include <errno.h>
 #include "httplike.h"
 
+char * states[] ={
+
+  "HTPL_IS_INIT",
+    "HTPL_IS_OPER" ,
+    "HTPL_IS_WTS1" ,
+    "HTPL_IS_OPND" ,
+    "HTPL_IS_WTS2",
+    "HTPL_IS_VERS" ,
+    "HTPL_IS_H_NL" ,
+    "HTPL_IS_WTS3",
+    "HTPL_IS_HNAM" ,
+    "HTPL_IS_COLO" ,
+    "HTPL_IS_WTS4",
+    "HTPL_IS_HVAL",
+    "HTPL_IS_DATA",
+    "HTPL_IS_ERRO",
+
+};
+
+
+void httplike_socket_set_error(httplike_socket * sock, int errcode,char * errstr){
+  assert(sock!=NULL);
+  
+  if(sock->errstr)
+    XDR_free(sock->errstr);
+  
+  if(errstr)
+    sock->errstr = strdup(errstr);
+  else
+    sock->errstr  = NULL;
+
+  sock->errcode = HTTPLIKE_STATE_ERROR;
+  
+}
 
 // this is a transition relation, 
 // ANY STATES ABOVE HTTPLIKE_STATE_MAX_T have no out transitions, so aren't included. 
-struct httplike_trans lex_trans [11][4]=
+struct httplike_trans lex_trans [12][4]=
   {   //NWS-WC-colon        NEWLINE        COLON            WHITESPACE
     {{HTPL_IS_OPER,1},{HTPL_IS_ERRO,0},{HTPL_IS_ERRO,0},{HTPL_IS_ERRO,0}}, //HTPL_IS_INIT
     {{HTPL_IS_OPER,1},{HTPL_IS_ERRO,0},{HTPL_IS_OPER,1},{HTPL_IS_WTS1,0}}, //HTPL_IS_OPER
     {{HTPL_IS_OPND,1},{HTPL_IS_ERRO,0},{HTPL_IS_OPND,1},{HTPL_IS_WTS1,0}}, //HTPL_IS_WTS1
     {{HTPL_IS_OPND,1},{HTPL_IS_ERRO,0},{HTPL_IS_OPND,1},{HTPL_IS_WTS2,0}}, //HTPL_IS_OPND 
-    {{HTPL_IS_VERS,1},{HTPL_IS_H_NL,0},{HTPL_IS_VERS,1},{HTPL_IS_WTS2,0}}, //HTPL_IS_WTS2
+    {{HTPL_IS_VERS,1},{HTPL_IS_ERRO,0},{HTPL_IS_VERS,1},{HTPL_IS_WTS2,0}}, //HTPL_IS_WTS2
+    {{HTPL_IS_VERS,1},{HTPL_IS_H_NL,0},{HTPL_IS_VERS,1},{HTPL_IS_VERS,1}}, //HTPL_IS_VERS
     {{HTPL_IS_HNAM,1},{HTPL_IS_DATA,0},{HTPL_IS_ERRO,0},{HTPL_IS_WTS3,0}}, //HTPL_IS_H_NL
     {{HTPL_IS_HNAM,1},{HTPL_IS_ERRO,0},{HTPL_IS_ERRO,0},{HTPL_IS_WTS3,0}}, //HTPL_IS_WTS3
     {{HTPL_IS_HNAM,1},{HTPL_IS_ERRO,0},{HTPL_IS_WTS4,0},{HTPL_IS_COLO,0}}, //HTPL_IS_HNAM
@@ -69,6 +106,15 @@ httplike_timeout_func  httplike_socket_get_timeout_func(httplike_socket * sock){
   return (httplike_timeout_func) p_get(sock,&(sock->on_timeout));
 }
 
+httplike_closed_func  httplike_socket_set_closed_func(httplike_socket * sock,
+							httplike_closed_func func){
+  return (httplike_closed_func)p_set(sock,&(sock->on_closed),func);
+}
+
+httplike_closed_func  httplike_socket_get_closed_func(httplike_socket * sock){
+  return (httplike_closed_func) p_get(sock,&(sock->on_closed));
+}
+
 httplike_error_func  httplike_socket_set_error_func(httplike_socket * sock,
 						    httplike_error_func func){
   return (httplike_error_func)p_set(sock,&(sock->on_error),func);
@@ -91,7 +137,7 @@ void httplike_parse_error(httplike_socket * sock,
 void pc_buffer_reset(httplike_parse_context * pc);
 
 httplike_socket* httplike_new_socket(int fd){
-
+  int socket_flags;
   httplike_socket * sock;
 
   sock = XDR_malloc(httplike_socket);
@@ -100,6 +146,10 @@ httplike_socket* httplike_new_socket(int fd){
   sock->fd = fd;
   sock->state= HTTPLIKE_STATE_IDLE;
   pc_buffer_reset(&(sock->pc));
+
+  socket_flags = fcntl(sock->fd,F_GETFL);
+  socket_flags = fcntl(sock->fd,F_SETFL, socket_flags | O_NONBLOCK);
+  
   return sock;
 }
 
@@ -164,8 +214,8 @@ char * string_term_chomp(httplike_parse_context *pc){
   
   assert(NULL!=new_str);
   
-  strncpy(new_str,pc->parsebuf,pc->c_term_len+1);
-  
+  memcpy(new_str,pc->parsebuf,pc->c_term_len);
+  new_str[pc->c_term_len]=0;
   pc_buffer_reset(pc);
   return new_str;
 }
@@ -180,7 +230,8 @@ void httplike_handle_state_exit(httplike_socket * sock,
 			   httplike_internal_state next){
   httplike_packet *  packet =  &(pc->packet);
 
-  fprintf(stderr,"leaving state %d for state %d\n",state,next);  
+  fprintf(stderr,"leaving state %s for state %s\ncurrent terminal  is %d bytes long\n",states[state],states[next],pc->c_term_len);  
+  
   switch (state){
   
   case HTPL_IS_INIT: 
@@ -190,17 +241,17 @@ void httplike_handle_state_exit(httplike_socket * sock,
     break;
 
   case HTPL_IS_OPER: 
-    assert(packet->operation);
+    assert(packet->operation==NULL);
     packet->operation = string_term_chomp(pc);
     break;
 
   case HTPL_IS_OPND:
-    assert(packet->operand);
+    assert(packet->operand==NULL);
     packet->operand = string_term_chomp(pc);
     break;
 
   case HTPL_IS_VERS:
-    assert(packet->version);
+    assert(packet->version==NULL);
     packet->version = string_term_chomp(pc);
     break;
     
@@ -210,11 +261,12 @@ void httplike_handle_state_exit(httplike_socket * sock,
       break;
     }
     
-    packet->nheader++;
     packet->headers[packet->nheader].h_name = string_term_chomp(pc);
+
     break;
   case HTPL_IS_HVAL:
     packet->headers[packet->nheader].h_val = string_term_chomp(pc);
+	
     if(strcasecmp(HTTPLIKE_HEADER_CONTENT_LEN,packet->headers[packet->nheader].h_name)==0){
       if(sscanf(packet->headers[packet->nheader].h_val,"%d",
 		&(packet->content_len))!=1){
@@ -223,6 +275,8 @@ void httplike_handle_state_exit(httplike_socket * sock,
 	
       }
     }
+    packet->nheader++;
+
     break;
     
   case HTPL_IS_DATA:
@@ -230,6 +284,9 @@ void httplike_handle_state_exit(httplike_socket * sock,
     if(sock->on_dispatch)
       sock->on_dispatch(sock,packet);
     pc_packet_reset(pc);
+    break;
+  default:
+    fprintf(stderr,"erm\n");        
     break;
   }
 }
@@ -241,13 +298,15 @@ void httplike_handle_state_exit(httplike_socket * sock,
   httplike_handle_state_exit when it is done.
 */
 void httplike_consume_content(httplike_socket * sock, 
-			      char * data, unsigned int data_len){
+			      char * data, size_t data_len){
   char *c;
+  size_t data_left = data_len;
+
   httplike_parse_context * pc;
   httplike_trans * c_trans;
   pc = &(sock->pc);
-
-  for(c =data;c<data + data_len;c++,data_len--){
+  
+  for(c =data;c<data + data_len;c++,data_left--){
     if(pc->istate == HTPL_IS_ERRO){
       return;
       break;
@@ -257,18 +316,23 @@ void httplike_consume_content(httplike_socket * sock,
     
 
     if(pc->istate==HTPL_IS_DATA){
-      size_t to_copy = ((pc->packet.content_len - pc->c_term_len) < data_len? pc->packet.content_len-pc->c_term_len : data_len);
-            
-      //we consume as much data as we are allowed for the data segment. 
+      size_t to_copy = ((pc->packet.content_len - pc->c_term_len) < data_left? pc->packet.content_len-pc->c_term_len : data_left);
+      
+      
+      //we consume as much data as we are allowed for the data segment, also
       //and then manipulate c to suit. 
-      
-      if(pc->parsebuf_size <(pc->c_term_len + to_copy)){
-	//grow the parsebuf if we need to
-	pc->parsebuf = realloc(pc->parsebuf,pc->c_term_len + to_copy);
-	assert(pc->parsebuf!=NULL);
+      // if there is a data handler we dispatch to that instead of the buffer
+      if(sock->on_data){
+	sock->on_data(sock,&(pc->packet),data,to_copy);
+      }else{
+	if(pc->parsebuf_size <(pc->c_term_len + to_copy)){
+	  //grow the parsebuf if we need to
+	  pc->parsebuf = realloc(pc->parsebuf,pc->c_term_len + to_copy);
+	  assert(pc->parsebuf!=NULL);
+	}
+	
+	memcpy(pc->parsebuf + pc->c_term_len,data,to_copy);
       }
-      
-      memcpy(pc->parsebuf + pc->c_term_len,data,to_copy);
       pc->c_term_len+=to_copy;
       if(pc->packet.content_len == pc->c_term_len){
 	httplike_handle_state_exit(sock,pc,HTPL_IS_DATA,HTPL_IS_INIT);
@@ -276,7 +340,6 @@ void httplike_consume_content(httplike_socket * sock,
       }
       c+=to_copy;
     }else{
-      
       if(whitespace(*c)){
 	c_trans = &(lex_trans[pc->istate][HTTPLIKE_TRIGGER_WHITESPACE]);
       }else if(*c==':'){
@@ -286,37 +349,81 @@ void httplike_consume_content(httplike_socket * sock,
       }else{
 	c_trans = &(lex_trans[pc->istate][HTTPLIKE_TRIGGER_NONWSPACE]);
       }
+
+      if(c_trans->next == HTPL_IS_ERRO){	
+	char errbuf[1024];
+	bzero(errbuf,1024);
+	snprintf(errbuf,1024,"HTTPLIKE lex error: char %c, not allowed after state %s\n",*c,states[pc->istate]);
+	httplike_socket_set_error(sock,HTTPLIKE_ERR_LEX_ERROR,errbuf);
+	return;
+      }
       
       if(c_trans->next != pc->istate){
 	httplike_handle_state_exit(sock,pc,pc->istate,c_trans->next);
+	pc->istate=c_trans->next;
+	if(!httplike_socket_is_open(sock)){
+	  return ;
+	}
       }
 
       if(c_trans->chomp){
 	pc->parsebuf[pc->c_term_len] = *c;
 	pc->c_term_len++;
       }
+
+      if(pc->istate==HTPL_IS_DATA && pc->packet.content_len==0){
+	//special case if the content is explicity O length.
+	httplike_handle_state_exit(sock,pc,HTPL_IS_DATA,HTPL_IS_INIT);
+	pc->istate = HTPL_IS_INIT;
+	
+	if(!httplike_socket_is_open(sock)){
+	  return;
+	}
+      }
+
     }
   }
 }
 
+#define HTTPLIKE_NET_BUF_LEN 1024
 
-  
-void httplike_pump_socket(httplike_socket *sock){
+int httplike_pump_socket(httplike_socket *sock){
   assert(sock!=NULL);
   int  nb=0;
-  do{
+  do{ 
     if(sock->state!=HTTPLIKE_STATE_CLOSED){
-      
       char netbuf[HTTPLIKE_NET_BUF_LEN];
-      if((nb=recv(sock->fd,netbuf,HTTPLIKE_NET_BUF_LEN,MSG_DONTWAIT)>0)){
-	fprintf(stderr,"got %d bytes of data dispatching\n",nb);
+      
+      if((nb=recv(sock->fd,netbuf,HTTPLIKE_NET_BUF_LEN,0))>0){
+	int i;
+	//fprintf(stderr,"got %d bytes of data dispatching\n",nb);
+	for(i=0;i<nb;i++)
+	  fprintf(stderr," \"%c\" ",netbuf[i]);
+	fflush(stderr);
 	httplike_consume_content(sock,netbuf,nb);
       }else{
 	fprintf(stderr,"end of pump, no more data to report capn\n");
       }
     }
-  }while(sock->state!=HTTPLIKE_STATE_CLOSED && 
-	 nb!=0);
+  }while(sock->state!=HTTPLIKE_STATE_CLOSED && nb>0);
+
+  if(nb==-1 && errno!=EAGAIN  && error!=EWOULDBLOCK){
+    sock->state = HTTPLIKE_STATE_ERROR;
+    if(sock->on_closed)
+      sock->on_closed(sock);
+    return 0;
+  }
+  
+  if(nb==0){
+    fprintf(stderr,"socket has closed\n");
+    sock->state = HTTPLIKE_STATE_CLOSED;
+    if(sock->on_closed)
+      sock->on_closed(sock);
+
+    return 1;
+  }
+
+  return 1;
 }
 
 
@@ -363,6 +470,15 @@ httplike_socket_set_data_destructor(httplike_socket * sock,httplike_data_destruc
   return p_set(sock,&(sock->dest_data),func);
 }
 
+httplike_data_func  httplike_socket_get_data_func(httplike_socket * sock){
+  return p_get(sock,&(sock->on_data));
+}
+
+httplike_data_func  httplike_socket_set_data_func(httplike_socket * sock,
+						  httplike_data_func func){
+  return p_set(sock,&(sock->on_data),func);
+}
+
 
 int httplike_packet_add_header(httplike_packet * packet,
 			       const char * h_name,
@@ -370,7 +486,6 @@ int httplike_packet_add_header(httplike_packet * packet,
   int i;
   
   assert(packet!=NULL);
-
   if(strcasecmp(h_name,HTTPLIKE_HEADER_CONTENT_LEN)==0){
     return 0;
   }
@@ -389,7 +504,7 @@ int httplike_packet_add_header(httplike_packet * packet,
     return 0;
   
   packet->headers[packet->nheader].h_name = strdup(h_name);
-  packet->headers[packet->nheader++].h_name = strdup(h_val);
+  packet->headers[packet->nheader++].h_val = strdup(h_val);
   return 0;
 }
 
@@ -426,29 +541,31 @@ int httplike_socket_send_packet(httplike_socket *sock, httplike_packet *packet){
   int i;
   assert(sock!=NULL);
   assert(packet!=NULL);
-  
+  fprintf(stderr,"Sending packet:\n");
+  httplike_dump_packet(packet);
   snprintf(h_len_val,128,"%d",packet->content_len);
   httplike_packet_add_header(packet,HTTPLIKE_HEADER_CONTENT_LEN,h_len_val);
+
   snprintf(wbuf,2048,"%s %s %s\n",packet->operation, packet->operand, packet->version);
 
   w_len =strlen(wbuf);
-  if(0==write(sock->fd,wbuf,w_len)){
+  if(-1==write(sock->fd,wbuf,w_len)){
     return 0;
   }
 
   for(i=0;i<packet->nheader;i++){
     snprintf(wbuf,2048,"%s:%s\n",packet->headers[i].h_name,packet->headers[i].h_val);
     w_len =strlen(wbuf);
-    if(0==write(sock->fd,wbuf,w_len)){
+    if(-1==write(sock->fd,wbuf,w_len)){
       return 0;
     }
   }
 
-  if(0==write(sock->fd,"\n",1)){
+  if(-1==write(sock->fd,"\n",1)){
     return 0;
   }
 
-  if(0==write(sock->fd,packet->content,packet->content_len)){
+  if(-1==write(sock->fd,packet->content,packet->content_len)){
     return 0;
   }
   return 1;
@@ -477,4 +594,13 @@ void httplike_dump_packet(httplike_packet * packet){
   }else{
     fprintf(stderr,"got non-text content (%d)\n",packet->content_len);
   }
+}
+
+
+const char * httplike_socket_get_errorstr(httplike_socket * sock){
+  return p_get(sock,&(sock->errstr));
+}
+
+int httplike_socket_get_errorcode(httplike_socket * sock){
+  return (int) p_get(sock,&(sock->errcode));
 }

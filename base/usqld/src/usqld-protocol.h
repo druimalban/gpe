@@ -2,7 +2,7 @@
 #define USQLD_PROTOCOL_H
 
 #include <xdr.h>
-
+#include <usqld-network.h>
 #define PICKLE_CONNECT 1
 #define PICKLE_DISCONNECT 2
 #define PICKLE_QUERY 3
@@ -27,16 +27,14 @@
 #define USQLD_UNSUPPORTED  (USQLD_ERRBASE + 4)
 #define USQLD_PROTOCOL_ERROR  (USQLD_ERRBASE + 5)
 
-typedef XDR_tree usqld_packet;
 
 XDR_schema * usqld_get_protocol();
-int usqld_recv_packet(int fd,usqld_packet ** packet);
-int usqld_send_packet(int fd,usqld_packet* packet);
-int usqld_get_packet_type(usqld_packet *packet);
+
 
 usqld_packet * usqld_error_packet(int errcode, const char * str);
 usqld_packet * usqld_ok_packet();
 usqld_packet * usqld_rowid_packet(int rowid);
+int usqld_get_packet_type(usqld_packet *packet);
 
 
 #endif

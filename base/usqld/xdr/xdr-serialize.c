@@ -6,10 +6,10 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "xdr.h"
-int debug_fd = 0;
+
 
 int  XDR_serialize_elem(XDR_schema * in_s, 
-			XDR_tree *in_t,int fd){
+			XDR_tree *in_t,XDR_io *io){
 
   unsigned char buf[4];
   int rv = XDR_OK;
@@ -40,7 +40,7 @@ int  XDR_serialize_elem(XDR_schema * in_s,
       XDR_tree_simple *t;
       t = XDR_TREE_SIMPLE(in_t);
       *((u_int32_t*)buf) = htonl(t->val.uintVal);
-      if(-1==write(fd,buf,4))
+      if(-1==XDR_io_write(io,buf,4))
 	return XDR_IO_ERROR;
 
     };break;
@@ -48,7 +48,7 @@ int  XDR_serialize_elem(XDR_schema * in_s,
     {
       XDR_tree_simple *t;
       t = XDR_TREE_SIMPLE(in_t);
-      if(-1==write(fd,&(t->val.floatVal),4))
+      if(-1==XDR_io_write(io,(char *)&(t->val.floatVal),4))
 	return XDR_IO_ERROR;
     };break;
   case XDR_HYPER:
@@ -77,7 +77,7 @@ int  XDR_serialize_elem(XDR_schema * in_s,
       
       if(in_s->type!=XDR_FIXEDOPAQUE){ //FIXED OPAQUE has no length prefix
 	*((u_int32_t*)buf) = htonl(slen);
-	if(-1==write(fd,buf,4))
+	if(-1==XDR_io_write(io,buf,4))
 	  return XDR_IO_ERROR;
       }
       
@@ -91,7 +91,7 @@ int  XDR_serialize_elem(XDR_schema * in_s,
 	  slen-=4;
 	  data +=4;
 	}	
-	if(-1==write(fd,buf,4))
+	if(-1==XDR_io_write(io,buf,4))
 	  return XDR_IO_ERROR;
        
       }
@@ -116,13 +116,13 @@ int  XDR_serialize_elem(XDR_schema * in_s,
 
       len = t->nelems;
       *((u_int32_t*)buf) = htonl(len);
-      if(-1==write(fd,buf,4))
+      if(-1==XDR_io_write(io,buf,4))
 	return XDR_IO_ERROR;
       
       for(i =0;i<len;i++){
 	if(XDR_OK!=(rv =XDR_serialize_elem(s->elem_type,
 					   t->subelems[i],
-					   fd)))
+					   io)))
 	  return rv;
 	
       }
@@ -147,7 +147,7 @@ int  XDR_serialize_elem(XDR_schema * in_s,
       
       for(i = 0;i<nelems;i++){
 	if(XDR_OK!=(rv=XDR_serialize_elem(s->elems[i],
-					  t->subelems[i],fd)))
+					  t->subelems[i],io)))
 	  return rv;
       }
       
@@ -205,12 +205,12 @@ int  XDR_serialize_elem(XDR_schema * in_s,
       }
       
       *((int*)buf) = htonl(d_val);
-      if(-1==write(fd,buf,4))
+      if(-1==XDR_io_write(io,buf,4))
 	return XDR_IO_ERROR;
       
       if(XDR_OK!=(rv=XDR_serialize_elem(d_t,
 				        XDR_t_get_comp_elem(t,1),
-					fd)))
+					io)))
 	return rv;
     }
     break;

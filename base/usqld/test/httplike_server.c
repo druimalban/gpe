@@ -98,22 +98,30 @@ void * httplike_client_handler(void * dat){
   
   httplike_socket_set_data(sock,ctx);
   httplike_socket_set_data_destructor(sock,server_ctx_destructor);
-
+  
+  httplike_socket_set_message_func(sock,packet_callback);
   while(!ctx->stop){
     fd_set  socks;
     struct timeval tv;
     int rv;
 
-    FD_ZERO(&socks);
+    FD_ZERO(&socks); 
     FD_SET(sock->fd,&socks);
-    tv.tv_sec = 5;
+    tv.tv_sec = 20;
     tv.tv_usec = 0;
     fprintf(stderr,"waiting for something to happen\n");
-    rv =select(sock->fd+1,&socks,NULL,NULL,NULL);
+    rv =select(sock->fd+1,&socks,NULL,NULL,&tv);
 
     if(rv==1){
       fprintf(stderr,"something just happened\n");    
-      httplike_pump_socket(sock);
+      if(!httplike_pump_socket(sock)){
+	ctx->stop =1;	
+	fprintf(stderr,"error pumping socket\n");    
+      }
+      if(!httplike_socket_is_open(sock)){
+	fprintf(stderr,"socket closed normally\n");    
+	ctx->stop =1;
+      }
     }else{
       fprintf(stderr,"something unexpected just happened\n");
       return NULL;

@@ -28,9 +28,10 @@ typedef enum {
 
 #include "xdr-tree.h"
 #include "xdr-schema.h"
+#include "xdr-io.h"
 
-int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t);
-int  XDR_serialize_elem(XDR_schema *s, XDR_tree *t,int fd);
+int  XDR_deserialize_elem(XDR_schema *s,XDR_io *io, XDR_tree **out_t);
+int  XDR_serialize_elem(XDR_schema *s, XDR_tree *t,XDR_io * io);
 const char * XDR_find_type_name(XDR_type t);
 
 #endif 

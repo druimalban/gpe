@@ -12,13 +12,22 @@ usqld_conn * usqld_connect(const char * server,
 			   const char * database,
 			   char ** errmsg);
 
+void usqld_pump_conn(usqld_conn*);
+
+
 void usqld_disconnect(usqld_conn *);
-
 void usqld_interrupt(usqld_conn*);
-
 int usqld_complete(const char *sql);
-
 typedef int (*usqld_callback)(void*,int, char**,  char**);
+
+
+int usqld_exec_nb(
+  usqld_conn*,                   /* An open database */
+  const char *sql,              /* SQL to be executed */
+  usqld_callback,              /* Callback function */
+  void *
+);
+
 
 int usqld_exec(
   usqld_conn*,                      /* An open database */
@@ -27,6 +36,7 @@ int usqld_exec(
   void *,                       /* 1st argument to callback function */
   char **errmsg                 /* Error msg written here */
 );
+
 int usqld_exec_printf(
   usqld_conn*,                      /* An open database */
   const char *sqlFormat,        /* printf-style format string for the SQL */
@@ -35,6 +45,7 @@ int usqld_exec_printf(
   char **errmsg,                /* Error msg written here */
   ...                           /* Arguments to the format string. */
 );
+
 int usqld_exec_vprintf(
   usqld_conn*,                      /* An open database */
   const char *sqlFormat,        /* printf-style format string for the SQL */
@@ -43,6 +54,7 @@ int usqld_exec_vprintf(
   char **errmsg,                /* Error msg written here */
   va_list ap                    /* Arguments to the format string. */
 );
+
 int usqld_get_table_printf(
   usqld_conn*,               /* An open database */
   const char *sqlFormat, /* printf-style format string for the SQL */
@@ -52,6 +64,7 @@ int usqld_get_table_printf(
   char **errmsg,         /* Error msg written here */
   ...                    /* Arguments to the format string */
 );
+
 int usqld_get_table_vprintf(
   usqld_conn*,               /* An open database */
   const char *sqlFormat, /* printf-style format string for the SQL */
@@ -70,6 +83,7 @@ int usqld_get_table(
   int *pnColumn,              /* Write the number of columns of result here */
   char **pzErrMsg             /* Write error messages here */
 );
+
 void usqld_free_table(
   char **azResult             /* Result returned from from sqlite_get_table() */
 );
@@ -100,5 +114,7 @@ int usqld_last_insert_rowid(usqld_conn *con);
 #define SQLITE_MISMATCH    20   /* Data type mismatch */
 
 
+#define USQLD_PACKET_NOT_UNDERSTOOD 501
+#define USQLD_TARGET_NOT_UNDERSTOOD 502
 
 #endif

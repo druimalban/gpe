@@ -140,12 +140,7 @@ int main(int argc, char * argv[])
 	}else{
 	  usqld_conhandler_main(new_thread_init);
 	}
-	
-	
      }
-   
-   
-      
 }
 
 

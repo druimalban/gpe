@@ -61,6 +61,7 @@ typedef struct
 #define XDR_malloc(type) (type*) malloc(sizeof(type))
 #define XDR_mallocn(type,n) (type*) malloc(sizeof(type) * n)
 #define XDR_free(x) (assert(x!=NULL),free(x),x=NULL)
+
 XDR_schema * XDR_schema_new_typedesc(XDR_type t);
 
 XDR_schema * XDR_schema_new_opaque(size_t len);
