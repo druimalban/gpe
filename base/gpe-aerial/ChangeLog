@@ -1,4 +1,8 @@
 2003-10-14		Florian Boor <florian.boor@kernelconcepts.de>
+	* New translation: Romanian, Laurentiu Buzdugan contributed this - thank you.
+	* New translation: Swedish, thanks to Christian Rose for contributing.
+	
+2003-10-13		Florian Boor <florian.boor@kernelconcepts.de>
 	* New translation: German, thanks Colin!
 	* Makefile: New verion: 0.2.7, get rid of old version number style.
 	
