@@ -26,6 +26,7 @@
 
 #include <gpe/errorbox.h>
 
+#include "config.h"
 #include "launch.h"
 
 #define MAX_ARGS 255
