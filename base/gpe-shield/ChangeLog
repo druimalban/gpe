@@ -1,3 +1,6 @@
+2004-06-05 Florian Boor <florian.boor@kernelconceps.de>
+	* interface.c: Set config flag to make network app restore rules.
+	
 2004-06-04 Florian Boor <florian.boor@kernelconceps.de>
 	* interface.c: some simplification.
 	* interface.c: Added default rule.

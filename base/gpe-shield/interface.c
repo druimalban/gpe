@@ -75,7 +75,7 @@
 #define HELPMESSAGE "GPE-Shield\nVersion " VERSION \
 		"\nGPE desktop firewall\n\nflorian.boor@kernelconcepts.de"
 #define NOHELPMESSAGE N_("Displaying help failed.")
-
+#define LOADRULES_MARK ".gpe/gpe-shield-load"
 
 /* --- module global variables --- */
 
@@ -501,6 +501,26 @@ on_help_clicked (GtkWidget * w)
 }
 
 
+void
+change_network_control (GtkWidget * w)
+{
+	int fh;
+	char *file = g_strdup_printf("%s/%s",g_get_home_dir(),LOADRULES_MARK);
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
+	{
+		if ((fh = open(file,O_CREAT)) < 0)
+			gpe_perror_box(_("Cannot save setting."));
+		else
+			close(fh);
+	}
+	else
+	{
+		if (remove(file) < 0)
+			gpe_perror_box(_("Cannot save setting."));
+	}
+}
+
+
 void do_message_dlg(int type,char *msg)
 {
 	GtkWidget *dialog;
@@ -870,12 +890,23 @@ create_fMain (void)
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
 
   
-  /* messages tab */
+  /* confguration tab */
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
   cur = gtk_label_new(_("Configuration"));
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
-
+  cur = gtk_label_new(NULL);
+  tmp = g_strdup_printf("<b>%s</b>",_("Network Security Configuration"));
+  gtk_label_set_markup(GTK_LABEL(cur),tmp);
+  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+  free(tmp);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+  
+  cur = gtk_check_button_new_with_label(_("Start network control on login"));
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);
+	g_signal_connect_after (G_OBJECT (cur), "toggled",
+			  G_CALLBACK (change_network_control), NULL);
+  
   g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
   
   gtk_widget_show_all(fMain);

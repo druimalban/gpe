@@ -1,7 +1,7 @@
 TODO and ideas for gpe-shield
 
 - do better checks on rules
-- Add a toolbar app that loads and controles preset rules.
+- Add a toolbar app that loads and controles preset rules. (gpe-mininet!)
 - Configure system network security settings.
 - Create rules for both directions.
 - Show network connections/activity.
