@@ -3,5 +3,5 @@ Name=Theme switcher
 Comment=Matchbox theme selection utility
 Exec=minitheme
 Type=PanelApp
-Icon=/usr/share/pixmaps/minitheme.png
+Icon=minitheme.png
 Categories=Panel;Utility;GPE
