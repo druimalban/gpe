@@ -1,10 +1,10 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.10
+VERSION = 0.2.11
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
 STRIP=strip
-PREFIX = /usr/
+PREFIX = /usr/local
 DESTDIR = /
 
 LINGUAS = de sv ro cs nl pt ru fr sr es

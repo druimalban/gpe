@@ -133,6 +133,13 @@ draw_signal (int signal)
 	GdkGC *gc;
 	GdkColor sigc = { 0, 0x0000, 0x0000, 0xFFFF };
 	GdkRectangle rect = { 0, 0, 16, 16 };
+	GdkPixbuf *pbuf = gtk_image_get_pixbuf(GTK_IMAGE(icon));
+	int xsize, ysize;
+	
+	xsize = gdk_pixbuf_get_width(pbuf);
+	ysize = gdk_pixbuf_get_height(pbuf);
+	rect.width = xsize;
+	rect.height = ysize;
 	gc = gdk_gc_new (GDK_DRAWABLE (dock_window));
 	gdk_gc_set_fill (gc, GDK_OPAQUE_STIPPLED);
 	gdk_gc_set_rgb_fg_color (gc, &sigc);
@@ -140,8 +147,8 @@ draw_signal (int signal)
 	gdk_window_invalidate_rect (dock_window, &rect, TRUE);
 	gdk_window_process_updates (dock_window, TRUE);
 	gdk_draw_rectangle (GDK_DRAWABLE (dock_window), gc, TRUE, 0,
-			    (16 + 2) - signal * 30 / 255, 16,
-			    signal * 30 / 255 + 2);
+			    (xsize + 2) - signal * (ysize*2) / 255, ysize,
+			    signal * (ysize*2) / 255 + 2);
 	g_object_unref(G_OBJECT(gc));
 }
 
@@ -916,6 +923,31 @@ aerial_shutdown ()
 }
 
 
+/* handle resizing */
+gboolean 
+external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
+{
+  GdkBitmap *bitmap;
+  GdkPixbuf *sbuf, *dbuf;
+  int size;
+	
+  if (event->type == GDK_CONFIGURE)
+  {
+    size = (event->width > event->height) ? event->height : event->width;
+    sbuf = gpe_find_icon(radio_is_on ? "scan-on" : "scan-off");
+    dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
+    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 0, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 0, 0);
+    gdk_bitmap_unref (bitmap);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
+	/* make sure we want to resize all the time */
+	gtk_widget_set_size_request(GTK_WIDGET(window),size+1,size);
+  }
+  return FALSE;
+}
+
+
 int
 main (int argc, char *argv[])
 {
@@ -945,8 +977,7 @@ main (int argc, char *argv[])
 	{
 		if (create_table () != 0)
 		{
-			fprintf (stderr,
-				 "Unable to create database - exiting!\n");
+			fprintf (stderr,"Unable to create database - exiting!\n");
 			gtk_exit (-1);
 		}
 	}
@@ -961,6 +992,8 @@ main (int argc, char *argv[])
 
 	window = gtk_plug_new (0);
 	gtk_widget_set_usize (window, 16, 16);
+	/* this makes it scale up to 48pixels child size if possible */	
+	gtk_widget_set_size_request(window,50,50);
 	gtk_widget_realize (window);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Wireless LAN control"));
@@ -1009,6 +1042,7 @@ main (int argc, char *argv[])
 					  (radio_is_on ? "scan-on" : "scan-off")); 
 
 	gtk_widget_show (icon);
+	gtk_misc_set_alignment(GTK_MISC(icon),0.0,0.5);
 	gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("scan-off"), NULL,
 					   &bitmap, 128);
 	
@@ -1024,6 +1058,8 @@ main (int argc, char *argv[])
 	g_signal_connect (G_OBJECT (window), "button-press-event",
 			  G_CALLBACK (clicked), NULL);
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
+    g_signal_connect (G_OBJECT (window), "configure-event", 
+		G_CALLBACK (external_event), NULL);
 
 	gtk_container_add (GTK_CONTAINER (window), icon);
 
