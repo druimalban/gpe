@@ -7,3 +7,4 @@ Type=Application
 Icon=gpe-sketchbook.png
 Categories=Application;PIM;GPE
 StartupNotify=True
+SingleInstance=True
