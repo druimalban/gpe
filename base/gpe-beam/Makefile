@@ -9,7 +9,7 @@ PREFIX = /usr
 DESTDIR = /
 CONTROL = control1
 
-LINGUAS = cs
+#LINGUAS = cs
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
@@ -101,7 +101,7 @@ libircp.a: $(libircp_a_OBJECTS) $(libircp_a_DEPENDENCIES)
 	$(AR) cru libircp.a $(libircp_a_OBJECTS) $(libircp_a_LIBADD)
 	$(RANLIB) libircp.a
 
-install-program: all
+install-program: all all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ <familiar/$(CONTROL) > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin

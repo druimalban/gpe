@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=IrDa control
+Name[cs]=Nastavení IrDa
 Comment=Panel based infrared communications control
+Comment[cs]=Správce komunikace pro infračervený port.
 Exec=gpe-beam
 Type=PanelApp
 Icon=irda-on-16.png
