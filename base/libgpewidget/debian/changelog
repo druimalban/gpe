@@ -1,3 +1,16 @@
+libgpewidget (0.10-2) unstable; urgency=low
+
+  * Include missing headers in libgpewidget-dev
+
+ -- Phil Blundell <pb@debian.org>  Wed, 10 Jul 2002 21:53:30 +0100
+
+libgpewidget (0.10-1) unstable; urgency=low
+
+  * New upstream version
+  * Seems to autobuild without problems now, closes: #150850
+
+ -- Phil Blundell <pb@debian.org>  Wed, 10 Jul 2002 21:46:41 +0100
+
 libgpewidget (0.09-1) unstable; urgency=low
 
   * New upstream version
