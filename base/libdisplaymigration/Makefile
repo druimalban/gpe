@@ -45,11 +45,10 @@ install: $(SONAME)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
-	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libdotdesktop.so
+	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libdm.so
 
 clean:
-	rm -f $(OBJS) $(SONAME) libdotdesktop.so $(DEPS)
+	rm -f $(OBJS) $(SONAME) libdm.so $(DEPS) mt
 
 -include $(DEPS)
-include ../build/Makefile.dpkg_ipkg
-
+-include ../build/Makefile.dpkg_ipkg
