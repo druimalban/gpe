@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.1
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
-Depends: libgtk1.2, gpe-icons (>= 0.05), libgpewidget0 (>= 0.08)
+Depends: gpe-icons (>= 0.05), libgpewidget1 (>= 0.08)
 Description: GPE image gallery and viewer, with slideshow support.
