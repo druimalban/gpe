@@ -204,6 +204,50 @@ _gpe_icon_list_view_queue_redraw (GPEIconListView *view, GPEIconListItem *i)
     }
 }
 
+static void
+apply_translucency (GPEIconListView *il, GdkPixbuf *p)
+{
+  guchar *line;
+  int i, j, w, h;
+  int alpha, br, bg, bb;
+  int stride, bpp;
+
+  bb = il->bgcol & 0xff;
+  bg = (il->bgcol >> 8) & 0xff;
+  br = (il->bgcol >> 16) & 0xff;
+  alpha = (il->bgcol >> 24) & 0xff;
+
+  if (!p)
+    return;
+  
+  line = gdk_pixbuf_get_pixels (p);
+  w = gdk_pixbuf_get_width (p);
+  h = gdk_pixbuf_get_height (p);
+  bpp = gdk_pixbuf_get_bits_per_sample (p);
+  stride = gdk_pixbuf_get_has_alpha (p) ? 4 : 3;
+
+  for (j = 0; j < h; j++)
+    {
+      guchar *data = line;
+      for (i = 0; i < w; i++)
+	{
+	  int r, g, b;
+	  r = data[0];
+	  g = data[1];
+	  b = data[2];
+	  r = ((r * (255 - alpha)) + (br * alpha)) / 256;
+	  g = ((g * (255 - alpha)) + (bg * alpha)) / 256;
+	  b = ((b * (255 - alpha)) + (bb * alpha)) / 256;
+	  data[0] = r;
+	  data[1] = g;
+	  data[2] = b;
+	  
+	  data += stride;
+	}
+      line += gdk_pixbuf_get_rowstride (p);
+    }
+}
+
 static gboolean
 _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 {
@@ -227,6 +271,30 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
     pango_layout_set_alignment (pl, PANGO_ALIGN_LEFT);
   
   label_height = il_label_height (il);
+
+  if (il->bgpixbuf)
+    {
+      GdkPixbuf *s, *p;
+      int ax, ay;
+      ax = event->area.x + GTK_WIDGET (il)->allocation.x;
+      ay = event->area.y + GTK_WIDGET (il)->allocation.y;
+      
+      s = gdk_pixbuf_new_subpixbuf (il->bgpixbuf,
+				    ax, ay,
+				    event->area.width, event->area.height);
+      p = gdk_pixbuf_copy (s);
+      apply_translucency (il, p);
+      gdk_draw_pixbuf (widget->window, 
+		       widget->style->fg_gc[GTK_STATE_NORMAL],
+		       p,
+		       0, 0,
+		       event->area.x, event->area.y,
+		       event->area.width, event->area.height,
+		       GDK_RGB_DITHER_NORMAL, 0, 0);
+      
+      gdk_pixbuf_unref (s);
+      gdk_pixbuf_unref (p);
+    }
 
   for (icons = il->icons; icons != NULL; icons = icons->next) 
     {
@@ -262,17 +330,20 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 
 	  state = (selected && !il->flag_embolden) ? GTK_STATE_SELECTED : GTK_WIDGET_STATE (widget);
 
-	  gtk_paint_flat_box (widget->style,
-			      widget->window,
-			      state,
-			      GTK_SHADOW_NONE,
-			      &dst,
-			      widget,
-			      "",
-			      cell_x,
-			      cell_y,
-			      cell_w,
-			      cell_h);
+	  if (!il->bgpixbuf)
+	    {
+	      gtk_paint_flat_box (widget->style,
+				  widget->window,
+				  state,
+				  GTK_SHADOW_NONE,
+				  &dst,
+				  widget,
+				  "",
+				  cell_x,
+				  cell_y,
+				  cell_w,
+				  cell_h);
+	    }
 	  
 	  /* Get the icon from the cache if its there, if not put it there :) */
 	  if (icon->pb_scaled)
@@ -738,7 +809,7 @@ gpe_icon_list_view_init (GPEIconListView *self)
   self->mrow = self->mcol = -1;
   self->icon_size = 48;
   self->icon_xmargin = 12;
-  self->bgcolor = 0xffffffff;
+  self->bgcolor = 0xd0ffffff;
   self->flag_embolden = FALSE;
   self->flag_show_title = TRUE;
   self->rows_set = 0;

@@ -1,3 +1,13 @@
+2004-08-08  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile: Version 0.88 released.
+
+2004-08-08  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpeiconlistview.c (apply_translucency): New function.
+	(_gpe_icon_list_view_expose): Draw translucent box if background
+	pixmap is set.
+
 2004-08-07  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.87 released.
