@@ -15,7 +15,6 @@
 #include <gpe/pixmaps.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/smallbox.h>
-#include <gpe/render.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 

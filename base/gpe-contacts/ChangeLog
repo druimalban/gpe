@@ -1,3 +1,7 @@
+2005-03-11  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * structure.c: Removed inclusion of render.h
+
 2005-02-16  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Version 0.35 released.
