@@ -1,3 +1,18 @@
+2004-10-09  Phil Blundell  <pb@nexus.co.uk>
+
+	* gtkdatecombo.c (popdown_calendar): New function.
+	(gtk_date_combo_button_press): Likewise.
+	(popup_grab_on_window): Likewise.
+	(click_calendar): Use popdown_calendar to remove popup.
+	(drop_calendar): Likewise.  Set grabs on popup window.
+	(update_text): Reformat.
+	(gtk_date_combo_destroy): New function.
+	(gtk_date_combo_init): Revert change of 2004-10-07.  Take
+	reference to popup window.  Set signal handler for button presses.
+	(gtk_date_combo_class_init): Initialise destroy method.
+	(gtk_date_combo_get_type): Use GType, not GtkType.
+	(gtk_date_combo_new): Likewise.
+
 2004-10-07  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.92 released.

@@ -27,6 +27,69 @@
 #include "gtkdatecombo.h"
 
 static void
+popdown_calendar (GtkDateCombo *combo)
+{
+  gtk_grab_remove (combo->cal);
+  gtk_widget_hide (combo->calw);
+  gdk_display_pointer_ungrab (gtk_widget_get_display (GTK_WIDGET (combo->cal)),
+			      gtk_get_current_event_time ());
+  gdk_display_keyboard_ungrab (gtk_widget_get_display (GTK_WIDGET (combo->cal)),
+			       gtk_get_current_event_time ());
+  combo->cal_open = FALSE;  
+}
+
+static gint
+gtk_date_combo_button_press (GtkWidget * widget, GdkEvent * event, GtkDateCombo * combo)
+{
+  GtkWidget *child;
+
+  child = gtk_get_event_widget (event);
+
+  /* We don't ask for button press events on the grab widget, so
+   *  if an event is reported directly to the grab widget, it must
+   *  be on a window outside the application (and thus we remove
+   *  the popup window). Otherwise, we check if the widget is a child
+   *  of the grab widget, and only remove the popup window if it
+   *  is not.
+   */
+  if (child != widget)
+    {
+      while (child)
+	{
+	  if (child == widget)
+	    return FALSE;
+
+	  child = child->parent;
+	}
+    }
+  
+  popdown_calendar (combo);
+  
+  return TRUE;
+}
+
+static gboolean
+popup_grab_on_window (GdkWindow *window,
+		      guint32    activate_time)
+{
+  if ((gdk_pointer_grab (window, TRUE,
+			 GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
+			 NULL, NULL, activate_time) == 0))
+    {
+      if (gdk_keyboard_grab (window, TRUE, activate_time) == 0)
+	return TRUE;
+      else
+	{
+	  gdk_display_pointer_ungrab (gdk_drawable_get_display (window),
+				      activate_time);
+	  return FALSE;
+	}
+    }
+
+  return FALSE;
+}
+
+static void
 update_text (GtkDateCombo *combo)
 {
   struct tm tm;
@@ -38,15 +101,15 @@ update_text (GtkDateCombo *combo)
   tm.tm_mday = combo->day;
   
   if (combo->ignore_year)
-  {
-    strftime (buf, sizeof(buf), "%D", &tm);
-    strrchr(buf,'/')[0] = 0;
-  }
+    {
+      strftime (buf, sizeof (buf), "%D", &tm);
+      strrchr (buf,'/')[0] = 0;
+    }
   else
-  {
-    strftime (buf, sizeof(buf), "%x", &tm);
-  }
-
+    {
+      strftime (buf, sizeof (buf), "%x", &tm);
+    }
+  
   gtk_entry_set_text (GTK_ENTRY (combo->entry), buf);
 }
 
@@ -57,8 +120,7 @@ click_calendar (GtkWidget *widget, GtkDateCombo *combo)
 			 &combo->month, &combo->day);
   combo->set = TRUE;
   update_text (combo);
-  gtk_widget_hide (combo->calw);
-  combo->cal_open = FALSE;
+  popdown_calendar (combo);
 }
 
 static void
@@ -66,8 +128,7 @@ drop_calendar (GtkWidget *widget, GtkDateCombo *dp)
 {
   if (dp->cal_open)
     {
-      gtk_widget_hide (dp->calw);
-      dp->cal_open = FALSE;
+      popdown_calendar (dp);
     }
   else
     {
@@ -92,21 +153,27 @@ drop_calendar (GtkWidget *widget, GtkDateCombo *dp)
       
       gtk_widget_show (dp->calw);
       dp->cal_open = TRUE;
+      
+      gtk_widget_grab_focus (dp->cal);
+      popup_grab_on_window (dp->calw->window, gtk_get_current_event_time ());
+
+      gtk_grab_add (dp->cal);
     }
 }
 
 gboolean 
 verify_date (GtkWidget *entry, GdkEventFocus *event, GtkDateCombo *cb)
 {
-  const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
+  const gchar *text = gtk_entry_get_text (GTK_ENTRY (entry));
   struct tm time;
   char *ret;
     
-  ret = strptime(text, "%x", &time);
+  ret = strptime (text, "%x", &time);
   if (ret)
     gtk_date_combo_set_date (cb, time.tm_year+1900, time.tm_mon, time.tm_mday);
   else
-    update_text(cb);
+    update_text (cb);
+
   return FALSE;
 }
 
@@ -153,8 +220,11 @@ gtk_date_combo_init (GtkDateCombo *combo)
 
   combo->cal = gtk_calendar_new ();
   combo->calw = gtk_window_new (GTK_WINDOW_POPUP);
-  combo->calw->parent = GTK_WIDGET (combo);
+  g_object_ref (combo->calw);
   combo->cal_open = FALSE;
+  gtk_widget_set_events (combo->cal, GDK_KEY_PRESS_MASK);
+  g_signal_connect (G_OBJECT (combo->calw), "button_press_event",
+		    G_CALLBACK (gtk_date_combo_button_press), combo);
   gtk_widget_show (combo->cal);
   gtk_container_add (GTK_CONTAINER (combo->calw), combo->cal);
 
@@ -215,39 +285,57 @@ gtk_date_combo_show (GtkWidget *widget)
 }
 
 static void
+gtk_date_combo_destroy (GtkObject *object)
+{
+  GtkDateCombo *combo;
+  combo = GTK_DATE_COMBO (object);
+  if (combo->calw)
+    {
+      gtk_widget_destroy (combo->calw);
+      g_object_unref (combo->calw);
+      combo->calw = NULL;
+    }
+  GTK_OBJECT_CLASS (parent_class)->destroy (object);
+}
+
+static void
 gtk_date_combo_class_init (GtkDateComboClass * klass)
 {
   GtkObjectClass *oclass;
   GtkWidgetClass *widget_class;
 
-  parent_class = gtk_type_class (gtk_hbox_get_type ());
+  parent_class = g_type_class_peek_parent (klass);
   oclass = (GtkObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
   widget_class->size_allocate = gtk_date_combo_size_allocate;
   widget_class->show = gtk_date_combo_show;
+
+  oclass->destroy = gtk_date_combo_destroy;
 }
 
-GtkType
+GType
 gtk_date_combo_get_type (void)
 {
-  static guint date_combo_type = 0;
+  static GType date_combo_type = 0;
 
   if (! date_combo_type)
     {
-      static const GtkTypeInfo date_combo_info =
+      static const GTypeInfo date_combo_info =
         {
-          "GtkDateCombo",
-          sizeof (GtkDateCombo),
           sizeof (GtkDateComboClass),
-          (GtkClassInitFunc) gtk_date_combo_class_init,
-          (GtkObjectInitFunc) gtk_date_combo_init,
-          /* reserved_1 */ NULL,
-          /* reserved_2 */ NULL,
-          (GtkClassInitFunc) NULL,
+	  NULL,		/* base_init */
+	  NULL,		/* base_finalize */
+          (GClassInitFunc) gtk_date_combo_class_init,
+	  NULL,		/* class_finalize */
+	  NULL,		/* class_data */
+	  sizeof (GtkDateCombo),
+	  0,		/* n_preallocs */
+          (GInstanceInitFunc) gtk_date_combo_init,
         };
-      date_combo_type = gtk_type_unique (gtk_hbox_get_type (), 
-					 &date_combo_info);
+
+      date_combo_type = g_type_register_static (GTK_TYPE_HBOX, "GtkDateCombo",
+						&date_combo_info, 0);
     }
   return date_combo_type;
 }
@@ -255,7 +343,7 @@ gtk_date_combo_get_type (void)
 GtkWidget *
 gtk_date_combo_new (void)
 {
-  return GTK_WIDGET (gtk_type_new (gtk_date_combo_get_type ()));
+  return g_object_new (gtk_date_combo_get_type (), NULL);
 }
 
 void
