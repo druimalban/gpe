@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Login Setup
+Name[cs]=Nastavení přihlašování
 Comment=Login Setup
+Comment[cs]=Nastavení přihlašování
 Exec=gpe-conf login-setup
 Terminal=0
 Type=Application

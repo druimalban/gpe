@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Storage Usage
+Name[cs]=Využití pamětí
 Comment=Storage Information
+Comment[cs]=Informace o využití paměti
 Exec=gpe-conf storage
 Terminal=0
 Type=Application

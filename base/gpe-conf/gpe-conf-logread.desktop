@@ -1,6 +1,7 @@
 [Desktop Entry]
-Name=Show Log
+Name=Show Logs
 Comment=Accesss System Log 
+Comment[cs]=Ukázat log
 Exec=gpe-conf logread
 Terminal=0
 Type=Application

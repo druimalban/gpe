@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Date/Time Setup
+Name[cs]=Datum/čas
 Comment=Setup Date and Time
+Comment[cs]=Nastavení data a času
 Exec=gpe-conf time
 Terminal=0
 Type=Application

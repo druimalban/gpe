@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=External Keyboard
+Name[cs]=Přídavné klávesnice
 Comment=External Keyboard Setup
+Comment[cs]=Nastavení přídavné klávesnice
 Exec=gpe-conf keyboard
 Terminal=0
 Type=Application

@@ -138,14 +138,14 @@ PIXMAPS += gpe-config-logread.png
 PIXMAPS += gpe-config-keyboard.png
 PIXMAPS += gpe-config-battery.png
 
-all: $(PACKAGE) 
+all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
 	cp $(PACKAGE) gpe-conf.pc
 	$(STRIP) $(PACKAGE)
 
-install-program: $(PACKAGE)
+install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe

@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Battery Info
+Name[cs]=Baterie
 Comment=Battery Information
+Comment[cs]=Informace o stavu baterií
 Exec=gpe-conf battery
 Terminal=0
 Type=Application

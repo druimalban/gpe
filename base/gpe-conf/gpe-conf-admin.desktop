@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=User Access
+Name[cs]=Přístup uživetelů
 Comment=User access administration
+Comment[cs]=Nastavení přístupu uživatelů
 Exec=gpe-conf admin
 Terminal=0
 Type=Application

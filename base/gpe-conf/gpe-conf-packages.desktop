@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name= Update Manager
+Name[cs]=Aktualizace systému
 Comment=Update installed packages
+Comment[cs]=Updatovat/Instalovat nové balíčky
 Exec=gpe-conf packages
 Terminal=0
 Type=Application

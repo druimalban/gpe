@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name= Serial Ports
+Name[cs]=Sériové porty
 Comment=Serial Port Settings
+Comment[cs]=Nastavení sériového portu
 Exec=gpe-conf serial
 Terminal=0
 Type=Application

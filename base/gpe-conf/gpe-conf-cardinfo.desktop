@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=PC/CF Cards
+Name[cs]=PC/CF karty
 Comment=PC/CF Cards info and config
+Comment[cs]=Nastavení a informace o PC/CF kartách
 Exec=gpe-conf cardinfo
 Terminal=0
 Type=Application

@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Global Look
+Name[cs]=Nastavení celkového vzhledu aplikací
 Comment=Global Appearance Setup
+Comment[cs]=Vzhled a písma
 Exec=gpe-conf theme
 Terminal=0
 Type=Application

@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Network Setup
+Name[cs]=Nastavení sítě
 Comment=Network Setup
+Comment[cs]=Nastavení sítě
 Exec=gpe-conf network
 Terminal=0
 Type=Application

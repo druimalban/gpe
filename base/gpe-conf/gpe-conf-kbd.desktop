@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Virtual Keyboard
+Name[cs]=Rozložení kláves
 Comment=Virtual Keyboard Setup
+Comment[cs]=Nastavení rozložení kláves
 Exec=gpe-conf kbd
 Terminal=0
 Type=Application

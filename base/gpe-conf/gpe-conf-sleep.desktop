@@ -1,6 +1,8 @@
 [Desktop Entry]
-Name=Sleep Config	
+Name=Sleep Config
+Name[cs]=Nastavení spánku
 Comment=Sleep Configuration
+Comment[cs]=Nastavení spánku
 Exec=gpe-conf sleep
 Terminal=0
 Type=Application

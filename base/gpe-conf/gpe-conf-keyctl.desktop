@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Button Config
+Name[cs]=Nastavení tlačítek
 Comment=Button Configuration
+Comment[cs]=Nastavení vnějších tlačítek
 Exec=gpe-conf keyctl
 Terminal=0
 Type=Application
