@@ -102,7 +102,7 @@ void window_selector_init(GtkWidget * window_selector){
 void selector_refresh_list(){}
 
 gchar * make_label_from_filename(const gchar * filename){
-  //filename:  yyyy-mm-dd_hh-mm-ss.xpm[.gz]
+  //filename:  yyyy-mm-dd_hh-mm-ss.png
   //label   : "yyyy mm dd  at  hh:mm:ss"
   gchar * label;
 
@@ -136,17 +136,12 @@ int _direntry_selector (const struct dirent * direntry){
   /* no hidden file */
   if(s[0] == '.') return 0;
 
-  ///* only .xpm[.gz] files */
-  //g_strreverse(s);
-  //if(g_strncasecmp(s,"mpx.", 4) && g_strncasecmp(s,"zg.mpx.", 7)) return 0;
-  //g_strreverse(s);
-
   /* only .png files */
   g_strreverse(s);
   if(g_strncasecmp(s,"gnp.", 4)) return 0;
   g_strreverse(s);
 
-  /* yyyy-mm-dd_hh-mm-ss.xpm[.gz] */
+  /* yyyy-mm-dd_hh-mm-ss */
   // ...
 
   return 1;

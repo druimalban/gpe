@@ -20,7 +20,6 @@
 #include <time.h>   //time --> filename
 
 #include "files.h"
-#include "files-xpm.h"
 #include "files-png.h"
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"

@@ -66,7 +66,8 @@ void file_save_png(const gchar * fullpath_filename){
                                           drawing_area_height);//int height);
 
     success = gdk_pixbuf__png_image_save (fp, pixbuf, NULL, NULL, NULL);
-    if(!success){}//FIXME: do something
+    if(!success){//FIXME: do something
+    }
 
     fclose(fp);
     gdk_pixbuf_unref(pixbuf);
@@ -76,12 +77,14 @@ void file_save_png(const gchar * fullpath_filename){
 void file_load_png(const gchar * fullpath_filename){
   //FIXME: drawing_area/drawing_area_pixmap_buffer should be a parameter
   GdkGC * gc;
-  GdkPixbuf * pixbuf;
+  GdkPixbuf * pixbuf = NULL;
   gint width, height;
 
   gc = gdk_gc_new(drawing_area->window);
 
   pixbuf = gdk_pixbuf_new_from_file(fullpath_filename);
+  if(pixbuf == NULL){//FIXME: do something
+  }
   width  = gdk_pixbuf_get_width (pixbuf);
   height = gdk_pixbuf_get_height(pixbuf);
   gdk_pixbuf_render_to_drawable(pixbuf,//GdkPixbuf *pixbuf,
