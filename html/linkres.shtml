@@ -48,7 +48,12 @@ through the ubiquitous SQL (Structured Query Language).
 
 <h2>Data transfer</h2>
 <p>
-GPE will support the <a href="http://www.imc.org/pdi/">vCard and vCal</a> standards for transferring address book and calendar information. We also plan to follow the <a href="http://www.imc.org/ietf-calendar/">IETF Calendaring and Scheduling</a> standards.
+GPE will support the 
+<a href="http://www.imc.org/pdi/">vCard and vCal</a> 
+standards for transferring address book and calendar
+information. We also plan to follow the 
+<a href="http://www.imc.org/ietf-calendar/">IETF Calendaring and
+Scheduling</a> standards. See also the multisync link below.
 </p>
 
 <H2>Interesting applications</H2>
@@ -61,6 +66,9 @@ GPE will support the <a href="http://www.imc.org/pdi/">vCard and vCal</a> standa
 <A HREF="http://www.syncml.org">http://www.syncml.org</A><BR>
 SyncML library<BR>
 <A HREF="http://libsyncml.sourceforge.net/">http://libsyncml.sourceforge.net/</A>
+
+<LI> <A HREF="http://http://multisync.sourceforge.net/">multisync</A>
+<LI> <A HREF="http://handhelds.org/~paxanima/">PaxAnimas minipredict, psCalc and psPim</A>
 </UL>
 
 <!--#include virtual="includes/foot.shtml"-->
