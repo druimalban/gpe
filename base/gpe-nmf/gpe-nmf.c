@@ -163,8 +163,8 @@ eject_clicked (GtkWidget *w, gpointer d)
 {
   GtkWidget *filesel = gtk_mini_file_selection_new (_("Select file"));
   gtk_signal_connect (GTK_OBJECT (GTK_MINI_FILE_SELECTION (filesel)->cancel_button), 
-		      "clicked", close_file_sel, filesel);
-  gtk_signal_connect (GTK_OBJECT (filesel), "completed", select_file_done, d);
+		      "clicked", GTK_SIGNAL_FUNC (close_file_sel), filesel);
+  gtk_signal_connect (GTK_OBJECT (filesel), "completed", GTK_SIGNAL_FUNC (select_file_done), d);
   gtk_widget_show (filesel);
 }
 
