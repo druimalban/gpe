@@ -2,8 +2,9 @@ gpe-icons (0.20-2) unstable; urgency=low
 
   * Add long package description in debian/control. Closes: #209511.
   * Fix debian/rules to install package changelog.
+  * Alter debian/copyright to appease lintian.
 
- -- Moray Allan <moray@sermisy.org>  Sat,  8 Nov 2003 22:51:20 +0000
+ -- Moray Allan <moray@sermisy.org>  Sat,  8 Nov 2003 23:01:40 +0000
 
 gpe-icons (0.07-1) unstable; urgency=low
 
