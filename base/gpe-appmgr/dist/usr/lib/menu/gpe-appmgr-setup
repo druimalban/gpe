@@ -1,6 +1,6 @@
 ?package(gpe-appmgr-setup): \
  needs=x11 \
- title="Appmgr Setup" \
+ title="Launcher Setup" \
  command=gpe-appmgr-setup \
  icon48=/usr/share/pixmaps/gpe-appmgr-setup.png \
  section=Configuration
