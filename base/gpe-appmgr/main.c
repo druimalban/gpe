@@ -356,6 +356,7 @@ GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 	pixbuf = gdk_pixbuf_new_from_file (fn);
 	if (pixbuf == NULL)
 		return NULL;
+
 	spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, 
 					   GDK_INTERP_BILINEAR);
 	gdk_pixbuf_unref (pixbuf);
@@ -366,10 +367,10 @@ GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 
 char *get_closest_icon (struct package *p, int iconsize)
 {
-	char tmp[1024];
+	char *tmp;
 	char *fn;
 
-	snprintf (tmp, 1000, "icon%d", iconsize);
+	tmp = g_strdup_printf ("icon%d", iconsize);
 	fn = package_get_data (p, tmp);
 	if (!fn)
 		fn = package_get_data (p, "icon");
@@ -381,6 +382,8 @@ char *get_closest_icon (struct package *p, int iconsize)
 		 * maybe get actual closest, preferring larger?
 		 */
 	}
+
+	g_free (tmp);
 
 	return fn;
 }
@@ -564,6 +567,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 				GdkPixbuf *spixbuf = gdk_pixbuf_scale_simple (pixbuf, cfg_options.list_icon_size, cfg_options.list_icon_size, GDK_INTERP_BILINEAR);
 				if (pixbuf != default_pixbuf)
 					gdk_pixbuf_unref (pixbuf);
+
 				pixmap = gpe_render_icon (notebook->style, 
 							  spixbuf);
 				gdk_pixbuf_unref (spixbuf);
