@@ -1,3 +1,7 @@
+2004-02-13  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpe-logout.sh: Fix to work with matchbox >= 0.8
+
 2004-01-28  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.65 released.
