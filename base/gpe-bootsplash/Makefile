@@ -5,18 +5,16 @@ gpe-bootsplash: splash.c
 	gcc `gdk-pixbuf-config --cflags` -Os splash.c `gdk-pixbuf-config --libs` -o gpe-bootsplash
 	strip gpe-bootsplash
 
-symlinks:
-	ln -sf 3600 dist/usr/share/gpe/bootsplash/3700
-	ln -sf ../init.d/gpe-bootsplash.sh dist/etc/rc2.d/S00gpe-bootsplash.sh
-
 ipkg:
 	rm -rf dist
 	mkdir -p dist/CONTROL
 	mkdir -p dist/usr/bin
 	mkdir -p dist/usr/share/gpe
 	mkdir -p dist/etc/rcS.d
+	mkdir -p dist/etc/init.d
+	cp gpe-bootsplash.init dist/etc/init.d/gpe-bootsplash
 	cp splash.png dist/usr/share/gpe/
 	cp gpe-bootsplash dist/usr/bin/
 	cp control dist/CONTROL
-	ln -s /usr/bin/gpe-bootsplash dist/etc/rcS.d/S00bootsplash
+	ln -s ../init.d/gpe-bootsplash dist/etc/rcS.d/S00bootsplash
 	ipkg-build dist
