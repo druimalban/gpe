@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Sketchbook
+Comment=GPE Sketchbook
+Exec=gpe-sketchbook
+Terminal=0
+Type=Application
+Icon=gpe-sketchbook.png
+Categories=Application;PIM;GPE
+StartupNotify=True

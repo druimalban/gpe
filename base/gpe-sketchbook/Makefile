@@ -32,7 +32,7 @@ install:  install-mo #all
 	install -D src/$(ARM_BIN)  $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -D $(PACKAGE).png  $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
-
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
 
 #CONTROL = familiar/dist/CONTROL
 #ipkg:
