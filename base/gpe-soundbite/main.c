@@ -111,14 +111,6 @@ void start_sound (void)
      progress bar here - to do that we need to find out in advance how
      long (in seconds) the sound file is */
 
-  if (progress_bar)
-  {
-    gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
-    gtk_progress_set_format_string (GTK_PROGRESS(progress_bar), _("%v s"));
-    gtk_progress_set_text_alignment (GTK_PROGRESS(progress_bar), 0.5, 0.5);
-    gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), TRUE);
-  }
-
   if (recording)
     {
       int infd, outfd;
@@ -290,9 +282,19 @@ main(int argc, char *argv[])
     {
       if (!strcmp (argv[2], "--autogenerate-filename"))
         {
-          time_t currenttime;
-          currenttime = time(NULL);
-          filename = g_strdup_printf ("%s/Voice memo at %s", getenv("HOME"), ctime(&currenttime));
+          time_t time1;
+          struct tm *time2;
+          char *s;
+          size_t length;
+          time1 = time(NULL);
+          time2 = localtime (&time1);
+          length = strlen ("2002-06-23 03:54:00") + 1;
+          s = g_malloc (length);
+          length = strftime (s, length, "%Y-%m-%d %H:%M:%S", time2);
+          if (length > 0)
+            {
+              filename = g_strdup_printf ("%s/Voice memo at %s", getenv("HOME"), s);
+            }
         }
       else
         {
@@ -348,6 +350,11 @@ main(int argc, char *argv[])
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
   progress_bar = gtk_progress_bar_new ();
+  gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
+  gtk_progress_set_format_string (GTK_PROGRESS(progress_bar), _("%v s"));
+  gtk_progress_set_text_alignment (GTK_PROGRESS(progress_bar), 0.5, 0.5);
+  gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), TRUE);
+
   gtk_widget_show (progress_bar);
   if (playing)
     {
@@ -389,6 +396,9 @@ main(int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (on_window_destroy),
                       NULL);
+
+  if (filename)
+    gtk_widget_show (window);
 
   gtk_main ();
 
