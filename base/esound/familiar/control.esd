@@ -1,0 +1,8 @@
+Package: esd
+Section: base
+Priority: optional
+Version: 0.2.28-gpe1
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Description: Enlightened Sound Daemon
+Depends: libesd0 (>= 0.2.28)
