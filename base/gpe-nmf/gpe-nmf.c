@@ -43,6 +43,7 @@ main (int argc, char *argv[])
   GtkWidget *hbox;
   GdkColor col;
   GtkStyle *style;
+  gchar *color = "gray80";
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -50,12 +51,15 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  if (argc == 2)
+    color = argv[1];
+
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  gdk_color_parse ("gray80", &col);
+  gdk_color_parse (color, &col);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (window);
