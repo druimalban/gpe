@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-ownerinfo-0.20\n"
-"POT-Creation-Date: 2003-03-04 00:13+0100\n"
-"PO-Revision-Date: 2003-03-04 00:13+0100\n"
+"Project-Id-Version: gpe-ownerinfo 0.20\n"
+"POT-Creation-Date: 2003-03-04 00:17+0100\n"
+"PO-Revision-Date: 2003-03-05 22:15+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,63 +18,64 @@ msgstr ""
 msgid "Owner"
 msgstr "Besitzer"
 
-#: gpe-ownerinfo.c:388
+#. TRANSLATORS: please replace this with the Pango code for your own language
+#: gpe-ownerinfo.c:387
 msgid "en"
 msgstr "de"
 
-#: gpe-ownerinfo.c:409 gpe-ownerinfo.c:525
+#: gpe-ownerinfo.c:408 gpe-ownerinfo.c:524
 msgid "GPE Owner Info"
 msgstr "Eigentümerinformation"
 
-#: gpe-ownerinfo.c:411
+#: gpe-ownerinfo.c:410
 msgid "Valid options:\n"
 msgstr "Gültige Optionen:\n"
 
-#: gpe-ownerinfo.c:412
+#: gpe-ownerinfo.c:411
 msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
 msgstr "   -g GEOMETRY  Fenstergeometrie (Vorgabe: 240x100+0+220)\n"
 
-#: gpe-ownerinfo.c:413
+#: gpe-ownerinfo.c:412
 msgid "   -t           make window transparent\n"
 msgstr "   -t           transparentes Fenster\n"
 
-#: gpe-ownerinfo.c:414
+#: gpe-ownerinfo.c:413
 msgid "   -k           always keep window on top (override redirect)\n"
 msgstr "   -k           halte Fenster immer ganz oben (override redirect)\n"
 
-#: gpe-ownerinfo.c:415
+#: gpe-ownerinfo.c:414
 msgid "   -h           this help text\n"
 msgstr "   -h           dieser Hilfetext\n"
 
-#: gpe-ownerinfo.c:434
+#: gpe-ownerinfo.c:433
 msgid "GPE User"
 msgstr "GPE-Benutzer"
 
-#: gpe-ownerinfo.c:435
+#: gpe-ownerinfo.c:434
 msgid "nobody@localhost.localdomain"
 msgstr "nobody@localhost.localdomain"
 
-#: gpe-ownerinfo.c:436
+#: gpe-ownerinfo.c:435
 msgid "+99 (9999) 999-9999"
 msgstr "+99 (9999) 999-9999"
 
-#: gpe-ownerinfo.c:440
+#: gpe-ownerinfo.c:439
 msgid "Configurable with"
 msgstr "Konfigurierbar mit"
 
-#: gpe-ownerinfo.c:441 gpe-ownerinfo.c:550
+#: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
 msgid "Owner Information"
 msgstr "Eigentümer"
 
-#: gpe-ownerinfo.c:442
+#: gpe-ownerinfo.c:441
 msgid "under"
 msgstr "unter"
 
-#: gpe-ownerinfo.c:442
+#: gpe-ownerinfo.c:441
 msgid " Settings."
 msgstr " Einstellungen."
 
-#: gpe-ownerinfo.c:579
+#: gpe-ownerinfo.c:578
 msgid "Address:"
 msgstr "Adresse:"
 
