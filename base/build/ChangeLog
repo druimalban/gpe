@@ -1,3 +1,7 @@
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.dpkg_ipkg (ipkg): Pass DEBUG=no to make install.
+
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation: Add $(DIR_PO).

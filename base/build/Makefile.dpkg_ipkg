@@ -25,6 +25,6 @@ ipkg: clean
 	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
 	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
 	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr install
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
