@@ -1,3 +1,11 @@
+2003-07-09  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.50 released.
+
+2003-07-09  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.sysconfig (AUTOLOGIN): Change == to = here also.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* nocursor.c (_gdk_window_set_cursor): Removed legacy GTK1 code.

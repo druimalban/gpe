@@ -2,7 +2,7 @@
 
 AUTOLOGIN="false"
 
-if [ "$AUTOLOGIN" == "true" ]; then
+if [ "$AUTOLOGIN" = "true" ]; then
   USER="root"
   HOME="/root"
 fi
