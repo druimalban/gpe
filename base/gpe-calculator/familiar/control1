@@ -1,6 +1,7 @@
-Package: gpe-calculator2 
-Version: 0.2
-Section: base 
+Package: gpe-calculator2
+Version: VERSION
+Source: SOURCE
+Section: base
 Priority: optional
 Architecture: arm
 Depends: libgtk2.0-0
