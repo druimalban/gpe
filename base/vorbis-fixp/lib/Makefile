@@ -1,4 +1,4 @@
-CC = gcc
+CC = gcc-3.1
 AR = ar
 
 CFLAGS = -Wall -fomit-frame-pointer
@@ -8,8 +8,8 @@ CFLAGS += -mcpu=strongarm
 
 # Note that -O2 doesn't produce as good results as the -O with all the
 # specific optimisations below.
-#CFLAGS += -O2 -frename-registers
-CFLAGS += -O -fforce-mem -fforce-addr -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -fexpensive-optimizations -fregmove -fschedule-insns2 -fstrength-reduce
+CFLAGS += -O2 -fomit-frame-pointer -frename-registers
+#CFLAGS += -O -fforce-mem -fforce-addr -fthread-jumps -fcse-follow-jumps -fcse-skip-blocks -fexpensive-optimizations -fregmove -fschedule-insns2 -fstrength-reduce
 
 OBJS = 	framing.o bitwise.o info.o sharedbook.o codebook.o \
 	synthesis.o block.o window.o mdct.o lsp.o \

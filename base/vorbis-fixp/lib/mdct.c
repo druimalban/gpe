@@ -329,7 +329,7 @@ STIN void mdct_butterfly_generic(DATA_TYPE *T,
   }while(x2>=x);
 }
 
-STIN void mdct_butterflies(mdct_lookup *init,
+static void mdct_butterflies(mdct_lookup *init,
 			     DATA_TYPE *x,
 			     int points){
   

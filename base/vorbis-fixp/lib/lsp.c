@@ -86,6 +86,7 @@ void vorbis_lsp_to_curve(FIXP *curve,int *map,int n,int ln,FIXP *lsp,int m,
   long *ilsp=lsp;
   for(i=0;i<m;i++)ilsp[i]=vorbis_coslook_i(MUL(16,lsp[i],(int)(65536.0/M_PI+.5)));
 #endif
+  int rln = 65536/ln;
 
   i=0;
   while(i<n){
@@ -93,7 +94,7 @@ void vorbis_lsp_to_curve(FIXP *curve,int *map,int n,int ln,FIXP *lsp,int m,
     unsigned long pi=46341; /* 2**-.5 in 0.16 */
     unsigned long qi=46341;
     int qexp=0,shift;
-    long wi=vorbis_coslook_i(k*65536/ln);
+    long wi=vorbis_coslook_i(k*rln);
 
     qi*=labs(ilsp[0]-wi);
     pi*=labs(ilsp[1]-wi);

@@ -34,13 +34,14 @@ typedef int FIXP;
 
 /* ARM optimized multiplication with proper rounding */
 #define MUL(s, a, b)  ({ \
-	int res, tmp; \
-	asm (	"smull	%0, %1, %2, %3\n\t" \
-		"movs	%0, %0, lsr %4\n\t" \
-		"adc	%0, %0, %1, lsl %5" \
+	register int res, tmp; \
+	asm (	"smull	%0, %1, %2, %3\t@ mul 1" \
 		: "=&r" (res), "=&r" (tmp) \
-		: "%r" (a), "r" (b), \
-		  "M" (s), "M"(32 - (s)) \
+		: "%r" (a), "r" (b)); \
+	asm (	"movs	%0, %0, lsr %3\t@ mul 2\n\t" \
+		"adc	%0, %0, %2, lsl %4" \
+		: "=&r" (res) \
+		: "0" (res), "r" (tmp), "M" (s), "M"(32 - (s)) \
 		: "cc"); \
 	res; })
 
