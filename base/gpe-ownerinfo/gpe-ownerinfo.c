@@ -357,10 +357,10 @@ main (int argc, char *argv[])
   GtkSizeGroup *sizegroup;
   GtkObject *adjustment;
   
-  //gchar *gpe_catindent = gpe_get_catindent ();
-  //guint gpe_catspacing = gpe_get_catspacing ();
+  /* gchar *gpe_catindent = gpe_get_catindent ();  */
+  /* guint gpe_catspacing = gpe_get_catspacing (); */
   guint gpe_boxspacing = gpe_get_boxspacing ();
-  //guint gpe_border     = gpe_get_border ();
+  /* guint gpe_border     = gpe_get_border ();     */
 
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   gchar *ownerphotofile;
@@ -512,7 +512,7 @@ main (int argc, char *argv[])
   GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_Ownerinfo, "GPE_Ownerinfo");
   gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "GPE_Ownerinfo", GPE_Ownerinfo);
-  //gtk_container_set_border_width (GTK_CONTAINER (GPE_Ownerinfo), gpe_border);
+  gtk_container_set_border_width (GTK_CONTAINER (GPE_Ownerinfo), 0);
   gtk_window_set_title (GTK_WINDOW (GPE_Ownerinfo), _("GPE Owner Info"));
 
   /* notebook with two pages;
@@ -550,11 +550,12 @@ main (int argc, char *argv[])
 
   leftcolvbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (leftcolvbox);
+  //gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, gpe_boxspacing);
 
   namelabel = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (namelabel),
-			g_strdup_printf ("<span lang='%s'><b>%s</b></span>",
+			g_strdup_printf ("<span lang='%s'><b>%s</b></span> ",
 					 pango_lang_code, _("Owner")));
   gtk_widget_show (namelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), namelabel, FALSE, TRUE, 0);
