@@ -21,6 +21,7 @@ install: all
 	install -D pdamaze.host $(DESTDIR)$(PREFIX)/bin/pdamaze
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pdamaze
 	for i in images/*.png; do install -m 664 $$i $(DESTDIR)$(PREFIX)/share/pdamaze/; done
+	install -D pdamaze.xpm $(DESTDIR)$(PREFIX)/share/pixmaps
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	install -m 664 pdamaze.menu $(DESTDIR)$(PREFIX)/lib/menu
 
@@ -55,10 +56,4 @@ $(TARGET):	pdamaze.c
 	$(STRIP) --remove-section .note $(TARGET)
 	$(STRIP) --remove-section .comment $(TARGET)
 
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
+include ../base/build/Makefile.dpkg_ipkg

@@ -1,0 +1,8 @@
+2002-08-04  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/control (Module): Fix typo.
+
+	* pdamaze.menu (Module): Fix icon name (xpm, not png)
+
+	* Makefile (Module): Install icon.
+
