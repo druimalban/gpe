@@ -73,7 +73,7 @@ year_view_update (void)
 	{
 	  if (day_event_bits[dy / sizeof (unsigned int)] & 
 	      1 << (dy % sizeof (unsigned int)))
-	    gtk_calendar_mark_day (GTK_CALENDAR (cal[i]), md);
+	    gtk_calendar_mark_day (GTK_CALENDAR (cal[i]), md + 1);
 	  dy++;
 	}
 
