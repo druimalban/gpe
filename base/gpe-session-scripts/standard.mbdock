@@ -1,9 +1,10 @@
 mbmenu
-monolaunch -k /usr/share/pixmaps/xkbd.xpm xkbd
-minilite
+mbinputmgr
 minivol
+minilite
 minibat
-gpe-what
-xstroke
+	
 gpe-clock
 gpe-auto-bluetooth
+gpe-what
+	
