@@ -2,8 +2,9 @@ PREFIX = /usr/local
 PACKAGE = miniclipboard
 DEBUG = yes
 
-MEMBERS = miniclipboard tray
+MEMBERS = miniclipboard
 
+CFLAGS += -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -12,7 +13,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-LDFLAGS += -L/usr/X11R6/lib -lX11 -lXext -lXtst -lXpm
+LDFLAGS += -L/usr/X11R6/lib -lX11 -lXpm -lmbdock
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
@@ -27,19 +28,7 @@ install: all
 	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
-
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
-
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 clean:
 	rm -f $(PACKAGE) $(OBJS)
+
+include ../build/Makefile.dpkg_ipkg

@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -5,6 +14,8 @@
 #include <X11/xpm.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/shape.h>
+
+#include <mbtray.h>
 
 Display *dpy;
 Atom window_type_atom;
@@ -76,6 +87,7 @@ load_icon (struct pix *p)
 void
 copy_click (XEvent *ev)
 {
+  fprintf (stderr, "copying\n");
   XConvertSelection (dpy, primary_selection_atom, string_atom, 
 		     clipboard_selection_atom, copy.win, ev->xbutton.time);
 }
@@ -83,31 +95,13 @@ copy_click (XEvent *ev)
 void
 paste_click (XEvent *ev)
 {
-  Window focus;
-  Atom actual_type;
-  unsigned long nitems;
-  unsigned long bytes_after;
-  int actual_format;
-  XButtonEvent evb;
-  int ret;
-  Window root;
+  Window w;
+  int revert;
 
-  memset (&evb, 0, sizeof (evb));
-  
-  XGetInputFocus (dpy, &focus, &ret);
+  XGetInputFocus (dpy, &w, &revert);
 
-  evb.root = RootWindow (dpy, screen);
-  evb.display = dpy;
-  evb.window = focus;
-  evb.button = 2;
-  evb.time = CurrentTime;
-  evb.same_screen = True;
-
-  evb.type = ButtonPress;
-  XSendEvent (dpy, focus, True, 0, (XEvent *)&evb);
-  evb.state = Button2Mask;
-  evb.type = ButtonRelease;
-  XSendEvent (dpy, focus, True, 0, (XEvent *)&evb);
+  if (w != None)
+    fprintf (stderr, "pasting to %x\n", w);
 }
 
 void
@@ -197,10 +191,9 @@ main (int argc, char *argv[])
   load_icon (&copy);
   load_icon (&paste);
 
-  tray_init_session_info (dpy, copy.win, argv, argc);
-
-  tray_init (dpy, copy.win);  
-  tray_init (dpy, paste.win);
+  mb_tray_init_session_info (dpy, copy.win, argv, argc);
+  mb_tray_init (dpy, copy.win);  
+  mb_tray_init (dpy, paste.win);
 
   XSelectInput (dpy, DefaultRootWindow (dpy), SubstructureNotifyMask);
 
@@ -244,6 +237,6 @@ main (int argc, char *argv[])
 	  break;
 	}
 
-      tray_handle_event (any->display, any->window, &an_event);
+      mb_tray_handle_event (any->display, any->window, &an_event);
     }
 }
