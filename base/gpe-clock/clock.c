@@ -137,7 +137,8 @@ alarm_window (void)
   GtkWidget *date_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *time_sel = gtk_time_sel_new ();
-  GtkWidget *clock = clock_widget (GTK_TIME_SEL (time_sel)->minute_adj);
+  GtkWidget *clock = clock_widget (GTK_TIME_SEL (time_sel)->hour_adj, 
+				   GTK_TIME_SEL (time_sel)->minute_adj);
   int spacing = gpe_get_boxspacing ();
   GSList *radiogroup;
 

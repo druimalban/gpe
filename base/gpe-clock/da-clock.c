@@ -20,11 +20,9 @@ static int clock_radius = 50, border = 2;
 
 static guint x_offset, y_offset;
 
-static double angle;
-
 static gboolean hand = TRUE;
 
-static GtkAdjustment *the_adj;
+static GtkAdjustment *hour_adj, *minute_adj;
 
 static void
 draw_hand (GdkDrawable *drawable, 
@@ -82,6 +80,7 @@ draw_clock (GtkWidget *widget,
   GdkGC *black_gc;
   GdkGC *gray_gc;
   GdkGC *white_gc;
+  double hour_angle, minute_angle;
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
@@ -117,10 +116,13 @@ draw_clock (GtkWidget *widget,
 		6, 6, 
 		0, 360 * 64);
 
-  draw_hand (drawable, black_gc, angle, x_offset, y_offset, clock_radius, 
+  minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
+  hour_angle = gtk_adjustment_get_value (hour_adj) * 2 * M_PI / 12;
+
+  draw_hand (drawable, black_gc, minute_angle, x_offset, y_offset, clock_radius, 
 	     7 * clock_radius / 8);
 
-  draw_hand (drawable, black_gc, M_PI_2, x_offset, y_offset, clock_radius, 
+  draw_hand (drawable, black_gc, hour_angle, x_offset, y_offset, clock_radius, 
 	     2 * clock_radius / 3);
 
   return TRUE;
@@ -164,20 +166,21 @@ button_drag (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
   gint x = m->x - x_offset - clock_radius;
   gint y = m->y - y_offset - clock_radius;
   int val;
+  double angle;
 
   angle = calc_angle (x, y);
   
-  draw_clock (w, NULL, NULL);
-
   val = (hand ? 60 : 12) * angle / (2 * M_PI);
 
-  gtk_adjustment_set_value (the_adj, val);
+  gtk_adjustment_set_value (hand ? minute_adj : hour_adj, val);
+
+  draw_clock (w, NULL, NULL);
 
   gdk_window_get_pointer (w->window, NULL, NULL, NULL);
 }
 
 GtkWidget *
-clock_widget (GtkAdjustment *adj)
+clock_widget (GtkAdjustment *hadj, GtkAdjustment *madj)
 {
   GtkWidget *w = gtk_drawing_area_new ();
 
@@ -189,7 +192,8 @@ clock_widget (GtkAdjustment *adj)
   g_signal_connect (G_OBJECT (w), "button-release-event", G_CALLBACK (button_up), NULL);
   g_signal_connect (G_OBJECT (w), "motion-notify-event", G_CALLBACK (button_drag), NULL);
 
-  the_adj = adj;
+  hour_adj = hadj;
+  minute_adj = madj;
 
   g_signal_connect (G_OBJECT (w), "expose_event", draw_clock, NULL);
 
