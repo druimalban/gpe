@@ -32,10 +32,115 @@
 
 
 /* --- local types and constants --- */
+/* this is from apps/kbdd/kbd.c */
+#define KBD_TYPE_NONE		0
+#define KBD_TYPE_FOLDABLE	1
+#define KBD_TYPE_SNAPNTYPE	2
+#define KBD_TYPE_STOWAWAY	3
+#define KBD_TYPE_STOWAWAYXT	4
+#define KBD_TYPE_HPSLIM		5
+#define KBD_TYPE_SMARTBT	6
+#define KBD_TYPE_LIRC		7
+#define KBD_TYPE_BELKINIR	8
+#define KBD_TYPE_FLEXIS		9
+#define KBD_TYPE_BENQ_GAMEPAD	10
+#define KBD_TYPE_POCKETVIK	11
+#define KBD_TYPE_MICRO_FOLDAWAY	12
+#define KBD_TYPE_MICRO_DATAPAD	13
+
+#define DEFAULT_TTS "/dev/ttyS0"
+#define KBDD_CONFIG "/etc/kbdd.conf"
 
 /* --- module global variables --- */
 
+int keyboard_type = KBD_TYPE_NONE;
+gchar *keyboard_port = NULL;
+
 /* --- local intelligence --- */
+
+int 
+find_kbd_type(const char *ktype)
+{
+	if (strncmp("foldable", ktype, 8) == 0)
+		return KBD_TYPE_FOLDABLE;
+	else if (strncmp("snapntype", ktype, 9) == 0)
+		return KBD_TYPE_SNAPNTYPE;
+	else if (strncmp("stowaway", ktype, 8) == 0)
+		return KBD_TYPE_STOWAWAY;
+	else if (strncmp("stowawayxt", ktype, 8) == 0)
+		return KBD_TYPE_STOWAWAYXT;
+	else if (strncmp("hpslim", ktype, 6) == 0)
+		return KBD_TYPE_HPSLIM;
+	else if (strncmp("smartbt", optarg, 7) == 0)
+		return KBD_TYPE_SMARTBT;
+	else if (strncmp("flexis", ktype, 6) == 0)
+		return KBD_TYPE_FLEXIS;
+	else if (strncmp("lirc", optarg, 4) == 0)
+		return KBD_TYPE_LIRC;
+        else if (strncmp("belkinir", optarg, 8) == 0)
+		return KBD_TYPE_BELKINIR;
+	else if (strncmp("g250", optarg, 4) == 0)
+		return KBD_TYPE_BENQ_GAMEPAD;
+	else if (strncmp("pocketvik", optarg, 9) == 0)
+		return KBD_TYPE_POCKETVIK;
+	else if (strncmp("microfold", optarg, 9) == 0)
+		return KBD_TYPE_MICRO_FOLDAWAY;
+	else if (strncmp("micropad", optarg, 8) == 0)
+		return KBD_TYPE_MICRO_DATAPAD;
+
+	fprintf(stderr, "unrecognised keyboard type %s\n", ktype);
+
+return KBD_TYPE_NONE;
+}
+
+
+void 
+parse_config(const char *path, int *kbdtype, char port[])
+{
+char *needle;
+FILE *fd;
+char buf[PATH_MAX];
+        
+	fd = fopen(path, "r");
+	if (!fd) {
+		fprintf(stderr, "could not open config file %s\n", path);
+		return;
+	}
+        
+        while (!feof(fd)) {
+		fgets(buf, PATH_MAX, fd);
+		
+		if (*buf == '#' || *buf == '\0') {
+			/* It's a comment or a blank line */
+			continue;
+		}
+		
+		if ((needle = strstr(buf, "port:")) != 0) {
+			needle += 5; 
+			/* Trim whitespaces */
+			while (isspace(*needle)) {
+				needle++;
+			}
+			
+			while (isspace(needle[strlen(needle)-1])) {
+				needle[strlen(needle)-1] = '\0';
+			}
+			strncpy(port, needle, PATH_MAX);
+		} else if ((needle = strstr(buf, "type:")) != 0) {
+				needle += 5; 
+				/* Trim whitespaces */
+				while (isspace(*needle)) {
+					needle++;
+				}
+			
+				while (isspace(needle[strlen(needle)-1])) {
+					needle[strlen(needle)-1] = '\0';
+				}
+					
+				*kbdtype = find_kbd_type(needle);
+			}
+	}
+}
 
 /* --- gpe-conf interface --- */
 

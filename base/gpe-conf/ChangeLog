@@ -1,3 +1,7 @@
+2005-03-01	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* kbd/keyboard.c: Add some bits for kbdd configuration support.
+
 2005-02-27	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* theme.c: Changed default.
