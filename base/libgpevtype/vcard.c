@@ -212,7 +212,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
 
       g_object_get (G_OBJECT (email), "address", &s, NULL);
 
-      if (s) // we cheat a little bit - vcard doesn't tell us
+      if (s) /* vcard doesn't tell us if it is home or work */
         {
           data = gpe_tag_list_prepend (data, "home.email", g_strdup(s));/*!*/
           data = gpe_tag_list_prepend (data, "work.email", s);
@@ -265,7 +265,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
       l = g_list_next (l);
     }
   
-  /* generate name field */
+  /* populate name field */
   g_object_get (G_OBJECT (vcard), "givenname", &fn, NULL);
   g_object_get (G_OBJECT (vcard), "familyname", &ln, NULL);
   g_strstrip(fn);
