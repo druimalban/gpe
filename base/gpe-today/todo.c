@@ -100,7 +100,7 @@ void todo_init(void)
 void todo_free(void)
 {
 	free_items();
-	gtk_container_remove(GTK_CONTAINER(window.vbox1), todo.toplevel);
+//	gtk_container_remove(GTK_CONTAINER(window.vbox1), todo.toplevel);
 	g_free(db_fname);
 	g_source_remove(todo_update_tag);
 

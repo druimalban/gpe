@@ -94,7 +94,7 @@ int calendar_init(void)
 void calendar_free(void)
 {
 	free_calendar_entries();
-	gtk_container_remove(GTK_CONTAINER(window.vbox1), calendar.toplevel);
+//	gtk_container_remove(GTK_CONTAINER(window.vbox1), calendar.toplevel);
 	g_free(db_fname);
 	g_source_remove(calendar_update_tag);
 }

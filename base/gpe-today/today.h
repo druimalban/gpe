@@ -38,6 +38,7 @@ enum { PORTRAIT, LANDSCAPE };
 struct {
 	GtkWidget *toplevel;            /* top-level window */
 	  GtkWidget *vbox1;             /* top-level vertical box */
+	    GtkWidget *vpan1;
 
 	gint height;  /* window height */
 	gint width;   /* window width */

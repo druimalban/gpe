@@ -124,11 +124,14 @@ static void load_modules(void)
 	date_init();
 	gtk_box_pack_start(GTK_BOX(window.vbox1), date.toplevel, FALSE, FALSE, 0);
 
+	window.vpan1 = gtk_vpaned_new();
+	gtk_box_pack_start(GTK_BOX(window.vbox1), window.vpan1, TRUE, TRUE, 0);
+
 	calendar_init();
-	gtk_box_pack_start(GTK_BOX(window.vbox1), calendar.toplevel, TRUE, TRUE, 0);
+	gtk_paned_pack1 (GTK_PANED(window.vpan1), calendar.toplevel, TRUE, TRUE);
 
 	todo_init();
-	gtk_box_pack_start(GTK_BOX(window.vbox1), todo.toplevel, TRUE, TRUE, 0);
+	gtk_paned_pack2 (GTK_PANED(window.vpan1), todo.toplevel, TRUE, TRUE);
 }
 
 void load_pixmap(const char *path, GdkPixmap **pixmap, GdkBitmap **mask, int alpha)
