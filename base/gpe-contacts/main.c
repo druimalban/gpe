@@ -26,6 +26,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/render.h>
 #include <gpe/gtkdatecombo.h>
+#include <gpe/question.h>
 
 #include "interface.h"
 #include "support.h"
@@ -155,8 +156,12 @@ delete_contact(GtkWidget *widget, gpointer d)
     {
       guint row = (guint)(GTK_CLIST (clist)->selection->data);
       guint uid = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      if (db_delete_by_uid (uid))
-	update_display ();
+      if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
+			    "question", _("Delete"), "delete", _("Cancel"), "cancel", NULL) == 0)
+	{
+	  if (db_delete_by_uid (uid))
+	    update_display ();
+	}
     }
 }
 
@@ -206,12 +211,12 @@ config_categories_box(void)
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
-			   _("New"), _("New"), pw, new_category, clist);
+			   _("New"), _("New"), pw, (GtkSignalFunc)new_category, clist);
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, 
-			   delete_category, clist);
+			   (GtkSignalFunc)delete_category, clist);
 
   categories = db_get_categories ();
   if (categories)
@@ -355,17 +360,17 @@ main (int argc, char *argv[])
   pw = gpe_render_icon (mainw->style, gpe_find_icon ("new"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
 			   _("New Contact"), _("New Contact"),
-			   pw, new_contact, NULL);
+			   pw, (GtkSignalFunc)new_contact, NULL);
 
   pw = gpe_render_icon (mainw->style, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete Contact"), 
 			   _("Delete Contact"), _("Delete Contact"), 
-			   pw, delete_contact, NULL);
+			   pw, (GtkSignalFunc)delete_contact, NULL);
 
   pw = gpe_render_icon (mainw->style, gpe_find_icon ("properties"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Configure"), 
 			   _("Configure"), _("Configure"),
-			   pw, configure, NULL);
+			   pw, (GtkSignalFunc)configure, NULL);
 
   load_structure ();
 
