@@ -6,6 +6,8 @@
 
 	* Makefile (LINGUAS): Add cs.
 
+	* familiar/control1: Add Source.
+
 2003-07-27  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (CPPFLAGS) [CVSBUILD=yes]: Add -I../libgpewidget.
