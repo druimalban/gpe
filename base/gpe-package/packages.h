@@ -1,6 +1,8 @@
 #ifndef GPE_PACKAGES_H
 #define GPE_PACKAGES_H
 
+#include <ipkglib.h> /* types */
+
 #define LEN_PARAMS 255
 #define LEN_LIST  1024
 #define LEN_STR1   255
@@ -50,6 +52,7 @@ typedef struct
 	char str1[LEN_STR1];
 	char str2[LEN_STR2];
 	char str3[LEN_STR3];
+	pkg_state_status_t status;
 }
 msg2front_t;
 

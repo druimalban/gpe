@@ -40,18 +40,20 @@ static args_t args;
 /* message send and receive */
 
 static void
-send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2, const char *str3)
+send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2, 
+	const char *str3, pkg_state_status_t status)
 {
 	pkmessage_t msg;
 	msg.type = PK_FRONT;
 	msg.ctype = ctype;
 	msg.content.tf.priority = prio;
-	snprintf(msg.content.tf.str1,LEN_STR1, str1);
-	snprintf(msg.content.tf.str2,LEN_STR2, str2);
-	snprintf(msg.content.tf.str3,LEN_STR3, str3);
+	snprintf(msg.content.tf.str1,LEN_STR1-1, str1);
+	snprintf(msg.content.tf.str2,LEN_STR2-1, str2);
+	snprintf(msg.content.tf.str3,LEN_STR3-1, str3);
+	msg.content.tf.status = status;
 	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
 	{
-		perror ("err sending data to backend");
+		perror ("ERR sending data to frontend");
 	}
 }
 
@@ -68,7 +70,7 @@ do_response (char *res)
 char * /*ipkg_response_callback*/
 ipkg_question (char *question)
 {
-	send_message (PK_QUESTION, 1, question, NULL, NULL);
+	send_message (PK_QUESTION, 1, question, NULL, NULL, 0);
 	await_response = TRUE;
 	while (await_response) wait_message();
 printf("Response: %s\n",response);
@@ -82,18 +84,18 @@ ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 	if (level <= IPKG_NOTICE)
 	{
 		if (level <= IPKG_ERROR)
-			send_message (PK_ERROR, level, msg, NULL, NULL);
+			send_message (PK_ERROR, level, msg, NULL, NULL, 0);
 		else
-			send_message (PK_INFO, level, msg, NULL, NULL);
+			send_message (PK_INFO, level, msg, NULL, NULL, 0);
 	}
 	return 0;
 }
 
 
 int /*ipkg_list_callback*/
-list_entry (char *name, char *desc, char *version)
+list_entry (char *name, char *desc, char *version, pkg_state_status_t status)
 {
-	send_message (PK_LIST, 1, name, desc, version);
+	send_message (PK_LIST, 1, name, desc, version, status);
 	return 0;
 }
 
@@ -180,7 +182,7 @@ do_command (pkcommand_t command, char *params, char *list)
 	break;
 	}
 	
-	send_message(PK_FINISHED,0,"","","");
+	send_message(PK_FINISHED,0,"","","",0);
 }
 
 
@@ -192,8 +194,7 @@ suidloop (int csock)
 	/* init ipkg lib */
 	sock = csock;
 	
-	ipkg_init (/*(ipkg_message_callback)*/ ipkg_msg,
-		   /*(ipkg_response_callback)*/ ipkg_question, &args);
+	ipkg_init (ipkg_msg, ipkg_question, &args);
 
 	while (wait_message ()) ;
 printf("leaving...\n");

@@ -1,3 +1,11 @@
+2003-10-09 Florian Boor <florian.boor@kernelconcepts.de>
+	* Added status dialogs.
+	* Added package update button.
+	* Implemeted update routines.
+	* Improved error messages.
+	* GUI updates, status is shown now.
+	* Removed obsolete stuff, some cleanups.	
+	
 2003-10-07 Florian Boor <florian.boor@kernelconcepts.de>
 	* Major GUI rework.
 	* Package listings.

@@ -46,11 +46,12 @@ static GtkWidget *notebook;
 static GtkWidget *txLog;
 static GtkWidget *treeview;
 static GtkTreeStore *store = NULL;
-static GtkWidget *bUpdate, *bApply;
+static GtkWidget *bUpdate, *bApply, *bSysUpgrade;
 static GtkWidget *sbar;
 int sock;
 void create_fMain (void);
 static GtkWidget *fMain;
+static GtkWidget *dlgAction = NULL;
 static pkcommand_t running_command = CMD_NONE;
 
 
@@ -61,8 +62,41 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "exit" },
   { "refresh" },
-  { "send_and_recieve"}
+  { "send_and_recieve" },
+  { "icon", PREFIX "/share/pixmaps/gpe-packages.png" }
 };
+
+/* dialogs */
+
+GtkWidget *
+progress_dialog (gchar * text, GdkPixbuf * pixbuf)
+{
+	GtkWidget *window;
+	GtkWidget *label;
+	GtkWidget *image;
+	GtkWidget *hbox;
+	
+	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	hbox = gtk_hbox_new (FALSE, 0);
+	image = gtk_image_new_from_pixbuf (pixbuf);
+	label = gtk_label_new (text);
+
+	gtk_window_set_type_hint (GTK_WINDOW (window),
+				  GDK_WINDOW_TYPE_HINT_DIALOG);
+
+	gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+
+	gtk_container_set_border_width (GTK_CONTAINER (hbox),
+					gpe_get_border ());
+
+	gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+	gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+
+	gtk_container_add (GTK_CONTAINER (window), hbox);
+
+	return window;
+}
+
 
 /* message send and receive */
 
@@ -70,16 +104,41 @@ static void
 send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 {
 	pkmessage_t msg;
+	char *desc;
+
 	msg.type = PK_BACK;
 	msg.ctype = ctype;
+	
+	/* handle commands */
 	if (msg.ctype == PK_COMMAND)
+	{
 		running_command = command;
+		switch (command)
+		{
+			case CMD_LIST:
+				desc = _("Reading packages list...");
+				gtk_tree_store_clear(GTK_TREE_STORE(store));
+			break;
+			case CMD_UPDATE:
+				desc = _("Updating package lists");
+			break;
+			case CMD_UPGRADE:
+				desc = _("Upgrading installed system");
+			break;
+			default:
+				desc = _("Working...");			
+			break;
+		}
+		if (!dlgAction)
+			dlgAction = progress_dialog(desc,gpe_find_icon("icon"));			
+		gtk_widget_show_all(dlgAction);
+	}
 	msg.content.tb.command = command;
 	snprintf(msg.content.tb.params,LEN_PARAMS,params);
 	snprintf(msg.content.tb.list,LEN_LIST,list);
 	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
 	{
-		perror ("err sending config data");
+		perror ("ERR: sending data to backend");
 	}
 }
 
@@ -110,23 +169,26 @@ void do_question(int nr, char *question)
 }
 
 
-void do_list(int prio,char* pkg,char *desc, char *version)
+void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t status)
 {
 	GtkTreeIter iter;
+	gboolean isinstalled;
 	
+	isinstalled = (status==SS_INSTALLED);
 	switch (running_command)
 	{
 		case CMD_LIST:
 			gtk_tree_store_append (store, &iter, NULL);	/* Acquire an iterator */
 			gtk_tree_store_set (store, &iter,
-			    COL_NAME, pkg,
+			    COL_NAME, pkgname,
 			    COL_DESCRIPTION, desc,
 				COL_VERSION, version,
+				COL_INSTALLED, isinstalled,
 //				COL_COLOR, calc_color(gnet[actual_rows].color),
 			    -1);
 		break;
 		default:
-			printlog(txLog,pkg);
+			printlog(txLog,pkgname);
 	}
 }
 
@@ -157,7 +219,14 @@ void do_end_command()
 {
     gtk_widget_set_sensitive(bUpdate,TRUE);
     gtk_widget_set_sensitive(bApply,TRUE);
+	gtk_widget_set_sensitive(bSysUpgrade,TRUE);
     printlog(txLog,_("Command finished. Please check log messages for errors."));
+	if (dlgAction) 
+	{
+		gtk_widget_destroy(dlgAction);
+		dlgAction = NULL;
+	}
+	running_command = CMD_NONE;
 }
 
 
@@ -172,14 +241,14 @@ get_pending_messages ()
 	{
 		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP))
 		{
-#ifdef DEBUG
-			perror ("Err: connection lost: ");
-#endif
-			return TRUE;
+			perror ("ERR: connection lost: ");
+			do_error(_("IPKG backend failure, cannot continue."));
+			close(sock);
+			exit(1);
 		}
 		if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
 		{
-			perror ("err receiving data packet");
+			perror ("ERR: receiving data packet");
 			close (sock);
 #warning todo
 			exit (1);
@@ -196,7 +265,9 @@ get_pending_messages ()
 				do_error(msg.content.tf.str1);
 			break;	
 			case PK_LIST:
-				do_list(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2,msg.content.tf.str3);
+				do_list(msg.content.tf.priority, msg.content.tf.str1,
+						msg.content.tf.str2,msg.content.tf.str3,
+						msg.content.tf.status);
 			break;	
 			case PK_INFO:
 				do_info(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
@@ -215,6 +286,28 @@ get_pending_messages ()
 }
 
 
+void
+list_toggle_inst (GtkCellRendererToggle * cellrenderertoggle,
+		  gchar * path_str, gpointer model_data)
+{
+  GtkTreeIter iter;
+  GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+  gboolean inst;
+	
+  /* get toggled iter */
+  gtk_tree_model_get_iter (GTK_TREE_MODEL(store), &iter, path);
+  gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_INSTALLED, &inst, -1);
+
+  /* do something with the value */
+  inst ^= 1;
+
+  gtk_tree_store_set (GTK_TREE_STORE(store), &iter, COL_INSTALLED,inst, -1);
+
+  /* clean up */
+  gtk_tree_path_free (path);
+}
+
+
 /* app mainloop */
 
 int
@@ -227,13 +320,13 @@ mainloop (int argc, char *argv[])
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
-
+	
 	
 	/* Create socket from which to read. */
 	sock = socket (AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0)
 	{
-		perror ("opening datagram socket");
+		perror ("ERR: opening datagram socket");
 		exit (1);
 	}
 
@@ -242,7 +335,7 @@ mainloop (int argc, char *argv[])
 	strcpy (name.sun_path, PK_SOCKET);
 	if (connect (sock, (struct sockaddr *) &name, SUN_LEN (&name)))
 	{
-		perror ("connecting to socket");
+		perror ("ERR: connecting to socket");
 		exit (1);
 	}
 
@@ -254,6 +347,9 @@ mainloop (int argc, char *argv[])
 
 	create_fMain ();
 	gtk_widget_show (fMain);
+  
+	/* get packages list */
+	send_message(PK_COMMAND,CMD_LIST,"","");
 	
 	gtk_timeout_add(500,get_pending_messages,NULL);
 	
@@ -270,43 +366,85 @@ mainloop (int argc, char *argv[])
  */
 int do_package_check(const char *package)
 {
-/*	char s1[100], s2[100], s3[100];
-	char *command = g_strdup_printf("/usr/bin/ipkg status %s",package);
-	if (parse_pipe(command,"Status: %s %s %s",s1,s2,s3))
-	{
-		return FALSE;
-	}
-	else		
-	{
-		printf("s1: %s, s2: %s, s3: %s\n",s1,s2,s3);
-		if (!strcmp(s1,"install") && !strcmp(s2,"ok") && !strcmp(s3,"installed"))
-			return TRUE;
-		else
-			return FALSE;
-	}
-*/	
 }
 
 
-void on_network_update_clicked(GtkButton *button, gpointer user_data)
+void
+on_system_update_clicked(GtkButton *button, gpointer user_data)
 {
   GtkTextBuffer *logbuf;
   GtkTextIter start,end;
-	
   gtk_widget_set_sensitive(bUpdate,FALSE);
   gtk_widget_set_sensitive(bApply,FALSE);
-	
+  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
+	   
   /* clear log */	
   logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
   gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
   gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
   gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
   send_message(PK_COMMAND,CMD_UPDATE,"","");
+	while (running_command != CMD_NONE)
+	{
+		gtk_main_iteration();
+		gtk_main_iteration();
+		usleep(100000);
+		get_pending_messages();
+	}
   send_message(PK_COMMAND,CMD_UPGRADE,"-force-depends","");
+	while (running_command != CMD_NONE)
+	{
+		gtk_main_iteration();
+		gtk_main_iteration();
+		usleep(100000);
+		get_pending_messages();
+	}
+  send_message(PK_COMMAND,CMD_LIST,"","");
+	while (running_command != CMD_NONE)
+	{
+		gtk_main_iteration();
+		gtk_main_iteration();
+		usleep(100000);
+		get_pending_messages();
+	}
 }
 
 
-void on_package_install_clicked(GtkButton *button, gpointer user_data)
+void
+on_packages_update_clicked(GtkButton *button, gpointer user_data)
+{
+  GtkTextBuffer *logbuf;
+  GtkTextIter start,end;
+  gtk_widget_set_sensitive(bUpdate,FALSE);
+  gtk_widget_set_sensitive(bApply,FALSE);
+  gtk_widget_set_sensitive(bSysUpgrade,FALSE);
+	   
+  /* clear log */	
+  logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
+  gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
+  gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
+  gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
+  send_message(PK_COMMAND,CMD_UPDATE,"","");
+	while (running_command != CMD_NONE)
+	{
+		gtk_main_iteration();
+		gtk_main_iteration();
+		usleep(100000);
+		get_pending_messages();
+	}
+  send_message(PK_COMMAND,CMD_LIST,"","");
+	while (running_command != CMD_NONE)
+	{
+		gtk_main_iteration();
+		gtk_main_iteration();
+		usleep(100000);
+		get_pending_messages();
+	}
+}
+
+
+void 
+on_package_install_clicked(GtkButton *button, gpointer user_data)
 {
 }
 
@@ -328,12 +466,12 @@ create_fMain (void)
 
 	/* init tree storage stuff */
 	store = gtk_tree_store_new (N_COLUMNS,
-				    G_TYPE_INT,
+				    G_TYPE_BOOLEAN,
 				    G_TYPE_STRING,
 					G_TYPE_STRING,
 					G_TYPE_STRING,
-					G_TYPE_STRING,
-				    G_TYPE_INT, 
+					G_TYPE_INT,
+				    G_TYPE_STRING, 
 					G_TYPE_STRING
 	);
 
@@ -341,6 +479,7 @@ create_fMain (void)
   gtk_window_set_title (GTK_WINDOW (fMain), _("GPE Package"));
   gtk_window_set_default_size (GTK_WINDOW (fMain), 240, 300);
   gtk_window_set_policy (GTK_WINDOW (fMain), TRUE, TRUE, FALSE);
+  gpe_set_window_icon(fMain, "icon");
 
   vbox = gtk_vbox_new(FALSE,0);
   gtk_container_add(GTK_CONTAINER(fMain),vbox);
@@ -354,15 +493,19 @@ create_fMain (void)
 			       GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  bUpdate = gtk_image_new_from_pixbuf (gpe_find_icon ("refresh"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Update System"),
-			   _("Update System"), _("Update entire system over an internet connection."), bUpdate,
-			   (GtkSignalFunc) on_network_update_clicked , NULL);
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("refresh"));
+  bSysUpgrade = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Update System"),
+			   _("Update System"), _("Update entire system over an internet connection."), pw,
+			   (GtkSignalFunc) on_system_update_clicked , NULL);
 
-  bApply = gtk_image_new_from_pixbuf (gpe_find_icon ("send_and_recieve"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Apply package selection"),
-			   _("Apply package selection"), _("Apply package selection"), bApply,
-			   (GtkSignalFunc) on_network_update_clicked , NULL);
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("send_and_recieve"));
+  bApply = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Apply package selection"),
+			   _("Apply package selection"), _("Apply package selection"), pw,
+			   (GtkSignalFunc) on_package_install_clicked , NULL);
+			   
+  bUpdate = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_DOWN, _("Update package lists"),
+			   _("Update package lists"),
+			   (GtkSignalFunc) on_packages_update_clicked , NULL, -1);
 			   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
@@ -406,13 +549,17 @@ create_fMain (void)
 											
   treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
   gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
   gtk_container_add(GTK_CONTAINER(cur),treeview);	
   
 /*		g_signal_connect (G_OBJECT (tree), "cursor-changed",
 				  G_CALLBACK (tv_row_clicked), NULL);
 */
 		renderer = gtk_cell_renderer_toggle_new ();
-		column = gtk_tree_view_column_new_with_attributes (_("Installed"),
+		gtk_cell_renderer_toggle_set_radio(GTK_CELL_RENDERER_TOGGLE(renderer),FALSE);
+  		g_signal_connect (G_OBJECT (renderer), "toggled",
+		                  G_CALLBACK (list_toggle_inst), store);
+		column = gtk_tree_view_column_new_with_attributes (_("Inst."),
 								   renderer,
 								   "active",
 								   COL_INSTALLED,
@@ -431,6 +578,7 @@ create_fMain (void)
 								   NULL);
 		gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+		
 		renderer = gtk_cell_renderer_text_new ();
 		column = gtk_tree_view_column_new_with_attributes (_("Version"),
 								   renderer,
@@ -470,6 +618,4 @@ create_fMain (void)
   g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
   
   gtk_widget_show_all(fMain);
-  
-  send_message(PK_COMMAND,CMD_LIST,"","");
 }
