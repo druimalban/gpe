@@ -1,3 +1,8 @@
+2002-09-03  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.dpkg_ipkg (ipkg): Depend on the clean target, so that
+	all specified defines are fresh (DESTDIR, PREFIX and prefix).
+
 2002-08-21  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.dpkg_ipkg (ipkg): Set prefix=/usr in addition to
