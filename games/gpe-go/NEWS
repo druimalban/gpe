@@ -1,6 +1,8 @@
 GPE go NEWS
 
 * cvs
+- added load SGF (the scanner is still limited to a subset of SGF)
+- improved variation handeling (choose the main branch as default)
 - moved [new] [save] into a popup menu with coming [load]
 - added dialog to choose game size
 - support for variations

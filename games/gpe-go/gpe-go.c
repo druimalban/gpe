@@ -12,6 +12,9 @@
 #include <stdlib.h> //exit()
 #include <stdio.h>  //sscanf()
 
+#include "model.h"
+#include "sgf.h"
+
 //--GPE libs
 #include "gpe/init.h"
 #include "gpe/pixmaps.h"
@@ -50,104 +53,6 @@ enum page_names{
   PAGE_BOARD = 0,
   PAGE_GAME_SETTINGS
 };
-
-typedef struct _go {
-  //--ui
-  GtkWidget * window;
-  GtkWidget * notebook;
-
-  GdkPixmap * drawing_area_pixmap_buffer;
-  GtkWidget * drawing_area;
-
-  GdkPixbuf * loaded_board;
-  GdkPixbuf * loaded_black_stone;
-  GdkPixbuf * loaded_white_stone;
-
-  GdkPixbuf * pixbuf_black_stone;
-  GdkPixbuf * pixbuf_white_stone;
-  GdkPixmap * pixmap_empty_board;
-
-  GtkWidget * capture_label;
-  char      * capture_string;
-
-  GtkWidget * file_selector;
-
-  GtkWidget * game_popup_button;
-
-  int selected_game_size;
-  GtkWidget * game_size_spiner;
-
-#ifdef TURN_LABEL
-  GtkWidget * turn_label;
-  char      * turn_string;
-#endif
-
-  int board_size;//px PARAM - size of the board widget
-  int margin;    //***px - left/top margin
-  
-  int cell_size;  //***px - == stone_size + stone_space 
-  int stone_size; //px
-  int stone_space;//px PARAM space between two stones (0/1 px)
-  
-  int grid_stroke;//px PARAM width of the grid stroke (1px)
-
-  //--game
-  int game_size; //9, 13, 19, ...
-
-  char ** grid;   //current state of the board
-  char ** stamps;
-
-  int white_captures; //stones captured by white!
-  int black_captures; 
-
-  int turn;
-  int last_turn;
-
-  //last played
-  int last_col;
-  int last_row;
-
-  //current position
-  int col;
-  int row;
-
-  GNode * history_root; //root node
-  GNode * history;      //current pointer
-  GNode * main_branch;  //ref to the leaf of the main branch
-  GNode * variation_main_branch_node;
-
-  gboolean lock_variation_choice;
-
-} Go;
-
-Go go;
-
-typedef enum {
-  EMPTY = 0,
-  BLACK_STONE,
-  WHITE_STONE,
-} GoItem;
-
-typedef enum {
-  NO_MARK,
-  MARK_SQUARE,
-  MARK_SPOT,
-  //MARK_TRIANGLE
-} GoMark;
-
-typedef enum {
-  PASS,
-  PLAY,
-  CAPTURE,
-} GoAction;
-
-typedef struct _hist_item{
-  GoAction action;
-  GoItem   item;
-  int posx;
-  int posy;
-  //GList * captured; FIXME: to use
-} Hitem;
 
 Hitem * new_hitem(){
   Hitem * hitem;
@@ -240,6 +145,9 @@ void free_table(char ** table, int size){
   if(table) free(table);
 }
 
+void scale_graphics();
+void paint_board(GtkWidget * widget);
+
 void init_new_game(int game_size){
   int free_space;
   int old_game_size;
@@ -298,6 +206,9 @@ void init_new_game(int game_size){
   go.last_row = 0;
 
   go.lock_variation_choice = FALSE;
+
+  scale_graphics();
+  paint_board(go.drawing_area);
 }
 
 void app_init(int argc, char ** argv){
@@ -377,6 +288,7 @@ void _print_history(){
 
 void gui_init();
 
+void load_graphics();
 int main (int argc, char ** argv){
 
   if (gpe_application_init (&argc, &argv) == FALSE) exit (1);
@@ -387,8 +299,9 @@ int main (int argc, char ** argv){
   textdomain (PACKAGE);
   setlocale (LC_ALL, "");
 
-  app_init (argc, argv);
   gui_init ();
+  load_graphics();
+  app_init (argc, argv);
 
   gtk_main ();
 
@@ -1294,7 +1207,33 @@ void save_game(){
   fprintf(f, "\n)\n");
 
   fclose(f);
-  gtk_widget_hide (go.file_selector);
+  //gtk_widget_hide (go.file_selector);
+}
+
+void load_game(){
+  char * filename;
+  char * filename_sgf;
+
+  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
+  if(g_str_has_suffix(filename, ".sgf") == FALSE){
+    filename_sgf = g_strconcat (filename, ".sgf", NULL);
+    g_free(filename);
+  }
+  else{
+    filename_sgf = filename;
+  }
+
+  //gtk_widget_hide (go.file_selector);
+  //loading... dialog
+
+  load_sgf_file(filename_sgf);
+
+  g_free(filename_sgf);
+}
+
+void on_file_selection_ok(GtkWidget *widget, gpointer file_selector){
+  if(go.save_game) save_game();
+  else load_game();
 }
 
 void on_button_prev_pressed (void){
@@ -1324,8 +1263,8 @@ void on_button_newgame_cancel_clicked (void){
 
 void on_button_newgame_ok_clicked (void){
   init_new_game(go.selected_game_size);
-  scale_graphics();
-  paint_board(go.drawing_area);
+  //scale_graphics();
+  //paint_board(go.drawing_area);
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
 }
 
@@ -1335,13 +1274,17 @@ void on_button_game_new_clicked(GtkButton *button, gpointer unused){
 }
 void on_button_game_save_clicked(GtkButton *button, gpointer unused){
   popup_menu_close(go.game_popup_button);
+  go.save_game = TRUE;
   gtk_widget_show (go.file_selector);
 }
 void on_button_game_load_clicked(GtkButton *button, gpointer unused){
-  popup_menu_close(go.game_popup_button);
-  gpe_question_ask (_("On its way, wait...\n(the next release ;)"),
-                    _("Warning"), "!gtk-dialog-warning",
-                    _("OK"), "!gtk-ok", NULL);
+  popup_menu_close(go.game_popup_button);//FIXME: connect function on "clicked"
+  go.save_game = FALSE;
+  gtk_widget_show (go.file_selector);
+
+//  gpe_question_ask (_("On its way, wait...\n(the next release ;)"),
+//                    _("Warning"), "!gtk-dialog-warning",
+//                    _("OK"), "!gtk-ok", NULL);
 }
 
 void on_radiobutton_size_clicked (GtkButton *button, gpointer size){
@@ -1629,14 +1572,25 @@ void gui_init(){
                            image, GTK_SIGNAL_FUNC (on_button_pass_clicked), NULL);
 
   //file selector
-  widget = gtk_file_selection_new (_("Save as..."));
+  widget = gtk_file_selection_new (NULL/*_("Save as...")*/);
 
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(widget)->ok_button),
-			     "clicked", GTK_SIGNAL_FUNC (save_game), NULL);
+  g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
+                    "clicked",
+                    G_CALLBACK (on_file_selection_ok),
+                    (gpointer) widget);
 
-  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(widget)->cancel_button),
-		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_hide),
-		             (gpointer) widget);
+  g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
+                            "clicked",
+                            G_CALLBACK (gtk_widget_hide), 
+                            (gpointer) widget); 
+
+  g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (widget)->cancel_button),
+                             "clicked",
+                             G_CALLBACK (gtk_widget_hide),
+                             (gpointer) widget);
+
+
+
   //gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf"); //FIXME...
   go.file_selector = widget;
 
@@ -1705,9 +1659,9 @@ void gui_init(){
   gtk_widget_show_all (window);
   gtk_notebook_set_page(GTK_NOTEBOOK(widget), PAGE_BOARD);
 
-  load_graphics();
-  scale_graphics();
-  paint_board(drawing_area);
+  //load_graphics();
+  //scale_graphics();
+  //paint_board(drawing_area);
   
 }//gui_init()
 
