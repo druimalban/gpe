@@ -1,0 +1,9 @@
+2002-07-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/preinst (Module),
+	  familiar/control (Module),
+	  familiar/conffiles (Module),
+	  ipaq-sleep.session (Module): New files pulled from the ipk.
+
+	* Makefile (install): Install the setup files too.
+

@@ -1,0 +1,3 @@
+/etc/init.d/ipaq-sleep
+/etc/ipaq-sleep.conf
+/etc/X11/Xsession.d/69ipaq-sleep

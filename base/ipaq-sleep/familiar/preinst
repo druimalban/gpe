@@ -1,0 +1,6 @@
+#!/bin/sh
+
+rm -f /tmp/R69ipaq-sleep
+rm -f /etc/rc2.d/S69ipaq-sleep
+rm -f /etc/resume-scripts/R69ipaq-sleep
+rm -f /etc/suspend-scripts/S69ipaq-sleep
