@@ -4,4 +4,4 @@
  logtitle="Log out" \
  icon48=/usr/share/pixmaps/gpe-logout.png \
  command="gpe-logout" \
- section=System
+ section=Utilities
