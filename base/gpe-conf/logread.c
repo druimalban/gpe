@@ -218,7 +218,6 @@ Logread_Build_Objects (void)
   gchar *tstr;
 
   notebook = gtk_notebook_new();
-  gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
 
   /* syslog box */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());

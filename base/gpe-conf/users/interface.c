@@ -251,7 +251,8 @@ Users_Build_Objects (void)
 			   
   user_list = gtk_clist_new_with_titles (3,listTitles);
   pw = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pw),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pw),
+                                 GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_container_add (GTK_CONTAINER (pw), user_list);
   
   InitPwList();
@@ -393,7 +394,10 @@ create_userchange (pwlist *init,GtkWidget *parent)
   gtk_widget_show (self->shell);
 
   
-  passwd = gpe_picture_button (wstyle,_("Change"),"lock16");
+  passwd = gpe_picture_button (wstyle,
+                               strlen(init->pw.pw_passwd) ? _("Change") 
+							     : _("Set"), 
+						       "lock16");
 
   gtk_widget_show (passwd);
   gtk_table_attach (GTK_TABLE (table1), passwd, 1, 2, 1, 2,
@@ -515,6 +519,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   gtk_entry_set_visibility (GTK_ENTRY (self->oldpasswd), FALSE);
+  gtk_widget_set_sensitive(self->oldpasswd, strlen(init->pw.pw_passwd));
 
   self->newpasswd = gtk_entry_new ();
 

@@ -186,6 +186,7 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 	  
 	  sleep_cpu_spin_adj = gtk_adjustment_new (0.05, 0.01, 1.2, 0.01, 0.05, 10);
 	  sleep_cpu_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sleep_cpu_spin_adj), 1, 2);
+	  gtk_entry_set_width_chars(GTK_ENTRY(sleep_cpu_spin), 5);
 	  gtk_widget_show (sleep_cpu_spin);
 	  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (sleep_cpu_spin), TRUE);
 	  gtk_box_pack_start(GTK_BOX(hbox), sleep_cpu_spin, FALSE, TRUE, 0);

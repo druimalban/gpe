@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	         2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003  Florian Boor <florian.boor@kernelconcepts.de>
  *               2004  Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -28,9 +28,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE		/* Pour GlibC2 */
-#endif
 #include <time.h>
 #include <libintl.h>
 #include <net/if.h>
