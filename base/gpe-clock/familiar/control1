@@ -4,5 +4,5 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgpewidget1 (>= 0.56)
+Depends: libgpewidget1 (>= 0.57)
 Description: GPE clock applet
