@@ -48,7 +48,7 @@ int dont_launch_exists()
   if(strlen(home) > 230)
       gpe_error_box( "bad $HOME !!");
 
-  sprintf(dont_launch_file,"%s/.dont_launch_appmgr",home);
+  sprintf(dont_launch_file,"%s/.gpe/dont_launch_appmgr",home);
   
   return file_exists(dont_launch_file);
 }
@@ -118,7 +118,6 @@ void Appmgr_Free_Objects (void){}
 void Appmgr_Save (void)
 {
 	char *fn;
-	struct stat buf;
 
 	if (!config)
 	{
@@ -148,30 +147,11 @@ void Appmgr_Save (void)
 	else if(file_exists(dont_launch_file))
 	  system_printf("rm %s",dont_launch_file);
 
-		package_set_data (config, "show_recent_apps", "no");
-
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(tab_view_icon)))
 		package_set_data (config, "tab_view", "icon");
 	else
 		package_set_data (config, "tab_view", "list");
 
-	fn = g_strdup_printf ("%s/.gpe", g_get_home_dir());
-	if (stat (fn, &buf) != 0)
-	{
-		if (mkdir (fn, 0) != 0)
-		{
-			perror ("Cannot create ~/.gpe");
-			exit (1);
-		}
-	} else {
-		if (!S_ISDIR(buf.st_mode))
-		{
-			printf ("ERROR: ~/.gpe is not a directory!\n");
-			exit (1);
-		}
-	}
-
-	g_free (fn);
  	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr", g_get_home_dir());
 	package_save (config, fn);
 	g_free (fn);
