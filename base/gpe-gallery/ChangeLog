@@ -1,3 +1,7 @@
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
+	* familiar/postinst: Deleted.
+
 2003-03-23  Damien Tanner  <dctanner@dctanner>
 
 	* main.c (main): Fit to window code now works, removed compile time warnings.
