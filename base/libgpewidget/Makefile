@@ -67,7 +67,7 @@ install-devel: $(PACKAGE).pc
 	install -m 644 $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkg-config/
 
 clean: clean-po
-	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)
+	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

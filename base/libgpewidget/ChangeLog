@@ -2,6 +2,7 @@
 
 	* Makefile (install-devel): Respect $(DESTDIR) when installing .pc
 	file.
+	(clean): Also remove .pc files.
 
 	* libgpewidget.pc.in (Libs): Remove full path.
 	* libgpewidget-uninstalled.pc.in (Libs): Likewise.  Only use it
