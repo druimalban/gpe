@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Control Panel
+_Comment=Control Panel
+Exec=gpe-appmgr -g Settings -D /usr/share/applications/gpe-conf.desktop
+Terminal=0
+Type=Application
+Icon=gpe-conf.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True
+SingleInstance=True

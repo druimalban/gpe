@@ -1,3 +1,8 @@
+2004-06-04  Philip Blundell  <philb@gnu.org>
+
+	* gpe-conf.desktop.in: New desktop file for top-level "control panel".
+	* pixmaps/gpe-config.png, pixmaps/gpe-config-admin.png: Switch
+	icons around.
 
 2004-06-04	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Makefile: some minor build fixes.
