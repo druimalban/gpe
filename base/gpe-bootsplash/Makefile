@@ -16,5 +16,5 @@ ipkg:
 	cp splash.png dist/usr/share/gpe/
 	cp gpe-bootsplash dist/usr/bin/
 	cp control dist/CONTROL
-	ln -s ../init.d/gpe-bootsplash dist/etc/rcS.d/S00bootsplash
+	ln -s ../init.d/gpe-bootsplash dist/etc/rcS.d/S06bootsplash
 	ipkg-build dist
