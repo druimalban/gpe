@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,16 +25,17 @@
 
 #include <X11/Xlib.h>
 
-#define REQUEST_NAME "org.handhelds.gpe.hotplug"
+#define PATH_NAME "org.handhelds.gpe.hotplug"
+#define SIGNAL_NAME "HotplugEvent"
 
 #define _(x) gettext(x)
 
-extern void handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter);
-extern void handle_net_message (DBusMessage *message, DBusMessageIter *iter);
+extern DBusHandlerResult handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter);
+extern DBusHandlerResult handle_net_message (DBusMessage *message, DBusMessageIter *iter);
 
 Display *dpy;
 
-void
+DBusHandlerResult
 autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
 {
   DBusMessageIter iter;
@@ -45,32 +46,35 @@ autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   
   type = dbus_message_iter_get_arg_type (&iter);
   if (type != DBUS_TYPE_STRING)
-    return;
+    return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 
   subsys = dbus_message_iter_get_string (&iter);
 
   if (!strcmp (subsys, "net"))
-    handle_net_message (message, &iter);
+    return handle_net_message (message, &iter);
 
 #if 0
   if (!strcmp (subsys, "bluetooth"))
     handle_bluetooth_message (message, &iter);
 #endif
+
+  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
 
 DBusHandlerResult
-dbus_handler_func (DBusMessageHandler *handler,
-		   DBusConnection     *connection,
+dbus_handler_func (DBusConnection     *connection,
 		   DBusMessage        *message,
 		   void               *user_data)
 {
-  if (dbus_message_has_name (message, REQUEST_NAME))
-    autostarter_handle_dbus_request (connection, message);
+  if (dbus_message_is_signal (message, PATH_NAME, SIGNAL_NAME))
+    return autostarter_handle_dbus_request (connection, message);
   
-  if (dbus_message_has_name (message, DBUS_MESSAGE_LOCAL_DISCONNECT))
+  if (dbus_message_is_signal (message,
+                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              "Disconnected"))
     exit (0);
   
-  return DBUS_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+  return DBUS_HANDLER_RESULT_HANDLED;
 }
 
 void
@@ -78,7 +82,6 @@ autostarter_init_dbus (void)
 {
   DBusConnection *connection;
   DBusError error;
-  DBusMessageHandler *handler;
 
   dbus_error_init (&error);
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
@@ -92,8 +95,7 @@ autostarter_init_dbus (void)
 
   dbus_connection_setup_with_g_main (connection, NULL);
 
-  handler = dbus_message_handler_new (dbus_handler_func, NULL, NULL);
-  dbus_connection_add_filter (connection, handler);
+  dbus_connection_add_filter (connection, dbus_handler_func, NULL, NULL);
 }
 
 typedef struct
