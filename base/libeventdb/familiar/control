@@ -1,4 +1,4 @@
-Package: libeventdb
+Package: libeventdb0
 Section: base
 Priority: optional
 Version: 0.01
