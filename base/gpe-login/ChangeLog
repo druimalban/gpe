@@ -1,5 +1,9 @@
 2003-03-11  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.38 released.
+
+2003-03-11  Philip Blundell  <philb@gnu.org>
+
 	* X11/Xsession-gpe.d/98standard-apps: Tweak timings, etc.
 
 2003-03-10  Philip Blundell  <philb@gnu.org>
