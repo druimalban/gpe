@@ -99,8 +99,6 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   if(is_current_sketch_new){
     gboolean ret;
     g_signal_emit_by_name(G_OBJECT(selector.textlistview), "unselect-all", &ret);
-    gtk_widget_set_sensitive(selector.button_edit,   FALSE);
-    gtk_widget_set_sensitive(selector.button_delete, FALSE);
   }
   else{
     GtkTreeSelection * selection;
@@ -114,9 +112,6 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
 
     //set the current one selected
     set_current_sketch_selected();
-
-    gtk_widget_set_sensitive(selector.button_edit,   TRUE);
-    gtk_widget_set_sensitive(selector.button_delete, TRUE);
   }
   switch_to_page(PAGE_SELECTOR);
 }

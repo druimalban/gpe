@@ -28,6 +28,8 @@
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 #include "gpe/gpeiconlistview.h"
+#include "gpe/popup_menu.h"
+#include "gpe/picturebutton.h"
 
 //--i18n
 #include <libintl.h>
@@ -85,43 +87,71 @@ GtkWidget * selector_gui(){
   return vbox;
 }
 
+GtkWidget * _selector_popup_new (GtkWidget *parent_button){
+  GtkWidget *vbox;//to return
+
+  GtkWidget * button_new;
+  GtkWidget * button_open;
+  GtkWidget * button_import;
+  GtkWidget * button_delete;
+  //GtkWidget * button_properties;
+
+  GtkStyle * style ;//FIXME !!! = sketchpad.window->style;
+
+  button_new        = gpe_picture_button_aligned (style, _("New"),    "new",    GPE_POS_LEFT);
+  button_open       = gpe_picture_button_aligned (style, _("Edit"),   "edit",   GPE_POS_LEFT);
+  button_import     = gpe_picture_button_aligned (style, _("Import"), "import", GPE_POS_LEFT);
+  button_delete     = gpe_picture_button_aligned (style, _("Delete"), "delete", GPE_POS_LEFT);
+  //button_properties = gpe_picture_button_aligned (style, _("Properties"), "properties", GPE_POS_LEFT);
+
+#define _BUTTON_SETUP(action) \
+              gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
+              g_signal_connect (G_OBJECT (button_ ##action), "clicked",\
+              G_CALLBACK (on_button_selector_ ##action ##_clicked), NULL);
+
+  _BUTTON_SETUP(new);
+  _BUTTON_SETUP(import);
+  _BUTTON_SETUP(open);
+  _BUTTON_SETUP(delete);
+  //_BUTTON_SETUP(properties);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_new,        FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_open,       FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_delete,     FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_import,     FALSE, FALSE, 0);
+  //gtk_box_pack_start (GTK_BOX (vbox), button_properties, FALSE, FALSE, 0);
+
+  if(is_current_sketch_selected){//selector.sketch_is_selected){
+    gtk_widget_set_sensitive(button_open,   TRUE);
+    gtk_widget_set_sensitive(button_delete, TRUE);
+  }
+  else {
+    gtk_widget_set_sensitive(button_open,   FALSE);
+    gtk_widget_set_sensitive(button_delete, FALSE);
+  }
+  return vbox;
+}
+
 GtkWidget * build_selector_toolbar(){
   GtkWidget * toolbar;
   GtkWidget * button;
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
 
+  GtkWidget * files_popup_button;
+
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   pixbuf = gpe_find_icon ("new");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("New sketch"), _("New sketch"),
-                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_new_clicked), NULL);
-  pixbuf = gpe_find_icon ("open");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Edit sketch"), _("Edit sketch"),
-                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_open_clicked), NULL);
-  gtk_widget_set_sensitive(button, FALSE);
-  selector.button_edit = button;
-  pixbuf = gpe_find_icon ("delete");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           _("Delete selected sketch"), _("Delete selected sketch"),
-                           pixmap, GTK_SIGNAL_FUNC(on_button_selector_delete_clicked), NULL);
-  gtk_widget_set_sensitive(button, FALSE);
-  selector.button_delete = button;
+  files_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW, _selector_popup_new, NULL);
+  gtk_button_set_relief (GTK_BUTTON (files_popup_button), GTK_RELIEF_NONE);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
+                            files_popup_button, _("Sketch menu"), _("Sketch menu"));
 
-  pixbuf = gpe_find_icon ("import");
-  pixmap = gtk_image_new_from_pixbuf (pixbuf);
-  button = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                                    _("Import from image"), _("Import from image"),
-				    pixmap,
-				    GTK_SIGNAL_FUNC(on_button_selector_import_clicked), NULL);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  selector.files_popup_button = files_popup_button;  //keep a ref
 
   pixbuf = gpe_find_icon ("icons");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);

@@ -30,8 +30,8 @@ typedef struct _selector {
 
   GtkTreeModel * listmodel;
 
-  GtkWidget * button_edit;  //to set unsensitive
-  GtkWidget * button_delete;//to set unsensitive
+  GtkWidget * files_popup_button;
+
   GtkWidget * button_view;  //to switch the icon (from gpe-sketchbook.c)
 
   gboolean thumbnails_notloaded;

@@ -26,20 +26,13 @@
 #include "sketchpad.h"
 
 #include "gpe/question.h"
+#include "gpe/popup_menu.h"
 
 //--i18n
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
 void switch_to_page(guint page){
-  switch(page){
-    case PAGE_SELECTOR:
-      if(icons_mode){
-        //FIXME: to remove if iconlist can select
-        gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: to remove
-        gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: to remove
-      }
-  }
   gtk_notebook_set_page(sketchbook.notebook, page);
 }
 
@@ -48,12 +41,14 @@ void on_window_selector_destroy (GtkObject *object, gpointer user_data){
 }
 
 void on_button_selector_new_clicked (GtkButton *button, gpointer user_data){
+  popup_menu_close (selector.files_popup_button);
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
   switch_to_page(PAGE_SKETCHPAD);
 }
 
 void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
+  popup_menu_close (selector.files_popup_button);
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   open_indexed_sketch(current_sketch);
   switch_to_page(PAGE_SKETCHPAD);
@@ -61,7 +56,11 @@ void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
 
 void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
   int ret;
+
+  popup_menu_close (selector.files_popup_button);
+
   if(!is_current_sketch_selected || is_current_sketch_new) return;
+
   //--ask confirmation (maybe a preference)
   ret = gpe_question_ask (_("Delete current sketch?"), _("Question"), "question", 
                           _("Cancel"), "!gtk-no", _("Delete"), "!gtk-yes", NULL);
@@ -70,6 +69,7 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
 }
 
 void on_button_selector_import_clicked (GtkButton *button, gpointer user_data){
+  popup_menu_close (selector.files_popup_button);
   sketchpad_import_image();
 }
 
@@ -100,17 +100,11 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
     gtk_widget_hide(selector.iconlist);
     gtk_widget_show(selector.textlist);
     icons_mode = FALSE;
-    if(is_current_sketch_selected){//FIXME: remove if iconlist can select
-      gtk_widget_set_sensitive(selector.button_edit,   TRUE);//FIXME: remove
-      gtk_widget_set_sensitive(selector.button_delete, TRUE);//FIXME: remove
-    }//FIXME: remove if iconlist can select
   }
   else {//--> switch to ICON view
     gtk_widget_hide(selector.textlist);
     gtk_widget_show(selector.iconlist);
     icons_mode = TRUE;
-    gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: remove if iconlist can select
-    gtk_widget_set_sensitive(selector.button_delete, FALSE);//FIXME: remove if iconlist can select
     if(selector.thumbnails_notloaded) load_thumbnails();
   }
   if(button) _switch_icon(button);
@@ -161,12 +155,6 @@ gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_mo
 		g_free(fullpath_filename);
         switch_to_page(PAGE_SKETCHPAD);
         return TRUE;
-      }
-    case GDK_BUTTON_PRESS://single click --> select the item
-      {
-        gtk_widget_set_sensitive(selector.button_edit,   TRUE);
-        gtk_widget_set_sensitive(selector.button_delete, TRUE);
-        return FALSE;
       }
     default: return FALSE;//FALSE to propagate the event further
   }
