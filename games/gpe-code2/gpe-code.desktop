@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=CodeBreaker
+Comment=GPE Code
+Exec=gpe-code
+Terminal=0
+Type=Application
+Icon=gpe-code.png
+Categories=Games
+StartupNotify=False

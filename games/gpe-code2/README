@@ -1,0 +1,26 @@
+This is Mastermind/GTK, version 0.2.
+
+Just type "make" to compile it, and run it from the current directory.  
+If you want to run it from a different dir, you need to make sure there is
+an "xpm" subdir (or symbolic link) containing the bitmaps.
+
+This program should compile fine under unix-like systems with gtk+-1.2.0
+or higher installed.  Tested under Linux/x86 2.0 and 2.2, and SunOS/sparc
+5.6.  If it doesn't work on your system, let me know.
+
+The program is public domain, which means you can do whatever you want
+with the program or the source.  If you use my code, it would be nice if
+you gave me some credit (and sent me an email), but you don't have to.
+
+Instructions:  Point and click using three mouse buttons.  You figure it
+out.  ;-)
+
+Bugs:  None that I know of.
+
+To do:
+- better interface (pop-up menus for choosing colors would be nice)
+- some sort of highscores
+- help text
+- nicer bitmaps
+
+Knut Arild Erstad, knute@ii.uib.no
