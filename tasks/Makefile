@@ -19,7 +19,7 @@ default: $(ALL_TASKS)
 	@ipkg-build -o root -g root dist
 
 clean:
-	rm -rf dist *.ipk *~ .*~
+	rm -rf dist *.ipk *.ipk.asc *~ .*~
 
 #---Meta tasks
 #DEP_gpe-apps = \
@@ -75,6 +75,7 @@ DEP_gpe-task-base = \
     gpe-wlancfg, \
     gpe-aerial, \
     hotplug-dbus
+#FIXME: could be refined (contains hardware dependant packages)
 
 #---The following tasks aims to be user-level tasks
 DEP_gpe-task-pim = \
