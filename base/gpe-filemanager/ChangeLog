@@ -1,3 +1,7 @@
+2004-11-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * guitools.c: Changed poll behaviour. Solution is stupid but workd.
+
 2004-11-01  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * fileops.*: New files containing file operation implemetations.
