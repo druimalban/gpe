@@ -1,5 +1,9 @@
 2003-04-13  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.57 released.
+
+2003-04-13  Philip Blundell  <philb@gnu.org>
+
 	* gtktimesel.c (button_press): New function.
 	(button_release): Likewise.
 	(do_popup): Likewise.
