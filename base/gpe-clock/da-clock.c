@@ -67,7 +67,12 @@ draw_hand (GdkDrawable *drawable,
   if (! draw)
     draw = make_draw (drawable);
   if (! image_pict)
-    image_pict = XftDrawPicture (draw);
+    {
+      XRenderPictureAttributes att;
+      image_pict = XftDrawPicture (draw);
+      att.poly_edge = PolyEdgeSmooth;
+      XRenderChangePicture (dpy, image_pict, CPPolyEdge, &att);
+    }
   if (! src_pict)
     src_pict = XftDrawSrcPicture (draw, &color);
 
@@ -88,6 +93,8 @@ draw_hand (GdkDrawable *drawable,
 
   for (i = 0; i < 5; i++)
     {
+      /* Xrotated = X * COS(angle) - Y * SIN(angle)        
+	 Yrotated = X * SIN(angle) + Y * COS(angle) */
       int x = points[i].x * ca - points[i].y * sa;
       int y = points[i].x * sa + points[i].y * ca;
       points[i].x = -x;
@@ -102,15 +109,6 @@ draw_hand (GdkDrawable *drawable,
       poly[i].x = points[i].x;
       poly[i].y = points[i].y;
     }
-
-  /* Xrotated = X * COS(angle) - Y * SIN(angle)        
-     Yrotated = X * SIN(angle) + Y * COS(angle) */
-
-  {
-    XRenderPictureAttributes att;
-    att.poly_edge = PolyEdgeSmooth;
-    XRenderChangePicture (dpy, image_pict, CPPolyEdge, &att);
-  }
 
   XRenderCompositeDoublePoly (dpy,
 			      PictOpOver,
@@ -150,35 +148,16 @@ draw_clock (GtkWidget *widget,
       gdk_gc_set_clip_rectangle (white_gc, &event->area);
     }
 
-  /*
-  gdk_draw_arc (drawable, black_gc, TRUE, 
-		x_offset, y_offset,
-		clock_radius * 2, clock_radius * 2, 
-		0, 360 * 64);
-
-  gdk_draw_arc (drawable, white_gc, TRUE, 
-		x_offset + border, y_offset + border,
-		(clock_radius - border) * 2, (clock_radius - border) * 2,
-		0, 360 * 64);
-  */
-
-  /*
-  gdk_draw_arc (drawable, black_gc, TRUE, 
-		x_offset + clock_radius - 3, y_offset + clock_radius - 3,
-		6, 6, 
-		0, 360 * 64);
-  */
-
   if (event)
-  {
-    pixbuf_rect.x = x_offset;
-    pixbuf_rect.y = y_offset;
-    pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
-    pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
+    {
+      pixbuf_rect.x = x_offset;
+      pixbuf_rect.y = y_offset;
+      pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
+      pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
 
-    if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
-      gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
-  }
+      if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+	gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
+    }
   else
     gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, 0, 0, x_offset, y_offset, gdk_pixbuf_get_width (clock_background), gdk_pixbuf_get_height (clock_background), GDK_RGB_DITHER_NONE, 0, 0);
  
