@@ -1958,25 +1958,29 @@ main (int argc, char *argv[])
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
-			    _("Back"), _("Go back in history."),
+			    _("Go back in history."), NULL,
 			    G_CALLBACK (history_back), NULL, -1);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
-			    _("Forward"), _("Go forward in history."),
+			    _("Go forward in history."), NULL,
 			    G_CALLBACK (history_forward), NULL, -1);
 
   btnGoUp = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_UP,
-			                          _("Up one level"), _("Go up one level."),
+			                          _("Go up one level."), NULL,
 			                          G_CALLBACK (up_one_level), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
-			    _("Home"), _("Goto your home directory."),
+			    _("Goto your home directory."), NULL,
 			    G_CALLBACK (set_directory_home), NULL, -1);
                 
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
+			    _("Refresh current directory."), NULL,
+			    G_CALLBACK (refresh_current_directory), NULL, -1);
+                
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
-			    _("Stop"), _("Stop the current process."),
+			    _("Stop the current process."), NULL,
 			    G_CALLBACK (safety_check), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -1984,20 +1988,20 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("icon-view");
   pw = gtk_image_new_from_pixbuf(p);
   btnIconView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
-			   _("Icon view"), _("View files as icons"), pw, 
+			   _("View files as icons"), NULL, pw, 
 			   G_CALLBACK (view_icons), NULL);
   
   p = gpe_find_icon ("list-view");
   pw = gtk_image_new_from_pixbuf(p);
   btnListView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("List view"), 
-			   _("List view"), _("View files in a list"), pw, 
+			   _("View files in a list"), NULL, pw, 
 			   G_CALLBACK (view_list), NULL);
   gtk_widget_set_sensitive(btnListView,FALSE);
                
   pw = gtk_image_new_from_stock(GTK_STOCK_JUMP_TO, 
                                 gtk_toolbar_get_icon_size(GTK_TOOLBAR(toolbar2)));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Go!"), 
-			   _("Goto Location"), _("Goto Location"), pw, 
+			   _("Goto Location"), NULL, pw, 
 			   G_CALLBACK (goto_directory), NULL);
   
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));

@@ -1,3 +1,9 @@
+2004-09-02  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Fixed broken button hints.
+    * main.c: Added refresh button to compensate broken fs monitoring on 
+              some platforms.
+
 2004-09-01  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Released V 0.19.
