@@ -1,4 +1,6 @@
-PREFIX  = /usr/local
+ifndef PREFIX
+PREFIX = /usr/local
+endif
 
 VERSION = 0.2.7
 
