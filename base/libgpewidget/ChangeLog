@@ -1,3 +1,8 @@
+2003-08-05  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add nl.
+	* po/nl.po: New file, courtesy Elros Cyriatan.
+
 2003-07-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.64 released.
