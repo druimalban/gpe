@@ -653,13 +653,14 @@ main (int argc, char *argv[])
       gtk_widget_set_style (smallphotobutton, style);
       gtk_widget_set_style (smallphotodrawingarea, style);
       gtk_widget_set_style (address, style);
+      gtk_widget_set_style (scrollbar, style);
       gtk_widget_set_style (bigphotobutton, style);
       gtk_widget_set_style (bigphotodrawingarea, style);
     }
 
   /* Make sure the labels are all the same height (which might not
    * be the case because of the pango markup for e.g. 'email').
-   * Don't put 'address(label)' in it, it is too high.
+   * Don't put 'address' in it, it is too high.
    */
   sizegroup = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
   gtk_size_group_add_widget (sizegroup, namelabel);

@@ -2,6 +2,7 @@
 
 	* gpe-ownerinfo2.c (main): Don't spam user with debug info.
 	(main): Cosmetic changes.
+	(main): Make scrollbar transparent too. Let's see how that looks.
 
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
