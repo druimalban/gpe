@@ -957,6 +957,13 @@ ask_open_with (FileInformation *file_info)
                       GTK_SIGNAL_FUNC (open_with_row_selected),
                       entry);
 
+  cancel_button = gpe_picture_button (dialog_window->style, "Cancel", "cancel");
+  gtk_signal_connect (GTK_OBJECT (cancel_button), "clicked",
+                      GTK_SIGNAL_FUNC (kill_widget),
+                      dialog_window);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
+                      cancel_button);
+
   open_button = gpe_picture_button (dialog_window->style, "Open", "open");
   gtk_object_set_data (GTK_OBJECT (open_button), "FileInformation", (gpointer) file_info);
   gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
@@ -967,14 +974,7 @@ ask_open_with (FileInformation *file_info)
                       dialog_window);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
                       open_button);
-
-  cancel_button = gpe_picture_button (dialog_window->style, "Cancel", "cancel");
-  gtk_signal_connect (GTK_OBJECT (cancel_button), "clicked",
-                      GTK_SIGNAL_FUNC (kill_widget),
-                      dialog_window);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
-                      cancel_button);
-
+                      
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), label, TRUE, TRUE, 4);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), clist, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), entry, TRUE, TRUE, 4);
