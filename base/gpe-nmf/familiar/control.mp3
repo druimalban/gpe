@@ -1,0 +1,8 @@
+Package: gpe-nmf-mp3
+Section: base
+Priority: optional
+Version: 0.01
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libmad0, libid3tag0
+Description: GPE music player: MP3 decoder

@@ -5,6 +5,8 @@ CFLAGS = -O2 -g -Wall
 CFLAGS += `pkg-config --cflags glib-2.0` `pkg-config --cflags libxml-2.0`
 LDFLAGS += `pkg-config --libs glib-2.0`
 
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I../../vorbis-fixp/lib
+
 CODECS = d-vorbis.so d-mad.so
 BACKEND = libgpenmf.so.0
 BACKEND_SO = libgpenmf.so
@@ -37,3 +39,9 @@ $(BACKEND): $(OBJS)
 
 clean:
 	rm -f $(DEPS) $(OBJS) $(OGG_OBJS) $(MAD_OBJS) $(BACKEND) d-vorbis.so d-mad.so
+
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/lib
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/gpe-nmf/decoders
+	install -s $(BACKEND) $(DESTDIR)$(PREFIX)/lib/$(BACKEND)
+	for i in $(CODECS); do install -s $$i $(DESTDIR)$(PREFIX)/lib/gpe-nmf/decoders/$$i; done

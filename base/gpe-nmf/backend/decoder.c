@@ -11,10 +11,13 @@
 #include <string.h>
 #include <stdio.h>
 #include <glib.h>
+#include <dirent.h>
 
 #include "decoder.h"
 #include "decoder_i.h"
 #include "playlist_db.h"
+
+#define DECODER_PATH  PREFIX "/lib/gpe-nmf/decoders"
 
 GSList *decoders;
 
@@ -70,8 +73,22 @@ load_decoder (char *fn)
 void
 decoder_init (void)
 {
-  load_decoder ("./backend/d-mad.so");
-  load_decoder ("./backend/d-vorbis.so");
+  DIR *dirp = opendir (DECODER_PATH);
+  if (dirp == NULL)
+    {
+      perror (DECODER_PATH);
+    }
+  else
+    {
+      struct dirent *d;
+      while (d = readdir (dirp), d != NULL)
+	{
+	  char *fp = g_strdup_printf ("%s/%s", DECODER_PATH, d->d_name);
+	  load_decoder (fp);
+	  g_free (fp);
+	}
+      closedir (dirp);
+    }
 }
 
 decoder_t

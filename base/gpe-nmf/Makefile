@@ -26,6 +26,7 @@ endif
 LDFLAGS += -lgpewidget1 $(GTKLDFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 .PHONY: backend
 
@@ -38,22 +39,36 @@ $(PACKAGE): $(OBJS) $(LIB)
 	$(CC) -o $@ $^ $(LDFLAGS) -Lbackend -lgpenmf
 
 install: all
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	make -C backend install
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
+	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
-
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
+clean:
+	make -C backend clean
+	rm -f $(PACKAGE) $(OBJS)
 
 ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
+	mkdir -p familiar/dist-mp3/CONTROL
+	mkdir -p familiar/dist-ogg/CONTROL
 	cp familiar/control familiar/dist/CONTROL
+	cp familiar/control.mp3 familiar/dist-mp3/CONTROL/control
+	cp familiar/control.ogg familiar/dist-ogg/CONTROL/control
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	mkdir -p familiar/dist-mp3/usr/lib/gpe-nmf/decoders
+	mv familiar/dist/usr/lib/gpe-nmf/decoders/d-mad.so familiar/dist-mp3/usr/lib/gpe-nmf/decoders
+	mkdir -p familiar/dist-ogg/usr/lib/gpe-nmf/decoders
+	mv familiar/dist/usr/lib/gpe-nmf/decoders/d-vorbis.so familiar/dist-ogg/usr/lib/gpe-nmf/decoders
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
+	chown -R root.root familiar/dist-mp3
+	ipkg-build familiar/dist-mp3
+	chown -R root.root familiar/dist-ogg
+	ipkg-build familiar/dist-ogg
 
-clean:
-	rm -f $(PACKAGE) $(OBJS)
+include ../build/Makefile.translation
