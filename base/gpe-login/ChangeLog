@@ -1,6 +1,7 @@
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
-	* X11, standard.mbdock, gpe-logout.desktop.in, gpe-logout.png,
+	* X11/Xinit.d, X11/Xsession.d, X11/xsettings.default,
+	standard.mbdock, gpe-logout.desktop.in, gpe-logout.png,
 	gpe-logout.sh, gpe-xcalibrate.sh, gpe-auto-bluetooth.sh: Moved to
 	../gpe-session-scripts.
 
