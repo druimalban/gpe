@@ -14,7 +14,7 @@
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 
-#define USE_USQLD
+#undef USE_USQLD
 
 #ifdef USE_USQLD
 #include <usql.h>
@@ -492,8 +492,12 @@ db_insert_category (gchar *name, guint *id)
       free (err);
       return FALSE;
     }
-  
+ 
+#ifdef USE_USQLD 
   *id = usqld_last_insert_rowid (db);
+#else
+  *id = sqlite_last_insert_rowid (db);
+#endif
   return TRUE;
 }
 
