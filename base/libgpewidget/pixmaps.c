@@ -173,6 +173,22 @@ gpe_find_icon (const char *name)
   return p->pixbuf;
 }
 
+GdkPixbuf *
+gpe_find_icon_scaled (const char *name, GtkIconSize size)
+{
+  GdkPixbuf *p = gpe_find_icon (name);
+  int width, height;
+
+  if (gtk_icon_size_lookup (size, &width, &height))
+    {
+      GdkPixbuf *scaled = gdk_pixbuf_scale_simple (p, width, height, GDK_INTERP_BILINEAR);
+      g_object_unref (p);
+      p = scaled;
+    }
+
+  return p;
+}
+
 gboolean
 gpe_find_icon_pixmap (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
 {
