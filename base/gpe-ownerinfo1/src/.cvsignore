@@ -20,3 +20,8 @@ POTFILES
 .deps
 gpe-ownerinfo
 dist
+missing
+mkinstalldirs
+install-sh
+config.sub
+config.guess
