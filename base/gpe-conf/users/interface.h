@@ -33,9 +33,9 @@ typedef struct passw_s
 }passw;
 
 
-GtkWidget* create_userchange (pwlist *init);
+GtkWidget* create_userchange (pwlist *init,GtkWindow *parent);
 
-GtkWidget* create_passwindow (pwlist *init);
+GtkWidget* create_passwindow (pwlist *init,GtkWindow *parent);
 
 void ReloadList(void);
 int IsHidden(pwlist *t);

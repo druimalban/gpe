@@ -1,6 +1,3 @@
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
 
 #include <gtk/gtk.h>
 #include <stdlib.h>
@@ -10,6 +7,10 @@
 #include "interface.h"
 #include <gpe/errorbox.h>
 
+#define _XOPEN_SOURCE_
+#include <unistd.h>
+
+#include <crypt.h>
 
 
 
@@ -41,7 +42,7 @@ users_on_new_clicked                      (GtkButton       *button,
   cur->pw.pw_dir = strdup("/home/newuser");
   cur->pw.pw_shell = strdup("/bin/sh");
   cur->next = 0;
-  gtk_widget_show(create_userchange (cur));
+  gtk_widget_show(create_userchange (cur,GTK_WINDOW(GTK_WIDGET(button)->window)));
   ReloadList();
 
 }
@@ -65,7 +66,7 @@ users_on_edit_clicked                      (GtkButton       *button,
 	  cur =cur->next;
 	i--;
       }
-    gtk_widget_show(create_userchange (cur));
+    gtk_widget_show(create_userchange (cur,GTK_WINDOW(GTK_WIDGET(button)->window)));
     
   }
 
@@ -116,7 +117,7 @@ users_on_passwd_clicked                      (GtkButton       *button,
                                         gpointer         user_data)
 {
   userw *self=(userw *)user_data;
-  gtk_widget_show(create_passwindow (self->cur));
+  gtk_widget_show(create_passwindow (self->cur,GTK_WINDOW(GTK_WIDGET(button)->window)));
 }
 
 
@@ -124,7 +125,8 @@ void
 users_on_save_clicked                        (GtkButton       *button,
                                         gpointer         user_data)
 {
-  userw *self=(userw *)user_data;
+  //  userw *self=(userw *)user_data;
+  gtk_widget_destroy(GTK_WIDGET(GTK_WIDGET(button)->window));
 
 }
 
@@ -133,7 +135,8 @@ void
 users_on_cancel_clicked                      (GtkButton       *button,
                                         gpointer         user_data)
 {
-  userw *self=(userw *)user_data;
+  //  userw *self=(userw *)user_data;
+  gtk_widget_destroy(GTK_WIDGET(GTK_WIDGET(button)->window));
 
 }
 
@@ -144,6 +147,25 @@ users_on_changepasswd_clicked                (GtkButton       *button,
 {
 
   passw *self=(passw *)user_data;
+  gchar *oldpasswd = gtk_entry_get_text(GTK_ENTRY(self->oldpasswd));
+  gchar *newpasswd2 = gtk_entry_get_text(GTK_ENTRY(self->newpasswd2));
+  gchar *newpasswd = gtk_entry_get_text(GTK_ENTRY(self->newpasswd));
+  char *old_crypted_pass = self->cur->pw.pw_passwd; 
+
+  // TODO use proper suids.
+
+  if (strcmp(crypt(oldpasswd,old_crypted_pass ), old_crypted_pass) == 0)
+    {
+      if(strcmp(newpasswd,newpasswd2)==0)
+	{
+	  self->cur->pw.pw_passwd = strdup(crypt(newpasswd,old_crypted_pass ));
+	  free(old_crypted_pass);
+	}
+      else
+	gpe_error_box("The two new pass are different!\n try again!");
+    }
+  else
+    gpe_error_box("Wrong password\n try again!");
 
 }
 

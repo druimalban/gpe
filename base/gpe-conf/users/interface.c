@@ -131,7 +131,7 @@ Users_Build_Objects (void)
 }
 
 GtkWidget*
-create_userchange (pwlist *init)
+create_userchange (pwlist *init,GtkWidget *parent)
 {
   GtkWidget *userchange;
   GtkWidget *vbox2;
@@ -149,7 +149,8 @@ create_userchange (pwlist *init)
   GtkWidget *cancel;
   userw     *self = malloc (sizeof(userw));
 
-  userchange = gtk_window_new (GTK_WINDOW_DIALOG);
+  userchange = gtk_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW(userchange), GTK_WINDOW(parent));
   gtk_window_set_title (GTK_WINDOW (userchange), _("Add user"));
   gtk_window_set_modal (GTK_WINDOW (userchange), TRUE);
 
@@ -291,7 +292,7 @@ create_userchange (pwlist *init)
 }
 
 GtkWidget*
-create_passwindow (pwlist *init)
+create_passwindow (pwlist *init,GtkWidget *parent)
 {
   GtkWidget *passwindow;
   GtkWidget *vbox3;
@@ -306,7 +307,8 @@ create_passwindow (pwlist *init)
   passw     *self = malloc(sizeof(passw));
   GdkPixbuf *p = gpe_find_icon ("lock");
 
-  passwindow = gtk_window_new (GTK_WINDOW_DIALOG);
+  passwindow = gtk_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW(passwindow), GTK_WINDOW(parent));
   gtk_window_set_title (GTK_WINDOW (passwindow), _("Change passwd"));
   gtk_window_set_modal (GTK_WINDOW (passwindow), TRUE);
 

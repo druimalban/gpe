@@ -21,7 +21,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 all: gpe-conf gpe-confsuid
 
 gpe-conf: $(OBJS)
-	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs`
+	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs` -lcrypt
 	strip gpe-conf
 
 gpe-confsuid: gpe-confsuid.c
