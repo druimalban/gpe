@@ -1,3 +1,7 @@
+2003-03-23  Damien Tanner  <dctanner@dctanner>
+
+	* popup_menu.c (popup_menu_button_new_type_color): Returns GdkColor to callback.
+
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.54 released.

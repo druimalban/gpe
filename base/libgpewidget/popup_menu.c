@@ -190,7 +190,7 @@ construct_font_popup (GtkWidget *parent_button)
 }
 
 static void
-construct_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j)
+construct_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j, GtkWidget *parent_button)
 {
   GtkWidget *frame, *drawing_area;
 
@@ -200,6 +200,10 @@ construct_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint 
   drawing_area = gtk_drawing_area_new ();
   gtk_widget_set_size_request (drawing_area, 12, 12);
   gtk_widget_modify_bg (drawing_area, GTK_STATE_NORMAL, &color);
+
+  g_signal_connect (G_OBJECT (drawing_area), "button-release-event", G_CALLBACK (g_object_get_data (G_OBJECT (parent_button), "callback")), &color);
+
+  gtk_widget_add_events (GTK_WIDGET (drawing_area), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_container_add (GTK_CONTAINER (frame), drawing_area);
   gtk_table_attach_defaults (GTK_TABLE (table), frame, i, i+1, j, j+1);
@@ -212,7 +216,6 @@ construct_color_popup (GtkWidget *parent_button)
   GtkWidget *vbox, *table, *button;
   GdkColor *colors = NULL;
   gint i = 0, j = 0, k = 0;
-  gint window_x, window_y;
   gint n_colors = 0;
 
   vbox = gtk_vbox_new (FALSE, 0);
@@ -230,7 +233,7 @@ construct_color_popup (GtkWidget *parent_button)
       j = 0;
       i++;
     }
-    construct_color_popup_add_color (table, colors[k], i, j);
+    construct_color_popup_add_color (table, colors[k], i, j, parent_button);
     k++;
     j++;
   }
