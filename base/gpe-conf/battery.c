@@ -26,7 +26,9 @@
 #include <sys/ioctl.h> 
 #include <sys/time.h>
 #include <sys/types.h>
+#ifdef __arm__
 #include <linux/h3600_ts.h>
+#endif
 
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
@@ -84,6 +86,7 @@ void init_device()
 
 gint update_bat_values(gpointer data)
 {
+#ifdef __arm__
 static struct h3600_battery battery_val;
 float bperc;
 gchar percstr[9];
@@ -225,6 +228,7 @@ gchar tmp[128];
 
 		gtk_label_set_text(GTK_LABEL(batt_ext.llifetime),_("Lifetime: unknown"));
 	}
+#endif
 
 	return TRUE;
 }

@@ -7,6 +7,10 @@
 
 	* serial.c (Serial_Build_Objects): Fix typos.
 
+2003-09-21	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Applied pb_'s patch to make battery.c compile on !arm systems.
+	* Fixed bug in Makefile to work on !arm systems.
+	
 2003-09-18	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Released 0.1.0-pre9
 	* Updated gpe-conf.pot
