@@ -1,6 +1,7 @@
 .SUFFIXES: .mo .po .pot
 
 mo-files = $(patsubst %,po/%.mo,$(LINGUAS))
+po-files = $(patsubst %,po/%.po,$(LINGUAS))
 
 all-mo: $(mo-files)
 
@@ -10,10 +11,15 @@ install-mo: all-mo
 .po.mo:;
 	msgfmt -o $@ $<
 
-update-po: po/$(PACKAGE).pot
+update-po: $(po-files)
+
+po/%.po: po/$(PACKAGE).pot
+	msgmerge -o $@.new $@ $^
+	if cmp -s $@.new $@; then rm $@.new; else mv $@.new $@; fi
 
 po/$(PACKAGE).pot: $(SOURCES)
-	xgettext -k_ -o po/$(PACKAGE).pot $^
+	xgettext -k_ -o po/$(PACKAGE).pot.new $^
+	if cmp -s po/$(PACKAGE).pot.new $(PACKAGE).pot; then rm po/$(PACKAGE).pot.new; else mv po/$(PACKAGE).pot.new po/$(PACKAGE).pot; fi
 
 # ------------------------------------------------------------------------
 
