@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,7 +12,7 @@
 #include "gtkdatecombo.h"
 
 static void
-update_text(GtkDateCombo *combo)
+update_text (GtkDateCombo *combo)
 {
   struct tm tm;
   char buf[256];
@@ -26,8 +26,7 @@ update_text(GtkDateCombo *combo)
 }
 
 static void
-click_calendar(GtkWidget *widget,
-	       GtkDateCombo *combo)
+click_calendar (GtkWidget *widget, GtkDateCombo *combo)
 {
   gtk_calendar_get_date (GTK_CALENDAR (widget), &combo->year, 
 			 &combo->month, &combo->day);
@@ -38,8 +37,7 @@ click_calendar(GtkWidget *widget,
 }
 
 static void
-drop_calendar(GtkWidget *widget,
-	      GtkDateCombo *dp)
+drop_calendar (GtkWidget *widget, GtkDateCombo *dp)
 {
   if (dp->cal_open)
     {
@@ -125,8 +123,7 @@ gtk_date_combo_init (GtkDateCombo *combo)
 static GtkHBoxClass *parent_class = NULL;
 
 static void
-gtk_date_combo_size_allocate (GtkWidget     *widget,
-			      GtkAllocation *allocation)
+gtk_date_combo_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 {
   GtkDateCombo *combo;
 
@@ -224,4 +221,12 @@ gtk_date_combo_clear (GtkDateCombo *dp)
 {
   dp->set = FALSE;
   gtk_entry_set_text (GTK_ENTRY (dp->entry), "");
+}
+
+void
+gtk_date_combo_week_starts_monday (gboolean yes)
+{
+  gtk_calendar_display_options (GTK_CALENDAR (combo->calendar), 
+				GTK_CALENDAR_SHOW_DAY_NAMES | 
+				(yes ? GTK_CALENDAR_WEEK_STARTS_MONDAY : NULL));
 }

@@ -1,5 +1,11 @@
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
+	* gtkdatecombo.c (gtk_date_combo_week_starts_monday): New
+	function.
+	(update_text, click_calendar, drop_calendar): Reformat.
+	* gpe/gtkdatecombo.h (gtk_date_combo_week_starts_monday): Add
+	prototype.
+
 	* gtkdatesel.c (make_field): Reduce padding.
 
 2003-01-01  Robert Mibus  <mibus@handhelds.org>
