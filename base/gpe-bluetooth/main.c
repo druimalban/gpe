@@ -150,7 +150,7 @@ radio_on (void)
   sigset_t sigs;
   int fd;
 
-  fd = socket (PF_BLUETOOTH, SOCK_RAW, BTPROTO_L2CAP);
+  fd = socket (PF_BLUETOOTH, SOCK_DGRAM, BTPROTO_L2CAP);
   if (fd < 0)
     {
       gpe_error_box (_("No kernel support for Bluetooth"));
@@ -483,7 +483,6 @@ schedule_message_delete (guint id, guint time)
 int
 main (int argc, char *argv[])
 {
-  Display *dpy;
   GtkWidget *window;
   GdkBitmap *bitmap;
   GtkWidget *menu_remove;
@@ -550,7 +549,7 @@ main (int argc, char *argv[])
   icon = gtk_image_new_from_pixbuf (gpe_find_icon (radio_is_on ? "bt-on" : "bt-off"));
   gtk_widget_show (icon);
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 2, 2);
+  gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
   gdk_bitmap_unref (bitmap);
 
   gpe_set_window_icon (window, "bt-on");
@@ -562,8 +561,6 @@ main (int argc, char *argv[])
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 
   gtk_container_add (GTK_CONTAINER (window), icon);
-
-  dpy = GDK_WINDOW_XDISPLAY (window->window);
 
   gtk_widget_show (window);
 
