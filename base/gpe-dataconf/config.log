@@ -1,0 +1,231 @@
+This file contains any messages produced by compilers while
+running configure, to aid debugging if configure makes a mistake.
+
+configure:872: checking for non-GNU ld
+configure:907: checking if the linker (/usr/bin/ld) is GNU ld
+GNU ld version 2.13.90.0.14 20021114 Debian GNU/Linux
+configure:956: checking for a BSD compatible install
+configure:1009: checking whether build environment is sane
+configure:1066: checking whether make sets ${MAKE}
+configure:1112: checking for working aclocal-1.4
+configure:1125: checking for working autoconf
+configure:1138: checking for working automake-1.4
+configure:1151: checking for working autoheader
+configure:1164: checking for working makeinfo
+configure:1183: checking for strerror in -lcposix
+configure:1202: cc -o conftest    conftest.c -lcposix   1>&5
+/usr/bin/ld: cannot find -lcposix
+collect2: ld returned 1 exit status
+configure: failed program was:
+#line 1191 "configure"
+#include "confdefs.h"
+/* Override any gcc2 internal prototype to avoid an error.  */
+/* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+char strerror();
+
+int main() {
+strerror()
+; return 0; }
+configure:1227: checking for gcc
+configure:1340: checking whether the C compiler (gcc  ) works
+configure:1356: gcc -o conftest    conftest.c  1>&5
+configure:1382: checking whether the C compiler (gcc  ) is a cross-compiler
+configure:1387: checking whether we are using GNU C
+configure:1396: gcc -E conftest.c
+configure:1415: checking whether gcc accepts -g
+configure:1450: checking for gcc option to accept ANSI C
+configure:1503: gcc  -c -g -O2  conftest.c 1>&5
+configure:1527: checking how to run the C preprocessor
+configure:1548: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1607: checking for ANSI C header files
+configure:1620: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:1687: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:1722: checking for Cygwin environment
+configure:1738: gcc -c -g -O2  conftest.c 1>&5
+configure: In function `main':
+configure:1734: `__CYGWIN32__' undeclared (first use in this function)
+configure:1734: (Each undeclared identifier is reported only once
+configure:1734: for each function it appears in.)
+configure: failed program was:
+#line 1727 "configure"
+#include "confdefs.h"
+
+int main() {
+
+#ifndef __CYGWIN__
+#define __CYGWIN__ __CYGWIN32__
+#endif
+return __CYGWIN__;
+; return 0; }
+configure:1755: checking for mingw32 environment
+configure:1767: gcc -c -g -O2  conftest.c 1>&5
+configure: In function `main':
+configure:1763: `__MINGW32__' undeclared (first use in this function)
+configure:1763: (Each undeclared identifier is reported only once
+configure:1763: for each function it appears in.)
+configure: failed program was:
+#line 1760 "configure"
+#include "confdefs.h"
+
+int main() {
+return __MINGW32__;
+; return 0; }
+configure:1859: checking host system type
+configure:1880: checking build system type
+configure:1909: checking for ld used by GCC
+configure:1977: checking if the linker (/usr/bin/ld) is GNU ld
+GNU ld version 2.13.90.0.14 20021114 Debian GNU/Linux
+configure:1994: checking for /usr/bin/ld option to reload object files
+configure:2006: checking for BSD-compatible nm
+configure:2044: checking for a sed that does not truncate output
+configure:2128: checking whether ln -s works
+configure:2149: checking how to recognise dependent libraries
+configure:2335: checking for object suffix
+configure:2341: gcc -c -g -O2  conftest.c 1>&5
+configure:2361: checking for executable suffix
+configure:2371: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:2402: checking command to parse /usr/bin/nm -B output
+configure:2485: gcc -c -g -O2  conftest.c 1>&5
+configure:2488: /usr/bin/nm -B conftest.o | sed -n -e 's/^.*[ ]\([ABCDGISTW][ABCDGISTW]*\)[ ][ ]*\(\)\([_A-Za-z][_A-Za-z0-9]*\)$/\1 \2\3 \3/p' > conftest.nm
+configure:2539: gcc -o conftest -g -O2   conftest.c conftstm.o 1>&5
+configure:2588: checking for dlfcn.h
+configure:2598: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:2767: checking for ranlib
+configure:2834: checking for strip
+configure:3077: checking for objdir
+configure:3104: checking for gcc option to produce PIC
+configure:3252: checking if gcc PIC flag -fPIC works
+configure:3266: gcc -c -g -O2 -fPIC -DPIC  conftest.c 1>&5
+configure:3318: checking if gcc static flag -static works
+configure:3333: gcc -o conftest -g -O2   -static conftest.c  1>&5
+configure:3360: checking if gcc supports -c -o file.o
+configure:3379: gcc -c -g -O2 -o out/conftest2.o  conftest.c 1>&5
+configure:3408: checking if gcc supports -c -o file.lo
+configure:3426: gcc -c -g -O2 -c -o conftest.lo  conftest.c 1>&5
+configure:3476: checking if gcc supports -fno-rtti -fno-exceptions
+configure:3489: gcc -c -g -O2 -fno-rtti -fno-exceptions -c conftest.c  conftest.c 1>&5
+configure:3516: checking whether the linker (/usr/bin/ld) supports shared libraries
+configure:4215: checking how to hardcode library paths into programs
+configure:4243: checking whether stripping libraries is possible
+configure:4257: checking dynamic linker characteristics
+configure:4681: checking if libtool supports shared libraries
+configure:4685: checking whether to build shared libraries
+configure:4708: checking whether to build static libraries
+configure:5244: checking whether -lc should be explicitly linked in
+configure:5251: gcc -c -g -O2  conftest.c 1>&5
+configure:5264: gcc -shared conftest.o  -v -Wl,-soname -Wl,conftest -o conftest 2>&1 | grep  -lc  >/dev/null 2>&1
+configure:5855: checking for pkg-config
+configure:5899: checking for gtk+-2.0 gdk-2.0
+configure:5906: checking GTK_CFLAGS
+configure:5911: checking GTK_LIBS
+configure:5955: checking for inttypes.h
+configure:5968: gcc -c -g -O2  conftest.c 1>&5
+configure:5990: checking for stdint.h
+configure:6003: gcc -c -g -O2  conftest.c 1>&5
+configure:6025: checking for unsigned long long
+configure:6038: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:6076: checking for shared library run path origin
+configure:6121: checking for ranlib
+configure:6149: checking for working const
+configure:6203: gcc -c -g -O2  conftest.c 1>&5
+configure:6224: checking for inline
+configure:6238: gcc -c -g -O2  conftest.c 1>&5
+configure:6264: checking for off_t
+configure:6297: checking for size_t
+configure:6332: checking for working alloca.h
+configure:6344: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:6365: checking for alloca
+configure:6398: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:6567: checking for unistd.h
+configure:6577: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:6606: checking for getpagesize
+configure:6634: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:6659: checking for working mmap
+configure:6807: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:6831: checking whether we are using the GNU C Library 2.1 or newer
+configure:6869: checking whether integer division by zero raises SIGFPE
+configure:6926: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:6967: checking for inttypes.h
+configure:6981: gcc -c -g -O2  conftest.c 1>&5
+configure:7006: checking whether the inttypes.h PRIxNN macros are broken
+configure:7023: gcc -c -g -O2  conftest.c 1>&5
+configure:7434: checking for msgfmt
+configure:7469: checking for gmsgfmt
+configure:7506: checking for xgettext
+configure:7543: checking for msgmerge
+configure:7606: checking for argz.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for limits.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for locale.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for nl_types.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for malloc.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for stddef.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for stdlib.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for string.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7606: checking for unistd.h
+configure:7606: checking for sys/param.h
+configure:7616: gcc -E  conftest.c >/dev/null 2>conftest.out
+configure:7647: checking for feof_unlocked
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for fgets_unlocked
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for getc_unlocked
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for getcwd
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for getegid
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for geteuid
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for getgid
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for getuid
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for mempcpy
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for munmap
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for putenv
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for setenv
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for setlocale
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for stpcpy
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for strcasecmp
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for strdup
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for strtoul
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for tsearch
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for __argz_count
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for __argz_stringify
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7647: checking for __argz_next
+configure:7675: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7731: checking for iconv
+configure:7749: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7806: checking for iconv declaration
+configure:7831: gcc -c -g -O2  conftest.c 1>&5
+configure:7855: checking for nl_langinfo and CODESET
+configure:7867: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7891: checking for LC_MESSAGES
+configure:7903: gcc -o conftest -g -O2   conftest.c  1>&5
+configure:7930: checking for bison
+configure:7963: checking version of bison
+configure:7992: checking whether NLS is requested
+configure:8016: checking whether included gettext is requested
+configure:8036: checking for GNU gettext in libc
+configure:8051: gcc -o conftest -g -O2   conftest.c  1>&5

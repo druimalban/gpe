@@ -1,0 +1,27 @@
+PREFIX = /usr/local
+PACKAGE = gpe-dataconf
+pkgdatadir = $(PREFIX)/share/$(PACKAGE)
+GTK2 = yes
+
+all:
+	make -C src all PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+
+clean:
+	make -C src clean
+
+install:
+	make -C src install PREFIX=$(PREFIX) DESTDIR=$(DESTDIR)
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
+	install gpe-dataconf.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-dataconf
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+	install -m 644 gpe-dataconf.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-dataconf
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
+	install -m 644 icons/gpe-dataconf.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-dataconf.png
+	mkdir -p $(DESTDIR)$(pkgdatadir)
+	mkdir -p $(DESTDIR)$(pkgdatadir)/pixmaps
+	install -m 644 icons/frame.png $(DESTDIR)$(pkgdatadir)/pixmaps/
+	install -m 644 icons/entry.png $(DESTDIR)$(pkgdatadir)/pixmaps/
+	install -m 644 icons/notebook.png $(DESTDIR)$(pkgdatadir)/pixmaps/
+
+include ../build/Makefile.dpkg_ipkg
+
