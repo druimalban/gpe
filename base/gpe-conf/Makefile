@@ -1,9 +1,7 @@
 VERSION = 0.0.4
 
-ifndef ($(pc)) # simple test to recognise if we are from ipaq
+ifndef PREFIX # simple test to recognise if we are from ipaq
 PREFIX = "/usr/local"
-else
-PREFIX = "/usr"
 endif
 
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"

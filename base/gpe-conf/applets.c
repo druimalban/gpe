@@ -123,11 +123,23 @@ select_fs                                (GtkButton       *button,
                                         gpointer         user_data)
 {
   char * file;
+  struct stat st;
   struct fstruct *s = (struct fstruct *)user_data;
 
   file=gtk_mini_file_selection_get_filename(GTK_MINI_FILE_SELECTION(s->fs));
-  s->File_Selected(file,s->data);
-  gtk_widget_destroy(GTK_WIDGET(s->fs));
+  if(stat(file,&st)==0)
+    {
+      if(S_ISDIR(st.st_mode))
+	{
+	  printf("%s\n",file);
+	  gtk_mini_file_selection_set_directory(GTK_MINI_FILE_SELECTION(s->fs),file);
+	}
+      else
+	{
+	  s->File_Selected(file,s->data);
+	  gtk_widget_destroy(GTK_WIDGET(s->fs));
+	}
+    }
 }
 
 static void
