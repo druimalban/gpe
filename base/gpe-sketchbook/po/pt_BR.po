@@ -1,0 +1,212 @@
+# Translation to Brazilian Portuguese (pt_BR)
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# Marcus Moreira de Souza <marcus@frb.br>, 2004.
+# based on the translation to Portuguese (pt) by
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-12 20:45+0300\n"
+"PO-Revision-Date: 2004-09-02 17:36-0300\n"
+"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/gpe-sketchbook.c:115
+msgid "Sketchbook: preferences"
+msgstr "Rabiscos: preferências"
+
+#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+msgid "Sketchbook"
+msgstr "Rabiscos"
+
+#: src/preferences.c:93
+msgid ""
+"Cannot create XSettings client.\n"
+"Use default preferences."
+msgstr ""
+"Impossível criar o cliente XSettings.\n"
+"Usando as preferências padrões."
+
+#: src/preferences.c:188
+msgid ""
+"gpe-confd is not running.\n"
+"Cannot save the preferences."
+msgstr ""
+"gpe-confd não está a executando.\n"
+"Não foi possível salvar as preferências."
+
+#: src/preferences.c:277
+msgid "Start with"
+msgstr "Começar com"
+
+#: src/preferences.c:280
+msgid "Sketchpad"
+msgstr "Sketchpad"
+
+#: src/preferences.c:282
+msgid "Selector - list"
+msgstr "Seletor - Lista"
+
+#: src/preferences.c:284
+msgid "Selector - icons table"
+msgstr "Seletor - Ícones"
+
+#: src/preferences.c:300
+msgid "Use joypad scrolling"
+msgstr "Usar rolagem do joypad"
+
+#: src/preferences.c:307
+msgid "Grow on scroll"
+msgstr "Ampliar imagem automaticamente"
+
+#: src/preferences.c:316
+msgid "OK"
+msgstr "OK"
+
+#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/selector.c:88
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Impossível ler a diretório do programa: %s. Saindo."
+
+#  TRANSLATORS: %s are: [folder name] [error message]
+#. TRANSLATORS: %s are: [folder name] [error message]
+#: src/selector.c:95
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Impossível criar %s: %s. Saindo."
+
+#  TRANSLATORS: default sketch label based on [date] and [time]
+#  example: "2003 10 12  at  18:48:51"
+#. TRANSLATORS: default sketch label based on [date] and [time]
+#. example: "2003 10 12  at  18:48:51"
+#: src/selector.c:179
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s  em  %s"
+
+#: src/selector-cb.c:66 src/sketchpad-cb.c:243
+msgid "Delete current sketch?"
+msgstr "Deseja apagar o desenho atual?"
+
+#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:243
+msgid "Question"
+msgstr "Questão"
+
+#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
+msgid "Delete"
+msgstr "Apagar"
+
+#: src/selector-gui.c:102
+msgid "New sketch"
+msgstr "Novo desenho"
+
+#: src/selector-gui.c:107
+msgid "Edit sketch"
+msgstr "Editar desenho"
+
+#: src/selector-gui.c:115
+msgid "Delete selected sketch"
+msgstr "Apagar o desenho selecionado"
+
+#: src/selector-gui.c:123
+msgid "Import from image"
+msgstr "Importar de uma imagem"
+
+#: src/selector-gui.c:132
+msgid "Toggle view"
+msgstr "Alternar modo de visão"
+
+#: src/selector-gui.c:146
+msgid "Preferences"
+msgstr "Preferências"
+
+#: src/sketchpad.c:184
+msgid "Sketch"
+msgstr "Rabisco"
+
+#: src/sketchpad.c:189
+msgid "new"
+msgstr "novo"
+
+#: src/sketchpad.c:220
+#, c-format
+msgid "Import of `%s' failed."
+msgstr "Importação de `%s' falhou."
+
+#: src/sketchpad.c:237
+msgid "Image to import"
+msgstr "Imagem para importar"
+
+#: src/sketchpad-cb.c:47
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Desenho modificado,\n"
+"salvar antes de sair?"
+
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
+msgid "Discard"
+msgstr "Descartar"
+
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
+msgid "Save"
+msgstr "Guardar"
+
+#: src/sketchpad-cb.c:77
+msgid "Save current sketch?"
+msgstr "Salvar o desenho atual?"
+
+#: src/sketchpad-gui.c:266
+msgid "Select eraser"
+msgstr "Selecionar borracha"
+
+#: src/sketchpad-gui.c:268
+msgid "Select pencil"
+msgstr "Selecionar lápis"
+
+#: src/sketchpad-gui.c:270
+msgid "Brush size"
+msgstr "Tamanho do pincel"
+
+#: src/sketchpad-gui.c:271
+msgid "Brush color"
+msgstr "Cor do pincel"
+
+#: src/sketchpad-gui.c:430
+msgid "Sketch menu"
+msgstr "Menu de desenho"
+
+#: src/sketchpad-gui.c:439
+msgid "Show list"
+msgstr "Mostrar lista"
+
+#: src/sketchpad-gui.c:444
+msgid "Previous sketch"
+msgstr "Desenho anterior"
+
+#: src/sketchpad-gui.c:449
+msgid "Next sketch"
+msgstr "Próximo desenho"
+
+#: src/sketchpad-gui.c:465
+msgid "New"
+msgstr "Novo"
+
+#: src/sketchpad-gui.c:466
+msgid "Import"
+msgstr "Importar"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE Rabiscos"
