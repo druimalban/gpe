@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=Legacy-Mixed
+Name=gSoko
+Comment=Clone of the Sokoban game
+Comment[sv]=Klon av spelet Sokoban
+Exec=gsoko
+Icon=/usr/share/pixmaps/gsoko.png
+Terminal=false
+Type=Application
+SingleInstance=true
+
