@@ -4,6 +4,9 @@
 
 When			Who				Where						What
 
+04.08.2003		Florian			interface.c					Changed some strings...
+						storage.c
+
 03.08.2003		Florian			interface.c					Applied Libor's patch for irda/i18n.
 
 01.08.2003		Luc			storage.c                                      "MB" need to be translated too	

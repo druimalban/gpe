@@ -170,13 +170,13 @@ add_interface (GtkWidget * widget, gpointer d)
 				       g_strdup ("bnep0"));
 	}
 
-	ifbox[0].label = g_strdup (_("New interface:"));
+	ifbox[0].label = g_strdup (_("Name:"));
 	ifbox[0].value = ifbox[0].suggestions->data;
 	ifbox[1].suggestions = NULL;
 	ifbox[1].label = NULL;
 	ifbox[1].value = NULL;
 
-	if (smallbox_x2 (_("Enter name of new interface"), ifbox))
+	if (smallbox_x2 (_("New Interface"), ifbox))
 	{
 		ifname = g_strdup (ifbox[0].value);
 		for (i = 0; i < iflen; i++)

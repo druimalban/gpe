@@ -192,7 +192,7 @@ update_status ()
 	{
 		fstr = g_strdup_printf ("%s%s %s",
 					"<b><span foreground=\"black\">",
-					_("System memory"), "</span></b>");
+					_("System Memory"), "</span></b>");
 		gtk_label_set_markup (GTK_LABEL (meminfo.label), fstr);
 		g_free (fstr);
 
