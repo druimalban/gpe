@@ -1,6 +1,6 @@
 ?package(gpe-sketchbook): \
  needs=x11 \
- section=Graphics \
+ section=PIM \
  title=Sketchbook \
  logtitle=Sketchbook \
  icon48=/usr/share/pixmaps/gpe-sketchbook.png \
