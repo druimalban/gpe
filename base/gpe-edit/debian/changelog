@@ -1,3 +1,9 @@
+gpe-edit (0.04-2) unstable; urgency=low
+
+  * Add more build-depends
+
+ -- Phil Blundell <pb@debian.org>  Thu, 11 Jul 2002 09:43:40 +0100
+
 gpe-edit (0.04-1) unstable; urgency=low
 
   * New upstream version

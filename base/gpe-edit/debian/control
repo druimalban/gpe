@@ -2,7 +2,7 @@ Source: gpe-edit
 Section: x11
 Priority: optional
 Maintainer: Phil Blundell <pb@debian.org>
-Build-Depends: debhelper (>> 3.0.0), libgpewidget-dev, libgtk1.2-dev
+Build-Depends: debhelper (>> 3.0.0), libgpewidget-dev (>= 0.10-2), libgtk1.2-dev, libgdk-pixbuf-dev
 Standards-Version: 3.5.2
 
 Package: gpe-edit
