@@ -1,60 +1,36 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.9
-NATIVE = yes
+VERSION = 0.2.10
 CVSBUILD = yes
 DEBUG = no
-GTK2 = yes
 INSTALL = install
+STRIP=strip
 PREFIX = /usr/
 DESTDIR = /
 
 LINGUAS = de sv ro cs nl pt ru fr sr
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L.
-CFLAGS += -Wall -I../libgpewidget 
 BUILD = ../build
 else
-CFLAGS += -I$(PREFIX)/include/gpe
 BUILD = build
 endif
 
 ifeq ($(DEBUG),yes)
-CFLAGS += -g -DDEBUG
+PACKAGE_CFLAGS += -g -DDEBUG
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
-CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -Wall -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
+PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += -I.
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0`
 
-# setup how to compile
-ifeq ($(NATIVE),yes)
-
-STRIP=strip
-CC=gcc
-
-CFLAGS +=  -Wall $(GTKCFLAGS)
-LDFLAGS += -lgpewidget $(GTKLDFLAGS) -lsqlite
-
-else # we do cross-compile...
-
-CC=arm-linux-gcc
-STRIP=arm-linux-strip
-
-CFLAGS +=  -Wall -march=armv4 -mtune=strongarm $(GTKCFLAGS)
-LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
-LDFLAGS += -lgpewidget $(GTKLDFLAGS)
-LDFLAGS += -lm 
-LDFLAGS += -lgmodule-2.0 -ldl -lXinerama
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0 -lsqlite
-
-endif #native or cross-compile
+PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) $(GTKCFLAGS) 
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) -lsqlite
 
 
 MEMBERS  = main netdb netedit
@@ -71,9 +47,7 @@ PIXMAPS += scan-off-16.png
 all: $(PACKAGE) 
 
 $(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
-
-CFLAGS += $(MIMECFLAGS)
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 
 install-program: $(PACKAGE) all-desktop

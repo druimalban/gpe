@@ -119,6 +119,13 @@ static GtkWidget *tree;
 static GtkCellRenderer *renderer;
 
 
+/* send command to turn off device */
+static void
+device_off (GtkWidget * w)
+{
+	radio_off();
+	send_command (C_IFDOWN, 0);
+}
 
 static void
 draw_signal (int signal)
@@ -916,6 +923,7 @@ main (int argc, char *argv[])
 	GtkWidget *window;
 	GdkBitmap *bitmap;
 	GtkWidget *menu_remove;
+	GtkWidget *menu_off;
 	GtkTooltips *tooltips;
 	int i;
 
@@ -966,6 +974,7 @@ main (int argc, char *argv[])
 		gtk_menu_item_new_with_label (_("Switch scanner off"));
 	menu_devices = gtk_menu_item_new_with_label (_("Networks..."));
 	menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
+	menu_off = gtk_menu_item_new_with_label (_("Turn WLAN off"));
 
 	g_signal_connect (G_OBJECT (menu_radio_on), "activate",
 			  G_CALLBACK (radio_on), NULL);
@@ -975,6 +984,8 @@ main (int argc, char *argv[])
 			  G_CALLBACK (show_networks), NULL);
 	g_signal_connect (G_OBJECT (menu_remove), "activate",
 			  G_CALLBACK (aerial_shutdown), NULL);
+	g_signal_connect (G_OBJECT (menu_off), "activate",
+			  G_CALLBACK (device_off), NULL);
 
 	if (!radio_is_on)
 	{
@@ -983,10 +994,12 @@ main (int argc, char *argv[])
 
 	gtk_widget_show (menu_devices);
 	gtk_widget_show (menu_remove);
+	gtk_widget_show (menu_off);
 
 	gtk_menu_append (GTK_MENU (menu), menu_radio_on);
 	gtk_menu_append (GTK_MENU (menu), menu_radio_off);
 	gtk_menu_append (GTK_MENU (menu), menu_devices);
+	gtk_menu_append (GTK_MENU (menu), menu_off);
 	gtk_menu_append (GTK_MENU (menu), menu_remove);
 
 	if (gpe_load_icons (my_icons) == FALSE)

@@ -17,6 +17,13 @@
  *                                                                         *
  ***************************************************************************/
 
+/*
+** Make sure we can call this stuff from C++.
+*/
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -26,7 +33,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#define VERSIONSTR "Prismstumbler 0.7.0"
+#define VERSIONSTR "Prismstumbler " VERSION
 
 #define MAX_BUFFER_SIZE 3000	/* Size of receive buffer */
 
@@ -69,7 +76,8 @@ typedef enum
 	C_CLEARLIST,
 	C_DETECT_CARD,
 	C_ASSOCIATE,
-	C_GPSD
+	C_GPSD,
+	C_IFDOWN
 }
 command_t;
 
@@ -217,7 +225,7 @@ typedef struct
 	unsigned char nameserver[4];
 	char wep_key[48];
 	int inrange;	
-	ulong userset;
+	unsigned long userset;
 }
 usernetinfo_t;
 
@@ -270,5 +278,9 @@ extern char device_capture[6];
 
 void update_all (ScanResult_t *aresult, int sock);
 extern int QUIET_MODE;
+
+#ifdef __cplusplus
+}  /* End of the 'extern "C"' block */
+#endif
 
 #endif
