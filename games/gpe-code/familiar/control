@@ -1,0 +1,8 @@
+Package: gpe-code 
+Version: 0.1 
+Section: games
+Priority: optional
+Architecture: arm
+Depends: libgtk1.2
+Maintainer: Joe McCarthy <mccarthy@engrng.pitt.edu>
+Description: A Master Mind clone using GTK
