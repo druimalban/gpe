@@ -63,7 +63,7 @@ start_server (gboolean crashed)
 }
 
 void
-shutdown (void)
+shutdown (int s)
 {
   if (xserver_pid)
     kill (xserver_pid, SIGTERM);
@@ -80,7 +80,7 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  daemon ();
+  daemon (0, 0);
 
   if (argc == 2)
     dpy = argv[1];
