@@ -94,9 +94,9 @@ bluez_pin_request (struct pin_request_context *ctx, gboolean outgoing, const gch
   pixbuf = gpe_find_icon ("bt-logo");
 #else 
   pixbuf = gdk_pixbuf_new_from_file (BT_ICON, NULL);
+#endif
   if (pixbuf)
     logo = gtk_image_new_from_pixbuf (pixbuf);
-#endif
 
   pin_label = gtk_label_new (_("PIN:"));
   entry = gtk_entry_new ();
