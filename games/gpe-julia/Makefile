@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-julia
-DEBUG = no
+DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 
