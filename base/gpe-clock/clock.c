@@ -42,7 +42,7 @@ static gchar *alarm_file, *prefs_file;
 #define FORMAT_ANALOGUE		2
 
 static gboolean show_seconds;
-static int format;
+static int format = FORMAT_ANALOGUE;
 
 struct alarm_state
 {
