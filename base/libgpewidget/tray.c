@@ -111,7 +111,6 @@ gpe_system_tray_dock (GdkWindow *window)
 {
   Display *dpy = GDK_WINDOW_XDISPLAY (window);
   Window win = GDK_WINDOW_XWINDOW (window);
-  GdkScreen *screen = gdk_screen_get_default ();
   gchar *tray_atom_name;
 
   manager_atom = XInternAtom (dpy, "MANAGER", False);
@@ -120,7 +119,7 @@ gpe_system_tray_dock (GdkWindow *window)
   system_tray_atom = XInternAtom (dpy, tray_atom_name, False);
   g_free (tray_atom_name);
 
-  gdk_window_add_filter (gdk_screen_get_root_window (screen), filter, (gpointer)win);
+  gdk_window_add_filter (GDK_ROOT_PARENT (), filter, (gpointer)win);
 
   find_tray (dpy, win);
 }
