@@ -383,8 +383,7 @@ main (int argc, char *argv[])
   gint opt;
   gint upgrade_result = UPGRADE_ERROR;
 
-  /* (LanguageCode) translators: please replace this with your own
-     Pango language code: */
+  /* TRANSLATORS: please replace this with the Pango code for your own language */
   pango_lang_code = g_strdup (_("en"));
   
   setlocale (LC_ALL, "");

@@ -1,5 +1,5 @@
-PACKAGE = gpe-ownerinfo2
-VERSION = 0.10
+PACKAGE = gpe-ownerinfo
+VERSION = 0.20
 
 PREFIX = /usr/local
 DEBUG = no
@@ -7,7 +7,7 @@ CVSBUILD = yes
 GTK2=yes
 LINGUAS = de
 
-MEMBERS = gpe-ownerinfo2
+MEMBERS = $(PACKAGE)
 CONTROL = control1
 
 ifeq ($(CVSBUILD),yes)
@@ -57,7 +57,7 @@ install: install-program install-mo
 
 install-program: all 
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/gpe-ownerinfo
+	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)/etc/gpe/
 

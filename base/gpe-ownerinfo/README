@@ -1,8 +1,8 @@
-README for gpe-ownerinfo2
-=========================
+README for gpe-ownerinfo
+========================
 
 /etc/gpe/gpe-ownerinfo.data can contain Pango markup if used with
-gpe-ownerinfo2.  
+gpe-ownerinfo.  
 
 Examples:
 

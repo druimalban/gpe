@@ -1,80 +1,80 @@
-# German translation of gpe-ownerinfo2.
+# German translation of gpe-ownerinfo.
 # Copyright (C) 2003 Colin Marquardt.
-# This file is distributed under the same license as the gpe-ownerinfo2 package.
+# This file is distributed under the same license as the gpe-ownerinfo package.
 # Colin Marquardt <colin@marquardt-home.de>, 2003.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-ownerinfo2-0.06\n"
-"POT-Creation-Date: 2003-02-18 19:18+0100\n"
-"PO-Revision-Date: 2003-02-18 19:08+0100\n"
+"Project-Id-Version: gpe-ownerinfo-0.20\n"
+"POT-Creation-Date: 2003-03-04 00:13+0100\n"
+"PO-Revision-Date: 2003-03-04 00:13+0100\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-ownerinfo2.c:379
-msgid "en"
-msgstr "de"
-
-#: gpe-ownerinfo2.c:400 gpe-ownerinfo2.c:516
-msgid "GPE Owner Info"
-msgstr "Eigentümerinformation"
-
-#: gpe-ownerinfo2.c:402
-msgid "Valid options:\n"
-msgstr "Gültige Optionen:\n"
-
-#: gpe-ownerinfo2.c:403
-msgid "   -g GEOMETRY  window geometry (default: 240x120+0+200)\n"
-msgstr "   -g GEOMETRY  Fenstergeometrie (Vorgabe: 240x120+0+200)\n"
-
-#: gpe-ownerinfo2.c:404
-msgid "   -t           make window transparent\n"
-msgstr "   -t           transparentes Fenster\n"
-
-#: gpe-ownerinfo2.c:405
-msgid "   -k           always keep window on top (override redirect)\n"
-msgstr "   -k           halte Fenster immer ganz oben (override redirect)\n"
-
-#: gpe-ownerinfo2.c:406
-msgid "   -h           this help text\n"
-msgstr "   -h           dieser Hilfetext\n"
-
-#: gpe-ownerinfo2.c:425
-msgid "GPE User"
-msgstr "GPE-Benutzer"
-
-#: gpe-ownerinfo2.c:426
-msgid "nobody@localhost.localdomain"
-msgstr "nobody@localhost.localdomain"
-
-#: gpe-ownerinfo2.c:427
-msgid "+99 (9999) 999-9999"
-msgstr "+99 (9999) 999-9999"
-
-#: gpe-ownerinfo2.c:431
-msgid "Configurable with"
-msgstr "Konfigurierbar mit"
-
-#: gpe-ownerinfo2.c:432 gpe-ownerinfo2.c:541
-msgid "Owner Information"
-msgstr "Eigentümer"
-
-#: gpe-ownerinfo2.c:433
-msgid "under"
-msgstr "unter"
-
-#: gpe-ownerinfo2.c:433
-msgid " Settings."
-msgstr " Einstellungen."
-
-#: gpe-ownerinfo2.c:558
+#: gpe-ownerinfo.c:345
 msgid "Owner"
 msgstr "Besitzer"
 
-#: gpe-ownerinfo2.c:571
+#: gpe-ownerinfo.c:388
+msgid "en"
+msgstr "de"
+
+#: gpe-ownerinfo.c:409 gpe-ownerinfo.c:525
+msgid "GPE Owner Info"
+msgstr "Eigentümerinformation"
+
+#: gpe-ownerinfo.c:411
+msgid "Valid options:\n"
+msgstr "Gültige Optionen:\n"
+
+#: gpe-ownerinfo.c:412
+msgid "   -g GEOMETRY  window geometry (default: 240x100+0+220)\n"
+msgstr "   -g GEOMETRY  Fenstergeometrie (Vorgabe: 240x100+0+220)\n"
+
+#: gpe-ownerinfo.c:413
+msgid "   -t           make window transparent\n"
+msgstr "   -t           transparentes Fenster\n"
+
+#: gpe-ownerinfo.c:414
+msgid "   -k           always keep window on top (override redirect)\n"
+msgstr "   -k           halte Fenster immer ganz oben (override redirect)\n"
+
+#: gpe-ownerinfo.c:415
+msgid "   -h           this help text\n"
+msgstr "   -h           dieser Hilfetext\n"
+
+#: gpe-ownerinfo.c:434
+msgid "GPE User"
+msgstr "GPE-Benutzer"
+
+#: gpe-ownerinfo.c:435
+msgid "nobody@localhost.localdomain"
+msgstr "nobody@localhost.localdomain"
+
+#: gpe-ownerinfo.c:436
+msgid "+99 (9999) 999-9999"
+msgstr "+99 (9999) 999-9999"
+
+#: gpe-ownerinfo.c:440
+msgid "Configurable with"
+msgstr "Konfigurierbar mit"
+
+#: gpe-ownerinfo.c:441 gpe-ownerinfo.c:550
+msgid "Owner Information"
+msgstr "Eigentümer"
+
+#: gpe-ownerinfo.c:442
+msgid "under"
+msgstr "unter"
+
+#: gpe-ownerinfo.c:442
+msgid " Settings."
+msgstr " Einstellungen."
+
+#: gpe-ownerinfo.c:579
 msgid "Address:"
 msgstr "Adresse:"
 

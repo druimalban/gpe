@@ -1,3 +1,16 @@
+2003-03-04  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-ownerinfo.c (main): add "TRANSLATORS:" keyword in comment for
+	pango_lang_code assignment.
+
+	* familiar/control1 (Package): Name it gpe-ownerinfo.
+	(Replaces): Replace gpe-ownerinfo2 (<= 0.10).
+
+	* Makefile (VERSION): Bump up to 0.20.
+	(PACKAGE): Name it gpe-ownerinfo.
+
+	* gpe-ownerinfo.c: This file renamed from gpe-ownerinfo2.c.
+
 2003-02-26  Philip Blundell  <philb@gnu.org>
 
 	* gpe-ownerinfo2.c (translate_name_label): Add extra argument to
