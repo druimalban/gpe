@@ -106,7 +106,7 @@ int
 sql_start (void)
 {
   static const char *schema1_str = 
-    "create table mime_types (uid INTEGER PRIMARY KEY, mime_types TEXT, description TEXT, extension TEXT, program TEXT, icon TEXT)";
+    "create table mime_types (uid INTEGER PRIMARY KEY, mime_name TEXT, description TEXT, extension TEXT, program TEXT, icon TEXT)";
 
   const char *home = getenv ("HOME");
   char *buf;
