@@ -180,6 +180,7 @@ add_opush (sdp_session_t *session, uint8_t chan)
   int i;
   uint8_t dtd = SDP_UINT8;
   sdp_data_t *sflist;
+  gboolean ret = TRUE;
   
   memset((void *)&record, 0, sizeof(sdp_record_t));
   record.handle = 0xffffffff;
@@ -212,12 +213,6 @@ add_opush (sdp_session_t *session, uint8_t chan)
   
   aproto = sdp_list_append(0, apseq);
   sdp_set_access_protos(&record, aproto);
-  sdp_data_free(channel);
-  sdp_list_free(proto[0], 0);
-  sdp_list_free(proto[1], 0);
-  sdp_list_free(proto[2], 0);
-  sdp_list_free(apseq, 0);
-  sdp_list_free(aproto, 0);
   
   for (i = 0; i < sizeof(formats); i++) 
     {
@@ -229,12 +224,17 @@ add_opush (sdp_session_t *session, uint8_t chan)
   
   sdp_set_info_attr(&record, "OBEX Object Push", 0, 0);
   
-  if (0 > sdp_record_register(session, &record, SDP_RECORD_PERSIST)) 
-    {
-      printf("Service Record registration failed.\n");
-      return FALSE;
-    }
-  return TRUE;
+  if (sdp_record_register(session, &record, SDP_RECORD_PERSIST) < 0)
+    ret = FALSE;
+
+  sdp_data_free(channel);
+  sdp_list_free(proto[0], 0);
+  sdp_list_free(proto[1], 0);
+  sdp_list_free(proto[2], 0);
+  sdp_list_free(apseq, 0);
+  sdp_list_free(aproto, 0);
+
+  return ret;
 }
 
 int 
@@ -242,20 +242,17 @@ add_service (void)
 {
   sdp_session_t *sess;
   bdaddr_t interface;
+  gboolean ret;
 
   sess = sdp_connect (&interface, BDADDR_LOCAL, 0);
 
   if (!sess)
     return FALSE;
 
-  if (add_opush (sess, 10) == FALSE)
-    {
-      sdp_close(sess);
-      return FALSE;
-    }
+  ret = add_opush (sess, 10);
 
   sdp_close(sess);
-  return TRUE;
+  return ret;
 }
 
 int
@@ -271,8 +268,12 @@ obex_init (void)
   BtOBEX_ServerRegister (obex, NULL, OBEX_PUSH_HANDLE);
 
   obex_connect_input (obex);
-
-  add_service ();
+  
+  if (add_service () == FALSE)
+    {
+      gpe_error_box (_("Couldn't register OBEX service"));
+      return FALSE;
+    }
 
   return TRUE;
 }
