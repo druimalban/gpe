@@ -1,3 +1,9 @@
+2003-09-05  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.dpkg_ipkg (check-source): New, broken out from ipkg
+	target.
+	(tag, dist): Depend on check-source.
+
 2003-08-05  Colin Marquardt  <colin@marquardt-home.de>
 
 	* README: Mention make source.

@@ -11,7 +11,7 @@ SOURCE = ftp://gpe.handhelds.org/gpe/source/$(PACKAGE)-$(VERSION).tar.gz
 # can change this to e.g. /var/tmp/deb
 DEB_PATH = ../deb
 
-dist: clean dist-prep
+dist: check-source clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	mkdir ../$(PACKAGE)-$(VERSION)
 	( tar cf - --exclude "*/CVS" --exclude CVS --exclude "*~" --exclude "#*#" --exclude "debian" --exclude "familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" --exclude "*.mo" --exclude "*.d" * ) | (cd ../$(PACKAGE)-$(VERSION); tar xf -)
@@ -29,8 +29,10 @@ install-mo:
 
 install: install-program install-mo
 
-ipkg: clean
+check-source:
 	@if ! grep -q '^Source:' familiar/$(CONTROL); then echo -e "\nNo Source: field in control file.  Aborting.\n"; exit 1; fi
+
+ipkg: check-source clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	sed 's:VERSION:$(VERSION):;s$$SOURCE$$$(SOURCE)$$' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
@@ -62,7 +64,7 @@ printinfo:
 	@printf "You can use 'make dist-upload' to do that.\n"
 	@printf '-------------------------------------------------------------------------------\n'
 
-tag: 
+tag: check-source
 	cvs tag $(CVSTAG)
 
 source: tag dist-upload
