@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Owner Information
+_Comment=Set Owner Information
+Exec=gpe-conf ownerinfo
+Terminal=0
+Type=Application
+Icon=gpe-config-ownerinfo.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

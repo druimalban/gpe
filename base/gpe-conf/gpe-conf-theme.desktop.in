@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Global Look
+_Comment=Global Appearance Setup
+Exec=gpe-conf theme
+Terminal=0
+Type=Application
+Icon=gpe-config-theme.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

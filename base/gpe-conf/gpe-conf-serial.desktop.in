@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name= Serial Ports
+_Comment=Serial Port Settings
+Exec=gpe-conf serial
+Terminal=0
+Type=Application
+Icon=gpe-config-serial.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

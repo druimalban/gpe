@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Battery Info
+_Comment=Battery Information
+Exec=gpe-conf battery
+Terminal=0
+Type=Application
+Icon=gpe-config-battery.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

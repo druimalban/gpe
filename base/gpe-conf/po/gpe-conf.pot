@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-23 03:32+0200\n"
+"POT-Creation-Date: 2003-08-25 22:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1568,4 +1568,136 @@ msgstr ""
 
 #: battery.c:269
 msgid "Jacket battery"
+msgstr ""
+
+#: gpe-conf-admin.desktop.in.h:1
+msgid "User Access"
+msgstr ""
+
+#: gpe-conf-admin.desktop.in.h:2
+msgid "User access administration"
+msgstr ""
+
+#: gpe-conf-battery.desktop.in.h:1
+msgid "Battery Info"
+msgstr ""
+
+#: gpe-conf-battery.desktop.in.h:2
+msgid "Battery Information"
+msgstr ""
+
+#: gpe-conf-cardinfo.desktop.in.h:1
+msgid "PC/CF Cards"
+msgstr ""
+
+#: gpe-conf-cardinfo.desktop.in.h:2
+msgid "PC/CF Cards info and config"
+msgstr ""
+
+#: gpe-conf-ipaqscreen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr ""
+
+#: gpe-conf-kbd.desktop.in.h:1
+msgid "Virtual Keyboard"
+msgstr ""
+
+#: gpe-conf-kbd.desktop.in.h:2
+msgid "Virtual Keyboard Setup"
+msgstr ""
+
+#: gpe-conf-keyboard.desktop.in.h:1
+msgid "External Keyboard"
+msgstr ""
+
+#: gpe-conf-keyboard.desktop.in.h:2
+msgid "External Keyboard Setup"
+msgstr ""
+
+#: gpe-conf-keyctl.desktop.in.h:1
+msgid "Button Config"
+msgstr ""
+
+#: gpe-conf-keyctl.desktop.in.h:2
+msgid "Button Configuration"
+msgstr ""
+
+#: gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr ""
+
+#: gpe-conf-logread.desktop.in.h:1
+msgid "Accesss System Log "
+msgstr ""
+
+#: gpe-conf-logread.desktop.in.h:2
+msgid "Show Log"
+msgstr ""
+
+#: gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr ""
+
+#: gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr ""
+
+#: gpe-conf-ownerinfo.desktop.in.h:2
+msgid "Set Owner Information"
+msgstr ""
+
+#: gpe-conf-packages.desktop.in.h:1
+msgid " Update Manager"
+msgstr ""
+
+#: gpe-conf-packages.desktop.in.h:2
+msgid "Update installed packages"
+msgstr ""
+
+#: gpe-conf-serial.desktop.in.h:1
+msgid " Serial Ports"
+msgstr ""
+
+#: gpe-conf-serial.desktop.in.h:2
+msgid "Serial Port Settings"
+msgstr ""
+
+#: gpe-conf-sleep.desktop.in.h:1
+msgid "Sleep Config"
+msgstr ""
+
+#: gpe-conf-sleep.desktop.in.h:2
+msgid "Sleep Configuration"
+msgstr ""
+
+#: gpe-conf-storage.desktop.in.h:1
+msgid "Storage Information"
+msgstr ""
+
+#: gpe-conf-storage.desktop.in.h:2
+msgid "Storage Usage"
+msgstr ""
+
+#: gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr ""
+
+#: gpe-conf-theme.desktop.in.h:2
+msgid "Global Look"
+msgstr ""
+
+#: gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr ""
+
+#: gpe-conf-time.desktop.in.h:2
+msgid "Setup Date and Time"
+msgstr ""
+
+#: gpe-conf-users.desktop.in.h:1
+msgid "Manage local Users "
+msgstr ""
+
+#: gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
 msgstr ""

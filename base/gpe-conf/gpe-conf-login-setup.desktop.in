@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Login Setup
+_Comment=Login Setup
+Exec=gpe-conf login-setup
+Terminal=0
+Type=Application
+Icon=gpe-config-login-setup.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

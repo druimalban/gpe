@@ -1,3 +1,8 @@
+2003-08-26	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Applied Libor's patch to create .desktop translations
+	* Updated Czech translation and pot
+	* Added the new *.desktop.in files
+
 2003-08-23	Florian Boor	<florian.boor@kernelconcepts.de>
 	* finished basic gps setup
 	* new czech translation - thanks to Libor Klepac

@@ -9,6 +9,25 @@ PREFIX = /usr/
 DESTDIR = /
 
 LINGUAS = pt ro de fr cs nl sv
+EXTRA_DESKTOPS = \
+	gpe-conf-admin.desktop.in \
+	gpe-conf-battery.desktop.in \
+	gpe-conf-cardinfo.desktop.in \
+	gpe-conf-ipaqscreen.desktop.in \
+	gpe-conf-kbd.desktop.in \
+	gpe-conf-keyboard.desktop.in \
+	gpe-conf-keyctl.desktop.in \
+	gpe-conf-login-setup.desktop.in \
+	gpe-conf-logread.desktop.in \
+	gpe-conf-network.desktop.in \
+	gpe-conf-ownerinfo.desktop.in \
+	gpe-conf-packages.desktop.in \
+	gpe-conf-serial.desktop.in \
+	gpe-conf-sleep.desktop.in \
+	gpe-conf-storage.desktop.in \
+	gpe-conf-theme.desktop.in \
+	gpe-conf-time.desktop.in \
+	gpe-conf-users.desktop.in	
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdisplaymigration -ldisplaymigration -L.

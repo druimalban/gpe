@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=PC/CF Cards
+_Comment=PC/CF Cards info and config
+Exec=gpe-conf cardinfo
+Terminal=0
+Type=Application
+Icon=gpe-config-cardinfo.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True
