@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = yes
 CVSBUILD = yes
+GTK2 = yes
 
 MEMBERS = main
 
