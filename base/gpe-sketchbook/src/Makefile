@@ -6,7 +6,7 @@ OBJS    = $(patsubst %,%.o,$(MEMBERS))
 
 CC      = gcc
 CFLAGS += -Wall #-g
-CFLAGS += -O2
+CFLAGS += -Os
 CFLAGS += -MD #(deps)
 
 #-- varaibles
@@ -29,10 +29,6 @@ LIBS   += `gdk-pixbuf-config --libs`
 #-- SQLite
 #LIBS += -lsqlite
 
-#-- libxpm support
-CPPFLAGS += -I/usr/X11R6/include
-LIBS     += -L/usr/X11R6/lib -lXpm
-
 #-- libpng support
 CPPFLAGS += -I/usr/include
 LIBS     += -L/usr/lib -lpng
@@ -40,7 +36,7 @@ LIBS     += -L/usr/lib -lpng
 #-- @ handhelds.org
 CPPFLAGS += -I../../include
 LIBS     += -L../../lib
-LIBS     += -lgdk_pixbuf -lXpm
+LIBS     += -lgdk_pixbuf
 
 #.SUFFIXES: .d
 
@@ -66,7 +62,7 @@ x: $(PACKAGE)
 
 clean:
 	rm -f *~
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(ARM_BIN)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) #$(ARM_BIN)
 
 -include $(DEPS)
 

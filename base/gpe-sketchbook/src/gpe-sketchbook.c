@@ -108,8 +108,10 @@ void gui_init(){
   window_sketchpad_init(window_sketchpad);
   //gtk_window_set_title (GTK_WINDOW (window_sketchpad), "Sketch: new");
 
-  //**/gtk_window_set_position (GTK_WINDOW (window_selector),  GTK_WIN_POS_CENTER);
-  //**/gtk_window_set_position (GTK_WINDOW (window_sketchpad), GTK_WIN_POS_CENTER);
+#ifdef DESKTOP
+  gtk_window_set_position (GTK_WINDOW (window_selector),  GTK_WIN_POS_CENTER);
+  gtk_window_set_position (GTK_WINDOW (window_sketchpad), GTK_WIN_POS_CENTER);
+#endif
 
   //the window to show first
   //NOTE: could be defined by preference, or command line argument
