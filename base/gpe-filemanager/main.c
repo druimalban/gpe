@@ -652,6 +652,7 @@ browse_directory (gchar *directory)
       //printf ("Current directory: %s\n", current_directory);
       add_history (directory);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
+      loaded_icons = g_hash_table_new (NULL, NULL);
       refresh_view ();
     }
     else
