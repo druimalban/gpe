@@ -28,8 +28,8 @@
 //--------------------------------------------------------------------
 // Adjustments to use GTK+ 2.0 png save function (gdkpixbuf/io-png.c)
 //
-#define png_simple_error_callback   NULL //FIXME: use gpe_error_box
-#define png_simple_warning_callback NULL //FIXME: use (make) gpe_warning box
+#define png_simple_error_callback   NULL //NOTE: may use gpe_error_box
+#define png_simple_warning_callback NULL //NOTE: may use gpe_warning_box
 #define g_set_error(e, GDK_PIXBUF_ERROR, GDK_PIXBUF_ERROR_BAD_OPTION, text) {}
 #define g_convert(value, a, b, c, d, e, f) value 
 #define GError gpointer

@@ -140,10 +140,13 @@ void on_radiobutton_color_clicked (GtkButton *button, gpointer user_data){
 //--------------------- DRAWING AREA ----------------------
 
 gboolean
-on_drawing_area_configure_event (GtkWidget        *widget,
+on_drawing_area_configure_event (GtkWidget        * widget,
                                  GdkEventConfigure *event,
                                  gpointer          user_data){
-  configure_event_handler(widget, event);
+  //when window is created or resized
+  if(!drawing_area_pixmap_buffer){
+    reset_drawing_area(widget);
+  }
   return FALSE;
 }
 
@@ -152,7 +155,13 @@ gboolean
 on_drawing_area_expose_event (GtkWidget       *widget,
                               GdkEventExpose  *event,
                               gpointer         user_data){
-  expose_event_handler(widget, event);
+  //refresh the part outdated by the event
+  gdk_draw_pixmap(widget->window,
+                  widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+                  drawing_area_pixmap_buffer,
+                  event->area.x, event->area.y,
+                  event->area.x, event->area.y,
+                  event->area.width, event->area.height);
   return FALSE;
 }
 
@@ -161,7 +170,24 @@ gboolean
 on_drawing_area_motion_notify_event(GtkWidget       *widget,
                                     GdkEventMotion  *event,
                                     gpointer         user_data){
-  motion_notify_event_handler(widget, event);
+  int x, y;
+  GdkModifierType state;
+
+  if (event->is_hint){
+    gdk_window_get_pointer (event->window, &x, &y, &state);
+  }
+  else{
+    x = event->x;
+    y = event->y;
+    state = event->state;
+  }    
+  if (state & GDK_BUTTON1_MASK){// && drawing_area_pixmap_buffer != NULL){
+    if(prev_pos_x != NO_PREV_POS){
+      draw_line(prev_pos_x, prev_pos_y, x, y);
+    }
+    prev_pos_x = x;
+    prev_pos_y = y;
+  }
   return FALSE;
 }
 
@@ -170,7 +196,11 @@ gboolean
 on_drawing_area_button_press_event(GtkWidget       *widget,
                                    GdkEventButton  *event,
                                    gpointer         user_data){
-  button_press_event_handler(widget, event);
+  if (event->button == 1 && drawing_area_pixmap_buffer != NULL){
+    draw_point (event->x, event->y);
+    prev_pos_x = event->x;
+    prev_pos_y = event->y;
+  }
   return FALSE;
 }
 
@@ -179,7 +209,7 @@ gboolean
 on_drawing_area_button_release_event(GtkWidget       *widget,
                                      GdkEventButton  *event,
                                      gpointer         user_data){
-  button_release_event_handler(widget, event);
+  prev_pos_x = prev_pos_y = NO_PREV_POS;
   return FALSE;
 }
 

@@ -28,6 +28,7 @@ extern GtkWidget * drawing_area;
 void sketchpad_init();
 void window_sketchpad_init(GtkWidget * window_sketchpad);
 
+void reset_drawing_area();
 //--event handlers //FIXME: to move to sketchpad-cb
 gint configure_event_handler     (GtkWidget *_drawing_area, GdkEventConfigure *event);
 gint expose_event_handler        (GtkWidget *_drawing_area, GdkEventExpose *event);
@@ -43,7 +44,7 @@ void sketchpad_new_sketch();
 void sketchpad_set_title(const gchar * name);
 
 //--drawing functions
-void draw_brush(gdouble x, gdouble y);
+void draw_point(gdouble x, gdouble y);
 void draw_line (gdouble x1, gdouble y1, gdouble x2, gdouble y2);
 
 //--drawing area

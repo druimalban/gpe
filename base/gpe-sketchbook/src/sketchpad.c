@@ -53,7 +53,7 @@ GdkCursor * cursor_eraser_large;
 GdkCursor * cursor_eraser_xlarge;
 GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height);//gint diameter);
 
-void   _reset_drawing_area       ();
+void    reset_drawing_area       ();
 void    clear_drawing_area       ();
 
 void sketchpad_init(){
@@ -83,8 +83,11 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   //--cursors
   {//none cursor
     GdkPixmap * cursor_pixmap;
+#ifdef DESKTOP
     static unsigned char cursor_none_data[] = { 0x01 }; //single spot
-    //static unsigned char cursor_none_data[] = { 0x00 }; //empty
+#else
+    static unsigned char cursor_none_data[] = { 0x00 }; //empty
+#endif
     cursor_pixmap = gdk_bitmap_create_from_data(NULL, cursor_none_data, 1, 1);
     cursor_none   = gdk_cursor_new_from_pixmap(cursor_pixmap, cursor_pixmap,
                                                &black, &white, 1, 1);
@@ -182,7 +185,7 @@ void sketchpad_open_file(gchar * fullpath_filename, const gchar * name){
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){
-  _reset_drawing_area(drawing_area);
+  reset_drawing_area(drawing_area);
   sketchpad_set_title(SKETCHPAD_TITLE_NEW);
   sketchpad_refresh_drawing_area(drawing_area);
 }//sketchpad_new_sketch()
@@ -244,7 +247,7 @@ void draw_line (gdouble x1, gdouble y1,
   gtk_widget_draw (drawing_area, &updated_rectangle);
 }
 
-void _reset_drawing_area(){
+void reset_drawing_area(){
   if(drawing_area_pixmap_buffer) gdk_pixmap_unref(drawing_area_pixmap_buffer);
   drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
                                               drawing_area_width,
@@ -269,62 +272,7 @@ void sketchpad_refresh_drawing_area(){
 }
 
 void clear_drawing_area(){
-  _reset_drawing_area();
+  reset_drawing_area();
   sketchpad_refresh_drawing_area();
 }
-
-gint configure_event_handler(GtkWidget *_drawing_area, GdkEventConfigure *event){
-  //when window is created or resized
-  if(!drawing_area_pixmap_buffer){
-    _reset_drawing_area(_drawing_area);
-  }
-  return TRUE;
-}//configure_event_handler()
-
-gint expose_event_handler(GtkWidget * _drawing_area, GdkEventExpose *event){
-  //refresh the part outdated by the event
-  gdk_draw_pixmap(_drawing_area->window,
-                  _drawing_area->style->fg_gc[GTK_WIDGET_STATE (_drawing_area)],
-                  drawing_area_pixmap_buffer,
-                  event->area.x, event->area.y,
-                  event->area.x, event->area.y,
-                  event->area.width, event->area.height);
-  return FALSE;
-}//expose_event_handler()
-
-gint button_press_event_handler(GtkWidget *_drawing_area, GdkEventButton *event ){
-  if (event->button == 1 && drawing_area_pixmap_buffer != NULL){
-    draw_point (event->x, event->y);
-    prev_pos_x = event->x;
-    prev_pos_y = event->y;
-  }
-  return TRUE;
-}//button_press_event_handler()
-
-gint button_release_event_handler(GtkWidget *_drawing_area, GdkEventButton *event ){
-  prev_pos_x = prev_pos_y = NO_PREV_POS;
-  return TRUE;
-}//button_release_event_handler()
-
-gint motion_notify_event_handler(GtkWidget *_drawing_area, GdkEventMotion *event){
-  int x, y;
-  GdkModifierType state;
-
-  if (event->is_hint){
-    gdk_window_get_pointer (event->window, &x, &y, &state);
-  }
-  else{
-    x = event->x;
-    y = event->y;
-    state = event->state;
-  }    
-  if (state & GDK_BUTTON1_MASK){// && drawing_area_pixmap_buffer != NULL){
-    if(prev_pos_x != NO_PREV_POS){
-      draw_line(prev_pos_x, prev_pos_y, x, y);
-    }
-    prev_pos_x = x;
-    prev_pos_y = y;
-  }
-  return TRUE;
-}//motion_notify_event_handler()
 
