@@ -49,7 +49,11 @@ vorbis_play_loop (void *vv)
   unsigned char buffer[OGGBUFSIZ];
   struct vorbis_context *v = (struct vorbis_context *)vv;
 
-  pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  if (pthread_setcancelstate (PTHREAD_CANCEL_ENABLE, NULL))
+    perror ("pthread_setcancelstate");
+
+  if (pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, NULL))
+    perror ("pthread_setcanceltype");
 
   ret = ov_open_callbacks (v, &v->vf, NULL, 0, vorbisfile_callbacks);
   if (ret < 0)
@@ -149,7 +153,7 @@ vorbis_open (struct stream *s, int fd)
   ret = pthread_create (&v->thread, 0, vorbis_play_loop, v);
   if (ret < 0)
     {
-      fprintf (stderr, "Vorbis: couldn't create thread\n");
+      perror ("pthread_create");
       ov_clear (&v->vf);
       g_free (v);
       return NULL;
@@ -161,8 +165,10 @@ vorbis_open (struct stream *s, int fd)
 static void 
 vorbis_close (struct vorbis_context *v)
 {
-  pthread_cancel (v->thread);
-  pthread_join (v->thread, NULL);
+  if (pthread_cancel (v->thread))
+    perror ("pthread_cancel");
+  if (pthread_join (v->thread, NULL))
+    perror ("pthread_join");
 }
 
 static void

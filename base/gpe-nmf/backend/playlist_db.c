@@ -35,6 +35,7 @@ playlist_fetch_item_internal (struct playlist *l, int *idx)
 	    (*idx)--;
 	  break;
 	}
+      i = i->next;
     }
   return v;
 }
