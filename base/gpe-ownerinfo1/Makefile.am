@@ -23,6 +23,7 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)/etc/gpe/
 	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/gpe/
 #	$(INSTALL_DATA) gpe-ownerinfo-bg.png $(DESTDIR)$(PREFIX)/share/gpe/gpe-ownerinfo-bg.png
+	$(INSTALL_DATA) tux-48.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tux-48.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-ownerinfo
 
 dist-hook:

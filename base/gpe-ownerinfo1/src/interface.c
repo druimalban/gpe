@@ -30,10 +30,16 @@ create_GPE_Ownerinfo (void)
   GtkWidget *email;
   GtkWidget *owner_phone_label;
   GtkWidget *phone;
-  GtkWidget *owner_address_label;
   GtkWidget *scrolledwindow1;
   GtkWidget *viewport1;
   GtkWidget *address;
+  GtkWidget *vbox1;
+  GtkWidget *owner_address_label;
+  GtkWidget *photobutton;
+  GtkWidget *pixmap1;
+  GtkTooltips *tooltips;
+
+  tooltips = gtk_tooltips_new ();
 
   GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (GPE_Ownerinfo, "GPE_Ownerinfo");
@@ -136,19 +142,6 @@ create_GPE_Ownerinfo (void)
   gtk_misc_set_alignment (GTK_MISC (phone), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (phone), 5, 0);
 
-  owner_address_label = gtk_label_new (_("Address"));
-  gtk_widget_set_name (owner_address_label, "owner_address_label");
-  gtk_widget_ref (owner_address_label);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "owner_address_label", owner_address_label,
-                            (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (owner_address_label);
-  gtk_table_attach (GTK_TABLE (table1), owner_address_label, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
-  gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
-
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_widget_set_name (scrolledwindow1, "scrolledwindow1");
   gtk_widget_ref (scrolledwindow1);
@@ -180,9 +173,55 @@ create_GPE_Ownerinfo (void)
   gtk_misc_set_alignment (GTK_MISC (address), 0, 0);
   gtk_misc_set_padding (GTK_MISC (address), 5, 0);
 
+  vbox1 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox1, "vbox1");
+  gtk_widget_ref (vbox1);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "vbox1", vbox1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox1);
+  gtk_table_attach (GTK_TABLE (table1), vbox1, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  owner_address_label = gtk_label_new (_("Address"));
+  gtk_widget_set_name (owner_address_label, "owner_address_label");
+  gtk_widget_ref (owner_address_label);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "owner_address_label", owner_address_label,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (owner_address_label);
+  gtk_box_pack_start (GTK_BOX (vbox1), owner_address_label, FALSE, FALSE, 1);
+  gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
+
+  photobutton = gtk_button_new ();
+  gtk_widget_set_name (photobutton, "photobutton");
+  gtk_widget_ref (photobutton);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "photobutton", photobutton,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (photobutton);
+  gtk_box_pack_end (GTK_BOX (vbox1), photobutton, TRUE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, photobutton, _("Owner photo"), NULL);
+  gtk_button_set_relief (GTK_BUTTON (photobutton), GTK_RELIEF_NONE);
+
+  pixmap1 = gpe_render_icon (GPE_Ownerinfo->style, gpe_find_icon ("tux-48"));
+  //  pixmap1 = create_pixmap (GPE_Ownerinfo, NULL);
+  gtk_widget_set_name (pixmap1, "pixmap1");
+  gtk_widget_ref (pixmap1);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "pixmap1", pixmap1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (pixmap1);
+  gtk_container_add (GTK_CONTAINER (photobutton), pixmap1);
+
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (photobutton), "clicked",
+                      GTK_SIGNAL_FUNC (on_photobutton_clicked),
+                      NULL);
+
+  gtk_widget_grab_focus (photobutton);
+  gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "tooltips", tooltips);
 
   return GPE_Ownerinfo;
 }

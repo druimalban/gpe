@@ -20,20 +20,33 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <gpe/errorbox.h>
 #include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
 
+#include "callbacks.h"
 #include "interface.h"
 #include "support.h"
 
 #define GPE_OWNERINFO_DATA "/etc/gpe/gpe-ownerinfo.data"
 
+GtkWidget *GPE_Ownerinfo;
+
+struct gpe_icon my_icons[] = {
+  { "tux-48" },
+  { NULL }
+};
+
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *GPE_Ownerinfo;
+
   GtkWidget *widget;
+  static GtkWidget *icon;
+  
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   FILE *fp;
   gchar * geometry = NULL;
@@ -53,6 +66,9 @@ main (int argc, char *argv[])
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
+
+  if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
 
   while ((opt = getopt (argc,argv,"hg:")) != EOF)
     {
