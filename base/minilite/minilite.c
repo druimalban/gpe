@@ -345,7 +345,7 @@ set_level (int level)
 		return integral_set_level(level);
 	break;
 	case P_SIMPAD:
-		return integral_set_level(level);
+		return simpad_set_level(level);
 	break;
 	default:
 		return 0;

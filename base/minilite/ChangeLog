@@ -1,4 +1,5 @@
 2004-06-22	Florian Boor <florian.boor@kernelconcepts.de>
+	* fixed evil bug
 	* eleased V 0.42
 	* minilite.c: Added simpad support.
 	* minilite.c: set_level() Added sanity check.
