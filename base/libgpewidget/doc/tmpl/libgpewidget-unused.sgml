@@ -1,3 +1,43 @@
+<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:Title ##### -->
+GtkGpePixmap
+
+
+<!-- ##### SECTION ./tmpl/render.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/render.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/render.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/render.sgml:Title ##### -->
+render
+
+
 <!-- ##### FUNCTION gpe_render_icon ##### -->
 <para>
 [obsolete, use gtk_image_new_from_pixbuf()]
@@ -6,4 +46,67 @@
 @style: 
 @pixbuf: 
 @Returns: 
+
+
+=======
+>>>>>>> 1.4
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_get ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+@mask: 
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_new ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@mask: 
+@Returns: 
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+@mask: 
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_active ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_build_insensitive ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@build: 
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_prelight ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
+
+<!-- ##### FUNCTION gtk_gpe_pixmap_set_selected ##### -->
+<para>
+
+</para>
+
+@pixmap: 
+@val: 
 

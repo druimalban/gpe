@@ -15,6 +15,23 @@ input field.
 
 </para>
 
+<!-- ##### STRUCT box_desc ##### -->
+<para>
+
+</para>
+
+@label: 
+@value: 
+
+<!-- ##### STRUCT box_desc2 ##### -->
+<para>
+
+</para>
+
+@label: 
+@value: 
+@suggestions: 
+
 <!-- ##### FUNCTION smallbox_x ##### -->
 <para>
 

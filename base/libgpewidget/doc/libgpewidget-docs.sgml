@@ -36,7 +36,6 @@
     <title>Interface Description</title>
     <xi:include href="xml/gpe-iconlist.xml"/>
     <xi:include href="xml/gtkdatecombo.xml"/>
-    <xi:include href="xml/gtkgpepixmap.xml"/>
     <xi:include href="xml/gtksimplemenu.xml"/>
     <xi:include href="xml/gpeiconlistitem.xml"/>
     <xi:include href="xml/gpetimesel.xml"/>
@@ -48,7 +47,6 @@
     <xi:include href="xml/init.xml"/>
     <xi:include href="xml/pixmaps.xml"/>
     <xi:include href="xml/question.xml"/>
-    <xi:include href="xml/render.xml"/>
     <xi:include href="xml/smallbox.xml"/>
     <xi:include href="xml/spacing.xml"/>
     <xi:include href="xml/stylus.xml"/>
