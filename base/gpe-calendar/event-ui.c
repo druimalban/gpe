@@ -233,12 +233,12 @@ click_ok(GtkWidget *widget,
   tm.tm_min = 0;
   ev->duration = 24 * 60 * 60;
 
-  if (strptime (start, "%X", &tm_start))
+  if (strptime (start, TIMEFMT, &tm_start))
     {
       tm.tm_hour = tm_start.tm_hour;
       tm.tm_min = tm_start.tm_min;
       
-      if (strptime (end, "%X", &tm_end))
+      if (strptime (end, TIMEFMT, &tm_end))
 	{
 	  ev->duration = ((tm_end.tm_hour - tm_start.tm_hour) * 60
 			  + (tm_end.tm_min - tm_start.tm_min)) * 60;
@@ -711,10 +711,10 @@ new_event(time_t t, guint timesel)
       gtk_widget_set_sensitive (s->deletebutton, FALSE);
       
       localtime_r (&t, &tm);
-      strftime (buf, sizeof(buf), "%X", &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
       tm.tm_hour++;
-      strftime (buf, sizeof(buf), "%X", &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
       
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
@@ -750,11 +750,11 @@ edit_event(event_t ev)
       event_db_forget_details (ev);
       
       localtime_r (&(ev->start), &tm);
-      strftime (buf, sizeof(buf), "%X", &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
       end=ev->start+ev->duration;
       localtime_r (&end, &tm);
-      strftime (buf, sizeof(buf), "%X", &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
       
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),

@@ -133,11 +133,11 @@ main(int argc, char *argv[])
       localtime_r (&t, &tm);
       tm.tm_hour = hour;
       tm.tm_min = 0;
-      strftime (buf, sizeof(buf), "%X", &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
       times = g_list_append (times, g_strdup (buf));
       tm.tm_hour = hour;
       tm.tm_min = 30;
-      strftime (buf, sizeof(buf), "%X", &tm);
+      strftime (buf, sizeof(buf), TIMEFMT, &tm);
       times = g_list_append (times, g_strdup (buf));
     }
 
@@ -156,7 +156,7 @@ main(int argc, char *argv[])
       abort ();
     }
   yearfont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-*-*-*");
-  if (datefont == NULL)
+  if (yearfont == NULL)
     {
       printf ("Couldn't get year font\n");
       abort ();
