@@ -1,9 +1,11 @@
 ## Process this file with automake to produce Makefile.in
 
+PREFIX=/usr/local
+
 INCLUDES = \
 	-I$(top_srcdir)/intl \
 	-I$(top_srcdir)/../libgpewidget `gdk-pixbuf-config --cflags` \
-	@GTK_CFLAGS@ -DPREFIX=\"@prefix@\"
+	@GTK_CFLAGS@ -DPREFIX=\"$(PREFIX)\"
 
 bin_PROGRAMS = gpe-ownerinfo
 
