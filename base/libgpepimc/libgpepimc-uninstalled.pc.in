@@ -1,6 +1,6 @@
 Name: libgpevtype
 Description: GPE PIM Categories Library (not installed)
 Version: VERSION
-Requires: gtk-2.0
+Requires: gtk+-2.0
 Libs: -LBUILDDIR -lgpepimc
 Cflags: -IBUILDDIR

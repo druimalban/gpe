@@ -6,6 +6,6 @@ includedir=${prefix}/include
 Name: libgpevtype
 Description: GPE PIM Categories Library
 Version: VERSION
-Requires: gtk-2.0
+Requires: gtk+-2.0
 Libs: -L${libdir} -lgpepimc
 Cflags: -I${includedir}
