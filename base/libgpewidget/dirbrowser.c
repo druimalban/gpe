@@ -161,7 +161,7 @@ ok_clicked (GObject *obj, GObject *window)
       return;
     }
 
-  gpe_error_box (_("No directory is selected"));
+  gpe_error_box (_("No directory is selected."));
 }
 
 static void

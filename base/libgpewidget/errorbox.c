@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,71 +37,34 @@ static volatile gboolean currently_handling_error = FALSE;
 static void
 do_gpe_error_box (const char *text, gboolean block)
 {
-  GtkWidget *label, *ok, *dialog;
-  GtkWidget *hbox;
-  GdkPixbuf *p;
-  GtkWidget *fakewindow;
+  GtkWidget *w;
 
-  fprintf (stderr, "GPE-ERROR: %s\n", text);
+  fprintf (stderr, _("GPE-ERROR: %s\n"), text);
 
   if (currently_handling_error)
     return;
 
   currently_handling_error = TRUE;
-  fakewindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize (fakewindow);
-
-  dialog = gtk_dialog_new ();
-  gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(fakewindow));
-  gtk_widget_realize (dialog);
-
-  gtk_window_set_title (GTK_WINDOW(dialog), _("Error"));
-
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
-
-  label = gtk_label_new (text);
-  hbox = gtk_hbox_new (FALSE, 4);
-
-#if GTK_MAJOR_VERSION >= 2
-  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-#endif
-
-  gtk_widget_realize (dialog);
-
-  ok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
-  gtk_signal_connect_object (GTK_OBJECT (ok), "clicked",
-			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
-			     (gpointer)dialog);
-
-  p = gpe_try_find_icon ("error", NULL);
-  if (p)
-    {
-      GtkWidget *icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, p);
-      gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
-    }
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
-
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
-
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+  
+  w = gtk_message_dialog_new (NULL, 
+			      block ? GTK_DIALOG_MODAL : 0,
+			      GTK_MESSAGE_ERROR,
+			      GTK_BUTTONS_OK,
+			      text);
 
   if (block)
     {
-      gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
-			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+      gtk_dialog_run (GTK_DIALOG (w));
+      gtk_widget_destroy (w);
     }
-      
-  gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
-                    GTK_SIGNAL_FUNC (gtk_widget_destroy),(gpointer)fakewindow);
-
-  gtk_widget_show_all (dialog);
-
-  if (block)
-    gtk_main ();
-
+  else
+    {
+      g_signal_connect_swapped (G_OBJECT (w), "response",
+				G_CALLBACK (gtk_widget_destroy),
+				G_OBJECT (w));
+      gtk_widget_show (w);
+    }
+  
   currently_handling_error = FALSE;
 }
 
