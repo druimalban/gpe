@@ -5,5 +5,5 @@ Version: VERSION
 Source: SOURE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libc6, libgtk2.0-0, libgcrypt1
+Depends: libc6, libgtk2.0-0, libgcrypt7
 Description: Display migration support for GTK
