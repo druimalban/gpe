@@ -124,6 +124,12 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
   singles = NULL;
 }
 
+static void
+destroy_category_widgets (gpointer p)
+{
+  g_slist_free ((GSList *)p);
+}
+
 static GtkWidget*
 create_edit (void)
 {
@@ -302,15 +308,21 @@ create_edit (void)
   if (categories)
     {
       GSList *iter;
+      GSList *category_widgets = NULL;
       for (iter = categories; iter; iter = iter->next)
 	{
 	  struct category *c = iter->data;
 	  GtkWidget *w = gtk_check_button_new_with_label (c->name);
+	  gtk_object_set_data (GTK_OBJECT (w), "category", (gpointer)c->id);
 	  gtk_widget_show (w);
 	  gtk_box_pack_start (GTK_BOX (cbox), w, FALSE, FALSE, 0);
 	  g_free (c->name);
 	  g_free (c);
+	  category_widgets = g_slist_append (category_widgets, w);
 	}
+      
+      gtk_object_set_data_full (GTK_OBJECT (edit), "category-widgets", category_widgets,
+				(GtkDestroyNotify) destroy_category_widgets);
 
       g_slist_free (categories);
     }

@@ -1,3 +1,23 @@
+2002-08-24  Philip Blundell  <philb@gnu.org>
+
+	* src/Makefile.am (gpe_contacts_LDADD): Reinstate -L../../libgpewidget.
+
+	* src/editing.c (destroy_category_widgets): New function.
+	(create_edit): Store list of category checkboxes.
+	* src/db.c (db_set_multi_data): New function.
+	(read_entry_data): Use it.
+	(db_delete_tag): New function.
+	* src/db.h (db_set_multi_data): New prototype.
+	(db_delete_tag): Likewise.
+	* src/main.c (store_special_fields): New function.
+	(edit_person): Call it.
+	* src/callbacks.c (retrieve_special_fields): New function.
+	(on_edit_save_clicked): Call it.
+	
+	* src/proto.h: New file.
+	* src/main.c: Include it.
+	* src/callbacks.c: Likewise.
+
 2002-08-15  Philip Blundell  <philb@gnu.org>
 
 	* src/editing.c: Change path to libgpewidget headers.

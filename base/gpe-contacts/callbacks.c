@@ -1,9 +1,11 @@
 #include <gtk/gtk.h>
 #include <sqlite.h>
+#include <stdio.h>
 
 #include "interface.h"
 #include "support.h"
 #include "db.h"
+#include "proto.h"
 
 #include <gpe/gtkdatecombo.h>
 
@@ -86,6 +88,38 @@ on_edit_cancel_clicked                 (GtkButton       *button,
   gtk_widget_destroy (GTK_WIDGET (user_data));
 }
 
+void
+retrieve_special_fields (GtkWidget *edit, struct person *p)
+{
+  GSList *cl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
+  db_delete_tag (p, "CATEGORY");
+  while (cl)
+    {
+      GtkWidget *w = cl->data;
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
+	{
+	  guint c = (guint) gtk_object_get_data (GTK_OBJECT (w), "category");
+	  char buf[32];
+	  struct tag_value *t;
+	  snprintf (buf, sizeof (buf) - 1, "%d", c);
+	  buf[sizeof (buf) - 1] = 0;
+	  db_set_multi_data (p, "CATEGORY", g_strdup (buf));
+	}
+      cl = cl->next;
+    }
+
+  db_delete_tag (p, "BIRTHDAY");
+  {
+    GtkDateCombo *c = GTK_DATE_COMBO (lookup_widget (edit, "datecombo"));
+    if (c->set)
+      {
+	char buf[32];
+	snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", c->year, c->month, c->day);
+	buf[sizeof (buf) - 1] = 0;
+	db_set_data (p, "BIRTHDAY", g_strdup (buf));
+      }
+  }
+}
 
 void
 on_edit_save_clicked                   (GtkButton       *button,
@@ -109,6 +143,8 @@ on_edit_save_clicked                   (GtkButton       *button,
       gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
       db_set_data (p, tag, text);
     }
+
+  retrieve_special_fields (edit, p);
 
   if (commit_person (p))
     {

@@ -15,4 +15,4 @@ gpe_contacts_SOURCES = \
 	db.c db.h \
 	editing.c
 
-gpe_contacts_LDADD = -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
+gpe_contacts_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@

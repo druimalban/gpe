@@ -111,7 +111,7 @@ gpe_contacts_SOURCES = \
 	editing.c
 
 
-gpe_contacts_LDADD = -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
+gpe_contacts_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h

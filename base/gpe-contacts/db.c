@@ -196,7 +196,7 @@ static int
 read_entry_data (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = arg;
-  db_set_data (p, argv[0], g_strdup (argv[1]));
+  db_set_multi_data (p, argv[0], g_strdup (argv[1]));
   return 0;
 }
 
@@ -278,6 +278,13 @@ db_find_tag (struct person *p, gchar *tag)
 }
 
 void
+db_set_multi_data (struct person *p, gchar *tag, gchar *value)
+{
+  struct tag_value *t = new_tag_value (g_strdup (tag), value);
+  p->data = g_slist_append (p->data, t);
+}
+
+void
 db_set_data (struct person *p, gchar *tag, gchar *value)
 {
   struct tag_value *t = db_find_tag (p, tag);
@@ -290,6 +297,26 @@ db_set_data (struct person *p, gchar *tag, gchar *value)
     {
       t = new_tag_value (g_strdup (tag), value);
       p->data = g_slist_append (p->data, t);
+    }
+}
+
+void
+db_delete_tag (struct person *p, gchar *tag)
+{
+  GSList *l;
+  
+  for (l = p->data; l; )
+    {
+      GSList *n = l->next;
+      struct tag_value *t = l->data;
+      if (!strcmp (t->tag, tag))
+	{
+	  g_free (t->tag);
+	  g_free (t->value);
+	  g_free (t);
+	  p->data = g_slist_remove (p->data, t);
+	}
+      l = n;
     }
 }
 

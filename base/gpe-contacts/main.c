@@ -16,11 +16,13 @@
 #include <gpe/smallbox.h>
 #include <gpe/errorbox.h>
 #include <gpe/render.h>
+#include <gpe/gtkdatecombo.h>
 
 #include "interface.h"
 #include "support.h"
 #include "db.h"
 #include "structure.h"
+#include "proto.h"
 
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
 
@@ -67,6 +69,40 @@ update_combo_categories (void)
 }
 
 static void
+store_special_fields (GtkWidget *edit, struct person *p)
+{
+  struct tag_value *v = db_find_tag (p, "BIRTHDAY");
+  GtkWidget *w = lookup_widget (edit, "datecombo");
+  GSList *l, *bl;
+  if (v && v->value)
+    {
+      guint year, month, day;
+      sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (w), year, month, day);
+    }
+  else
+    gtk_date_combo_clear (GTK_DATE_COMBO (w));
+
+  bl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
+  for (l = p->data; l; l = l->next)
+    {
+      v = l->data;
+      if (!strcmp (v->tag, "CATEGORY")
+	  && v->value)
+	{
+	  guint c = atoi (v->value);
+	  GSList *i;
+	  for (i = bl; i; i = i->next)
+	    {
+	      GtkWidget *w = i->data;
+	      if ((guint)gtk_object_get_data (GTK_OBJECT (w), "category") == c)
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+	    }
+	}
+    }
+}
+
+static void
 edit_person (struct person *p)
 {
   GtkWidget *w = edit_window ();
@@ -86,6 +122,7 @@ edit_person (struct person *p)
 	}
       gtk_object_set_data (GTK_OBJECT (w), "person", p);
     }
+  store_special_fields (w, p);
   gtk_widget_show (w);
   gtk_widget_grab_focus (entry);
 }
