@@ -161,7 +161,7 @@ edit_todo(struct todo_list *list, struct todo_item *item)
 
   gtk_widget_realize (window);
 
-  buttonok = gpe_picture_button (window->style, _("Save"), "ok");
+  buttonok = gpe_picture_button (window->style, _("Save"), "save");
   buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
   buttondelete = gpe_picture_button (window->style, _("Delete"), "delete");
  
