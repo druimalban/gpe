@@ -35,7 +35,7 @@ $(LIBROOTIMAGE_SO): $(OBJS)
 install: $(LIBROOTIMAGE_SO)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
 	install $(LIBROOTIMAGE_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBROOTIMAGE_SO)
-	strip $(DESTDIR)$(PREFIX)/lib/$(LIBXROOTIMAGE_SO)
+	strip $(DESTDIR)$(PREFIX)/lib/$(LIBROOTIMAGE_SO)
 
 clean:
 	rm -f $(LIBROOTIMAGE_SO) librootimage.so
