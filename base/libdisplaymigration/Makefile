@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libdisplaymigration
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.26
+VERSION = 0.27
 
 LINGUAS = 
 
@@ -10,17 +10,9 @@ MEMBERS = migrate auth crypt
 
 SONAME = $(PACKAGE).so.0
 
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD 
-
-CFLAGS += $(GTKCFLAGS)
-LDFLAGS += $(GTKLIBS) -lgcrypt
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) -fPIC
+PACKAGE_CPPFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\"
+PACKAGE_LDFLAGS += $(GTKLIBS) -lgcrypt
 
 HEADERS = libdisplaymigration/displaymigration.h libdisplaymigration/auth.h libdisplaymigration/crypt.h
 
@@ -40,10 +32,7 @@ $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: $(SONAME)
 	install -d $(DESTDIR)$(PREFIX)/lib
