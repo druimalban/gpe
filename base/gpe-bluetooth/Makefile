@@ -4,7 +4,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.35
+VERSION = 0.36
 
 GLADE = bluez-pin-gpe.glade
 
@@ -97,7 +97,7 @@ install-program: all $(GLADE) bluez.conf
 	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) bnep-helper rfcomm-helper
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg

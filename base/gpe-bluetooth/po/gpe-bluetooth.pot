@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-26 19:13+0000\n"
+"POT-Creation-Date: 2004-03-07 18:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,71 +16,71 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:158
+#: main.c:159
 msgid "No kernel support for Bluetooth"
 msgstr ""
 
-#: main.c:221
+#: main.c:222
 msgid "Device information"
 msgstr ""
 
-#: main.c:261
+#: main.c:262
 msgid "Details ..."
 msgstr ""
 
-#: main.c:294
+#: main.c:323 obexclient.c:372
 msgid "Scanning for devices"
 msgstr ""
 
-#: main.c:307
+#: main.c:334 obexclient.c:384
 msgid "Inquiry failed"
 msgstr ""
 
-#: main.c:319
+#: main.c:342 obexclient.c:392
 msgid "HCI device open failed"
 msgstr ""
 
-#: main.c:350
+#: main.c:369 obexclient.c:413
 msgid "unknown"
 msgstr ""
 
-#: main.c:389
+#: main.c:391
 msgid "Retrieving service information"
 msgstr ""
 
-#: main.c:426
+#: main.c:436
 msgid "Bluetooth devices"
 msgstr ""
 
-#: main.c:444
+#: main.c:454
 msgid "Unable to scan for devices"
 msgstr ""
 
-#: main.c:458
+#: main.c:475
 msgid "hciattach died unexpectedly"
 msgstr ""
 
-#: main.c:522
+#: main.c:540
 msgid "Bluetooth control"
 msgstr ""
 
-#: main.c:527
+#: main.c:545
 msgid "Switch radio on"
 msgstr ""
 
-#: main.c:528
+#: main.c:546
 msgid "Switch radio off"
 msgstr ""
 
-#: main.c:529
+#: main.c:547
 msgid "Devices..."
 msgstr ""
 
-#: main.c:530
+#: main.c:548
 msgid "Remove from panel"
 msgstr ""
 
-#: main.c:563
+#: main.c:583
 msgid ""
 "This is the Bluetooth control.\n"
 "Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
@@ -150,6 +150,21 @@ msgstr ""
 msgid "Incoming connection from %s"
 msgstr ""
 
+#: dbus.c:101 dbus.c:123
+#, c-format
+msgid "Failed to acquire service: %s"
+msgstr ""
+
+#: dbus.c:107
+#, c-format
+msgid "Failed to open connection to system message bus: %s"
+msgstr ""
+
+#: dbus.c:129
+#, c-format
+msgid "Failed to open connection to session message bus: %s"
+msgstr ""
+
 #: headset.c:148
 #, c-format
 msgid "HEADSET connection to %s lost"
@@ -188,4 +203,32 @@ msgstr ""
 
 #: obex-unknown.c:78
 msgid "Save as ..."
+msgstr ""
+
+#: obexclient.c:158
+msgid "Sending data"
+msgstr ""
+
+#: obexclient.c:226
+msgid "Connecting"
+msgstr ""
+
+#: obexclient.c:233
+msgid "Selected device lacks OBEX support"
+msgstr ""
+
+#: obexclient.c:240
+msgid "Unable to create OBEX object"
+msgstr ""
+
+#: obexclient.c:247
+msgid "Unable to connect"
+msgstr ""
+
+#: obexclient.c:307
+msgid "No destination selected"
+msgstr ""
+
+#: obexclient.c:471
+msgid "Select destination"
 msgstr ""
