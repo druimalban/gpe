@@ -1,5 +1,7 @@
 2003-04-07  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile (LINGUAS): Add 'fr'.
+
 	* po/fr.po: New file courtesy Luc Pionchon.
 
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
