@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,6 +32,23 @@ size_t bufsiz = 0;
 static int trapped_error_code;
 static int (*old_error_handler) (Display *d, XErrorEvent *e);
 
+static void
+gpe_popup_infoprint (Display *dpy, char *s)
+{
+  Window w;
+  static Atom infoprint_atom;
+  
+  if (infoprint_atom == None)
+    infoprint_atom = XInternAtom (dpy, "_GPE_INFOPRINT", False);
+
+  w = XGetSelectionOwner (dpy, infoprint_atom);
+  if (w != None)
+    {
+      XChangeProperty (dpy, w, infoprint_atom, XA_STRING, 8, PropModeReplace,
+		       s, strlen (s));
+    }
+}
+
 static int
 error_handler(Display     *display,
 	      XErrorEvent *error)
@@ -57,8 +74,6 @@ untrap_errors(void)
 void
 selection_clear (void)
 {
-  fprintf (stderr, "got SelectionClear\n");
-
   XConvertSelection (dpy, clipboard_atom, XA_STRING,
 		     clipboard_selection_atom, win, CurrentTime);
 
@@ -71,8 +86,6 @@ selection_request (XEvent *ev)
   XSelectionRequestEvent *rev = (XSelectionRequestEvent *)ev;
   XSelectionEvent sev;
   
-  fprintf (stderr, "got SelectionRequest from requestor %x\n", rev->requestor);
-
   sev.type = SelectionNotify;
   sev.selection = rev->selection;
   sev.requestor = rev->requestor;
@@ -126,8 +139,8 @@ selection_notify (XEvent *ev)
       buf = malloc (n);
       memcpy (buf, prop, n);
       bufsiz = n;
-
-      mb_tray_send_message (dpy, win, "Copied", 2000);
+      
+      gpe_popup_infoprint (dpy, "Copied");
     }
 
   XSetSelectionOwner (dpy, clipboard_atom, win, CurrentTime);
@@ -148,16 +161,11 @@ main (int argc, char *argv[])
     }
 
   clipboard_atom = XInternAtom (dpy, "CLIPBOARD", False);
-  clipboard_selection_atom = XInternAtom (dpy, "MINICLIPBOARD_SELECTION", False);
+  clipboard_selection_atom = XInternAtom (dpy, "_GPE_MINICLIPBOARD_SELECTION", False);
 
   screen = DefaultScreen (dpy);
 
   win = XCreateSimpleWindow (dpy, RootWindow (dpy, screen), 0, 0, 1, 1, 0, 0, 0);
-  XMapWindow (dpy, win);
-  
-  mb_tray_init (dpy);  
-
-  //XSelectInput (dpy, DefaultRootWindow (dpy), SubstructureNotifyMask);
 
   selection_clear ();
 

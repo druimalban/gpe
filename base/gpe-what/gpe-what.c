@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,6 +30,7 @@
 #define _(x) gettext(x)
 
 static Atom help_atom;
+static Atom infoprint_atom;
 static Display *dpy;
 static int screen;
 
@@ -55,6 +56,7 @@ static Pixmap pixmap, pixmap_active;
 static struct timeval close_time;
 
 #define TIMEOUT 10
+#define INFOTIMEOUT 2
 
 static MBPixbufImage *img_icon, *img_icon_active;
 
@@ -96,7 +98,7 @@ close_popup (void)
 }
 
 static void
-popup_box (const char *text, int length, int x, int y)
+popup_box (const char *text, int length, int x, int y, int timeout)
 {
   PangoRectangle ink_rect;
   unsigned int w, h;
@@ -122,15 +124,23 @@ popup_box (const char *text, int length, int x, int y)
   w = ink_rect.width + (2 * XPADDING);
   h = ink_rect.height + (2 * YPADDING);
 
-  if (x + w >= root_w)
-    x -= w;
-  if (y + h >= root_h)
-    y -= h;
-
-  if (x < 0)
-    x = 0;
-  if (y < 0)
-    y = 0;
+  if (x < 0 && y < 0)
+    {
+      x = root_w - w - XPADDING;
+      y = YPADDING;
+    }
+  else
+    {
+      if (x + w >= root_w)
+	x -= w;
+      if (y + h >= root_h)
+	y -= h;
+      
+      if (x < 0)
+	x = 0;
+      if (y < 0)
+	y = 0;
+    }
 
   win_popup = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), x, y, w, h, 0, 0, bgcol);
   mask = XCreatePixmap (dpy, win_popup, w, h, 1);
@@ -175,7 +185,7 @@ popup_box (const char *text, int length, int x, int y)
   XSync (dpy, 0);
 
   gettimeofday (&close_time, NULL);
-  close_time.tv_sec += TIMEOUT;
+  close_time.tv_sec += timeout;
 }
 
 static gboolean
@@ -276,7 +286,6 @@ main (int argc, char *argv[])
   XRenderColor colortmp;
   XColor c;
   int last_x = 0, last_y = 0;
-  Atom string_atom;
   int xfd;
   int state = 0;
 
@@ -345,7 +354,7 @@ main (int argc, char *argv[])
   XClearWindow (dpy, win_panel);
 
   help_atom = XInternAtom (dpy, "_GPE_INTERACTIVE_HELP", False);
-  string_atom = XInternAtom (dpy, "STRING", False);
+  infoprint_atom = XInternAtom (dpy, "_GPE_INFOPRINT", False);
   
   pango_ctx = pango_xft_get_context (dpy, DefaultScreen (dpy));
 
@@ -377,7 +386,9 @@ main (int argc, char *argv[])
   XAllocColor (dpy, DefaultColormap (dpy, screen), &c);
   bgcol = c.pixel;
 
-  XChangeProperty (dpy, win_panel, help_atom, string_atom, 8, PropModeReplace, NULL, 0);
+  XSetSelectionOwner (dpy, infoprint_atom, win_panel, CurrentTime);
+
+  XChangeProperty (dpy, win_panel, help_atom, XA_STRING, 8, PropModeReplace, NULL, 0);
 
   XSelectInput (dpy, win_panel, ButtonPressMask | PropertyChangeMask);
 
@@ -442,7 +453,7 @@ main (int argc, char *argv[])
 		  last_y = xev.xbutton.y_root;
 		  
 		  if (handle_click (w, w, x, y) == FALSE)
-		    popup_box (_("No help available here."), -1, xev.xbutton.x_root, xev.xbutton.y_root);
+		    popup_box (_("No help available here."), -1, xev.xbutton.x_root, xev.xbutton.y_root, TIMEOUT);
 
 		  state = 2;
 		}
@@ -471,7 +482,7 @@ main (int argc, char *argv[])
 
 	case ClientMessage:
 	  if (xev.xclient.message_type == help_atom)
-	    popup_box (_("This is the interactive help button.  Tap here and then on another icon to get help."), -1, last_x, last_y);
+	    popup_box (_("This is the interactive help button.  Tap here and then on another icon to get help."), -1, last_x, last_y, TIMEOUT);
 	  break;
 
 	case PropertyNotify:
@@ -483,9 +494,23 @@ main (int argc, char *argv[])
 	      int format;
 
 	      if (XGetWindowProperty (dpy, win_panel, help_atom, 0, 65536, False,
-				      string_atom, &type, &format, &nitems, &bytes_after, &prop) == Success)
+				      XA_STRING, &type, &format, &nitems, &bytes_after, &prop) == Success)
 		{
-		  popup_box (prop, nitems, last_x, last_y);
+		  popup_box (prop, nitems, last_x, last_y, TIMEOUT);
+		  XFree (prop);
+		}
+	    }
+	  else if (xev.xproperty.atom == infoprint_atom)
+	    {
+	      unsigned char *prop;
+	      unsigned long nitems, bytes_after;
+	      Atom type;
+	      int format;
+
+	      if (XGetWindowProperty (dpy, win_panel, infoprint_atom, 0, 65536, False,
+				      XA_STRING, &type, &format, &nitems, &bytes_after, &prop) == Success)
+		{
+		  popup_box (prop, nitems, -1, -1, INFOTIMEOUT);
 		  XFree (prop);
 		}
 	    }

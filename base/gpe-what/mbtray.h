@@ -29,7 +29,7 @@
 #include <X11/Xatom.h>
 #include <X11/Xmd.h>
 
-#include <libmb/mbpixbuf.h>
+#include "mbpixbuf.h"
 
 #define SYSTEM_TRAY_REQUEST_DOCK    0
 #define SYSTEM_TRAY_BEGIN_MESSAGE   1
