@@ -55,6 +55,11 @@ install-mo:
 
 install: install-program install-mo
 
+clean-dist:
+	rm -rf familiar/dist familiar/dist.list
+
+clean: clean-dist
+
 check-source:
 	@if ! grep -q '^Source:' familiar/$(CONTROL); then echo -e "\nNo Source: field in control file.  Aborting.\n"; exit 1; fi
 
@@ -70,9 +75,9 @@ ipkg: check-source ipkg-prep clean
 	$(MAKE) DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install-program
 	rm -rf familiar/dist.list
 	ipkg-build -o 0 -g 0 familiar/dist | sed 's/^Packaged .*into //; t 1; d; : 1; s:.*/::' >> familiar/dist.list
-	rm -f 
 	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; tr ' ' '\n' < translation-ipkgs.txt >> familiar/dist.list; fi
 	md5sum `cat familiar/dist.list` > $(PACKAGE)_$(VERSION).batch
+	rm -rf familiar/dist familiar/dist.list
 	$(MAKE) printinfo
 
 dpkg: dist

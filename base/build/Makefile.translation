@@ -56,7 +56,7 @@ extract-po:
 	( SOURCES="$(SOURCES)"; for DESK in $(PACKAGE).desktop.in $(EXTRA_DESKTOPS); do if [ -f $$DESK ]; then intltool-extract --type=gettext/ini $$DESK; SOURCES="$$SOURCES $${DESK}.h"; fi; done; if [ "x$$SOURCES" != "x" ]; then xgettext --add-comments=TRANSLATORS: -k_ -kN_ -o $(DIR_PO)/$(PACKAGE).pot.new $$SOURCES; fi )
 	if [ -f $(DIR_PO)/$(PACKAGE).pot.new ]; then if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi; fi
 
-clean: clean-po
+clean: clean-po clean-dist-translation
 
 clean-po:
 	rm -rf $(DIR_PO)/*.mo
@@ -83,6 +83,9 @@ endif
 transdist := familiar/dist-translation
 templates := $(BUILD)/familiar
 ipkglist  := translation-ipkgs.txt
+
+clean-dist-translation:
+	rm -rf $(transdist) $(ipkglist)
 
 real-translation-package: all-mo
 	rm -rf $(transdist) $(ipkglist)

@@ -1,5 +1,15 @@
 2004-03-07  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.translation (clean-dist-translation): Remove temporary
+	files.
+	(clean): Also depend on clean-dist-translation.
+
+	* Makefile.dpkg_ipkg (clean-dist): Remove familiar/dist and
+	familiar/dist.list.
+	(clean): Also depend on clean-dist.
+	(ipkg): Clean away familiar/dist and familiar/dist.list after
+	packaging.
+
 	* Makefile.translation (real-translation-package): Pass "-g 0 -o 0"
 	to ipkg-build.  Remove chown command.
 
