@@ -41,6 +41,7 @@
 #define GPSD_STARTUP_SCRIPT "/etc/init.d/gpsd"
 #define GPSD_STARTUP_LINK "/etc/rc2.d/S96gpsd"
 #define INITTAB "/etc/inittab"
+#define GPSD_CONFIG "/etc/gpsd.conf"
 
 #define PARAM_BOOL 0
 #define PARAM_INT 1
@@ -204,9 +205,19 @@ Serial_Build_Objects (void)
   gchar iname[100];
   GtkTooltips *tooltips;
   GSList *bauds = NULL;
+  gchar cur_baud[10] = {"4800"};
+  gint ibaud = 4800;
+  gchar etmp[10];
+  gboolean emate = FALSE;
 	
   int gpsd_installed = !access(GPSD_STARTUP_SCRIPT,F_OK);
 
+  if (!parse_file(GPSD_CONFIG,"-T %c",etmp) ||
+	  !parse_file(GPSD_CONFIG,"-T%c",etmp))
+  emate = TRUE;
+  
+  parse_file(GPSD_CONFIG,"-s %d",&ibaud);
+  snprintf(cur_baud,10,"%d",ibaud);
   bauds = g_slist_append(bauds,"1200");
   bauds = g_slist_append(bauds,"2400");
   bauds = g_slist_append(bauds,"4800");
@@ -278,7 +289,7 @@ Serial_Build_Objects (void)
   -d host      [ set dgps server ]
   -r port      [ set dgps rtcm-sc104 port ]
 */
-  
+#warning missing: port  
   table = gtk_table_new(3,3,FALSE);
  
   gtk_tooltips_set_tip(tooltips,table,_("This page configures the GPS receiver software."),NULL);
@@ -306,7 +317,8 @@ Serial_Build_Objects (void)
   gtk_table_attach(GTK_TABLE(table),self.rbEarthmate,1,2,2,3,GTK_FILL,GTK_FILL,gpe_get_boxspacing(),gpe_get_boxspacing());
   gtk_widget_set_sensitive(self.rbEarthmate,gpsd_installed);
   gtk_tooltips_set_tip(tooltips,self.rbEarthmate,_("GPS receiver is an Earthmate GPS."),NULL);
-
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbEarthmate),emate);
+  
   label = gtk_label_new(_("Baud Rate"));
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   gtk_table_attach(GTK_TABLE(table),label,0,2,3,4,GTK_FILL,GTK_FILL,0,0);
@@ -314,6 +326,8 @@ Serial_Build_Objects (void)
   self.cbBaudrate = gtk_combo_new();
   gtk_combo_set_popdown_strings(GTK_COMBO(self.cbBaudrate),bauds);  
   gtk_table_attach(GTK_TABLE(table),self.cbBaudrate,0,2,4,5,GTK_FILL,GTK_FILL,gpe_get_boxspacing(),gpe_get_boxspacing());
-    
+  gtk_combo_set_value_in_list(GTK_COMBO(self.cbBaudrate),FALSE,FALSE);
+  gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(self.cbBaudrate)->entry),cur_baud);    
+  
   return notebook;
 }
