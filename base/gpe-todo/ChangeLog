@@ -1,3 +1,7 @@
+2002-06-21  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* list-ui.c: Push changes to items when clicked from main window.
+
 2002-06-21  Philip Blundell  <pb@debian.org>
 
 	* main.c: Set icon for window manager.
