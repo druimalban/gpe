@@ -119,6 +119,8 @@
 	      <property name="show_border">False</property>
 	      <property name="tab_pos">GTK_POS_TOP</property>
 	      <property name="scrollable">False</property>
+	      <property name="tab_hborder">2</property>
+	      <property name="tab_vborder">2</property>
 	      <property name="enable_popup">False</property>
 
 	      <child>
@@ -183,6 +185,8 @@
 		      <property name="show_border">True</property>
 		      <property name="tab_pos">GTK_POS_TOP</property>
 		      <property name="scrollable">True</property>
+		      <property name="tab_hborder">2</property>
+		      <property name="tab_vborder">2</property>
 		      <property name="enable_popup">False</property>
 
 		      <child>
@@ -1894,6 +1898,8 @@ USE WITH CARE</property>
 		      <property name="show_border">True</property>
 		      <property name="tab_pos">GTK_POS_TOP</property>
 		      <property name="scrollable">True</property>
+		      <property name="tab_hborder">2</property>
+		      <property name="tab_vborder">2</property>
 		      <property name="enable_popup">False</property>
 
 		      <child>
@@ -2356,6 +2362,7 @@ USE WITH CARE</property>
 				  <property name="active">False</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
+				  <property name="group">rbWEPenable</property>
 				</widget>
 				<packing>
 				  <property name="left_attach">1</property>
@@ -2377,6 +2384,7 @@ USE WITH CARE</property>
 				  <property name="active">False</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
+				  <property name="group">rbWEPenable</property>
 				</widget>
 				<packing>
 				  <property name="left_attach">1</property>
@@ -2420,7 +2428,7 @@ USE WITH CARE</property>
 				  <property name="active">False</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
-				  <property name="group">rbAuthOpen</property>
+				  <property name="group">rbWEPenable</property>
 				</widget>
 				<packing>
 				  <property name="left_attach">2</property>
@@ -2442,7 +2450,7 @@ USE WITH CARE</property>
 				  <property name="active">False</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
-				  <property name="group">rbKeyHex</property>
+				  <property name="group">rbWEPenable</property>
 				</widget>
 				<packing>
 				  <property name="left_attach">2</property>

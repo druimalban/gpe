@@ -551,15 +551,14 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 {
 	
 	GtkWidget 	*MainWindow;
-	GtkWidget 	*SaveWindow;
-
 	GtkWidget 	*treeview;
+	GtkWidget       *dialog;
  	GtkTreeIter	iter;
 	GtkListStore	*liststore;
 	GtkTreeSelection *selection;
 	
 	gchar      	*ListEntry[4];
-
+	gint            answer;
 	int 		count;
 	Scheme_t*	Scheme;
 	Scheme_t*	OrigScheme;
@@ -576,13 +575,18 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 		get_changes();
 		if (HasChanged) 
 		{
-			SaveWindow = create_dlgSaveChanges();
-			gtk_window_set_transient_for(GTK_WINDOW(SaveWindow), GTK_WINDOW(GPE_WLANCFG));
-			if (gtk_dialog_run(GTK_DIALOG(SaveWindow)) != GTK_RESPONSE_YES) 
+	       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_MESSAGE_QUESTION,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 _("Settings habe been changed.\nDo you want to save the settings?"));
+			answer = gtk_dialog_run(GTK_DIALOG(dialog));
+			gtk_widget_destroy(dialog);
+
+			if (answer != GTK_RESPONSE_YES) 
 			{
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
-			} 
-			else
+			} else
 			{
 				if (CurrentScheme->NewScheme)
 				{
@@ -633,9 +637,6 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 						free(ListEntry[count]);
 				}
 			}
-			gtk_widget_destroy(SaveWindow);
-
-
 		} else 
 		{
 			gtk_notebook_set_page(GTK_NOTEBOOK(MainWindow), 0);
@@ -649,9 +650,14 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 		get_changes_simple();
 		if (HasChanged) 
 		{
-			SaveWindow = create_dlgSaveChanges();
-			gtk_window_set_transient_for(GTK_WINDOW(SaveWindow), GTK_WINDOW(GPE_WLANCFG));
-			if (gtk_dialog_run(GTK_DIALOG(SaveWindow)) != GTK_RESPONSE_YES) 
+	       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_MESSAGE_QUESTION,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 _("Settings habe been changed.\nDo you want to save the settings?"));
+			answer = gtk_dialog_run(GTK_DIALOG(dialog));
+			gtk_widget_destroy(dialog);
+			if (answer != GTK_RESPONSE_YES) 
 			{
 				memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
 			} else
@@ -676,8 +682,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 				for (count = 0; count < 4; count++) 
 					free(ListEntry[count]);
 			}
-			gtk_widget_destroy(SaveWindow);
-
+			
 			gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
 		
 			for (count = 0; count<SchemeCount; count++)
@@ -777,73 +782,9 @@ void on_GPE_WLANCFG_show (GtkWidget *widget, gpointer user_data)
 
 }
 
-/* kc-or: as we cannot reorder the entries in the file due to the 
-          method the parser works, wo don't have the up and down
-          buttons any longer...
-
-void on_btnUp_clicked (GtkButton *button, gpointer user_data)
-{
-	GtkWidget	*treeview;
- 	GtkTreeSelection *selection;
-	GtkTreeIter	iter;
-	GtkTreeIter	prev;
-	GtkTreeModel	*liststore;
-	GtkTreePath     *treepath;
-	void		*Values[5];
-	
-	treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
-	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-	
-	if(gtk_tree_selection_get_selected (selection, &liststore, &iter))
-	{
-		treepath = gtk_tree_model_get_path(liststore, &iter);
-		gtk_tree_path_prev(treepath);
-		if (gtk_tree_model_get_iter(liststore, &prev, treepath))
-		{
-			gtk_list_store_insert_before(GTK_LIST_STORE(liststore), &prev, &prev);
-			gtk_tree_model_get(liststore, &iter, 0, &Values[0], 1, &Values[1], 2, &Values[2], 3, &Values[3], 4, &Values[4], -1);
-			gtk_list_store_set(GTK_LIST_STORE(liststore), &prev, 0, Values[0], 1, Values[1], 2 , Values[2], 3, Values[3], 4, Values[4], -1);
-			gtk_list_store_remove(GTK_LIST_STORE(liststore), &iter);
-			gtk_tree_selection_select_iter(selection, &prev);
-			HasChanged = TRUE;
-		}
-		gtk_tree_path_free(treepath);
-	}
-}
-
-
-void on_btnDown_clicked(GtkButton *button, gpointer user_data)
-{
-	GtkWidget	*treeview;
- 	GtkTreeSelection *selection;
-	GtkTreeIter	iter;
-	GtkTreeIter	next;
-	GtkTreeModel	*liststore;
-	void		*Values[5];
-	
-	treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
-	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
-	
-	if(gtk_tree_selection_get_selected (selection, &liststore, &iter))
-	{
-		next = iter;
-		if (gtk_tree_model_iter_next(liststore, &next))
-		{
-			gtk_list_store_insert_after(GTK_LIST_STORE(liststore), &next, &next);
-			gtk_tree_model_get (liststore, &iter, 0, &Values[0], 1, &Values[1], 2, &Values[2], 3, &Values[3], 4, &Values[4], -1);
-			gtk_list_store_set(GTK_LIST_STORE(liststore), &next, 0, Values[0], 1, Values[1], 2 , Values[2], 3, Values[3], 4, Values[4], -1);
-			gtk_list_store_remove(GTK_LIST_STORE(liststore), &iter);
-			gtk_tree_selection_select_iter(selection, &next);
-			HasChanged = TRUE;
-		}
-	}
-}
-
-*/
-
 void on_btnDelete_clicked(GtkButton *button, gpointer user_data)
 {
-	GtkWidget	*DeleteVerify;
+	GtkWidget       *dialog;
 	
 	Scheme_t	*Scheme;
 	
@@ -853,14 +794,23 @@ void on_btnDelete_clicked(GtkButton *button, gpointer user_data)
 	GtkTreeIter	iter;
 	GtkTreeModel	*liststore;
 	
+	gint            answer;
+	
 	treeview  = lookup_widget(GPE_WLANCFG, "tvSchemeList");
 	selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	
 	if(gtk_tree_selection_get_selected (selection, &liststore, &iter))
 	{
-		DeleteVerify=create_dlgDeleteEntry();
-		gtk_window_set_transient_for(GTK_WINDOW(DeleteVerify), GTK_WINDOW(GPE_WLANCFG));
-		if (gtk_dialog_run(GTK_DIALOG(DeleteVerify)) == GTK_RESPONSE_YES)
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION,
+					 GTK_BUTTONS_YES_NO,
+					 _("Do you realy want to delete this entry??"));
+		answer = gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+
+		if (answer == GTK_RESPONSE_YES)
 		{
 			gtk_tree_model_get (liststore, &iter, 4, &Scheme, -1);
 			delete_list[delete_list_count][0] = Scheme->scheme_start;
@@ -874,10 +824,8 @@ void on_btnDelete_clicked(GtkButton *button, gpointer user_data)
 			SchemeCount--;	
 			HasChanged = TRUE;
 		};
-		gtk_widget_destroy(DeleteVerify);
 	}
 }
-
 
 void on_btnNew_clicked (GtkButton *button, gpointer user_data)
 {
@@ -1206,14 +1154,14 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 {
 	
 	GtkWidget 	*MainWindow;
-	GtkWidget 	*SaveWindow;
-
+	GtkWidget       *dialog;
 	GtkWidget 	*treeview;
  	GtkTreeIter	iter;
 	GtkListStore	*liststore;
 	GtkTreeSelection *selection;
 	
 	gchar      	*ListEntry[4];
+	gint            answer;
 
 	int 		count;
 	Scheme_t*	OrigScheme;
@@ -1228,9 +1176,14 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 	get_changes_simple();
 	if (HasChanged) 
 	{
-		SaveWindow = create_dlgSaveChanges();
-		gtk_window_set_transient_for(GTK_WINDOW(SaveWindow), GTK_WINDOW(GPE_WLANCFG));
-		if (gtk_dialog_run(GTK_DIALOG(SaveWindow)) != GTK_RESPONSE_YES) 
+		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_QUESTION,
+					 GTK_BUTTONS_YES_NO,
+					 _("Settings habe been changed.\nDo you want to save the settings?"));
+		answer = gtk_dialog_run(GTK_DIALOG(dialog));
+		gtk_widget_destroy(dialog);
+		if (answer != GTK_RESPONSE_YES) 
 		{
 			memcpy(CurrentScheme, OrigScheme, sizeof(Scheme_t));
 		} else
@@ -1255,7 +1208,6 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 			for (count = 0; count < 4; count++) 
 				free(ListEntry[count]);
 		}
-		gtk_widget_destroy(SaveWindow);
 
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
 	}

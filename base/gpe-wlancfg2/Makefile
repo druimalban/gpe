@@ -30,15 +30,15 @@ CONTROL = control1
 #GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
 #GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype -lXinerama
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype 
+#-lXinerama
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 else
 CFLAGS += -Os -fomit-frame-pointer 
-LDFLAGS = -L/skiff/local/arm-linux/lib/X11 -lgdk-x11-2.0 -lX11 -lXrender -lXext -lXinerama
-LDFLAGS = -L/skiff/local/arm-linux/lib/X11 -lgdk-x11-2.0 -lX11 -lXrender -lXext -lXinerama
+#LDFLAGS = -L/skiff/local/arm-linux/lib/X11 -lgdk-x11-2.0 -lX11 -lXrender -lXext -lXinerama
 endif
 
 CFLAGS += -Wall
