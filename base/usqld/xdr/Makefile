@@ -1,10 +1,10 @@
-all:libxdr example
+all:libxdr 
 
 CFLAGS=-Os -fPIC
 
 libxdr:xdr-schema.lo xdr-tree.lo xdr-serialize.lo xdr-deserialize.lo
 	gcc -shared -o libxdr.so *.lo
-	
+
 xdr-tree.lo: xdr.h xdr-tree.c
 	gcc $(CFLAGS) -c xdr-tree.c -o xdr-tree.lo
 

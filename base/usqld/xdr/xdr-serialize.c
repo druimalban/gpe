@@ -1,14 +1,18 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <assert.h>
-
+#include <stdio.h>
 #include "xdr.h"
 
-int  XDR_serialize_elem(XDR_typedesc * s, XDR_tree *t,int fd){
+int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
   unsigned char buf[4];
   int rv = XDR_OK;
+  
 
   if(s->type!=t->type){
+    fprintf(stderr,"errrr, schema says %s, but type says %s\n",
+	    XDR_find_type_name(s->type),
+	    XDR_find_type_name(t->type));
     return XDR_SCHEMA_VIOLATION;
   }
   switch(s->type){
@@ -41,7 +45,7 @@ int  XDR_serialize_elem(XDR_typedesc * s, XDR_tree *t,int fd){
       data = ((XDR_tree_str*)t)->data;
       slen = ((XDR_tree_str*)t)->len;;
       
-      *buf = htonl(slen);
+      *((u_int32_t*)buf) = htonl(slen);
       if(-1==write(fd,buf,4))
 	 return XDR_IO_ERROR;
 	 
@@ -105,15 +109,17 @@ int  XDR_serialize_elem(XDR_typedesc * s, XDR_tree *t,int fd){
     {
       int i;
       unsigned int d_val;
-      XDR_typedesc * d_t = NULL;
+      XDR_schema * d_t = NULL;
       
-      if(((XDR_tree_compound*)s)->nelems!=2 ||
-	 ((XDR_tree_compound*)s)->subelems[0]->type!=XDR_UINT){
+      if(((XDR_tree_compound*)t)->nelems!=2 ){
+	return XDR_SCHEMA_VIOLATION;
+      }
+      if( ((XDR_tree_compound*)t)->subelems[0]->type!=XDR_UINT){
 	return XDR_SCHEMA_VIOLATION;
       }
       d_val = ((XDR_tree_simple*)(((XDR_tree_compound*)t)->subelems[0]))->val.uintVal;
       
-      for(i=0;i<((XDR_type_union*)s)->num_alternatives;i++){	
+      for(i=0;i<((XDR_type_union*)s)->num_alternatives;i++){
 	if(((XDR_type_union*)s)->elems[i].d==d_val){
 	  d_t = ((XDR_type_union*)s)->elems[i].t;
 	  break;
@@ -137,7 +143,8 @@ int  XDR_serialize_elem(XDR_typedesc * s, XDR_tree *t,int fd){
     break;
   case XDR_VOID:
     break;
-  defauilt:
+  default:
+    fprintf(stderr,"attempt to serialize unknown type %d\n",s->type);
     return XDR_SCHEMA_VIOLATION;
   }
   

@@ -79,37 +79,37 @@ typedef struct {
 typedef struct  
 {
   XDR_type type;
-}XDR_typedesc;
+}XDR_schema;
 
 
 typedef struct
 {
-  XDR_typedesc base;
+  XDR_schema base;
   size_t num_elems; /*!=NULL*/
 } XDR_opaque;
 
 typedef struct 
 {
-  XDR_typedesc base;
+  XDR_schema base;
   size_t num_elems;
-  XDR_typedesc * elem_type;
+  XDR_schema * elem_type;
 } XDR_array;
 
 typedef struct  
 {
-  XDR_typedesc base;
+  XDR_schema base;
   size_t num_elems;
-  XDR_typedesc ** elems;
+  XDR_schema ** elems;
 }XDR_struct;
 
 typedef struct {
-  XDR_typedesc * t;
+  XDR_schema * t;
   unsigned int d;
 }XDR_union_discrim;
 
 typedef struct  
 {
-  XDR_typedesc base;
+  XDR_schema base;
   size_t num_alternatives;
   XDR_union_discrim * elems;
 }XDR_type_union;
@@ -119,12 +119,12 @@ typedef struct
 #define mylloc(type) (type*) malloc(sizeof(type))
 #define myllocn(type,n) (type*) malloc(sizeof(type) * n)
 
-XDR_typedesc * XDR_schema_new_typedesc(XDR_type t);
+XDR_schema * XDR_schema_new_typedesc(XDR_type t);
 
-XDR_typedesc * XDR_schema_new_opaque(size_t len);
-XDR_typedesc * XDR_schema_new_array(XDR_typedesc *t,size_t len);
-XDR_typedesc * XDR_schema_new_struct(size_t num_elems,const XDR_typedesc **elems);
-XDR_typedesc * XDR_schema_new_type_union(size_t num_alternatives,const XDR_union_discrim *elems);
+XDR_schema * XDR_schema_new_opaque(size_t len);
+XDR_schema * XDR_schema_new_array(XDR_schema *t,size_t len);
+XDR_schema * XDR_schema_new_struct(size_t num_elems,const XDR_schema **elems);
+XDR_schema * XDR_schema_new_type_union(size_t num_alternatives,const XDR_union_discrim *elems);
 
 #define XDR_schema_new_varopaque() XDR_schema_new_opaque(0)
 #define XDR_schema_new_fixedopaque(n) XDR_schema_new_opaque(n)
@@ -143,8 +143,6 @@ XDR_typedesc * XDR_schema_new_type_union(size_t num_alternatives,const XDR_union
 #define XDR_schema_new_string() XDR_schema_new_typedesc(XDR_STRING)
 #define XDR_schema_new_void() XDR_schema_new_typedesc(XDR_VOID)
 
-int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t);
-int  XDR_serialize_elem(XDR_typedesc *s, XDR_tree *t,int fd);
 
 
 /*base constructors for tree elements*/
@@ -162,38 +160,53 @@ void XDR_tree_new_simple(XDR_type type,XDR_tree_simple ** out_t);
  */
 XDR_tree*  XDR_tree_new_union (unsigned int disc,
 			       XDR_tree * val);
-
-XDR_tree* XDR_tree_new_struct (size_t num_elems,
-			       XDR_tree ** elems);
-
-XDR_tree * XDR_tree_new_array(int fixed_size,
-			      size_t num_elems,
-			      XDR_tree **elems);
-
-XDR_tree * XDR_tree_new_compound(int fixed_size,
-				 size_t length,
-				 unsigned char * data);
-
-XDR_tree * XDR_tree_new_string(size_t length,
+XDR_tree* XDR_tree_new_mult (XDR_type type,
+			     size_t num_elems,
+			     XDR_tree ** elems);
+#define XDR_tree_new_fixed_array(n,e) XDR_tree_new_mult(XDR_FIXEDARRAY,en,e)
+#define XDR_tree_new_var_array(n,e) XDR_tree_new_mult(XDR_VARARRAY,n,e)
+#define XDR_tree_new_struct(n,e) XDR_tree_new_mult(XDR_STRUCT,n,e)
+XDR_tree * XDR_tree_new_opaque(XDR_type type,
+			       int fixed_size,
+			       size_t length,
 			       unsigned char * data);
-
+#define XDR_tree_new_fixed_opaque(l,d) \
+  XDR_tree_new_opaque(XDR_FIXEDOPAQUE,1,l,d)
+#define XDR_tree_new_var_opaque(l,d) \
+  XDR_tree_new_opaque(XDR_VAROPAQUE,0,l,d)
+XDR_tree * XDR_tree_new_string(char * data);
 XDR_tree * XDR_tree_new_num(XDR_type t,u_int32_t val);
-#define XDR_tree_new_int(v) XDR_tree_new_uint(XDR_INT,(u_int32_t)v)
-#define XDR_tree_new_uint(v) XDR_tree_new_uint(XDR_UINT,(u_int32_t)v)
-#define XDR_tree_new_bool(v) XDR_tree_new_uint(XDR_BOOL,(u_int32_t)v)
-#define XDR_tree_new_enum(v) XDR_tree_new_uint(XDR_ENUM,(u_int32_t)v)
+#define XDR_tree_new_int(v) XDR_tree_new_num(XDR_INT,(u_int32_t)v)
+#define XDR_tree_new_uint(v) XDR_tree_new_num(XDR_UINT,(u_int32_t)v)
+#define XDR_tree_new_bool(v) XDR_tree_new_num(XDR_BOOL,(u_int32_t)v)
+#define XDR_tree_new_enum(v) XDR_tree_new_num(XDR_ENUM,(u_int32_t)v)
 
-XDR_tree * XDR_tree_new_uhyper(u_int64_t val);
-#define  XDR_tree_new_hyper(val) XDR_tree_new_uhyper((u_int64_t)val)
-
+XDR_tree * XDR_tree_new_xhyper(XDR_type t,u_int64_t val);
+#define  XDR_tree_new_uhyper(val) XDR_tree_new_xhyper(XDR_UHYPER, \
+						      (u_int64_t)val)
+#define  XDR_tree_new_hyper(val) XDR_tree_new_xhyper(XDR_HYPER,(u_int64_t)val)
 XDR_tree * XDR_tree_new_float(float val);
 XDR_tree * XDR_tree_new_double(double val);
 
+/*accessors*/
+#define XDR_t_get_union_disc(t)  ((XDR_tree_simple*)\
+					 ((XDR_tree_compound*)\
+					  t)->subelems[0]).val.uintVal
+#define XDR_t_get_union_t(t)  ((XDR_tree_compound*)\
+					  t)->subelems[1])
 
+#define XDR_t_get_string(t)  ((XDR_tree_str *)t->data)
+#define XDR_t_get_data(t)  ((XDR_tree_str *)t->data)
+#define XDR_t_get_data_len(t)  ((XDR_tree_str *)t->len)
 
+#define XDR_t_get_comp_elem(t,n) ((XDR_tree_compound*)t->subelems[n])
 
-
-
+void XDR_tree_dump(XDR_tree*t);
 void XDR_tree_free(XDR_tree * t);
+void XDR_dump_schema(XDR_schema *s);
+const char * XDR_find_type_name(XDR_type t);
+
+int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t);
+int  XDR_serialize_elem(XDR_schema *s, XDR_tree *t,int fd);
 
 #endif 

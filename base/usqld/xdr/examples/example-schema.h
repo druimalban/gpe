@@ -10,5 +10,5 @@
 #define PICKLE_ROW 0x6
 #define PICKLE_EOF 0x7
 #define PICKLE_MAX 0x8
-XDR_typedesc * get_schema();
+XDR_schema * get_schema();
 #endif

@@ -1,14 +1,14 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <assert.h>
-
+#include <stdio.h>
 #include "xdr.h"
 
 
-int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t){
+int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
   unsigned char buf[4];
   int rv = XDR_OK;
-
+  
   switch(s->type){
   case XDR_INT:
   case XDR_BOOL:
@@ -38,8 +38,8 @@ int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t){
       if(-1==read(fd,buf,4))
 	return XDR_IO_ERROR;      
       
-      slen = ntohl(((int*)buf));
-      
+      slen = ntohl(*((u_int32_t*)buf));
+ 
       if(XDR_OK!=(rv=XDR_tree_new_str(s->type,slen,&t))){
 	return rv;
       }
@@ -77,7 +77,8 @@ int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t){
 	len = ntohl(*((int*)buf));
       }else{
 	len = ((XDR_array*)s)->num_elems;
-      }
+      }   
+      fprintf(stderr,"reading %d array elements\n",len);
       
       if(XDR_OK!=(rv=XDR_tree_new_compound(s->type,len,&t)))
 	return rv;
@@ -117,7 +118,7 @@ int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t){
     {
       int i;
       unsigned int d_val;
-      XDR_typedesc * d_t = NULL;
+      XDR_schema * d_t = NULL;
       XDR_tree_compound * t;
       XDR_tree_simple *disc;
       if(-1==read(fd,buf,4))
@@ -148,7 +149,10 @@ int  XDR_deserialize_elem(XDR_typedesc *s,int fd, XDR_tree **out_t){
       *out_t=(XDR_tree*) t;
     }
     break;
-  defauilt:
+  case XDR_VOID:
+    *out_t = NULL;
+    break;
+  default:
     return XDR_SCHEMA_VIOLATION;
   }
   

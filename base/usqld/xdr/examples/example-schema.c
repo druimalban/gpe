@@ -1,10 +1,10 @@
-
+#include <stdlib.h>
 #include <xdr.h>
 #include "example-schema.h"
 
-XDR_typedesc * get_schema(){
+XDR_schema * get_schema(){
   
-  XDR_typedesc * protocol,
+  XDR_schema * protocol,
     *connect_packet,
     *disconnect_packet,
     *query_packet,
@@ -19,7 +19,7 @@ XDR_typedesc * get_schema(){
   
   elems[0].t = eof_packet = XDR_schema_new_void();
   elems[0].d = PICKLE_EOF;
-  elems[1].t = rows_packet = XDR_schema_new_array(XDR_schema_new_string(),0);
+  elems[1].t = rows_packet = XDR_schema_new_array(XDR_schema_new_string(),5);
   elems[1].d = PICKLE_ROW;
   elems[2].t = start_rows_packet = XDR_schema_new_array(XDR_schema_new_string(),0);
   elems[2].d = PICKLE_STARTROWS;
