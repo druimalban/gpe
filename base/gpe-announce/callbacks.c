@@ -76,6 +76,12 @@ set_buzzer (int on, int off)
 
   return 0;
 }
+
+void
+buzzer_off (void)
+{
+  set_buzzer (0, 0);
+}
 	
 int get_vol(int *left, int *right)
 {
@@ -235,6 +241,8 @@ gint bells_and_whistles ()
   
 	if(get_vol(&curl, &curr) == -1)
     		printf("Unable to get volume\n");
+
+	atexit (buzzer_off);
    	
 	set_buzzer (1000, 500);
 
