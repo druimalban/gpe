@@ -239,7 +239,7 @@ main (int argc, char *argv[])
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
-  g_signal_connect (G_OBJECT (main_window), "destroy",
+  g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_exit), NULL);
 
   libdm_mark_window (main_window);

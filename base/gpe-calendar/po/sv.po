@@ -1,0 +1,314 @@
+# Swedish messages for gpe-calendar.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-calendar 0.40\n"
+"POT-Creation-Date: 2003-03-30 15:42+0100\n"
+"PO-Revision-Date: 2003-07-06 17:49+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:239 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "Kalender"
+
+#: main.c:258
+msgid "New appointment"
+msgstr "Nytt möte"
+
+#: main.c:258
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Tryck här för att lägga till ett nytt möte eller en ny påminnelse"
+
+#: main.c:264 main.c:265
+msgid "Today"
+msgstr "Idag"
+
+#: main.c:273
+msgid "Future"
+msgstr "Framtid"
+
+#: main.c:273
+msgid "Future View"
+msgstr "Framtidsvy"
+
+#: main.c:274
+msgid "Tap here to see all future events."
+msgstr "Tryck här för att se alla framtida händelser."
+
+#: main.c:281
+msgid "Day View"
+msgstr "Dagsvy"
+
+#: main.c:282
+msgid "Tap here to select day-at-a-time view."
+msgstr "Tryck här för att välja endagsvy."
+
+#: main.c:289
+msgid "Week"
+msgstr "Vecka"
+
+#: main.c:289
+msgid "Week View"
+msgstr "Veckovy"
+
+#: main.c:290
+msgid "Tap here to select week-at-a-time view."
+msgstr "Tryck här för att välja enveckasvy."
+
+#: main.c:297
+msgid "Month"
+msgstr "Månad"
+
+#: main.c:297
+msgid "Month View"
+msgstr "Månadsvy"
+
+#: main.c:298
+msgid "Tap here to select month-at-a-time view."
+msgstr "Tryck här för att välja enmånadsvy."
+
+#: main.c:304
+msgid "Exit"
+msgstr "Avsluta"
+
+#: main.c:304
+msgid "Tap here to exit the program"
+msgstr "Tryck här för att avsluta programmet"
+
+#: event-ui.c:386
+msgid "End time must not be earlier than start time"
+msgstr "Sluttiden får inte vara tidigare än starttiden"
+
+#: event-ui.c:620
+msgid "Event"
+msgstr "Händelse"
+
+#: event-ui.c:621
+msgid "Recurrence"
+msgstr "Upprepning"
+
+#: event-ui.c:622 event-ui.c:809
+msgid "Alarm"
+msgstr "Alarm"
+
+#: event-ui.c:641 event-ui.c:846
+msgid "Type:"
+msgstr "Typ:"
+
+#: event-ui.c:646
+msgid "Appointment"
+msgstr "Möte"
+
+#: event-ui.c:647
+msgid "Reminder"
+msgstr "Påminnelse"
+
+#: event-ui.c:649
+msgid "Task"
+msgstr "Uppgift"
+
+#: event-ui.c:655
+msgid "Days"
+msgstr "dag"
+
+#: event-ui.c:656
+msgid "Weeks"
+msgstr "Veckor"
+
+#: event-ui.c:664
+msgid "Summary:"
+msgstr "Sammanfattning:"
+
+#: event-ui.c:680
+msgid "Start:"
+msgstr "Start:"
+
+#: event-ui.c:681
+msgid "End:"
+msgstr "Slut:"
+
+#: event-ui.c:682 event-ui.c:683
+msgid "at:"
+msgstr "vid:"
+
+#: event-ui.c:716
+msgid "Date:"
+msgstr "Datum:"
+
+#: event-ui.c:719
+msgid "Time:"
+msgstr "Tid:"
+
+#: event-ui.c:739
+msgid "Due:"
+msgstr "Ska utföras:"
+
+#: event-ui.c:743
+msgid "Allow:"
+msgstr "Tillåt:"
+
+#: event-ui.c:758
+msgid "Description:"
+msgstr "Beskrivning:"
+
+#: event-ui.c:813
+msgid "before event"
+msgstr "före händelse"
+
+#: event-ui.c:816
+msgid "minutes"
+msgstr "minuter"
+
+#: event-ui.c:818
+msgid "hours"
+msgstr "timmar"
+
+#: event-ui.c:820 event-ui.c:901
+msgid "days"
+msgstr "dagar"
+
+#: event-ui.c:822
+msgid "weeks"
+msgstr "veckor"
+
+#: event-ui.c:824 event-ui.c:967
+msgid "months"
+msgstr "månader"
+
+#: event-ui.c:826 event-ui.c:1021
+msgid "years"
+msgstr "år"
+
+#: event-ui.c:858
+msgid "No recurrence"
+msgstr "Ingen upprepning"
+
+#: event-ui.c:861
+msgid "Daily"
+msgstr "Dagligen"
+
+#: event-ui.c:864
+msgid "Weekly"
+msgstr "Veckovis"
+
+#: event-ui.c:867
+msgid "Monthly"
+msgstr "Månatligen"
+
+#: event-ui.c:870
+msgid "Yearly"
+msgstr "Årligen"
+
+#: event-ui.c:891 event-ui.c:913 event-ui.c:956 event-ui.c:1011
+msgid "Every"
+msgstr "Var"
+
+#: event-ui.c:914
+msgid "weeks, on:"
+msgstr "vecka, på:"
+
+#: event-ui.c:972
+#, c-format
+msgid "on day %d"
+msgstr "på dag %d"
+
+#: event-ui.c:976
+msgid "on the"
+msgstr "den"
+
+#: event-ui.c:984
+msgid "first"
+msgstr "första"
+
+# Bugrapporterat, http://bugzilla.ximian.com/show_bug.cgi?id=36245
+#: event-ui.c:986
+msgid "second"
+msgstr "sekund"
+
+#: event-ui.c:988
+msgid "third"
+msgstr "tredje"
+
+#: event-ui.c:990
+msgid "fourth"
+msgstr "fjärde"
+
+#: event-ui.c:992
+msgid "fifth"
+msgstr "femte"
+
+#: event-ui.c:994
+msgid "last"
+msgstr "sista"
+
+#: event-ui.c:1040
+msgid "End Date:"
+msgstr "Slutdatum:"
+
+#: event-ui.c:1046
+msgid "forever"
+msgstr "för alltid"
+
+#: event-ui.c:1057
+msgid "end after"
+msgstr "sluta efter"
+
+#: event-ui.c:1074
+msgid "end on"
+msgstr "sluta den"
+
+#: event-ui.c:1082
+msgid "events"
+msgstr "händelser"
+
+#: event-ui.c:1188
+msgid "Calendar: New event"
+msgstr "Kalender: Ny händelse"
+
+#: event-ui.c:1229
+msgid "Calendar: Edit event"
+msgstr "Kalender: Redigera händelser"
+
+#: day_popup.c:172
+msgid "No appointments"
+msgstr "Inga möten"
+
+#: xsettings.c:103
+msgid "Cannot create XSettings client"
+msgstr "Kan inte skapa XSettings-klient"
+
+#: gtkdatesel.c:187
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:196
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:199
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:202
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:213
+msgid "Week %V"
+msgstr "Vecka %V"
+
+#: gtkdatesel.c:219
+#, c-format
+msgid "%a, %d"
+msgstr "%a %d"
+
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE-kalender"

@@ -1,3 +1,12 @@
+2003-07-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add sv.
+	* po/sv.po: New file, courtesy Christian Rose.	
+
+2003-06-22  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Hook delete-event signal, not destroy.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (install_program), gpe-calendar.menu: No longer install
