@@ -20,7 +20,7 @@
     <handler>on_mainwindow_destroy</handler>
     <last_modification_time>Tue, 19 Mar 2002 01:30:39 GMT</last_modification_time>
   </signal>
-  <title>Screen settings</title>
+  <title>Screen Settings</title>
   <type>GTK_WINDOW_TOPLEVEL</type>
   <position>GTK_WIN_POS_NONE</position>
   <modal>False</modal>
