@@ -1,7 +1,10 @@
 2002-07-20  Philip Blundell  <philb@gnu.org>
 
+	* X11/Xsession-gpe.d/10setroot: New file.
+
 	* gpe-login.c (filter): Clear "result" label in case of previous
 	failed login attempt.
+	(Makefile): Remove spare "all" target.
 
 2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
 
