@@ -7,5 +7,5 @@ Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
 Provides: gpe-filemanager
 Replaces: gpe-filemanager
-Depends: libgpewidget1 (>= 0.27), gpe-icons (>= 0.15), libgnomevfs2-0, gnome-vfs-extras, libsqlite0
+Depends: libgpewidget1 (>= 0.83), gpe-icons (>= 0.15), libgnomevfs2-0, gnome-vfs-extras, libsqlite0
 Description: GPE File Manager

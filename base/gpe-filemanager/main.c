@@ -33,7 +33,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
-#include <gpe/gpe-iconlist.h>
+#include <gpe/gpeiconlistview.h>
 #include <gpe/dirbrowser.h>
 #include <gpe/spacing.h>
 
@@ -459,7 +459,7 @@ paste_file_clip (void)
 static void
 hide_menu (void)
 {
-  gpe_iconlist_popup_removed (GPE_ICONLIST (view_widget));
+  gpe_icon_list_view_popup_removed (GPE_ICON_LIST_VIEW (view_widget));
 }
 
 static void
@@ -1120,7 +1120,7 @@ add_icon (FileInformation *file_info)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 
   pixbuf = get_pixbuf (mime_icon);
-  gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
+  gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
 }
 
 gint
@@ -1147,7 +1147,7 @@ make_view ()
   loading_directory = 1;
 
   loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
-  gpe_iconlist_clear (GPE_ICONLIST (view_widget));
+  gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (view_widget));
   gtk_widget_draw (view_widget, NULL); // why?
 
   open_dir_result = 
@@ -1331,7 +1331,7 @@ zoom_in ()
   if (current_zoom < 48)
   {
     current_zoom = current_zoom + ZOOM_INCREMENT;
-    gpe_iconlist_set_icon_size (GPE_ICONLIST (view_widget), current_zoom);
+    gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
   }
 }
 
@@ -1341,7 +1341,7 @@ zoom_out ()
   if (current_zoom > 16)
   {
     current_zoom = current_zoom - ZOOM_INCREMENT;
-    gpe_iconlist_set_icon_size (GPE_ICONLIST (view_widget), current_zoom);
+    gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
   }
 }
 
@@ -1349,7 +1349,7 @@ zoom_out ()
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *toolbar2;
+  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *sw;
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
@@ -1390,14 +1390,19 @@ main (int argc, char *argv[])
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
     "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
 
-  view_widget = gpe_iconlist_new ();
+  view_widget = gpe_icon_list_view_new ();
   gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
 		      GTK_SIGNAL_FUNC (button_clicked), NULL);
   gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
 		      GTK_SIGNAL_FUNC (show_popup), NULL);
                              
-  gpe_iconlist_set_icon_size (GPE_ICONLIST (view_widget), current_zoom);
-  gpe_icon_list_view_set_icon_xmargin (GPE_ICONLIST (view_widget), 30);
+  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view_widget), 30);
+  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_RIGHT);
+  
+  sw = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),GTK_POLICY_ALWAYS,GTK_POLICY_ALWAYS);
+  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(sw),view_widget);
   
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
@@ -1446,7 +1451,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), view_widget, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), sw, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
 

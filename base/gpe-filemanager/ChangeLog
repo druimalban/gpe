@@ -1,3 +1,9 @@
+2004-06-07  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: Using new features to set to list view now.
+    * familiar/control1: Changed libgpewidget dependency from 0.27 to 
+      coming release 0.83.
+    * Makefile: Some compatibility changes.
+
 2004-06-02  Florian Boor  <florian.boor@kernelconcepts.de>
     * Makefile: Version = 0.14
     * Released V 0.14 
