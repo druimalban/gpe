@@ -1,3 +1,11 @@
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.35 released.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile: Remove GTK 1 support.
+
 2003-03-23  Damien Tanner  <dctanner@handhelds.org>
 
 	* list-ui.c (top_level): Using stock icons.
