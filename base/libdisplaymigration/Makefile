@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libdisplaymigration
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.25
+VERSION = 0.26
 
 LINGUAS = 
 
@@ -17,8 +17,10 @@ LDFLAGS += -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -MD `pkg-config --cflags gtk+-2.0`
-LDFLAGS += `pkg-config --libs gtk+-2.0` -lgcrypt
+CFLAGS += -MD 
+
+CFLAGS += $(GTKCFLAGS)
+LDFLAGS += $(GTKLIBS) -lgcrypt
 
 HEADERS = libdisplaymigration/displaymigration.h libdisplaymigration/auth.h libdisplaymigration/crypt.h
 
