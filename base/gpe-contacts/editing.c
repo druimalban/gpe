@@ -601,7 +601,11 @@ void
 on_edit_bt_image_clicked (GtkWidget *bimage, gpointer user_data)
 {
   GtkWidget *filesel = gtk_file_selection_new ("Select image");
-
+  
+  gtk_window_set_transient_for(GTK_WINDOW(filesel),
+                               GTK_WINDOW(gtk_widget_get_toplevel(bimage)));
+  gtk_window_set_modal(GTK_WINDOW(filesel),TRUE);
+  
   g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
 		      "clicked", G_CALLBACK (store_filename), filesel);
 

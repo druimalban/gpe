@@ -1,5 +1,6 @@
 2004-07-14  Florian Boor  <florian.boor@kernelconcepts.de>
-
+    
+    * editing.c: on_edit_bt_image_clicked(): Dialog is now modal.
     * po/es.po: Added file to avoid build error.
     * editing.c: Improved date settings.
     * control1: Changed version number of libgpewidget we depend on to 0.86.
