@@ -40,7 +40,8 @@ typedef enum
 	P_CORGI,
 	P_INTEGRAL,
 	P_SIMPAD,
-	P_SIMPAD_NEW
+	P_SIMPAD_NEW,
+    P_GENERIC
 }t_platform;
 
 
@@ -85,6 +86,8 @@ char IpaqModel = -1;
 /* Simpad, new interface */
 #define SIMPAD_BACKLIGHT_REG_NEW	"/proc/driver/mq200/backlight"
 
+/* Generic backight */
+#define GENERIC_PROC_DRIVER "/proc/driver/backlight"
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -117,9 +120,43 @@ detect_platform(void)
 		return P_SIMPAD_NEW;
 	if (!access(SIMPAD_BACKLIGHT_REG,R_OK))
 		return P_SIMPAD;
+	if (!access(GENERIC_PROC_DRIVER,R_OK))
+		return P_GENERIC;
 	return P_NONE;
 }
 
+
+int 
+generic_set_level(int level)
+{
+  FILE *f_light;
+  
+  f_light = fopen(GENERIC_PROC_DRIVER,"w");
+  if (f_light != NULL)
+  {
+    fprintf(f_light,"%d\n", level);
+  	fclose(f_light);
+	return level;
+  }
+  else
+	  return -1;
+}
+
+int 
+generic_get_level(void)
+{
+  FILE *f_light;
+  int level;
+  
+  f_light = fopen(GENERIC_PROC_DRIVER,"r");
+  if (f_light != NULL)
+  {
+  	fscanf(f_light,"%d", &level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+}  
 
 int 
 simpad_new_set_level(int level)
@@ -428,6 +465,9 @@ read_old_level (void)
 	case P_SIMPAD:
 		return simpad_get_level();
 	break;
+	case P_GENERIC:
+		return generic_get_level();
+	break;
 	default:
 		return 0;
 	break;
@@ -565,8 +605,10 @@ main (int argc, char **argv)
       slider = gtk_vscale_new_with_range (0, 255, 1);
       break;
   }
-  else
-  	slider = gtk_vscale_new_with_range (0, 255, 1);
+  else if (platform == P_GENERIC)
+         slider = gtk_vscale_new_with_range (0, 32, 1);
+       else  
+  	     slider = gtk_vscale_new_with_range (0, 255, 1);
 
   gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
   gtk_widget_set_usize (slider_window, -1, SLIDER_HEIGHT);
