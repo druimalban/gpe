@@ -22,7 +22,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/** Create a browser window to select a directory.*/
 GtkWidget *gpe_create_dir_browser(gchar * title, gchar * current_path, GtkSelectionMode mode, void (*handler) (gchar *));
 
 #ifdef __cplusplus
