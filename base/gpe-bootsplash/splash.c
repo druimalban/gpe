@@ -23,7 +23,7 @@ static char *cursoff = "\033[?25l\000";
 int 
 main(int argc, char *argv[])
 {
-  GdkPixbuf *buf =  gdk_pixbuf_new_from_file (IMAGE);
+  GdkPixbuf *buf;
   guchar *pix;
   int fd;
   gushort *fb;
@@ -33,6 +33,13 @@ main(int argc, char *argv[])
   int tty;
   int xsize = 240, ysize = 320;
   gboolean flip = FALSE;
+
+#ifdef GTK2
+  g_type_init ();
+  buf =  gdk_pixbuf_new_from_file (IMAGE, NULL);
+#else
+  buf =  gdk_pixbuf_new_from_file (IMAGE);
+#endif
 
   if (buf == NULL)
     exit (1);

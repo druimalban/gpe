@@ -8,16 +8,12 @@ module_id() {
 
 case $1 in
 'start')
-	DIR=/usr/share/gpe/bootsplash
-	FN=""
-	# start off server in conventional location.
-	echo `module_id`
 	case `module_id` in
-		" iPAQ 3100" )	    ;;
+		" iPAQ 3100" )	    ARGS="--mono" ;;
 		" iPAQ 3600" )	    ;;
 		" iPAQ 3700" )	    ;;
 		" iPAQ 3800" )	    ARGS="--flip" ;;
-#		" iPAQ 3900" )	    ARGS="--flip" ;;
+		" iPAQ 3600" )	    ;;
 	esac
 	/usr/bin/gpe-bootsplash $ARGS
 	;;
