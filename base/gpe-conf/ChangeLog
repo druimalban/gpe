@@ -1,6 +1,9 @@
 When			Who				Where						What
 
-24.04.203		Florian			packages.c					Added -force-defaults to ipkg call to prevent questions we can't answer.
+25.04.2003		Florian			po/pt.po					Added translation.
+								Makefile
+
+24.04.2003		Florian			packages.c					Added -force-defaults to ipkg call to prevent questions we can't answer.
 								gpe-admin.*					Changed handling of global setup, no need to login as root anymore.
 								suid.c
 								control1					New version: 0.0.9-9

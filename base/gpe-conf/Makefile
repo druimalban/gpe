@@ -9,6 +9,8 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 
+LINGUAS = pt
+
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdm -ldm -L.
 CFLAGS += -Wall -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
