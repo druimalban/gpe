@@ -1,0 +1,322 @@
+# Dutch translation of gpe-calendar.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-calendar package.
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-calendar 0.45\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"PO-Revision-Date: 2003-09-06 09:43+0100\n"
+"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
+"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "Kalender"
+
+#: main.c:261
+msgid "New appointment"
+msgstr "Nieuwe afspraak"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Druk hier om een nieuwe afspraak of herinnering toe te voegen"
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "Vandaag"
+
+#: main.c:276
+msgid "Future"
+msgstr "In de toekomst"
+
+#: main.c:276
+msgid "Future View"
+msgstr "Toekomst weergave"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "Druk hier om alle toekomstige gebeurtenissen te zien"
+
+#: main.c:284
+msgid "Day View"
+msgstr "Dag weergave"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "Druk hier om per-dag weergave te selecteren."
+
+#: main.c:292
+msgid "Week"
+msgstr "Week"
+
+#: main.c:292
+msgid "Week View"
+msgstr "Week weergave"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "Druk hier om per-week weergave te selecteren."
+
+#: main.c:300
+msgid "Month"
+msgstr "Maand"
+
+#: main.c:300
+msgid "Month View"
+msgstr "Maand weergave"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "Druk hier om per-maand weergave te selecteren."
+
+#: main.c:307
+msgid "Exit"
+msgstr "Afsluiten"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "Druk hier om het programma af te sluiten"
+
+#: event-ui.c:251
+msgid ""
+"Delete all recurring entries?\n"
+"(If no, delete this instance only)"
+msgstr ""
+"Alle terugkomende ingangen verwijderen?\n"
+"(Als nee, dan alleen deze ene ingang)"
+
+#: event-ui.c:383
+msgid "End time must not be earlier than start time"
+msgstr "Eindtijd mag niet eerder zijn dan begintijd"
+
+#: event-ui.c:622
+msgid "Event"
+msgstr "Gebeurtenis"
+
+#: event-ui.c:623
+msgid "Recurrence"
+msgstr "Herhaling"
+
+#: event-ui.c:624 event-ui.c:797
+msgid "Alarm"
+msgstr "Alarm"
+
+#: event-ui.c:651 event-ui.c:853
+msgid "Type:"
+msgstr "Soort:"
+
+#: event-ui.c:656
+msgid "Appointment"
+msgstr "Afspraak"
+
+#: event-ui.c:657
+msgid "Reminder"
+msgstr "Herinnering"
+
+#: event-ui.c:659
+msgid "Task"
+msgstr "Taak"
+
+#: event-ui.c:665
+msgid "Days"
+msgstr "Dagen"
+
+#: event-ui.c:666
+msgid "Weeks"
+msgstr "Weken"
+
+#: event-ui.c:674
+msgid "Summary:"
+msgstr "Samenvatting:"
+
+#: event-ui.c:690
+msgid "Start:"
+msgstr "Begin:"
+
+#: event-ui.c:691
+msgid "End:"
+msgstr "Einde:"
+
+#: event-ui.c:692 event-ui.c:693
+msgid "at:"
+msgstr "op:"
+
+#: event-ui.c:726
+msgid "Date:"
+msgstr "Datum:"
+
+#: event-ui.c:729
+msgid "Time:"
+msgstr "Tijd:"
+
+#: event-ui.c:749
+msgid "Due:"
+msgstr "Tijdstip:"
+
+#: event-ui.c:753
+msgid "Allow:"
+msgstr "Toestaan:"
+
+#: event-ui.c:768
+msgid "Description:"
+msgstr "Beschrijving:"
+
+#: event-ui.c:801
+msgid "before event"
+msgstr "voor gebeurtenis"
+
+#: event-ui.c:804
+msgid "minutes"
+msgstr "minuten"
+
+#: event-ui.c:806
+msgid "hours"
+msgstr "uren"
+
+#: event-ui.c:808 event-ui.c:908
+msgid "days"
+msgstr "dagen"
+
+#: event-ui.c:810
+msgid "weeks"
+msgstr "weken"
+
+#: event-ui.c:865
+msgid "No recurrence"
+msgstr "Geen herhaling"
+
+#: event-ui.c:868
+msgid "Daily"
+msgstr "Dagelijks"
+
+#: event-ui.c:871
+msgid "Weekly"
+msgstr "Wekelijks"
+
+#: event-ui.c:874
+msgid "Monthly"
+msgstr "Maandelijks"
+
+#: event-ui.c:877
+msgid "Yearly"
+msgstr "Jaarlijks"
+
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+msgid "Every"
+msgstr "Elke"
+
+#: event-ui.c:921
+msgid "weeks, on:"
+msgstr "weken, op:"
+
+#: event-ui.c:974
+msgid "months"
+msgstr "maanden"
+
+#: event-ui.c:979
+#, c-format
+msgid "on day %d"
+msgstr "op dag %d"
+
+#: event-ui.c:983
+msgid "on the"
+msgstr "op de"
+
+#: event-ui.c:991
+msgid "first"
+msgstr "eerste"
+
+#: event-ui.c:993
+msgid "second"
+msgstr "tweede"
+
+#: event-ui.c:995
+msgid "third"
+msgstr "derde"
+
+#: event-ui.c:997
+msgid "fourth"
+msgstr "vierde"
+
+#: event-ui.c:999
+msgid "fifth"
+msgstr "vijfde"
+
+#: event-ui.c:1001
+msgid "last"
+msgstr "laatste"
+
+#: event-ui.c:1028
+msgid "years"
+msgstr "jaren"
+
+#: event-ui.c:1047
+msgid "End Date:"
+msgstr "Einddatum:"
+
+#: event-ui.c:1053
+msgid "forever"
+msgstr "altijd"
+
+#: event-ui.c:1064
+msgid "end after"
+msgstr "einde na"
+
+#: event-ui.c:1081
+msgid "end on"
+msgstr "einde op"
+
+#: event-ui.c:1089
+msgid "events"
+msgstr "gebeurtenissen"
+
+#: event-ui.c:1188
+msgid "Calendar: New event"
+msgstr "Kalender: Nieuwe gebeurtenis"
+
+#: event-ui.c:1235
+msgid "Calendar: Edit event"
+msgstr "Kalender: Gebeurtenis bewerken"
+
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "Geen afspraken"
+
+#: xsettings.c:105
+msgid "Cannot create XSettings client"
+msgstr "Kan geen XSettings client maken"
+
+#: gtkdatesel.c:193
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:202
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:205
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:208
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:219
+msgid "Week %V"
+msgstr "Week %V"
+
+#: gtkdatesel.c:225
+#, c-format
+msgid "%a, %d"
+msgstr "%a, %d"
+
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE Kalender"
