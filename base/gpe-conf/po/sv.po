@@ -1,0 +1,1575 @@
+# Swedish messages for gpe-conf.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+# Ska applet vara panelprogram?
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.1.0-pre6\n"
+"POT-Creation-Date: 2003-07-08 20:08+0200\n"
+"PO-Revision-Date: 2003-08-16 23:39+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+
+#: main.c:288
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "\"task_nameserver\" behöver en ny (och endast en) namnserver som argument.\n"
+
+#: main.c:343
+msgid "Warning: PCMCIA init failed."
+msgstr "Varning: PCMCIA-initiering misslyckades."
+
+#: main.c:371
+msgid "This mode is disabled, please try:\n"
+msgstr "Detta läge är inaktiverat, försök istället med:\n"
+
+#: main.c:372
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf [appletnamn]\n"
+"där appletnamn är i:\n"
+
+#: main.c:385
+#, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Applet %s är okänd!\n"
+
+#: main.c:386
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Användning: gpe-conf [appletnamn]\n"
+"där appletnamn är i:\n"
+
+#: applets.c:327
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"En del alternativ är endast\n"
+"tillgängliga för användaren\n"
+"root. Ange lösenord."
+
+#: applets.c:363 ipaqscreen/calibrate.c:33
+msgid "Sorry, wrong password."
+msgstr "Tyvärr, fel lösenord."
+
+#: timeanddate.c:349
+msgid "Time & Date"
+msgstr "Tid och datum"
+
+#: timeanddate.c:365
+msgid "Date"
+msgstr "Datum"
+
+#: timeanddate.c:379
+msgid "Enter current date here or use button to select."
+msgstr "Ange aktuellt datum här eller använd knappen för att välja."
+
+#: timeanddate.c:384
+msgid "Time"
+msgstr "Tid"
+
+#: timeanddate.c:409
+msgid "Network"
+msgstr "Nätverk"
+
+#: timeanddate.c:427
+msgid "Select the timeserver to use to set the clock."
+msgstr "Välj den tidsserver som ska användas för att ställa klockan."
+
+#: timeanddate.c:429
+msgid "Get time from network"
+msgstr "Hämta tid från nätverket"
+
+#: timeanddate.c:436
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Om enheten är ansluten till Internet kan du trycka på denna knapp för att ställa tiden på denna enhet genom att använda tidsservern ovan."
+
+#: timeanddate.c:441 timeanddate.c:450
+msgid "Timezone"
+msgstr "Tidszon"
+
+#: timeanddate.c:478
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Välj din aktuella tidszon här. Inställningen börjar gälla efter nästa inloggning."
+
+#: timeanddate.c:486
+msgid "Daylight Saving"
+msgstr "Sommartid"
+
+#: timeanddate.c:493
+msgid "Use daylight saving time"
+msgstr "Använd sommartid"
+
+#: timeanddate.c:500
+msgid "Check this box if you want your device to handle daylight saving time for you."
+msgstr "Kryssa för denna ruta om du vill att din enhet ska hantera sommartid åt dig."
+
+#: timeanddate.c:502
+msgid "Offset:"
+msgstr "Avstånd:"
+
+#: timeanddate.c:511
+msgid "Default"
+msgstr "Standard"
+
+#: timeanddate.c:518
+msgid "Use default DST offset of one hour?"
+msgstr "Använd standardsommartidsavståndet om en timme?"
+
+#: timeanddate.c:523
+msgid "Hours"
+msgstr "timmar"
+
+#: timeanddate.c:526
+msgid "Select daylight saving time offset hours here."
+msgstr "Välj antalet sommartidsavståndstimmar här."
+
+#: timeanddate.c:531
+msgid "Minutes"
+msgstr "minuter"
+
+#: timeanddate.c:534
+msgid "Select daylight saving time offset minutes here."
+msgstr "Välj antalet sommartidsavståndsminuter här."
+
+#: timeanddate.c:540
+msgid "Advanced Settings"
+msgstr "Avancerade inställningar"
+
+#: timeanddate.c:546
+msgid "Use advanced settings"
+msgstr "Använd avancerade inställningar"
+
+#: timeanddate.c:549
+msgid "Check this if you want to use the advanced settings below."
+msgstr "Kryssa för detta om du vill använda de avancerade inställningarna nedan."
+
+#: timeanddate.c:646
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
+msgstr "För att tidszonsinställningarna ska börja gälla måste du logga ut och logga in igen."
+
+#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
+msgid "General"
+msgstr "Allmänt"
+
+#: appmgr_setup.c:237
+msgid "Tab View"
+msgstr "Flikvy"
+
+#: appmgr_setup.c:252
+msgid "Icon"
+msgstr "Ikon"
+
+#: appmgr_setup.c:256
+msgid "List"
+msgstr "Lista"
+
+#: appmgr_setup.c:265
+msgid "Changes will take effect after relog"
+msgstr "Ändringarna kommer att börja gälla efter ominloggning"
+
+#: ipaqscreen/main.c:68
+msgid "Portrait"
+msgstr "Stående"
+
+#: ipaqscreen/main.c:69
+msgid "Landscape (left)"
+msgstr "Liggande (vänster)"
+
+#: ipaqscreen/main.c:70
+msgid "Inverted"
+msgstr "Inverterad"
+
+#: ipaqscreen/main.c:71
+msgid "Landscape (right)"
+msgstr "Liggande (höger)"
+
+#: ipaqscreen/main.c:92
+msgid "Light"
+msgstr "Ljus"
+
+#: ipaqscreen/main.c:98
+msgid "Brightness"
+msgstr "Ljusstyrka"
+
+#: ipaqscreen/main.c:104
+msgid "State"
+msgstr "Tillstånd"
+
+#: ipaqscreen/main.c:115
+msgid "Screensaver"
+msgstr "Skärmsläckare"
+
+#: ipaqscreen/main.c:121
+msgid "Delay until start"
+msgstr "Fördröjning innan start"
+
+#: ipaqscreen/main.c:125
+msgid "Activated"
+msgstr "Aktiverad"
+
+#: ipaqscreen/main.c:135
+msgid "Orientation"
+msgstr "Orientering"
+
+#: ipaqscreen/main.c:154
+msgid "Touchscreen"
+msgstr "Pekskärm"
+
+#: ipaqscreen/main.c:158
+msgid "Calibrate"
+msgstr "Kalibrera"
+
+#: ipaqscreen/main.c:160 network.c:731
+msgid "on"
+msgstr "på"
+
+#: ipaqscreen/main.c:161 network.c:742
+msgid "off"
+msgstr "av"
+
+#: ipaqscreen/main.c:272
+msgid "minutes"
+msgstr "minuter"
+
+#: ipaqscreen/main.c:275
+msgid "seconds"
+msgstr "sekunder"
+
+#: ipaqscreen/main.c:277
+msgid "Off"
+msgstr "Av"
+
+#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:124
+msgid "Couldn't read screen settings!"
+msgstr "Kunde inte läsa skärminställningar!"
+
+#: ipaqscreen/rotation.c:54
+msgid "Can't interpret output from xrandr!"
+msgstr "Kan inte tolka utdata från xrandr!"
+
+#: ipaqscreen/rotation.c:71
+msgid "Can't set rotation on an x86."
+msgstr "Kan inte ställa in rotation på en x86."
+
+#: kbd.c:146
+msgid "Keyboard Geometry / Layout"
+msgstr "Tangentbordsgeometri/-layout"
+
+#: kbd.c:186
+msgid "User defined"
+msgstr "Användardefinierad"
+
+#: keyboard.c:131
+msgid "Could not read keyboard definition file."
+msgstr "Kunde inte läsa tangentbordsdefinitionsfil."
+
+#: keyboard.c:171
+msgid "Error reading keyboard definition."
+msgstr "Fel vid inläsning av tangentbordsdefinition."
+
+#: keyboard.c:274
+msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
+msgstr "Konfiguration av externt tangentbord. Inaktiverade knappar \t\t\t\t\tär inte installerade för tillfället."
+
+#: keyboard.c:279
+msgid "External Keyboard Type"
+msgstr "Extern tangentbordstyp"
+
+#: keyboard.c:286
+msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
+msgstr "Här kan du välja modellen på ditt externa tangentbord. \t\t\t\t  För att installera programvarustöd ansluter du din enhet till \t\t\t\t  Internet och klickar på knappen \"Installera\"."
+
+#: keyboard.c:308
+msgid "Tap here to select this keyboard model."
+msgstr "Tryck här för att välja denna tangentbordsmodell."
+
+#: keyboard.c:315 packages.c:183 packages.c:364
+msgid "Install"
+msgstr "Installera"
+
+#: keyboard.c:321
+msgid "Tap here to install support for this keyboard."
+msgstr "Tryck här för att installera stöd för detta tangentbord."
+
+#: network.c:95
+msgid "Current Config"
+msgstr "Aktuell konfiguration"
+
+#: network.c:173
+msgid "New interface:"
+msgstr "Nytt gränssnitt:"
+
+#: network.c:179
+msgid "Enter name of new interface"
+msgstr "Ange namnet på nya gränssnittet"
+
+#: network.c:186
+msgid "This interface definition already exists!"
+msgstr "Denna gränssnittsdefinition finns redan!"
+
+#: network.c:227
+msgid "Do you want to delete this interface?"
+msgstr "Vill du ta bort detta gränssnitt?"
+
+#: network.c:227 keyctl.c:151
+msgid "Question"
+msgstr "Fråga"
+
+#: network.c:441
+msgid "Address"
+msgstr "Adress"
+
+#: network.c:444
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "Ange din IP-adress här, t.ex. 192.168.1.2"
+
+#: network.c:446
+msgid "Netmask"
+msgstr "Nätmask"
+
+#: network.c:449
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Ange din nätmask här, t.ex. 255.255.255.0 i de flesta fall"
+
+#: network.c:451
+msgid "Broadcast"
+msgstr "Broadcast"
+
+#: network.c:454
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Ange din broadcastadress här. Vanligtvis är det samma som ditt IP fast med 255 som sista tal."
+
+#: network.c:456
+msgid "Gateway"
+msgstr "Gateway"
+
+#: network.c:459
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Ange IP-adressen för din standardgateway här."
+
+#: network.c:541
+msgid "Hostname"
+msgstr "Värdnamn"
+
+#: network.c:544
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Ange ditt önskade värdnamn här. Denna parameter är valfri."
+
+#: network.c:627
+msgid "Provider"
+msgstr "Leverantör"
+
+#: network.c:630
+msgid "Here you need to enter the name if the provider configuration to use for this interface."
+msgstr "Här kan du ange namnet för leverantörskonfigurationen som ska användas för detta gränssnitt."
+
+#: network.c:654
+msgid "Global Settings"
+msgstr "Globala inställningar"
+
+#: network.c:695
+msgid "Proxy"
+msgstr "Proxyserver"
+
+#: network.c:697
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Om du vill/måste använda en proxyserver anger du den här (detta gäller endast dillo just nu)."
+
+#: network.c:702
+msgid "No proxy for"
+msgstr "Ingen proxyserver för"
+
+# Knepigt
+#: network.c:705
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Här bör du ange din lokala domän som du inte vill använda en proxyserver för."
+
+#: network.c:714
+msgid "Use DHCP in any case (usually not needed)."
+msgstr "Använd DHCP oavsett vilket (behövs normalt inte)."
+
+#: network.c:716
+msgid "Use DHCP"
+msgstr "Använd DHCP"
+
+#: network.c:755
+msgid "DNS server"
+msgstr "DNS-server"
+
+#: network.c:758
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Ange IP till den DNS-server som ska användas här."
+
+#: network.c:939
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
+msgstr ""
+"Här kan du ändra den grundläggande konfigurationstypen för din enhet.\n"
+"Använd statisk för manuell gränssnittskonfiguration, dhcp för att använda DHCP och ppp för att göra enheten till en punkt-till-punkt-enhet."
+
+#: network.c:966 network.c:967
+msgid "Add Interface"
+msgstr "Lägg till gränssnitt"
+
+#: network.c:968
+msgid "Add a new Interface"
+msgstr "Lägg till ett nytt gränssnitt"
+
+#: network.c:976 network.c:977
+msgid "Remove Interface"
+msgstr "Ta bort gränssnitt"
+
+#: network.c:978
+msgid "Remove current Interface"
+msgstr "Ta bort aktuellt gränssnitt"
+
+#: network.c:991
+msgid "Information"
+msgstr "Information"
+
+#: network.c:992 network.c:993
+msgid "Show current configuration."
+msgstr "Visa aktuell konfiguration."
+
+#: network.c:1004
+msgid "Close"
+msgstr "Stäng"
+
+#: network.c:1005
+msgid "Close  network tool"
+msgstr "Stäng nätverksverktyget"
+
+#: network.c:1006
+msgid "Close network tool"
+msgstr "Stäng nätverksverktyget"
+
+#: network.c:1021
+msgid "Couldn't read network configuration."
+msgstr "Kunde inte läsa nätverkskonfiguration."
+
+#: network.c:1030
+msgid "global"
+msgstr "global"
+
+#: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
+msgid "Color"
+msgstr "Färg"
+
+#: theme.c:393
+msgid "Red"
+msgstr "Röd"
+
+#: theme.c:398
+msgid "Green"
+msgstr "Grön"
+
+#: theme.c:403
+msgid "Blue"
+msgstr "Blå"
+
+#: theme.c:654
+msgid "Select color"
+msgstr "Välj färg"
+
+#: theme.c:680 theme.c:746
+msgid ""
+"You don't have read access\n"
+"to selected background image!"
+msgstr ""
+"Du har inte läsåtkomst till\n"
+"den valda bakgrundsbilden!"
+
+#: theme.c:828
+msgid "Theme"
+msgstr "Tema"
+
+#: theme.c:837
+msgid "Desktop Theme"
+msgstr "Skrivbordstema"
+
+#: theme.c:849
+msgid "Name"
+msgstr "Namn"
+
+#: theme.c:865
+msgid "Icon Size"
+msgstr "Ikonstorlek"
+
+#: theme.c:879
+msgid "Background"
+msgstr "Bakgrund"
+
+#: theme.c:890
+msgid "Background Settings"
+msgstr "Bakgrundsinställningar"
+
+#: theme.c:897
+msgid "Solid color"
+msgstr "Enfärgad"
+
+#: theme.c:911
+msgid "Horizontal"
+msgstr "Horisontell"
+
+#: theme.c:915
+msgid "Vertical"
+msgstr "Vertikal"
+
+#: theme.c:931
+msgid "Color gradient"
+msgstr "Färgtoning"
+
+#: theme.c:951
+msgid "Image"
+msgstr "Bild"
+
+#: theme.c:977
+msgid "Centered"
+msgstr "Centrerad"
+
+#: theme.c:981
+msgid "Tiled"
+msgstr "Sida-vid-sida"
+
+#: theme.c:984
+msgid "Stretched"
+msgstr "Utsträckt"
+
+#: theme.c:989
+msgid "Fonts"
+msgstr "Typsnitt"
+
+#: theme.c:998 theme.c:1018
+msgid "Desktop Font"
+msgstr "Skrivbordstypsnitt"
+
+#: theme.c:1005 theme.c:1060
+msgid "Family"
+msgstr "Familj"
+
+#: theme.c:1025 theme.c:1080
+msgid "Size"
+msgstr "Storlek"
+
+#: theme.c:1053 theme.c:1073
+msgid "Application Font"
+msgstr "Programtypsnitt"
+
+#: keyctl.c:151
+msgid "Reset button config to default?"
+msgstr "Återställ knappkonfigurationen till standardläget?"
+
+#: keyctl.c:188
+msgid "Defaults"
+msgstr "Standardalternativ"
+
+#: keyctl.c:293
+msgid "ERROR: Can't open keylaunchrc for writing!\n"
+msgstr "FEL: Kan inte öppna keylaunchrc för skrivning!\n"
+
+#: ownerinfo.c:201
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Endast användaren \"root\" har tillåtelse att ändra denna information"
+
+#: ownerinfo.c:221
+msgid "Name:"
+msgstr "Namn:"
+
+#: ownerinfo.c:236
+msgid "E-Mail:"
+msgstr "E-post:"
+
+#: ownerinfo.c:251
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: ownerinfo.c:266
+msgid "Address:"
+msgstr "Adress:"
+
+#: ownerinfo.c:292
+msgid "Photofile:"
+msgstr "Bildfil:"
+
+#: login-setup.c:131
+msgid "Some or all of these settings can only be changed by the user 'root'."
+msgstr "En del av eller alla dessa inställningar kan endast ändras av användaren \"root\"."
+
+#: login-setup.c:167
+msgid "Show owner information at login."
+msgstr "Visa ägarinformation vid inloggning."
+
+#: login-setup.c:169
+msgid "Use background image for login screen."
+msgstr "Använd bakgrundsbild på inloggningsskärmen."
+
+#: login-setup.c:171
+msgid "Lock display on suspend."
+msgstr "Lås display vid viloläge."
+
+#: login-setup.c:184
+msgid "Image:"
+msgstr "Bild:"
+
+#: sleep/interface.c:71
+msgid "Auto sleep"
+msgstr "Automatisk insomning"
+
+#: sleep/interface.c:81 sleep/interface.c:117
+msgid "enabled"
+msgstr "aktiverad"
+
+#: sleep/interface.c:95
+msgid "sleep timeout"
+msgstr "insomningstidsgräns"
+
+#: sleep/interface.c:98 sleep/interface.c:132
+msgid "idle(sec)"
+msgstr "tomgång(sek)"
+
+#: sleep/interface.c:107
+msgid "Auto dim"
+msgstr "Förmörka automatiskt"
+
+#: sleep/interface.c:130
+msgid "backlight dim timeout"
+msgstr "dim-timeout för bakgrundsbelysning"
+
+#: sleep/interface.c:139
+msgid "Auto dim level"
+msgstr "Automatisk förmörkningsnivå"
+
+#: sleep/interface.c:157
+msgid "Auto sleep advanced controls"
+msgstr "Avancerade kontroller för automatisk sömn"
+
+#: sleep/interface.c:167
+msgid "CPU"
+msgstr "Processor"
+
+#: sleep/interface.c:174
+msgid "Sleep on cpu less than load"
+msgstr "Sov då processor mindre än belastning"
+
+#: sleep/interface.c:185
+msgid "load"
+msgstr "belastning"
+
+#: sleep/interface.c:192
+msgid "APM"
+msgstr "APM"
+
+#: sleep/interface.c:198
+msgid "Sleep on AC"
+msgstr "Sov då växelspänning"
+
+#: sleep/interface.c:200
+msgid "probe IRQs"
+msgstr "undersök IRQ:er"
+
+#: sleep/interface.c:206
+msgid "Check IRQ activity"
+msgstr "Kontrollera IRQ-aktivitet"
+
+#: sleep/interface.c:208
+msgid "Choose IRQs"
+msgstr "Välj IRC:er"
+
+#: users/interface.c:208
+msgid "User Name"
+msgstr "Användarnamn"
+
+#: users/interface.c:209
+msgid "User Info"
+msgstr "Användarinformation"
+
+#: users/interface.c:211
+msgid "Home"
+msgstr "Hem"
+
+#: users/interface.c:228 users/interface.c:229
+msgid "Add user"
+msgstr "Lägg till användare"
+
+#: users/interface.c:229
+msgid "Add a new user"
+msgstr "Lägg till en ny användare"
+
+#: users/interface.c:233 users/interface.c:234
+msgid "Edit user"
+msgstr "Redigera användare"
+
+#: users/interface.c:234
+msgid "Edit existing user"
+msgstr "Redigera befintlig användare"
+
+#: users/interface.c:238 users/interface.c:239
+msgid "Delete user"
+msgstr "Ta bort användare"
+
+#: users/interface.c:239
+msgid "Delete existing user"
+msgstr "Ta bort befintlig användare"
+
+#: users/interface.c:283
+msgid "User settings"
+msgstr "Användarinställningar"
+
+#: users/interface.c:297
+msgid "User Name:"
+msgstr "Användarnamn:"
+
+#: users/interface.c:313
+msgid "Password:"
+msgstr "Lösenord:"
+
+#: users/interface.c:321
+msgid "User Info:"
+msgstr "Användarinformation:"
+
+#: users/interface.c:337
+msgid "Shell:"
+msgstr "Skal:"
+
+#: users/interface.c:356
+msgid "Home:"
+msgstr "Hem:"
+
+#: users/interface.c:374
+msgid "Change"
+msgstr "Byt"
+
+#: users/interface.c:435
+msgid "Change Password"
+msgstr "Byt lösenord"
+
+#: users/interface.c:462
+msgid "Old Password:"
+msgstr "Gammalt lösenord:"
+
+#: users/interface.c:469
+msgid "New Password:"
+msgstr "Nytt lösenord:"
+
+#: users/interface.c:477
+msgid "Confirm:"
+msgstr "Bekräfta:"
+
+#: users/callbacks.c:104
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"Du kan inte ta bort\n"
+" systemanvändare!"
+
+#: users/callbacks.c:138
+msgid "Please choose a user name."
+msgstr "Välj ett användarnamn."
+
+#: users/callbacks.c:156
+msgid "Please choose a home directory."
+msgstr "Välj en hemkatalog."
+
+#: users/callbacks.c:217
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"De två nya lösenorden är olika!\n"
+" Försök igen!"
+
+#: users/callbacks.c:220
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Fel lösenord\n"
+" Försök igen!"
+
+#: cfgfile.c:630
+msgid "No write access to network configuration."
+msgstr "Ingen skrivåtkomst till nätverkskonfiguration."
+
+#: gpe-admin.c:93
+msgid "Allow users to configure everything"
+msgstr "Tillåt användare att konfigurera allt"
+
+#: storage.c:195
+msgid "System memory"
+msgstr "Systemminne"
+
+#: storage.c:202 storage.c:464
+msgid "Free memory"
+msgstr "Ledigt minne"
+
+#: storage.c:209 storage.c:357 storage.c:477 storage.c:595
+msgid "Total:"
+msgstr "Totalt:"
+
+#: storage.c:321 storage.c:524
+msgid "Internal Flash"
+msgstr "Internt flashminne"
+
+#: storage.c:327 storage.c:530
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:333 storage.c:536
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:339 storage.c:542
+msgid "Network Filesystem"
+msgstr "Nätverksfilsystem"
+
+#: storage.c:359 storage.c:597
+msgid "Mounted at"
+msgstr "Monterad på"
+
+#: storage.c:367 storage.c:577
+msgid "Free space"
+msgstr "Ledigt utrymme"
+
+#: storage.c:444
+msgid "System Memory"
+msgstr "Systemminne"
+
+#: storage.c:616
+msgid "Couldn't get filesystem info!"
+msgstr "Kunde inte få tag i filsystemsinformation!"
+
+#: serial.c:146
+msgid "Couldn't find default runlevel!"
+msgstr "Kunde inte hitta standardkörnivå!"
+
+#: serial.c:268 serial.c:272
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Enkelt gränssnitt för serieportskonfiguration. Inaktiverade komponenter är inte installerade."
+
+#: serial.c:270
+msgid "Simple"
+msgstr "Enkelt"
+
+#: serial.c:275
+msgid "Serial port default usage"
+msgstr "Standardanvändning av serieport"
+
+#: serial.c:279
+msgid "Select desired software to use serial port here."
+msgstr "Välj önskad programvara för att använda serieporten här."
+
+#: serial.c:281
+msgid "Console"
+msgstr "Konsoll"
+
+#: serial.c:283
+msgid "This option runs console on serial port. (default)"
+msgstr "Detta alternativ kör konsoll på serieport (standard)."
+
+#: serial.c:285
+msgid "GPS Daemon"
+msgstr "GPS-demon"
+
+#: serial.c:288
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Detta alternativ aktiverar starten av GPSD, som tillhandahåller data från en GPS-mottagare till program."
+
+#: serial.c:290
+msgid "Nothing (free)"
+msgstr "Ingenting (ledig)"
+
+#: serial.c:292
+msgid "Don't start any software that uses the serial port."
+msgstr "Starta inte någon programvara som använder serieporten."
+
+#: logread.c:140
+msgid "<empty syslog>"
+msgstr "<tom syslogg>"
+
+#: logread.c:191
+msgid "System Log"
+msgstr "Systemlogg"
+
+#: packages.c:66
+msgid "Removing package"
+msgstr "Tar bort paket"
+
+#: packages.c:71
+msgid "Installing package"
+msgstr "Installerar paket"
+
+#: packages.c:150 packages.c:324
+msgid "Start"
+msgstr "Starta"
+
+#: packages.c:155
+msgid "Update finished. Please check log messages for errors."
+msgstr "Uppdatering slutförd. Kontrollera loggmeddelanden för eventuella fel."
+
+#: packages.c:184 packages.c:370
+msgid "Remove"
+msgstr "Ta bort"
+
+#: packages.c:185
+msgid "Install/Removal finished. Please check log messages for errors."
+msgstr "Installation/Borttagning slutförd. Kontrollera loggmeddelanden för eventuella fel."
+
+#: packages.c:205
+msgid "Update using \"ipkg upgrade\" started.\n"
+msgstr "Uppdatering som använder \"ipkg upgrade\" startad.\n"
+
+#: packages.c:229 packages.c:253
+msgid "Running..."
+msgstr "Kör..."
+
+#: packages.c:314
+msgid "Update"
+msgstr "Uppdatera"
+
+#: packages.c:319
+msgid "Update from network"
+msgstr "Uppdatera från nätverket"
+
+#: packages.c:328
+msgid "Update entire system over an internet connection."
+msgstr "Uppdatera hela systemet över en Internetanslutning."
+
+#: packages.c:332 packages.c:378
+msgid "Activity log"
+msgstr "Aktivitetslogg"
+
+#: packages.c:340
+msgid "This window shows all output from the packet manager that performs the update."
+msgstr "Detta fönster visar all utdata från pakethanteraren som utför uppdateringen."
+
+#: packages.c:350
+msgid "Install/Remove"
+msgstr "Installera/Ta bort"
+
+#: packages.c:355
+msgid "Install/Remove a package"
+msgstr "Installera/Ta bort ett paket"
+
+#: packages.c:362
+msgid "Enter name of package to be installed here."
+msgstr "Ange namnet på paketet som ska installeras här."
+
+#: packages.c:368
+msgid "Install a package from a configured source."
+msgstr "Installera ett paket från en konfigurerad källa."
+
+#: packages.c:374
+msgid "Remove the package."
+msgstr "Ta bort paketet."
+
+#: packages.c:386
+msgid "This window shows all output from the packet manager installing the package."
+msgstr "Detta fönster visar all utdata från pakethanteraren vid installation av paketet."
+
+#: cardinfo.c:247 cardinfo.c:318
+msgid "Could not write to temporal config file."
+msgstr "Kunde inte skriva till temporär konfigurationsfil."
+
+#: cardinfo.c:524
+msgid "Could not open pidfile:"
+msgstr "Kunde inte öppna pidfil:"
+
+#: cardinfo.c:530
+msgid "Could not read pidfile"
+msgstr "Kunde inte läsa pidfil"
+
+#: cardinfo.c:534
+msgid "Could not signal cardmgr:"
+msgstr "Kunde inte signalera korthanterare:"
+
+#: cardinfo.c:609
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "gpe-conf måste vara setuid root för att använda kortinformationsfunktionen."
+
+#: cardinfo.c:628
+msgid "No pcmcia driver in /proc/devices"
+msgstr "Ingen pcmcia-drivrutin i /proc/devices"
+
+#: cardinfo.c:631
+msgid "Could not open /proc/devices"
+msgstr "Kunde inte öppna /proc/devices"
+
+#: cardinfo.c:643
+msgid "No sockets found\n"
+msgstr "Inga uttag hittades\n"
+
+#: cardinfo.c:652
+msgid "Card Services release does not match!"
+msgstr "Utgåva av Card Services stämmer inte överens!"
+
+#: cardinfo.c:657
+msgid "Could not get CS revision info!\n"
+msgstr "Kunde inte få tag i CS-revisionsinformation!\n"
+
+#: cardinfo.c:820
+msgid "flock(stabfile) failed)"
+msgstr "flock(stabfile) misslyckades)"
+
+#: cardinfo.c:836
+msgid "no driver loaded"
+msgstr "ingen drivrutin inläst"
+
+#: cardinfo.c:945
+msgid "ready"
+msgstr "redo"
+
+#: cardinfo.c:963
+msgid "not ready"
+msgstr "inte redo"
+
+#: cardinfo.c:978
+msgid "suspended"
+msgstr "försatt i viloläge"
+
+#: cardinfo.c:1170 cardinfo.c:1341 cardinfo.c:1342
+msgid "Assign Driver"
+msgstr "Tilldela drivrutin"
+
+#: cardinfo.c:1179
+msgid ""
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
+msgstr ""
+"Detta dialogfönster låter dig välja/\n"
+"ändra drivrutinstilldelningen för\n"
+"ett PCMCIA- eller CF-kort."
+
+#: cardinfo.c:1189
+msgid "Your current card identifies itself as:"
+msgstr "Ditt nuvarande kort identifierar sig som:"
+
+#: cardinfo.c:1203 cardinfo.c:1209
+msgid "Manuf. Id"
+msgstr "Tillverkar-id"
+
+#: cardinfo.c:1203 cardinfo.c:1209
+msgid "Class"
+msgstr "Klass"
+
+#: cardinfo.c:1282
+msgid "Insert Card"
+msgstr "Sätt in kort"
+
+#: cardinfo.c:1284
+msgid "Tap here to start card insertion manually."
+msgstr "Tryck här för att starta kortinsättningen manuellt."
+
+#: cardinfo.c:1292
+msgid "Eject Card"
+msgstr "Mata ut kort"
+
+#: cardinfo.c:1294
+msgid "Tap here to eject card manually."
+msgstr "Tryck här gör att mata ut kortet manuellt."
+
+#: cardinfo.c:1302
+msgid "Suspend Card"
+msgstr "Försätt kort i viloläge"
+
+#: cardinfo.c:1304
+msgid "Tap here to suspend current card."
+msgstr "Tryck här för att försätta det aktuella kortet i viloläge."
+
+#: cardinfo.c:1312
+msgid "Resume Card"
+msgstr "Återställ kort"
+
+#: cardinfo.c:1314
+msgid "Tap here to resume current card."
+msgstr "Tryck här för att återställa kortet."
+
+#: cardinfo.c:1322
+msgid "Reset Card"
+msgstr "Återställ kort"
+
+#: cardinfo.c:1323
+msgid "Tap here to reset current card."
+msgstr "Tryck här för att återställa kortet."
+
+#: cardinfo.c:1331 cardinfo.c:1332
+msgid "Reset Card Manager"
+msgstr "Återställ korthanteraren"
+
+#: cardinfo.c:1334
+msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
+msgstr "Tryck här för att återställa korthanteraren. Detta verkställer alla uppdateringar i pcmcia-konfigurationsfiler."
+
+#: cardinfo.c:1344
+msgid "Tap here to assign a driver to this card / change current driver assignment."
+msgstr "Tryck här för att tilldela en drivrutin till detta kort / ändra drivrutinstilldelningen."
+
+#: cardinfo.c:1351 cardinfo.c:1352
+msgid "Exit applet"
+msgstr "Avsluta panelprogram"
+
+#: cardinfo.c:1361 cardinfo.c:1374
+msgid "PC/CF card socket information."
+msgstr "Uttagsinformation för PC/CF-kort."
+
+#: cardinfo.c:1369
+msgid "Socket"
+msgstr "Uttag"
+
+#: cardinfo.c:1400
+msgid "Information for socket"
+msgstr "Information för uttag"
+
+#: cardinfo.c:1409
+msgid "State:"
+msgstr "Tillstånd:"
+
+#: cardinfo.c:1410
+msgid "Device:"
+msgstr "Enhet:"
+
+#: cardinfo.c:1411
+msgid "Driver:"
+msgstr "Drivrutin:"
+
+#: cardinfo.c:1412
+msgid "Type:"
+msgstr "Typ:"
+
+#: cardinfo.c:1413
+msgid "I/O:"
+msgstr "I/O:"
+
+#: cardinfo.c:1414
+msgid "IRQ:"
+msgstr "IRQ:"
+
+#: cardinfo.c:1421
+msgid "Flags:"
+msgstr "Flaggor:"
+
+#: cardinfo.c:1438
+msgid "PCMCIA initialisation failed"
+msgstr "PCMCIA-initiering misslyckades"
+
+#: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
+#: tools/interface.c:622
+msgid "[NONE SET]"
+msgstr "[INGEN INSTÄLLD]"
+
+#: tools/interface.c:394
+#, c-format
+msgid "rresolve: unsupport address family %d !\n"
+msgstr "rresolve: adressfamiljen %d stöds inte!\n"
+
+#: tools/interface.c:677 tools/interface.c:1650
+msgid "UNSPEC"
+msgstr "UNSPEC"
+
+#: tools/interface.c:679
+msgid "UNIX Domain"
+msgstr "UNIX-domän"
+
+#: tools/interface.c:682
+msgid "DARPA Internet"
+msgstr "DARPA Internet"
+
+#: tools/interface.c:685
+msgid "IPv6"
+msgstr "IPv6"
+
+#: tools/interface.c:688 tools/interface.c:1671
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: tools/interface.c:691 tools/interface.c:1677
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: tools/interface.c:694
+msgid "Novell IPX"
+msgstr "Novell IPX"
+
+#: tools/interface.c:697
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: tools/interface.c:700 tools/interface.c:1712
+msgid "Econet"
+msgstr "Econet"
+
+#: tools/interface.c:703
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: tools/interface.c:706 tools/interface.c:1674
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: tools/interface.c:709 tools/interface.c:1662
+msgid "Ash"
+msgstr "Ash"
+
+#: tools/interface.c:736
+msgid "Too much address family arguments.\n"
+msgstr "För många adressfamiljsargument.\n"
+
+#: tools/interface.c:747
+#, c-format
+msgid "Unknown address family `%s'.\n"
+msgstr "Okänd adressfamilj \"%s\".\n"
+
+#: tools/interface.c:810
+msgid "Please don't supply more than one address family.\n"
+msgstr "Ange inte fler än en adressfamilj.\n"
+
+#: tools/interface.c:937
+msgid "No usable address families found.\n"
+msgstr "Inga användbara adressfamiljer hittades.\n"
+
+#: tools/interface.c:1007
+#, c-format
+msgid "warning: no inet socket available: %s\n"
+msgstr "varning: inget inet-uttag tillgngligt: %s\n"
+
+#: tools/interface.c:1159
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Varning: kan inte öppna %s (%s). Begränsad utdata.\n"
+
+#: tools/interface.c:1402
+msgid "Device not found"
+msgstr "Enheten hittades inte"
+
+#: tools/interface.c:1406
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: fel vid hämtning av gränssnittsinformation: %s\n"
+
+#: tools/interface.c:1480 tools/interface.c:1497
+#, c-format
+msgid "in_ether(%s): invalid ether address!\n"
+msgstr "in_ether(%s): ogiltig ether-adress!\n"
+
+#: tools/interface.c:1511
+#, c-format
+msgid "in_ether(%s): trailing : ignored!\n"
+msgstr "in_ether(%s): eftersläpande : ignorerat!\n"
+
+#: tools/interface.c:1523
+#, c-format
+msgid "in_ether(%s): trailing junk!\n"
+msgstr "in_ether(%s): eftersläpande skräp!\n"
+
+#: tools/interface.c:1555
+msgid "You cannot start PPP with this program.\n"
+msgstr "Du kan inte starta PPP med detta program.\n"
+
+#: tools/interface.c:1649
+msgid "Local Loopback"
+msgstr "Lokal vändslinga"
+
+#: tools/interface.c:1652
+msgid "Serial Line IP"
+msgstr "IP över seriell lina"
+
+#: tools/interface.c:1653
+msgid "VJ Serial Line IP"
+msgstr "VJ IP över seriell lina"
+
+#: tools/interface.c:1654
+msgid "6-bit Serial Line IP"
+msgstr "6-bitars IP över seriell lina"
+
+#: tools/interface.c:1655
+msgid "VJ 6-bit Serial Line IP"
+msgstr "6-bitars VJ IP över seriell lina"
+
+#: tools/interface.c:1656
+msgid "Adaptive Serial Line IP"
+msgstr "Adaptiv IP över seriell lina"
+
+#: tools/interface.c:1659
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: tools/interface.c:1665
+msgid "Fiber Distributed Data Interface"
+msgstr "Fiberdistribuerat datagränssnitt (FDDI)"
+
+#: tools/interface.c:1668
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: tools/interface.c:1680
+msgid "generic X.25"
+msgstr "vanlig X.25"
+
+#: tools/interface.c:1683
+msgid "IPIP Tunnel"
+msgstr "IPIP-tunnel"
+
+#: tools/interface.c:1686
+msgid "Point-to-Point Protocol"
+msgstr "Punkt-till-punktprotokoll (PPP)"
+
+#: tools/interface.c:1689
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: tools/interface.c:1690
+msgid "LAPB"
+msgstr "LAPB"
+
+#: tools/interface.c:1693
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: tools/interface.c:1696
+msgid "Frame Relay DLCI"
+msgstr "Frame Relay-DLCI"
+
+#: tools/interface.c:1697
+msgid "Frame Relay Access Device"
+msgstr "Frame Relay-åtkomstenhet"
+
+#: tools/interface.c:1700
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-i-IPv4"
+
+#: tools/interface.c:1703
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: tools/interface.c:1706
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mb/s Token Ring"
+
+#: tools/interface.c:1708
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "16/4 Mb/s Token Ring (Nytt)"
+
+#: tools/interface.c:1818
+#, c-format
+msgid ""
+"<b>Interface %s</b>\n"
+"Type: %s\n"
+msgstr ""
+"<b>Gränssnitt %s</b>\n"
+"Typ: %s\n"
+
+#: tools/interface.c:1826
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HV-adress (MAC): %s\n"
+
+#: tools/interface.c:1832
+#, c-format
+msgid "Media: %s"
+msgstr "Media: %s"
+
+#: tools/interface.c:1837
+msgid "(auto)"
+msgstr "(auto)"
+
+#: tools/interface.c:1849
+#, c-format
+msgid "Address: %s\n"
+msgstr "Adress: %s\n"
+
+#: tools/interface.c:1854
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-t-P: %s\n"
+
+#: tools/interface.c:1858
+#, c-format
+msgid "Netmask: %s\n"
+msgstr "Nätmask: %s\n"
+
+#: tools/interface.c:1862
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr "Broadcast: %s\n"
+
+#: tools/interface.c:1882
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "IPv6-adress: %s/%d\n"
+
+#: tools/interface.c:1886
+msgid "Scope: "
+msgstr "Omfattning: "
+
+#: tools/interface.c:1891
+msgid "Global"
+msgstr "Global"
+
+#: tools/interface.c:1894
+msgid "Link"
+msgstr "Länk"
+
+#: tools/interface.c:1897
+msgid "Site"
+msgstr "Plats"
+
+#: tools/interface.c:1900
+msgid "Compat"
+msgstr "Kompatibilitet"
+
+#: tools/interface.c:1903
+msgid "Host"
+msgstr "Värd"
+
+#: tools/interface.c:1906
+msgid "Unknown"
+msgstr "Okänd"
+
+#: battery.c:79
+#, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "kunde inte pekskärmsenheten \"%s\"\n"
+
+#: battery.c:127 battery.c:179
+msgid "Status: high"
+msgstr "Status: hög"
+
+#: battery.c:130 battery.c:182
+msgid "Status: low"
+msgstr "Status: låg"
+
+#: battery.c:133 battery.c:185
+msgid "Status: critical"
+msgstr "Status: kritiskt"
+
+#: battery.c:136 battery.c:188
+msgid "Status: charging"
+msgstr "Status: laddar"
+
+#: battery.c:139 battery.c:191
+msgid "Status: charge main"
+msgstr "Status: ladda huvud"
+
+#: battery.c:142
+msgid "Status: dead"
+msgstr "Status: dött"
+
+#: battery.c:145 battery.c:197
+msgid "Status: full"
+msgstr "Status: fullt"
+
+#: battery.c:148 battery.c:200
+msgid "Status: no battery"
+msgstr "Status: inget batteri"
+
+#: battery.c:151 battery.c:203 battery.c:222
+msgid "Status: unknown"
+msgstr "Status: okänd"
+
+#: battery.c:155 battery.c:207
+msgid "Voltage"
+msgstr "Spänning"
+
+#: battery.c:159 battery.c:211
+msgid "AC connected"
+msgstr "Nätspänning ansluten"
+
+#: battery.c:161 battery.c:213
+msgid "Lifetime"
+msgstr "Livslängd"
+
+#: battery.c:194
+msgid "Status: not installed"
+msgstr "Status: inte installerat"
+
+#: battery.c:220
+msgid "not installed"
+msgstr "inte installerat"
+
+#: battery.c:224
+msgid "Voltage: unknown"
+msgstr "Spänning: okänd"
+
+#: battery.c:226
+msgid "Lifetime: unknown"
+msgstr "Livslängd: okänd"
+
+#: battery.c:265
+msgid "Internal battery"
+msgstr "Internt batteri"
+
+# Osäker
+#: battery.c:269
+msgid "Jacket battery"
+msgstr "Batteripaket"
+
+#~ msgid "External keyboard configuration. Disabled buttons are currently not installed."
+#~ msgstr "Konfiguration av externt tangentbord. Inaktiverade knappar är inte installerade för tillfället."
+
+#~ msgid "Here you may select your external keyboard model. To install software support connect your device to internet and click the \"Install\" button."
+#~ msgstr "Här kan du välja modellen på ditt externa tangentbord. För att installera programvarustöd ansluter du din enhet till Internet och klickar på knappen \"Installera\"."
+
+#~ msgid "Here you need to enter the name of the provider configuration to use for this interface."
+#~ msgstr "Här kan du ange namnet för leverantörskonfigurationen som ska användas för detta gränssnitt."
+
+#~ msgid "You don't have read access to selected background image!"
+#~ msgstr "Du har inte läsåtkomst till den valda bakgrundsbilden!"
+
+#~ msgid "diabled"
+#~ msgstr "inaktiverad"
+
+#~ msgid "You can't remove system users!"
+#~ msgstr "Du kan inte ta bort systemanvändare!"
+
+#~ msgid "Removing packages"
+#~ msgstr "Tar bort paket"
+
+#~ msgid "Installing packages"
+#~ msgstr "Installerar paket"
+
+#~ msgid "flock(stabfile) failed"
+#~ msgstr "flock(stabfile) misslyckades"
+
+#~ msgid "rresolve: unsupported address family %d!\n"
+#~ msgstr "rresolve: adressfamiljen %d stöds inte!\n"
+
+#~ msgid "Warning: no inet socket available: %s\n"
+#~ msgstr "Varning: inget inet-uttag tillgngligt: %s\n"
+
+#~ msgid "Time and Date"
+#~ msgstr "Tid och datum"
+
+#~ msgid "Landscape"
+#~ msgstr "Liggande"
+
+#~ msgid "On"
+#~ msgstr "På"
+
+#~ msgid "Current Configuration"
+#~ msgstr "Aktuell konfiguration"
+
+#~ msgid "Font"
+#~ msgstr "Typsnitt"
+
+#~ msgid "Scope:"
+#~ msgstr "Omfattning:"

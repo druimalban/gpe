@@ -1,3 +1,7 @@
+2003-08-17	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Added swedish translation.
+	Thanks to the Translation Project!
+	
 2003-08-14	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Added dutch translation.
 	* Added optimising flags to makefile.
