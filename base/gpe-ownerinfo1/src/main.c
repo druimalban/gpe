@@ -179,9 +179,6 @@ main (int argc, char *argv[])
       */
     }
 
-  /* printf ("photofile: %s, %s\n", ownerphotofile, my_icons[0].filename); */
-  
-  //  gtk_rc_add_default_file ("/usr/local/share/gpe/gtkrc");
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -236,7 +233,7 @@ main (int argc, char *argv[])
   widget = lookup_widget (GPE_Ownerinfo, "smallphoto");
   gtk_widget_show (widget);
 
-  /* make window transparent if running on the iPAQ: */
+  /* make window transparent if option -t is given: */
   if (flag_transparent) {
     widget = lookup_widget (GPE_Ownerinfo, "viewport1");
     widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
