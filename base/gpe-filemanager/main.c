@@ -268,7 +268,9 @@ rename_file (GtkDialog *dialog_window, gint response_id)
 
   if (response_id == GTK_RESPONSE_ACCEPT)
   {
-  dest = g_strdup_printf ("%s/%s", dirname (current_popup_file->filename), gtk_entry_get_text (GTK_ENTRY (g_object_get_data (G_OBJECT (dialog_window), "entry"))));
+  gchar *tmp = g_strdup (current_popup_file->filename);
+  dest = g_strdup_printf ("%s/%s", dirname (tmp), gtk_entry_get_text (GTK_ENTRY (g_object_get_data (G_OBJECT (dialog_window), "entry"))));
+  g_free (tmp);
   printf ("Rename dest: %s\n", dest);
   result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
 
