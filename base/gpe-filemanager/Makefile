@@ -7,11 +7,11 @@ SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 MIME_HANDLERS = `cd mime-handlers && ls *.mime`
 GTK2 = yes
 
-MEMBERS = main mime-sql mime-programs-sql mime
+MEMBERS = main mime-sql mime-programs-sql
 MEMBERS2 = update_mime_db hash mime-sql mime-programs-sql
 
 ifeq ($(GTK2),yes)
-CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+CFLAGS = `pkg-config --cflags gtk+-2.0 gnome-vfs-2.0` -DGTK_ENABLE_BROKEN
 CONTROL = control1
 else
 CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
@@ -35,7 +35,7 @@ endif
 LDFLAGS += -lgpewidget -lsqlite
 
 ifeq ($(GTK2),yes)
-LDFLAGS += `pkg-config --libs gtk+-2.0`
+LDFLAGS += `pkg-config --libs gtk+-2.0 gnome-vfs-2.0`
 else
 LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
 endif

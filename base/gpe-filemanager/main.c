@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <libgnomevfs/gnome-vfs.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -337,6 +338,8 @@ add_icon (gchar *base_filename, gchar *filename)
   gchar *image_filename = PREFIX "/share/gpe/pixmaps/default/filemanager/document-icons/";
   gchar *extension;
 
+  printf ("add_icon varibles:\n\tbase_filename = %s\n\tfilename = %s\n\n", base_filename, filename);
+
   if (stat (filename, &file_stats) == 0)
   {
     file_info->filename = filename;
@@ -411,6 +414,10 @@ make_view (gchar *view)
   DIR *dir;
   gchar *filename;
   GList *filenames = NULL;
+  GnomeVFSDirectoryHandle *handle;
+  GnomeVFSFileInfo *file_info;
+  GnomeVFSURI *uri;
+  GnomeVFSResult result, open_dir_result;
   loading_directory = 1;
 
   if (view_widget)
@@ -422,6 +429,51 @@ make_view (gchar *view)
   gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
   gtk_widget_show (view_widget);
 
+
+  uri = gnome_vfs_uri_new (current_directory);
+  file_info = gnome_vfs_file_info_new ();
+
+  open_dir_result = gnome_vfs_directory_open_from_uri (&handle, uri, GNOME_VFS_FILE_INFO_DEFAULT);
+
+  while (open_dir_result == GNOME_VFS_OK)
+  {
+    result = gnome_vfs_directory_read_next (handle, file_info);
+    printf ("Gnome VFS FileInfo->Name: %s\n", file_info->name);
+
+    if (loading_directory == 0)
+      break;
+
+    if (file_info->name != NULL)
+    {
+      if (strcmp (current_directory, "/"))
+        filename = g_strdup_printf ("%s/%s", current_directory, file_info->name);
+      else
+        filename = g_strdup_printf ("/%s", file_info->name);
+
+      if (basename (filename)[0] != '.')
+        filenames = g_list_append (filenames, filename);
+    }
+
+    if (result != GNOME_VFS_OK)
+      break;
+  }
+
+  if (open_dir_result == GNOME_VFS_OK)
+  {
+    gnome_vfs_file_info_unref (file_info);
+    gnome_vfs_directory_close (handle);
+
+    filenames = g_list_sort (filenames, sort_filenames);
+    filenames = g_list_first (filenames);
+
+    while (filenames)
+    {
+      add_icon (basename ((gchar *) filenames->data), (gchar *) filenames->data);
+      filenames = filenames->next;
+    }
+  }
+
+  /*
   dir = opendir (current_directory);
   if (dir)
   {
@@ -454,6 +506,7 @@ make_view (gchar *view)
       filenames = filenames->next;
     }
   }
+  */
   loading_directory = 0;
 }
 
@@ -756,6 +809,8 @@ main (int argc, char *argv[])
 
   set_directory_home (NULL);
   //history_place--;
+
+  gnome_vfs_init ();
 
   gtk_main();
 

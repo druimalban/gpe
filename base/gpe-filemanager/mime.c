@@ -63,3 +63,4 @@ _parse_desktop_entry(struct DotDesktop *dd, gchar *section)
   
   return DD_SUCCESS;
 }
+
