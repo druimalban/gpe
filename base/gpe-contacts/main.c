@@ -36,7 +36,8 @@
 #include "main.h"
 #include "export.h"
 
-#define MY_PIXMAPS_DIR PREFIX "/share/pixmaps/"
+#define SYSTEM_PIXMAPS_DIR PREFIX "/share/pixmaps/"
+#define MY_PIXMAPS_DIR "gpe-contacts/"
 #define TAB_CONFIG_LOCAL ".contacts-tab"
 #define TAB_CONFIG_GLOBAL "/etc/gpe/contacts-tab.conf"
 
@@ -53,10 +54,10 @@ struct gpe_icon my_icons[] = {
   {"edit"},
   {"delete"},
   {"cancel"},
-  {"frame", MY_PIXMAPS_DIR "frame.png"},
-  {"notebook", MY_PIXMAPS_DIR "notebook.png"},
-  {"entry", MY_PIXMAPS_DIR "entry.png"},
-  {"icon", MY_PIXMAPS_DIR "gpe-contacts.png" },
+  {"frame", MY_PIXMAPS_DIR "frame"},
+  {"notebook", MY_PIXMAPS_DIR "notebook"},
+  {"entry", MY_PIXMAPS_DIR "entry"},
+  {"icon", SYSTEM_PIXMAPS_DIR "gpe-contacts.png" },
   {NULL, NULL}
 };
 
