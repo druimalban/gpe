@@ -640,8 +640,10 @@ show_control (void)
 		else
 			lTStatus = gtk_label_new(_("IR transceiver off"));
 		
+		gtk_label_set_line_wrap(GTK_LABEL(lTStatus),TRUE);
+		
 		gtk_table_attach (GTK_TABLE (table), lTStatus, 0, 3, 6, 7,
-				  GTK_FILL | GTK_EXPAND,
+				  GTK_FILL,
 				  GTK_FILL | GTK_EXPAND, 0, 0);
 				  
 		hbox = gtk_hbutton_box_new ();
