@@ -1,6 +1,8 @@
 2003-09-26	Nils Faerber <nils@kernelconcepts.de>
 	* bump to version 0.30
 	* removed system() calls and replaced with ioctl()s
+	* added code to detect iPaq model to accomodate slider range
+	  (different models have different light level ranges)
 
 all before	Philip Blundell  <philb@gnu.org>
 	* initial code

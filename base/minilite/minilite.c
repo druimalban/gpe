@@ -33,10 +33,16 @@
 /* for iPAQ touchscreen */
 #include <linux/h3600_ts.h>
 #define TS_DEV "/dev/touchscreen/0raw"
+#define H36XX 0
+#define H38XX 1
+#define H5XXX 2
+#define H19XX 3
+#define H22XX 4
+char IpaqModel = -1;
 #endif
 
 GtkWidget *slider_window;
-GtkWidget *window;
+GtkWidget *window, *slider;
 
 #define _(_x)  gettext (_x)
 
@@ -49,6 +55,37 @@ struct gpe_icon my_icons[] = {
 
 int window_open;
 int light_fd=-1;	/* filedescriptor to backlight device */
+
+
+#ifdef IPAQ
+int
+get_ipaq_model (void)
+{
+  int fd;
+  char buf[16];
+
+  fd = open ("/proc/hal/model", O_RDONLY);
+  if (fd <= 0)
+    return -1;
+  if ( read( fd, buf, 16) < 4)
+    return -1;
+  close(fd);
+
+  if ((strncmp (buf, "36", 2) == 0) || (strncmp (buf, "37", 2) == 0)) {
+    g_print ("model is H36xx\n");
+    IpaqModel = H36XX;
+  } else if ((strncmp (buf, "38", 2) == 0) || (strncmp (buf, "39", 2) == 0)) {
+    g_print ("model is H38xx\n");
+    IpaqModel = H38XX;
+  } else if ((strncmp (buf, "54", 2) == 0) || (strncmp (buf, "55", 2) == 0)) {
+    g_print ("model is H38xx\n");
+    IpaqModel = H5XXX;
+  } else
+    IpaqModel = -1;
+
+return IpaqModel;
+}
+#endif
 
 int 
 set_level (int level)
@@ -112,6 +149,9 @@ clicked (GtkWidget *w, GdkEventButton *ev)
   gtk_widget_set_uposition (GTK_WIDGET (slider_window), x, y - SLIDER_HEIGHT);
   
   level = read_old_level ();
+
+  if (level != -1)
+    gtk_adjustment_set_value(gtk_range_get_adjustment(GTK_RANGE(slider)), level);
   
   gtk_widget_show (slider_window);
   
@@ -125,7 +165,7 @@ main (int argc, char **argv)
   GtkWidget *menu_remove;
   GtkTooltips *tooltips;
   int dd;
-  GtkWidget *icon, *slider;
+  GtkWidget *icon;
   GtkAdjustment *adj;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -141,6 +181,10 @@ main (int argc, char **argv)
   light_fd = open (TS_DEV, O_RDONLY);
   if (light_fd <= 0) {
     gpe_perror_box (_("Opening touchscreen device" TS_DEV));
+    exit (1);
+  }
+  if (get_ipaq_model() == -1) {
+    gpe_perror_box (_("Determining iPaq model"));
     exit (1);
   }
 #endif
@@ -173,7 +217,30 @@ main (int argc, char **argv)
   gpe_system_tray_dock (window->window);
 
   slider_window = gtk_window_new (GTK_WINDOW_POPUP);
-  slider = gtk_vscale_new_with_range (0, 255, 10);
+#ifdef IPAQ
+  switch (IpaqModel) {
+    case H36XX:
+      slider = gtk_vscale_new_with_range (0, 255, 1);
+      break;
+    case H38XX:
+      slider = gtk_vscale_new_with_range (0, 64, 1);
+      break;
+    case H5XXX:
+      slider = gtk_vscale_new_with_range (0, 64, 1);
+      break;
+    case H19XX:
+      slider = gtk_vscale_new_with_range (0, 255, 1);
+      break;
+    case H22XX:
+      slider = gtk_vscale_new_with_range (0, 255, 1);
+      break;
+    default:
+      slider = gtk_vscale_new_with_range (0, 255, 1);
+      break;
+  }
+#else
+  slider = gtk_vscale_new_with_range (0, 255, 1);
+#endif
 
   gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
   gtk_widget_set_usize (slider_window, -1, SLIDER_HEIGHT);
