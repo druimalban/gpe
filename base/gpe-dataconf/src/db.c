@@ -8,7 +8,7 @@
  * Some code from gpe-todo by Philip Blundell <philb@gnu.org> and
  * other gpe applications.
  *
- * This will be database access control library soon :-)
+ * This will be database client access control library soon :-)
  */
 
 
@@ -18,7 +18,7 @@
 #include <glib.h>
 
 #include <gpe/errorbox.h>
-
+#include <gpe-sql.h>
 #include "../include/db.h"
 
 // define the (changable) default access permission
@@ -88,19 +88,6 @@ gpe_acontrol_set_table(t_sql_handle* sqlh, char *table, int uid, uint permission
 	return 0; // should never get here
 }
 
-int 
-gpe_acontrol_list_tables(t_sql_handle* sqlh, char*** resvec)
-{
-	char *err;
-	int ret, nrow,ncolumn;
-	ret = sql_get_table(sqlh,"SELECT name FROM sqlite_master WHERE type='table'",resvec,&nrow,&ncolumn,&err);
-	if (ret) {
-		fprintf(stderr,"err gpe_acontrol_list_tables: %s",err);
-		free(err);
-		return 0;
-	}
-	return nrow;
-}
 
 int 
 gpe_acontrol_list_databases(char** resvec)
@@ -110,48 +97,6 @@ gpe_acontrol_list_databases(char** resvec)
 	return result;
 }
 
-t_sql_handle*
-gpe_acontrol_db_open (char *dbtoopen)
-{
-  static const char *create_control_str = "create table _acontrol (
-	atable	TEXT NOT NULL,
-	auser	TEXT NOT NULL,
-	amask	INTEGER NOT NULL,	
-	aowner	INTEGER	
-  );
-  ";
-
-  char *err;
-  char *buf;
-  t_sql_handle *sqlh;
-	
-#ifdef USE_USQLD
-  sqlh = usqld_connect ("localhost", dbtoopen, &err);
-#else
-  const char *home = getenv ("HOME");
-  size_t len;
-  if (home == NULL)
-    home = "";
-  len = strlen (home) + strlen (dbpath) + strlen (dbtoopen) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  strcat (buf, dbpath);
-  strcat (buf, dbtoopen);
-  sqlh = sqlite_open (buf, 0, &err);
-#endif
-  if (sqlh == NULL)
-    {
-      gpe_error_box (err);
-      free (err);
-      g_free (buf);
-      return NULL;
-    }
-
-  // create control table if it doesn't exist
-  // we just want to be shure :-)
-  sql_exec (sqlh, create_control_str, NULL, NULL, &err);
-  return sqlh;
-}
 
 
 /*
@@ -210,17 +155,6 @@ gpe_acontrol_get_list(t_sql_handle* sqlh,char* table, sql_callback cb)
 	  free(err);
   }
   return ret;
-}
-
-
-void
-gpe_acontrol_db_close (t_sql_handle* sqlh)
-{
-#ifdef USE_USQLD
-  usqld_disconnect (sqlh);
-#else
-  sqlite_close (sqlh);
-#endif
 }
 
 

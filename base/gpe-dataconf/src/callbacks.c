@@ -8,12 +8,14 @@
 #include <stdlib.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
+#include <gpe-sql.h>
 
 #include "../include/callbacks.h"
 #include "interface.h"
 #include "support.h"
-#include "db.h"
+#include "../include/db.h"
 #include "../include/questionfx.h"
+
 
 extern GtkWidget *wdcmain;
 static t_sql_handle *db = NULL;
@@ -170,7 +172,7 @@ void
 on_wdcmain_destroy (GtkObject * object, gpointer user_data)
 {
   if (db)
-    gpe_acontrol_db_close (db);
+    sql_close (db);
 }
 
 
@@ -188,12 +190,12 @@ on_combo_entry2_changed (GtkEditable * editable, gpointer user_data)
     return;
 
   if (db)
-    gpe_acontrol_db_close (db);
-  db = gpe_acontrol_db_open (etext);
+    sql_close (db);
+  db = sql_open (etext);
   if (db)
     {
       items = NULL;
-      cnt = gpe_acontrol_list_tables (db, &tables);
+      cnt = sql_list_tables (db, &tables);
       for (i = 1; i < cnt; i++)	// first is field name
 	items = g_list_append (items, tables[i]);
       combo = lookup_widget (GTK_WIDGET (editable), "cbTable");

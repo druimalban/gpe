@@ -1,13 +1,13 @@
 
 [filenumbers]
 0=63
-1=94
-2=263
-3=55
-4=156
-5=44
-6=130
-7=1
+1=20
+2=38
+3=44
+4=198
+5=94
+6=167
+7=26
 
 [filemarkers]
 0=
@@ -27,14 +27,17 @@ ShowLocals=true
 
 [filelist]
 0=/home/fuchs/Projekte/gpe/todo.txt
-1=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/main.c
-2=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/callbacks.c
-3=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/db.c
-4=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/interface.c
-5=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/callbacks.h
+1=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/db.h
+2=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/Makefile
+3=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/include/callbacks.h
+4=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/callbacks.c
+5=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/main.c
+6=/home/fuchs/Projekte/gpe/gpe/base/gpe-dataconf/src/db.c
+7=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/include/gpe-sql.h
 
 [replace_text]
 0=wdcmain
 
 [find_text]
-0=mainw
+0=db_open
+1=mainw

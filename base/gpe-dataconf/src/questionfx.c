@@ -89,7 +89,7 @@ gpe_question_fx_ask (char *qn, char *title, char *iconname, char **strbuf, ...)
   p = gpe_try_find_icon (iconname, NULL);
   if (p != NULL)
   {
-    icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);
+    icon = gtk_image_new_from_pixbuf (p);
     gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
   }
 

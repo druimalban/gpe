@@ -8,8 +8,16 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../../libgpewidget -I../include -Wall 
+CFLAGS = $(GTKCFLAGS) -g -I../../libgpewidget -I../include -Wall -I../../libgpedb/include
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+
+ifdef USE_USQLD
+CFLAGS += -lusqld
+else
+CFLAGS += -lsqlite
+endif
+
+
 CFLAGS += -MD
 
 MEMBERS = callbacks interface main support db questionfx
@@ -21,7 +29,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-dataconf all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../../libgpewidget -lgpewidget $(GTKLDFLAGS) -lsqlite
+	$(CC) $(CFLAGS) -o $@ $^ -L../../libgpewidget -lgpewidget $(GTKLDFLAGS) -L../../libgpedb/src -lgpedb
 
 clean:
 	rm -f gpe-dataconf $(OBJS) $(DEPS)

@@ -9,6 +9,8 @@
 
 #include <gtk/gtk.h>
 #include <libintl.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -49,6 +51,7 @@ main (int argc, char *argv[])
   GtkWidget *vbox1;
   GtkWidget *toolbar;
   GtkWidget *pw;
+  GtkWidget *btn;
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
   GtkListStore *liststore;
@@ -83,19 +86,25 @@ main (int argc, char *argv[])
   gtk_box_reorder_child (GTK_BOX (vbox1), toolbar, 0);
   gtk_widget_show (toolbar);
 
-  pw = gpe_render_icon (wdcmain->style, gpe_find_icon ("new"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New rule"),
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("new"));
+  btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New rule"),
 			   _("New rule"), _("New rule"), pw,
 			   (GtkSignalFunc) on_bNew_clicked, NULL);
+#ifdef USE_USQLD
+	gtk_widget_set_sensitive(btn,FALSE);
+#endif
 
-  pw = gpe_render_icon (wdcmain->style, gpe_find_icon ("delete"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete rule"),
+  pw = gtk_image_new_from_pixbuf(gpe_find_icon ("delete"));
+  btn = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete rule"),
 			   _("Delete rule"), _("Delete rule"), pw,
 			   (GtkSignalFunc) on_bDelete_clicked, NULL);
+#ifdef USE_USQLD
+	gtk_widget_set_sensitive(btn,FALSE);
+#endif
   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
-  pw = gpe_render_icon (wdcmain->style, gpe_find_icon ("exit"));
+  pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close application"),
 			   _("Close application"), _("Close application"), pw,
 			   (GtkSignalFunc) gtk_main_quit, NULL);
@@ -144,7 +153,16 @@ main (int argc, char *argv[])
   gtk_tree_view_column_set_fixed_width (GTK_TREE_VIEW_COLUMN (tcolumn), 50);
   gtk_tree_view_append_column (treeview, tcolumn);
 
-
+  // disable some feature if we are not root
+  if (geteuid() > 0)  // if true we don't have root permissions
+  {
+	pw = lookup_widget(wdcmain,"ePolicy");
+	gtk_widget_set_sensitive(pw,FALSE);
+#ifdef USE_USQLD
+	pw = lookup_widget(wdcmain,"tvACL");
+	gtk_widget_set_sensitive(pw,FALSE);
+#endif
+  }
   // now show main window
   gtk_widget_show (wdcmain);
   gtk_main ();
