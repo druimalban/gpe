@@ -1,8 +1,27 @@
 2002-08-03  Philip Blundell  <philb@gnu.org>
 
+	* list-ui.c (new_todo_item): Use edit_item.  Remove use of
+	curr_list.
+	(set_cur_list): Delete.
+	(set_category): New.
+	(ui_del_list): Delete.
+	(ui_create_new_list): Likewise.
+	(categories_menu): New.
+	(close_window, close_configure, configure): Delete.
+	(new_todo_item): New.
+	(draw_expose_event): Use display_items.
+	(draw_click_event): Likewise.  Ignore double clicks on checkbox
+	icon.
+	(category_matches): New.
+	(refresh_items): New.
+	(top_level): Replace lists with categories.  Tweak tooltips.
+
+	* Makefile (ipkg): Delete; replaced by Makefile.dpkg_ipkg.
+	
 	* main.c (main): Don't force window size.
 
 	* configure.c: New file.
+	* Makefile (MEMBERS): Add configure.
 
 	* todo-sql.c (new_category_internal): New.
 	(new_category): Likewise.
