@@ -1,7 +1,11 @@
 2002-07-20  Philip Blundell  <philb@gnu.org>
 
-	* Makefile (install-dm): Use -f when making symbolic link.
- 
+	* gpe-login.c (main): Always create a GtkSocket.  Don't start xkbd
+	if in autolock mode.
+	(filter): Start it here instead.
+	(spawn_xkbd): Return XID, not socket.  Clear "result" label in
+	case a previous login attempt failed.
+
 2002-07-20  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-login.c (main): Add default and user resource files.
