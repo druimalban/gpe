@@ -214,25 +214,27 @@ void
 syncobj_modify (gpe_conn *conn, char* object, char *uid,
 		sync_object_type objtype, char *returnuid, int *returnuidlen) 
 {
+  GError *err = NULL;
+
   GPE_DEBUG (conn, "syncobj_modify");  
   
   /* 
    * calendar
    */
   if (objtype & (SYNC_OBJECT_TYPE_CALENDAR))
-    push_calendar (conn, object, uid, returnuid, returnuidlen);
+    push_calendar (conn, object, uid, returnuid, returnuidlen, &err);
   
   /* 
    * phonebook
    */
   else if (objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
-    push_contact (conn, object, uid, returnuid, returnuidlen);
+    push_contact (conn, object, uid, returnuid, returnuidlen, &err);
   
   /* 
    * todo list
    */
   else if (objtype & (SYNC_OBJECT_TYPE_TODO))
-    push_todo (conn, object, uid, returnuid, returnuidlen);
+    push_todo (conn, object, uid, returnuid, returnuidlen, &err);
   
   sync_set_requestdone (conn->sync_pair);
 }

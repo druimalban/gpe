@@ -26,7 +26,7 @@ sync_calendar (GList *data, gpe_conn *conn, int newdb)
 
 gboolean
 push_calendar (gpe_conn *conn, const char *obj, const char *uid, 
-	       char *returnuid, int *returnuidlen)
+	       char *returnuid, int *returnuidlen, GError **err)
 {
   return FALSE;
 }

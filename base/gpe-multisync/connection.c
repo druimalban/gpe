@@ -94,6 +94,25 @@ fetch_tag_data (nsqlc *db, const gchar *query_str, guint id)
   return data;
 }
 
+gboolean
+store_tag_data (nsqlc *db, const gchar *table, guint id, GSList *tags, gboolean delete)
+{
+  if (delete)
+    nsqlc_exec_printf (db, "delete from '%q' where urn=%d", NULL, NULL, NULL, table, id);
+
+  while (tags)
+    {
+      gpe_tag_pair *p = tags->data;
+
+      nsqlc_exec_printf (db, "insert into '%q' values (%d, '%q', '%q')", NULL, NULL, NULL,
+			 table, id, p->tag, p->value);
+
+      tags = tags->next;
+    }
+
+  return TRUE;
+}
+
 static int
 fetch_uid_callback (void *arg, int argc, char **argv, char **names)
 {

@@ -56,9 +56,26 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
 
 gboolean
 push_contact (gpe_conn *conn, const char *obj, const char *uid, 
-	      char *returnuid, int *returnuidlen)
+	      char *returnuid, int *returnuidlen, GError **error)
 {
-  return FALSE;
+  GSList *tags;
+  MIMEDirVCard *vcard;
+  int id;
+
+  vcard = mimedir_vcard_new_from_string (obj, error);
+  if (vcard == NULL)
+    return FALSE;
+
+  tags = vcard_to_tags (vcard);
+
+  if (uid)
+    id = atoi (uid);
+  else
+    id = 0;
+    
+  store_tag_data (conn->contacts, "contacts", id, tags, TRUE);
+
+  return TRUE;
 }
 
 gboolean
