@@ -1,0 +1,71 @@
+<?php
+$addtitle="CVS";
+$pagename="cvs";
+$author="Colin Marquardt";
+$authoremail="gpe-web@marquardt-home.de";
+
+include ("includes/head.php");
+?>
+
+<H2>Accessing the GPE CVS repository</H2>
+<p>
+In short, if you are not (yet?) a developer, you do the following to get an initial copy of the GPE sources:
+   <pre>
+      $ cd gpe_cvs
+      $ export CVSROOT=:pserver:anoncvs@cvs.handhelds.org:/cvs
+      $ cvs login
+      Logging in to :pserver:anoncvs@cvs.handhelds.org:2401/cvs
+      CVS Password: anoncvs
+      $ cvs checkout gpe
+   </pre>
+You only have to do this once. The next time you want to update
+your copy of the sources, do:
+   <pre>
+      $ cd gpe_cvs
+      $ cvs update
+   </pre>
+
+<P>
+For a more detailed description about how to use handhelds.org CVS, please see
+<a href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
+here</a>.
+</P>
+<P>
+You can examine the CVS repository directly 
+<A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">here</A>.
+</P>
+
+<H2>Building GPE CVS applications</H2>
+<p>
+There is no easy recipe for building GPE applications for the ARM
+architecture yet. For a start, check the 
+<A HREF="http://handhelds.org/z/wiki/GpeCrossCompilation">GpeCrossCompilation
+wiki page</A>.
+However, GPE can be built like any other application for your
+desktop.
+
+A makefile in 'gpe_cvs/base' helps you build (most of) GPE:
+
+   <pre>
+      $ make -f Makefile.gpe DESTDIR=`pwd`/tmp-install install
+   </pre>
+
+If this doesn't work for you: prerequisites for building GPE
+applications are libgpewidget, gpe-icons and, for some applications,
+libsqlite. libsqlite is not in GPE CVS, but is likely to be available
+as a package for your distribution, perhaps called 'libsqlite-dev' or
+'libsqlite-devel').
+
+So do the following before you attempt to compile one of the GPE
+applications:
+
+   <pre>
+      $ cd gpe_cvs/base
+      $ cd libgpewidget
+      $ make
+      $ make install
+      $ cd ../gpe-icons
+      $ make install
+   </pre>
+
+<?php include ("includes/foot.php"); ?>
