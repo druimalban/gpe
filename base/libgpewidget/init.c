@@ -35,6 +35,13 @@ gpe_application_init (int *argc, char **argv[])
   len = strlen (home) + strlen (dname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
+  if (access (buf, F_OK))
+    {
+      gpe_perror_box (buf);
+      g_free (buf);
+      return FALSE;
+    }
+
   strcat (buf, dname);
   if (access (buf, F_OK))
     {

@@ -18,89 +18,49 @@
 #include "pixmaps.h"
 #include "errorbox.h"
 
-static GData *pdata;
-
 static GData *pbdata;
 
 static const gchar *theme_dir_tail = "/.gpe/pixmaps";
 static const gchar *default_theme_dir = PREFIX "/share/gpe/pixmaps/default";
+static const gchar *theme_dir;
 
 #define _(x) dgettext(PACKAGE, x)
 
-gboolean 
-gpe_load_pixmaps (struct pix *p)
+static GdkPixbuf *
+gpe_load_one_icon (const char *filename, gchar **error)
 {
-  gchar *home = getenv ("HOME");
-  gchar *buf;
-  const gchar *theme_dir;
-  size_t s;
-  if (home == NULL)
-    home = "/";
-
-  s = strlen (home) + strlen (theme_dir_tail) + 1;
-  buf = alloca (s);
-  strcpy (buf, home);
-  strcat (buf, theme_dir_tail);
-
-  if (access (buf, F_OK) == 0)
-    theme_dir = buf;
-  else
-    theme_dir = default_theme_dir;
- 
-  g_datalist_init (&pdata);
+  const gchar *pathname;
+  char buf[1024];
+  GdkPixbuf *pb;
   
-  while (p->shortname && p->filename)
+  if (filename[0] == '/')
     {
-      const gchar *filename;
-      char buf[1024];
-      GdkPixbuf *pixbuf;
-
-      if (p->filename[0] == '/')
+      pathname = filename;
+    }
+  else
+    {
+      snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, filename);
+      buf[sizeof (buf) - 1] = 0;
+      if (access (buf, F_OK) != 0 && theme_dir != default_theme_dir)
 	{
-	  filename = p->filename;
-	}
-      else
-	{
-	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, p->filename);
+	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
+		    filename);
 	  buf[sizeof (buf) - 1] = 0;
-	  if (access (buf, F_OK) != 0 && theme_dir != default_theme_dir)
-	    {
-	      snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
-			p->filename);
-	      buf[sizeof (buf) - 1] = 0;
-	    }
-	  filename = buf;
 	}
+      pathname = buf;
+    }
+  
+  pb = gdk_pixbuf_new_from_file (pathname);
 
-      pixbuf = gdk_pixbuf_new_from_file (filename);
-      if (pixbuf == NULL)
-	{
-	  char buf[1024];
-	  sprintf (buf, _("Unable to load %s"), filename);
-	  gpe_error_box (buf);
-	  exit (1);
-	}
-      gdk_pixbuf_render_pixmap_and_mask (pixbuf,
-					 &p->pixmap,
-					 &p->mask,
-					 1);
-
-      g_datalist_set_data (&pdata, p->shortname, p);
-      p++;
+  if (pb == NULL && error)
+    {
+      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon \"%s\""),
+		filename);
+      buf[sizeof (buf)-1] = 0;
+      *error = g_strdup (buf);
     }
 
-  return TRUE;
-}
-
-gboolean 
-load_pixmaps () __attribute__ ((weak, deprecated, alias ("gpe_load_pixmaps")));
-
-struct pix *
-gpe_find_pixmap (const char *name)
-{
-  struct pix *p = g_datalist_get_data (&pdata, name);
-
-  return p;
+  return pb;
 }
 
 gboolean 
@@ -108,51 +68,33 @@ gpe_load_icons (struct gpe_icon *p)
 {
   gchar *home = getenv ("HOME");
   gchar *buf;
-  const gchar *theme_dir;
   size_t s;
+
   if (home == NULL)
     home = "/";
-
+  
   s = strlen (home) + strlen (theme_dir_tail) + 1;
   buf = alloca (s);
   strcpy (buf, home);
   strcat (buf, theme_dir_tail);
-
+  
   if (access (buf, F_OK) == 0)
-    theme_dir = buf;
+    theme_dir = g_strdup (buf);
   else
     theme_dir = default_theme_dir;
  
   g_datalist_init (&pbdata);
   
-  while (p->shortname && p->filename)
+  while (p->shortname)
     {
-      const gchar *filename;
-      char buf[1024];
+      gchar *error;
+      p->pixbuf = gpe_load_one_icon (p->filename ? p->filename : p->shortname,
+				     &error);
 
-      if (p->filename[0] == '/')
-	{
-	  filename = p->filename;
-	}
-      else
-	{
-	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, p->filename);
-	  buf[sizeof (buf) - 1] = 0;
-	  if (access (buf, F_OK) != 0 && theme_dir != default_theme_dir)
-	    {
-	      snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
-			p->filename);
-	      buf[sizeof (buf) - 1] = 0;
-	    }
-	  filename = buf;
-	}
-
-      p->pixbuf = gdk_pixbuf_new_from_file (filename);
       if (p->pixbuf == NULL)
 	{
-	  char buf[1024];
-	  sprintf (buf, _("Unable to load %s"), filename);
-	  gpe_error_box (buf);
+	  gpe_error_box (error);
+	  g_free (error);
 	  exit (1);
 	}
 
@@ -167,6 +109,17 @@ GdkPixbuf *
 gpe_find_icon (const char *name)
 {
   struct gpe_icon *p = g_datalist_get_data (&pbdata, name);
+  if (p == NULL)
+    {
+      GdkPixbuf *buf = gpe_load_one_icon (name, NULL);
+      if (buf)
+	{
+	  p = g_malloc (sizeof (struct gpe_icon));
+	  p->shortname = g_strdup (name);
+	  p->pixbuf = buf;
+	  g_datalist_set_data (&pbdata, p->shortname, p);
+	}
+    }
   return p ? p->pixbuf : NULL;
 }
 
@@ -184,7 +137,4 @@ gpe_find_icon_pixmap (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
     }
   return FALSE;
 }
-
-struct pix *
-find_pixmap () __attribute__ ((weak, deprecated, alias ("gpe_find_pixmap")));
 

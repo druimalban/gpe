@@ -12,23 +12,12 @@
 
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-struct pix
-{
-  const char *shortname;
-  const char *filename;
-  GdkPixmap *pixmap;
-  GdkBitmap *mask;
-};
-
 struct gpe_icon
 {
   const char *shortname;
   const char *filename;
   GdkPixbuf *pixbuf;
 };
-
-extern gboolean gpe_load_pixmaps (struct pix *);
-extern struct pix *gpe_find_pixmap (const char *name);
 
 extern gboolean gpe_load_icons (struct gpe_icon *);
 extern GdkPixbuf *gpe_find_icon (const char *name);

@@ -1,6 +1,22 @@
+2002-06-20  Philip Blundell  <pb@debian.org>
+
+	* gtkminifilesel.c (menu_change_directory): Fix warning.
+	(gtk_mini_file_selection_size_request): Likewise.
+	* picturebutton.c (gpe_picture_button): Likewise.
+
+	* init.c (gpe_application_init): Test for existence of $HOME before
+	attempting to create ~/.gpe.
+
+	* pixmaps.c (gpe_load_pixmaps, gpe_find_pixmap): Deleted.
+	(gpe_load_one_icon): New function, broken out from...
+	(gpe_load_icons): ... here.  Tolerate NULL filename, just use
+	the short name in that case.
+	(gpe_find_icon): Attempt lazy loading of images if lookup fails.
+	* pixmaps.h (gpe_load_pixmaps, gpe_find_pixmap, struct pix): Deleted.
+
 2002-06-19  Philip Blundell <pb@nexus.co.uk>
 
-	* version 0.07 released
+	* Version 0.07 released.
 
 2002-06-18  Philip Blundell  <pb@debian.org>
 

@@ -53,8 +53,6 @@ static void
 gtk_mini_file_selection_size_request (GtkWidget     *widget,
 				      GtkRequisition *requisition)
 {
-  GtkMiniFileSelection *fs;
-
   g_return_if_fail (widget != NULL);
   g_return_if_fail (GTK_IS_MINI_FILE_SELECTION (widget));
   g_return_if_fail (requisition != NULL);
@@ -81,7 +79,6 @@ gtk_mini_file_selection_show (GtkWidget *widget)
 static void
 menu_change_directory (GtkWidget *w, gpointer p)
 {
-  GtkMiniFileSelection *fs = GTK_MINI_FILE_SELECTION (p);
   char *s = strdup (gtk_object_get_data (GTK_OBJECT (w), "text"));
   
   set_directory (p, s);
