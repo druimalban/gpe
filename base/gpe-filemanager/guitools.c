@@ -68,7 +68,7 @@ is_mounted(gchar *path)
 }
 
 
-static gboolean
+gboolean
 do_scheduled_update()
 {
   int i;
@@ -76,8 +76,12 @@ do_scheduled_update()
   for (i=0; i<num_storage; i++)
     {
       if (storages[i].mountable)
-        gtk_widget_set_sensitive(storages[i].item, 
-                                 is_mounted(storages[i].path));
+        {
+          if (is_mounted(storages[i].path))
+            gtk_widget_show(storages[i].item);
+          else
+            gtk_widget_hide(storages[i].item);
+        }
     }
   return FALSE;
 }

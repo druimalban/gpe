@@ -8,7 +8,7 @@ extern "C"
 
 GtkWidget *build_storage_menu(gboolean wide);
 void set_active_item(char* path);
-
+gboolean do_scheduled_update(void);
 
 #ifdef __cplusplus
 }

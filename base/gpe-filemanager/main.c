@@ -199,6 +199,7 @@ void on_about_clicked (GtkWidget * w);
 void on_help_clicked (GtkWidget * w);
 void on_dirbrowser_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
 void on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
+void do_select_all(GtkWidget *w, gpointer d);
 
 
 /* items of the context menu */
@@ -223,8 +224,15 @@ static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 /* items of the main menu */
 static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_File"),         NULL,         NULL, 0, "<Branch>" },
+  { N_("/_File/_Copy"),          NULL, copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
+  { N_("/_File/_Paste"),          NULL, paste_file_clip,         0, "<StockItem>", GTK_STOCK_PASTE },
+  { N_("/_File/_Move"),            NULL, popup_ask_move_file,            0, "<Item>" },
+  { N_("/_File/_Rename"),          NULL, popup_ask_rename_file,          0, "<Item>" },
+  { N_("/_File/_Delete"),   "Delete", popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
   { N_("/_File/_Create Directory"),NULL, create_directory_interactive, 0, "<Item>"},
   { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
+  { N_("/_File/Select _All"),"Control+A", do_select_all, 0, "<Item>"},
+  { N_("/_File/s2"), NULL , NULL,    0, "<Separator>"},
   { N_("/_File/_Close"),  NULL, gtk_main_quit, 0, "<StockItem>", GTK_STOCK_QUIT },
   { N_("/_Settings"),         NULL,         NULL, 0, "<Branch>" },
   { N_("/_Settings/Directory Browser"), NULL, on_dirbrowser_setting_changed, 0, "<CheckItem>"},
@@ -573,6 +581,15 @@ create_directory_interactive(void)
   gtk_widget_destroy(dialog);
 }
 
+void
+do_select_all(GtkWidget *w, gpointer d)
+{
+  GtkTreeSelection *sel;
+  
+  sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
+  gtk_tree_selection_select_all(sel);
+}
+
 static void
 copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
 {
@@ -817,57 +834,77 @@ rename_file (GtkWidget *dialog_window, gint response_id)
   refresh_current_directory();
 }
 
+
 static void
-move_file (gchar *directory)
+move_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
+               gpointer data)
 {
-  gchar *dest, *error;
   GnomeVFSResult result;
+  gint col;
+  gchar *directory = (gchar*)data;
+  gchar *dest;
 
-  dest = g_strdup_printf ("%s/%s", directory, current_popup_file->vfs->name);
-
-  result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
-
-  if (result != GNOME_VFS_OK)
-    {
-      switch (result)
-      {
-      case GNOME_VFS_ERROR_NO_SPACE:
-        error = g_strdup ("No space left on device.");
-        break;
-      case GNOME_VFS_ERROR_READ_ONLY:
-        error = g_strdup ("Destination is read only.");
-        break;
-      case GNOME_VFS_ERROR_ACCESS_DENIED:
-        error = g_strdup ("Access denied.");
-        break;
-      case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
-        error = g_strdup ("Read only file system.");
-        break;
-      default:
-        error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
-        break;
-      }
-      gpe_error_box (error);
-      g_free (error);
-    }
+  if (active_view == view_widget)
+    col = COL_DATA;
   else
+    col = COL_DIRDATA;
+
+  FileInformation *cfi = NULL;
+  
+  gtk_tree_model_get(model, iter, col, &cfi, -1);
+  if (cfi)
     {
-      gpe_popup_infoprint(GDK_DISPLAY(), _("File moved."));
-      refresh_current_directory();
+      dest = g_strdup_printf ("%s/%s", directory, cfi->vfs->name);
+      result = gnome_vfs_move_uri (gnome_vfs_uri_new (cfi->filename), 
+                                   gnome_vfs_uri_new (dest), TRUE);
+      g_free (dest); 
+      if (result != GNOME_VFS_OK)
+        gpe_error_box (gnome_vfs_result_to_string (result));
     }
-  g_free (dest);
+}
+
+static void
+move_files (gchar *directory)
+{
+  GtkTreeSelection *sel = NULL;
+  
+  if (active_view)
+    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
+  
+  if (!sel) 
+    return;
+  
+  if (gtk_tree_selection_count_selected_rows(sel))
+  {
+    gtk_tree_selection_selected_foreach(sel, 
+                                        (GtkTreeSelectionForeachFunc)move_one_file,
+                                        (gpointer)directory);
+    refresh_current_directory();
+    gpe_popup_infoprint(GDK_DISPLAY(), _("File(s) moved."));
+  }
 }
 
 static void
 popup_ask_move_file ()
 {
   GtkWidget *dirbrowser_window;
+  GtkTreeSelection *sel = NULL;
 
-  dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), 
-    (gchar *) g_get_home_dir (), GTK_SELECTION_SINGLE, move_file);
-  gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
+  if (active_view)
+    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
+  
+  if (!sel) 
+    return;
+  
+  if (gtk_tree_selection_count_selected_rows(sel))
+  {
+    dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), 
+                                                (gchar *) g_get_home_dir (), 
+                                                GTK_SELECTION_SINGLE, move_files);
+    gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
 
-  gtk_widget_show_all (dirbrowser_window);
+    gtk_widget_show_all (dirbrowser_window);
+  }
 }
 
 static void
@@ -1878,43 +1915,7 @@ tree_button_press (GtkWidget *tree, GdkEventButton *b, gpointer user_data)
         show_popup (NULL, NULL);
   }
 
-  return TRUE;
-}
-
-
-static gboolean
-tree_button_release (GtkWidget *tree, GdkEventButton *b)
-{
-  
-  if (b->button == 1)
-    {
-      gint x, y;
-      GtkTreeViewColumn *col;
-      GtkTreePath *path;
-  
-      x = b->x;
-      y = b->y;
-
-      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (tree),
-					 x, y,
-					 &path, &col,
-					 NULL, NULL))
-      {
-	    /*GtkTreeIter iter;
-        GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
-	    FileInformation *i;
-	    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
-        */
-        gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);
-
-	   // gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
-		
-	    gtk_tree_path_free (path);
-		
-        //button_clicked (NULL, i);
-      }
-  }
-  return TRUE;
+  return FALSE;
 }
 
 
@@ -1948,9 +1949,9 @@ create_view_widget_list(void)
     if (GTK_IS_WIDGET(view_window)) gtk_widget_destroy(view_window);
 	
 	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
-  	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
-	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
+  	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview), FALSE);
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview), TRUE);
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview), TRUE);
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
     
@@ -1999,11 +2000,9 @@ create_view_widget_list(void)
 
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
-	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
-		G_CALLBACK(tree_button_release), NULL);
 	g_signal_connect (G_OBJECT(treeview), "focus-in-event", 
 		G_CALLBACK(tree_focus_in), NULL);
-	
+
     gtk_widget_show_all(view_window);
 	return treeview;
 }
@@ -2049,10 +2048,10 @@ create_dir_view_widget(void)
     GtkTreeSelection *selection;
 	
 	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (dirstore));
-  	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),FALSE);
-	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
-	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview),TRUE);
-	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(treeview),TRUE);
+  	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview), FALSE);
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview), TRUE);
+	gtk_tree_view_set_enable_search(GTK_TREE_VIEW(treeview), TRUE);
+	gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(treeview), TRUE);
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
   
@@ -2086,8 +2085,6 @@ create_dir_view_widget(void)
     
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
-	g_signal_connect (G_OBJECT(treeview), "button_release_event", 
-		G_CALLBACK(tree_button_release), NULL);
 	g_signal_connect (G_OBJECT(treeview), "focus-in-event", 
 		G_CALLBACK(tree_focus_in), NULL);
     gtk_widget_show_all(dir_view_window);
@@ -2315,6 +2312,7 @@ main (int argc, char *argv[])
     }
   
   setup_tabchain();
+  do_scheduled_update();
   initialized = TRUE;  
   gtk_main();
 

@@ -1,5 +1,16 @@
 2004-10-28  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    Released V 0.21
+    * main.c: Implemented moving of multiple files.
+              Removed some unused stuff.
+              Added some more functions to menus.
+              Fixed random selection of files.
+    * guitools.*: Hide inactive mountpoints instead of disabling them.
+    * main.c: Call do_scheduled_update() to set initially visible mountpoints.
+              Implemented "select all".    
+
+2004-10-28  Florian Boor  <florian.boor@kernelconcepts.de>
+
     * main.c: Implemented paste and delete for multiple files.
               Improved rename dialog.
               Changed focus behaviour of main window.
