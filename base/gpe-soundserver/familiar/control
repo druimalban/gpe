@@ -1,7 +1,7 @@
 Package: gpe-soundserver
 Section: base
 Priority: optional
-Version: 0.02
+Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: esd

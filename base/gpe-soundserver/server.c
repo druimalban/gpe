@@ -52,7 +52,7 @@ main ()
   pid = vfork ();
   if (pid == 0)
     {
-      execlp ("esd", "esd", "-nobeeps", NULL);
+      execlp ("esd", "esd", "-nobeeps", "-as", "5", NULL);
       perror ("exec");
       _exit (1);
     }
