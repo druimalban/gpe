@@ -1,9 +1,0 @@
-[Desktop Entry]
-_Name=Go 19
-_Comment=GPE Go
-Exec=gpe-go 19
-Terminal=0
-Type=Application
-Icon=gpe-go.png
-Categories=Games
-StartupNotify=True

@@ -16,6 +16,7 @@
 #include "gpe/init.h"
 #include "gpe/pixmaps.h"
 #include "gpe/errorbox.h"
+#include "gpe/question.h"
 
 //--i18n
 #include <libintl.h>
@@ -34,8 +35,6 @@ static struct gpe_icon my_icons[] = {
 
   //{ "new",        "new"   },
   //{ "prefs",      "preferences"  },
-
-  //{ "remove",     "gpe-go/stock_clear_24"},
 
   { NULL, NULL }
 };
@@ -191,7 +190,20 @@ void app_init(int argc, char ** argv){
     int size;
     if(sscanf(argv[1], "%d", &size) == 1) go.game_size = size;
   }
-  else go.game_size = 9;//default size
+  else{
+    int rep;
+    rep = gpe_question_ask (_("Size of the game:"),
+                            "gpe-go", "this_app_icon",
+                            "19", "19",
+                            "13", "13",
+                            "9",  "9",
+                            NULL);
+    switch(rep){
+      case 0:  go.game_size = 19; break;
+      case 1:  go.game_size = 13; break;
+      default: go.game_size =  9; break;
+    }
+  }
 
   go.board_size = BOARD_SIZE;//240
   go.stone_space = 1;

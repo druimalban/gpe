@@ -1,4 +1,4 @@
-VERSION = 0.04
+VERSION = 0.05-pre
 
 PACKAGE = gpe-go
 
@@ -16,11 +16,6 @@ endif
 
 
 LINGUAS = cs de pl ro sv nl fr pt
-
-EXTRA_DESKTOPS = \
-    gpe-go-9.desktop.in \
-    gpe-go-13.desktop.in \
-    gpe-go-19.desktop.in
 
 MEMBERS = gpe-go
 
@@ -47,7 +42,6 @@ LDFLAGS += -L../../base/libgpewidget -lgpewidget
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
-EXTRA_DESKTOPS_RM = $(patsubst %.in,%,$(EXTRA_DESKTOPS))
 
 ifdef DESKTOP #environement variable to set if you want extra code included.
 CPPFLAGS += -DDESKTOP
@@ -58,22 +52,20 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
-install-program: $(EXTRA_DESKTOPS_RM) all #Later: depends only on $(PACKAGE).desktop
+install-program: $(PACKAGE).desktop all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -d $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE)-9.desktop $(DESTDIR)$(PREFIX)/share/applications/
-	install -m 644 $(PACKAGE)-13.desktop $(DESTDIR)$(PREFIX)/share/applications/
-	install -m 644 $(PACKAGE)-19.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 	for i in $(PIXMAPS); do \
 	install -m 644 pixmaps/$$i   $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/;\
 	done
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop $(EXTRA_DESKTOPS_RM)
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) $(PACKAGE).desktop
 	find . -name "*~" -exec rm -f {} \;
 
 
