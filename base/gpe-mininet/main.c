@@ -159,35 +159,34 @@ net_get_status()
 	return result;
 }
 
-
+/*
 static gboolean
 remove_dock_message (guint id)
 {
 //	gpe_system_tray_cancel_message (GDK_WINDOW(), id);
 	return FALSE;
 }
-
+*/
 
 gboolean
 update_netstatus (void)
 {
 	GdkBitmap *bitmap;
 	gboolean oldstatus = net_is_on;
-	guint msg_id;
 	
 	net_is_on = net_get_status();
 	
 	if (net_is_on != oldstatus)
 	{
 		mb_tray_app_repaint (app);
-/*		msg_id = gpe_system_tray_send_message (GDK_WINDOW(), 
+		mb_tray_app_tray_send_message (app, 
 			net_is_on ? _("Network connection established.") 
 				: _("Network connection lost.")
-			, 0);
+			, 8000);
 		
-		g_timeout_add (10000, (GSourceFunc) remove_dock_message,
-		       (gpointer) msg_id);
-*/	}
+//		g_timeout_add (10000, (GSourceFunc) remove_dock_message,
+//		       (gpointer) msg_id);
+	}
 	return TRUE;
 }
 
