@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.7
+VER_gpe-task-base = 0.8
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -81,6 +81,7 @@ DEP_gpe-task-base = \
     gpe-soundserver, \
     gpe-mimedir-tools, \
     teleport, \
+    gpe-keylock, \
     \
     matchbox, \
     xmonobut, \
