@@ -885,7 +885,6 @@ edit_event_window (void)
   gtk_widget_set_sensitive (radiobuttonforever , FALSE);
 
   /* endafter hbox */
-  hboxendafter = gtk_hbox_new (FALSE, 0);
   /*gtk_box_pack_start_show (GTK_BOX (vboxend), hboxendafter, FALSE, FALSE, 0);*/
 
   /* end after radio button */
