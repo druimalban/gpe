@@ -3,7 +3,7 @@ PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.36
+VERSION = 0.37
 
 LINGUAS = id pt de
 

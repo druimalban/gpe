@@ -1,5 +1,9 @@
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.37 released.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
 	* globals.h (VERSION): Delete.
 	(update_all_views): Add prototype.
 
