@@ -552,10 +552,10 @@ build_edit_event_window (void)
   GtkWidget *vboxrepeat = gtk_vbox_new (FALSE, 0);
   GtkWidget *vboxalarm = gtk_vbox_new (FALSE, 0);
 
-  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
   GtkWidget *vboxend = gtk_vbox_new (FALSE, 0);
-  GtkWidget *vboxtop = GTK_DIALOG (window)->vbox;
+  GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
 
   GtkWidget *vboxrecur = gtk_vbox_new (FALSE, 0);
   GtkWidget *hboxrecurtypes = gtk_hbox_new (FALSE, 0);
@@ -617,7 +617,7 @@ build_edit_event_window (void)
   GtkWidget *hboxtask1 = gtk_hbox_new (FALSE, 0);
   GtkWidget *hboxtask2 = gtk_hbox_new (FALSE, 0);
 
-  GtkWidget *buttonbox = GTK_DIALOG (window)->action_area;
+  GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
   GtkWidget *buttondelete;
@@ -732,7 +732,7 @@ build_edit_event_window (void)
 
   gtk_container_set_border_width (GTK_CONTAINER (descriptionhbox), 6);
   gtk_container_add (GTK_CONTAINER (descriptionhbox), description);
-  gtk_box_pack_start (GTK_BOX (vboxevent), descriptionlabel, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxevent), descriptionlabel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vboxevent), descriptionhbox, TRUE, TRUE, 0);
 /* Begin repeat vbox */
 
@@ -1056,6 +1056,9 @@ build_edit_event_window (void)
   s->dailyspin_adj = dailyspin_adj;
   s->monthlyspin_adj = monthlyspin_adj;
   s->yearlyspin_adj = yearlyspin_adj;
+
+  gtk_box_pack_start (GTK_BOX (vboxtop), buttonbox, FALSE, FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (window), vboxtop);
 
   g_object_set_data_full (G_OBJECT (window), "edit_state", s,
                           destroy_user_data);
