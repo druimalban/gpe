@@ -2,6 +2,7 @@ Package: gpe-irc
 Section: x11
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@handhelds.org>
 Depends: libgtk2.0-0
