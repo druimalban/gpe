@@ -21,6 +21,7 @@
 #include "event-ui.h"
 #include "day_popup.h"
 #include "pixmaps.h"
+#include "picturebutton.h"
 
 static void
 destroy_popup(GtkWidget *widget,
@@ -80,12 +81,16 @@ day_popup(GtkWidget *parent, struct day_popup *p)
   GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *day_button = gpe_picture_button (window->style, NULL, "day_view");
-  GtkWidget *close_button = gpe_picture_button (window->style, NULL, "cancel");
+  GtkWidget *day_button;
+  GtkWidget *close_button;
   GtkWidget *label;
   GtkWidget *contents;
   char buf[256];
   struct tm tm;
+
+  gtk_widget_realize (window);
+  day_button = gpe_picture_button (window->style, NULL, "day_view");
+  close_button = gpe_picture_button (window->style, NULL, "cancel");
 
   memset (&tm, 0, sizeof (tm));
   tm.tm_year = p->year - 1900;

@@ -18,6 +18,7 @@
 
 #include "init.h"
 #include "pixmaps.h"
+#include "render.h"
 
 #include "event-db.h"
 #include "event-ui.h"

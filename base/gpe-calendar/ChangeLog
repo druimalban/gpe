@@ -1,3 +1,10 @@
+2002-06-18  Philip Blundell  <pb@debian.org>
+
+	* day_popup.c (day_popup): Realize widget before using its style.
+	Add missing include.
+	* event-ui.c (edit_event_window): Likewise.
+	* main.c: Add missing include.
+
 2002-06-16  Philip Blundell  <pb@debian.org>
 
 	* main.c (my_pix): Add "cancel".

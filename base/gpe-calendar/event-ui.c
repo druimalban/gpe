@@ -21,6 +21,7 @@
 #include "globals.h"
 #include "event-db.h"
 #include "event-ui.h"
+#include "picturebutton.h"
 
 #include "gtkdatecombo.h"
 
@@ -418,6 +419,7 @@ edit_event_window(void)
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
   gtk_widget_set_usize (description, -1, 88);
 
+  gtk_widget_realize (window);
   buttonok = gpe_picture_button (window->style, _("Save"), "save");
   buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
   buttondelete = gpe_picture_button (window->style, _("Delete"), "delete");
