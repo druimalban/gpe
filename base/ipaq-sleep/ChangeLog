@@ -1,3 +1,7 @@
+2004-09-20  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* ipaq-sleep.h: Maybe just .sleep.conf? We use it on other platforms
+                        now.
 
 2004-09-17  Florian Boor <florian.boor@kernelconcepts.de>
 

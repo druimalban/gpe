@@ -1,6 +1,6 @@
 #define MAX_IRQS 255
 
-#define DEFAULTSUSER "/.ipaq-sleep.conf"
+#define DEFAULTSUSER "/.sleep.conf"
 #define DEFAULTS "/etc/ipaq-sleep.conf"
 #define INTERRUPTS "/proc/interrupts"
 #define LOADAVG "/proc/loadavg"
