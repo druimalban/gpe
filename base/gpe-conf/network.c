@@ -48,7 +48,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/picturebutton.h>
-#include <gpe/render.h>
 #include <gpe/question.h>
 #include <gpe/smallbox.h>
 #include <gpe/gtksimplemenu.h>

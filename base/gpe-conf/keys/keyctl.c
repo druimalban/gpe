@@ -26,7 +26,6 @@
 #include <gdk/gdk.h>
 
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 #include <gpe/spacing.h>

@@ -27,11 +27,10 @@
 #include "interface.h"
 #include <gpe/picturebutton.h>
 #include <gpe/errorbox.h>
+#include <gpe/pixmaps.h>
 
 #include "../applets.h"
 #include "../suid.h"
-#include "gpe/pixmaps.h"
-#include "gpe/render.h"
 
 static gchar *listTitles[3];
 extern gboolean set_own_password;

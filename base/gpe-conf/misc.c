@@ -13,7 +13,6 @@
 
 #include <gtk/gtk.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <stdio.h>
 #include <string.h>
 
