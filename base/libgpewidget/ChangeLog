@@ -1,3 +1,7 @@
+2002-08-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gtkrc: Add some info about font specs in pixels vs. points.
+
 2002-08-26  Pierre Tardy  <tardyp@free.fr>
 
         * errorbox.c (gpe_error_box): the dialog acts now like a proper dialog.

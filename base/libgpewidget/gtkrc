@@ -1,5 +1,11 @@
 # ------------------------------------------------------------------------
 
+# -monotype-courier new-medium-r-normal-*-*-95-*-*-m-*-iso8859-15
+# 
+# The 95 is the size in tenths of a point, ie 9.5 pt font.  Using this
+# instead of pixels helps keep things the same size when changing
+# display resolutions, if the dpi of the display is accurate...
+
 # the normal gpe font
 style "gpe_normal"
 {
