@@ -182,7 +182,54 @@ char *compose_tz_advanced(tzinfo tzi)
 }
 
 
-/* This finction sets TZ in given file to a new value */
+/* find current timezone definition */
+
+char* 
+get_current_tz(void)
+{
+	char* fprof;
+	char *result;
+	static char tzbuf[31];
+	char *cont = NULL;
+	int len;
+	GError *err = NULL;
+
+	tzbuf[0] = 0;
+	
+	if (geteuid()) 
+		fprof = g_strdup_printf("%s/.profile",g_get_home_dir());
+	else
+		fprof = g_strdup("/etc/profile");
+	
+	if (g_file_get_contents(fprof, &cont, &len, &err))
+	{
+		char *p = strstr(cont, "TZ");
+		if (p)
+		{
+			int i = 0;
+			p = strstr(p, "=") + 1;
+			while (p[0] == ' ' || p[0] == '\t') p++;
+			while (((p + i) < (cont + len)) && (i < 30))
+			{
+				tzbuf[i] = p[i];
+				i++;
+				if (p[i] == '\n')
+					break;
+			}
+			tzbuf[i] = 0;
+		}
+		g_free(cont);			
+	}
+	if (strlen(tzbuf))
+		result = tzbuf;
+	else
+		result = getenv("TZ");
+
+	g_free(fprof);
+	return result;  
+}
+
+/* This function sets TZ in given file to a new value */
 
 void
 set_timezone (gchar *fprofile, gchar *zone)
@@ -527,7 +574,7 @@ GtkWidget *Time_Build_Objects(gboolean nonroot)
 		    GTK_FILL,GTK_FILL | GTK_EXPAND,0,0);
 
   self.timezone = gtk_combo_new ();
-  tzi = get_tz_info(getenv("TZ"));
+  tzi = get_tz_info(get_current_tz());
 
   if (strlen(tzi.tzname)) 
 	fstr=g_strdup(tzi.tzname);

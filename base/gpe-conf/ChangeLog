@@ -1,5 +1,6 @@
 2004-08-23	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* timeanddate.c: Read current TZ from file instead of environment.
 	* battery.c: Several improvements in APM stuff like correct handling 
 	             of units and improved bar setup.
 
