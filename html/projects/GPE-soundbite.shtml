@@ -11,15 +11,17 @@ back through the PDA's internal audio system.  The <B>libgsm</B> codec
 library can be used to compress the data for storage.
 </P>
 <P>
-I'm not sure what the user interface should be like.  Obviously, on
-the iPAQ, the record button should start and stop recording.  But
-there also needs to be some means to choose where the files are saved
-and to play them back.
+Obviously, on
+the iPAQ, the record button should start and stop recording.  
+There also needs to be some means to choose where the files are saved
+and to play them back. However, it would be nice if this was integrated
+with other programs (e.g. gpe-todo), so that audio notes can easily be
+associated with the other data they're relevant to.
 </P>
 
 <H2>Status</H2>
 <P>
-Nobody is working on this project at the moment.  If you would like to
-volunteer, send mail to the <A href="mailto:gpe@handhelds.org">list</A>.
+<A HREF="mailto:moray@handhelds.org">Moray Allan</a> has been doing 
+some work on this module.
 
 <!--#include virtual="/includes/foot.shtml"-->
