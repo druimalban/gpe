@@ -12,8 +12,8 @@
 #include <glib.h>
 #include <assert.h>
 
-#include "auth.h"
-#include "crypt.h"
+#include "libdisplaymigration/auth.h"
+#include "libdisplaymigration/crypt.h"
 
 static GcryMPI
 mpi_from_sexp (GcrySexp r, char *tag)

@@ -12,8 +12,8 @@
 #include <string.h>
 #include <glib.h>
 
-#include "auth.h"
-#include "crypt.h"
+#include "libdisplaymigration/auth.h"
+#include "libdisplaymigration/crypt.h"
 
 #define CHALLENGE_LEN 64
 

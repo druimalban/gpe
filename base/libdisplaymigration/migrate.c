@@ -20,8 +20,8 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
 
-#include "auth.h"
-#include "displaymigration.h"
+#include "libdisplaymigration/auth.h"
+#include "libdisplaymigration/displaymigration.h"
 
 #define _(x) gettext(x)
 
