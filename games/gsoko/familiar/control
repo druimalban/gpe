@@ -6,4 +6,4 @@ Priority: optional
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgtk2.0-0
 Description: Sokoban game for GTK
-
+Source: SOURCE
