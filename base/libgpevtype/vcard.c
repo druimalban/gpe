@@ -116,17 +116,6 @@ vcard_from_tags (GSList *tags)
   return vcard;
 }
 
-static GSList *
-tag_list_prepend (GSList *data, const char *tag, const char *value)
-{
-  gpe_tag_pair *p = g_malloc (sizeof (gpe_tag_pair));
-
-  p->tag = g_strdup (tag);
-  p->value = value;
-
-  return g_slist_prepend (data, p);
-}
-
 static gchar *
 append_str (gchar *old, gchar *new)
 {
@@ -159,7 +148,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
       g_object_get (G_OBJECT (vcard), t->vc ? t->vc : t->tag, &value, NULL);
 
       if (value)
-	data = tag_list_prepend (data, t->tag, g_strstrip (value));
+	data = gpe_tag_list_prepend (data, t->tag, g_strstrip (value));
 
       t++;
     }
@@ -205,9 +194,9 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	  g_object_get (G_OBJECT (address), "home", &home, NULL);
 	  g_object_get (G_OBJECT (address), "work", &work, NULL);
 	  if (home || !work)
-	    data = tag_list_prepend (data, "home.address", s);
+	    data = gpe_tag_list_prepend (data, "home.address", s);
 	  if (work)
-	    data = tag_list_prepend (data, "work.address", s);
+	    data = gpe_tag_list_prepend (data, "work.address", s);
 	}
       else
 	fprintf (stderr, "Unable to retrieve address.\n");
@@ -224,8 +213,8 @@ vcard_to_tags (MIMEDirVCard *vcard)
 
       if (s) // we cheat a little bit - vcard doesn't tell us
 	{
-	  data = tag_list_prepend (data, "home.email", s);
-	  data = tag_list_prepend (data, "work.email", s);
+	  data = gpe_tag_list_prepend (data, "home.email", s);
+	  data = gpe_tag_list_prepend (data, "work.email", s);
 	}
 
       l = g_list_next (l);
@@ -252,23 +241,23 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	  if (voice && !cell) 
 	    {		  
 	      if (work)
-		data = tag_list_prepend (data, "work.telephone", s);
+		data = gpe_tag_list_prepend (data, "work.telephone", s);
 	      else
-		data = tag_list_prepend (data, "home.telephone", s);
+		data = gpe_tag_list_prepend (data, "home.telephone", s);
 	    }
 	  if (fax)
 	    {		  
 	      if (work)
-		data = tag_list_prepend (data, "work.fax", s);
+		data = gpe_tag_list_prepend (data, "work.fax", s);
 	      else
-		data = tag_list_prepend (data, "home.fax", s);
+		data = gpe_tag_list_prepend (data, "home.fax", s);
 	    }
 	  if (cell)
 	    {		  
 	      if (work)
-		data = tag_list_prepend (data, "work.mobile", s);
+		data = gpe_tag_list_prepend (data, "work.mobile", s);
 	      else
-		data = tag_list_prepend (data, "home.mobile", s);
+		data = gpe_tag_list_prepend (data, "home.mobile", s);
 	    }
 	}
       

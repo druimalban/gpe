@@ -26,3 +26,15 @@ gpe_tag_list_free (GSList *tags)
 
   g_slist_free (tags);
 }
+
+GSList *
+gpe_tag_list_prepend (GSList *data, const char *tag, const char *value)
+{
+  gpe_tag_pair *p = g_malloc (sizeof (gpe_tag_pair));
+
+  p->tag = g_strdup (tag);
+  p->value = value;
+
+  return g_slist_prepend (data, p);
+}
+

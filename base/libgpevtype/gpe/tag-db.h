@@ -17,5 +17,6 @@ typedef struct
 } gpe_tag_pair;
 
 extern void gpe_tag_list_free (GSList *tags);
+extern GSList *gpe_tag_list_prepend (GSList *data, const char *tag, const char *value);
 
 #endif
