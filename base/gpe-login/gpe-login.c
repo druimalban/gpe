@@ -15,8 +15,9 @@
 #include <stdlib.h>
 
 #include <gtk/gtk.h>
+#include <gdk_imlib.h>
 
-#include "gpe.xpm"
+#define GPE_ICON "/usr/share/pixmaps/gpe-logo.png"
 
 static const char *current_username;
 static GtkWidget *label_result;
@@ -98,7 +99,7 @@ main(int argc, char *argv[])
   GtkWidget *next_button;
   GtkWidget *hbox_user, *hbox_password;
   GtkWidget *frame;
-  GtkWidget *logo;
+  GtkWidget *logo = NULL;
   GtkWidget *login_label, *password_label;
   GtkWidget *entry;
 
@@ -106,12 +107,12 @@ main(int argc, char *argv[])
   GdkBitmap *gpe_pix_mask;
 
   gtk_init(&argc, &argv);
+  gdk_imlib_init();
   
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 
-  gpe_pix = gdk_pixmap_create_from_xpm_d (window->window, &gpe_pix_mask, NULL, 
-					  gpe_login_xpm);
-  logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
+  if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
+    logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
 
   frame = gtk_frame_new ("Log in");
 
@@ -162,7 +163,8 @@ main(int argc, char *argv[])
 		     GTK_SIGNAL_FUNC (enter_callback), entry);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox2), logo, FALSE, FALSE, 0);
+  if (logo)
+    gtk_box_pack_start (GTK_BOX (vbox2), logo, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 5);
 
