@@ -1,13 +1,13 @@
-# gpe-calendar-0.34 (Indonesian)
+# gpe-calendar-0.40 (Indonesian)
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # Tedi Heriyanto <tedi_h@gmx.net>, 2003
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.34\n"
-"POT-Creation-Date: 2003-02-20 20:43+0000\n"
-"PO-Revision-Date: 2003-03-07 13:27GMT+0700\n"
+"Project-Id-Version: gpe-calendar 0.40\n"
+"POT-Creation-Date: 2003-03-30 15:42+0100\n"
+"PO-Revision-Date: 2003-04-04 14:37GMT+0700\n"
 "Last-Translator: Tedi Heriyanto <tedi_h@gmx.net>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -15,274 +15,300 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 0.9.6\n"
 
-#: main.c:238 gpe-calendar.desktop.in.h:1
+#: main.c:239 gpe-calendar.desktop.in.h:1
 msgid "Calendar"
 msgstr "Kalendar"
 
-#: main.c:257 main.c:258
-msgid "New Appointment"
+#: main.c:258
+msgid "New appointment"
 msgstr "Janji Baru"
 
-#: main.c:259
+#: main.c:258
 msgid "Tap here to add a new appointment or reminder"
 msgstr "Tab di sini untuk menambah janji atau pengingat baru"
 
-#: main.c:265 main.c:266
+#: main.c:264 main.c:265
 msgid "Today"
 msgstr "Hari ini"
 
-#: main.c:274
+#: main.c:273
 msgid "Future"
 msgstr "Mendatang"
 
-#: main.c:274
+#: main.c:273
 msgid "Future View"
 msgstr "Future View"
 
-#: main.c:275
+#: main.c:274
 msgid "Tap here to see all future events."
 msgstr "Tab di sini untuk melihat seluruh peristiwa mendatang"
 
-#: main.c:282
+#: main.c:281
 msgid "Day View"
 msgstr "Day View"
 
-#: main.c:283
+#: main.c:282
 msgid "Tap here to select day-at-a-time view."
 msgstr "Tab di sini untuk memilih view satu hari tertentu"
 
-#: main.c:290
+#: main.c:289
 msgid "Week"
 msgstr "Minggu"
 
-#: main.c:290
+#: main.c:289
 msgid "Week View"
 msgstr "Week View"
 
-#: main.c:291
+#: main.c:290
 msgid "Tap here to select week-at-a-time view."
 msgstr "Tab di sini untuk memilih view satu minggu tertentu"
 
-#: main.c:298
+#: main.c:297
 msgid "Month"
 msgstr "Bulan"
 
-#: main.c:298
+#: main.c:297
 msgid "Month View"
 msgstr "Month View"
 
-#: main.c:299
+#: main.c:298
 msgid "Tap here to select month-at-a-time view."
 msgstr "Tab di sini untuk memilih view satu bulan"
 
-#: main.c:305 main.c:306
+#: main.c:304
 msgid "Exit"
 msgstr "Keluar"
 
-#: main.c:306
+#: main.c:304
 msgid "Tap here to exit the program"
 msgstr "Tab di sini untuk keluar"
 
-#: event-ui.c:382
+#: event-ui.c:386
 msgid "End time must not be earlier than start time"
 msgstr "Waktu akhir tidak boleh lebih awal daripada waktu mulai"
 
-#: event-ui.c:551
+#: event-ui.c:620
 msgid "Event"
 msgstr "Peristiwa"
 
-#: event-ui.c:552
+#: event-ui.c:621
 msgid "Recurrence"
 msgstr "Kemunculan"
 
-#: event-ui.c:553 event-ui.c:597
+#: event-ui.c:622 event-ui.c:809
 msgid "Alarm"
 msgstr "Alarm"
 
-#: event-ui.c:584
-msgid "Start:"
-msgstr "Mulai:"
-
-#: event-ui.c:585
-msgid "End:"
-msgstr "Akhir:"
-
-#: event-ui.c:586 event-ui.c:587
-msgid "at:"
-msgstr "pada:"
-
-#: event-ui.c:591
-msgid "Summary:"
-msgstr "Ringkasan:"
-
-#: event-ui.c:593
-msgid "Description:"
-msgstr "Deskripsi:"
-
-#: event-ui.c:602
-msgid "before event"
-msgstr "sebelum peristiwa"
-
-#: event-ui.c:605 event-ui.c:794 event-ui.c:849 event-ui.c:902
-msgid "Every"
-msgstr "Setiap"
-
-#: event-ui.c:606
-msgid "weeks, on:"
-msgstr "minggu, pada:"
-
-#: event-ui.c:636
-msgid "Appointment"
-msgstr "Janji"
-
-#: event-ui.c:637
-msgid "Reminder"
-msgstr "Pengingat"
-
-#: event-ui.c:639
-msgid "Task"
-msgstr "Tugas"
-
-#: event-ui.c:645
-msgid "Days"
-msgstr "Hari"
-
-#: event-ui.c:646
-msgid "Weeks"
-msgstr "Minggu"
-
-#: event-ui.c:675
-msgid "Date:"
-msgstr "Tanggal:"
-
-#: event-ui.c:678
-msgid "Time:"
-msgstr "Waktu:"
-
-#: event-ui.c:691
-msgid "Due:"
-msgstr "Batas:"
-
-#: event-ui.c:694
-msgid "Allow:"
-msgstr "Perbolehkan:"
-
-#: event-ui.c:741
+#: event-ui.c:641 event-ui.c:846
 msgid "Type:"
 msgstr "Tipe:"
 
-#: event-ui.c:750
-msgid "No recurrence"
-msgstr "Tidak berulang"
+#: event-ui.c:646
+msgid "Appointment"
+msgstr "Janji"
 
-#: event-ui.c:756
-msgid "Daily"
-msgstr "Harian"
+#: event-ui.c:647
+msgid "Reminder"
+msgstr "Pengingat"
 
-#: event-ui.c:761
-msgid "Weekly"
-msgstr "Mingguan"
+#: event-ui.c:649
+msgid "Task"
+msgstr "Tugas"
 
-#: event-ui.c:767
-msgid "Monthly"
-msgstr "Bulanan"
+#: event-ui.c:655
+msgid "Days"
+msgstr "Hari"
 
-#: event-ui.c:772
-msgid "Yearly"
-msgstr "Tahunan"
+#: event-ui.c:656
+msgid "Weeks"
+msgstr "Minggu"
 
-#: event-ui.c:804 event-ui.c:990
+#: event-ui.c:664
+msgid "Summary:"
+msgstr "Ringkasan:"
+
+#: event-ui.c:680
+msgid "Start:"
+msgstr "Mulai:"
+
+#: event-ui.c:681
+msgid "End:"
+msgstr "Akhir:"
+
+#: event-ui.c:682 event-ui.c:683
+msgid "at:"
+msgstr "pada:"
+
+#: event-ui.c:716
+msgid "Date:"
+msgstr "Tanggal:"
+
+#: event-ui.c:719
+msgid "Time:"
+msgstr "Waktu:"
+
+#: event-ui.c:739
+msgid "Due:"
+msgstr "Batas:"
+
+#: event-ui.c:743
+msgid "Allow:"
+msgstr "Perbolehkan:"
+
+#: event-ui.c:758
+msgid "Description:"
+msgstr "Deskripsi:"
+
+#: event-ui.c:813
+msgid "before event"
+msgstr "sebelum peristiwa"
+
+#: event-ui.c:816
+msgid "minutes"
+msgstr "menit"
+
+#: event-ui.c:818
+msgid "hours"
+msgstr "jam"
+
+#: event-ui.c:820 event-ui.c:901
 msgid "days"
 msgstr "hari"
 
-#: event-ui.c:860 event-ui.c:994
+#: event-ui.c:822
+msgid "weeks"
+msgstr "minggu"
+
+#: event-ui.c:824 event-ui.c:967
 msgid "months"
 msgstr "bulan"
 
-#: event-ui.c:865
+#: event-ui.c:826 event-ui.c:1021
+msgid "years"
+msgstr "tahun"
+
+#: event-ui.c:858
+msgid "No recurrence"
+msgstr "Tidak berulang"
+
+#: event-ui.c:861
+msgid "Daily"
+msgstr "Harian"
+
+#: event-ui.c:864
+msgid "Weekly"
+msgstr "Mingguan"
+
+#: event-ui.c:867
+msgid "Monthly"
+msgstr "Bulanan"
+
+#: event-ui.c:870
+msgid "Yearly"
+msgstr "Tahunan"
+
+#: event-ui.c:891 event-ui.c:913 event-ui.c:956 event-ui.c:1011
+msgid "Every"
+msgstr "Setiap"
+
+#: event-ui.c:914
+msgid "weeks, on:"
+msgstr "minggu, pada:"
+
+#: event-ui.c:972
 #, c-format
 msgid "on day %d"
 msgstr "pada hari %d"
 
-#: event-ui.c:869
+#: event-ui.c:976
 msgid "on the"
 msgstr "pada"
 
-#: event-ui.c:875
+#: event-ui.c:984
 msgid "first"
 msgstr "pertama"
 
-#: event-ui.c:877
+#: event-ui.c:986
 msgid "second"
 msgstr "kedua"
 
-#: event-ui.c:879
+#: event-ui.c:988
 msgid "third"
 msgstr "ketiga"
 
-#: event-ui.c:881
+#: event-ui.c:990
 msgid "fourth"
 msgstr "keempat"
 
-#: event-ui.c:883
+#: event-ui.c:992
 msgid "fifth"
 msgstr "kelima"
 
-#: event-ui.c:885
+#: event-ui.c:994
 msgid "last"
 msgstr "terakhir"
 
-#: event-ui.c:912 event-ui.c:996
-msgid "years"
-msgstr "tahun"
-
-#: event-ui.c:931
+#: event-ui.c:1040
 msgid "End Date:"
 msgstr "Tanggal Akhir:"
 
-#: event-ui.c:937
+#: event-ui.c:1046
 msgid "forever"
 msgstr "selamanya"
 
-#: event-ui.c:948
+#: event-ui.c:1057
 msgid "end after"
 msgstr "berakhir setelah"
 
-#: event-ui.c:965
+#: event-ui.c:1074
 msgid "end on"
 msgstr "berakhir pada"
 
-#: event-ui.c:973
+#: event-ui.c:1082
 msgid "events"
 msgstr "peristiwa"
 
-#: event-ui.c:986
-msgid "minutes"
-msgstr "menit"
-
-#: event-ui.c:988
-msgid "hours"
-msgstr "jam"
-
-#: event-ui.c:992
-msgid "weeks"
-msgstr "minggu"
-
-#: event-ui.c:1110
+#: event-ui.c:1188
 msgid "Calendar: New event"
 msgstr "Kalendar: Peristiwa baru"
 
-#: event-ui.c:1155
+#: event-ui.c:1229
 msgid "Calendar: Edit event"
 msgstr "Kalendar: Edit peristiwa"
 
-#: day_popup.c:173
+#: day_popup.c:172
 msgid "No appointments"
 msgstr "Tidak ada janji"
 
 #: xsettings.c:103
 msgid "Cannot create XSettings client"
 msgstr "Tidak dapat membuat klien XSettings"
+
+#: gtkdatesel.c:187
+msgid "%Y"
+msgstr "%Y"
+
+#: gtkdatesel.c:196
+msgid "%b"
+msgstr "%b"
+
+#: gtkdatesel.c:199
+msgid "%B"
+msgstr "%B"
+
+#: gtkdatesel.c:202
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: gtkdatesel.c:213
+msgid "Week %V"
+msgstr "Minggu %V"
+
+#: gtkdatesel.c:219
+#, c-format
+msgid "%a, %d"
+msgstr "%a, %d"
 
 #: gpe-calendar.desktop.in.h:2
 msgid "GPE Calendar"

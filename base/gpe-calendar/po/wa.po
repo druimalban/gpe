@@ -1,288 +1,285 @@
-# gpe-calendar (french)
-# Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
-# This file is distributed under GPL.
-# Luc Pionchon <luc@handhelds.org>, 2003.
-#
+# Translation into the walloon language.
+# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
+# Pablo Saratxaga <pablo@walon.org>, 2003
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.40\n"
 "POT-Creation-Date: 2003-03-30 15:42+0100\n"
-"PO-Revision-Date: 2003-06-07 21:05+0300\n"
-"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
-"Language-Team: French <traduc@traduc.org>\n"
+"PO-Revision-Date: 2003-06-25 20:08+0100\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.c:239 gpe-calendar.desktop.in.h:1
 msgid "Calendar"
-msgstr "Calendrier"
+msgstr "CalindrÃ®"
 
 #: main.c:258
 msgid "New appointment"
-msgstr "Nouveau rendez-vous"
+msgstr "Novea radjoÃ»"
 
 #: main.c:258
 msgid "Tap here to add a new appointment or reminder"
-msgstr "Cliquez ici pour ajouter un nouveau rendez-vous ou pense-bête"
+msgstr "ClitchÃ®z chal po radjouter Ã¥k a s' rapinser"
 
 #: main.c:264 main.c:265
 msgid "Today"
-msgstr "Aujourd'hui"
+msgstr "Ouy"
 
 #: main.c:273
 msgid "Future"
-msgstr "Futur"
+msgstr "E futeur"
 
 #: main.c:273
 msgid "Future View"
-msgstr "Vue future"
+msgstr "Vuwe do futeur"
 
 #: main.c:274
 msgid "Tap here to see all future events."
-msgstr "Cliquez ici pour voir tous les événements futur."
+msgstr "ClitchÃ®z chal po vey tos les evenmints e futeur."
 
 #: main.c:281
 msgid "Day View"
-msgstr "Vue par jour"
+msgstr "Vuwe des djoÃ»s"
 
 #: main.c:282
 msgid "Tap here to select day-at-a-time view."
-msgstr "Cliquez ici pour sélectionner la vue par jour."
+msgstr "ClitchÃ®z chal pol vuwe des djoÃ»s (on djoÃ» pa cÃ´p)."
 
 #: main.c:289
 msgid "Week"
-msgstr "Semaine"
+msgstr "Samwinne"
 
 #: main.c:289
 msgid "Week View"
-msgstr "Vue par semaine"
+msgstr "Vuwe des samwinnes"
 
 #: main.c:290
 msgid "Tap here to select week-at-a-time view."
-msgstr "Cliquer ici pour sélectionner la vue par semaine."
+msgstr "ClitchÃ®z chal po vuwe des sawinnes (ene samwinne pa cÃ´p)."
 
 #: main.c:297
 msgid "Month"
-msgstr "Mois"
+msgstr "Moes"
 
 #: main.c:297
 msgid "Month View"
-msgstr "Vue par mois"
+msgstr "Vuwe des moes"
 
 #: main.c:298
 msgid "Tap here to select month-at-a-time view."
-msgstr "Cliquez ici pour sélectionner la vue par mois."
+msgstr "ClitchÃ®z chal po vuwe des moes (on moes pa cÃ´p)."
 
 #: main.c:304
 msgid "Exit"
-msgstr "Quitter"
+msgstr "MoussÃ® foÃ»"
 
 #: main.c:304
 msgid "Tap here to exit the program"
-msgstr "Cliquer ici pour quitter le programme."
+msgstr "ClitchÃ®z chal po moussÃ® foÃ» do programe"
 
 #: event-ui.c:386
 msgid "End time must not be earlier than start time"
-msgstr "La date de fin ne doit pas être plus récente que la date de début."
+msgstr "Li moumint del fÃ©n ni pout nÃ©n esse divant l'Â moumint di cmince"
 
 #: event-ui.c:620
 msgid "Event"
-msgstr "Événement"
+msgstr "Evenmint"
 
 #: event-ui.c:621
 msgid "Recurrence"
-msgstr "Récurrence"
+msgstr "Recurince"
 
 #: event-ui.c:622 event-ui.c:809
 msgid "Alarm"
-msgstr "Alarme"
+msgstr "Abranle"
 
 #: event-ui.c:641 event-ui.c:846
 msgid "Type:"
-msgstr "Type :"
+msgstr "SÃ´re:"
 
 #: event-ui.c:646
 msgid "Appointment"
-msgstr "Rendez-vous"
+msgstr "RadjoÃ»"
 
 #: event-ui.c:647
 msgid "Reminder"
-msgstr "Pense-bête"
+msgstr "A s'Â rapinser"
 
 #: event-ui.c:649
 msgid "Task"
-msgstr "Tâche"
+msgstr "Bouye"
 
 #: event-ui.c:655
 msgid "Days"
-msgstr "Jours"
+msgstr "DjoÃ»s"
 
 #: event-ui.c:656
 msgid "Weeks"
-msgstr "Semaines"
+msgstr "Samwinnes"
 
 #: event-ui.c:664
 msgid "Summary:"
-msgstr "Résumé"
+msgstr "Rascourti:"
 
 #: event-ui.c:680
 msgid "Start:"
-msgstr "Début"
+msgstr "Comince:"
 
 #: event-ui.c:681
 msgid "End:"
-msgstr "Fin"
+msgstr "FÃ©n:"
 
 #: event-ui.c:682 event-ui.c:683
 msgid "at:"
-msgstr "à"
+msgstr "li:"
 
 #: event-ui.c:716
 msgid "Date:"
-msgstr "Date"
+msgstr "Date:"
 
 #: event-ui.c:719
 msgid "Time:"
-msgstr "Heure"
+msgstr "Eure:"
 
 #: event-ui.c:739
 msgid "Due:"
-msgstr "Dû"
+msgstr "A fÃ© po:"
 
 #: event-ui.c:743
 msgid "Allow:"
-msgstr "Permettre :"
+msgstr "Permete:"
 
 #: event-ui.c:758
 msgid "Description:"
-msgstr "Description :"
+msgstr "Discrijhaedje:"
 
 #: event-ui.c:813
 msgid "before event"
-msgstr "en avance"
+msgstr "divant l'Â evenmint"
 
 #: event-ui.c:816
 msgid "minutes"
-msgstr "minutes"
+msgstr "munutes"
 
 #: event-ui.c:818
 msgid "hours"
-msgstr "heures"
+msgstr "eures"
 
 #: event-ui.c:820 event-ui.c:901
 msgid "days"
-msgstr "jours"
+msgstr "djoÃ»s"
 
 #: event-ui.c:822
 msgid "weeks"
-msgstr "semaines"
+msgstr "samwinnes"
 
 #: event-ui.c:824 event-ui.c:967
 msgid "months"
-msgstr "mois"
+msgstr "moes"
 
 #: event-ui.c:826 event-ui.c:1021
 msgid "years"
-msgstr "années"
+msgstr "anÃªyes"
 
 #: event-ui.c:858
 msgid "No recurrence"
-msgstr "Pas de récurrence"
+msgstr "Nole recurince"
 
 #: event-ui.c:861
 msgid "Daily"
-msgstr "Quotidien"
+msgstr "Tchaeke djoÃ»"
 
 #: event-ui.c:864
 msgid "Weekly"
-msgstr "Hebdomadaire"
+msgstr "Tchaeke samwinne"
 
 #: event-ui.c:867
 msgid "Monthly"
-msgstr "Mensuel"
+msgstr "Tchaeke moes"
 
 #: event-ui.c:870
 msgid "Yearly"
-msgstr "Annuel"
+msgstr "Tchaeke anÃªye"
 
-# "Tous/Toutes les" ... the GUI assumes english grammar
 #: event-ui.c:891 event-ui.c:913 event-ui.c:956 event-ui.c:1011
 msgid "Every"
-msgstr "Tous les"
+msgstr "Tchaeke"
 
 #: event-ui.c:914
 msgid "weeks, on:"
-msgstr "semaines, les "
+msgstr "samwinnes, les:"
 
 #: event-ui.c:972
 #, c-format
 msgid "on day %d"
-msgstr "le %d"
+msgstr "li %d"
 
 #: event-ui.c:976
 msgid "on the"
-msgstr "le"
+msgstr "li"
 
 #: event-ui.c:984
 msgid "first"
-msgstr "premier"
+msgstr "prumÃ®"
 
 #: event-ui.c:986
 msgid "second"
-msgstr "deuxième"
+msgstr "deujhinme"
 
 #: event-ui.c:988
 msgid "third"
-msgstr "troisième"
+msgstr "troejhinme"
 
 #: event-ui.c:990
 msgid "fourth"
-msgstr "quatrième"
+msgstr "cwatrinme"
 
 #: event-ui.c:992
 msgid "fifth"
-msgstr "cinquième"
+msgstr "cÃ©nkinme"
 
 #: event-ui.c:994
 msgid "last"
-msgstr "dernier"
+msgstr "dierin"
 
 #: event-ui.c:1040
 msgid "End Date:"
-msgstr "Date de fin :"
+msgstr "Date di fÃ©n:"
 
 #: event-ui.c:1046
 msgid "forever"
-msgstr "perpétuel"
+msgstr "tofer"
 
 #: event-ui.c:1057
 msgid "end after"
-msgstr "prend fin après"
+msgstr "finixh aprÃ¨s"
 
 #: event-ui.c:1074
 msgid "end on"
-msgstr "prend fin le"
+msgstr "finixh li"
 
 #: event-ui.c:1082
 msgid "events"
-msgstr "événements"
+msgstr "evenmints"
 
 #: event-ui.c:1188
 msgid "Calendar: New event"
-msgstr "Calendrier : Nouvel événement"
+msgstr "CalindrÃ®: novea evenmint"
 
 #: event-ui.c:1229
 msgid "Calendar: Edit event"
-msgstr "Calendrier : Édition de l'événement"
+msgstr "CalindrÃ®: candjÃ® evenmint"
 
 #: day_popup.c:172
 msgid "No appointments"
-msgstr "Pas de rendez-vous"
+msgstr "Nou radjoÃ»"
 
 #: xsettings.c:103
 msgid "Cannot create XSettings client"
-msgstr "Impossible de créer un client XSettings"
+msgstr "Dji n'Â sai ahiver li cliyiny XSettings"
 
 #: gtkdatesel.c:187
 msgid "%Y"
@@ -303,13 +300,13 @@ msgstr "%m"
 
 #: gtkdatesel.c:213
 msgid "Week %V"
-msgstr "Semaine %V"
+msgstr "Samwinne lÂº %V"
 
 #: gtkdatesel.c:219
 #, c-format
 msgid "%a, %d"
-msgstr "%a %d"
+msgstr "%a, %d"
 
 #: gpe-calendar.desktop.in.h:2
 msgid "GPE Calendar"
-msgstr "GPE Calendrier"
+msgstr "GPE CalindrÃ®"
