@@ -75,6 +75,7 @@ typedef struct event_s
 
 extern gboolean event_db_start (void);
 extern gboolean event_db_stop (void);
+extern gboolean event_db_refresh (void);
 
 extern gboolean event_db_add (event_t);
 extern gboolean event_db_remove (event_t);

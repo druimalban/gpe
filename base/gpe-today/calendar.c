@@ -52,6 +52,9 @@ int calendar_init(void)
 	strcpy(db_fname, home);
 	strcat(db_fname, CALENDAR_DB);
 
+	/* fire db up */
+	event_db_start();
+
 	calendar.toplevel = gtk_hbox_new(FALSE, 0);
 
 	/* calendar icon */
@@ -100,6 +103,7 @@ void calendar_free(void)
 	gtk_container_remove(GTK_CONTAINER(window.vbox1), calendar.toplevel);
 	g_free(db_fname);
 	g_source_remove(calendar_update_tag);
+	event_db_stop();
 }
 
 gboolean calendar_update(gpointer data)
@@ -165,7 +169,7 @@ void calendar_events_db_update(void)
 	event_t ev;
 	static GSList *events = NULL;
 	
-	if (!event_db_start())
+	if (!event_db_refresh())
 	 	return; /* could not load the db */
 
 	free_calendar_entries();
@@ -189,10 +193,6 @@ void calendar_events_db_update(void)
 	for (i = 0; (ev = (event_t) g_slist_nth_data(events, i)); i++)
 		calendar_add_event(ev);
 
-	event_db_stop();
-	event_db_list_destroy(events); /* NOTE: the event_t's are still
-					  being used in the calendar_entries
-					  list */
 }
 
 static void calendar_add_event(event_t event)
@@ -250,8 +250,6 @@ static void free_calendar_entries(void)
 
 	for (i = 0; (event = (struct calevent *) g_slist_nth_data(calendar_entries, i)); i++) {
 		gtk_container_remove(GTK_CONTAINER(calendar.eventsvbox), event->wid);
-		event_db_forget_details(event->ev);
-		event_db_destroy(event->ev);
 		g_free(event->time_str);
 		g_free(event);
 	}
