@@ -363,6 +363,16 @@ create_main_window (void)
   refresh_tabs ();
 }
 
+struct package_group *
+make_group (gchar *name)
+{
+  struct package_group *g;
+  g = g_malloc0 (sizeof (struct package_group));
+  g->name = name;
+  groups = g_list_append (groups, g);  
+  return g;
+}
+
 /* main():
  * init the libs, setup the signal handler,
  * run gtk bits
@@ -370,6 +380,7 @@ create_main_window (void)
 int 
 main (int argc, char *argv[]) 
 {
+  struct package_group *g;
   struct sigaction sa_old, sa_new;
   TRACE ("main");
 
@@ -410,11 +421,16 @@ main (int argc, char *argv[])
 	}
     }
 
-  other_group = g_malloc0 (sizeof (struct package_group));
-  other_group->name = "Other";
+  other_group = make_group ("Other");
+  g = make_group ("Office");
+  g->categories = g_list_append (g->categories, "Office");
+  g = make_group ("Internet");
+  g->categories = g_list_append (g->categories, "Internet");
+  g = make_group ("PIM");
+  g->categories = g_list_append (g->categories, "PIM");
+  g = make_group ("Games");
+  g->categories = g_list_append (g->categories, "Games");
 
-  groups = g_list_append (groups, other_group);
-  
   /* update the menu data */
   refresh_list ();
 
