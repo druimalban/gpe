@@ -43,6 +43,7 @@
 
 #include "main.h"
 #include "prismstumbler.h"
+#include "netdb.h"
 
 #define _(x) gettext(x)
 
@@ -82,7 +83,15 @@ static GSList *devices = NULL;
 static gboolean run_scan (void);
 static void radio_off (void);
 static void list_add_net (netinfo_t * ni);
+static void send_command (command_t cmd, int par);
 
+
+
+static void
+net_enter_data (GtkWidget * w, netinfo_t * this_net)
+{
+	
+}
 
 
 static void
@@ -90,10 +99,11 @@ check_connection (GtkWidget * w, netinfo_t * this_net)
 {
 	/* we need to switch the scanner off */
 	radio_off ();
+	send_command(C_ASSOCIATE, this_net->net.seqnr);
 }
 
 
-void
+static void
 send_config ()
 {
 	psmessage_t msg;
@@ -107,12 +117,13 @@ send_config ()
 }
 
 
-void
-send_command (command_t cmd)
+static void
+send_command (command_t cmd, int par)
 {
 	psmessage_t msg;
 	msg.type = msg_command;
 	msg.content.command.command = cmd;
+	msg.content.command.par = par;
 
 	if (write (sock, (void *) &msg, sizeof (psmessage_t)) < 0)
 	{
@@ -483,13 +494,20 @@ device_clicked (GtkWidget * widget, GdkEventButton * e, gpointer data)
 	gtk_widget_show (details);
 	gtk_menu_append (GTK_MENU (device_menu), details);
 
+	details = gtk_menu_item_new_with_label (_("Enter additional info"));
+	g_signal_connect (G_OBJECT (details), "activate",
+			  G_CALLBACK (net_enter_data), ni);
+	gtk_widget_show (details);
+	gtk_menu_append (GTK_MENU (device_menu), details);
+	gtk_widget_set_sensitive (details, TRUE);
+
 	details = gtk_menu_item_new_with_label (_("Try connect ..."));
 	g_signal_connect (G_OBJECT (details), "activate",
 			  G_CALLBACK (check_connection), ni);
 	gtk_widget_show (details);
 	gtk_menu_append (GTK_MENU (device_menu), details);
 	gtk_widget_set_sensitive (details, strlen (ni->net.ssid));
-
+	
 	gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, widget, 1,
 			GDK_CURRENT_TIME);
 }
@@ -535,7 +553,7 @@ run_scan (void)
 	gdk_threads_leave ();
 
 	sleep (9);
-	send_command (C_SENDLIST);
+	send_command (C_SENDLIST,0);
 	sleep (1);
 	gdk_threads_enter ();
 	get_networks ();
@@ -604,7 +622,7 @@ radio_on (void)
 
 	cfg.autosend = FALSE;
 	send_config ();
-	send_command(C_DETECT_CARD);
+	send_command(C_DETECT_CARD,0);
 	printf ("socket -->%s\n", PS_SOCKET);
 }
 

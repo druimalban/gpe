@@ -31,7 +31,7 @@
 #define MAX_BUFFER_SIZE 3000	/* Size of receive buffer */
 
 #define FAKEAP_LEVEL 7
-#define PMAX 20
+#define PMAX 30
 #define RBUFFER_SIZE 10
 
 #define DT_PRISM   0x01
@@ -39,6 +39,7 @@
 #define DT_HOSTAP  0x04
 
 #define PS_SOCKET "/tmp/.psintercom"
+#define DHCP_COMMAND "dhcpcd -i %s &"
 
 typedef enum
 {
@@ -55,7 +56,9 @@ typedef enum
 	C_SENDLIST,
 	C_CLEARLIST,
 	C_DETECT_CARD,
-	C_ASSOCIATE
+	C_ASSOCIATE, 
+	C_SUCCESS,
+	C_FAILED
 }
 command_t;
 
@@ -117,6 +120,7 @@ ScanResult_t;
 
 typedef struct
 {
+	int seqnr;			// sequence number 
 	int isvalid;
 	char ssid[33];
 	char bssid[32];

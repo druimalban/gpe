@@ -1,3 +1,14 @@
+05/18/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- main.c	Added usage of netdb.
+				Added facility to enter net data.
+	- added netdb.c, netdb.h for saving/restoring networks.
+	- main.h 	Added data type to hold network data.
+
+05/17/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- main.c	Added very basic network connect stuff.
+
 05/16/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- main.c	Change icon if adhoc is detected.

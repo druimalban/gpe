@@ -3,7 +3,24 @@
 
 typedef struct
 {
+	char bssid[20];
+	char ssid[33];
+	int mode; 		// o = managed, 1 = ad-hoc
+	int wep;
+	int dhcp;
+	int channel;
+	unsigned char ip[4];
+	unsigned char netmask[4];
+	unsigned char gateway[4];
+	char wep_key[48];
+	int inrange;	
+}
+usernetinfo_t;
+
+typedef struct
+{
 	psnetinfo_t net;
+	usernetinfo_t netinfo;
 	GdkPixbuf *pix;
 }
 netinfo_t;
