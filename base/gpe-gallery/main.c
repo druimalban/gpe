@@ -37,7 +37,8 @@
 #define _(_x) gettext (_x)
 GtkWidget *window, *vbox2, *scrolled_window;
 GtkWidget *dirbrowser_window;
-GtkWidget *view_widget, *image_widget, *image_pixbuf, *scaled_image_pixbuf;
+GtkWidget *view_widget, *image_widget;
+GdkPixbuf *image_pixbuf, *scaled_image_pixbuf;
 GtkWidget *image_event_box;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
@@ -118,8 +119,8 @@ button_down (GtkWidget *w, GdkEventButton *b)
   x_start = b->x;
   y_start = b->y;
 
-  x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 2);
-  y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 2);
+  x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 4);
+  y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 4);
 
   gdk_pointer_grab (w->window, FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
 		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
@@ -145,7 +146,7 @@ motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 
   rotate_pixbuf = image_rotate (image_pixbuf, deg);
 
-  gtk_image_set_from_pixbuf (image_widget, rotate_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), rotate_pixbuf);
 }
 
 void
@@ -569,9 +570,9 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), image_event_box);
 
-  gtk_signal_connect (image_event_box, "button-press-event", button_down, NULL);
-  gtk_signal_connect (image_event_box, "button-release-event", button_up, NULL);
-  gtk_signal_connect (image_event_box, "motion-notify-event", pan, NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_down), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_up), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (pan), NULL);
 
   gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
