@@ -169,7 +169,7 @@ typedef struct
 {
 	char bssid[20];
 	char ssid[33];
-	int mode; 		// o = managed, 1 = ad-hoc
+	int mode; 		// o = managed, >=1 = ad-hoc
 	int wep;
 	int dhcp;
 	int channel;

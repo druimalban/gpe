@@ -1,3 +1,11 @@
+06/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c	Minor signal display changes.
+				Message display bugfixes.
+				Reformated.
+	*16*.png	New dock icons.
+	Makefile	Updated version number.
+	Released V 0.2.3
+	
 06/06/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c	Moved network details dialog code.
 	- netedit.*
