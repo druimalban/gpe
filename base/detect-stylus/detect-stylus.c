@@ -131,7 +131,7 @@ main (int argc, char *argv[])
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
       XCloseDisplay (dpy);
-      if (!access("/usr/bin/xrdb", X_OK))
+      if (access("/usr/bin/xrdb", X_OK))
         system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
       else
         system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/bin/xrdb -nocpp -merge");
