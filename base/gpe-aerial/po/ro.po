@@ -1,280 +1,260 @@
 # Mesajele în limba românã pentru gpe-aerial.
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-aerial.
-# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+# Laurentiu Buzdugan <lbuz@rolix.org>, 2003.
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-aerial-0.2.6\n"
-"POT-Creation-Date: 2003-10-10 18:55+0200\n"
-"PO-Revision-Date: 2003-10-11 12:00-0500\n"
-"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Project-Id-Version: gpe-aerial-0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2006-06-17 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <lbuz@rolix.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Report-Msgid-Bugs-To: Laurentiu Buzdugan <buzdugan@voyager.net>nPOT-Creation-Date: 2003-10-10 18:55+0200\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: main.c:375
+#: main.c:386
 msgid "Wireless networks"
 msgstr "Reþele wireless"
 
-#: main.c:391
-msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some\tconfiguration, red=not possible."
-msgstr "Aceastã fereastrã aratã toate reþelele detectate. Aceasta va fi actualizatã în timp ce scanerul ruleazã. Culorile vã informeazã despre posibilitatea de a vã conecta la reþea. Verde=OK, galben=poate e necesarã ceva\tconfigurare, roºu=nu e posibil."
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "Aceastã fereastrã aratã toate reþelele detectate. Fereastra va fi actualizatã în timp ce scanerul ruleazã. Culorile vã informeazã despre posibilitatea de a vã conecta la reþea. Verde=OK, galben=poate e necesarã ceva configurare, roºu=nu e posibilã."
 
-#: main.c:399 netedit.c:230 netedit.c:421 netedit.c:423
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
 msgid "Mode"
 msgstr "Mod"
 
-#: main.c:409
+#: main.c:420
 msgid "ESSID"
 msgstr "ESSID"
 
-#: main.c:420
+#: main.c:431
 msgid "CH"
 msgstr "CH"
 
-#: main.c:431
+#: main.c:442
 msgid "WEP"
 msgstr "WEP"
 
-#: main.c:452
+#: main.c:463
 msgid "Unable to scan for devices."
 msgstr "Nu pot scana pentru dispozitive."
 
-#: main.c:587
+#: main.c:597
 msgid "Successfully connected."
 msgstr "Conectat cu succses."
 
-#: main.c:602
-msgid ""
-"Ad-Hoc connections\n"
-"setup complete."
-msgstr ""
-"Conexiuni ad-hoc\n"
-"setare completã."
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Setarea conexiuniilor ad-hoc este completã."
 
-#: main.c:612
-msgid ""
-"Could not connect\n"
-"to wireless LAN."
-msgstr ""
-"Nu m-am putut conecta\n"
-"ls LAN-ul wireless."
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "Nu m-am putut conecta la LAN-ul wireless."
 
-#: main.c:691
+#: main.c:700
 msgid "Details..."
 msgstr "Detalii..."
 
-#: main.c:697
+#: main.c:706
 msgid "Enter additional info"
 msgstr "Introduceþi info adiþionalã"
 
-#: main.c:704
+#: main.c:713
 msgid "Try connect..."
 msgstr "Încerc conectare..."
 
-#: main.c:759
+#: main.c:768
 msgid "Scanning for networks..."
 msgstr "Scanez pentru reþele..."
 
-#: main.c:861
+#: main.c:867
 msgid "scanner died unexpectedly"
 msgstr "scanerul a crãpat neaºteptat"
 
-#: main.c:959
+#: main.c:966
 msgid "Wireless LAN control"
 msgstr "Control reþea wireless"
 
-#: main.c:965
+#: main.c:972
 msgid "Switch scanner on"
 msgstr "Comutã scaner pornit"
 
-#: main.c:967
+#: main.c:974
 msgid "Switch scanner off"
 msgstr "Comutã scaner oprit"
 
-#: main.c:968
+#: main.c:975
 msgid "Networks..."
 msgstr "Reþele..."
 
-#: main.c:969
+#: main.c:976
 msgid "Remove from dock"
-msgstr "ndepãrteazã de pe dock"
+msgstr "Îndepãrteazã de pe dock"
 
-#: main.c:1009
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "Opreºte WLAN"
+
+#: main.c:1022
 msgid "This is gpe-aerial - the wireless LAN selector."
 msgstr "Acesta este gpe-aerial - selectorul de LAN-uri wireless"
 
-#: netedit.c:102
-msgid ""
-"The key you entered\n"
-"is not valid."
-msgstr ""
-"Cheia introdusã\n"
-"nu este validã."
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "Cheia introdusã nu este validã."
 
-#: netedit.c:113
-msgid ""
-"The IP address you entered\n"
-"is not valid."
-msgstr ""
-"Adresa IP introdusã\n"
-"nu este validã."
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "Adresa IP introdusã nu este validã."
 
-#: netedit.c:132
-msgid ""
-"The subnet mask address you\n"
-"entered is not valid."
-msgstr ""
-"Adresã mascã de subreþea\n"
-"introsusã nu este validã."
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "Adresã mascã de subreþea introdusã nu este validã."
 
-#: netedit.c:151
-msgid ""
-"The gateway address you\n"
-"entered is not valid."
-msgstr ""
-"Adresa gateway introdusã\n"
-"nu este validã."
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "Adresa gateway introdusã nu este validã."
 
-#: netedit.c:170
-msgid ""
-"The DNS server address you\n"
-"entered is not valid."
-msgstr ""
-"Adresa de server DNS introdusã\n"
-"nu este validã."
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "Adresa de server DNS introdusã nu este validã."
 
-#: netedit.c:226
+#: netedit.c:227
 msgid "SSID"
 msgstr "SSID"
 
-#: netedit.c:231
+#: netedit.c:232
 msgid "Managed"
 msgstr "Administrat"
 
-#: netedit.c:232 netedit.c:440
+#: netedit.c:233 netedit.c:441
 msgid "Channel"
 msgstr "Canal"
 
-#: netedit.c:233 netedit.c:444 netedit.c:446
+#: netedit.c:234 netedit.c:445 netedit.c:447
 msgid "WEP enabled"
 msgstr "Capabil WEP"
 
-#: netedit.c:234
+#: netedit.c:235
 msgid "Use DHCP"
 msgstr "Foloseºte DHCP"
 
-#: netedit.c:235
+#: netedit.c:236
 msgid "DNS Server"
 msgstr "Server DNS"
 
-#: netedit.c:239
+#: netedit.c:240
 msgid "Ad-Hoc"
 msgstr "Ad-Hoc"
 
-#: netedit.c:243
+#: netedit.c:244
 msgid "Gateway"
 msgstr "Gateway"
 
-#: netedit.c:245
+#: netedit.c:246
 msgid "Subnet mask"
 msgstr "Mascã subreþea"
 
-#: netedit.c:247
+#: netedit.c:248
 msgid "IP Address"
 msgstr "Adresã IP"
 
-#: netedit.c:250
-msgid "WEP-Key"
+#: netedit.c:251
+msgid "WEP key"
 msgstr "Cheie WEP"
 
-#: netedit.c:254
+#: netedit.c:255
 msgid "Enter your desired IP address here, e.g. 192.168.1.2"
 msgstr "Introduceþi adresa IP doritã aici, de exemplu 192.168.1.2"
 
-#: netedit.c:255
+#: netedit.c:256
 msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
 msgstr "Introduceþi masca de subreþea doritã aici, de obicei 255.255.255.0"
 
-#: netedit.c:256
+#: netedit.c:257
 msgid "This field needs to contain the name of this wireless LAN."
 msgstr "Acest câmp trebuie sã conþinã numele acestui LAN wireless."
 
-#: netedit.c:257 netedit.c:258
-msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."
-msgstr "Aici selectaþi tipul reþelei dvs, dacã aveþi un punct de acces selectaþi dministrat\", dacã dvs."
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "Aici selectaþi tipul reþelei dvs, dacã aveþi un punct de acces selectaþi \"administrat\", pentru conexiuni directe \"ad-hoc\""
 
-#: netedit.c:259
+#: netedit.c:260
 msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
 msgstr "Selectaþi canalul aici, numai dacã e nevoie in modul ad-hoc. Notã: Nu toate canalele sunt permise în toate þãrile."
 
-#: netedit.c:260
+#: netedit.c:261
 msgid "Get IP setup using DHCP."
 msgstr "Obþineþi setarea IP folosind DHCP."
 
-#: netedit.c:261
+#: netedit.c:262
 msgid "Enter the IP of the default gateway to use."
 msgstr "Introduceþi IP-ul gateway-ului de folosit implicit"
 
-#: netedit.c:262
+#: netedit.c:263
 msgid "Check this if WEP encryption is activated in this LAN."
 msgstr "Confirmaþi aici dacã encripþia WEP este activatã în acest LAN."
 
-#: netedit.c:263
+#: netedit.c:264
 msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
 msgstr "Introduceþi cheia WEP aici. Folosiþi digiþi hexa sau setaþi ca ºir ascii (s: <ºir-cheie>)."
 
-#: netedit.c:264
+#: netedit.c:265
 msgid "Enter the IP address of the primary nameserver to be used in this net here."
 msgstr "Introduceþi adresa IP a nameserver-ului primar de folosit în aceastã reþea aici."
 
-#: netedit.c:267
+#: netedit.c:268
 msgid "Network editor"
 msgstr "Editor reþea"
 
-#: netedit.c:406
-msgid "This dialog provides some inforamtion about the selected wireless LAN."
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
 msgstr "Acest dialog furnizeazã niºte informaþii despre LAN-ul wireless selectat."
 
-#: netedit.c:408
+#: netedit.c:409
 msgid "Network information"
 msgstr "Informaþii reþea"
 
-#: netedit.c:428
+#: netedit.c:429
 msgid "Max. signal"
 msgstr "Semnal maxim"
 
-#: netedit.c:433 netedit.c:436
+#: netedit.c:434 netedit.c:437
 msgid "Speed"
 msgstr "Vitezã"
 
-#: netedit.c:437 netedit.c:472
-msgid "<i>unknown</i>"
-msgstr "<i>necunoscut</i>"
+#: netedit.c:438
+msgid "unknown"
+msgstr "necunoscut"
 
-#: netedit.c:444 netedit.c:451 netedit.c:459
+#: netedit.c:445 netedit.c:452 netedit.c:460
 msgid "yes"
 msgstr "da"
 
-#: netedit.c:446 netedit.c:454 netedit.c:461
+#: netedit.c:447 netedit.c:455 netedit.c:462
 msgid "no"
 msgstr "nu"
 
-#: netedit.c:450 netedit.c:453
+#: netedit.c:451 netedit.c:454
 msgid "IPSec detected"
 msgstr "IPSec detectat"
 
-#: netedit.c:458 netedit.c:461
+#: netedit.c:459 netedit.c:462
 msgid "DHCP detected"
 msgstr "DHCP detectat"
 
-#: netedit.c:465 netedit.c:471
+#: netedit.c:466 netedit.c:472
 msgid "Subnet"
 msgstr "Subreþea"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>necunoscut</i>"
 
 #: gpe-aerial.desktop.in.h:1
 msgid "Aerial"

@@ -1,278 +1,260 @@
-# Translation of gpe-aerial-0.2.6 to Russian.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Translation of gpe-aerial-0.2.10.po to Russian
+# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-aerial package.
-# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-aerial 0.2.6\n"
-"POT-Creation-Date: 2003-10-10 18:55+0200\n"
-"PO-Revision-Date: 2003-10-23 18:13+0200\n"
+"Project-Id-Version: gpe-aerial-0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2004-06-17 09:19+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.3\n"
 
-#: main.c:375
+#: main.c:386
 msgid "Wireless networks"
 msgstr "Беспроводные сети"
 
-#: main.c:391
-msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some\tconfiguration, red=not possible."
-msgstr "В этом окне показаны все обнаруженные сети. Они будут обновляться, пока работает сканер. Цвета указывают на возможность подключения у сети. Зеленый=ОК, желтый=может нужна некоторая\tнастройка, красный=невозможно."
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "В этом окне показываются все обнаруженные сети. Оно будет обновляться, пока работает сканер. Цвета говорят вам о возможности подключения к сети. Зеленый=ОК, желтый=возможно необходима некоторая настройка, красный=невозможно."
 
-#: main.c:399 netedit.c:230 netedit.c:421 netedit.c:423
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
 msgid "Mode"
 msgstr "Режим"
 
-#: main.c:409
+#: main.c:420
 msgid "ESSID"
 msgstr "ESSID"
 
-#: main.c:420
+#: main.c:431
 msgid "CH"
 msgstr "CH"
 
-#: main.c:431
+#: main.c:442
 msgid "WEP"
 msgstr "WEP"
 
-#: main.c:452
+#: main.c:463
 msgid "Unable to scan for devices."
 msgstr "Невозможно просканировать устройства."
 
-#: main.c:587
+#: main.c:597
 msgid "Successfully connected."
 msgstr "Соединение успешно установлено."
 
-#: main.c:602
-msgid ""
-"Ad-Hoc connections\n"
-"setup complete."
-msgstr ""
-"Установка подключений \n"
-"Ad-Hoc завершена."
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Установка подключений Ad-Hoc завершена."
 
-#: main.c:612
-msgid ""
-"Could not connect\n"
-"to wireless LAN."
-msgstr ""
-"Невозможно подключиться\n"
-"к беспроводной ЛВС."
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "Невозможно подключиться к беспроводной ЛВС."
 
-#: main.c:691
+#: main.c:700
 msgid "Details..."
 msgstr "Подробнее..."
 
-#: main.c:697
+#: main.c:706
 msgid "Enter additional info"
 msgstr "Ввод дополнительной информации"
 
-#: main.c:704
+#: main.c:713
 msgid "Try connect..."
 msgstr "Выполняется попытка подключения..."
 
-#: main.c:759
+#: main.c:768
 msgid "Scanning for networks..."
 msgstr "Сканируются сети..."
 
-#: main.c:861
+#: main.c:867
 msgid "scanner died unexpectedly"
 msgstr "сканер неожиданно умер"
 
-#: main.c:959
+#: main.c:966
 msgid "Wireless LAN control"
 msgstr "Управление беспроводной ЛВС"
 
-#: main.c:965
+#: main.c:972
 msgid "Switch scanner on"
 msgstr "Включить сканер"
 
-#: main.c:967
+#: main.c:974
 msgid "Switch scanner off"
 msgstr "Выключить сканер"
 
-#: main.c:968
+#: main.c:975
 msgid "Networks..."
 msgstr "Сети..."
 
-#: main.c:969
+#: main.c:976
 msgid "Remove from dock"
 msgstr "Удалить из дока"
 
-#: main.c:1009
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "Отключить WLAN"
+
+#: main.c:1022
 msgid "This is gpe-aerial - the wireless LAN selector."
 msgstr "Это gpe-aerial - селектор беспроводных ЛВС."
 
-#: netedit.c:102
-msgid ""
-"The key you entered\n"
-"is not valid."
-msgstr ""
-"Ключ, который ввели,\n"
-"неверный."
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "Ключ, который ввели, - неверный."
 
-#: netedit.c:113
-msgid ""
-"The IP address you entered\n"
-"is not valid."
-msgstr ""
-"IP-адрес, который вы ввели,\n"
-"неверный."
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "IP-адрес, который вы ввели, - неверный."
 
-#: netedit.c:132
-msgid ""
-"The subnet mask address you\n"
-"entered is not valid."
-msgstr ""
-"Маска подсети, которую вы ввели,\n"
-"неверна."
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "Маска подсети, которую вы ввели, - неверная."
 
-#: netedit.c:151
-msgid ""
-"The gateway address you\n"
-"entered is not valid."
-msgstr ""
-"Адрес шлюза, который вы ввели,\n"
-"неверный."
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "Адрес шлюза, который вы ввели, - неверный."
 
-#: netedit.c:170
-msgid ""
-"The DNS server address you\n"
-"entered is not valid."
-msgstr ""
-"Адрес DNS-сервера, который вы ввели,\n"
-"неверный."
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "Адрес DNS-сервера, который вы ввели, - неверный."
 
-#: netedit.c:226
+#: netedit.c:227
 msgid "SSID"
 msgstr "SSID"
 
-#: netedit.c:231
+#: netedit.c:232
 msgid "Managed"
 msgstr "Управляемая"
 
-#: netedit.c:232 netedit.c:440
+#: netedit.c:233 netedit.c:441
 msgid "Channel"
 msgstr "Канал"
 
-#: netedit.c:233 netedit.c:444 netedit.c:446
+#: netedit.c:234 netedit.c:445 netedit.c:447
 msgid "WEP enabled"
 msgstr "WEP включен"
 
-#: netedit.c:234
+#: netedit.c:235
 msgid "Use DHCP"
 msgstr "Использовать DHCP"
 
-#: netedit.c:235
+#: netedit.c:236
 msgid "DNS Server"
 msgstr "DNS-сервер"
 
-#: netedit.c:239
+#: netedit.c:240
 msgid "Ad-Hoc"
 msgstr "Ad-Hoc"
 
-#: netedit.c:243
+#: netedit.c:244
 msgid "Gateway"
 msgstr "Шлюз"
 
-#: netedit.c:245
+#: netedit.c:246
 msgid "Subnet mask"
 msgstr "Маска подсети"
 
-#: netedit.c:247
+#: netedit.c:248
 msgid "IP Address"
 msgstr "IP-адрес"
 
-#: netedit.c:250
-msgid "WEP-Key"
+#: netedit.c:251
+msgid "WEP key"
 msgstr "WEP-ключ"
 
-#: netedit.c:254
+#: netedit.c:255
 msgid "Enter your desired IP address here, e.g. 192.168.1.2"
 msgstr "Введите здесь желаемый IP-адрес, напр., 192.168.1.2"
 
-#: netedit.c:255
+#: netedit.c:256
 msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
 msgstr "Введите здесь желаемую маску подсети, обычно она установлена в 255.255.255.0"
 
-#: netedit.c:256
+#: netedit.c:257
 msgid "This field needs to contain the name of this wireless LAN."
 msgstr "Это поле должно содержать имя этой беспроводной ЛВС."
 
-#: netedit.c:257 netedit.c:258
-msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."
-msgstr "Выберите тип своей сети. Если у вас есть точка доступа, выберите \"управляемая\"."
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "Выберите тип своей сети. Если у вас есть точка доступа, выберите \"управляемая\", для прямых подключений - \"ad-hoc\""
 
-#: netedit.c:259
+#: netedit.c:260
 msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
 msgstr "Выберите канал, нужный только в режиме ad-hoc. Примечание: Не все каналы разрешены во всех странах."
 
-#: netedit.c:260
+#: netedit.c:261
 msgid "Get IP setup using DHCP."
 msgstr "Получить IP, используя DHCP."
 
-#: netedit.c:261
+#: netedit.c:262
 msgid "Enter the IP of the default gateway to use."
 msgstr "Введите IP шлюза, используемого по умолчанию."
 
-#: netedit.c:262
+#: netedit.c:263
 msgid "Check this if WEP encryption is activated in this LAN."
 msgstr "Выберите этот пункт, если в этой ЛВС используется шифрование WEP."
 
-#: netedit.c:263
+#: netedit.c:264
 msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
 msgstr "Введите WEP-ключ. Используйте шестнадцатеричные числа или установите как строку ascii (s: <строка_ключа>)."
 
-#: netedit.c:264
+#: netedit.c:265
 msgid "Enter the IP address of the primary nameserver to be used in this net here."
 msgstr "Введите IP-адрес первичного сервера доменных имен, используемого для в этой сети."
 
-#: netedit.c:267
+#: netedit.c:268
 msgid "Network editor"
 msgstr "Редактор сети"
 
-#: netedit.c:406
-msgid "This dialog provides some inforamtion about the selected wireless LAN."
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
 msgstr "Это диалоговое окно предоставляет некоторую информацию о выбранной беспроводной ЛВС."
 
-#: netedit.c:408
+#: netedit.c:409
 msgid "Network information"
 msgstr "Информация о сети"
 
-#: netedit.c:428
+#: netedit.c:429
 msgid "Max. signal"
 msgstr "Макс. сигнал"
 
-#: netedit.c:433 netedit.c:436
+#: netedit.c:434 netedit.c:437
 msgid "Speed"
 msgstr "Скорость"
 
-#: netedit.c:437 netedit.c:472
-msgid "<i>unknown</i>"
-msgstr "<i>неизвестна</i>"
+#: netedit.c:438
+msgid "unknown"
+msgstr "неизвестна"
 
-#: netedit.c:444 netedit.c:451 netedit.c:459
+#: netedit.c:445 netedit.c:452 netedit.c:460
 msgid "yes"
 msgstr "да"
 
-#: netedit.c:446 netedit.c:454 netedit.c:461
+#: netedit.c:447 netedit.c:455 netedit.c:462
 msgid "no"
 msgstr "нет"
 
-#: netedit.c:450 netedit.c:453
+#: netedit.c:451 netedit.c:454
 msgid "IPSec detected"
 msgstr "Обнаружен IPSec"
 
-#: netedit.c:458 netedit.c:461
+#: netedit.c:459 netedit.c:462
 msgid "DHCP detected"
 msgstr "Обнаружен DHCP"
 
-#: netedit.c:465 netedit.c:471
+#: netedit.c:466 netedit.c:472
 msgid "Subnet"
 msgstr "Подсеть"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>неизвестна</i>"
 
 #: gpe-aerial.desktop.in.h:1
 msgid "Aerial"

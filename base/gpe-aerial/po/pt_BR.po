@@ -1,32 +1,32 @@
-# German translation for gpe-aerial.
+# Translation to Brazilian Portuguese (pt_BR)
 # Copyright (C) 2004 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gpe-aerial package.
-# Colin Marquardt <colin@marquardt-home.de>, 2003.
-# Roland Illig <roland.illig@gmx.de>, 2004.
+# Marcus Moreira de Souza <marcus@frb.br>, 2004.
+# based on the translation to Portuguese (pt) by
+# Luis Oliveira <luismbo@netcabo.pt>, 2003.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-aerial 0.2.10\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-06-12 01:19+0200\n"
-"PO-Revision-Date: 2004-06-16 22:55+0100\n"
-"Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
-"Language-Team: German <de@li.org>\n"
+"PO-Revision-Date: 2004-09-02 20:12-0300\n"
+"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.c:386
 msgid "Wireless networks"
-msgstr "Drahtlose Netzwerke"
+msgstr "Redes sem fios"
 
 #: main.c:402
 msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
-msgstr "In diesem Fenster werden alle gefundenen Netzwerke angezeigt. Es wird aktualisiert, während der Scanner läuft. Die Farben sagen etwas über die Möglichkeit, sich mit diesen Netzen zu verbinden. Grün: ok, Gelb: braucht vielleicht ein bisschen Konfiguration, Rot: unmöglich."
+msgstr "Esta janela mostra todas as redes detectadas. Será actualizada enquanto o scanner estiver a correr. As cores mostram a possibilidade de efectuar uma ligação à rede. Verde=OK, amarelo=talvez necessite configurações extra, vermelho=não é possível."
 
 #: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
 msgid "Mode"
-msgstr "Modus"
+msgstr "Modo"
 
 #: main.c:420
 msgid "ESSID"
@@ -42,87 +42,87 @@ msgstr "WEP"
 
 #: main.c:463
 msgid "Unable to scan for devices."
-msgstr "Kann nicht nach Geräten suchen."
+msgstr "Não possível procurar dispositivos."
 
 #: main.c:597
 msgid "Successfully connected."
-msgstr "Erfolgreich verbunden."
+msgstr "Ligado com sucesso."
 
 #: main.c:611
 msgid "Ad-Hoc connections setup complete."
-msgstr "Ad-Hoc-Verbindungseinrichtung abgeschlossen."
+msgstr "Configuração de conexões Ad-Hoc completa."
 
 #: main.c:620
 msgid "Could not connect to wireless LAN."
-msgstr "Verbindung mit WLAN fehlgeschlagen."
+msgstr "Impossível conexão à rede wireless"
 
 #: main.c:700
 msgid "Details..."
-msgstr "Details..."
+msgstr "Detalhes..."
 
 #: main.c:706
 msgid "Enter additional info"
-msgstr "Zusätzliche Info eingeben"
+msgstr "Insira informação adicional"
 
 #: main.c:713
 msgid "Try connect..."
-msgstr "Verbindung versuchen..."
+msgstr "Tentar ligar..."
 
 #: main.c:768
 msgid "Scanning for networks..."
-msgstr "Suche nach Netzwerken..."
+msgstr "Procurando redes..."
 
 #: main.c:867
 msgid "scanner died unexpectedly"
-msgstr "Scanner unerwartet beendet"
+msgstr "scanner terminou inesperadamente"
 
 #: main.c:966
 msgid "Wireless LAN control"
-msgstr "Wireless-LAN-Steuerung"
+msgstr "Controlo de LAN sem-fios"
 
 #: main.c:972
 msgid "Switch scanner on"
-msgstr "Schalte Scanner an"
+msgstr "Ligar scanner"
 
 #: main.c:974
 msgid "Switch scanner off"
-msgstr "Schalte Scanner aus"
+msgstr "Desligar scanner"
 
 #: main.c:975
 msgid "Networks..."
-msgstr "Netzwerke..."
+msgstr "Redes..."
 
 #: main.c:976
 msgid "Remove from dock"
-msgstr "Vom Dock entfernen"
+msgstr "Remover do painel"
 
 #: main.c:977
 msgid "Turn WLAN off"
-msgstr "WLAN ausschalten"
+msgstr "Desligar WLAN"
 
 #: main.c:1022
 msgid "This is gpe-aerial - the wireless LAN selector."
-msgstr "Dies ist gpe-aerial - Entdeckungswerkzeug für Wireless LAN."
+msgstr "gpe-aerial - programa de configuração de redes sem-fios."
 
 #: netedit.c:103
 msgid "The key you entered is not valid."
-msgstr "Der eingetragene Schlüssel ist nicht gültig."
+msgstr "A chave inserida não é válida."
 
 #: netedit.c:114
 msgid "The IP address you entered is not valid."
-msgstr "Die eingetragene IP-Adresse ist nicht gültig."
+msgstr "O endereço IP inserido não é válido."
 
 #: netedit.c:133
 msgid "The subnet mask address you entered is not valid."
-msgstr "Die eingetragene Subnetzmaske ist nicht gültig."
+msgstr "A máscara de rede inserida não é válida."
 
 #: netedit.c:152
 msgid "The gateway address you entered is not valid."
-msgstr "Die eingetragene Gateway-Adresse ist nicht gültig."
+msgstr "O endereço de gateway inserido não é válido."
 
 #: netedit.c:171
 msgid "The DNS server address you entered is not valid."
-msgstr "Die eingetragene DNS-Server-Adresse ist nicht gültig."
+msgstr "O endereço do servidor DNS inserido não é válido."
 
 #: netedit.c:227
 msgid "SSID"
@@ -134,19 +134,19 @@ msgstr "Managed"
 
 #: netedit.c:233 netedit.c:441
 msgid "Channel"
-msgstr "Kanal"
+msgstr "Canal"
 
 #: netedit.c:234 netedit.c:445 netedit.c:447
 msgid "WEP enabled"
-msgstr "WEP benutzt"
+msgstr "WEP activado"
 
 #: netedit.c:235
 msgid "Use DHCP"
-msgstr "DHCP verwenden"
+msgstr "Utilizar DHCP"
 
 #: netedit.c:236
 msgid "DNS Server"
-msgstr "DNS-Server"
+msgstr "Servidor DNS"
 
 #: netedit.c:240
 msgid "Ad-Hoc"
@@ -154,108 +154,107 @@ msgstr "Ad-Hoc"
 
 #: netedit.c:244
 msgid "Gateway"
-msgstr "Gateway"
+msgstr "Porta de ligação"
 
 #: netedit.c:246
 msgid "Subnet mask"
-msgstr "Subnetzmaske"
+msgstr "Máscara de Rede"
 
 #: netedit.c:248
 msgid "IP Address"
-msgstr "IP-Adresse"
+msgstr "Endereço IP"
 
 #: netedit.c:251
 msgid "WEP key"
-msgstr "WEP-Schlüssel"
+msgstr "Chave WEP"
 
 #: netedit.c:255
 msgid "Enter your desired IP address here, e.g. 192.168.1.2"
-msgstr "Geben Sie hier Ihre gewünschte IP-Adresse ein, z. B. 192.168.1.2"
+msgstr "Insira aqui o endereço IP, ex: 192.168.1.2"
 
 #: netedit.c:256
 msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
-msgstr "Geben Sie hier Ihre gewünschte Teilnetzmaske ein, normalerweise 255.255.255.0"
+msgstr "Insira aqui a máscara de rede, usualmente: 255.255.255.0"
 
 #: netedit.c:257
 msgid "This field needs to contain the name of this wireless LAN."
-msgstr "Dieses Feld muss den Namen dieses WLANs enthalten."
+msgstr "Este campo necessita do nome da rede sem-fios."
 
-# ???
 #: netedit.c:258 netedit.c:259
 msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
-msgstr "Hier wählen Sie die Art des Netzes aus: Wählen Sie »managed«, falls Sie einen Accesspoint haben, »ad-hoc« für direkte Verbindungen."
+msgstr "Aqui é possível selecionar o tipo de rede, se tiver um accesspoint  selecione \"managed\", para conexões diretas \"ad-hoc\""
 
 #: netedit.c:260
 msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
-msgstr "Wählen Sie hier den Kanal aus (nur im Ad-hoc-Modus). Achtung: Nicht alle Kanäle sind in allen Ländern erlaubt."
+msgstr "Selecione o canal aqui, apenas necessário em modo Ad-Hox. Nota: nem todos os canais são permitidos em alguns países."
 
 #: netedit.c:261
 msgid "Get IP setup using DHCP."
-msgstr "IP-Einstellungen mit DHCP ermitteln."
+msgstr "Obter informações via DHCP."
 
 #: netedit.c:262
 msgid "Enter the IP of the default gateway to use."
-msgstr "Geben Sie die IP-Adresse des Standardgateways ein."
+msgstr "Insira o IP da porta de ligação."
 
 #: netedit.c:263
 msgid "Check this if WEP encryption is activated in this LAN."
-msgstr "Kreuzen Sie hier an, falls die WEP-Verschlüsselung in diesem LAN aktiviert ist."
+msgstr "Ative caso a criptografia WEP estiver ativa nesta rede."
 
 #: netedit.c:264
 msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
-msgstr "Geben Sie den WEP-Schlüssel hier ein. Benutzen Sie hexadezimale Ziffern oder eine ASCII-Zeichenkette (s: <Schlüssel>)."
+msgstr "Insira aqui a chave WEP. Utilize digitos hexadecimais ou uma frase (s: <chave>)."
 
 #: netedit.c:265
 msgid "Enter the IP address of the primary nameserver to be used in this net here."
-msgstr "Geben Sie hier die IP-Adresse des primären Nameservers ein, der in diesem Netz benutzt wird."
+msgstr "Insira o endereço IP do servidor DNS primário."
 
 #: netedit.c:268
 msgid "Network editor"
-msgstr "Netzwerk-Editor"
+msgstr "Editor de rede"
 
 #: netedit.c:407
 msgid "This dialog provides some information about the selected wireless LAN."
-msgstr "Dieser Dialog liefert ein paar Informationen über das ausgewählte WLAN."
+msgstr "Esta janela fornece informações sobre da rede wireless selecionada."
 
 #: netedit.c:409
 msgid "Network information"
-msgstr "Netzwerk-Informationen"
+msgstr "Informações de rede"
 
 #: netedit.c:429
 msgid "Max. signal"
-msgstr "Max. Signalpegel"
+msgstr "Sinal max."
 
 #: netedit.c:434 netedit.c:437
 msgid "Speed"
-msgstr "Geschwindigkeit"
+msgstr "Velocidade"
 
 #: netedit.c:438
 msgid "unknown"
-msgstr "unbekannt"
+msgstr "desconhecido"
 
 #: netedit.c:445 netedit.c:452 netedit.c:460
 msgid "yes"
-msgstr "ja"
+msgstr "sim"
 
 #: netedit.c:447 netedit.c:455 netedit.c:462
 msgid "no"
-msgstr "nein"
+msgstr "não"
 
 #: netedit.c:451 netedit.c:454
 msgid "IPSec detected"
-msgstr "IPSec erkannt"
+msgstr "IPSec detectado"
 
 #: netedit.c:459 netedit.c:462
 msgid "DHCP detected"
-msgstr "DHCP erkannt"
+msgstr "DHCP detectado"
 
 #: netedit.c:466 netedit.c:472
 msgid "Subnet"
-msgstr "Subnetz"
+msgstr "Sub-rede"
 
 #: netedit.c:473
 msgid "<i>unknown</i>"
-msgstr "<i>unbekannt</i>"
+msgstr "<i>desconhecido</i>"
 
 #: gpe-aerial.desktop.in.h:1
 msgid "Aerial"
@@ -263,4 +262,4 @@ msgstr "Aerial"
 
 #: gpe-aerial.desktop.in.h:2
 msgid "Panel based wireless LAN communications control"
-msgstr "Kontrollfeldbasierte WLAN-Kommunikationssteuerung"
+msgstr "Controle de comunicações de redes sem-fios"
