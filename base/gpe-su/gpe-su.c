@@ -29,8 +29,6 @@
 #include "gpe/errorbox.h"
 
 static struct gpe_icon my_icons[] = {
-  { "ok" },
-  { "cancel" },
   { "lock", PREFIX "/share/pixmaps/gpe-su.png" },
   { NULL, NULL }
 };
@@ -184,8 +182,8 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (window);
 
-  buttonok = gpe_picture_button (window->style, _("OK"), "ok");
-  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  buttonok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
 		      buttoncancel, TRUE, TRUE, 0);
