@@ -19,6 +19,26 @@
 
 #include <linux/input.h>
 
+int flag_device;
+
+int
+try_open (char *name)
+{
+  int fd;
+
+  fd = open (name, O_RDONLY);
+  if (fd >= 0)
+    {
+      if (flag_device)
+	{
+	  printf ("%s\n", name);
+	  exit (0);
+	}
+    }
+
+  return fd;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -27,11 +47,20 @@ main (int argc, char *argv[])
   Atom atom;
   Display *dpy;
   Window root;
-  int fd = open ("/dev/touchscreen/0", O_RDONLY);
+  int fd;
+  int i;
+
+  for (i = 1; i < argc; i++)
+    {
+      if (!strcmp (argv[i], "--device"))
+	flag_device = 1;
+    }
+
+  fd = try_open ("/dev/touchscreen/0");
   
   /* if neccessary probe others */
   if (fd < 0) 
-    fd = open ("/dev/touchscreen/ucb1x00", O_RDONLY);
+    fd = try_open ("/dev/touchscreen/ucb1x00");
 
   if (fd < 0)
     {
@@ -61,6 +90,13 @@ main (int argc, char *argv[])
 			{
 			  close (fd);
 			  fd = -1;
+			  continue;
+			}
+		      
+		      if (flag_device)
+			{
+			  printf ("%s\n", buf);
+			  exit (0);
 			}
 		    }
 		}
@@ -72,10 +108,14 @@ main (int argc, char *argv[])
   /* still not found? try environment */
   if (fd < 0)
     {
-      tsdev = getenv("TSLIB_TSDEVICE");
+      tsdev = getenv ("TSLIB_TSDEVICE");
       if (tsdev != NULL)
-        fd = open(tsdev, O_RDONLY); 
+        fd = try_open (tsdev);
     }
+
+  if (flag_device)
+    exit (1);		/* Nothing found */
+
   if (fd >= 0)
     {
       close (fd);
