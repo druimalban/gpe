@@ -246,7 +246,10 @@ void _print_hitem(Hitem * hitem){
   char action;
   char item;
 
-  if(!hitem) return;
+  if(!hitem){
+    g_print("hitem NULL");
+    return;
+  }
 
   switch(hitem->action){
   case PASS   : action = '='; break;
@@ -579,7 +582,7 @@ void update_last_played_mark_to(int next_col, int next_row){
 }
 
 void put_stone(GoItem color, int col, int row){
-  if(go.grid[col][row] != EMPTY) return;
+  //if(go.grid[col][row] != EMPTY) return;
   go.grid[col][row] = color;
   paint_stone(col, row, color);
 }
@@ -661,6 +664,13 @@ on_drawing_area_button_press_event(GtkWidget       *widget,
                                    gpointer         user_data){
   //TRACE("press");
   return FALSE;
+}
+
+void clear_grid(){
+  int i,j;
+  for(i=0; i<= go.game_size; i++)
+    for(j=0; j<=go.game_size; j++)
+      go.grid[i][j] = EMPTY;
 }
 
 gboolean is_stamped (int col, int row){return go.stamps[col][row];}
@@ -843,7 +853,7 @@ void play_at(int col, int row){
     redo_turn();
     return;
   }
-  if(go.grid[col][row] != 0){
+  if(go.grid[col][row] != EMPTY){
     //TRACE("--> not empty");
     return;
   }
@@ -955,10 +965,10 @@ void undo_turn(){
     go.turn--;
   }
 
-  if(go.history->parent && !G_NODE_IS_ROOT(go.history->parent)){
+  if(go.history->parent){
     go.history = go.history->parent;
-
-    {
+    
+    if(!G_NODE_IS_ROOT(go.history)){
       GNode * hist;
       Hitem * item;
       hist = go.history;
@@ -980,6 +990,8 @@ void redo_turn(){
     TRACE("================do nothing");
     return;
   }
+
+  if(G_NODE_IS_ROOT(go.history)) go.history = go.history->children;
 
   //check variations
   children = g_node_n_children(go.history);
@@ -1212,6 +1224,49 @@ void load_game(){
 void on_file_selection_ok(GtkWidget *widget, gpointer file_selector){
   if(go.save_game) save_game();
   else load_game();
+}
+
+void on_button_first_pressed(GtkWidget *widget, gpointer unused){
+  //keep a ref to the leaf of the main branch
+  if(G_NODE_IS_LEAF(go.history)) go.main_branch = go.history;
+
+  go.history = go.history_root;
+
+  {
+    go.white_captures = 0;
+    go.black_captures = 0;    
+    go.turn = 0;
+    go.last_col = 0;
+    go.last_row = 0;
+    go.lock_variation_choice = FALSE;
+
+    clear_grid();
+  }
+
+  paint_board(go.drawing_area);
+  {//!!!
+    GdkRectangle rect;
+    rect.x = rect.y = 0;
+    rect.width = rect.height = BOARD_SIZE;
+    gtk_widget_draw (go.drawing_area, &rect);
+  }
+}
+
+void on_button_last_pressed(GtkWidget *widget, gpointer unused){
+  GNode * node;
+  Hitem * hitem;
+
+  if(G_NODE_IS_LEAF(go.history)) return;
+  do{
+    node = go.history->children;
+    while(!is_on_main_branch(node)){
+      node = node->next;
+    }
+    hitem = node->data;
+    play_at(hitem->col, hitem->row);
+
+    node = go.history;
+  }while(!G_NODE_IS_LEAF(node));
 }
 
 void on_button_prev_pressed (void){
@@ -1491,6 +1546,13 @@ void gui_init(){
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
+  //[FIRST] button
+  image = gtk_image_new_from_stock (GTK_STOCK_GOTO_FIRST, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
+			   _("First"), _("Go to the beginning of the game"), _("Go to the beginning of the game"),
+			   image, GTK_SIGNAL_FUNC (on_button_first_pressed), NULL);
+
+
   //[UNDO] button
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
@@ -1502,8 +1564,14 @@ void gui_init(){
 
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   _("Redo"), _("Redo"), _("Redo"),
-			   image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
- 
+			   image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL); 
+
+  //[LAST] button
+  image = gtk_image_new_from_stock (GTK_STOCK_GOTO_LAST, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
+			   _("Last"), _("Go to the end of the game"), _("Go to the end of the game"),
+			   image, GTK_SIGNAL_FUNC (on_button_last_pressed), NULL);
+
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
 
