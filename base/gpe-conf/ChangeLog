@@ -1,3 +1,7 @@
+2004-09-07	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	gpe-config.conf: Fixed access control.
+
 2004-09-06	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* login-setup.h: Updated path to latest standard.
