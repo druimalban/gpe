@@ -32,6 +32,8 @@ static int next_uid;
 
 GSList *lists;
 
+struct todo_list *all_items;
+
 struct todo_item *
 add_new_item_internal(struct todo_list *list, time_t t, const char *what, 
 		      item_state state, const char *summary, int id);
@@ -321,4 +323,27 @@ delete_item (struct todo_list *list, struct todo_item *i)
   g_free ((gpointer)i->what);
   g_free ((gpointer)i->summary);
   g_free (i);
+}
+
+void
+del_list (struct todo_list *list)
+{
+  char *err;
+  if (sqlite_exec_printf (sqliteh, "delete from todo_items where list=%d",
+		      NULL, NULL, &err,
+			  list->id))
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+
+  if (sqlite_exec_printf (sqliteh, "delete from todo_lists where uid=%d",
+		      NULL, NULL, &err,
+			  list->id))
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+
+  lists = g_slist_remove (lists, list);
 }

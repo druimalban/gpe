@@ -22,9 +22,9 @@ struct todo_list
   const char *title;
   int id;
   GList *items;
-
-  GtkWidget *widget;
 };
+
+extern GtkWidget *g_draw;
 
 extern GtkWidget *edit_todo(struct todo_list *list, struct todo_item *item);
 extern GSList *lists;
@@ -39,3 +39,4 @@ extern void push_item (struct todo_item *i);
 extern void delete_item (struct todo_list *list, struct todo_item *i);
 extern int new_list_id (void);
 extern void sql_add_list (int id, const char *title);
+extern void del_list (struct todo_list *);

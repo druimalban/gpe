@@ -17,6 +17,18 @@
 
 #include "todo.h"
 #include "todo-sql.h"
+#include "pixmaps.h"
+#include "init.h"
+
+#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
+#define MY_PIXMAPS_DIR "/usr/share/gpe-contacts/pixmaps"
+
+struct pix my_pix[] = {
+  { "new", MY_PIXMAPS_DIR "/new.png" },
+  { "config", MY_PIXMAPS_DIR "/preferences.png" },
+  { "delete", MY_PIXMAPS_DIR "/trash.png" },
+  { NULL, NULL }
+};
 
 #define _(_x) gettext(_x)
 
@@ -30,25 +42,26 @@ extern GtkWidget *top_level (void);
 static void
 open_window (void)
 {
-  GtkWidget *listbook = top_level();
+  GtkWidget *top = top_level();
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  the_notebook = listbook;
-  gtk_container_add (GTK_CONTAINER (window), listbook);
+  gtk_container_add (GTK_CONTAINER (window), top);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   gtk_widget_set_usize (window, 240, 320);
-  gtk_widget_show_all (window);
+  gtk_widget_show (window);
 }
 
 int
 main(int argc, char *argv[])
 {
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
-  gdk_imlib_init ();
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
+
+  if (load_pixmaps (my_pix) == FALSE)
+    exit (1);
 
   if (sql_start ())
     exit (1);

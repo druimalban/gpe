@@ -103,7 +103,7 @@ click_ok(GtkWidget *widget,
   else
     add_new_item (t->list, when, what, t->state, summary, new_unique_id ());
 
-  gtk_widget_draw (t->list->widget, NULL);
+  gtk_widget_draw (g_draw, NULL);
 
   gtk_widget_hide (window);
   gtk_widget_destroy (window);
@@ -230,12 +230,15 @@ edit_todo(struct todo_list *list, struct todo_item *item)
 	}
       else
 	gtk_widget_set_sensitive (t->duedate, FALSE);
+
+      gtk_window_set_title (GTK_WINDOW (window), _("Edit item"));
     }
   else
     {
       t->state = NOT_STARTED;
       gtk_widget_set_sensitive (buttondelete, FALSE);
       gtk_widget_set_sensitive (t->duedate, FALSE);
+      gtk_window_set_title (GTK_WINDOW (window), _("New item"));
     }
 
   t->text = text;
