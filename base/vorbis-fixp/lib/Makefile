@@ -33,7 +33,7 @@ libvorbisfile-fixp.a: $(FOBJS)
 	$(AR) rcs $@ $(FOBJS)
 
 libvorbisfile-fixp.so.0: libvorbisfile-fixp.a
-	gcc -shared -nostartfiles -o $@ -Wl,--whole-archive $< -Wl,--no-whole-archive -Wl,-soname -Wl,libvorbfisfile-fixp.so.0
+	gcc -shared -nostartfiles -o $@ -Wl,--whole-archive $< -Wl,--no-whole-archive -Wl,-soname -Wl,libvorbisfile-fixp.so.0
 
 libfixpvorbis.a: $(OBJS)
 	$(AR) rcs $@ $(OBJS)
