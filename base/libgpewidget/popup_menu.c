@@ -157,7 +157,7 @@ construct_font_popup (GtkWidget *parent_button)
     alignment = gtk_alignment_new (0, 0, 0, 0);
     button = gtk_button_new ();
     g_signal_connect (G_OBJECT (button), "clicked",
-    		      GTK_SIGNAL_FUNC (void *(g_object_get_data (G_OBJECT (button), "callback"))()), families[i]);
+    		      G_CALLBACK (g_object_get_data (G_OBJECT (button), "callback")), families[i]);
     gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
     g_object_set_data (G_OBJECT (button), "parent_button", parent_button);
     gtk_container_add (GTK_CONTAINER (alignment), button_label);
