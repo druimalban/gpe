@@ -32,6 +32,8 @@
 
 #include <libdisplaymigration/displaymigration.h>
 
+#include <locale.h>
+
 #define _(_x) gettext (_x)
 
 extern gboolean gpe_calendar_start_xsettings (void);
@@ -132,7 +134,7 @@ static void
 new_appointment (void)
 {
   GtkWidget *appt = new_event (viewtime, 0);
-  gtk_widget_show_all (appt);
+  gtk_widget_show (appt);
 }
 
 static void

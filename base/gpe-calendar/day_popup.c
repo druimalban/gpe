@@ -66,7 +66,7 @@ selection_made (GtkWidget *clist, gint row, gint column,
      
       ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
       
-      gtk_widget_show_all (edit_event (ev));
+      gtk_widget_show (edit_event (ev));
 
       gtk_widget_destroy (widget);
     }

@@ -85,6 +85,7 @@ selection_made (GtkWidget      *clist,
 		GtkWidget      *widget)
 {
   event_t ev;
+  GtkWidget *w;
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
@@ -94,7 +95,7 @@ selection_made (GtkWidget      *clist,
       
       if (ev) 
 	{
-	  gtk_widget_show_all (edit_event (ev));
+	  w = edit_event (ev);
 	}
       else 
 	{
@@ -102,8 +103,9 @@ selection_made (GtkWidget      *clist,
 	  localtime_r (&viewtime, &tm);
 	  if (gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t))
 	    strptime (t, TIMEFMT, &tm);
-	  gtk_widget_show_all (new_event (mktime (&tm), 1));
+	  w = new_event (mktime (&tm), 1);
 	}
+	gtk_widget_show (w);
     }
   else if (event->type == GDK_BUTTON_RELEASE)
     {

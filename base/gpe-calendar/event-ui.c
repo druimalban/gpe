@@ -605,7 +605,7 @@ build_edit_event_window (void)
   GtkWidget *monthlylabelevery, *monthlyspin, *monthlylabels;
   GtkWidget *yearlylabelevery, *yearlyspin, *yearlylabels;
 
-  GtkWidget *scrolledwindowevent, *scrolledwindowalarm, *scrolledwindowrecurrence;
+  GtkWidget *scrolledwindowevent, *scrolledwindowalarm, *scrolledwindowrecur;
 
   GtkAdjustment *endspin_adj, *dailyspin_adj, *weeklyspin_adj,
                 *monthlyspin_adj, *yearlyspin_adj;
@@ -850,8 +850,10 @@ build_edit_event_window (void)
 
   vboxrepeattop = gtk_vbox_new (FALSE, 0);
 
-  scrolledwindowrecurrence = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowrecurrence), vboxrepeattop);
+  scrolledwindowrecur = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowrecur), vboxrepeattop);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowrecur),
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   recurborder = gtk_frame_new (_("Type:"));
   gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurborder,
@@ -1114,7 +1116,7 @@ build_edit_event_window (void)
                             labeleventpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowalarm,
                             labelalarmpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowrecurrence,
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebookedit), scrolledwindowrecur,
                             labelrecurpage);
   gtk_widget_grab_focus (summaryentry);
 
@@ -1153,6 +1155,7 @@ build_edit_event_window (void)
   g_object_set_data_full (G_OBJECT (window), "edit_state", s,
                           destroy_user_data);
 
+  gtk_widget_show_all (vboxtop);
   recalculate_sensitivities (NULL, window);
 
   gpe_set_window_icon (window, "icon");
