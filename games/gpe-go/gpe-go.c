@@ -62,16 +62,23 @@ typedef struct _go {
   char      * turn_string;
 #endif
 
-  int grid_margin;//px
-  int grid_space; //px
+  int board_size;//px PARAM - size of the board widget
+  //int free_space;//px - free space on the widget out of the grid
+  int margin;    //***px - left/top margin
+
+  int game_size; //9, 13, 19, ...
+  
+  int cell_size;  //***px - == stone_size + stone_space 
+  int stone_size; //px
+  int stone_space;//px PARAM space between two stones (0/1 px)
+  
+  int grid_stroke;//px PARAM width of the grid stroke (1px)  
 
   //--current position
-  int x;
-  int y;
+  int col;
+  int row;
 
   //--game
-  int grid_size; // 9x9 13x13 19x19
-
   char ** grid;   //current state of the board
   char ** stamps;
 
@@ -159,24 +166,49 @@ void app_init(int argc, char ** argv){
   //--grid size
   if(argc > 1){//first arg is board size if numeric
     int size;
-    if(sscanf(argv[1], "%d", &size) == 1) go.grid_size = size;
+    if(sscanf(argv[1], "%d", &size) == 1) go.game_size = size;
   }
-  else go.grid_size = 9;//default size
+  else go.game_size = 9;//default size
+
+  go.board_size = BOARD_SIZE;//240
+  go.stone_space = 1;
+  go.grid_stroke = 1;
+
+  go.cell_size = go.board_size / go.game_size;
+  if ((go.cell_size - go.grid_stroke - go.stone_space) %2) go.cell_size--;
+  go.free_space = go.board_size - go.game_size * go.cell_size;
+  if(go.free_space < 2){
+    go.cell_size--;
+    go.free_space += go.game_size;
+  }
+  go.margin = go.free_space / 2;
+  
+  go.stone_size = go.cell_size - go.stone_space;
+  
+  TRACE("|%d| %d x %d |%d|",
+        go.margin,
+        go.cell_size,
+        go.game_size,
+        go.free_space - go.margin);
+  TRACE("cells: %d |%d %d|",
+        go.cell_size,
+        go.stone_space,
+        go.stone_size);
 
   //--init grid
   //one unused row/col to have index from *1* to grid_size.
-  go.grid = (char **) malloc ((go.grid_size +1) * sizeof(char *));
-  for (i=0; i<=go.grid_size; i++){
-    go.grid[i] = (char *) malloc ((go.grid_size +1) * sizeof(char));
+  go.grid = (char **) malloc ((go.game_size +1) * sizeof(char *));
+  for (i=0; i<=go.game_size; i++){
+    go.grid[i] = (char *) malloc ((go.game_size +1) * sizeof(char));
   }
-  for(i=1; i<= go.grid_size; i++) for(j=1; j<=go.grid_size; j++) go.grid[i][j]=0;
+  for(i=1; i<= go.game_size; i++) for(j=1; j<=go.game_size; j++) go.grid[i][j]=0;
 
   //stamps grid
-  go.stamps = (char **) malloc ((go.grid_size +1) * sizeof(char *));
-  for (i=0; i<=go.grid_size; i++){
-    go.stamps[i] = (char *) malloc ((go.grid_size +1) * sizeof(char));
+  go.stamps = (char **) malloc ((go.game_size +1) * sizeof(char *));
+  for (i=0; i<=go.game_size; i++){
+    go.stamps[i] = (char *) malloc ((go.game_size +1) * sizeof(char));
   }
-  for(i=1; i<= go.grid_size; i++) for(j=1; j<=go.grid_size; j++) go.stamps[i][j]=0;
+  for(i=1; i<= go.game_size; i++) for(j=1; j<=go.game_size; j++) go.stamps[i][j]=0;
 
   //--init game
   go.history = NULL;
@@ -187,9 +219,6 @@ void app_init(int argc, char ** argv){
   go.turn = 0;
   go.last_turn = 0;
 
-  //--some ui init... FIXME: to move 
-  go.grid_space  = BOARD_SIZE / (go.grid_size - 1 + 1.5/*= margin prop*/);
-  go.grid_margin = (BOARD_SIZE - (go.grid_size - 1) * go.grid_space ) / 2;
 }
 
 void app_quit(){
@@ -199,11 +228,11 @@ void app_quit(){
 void _print_gird(){
   int i,j;
   g_print("     ");
-  for(j=1; j<= go.grid_size; j++) g_print("%2d ", j);
+  for(j=1; j<= go.game_size; j++) g_print("%2d ", j);
   g_print("\n");
-  for(j=1; j<= go.grid_size; j++){
+  for(j=1; j<= go.game_size; j++){
     g_print("%2d : ", j);
-    for(i=1; i<=go.grid_size; i++){
+    for(i=1; i<=go.game_size; i++){
       if(go.grid[i][j] == 0) g_print(" %c ",'-');
       else{
         if(go.stamps[i][j]) g_print("*%d*",go.grid[i][j]);
@@ -274,7 +303,7 @@ void load_graphics(){
 
   int stone_size;
 
-  stone_size = go.grid_space - 2;
+  stone_size = go.stone_size;
 
   //--black stone
   stone_image = gdk_pixbuf_new_from_file(PIXMAPS_SRC "black.png", NULL);
@@ -327,8 +356,8 @@ void load_graphics(){
 
 void paint_board(GtkWidget * widget){
   int i;
-  int space;
-  int margin;
+  int cell_size;
+  int border_trans; //grid's translation from the border of the board
 
   GdkPixbuf * bg_image;
   GdkPixbuf * bg_scaled;
@@ -368,61 +397,59 @@ void paint_board(GtkWidget * widget){
   }
 
   //--grid
-  space  = go.grid_space ;
-  margin = go.grid_margin;
-  TRACE("space: %d, margin: %d", space, margin);
+  cell_size = go.cell_size;
+  border_trans = go.margin + go.cell_size / 2;
   
-  for(i=0; i< go.grid_size; i++){
+  for(i=0; i< go.game_size; i++){
+    //vertical lines
     gdk_draw_line(go.pixmap_empty_board,
                   widget->style->black_gc,
-                  space * i + margin, margin,
-                  space * i + margin, BOARD_SIZE - margin);
+                  border_trans + cell_size * i, border_trans,
+                  border_trans + cell_size * i, BOARD_SIZE - border_trans);
+    //horizontal lines
     gdk_draw_line(go.pixmap_empty_board,
                   widget->style->black_gc,
-                  margin, space * i + margin,
-                  BOARD_SIZE - margin, space * i + margin);
-    TRACE("%2d (%3d,%3d) (%3d,%3d)",
-          i + 1,
-          space * i, margin + space,
-          space * i, BOARD_SIZE - margin - space);
+                  border_trans, border_trans + cell_size * i,
+                  BOARD_SIZE - border_trans, border_trans + cell_size * i);
   }
   //--advantage points
 
-#define paint_point(w,x,y) \
+#define ADVANTAGE_POINT_SIZE 3
+#define paint_point(x,y) \
       gdk_draw_rectangle(go.pixmap_empty_board, \
                widget->style->black_gc, TRUE, \
-               margin + space * (x-1) - w/2, \
-               margin + space * (y-1) - w/2, \
-               w, w);
+               border_trans + cell_size * (x-1) - ADVANTAGE_POINT_SIZE/2, \
+               border_trans + cell_size * (y-1) - ADVANTAGE_POINT_SIZE/2, \
+               ADVANTAGE_POINT_SIZE, ADVANTAGE_POINT_SIZE);
 
-  if(go.grid_size == 9){
-    paint_point(3, 3, 3);
-    paint_point(3, 7, 3);
-    paint_point(3, 5, 5);
-    paint_point(3, 3, 7);
-    paint_point(3, 7, 7);
+  if(go.game_size == 9){
+    paint_point(3, 3);
+    paint_point(7, 3);
+    paint_point(5, 5);
+    paint_point(3, 7);
+    paint_point(7, 7);
   }
-  else if(go.grid_size == 13){
-    paint_point(3, 4, 4);
-    paint_point(3, 4, 7);
-    paint_point(3, 4, 10);
-    paint_point(3, 7, 4);
-    paint_point(3, 7, 7);
-    paint_point(3, 7, 10);
-    paint_point(3,10, 4);
-    paint_point(3,10, 7);
-    paint_point(3,10, 10);
+  else if(go.game_size == 13){
+    paint_point( 4,  4);
+    paint_point( 4,  7);
+    paint_point( 4, 10);
+    paint_point( 7,  4);
+    paint_point( 7,  7);
+    paint_point( 7, 10);
+    paint_point(10,  4);
+    paint_point(10,  7);
+    paint_point(10, 10);
   }
-  else if(go.grid_size == 19){
-    paint_point(3,  4,  4);
-    paint_point(3,  4, 10);
-    paint_point(3,  4, 16);
-    paint_point(3, 10,  4);
-    paint_point(3, 10, 10);
-    paint_point(3, 10, 16);
-    paint_point(3, 16,  4);
-    paint_point(3, 16, 10);
-    paint_point(3, 16, 16);
+  else if(go.game_size == 19){
+    paint_point( 4,  4);
+    paint_point( 4, 10);
+    paint_point( 4, 16);
+    paint_point(10,  4);
+    paint_point(10, 10);
+    paint_point(10, 16);
+    paint_point(16,  4);
+    paint_point(16, 10);
+    paint_point(16, 16);
   }
 
   
@@ -433,12 +460,12 @@ void paint_board(GtkWidget * widget){
 }
 
 
-void unpaint_stone(int x, int y){
+void unpaint_stone(int col, int row){
   GdkRectangle rect;
 
-  rect.x = x;
-  rect.y = y;
-  rect.width = rect.height = go.grid_space -1;
+  rect.x = (col -1) * go.cell_size + go.margin;
+  rect.y = (row -1) * go.cell_size + go.margin;
+  rect.width = rect.height = go.cell_size;
 
   gdk_draw_drawable (go.drawing_area_pixmap_buffer,
                      go.drawing_area->style->black_gc,
@@ -448,13 +475,12 @@ void unpaint_stone(int x, int y){
   gtk_widget_draw (go.drawing_area, &rect);
 }
 
-
-void paint_stone(int x, int y, GoItem item){
+void paint_stone(int col, int row, GoItem item){
   GdkRectangle rect;
 
-  rect.x = x +1;
-  rect.y = y +1;
-  rect.width = rect.height = go.grid_space -2;
+  rect.x = (col -1) * go.cell_size + go.margin + go.stone_space;
+  rect.y = (row -1) * go.cell_size + go.margin + go.stone_space;
+  rect.width = rect.height = go.stone_size;
 
   TRACE("paint");
  
@@ -483,16 +509,13 @@ void paint_stone(int x, int y, GoItem item){
 
 void put_stone(GoItem color, int gox, int goy){
   if(go.grid[gox][goy] != EMPTY) return;
-  paint_stone((gox -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-              (goy -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-              color);
+  paint_stone(gox, goy, color);
   go.grid[gox][goy] = color;
 }
 
 void remove_stone(int gox, int goy){
   if(go.grid[gox][goy] == EMPTY) return;
-  unpaint_stone((gox -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-                (goy -1) * go.grid_space + go.grid_margin - go.grid_space / 2);
+  unpaint_stone(gox, goy);
   go.grid[gox][goy] = EMPTY;
 }
 
@@ -549,9 +572,9 @@ on_drawing_area_motion_notify_event(GtkWidget       *widget,
     state = event->state;
   }
 
-  go.x = (x - go.grid_margin - go.grid_space / 2 + 0.1) / go.grid_space +2;
-  go.y = (y - go.grid_margin - go.grid_space / 2 + 0.1) / go.grid_space +2;
-  //TRACE("[%d,%d] (%d,%d) %d", go.x, go.y, x, y, state);
+  go.col = (x - go.margin) / go.cell_size + 1;
+  go.row = (y - go.margin) / go.cell_size + 1;
+  //TRACE("[%d,%d] (%d,%d) %d", go.col, go.row, x, y, state);
 
 
   if (state & GDK_BUTTON1_MASK){
@@ -578,8 +601,8 @@ void unstamp(int gox, int goy){
 }
 void clear_stamps(){
   int i,j;
-  for(j=1; j<= go.grid_size; j++){
-    for(i=1; i<=go.grid_size; i++){
+  for(j=1; j<= go.game_size; j++){
+    for(i=1; i<=go.game_size; i++){
       if(go.stamps[i][j]) go.stamps[i][j] = 0;
     }
   }
@@ -606,13 +629,13 @@ void stamp_group_of(int gox, int goy){
   }
   x = gox + 1;
   y = goy;
-  if(gox<go.grid_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  if(gox<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = gox;
   y = goy + 1;
-  if(goy<go.grid_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  if(goy<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
@@ -644,12 +667,12 @@ int size_group_of(int gox, int goy){
   }
   x = gox + 1;
   y = goy;
-  if(gox<go.grid_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  if(gox<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     count += size_group_of(x,y);
   }
   x = gox;
   y = goy + 1;
-  if(goy<go.grid_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
+  if(goy<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
     count += size_group_of(x,y);
   }
   x = gox - 1;
@@ -681,14 +704,14 @@ gboolean is_alive_group_of(int gox, int goy){
   }
   x = gox + 1; //EAST
   y = goy;
-  if(gox<go.grid_size && !go.stamps[x][y]){
+  if(gox<go.game_size && !go.stamps[x][y]){
     if(go.grid[x][y] == EMPTY) return TRUE;
     else if( go.grid[x][y] == my_color )
       if(is_alive_group_of(x,y)) return TRUE;
   }
   x = gox;     //SOUTH
   y = goy + 1;
-  if(goy<go.grid_size && !go.stamps[x][y]){
+  if(goy<go.game_size && !go.stamps[x][y]){
     if(go.grid[x][y] == EMPTY) return TRUE;
     else if( go.grid[x][y] == my_color )
       if(is_alive_group_of(x,y)) return TRUE;
@@ -712,8 +735,8 @@ int kill_group_of(int gox, int goy){//returns number of stones killed
   clear_stamps();
   stamp_group_of(gox, goy);
 
-  for(i=1; i<= go.grid_size; i++){
-    for(j=1; j<=go.grid_size; j++){
+  for(i=1; i<= go.game_size; i++){
+    for(j=1; j<=go.game_size; j++){
       if(go.stamps[i][j]){
 
         append_hitem(CAPTURE, go.grid[i][j], i, j);
@@ -747,8 +770,8 @@ void update_turn_label(){
 
 void play_at(int gox, int goy){
   //TRACE("Play at %d %d", gox, goy);
-  if( gox < 1 || go.grid_size < gox ||
-      goy < 1 || go.grid_size < goy ){
+  if( gox < 1 || go.game_size < gox ||
+      goy < 1 || go.game_size < goy ){
     //TRACE("--> out of bounds");
     return;
   }
@@ -792,13 +815,13 @@ void play_at(int gox, int goy){
     clear_stamps();
     x = gox + 1;
     y = goy;
-    if(gox<go.grid_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
+    if(gox<go.game_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
       *captured += kill_group_of(x,y);
     }
     clear_stamps();
     x = gox;
     y = goy + 1;
-    if(goy<go.grid_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
+    if(goy<go.game_size && go.grid[x][y] == opp_color && !is_alive_group_of(x,y)){
       *captured += kill_group_of(x,y);
     }
     clear_stamps();
@@ -916,7 +939,7 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
                                      gpointer         user_data){
   TRACE("release");
 
-  play_at(go.x, go.y);
+  play_at(go.col, go.row);
 
   return FALSE;
 }
@@ -973,7 +996,7 @@ void save_game(){
   if(!c) return;
 
   fprintf(f, "(;GM[1]FF[3]\n");
-  fprintf(f, "RU[Japanese]SZ[%d]H[%d]KM[%f]\n", go.grid_size, 0, 5.5);
+  fprintf(f, "RU[Japanese]SZ[%d]H[%d]KM[%f]\n", go.game_size, 0, 5.5);
   fprintf(f, "PW[%s]\n", "white");
   fprintf(f, "PB[%s]\n", "black");
   fprintf(f, "GN[%s]\n", "the game of the year");
