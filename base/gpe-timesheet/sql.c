@@ -76,6 +76,7 @@ internal_note_task (guint id, gchar *text, guint elapsed, struct task *pt)
   t->time_cf = elapsed;
   t->children = NULL;
   t->parent = pt;
+  t->started = 0;
   if (pt)
     pt->children = g_slist_append (pt->children, t);
   else
@@ -191,11 +192,14 @@ scan_logs (GSList *list)
 static int
 journal_callback (void *arg, int argc, char **argv, char **names)
 {
-  if (argc == 2)
+  time_t ti;
+  
+  if (argc == 3)
     {
-      struct task *t = arg;
+//      struct task *t = arg;
+      ti = atol(argv[0]);
       if (argv[1])
-      journal_add_line(*t); // this is a fake
+        journal_add_line(argv[2],argv[1],ctime(&ti));
     }
   return 0;
 }
@@ -217,7 +221,7 @@ scan_journal (GSList *list)
 	  char *err;
 	  int r;
 
-	  r = sqlite_exec_printf (sqliteh, "select time, action from log where task=%d order by time desc", 
+	  r = sqlite_exec_printf (sqliteh, "select time, action, info from log where task=%d", 
 				  journal_callback, t, &err,
 				  t->id);
 	  if (r != 0 && r != SQLITE_ABORT)

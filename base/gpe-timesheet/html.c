@@ -26,7 +26,7 @@
 static char **myjournal = NULL;
 static int jlen = 0;
 
-/* adds the doscument header */
+/* adds the document header */
 int 
 journal_add_header(char* title)
 {
@@ -47,11 +47,11 @@ journal_add_header(char* title)
 
 /* this one adds a data line to journal list */
 int 
-journal_add_line(struct task atask)
+journal_add_line(const char *action, const char *info, const char *time)
 {
   myjournal = realloc(myjournal,sizeof(char*)*(++jlen));
   myjournal[jlen - 2] = 
-    g_strdup_printf("%s %i<br>\n",atask.description, atask.time_cf);
+    g_strdup_printf("%s  %s  %s<br>\n",action, info, time);
   myjournal[jlen - 1] = NULL;
   return jlen;
 }

@@ -53,7 +53,6 @@ journal (GtkWidget *w, gpointer user_data)
       t = gtk_ctree_node_get_row_data (ct, node);
       /* here we go... */
       journal_add_header(t->description);
-      // scan tree, add lines here
       scan_journal(g_slist_find(root,t));
       journal_add_footer();
       journal_to_file(JOURNAL_FILE);

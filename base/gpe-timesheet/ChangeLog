@@ -1,5 +1,7 @@
 2004-05-05  Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Fixed bug that caused new tasks to start without event.
+	* Basic data lines, some time info.
 	* Finished journal framework, now only content is missing.
 
 2004-05-03  Florian Boor <florian.boor@kernelconcepts.de>
