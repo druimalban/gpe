@@ -5,7 +5,7 @@ GTK2 = yes
 VERSION = 0.60
 DEBUG = no
 
-LINGUAS = de sv wa nl
+LINGUAS = de sv wa nl pt
 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
