@@ -26,7 +26,6 @@
 #define SERVER_CRASHING_THRESHOLD	3
 
 static pid_t xserver_pid;
-static pid_t xinit_pid;
 static pid_t session_pid;
 
 static char *dpyname;
