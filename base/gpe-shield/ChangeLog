@@ -1,3 +1,7 @@
+2004-06-10 Florian Boor <florian.boor@kernelconceps.de>
+	* backend.c: Fixed missing unlink of socket endpoint.
+	* interface.c: Fixed handling of config flag. Fixed small memory leak.
+
 2004-06-09 Florian Boor <florian.boor@kernelconceps.de>
 	* Released V 0.3
 	* editrule.c: Gui updates to look better on small displays.

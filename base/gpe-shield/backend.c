@@ -445,6 +445,7 @@ suidloop (int csock)
 	while (wait_message ()) ;
 		
 	close (sock);
+	unlink (PK_SOCKET);
 
 	return 0;
 }

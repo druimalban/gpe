@@ -508,7 +508,7 @@ change_network_control (GtkWidget * w)
 	char *file = g_strdup_printf("%s/%s",g_get_home_dir(),LOADRULES_MARK);
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
 	{
-		if ((fh = open(file,O_CREAT)) < 0)
+		if ((fh = open(file,O_CREAT | O_RDWR | O_TRUNC)) < 0)
 			gpe_perror_box(_("Cannot save setting."));
 		else
 			close(fh);
@@ -518,6 +518,22 @@ change_network_control (GtkWidget * w)
 		if (remove(file) < 0)
 			gpe_perror_box(_("Cannot save setting."));
 	}
+	g_free(file);
+}
+
+
+gboolean
+get_network_control (void)
+{
+	gboolean result;
+	char *file = g_strdup_printf("%s/%s",g_get_home_dir(),LOADRULES_MARK);
+	
+	if (!access(file,F_OK))
+		result = TRUE;
+	else
+		result = FALSE;
+	g_free(file);
+	return result;
 }
 
 
@@ -904,7 +920,8 @@ create_fMain (void)
   
   cur = gtk_check_button_new_with_label(_("Start network control on login"));
   gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);
-	g_signal_connect_after (G_OBJECT (cur), "toggled",
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cur),get_network_control());
+  g_signal_connect_after (G_OBJECT (cur), "toggled",
 			  G_CALLBACK (change_network_control), NULL);
   
   g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
