@@ -30,6 +30,11 @@
 #include <gpe/soundgen.h>
 #include <gpe/schedule.h>
 
+#include <linux/types.h>
+#include <linux/ioctl.h>
+
+#include "buzzer.h"
+
 #define MIXER "/dev/mixer"
 
 #define SIZE 256
@@ -41,6 +46,36 @@ static gboolean PlayAlarmStop = TRUE;
 int fd;
 int curl, curr;	
 pthread_t mythread;
+
+int buzzerfd = -1;
+
+#define BUZZER_FILE "/dev/misc/buzzer"
+
+void
+open_buzzer (void)
+{
+  buzzerfd = open (BUZZER_FILE, O_WRONLY);
+}
+
+int
+set_buzzer (int on, int off)
+{
+  struct buzzer_time t;
+
+  if (buzzerfd == -1)
+    return 0;
+
+  t.on_time = on;
+  t.off_time = off;
+
+  if (ioctl (buzzerfd, IOC_SETBUZZER, &t))
+    {
+      perror ("IOC_SETBUZZER");
+      return -1;
+    }
+
+  return 0;
+}
 	
 int get_vol(int *left, int *right)
 {
@@ -196,10 +231,13 @@ return (NULL);
 
 gint bells_and_whistles ()
 {
-	
+	open_buzzer ();
+  
 	if(get_vol(&curl, &curr) == -1)
     		printf("Unable to get volume\n");
    	
+	set_buzzer (1000, 500);
+
 	set_vol(50,50);
 	PlayAlarmStop = FALSE;
 	if (pthread_create(&mythread, NULL, play_alarm, NULL) != 0) {
@@ -216,6 +254,7 @@ on_snooze_clicked                     (GtkButton       *button,
 	time_t viewtime;
 	
 	PlayAlarmStop = TRUE;
+	set_buzzer (0, 0);
 	pthread_join(mythread, NULL);		
 	set_vol(curl, curr);
 	
@@ -234,6 +273,7 @@ on_ok_clicked                     (GtkButton       *button,
                                         gpointer         user_data)
 {
 	PlayAlarmStop = TRUE;
+	set_buzzer (0, 0);
 	pthread_join(mythread, NULL);		
 	set_vol(curl, curr);
 	
@@ -246,5 +286,6 @@ on_mute_clicked                     (GtkButton       *button,
                                         gpointer         user_data)
 {
 	PlayAlarmStop = TRUE;
+	set_buzzer (0, 0);
 	return(FALSE);
 }
