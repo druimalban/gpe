@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
-#include <glib.h>
 
 #include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
@@ -21,6 +20,8 @@
 #include <bluetooth/sdp_lib.h>
 
 #include "main.h"
+
+extern int bnep_init (void);
 
 struct bt_service_pan
 {
@@ -44,12 +45,22 @@ pan_scan (sdp_record_t *rec, struct bt_device *bd)
   return (struct bt_service *)s;
 }
 
+static void
+pan_popup_menu (struct bt_service *svc, GtkWidget *menu)
+{
+  struct bt_service_pan *pan = (struct bt_service_pan *)svc;
+}
+
 void
 pan_init (void)
 {
   sdp_uuid16_create (&pan_service_desc.uuid, NAP_SVCLASS_ID);  
 
   pan_service_desc.scan = pan_scan;
+  pan_service_desc.popup_menu = pan_popup_menu;
 
   service_desc_list = g_slist_prepend (service_desc_list, &pan_service_desc);
+
+  if (bnep_init ())
+    exit (1);
 }

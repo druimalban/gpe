@@ -220,24 +220,14 @@ radio_on (void)
 static void
 do_stop_radio (void)
 {
-  GSList *iter;
-
   radio_is_on = FALSE;
-  for (iter = devices; iter; iter = iter->next)
-    {
-      struct bt_device *bd = (struct bt_device *)iter->data;
-#if 0
-      if (bd->pid)
-	{
-	  stop_dun (bd);
-	}
-#endif
-    }
+
   if (hciattach_pid)
     {
       kill (hciattach_pid, 15);
       hciattach_pid = 0;
     }
+
   system ("hciconfig hci0 down");
 }
 
@@ -307,7 +297,7 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 {
   GSList *iter;
   GtkWidget *device_menu;
-  GtkWidget *details, *w;
+  GtkWidget *details;
 
   device_menu = gtk_menu_new ();
 
@@ -320,7 +310,8 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
     {
       struct bt_service *sv = iter->data;
 
-      /* ... */
+      if (sv->desc->popup_menu)
+	sv->desc->popup_menu (sv, device_menu);
     }
 
   g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (g_object_unref), NULL);
@@ -419,7 +410,7 @@ main (int argc, char *argv[])
   Display *dpy;
   GtkWidget *window;
   GdkBitmap *bitmap;
-  GtkWidget *menu_remove, *details;
+  GtkWidget *menu_remove;
   GtkTooltips *tooltips;
   int dd;
 

@@ -12,12 +12,8 @@
 #include <time.h>
 #include <libintl.h>
 #include <locale.h>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <pthread.h>
-#include <errno.h>
 #include <stdio.h>
+#include <gtk/gtk.h>
 
 #include <sys/socket.h>
 #include <bluetooth/bluetooth.h>
@@ -47,13 +43,24 @@ static struct bt_service *
 lap_scan (sdp_record_t *rec, struct bt_device *bd)
 {
   struct bt_service_lap *s;
+  int port;
+
+  if (sdp_find_rfcomm (rec, &port) == FALSE)
+    return NULL;
 
   s = g_malloc (sizeof (*s));
 
   s->service.desc = &lap_service_desc;
   s->bd = bd;
+  s->port = port;
 
   return (struct bt_service *)s;
+}
+
+static void
+lap_popup_menu (struct bt_service *svc, GtkWidget *menu)
+{
+  struct bt_service_lap *lap = (struct bt_service_lap *)svc;
 }
 
 void
@@ -62,6 +69,7 @@ lap_init (void)
   sdp_uuid16_create (&lap_service_desc.uuid, LAN_ACCESS_SVCLASS_ID);
 
   lap_service_desc.scan = lap_scan;
+  lap_service_desc.popup_menu = lap_popup_menu;
 
   service_desc_list = g_slist_prepend (service_desc_list, &lap_service_desc);
 }

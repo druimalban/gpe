@@ -118,27 +118,6 @@ int bnep_cleanup(void)
 	return 0;
 }
 
-int bnep_show_connections(void)
-{
-	struct bnep_connlist_req req;
-	struct bnep_conninfo ci[48];
-	int i;
-
-	req.cnum = 48;
-	req.ci   = ci;
-	if (ioctl(ctl, bnepgetconnlist, &req)) {
-		perror("Failed to get connection list");
-		return -1;
-	}
-
-	for (i=0; i < req.cnum; i++) {
-		printf("%s %s %s\n", ci[i].device,
-			batostr((bdaddr_t *) ci[i].dst),
-			bnep_svc2str(ci[i].role));
-	}
-	return 0;
-}
-
 int bnep_kill_connection(uint8_t *dst)
 {
 	struct bnep_conndel_req req;
@@ -206,38 +185,6 @@ struct __service_128 {
 	uint16_t src;
 	uint16_t unused3[7];
 } __attribute__ ((packed));
-
-int bnep_accept_connection(int sk, uint16_t role, char *dev)
-{
-	struct bnep_setup_conn_req *req;
-	struct bnep_control_rsp *rsp;
-	unsigned char pkt[BNEP_MTU];
-	int r;
-
-	r = recv(sk, pkt, BNEP_MTU, 0);
-	if (r <= 0)
-		return -1;
-
-	errno = EPROTO;
-
-	if (r < sizeof(*req))
-		return -1;
-
-	req = (void *) pkt;
-	if (req->type != BNEP_CONTROL || req->ctrl != BNEP_SETUP_CONN_REQ)
-		return -1;
-
-	/* FIXME: Check role UUIDs */
-
-	rsp = (void *) pkt;
-	rsp->type = BNEP_CONTROL;
-	rsp->ctrl = BNEP_SETUP_CONN_RSP;
-	rsp->resp = htons(BNEP_SUCCESS);
-	if (send(sk, rsp, sizeof(*rsp), 0) < 0)
-		return -1;
-
-	return bnep_connadd(sk, role, dev);
-}
 
 /* Create BNEP connection 
  * sk      - Connect L2CAP socket
