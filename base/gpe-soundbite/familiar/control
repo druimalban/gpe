@@ -1,8 +1,12 @@
-Package: keylaunch
+Package: gpe-soundbite
 Section: base
 Priority: optional
-Version: 1.3.0-5gpe3.1
+Version: 0.08
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
-Depends: libc6 (>= 2.2.4-4), xlibs (>> 4.1.0)
-Description: A small utility for binding commands to a hot key.
+Depends: libgtk1.2, libgpewidget0 (>= 0.05), gpe-icons (>= 0.04), libgsm1
+Description: Audio note recorder for GPE.
+ gpe-soundbite allows you to record and play back spoken notes. Audio files
+ are compressed using GSM speech compression before they are written to disk,
+ greatly reducing the space they take up.
+ .
