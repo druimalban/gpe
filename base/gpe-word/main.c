@@ -37,6 +37,8 @@ int search_replace_open = 0;
 int last_found = 0;
 gboolean utf8_mode;
 
+static gchar* default_colors = "black:white:gray50:red:purple:blue:light blue:green:yellow:orange:lavender:brown:goldenrod4:dodger blue:pink:light green:gray10:gray30:gray75:gray90";
+
 GtkWidget *main_window;
 GtkWidget *text_view;
 GtkWidget *file_selector;
@@ -249,8 +251,7 @@ open_file (char *new_filename)
 static void
 open_file_from_filesel (GtkFileSelection *selector, gpointer user_data)
 {
-
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
+  filename = g_strdup (gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
 
   gtk_widget_destroy (file_selector);
 
@@ -299,8 +300,7 @@ do_save_file (gchar *filename)
 static void
 save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
-  
+  filename = g_strdup (gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
   do_save_file (filename);
 
   gtk_widget_destroy (file_selector);
@@ -592,12 +592,25 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
     }
 }
 
-static void
-select_justification_popup (GtkWidget *parent_button)
+static int
+select_font_popup_cmp_families (const void *a, const void *b)
 {
-  GtkWidget *popup_window, *frame, *vbox, *button;
+  const char *a_name = pango_font_family_get_name (*(PangoFontFamily **)a);
+  const char *b_name = pango_font_family_get_name (*(PangoFontFamily **)b);
+  
+  return g_utf8_collate (a_name, b_name);
+}
+
+static void
+select_font_popup (GtkWidget *parent_button)
+{
+  GtkWidget *popup_window, *frame, *vbox, *button, *alignment, *scrolled_window, *button_label;
   GtkWidget *parent_arrow;
-  GtkRequisition requisition;
+  GtkRequisition frame_requisition, parent_button_requisition;
+  GtkRcStyle *button_label_rc_style;
+  PangoFontFamily **families;
+  PangoFontFamily *match_family = NULL;
+  gint n_families, i;
   gint x, y;
   gint window_x, window_y;
   gint screen_width;
@@ -620,60 +633,249 @@ select_justification_popup (GtkWidget *parent_button)
     vbox = gtk_vbox_new (FALSE, 0);
     frame = gtk_frame_new (NULL);
     gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
+    scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_LEFT, GPE_BUTTON_TYPE_BOTH);
-    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+    pango_context_list_families (gtk_widget_get_pango_context (GTK_WIDGET (parent_button)), &families, &n_families);
+    qsort (families, n_families, sizeof (PangoFontFamily *), select_font_popup_cmp_families);
 
-    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_CENTER, GPE_BUTTON_TYPE_BOTH);
-    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+    for (i=0; i<n_families; i++)
+    {
+      const gchar *font_name = pango_font_family_get_name (families[i]);
 
-    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_RIGHT, GPE_BUTTON_TYPE_BOTH);
-    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+      printf ("Found font: %s\n", font_name);
 
-    button = gpe_button_new_from_stock (GTK_STOCK_JUSTIFY_FILL, GPE_BUTTON_TYPE_BOTH);
-    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-    gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+      button_label = gtk_label_new (font_name);
+      button_label_rc_style = gtk_rc_style_new ();
+      button_label_rc_style->font_desc = pango_font_description_from_string (g_strdup_printf ("%s 9", font_name));
+      gtk_widget_modify_style (button_label, button_label_rc_style);
 
-    gtk_container_add (GTK_CONTAINER (frame), vbox);
+      alignment = gtk_alignment_new (0, 0, 0, 0);
+      button = gtk_button_new ();
+      gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+      gtk_container_add (GTK_CONTAINER (alignment), button_label);
+      gtk_container_add (GTK_CONTAINER (button), alignment);
+      gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+    }
+
+    g_free (families);
+
+    gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
+    gtk_container_add (GTK_CONTAINER (frame), scrolled_window);
     gtk_container_add (GTK_CONTAINER (popup_window), frame);
     gtk_widget_show_all (frame);
 
-    gdk_window_get_pointer (NULL, &x, &y, NULL);
-    gtk_widget_size_request (vbox, &requisition);
-      
-    screen_width = gdk_screen_width ();
-    screen_height = gdk_screen_height ();
-      
-    //x = CLAMP (x - 2, 0, MAX (0, screen_width - requisition.width));
-    //y = CLAMP (y + 4, 0, MAX (0, screen_height - requisition.height));
-
-    printf ("Widget x allocation: %d\n", parent_button->allocation.x);
-    printf ("Widget y allocation: %d\n", parent_button->allocation.y);
-
-    printf ("Widget x requisition: %d\n", requisition.width);
-    printf ("Widget y requisition: %d\n", requisition.height);
+    gtk_widget_size_request (parent_button, &parent_button_requisition);
+    gtk_widget_size_request (frame, &frame_requisition);
 
     gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
 
-    printf ("Window x: %d\n", x);
-    printf ("Window y: %d\n", y);
-
-    //x = parent_button->allocation.x + requisition.width;
-    //y = parent_button->allocation.y + requisition.height;
-    x += parent_button->allocation.x;
+    screen_width = gdk_screen_width ();
+    screen_height = gdk_screen_height ();
+      
+    x = CLAMP (x + parent_button->allocation.x, 0, MAX (0, screen_width - frame_requisition.width));
     y += parent_button->allocation.y;
+    y += parent_button_requisition.height;
 
-    printf ("x: %d\n", x);
-    printf ("y: %d\n", y);
+    gtk_widget_set_size_request (scrolled_window, -1, (screen_height - y) - 10);
 
-    gtk_widget_set_uposition (popup_window, MAX (x, 0), MAX (y, 0));
+    gtk_widget_set_uposition (popup_window, x, y);
       
     g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
 
     gtk_widget_show (popup_window);
+  }
+
+  gtk_widget_grab_focus (text_view);
+}
+
+static void
+select_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j)
+{
+  GtkWidget *frame, *drawing_area;
+
+  frame = gtk_frame_new (NULL);
+  gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_IN);
+  
+  drawing_area = gtk_drawing_area_new ();
+  gtk_widget_set_size_request (drawing_area, 12, 12);
+  gtk_widget_modify_bg (drawing_area, GTK_STATE_NORMAL, &color);
+
+  gtk_container_add (GTK_CONTAINER (frame), drawing_area);
+  gtk_table_attach_defaults (GTK_TABLE (table), frame, i, i+1, j, j+1);
+  gtk_widget_show_all (frame);
+}
+
+
+static void
+select_color_popup (GtkWidget *parent_button)
+{
+  GtkWidget *popup_window, *frame, *table, *button;
+  GtkWidget *parent_arrow;
+  GtkRequisition frame_requisition, parent_button_requisition;
+  GdkColor *colors = NULL;
+  gint x, y;
+  gint i = 0, j = 0, k = 0;
+  gint window_x, window_y;
+  gint screen_width;
+  gint screen_height;
+  gint n_colors = 0;
+
+  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
+
+  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
+  {
+    gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
+    g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+  }
+  else
+  {
+    gtk_color_selection_palette_from_string (default_colors, &colors, &n_colors);
+
+    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
+
+    popup_window = gtk_window_new (GTK_WINDOW_POPUP);
+    frame = gtk_frame_new (NULL);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
+
+    table = gtk_table_new (4, 5, TRUE);
+    gtk_table_set_row_spacings (GTK_TABLE (table), 1);
+    gtk_table_set_col_spacings (GTK_TABLE (table), 1);
+
+    while (k < n_colors)
+    {
+      if (j == 4)
+      {
+	j = 0;
+	i++;
+      }
+      select_color_popup_add_color (table, colors[k], i, j);
+      k++;
+      j++;
+    }
+
+    gtk_container_add (GTK_CONTAINER (frame), table);
+    gtk_container_add (GTK_CONTAINER (popup_window), frame);
+    gtk_widget_show_all (frame);
+
+    gtk_widget_size_request (parent_button, &parent_button_requisition);
+    gtk_widget_size_request (frame, &frame_requisition);
+
+    gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
+
+    screen_width = gdk_screen_width ();
+    screen_height = gdk_screen_height ();
+      
+    x = CLAMP (x + parent_button->allocation.x, 0, MAX (0, screen_width - frame_requisition.width));
+    y += parent_button->allocation.y;
+    y += parent_button_requisition.height;
+
+    gtk_widget_set_uposition (popup_window, x, y);
+      
+    g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
+
+    gtk_widget_show (popup_window);
+  }
+
+  gtk_widget_grab_focus (text_view);
+}
+
+static GtkWidget *
+construct_justification_menu_add_button (const gchar *stock_id)
+{
+  GtkWidget *button, *hbox, *image, *label, *alignment;
+  GtkStockItem item;
+
+  gtk_stock_lookup (stock_id, &item);
+  alignment = gtk_alignment_new (0, 0, 0, 0);
+  hbox = gtk_hbox_new (FALSE, 2);
+  button = gtk_button_new ();
+  image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  label = gtk_label_new_with_mnemonic (item.label);
+
+  gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+  gtk_container_add (GTK_CONTAINER (alignment), hbox);
+  gtk_container_add (GTK_CONTAINER (button), alignment);
+  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+  return button;
+}
+
+static GtkWidget *
+construct_justification_menu ()
+{
+  GtkWidget *vbox, *button;
+
+  vbox = gtk_vbox_new (FALSE, 0);
+
+  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_LEFT);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_CENTER);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_RIGHT);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_FILL);
+  gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
+
+  return vbox;
+}
+
+static void
+popup_menu_show (GtkWidget *parent_button, GtkWidget *(construct_func)())
+{
+  GtkWidget *popup_window, *frame, *child_widget;
+  GtkWidget *parent_arrow;
+  GtkRequisition frame_requisition, parent_button_requisition;
+  gint x, y;
+  gint window_x, window_y;
+  gint screen_width;
+  gint screen_height;
+
+  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
+
+  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
+  {
+    gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
+    g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+  }
+  else
+  {
+    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
+
+    popup_window = gtk_window_new (GTK_WINDOW_POPUP);
+    frame = gtk_frame_new (NULL);
+    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
+
+    child_widget = construct_func ();
+
+    gtk_container_add (GTK_CONTAINER (frame), child_widget);
+    gtk_container_add (GTK_CONTAINER (popup_window), frame);
+
+    gtk_widget_size_request (parent_button, &parent_button_requisition);
+    gtk_widget_size_request (frame, &frame_requisition);
+
+    gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
+
+    screen_width = gdk_screen_width ();
+    screen_height = gdk_screen_height ();
+      
+    x = CLAMP (x + parent_button->allocation.x, 0, MAX (0, screen_width - frame_requisition.width));
+    y += parent_button->allocation.y;
+    y += parent_button_requisition.height;
+
+    gtk_widget_set_uposition (popup_window, x, y);
+      
+    g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
+
+    gtk_widget_show_all (popup_window);
   }
 
   gtk_widget_grab_focus (text_view);
@@ -824,15 +1026,15 @@ main (int argc, char *argv[])
 
   justify_button = popup_menu_button_new (GTK_STOCK_JUSTIFY_LEFT);
   gtk_signal_connect (GTK_OBJECT (justify_button), "pressed",
-		      GTK_SIGNAL_FUNC (select_justification_popup), NULL);
+		      GTK_SIGNAL_FUNC (popup_menu_show), construct_justification_menu);
 
   color_button = popup_menu_button_new (GTK_STOCK_SELECT_COLOR);
   gtk_signal_connect (GTK_OBJECT (color_button), "pressed",
-		      GTK_SIGNAL_FUNC (select_justification_popup), NULL);
+		      GTK_SIGNAL_FUNC (select_color_popup), NULL);
 
   font_button = popup_menu_button_new (GTK_STOCK_SELECT_FONT);
   gtk_signal_connect (GTK_OBJECT (font_button), "pressed",
-		      GTK_SIGNAL_FUNC (select_justification_popup), NULL);
+		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), gtk_item_factory_get_widget (item_factory, "<main>"), FALSE, FALSE, 0);
