@@ -22,12 +22,14 @@
 struct edit_todo
 {
   GtkWidget *text;
-  GtkWidget *state;
+  GtkWidget *summary;
   GtkWidget *duetoggle;
   GtkWidget *duedate;
 
   struct todo_item *item;
   struct todo_list *list;
+
+  item_state state;
 };
 
 static void
@@ -62,33 +64,58 @@ click_ok(GtkWidget *widget,
 
   time_t when;
   struct tm tm;
-  const char *what;
-  //  gboolean completed = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (t->completed));
-  item_state state = NOT_STARTED;
+  const char *what, *summary;
 
-#if 0  
-  memset(&tm, 0, sizeof(tm));
-  tm.tm_year = t->year - 1900;
-  tm.tm_mon = t->month;
-  tm.tm_mday = t->day;
-  when = mktime(&tm);
-#endif
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (t->duetoggle)))
+    {
+      memset(&tm, 0, sizeof(tm));
+      tm.tm_year = GTK_DATE_COMBO (t->duedate)->year - 1900;
+      tm.tm_mon = GTK_DATE_COMBO (t->duedate)->month;
+      tm.tm_mday = GTK_DATE_COMBO (t->duedate)->day;
+      when = mktime(&tm);
+    }
+  else
+    when = (time_t)0;
 
   what = gtk_editable_get_chars (GTK_EDITABLE (t->text), 0, -1);
+  summary = gtk_editable_get_chars (GTK_EDITABLE (t->summary), 0, -1);
 
   if (t->item)
     {
       g_free ((char *)t->item->what);
       t->item->what = what;
+      g_free ((char *)t->item->summary);
+      t->item->summary = summary;
       t->item->time = when;
-      t->item->state = state;
+      t->item->state = t->state;
       gtk_widget_draw (t->list->widget, NULL);
     }
   else
-    add_new_event (t->list, when, what, state);
+    add_new_event (t->list, when, what, t->state, summary);
 
   gtk_widget_hide (window);
   gtk_widget_destroy (window);
+}
+
+static void
+state_func_0(GtkMenuItem *w, gpointer p)
+{
+  struct edit_todo *t = p;
+  t->state = NOT_STARTED;
+}
+
+static void
+state_func_1(GtkMenuItem *w, gpointer p)
+{
+  struct edit_todo *t = p;
+  t->state = IN_PROGRESS;
+}
+
+static void
+state_func_2(GtkMenuItem *w, gpointer p)
+{
+  struct edit_todo *t = p;
+  t->state = COMPLETED;
 }
 
 GtkWidget *
@@ -114,19 +141,23 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   time_t the_time;
   char buf[32];
 
-  gtk_menu_append (GTK_MENU (state_menu), 
-		   gtk_menu_item_new_with_label (_("Not started")));
-  gtk_menu_append (GTK_MENU (state_menu), 
-		   gtk_menu_item_new_with_label (_("In progress")));
-  gtk_menu_append (GTK_MENU (state_menu), 
-		   gtk_menu_item_new_with_label (_("Completed")));
-
+  const char *state_strings[] = { _("Not started"), _("In progress"),
+				  _("Completed") };
+  void (*state_funcs[3])(void) = { state_func_0, state_func_1, state_func_2 };
+  guint i;
+ 
+  for (i = 0; i < 3; i++)
+    {
+      GtkWidget *l = gtk_menu_item_new_with_label (state_strings[i]);
+      gtk_menu_append (GTK_MENU (state_menu), l);
+      gtk_signal_connect (GTK_OBJECT (l), "activate", state_funcs[i], t);
+    }
+		   
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
 
   t->list = list;
   t->item = item;
-  t->state = state;
   
   gtk_widget_set_usize (window, 240, 320);
 
@@ -165,21 +196,28 @@ edit_todo(struct todo_list *list, struct todo_item *item)
 
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
+  gtk_widget_grab_focus (entry_summary);
+
   if (item)
     {
       gint p = 0;
       the_time = item->time;
       gtk_editable_insert_text (GTK_EDITABLE (text), item->what, 
 				strlen (item->what), &p);
+      gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
+      gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);
+      t->state = item->state;
     }
   else
     {
+      t->state = NOT_STARTED;
       time (&the_time);
       gtk_widget_set_sensitive (buttondelete, FALSE);
       gtk_widget_set_sensitive (t->duedate, FALSE);
     }
 
   t->text = text;
+  t->summary = entry_summary;
   
   gtk_object_set_data_full (GTK_OBJECT (window), "todo", t, destroy_user_data);
 

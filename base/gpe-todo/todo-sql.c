@@ -29,14 +29,26 @@ list_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
+static int
+item_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 5)
+    {
+      new_item (atoi (argv[0]), atoi (argv[1]),
+		argv[2], atoi(argv[3]), argv[4]);
+    }
+  return 0;
+}
+
 int
 sql_start (void)
 {
   static const char *schema1_str = 
     "create table todo_lists (uid integer NOT NULL, description text)";
   static const char *schema2_str = 
-    "create table todo_items (uid integer NOT NULL, list integer NOT NULL,"
-    "summary text, description text, state integer, due integer)";
+    "create table todo_items (uid integer NOT NULL, list integer NOT NULL, "
+    "summary text, description text, state integer NOT NULL, " 
+    "due_by text, completed_at text)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -61,6 +73,15 @@ sql_start (void)
 
   if (sqlite_exec (sqliteh, "select uid,description from todo_lists",
 		   list_callback, NULL, &err))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+      return -1;
+    }
+
+  if (sqlite_exec (sqliteh, 
+		   "select uid,list,summary,state,due_by from todo_items",
+		   item_callback, NULL, &err))
     {
       fprintf (stderr, "sqlite: %s\n", err);
       free (err);

@@ -12,17 +12,24 @@ struct todo_item
 {
   time_t time;
   const char *what;
+  const char *summary;
   item_state state;
-
-  struct todo_item *next, *prev;
+  time_t due;
 };
 
 struct todo_list 
 {
   const char *title;
   int id;
-  struct todo_list *next;
-  struct todo_item *items;
+  GList *items;
 
   GtkWidget *widget;
 };
+
+extern GtkWidget *edit_todo(struct todo_list *list, struct todo_item *item);
+extern GSList *lists;
+extern struct todo_list *new_list (int id, const char *title);
+extern GtkWidget *the_notebook;
+extern void add_new_event(struct todo_list *list, time_t t, 
+			  const char *what, item_state state, 
+			  const char *summary);
