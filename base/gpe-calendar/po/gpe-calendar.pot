@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-06-14 00:02+0100\n"
+"POT-Creation-Date: 2002-06-14 19:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,8 +14,36 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: about.c:37
-msgid "OK"
+#: main.c:237
+msgid "New Appointment"
+msgstr ""
+
+#: main.c:239
+msgid "Today"
+msgstr ""
+
+#: main.c:241
+msgid "Future View"
+msgstr ""
+
+#: main.c:242
+msgid "Day View"
+msgstr ""
+
+#: main.c:243
+msgid "Week View"
+msgstr ""
+
+#: main.c:244
+msgid "Month View"
+msgstr ""
+
+#: main.c:245
+msgid "Year View"
+msgstr ""
+
+#: main.c:247
+msgid "Exit"
 msgstr ""
 
 #: event-ui.c:338
@@ -177,4 +205,8 @@ msgstr ""
 
 #: event-ui.c:730
 msgid "week(s)"
+msgstr ""
+
+#: about.c:37
+msgid "OK"
 msgstr ""

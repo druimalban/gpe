@@ -31,6 +31,8 @@
 #define PIXMAPS_DIR PREFIX "/share/gpe/pixmaps"
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-calendar/pixmaps"
 
+#define _(_x) gettext (_x)
+
 extern void about (void);
 
 GdkFont *timefont;
@@ -232,17 +234,17 @@ main(int argc, char *argv[])
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
 
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New Appointment", "New Appointment", "New Appointment", GTK_WIDGET (new_pixmap), new_appointment, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Appointment"), _("New Appointment"), _("New Appointment"), GTK_WIDGET (new_pixmap), new_appointment, NULL);
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Today", "Today", "Today", GTK_WIDGET (today_pixmap), set_today, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"), _("Today"), _("Today"), GTK_WIDGET (today_pixmap), set_today, NULL);
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Future View", "Future View", "Future View", GTK_WIDGET (future_pixmap), set_future_view, NULL);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Day View", "Day View", "Day View", GTK_WIDGET (day_pixmap), set_day_view, NULL);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Week View", "Week View", "Week View", GTK_WIDGET (week_pixmap), set_week_view, NULL);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Month View", "Month View", "Month View", GTK_WIDGET (month_pixmap), set_month_view, NULL);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Year View", "Year View", "Year View", GTK_WIDGET (year_pixmap), set_year_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Future View"), _("Future View"), _("Future View"), GTK_WIDGET (future_pixmap), set_future_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Day View"), _("Day View"), _("Day View"), GTK_WIDGET (day_pixmap), set_day_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Week View"), _("Week View"), _("Week View"), GTK_WIDGET (week_pixmap), set_week_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Month View"), _("Month View"), _("Month View"), GTK_WIDGET (month_pixmap), set_month_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Year View"), _("Year View"), _("Year View"), GTK_WIDGET (year_pixmap), set_year_view, NULL);
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Exit", "Exit", "Exit", GTK_WIDGET (exit_pixmap), gtk_exit, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), _("Exit"), _("Exit"), GTK_WIDGET (exit_pixmap), gtk_exit, NULL);
 
   time (&viewtime);
   week = week_view ();
@@ -272,3 +274,4 @@ main(int argc, char *argv[])
 
   return 0;
 }
+
