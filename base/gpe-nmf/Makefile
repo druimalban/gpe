@@ -4,7 +4,7 @@ DEBUG = no
 CVSBUILD = yes
 GST = yes
 GST_VERSION = 0.8
-VERSION = 0.19
+VERSION = 0.20
 
 MEMBERS = gpe-nmf playlist_edit
 
