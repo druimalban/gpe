@@ -33,7 +33,7 @@ static char *const cvsid = "$Id$" ;
 #include "demineur.h"
 #include "xdemineur.h"
 
-#include "xdemineur.xbm"
+#include "xdemineur.xpm"
 
 #include "pixmaps/face_normal.xpm"
 #include "pixmaps/face_click.xpm"
@@ -147,9 +147,9 @@ extern state_t           state ;
 static Display   *display ;
 static int       screen ;
 static Window    window ;
-static Pixmap    icon_bitmap ;
 static Atom      protocol[1] ;
 static GC        gc ;
+static Pixmap	 icon_pixmap, icon_mask;
 
 static unsigned long black , white , gray , light_gray ;
 
@@ -166,6 +166,7 @@ void xdemineur_initialize ( int argc , char **argv ,
    int             x_pos = 0 , y_pos = 0 ,
                    width = MIN_WIDTH , height = MIN_HEIGHT ;
    char            *window_title = "xdémineur" , *icon_title = "xdémineur" ;
+   char		   *utf8_title = "xdÃ©mineur";
    XTextProperty   window_name , icon_name ;
    XWMHints        wm_hints ;
    XClassHint      class_hints ;
@@ -272,15 +273,16 @@ void xdemineur_initialize ( int argc , char **argv ,
    size_hints.base_width  = BASE_WIDTH ;
    size_hints.base_height = BASE_HEIGHT ;
 
-   icon_bitmap = XCreateBitmapFromData ( display ,
-                                         RootWindow ( display , screen ) ,
-                                         xdemineur_bits ,
-                                         xdemineur_width , xdemineur_height ) ;
-
-   wm_hints.flags         = InputHint | StateHint | IconPixmapHint | WindowGroupHint;
+   XpmCreatePixmapFromData ( display ,
+			     RootWindow ( display , screen ) ,
+			     xdemineur_bits ,
+			     &icon_pixmap, &icon_mask, NULL);
+   
+   wm_hints.flags         = InputHint | StateHint | IconPixmapHint | IconMaskHint | WindowGroupHint;
    wm_hints.input         = True ;
    wm_hints.initial_state = NormalState ;
-   wm_hints.icon_pixmap   = icon_bitmap ;
+   wm_hints.icon_pixmap   = icon_pixmap ;
+   wm_hints.icon_mask     = icon_mask ;
    wm_hints.window_group  = window ;
 
    class_hints.res_name  = argv[0] ;
@@ -292,6 +294,16 @@ void xdemineur_initialize ( int argc , char **argv ,
                       &size_hints , &wm_hints , &class_hints ) ;
 
    XSetCommand ( display , window , argv , argc ) ;
+
+   XChangeProperty (display, window,
+		    XInternAtom (display, "_NET_WM_NAME", False),
+		    XInternAtom (display, "UTF8_STRING", False),
+		    8, PropModeReplace, utf8_title, strlen (utf8_title));
+
+   XChangeProperty (display, window,
+		    XInternAtom (display, "_NET_WM_ICON_NAME", False),
+		    XInternAtom (display, "UTF8_STRING", False),
+		    8, PropModeReplace, utf8_title, strlen (utf8_title));
 
    protocol[0] = XInternAtom ( display , "WM_DELETE_WINDOW" , False ) ;
    XSetWMProtocols ( display , window , protocol , 1 ) ;
@@ -1003,7 +1015,8 @@ void xdemineur_end ( )
    XFreePixmap ( display , mine_false ) ;
 
    XFreeGC ( display , gc ) ;
-   XFreePixmap ( display , icon_bitmap ) ;
+   XFreePixmap ( display , icon_pixmap ) ;
+   XFreePixmap ( display , icon_mask ) ;
    XDestroyWindow ( display , window ) ;
    XCloseDisplay ( display ) ;
 }

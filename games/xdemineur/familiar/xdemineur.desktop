@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=xdémineur
+Comment=Minesweeper-like game
+Exec=xdemineur
+Terminal=0
+Type=Application
+Icon=xdemineur.png
+Categories=Games
+StartupNotify=False

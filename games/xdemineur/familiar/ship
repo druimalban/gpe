@@ -6,9 +6,11 @@ mkdir -p $DIST/CONTROL
 mkdir -p $DIST/usr/bin
 mkdir -p $DIST/usr/lib/menu
 mkdir -p $DIST/usr/share/pixmaps
+mkdir -p $DIST/usr/share/applications
 
 install -s xdemineur $DIST/usr/bin
 install -m 644 familiar/menu $DIST/usr/lib/menu/xdemineur
+install -m 644 familiar/xdemineur.desktop $DIST/usr/share/applications/
 install -m 644 familiar/xdemineur.png $DIST/usr/share/pixmaps/
 
 install -m 644 familiar/control $DIST/CONTROL
@@ -16,4 +18,3 @@ install familiar/postinst $DIST/CONTROL
 install familiar/postrm $DIST/CONTROL
 
 fakeroot ipkg-build familiar/dist
-
