@@ -1,5 +1,5 @@
 PREFIX = /usr/local
-PROGRAM = gpe-tetris
+PACKAGE = gpe-tetris
 OBJS = misc.o highscore.o tetris.o interface.o
 BIN_PATH = $(DESTDIR)$(PREFIX)/bin
 HIGHSCORE_PATH = $(PREFIX)/share/gpe-tetris
@@ -13,7 +13,7 @@ VERSION = 0.6-2
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-PACKAGE_CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 PACKAGE_LDFLAGS = $(GTKLDFLAGS)
 
 ifeq ($(DEBUG),yes)
@@ -32,10 +32,10 @@ endif
 PACKAGE_LDFLAGS += -lgpewidget
 
 all: $(OBJS)
-	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(PACKAGE_LDFLAGS)
+	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PACKAGE) $(PACKAGE_LDFLAGS)
 
 clean: 
-	rm -f *.o $(PROGRAM)
+	rm -f *.o $(PACKAGE)
 
 install-program: all
 	install -d $(BIN_PATH)
@@ -44,14 +44,14 @@ install-program: all
 	install -m 644 pixmaps/stop.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/stop.png
 	install -m 644 pixmaps/pause.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/pause.png
 	install -m 644 pixmaps/highscores.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/highscores.png
-	install -s $(PROGRAM) $(BIN_PATH)/$(PROGRAM)
+	install -s $(PACKAGE) $(BIN_PATH)/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 gpe-tetris.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -m 644 gpe-tetris.png $(DESTDIR)$(PREFIX)/share/pixmaps/
 
 uninstall:
-	rm -i $(BIN_PATH)/$(PROGRAM)
+	rm -i $(BIN_PATH)/$(PACKAGE)
 	rm -i $(HIGHSCORE_FILE)
 	rmdir $(HIGHSCORE_PATH)
 
