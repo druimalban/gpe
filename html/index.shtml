@@ -24,7 +24,7 @@ infrastructure.
 Part of the GPE environment is about core software such as the GUI
 toolkit, and necessary libraries which largely already exist.  The
 other, perhaps more important part is fixing standards for program
-interaction, such as SQL, XML and other data schemas.
+interaction, such as SQL, XML, and other data schemas.
 </p>
 
 <!--#include virtual="includes/foot.shtml"-->
