@@ -119,11 +119,20 @@ gpe_export_vcard (sqlite *db, guint uid)
   return vcard;
 }
 
+#define insert(a,b) \
+	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
+				  NULL, NULL, &err, \
+				  id, a, b)) \
+	    goto error;
+
+
 gboolean
 gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 {
   char *err;
   guint id;
+  struct tag_map *t = &map[0];
+  GSList *l;
 
   if (sqlite_exec (db, "begin transaction", NULL, NULL, &err))
     {
@@ -139,6 +148,54 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
   id = sqlite_last_insert_rowid (db);
 
   fprintf (stderr, "uid is %d\n", id);
+
+  while (t->tag)
+    {
+      gchar *value;
+      g_object_get (G_OBJECT (vcard), t->vc ? t->vc : t->tag, &value, NULL);
+      if (value)
+	{
+	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')",
+				  NULL, NULL, &err,
+				  id, t->tag, value))
+	    goto error;
+	}
+      t++;
+    }
+
+  l = NULL;
+  g_object_get (G_OBJECT (vcard), "address-list", &l, NULL);
+  while (l)
+    {
+      MIMEDirVCardAddress *address;
+      gchar *s = NULL;
+      gboolean home = FALSE, work = FALSE;
+      address = l->data;
+      g_object_get (G_OBJECT (address), "full", &s, NULL);
+      if (s)
+	{
+	  g_object_get (G_OBJECT (address), "home", &home, NULL);
+	  g_object_get (G_OBJECT (address), "work", &work, NULL);
+	  if (home)
+	    insert ("home.address", s);
+	  if (work)
+	    insert ("work.address", s);
+	}
+      l = g_slist_next (l);
+    }
+
+  g_object_get (G_OBJECT (vcard), "email-list", &l, NULL);
+  while (l)
+    {
+      MIMEDirVCardEMail *email;
+      l = g_slist_next (l);
+    }
+  g_object_get (G_OBJECT (vcard), "phone-list", &l, NULL);
+  while (l)
+    {
+      MIMEDirVCardPhone *phone;
+      l = g_slist_next (l);
+    }
 
   if (sqlite_exec (db, "commit transaction", NULL, NULL, &err))
     {

@@ -49,6 +49,10 @@ main (int argc, char *argv[])
   guint uid;
   MIMEDirVCard *vcard;
   gchar *str;
+  GError *err = NULL;
+  GIOChannel *channel;
+  FILE *fp;
+  char line[256];
 
   g_type_init ();
 
@@ -65,8 +69,20 @@ main (int argc, char *argv[])
 
   vcard = gpe_export_vcard (db, uid);
 
-  str = mimedir_vcard_get_as_string (vcard);
-  printf ("%s\n", str);
+  fp = tmpfile ();
+  channel = g_io_channel_unix_new (fileno (fp));
+  if (mimedir_vcard_write_to_channel (vcard, channel, &err) == FALSE)
+    {
+      fprintf (stderr, "%s\n", err->message);
+      g_clear_error (&err);
+    }
+
+  rewind (fp);
+  while (fgets (line, sizeof (line), fp))
+    {
+      puts (line);
+    }
+  fclose (fp);
 
   exit (0);
 }
