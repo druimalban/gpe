@@ -1,26 +1,12 @@
 PREFIX = /usr/local
 DEBUG = no
+VERSION = 0.2
 
 MEMBERS = soundgen
-
-ifeq ($(GTK2),yes)
 SONAME = libsoundgen.so.1
-CONTROL = control1
-else
-SONAME = libsoundgen.so.0
-CONTROL = control
-endif
 
-ifeq ($(GTK2),yes)
-GLIBCFLAGS = `pkg-config --cflags glib-2.0`
-GLIBLDFLAGS += `pkg-config --libs glib-2.0`
-else
-GLIBCFLAGS = `glib-config --cflags`
-GLIBLDFLAGS = `glib-config --libs`
-endif
-
-CFLAGS += -Wall $(GLIBCFLAGS)
-LDFLAGS += $(GLIBLDFLAGS) -lm -lesd
+CFLAGS += -Wall
+LDFLAGS += -lm -lesd
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
