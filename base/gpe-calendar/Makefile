@@ -17,7 +17,7 @@ GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 GTKLDFLAGS = `gtk-config --libs`
 endif
 
-CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb
+CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb -I../libschedule
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g 
@@ -44,7 +44,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -leventdb -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -L../libeventdb -leventdb -L../libschedule -lschedule -lsqlite $(LDFLAGS)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

@@ -1,5 +1,10 @@
 2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* event-ui.c: use libschedule
+	* familiar/control*: likewise
+	
+2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* week_view.c: fix declaration locations so it builds on ipaq cluster
 	* event-ui.c: likewise
 	* month_view.c: likewise

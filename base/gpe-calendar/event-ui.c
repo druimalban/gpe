@@ -27,6 +27,7 @@
 #include <gpe/gtksimplemenu.h>
 #include <gpe/event-db.h>
 #include <gpe/spacing.h>
+#include <gpe/schedule.h>
 
 #include "globals.h"
 #include "event-ui.h"
@@ -170,63 +171,12 @@ recalculate_sensitivities (GtkWidget *widget,
 }
 
 static void
-schedule_alarm(event_t ev, time_t start)
-{
-  time_t alarm_t;
-  event_details_t ev_d;
-  char filename[256];
-  FILE *f;
-
-  alarm_t = start-60*ev->alarm;
-  ev_d = event_db_get_details (ev);
-
-  sprintf(filename, "/var/spool/at/%ld.%ld.%ld", (long)alarm_t, ev->uid,
-                  (long)(getuid()));
-
-  if ((f=fopen(filename, "w")))
-  {
-    fprintf(f, "#!/bin/sh\n");
-    fprintf(f, "export DISPLAY=:0.0\n");
-    fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
-    fprintf(f, "/usr/bin/gpe-calendar -s %ld -e %ld &\n", (long)alarm_t, ev->uid);
-    fprintf(f, "/bin/rm $0\n");
-
-    fclose(f);
-
-    chmod (filename, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
-
-    f=NULL;
-    f=fopen("/var/spool/at/trigger","w");
-    if (f != NULL)
-    {
-      fprintf(f,"\n");
-      fclose(f);
-    }
-  }
-}
-
-static void
 unschedule_alarm(event_t ev)
 {
-  time_t alarm_t;
-  char filename[256], command[256];
-  FILE *f;
+  event_t ev_real = (event_t)ev->cloned_ev;
 
-  alarm_t = ev->start-60*ev->alarm;
-
-  sprintf(filename, "/var/spool/at/%ld.%ld.%ld", (long)alarm_t, ev->uid,
-                  (long)(getuid()));
-  sprintf(command, "rm %s", filename);
-  system(command);
-
-  f=NULL;
-  f=fopen("/var/spool/at/trigger","w");
-  if (f != NULL)
-  {
-    fprintf(f,"\n");
-    fclose(f);
-  }
-
+  if (!schedule_cancel_alarm (ev_real->uid, ev->start)) printf("ack!\n");
+	     
 }
 
 void
@@ -235,7 +185,9 @@ schedule_next(guint skip, guint uid)
   GSList *events=NULL, *iter;
   struct tm tm;
   time_t end, start=time(NULL);
-
+  event_details_t ev_d;
+  gchar action[256];
+  
   localtime_r (&start, &tm);
   tm.tm_year++;
   end=mktime (&tm);
@@ -248,10 +200,13 @@ schedule_next(guint skip, guint uid)
 
       if (ev->flags & FLAG_ALARM) {
         ev_real = (event_t)ev->cloned_ev;
-        if (((int)(ev->start) != (int)skip) && (uid!=ev->uid))
+        ev_d = event_db_get_details (ev_real);
+	if (((int)(ev->start) != (int)skip) && (uid!=ev_real->uid))
           {
-            schedule_alarm (ev_real, ev->start);
-            break;
+             sprintf(action, "/usr/bin/gpe-announce '%s'\n/usr/bin/gpe-calendar -s %ld -e %ld &\n ",
+			     ev_d->summary, (long)ev->start, ev_real->uid);
+    	     if (!schedule_set_alarm (ev->uid, ev->start, action)) printf("ack!\n");
+	     break;
           }
       }
     }
@@ -291,7 +246,7 @@ click_delete (GtkWidget *widget, event_t ev)
 	{			  
 		if (ev_real->flags & FLAG_ALARM)
 		{
-	  	unschedule_alarm (ev_real);
+	  	unschedule_alarm (ev);
 	  	schedule_next(0,0);
 		}
 
@@ -309,7 +264,7 @@ click_delete (GtkWidget *widget, event_t ev)
   {			  
 	if (ev_real->flags & FLAG_ALARM)
 	{
-		unschedule_alarm (ev_real);
+		unschedule_alarm (ev);
 	  	schedule_next(0,0);
 	}
 
@@ -338,7 +293,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
       ev = (event_t)(s->ev->cloned_ev);
       ev_d = event_db_get_details (ev);
       if (ev->flags & FLAG_ALARM)
-        unschedule_alarm (ev);
+        unschedule_alarm (s->ev);
       ev_d->sequence++;
     }
   else

@@ -4,6 +4,6 @@ Priority: optional
 Version: 0.29
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libsqlite0, gpe-icons (>= 0.14), libgpewidget0 (>= 0.08), atd, libxsettings-client0
+Depends: libsqlite0, gpe-icons (>= 0.14), libgpewidget0 (>= 0.08), atd, libxsettings-client0, libschedule0
 Description: GPE calendar
 Provides: gpe-calendar
