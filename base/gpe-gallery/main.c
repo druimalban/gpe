@@ -452,6 +452,9 @@ render_list_view_button_press_event (GtkWidget *widget, GdkEventButton *event, G
   if (event->button != 1)
     return FALSE;
 
+  if (loaded_images == NULL)
+    return FALSE;
+
   this_item = loaded_images;
 
   while (current_y <= target_y)
@@ -485,6 +488,9 @@ render_list_view_button_release_event (GtkWidget *widget, GdkEventButton *event,
   guint target_y = event->y;
 
   if (event->button != 1)
+    return FALSE;
+
+  if (loaded_images == NULL)
     return FALSE;
 
   this_item = loaded_images;
@@ -640,7 +646,7 @@ render_list_view ()
 	g_object_unref (list_item->pixbuf);
 	list_item->pixbuf = pixbuf;
       }
-    }
+    
 
     list_item->pango_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (list_item->pango_layout, -1);
@@ -657,6 +663,7 @@ render_list_view ()
 
     while (gtk_events_pending ())
       gtk_main_iteration ();
+   }
   }
 
   g_signal_connect (G_OBJECT (drawing_area), "expose_event", 
