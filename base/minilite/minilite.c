@@ -269,7 +269,7 @@ integral_set_level(int level)
   FILE *f_light;
   
   f_light = fopen(PROC_LIGHT,"w");
-  if (f_light >= 0)
+  if (f_light != NULL)
   {
   	fprintf(f_light,"%i\n", level);
   	fclose(f_light);
@@ -286,7 +286,7 @@ integral_get_level(void)
   int level;
   
   f_light = fopen(PROC_LIGHT,"r");
-  if (f_light >= 0)
+  if (f_light != NULL)
   {
   	fscanf(f_light,"%i", &level);
   	fclose(f_light);

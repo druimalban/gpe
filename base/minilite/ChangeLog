@@ -1,3 +1,7 @@
+2004-06-23	Florian Boor <florian.boor@kernelconcepts.de>
+	* minilite.c: Fixed bug causing segfault if integral_set_level()
+	  is called on other platforms.
+	
 2004-06-22	Florian Boor <florian.boor@kernelconcepts.de>
 	* fixed evil bug
 	* eleased V 0.42
