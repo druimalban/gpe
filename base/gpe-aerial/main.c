@@ -891,7 +891,7 @@ main (int argc, char *argv[])
 			      G_TYPE_BOOLEAN, G_TYPE_POINTER, G_TYPE_STRING);
 
   window = gtk_plug_new (0);
-  gtk_widget_set_usize (window, 20, 16);
+  gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
   gtk_window_set_title (GTK_WINDOW (window), _("Wireless LAN control"));
