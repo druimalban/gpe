@@ -55,7 +55,7 @@ file_stream_close (struct stream *s)
   g_free (s);
 }
 
-void
+int
 file_stream_seek (struct stream *s, int64_t offset, int whence)
 {
   struct file_stream *f = (struct file_stream *)s;

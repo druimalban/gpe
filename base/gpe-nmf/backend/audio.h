@@ -19,5 +19,6 @@ extern gboolean audio_write (audio_t, void *, size_t);
 extern void audio_close (audio_t);
 extern void audio_set_rate (audio_t, guint);
 extern void audio_set_volume (audio_t, guint);
+extern void audio_set_channels (audio_t, guint);
 
 #endif

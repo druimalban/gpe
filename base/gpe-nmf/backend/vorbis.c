@@ -36,6 +36,8 @@ struct vorbis_context
   vorbis_info *vi;
   int current_section;
 
+  unsigned int rate;
+  unsigned int channels;
   unsigned long long time;
   unsigned long long total_time;
 
@@ -79,6 +81,16 @@ vorbis_play_loop (void *vv)
 	  v->vi = ov_info(&v->vf, -1);
 	  v->total_time = ov_pcm_total (&v->vf, -1);
 	  v->bos = 0;
+	  if (v->rate != v->vi->rate)
+	    {
+	      v->rate = v->vi->rate;
+	      audio_set_rate (v->audio, v->rate);
+	    }
+	  if (v->channels != v->vi->channels)
+	    {
+	      v->channels = v->vi->channels;
+	      audio_set_channels (v->audio, v->channels);
+	    }
 	}
 
       old_section = v->current_section;
@@ -172,6 +184,8 @@ vorbis_open (struct stream *s, audio_t audio)
   v->time = 0;
   v->total_time = 0;
   v->bos = 1;
+  v->channels = 0;
+  v->rate = 0;
   
   ret = pthread_create (&v->thread, 0, vorbis_play_loop, v);
   if (ret < 0)
@@ -203,6 +217,7 @@ vorbis_stats (struct vorbis_context *v, struct decoder_stats *ds)
   ds->finished = v->eos;
   ds->time = v->time;
   ds->total_time = v->total_time;
+  ds->rate = v->rate;
 }
 
 extern gboolean playlist_fill_ogg_data (struct playlist *p);

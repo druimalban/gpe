@@ -35,6 +35,10 @@ struct mad_context
   size_t bufsiz;
 
   unsigned long bytes_read;
+  unsigned int rate;
+  unsigned int channels;
+  unsigned long long time;
+  unsigned long long total_time;
 
   char buffer[MADBUFSIZ];
 };
@@ -132,6 +136,19 @@ enum mad_flow output(void *data,
   left_ch   = pcm->samples[0];
   right_ch  = pcm->samples[1];
 
+  if (pcm->samplerate != c->rate)
+    {
+      c->rate = pcm->samplerate;
+      audio_set_rate (c->audio, pcm->samplerate);
+    }
+  if (nchannels != c->channels)
+    {
+      c->channels = nchannels;
+      audio_set_channels (c->audio, nchannels);
+    }
+
+  c->time += nsamples / nchannels;
+
   while (nsamples--) {
     signed int sample;
 
@@ -208,6 +225,9 @@ mad_open (struct stream *s, audio_t audio)
   c->s = s;
   c->finished = FALSE;
   c->bytes_read = 0;
+  c->time = c->total_time = 0;
+  c->channels = 0;
+  c->rate = 0;
 
   mad_decoder_init (&c->decoder, c,
 		    input, 0 /* header */, 0 /* filter */, output,
@@ -239,6 +259,9 @@ static void
 mad_stats (struct mad_context *c, struct decoder_stats *ds)
 {
   ds->finished = c->finished;
+  ds->rate = c->rate;
+  ds->time = c->time;
+  ds->total_time = c->total_time;
 }
 
 extern gboolean playlist_fill_id3_data (struct playlist *);
