@@ -15,5 +15,4 @@ ipaqscreen_SOURCES = \
 	calibrate.c calibrate.h \
 	rotation.c rotation.h
 
-ipaqscreen_LDADD = @GTK_LIBS@ $(INTLLIBS)
-
+ipaqscreen_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@ $(INTLLIBS)
