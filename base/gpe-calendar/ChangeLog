@@ -1,5 +1,10 @@
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (LINGUAS): Add pt, de.
+
+	* po/pt.po: New file from Translation Project, courtesy Luis
+	Oliveira.
+
 	* event-ui.c: Replace GtkObject with GObject.  Patch from
 	Christian Meyer <chrisime@gnome-de.org>.
 
