@@ -2,6 +2,10 @@
 
 	* Version 0.16 released.
 
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add de.
+
 2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install): Remove, let Makefile.dpkg_ipkg provide it.

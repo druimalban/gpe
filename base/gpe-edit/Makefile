@@ -6,7 +6,7 @@ GTK2 = yes
 VERSION = 0.16
 
 MEMBERS = main
-LINGUAS = id pt
+LINGUAS = id pt de
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
