@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case "$1" in
+	start)
+		echo "Setting up D-BUS hotplug"
+		echo "/sbin/hotplug-dbus" >/proc/sys/kernel/hotplug
+		;;
+esac

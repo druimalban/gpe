@@ -1,0 +1,8 @@
+Package: hotplug-dbus
+Version: VERSION
+Architecture: all
+Section: base
+Priority: optional
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: dbus-1
+Description: Forward hotplug events to D-BUS

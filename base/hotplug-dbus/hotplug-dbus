@@ -1,0 +1,16 @@
+#!/bin/sh
+
+MESSAGE="org.handhelds.gpe.hotplug"
+
+invoke_hotplug () 
+{
+  cmd="dbus-send --system $MESSAGE"
+  while [ $# -gt 0 ]; do
+    cmd="$cmd :$1"
+    shift
+  done
+  eval $cmd
+}
+
+invoke_hotplug $*
+exec /sbin/hotplug $*
