@@ -1,3 +1,13 @@
+2002-06-22  Philip Blundell  <philb@gnu.org>
+
+	* gtkminifilesel.c (gtk_mini_file_selection_get_filename): Don't
+	append a slash to directory name if it was "/".
+	(enter_struck): New function.
+	(gtk_mini_file_selection_init): Call it when user presses RETURN.
+	(set_members): Omit anything starting with '.'.
+	(selection_made): Handle "/" directory specially.  Put focus back
+	in entry widget.
+
 2002-06-21  Philip Blundell  <pb@debian.org>
 
 	* render.c (gpe_render_pixmap): Render with no alpha if passed

@@ -157,23 +157,23 @@ set_members (GtkMiniFileSelection *fs)
     {
       while (d = readdir (dir), d != NULL)
 	{
-	  struct stat s;
-	  strcpy (fp, d->d_name);
-	  if (stat (buf, &s) == 0)
+	  if (d->d_name[0] != '.')
 	    {
-	      if (S_ISDIR (s.st_mode))
+	      struct stat s;
+	      strcpy (fp, d->d_name);
+	      if (stat (buf, &s) == 0)
 		{
-		  if (strcmp (d->d_name, "..") && strcmp (d->d_name, "."))
+		  if (S_ISDIR (s.st_mode))
 		    {
 		      gchar *fn = g_malloc (strlen (d->d_name) + 3);
 		      sprintf (fn, "%s", d->d_name);
 		      subdirs = g_slist_append (subdirs, fn);
 		    }
-		}
-	      else
-		{
-		  gchar *fn = g_strdup (d->d_name);
-		  files = g_slist_append (files, fn);
+		  else
+		    {
+		      gchar *fn = g_strdup (d->d_name);
+		      files = g_slist_append (files, fn);
+		    }
 		}
 	    }
 	}
@@ -251,10 +251,15 @@ selection_made(GtkWidget      *clist,
 	  {
 	    size_t l = strlen (text);
 	    size_t dl = strlen (fs->directory);
-	    gchar *s = malloc (strlen (text) + strlen (fs->directory) + 2);
-	    strcpy (s, fs->directory);
-	    strcat (s, "/");
-	    strcat (s, text);
+	    gchar *s = malloc (l + dl + 2);
+	    gchar *p = s;
+	    if (strcmp (fs->directory, "/"))
+	      {
+		dl = strlen (fs->directory);
+		p = stpcpy (s, fs->directory);
+	      }
+	    *p++ = '/';
+	    strcpy (p, text);
 	    set_directory (fs, s);
 	    break;
 	  }
@@ -280,12 +285,34 @@ selection_made(GtkWidget      *clist,
       if (type == 0)
 	gtk_entry_set_text (GTK_ENTRY (fs->entry), text);
     }
+
+  gtk_widget_grab_focus (fs->entry);
 }
 
 static void
 emit_completed (GtkWidget *w, gpointer p)
 {
   gtk_signal_emit (GTK_OBJECT (p), signals[COMPLETED]);
+}
+
+static void
+enter_struck (GtkWidget *w, gpointer p)
+{
+  gchar *path = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (p));
+  struct stat s;
+  
+  if (stat (path, &s) == 0)
+    {
+      if (S_ISDIR (s.st_mode))
+	{
+	  char *dp = strdup (path);
+	  set_directory (p, dp);
+	  g_free (path);
+	  return;
+	}
+    }
+
+  gtk_signal_emit (GTK_OBJECT (p), signals[COMPLETED]);  
 }
 
 static void
@@ -335,7 +362,7 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
 
   gtk_signal_connect (GTK_OBJECT (fs->ok_button), "clicked", 
 		      emit_completed, fs);
-  gtk_signal_connect (GTK_OBJECT (fs->entry), "activate", emit_completed, fs);
+  gtk_signal_connect (GTK_OBJECT (fs->entry), "activate", enter_struck, fs);
 
   fs->directory = NULL;
   set_directory (fs, get_current_dir_name ());
@@ -411,10 +438,19 @@ gtk_mini_file_selection_new (const gchar *title)
 gchar *
 gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs)
 {
-  size_t dl = strlen (fs->directory);
   gchar *chars = gtk_editable_get_chars (GTK_EDITABLE (fs->entry), 0, -1);
-  gchar *buf = g_malloc (strlen (chars) + dl + 2);
-  sprintf (buf, "%s/%s", fs->directory, chars);
-  g_free (chars);
-  return buf;
+
+  if (chars[0] != '/')
+    {
+      size_t dl = strlen (fs->directory);
+      gchar *buf = g_malloc (strlen (chars) + dl + 2);
+      if (strcmp (fs->directory, "/"))
+	sprintf (buf, "%s/%s", fs->directory, chars);
+      else
+	sprintf (buf, "/%s", chars);
+      g_free (chars);
+      return buf;
+    }
+
+  return chars;
 }
