@@ -1,3 +1,9 @@
+2004-01-28  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Remember $DISPLAY.
+	(do_login): Clear out the environment, then set DISPLAY as well as
+	HOME, USER, LANG and SHELL.
+
 2004-01-17  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.57 released.

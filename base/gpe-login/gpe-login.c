@@ -67,6 +67,7 @@ static pid_t kbd_pid;
 static const char *xkbd_path = "xkbd";
 static const char *xkbd_str;
 static gboolean force_xkbd;
+static const char *display;
 
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
@@ -403,10 +404,12 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
       exit(1);
     }
 
+  clearenv ();
   setenv ("SHELL", shell, 1);
   setenv ("HOME", dir, 1);
   setenv ("USER", name, 1);
   setenv ("LANG", current_locale->locale, 1);
+  setenv ("DISPLAY", display, 1);
 
   chdir (dir);
 
@@ -1392,6 +1395,8 @@ main (int argc, char *argv[])
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
+
+  display = getenv ("DISPLAY");
 
   /* (LanguageCode) */
   /* TRANSLATORS: please replace this with your own Pango language code: */
