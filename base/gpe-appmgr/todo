@@ -3,5 +3,4 @@
    (in case of CF card insertion)
 4) appmgr popup thing, --directory=, --autoclose?
 	-> thing for Q-Menu perhaps as well?
-5) use key-release-event signal to do up/down scrolling
 * set preferred image size: 32x32, 48x48
