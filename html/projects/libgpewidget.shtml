@@ -113,7 +113,7 @@ In the commonest case, only the <CODE>shortname</CODE> needs to be
     provided.  This is the string that you will later pass to
     <CODE>gpe_find_icon</CODE> to retrieve the image data;
     libgpewidget will search for a file named
-    <CODE>shortname.png<CODE>, first in <CODE>~/.gpe/pixmaps</CODE> and
+    <CODE>shortname.png</CODE>, first in <CODE>~/.gpe/pixmaps</CODE> and
 	then in <CODE>PREFIX/share/gpe/pixmaps/default</CODE>.
 </p>
 
