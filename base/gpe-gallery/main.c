@@ -708,7 +708,11 @@ render_view (GtkWidget *parent, gint view)
 
   if (image_widget)
   {
-    g_object_unref (scaled_image_pixbuf);
+    if (scaled_image_pixbuf)
+      {
+	g_object_unref (scaled_image_pixbuf);
+	scaled_image_pixbuf = NULL;
+      }
 
     gtk_widget_hide (image_widget);
     gtk_widget_hide (image_event_box);
