@@ -48,6 +48,9 @@ gdouble xcentre = 0;
 gdouble ycentre = 0;
 gdouble zoom = 1;
 signed long juliax, juliay;
+guint timeout = 0;
+gint zoomx, zoomy;
+gboolean already_zoomed = FALSE;
 
 enum mode_type {
   mode_julia,
@@ -139,17 +142,8 @@ void choose_julia (gint pixelx, gint pixely)
 
 void choose_centre (gint pixelx, gint pixely)
 {
-  if (zoom <= 1.02)
-    {
-      zoom = 1;
-      xcentre = 0;
-      ycentre = 0;
-    }
-  else
-    {
-      xcentre = ((pixelx*(1<<16)/width) - (1<<15))/zoom + xcentre;
-      ycentre = ((pixely*(1<<16)/height) - (1<<15))/zoom + ycentre;
-    }
+  xcentre = ((pixelx*(1<<16)/width) - (1<<15))/zoom + xcentre;
+  ycentre = ((pixely*(1<<16)/height) - (1<<15))/zoom + ycentre;
 }
 
 void
@@ -251,6 +245,12 @@ void zoom_in (gint pixelx, gint pixely, double zoomfactor)
 void zoom_out (gint pixelx, gint pixely, double zoomfactor)
 {
   zoom = zoom / zoomfactor;
+  if (zoom <= 1.01)
+    {
+      zoom = 1;
+      xcentre = 0;
+      ycentre = 0;
+    }
   choose_centre (pixelx, pixely);
   draw_init ();
   draw ();
@@ -266,22 +266,54 @@ motion_notify (GtkWidget *widget, GdkEventMotion *motion, gpointer *data)
       current_fractal = fractal_julia;
       draw_julia ();
       redraw ();
+      gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
     }
-  else if (current_mode == mode_zoom_in)
+}
+
+gboolean timeout_event (gpointer data)
+{
+  gint x, y;
+  GtkWidget *widget = GTK_WIDGET (data);
+
+  gdk_window_get_pointer (widget->window, &x, &y, NULL);
+
+  already_zoomed = TRUE;
+
+  if (current_mode == mode_zoom_in)
     {
-      zoom_in (motion->x, motion->y, 1.1);
+      zoom_in (x, y, 1.02);
     }
-  else
+  else if (current_mode == mode_zoom_out)
     {
-      zoom_in (motion->x, motion->y, 1.1);
+      zoom_out (x, y, 1.02);
     }
-  gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
+
+#ifdef DEBUG
+  printf ("zooming after timeout\n");
+#endif
+
+  return TRUE;
 }
 
 void
 button_press_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
 {
-  gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
+  if (current_mode == mode_julia)
+    {
+      gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
+    }
+  else if ((current_mode == mode_zoom_in) || (current_mode == mode_zoom_out))
+    {
+      zoomx = button->x;
+      zoomy = button->y;
+/*      choose_centre (zoomx, zoomy); */
+      already_zoomed = FALSE;
+      if (timeout == 0)
+        timeout = g_timeout_add (100, timeout_event, widget);
+#ifdef DEBUG
+      printf ("adding timeout\n");
+#endif
+    }
 }
 
 void
@@ -294,13 +326,24 @@ button_release_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
       draw_julia ();
       redraw ();
     }
-  else if (current_mode == mode_zoom_in)
+  else if (!already_zoomed && (current_mode == mode_zoom_in))
     {
       zoom_in (button->x, button->y, 1.3);
     }
-  else if (current_mode == mode_zoom_out)
+  else if (!(already_zoomed) && (current_mode == mode_zoom_out))
     {
-      zoom_in (button->x, button->y, 1.3);
+      zoom_out (button->x, button->y, 1.3);
+    }
+  if ((current_mode == mode_zoom_in) || (current_mode == mode_zoom_out))
+    {
+      if (timeout != 0)
+      {
+        g_source_remove (timeout);
+        timeout = 0;
+#ifdef DEBUG
+        printf ("removing timeout\n");
+#endif
+      }
     }
 }
 
