@@ -2,13 +2,13 @@
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # Christian Rose <menthos@menthos.com>, 2003.
 #
-# Ska applet vara panelprogram?
+# Applet ska nog vara panelprogram.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.0-pre6\n"
 "POT-Creation-Date: 2003-07-08 20:08+0200\n"
-"PO-Revision-Date: 2003-08-17 16:01+0200\n"
+"PO-Revision-Date: 2003-08-20 01:56+0200\n"
 "Last-Translator: Christian Rose <menthos@menthos.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,13 +35,13 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 "\n"
-"gpe-conf [appletnamn]\n"
-"där appletnamn är i:\n"
+"gpe-conf [panelprogramsnamn]\n"
+"där panelprogramsnamn är i:\n"
 
 #: main.c:385
 #, c-format
 msgid "Applet %s unknown!\n"
-msgstr "Applet %s är okänd!\n"
+msgstr "Panelprogrammet %s är okänt!\n"
 
 #: main.c:386
 msgid ""
@@ -52,8 +52,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Användning: gpe-conf [appletnamn]\n"
-"där appletnamn är i:\n"
+"Användning: gpe-conf [panelprogramsnamn]\n"
+"där panelprogramsnamn är i:\n"
 
 #: applets.c:327
 msgid ""
@@ -1291,23 +1291,23 @@ msgstr "Lokal vändslinga"
 
 #: tools/interface.c:1652
 msgid "Serial Line IP"
-msgstr "IP över seriell lina"
+msgstr "SLIP (Serial Line IP)"
 
 #: tools/interface.c:1653
 msgid "VJ Serial Line IP"
-msgstr "VJ IP över seriell lina"
+msgstr "VJ SLIP (VJ Serial Line IP)"
 
 #: tools/interface.c:1654
 msgid "6-bit Serial Line IP"
-msgstr "6-bitars IP över seriell lina"
+msgstr "6-bitars SLIP (Serial Line IP)"
 
 #: tools/interface.c:1655
 msgid "VJ 6-bit Serial Line IP"
-msgstr "6-bitars VJ IP över seriell lina"
+msgstr "6-bitars VJ SLIP (VJ Serial Line IP)"
 
 #: tools/interface.c:1656
 msgid "Adaptive Serial Line IP"
-msgstr "Adaptiv IP över seriell lina"
+msgstr "Adaptiv SLIP (Serial Line IP)"
 
 #: tools/interface.c:1659
 msgid "Ethernet"
