@@ -1,3 +1,9 @@
+2004-08-18 Nils Faerber <nils.faerber@kernelconcepts.de>
+	* Created a new error dialog box for ipkg errors
+	* Error messages are now redirected into the messages notebook tab
+	* Only *one* ipkg error dialog will pop up even for multiple errors
+	  (until user acknowledges it)
+
 2004-07-29 Florian Boor <florian.boor@kernelconcepts.de>
 	* Released V 0.0.10
 	* Makefile: Fixed version. 

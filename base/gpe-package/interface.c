@@ -69,15 +69,13 @@
 /* --- module global variables --- */
 
 
-typedef struct
-{
+typedef struct {
 	char *name;
 	char *version;
 	char *description;
 	char *color;
 	pkg_state_status_t status;
-}
-description_t;
+} description_t;
 
 static description_t *pkg_info = NULL;
 static int pkg_count = 0;
@@ -87,6 +85,7 @@ int sock;
 static pkcommand_t running_command = CMD_NONE;
 static int pkg_selection_changed = 0;
 static int error = 0;
+static gboolean ErrorDialogOpen = FALSE;
 
 /* --- global widgets --- */
 static GtkWidget *notebook;
@@ -154,19 +153,21 @@ struct gpe_icon my_icons[] = {
 void
 destroy_package_list(description_t *list, int len)
 {
-	while (len)
-	{
-		if (list[len-1].name) g_free(list[len-1].name);
-		if (list[len-1].description) g_free(list[len-1].description);
-		if (list[len-1].version) g_free(list[len-1].version);
+	while (len) {
+		if (list[len-1].name)
+			g_free(list[len-1].name);
+		if (list[len-1].description)
+			g_free(list[len-1].description);
+		if (list[len-1].version)
+			g_free(list[len-1].version);
 		len--;
 	}
-	if (list) g_free(list);
+	if (list)
+		g_free(list);
 }
 
 
-gboolean
-dialog_destroy()
+gboolean dialog_destroy()
 {
 	gtk_widget_destroy(dlgInfo);
 	dlgInfo = NULL;
@@ -182,8 +183,7 @@ do_package_info(const char* name, const char *info)
 	GtkWidget *textview;
 	GtkTextBuffer *buffer;
 	
-	if (dlgInfo == NULL)
-	{
+	if (dlgInfo == NULL) {
 		dlgInfo = gtk_dialog_new_with_buttons(_("Package information"),GTK_WINDOW(fMain),
 				   GTK_DIALOG_DESTROY_WITH_PARENT,
 				   GTK_STOCK_OK,
@@ -203,10 +203,9 @@ do_package_info(const char* name, const char *info)
 		gtk_widget_set_size_request(textview,220,250);
 		gtk_widget_show_all(dlgInfo);
 		g_signal_connect_swapped(dlgInfo,"response",G_CALLBACK(dialog_destroy),NULL);
-	}
-	else
-	{
-		if (!infobuffer) return;
+	} else {
+		if (!infobuffer)
+			return;
 		gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(infobuffer),
 			info,strlen(info));
 	}
@@ -216,10 +215,10 @@ do_package_info(const char* name, const char *info)
 GtkWidget *
 progress_dialog (gchar * text, GdkPixbuf * pixbuf)
 {
-	GtkWidget *window;
-	GtkWidget *label;
-	GtkWidget *image;
-	GtkWidget *hbox;
+GtkWidget *window;
+GtkWidget *label;
+GtkWidget *image;
+GtkWidget *hbox;
 	
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	hbox = gtk_hbox_new (FALSE, 0);
@@ -246,7 +245,7 @@ progress_dialog (gchar * text, GdkPixbuf * pixbuf)
 void
 show_message(GtkMessageType type, char* message)
 {
-	GtkWidget* dialog;
+GtkWidget* dialog;
 	
 	dialog = gtk_message_dialog_new (GTK_WINDOW(fMain),
 					 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -263,49 +262,46 @@ show_message(GtkMessageType type, char* message)
 static void
 send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 {
-	pkmessage_t msg;
-	char *desc;
+pkmessage_t msg;
+char *desc;
 
 	msg.type = PK_BACK;
 	msg.ctype = ctype;
 	
 	/* handle commands */
-	if (msg.ctype == PK_COMMAND)
-	{
+	if (msg.ctype == PK_COMMAND) {
 		running_command = command;
-		switch (command)
-		{
+		switch (command) {
 			case CMD_LIST:
 				desc = _("Reading packages list...");
 				destroy_package_list(pkg_info,pkg_count);
 				pkg_count = 0;
 				pkg_info = NULL;			
-			break;
+				break;
 			case CMD_UPDATE:
 				desc = _("Updating package lists");
-			break;
+				break;
 			case CMD_UPGRADE:
 				desc = _("Upgrading installed system");
-			break;
+				break;
 			case CMD_INSTALL:
 				desc = g_strdup_printf("%s %s", _("Installing"), list);
-			break;
+				break;
 			case CMD_INFO:
 				desc = g_strdup_printf("%s", _("Retrieving package information"));
-			break;
+				break;
 			default:
 				desc = _("Working...");			
-			break;
+				break;
 		}
 		if (!dlgAction)
-			dlgAction = progress_dialog(desc,gpe_find_icon("icon"));			
+			dlgAction = progress_dialog(desc,gpe_find_icon("icon"));
 		gtk_widget_show_all(dlgAction);
 	}
 	msg.content.tb.command = command;
 	snprintf(msg.content.tb.params,LEN_PARAMS,params);
 	snprintf(msg.content.tb.list,LEN_LIST,list);
-	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
-	{
+	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0) {
 		perror ("ERR: sending data to backend");
 	}
 }
@@ -313,20 +309,19 @@ send_message (pkcontent_t ctype, pkcommand_t command, char* params, char* list)
 
 void printlog(GtkWidget *textview, gchar *str)
 {
-	GtkTextBuffer* log;
+GtkTextBuffer* log;
+
 	log = gtk_text_view_get_buffer(GTK_TEXT_VIEW(textview));
 	gtk_text_buffer_insert_at_cursor(GTK_TEXT_BUFFER(log),str,-1);
 }
 
 
-void 
-wait_command_finish()
+void wait_command_finish()
 {
-	while (running_command != CMD_NONE)
-	{
+	while (running_command != CMD_NONE) {
 		gtk_main_iteration();
 		gtk_main_iteration();
-		usleep(100000);
+		usleep (100000);
 		get_pending_messages();
 	}
 }
@@ -334,36 +329,34 @@ wait_command_finish()
 
 /* --- local intelligence --- */
 
-gboolean
-update_check(GtkTreeModel *model, GtkTreePath *path,
+gboolean update_check(GtkTreeModel *model, GtkTreePath *path,
              GtkTreeIter *iter,
              gpointer data)
 {
-	pkg_state_want_t dstate;
-	char *name;
+pkg_state_want_t dstate;
+char *name;
+
 	gtk_tree_model_get (GTK_TREE_MODEL(model), iter, 
-						COL_DESIREDSTATE, &dstate,
-						COL_NAME,&name,	-1);
-	switch (dstate)
-	{
+				COL_DESIREDSTATE, &dstate,
+				COL_NAME, &name, -1);
+	switch (dstate) {
 		case SW_INSTALL:
 			send_message(PK_COMMAND,CMD_INSTALL,"",name);
 			wait_command_finish();
 			gtk_tree_store_set (GTK_TREE_STORE(model), iter, 
-                      COL_INSTALLED,TRUE,
-                      COL_DESIREDSTATE,SW_UNKNOWN,
-                      COL_COLOR,NULL,-1);
-		break;
+				COL_INSTALLED,TRUE, COL_DESIREDSTATE,SW_UNKNOWN,
+				COL_COLOR,NULL,-1);
+			break;
 		case SW_DEINSTALL:
 			send_message(PK_COMMAND,CMD_REMOVE,"",name);
 			wait_command_finish();
 			gtk_tree_store_set (GTK_TREE_STORE(model), iter, 
-                      COL_INSTALLED,FALSE,
-                      COL_DESIREDSTATE,SW_UNKNOWN,
-                      COL_COLOR,NULL,-1);
-		break;
+				COL_INSTALLED,FALSE,
+				COL_DESIREDSTATE,SW_UNKNOWN,
+				COL_COLOR,NULL,-1);
+			break;
 		default:
-		break;
+			break;
 	}	
 	return FALSE;
 }
@@ -371,7 +364,7 @@ update_check(GtkTreeModel *model, GtkTreePath *path,
 
 void do_question(int nr, char *question)
 {
-	GtkWidget *dialog;
+GtkWidget *dialog;
 	
 	dialog = gtk_message_dialog_new (GTK_WINDOW (fMain),
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -386,12 +379,11 @@ void do_question(int nr, char *question)
 }
 
 
-void
-update_tree(void)
+void update_tree(void)
 {
-	guint id;
-	int i;
-	GtkTreeIter iter;
+guint id;
+int i;
+GtkTreeIter iter;
 
 	id = gtk_statusbar_get_context_id(GTK_STATUSBAR(sbar),"upd");
 	gtk_statusbar_push(GTK_STATUSBAR(sbar),
@@ -400,8 +392,7 @@ update_tree(void)
 #warning improve this
 	gtk_tree_store_clear(GTK_TREE_STORE(store));
 	
-	for (i=0;i<pkg_count;i++)
-	{
+	for (i=0; i<pkg_count; i++) {
 		if (((tree_filter & TREE_SHOW_INST) && (pkg_info[i].status == SS_INSTALLED))
 			|| ((tree_filter & TREE_SHOW_NOTINST) && (pkg_info[i].status != SS_INSTALLED)))		
 			continue;
@@ -409,20 +400,18 @@ update_tree(void)
 		gtk_tree_store_append (store, &iter, NULL);
 	
 		gtk_tree_store_set (store, &iter,
-		    COL_NAME, pkg_info[i].name,
-		    COL_DESCRIPTION, pkg_info[i].description,
+			COL_NAME, pkg_info[i].name,
+			COL_DESCRIPTION, pkg_info[i].description,
 			COL_VERSION, pkg_info[i].version,
 			COL_INSTALLED, pkg_info[i].status == SS_INSTALLED,
 			COL_DESIREDSTATE, SW_UNKNOWN,
-			COL_COLOR, pkg_info[i].color,
-	    	-1);
+			COL_COLOR, pkg_info[i].color, -1);
 	}
 	gtk_statusbar_pop(GTK_STATUSBAR(sbar),id);	
 }
 
 
-void
-on_tree_filter_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
+void on_tree_filter_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
 {
 	tree_filter =
 		!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(miFilterInst)) *
@@ -433,31 +422,27 @@ on_tree_filter_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
 }
 
 
-void
-on_about_clicked (GtkWidget * w)
+void on_about_clicked (GtkWidget * w)
 {
 	show_message(GTK_MESSAGE_INFO,HELPMESSAGE);
 }
 
 
-void
-on_help_clicked (GtkWidget * w)
+void on_help_clicked (GtkWidget * w)
 {
 	if (gpe_show_help("gpe-package",NULL))
-		show_message(GTK_MESSAGE_ERROR,NOHELPMESSAGE);
+		show_message(GTK_MESSAGE_ERROR, NOHELPMESSAGE);
 }
 
 
-void 
-do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t status)
+void do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t status)
 {
-	gboolean updatev;
-	char *nversion = NULL;
+gboolean updatev;
+char *nversion = NULL;
 
 	updatev = (pkg_count && !strcmp(pkgname,pkg_info[pkg_count-1].name));
 
-	if (!updatev)
-	{
+	if (!updatev) {
 		pkg_info = realloc(pkg_info,sizeof(description_t) * (pkg_count + 1));		
 		pkg_info[pkg_count].name = g_strdup(pkgname);
 		pkg_info[pkg_count].version = g_strdup(version);
@@ -467,9 +452,7 @@ do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t sta
 		if ((status != SS_INSTALLED) && (status != SS_NOT_INSTALLED))
 			pkg_info[pkg_count].color = C_INCOMPLETE;
 		pkg_count++;
-	}
-	else
-	{
+	} else {
 		nversion = pkg_info[pkg_count-1].version;
 		pkg_info[pkg_count-1].version = g_strdup_printf("%s\n%s",nversion,version);
 		if (pkg_info[pkg_count-1].status != SS_INSTALLED)
@@ -480,30 +463,27 @@ do_list(int prio,char* pkgname,char *desc, char *version, pkg_state_status_t sta
 	}		
 	
 		
-	switch (running_command)
-	{
+	switch (running_command) {
 		case CMD_LIST:
-		{
-		}
-		break;
+			break;
 		default:
 			printlog(txLog,pkgname);
+			break;
 	}
 }
 
 
 void do_message_dlg(int type,char *msg)
 {
-	GtkWidget *dialog;
-	printlog(txLog,msg);
+GtkWidget *dialog;
+printlog(txLog,msg);
 	
 	dialog = gtk_message_dialog_new (GTK_WINDOW (fMain),
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
-					 type,
-					 GTK_BUTTONS_CLOSE,
+					 type, GTK_BUTTONS_CLOSE,
 					 msg);
 	gtk_dialog_run(GTK_DIALOG(dialog));
-	gtk_widget_destroy(dialog);	
+	gtk_widget_destroy(dialog);
 }
 
 
@@ -516,13 +496,12 @@ void do_info(int priority, char *str1, char *str2)
 
 void do_end_command()
 {
-    gtk_widget_set_sensitive(miUpdate,TRUE);
-    gtk_widget_set_sensitive(miApply,TRUE);
+	gtk_widget_set_sensitive(miUpdate,TRUE);
+	gtk_widget_set_sensitive(miApply,TRUE);
 	gtk_widget_set_sensitive(miSysUpgrade,TRUE);
-    gtk_widget_set_sensitive(bApply,TRUE);
-    printlog(txLog,_("Command finished. Please check log messages for errors."));
-	if (dlgAction) 
-	{
+	gtk_widget_set_sensitive(bApply,TRUE);
+	printlog(txLog,_("Command finished. Please check log messages for errors."));
+	if (dlgAction) {
 		gtk_widget_destroy(dlgAction);
 		dlgAction = NULL;
 	}
@@ -532,24 +511,20 @@ void do_end_command()
 }
 
 
-void do_safe_exit()
+void do_safe_exit(int sig)
 {
-	GtkWidget *dialog;
+GtkWidget *dialog;
 
-	if (pkg_selection_changed > 0)
-	{		
+	if (pkg_selection_changed > 0) {
 		dialog = gtk_message_dialog_new (GTK_WINDOW (fMain),
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION,
 					 GTK_BUTTONS_YES_NO,
 					 _("Package selection was changed. Really exit?"));
-		if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_YES)
-		{
+		if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_YES) {
 			gtk_widget_destroy(dialog);	
 			return;
-		}
-		else
-		{
+		} else {
 			gtk_widget_destroy(dialog);
 		}
 	}
@@ -557,139 +532,144 @@ void do_safe_exit()
 }
 
 
-gboolean
-get_pending_messages ()
+void error_dialog_close(void *data)
 {
-	static pkmessage_t msg;
-	struct pollfd pfd[1];
+	ErrorDialogOpen = FALSE;
+	gtk_widget_destroy(GTK_WIDGET(data));
+}
+
+
+gboolean get_pending_messages ()
+{
+static pkmessage_t msg;
+struct pollfd pfd[1];
+
 	pfd[0].fd = sock;
 	pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
-	while (poll (pfd, 1, 0) > 0)
-	{
-		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP))
-		{
+	while (poll (pfd, 1, 0) > 0) {
+		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP)) {
 			perror ("ERR: connection lost: ");
 			do_message_dlg(GTK_MESSAGE_ERROR,_("IPKG backend failure, cannot continue."));
 			close(sock);
 			exit(1);
 		}
-		if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
-		{
+		if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0) {
 			perror ("ERR: receiving data packet");
 			close (sock);
 			do_message_dlg(GTK_MESSAGE_ERROR,_("Communication error, cannot continue."));
 			exit (1);
-		}
-		else
-		if (msg.type == PK_FRONT)
-		{
-			switch (msg.ctype)
-			{
-			case PK_QUESTION:
-				do_question(msg.content.tf.priority, msg.content.tf.str1);
-			break;
-			case PK_ERROR:
-				do_message_dlg(GTK_MESSAGE_ERROR,msg.content.tf.str1);
-				error++;
-			break;	
-			case PK_LIST:
-				do_list(msg.content.tf.priority, msg.content.tf.str1,
+		} else if (msg.type == PK_FRONT) {
+			// fprintf(stderr,"interf.: got type %d ctype %d\n", msg.type, msg.ctype);
+			switch (msg.ctype) {
+				case PK_QUESTION:
+					do_question(msg.content.tf.priority, msg.content.tf.str1);
+					break;
+				case PK_ERROR:
+					//do_message_dlg(GTK_MESSAGE_ERROR,msg.content.tf.str1);
+					if (!ErrorDialogOpen) {
+						GtkWidget *dialog;
+						//do_message_dlg(GTK_MESSAGE_ERROR, "Some error occured, please see log-tab");
+						dialog = gtk_message_dialog_new (GTK_WINDOW(fMain),
+		                                  GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
+                		                  GTK_MESSAGE_ERROR,
+                        		          GTK_BUTTONS_CLOSE,
+                        		          _("An error occurred.\nPlease consult the message log\nfor hints what went wrong."));
+                        		        g_signal_connect_swapped (dialog, "response", G_CALLBACK (error_dialog_close), dialog);
+						gtk_widget_show(dialog);
+						ErrorDialogOpen = TRUE;
+					}
+					printlog(txLog, msg.content.tf.str1);
+					error++;
+					break;	
+				case PK_LIST:
+					do_list(msg.content.tf.priority, msg.content.tf.str1,
 						msg.content.tf.str2,msg.content.tf.str3,
 						msg.content.tf.status);
-			break;	
-			case PK_INFO:
-				do_info(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
-			break;	
-			case PK_PKGINFO:
-				do_package_info(msg.content.tf.str1, msg.content.tf.str2);
-			break;	
-			case PK_PACKAGESTATE:
-//				do_state(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
-			case PK_FINISHED:
+					break;	
+				case PK_INFO:
+					do_info(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
+					break;	
+				case PK_PKGINFO:
+					do_package_info(msg.content.tf.str1, msg.content.tf.str2);
+					break;	
+				case PK_PACKAGESTATE:
+//					do_state(msg.content.tf.priority, msg.content.tf.str1,msg.content.tf.str2);
+					break;
+				case PK_FINISHED:
 #ifdef DEBUG				
-				printf("finished\n");
+					printf("finished\n");
 #endif			
-				do_end_command();
-			default:
-				break;
-			}
+					do_end_command();
+					break;
+				default:
+					break;
+			} /* switch */
 		}
 	}
-
 	return TRUE;
 }
 
 
-void
-list_toggle_inst (GtkCellRendererToggle * cellrenderertoggle,
+void list_toggle_inst (GtkCellRendererToggle * cellrenderertoggle,
 		  gchar * path_str, gpointer model_data)
 {
-  GtkTreeIter iter;
-  GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
-  gboolean inst;
-  pkg_state_want_t dstate;
-  char *color;
+GtkTreeIter iter;
+GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+gboolean inst;
+pkg_state_want_t dstate;
+char *color;
 	
-  /* get toggled iter and values */
-  gtk_tree_model_get_iter (GTK_TREE_MODEL(store), &iter, path);
-  gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_INSTALLED, &inst, 
-                                                    COL_DESIREDSTATE, &dstate, -1);
-  /* What do we want to do with it? */
-  if (dstate != SW_UNKNOWN)
-  {
-  	  pkg_selection_changed--;
-	  dstate = SW_UNKNOWN;
-	  color = NULL;
-  }
-  else
-  	if (inst)
-	{
+	/* get toggled iter and values */
+	gtk_tree_model_get_iter (GTK_TREE_MODEL(store), &iter, path);
+	gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_INSTALLED, &inst, 
+				COL_DESIREDSTATE, &dstate, -1);
+	/* What do we want to do with it? */
+	if (dstate != SW_UNKNOWN) {
+		pkg_selection_changed--;
+		dstate = SW_UNKNOWN;
+		color = NULL;
+	} else if (inst) {
 		pkg_selection_changed++;
 		dstate = SW_DEINSTALL;
 		color = C_INSTALL;
-	}
-	else
-	{
+	} else {
 		pkg_selection_changed++;
 		dstate = SW_INSTALL;
 		color = C_REMOVE;
 	}
  
-  /* invert displayed value */
-  inst ^= 1;
+	/* invert displayed value */
+	inst ^= 1;
 
-  /* write values */
-  gtk_tree_store_set (GTK_TREE_STORE(store), &iter, 
-                      COL_INSTALLED,inst,
-                      COL_DESIREDSTATE,dstate,
-                      COL_COLOR,color,-1);
+	/* write values */
+	gtk_tree_store_set (GTK_TREE_STORE(store), &iter, 
+				COL_INSTALLED, inst,
+				COL_DESIREDSTATE, dstate,
+				COL_COLOR,color, -1);
 	
-  /* clean up */
-  gtk_tree_path_free (path);
+	/* clean up */
+	gtk_tree_path_free (path);
 }
 
 
-void
-do_local_install(char *filename,gpointer userdata)
+void do_local_install(char *filename,gpointer userdata)
 {
 	printf(filename);
-	if (!access(filename,F_OK))
-	{
+	if (!access(filename,F_OK)) {
 		send_message(PK_COMMAND,CMD_INSTALL,"",filename);
 		wait_command_finish();
-	}
-	else
+	} else {
 		do_message_dlg(GTK_MESSAGE_ERROR,
-		_("The selected file could not be accessed."));		
+		_("The selected file could not be accessed."));
+	}
 }
 
 
 /* app mainloop */
 
-int
-mainloop (int argc, char *argv[])
+int mainloop (int argc, char *argv[])
 {
-	struct sockaddr_un name;
+struct sockaddr_un name;
 	
 	sleep(1); /* wait for second process to initialize */
 	setlocale (LC_ALL, "");
@@ -702,8 +682,7 @@ mainloop (int argc, char *argv[])
  	
 	/* Create socket from which to read. */
 	sock = socket (AF_UNIX, SOCK_STREAM, 0);
-	if (sock < 0)
-	{
+	if (sock < 0) {
 		perror ("ERR: opening datagram socket");
 		exit (1);
 	}
@@ -711,8 +690,7 @@ mainloop (int argc, char *argv[])
 	/* Create name. */
 	name.sun_family = AF_UNIX;
 	strcpy (name.sun_path, PK_SOCKET);
-	if (connect (sock, (struct sockaddr *) &name, SUN_LEN (&name)))
-	{
+	if (connect (sock, (struct sockaddr *) &name, SUN_LEN (&name))) {
 		perror ("ERR: connecting to socket");
 		exit (1);
 	}
@@ -742,45 +720,40 @@ mainloop (int argc, char *argv[])
 /* 
  * Checks if the given package is installed.
  */
-int 
-do_package_check(const char *package)
+int do_package_check(const char *package)
 {
 	return 0;
 }
 
 
-void
-on_select_local(GtkButton *button, gpointer user_data)
+void on_select_local(GtkButton *button, gpointer user_data)
 {
 	ask_user_a_file("/tmp",_("Select package file"),do_local_install,NULL,NULL);
 }
 
 
-void
-on_package_info_clicked(GtkButton *button, gpointer user_data)
+void on_package_info_clicked(GtkButton *button, gpointer user_data)
 {
-	GtkTreeIter iter;
-	GtkTreeSelection *sel;
-	char *name = NULL;
+GtkTreeIter iter;
+GtkTreeSelection *sel;
+char *name = NULL;
 	
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	
-	if (gtk_tree_selection_get_selected(sel, (GtkTreeModel**)(&store), &iter))
-	{
+	if (gtk_tree_selection_get_selected(sel, (GtkTreeModel**)(&store), &iter)) {
 		gtk_tree_model_get (GTK_TREE_MODEL(store), &iter, COL_NAME, &name, -1);
 		send_message(PK_COMMAND,CMD_INFO,name,name);
 	}
 }
 
 
-void
-on_system_update_clicked(GtkButton *button, gpointer user_data)
+void on_system_update_clicked(GtkButton *button, gpointer user_data)
 {
-	GtkTextBuffer *logbuf;
-	GtkTextIter start,end;
+GtkTextBuffer *logbuf;
+GtkTextIter start,end;
 	
-    gtk_widget_set_sensitive(miUpdate,FALSE);
-    gtk_widget_set_sensitive(miApply,FALSE);
+	gtk_widget_set_sensitive(miUpdate,FALSE);
+	gtk_widget_set_sensitive(miApply,FALSE);
 	gtk_widget_set_sensitive(miSysUpgrade,FALSE);
 	gtk_widget_set_sensitive(bApply,FALSE);
 
@@ -805,14 +778,13 @@ on_system_update_clicked(GtkButton *button, gpointer user_data)
 }
 
 
-void
-on_packages_update_clicked(GtkButton *button, gpointer user_data)
+void on_packages_update_clicked(GtkButton *button, gpointer user_data)
 {
-	GtkTextBuffer *logbuf;
-	GtkTextIter start,end;
+GtkTextBuffer *logbuf;
+GtkTextIter start,end;
 
-    gtk_widget_set_sensitive(miUpdate,FALSE);
-    gtk_widget_set_sensitive(miApply,FALSE);
+	gtk_widget_set_sensitive(miUpdate,FALSE);
+	gtk_widget_set_sensitive(miApply,FALSE);
 	gtk_widget_set_sensitive(miSysUpgrade,FALSE);
 	gtk_widget_set_sensitive(bApply,FALSE);
 
@@ -838,18 +810,18 @@ on_packages_update_clicked(GtkButton *button, gpointer user_data)
 void 
 on_package_install_clicked(GtkButton *button, gpointer user_data)
 {
-	char *msg;
+char *msg;
+
 	error = 0;
 	gtk_tree_model_foreach(GTK_TREE_MODEL(store),update_check,NULL);
-	if (error)
-	{
+	if (error) {
 		msg = g_strdup_printf("%i %s",error,
 		_("changes could not be applied."));
 		do_message_dlg(GTK_MESSAGE_WARNING,msg);
 		g_free(msg);
-	}
-	else
+	} else
 		do_message_dlg(GTK_MESSAGE_INFO,_("Packages installed sucessfully."));
+
 	pkg_selection_changed = 0;
 }
 
@@ -858,15 +830,16 @@ gboolean
 tv_row_clicked(GtkTreeView *treeview, GtkTreePath *arg1, 
 	GtkTreeViewColumn *arg2, gpointer user_data)
 {
-	GtkTreeSelection *selection;
-	GtkTreeIter iter;
-	char *version;
+GtkTreeSelection *selection;
+GtkTreeIter iter;
+char *version;
 
 	selection = gtk_tree_view_get_selection (treeview);
 	if (gtk_tree_selection_get_selected (selection, NULL, &iter) == FALSE) 
 		return FALSE;
 	gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_VERSION, &version, -1);
 	gtk_statusbar_push(GTK_STATUSBAR(sbar),0,version);
+
 	return TRUE;
 }
 
@@ -875,8 +848,8 @@ tv_row_clicked(GtkTreeView *treeview, GtkTreePath *arg1,
 GtkWidget *
 create_mMain(GtkWidget  *window)
 {
-	GtkItemFactory *itemfactory;
-	GtkAccelGroup *accelgroup;
+GtkItemFactory *itemfactory;
+GtkAccelGroup *accelgroup;
 
 	accelgroup = gtk_accel_group_new ();
 
@@ -902,24 +875,23 @@ create_mMain(GtkWidget  *window)
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(miFilterInst),TRUE); 
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(miFilterNotInst),TRUE); 
 	
-	return (gtk_item_factory_get_widget (itemfactory, "<main>"));
+return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 }
 
 
 
 /* --- create mainform --- */
 
-void
-create_fMain (void)
+void create_fMain (void)
 {
-  GtkWidget *vbox;
-  GtkWidget *cur;
-  GtkWidget *toolbar;
-  GtkWidget *pw;
-  GtkTooltips *tooltips;
-  GtkCellRenderer *renderer;
-  GtkTreeViewColumn *column;
-  char *tmp;
+GtkWidget *vbox;
+GtkWidget *cur;
+GtkWidget *toolbar;
+GtkWidget *pw;
+GtkTooltips *tooltips;
+GtkCellRenderer *renderer;
+GtkTreeViewColumn *column;
+char *tmp;
 
 	/* init tree storage stuff */
 	store = gtk_tree_store_new (N_COLUMNS,
@@ -933,74 +905,74 @@ create_fMain (void)
 					G_TYPE_INT
 	);
 
-  fMain = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (fMain), _("GPE Package"));
-  gtk_window_set_default_size (GTK_WINDOW (fMain), 240, 300);
-  gtk_window_set_policy (GTK_WINDOW (fMain), TRUE, TRUE, FALSE);
-  gpe_set_window_icon(fMain, "icon");
+	fMain = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title (GTK_WINDOW (fMain), _("GPE Package"));
+	gtk_window_set_default_size (GTK_WINDOW (fMain), 240, 300);
+	gtk_window_set_policy (GTK_WINDOW (fMain), TRUE, TRUE, FALSE);
+	gpe_set_window_icon(fMain, "icon");
 
-  vbox = gtk_vbox_new(FALSE,0);
-  gtk_container_add(GTK_CONTAINER(fMain),vbox);
+	vbox = gtk_vbox_new(FALSE,0);
+	gtk_container_add(GTK_CONTAINER(fMain),vbox);
 	
-  tooltips = gtk_tooltips_new ();
+	tooltips = gtk_tooltips_new ();
   
-  sbar = gtk_statusbar_new();
-  gtk_box_pack_end(GTK_BOX(vbox),sbar,FALSE,TRUE,0);
+	sbar = gtk_statusbar_new();
+	gtk_box_pack_end(GTK_BOX(vbox),sbar,FALSE,TRUE,0);
 
-  /* main menu */ 
-  mMain = create_mMain(fMain);
-  gtk_box_pack_start(GTK_BOX(vbox),mMain,FALSE,TRUE,0);
+	/* main menu */ 
+	mMain = create_mMain(fMain);
+	gtk_box_pack_start(GTK_BOX(vbox),mMain,FALSE,TRUE,0);
   
-  /* toolbar */
+	/* toolbar */
 	
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
+	toolbar = gtk_toolbar_new ();
+	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 			       GTK_ORIENTATION_HORIZONTAL);
 
-  bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
+	bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
 			   _("Apply package selection"), _("Apply package selection"),
 			   (GtkSignalFunc) on_package_install_clicked , NULL, -1);
 			   
-  gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
-  pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close application"),
+	pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close application"),
 			   _("Close application"), _("Close application"), pw,
 			   (GtkSignalFunc) do_safe_exit, NULL);
 			   
-  gtk_box_pack_start(GTK_BOX(vbox),toolbar,FALSE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),toolbar,FALSE,TRUE,0);
 
-  /* notebook */
+	/* notebook */
   
-  notebook = gtk_notebook_new();	
-  gtk_box_pack_start(GTK_BOX(vbox),notebook,TRUE,TRUE,0);
+	notebook = gtk_notebook_new();	
+	gtk_box_pack_start(GTK_BOX(vbox),notebook,TRUE,TRUE,0);
 	
-  gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
+	gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
   
-  /* installed tab */	
-  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+	/* installed tab */	
+	vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
-  cur = gtk_label_new(_("List"));
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
+	cur = gtk_label_new(_("List"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
 
-  cur = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
-  tmp = g_strdup_printf("<b>%s</b>",_("Package List"));
-  gtk_label_set_markup(GTK_LABEL(cur),tmp);
-  free(tmp);
-  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+	cur = gtk_label_new(NULL);
+	gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+	tmp = g_strdup_printf("<b>%s</b>",_("Package List"));
+	gtk_label_set_markup(GTK_LABEL(cur),tmp);
+	free(tmp);
+	gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
 	
-  cur = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),
-  	GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur), GTK_SHADOW_IN);
-  gtk_box_pack_start(GTK_BOX(vbox), cur, TRUE, TRUE, 0);	
+	cur = gtk_scrolled_window_new(NULL,NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),
+  		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur), GTK_SHADOW_IN);
+	gtk_box_pack_start(GTK_BOX(vbox), cur, TRUE, TRUE, 0);	
 
-  /* packages tree */
-  treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
-  gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
-  gtk_container_add(GTK_CONTAINER(cur),treeview);	
+	/* packages tree */
+	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
+	gtk_container_add(GTK_CONTAINER(cur),treeview);	
   
 	g_signal_connect_after (G_OBJECT (treeview), "cursor-changed",
 			  G_CALLBACK (tv_row_clicked), NULL);
@@ -1028,34 +1000,33 @@ create_fMain (void)
 							   NULL);
 	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
 	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
-
   
-  /* messages tab */
-  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+	/* messages tab */
+	vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
 
-  cur = gtk_label_new(_("Messages"));
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
+	cur = gtk_label_new(_("Messages"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
 
-  cur = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
-  tmp = g_strdup_printf("<b>%s</b>",_("Messages Log"));
-  gtk_label_set_markup(GTK_LABEL(cur),tmp);
-  free(tmp);
-  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+	cur = gtk_label_new(NULL);
+	gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+	tmp = g_strdup_printf("<b>%s</b>",_("Messages Log"));
+	gtk_label_set_markup(GTK_LABEL(cur),tmp);
+	free(tmp);
+	gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
 
-  cur = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),
-  	GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
-  gtk_tooltips_set_tip (tooltips, cur, 
-  	_("This window shows all messages from the packet manager."), NULL);
+	cur = gtk_scrolled_window_new(NULL,NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),
+  		GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
+	gtk_tooltips_set_tip (tooltips, cur, 
+  		_("This window shows all messages from the packet manager."), NULL);
   
-  txLog = gtk_text_view_new();
-  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txLog),GTK_WRAP_WORD);
-  gtk_container_add(GTK_CONTAINER(cur),txLog);
-  gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
+	txLog = gtk_text_view_new();
+	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txLog),GTK_WRAP_WORD);
+	gtk_container_add(GTK_CONTAINER(cur),txLog);
+	gtk_box_pack_start(GTK_BOX(vbox),cur,TRUE,TRUE,0);	
   
-  g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
+	g_signal_connect(G_OBJECT (fMain),"destroy",gtk_main_quit,NULL);
   
-  gtk_widget_show_all(fMain);
+	gtk_widget_show_all(fMain);
 }

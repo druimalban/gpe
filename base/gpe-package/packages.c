@@ -43,7 +43,8 @@ static void
 send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2, 
 	const char *str3, pkg_state_status_t status)
 {
-	pkmessage_t msg;
+pkmessage_t msg;
+
 	msg.type = PK_FRONT;
 	msg.ctype = ctype;
 	msg.content.tf.priority = prio;
@@ -51,8 +52,7 @@ send_message (pkcontent_t ctype, int prio, const char *str1, const char *str2,
 	snprintf(msg.content.tf.str2,LEN_STR2-1, str2);
 	snprintf(msg.content.tf.str3,LEN_STR3-1, str3);
 	msg.content.tf.status = status;
-	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
-	{
+	if (write (sock, (void *) &msg, sizeof (pkmessage_t)) < 0) {
 		perror ("ERR sending data to frontend");
 	}
 }
@@ -72,7 +72,8 @@ ipkg_question (char *question)
 {
 	send_message (PK_QUESTION, 1, question, NULL, NULL, 0);
 	await_response = TRUE;
-	while (await_response) wait_message();
+	while (await_response)
+		wait_message();
 	return (response);
 }
 
@@ -80,8 +81,7 @@ ipkg_question (char *question)
 int
 ipkg_msg (ipkg_conf_t * conf, message_level_t level, char *msg)
 {
-	if (level <= IPKG_NOTICE)
-	{
+	if (level <= IPKG_NOTICE) {
 		if (level <= IPKG_ERROR)
 			send_message (PK_ERROR, level, msg, NULL, NULL, 0);
 		else
@@ -111,54 +111,50 @@ package_info(char *name, int istatus, char *desc, void *userdata)
 int 
 package_status(char *name, int istatus, char *desc, void *userdata)
 {
-	
+	return 0;	
 }
 
 
 static int
 wait_message ()
 {
-	static pkmessage_t msg;
-	struct pollfd pfd[1];
-	static int retry_count = 0;
+static pkmessage_t msg;
+struct pollfd pfd[1];
+static int retry_count = 0;
 
 	pfd[0].fd = sock;
 	pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
-	while (poll (pfd, 1, -1) > 0)
-	{
-		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP))
-		{
+	while (poll (pfd, 1, -1) > 0) {
+		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP)) {
 #ifdef DEBUG
 			perror ("Err: connection lost: ");
 #endif		
 			retry_count++;
-			if (retry_count > 6) return FALSE;
-			usleep(500000);
-		}
-		else
-		{
-			if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0)
-			{
-	#ifdef DEBUG
-				perror ("err receiving data packet");
-	#endif
+			if (retry_count > 6)
 				return FALSE;
-			}
-			else if (msg.type == PK_BACK)
-			{
-				retry_count = 0;
-				switch (msg.ctype)
-				{
-				case (PK_COMMAND):
-					do_command (msg.content.tb.command,
-							msg.content.tb.params,
-							msg.content.tb.list);
-					break;
-				case (PK_REPLY):
-					do_response (msg.content.tb.params);
-					break;
-				default:
-					break;
+			usleep(500000);
+		} else {
+			if (read (sock, (void *) &msg, sizeof (pkmessage_t)) < 0) {
+#ifdef DEBUG
+				perror ("err receiving data packet");
+#endif
+				return FALSE;
+			} else {
+				// fprintf(stderr,"got type %d ctype %d\n", msg.type, msg.ctype);
+				if (msg.type == PK_BACK) {
+					retry_count = 0;
+					switch (msg.ctype) {
+						case (PK_COMMAND):
+							do_command (msg.content.tb.command,
+								msg.content.tb.params,
+								msg.content.tb.list);
+							break;
+						case (PK_REPLY):
+							do_response (msg.content.tb.params);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 		} /* else */	
@@ -174,40 +170,39 @@ do_command (pkcommand_t command, char *params, char *list)
 	if (!strlen(list))
 		list = NULL;
 	
-	switch (command)
-	{
-	case CMD_INSTALL:
-		ipkg_packages_install(&args,list);
-	break;
-	case CMD_REMOVE:
-		ipkg_packages_remove(&args,list,FALSE);
-	break;
-	case CMD_PURGE:
-		ipkg_packages_remove(&args,list,TRUE);
-	break;
-	case CMD_UPDATE:
-		ipkg_lists_update(&args);
-	break;
-	case CMD_UPGRADE:
-		ipkg_packages_upgrade(&args);
-	break;
-	case CMD_STATUS:
-		ipkg_packages_status(&args,list,package_status,NULL);
-	break;
-	case CMD_INFO:
-		ipkg_packages_info(&args,list,package_info,NULL);
-	break;
-	case CMD_SEARCH:
-		ipkg_file_search(&args,list,list_entry, NULL);
-	break;
-	case CMD_LIST:
-		ipkg_packages_list(&args,list,list_entry, NULL);
-	break;
-	case CMD_FILES:
-		ipkg_package_files(&args,list,list_entry, NULL);
-	break;
-	default:
-	break;
+	switch (command) {
+		case CMD_INSTALL:
+			ipkg_packages_install(&args,list);
+			break;
+		case CMD_REMOVE:
+			ipkg_packages_remove(&args,list,FALSE);
+			break;
+		case CMD_PURGE:
+			ipkg_packages_remove(&args,list,TRUE);
+			break;
+		case CMD_UPDATE:
+			ipkg_lists_update(&args);
+			break;
+		case CMD_UPGRADE:
+			ipkg_packages_upgrade(&args);
+			break;
+		case CMD_STATUS:
+			ipkg_packages_status(&args,list,package_status,NULL);
+			break;
+		case CMD_INFO:
+			ipkg_packages_info(&args,list,package_info,NULL);
+			break;
+		case CMD_SEARCH:
+			ipkg_file_search(&args,list,list_entry, NULL);
+			break;
+		case CMD_LIST:
+			ipkg_packages_list(&args,list,list_entry, NULL);
+			break;
+		case CMD_FILES:
+			ipkg_package_files(&args,list,list_entry, NULL);
+			break;
+		default:
+			break;
 	}
 	
 	send_message(PK_FINISHED,0,"","","",0);
