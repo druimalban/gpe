@@ -42,6 +42,7 @@
 #include <gpe/picturebutton.h>
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
+#include <gpe/spacing.h>
 
 
 /* These aren't in the header files, so we prototype them here.
@@ -204,11 +205,12 @@ void make_container()
 
   hbuttons = gtk_hbutton_box_new();
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons, FALSE, TRUE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_border());
 
-  self.cancel = gpe_picture_button (self.w->style, ("Cancel"), "cancel");
+  self.cancel = gpe_picture_button (self.w->style, _("Cancel"), _("cancel"));
   gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,TRUE, TRUE, 0);
 
-  self.save = gpe_picture_button (self.w->style, ("Apply"), "save");
+  self.save = gpe_picture_button (self.w->style, _("Apply"), _("save"));
   gtk_box_pack_start(GTK_BOX(hbuttons),self.save,TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",

@@ -30,8 +30,11 @@
 #include "cfgfile.h"
 #include "misc.h"
 
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
+#include <gpe/picturebutton.h>
 
 extern NWInterface_t* iflist;
 extern gint iflen;
@@ -40,6 +43,19 @@ GtkWidget *table;
 GtkWidget* create_nwstatic_widgets(NWInterface_t iface);
 GtkWidget* create_nwdhcp_widgets(NWInterface_t iface);
 GtkWidget* create_nwppp_widgets(NWInterface_t iface);
+
+
+static void
+add_interface(GtkWidget *widget, gpointer d)
+{
+	
+}
+
+static void
+remove_interface(GtkWidget *widget, gpointer d)
+{
+	
+}
 
 
 void changed_nwtype(GtkToggleButton *togglebutton,gpointer user_data)
@@ -433,17 +449,47 @@ void Network_Save()
 
 GtkWidget *Network_Build_Objects()
 {  
-	GtkWidget *label, *ctable;
+	GtkWidget *label, *ctable, *tablebox, *toolbar;
 	gint row = 0;
 	gint num_int = 0;
 	guint gpe_border     = gpe_get_border ();
 	
+	tablebox = gtk_vbox_new(FALSE,0);
+	
+	// create toolbar
+#if GTK_MAJOR_VERSION < 2
+	toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+#else
+	toolbar = gtk_toolbar_new ();
+	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
+	gtk_widget_set_name (toolbar, "toolbar");
+	gtk_widget_ref (toolbar);
+	gtk_widget_show (toolbar);
+	gtk_box_pack_start (GTK_BOX (tablebox), toolbar, FALSE, FALSE, 0);
+
+	label = gpe_render_icon (mainw->style, gpe_find_icon ("new"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Add Interface"), 
+			   _("Add Interface"), _("Add Interface"),
+			   label, (GtkSignalFunc)add_interface, NULL);
+
+	label = gpe_render_icon (mainw->style, gpe_find_icon ("delete"));
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Remove Interface"), 
+			   _("Remove Interface"), _("Remove Interface"), 
+			   label, (GtkSignalFunc)remove_interface, NULL);
+
+
+	// chreate tabbed notebook
+	// this contains lookup list!
 	table = gtk_notebook_new();
 
     gtk_object_set_data (GTK_OBJECT (table), "table", table);
 	gtk_widget_set_name(GTK_WIDGET(table),"table");
 
 	gtk_container_set_border_width (GTK_CONTAINER (table), 2);//gpe_border
+
+	gtk_container_add(GTK_CONTAINER(tablebox),table);
 
 	if (!set_file_open(TRUE))
 		gpe_error_box( "Couldn't read network configuration.\n");
@@ -466,5 +512,5 @@ GtkWidget *Network_Build_Objects()
 		}
 	} 
 
-   return table;
+   return tablebox;
 }
