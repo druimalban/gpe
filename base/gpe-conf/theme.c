@@ -306,7 +306,7 @@ GtkWidget *Theme_Build_Objects()
   gtk_misc_set_padding (GTK_MISC (label),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
-  gtk_rc_parse_string ("widget '*label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");
 
   self.MatchboxMenu = gtk_option_menu_new();
@@ -333,7 +333,7 @@ GtkWidget *Theme_Build_Objects()
   gtk_misc_set_padding (GTK_MISC (label),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
-  gtk_rc_parse_string ("widget '*label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");
 
   self.GtkMenu = gtk_option_menu_new();
@@ -358,7 +358,7 @@ GtkWidget *Theme_Build_Objects()
   gtk_misc_set_padding (GTK_MISC (label),
 			widget_padding_x, widget_padding_y_even);
   /* make the label grey: */
-  gtk_rc_parse_string ("widget '*label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");
 
   hbox = gtk_hbox_new(FALSE,0);

@@ -298,15 +298,15 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ------------------------------------------------------------------------ */
   /* make the labels grey: */
-  gtk_rc_parse_string ("widget '*owner_name_label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*owner_name_label' style 'gpe_labels'");
   gtk_widget_set_name (owner_name_label, "owner_name_label");
-  gtk_rc_parse_string ("widget '*owner_email_label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*owner_email_label' style 'gpe_labels'");
   gtk_widget_set_name (owner_email_label, "owner_email_label");
-  gtk_rc_parse_string ("widget '*owner_phone_label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*owner_phone_label' style 'gpe_labels'");
   gtk_widget_set_name (owner_phone_label, "owner_phone_label");
-  gtk_rc_parse_string ("widget '*owner_address_label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*owner_address_label' style 'gpe_labels'");
   gtk_widget_set_name (owner_address_label, "owner_address_label");
-  gtk_rc_parse_string ("widget '*owner_photofile_label' style 'gpe_ownerinfo_labels'");
+  gtk_rc_parse_string ("widget '*owner_photofile_label' style 'gpe_labels'");
   gtk_widget_set_name (owner_photofile_label, "owner_photofile_label");
  
   /*

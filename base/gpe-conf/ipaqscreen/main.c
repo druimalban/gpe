@@ -36,8 +36,9 @@ char *RotationLabels[4]=
   };
 static struct
 {
-  GtkWidget *vbox;
   GtkWidget *table;
+  GtkWidget *scrolledwindow;
+  GtkWidget *viewport;
   GtkWidget *hbox2;
   GtkWidget *brightnessl;
   GtkWidget *brightness;
@@ -53,23 +54,74 @@ static struct
 
 GtkWidget *ipaqscreen_Build_Objects()
 {
-  GtkWidget *applet;
   GtkWidget *menu = NULL;
   GtkWidget *glade_menuitem = NULL;
   guint i;
-  int ss_sec = xset_get_ss_sec();
-  applet = self.vbox = gtk_vbox_new(0,0);
+  int ss_sec;
+
+  GtkAttachOptions table_attach_left_col_x;
+  GtkAttachOptions table_attach_left_col_y;
+  GtkAttachOptions table_attach_right_col_x;
+  GtkAttachOptions table_attach_right_col_y;
+  GtkJustification table_justify_left_col;
+  GtkJustification table_justify_right_col;
+  guint widget_padding_x;
+  guint widget_padding_y_even;
+  guint widget_padding_y_odd;
+
+  /* 
+   * GTK_EXPAND  the widget should expand to take up any extra space
+                 in its container that has been allocated.
+   * GTK_SHRINK  the widget should shrink as and when possible.
+   * GTK_FILL    the widget should fill the space allocated to it.
+   */
+  
+  /*
+   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
+   * let it fill on the left side (so that the right alignment
+   * works:
+   */ 
+  table_attach_left_col_x = GTK_FILL; 
+  table_attach_left_col_y = 0;
+  table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
+  table_attach_right_col_y = GTK_FILL;
+  
+  /*
+   * GTK_JUSTIFY_LEFT
+   * GTK_JUSTIFY_RIGHT
+   * GTK_JUSTIFY_CENTER (the default)
+   * GTK_JUSTIFY_FILL
+   */
+  table_justify_left_col = GTK_JUSTIFY_RIGHT;
+  table_justify_right_col = GTK_JUSTIFY_RIGHT;
+
+  widget_padding_x = 5;
+  widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
+  widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
+
+  ss_sec = xset_get_ss_sec();
+  /* ======================================================================== */
+  /* draw the GUI */
+  self.scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (self.scrolledwindow),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  self.viewport = gtk_viewport_new (NULL, NULL);
+  gtk_container_add (GTK_CONTAINER (self.scrolledwindow), self.viewport);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (self.viewport), GTK_SHADOW_NONE);
 
   self.table = gtk_table_new(2,6,FALSE);
-  gtk_container_add(GTK_CONTAINER(self.vbox),self.table);
+  gtk_widget_set_name (self.table, "table");
+  gtk_container_add (GTK_CONTAINER (self.viewport), self.table);
+  gtk_container_set_border_width (GTK_CONTAINER (self.table), widget_padding_x);
 
-  self.brightnessl = gtk_label_new("Brightness:");
+  self.brightnessl = gtk_label_new("Brightness");
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0)));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_RIGHT);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
 
-  self.screensaverl = gtk_label_new("Screensaver:");
-  self.screensaverl2 = gtk_label_new("Screensaver:");
+  self.screensaverl = gtk_label_new("Screensaver");
+  self.screensaverl2 = gtk_label_new("Screensaver");
 
   self.screensaverbt = gtk_check_button_new_with_label ("On");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), TRUE);
@@ -79,7 +131,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
 
-  self.rotationl = gtk_label_new("Rotation:");
+  self.rotationl = gtk_label_new("Rotation");
   self.rotation = gtk_option_menu_new ();
 
   menu =  gtk_menu_new ();
@@ -93,50 +145,76 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_option_menu_set_menu (GTK_OPTION_MENU (self.rotation),menu);
   gtk_option_menu_set_history(GTK_OPTION_MENU (self.rotation),get_rotation());
  
-
-  self.touchscreen = gtk_label_new("Touchscreen:");
+  self.touchscreen = gtk_label_new("Touchscreen");
   self.calibrate = gtk_button_new_with_label("Calibrate");
 
   gtk_table_attach (GTK_TABLE (self.table), self.brightnessl, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
-
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (self.brightnessl), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (self.brightnessl), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (self.brightnessl),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*self.brightnessl' style 'gpe_labels'");
+  gtk_widget_set_name (self.brightnessl, "self.brightnessl");
 
   gtk_table_attach (GTK_TABLE (self.table), self.brightness, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
   gtk_table_attach (GTK_TABLE (self.table), self.screensaverl, 0, 1, 1, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (self.screensaverl), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (self.screensaverl), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (self.screensaverl),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*self.screensaverl' style 'gpe_labels'");
+  gtk_widget_set_name (self.screensaverl, "self.screensaverl");
 
   gtk_table_attach (GTK_TABLE (self.table), self.screensaverl2, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
 /*  gtk_table_attach (GTK_TABLE (self.table), self.screensaverbt, 2, 3, 1, 3,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
 */
   gtk_table_attach (GTK_TABLE (self.table), self.screensaver, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
   gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (self.rotationl), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (self.rotationl), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (self.rotationl),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*self.rotationl' style 'gpe_labels'");
+  gtk_widget_set_name (self.rotationl, "self.rotationl");
 
   gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
   gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+  gtk_label_set_justify (GTK_LABEL (self.touchscreen), table_justify_left_col);
+  gtk_misc_set_alignment (GTK_MISC (self.touchscreen), 1, 0.5);
+  gtk_misc_set_padding (GTK_MISC (self.touchscreen),
+			widget_padding_x, widget_padding_y_even);
+  /* make the label grey: */
+  gtk_rc_parse_string ("widget '*self.touchscreen' style 'gpe_labels'");
+  gtk_widget_set_name (self.touchscreen, "self.touchscreen");
 
   gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
 
 
   gtk_signal_connect (GTK_OBJECT (self.brightness), "draw",
@@ -160,7 +238,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                       NULL);
   initialising = 0;
 
-  return applet;
+  return self.scrolledwindow;
 }
 void change_screen_saver_label(int sec)
 {
