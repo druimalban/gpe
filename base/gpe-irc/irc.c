@@ -69,20 +69,21 @@ irc_server_read (IRCServer *server)
 
   while (1)
   {
-    tv.tv_sec = 5;
-    tv.tv_usec = 0;
-    printf ("Checking for data...\n");
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 1;
+  FD_ZERO (&rfds);
+  FD_SET (server->fd, &rfds);
+    //printf ("Checking for data...\n");
     data_waiting = select (server->fd + 1, &rfds, NULL, NULL, &tv);
 
     if (data_waiting)
     {
-      printf ("Data waiting.\n");
+      //printf ("Data waiting.\n");
       buf_len = read (server->fd, buf, sizeof (buf));
-      snprintf (message, buf_len, "%s");
-      printf ("%s", message);
+      if (buf_len != -1)
+        printf ("%s\n", buf);
     }
-    else
-      sleep (.1);
   }
 
   return FALSE;
@@ -126,7 +127,7 @@ gboolean
 irc_server_login_init (IRCServer *server)
 {
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
-  irc_server_join_channel (server, "#gpe");
+  irc_server_join_channel (server, "#handhelds.org");
 
   irc_server_read (server);
   return TRUE;
