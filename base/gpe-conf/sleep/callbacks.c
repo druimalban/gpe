@@ -56,7 +56,7 @@ gchar*
 change_dim_scale_label (GtkScale *scale, gdouble val)
 {
   gchar *buf;
-  buf = g_strdup_printf("%d %s",(int)(val/2.55),_("%"));
+  buf = g_strdup_printf("%d %%",(int)(val/2.55));
   return buf;
 }
 
