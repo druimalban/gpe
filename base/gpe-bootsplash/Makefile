@@ -21,4 +21,7 @@ install-program: gpe-bootsplash
 	cp $(CONTROL) $(DESTDIR)/CONTROL/control
 	ln -sf ../init.d/gpe-bootsplash $(DESTDIR)/etc/rcS.d/S00bootsplash
 
+clean:
+	rm -f gpe-bootsplash splash.o
+
 include ../build/Makefile.dpkg_ipkg

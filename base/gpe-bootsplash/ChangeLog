@@ -2,6 +2,8 @@
 
 	* splash.c (main), Makefile: Remove legacy GTK1 code.
 
+	* Makefile (clean): New target.
+
 2002-12-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.0-4 released.
