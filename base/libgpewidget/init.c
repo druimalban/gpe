@@ -17,8 +17,6 @@
 #include "errorbox.h"
 #include "what.h"
 
-static const char *dname = "/.gpe";
-
 gboolean
 gpe_application_init (int *argc, char **argv[])
 {
@@ -26,33 +24,42 @@ gpe_application_init (int *argc, char **argv[])
   struct stat buf;
   gchar *user_gtkrc_file;
   const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
+  gchar *home_dir = g_get_home_dir ();
 	  
-  gtk_rc_add_default_file (default_gtkrc_file);
-  user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", g_get_home_dir());
-  gtk_rc_add_default_file (user_gtkrc_file);
-  g_free (user_gtkrc_file);
-
+  gtk_init (argc, argv);
   gtk_set_locale ();
 
-  gtk_init(argc, argv);
+  gtk_rc_add_default_file (default_gtkrc_file);
 
-  fn = g_strdup_printf ("%s%s", g_get_home_dir(),dname);
-  if (stat (fn, &buf) != 0)
+  if (home_dir[0] && strcmp (home_dir, "/"))
     {
-      if (mkdir (fn, 0700) != 0)
+      user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", home_dir);
+      gtk_rc_add_default_file (user_gtkrc_file);
+      g_free (user_gtkrc_file);
+
+      /* Maybe this belongs somewhere else */
+      fn = g_strdup_printf ("%s/.gpe", home_dir);
+      if (stat (fn, &buf) != 0)
 	{
-	  gpe_perror_box ("Cannot create ~/.gpe");
-	  return FALSE;
-	}
-    } else {
-      if (!S_ISDIR(buf.st_mode))
+	  if (mkdir (fn, 0700) != 0)
+	    {
+	      gpe_perror_box ("Cannot create ~/.gpe");
+	      g_free (fn);
+	      return FALSE;
+	    }
+	} 
+      else 
 	{
-	  gpe_perror_box ("ERROR: ~/.gpe is not a directory!\n");
-	  return FALSE;
+	  if (!S_ISDIR (buf.st_mode))
+	    {
+	      gpe_error_box ("ERROR: ~/.gpe is not a directory!");
+	      g_free (fn);
+	      return FALSE;
+	    }
 	}
-    }
   
-  g_free (fn);
+      g_free (fn);
+    }
 
   gpe_what_init ();
 

@@ -1,5 +1,10 @@
 2002-08-19  Philip Blundell  <philb@gnu.org>
 
+	* init.c (gpe_application_init): Call gtk_init before other gtk
+	functions.  Optimise a bit.  Avoid creating .gpe if home dir is
+	unset or the root directory.  Avoid memory leaks when returning
+	failure.  Improve error messages.
+	
 	* Makefile (ipkg): Force debug off.
 	(install): Don't ship gtkrc in gtk2 package.
 
