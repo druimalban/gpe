@@ -23,7 +23,6 @@ module_id() {
 }
 
 export USER=root
-export HOME=/root
 
 ARGS="-dpi 100 -br -pn"
 
@@ -49,8 +48,7 @@ case `module_id` in
 	*Collie | *Poodle)
 		ARGS="$ARGS -screen 320x240@270 -rgba vrgb" ;;
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
-		ARGS="$ARGS -rgba rgb"
-		export TSLIB_TSDEVICE="/dev/sharp_ts" ;;
+		ARGS="$ARGS -rgba rgb" ;;
 	"Simpad")
 		ARGS="$ARGS -rgba rgb" ;;
 esac
