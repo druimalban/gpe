@@ -73,7 +73,6 @@ selection_made( GtkWidget      *clist,
     
   if (event->type == GDK_2BUTTON_PRESS)
     {
-      guint hour = row;
       struct tm tm;
       
       ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
@@ -107,6 +106,7 @@ day_view_update ()
   GSList *day_events[24];
   guint width = 0, i;
   GSList *iter;
+  static gboolean width_set;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
       
@@ -191,10 +191,13 @@ day_view_update ()
       line_info[1] = text;
       strftime (buf, sizeof (buf), "%R", &tm_start);
       line_info[0] = buf;
-      
-      w = gdk_string_width (time_style->font, buf);
-      if (w > width)
-	width = w;
+     
+      if (! width_set)
+	{
+	  w = gdk_string_width (time_style->font, buf);
+	  if (w > width)
+	    width = w;
+	}
 
       gtk_clist_append (GTK_CLIST (day_list), line_info);
 
@@ -232,7 +235,11 @@ day_view_update ()
   for (i = 0; i < row; i++)
     gtk_clist_set_cell_style (GTK_CLIST (day_list), i, 0, time_style);
 
-  gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
+  if (! width_set)
+    {
+      width_set = TRUE;
+      gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
+    }
 
   gtk_clist_moveto (GTK_CLIST (day_list), bias, 0, 0.0, 0.0);
 
