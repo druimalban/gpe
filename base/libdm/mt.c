@@ -28,6 +28,8 @@ send_message (Display *dpy, Window w, char *host, int screen)
   strcpy (buf + 1, host);
   
   XChangeProperty (dpy, w, migrate_atom, string_atom, 8, PropModeReplace, buf, strlen (host) + 1);
+
+  XFlush (dpy);
 }
 
 static int
@@ -88,14 +90,14 @@ main (int argc, char *argv[])
 {
   int done = 0;
 
-  if (argc < 3)
+  if (argc < 2)
     {
-      fprintf (stderr, "usage: %s <host> <screen>\n", argv[0]);
+      fprintf (stderr, "usage: %s <display>\n", argv[0]);
       exit (1);
     }
 
   host = argv[1];
-  screen = atoi (argv[2]);
+  screen = 0;
 
   dpy = XOpenDisplay (NULL);
   if (!dpy)

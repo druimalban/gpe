@@ -7,6 +7,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <stdio.h>
+
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -17,7 +19,7 @@
 
 static GdkAtom string_gdkatom, display_change_gdkatom, display_change_ok_gdkatom;
 
-void
+static gboolean
 do_change_display (GtkWidget *w, char *display_name, int screen_nr)
 {
   GdkDisplay *newdisplay = gdk_display_open (display_name);
@@ -25,8 +27,17 @@ do_change_display (GtkWidget *w, char *display_name, int screen_nr)
     {
       GdkScreen *screen = gdk_display_get_screen (newdisplay, screen_nr);
       if (screen)
-	gtk_window_set_screen (GTK_WINDOW (w), screen);
+	{
+	  gtk_window_set_screen (GTK_WINDOW (w), screen);
+	  return TRUE;
+	}
+      else
+	fprintf (stderr, "Couldn't get screen %d\n", screen_nr);
     }
+  else
+    fprintf (stderr, "Couldn't open display %s\n", display_name);
+
+  return FALSE;
 }
 
 static GdkFilterReturn 
@@ -51,23 +62,26 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 			      string_atom, &actual_type, &actual_format, &nitems, &bytes_after,
 			      &prop) == Success)
 	{
+	  gboolean success = FALSE;
+
 	  if (actual_type == string_atom
 	      && nitems != 0)
 	    {
 	      GtkWidget *widget;
 	      GdkWindow *gwindow;
-	      int screen_nr = *(prop++);
+	      int screen_nr = *prop;
 
 	      gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
 	      if (gwindow)
 		{
 		  gdk_window_get_user_data (gwindow, (gpointer*) &widget);
 		  if (widget)
-		    do_change_display (widget, prop, screen_nr);
+		    success = do_change_display (widget, prop + 1, screen_nr);
 		}
 	    }
 
-	  XDeleteProperty (xev->display, xev->window, display_change_atom);
+	  if (! success)
+	    XDeleteProperty (xev->display, xev->window, display_change_atom);
 
 	  if (prop)
 	    XFree (prop);
@@ -92,7 +106,7 @@ libdm_mark_window (GtkWidget *w)
 			   32, GDK_PROP_MODE_REPLACE, NULL, 0);
     }
   else
-    gtk_signal_connect (GTK_OBJECT (w), "realized", GTK_SIGNAL_FUNC (libdm_mark_window), NULL);
+    gtk_signal_connect (GTK_OBJECT (w), "realize", GTK_SIGNAL_FUNC (libdm_mark_window), NULL);
 }
 
 void
