@@ -135,7 +135,7 @@ main (int argc, char *argv[])
       if ((numchar=fread (buf, 1, sizeof (buf), fp)))
       	{
       	  owneraddress = g_strdup (buf);
-      	  owneraddress[numchar-1]='\0';
+      	  owneraddress[numchar]='\0';
       	}
 
       fclose (fp);

@@ -1,5 +1,13 @@
 2002-07-25  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile.am (install-data-local): Install
+	/etc/X11/gpe-ownerinfo.geometry and /etc/gpe/gpe-ownerinfo.data.
+
+	* configure.in: Added de to ALL_LINGUAS.
+
+	* gpe-ownerinfo.data (Module): Don't want my data here by default
+	(or maybe that would get me lots of PDAs?)  :)
+
 	* .cvsignore (Module): Add some more files to ignore.
 
 	* src/main.c (main): Add geometry support (stolen from gpe-login).
