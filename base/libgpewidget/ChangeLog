@@ -1,3 +1,10 @@
+2003-04-21  Philip Blundell  <philb@gnu.org>
+
+	* errorbox.c (do_gpe_perror_box): New function.
+	(gpe_perror_box): Call it.
+	(gpe_perror_box_nonblocking): New function.
+	* gpe/errorbox.h (gpe_perror_box_nonblocking): Add prototype.
+
 2003-04-18  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.60 released.

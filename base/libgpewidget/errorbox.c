@@ -80,16 +80,28 @@ gpe_error_box_nonblocking (const char *text)
   do_gpe_error_box (text, FALSE);
 }
 
-void
-gpe_perror_box(const char *text)
+static void
+do_gpe_perror_box(const char *text, gboolean block)
 {
   char *p = strerror (errno);
   char *buf = g_malloc (strlen (p) + strlen (text) + 3);
   strcpy (buf, text);
   strcat (buf, ":\n");
   strcat (buf, p);
-  gpe_error_box (buf);
+  do_gpe_error_box (buf, block);
   g_free (buf);
+}
+
+void
+gpe_perror_box (const char *text)
+{
+  do_gpe_perror_box (text, TRUE);
+}
+
+void
+gpe_perror_box_nonblocking (const char *text)
+{
+  do_gpe_perror_box (text, FALSE);
 }
 
 void

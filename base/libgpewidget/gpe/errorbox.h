@@ -27,6 +27,7 @@ extern "C" {
 extern void gpe_error_box (const char *text);
 extern void gpe_error_box_nonblocking (const char *text);
 extern void gpe_perror_box (const char *text);
+extern void gpe_perror_box_nonblocking (const char *text);
 extern void gpe_error_box_fmt (const char *format, ...);
 
 #ifdef __cplusplus
