@@ -8,6 +8,8 @@
 
 #include "tetris.h"
 
+#include <libintl.h>
+
 #define _(_x) gettext (_x)
 
 struct item

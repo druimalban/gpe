@@ -29,7 +29,7 @@ LDFLAGS += -lgpewidget
 LIBS = `gdk-pixbuf-config --libs` `gtk-config --libs`
 
 all: $(OBJS)
-	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LIBS) $(LDFLAGS)
+	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
 
 clean: 
 	rm -f *.o $(PROGRAM)
@@ -60,6 +60,6 @@ ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/control familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist

@@ -1,6 +1,6 @@
 Package: gpe-tetris
 Priority: extra
-Version: 0.5
+Version: 0.5.1
 Architecture: arm
 Section: x11
 Maintainer: Damien Tanner <dctanner@magenet.com>

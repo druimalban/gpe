@@ -149,7 +149,7 @@ void game_set_pause()
 {
 	if(game_over)
 	{
-		gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(menu_game_pause),FALSE);
+  //		gtk_check_menu_item_set_state(GTK_CHECK_MENU_ITEM(menu_game_pause),FALSE);
 		return;
 	}
 	game_pause = !game_pause;
