@@ -21,9 +21,8 @@ void
 choose_login_bg_file (GtkWidget *button,
 		      gpointer  user_data);
 
-static void
-File_Selected (char *file,
-	       gpointer data);
+void
+File_Selected (char *file, gpointer data);
 
 void
 get_initial_values ();

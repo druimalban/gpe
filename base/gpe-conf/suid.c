@@ -30,6 +30,8 @@
 #include "gpe-admin.h"
 #include "cfgfile.h"
 #include "ownerinfo.h"
+#include "ipaqscreen/brightness.h"
+#include "ipaqscreen/rotation.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -38,6 +40,23 @@ static int know_global_user_access = FALSE;
 
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
+
+void update_light_status (int state)
+{
+	if ((state >= 0) && (state <=1))
+	turn_light(state);
+}
+
+void update_screen_brightness (int br)
+{
+	set_brightness (br);
+}
+
+void update_screen_rotation (int rotation)
+{
+	if ((rotation >= 0) && (rotation <= 3)) 
+		set_rotation(rotation);
+}
 
 
 void update_dhcp_status(const gchar* active)
@@ -256,7 +275,10 @@ check_user_access (const char *cmd)
 	global_user_access = atoi(acstr);
 	know_global_user_access = TRUE;
   }	
-  
+  // allow screen settings
+  if (!strcmp(cmd,"SCRR")) return TRUE;
+  if (!strcmp(cmd,"SCRB")) return TRUE;
+	  
   return global_user_access;	
 }
 
@@ -373,6 +395,21 @@ suidloop (int write, int read)
 	      {
 		fscanf (in, "%100s", arg2);
 		update_dns_server (arg2);
+	      }
+	    else if (strcmp (cmd, "SCRB") == 0)
+	      {
+		fscanf (in, "%d", &numarg);
+		update_screen_brightness (numarg);
+	      }
+	    else if (strcmp (cmd, "SCRR") == 0)
+	      {
+		fscanf (in, "%d", &numarg);
+		update_screen_rotation (numarg);
+	      }
+	    else if (strcmp (cmd, "SCRL") == 0)
+	      {
+		fscanf (in, "%d", &numarg);
+		update_light_status (numarg);
 	      }
 #if 0
 	    if (bin)		// fork and exec

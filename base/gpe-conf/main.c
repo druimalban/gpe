@@ -169,11 +169,6 @@ int killchild()
 
 void initwindow()
 {
-  if (gpe_application_init (NULL, NULL) == FALSE)
-    exit (1);
-
-  if (gpe_load_icons (my_icons) == FALSE)
-    exit (1);
 
    // main window
    self.w = mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -230,6 +225,13 @@ void main_one(int argc, char **argv,int applet)
 {
 
   self.alone_applet=1;
+	
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
+
+  if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
+	
   initwindow();
 
   self.vbox = gtk_vbox_new(FALSE,0);
@@ -288,23 +290,22 @@ int main(int argc, char **argv)
       suidout = fdopen(pipe2[1],"w");
       suidin = fdopen(pipe1[0],"r");
 
-	
       setresuid(getuid(),getuid(),getuid()); // abandon privilege..
       setresgid(getgid(),getgid(),getgid()); // abandon privilege..
       if(argc == 1)
 	{
 		fprintf(stderr,"This mode is disabled, please try:\n");
-	      printf("\ngpe-conf [AppletName]\nwhere AppletName is in:\n");
-	      for( i = 0 ; i< applets_nb ; i++)
-		if(applets[i].Build_Objects != Unimplemented_Build_Objects)
+	    printf("\ngpe-conf [AppletName]\nwhere AppletName is in:\n");
+	    for ( i = 0 ; i< applets_nb ; i++)
+		if (applets[i].Build_Objects != Unimplemented_Build_Objects)
 		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
 	}
       else
 	{
 	  for( i = 0 ; i< applets_nb ; i++)
 	    {
-	      if(strcmp(argv[1], applets[i].name) == 0)
-		main_one(argc,argv,i);
+          if (strcmp(argv[1], applets[i].name) == 0)
+          main_one(argc,argv,i);
 	    }
 	  if (i ==applets_nb)
 	    {

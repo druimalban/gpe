@@ -16,58 +16,115 @@
 #include "gpe/errorbox.h"
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libintl.h>
 
 #include "brightness.h"
 #include "../applets.h"
 #include "../parser.h"
-/*
+
 #include <fcntl.h>
+#ifndef __i386__
 #include <sys/ioctl.h>
 #include <linux/h3600_ts.h>
+#define TS_DEV "/dev/touchscreen/0"
+#endif
 
-#define TS_DEV "/dev/h3600_ts"
+static FLITE_IN bl;
 
-FLITE_IN bl;
+void turn_light(int status)
+{
+#ifndef __i386__
+  int fd;
+printf("sw %d\n",status);
+  bl.mode=1;
+  bl.pwr=status;
+  fd = open(TS_DEV, O_RDWR);
+  if (fd == -1)
+  	return;
+  ioctl(fd,FLITE_ON,(void *)&bl);
+  close(fd);
+#endif
+}
 
-*/
+int get_light_state ()
+{
+  struct h3600_ts_backlight tsbl;
+  int fd;
+  char state[5];
+#ifdef __i386__
+  return 10; // bl doesnt exit on i386 dev machines!
+#else
+  tsbl.power = 0;
+  fd = open(TS_DEV, O_RDONLY);  // if we are allowed, we read bl setting direct from device
+  if (fd != -1) {
+    ioctl(fd,TS_GET_BACKLIGHT,(void *)&tsbl);
+    close(fd);
+  }
+  else
+  {	
+    if( parse_pipe("bl","%4s %d",state,&tsbl.brightness))
+    {
+      gpe_error_box (_("Couldn't read screen settings!"));
+      strcpy (state, "on");
+      tsbl.brightness = 128;
+    }
+    if (strcmp(state,"off") == 0)
+    {
+      tsbl.power = 0;
+    }
+	else
+	{
+      tsbl.power = 1;
+	}
+  }
+#endif
+  return tsbl.power;
+}
+
 void set_brightness (int brightness)
 {
-//	int fd;
+  int fd;
 #ifdef __i386__
   return ; // bl doesnt exit on i386 dev machines!
+#else
+  bl.mode=1;
+  fd = open(TS_DEV, O_RDWR);
+  if (fd == -1)
+    return;
+  bl.brightness=(unsigned char)brightness;
+  ioctl(fd,FLITE_ON,(void *)&bl);
+   close(fd);
 #endif
-  if (brightness == 0)
-    system ("bl off\n");
-  else
-    system_printf("bl %d",brightness);
-/*
-	fd = open(TS_DEV, O_RDWR);
-	if (fd == -1)
-		return;
-	if (brightness>0) bl.pwr=1;
-		else bl.pwr=0;
-	bl.brightness=(unsigned char)brightness;
-	ioctl(fd,FLITE_ON,(void *)&bl);
-	close(fd);
-	*/
 }
 
 int get_brightness ()
 {
-  int brightness;
+  struct h3600_ts_backlight tsbl;
+  int fd;
   char state[5];
 #ifdef __i386__
   return 10; // bl doesnt exit on i386 dev machines!
-#endif
-  if( parse_pipe("bl","%4s %d",state,&brightness))
+#else
+  tsbl.brightness = 10;
+  fd = open(TS_DEV, O_RDONLY);  // if we are allowed, we read bl setting direct from device
+  if (fd != -1) {
+    ioctl(fd,TS_GET_BACKLIGHT,(void *)&tsbl);
+    close(fd);
+  }
+  else
+  {	
+    if( parse_pipe("bl","%4s %d",state,&tsbl.brightness))
     {
-      gpe_error_box ( "couldn't read brightness");
+      gpe_error_box (_("Couldn't read screen settings!"));
       strcpy (state, "on");
-      brightness = 255;
+      tsbl.brightness = 128;
     }
-  if (strcmp (state, "off") == 0)
+    if (strcmp (state, "off") == 0)
     {
-      brightness = 0;
+      tsbl.brightness = 0;
     }
-  return brightness;
+  }
+  bl.brightness = tsbl.brightness;
+#endif
+  return tsbl.brightness;
 }

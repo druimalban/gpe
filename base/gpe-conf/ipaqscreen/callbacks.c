@@ -13,21 +13,41 @@
 #  include <config.h>
 #endif
 
+#include <stdio.h>
 #include <gtk/gtk.h>
 #include <math.h>
-
+#include "../suid.h"
 #include "callbacks.h"
 #include "xset.h"
 
 #include "brightness.h"
 #include "calibrate.h"
 #include "rotation.h"
+
+
 void
-										
-on_brightness_hscale_draw              (GtkWidget       *adjustment,
+on_light_on (GtkWidget *sender, gpointer user_data)
+{
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(user_data)))
+		suid_exec("SCRL","1");
+	else
+		suid_exec("SCRL","0");
+}
+
+gint on_light_check(gpointer adj)
+{
+  gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),(gfloat) get_brightness() / 2.55);
+  return TRUE;	
+}
+
+
+void
+on_brightness_hscale_draw              (GtkObject       *adjustment,
                                         gpointer         user_data)
 {
-  set_brightness ((int) (GTK_ADJUSTMENT(adjustment)->value * 2.55));
+	char val[10];
+	snprintf(val,9,"%d",(int) (GTK_ADJUSTMENT(adjustment)->value * 2.55));
+	suid_exec("SCRB",val);
 }
 
 
@@ -46,7 +66,6 @@ on_screensaver_hscale_draw              (GtkWidget       *adjustment,
     sec = 0;
   if(sec>60)
     sec = sec - sec%60;
-
 
   change_screen_saver_label(sec);
 
@@ -68,6 +87,7 @@ void
 on_rotation_entry_changed              (GtkWidget     *menu,
                                         gpointer         user_data)
 {
+  char val[10];
   // it seems that it is the only way to have the nb of the selected item..
 
   GtkWidget *active=gtk_menu_get_active(GTK_MENU(menu));
@@ -78,8 +98,8 @@ on_rotation_entry_changed              (GtkWidget     *menu,
       children = children->next;
       i++;
     }
-  set_rotation(i);
-
+  snprintf(val,9,"%d",i);
+  suid_exec("SCRR",val);
 }
 
 

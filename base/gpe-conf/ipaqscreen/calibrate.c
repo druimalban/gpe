@@ -26,8 +26,8 @@ void calibrate ()
 {
 
 #ifdef __i386__
-	gpe_error_box ("you are on 386 machine!!");
-	return ; // xrandr doesnt exit on i386 dev machines!
+	gpe_error_box ("Wrong system type, can't execute xcalibrate.");
+	return ; 
 #endif
 	if (suid_exec("XCAL",""))
 	  gpe_error_box(_("Sorry, wrong password."));

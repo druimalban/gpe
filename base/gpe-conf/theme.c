@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <ctype.h>
 #include <pwd.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -425,6 +426,7 @@ notify_func (const char *name,
 	     XSettingsSetting * setting, void *cb_data)
 {
   GtkRcStyle *astyle;
+  GtkWidget *label;
 	
    if (strncmp (name, KEY_THEME, strlen (KEY_THEME)) == 0)
     {
@@ -488,11 +490,17 @@ notify_func (const char *name,
 	{
 	  if (setting->type == XSETTINGS_TYPE_STRING)
 	    {
+		   char* spos = NULL;
+			
            astyle = gtk_rc_style_new ();
+		   spos = strrchr(setting->data.v_string,'-'); // this should be the size divider
+		   if ((spos != NULL) && strlen(spos) && isdigit(spos[1]))
+			  spos[0] = ' ';		   
            astyle->font_desc = pango_font_description_from_string (setting->data.v_string);
            gtk_widget_modify_style (self.demolabel, astyle);
 		   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)pango_font_description_get_size(astyle->font_desc)/PANGO_SCALE);
-		   gtk_button_set_label(GTK_BUTTON(self.bFont),setting->data.v_string);	
+		   label = g_object_get_data (G_OBJECT (self.bFont), "label");
+		   gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(astyle->font_desc));	
 		}
 	}
 	
@@ -666,9 +674,13 @@ void
 Theme_Save ()
 {
 	char *confstr = NULL;
+	const char* clabel;
 	char *par1,*par2;
+	int fs;
+	GtkWidget* label;
 	
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
+    /* background settings */
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.rbSolid)))
 	{
 		par1 = get_color_from_widget(self.bColor1);
 		confstr = g_strdup_printf("col-solid:%s",par1);
@@ -709,6 +721,20 @@ Theme_Save ()
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
 	}
+
+	/* font type and size */
+	label = g_object_get_data (G_OBJECT (self.bFont), "label");
+	clabel = gtk_label_get_text(GTK_LABEL(label));
+	fs = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS));
+	confstr = g_strdup_printf("xst write %s%s str \"%s-%i\"", KEY_MATCHBOX, "DesktopFont", clabel,fs);
+	printf ("xst write %s%s str \"%s-%i\"\n", KEY_MATCHBOX, "DesktopFont", clabel,fs);
+	system(confstr);
+	free(confstr);
+	/* font color */
+	confstr = get_color_from_widget(self.bColorFont);
+	printf ("xst write %s%s str \"%s\"\n", KEY_MATCHBOX, "DesktopFontColor", confstr);
+	system_printf ("xst write %s%s str \"%s\"", KEY_MATCHBOX, "DesktopFontColor", confstr);
+	free(confstr);
 }
 
 void
@@ -726,7 +752,7 @@ Theme_Build_Objects ()
 {
   GtkWidget *table, *rg_background, *rg_hv, *rg_img;
   GtkWidget *label;
-  GtkWidget *hbox, *vbox;
+  GtkWidget *hbox;
   GtkWidget *notebook;
   GtkAttachOptions table_attach_left_col_x;
   GtkAttachOptions table_attach_left_col_y;
@@ -737,6 +763,7 @@ Theme_Build_Objects ()
   guint gpe_border = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
   gchar *tstr; 
+  GtkRcStyle* astyle;
 
   table_attach_left_col_x = GTK_FILL;
   table_attach_left_col_y = 0;
@@ -750,22 +777,28 @@ Theme_Build_Objects ()
   self.themename = NULL;
 /* ------------------------------------------------------------------------ */
 
-   notebook  = gtk_notebook_new();
+  notebook  = gtk_notebook_new();
   
   label = gtk_label_new (_("Theme"));
-  
-  vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,label);
+  table = gtk_table_new (3, 2, FALSE);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
 
   label = gtk_label_new("none");
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Matchbox Theme"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
-  gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, TRUE, gpe_boxspacing);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 0, 1,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   
   hbox = gtk_hbox_new (FALSE, gpe_boxspacing);
-  gtk_box_pack_start(GTK_BOX(vbox),hbox,FALSE,TRUE,gpe_boxspacing);
+  gtk_table_attach (GTK_TABLE (table), hbox, 0, 1, 1, 2,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   
   label = gtk_label_new (_("Name"));
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, TRUE, 0);
@@ -875,10 +908,10 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
   hbox = gtk_hbox_new(False,gpe_boxspacing);
- // gtk_widget_show(hbox);
   gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 8, 9,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+			
   label = gtk_radio_button_new_with_label (NULL, _("Centered"));
   rg_img = label;
   self.rbImgCent = label;
@@ -945,6 +978,14 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
  gtk_widget_set_size_request(self.bColorFont,20,-1);
   
+/* insert some defaults */
+  astyle = gtk_rc_style_new ();
+  astyle->font_desc = pango_font_description_from_string ("Sans 9");
+  gtk_widget_modify_style (self.demolabel, astyle);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
+  label = g_object_get_data (G_OBJECT (self.bFont), "label");
+  gtk_label_set_text(GTK_LABEL(label),"Sans");	
+  
   mb_start_xsettings ();
 
   return notebook;
@@ -954,7 +995,7 @@ Theme_Build_Objects ()
 static GtkWidget *
 popup_menu_button_new (const gchar *stock_id)
 {
-  GtkWidget *button, *arrow, *hbox, *image;
+  GtkWidget *button, *arrow, *hbox, *image, *label;
   GtkRequisition requisition;
   gint width = 0, height;
 
@@ -962,6 +1003,7 @@ popup_menu_button_new (const gchar *stock_id)
   arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
   hbox = gtk_hbox_new (FALSE, 0);
   image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  label = gtk_label_new(NULL);
 
   gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
 
@@ -969,9 +1011,11 @@ popup_menu_button_new (const gchar *stock_id)
   g_object_set_data (G_OBJECT (button), "hbox", hbox);
   g_object_set_data (G_OBJECT (button), "image", image);
   g_object_set_data (G_OBJECT (button), "arrow", arrow);
+  g_object_set_data (G_OBJECT (button), "label", label);
 
   gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), arrow, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
 
   gtk_widget_size_request (image, &requisition);
   width = width + requisition.width;
@@ -991,9 +1035,11 @@ popup_menu_button_new (const gchar *stock_id)
 static void
 on_font_select(GtkWidget * widget, gpointer style)
 {
+	GtkWidget * label;
 	gtk_widget_modify_style(self.demolabel,GTK_RC_STYLE(style));
 	pango_font_description_set_size(GTK_RC_STYLE(style)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS))*PANGO_SCALE);
-	gtk_button_set_label(GTK_BUTTON(self.bFont),pango_font_description_to_string(GTK_RC_STYLE(style)->font_desc));	
+	label = g_object_get_data(G_OBJECT(self.bFont),"label");
+	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
 }
 
 
@@ -1031,20 +1077,17 @@ select_font_popup (GtkWidget *parent_button)
   gint screen_width;
   gint screen_height;
 
- // parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
-printf("-1-\n");
+  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
   if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
   {
-printf("-1-\n");
     gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
     g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
-  //  gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
   }
   else
   {
-printf("-1-\n");
     g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
-  //  gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
+    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
 
     popup_window = gtk_window_new (GTK_WINDOW_POPUP);
     vbox = gtk_vbox_new (FALSE, 0);
@@ -1059,7 +1102,6 @@ printf("-1-\n");
     for (i=0; i<n_families; i++)
     {
       const gchar *font_name = pango_font_family_get_name (families[i]);
-printf("-1-\n");
 
       button_label = gtk_label_new (font_name);
       button_label_rc_style = gtk_rc_style_new ();
@@ -1076,7 +1118,6 @@ printf("-1-\n");
     }
 
     g_free (families);
-printf("-1-\n");
 
     gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
     gtk_container_add (GTK_CONTAINER (frame), scrolled_window);
