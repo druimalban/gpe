@@ -62,8 +62,18 @@ Window Window_With_Name(dpy, top, name)
         Window w=0;
         char *window_name;
 
-        if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name))
-          return(top);
+	/* debugging: */
+	if (XFetchName(dpy, top, &window_name)) {
+		printf ("checking window of name '%s' (looking for '%s')\n", window_name, name);
+		XFree(window_name);
+	}
+	else
+	  printf ("ignoring window, no name set\n");
+
+        if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name)) {
+		XFree(window_name);
+        	return(top);
+	}
 
         if (!XQueryTree(dpy, top, &dummy, &dummy, &children, &nchildren))
           return(0);
@@ -180,13 +190,24 @@ wm_state(Display *display, Window w)
 //
 void raise_window(Display *display, Window w)
 {
-	int iState;
+/*	int iState;
 	iState = wm_state(display, w);
 	if (iState == NormalState)
+	{
+		printf ("NormalState - using XMapRaised\n");
 	 		XMapRaised(display, w);
+	}
   	else if( iState == IconicState )
+	{
+		printf ("IconicState - using XMapRaised\n");
 	 		XMapRaised(display, w);
-	else XRaiseWindow (display, w);
+	}
+	else
+	{
+		printf ("using XRaiseWindow\n");
+	XRaiseWindow (display, w);
+	} */
+	XMapRaised(display, w);
 }
 
 int try_to_raise_window (Display *display, char *window)
