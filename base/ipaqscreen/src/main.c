@@ -9,6 +9,8 @@
 
 #include <gtk/gtk.h>
 
+#include "init.h"
+
 #include "interface.h"
 #include "support.h"
 
@@ -34,8 +36,15 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 
-  gtk_set_locale ();
-  gtk_init (&argc, &argv);
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    {
+      exit (1);
+    }
+
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
 
 /*
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
