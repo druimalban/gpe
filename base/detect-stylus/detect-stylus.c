@@ -23,6 +23,7 @@ int
 main (int argc, char *argv[])
 {
   char b = 1;
+  char *tsdev;
   Atom atom;
   Display *dpy;
   Window root;
@@ -67,11 +68,17 @@ main (int argc, char *argv[])
 	  closedir (d);
 	}
     }
-  
+	
+  /* still not found? try environment */
+  if (fd < 0)
+    {
+      tsdev = getenv("TSLIB_TSDEVICE");
+      if (tsdev != NULL)
+        fd = open(tsdev, O_RDONLY); 
+    }
   if (fd >= 0)
     {
       close (fd);
-
       if ((dpy = XOpenDisplay (NULL)) == NULL)
 	{
 	  fprintf (stderr, "Cannot connect to X server.");
@@ -84,7 +91,7 @@ main (int argc, char *argv[])
       XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 
       XCloseDisplay (dpy);
-      if (!access("/usr/X11R6/bin/xrdb", X_OK))
+      if (!access("/usr/bin/xrdb", X_OK))
         system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/X11R6/bin/xrdb -nocpp -merge");
       else
         system ("echo \"Matchbox.cursor: no\nXcursor.theme: fully-transparent\" | /usr/bin/xrdb -nocpp -merge");
