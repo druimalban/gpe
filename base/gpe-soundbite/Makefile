@@ -2,8 +2,14 @@ PREFIX = /usr/local
 PACKAGE = gpe-soundbite
 #DEBUG = yes
 CVSBUILD = yes
+ESD = no
 
-MEMBERS = main gsm-codec oss
+MEMBERS = main gsm-codec
+ifeq ($(ESD),yes)
+MEMBERS += esd
+else
+MEMBERS += oss
+endif
 
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -21,6 +27,10 @@ else
 CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget -lgsm `gtk-config --libs`
+
+ifeq ($(ESD),yes)
+LDFLAGS += -lesd
+endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
