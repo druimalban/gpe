@@ -12,7 +12,6 @@
 
 #include <glib.h>
 #include <time.h>
-#include <stdlib.h>
 
 typedef enum
 {
@@ -37,12 +36,13 @@ typedef struct event_details_s
 #define FLAG_UNTIMED   (1 << 0)
 #define FLAG_ALARM     (1 << 1)
 #define FLAG_TENTATIVE (1 << 2)
+#define FLAG_CLONE     (1 << 3)
+#define FLAG_RECUR     (1 << 4)
 
 struct calendar_time_s
 {
-  u_int16_t year;
-  u_int8_t month, day;
-  u_int8_t hour, minute;
+  GDate date;
+  GTime time;
 };
 
 typedef time_t calendar_time_t;
@@ -73,16 +73,50 @@ typedef struct event_s
   gboolean mark;
 } *event_t;
 
+#ifdef EVENT_DB_USE_MEMCHUNK
+
+extern GMemChunk *event_chunk, *recur_chunk;
+
+#define event_db__alloc_event()		\
+	(event_t)g_mem_chunk_alloc0 (event_chunk)
+
+#define event_db__alloc_recur()		\
+	(recur_t)g_mem_chunk_alloc0 (recur_chunk)
+
+#define event_db__free_event(_x)	\
+	g_mem_chunk_free (event_chunk, _x)
+
+#define event_db__free_recur(_x)	\
+	g_mem_chunk_free (recur_chunk, _x)
+
+#else
+
+#define event_db__alloc_event()		\
+	(event_t)g_malloc0 (sizeof (struct event_s))
+
+#define event_db__alloc_recur()		\
+	(recur_t)g_malloc0 (sizeof (struct recur_s))
+
+#define event_db__free_event(_x)	\
+	g_free (_x)
+
+#define event_db__free_recur(_x)	\
+	g_free (_x)
+
+#endif
+
 extern gboolean event_db_start (void);
-extern gboolean event_db_stop (void);
 extern gboolean event_db_refresh (void);
+extern gboolean event_db_stop (void);
 
 extern gboolean event_db_add (event_t);
 extern gboolean event_db_remove (event_t);
 
 extern gboolean event_db_flush (event_t ev);
 
+extern event_t event_db_clone (event_t);
 extern event_t event_db_new (void);
+extern event_t event_db_find_by_uid (guint uid);
 extern void event_db_destroy (event_t);
 
 extern event_details_t event_db_alloc_details (event_t);

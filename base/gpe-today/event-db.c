@@ -53,6 +53,10 @@ static const char *schema_info =
 
 extern gboolean convert_old_db (int oldversion, sqlite *);
 
+#ifdef EVENT_DB_USE_MEMCHUNK
+GMemChunk *event_chunk, *recur_chunk;
+#endif
+
 static gint
 event_sort_func (const event_t ev1, const event_t ev2)
 {
@@ -173,15 +177,14 @@ load_callback (void *arg, int argc, char **argv, char **names)
     {
       char *err;
       guint uid = atoi (argv[0]);
-      event_t ev = g_malloc (sizeof (struct event_s));
-      memset (ev, 0, sizeof (*ev));
+      event_t ev = event_db__alloc_event ();
       ev->uid = uid;
       if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d", 
 			      load_data_callback, ev, &err, uid))
 	{
 	  gpe_error_box (err);
 	  free (err);
-	  g_free (ev);
+	  event_db__free_event (ev);
 	  return 1;
 	}
 
@@ -189,7 +192,7 @@ load_callback (void *arg, int argc, char **argv, char **names)
 	{
 	  /* Old versions of gpe-calendar dumped out a load of recurrence tags
 	     even for a one-shot event.  */
-	  g_free (ev->recur);
+	  event_db__free_recur (ev->recur);
 	  ev->recur = NULL;
 	}
 
@@ -217,6 +220,12 @@ event_db_start (void)
   char *buf;
   char *err;
   size_t len;
+
+#ifdef EVENT_DB_USE_MEMCHUNK
+  event_chunk = g_mem_chunk_new ("event", sizeof (struct event_s), 4096, G_ALLOC_AND_FREE);
+  recur_chunk = g_mem_chunk_new ("recur", sizeof (struct recur_s), 4096, G_ALLOC_AND_FREE);
+#endif
+
   len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
@@ -349,9 +358,64 @@ event_db_stop (void)
     event_db_destroy(iter->data);
   event_db_list_destroy(recurring_events);
   recurring_events = NULL;
-
+	
   sqlite_close (sqliteh);
   return TRUE;
+}
+
+event_t
+event_db_find_by_uid (guint uid)
+{
+  GSList *iter;
+    
+  for (iter = one_shot_events; iter; iter = g_slist_next (iter))
+    {
+      event_t ev = iter->data;
+      
+      if (ev->uid == uid) 
+	return ev;
+    }
+
+  for (iter = recurring_events; iter; iter = g_slist_next (iter))
+    {
+      event_t ev = iter->data;
+       
+      if (ev->uid == uid) 
+	return ev;
+    }
+
+  return NULL;
+}
+
+void
+event_db_destroy_clone (event_t ev)
+{
+  event_db__free_event (ev);
+}
+
+void
+event_db_list_destroy (GSList *l)
+{
+  GSList *iter;
+    
+  for (iter = l; iter; iter = g_slist_next (iter))
+    {
+      event_t ev = iter->data;
+      
+      if (ev->flags & FLAG_CLONE) 
+	event_db_destroy_clone (ev);
+    }
+	  
+  g_slist_free (l);
+}
+
+event_t
+event_db_clone (event_t ev)
+{
+  event_t n = event_db__alloc_event ();
+  memcpy (n, ev, sizeof (*ev));
+  n->flags |= FLAG_CLONE;
+  return n;
 }
 
 static GSList *
@@ -360,20 +424,23 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 {
   GSList *iter;
   GSList *list = NULL;
-  double test1, test2,not_today;
-  struct tm tm_current, tm_event;
-  guint n = 0;
+  struct tm tm_event;
   
-  localtime_r (&start, &tm_current);
+  if (end == 0)		/* ??? pb */
+    {
+      struct tm tm_current;
+
+      localtime_r (&start, &tm_current);
+  
+      tm_current.tm_year+=1;
+      end = mktime (&tm_current);
+    }
   
   for (iter = one_shot_events; iter; iter = g_slist_next (iter))
     {
       event_t ev = iter->data;
+      time_t fixed_start = ev->start;
       
-      /* Stop if we have enough events */
-      if (max && n >= max)
-	break;
-
       if (untimed_significant)
 	{
 	  /* Ignore events with wrong untimed status */
@@ -382,28 +449,23 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	}
 
       /* Stop if event hasn't started yet */
-      if (end && ev->start > end)
+      if (end && fixed_start > end)
 	break;
       
       /* Skip events that have finished already */
-      if ((ev->start + ev->duration < start)
-	  || (ev->duration && ((ev->start + ev->duration == start))))
+      if ((fixed_start + ev->duration < start)
+	  || (ev->duration && ((fixed_start + ev->duration == start))))
 	continue;
 
-      list = g_slist_append (list, ev);
-      n++;
+      list = g_slist_insert_sorted (list, ev, (GCompareFunc)event_sort_func);
     }
-
+  
   for (iter = recurring_events; iter; iter = g_slist_next (iter))
     {
-      event_t ev = iter->data;
+      event_t ev = iter->data, new_ev;
       time_t fixed_start = ev->start;
       recur_t r = ev->recur;
       
-      /* Stop if we have enough events */
-      if (max && n >= max)
-	break;
-
       if (untimed_significant)
 	{
 	  /* Ignore events with wrong untimed status */
@@ -415,102 +477,98 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
       if (end && fixed_start > end)
 	continue;
       
+      /* Skip events that have finished already */
+      if (r->end && fixed_start > r->end)
+	continue;
+
       switch (r->type)
 	{
 	case RECUR_NONE:
 	  abort ();
 	  
 	case RECUR_DAILY:
-          localtime_r (&ev->start, &tm_event);
-          tm_event.tm_mday=tm_current.tm_mday;
-  	  tm_event.tm_mon=tm_current.tm_mon;
-  	  tm_event.tm_year=tm_current.tm_year;
-  	  fixed_start = mktime (&tm_event);
-	  
-	  test1=(double)(fixed_start-ev->start);
-	  test2=(double)SECONDS_IN_DAY*(double)r->increment;
-	  not_today=fmod(test1, test2);
-	  
-	  /* Stop if event hasn't started yet */
-          if (fixed_start > end || (r->end && fixed_start > r->end) || not_today!=0.0)
-	    continue;
-
-          /* Skip events that have finished already */
-	  if ((fixed_start + ev->duration < start)
-	    || (ev->duration && ((fixed_start + ev->duration == start))))
-	      continue;
-          list = g_slist_append (list, ev);
+	  do {
+	    localtime_r (&fixed_start, &tm_event);
+	    if (fixed_start >= start) 
+	      {
+		new_ev = event_db_clone (ev);
+		new_ev->flags |= FLAG_RECUR;
+		list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	      }
+	    tm_event.tm_mday+=r->increment;
+	    fixed_start = mktime (&tm_event);   
+	  } while (!(r->end && fixed_start > r->end) && fixed_start<end);
 	  break;
 
 	case RECUR_WEEKLY:
-          localtime_r (&ev->start, &tm_event);
-          tm_event.tm_mday=tm_current.tm_mday;
-  	  tm_event.tm_mon=tm_current.tm_mon;
-  	  tm_event.tm_year=tm_current.tm_year;
-  	  fixed_start = mktime (&tm_event);
-	  
-	  /* Stop if event hasn't started yet */
-          if (fixed_start > end || (r->end && fixed_start > r->end))
-	    continue;
-
-          /* Skip events that have finished already */
-	  if ((fixed_start + ev->duration < start)
-	    || (ev->duration && ((fixed_start + ev->duration == start))))
-	      continue;
-          
-	  /* Check day of week */
-	  if ((r->daymask & MON && tm_event.tm_wday==1) ||
-	      (r->daymask & TUE && tm_event.tm_wday==2) ||
-	      (r->daymask & WED && tm_event.tm_wday==3) ||
-	      (r->daymask & THU && tm_event.tm_wday==4) ||
-	      (r->daymask & FRI && tm_event.tm_wday==5) ||
-	      (r->daymask & SAT && tm_event.tm_wday==6) ||
-	      (r->daymask & SUN && tm_event.tm_wday==0))	  
-	     list = g_slist_append (list, ev);
+          do {
+	    localtime_r (&fixed_start, &tm_event);
+	    if (fixed_start >= start &&
+		((r->daymask & MON && tm_event.tm_wday==1) ||
+		 (r->daymask & TUE && tm_event.tm_wday==2) ||
+		 (r->daymask & WED && tm_event.tm_wday==3) ||
+		 (r->daymask & THU && tm_event.tm_wday==4) ||
+		 (r->daymask & FRI && tm_event.tm_wday==5) ||
+		 (r->daymask & SAT && tm_event.tm_wday==6) ||
+		 (r->daymask & SUN && tm_event.tm_wday==0))) {
+	      new_ev = event_db_clone (ev);
+	      new_ev->start = fixed_start;
+	      new_ev->flags |= FLAG_RECUR;
+	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	    }
+	    tm_event.tm_mday++;
+	    fixed_start = mktime (&tm_event);  
+	  } while (!(r->end && fixed_start > r->end) && fixed_start<end);
 	  break;
 
 	case RECUR_MONTHLY:
-          localtime_r (&ev->start, &tm_event);
-          test1=(double)(tm_event.tm_mon-tm_current.tm_mon);
-	  tm_event.tm_mon=tm_current.tm_mon;
-  	  tm_event.tm_year=tm_current.tm_year;
-  	  fixed_start = mktime (&tm_event);
-	  
-	  test2=(double)r->increment;
-	  not_today=fmod(test1, test2);
-	  /* Stop if event hasn't started yet */
-          if (fixed_start > end || (r->end && fixed_start > r->end) || not_today!=0.0)
-	    continue;
-
-          /* Skip events that have finished already */
-	  if ((fixed_start + ev->duration < start)
-	    || (ev->duration && ((fixed_start + ev->duration == start))))
-	      continue;
-          list = g_slist_append (list, ev);
+          do {
+	    localtime_r (&fixed_start, &tm_event);
+	    if (fixed_start >= start) {
+	      new_ev = event_db_clone (ev);
+	      new_ev->start = fixed_start;
+	      new_ev->flags |= FLAG_RECUR;
+	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	    }
+	    tm_event.tm_mon+=r->increment;
+	    fixed_start = mktime (&tm_event); 	  
+	  } while (!(r->end && fixed_start > r->end) && fixed_start<end);
 	  break;
 
 	case RECUR_YEARLY:
-          localtime_r (&ev->start, &tm_event);
-          test1=(double)(tm_event.tm_year-tm_current.tm_year);
-	  tm_event.tm_year=tm_current.tm_year;
-  	  fixed_start = mktime (&tm_event);
-	  
-	  test2=(double)r->increment;
-	  not_today=fmod(test1, test2);
-	  
-	  /* Stop if event hasn't started yet */
-          if (fixed_start > end || (r->end && fixed_start > r->end) || not_today!=0.0)
-	    continue;
-
-          /* Skip events that have finished already */
-	  if ((fixed_start + ev->duration < start)
-	    || (ev->duration && ((fixed_start + ev->duration == start))))
-	      continue;
-          list = g_slist_append (list, ev);
+          do {
+	    localtime_r (&fixed_start, &tm_event);
+	    if (fixed_start >= start) {
+	      new_ev = event_db_clone (ev);
+	      new_ev->start = fixed_start;
+	      new_ev->flags |= FLAG_RECUR;
+	      list = g_slist_insert_sorted (list, new_ev, (GCompareFunc)event_sort_func);
+	    }
+	    tm_event.tm_year+=r->increment;
+	    fixed_start = mktime (&tm_event); 	  
+	  } while (!(r->end && fixed_start > r->end) && fixed_start<end);
 	  break;
-	}
+  	}
     }
+  
+  if (max && g_slist_length (list) > max)
+    {
+      GSList *return_list = NULL;
+      int n = 0;
+      for (iter = list; iter; iter = g_slist_next (iter))
+	{
+	  event_t ev = iter->data; 
+	  /* Stop if we have enough events */
+	  if (n >= max)
+	    break;
+	  return_list = g_slist_append(return_list, ev);
+	  n++;
+	}
 
+      g_slist_free (list);
+      list = return_list;
+    }
+  
   return list;
 }
 
@@ -530,12 +588,6 @@ GSList *
 event_db_list_for_future (time_t start, guint max)
 {
   return event_db_list_for_period_internal (start, 0, FALSE, FALSE, max);
-}
-
-void
-event_db_list_destroy (GSList *l)
-{
-  g_slist_free (l);
 }
 
 #define insert_values(db, id, key, format, value)	\
@@ -687,21 +739,19 @@ event_db_remove (event_t ev)
 event_t
 event_db_new (void)
 {
-  event_t ev = (event_t) g_malloc (sizeof (struct event_s));
-  memset (ev, 0, sizeof (struct event_s));
+  event_t ev = event_db__alloc_event ();
   return ev;
 }
 
 void
 event_db_destroy (event_t ev)
 {
-  if (ev->details)
-    event_db_forget_details(ev);
+  event_db_forget_details (ev);
 
   if (ev->recur)
-    g_free (ev->recur);
+    event_db__free_recur (ev->recur);
 
-  g_free (ev);
+  event_db__free_event (ev);
 }
 
 event_details_t
@@ -718,8 +768,7 @@ event_db_get_recurrence (event_t ev)
 {
   if (ev->recur == NULL)
     {
-      ev->recur = g_malloc (sizeof (struct recur_s));
-      memset (ev->recur, 0, sizeof (struct recur_s));
+      ev->recur = event_db__alloc_recur ();
 
       ev->recur->type = RECUR_NONE;
     }
