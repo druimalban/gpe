@@ -1,0 +1,180 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-05-27 23:09+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: about.c:37
+msgid "OK"
+msgstr "OK"
+
+#: event-ui.c:322
+msgid "Event"
+msgstr "Evento"
+
+#: event-ui.c:323
+msgid "Recurrence"
+msgstr "Reocurrência"
+
+#: event-ui.c:324 event-ui.c:365
+msgid "Alarm"
+msgstr "Alarme"
+
+#: event-ui.c:340
+msgid "Save"
+msgstr "Guardar"
+
+#: event-ui.c:341
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: event-ui.c:342
+msgid "Delete"
+msgstr "Apagar"
+
+#: event-ui.c:349
+msgid "Start on:"
+msgstr "Começar em:"
+
+#: event-ui.c:350
+msgid "End on:"
+msgstr "Acabar em:"
+
+#: event-ui.c:351 event-ui.c:352
+msgid "at:"
+msgstr "em:"
+
+#: event-ui.c:356
+msgid "Summary:"
+msgstr "Sumário:"
+
+#: event-ui.c:358
+msgid "Description:"
+msgstr "Descrição"
+
+#: event-ui.c:361
+msgid "All-day event"
+msgstr "Evento do dia"
+
+#: event-ui.c:370
+msgid "before event"
+msgstr "evento anterior"
+
+#: event-ui.c:424
+msgid "Type:"
+msgstr "Tipo:"
+
+#: event-ui.c:433
+msgid "No recurrence"
+msgstr "Não há reocurrência"
+
+#: event-ui.c:439
+msgid "Daily"
+msgstr "Diáriamente"
+
+#: event-ui.c:444
+msgid "Weekly"
+msgstr "Semanalmente"
+
+#: event-ui.c:450
+msgid "Monthly"
+msgstr "Mensalmente"
+
+#: event-ui.c:455
+msgid "Yearly"
+msgstr "Anualmente"
+
+#: event-ui.c:478 event-ui.c:499 event-ui.c:554 event-ui.c:622
+msgid "Every"
+msgstr "Todos"
+
+#: event-ui.c:488 event-ui.c:706
+msgid "day(s)"
+msgstr "dia(s)"
+
+#: event-ui.c:500
+msgid "week(s), on:"
+msgstr "semana(s), em:"
+
+#: event-ui.c:565 event-ui.c:710
+msgid "month(s)"
+msgstr "meses"
+
+#: event-ui.c:570
+#, c-format
+msgid "on day %d"
+msgstr "no dia %d"
+
+#: event-ui.c:575
+msgid "on the"
+msgstr "no"
+
+#: event-ui.c:591
+msgid "first"
+msgstr "primeiro"
+
+#: event-ui.c:593
+msgid "second"
+msgstr "segundo"
+
+#: event-ui.c:595
+msgid "third"
+msgstr "terceiro"
+
+#: event-ui.c:597
+msgid "fourth"
+msgstr "quarto"
+
+#: event-ui.c:599
+msgid "fifth"
+msgstr "quinto"
+
+#: event-ui.c:601
+msgid "last"
+msgstr "último"
+
+#: event-ui.c:632 event-ui.c:712
+msgid "year(s)"
+msgstr "ano(s)"
+
+#: event-ui.c:645
+msgid "End Date:"
+msgstr "Data do Final:"
+
+#: event-ui.c:652
+msgid "forever"
+msgstr "indefenidamente"
+
+#: event-ui.c:664
+msgid "end after"
+msgstr "acabar após"
+
+#: event-ui.c:681
+msgid "end on"
+msgstr "acabar em"
+
+#: event-ui.c:689
+msgid "event(s)"
+msgstr "evento(s)"
+
+#: event-ui.c:702
+msgid "minute(s)"
+msgstr "minuto(s)"
+
+#: event-ui.c:704
+msgid "hour(s)"
+msgstr "hora(s)"
+
+#: event-ui.c:708
+msgid "week(s)"
+msgstr "semana(s)"
