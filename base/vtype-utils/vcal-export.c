@@ -16,6 +16,8 @@
 
 sqlite *db;
 
+MIMEDirVCal *vcal;
+
 int 
 db_open(void) 
 {
@@ -56,9 +58,7 @@ read_tags (void *data, int argc, char *argv[], char *ignore[])
 void
 export_one_vcal (int uid)
 {
-  MIMEDirVCal *vcal;
   MIMEDirVEvent *vevent;
-  gchar *str;
   char *err = NULL;
   GSList *tags = NULL;
 
@@ -69,19 +69,9 @@ export_one_vcal (int uid)
       exit (1);
     }
 
-  vcal = mimedir_vcal_new ();
   vevent = vevent_from_tags (tags);
 
   mimedir_vcal_add_component (vcal, MIMEDIR_VCOMPONENT (vevent));
-
-  if (vcal)
-    {
-      str = mimedir_vcal_write_to_string (vcal);
-
-      fprintf (stdout, "%s\n", str);
-    }
-  else
-    fprintf (stderr, "Cannot generate vCal\n");
 }
 
 int
@@ -95,10 +85,14 @@ read_one (void *ignore, int argc, char *argv[], void *data)
 int
 main (int argc, char *argv[])
 {
+  gchar *str;
+
   g_type_init ();
 
   if (db_open ())
     exit (1);
+
+  vcal = mimedir_vcal_new ();
 
   if (argc > 1)
     {
@@ -108,6 +102,10 @@ main (int argc, char *argv[])
     }
   else
     sqlite_exec (db, "select uid from calendar_urn", read_one, NULL, NULL);
+
+  str = mimedir_vcal_write_to_string (vcal);
+
+  fprintf (stdout, "%s\n", str);
 
   exit (0);
 }
