@@ -18,7 +18,6 @@
 	
 	* gpe-login.c (main): Set cursor for window.
 
-	* familiar/control.gpe-dm: Conflict with old xserver-tiny-h3600.
 	* X11/Xserver (ARGS): Add -br.
 
 2003-01-18  Philip Blundell  <philb@gnu.org>
