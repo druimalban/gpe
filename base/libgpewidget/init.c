@@ -16,6 +16,7 @@
 
 #include "errorbox.h"
 #include "what.h"
+#include "tap.h"
 
 gboolean
 gpe_application_init (int *argc, char **argv[])
@@ -24,7 +25,7 @@ gpe_application_init (int *argc, char **argv[])
   struct stat buf;
   gchar *user_gtkrc_file;
   const gchar *default_gtkrc_file = PREFIX "/share/gpe/gtkrc";
-  gchar *home_dir = g_get_home_dir ();
+  const gchar *home_dir = g_get_home_dir ();
 	  
   gtk_rc_add_default_file (default_gtkrc_file);
   user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", home_dir);
@@ -62,6 +63,8 @@ gpe_application_init (int *argc, char **argv[])
     }
 
   gpe_what_init ();
+
+  tap_hold_init ();
 
   return TRUE;
 }

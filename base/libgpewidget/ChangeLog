@@ -1,3 +1,13 @@
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
+	* gpe/what.h: Move to ...
+	* what.h: ... here.
+	
+	* tap.c, tap.h: New files.  Highly experimental code to convert
+	tap-and-hold into button 3 clicks.
+	* Makefile (MEMBERS): Add tap.
+	* init.c (gpe_application_init): Fix warning.  Call tap_hold_init.
+
 2003-01-04  Robert Mibus  <mibus@handhelds.org>
 
 	* gpeiconlist.gob, gpe-iconlist.[ch]: Oops, fix it right this time!
