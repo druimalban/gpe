@@ -1,8 +1,14 @@
 VERSION = 0.0.3
 
+ifeq ($(pc),"") # simple test to recognise if we are from ipaq
 PREFIX = "/usr/local"
+else
+PREFIX = "/usr"
+endif
+
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
 CC = gcc
+
 MEMBERS  = main applets parser
 MEMBERS += unimplemented
 MEMBERS += timeanddate
@@ -26,7 +32,6 @@ all: gpe-conf gpe-confsuid
 gpe-conf: $(OBJS)
 	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs` -lcrypt
 	strip gpe-conf
-
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
 	strip gpe-confsuid
@@ -48,6 +53,9 @@ ipkg:
 	sudo chown -R pierre.pierre dist
 clean:
 	rm -f gpe-conf $(OBJS) *~ */*~ *.ipk
+
 # to build arm bin on ipaq cluster
 tgz:	clean
 	cd ..;tar czf /tmp/ss.tgz gpe-conf
+send:
+	scp $(ARM_BINARY) $(HOMEUSER)@$(pc):/armbins/
