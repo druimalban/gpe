@@ -1,3 +1,13 @@
+2005-03-06		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Released Version 0.2.13
+	* main.c: Fixed some icon display issues, improved signal strength display.
+	          Fixed dhcp autodetection.
+	* pixmaps/scan-off.png: New icon.
+	* pixmaps/scan-on.png: Add bar for signal strength display.
+	* gpe-aerial.desktop: Removed file, it is generated.
+	* Makefile: Add installation of new icon, changed version.
+
 2005-02-13		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Add autodetection of dhcp client.

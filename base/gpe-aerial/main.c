@@ -1,5 +1,5 @@
 /*
- * gpe-aerial (c) 2003, 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-aerial (c) 2003 - 2005 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
@@ -61,7 +61,7 @@ static GThread *scan_thread;
 
 struct gpe_icon my_icons[] = {
 	{"scan-on", PREFIX "/share/pixmaps/scan-on.png"},
-	{"scan-off", PREFIX "/share/pixmaps/gpe-aerial.png"},
+	{"scan-off", PREFIX "/share/pixmaps/scan-off.png"},
 	{"network", PREFIX "/share/pixmaps/pccard-network.png"},
 	{"gpe-aerial", PREFIX "/share/pixmaps/gpe-aerial.png"},
 	{NULL}
@@ -108,6 +108,7 @@ GtkWidget *devices_window;
 gboolean radio_is_on = FALSE;
 GdkWindow *dock_window;
 static GSList *devices = NULL;
+GtkWidget *window;
 
 
 /* some forwards */
@@ -126,6 +127,26 @@ static void aerial_shutdown ();
 static GtkTreeStore *store;
 static GtkWidget *tree;
 static GtkCellRenderer *renderer;
+
+static void
+image_set(int size)
+{
+	GdkBitmap *bitmap;
+	GdkPixbuf *sbuf, *dbuf;
+	
+	if (size == 0)
+	{
+		GdkPixbuf *pbuf = gtk_image_get_pixbuf(GTK_IMAGE(icon));
+		size = gdk_pixbuf_get_width(pbuf);
+	}
+    sbuf = gpe_find_icon(radio_is_on ? "scan-on" : "scan-off");
+    dbuf = gdk_pixbuf_scale_simple(sbuf, size, size, GDK_INTERP_HYPER);
+    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
+    gdk_bitmap_unref (bitmap);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(icon), dbuf);
+}
 
 /* find a valid dhcp command */
 static int
@@ -166,13 +187,13 @@ draw_signal (int signal)
 	rect.width = xsize;
 	rect.height = ysize;
 	gc = gdk_gc_new (GDK_DRAWABLE (dock_window));
-	gdk_gc_set_fill (gc, GDK_OPAQUE_STIPPLED);
+	gdk_gc_set_fill (gc, GDK_SOLID);
 	gdk_gc_set_rgb_fg_color (gc, &sigc);
 
 	gdk_window_invalidate_rect (dock_window, &rect, TRUE);
 	gdk_window_process_updates (dock_window, TRUE);
 	gdk_draw_rectangle (GDK_DRAWABLE (dock_window), gc, TRUE, 0,
-			    (xsize + 2) - signal * (ysize*2) / 255, ysize,
+			    (xsize + 2) - signal * (ysize*2) / 255, 4,
 			    signal * (ysize*2) / 255 + 2);
 	g_object_unref(G_OBJECT(gc));
 }
@@ -512,19 +533,12 @@ do_stop_radio (void)
 static void
 radio_off (void)
 {
-/*	if (timeout_id) 
-	{
-		gtk_timeout_remove(timeout_id);
-		timeout_id = 0;
-	}
-*/ gtk_widget_hide (menu_radio_off);
+	gtk_widget_hide (menu_radio_off);
 	gtk_widget_show (menu_radio_on);
 
-	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
-				   gpe_find_icon ("scan-off"));
-
 	do_stop_radio ();
-
+	image_set(0);
+	
 	draw_signal (0);
 }
 
@@ -827,13 +841,13 @@ radio_on (void)
 {
 	sigset_t sigs;
 	struct sockaddr_un name;
-
+	
 	gtk_widget_hide (menu_radio_on);
 	gtk_widget_show (menu_radio_off);
-
-	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
-				   gpe_find_icon ("scan-on"));
+	
 	radio_is_on = TRUE;
+	image_set(0);
+	
 	sigemptyset (&sigs);
 	sigaddset (&sigs, SIGCHLD);
 	/* start and connect to scanner */
@@ -871,6 +885,7 @@ radio_on (void)
 		usleep(200000);
 		get_networks();
 	}
+	cfg.dhcpcommand = check_dhcp();
 	cfg_changed = FALSE;
 	cfg.scan = TRUE;
 	send_config ();
@@ -952,20 +967,12 @@ aerial_shutdown ()
 gboolean 
 external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
 {
-  GdkBitmap *bitmap;
-  GdkPixbuf *sbuf, *dbuf;
   int size;
 	
   if (event->type == GDK_CONFIGURE)
   {
     size = (event->width > event->height) ? event->height : event->width;
-    sbuf = gpe_find_icon(radio_is_on ? "scan-on" : "scan-off");
-    dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
-    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
-    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
-    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
-    gdk_bitmap_unref (bitmap);
-    gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
+	image_set(size);
   }
   return FALSE;
 }
@@ -975,7 +982,6 @@ int
 main (int argc, char *argv[])
 {
 	Display *dpy;
-	GtkWidget *window;
 	GdkBitmap *bitmap;
 	GtkWidget *menu_remove;
 	GtkWidget *menu_off;
@@ -1093,8 +1099,6 @@ main (int argc, char *argv[])
 
 	dock_window = window->window;
 	gpe_system_tray_dock (window->window);
-
-	cfg.dhcpcommand = check_dhcp();
 
 	gtk_timeout_add (1000, (GtkFunction) update_linklevel, NULL);
 

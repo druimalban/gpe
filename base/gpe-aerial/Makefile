@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.12
+VERSION = 0.2.13
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -42,6 +42,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = gpe-aerial.png
 PIXMAPS += scan-on.png
+PIXMAPS += scan-off.png
 
 all: $(PACKAGE) 
 
