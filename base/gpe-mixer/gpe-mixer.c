@@ -52,6 +52,7 @@ static struct gpe_icon my_icons[] = {
 /* GTK UI */
 GtkWidget *window;				/* Main window */
 GtkStyle *style;
+GtkObject **MixerAdjuster;
 
 /* helper for i8n */
 #define _(x) gettext(x)
@@ -61,6 +62,7 @@ char *mixer_labels[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_LABELS;
 char *mixer_names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_NAMES;
 int devmask = 0, recmask = 0, recsrc = 0;
 int mixfd;
+
 
 static void
 set_volume (GtkObject *o, void *t)
@@ -76,12 +78,12 @@ set_volume (GtkObject *o, void *t)
   	perror("WRITE_MIXER");
 }
 
-void create_mixers(GtkWidget *table, int mdev)
+
+void create_mixers(GtkWidget *table)
 {
 int i,n=0;
 int mval;
 GtkWidget *slider;
-GtkObject *adjuster;
 GtkWidget *label;
 GtkWidget *w;
 int *devnum;
@@ -93,25 +95,27 @@ int *devnum;
 	}
 
 	/* create table for all mixers */
-	table=gtk_table_new(2,n,FALSE);
+	table=gtk_table_new(2, n, FALSE);
 	style = gtk_style_copy (table->style);
 	gtk_container_add (GTK_CONTAINER (window), table);
+	MixerAdjuster=(GtkObject **)malloc(n * sizeof (GtkObject));
 
 	/* fill table with mixers */
+	n=0;
 	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
 		if ((1 << i) & devmask) {
 			devnum=(int *)malloc(sizeof(int));
 			*devnum=i;
-			adjuster = gtk_adjustment_new (101.0, 0.0, 101.0, 1.0, 10.0, 1.0);
-			slider = gtk_vscale_new (GTK_ADJUSTMENT (adjuster));
+			MixerAdjuster[n] = gtk_adjustment_new (101.0, 0.0, 101.0, 1.0, 10.0, 1.0);
+			slider = gtk_vscale_new (GTK_ADJUSTMENT (MixerAdjuster[n]));
 			gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
 			gtk_widget_set_style (slider, style);
 			gtk_table_attach(GTK_TABLE(table), slider, n,n+1,1,2,(GtkAttachOptions) (GTK_FILL),(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-			if (ioctl(mdev, MIXER_READ(i),&mval)== -1) /* get initial setting */
+			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get initial setting */
 				perror("MIXER_READ");
 			else
-				gtk_adjustment_set_value(GTK_ADJUSTMENT(adjuster), 100 - (gdouble)(mval & 0x7f));
-			g_signal_connect (G_OBJECT (adjuster), "value-changed",G_CALLBACK (set_volume), devnum);
+				gtk_adjustment_set_value(GTK_ADJUSTMENT(MixerAdjuster[n]), 100 - (gdouble)(mval & 0x7f));
+			g_signal_connect (G_OBJECT (MixerAdjuster[n]), "value-changed",G_CALLBACK (set_volume), devnum);
 			gtk_widget_show(slider);
 			if ((w = gtk_image_new_from_pixbuf (gpe_find_icon (mixer_names[i])))) {
 				gtk_widget_set_style (w, style);
@@ -127,6 +131,26 @@ int *devnum;
 		}
 	}
 	gtk_widget_show (table);
+}
+
+
+gboolean mixer_idle (gpointer data)
+{
+unsigned int i, n;
+int mval;
+
+	n=0;
+	for (i=0; i<SOUND_MIXER_NRDEVICES; i++) {
+		if ((1 << i) & devmask) {
+			if (ioctl(mixfd, MIXER_READ(i),&mval)== -1) /* get setting */
+				perror("MIXER_READ");
+			else
+				gtk_adjustment_set_value(GTK_ADJUSTMENT(MixerAdjuster[n]), 100 - (gdouble)(mval & 0x7f));
+			n++;
+		}
+	}
+
+return TRUE;
 }
 
 
@@ -181,11 +205,13 @@ gchar *color = "gray80";
 			G_CALLBACK (gtk_main_quit), NULL);
 
 	table = NULL;
-	create_mixers(table, mixfd);
+	create_mixers(table);
 
 #ifdef USE_GPE
 	gpe_set_window_icon (window, "icon");
 #endif
+
+	gtk_timeout_add(500 /*ms*/, mixer_idle, NULL);
 
 	gtk_widget_show (window);
 
