@@ -120,13 +120,10 @@ gpe_export_vcard (sqlite *db, guint uid)
 }
 
 #define insert(a,b) \
-	  {if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
+	  if (sqlite_exec_printf (db, "insert into contacts values (%d,'%q','%q')", \
 				  NULL, NULL, &err, \
 				  id, a, b)) \
-	    goto error; \
-	  printf ("insert into contacts values (%d,'%s','%s')\n", \
-				  \
-				  id, a, b);}
+	    goto error; 
 
 gchar *
 append_str (gchar *old, gchar *new)
@@ -179,8 +176,6 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 				  NULL, NULL, &err,
 				  id, t->tag, g_strstrip(value)))
 	    goto error;
-printf("1: insert into contacts values (%d,'%s','%s')\n", 
-				  id, t->tag, g_strstrip(value));	  
 	}
       t++;
     }
@@ -225,7 +220,7 @@ printf("1: insert into contacts values (%d,'%s','%s')\n",
 	{
 	  g_object_get (G_OBJECT (address), "home", &home, NULL);
 	  g_object_get (G_OBJECT (address), "work", &work, NULL);
-	  if (home && !work)
+	  if (home || !work)
 	    insert ("home.address", s);
 	  if (work)
 	    insert ("work.address", s);
