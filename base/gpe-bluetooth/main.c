@@ -54,12 +54,23 @@ struct gpe_icon my_icons[] = {
   { NULL }
 };
 
+typedef enum
+  {
+    BT_UNKNOWN,
+    BT_LAP,
+    BT_DUN
+  } bt_device_type;
+
 struct bt_device
 {
   gchar *name;
   guint class;
   bdaddr_t bdaddr;
   GdkPixbuf *pixbuf;
+  bt_device_type type;
+  guint port;
+  pid_t pid;
+  GtkWidget *window, *button;
 };
 
 static GtkWidget *icon;
@@ -85,7 +96,7 @@ do_run_scan (void)
   int dev_id = hci_get_route(&bdaddr);
   int num_rsp, length, flags;
   char name[248];
-  int i, opt, dd;
+  int i, dd;
 
   if (dev_id < 0) 
     {
@@ -117,13 +128,30 @@ do_run_scan (void)
   for (i = 0; i < num_rsp; i++) 
     {
       struct bt_device *bd;
+      GSList *iter;
+      gboolean found = FALSE;
+
+      baswap (&bdaddr, &(info+i)->bdaddr);
+
+      for (iter = devices; iter; iter = iter->next)
+	{
+	  struct bt_device *d = (struct bt_device *)iter->data;
+	  if (memcmp (&d->bdaddr, &bdaddr, sizeof (bdaddr)) == 0)
+	    {
+	      found = TRUE;
+	      break;
+	    }
+	}
+
+      if (found)
+	continue;
 
       memset(name, 0, sizeof(name));
       if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 100000) < 0)
-	strcpy (name, "n/a");
-      baswap (&bdaddr, &(info+i)->bdaddr);
+	strcpy (name, _("unknown"));
 
       bd = g_malloc (sizeof (struct bt_device));
+      memset (bd, 0, sizeof (*bd));
       bd->name = g_strdup (name);
       memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
       bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
@@ -151,12 +179,29 @@ do_run_scan (void)
   return TRUE;
 }
 
-static void
-run_scan (void)
+static int
+run_scan (void *data)
 {
   do_run_scan ();
 
   scan_complete = TRUE;
+
+  return 0;
+}
+
+static void
+stop_dun (struct bt_device *bd)
+{
+  pid_t p = vfork ();
+  char bdaddr[40];
+
+  strcpy (bdaddr, batostr (&bd->bdaddr));
+
+  if (p == 0)
+    {
+      execlp ("dund", "dund", "-k", bdaddr, NULL);
+      _exit (1);
+    }
 }
 
 static pid_t
@@ -214,12 +259,21 @@ radio_on (void)
 static void
 radio_off (void)
 {
+  GSList *iter;
   gtk_widget_hide (menu_radio_off);
   gtk_widget_show (menu_radio_on);
   gtk_widget_set_sensitive (menu_devices, FALSE);
 
   gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
   radio_is_on = FALSE;
+  for (iter = devices; iter; iter = iter->next)
+    {
+      struct bt_device *bd = (struct bt_device *)iter->data;
+      if (bd->pid)
+	{
+	  stop_dun (bd);
+	}
+    }
   if (hcid_pid)
     {
       kill (hcid_pid, 15);
@@ -242,20 +296,23 @@ devices_window_destroyed (void)
 }
 
 static gboolean
-browse_device (bdaddr_t *hbdaddr)
+browse_device (struct bt_device *bd)
 {
   GSList *attrid, *search;
   GSList *pSeq = NULL;
-  GSList *pGSList = NULL;
   uint32_t range = 0x0000ffff;
   uint16_t count = 0;
   int status = -1, i;
   uuid_t group;
   bdaddr_t bdaddr;
+  uuid_t lap_uuid, dun_uuid, rfcomm_uuid;
 
-  baswap (&bdaddr, hbdaddr);
+  baswap (&bdaddr, &bd->bdaddr);
 
   sdp_create_uuid16 (&group, PUBLIC_BROWSE_GROUP);
+  sdp_create_uuid16 (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
+  sdp_create_uuid16 (&dun_uuid, DIALUP_NET_SVCLASS_ID);
+  sdp_create_uuid16 (&rfcomm_uuid, RFCOMM_UUID);
 
   attrid = g_slist_append (NULL, &range);
   search = g_slist_append (NULL, &group);
@@ -265,56 +322,187 @@ browse_device (bdaddr_t *hbdaddr)
   if (status) 
     return FALSE;
 
-  for (i = 0; i < (int) g_slist_length(pSeq); i++) 
+  bd->type = BT_UNKNOWN;
+
+  for (i = 0; i < (int) g_slist_length (pSeq); i++) 
     {
       uint32_t svcrec;
+      GSList *pGSList;
       svcrec = *(uint32_t *) g_slist_nth_data(pSeq, i);
 
-      /* ... */
+      if (sdp_get_svclass_id_list (&bdaddr, svcrec, &pGSList) == 0) 
+	{
+	  GSList *iter;
+	  
+	  for (iter = pGSList; iter; iter = iter->next)
+	    {
+	      uuid_t *u = iter->data;
+	      if (sdp_uuid_cmp (u, &lap_uuid) == 0)
+		bd->type = BT_LAP;
+	      else if (sdp_uuid_cmp (u, &dun_uuid) == 0)
+		bd->type = BT_DUN;
+	    }
+	}
 
+      if (bd->type != BT_UNKNOWN)
+	{
+	  sdp_access_proto_t *access_proto;
+	  if (sdp_get_access_proto (&bdaddr, svcrec, &access_proto) == 0) 
+	    {
+	      GSList *iter;
+
+	      for (iter = access_proto->seq; iter; iter = iter->next)
+		{
+		  GSList *list;
+
+		  for (list = iter->data; list; list = list->next)
+		    {
+		      sdp_proto_desc_t *desc = list->data;
+		      if (sdp_uuid_cmp (&desc->uuid, &rfcomm_uuid) == 0)
+			bd->port = desc->port;
+		    }
+		}
+	    }
+	}
     }
   
   return TRUE;
 }
 
 static void
+window_destroyed (GtkWidget *window, gpointer data)
+{
+  struct bt_device *bd = (struct bt_device *)data;
+
+  bd->window = NULL;
+  bd->button = NULL;
+}
+
+static void
+button_clicked (GtkWidget *window, gpointer data)
+{
+  struct bt_device *bd = (struct bt_device *)data;
+
+  if (bd->pid)
+    {
+      stop_dun (bd);
+      bd->pid = 0;
+    }
+  else
+    {
+      /* connect */
+      char port[16];
+      char address[64];
+      pid_t p;
+
+      if (! radio_is_on)
+	{
+	  gpe_error_box (_("Radio is switched off"));
+	  return;
+	}
+      
+      strcpy (address, batostr (&bd->bdaddr));
+      sprintf (port, "%d", bd->port);
+
+      p = vfork ();
+
+      if (p == 0)
+	{
+	  execlp ("dund", "dund", "-n", "-C", port, "-c", address, NULL);
+	  _exit (1);
+	}
+
+      bd->pid = p;
+    }
+
+  if (bd->button)
+    {
+      GtkWidget *label = gtk_bin_get_child (GTK_BIN (bd->button));
+      gtk_label_set_text (GTK_LABEL (label), bd->pid ? _("Disconnect") : _("Connect"));
+    }
+}
+
+static void
 device_clicked (GtkWidget *w, gpointer data)
 {
   struct bt_device *bd = (struct bt_device *)data;
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
-  GtkWidget *labelname = gtk_label_new (bd->name);
-  GtkWidget *labeladdr = gtk_label_new (batostr (&bd->bdaddr));
-  GtkWidget *image = gtk_image_new_from_pixbuf (bd->pixbuf);
-  GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
 
-  gtk_widget_show (vbox1);
-  gtk_widget_show (hbox1);
-  gtk_widget_show (vbox2);
-  gtk_widget_show (labelname);
-  gtk_widget_show (labeladdr);
-  gtk_widget_show (image);
+  if (bd->window == NULL)
+    {
+      GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+      GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
+      GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
+      GtkWidget *labelname = gtk_label_new (bd->name);
+      GtkWidget *labeladdr = gtk_label_new (batostr (&bd->bdaddr));
+      GtkWidget *image = gtk_image_new_from_pixbuf (bd->pixbuf);
+      GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
 
-  gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
-  gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
+      gtk_widget_show (vbox1);
+      gtk_widget_show (hbox1);
+      gtk_widget_show (vbox2);
+      gtk_widget_show (labelname);
+      gtk_widget_show (labeladdr);
+      gtk_widget_show (image);
 
-  gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
+      gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
+      gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
+      
+      gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
+      
+      gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
+      gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
+      
+      gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
-  gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
+      if (bd->type == 0)
+	browse_device (bd);
 
-  gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, FALSE, 0);
-
-  gtk_container_add (GTK_CONTAINER (window), vbox2);
-
-  gtk_widget_realize (window);
-  gdk_window_set_transient_for (window->window, devices_window->window);
-  
-  gtk_widget_show (window);
-
-  browse_device (&bd->bdaddr);
+      if (bd->type != BT_UNKNOWN)
+	{
+	  GtkWidget *label;
+	  char str[80];
+	  
+	  strcpy (str, _("Service class: "));
+	  switch (bd->type)
+	    {
+	    case BT_DUN:
+	      strcat (str, _("Dial-Up Network"));
+	      break;
+	    case BT_LAP:
+	      strcat (str, _("LAN Access"));
+	      break;
+	    default:
+	      strcat (str, _("unknown"));
+	      break;
+	    }
+	  
+	  label = gtk_label_new (str);
+	  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+	  gtk_widget_show (label);
+	  gtk_box_pack_start (GTK_BOX (vbox2), label, FALSE, FALSE, 4);
+	}
+      
+      if (bd->type == BT_LAP)
+	{
+	  GtkWidget *button = gtk_button_new_with_label (bd->pid ? _("Disconnect") : _("Connect"));
+	  gtk_widget_show (button);
+	  gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 4);
+	  bd->button = button;
+	  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (button_clicked), bd);
+	}
+      
+      gtk_container_add (GTK_CONTAINER (window), vbox2);
+      
+      gtk_widget_realize (window);
+      gdk_window_set_transient_for (window->window, devices_window->window);
+      
+      gtk_widget_show (window);
+      
+      bd->window = window;
+      
+      g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (window_destroyed), bd);
+    }
 }
 
 static gboolean
@@ -325,7 +513,6 @@ check_scan_complete (void)
       GSList *iter;
 
       pthread_join (scan_thread, NULL);
-      gpe_iconlist_clear (GPE_ICONLIST (iconlist));
       
       for (iter = devices; iter; iter = iter->next)
 	{
@@ -342,6 +529,8 @@ check_scan_complete (void)
 static void
 show_devices (void)
 {
+  GSList *iter;
+
   if (devices_window == NULL)
     {
       devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -360,6 +549,7 @@ show_devices (void)
 			G_CALLBACK (devices_window_destroyed), NULL);
     }
 
+  gpe_iconlist_clear (GPE_ICONLIST (iconlist));
   gtk_widget_show (devices_window);
 
   scan_complete = FALSE;
@@ -380,7 +570,7 @@ sigchld_handler (int sig)
       hcid_pid = 0;
       if (radio_is_on)
 	{
-	  gpe_error_box (_("hcid died unexpectedly"));
+	  gpe_error_box_nonblocking (_("hcid died unexpectedly"));
 	  radio_off ();
 	}
     }
@@ -389,7 +579,7 @@ sigchld_handler (int sig)
       hciattach_pid = 0;
       if (radio_is_on)
 	{
-	  gpe_error_box (_("hciattach died unexpectedly"));
+	  gpe_error_box_nonblocking (_("hciattach died unexpectedly"));
 	  radio_off ();
 	}
     }
