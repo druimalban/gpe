@@ -1,3 +1,9 @@
+2002-08-06  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-xcalibrate.sh: Don't look at xcalibrate's return code, as it
+	always returns 1 (at least in the version we have in unstable
+	right now).
+
 2002-08-05  Moray Allan  <moray@handhelds.org>
 
 	* gpe-login/familiar/gpe-logout.menu: Moved to section 'Utilities'.
