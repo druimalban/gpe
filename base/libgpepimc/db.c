@@ -22,7 +22,7 @@
 
 #define DB_NAME "/.gpe/categories"
 
-static const char *schema_str = "create table contacts_category (id INTEGER PRIMARY KEY, description TEXT);";
+static const char *schema_str = "create table category (id INTEGER PRIMARY KEY, description TEXT);";
 
 static GSList *categories;
 static sqlite *db;
@@ -85,7 +85,7 @@ gpe_pim_categories_init (void)
 GSList *
 gpe_pim_categories_list (void)
 {
-  return categories;
+  return g_slist_copy (categories);
 }
 
 gboolean
@@ -94,7 +94,7 @@ gpe_pim_category_new (const gchar *name, gint *id)
   char *err;
   int r =
     sqlite_exec_printf (db,
-			"insert into contacts_category values (NULL, '%q')",
+			"insert into category values (NULL, '%q')",
 			      NULL, NULL, &err, name);
   if (r)
     {

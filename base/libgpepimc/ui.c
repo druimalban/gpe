@@ -28,7 +28,7 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
 {
   GtkWidget *entry = gtk_object_get_data (GTK_OBJECT (d), "entry");
   char *title = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-  GSList *l;
+  GSList *l, *list;
   GtkTreeIter iter;
   GtkListStore *list_store;
 
@@ -41,7 +41,8 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
       return;
     }
 
-  for (l = gpe_pim_categories_list (); l; l = l->next)
+  list = gpe_pim_categories_list ();
+  for (l = list; l; l = l->next)
     {
       struct gpe_pim_category *c = l->data;
       if (!strcasecmp (title, c->name))
@@ -51,6 +52,7 @@ do_new_category (GtkWidget *widget, GtkWidget *d)
 	  return;
 	}
     }
+  g_slist_free (list);
 
   gtk_list_store_append (list_store, &iter);
   gtk_list_store_set (list_store, &iter, 0, FALSE, 1, title, 2, NULL, -1);
@@ -346,12 +348,15 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   for (iter = list; iter; iter = iter->next)
     {
       struct gpe_pim_category *c = iter->data;
-      GtkTreeIter iter;
+      GtkTreeIter titer;
 
-      gtk_list_store_append (list_store, &iter);
+      gtk_list_store_append (list_store, &titer);
 
-      gtk_list_store_set (list_store, &iter, 0, g_slist_find (selected_categories, (gpointer)c->id), 
-			  1, c->name, 2, c->id, -1);
+      gtk_list_store_set (list_store, &titer, 
+			  0, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE, 
+			  1, c->name, 
+			  2, c->id, 
+			  -1);
     }
   g_slist_free (list);
 
