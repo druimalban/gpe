@@ -640,6 +640,8 @@ show_control (void)
 {
 	GtkWidget *img;
 	GtkWidget *tw, *hb;
+	gchar *str;
+	
 	if (control_window == NULL)
 	{
 		GtkWidget *hsep = gtk_hseparator_new ();
@@ -665,10 +667,13 @@ show_control (void)
 		gtk_misc_set_alignment (GTK_MISC (lCHint), 0, 0.0);
 		lSaddr = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lSaddr), 0, 0.5);
+		str = g_strdup_printf("<b>%s</b>",_("Peer Information"))
+		gtk_label_set_markup (GTK_LABEL(lcPeer), str);
+		g_free(str);			  
+		str = g_strdup_printf("<b>%s</b>",_("Peer Actions"))
 		gtk_label_set_markup (GTK_LABEL
-				      (lcPeer), _("<b>Peer Information</b>"));
-		gtk_label_set_markup (GTK_LABEL
-				      (lcActions), _("<b>Peer Actions</b>"));
+				      (lcActions), str);
+		g_free(str);			  
 		hb = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
 		img = gtk_image_new_from_stock
 			(GTK_STOCK_GO_UP, GTK_ICON_SIZE_BUTTON);
