@@ -31,6 +31,8 @@ static struct todo_category *selected_category;
 GtkListStore *list_store;
 GtkWidget *item_menu;
 
+GdkPixbuf *tick_icon, *no_tick_icon;
+
 static struct todo_item *current_menu_item;
 
 static void
@@ -39,11 +41,6 @@ item_do_edit (void)
   gtk_widget_show_all (edit_item (current_menu_item, NULL));
 
   current_menu_item = NULL;
-}
-
-static void
-item_do_move (void)
-{
 }
 
 static void
@@ -129,7 +126,7 @@ toggle_completed (GtkTreePath *path)
   complete = (i->state == COMPLETED) ? TRUE : FALSE;
 
   gtk_list_store_set (list_store, &iter, 
-		      0, complete ? gpe_find_icon ("tick-box") : gpe_find_icon ("notick-box"),
+		      0, complete ? tick_icon : no_tick_icon,
 		      1, i->summary,  
 		      2, complete, 
 		      3, i,
@@ -138,14 +135,29 @@ toggle_completed (GtkTreePath *path)
   todo_db_push_item (i);
 }
 
+int
+sort_by_priority (gconstpointer a, gconstpointer b)
+{
+  struct todo_item *ia, *ib;
+
+  ia = (struct todo_item *)a;
+  ib = (struct todo_item *)b;
+
+  return ia->priority - ib->priority;
+}
+
 void
 refresh_items (void)
 {
-  GSList *iter;
+  GSList *list, *iter;
 
   gtk_list_store_clear (list_store);
 
-  for (iter = todo_db_get_items_list(); iter; iter = iter->next)
+  list = g_slist_copy (todo_db_get_items_list ());
+
+  g_slist_sort (list, sort_by_priority);
+
+  for (iter = list; iter; iter = iter->next)
     {
       struct todo_item *i = iter->data;
       if (selected_category == NULL 
@@ -159,13 +171,15 @@ refresh_items (void)
 	  gtk_list_store_append (list_store, &iter);
 
 	  gtk_list_store_set (list_store, &iter, 
-			      0, complete ? gpe_find_icon ("tick-box") : gpe_find_icon ("notick-box"),
+			      0, complete ? tick_icon : no_tick_icon,
 			      1, i->summary,  
 			      2, complete, 
 			      3, i,
 			      -1);
 	}
     }
+
+  g_slist_free (list);
 }
 
 gboolean
@@ -239,7 +253,6 @@ button_release_event (GtkWidget *widget, GdkEventButton *b)
 static GtkItemFactoryEntry menu_items[] =
 {
   { "/_Edit",   NULL, item_do_edit,     0, "<Item>" },
-  //  { "/_Move",   NULL, item_do_move,     0, "<Item>" },
   { "/_Delete", NULL, item_do_delete,   0, "<StockItem>", GTK_STOCK_DELETE },
 };
 
@@ -254,6 +267,9 @@ top_level (GtkWidget *window)
   GtkWidget *list_view;
   GtkAccelGroup *accel_group;
   GtkItemFactory *item_factory;
+
+  no_tick_icon = gpe_find_icon ("notick-box");
+  tick_icon = gpe_find_icon ("tick-box");
 
   g_option = option;
   categories_menu ();

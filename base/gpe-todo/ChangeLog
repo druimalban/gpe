@@ -1,5 +1,11 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* list-ui.c (top_level): Cache pointers to tick-box and notick-box
+	icons.
+	(toggle_completed): Use them.
+	(refresh_items): Likewise.  Sort items by priority.
+	(sort_by_priority): New.
+
 	* familiar/control1 (Depends): Demand libtododb >= 0.03.
 
 	* todo-ui.c (edit_item): Move action buttons outside of scrolled
