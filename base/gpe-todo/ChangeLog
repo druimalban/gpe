@@ -1,3 +1,10 @@
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* gpe-todo.desktop (SingleInstance): Set to true.
+
+	* configure.c (new_category_box): Set title and icon on
+	configuration window.
+
 2002-12-24  Philip Blundell  <pb@nexus.co.uk>
 
 	* Version 0.29 released.

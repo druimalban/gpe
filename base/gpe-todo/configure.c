@@ -99,6 +99,9 @@ new_category_box (GtkWidget *w, gpointer data)
   guint screen_width, screen_height;
   GtkRequisition requisition;
 
+  gtk_window_set_title (GTK_WINDOW (window), _("To-do list: Categories"));
+  gpe_set_window_icon (window, "icon");
+
   ok = gpe_picture_button (window->style, _("OK"), "ok");
   cancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
 

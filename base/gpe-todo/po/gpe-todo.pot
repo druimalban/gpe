@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-24 14:02+0000\n"
+"POT-Creation-Date: 2003-01-01 23:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 msgid "To-do list"
 msgstr ""
 
-#: todo-ui.c:254 configure.c:102 configure.c:196
+#: todo-ui.c:254 configure.c:105 configure.c:199
 msgid "OK"
 msgstr ""
 
-#: todo-ui.c:255 todo-ui.c:304 list-ui.c:82 configure.c:103
+#: todo-ui.c:255 todo-ui.c:304 list-ui.c:82 configure.c:106
 msgid "Cancel"
 msgstr ""
 
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: todo-ui.c:305 list-ui.c:82 configure.c:209
+#: todo-ui.c:305 list-ui.c:82 configure.c:212
 msgid "Delete"
 msgstr ""
 
@@ -87,7 +87,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: list-ui.c:342 configure.c:202
+#: list-ui.c:342 configure.c:205
 msgid "New"
 msgstr ""
 
@@ -135,18 +135,22 @@ msgstr ""
 msgid "A category by that name already exists"
 msgstr ""
 
-#: configure.c:132
+#: configure.c:102
+msgid "To-do list: Categories"
+msgstr ""
+
+#: configure.c:135
 msgid "New category"
 msgstr ""
 
-#: configure.c:165
+#: configure.c:168
 msgid "Categories"
 msgstr ""
 
-#: configure.c:203 configure.c:204
+#: configure.c:206 configure.c:207
 msgid "Create a new category"
 msgstr ""
 
-#: configure.c:210 configure.c:211
+#: configure.c:213 configure.c:214
 msgid "Delete the selected category"
 msgstr ""
