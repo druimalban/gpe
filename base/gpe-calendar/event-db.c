@@ -11,8 +11,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include <sqlite.h>
+
+#include "errorbox.h"
 
 #include "event-db.h"
 #include "globals.h"
@@ -21,7 +25,8 @@ static sqlite *sqliteh;
 
 static GSList *single_events, *recurring_events;
 
-static char *dname = "/.gpe/calendar";
+static const char *dname = "/.gpe";
+static const char *fname = "/calendar";
 
 static unsigned long uid;
 
@@ -105,14 +110,24 @@ event_db_start (void)
   size_t len;
   if (home == NULL) 
     home = "";
-  len = strlen (home) + strlen (dname) + 1;
+  len = strlen (home) + strlen (dname) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, dname);
+  if (access (buf, F_OK))
+    {
+      if (mkdir (buf, 0700))
+	{
+	  gpe_perror_box (buf);
+	  g_free (buf);
+	  return -1;
+	}
+    }
+  strcat (buf, fname);
   sqliteh = sqlite_open (buf, 0, &err);
   if (sqliteh == NULL)
     {
-      fprintf (stderr, "sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
       return FALSE;
     }
@@ -121,7 +136,7 @@ event_db_start (void)
   
   if (sqlite_exec (sqliteh, "select uid, start, duration, alarmtime, recurring from events", load_callback, NULL, &err))
     {
-      fprintf (stderr, "sqlite: %s\n", err);
+      gpe_error_box (err);
       free (err);
       return FALSE;
     }

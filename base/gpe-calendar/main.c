@@ -118,12 +118,12 @@ main(int argc, char *argv[])
 
   gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
   
-  if (event_db_start () == FALSE)
-    exit (1);
-
   gtk_set_locale ();
   gtk_init(&argc, &argv);
   gdk_imlib_init ();
+
+  if (event_db_start () == FALSE)
+    exit (1);
 
   for (hour = 0; hour < 24; hour++)
     {

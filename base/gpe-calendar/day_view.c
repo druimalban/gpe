@@ -24,8 +24,6 @@
 
 extern GdkFont *timefont, *datefont;
   
-gint bias = 8;
-
 static GSList *strings;
 static GtkWidget *day_list;
 static GtkWidget *datesel;
@@ -245,7 +243,8 @@ day_view_update ()
       gtk_clist_set_column_width (GTK_CLIST (day_list), 0, width + 4);
     }
 
-  gtk_clist_moveto (GTK_CLIST (day_list), bias, 0, 0.0, 0.0);
+  localtime_r (&viewtime, &tm_start);
+  gtk_clist_moveto (GTK_CLIST (day_list), tm_start.tm_hour, 0, 0.0, 0.0);
 
   gtk_clist_thaw (GTK_CLIST (day_list));
   
