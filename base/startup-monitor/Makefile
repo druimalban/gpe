@@ -18,11 +18,13 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 
 CFLAGS += -Wall
-LDFLAGS += -L/usr/X11R6/lib -lX11 -lXext -lmb `pkg-config --libs libstartup-notification-1.0` `pkg-config --libs glib-2.0`
+LDFLAGS += `pkg-config --libs x11` -lXext -lmb `pkg-config --libs libstartup-notification-1.0` `pkg-config --libs glib-2.0`
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
 .SUFFIXES: .d
+
+export PKG_CONFIG_PATH = $(BUILD)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
