@@ -1,3 +1,8 @@
+2004-08-24  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * editing.c: Added missing population of categories display.
+    * db.c: Fixed warning.
+
 2004-08-23  Florian Boor  <florian.boor@kernelconcepts.de>
     
     * main.c: Fixed category update.

@@ -502,7 +502,7 @@ db_get_entries_alpha (const gchar * alphalist)
 {
   GSList *list = NULL;
 
-  char *command, *tmp, *modifier;
+  char *command, *tmp = NULL, *modifier;
   char *err;
   int r, s, t;
 
@@ -549,17 +549,17 @@ db_get_entries_alpha (const gchar * alphalist)
       g_free (temp_char_up);
 
       if (r != s-1)
-	command = g_strdup_printf ("%s or", tmp);
+        command = g_strdup_printf ("%s or", tmp);
       
       cursym = g_utf8_next_char (cursym);
+      
     }
   
   command = g_strdup_printf ("select urn, value from contacts "
 			     "where ((( tag = 'NAME') or ( tag = 'name')) and%s(%s)) "
 			     "order by value desc", modifier, tmp);
+  r = sqlite_exec (db, command, read_one_entry_alpha, &list, &err);
   g_free (tmp);
-  r = sqlite_exec (db, command,
-		   read_one_entry_alpha, &list, &err);
 
   if (r)
     {

@@ -512,7 +512,8 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 void
 edit_person (struct person *p)
 {
-  GtkWidget *w = edit_window ();
+  GtkWidget *catlabel, *w = edit_window ();
+  gchar *str;
   
   if (p)
     {
@@ -573,6 +574,12 @@ edit_person (struct person *p)
             }
         }
       gtk_object_set_data (GTK_OBJECT (w), "person", p);
+        
+      /* display categories */  
+      str = build_categories_string (p);
+      catlabel = lookup_widget (w, "categories-label");
+      gtk_label_set_text (GTK_LABEL (catlabel), str);
+      g_free (str);
     }
   gtk_widget_show (w);
 }
