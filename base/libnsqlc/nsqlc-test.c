@@ -31,7 +31,7 @@ main()
     }
 
   nsqlc_get_time (ctx, &t, &err);
-  printf ("%d %d", t, time (NULL));
+  printf ("%d %d\n", t, time (NULL));
 
   if (nsqlc_exec (ctx, "select * from test", callback, NULL, &err))
     {
