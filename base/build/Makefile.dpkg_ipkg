@@ -3,11 +3,7 @@
 
 # Let's use whatever clean target the specific app provides
 
-ifeq ($(GTK2),yes)
-CONTROL = control1
-else
-CONTROL = control
-endif
+CONTROL = `if test -e familiar/control1; then echo control1; else echo control; fi`
 
 # can change this to e.g. /var/tmp/deb
 DEB_PATH = ../deb

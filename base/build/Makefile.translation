@@ -1,10 +1,6 @@
 .SUFFIXES: .mo .po .pot .po8
 
-ifeq ($(GTK2),yes)
-CONTROL = control1
-else
-CONTROL = control
-endif
+CONTROL = `if test -e familiar/control1; then echo control1; else echo control; fi`
 
 # use ipkg-build or ipkg-deb-build
 IPKG_BUILD := ipkg-build

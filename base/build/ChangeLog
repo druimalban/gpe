@@ -1,3 +1,9 @@
+2003-07-07  Moray Allan  <moray@sermisy.org>
+
+	* Makefile.dpkg_ipkg, Makefile.translation: Use familiar/control1 if
+	it exists; otherwise use familiar/control. (Previous behaviour was
+	dependent on the now-unneeded GTK2 variable.)
+
 2003-06-28  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (dist): Use $(BUILD) as source when copying
