@@ -1,3 +1,7 @@
+2004-08-19 Florian Boor <florian.boor@kernelconcepts.de>
+	* Released V 0.0.11
+	* Fixed some labels.
+
 2004-08-18 Nils Faerber <nils.faerber@kernelconcepts.de>
 	* Created a new error dialog box for ipkg errors
 	* Error messages are now redirected into the messages notebook tab

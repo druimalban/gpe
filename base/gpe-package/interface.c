@@ -930,14 +930,14 @@ char *tmp;
 			       GTK_ORIENTATION_HORIZONTAL);
 
 	bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
-			   _("Apply package selection"), _("Apply package selection"),
+			   _("Apply package selection"), NULL,
 			   (GtkSignalFunc) on_package_install_clicked , NULL, -1);
 			   
 	gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
 	pw = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close application"),
-			   _("Close application"), _("Close application"), pw,
+	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close"),
+			   _("Close application"), NULL, pw,
 			   (GtkSignalFunc) do_safe_exit, NULL);
 			   
 	gtk_box_pack_start(GTK_BOX(vbox),toolbar,FALSE,TRUE,0);

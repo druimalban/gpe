@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.10
+VERSION = 0.0.11
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -29,14 +29,14 @@ endif
 PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 #PACKAGE_CFLAGS += -DIPKG_LIB  -I/skiff/local/arm-linux/include/libipkg
-PACKAGE_CFLAGS += -DIPKG_LIB  -I/usr/local/include/libipkg
+PACKAGE_CFLAGS += -DIPKG_LIB  `pkg-config --cflags libipkg`
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 libipkg` 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0 gdk-pixbuf-2.0`
 
 PACKAGE_CFLAGS += $(GPECFLAGS) $(GTKCFLAGS) $(STANDARD_CFLAGS) 
 #PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) $(STANDARD_LDFLAGS)
-PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) $(STANDARD_LDFLAGS) -lipkg
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS) $(STANDARD_LDFLAGS) `pkg-config --libs libipkg`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
