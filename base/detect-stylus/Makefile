@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = detect-stylus
 #DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.06
+VERSION = 0.07
 
 MEMBERS = detect-stylus
 
@@ -24,7 +24,7 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install: all
-	mkdir -p $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/bin/
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/X11/Xinit.d
 	install 70detect-stylus $(DESTDIR)/etc/X11/Xinit.d
