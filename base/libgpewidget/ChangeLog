@@ -1,3 +1,15 @@
+2002-08-24  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.21 released.
+
+2002-08-24  Philip Blundell  <philb@gnu.org>
+
+	* gtkdatecombo.c (gtk_date_combo_clear): New function.
+	(gtk_date_combo_init): Set combo->set to TRUE.
+	(click_calendar): Likewise.
+	* gpe/gtkdatecombo.h (gtk_date_combo_clear): Add prototype.
+	(struct _GtkDateCombo): New member "set".
+
 2002-08-23  Philip Blundell  <philb@gnu.org>
 
 	* render.c (gpe_render_pixmap_alpha): Renamed from

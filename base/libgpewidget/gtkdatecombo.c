@@ -31,6 +31,7 @@ click_calendar(GtkWidget *widget,
 {
   gtk_calendar_get_date (GTK_CALENDAR (widget), &combo->year, 
 			 &combo->month, &combo->day);
+  combo->set = TRUE;
   update_text (combo);
   gtk_widget_hide (combo->calw);
   combo->cal_open = FALSE;
@@ -81,6 +82,7 @@ gtk_date_combo_init (GtkDateCombo *combo)
   time (&t);
   localtime_r (&t, &tm);
 
+  combo->set = TRUE;
   combo->year = tm.tm_year + 1900;
   combo->month = tm.tm_mon;
   combo->day = tm.tm_mday;
@@ -228,4 +230,11 @@ gtk_date_combo_set_date (GtkDateCombo *dp, guint year, guint month, guint day)
   dp->month = month;
   dp->day = day;
   update_text (dp);
+}
+
+void
+gtk_date_combo_clear (GtkDateCombo *dp)
+{
+  dp->set = FALSE;
+  gtk_entry_set_text (dp->entry, "");
 }

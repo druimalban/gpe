@@ -27,9 +27,11 @@ struct _GtkDateCombo
   GtkWidget *button;
   gboolean cal_open;
   guint year, month, day;
+  gboolean set;
 };
 
-struct _GtkDateComboClass {
+struct _GtkDateComboClass 
+{
   GtkHBoxClass parent_class;
 };
 
@@ -42,5 +44,7 @@ GtkWidget      *gtk_date_combo_new (void);
 
 void            gtk_date_combo_set_date (GtkDateCombo *,
 					 guint year, guint month, guint day);
+
+void		gtk_date_combo_clear (GtkDateCombo *dp);
 
 #endif
