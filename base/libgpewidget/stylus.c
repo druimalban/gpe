@@ -20,6 +20,7 @@
 #define YES 1
 #define NO 2
 
+#include <stdlib.h>
 #include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>

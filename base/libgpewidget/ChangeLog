@@ -1,5 +1,7 @@
 2004-05-27  Philip Blundell  <philb@gnu.org>
 
+	* stylus.c: Include <stdlib.h> to fix warning.
+
 	* Makefile (MEMBERS): Remove tap.
 	* tap.h: Deleted.
 	* init.c (gpe_application_init): Delete call to tap_hold_init.
