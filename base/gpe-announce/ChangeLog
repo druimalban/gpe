@@ -1,5 +1,6 @@
 2004-10-08  Florian Boor <florian@kernelconcepts.de>
 
+	* Released Version 0.11
 	* callbacks.c: Feature to read user-specific config file and set alarm
 	               settings according to value in it.
 

@@ -17,7 +17,7 @@ PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
 LINGUAS = 
-VERSION = 0.10
+VERSION = 0.11
 
 MEMBERS = main interface callbacks
 
