@@ -1,3 +1,8 @@
+
+2004-12-21  Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* Version 0.59 released.
+
 2004-11-25  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* event-ui.c: Applied patch to fix transientness, thanks to
