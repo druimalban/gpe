@@ -1,3 +1,8 @@
+2003-02-17  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation ($(PACKAGE).desktop): New rule.
+	(extract-po): Extract strings from .desktop file also.
+
 2003-02-15  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (real-translation-package): Renamed from
