@@ -633,20 +633,40 @@ GSList *
 db_get_entries_alpha (const gchar * alphalist)
 {
   GSList *list = NULL;
-  GSList *all_entries = db_get_entries ();
   GSList *i;
 
-  for (i = all_entries; i; i = i->next)
-    {
-      struct person *p = i->data;
-      
-      if (strchr (alphalist, p->name[0]))
-	list = g_slist_insert_sorted (list, p, (GCompareFunc) sort_entries);
-      else
-	discard_person (p);
-    }
+  char *command, *tmp;
+  char *err;
+  int r, s;
 
-  g_slist_free (all_entries);
+  s = strlen(alphalist);
+  command = g_strdup("");
+  for (r=0;r<s;r++)
+  {
+     tmp = g_strdup_printf("%s(contacts.value like '%c%%') or (contacts.value like '%c%%')",
+	   command,g_ascii_toupper(alphalist[r]),g_ascii_tolower(alphalist[r]));
+	 free(command); 
+	 if (r != s-1)
+	   command = g_strdup_printf("%s or",tmp);					 
+  }
+
+  command = g_strdup_printf("select distinct contacts_urn.urn from contacts_urn, \
+  		contacts where ((contacts_urn.urn = contacts.urn) and (%s))",tmp);
+  free(tmp);
+#ifdef USE_USQLD	
+  r = usqld_exec (db, command,
+		   read_one_entry, &list, &err);
+#else
+  r = sqlite_exec (db, command,
+		   read_one_entry, &list, &err);
+#endif
+
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
 
   return list;
 }

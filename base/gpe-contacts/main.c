@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <libdm.h>
+#include <unistd.h>
 
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
@@ -39,6 +40,8 @@
 #include "callbacks.h"
 
 #define MY_PIXMAPS_DIR PREFIX "/share/gpe-contacts/pixmaps"
+#define TAB_CONFIG_LOCAL ".contacts-tab"
+#define TAB_CONFIG_GLOBAL "/etc/gpe/contacts-tab.conf"
 
 static GtkWidget *categories_smenu;
 gchar *active_chars;
@@ -57,6 +60,74 @@ struct gpe_icon my_icons[] = {
   {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
+
+/* type that holds tab configuration data */
+typedef struct 
+{
+	char *label;
+	char *chars;
+}t_tabdef;
+
+t_tabdef *tabdefs = NULL;
+int num_tabs = 0;
+
+/* loads tab config from file */
+/* doesn't free existing structs! */
+static int 
+load_tab_config ()
+{
+  FILE *fnew;
+  char *label, *chars;
+  char *localfile;
+	
+  label = malloc(33);
+  chars = malloc(33);
+  num_tabs = 0;
+
+  localfile = g_strdup_printf("%s/%s",g_get_home_dir(),TAB_CONFIG_LOCAL);
+  if (!access(localfile,R_OK))
+    fnew = fopen (localfile, "r");
+  else if (!access(TAB_CONFIG_GLOBAL,R_OK))
+    fnew = fopen (TAB_CONFIG_GLOBAL, "r");
+
+  /* scans config file */  
+  /* TAB=<label> <charlist> */
+  if (fnew)
+  {
+    while (!feof(fnew) && (2 == fscanf (fnew, "TAB=%32s %32s\n", label, chars)))
+    {
+      num_tabs++;
+      tabdefs = realloc(tabdefs,num_tabs*sizeof(t_tabdef));
+      tabdefs[num_tabs-1].label=g_strdup(label);
+      tabdefs[num_tabs-1].chars=g_strdup(chars);
+    }
+    fclose (fnew);
+  }
+  else  // defaults
+  {
+    tabdefs = malloc(7*sizeof(t_tabdef));
+    tabdefs[0].label=g_strdup("abcd");
+    tabdefs[0].chars=tabdefs[0].label;
+    tabdefs[1].label=g_strdup("efgh");
+    tabdefs[1].chars=tabdefs[1].label;
+    tabdefs[2].label=g_strdup("ijkl");
+    tabdefs[2].chars=tabdefs[2].label;
+    tabdefs[3].label=g_strdup("mnop");
+    tabdefs[3].chars=tabdefs[3].label;
+    tabdefs[4].label=g_strdup("qrstu");
+    tabdefs[4].chars=tabdefs[4].label;
+    tabdefs[5].label=g_strdup("vwxyz");
+    tabdefs[5].chars=tabdefs[5].label;
+    tabdefs[6].label=g_strdup("other");
+    tabdefs[6].chars=g_strdup("1234567890+-?!$");
+    num_tabs = 7;
+  }
+  free(label);
+  free(chars);
+  free(localfile);
+  active_chars = tabdefs[0].chars;
+  return num_tabs;
+}
 
 void
 load_panel_config ()
@@ -658,31 +729,7 @@ main_view_switch_page (GtkNotebook * notebook,
 		       GtkNotebookPage * page,
 		       gint page_num, gpointer user_data)
 {
-  switch (page_num)
-    {
-    case 0:
-      sprintf (active_chars, "ABC");
-      break;	
-    case 1:
-      sprintf (active_chars, "DEF");
-      break;	
-    case 2: 
-      sprintf (active_chars, "GHIJ");
-      break;	
-    case 3:
-      sprintf (active_chars, "KLMN");
-      break;	
-    case 4:
-      sprintf (active_chars, "OPQR");
-      break;	
-    case 5:
-      sprintf (active_chars, "STUV");
-      break;	
-    case 6:
-      sprintf (active_chars, "WXYZ");
-      break;	
-    }
-
+  active_chars = tabdefs[page_num].chars;
   update_display ();
 }
 
@@ -774,12 +821,6 @@ create_main (void)
   GtkWidget *nbList;
   GtkWidget *empty_notebook_page;
   GtkWidget *label46a;
-  GtkWidget *label47;
-  GtkWidget *label48;
-  GtkWidget *label49;
-  GtkWidget *label50;
-  GtkWidget *label51;
-  GtkWidget *label52;
   GtkWidget *hbox3;
   GtkWidget *label83, *label84;
   GtkWidget *entry1;
@@ -791,6 +832,7 @@ create_main (void)
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
   GtkWidget *go_button;
+  int i;
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
@@ -824,63 +866,29 @@ create_main (void)
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
 			    _("Properties"), _("Tap here to configure the program."),
 			    G_CALLBACK (configure), NULL, -1);
+				
+  gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
 
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
+			    _("Close"), _("Tap here to exit gpe-contacts."),
+			    G_CALLBACK (gtk_main_quit), NULL, -1);
+				
   nbList = gtk_notebook_new ();
   gtk_box_pack_start (GTK_BOX (vbox1), nbList, FALSE, FALSE, 0);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (nbList), FALSE);
   gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (nbList), 1);
   gtk_notebook_set_tab_vborder (GTK_NOTEBOOK (nbList), 0);
 
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
+  load_tab_config();
 
-  label46a = gtk_label_new (_("ABC"));
-  gtk_widget_show (label46a);
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 0), label46a);
-
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
-
-  label47 = gtk_label_new (_("DEF"));
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 1), label47);
-
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
-
-  label48 = gtk_label_new (_("GHIJ"));
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 2), label48);
-
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
-
-  label49 = gtk_label_new (_("KLMN"));
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 3), label49);
-
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
-
-  label50 = gtk_label_new (_("OPQR"));
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 4), label50);
-
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
-
-  label51 = gtk_label_new (_("STUV"));
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 5), label51);
-
-  empty_notebook_page = gtk_vbox_new (FALSE, 0);
-  gtk_container_add (GTK_CONTAINER (nbList), empty_notebook_page);
-
-  label52 = gtk_label_new (_("WXYZ"));
-  gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbList), 
-			      gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbList), 6), label52);
-
+  for (i=0;i<num_tabs;i++)
+  {
+     empty_notebook_page = gtk_vbox_new (FALSE, 0);
+     label46a = gtk_label_new(tabdefs[i].label);
+     gtk_widget_show (label46a);
+     gtk_notebook_append_page(GTK_NOTEBOOK(nbList),empty_notebook_page,label46a);	  
+  }
+  
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -945,9 +953,6 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 	
-  active_chars = malloc (5 * sizeof (gchar));
-  sprintf (active_chars, "ABCD");
-
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 

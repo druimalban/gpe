@@ -1,3 +1,14 @@
+2003-04-25	Florian Boor	<florian.boor@kernelconcepts.de>
+
+	* main.c, some fixes for new tab handling, some cleanups
+	* db.c, db_get_entries_alpha some bugfixes in sql generating code
+	* contacts-tab.conf.de, new: example tab configuration for german language setting
+	
+2003-04-24	Florian Boor	<florian.boor@kernelconcepts.de>
+
+	* main.c, some code for improved tab handling and configuration
+	* db.c, db_get_entries_alpha speedup - needs testing
+
 2003-04-12  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.13 released.
@@ -411,4 +422,3 @@
 	* gpe-contacts.menu: New file.
 
 	* contacts-layout.xml: New structure.
-
