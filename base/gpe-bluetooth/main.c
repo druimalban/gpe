@@ -503,6 +503,22 @@ schedule_message_delete (guint id, guint time)
   g_timeout_add (time, (GSourceFunc) cancel_dock_message, (gpointer)id);
 }
 
+gboolean 
+configure_event (GtkWidget *window, GdkEventConfigure *event, GdkBitmap *bitmap)
+{
+  GdkPixbuf *buf;
+  int xoff, yoff;
+
+  buf = gpe_find_icon ("bt-off");
+
+  xoff = (event->width - gdk_pixbuf_get_width (buf)) / 2;
+  yoff = (event->height - gdk_pixbuf_get_height (buf)) / 2;
+
+  gtk_widget_shape_combine_mask (window, bitmap, xoff, yoff);
+ 
+  return FALSE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -572,14 +588,14 @@ main (int argc, char *argv[])
   icon = gtk_image_new_from_pixbuf (gpe_find_icon (radio_is_on ? "bt-on" : "bt-off"));
   gtk_widget_show (icon);
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
-  gdk_bitmap_unref (bitmap);
+  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 
   gpe_set_window_icon (window, "bt-on");
 
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the Bluetooth control.\nTap here to turn the radio on and off, or to see a list of Bluetooth devices."), NULL);
 
+  g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (configure_event), bitmap);
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 
