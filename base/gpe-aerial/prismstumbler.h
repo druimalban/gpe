@@ -48,7 +48,8 @@ typedef enum
 	msg_config,
 	msg_gps,
 	msg_command,
-	msg_usernet
+	msg_usernet,
+	msg_info
 }
 psmsgtype_t;
 
@@ -58,11 +59,26 @@ typedef enum
 	C_SENDLIST,
 	C_CLEARLIST,
 	C_DETECT_CARD,
-	C_ASSOCIATE, 
-	C_SUCCESS,
-	C_FAILED
+	C_ASSOCIATE
 }
 command_t;
+
+typedef enum
+{
+	I_NONE,
+	I_NOCARD,
+	I_ERRCARD,
+	I_SUCCESS,
+	I_FAILED
+}
+info_t;
+
+typedef struct
+{
+	info_t info;
+	char message[100];
+}
+psinfo_t;
 
 
 typedef struct
@@ -71,6 +87,7 @@ typedef struct
 	int quality;
 }
 psgps_t;
+
 
 typedef struct
 {
@@ -186,6 +203,7 @@ typedef struct
 		pscommand_t command;
 		psgps_t gps;
 		usernetinfo_t usernet;
+		psinfo_t info; 
 	}content;
 }
 psmessage_t;

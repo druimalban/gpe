@@ -1,3 +1,9 @@
+06/05/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c	New: Display messages from prismstumbler.
+	Makefile	New version.
+				Updated header file for new prismstumbler version.
+	Released 0.2.2
+
 05/30/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c	Reduced icon size - is GTK_ICON_SIZE_DIALOG now which will be 
 				set to 30x30 in future.

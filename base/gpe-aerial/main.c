@@ -489,13 +489,13 @@ update_netlist (psnetinfo_t * anet)
 
 
 static void
-do_cmd_result (pscommand_t * cmd)
+do_message_info (psinfo_t * psi)
 {
 	GtkWidget *dialog;
 
-	switch (cmd->command)
+	switch (psi->info)
 	{
-	case C_SUCCESS:
+	case I_SUCCESS:
 		dialog = gtk_message_dialog_new (GTK_WINDOW (devices_window),
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_INFO,
@@ -507,7 +507,7 @@ do_cmd_result (pscommand_t * cmd)
 					  G_OBJECT (dialog));
 		gtk_widget_show (dialog);
 		break;
-	case C_FAILED:
+	case I_FAILED:
 		if ((net_request_nr >= 0) && (netlist[net_request_nr]->netinfo.mode == 1))
 			gpe_perror_box_nonblocking (_
 					    ("Ad-Hoc connections setup complete."));
@@ -515,6 +515,9 @@ do_cmd_result (pscommand_t * cmd)
 			gpe_perror_box_nonblocking (_
 					    ("Could not connect to wireless LAN."));
 		break;
+	case I_ERRCARD:
+	case I_NOCARD:
+			gpe_perror_box_nonblocking (psi->message);
 	default:
 		break;
 	}
@@ -547,8 +550,8 @@ get_networks (void)
 				memcpy (&cfg, &msg.content.cfg,
 					sizeof (psconfig_t));
 				break;
-			case msg_command:
-				do_cmd_result (&msg.content.command);
+			case msg_info:
+				do_message_info (&msg.content.info);
 				break;
 			default:
 				break;
