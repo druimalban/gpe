@@ -317,8 +317,8 @@ update_time_face (void)
   time (&t);
   localtime_r (&t, &tm);
 
-  gtk_adjustment_set_value (hour_adj, tm.tm_hour);
-  gtk_adjustment_set_value (minute_adj, tm.tm_min);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (hour_adj), tm.tm_hour);
+  gtk_adjustment_set_value (GTK_ADJUSTMENT (minute_adj), tm.tm_min);
 }
 
 static void
@@ -573,10 +573,12 @@ alarm_window (void)
   button_toggled (NULL, ctx);
 }
 
-static void
+static gboolean
 clicked (GtkWidget *w, GdkEventButton *ev, GtkWidget *menu)
 {
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
+
+  return TRUE;
 }
 
 static void
@@ -643,36 +645,6 @@ main (int argc, char *argv[])
   set_defaults ();
   load_prefs ();
 
-  panel_window = gtk_plug_new (0);
-
-  if (flag_graphical)
-    {
-      hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
-      minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
-  
-      face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
-      gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
-      gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
-      gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
-      gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
-      
-      gtk_container_add (GTK_CONTAINER (panel_window), face);
-    }
-  else
-    {
-      time_label = gtk_label_new (NULL);
-
-      update_time_label (time_label);
-
-      gtk_container_add (GTK_CONTAINER (panel_window), time_label);
-    }
-
-  gtk_widget_realize (panel_window);
-
-  gtk_widget_show_all (panel_window);
-
-  gpe_system_tray_dock (panel_window->window);
-
   menu = gtk_menu_new ();
   menu_prefs = gtk_menu_item_new_with_label (_("Preferences"));
   menu_set_time = gtk_menu_item_new_with_label (_("Set the time"));
@@ -694,8 +666,42 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (menu_alarm), "activate", G_CALLBACK (alarm_window), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
-  g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
-  gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+  panel_window = gtk_plug_new (0);
+
+  if (flag_graphical)
+    {
+      hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
+      minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
+  
+      face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
+      gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
+      gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
+      gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
+      gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
+      
+      gtk_container_add (GTK_CONTAINER (panel_window), face);
+
+      g_signal_connect (G_OBJECT (face), "button-press-event", G_CALLBACK (clicked), menu);
+    }
+  else
+    {
+      time_label = gtk_label_new (NULL);
+
+      update_time_label (time_label);
+
+      gtk_container_add (GTK_CONTAINER (panel_window), time_label);
+
+      g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
+      gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+    }
+
+  gtk_widget_realize (panel_window);
+
+  gtk_widget_show_all (panel_window);
+
+  printf("allocation: %d %d\n", panel_window->allocation.width, panel_window->allocation.height);
+
+  gpe_system_tray_dock (panel_window->window);
 
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, change the display format, or remove this program from the panel."), NULL);

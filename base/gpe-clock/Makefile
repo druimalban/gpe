@@ -3,7 +3,7 @@ PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.8
+VERSION = 0.9
 
 #FIXME: add: de ro ru sr sk sv
 LINGUAS = nl pt cs fr
