@@ -1,3 +1,8 @@
+2005-04-07	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * minilite.c: Applied patch by Matthew Reimer to fix display turn off 
+                  using Sysfs.
+	
 2004-12-22	Florian Boor <florian.boor@kernelconcepts.de>
 
     * Released version 0.47.

@@ -96,7 +96,6 @@ char IpaqModel = -1;
 #define SYS_STATE_OFF 4
 static char *SYS_BRIGHTNESS = NULL;
 static char *SYS_POWER = NULL;
-static char *SYS_LCDPOWER = NULL;
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -145,8 +144,6 @@ setup_sysclass(void)
 	
 	SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", bl_dev);
 	SYS_POWER = g_strdup_printf("%s/power", bl_dev);
-	SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", 
-	                               strrchr(bl_dev, '/') + 1);
 }
 
 static t_platform
@@ -183,19 +180,13 @@ sysclass_set_level(int level)
   f_light = fopen(SYS_BRIGHTNESS, "w");
   if (f_light != NULL)
   {
-    fprintf(f_light,"%d\n", level * 4);
+    fprintf(f_light,"%d\n", level * 4); /* XXX Ought to scale to max_brightness. */ 
   	fclose(f_light);
   }
   else
 	  return -1;
   
   f_light = fopen(SYS_POWER, "w");
-  if (f_light != NULL)
-  {
-    fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
-  	fclose(f_light);
-  }
-  f_light = fopen(SYS_LCDPOWER, "w");
   if (f_light != NULL)
   {
     fprintf(f_light,"%d\n",  level ? SYS_STATE_ON : SYS_STATE_OFF);
@@ -216,7 +207,7 @@ sysclass_get_level(void)
   {
   	fscanf(f_light,"%d", &level);
   	fclose(f_light);
-	return level / 4;
+	return level / 4; /* XXX Ought to scale to max_brightness. */
   }
   return -1;
 }  
