@@ -140,9 +140,9 @@ static GtkItemFactoryEntry menu_items[] =
   { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
   { "/_Rename",          NULL, popup_ask_rename_file,          0, "<Item>" },
   { "/_Delete",          NULL, popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
+  { "/_Create Directory",NULL, create_directory_interactive, 0, "<Item>"},
   { "/sep2",	         NULL, NULL,	             0, "<Separator>" },
   { "/_Properties",      NULL, show_file_properties, 0, "<StockItem>", GTK_STOCK_PROPERTIES },
-  { "/_Create Directory",NULL, create_directory_interactive, 0, "<Item>"},
 };
 
 static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
@@ -314,7 +314,7 @@ create_directory_interactive(void)
     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
     GTK_MESSAGE_QUESTION,
     GTK_BUTTONS_OK_CANCEL, NULL);
-    
+#warning pass message    
   label = gtk_label_new ("New directory");
   entry = gtk_entry_new ();
 
@@ -667,7 +667,74 @@ popup_ask_delete_file ()
 static void
 show_file_properties ()
 {
-  printf ("Show file properties\n");
+  GtkWidget *infodialog;
+  GtkWidget *label; /* will be used to hold several labels */
+  GtkWidget *table;
+  gchar *text;
+
+  infodialog = gtk_message_dialog_new(GTK_WINDOW(window),
+	                                  GTK_DIALOG_DESTROY_WITH_PARENT 
+	                                    | GTK_DIALOG_MODAL,
+	                                  GTK_MESSAGE_INFO,
+	                                  GTK_BUTTONS_CLOSE,
+	                                  "File information");
+  table = gtk_table_new(4,2,FALSE);
+  gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+  
+  /* filename */
+  text = g_strdup_printf("<b>%s</b>","Name:");
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
+  gtk_label_set_markup(GTK_LABEL(label),text);
+  g_free(text);
+  gtk_table_attach(GTK_TABLE(table),label,0,1,0,1,GTK_FILL,GTK_FILL,0,0);
+  label = gtk_label_new(current_popup_file->vfs->name);
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5); 
+  gtk_table_attach(GTK_TABLE(table),label,1,2,0,1,GTK_FILL,GTK_FILL,0,0);
+	
+  /* size */
+  text = g_strdup_printf("<b>%s</b>","Size:");
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
+  gtk_label_set_markup(GTK_LABEL(label),text);
+  g_free(text);
+  gtk_table_attach(GTK_TABLE(table),label,0,1,1,2,GTK_FILL,GTK_FILL,0,0);
+  text = gnome_vfs_format_file_size_for_display(current_popup_file->vfs->size);
+  label = gtk_label_new(text);
+  g_free(text);
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5); 
+  gtk_table_attach(GTK_TABLE(table),label,1,2,1,2,GTK_FILL,GTK_FILL,0,0);
+  
+  /* mime type */
+  text = g_strdup_printf("<b>%s</b>","MIME-Type:");
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
+  gtk_label_set_markup(GTK_LABEL(label),text);
+  g_free(text);
+  gtk_table_attach(GTK_TABLE(table),label,0,1,2,3,GTK_FILL,GTK_FILL,0,0);
+  label = gtk_label_new(current_popup_file->vfs->mime_type);
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5); 
+  gtk_table_attach(GTK_TABLE(table),label,1,2,2,3,GTK_FILL,GTK_FILL,0,0);
+  
+  /* change time */
+  text = g_strdup_printf("<b>%s</b>","Changed:");
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),1,0.5); /* align right, gnomish */
+  gtk_label_set_markup(GTK_LABEL(label),text);
+  g_free(text);
+  gtk_table_attach(GTK_TABLE(table),label,0,1,3,4,GTK_FILL,GTK_FILL,0,0);
+  text = g_strdup(ctime(&current_popup_file->vfs->ctime));
+  if ((text) && text[strlen(text)-1] == '\n') 
+	text[strlen(text)-1] = 0;
+  label = gtk_label_new(text);
+  g_free(text);
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5); 
+  gtk_table_attach(GTK_TABLE(table),label,1,2,3,4,GTK_FILL,GTK_FILL,0,0);
+  
+  gtk_box_pack_start(GTK_BOX(GTK_DIALOG(infodialog)->vbox),table,FALSE,TRUE,0);
+  gtk_widget_show_all(infodialog);
+  gtk_dialog_run(GTK_DIALOG(infodialog));
+  gtk_widget_destroy(infodialog);
 }
 
 static void
@@ -982,9 +1049,9 @@ make_view ()
   GnomeVFSDirectoryHandle *handle;
   GnomeVFSFileInfo *vfs_file_info;
   GnomeVFSResult result, open_dir_result;
-  loading_directory = 1;
   GList *list = NULL, *iter;
   gchar *error = NULL;
+  loading_directory = 1;
 
   loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
   gpe_iconlist_clear (GPE_ICONLIST (view_widget));
