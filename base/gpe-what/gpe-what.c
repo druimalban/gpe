@@ -75,16 +75,10 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   window = gtk_plug_new (0);
+  gtk_widget_realize (window);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
-
-  if (tray_init (dpy, 0))
-    {
-      gtk_plug_construct (window, tray_get_window ());
-    }  
-
-  gtk_widget_realize (window);
 
   icon = gpe_render_icon (window->style, gpe_find_icon ("what"));
   gtk_widget_show (icon);
@@ -105,18 +99,17 @@ main (int argc, char *argv[])
   window_type_dock_atom = XInternAtom (dpy,
 				       "_NET_WM_WINDOW_TYPE_DOCK", False);
 
-  gtk_widget_realize (window);
-
   mywindow = GDK_WINDOW_XWINDOW (window->window);
-
-  printf ("my window is %d\n", mywindow);
   XChangeProperty (dpy, mywindow, 
 		   window_type_atom, XA_ATOM, 32, 
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
-  XSync (dpy, 0);
 
-  gtk_widget_show (window);
+  if (tray_init (dpy, GDK_WINDOW_XWINDOW (window->window)))
+    {
+      gtk_plug_construct (window, tray_get_window ());
+      gtk_widget_show (window);
+    }  
 
   gtk_main ();
 
