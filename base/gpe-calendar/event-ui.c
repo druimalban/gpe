@@ -258,29 +258,23 @@ schedule_next(guint skip, guint uid)
       if (ev->flags & FLAG_ALARM) {
 	ev_real = event_db_find_by_uid (ev->uid);
 	if (((int)(ev->start-60*ev->alarm) != (int)skip) && (uid!=ev->uid))
-	{
-	  schedule_alarm (ev_real, ev->start);
-	  break;
-        }
+	  {
+	    schedule_alarm (ev_real, ev->start);
+	    break;
+	  }
       }
-      
     }
-
 }
     
 static void
 edit_finished (GtkWidget *d)
 {
   gtk_widget_hide (d);
-#if 0
+
   if (cached_window)
     gtk_widget_destroy (d);
   else
     cached_window = d;
-#else
-  gtk_widget_destroy (d);
-#endif
-  
 }
 
 static void
@@ -289,10 +283,10 @@ click_delete (GtkWidget *widget, event_t ev)
   GtkWidget *d = gtk_widget_get_toplevel (widget);
   
   if (ev->flags & FLAG_ALARM) 
-  { 
-    unschedule_alarm (ev);
-    schedule_next(0,0);
-  }
+    { 
+      unschedule_alarm (ev);
+      schedule_next(0,0);
+    }
   
   event_db_remove (ev);
   update_current_view ();
@@ -523,7 +517,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     event_db_flush (ev);
 
   if (ev->flags & FLAG_ALARM)  
-    schedule_next(0,0);
+    schedule_next (0, 0);
 
   event_db_forget_details (ev);
   
@@ -740,7 +734,6 @@ build_edit_event_window (void)
 #endif
   gtk_widget_set_usize (description, -1, 88);
 
-  gtk_widget_realize (window);
   buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
   buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
   buttondelete = gpe_button_new_from_stock (GTK_STOCK_DELETE, GPE_BUTTON_TYPE_BOTH);
@@ -1111,6 +1104,9 @@ build_edit_event_window (void)
 
   gtk_window_set_default_size (GTK_WINDOW (window), 280, 320);
   
+  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
+		      GTK_SIGNAL_FUNC (edit_finished), NULL);
+
   return window;
 }
 

@@ -1,3 +1,12 @@
+2003-01-19  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (build_edit_event_window): Don't realize window
+	explicitly.  Install "destroy" handler on new window.
+	(edit_finished): Re-enable caching.
+	(click_delete): Reformat.
+	(click_ok): Likewise.
+	(schedule_next): Likewise.
+
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.33 released.
