@@ -740,8 +740,6 @@ main (int argc, char *argv[])
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
-
   if (hard_keys_mode)
     {
       key_map_t *k = keymap;
@@ -843,6 +841,9 @@ main (int argc, char *argv[])
 	      geometry_set = TRUE;
 	    }
 	}
+
+      if (geometry_set == FALSE)
+	gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
     }
 
   menu = gtk_menu_new ();
