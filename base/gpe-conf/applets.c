@@ -99,6 +99,25 @@ GtkWidget *make_menu_from_dir(char *path, int(*entrytest)(char* path), char *cur
   return menu;
 }
 
+GList *make_items_from_dir(char *path)
+{
+  DIR *dir;
+  struct dirent *entry;
+  GList *items = NULL;
+  dir = opendir (path);
+  if(dir)
+    {
+      while ((entry = readdir (dir)))
+	{
+	  if (entry->d_name[0] == '.') 
+	    continue;
+	  items = g_list_append(items,g_strdup(entry->d_name));
+	}
+      closedir (dir);
+    }
+  return items;
+}
+
 /***************************************************************************************/
 int mystrcmp(char *s,char*c)
 {

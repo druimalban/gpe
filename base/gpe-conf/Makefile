@@ -7,7 +7,7 @@ GTK2 = yes
 IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 CC = arm-linux-gcc
 INSTALL = install
-PREFIX = /usr
+PREFIX = /usr/local
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop -L../libdm -ldm -L.
@@ -75,6 +75,7 @@ MEMBERS += users/interface users/callbacks
 MEMBERS += cfgfile
 MEMBERS += gpe-admin
 MEMBERS += storage
+MEMBERS += widgets/sp-color-slider
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

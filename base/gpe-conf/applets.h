@@ -21,6 +21,7 @@ struct Applet
 
 int file_exists (char *fn);
 GtkWidget *make_menu_from_dir(char *path, int(*entrytest)(char* path), char *current);
+GList *make_items_from_dir(char *path);
 
 // I just want to get a file !
 void ask_user_a_file(char *path, char *prompt,

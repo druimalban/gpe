@@ -21,7 +21,6 @@
 #include <ctype.h>
 #include <string.h>
 #include <libintl.h>
-/* for stat() */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -30,7 +29,7 @@
 #include "applets.h"
 
 #include "appmgr_setup.h"
-#include "xsettings-client.h"
+#include <xsettings-client.h>
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 

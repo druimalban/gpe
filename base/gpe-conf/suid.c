@@ -81,7 +81,7 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gcha
   FILE *fnew;
   gint i = 0;
   gint j = 0;
-  GError *err;
+  GError *err = NULL;
 
   tmpval = "";
   delim = g_strdup ("\n");
@@ -197,7 +197,7 @@ set_timezone (gchar * zone)
   gint i = 0;
   gint j = 0;
 
-  GError *err;
+  GError *err = NULL;
 
   delim = g_strdup ("\n");
   g_file_get_contents ("/etc/profile", &profile, &length, &err);
