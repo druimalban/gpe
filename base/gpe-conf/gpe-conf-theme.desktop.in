@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name=Appearance
+_Name=Look and Feel
 _Comment=Global Appearance Setup
 Exec=gpe-conf theme
 Terminal=0
