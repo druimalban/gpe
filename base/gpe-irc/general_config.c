@@ -22,22 +22,6 @@
 #include "general_config_sql.h"
 
 static GtkWidget *
-make_color_swatch (gint red, gint blue, gint green)
-{
-  GtkWidget *swatch;
-  GdkColor color;
-
-  swatch = gtk_drawing_area_new ();
-  color.red = red;
-  color.blue = blue;
-  color.green = green;
-  gtk_widget_modify_bg (swatch, GTK_STATE_NORMAL, &color);
-  gtk_widget_set_usize (swatch, 16, 16);
-
-  return swatch;
-}
-
-static GtkWidget *
 make_option_menu (gchar *tag_name)
 {
   GtkWidget *menu, *menu_item, *option_menu, *swatch;
@@ -46,35 +30,35 @@ make_option_menu (gchar *tag_name)
   option_menu = gtk_option_menu_new ();
 
   menu_item = gtk_image_menu_item_new_with_label ("Black");
-  swatch = make_color_swatch (0, 0, 0);
+  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("black"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("White");
-  swatch = make_color_swatch (65535, 65535, 65535);
+  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("white"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("Red");
-  swatch = make_color_swatch (65535, 0, 0);
+  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("red"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("Blue");
-  swatch = make_color_swatch (0, 65535, 0);
+  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("blue"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("Green");
-  swatch = make_color_swatch (0, 0, 65535);
+  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("green"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
@@ -108,9 +92,9 @@ window_close_and_save (GtkWidget *window)
 void
 general_config_window ()
 {
-  GtkWidget *window, *vbox, *notebook, *notebook_label, *table, *button_hbox;
+  GtkWidget *window, *vbox, *notebook, *notebook_label, *scroll, *table, *button_hbox;
   GtkWidget *save_button, *close_button;
-  GtkWidget *label, *text_option_menu, *bg_option_menu, *nick_option_menu, *action_option_menu, *own_nick_option_menu, *channel_option_menu, *nick_ops_option_menu;
+  GtkWidget *label, *text_option_menu, *bg_option_menu, *nick_option_menu, *action_option_menu, *own_nick_option_menu, *channel_option_menu, *nick_ops_option_menu, *nick_highlight_option_menu;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
   
@@ -133,45 +117,65 @@ general_config_window ()
 
   notebook = gtk_notebook_new ();
 
-  table = gtk_table_new (7, 2, FALSE);
+  scroll = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+  table = gtk_table_new (8, 2, FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), 6);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 6);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 6);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroll), table);
 
   label = gtk_label_new ("Normal text");
   text_option_menu = make_option_menu ("tag_text");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 0, 1);
   gtk_table_attach_defaults (GTK_TABLE (table), text_option_menu, 1, 2, 0, 1);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
   label = gtk_label_new ("Background");
   bg_option_menu = make_option_menu ("tag_bg");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 1, 2);
   gtk_table_attach_defaults (GTK_TABLE (table), bg_option_menu, 1, 2, 1, 2);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
   label = gtk_label_new ("Action astrix");
   action_option_menu = make_option_menu ("tag_action");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 2, 3);
   gtk_table_attach_defaults (GTK_TABLE (table), action_option_menu, 1, 2, 2, 3);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
   label = gtk_label_new ("Channel names");
   channel_option_menu = make_option_menu ("tag_channel");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 3, 4);
   gtk_table_attach_defaults (GTK_TABLE (table), channel_option_menu, 1, 2, 3, 4);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
-  label = gtk_label_new ("Nickname highlight");
+  label = gtk_label_new ("Nicknames");
   nick_option_menu = make_option_menu ("tag_nick");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 4, 5);
   gtk_table_attach_defaults (GTK_TABLE (table), nick_option_menu, 1, 2, 4, 5);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
-  label = gtk_label_new ("Own nick highlight");
+  label = gtk_label_new ("Own nick");
   own_nick_option_menu = make_option_menu ("tag_own_nick");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 5, 6);
   gtk_table_attach_defaults (GTK_TABLE (table), own_nick_option_menu, 1, 2, 5, 6);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
-  label = gtk_label_new ("Nickname operations");
+  label = gtk_label_new ("Nick operations");
   nick_ops_option_menu = make_option_menu ("tag_nick_ops");
   gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 6, 7);
   gtk_table_attach_defaults (GTK_TABLE (table), nick_ops_option_menu, 1, 2, 6, 7);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
+
+  label = gtk_label_new ("Nick highlight");
+  nick_highlight_option_menu = make_option_menu ("tag_nick_highlight");
+  gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, 7, 8);
+  gtk_table_attach_defaults (GTK_TABLE (table), nick_highlight_option_menu, 1, 2, 7, 8);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, .5);
 
   notebook_label = gtk_label_new ("Colours");
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), table, notebook_label);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), scroll, notebook_label);
 
   close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_BOTH);
   save_button = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
@@ -188,6 +192,7 @@ general_config_window ()
   g_object_set_data (G_OBJECT (save_button), "nick_option_menu", (gpointer) nick_option_menu);
   g_object_set_data (G_OBJECT (save_button), "own_nick_option_menu", (gpointer) own_nick_option_menu);
   g_object_set_data (G_OBJECT (save_button), "nick_ops_option_menu", (gpointer) nick_ops_option_menu);
+  g_object_set_data (G_OBJECT (save_button), "nick_highlight_option_menu", (gpointer) nick_ops_option_menu);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);

@@ -194,7 +194,7 @@ irc_server_out (GIOChannel *source, GIOCondition condition, gpointer data)
 	irc_nick(server, server->user_info->nick);
 	irc_user(server, server->user_info->username, server->user_info->real_name);
 
-	irc_join(server, "#gpe");
+	//irc_join(server, "#gpe");
 	return FALSE;
 }
 

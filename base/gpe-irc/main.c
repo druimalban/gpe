@@ -46,6 +46,11 @@ struct gpe_icon my_icons[] = {
   { "error", "error", NULL },
   { "globe", "irc/globe", NULL },
   { "quote", "irc/quote", NULL },
+  { "black", "irc/colors/black", NULL },
+  { "white", "irc/colors/white", NULL },
+  { "red", "irc/colors/red", NULL },
+  { "green", "irc/colors/green", NULL },
+  { "blue", "irc/colors/blue", NULL },
   { "smiley_happy", "irc/smileys/happy", NULL },
   { "icon", PREFIX "/share/pixmaps/gpe-irc.png", NULL },
   {NULL, NULL, NULL}
@@ -597,6 +602,76 @@ new_connection_dialog ()
   gtk_widget_show_all (window);
 }
 
+static void
+join_channel_window_do (GtkWidget *parent, GtkWidget *window)
+{
+  GtkWidget *entry;
+  gchar *text;
+
+  entry = g_object_get_data (G_OBJECT (parent), "entry");
+  text = gtk_entry_get_text (GTK_ENTRY (entry));
+
+  if (strlen (text) > 0)
+    irc_join (selected_server, text);
+
+  gtk_widget_destroy (window);
+}
+
+static void
+join_channel_dialog ()
+{
+  GtkWidget *window, *vbox, *hbox, *button_hbox, *label, *hsep, *entry;
+  GtkWidget *join_button, *close_button;
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
+
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (window), "IRC Client - Join Channel");
+  //gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
+  g_signal_connect (G_OBJECT (window), "destroy",
+                             G_CALLBACK (kill_widget), window);
+
+  gtk_widget_realize (window);
+
+  vbox = gtk_vbox_new (FALSE, 0);
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_set_spacing (GTK_BOX (hbox), 3);
+  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
+  button_hbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_set_spacing (GTK_BOX (button_hbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (button_hbox), 6);
+
+  label = gtk_label_new ("Channel");
+
+  hsep = gtk_hseparator_new ();
+
+  entry = gtk_entry_new ();
+
+  join_button = gpe_button_new_from_stock (GTK_STOCK_JUMP_TO, GPE_BUTTON_TYPE_BOTH);
+  close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_BOTH);
+
+  g_object_set_data (G_OBJECT (join_button), "entry", (gpointer) entry);
+
+  g_signal_connect (G_OBJECT (join_button), "clicked",
+                             G_CALLBACK (join_channel_window_do), window);
+  g_signal_connect (GTK_OBJECT (close_button), "clicked",
+                             G_CALLBACK (kill_widget), window);
+
+  gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
+  gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), entry, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), button_hbox, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox), hsep, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox), close_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (button_hbox), join_button, FALSE, FALSE, 0);
+
+  if (gpe_find_icon_pixmap ("globe", &pmap, &bmap))
+    gdk_window_set_icon (window->window, NULL, pmap, bmap);
+
+  gtk_widget_show_all (window);
+}
+
 gboolean
 entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
@@ -698,9 +773,26 @@ main (int argc, char *argv[])
 
   menu = gtk_menu_new ();
 
+  menu_item = gtk_image_menu_item_new_with_label ("Join Channel");
+  g_signal_connect (GTK_OBJECT (menu_item), "activate",
+		    G_CALLBACK (join_channel_dialog), NULL);
+  menu_item_image = gtk_image_new_from_stock (GTK_STOCK_JUMP_TO, GTK_ICON_SIZE_MENU);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), menu_item_image);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  gtk_widget_show (menu_item);
+  gtk_widget_show (menu_item_image);
+
+  menu_item = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  gtk_widget_show (menu_item);
+
   menu_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
   g_signal_connect (GTK_OBJECT (menu_item), "activate",
   		    G_CALLBACK (general_config_window), NULL);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
+  gtk_widget_show (menu_item);
+
+  menu_item = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (menu_item);
 
