@@ -21,11 +21,12 @@
 
 #include <gtk/gtk.h>
 
-#include "_interface.h"
 #include "_support.h"
 
 #include "sketchpad-cb.h"
+#include "sketchpad-gui.h"
 #include "sketchpad.h"
+
 #include "gpe-sketchbook.h"
 #include "files.h"
 #include "selector.h"

@@ -22,20 +22,4 @@
 extern gchar * sketchdir;
 void app_quit();
 
-////--about
-//extern GtkWidget *window_about;
-
-////--dialog
-//extern GtkWidget *window_dialog;
-//void dialog_set_text(gchar * text);
-
-//extern gint dialog_action;
-//#define DELETE 1
-//#define SAVE   2
-//#define dialog_set_action(action) (dialog_action = action)
-//extern gint dialog_type;
-//#define DIALOG_CANCEL_OK 0
-//#define DIALOG_OK        1
-//#define dialog_set_type(type) (dialog_type = type)
-
 #endif

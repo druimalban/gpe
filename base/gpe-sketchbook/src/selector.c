@@ -28,7 +28,6 @@
 #include "files.h"
 #include "sketchpad.h"
 #include "gpe-sketchbook.h"
-#include "_support.h" //lookup_widget
 
 GtkWidget * window_selector;
 GtkCList  * selector_clist; 
@@ -46,6 +45,9 @@ void selector_init(){
   current_sketch   = SKETCH_NEW;
 }//selector_init()
 
+void set_selector_clist(GtkCList * clist){
+  selector_clist = clist;
+}
 void window_selector_init(GtkWidget * window_selector){
   struct dirent ** direntries;
   int n;
@@ -59,7 +61,6 @@ void window_selector_init(GtkWidget * window_selector){
   gdk_colormap_alloc_color(colormap, &bg_color, FALSE, TRUE);
 
   //--Clist init
-  selector_clist = (GtkCList *) lookup_widget(window_selector, "clist_selector");
   gtk_clist_column_titles_hide(selector_clist);//no title (single column)
 
   //--fill CList

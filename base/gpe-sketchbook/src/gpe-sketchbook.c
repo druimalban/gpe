@@ -33,8 +33,10 @@
 //--own headers
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
+#include "sketchpad-gui.h"
 #include "selector.h"
-#include "_interface.h"
+#include "selector-gui.h"
+
 #include "_support.h"
 
 gchar * sketchdir;
@@ -90,7 +92,7 @@ void gui_init(){
   window_selector_init(window_selector);
   gtk_window_set_title (GTK_WINDOW (window_selector), "Sketch selector");
 
-  window_sketchpad = create_window_sketchpad();
+  window_sketchpad = sketchpad_build_window();
   window_sketchpad_init(window_sketchpad);
   //gtk_window_set_title (GTK_WINDOW (window_sketchpad), "Sketch: new");
 

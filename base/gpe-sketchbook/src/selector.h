@@ -23,6 +23,7 @@
 extern GtkWidget * window_selector;
 extern GtkCList  * selector_clist; 
 extern GdkColor bg_color;
+void set_selector_clist(GtkCList * clist);
 
 extern gint sketch_list_size;
 #define is_sketch_list_empty (sketch_list_size == 0)

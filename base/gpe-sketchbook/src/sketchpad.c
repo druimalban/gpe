@@ -17,7 +17,6 @@
  */
 #include "sketchpad.h"
 #include "sketchpad-cb.h"
-#include "_support.h" //lookup_widget
 #include "files.h"
 #include "selector.h"
 
@@ -54,7 +53,6 @@ GdkCursor * cursor_eraser_large;
 GdkCursor * cursor_eraser_xlarge;
 GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height);//gint diameter);
 
-void _radiobutton_set_relief_none(const gchar * widget_name);
 void   _reset_drawing_area       ();
 void    clear_drawing_area       ();
 
@@ -73,60 +71,6 @@ void sketchpad_init(){
 }//sketchpad_init()
 
 void window_sketchpad_init(GtkWidget * window_sketchpad){
-  GtkWidget * widget;
-
-  GtkWidget * scrolledwindow_drawing_area;
-
-  //--drawing area ref
-  drawing_area = lookup_widget(window_sketchpad, "drawing_area");
-  gtk_widget_destroy(drawing_area);//Oooooooooooops :)
-  widget       = lookup_widget(window_sketchpad, "scrolledwindow_drawing_area");
-  gtk_widget_destroy(widget);//Oooooooooooops again :)
-  widget       = lookup_widget(window_sketchpad, "vbox");
-
-  scrolledwindow_drawing_area = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_show (scrolledwindow_drawing_area);
-  gtk_box_pack_start (GTK_BOX (widget), scrolledwindow_drawing_area, TRUE, TRUE, 0);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow_drawing_area),
-                                  GTK_POLICY_AUTOMATIC,
-                                  GTK_POLICY_AUTOMATIC);
-
-  drawing_area = gtk_drawing_area_new ();
-  gtk_widget_show (drawing_area);
-  gtk_widget_set_usize (drawing_area, drawing_area_width, drawing_area_height);
-  gtk_widget_set_events (drawing_area,
-                         GDK_EXPOSURE_MASK
-                         | GDK_POINTER_MOTION_MASK
-                         | GDK_POINTER_MOTION_HINT_MASK
-                         | GDK_BUTTON_PRESS_MASK
-                         | GDK_BUTTON_RELEASE_MASK
-                         | GDK_LEAVE_NOTIFY_MASK);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow_drawing_area),
-                                        drawing_area);
-
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "configure_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_configure_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_expose_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "motion_notify_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_motion_notify_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "button_press_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_button_press_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (drawing_area), "button_release_event",
-                      GTK_SIGNAL_FUNC (on_drawing_area_button_release_event),
-                      NULL);
-
-  //--default tools
-  widget = lookup_widget(window_sketchpad, "radiobutton_tools_pen");
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
-  widget = lookup_widget(window_sketchpad, "radiobutton_brush_medium");
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
-  widget = lookup_widget(window_sketchpad, "radiobutton_color_black");
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (widget), TRUE);
 
   //--colors
   colormap = gdk_colormap_get_system();
@@ -157,24 +101,7 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   cursor_eraser  = cursor_eraser_small;
   current_cursor = &cursor_pen;
   
-  //--GUI stuff not done by glade
-  _radiobutton_set_relief_none("radiobutton_tools_eraser");
-  _radiobutton_set_relief_none("radiobutton_tools_pen");
-  _radiobutton_set_relief_none("radiobutton_brush_small");
-  _radiobutton_set_relief_none("radiobutton_brush_medium");
-  _radiobutton_set_relief_none("radiobutton_brush_large");
-  _radiobutton_set_relief_none("radiobutton_brush_xlarge");
-  _radiobutton_set_relief_none("radiobutton_color_black");
-  _radiobutton_set_relief_none("radiobutton_color_blue");
-  _radiobutton_set_relief_none("radiobutton_color_red");
-  _radiobutton_set_relief_none("radiobutton_color_green");
 }//window_sketchpad_init()
-
-void _radiobutton_set_relief_none(const gchar * widget_name){
-  GtkWidget * widget;
-  widget = lookup_widget(window_sketchpad, widget_name);
-  gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
-}
 
 GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height){//gint diameter){
   GdkCursor * cursor;
@@ -259,6 +186,10 @@ void sketchpad_new_sketch(){
   sketchpad_set_title(SKETCHPAD_TITLE_NEW);
   sketchpad_refresh_drawing_area(drawing_area);
 }//sketchpad_new_sketch()
+
+void sketchpad_set_darwing_area(GtkWidget * a_drawing_area){
+  drawing_area = a_drawing_area;
+}
 
 /* Draw a circle on the screen */
 void draw_point(gdouble x, gdouble y){
