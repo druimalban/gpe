@@ -31,10 +31,9 @@ click_calendar(GtkWidget *widget,
 {
   gtk_calendar_get_date (GTK_CALENDAR (widget), &combo->year, 
 			 &combo->month, &combo->day);
-
   update_text (combo);
-
-  gtk_widget_hide (widget);
+  gtk_widget_hide (combo->calw);
+  combo->cal_open = FALSE;
 }
 
 static void
