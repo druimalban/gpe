@@ -25,7 +25,7 @@ CFLAGS += -MD
 
 CPPFLAGS += -I.
 
-HEADERS = 
+HEADERS = gpe/pim-categories.h gpe/pim-categories-ui.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -49,7 +49,8 @@ $(SONAME): $(OBJS)
 	$(CC) $(CFLAGS) -S $<
 
 install-devel: $(PACKAGE).pc
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/$$i; done
+	install -m 644 -D $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/$(PACKAGE).pc
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
 
 clean:
