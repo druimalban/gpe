@@ -11,7 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <glib.h>
-#include <assert.h>
 
 #include "auth.h"
 #include "crypt.h"
@@ -135,16 +134,13 @@ libdm_auth_validate_request (char *display, char *data)
   if (*ep)
     return FALSE;
 
-#ifdef DEBUG
-  fprintf (stderr, "using key id %x\n", key_id);
-#endif
-
   k = lookup_pubkey (key_id);
   if (k == NULL)
     return FALSE;
 
   libdm_crypt_create_hash (display, libdm_auth_challenge_string, 
 			   strlen (libdm_auth_challenge_string), hash);
+
   rc = libdm_crypt_check_signature (k, hash, p);
 
   free_pubkey (k);

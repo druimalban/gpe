@@ -11,7 +11,6 @@
 #include <ctype.h>
 #include <libintl.h>
 #include <string.h>
-#include <stdio.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
@@ -38,6 +37,8 @@ static GdkAtom rsa_challenge_gdkatom;
 static gboolean no_auth;
 
 static GSList *all_widgets;
+
+static gboolean libdm_initialised;
 
 static int
 do_change_display (GtkWidget *w, char *display_name)
@@ -124,8 +125,8 @@ generate_response (GdkDisplay *gdisplay, Display *dpy, Window window, int code)
   ev.data.l[0] = window;
   ev.data.l[1] = code;
   
-  XSendEvent (dpy, DefaultRootWindow (dpy),
-	      False, SubstructureNotifyMask, (XEvent *)&ev);
+  XSendEvent (dpy, DefaultRootWindow (dpy), False, 
+	      SubstructureNotifyMask, (XEvent *)&ev);
 }
 
 static int
@@ -153,24 +154,21 @@ handle_request (GdkWindow *gwindow, char *prop)
 	}
     }
 
-#ifdef DEBUG
-  fprintf (stderr, "target %s; auth %s; data %s\n", target, auth_method, auth_data);
-#endif
-
-  if (!strcasecmp (auth_method, "null"))
+  if (no_auth == FALSE)
     {
-      if (no_auth == FALSE)
+      if (!strcasecmp (auth_method, "null"))
+	return DISPLAY_CHANGE_AUTHENTICATION_BAD;
+      else if (!strcasecmp (auth_method, "rsa-sig"))
+	{
+	  if (libdm_auth_validate_request (target, auth_data) == FALSE)
+	    return DISPLAY_CHANGE_AUTHENTICATION_BAD;
+	}
+      else
 	return DISPLAY_CHANGE_AUTHENTICATION_BAD;
     }
-  else if (!strcasecmp (auth_method, "rsa-sig"))
-    {
-      if (libdm_auth_validate_request (target, auth_data) == FALSE)
-	return DISPLAY_CHANGE_AUTHENTICATION_BAD;
-    }
-  else
-    return DISPLAY_CHANGE_AUTHENTICATION_BAD;
 
   gdk_window_get_user_data (gwindow, (gpointer*) &widget);
+
   if (widget)
     return do_change_display (widget, target);
 
@@ -188,58 +186,57 @@ filter_func (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
       Atom atom;
 
       gdisplay = gdk_x11_lookup_xdisplay (xev->display);
-
-      atom = gdk_x11_atom_to_xatom_for_display (gdisplay, display_change_gdkatom);
-      if (xev->atom == atom)
+      if (gdisplay)
 	{
-	  GdkWindow *gwindow;
+	  atom = gdk_x11_atom_to_xatom_for_display (gdisplay, display_change_gdkatom);
 
-	  gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
-
-	  if (gwindow)
+	  if (xev->atom == atom)
 	    {
-	      GdkAtom actual_type;
-	      gint actual_format;
-	      gint actual_length;
-	      unsigned char *prop = NULL;
+	      GdkWindow *gwindow;
 	      
-	      if (gdk_property_get (gwindow, display_change_gdkatom, string_gdkatom,
-				    0, 65536, FALSE, &actual_type, &actual_format,
-				    &actual_length, &prop))
+	      gwindow = gdk_window_lookup_for_display (gdisplay, xev->window);
+	      
+	      if (gwindow)
 		{
-		  if (actual_length != 0)
+		  GdkAtom actual_type;
+		  gint actual_format;
+		  gint actual_length;
+		  unsigned char *prop = NULL;
+		  
+		  if (gdk_property_get (gwindow, display_change_gdkatom, string_gdkatom,
+					0, G_MAXLONG, FALSE, &actual_type, &actual_format,
+					&actual_length, &prop))
 		    {
-		      if (actual_type == string_gdkatom && actual_length > 8)
+		      if (actual_length != 0)
 			{
-			  gchar *buf = g_malloc (actual_length + 1);
-			  int rc;
+			  if (actual_type == string_gdkatom && actual_length > 8)
+			    {
+			      gchar *buf = g_malloc (actual_length + 1);
+			      int rc;
+			      
+			      memcpy (buf, prop, actual_length);
+			      buf[actual_length] = 0;
+			      
+			      rc = handle_request (gwindow, buf);
+			      
+			      g_free (buf);
+			      generate_response (gdisplay, xev->display, xev->window, rc);
+			      
+			      if (rc == DISPLAY_CHANGE_SUCCESS)
+				update_challenge_on_windows ();
+			    }
 			  
-			  memcpy (buf, prop, actual_length);
-			  buf[actual_length] = 0;
-			  
-			  rc = handle_request (gwindow, buf);
-
-#ifdef DEBUG
-			  fprintf ("return code is %d\n", rc);
-#endif
-
-			  g_free (buf);
-			  generate_response (gdisplay, xev->display, xev->window, rc);
-
-			  if (rc == DISPLAY_CHANGE_SUCCESS)
-			    update_challenge_on_windows ();
+			  reset_state (gwindow);
 			}
-
-		      reset_state (gwindow);
 		    }
+		  
+		  if (prop)
+		    g_free (prop);
 		}
-
-	      if (prop)
-		g_free (prop);
 	    }
+	  
+	  return GDK_FILTER_REMOVE;
 	}
-
-      return GDK_FILTER_REMOVE;
     }
 
   return GDK_FILTER_CONTINUE;
@@ -254,6 +251,12 @@ unrealize_window (GtkWidget *w)
 void
 libdm_mark_window (GtkWidget *w)
 {
+  if (! libdm_initialised)
+    {
+      g_warning ("libdm not initialised yet");
+      return;
+    }
+
   if (GTK_WIDGET_REALIZED (w))
     {
       GdkWindow *window = w->window;
@@ -282,4 +285,6 @@ libdm_init (void)
   rsa_challenge_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE_RSA_CHALLENGE", FALSE);
 
   libdm_auth_generate_challenge ();
+
+  libdm_initialised = TRUE;
 }

@@ -8,7 +8,6 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <glib.h>
 #include <assert.h>
@@ -65,9 +64,7 @@ do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
    *
    * PAD consists of FF bytes.
    */
-  frame = malloc (nframe);
-  if (!frame)
-    return -1;
+  frame = g_malloc (nframe);
   n = 0;
   frame[n++] = 0;
   frame[n++] = 1; /* block type */
@@ -80,7 +77,7 @@ do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
   assert ( n == nframe );
       
   gcry_mpi_scan (r_val, GCRYMPI_FMT_USG, frame, &nframe);
-  free (frame);
+  g_free (frame);
   return 0;
 }
 
@@ -153,10 +150,6 @@ libdm_crypt_check_signature (struct rsa_key *k, char *hash, char *sigbuf)
   gcry_sexp_release (key);
   gcry_sexp_release (sig);
   gcry_mpi_release (mpi2);
-
-#ifdef DEBUG
-  fprintf (stderr, "signature check %d\n", rc);
-#endif
 
   if (rc)
     return FALSE;
