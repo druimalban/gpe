@@ -121,8 +121,7 @@ new_attribute (GtkWidget *w, gpointer p)
       if (name[0])
 	{
 	  gchar *line_info[2];
-	  guint nr = atoi (name);
-	  if (nr == 0)
+	  if (name[0] == 0)
 	    {
 	      gpe_error_box (_("Invalid attribute tag"));
 	      return;
@@ -135,7 +134,7 @@ new_attribute (GtkWidget *w, gpointer p)
 	  
 	  line_info[0] = name;
 	  line_info[1] = desc;
-	  if (db_insert_attribute (nr, desc))
+	  if (db_insert_attribute (name, desc))
 	    {
 	      gtk_clist_append (GTK_CLIST (p), line_info);
 	      gtk_clist_columns_autosize (GTK_CLIST (p));

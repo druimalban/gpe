@@ -18,26 +18,10 @@
 static sqlite *db;
 
 static const char *schema_str = 
-"create table person (
-	id		int NOT NULL,
-	name		text NOT NULL,
-	PRIMARY KEY(id)
-);
-
-create table person_attr (
-	person		int NOT NULL,
-	attr		int NOT NULL,
-	value		text
-);
-
-create table attr (
-	id		int NOT NULL,
-	description	text
-);
-
-create table category (
-	id		int NOT NULL,
-	description	text
+"create table contacts (
+	urn		int NOT NULL,
+	tag		text NOT NULL,
+	value		text NOT NULL
 );
 ";
 
@@ -97,7 +81,7 @@ load_structure (void)
 }
 
 struct tag_value *
-new_tag_value (guint tag, gchar *value)
+new_tag_value (gchar *tag, gchar *value)
 {
   struct tag_value *t = g_malloc (sizeof (struct tag_value));
   t->tag = tag;
@@ -149,52 +133,79 @@ new_person_id ()
 }
 
 void
+db_set_data (struct person *p, gchar *tag, gchar *value)
+{
+  struct tag_value *t = NULL;
+  GSList *iter;
+  for (iter = p->data; iter; iter = iter->next)
+    {
+      struct tag_value *id = (struct tag_value *)iter->data;
+      if (!strcmp (id->tag, tag))
+	{
+	  t = id;
+	  break;
+	}
+    }
+
+  if (t)
+    {
+      update_tag_value (t, value);
+    }
+  else
+    {
+      t = new_tag_value (tag, value);
+      p->data = g_slist_append (p->data, t);
+    }
+}
+
+gboolean
 commit_person (struct person *p)
 {
   GSList *iter;
   int r;
   gchar *err;
+  gboolean rollback = FALSE;
+
+  r = sqlite_exec (db, "begin transaction", NULL, NULL, &err);
+  if (r)
+    goto error;
+
+  rollback = TRUE;
 
   if (p->id)
     {
-      r = sqlite_exec_printf (db,
-			      "update person set name='%q' where id=%d",
-			      NULL,
-			      NULL,
-			      &err,
-			      p->name, p->id);
+      r = sqlite_exec_printf (db, "delete from contacts where urn='%d'",
+			      NULL, NULL, &err,
+			      p->id);
+      if (r)
+	goto error;
     }
   else
-    {
-      p->id = new_person_id ();
-      r = sqlite_exec_printf (db,
-			      "insert into person values (%d,'%q')",
-			      NULL,
-			      NULL,
-			      &err,
-			      p->id, p->name);
-    }
+    p->id = new_person_id ();
 
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *v = iter->data;
-      if (v->oid)
-	{
-	  r = sqlite_exec_printf (db,
-				  "update person_attr set value='%q' where oid=%d", 
-				  NULL, NULL, &err,
-				  v->value, v->oid);
-	}
-      else
-	{
-	  r = sqlite_exec_printf (db,
-				  "insert into person_attr values(%d,%d,'%q')",
-				  NULL, NULL, &err,
-				  p->id, v->tag, v->value);
-	}
+      r = sqlite_exec_printf (db,
+			      "insert into contacts values(%d,'%q','%q')",
+			      NULL, NULL, &err,
+			      p->id, v->tag, v->value);
+      if (r)
+	goto error;
     }
 
-  discard_person (p);
+  r = sqlite_exec (db, "commit transaction", NULL, NULL, &err);
+  if (r)
+    goto error;
+
+  return TRUE;
+
+ error:
+  if (rollback)
+    sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+  gpe_error_box (err);
+  free (err);
+  return FALSE;
 }
 
 gboolean
@@ -205,7 +216,7 @@ db_insert_category (gchar *name, guint *id)
 }
 
 gboolean
-db_insert_attribute (guint id, gchar *desc)
+db_insert_attribute (gchar *id, gchar *desc)
 {
   return TRUE;
 }

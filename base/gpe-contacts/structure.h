@@ -26,7 +26,7 @@ struct edit_thing
 {
   edit_thing_type type;
   gchar *name;
-  guint tag;
+  gchar *tag;
   GSList *children;
   struct edit_thing *parent;
 };

@@ -94,12 +94,18 @@ on_edit_save_clicked                   (GtkButton       *button,
   GtkWidget *w;
   GSList *data = NULL;
   GSList *tags;
+  gchar *s;
   struct person *p = gtk_object_get_data (GTK_OBJECT (edit), "person");
   if (p == NULL)
     p = new_person ();
 
   w = lookup_widget (edit, "name_entry");
-  p->name = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+  s = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+  db_set_data (p, "NAME", s);
+  
+  w = lookup_widget (edit, "summary_entry");
+  s = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+  db_set_data (p, "SUMMARY", s);
   
   for (tags = gtk_object_get_data (GTK_OBJECT (edit), "tag-widgets");
        tags;
@@ -107,20 +113,13 @@ on_edit_save_clicked                   (GtkButton       *button,
     {
       GtkWidget *w = tags->data;
       gchar *text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
-      guint tag = (guint)gtk_object_get_data (GTK_OBJECT (w), "db-tag");
-      struct tag_value *t = gtk_object_get_data (GTK_OBJECT (w), "tag-value");
-      if (t)
-	{
-	  update_tag_value (t, text);
-	}
-      else
-	{
-	  t = new_tag_value (tag, text);
-	  p->data = g_slist_append (p->data, t);
-	}
+      gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+      db_set_data (p, tag, text);
     }
 
-  commit_person (p);
-  gtk_widget_destroy (edit);
+  if (commit_person (p))
+    {
+      gtk_widget_destroy (edit);
+      discard_person (p);
+    }
 }
-

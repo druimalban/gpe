@@ -145,9 +145,9 @@ structure_new_field (GtkWidget *widget,
       GtkWidget *label2 = gtk_label_new (_("Tag:"));
       GtkWidget *radio1 = gtk_radio_button_new_with_label (NULL, 
 							   _("Single line"));
-      GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget (radio1, _("Multiple line"));
+      GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radio1), 
+								       _("Multiple line"));
       
-#if 0
       gchar *t = smallbox (_("New field"), _("Title"), "");
 
       if (t)
@@ -157,7 +157,6 @@ structure_new_field (GtkWidget *widget,
 	  else
 	    g_free (t);
 	}
-#endif
     }
   else
     {
@@ -314,7 +313,7 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
       fprintf (fp, "<single-item>\n");
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, "<tag>%d</tag>\n", e->tag);
+      fprintf (fp, "<tag>%s</tag>\n", e->tag);
       for (i = 0; i <= level; i++)
 	fputs ("  ", fp);
       if (e->name)
@@ -369,10 +368,7 @@ structure_parse_xml_item (xmlDocPtr doc, xmlNodePtr cur,
 	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
 
       if (!xmlStrcmp (cur->name, "tag"))
-	{
-	  gchar *s = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
-	  e->tag = atoi (s);
-	}
+	e->tag = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
 
       cur = cur->next;
     }

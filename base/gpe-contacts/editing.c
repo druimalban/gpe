@@ -20,10 +20,10 @@
 #include "db.h"
 
 static void
-add_tag (guint tag, GtkWidget *w, GtkWidget *pw)
+add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
 {
   GSList *tags;
-  gtk_object_set_data (GTK_OBJECT (w), "db-tag", (gpointer)tag);
+  gtk_object_set_data (GTK_OBJECT (w), "db-tag", tag);
 
   tags = gtk_object_get_data (GTK_OBJECT (pw), "tag-widgets");
   tags = g_slist_append (tags, w);

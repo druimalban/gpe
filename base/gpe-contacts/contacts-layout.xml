@@ -4,30 +4,30 @@
     <group>
       <label>Phone</label>
       <single-item>
-        <tag>100</tag>
+        <tag>TELEPHONE.HOME</tag>
         <label>Home</label>
       </single-item>
       <single-item>
-        <tag>101</tag>
+        <tag>TELEPHONE.WORK</tag>
         <label>Work</label>
       </single-item>
       <single-item>
-        <tag>102</tag>
+        <tag>TELEPHONE.MOBILE</tag>
         <label>Mobile</label>
       </single-item>
       <single-item>
-        <tag>103</tag>
+        <tag>TELEPHONE.FAX</tag>
         <label>Fax</label>
       </single-item>
     </group>
     <group>
       <label>Internet</label>
       <single-item>
-        <tag>300</tag>
+        <tag>EMAIL</tag>
         <label>Mail</label>
       </single-item>
       <single-item>
-        <tag>301</tag>
+        <tag>WWW</tag>
         <label>Web</label>
       </single-item>
     </group>
@@ -35,18 +35,18 @@
   <page>
     <label>Addresses</label>
     <multi-item>
-      <tag>200</tag>
+      <tag>ADDRESS.HOME</tag>
       <label>Home</label>
     </multi-item>
     <multi-item>
-      <tag>201</tag>
+      <tag>ADDRESS.WORK</tag>
       <label>Work</label>
     </multi-item>
   </page>
   <page>
     <label>Notes</label>
     <multi-item>
-      <tag>402</tag>
+      <tag>NOTES</tag>
     </multi-item>
   </page>
 </layout>
