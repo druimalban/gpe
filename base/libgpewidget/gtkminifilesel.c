@@ -144,8 +144,13 @@ set_members (GtkMiniFileSelection *fs)
   gchar *buf = g_malloc (strlen (fs->directory) + 256 + 2);
   gchar *fp;
   gchar *text[2];
-  GdkPixmap *pix;
-  GdkBitmap *mask;
+  GdkPixmap *dirup_pix;
+  GdkBitmap *dirup_mask;
+  GdkPixmap *folder_pix;
+  GdkBitmap *folder_mask;
+
+  gpe_find_icon_pixmap ("dir-up", &dirup_pix, &dirup_mask);
+  gpe_find_icon_pixmap ("dir-closed", &folder_pix, &folder_mask);
  
   gtk_clist_clear (GTK_CLIST (fs->clist));
 
@@ -166,7 +171,14 @@ set_members (GtkMiniFileSelection *fs)
 		  if (S_ISDIR (s.st_mode))
 		    {
 		      gchar *fn = g_malloc (strlen (d->d_name) + 3);
-		      sprintf (fn, "%s", d->d_name);
+		      if (!folder_pix)
+			{
+		          sprintf (fn, "[%s]", d->d_name);
+			}
+		      else
+			{
+		          sprintf (fn, "%s", d->d_name);
+			}
 		      subdirs = g_slist_append (subdirs, fn);
 		    }
 		  else
@@ -183,19 +195,18 @@ set_members (GtkMiniFileSelection *fs)
   subdirs = g_slist_sort (subdirs, (GCompareFunc)strcoll);
   files = g_slist_sort (files, (GCompareFunc)strcoll);
 
-  gpe_find_icon_pixmap ("dir-up", &pix, &mask);
-
   if (strcmp (fs->directory, "/") != 0)
     {
       guint row;
       text[0] = NULL;
-      text[1] = NULL;
+      text[1] = dirup_pix ? NULL : "../";
       row = gtk_clist_append (GTK_CLIST (fs->clist), text);
-      gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, pix, mask);
+      if (dirup_pix)
+      {
+        gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, dirup_pix, dirup_mask);
+      }
       gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)2);
     }
-
-  gpe_find_icon_pixmap ("dir-closed", &pix, &mask);
 
   for (iter = subdirs; iter; iter = iter->next)
     {
@@ -203,7 +214,7 @@ set_members (GtkMiniFileSelection *fs)
       text[1] = iter->data;
       text[0] = NULL;
       row = gtk_clist_append (GTK_CLIST (fs->clist), text);
-      gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, pix, mask);
+      gtk_clist_set_pixmap (GTK_CLIST (fs->clist), row, 0, folder_pix, folder_mask);
       gtk_clist_set_row_data (GTK_CLIST (fs->clist), row, (gpointer)1);
       g_free (iter->data);
     }
