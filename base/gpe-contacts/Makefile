@@ -31,8 +31,6 @@ clean:
 
 install: all install-mo
 	install -D gpe-contacts $(DESTDIR)$(PREFIX)/bin/gpe-contacts
-	install -D gpe-contacts.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-contacts
-	install -D gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-contacts.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-contacts
 
 include ../../build/Makefile.dpkg_ipkg
