@@ -2,6 +2,9 @@
 
 	* pixmaps.c (gpe_load_one_icon): Add linebreak before icon name in
 	error message.
+2002-08-17  Pierre Tardy  <tardyp@free.fr>
+
+	* init.c (gpe-init):  fixed the FIXME,when checking/creating ~/.gpe
 
 2002-08-12  Philip Blundell  <philb@gnu.org>
 
