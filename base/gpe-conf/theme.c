@@ -205,25 +205,32 @@ mbbg_parse_spec(MBDesktopBG *mbbg, char *spec)
 void
 widget_set_color_rgb8 (GtkWidget * widget,float r, float g, float b)
 {
-//  static GdkColor white = {0,0xffff,0xffff,0xffff};
-//  static GdkColor black = {0,0x0000,0x0000,0x0000};
   GtkStyle *astyle;
   GtkRcStyle *rc_style;
   GdkColor gcolor;
   GtkBin bbin;
   float gray;
 
-  bbin =  (GtkBin)(GTK_BUTTON(widget)->bin);
-  gray = 0.3*r + 0.59*g + 0.11*b;
+  if (!GTK_IS_BUTTON(widget))
+  {
+	 fprintf(stderr,"no button... exiting\n");
+	 return;
+  }
   
+  bbin =  (GtkBin)(GTK_BUTTON(widget)->bin);
+
+  gray = 0.3*r + 0.59*g + 0.11*b;
+
+	
   if (gray > 0.5)
   {
-	  gtk_label_set_markup(GTK_LABEL(bbin.child),g_strdup_printf("<span foreground=\"#000000\"> %s </span>",_("Color")));
+	  gtk_label_set_markup(GTK_LABEL(bbin.child),
+	  	g_strdup_printf("<span foreground=\"#000000\"> %s </span>",gtk_label_get_text(GTK_LABEL(bbin.child))));
   }
   else
   {
-	  gtk_label_set_markup(GTK_LABEL(bbin.child),g_strdup_printf("<span foreground=\"#ffffff\"> %s </span>",_("Color")));
-
+	  gtk_label_set_markup(GTK_LABEL(bbin.child),
+	    g_strdup_printf("<span foreground=\"#ffffff\"> %s </span>",gtk_label_get_text(GTK_LABEL(bbin.child))));
   }
   gcolor.pixel = 0;
   gcolor.red = (int)(r*65534.0);
@@ -240,8 +247,6 @@ widget_set_color_rgb8 (GtkWidget * widget,float r, float g, float b)
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_FG;
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_BASE;
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_BG;
-//      rc_style->text[GTK_STATE_NORMAL] = xcolor;
-//      rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_TEXT;
 		
       gtk_widget_modify_style (widget, rc_style);
     }
@@ -294,7 +299,7 @@ sp_color_selector_update_sliders (SPColorSlider * csel1, guint channels)
   g = csel->a[1]->value;
   b = csel->a[2]->value;
 	
-  widget_set_color_rgb8(csel->previewbutton,r,g,b);
+  if (GTK_WIDGET_DRAWABLE(csel->previewbutton)) widget_set_color_rgb8(csel->previewbutton,r,g,b);
   updating = FALSE;
 }
 
@@ -374,7 +379,7 @@ build_colorbox ()
   gtk_table_set_col_spacings (GTK_TABLE (colorbox), gpe_boxspacing);
   gtk_widget_show (colorbox);
 
-	button = gtk_button_new();
+	button = gtk_button_new_with_label(" ");
 	csel->previewbutton = button;
     gtk_widget_set_size_request(button,30,30+6*gpe_boxspacing);
     gtk_table_attach (GTK_TABLE (colorbox), button, 2, 3, 0, 3,
@@ -650,7 +655,7 @@ on_color_select (GtkWidget * widget, GdkEvent * event)
 {
   GtkWidget *w;
   GtkStyle *astyle = gtk_widget_get_style(widget);
-
+	
   w = gtk_dialog_new_with_buttons (_("Select color"), GTK_WINDOW (mainw),
 				   GTK_DIALOG_MODAL |
 				   GTK_DIALOG_DESTROY_WITH_PARENT,

@@ -7,9 +7,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.0-pre4\n"
-"POT-Creation-Date: 2003-06-11 18:07+0200\n"
-"PO-Revision-Date: 2003-06-12 12:00-0500\n"
+"Project-Id-Version: gpe-conf 0.1.0-pre9\n"
+"POT-Creation-Date: 2003-09-18 17:55+0200\n"
+"PO-Revision-Date: 2003-09-21 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -17,15 +17,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: main.c:318
+#: main.c:292
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "'task_nameserver' are nevoie de un singur nameserver ca argument.\n"
+
+#: main.c:356
 msgid "Warning: PCMCIA init failed."
 msgstr "Avertisment: iniþializare PCMCIA eºuatã."
 
-#: main.c:345
+#: main.c:384
 msgid "This mode is disabled, please try:\n"
 msgstr "Acest mod este deactivat, vã rugãm încercaþi:\n"
 
-#: main.c:346
+#: main.c:385
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
@@ -35,12 +39,12 @@ msgstr ""
 "gpe-conf [NumeApplet]\n"
 "unde NumeAppletName este:\n"
 
-#: main.c:360
+#: main.c:398
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Applet %s necunoscut!\n"
 
-#: main.c:361
+#: main.c:399
 msgid ""
 "\n"
 "\n"
@@ -52,7 +56,11 @@ msgstr ""
 "Folosire: gpe-conf [NumeApplet]\n"
 "unde NumeAppletName este:\n"
 
-#: applets.c:332
+#: applets.c:349
+msgid "Root access"
+msgstr "Acces root"
+
+#: applets.c:359
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -62,109 +70,113 @@ msgstr ""
 "accesibile numai pentru root.\n"
 "Vã rugãm introduceþi parola."
 
-#: applets.c:368 ipaqscreen/calibrate.c:33
+#: applets.c:405 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
 msgstr "Ne pare rãu, parolã greºitã"
 
-#: timeanddate.c:349
+#: timeanddate.c:436
 msgid "Time & Date"
 msgstr "Timp ºi Datã"
 
-#: timeanddate.c:365
+#: timeanddate.c:452
 msgid "Date"
 msgstr "Datã"
 
-#: timeanddate.c:379
+#: timeanddate.c:466
 msgid "Enter current date here or use button to select."
 msgstr "Introduceþi data curentã aici sau folosiþi butonul pentru a selecta."
 
-#: timeanddate.c:384
+#: timeanddate.c:471
 msgid "Time"
 msgstr "Timp"
 
-#: timeanddate.c:409
+#: timeanddate.c:485
 msgid "Network"
 msgstr "Reþea"
 
-#: timeanddate.c:427
+#: timeanddate.c:503
 msgid "Select the timeserver to use to set the clock."
 msgstr "Selectaþ serverul de timp de folosit pentru setarea ceasului."
 
-#: timeanddate.c:429
+#: timeanddate.c:505
 msgid "Get time from network"
 msgstr "Obþine timpul de pe reþea"
 
-#: timeanddate.c:436
+#: timeanddate.c:512
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Dacã sunt conectat la Internet, puteþi apãsa acest buton pentru a seta timpul pe acest dispozitiv folosind serverul de timp de deasupra."
 
-#: timeanddate.c:441 timeanddate.c:450
+#: timeanddate.c:517 timeanddate.c:526
 msgid "Timezone"
 msgstr "Zona de timp"
 
-#: timeanddate.c:478
+#: timeanddate.c:549
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "Selectaþi zona d-voastrã de timp aici. Setarea se aplicã dupã urmãtorul login."
 
-#: timeanddate.c:486
+#: timeanddate.c:557
 msgid "Daylight Saving"
 msgstr "Ora de varã"
 
-#: timeanddate.c:493
+#: timeanddate.c:564
 msgid "Use daylight saving time"
 msgstr "Foloseºte timpul conform orarul de varã"
 
-#: timeanddate.c:500
+#: timeanddate.c:571
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "Bifaþi aceastã cãsuþã dacã doriþi ca dispozitivul d-voastrã sã seteze schimbarea orarul de varã pentru d-voastrã."
 
-#: timeanddate.c:502
+#: timeanddate.c:573
 msgid "Offset:"
 msgstr "Diferenþã:"
 
-#: timeanddate.c:511
+#: timeanddate.c:582
 msgid "Default"
 msgstr "Implicit"
 
-#: timeanddate.c:518
+#: timeanddate.c:589
 msgid "Use default DST offset of one hour?"
 msgstr "Folosiþi diferenþa implicitã de o orã pentru orarul de varã"
 
-#: timeanddate.c:523
+#: timeanddate.c:594
 msgid "Hours"
 msgstr "Ore"
 
-#: timeanddate.c:526
+#: timeanddate.c:597
 msgid "Select daylight saving time offset hours here."
 msgstr "Selectaþi diferenþa în ore pentru orarul de varã."
 
-#: timeanddate.c:531
+#: timeanddate.c:602
 msgid "Minutes"
 msgstr "Minute"
 
-#: timeanddate.c:534
+#: timeanddate.c:605
 msgid "Select daylight saving time offset minutes here."
 msgstr "Selectaþi diferenþa în minute pentru orarul de varã."
 
-#: timeanddate.c:540
-msgid "Advanced Settings"
-msgstr "Setãri Avansate"
-
-#: timeanddate.c:546
-msgid "Use advanced settings"
-msgstr "Foloseºte setãri avansate"
-
-#: timeanddate.c:549
-msgid "Check this if you want to use the advanced settings below."
-msgstr "Bifeazã aici dacã doriþi sã folosiþi setãrile avansate dedesubt."
-
-#: timeanddate.c:646
+#: timeanddate.c:722
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
 msgstr "Pentru ca setarea zonei de timp sã ia efect va trebui sã vã de-logaþi ºi sã va logaþi din nou."
 
 #: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
 msgid "General"
 msgstr "General"
+
+#: appmgr_setup.c:206
+msgid "Show 'All' group"
+msgstr "Aratã grupul 'Toate'"
+
+#: appmgr_setup.c:214
+msgid "Auto-hide group labels"
+msgstr "Auto-ascunde etichetele grup"
+
+#: appmgr_setup.c:221
+msgid "Show 'Recent' tab"
+msgstr "Aratã tab-ul 'Recente'"
+
+#: appmgr_setup.c:228
+msgid "Do not launch at startup"
+msgstr "Nu lansa la pornire"
 
 #: appmgr_setup.c:237
 msgid "Tab View"
@@ -234,11 +246,11 @@ msgstr "Touchscreen"
 msgid "Calibrate"
 msgstr "Calibrare"
 
-#: ipaqscreen/main.c:160 network.c:731
+#: ipaqscreen/main.c:160
 msgid "on"
 msgstr "activat"
 
-#: ipaqscreen/main.c:161 network.c:742
+#: ipaqscreen/main.c:161
 msgid "off"
 msgstr "deactivat"
 
@@ -254,7 +266,7 @@ msgstr "secunde"
 msgid "Off"
 msgstr "Deactivat"
 
-#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:124
+#: ipaqscreen/brightness.c:66 ipaqscreen/brightness.c:122
 msgid "Couldn't read screen settings!"
 msgstr "Nu am putut citi setãri ecran!"
 
@@ -283,186 +295,190 @@ msgid "Error reading keyboard definition."
 msgstr "Eroare la citirea definirii tastaturii."
 
 #: keyboard.c:274
-msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
-msgstr "Configurare tastaturã externã. Butoane deactivate \t\t\t\t\tnu sunt instalate în prezent."
+msgid "External keyboard configuration. Model support packages not installed if inactive."
+msgstr "Configurare tastaturã externã. Pachete suport model ne-instalate dacã inactive."
 
 #: keyboard.c:279
 msgid "External Keyboard Type"
 msgstr "Tip tastaturã externã"
 
 #: keyboard.c:286
-msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
-msgstr "Aici puteþi selecta modelul tastaturii externe. \t\t\t\t  Pentru a instala software de suport conectaþi dispozitivul d-voastra \t\t\t\t  la internet ºi apãsaþi butonul \"Install\"."
+msgid "Here you may select your external keyboard model. To install software support, connect your device to the internet and click the \"Install\" button."
+msgstr "Aici puteþi selecta modelul tastaturii externe. Pentru a instala software de suport conectaþi dispozitivul d-voastra la internet ºi apãsaþi butonul \"Install\"."
 
-#: keyboard.c:308
-msgid "Tap here to select this keyboard model."
+#: keyboard.c:307
+msgid "Click here to select this keyboard model."
 msgstr "Apãsaþi aici pentru a selecta acest model de tastaturã."
 
-#: keyboard.c:315
+#: keyboard.c:314 packages.c:184 packages.c:365
 msgid "Install"
 msgstr "Instaleazã"
 
-#: keyboard.c:321
-msgid "Tap here to install support for this keyboard."
+#: keyboard.c:319
+msgid "Click here to install support for this keyboard."
 msgstr "Apãsaþi aici pentru a instala suport pentru aceastã tastaturã."
 
 #: network.c:95
 msgid "Current Config"
 msgstr "Configurare Curentã"
 
-#: network.c:173
-msgid "New interface:"
+#: network.c:174 ownerinfo.c:221
+msgid "Name:"
+msgstr "Nume"
+
+#: network.c:180
+msgid "New Interface"
 msgstr "Nouã interfaþã:"
 
-#: network.c:179
-msgid "Enter name of new interface"
-msgstr "Introduceþi numele noii interfeþe"
-
-#: network.c:186
+#: network.c:187
 msgid "This interface definition already exists!"
 msgstr "Acestã definiþie de interfaþã existã deja!"
 
-#: network.c:227
+#: network.c:228
 msgid "Do you want to delete this interface?"
 msgstr "Doriþi sã ºtergeþi aceastã interfaþã?"
 
-#: network.c:227 keyctl.c:159
+#: network.c:228 keyctl.c:162
 msgid "Question"
 msgstr "Întrebare"
 
-#: network.c:441
+#: network.c:443
 msgid "Address"
 msgstr "Adresã"
 
-#: network.c:444
+#: network.c:446
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "Introduceþi adresa d-voastrã IP aici, de exemplu 192.168.1.2"
 
-#: network.c:446
+#: network.c:448
 msgid "Netmask"
 msgstr "Netmask"
 
-#: network.c:449
+#: network.c:451
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "Introduceþi netmask-ul d-voastrã aici, de exemplu 255.255.255.0 în cele mai multe cazuri"
 
-#: network.c:451
+#: network.c:453
 msgid "Broadcast"
 msgstr "Broadcast"
 
-#: network.c:454
+#: network.c:456
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "Introduceþi adresa d-voastrã de broadcast aici, de obicei similarã cu adresa d-voastrã IP cu 255 ca ultimul numãr."
 
-#: network.c:456
+#: network.c:458
 msgid "Gateway"
 msgstr "Gateway"
 
-#: network.c:459
+#: network.c:461
 msgid "Enter the IP Address of your default gateway here."
 msgstr "Introduceþi adresa IP a gateway-ului d-voastrã implicit."
 
-#: network.c:541
+#: network.c:543
 msgid "Hostname"
 msgstr "Hostname"
 
-#: network.c:544
+#: network.c:546
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "Introduceþi hostname-ul dorit de d-voastrã. Acest parametru e optional."
 
-#: network.c:627
+#: network.c:629
 msgid "Provider"
 msgstr "Furnizor"
 
-#: network.c:630
-msgid "Here you need to enter the name if the provider configuration to use for this interface."
-msgstr "Aici trebuie sã introduceþi numele pentru configuraþia furnizorului de folosit pentru aceastã interfaþã."
+#: network.c:632
+msgid "Here you need to enter the name of the provider configuration to use for this interface."
+msgstr "Aici trebuie sã introduceþi numele pentru configuraþia despre furnizorul ce trebuie folosit pentru aceastã interfaþã."
 
-#: network.c:654
+#: network.c:656
 msgid "Global Settings"
 msgstr "Setãri Globale"
 
-#: network.c:695
+#: network.c:697
 msgid "Proxy"
 msgstr "Proxy"
 
-#: network.c:697
+#: network.c:699
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "Dacã doriþi/aveþi nevoie sã folosiþi un proxy, introduceþi-l aici. (Aceasta este aplicabil doar pentru dillo, deocamdatã.)"
 
-#: network.c:702
+#: network.c:704
 msgid "No proxy for"
 msgstr "Nici un proxy pentru"
 
-#: network.c:705
+#: network.c:707
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "Aici ar trebui sã introduceþi domeniul d-voastrã local dacã nu doriþi sã folosiþi un proxy."
 
-#: network.c:714
+#: network.c:716
 msgid "Use DHCP in any case (usually not needed)."
 msgstr "Foloseºte întotdeauna DHCP (de obicei nu e necesar)."
 
-#: network.c:716
+#: network.c:718
 msgid "Use DHCP"
 msgstr "Foloseºte DHCP"
 
-#: network.c:755
+#: network.c:733
+msgid "yes"
+msgstr "da"
+
+#: network.c:744
+msgid "no"
+msgstr "nu"
+
+#: network.c:757
 msgid "DNS server"
 msgstr "Server DNS"
 
-#: network.c:758
+#: network.c:760
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "Introduceþi IP-ul serverului DNS pe care îl folosiþi."
 
-#: network.c:939
+#: network.c:941
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
-"Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
-"Aici puteþi schimba tipul de configuraþie de bazã pentru dispozitivul d-voastrã.\n"
-"Folosiþi static pentru configurarea manualã a interfeþei, dhcp pentru a folosi DHCP ºi ppp pentru a face acest dispozitiv un dspozitiv PPP."
+"Aici puteþi schimba tipul de configuraþie de bazã pentru dispozitivul dvs.\n"
+"Folosiþi \"static\" pentru configurarea manualã a interfeþei, \"dhcp\" pentru a folosi DHCP ºi \"ppp\" pentru a face acest dispozitiv un dispozitiv point-to-point."
 
-#: network.c:971 network.c:972
+#: network.c:968 network.c:969
 msgid "Add Interface"
 msgstr "Adaugã Interfaþã"
 
-#: network.c:973
+#: network.c:970
 msgid "Add a new Interface"
 msgstr "Adaugã o nouã Interfaþã"
 
-#: network.c:981 network.c:982
+#: network.c:978 network.c:979
 msgid "Remove Interface"
 msgstr "Eliminã Interfaþã"
 
-#: network.c:983
+#: network.c:980
 msgid "Remove current Interface"
 msgstr "Eliminã Interfaþa curentã"
 
-#: network.c:996
+#: network.c:993
 msgid "Information"
 msgstr "Informaþie"
 
-#: network.c:997 network.c:998
+#: network.c:994 network.c:995
 msgid "Show current configuration."
 msgstr "Aratã configuraþia curentã."
 
-#: network.c:1009
+#: network.c:1006
 msgid "Close"
 msgstr "Închide"
 
-#: network.c:1010
-msgid "Close  network tool"
-msgstr "Închide utilitarul de reþea"
-
-#: network.c:1011
+#: network.c:1007 network.c:1008
 msgid "Close network tool"
 msgstr "Închide utilitarul de reþea"
 
-#: network.c:1026
+#: network.c:1023
 msgid "Couldn't read network configuration."
 msgstr "Nu am putut citi configuraþia pentru reþea."
 
-#: network.c:1035
+#: network.c:1032
 msgid "global"
 msgstr "global"
 
@@ -570,25 +586,21 @@ msgstr "Dimensiune"
 msgid "Application Font"
 msgstr "Font Aplicaþie"
 
-#: keyctl.c:159
+#: keyctl.c:162
 msgid "Reset button config to default?"
 msgstr "Buton reset configurat la implicit?"
 
-#: keyctl.c:196
+#: keyctl.c:199
 msgid "Defaults"
 msgstr "Implicite"
 
-#: keyctl.c:301
+#: keyctl.c:304
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr "EROARE: Nu pot deschide keylaunchrc pentru scriere!\n"
 
 #: ownerinfo.c:201
 msgid "Only the user 'root' is allowed to change this information"
 msgstr "Numai utilizatorul 'root' are dreptul sã schimba aceastã informaþie"
-
-#: ownerinfo.c:221
-msgid "Name:"
-msgstr "Nume"
 
 #: ownerinfo.c:236
 msgid "E-Mail:"
@@ -810,203 +822,305 @@ msgstr "Nu aveþi permisiune pentru a scrie configuraþia pentru reþea."
 msgid "Allow users to configure everything"
 msgstr "Permite utilizatori sã seteze totul"
 
-#: storage.c:261 storage.c:422
-msgid "Internal Flash"
-msgstr "Flash intern"
-
-#: storage.c:267 storage.c:428
-msgid "MMC"
-msgstr "MMC"
-
-#: storage.c:273 storage.c:434
-msgid "Compact Flash"
-msgstr "Compact Flash"
-
-#: storage.c:279 storage.c:440
-msgid "Network Filesystem"
-msgstr "Sistem de fiºiere de reþea"
-
-#: storage.c:296 storage.c:355 storage.c:477 storage.c:530
-msgid "Total:"
-msgstr "Total:"
-
-#: storage.c:299 storage.c:480
-msgid "Mounted at"
-msgstr "Montal la"
-
-#: storage.c:305 storage.c:463
-msgid "Free space"
-msgstr "Spaþiu liber"
-
-#: storage.c:342
-msgid "System memory"
-msgstr "Memorie sistem"
-
-#: storage.c:349 storage.c:518
-msgid "Free memory"
-msgstr "Memorie liberã"
-
-#: storage.c:501
+#: storage.c:195 storage.c:445
 msgid "System Memory"
 msgstr "Memorie Sistem"
 
-#: serial.c:146
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:203 storage.c:465
+msgid "Free memory"
+msgstr "Memorie liberã"
+
+#: storage.c:205 storage.c:212 storage.c:359 storage.c:370 storage.c:467
+#: storage.c:480 storage.c:581 storage.c:598
+msgid "MB"
+msgstr "MB"
+
+#: storage.c:210 storage.c:358 storage.c:478 storage.c:596
+msgid "Total:"
+msgstr "Total:"
+
+#: storage.c:322 storage.c:525
+msgid "Internal Flash"
+msgstr "Flash intern"
+
+#: storage.c:328 storage.c:531
+msgid "MMC"
+msgstr "MMC"
+
+#: storage.c:334 storage.c:537
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: storage.c:340 storage.c:543
+msgid "Network Filesystem"
+msgstr "Sistem de fiºiere de reþea"
+
+#: storage.c:360 storage.c:598
+msgid "Mounted at "
+msgstr "Montat la "
+
+#: storage.c:368 storage.c:578
+msgid "Free space"
+msgstr "Spaþiu liber"
+
+#: storage.c:617
+msgid "Couldn't get filesystem info!"
+msgstr "Nu pot obþine info despre sistemul de fiºiere!"
+
+#: serial.c:158
 msgid "Couldn't find default runlevel!"
 msgstr "Nu am putut determina nivelul de rulare implicit!"
 
-#: serial.c:268 serial.c:272
+#: serial.c:289 serial.c:295
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr "Interfaþã simplã pentru configurarea portului serial. Componentele deactivate nu sunt instalate."
 
-#: serial.c:270
-msgid "Simple"
-msgstr "Simplu"
+#: serial.c:292
+msgid "Port A"
+msgstr "Port A"
 
-#: serial.c:275
+#: serial.c:299
 msgid "Serial port default usage"
 msgstr "Folosire implicitã a portului serial"
 
-#: serial.c:279
+#: serial.c:304
 msgid "Select desired software to use serial port here."
 msgstr "Selectaþi software-ul dorit pentru a folosi portul serial aici."
 
-#: serial.c:281
+#: serial.c:307
 msgid "Console"
 msgstr "Consolã"
 
-#: serial.c:283
+#: serial.c:310
 msgid "This option runs console on serial port. (default)"
 msgstr "Aceastã opþiune ruleazã consola pe portul serial. (implicit)"
 
-#: serial.c:285
+#: serial.c:316
 msgid "GPS Daemon"
 msgstr "Demon GPS"
 
-#: serial.c:288
+#: serial.c:320
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
 msgstr "Aceastã opþiune permite pornirea lui GPSD, care furnizeazã date de la un receptor GPS la aplicaþii."
 
-#: serial.c:290
+#: serial.c:327
 msgid "Nothing (free)"
 msgstr "Nimic (liber)"
 
-#: serial.c:292
+#: serial.c:330
 msgid "Don't start any software that uses the serial port."
 msgstr "Nu porni nici un software ce foloseºte portul serial."
 
-#: logread.c:140
+#: serial.c:368 serial.c:375
+msgid "This page configures the GPS receiver software."
+msgstr "Aceastã paginã configureazã software-ul pentru receptorul GPS."
+
+#: serial.c:372
+msgid "GPS Receiver"
+msgstr "Receptor GPS"
+
+#: serial.c:379
+msgid "GPS settings"
+msgstr "Setãri GPS"
+
+#: serial.c:385
+msgid "Receiver Type"
+msgstr "Tip receptor"
+
+#: serial.c:390
+msgid "NMEA"
+msgstr "NMEA"
+
+#: serial.c:395
+msgid "The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"
+msgstr "Receptorul GPS recepþioneazã date NMEA. (implicit, nu trebuie schimbat pentru cele mai multe receptoare)"
+
+#: serial.c:401
+msgid "Earthmate"
+msgstr "Earthmate"
+
+#: serial.c:407
+msgid "GPS receiver is an Earthmate GPS."
+msgstr "Receptorul GPS este Earthmate."
+
+#: serial.c:411
+msgid "Baud Rate"
+msgstr "Ratã Baud"
+
+#: logread.c:107
+msgid "Can't find circular buffer, is syslog running?"
+msgstr "Nu pot gãsi buffer-ul circular, ruleazã syslog?"
+
+#: logread.c:113
+msgid "Can't get access to circular buffer from syslogd."
+msgstr "Nu pot obþine acces la buffer-ul circular de la syslog."
+
+#: logread.c:119
+msgid "Can't get access to semaphone(s) for circular buffer from syslogd."
+msgstr "Nu pot obþine acces la semaforul(-arele) pentru buffer-ul de la syslog."
+
+#: logread.c:144
 msgid "<empty syslog>"
 msgstr "<syslog gol>"
 
-#: logread.c:191
+#: logread.c:215 logread.c:229
 msgid "System Log"
 msgstr "Log sistem"
 
-#: packages.c:62
+#: logread.c:237 logread.c:251
+msgid "Session Log"
+msgstr "Jurnal sesiune"
+
+#: logread.c:257
+msgid "Could not open X session log."
+msgstr "Nu pot deschide jurnalul sesiunii X."
+
+#: packages.c:67
+msgid "Removing package"
+msgstr "ªterge pachet"
+
+#: packages.c:72
 msgid "Installing package"
 msgstr "Instalez pachet"
 
-#: packages.c:140 packages.c:245
+#: packages.c:151 packages.c:325
 msgid "Start"
 msgstr "Start"
 
-#: packages.c:142
+#: packages.c:156
 msgid "Update finished. Please check log messages for errors."
 msgstr "Actualizare terminatã. Vã rugãm verificaþi mesaje log pentru erori."
 
-#: packages.c:163
+#: packages.c:185 packages.c:371
+msgid "Remove"
+msgstr "Eliminã"
+
+#: packages.c:186
+msgid "Install/Removal finished. Please check log messages for errors."
+msgstr "Instalare/ªtergere terminatã. Vã rugãm verificaþi mesaje jurnal pentru erori."
+
+#: packages.c:206
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr "Actualizare folosind \"ipkg upgrade\" începutã.\n"
 
-#: packages.c:186
+#: packages.c:230 packages.c:254
 msgid "Running..."
 msgstr "Rulez..."
 
-#: packages.c:235
+#: packages.c:315
 msgid "Update"
 msgstr "Actualizeazã"
 
-#: packages.c:240
+#: packages.c:320
 msgid "Update from network"
 msgstr "Actualizeazã de pe reþea"
 
-#: packages.c:249
+#: packages.c:329
 msgid "Update entire system over an internet connection."
 msgstr "Actualizeazã întregul sistem prin conexiune pe internet."
 
-#: packages.c:253
+#: packages.c:333 packages.c:379
 msgid "Activity log"
 msgstr "Log activitate"
 
-#: packages.c:261
+#: packages.c:341
 msgid "This window shows all output from the packet manager that performs the update."
 msgstr "Aceastã fereastrã aratã toate ieºirile de la managerul de pachete care executã actualizãri."
 
-#: cardinfo.c:234
+#: packages.c:351
+msgid "Install/Remove"
+msgstr "Instaleazã/Eliminã"
+
+#: packages.c:356
+msgid "Install/Remove a package"
+msgstr "Instaleazã/Eliminã un pachet"
+
+#: packages.c:363
+msgid "Enter name of package to be installed here."
+msgstr "Introduceþi numele pachetului de a fi instalat aici."
+
+#: packages.c:369
+msgid "Install a package from a configured source."
+msgstr "Instaleazã un pachet dintr-o sursã configuratã."
+
+#: packages.c:375
+msgid "Remove the package."
+msgstr "Eliminã pachetul."
+
+#: packages.c:387
+msgid "This window shows all output from the packet manager installing the package."
+msgstr "Aceastã fereastrã aratã toate ieºirile de la managerul ce instaleazã pachetul."
+
+#: cardinfo.c:145 cardinfo.c:833
+msgid "card not recognized"
+msgstr "card ne-recunoscut"
+
+#: cardinfo.c:247 cardinfo.c:318
 msgid "Could not write to temporal config file."
 msgstr "Nu am putut scrie în fiºierul de configurare temporar."
 
-#: cardinfo.c:426
+#: cardinfo.c:524
 msgid "Could not open pidfile:"
 msgstr "Nu am putut deschide fiºierpid:"
 
-#: cardinfo.c:432
+#: cardinfo.c:530
 msgid "Could not read pidfile"
 msgstr "Nu am putut citi fiºierpid"
 
-#: cardinfo.c:436
+#: cardinfo.c:534
 msgid "Could not signal cardmgr:"
-msgstr "Nu am utut semnala cardmgr:"
+msgstr "Nu am putut semnala cardmgr:"
 
-#: cardinfo.c:511
+#: cardinfo.c:609
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf trbuie sã fie setuid root pentru a folosi capabilitatea cardinfo."
 
-#: cardinfo.c:530
-msgid "No pcmcia driver in /proc/devices"
-msgstr "Nici un driver pcmcia în /proc/devices"
+#: cardinfo.c:628
+msgid "No PCMCIA driver in '/proc/devices'"
+msgstr "Nici un driver PCMCIA în /proc/devices"
 
-#: cardinfo.c:533
-msgid "Could not open /proc/devices"
+#: cardinfo.c:631
+msgid "Could not open '/proc/devices'"
 msgstr "Nu am putut deschide /proc/devices"
 
-#: cardinfo.c:545
+#: cardinfo.c:643
 msgid "No sockets found\n"
 msgstr "Nu am gãsit nici un socket\n"
 
-#: cardinfo.c:554
+#: cardinfo.c:652
 msgid "Card Services release does not match!"
 msgstr "Versiunile Card Services nu se potrivesc!"
 
-#: cardinfo.c:559
+#: cardinfo.c:657
 msgid "Could not get CS revision info!\n"
 msgstr "Nu pot obþine info despre versiunea CS!\n"
 
-#: cardinfo.c:716
-msgid "flock(stabfile) failed)"
-msgstr "flock(stabfile) eºuat)"
+#: cardinfo.c:820
+msgid "flock(stabfile) failed"
+msgstr "flock(stabfile) eºuat"
 
-#: cardinfo.c:732
+#: cardinfo.c:839
 msgid "no driver loaded"
 msgstr "nici un driver încãrcat"
 
-#: cardinfo.c:841
+#: cardinfo.c:948
 msgid "ready"
 msgstr "e gata"
 
-#: cardinfo.c:859
+#: cardinfo.c:966
 msgid "not ready"
 msgstr "nu e gata"
 
-#: cardinfo.c:874
+#: cardinfo.c:981
 msgid "suspended"
 msgstr "suspendat"
 
-#: cardinfo.c:1068 cardinfo.c:1239 cardinfo.c:1240
+#: cardinfo.c:1173 cardinfo.c:1344 cardinfo.c:1345
 msgid "Assign Driver"
 msgstr "Repartizeazã Driver"
 
-#: cardinfo.c:1077
+#: cardinfo.c:1182
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1016,316 +1130,296 @@ msgstr ""
 "schimbaþi repartizarea driverului\n"
 "pentru un card PCMCIA sau CF"
 
-#: cardinfo.c:1087
+#: cardinfo.c:1192
 msgid "Your current card identifies itself as:"
 msgstr "Cardul d-voastrã curent se identificã ca:"
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1206 cardinfo.c:1212
 msgid "Manuf. Id"
 msgstr "Manuf. Id"
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1206 cardinfo.c:1212
 msgid "Class"
 msgstr "Clasa"
 
-#: cardinfo.c:1180
+#: cardinfo.c:1285
 msgid "Insert Card"
 msgstr "Introduceþi Card"
 
-#: cardinfo.c:1182
-msgid "Tap here to start card insertion manually."
+#: cardinfo.c:1287
+msgid "Click here to start card insertion manually."
 msgstr "Apãsaþi aici pentru a începe inserarea manualã a cardului."
 
-#: cardinfo.c:1190
+#: cardinfo.c:1295
 msgid "Eject Card"
 msgstr "Scoate Card"
 
-#: cardinfo.c:1192
-msgid "Tap here to eject card manually."
+#: cardinfo.c:1297
+msgid "Click here to eject card manually."
 msgstr "Apãsaþi aici pentru a scoate cardul manual."
 
-#: cardinfo.c:1200
+#: cardinfo.c:1305
 msgid "Suspend Card"
 msgstr "Suspendã Card"
 
-#: cardinfo.c:1202
-msgid "Tap here to suspend current card."
+#: cardinfo.c:1307
+msgid "Click here to suspend current card."
 msgstr "Apãsaþi aici pentru a suspenda cardul curent."
 
-#: cardinfo.c:1210
+#: cardinfo.c:1315
 msgid "Resume Card"
 msgstr "Reporneºte Card"
 
-#: cardinfo.c:1212
-msgid "Tap here to resume current card."
+#: cardinfo.c:1317
+msgid "Click here to resume current card."
 msgstr "Apãsaþi aici pentru a reporni cardul curent"
 
-#: cardinfo.c:1220
+#: cardinfo.c:1325
 msgid "Reset Card"
 msgstr "Reseteazã Card"
 
-#: cardinfo.c:1221
-msgid "Tap here to reset current card."
+#: cardinfo.c:1326
+msgid "Click here to reset current card."
 msgstr "Apãsaþi aici pentru a reseta cardul curent."
 
-#: cardinfo.c:1229 cardinfo.c:1230
+#: cardinfo.c:1334 cardinfo.c:1335
 msgid "Reset Card Manager"
 msgstr "Reseteazã Managerul de Carduri"
 
-#: cardinfo.c:1232
-msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
+#: cardinfo.c:1337
+msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
 msgstr "Apãsaþi aici pentru a reseta managerul de carduri. Aceasta comite toate actualizãrile fiºierelor de configurare pentru pcmcia."
 
-#: cardinfo.c:1242
-msgid "Tap here to assign a driver to this card / change current driver assignment."
+#: cardinfo.c:1347
+msgid "Click here to assign a driver to this card / change current driver assignment."
 msgstr "Apãsaþi aici pentru a repartiza un driver pentru acest card / a schimba repartizarea curentã a driverului."
 
-#: cardinfo.c:1249 cardinfo.c:1250
+#: cardinfo.c:1354 cardinfo.c:1355
 msgid "Exit applet"
 msgstr "Terminã applet"
 
-#: cardinfo.c:1259 cardinfo.c:1272
+#: cardinfo.c:1364 cardinfo.c:1377
 msgid "PC/CF card socket information."
 msgstr "Informaþie socket card PC/CF."
 
-#: cardinfo.c:1267
+#: cardinfo.c:1372
 msgid "Socket"
 msgstr "Socket"
 
-#: cardinfo.c:1298
+#: cardinfo.c:1403
 msgid "Information for socket"
 msgstr "Informaþie pentru socket"
 
-#: cardinfo.c:1307
+#: cardinfo.c:1412
 msgid "State:"
 msgstr "Stare:"
 
-#: cardinfo.c:1308
+#: cardinfo.c:1413
 msgid "Device:"
 msgstr "Dispozitiv:"
 
-#: cardinfo.c:1309
+#: cardinfo.c:1414
 msgid "Driver:"
 msgstr "Driver:"
 
-#: cardinfo.c:1310
+#: cardinfo.c:1415
 msgid "Type:"
 msgstr "Tip:"
 
-#: cardinfo.c:1311
+#: cardinfo.c:1416
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1312
+#: cardinfo.c:1417
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1319
+#: cardinfo.c:1424
 msgid "Flags:"
 msgstr "Opþiuni:"
 
-#: cardinfo.c:1336
+#: cardinfo.c:1441
 msgid "PCMCIA initialisation failed"
 msgstr "Iniþializare PCMCIA a eºuat"
 
-#: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
-#: tools/interface.c:622
+#: tools/interface.c:288 tools/interface.c:488 tools/interface.c:504
+#: tools/interface.c:624
 msgid "[NONE SET]"
 msgstr "[NICIUNUL SETAT]"
 
-#: tools/interface.c:394
-#, c-format
-msgid "rresolve: unsupport address family %d !\n"
-msgstr "rresolve: familie de adrese nesuportatã %d !\n"
-
-#: tools/interface.c:677 tools/interface.c:1650
+#: tools/interface.c:679 tools/interface.c:1677
 msgid "UNSPEC"
 msgstr "UNSPEC"
 
-#: tools/interface.c:679
+#: tools/interface.c:681
 msgid "UNIX Domain"
 msgstr "Domeniu UNIX"
 
-#: tools/interface.c:682
+#: tools/interface.c:684
 msgid "DARPA Internet"
 msgstr "DARPA Internet"
 
-#: tools/interface.c:685
+#: tools/interface.c:687
 msgid "IPv6"
 msgstr "IPv6"
 
-#: tools/interface.c:688 tools/interface.c:1671
+#: tools/interface.c:690 tools/interface.c:1698
 msgid "AMPR AX.25"
 msgstr "AMPR AX.25"
 
-#: tools/interface.c:691 tools/interface.c:1677
+#: tools/interface.c:693 tools/interface.c:1704
 msgid "AMPR NET/ROM"
 msgstr "AMPR NET/ROM"
 
-#: tools/interface.c:694
+#: tools/interface.c:696
 msgid "Novell IPX"
 msgstr "Novell IPX"
 
-#: tools/interface.c:697
+#: tools/interface.c:699
 msgid "Appletalk DDP"
 msgstr "Appletalk DDP"
 
-#: tools/interface.c:700 tools/interface.c:1712
+#: tools/interface.c:702 tools/interface.c:1739
 msgid "Econet"
 msgstr "Econet"
 
-#: tools/interface.c:703
+#: tools/interface.c:705
 msgid "CCITT X.25"
 msgstr "CCITT X.25"
 
-#: tools/interface.c:706 tools/interface.c:1674
+#: tools/interface.c:708 tools/interface.c:1701
 msgid "AMPR ROSE"
 msgstr "AMPR ROSE"
 
-#: tools/interface.c:709 tools/interface.c:1662
+#: tools/interface.c:711 tools/interface.c:1689
 msgid "Ash"
 msgstr "Ash"
 
-#: tools/interface.c:736
-msgid "Too much address family arguments.\n"
+#: tools/interface.c:738
+msgid "Too many address family arguments.\n"
 msgstr "Prea multe argumente de familii de adrese.\n"
 
-#: tools/interface.c:747
+#: tools/interface.c:749
 #, c-format
-msgid "Unknown address family `%s'.\n"
+msgid "Unknown address family '%s'.\n"
 msgstr "Familie de adrese necunoscutã `%s'.\n"
 
-#: tools/interface.c:810
+#: tools/interface.c:812
 msgid "Please don't supply more than one address family.\n"
 msgstr "Vã rugãm nu furnizaþi mai mult de o familie de adrese.\n"
 
-#: tools/interface.c:937
+#: tools/interface.c:939
 msgid "No usable address families found.\n"
 msgstr "Nu am gãsit nici o famile de adrese ce poate fi folositã.\n"
 
-#: tools/interface.c:1007
+#: tools/interface.c:1009
 #, c-format
-msgid "warning: no inet socket available: %s\n"
-msgstr "avertisment: nici un socket inet disponibil: %s\n"
+msgid "Warning: no inet socket available: %s\n"
+msgstr "Avertisment: nici un socket inet disponibil: %s\n"
 
-#: tools/interface.c:1159
+#: tools/interface.c:1161
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
 msgstr "Avertisment: nu pot deschide %s (%s). Ieºire limitatã.\n"
 
-#: tools/interface.c:1402
+#: tools/interface.c:1404
 msgid "Device not found"
 msgstr "Nu am gãsit dispozitivul"
 
-#: tools/interface.c:1406
+#: tools/interface.c:1408
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
 msgstr "%s: eroare la obþinerea informaþiei despre interfaþã: %s\n"
 
-#: tools/interface.c:1480 tools/interface.c:1497
-#, c-format
-msgid "in_ether(%s): invalid ether address!\n"
-msgstr "în ether(%s): adresã ether invalidã!\n"
-
-#: tools/interface.c:1511
-#, c-format
-msgid "in_ether(%s): trailing : ignored!\n"
-msgstr "în ether(%s): în coadã : ignorat!\n"
-
-#: tools/interface.c:1523
-#, c-format
-msgid "in_ether(%s): trailing junk!\n"
-msgstr "în ether(%s): gunoi în coadã!\n"
-
-#: tools/interface.c:1555
+#: tools/interface.c:1582
 msgid "You cannot start PPP with this program.\n"
 msgstr "Nu puteþi porni PPP cu acest program.\n"
 
-#: tools/interface.c:1649
+#: tools/interface.c:1676
 msgid "Local Loopback"
 msgstr "Loopback Local"
 
-#: tools/interface.c:1652
+#: tools/interface.c:1679
 msgid "Serial Line IP"
 msgstr "Linie IP Serialã"
 
-#: tools/interface.c:1653
+#: tools/interface.c:1680
 msgid "VJ Serial Line IP"
 msgstr "Linie IP Serialã VJ"
 
-#: tools/interface.c:1654
+#: tools/interface.c:1681
 msgid "6-bit Serial Line IP"
 msgstr "Linie IP Serialã 6-biþi"
 
-#: tools/interface.c:1655
+#: tools/interface.c:1682
 msgid "VJ 6-bit Serial Line IP"
 msgstr "Linie IP Serialã VJ 6-biþi"
 
-#: tools/interface.c:1656
+#: tools/interface.c:1683
 msgid "Adaptive Serial Line IP"
 msgstr "Linie IP Serialã Adaptivã"
 
-#: tools/interface.c:1659
+#: tools/interface.c:1686
 msgid "Ethernet"
 msgstr "Ethernet"
 
-#: tools/interface.c:1665
+#: tools/interface.c:1692
 msgid "Fiber Distributed Data Interface"
 msgstr "Fiber Distributed Data Interface"
 
-#: tools/interface.c:1668
+#: tools/interface.c:1695
 msgid "HIPPI"
 msgstr "HIPPI"
 
-#: tools/interface.c:1680
+#: tools/interface.c:1707
 msgid "generic X.25"
 msgstr "generic X.25"
 
-#: tools/interface.c:1683
+#: tools/interface.c:1710
 msgid "IPIP Tunnel"
 msgstr "IPIP Tunnel"
 
-#: tools/interface.c:1686
+#: tools/interface.c:1713
 msgid "Point-to-Point Protocol"
 msgstr "Protocol Point-to-Point"
 
-#: tools/interface.c:1689
+#: tools/interface.c:1716
 msgid "(Cisco)-HDLC"
 msgstr "(Cisco)-HDLC"
 
-#: tools/interface.c:1690
+#: tools/interface.c:1717
 msgid "LAPB"
 msgstr "LAPB"
 
-#: tools/interface.c:1693
+#: tools/interface.c:1720
 msgid "ARCnet"
 msgstr "ARCnet"
 
-#: tools/interface.c:1696
+#: tools/interface.c:1723
 msgid "Frame Relay DLCI"
 msgstr "Frame Relay DLCI"
 
-#: tools/interface.c:1697
+#: tools/interface.c:1724
 msgid "Frame Relay Access Device"
 msgstr "Dispozitiv Frame Relay Access"
 
-#: tools/interface.c:1700
+#: tools/interface.c:1727
 msgid "IPv6-in-IPv4"
 msgstr "IPv6-in-IPv4"
 
-#: tools/interface.c:1703
+#: tools/interface.c:1730
 msgid "IrLAP"
 msgstr "IrLAP"
 
-#: tools/interface.c:1706
+#: tools/interface.c:1733
 msgid "16/4 Mbps Token Ring"
 msgstr "16/4 Mbps Token Ring"
 
-#: tools/interface.c:1708
+#: tools/interface.c:1735
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "16/4 Mbps Token Ring (Nou)"
 
-#: tools/interface.c:1818
+#: tools/interface.c:1845
 #, c-format
 msgid ""
 "<b>Interface %s</b>\n"
@@ -1334,69 +1428,278 @@ msgstr ""
 "<b>Interfaþã %s</b>\n"
 "Tip: %s\n"
 
-#: tools/interface.c:1826
+#: tools/interface.c:1853
 #, c-format
 msgid "HWaddr (MAC): %s\n"
 msgstr "HWaddr (MAC): %s\n"
 
-#: tools/interface.c:1832
+#: tools/interface.c:1859
 #, c-format
 msgid "Media: %s"
 msgstr "Mediu: %s"
 
-#: tools/interface.c:1837
+#: tools/interface.c:1864
 msgid "(auto)"
 msgstr "(auto)"
 
-#: tools/interface.c:1849
+#: tools/interface.c:1876
 #, c-format
 msgid "Address: %s\n"
 msgstr "Adresa: %s\n"
 
-#: tools/interface.c:1854
+#: tools/interface.c:1881
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "P-t-P: %s\n"
 
-#: tools/interface.c:1858
+#: tools/interface.c:1885
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "Netmask: %s\n"
 
-#: tools/interface.c:1862
+#: tools/interface.c:1889
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "Broadcast: %s\n"
 
-#: tools/interface.c:1882
+#: tools/interface.c:1909
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "Adresa IPv6: %s/%d\n"
 
-#: tools/interface.c:1886
+#: tools/interface.c:1913
 msgid "Scope: "
 msgstr "Domeniu: "
 
-#: tools/interface.c:1891
+#: tools/interface.c:1918
 msgid "Global"
 msgstr "Global"
 
-#: tools/interface.c:1894
+#: tools/interface.c:1921
 msgid "Link"
 msgstr "Legãturã"
 
-#: tools/interface.c:1897
+#: tools/interface.c:1924
 msgid "Site"
 msgstr "Sit"
 
-#: tools/interface.c:1900
+#: tools/interface.c:1927
 msgid "Compat"
 msgstr "Compat"
 
-#: tools/interface.c:1903
+#: tools/interface.c:1930
 msgid "Host"
 msgstr "Host"
 
-#: tools/interface.c:1906
+#: tools/interface.c:1933
 msgid "Unknown"
 msgstr "Necunoscut"
+
+#: battery.c:79
+#, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "nu am putut deschide dispozitul touchscreen '%s'\n"
+
+#: battery.c:127 battery.c:179
+msgid "Status: high"
+msgstr "Stare: aproape plinã"
+
+#: battery.c:130 battery.c:182
+msgid "Status: low"
+msgstr "Stare: aproape goalã"
+
+#: battery.c:133 battery.c:185
+msgid "Status: critical"
+msgstr "Stare: critic"
+
+#: battery.c:136 battery.c:188
+msgid "Status: charging"
+msgstr "Stare: încãrcare"
+
+#: battery.c:139 battery.c:191
+msgid "Status: charge main"
+msgstr "Stare: încãrcare principalã"
+
+#: battery.c:142
+msgid "Status: dead"
+msgstr "Stare: moartã"
+
+#: battery.c:145 battery.c:197
+msgid "Status: full"
+msgstr "Stare: plinã"
+
+#: battery.c:148 battery.c:200
+msgid "Status: no battery"
+msgstr "Stare: nici o baterie"
+
+#: battery.c:151 battery.c:203 battery.c:222
+msgid "Status: unknown"
+msgstr "Stare: necunoscutã"
+
+#: battery.c:155 battery.c:207
+msgid "Voltage"
+msgstr "Voltaj"
+
+#: battery.c:159 battery.c:211
+msgid "AC connected"
+msgstr "AC conectatã"
+
+#: battery.c:161 battery.c:213
+msgid "Lifetime"
+msgstr "Durata de viaþã"
+
+#: battery.c:194
+msgid "Status: not installed"
+msgstr "Stare: ne-instalatã"
+
+#: battery.c:220
+msgid "not installed"
+msgstr "ne-instalatã"
+
+#: battery.c:224
+msgid "Voltage: unknown"
+msgstr "Voltaj: necunoscut"
+
+#: battery.c:226
+msgid "Lifetime: unknown"
+msgstr "Duratã de viaþã: necunoscutã"
+
+#: battery.c:265
+msgid "Internal battery"
+msgstr "Baterie internã"
+
+#: battery.c:269
+msgid "Jacket battery"
+msgstr "Baterie jachetã"
+
+#: gpe-conf-admin.desktop.in.h:1
+msgid "User Access"
+msgstr "Acces Utilizator"
+
+#: gpe-conf-admin.desktop.in.h:2
+msgid "User access administration"
+msgstr "Administraþie acces utilizator"
+
+#: gpe-conf-battery.desktop.in.h:1
+msgid "Battery Info"
+msgstr "Informaþii baterie"
+
+#: gpe-conf-battery.desktop.in.h:2
+msgid "Battery Information"
+msgstr "Informaþii Baterie"
+
+#: gpe-conf-cardinfo.desktop.in.h:1
+msgid "PC/CF Cards"
+msgstr "Carduri PC/CF"
+
+#: gpe-conf-cardinfo.desktop.in.h:2
+msgid "PC/CF Cards info and config"
+msgstr "Informaþii ºi configurare carduri PC/CF."
+
+#: gpe-conf-ipaqscreen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Setare screen"
+
+#: gpe-conf-kbd.desktop.in.h:1
+msgid "Virtual Keyboard"
+msgstr "Tastaturã virtualã"
+
+#: gpe-conf-kbd.desktop.in.h:2
+msgid "Virtual Keyboard Setup"
+msgstr "Setare tastaturã virtualã"
+
+#: gpe-conf-keyboard.desktop.in.h:1
+msgid "External Keyboard"
+msgstr "Tastaturã externã"
+
+#: gpe-conf-keyboard.desktop.in.h:2
+msgid "External Keyboard Setup"
+msgstr "Setare tastaturã externã"
+
+#: gpe-conf-keyctl.desktop.in.h:1
+msgid "Button Config"
+msgstr "Buton Configurare"
+
+#: gpe-conf-keyctl.desktop.in.h:2
+msgid "Button Configuration"
+msgstr "Buton Configurare"
+
+#: gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Setare Login"
+
+#: gpe-conf-logread.desktop.in.h:1
+msgid "Accesss System Log "
+msgstr "Acceseazã Jurnal Sistem "
+
+#: gpe-conf-logread.desktop.in.h:2
+msgid "Show Logs"
+msgstr "Aratã Jurnale"
+
+#: gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Setare Reþea"
+
+#: gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Informaþii Proprietar"
+
+#: gpe-conf-ownerinfo.desktop.in.h:2
+msgid "Set Owner Information"
+msgstr "Seteazã Informaþii Proprietar"
+
+#: gpe-conf-packages.desktop.in.h:1
+msgid " Update Manager"
+msgstr "Actualizeazã Manager"
+
+#: gpe-conf-packages.desktop.in.h:2
+msgid "Update installed packages"
+msgstr "Actualizeazã pachete instalate"
+
+#: gpe-conf-serial.desktop.in.h:1
+msgid " Serial Ports"
+msgstr " Porturi Seriale"
+
+#: gpe-conf-serial.desktop.in.h:2
+msgid "Serial Port Settings"
+msgstr "Setãri Porturi Seriale"
+
+#: gpe-conf-sleep.desktop.in.h:1
+msgid "Sleep Config"
+msgstr "Configurare Adormire"
+
+#: gpe-conf-sleep.desktop.in.h:2
+msgid "Sleep Configuration"
+msgstr "Configuraþie Adormire"
+
+#: gpe-conf-storage.desktop.in.h:1
+msgid "Storage Information"
+msgstr "Informaþii Depozitare"
+
+#: gpe-conf-storage.desktop.in.h:2
+msgid "Storage Usage"
+msgstr "Folosire Depozitare"
+
+#: gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr "Setare Aspect Global"
+
+#: gpe-conf-theme.desktop.in.h:2
+msgid "Global Look"
+msgstr "Privire Globalã"
+
+#: gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr "Setare Datã/Timp"
+
+#: gpe-conf-time.desktop.in.h:2
+msgid "Setup Date and Time"
+msgstr "Setare Datã ºi Timp"
+
+#: gpe-conf-users.desktop.in.h:1
+msgid "Manage local Users "
+msgstr "Gestioneazã utilizatori locali "
+
+#: gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
+msgstr "Managerul de Utilizatori"

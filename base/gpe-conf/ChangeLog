@@ -1,6 +1,11 @@
 2003-09-23	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Fixed bug cause network setup to die.
 	* Added new Portuguese translation (thanks to Luis Oliveira)
+	* Fixed bug in theme.c that caused a crash opening color selectors.
+
+2003-09-22	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Added new pot (translation project version)
+	* Added new German (thanks Colin) and Romanian (...) translation.
 
 2003-09-21  Colin Marquardt  <colin@marquardt-home.de>
 
