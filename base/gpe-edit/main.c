@@ -25,6 +25,7 @@
 #include "pixmaps.h"
 #include "gtkminifilesel.h"
 
+#define WINDOW_NAME "GPE Edit"
 #define _(_x) gettext (_x)
 
 gchar *buffer;
@@ -59,26 +60,14 @@ clear_text_area (void)
 void
 update_window_title (void)
 {
-  gchar *window_title = "GPE Edit - ";
-  gchar *buf;
-  gchar *file_path;
+  gchar *window_title;
+  gchar *file_basename;
 
-  if (filename == "")
-  {
-    /* FIXME: this should be held in a variable [CM] */  
-    file_path = g_malloc (strlen(_("Untitled")));
-    file_path = _("Untitled");
-  }
-  else
-  {
-    file_path = g_malloc (strlen(basename (filename)));
-    file_path = basename (filename);
-  }
+  const char *displayname = filename ? basename (filename) : _("Untitled");
+  window_title = g_malloc (strlen (WINDOW_NAME " - ") + strlen (displayname) + 1);
+  strcpy (stpcpy (window_title, WINDOW_NAME " - "), displayname);
 
-  buf = g_malloc (strlen (window_title) + strlen (basename (file_path)) + 1);
-  strcpy (buf, window_title);
-  strcat (buf, basename (file_path));
-  gtk_window_set_title (GTK_WINDOW (main_window), buf);
+  gtk_window_set_title (GTK_WINDOW (main_window), window_title);
 }
 
 void

@@ -1,11 +1,11 @@
 PREFIX = /usr/local
 PACKAGE = gpe-edit
-#DEBUG = yes
+DEBUG = yes
 CVSBUILD = yes
 
 MEMBERS = main
 
-CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall
+CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -38,7 +38,7 @@ po/gpe-edit.pot: $(SOURCES)
 	xgettext -k_ -o po/gpe-edit.pot $^
 
 gpe-edit: $(OBJS)
-	$(CC) -o $@ $^ `gtk-config --libs` $(LDFLAGS)
+	$(CC) -o $@ $^ `gtk-config --libs` `gdk-pixbuf-config --libs` $(LDFLAGS)
 
 install: all install-po
 	install -D gpe-edit $(DESTDIR)$(PREFIX)/bin/gpe-edit
