@@ -10,6 +10,8 @@ applications will be lost." --buttons !gtk-cancel "ok:Log out"
 if [ $? -eq 1 ]; then
     echo "Logout.";
     mbcontrol -exit;
+# hack to run on simpad too
+    killall metacity; 
 else
     echo "Logout cancelled.";
 fi
