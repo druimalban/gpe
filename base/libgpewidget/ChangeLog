@@ -1,8 +1,8 @@
 2003-04-01  Philip Blundell  <philb@gnu.org>
 
-	* gpeclock.c: New file.
-	* gpe/gpeclock.h: Likewise.
-	* Makefile (MEMBERS): Add gpeclock.
+	* gpeclockface.c: New file.
+	* gpe/gpeclockface.h: Likewise.
+	* Makefile (MEMBERS): Add gpeclockface.
 
 2003-03-31  Philip Blundell  <philb@gnu.org>
 
