@@ -40,10 +40,10 @@ typedef struct{
 unsigned int usqld_peek_next_packet(int fd){
   unsigned char header[4];
   
-  if(4== recv(fd,header,4,MSG_DONTWAIT|MSG_PEEK)){
-    return ntohl(*((unsigned int *)header));
-  }
-  return 0;
+ //  if(4== recv(fd,header,4,MSG_DONTWAIT|MSG_PEEK)){
+  //     return ntohl(*((unsigned int *)header));
+  //  }
+   return 0;
 }
 
 /*
@@ -135,7 +135,7 @@ int usqld_send_row(usqld_row_context * rc,
   }
   
 #ifdef VERBOSE_DEBUG
-  for(i = 0;i<nfiels;i++){
+  for(i = 0;i<nfields;i++){
     fprintf(stderr,"\t%s,",heads[i]);
   }
   fprintf(stderr,"]\n");
@@ -205,7 +205,7 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
   rc.rv =0;
   rc.headsent = 0;
   rc.terminate_now = 0;
-
+  rc.interrupted = 0;
   if(NULL==tc->db){
     reply = usqld_error_packet(USQLD_NOT_OPEN,
 			       "You do not have a database open");
