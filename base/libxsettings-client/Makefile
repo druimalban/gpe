@@ -45,6 +45,12 @@ install-program: $(LIBXSETTINGS_SO)
 	install -d $(DESTDIR)$(PREFIX)/lib
 	install -s $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
 
+install-devel:
+	install -d $(DESTDIR)$(PREFIX)/include
+	install -m 644 xsettings-client.h $(DESTDIR)$(PREFIX)/include/xsettings-client.h
+	install -d $(DESTDIR)$(PREFIX)/lib
+	ln -sf $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/libXsettings-client.so
+                                
 clean:
 	rm -f $(LIBXSETTINGS_SO) libXsettings-client.so
 	rm -f $(XSETTINGS_OBJS) $(DEPS)
