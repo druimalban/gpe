@@ -22,7 +22,7 @@ td {
 	text-align:	left;
 }
 
-code, tt {
+code, tt, pre {
 	font-family:	lucidatypewriter, monospace;
 	font-size:	80%
 }
