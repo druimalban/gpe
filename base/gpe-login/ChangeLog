@@ -1,5 +1,9 @@
 2003-04-05  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.49 released.
+
+2003-04-05  Phil Blundell  <pb@nexus.co.uk>
+
 	* gpe-logout.sh: Add hard line breaks.
 
 	* gpe-login.xinit: Check /etc/sysconfig/gpelogin
