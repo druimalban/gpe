@@ -3,5 +3,5 @@ Name=Aerial
 Comment=Panel based wireless LAN communications control
 Exec=gpe-aerial
 Type=PanelApp
-Icon=gpe-aerial.png
+Icon=/usr/share/gpe/pixmaps/default/gpe-aerial.png
 Categories=Panel;Utility;GPE;WiFi

@@ -75,7 +75,9 @@ info_t;
 
 typedef enum
 {
+	N_UNKNOWN,
 	N_NET,
+	N_MANAGED,
 	N_ADHOC,
 	N_HOST,
 	N_GATEWAY,

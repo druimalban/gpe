@@ -1,5 +1,7 @@
 2003-10-16		Florian Boor <florian.boor@kernelconcepts.de>
+	* New translation: Portuguese, contributed by Luis Oliveira
 	* New translation: Czech, contributed by Libor Klepac
+
 2003-10-15		Florian Boor <florian.boor@kernelconcepts.de>
 	* Added Dutch translation, contributed by Elros Cyriatan.
 	
@@ -15,6 +17,9 @@
 
 	* netedit.c (network_edit): Fix typo.
 
+10/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c, netedit.c: Fixed bugs 1038, 1039, 1040, 1041, 1042
+	
 10/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- Registered to translation project.
 	- Added po/gpe-aerial.pot to cvs.

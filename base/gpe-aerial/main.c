@@ -392,7 +392,7 @@ show_networks (void)
 											"It will be updated while the scanner is "\
 											"running. The colors tell you something "\
 											"about the possibility to connect to the "\
-											"net. Green=OK, yellow=maybe need some	"\
+											"net. Green=OK, yellow=maybe need some "\
 											"configuration, red=not possible."),NULL);
 		
 		renderer = gtk_cell_renderer_pixbuf_new ();
@@ -599,7 +599,7 @@ do_message_info (psinfo_t * psi)
 							 GTK_MESSAGE_INFO,
 							 GTK_BUTTONS_OK,
 							 _
-							 ("Ad-Hoc connections\nsetup complete."));
+							 ("Ad-Hoc connections setup complete."));
 			g_signal_connect_swapped (G_OBJECT (dialog),
 						  "response",
 						  G_CALLBACK
@@ -609,7 +609,7 @@ do_message_info (psinfo_t * psi)
 		}
 		else
 			gpe_error_box_nonblocking (_
-						   ("Could not connect\nto wireless LAN."));
+						   ("Could not connect to wireless LAN."));
 		break;
 	case I_ERRCARD:
 	case I_NOCARD:

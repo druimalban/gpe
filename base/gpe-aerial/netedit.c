@@ -99,7 +99,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	{
 		if ((ni->netinfo.wep) && !is_valid_key(tmp))
 		{
-			gpe_error_box(_("The key you entered\nis not valid."));
+			gpe_error_box(_("The key you entered is not valid."));
 			return;
 		}
 		snprintf(ni->netinfo.wep_key,27,tmp);
@@ -110,7 +110,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eIP),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The IP address you entered\nis not valid."));
+		gpe_error_box(_("The IP address you entered is not valid."));
 		return;
 	}
 	else
@@ -129,7 +129,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eSubnet),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The subnet mask address you\nentered is not valid."));
+		gpe_error_box(_("The subnet mask address you entered is not valid."));
 		return;
 	}
 	else
@@ -148,7 +148,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eGateway),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The gateway address you\nentered is not valid."));
+		gpe_error_box(_("The gateway address you entered is not valid."));
 		return;
 	}
 	else
@@ -167,7 +167,7 @@ ok_clicked (GtkWidget * w, GtkWidget * window)
 	tmp = gtk_editable_get_chars(GTK_EDITABLE(eNameServer),0,-1);
 	if (strlen(tmp) && (sscanf(tmp,"%hhu.%hhu.%hhu.%hhu",&i1,&i2,&i3,&i4) < 4))
 	{
-		gpe_error_box(_("The DNS server address you\nentered is not valid."));
+		gpe_error_box(_("The DNS server address you entered is not valid."));
 		return;
 	}
 	else
@@ -254,8 +254,8 @@ network_edit (netinfo_t * ni)
 	gtk_tooltips_set_tip(tooltips,eIP,_("Enter your desired IP address here, e.g. 192.168.1.2"),NULL);
 	gtk_tooltips_set_tip(tooltips,eSubnet,_("Enter your desired subnet mask here, usually it is set to 255.255.255.0"),NULL);
 	gtk_tooltips_set_tip(tooltips,eSsid,_("This field needs to contain the name of this wireless LAN."),NULL);
-	gtk_tooltips_set_tip(tooltips,rbTypeManaged,_("Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."),NULL);
-	gtk_tooltips_set_tip(tooltips,rbTypeAdHoc,_("Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."),NULL);
+	gtk_tooltips_set_tip(tooltips,rbTypeManaged,_("Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""),NULL);
+	gtk_tooltips_set_tip(tooltips,rbTypeAdHoc,_("Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""),NULL);
 	gtk_tooltips_set_tip(tooltips,eChannel,_("Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."),NULL);
 	gtk_tooltips_set_tip(tooltips,tbDhcp,_("Get IP setup using DHCP."),NULL);
 	gtk_tooltips_set_tip(tooltips,eGateway,_("Enter the IP of the default gateway to use."),NULL);
@@ -403,7 +403,7 @@ network_info (netinfo_t * ni)
 	GtkTooltips *tooltips = gtk_tooltips_new ();
 	
 	
-	gtk_tooltips_set_tip(tooltips,window,_("This dialog provides some inforamtion about the selected wireless LAN."),NULL);
+	gtk_tooltips_set_tip(tooltips,window,_("This dialog provides some information about the selected wireless LAN."),NULL);
 	
 	gtk_window_set_title (GTK_WINDOW (window), _("Network information"));
 	gpe_set_window_icon (GTK_WIDGET (window), "gpe-aerial");
@@ -434,7 +434,7 @@ network_info (netinfo_t * ni)
 				       (float) ni->net.speed / 1000.0);
 	else
 		tmp = g_strdup_printf ("%s: %s", _("Speed"),
-				       _("<i>unknown</i>"));
+				       _("unknown"));
 	gtk_label_set_markup (GTK_LABEL (lSpeed), tmp);
 	g_free (tmp);
 	tmp = g_strdup_printf ("%s: %d", _("Channel"), ni->netinfo.channel);
