@@ -40,7 +40,8 @@ static gboolean PlayAlarmStop = TRUE;
 
 int fd;
 int curl, curr;	
-
+pthread_t mythread;
+	
 int get_vol(int *left, int *right)
 {
 int vol;
@@ -108,9 +109,10 @@ extern int times;
 		for (i = 0; i < ToneAltCount; i++) {
 			if (PlayAlarmStop)
 				break;
-			soundgen_play_tone1(snd_dev, Tone1Pitch, Tone1Duration);
-			soundgen_play_tone2(snd_dev, Tone2Pitch, Tone2Duration);
-		
+			else soundgen_play_tone1(snd_dev, Tone1Pitch, Tone1Duration);
+			if (PlayAlarmStop)
+				break;
+			else soundgen_play_tone2(snd_dev, Tone2Pitch, Tone2Duration);
 		}
 		soundgen_pause(snd_dev, TonePause);
 		
@@ -194,7 +196,6 @@ return (NULL);
 
 gint bells_and_whistles ()
 {
-	pthread_t mythread;
 	
 	if(get_vol(&curl, &curr) == -1)
     		printf("Unable to get volume\n");
@@ -203,9 +204,8 @@ gint bells_and_whistles ()
 	PlayAlarmStop = FALSE;
 	if (pthread_create(&mythread, NULL, play_alarm, NULL) != 0) {
 		g_print("pthread_create() failed\n");
-	} else
-		pthread_detach(mythread);
-	
+		gtk_main_quit();
+	} 
 return(1);
 }
 
@@ -215,14 +215,15 @@ on_snooze_clicked                     (GtkButton       *button,
 {
 	time_t viewtime;
 	
+	PlayAlarmStop = TRUE;
+	pthread_join(mythread, NULL);		
 	set_vol(curl, curr);
 	
-  	time (&viewtime);
-  	viewtime+=SNOOZE*60;
+  time (&viewtime);
+  viewtime+=SNOOZE*60;
 		      
 	schedule_alarm(user_data, viewtime);
   
-	PlayAlarmStop = TRUE;
 	gtk_main_quit();
 	return(FALSE);
 }
@@ -233,7 +234,9 @@ on_ok_clicked                     (GtkButton       *button,
                                         gpointer         user_data)
 {
 	PlayAlarmStop = TRUE;
+	pthread_join(mythread, NULL);		
 	set_vol(curl, curr);
+	
 	gtk_main_quit();
 	return(FALSE);
 }
