@@ -50,6 +50,7 @@ else # we do cross-compile...
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
 
+CFLAGS += $(IPAQ_INCLUDES)
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall 
 LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
 LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 
@@ -79,7 +80,7 @@ MEMBERS += storage
 MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
 MEMBERS += logread
-MEMBERS += packages
+MEMBERS += packages cardinfo
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -107,6 +108,7 @@ PIXMAPS += gpe-config-admin.png
 PIXMAPS += gpe-config-storage.png
 PIXMAPS += gpe-config-serial.png
 PIXMAPS += gpe-config-packages.png
+PIXMAPS += gpe-config-cardinfo.png
 
 all: $(PACKAGE) 
 

@@ -44,6 +44,7 @@
 #include "serial.h"
 #include "logread.h"
 #include "packages.h"
+#include "cardinfo.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -95,7 +96,7 @@ struct Applet applets[]=
     { &Storage_Build_Objects, &Storage_Free_Objects, &Unimplemented_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore , "Serial" ,"serial","Serial Port Configuration"},
     { &Logread_Build_Objects, &Logread_Free_Objects, &Unimplemented_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
+    { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore , "Cardinfo" ,"cardinfo","PC/CF Card information"},
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Adding and Removing Programs"},
   };
 struct gpe_icon my_icons[] = {
@@ -298,6 +299,13 @@ int main(int argc, char **argv)
       fprintf(stderr, "Can't open pipe\n");
       exit(errno);
     }
+	
+  /* init pcmcia stuff if necessary */
+  if ((argc > 1) && (!strcmp("cardinfo",argv[1])))
+  {
+	  if (init_pcmcia_suid() != 0)
+		  exit(EXIT_FAILURE);
+  }
 
   switch(suidPID = fork())
     {
