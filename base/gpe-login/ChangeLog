@@ -1,3 +1,29 @@
+2003-04-28 Paul Jakma <paul@dishone.st>
+
+	* gpe-login.c (global): Added default_locale global.
+	Added GPE_LOCALE_DEFAULT define.
+	Changed the GPE_LOCALE_ALIAS define to /etc/gpe/locales/.
+	(parse_locale_line): renamed to locale_parse_line
+	(locale_parse_line): new, see above.
+	(get_locale_list): renamed to locale_get_list
+	(locale_get_list): new, see above
+	(locale_try_user): make it use default_locale if
+	user hasnt previously set a locale.
+	(locale_get_files): new function, to return list of locale files
+	(locale_get_file_single): new function, to read a file and return
+	just one locale entry (the last valid item).
+	(build_language_menu): use locale_get_files to determine files
+	to pass to locale_get_list, concat all the returned item lists
+	together.  Changed return type to void as the GtkWidget it was 
+	returning is now global. Make it initialise default_locale, and 
+	use it, if needs be. 
+	(locale_read_user): remove file handling code and use 
+	locale_get_file_single instead. Change stat() to lstat(), as stat()
+	dereferences symlinks.
+	(main): Change call to build_language_menu() to reflect above change.
+	(misc): whitespace/formatting adjustments. Added missing include.
+	Added descriptive comments to some functions.
+
 2003-04-27  Philip Blundell  <philb@gnu.org>
 
 	* familiar/conffiles: New.
