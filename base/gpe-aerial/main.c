@@ -1,7 +1,7 @@
 /*
  * gpe-aerial (c) 2003 Florian Boor <florian.boor@kernelconcepts.de>
  *
- * Base applet taken from gpe-bluetooth (see below)
+ * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
  * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
@@ -109,6 +109,7 @@ static void send_usernet (usernetinfo_t * usernet);
 static void device_clicked (GtkWidget * widget, GdkEventButton * e,
 			    gpointer data);
 void update_display (netinfo_t * ni);
+static void aerial_shutdown ();
 
 static GtkTreeStore *store;
 static GtkWidget *tree;
@@ -192,6 +193,7 @@ check_connection (GtkWidget * w, netinfo_t * this_net)
 	send_command (C_ASSOCIATE, SEQ_USERNET);
 	net_request_mode = this_net->netinfo.mode;
 }
+
 
 static void
 update_usernet (netinfo_t * ni, gboolean run_display_update)
@@ -362,7 +364,9 @@ show_networks (void)
 {
 	static GtkTreeViewColumn *column;
 	GtkWidget *sw;
-
+	GtkTooltips *tooltips;
+	
+	
 	if (devices_window == NULL)
 	{
 		devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -382,6 +386,15 @@ show_networks (void)
 		g_signal_connect (G_OBJECT (tree), "button-release-event",
 				  G_CALLBACK (device_clicked), NULL);
 
+		/* add help */
+		tooltips = gtk_tooltips_new ();
+		gtk_tooltips_set_tip(tooltips,tree,_("This window shows all detected networks. "\
+											"It will be updated while the scanner is "\
+											"running. The colors tell you something "\
+											"about the possibility to connect to the "\
+											"net. Green=OK, yellow=maybe need some	"\
+											"configuration, red=not possible."),NULL);
+		
 		renderer = gtk_cell_renderer_pixbuf_new ();
 		column = gtk_tree_view_column_new_with_attributes (_("Mode"),
 								   renderer,
@@ -734,8 +747,10 @@ run_scan (void)
 {
 	GtkWidget *w;
 
+	gdk_threads_enter ();
 	if (radio_is_on == FALSE)
 		radio_on ();
+	gdk_threads_leave ();
 
 	gdk_threads_enter ();
 	w = bt_progress_dialog (_("Scanning for networks..."),
@@ -822,6 +837,13 @@ radio_on (void)
 
 
 static void
+sigterm_handler (int sig)
+{
+	aerial_shutdown ();
+}
+	
+
+static void
 sigchld_handler (int sig)
 {
 	int status;
@@ -872,12 +894,11 @@ clicked (GtkWidget * w, GdkEventButton * ev)
 static void
 aerial_shutdown ()
 {
-	cfg.scan = FALSE;
-
 	/* inform scanner */
-	send_config ();
 	if (scanner_pid)
 	{
+		cfg.scan = FALSE;
+		send_config ();
 		kill (scanner_pid, 15);
 		scanner_pid = 0;
 	}
@@ -935,6 +956,7 @@ main (int argc, char *argv[])
 	gtk_window_set_title (GTK_WINDOW (window), _("Wireless LAN control"));
 
 	signal (SIGCHLD, sigchld_handler);
+	signal (SIGTERM, sigterm_handler);
 
 	menu = gtk_menu_new ();
 	menu_radio_on = gtk_menu_item_new_with_label (_("Switch scanner on"));
@@ -981,7 +1003,7 @@ main (int argc, char *argv[])
 
 	tooltips = gtk_tooltips_new ();
 	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window,
-			      _("This is the wireless LAN selector."), NULL);
+			      _("This is gpe-aerial - the wireless LAN selector."), NULL);
 
 	g_signal_connect (G_OBJECT (window), "button-press-event",
 			  G_CALLBACK (clicked), NULL);

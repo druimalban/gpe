@@ -228,9 +228,16 @@ network_edit (netinfo_t * ni)
 	lWEPKey = gtk_label_new (_("WEP-Key"));
 	eWEPKey = gtk_entry_new ();
 
-//	gtk_object_set_data (GTK_OBJECT (window), "tooltips", tooltips);
-	
-	gtk_tooltips_add_tip(tooltips,eIP,_("Enter your desired IP address here, e.g. 192.168.1.2"),NULL);
+	gtk_tooltips_set_tip(tooltips,eIP,_("Enter your desired IP address here, e.g. 192.168.1.2"),NULL);
+	gtk_tooltips_set_tip(tooltips,eSubnet,_("Enter your desired subnet mask here, usually it is set to 255.255.255.0"),NULL);
+	gtk_tooltips_set_tip(tooltips,eSsid,_("This field needs to contain the name of this wireless LAN."),NULL);
+	gtk_tooltips_set_tip(tooltips,rbTypeManaged,_("Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."),NULL);
+	gtk_tooltips_set_tip(tooltips,rbTypeAdHoc,_("Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."),NULL);
+	gtk_tooltips_set_tip(tooltips,eChannel,_("Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."),NULL);
+	gtk_tooltips_set_tip(tooltips,tbDhcp,_("Get IP setup using DHCP."),NULL);
+	gtk_tooltips_set_tip(tooltips,eGateway,_("Enter the IP of the default gateway to use."),NULL);
+	gtk_tooltips_set_tip(tooltips,tbWEP,_("Check this if WEP encryption is activated in this LAN."),NULL);
+	gtk_tooltips_set_tip(tooltips,eWEPKey,_("Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."),NULL);
 	
 	g_object_set_data(G_OBJECT(window),"netinfo",ni);
 	gtk_window_set_title (GTK_WINDOW (window), _("Network editor"));
@@ -360,7 +367,11 @@ network_info (netinfo_t * ni)
 	GtkWidget *lSubnet = gtk_label_new (NULL);
 	GtkWidget *lIPSec = gtk_label_new (NULL);
 	GtkWidget *lDhcp = gtk_label_new (NULL);
-
+	GtkTooltips *tooltips = gtk_tooltips_new ();
+	
+	
+	gtk_tooltips_set_tip(tooltips,window,_("This dialog provides some inforamtion about the selected wireless LAN."),NULL);
+	
 	gtk_window_set_title (GTK_WINDOW (window), _("Network information"));
 	gpe_set_window_icon (GTK_WIDGET (window), "gpe-aerial");
 	gtk_box_set_spacing (GTK_BOX (vbox1), gpe_get_boxspacing ());

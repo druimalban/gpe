@@ -1,4 +1,8 @@
 06/12/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	netedit.c	Added help and missing thread stuff.
+	main.c		Shutdown and kill prismstumbler on SIGTERM.
+
+06/12/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	Makefile	Version update, language support.
 	.desktop ->
 	.desktop.in
