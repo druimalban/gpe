@@ -61,7 +61,7 @@ player_new (void)
     sink = "esdsink";
 
   p->source_elem = g_strdup (src);
-  p->source_elem = g_strdup (sink);
+  p->sink_elem = g_strdup (sink);
 
   return p;
 }

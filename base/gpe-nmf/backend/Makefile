@@ -43,6 +43,5 @@ clean:
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
-	mkdir -p $(DESTDIR)$(PREFIX)/lib/gpe-nmf/decoders
 	install -s $(BACKEND) $(DESTDIR)$(PREFIX)/lib/$(BACKEND)
 	for i in $(CODECS); do install -s $$i $(DESTDIR)$(PREFIX)/lib/gpe-nmf/decoders/$$i; done

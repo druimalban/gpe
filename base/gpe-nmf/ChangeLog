@@ -1,5 +1,16 @@
 2003-03-08  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.15 released.
+
+2003-03-08  Philip Blundell  <philb@gnu.org>
+
+	* backend/Makefile (install): Don't create decoders directory.
+
+	* backend/gstplayer.c (player_new): Set sink_elem rather than
+	source_elem for a second time.
+
+2003-03-08  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.14 released.
 
 	* backend/gstplayer.c (player_new): Default source is
