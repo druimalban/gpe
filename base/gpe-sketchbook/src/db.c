@@ -51,12 +51,12 @@ static void report_error(const int errno, gchar * errmsg){
 }
 
 static int load_note_cb(void *pArg, int argc, char **argv, char **columnNames){
-  gint i;
-
-  TRACE("GOT> %d cols", argc);
-  for (i=0; i< argc; i++){
-    TRACE("GOT> [%d] %s:%s", i, columnNames[i], argv[i]);
-  }
+//  gint i;
+//
+//  TRACE("GOT> %d cols", argc);
+//  for (i=0; i< argc; i++){
+//    TRACE("GOT> [%d] %s:%s", i, columnNames[i], argv[i]);
+//  }
 
 //GOT> 6 cols
 //GOT> [0] ROWID:3
@@ -77,7 +77,11 @@ static int load_note_cb(void *pArg, int argc, char **argv, char **columnNames){
     note.updated =     atoi(argv[4]);//unused yet
     note.url     = g_strdup(argv[5]);
 
-    TRACE("here");
+//    TRACE("[%30s] created %s updated %s",
+//          note.title,
+//          _get_time_label(note.created),
+//          _get_time_label(note.updated));
+
     selector_add_note(note.id, note.title, note.url, NULL);
     sketch_list_size++;
   }
@@ -101,7 +105,7 @@ int db_load_notes(){
 }
 
 
-void db_update_note_timestamp (const gint id, const int timestamp){//FIXME: use it
+void db_update_timestamp (const gint id, const gint timestamp){
   gint   result;
   gchar *errmsg;
 
@@ -110,6 +114,8 @@ void db_update_note_timestamp (const gint id, const int timestamp){//FIXME: use 
                                &errmsg,
                                timestamp,
                                id);
+
+  TRACE("SQL> [%d] update timestamp >>%d<<", id, timestamp);
 
   if(result != SQLITE_OK){
     report_error(result, errmsg);

@@ -1,5 +1,5 @@
 /* gpe-sketchbook -- a sketches notebook program for PDA
- * Copyright (C) 2002 Luc Pionchon
+ * Copyright (C) 2002, 2003, 2004, 2005 Luc Pionchon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -70,5 +70,7 @@ gchar * make_label_from_filename(const gchar * filename);
 
 void open_indexed_sketch(gint index);
 void delete_current_sketch();
+
+gchar * get_time_label(glong timestamp);
 
 #endif

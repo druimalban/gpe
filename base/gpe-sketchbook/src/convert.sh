@@ -15,7 +15,7 @@ mkdir  $NEW_REPOS &> /dev/null
 
 for file in $FILES
   do
-  install --mode=644 $REPOS/$file $NEW_REPOS/$file
+  install --mode=644  --preserve-timestamps $REPOS/$file $NEW_REPOS/$file
 done
 
 

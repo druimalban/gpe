@@ -168,6 +168,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   GdkPixbuf * thumbnail = NULL;
   GObject   * iconlist_item = NULL;
   GtkTreeIter iter;
+  GTimeVal current_time; //struct GTimeVal{  glong tv_sec;  glong tv_usec;};
   gint note_id = -1;
 
   if(!is_current_sketch_modified){
@@ -177,7 +178,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 
   if(is_current_sketch_new){
     filename = file_new_fullpath_filename();
-    title    = make_label_from_filename(filename); //FIXME: "New sketch"
+    title    = g_strdup(_("New sketch"));
   }
   else{
     //access the existing row data
@@ -187,6 +188,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     /*gboolean*/gtk_tree_model_get_iter_from_string( selector.listmodel, &iter, path_string);
     g_free(path_string);
     gtk_tree_model_get(selector.listmodel, &iter,
+                       ENTRY_ID, &note_id,
                        ENTRY_URL, &filename,
                        ENTRY_THUMBNAIL, &thumbnail,
                        ENTRY_ICONLISTITEM, &iconlist_item,
@@ -208,16 +210,15 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     thumbnail = pixbuf_scaled;
   }
 
+  g_get_current_time(&current_time);
+
   if(is_current_sketch_new){
     current_sketch = sketch_list_size;
     sketch_list_size++;
 
     //--Add to DB
     {
-      GTimeVal current_time; //struct GTimeVal{  glong tv_sec;  glong tv_usec;};
       Note note;
-      
-      g_get_current_time(&current_time);
       
       note.type    = DB_NOTE_TYPE_SKETCH;
       note.title   = title;
@@ -230,10 +231,16 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
 
     selector_add_note(note_id, title, filename, thumbnail);
   }
-  else if(selector.thumbnails_notloaded == FALSE){
-    //update icon_view
-  	gpe_icon_list_view_set_item_icon(GPE_ICON_LIST_VIEW(selector.iconlist), iconlist_item, thumbnail);
+  else{
+
+    db_update_timestamp(note_id, current_time.tv_sec);
+
+    if(selector.thumbnails_notloaded == FALSE){
+      //update icon_view
+      gpe_icon_list_view_set_item_icon(GPE_ICON_LIST_VIEW(selector.iconlist), iconlist_item, thumbnail);
+    }
   }
+
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
 

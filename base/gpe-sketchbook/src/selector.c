@@ -1,5 +1,5 @@
 /* gpe-sketchbook -- a sketches notebook program for PDA
- * Copyright (C) 2002 Luc Pionchon
+ * Copyright (C) 2002, 2003, 2004, 2005 Luc Pionchon
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
  */
 #include <gtk/gtk.h>
 
-#include <dirent.h> //filesystem acces
 #include <errno.h>  //errors
 #include <stdio.h>  //perror
 #include <stdlib.h> //free
@@ -25,7 +24,7 @@
 #include <sys/stat.h> //mkdir
 #include <sys/types.h>//mkdir
 #include <asm/errno.h>//mkdir
-#include <stdlib.h>   //system()
+#include <time.h>   //localtime
 
 #include "gpe/errorbox.h"
 #include "gpe/gpeiconlistview.h"
@@ -55,8 +54,6 @@ gint sketch_list_size;
 
 gint current_sketch;
 gboolean is_current_sketch_selected;
-
-int _direntry_selector(const struct dirent * direntry);
 
 void selector_init(){
   GtkListStore * store;
@@ -170,56 +167,6 @@ void load_thumbnails(){
 }
 
 void selector_refresh_list(){}
-
-gchar * make_label_from_filename(const gchar * filename){
-  //filename:  yyyy-mm-dd_hh-mm-ss.png
-  //label   : "yyyy mm dd  at  hh:mm:ss"
-  gchar * label;
-
-  G_CONST_RETURN gchar * file_basename_ref;
-  gchar * file_basename;
-  char * date_token;
-  char * time_token;
-
-  file_basename_ref = g_basename(filename);
-  file_basename     = g_strdup(file_basename_ref);
-
-  //NOTE: May use: g_strsplit()
-  //gchar** g_strsplit(const gchar *string, const gchar *delimiter, gint max_tokens)
-  //Returns :	a newly-allocated array of strings. Use g_strfreev() to free it. 
-  date_token = strtok(file_basename, "_");
-  if(!date_token) return g_strdup(filename);
-
-  time_token = strtok(NULL, ".");
-  if(!time_token) return g_strdup_printf("%s", g_strdelimit(date_token, "-", ' '));
-
-  /* TRANSLATORS: default sketch label based on [date] and [time]
-     example: "2003 10 12  at  18:48:51" */
-  label = g_strdup_printf(_("%s  at  %s"),
-                          g_strdelimit(date_token, "-", ' '), //FIXME: localize date/time
-                          g_strdelimit(time_token, "-", ':'));
-  free(file_basename);
-  return label;
-}//make_label_from_filename()
-
-int _direntry_selector (const struct dirent * direntry){
-  //struct dirent{ char d_name[]; ...};
-  gchar * s;
-  s = (gchar *) direntry->d_name; //WARNING: do not modify s!
-
-  /* no hidden file */
-  if(s[0] == '.') return 0;
-
-  /* only .png files */
-  g_strreverse(s);
-  if(g_strncasecmp(s,"gnp.", 4)) return 0;
-  g_strreverse(s);
-
-  /* yyyy-mm-dd_hh-mm-ss */
-  // ...
-
-  return 1;
-}
 
 void delete_current_sketch(){
   gboolean is_deleted = FALSE;

@@ -1,6 +1,7 @@
 GPE sketchbook NEWS
 
 * cvs
+- store updated timestamp in DB
 - added editable titles
 - store notes into sqlite DB (open door to many improvements :)
 
