@@ -1,0 +1,14 @@
+2002-08-07  Moray Allan  <moray@sermisy.org>
+
+	* Version 0.0.2 uploaded to archive.
+
+2002-08-07  Moray Allan  <moray@sermisy.org>
+
+	* Changes to autoconf files so we can cleanly build an ipkg.
+	* main.c: Ported to use libgpewidget (with minimal changes).
+	* brightness.c, calibrate.c, rotation.c: Remember to reap children.
+	* postinst: Check if required utilities are setuid.
+
+2002-08-07  Moray Allan  <moray@sermisy.org>
+
+	* Initial commit of ipaqscreen version 0.0.1.
