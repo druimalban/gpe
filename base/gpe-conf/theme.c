@@ -247,7 +247,11 @@ GtkWidget *Theme_Build_Objects()
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
+  guint border_width;
+  guint col_spacing;
+  guint row_spacing;
   guint widget_padding_x;
+  guint widget_padding_y;
   guint widget_padding_y_even;
   guint widget_padding_y_odd;
  
@@ -265,7 +269,7 @@ GtkWidget *Theme_Build_Objects()
    */ 
   table_attach_left_col_x = GTK_FILL; 
   table_attach_left_col_y = 0;
-  table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
+  table_attach_right_col_x = GTK_SHRINK | GTK_EXPAND | GTK_FILL;
   table_attach_right_col_y = GTK_FILL;
   
   /*
@@ -277,9 +281,13 @@ GtkWidget *Theme_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
-  widget_padding_x = 5;
-  widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
-  widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
+  border_width = 6;
+  col_spacing = 6;
+  row_spacing = 6;
+  widget_padding_x = 0; /* add space with col_spacing */
+  widget_padding_y = 0; /* add space with row_spacing */
+  widget_padding_y_even = 6; /* padding in y direction for widgets in an even row */
+  widget_padding_y_odd  = 6; /* padding in y direction for widgets in an odd row  */
 
   /* ======================================================================== */
   /* draw the GUI */
@@ -294,13 +302,15 @@ GtkWidget *Theme_Build_Objects()
   table = gtk_table_new(3,2,FALSE);
   gtk_widget_set_name (table, "table");
   gtk_container_add (GTK_CONTAINER (viewport), table);
-  gtk_container_set_border_width (GTK_CONTAINER (table), widget_padding_x);
+  gtk_container_set_border_width (GTK_CONTAINER (table), border_width);
+  gtk_table_set_row_spacings (GTK_TABLE (table), row_spacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), col_spacing);
 
   /* ------------------------------------------------------------------------ */
   label = gtk_label_new(_("Matchbox Theme:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 0, 1,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
@@ -317,7 +327,7 @@ GtkWidget *Theme_Build_Objects()
 
   gtk_table_attach (GTK_TABLE (table), self.MatchboxMenu, 1, 2, 0, 1,
 		    (GtkAttachOptions) (table_attach_right_col_x),
-		    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+		    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   gtk_signal_connect (GTK_OBJECT (menu), "selection-done",
                       GTK_SIGNAL_FUNC (on_matchbox_entry_changed),
@@ -328,7 +338,7 @@ GtkWidget *Theme_Build_Objects()
   label = gtk_label_new(_("GTK+ Theme:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
@@ -345,7 +355,7 @@ GtkWidget *Theme_Build_Objects()
 
   gtk_table_attach (GTK_TABLE (table), self.GtkMenu, 1, 2, 1, 2,
 		    (GtkAttachOptions) (table_attach_right_col_x),
-		    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+		    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   gtk_signal_connect (GTK_OBJECT (menu), "selection-done",
                       GTK_SIGNAL_FUNC (on_gtk_entry_changed),
@@ -354,26 +364,30 @@ GtkWidget *Theme_Build_Objects()
   label = gtk_label_new(_("Wallpaper:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
-		    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
-			widget_padding_x, widget_padding_y_even);
+			widget_padding_x, widget_padding_y_odd);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  /* make the label grey: */
+
+  /* give the label a style: */
   gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
   gtk_widget_set_name (label, "label");
 
   hbox = gtk_hbox_new(FALSE,0);
   gtk_table_attach (GTK_TABLE (table), hbox, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_right_col_x),
-		    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+		    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   self.WallPaper  = gtk_entry_new();
   gtk_entry_set_text(GTK_ENTRY(self.WallPaper),get_wallpaper());
   gtk_box_pack_start (GTK_BOX (hbox), self.WallPaper, TRUE, TRUE, 0);
-
+  
   button = gtk_button_new_with_label("...");
-  gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), button, FALSE, TRUE, 0);
+  /* FIXME: do not hardcode the usize here, but use a global GPE constant [CM] */
+  gtk_widget_set_usize (button, 25, -2);
+
 
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
                       GTK_SIGNAL_FUNC (choose_wallpaper),

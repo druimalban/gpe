@@ -20,6 +20,60 @@
 static gchar *listTitles[] = { _("User Name"),_("User Info"),_("Shell"),_("Home")};
 
 pwlist *pwroot = NULL;
+
+GtkAttachOptions table_attach_left_col_x;
+GtkAttachOptions table_attach_left_col_y;
+GtkAttachOptions table_attach_right_col_x;
+GtkAttachOptions table_attach_right_col_y;
+GtkJustification table_justify_left_col;
+GtkJustification table_justify_right_col;
+guint border_width;
+guint col_spacing;
+guint row_spacing;
+guint widget_padding_x;
+guint widget_padding_y;
+guint widget_padding_y_even;
+guint widget_padding_y_odd;
+
+void
+InitSpacings () {
+  /* 
+   * GTK_EXPAND  the widget should expand to take up any extra space
+                 in its container that has been allocated.
+   * GTK_SHRINK  the widget should shrink as and when possible.
+   * GTK_FILL    the widget should fill the space allocated to it.
+   */
+  
+  /*
+   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
+   * let it fill on the left side (so that the right alignment
+   * works:
+   */ 
+  table_attach_left_col_x = GTK_FILL; 
+  table_attach_left_col_y = 0;
+  table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
+  //table_attach_right_col_x = GTK_SHRINK | GTK_EXPAND | GTK_FILL;
+  table_attach_right_col_y = GTK_FILL;
+  
+  /*
+   * GTK_JUSTIFY_LEFT
+   * GTK_JUSTIFY_RIGHT
+   * GTK_JUSTIFY_CENTER (the default)
+   * GTK_JUSTIFY_FILL
+   */
+  table_justify_left_col = GTK_JUSTIFY_LEFT;
+  table_justify_right_col = GTK_JUSTIFY_RIGHT;
+
+  border_width = 6;
+  col_spacing = 6;
+  row_spacing = 6;
+  widget_padding_x = 0; /* add space with col_spacing */
+  widget_padding_y = 0; /* add space with row_spacing */
+  widget_padding_y_even = 6; /* padding in y direction for widgets in an even row */
+  widget_padding_y_odd  = 6; /* padding in y direction for widgets in an odd row  */
+}
+
+
 int IsHidden(pwlist *cur)
 {
   return     !((cur->pw.pw_uid>=MINUSERUID && cur->pw.pw_uid<65534) || cur->pw.pw_uid ==0);
@@ -138,12 +192,16 @@ Users_Build_Objects (void)
   GtkWidget *button1;
   GtkWidget *button2;
   GtkWidget *button3;
-  GtkWidget *scrw;
+
+  InitSpacings ();
 
   vbox1 = gtk_vbox_new (FALSE, 0);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox1), border_width);
 
   hbuttonbox1 = gtk_hbutton_box_new ();
-
+  gtk_hbutton_box_set_spacing_default (0);
+  gtk_hbutton_box_set_layout_default (GTK_BUTTONBOX_START);
+  
   gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, FALSE, 0);
 
   button1 = gpe_picture_button (wstyle, _("Add"), "new");
@@ -158,29 +216,24 @@ Users_Build_Objects (void)
 
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), button3);
 
-  scrw = gtk_scrolled_window_new(NULL,NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrw),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
   user_list = gtk_clist_new_with_titles (4,listTitles);
   InitPwList();
   ReloadList();
 
- gtk_widget_show (user_list);
+  gtk_widget_show (user_list);
  
- gtk_box_pack_start (GTK_BOX (vbox1), scrw, TRUE, TRUE, 0);
- gtk_container_add (GTK_CONTAINER (scrw), user_list);
-
- gtk_signal_connect_after (GTK_OBJECT (button1), "clicked",
-			   GTK_SIGNAL_FUNC (users_on_new_clicked),
-			   NULL);
-
- gtk_signal_connect_after (GTK_OBJECT (button2), "clicked",
-			   GTK_SIGNAL_FUNC (users_on_edit_clicked),
-			   NULL);
- gtk_signal_connect_after (GTK_OBJECT (button3), "clicked",
-			   GTK_SIGNAL_FUNC (users_on_delete_clicked),
-			   NULL);
+  gtk_box_pack_start (GTK_BOX (vbox1), user_list, TRUE, TRUE, 0);
+  
+  gtk_signal_connect_after (GTK_OBJECT (button1), "clicked",
+			    GTK_SIGNAL_FUNC (users_on_new_clicked),
+			    NULL);
+  
+  gtk_signal_connect_after (GTK_OBJECT (button2), "clicked",
+			    GTK_SIGNAL_FUNC (users_on_edit_clicked),
+			    NULL);
+  gtk_signal_connect_after (GTK_OBJECT (button3), "clicked",
+			    GTK_SIGNAL_FUNC (users_on_delete_clicked),
+			    NULL);
 
   return vbox1;
 }
@@ -203,6 +256,10 @@ create_userchange (pwlist *init,GtkWidget *parent)
   GtkWidget *cancel;
   userw     *self = malloc (sizeof(userw));
 
+  /* ======================================================================== */
+  /* draw the GUI */
+  InitSpacings ();
+  
   self->cur = init;
   self->w = userchange = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(userchange), GTK_WINDOW(parent));
@@ -216,13 +273,16 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (vbox2), table1);
+  gtk_container_set_border_width (GTK_CONTAINER (table1), border_width);
+  gtk_table_set_row_spacings (GTK_TABLE (table1), row_spacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table1), col_spacing);
 
   label1 = gtk_label_new (_("User Name:"));
 
   gtk_widget_show (label1);
   gtk_table_attach (GTK_TABLE (table1), label1, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
 
   self->username = gtk_entry_new ();
@@ -230,23 +290,23 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (self->username);
   gtk_table_attach (GTK_TABLE (table1), self->username, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   label2 = gtk_label_new (_("Password:"));
 
   gtk_widget_show (label2);
   gtk_table_attach (GTK_TABLE (table1), label2, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label2), 0, 0.5);
 
   label3 = gtk_label_new (_("User Info:"));
 
   gtk_widget_show (label3);
   gtk_table_attach (GTK_TABLE (table1), label3, 0, 1, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label3), 0, 0.5);
 
   self->gecos = gtk_entry_new ();
@@ -254,14 +314,14 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (self->gecos);
   gtk_table_attach (GTK_TABLE (table1), self->gecos, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (0), 0, 0);
 
   label4 = gtk_label_new (_("Shell:"));
 
   gtk_widget_show (label4);
   gtk_table_attach (GTK_TABLE (table1), label4, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label4), 0, 0.5);
 
@@ -269,8 +329,8 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (shellcombo);
   gtk_table_attach (GTK_TABLE (table1), shellcombo, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   self->shell = GTK_COMBO (shellcombo)->entry;
   gtk_entry_set_text(GTK_ENTRY(self->shell),init->pw.pw_shell);
@@ -280,7 +340,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (label5);
   gtk_table_attach (GTK_TABLE (table1), label5, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label5), 0, 0.5);
 
@@ -289,16 +349,17 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (self->home);
   gtk_table_attach (GTK_TABLE (table1), self->home, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   gtk_widget_show (self->shell);
 
-  passwd = gpe_picture_button (wstyle,_("Change"),"lock");
+  
+  passwd = gpe_picture_button (wstyle,_("Change"),"lock16");
 
   gtk_widget_show (passwd);
   gtk_table_attach (GTK_TABLE (table1), passwd, 1, 2, 1, 2,
-                    (GtkAttachOptions) (0),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
 
   hbuttonbox2 =  GTK_DIALOG (userchange)->action_area;
 
@@ -326,9 +387,9 @@ create_userchange (pwlist *init,GtkWidget *parent)
                             GTK_SIGNAL_FUNC (users_on_cancel_clicked),
                             (gpointer) self);
 
-
+  /* in case of destruction by close (X) button */
   gtk_signal_connect (GTK_OBJECT(userchange) , "destroy", 
-		      (GtkSignalFunc) freedata, (gpointer)self); // in case of destruction by close (X) button
+		      (GtkSignalFunc) freedata, (gpointer)self);
   return userchange;
 }
 
@@ -347,10 +408,14 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   passw     *self = malloc(sizeof(passw));
   GdkPixbuf *p = gpe_find_icon ("lock");
 
+  /* ======================================================================== */
+  /* draw the GUI */
+  InitSpacings ();
+
   self->cur = init;
   self->w = passwindow = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(passwindow), GTK_WINDOW(parent));
-  gtk_window_set_title (GTK_WINDOW (passwindow), _("Change passwd"));
+  gtk_window_set_title (GTK_WINDOW (passwindow), _("Change Password"));
   gtk_window_set_modal (GTK_WINDOW (passwindow), TRUE);
 
   vbox3 = GTK_DIALOG (passwindow)->vbox;
@@ -359,62 +424,70 @@ create_passwindow (pwlist *init,GtkWidget *parent)
 
   gtk_widget_show (table3);
   gtk_container_add (GTK_CONTAINER (vbox3), table3);
+  gtk_container_set_border_width (GTK_CONTAINER (table3), border_width);
+  gtk_table_set_row_spacings (GTK_TABLE (table3), row_spacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table3), col_spacing);
 
+  /* 1st column: */
   if(p)
     {
       GtkWidget *pixmap1 = gpe_render_icon (wstyle, p);
       gtk_widget_show (pixmap1);
 
-      gtk_table_attach (GTK_TABLE (table3), pixmap1, 0, 1, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+      /* span all table rows from 0 to 3: */
+      gtk_table_attach (GTK_TABLE (table3), pixmap1, 0, 1, 0, 3,
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+      gtk_misc_set_alignment (GTK_MISC (pixmap1), 0.5, 0.5);
     }
-  label6 = gtk_label_new (_("Old Passwd:"));
 
+  /* 2nd column: */
+  label6 = gtk_label_new (_("Old Password:"));
   gtk_widget_show (label6);
   gtk_table_attach (GTK_TABLE (table3), label6, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label6), 0, 0.5);
 
-  label7 = gtk_label_new (_("New Passwd:"));
+  label7 = gtk_label_new (_("New Password:"));
 
   gtk_widget_show (label7);
   gtk_table_attach (GTK_TABLE (table3), label7, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label7), 0, 0.5);
 
   label8 = gtk_label_new (_("Confirm:"));
 
   gtk_widget_show (label8);
   gtk_table_attach (GTK_TABLE (table3), label8, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label8), 0, 0.5);
 
+  /* 3rd column: */
   self->oldpasswd = gtk_entry_new ();
 
   gtk_widget_show (self->oldpasswd);
   gtk_table_attach (GTK_TABLE (table3), self->oldpasswd, 2, 3, 0, 1,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   gtk_entry_set_visibility (GTK_ENTRY (self->oldpasswd), FALSE);
 
   self->newpasswd = gtk_entry_new ();
 
   gtk_widget_show (self->newpasswd);
   gtk_table_attach (GTK_TABLE (table3), self->newpasswd, 2, 3, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   gtk_entry_set_visibility (GTK_ENTRY (self->newpasswd), FALSE);
 
   self->newpasswd2 = gtk_entry_new ();
 
   gtk_widget_show (self->newpasswd2);
   gtk_table_attach (GTK_TABLE (table3), self->newpasswd2, 2, 3, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
   gtk_entry_set_visibility (GTK_ENTRY (self->newpasswd2), FALSE);
 
 
@@ -440,9 +513,9 @@ create_passwindow (pwlist *init,GtkWidget *parent)
                       GTK_SIGNAL_FUNC (users_on_changepasswd_clicked),
                       (gpointer)self);
 
+  /* in case of destruction by close (X) button */
   gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
-		      (GtkSignalFunc) freedata, (gpointer)self); // in case of destruction by close (X) button
+		      (GtkSignalFunc) freedata, (gpointer)self);
 
   return passwindow;
 }
-

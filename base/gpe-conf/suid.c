@@ -177,7 +177,7 @@ int ask_root_passwd()
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
-  label = gtk_label_new (_("You have to know \nthe root password\n to do such thing!"));
+  label = gtk_label_new (_("You have to know\nthe root password\nto do this!"));
   hbox = gtk_hbox_new (FALSE, 4);
 
   gtk_widget_realize (dialog);
@@ -194,7 +194,7 @@ int ask_root_passwd()
 
 
   ok = gpe_picture_button (dialog->style, _("OK"), "ok");
-  cancel = gpe_picture_button (dialog->style, _("Dunno"), "cancel");
+  cancel = gpe_picture_button (dialog->style, _("Cancel"), "cancel");
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), cancel);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->action_area), ok);

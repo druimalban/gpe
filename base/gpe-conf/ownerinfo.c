@@ -122,8 +122,8 @@ GtkWidget *Ownerinfo_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_LEFT;
 
-  widget_padding_x = 5;
-  widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
+  widget_padding_x = 6;
+  widget_padding_y_even = 6; /* padding in y direction for widgets in an even row */
   widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
   
 
@@ -409,10 +409,10 @@ void Ownerinfo_Save()
 
 void Ownerinfo_Restore()
 {
-  gtk_entry_set_text (GTK_ENTRY (photofile),  ownerphotofile);
-  gtk_entry_set_text (GTK_ENTRY (name),   ownername);
-  gtk_entry_set_text (GTK_ENTRY (email),  owneremail);
-  gtk_entry_set_text (GTK_ENTRY (phone),  ownerphone);
+  gtk_entry_set_text (GTK_ENTRY (photofile), ownerphotofile);
+  gtk_entry_set_text (GTK_ENTRY (name),      ownername);
+  gtk_entry_set_text (GTK_ENTRY (email),     owneremail);
+  gtk_entry_set_text (GTK_ENTRY (phone),     ownerphone);
 
   gtk_editable_delete_text (GTK_EDITABLE (address), 0, -1);
   gtk_text_freeze (GTK_TEXT (address));

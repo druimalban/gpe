@@ -39,7 +39,7 @@ GtkWidget *Network_Build_Objects()
 
   table = gtk_table_new(row,2,FALSE);
 
-  pipe = popen ("/sbin/ifconfig", "r");
+  pipe = popen ("LC_ALL=C /sbin/ifconfig", "r");
   
   if (pipe > 0)
     {
@@ -57,16 +57,11 @@ GtkWidget *Network_Build_Objects()
 	      label = gtk_label_new(buffer2);
 	      gtk_table_attach (GTK_TABLE (table), label, 0, 1, row-1, row,
 				(GtkAttachOptions) ( GTK_FILL),
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+/* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
+				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 6, 6/2);
 
 	    }
-#if __i386__ // my pc is in french :-(
-	  // this code is notvery portable.
-	  // there is surely some system function to do that..
-	  if ((shift = mystrcmp (buffer, "inet adr:")) != -1)
-#else
 	  if ((shift = mystrcmp (buffer, "inet addr:")) != -1)
-#endif	    
 	    {
 	      for(i=shift;buffer[i]!=' ';i++)
 		buffer2[i-shift] = buffer[i];
@@ -77,8 +72,8 @@ GtkWidget *Network_Build_Objects()
 	      
 	      gtk_table_attach (GTK_TABLE (table), label, 1, 2, row-1, row,
 				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
-
+/* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
+				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 6, 6/2);
 	    }
 	  fgets (buffer, 255, pipe);
 	}
@@ -86,7 +81,7 @@ GtkWidget *Network_Build_Objects()
     }
   else
     {
-      gpe_error_box( "couldn't read ifconfig stats\n");
+      gpe_error_box( "Couldn't read ifconfig stats\n");
     }
   
   return table;
