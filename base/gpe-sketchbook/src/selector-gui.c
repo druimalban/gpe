@@ -25,6 +25,7 @@
 //gpe libs
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
+#include "gpe/gpe-iconlist.h"
 
 //--i18n
 #include <libintl.h>
@@ -165,32 +166,59 @@ GtkWidget * build_scrollable_clist(){
   return scrolledwindow;
 }
 
+
+#define THUMBNAIL_SIZE 64
+void on_iconlist_clicked    (GtkWidget * iconlist, gpointer il_data, gpointer data);
+//void on_iconlist_show_popup (GtkWidget * iconlist, gpointer il_data, gpointer data);
+
 GtkWidget * build_scrollable_icons(GtkWidget * window){
+//  GtkWidget * scrolledwindow;
+//  GtkWidget * table;
+//
+//  table = gtk_table_new (1, 1, FALSE);//empty table, will be resized if needed
+//  set_selector_icons_table(table);
+//  
+//  //--scrolled window
+//  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+//  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
+//                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+//  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow), table);
+//
+//  gtk_widget_show_all(table->parent);//viewport
+//
+//  return scrolledwindow;
+  GtkWidget * iconlist;
 
-  GtkWidget * scrolledwindow;
-  GtkWidget * table;
+  iconlist = gpe_iconlist_new();
+  gpe_iconlist_set_icon_size (GPE_ICONLIST(iconlist), THUMBNAIL_SIZE);
+  gpe_iconlist_set_bg_color  (GPE_ICONLIST(iconlist), 0xddddd444);//light grey 
 
-  table = gtk_table_new (1, 1, FALSE);//empty table, will be resized if needed
-  set_selector_icons_table(table);
-  
-  //--scrolled window
-  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow), table);
+  g_signal_connect (G_OBJECT (iconlist), "clicked",
+                    G_CALLBACK (on_iconlist_clicked), "clicked!!!");
+  //g_signal_connect (G_OBJECT (iconlist), "show_popup",
+  //                  G_CALLBACK (on_iconlist_show_popup), "popup!!!");
+  //**/gtk_widget_show(iconlist);
 
-  gtk_widget_show_all(table->parent);//viewport
-
-  return scrolledwindow;
+  return iconlist;
 }
 
 #include "note.h"
-#define THUMBNAIL_SIZE 64
 void on_iconsview_icon_clicked(GtkButton *button, gpointer note){
   current_sketch = gtk_clist_find_row_from_data(selector_clist, note);
   //**/g_printerr("Icon: %d\n", current_sketch);
   set_current_sketch_selected();
 }
+void on_iconlist_clicked (GtkWidget * iconlist, gpointer note, gpointer data) {
+  //**/g_printerr("ICONLIST> %s\n", (char *)data);
+  current_sketch = gtk_clist_find_row_from_data(selector_clist, note);
+  set_current_sketch_selected();
+  on_button_selector_open_clicked (NULL, NULL);
+}
+
+//void on_iconlist_show_popup (GtkWidget *il, gpointer note, gpointer data) {
+//  /**/g_printerr("ICONLIST> %s", data);
+//}
+
 void build_thumbnail_widget(Note * note, GtkStyle * style){
   GtkWidget * button;
   GdkPixbuf * pixbuf;
@@ -199,8 +227,8 @@ void build_thumbnail_widget(Note * note, GtkStyle * style){
 
   button = gtk_button_new();
   gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_NONE);
-  gtk_signal_connect (GTK_OBJECT (button), "clicked",
-                      GTK_SIGNAL_FUNC (on_iconsview_icon_clicked), note);
+  //li gtk_signal_connect (GTK_OBJECT (button), "clicked",
+  //li                     GTK_SIGNAL_FUNC (on_iconsview_icon_clicked), note);
 
 #ifdef GTK2
   pixbuf = gdk_pixbuf_new_from_file(note->fullpath_filename, NULL); //GError **error
@@ -215,10 +243,10 @@ void build_thumbnail_widget(Note * note, GtkStyle * style){
                                            //GDK_INTERP_HYPER);
   gdk_pixbuf_unref(pixbuf);
   pixmap = gtk_image_new_from_pixbuf (pixbuf_scaled);
+  note->thumbnail = pixbuf_scaled;//li
   gdk_pixbuf_unref(pixbuf_scaled);
   gtk_container_add (GTK_CONTAINER (button), pixmap);
   if(note->icon_widget != NULL) gtk_widget_destroy(note->icon_widget);
-  //note->thumbnail = pixmap;
   note->icon_widget = button;
 }
 

@@ -25,7 +25,7 @@
 typedef struct
 {
   gchar     * fullpath_filename;
-  GtkWidget * thumbnail;
+  GdkPixbuf * thumbnail;
   GtkWidget * icon_widget;
   //gchar     * label;??? (text in clist)
   //gint type; SKETCH, AUDIO, TEXT

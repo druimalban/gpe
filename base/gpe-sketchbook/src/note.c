@@ -32,7 +32,7 @@ Note * note_new(){
 void note_delete(Note * note){
   if(!note) return;
   if(note->fullpath_filename) free(note->fullpath_filename);
-  if(note->thumbnail) gtk_widget_destroy(note->thumbnail);
+  if(note->thumbnail)   gdk_pixbuf_unref(note->thumbnail);
   if(note->icon_widget) gtk_widget_destroy(note->icon_widget);
   free(note);
 }

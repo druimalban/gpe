@@ -30,7 +30,8 @@
 
 #include "dock.h"
 #include "gpe/question.h"
-#include "gpe/gtkgpepixmap.h"
+//#include "gpe/gtkgpepixmap.h"
+#include "gpe/gpe-iconlist.h"
 
 //--i18n
 #include <libintl.h>
@@ -103,7 +104,7 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
                             current_sketch, 1,
                             NULL, NULL);//highlight the selected item
   }
-  gtk_widget_show_all(selector_icons_table);
+  //li gtk_widget_show_all(selector_icons_table);
 }
 
 //---------------------------------------------------------
@@ -145,12 +146,17 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     gtk_clist_set_row_data_full(selector_clist, current_sketch, note, note_destroy);
     if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
 
-    selector_pack_icons(selector_icons_table);
+    //li selector_pack_icons(selector_icons_table);
+    gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(scrolledwindow_selector_icons),//li
+                                  "Sketch",//FIXME: does not allow NULL title
+                                  note->thumbnail,
+                                  note);
   }
   else{
     //update icon_view
-    selector_repack_icon(GTK_TABLE(selector_icons_table), note);
-
+    //li selector_repack_icon(GTK_TABLE(selector_icons_table), note);
+    gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST(scrolledwindow_selector_icons),
+                                              note->thumbnail, note);
   }
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();

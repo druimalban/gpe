@@ -27,6 +27,7 @@
 #include <asm/errno.h>//mkdir
 
 #include "gpe/errorbox.h"
+#include "gpe/gpe-iconlist.h"
 
 #include "selector.h"
 #include "selector-gui.h"
@@ -115,8 +116,11 @@ void window_selector_init(GtkWidget * window_selector){
       note = note_new();
       note->fullpath_filename = fullpath_filename;
 
-      build_thumbnail_widget(note, window_selector->style);
-
+      build_thumbnail_widget(note, window_selector->style);//FIXME: just get scaled pixbuf
+      gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(scrolledwindow_selector_icons),//li
+                                    "Sketch",//FIXME: does not allow NULL title
+                                    note->thumbnail,
+                                    note);
       gtk_clist_set_row_data_full(selector_clist, line, note, note_destroy);
       //do NOT g_free(fullpath_filename) now! :)
       if(i%2) gtk_clist_set_background(selector_clist, i, &bg_color);
@@ -124,8 +128,8 @@ void window_selector_init(GtkWidget * window_selector){
 
       g_free(line_text[0]);
     }
-    selector_pack_icons(selector_icons_table);
-    gtk_widget_show_all(selector_icons_table);
+    //li selector_pack_icons(selector_icons_table);
+    //li gtk_widget_show_all(selector_icons_table);
 
     free(direntries);
   }//else
@@ -189,8 +193,11 @@ void delete_current_sketch(){
   is_deleted = file_delete(note->fullpath_filename);
 
   if(is_deleted){
+    gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(scrolledwindow_selector_icons), note);
+
     _clist_update_alternate_colors_from(selector_clist, current_sketch);
     gtk_clist_remove(selector_clist, current_sketch);
+
     if(is_current_sketch_last) current_sketch--;
     sketch_list_size--;
 
