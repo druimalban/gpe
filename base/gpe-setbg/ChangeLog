@@ -1,5 +1,13 @@
 2002-09-24  Colin Marquardt  <colin@marquardt-home.de>
 
+        * gpe-setbg 0.01 released.
+	
+	* familiar/postrm: To remove a symlink I need to call test with
+	-L.
+
+	* familiar/control (Suggests): gpe-login (>= 0.23), gpe-conf (>=
+	0.05)
+
 	* familiar/postinst: Symlink bg image files.
 
 2002-09-22  Colin Marquardt  <colin@marquardt-home.de>
@@ -9,4 +17,3 @@
 	* gpe-setbg.c: Add copyright info.
 	(my_icons): Try to load gpe-default-bg.png now.
 	(main): Accept file from the command line. Be verbose.
-
