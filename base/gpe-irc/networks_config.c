@@ -64,9 +64,10 @@ networks_config_add_from_sql ()
 }
 
 gboolean
-networks_config_network_idle_save (data)
+networks_config_network_idle_save (struct sql_network *network)
 {
   printf ("Idle save.\n");
+  edit_sql_network (network);
   timer_active = FALSE;
   return FALSE;
 }
@@ -74,7 +75,7 @@ networks_config_network_idle_save (data)
 void
 networks_config_add_save_timer (GtkWidget *entry, int entry_type)
 {
-  struct irc_network *network;
+  struct sql_network *network;
   gchar *new_text;
   
   new_text = gtk_entry_get_text (GTK_ENTRY (entry));
