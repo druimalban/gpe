@@ -239,7 +239,7 @@ create_window (char *announcetext)
                       NULL);
   gtk_signal_connect (GTK_OBJECT (AlarmDelay), "clicked",
                       GTK_SIGNAL_FUNC (on_snooze_clicked),
-                      &announcetext);
+                      announcetext);
   gtk_signal_connect (GTK_OBJECT (AlarmACK), "clicked",
                       GTK_SIGNAL_FUNC (on_ok_clicked),
                       NULL);
