@@ -1,0 +1,8 @@
+Package: gpe-calendar
+Section: base
+Priority: optional
+Version: 0.03
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk1.2, gdk-imlib1, sqlite, libgpewidget0
+Description: GPE calendar
