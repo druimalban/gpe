@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-20 12:08+0000\n"
+"POT-Creation-Date: 2002-12-30 00:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,20 +19,28 @@ msgstr ""
 msgid "Error"
 msgstr "Strewth!"
 
-#: errorbox.c:62 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:680
+#: errorbox.c:62 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:670
 #: dirbrowser.c:307
 msgid "OK"
 msgstr ""
 
-#: pixmaps.c:67
+#: pixmaps.c:71
 #, c-format
-msgid ""
-"Unable to load icon\n"
-"\"%s\""
+msgid "Unable to load icon \"%s\""
+msgstr ""
+
+#: pixmaps.c:74
+#, c-format
+msgid "Unable to load icon \"%s\": %s"
+msgstr ""
+
+#: pixmaps.c:158
+#, c-format
+msgid "Icon \"%s\" not loaded"
 msgstr ""
 
 #: smallbox.c:56 smallbox.c:154 gtkminifilesel.c:148 gtkminifilesel.c:194
-#: gtkminifilesel.c:238 gtkminifilesel.c:676 dirbrowser.c:315
+#: gtkminifilesel.c:238 gtkminifilesel.c:666 dirbrowser.c:315
 msgid "Cancel"
 msgstr ""
 
@@ -75,6 +83,10 @@ msgstr ""
 
 #: gtkminifilesel.c:266
 msgid "New directory"
+msgstr ""
+
+#: what.c:58
+msgid "No help available."
 msgstr ""
 
 #: gtkdatesel.c:176

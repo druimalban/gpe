@@ -1,5 +1,9 @@
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.38 released.
+
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
 	* gtkdatecombo.c (gtk_date_combo_init): When in stylus mode, allow
 	a single click to select the day.
 
