@@ -1,4 +1,4 @@
-VERSION = pre0.1.5
+VERSION = 0.1.4
 
 DEPENDS = libgtk1.2, libgpewidget0, libpng2, libgdk-pixbuf2
 

@@ -7,6 +7,9 @@ $(PACKAGE):
 	cd src && make $(PACKAGE)
 arm:
 	cd src && make arm
+clean:
+	rm -rf *~ .*~
+	cd src && make clean
 
 ##--i10n
 #mo:
