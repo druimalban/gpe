@@ -496,7 +496,7 @@ build_pixmap (int x_pos, int y_pos, int text_w, int height)
   char *p;
 
   background = mb_pixbuf_img_new_from_drawable (pb, win_root, None, x_pos, y_pos, 
-					      popup_w, popup_h);
+						popup_w, popup_h);
 
   draw_ellipse (background, popup_w / 2, text_offset / 2, (text_w * 3) / 4, height, 0xffffffff);
   
@@ -626,7 +626,7 @@ main (int argc, char **argv)
   }
 
   text_offset = 2 * (msg_font->ascent + msg_font->descent);
-  popup_h = (text_offset * 5) / 3 + mb_pixbuf_img_get_height (img_icon_popup);
+  popup_h = text_offset + mb_pixbuf_img_get_height (img_icon_popup);
 
   img_backing = mb_pixbuf_img_new(pb, 
 				  mb_pixbuf_img_get_width(img_icon), 
@@ -735,7 +735,7 @@ main (int argc, char **argv)
 		  
 		  GetWinPosition (dpy, win_panel, &x, &y, &w, &h);
 		  x_pos = x + (w / 2) - (popup_w / 2);
-		  y_pos = y + h - popup_h + 4;
+		  y_pos = y + h - popup_h + 2;
 
 		  if (x_pos < 0)
 		    x_pos = 0;
