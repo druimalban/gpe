@@ -27,63 +27,8 @@
 
 #define _(x) gettext(x)
 
-pid_t miniwave_pid;
-
-void
-handle_net_wlan (char *action, char *interface)
-{
-  if (! strcmp (action, "register"))
-    {
-      pid_t pid;
-
-      pid = vfork ();
-
-      if (pid == 0)
-	{
-	  execlp ("miniwave", "miniwave", NULL);
-	  perror ("miniwave");
-	  _exit (1);
-	}
-
-      miniwave_pid = pid;
-    }
-  else if (! strcmp (action, "unregister"))
-    {
-      if (miniwave_pid)
-	{
-	  kill (miniwave_pid, SIGTERM);
-	  miniwave_pid = 0;
-	}
-    }
-}
-
-void
-handle_net_message (DBusMessage *message, DBusMessageIter *iter)
-{
-  int type;
-  char *action, *interface;
-
-  if (! dbus_message_iter_next (iter))
-    return;
-
-  type = dbus_message_iter_get_arg_type (iter);
-  if (type != DBUS_TYPE_STRING)
-    return;
-
-  action = dbus_message_iter_get_string (iter);
-
-  if (! dbus_message_iter_next (iter))
-    return;
-
-  type = dbus_message_iter_get_arg_type (iter);
-  if (type != DBUS_TYPE_STRING)
-    return;
-
-  interface = dbus_message_iter_get_string (iter);
-
-  if (! strncmp (interface, "wlan", 4))
-    handle_net_wlan (action, interface);
-}
+extern void handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter);
+extern void handle_net_message (DBusMessage *message, DBusMessageIter *iter);
 
 void
 autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
@@ -102,6 +47,9 @@ autostarter_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
 
   if (!strcmp (subsys, "net"))
     handle_net_message (message, &iter);
+
+  if (!strcmp (subsys, "bluetooth"))
+    handle_bluetooth_message (message, &iter);
 }
 
 DBusHandlerResult
