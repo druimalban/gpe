@@ -295,8 +295,7 @@ event_db_get_details (event_t ev)
     }
   else
     {
-      evd = g_malloc (sizeof (struct event_details_s));
-      memset (evd, 0, sizeof (*evd));
+      evd = g_malloc0 (sizeof (struct event_details_s));
 
       if (sqlite_exec_printf (sqliteh, "select tag,value from calendar where uid=%d",
 			      load_details_callback, evd, &err, ev->uid))
@@ -772,8 +771,7 @@ event_db_destroy (event_t ev)
 event_details_t
 event_db_alloc_details (event_t ev)
 {
-  ev->details = (event_details_t) g_malloc (sizeof (struct event_details_s));
-  memset (ev->details, 0, sizeof (*ev->details));
+  ev->details = (event_details_t) g_malloc0 (sizeof (struct event_details_s));
   ev->details->ref++;
   return ev->details;
 }

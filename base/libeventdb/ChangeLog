@@ -1,5 +1,8 @@
 2003-02-16  Philip Blundell  <philb@gnu.org>
 
+	* event-db.c (event_db_get_details): Use g_malloc0.
+	(event_db_alloc_details): Likewise.
+
 	* gpe/event-db.h (EVENT_DB_USE_MEMCHUNK): Define.
 
 	* Makefile (CFLAGS): Build with -DG_DISABLE_DEPRECATED.
