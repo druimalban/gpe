@@ -2,6 +2,7 @@ Package: gpe-what
 Section: x11
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: xlibs, libgpewidget1 (>= 0.35), matchbox
