@@ -23,7 +23,7 @@
 #include <gtk/gtk.h>
 #define _XOPEN_SOURCE /* For GlibC2 */
 #include <time.h>
-#include <libgen.h> /* for dirname() */
+/* #include <libgen.h> */ /* for dirname() */
 
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
@@ -252,7 +252,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   /* either we can write to the file... */
   if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
       /* ...or we are allowed to write in this directory, and the file does not yet exist */
-      (((access (dirname(g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
+      (((access (my_dirname(g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
        (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
     gtk_widget_set_sensitive (table, TRUE);
   else 
@@ -523,3 +523,11 @@ create_pixmap                          (GtkWidget       *widget,
   return pixmap;  
 }
 
+/* MacOS X doesn't have a dirname... */
+char
+*my_dirname(char *s) {
+  int i;
+  for (i=strlen(s); i && s[i]!='/'; i--);
+  s[i] = 0;
+  return s;
+}

@@ -28,3 +28,6 @@ choose_photofile              (GtkWidget     *button,
 GtkWidget*
 create_pixmap                          (GtkWidget       *widget,
                                         const gchar     *filename);
+
+char
+*my_dirname (char *s);
