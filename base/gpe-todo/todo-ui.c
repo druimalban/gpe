@@ -39,6 +39,14 @@ destroy_user_data (gpointer p)
 }
 
 static void
+due_toggle_clicked(GtkWidget *widget, struct edit_todo *t)
+{
+  gtk_widget_set_sensitive (t->duedate, 
+		    gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON 
+						  (t->duetoggle)));
+}
+
+static void
 click_cancel(GtkWidget *widget,
 	     GtkWidget *window)
 {
@@ -97,6 +105,10 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   GtkWidget *buttondelete = gtk_button_new_with_label (_("Delete"));
   GtkWidget *state = gtk_option_menu_new ();
   GtkWidget *state_menu = gtk_menu_new ();
+  GtkWidget *label_summary = gtk_label_new (_("Summary:"));
+  GtkWidget *frame_details = gtk_frame_new (_("Details"));
+  GtkWidget *entry_summary = gtk_entry_new ();
+  GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   struct edit_todo *t = g_malloc(sizeof(struct edit_todo));
   struct tm tm;
   time_t the_time;
@@ -118,14 +130,13 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   
   gtk_widget_set_usize (window, 240, 320);
 
-  gtk_widget_set_usize (buttonok, 60, -1);
-  gtk_widget_set_usize (buttoncancel, 60, -1);
-
   gtk_widget_set_usize (state, -1, state->style->font->ascent * 2);
 
   gtk_box_pack_start (GTK_BOX (duebox), t->duetoggle, FALSE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (duebox), t->duedate, TRUE, TRUE, 4);
 
+  gtk_signal_connect (GTK_OBJECT (t->duetoggle), "clicked",
+		      GTK_SIGNAL_FUNC (due_toggle_clicked), t);
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
@@ -137,10 +148,16 @@ edit_todo(struct todo_list *list, struct todo_item *item)
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (state), state_menu);
 
-  gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), text, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
+  gtk_container_add (GTK_CONTAINER (frame_details), text);
+
+  gtk_box_pack_start (GTK_BOX (hbox_summary), label_summary, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox_summary), entry_summary, TRUE, TRUE, 2);
+
+  gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, TRUE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), duebox, TRUE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), state, TRUE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), buttonbox, TRUE, FALSE, 2);
 
   gtk_text_set_editable (GTK_TEXT (text), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
@@ -158,6 +175,7 @@ edit_todo(struct todo_list *list, struct todo_item *item)
     {
       time (&the_time);
       gtk_widget_set_sensitive (buttondelete, FALSE);
+      gtk_widget_set_sensitive (t->duedate, FALSE);
     }
 
   t->text = text;
