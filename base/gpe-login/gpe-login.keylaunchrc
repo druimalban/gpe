@@ -1,1 +1,1 @@
-key=???XF86AudioRecord:xcalibrate:/usr/X11R6/bin/xcalibrate
+key=???XF86AudioRecord:xcalibrate:/usr/bin/gpe-xcalibrate.sh

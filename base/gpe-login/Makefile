@@ -40,6 +40,7 @@ install: install-dm install-login
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
 	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
+	install -D gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 	install -D gpe-login.setup $(DESTDIR)/etc/X11/gpe-login.setup
 	install -D gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
 	install -D -m 644 gpe-login.buttons $(DESTDIR)/etc/X11/gpe-login.buttons
