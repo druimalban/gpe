@@ -85,6 +85,7 @@ char IpaqModel = -1;
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
+GtkWidget *icon;
 
 #define _(_x)  gettext (_x)
 
@@ -415,12 +416,35 @@ clicked (GtkWidget *w, GdkEventButton *ev)
   gdk_pointer_grab (slider_window->window, TRUE, GDK_BUTTON_PRESS_MASK, NULL, NULL, ev->time);
 }
 
+
+/* handle resizing */
+gboolean 
+external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
+{
+  GdkBitmap *bitmap;
+  GdkPixbuf *sbuf, *dbuf;
+  int size;
+
+  if (event->type == GDK_CONFIGURE)
+  {
+    size = (event->width > event->height) ? event->height : event->width;
+    sbuf = gpe_find_icon ("minilite");
+    dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
+    gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
+    gdk_bitmap_unref (bitmap);
+    gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
+  }
+  return FALSE;
+}
+
+
 int 
 main (int argc, char **argv)
 {
   GdkBitmap *bitmap;
   GtkTooltips *tooltips;
-  GtkWidget *icon;
   GtkAdjustment *adj;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -441,7 +465,10 @@ main (int argc, char **argv)
     }
 
   window = gtk_plug_new (0);
+  gtk_window_set_resizable(GTK_WINDOW(window),TRUE);
   gtk_widget_set_usize (window, 16, 16);
+   /* this makes it scale up to 48pixels child size if possible */	
+  gtk_widget_set_size_request(window,50,50);
   gtk_widget_realize (window);
 
   if (gpe_load_icons (my_icons) == FALSE) {
@@ -452,15 +479,15 @@ main (int argc, char **argv)
   gtk_window_set_title (GTK_WINDOW (window), _("Frontlight control"));
   gpe_set_window_icon (GTK_WIDGET (window), "minilite");
 
-  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("minilite"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
-  gdk_bitmap_unref (bitmap);
-
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the frontlight control.  Tap here and drag the slider to change the brightness."), NULL);
 
-  icon = gtk_image_new_from_pixbuf (gpe_find_icon ("minilite"));
+  gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("minilite"), NULL, &bitmap, 255);
+  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
+  gdk_bitmap_unref (bitmap);
 
+  icon = gtk_image_new_from_pixbuf (gpe_find_icon ("minilite"));
+  gtk_misc_set_alignment(GTK_MISC(icon),0.0,0.5);
   gtk_container_add (GTK_CONTAINER (window), icon);
 
   gtk_widget_show_all (window);
@@ -501,10 +528,12 @@ main (int argc, char **argv)
   
   gtk_container_add (GTK_CONTAINER (slider_window), slider);
 
+  g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (external_event), NULL);
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
   g_signal_connect (G_OBJECT (slider_window), "button-press-event", G_CALLBACK (slider_clicked), NULL);
 
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+gtk_widget_add_events (window, GDK_ALL_EVENTS_MASK);
   gtk_widget_add_events (slider_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_widget_show (slider);
