@@ -1,3 +1,7 @@
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* callbacks.c (on_edit_save_clicked): Put decl in right place.
+
 2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (install-program): New name for 'install' ('install' is
