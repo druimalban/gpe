@@ -1,3 +1,9 @@
+2002-08-26  Pierre Tardy  <tardyp@free.fr>
+
+        * errorbox.c (gpe_error_box): the dialog acts now like a proper dialog.
+        * question.c (gpe_question_ask): fixed a memory leak where the
+	fake window will never be freed.
+
 2002-08-25  Luc Pionchon <luc.pionchon@welho.com>
 
 	* about.c: scale down to 48x48 gpe_logo; and support for app_icon on window

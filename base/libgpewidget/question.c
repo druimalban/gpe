@@ -73,6 +73,9 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+                      GTK_SIGNAL_FUNC (gtk_widget_destroy),
+                      (gpointer)fakeparentwindow);
   gtk_object_set_data (GTK_OBJECT (window), "return", &button_pressed);
 
   /* icon / label */

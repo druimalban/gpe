@@ -30,6 +30,7 @@ gpe_error_box (char *text)
   GtkWidget *label, *ok, *dialog, *icon;
   GtkWidget *hbox;
   GdkPixbuf *p;
+  GtkWidget *fakewindow;
 
   fprintf (stderr, "GPE-ERROR: %s\n", text);
 
@@ -37,8 +38,18 @@ gpe_error_box (char *text)
     return;
 
   currently_handling_error = TRUE;
+  fakewindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_widget_realize (fakewindow);
 
   dialog = gtk_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(fakewindow));
+  gtk_widget_realize (dialog);
+
+  gtk_window_set_title (GTK_WINDOW(dialog), _("Error"));
+
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
+
   label = gtk_label_new (text);
   hbox = gtk_hbox_new (FALSE, 4);
 
@@ -62,6 +73,9 @@ gpe_error_box (char *text)
 
   gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+
+  gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
+                    GTK_SIGNAL_FUNC (gtk_widget_destroy),(gpointer)fakewindow);
 
   gtk_widget_show_all (dialog);
 
