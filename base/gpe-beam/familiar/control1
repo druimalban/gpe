@@ -3,6 +3,7 @@ Section: x11
 Priority: optional
 Version: VERSION
 Architecture: arm
-Maintainer: nobody
-Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), libopenobex-1.0-0 (>=1.0.0)
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), libopenobex-1.0-0 (>=1.0.0), gpe-mimedir-tools
 Description: GPE infrared communication applet
+Source: cvs.handhelds.org/cvs/gpe/base/gpe-beam

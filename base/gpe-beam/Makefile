@@ -1,5 +1,5 @@
 PACKAGE = gpe-beam
-VERSION = 0.2.0
+VERSION = 0.2.1
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -73,7 +73,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = irda-16.png irda.png irda-16-on.png
+PIXMAPS = irda-16.png irda.png irda-on-16.png
 
 all: $(PACKAGE) vcard-export vcard-import vcard-import-file irsw
 
@@ -99,15 +99,15 @@ libircp.a: $(libircp_a_OBJECTS) $(libircp_a_DEPENDENCIES)
 	$(AR) cru libircp.a $(libircp_a_OBJECTS) $(libircp_a_LIBADD)
 	$(RANLIB) libircp.a
 
-install-program: $(PACKAGE)
+install-program: all
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ <familiar/$(CONTROL) > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(INSTALL) irsw $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
-	$(INSTALL) vcard-import-file $(DESTDIR)$(PREFIX)/bin/
+#	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
+#	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
+#	$(INSTALL) vcard-import-file $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/*
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
