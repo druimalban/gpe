@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-what
 #DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.32
+VERSION = 0.33
 
 MEMBERS = gpe-what mbtray
 
