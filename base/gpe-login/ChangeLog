@@ -1,5 +1,15 @@
 2003-08-14  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.50 released.
+
+2003-08-14  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xinit.d/30xTs_Calibrate: Add missing #!/bin/sh.
+	* X11/Xinit.d/60xXDefaults: Likewise.
+	* X11/Xinit.d/55xScreenSaver: Likewise.
+
+2003-08-14  Philip Blundell  <philb@gnu.org>
+
 	* gpe-session-scripts 0.49 released.
 	* gpe-login 0.58 released.
 
