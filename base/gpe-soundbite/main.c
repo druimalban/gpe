@@ -65,7 +65,7 @@ guint timeout_handler;
 void
 sigint (int signal)
 {
-  printf ("received sigint\n");
+  fprintf (stderr, "received sigint\n");
   stop = TRUE;
 }
 
@@ -88,11 +88,16 @@ void stop_sound (void)
 {
   if (sound_process > 0)
     {
+      fprintf (stderr, "signalling child sound process\n");
       kill (sound_process, SIGINT);
       kill (sound_process, SIGKILL);
-      waitpid (sound_process, 0, 1);
-      sound_process = 0;
+      if (waitpid (sound_process, 0, 1) == sound_process)
+        sound_process = 0;
+      else
+        fprintf (stderr, "failed to kill sound process\n");
     }
+  else
+    fprintf (stderr, "no sound process found\n");
 /*  if (timer != NULL)
     {
       g_timer_stop (timer);
@@ -185,8 +190,9 @@ void start_sound (void)
               {
                 signal (SIGINT, sigint);
                 sound_encode (infd, outfd);
-               close (infd);
-               close (outfd);
+                close (infd);
+                close (outfd);
+		fprintf (stderr, "child sound process is exiting\n");
                 exit(0);
               }
             else
@@ -231,6 +237,7 @@ void start_sound (void)
                 sound_decode (infd, outfd);
                 close (infd);
                 close (outfd);
+		fprintf (stderr, "child sound process is exiting\n");
                 exit (0);
               }
             else
@@ -272,14 +279,21 @@ on_key_release_signal                  (GtkWidget *widget,
                                             GdkEventKey *event,
                                             gpointer user_data)
 {
-  printf ("Key released: '%s'\n", gdk_keyval_name (event->keyval));
+  fprintf (stderr, "Key released: '%s'\n", gdk_keyval_name (event->keyval));
   if (!strcmp (gdk_keyval_name (event->keyval), "XF86AudioRecord"))
     {
       gdouble time;
       time = g_timer_elapsed (timer, NULL);
       if (time > 0.5) /* if less assume just mean to 'click' button */
-        stop_sound ();
-/*        gtk_exit (0); */
+	{
+	  fprintf (stderr, "should now stop\n");
+          stop_sound ();
+          gtk_exit (0);
+	}
+      else
+	{
+	  fprintf (stderr, "assuming key bounced, so not stopping\n");
+	}
     }
 }
 
