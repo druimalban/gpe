@@ -1,3 +1,10 @@
+2004-09-17  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * main.c, guitools.c: Added tools for fast directory access.
+    * main.c: Removed some old cruft.
+    * guitools.*: New files for additional GUI elements.
+    * Makefile: Removed unused stuff, increased version number.
+
 2004-09-07  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Removed obsolete code in button_clicked(), use open_with() now.

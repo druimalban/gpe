@@ -13,7 +13,6 @@
 #include <libintl.h>
 #include <sys/types.h>
 #include <pwd.h>
-#include <dirent.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -34,7 +33,6 @@
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
@@ -45,9 +43,7 @@
 #include <X11/Xlib.h>
 #include <gpe/infoprint.h>
 
-#include "mime-sql.h"
-#include "mime-programs-sql.h"
-
+#include "guitools.h"
 #include "bluetooth.h"
 
 #define _(x) dgettext(PACKAGE, x)
@@ -112,10 +108,11 @@ static GtkWidget *properties_menu_item;
 static GtkWidget *delete_menu_item;
 static GtkWidget *set_dirbrowser_menu_item;
 static GtkWidget *set_myfiles_menu_item;
+static GtkWidget *goto_menu_item;
 
 static GtkWidget *btnListView;
 static GtkWidget *btnIconView;
-static GtkWidget *btnGoUp;
+static GtkWidget *btnGoUp = NULL;
 
 GdkPixbuf *default_pixbuf;
 
@@ -180,7 +177,7 @@ struct gpe_icon my_icons[] = {
 
 /* some forward declarations */
 
-static void browse_directory (gchar *directory);
+void browse_directory (gchar *directory);
 static void popup_ask_open_with (void);
 static void popup_ask_move_file (void);
 static void popup_ask_rename_file (void);
@@ -226,6 +223,7 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_Settings"),         NULL,         NULL, 0, "<Branch>" },
   { N_("/_Settings/Directory Browser"), NULL, on_dirbrowser_setting_changed, 0, "<CheckItem>"},
   { N_("/_Settings/My Files only"), NULL, on_myfiles_setting_changed, 0, "<CheckItem>"},
+  { N_("/_Go To"),         NULL,         NULL,           0, "<Branch>" },
   { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
   { N_("/_Help/Index"),   NULL,         on_help_clicked,    0, "<StockItem>",GTK_STOCK_HELP },
   { N_("/_Help/About"),   NULL,         on_about_clicked,    0, "<Item>" },
@@ -252,8 +250,10 @@ create_mMain(GtkWidget  *window)
     gtk_item_factory_get_item (itemfactory, N_("/Settings/Directory Browser"));
   set_myfiles_menu_item = 
     gtk_item_factory_get_item (itemfactory, N_("/Settings/My Files only"));
-
-  gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item),
+  goto_menu_item = 
+    gtk_item_factory_get_item (itemfactory, N_("/Go To"));
+  
+ gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item),
                                  directory_browser); 
   
   return (gtk_item_factory_get_widget (itemfactory, "<main>"));
@@ -710,16 +710,7 @@ open_with (GnomeVFSMimeApplication *application,
   }
 }
 
-/*static void
-open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *event, gpointer entry)
-{
-  GnomeVFSMimeApplication *application;
 
-  application = gtk_clist_get_row_data (GTK_CLIST (clist), row);
-  gtk_object_set_data (GTK_OBJECT (entry), "GnomeVFSMimeApplication", (gpointer) application);
-  gtk_entry_set_text (GTK_ENTRY (entry), application->name);
-}
-*/
 static void
 rename_file (GtkWidget *dialog_window, gint response_id)
 {
@@ -1065,31 +1056,6 @@ ask_open_with (FileInformation *file_info)
     
   gtk_widget_destroy(dialog_window);
   g_list_free(appnames);
-    
-/*
-  if (mime_programs)
-  {
-    for (iter = mime_programs; iter; iter = iter->next)
-    {
-      struct mime_program *program = iter->data;
-
-      row_text[0] = "";
-      row_text[1] = program->name;
-      gtk_clist_append (GTK_CLIST (clist), row_text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) program->command);
-
-      pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, program->command);
-      pixbuf = gdk_pixbuf_new_from_file (pixmap_file, NULL);
-      if (pixbuf != NULL)
-      {
-        spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
-        gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
-        gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
-      }
-      row_num++;
-    }
-  }
-*/
 }
 
 static void
@@ -1505,13 +1471,15 @@ directory_changed (GnomeVFSMonitorHandle *handle,
     }
 }
 
-static void
+void
 browse_directory (gchar *directory)
 {
   gboolean enabled;
   /* disable "up" button if we are in homedir and view is limited */
   enabled = (!limited_view || strcmp(directory,g_get_home_dir()));
-  gtk_widget_set_sensitive(btnGoUp,enabled);
+  if (btnGoUp)
+    gtk_widget_set_sensitive(btnGoUp,enabled);
+  set_active_item(directory);  
   
   /* some hacks to handle nasty smb urls */
   if (g_str_has_prefix(directory,"smb:"))
@@ -1902,6 +1870,7 @@ main (int argc, char *argv[])
   GdkPixbuf *p;
   GtkWidget *pw;
   GtkAccelGroup *accel_group;
+  GtkWidget *storage_menu;
   int size_x, size_y;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -1969,6 +1938,8 @@ main (int argc, char *argv[])
   
   dir_view_widget = create_dir_view_widget();
   
+  storage_menu = build_storage_menu(directory_browser);
+  
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
@@ -1989,9 +1960,12 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
-			    _("Goto your home directory."), NULL,
-			    G_CALLBACK (set_directory_home), NULL, -1);
+  if (!directory_browser)
+    {
+      gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
+	                            _("Goto your home directory."), NULL,
+                                G_CALLBACK (set_directory_home), NULL, -1);
+    }
                 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_REFRESH,
 			    _("Refresh current directory."), NULL,
@@ -2024,6 +1998,8 @@ main (int argc, char *argv[])
   
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+  if (directory_browser)
+    gtk_box_pack_start (GTK_BOX (vbox), storage_menu, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), combo, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
@@ -2036,7 +2012,10 @@ main (int argc, char *argv[])
   g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
   gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
   gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
-
+  
+  if (!directory_browser)
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(goto_menu_item), storage_menu);
+  
   bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
   copy_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Copy");
   paste_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Paste");
@@ -2064,7 +2043,10 @@ main (int argc, char *argv[])
   gnome_vfs_application_registry_reload();
   
   if (directory_browser)
-    gtk_widget_show_all(dir_view_window);
+    {
+      gtk_widget_hide(goto_menu_item);
+      gtk_widget_show_all(dir_view_window);
+    }
   else
 	gtk_widget_hide(dir_view_window);
 

@@ -2,11 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.19
+VERSION = 0.20
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
-SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 
-MEMBERS = main mime-sql mime-programs-sql bluetooth
+MEMBERS = main bluetooth guitools
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CFLAGS += -I ../libgpewidget
@@ -36,7 +35,6 @@ install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	for i in $(MIME_PIXMAPS); do install -D -m 644 pixmaps/document-icons/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/document-icons/$$i; done
-	#for i in $(SPINNER_PIXMAPS); do install -D -m 644 pixmaps/spinner/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/spinner/$$i; done
 
 uninstall:
 	rm -rf $(DESTDIR)$(PREFIX)/bin/gpe-filemanager $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager
