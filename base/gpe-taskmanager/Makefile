@@ -5,6 +5,7 @@ GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.16.1
 
+#FIXME: add: de pt ro ru sr sk sv
 LINGUAS = nl cs fr
 
 MEMBERS = gpe-taskmanager
