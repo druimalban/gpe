@@ -1,3 +1,7 @@
+2003-02-13  Phil Blundell <pb@nexus.co.uk>
+
+	* Makefile.translation: Delete rule calling msgmerge.
+
 2003-02-12  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.translation (CONTROL): Define variable depending on
