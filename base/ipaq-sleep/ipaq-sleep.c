@@ -38,6 +38,7 @@ int sleep_time = DEFAULT_SLEEP_TIME;
 int cpu=1;
 int apm=1;
 int dimming=1;
+int dim_level=4; 
 int sleeping=1;
 int debug=0;
 int probe=1;
@@ -184,6 +185,12 @@ void parse_command_line (int argc, char **argv) {
 #endif
 						dimming=0;
 					}
+				}
+				if (strcmp(func, Lflag)==0) {
+					dim_level=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "dim_idle=%d\n", dim_idle);
+#endif
 				}
 				if (strcmp(func, aflag)==0) {
 					apm=atoi(value);
@@ -411,6 +418,7 @@ void parse_command_line (int argc, char **argv) {
 			fprintf(f,"debug = %i\n", debug);
 			fprintf(f,"auto-sleep_time = %i\n", sleep_idle);
 			fprintf(f,"dim_time = %i\n", dim_idle);
+			fprintf(f,"dim_level = %i\n", dim_level);
 			fprintf(f,"check_apm = %i\n", apm);
 			fprintf(f,"check_cpu = %i\n", cpu);
 			fprintf(f,"X = %i\n", X);
@@ -648,7 +656,7 @@ void main_loop (void) {
 			if (dimming  && !dimmed && !apm_active) {
 				if ((newIdle-oldIdle)>=dim_idle) {
 					current_bl = read_backlight ();
-					set_backlight (-1);
+					set_backlight (dim_level);
 					dimmed=1;
 				}
 			}

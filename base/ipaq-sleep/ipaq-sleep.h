@@ -14,6 +14,7 @@
 #define aflag	"check_apm"
 #define cflag	"check_cpu"
 #define dflag	"debug"
+#define Lflag	"dim_level"
 #define xflag	"X"
 #define Cflag	"CPU_value"
 #define pflag	"probe_IRQs"

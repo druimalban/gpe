@@ -1,3 +1,7 @@
+2004-08-18  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Started to teach ipaq-sleep the maning of "dim".
+
 2003-09-23  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.7-7 released.
