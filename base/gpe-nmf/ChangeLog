@@ -1,3 +1,16 @@
+2003-03-08  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.14 released.
+
+	* backend/gstplayer.c (player_new): Default source is
+	gnomevfssrc.  Fill in sink as well.
+	(struct player): Add sink_elem.
+	(player_destroy): Free sink_elem.
+	(build_pipeline): Use p->sink_elem in place of esdsink.
+
+	* gpe-nmf.desktop (Categories): Remove Utility.
+	(Name): "Audio Player" -> "Audio player"
+
 2003-03-06  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.13 released.

@@ -1,10 +1,9 @@
 [Desktop Entry]
-Name=Audio Player
+Name=Audio player
 Comment=NMF
 Exec=gpe-nmf
 Terminal=0
 Type=Application
 Icon=gpe-nmf.png
-Categories=Application;Utility;AudioVideo;GPE
+Categories=Application;AudioVideo;GPE
 SingleInstance=true
-

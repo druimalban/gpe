@@ -42,6 +42,7 @@ struct player
   int opt_loop;
 
   char *source_elem;
+  char *sink_elem;
 };
 
 static gboolean play_track (player_t p, struct playlist *t);
@@ -51,11 +52,15 @@ player_new (void)
 {
   player_t p = g_malloc0 (sizeof (struct player));
   char *src = getenv ("NMF_SRC");
+  char *src = getenv ("NMF_SINK");
 
   if (!src)
-    src = "filesrc";
+    src = "gnomevfssrc";
+  if (!sink)
+    sink = "esdsink";
 
   p->source_elem = g_strdup (src);
+  p->source_elem = g_strdup (sink);
 
   return p;
 }
@@ -66,6 +71,7 @@ player_destroy (player_t p)
   player_stop (p);
 
   g_free (p->source_elem);
+  g_free (p->sink_elem);
   g_free (p);
 }
 
@@ -300,7 +306,7 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
   p->filesrc = gst_element_factory_make (p->source_elem, "disk_source");
   p->decoder = gst_element_factory_make ("spider", "decoder");
   p->volume = gst_element_factory_make ("volume", "volume");
-  p->audiosink = gst_element_factory_make (really_play ? "esdsink" : "fakesink", "play_audio");
+  p->audiosink = gst_element_factory_make (really_play ? p->sink_elem : "fakesink", "play_audio");
 
   if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink)
     {
