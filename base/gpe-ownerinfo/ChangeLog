@@ -1,3 +1,9 @@
+2003-04-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (LINGUAS): Add 'zh_TW'.
+
+	* po/zh_TW.po (Module): New file courtesy Chao-Hsiung Liao.
+
 2003-04-07  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (LINGUAS): Add 'fr'.
