@@ -15,6 +15,8 @@ sound_encode (int infd, int outfd)
   size_t r;
   gsm g = gsm_create ();
 
+  stop = FALSE;
+
   do {
     guint i;
 
@@ -37,7 +39,7 @@ sound_encode (int infd, int outfd)
 	gsm_destroy (g);
 	return -1;
       }
-  } while (r = sizeof (indata1) && !stop);
+  } while (r == sizeof (indata1) && !stop);
 
   gsm_destroy (g);
 
@@ -53,15 +55,20 @@ sound_decode (int infd, int outfd)
   size_t r;
   gsm g = gsm_create ();
 
+  stop = FALSE;
+
   do {
     guint i;
 
     r = read (infd, indata, sizeof (indata));
-    if (r != sizeof (indata))
+    if (r <= 0)
       {
 	gsm_destroy (g);
 	return r ? -1 : 0;
       }
+
+    if (r < sizeof (indata))
+      memset (indata + r, 0, sizeof(indata) - r);
 
     gsm_decode (g, indata, outdata);
 
