@@ -1,3 +1,27 @@
+2002-08-03  Philip Blundell  <philb@gnu.org>
+
+	* todo-ui.c (edit_item): Renamed from edit_todo.  Add frame
+	containing check buttons for all categories.  Don't force window
+	size.
+	(struct category_map): New.
+	(struct edit_todo: Add category_map.
+	(destroy_user_data): Free category_map list.
+	(click_delete): Call refresh_items.  Pass only one arg to
+	delete_item.
+	(click_ok): Free old summary and description if not NULL.  Set new
+	summary and description only if not empty.  Use new_item.
+
+	* main.c (main): Don't force window size.
+
+	* todo.h: Add copyright header and multiple inclusion guard.
+	(struct todo_list): Delete.
+	(struct todo_category): New.
+	(edit_todo, lists, new_list, del_list, add_new_event, sql_add_item): Delete.
+	(categories, items): New declarations.
+	(delete_item): Take only one argument.
+	(new_category, del_category): New prototypes.
+	(configure, categories_menu, refresh_items): Likewise.
+
 2002-07-11  Philip Blundell  <philb@gnu.org>
 
 	* list-ui.c (new_todo_item): Display error if curr_list is NULL.
