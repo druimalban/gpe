@@ -298,7 +298,7 @@ check_user_access (const char *cmd)
 		know_global_user_access = TRUE;
 	}
 
-	// allow screen settings
+	/* allow screen settings */
 	if (!strcmp (cmd, "SCRR"))
 		return TRUE;
 	if (!strcmp (cmd, "SCRB"))
@@ -306,6 +306,11 @@ check_user_access (const char *cmd)
 	if (!strcmp (cmd, "SCRL"))
 		return TRUE;
 
+	/* allow time settings */
+	if (!strcmp (cmd, "STIM"))
+		return TRUE;
+	if (!strcmp (cmd, "NTPD"))
+		return TRUE;
 	return global_user_access;
 }
 
