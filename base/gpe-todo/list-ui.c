@@ -109,7 +109,7 @@ categories_menu (void)
   gtk_menu_append (GTK_MENU (menu), i);
   gtk_widget_show (i);
 
-  i = gtk_check_menu_item_new_with_label (_("Show completed tasks"));
+  i = gtk_check_menu_item_new_with_label (_("Show completed"));
   gtk_check_menu_item_set_active
      (GTK_CHECK_MENU_ITEM (i), show_completed_tasks);
   g_signal_connect (G_OBJECT (i), "toggled", 
