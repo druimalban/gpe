@@ -1,3 +1,8 @@
+2004-11-04	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Makefile: Added Chinese translation. Thanks to Meng Jie for
+                    contributing this.
+
 2004-11-01	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* sound.c: Changed locations of mixer icons.
