@@ -1,5 +1,7 @@
 2003-03-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/.cvsignore: Add 'dist-translation'.
+
 	* po/de.po: Fix Project-Id-Version.
 
 2003-03-04  Colin Marquardt  <colin@marquardt-home.de>

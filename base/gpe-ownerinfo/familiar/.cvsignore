@@ -20,3 +20,4 @@ POTFILES
 .deps
 gpe-ownerinfo
 dist
+dist-translation
