@@ -223,7 +223,7 @@ void Theme_Save()
 	  fclose(f);
 	}
       if(system_printf("qiv -z %s",file))
-	gpe_error_box("you need qiv installed\n to set the wallpaper!!");
+	gpe_error_box("You need qiv installed\nto set the wallpaper!!");
     }
 }
 
@@ -288,7 +288,7 @@ GtkWidget *Theme_Build_Objects()
 
 
 
-  label = gtk_label_new(_("WallPaper:"));
+  label = gtk_label_new(_("Wallpaper:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 2, 3,
  		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
 		    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);

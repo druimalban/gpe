@@ -1,5 +1,7 @@
 VERSION = 0.0.2
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\"
+
+PREFIX = "/usr/local"
+CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
 CC = gcc
 MEMBERS  = main applets parser
 MEMBERS += unimplemented

@@ -85,6 +85,7 @@ struct gpe_icon my_icons[] = {
   { "media-play" },
   { "media-stop" },
   { "ipaq" },
+  { "ownerphoto", "tux-48" },
   { NULL, NULL }
 };
 
