@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,7 +52,7 @@ main ()
   pid = vfork ();
   if (pid == 0)
     {
-      execlp ("esd", "esd", "-nobeeps", "-as", "5", NULL);
+      execlp ("wrapesd", "esd", "-nobeeps", "-as", "5", NULL);
       perror ("exec");
       _exit (1);
     }

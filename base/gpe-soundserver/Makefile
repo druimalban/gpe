@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-soundserver
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.3
+VERSION = 0.4
 
 MEMBERS = server
 
@@ -27,14 +27,18 @@ endif
 
 export PKG_CONFIG_PATH = $(BUILD)
 
-all: $(PACKAGE)
+all: $(PACKAGE) wrapesd
 
 $(PACKAGE): $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+wrapesd: wrapesd.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -s wrapesd $(DESTDIR)$(PREFIX)/bin/wrapesd
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install $(PACKAGE).xsession $(DESTDIR)/etc/X11/Xsession.d/50sound-server
 
