@@ -1,3 +1,9 @@
+2004-07-14  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gtkdatecombo.*: gtk_date_combo_ignore_year() New method to
+                          switch wether year is displayed or not.
+        * gtkdatecombo.c: Minor formating changes.
+
 2004-07-14  Philip Blundell  <philb@gnu.org>
 
 	* Makefile: Version 0.85 released.

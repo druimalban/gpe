@@ -38,6 +38,7 @@ struct _GtkDateCombo
   gboolean cal_open;
   guint year, month, day;
   gboolean set;
+  gboolean ignore_year;
 };
 
 struct _GtkDateComboClass 
@@ -59,4 +60,5 @@ void		gtk_date_combo_clear (GtkDateCombo *dp);
 
 void		gtk_date_combo_week_starts_monday (GtkDateCombo *, gboolean);
 
+void		gtk_date_combo_ignore_year (GtkDateCombo *, gboolean);
 #endif

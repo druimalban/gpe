@@ -36,7 +36,17 @@ update_text (GtkDateCombo *combo)
   tm.tm_year = combo->year - 1900;
   tm.tm_mon = combo->month;
   tm.tm_mday = combo->day;
-  strftime (buf, sizeof(buf), "%x", &tm);
+  
+  if (combo->ignore_year)
+  {
+    strftime (buf, sizeof(buf), "%D", &tm);
+    strrchr(buf,'/')[0] = 0;
+  }
+  else
+  {
+    strftime (buf, sizeof(buf), "%x", &tm);
+  }
+
   gtk_entry_set_text (GTK_ENTRY (combo->entry), buf);
 }
 
@@ -100,7 +110,9 @@ gtk_date_combo_init (GtkDateCombo *combo)
   combo->year = tm.tm_year + 1900;
   combo->month = tm.tm_mon;
   combo->day = tm.tm_mday;
-
+ 
+  combo->ignore_year = FALSE;
+  
   if (pixbuf)
     arrow = gtk_image_new_from_pixbuf (pixbuf);
   else
@@ -205,16 +217,16 @@ gtk_date_combo_get_type (void)
   if (! date_combo_type)
     {
       static const GtkTypeInfo date_combo_info =
-      {
-	"GtkDateCombo",
-	sizeof (GtkDateCombo),
-	sizeof (GtkDateComboClass),
-	(GtkClassInitFunc) gtk_date_combo_class_init,
-	(GtkObjectInitFunc) gtk_date_combo_init,
-	/* reserved_1 */ NULL,
-	/* reserved_2 */ NULL,
-        (GtkClassInitFunc) NULL,
-      };
+        {
+          "GtkDateCombo",
+          sizeof (GtkDateCombo),
+          sizeof (GtkDateComboClass),
+          (GtkClassInitFunc) gtk_date_combo_class_init,
+          (GtkObjectInitFunc) gtk_date_combo_init,
+          /* reserved_1 */ NULL,
+          /* reserved_2 */ NULL,
+          (GtkClassInitFunc) NULL,
+        };
       date_combo_type = gtk_type_unique (gtk_hbox_get_type (), 
 					 &date_combo_info);
     }
@@ -250,4 +262,14 @@ gtk_date_combo_week_starts_monday (GtkDateCombo *combo, gboolean yes)
 				GTK_CALENDAR_SHOW_DAY_NAMES | 
 				GTK_CALENDAR_SHOW_HEADING |
 				(yes ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
+}
+
+void
+gtk_date_combo_ignore_year (GtkDateCombo *combo, gboolean yes)
+{
+  if (combo->ignore_year != yes)
+    {
+      combo->ignore_year = yes;
+      update_text(combo);
+    }
 }
