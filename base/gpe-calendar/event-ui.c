@@ -17,10 +17,10 @@
 
 #include <gtk/gtk.h>
 
-#include "pixmaps.h"
-#include "picturebutton.h"
-#include "gtkdatecombo.h"
-#include "errorbox.h"
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+#include <gpe/gtkdatecombo.h>
+#include <gpe/errorbox.h>
 
 #include "globals.h"
 #include "event-db.h"

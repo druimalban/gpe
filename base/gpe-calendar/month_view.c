@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
  *
@@ -19,7 +20,7 @@
 
 #include "event-db.h"
 #include "event-ui.h"
-#include "gtkdatesel.h"
+#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "month_view.h"
 #include "day_popup.h"
@@ -358,12 +359,14 @@ month_view(void)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
 
   draw = gtk_drawing_area_new ();
+  gtk_widget_show (draw);
   gtk_signal_connect (GTK_OBJECT (draw),
 		      "expose_event",
 		      GTK_SIGNAL_FUNC (draw_expose_event),
 		      NULL);
 
   datesel = gtk_date_sel_new (GTKDATESEL_MONTH);
+  gtk_widget_show (datesel);
   
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);

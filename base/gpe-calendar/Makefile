@@ -1,6 +1,7 @@
 PACKAGE = gpe-calendar
 PREFIX = /usr/local
 DEBUG = yes
+LINGUAS = de pt_PT
 
 MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup
 
@@ -23,41 +24,21 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = close.xpm config.xpm dayview.xpm futureview.xpm monthview.xpm new.xpm save.xpm today.xpm weekview.xpm yearview.xpm exit.xpm
 
-all: $(PACKAGE) mo
-
-mo:
-	make -C po
-
-install-po:
-	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
-
-update-po: po/$(PACKAGE).pot
-
-po/$(PACKAGE).pot: $(SOURCES)
-	xgettext -k_ -o po/$(PACKAGE).pot $^
+all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -lsqlite $(LDFLAGS)
 
-install: all install-po
+install: all install-mo
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-translation-package: mo
-	make -C po translation-package PREFIX=$(PREFIX) PACKAGE=$(PACKAGE)
-
+include ../build/Makefile.translation
+include ../build/Makefile.dpkg_ipkg
 -include $(DEPS)

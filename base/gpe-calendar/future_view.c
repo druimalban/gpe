@@ -15,7 +15,7 @@
 
 #include <gtk/gtk.h>
 
-#include "gtkdatesel.h"
+#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "future_view.h"
 #include "event-ui.h"
@@ -113,13 +113,17 @@ future_view(void)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *label;
-  
+
+  gtk_widget_show (scrolled_window);
+
   localtime_r(&t, &tm);
   strftime (buf, sizeof (buf), "%A, %d %b %Y", &tm);
   
   label = gtk_label_new (buf);
+  gtk_widget_show (label);
   
   future_list = gtk_clist_new (2);
+  gtk_widget_show (future_list);
   
   gtk_signal_connect(GTK_OBJECT (future_list), "select_row",
                        GTK_SIGNAL_FUNC (selection_made),

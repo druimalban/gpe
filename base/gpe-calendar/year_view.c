@@ -19,7 +19,7 @@
 #include "globals.h"
 #include "year_view.h"
 #include "event-db.h"
-#include "gtkdatesel.h"
+#include <gpe/gtkdatesel.h>
 #include "day_popup.h"
 
 static GtkWidget *g_table;
@@ -154,12 +154,19 @@ year_view(void)
   GtkWidget *label;
   guint i;
 
+  gtk_widget_show (hbox);
+  gtk_widget_show (table);
+  gtk_widget_show (scrolled);
+
   datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
-  
+  gtk_widget_show (datesel);
+ 
   for (i = 0; i < 12; i++)
     {
       guint x = i % 2, y = (i / 2) * 2;
-      cal[i] = gtk_calendar_new ();
+      cal[i] = gtk_calendar_new ();  
+      gtk_widget_show (cal[i]);
+
       gtk_calendar_display_options (GTK_CALENDAR (cal[i]), week_starts_monday ? GTK_CALENDAR_WEEK_START_MONDAY : 0);
       gtk_table_attach_defaults (GTK_TABLE (table),
 				 cal[i],

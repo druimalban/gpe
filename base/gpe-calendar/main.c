@@ -15,9 +15,9 @@
 #include <gtk/gtk.h>
 #include <libintl.h>
 
-#include "init.h"
-#include "pixmaps.h"
-#include "render.h"
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
 
 #include "event-db.h"
 #include "event-ui.h"
@@ -103,7 +103,7 @@ new_view (GtkWidget *widget)
   if (pop_window)
     gtk_widget_destroy (pop_window);
   
-  gtk_widget_show_all (widget);
+  gtk_widget_show (widget);
   current_view = widget;
 
   update_current_view ();

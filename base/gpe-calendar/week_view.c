@@ -16,7 +16,7 @@
 
 #include <gtk/gtk.h>
 
-#include "gtkdatesel.h"
+#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "event-db.h"
 #include "week_view.h"
@@ -192,7 +192,11 @@ week_view(void)
   GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
   guint i;
 
+  gtk_widget_show (scroller);
+  gtk_widget_show (vbox2);
+
   datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
+  gtk_widget_show (datesel);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), 
 					 vbox2);
@@ -203,6 +207,7 @@ week_view(void)
     {
       
       list[i] = gtk_clist_new (2);
+      gtk_widget_show (list[i]);
       
       gtk_clist_set_column_width (GTK_CLIST (list[i]), 0, 120);
       gtk_clist_set_column_width (GTK_CLIST (list[i]), 1, 70);

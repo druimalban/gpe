@@ -20,8 +20,8 @@
 #include "event-db.h"
 #include "event-ui.h"
 #include "day_popup.h"
-#include "pixmaps.h"
-#include "picturebutton.h"
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
 
 static void
 destroy_popup(GtkWidget *widget,

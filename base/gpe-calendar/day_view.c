@@ -18,7 +18,7 @@
 
 #include "event-db.h"
 #include "event-ui.h"
-#include "gtkdatesel.h"
+#include <gpe/gtkdatesel.h>
 #include "globals.h"
 #include "day_view.h"
 
@@ -277,10 +277,14 @@ day_view(void)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 
+  gtk_widget_show (scrolled_window);
+
   datesel = gtk_date_sel_new (GTKDATESEL_FULL);
+  gtk_widget_show (datesel);
   
   day_list = gtk_clist_new (2);
-  
+  gtk_widget_show (day_list);
+ 
   gtk_signal_connect (GTK_OBJECT (day_list), "select_row",
                        GTK_SIGNAL_FUNC (selection_made),
                        NULL);
@@ -289,7 +293,7 @@ day_view(void)
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   
   gtk_container_add (GTK_CONTAINER (scrolled_window), day_list);
-  
+
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
 

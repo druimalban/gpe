@@ -16,7 +16,7 @@
 
 #include <sqlite.h>
 
-#include "errorbox.h"
+#include <gpe/errorbox.h>
 
 #include "event-db.h"
 #include "globals.h"
