@@ -1,3 +1,6 @@
+2003-11-19	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* theme.c: Set some more intelligent defaults.
+	
 2003-11-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* main.c: Removed obsolete loading of default-bg pixmap.
 	          Moved loading of ipaq bitmap to keyctl module.

@@ -899,7 +899,7 @@ Theme_Build_Objects ()
 		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
 			  
   label = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.9);
   tstr = g_strdup_printf ("<b>%s</b>", _("Icon Size"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
@@ -911,7 +911,8 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), self.slIconSize, 0, 4, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
-			  
+  gtk_range_set_value(GTK_RANGE(self.slIconSize),32.0);  
+  
  /*---------------------------------------------*/
 
   label = gtk_label_new (_("Background"));
@@ -984,7 +985,7 @@ Theme_Build_Objects ()
   gtk_button_set_label(GTK_BUTTON(self.bColor2),_("Color"));
   g_signal_connect (GTK_OBJECT (self.bColor2), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
-  //gtk_button_new_from_stock (GTK_STOCK_SELECT_COLOR);
+			
   gtk_table_attach (GTK_TABLE (table), self.bColor2, 1, 2, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
@@ -1072,6 +1073,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   self.spFS = gtk_spin_button_new_with_range(1,20,1);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS,8.0));
   gtk_table_attach (GTK_TABLE (table), self.spFS, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
@@ -1127,6 +1129,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   self.spFSApp = gtk_spin_button_new_with_range(1,20,1);
+  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp,8.0));
   gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);

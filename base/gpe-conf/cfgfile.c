@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2002, 2003  Florian Boor <florian.boor@kernelconcepts.de>
