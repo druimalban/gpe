@@ -8,7 +8,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <HTML> 
 <HEAD> 
-<TITLE> GPE: <?php echo $addtitle; ></TITLE> 
+<TITLE> GPE: <?php echo $addtitle; ?></TITLE> 
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <LINK REL="stylesheet" HREF="/css/style.css" TYPE="text/css">
 <LINK REL="shortcut icon" HREF="/images/favicon.ico" TYPE="image/x-icon">
