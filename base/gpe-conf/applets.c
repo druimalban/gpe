@@ -131,8 +131,9 @@ select_fs                                (GtkButton       *button,
     {
       if(S_ISDIR(st.st_mode))
 	{
-	  printf("%s\n",file);
-	  gtk_mini_file_selection_set_directory(GTK_MINI_FILE_SELECTION(s->fs),file);
+	  // TODO dont do anything for now. (work in libgpewidget)
+	  //printf("%s\n",file);
+	  //gtk_mini_file_selection_set_directory(GTK_MINI_FILE_SELECTION(s->fs),file);
 	}
       else
 	{
