@@ -1,5 +1,7 @@
 2003-02-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-ownerinfo2.c (main): Put widgets for the actual info into a
+	GtkSizeGroup so that they all get.
 	* Makefile (VERSION): Define VERSION variable.
 	(distclean): New target distclean which removes familiar/dist/.
 	Make "make dist" work.

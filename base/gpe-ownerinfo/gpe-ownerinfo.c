@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Colin Marquardt <ipaq@marquardt-home.de>
+ * Copyright (C) 2002, 2003 Colin Marquardt <ipaq@marquardt-home.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -230,10 +230,7 @@ upgrade_to_v2 (guint new_version)
   FILE *fp;
   
   firstline = g_strdup ("Initial firstline, must be looooooooooooooooooong enough for the later content");
-  // #warning FIXME: Why doesnt this work?
   sprintf (firstline, "%s %d]", INFO_MATCH, new_version);
-  /* sprintf (firstline, INFO_MATCH "%d]", INFO_MATCH, new_version); maybe??? */
-  //#firstline =  g_strdup ("[gpe-ownerinfo data version 2]");
   oldcontent = g_strdup ("Initial oldcontent.");
   
   fp = fopen (GPE_OWNERINFO_DATA, "r");
@@ -427,6 +424,7 @@ main (int argc, char *argv[])
   GtkWidget *rightcolvbox;
   GtkWidget *scrolledwindow;
   GtkWidget *viewport;
+  GtkSizeGroup *sizegroup;
   
   gchar *gpe_catindent = gpe_get_catindent ();
   //guint gpe_catspacing = gpe_get_catspacing ();
@@ -737,6 +735,19 @@ main (int argc, char *argv[])
   gtk_widget_show (bigphotodrawingarea);
   gtk_container_add (GTK_CONTAINER (bigphotobutton), bigphotodrawingarea);
   
+
+  /* Make sure the labels are all the same height (which might not
+   * be the case because of the pango markup for e.g. 'email').
+   * Don't put 'address(label)' in it, it is too high.
+   */
+  sizegroup = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
+  gtk_size_group_add_widget (sizegroup, namelabel);
+  gtk_size_group_add_widget (sizegroup, emaillabel);
+  gtk_size_group_add_widget (sizegroup, phonelabel);
+  gtk_size_group_add_widget (sizegroup, name);
+  gtk_size_group_add_widget (sizegroup, email);
+  gtk_size_group_add_widget (sizegroup, phone);
+
   /* end of drawing the GUI */
 
   
