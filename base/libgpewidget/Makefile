@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
-VERSION = 0.72
+VERSION = 0.73
 CVSBUILD = yes
 
 LINGUAS = ro de id pt fr ga wa sv nl
@@ -17,8 +17,11 @@ else
 BUILD = build
 endif
 
-$(eval CFLAGS = $(shell pkg-config --cflags gtk+-2.0))
-$(eval LDFLAGS = $(shell pkg-config --libs gtk+-2.0))
+$(eval CFLAGS = $(shell pkg-config --cflags xrender))
+$(eval LDFLAGS = $(shell pkg-config --libs xrender))
+
+LDFLAGS += $(GTKLIBS)
+CFLAGS += $(GTKCFLAGS)
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
