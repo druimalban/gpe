@@ -1,3 +1,11 @@
+2002-11-14  Robert Mibus  <mibus@handhelds.org>
+
+	* gpeiconlist.gob, gpe-iconlist.c, gpe/gpe-iconlist.h:
+	update to latest, LOTS of changes:
+	 loads more debugging output (for now)
+	 use g_object_[set/get]_data not gtk_object_...
+	 basic popup menu support
+
 2002-11-12  Robert Mibus  <mibus@handhelds.org>
 
 	* gpeiconlist.gob, gpe-iconlist.c, gpe/gpe-iconlist.h:

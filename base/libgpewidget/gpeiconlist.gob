@@ -42,10 +42,14 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private int cols = 1;
 	private int mcol = -1;
 	private int mrow = -1;
+	private int popup_timeout = 0;
 
 /* Signals */
 	signal last NONE(POINTER)
 	void clicked(self, gpointer udata);
+
+	signal last NONE(POINTER)
+	void show_popup(self, gpointer udata);
 
 /* init and other gtkish methods */
 	init (self)
@@ -130,7 +134,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		int label_height;
 		int i;
 
-		printf ("iconlist_expose\n");
+		printf ("iconlist_expose (%d,%d) (%dx%d)\n", event->area.x, event->area.y, event->area.width, event->area.height);
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
 		/* Pango font rendering setup */
@@ -167,7 +171,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 					      1,//(double) widget->allocation.height / gdk_pixbuf_get_height (il->_priv->bgpixbuf),
 					      GDK_INTERP_BILINEAR, 255);
 */
-
+		printf ("bg:\n");
 		if (il->_priv->bgpixbuf)
 			for (i=0; i < il->_priv->rows * (60 + label_height); i += gdk_pixbuf_get_height(il->_priv->bgpixbuf)) {
 				GdkRectangle r1, dst;
@@ -189,8 +193,9 @@ class GPE:IconList from Gtk:Scrolled:Window {
 							      GDK_INTERP_BILINEAR, 255);
 				}
 			}
+		printf (":done\n");
 
-
+		printf ("icons:\n");
 		icons = il->_priv->icons;
 		while (icons) {
 			GdkRectangle r1, r2, dst;
@@ -229,7 +234,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 							      GDK_INTERP_BILINEAR, // filtering
 							      //(gpe_iconlist__contains (r1, il->_priv->mx, il->_priv->my)) ? 128 : 255); // forced whole-alpha
 							      col == il->_priv->mcol && row == il->_priv->mrow ? 128 : 255);
-				//gdk_pixbuf_unref (pixbuf);
+					//gdk_pixbuf_unref (pixbuf);
+					     
 				}
 			}
 
@@ -239,17 +245,21 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 			icons = icons->next;
 		}
+		printf (":done\n");
 
+		printf ("render:\n");
 		/* Dump to drawingarea */
 		gdk_pixbuf_render_to_drawable (dest, widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					       0, 0, event->area.x, event->area.y,
 					       event->area.width, event->area.height,
 					       GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
+		printf (":done\n");
 
 		gdk_pixbuf_unref (dest);
 
 		col = row = 0;
 
+		printf ("text:\n");
 		icons = il->_priv->icons;
 		while (icons) {
 			GdkRectangle r1, r2, dst;
@@ -352,14 +362,14 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		printf ("iconlist: size_allocate\n");
 
-		if ((int)gtk_object_get_data (GTK_OBJECT(il), "size_x") == allocation->width &&
-		    (int)gtk_object_get_data (GTK_OBJECT(il), "size_y") == allocation->height)
+		if ((int)g_object_get_data (G_OBJECT(il), "size_x") == allocation->width &&
+		    (int)g_object_get_data (G_OBJECT(il), "size_y") == allocation->height)
 			return;
 
 		printf ("new size: %dx%d\n", allocation->width, allocation->height);
 
-		gtk_object_set_data (GTK_OBJECT(il), "size_x", (gpointer)allocation->width);
-		gtk_object_set_data (GTK_OBJECT(il), "size_y", (gpointer)allocation->height);
+		g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
+		g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
 		
 		if (allocation->width - 15 > 70) 
 			il->_priv->cols = (allocation->width - 15) / 70;
@@ -400,29 +410,71 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		gtk_widget_queue_draw_area (widget, x, y, 70, 60 + label_height + 5);
 	}
 
+	private struct ILIcon *_get_icon (GPEIconList *il, int col, int row) {
+		int i;
+		GList *icons;
+
+		icons = il->_priv->icons;
+		for (i=0;i<row*col*il->_priv->cols+col && icons;i++)
+			icons = icons->next;
+
+		return icons ? icons->data : NULL;
+
+	}
+
+	private void _cancel_popup (GPEIconList *il) {
+		if (il->_priv->popup_timeout != 0) {
+			gtk_timeout_remove (il->_priv->popup_timeout);
+			il->_priv->popup_timeout = 0;
+		}
+	}
+
 	private gint _button_release (GtkWidget *widget, GdkEventButton *event) {
 		GPEIconList *il;
-		int col, row;
+		int row, col;
+
+		printf ("button_release\n");
+
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
+
+		gpe_iconlist__cancel_popup (il);
 
 		gpe_iconlist__refresh_containing (GTK_WIDGET(widget), il->_priv->mcol, il->_priv->mrow);
 
 		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(col), &(row));
-		if (col == il->_priv->mcol && row == il->_priv->mrow) {
-			int i;
-			GList *icons;
-
-			icons = il->_priv->icons;
-			for (i=0;i<il->_priv->mrow*il->_priv->cols+il->_priv->mcol && icons;i++)
-				icons = icons->next;
-
-			if (icons)
-				gpe_iconlist_clicked (il, ((struct ILIcon *)icons->data)->udata);
-		}
+		if (col == il->_priv->mcol && row == il->_priv->mrow)
+			gpe_iconlist_clicked (il,
+					      (gpe_iconlist__get_icon(il,
+								      il->_priv->mcol,
+								      il->_priv->mrow))->udata);		
 
 		il->_priv->mcol = il->_priv->mrow = -1;
 
 		return TRUE;
+	}
+
+	private gint _popup (gpointer data) {
+		GPEIconList *il = data;
+		int row, col;
+
+		gpe_iconlist__cancel_popup (il);
+
+		row = il->_priv->mrow;
+		col = il->_priv->mcol;
+
+		il->_priv->mcol = il->_priv->mrow = -1;
+		
+		gdk_pointer_grab (GTK_WIDGET(il)->window,
+				  TRUE,
+				  GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
+				  NULL, NULL, GDK_CURRENT_TIME);
+
+		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
+
+//		gpe_iconlist__refresh_containing (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(il), "da")),
+//						  col, row);
+
+		return FALSE;
 	}
 
 	private gint _button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
@@ -430,11 +482,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
-//		printf ("btn_press\n");
-//		printf ("(%f,%f) btn %d\n", event->x, event->y, event->button);
-
-		//il->_priv->mx = event->x;
-		//il->_priv->my = event->y;
+		il->_priv->popup_timeout = gtk_timeout_add (500, gpe_iconlist__popup, (gpointer)il);
 
 		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
 		gpe_iconlist__refresh_containing (widget, il->_priv->mcol, il->_priv->mrow);

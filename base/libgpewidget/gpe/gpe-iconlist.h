@@ -44,6 +44,7 @@ typedef struct _GPEIconListClass GPEIconListClass;
 struct _GPEIconListClass {
 	GtkScrolledWindowClass __parent__;
 	/*signal*/void (* clicked) (GPEIconList * self, gpointer udata);
+	/*signal*/void (* show_popup) (GPEIconList * self, gpointer udata);
 };
 
 
@@ -51,6 +52,8 @@ struct _GPEIconListClass {
  * Public methods
  */
 GType	gpe_iconlist_get_type	(void);void 	gpe_iconlist_clicked	(GPEIconList * self,
+					gpointer udata);
+void 	gpe_iconlist_show_popup	(GPEIconList * self,
 					gpointer udata);
 GtkWidget * 	gpe_iconlist_new	(void);
 void 	gpe_iconlist_set_bg	(GPEIconList * self,
@@ -67,10 +70,16 @@ void 	gpe_iconlist_add_item	(GPEIconList * self,
 #define gpe_iconlist_connect__clicked(object,func,data)	g_signal_connect(GPE_ICONLIST(({GPEIconList *___object = (object); ___object; })),"clicked",(GCallback)({void (* ___clicked) (GPEIconList * self, gpointer udata, gpointer ___data ) = (func); ___clicked; }), (data))
 #define gpe_iconlist_connect_after__clicked(object,func,data)	g_signal_connect_after(GPE_ICONLIST(({GPEIconList *___object = (object); ___object; })),"clicked",(GCallback)({void (* ___clicked) (GPEIconList * self, gpointer udata, gpointer ___data ) = (func); ___clicked; }), (data))
 #define gpe_iconlist_connect_data__clicked(object,func,data,destroy_data,flags)	g_signal_connect_data(GPE_ICONLIST(({GPEIconList *___object = (object); ___object; })),"clicked",(GCallback)({void (* ___clicked) (GPEIconList * self, gpointer udata, gpointer ___data ) = (func); ___clicked; }), (data), (destroy_data), (GConnectFlags)(flags))
+#define gpe_iconlist_connect__show_popup(object,func,data)	g_signal_connect(GPE_ICONLIST(({GPEIconList *___object = (object); ___object; })),"show_popup",(GCallback)({void (* ___show_popup) (GPEIconList * self, gpointer udata, gpointer ___data ) = (func); ___show_popup; }), (data))
+#define gpe_iconlist_connect_after__show_popup(object,func,data)	g_signal_connect_after(GPE_ICONLIST(({GPEIconList *___object = (object); ___object; })),"show_popup",(GCallback)({void (* ___show_popup) (GPEIconList * self, gpointer udata, gpointer ___data ) = (func); ___show_popup; }), (data))
+#define gpe_iconlist_connect_data__show_popup(object,func,data,destroy_data,flags)	g_signal_connect_data(GPE_ICONLIST(({GPEIconList *___object = (object); ___object; })),"show_popup",(GCallback)({void (* ___show_popup) (GPEIconList * self, gpointer udata, gpointer ___data ) = (func); ___show_popup; }), (data), (destroy_data), (GConnectFlags)(flags))
 #else /* __GNUC__ && !__STRICT_ANSI__ */
 #define gpe_iconlist_connect__clicked(object,func,data)	g_signal_connect(GPE_ICONLIST(object),"clicked",(GCallback)(func),(data))
 #define gpe_iconlist_connect_after__clicked(object,func,data)	g_signal_connect_after(GPE_ICONLIST(object),"clicked",(GCallback)(func),(data))
 #define gpe_iconlist_connect_data__clicked(object,func,data,destroy_data,flags)	g_signal_connect_data(GPE_ICONLIST(object),"clicked",(GCallback)(func),(data),(destroy_data),(GConnectFlags)(flags))
+#define gpe_iconlist_connect__show_popup(object,func,data)	g_signal_connect(GPE_ICONLIST(object),"show_popup",(GCallback)(func),(data))
+#define gpe_iconlist_connect_after__show_popup(object,func,data)	g_signal_connect_after(GPE_ICONLIST(object),"show_popup",(GCallback)(func),(data))
+#define gpe_iconlist_connect_data__show_popup(object,func,data,destroy_data,flags)	g_signal_connect_data(GPE_ICONLIST(object),"show_popup",(GCallback)(func),(data),(destroy_data),(GConnectFlags)(flags))
 #endif /* __GNUC__ && !__STRICT_ANSI__ */
 
 
