@@ -2,7 +2,7 @@ PREFIX=/usr/local
 
 install:
 	install -m 644 -D gpe-terminal.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-terminal.png
-	install -m 644 -D gpe-terminal.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -m 644 -D gpe-terminal.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-terminal.desktop
 
 ipkg:
 	rm -rf familiar/dist
