@@ -19,7 +19,6 @@
 #include "todo-sql.h"
 #include "pixmaps.h"
 #include "init.h"
-#include "what.h"
 
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
@@ -87,8 +86,6 @@ main(int argc, char *argv[])
 
   if (sql_start ())
     exit (1);
-
-  what_init ();
 
   open_window ();
   

@@ -1,3 +1,10 @@
+2002-07-13  Philip Blundell  <philb@gnu.org>
+
+	* list-ui.c: Fix warnings.
+	* todo-ui.c: Likewise.
+
+	* main.c (main): Remove call to what_init.
+
 2002-07-10  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* main.c : add "hide" to the my_icons list

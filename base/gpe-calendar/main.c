@@ -19,7 +19,6 @@
 #include "init.h"
 #include "pixmaps.h"
 #include "render.h"
-#include "what.h"
 
 #include "event-db.h"
 #include "event-ui.h"
@@ -298,8 +297,6 @@ main(int argc, char *argv[])
   gtk_widget_show (main_window);
   gtk_widget_show (vbox);
   gtk_widget_show (toolbar);
-
-  what_init ();
 
   new_view (day);
   

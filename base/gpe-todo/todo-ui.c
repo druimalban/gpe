@@ -59,7 +59,7 @@ click_cancel(GtkWidget *widget,
 
 static void
 click_delete(GtkWidget *widget,
-	     GtkWindow *window)
+	     GtkWidget *window)
 {
   struct edit_todo *t = gtk_object_get_data (GTK_OBJECT (window), "todo");
   

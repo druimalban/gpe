@@ -18,6 +18,7 @@
 #include "pixmaps.h"
 #include "errorbox.h"
 #include "render.h"
+#include "picturebutton.h"
 
 #include "tick.xpm"
 #include "box.xpm"

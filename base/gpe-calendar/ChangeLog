@@ -1,3 +1,7 @@
+2002-07-13  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Remove call to what_init.
+
 2002-07-09  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (gpe-calendar): Link with libgpewidget before libgtk.
