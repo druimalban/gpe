@@ -638,6 +638,8 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 						free(ListEntry[count]);
 				}
 			}
+			//kc-or: Only ask if realy changed
+			HasChanged = FALSE;
 		} else 
 		{
 			gtk_notebook_set_page(GTK_NOTEBOOK(MainWindow), 0);
@@ -702,6 +704,18 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
 		gtk_main_quit();
 	} else 
 	{
+		if (HasChanged) 
+		{
+	       		dialog = gtk_message_dialog_new (GTK_WINDOW (GPE_WLANCFG),
+                                                 GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                 GTK_MESSAGE_QUESTION,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 _("Settings have been changed.\nDo you want to save the settings?"));
+			answer = gtk_dialog_run(GTK_DIALOG(dialog));
+			gtk_widget_destroy(dialog);
+			if (answer == GTK_RESPONSE_YES) save_config = TRUE; 
+		}
+
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
 		
 		for (count = 0; count<SchemeCount; count++)
@@ -1245,6 +1259,8 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 		}
 
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(liststore), &iter);
+
+		HasChanged = FALSE;
 	}
 	free(OrigScheme);
 
