@@ -85,34 +85,61 @@ irc_prefix_is_self(IRCServer *server, gchar *prefix)
 static gboolean
 irc_parse_reply(IRCServer *server, int reply_num, gchar *params)
 {
-	switch(reply_num)
+	gchar **str_array = NULL;
+
+	/* The first bit should be nick */
+	if(!g_str_has_prefix(params, server->user_info->nick))
 	{
-		case 332:
-			/* Channel topic */
-
-			break;
-
-		case 333:
-			/* Channel founder */
-			break;
-
-		case 353:
-			/* Channel nick list */
-			break;
-
-		case 433:
-			/* Duplicate nick */
-			break;
-
-		case 366:
-			/* Some messages that we don't care */
-			/* 366: End of /NAMES list */
-			break;
-
-		default:
-
-			break;
+		return FALSE;
 	}
+
+	params += strlen(server->user_info->nick) + 1;
+
+	str_array = irc_params_split(params);
+
+	if(str_array && *str_array && *(str_array + 1))
+	{
+		g_strstrip(str_array[0]);
+
+		switch(reply_num)
+		{
+			case 332:
+				/* Channel topic */
+				{
+					IRCChannel *channel = irc_server_channel_get(server, str_array[0]);
+					if(channel)
+					{
+						channel->topic = g_strdup(str_array[1]);
+					}
+
+				}
+				break;
+
+			case 333:
+				/* Channel founder */
+				break;
+
+			case 353:
+				/* Channel nick list */
+				break;
+
+			case 433:
+				/* Duplicate nick */
+				break;
+
+			case 366:
+				/* Some messages that we don't care */
+				/* 366: End of /NAMES list */
+				break;
+
+			default:
+
+				break;
+		}
+		
+		g_strfreev(str_array);
+	}
+
 
 	return TRUE;
 }
@@ -151,6 +178,7 @@ irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params)
 	{
 		if(!ctcp_parse(server, prefix, str_array[0], str_array[1]))
 		{
+			/* TODO: Parse str_array[0] */
 			g_string_printf(gstr, "%s: %s\n", nick, str_array[1]);
 		}
 

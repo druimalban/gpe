@@ -410,3 +410,18 @@ irc_server_disconnect (IRCServer *server)
   printf ("IRC Server Disconnect.\n");
   return TRUE;
 }
+
+
+IRCChannel *
+irc_server_channel_get(IRCServer *server, gchar *channel_name)
+{
+	IRCChannel *ircchannel = NULL;
+
+	if(server && server->channel && channel_name && strlen(channel_name))
+	{
+		ircchannel = g_hash_table_lookup(server->channel, (gconstpointer) channel_name);
+	}
+
+	return ircchannel;
+}
+
