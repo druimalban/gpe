@@ -24,6 +24,16 @@ ok_clicked (GtkWidget *w, GtkWidget *data)
   gpe_conn *conn;
 
   conn = g_object_get_data (G_OBJECT (data), "conn");
+
+  g_free (conn->username);
+  g_free (conn->device_addr);
+
+  w = g_object_get_data (G_OBJECT (data), "username");
+  conn->username = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+
+  w = g_object_get_data (G_OBJECT (data), "addr");
+  conn->device_addr = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO (w)->entry), 0, -1);
+
   gpe_save_config (conn);
 
   gtk_widget_destroy (data);
@@ -75,9 +85,11 @@ open_option_window (sync_pair *pair, connection_type type)
 
   w = glade_xml_get_widget (xml, "entry1");
   gtk_entry_set_text (GTK_ENTRY (w), conn->username);
+  g_object_set_data (G_OBJECT (config_window), "username", w);
 
   w = glade_xml_get_widget (xml, "combo1");
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), conn->device_addr);
+  g_object_set_data (G_OBJECT (config_window), "addr", w);
 
   w = glade_xml_get_widget (xml, "cancelbutton1");
   g_signal_connect (G_OBJECT (w), "clicked", G_CALLBACK (cancel_clicked), config_window);
