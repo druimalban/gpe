@@ -11,10 +11,6 @@
 #include <time.h>
 #include "event-db.h"
 
-extern GdkFont *timefont;
-extern GdkFont *datefont;
-extern GdkFont *yearfont;
-
 extern GList *times;
 extern time_t viewtime;
 
@@ -36,9 +32,6 @@ extern GtkWidget *main_window, *pop_window;
 /* stuff that could perhaps be configurable */
 #define TIMEFMT "%R"
 #define MONTHTIMEFMT "%a %d"
-
-/* KEEP RECURRENCE PAGE OUT UNTIL WE ACTUALLY SUPPORT IT BETTER */
-#undef DO_RECURRENCE
 
 #define MON  (1 << 0)
 #define TUE  (1 << 1)
