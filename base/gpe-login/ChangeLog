@@ -1,5 +1,10 @@
 2003-02-11  Philip Blundell  <philb@gnu.org>
 
+	* X11/Xdefaults: New file.
+	* Makefile (install-scripts): Ship it.
+
+2003-02-11  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.38 released.
 
 2003-02-11  Philip Blundell  <pb@nexus.co.uk>

@@ -89,6 +89,7 @@ install-scripts:
 	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 	install -d $(DESTDIR)/etc/gpe
 	install -m 644 X11/xsettings.default $(DESTDIR)/etc/gpe/
+	install -m 644 X11/Xdefaults $(DESTDIR)/etc/X11/
 	mkdir -p familiar/dist.gpe-session-scripts/usr/share/pixmaps
 	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps
 	mkdir -p familiar/dist.gpe-session-scripts/usr/share/applications
