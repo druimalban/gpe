@@ -37,6 +37,7 @@
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
 GtkWidget *icon;
+GdkBitmap *bitmap;
 
 int mixerfd;
 
@@ -101,10 +102,23 @@ clicked (GtkWidget *w, GdkEventButton *ev)
   gdk_pointer_grab (slider_window->window, TRUE, GDK_BUTTON_PRESS_MASK, NULL, NULL, ev->time);
 }
 
+gboolean 
+configure_event (GtkWidget *window, GdkEventConfigure *event)
+{
+  GdkPixbuf *buf;
+  int xoff, yoff;
+
+  xoff = (event->width - 30) / 2;
+  yoff = (event->height - 32) / 2;
+
+  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
+ 
+  return FALSE;
+}
+
 int 
 main (int argc, char **argv)
 {
-  GdkBitmap *bitmap;
   GtkTooltips *tooltips;
   GtkAdjustment *adj;
 
@@ -118,7 +132,7 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   window = gtk_plug_new (0);
-  gtk_window_set_resizable (GTK_WINDOW(window),TRUE);
+  gtk_window_set_resizable (GTK_WINDOW (window), TRUE);
   gtk_widget_set_usize (window, 30, 32);
   gtk_widget_realize (window);
 
@@ -128,7 +142,9 @@ main (int argc, char **argv)
       exit (1);
     }
 
-  mixerfd = open ("/dev/sound/mixer", O_RDWR);
+  mixerfd = open ("/dev/mixer", O_RDWR);
+  if (mixerfd < 0)
+    mixerfd = open ("/dev/sound/mixer", O_RDWR);
   if (mixerfd < 0)
     {
       gpe_perror_box ("Could not open /dev/sound/mixer");
@@ -143,7 +159,6 @@ main (int argc, char **argv)
 
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("minimix"), NULL, &bitmap, 255);
   gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
-  gdk_bitmap_unref (bitmap);
 
   icon = gtk_image_new_from_pixbuf (gpe_find_icon ("minimix"));
   gtk_container_add (GTK_CONTAINER (window), icon);
@@ -164,6 +179,7 @@ main (int argc, char **argv)
   
   gtk_container_add (GTK_CONTAINER (slider_window), slider);
 
+  g_signal_connect (G_OBJECT (window), "configure-event", G_CALLBACK (configure_event), NULL);
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
   g_signal_connect (G_OBJECT (slider_window), "button-press-event", G_CALLBACK (slider_clicked), NULL);
 
