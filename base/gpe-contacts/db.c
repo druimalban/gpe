@@ -244,14 +244,36 @@ sort_entries (struct person * a, struct person * b)
 }
 
 static int
+read_name (void *arg, int argc, char **argv, char **names)
+{
+  struct person *p = (struct person *)arg;
+
+  if (strcasecmp (argv[0], "NAME") == 0)
+    p->name = g_strdup (argv[1]);
+
+  return 0;
+}
+
+static int
 read_one_entry (void *arg, int argc, char **argv, char **names)
 {
   struct person *p = new_person ();
   GSList **list = (GSList **) arg;
 
   p->id = atoi (argv[0]);
-  p->name = g_strdup (argv[1]);
-  *list = g_slist_insert_sorted (*list, p, (GCompareFunc) sort_entries);
+
+#ifdef USE_USQLD	
+  usqld_exec_printf (db, "select tag,value from contacts where urn=%d",
+		     read_name, p, NULL, p->id);
+#else
+  sqlite_exec_printf (db, "select tag,value from contacts where urn=%d",
+		      read_name, p, NULL, p->id);
+#endif  
+
+  if (p->name)
+    *list = g_slist_insert_sorted (*list, p, (GCompareFunc) sort_entries);
+  else
+    discard_person (p);
 
   return 0;
 }
@@ -264,12 +286,20 @@ db_get_entries (void)
   int r;
 
 #ifdef USE_USQLD	
-  r = usqld_exec (db, "select urn,value from contacts where tag='NAME'",
+  r = usqld_exec (db, "select urn from contacts_urn",
 		   read_one_entry, &list, &err);
 #else
-  r = sqlite_exec (db, "select urn,value from contacts where tag='NAME'",
+  r = sqlite_exec (db, "select urn from contacts_urn",
 		   read_one_entry, &list, &err);
 #endif
+
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
   return list;
 }
 
@@ -373,7 +403,7 @@ db_find_tag (struct person *p, gchar * tag)
   for (iter = p->data; iter; iter = iter->next)
     {
       struct tag_value *id = (struct tag_value *) iter->data;
-      if (!strcmp (id->tag, tag))
+      if (!strcasecmp (id->tag, tag))
 	{
 	  t = id;
 	  break;
@@ -414,7 +444,7 @@ db_delete_tag (struct person *p, gchar * tag)
     {
       GSList *n = l->next;
       struct tag_value *t = l->data;
-      if (!strcmp (t->tag, tag))
+      if (!strcasecmp (t->tag, tag))
 	{
 	  g_free (t->tag);
 	  g_free (t->value);
@@ -603,25 +633,21 @@ GSList *
 db_get_entries_alpha (const gchar * alphalist)
 {
   GSList *list = NULL;
-  gchar *err = NULL;
-  gchar *statement;
-  gint r;
+  GSList *all_entries = db_get_entries ();
+  GSList *i;
 
-  statement = g_malloc (sizeof (gchar) * 100);
-  for (r = 0; r < strlen (alphalist); r++)
+  for (i = all_entries; i; i = i->next)
     {
-      sprintf (statement,
-	       "select urn,value from contacts where (tag='NAME') and ((value like \'%c%%\') or (value like \'%c%%\'))",
-	       toupper (alphalist[r]), tolower (alphalist[r]));
-#ifdef USE_USQLD		
-      usqld_exec (db, statement, read_one_entry, &list, &err);
-#else
-      sqlite_exec (db, statement, read_one_entry, &list, &err);
-#endif		
+      struct person *p = i->data;
+      
+      if (strchr (alphalist, p->name[0]))
+	list = g_slist_append (list, p);
+      else
+	discard_person (p);
     }
-  if (err)
-    g_free (err);
-  g_free (statement);
+
+  g_slist_free (all_entries);
+
   return list;
 }
 

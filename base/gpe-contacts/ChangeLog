@@ -1,3 +1,20 @@
+2003-03-12  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Version 0.10 released.
+
+2003-03-12  Philip Blundell  <philb@gnu.org>
+
+	* db.c (db_delete_tag): Use strcasecmp for tags.
+	(db_find_tag): Likewise.
+	* main.c (store_special_fields): Likewise.
+
+	* db.c (db_get_entries_alpha): Implement in terms of
+	db_get_entries.
+	(read_name): New.
+	(read_one_entry): Look name up with a separate query.
+	(db_get_entries): Add error trapping.  Just search the URN table,
+	don't assume anything about the tags.
+
 2003-03-09  Philip Blundell  <philb@gnu.org>
 
 	* gpe-contacts.desktop.in: New file.

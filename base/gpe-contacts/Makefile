@@ -3,6 +3,7 @@ PACKAGE = gpe-contacts
 GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
+VERSION = 0.10
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`

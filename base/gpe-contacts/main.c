@@ -339,7 +339,7 @@ store_special_fields (GtkWidget * edit, struct person *p)
 	  for (l = p->data; l; l = l->next)
 	    {
 	      v = l->data;
-	      if (!strcmp (v->tag, "CATEGORY") && v->value)
+	      if (!strcasecmp (v->tag, "CATEGORY") && v->value)
 		{
 		  guint c = atoi (v->value);
 		  GSList *i;
