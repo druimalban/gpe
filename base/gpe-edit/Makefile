@@ -2,21 +2,21 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.20
+VERSION = 0.21
 
 MEMBERS = main
 #FIXME: add: cs ru sr ('de' is not on TP?)
 LINGUAS = id pt de zh_TW fr ro wa sv nl sk
 
-CPPFLAGS += $(STANDARD_CPPFLAGS)
-CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
-LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration
+PACKAGE_CFLAGS += -I../libdisplaymigration
+PACKAGE_LDFLAGS += -L../libdisplaymigration
 endif
-LDFLAGS += -ldisplaymigration
+PACKAGE_LDFLAGS += -ldisplaymigration
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
@@ -31,7 +31,7 @@ endif
 all: gpe-edit all-mo
 
 gpe-edit: $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all gpe-edit.desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
