@@ -1,18 +1,14 @@
 PREFIX = /usr/local
 DEBUG = no
-VERSION = 0.2
+VERSION = 0.3
+CVSBUILD = yes
 
 MEMBERS = soundgen
 SONAME = libsoundgen.so.1
 
-CFLAGS += -Wall -fPIC
-LDFLAGS += -lm -lesd
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
-
-.SUFFIXES: .d
-
-CPPFLAGS += -I./gpe
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I./gpe
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) -fPIC
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) -lm -lesd
 
 HEADERS = soundgen.h
 
@@ -20,16 +16,19 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: libsoundgen.so
 
 libsoundgen.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-libsoundgen.a: $(OBJS)
-	ar cq $@ $^
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: $(SONAME)
 	install -d $(DESTDIR)$(PREFIX)/lib
@@ -42,7 +41,7 @@ install-devel:
 clean:
 	rm -f $(OBJS) $(SONAME) libsoundgen.so $(DEPS)
 
-include ../build/Makefile.dpkg_ipkg
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
 
 -include $(DEPS)
