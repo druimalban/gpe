@@ -19,7 +19,7 @@ extern GList *times;
 extern guint window_x, window_y;
 extern time_t viewtime;
 
-#define VERSION "0.01"
+#define VERSION "0.04"
 
 extern void update_current_view (void);
 
