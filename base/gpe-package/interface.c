@@ -42,7 +42,8 @@
 #include "packages.h"
 #include "interface.h"
 #include "main.h"
-#include "filesel.h"
+//#include "filesel.h"
+#include "filechooser.h"
 
 #define N_(x) (x)
 
@@ -118,7 +119,7 @@ void on_package_info_clicked(GtkButton *button, gpointer user_data);
 
 static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_File"),         NULL,         NULL, MI_FILE, "<Branch>" },
-  { N_("/File/_Install file"), "", on_select_local, MI_FILE_INSTALL, "<Item>"},
+  { N_("/File/_Install file"), "", on_select_local, MI_FILE_INSTALL, "<StockItem>", GTK_STOCK_OPEN},
   { N_("/_File/s1"), NULL , NULL,    0, "<Separator>"},
   { N_("/File/_Close"),  NULL, do_safe_exit, MI_FILE_CLOSE, "<StockItem>", GTK_STOCK_QUIT },
   { N_("/_Packages"),         NULL,         NULL, MI_PACKAGES, "<Branch>" },
@@ -729,7 +730,8 @@ int do_package_check(const char *package)
 
 void on_select_local(GtkButton *button, gpointer user_data)
 {
-	ask_user_a_file("/tmp",_("Select package file"),do_local_install,NULL,NULL);
+	//ask_user_a_file("/tmp",_("Select package file"),do_local_install,NULL,NULL);
+	package_choose(fMain, do_local_install);
 }
 
 

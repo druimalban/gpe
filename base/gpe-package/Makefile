@@ -18,7 +18,7 @@ else
 BUILD = build
 endif
 
-MEMBERS  = main interface packages filesel
+MEMBERS  = main interface packages filechooser
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG
