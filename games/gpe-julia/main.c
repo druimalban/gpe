@@ -229,7 +229,7 @@ void draw (void)
 
 void redraw (void)
 {
-  gtk_image_set_from_pixbuf (GTK_IMAGE(image_widget), pixbuf);
+  gtk_widget_queue_draw (image_widget);
   gdk_window_process_updates (GTK_WIDGET(image_widget)->window, FALSE);
 }
 
@@ -260,9 +260,13 @@ void zoom_out (gint pixelx, gint pixely, double zoomfactor)
 void
 motion_notify (GtkWidget *widget, GdkEventMotion *motion, gpointer *data)
 {
+  gint x, y;
+
+  gdk_window_get_pointer (widget->window, &x, &y, NULL);
+
   if (current_mode == mode_julia)
     {
-      choose_julia (motion->x, motion->y);
+      choose_julia (x, y);
       current_fractal = fractal_julia;
       draw_julia ();
       redraw ();
@@ -486,12 +490,7 @@ main(int argc, char *argv[])
   statusbar_update ();
   gtk_container_add (GTK_CONTAINER (vbox), statusbar);
 
-  gtk_widget_show (statusbar);
-  gtk_widget_show (image_widget);
-  gtk_widget_show (image_event_box);
-  gtk_widget_show (toolbar);
-  gtk_widget_show (vbox);
-  gtk_widget_show (window);
+  gtk_widget_show_all (window);
 
   home ();
 
