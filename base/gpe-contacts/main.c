@@ -82,7 +82,7 @@ menu_do_delete (void)
 			"question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
     {
       if (db_delete_by_uid (menu_uid))
-	update_display ();
+        update_display ();
     }
 }
 
@@ -145,6 +145,12 @@ static void
 new_contact (GtkWidget * widget, gpointer d)
 {
   struct person *p;
+  GtkWidget *new_button, *edit_button;
+	  
+  new_button = g_object_get_data(G_OBJECT(mainw), "new-button");
+  edit_button = g_object_get_data(G_OBJECT(mainw), "edit-button");
+  gtk_widget_set_sensitive (new_button, FALSE);
+  gtk_widget_set_sensitive (edit_button, FALSE);
   p = new_person ();
   edit_person (p, TRUE);
 }
@@ -160,6 +166,12 @@ edit_contact (GtkWidget * widget, gpointer d)
     {
       guint uid;
       struct person *p;
+      GtkWidget *new_button, *edit_button;
+	  
+	  new_button = g_object_get_data(G_OBJECT(mainw), "new-button");
+	  edit_button = g_object_get_data(G_OBJECT(mainw), "edit-button");
+      gtk_widget_set_sensitive (new_button, FALSE);
+      gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
       p = db_get_by_uid (uid);
       edit_person (p, FALSE);
@@ -277,6 +289,7 @@ show_details (struct person *p)
             if ((fieldname) 
                  && strcasecmp(id->tag,"NAME")
                  && strcasecmp(id->tag,"GIVEN_NAME")
+                 && strcasecmp(id->tag,"MIDDLE_NAME")
                  && strcasecmp(id->tag,"FAMILY_NAME")
                  && strcasecmp(id->tag,"HONORIFIC_SUFFIX")
                  && strcasecmp(id->tag,"TITLE")
@@ -396,10 +409,11 @@ selection_made (GtkTreeSelection *sel, GObject *o)
   guint id;
   struct person *p;
   GtkTreeModel *model;
-  GtkWidget *edit_button, *delete_button;
+  GtkWidget *edit_button, *delete_button, *new_button;
 
   edit_button = g_object_get_data (o, "edit-button");
   delete_button = g_object_get_data (o, "delete-button");
+  new_button = g_object_get_data (o, "new-button");
 
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
@@ -419,6 +433,8 @@ selection_made (GtkTreeSelection *sel, GObject *o)
       gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_widget_set_sensitive (delete_button, FALSE);
     }
+	/* restore after edit/new */
+    gtk_widget_set_sensitive (new_button, TRUE);
 }
 
 static gboolean
@@ -792,6 +808,7 @@ create_main (gboolean show_config_button)
   btnNew = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
 			    _("New contact"), _("Tap here to add a new contact."),
 			    G_CALLBACK (new_contact), NULL, -1);
+  g_object_set_data (G_OBJECT (main_window), "new-button", btnNew);
 
   pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("edit", 
 							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));

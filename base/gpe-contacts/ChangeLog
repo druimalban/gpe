@@ -1,3 +1,8 @@
+2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c: Some middle-name fixes. Disable edit and new buttons
+	          while edit window is open.
+	
 2004-09-14  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c, main.c: Added parameter to edit_person() to set different 
