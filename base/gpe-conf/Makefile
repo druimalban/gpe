@@ -8,7 +8,7 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 
-LINGUAS = pt ro de fr cs nl sv sk
+LINGUAS = pt ro de fr cs nl sv sk ru
 EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
 	gpe-conf-battery.desktop.in \

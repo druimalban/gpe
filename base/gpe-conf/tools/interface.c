@@ -44,6 +44,7 @@
  */
 #define HAVE_AFINET 1
 #undef HAVE_AFINET6
+#define HAVE_AFINET6x 1
 #undef HAVE_AFIPX
 #undef HAVE_AFATALK
 #undef HAVE_AFNETROM
@@ -83,6 +84,7 @@
 
 #define _(x) gettext(x)
 #define _PATH_PROCNET_DEV               "/proc/net/dev"
+        
 #define new(p) ((p) = calloc(1,sizeof(*(p))))
 #define KRELEASE(maj,min,patch) ((maj) * 65536 + (min)*256 + (patch))
 
@@ -97,9 +99,34 @@ static int procnetdev_vsn = 1;
 #include <linux/if_slip.h>
 #endif
 
+#if HAVE_AFINET6x
+#define _PATH_PROCNET_IFINET6		"/proc/net/if_inet6"
+
+#define IPV6_ADDR_ANY		0x0000U
+
+#define IPV6_ADDR_UNICAST      	0x0001U	
+#define IPV6_ADDR_MULTICAST    	0x0002U	
+#define IPV6_ADDR_ANYCAST	0x0004U
+
+#define IPV6_ADDR_LOOPBACK	0x0010U
+#define IPV6_ADDR_LINKLOCAL	0x0020U
+#define IPV6_ADDR_SITELOCAL	0x0040U
+
+#define IPV6_ADDR_COMPATv4	0x0080U
+
+#define IPV6_ADDR_SCOPE_MASK	0x00f0U
+
+#define IPV6_ADDR_MAPPED	0x1000U
+#define IPV6_ADDR_RESERVED	0x2000U	/* reserved address space */
+
+
+#endif
+
 #if HAVE_AFINET6
+//#include <linux/in6.h>
 
 #ifndef _LINUX_IN6_H
+
 /*
  *    This is in linux/include/net/ipv6.h.
  */
@@ -596,6 +623,17 @@ static struct aftype inet_aftype =
 };
 
 #endif				/* HAVE_AFINET */
+
+static struct aftype inet6_aftype =
+{
+    "inet6", "DARPA Internet", AF_INET6, 4 * sizeof(unsigned long),
+    NULL /* UNUSED INET_print */, INET_sprint,
+	NULL /* UNUSED INET_input */, NULL /* UNUSED INET_reserror */,
+    NULL /*INET_rprint */ , NULL /*INET_rinput */ ,
+    NULL /* UNUSED INET_getnetmask */,
+    -1,
+    NULL
+};
 
 /* Display an UNSPEC address. */
 static char *UNSPEC_print(unsigned char *ptr)
@@ -1815,10 +1853,11 @@ char* if_to_infostr(struct interface *ptr)
     int hf;
     int can_compress = 0;
 
-#if HAVE_AFINET6
+#if HAVE_AFINET6x
     FILE *f;
     char addr6[40], devname[20];
     struct sockaddr_in6 sap;
+    int i;
     int plen, scope, dad_status, if_idx;
     extern struct aftype inet6_aftype;
     char addr6p[8][5];
@@ -1827,7 +1866,7 @@ char* if_to_infostr(struct interface *ptr)
 	char *tmp = NULL;
 	char *buffer = strdup("");
 
-	tmp = malloc(256);
+	tmp = (char *)  malloc(256);
 	
     ap = get_afntype(ptr->addr.sa_family);
     if (ap == NULL)
@@ -1893,7 +1932,7 @@ char* if_to_infostr(struct interface *ptr)
     }
 #endif
 
-#if HAVE_AFINET6
+#if HAVE_AFINET6x
     /* FIXME: should be integrated into interface.c.   */
 
     if ((f = fopen(_PATH_PROCNET_IFINET6, "r")) != NULL) {
@@ -1902,14 +1941,40 @@ char* if_to_infostr(struct interface *ptr)
 		      addr6p[4], addr6p[5], addr6p[6], addr6p[7],
 		  &if_idx, &plen, &scope, &dad_status, devname) != EOF) {
 	    if (!strcmp(devname, ptr->name)) {
+		/*
 		sprintf(addr6, "%s:%s:%s:%s:%s:%s:%s:%s",
 			addr6p[0], addr6p[1], addr6p[2], addr6p[3],
 			addr6p[4], addr6p[5], addr6p[6], addr6p[7]);
-		inet6_aftype.input(1, addr6, (struct sockaddr *) &sap);
-		sprintf(tmp,_("IPv6 Address: %s/%d\n"),
+		*/
+		//inet6_aftype.input(1, addr6, (struct sockaddr *) &sap);
+		addr6[0] = '\0';
+		for (i = 0; i < 8; i++) {
+		    if (! strcmp(addr6p[i], "0000")) {
+			if (strstr(addr6, "::") == NULL) {
+			    sprintf(addr6, "%s::", addr6);
+			}
+		    } else {
+			if (addr6[strlen(addr6)-1] == ':') {
+			    sprintf(addr6,"%s%s", addr6, addr6p[i]);
+			} else if (strlen(addr6) > 0) {
+			    sprintf(addr6,"%s:%s", addr6, addr6p[i]);
+			} else {
+			    sprintf(addr6,"%s", addr6p[i]);
+			}
+
+		    }
+		    printf("%s\n", addr6);
+		}
+		//sprintf(tmp, _("IPv6 Address: %s/%d\n"), addr6, plen);
+		sprintf(tmp, _("IPv6 Address: %s/%d\n"), addr6, plen);
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
-		 inet6_aftype.sprint((struct sockaddr *) &sap, 1), plen);
+		/*
+		sprintf(tmp,_("IPv6 Address: %s/%d\n"), addr6, scope);
+		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
+		strcat(buffer,tmp);
+		// inet6_aftype.sprint((struct sockaddr *) &sap, 1), plen);
+		*/
 		sprintf(tmp,_("Scope: "));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
@@ -1932,8 +1997,10 @@ char* if_to_infostr(struct interface *ptr)
 		default:
 		    sprintf(tmp,_("Unknown"));
 		}
-		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
+		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+3);
 		strcat(buffer,tmp);
+		strcat(buffer,"\n\n");
+		
 	    }
 	}
 	fclose(f);

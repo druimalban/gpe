@@ -1,3 +1,8 @@
+
+2003-10-30	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* tools/interface.c: Added IPv6 patch by Libor Klepac
+	* Added Russian translation by Pavel Maryanov - many thanks!
+
 2003-10-24	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* therme.c: Added feature to enable therme defaults.
 	
