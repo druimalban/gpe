@@ -79,17 +79,18 @@ int popup_menu_activate (gpointer data)
 	GtkWidget *menu, *mi;
 	GList *l=NULL, *r=NULL;
 	char *window_title;
+#ifndef GTK2
 	GdkFont *font; /* Font in the menu label */
-
+#endif
 	p = (struct package *)data;
 
 	menu = gtk_menu_new ();
-
+#ifndef GTK2
 	if (gtk_rc_get_style (menu))
 		font = gtk_rc_get_style (menu)->font;
 	else
 		font = gtk_widget_get_style (menu)->font;
-
+#endif
 	window_title = package_get_data (p, "windowtitle");
 	if (window_title)
 		r = l = get_windows_with_name (window_title);
@@ -98,9 +99,9 @@ int popup_menu_activate (gpointer data)
 		struct window_info *w;
 
 		w = (struct window_info *) l->data;
-
+#ifndef GTK2
 		trim_text (font, w->name, 100);
-
+#endif
 		mi = gtk_menu_item_new_with_label (w->name);
 		gtk_signal_connect( GTK_OBJECT(mi), "activate",
 				    GTK_SIGNAL_FUNC(on_menuitem_raise), (gpointer)w->xid);
@@ -127,10 +128,9 @@ int popup_menu_activate (gpointer data)
 			    GTK_SIGNAL_FUNC(on_menuitem_properties), p);
 	gtk_menu_append (GTK_MENU(menu), mi);
 
+	gtk_widget_show_all (menu);
 
 	gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, 0);
-
-	gtk_widget_show_all (menu);
 
 	return FALSE;
 }

@@ -21,7 +21,7 @@
 #include <gdk/gdkx.h>
 
 /* directory listing */
-#include<sys/types.h>
+#include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
 
@@ -99,6 +99,7 @@ char *translate_group_name (char *name);
 
 void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 {
+#ifndef GTK2
 	GtkWidget *hb;
 	int i=0;
 
@@ -133,6 +134,7 @@ void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 			children = children->next;
 		}
 	}
+#endif
 }
 
 gint unignore_press (gpointer data)
@@ -308,9 +310,20 @@ char *find_icon (char *base)
    Eeeevil and Uuuugly but it works just fine AFAIK */
 void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
 {
-	int i;
+#ifdef GTK2
 	char *title;
+	if (strlen (full_title) > 10)
+		title = g_strdup_printf ("%.8s...", full_title);
+	else
+		title = g_strdup (full_title);
+	gtk_label_set_text (GTK_LABEL(label), title);
+	g_free (title);
+#else
+	int i;
+	char *title=NULL;
 	char *last_break=NULL;
+
+	DBG ((stderr, "make_nice_title: %s\n", full_title));
 
 	g_assert (label != NULL);
 	g_assert (font != NULL);
@@ -364,13 +377,18 @@ void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
 
 	gtk_label_set_text (GTK_LABEL (label), title);
 	g_free (title);
+#endif
 }
 
 GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
 	GdkPixbuf *pixbuf, *spixbuf;
 	GtkWidget *w;
+#ifdef GTK2
+	pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
+#else
 	pixbuf = gdk_pixbuf_new_from_file (fn);
+#endif
 	if (pixbuf == NULL)
 		return NULL;
 
@@ -550,7 +568,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 
 		if (style == TAB_VIEW_ICONS)
 		{
-			GdkFont *font; /* Font in the label */
+			GdkFont *font=NULL; /* Font in the label */
 			GtkWidget *lbl;
 			char *icon;
 			GdkPixbuf *pixbuf = NULL;
@@ -560,12 +578,20 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			icon = find_icon (get_closest_icon (p, cfg_options.list_icon_size));
 			if (icon)
 			{
+#ifdef GTK2
+				pixbuf = gdk_pixbuf_new_from_file (icon, NULL);
+#else
 				pixbuf = gdk_pixbuf_new_from_file (icon);
+#endif
 				free (icon);
 			}
 			if (!pixbuf) {
 				if (!default_pixbuf)
+#ifdef GTK2
+					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program.png", NULL);
+#else
 					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program.png");
+#endif
 				pixbuf = default_pixbuf;
 			}
 
@@ -573,11 +599,13 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			lbl = gtk_label_new("");
 
 			/* Get the font used by the label */
+#ifndef GTK2
 			if (gtk_rc_get_style (lbl))
 				font = gtk_rc_get_style (lbl)->font;
 			else
 				font = gtk_widget_get_style (lbl)->font;
 
+#endif
 			make_nice_title (lbl, font, package_get_data (p, "title"));
 
 			/* Button VBox */
@@ -597,9 +625,12 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 
 			/* The 'button' itself */
 			btn = gtk_event_box_new ();
+#ifdef GTK2
+#else
 			/* The "Ay" is arbitrary; I figure'd it'd give a decent approximation at the
 			   max. height of the font */
 			gtk_widget_set_usize (btn, 70, 55 + 2*gdk_text_height(font, "Ay", 2));
+#endif
 
 		} else /* Thus style == TAB_VIEW_LIST */
 		{
@@ -1085,7 +1116,11 @@ void create_recent_box(GtkBox *cont)
 	TRACE ("create_recent_box");
 
 	if (w != NULL) {
+#ifdef GTK2
+		;
+#else
 		gtk_widget_destroy (w);
+#endif
 		w = NULL;
 	} else if (recent_tab != NULL) {
 		gtk_widget_destroy (recent_tab);
@@ -1149,6 +1184,9 @@ void icons_page_up_down (int down)
 
 gint keysnoop (GtkWidget *grab_widget, GdkEventKey *event, gpointer func_data)
 {
+	if (event->type != GDK_KEY_PRESS)
+		return 1;
+
 	switch (event->keyval) {
 	case GDK_Up:
 		icons_page_up_down (0);
