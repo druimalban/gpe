@@ -145,9 +145,10 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
     }
   else if (old_state == GST_STATE_PLAYING && new_state == GST_STATE_PAUSED)
     {
-      fprintf (stderr, "player %p: Play finished.\n", p);
+      fprintf (stderr, "player %p: Play finished.", p);
       if (p->state == PLAYER_STATE_PLAYING)
 	{
+	  fprintf (stderr, "player %p: Setting element state to NULL.", p);
 	  gst_element_set_state (elt, GST_STATE_NULL);
 	  p->state = PLAYER_STATE_NEXT_TRACK;
 	}
@@ -221,8 +222,6 @@ player_play (player_t p)
 {
   if (p->list)
     {
-      p->idx = 0;
-      
       p->cur = playlist_fetch_item (p->list, p->idx);
       
       if (p->cur)
