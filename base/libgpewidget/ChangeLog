@@ -1,3 +1,7 @@
+2004-03-11  Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* gpehelp.c: Fixed parameters for application start.
+
 2004-03-07  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.78 released.

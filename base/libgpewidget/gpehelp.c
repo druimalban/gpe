@@ -63,11 +63,18 @@ gpe_show_help(const char* book, const char* topic)
 		return TRUE;
 	
 	/* construct the complete help address */
-	helpadress = g_strdup_printf	("%s%s#%s",
+	if ((topic) && strlen(topic))
+		helpadress = g_strdup_printf("%s%s#%s",
 										GPE_HELP_FILE_PREFIX,
 										helpfile,
 										topic
 									);
+	else
+		helpadress = g_strdup_printf("%s%s",
+										GPE_HELP_FILE_PREFIX,
+										helpfile
+									);
+		
 	/* fork and exec displaying application */
 	p_help = fork();
 	switch (p_help)
@@ -76,7 +83,7 @@ gpe_show_help(const char* book, const char* topic)
 			return TRUE;
 		break;
 		case  0: 
-				execlp(app,helpadress,NULL);
+				execlp(app,app,helpadress,NULL);
 		break;
 		default: 
 			g_free(helpadress);
