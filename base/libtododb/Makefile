@@ -10,8 +10,8 @@ MEMBERS = todo-db old-db
 
 SONAME = libtododb.so.0
 
-CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
-LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget
+CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED -I../libgpepimc
+LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget -L../libgpepimc -lgpepimc
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 

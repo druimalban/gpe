@@ -19,45 +19,11 @@
 
 #include <gpe/errorbox.h>
 #include <gpe/todo-db.h>
+#include <gpe/pim-categories.h>
 
 extern gboolean converted_item (struct todo_item *i);
-extern int converted_category (const char *title);
-
-static GSList *lists;
 
 static sqlite *sqliteh_here;
-
-struct todo_list 
-{
-  const char *title;
-  int id;
-  GList *items;
-};
-
-struct todo_list *
-new_list (int id, const char *title)
-{
-  struct todo_list *t = g_malloc (sizeof (struct todo_list));
-  t->items = NULL;
-  t->title = title;
-  t->id = id;
-  	    
-  lists = g_slist_append (lists, t);
-  return t;
-}
-
-static int
-list_callback0 (void *arg, int argc, char **argv, char **names)
-{
-  if (argc == 2)
-    {
-      new_list (atoi (argv[0]), g_strdup (argv[1]));
-
-      converted_category (g_strdup (argv[1]));
-    }
-
-  return 0;
-}
 
 static int
 item_callback0 (void *arg, int argc, char **argv, char **names)
@@ -71,7 +37,6 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
       char *due = argv[5];
       struct todo_item *i = g_malloc (sizeof (struct todo_item));
       
-      GSList *iter;
       time_t t = (time_t)0;
 
       memset (i, 0, sizeof (*i));
@@ -92,19 +57,6 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
 	
       i->time = t;
       
-      for (iter = lists; iter; iter = iter->next)
-	{
-	  struct todo_category *t = g_malloc (sizeof (struct todo_category));
-          struct todo_list *l = iter->data;
-	  if (l->id == list)
-	  {
-	    t->id = l->id;
-	    t->title = l->title;
-	    i->categories = g_slist_append (i->categories, (gpointer)(t->id));
-	    break;
-          }
-	}
-	
       converted_item (i);
     }
   
@@ -120,9 +72,6 @@ convert_old_db (int oldversion, sqlite *sqliteh)
   
   if (oldversion == 0) 
     {
-      sqlite_exec (sqliteh, "select uid,description from todo_lists",
-		   list_callback0, NULL, NULL);
-
       sqlite_exec (sqliteh, 
 		       "select uid,list,summary,description,state,due_by from todo_items",
 		   item_callback0, NULL, NULL);
@@ -140,4 +89,72 @@ convert_old_db (int oldversion, sqlite *sqliteh)
     }
     
   return TRUE;
+}
+
+/* Category handling */
+
+struct map
+{
+  int old, new;
+};
+
+GSList *mapping;
+
+void
+migrate_one_category (sqlite *db, int id, gchar *string)
+{
+  struct map *map;
+  int new_id;
+  char *err;
+
+  if (sqlite_exec_printf (db, "update todo set value='MIGRATED-%d' where tag='CATEGORY' and value='%d'",
+			  NULL, NULL, &err, id, id) != SQLITE_OK)
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+
+  if (gpe_pim_category_new (string, &new_id))
+    {
+      map = g_malloc0 (sizeof (*map));
+      map->old = id;
+      map->new = new_id;
+      mapping = g_slist_prepend (mapping, map);
+    }
+}
+
+void
+migrate_old_categories (sqlite *db)
+{
+  gint r, c;
+  gchar **list;
+
+  if (sqlite_get_table (db, "select id,description from todo_categories", &list, &r, &c, NULL) == SQLITE_OK)
+    {
+      int i;
+      GSList *iter;
+
+      for (i = 1; i < r; i++)
+	{
+	  gchar **data = &list[i * c];
+	  int id = atoi (data[0]);
+
+	  if (id)
+	    migrate_one_category (db, id, data[1]);
+	}
+
+      for (iter = mapping; iter; iter = iter->next)
+	{
+	  struct map *map = iter->data;
+
+	  sqlite_exec_printf (db, "update todo set value='%d' where tag='CATEGORY' and value='MIGRATED-%d'",
+			      NULL, NULL, NULL, map->new, map->old);
+
+	  g_free (map);
+	}
+
+      sqlite_exec_printf (db, "drop table todo_categories", NULL, NULL, NULL);
+
+      sqlite_free_table (list);
+    }
 }

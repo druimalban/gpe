@@ -23,26 +23,16 @@ struct todo_item
   guint priority;
 };
 
-#define PRIORITY_HIGH		100
-#define PRIORITY_STANDARD	50
-#define PRIORITY_LOW		1
-
-struct todo_category
-{
-  const char *title;
-  int id;
-};
+#define PRIORITY_HIGH		9
+#define PRIORITY_STANDARD	5
+#define PRIORITY_LOW		0
 
 extern struct todo_item *todo_db_new_item (void);
 extern gboolean todo_db_push_item (struct todo_item *i);
 extern void todo_db_delete_item (struct todo_item *i);
 extern void todo_db_destroy_item (struct todo_item *i);
-extern struct todo_category *todo_db_new_category (const char *title);
-extern void todo_db_destroy_category (struct todo_category *);
-extern void todo_db_del_category (struct todo_category *);
 
 extern GSList *todo_db_get_items_list(void);
-extern GSList *todo_db_get_categories_list(void);
 
 extern int todo_db_start (void);
 extern void todo_db_stop (void);

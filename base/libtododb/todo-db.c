@@ -21,109 +21,19 @@
 #include <gpe/todo-db.h>
 
 static sqlite *sqliteh;
-static GSList *todo_db_categories, *todo_db_items;
+static GSList *todo_db_items;
 
 static unsigned long dbversion;
 
 static const char *fname = "/.gpe/todo";
 
 extern gboolean convert_old_db (int oldversion, sqlite *);
-
-static struct todo_category *
-new_category_internal (int id, const char *title)
-{
-  struct todo_category *t = g_malloc (sizeof (struct todo_category));
-
-  t->title = title;
-  t->id = id;
-
-  todo_db_categories = g_slist_append (todo_db_categories, t);
-
-  return t;
-}
+extern void migrate_old_categories (sqlite *db);
 
 GSList *
 todo_db_get_items_list(void)
 {
   return todo_db_items;
-}
-
-GSList *
-todo_db_get_categories_list(void)
-{
-  return todo_db_categories;
-}
-	
-int 
-converted_category (const char *title)
-{
-  char *err;
-
-  if (sqlite_exec_printf (sqliteh, "insert into todo_categories values (NULL, '%q')",
-			  NULL, NULL, &err, title))
-    {
-      gpe_error_box (err);
-      free (err);
-      return -1;
-    }
-
-  new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
-  return sqlite_last_insert_rowid (sqliteh);
-}
-
-struct todo_category *
-todo_db_new_category (const char *title)
-{
-  char *err;
-
-  if (sqlite_exec_printf (sqliteh, "insert into todo_categories values (NULL, '%q')",
-			  NULL, NULL, &err, title))
-    {
-      gpe_error_box (err);
-      free (err);
-      return NULL;
-    }
-
-  return new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
-}
-
-struct todo_category *
-todo_db_category_find_by_id (int i)
-{
-  GSList *iter;
-
-  for (iter = todo_db_categories; iter; iter = iter->next)
-    {
-      struct todo_category *c = (struct todo_category *)iter->data;
-      if (c->id == i)
-	return c;
-    }
-
-  return NULL;
-}
-
-void
-todo_db_destroy_category (struct todo_category *c)
-{
-  g_free ((gpointer)c->title);
-  g_free (c);
-}
-
-void
-todo_db_del_category (struct todo_category *c)
-{
-  char *err;
-
-  if (sqlite_exec_printf (sqliteh, "delete from todo_categories where uid=%d",
-			  NULL, NULL, &err,
-			  c->id))
-    {
-      gpe_error_box (err);
-      free (err);
-    }
-
-  todo_db_categories = g_slist_remove (todo_db_categories, c);
-  todo_db_destroy_category (c);
 }
 
 /* ------ */
@@ -144,11 +54,7 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
       else if (!strcasecmp (argv[0], "PRIORITY"))
 	i->state = atoi (argv[2]);
       else if (!strcasecmp (argv[0], "CATEGORY"))
-	{
-	  struct todo_category *c = todo_db_category_find_by_id (atoi (argv[1]));
-	  if (c)
-	    i->categories = g_slist_append (i->categories, c);;
-	}
+	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
       else if (!strcasecmp (argv[0], "DUE"))
 	{
 	  struct tm tm;
@@ -196,21 +102,11 @@ dbinfo_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-static int
-category_callback (void *arg, int argc, char **argv, char **names)
-{
-  if (argc == 2 && argv[0] && argv[1])
-    new_category_internal (atoi (argv[0]), g_strdup (argv[1]));
-  return 0;
-}
-
 /* --- */
 
 int
 todo_db_start (void)
 {
-  static const char *schema1_str = 
-    "create table todo_categories (uid INTEGER PRIMARY KEY, description text)";
   static const char *schema2_str = 
     "create table todo (uid INTEGER NOT NULL, tag TEXT NOT NULL, value TEXT)";
   static const char *schema3_str = 
@@ -247,50 +143,33 @@ todo_db_start (void)
       return FALSE;
     }
 
-  sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err);
      
-  if (dbversion==1) 
+  if (dbversion == 1) 
     {
-      
-      if (sqlite_exec (sqliteh, "select uid,description from todo_categories",
-		   category_callback, NULL, &err))
-      {
-        gpe_error_box (err);
-        free (err);
-        return -1;
-      }
-      
       if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
-      {
-        gpe_error_box (err);
-        free (err);
-        return -1;
-      }
-      
+	{
+	  gpe_error_box (err);
+	  free (err);
+	  return -1;
+	}
     }
     
-  else if (dbversion==0) 
+  else if (dbversion == 0)
     {
-      if (sqlite_exec (sqliteh, "select uid,description from todo_categories",
-		   category_callback, NULL, &err))
-      {
-        gpe_error_box (err);
-        free (err);
-        return -1;
-      }
-      
       if (sqlite_exec (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
-      {
-        gpe_error_box (err);
-        free (err);
-        return -1;
-      }
+	{
+	  gpe_error_box (err);
+	  free (err);
+	  return -1;
+	}
       
       convert_old_db (dbversion, sqliteh);
-      dbversion=1;
+      dbversion = 1;
     }
+
+  migrate_old_categories (sqliteh);
 
   return 0;
 }
@@ -305,11 +184,6 @@ todo_db_stop (void)
   g_slist_free (todo_db_items);
   todo_db_items = NULL;
 
-  for (iter = todo_db_categories; iter; iter = g_slist_next (iter))
-    todo_db_destroy_category (iter->data);
-  g_slist_free (todo_db_categories);
-  todo_db_categories = NULL;
-	
   sqlite_close (sqliteh);
 }
 
@@ -367,7 +241,7 @@ todo_db_push_item (struct todo_item *i)
 
   for (iter = i->categories; iter; iter = iter->next)
     {
-      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", ((struct todo_category *)iter->data)->id))
+      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", iter->data))
 	goto error;
     }
 

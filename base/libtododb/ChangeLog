@@ -1,3 +1,30 @@
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpe/todo-db.h: (struct todo_category): Deleted.
+	(todo_db_destroy_category): Likewise.
+	(todo_db_del_category): Likewise.
+	(todo_db_get_categories_list): Likewise.
+
+	* todo-db.c (new_category_internal): Deleted.
+	(todo_db_get_categories_list): Likewise.
+	(converted_category): Likewise.
+	(todo_db_new_category): Likewise.
+	(todo_db_category_find_by_id): Likewise.
+	(todo_db_destroy_category): Likewise.
+	(todo_db_del_category): Likewise.
+	(category_callback): Likewise.
+	(item_data_callback): Store category in list as ID, not pointer.
+	(todo_db_start): Don't create categories table.  Reformat some
+	code.  Delete category loading stuff.  Call
+	migrate_old_categories().
+	(todo_db_stop): Remove category handling.
+	(todo_db_push_item): Categories list holds ID directly.
+
+	* gpe/todo-db.h (PRIORITY_HIGH, PRIORITY_STANDARD, PRIORITY_LOW):
+	Tweak numbering to fit vEvent range.
+
+	* Makefile (CFLAGS, LDFLAGS): Add libgpepimc.
+
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (VERSION): Version 0.03 released.
