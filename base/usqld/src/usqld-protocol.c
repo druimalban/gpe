@@ -48,7 +48,7 @@ XDR_schema * usqld_make_protocol(){
 
   elems[3].t = query_packet = XDR_schema_new_string();
   elems[3].d = PICKLE_QUERY;
-
+  
   elems[4].t = disconnect_packet = XDR_schema_new_void();
   elems[4].d = PICKLE_DISCONNECT;
 
@@ -115,8 +115,7 @@ usqld_packet * usqld_error_packet(int errcode, const char * str){
   ep[1] = XDR_tree_new_string(str);
 
   p = XDR_tree_new_union(PICKLE_ERROR,
-			 XDR_tree_new_union(PICKLE_ERROR,
-			 XDR_tree_new_struct(2,ep)));
+			 XDR_tree_new_struct(2,ep));
   return p;
 }
 

@@ -13,6 +13,7 @@
 #include "usqld-server.h"
 #include "usqld-conhandler.h"
 #include "usqld-protocol.h"
+
 typedef struct{
   int client_fd;
   sqlite * db;
@@ -78,6 +79,16 @@ int usqld_send_row(usqld_row_context * rc,
   XDR_tree * rowpacket = NULL,*field_elems;
   int i;
   int rv;
+  fprintf(stderr,"about to send a row:\n[");
+  for(i = 0;i<nfields;i++){
+    fprintf(stderr,"\t%s,",heads[i]);
+  }
+  fprintf(stderr,"]\n");
+  fprintf(stderr,"(");
+  for(i = 0;i<nfields;i++){
+    fprintf(stderr,"\t%s,",fields[i]);
+  }
+  fprintf(stderr,")\n");
 
   if(!rc->headsent){
     XDR_tree  * srpacket = NULL, *head_elems;
@@ -146,13 +157,18 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
 				(sqlite_callback)usqld_send_row,
 				(void*)&rc,
 				&errmsg))){
+    fprintf(stderr,"error executing sql:%s\n",errmsg);
+    if(errmsg==NULL){
+      reply = usqld_error_packet(rv,"Unknown sql error");
+    }else{
+      reply = usqld_error_packet(rv,errmsg);
+      free(errmsg);
+    }
     
+    goto query_send_reply; 
   }
-  
-	      
-	      
-	      
-  
+  reply = usqld_ok_packet();
+	        
  query_send_reply:
   assert(reply!=NULL);
   rv =  usqld_send_packet(tc->client_fd,reply);

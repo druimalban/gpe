@@ -154,8 +154,8 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
       if(XDR_t_get_comp_elem(t,1)->type!=d_t->type){
 	sprintf(errbuf,
 		"desired target of %s does not match given type of %s\n",
-		XDR_find_type_name(XDR_t_get_comp_elem(t,1)->type),
-		XDR_find_type_name(d_t->type));
+		XDR_find_type_name(d_t->type),
+		XDR_find_type_name(XDR_t_get_comp_elem(t,1)->type));
 	reason = errbuf;
 	rv=XDR_SCHEMA_VIOLATION;
 	goto serialize_failed_output;
@@ -184,7 +184,7 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
   return XDR_OK;
  serialize_failed_output:
   fprintf(stderr,"serialization failed because %s, "\
-	  "while processing data elemm of type %s, and schema elem of type %s",
+	  "while processing data elemm of type %s, and schema elem of type %s\n",
 	  reason,
 	  XDR_find_type_name(t->type),
 	  XDR_find_type_name(s->type));

@@ -70,7 +70,7 @@ ECHO = echo
 EXEEXT = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LN_S = ln -s
-MAINT = 
+MAINT = #
 MAKEINFO = makeinfo
 OBJDUMP = @OBJDUMP@
 OBJEXT = o
@@ -123,7 +123,7 @@ OBJECTS = $(writer_example_OBJECTS) $(reader_example_OBJECTS)
 all: all-redirect
 .SUFFIXES:
 .SUFFIXES: .S .c .lo .o .obj .s
-$(srcdir)/Makefile.in:  Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in: # Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu xdr/examples/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
