@@ -1,8 +1,8 @@
 Package: gpe-games
 Section: games
 Priority: optional
-Version: 0.02
+Version: 0.03
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-tetris, gtksolitaire, xdemineur, codebreaker
+Depends: gpe-tetris, gtksolitaire, xdemineur, codebreaker, gsoko
 Description: Task package for GPE games
