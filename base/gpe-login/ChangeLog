@@ -1,3 +1,7 @@
+2002-11-15  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xserver: Tweak iPAQ model handling.  Add support for H3900.
+
 2002-10-25  Philip Blundell  <philb@gnu.org>
 
 	* gpe-dm.c: Don't open connection to X server.
