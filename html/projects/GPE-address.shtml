@@ -8,11 +8,23 @@
 <CENTER><IMG src="/images/gpe-contacts.png" ALT="[gpe-contacts screenshot]">
 <IMG src="/images/gpe-contacts2.png" ALT="[gpe-contacts screenshot]"></CENTER>
 <HR>
+
+<H2>Coordinator</H2>
+<P>
+The coordinator for this sub-project is Philip Blundell
+(<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>). If you want to 
+contribute to this project, please contact him directly.
+</P>
+
 <H2>Function</H2>
 <P>
-This is very obvious. It stores contact addresses and is able to categorize
-them. Nice features should include IrDA IrOBEX support for beaming them in
-vCard format.
+This is very obvious.  It stores contact details such as addresses and
+is able to categorize them.  Future enhancements will include IrDA IrOBEX
+support for beaming them in vCard format.
+</P>
+<H2>Status</H2>
+<P>
+<CODE>gpe-contacts</CODE> is in CVS and the unstable feed.
 </P>
 
 <!--#include virtual="/includes/foot.shtml"-->
