@@ -18,6 +18,7 @@
  */
 
 #include <signal.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>

@@ -1,5 +1,7 @@
 2003-03-01  Philip Blundell  <philb@gnu.org>
 
+	* render.c: Include <stdlib.h> to quash warning.
+
 	* tray.c (gpe_system_tray_dock): Call XSetCommand with saved
 	arguments.  Use XInternAtoms.
 	(filter): Adjust appropriately.
