@@ -25,7 +25,6 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
-#include <gpe/gtkminifilesel.h>
 
 #include <libdm.h>
 
@@ -198,7 +197,7 @@ static void
 open_file_from_filesel (GtkFileSelection *selector, gpointer user_data)
 {
 
-  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
+  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
 
   gtk_widget_destroy (file_selector);
 
@@ -247,7 +246,7 @@ do_save_file (gchar *filename)
 static void
 save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
-  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
+  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
   
   do_save_file (filename);
 
@@ -257,12 +256,12 @@ save_file_as (GtkFileSelection *selector, gpointer user_data)
 static void
 select_open_file (void)
 {
-  file_selector = gtk_mini_file_selection_new (_("Open File ..."));
+  file_selector = gtk_file_selection_new (_("Open File ..."));
 
-  gtk_signal_connect (GTK_OBJECT (file_selector),
-		      "completed", GTK_SIGNAL_FUNC (open_file_from_filesel), NULL);
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
+			     "clicked", GTK_SIGNAL_FUNC (open_file_from_filesel), NULL);
 
-  gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
   gtk_widget_show (file_selector);
@@ -285,16 +284,16 @@ select_save_file_as (void)
 
   suggested_filename = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
-  file_selector = gtk_mini_file_selection_new (_("Save as .."));
+  file_selector = gtk_file_selection_new (_("Save as .."));
 
-  gtk_signal_connect (GTK_OBJECT (file_selector),
-		      "completed", GTK_SIGNAL_FUNC (save_file_as), NULL);
-
-  gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->ok_button),
+			     "clicked", GTK_SIGNAL_FUNC (save_file_as), NULL);
+  
+  gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
 
-  gtk_entry_set_text (GTK_ENTRY (GTK_MINI_FILE_SELECTION (file_selector)->entry), suggested_filename);
+  gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_selector), suggested_filename);
 
   gtk_widget_show (file_selector);
 
