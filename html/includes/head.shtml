@@ -7,6 +7,7 @@
 <HTML> 
 <HEAD> 
 <TITLE> GPE: <!--#echo var="addtitle"--></TITLE> 
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-15">
 <LINK REL="stylesheet" HREF="/css/style.css" TYPE="text/css">
 </HEAD>
 <BODY bgcolor="#ffffff" fgcolor="#000000">
