@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+03.07.2003		Florian			cardinfo.c					Now wlan-ng devices are shown with the network icon.
+
 03.07.2003		Florian			cardinfo.c					Fixed a bug causing gpe-conf to die with no wlan-ng.conf found.
 								pixmaps/pccard-usb.png		Added support for displaying USB cards.
 								Makefile					Updated version to -pre6.

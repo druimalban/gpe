@@ -736,6 +736,8 @@ update_icon (char *type, GtkWidget * container)
 	/* transfer types we know */
 	if (!strcmp(type,"254"))
 		sprintf(type,"usb");
+	if (!strcmp(type,"wlan-ng"))
+		sprintf(type,"network");
 	
 	fname = g_strdup_printf ("%spccard-%s.png", PIXMAP_PATH, type);
 	if (access (fname, R_OK))
