@@ -67,7 +67,9 @@ lookup_in_list (int outgoing, const char *address, char **pin)
   if (nrow == 0)
     return 0;
   
-  *pin = results[ncol];
+  *pin = g_strdup (results[ncol]);
+  
+  sqlite_free_table (results);
 
   return 1;
 }
