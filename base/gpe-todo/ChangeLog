@@ -1,5 +1,9 @@
 2004-01-17  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.40 released.
+
+2004-01-17  Philip Blundell  <philb@gnu.org>
+
 	* list-ui.c (top_level): Tweak packing flags on optionmenu in
 	toolbar.
 
