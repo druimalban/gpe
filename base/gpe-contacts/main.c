@@ -28,9 +28,11 @@ static GtkWidget *combo;
 static GtkWidget *clist;
 
 struct gpe_icon my_icons[] = {
-  { "delete", },
-  { "new", },
-  { "properties", },
+  { "delete" },
+  { "new" },
+  { "save" },
+  { "cancel" },
+  { "properties" },
   { "frame", MY_PIXMAPS_DIR "/frame.xpm" },
   { "notebook", MY_PIXMAPS_DIR "/notebook.xpm" },
   { "entry", MY_PIXMAPS_DIR "/entry.xpm" },
