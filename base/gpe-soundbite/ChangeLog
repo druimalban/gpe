@@ -1,3 +1,8 @@
+2003-01-09  Moray Allan  <moray@handhelds.org>
+
+	* Makefile: Fix .desktop files to have a .desktop extension when
+	installed (lacked any extension previously).
+
 2003-01-06  Moray Allan  <moray@handhelds.org>
 
 	* main.c: Removed use of GtkMiniFileSelection, in favour of the
