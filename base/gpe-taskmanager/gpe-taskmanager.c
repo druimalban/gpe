@@ -272,8 +272,8 @@ task_manager (void)
   g_signal_connect (G_OBJECT (close_button), "clicked", G_CALLBACK (gtk_main_quit), NULL);
   g_signal_connect (G_OBJECT (window), "delete_event", G_CALLBACK (gtk_main_quit), NULL);
 
-  gtk_window_set_default_size (GTK_WINDOW (window), 200, 128);
-  gtk_window_set_title (GTK_WINDOW (window), _("Program manager"));
+  gtk_window_set_default_size (GTK_WINDOW (window), -1, 128);
+  gtk_window_set_title (GTK_WINDOW (window), _("Running programs"));
   gpe_set_window_icon (window, "icon");
 
   gtk_widget_show_all (window);
