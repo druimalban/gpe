@@ -18,6 +18,8 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <pthread.h>
+#include <errno.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -93,22 +95,16 @@ do_run_scan (void)
 {
   bdaddr_t bdaddr;
   inquiry_info *info = NULL;
-  int dev_id = hci_get_route(&bdaddr);
+  int dev_id = -1;
   int num_rsp, length, flags;
   char name[248];
   int i, dd;
 
-  if (dev_id < 0) 
-    {
-      gpe_perror_box ("Device is not available");
-      return FALSE;
-    }
-  
   length  = 4;  /* ~10 seconds */
   num_rsp = 10;
   flags = 0;
 
-  num_rsp = hci_inquiry(dev_id, length, num_rsp, NULL, &info, flags);
+  num_rsp = hci_inquiry (dev_id, length, num_rsp, NULL, &info, flags);
   if (num_rsp < 0) 
     {
       gpe_perror_box ("Inquiry failed.");
@@ -306,74 +302,102 @@ devices_window_destroyed (void)
 static gboolean
 browse_device (struct bt_device *bd)
 {
-  GSList *attrid, *search;
-  GSList *pSeq = NULL;
+  sdp_list_t *attrid, *search, *seq, *next;
   uint32_t range = 0x0000ffff;
-  uint16_t count = 0;
-  int status = -1, i;
+  int status = -1;
   uuid_t group;
   bdaddr_t bdaddr;
   uuid_t lap_uuid, dun_uuid, rfcomm_uuid;
+  char str[20];
+  sdp_session_t *sess;
 
   baswap (&bdaddr, &bd->bdaddr);
 
-  sdp_create_uuid16 (&group, PUBLIC_BROWSE_GROUP);
-  sdp_create_uuid16 (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
-  sdp_create_uuid16 (&dun_uuid, DIALUP_NET_SVCLASS_ID);
-  sdp_create_uuid16 (&rfcomm_uuid, RFCOMM_UUID);
+  sdp_uuid16_create (&group, PUBLIC_BROWSE_GROUP);
+  sdp_uuid16_create (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
+  sdp_uuid16_create (&dun_uuid, DIALUP_NET_SVCLASS_ID);
+  sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
 
-  attrid = g_slist_append (NULL, &range);
-  search = g_slist_append (NULL, &group);
-  status = sdp_service_search_attr_req (&bdaddr, search, SDP_ATTR_REQ_RANGE,
-					attrid, 65535, &pSeq, &count);
+  attrid = sdp_list_append (0, &range);
+  search = sdp_list_append (0, &group);
+  sess = sdp_connect(BDADDR_ANY, &bdaddr, 0);
+  if (!sess) {
+    ba2str (&bdaddr, str);
+    fprintf (stderr, "Failed to connect to SDP server on %s\n", str);
+    return FALSE;
+  }
+  status = sdp_service_search_attr_req (sess, search, SDP_ATTR_REQ_RANGE, attrid, &seq);
 
   if (status) 
     return FALSE;
 
   bd->type = BT_UNKNOWN;
 
-  for (i = 0; i < (int) g_slist_length (pSeq); i++) 
+  for (; seq; seq = next)
     {
-      uint32_t svcrec;
-      GSList *pGSList;
-      svcrec = *(uint32_t *) g_slist_nth_data(pSeq, i);
+      sdp_record_t *svcrec = (sdp_record_t *) seq->data;
+      sdp_list_t *list = 0;
 
-      if (sdp_get_svclass_id_list (&bdaddr, svcrec, &pGSList) == 0) 
+      if (sdp_get_service_classes (svcrec, &list) == 0) 
 	{
-	  GSList *iter;
-	  
-	  for (iter = pGSList; iter; iter = iter->next)
+	  sdp_list_t *next;
+
+	  for (; list; list = next)
 	    {
-	      uuid_t *u = iter->data;
+	      uuid_t *u = list->data;
 	      if (sdp_uuid_cmp (u, &lap_uuid) == 0)
 		bd->type = BT_LAP;
 	      else if (sdp_uuid_cmp (u, &dun_uuid) == 0)
 		bd->type = BT_DUN;
+
+	      next = list->next;
+	      free (list);
 	    }
 	}
 
       if (bd->type != BT_UNKNOWN)
 	{
-	  sdp_access_proto_t *access_proto;
-	  if (sdp_get_access_proto (&bdaddr, svcrec, &access_proto) == 0) 
+	  if (sdp_get_access_protos (svcrec, &list) == 0) 
 	    {
-	      GSList *iter;
-
-	      for (iter = access_proto->seq; iter; iter = iter->next)
+	      sdp_list_t *next;
+	      for (; list; list = next)
 		{
-		  GSList *list;
-
-		  for (list = iter->data; list; list = list->next)
+		  gboolean rfcomm = FALSE;
+		  sdp_list_t *protos = (sdp_list_t *)list->data, *nextp;
+		  for (; protos; protos = nextp)
 		    {
-		      sdp_proto_desc_t *desc = list->data;
-		      if (sdp_uuid_cmp (&desc->uuid, &rfcomm_uuid) == 0)
-			bd->port = desc->port;
+		      sdp_data_t *p = protos->data;
+		      switch (p->dtd)
+			{
+			case SDP_UUID16:
+			case SDP_UUID32:
+			case SDP_UUID128:
+			  if (sdp_uuid_cmp (&p->val.uuid, &rfcomm_uuid) == 0)
+			    rfcomm = TRUE;
+			  break;
+
+			case SDP_UINT8:
+			  if (rfcomm)
+			    bd->port = p->val.uint8;
+			  break;
+			}
+		      nextp = protos->next;
+		      free (protos);
 		    }
+
+		  next = list->next;
+		  free (list);
 		}
 	    }
 	}
+
+      next = seq->next;
+      free (seq);
+      sdp_record_free (svcrec);
     }
-  
+    
+  sdp_close (sess);
+
   return TRUE;
 }
 
@@ -537,8 +561,6 @@ check_scan_complete (void)
 static void
 show_devices (void)
 {
-  GSList *iter;
-
   if (devices_window == NULL)
     {
       devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -620,8 +642,6 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
-
-  sdp_init ();
 
   window = gtk_plug_new (0);
   gtk_widget_set_usize (window, 16, 16);
