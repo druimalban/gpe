@@ -33,6 +33,8 @@
 #include "db.h"
 #include "structure.h"
 #include "proto.h"
+#include "main.h"
+#include "export.h"
 
 #define MY_PIXMAPS_DIR PREFIX "/share/pixmaps/"
 #define TAB_CONFIG_LOCAL ".contacts-tab"
@@ -43,6 +45,8 @@ GtkWidget *mainw;
 GtkListStore *list_store;
 GtkWidget *list_view;
 GtkWidget *search_entry;
+GtkWidget *popup_menu;
+guint menu_uid;
 
 struct gpe_icon my_icons[] = {
   {"edit"},
@@ -51,10 +55,28 @@ struct gpe_icon my_icons[] = {
   {"frame", MY_PIXMAPS_DIR "frame.png"},
   {"notebook", MY_PIXMAPS_DIR "notebook.png"},
   {"entry", MY_PIXMAPS_DIR "entry.png"},
-  {"export", MY_PIXMAPS_DIR "export.png"},
   {"icon", MY_PIXMAPS_DIR "gpe-contacts.png" },
   {NULL, NULL}
 };
+
+static void
+menu_do_edit (void)
+{
+  struct person *p;
+  p = db_get_by_uid (menu_uid);
+  edit_person (p);
+}
+
+static void
+menu_do_delete (void)
+{
+  if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
+			"question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
+    {
+      if (db_delete_by_uid (menu_uid))
+	update_display ();
+    }
+}
 
 void
 load_panel_config (void)
@@ -112,37 +134,6 @@ update_categories (void)
 }
 
 static void
-export_contact (GtkWidget * widget, gpointer d)
-{
-  GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
-  GtkTreeIter iter;
-  GtkTreeModel *model;
-  char *cmd;
-  GtkWidget *dlg;
-	
-  if (gtk_tree_selection_get_selected (sel, &model, &iter))
-    {
-      guint uid = -1;
-      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
-	  if (uid >= 0)
-      {
-         cmd = g_strdup_printf("/usr/bin/vcard-export %i > /tmp/vcard.vcf",uid);
-         if (system(cmd))
-           dlg = gtk_message_dialog_new (GTK_WINDOW(mainw),
-              GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_ERROR,
-              GTK_BUTTONS_CLOSE, _("Export of VCARD failed."));
-         else
-           dlg = gtk_message_dialog_new (GTK_WINDOW(mainw),
-              GTK_DIALOG_DESTROY_WITH_PARENT,GTK_MESSAGE_INFO, 
-              GTK_BUTTONS_CLOSE, _("VCARD exported to\n/tmp/vcard.vcf."));
-        gtk_dialog_run (GTK_DIALOG (dlg));
-        gtk_widget_destroy (dlg);
-        free(cmd);
-      }		  
-    }
-}
-
-static void
 new_contact (GtkWidget * widget, gpointer d)
 {
   struct person *p;
@@ -179,8 +170,7 @@ delete_contact (GtkWidget * widget, gpointer d)
       guint uid;
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
       if (gpe_question_ask (_("Really delete this contact?"), _("Confirm"), 
-			    "question", _("Delete"), "delete", _("Cancel"),
-			    "cancel", NULL) == 0)
+			    "question", "!gtk-cancel", NULL, "!gtk-delete", NULL, NULL) == 1)
 	{
 	  if (db_delete_by_uid (uid))
 	    update_display ();
@@ -243,11 +233,10 @@ selection_made (GtkTreeSelection *sel, GObject *o)
   guint id;
   struct person *p;
   GtkTreeModel *model;
-  GtkWidget *edit_button, *delete_button, *export_button;
+  GtkWidget *edit_button, *delete_button;
 
   edit_button = g_object_get_data (o, "edit-button");
   delete_button = g_object_get_data (o, "delete-button");
-  export_button = g_object_get_data (o, "export-button");
 
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
@@ -261,13 +250,11 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 		
       gtk_widget_set_sensitive (edit_button, TRUE);
       gtk_widget_set_sensitive (delete_button, TRUE);
-      gtk_widget_set_sensitive (export_button, TRUE);
     }
   else
     {
       gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_widget_set_sensitive (delete_button, FALSE);
-      gtk_widget_set_sensitive (export_button, FALSE);
     }
 }
 
@@ -392,7 +379,73 @@ update_display (void)
   do_search (G_OBJECT (search_entry), search_entry);
 }
 
-static GtkWidget*
+static gboolean
+list_button_release_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *list_store)
+{
+  if (b->button == 3)
+    return TRUE;
+
+  return FALSE;
+}
+
+static gboolean
+list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *list_store)
+{
+  if (b->button == 3)
+    {
+      gint x, y;
+      GtkTreePath *path;
+  
+      x = b->x;
+      y = b->y;
+      
+      if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+					 x, y,
+					 &path, NULL,
+					 NULL, NULL))
+	{
+	  GtkTreeIter iter;
+	  guint id;
+
+	  gtk_tree_model_get_iter (GTK_TREE_MODEL (list_store), &iter, path);
+
+	  gtk_tree_path_free (path);
+
+	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &id, -1);
+
+	  menu_uid = id;
+
+	  gtk_menu_popup (GTK_MENU (popup_menu), NULL, NULL, NULL, widget, b->button, b->time);
+	}
+    }
+
+  return FALSE;
+}
+
+static GtkItemFactoryEntry popup_items[] =
+{
+  { "/_Edit",		    NULL, menu_do_edit,           0, "<Item>" },
+  { "/_Delete",		    NULL, menu_do_delete,         0, "<StockItem>", GTK_STOCK_DELETE },
+  { "/_Save as ...",	    NULL, menu_do_save,           0, "<Item>" },
+  { "/_Send via Bluetooth", NULL, menu_do_send_bluetooth, 0, "<Item>", },
+};
+
+static GtkWidget *
+create_popup (GtkWidget *window)
+{
+  GtkAccelGroup *accel_group;
+  GtkItemFactory *item_factory;
+
+  accel_group = gtk_accel_group_new ();
+  item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
+  g_object_set_data_full (G_OBJECT (window), "<main>", item_factory, (GDestroyNotify) g_object_unref);
+  gtk_item_factory_create_items (item_factory, sizeof (popup_items) / sizeof (popup_items[0]), 
+				 popup_items, NULL);
+
+  return gtk_item_factory_get_widget (item_factory, "<main>");
+}
+
+static GtkWidget *
 create_main (void)
 {
   GtkWidget *main_window;
@@ -442,14 +495,6 @@ create_main (void)
   g_object_set_data (G_OBJECT (main_window), "delete-button", b);
   gtk_widget_set_sensitive (b, FALSE);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("export", 
-							gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
-  b = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Export"),
-			       _("Export"), _("Tap here to export this contact to VCARD."),
-			       pw, G_CALLBACK (export_contact), NULL);
-  g_object_set_data (G_OBJECT (main_window), "export-button", b);
-  gtk_widget_set_sensitive (b, FALSE);
-				
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
 			    _("Properties"), _("Tap here to configure the program."),
 			    G_CALLBACK (configure), NULL, -1);
@@ -498,6 +543,12 @@ create_main (void)
   g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "changed", G_CALLBACK (schedule_search), NULL);
 
+  g_signal_connect (G_OBJECT (list_view), "button_press_event", 
+		    G_CALLBACK (list_button_press_event), list_store);
+
+  g_signal_connect (G_OBJECT (list_view), "button_release_event", 
+		    G_CALLBACK (list_button_release_event), list_store);
+
   search_entry = entry1;
 
   pDetail = gtk_frame_new (_("Contact"));
@@ -544,6 +595,7 @@ main (int argc, char *argv[])
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
 
   mainw = create_main ();
+  popup_menu = create_popup (mainw);
   update_categories ();
   show_details (NULL);
 

@@ -20,6 +20,7 @@
 #include "support.h"
 #include "structure.h"
 #include "db.h"
+#include "main.h"
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
 void on_edit_save_clicked (GtkButton * button, gpointer user_data);

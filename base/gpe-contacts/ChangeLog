@@ -1,3 +1,27 @@
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (LDFLAGS, CFLAGS): Add libgpevtype and libmimedir.
+	(MEMBERS): Add export.
+
+	* export.c, export.h: New files.
+	
+	* main.h: New.
+	* editing.c, main.c: Include main.h.
+	* proto.h (update_display): Moved to main.h.
+
+	* main.c (menu_do_edit, menu_do_delete): New.
+	(export_contact): Deleted.
+	(delete_contact): Swap position of buttons in confirmation dialog.
+	(selection_made): Remove handling of export button.
+	(list_button_press_event, list_button_release_event): New.
+	(create_popup): New.
+	(create_main): Don't create export button.  Install signal
+	handlers for list view.
+	(main): Call create_popup.
+	
+	* support.h (get_widget, add_pixmap_directory, create_pixmap):
+	Delete old cruft.
+
 2004-02-25  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.18 released.

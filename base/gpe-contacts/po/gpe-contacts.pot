@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-22 15:34+0000\n"
+"POT-Creation-Date: 2004-02-25 23:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,101 +68,101 @@ msgstr ""
 msgid "Personal"
 msgstr ""
 
-#: main.c:175
+#: main.c:103
 msgid "All categories"
 msgstr ""
 
-#: main.c:205
+#: main.c:133
 msgid "Export of VCARD failed."
 msgstr ""
 
-#: main.c:209
+#: main.c:137
 msgid ""
 "VCARD exported to\n"
 "/tmp/vcard.vcf."
 msgstr ""
 
-#: main.c:253
+#: main.c:181
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:253 structure.c:176
+#: main.c:181 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:254 structure.c:177
+#: main.c:182 structure.c:177
 msgid "Delete"
 msgstr ""
 
-#: main.c:254 structure.c:177
+#: main.c:182 structure.c:177
 msgid "Cancel"
 msgstr ""
 
-#: main.c:513 gpe-contacts.desktop.in.h:1
+#: main.c:413 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:527
+#: main.c:427
 msgid "New contact"
 msgstr ""
 
-#: main.c:527
+#: main.c:427
 msgid "Tap here to add a new contact."
 msgstr ""
 
-#: main.c:533
+#: main.c:433
 msgid "Edit"
 msgstr ""
 
-#: main.c:534
+#: main.c:434
 msgid "Edit contact"
 msgstr ""
 
-#: main.c:534
+#: main.c:434
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:540
+#: main.c:440
 msgid "Delete contact"
 msgstr ""
 
-#: main.c:540
+#: main.c:440
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:547 main.c:548
+#: main.c:447 main.c:448
 msgid "Export"
 msgstr ""
 
-#: main.c:548
+#: main.c:448
 msgid "Tap here to export this contact to VCARD."
 msgstr ""
 
-#: main.c:554
+#: main.c:454
 msgid "Properties"
 msgstr ""
 
-#: main.c:554
+#: main.c:454
 msgid "Tap here to configure the program."
 msgstr ""
 
-#: main.c:560
+#: main.c:460
 msgid "Close"
 msgstr ""
 
-#: main.c:560
+#: main.c:460
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:592 main.c:616
+#: main.c:477 main.c:503
 msgid "Contact"
 msgstr ""
 
-#: main.c:599
+#: main.c:484
 msgid "Find:"
 msgstr ""
 
-#: main.c:605
+#: main.c:490
 msgid "in"
 msgstr ""
 

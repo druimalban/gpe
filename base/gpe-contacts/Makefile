@@ -28,15 +28,15 @@ endif
 CPPFLAGS += -D_GNU_SOURCE -DENABLE_NLS
 
 CPPFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration -ldisplaymigration -L../libgpepimc -lgpepimc
+LDFLAGS += -L../libdisplaymigration -ldisplaymigration -L../libgpepimc -lgpepimc -L../libgpevtype -lgpevtype `pkg-config --libs mimedir-1.0`
 
 LDFLAGS += -lsqlite
 
-CFLAGS = $(GTKCFLAGS) -I../libgpepimc -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
+CFLAGS = $(GTKCFLAGS) -I../libgpepimc -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0` -I../libgpevtype `pkg-config --cflags mimedir-1.0`
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = db editing main structure support configure old-db
+MEMBERS = db editing main structure support configure old-db export
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
