@@ -1,3 +1,7 @@
+2004-09-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * namedetail.c: Changed packing.
+
 2004-08-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
     Released Version 0.28

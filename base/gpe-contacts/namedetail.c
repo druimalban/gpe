@@ -72,10 +72,14 @@ do_edit_name_detail(GtkWindow *parent, struct person *p)
   gtk_table_attach(GTK_TABLE(table),lfamily,0,1,2,3,GTK_FILL,GTK_FILL,0,0);
   gtk_table_attach(GTK_TABLE(table),lsuffix,0,1,3,4,GTK_FILL,GTK_FILL,0,0);
   
-  gtk_table_attach(GTK_TABLE(table),etitle,1,2,0,1,GTK_FILL,GTK_FILL,0,0);
-  gtk_table_attach(GTK_TABLE(table),egiven,1,2,1,2,GTK_FILL,GTK_FILL,0,0);
-  gtk_table_attach(GTK_TABLE(table),efamily,1,2,2,3,GTK_FILL,GTK_FILL,0,0);
-  gtk_table_attach(GTK_TABLE(table),esuffix,1,2,3,4,GTK_FILL,GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),etitle,1,2,0,1,GTK_FILL | GTK_EXPAND,
+                   GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),egiven,1,2,1,2,GTK_FILL | GTK_EXPAND,
+                   GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),efamily,1,2,2,3,GTK_FILL | GTK_EXPAND,
+                   GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),esuffix,1,2,3,4,GTK_FILL | GTK_EXPAND,
+                   GTK_FILL,0,0);
 
   /* fill in values */
   v = db_find_tag(p,"TITLE");
