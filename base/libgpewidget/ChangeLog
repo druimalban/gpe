@@ -1,3 +1,7 @@
+2003-02-21  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Depends): Add libgpewidget1-locale*.
+
 2003-02-20  Philip Blundell  <pb@nexus.co.uk>
 
 	* po/de.po: New file from Translation Project.
