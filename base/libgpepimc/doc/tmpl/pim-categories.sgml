@@ -1,0 +1,59 @@
+<!-- ##### SECTION Title ##### -->
+pim-categories
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT gpe_pim_category ##### -->
+<para>
+
+</para>
+
+@name: 
+@id: 
+
+<!-- ##### FUNCTION gpe_pim_categories_init ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_pim_categories_list ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_pim_category_new ##### -->
+<para>
+
+</para>
+
+@title: 
+@id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION gpe_pim_category_name ##### -->
+<para>
+
+</para>
+
+@id: 
+@Returns: 
+
+

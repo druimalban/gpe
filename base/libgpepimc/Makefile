@@ -50,6 +50,11 @@ install-program: $(SONAME)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
+.PHONY: doc
+doc:
+	make -C doc PACKAGE=$(PACKAGE)
+
+
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
 -include $(DEPS)
