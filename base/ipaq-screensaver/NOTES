@@ -1,0 +1,10 @@
+short LED blink
+	led 1 0 1 20
+
+/etc/suspend-scripts > S40led
+
+#!/bin/sh
+if [ -x /usr/bin/led ]; then
+	/usr/bin/led 0 0 0 0
+fi
+

@@ -1,0 +1,8 @@
+Package: ipaq-screensaver
+Priority: extra
+Version: 0.1
+Architecture: arm
+Section: base
+Maintainer: Nils Faerber <nils@kernelconcepts.de>
+Depends: libc6
+Description: ipaq-screensaver, a three timeouts battery/screen saver.
