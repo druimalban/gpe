@@ -1,5 +1,26 @@
 2002-08-03  Philip Blundell  <philb@gnu.org>
 
+	* main.c (main): Don't force window size.
+
+	* configure.c: New file.
+
+	* todo-sql.c (new_category_internal): New.
+	(new_category): Likewise.
+	(del_category): Likewise.
+	(item_data_callback): Likewise.
+	(item_callback): Use new database format.
+	(push_item): Likewise.
+	(sql_start): Likewise.  Don't create ~/.gpe.
+	(category_callback): New.
+	(new_item): Likewise.
+	(sql_add_list): Delete.
+	(del_list): Likewise.
+	(add_item_sql): Likewise.
+	(add_new_item): Likewise.
+	(new_unique_id): Likewise.
+	(add_new_item_internal): Likewise.
+	(delete_item): Use new database format.  Take only one argument.
+	
 	* todo-ui.c (edit_item): Renamed from edit_todo.  Add frame
 	containing check buttons for all categories.  Don't force window
 	size.
@@ -10,8 +31,6 @@
 	delete_item.
 	(click_ok): Free old summary and description if not NULL.  Set new
 	summary and description only if not empty.  Use new_item.
-
-	* main.c (main): Don't force window size.
 
 	* todo.h: Add copyright header and multiple inclusion guard.
 	(struct todo_list): Delete.

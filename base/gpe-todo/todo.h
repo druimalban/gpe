@@ -27,6 +27,7 @@ struct todo_item
   const char *what;
   const char *summary;
   item_state state;
+  GSList *categories;
 };
 
 struct todo_category
@@ -54,5 +55,7 @@ extern void configure (GtkWidget *w, gpointer list);
 extern void categories_menu (void);
 
 extern void refresh_items (void);
+
+extern gboolean category_matches (GSList *valid, guint id);
 
 #endif

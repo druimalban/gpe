@@ -22,6 +22,12 @@
 
 #define _(_x) gettext(_x)
 
+struct category_map
+{
+  GtkWidget *w;
+  struct todo_category *c;
+};
+
 struct edit_todo
 {
   GtkWidget *text;
@@ -30,14 +36,21 @@ struct edit_todo
   GtkWidget *duedate;
 
   struct todo_item *item;
-  struct todo_list *list;
 
   item_state state;
+  
+  GSList *category_map;
 };
 
 static void
 destroy_user_data (gpointer p)
 {
+  GSList *iter;
+  struct edit_todo *t = (struct edit_todo *)p;
+  for (iter = t->category_map; iter; iter = iter->next)
+    g_free (iter->data);
+  if (t->category_map)
+    g_slist_free (t->category_map);
   g_free (p);
 }
 
@@ -200,8 +213,14 @@ edit_item (struct todo_item *item)
       for (iter = categories; iter; iter = iter->next)
 	{
 	  struct todo_category *c = iter->data;
+	  struct category_map *m = g_malloc (sizeof (struct category_map));
 	  GtkWidget *w = gtk_check_button_new_with_label (c->title);
+	  m->c = c;
+	  m->w = w;
+	  if (item && category_matches (item->categories, c->id))
+	    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
 	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+	  t->category_map = g_slist_append (t->category_map, m);
 	}
       sw = gtk_scrolled_window_new (NULL, NULL);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),

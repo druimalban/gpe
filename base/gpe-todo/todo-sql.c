@@ -86,10 +86,12 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
     {
       if (!strcmp (argv[0], "SUMMARY"))
 	i->summary = g_strdup (argv[1]);
-      if (!strcmp (argv[0], "DESCRIPTION"))
+      else if (!strcmp (argv[0], "DESCRIPTION"))
 	i->what = g_strdup (argv[1]);
-      if (!strcmp (argv[0], "STATE"))
+      else if (!strcmp (argv[0], "STATE"))
 	i->state = atoi (argv[1]);
+      else if (!strcmp (argv[0], "CATEGORY"))
+	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
     }
 
   return 0;
@@ -207,8 +209,8 @@ void
 push_item (struct todo_item *i)
 {
   char *err;
-  int r;
   gboolean rollback = FALSE;
+  GSList *iter;
 
   if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
     goto error;
@@ -229,6 +231,12 @@ push_item (struct todo_item *i)
       localtime_r (&i->time, &tm);
       strftime (d_buf, sizeof(d_buf), "%F", &tm);
       if (insert_values (sqliteh, i->id, "DUE", "%q", d_buf))
+	goto error;
+    }
+
+  for (iter = i->categories; iter; iter = iter->next)
+    {
+      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", iter->data))
 	goto error;
     }
 
