@@ -19,6 +19,7 @@ LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt
 CC = gcc
 
 MEMBERS  = main applets parser suid
+MEMBERS += misc
 MEMBERS += unimplemented
 MEMBERS += timeanddate
 MEMBERS += appmgr_setup ../gpe-appmgr/package ../gpe-appmgr/cfg
@@ -28,6 +29,7 @@ MEMBERS += network
 MEMBERS += theme
 MEMBERS += keyctl
 MEMBERS += ownerinfo
+MEMBERS += login-setup
 MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
 MEMBERS += users/interface users/callbacks  
 
@@ -42,7 +44,7 @@ gpe-conf: $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 	strip gpe-conf
 	cp gpe-conf gpe-conf.pc
-	
+
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
 	strip gpe-confsuid

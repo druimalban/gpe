@@ -23,7 +23,6 @@
 #include <gtk/gtk.h>
 #define _XOPEN_SOURCE /* For GlibC2 */
 #include <time.h>
-/* #include <libgen.h> */ /* for dirname() */
 
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
@@ -31,19 +30,13 @@
 #include <gpe/spacing.h>
 
 #include "applets.h"
+#include "misc.h"
 #include "ownerinfo.h"
 
 static
 void File_Selected (char *file,
 		    gpointer data);
 
-char *dirname(char *s)
-{
-	int i;
-	for(i=strlen(s);i && s[i]!='/'; i--);
-	s[i]=0;
-	return s;
-}
 #define CURRENT_DATAFILE_VER 2
 
 /* WARNING: don't mess with this! */
@@ -198,7 +191,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   /* either we can write to the file... */
   if ((access (GPE_OWNERINFO_DATA, W_OK) == 0) ||
       /* ...or we are allowed to write in this directory, and the file does not yet exist */
-      (((access (my_dirname (g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
+      (((access (gpe_dirname (g_strdup(GPE_OWNERINFO_DATA)), W_OK)) == 0) &&
        (access (GPE_OWNERINFO_DATA, F_OK) != 0)))
     datafile_writable = TRUE;
   else
@@ -332,7 +325,8 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y | GTK_EXPAND), 0, 0);
   
-  photo = create_pixmap (table, ownerphotofile);
+  /* these values are just a dummy size for the initial display */
+  photo = gpe_create_pixmap (table, ownerphotofile, 24, 32);
   gtk_container_add (GTK_CONTAINER (button), photo);
 
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -577,66 +571,7 @@ void
 choose_photofile              (GtkWidget     *button,
 			       gpointer       user_data)
 {
-  ask_user_a_file (my_dirname (ownerphotofile), NULL, File_Selected, NULL, NULL);
+  ask_user_a_file (gpe_dirname (ownerphotofile), NULL, File_Selected, NULL, NULL);
 #warning FIXME: update the image in the button here  
   /* gtk_widget_draw (GTK_WIDGET (button), NULL); */
-}
-
-/* This is an internally used function to create pixmaps. */
-GtkWidget*
-create_pixmap                          (GtkWidget       *widget,
-                                        const gchar     *filename)
-{
-  GtkWidget *pixmap;
-  GdkPixbuf *icon;
-  
-  gint width, height;
-  gfloat scale, scale_width = 2.72, scale_height = 3.14;
-
-  const guint maxwidth = 80, maxheight = 80;
-  
-  icon = gpe_find_icon (filename);
-  
-  width  = gdk_pixbuf_get_width (icon);
-  height = gdk_pixbuf_get_height (icon);
-
-  /* g_message ("image is %d x %d", width, height); */
-
-  if (width > maxwidth)
-    scale_width = (gfloat) maxwidth / width;
-  else
-    scale_width = 1.0;
-
-  if (height > maxheight)
-    scale_height = (gfloat) maxheight / height;
-  else
-    scale_height = 1.0;
-
-  /* g_message ("scale_width: %f, scale_height: %f", scale_width, scale_height); */
-
-  scale = scale_width < scale_height ? scale_width : scale_height;
-
-  /* g_message ("scale: %f", scale); */
-  
-  pixmap = gpe_render_icon (widget->style,
-				gdk_pixbuf_scale_simple
-				(icon, width * scale, height * scale, GDK_INTERP_BILINEAR));
-  
-  return pixmap;  
-}
-
-/* MacOS X doesn't have a dirname... */
-char
-*my_dirname (char *s) {
-  int i;
-  for (i=strlen (s); i && s[i]!='/'; i--);
-  s[i] = 0;
-  return s;
-}
-
-char
-*my_basename (char *s) {
-  int i;
-  for (i=strlen (s); i && s[i]!='/'; i--);
-  return s+i+1;
 }

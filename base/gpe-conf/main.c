@@ -34,6 +34,7 @@
 #include "keyctl.h"
 #include "sleep.h"
 #include "ownerinfo.h"
+#include "login-setup.h"
 #include "users.h"
 
 #include "gpe/init.h"
@@ -79,7 +80,8 @@ struct Applet applets[]=
     { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Addresses"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance Setup"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
-    { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore , "Owner" ,"ownerinfo","Owner Information"},
+    { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore, "Owner", "ownerinfo", "Owner Information"},
+    { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Unimplemented_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
