@@ -856,7 +856,7 @@ about a contact.
 
 	<widget>
 	  <class>GtkEntry</class>
-	  <name>entry16</name>
+	  <name>name-entry</name>
 	  <can_focus>True</can_focus>
 	  <editable>True</editable>
 	  <text_visible>True</text_visible>
@@ -880,7 +880,7 @@ about a contact.
 
 	<widget>
 	  <class>GtkEntry</class>
-	  <name>entry17</name>
+	  <name>summary-entry</name>
 	  <can_focus>True</can_focus>
 	  <editable>True</editable>
 	  <text_visible>True</text_visible>

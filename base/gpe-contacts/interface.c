@@ -490,8 +490,8 @@ create_edit (void)
   GtkWidget *scrolledwindow3;
   GtkWidget *viewport1;
   GtkWidget *edit_catlist;
-  GtkWidget *entry16;
-  GtkWidget *entry17;
+  GtkWidget *name_entry;
+  GtkWidget *summary_entry;
   GtkWidget *label34;
   GtkWidget *label35;
   GtkWidget *label16;
@@ -711,23 +711,23 @@ create_edit (void)
   gtk_container_add (GTK_CONTAINER (viewport1), edit_catlist);
   gtk_list_set_selection_mode (GTK_LIST (edit_catlist), GTK_SELECTION_MULTIPLE);
 
-  entry16 = gtk_entry_new ();
-  gtk_widget_set_name (entry16, "entry16");
-  gtk_widget_ref (entry16);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "entry16", entry16,
+  name_entry = gtk_entry_new ();
+  gtk_widget_set_name (name_entry, "name_entry");
+  gtk_widget_ref (name_entry);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "name_entry", name_entry,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (entry16);
-  gtk_table_attach (GTK_TABLE (table1), entry16, 1, 2, 0, 1,
+  gtk_widget_show (name_entry);
+  gtk_table_attach (GTK_TABLE (table1), name_entry, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  entry17 = gtk_entry_new ();
-  gtk_widget_set_name (entry17, "entry17");
-  gtk_widget_ref (entry17);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "entry17", entry17,
+  summary_entry = gtk_entry_new ();
+  gtk_widget_set_name (summary_entry, "summary_entry");
+  gtk_widget_ref (summary_entry);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "summary_entry", summary_entry,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (entry17);
-  gtk_table_attach (GTK_TABLE (table1), entry17, 1, 2, 1, 2,
+  gtk_widget_show (summary_entry);
+  gtk_table_attach (GTK_TABLE (table1), summary_entry, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 

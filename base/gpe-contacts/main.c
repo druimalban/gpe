@@ -16,10 +16,6 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *mainw;
-  GtkWidget *detailview;
-  GtkWidget *edit;
-  GtkWidget *calender;
-  GtkWidget *fileselection1;
 
 #ifdef ENABLE_NLS
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
