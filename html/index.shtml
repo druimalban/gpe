@@ -5,9 +5,9 @@
 <p>
 The GPE Palmtop Environment aims to
 provide a Free Software GUI environment for palmtop/handheld computers
-running the GNU/Linux&trade; operating system.  GPE uses the <A
+running the GNU/Linux&#8482; operating system.  GPE uses the <A
 href="http://www.xfree86.org">X Window System</A>, and the <A
-href="http://www.gtk.org/">GTK+ widget toolkit</A>.
+href="http://www.gtk.org/">GTK+-2.2 widget toolkit</A>.
 </p>
 
 <p>
@@ -24,4 +24,15 @@ importantly, the GPE environment fixes standards for program interaction,
 such as SQL, XML, and other data schemas.
 </p>
 
+<p>
+GPE Quick Links: 
+<a href="http://handhelds.org/z/wiki/GPE">Wiki Page</a> 
+| 
+<a href="http://handhelds.org/pipermail/gpe/">Mailing List Archive</a> 
+|
+<a href="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">ViewCVS</a>
+| 
+<a href="http://ipkgfind.handhelds.org/result.phtml?query=gpe*&searchtype=package&section=">List
+Packages</a>
+</p>
 <!--#include virtual="includes/foot.shtml"-->

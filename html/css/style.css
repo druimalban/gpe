@@ -10,11 +10,11 @@ p,li {
 }
 
 h1,h2,h3,h4,h5,h6 {
-	font-family:	helvetica, sans-serif;
+	font-family:	Vera, Georgia, Verdana, Geneva, Helvetica, Arial, sans-serif;
 }
 
 th {
-	font-family:	helvetica, sans-serif;
+	font-family:	Vera, Georgia, Verdana, Geneva, Helvetica, Arial, sans-serif;
 	text-align:	left;
 }
 
@@ -46,11 +46,11 @@ hr {
 div.menu {
 	margin-top:	6pt;
 	margin-bottom:	2pt;
-	font-family:	sans-serif;
+	font-family:	Vera, Georgia, Verdana, Geneva, Helvetica, Arial, sans-serif;
 }
 
 div.footer {
-	margin-top:	70pt;
+	margin-top:	6pt;
 	margin-bottom:	2pt;
-	font-family:	sans-serif;
+	font-family:	Vera, Georgia, Verdana, Geneva, Helvetica, Arial, sans-serif;
 }
