@@ -151,7 +151,6 @@ static void enter_callback (GtkWidget * widget, GtkWidget * entry);
 static void enter_newuser_callback (GtkWidget * widget, gpointer h);
 static void hard_key_insert (gchar c);
 static gboolean key_press_event (GtkWidget * window, GdkEventKey * event);
-static void mapped (GtkWidget * window);
 
 static locale_item_t *locale_parse_line (char *p);
 static GSList *locale_get_list (const char *flocale);

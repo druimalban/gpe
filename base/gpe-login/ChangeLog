@@ -1,3 +1,10 @@
+2003-07-31  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (mapped): Delete prototype.
+
+	* Makefile (gpe-lock-display): Use pkg-config x11 rather than
+	hardcoded -L /usr/X11R6.
+
 2003-07-21  Phil Blundell  <pb@nexus.co.uk>
 
 	* gpe-login.xinit: Remove geometry and transparency options.

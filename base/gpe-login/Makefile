@@ -44,7 +44,7 @@ gpe-login: gpe-login.o nocursor.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_OWNERINFO) -lcrypt
 
 gpe-lock-display: gpe-lock-display.o
-	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
+	$(CC) -o $@ $^ `pkg-config --libs x11`
 
 install: install-scripts
 
