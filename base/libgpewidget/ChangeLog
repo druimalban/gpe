@@ -1,5 +1,9 @@
 2003-09-09  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.68 released.
+
+2003-09-09  Philip Blundell  <philb@gnu.org>
+
 	* gpeiconlist.gob (_recalc_size): Use gtk_widget_set_usize instead
 	of gtk_drawing_area_size.  Call viewport's size_allocate method
 	rather than manually fiddling with the scrollbar adjustments.
