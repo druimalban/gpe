@@ -34,3 +34,6 @@ extern GtkWidget *bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf);
 
 extern GdkWindow *dock_window;
 extern void schedule_message_delete (guint id, guint time);
+
+extern const gchar *icon_name_for_class (int class);
+

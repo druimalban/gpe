@@ -279,6 +279,33 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
   gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, widget, 1, GDK_CURRENT_TIME);
 }
 
+const gchar *
+icon_name_for_class (int class)
+{
+  const gchar *pixbuf_name;
+
+  switch (class & 0x1f00)
+    {
+    case 0x100:
+      pixbuf_name = "computer";
+      break;
+    case 0x200:
+      pixbuf_name = "cellphone";
+      break;
+    case 0x300:
+      pixbuf_name = "network";
+      break;
+    case 0x600:
+      pixbuf_name = "printer";
+      break;
+    default:
+      pixbuf_name = "bt-logo";
+      break;
+    }
+
+  return pixbuf_name;
+}
+
 static gboolean
 run_scan (gpointer data)
 {
@@ -347,24 +374,7 @@ run_scan (gpointer data)
       memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
       bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
 
-      switch (bd->class & 0x1f00)
-	{
-	case 0x100:
-	  bd->pixbuf = gpe_find_icon ("computer");
-	  break;
-	case 0x200:
-	  bd->pixbuf = gpe_find_icon ("cellphone");
-	  break;
-	case 0x300:
-	  bd->pixbuf = gpe_find_icon ("network");
-	  break;
-	case 0x600:
-	  bd->pixbuf = gpe_find_icon ("printer");
-	  break;
-	default:
-	  bd->pixbuf = gpe_find_icon ("bt-logo");
-	  break;
-	}
+      bd->pixbuf = gpe_find_icon (icon_name_for_class (bd->class));
 
       gdk_pixbuf_ref (bd->pixbuf);
 

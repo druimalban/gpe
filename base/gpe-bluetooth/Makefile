@@ -102,7 +102,7 @@ install-program: all $(GLADE) bluez.conf
 clean:
 	rm -f $(PACKAGE) $(OBJS) pin-ui.c pin-dbus.c pin-ui.h
 
-include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.translation-auto-linguas
 include $(BUILD)/Makefile.dpkg_ipkg
 
 -include $(DEPS)

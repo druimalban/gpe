@@ -105,7 +105,7 @@ obex_choose_destination (gpointer data)
       char name[248];
       int class;
       GdkPixbuf *pixbuf = NULL;
-      gchar *pixbuf_name;
+      const gchar *pixbuf_name;
 
       memset (name, 0, sizeof (name));
       if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof (name), name, 25000) < 0)
@@ -113,30 +113,9 @@ obex_choose_destination (gpointer data)
 
       class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
 
-      switch (class & 0x1f00)
-	{
-	case 0x100:
-	  pixbuf_name = "computer";
-	  break;
-	case 0x200:
-	  pixbuf_name = "cellphone";
-	  break;
-	case 0x300:
-	  pixbuf_name = "network";
-	  break;
-	case 0x600:
-	  pixbuf_name = "printer";
-	  break;
-	default:
-	  pixbuf_name = "bt-logo";
-	  break;
-	}
-
-      if (pixbuf_name)
-	pixbuf = gpe_find_icon_scaled (pixbuf_name, GTK_ICON_SIZE_MENU);
-
-      if (pixbuf)
-	gdk_pixbuf_ref (pixbuf);
+      pixbuf_name = icon_name_for_class (class);
+      pixbuf = gpe_find_icon_scaled (pixbuf_name, GTK_ICON_SIZE_MENU);
+      gdk_pixbuf_ref (pixbuf);
       
       str = g_strdup (name);
 
@@ -204,7 +183,7 @@ obex_object_push (const gchar *filename, const gchar *mimetype, const gchar *dat
 		  GCallback callback, gpointer cb_data)
 {
   struct obex_push_req *req;
-  GThread *scan_thread;
+  GThread *thread;
 
   req = g_new (struct obex_push_req, 1);
 
@@ -215,9 +194,9 @@ obex_object_push (const gchar *filename, const gchar *mimetype, const gchar *dat
   req->callback = callback;
   req->cb_data = cb_data;
 
-  scan_thread = g_thread_create ((GThreadFunc) obex_choose_destination, req, FALSE, NULL);
+  thread = g_thread_create ((GThreadFunc) obex_choose_destination, req, FALSE, NULL);
 
-  if (scan_thread == NULL)
+  if (thread == NULL)
     {
       g_free (req);
       return FALSE;
