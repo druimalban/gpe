@@ -1,5 +1,5 @@
 PACKAGE = gpe-julia
-VERSION = 0.0.3
+VERSION = 0.0.4
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
