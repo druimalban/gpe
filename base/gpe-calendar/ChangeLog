@@ -1,3 +1,7 @@
+2002-12-15  Philip Blundell  <philb@gnu.org>
+
+	* po/pt_PT.po: Set character set to iso-8859-15.
+
 2002-10-31  Luis Oliveira  <luis@handhelds.org>
 
        * event-db.c (event_db_destroy): Fix memory leak.
