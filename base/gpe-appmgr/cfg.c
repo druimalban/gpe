@@ -41,7 +41,7 @@ void cfg_load ()
 	home_dir = (char*) getenv("HOME");
 	if (home_dir)
 	{
-		s = (char*) malloc (strlen (home_dir) + strlen (config_path) + 1);
+		s = (char*) malloc (strlen (home_dir) + strlen (config_path) + 2);
 		sprintf (s, "%s/%s", home_dir, config_path);
 		p = package_read (s);
 		free (s);
@@ -97,6 +97,8 @@ void cfg_load ()
 			cfg_options.tab_view = TAB_VIEW_LIST;
 		}
 	}
+
+	package_free (p);
 }
 
 void cfg_load_if_newer (time_t when)
