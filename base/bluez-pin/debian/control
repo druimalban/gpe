@@ -1,0 +1,14 @@
+Source: bluez-pin
+Section: net
+Priority: optional
+Maintainer: Philip Blundell <pb@handhelds.org>
+Build-Depends: debhelper (>> 3.0.0), dbus-glib-1-dev, libgtk2.0-dev, libbluetooth1-dev
+Standards-Version: 3.5.2
+
+Package: bluez-pin
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Bluetooth PIN helper with D-BUS support
+ Bluez-pin provides a user interface for entering the PIN codes needed
+ when pairing one Bluetooth device with another.
+
