@@ -1,6 +1,8 @@
 <!--#set var="addtitle" value="CVS"-->
 <!--#set var="pagename" value="cvs"-->
 <!--#include virtual="includes/head.shtml"-->
+<!--#set var="author" value="Colin Marquardt"-->
+<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 
 <H2>Accessing the GPE CVS repository</H2>
 <p>
