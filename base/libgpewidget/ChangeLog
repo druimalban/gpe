@@ -1,3 +1,10 @@
+2003-03-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* translabel.c (gtk_label_new_with_translation): Remove typecast
+	to fix warning.
+
+	* windows.c (gpe_get_window_icon): Add typecast to fix warning.
+
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
 	* smallbox.c (smallbox_x): Try to use correct spacing.  Remove

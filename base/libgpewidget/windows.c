@@ -133,7 +133,7 @@ gpe_get_window_icon (Display *dpy, Window w)
 					 8,
 					 w, h,
 					 w * 4,
-					 g_free,
+					 (GdkPixbufDestroyNotify)g_free,
 					 NULL);
     }
 

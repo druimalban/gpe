@@ -135,7 +135,7 @@ gtk_label_new_with_translation (gchar *domain, gchar *string)
   g_object_set_data (G_OBJECT (w), "translate-domain", domain);
   g_object_set_data (G_OBJECT (w), "translate-string", string);
 
-  gtk_widget_add_translation_hook (w, G_CALLBACK (label_translation), NULL);
+  gtk_widget_add_translation_hook (w, label_translation, NULL);
 
   return w;
 }
