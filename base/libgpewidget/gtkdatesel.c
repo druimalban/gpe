@@ -192,6 +192,7 @@ gtk_date_sel_size_request (GtkWidget      *widget,
   
   sel->week_width = gdk_string_width (widget->style->font, "Week 88");
 
+  sel->day_width = 0;
   for (i = 0; i < 7; i++)
     {
       tm.tm_wday = i;
@@ -202,6 +203,7 @@ gtk_date_sel_size_request (GtkWidget      *widget,
     }
   sel->day_width += gdk_string_width (widget->style->font, ", 88");
   
+  sel->month_width = 0;
   for (i = 0; i < 11; i++)
     {
       tm.tm_mon = i;
