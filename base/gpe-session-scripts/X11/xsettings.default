@@ -1,2 +1,3 @@
 Gtk/FontName:S:Sans 8
 Net/ThemeName:S:Angelistic
+Gtk/IconSizes:S:gtk-dialog=32,32:gtk-button=16,16
