@@ -1,5 +1,8 @@
 2002-11-15  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.setup (PATH): Set suspend button to soft mode.
+	* gpe-login.keylaunchrc: Add suspend button handling.
+	
 	* X11/Xserver: Tweak iPAQ model handling.  Add support for H3900.
 
 2002-10-25  Philip Blundell  <philb@gnu.org>

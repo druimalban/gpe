@@ -2,6 +2,8 @@
 
 PATH=$PATH:/usr/X11R6/bin:/usr/bin
 
+echo 1 > /proc/sys/ts/suspend_button_mode
+
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
 ipaq-sleep -u 60 -o 30 -n &
 
