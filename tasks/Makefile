@@ -109,7 +109,7 @@ DEP_gpe-task-base = \
     hotplug-dbus
 #FIXME: could be refined (contains hardware dependant packages)
 
-VER_gpe-collateral-gtk2 = 0.03
+VER_gpe-collateral-gtk2 = 0.04
 DEP_gpe-collateral-gtk2 = \
     libgtk2.0-0, \
     gtk2-theme-angelistic, \
@@ -169,7 +169,7 @@ DEP_gpe-task-extra-apps = \
     greader
 
 #------------------------------------------ Games
-VER_gpe-task-games = 0.11
+VER_gpe-task-games = 0.2
 DEP_gpe-task-games = \
     gpe-tetris2, \
     xdemineur, \
