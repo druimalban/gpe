@@ -10,6 +10,8 @@ all: gpe-todo
 
 install: all
 	install -D gpe-todo $(DESTDIR)/usr/bin/gpe-todo
+	install -D gpe-todo.menu $(DESTDIR)/usr/lib/menu/gpe-todo
+	install -D gpe-todo.png $(DESTDIR)/usr/share/pixmaps/gpe-todo.png
 	strip $(DESTDIR)/usr/bin/gpe-todo
 
 ipkg:
