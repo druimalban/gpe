@@ -32,7 +32,7 @@
 struct edit_state
 {
   GtkWidget *deletebutton;
-  GtkWidget *notebooktype;
+  GtkWidget *notebooktype, *notebook;
 
   GtkWidget *startdate, *enddate;
   GtkWidget *starttime, *endtime;
@@ -1055,6 +1055,7 @@ build_edit_event_window (void)
 			    labelrecurpage);
   gtk_widget_grab_focus (summaryentry);
 
+  s->notebook = notebook;
   s->deletebutton = buttondelete;
   s->starttime = starttime;
   s->endtime = endtime;
@@ -1146,6 +1147,9 @@ new_event (time_t t, guint timesel)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), FALSE);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone), TRUE);
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebook), 0);
       gtk_entry_set_text (GTK_ENTRY (s->summary), "");
 #if GTK_MAJOR_VERSION >= 2
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)), "", -1);
@@ -1197,7 +1201,7 @@ edit_event (event_t ev)
       localtime_r (&end, &tm);
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->endtime)->entry), buf);
-      
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebook), 0);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       
