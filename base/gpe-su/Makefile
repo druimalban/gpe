@@ -4,37 +4,23 @@ DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.10
 
-LINGUAS = nl pt
+LINGUAS = nl pt fr sk cs de sv ro
 
 MEMBERS = gpe-su
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lgpewidget -lutil
+CPPFLAGS += $(STANDARD_CPPFLAGS)
+CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
-CPPFLAGS += -D_GNU_SOURCE
-
-CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdisplaymigration
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = $(GTKLDFLAGS) -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-LDFLAGS = $(GTKLDFLAGS)
-endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+LDFLAGS += -lutil
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
 BUILD = ../build
 else
-CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
 
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 

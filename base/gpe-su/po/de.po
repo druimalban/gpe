@@ -1,0 +1,27 @@
+# German translation for gpe-su.
+# Copyright (C) 2003 Phil Blundell <pb@debian.org>
+# This file is distributed under the same license as the gpe-su package.
+# Colin Marquardt <colin@marquardt-home.de>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-su 0.09\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2003-09-08 21:19+0200\n"
+"Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-su.c:164
+msgid "Enter password for root:"
+msgstr "Passwort fÅ¸r root eingeben:"
+
+#: gpe-su.desktop.in.h:1
+msgid "Root shell"
+msgstr "Root-Shell"
+
+#: gpe-su.desktop.in.h:2
+msgid "gpe-su"
+msgstr "gpe-su"
