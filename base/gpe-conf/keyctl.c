@@ -78,6 +78,17 @@ t_buttondef buttondef[NUM_BUTTONS] = {
 
 static int active_button = 0;
 
+struct gpe_icon local_icons[] = {
+	{ "ipaq" , "ipaq-s1"},
+/*	{ "button1", PREFIX "/share/pixmaps/button1.png" }, 
+	{ "button2", PREFIX "/share/pixmaps/button2.png" }, 
+	{ "button3", PREFIX "/share/pixmaps/button3.png" }, 
+	{ "button4", PREFIX "/share/pixmaps/button4.png" }, 
+	{ "button5", PREFIX "/share/pixmaps/button5.png" }, 
+*/	{ NULL, NULL }
+};
+	
+	
 char *default_keyctl_conf[] = {
 	"key=???Pressed XF86AudioRecord:Record Memo:gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",
 	"key=???XF86Calendar:Calendar:gpe-calendar",
@@ -249,6 +260,9 @@ Keyctl_Build_Objects ()
 	GtkWidget *bFile = gtk_button_new_from_stock(GTK_STOCK_OPEN);
 	GtkWidget *table = gtk_table_new(3,2,FALSE);
 	int i;
+	
+	
+	gpe_load_icons(local_icons);
 	
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
 					GTK_POLICY_NEVER,

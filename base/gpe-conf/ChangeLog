@@ -1,9 +1,13 @@
 2003-11-16	Florian Boor  	<florian.boor@kernelconcepts.de>
-	* keyctl.c: Fixed several bugs in data handling. Still open:
+	* main.c: Removed obsolete loading of default-bg pixmap.
+	          Moved loading of ipaq bitmap to keyctl module.
+	* keyctl.c: Fixed several bugs in data handling. 
+	            Added loading of necessary pixmaps.
+	Still open:
 	            - Pixmaps
 				- Loading of configuration
 				- Saving
-				- Special functions
+				- Special functions	
 	
 2003-11-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* keyctl.c: Third step of major design changes, currently broken.

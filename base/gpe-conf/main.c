@@ -134,11 +134,9 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "new" },
   { "lock" },
-  { "ipaq" , "ipaq-s1"},
   { "exit" },
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
-  { "default-bg", PREFIX "/share/pixmaps/gpe-default-bg.png" }, 
   { "menu-insert", PREFIX "/share/pixmaps/menu-insert.png" }, 
   { "menu-eject", PREFIX "/share/pixmaps/menu-eject.png" }, 
   { "menu-suspend", PREFIX "/share/pixmaps/menu-suspend.png" }, 
@@ -150,7 +148,7 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-#define count_icons 19
+#define count_icons 17
 
 int applets_nb = sizeof(applets) / sizeof(struct Applet);
 
