@@ -1,5 +1,10 @@
 When			Who				Where						What
 
+08.04.2003		Florian			cfgfile.c					Fixed several minor bugs in string and interface handling.
+								network.c					Network interfaces are now added to auto up list. 
+								suid.c
+								cardinfo.c					Changed button order.
+
 07.04.2003		Phil			cardinfo.c				Add missing include <time.h>.
 								pcmcia/*		Avoid need for kernel source.
 								Makefile		Add -I. to CPPFLAGS

@@ -46,7 +46,7 @@ gchar last_char(gchar* s);
 gint count_char(gchar* s, gchar c);
 gint get_first_char(gchar* s);
 gint get_param_val(gchar* line, gchar* param, gchar* value);
-gint subst_val(gchar* line, gchar* value);
+gchar *subst_val(gchar* line, gchar* value);
 
 gchar* get_file_var(const gchar *file, const gchar *var)
 {
@@ -91,7 +91,7 @@ gchar* get_file_var(const gchar *file, const gchar *var)
   return delim;
 }
 
-gint subst_val(gchar* line, gchar* value)
+gchar *subst_val(gchar* line, gchar* value)
 {
 	gchar param[255];
 	gchar tmpval[255];
@@ -99,13 +99,14 @@ gint subst_val(gchar* line, gchar* value)
 	if (get_first_char(value) != -1)
 	{
 		get_param_val(line,param,tmpval);
-		sprintf(line,"\t%s %s",param,value);
+		free(line);
+		line = g_strdup_printf("\t%s %s",param,value);
 	}
 	else	// remove line
 	{
 		sprintf(line,"\0"); 
 	}	
-	return 0;
+	return line;
 }
 
 gint get_param_val(gchar* line, gchar* param, gchar* value)
@@ -370,6 +371,21 @@ void add_line(gint pos, gchar* line)
 	strcpy(configtext[pos],line);
 }
 
+
+gchar *get_iflist()
+{
+	gint i;
+	gchar *result = malloc(256*sizeof(gchar));
+	result[0] = '\0';
+	for (i=0;i<iflen;i++)
+	{
+		strncat(result,iflist[i].name,255);
+		strncat(result," ",255);
+	}
+	return result;
+}
+
+
 gint write_sections()
 {
 	gint i,j;
@@ -381,10 +397,20 @@ gint write_sections()
 	gint svd[10];
 	gint lastwpos = 0;
 	gint last_i;
+	gboolean auto_set = FALSE;
+	
 	
 	for (i=0;i<configlen;i++)
 	{
 		get_param_val(configtext[i],paramval,ifname);	// get next tokens
+		
+		if (!strcmp("auto",paramval))
+		{
+			auto_set = TRUE;
+			free(configtext[i]);
+			configtext[i] = g_strdup_printf("auto %s\n",get_iflist());
+		}
+		
 		if (!strcmp("iface",paramval))
 		{
 			in_section = TRUE;
@@ -398,8 +424,12 @@ gint write_sections()
 			if (iflist[l-1].isppp) strcat(outstr," ppp");
 			if (iflist[l-1].isdhcp) strcat(outstr," dhcp");
 			strcat(outstr,"\n\0"); // tm?
-			if (iflist[l-1].status != NWSTATE_REMOVED) strcpy(configtext[i],outstr);
-				else configtext[i][0]='\0';					
+			if (iflist[l-1].status != NWSTATE_REMOVED) 
+			{
+				configtext[i]=realloc(configtext[i],strlen(outstr)+1);
+				strcpy(configtext[i],outstr);
+			}
+			else configtext[i][0]='\0';					
 		}
 		else 
 		{
@@ -413,49 +443,49 @@ gint write_sections()
 			
 			if (!strcmp("address",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].address);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].address);
 				svd[Saddress]=TRUE;
 				lastwpos = i;
 			}
 			if (!strcmp("netmask",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].netmask);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].netmask);
 				svd[Snetmask]=TRUE;
 				lastwpos = i;
 			}
 			if (!strcmp("gateway",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].gateway);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].gateway);
 				svd[Sgateway]=TRUE;
 				lastwpos = i;
 			}
 			if (!strcmp("broadcast",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].broadcast);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].broadcast);
 				svd[Sbroadcast]=TRUE;
 				lastwpos = i;
 			}
 			if (!strcmp("network",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].network);			
+				configtext[i] = subst_val(configtext[i],iflist[l-1].network);			
 				svd[Snetwork]=TRUE;
 				lastwpos = i;
 			}
 			if (!strcmp("hostname",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].hostname);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].hostname);
 				svd[Shostname]=TRUE;
 				lastwpos = i;
 			}			
 			if (!strcmp("client",paramval))
 			{
-				subst_val(configtext[i],iflist[l-1].clientid);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].clientid);
 				svd[Sclientid]=TRUE;
 				lastwpos = i;
 			}
 			if (!strcmp("provider",paramval)) 
 			{
-				subst_val(configtext[i],iflist[l-1].provider);
+				configtext[i] = subst_val(configtext[i],iflist[l-1].provider);
 				svd[Sprovider]=TRUE;
 				lastwpos = i;
 			}
@@ -574,7 +604,12 @@ gint write_sections()
 			}
 		} //if status
 	
-	
+	/* handle auto line if not yet done */
+	if (auto_set == FALSE)
+	{
+		add_line(configlen,g_strdup_printf("auto %s\n",get_iflist()));
+	}
+		
 	// write file
 	configfile = fopen(NET_NEWFILE,"w");
 	if (configfile)

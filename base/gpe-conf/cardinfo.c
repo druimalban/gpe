@@ -860,8 +860,8 @@ static void do_driver_dialog (GtkWidget *parent_button)
   w = gtk_dialog_new_with_buttons (_("Assign Driver"), GTK_WINDOW (mainw),
 				   GTK_DIALOG_MODAL |
 				   GTK_DIALOG_DESTROY_WITH_PARENT,
-				   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 				   GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+				   GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 				   NULL);
   
   l = gtk_label_new(_("This dialog allows you to select/change\nthe driver assignment for a\nPCMCIA/CF card."));

@@ -82,7 +82,7 @@ void update_dhcp_status(const gchar* active)
 		    fprintf (stderr, "cant fork\n");
 		    exit (errno);
 		  case 0:
-			execlp ("/sbin/dhcpcd", "dhcpcd", "-d", "eth0");
+			execlp ("/sbin/dhcpcd", "dhcpcd");
 		    exit(0);
 		  default:
 		  break;
@@ -163,7 +163,7 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gcha
       i++;
     }
 
-  i--;
+  if (i) i--;
 
 writefile:
 	
@@ -393,7 +393,9 @@ suidloop (int write, int read)
 	      }
 	    else if (strcmp (cmd, "CPIF") == 0)
 	      {
+		fscanf (in, "%100s", arg2); // to forget soon...
 		bin = "/bin/cp";
+		system ("killall dhcpcd");
 		strcpy (arg1, "/tmp/interfaces");
 		strcpy (arg2, "/etc/network/interfaces");
 		numarg = 2;

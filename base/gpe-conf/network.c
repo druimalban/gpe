@@ -72,7 +72,7 @@ add_interface(GtkWidget *widget, gpointer d)
 	GtkWidget* label;
 	gint i;
 	
-	ifname = smallbox(_("Please enter name of new interface."), _("New interface:"), "eth1");
+	ifname = smallbox(_("Enter name of new interface"), _("New interface:"), "eth0");
 	if (ifname)
 	{
 		for (i=0;i<iflen;i++)
@@ -114,7 +114,8 @@ remove_interface(GtkWidget *widget, gpointer d)
 	
 	page = gtk_notebook_get_nth_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
 	ifname = gtk_notebook_get_tab_label_text(GTK_NOTEBOOK(table),page);
-	if (gpe_question_ask_yn(_("Do you want to delete this interface?")))
+	if (gpe_question_ask (_("Do you want to delete this interface?"), _("Question"), "question",
+		"!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	{
 		iflist[get_section_nr(ifname)].status = NWSTATE_REMOVED;  
 		gtk_notebook_remove_page(GTK_NOTEBOOK(table),gtk_notebook_get_current_page(GTK_NOTEBOOK(table)));
@@ -181,7 +182,7 @@ void create_editable_entry(NWInterface_t* piface, GtkWidget* attach_to, gchar* w
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 0, 1, clnr, clnr+1,
 			(GtkAttachOptions) (GTK_FILL),
-			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			(GtkAttachOptions) ( GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
 	label = gtk_entry_new();
 	strcpy(wname,wprefix);
@@ -194,8 +195,8 @@ void create_editable_entry(NWInterface_t* piface, GtkWidget* attach_to, gchar* w
 	gtk_entry_set_text(GTK_ENTRY(label),wdata);
 	gtk_entry_set_editable(GTK_ENTRY(label),TRUE);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 1, 2, clnr, clnr+1,
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				(GtkAttachOptions) ( GTK_FILL),
+				(GtkAttachOptions) ( GTK_FILL),
 				gpe_boxspacing, gpe_boxspacing);
 }
 
@@ -208,7 +209,7 @@ void create_editable_entry_simple(GtkWidget* attach_to, gchar* name, gchar* ltex
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 0, 1, clnr, clnr+1,
 			(GtkAttachOptions) (GTK_FILL),
-			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			(GtkAttachOptions) ( GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
 	label = gtk_entry_new();
 	gtk_widget_set_name(GTK_WIDGET(label),name);
@@ -219,8 +220,8 @@ void create_editable_entry_simple(GtkWidget* attach_to, gchar* name, gchar* ltex
 	gtk_entry_set_text(GTK_ENTRY(label),wdata);
 	gtk_entry_set_editable(GTK_ENTRY(label),TRUE);
 	gtk_table_attach (GTK_TABLE (attach_to), label, 1, 2, clnr, clnr+1,
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				(GtkAttachOptions) ( GTK_FILL),
+				(GtkAttachOptions) ( GTK_FILL),
 				gpe_boxspacing, gpe_boxspacing);
 }
 
@@ -493,14 +494,14 @@ GtkWidget* create_global_widgets()
 	gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 	gtk_table_attach (GTK_TABLE (ctable), label, 0, 1, 4, 5,
 			(GtkAttachOptions) (GTK_FILL),
-			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			(GtkAttachOptions) ( GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
 	gtk_widget_set_sensitive(label,have_access);
 	
 	box = gtk_hbox_new(TRUE,0);
 	gtk_table_attach (GTK_TABLE (ctable), box, 1, 2, 4, 5,
 			(GtkAttachOptions) (GTK_FILL),
-			(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+			(GtkAttachOptions) ( GTK_FILL),
 			gpe_boxspacing, gpe_boxspacing);
 	
 	label = gtk_radio_button_new_with_label_from_widget(NULL,_("on"));
@@ -510,7 +511,7 @@ GtkWidget* create_global_widgets()
 	gtk_object_set_data_full(GTK_OBJECT (table), "use-dhcp-on", label,
                             (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),dhcp_on);  
-	gtk_container_add(GTK_CONTAINER(box),label);
+	gtk_box_pack_start(GTK_BOX(box),label,FALSE,FALSE,0);
 	label = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(label),_("off"));
 	gtk_widget_set_sensitive(label,have_access);
 	gtk_widget_set_name(GTK_WIDGET(label),"use-dhcp-off");
@@ -518,7 +519,7 @@ GtkWidget* create_global_widgets()
 	gtk_object_set_data_full(GTK_OBJECT (table), "use-dhcp-off", label,
                             (GtkDestroyNotify) gtk_widget_unref);
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),!dhcp_on);  
-	gtk_container_add(GTK_CONTAINER(box),label);
+	gtk_box_pack_start(GTK_BOX(box),label,FALSE,FALSE,0);
 
 	// nameserver
 	tmpval = get_file_var("/etc/resolv.conf", "nameserver");
@@ -635,17 +636,15 @@ void Network_Save()
 	set_file_open(FALSE);
 	
 	// copy and activate interface config
-	suid_exec("CPIF","");
+	suid_exec("CPIF","CPIF");
 	
-	strcpy(wname,"proxy");
-	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	entry = gtk_object_get_data (GTK_OBJECT (table),"proxy");
 	if (entry)
 	{
 		newval=gtk_editable_get_chars(GTK_EDITABLE(entry),0,-1);
 		change_cfg_value (cfgfile, "http_proxy", newval,'=');
 	}
-	strcpy(wname,"no_proxy");
-	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	entry = gtk_object_get_data (GTK_OBJECT (table),"no_proxy");
 	if (entry)
 	{
 		newval=gtk_editable_get_chars(GTK_EDITABLE(entry),0,-1);
@@ -654,8 +653,7 @@ void Network_Save()
 	g_free(cfgfile);
 	
 	// save and activate dhcp 
-	strcpy(wname,"use-dhcp-on");
-	entry = gtk_object_get_data (GTK_OBJECT (table),wname);
+	entry = gtk_object_get_data (GTK_OBJECT (table),"use-dhcp-on");
 	if (entry)
 	{
 		sprintf(wname,"%i",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(entry)));

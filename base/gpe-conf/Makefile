@@ -5,7 +5,6 @@ CVSBUILD = yes
 DEBUG = no
 GTK2 = yes
 IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
-CC = arm-linux-gcc
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
@@ -139,7 +138,6 @@ install: gpe-conf
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../libgpewidget/
-#	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl > gpe-conf.menu_tmp
 	$(INSTALL) gpe-conf.menu_tmp $(DESTDIR)$(PREFIX)/lib/menu/gpe-conf
 	mkdir -p  $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default
 	$(INSTALL) pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
