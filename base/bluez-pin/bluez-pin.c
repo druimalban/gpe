@@ -195,12 +195,15 @@ main(int argc, char *argv[])
 {
   int outgoing = 0;
   char *pin;
+  gboolean gui_started;
 
   setenv ("DISPLAY", ":0", 0);
 
   gtk_set_locale ();
-  gtk_init (&argc, &argv);
-  gdk_imlib_init ();
+  gui_started = gtk_init_check (&argc, &argv);
+
+  if (gui_started)
+    gdk_imlib_init ();
 
   if (argc != 3)
     usage (argv);
@@ -220,7 +223,10 @@ main(int argc, char *argv[])
       exit (0);
     }
 
-  ask_user (outgoing, address);
+  if (gui_started)
+    ask_user (outgoing, address);
+  else
+    printf("ERR\n");
 
   exit (0);
 }
