@@ -3,15 +3,6 @@
 <!--#include virtual="includes/head.shtml"-->
 
 <H2>Accessing the GPE CVS repository</H2>
-<P>
-For a more detailed description about how to use handhelds.org CVS please see
-<a href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
-here</a>.
-</P>
-<P>
-You can watch the CVS repository directly by following
-<A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">this link</A>.
-</P>
 <p>
 In short, if you are not (yet?) a developer, you do the following:
    <pre>
@@ -22,14 +13,21 @@ In short, if you are not (yet?) a developer, you do the following:
       CVS Password: anoncvs
       bash$ cvs checkout gpe
    </pre>
-
 You only have to do this one time. The next time you want to update
 your CVS, do:
    <pre>
       bash$ cd gpe_cvs
       bash$ cvs up
    </pre>
-
 </p>
+<P>
+For a more detailed description about how to use handhelds.org CVS, please see
+<a href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
+here</a>.
+</P>
+<P>
+You can watch the CVS repository directly by following
+<A HREF="http://cvs.handhelds.org/cgi-bin/viewcvs.cgi/gpe/">this link</A>.
+</P>
 
 <!--#include virtual="includes/foot.shtml"-->
