@@ -9,15 +9,18 @@ LINGUAS = de sv wa nl pt cs fr hu ro ru sr sk
 
 CONTROL_GPE_LOGIN = control1
 
-CPPFLAGS += $(STANDARD_CPPFLAGS)
-CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
-LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
-# only works if CVSBUILD
-CPPFLAGS += -I../gpe-ownerinfo
-LDFLAGS_OWNERINFO = -L../gpe-ownerinfo -lgpe-ownerinfo
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CPPFLAGS += -I../gpe-ownerinfo
+PACKAGE_LDFLAGS_OWNERINFO += -L../gpe-ownerinfo
+endif
 
-MEMBERS = gpe-login
+PACKAGE_LDFLAGS_OWNERINFO += -lgpe-ownerinfo
+
+MEMBERS = gpe-login nocursor
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -35,11 +38,11 @@ export PKG_CONFIG_PATH = $(BUILD)
 
 all: gpe-login gpe-lock-display
 
-gpe-login: gpe-login.o nocursor.o
-	$(CC) -o $@ $^ $(LDFLAGS) $(GPELIBS) $(LDFLAGS_OWNERINFO) -lcrypt
+gpe-login: $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) $(PACKAGE_LDFLAGS_OWNERINFO) -lcrypt
 
 gpe-lock-display: gpe-lock-display.o
-	$(CC) -o $@ $^ `pkg-config --libs x11`
+	$(CC) -o $@ $^ $(LDFLAGS) `pkg-config --libs x11`
 
 install: install-scripts
 
@@ -92,7 +95,7 @@ scripts-ipkg:
 ipkg: scripts-ipkg
 
 clean: clean-po
-	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o
+	rm -f gpe-login $(OBJS) $(DEPS) gpe-lock-display gpe-lock-display.o nocursor.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

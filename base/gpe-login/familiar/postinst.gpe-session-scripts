@@ -1,3 +1,0 @@
-#!/bin/sh
-
-rm -rf /etc/X11/Xsession-gpe.d
