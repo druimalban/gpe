@@ -1,6 +1,7 @@
 2003-07-06  Moray Allan  <moray@ascendit.sermisy.org>
 
 	* gpe-su.menu: Remove old-style menu file.
+	* Makefile: Remove legacy GTK1 support.
 
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 

@@ -2,6 +2,7 @@
 
 	* Makefile (install-program): Install gpe-default-bg.png with
 	correct permissions.
+	* Makefile: Removed legacy GTK1 support.
 
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 

@@ -8,19 +8,12 @@ HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.6-1
-GTK2 = yes
 
 CC = gcc
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CONTROL = control1
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-CONTROL = control
-endif
 
 CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 LDFLAGS = $(GTKLDFLAGS)

@@ -3,7 +3,6 @@ VERSION = 0.1.0-pre6
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
-GTK2 = yes
 IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 INSTALL = install
 PREFIX = /usr/
@@ -29,15 +28,9 @@ endif
 LDFLAGS += -lXsettings -lXsettings-client -lcrypt
 CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE 
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` 
 CONTROL = control1
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs` 
-CONTROL = control
-endif
 
 # setup how to compile
 ifeq ($(NATIVE),yes)

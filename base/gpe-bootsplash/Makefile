@@ -1,15 +1,8 @@
 #set up the symlinks for the package
-GTK2 = yes
 
-ifeq ($(GTK2),yes)
 CONTROL = control1
 CFLAGS = `pkg-config --cflags gdk-pixbuf-2.0` `pkg-config --libs gdk-pixbuf-2.0` -DGTK2
 SPLASH = splash2.png
-else
-CONTROL = control
-CFLAGS = `gdk-pixbuf-config --cflags` `gdk-pixbuf-config --libs`
-SPLASH = splash.png
-endif
 
 all: gpe-bootsplash
 

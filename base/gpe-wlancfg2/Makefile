@@ -17,18 +17,13 @@ PREFIX = /usr/local
 DEBUG = no
 LINGUAS = de pt_PT
 VERSION = 0.2.1
-GTK2 = yes
 
 YACC = byacc
 LEX  = flex
 CC   = gcc
 STRIP = strip
 
-ifeq ($(GTK2),yes)
 CONTROL = control1
-else
-CONTROL = control
-endif
 
 #GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
 #GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`

@@ -5,15 +5,9 @@ LINGUAS =
 
 MEMBERS = code_breaker gtk_graphic_funcs gtk_style_funcs gtk_timer gtk_usefull_funcs usefull_funcs
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CONTROL = control1
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-CONTROL = control
-endif
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
 ifeq ($(DEBUG),yes)

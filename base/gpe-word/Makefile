@@ -3,17 +3,11 @@ PACKAGE = gpe-word
 VERSION=0.2
 DEBUG = no
 CVSBUILD = yes
-GTK2 = yes
 
 MEMBERS = main
 
-ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
-else
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
-CONTROL = control
-endif
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -33,11 +27,7 @@ BUILD = build
 endif
 LDFLAGS += -lgpewidget
 
-ifeq ($(GTK2),yes)
 LDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
-endif
 
 CFLAGS += -I../libdm
 LDFLAGS += -L../libdm -ldm

@@ -1,3 +1,7 @@
+2003-07-07  Moray Allan  <moray@sermisy.org>
+
+	* Makefile : Removed legacy GTK1 support.
+
 2003-04-20  Joe McCarthy <jjmcc@pitt.edu>
 
 	* callbacks.c : oops, snooze doesnt work quite right....add a check

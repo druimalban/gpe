@@ -5,7 +5,6 @@ PACKAGE = gpe-soundbite
 DEBUG = yes
 CVSBUILD = yes
 ESD = yes
-GTK2 = yes
 
 MEMBERS = main gsm-codec
 ifeq ($(ESD),yes)
@@ -20,14 +19,8 @@ else
 BUILD = build
 endif
 
-
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-endif
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)

@@ -2,17 +2,11 @@ PACKAGE = gpe-calculator
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-GTK2 = yes
 
 MEMBERS = calc_basic  display interface math_functions callbacks general_functions  main support
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-endif
 
 CPPFLAGS = -D_GNU_SOURCE
 ifeq ($(DEBUG),yes)

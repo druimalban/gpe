@@ -2,6 +2,7 @@
 
 	* Makefile (install-program), gpe-soundbite.menu,
 	gpe-soundbite-record.menu: no longer install old-style menu files.
+	* Makefile: Remove legacy GTK1 support.
 
 2003-06-10  Moray Allan  <moray@handhelds.org>
 

@@ -2,7 +2,6 @@
 #LDFLAGS= -lgtk -lgdk
 #LDFLAGS= `gtk-config --libs`
 #CFLAGS = `gtk-config --cflags` -g
-GTK2=yes
 
 CFLAGS2 = `pkg-config --cflags gtk+-2.0` -g -Wall -Werror
 LDFLAGS2 = `pkg-config --libs gtk+-2.0`
@@ -10,13 +9,8 @@ LDFLAGS2 = `pkg-config --libs gtk+-2.0`
 CFLAGS1 = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -DGTK1
 LDFLAGS1 = `gtk-config --libs`
 
-ifeq ($(GTK2),yes)
 CFLAGS=$(CFLAGS2)
 LDFLAGS=$(LDFLAGS2)
-else
-CFLAGS=$(CFLAGS1)
-LDFLAGS=$(LDFLAGS1)
-endif
 
 #test: gtkcolombotest
 
@@ -28,13 +22,8 @@ l2v.o: l2v.c
 gpe-mail.o: gpe-mail.c
 	gcc $(CFLAGS) -c gpe-mail.c
 
-ifeq ($(GTK2),yes)
 gpe-mail: gpe-mail.o gtkcolombo.o
 	gcc -g -o gpe-mail $(LDFLAGS) gpe-mail.o gtkcolombo.o
-else
-gpe-mail: gpe-mail.o l2v.o gtkcolombo.o
-	gcc -g -o gpe-mail $(LDFLAGS) gpe-mail.o l2v.o gtkcolombo.o
-endif
 
 clean:
 	/bin/rm -f *.o gpe-mail

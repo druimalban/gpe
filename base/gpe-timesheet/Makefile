@@ -2,16 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
 VERSION = 0.12
-GTK2 = yes
 LINGUAS = id pt zh_TW fr ro
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs`
-endif
 
 ifeq ($(CVSBUILD),yes)
 LGPEWIDGET = -L../libgpewidget

@@ -5,17 +5,11 @@ CVSBUILD = yes
 VERSION = 0.09
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
-GTK2 = yes
 
 MEMBERS = main mime-sql mime-programs-sql
 
-ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0 gnome-vfs-2.0`
 CONTROL = control1
-else
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
-CONTROL = control
-endif
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -35,11 +29,7 @@ BUILD = build
 endif
 LDFLAGS += -lgpewidget -lsqlite -lgnomevfs-2
 
-ifeq ($(GTK2),yes)
 LDFLAGS += `pkg-config --libs gtk+-2.0`
-else
-LDFLAGS += `gtk-config --libs` `gdk-pixbuf-config --libs`
-endif
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 

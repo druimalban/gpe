@@ -17,21 +17,14 @@ VERSION = 2.0
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-GTK2 = yes
 
 LINGUAS = de
 
 MEMBERS = main interface callbacks support db-funcs
 
-ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += -lX11 `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 CONTROL = control1
-else
-GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS = `gtk-config --libs` -lgthread -lpthread 
-CONTROL = control
-endif
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -DENABLE_NLS -I../libgpewidget
 ifeq ($(DEBUG),yes)
