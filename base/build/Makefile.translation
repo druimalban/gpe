@@ -5,7 +5,7 @@ CONTROL = `if test -e familiar/control1; then echo control1; else echo control; 
 # use ipkg-build or ipkg-deb-build
 IPKG_BUILD := ipkg-build
 
-TRANSLATION_SITE := http://www.iro.umontreal.ca/~gnutra/maint/
+TRANSLATION_SITE := http://www.iro.umontreal.ca/~gnutra/maint
 
 ifeq ($(DIR_PO),)
 DIR_PO := po
@@ -76,8 +76,12 @@ freshen-po:
 
 MAINTAINER = $(shell grep 'Maintainer: ' familiar/$(CONTROL) | cut -d ' ' -f 2-)
 
+ifndef BUILD
+BUILD = ../build
+endif
+
 transdist := familiar/dist-translation
-templates := ../build/familiar
+templates := $(BUILD)/familiar
 ipkglist  := translation-ipkgs.txt
 
 real-translation-package: all-mo
