@@ -15,11 +15,11 @@ h1,h2,h3,h4,h5,h6 {
 
 th {
 	font-family:	helvetica, sans-serif;
-	align:		left;
+	text-align:	left;
 }
 
 td {
-	align:		left;
+	text-align:	left;
 }
 
 code, tt {
