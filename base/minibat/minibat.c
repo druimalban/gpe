@@ -25,6 +25,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <libintl.h>
+#include <stdint.h>
 
 #define _(x) gettext(x)
 
@@ -91,7 +92,7 @@ static int time_left_idx = 4;
 
 static Bool ac_power = False;
 
-#define popup_w 48
+#define popup_w 64
 
 static Window win_popup;
 static Bool popup_visible;
@@ -114,7 +115,12 @@ read_apm(int *values)
   /* add stat function here ? */
  
   apm_info info;
-  apm_read(&info);
+
+  if (apm_read(&info))
+    {
+      memset (&values, 0, sizeof (values));
+      return 1;
+    }
 
   values[TIME_LEFT] = info.battery_time;
   values[PERCENTAGE] = info.battery_percentage;
@@ -251,34 +257,12 @@ usage (char *progname)
   ;
 }
 
-static void
-mbpixbuf_to_mask (MBPixbuf *pb, MBPixbufImage *img, Drawable     drw,
-		  GC gc0, GC gc1, int drw_x, int drw_y)
-{
-  unsigned char *p;
-  int x,y;
-  int r, g, b;
-
-  p = img->rgba;
-
-  for(y=0; y<img->height; y++)
-    {
-      for(x=0; x<img->width; x++)
-	{
-	  r = ( *p++ );
-	  g = ( *p++ );
-	  b = ( *p++ );
-	  XDrawPoint (dpy, drw, (*p++) ? gc1 : gc0, x + drw_x, y + drw_y);
-	}
-    }
-}
-
 void
 draw_text_in (Drawable dr, char *s, int x, int y)
 {
   XftDraw *xftdraw = XftDrawCreate (dpy, dr,
-				    DefaultVisual(dpy, screen),
-				    DefaultColormap(dpy, screen));
+				    DefaultVisual (dpy, screen),
+				    DefaultColormap (dpy, screen));
 
   XftDrawStringUtf8 (xftdraw, &fg_xftcol, msg_font, x, y, (FcChar8 *)s, strlen (s));
 
@@ -298,55 +282,220 @@ text_size (char *s, int *x, int *y)
     *y = g.height;
 }
 
-#define MAX_OPACITY  192
-#define XRANGE 5
-#define YRANGE 4
-
-static int
-opacity (int val, int range, int ramp)
+void
+pixelColorWeightNolock (MBPixbufImage *dst, int x, int y, uint32_t color, int a)
 {
-  int step = MAX_OPACITY / ramp;
-
-  if (val < ramp)
-    {
-      return val * step;
-    }
-  else if (val > (range - ramp))
-    {
-      return (range - val - 1) * step;
-    }
-
-  return MAX_OPACITY;
+  unsigned char *p = dst->rgba + (4 * (x + (dst->width * y)));
+  int r = (color >> 24) & 0xff;
+  int g = (color >> 16) & 0xff;
+  int b = (color >> 8) & 0xff;
+  int ap = 255 - a;
+  
+  *p = ((*p * ap) + (r * a)) >> 8;
+  p++;
+  *p = ((*p * ap) + (g * a)) >> 8;
+  p++;
+  *p = ((*p * ap) + (b * a)) >> 8;
 }
 
-Pixmap
-build_pixmap (MBPixbufImage *background)
+void
+draw_ellipse (MBPixbufImage *dst, int xc, int yc, int rx, int ry, uint32_t color)
 {
-  Pixmap pix;
-  MBPixbufImage *img_whiten;
-  int i, j;
-  char *p;
+    int i;
+    int a2, b2, ds, dt, dxt, t, s, d;
+    short x, y, xs, ys, dyt, xx, yy, xc2, yc2;
+    float cp;
+    unsigned char weight, iweight;
 
-  img_whiten = mb_pixbuf_img_new (pb, popup_w, text_offset);
-  p = img_whiten->rgba;
-  
-  for (j = 0; j < text_offset; j++)
+    /* Sanity check radius */
+    if (rx < 1)
+	rx = 1;
+    if (ry < 1)
+	ry = 1;
+
+    /* Variable setup */
+    a2 = rx * rx;
+    b2 = ry * ry;
+
+    ds = 2 * a2;
+    dt = 2 * b2;
+
+    xc2 = 2 * xc;
+    yc2 = 2 * yc;
+
+    dxt = (int) (a2 / sqrt(a2 + b2));
+
+    t = 0;
+    s = -2 * a2 * ry;
+    d = 0;
+
+    x = xc;
+    y = yc - ry;
+
+    /* "End points" */
+    pixelColorWeightNolock(dst, x, y, color, 255);
+    pixelColorWeightNolock(dst, xc2 - x, y, color, 255);
+    pixelColorWeightNolock(dst, x, yc2 - y, color, 255);
+    pixelColorWeightNolock(dst, xc2 - x, yc2 - y, color, 255);
     {
-      for (i = 0; i < popup_w; i++)
+      int yi;
+      for (yi = y; yi <= yc; yi++)
 	{
-	  int v = opacity (i, popup_w, XRANGE) * opacity (j, text_offset, YRANGE) / 256;
-	  
-	  *p++ = 255;
-	  *p++ = 255;
-	  *p++ = 255;
-	  *p++ = v;
+	  pixelColorWeightNolock(dst, xc, yi, color, 255);
+	  pixelColorWeightNolock(dst, xc, yc2 - yi, color, 255);
 	}
     }
 
-  mb_pixbuf_img_composite (pb, background, img_whiten, 0, 0);
+    for (i = 1; i <= dxt; i++) {
+	x--;
+	d += t - b2;
 
-  mb_pixbuf_img_free (pb, img_whiten);
+	if (d >= 0)
+	    ys = y - 1;
+	else if ((d - s - a2) > 0) {
+	    if ((2 * d - s - a2) >= 0)
+		ys = y + 1;
+	    else {
+		ys = y;
+		y++;
+		d -= s + a2;
+		s += ds;
+	    }
+	} else {
+	    y++;
+	    ys = y + 1;
+	    d -= s + a2;
+	    s += ds;
+	}
 
+	t -= dt;
+
+	/* Calculate alpha */
+	if (s != 0.0) {
+	    cp = (float) abs(d) / (float) abs(s);
+	    if (cp > 1.0) {
+		cp = 1.0;
+	    }
+	} else {
+	    cp = 1.0;
+	}
+
+	/* Calculate weights */
+	weight = (unsigned char) (cp * 255);
+	iweight = 255 - weight;
+
+	/* Upper half */
+	xx = xc2 - x;
+	pixelColorWeightNolock(dst, x, y, color, iweight);
+	pixelColorWeightNolock(dst, xx, y, color, iweight);
+
+	pixelColorWeightNolock(dst, x, ys, color, weight);
+	pixelColorWeightNolock(dst, xx, ys, color, weight);
+
+	/* Lower half */
+	yy = yc2 - y;
+	pixelColorWeightNolock(dst, x, yy, color, iweight);
+	pixelColorWeightNolock(dst, xx, yy, color, iweight);
+
+	yy = yc2 - ys;
+	pixelColorWeightNolock(dst, x, yy, color, weight);
+	pixelColorWeightNolock(dst, xx, yy, color, weight);
+
+	{
+	  int yi;
+	  for (yi = y; yi < yc; yi++)
+	    {
+	      pixelColorWeightNolock(dst, x, yi, color, 255);
+	      pixelColorWeightNolock(dst, x, yc2 - yi, color, 255);
+	      pixelColorWeightNolock(dst, xx, yi, color, 255);
+	      pixelColorWeightNolock(dst, xx, yc2 - yi, color, 255);
+	    }
+	}
+    }
+
+    dyt = abs(y - yc);
+
+    for (i = 1; i <= dyt; i++) {
+	y++;
+	d -= s + a2;
+
+	if (d <= 0)
+	    xs = x + 1;
+	else if ((d + t - b2) < 0) {
+	    if ((2 * d + t - b2) <= 0)
+		xs = x - 1;
+	    else {
+		xs = x;
+		x--;
+		d += t - b2;
+		t -= dt;
+	    }
+	} else {
+	    x--;
+	    xs = x - 1;
+	    d += t - b2;
+	    t -= dt;
+	}
+
+	s += ds;
+
+	/* Calculate alpha */
+	if (t != 0.0) {
+	    cp = (float) abs(d) / (float) abs(t);
+	    if (cp > 1.0) {
+		cp = 1.0;
+	    }
+	} else {
+	    cp = 1.0;
+	}
+
+	/* Calculate weight */
+	weight = (unsigned char) (cp * 255);
+	iweight = 255 - weight;
+
+	/* Left half */
+	xx = xc2 - x;
+	yy = yc2 - y;
+	pixelColorWeightNolock(dst, x, y, color, iweight);
+	pixelColorWeightNolock(dst, xx, y, color, iweight);
+
+	pixelColorWeightNolock(dst, x, yy, color, iweight);
+	pixelColorWeightNolock(dst, xx, yy, color, iweight);
+
+	/* Right half */
+	xx = 2 * xc - xs;
+	pixelColorWeightNolock(dst, xs, y, color, weight);
+	pixelColorWeightNolock(dst, xx, y, color, weight);
+
+	pixelColorWeightNolock(dst, xs, yy, color, weight);
+	pixelColorWeightNolock(dst, xx, yy, color, weight);
+
+	{
+	  int xi;
+	  for (xi = x; xi < xc; xi++)
+	    {
+	      pixelColorWeightNolock(dst, xi, y, color, 255);
+	      pixelColorWeightNolock(dst, xc2 - xi, y, color, 255);
+	      pixelColorWeightNolock(dst, xi, yy, color, 255);
+	      pixelColorWeightNolock(dst, xc2 - xi, yy, color, 255);
+	    }
+	}
+    }
+}
+
+Pixmap
+build_pixmap (int x_pos, int y_pos, int text_w, int height)
+{
+  Pixmap pix;
+  MBPixbufImage *background;
+  int i, j;
+  char *p;
+
+  background = mb_pixbuf_img_new_from_drawable (pb, win_root, None, x_pos, y_pos, 
+					      popup_w, popup_h);
+
+  draw_ellipse (background, popup_w / 2, text_offset / 2, (text_w * 3) / 4, height, 0xffffffff);
+  
   mb_pixbuf_img_composite (pb, background, img_icon_popup, 
 			   popup_w / 2 - mb_pixbuf_img_get_width (img_icon_popup) / 2,
 			   text_offset);
@@ -354,6 +503,8 @@ build_pixmap (MBPixbufImage *background)
   pix = XCreatePixmap (dpy, win_popup, popup_w, popup_h, pb->depth);
 
   mb_pixbuf_img_render_to_drawable (pb, background, pix, 0, 0);
+
+  mb_pixbuf_img_free (pb, background);
 
   return pix;
 }
@@ -471,7 +622,7 @@ main (int argc, char **argv)
   }
 
   text_offset = 2 * (msg_font->ascent + msg_font->descent);
-  popup_h = text_offset + mb_pixbuf_img_get_height (img_icon_popup);
+  popup_h = (text_offset * 5) / 3 + mb_pixbuf_img_get_height (img_icon_popup);
 
   img_backing = mb_pixbuf_img_new(pb, 
 				  mb_pixbuf_img_get_width(img_icon), 
@@ -526,7 +677,7 @@ main (int argc, char **argv)
 
   while (1)
     {
-      int visible = 1;
+      int visible = 0;
       struct timeval tvt;
 
       tvt.tv_usec = 0;
@@ -570,53 +721,60 @@ main (int argc, char **argv)
 	      popup_visible = !popup_visible;
 	      if (popup_visible) 
 		{
-		  char buf[64];
-		  XImage *image;
+		  char line1_buf[64], line2_buf[64];
 		  int x, y, w, h;
 		  int x_pos, y_pos;
-		  MBPixbufImage *img_back;
-
+		  int text_w;
+		  int text1_w, text1_h;
+		  int text2_w, text2_h;
+		  int height;
+		  
 		  GetWinPosition (dpy, win_panel, &x, &y, &w, &h);
 		  x_pos = x + (w / 2) - (popup_w / 2);
 		  y_pos = y + h - popup_h;
 
-		  img_back = mb_pixbuf_img_new_from_drawable (pb, win_root,
-							      None, x_pos, y_pos, 
-							      popup_w, popup_h);
-
-		  popup_pixmap = build_pixmap (img_back);
-
-		  mb_pixbuf_img_free (pb, img_back);
+		  line1_buf[0] = 0;
+		  line2_buf[0] = 0;
 
 		  if (apm_vals[PERCENTAGE] >= 0)
 		    {
-		      snprintf (buf, sizeof (buf) - 1, _("%d%%"), apm_vals[PERCENTAGE]);
-		      buf[sizeof(buf - 1)] = 0;
-		      text_size (buf, &w, &h);
-		      draw_text_in (popup_pixmap, buf, (popup_w / 2) - (w / 2), text_offset - msg_font->descent);
-		      h += 4;
+		      snprintf (line1_buf, sizeof (line1_buf) - 1, _("%d%%"), apm_vals[PERCENTAGE]);
+		      line1_buf[sizeof (line1_buf - 1)] = 0;
 		    }
-		  else
-		    h = 0;
 
-		  buf[0] = 0;
 		  if (apm_vals[AC_POWER] == AC_LINE_STATUS_ON)
 		    {
 		      if (apm_vals[BATT_STATUS] & BATTERY_STATUS_CHARGING)
-			strncpy (buf, _("Charging"), sizeof (buf) - 1);
+			strncpy (line2_buf, _("Charging"), sizeof (line2_buf) - 1);
 		      else
-			strncpy (buf, _("AC on"), sizeof (buf) - 1);
+			strncpy (line2_buf, _("AC on"), sizeof (line2_buf) - 1);
 		    }
 		  else if (apm_vals[TIME_LEFT] >= 0)
-		    snprintf (buf, sizeof (buf) - 1, _("%d min"), apm_vals[TIME_LEFT]);
+		    snprintf (line2_buf, sizeof (line2_buf) - 1, _("%d min"), apm_vals[TIME_LEFT]);
 
-		  if (buf[0])
+		  text_size (line1_buf, &text1_w, &text1_h);
+		  text_size (line2_buf, &text2_w, &text2_h);
+		  text_w = (text1_w > text2_w) ? text1_w : text2_w;
+
+		  height = (text1_h && text2_h) ? text_offset / 2 : text_offset / 3;
+
+		  popup_pixmap = build_pixmap (x_pos, y_pos, text_w, height);
+
+		  if (text1_h && text2_h)
 		    {
-		      buf[sizeof(buf) - 1] = 0;
-		      text_size (buf, &w, NULL);
-		      draw_text_in (popup_pixmap, buf, (popup_w / 2) - (w / 2), 
-				    text_offset - h - msg_font->descent);
-		      
+		      draw_text_in (popup_pixmap, line1_buf, 
+				    (popup_w / 2) - (text1_w / 2), (text_offset * 1) / 3 + (text1_h / 2));
+		      draw_text_in (popup_pixmap, line2_buf, 
+				    (popup_w / 2) - (text2_w / 2), (text_offset * 2) / 3 + (text2_h / 2));
+		    }
+		  else
+		    {
+		      char *buf = line1_buf[0] ? line1_buf : line2_buf;
+		      int len = line1_buf[0] ? text1_w : text2_w;
+		      int height = line1_buf[0] ? text1_h : text2_h;
+
+		      draw_text_in (popup_pixmap, buf, 
+				    (popup_w / 2) - (len / 2), (text_offset / 2) + (height / 2));
 		    }
 
 		  XSetWindowBackgroundPixmap (dpy, win_popup, popup_pixmap);
