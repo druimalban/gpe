@@ -22,31 +22,43 @@
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 
-#define REQUEST_NAME "org.handhelds.gpe.bluez.pin-request"
+#include <gpe/errorbox.h>
 
 #define _(x) gettext(x)
 
+#define SERVICE_NAME   "org.handhelds.gpe.bluez"
+#define INTERFACE_NAME SERVICE_NAME ".PinAgent"
+
+extern DBusHandlerResult bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message);
+
 DBusHandlerResult
-dbus_handler_func (DBusMessageHandler *handler,
-		   DBusConnection     *connection,
-		   DBusMessage        *message,
-		   void               *user_data)
+handler_func (DBusConnection     *connection,
+	      DBusMessage        *message,
+	      void               *user_data)
 {
-  if (dbus_message_has_name (message, REQUEST_NAME))
-    bluez_pin_handle_dbus_request (connection, message);
+  if (dbus_message_is_method_call (message, INTERFACE_NAME, "PinRequest"))
+    return bluez_pin_handle_dbus_request (connection, message);
   
-  if (dbus_message_has_name (message, DBUS_MESSAGE_LOCAL_DISCONNECT))
+  if (dbus_message_is_signal (message,
+                              DBUS_INTERFACE_ORG_FREEDESKTOP_LOCAL,
+                              "Disconnected"))
     exit (0);
   
-  return DBUS_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
+  return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
 }
+
+static DBusObjectPathVTable dbus_vtable = {
+  NULL,
+  handler_func,
+  NULL
+};
 
 void
 gpe_bluetooth_init_dbus (void)
 {
   DBusConnection *connection;
   DBusError error;
-  DBusMessageHandler *handler;
+  static const char *object_path[] = { "org", "handhelds", "gpe", "bluez", "PinAgent", NULL };
 
   dbus_error_init (&error);
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
@@ -60,6 +72,13 @@ gpe_bluetooth_init_dbus (void)
 
   dbus_connection_setup_with_g_main (connection, NULL);
 
-  handler = dbus_message_handler_new (dbus_handler_func, NULL, NULL);
-  dbus_connection_add_filter (connection, handler);
+  dbus_connection_register_object_path (connection, object_path, &dbus_vtable, NULL);
+
+  dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
+  if (dbus_error_is_set (&error))
+    {
+      fprintf (stderr, "Failed to acquire service: %s\n", error.message);
+      dbus_error_free (&error);
+      exit (1);
+    }
 }

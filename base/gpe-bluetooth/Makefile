@@ -40,6 +40,11 @@ pin-ui.c: ../bluez-pin/pin-ui.c
 	cp $< $@
 	chmod a-w $@
 
+pin-ui.h: ../bluez-pin/pin-ui.h
+	rm -f $@
+	cp $< $@
+	chmod a-w $@
+
 pin-dbus.c: ../bluez-pin/pin-dbus.c
 	rm -f $@
 	cp $< $@
@@ -47,8 +52,8 @@ pin-dbus.c: ../bluez-pin/pin-dbus.c
 
 extract-po: pin-ui.c pin-dbus.c
 
-$(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+$(PACKAGE): pin-ui.h $(OBJS)
+	$(CC) -o $@ $(OBJS) $(LDFLAGS)
 
 bnep-helper: bnep-helper.c
 
@@ -77,7 +82,7 @@ install-program: all
 	install -m 644 peers/lap $(DESTDIR)/etc/ppp/peers/lap
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) pin-ui.c pin-dbus.c
+	rm -f $(PACKAGE) $(OBJS) pin-ui.c pin-dbus.c pin-ui.h
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
