@@ -1,5 +1,9 @@
 2003-08-03  Philip Blundell  <philb@gnu.org>
 
+	* familiar/gpe-logout.menu: Deleted.
+
+2003-08-03  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.57 released.
 
 2003-08-03  Philip Blundell  <philb@gnu.org>

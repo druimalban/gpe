@@ -1,7 +1,0 @@
-?package(gpe-logout): \
- needs=x11 \
- title="Log out" \
- logtitle="Log out" \
- icon48=/usr/share/pixmaps/gpe-logout.png \
- command="gpe-logout" \
- section=Utilities
