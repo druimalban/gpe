@@ -1,3 +1,7 @@
+
+2004-08-04	Florian Boor <florian.boor@kernelconcepts.de>
+	* Fixed light level setting on generic interface.
+
 2004-08-02	Florian Boor <florian.boor@kernelconcepts.de>
     
     * Released V 0.44

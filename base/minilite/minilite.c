@@ -426,6 +426,9 @@ set_level (int level)
 	case P_SIMPAD:
 		return simpad_set_level(level);
 	break;
+	case P_GENERIC:
+		return generic_set_level(level);
+	break;
 	default:
 		return 0;
 	break;
