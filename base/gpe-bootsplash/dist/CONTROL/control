@@ -1,0 +1,8 @@
+Package: gpe-bootsplash
+Section: base
+Priority: optional
+Version: 0.0
+Architecture: arm
+Maintainer: Robert Mibus <mibus@bigpond.com>
+Depends:
+Description: A GPE splashscreen while booting
