@@ -7,6 +7,11 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+/* Example:
+ *
+ * gpe-question --question "Question?" --buttons cancel:Cancel "ok:Go ahead"
+*/
+
 #include <fcntl.h>
 #include <libintl.h>
 #include <locale.h>
@@ -22,19 +27,22 @@
 #include <gpe/pixmaps.h>
 #include <gpe/question.h>
 
-static struct gpe_icon my_icons[] = {
-  { "ok", "ok" },
-  { "cancel", "cancel" },
-  { "question", "question" },
-  { NULL, NULL }
-};
-
 #define _(x) gettext(x)
+
+#define MAXBUTTONS 10
 
 int
 main(int argc, char *argv[])
 {
-  gint answer = -1;
+  gint i, answer = -1;
+  gchar *question = NULL;
+  gchar *icon[MAXBUTTONS];
+  gchar *text[MAXBUTTONS];
+
+  for (i = 0; i < MAXBUTTONS; i++)
+    {
+      icon[i] = text[i] = NULL;
+    }
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     {
@@ -46,14 +54,44 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (gpe_load_icons (my_icons) == FALSE)
+  for (i = 1; i < argc; i++)
     {
-      gtk_exit (1);
+      if (!strcmp (argv[i], "--question"))
+	{
+	  question = argv[++i];
+	  continue;
+	}
+      if (!strcmp (argv[i], "--buttons"))
+	{
+	  int j = 0;
+	  for (i++; i < argc; i++)
+	    {
+	      gchar *colon;
+	      text[j] = g_strdup (argv[i]);
+	      if ((colon = strchr (text[j], ':')) && (colon[-1] != '\\'))
+	  	{
+		  *colon = 0;
+		  icon[j] = text[j];
+		  text[j] = &colon[1];
+		}
+		j++;
+	    }
+	  continue;
+	}
     }
 
-  answer = 0; /* gpe_question_ask ("my question", "my title", "a"); */
-
-/*  gtk_main (); */
+  answer = gpe_question_ask (question, "", "question",
+                             text[0], icon[0],
+                             text[1], icon[1],
+                             text[2], icon[2],
+                             text[3], icon[3],
+                             text[4], icon[4],
+                             text[5], icon[5],
+                             text[6], icon[6],
+                             text[7], icon[7],
+                             text[8], icon[8],
+                             text[9], icon[9],
+			     NULL, NULL);
 
   return answer;
 }
