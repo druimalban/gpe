@@ -14,7 +14,7 @@
 <LINK REL="shortcut icon" HREF="/images/favicon.ico" TYPE="image/x-icon">
 </HEAD>
 <BODY>
-<table border=0>
+<table border=0 width="100%">
 <tr>
 <td width=70>
 <img src="/images/gpe-logo.png" alt="[The GPE Logo]">
