@@ -600,7 +600,7 @@ day_view (void)
   gtk_widget_show (day_list);
  
   g_signal_connect (G_OBJECT (calendar), 
-		    gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
+		    "day-selected",
 		    G_CALLBACK (day_changed_calendar), NULL);
   
   g_signal_connect (G_OBJECT (day_list), "select_row",

@@ -1,5 +1,11 @@
 2004-10-09  Phil Blundell  <pb@nexus.co.uk>
 
+	* day_view.c (day_view): Single click on calendar moves highlight,
+	even when not in stylus mode.
+	* week_view.c (week_view): Likewise.
+
+2004-10-09  Phil Blundell  <pb@nexus.co.uk>
+
 	* month_view.c (title_height): New global.
 	(button_press): Use it.
 	(draw_expose_event): Likewise.  Avoid wasteful re-initialisation
