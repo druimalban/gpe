@@ -422,11 +422,13 @@ clicked (GtkWidget *w, GdkEventButton *ev)
 static void
 pan_connect_menu (void)
 {
+  start_pan (this_device);
 }
 
 static void
 pan_disconnect_menu (void)
 {
+  stop_pan (this_device);
 }
 
 static void
