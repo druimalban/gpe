@@ -11,5 +11,6 @@
 #define ERRORBOX_H
 
 extern void gpe_error_box (char *text);
+extern void gpe_perror_box (char *text);
 
 #endif

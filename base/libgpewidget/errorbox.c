@@ -10,6 +10,8 @@
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
 #include <libintl.h>
+#include <errno.h>
+#include <string.h>
 
 #include "errorbox.h"
 
@@ -55,4 +57,16 @@ gpe_error_box (char *text)
   gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
   gtk_widget_show_all (dialog);
+}
+
+void
+gpe_perror_box(char *text)
+{
+  char *p = strerror (errno);
+  char *buf = g_malloc (strlen (p) + strlen (text) + 3);
+  strcpy (buf, text);
+  strcat (buf, ": ");
+  strcat (buf, p);
+  gpe_error_box (buf);
+  g_free (buf);
 }
