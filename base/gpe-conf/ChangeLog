@@ -1,3 +1,5 @@
+2004-07-21	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* ipaqscreen/main.c: Raised lower limit for screensaver timeout.
 
 2004-07-20	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* battery.c: Improved battery status display using APM.

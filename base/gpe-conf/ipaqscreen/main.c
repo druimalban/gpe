@@ -136,7 +136,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   self.screensaverbt2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.screensaverbt1),_("off"));
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), (gboolean)ss_sec);
 
-  self.adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 1, 20, 0, 0, 0);
+  self.adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 2, 20, 0, 0, 0);
   self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (self.adjSaver)));
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), TRUE);
