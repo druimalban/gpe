@@ -26,8 +26,10 @@ void on_window_size_allocate       (GtkWidget *widget, GtkAllocation *a, gpointe
 void on_button_list_view_clicked   (GtkButton *button, gpointer user_data);
 
 /* files toolbar*/
+void on_button_files_clicked       (GtkButton *button, gpointer filesbox);
 void on_button_file_save_clicked   (GtkButton *button, gpointer user_data);
 void on_button_file_new_clicked    (GtkButton *button, gpointer user_data);
+void on_button_file_properties_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_prev_clicked   (GtkButton *button, gpointer user_data);
 void on_button_file_next_clicked   (GtkButton *button, gpointer user_data);

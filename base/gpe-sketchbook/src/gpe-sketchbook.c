@@ -45,12 +45,14 @@ static struct gpe_icon my_icons[] = {
   { "open",   "gpe-sketchbook/edit"  }, //distributed separatly until next gpe-icons release
   { "delete", "delete"},
   { "save",   "save"  },
+  { "properties",   "properties"  },
   { "left",   "left"  },
   { "right",  "right" },
   { "about",  "help"  },
   { "list",      "gpe-sketchbook/view-mode-list"},
   { "icons",     "gpe-sketchbook/view-mode-icons"},
   //{ "sketchpad", "gpe-sketchbook/view-mode-sketchpad" },
+  { "files",     "gpe-sketchbook/file-entry"},
 
   { "question",  "question"  },//needed to be loaded for gpe_question ??? //FIXME: !!!
 

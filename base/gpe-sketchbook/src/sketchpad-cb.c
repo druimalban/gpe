@@ -94,10 +94,21 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
 
 //---------------------------------------------------------
 //--------------------- FILE TOOLBAR ----------------------
+void on_button_files_clicked(GtkButton * button, gpointer filesbox){
+  gtk_widget_hide    (GTK_WIDGET (filesbox));
+  gtk_widget_show_all(GTK_WIDGET (filesbox));
+}
+
+void _close_filesbox(GtkButton * button){
+  GtkWidget * filesbox;
+  filesbox = gtk_widget_get_toplevel((GtkWidget *)button);
+  gtk_widget_hide (GTK_WIDGET (filesbox));
+}
+
 void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
   Note * note;
 
-  if(!is_current_sketch_modified) return;
+  if(!is_current_sketch_modified){ _close_filesbox(button); return;}
 
   if(is_current_sketch_new){
     note = note_new();
@@ -129,6 +140,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
 
   }
   is_current_sketch_modified = FALSE;
+  _close_filesbox(button);
 }
 
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
@@ -140,16 +152,25 @@ void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
   }
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
+
+  _close_filesbox(button);
 }
 
+void on_button_file_properties_clicked (GtkButton *button, gpointer user_data){
+  //does nothing yet
+  _close_filesbox(button);
+}
 
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data){
-  if(is_current_sketch_new) return;
+  if(is_current_sketch_new){ _close_filesbox(button); return;}
+
   //NOTE: moved back to my own dialog-box, gpe_question freezes.
   //if(gpe_question_ask_yn ("Delete sketch?") == 1){
   if(confirm_action_dialog_box(_("Delete sketch?"),_("Cancel"),_("Delete"))){
     delete_current_sketch();  
   }
+    
+  _close_filesbox(button);
 }
 
 

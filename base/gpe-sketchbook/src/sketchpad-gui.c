@@ -376,25 +376,55 @@ GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   return toolbar;
 }//sketchpad_build_files_toolbar()
 
+GtkWidget * filesbox_new(){
+  GtkWidget * filesbox;
+
+  GtkWidget * table_files;
+  GtkWidget * button_new;
+  GtkWidget * button_save;
+  GtkWidget * button_delete;
+  GtkWidget * button_properties;
+
+  GdkPixbuf *pixbuf;
+  GtkWidget *pixmap;
+
+  table_files = gtk_table_new (2, 2, FALSE);
+  filesbox = _popupwindow (table_files);
+
+#define MAKE_FILES_BUTTON(action, icon, x, y, a, b)  \
+  button_ ##action = gtk_button_new ();\
+  pixbuf = gpe_find_icon ( ##icon );\
+  pixmap = gpe_render_icon (filesbox->style, pixbuf);\
+  gtk_container_add (GTK_CONTAINER (button_ ##action), pixmap);\
+  gtk_button_set_relief (GTK_BUTTON (button_ ##action), GTK_RELIEF_NONE);\
+  gtk_signal_connect (GTK_OBJECT (button_ ##action), "clicked",\
+                      GTK_SIGNAL_FUNC (on_button_file_ ##action ##_clicked), NULL);\
+  \
+  gtk_table_attach (GTK_TABLE (table_files), button_ ##action, x, y, a, b, \
+                    (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  MAKE_FILES_BUTTON (new        , "new"        , 0, 1, 0, 1);
+  MAKE_FILES_BUTTON (properties , "properties" , 0, 1, 1, 2);
+  MAKE_FILES_BUTTON (save       , "save"       , 1, 2, 1, 2);
+  MAKE_FILES_BUTTON (delete     , "delete"     , 1, 2, 0, 1);
+
+  return filesbox;
+}//filebox_new()
+
 void sketchpad_fill_files_toolbar(GtkWidget * toolbar, GtkWidget * window){
   GdkPixbuf *pixbuf;
   GtkWidget *pixmap;
 
-  pixbuf = gpe_find_icon ("new");
+  GtkWidget *filesbox;
+
+  filesbox = filesbox_new();
+  /**/gtk_window_set_transient_for(GTK_WINDOW(filesbox), GTK_WINDOW(window));
+
+  pixbuf = gpe_find_icon ("files");
   pixmap = gpe_render_icon (window->style, pixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
                            NULL, NULL,
-                           pixmap, on_button_file_new_clicked, NULL);
-  pixbuf = gpe_find_icon ("save");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
-                           pixmap, on_button_file_save_clicked, NULL);
-  pixbuf = gpe_find_icon ("delete");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
-                           NULL, NULL,
-                           pixmap, on_button_file_delete_clicked, NULL);
+                           pixmap, on_button_files_clicked, filesbox);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
