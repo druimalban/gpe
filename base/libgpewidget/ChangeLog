@@ -1,5 +1,9 @@
 2004-10-04  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.91 released.
+
+2004-10-04  Phil Blundell  <pb@nexus.co.uk>
+
 	* gpeiconlistview.c (gpe_icon_list_view_set_border_width): New.
 	(struct _GPEIconListView): New member border_width.
 	(_gpe_icon_list_view_expose): Factor border_width into y
