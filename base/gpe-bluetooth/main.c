@@ -17,7 +17,6 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
-#include <pthread.h>
 #include <errno.h>
 #include <stdio.h>
 
@@ -51,7 +50,7 @@
 
 #define HCIATTACH "/etc/bluetooth/hciattach"
 
-static pthread_t scan_thread;
+static GThread *scan_thread;
 static gboolean scan_complete;
 
 bdaddr_t src_addr = *BDADDR_ANY;
@@ -99,7 +98,9 @@ do_run_scan (void)
   num_rsp = hci_inquiry (dev_id, length, num_rsp, NULL, &info, flags);
   if (num_rsp < 0) 
     {
+      gdk_threads_enter ();
       gpe_perror_box ("Inquiry failed.");
+      gdk_threads_leave ();
       close (dev_id);
       return FALSE;
     }
@@ -107,7 +108,9 @@ do_run_scan (void)
   dd = hci_open_dev(0/*dev_id*/);
   if (dd < 0) 
     {
+      gdk_threads_enter ();
       gpe_perror_box ("HCI device open failed");
+      gdk_threads_leave ();
       close (dev_id);
       free(info);
       return FALSE;
@@ -159,6 +162,7 @@ do_run_scan (void)
 	  bd->pixbuf = gpe_find_icon ("bt-logo");
 	  break;
 	}
+
       gdk_pixbuf_ref (bd->pixbuf);
 
       devices = g_slist_append (devices, bd);
@@ -329,7 +333,7 @@ check_scan_complete (void)
     {
       GSList *iter;
 
-      pthread_join (scan_thread, NULL);
+      g_thread_join (scan_thread);
       
       for (iter = devices; iter; iter = iter->next)
 	{
@@ -374,10 +378,13 @@ show_devices (void)
   gtk_widget_show (devices_window);
 
   scan_complete = FALSE;
-  if (pthread_create (&scan_thread, 0, run_scan, NULL))
-    gpe_perror_box (_("Unable to scan"));
-  else
+
+  scan_thread = g_thread_create ((GThreadFunc) run_scan, NULL, TRUE, NULL);
+
+  if (scan_thread)
     gtk_timeout_add (100, (GtkFunction) check_scan_complete, NULL);
+  else
+    gpe_perror_box (_("Unable to scan"));
 }
 
 static void
@@ -416,6 +423,9 @@ main (int argc, char *argv[])
   GtkWidget *menu_remove;
   GtkTooltips *tooltips;
   int dd;
+
+  g_thread_init (NULL);
+  gdk_threads_init ();
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -496,7 +506,9 @@ main (int argc, char *argv[])
 
   gpe_system_tray_dock (window->window);
 
+  gdk_threads_enter ();
   gtk_main ();
+  gdk_threads_leave ();
 
   exit (0);
 }
