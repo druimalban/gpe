@@ -55,6 +55,7 @@ gchar *photofile = PREFIX "/share/gpe/pixmaps/default/tux-48.png";
 PangoLayout *address_layout;
 guint lost_height;
 GtkWidget *scrollbar;
+gchar *pango_lang_code;
 
 /* redraw the pixbuf */
 gboolean
@@ -335,6 +336,14 @@ set_address_size (GtkWidget *widget, GtkAllocation *allocation, gpointer user_da
   adj->page_size = (double)allocation->height / (double)height;
 }
 
+void
+translate_name_label (GtkWidget *namelabel)
+{
+  gtk_label_set_markup (GTK_LABEL (namelabel),
+			g_strdup_printf ("<span lang='%s'><b>%s</b></span> ",
+					 pango_lang_code, _("Owner")));
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -372,7 +381,6 @@ main (int argc, char *argv[])
   gint val;
   gint opt;
   gint upgrade_result = UPGRADE_ERROR;
-  gchar *pango_lang_code;
 
   /* (LanguageCode) translators: please replace this with your own
      Pango language code: */
@@ -554,9 +562,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (indentedhbox), leftcolvbox, FALSE, FALSE, gpe_boxspacing);
 
   namelabel = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (namelabel),
-			g_strdup_printf ("<span lang='%s'><b>%s</b></span> ",
-					 pango_lang_code, _("Owner")));
+  gtk_widget_add_translation_hook (namelabel, translate_name_label);
   gtk_widget_show (namelabel);
   gtk_box_pack_start (GTK_BOX (leftcolvbox), namelabel, FALSE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (namelabel), GTK_JUSTIFY_LEFT);

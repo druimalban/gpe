@@ -1,3 +1,9 @@
+2003-02-23  Philip Blundell  <philb@gnu.org>
+
+	* gpe-ownerinfo2.c (translate_name_label): New function.
+	(main): Use it.
+	(pango_lang_code): Make global.
+
 2003-02-22  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (VERSION): Set to 0.10.
