@@ -54,19 +54,36 @@
 
 #define MAX_SYM_DEPTH 256
 
-GtkWidget *window;
-GtkWidget *combo;
-GtkWidget *view_scrolld;
-GtkWidget *view_widget;
+/* IDs for data storage fields */
+enum
+{
+	COL_ICON,
+	COL_NAME,
+	COL_SIZE,
+	COL_PERM,
+    COL_CHANGED,
+    COL_TYPE,
+	COL_DATA,
+	N_COLUMNS
+};
+static GtkTreeStore *store = NULL;
 
-GtkWidget *bluetooth_menu_item;
-GtkWidget *copy_menu_item;
-GtkWidget *paste_menu_item;
-GtkWidget *open_menu_item;
-GtkWidget *move_menu_item;
-GtkWidget *rename_menu_item;
-GtkWidget *properties_menu_item;
-GtkWidget *delete_menu_item;
+static GtkWidget *window;
+static GtkWidget *combo;
+static GtkWidget *view_scrolld;
+static GtkWidget *view_widget;
+
+static GtkWidget *bluetooth_menu_item;
+static GtkWidget *copy_menu_item;
+static GtkWidget *paste_menu_item;
+static GtkWidget *open_menu_item;
+static GtkWidget *move_menu_item;
+static GtkWidget *rename_menu_item;
+static GtkWidget *properties_menu_item;
+static GtkWidget *delete_menu_item;
+
+static GtkWidget *btnListView;
+static GtkWidget *btnIconView;
 
 GdkPixbuf *default_pixbuf;
 
@@ -88,7 +105,9 @@ GList *history = NULL;
 
 gchar *current_directory = NULL;
 gchar *current_view = "icons";
-gint current_zoom = 28;
+gint current_zoom = 20;
+static gboolean view_is_icons = FALSE;
+GtkTreeStore *store = NULL;
 
 static gchar *file_clipboard = NULL;
 
@@ -120,6 +139,8 @@ struct gpe_icon my_icons[] = {
   { "preferences", "preferences" },
   { "zoom_in", "filemanager/zoom_in" },
   { "zoom_out", "filemanager/zoom_out" },
+  { "list-view" },
+  { "icon-view" },
   { "icon", PREFIX "/share/pixmaps/gpe-filemanager.png" },
   {NULL, NULL}
 };
@@ -495,56 +516,6 @@ GtkWidget
   return w;
 }
 
-#if 0
-static void
-run_program (gchar *exec, gchar *mime_name)
-{
-  gchar *search_mime, *program_command = NULL;
-  GSList *iter;
-  pid_t p_help;
-
-  if (mime_programs)
-  {
-    for (iter = mime_programs; iter; iter = iter->next)
-    {
-      struct mime_program *program = iter->data;
-
-      if (program->mime)
-      {
-        if (program->mime[strlen (program->mime) - 1] == '*')
-        {
-	  search_mime = g_strdup (program->mime);
-	  search_mime[strlen (search_mime) - 1] = 0;
-
-          if (strstr (mime_name, search_mime))
-	    program_command = g_strdup (program->command);
-        }
-        else if (strcmp (mime_name, program->mime) == 0)
-        {
-	  program_command = g_strdup (program->command);
-        }
-      }
-    }
-  }
-
-  if (program_command)
-  {
-	p_help = fork();
-	switch (p_help)
-	{
-		case -1: 
-			return; /* failed */
-		break;
-		case  0: 
-			execlp(program_command,program_command,exec,NULL);
-		break;
-		default: 
-			g_free(program_command);
-		break;
-	} 
-  }
-}
-#endif
 
 static void
 open_with (GtkButton *button, gpointer data)
@@ -1120,7 +1091,20 @@ add_icon (FileInformation *file_info)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 
   pixbuf = get_pixbuf (mime_icon);
-  gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
+  
+  /* now be careful */
+  if (view_is_icons)
+  	gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
+  else
+  {
+	GtkTreeIter iter;
+	gtk_tree_store_append (store, &iter, NULL);
+	gtk_tree_store_set (store, &iter,
+	    COL_NAME, file_info->vfs->name,
+		COL_ICON, pixbuf,
+		COL_DATA, (gpointer) file_info,
+    	-1);
+  }	  
 }
 
 gint
@@ -1147,7 +1131,11 @@ make_view ()
   loading_directory = 1;
 
   loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
-  gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (view_widget));
+  if (view_is_icons)
+    gpe_icon_list_view_clear (GPE_ICON_LIST_VIEW (view_widget));
+  else
+    gtk_tree_store_clear(GTK_TREE_STORE(store));
+
   gtk_widget_draw (view_widget, NULL); // why?
 
   open_dir_result = 
@@ -1346,6 +1334,93 @@ zoom_out ()
 }
 
 
+static void
+view_icons (GtkWidget *widget)
+{
+//  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_BELOW);
+  gtk_widget_destroy(view_widget);
+  gtk_tree_store_clear(GTK_TREE_STORE(store));
+  view_widget = create_view_widget_icons();
+  gtk_widget_set_sensitive(btnListView,TRUE);
+  gtk_widget_set_sensitive(btnIconView,FALSE);
+  view_is_icons = TRUE;
+}
+
+
+static void
+view_list (GtkWidget *widget)
+{
+//  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_RIGHT);
+  gtk_widget_destroy(view_widget);
+  view_widget = create_view_widget_list();
+  gtk_widget_set_sensitive(btnListView,FALSE);
+  gtk_widget_set_sensitive(btnIconView,TRUE);
+  view_is_icons = FALSE;
+}
+
+
+
+static GtkWidget*
+create_view_widget_list()
+{
+    GtkWidget *treeview;
+	GtkCellRenderer *renderer;
+	GtkTreeViewColumn *column;
+	
+	treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (store));
+	
+	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(treeview),TRUE);
+	gtk_tree_view_set_rules_hint (GTK_TREE_VIEW(treeview),TRUE);
+  
+	renderer = gtk_cell_renderer_pixbuf_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Icon"),
+							   renderer,
+							   "pixbuf",
+							   COL_ICON,
+							   NULL);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Name"),
+							   renderer,
+							   "text",
+							   COL_NAME,
+							   NULL);
+	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+	renderer = gtk_cell_renderer_text_new ();
+	column = gtk_tree_view_column_new_with_attributes (_("Size"),
+							   renderer,
+							   "text",
+							   COL_SIZE,
+							   NULL);
+	gtk_tree_view_column_set_resizable(GTK_TREE_VIEW_COLUMN(column),TRUE);
+	gtk_tree_view_append_column (GTK_TREE_VIEW (treeview), column);
+
+	return treeview;
+}
+
+
+static GtkWidget*
+create_view_widget_icons()
+{
+  GtkWidget *view_widget;
+  
+  view_widget = gpe_icon_list_view_new ();
+  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
+		      GTK_SIGNAL_FUNC (button_clicked), NULL);
+  gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
+		      GTK_SIGNAL_FUNC (show_popup), NULL);
+                             
+  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view_widget), 30);
+  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_RIGHT);
+  
+  return view_widget;
+}
+
+
 int
 main (int argc, char *argv[])
 {
@@ -1367,6 +1442,16 @@ main (int argc, char *argv[])
 
   bluetooth_init ();
 
+	/* init tree storage stuff */
+	store = gtk_tree_store_new (N_COLUMNS,
+  		G_TYPE_POINTER,
+		G_TYPE_STRING,
+	 	G_TYPE_LONG,
+		G_TYPE_INTEGER,
+		G_TYPE_DATE,
+		G_TYPE_STRING,
+		G_TYPE_POINTER);
+  
   /* main window */
   size_x = gdk_screen_width() / 2;
   size_y = gdk_screen_height() * 2 / 3;  
@@ -1390,15 +1475,7 @@ main (int argc, char *argv[])
   combo_signal_id = gtk_signal_connect (GTK_OBJECT (GTK_COMBO (combo)->entry),
     "activate", GTK_SIGNAL_FUNC (goto_directory), NULL);
 
-  view_widget = gpe_icon_list_view_new ();
-  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
-		      GTK_SIGNAL_FUNC (button_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
-		      GTK_SIGNAL_FUNC (show_popup), NULL);
-                             
-  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW (view_widget), current_zoom);
-  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view_widget), 30);
-  gpe_icon_list_view_set_textpos (GPE_ICON_LIST_VIEW (view_widget), GPE_TEXT_RIGHT);
+  view_widget = create_view_widget_list();
   
   sw = gtk_scrolled_window_new(NULL,NULL);
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw),GTK_POLICY_ALWAYS,GTK_POLICY_ALWAYS);
@@ -1442,6 +1519,19 @@ main (int argc, char *argv[])
 			    _("Zoom out"), _("Zoom out."),
 			    G_CALLBACK (zoom_out), NULL, -1);
 
+  p = gpe_find_icon ("icon-view");
+  pw = gtk_image_new_from_pixbuf(p);
+  btnIconView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
+			   _("Icon view"), _("View files as icons"), pw, 
+			   G_CALLBACK (view_icons), NULL);
+  
+  p = gpe_find_icon ("list-view");
+  pw = gtk_image_new_from_pixbuf(p);
+  btnListView = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("List view"), 
+			   _("List view"), _("View files in a list"), pw, 
+			   G_CALLBACK (view_list), NULL);
+  gtk_widget_set_sensitive(btnListView,FALSE);
+               
   p = gpe_find_icon ("dir-up");
   pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Goto Location"), 
