@@ -1281,7 +1281,7 @@ build_new_user_box (void)
   GtkWidget *hbox;
   GtkWidget *label;
   GtkWidget *ok_button;
-  GtkWidget *language_label;
+  GtkWidget *label_language, *hbox_language;
   guint gpe_boxspacing = gpe_get_boxspacing ();
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
@@ -1290,6 +1290,7 @@ build_new_user_box (void)
   label_fullname = gtk_label_new_with_translation (PACKAGE, N_("Full name"));
   label_password = gtk_label_new_with_translation (PACKAGE, N_("Password"));
   label_confirm = gtk_label_new_with_translation (PACKAGE, N_("Confirm password"));
+  label_language = gtk_label_new_with_translation (PACKAGE, N_("Language"));
 
   entry_username = gtk_entry_new ();
   entry_fullname = gtk_entry_new ();
@@ -1313,10 +1314,8 @@ build_new_user_box (void)
 		      FALSE, FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (hbox_confirm), label_confirm,
 		      FALSE, FALSE, gpe_boxspacing);
-  gtk_box_pack_start (GTK_BOX (hbox_language), language_label,
+  gtk_box_pack_start (GTK_BOX (hbox_language), label_language,
 		      FALSE, FALSE, gpe_boxspacing);
-
-  language_label = gtk_label_new_with_translation (PACKAGE, N_("Language"));
 
   table = gtk_table_new (5, 2, FALSE);
   gtk_table_attach_defaults (GTK_TABLE (table), hbox_username, 
