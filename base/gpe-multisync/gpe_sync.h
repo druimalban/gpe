@@ -28,7 +28,7 @@ struct db
   const gchar *name;
   int type;
 
-  GList *(*get_changes)(struct db *db, GList *data, int newdb);
+  GList *(*get_changes)(struct db *db, int newdb);
   gboolean (*push_object)(struct db *db, const char *obj, const char *uid,
 			  char *returnuid, int *returnuidlen, GError **err);
   gboolean (*delete_object)(struct db *db, const char *uid, gboolean soft);
@@ -36,6 +36,7 @@ struct db
   nsqlc *db;
   time_t last_timestamp;
   time_t current_timestamp;
+  gboolean changed;
 };
 
 #define GPE_DEBUG(conn, x) fprintf (stderr, "%s\n", (x))

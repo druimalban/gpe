@@ -257,6 +257,32 @@ syncobj_get_recurring (gpe_conn *conn, changed_object *obj)
 void 
 sync_done (gpe_conn *conn, gboolean success) 
 {
+  GSList *i;
+
+  for (i = db_list; i; i = i->next)
+    {
+      struct db *db = i->data;
+
+      if (db->changed)
+	{
+	  gchar *filename;
+	  FILE *fp;
+
+	  filename = g_strdup_printf ("%s/%s", 
+				      sync_get_datapath (conn->sync_pair),
+				      db->name);
+
+	  fp = fopen (filename, "w");
+	  if (fp)
+	    {
+	      fprintf (fp, "%d\n", (int)db->current_timestamp);
+	      fclose (fp);
+	    }
+	  
+	  g_free (filename);
+	}
+    }
+
   sync_set_requestdone (conn->sync_pair);
 }
 

@@ -22,8 +22,9 @@
 #include <mimedir/mimedir-vcal.h>
 
 GList *
-calendar_get_changes (struct db *db, GList *data, int newdb)
+calendar_get_changes (struct db *db, int newdb)
 {
+  GList *data = NULL;
   GSList *list, *i;
   
   if (newdb)

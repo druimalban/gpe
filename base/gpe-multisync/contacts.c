@@ -20,8 +20,9 @@
 #include <gpe/tag-db.h>
 
 GList *
-contacts_get_changes (struct db *db, GList *data, int newdb)
+contacts_get_changes (struct db *db, int newdb)
 {
+  GList *data = NULL;
   GSList *list, *i;
   
   list = fetch_uid_list (db->db, "select distinct urn from contacts_urn");

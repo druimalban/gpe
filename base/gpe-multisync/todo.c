@@ -22,8 +22,9 @@
 #include <mimedir/mimedir-vcal.h>
 
 GList *
-todo_get_changes (struct db *db, GList *data, int newdb)
+todo_get_changes (struct db *db, int newdb)
 {
+  GList *data = NULL;
   GSList *list, *i;
   
   list = fetch_uid_list (db->db, "select distinct uid from todo_urn");

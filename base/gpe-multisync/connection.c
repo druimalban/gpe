@@ -115,11 +115,40 @@ gpe_do_get_changes (void *_conn)
   for (i = db_list; i; i = i->next)
     {
       struct db *db = i->data;
+      gchar *filename;
+      FILE *fp;
+
+      db->last_timestamp = 0;
+
+      filename = g_strdup_printf ("%s/%s", 
+				  sync_get_datapath (conn->sync_pair),
+				  db->name);
+
+      fp = fopen (filename, "r");
+      if (fp)
+	{
+	  int i;
+
+	  if (fscanf (fp, "%d", &i))
+	    db->last_timestamp = i;
+
+	  fclose (fp);
+	}
+
+      g_free (filename);
 
       nsqlc_get_time (db->db, &db->current_timestamp, NULL);
 
       if (conn->commondata.object_types & db->type)
-	changes = db->get_changes (db, changes, newdbs & db->type);
+	{
+	  GList *local_changes = db->get_changes (db, newdbs & db->type);
+
+	  if (local_changes)
+	    {
+	      db->changed = TRUE;
+	      changes = g_list_concat (changes, local_changes);
+	    }
+	}
     }
   
   /* Allocate the change_info struct */
