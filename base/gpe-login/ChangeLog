@@ -4,6 +4,9 @@
 
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* locale.alias: Remove duplicates.  Comment out some languages for
+	which no translations are currently available.
+
 	* Makefile: Delete old rules relating to .po files.  Call
 	translation-ipkg.
 	* po/Makefile: Deleted.
