@@ -44,10 +44,19 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
 	{
 	  if (t->type == G_TYPE_STRING)
 	    g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, value, NULL);
-	  else if (t->type == G_TYPE_INT)
-	    g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, atoi (value), NULL);
+	  else if (t->type == G_TYPE_INT) 
+	    {
+	      if (!strcasecmp (t->tag, "STATE") && !strcmp(value, "2")) 
+		{ // Completed Task
+		  g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_COMPLETED, NULL);
+		  g_object_set (G_OBJECT (todo), "dtcompleted", mimedir_datetime_new_from_time_t (time(NULL)), NULL);
+		} 
+	      else
+		g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, atoi (value), NULL);
+	    } 
 	  else
-	    abort ();
+	    return FALSE;
+
 	  return TRUE;
 	}
       t++;
@@ -113,6 +122,12 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
 
 	  g_object_get (G_OBJECT (vtodo), t->vc ? t->vc : t->tag, &value, NULL);
 
+	  // Convert from MIMEDir's Status to GPE's state
+	  if (! strcasecmp (t->tag, "STATE"))
+	    value = (value == MIMEDIR_STATUS_COMPLETED) ? 2 : 0;
+	  // The default priority of 0 seems to annoy GPE-Todo?
+	  if (! strcasecmp (t->tag, "PRIORITY"))
+	    value = (value >= 5) ? value : 5;
 	  data = gpe_tag_list_prepend (data, t->tag, g_strdup_printf ("%d", value));
 	}
       else
