@@ -215,8 +215,18 @@ year_view_update (void)
 
   for (i = 0; i < 367; i++)
     {
-      GSList *l = event_db_list_for_period (basetime + (i * SECONDS_IN_DAY),
-					    basetime + ((i + 1) * SECONDS_IN_DAY) - 1);
+      int already=0;
+      struct tm *newtm;
+      time_t newbasetime;
+      GSList *l;
+      
+      newbasetime=basetime + (i * SECONDS_IN_DAY);
+      newtm = localtime (&newbasetime);
+      
+      if (!newtm->tm_isdst) newbasetime+=60*60;
+            
+      l = event_db_list_for_period (newbasetime, newbasetime + SECONDS_IN_DAY - 1);
+      
       if (l)
 	{
 	  event_db_list_destroy (l);

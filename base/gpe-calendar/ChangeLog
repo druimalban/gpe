@@ -1,3 +1,9 @@
+2002-09-09  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* month-view.c: fix daylight savings glitch
+	
+	* year-view.c: same	
+
 2002-09-08  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (struct edit_state): Add taskdate, taskspin,

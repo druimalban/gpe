@@ -320,6 +320,11 @@ month_view_update ()
       tm_end.tm_sec = 59;
       end = mktime (&tm_end);
 
+      if (!tm_start.tm_isdst) {
+	      start+=60*60;
+	      end+=60*60;
+      }
+      
       day_events[day] = event_db_list_for_period (start, end);
       
       for (iter = day_events[day]; iter; iter = iter->next)
