@@ -48,7 +48,7 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lsqlite $(LDFLAGS)
 
 install-program: all $(PACKAGE).desktop
-	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
+	for i in $(PIXMAPS); do install -D -m 644 pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps

@@ -1,7 +1,7 @@
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
-	* Makefile (install-program): Install gpe-sketchbook.png and menu with
-	correct permissions.
+	* Makefile (install-program): Install pixmaps and menu with correct
+	permissions.
 
 	* Makefile (install-program): Install .desktop file with .desktop
 	filename extension.

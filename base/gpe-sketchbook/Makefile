@@ -19,7 +19,7 @@ arm:
 ARM_BIN = $(PACKAGE)
 install-program:  $(PACKAGE).desktop #all
 	for i in $(PIXMAPS); do \
-	install -D pixmaps/$$i     $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/$$i;\
+	install -D -m 644 pixmaps/$$i     $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/$$i;\
 	done
 	install -D src/$(ARM_BIN)  $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
