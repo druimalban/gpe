@@ -54,11 +54,11 @@ load_pixmaps (struct pix *p)
 	}
       else
 	{
-	  snprintf (buf, sizeof (buf) - 1, "%s/%s", theme_dir, p->filename);
+	  snprintf (buf, sizeof (buf) - 1, "%s/%s.png", theme_dir, p->filename);
 	  buf[sizeof (buf) - 1] = 0;
 	  if (access (buf, F_OK) != 0 && theme_dir != default_theme_dir)
 	    {
-	      snprintf (buf, sizeof (buf) - 1, "%s/%s", default_theme_dir, 
+	      snprintf (buf, sizeof (buf) - 1, "%s/%s.png", default_theme_dir, 
 			p->filename);
 	      buf[sizeof (buf) - 1] = 0;
 	    }
