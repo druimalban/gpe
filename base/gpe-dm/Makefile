@@ -10,13 +10,19 @@ else
 BUILD = build
 endif
 
+MEMBERS = gpe-dm
+
 CFLAGS = `pkg-config --cflags glib-2.0`
 LDFLAGS = `pkg-config --libs glib-2.0`
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-gpe-dm: gpe-dm.o
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+gpe-dm: $(SOURCES)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 install-program: gpe-dm
 	install -Ds gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
