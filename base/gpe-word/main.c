@@ -25,6 +25,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
+#include <gpe/popup_menu.h>
 
 #include <libdm.h>
 
@@ -603,15 +604,20 @@ toggle_tag (GtkWidget *parent_button, const gchar *tag_name)
   text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   if (gtk_text_buffer_get_selection_bounds (text_buffer, &iter_start, &iter_end))
   {
+    if (GTK_IS_TOGGLE_BUTTON (parent_button))
+    {
     if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (parent_button)))
       gtk_text_buffer_apply_tag_by_name (text_buffer, tag_name, &iter_start, &iter_end);
     else
       gtk_text_buffer_remove_tag_by_name (text_buffer, tag_name, &iter_start, &iter_end);
+    }
+    else
+      gtk_text_buffer_apply_tag_by_name (text_buffer, tag_name, &iter_start, &iter_end);
   }
 }
 
 static void
-cursor_position_changed (GtkTextView *text_view)
+cursor_position_changed (GtkTextView *text_view, GdkEventButton *event)
 {
   GtkWidget *tag_widget;
   GtkTextBuffer *text_buffer;
@@ -620,9 +626,7 @@ cursor_position_changed (GtkTextView *text_view)
   gboolean bold, italic, underline, strikethrough = FALSE;
 
   printf ("Cursor moved.\n");
-
-  //  if (movement_step == GTK_MOVEMENT_VISUAL_POSITIONS)
-  //{
+  /*
   text_buffer = gtk_text_view_get_buffer (text_view);
     if (gtk_text_buffer_get_selection_bounds (text_buffer, &iter_start, &iter_end))
     {
@@ -631,7 +635,7 @@ cursor_position_changed (GtkTextView *text_view)
       while (applied_tags != NULL)
       {
 	g_object_get (G_OBJECT (applied_tags->data), "weight", &bold, NULL);
-          bold = TRUE;
+	bold = TRUE;
 
         applied_tags = g_slist_next (applied_tags);
       }
@@ -642,108 +646,11 @@ cursor_position_changed (GtkTextView *text_view)
       else
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (tag_widget), FALSE);
     }
-    //}
-}
-
-static int
-select_font_popup_cmp_families (const void *a, const void *b)
-{
-  const char *a_name = pango_font_family_get_name (*(PangoFontFamily **)a);
-  const char *b_name = pango_font_family_get_name (*(PangoFontFamily **)b);
-  
-  return g_utf8_collate (a_name, b_name);
+  */
 }
 
 static void
-select_font_popup (GtkWidget *parent_button)
-{
-  GtkWidget *popup_window, *frame, *vbox, *button, *alignment, *scrolled_window, *button_label;
-  GtkWidget *parent_arrow;
-  GtkRequisition frame_requisition, parent_button_requisition;
-  GtkRcStyle *button_label_rc_style;
-  PangoFontFamily **families;
-  PangoFontFamily *match_family = NULL;
-  gint n_families, i;
-  gint x, y;
-  gint window_x, window_y;
-  gint screen_width;
-  gint screen_height;
-
-  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
-
-  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
-  {
-    gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
-    g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
-    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-  }
-  else
-  {
-    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
-    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
-
-    popup_window = gtk_window_new (GTK_WINDOW_POPUP);
-    vbox = gtk_vbox_new (FALSE, 0);
-    frame = gtk_frame_new (NULL);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
-    scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-    pango_context_list_families (gtk_widget_get_pango_context (GTK_WIDGET (parent_button)), &families, &n_families);
-    qsort (families, n_families, sizeof (PangoFontFamily *), select_font_popup_cmp_families);
-
-    for (i=0; i<n_families; i++)
-    {
-      const gchar *font_name = pango_font_family_get_name (families[i]);
-
-      printf ("Found font: %s\n", font_name);
-
-      button_label = gtk_label_new (font_name);
-      button_label_rc_style = gtk_rc_style_new ();
-      button_label_rc_style->font_desc = pango_font_description_from_string (g_strdup_printf ("%s 9", font_name));
-      gtk_widget_modify_style (button_label, button_label_rc_style);
-
-      alignment = gtk_alignment_new (0, 0, 0, 0);
-      button = gtk_button_new ();
-      gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
-      gtk_container_add (GTK_CONTAINER (alignment), button_label);
-      gtk_container_add (GTK_CONTAINER (button), alignment);
-      gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
-    }
-
-    g_free (families);
-
-    gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
-    gtk_container_add (GTK_CONTAINER (frame), scrolled_window);
-    gtk_container_add (GTK_CONTAINER (popup_window), frame);
-    gtk_widget_show_all (frame);
-
-    gtk_widget_size_request (parent_button, &parent_button_requisition);
-    gtk_widget_size_request (frame, &frame_requisition);
-
-    gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
-
-    screen_width = gdk_screen_width ();
-    screen_height = gdk_screen_height ();
-      
-    x = CLAMP (x + parent_button->allocation.x, 0, MAX (0, screen_width - frame_requisition.width));
-    y += parent_button->allocation.y;
-    y += parent_button_requisition.height;
-
-    gtk_widget_set_size_request (scrolled_window, -1, (screen_height - y) - 10);
-
-    gtk_widget_set_uposition (popup_window, x, y);
-      
-    g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
-
-    gtk_widget_show (popup_window);
-  }
-
-  gtk_widget_grab_focus (text_view);
-}
-
-static void
-select_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j)
+construct_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j)
 {
   GtkWidget *frame, *drawing_area;
 
@@ -756,87 +663,41 @@ select_color_popup_add_color (GtkWidget *table, GdkColor color, gint i, gint j)
 
   gtk_container_add (GTK_CONTAINER (frame), drawing_area);
   gtk_table_attach_defaults (GTK_TABLE (table), frame, i, i+1, j, j+1);
-  gtk_widget_show_all (frame);
 }
 
 
-static void
-select_color_popup (GtkWidget *parent_button)
+static GtkWidget *
+construct_color_popup (GtkWidget *parent_button)
 {
-  GtkWidget *popup_window, *frame, *table, *button;
-  GtkWidget *parent_arrow;
-  GtkRequisition frame_requisition, parent_button_requisition;
+  GtkWidget *table;
   GdkColor *colors = NULL;
-  gint x, y;
   gint i = 0, j = 0, k = 0;
   gint window_x, window_y;
-  gint screen_width;
-  gint screen_height;
   gint n_colors = 0;
 
-  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
+  table = gtk_table_new (4, 5, TRUE);
+  gtk_table_set_row_spacings (GTK_TABLE (table), 1);
+  gtk_table_set_col_spacings (GTK_TABLE (table), 1);
 
-  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
+  gtk_color_selection_palette_from_string (default_colors, &colors, &n_colors);
+
+  while (k < n_colors)
   {
-    gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
-    g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
-    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-  }
-  else
-  {
-    gtk_color_selection_palette_from_string (default_colors, &colors, &n_colors);
-
-    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
-    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
-
-    popup_window = gtk_window_new (GTK_WINDOW_POPUP);
-    frame = gtk_frame_new (NULL);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
-
-    table = gtk_table_new (4, 5, TRUE);
-    gtk_table_set_row_spacings (GTK_TABLE (table), 1);
-    gtk_table_set_col_spacings (GTK_TABLE (table), 1);
-
-    while (k < n_colors)
+    if (j == 4)
     {
-      if (j == 4)
-      {
-	j = 0;
-	i++;
-      }
-      select_color_popup_add_color (table, colors[k], i, j);
-      k++;
-      j++;
+      j = 0;
+      i++;
     }
-
-    gtk_container_add (GTK_CONTAINER (frame), table);
-    gtk_container_add (GTK_CONTAINER (popup_window), frame);
-    gtk_widget_show_all (frame);
-
-    gtk_widget_size_request (parent_button, &parent_button_requisition);
-    gtk_widget_size_request (frame, &frame_requisition);
-
-    gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
-
-    screen_width = gdk_screen_width ();
-    screen_height = gdk_screen_height ();
-      
-    x = CLAMP (x + parent_button->allocation.x, 0, MAX (0, screen_width - frame_requisition.width));
-    y += parent_button->allocation.y;
-    y += parent_button_requisition.height;
-
-    gtk_widget_set_uposition (popup_window, x, y);
-      
-    g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
-
-    gtk_widget_show (popup_window);
+    construct_color_popup_add_color (table, colors[k], i, j);
+    k++;
+    j++;
   }
 
-  gtk_widget_grab_focus (text_view);
+  return table;
 }
 
 static GtkWidget *
-construct_justification_menu_add_button (const gchar *stock_id)
+construct_justification_popup_add_button (const gchar *stock_id)
 {
   GtkWidget *button, *hbox, *image, *label, *alignment;
   GtkStockItem item;
@@ -858,121 +719,33 @@ construct_justification_menu_add_button (const gchar *stock_id)
 }
 
 static GtkWidget *
-construct_justification_menu ()
+construct_justification_popup (GtkWidget *parent_button)
 {
   GtkWidget *vbox, *button;
 
   vbox = gtk_vbox_new (FALSE, 0);
 
-  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_LEFT);
+  button = construct_justification_popup_add_button (GTK_STOCK_JUSTIFY_LEFT);
   gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
-  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_CENTER);
+  button = construct_justification_popup_add_button (GTK_STOCK_JUSTIFY_CENTER);
   gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
-  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_RIGHT);
+  button = construct_justification_popup_add_button (GTK_STOCK_JUSTIFY_RIGHT);
   gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
-  button = construct_justification_menu_add_button (GTK_STOCK_JUSTIFY_FILL);
+  button = construct_justification_popup_add_button (GTK_STOCK_JUSTIFY_FILL);
   gtk_box_pack_start (GTK_BOX (vbox), button, FALSE, FALSE, 0);
 
   return vbox;
 }
 
 static void
-popup_menu_show (GtkWidget *parent_button, GtkWidget *(construct_func)())
-{
-  GtkWidget *popup_window, *frame, *child_widget;
-  GtkWidget *parent_arrow;
-  GtkRequisition frame_requisition, parent_button_requisition;
-  gint x, y;
-  gint window_x, window_y;
-  gint screen_width;
-  gint screen_height;
-
-  parent_arrow = g_object_get_data (G_OBJECT (parent_button), "arrow");
-
-  if (g_object_get_data (G_OBJECT (parent_button), "active") == TRUE)
-  {
-    gtk_widget_destroy (g_object_get_data (G_OBJECT (parent_button), "window"));
-    g_object_set_data (G_OBJECT (parent_button), "active", FALSE);
-    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-  }
-  else
-  {
-    g_object_set_data (G_OBJECT (parent_button), "active", TRUE);
-    gtk_arrow_set (GTK_ARROW (parent_arrow), GTK_ARROW_UP, GTK_SHADOW_NONE);
-
-    popup_window = gtk_window_new (GTK_WINDOW_POPUP);
-    frame = gtk_frame_new (NULL);
-    gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
-
-    child_widget = construct_func ();
-
-    gtk_container_add (GTK_CONTAINER (frame), child_widget);
-    gtk_container_add (GTK_CONTAINER (popup_window), frame);
-
-    gtk_widget_size_request (parent_button, &parent_button_requisition);
-    gtk_widget_size_request (frame, &frame_requisition);
-
-    gdk_window_get_position (GDK_WINDOW (main_window->window), &x, &y);
-
-    screen_width = gdk_screen_width ();
-    screen_height = gdk_screen_height ();
-      
-    x = CLAMP (x + parent_button->allocation.x, 0, MAX (0, screen_width - frame_requisition.width));
-    y += parent_button->allocation.y;
-    y += parent_button_requisition.height;
-
-    gtk_widget_set_uposition (popup_window, x, y);
-      
-    g_object_set_data (G_OBJECT (parent_button), "window", popup_window);
-
-    gtk_widget_show_all (popup_window);
-  }
-
-  gtk_widget_grab_focus (text_view);
-}
-
-static GtkWidget *
-popup_menu_button_new (const gchar *stock_id)
-{
-  GtkWidget *button, *arrow, *hbox, *image;
-  GtkRequisition requisition;
-  gint width = 0, height;
-
-  button = gtk_button_new ();
-  arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
-  hbox = gtk_hbox_new (FALSE, 0);
-  image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_SMALL_TOOLBAR);
-
-  gtk_box_set_homogeneous (GTK_BOX (hbox), FALSE);
-
-  g_object_set_data (G_OBJECT (button), "active", FALSE);
-  g_object_set_data (G_OBJECT (button), "hbox", hbox);
-  g_object_set_data (G_OBJECT (button), "image", image);
-  g_object_set_data (G_OBJECT (button), "arrow", arrow);
-
-  gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), arrow, FALSE, FALSE, 0);
-
-  gtk_widget_size_request (image, &requisition);
-  width = width + requisition.width;
-  height = requisition.height;
-
-  gtk_widget_size_request (arrow, &requisition);
-  width = (width + requisition.width) - 5;
-
-  gtk_widget_set_size_request (hbox, width, height);
-  gtk_container_add (GTK_CONTAINER (button), hbox);
-  gtk_widget_show_all (button);
-
-  return button;
-}
-
-static void
 add_default_buffer_tags (GtkTextBuffer *buffer)
 {
+  PangoFontFamily **families;
+  gint n_families, i;
+
   gtk_text_buffer_create_tag (buffer, "blue",
 			      "foreground", "blue", NULL);
   gtk_text_buffer_create_tag (buffer, "green",
@@ -988,6 +761,20 @@ add_default_buffer_tags (GtkTextBuffer *buffer)
 			      "underline", PANGO_UNDERLINE_SINGLE, NULL);
   gtk_text_buffer_create_tag (buffer, "strikethrough",
 			      "strikethrough", TRUE, NULL);
+
+    pango_context_list_families (gtk_widget_get_pango_context (GTK_WIDGET (text_view)), &families, &n_families);
+    for (i=0; i<n_families; i++)
+    {
+      const gchar *font_name = pango_font_family_get_name (families[i]);
+      gtk_text_buffer_create_tag (buffer, font_name,
+				  "font", font_name, NULL);
+    }
+}
+
+static void
+font_selected (PangoFontFamily *font)
+{
+  printf ("Selected font %s\n", pango_font_family_get_name (font));
 }
 
 int
@@ -995,7 +782,7 @@ main (int argc, char *argv[])
 {
   GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *scroll, *toolbar_icon;
   GtkWidget *toolbar_button_bold, *toolbar_button_italic, *toolbar_button_underline, *toolbar_button_strikethrough;
-  GtkWidget *justify_button, *color_button, *font_button;
+  GtkWidget *justify_button, *justify_button_icon, *color_button, *font_button;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
   GtkTextBuffer *buf;
@@ -1056,13 +843,14 @@ main (int argc, char *argv[])
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   text_view = gtk_text_view_new ();
-  g_signal_connect (G_OBJECT (text_view), "set-anchor",
-		      GTK_SIGNAL_FUNC (cursor_position_changed), NULL);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_view), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text_view), TRUE);
+  gtk_text_view_set_left_margin (GTK_TEXT_VIEW (text_view), 3);
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_view));
   g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
+  //g_signal_connect (G_OBJECT (text_view), "button-press-event",
+  //		    GTK_SIGNAL_FUNC (cursor_position_changed), NULL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New"), 
@@ -1106,23 +894,15 @@ main (int argc, char *argv[])
   toolbar_button_strikethrough = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_CHILD_TOGGLEBUTTON, NULL, _("Strikethrough"), _("Strikethrough"), _("Make the selected text have a strike through it."), toolbar_icon, toggle_tag, "strikethrough");
   g_hash_table_insert (tag_widgets, (gpointer) "strikethrough", (gpointer) toolbar_button_strikethrough);
 
-  justify_button = popup_menu_button_new (GTK_STOCK_JUSTIFY_LEFT);
-  gtk_signal_connect (GTK_OBJECT (justify_button), "pressed",
-		      GTK_SIGNAL_FUNC (popup_menu_show), construct_justification_menu);
+  justify_button = popup_menu_button_new_from_stock (GTK_STOCK_JUSTIFY_LEFT, construct_justification_popup, NULL);
 
-  color_button = popup_menu_button_new (GTK_STOCK_SELECT_COLOR);
-  gtk_signal_connect (GTK_OBJECT (color_button), "pressed",
-		      GTK_SIGNAL_FUNC (select_color_popup), NULL);
-
-  font_button = popup_menu_button_new (GTK_STOCK_SELECT_FONT);
-  gtk_signal_connect (GTK_OBJECT (font_button), "pressed",
-		      GTK_SIGNAL_FUNC (select_font_popup), NULL);
+  font_button = popup_menu_button_new_type_font (font_selected);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), gtk_item_factory_get_widget (item_factory, "<main>"), FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, TRUE, TRUE, 0);
   gtk_box_pack_end (GTK_BOX (hbox), font_button, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (hbox), color_button, FALSE, FALSE, 0);
+  //gtk_box_pack_end (GTK_BOX (hbox), color_button, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (hbox), justify_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
