@@ -15,6 +15,5 @@ MEMBERS = \
 	sketchpad	     \
 	sketchpad-cb	     \
 	sketchpad-gui	     \
-	files		     \
-	files-png	     
+	files 
 

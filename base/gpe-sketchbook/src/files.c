@@ -20,7 +20,6 @@
 #include <time.h>   //time --> filename
 
 #include "files.h"
-#include "files-png.h"
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
 
@@ -52,4 +51,34 @@ gboolean file_delete(const gchar * fullpath_filename){
   if(res == 0) return TRUE;
   else return FALSE;
 }
+
+gint file_save_png(const gchar * fullpath_filename){
+    GdkPixbuf   * pixbuf;
+    gboolean success;
+
+    //--retrieve image data
+    pixbuf = sketchpad_get_current_sketch_pixbuf();
+    success = gdk_pixbuf_save (pixbuf, fullpath_filename, "png", NULL /*&error*/, NULL);
+    if(!success){
+      return 0;
+    }
+
+    gdk_pixbuf_unref(pixbuf);
+
+    return 1;
+}//file_save_png()
+
+gint file_load_png(const gchar * fullpath_filename){
+  GdkPixbuf * pixbuf = NULL;
+
+  pixbuf = gdk_pixbuf_new_from_file(fullpath_filename, NULL); //GError **error
+  if(pixbuf == NULL){
+    return 0;
+  }
+
+  sketchpad_set_current_sketch_from_pixbuf(pixbuf);
+  gdk_pixbuf_unref(pixbuf);
+
+  return 1; 
+}//file_load_png()
 
