@@ -47,7 +47,7 @@
 <!--#if expr="x${pagename}=xcontact" -->
 <b>Contact</b>
 <!--#else -->
-<A href="/contact.shtml">Contact</a>
+<A href="/contact.shtml">Mailing list</a>
 <!--#endif -->
 
 </small>
