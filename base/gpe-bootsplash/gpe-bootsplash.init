@@ -13,10 +13,11 @@ case $1 in
 	modprobe h3600_hal
 	case `module_id` in
 		" iPAQ 3100" )	    ARGS="--mono" ;;
-		" iPAQ 3600" )	    ;;
-		" iPAQ 3700" )	    ;;
-		" iPAQ 3800" )	    ARGS="--flip" ;;
-		" iPAQ 3900" )	    ;;
+		" iPAQ 3600" )	    ARGS="--flip" ;;
+		" iPAQ 3700" )	    ARGS="--flip" ;;
+		" iPAQ 3800" )	    ;;
+		" iPAQ 3900" )	    ARGS="--flip" ;;
+		" iPAQ 5400" )	    ;;
 	esac
 	/usr/bin/gpe-bootsplash $ARGS
 	;;
