@@ -159,7 +159,7 @@ on_matchbox_entry_changed              (GtkWidget     *menu,
                                         gpointer         user_data)
 {
 #if ! __i386__
-  system_printf("mbcontrol -t %s",gtk_object_get_data(GTK_OBJECT(
+  system_printf("mbcontrol -t %s",(char *)gtk_object_get_data(GTK_OBJECT(
 								 gtk_menu_get_active(GTK_MENU(menu))
 								 ),"fullpath"));
 #endif

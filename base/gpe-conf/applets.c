@@ -141,8 +141,8 @@ cancel_fs                               (GtkButton       *button,
 
   gtk_widget_destroy(GTK_WIDGET(s->fs));
 }
-static void
-freedata                               (GtkButton       *button,
+void
+freedata                               (GtkWidget       *ignored,
                                         gpointer         user_data)
 {
   struct fstruct *s = (struct fstruct *)user_data;

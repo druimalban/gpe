@@ -12,6 +12,7 @@ MEMBERS += theme
 MEMBERS += keyctl
 MEMBERS += ownerinfo
 MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
+MEMBERS += users/interface users/callbacks  
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 

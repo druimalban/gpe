@@ -80,27 +80,15 @@ void init_buttons()
     }
 }
 
-#if 0 //an attempt to draw some arrows from the pixmaps to the buttons. 
+#if 1 // an attempt to draw some nice arrows from the pixmaps to the buttons. 
+// if anyone is more experienced on gdk and wan to do it..
 gboolean expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
-{
+{			     
 
-/*  gdk_window_clear_area (widget->window,
-                         event->area.x, event->area.y,
-                         event->area.width, event->area.height);
-  gdk_gc_set_clip_rectangle (widget->style->fg_gc[widget->state],
-                             &event->area);
-			     
-*/ 
-  gtk_gpe_pixmap_expose     (widget,
-			     event);
-  gdk_draw_arc (widget->window,
+  gdk_draw_line (widget->window,
                 widget->style->fg_gc[widget->state],
-                TRUE,
-                0, 0, widget->allocation.width, widget->allocation.height,
-                0, 64 * 360);
-/*  gdk_gc_set_clip_rectangle (widget->style->fg_gc[widget->state],
-                             NULL);
-*/
+                184, 182,165, 145 
+                 );
   return TRUE;
 }
 #endif
@@ -117,13 +105,16 @@ on_button_clicked                      (GtkButton       *button,
 
 GtkWidget *Keyctl_Build_Objects()
 {
-  GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
   GtkWidget *layout1 = gtk_layout_new (NULL, NULL);
   GtkWidget *button_1 = gtk_button_new_with_label ("Record");
   GtkWidget *button_2 = gtk_button_new_with_label ("Calendar");
   GtkWidget *button_5 = gtk_button_new_with_label ("Menu");
   GtkWidget *button_3 = gtk_button_new_with_label ("Contacts");
   GtkWidget *button_4 = gtk_button_new_with_label ("Q");
+  GtkWidget *scroll = gtk_scrolled_window_new( 
+					      GTK_ADJUSTMENT(gtk_adjustment_new(0,0,230,1,10,240)),
+					      GTK_ADJUSTMENT(gtk_adjustment_new(0,0,220,1,10,240)));
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
   self.p = gpe_find_icon ("ipaq");
 
 
@@ -134,40 +125,40 @@ GtkWidget *Keyctl_Build_Objects()
   self.button[4]=button_5;
   
   gtk_widget_show (layout1);
-  gtk_container_add (GTK_CONTAINER (vbox1), layout1);
-  gtk_layout_set_size (GTK_LAYOUT (layout1), 400, 400);
+  gtk_container_add (GTK_CONTAINER (scroll), layout1);
+  gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 220);
   GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->hadjustment)->step_increment = 10;
   GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->vadjustment)->step_increment = 10;
 
   gtk_widget_show (button_1);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_1, 0, 66);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_1, 0, 56);
   gtk_widget_set_usize (button_1, 50, 20);
 
   gtk_widget_show (button_2);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_2, 8, 192);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_2, 8, 182);
   gtk_widget_set_usize (button_2, 50, 20);
 
   gtk_widget_show (button_5);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_5, 184, 192);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_5, 184, 182);
   gtk_widget_set_usize (button_5, 50, 20);
 
   gtk_widget_show (button_3);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_3, 64, 216);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_3, 64, 196);
   gtk_widget_set_usize (button_3, 50, 20);
 
   gtk_widget_show (button_4);
-  gtk_layout_put (GTK_LAYOUT (layout1), button_4, 128, 216);
+  gtk_layout_put (GTK_LAYOUT (layout1), button_4, 128, 196);
   gtk_widget_set_usize (button_4, 50, 20);
 
   if(self.p)
     {
       GtkWidget *pixmap1 = gpe_render_icon (wstyle, self.p);
       gtk_widget_show (pixmap1);
-      gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 50, 10);
+      gtk_layout_put (GTK_LAYOUT (layout1), pixmap1, 50, 0);
       gtk_widget_set_usize (pixmap1, 144, 208);
 
 
-      //      gtk_signal_connect (GTK_OBJECT (pixmap1), "expose_event",GTK_SIGNAL_FUNC (expose_event),NULL);
+      gtk_signal_connect_after (GTK_OBJECT (pixmap1), "expose_event",GTK_SIGNAL_FUNC (expose_event),NULL);
 
 
       
@@ -189,7 +180,7 @@ GtkWidget *Keyctl_Build_Objects()
                              GTK_SIGNAL_FUNC (on_button_clicked),
                              GTK_OBJECT (button_4));
   init_buttons();
-  return vbox1;
+  return scroll;
 
 }
 void Keyctl_Free_Objects();

@@ -1,4 +1,7 @@
 #include <gtk/gtk.h>
+//#include <libintl.h>
+
+
 #ifndef APPLETS_H
 #define APPLETS_H
 struct Applet
@@ -31,6 +34,10 @@ int mystrcmp(char *s, char *c);
 // one usefull macro..
 int system_and_gfree(gchar *cmd);
 #define system_printf(y...)   system_and_gfree(g_strdup_printf(y))
+
+void
+freedata                               (GtkWidget       *ignored,
+                                        gpointer         user_data); // to free data on destroy
 
 extern struct gpe_icon my_icons[];
 extern GtkStyle *wstyle; // for pixmaps

@@ -32,7 +32,7 @@
 #include "keyctl.h"
 #include "sleep.h"
 #include "ownerinfo.h"
-
+#include "users.h"
 
 #include "gpe/init.h"
 
@@ -67,16 +67,21 @@ struct Applet applets[]=
     { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Adresses"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance Setup"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
+    { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore , "Owner" ,"ownerinfo","Owner Information"},
+    { &Users_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Users" ,"users","Users Administration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software","Adding and Removing Programs"},
-    { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore , "Owner" ,"ownerinfo","Owner Information"},
   };
 struct gpe_icon my_icons[] = {
   { "save" },
   { "cancel" },
+  { "delete" },
+  { "properties" },
+  { "new" },
+  { "lock" },
   { "media-play" },
   { "media-stop" },
   { "ipaq" },
@@ -155,6 +160,20 @@ void initwindow()
 
 
 }
+// it is a small hack to let these %$#$ buttons glue to bottom..
+
+static int curHeight = 0;
+void WindowDrawEvent              (GtkWidget       *widget,
+                                   GdkRectangle    *area,
+				   gpointer         user_data)
+{
+  if(curHeight != self.w->allocation.height)
+    {
+      curHeight = self.w->allocation.height;
+      gtk_widget_set_usize(GTK_WIDGET(self.frame),200, self.w->allocation.height-40);
+    }
+}
+
 void make_container()
 {
   GtkWidget *hbuttons;
@@ -163,13 +182,18 @@ void make_container()
   //  gtk_widget_show (scrolledwindow);
   //  gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
 
+
   self.frame = gtk_frame_new ("About GPE Configuration");
+
+  //  WindowDrawEvent(NULL,NULL,NULL);
+  gtk_signal_connect (GTK_OBJECT (self.w), "check-resize",
+                      GTK_SIGNAL_FUNC (WindowDrawEvent),
+                      NULL);
 
   //  gtk_container_add(GTK_CONTAINER(scrolledwindow),self.frame);
   gtk_container_add(GTK_CONTAINER(self.vbox),self.frame);
-  gtk_widget_set_usize (self.frame, 240, 250);
 
-  hbuttons = gtk_hbox_new(TRUE,0);
+  hbuttons = gtk_hbutton_box_new();
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons,TRUE, TRUE, 0);
 
   self.cancel = gpe_picture_button (self.w->style, ("Cancel"), "cancel");

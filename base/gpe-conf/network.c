@@ -56,7 +56,7 @@ GtkWidget *Network_Build_Objects()
 	      gtk_table_resize(GTK_TABLE(table),row,col);
 	      label = gtk_label_new(buffer2);
 	      gtk_table_attach (GTK_TABLE (table), label, 0, 1, row-1, row,
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				(GtkAttachOptions) ( GTK_FILL),
 				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
 
 	    }
