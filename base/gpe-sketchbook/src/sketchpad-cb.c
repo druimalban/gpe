@@ -93,17 +93,17 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
   if(is_current_sketch_new){
-    gtk_clist_unselect_all(selector_clist);
-    GTK_CLIST(selector_clist)->focus_row = -1;
+    gtk_clist_unselect_all(GTK_CLIST(selector.textlistview));
+    GTK_CLIST(selector.textlistview)->focus_row = -1;
     gtk_widget_set_sensitive(selector.button_edit,   FALSE);
     gtk_widget_set_sensitive(selector.button_delete, FALSE);
   }
   else{
     //set the current one selected
     set_current_sketch_selected();
-    gtk_clist_select_row(selector_clist, current_sketch, 1);
-    GTK_CLIST(selector_clist)->focus_row = current_sketch;
-    gtk_signal_emit_by_name((GtkObject *)selector_clist, "select-row",
+    gtk_clist_select_row(GTK_CLIST(selector.textlistview), current_sketch, 1);
+    GTK_CLIST(selector.textlistview)->focus_row = current_sketch;
+    gtk_signal_emit_by_name((GtkObject *)selector.textlistview, "select-row",
                             current_sketch, 1,
                             NULL, NULL);//highlight the selected item
     gtk_widget_set_sensitive(selector.button_edit,   TRUE);
@@ -165,7 +165,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     note->fullpath_filename = file_new_fullpath_filename();
   }
   else{
-    note =  gtk_clist_get_row_data(selector_clist, current_sketch);
+    note =  gtk_clist_get_row_data(GTK_CLIST(selector.textlistview), current_sketch);
   }
 
   file_save(note->fullpath_filename); //FIXME: should catch saving errors
@@ -187,10 +187,10 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     sketch_list_size++;
 
     name[0] = make_label_from_filename(note->fullpath_filename);
-    current_sketch = gtk_clist_append(selector_clist, name);
+    current_sketch = gtk_clist_append(GTK_CLIST(selector.textlistview), name);
     g_free(name[0]);
-    gtk_clist_set_row_data_full(selector_clist, current_sketch, note, note_destroy);
-    if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
+    gtk_clist_set_row_data_full(GTK_CLIST(selector.textlistview), current_sketch, note, note_destroy);
+    if(current_sketch%2) gtk_clist_set_background(GTK_CLIST(selector.textlistview), current_sketch, &bg_color);
 
     gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
                                   NULL,// "Sketch"

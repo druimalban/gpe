@@ -23,7 +23,10 @@
 #define THUMBNAIL_SIZE 64
 
 typedef struct _selector {
-  GtkWidget * iconlist;
+  GtkWidget * iconlist;//top level container (the gpe_iconlist itself)
+  GtkWidget * textlist;//top level container (scrolled_window containing the list)
+
+  GtkWidget * textlistview;
 
   GtkWidget * button_edit;  //to set unsensitive
   GtkWidget * button_delete;//to set unsensitive
@@ -31,10 +34,7 @@ typedef struct _selector {
 } Selector;
 extern Selector selector;
 
-extern GtkCList  * selector_clist; 
 extern GdkColor bg_color;
-void set_selector_clist(GtkCList * clist);
-void set_selector_icons_table(GtkWidget * table);
 
 extern gint sketch_list_size;
 #define is_sketch_list_empty (sketch_list_size == 0)

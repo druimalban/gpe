@@ -31,14 +31,11 @@
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
-//list clist/icons views
-GtkWidget * scrolledwindow_selector_clist;
-
 gboolean icons_mode;
 
 GtkWidget * build_selector_toolbar();
-GtkWidget * build_scrollable_clist();
-GtkWidget * build_scrollable_icons();
+GtkWidget * build_scrollable_textlist();
+GtkWidget * build_scrollable_iconlist();
 
 GtkWidget * create_window_selector(){
   GtkWidget *window_selector;
@@ -65,15 +62,15 @@ GtkWidget * selector_gui(){
   //--Toolbar
   hbox = build_selector_toolbar();
 
-  //--Clist
-  scrolledwindow_selector_clist = build_scrollable_clist();
-  selector.iconlist = build_scrollable_icons();
+  //-- text/icon lists
+  selector.textlist = build_scrollable_textlist();
+  selector.iconlist = build_scrollable_iconlist();
 
   //--packing
   vbox = gtk_vbox_new (FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox,                          FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolledwindow_selector_clist, TRUE,  TRUE,  0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox,              FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), selector.textlist, TRUE,  TRUE,  0);
   gtk_box_pack_start (GTK_BOX (vbox), selector.iconlist, TRUE,  TRUE,  0);
 
   //--show all except top level window AND one view
@@ -81,7 +78,7 @@ GtkWidget * selector_gui(){
   gtk_widget_show_all(hbox);//toolbar
   icons_mode = FALSE;
   if(icons_mode) gtk_widget_show_all(selector.iconlist);
-  else           gtk_widget_show_all(scrolledwindow_selector_clist);
+  else           gtk_widget_show_all(selector.textlist);
 
   return vbox;
 }
@@ -150,13 +147,13 @@ GtkWidget * build_selector_toolbar(){
   return toolbar;
 }
 
-GtkWidget * build_scrollable_clist(){
+GtkWidget * build_scrollable_textlist(){
   GtkWidget * scrolledwindow;//to return
   GtkWidget * clist_selector;
   GtkWidget * label_Clist_column1;
 
   clist_selector = gtk_clist_new (1);
-  set_selector_clist(GTK_CLIST(clist_selector));//set a ref to the clist
+  selector.textlistview = clist_selector;//set a ref to the clist
 
   gtk_clist_set_column_width (GTK_CLIST (clist_selector), 0, 80);
   gtk_clist_column_titles_show (GTK_CLIST (clist_selector));
@@ -182,7 +179,7 @@ GtkWidget * build_scrollable_clist(){
 void on_iconlist_clicked    (GtkWidget * iconlist, gpointer il_data, gpointer data);
 //void on_iconlist_show_popup (GtkWidget * iconlist, gpointer il_data, gpointer data);
 
-GtkWidget * build_scrollable_icons(GtkWidget * window){
+GtkWidget * build_scrollable_iconlist(GtkWidget * window){
   GtkWidget * iconlist;
 
   iconlist = gpe_iconlist_new();
@@ -202,7 +199,7 @@ GtkWidget * build_scrollable_icons(GtkWidget * window){
 #include "note.h"
 void on_iconlist_clicked (GtkWidget * iconlist, gpointer note, gpointer data) {
   //**/g_printerr("ICONLIST> %s\n", (char *)data);
-  current_sketch = gtk_clist_find_row_from_data(selector_clist, note);
+  current_sketch = gtk_clist_find_row_from_data(GTK_CLIST(selector.textlistview), note);
   set_current_sketch_selected();
   on_button_selector_open_clicked (NULL, NULL);
 }

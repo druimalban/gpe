@@ -43,7 +43,6 @@
 
 Selector selector;
 
-GtkCList  * selector_clist; 
 GdkColor bg_color;//alternate color for list cells
 
 gint sketch_list_size;
@@ -58,9 +57,6 @@ void selector_init(){
   current_sketch   = SKETCH_NEW;
 }//selector_init()
 
-void set_selector_clist(GtkCList * clist){
-  selector_clist = clist;
-}
 void window_selector_init(GtkWidget * window_selector){
   struct dirent ** direntries;
   int scandir_nb_entries;
@@ -75,7 +71,7 @@ void window_selector_init(GtkWidget * window_selector){
   gdk_colormap_alloc_color(colormap, &bg_color, FALSE, TRUE);
 
   //--Clist init
-  gtk_clist_column_titles_hide(selector_clist);//no title (single column)
+  gtk_clist_column_titles_hide(GTK_CLIST(selector.textlistview));//no title (single column)
 
   //--fill CList
   scandir_nb_entries = scandir (sketchbook.save_dir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
@@ -120,7 +116,7 @@ void window_selector_init(GtkWidget * window_selector){
       line_text[0] = make_label_from_filename(direntries[i]->d_name);
       fullpath_filename = g_strdup_printf("%s%s", sketchbook.save_dir, direntries[i]->d_name);
 
-      line = gtk_clist_append(selector_clist, line_text);
+      line = gtk_clist_append(GTK_CLIST(selector.textlistview), line_text);
       note = note_new();
       note->fullpath_filename = fullpath_filename;
 
@@ -138,9 +134,9 @@ void window_selector_init(GtkWidget * window_selector){
                                     NULL,//"Sketch",
                                     note->thumbnail,//icon
                                     note);//udata
-      gtk_clist_set_row_data_full(selector_clist, line, note, note_destroy);
+      gtk_clist_set_row_data_full(GTK_CLIST(selector.textlistview), line, note, note_destroy);
       //do NOT g_free(fullpath_filename) now! :)
-      if(i%2) gtk_clist_set_background(selector_clist, i, &bg_color);
+      if(i%2) gtk_clist_set_background(GTK_CLIST(selector.textlistview), i, &bg_color);
       sketch_list_size++;
 
       g_free(line_text[0]);
@@ -206,14 +202,14 @@ void delete_current_sketch(){
   Note * note;
   gboolean is_deleted = FALSE;
   
-  note = gtk_clist_get_row_data(selector_clist, current_sketch);
+  note = gtk_clist_get_row_data(GTK_CLIST(selector.textlistview), current_sketch);
   is_deleted = file_delete(note->fullpath_filename);
 
   if(is_deleted){
     gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(selector.iconlist), note);
 
-    _clist_update_alternate_colors_from(selector_clist, current_sketch);
-    gtk_clist_remove(selector_clist, current_sketch);
+    _clist_update_alternate_colors_from(GTK_CLIST(selector.textlistview), current_sketch);
+    gtk_clist_remove(GTK_CLIST(selector.textlistview), current_sketch);
 
     if(is_current_sketch_last) current_sketch--;
     sketch_list_size--;
@@ -231,7 +227,7 @@ void delete_current_sketch(){
 
 void open_indexed_sketch(gint index){
   Note * note;
-  note = gtk_clist_get_row_data(selector_clist, index);
+  note = gtk_clist_get_row_data(GTK_CLIST(selector.textlistview), index);
   sketchpad_open_file(note->fullpath_filename);
 }
 

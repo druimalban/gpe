@@ -98,7 +98,7 @@ void _switch_icon(GtkButton * button){
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data){
   if(icons_mode){//--> switch to LIST view
     gtk_widget_hide(selector.iconlist);
-    gtk_widget_show(scrolledwindow_selector_clist);
+    gtk_widget_show(selector.textlist);
     icons_mode = FALSE;
     if(is_current_sketch_selected){//FIXME: remove if iconlist can select
       gtk_widget_set_sensitive(selector.button_edit,   TRUE);//FIXME: remove
@@ -106,7 +106,7 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
     }//FIXME: remove if iconlist can select
   }
   else {//--> switch to ICON view
-    gtk_widget_hide(scrolledwindow_selector_clist);
+    gtk_widget_hide(selector.textlist);
     gtk_widget_show(selector.iconlist);
     icons_mode = TRUE;
     gtk_widget_set_sensitive(selector.button_edit,   FALSE);//FIXME: remove if iconlist can select
