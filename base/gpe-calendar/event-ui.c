@@ -801,8 +801,6 @@ edit_event_window(void)
   gtk_object_set_data_full (GTK_OBJECT (window), "edit_state", s, 
 			    destroy_user_data);
 
-  gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
-
   recalculate_sensitivities (NULL, window);
   
   return window;
