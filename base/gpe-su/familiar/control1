@@ -1,0 +1,10 @@
+Package: gpe-su2
+Section: base
+Priority: optional
+Version: 0.03
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk2.0-0, libgpewidget1 (>= 0.08), gpe-icons (>= 0.04)
+Provides: gpe-su
+Replaces: gpe-su
+Description: Graphical root-shell frontend

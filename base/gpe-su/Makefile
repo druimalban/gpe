@@ -8,7 +8,7 @@ MEMBERS = gpe-su
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype -lgpewidget -lutil
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lgpewidget -lutil
 else
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 GTKLDFLAGS = `gtk-config --libs` -lutil -lgpewidget 
