@@ -11,3 +11,4 @@ if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
 ##	    /usr/share/pixmaps/gpe-default-bg.png 5
     fi
 fi
+
