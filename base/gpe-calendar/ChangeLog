@@ -1,8 +1,13 @@
 2003-04-25  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.43 released.
+
+2003-04-25  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Increase range of alarm spinner.
 	(click_ok): Use an array rather than a switch to decode alarm multipliers.
-	(edit_event): Set units appropriately for alarm time.
+	(new_event): Set the date for reminders.
+	(edit_event): Likewise.  Set units appropriately for alarm time.
 
 	* old-db.c: Deleted.
 

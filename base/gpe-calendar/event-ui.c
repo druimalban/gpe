@@ -1195,6 +1195,8 @@ new_event (time_t t, guint timesel)
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
+                               tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
       t += 60 * 60;
       localtime_r (&t, &tm);
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
@@ -1239,6 +1241,8 @@ edit_event (event_t ev)
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (s->starttime)->entry), buf);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
+                               tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (s->reminderdate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
       end=ev->start+ev->duration;
