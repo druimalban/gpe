@@ -58,9 +58,15 @@ GtkWidget *window;
 GtkWidget *combo;
 GtkWidget *view_scrolld;
 GtkWidget *view_widget;
+
 GtkWidget *bluetooth_menu_item;
 GtkWidget *copy_menu_item;
 GtkWidget *paste_menu_item;
+GtkWidget *open_menu_item;
+GtkWidget *move_menu_item;
+GtkWidget *rename_menu_item;
+GtkWidget *properties_menu_item;
+GtkWidget *delete_menu_item;
 
 GdkPixbuf *default_pixbuf;
 
@@ -936,20 +942,35 @@ show_popup (GtkWidget *widget, gpointer udata)
   file_info = (FileInformation *) udata;
 	
   if (file_info == NULL)
-    return;
-
-  current_popup_file = file_info;
-
-  if (bluetooth_available ())
-    gtk_widget_set_sensitive (bluetooth_menu_item, TRUE);
+  {
+    gtk_widget_set_sensitive(open_menu_item,FALSE);
+    gtk_widget_set_sensitive(copy_menu_item,FALSE);
+    gtk_widget_set_sensitive(bluetooth_menu_item,FALSE);
+    gtk_widget_set_sensitive(move_menu_item,FALSE);
+    gtk_widget_set_sensitive(rename_menu_item,FALSE);
+    gtk_widget_set_sensitive(properties_menu_item,FALSE);
+    gtk_widget_set_sensitive(delete_menu_item,FALSE);
+  }
   else
-    gtk_widget_set_sensitive (bluetooth_menu_item, FALSE);
+  {	  
+    current_popup_file = file_info;
 
+    gtk_widget_set_sensitive(open_menu_item,TRUE);
+    gtk_widget_set_sensitive(copy_menu_item,TRUE);
+    gtk_widget_set_sensitive(move_menu_item,TRUE);
+    gtk_widget_set_sensitive(rename_menu_item,TRUE);
+    gtk_widget_set_sensitive(properties_menu_item,TRUE);
+    gtk_widget_set_sensitive(delete_menu_item,TRUE);
+	  
+    if (bluetooth_available ())
+      gtk_widget_set_sensitive (bluetooth_menu_item, TRUE);
+    else
+      gtk_widget_set_sensitive (bluetooth_menu_item, FALSE);
+  }
   if (file_clipboard)
     gtk_widget_set_sensitive (paste_menu_item, TRUE);
   else
     gtk_widget_set_sensitive (paste_menu_item, FALSE);
-  
   gtk_menu_popup (GTK_MENU (gtk_item_factory_get_widget (item_factory, "<main>")), 
 		  NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
 }
@@ -1442,6 +1463,11 @@ main (int argc, char *argv[])
   bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
   copy_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Copy");
   paste_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Paste");
+  open_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Open With");
+  move_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Move");
+  rename_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Rename");
+  properties_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Properties");
+  delete_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Delete");
 
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
