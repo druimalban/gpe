@@ -1,5 +1,9 @@
 2002-06-21  Philip Blundell  <pb@debian.org>
 
+	* Makefile (clean): Remove $(DEPS) too.
+
+2002-06-21  Philip Blundell  <pb@debian.org>
+
 	* Version 0.08 released.
 
 2002-06-20  Philip Blundell  <pb@debian.org>

@@ -59,6 +59,6 @@ ipkg:
 	ipkg-build familiar/dist
 
 clean:
-	rm -f $(OBJS) $(SONAME) libgpewidget.so
+	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)
 
 -include $(DEPS)
