@@ -76,6 +76,12 @@ char IpaqModel = -1;
 #define ZAURUS_FL "/dev/fl"
 #define FL_IOCTL_STEP_CONTRAST    100
 
+/* Simpad, a little bit nasty - PWM reg. is set directly */
+
+#define SIMPAD_BACKLIGHT_REG	"/proc/driver/mq200/registers/PWM_CONTROL"
+#define SIMPAD_BACKLIGHT_MASK	0x00a10044
+
+
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -103,9 +109,49 @@ detect_platform(void)
 		return P_CORGI;
 	if (!access(ZAURUS_FL,R_OK))
 		return P_ZAURUS;
+	if (!access(SIMPAD_BACKLIGHT_REG,R_OK))
+		return P_SIMPAD;
 	return P_NONE;
 }
 
+
+int 
+simpad_set_level(int level)
+{
+  int val;
+  FILE *f_light;
+  
+  f_light = fopen(SIMPAD_BACKLIGHT_REG,"w");
+  if (f_light >= 0)
+  {
+	val = 255 - level;
+	val = val << 8;
+	val += (int)SIMPAD_BACKLIGHT_MASK;
+    fprintf(f_light,"0x%x\n", val);
+  	fclose(f_light);
+	return level;
+  }
+  else
+	  return -1;
+}
+
+int 
+simpad_get_level(void)
+{
+  FILE *f_light;
+  int level;
+  
+  f_light = fopen(SIMPAD_BACKLIGHT_REG,"r");
+  if (f_light >= 0)
+  {
+  	fscanf(f_light,"0x%x", &level);
+  	fclose(f_light);
+	level -= (int)SIMPAD_BACKLIGHT_MASK;
+	level = level >> 8;
+	return 255 - level;
+  }
+  return -1;
+}  
 
 int 
 corgi_set_level(int level)
@@ -280,6 +326,10 @@ return IpaqModel;
 int 
 set_level (int level)
 {
+	if (level < 0)
+		level = 0;
+	if (level > 255)
+		level = 255;
 	switch (platform)
 	{
 	case P_IPAQ:
@@ -292,6 +342,9 @@ set_level (int level)
 		return corgi_set_level(level);
 	break;
 	case P_INTEGRAL:
+		return integral_set_level(level);
+	break;
+	case P_SIMPAD:
 		return integral_set_level(level);
 	break;
 	default:

@@ -2,7 +2,7 @@ PACKAGE = minilite
 PREFIX = /usr
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.41
+VERSION = 0.42
 INSTALL = install
 LINGUAS = 
 

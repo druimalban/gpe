@@ -1,4 +1,8 @@
-
+2004-06-22	Florian Boor <florian.boor@kernelconcepts.de>
+	* eleased V 0.42
+	* minilite.c: Added simpad support.
+	* minilite.c: set_level() Added sanity check.
+	
 2004-06-21	Florian Boor <florian.boor@kernelconcepts.de>
 	* Fixed ChangeLog :-0
 	* Released V 0.41
