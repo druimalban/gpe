@@ -1,8 +1,10 @@
 #!/bin/sh
 
+# Broadcast hotplug events on D-BUS and then call the appropriate agent
+
 MESSAGE="org.handhelds.gpe.hotplug"
 
-invoke_hotplug () 
+invoke_dbus () 
 {
   cmd="dbus-send --system $MESSAGE"
   while [ $# -gt 0 ]; do
@@ -12,5 +14,5 @@ invoke_hotplug ()
   eval $cmd
 }
 
-invoke_hotplug $*
+invoke_dbus $*
 exec /sbin/hotplug $*
