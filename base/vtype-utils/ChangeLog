@@ -1,5 +1,11 @@
+2005-02-05  Florian Boor <florian@kernelconcepts.de>
+
+	* Released version 0.6
+	* Makefile: Fixed installation
+
 2005-02-04  Florian Boor <florian@kernelconcepts.de>
 
+	* Released version 0.5
 	* vcard-import.c (gpe_import_vcard): Fixed freeze on transaction
 	                                     commit.
 	* Makefile: new file.

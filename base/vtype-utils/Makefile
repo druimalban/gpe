@@ -1,5 +1,5 @@
 PACKAGE = vtype-utils
-VERSION = 0.5
+VERSION = 0.6
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
@@ -40,10 +40,6 @@ endif
 STRIP=strip
 CC=gcc
 
-#PACKAGE_CFLAGS +=  -Wall $(GPECFLAGS) $(GTKCFLAGS) `pkg-config --cflags gthread-2.0` `pkg-config --cflags dbus-glib-1`
-#PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLIBS) `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1`
-
-
 all: vcard-export vcard-import vcal-export
 
 PACKAGE_CFLAGS += $(MIMECFLAGS)
@@ -57,9 +53,7 @@ vcard-export: vcard-export.o
 vcard-import: vcard-import.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(MIMELDFLAGS)
 
-install-program: all 
-	mkdir -p $(DESTDIR)/CONTROL
-	sed -e s/VERSION/$(VERSION)/ <familiar/$(CONTROL) > $(DESTDIR)/CONTROL/control
+install-program: all
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) -m 755 vcal-export $(DESTDIR)$(PREFIX)/bin/
 	$(INSTALL) -m 755 vcard-export $(DESTDIR)$(PREFIX)/bin/
