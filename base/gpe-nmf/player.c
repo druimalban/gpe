@@ -31,11 +31,31 @@ player_new (void)
 void
 player_destroy (player_t p)
 {
+  player_stop (p);
+ 
+  g_free (p);
+}
+
+void
+player_set_playlist (player_t p, struct playlist *l)
+{
+  player_stop (p);
+
+  p->list = l;
+}
+
+void
+player_stop (player_t p)
+{
   if (p->decoder)
     decoder_close (p->decoder);
 
   if (p->stream)
     stream_close (p->stream);
- 
-  g_free (p);
+}
+
+void
+player_play (player_t p)
+{
+  p->idx = 0;
 }
