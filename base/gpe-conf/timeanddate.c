@@ -387,22 +387,8 @@ GtkWidget *Time_Build_Objects()
 		    GTK_FILL,GTK_FILL  | GTK_EXPAND,0,0);
   gtk_misc_set_alignment (GTK_MISC (self.catlabel2), 0.0, 0.9);
 
-/*  adj = gtk_adjustment_new(ts.tm_hour,0,24,1,6,6);
-  self.h = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_table_attach (GTK_TABLE (table), self.h, 0, 1, 3, 4,
-		    GTK_FILL,0,3,0);
-
-  adj = gtk_adjustment_new(ts.tm_min,0,60,1,15,15);
-  self.m = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_table_attach (GTK_TABLE (table), self.m, 1, 2, 3, 4,
-		    GTK_FILL,0,0,0);
-
-  adj = gtk_adjustment_new(ts.tm_sec,0,60,1,15,15);
-  self.s = gtk_spin_button_new (GTK_ADJUSTMENT(adj),1,0);
-  gtk_table_attach (GTK_TABLE (table), self.s, 2, 3, 3, 4,
-		    GTK_FILL,0,0,0);
-*/
   self.tsel = gpe_time_sel_new();
+  gpe_time_sel_set_time(GPE_TIME_SEL(self.tsel),(guint)ts.tm_hour, (guint)ts.tm_min);
   gtk_table_attach (GTK_TABLE (table), self.tsel, 0, 3, 3, 4,
 		    GTK_FILL,0,3,0);
   /* -------------------------------------------------------------------------- */
@@ -605,10 +591,6 @@ void Time_Save()
   tz = get_tz_info(par);
 	  
   gtk_calendar_get_date(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),&year,&month,&day);
-/*  h=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.h));
-  m=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.m));
-  s=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.s));
-*/
   gpe_time_sel_get_time(GPE_TIME_SEL(self.tsel),&h,&m);
   s = 0;	 
   tm.tm_mday=day;
@@ -665,9 +647,5 @@ void Time_Restore()
   ts = *tsptr;
   gtk_calendar_select_month(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),ts.tm_mon,ts.tm_year+1900);
   gtk_calendar_select_day(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),ts.tm_mday);
-/*  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.h),ts.tm_hour);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.m),ts.tm_min);
-  gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.s),ts.tm_sec);
-*/
   gpe_time_sel_set_time(GPE_TIME_SEL(self.tsel),(guint)ts.tm_hour, (guint)ts.tm_min);
 }
