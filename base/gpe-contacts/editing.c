@@ -404,13 +404,18 @@ edit_window (void)
       edit_thing_t e = page->data;
       GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
       GtkWidget *label = gtk_label_new (e->name);
+      GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 
       build_children (vbox, e->children, w);
 
       gtk_widget_show_all (vbox);
       gtk_widget_show (label);
+      gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+				      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+      gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
+      gtk_widget_show (scrolled_window);
 
-      gtk_notebook_append_page (GTK_NOTEBOOK (book), vbox, label);
+      gtk_notebook_append_page (GTK_NOTEBOOK (book), scrolled_window, label);
     }
 
 #if 0
