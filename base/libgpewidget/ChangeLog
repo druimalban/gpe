@@ -1,3 +1,16 @@
+2003-01-25  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.44 released.
+
+2003-01-25  Philip Blundell  <philb@gnu.org>
+
+	* gtkdatecombo.c (gtk_date_combo_week_starts_monday): Add
+	GTK_CALENDAR_SHOW_HEADING to options.
+
+2003-01-24  Philip Blundell  <philb@gnu.org>
+
+	* pixmaps.c (gpe_set_window_icon): Use gtk_window_set_icon.
+
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.43 released.

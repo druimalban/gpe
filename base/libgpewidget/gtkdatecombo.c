@@ -242,5 +242,6 @@ gtk_date_combo_week_starts_monday (GtkDateCombo *combo, gboolean yes)
 {
   gtk_calendar_display_options (GTK_CALENDAR (combo->cal), 
 				GTK_CALENDAR_SHOW_DAY_NAMES | 
+				GTK_CALENDAR_SHOW_HEADING |
 				(yes ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
 }

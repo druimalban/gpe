@@ -188,11 +188,6 @@ gpe_find_icon_pixmap (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
 void
 gpe_set_window_icon (GtkWidget *window, gchar *icon)
 {
-  GdkPixmap *pmap;
-  GdkBitmap *bmap;
-
-  gtk_widget_realize (window);
-
-  gpe_find_icon_pixmap (icon, &pmap, &bmap);
-  gdk_window_set_icon (window->window, NULL, pmap, bmap);
+  GdkPixbuf *p =  gpe_find_icon (icon);
+  gtk_window_set_icon (GTK_WINDOW (window), p);
 }
