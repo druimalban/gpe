@@ -1,8 +1,8 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = intl po src
+SUBDIRS = m4  po src
 
-EXTRA_DIST = \
+EXTRA_DIST = config.rpath  \
 	autogen.sh \
 	gpe-wlancfg.glade
 
@@ -27,3 +27,5 @@ dist-hook:
 	  done \
 	fi
 
+
+ACLOCAL_AMFLAGS = -I m4

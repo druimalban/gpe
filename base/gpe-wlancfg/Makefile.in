@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p6 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -60,39 +60,43 @@ POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = @host@
 BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
-CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
 GLIBC21 = @GLIBC21@
-GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GTK_CFLAGS = @GTK_CFLAGS@
 GTK_CONFIG = @GTK_CONFIG@
 GTK_LIBS = @GTK_LIBS@
+HAVE_LIB = @HAVE_LIB@
 INSTOBJEXT = @INSTOBJEXT@
 INTLBISON = @INTLBISON@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
 INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
 LEX = @LEX@
+LIB = @LIB@
 LIBICONV = @LIBICONV@
+LIBINTL = @LIBINTL@
+LTLIB = @LTLIB@
+LTLIBICONV = @LTLIBICONV@
+LTLIBINTL = @LTLIBINTL@
 MAKEINFO = @MAKEINFO@
 MKINSTALLDIRS = @MKINSTALLDIRS@
-MSGFMT = @MSGFMT@
 PACKAGE = @PACKAGE@
-POFILES = @POFILES@
 POSUB = @POSUB@
 RANLIB = @RANLIB@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 
-SUBDIRS = intl po src
+SUBDIRS = m4  po src
 
-EXTRA_DIST =  	autogen.sh 	gpe-wlancfg.glade
+EXTRA_DIST = config.rpath  	autogen.sh 	gpe-wlancfg.glade
 
+
+ACLOCAL_AMFLAGS = -I m4
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
@@ -116,8 +120,11 @@ Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
-$(ACLOCAL_M4):  configure.in 
-	cd $(srcdir) && $(ACLOCAL)
+$(ACLOCAL_M4):  configure.in  m4/codeset.m4 m4/gettext.m4 m4/glibc21.m4 \
+		m4/iconv.m4 m4/isc-posix.m4 m4/lcmessage.m4 \
+		m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 \
+		m4/progtest.m4
+	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
 
 config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
