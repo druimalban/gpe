@@ -17,43 +17,41 @@
 
 #include "errorbox.h"
 #include "render.h"
+#include "picturebutton.h"
+#include "pixmaps.h"
 
-#define ERROR_ICON "/usr/share/pixmaps/error.png"
+static struct gpe_icon my_icons[] = {
+  { "ok", "ok" },
+  { "error", "error" },
+  { NULL, NULL }
+};
 
 #define _(x) dgettext(PACKAGE, x)
-
-static GdkPixbuf *pixbuf;
-static gboolean error_pix_loaded;
 
 void
 gpe_error_box (char *text)
 {
-  GtkWidget *label, *ok, *dialog;
+  GtkWidget *label, *ok, *dialog, *icon;
   GtkWidget *hbox;
+  GdkPixbuf *p;
+
+  if (gpe_load_icons (my_icons) == FALSE)
+    exit (1);
 
   dialog = gtk_dialog_new ();
   label = gtk_label_new (text);
-  ok = gtk_button_new_with_label (_("OK"));
+  ok = gpe_picture_button (dialog->style, _("OK"), "ok");
   hbox = gtk_hbox_new (FALSE, 4);
 
   gtk_signal_connect_object (GTK_OBJECT (ok), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
 			     (gpointer)dialog);
 
-  if (!error_pix_loaded)
-    {
-      error_pix_loaded = TRUE;
-      pixbuf = gdk_pixbuf_new_from_file (ERROR_ICON);
-    }
-
   gtk_widget_realize (dialog);
 
-  if (pixbuf)
-    {
-      GtkWidget *icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, 
-					 pixbuf);
-      gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
-    }
+  p = gpe_find_icon ("error");
+  icon = gpe_render_icon (GTK_DIALOG (dialog)->vbox->style, p);
+  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
