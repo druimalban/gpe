@@ -2,6 +2,7 @@
 
 	* gpe-terminal.menu: Add option -sr ro rxvt-aa call to get the
 	scrollbars on the right.
+	Better set this in /etc/X11/Xdefaults, backing change out again.
 
 2002-07-30  Moray Allan  <moray@handhelds.org>
 
