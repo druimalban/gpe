@@ -32,6 +32,11 @@ if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then
   ARGS="$ARGS -mouse /dev/touchscreen/ucb1x00"
 fi
 
+# use usb mouse if present
+if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/input/mice ]; then
+  ARGS="$ARGS -mouse /dev/input/mice"
+fi
+
 # start off server in conventional location.
 case `module_id` in
 	"HP iPAQ H3100" | "HP iPAQ H3800")
