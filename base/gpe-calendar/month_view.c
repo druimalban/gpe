@@ -22,15 +22,15 @@
 #include "gtkdatesel.h"
 #include "globals.h"
 #include "month_view.h"
+#include "day_popup.h"
 
 static GtkWidget *datesel, *draw;
 static guint xp, xs, ys;
 
 struct render_ctl
 {
+  struct day_popup popup;
   gboolean valid;
-  guint nr;
-  gboolean events;
 };
 
 static struct render_ctl rc[35];
@@ -40,7 +40,7 @@ button_press(GtkWidget *widget,
 	      GdkEventButton *event,
 	      gpointer d)
 {
-  if (event->type == GDK_2BUTTON_PRESS)
+  if (event->type == GDK_BUTTON_PRESS)
     {
       guint x = event->x;
       guint y = event->y;
@@ -54,13 +54,7 @@ button_press(GtkWidget *widget,
       
       c = &rc[x + (y * 7)];
       if (c->valid)
-	{
-	  struct tm tm;
-	  localtime_r (&viewtime, &tm);
-	  tm.tm_mday = c->nr;
-	  viewtime = mktime (&tm);
-	  set_day_view ();
-	}
+	day_popup (main_window, &c->popup);
     }
 
   return TRUE;
@@ -170,10 +164,10 @@ draw_expose_event (GtkWidget *widget,
 	      gdk_draw_rectangle (drawable, light_gray_gc, FALSE,
 				  x, y, xs, ys);
 	      
-	      snprintf (buf, sizeof (buf), "%d", c->nr);
+	      snprintf (buf, sizeof (buf), "%d", c->popup.day);
 	      w = gdk_string_width (font, buf);
 	      
-	      gdk_draw_text (drawable, font, c->events ? red_gc : black_gc, 
+	      gdk_draw_text (drawable, font, c->popup.events ? red_gc : black_gc, 
 			     x + (xs - w) / 2, y + (ys / 2) + font->ascent,
 			     buf, strlen (buf));
 	    } 
@@ -234,6 +228,16 @@ month_view_update ()
 
   days = days_in_month (year, month);
 
+  for (day = 0; day < 35; day++)
+    {
+      struct render_ctl *c = &rc[day];
+      if (c->popup.events)
+	{
+	  event_db_list_destroy (c->popup.events);
+	  c->popup.events = NULL;
+	}
+    }
+
   for (day = 1; day <= days; day++)
     {
       localtime_r (&viewtime, &tm_start);
@@ -261,7 +265,9 @@ month_view_update ()
     {
       gint rday = day + wday;
       struct render_ctl *c = &rc[day];
-      c->nr = rday;
+      c->popup.day = rday;
+      c->popup.year = year;
+      c->popup.month = month;
       if (rday <= 0 || rday > days)
 	{
 	  c->valid = FALSE;
@@ -269,7 +275,7 @@ month_view_update ()
       else
 	{
 	  c->valid = TRUE;
-	  c->events = day_events[rday] ? TRUE : FALSE;
+	  c->popup.events = day_events[rday];
 	}
     }
 

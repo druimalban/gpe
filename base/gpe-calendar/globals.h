@@ -27,6 +27,11 @@ extern guint days_in_month (guint year, guint month);
 extern gboolean week_starts_monday;
 extern void set_day_view (void);
 
+extern GdkPixmap *close_pix, *day_pix;
+extern GdkBitmap *close_mask, *day_mask;
+
+extern GtkWidget *main_window;
+
 #define SECONDS_IN_DAY (24*60*60)
 
 /* stuff that could perhaps be configurable */

@@ -37,7 +37,11 @@ GdkFont *yearfont;
 GList *times;
 time_t viewtime;
 
-static GtkWidget *window, *day, *week, *month, *future, *year, *current_view;
+GdkPixmap *close_pix, *day_pix;
+GdkBitmap *close_mask, *day_mask;
+GtkWidget *main_window;
+
+static GtkWidget *day, *week, *month, *future, *year, *current_view;
 
 guint window_x = 240, window_y = 310;
 
@@ -136,7 +140,8 @@ main(int argc, char *argv[])
   GtkWidget *toolbar;
   GdkPixmap *tmp_pix;
   GdkBitmap *tmp_mask;
-  GtkWidget *new_pixmap, *today_pixmap, *future_pixmap, *day_pixmap, *week_pixmap, *month_pixmap, *year_pixmap;
+  GtkWidget *new_pixmap, *today_pixmap, *future_pixmap, *week_pixmap, *month_pixmap, *year_pixmap, *day_pixmap;
+
   GtkWidget *vbox;
   guint hour;
 
@@ -184,32 +189,34 @@ main(int argc, char *argv[])
       abort ();
     }
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+  main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
-  gtk_widget_realize (window);
+  gtk_widget_realize (main_window);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/new.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/new.xpm");
   new_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/today.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/today.xpm");
   today_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/futureview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/futureview.xpm");
   future_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/dayview.xpm");
-  day_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+  day_pix = gdk_pixmap_create_from_xpm (main_window->window, &day_mask, NULL, PIXMAPS_DIR "/dayview.xpm");
+  day_pixmap = gtk_pixmap_new (day_pix, day_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/weekview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/weekview.xpm");
   week_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/monthview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/monthview.xpm");
   month_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, PIXMAPS_DIR "/yearview.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/yearview.xpm");
   year_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  close_pix = gdk_pixmap_create_from_xpm (main_window->window, &close_mask, NULL, PIXMAPS_DIR "/close.xpm");
 
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
@@ -239,11 +246,11 @@ main(int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox), future, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), year, TRUE, TRUE, 0);
 
-  gtk_container_add (GTK_CONTAINER (window), vbox);
+  gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
-  gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
+  gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
 
-  gtk_widget_show (window);
+  gtk_widget_show (main_window);
   gtk_widget_show (vbox);
   gtk_widget_show (toolbar);
 
