@@ -35,6 +35,7 @@ struct tap
 };
 
 static struct tap *t;
+static int do_fn;
 
 static gboolean
 timeout (gpointer p)
@@ -66,6 +67,15 @@ timeout (gpointer p)
 static void
 filter (GdkEvent *ev, gpointer data)
 {
+  if (do_fn
+      && (ev->button.state & GDK_MOD1_MASK)
+      && ev->button.button == 1)
+    {
+      ev->button.button = 3;
+      gtk_main_do_event (ev);
+      return;
+    }
+
   if (ev->type == GDK_BUTTON_PRESS 
       && ev->button.button == 1 
       && t == NULL)
@@ -92,5 +102,8 @@ filter (GdkEvent *ev, gpointer data)
 void
 gtk_module_init (gint *argc, gchar ***argv)
 {
+  if (getenv ("GTK_STYLUS_DO_FN"))
+    do_fn = 1;
+
   gdk_event_handler_set (filter, NULL, NULL);
 }
