@@ -1,5 +1,9 @@
 2005-01-16  Phil Blundell  <philb@gnu.org>
 
+	* Version 0.61 released.
+
+2005-01-16  Phil Blundell  <philb@gnu.org>
+
 	* gtkdatesel.c (get_max_month_width): New function.
 	(gtk_date_sel_set_month_style): Use it.
 	(get_max_day_width): New function.
