@@ -1,5 +1,10 @@
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
+	* event-ui.c (build_edit_event_window): Tasks are not yet properly
+	implemented; don't offer them on the menu.
+
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Set week-starts-monday
 	flag on newly created GtkDateCombo widgets.
 	(build_edit_event_window): Set default size for window.

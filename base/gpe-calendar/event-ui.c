@@ -604,7 +604,9 @@ build_edit_event_window (void)
   s->optionmenutype = gtk_simple_menu_new ();
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Appointment"));
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Reminder"));
+#if 0
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Task"));
+#endif
   gtk_signal_connect (GTK_OBJECT (s->optionmenutype), "item-changed", 
 		      GTK_SIGNAL_FUNC (set_notebook_page), s);
 
