@@ -14,7 +14,7 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-LDFLAGS = -L/usr/X11R6/lib -lX11 -lXext -lmbdock
+LDFLAGS = -L/usr/X11R6/lib -lX11 -lXext -lmb
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
