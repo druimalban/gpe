@@ -1,3 +1,13 @@
+2003-03-09  Philip Blundell  <philb@gnu.org>
+
+	* gpe-contacts.desktop.in: New file.
+	* gpe-contacts.desktop: Deleted.
+
+	* callbacks.c, db.c, editing.c, interface.c, main.c, structure.c,
+	support.c, callbacks.h, db.h, interface.h, proto.h, structure.h,
+	support.h: Moved here from src subdirectory.
+	* Makefile: Adjust appropriately.
+
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.09 released.

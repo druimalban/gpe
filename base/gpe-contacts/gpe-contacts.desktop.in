@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Contacts
-Comment=GPE Contacts
+_Name=Contacts
+_Comment=GPE Contacts
 Exec=gpe-contacts
 Terminal=0
 Type=Application
