@@ -46,12 +46,12 @@
 GtkWidget *window, *main_scrolled_window, *fullscreen_window, *fullscreen_toggle_popup, *vbox2;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget, *image_widget;
-GdkPixbuf *image_pixbuf, *scaled_image_pixbuf;
+GdkPixbuf *image_pixbuf, *scaled_image_pixbuf = NULL;
 GtkWidget *image_event_box;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
 GtkAdjustment *h_adjust, *v_adjust;
-GList *image_filenames;
+GList *image_filenames = NULL;
 
 // 0 = Detailed list
 // 1 = Thumbs
@@ -210,7 +210,10 @@ show_image (GtkWidget *widget, GList *image_filename)
     scale_height_ratio = 1;
     scale_width_ratio = (float) width_ratio / (float) height_ratio;
   }
-
+  
+  if (scaled_image_pixbuf != NULL) 
+	  g_object_unref(G_OBJECT(scaled_image_pixbuf));
+	  
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 
@@ -738,10 +741,15 @@ static void
 add_directory (gchar *directory)
 {
   gchar *filename;
+  GList *tl; 
   struct dirent *d;
   DIR *dir;
 
   loading_directory = 1;
+  
+  for (tl=g_list_first(image_filenames);tl;tl=g_list_next(tl))
+	  g_free(tl->data);
+  
   g_list_free (image_filenames);
   image_filenames = NULL;
 
@@ -756,15 +764,16 @@ add_directory (gchar *directory)
       if (d->d_name[0] != '.')
       {
         struct stat s;
-        filename = g_strdup_printf ("%s%s", directory, g_strdup (d->d_name));
+        filename = g_strdup_printf ("%s%s", directory, d->d_name);
 
         if (stat (filename, &s) == 0)
         {
-	  if (strstr (filename, ".png") || strstr (filename, ".jpg") || strstr (filename, ".jpeg"))
-	  {
-	    image_filenames = g_list_append (image_filenames, (gpointer) filename);
-	  }
-	}
+	      if (strstr (filename, ".png") || strstr (filename, ".jpg") || strstr (filename, ".jpeg"))
+	      {
+	        image_filenames = g_list_append (image_filenames, (gpointer) filename);
+          }
+	  
+	    }
       }
     }
     render_view (NULL, current_view);
@@ -780,8 +789,6 @@ next_image (gpointer data)
       image_filenames = g_list_next (image_filenames);
     else
       image_filenames = g_list_first (image_filenames);
-
-    g_object_unref (scaled_image_pixbuf);
 
     show_image (NULL, image_filenames);
 
@@ -800,8 +807,6 @@ previous_image ()
       image_filenames = g_list_previous (image_filenames);
     else
       image_filenames = g_list_last (image_filenames);
-
-    g_object_unref (scaled_image_pixbuf);
 
     show_image (NULL, image_filenames);
 
@@ -957,15 +962,12 @@ main (int argc, char *argv[])
 
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   tools_toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (tools_toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (tools_toolbar), GTK_TOOLBAR_ICONS);
 
   loading_toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (loading_toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (loading_toolbar), GTK_TOOLBAR_ICONS);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 

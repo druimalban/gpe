@@ -1,3 +1,9 @@
+2004-05-24  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: Removed setting of toolbar style for more fexibility. 
+              We'll use xsettings to set this in future.
+	* main.c: add_directory(): Fixed small memory hole.
+	* main.c: Fixed big memory hole.
+
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
 	* Makefile: Add dependency tracking.
@@ -74,4 +80,3 @@
 2003-03-09  Damien Tanner  <dctanner@gekk>
 
 	* main.c (main): Fully working (but not yet optimized) list view and the ability to switch between icon and list view.
-
