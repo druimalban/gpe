@@ -1,3 +1,11 @@
+2004-07-13  Florian Boor  <florian.boor@kernelconcepts.de>
+    
+    * editing.c: Implementation for dynamic built images.
+    * editing.c: Fixed image handling.
+    * editing.c: Several minor fixes.
+    * editing.c: Started experimental keyboard navigation improvement.
+    * *xml: Changed order and minor fixes.
+
 2004-07-12  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * editing.c: Improved keyboard navigation in edit dialog.

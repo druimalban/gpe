@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -26,10 +27,15 @@
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
 void on_edit_save_clicked (GtkButton * button, gpointer user_data);
-void on_edit_bt_image_clicked (GtkButton * button, gpointer user_data);
+void on_edit_bt_image_clicked (GtkWidget *image, gpointer user_data);
 void on_categories_clicked (GtkButton *button, gpointer user_data);
+void        
+tv_move_cursor (GtkTextView *textview,
+                                            GtkMovementStep arg1,
+                                            gint arg2,
+                                            gboolean arg3,
+                                            gpointer user_data);
 
-static gchar *photofile = NULL;
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -115,6 +121,8 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           ww = gtk_text_view_new ();
           gtk_text_view_set_editable (GTK_TEXT_VIEW (ww), TRUE);
           gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD);
+          g_signal_connect(G_OBJECT(ww),"move_cursor",
+            G_CALLBACK(tv_move_cursor),NULL);
         
           gtk_widget_set_usize (GTK_WIDGET (ww), -1, 64);
           if (e->name)
@@ -150,12 +158,34 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           esched = gtk_check_button_new_with_label (_("Schedule"));
           gtk_widget_set_sensitive (esched, FALSE);
           gtk_box_pack_start (GTK_BOX (hbox), esched, TRUE, TRUE, 0);
-          gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, gpe_get_boxspacing());
           add_tag (e->tag, datecombo, pw);
         }
         break;
+        case ITEM_IMAGE:
+        {
+          GtkWidget *l = gtk_label_new (e->name);
+          GtkWidget *hbox, *image, *btn;
+          pop_singles (vbox, singles, pw);
+          singles = NULL;
+          
+          hbox = gtk_hbox_new (FALSE, 0);
+          gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.5);
+          gtk_box_pack_start (GTK_BOX (hbox), l, TRUE, TRUE, 0);
+
+          btn = gtk_button_new();
+          image = gtk_image_new();
+          gtk_container_add(GTK_CONTAINER(btn),image);
+          gtk_box_pack_start (GTK_BOX (hbox), btn, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 
+            gpe_get_boxspacing());
+          g_signal_connect (G_OBJECT (btn), "clicked",
+		    G_CALLBACK (on_edit_bt_image_clicked), image);
+          
+          add_tag (e->tag, image, pw);
+        }
         default:
-          //abort ();
+          /* just ignore */
         break;
       }
     }
@@ -282,18 +312,17 @@ edit_window (void)
       if (!page->next)
         {
           GtkWidget *cathbox, *catbutton, *catlabel;
-          cathbox = gtk_hbox_new (FALSE, 0);
+          cathbox = gtk_hbox_new (FALSE, gpe_get_boxspacing());
           catbutton = gtk_button_new_with_label (_("Categories"));
           catlabel = gtk_label_new (NULL);
           gtk_misc_set_alignment (GTK_MISC (catlabel), 0.0, 0.5);  
-          gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, 0);
-          gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 4);
-          gtk_box_pack_start (GTK_BOX (vbox), cathbox, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, gpe_get_boxspacing());
+          gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (vbox), cathbox, TRUE, FALSE, gpe_get_border());
           g_signal_connect (G_OBJECT (catbutton), "clicked",
 		    G_CALLBACK (on_categories_clicked), w);
           g_object_set_data (G_OBJECT (w), "categories-label", catlabel);
         }
-      
     }
 
   return w;
@@ -317,9 +346,6 @@ retrieve_special_fields (GtkWidget * edit, struct person *p)
 	}
       cl = cl->next;
     }
-
-  db_delete_tag (p, "PHOTO");
-  db_set_data (p, "PHOTO", g_strdup (photofile));
 }
 
 static GSList *
@@ -334,11 +360,10 @@ get_categories_list (struct person *p)
     {
       struct tag_value *t = iter->data;
       if (!strcasecmp (t->tag, "category"))
-	{
-	  int id = atoi (t->value);
-
-	  list = g_slist_prepend (list, (gpointer)id);
-	}
+        {
+          int id = atoi (t->value);
+          list = g_slist_prepend (list, (gpointer)id);
+	    }
     }
 
   return list;
@@ -403,7 +428,6 @@ static void
 store_special_fields (GtkWidget *edit, struct person *p)
 {
   GtkWidget *w;
-  struct tag_value *v;
   gchar *str;
 
   if (p)
@@ -415,16 +439,6 @@ store_special_fields (GtkWidget *edit, struct person *p)
           gtk_label_set_text (GTK_LABEL (w), str);
           g_free (str);
         }
-    }
-    
-  if (photofile) 
-    g_free(photofile);
-  photofile = NULL;
-  
-  v = p ? db_find_tag (p, "PHOTO") : NULL;
-  if (v && v->value)
-    {
-      photofile = g_strdup(v->value);
     }
 }
 
@@ -459,6 +473,15 @@ edit_person (struct person *p)
                   else
                     gtk_date_combo_clear (GTK_DATE_COMBO (w));
                 }
+              else if (GTK_IS_IMAGE(w))
+                {
+                  g_object_set_data(G_OBJECT(w),"filename",v->value);
+                  if ((v->value) && !access(v->value,R_OK))
+                    gtk_image_set_from_file(GTK_IMAGE(w), v->value);
+                  else
+                    gtk_image_set_from_stock(GTK_IMAGE(w), 
+                      GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
+                }
               else  
                 gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
                           v->value, -1);
@@ -482,15 +505,34 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
     {
       GtkWidget *w = tags->data;
       gchar *text, *tag;
+      gchar buf[32];
+      
       if (GTK_IS_EDITABLE (w))
         text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
-      else
-	{
-	  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
-	  GtkTextIter start, end;
-	  gtk_text_buffer_get_bounds (buf, &start, &end);
-	  text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
-	}
+      else if (GTK_IS_DATE_COMBO(w))
+        {
+          GtkDateCombo *c = GTK_DATE_COMBO (w);
+          if (c->set)
+            {
+               snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", 
+                 c->year, c->month, c->day);
+               buf[sizeof (buf) - 1] = 0;
+              text = g_strdup(buf);
+            }
+          else
+            text = NULL;
+        }
+        else if (GTK_IS_IMAGE(w))
+          {
+            text = g_object_get_data(G_OBJECT(w),"filename");
+          }
+        else
+        {
+          GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
+          GtkTextIter start, end;
+          gtk_text_buffer_get_bounds (buf, &start, &end);
+          text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+        }
       tag = g_object_get_data (G_OBJECT (w), "db-tag");
       db_set_data (p, tag, text);
     }
@@ -520,20 +562,23 @@ on_categories_clicked (GtkButton *button, gpointer user_data)
 void 
 store_filename (GtkWidget *widget, gpointer user_data)
 {
-  GtkWidget *selector = GTK_WIDGET (user_data);
-  
+  GtkWidget *selector = GTK_WIDGET(user_data);
+  GtkWidget *image = g_object_get_data(G_OBJECT(selector), "image");
+  gchar *old_file;
   const gchar *selected_filename =
     gtk_file_selection_get_filename (GTK_FILE_SELECTION (selector));
+  
   if (selected_filename)
     {
-      if (photofile) 
-        g_free(photofile);
-      photofile = g_strdup(selected_filename);
+       old_file = g_object_get_data(G_OBJECT(image),"filename");
+       g_free(old_file);
+       g_object_set_data(G_OBJECT(image),"filename",g_strdup(selected_filename));
+       gtk_image_set_from_file(GTK_IMAGE(image), selected_filename);
     }
 }
 
 void
-on_edit_bt_image_clicked (GtkButton * button, gpointer user_data)
+on_edit_bt_image_clicked (GtkWidget *bimage, gpointer user_data)
 {
   GtkWidget *filesel = gtk_file_selection_new ("Select image");
 
@@ -547,7 +592,9 @@ on_edit_bt_image_clicked (GtkButton * button, gpointer user_data)
   g_signal_connect_swapped (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button),
 		    "clicked", G_CALLBACK (gtk_widget_destroy),
 		    (gpointer) filesel);
-
+  
+  g_object_set_data(G_OBJECT(filesel),"image",user_data);
+  
   gtk_widget_show_all (filesel);
 }
 
@@ -555,4 +602,96 @@ void
 on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
 {
   gtk_widget_destroy (GTK_WIDGET (user_data));
+}
+
+GtkWidget *
+find_next_focusable_widget(GtkWidget *w)
+{
+  GtkWidget *parent = gtk_widget_get_parent(w);
+  GtkWidget *result = NULL;
+  GList *children = gtk_container_get_children(GTK_CONTAINER(parent));
+  GList *iter;
+  
+  while (!result && parent)
+    {
+      for (iter = children; iter; iter = iter->next)
+        {
+           if ((iter->data == w) && (iter->next))
+             {
+               if (GTK_WIDGET_CAN_FOCUS(GTK_WIDGET(iter->next->data)))
+                 result = iter->next->data;
+               else if (!(result = find_next_focusable_widget(iter->next->data)))
+                 w = iter->next->data;
+             }
+        }
+      w = parent;
+      g_list_free(children);
+      parent = gtk_widget_get_parent(w);
+      children = gtk_container_get_children(GTK_CONTAINER(parent));
+    }
+printf("ptr %p\n",result);
+  return (result);
+}
+
+GtkWidget *
+find_previous_focusable_widget(GtkWidget *w)
+{
+  GtkWidget *parent = gtk_widget_get_parent(w);
+  GtkWidget *result = NULL;
+  GList *children = gtk_container_get_children(GTK_CONTAINER(parent));
+  GList *iter;
+  
+  while (!result && parent)
+    {
+      for (iter = g_list_last(children); iter; iter = iter->prev)
+        {
+           if ((iter->data == w) && (iter->prev))
+             {
+               if (GTK_WIDGET_CAN_FOCUS(GTK_WIDGET(iter->prev->data)))
+                 result = iter->prev->data;
+               else
+                 w = iter->prev->data;
+             }  
+        }
+      w = parent;
+      g_list_free(children);
+      parent = gtk_widget_get_parent(parent);
+      children = gtk_container_get_children(GTK_CONTAINER(parent));
+    }
+printf("ptr %p\n",result);
+  return (result);
+}
+
+void        
+tv_move_cursor (GtkTextView *textview,
+                                            GtkMovementStep arg1,
+                                            gint arg2,
+                                            gboolean arg3,
+                                            gpointer user_data)
+{
+  GtkTextBuffer *buf = gtk_text_view_get_buffer(textview);
+  GtkWidget *newfocus;
+  
+  int cnt = (int)g_object_get_data(G_OBJECT(textview),"cnt");
+  
+  if (arg1 == GTK_MOVEMENT_DISPLAY_LINES)
+    {
+      cnt += arg2;
+  printf("move %i %i %i\n",arg1, arg2, cnt);
+      if (cnt > gtk_text_buffer_get_line_count(buf))
+        {
+          cnt = 0;
+          newfocus = find_next_focusable_widget(GTK_WIDGET(textview));
+          if (newfocus)
+            gtk_widget_grab_focus(newfocus);
+        }
+      else if (cnt < 0)
+        {
+          cnt = 0;
+          newfocus = find_previous_focusable_widget(GTK_WIDGET(textview));
+          if (newfocus)
+            gtk_widget_grab_focus(newfocus);
+        }  
+      g_object_set_data(G_OBJECT(textview),"cnt",(void*)cnt);  
+    }
 }

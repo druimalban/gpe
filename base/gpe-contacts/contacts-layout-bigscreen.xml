@@ -6,33 +6,6 @@
         <label>Name</label>
       </single-item>
       <group>
-        <label>Home</label>
-        <single-item>
-          <tag>HOME.TELEPHONE</tag>
-          <label>Phone</label>
-        </single-item>
-        <single-item>
-          <tag>HOME.MOBILE</tag>
-          <label>Mobile</label>
-        </single-item>
-        <single-item>
-          <tag>HOME.FAX</tag>
-          <label>Fax</label>
-        </single-item>
-        <single-item>
-          <tag>HOME.EMAIL</tag>
-          <label>Mail</label>
-        </single-item>
-        <single-item>
-          <tag>HOME.WWW</tag>
-          <label>Web</label>
-        </single-item>
-        <multi-item>
-          <tag>HOME.ADDRESS</tag>
-          <label>Address</label>
-        </multi-item>
-      </group>
-      <group>
         <label>Work</label>
         <single-item>
           <tag>WORK.TELEPHONE</tag>
@@ -59,6 +32,33 @@
           <label>Address</label>
         </multi-item>
       </group>
+      <group>
+        <label>Home</label>
+        <single-item>
+          <tag>HOME.TELEPHONE</tag>
+          <label>Phone</label>
+        </single-item>
+        <single-item>
+          <tag>HOME.MOBILE</tag>
+          <label>Mobile</label>
+        </single-item>
+        <single-item>
+          <tag>HOME.FAX</tag>
+          <label>Fax</label>
+        </single-item>
+        <single-item>
+          <tag>HOME.EMAIL</tag>
+          <label>Mail</label>
+        </single-item>
+        <single-item>
+          <tag>HOME.WWW</tag>
+          <label>Web</label>
+        </single-item>
+        <multi-item>
+          <tag>HOME.ADDRESS</tag>
+          <label>Address</label>
+        </multi-item>
+      </group>
   </page>
   <page>
     <label>About</label>
@@ -68,7 +68,7 @@
     </date-item>
     <image-item>
       <tag>PHOTO</tag>
-      <label>Birthday</label>
+      <label>Photo</label>
     </image-item>
     <multi-item>
       <label>Notes</label>

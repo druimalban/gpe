@@ -198,6 +198,8 @@ get_tag_name_1(const gchar *tag, edit_thing_t e)
           ret = get_tag_name_1 (tag, iter->data);
       break;
 
+      case ITEM_DATE:
+      case ITEM_IMAGE:
       case ITEM_SINGLE_LINE:
       case ITEM_MULTI_LINE:
         if (!strcmp(tag,e->tag))
