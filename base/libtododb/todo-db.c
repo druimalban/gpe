@@ -370,7 +370,7 @@ todo_db_push_item (struct todo_item *i)
 	goto error;
     }
 
-  if (insert_values (sqliteh, i->id, "PRIORITY", "%d", i->priority)
+  if (insert_values (sqliteh, i->id, "PRIORITY", "%d", i->priority))
     goto error;
 
   if (insert_values (sqliteh, i->id, "MODIFIED", "%d", (int)modified))
