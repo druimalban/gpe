@@ -1,4 +1,4 @@
-.SUFFIXES: .mo .po .pot
+.SUFFIXES: .mo .po .pot .po8
 
 # use ipkg-build or ipkg-deb-build
 IPKG_BUILD := ipkg-build
@@ -11,8 +11,11 @@ all-mo: $(mo-files)
 install-mo: all-mo
 	for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 po/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done
 
-.po.mo:;
+.po8.mo:;
 	msgfmt -o $@ $<
+
+.po.po8:;
+	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; recode $${CTYPE}..UTF-8 <$< >$@
 
 update-po: $(po-files) po/$(PACKAGE).pot
 
