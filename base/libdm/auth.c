@@ -16,18 +16,23 @@
 
 #define CHALLENGE_LEN 64
 
-char challenge_string[(CHALLENGE_LEN * 2) + 9];
+gchar *challenge_string;
 
 static unsigned char challenge_bytes[CHALLENGE_LEN];
 static unsigned long challenge_seq;
 
-#define hexbyte(a)  (((a) > 10) ? (a) + 'a' - 10 : (a) + '0')
+#define hexbyte(a)  (((a) >= 10) ? (a) + 'a' - 10 : (a) + '0')
 
 void 
 update_challenge (void)
 {
   int i;
-  unsigned char *p = challenge_string;
+  unsigned char *p;
+
+  if (challenge_string == NULL)
+    challenge_string = g_malloc ((CHALLENGE_LEN * 2) + 9);
+
+  p = challenge_string;
 
   for (i = 0; i < CHALLENGE_LEN; i++)
     {
