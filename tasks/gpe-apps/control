@@ -1,8 +1,8 @@
 Package: gpe-apps
 Section: base
 Priority: optional
-Version: 0.01
+Version: 0.02
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox, gtk-engines-xenophilia
+Depends: gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox, gtk-engines-xenophilia, gpe-what, gpe-edit, gpe-soundbite, keylaunch, esd, sfm
 Description: Task package for GPE applications
