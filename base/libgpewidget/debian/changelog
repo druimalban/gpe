@@ -1,3 +1,9 @@
+libgpewidget (0.72-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Phil Blundell <pb@debian.org>  Sat, 27 Sep 2003 11:39:02 +0100
+
 libgpewidget (0.70-2) unstable; urgency=low
 
   * Include .pc file as well.
