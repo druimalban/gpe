@@ -1,5 +1,8 @@
 # GPE Login Config
 
 AUTOLOGIN="false"
-USER="root"
-HOME="/root"
+
+if [ "$AUTOLOGIN" == "true" ]; then
+  USER="root"
+  HOME="/root"
+fi
