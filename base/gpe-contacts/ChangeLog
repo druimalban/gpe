@@ -1,5 +1,11 @@
 2004-02-29  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.19 released.
+	
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile: Use Makefile.translation-auto-linguas.
+
 	* familiar/control1 (Depends): Add libgpevtype0, libmimedir0,
 	dbus-glib-1.
 

@@ -4,7 +4,7 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.18
+VERSION = 0.19
 DEBUG = no
 
 LINGUAS = de sv cs nl hu ro ru sr sk
@@ -68,5 +68,5 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 icons/export.png $(DESTDIR)$(PREFIX)/share/pixmaps/
 
 include $(BUILD)/Makefile.dpkg_ipkg
-include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.translation-auto-linguas
 -include $(DEPS)
