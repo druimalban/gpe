@@ -1,0 +1,316 @@
+# Kinyarwanda translations for gpe-aerial package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-aerial package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-aerial 0.2.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-10 18:55+0200\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:375
+msgid "Wireless networks"
+msgstr ""
+
+#: main.c:391
+#, fuzzy
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some\tconfiguration, red=not possible."
+msgstr "Idirishya Byose i Gusikana ni Amabara Ibyerekeye i Kuri Kwihuza Kuri i Cyuzuye Umuhondo Umutuku OYA"
+
+#: main.c:399 netedit.c:230 netedit.c:421 netedit.c:423
+msgid "Mode"
+msgstr "uburyo"
+
+#: main.c:409
+msgid "ESSID"
+msgstr ""
+
+#: main.c:420
+msgid "CH"
+msgstr ""
+
+#: main.c:431
+msgid "WEP"
+msgstr ""
+
+#: main.c:452
+#, fuzzy
+msgid "Unable to scan for devices."
+msgstr "Kuri Gusikana kugirango"
+
+#: main.c:587
+msgid "Successfully connected."
+msgstr ""
+
+#: main.c:602
+#, fuzzy
+msgid ""
+"Ad-Hoc connections\n"
+"setup complete."
+msgstr "Byuzuye"
+
+#: main.c:612
+#, fuzzy
+msgid ""
+"Could not connect\n"
+"to wireless LAN."
+msgstr "OYA"
+
+#: main.c:691
+msgid "Details..."
+msgstr "Isesengurabyose..."
+
+#: main.c:697
+#, fuzzy
+msgid "Enter additional info"
+msgstr "Ibisobanuro"
+
+#: main.c:704
+#, fuzzy
+msgid "Try connect..."
+msgstr "Kwihuza"
+
+#: main.c:759
+#, fuzzy
+msgid "Scanning for networks..."
+msgstr "kugirango"
+
+#: main.c:861
+#, fuzzy
+msgid "scanner died unexpectedly"
+msgstr "Gusikana"
+
+#: main.c:959
+#, fuzzy
+msgid "Wireless LAN control"
+msgstr "Igenzura"
+
+#: main.c:965
+#, fuzzy
+msgid "Switch scanner on"
+msgstr "Gusikana ku"
+
+#: main.c:967
+#, fuzzy
+msgid "Switch scanner off"
+msgstr "Gusikana Bidakora"
+
+#: main.c:968
+msgid "Networks..."
+msgstr ""
+
+#: main.c:969
+#, fuzzy
+msgid "Remove from dock"
+msgstr "Bivuye"
+
+#: main.c:1009
+#, fuzzy
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr "ni i"
+
+#: netedit.c:102
+#, fuzzy
+msgid ""
+"The key you entered\n"
+"is not valid."
+msgstr "Urufunguzo OYA Byemewe"
+
+#: netedit.c:113
+#, fuzzy
+msgid ""
+"The IP address you entered\n"
+"is not valid."
+msgstr "Aderesi OYA Byemewe"
+
+#: netedit.c:132
+#, fuzzy
+msgid ""
+"The subnet mask address you\n"
+"entered is not valid."
+msgstr "Aderesi ni OYA Byemewe"
+
+#: netedit.c:151
+#, fuzzy
+msgid ""
+"The gateway address you\n"
+"entered is not valid."
+msgstr "Aderesi ni OYA Byemewe"
+
+#: netedit.c:170
+#, fuzzy
+msgid ""
+"The DNS server address you\n"
+"entered is not valid."
+msgstr "Seriveri Aderesi ni OYA Byemewe"
+
+#: netedit.c:226
+msgid "SSID"
+msgstr ""
+
+#: netedit.c:231
+msgid "Managed"
+msgstr ""
+
+#: netedit.c:232 netedit.c:440
+msgid "Channel"
+msgstr ""
+
+#: netedit.c:233 netedit.c:444 netedit.c:446
+#, fuzzy
+msgid "WEP enabled"
+msgstr "Bikora"
+
+#: netedit.c:234
+msgid "Use DHCP"
+msgstr ""
+
+# svx/source\options\optinet2.src:RID_SVXPAGE_INET_PROXY.GB_DNS.text
+#: netedit.c:235
+#, fuzzy
+msgid "DNS Server"
+msgstr "Seriveri DNS"
+
+#: netedit.c:239
+msgid "Ad-Hoc"
+msgstr ""
+
+#: netedit.c:243
+msgid "Gateway"
+msgstr ""
+
+#: netedit.c:245
+msgid "Subnet mask"
+msgstr ""
+
+#: netedit.c:247
+msgid "IP Address"
+msgstr ""
+
+#: netedit.c:250
+msgid "WEP-Key"
+msgstr ""
+
+#: netedit.c:254
+#, fuzzy
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr "g. 1.."
+
+#: netedit.c:255
+#, fuzzy
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr "ni Gushyiraho Kuri 0"
+
+#: netedit.c:256
+#, fuzzy
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr "Umwanya Kuri i Izina: Bya iyi"
+
+#: netedit.c:257 netedit.c:258
+#, fuzzy
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", if your ."
+msgstr "Guhitamo i Ubwoko Bya Cyuzuye NIBA Guhitamo NIBA"
+
+#: netedit.c:259
+#, fuzzy
+msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
+msgstr "in Ubwoko Byose in Byose"
+
+#: netedit.c:260
+#, fuzzy
+msgid "Get IP setup using DHCP."
+msgstr "Imikorere ikoresha"
+
+#: netedit.c:261
+#, fuzzy
+msgid "Enter the IP of the default gateway to use."
+msgstr "i Bya i Mburabuzi Kuri Gukoresha"
+
+#: netedit.c:262
+#, fuzzy
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr "iyi NIBA Bishunzwe: ni in iyi"
+
+#: netedit.c:263
+#, fuzzy
+msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr "Urufunguzo Cyangwa Gushyiraho Nka ASCII Ikurikiranyanyuguti S"
+
+#: netedit.c:264
+#, fuzzy
+msgid "Enter the IP address of the primary nameserver to be used in this net here."
+msgstr "i Aderesi Bya i Kuri in iyi Cyuzuye"
+
+#: netedit.c:267
+#, fuzzy
+msgid "Network editor"
+msgstr "Muhinduzi"
+
+#: netedit.c:406
+#, fuzzy
+msgid "This dialog provides some inforamtion about the selected wireless LAN."
+msgstr "Ikiganiro Ibyerekeye i Byahiswemo"
+
+#: netedit.c:408
+#, fuzzy
+msgid "Network information"
+msgstr "Ibisobanuro"
+
+#: netedit.c:428
+msgid "Max. signal"
+msgstr ""
+
+#: netedit.c:433 netedit.c:436
+msgid "Speed"
+msgstr "Umuvuduko"
+
+#: netedit.c:437 netedit.c:472
+#, fuzzy
+msgid "<i>unknown</i>"
+msgstr "<i Kitazwi i"
+
+#: netedit.c:444 netedit.c:451 netedit.c:459
+msgid "yes"
+msgstr "Yego"
+
+#: netedit.c:446 netedit.c:454 netedit.c:461
+#, fuzzy
+msgid "no"
+msgstr "Oya"
+
+#: netedit.c:450 netedit.c:453
+msgid "IPSec detected"
+msgstr ""
+
+#: netedit.c:458 netedit.c:461
+msgid "DHCP detected"
+msgstr ""
+
+#: netedit.c:465 netedit.c:471
+msgid "Subnet"
+msgstr ""
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr ""
+
+#: gpe-aerial.desktop.in.h:2
+#, fuzzy
+msgid "Panel based wireless LAN communications control"
+msgstr "Igenzura"

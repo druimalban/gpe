@@ -1,0 +1,2095 @@
+# Kinyarwanda translations for gpe-conf package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-conf package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.1.21\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-31 22:33+0100\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:335
+#, fuzzy, c-format
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "'a Gishya Na Nka"
+
+#: main.c:353
+#, fuzzy, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr "'S R Nka"
+
+#: main.c:421
+#, fuzzy
+msgid "Warning: PCMCIA init failed."
+msgstr "Byanze"
+
+#: main.c:453
+#, fuzzy, c-format
+msgid "This mode is disabled, please try:\n"
+msgstr "Ubwoko ni Yahagaritswe"
+
+#: main.c:454
+#, fuzzy, c-format
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr "ni in"
+
+#: main.c:470
+#, fuzzy, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Kitazwi"
+
+#: main.c:471
+#, fuzzy, c-format
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr "ni in"
+
+#: applets.c:356
+msgid "Root access"
+msgstr ""
+
+#: applets.c:370
+#, fuzzy
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr "Amahitamo kugirango Ukoresha: Imizi Injiza Ijambobanga..."
+
+#: applets.c:417 screen/calibrate.c:32
+#, fuzzy
+msgid "Sorry, wrong password."
+msgstr "Ijambobanga..."
+
+#: timeanddate.c:424
+#, fuzzy
+msgid "Time adjusted from network."
+msgstr "Bivuye urusobe"
+
+#: timeanddate.c:426
+#, fuzzy
+msgid "Adjusting time from network failed."
+msgstr "Igihe Bivuye urusobe Byanze"
+
+#: timeanddate.c:506
+msgid "Time & Date"
+msgstr ""
+
+#: timeanddate.c:522
+msgid "Date"
+msgstr "Itariki"
+
+#: timeanddate.c:536
+#, fuzzy
+msgid "Enter current date here or use button to select."
+msgstr "KIGEZWEHO Itariki Cyangwa Gukoresha Akabuto Kuri Guhitamo"
+
+#: timeanddate.c:541
+msgid "Time"
+msgstr "Igihe"
+
+#: timeanddate.c:555
+msgid "Network"
+msgstr "urusobe"
+
+#: timeanddate.c:573
+#, fuzzy
+msgid "Select the timeserver to use to set the clock."
+msgstr "i Kuri Gukoresha Kuri Gushyiraho i"
+
+#: timeanddate.c:575
+#, fuzzy
+msgid "Get time from network"
+msgstr "Igihe Bivuye urusobe"
+
+#: timeanddate.c:582
+#, fuzzy
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Kuri i Gicurasi Kanda iyi Akabuto Kuri Gushyiraho i Igihe ku iyi APAREYE ikoresha i hejuru"
+
+#: timeanddate.c:587 timeanddate.c:596
+msgid "Timezone"
+msgstr ""
+
+#: timeanddate.c:619
+#, fuzzy
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "KIGEZWEHO Igenamiterere Nyuma i Komeza>> Ifashayinjira"
+
+#: timeanddate.c:627
+msgid "Daylight Saving"
+msgstr ""
+
+#: timeanddate.c:634
+#, fuzzy
+msgid "Use daylight saving time"
+msgstr "Mu kubika Igihe"
+
+#: timeanddate.c:641
+#, fuzzy
+msgid "Check this box if you want your device to handle daylight saving time for you."
+msgstr "iyi Agasanduku NIBA APAREYE Kuri Mu kubika Igihe kugirango"
+
+# sch/source\ui\app\strings.src:STR_OFS.text
+#: timeanddate.c:643
+#, fuzzy
+msgid "Offset:"
+msgstr "Nta- boneza"
+
+#: timeanddate.c:652
+msgid "Default"
+msgstr "Mburabuzi"
+
+#: timeanddate.c:659
+#, fuzzy
+msgid "Use default DST offset of one hour?"
+msgstr "Mburabuzi Nta- boneza Bya ISAHA"
+
+#: timeanddate.c:664
+msgid "Hours"
+msgstr "amasaha"
+
+#: timeanddate.c:667
+#, fuzzy
+msgid "Select daylight saving time offset hours here."
+msgstr "Mu kubika Igihe Nta- boneza amasaha"
+
+#: timeanddate.c:672
+msgid "Minutes"
+msgstr "Iminota"
+
+#: timeanddate.c:675
+#, fuzzy
+msgid "Select daylight saving time offset minutes here."
+msgstr "Mu kubika Igihe Nta- boneza Iminota"
+
+#: timeanddate.c:780
+#, fuzzy
+msgid "To make timezone settings take effect,you'll need to log out and log in again."
+msgstr "Ubwoko Amagenamiterere INGARUKA Kuri LOG Inyuma Na LOG in"
+
+#: screen/main.c:74
+msgid "Portrait"
+msgstr "Impagarike"
+
+#: screen/main.c:75
+#, fuzzy
+msgid "Landscape (left)"
+msgstr "Ibumoso:"
+
+#: screen/main.c:76
+msgid "Inverted"
+msgstr ""
+
+#: screen/main.c:77
+#, fuzzy
+msgid "Landscape (right)"
+msgstr "Iburyo:"
+
+#: screen/main.c:104
+msgid "Light"
+msgstr "Cyeruruka"
+
+#: screen/main.c:110
+msgid "Brightness"
+msgstr "Urumuri"
+
+#: screen/main.c:152
+msgid "Display"
+msgstr "igaragaza"
+
+#: screen/main.c:156
+msgid "Rotation"
+msgstr "Ihinduranya"
+
+#: screen/main.c:176
+msgid "Touchscreen"
+msgstr ""
+
+#: screen/main.c:180
+msgid "Calibrate"
+msgstr ""
+
+#: screen/main.c:182
+msgid "Start"
+msgstr "tangira"
+
+# officecfg/registry\schema\org\openoffice\Office\Calc.xcs:....Input.LastFunctions..222.text
+#: screen/main.c:304 sleep/callbacks.c:47
+#, fuzzy
+msgid "min"
+msgstr "GITO"
+
+# sc/source\ui\src\scfuncs.src:RID_SC_FUNCTION_DESCRIPTIONS1.SC_OPCODE_GET_TIME.6.text
+#: screen/main.c:307 sleep/callbacks.c:50
+msgid "sec"
+msgstr "isogonda"
+
+#: kbd.c:146
+msgid "Keyboard Geometry / Layout"
+msgstr ""
+
+# sfx2/source\dialog\dinfdlg.src:SID_DOCINFO.1.TP_DOCINFOUSER.text
+#: kbd.c:186
+#, fuzzy
+msgid "User defined"
+msgstr "Mukoresha yagenywe"
+
+#: network.c:106
+msgid "Current Config"
+msgstr ""
+
+#: network.c:235 ownerinfo.c:237
+msgid "Name:"
+msgstr "Izina:"
+
+#: network.c:241
+msgid "New Interface"
+msgstr ""
+
+#: network.c:250
+#, fuzzy
+msgid "This interface definition already exists!"
+msgstr "Insobanuro"
+
+#: network.c:324
+#, fuzzy
+msgid "Do you want to delete this interface?"
+msgstr "Kuri Gusiba iyi"
+
+#: network.c:324 keyctl.c:230 users/callbacks.c:115
+msgid "Question"
+msgstr ""
+
+#: network.c:570
+msgid "WiFi config"
+msgstr ""
+
+#: network.c:600
+#, fuzzy, c-format
+msgid "<b>WiFi config for %s</b>"
+msgstr "<B kugirango B"
+
+#: network.c:610
+msgid "ESSID"
+msgstr ""
+
+#: network.c:632
+msgid "Mode"
+msgstr "uburyo"
+
+#: network.c:642
+msgid "managed"
+msgstr ""
+
+#: network.c:654
+msgid "ad-hoc"
+msgstr ""
+
+#: network.c:671
+msgid "Channel"
+msgstr ""
+
+#: network.c:693
+msgid "WEP"
+msgstr ""
+
+# #-#-#-#-#  svx.pot (PACKAGE VERSION)  #-#-#-#-#
+# svx/source\svdraw\svdstr.src:STR_ItemValOFF.text
+# #-#-#-#-#  svx.pot (PACKAGE VERSION)  #-#-#-#-#
+# svx/source\svdraw\svdstr.src:STR_ItemValTEXTANI_NONE.text
+#: network.c:703
+msgid "off"
+msgstr "bidakora"
+
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\accel\accel.src:STR_OPEN.text
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\dialog\cfg.src:STR_OPEN.text
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\dialog\versdlg.src:DLG_VERSIONS.PB_OPEN.text
+#: network.c:715
+#, fuzzy
+msgid "open"
+msgstr "Gufungura"
+
+#: network.c:727
+#, fuzzy
+msgid "restricted"
+msgstr "Nta gukoresha bisesuye"
+
+#: network.c:743
+msgid "Key 1"
+msgstr "Urufunguzo 1"
+
+#: network.c:771
+msgid "Key 2"
+msgstr "Urufunguzo 2"
+
+#: network.c:799
+msgid "Key 3"
+msgstr "Urufunguzo 3"
+
+#: network.c:828
+#, fuzzy
+msgid "Key 4"
+msgstr "4."
+
+#: network.c:1030
+msgid "Address"
+msgstr "Aderesi"
+
+#: network.c:1033
+#, fuzzy
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "g. 1.."
+
+#: network.c:1035
+msgid "Netmask"
+msgstr ""
+
+#: network.c:1038
+#, fuzzy
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "g."
+
+#: network.c:1040
+msgid "Broadcast"
+msgstr ""
+
+#: network.c:1043
+#, fuzzy
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Aderesi i nka Na: Nka Iheruka Umubare"
+
+#: network.c:1045
+msgid "Gateway"
+msgstr ""
+
+#: network.c:1048
+#, fuzzy
+msgid "Enter the IP Address of your default gateway here."
+msgstr "i Bya Mburabuzi"
+
+#: network.c:1059 network.c:1176
+#, fuzzy
+msgid "WiFi device"
+msgstr "APAREYE"
+
+#: network.c:1067 network.c:1184
+msgid "Configure"
+msgstr "Kugena Imiterere"
+
+#: network.c:1164
+#, fuzzy
+msgid "Hostname"
+msgstr "Izinabuturo"
+
+#: network.c:1167
+#, fuzzy
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Izina ry'inturo: ni Bitari ngombwa"
+
+#: network.c:1284
+msgid "Provider"
+msgstr ""
+
+#: network.c:1286
+#, fuzzy
+msgid "Here you need to enter the name of the provider configuration to use for this interface."
+msgstr "Kuri Injiza i Izina: Bya i Iboneza Kuri Gukoresha kugirango iyi"
+
+#: network.c:1309
+msgid "Global Settings"
+msgstr ""
+
+#: network.c:1350
+msgid "Proxy"
+msgstr "Porogisi"
+
+#: network.c:1351
+#, fuzzy
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Kuri Gukoresha a Porogisi Injiza Kuri kugirango NONEAHA"
+
+# 4183
+#: network.c:1357
+#, fuzzy
+msgid "No proxy for"
+msgstr "nta gisimbura"
+
+#: network.c:1359
+#, fuzzy
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Injiza Urwego kugirango Kuri Gukoresha a Porogisi"
+
+#: network.c:1366
+msgid "DNS server"
+msgstr "Seriveri DNS"
+
+#: network.c:1369
+#, fuzzy
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "i Bya i Izina: Seriveri Kuri Gukoresha"
+
+#: network.c:1540
+#, fuzzy
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
+msgstr "Gicurasi Guhindura>> i BASIC Iboneza Ubwoko Bya APAREYE kugirango Bikorwa Iboneza Kuri Gukoresha Na Kuri Ubwoko i APAREYE a Akadomo Kuri Akadomo APAREYE"
+
+#: network.c:1546
+#, fuzzy
+msgid "Enable this option if your device is a WiFi device"
+msgstr "iyi Ihitamo NIBA APAREYE ni a APAREYE"
+
+#: network.c:1548
+#, fuzzy
+msgid "Click to set the wireless options for this device"
+msgstr "Kuri Gushyiraho i Amahitamo kugirango iyi APAREYE"
+
+#: network.c:1550
+#, fuzzy
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr "i Ubwoko Akazi Cyangwa"
+
+#: network.c:1553
+#, fuzzy
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr "i Ubwoko Bidakora kugirango Oya Bishunzwe: Gufungura kugirango Gufungura Sisitemu Na Nta gukoresha bisesuye kugirango Ukwihuza"
+
+#: network.c:1558
+#, fuzzy
+msgid "Enter the essid of your WiFi network here."
+msgstr "i Bya urusobe"
+
+#: network.c:1561
+#, fuzzy
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr "g."
+
+#: network.c:1564
+#, fuzzy
+msgid "Select the WEP key to use."
+msgstr "i Urufunguzo Kuri Gukoresha"
+
+#: network.c:1567
+#, fuzzy
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr "i Umubare Cyangwa Ubwisubire NIBA OYA iyi Umwanya Ahatanditseho"
+
+#: network.c:1590
+msgid "Add Interface"
+msgstr ""
+
+#: network.c:1591
+#, fuzzy
+msgid "Add a new Interface"
+msgstr "a Gishya"
+
+#: network.c:1601
+msgid "Remove Interface"
+msgstr ""
+
+#: network.c:1602
+#, fuzzy
+msgid "Remove current Interface"
+msgstr "KIGEZWEHO"
+
+#: network.c:1616
+msgid "Information"
+msgstr "Ibisobanuro"
+
+#: network.c:1617
+#, fuzzy
+msgid "Show current configuration."
+msgstr "KIGEZWEHO Iboneza"
+
+#: network.c:1635
+#, fuzzy
+msgid "Couldn't read network configuration."
+msgstr "Gusoma urusobe Iboneza"
+
+#: network.c:1642
+msgid "global"
+msgstr ""
+
+#: theme.c:140
+#, fuzzy
+msgid "Choose backgound image"
+msgstr "Ishusho"
+
+#: theme.c:154
+#, fuzzy
+msgid "You are not allowed to read this file, choose another."
+msgstr "OYA Kuri Gusoma iyi IDOSIYE Guhitamo"
+
+#: theme.c:175
+#, fuzzy
+msgid "Succesfully changed background image."
+msgstr "Byahinduwe Mbuganyuma Ishusho"
+
+#: theme.c:176
+#, fuzzy
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr "Na Imikorere Kuri Guhindura>> Birambuye"
+
+#: theme.c:500
+msgid "Red"
+msgstr "Gitukura"
+
+#: theme.c:505
+msgid "Green"
+msgstr "Icyatsi"
+
+#: theme.c:510
+msgid "Blue"
+msgstr "Ubururu"
+
+#: theme.c:820
+msgid "Select colour"
+msgstr ""
+
+#: theme.c:846 theme.c:920
+#, fuzzy
+msgid "You don't have read access to selected background image!"
+msgstr "Gusoma Kuri Byahiswemo Mbuganyuma Ishusho"
+
+#: theme.c:1040
+msgid "Theme"
+msgstr ""
+
+#: theme.c:1042 gpe-conf-theme.desktop.in.h:2
+#, fuzzy
+msgid "Look and Feel"
+msgstr "Na"
+
+#: theme.c:1052
+msgid "Desktop Theme"
+msgstr ""
+
+#: theme.c:1064
+msgid "Name"
+msgstr "Izina"
+
+# offmgr/source\offapp\dialog\optgdlg.src:OFA_TP_VIEW.FT_BIG.text
+#: theme.c:1081
+#, fuzzy
+msgid "Icon Size"
+msgstr "Ingano y'agashushondanga"
+
+#: theme.c:1096
+msgid "Visual Effects"
+msgstr ""
+
+#: theme.c:1102
+msgid "Enable Visual Effects"
+msgstr ""
+
+#: theme.c:1109
+msgid "Background"
+msgstr "Imbuganyuma "
+
+#: theme.c:1123 theme.c:1125
+msgid "Background Settings"
+msgstr ""
+
+#: theme.c:1135 theme.c:1146
+msgid "Theme Default"
+msgstr ""
+
+#: theme.c:1154
+msgid "Solid colour"
+msgstr ""
+
+#: theme.c:1168
+msgid "Horizontal"
+msgstr "Gitambitse"
+
+#: theme.c:1172
+msgid "Vertical"
+msgstr "Impagarike"
+
+#: theme.c:1177 theme.c:1196 theme.c:1379 theme.c:1385
+msgid "Colour"
+msgstr ""
+
+#: theme.c:1187
+#, fuzzy
+msgid "Colour gradient"
+msgstr "Ikizamuko"
+
+#: theme.c:1206
+msgid "Image"
+msgstr "Ishusho"
+
+#: theme.c:1232
+msgid "Centered"
+msgstr "Kiri hagati"
+
+# #-#-#-#-#  wizards.pot (PACKAGE VERSION)  #-#-#-#-#
+# wizards/source\formwizard\dbwizres.src:RID_DB_FORM_WIZARD_START_+_56.text
+# #-#-#-#-#  wizards.pot (PACKAGE VERSION)  #-#-#-#-#
+# wizards/source\webwizard\webwizar.src:WEBDIALOG_+_7.text
+#: theme.c:1236
+#, fuzzy
+msgid "Tiled"
+msgstr "Cy'udukaro"
+
+#: theme.c:1239
+msgid "Stretched"
+msgstr "Birambuye"
+
+#: theme.c:1246
+msgid "Toolbars"
+msgstr "Imyanyabikoresho"
+
+#: theme.c:1258 theme.c:1260
+msgid "Toolbar Style"
+msgstr ""
+
+#: theme.c:1269 theme.c:1298
+msgid "Icons"
+msgstr "Udushushondanga"
+
+#: theme.c:1274 theme.c:1302
+msgid "Text"
+msgstr "Umwandiko"
+
+# sc/source\ui\src\autofmt.src:RID_SCDLG_AUTOFORMAT.STR_NORTH.text
+#: theme.c:1279
+msgid "Both"
+msgstr "Byombi"
+
+#: theme.c:1284
+#, fuzzy
+msgid "Both H"
+msgstr "H"
+
+#: theme.c:1305
+#, fuzzy
+msgid "Both (icon above text)"
+msgstr "Agashushondanga hejuru Umwandiko"
+
+#: theme.c:1308
+#, fuzzy
+msgid "Both (icon left of text)"
+msgstr "Agashushondanga Ibumoso: Bya Umwandiko"
+
+#: theme.c:1315
+#, fuzzy
+msgid "Toolbar Icon Size"
+msgstr "Ingano y'agashushondanga k'umwanyabikoresho"
+
+#: theme.c:1331
+msgid "Fonts"
+msgstr "Imyandikire"
+
+#: theme.c:1340 theme.c:1360
+msgid "Desktop Font"
+msgstr ""
+
+#: theme.c:1347 theme.c:1407 theme.c:1442
+msgid "Family"
+msgstr ""
+
+#: theme.c:1367 theme.c:1427 theme.c:1462
+msgid "Size"
+msgstr "Ingano"
+
+#: theme.c:1396 theme.c:1398 theme.c:1420 theme.c:1455
+msgid "Application Font"
+msgstr ""
+
+#: keyctl.c:230
+#, fuzzy
+msgid "Reset button config to default?"
+msgstr "Akabuto Kuri Mburabuzi"
+
+#: keyctl.c:248
+msgid "User Defined"
+msgstr "Igena-koresha"
+
+#: keyctl.c:249
+msgid "Record Memo"
+msgstr ""
+
+#: keyctl.c:250
+msgid "Calendar"
+msgstr "Karendari"
+
+#: keyctl.c:251
+msgid "Contacts"
+msgstr "Aho kubariza"
+
+#: keyctl.c:252
+msgid "Taskmanager"
+msgstr ""
+
+#: keyctl.c:253
+msgid "Audio Player"
+msgstr ""
+
+#: keyctl.c:254
+msgid "Web Browser"
+msgstr ""
+
+#: keyctl.c:255
+msgid "To-do List"
+msgstr ""
+
+#: keyctl.c:256
+msgid "Toggle Desktop"
+msgstr ""
+
+#: keyctl.c:277
+msgid "Defaults"
+msgstr ""
+
+#: keyctl.c:442
+#, fuzzy
+msgid "Critical: Can't open keylaunchrc for writing!\n"
+msgstr "Gufungura kugirango"
+
+#: keyctl.c:464
+#, fuzzy
+msgid "Could not restart key handler!\n"
+msgstr "OYA Ongera utangire Urufunguzo"
+
+#: keyctl.c:486
+#, fuzzy
+msgid "The file you selected is not executable."
+msgstr "IDOSIYE Byahiswemo ni OYA"
+
+#: ownerinfo.c:210
+#, fuzzy
+msgid "Information about the Owner"
+msgstr "Ibyerekeye i"
+
+#: ownerinfo.c:218
+#, fuzzy
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "i Ukoresha: ni Kuri Guhindura>> iyi Ibisobanuro"
+
+# sw/source\ui\wizard\wizbmp.src:STR_Usr_ElektrMail.text
+#: ownerinfo.c:252
+#, fuzzy
+msgid "E-Mail:"
+msgstr "Aderesi ya interineti:"
+
+#: ownerinfo.c:267
+msgid "Phone:"
+msgstr "Telefoni:"
+
+#: ownerinfo.c:282
+msgid "Address:"
+msgstr "Aderesi:"
+
+#: ownerinfo.c:308
+msgid "Photofile:"
+msgstr ""
+
+#: login-setup.c:118
+#, fuzzy
+msgid "Some of these settings can only be changed by the user 'root'."
+msgstr "Bya Amagenamiterere Byahinduwe ku i Ukoresha:"
+
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+#: login-setup.c:141 gpe-admin.c:86
+msgid "General"
+msgstr "Rusange"
+
+#: login-setup.c:158
+#, fuzzy
+msgid "Show owner information at login."
+msgstr "Ibisobanuro ku Ifashayinjira"
+
+#: login-setup.c:162
+#, fuzzy
+msgid "Lock display on suspend."
+msgstr "Kugaragaza ku"
+
+#: login-setup.c:166
+#, fuzzy
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
+msgstr "Kugaragaza ku Ijambobanga..."
+
+#: sleep/interface.c:67
+msgid "Auto sleep"
+msgstr ""
+
+#: sleep/interface.c:77 sleep/interface.c:116
+#, fuzzy
+msgid "enabled"
+msgstr "Bikora"
+
+#: sleep/interface.c:95
+#, fuzzy
+msgid "sleep timeout"
+msgstr "Igihe cyarenze:"
+
+#: sleep/interface.c:106
+#, fuzzy
+msgid "Auto dim"
+msgstr "Byijimye"
+
+#: sleep/interface.c:133
+#, fuzzy
+msgid "backlight dim timeout"
+msgstr "Byijimye Igihe cyarenze:"
+
+#: sleep/interface.c:142
+#, fuzzy
+msgid "Auto dim level"
+msgstr "Byijimye urwego"
+
+#: sleep/interface.c:162
+msgid "Advanced Controls"
+msgstr ""
+
+#: sleep/interface.c:172
+msgid "CPU"
+msgstr "CPU"
+
+#: sleep/interface.c:178
+#, fuzzy
+msgid "Sleep on cpu less than load"
+msgstr "ku CPU Birutwa Ibirimo"
+
+#: sleep/interface.c:182
+#, fuzzy
+msgid "load below"
+msgstr "Ibirimo munsi"
+
+#: sleep/interface.c:198
+msgid "APM"
+msgstr ""
+
+#: sleep/interface.c:204
+#, fuzzy
+msgid "Sleep on AC"
+msgstr "ku"
+
+#: sleep/interface.c:206
+msgid "probe IRQs"
+msgstr ""
+
+#: sleep/interface.c:212
+#, fuzzy
+msgid "Check IRQ activity"
+msgstr "Umurimo"
+
+#: sleep/callbacks.c:59
+msgid "%"
+msgstr "%"
+
+#: users/interface.c:215
+msgid "User Name"
+msgstr "Izinakoresha"
+
+#: users/interface.c:216
+msgid "User Info"
+msgstr ""
+
+#: users/interface.c:217
+msgid "Home"
+msgstr "Home"
+
+#: users/interface.c:235 users/interface.c:236
+#, fuzzy
+msgid "Add user"
+msgstr "Kongeramo ukoresha..."
+
+#: users/interface.c:236
+#, fuzzy
+msgid "Add a new user"
+msgstr "a Gishya Ukoresha:"
+
+#: users/interface.c:240 users/interface.c:241
+#, fuzzy
+msgid "Edit user"
+msgstr "Ukoresha:"
+
+#: users/interface.c:241
+#, fuzzy
+msgid "Edit existing user"
+msgstr "Ukoresha:"
+
+#: users/interface.c:245 users/interface.c:246
+msgid "Delete user"
+msgstr "Vanaho Ukoresha"
+
+#: users/interface.c:246
+#, fuzzy
+msgid "Delete existing user"
+msgstr "Ukoresha:"
+
+#: users/interface.c:250
+msgid "Password"
+msgstr "Ijambobanga"
+
+#: users/interface.c:251
+msgid "Change password"
+msgstr "Hindura ijambobanga"
+
+#: users/interface.c:320
+msgid "User settings"
+msgstr "Ikoresha-nkoresha"
+
+#: users/interface.c:334
+msgid "User Name:"
+msgstr "Izina ry'ukoresha:"
+
+#: users/interface.c:350
+msgid "Password:"
+msgstr "Ijambobanga:"
+
+#: users/interface.c:358
+msgid "User Info:"
+msgstr ""
+
+#: users/interface.c:374
+#, fuzzy
+msgid "Shell:"
+msgstr "Igikonoshwa"
+
+#: users/interface.c:393
+#, fuzzy
+msgid "Home:"
+msgstr "Murugo:"
+
+#: users/interface.c:412
+#, fuzzy
+msgid "Change"
+msgstr "Guhindura"
+
+#: users/interface.c:413
+msgid "Set"
+msgstr "Gushyiraho"
+
+#: users/interface.c:478
+msgid "Change Password"
+msgstr "Guhindura Ijambobanga"
+
+#: users/interface.c:504
+#, fuzzy
+msgid "Old Password:"
+msgstr "Ijambobanga rya kera"
+
+#: users/interface.c:511
+#, fuzzy
+msgid "New Password:"
+msgstr "Ijambobanga nshya:"
+
+# sfx2/source\dialog\passwd.src:DLG_PASSWD.FT_PASSWD_CONFIRM.text
+#: users/interface.c:519
+#, fuzzy
+msgid "Confirm:"
+msgstr "Kwemeza"
+
+#: users/callbacks.c:113
+#, fuzzy
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr "Sisitemu"
+
+#: users/callbacks.c:115
+#, fuzzy
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr "Ukoresha: Na Byose Ibyatanzwe Igikorwa ni OYA ni"
+
+#: users/callbacks.c:151
+#, fuzzy
+msgid "Please choose a user name."
+msgstr "Guhitamo a Ukoresha: Izina:"
+
+#: users/callbacks.c:169
+#, fuzzy
+msgid "Please choose a home directory."
+msgstr "Guhitamo a Ku Ntangiriro bushyinguro"
+
+#: users/callbacks.c:256
+#, fuzzy
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr "Gishya"
+
+#: users/callbacks.c:259
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+
+#: cfgfile.c:891
+#, fuzzy
+msgid "No write access to network configuration."
+msgstr "Kwandika Kuri urusobe Iboneza"
+
+#: gpe-admin.c:93
+#, fuzzy
+msgid "Allow users to configure everything"
+msgstr "Kuri Kugena Imiterere"
+
+#: serial.c:428 serial.c:434
+#, fuzzy
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Kuri Umuyoboro Iboneza OYA"
+
+#: serial.c:431
+#, fuzzy
+msgid "Port A"
+msgstr "A"
+
+#: serial.c:438
+#, fuzzy
+msgid "Serial port default usage"
+msgstr "Umuyoboro Mburabuzi Ikoresha:"
+
+#: serial.c:443
+#, fuzzy
+msgid "Select desired software to use serial port here."
+msgstr "Kuri Gukoresha Umuyoboro"
+
+#: serial.c:446
+msgid "Console"
+msgstr ""
+
+#: serial.c:449
+#, fuzzy
+msgid "This option runs console on serial port. (default)"
+msgstr "Ihitamo ku Umuyoboro Mburabuzi"
+
+#: serial.c:457
+msgid "GPS Daemon"
+msgstr ""
+
+#: serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr ""
+
+#: serial.c:467
+#, fuzzy
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Ihitamo i Gutangira Bya Ibyatanzwe Bivuye a Kuri Porogaramu"
+
+#: serial.c:474
+#, fuzzy
+msgid "Nothing (free)"
+msgstr "Kigenga"
+
+#: serial.c:477
+#, fuzzy
+msgid "Don't start any software that uses the serial port."
+msgstr "Gutangira i Umuyoboro"
+
+#: serial.c:514 serial.c:521
+#, fuzzy
+msgid "This page configures the GPS receiver software."
+msgstr "Ipaji i Mwakirizi"
+
+#: serial.c:518
+msgid "GPS Receiver"
+msgstr ""
+
+#: serial.c:525
+#, fuzzy
+msgid "GPS settings"
+msgstr "Amagenamiterere"
+
+#: serial.c:531
+msgid "Receiver Type"
+msgstr ""
+
+#: serial.c:536
+msgid "NMEA"
+msgstr ""
+
+#: serial.c:541
+#, fuzzy
+msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
+msgstr "Mwakirizi Ibyatanzwe Mburabuzi Oya Kuri Guhindura>> kugirango"
+
+#: serial.c:547
+msgid "Earthmate"
+msgstr ""
+
+#: serial.c:553
+#, fuzzy
+msgid "GPS receiver is an Earthmate GPS."
+msgstr "Mwakirizi ni"
+
+#: serial.c:557
+msgid "Baud Rate"
+msgstr ""
+
+#: serial.c:573
+msgid "Serial Port"
+msgstr ""
+
+#: cardinfo.c:105
+msgid "/_Card"
+msgstr ""
+
+#: cardinfo.c:106
+msgid "/Card/_Insert"
+msgstr ""
+
+#: cardinfo.c:107
+msgid "/Card/_Eject"
+msgstr ""
+
+#: cardinfo.c:108
+msgid "/Card/_Suspend"
+msgstr ""
+
+#: cardinfo.c:109
+msgid "/Card/_Resume"
+msgstr ""
+
+#: cardinfo.c:110
+msgid "/Card/_Reset"
+msgstr ""
+
+#: cardinfo.c:111
+msgid "/Card/s1"
+msgstr ""
+
+#: cardinfo.c:112
+msgid "/Card/_Assign Driver"
+msgstr ""
+
+#: cardinfo.c:113
+msgid "/Card/s2"
+msgstr ""
+
+#: cardinfo.c:114
+#, fuzzy
+msgid "/Card/_Close"
+msgstr "/Funga"
+
+# sfx2/source\appl\newhelp.src:STR_HELP_WINDOW_TITLE.text
+#: cardinfo.c:115
+#, fuzzy
+msgid "/_Help"
+msgstr "/Kugoboka"
+
+#: cardinfo.c:116
+msgid "/_Help/Index"
+msgstr ""
+
+#: cardinfo.c:117
+msgid "/_Help/About"
+msgstr ""
+
+#: cardinfo.c:177 cardinfo.c:865
+#, fuzzy
+msgid "card not recognized"
+msgstr "OYA"
+
+#: cardinfo.c:279 cardinfo.c:350
+#, fuzzy
+msgid "Could not write to temporal config file."
+msgstr "OYA Kwandika Kuri IDOSIYE"
+
+#: cardinfo.c:556
+#, fuzzy
+msgid "Could not open pidfile:"
+msgstr "OYA Gufungura"
+
+#: cardinfo.c:562
+#, fuzzy
+msgid "Could not read pidfile"
+msgstr "OYA Gusoma"
+
+#: cardinfo.c:566
+#, fuzzy
+msgid "Could not signal cardmgr:"
+msgstr "OYA"
+
+#: cardinfo.c:641
+#, fuzzy
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "Imizi Kuri Gukoresha"
+
+#: cardinfo.c:660
+#, fuzzy
+msgid "No PCMCIA driver in '/proc/devices'"
+msgstr "Musomyi: in"
+
+#: cardinfo.c:663
+#, fuzzy
+msgid "Could not open '/proc/devices'"
+msgstr "OYA Gufungura"
+
+#: cardinfo.c:675
+msgid "No sockets found\n"
+msgstr ""
+
+#: cardinfo.c:684
+#, fuzzy
+msgid "Card Services release does not match!"
+msgstr "OYA BIHUYE"
+
+#: cardinfo.c:689
+#, fuzzy
+msgid "Could not get CS revision info!\n"
+msgstr "OYA Kubona Isubiramo Ibisobanuro"
+
+#: cardinfo.c:852
+#, fuzzy
+msgid "flock(stabfile) failed"
+msgstr "Byanze"
+
+#: cardinfo.c:871
+#, fuzzy, c-format
+msgid "no driver loaded"
+msgstr "Oya Musomyi:"
+
+# svtools/source\dialogs\prnsetup.src:STR_SVT_PRNDLG_READY.text
+#: cardinfo.c:980
+#, fuzzy
+msgid "ready"
+msgstr "Cyiteguye"
+
+#: cardinfo.c:998
+#, fuzzy
+msgid "not ready"
+msgstr "OYA Cyiteguye"
+
+#: cardinfo.c:1013
+msgid "suspended"
+msgstr ""
+
+#: cardinfo.c:1205
+msgid "Assign Driver"
+msgstr ""
+
+#: cardinfo.c:1214
+#, fuzzy
+msgid ""
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
+msgstr "Ikiganiro Kuri Guhitamo Guhindura>> i Musomyi: Igenera kugirango Cyangwa"
+
+#: cardinfo.c:1224
+#, fuzzy
+msgid "Your current card identifies itself as:"
+msgstr "KIGEZWEHO Nka"
+
+#: cardinfo.c:1238 cardinfo.c:1244
+msgid "Manuf. Id"
+msgstr ""
+
+#: cardinfo.c:1238 cardinfo.c:1244
+msgid "Class"
+msgstr "ishuri,urwego"
+
+#: cardinfo.c:1342 cardinfo.c:1355
+#, fuzzy
+msgid "PC/CF card socket information."
+msgstr "Ibisobanuro"
+
+#: cardinfo.c:1350
+msgid "Socket"
+msgstr ""
+
+#: cardinfo.c:1381
+#, fuzzy
+msgid "Information for socket"
+msgstr "kugirango"
+
+#: cardinfo.c:1390
+msgid "State:"
+msgstr "Leta:"
+
+#: cardinfo.c:1391
+msgid "Device:"
+msgstr "Ububiko:"
+
+#: cardinfo.c:1392
+msgid "Driver:"
+msgstr "Musomyi:"
+
+#: cardinfo.c:1393
+msgid "Type:"
+msgstr "Ubwoko:"
+
+#: cardinfo.c:1394
+msgid "I/O:"
+msgstr ""
+
+#: cardinfo.c:1395
+msgid "IRQ:"
+msgstr ""
+
+# svx/source\gallery2\galtheme.src:RID_GALLERYSTR_THEME_FLAGS.text
+#: cardinfo.c:1402
+#, fuzzy
+msgid "Flags:"
+msgstr "Amabendera"
+
+#: cardinfo.c:1419
+#, fuzzy
+msgid "PCMCIA initialisation failed"
+msgstr "Byanze"
+
+#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
+#: tools/interface.c:651
+msgid "[NONE SET]"
+msgstr ""
+
+#: tools/interface.c:706 tools/interface.c:1704
+msgid "UNSPEC"
+msgstr ""
+
+#: tools/interface.c:708
+msgid "UNIX Domain"
+msgstr ""
+
+#: tools/interface.c:711
+msgid "DARPA Internet"
+msgstr ""
+
+#: tools/interface.c:714
+msgid "IPv6"
+msgstr ""
+
+#: tools/interface.c:717 tools/interface.c:1725
+#, fuzzy
+msgid "AMPR AX.25"
+msgstr "25%"
+
+#: tools/interface.c:720 tools/interface.c:1731
+msgid "AMPR NET/ROM"
+msgstr ""
+
+#: tools/interface.c:723
+msgid "Novell IPX"
+msgstr ""
+
+#: tools/interface.c:726
+msgid "Appletalk DDP"
+msgstr ""
+
+#: tools/interface.c:729 tools/interface.c:1766
+msgid "Econet"
+msgstr ""
+
+#: tools/interface.c:732
+#, fuzzy
+msgid "CCITT X.25"
+msgstr "25%"
+
+#: tools/interface.c:735 tools/interface.c:1728
+msgid "AMPR ROSE"
+msgstr ""
+
+#: tools/interface.c:738 tools/interface.c:1716
+msgid "Ash"
+msgstr ""
+
+#: tools/interface.c:765
+#, fuzzy, c-format
+msgid "Too many address family arguments.\n"
+msgstr "Aderesi ingingo"
+
+#: tools/interface.c:776
+#, fuzzy, c-format
+msgid "Unknown address family '%s'.\n"
+msgstr "Aderesi"
+
+#: tools/interface.c:839
+#, fuzzy, c-format
+msgid "Please don't supply more than one address family.\n"
+msgstr "Birenzeho Aderesi"
+
+#: tools/interface.c:966
+#, fuzzy, c-format
+msgid "No usable address families found.\n"
+msgstr "Aderesi Byabonetse"
+
+#: tools/interface.c:1036
+#, fuzzy, c-format
+msgid "Warning: no inet socket available: %s\n"
+msgstr "Oya Bihari"
+
+#: tools/interface.c:1188
+#, fuzzy, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Gufungura Ibisohoka"
+
+#: tools/interface.c:1431
+#, fuzzy
+msgid "Device not found"
+msgstr "OYA Byabonetse"
+
+#: tools/interface.c:1435
+#, fuzzy, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s:Ikosa Ibisobanuro"
+
+#: tools/interface.c:1609
+#, fuzzy, c-format
+msgid "You cannot start PPP with this program.\n"
+msgstr "Gutangira Na: iyi Porogaramu"
+
+#: tools/interface.c:1703
+msgid "Local Loopback"
+msgstr ""
+
+#: tools/interface.c:1706
+msgid "Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1707
+msgid "VJ Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1708
+#, fuzzy
+msgid "6-bit Serial Line IP"
+msgstr "6"
+
+#: tools/interface.c:1709
+#, fuzzy
+msgid "VJ 6-bit Serial Line IP"
+msgstr "6"
+
+#: tools/interface.c:1710
+msgid "Adaptive Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1713
+msgid "Ethernet"
+msgstr ""
+
+#: tools/interface.c:1719
+msgid "Fiber Distributed Data Interface"
+msgstr ""
+
+#: tools/interface.c:1722
+msgid "HIPPI"
+msgstr ""
+
+#: tools/interface.c:1734
+#, fuzzy
+msgid "generic X.25"
+msgstr "Gifitanye isano 25%"
+
+#: tools/interface.c:1737
+msgid "IPIP Tunnel"
+msgstr ""
+
+#: tools/interface.c:1740
+#, fuzzy
+msgid "Point-to-Point Protocol"
+msgstr "Kuri"
+
+#: tools/interface.c:1743
+msgid "(Cisco)-HDLC"
+msgstr ""
+
+#: tools/interface.c:1744
+msgid "LAPB"
+msgstr ""
+
+#: tools/interface.c:1747
+msgid "ARCnet"
+msgstr ""
+
+#: tools/interface.c:1750
+msgid "Frame Relay DLCI"
+msgstr ""
+
+#: tools/interface.c:1751
+msgid "Frame Relay Access Device"
+msgstr ""
+
+#: tools/interface.c:1754
+#, fuzzy
+msgid "IPv6-in-IPv4"
+msgstr "in"
+
+#: tools/interface.c:1757
+msgid "IrLAP"
+msgstr ""
+
+#: tools/interface.c:1760
+#, fuzzy
+msgid "16/4 Mbps Token Ring"
+msgstr "4."
+
+#: tools/interface.c:1762
+#, fuzzy
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "4."
+
+#: tools/interface.c:1871
+#, fuzzy, c-format
+msgid ""
+"<b>Interface %s</b>\n"
+"Type: %s\n"
+msgstr "<B B"
+
+#: tools/interface.c:1877
+#, fuzzy, c-format
+msgid "Media: %s"
+msgstr "Ibitangazamakuru"
+
+#: tools/interface.c:1882
+#, fuzzy, c-format
+msgid "(auto)"
+msgstr "(Ikiyega"
+
+#: tools/interface.c:1894
+#, fuzzy, c-format
+msgid "Address: %s\n"
+msgstr "Aderesi"
+
+#: tools/interface.c:1899
+#, fuzzy, c-format
+msgid "P-t-P: %s\n"
+msgstr "T"
+
+#: tools/interface.c:1903
+#, c-format
+msgid "Netmask: %s\n"
+msgstr ""
+
+#: tools/interface.c:1907
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr ""
+
+#: tools/interface.c:1919
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr ""
+
+#: tools/interface.c:1949
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr ""
+
+#: tools/interface.c:1952
+#, fuzzy, c-format
+msgid "Scope: "
+msgstr "Ingano:"
+
+#: tools/interface.c:1957
+#, c-format
+msgid "Global"
+msgstr ""
+
+#: tools/interface.c:1960
+#, c-format
+msgid "Link"
+msgstr "Ihuriro"
+
+#: tools/interface.c:1963
+#, c-format
+msgid "Site"
+msgstr "Ipaji"
+
+#: tools/interface.c:1966
+#, c-format
+msgid "Compat"
+msgstr ""
+
+#: tools/interface.c:1969
+#, c-format
+msgid "Host"
+msgstr "Ubuturo"
+
+# filter/source\xsltdialog\xmlfilterdialogstrings.src:STR_UNKNOWN_APPLICATION.text
+#: tools/interface.c:1972
+#, c-format
+msgid "Unknown"
+msgstr "Kitazwi"
+
+#: sound/sound.c:252
+msgid "Audio Settings"
+msgstr ""
+
+#: sound/sound.c:259
+msgid "Mute Everything"
+msgstr ""
+
+#: sound/sound.c:300
+msgid "Alarm Settings"
+msgstr ""
+
+#: sound/sound.c:307
+msgid "Enable Alarm Sound"
+msgstr ""
+
+#: sound/sound.c:314
+msgid "Automatic Volume (rising)"
+msgstr ""
+
+#: sound/sound.c:324 sound/soundctrl.c:283
+msgid "Volume"
+msgstr "Ijwi"
+
+#: sound/sound.c:331
+msgid "Test"
+msgstr "Igerageza"
+
+#: main-info.c:67
+#, fuzzy, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr "Ikoresha: Ibisobanuro Ipaji"
+
+#: main-info.c:68
+#, fuzzy, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr "Ipaji Gicurasi Mburabuzi"
+
+#: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
+msgid "System Information"
+msgstr ""
+
+#: storage.c:167 storage.c:424
+msgid "System Memory"
+msgstr ""
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:175 storage.c:444
+#, fuzzy
+msgid "Free memory"
+msgstr "Ububiko"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: storage.c:177 storage.c:184 storage.c:330 storage.c:341 storage.c:446
+#: storage.c:459 sysinfo.c:664 sysinfo.c:680
+msgid "MB"
+msgstr "MB"
+
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\autofmt.src:RID_SCDLG_AUTOFORMAT.STR_SUM.text
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\globstr.src:RID_GLOBSTR.STR_PIVOT_TOTAL.text
+#: storage.c:182 storage.c:329 storage.c:457
+#, fuzzy
+msgid "Total:"
+msgstr "Igiteranyo"
+
+#: storage.c:293
+msgid "Internal Flash"
+msgstr ""
+
+#: storage.c:299
+msgid "MMC"
+msgstr ""
+
+#: storage.c:305
+msgid "Compact Flash"
+msgstr ""
+
+#: storage.c:311
+msgid "Network Filesystem"
+msgstr ""
+
+#: storage.c:331
+#, fuzzy
+msgid "Mounted at "
+msgstr "ku"
+
+#: storage.c:339
+#, fuzzy
+msgid "Free space"
+msgstr "Umwanya"
+
+#: logread.c:116
+#, fuzzy
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Gushaka Cy'uruziga ni"
+
+#: logread.c:123
+#, fuzzy
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Kubona Kuri Cy'uruziga"
+
+#: logread.c:130
+#, fuzzy
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Kubona Kuri S kugirango Cy'uruziga"
+
+#: logread.c:156
+#, fuzzy
+msgid "<empty syslog>"
+msgstr "<ubusa"
+
+#: logread.c:227 logread.c:243
+msgid "System Log"
+msgstr ""
+
+#: logread.c:252 logread.c:268
+msgid "Session Log"
+msgstr ""
+
+#: logread.c:275
+#, fuzzy
+msgid "Could not open X session log.\n"
+msgstr "OYA Gufungura Umukoro LOG"
+
+#: battery.c:86
+#, fuzzy, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "OYA Gufungura APAREYE"
+
+#: battery.c:143 battery.c:200 battery.c:319
+#, fuzzy
+msgid "Status: high"
+msgstr "kirekire"
+
+#: battery.c:146 battery.c:203 battery.c:323
+#, fuzzy
+msgid "Status: low"
+msgstr "Byo hasi"
+
+#: battery.c:149 battery.c:206 battery.c:327
+#, fuzzy
+msgid "Status: critical"
+msgstr "Ibyangombwa"
+
+#: battery.c:152 battery.c:209 battery.c:331
+msgid "Status: charging"
+msgstr ""
+
+#: battery.c:155 battery.c:212
+msgid "Status: charge main"
+msgstr ""
+
+#: battery.c:158
+msgid "Status: dead"
+msgstr ""
+
+#: battery.c:161 battery.c:218 battery.c:317
+msgid "Status: full"
+msgstr ""
+
+#: battery.c:164 battery.c:221
+#, fuzzy
+msgid "Status: no battery"
+msgstr "Oya"
+
+#: battery.c:167 battery.c:224 battery.c:243 battery.c:334
+#, fuzzy
+msgid "Status: unknown"
+msgstr "Kitazwi"
+
+#: battery.c:172
+msgid "learning"
+msgstr ""
+
+#: battery.c:176 battery.c:228
+msgid "Voltage"
+msgstr ""
+
+#: battery.c:180 battery.c:232 battery.c:348
+msgid "AC connected"
+msgstr ""
+
+#: battery.c:182 battery.c:234 battery.c:350
+msgid "Lifetime"
+msgstr ""
+
+#: battery.c:215
+#, fuzzy
+msgid "Status: not installed"
+msgstr "OYA"
+
+#: battery.c:241
+#, fuzzy
+msgid "not installed"
+msgstr "OYA"
+
+#: battery.c:245
+#, fuzzy
+msgid "Voltage: unknown"
+msgstr "Kitazwi"
+
+#: battery.c:247
+#, fuzzy
+msgid "Lifetime: unknown"
+msgstr "Kitazwi"
+
+#: battery.c:309
+msgid "No battery"
+msgstr ""
+
+#: battery.c:409
+msgid "Internal battery"
+msgstr ""
+
+#: battery.c:413
+msgid "Jacket battery"
+msgstr ""
+
+#: sysinfo.c:237
+msgid "ARM"
+msgstr ""
+
+#: sysinfo.c:240
+#, fuzzy
+msgid "Intel x86 or compatible"
+msgstr "Cyangwa"
+
+#: sysinfo.c:241
+#, fuzzy
+msgid "IBM type PC"
+msgstr "Ubwoko"
+
+#: sysinfo.c:244
+msgid "Mips"
+msgstr ""
+
+#: sysinfo.c:246
+msgid "Silicon Graphics Machine"
+msgstr ""
+
+#: sysinfo.c:250
+#, fuzzy
+msgid "IBM Power or PowerPC"
+msgstr "Cyangwa"
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:279
+msgid "Familiar"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:293
+msgid "OpenEmbedded"
+msgstr ""
+
+#: sysinfo.c:335 sysinfo.c:337
+msgid "Build"
+msgstr ""
+
+#: sysinfo.c:439
+msgid "Network Status"
+msgstr ""
+
+#: sysinfo.c:453 sysinfo.c:456
+msgid "HWaddr (MAC)"
+msgstr ""
+
+#: sysinfo.c:467 sysinfo.c:468
+#, c-format
+msgid "Wireless"
+msgstr ""
+
+#: sysinfo.c:495
+msgid "Default Gateway"
+msgstr ""
+
+#: sysinfo.c:538
+#, fuzzy
+msgid "System information"
+msgstr "Ibisobanuro"
+
+#: sysinfo.c:548
+msgid "Version"
+msgstr "Ikiciro"
+
+#: sysinfo.c:580
+msgid "Distribution"
+msgstr "ikwirakwiza"
+
+#: sysinfo.c:605
+msgid "System"
+msgstr "Urwungano"
+
+#: sysinfo.c:614
+#, fuzzy
+msgid "Device information"
+msgstr "Ibisobanuro"
+
+#: sysinfo.c:626
+msgid "Device Name"
+msgstr ""
+
+# 1227
+#: sysinfo.c:645
+#, fuzzy
+msgid "CPU:"
+msgstr "CPU"
+
+# setup2/source\ui\error.src:ERR_CONFIG_MEM.text
+#: sysinfo.c:658
+#, fuzzy
+msgid "RAM:"
+msgstr "RAM"
+
+#: sysinfo.c:674
+msgid "Storage:"
+msgstr ""
+
+#: sysinfo.c:686
+msgid "Hardware"
+msgstr ""
+
+#: sysinfo.c:696
+msgid "Battery"
+msgstr ""
+
+#: sysinfo.c:703
+msgid "Storage"
+msgstr ""
+
+#: sysinfo.c:710
+msgid "Networks"
+msgstr ""
+
+#: sysinfo.c:717
+msgid "Log Display"
+msgstr ""
+
+#: gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr ""
+
+#: gpe-conf-admin.desktop.in.h:1
+msgid "User Access"
+msgstr ""
+
+#: gpe-conf-admin.desktop.in.h:2
+#, fuzzy
+msgid "User access administration"
+msgstr "ubuyobozi"
+
+#: gpe-conf-cardinfo.desktop.in.h:1
+msgid "PC/CF Cards"
+msgstr ""
+
+#: gpe-conf-cardinfo.desktop.in.h:2
+#, fuzzy
+msgid "PC/CF Cards info and config"
+msgstr "Ibisobanuro Na"
+
+#: gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr ""
+
+#: gpe-conf-kbd.desktop.in.h:1
+msgid "Virtual Keyboard"
+msgstr ""
+
+#: gpe-conf-kbd.desktop.in.h:2
+msgid "Virtual Keyboard Setup"
+msgstr ""
+
+#: gpe-conf-keyctl.desktop.in.h:1
+msgid "Button Config"
+msgstr ""
+
+#: gpe-conf-keyctl.desktop.in.h:2
+msgid "Button Configuration"
+msgstr ""
+
+#: gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr ""
+
+#: gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr ""
+
+#: gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr ""
+
+#: gpe-conf-ownerinfo.desktop.in.h:2
+msgid "Set Owner Information"
+msgstr ""
+
+#: gpe-conf-serial.desktop.in.h:1
+msgid "Serial Port Settings"
+msgstr ""
+
+#: gpe-conf-serial.desktop.in.h:2
+msgid "Serial Ports"
+msgstr ""
+
+#: gpe-conf-sleep.desktop.in.h:1
+msgid "Sleep Config"
+msgstr ""
+
+#: gpe-conf-sleep.desktop.in.h:2
+msgid "Sleep Configuration"
+msgstr ""
+
+#: gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr ""
+
+#: gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr ""
+
+#: gpe-conf-time.desktop.in.h:2
+#, fuzzy
+msgid "Setup Date and Time"
+msgstr "Na"
+
+#: gpe-conf-users.desktop.in.h:1
+msgid "Manage local users"
+msgstr ""
+
+#: gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
+msgstr ""
+
+#: gpe-conf-sysinfo.desktop.in.h:1
+msgid "System Info"
+msgstr ""
+
+#: gpe-conf-sound.desktop.in.h:1
+msgid "Sound Settings"
+msgstr ""
+
+#: gpe-conf-sound.desktop.in.h:2
+#, fuzzy
+msgid "Sound defaults and setup"
+msgstr "Na Imikorere"

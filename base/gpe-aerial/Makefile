@@ -7,7 +7,7 @@ STRIP=strip
 PREFIX = /usr/local
 DESTDIR = /
 
-LINGUAS = de sv ro cs nl pt ru fr sr es pt_BR vi
+LINGUAS = de sv ro cs nl pt ru fr sr es pt_BR vi rw
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build

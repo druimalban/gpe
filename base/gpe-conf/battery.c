@@ -86,7 +86,7 @@ void init_device()
  		perror("open");
 	};
 	
-	/* then check if we have apm support available*/
+	/* then check if we have apm support available */
 	if (!access(PROC_APM, R_OK))
 		file_apm = fopen(PROC_APM,"r");
 }
