@@ -11,5 +11,6 @@
 #define YEAR_VIEW_H
 
 extern GtkWidget *year_view (void);
+extern void year_free_lists(void);
 
 #endif

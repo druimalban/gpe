@@ -90,6 +90,15 @@ future_view_update ()
   return TRUE;
 }
 
+
+void
+future_free_lists(void)
+{
+  if (events) 
+    event_db_list_destroy (events);
+  events = NULL;
+}
+
 GtkWidget *
 future_view (void)
 {

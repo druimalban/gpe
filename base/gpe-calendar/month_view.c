@@ -586,6 +586,32 @@ printf("kp\n");
   return FALSE;
 }
 
+void
+month_free_lists()
+{
+  guint day;
+  struct tm tm_start;
+  guint days;
+  guint year, month;
+  struct tm today;
+  time_t t;
+
+  time (&t);
+  localtime_r (&t, &today);
+
+  localtime_r (&viewtime, &tm_start);
+  year = tm_start.tm_year + 1900;
+  month = tm_start.tm_mon;
+
+  days = days_in_month (year, month);
+
+  for (day = 1; day <= days; day++)
+    if (day_events[day]) 
+      {
+        event_db_list_destroy (day_events[day]);
+        day_events[day] = NULL;
+      }
+}
 
 GtkWidget *
 month_view(void)

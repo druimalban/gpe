@@ -11,5 +11,6 @@
 #define MONTH_VIEW_H
 
 extern GtkWidget *month_view (void);
+extern void month_free_lists(void);
 
 #endif

@@ -157,7 +157,7 @@ do_import_vcal (MIMEDirVCal *vcal)
   g_slist_free (list);
 }
 
-void
+int
 import_vcal (const gchar *data, size_t len)
 {
   MIMEDirVCal *cal;
@@ -174,13 +174,12 @@ import_vcal (const gchar *data, size_t len)
 
   if (cal)
     {
-      gchar *query;
-
-      query = g_strdup_printf (_("Received a calendar entry.  Import it?"));
-
-      if (gpe_question_ask (query, NULL, "bt-logo", "!gtk-cancel", NULL, "!gtk-ok", NULL, NULL))
-	do_import_vcal (cal);
-
+      do_import_vcal (cal);
       g_object_unref (cal);
+      return 0;
+    }
+  else
+    {
+      return -1;
     }
 }

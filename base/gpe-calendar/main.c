@@ -13,6 +13,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <libintl.h>
@@ -20,8 +21,10 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
+#include <gpe/errorbox.h>
 
 #include <gpe/event-db.h>
+
 #include "event-ui.h"
 #include "globals.h"
 
@@ -174,7 +177,7 @@ gpe_cal_exit (void)
 static void
 on_import_vcal (GtkWidget *widget, gpointer data)
 {
-  GtkWidget *filesel;
+  GtkWidget *filesel, *feedbackdlg;
   
   filesel = gtk_file_selection_new(_("Choose file"));
   gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel),TRUE);
@@ -182,23 +185,49 @@ on_import_vcal (GtkWidget *widget, gpointer data)
   if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
     {
       GError *err = NULL;
-      gchar *content;
-      int i = 0;
+      gchar *content, *errstr = NULL;
+      int ec = 0, i = 0;
       gsize count;
       gchar **files = 
         gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
-#warning todo: count and report success/errors
+      gtk_widget_hide(filesel); 
       while (files[i])
         {
           if (g_file_get_contents(files[i],&content,&count,&err))
             {
-              import_vcal(content,count);
+              if (import_vcal(content,count) < 0) 
+                {
+                  gchar *tmp;
+                  if (!errstr) 
+                    errstr=g_strdup("");
+                  ec++;
+                  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
+                  if (errstr) 
+                     g_free(errstr);
+                  errstr = tmp;
+                }
               g_free(content);
             }
           i++;  
         }
+      if (ec)
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(main_window),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
+      else
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(main_window),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          _("Import successful"));
+      gtk_dialog_run(GTK_DIALOG(feedbackdlg));
+      gtk_widget_destroy(feedbackdlg);
     }
   gtk_widget_destroy(filesel);
+  day_free_lists();
+  week_free_lists();
+  month_free_lists();
+  future_free_lists();   
+  event_db_refresh();
+  update_all_views();  
 }
 
 int
@@ -276,10 +305,17 @@ main (int argc, char *argv[])
   month = month_view ();
   future = future_view ();
 
+  /* main window */
+  window_x = gdk_screen_width() / 2;
+  window_y = gdk_screen_height() / 2;  
+  if (window_x < 240) window_x = 240;
+  if (window_y < 310) window_y = 310;
+    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_exit), NULL);
+  gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 
   displaymigration_mark_window (main_window);
 
@@ -361,8 +397,6 @@ main (int argc, char *argv[])
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), future, NULL);
 
   gtk_widget_show (notebook);
-
-  gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 
   gpe_set_window_icon (main_window, "icon");
 

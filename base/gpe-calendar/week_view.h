@@ -11,5 +11,6 @@
 #define WEEK_VIEW_H
 
 extern GtkWidget *week_view (void);
+extern void week_free_lists(void);
 
 #endif

@@ -12,5 +12,6 @@
 
 extern GtkWidget *day_view (void);
 extern gboolean day_view_combined_times;
+extern void day_free_lists(void);
 
 #endif

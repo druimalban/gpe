@@ -18,6 +18,7 @@
 #include <langinfo.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/question.h>
 #include <gpe/pixmaps.h>
@@ -588,6 +589,45 @@ click_categories (GtkWidget *b, GtkWidget *w)
   ui = gpe_pim_categories_dialog (s->categories, G_CALLBACK (update_categories), s);
 }
 
+gboolean
+on_description_focus_in(GtkWidget* widget, GdkEventFocus *event,
+                        gpointer user_data)
+{
+  GObject *window = user_data;
+  
+  g_object_set_data(window,"multiline",(void*)TRUE);
+  return FALSE;
+}
+
+gboolean
+on_description_focus_out(GtkWidget* widget, GdkEventFocus *event,
+                        gpointer user_data)
+{
+  GObject *window = user_data;
+  
+  g_object_set_data(window,"multiline",(void*)FALSE);
+  return FALSE;
+}
+
+static gboolean
+event_ui_key_press_event (GtkWidget *widget, GdkEventKey *k, gpointer data)
+{
+  if (k->keyval == GDK_Escape)
+    {
+      edit_finished(widget);
+      return TRUE;
+    }
+  if (k->keyval == GDK_Return)
+    {
+      if (!g_object_get_data(G_OBJECT(widget),"multiline"))
+        {
+          click_ok(NULL,widget);
+          return TRUE;
+       }
+    }
+  return FALSE;
+}
+
 static GtkWidget *
 build_edit_event_window (void)
 {
@@ -845,11 +885,16 @@ build_edit_event_window (void)
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (description), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (description), TRUE);
 
+  g_signal_connect(G_OBJECT(description), "focus-in-event", 
+                   G_CALLBACK(on_description_focus_in),window);
+  g_signal_connect(G_OBJECT(description), "focus-out-event", 
+                   G_CALLBACK(on_description_focus_out),window);
+
   descriptionlabel    = gtk_label_new (_("Description:"));
   gtk_misc_set_alignment(GTK_MISC (descriptionlabel), 0.015, 0.0);
   gtk_widget_set_size_request (GTK_WIDGET (description), -1, 88);
   gtk_container_add (GTK_CONTAINER (descriptionhbox), description);
-
+  
   /* Putting the tab together */
   s->notebooktype = gtk_notebook_new ();
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (s->notebooktype), FALSE);
@@ -1243,6 +1288,11 @@ build_edit_event_window (void)
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (edit_finished), NULL);
 
+  g_signal_connect (G_OBJECT (window), "key_press_event", 
+		            G_CALLBACK (event_ui_key_press_event), NULL);
+  gtk_widget_add_events (GTK_WIDGET (window), 
+                         GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+  
   return window;
 }
 

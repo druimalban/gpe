@@ -11,5 +11,6 @@
 #define FUTURE_VIEW_H
 
 extern GtkWidget *future_view (void);
+extern void future_free_lists(void);
 
 #endif

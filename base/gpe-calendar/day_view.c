@@ -519,6 +519,21 @@ update_hook_callback()
   day_view_update ();
 }
 
+void
+day_free_lists()
+{
+  int hour;
+  if (untimed_events) 
+    event_db_list_destroy (untimed_events);
+  untimed_events = NULL;
+  for (hour = 0; hour <= 23; hour++)
+    if (day_events[hour]) 
+      {
+        event_db_list_destroy (day_events[hour]);
+        day_events[hour] = NULL;
+      }
+}
+
 GtkWidget *
 day_view(void)
 {

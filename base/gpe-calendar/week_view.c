@@ -212,6 +212,22 @@ draw_expose_event (GtkWidget *widget,
   return TRUE;
 }
 
+
+void
+week_free_lists()
+{
+  int day;
+  for (day = 0; day < 7; day++)
+    {
+      struct week_day *d = &week_days[day];
+      if (d->events)
+        {
+          event_db_list_destroy (d->events);
+          d->events = NULL;
+        }
+    }
+}
+  
 static void
 week_view_update (void)
 {
@@ -374,7 +390,7 @@ update_hook_callback (void)
 }
 
 static gboolean
-week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *notebook)
+week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 {
   int i;
   struct render_ctl *c;

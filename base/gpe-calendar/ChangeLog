@@ -1,3 +1,14 @@
+2004-07-21  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Makefile: Working on V 0.54 now.
+    * main.c: Make default window size a little bit cleverer.
+    * year_view.*, month_view.*, week_view.*, future_view.*:
+      Added function to free allocated lists from eventdb.
+    * event-ui.c: Added handling of escape and enter keys to abort/save.
+    * import-vcal.c: import_vcal(): Returns success now. 
+                     Removed obsolete dialog.
+    * main.c: Import status dialog, error detection.
+
 2004-07-20  Florian Boor <florian.boor@kernelconcepts.de>
 
     * import-vcal.h: New file.
