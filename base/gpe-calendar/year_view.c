@@ -116,7 +116,7 @@ static void
 day_selected (GtkWidget *w, gpointer d)
 {
   struct day_popup *p = g_malloc (sizeof (struct day_popup));
-  GtkObject *o;
+  GtkWidget *o;
   struct tm tm;
   time_t t;
 
@@ -136,7 +136,7 @@ day_selected (GtkWidget *w, gpointer d)
   o = day_popup (main_window, p);
   if (o)
     {
-      gtk_signal_connect (o, "destroy", GTK_SIGNAL_FUNC (destroy_popup), p);
+      gtk_signal_connect (GTK_OBJECT(o), "destroy", GTK_SIGNAL_FUNC (destroy_popup), p);
     }
   else
     {

@@ -24,8 +24,9 @@
 #include "month_view.h"
 #include "day_popup.h"
 
-static GtkWidget *datesel, *draw;
+static GtkWidget *datesel, *draw, *popup;
 static guint xp, xs, ys;
+struct render_ctl *c_old;
 
 struct render_ctl
 {
@@ -40,22 +41,44 @@ button_press(GtkWidget *widget,
 	      GdkEventButton *event,
 	      gpointer d)
 {
-  if (event->type == GDK_BUTTON_PRESS)
-    {
-      guint x = event->x;
-      guint y = event->y;
-      struct render_ctl *c;
+  guint x = event->x;
+  guint y = event->y;
+  struct render_ctl *c;
 
-      x -= xp;
-      x /= xs;
-      
-      y /= ys;
-      y -= 1;
-      
-      c = &rc[x + (y * 7)];
-      if (c->valid)
-	day_popup (main_window, &c->popup);
+  x -= xp;
+  x /= xs;
+
+  y /= ys;
+  y -= 1;
+
+  c = &rc[x + (y * 7)];
+  if (c->valid) {
+	      
+    if (event->type == GDK_BUTTON_PRESS)
+    {
+      if (popup) gtk_widget_destroy (popup);
+      if (c!=c_old) {
+		popup=day_popup (main_window, &c->popup);
+		c_old=c;
+      }
+      else {
+		popup=NULL;
+		c_old=NULL;
+      }
     }
+    
+    else if (event->type == GDK_2BUTTON_PRESS)
+    {
+	struct tm tm;
+	localtime_r (&viewtime, &tm);
+	tm.tm_year = c->popup.year - 1900;
+	tm.tm_mon = c->popup.month;
+	tm.tm_mday = c->popup.day;
+	viewtime = mktime (&tm);
+	if (popup) gtk_widget_destroy (popup);
+        set_day_view ();    
+    }
+  }
 
   return TRUE;
 }

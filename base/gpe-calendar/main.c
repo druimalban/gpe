@@ -141,7 +141,7 @@ main(int argc, char *argv[])
   GtkWidget *toolbar;
   GdkPixmap *tmp_pix;
   GdkBitmap *tmp_mask;
-  GtkWidget *new_pixmap, *today_pixmap, *future_pixmap, *week_pixmap, *month_pixmap, *year_pixmap, *day_pixmap;
+  GtkWidget *new_pixmap, *today_pixmap, *future_pixmap, *week_pixmap, *month_pixmap, *year_pixmap, *day_pixmap, *exit_pixmap;
 
   GtkWidget *vbox;
   guint hour;
@@ -196,7 +196,7 @@ main(int argc, char *argv[])
 
   gtk_widget_realize (main_window);
 
-  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, PIXMAPS_DIR "/new.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/new.xpm");
   new_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
   tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/today.xpm");
@@ -217,7 +217,10 @@ main(int argc, char *argv[])
   tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/yearview.xpm");
   year_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
 
-  close_pix = gdk_pixmap_create_from_xpm (main_window->window, &close_mask, NULL, PIXMAPS_DIR "/close.xpm");
+  tmp_pix = gdk_pixmap_create_from_xpm (main_window->window, &tmp_mask, NULL, MY_PIXMAPS_DIR "/exit.xpm");
+  exit_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  close_pix = gdk_pixmap_create_from_xpm (main_window->window, &close_mask, NULL, MY_PIXMAPS_DIR "/close.xpm");
 
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
@@ -232,6 +235,8 @@ main(int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Week View", "Week View", "Week View", GTK_WIDGET (week_pixmap), set_week_view, NULL);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Month View", "Month View", "Month View", GTK_WIDGET (month_pixmap), set_month_view, NULL);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Year View", "Year View", "Year View", GTK_WIDGET (year_pixmap), set_year_view, NULL);
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Exit", "Exit", "Exit", GTK_WIDGET (exit_pixmap), gtk_exit, NULL);
 
   time (&viewtime);
   week = week_view ();
