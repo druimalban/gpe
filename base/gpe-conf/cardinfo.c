@@ -142,7 +142,7 @@ save_config (char *config, int socket)
 		use_wlan_ng = TRUE;
 		cfgfile = wlan_ng_cfgfile;
 	}
-	new = g_str_has_prefix (g_strchomp (cur_bind), "unsupported card");	// check if this is a known card
+	new = g_str_has_prefix (g_strchomp (cur_bind), _("card not recognized"));	// check if this is a known card
 
 	if (new)
 	{
@@ -829,7 +829,10 @@ do_update (GtkWidget * widget)
 				break;
 			s[strlen (s) - 1] = '\0';
 			/* if you change formating here, change <b>empty</b> too!*/
-			snprintf (d, 80, "<b>%s</b>", s + 9);
+			if (strstr(s,"unsupported card"))		
+				snprintf (d, 80, "<b>%s</b>", _("card not recognized"));
+			else
+				snprintf (d, 80, "<b>%s</b>", s + 9);
 			update_field (&st[i].card, d);
 			*d = '\0';
 			*type = '\0';

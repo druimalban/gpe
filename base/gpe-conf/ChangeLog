@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+14.07.2003		Florian			cardinfo.c					Changed text for cards with no known driver.
+
 08.07.2003		Florian			battery.c					Swapped labels...
 															Releases V 0.1.0-pre6
 
