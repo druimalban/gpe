@@ -1,3 +1,7 @@
+2002-08-05  Moray Allan  <moray@handhelds.org>
+
+	* gpe-login/familiar/gpe-logout.menu: Moved to section 'Utilities'.
+
 2002-08-04  Moray Allan  <moray@handhelds.org>
 
 	* X11/Xsession-gpe.d/25dotfiles: New file.
