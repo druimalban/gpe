@@ -1,3 +1,8 @@
+2003-07-06  Moray Allan  <moray@sermisy.org>
+
+	* Makefile (install_program), gpe-calendar.menu: No longer install
+	old-style menu file.
+
 2003-06-26  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add wa.
