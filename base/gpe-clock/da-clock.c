@@ -143,7 +143,7 @@ draw_clock (GtkWidget *widget,
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
-  GdkGC *gc;
+  GdkGC *gc, *tmp_gc;
   GdkRectangle pixbuf_rect, intersect_rect;
   double hour_angle, minute_angle;
 
@@ -163,7 +163,6 @@ draw_clock (GtkWidget *widget,
   if (! backing_pixmap)
     {
       XRenderPictureAttributes att;
-      GdkGC *tmp_gc;
       backing_pixmap = gdk_pixmap_new (drawable,
 				       widget->allocation.width, widget->allocation.height,
 				       gdk_drawable_get_depth (drawable));
@@ -176,13 +175,6 @@ draw_clock (GtkWidget *widget,
 
       background_width = gdk_pixbuf_get_width (clock_background);
       background_height = gdk_pixbuf_get_height (clock_background);
-
-      tmp_gc = get_bg_gc (drawable, backing_pixmap);
-
-      gdk_draw_rectangle (backing_pixmap, tmp_gc, TRUE,
-			  0, 0, widget->allocation.width, widget->allocation.height);
-
-      g_object_unref (tmp_gc);
     }
 
   if (event)
@@ -191,6 +183,13 @@ draw_clock (GtkWidget *widget,
       gdk_gc_set_clip_rectangle (backing_gc, &event->area);
     }
 
+  tmp_gc = get_bg_gc (drawable, backing_pixmap);
+  
+  gdk_draw_rectangle (backing_pixmap, tmp_gc, TRUE,
+		      0, 0, widget->allocation.width, widget->allocation.height);
+  
+  g_object_unref (tmp_gc);
+  
   if (event)
     {
       pixbuf_rect.x = x_offset;
