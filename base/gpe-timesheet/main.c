@@ -15,11 +15,12 @@
 
 #include <gtk/gtk.h>
 
-#include "pixmaps.h"
-#include "render.h"
-#include "init.h"
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
+#include <gpe/init.h>
+#include <gpe/smallbox.h>
+
 #include "sql.h"
-#include "smallbox.h"
 
 #define _(_x) gettext(_x)
 
@@ -206,11 +207,10 @@ main(int argc, char *argv[])
 		      gtk_main_quit, NULL);
 
   gtk_widget_realize (window);
+  gtk_widget_show (window);
 
   gtk_clist_set_column_width (GTK_CLIST (tree), 0, 
 			      tree->allocation.width - 32);
-
-  gtk_widget_show (window);
 
   gtk_main ();
 

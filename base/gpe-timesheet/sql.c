@@ -15,7 +15,8 @@
 #include <string.h>
 #include <sqlite.h>
 
-#include "errorbox.h"
+#include <gpe/errorbox.h>
+
 #include "sql.h"
 
 static const char *fname = "/.gpe/timesheet";

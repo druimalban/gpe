@@ -24,4 +24,7 @@ struct task
 extern gboolean sql_start (void);
 extern GSList *tasks, *root;
 
+extern void new_task (gchar *description, struct task *parent);
+extern void delete_task (struct task *t);
+
 #endif
