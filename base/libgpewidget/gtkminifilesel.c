@@ -406,15 +406,21 @@ gtk_mini_file_selection_class_init (GtkMiniFileSelectionClass * klass)
 
   signals[0] = gtk_signal_new ("completed",
 			       GTK_RUN_FIRST | GTK_RUN_ACTION,
+#if GTK_MAJOR_VERSION < 2
 			       oclass->type,
+#else
+			       GTK_CLASS_TYPE (oclass),				  
+#endif
 			       GTK_SIGNAL_OFFSET (GtkMiniFileSelectionClass, completed),
 			       gtk_marshal_NONE__NONE,
 			       GTK_TYPE_NONE, 0);
 
+#if GTK_MAJOR_VERSION < 2
   gtk_object_class_add_signals (oclass, signals, LAST_SIGNAL);
+#endif
 }
 
-guint
+GtkType
 gtk_mini_file_selection_get_type (void)
 {
   static guint mini_file_selection_type;

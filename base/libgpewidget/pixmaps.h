@@ -10,6 +10,7 @@
 #ifndef PIXMAPS_H
 #define PIXMAPS_H
 
+#include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 struct gpe_icon

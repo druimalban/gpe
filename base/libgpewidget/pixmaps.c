@@ -56,7 +56,11 @@ gpe_load_one_icon (const char *filename, gchar **error)
       pathname = buf;
     }
   
+#if GDK_PIXBUF_MAJOR < 2
   pb = gdk_pixbuf_new_from_file (pathname);
+#else
+  pb = gdk_pixbuf_new_from_file (pathname, NULL);
+#endif
 
   if (pb == NULL && error)
     {

@@ -192,7 +192,7 @@ gtk_date_combo_class_init (GtkDateComboClass * klass)
   widget_class->show = gtk_date_combo_show;
 }
 
-guint
+GtkType
 gtk_date_combo_get_type (void)
 {
   static guint date_combo_type = 0;
