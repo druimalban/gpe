@@ -22,8 +22,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE /* Pour GlibC2 */
 #endif
 #include <time.h>
 #include <unistd.h> /* for readlink () */

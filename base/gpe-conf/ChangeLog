@@ -1,3 +1,7 @@
+2004-08-11	Florian Boor  	<florian.boor@kernelconcepts.de>
+	
+	* suid.c, users/callbacks.c: Implemented removing a users home directory.
+	
 2004-08-08	Florian Boor  	<florian.boor@kernelconcepts.de>
  
     * brightness.c: Do not set level to 0 on platforms that my have a 

@@ -504,6 +504,14 @@ suidloop (int write, int read)
 					fscanf (in, "%100s", arg1);
 					do_change_user_access (arg1);
 				}
+				else if (strcmp (cmd, "DHDI") == 0)  // delete home directory
+				{
+					gchar *cmd;
+					fscanf (in, "%100s", arg1);
+					cmd = g_strdup_printf("rm -rf /home%s", arg1);
+					system (cmd);
+					g_free(cmd);
+				}
 			}	// if check_user_access
 			else	// clear buffer
 			{

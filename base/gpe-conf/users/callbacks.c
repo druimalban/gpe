@@ -8,6 +8,7 @@
 #include "callbacks.h"
 #include "interface.h"
 #include <gpe/errorbox.h>
+#include <gpe/question.h>
 #include "../applets.h"
 #define _XOPEN_SOURCE_
 #include <unistd.h>
@@ -103,10 +104,14 @@ users_on_delete_clicked                      (GtkButton       *button,
     if(cur->pw.pw_uid < MINUSERUID)
       gpe_error_box(_("You can't remove\n system users!"));
     else
-      {
-	*prec = cur->next;
-	free(cur);
-      }
+  		if (gpe_question_ask (_("Delete user and all its data?\nThis action is not revertable\nand is executed instantly."), _("Question"), "question",
+		   "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
+      	{
+			*prec = cur->next;
+     		suid_exec("DHDI",strrchr(cur->pw.pw_dir,'/'));
+			#warning todo: queue this and wait until user accepts changes.
+			free(cur);
+      	}
   }
   ReloadList();
 
