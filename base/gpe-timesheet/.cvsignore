@@ -1,3 +1,4 @@
 gpe-timesheet
 *.d
+*.desktop.in.h
 
