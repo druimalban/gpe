@@ -1,3 +1,11 @@
+2005-01-03  Phil Blundell  <philb@gnu.org>
+
+	* Version 0.74 released.
+
+2005-01-03  Phil Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Don't use gpe_application_init.
+
 2005-01-01  Luc Pionchon  <luc@handhelds.org>
 
 	* gpe-login.c (build_root_password_box): remove markup from i18n'ed strings.
