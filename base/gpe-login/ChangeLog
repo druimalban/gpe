@@ -1,3 +1,8 @@
+2003-02-15  Philip Blundell  <philb@gnu.org>
+
+	* X11/gpe-login.pre-session: Change ownership on
+	/dev/touchscreen/0raw also.
+
 2003-02-13  Philip Blundell  <philb@gnu.org>
 
 	* gpe-logout.sh: Add explicit line break to work around Gtk
