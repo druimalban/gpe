@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: sqlite, libgpewidget1, gpe-icons (>= 0.18), bluez-pin-locale*
+Depends: sqlite, libgpewidget1, gpe-icons (>= 0.18), bluez-pin-locale*, dbus-glib-1
 Description: Bluetooth PIN helper
 Provides: bluez-pin
 Replaces: bluez-pin
