@@ -1,8 +1,8 @@
 Package: gpe-contacts
 Section: base
 Priority: optional
-Version: 0.05
+Version: 0.06
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, libgpewidget0 (>= 0.21), gpe-icons (>= 0.04), libxml2
+Depends: libgtk1.2, libgpewidget0 (>= 0.30), gpe-icons (>= 0.04), libxml2
 Description: Contacts manager

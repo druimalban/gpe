@@ -1,5 +1,9 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* src/structure.c (structure_delete_item): Add "are you sure" dialog.
+
+	* familiar/control, familiar/control1: Require libgpewidget 0.30.
+
 	* src/structure.c (edit_structure): Just one column in the CTree.
 
 	* src/main.c (selection_made): Make linkage global.

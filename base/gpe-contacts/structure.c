@@ -21,6 +21,7 @@
 #include <gpe/smallbox.h>
 #include <gpe/render.h>
 #include <gpe/errorbox.h>
+#include <gpe/question.h>
 
 #include "interface.h"
 #include "support.h"
@@ -146,14 +147,6 @@ structure_new_field (GtkWidget *widget,
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
-      GtkWidget *box = gtk_dialog_new ();
-      GtkWidget *label1 = gtk_label_new (_("Label:"));
-      GtkWidget *label2 = gtk_label_new (_("Tag:"));
-      GtkWidget *radio1 = gtk_radio_button_new_with_label (NULL, 
-							   _("Single line"));
-      GtkWidget *radio2 = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radio1), 
-								       _("Multiple line"));
-      
       struct box_desc2 bd[3];
       memset (&bd, 0, sizeof (bd));
       bd[0].label = _("Title");
@@ -182,7 +175,10 @@ structure_delete_item (GtkButton       *button,
 		       gpointer         user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
-  if (GTK_CLIST (ct)->selection)
+  if (GTK_CLIST (ct)->selection
+      && (gpe_question_ask (_("Really delete this field?"), _("Confirm"), 
+			    "question", _("Delete"), "delete", _("Cancel"), "cancel", NULL) == 0))
+
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       edit_thing_t e = GTK_CTREE_ROW (node)->row.data;
