@@ -1,8 +1,8 @@
 Package: libgpewidget1
 Section: base
 Priority: optional
-Version: 0.14
+Version: 0.15
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk2.0-0
+Depends: libc6, libgtk2.0-0, gpe-icons
 Description: Common widget set for GPE

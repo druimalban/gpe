@@ -63,7 +63,9 @@ dpkg: upstream
 install: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+ifneq ($(GTK2),yes)
 	install -D $(GTKRC) $(DESTDIR)$(PREFIX)/share/gpe/$(GTKRC)
+endif
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
@@ -74,7 +76,7 @@ ipkg:
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
 	cp familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 

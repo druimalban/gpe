@@ -229,22 +229,9 @@ gtk_date_sel_init (GtkDateSel *sel)
 {
   time (&sel->time);
 
-  switch (sel->mode)
-    {
-    case GTKDATESEL_FULL:	/* day, month, year */
-      make_field (sel, &sel->day, day_click, day_update);
-      make_field (sel, &sel->month, month_click, month_update);
-      break;
-    case GTKDATESEL_WEEK:	/* week, year */
-      make_field (sel, &sel->week, week_click, week_update);
-      break;
-    case GTKDATESEL_MONTH:	/* month, year */
-      make_field (sel, &sel->month, month_click, month_update);
-      break;
-    case GTKDATESEL_YEAR:	/* year */
-      break;
-    }
-
+  make_field (sel, &sel->day, day_click, day_update);
+  make_field (sel, &sel->week, week_click, week_update);
+  make_field (sel, &sel->month, month_click, month_update);
   make_field (sel, &sel->year, year_click, year_update);
 }
 

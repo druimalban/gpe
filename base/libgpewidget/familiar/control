@@ -1,8 +1,8 @@
 Package: libgpewidget0
 Section: base
 Priority: optional
-Version: 0.14
+Version: 0.15
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, libgdk-pixbuf2
+Depends: libc6, libgtk1.2, libgdk-pixbuf2, gpe-icons
 Description: Common widget set for GPE
