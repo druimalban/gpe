@@ -330,12 +330,14 @@ event_db_stop (void)
 }
 
 static GSList *
-event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed)
+event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed, 
+				   gboolean untimed_significant, guint max)
 {
   GSList *iter;
   GSList *list = NULL;
   double test1, test2,not_today;
   struct tm tm_current, tm_event;
+  guint n = 0;
   
   localtime_r (&start, &tm_current);
   
@@ -343,11 +345,19 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed)
     {
       event_t ev = iter->data;
       
-      if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
-	continue;
+      /* Stop if we have enough events */
+      if (max && n >= max)
+	break;
+
+      if (untimed_significant)
+	{
+	  /* Ignore events with wrong untimed status */
+	  if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
+	    continue;
+	}
 
       /* Stop if event hasn't started yet */
-      if (ev->start > end)
+      if (end && ev->start > end)
 	break;
       
       /* Skip events that have finished already */
@@ -356,19 +366,28 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed)
 	continue;
 
       list = g_slist_append (list, ev);
+      n++;
     }
 
-  for (iter = recurring_events; iter; iter = g_slist_next (iter))
+  for (iter = recurring_events; max && iter; iter = g_slist_next (iter))
     {
       event_t ev = iter->data;
       time_t fixed_start = ev->start;
       recur_t r = ev->recur;
       
-      if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
-	continue;
+      /* Stop if we have enough events */
+      if (max && n >= max)
+	break;
+
+      if (untimed_significant)
+	{
+	  /* Ignore events with wrong untimed status */
+	  if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
+	    continue;
+	}
 
       /* Skip events that haven't started yet */
-      if (fixed_start > end)
+      if (end && fixed_start > end)
 	continue;
       
       /* Skip events that have finished already */
@@ -476,17 +495,22 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed)
   return list;
 }
 
-
 GSList *
 event_db_list_for_period (time_t start, time_t end)
 {
-  return event_db_list_for_period_internal (start, end, FALSE);
+  return event_db_list_for_period_internal (start, end, FALSE, FALSE, 0);
 }
 
 GSList *
-event_db_untimed_list_for_period (time_t start, time_t end)
+event_db_untimed_list_for_period (time_t start, time_t end, gboolean yes)
 {
-  return event_db_list_for_period_internal (start, end, TRUE);
+  return event_db_list_for_period_internal (start, end, yes, TRUE, 0);
+}
+
+GSList *
+event_db_list_for_future (time_t start, guint max)
+{
+  return event_db_list_for_period_internal (start, 0, FALSE, FALSE, max);
 }
 
 void

@@ -88,7 +88,8 @@ extern event_details_t event_db_get_details (event_t);
 extern void event_db_forget_details (event_t);
 
 extern GSList *event_db_list_for_period (time_t start, time_t end);
-extern GSList *event_db_untimed_list_for_period (time_t start, time_t end);
+extern GSList *event_db_list_for_future (time_t start, guint max);
+extern GSList *event_db_untimed_list_for_period (time_t start, time_t end, gboolean yes);
 extern void event_db_list_destroy (GSList *);
 
 extern recur_t event_db_get_recurrence (event_t ev);
