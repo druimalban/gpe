@@ -32,6 +32,7 @@
 #define WINDOW_NAME "Gallery"
 #define _(_x) gettext (_x)
 GtkWidget *window;
+GtkWidget *scrolled_window;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget;
 GList *image_filenames;
@@ -82,7 +83,6 @@ render_images ()
 
   il = gpe_iconlist_new ();
   printf ("Starting rendering...\n");
-  //gpe_iconlist_set_bg (il, (gchar *) all_items->data);
   this_item = image_filenames;
   while (this_item)
   {
@@ -136,6 +136,7 @@ add_directory (gchar *directory)
       }
     }
     view_widget = render_images (image_filenames);
+    gtk_scrolled_window_add_with_viewport (scrolled_window, GTK_WIDGET (view_widget));
     gtk_widget_show (view_widget);
   }
 }
@@ -239,7 +240,7 @@ show_dirbrowser (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *scroll, *info_label;
+  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *info_label;
   GtkWidget *view_option_menu, *view_menu, *view_menu_item;
   GdkPixbuf *p;
   GtkWidget *pw;
@@ -309,8 +310,8 @@ main (int argc, char *argv[])
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
 #endif
 
-  scroll = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   p = gpe_find_icon ("open");
   pw = gpe_render_icon (window->style, p);
@@ -383,8 +384,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_scrolled_window_add_with_viewport (scroll, GTK_WIDGET (view_widget));
-  gtk_box_pack_start (GTK_BOX (vbox), scroll, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar2, FALSE, FALSE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
@@ -398,7 +398,7 @@ main (int argc, char *argv[])
   gtk_widget_show (info_label);
   gtk_widget_show (view_option_menu);
   gtk_widget_show (view_menu);
-  gtk_widget_show (scroll);
+  gtk_widget_show (scrolled_window);
 
   gtk_main();
   return 0;
