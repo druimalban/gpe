@@ -26,6 +26,8 @@ static struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
+static gboolean currently_handling_error = FALSE;
+
 #define _(x) dgettext(PACKAGE, x)
 
 void
@@ -34,6 +36,14 @@ gpe_error_box (char *text)
   GtkWidget *label, *ok, *dialog, *icon;
   GtkWidget *hbox;
   GdkPixbuf *p;
+
+  if (currently_handling_error)
+    {
+      fprintf (stderr, "%s\n", text);
+      return;
+    }
+
+  currently_handling_error = TRUE;
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
@@ -65,6 +75,8 @@ gpe_error_box (char *text)
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
 
   gtk_widget_show_all (dialog);
+
+  currently_handling_error = FALSE;
 
   gtk_main ();
 }
