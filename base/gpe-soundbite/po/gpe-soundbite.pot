@@ -1,0 +1,44 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-10-06 14:11+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:132 main.c:509
+msgid "Recording"
+msgstr ""
+
+#: main.c:132
+msgid "available"
+msgstr ""
+
+#: main.c:426 main.c:431
+msgid "Voice memo at"
+msgstr ""
+
+#: main.c:494
+msgid "%v s"
+msgstr ""
+
+#: main.c:503
+msgid "Playing"
+msgstr ""
+
+#: main.c:525
+msgid "OK"
+msgstr ""
+
+#: main.c:530
+msgid "Cancel"
+msgstr ""

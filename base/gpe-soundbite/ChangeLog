@@ -1,3 +1,9 @@
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
+	* main.c: Update paths to libgpewidget headers.
+	* Makefile: Support GTK 2 and i18n.  Use Makefile.dpkg_ipkg and
+	Makefile.translation.
+
 2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-soundbite.menu: Give full path for icon.

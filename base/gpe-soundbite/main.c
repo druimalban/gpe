@@ -26,12 +26,12 @@
 
 #include <gtk/gtk.h>
 
-#include "init.h"
-#include "picturebutton.h"
-#include "pixmaps.h"
-#include "render.h"
-#include "gtkminifilesel.h"
-#include "errorbox.h"
+#include <gpe/init.h>
+#include <gpe/picturebutton.h>
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
+#include <gpe/gtkminifilesel.h>
+#include <gpe/errorbox.h>
 
 #include "gsm-codec.h"
 

@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-soundbite
-#DEBUG = yes
+DEBUG = yes
 CVSBUILD = yes
 ESD = yes
 
@@ -11,7 +11,15 @@ else
 MEMBERS += oss
 endif
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
+endif
+
+CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -26,20 +34,21 @@ LDFLAGS += -L../libgpewidget -lgsm
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget -lgsm `gtk-config --libs`
+LDFLAGS += -lgpewidget -lgsm $(GTKLDFLAGS)
 
 ifeq ($(ESD),yes)
 LDFLAGS += -lesd
 endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install: all
+install: all install-mo
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -D $(PACKAGE)-record.menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)-record
@@ -47,19 +56,8 @@ install: all
 	install -D gpe-soundbite-record.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-soundbite-record.png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
-
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
-
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 clean:
 	rm -f $(PACKAGE) $(OBJS)
+
+include ../build/Makefile.dpkg_ipkg
+include ../build/Makefile.translation
