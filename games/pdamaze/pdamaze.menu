@@ -1,1 +1,8 @@
-?package(pdamaze): needs=x11 title="PDA Maze" command=pdamaze icon48=pdamaze.png section=Games windowtitle=pdamaze
+?package(pdamaze): \
+ needs=x11 \
+ title="PDA Maze" \
+ logtitle="PDA Maze" \
+ command=pdamaze \
+ icon48=/usr/share/pixmaps/pdamaze.png \
+ section=Games \
+ windowtitle=pdamaze
