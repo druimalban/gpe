@@ -681,7 +681,7 @@ main (int argc, char **argv)
 
   while (1)
     {
-      int visible = 0;
+      int visible = 1;
       struct timeval tvt;
 
       tvt.tv_usec = 0;

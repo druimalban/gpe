@@ -2,7 +2,7 @@ PACKAGE = minibat
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.16
+VERSION = 0.17
 
 LINGUAS = 
 
