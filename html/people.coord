@@ -1,7 +1,11 @@
 # sorting order: from north to south
+# Lat    Long
  060.08   025.00 "luc"                           # Helsinki, .fi
+ 055.75   037.70 "elephantum"                    # Moscow, .ru
  055.57  -003.13 "moray"    align=above          # Edinburgh, .uk
  053.37  -006.50 "paul"     align=above          # Leixlip, .ie
+ 053.03   008.55 "reenoo"                        # Ganderkesee, .de
+ 052.22   006.92 "koen"                          # Enschede, .nl
  052.12   000.07 "pb"       align=right          # Cambridge, .uk
  051.38  -002.37 "owen"                          # Bath, .uk
  051.30   000.05 "dc"                            # London, .uk
@@ -11,11 +15,11 @@
  045.47   003.05 "pierre"                        # Clermont-Ferrand, .fr
  042.14  -071.48 "jamey/jg"                      # Cambridge, MA, .us 
  041.38   002.18 "wizly"                         # Barcelona, .es
+ 041.12   016.87 "bedboi"                        # Bari, .it
  040.26  -079.59 "mccarthy"                      # Pittsburgh, PA, .us
  040.20  -008.42 "spung"                         # Coimbra, .pt
  032.08   034.76 "ED"                            # Tel Aviv, .il
 -034.56   138.36 "mibus"                         # Adelaide, .au
- 055.75   037.70 "elephantum"                    # Moscow, .ru
 
 # some reference points:
 # 070.40   023.42 "Hammerfest"
@@ -23,10 +27,11 @@
 
 # Get location info from 
 #    http://www.getty.edu/research/tools/vocabulary/tgn/index.html
+# ("decimal degrees")
 #
 # Get the earth image from http://flatplanet.neurofractal.org/getmap.cgi?earthmap_hires.jpg
 # or maybe http://flatplanet.sourceforge.net/maps/images/earthmap_hires.jpg
 #
-# In images, run: 
-# xplanet -shade 100 -markerfile ../people.coord -output people.png -geometry 700x350 -font /usr/share/fonts/truetype/Verdana.ttf -fontsize 9 -image /opt/applications/earth_images/earthmap_hires.jpg
-# xplanet -shade 100 -markerfile ../people.coord -output people_eu.png -geometry 600x300 -font /usr/share/fonts/truetype/Verdana.ttf -fontsize 9 -lat 052.00 -lon 000.00 -projection orthographic -radius 200 -image /opt/applications/earth_images/earthmap_hires.jpg
+# Run: 
+#   xplanet -window -config xplanet.config  -pango -font="Bitstream Vera Sans" -fontsize 7 -geometry 800x400 -projection ancient -output images/people.png -num_times 1
+#   xplanet -radius 170 -window -projection orthographic -lat 049.00 -lon 015.00 -config xplanet.config  -pango -font "Bitstream Vera Sans" -fontsize 7 -geometry 600x400 -output images/people_eu.png -num_times 1

@@ -1,5 +1,16 @@
 2004-09-25  Colin Marquardt  <colin@marquardt-home.de>
 
+	* contact.phtml: Add new hackers. Yay! :)
+
+	* people.coord: Add renoo.
+
+	* xplanet.config: Fix config to use my image file.
+
+	* people.coord: Add bedboi and koen. Use new xplanet (1.1.0),
+	options and everything changed a lot :/
+
+	* xplanet.config: New file. Tailored to my paths, sorry.
+
 	* documentation.phtml: Links pointing to new wiki, reported by
 	Koen Kooi.
 	Add many more links to doc pages. Many thanks to unknown26 for all
