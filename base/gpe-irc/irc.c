@@ -131,7 +131,6 @@ irc_server_login_init (IRCServer *server)
 gboolean
 irc_server_login (IRCServer *server)
 {
-  int send_result;
   gchar *login_string;
 
   if (server->user_info->password)
@@ -141,9 +140,7 @@ irc_server_login (IRCServer *server)
 
   printf ("Now logging in...");
 
-  send_result = send (server->fd, login_string, strlen (login_string), 0);
-
-  if (send_result != -1)
+  if (g_io_channel_write_chars (server->io_channel, login_string, -1, NULL, NULL) == G_IO_STATUS_NORMAL)
   {
     printf ("Logged in.\n");
     irc_server_login_init (server);
@@ -177,6 +174,7 @@ irc_server_connect (IRCServer *server)
       if (connect_result != -1)
       {
 	server->fd = fd;
+	server->io_channel = g_io_channel_unix_new (fd);
 	break;
       }
     }

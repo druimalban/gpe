@@ -96,33 +96,33 @@ update_window_title ()
   gtk_window_set_title (GTK_WINDOW (main_window), new_title);
 }
 
-gchar *
-remove_invalid_utf8_chars (gchar *text)
+GString *
+remove_invalid_utf8_chars (GString *text)
 {
   const gchar *invalid_start;
 
-  if (g_utf8_validate (text, -1, &invalid_start) == TRUE)
+  if (g_utf8_validate (text->str, -1, &invalid_start) == TRUE)
     return text;
   else
     return NULL;
 }
 
 void
-update_text_view (gchar *text)
+update_text_view (GString *text)
 {
   GtkTextBuffer *text_buffer;
   GtkTextIter start, end;
   GtkAdjustment *vadjust;
 
   text = remove_invalid_utf8_chars (text);
-  if (text != NULL)
+  if (text->str != NULL)
   {
-    //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text);
+    //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
     vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
-    gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
+    gtk_text_buffer_insert (text_buffer, &end, text->str, strlen (text->str));
     gtk_adjustment_set_value (vadjust, vadjust->upper);
   }
 }
@@ -155,38 +155,29 @@ button_clicked (GtkWidget *button)
       selected_server = server;
       clear_text_view ();
       //printf ("Button's text passed: %s\n", server->text->str);
-      update_text_view (server->text->str);
+      update_text_view (server->text);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
     }
   }
 }
 
-void
-do_irc_iter ()
+gboolean
+get_data_from_server (GIOChannel *source, GIOCondition condition, IRCServer *server)
 {
-  gchar *text = NULL;
-  GList *iter = NULL;
+  GString *new_text;
 
-  iter = g_list_first (servers);
+  new_text = g_string_new ("");
 
-  while (iter != NULL)
+  if (g_io_channel_read_line_string (source, new_text, NULL, NULL) == G_IO_STATUS_NORMAL)
   {
-    //printf ("----- Reading from irc server %s\n", ((IRCServer *) iter->data)->name);
-    if (irc_server_read ((IRCServer *) iter->data, &text) == -1)
-      break;
-
-    printf ("--------------------%s\n\n", text);
-    if (text != NULL)
+    if (server == selected_server)
     {
-      if ((IRCServer *) iter->data == selected_server)
-	update_text_view (text);
-      //printf ("--------------------%s\n\n", text);
-      ((IRCServer *) iter->data)->text = g_string_append (((IRCServer *) iter->data)->text, text);
-      printf ("--------------------%s\n\n", ((IRCServer *) iter->data)->text->str);
+      update_text_view (new_text);
+      server->text = g_string_append (server->text, new_text->str);
     }
-
-    iter = iter->next;
   }
+
+  return TRUE;
 }
 
 void
@@ -237,10 +228,8 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 
   gtk_widget_destroy (parent_window);
 
-  while (gtk_events_pending ())
-    gtk_main_iteration ();
-
   irc_server_connect (server);
+  g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, server);
 }
 
 void
@@ -430,18 +419,7 @@ main (int argc, char *argv[])
 
   gtk_widget_grab_focus (main_entry);
 
-  //connection_init (server);
-
-  while (1)
-  {
-    if (servers != NULL)
-      do_irc_iter ();
-
-    sleep (1);
-
-    //while (gtk_events_pending ())
-    // gtk_main_iteration ();
-  }
+  gtk_main ();
 
   return 0;
 }

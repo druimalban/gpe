@@ -21,6 +21,7 @@ typedef struct
   gchar *name;
   GString *text;
   int fd;
+  GIOChannel *io_channel;
   gboolean connected;
   GHashTable *channel;
   GtkWidget *button;
