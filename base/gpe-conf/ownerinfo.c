@@ -104,9 +104,6 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ------------------------------------------------------------------------ */
   owner_name_label = gtk_label_new (_("Name"));
-  gtk_widget_set_name (owner_name_label, "owner_name_label");
-  gtk_widget_ref (owner_name_label);
-  gtk_widget_show (owner_name_label);
   gtk_table_attach (GTK_TABLE (table1), owner_name_label, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
@@ -116,18 +113,12 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   name = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (name), ownername);
-  gtk_widget_set_name (name, "name");
-  gtk_widget_ref (name);
-  gtk_widget_show (name);
   gtk_table_attach (GTK_TABLE (table1), name, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_email_label = gtk_label_new (_("E-Mail"));
-  gtk_widget_set_name (owner_email_label, "owner_email_label");
-  gtk_widget_ref (owner_email_label);
-  gtk_widget_show (owner_email_label);
   gtk_table_attach (GTK_TABLE (table1), owner_email_label, 0, 1, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
@@ -137,18 +128,12 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   email = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (email), owneremail);
-  gtk_widget_set_name (email, "email");
-  gtk_widget_ref (email);
-  gtk_widget_show (email);
   gtk_table_attach (GTK_TABLE (table1), email, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_phone_label = gtk_label_new (_("Phone"));
-  gtk_widget_set_name (owner_phone_label, "owner_phone_label");
-  gtk_widget_ref (owner_phone_label);
-  gtk_widget_show (owner_phone_label);
   gtk_table_attach (GTK_TABLE (table1), owner_phone_label, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
@@ -157,18 +142,12 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_misc_set_padding (GTK_MISC (owner_phone_label), 5, 0);
 
   phone = gtk_entry_new ();
-  gtk_entry_set_text (GTK_ENTRY (phone), ownerphone);
-  gtk_widget_ref (phone);
-  gtk_widget_show (phone);
   gtk_table_attach (GTK_TABLE (table1), phone, 1, 2, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_address_label = gtk_label_new (_("Address"));
-  gtk_widget_set_name (owner_address_label, "owner_address_label");
-  gtk_widget_ref (owner_address_label);
-  gtk_widget_show (owner_address_label);
   gtk_table_attach (GTK_TABLE (table1), owner_address_label, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
@@ -178,9 +157,6 @@ GtkWidget *Ownerinfo_Build_Objects()
 
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_name (scrolledwindow1, "scrolledwindow1");
-  gtk_widget_ref (scrolledwindow1);
-  gtk_widget_show (scrolledwindow1);
   gtk_table_attach (GTK_TABLE (table1), scrolledwindow1, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
@@ -188,16 +164,10 @@ GtkWidget *Ownerinfo_Build_Objects()
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   viewport1 = gtk_viewport_new (NULL, NULL);
-  gtk_widget_set_name (viewport1, "viewport1");
-  gtk_widget_ref (viewport1);
-  gtk_widget_show (viewport1);
   gtk_container_add (GTK_CONTAINER (scrolledwindow1), viewport1);
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport1), GTK_SHADOW_NONE);
 
   address = gtk_text_new (NULL, NULL);
-  gtk_widget_set_name (address, "address");
-  gtk_widget_ref (address);
-  gtk_widget_show (address);
   gtk_container_add (GTK_CONTAINER (viewport1), address);
   gtk_text_set_editable (GTK_TEXT (address), TRUE);
   gtk_text_insert (GTK_TEXT (address), NULL, NULL, NULL,
