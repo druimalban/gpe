@@ -94,5 +94,14 @@ structure_delete_clicked               (GtkButton       *button,
 {
 
 }
+
 #endif
+
+
+void
+on_structure_save_clicked              (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
 

@@ -1149,6 +1149,24 @@ about a contact.
 	  <fill>True</fill>
 	</child>
       </widget>
+
+      <widget>
+	<class>GtkButton</class>
+	<name>button6</name>
+	<can_focus>True</can_focus>
+	<signal>
+	  <name>clicked</name>
+	  <handler>on_structure_save_clicked</handler>
+	  <last_modification_time>Mon, 03 Jun 2002 10:44:21 GMT</last_modification_time>
+	</signal>
+	<label>Save</label>
+	<relief>GTK_RELIEF_NORMAL</relief>
+	<child>
+	  <padding>0</padding>
+	  <expand>False</expand>
+	  <fill>False</fill>
+	</child>
+      </widget>
     </widget>
   </widget>
 </widget>
@@ -1221,12 +1239,68 @@ Item
       <class>GtkVBox</class>
       <name>vbox12</name>
       <homogeneous>False</homogeneous>
-      <spacing>0</spacing>
+      <spacing>4</spacing>
       <child>
-	<padding>4</padding>
+	<padding>2</padding>
 	<expand>False</expand>
 	<fill>False</fill>
       </child>
+
+      <widget>
+	<class>GtkHBox</class>
+	<name>hbox10</name>
+	<homogeneous>False</homogeneous>
+	<spacing>0</spacing>
+	<child>
+	  <padding>2</padding>
+	  <expand>True</expand>
+	  <fill>True</fill>
+	</child>
+
+	<widget>
+	  <class>GtkLabel</class>
+	  <name>label44</name>
+	  <label>Tag:</label>
+	  <justify>GTK_JUSTIFY_CENTER</justify>
+	  <wrap>False</wrap>
+	  <xalign>0.5</xalign>
+	  <yalign>0.5</yalign>
+	  <xpad>0</xpad>
+	  <ypad>0</ypad>
+	  <child>
+	    <padding>4</padding>
+	    <expand>False</expand>
+	    <fill>False</fill>
+	  </child>
+	</widget>
+
+	<widget>
+	  <class>GtkCombo</class>
+	  <name>combo2</name>
+	  <value_in_list>False</value_in_list>
+	  <ok_if_empty>True</ok_if_empty>
+	  <case_sensitive>False</case_sensitive>
+	  <use_arrows>True</use_arrows>
+	  <use_arrows_always>False</use_arrows_always>
+	  <items></items>
+	  <child>
+	    <padding>4</padding>
+	    <expand>True</expand>
+	    <fill>True</fill>
+	  </child>
+
+	  <widget>
+	    <class>GtkEntry</class>
+	    <child_name>GtkCombo:entry</child_name>
+	    <name>combo-entry2</name>
+	    <can_focus>True</can_focus>
+	    <editable>True</editable>
+	    <text_visible>True</text_visible>
+	    <text_max_length>0</text_max_length>
+	    <text></text>
+	  </widget>
+	</widget>
+      </widget>
 
       <widget>
 	<class>GtkHBox</class>
@@ -1242,7 +1316,7 @@ Item
 	<widget>
 	  <class>GtkLabel</class>
 	  <name>label40</name>
-	  <label>Name:</label>
+	  <label>Label:</label>
 	  <justify>GTK_JUSTIFY_CENTER</justify>
 	  <wrap>False</wrap>
 	  <xalign>0.5</xalign>
@@ -1278,7 +1352,7 @@ Item
 	<homogeneous>False</homogeneous>
 	<spacing>0</spacing>
 	<child>
-	  <padding>4</padding>
+	  <padding>0</padding>
 	  <expand>False</expand>
 	  <fill>False</fill>
 	</child>

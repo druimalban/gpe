@@ -2,7 +2,7 @@
 
 INCLUDES = \
 	-I$(top_srcdir)/../libgpewidget \
-	@GTK_CFLAGS@
+	@GTK_CFLAGS@ `xml2-config --cflags`
 
 bin_PROGRAMS = adb
 
@@ -13,4 +13,4 @@ adb_SOURCES = \
 	callbacks.c callbacks.h \
 	structure.c db.c
 
-adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite
+adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2

@@ -2,6 +2,6 @@
 #define DB_H
 
 extern int db_open (void);
-extern void load_structure (void);
+extern gboolean load_structure (void);
 
 #endif

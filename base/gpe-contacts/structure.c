@@ -10,9 +10,12 @@
 #include <gtk/gtk.h>
 #include <stdio.h>
 
+#include <parser.h>
+
+#include "errorbox.h"
+
 #include "interface.h"
 #include "support.h"
-
 #include "structure.h"
 
 static GSList *edit_pages;
@@ -319,29 +322,53 @@ print_structure_1 (FILE *fp, edit_thing_t e, int level)
   switch (e->type)
     {
     case PAGE:
-      fprintf (fp, "page \"%s\" (\n", e->name);
+      fprintf (fp, "<page>\n");
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<label>%s</label>\n", e->name);
       for (iter = e->children; iter; iter = iter->next)
 	print_structure_1 (fp, iter->data, level + 1);
       for (i = 0; i < level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, ")\n\n");
+      fprintf (fp, "</page>\n");
       break;
 
     case GROUP:
-      fprintf (fp, "group \"%s\" (\n", e->name);
+      fprintf (fp, "<group>\n");
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<label>%s</label>\n", e->name);
       for (iter = e->children; iter; iter = iter->next)
 	print_structure_1 (fp, iter->data, level + 1);
       for (i = 0; i < level; i++)
 	fputs ("  ", fp);
-      fprintf (fp, ")\n");
+      fprintf (fp, "</group>\n");
       break;
 
     case ITEM_SINGLE_LINE:
-      fprintf (fp, "item single-line %d \"%s\"\n", e->tag, e->name);
+      fprintf (fp, "<single-item>\n");
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<tag>%d</tag>\n", e->tag);
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<label>%s</label>\n", e->name);
+      for (i = 0; i < level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "</single-item>\n");
       break;
 
     case ITEM_MULTI_LINE:
-      fprintf (fp, "item multi-line %d \"%s\"\n", e->tag, e->name);
+      fprintf (fp, "<multi-item>\n");
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<tag>%d</tag>\n", e->tag);
+      for (i = 0; i <= level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "<label>%s</label>\n", e->name);
+      for (i = 0; i < level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, "</multi-item>\n");
       break;
     }
 }
@@ -351,10 +378,129 @@ print_structure (FILE *fp)
 {
   GSList *page;
 
+  fputs ("<layout>\n", fp);
+
   for (page = edit_pages; page; page = page->next)
     {
       edit_thing_t e = page->data;
 
-      print_structure_1 (fp, e, 0);
+      print_structure_1 (fp, e, 1);
     }
+
+  fputs ("</layout>\n", fp);
+}
+
+static void
+structure_parse_xml_item (xmlDocPtr doc, xmlNodePtr cur, 
+			  edit_thing_type t, edit_thing_t parent)
+{
+  edit_thing_t e = new_thing (t, NULL, parent);
+
+  while (cur)
+    {
+      if (!xmlStrcmp (cur->name, "label"))
+	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+
+      cur = cur->next;
+    }
+}
+
+static void
+structure_parse_xml_group (xmlDocPtr doc, xmlNodePtr cur, 
+			   edit_thing_t parent)
+{
+  edit_thing_t e = new_thing (GROUP, NULL, parent);
+
+  while (cur)
+    {
+      if (!xmlStrcmp (cur->name, "label"))
+	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+
+      if (!xmlStrcmp (cur->name, "multi-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_MULTI_LINE, e);
+	
+      if (!xmlStrcmp (cur->name, "single-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_MULTI_LINE, e);
+
+      cur = cur->next;
+    }
+}
+
+static void
+structure_parse_xml_page (xmlDocPtr doc, xmlNodePtr cur)
+{
+  edit_thing_t e = new_thing (PAGE, NULL, NULL);
+
+  while (cur)
+    {
+      if (!xmlStrcmp (cur->name, "label"))
+	e->name = xmlNodeListGetString (doc, cur->xmlChildrenNode, 1);
+
+      if (!xmlStrcmp (cur->name, "group"))
+	structure_parse_xml_group (doc, cur->xmlChildrenNode, e);
+	
+      if (!xmlStrcmp (cur->name, "multi-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_MULTI_LINE, e);
+	
+      if (!xmlStrcmp (cur->name, "single-item"))
+	structure_parse_xml_item (doc, cur->xmlChildrenNode, 
+				  ITEM_MULTI_LINE, e);
+
+      cur = cur->next;
+    }
+
+  edit_pages = g_slist_append (edit_pages, e);
+}
+
+static void
+structure_parse_xml (xmlDocPtr doc, xmlNodePtr cur)
+{
+  while (cur)
+    {
+      if (!xmlStrcmp (cur->name, "page"))
+	structure_parse_xml_page (doc, cur->xmlChildrenNode);
+	
+      cur = cur->next;
+    }
+}
+
+gboolean
+read_structure (gchar *name)
+{
+  xmlDocPtr doc = xmlParseFile (name);
+  xmlNodePtr cur;
+
+  if (doc == NULL)
+    {
+      gpe_perror_box (name);
+      return FALSE;
+    }
+
+  xmlCleanupParser ();
+
+  cur = xmlDocGetRootElement (doc);
+  if (cur == NULL)
+    {
+      gpe_error_box ("Layout description is empty");
+      xmlFreeDoc (doc);
+      return FALSE;
+    }
+
+  if (xmlStrcmp (cur->name, "layout")) 
+    {
+      gpe_error_box ("Layout description has wrong document type");
+      xmlFreeDoc (doc);
+      return FALSE;
+    }
+
+  edit_pages = NULL;
+
+  structure_parse_xml (doc, cur->xmlChildrenNode);
+      
+  xmlFreeDoc (doc);
+
+  return TRUE;
 }

@@ -778,6 +778,7 @@ create_structure (void)
   GtkWidget *button1;
   GtkWidget *button2;
   GtkWidget *button3;
+  GtkWidget *button6;
 
   structure = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_name (structure, "structure");
@@ -860,6 +861,14 @@ create_structure (void)
   gtk_widget_show (button3);
   gtk_box_pack_start (GTK_BOX (hbox5), button3, TRUE, TRUE, 0);
 
+  button6 = gtk_button_new_with_label (_("Save"));
+  gtk_widget_set_name (button6, "button6");
+  gtk_widget_ref (button6);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "button6", button6,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button6);
+  gtk_box_pack_start (GTK_BOX (hbox5), button6, FALSE, FALSE, 0);
+
   gtk_signal_connect (GTK_OBJECT (button1), "clicked",
                       GTK_SIGNAL_FUNC (structure_add_clicked),
                       ctree1);
@@ -869,6 +878,9 @@ create_structure (void)
   gtk_signal_connect (GTK_OBJECT (button3), "clicked",
                       GTK_SIGNAL_FUNC (structure_delete_clicked),
                       ctree1);
+  gtk_signal_connect (GTK_OBJECT (button6), "clicked",
+                      GTK_SIGNAL_FUNC (on_structure_save_clicked),
+                      NULL);
 
   return structure;
 }
@@ -884,6 +896,10 @@ create_structure_item (void)
   GtkWidget *optionmenu1_menu;
   GtkWidget *glade_menuitem;
   GtkWidget *vbox12;
+  GtkWidget *hbox10;
+  GtkWidget *label44;
+  GtkWidget *combo2;
+  GtkWidget *combo_entry2;
   GtkWidget *hbox8;
   GtkWidget *label40;
   GtkWidget *entry16;
@@ -945,13 +961,44 @@ create_structure_item (void)
   gtk_menu_append (GTK_MENU (optionmenu1_menu), glade_menuitem);
   gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu1), optionmenu1_menu);
 
-  vbox12 = gtk_vbox_new (FALSE, 0);
+  vbox12 = gtk_vbox_new (FALSE, 4);
   gtk_widget_set_name (vbox12, "vbox12");
   gtk_widget_ref (vbox12);
   gtk_object_set_data_full (GTK_OBJECT (structure_item), "vbox12", vbox12,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (vbox12);
-  gtk_box_pack_start (GTK_BOX (vbox11), vbox12, FALSE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox11), vbox12, FALSE, FALSE, 2);
+
+  hbox10 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox10, "hbox10");
+  gtk_widget_ref (hbox10);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "hbox10", hbox10,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox10);
+  gtk_box_pack_start (GTK_BOX (vbox12), hbox10, TRUE, TRUE, 2);
+
+  label44 = gtk_label_new (_("Tag:"));
+  gtk_widget_set_name (label44, "label44");
+  gtk_widget_ref (label44);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "label44", label44,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label44);
+  gtk_box_pack_start (GTK_BOX (hbox10), label44, FALSE, FALSE, 4);
+
+  combo2 = gtk_combo_new ();
+  gtk_widget_set_name (combo2, "combo2");
+  gtk_widget_ref (combo2);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "combo2", combo2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (combo2);
+  gtk_box_pack_start (GTK_BOX (hbox10), combo2, TRUE, TRUE, 4);
+
+  combo_entry2 = GTK_COMBO (combo2)->entry;
+  gtk_widget_set_name (combo_entry2, "combo_entry2");
+  gtk_widget_ref (combo_entry2);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "combo_entry2", combo_entry2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (combo_entry2);
 
   hbox8 = gtk_hbox_new (FALSE, 0);
   gtk_widget_set_name (hbox8, "hbox8");
@@ -961,7 +1008,7 @@ create_structure_item (void)
   gtk_widget_show (hbox8);
   gtk_box_pack_start (GTK_BOX (vbox12), hbox8, TRUE, TRUE, 0);
 
-  label40 = gtk_label_new (_("Name:"));
+  label40 = gtk_label_new (_("Label:"));
   gtk_widget_set_name (label40, "label40");
   gtk_widget_ref (label40);
   gtk_object_set_data_full (GTK_OBJECT (structure_item), "label40", label40,
@@ -983,7 +1030,7 @@ create_structure_item (void)
   gtk_object_set_data_full (GTK_OBJECT (structure_item), "hbox9", hbox9,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (hbox9);
-  gtk_box_pack_start (GTK_BOX (vbox12), hbox9, FALSE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox12), hbox9, FALSE, FALSE, 0);
 
   label41 = gtk_label_new (_("Field size:"));
   gtk_widget_set_name (label41, "label41");
