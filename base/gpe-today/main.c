@@ -75,6 +75,8 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 			wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
 			wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
 			wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
+			g_object_ref(pix);
+			g_object_ref(pix);
 			gtk_widget_set_style(wid, wid->style);
 			g_object_set_data_full (G_OBJECT (pix), "pixmap", (void *)pmap, (GDestroyNotify)free_pixmap);
 			g_object_set_data (G_OBJECT (wid), "bg-pixmap", pix);
@@ -85,6 +87,8 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 	gtk_widget_queue_draw(calendar.toplevel);
 
 	if (old_pix) {
+		g_object_unref(old_pix);
+		g_object_unref(old_pix);
 		g_object_unref(old_pix);
 	}
 

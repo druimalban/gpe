@@ -26,10 +26,6 @@ static GSList *calendar_entries;
 char *db_fname;
 static int calendar_update_tag = 0;
 
-gboolean calendar_update(gpointer data);
-static void calendar_add_event(event_t event);
-static void free_calendar_entries(void);
-
 struct calevent {
 	event_t ev;
 	PangoLayout *pl;
@@ -38,9 +34,20 @@ struct calevent {
 	char *description;
 };
 
+gboolean calendar_update(gpointer data);
+static void calendar_add_event(event_t event);
+static void free_calendar_entries(void);
+static void remove_calendar_entry(struct calevent *ev);
+
 static void refresh_calendar_widget(void)
 {
 	myscroll_update_upper_adjust(calendar.scroll);
+
+	if (calendar.scroll->adjust->page_size >= calendar.scroll->adjust->upper)
+		gtk_widget_hide(calendar.scroll->scrollbar);
+	else if (!GTK_WIDGET_VISIBLE(calendar.scroll->scrollbar))
+		gtk_widget_show(calendar.scroll->scrollbar);
+
 	gtk_widget_queue_draw(calendar.scroll->draw);
 	gtk_widget_queue_draw(calendar.toplevel);
 }
@@ -130,7 +137,7 @@ gboolean calendar_update(gpointer data)
 	struct calevent *event;
 
 	if (stat(db_fname, &db) == -1) {
-		gpe_perror_box("Error stating calendar DB");
+		gpe_perror_box(_("Error stating calendar DB"));
 		return TRUE;
 	}
 
@@ -144,13 +151,8 @@ gboolean calendar_update(gpointer data)
 	for (i = 0; (event = g_slist_nth_data(calendar_entries, i)); i++) {
 		if ((event->ev->start + event->ev->duration) < current_time) {
 			/* event finished */
-			/* TODO: simply remove the event's widget */
-			calendar_events_db_update();
-			/*
-			  calendar_entries = g_slist_remove(calendar_entries, event);
-			  unpack
-			*/
-
+			remove_calendar_entry(event);
+			
 			continue;
 		}
 
@@ -248,17 +250,28 @@ static void calendar_add_event(event_t event)
 	}
 }
 
+static void free_calevent(struct calevent *ev)
+{
+	g_free(ev->summary);
+	g_free(ev->description);
+	g_object_unref(ev->pl);
+	g_free(ev);
+}
+
+static void remove_calendar_entry(struct calevent *ev)
+{
+	calendar_entries = g_slist_remove(calendar_entries, ev);
+	calendar.scroll->list = g_slist_remove(calendar.scroll->list, ev->pl);
+	free_calevent(ev);
+}
+
 static void free_calendar_entries(void)
 {
 	int i;
 	struct calevent *event;
 
-	for (i = 0; (event = g_slist_nth_data(calendar_entries, i)); i++) {
-		g_free(event->summary);
-		g_free(event->description);
-		g_object_unref(event->pl);
-		g_free(event);
-	}
+	for (i = 0; (event = g_slist_nth_data(calendar_entries, i)); i++)
+		free_calevent(event);
 
 	g_slist_free(calendar.scroll->list);
 	g_slist_free(calendar_entries);
