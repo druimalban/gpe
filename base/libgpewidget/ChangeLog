@@ -1,5 +1,9 @@
 2003-03-02  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.49 released
+
+2003-03-02  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (MEMBERS): Add popup.
 	* popup.c: New file.
 	* gpe/popup.h: Likewise.
