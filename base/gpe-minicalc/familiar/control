@@ -1,0 +1,8 @@
+Package: gpe-minicalc
+Section: x11
+Priority: optional
+Version: 0.01
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk1.2, gpe-icons (>= 0.05), libgpewidget0 (>= 0.08), libgmp3
+Description: Small dockable calculator

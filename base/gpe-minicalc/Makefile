@@ -31,8 +31,7 @@ $(PACKAGE): $(OBJS)
 
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
-	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+#	install -D $(PACKAGE).dock $(DESTDIR)$(PREFIX)/share/matchbox/mbdock
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 upstream: clean
