@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -23,6 +23,8 @@
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
 #include <libgnomevfs/gnome-vfs-module-callback.h>
 #include <libgnomevfs/gnome-vfs-standard-callbacks.h>
+#include <libgnomevfs/gnome-vfs-xfer.h>
+#include <libgnomevfs/gnome-vfs-types.h>
 
 
 #include <gpe/init.h>
@@ -57,6 +59,8 @@ GtkWidget *combo;
 GtkWidget *view_scrolld;
 GtkWidget *view_widget;
 GtkWidget *bluetooth_menu_item;
+GtkWidget *copy_menu_item;
+GtkWidget *paste_menu_item;
 
 GdkPixbuf *default_pixbuf;
 
@@ -79,6 +83,8 @@ GList *history = NULL;
 gchar *current_directory = "";
 gchar *current_view = "icons";
 gint current_zoom = 28;
+
+static gchar *file_clipboard = NULL;
 
 GHashTable *loaded_icons;
 
@@ -120,12 +126,16 @@ static void popup_ask_delete_file (void);
 static void show_file_properties (void);
 static void refresh_current_directory (void);
 static void send_with_bluetooth (void);
+static void copy_file_clip (void);
+static void paste_file_clip (void);
 
 static GtkItemFactoryEntry menu_items[] =
 {
   { "/Open Wit_h",	 NULL, popup_ask_open_with,  0, "<StockItem>", GTK_STOCK_OPEN },
   { "/sep1",	         NULL, NULL,	             0, "<Separator>" },
-  { "/Send via Bluetooth", NULL, send_with_bluetooth, 0, "<Item>" },
+  { "/Send via _Bluetooth", NULL, send_with_bluetooth, 0, "<Item>" },
+  { "/_Copy",          NULL, copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
+  { "/_Paste",          NULL, paste_file_clip,         0, "<StockItem>", GTK_STOCK_PASTE },
   { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
   { "/_Rename",          NULL, popup_ask_rename_file,          0, "<Item>" },
   { "/_Delete",          NULL, popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
@@ -136,12 +146,19 @@ static GtkItemFactoryEntry menu_items[] =
 static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
 
+static gint 
+transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
+{
+    return 1;
+}
 
-static void auth_callback (gconstpointer in,
-                           gsize         in_size,
-                           gpointer      out,
-                           gsize         out_size,
-                           gpointer      callback_data)
+
+static void 
+auth_callback (gconstpointer in,
+               gsize         in_size,
+               gpointer      out,
+               gsize         out_size,
+               gpointer      callback_data)
 {
   const GnomeVFSModuleCallbackAuthenticationIn *q_in = in;
   GnomeVFSModuleCallbackAuthenticationOut *q_out = out;
@@ -150,11 +167,13 @@ static void auth_callback (gconstpointer in,
   gchar *label_text;
   struct passwd *pwd = getpwuid(getuid());
 
-  printf("URI: %s\n",q_in->uri);
   q_out->username = NULL;
   q_out->password = NULL;
-	
-  label_text = g_strdup_printf ("<b>Enter credentials to access</b>\n%s", q_in->uri);
+
+  if (q_in->previous_attempt_failed)
+    label_text = g_strdup_printf ("<b>Login failed, please try again</b>\n%s", q_in->uri);
+  else
+    label_text = g_strdup_printf ("<b>Enter credentials to access</b>\n%s", q_in->uri);
 
   dialog_window = gtk_dialog_new_with_buttons ("Restricted Resource", 
     GTK_WINDOW (window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
@@ -196,6 +215,53 @@ static void auth_callback (gconstpointer in,
   gtk_widget_destroy(dialog_window);
 }
 
+static void
+copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
+{
+  GnomeVFSURI *uri_src = gnome_vfs_uri_new(src_uri_txt);
+  GnomeVFSURI *uri_dest = gnome_vfs_uri_new(dest_uri_txt);
+  GnomeVFSResult result;
+  gchar *error;
+    
+  result = gnome_vfs_xfer_uri (uri_src,
+                               uri_dest,
+                               GNOME_VFS_XFER_FOLLOW_LINKS 
+                                 | GNOME_VFS_XFER_RECURSIVE 
+                                 | GNOME_VFS_XFER_EMPTY_DIRECTORIES,
+                               GNOME_VFS_XFER_ERROR_MODE_QUERY,
+                               GNOME_VFS_XFER_OVERWRITE_MODE_QUERY,
+                               (GnomeVFSXferProgressCallback) transfer_callback,
+                               NULL);
+  if (result != GNOME_VFS_OK)
+  {
+    error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
+    gpe_error_box (error);
+    g_free (error);
+  }
+  gnome_vfs_uri_unref(uri_src);
+  gnome_vfs_uri_unref(uri_dest);
+}
+
+static void 
+copy_file_clip (void)
+{
+  if (file_clipboard) 
+    g_free(file_clipboard);
+  file_clipboard = gnome_vfs_get_uri_from_local_path(current_popup_file->filename);
+}
+
+
+static void 
+paste_file_clip (void)
+{
+  gchar *target_file, *tmp;
+  
+  tmp = gnome_vfs_get_local_path_from_uri(file_clipboard);
+  target_file = g_strdup_printf("%s/%s",current_directory,g_path_get_basename(tmp));
+  g_free(tmp);
+  copy_file(file_clipboard,target_file);
+  refresh_current_directory(); 
+}
 
 static void
 hide_menu (void)
@@ -264,7 +330,7 @@ run_program (gchar *exec, gchar *mime_name)
 {
   gchar *command, *search_mime, *program_command = NULL;
   GSList *iter;
-  //char *cmd[] = {"/bin/sh", "-c", ""};
+  pid_t p_help;
 
   if (mime_programs)
   {
@@ -292,12 +358,19 @@ run_program (gchar *exec, gchar *mime_name)
 
   if (program_command)
   {
-    command = g_strdup_printf ("%s %s &", program_command, exec);
-    //printf ("%s %s\n", program, exec);
-    //cmd[3] = g_strdup_printf ("%s", command);
-    //printf ("%s", cmd[3]);
-    //gnome_execute_async (NULL, 3, cmd);
-    system (command);
+	p_help = fork();
+	switch (p_help)
+	{
+		case -1: 
+			return; /* failed */
+		break;
+		case  0: 
+			execlp(program_command,program_command,exec,NULL);
+		break;
+		default: 
+			g_free(program_command);
+		break;
+	} 
   }
 }
 
@@ -381,7 +454,6 @@ move_file (gchar *directory)
   gchar *dest, *error;
   GnomeVFSResult result;
 
-  printf ("dir: %s\n", directory);
   dest = g_strdup_printf ("%s/%s", directory, current_popup_file->vfs->name);
 
   result = gnome_vfs_move_uri (gnome_vfs_uri_new (current_popup_file->filename), gnome_vfs_uri_new (dest), TRUE);
@@ -421,7 +493,8 @@ popup_ask_move_file ()
 {
   GtkWidget *dirbrowser_window;
 
-  dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), (gchar *) g_get_home_dir (), GTK_SELECTION_SINGLE, move_file);
+  dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), 
+    (gchar *) g_get_home_dir (), GTK_SELECTION_SINGLE, move_file);
   gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
 
   gtk_widget_show_all (dirbrowser_window);
@@ -617,10 +690,15 @@ show_popup (GtkWidget *widget, gpointer udata)
   current_popup_file = file_info;
 
   if (bluetooth_available ())
-    gtk_widget_show (bluetooth_menu_item);
+    gtk_widget_set_sensitive (bluetooth_menu_item, TRUE);
   else
-    gtk_widget_hide (bluetooth_menu_item);
+    gtk_widget_set_sensitive (bluetooth_menu_item, FALSE);
 
+  if (file_clipboard)
+    gtk_widget_set_sensitive (paste_menu_item, TRUE);
+  else
+    gtk_widget_set_sensitive (copy_menu_item, FALSE);
+  
   gtk_menu_popup (GTK_MENU (gtk_item_factory_get_widget (item_factory, "<main>")), 
 		  NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
 }
@@ -799,7 +877,7 @@ make_view ()
 
   loaded_icons = g_hash_table_new (g_str_hash, g_str_equal);
   gpe_iconlist_clear (GPE_ICONLIST (view_widget));
-  gtk_widget_draw (view_widget, NULL);
+  gtk_widget_draw (view_widget, NULL); // why?
 
   open_dir_result = gnome_vfs_directory_open (&handle, current_directory, GNOME_VFS_FILE_INFO_DEFAULT);
 
@@ -855,7 +933,7 @@ make_view ()
   for (iter = list; iter; iter = iter->next)
     add_icon (iter->data);
 
-  g_list_free (iter);
+  g_list_free (list);
   
   gtk_widget_draw (view_widget, NULL);
   loading_directory = 0;
@@ -1019,7 +1097,6 @@ zoom_in ()
     printf ("ZOOMING IN!\n");
     gpe_iconlist_set_icon_size (GPE_ICONLIST (view_widget), current_zoom);
   }
-  printf ("Current zoom is %d\n", current_zoom);
 }
 
 void
@@ -1031,7 +1108,6 @@ zoom_out ()
     printf ("ZOOMING OUT!\n");
     gpe_iconlist_set_icon_size (GPE_ICONLIST (view_widget), current_zoom);
   }
-  printf ("Current zoom is %d\n", current_zoom);
 }
 
 int
@@ -1139,7 +1215,9 @@ main (int argc, char *argv[])
   gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
   gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
 
-  bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via Bluetooth");
+  bluetooth_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/Send via _Bluetooth");
+  copy_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/_Copy");
+  paste_menu_item = gtk_item_factory_get_widget (item_factory, "<main>/_Paste");
 
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
@@ -1154,7 +1232,7 @@ main (int argc, char *argv[])
 
   gnome_vfs_init ();
   gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,
-						  (GnomeVFSModuleCallback*)auth_callback,
+						  (GnomeVFSModuleCallback) auth_callback,
 						  NULL,
 						  NULL);
  

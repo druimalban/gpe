@@ -1,0 +1,13 @@
+2004-05-15  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: Start to implement copy op.
+    * main.c: Fixed memory hole in create_view();
+    * main.c: Removed old cruft and debug output.
+    * main.c: Using async exec for external programs now.
+
+2004-05-14  Florian Boor  <florian.boor@kernelconcepts.de>
+    * Introduced this file.
+    * main.c: Fixed refresh calls after rename/move.
+    * main.c: Fixed segfault changing to a not readable location.
+    * main.c: make_view() Added proper error handling.
+    * main.c: Started implementing callback handling and smb compatibility.
+    * main.c: Implemented authentication callback, fixed some more bugs.
