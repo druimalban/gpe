@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # this location MUST be consistent with /etc/X11/gpe-login.pre-session
-HOME_VOLATILE=/home/$USER/.ramdisk
+HOME_VOLATILE=/home/$USER/ramdisk
 export HOME_VOLATILE
 
 . /etc/profile

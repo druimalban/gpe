@@ -13,5 +13,5 @@ mkdir -p /mnt/ramfs/home/$USER
 chown $USER /mnt/ramfs/home/$USER
 
 # this location MUST be consistent with HOME_VOLATILE in /etc/X11/Xsession
-ln -s /mnt/ramfs/home/$USER /home/$USER/.ramdisk
-ln -s .ramdisk/.xsession-errors /home/$USER/.xsession-errors
+ln -s /mnt/ramfs/home/$USER /home/$USER/ramdisk
+ln -s /home/$USER/ramdisk/.xsession-errors /home/$USER/.xsession-errors
