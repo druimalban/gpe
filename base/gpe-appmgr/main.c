@@ -710,7 +710,7 @@ GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style)
 	hb = gtk_hbox_new (FALSE, 0);
 	if (img)
 		gtk_box_pack_start_defaults (GTK_BOX(hb), img);
-	gtk_box_pack_start_defaults (GTK_BOX(hb), lbl);
+	gtk_box_pack_start (GTK_BOX(hb), lbl, FALSE, FALSE, gpe_get_boxspacing());
 
 	gtk_widget_show_all (hb);
 	if (cfg_options.auto_hide_group_labels)
