@@ -1,5 +1,5 @@
-<!--#set var="addtitle" value="Configuring Wireless Networking with GPE"-->
-<!--#set var="pagename" value="wireless"-->
+<!--#set var="addtitle" value="Configuring Wireless Networking"-->
+<!--#set var="pagename" value="documentation"-->
 <!--#set var="author" value="Colin Marquardt"-->
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 <!--#include virtual="../includes/head.shtml"-->
@@ -13,14 +13,14 @@
 
 <p> 
   First, make sure your card is recognized and a suitable module is
-  loaded. Use the Settings>PC/CF Cards applet for this.  Use the button
+  loaded. Use the Settings&gt;PC/CF Cards applet for this.  Use the button
   with the green arrow (second from right) to get the "Assign Driver"
   dialog:
 </p>
 
 <p> 
-  <img src="http://handhelds.org/scap/html.cgi?fn=port.9280.png"> 
-  <img src="http://handhelds.org/scap/html.cgi?fn=port.12381.png">
+  <img src="wireless_assign_driver.png"> 
+  <img src="wireless_card_recognized.png">
 </p>
 
 <p>
@@ -38,15 +38,25 @@
 <h4>With DHCP</h4>
 
 <ul>
-  <li><p>
+  <li>
+    <p>
       Network in Infrastructure/Managed Mode
-    <p>    Should work out of the box.</p>
+    <p>
+      Should work out of the box.
+    </p>
     </p>
   </li>
-  <li><p>Network in Ad-hoc Mode<p>    Use WLAN Config to set your card to ad-hoc mode and configure ESSID and channel if necessary:</p>
+  <li>
+    <p>
+      Network in Ad-hoc Mode
     <p>    
-      <img src="http://handhelds.org/scap/html.cgi?fn=port.32727.png"> 
-      <img src="http://handhelds.org/scap/html.cgi?fn=port.12644.png"></p>
+      Use WLAN Config to set your card to ad-hoc mode and configure ESSID and
+      channel if necessary:
+    </p>
+    <p>    
+      <img src="wireless_wlancfg_adhoc.png"> 
+      <img src="wireless_wlancfg_channel.png">
+    </p>
     <p> 
       Eject and re-insert your card. If you have the Wireless Monitor
       added to your dock, it should show a signal by turning red (assuming
@@ -60,18 +70,20 @@
 
 <ul>
   <li>
-    <p>Set Ad-hoc mode as described above if necessary.</p>
+    <p>
+      Set Ad-hoc mode as described above if necessary.
+    </p>
   </li>
   <li>
-  <p>
-    Assign an IP address and a netmask (the rest is optional) with the
-    Settings>Network Setup applet. Use the device that was shown for your
-    card in the PC/CF Cards applet (most likely wlan0 or eth0/1):
-   <p> 
-     <img src="http://handhelds.org/scap/html.cgi?fn=port.26110.png"> 
-     <img src="http://handhelds.org/scap/html.cgi?fn=port.21850.png">
-   </p>
-   </p>
+    <p>
+      Assign an IP address and a netmask (the rest is optional) with the
+      Settings&gt;Network Setup applet. Use the device that was shown for your
+      card in the PC/CF Cards applet (most likely wlan0 or eth0/1):
+    <p> 
+      <img src="wireless_network_new_if.png"> 
+      <img src="wireless_network_address.png">
+    </p>
+    </p>
   </li>
 </ul>
 
@@ -80,8 +92,8 @@
   Set a WEP key with WLAN Config:
 </p>
 <p> 
-   <img src="http://handhelds.org/scap/html.cgi?fn=port.13706.png"> 
-   <img src="http://handhelds.org/scap/html.cgi?fn=port.16290.png">
+  <img src="wireless_wlancfg_wep.png"> 
+  <img src="wireless_wlancfg_wep_key.png">
 </p>
 
 <h4>Investigate current interface configuration</h4>
@@ -93,9 +105,10 @@
   are down or of type "Loopback".
 </p>
 <p>  
-  <img src="http://handhelds.org/scap/html.cgi?fn=port.2751.png">
-  <img src="http://handhelds.org/scap/html.cgi?fn=port.22359.png">
+  <img src="wireless_network_settings.png">
+  <img src="wireless_network_cur_cfg.png">
 </p>
+
 <hr>
 Keywords: Wireless LAN, WLAN, Wi-Fi, WiFi
 

@@ -1,6 +1,10 @@
 2003-06-09  Colin Marquardt  <colin@marquardt-home.de>
 
+	* documentation/wireless.shtml: New addtitle and pagename. Use
+	scaps from CVS.
+
 	* documentation.shtml: New file.
+	Don't mention GPE in the title.
 
 	* documentation/wireless.shtml: New file, taken from the wiki.
 
