@@ -1,3 +1,8 @@
+2004-09-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Added support for infoprints when starting external applications.
+    * familiar/control1: Depends on libgpewidget 0.89 now.
+
 2004-09-02  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c: Fixed broken button hints.

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <gdk/gdkx.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
@@ -31,7 +32,6 @@
 #include <libgnomevfs/gnome-vfs-types.h>
 #include <libgnomevfs/gnome-vfs-application-registry.h>
 
-
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 #include <gpe/render.h>
@@ -42,6 +42,8 @@
 #include <gpe/dirbrowser.h>
 #include <gpe/spacing.h>
 #include <gpe/gpehelp.h>
+#include <X11/Xlib.h>
+#include <gpe/infoprint.h>
 
 #include "mime-sql.h"
 #include "mime-programs-sql.h"
@@ -665,9 +667,15 @@ open_with (GnomeVFSMimeApplication *application,
            FileInformation *file_info)
 {
   pid_t pid;
-
+    
   if (application)
   {
+    gchar *msg = g_strdup_printf("%s %s",_("Starting"),application->name);
+    Display *dpy = GDK_DISPLAY();
+      
+    gpe_popup_infoprint(dpy, msg);
+    g_free(msg);
+      
 	pid = fork();
 	switch (pid)
 	{
