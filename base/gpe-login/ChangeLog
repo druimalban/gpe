@@ -1,3 +1,11 @@
+2002-07-30  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/gpe-logout.png (Module): New icon.
+
+	* Makefile (ipkg): Copy icon.
+
+	* familiar/gpe-logout.menu: Added an icon.
+
 2002-07-29  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (filter): Set window dimensions.  Grab keyboard into
