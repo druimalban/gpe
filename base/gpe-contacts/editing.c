@@ -142,7 +142,8 @@ pop_singles (GtkWidget *vbox, GSList *list, GtkWidget *pw, gboolean visible)
         gtk_widget_show_all(table);
       else
         gtk_widget_hide_all(table);
-      gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 4);
+
+      gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, TRUE, 4);
     }
 }
 
