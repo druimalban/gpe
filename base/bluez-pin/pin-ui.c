@@ -29,12 +29,14 @@
 
 struct pin_request_context;
 
-static void send_reply (struct pin_request_context *ctx, const char *pin);
+extern void bluez_pin_response (struct pin_request_context *ctx, const char *pin);
 
 static void
 click_cancel (GtkWidget *widget, GtkWidget *window)
 {
-  struct req_context *req = g_object_get_data (G_OBJECT (window), "context");
+  struct pin_request_context *req;
+
+  req = g_object_get_data (G_OBJECT (window), "context");
 
   if (req)
     bluez_pin_response (req, NULL);
@@ -68,7 +70,7 @@ click_ok (GtkWidget *widget, GtkWidget *window)
   gtk_widget_destroy (window);
 }
 
-gboolean
+void
 bluez_pin_request (struct pin_request_context *ctx, gboolean outgoing, const gchar *address, const gchar *name)
 {
   GtkWidget *window;
