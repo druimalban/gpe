@@ -35,7 +35,10 @@ You can examine the CVS repository directly
 <H2>Building GPE CVS applications</H2>
 <p>
 There is no easy recipe for building GPE applications for the ARM
-architecture yet. However, it can be built like any other application for your
+architecture yet. For a start, check the 
+<A HREF="http://handhelds.org/z/wiki/GpeCrossCompilation">GpeCrossCompilation
+wiki page.</A>.
+However, GPE can be built like any other application for your
 desktop.
 
 Prerequisites for building GPE applications are libgpewidget, gpe-icons
