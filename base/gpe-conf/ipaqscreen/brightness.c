@@ -80,16 +80,16 @@ struct h3600_ts_backlight {
 #define GENERIC_PROC_DRIVER "/proc/driver/backlight"
 
 /* Linux 2.6 sysfs interface */
-#define SYS_POWER "/sys/class/backlight/fb0/power"
-#define SYS_LCDPOWER "/sys/class/lcd/fb0/power"
 #define SYS_STATE_ON  0
 #define SYS_STATE_OFF 4
-static const char *SYS_BRIGHTNESS = NULL;
+static char *SYS_BRIGHTNESS = NULL;
+static char *SYS_POWER = NULL;
+static char *SYS_LCDPOWER = NULL;
 
 const char *sysbdevs[] = 
 {
-	"/sys/class/backlight/sa1100fb/brightness",
-	"/sys/class/backlight/pxafb/brightness",
+	"/sys/class/backlight/sa1100fb",
+	"/sys/class/backlight/pxafb",
 	NULL
 };
 
@@ -119,7 +119,9 @@ detect_platform(void)
 	{
 		if (!access(sysbdevs[i], R_OK))
 		{
-			SYS_BRIGHTNESS = sysbdevs[i];
+			SYS_BRIGHTNESS = g_strdup_printf("%s/brightness", sysbdevs[i]);
+			SYS_POWER = g_strdup_printf("%s/power", sysbdevs[i]);
+			SYS_LCDPOWER = g_strdup_printf("/sys/class/lcd/%s/power", strrchr(sysbdevs[i],'/')+1);
 			return P_SYSFS;
 		}
 		i++;

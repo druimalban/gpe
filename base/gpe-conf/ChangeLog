@@ -1,5 +1,6 @@
 2004-10-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* brightness.c: Some more fixes.
 	* brightness.c: Fixed sysfs interface to find the correct interface.
 	* sound.c: Changed labels to become more descriptive.
 	* sound/sound.c, alarmctl*: Switch for automatic volume setting.
