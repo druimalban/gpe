@@ -1,3 +1,10 @@
+2002-09-12  Pierre Tardy  <tardyp@free.fr>
+
+	* gtkminifilesel.c (gtk_mini_file_selection_set_directory): New
+	function.
+	* gpe/gtkminifilesel.h (gtk_mini_file_selection_set_directory):
+	Add prototype.
+
 2002-09-08  Philip Blundell  <philb@gnu.org>
 
 	* gpe/gtksimplemenu.h: New file.

@@ -41,8 +41,9 @@ struct _GtkMiniFileSelectionClass
 
 typedef struct _GtkMiniFileSelectionClass  GtkMiniFileSelectionClass;
 
-GtkType		gtk_mini_file_selection_get_type	   (void);
+GtkType		gtk_mini_file_selection_get_type (void);
 GtkWidget      *gtk_mini_file_selection_new (const gchar *title);
-gchar * gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs);
+gchar	       *gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs);
+void		gtk_mini_file_selection_set_directory (GtkMiniFileSelection *fs, char *directory);
 
 #endif

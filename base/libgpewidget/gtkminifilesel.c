@@ -777,3 +777,9 @@ gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs)
 
   return chars;
 }
+
+void
+gtk_mini_file_selection_set_directory (GtkMiniFileSelection *fs, char *directory)
+{
+  set_directory (fs,strdup(directory));
+}
