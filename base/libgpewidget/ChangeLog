@@ -1,5 +1,6 @@
 2005-04-06  Florian Boor <florian@kernelconcepts.de>
 
+    * tray.c, doc/tmpl/tray.sgml: Some documentation.
 	* Fixed broken documentation.
 
 2005-04-06  Florian Boor <florian@kernelconcepts.de>

@@ -109,6 +109,19 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
   return GDK_FILTER_CONTINUE;
 }
 
+/**
+ * gpe_system_tray_send_message:
+ * @window: Dock window that should pop up the message. 
+ * @text: Message to display.
+ * @timeout: Time in seconds until message disappears.
+ *
+ * Pop up a message in the panel. These messages are intended to give the user 
+ * some information if something important is going on and should disappear 
+ * without user interaction. Note that message timeouts may be not implemented
+ * in some environments.
+ *
+ * Returns: An unique message id.
+ */
 guint
 gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int timeout)
 {
@@ -164,6 +177,13 @@ gpe_system_tray_send_message (GdkWindow *window, const gchar *text, unsigned int
   return id;
 }
 
+/**
+ * gpe_system_tray_cancel_message:
+ * @window: Window to remove a message from.
+ * @id: Id of the message to remove.
+ *
+ * Remove a message currently displayed from panel.
+ */
 void
 gpe_system_tray_cancel_message (GdkWindow *window, guint id)
 {
@@ -171,6 +191,12 @@ gpe_system_tray_cancel_message (GdkWindow *window, guint id)
 		    SYSTEM_TRAY_CANCEL_MESSAGE, id, 0, 0);
 }
 
+/**
+ * gpe_system_tray_dock:
+ * @window: Window to dock.
+ * 
+ * Make a window a dock window and dock it to a system tray.
+ */
 void
 gpe_system_tray_dock (GdkWindow *window)
 {
