@@ -6,8 +6,8 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
 OBJS    = $(patsubst %,%.o,$(MEMBERS))
 
-CFLAGS += -Wall
-CFLAGS += -MD #(deps)
+PACKAGE_CFLAGS += -Wall
+PACKAGE_CFLAGS += -MD #(deps)
 
 ifeq ($(DEBUG),yes)
 CPPFLAGS += -DDEBUG=yes
@@ -18,13 +18,13 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 
 #-- variables
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\"
-CPPFLAGS += -DVERSION=\"$(VERSION)\"
-CPPFLAGS += -DPREFIX=\"$(PREFIX)\"
-CPPFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\"
+PACKAGE_CPPFLAGS += -DVERSION=\"$(VERSION)\"
+PACKAGE_CPPFLAGS += -DPREFIX=\"$(PREFIX)\"
+PACKAGE_CPPFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 ifdef DESKTOP #environement variable to set if you want extra code included.
-CPPFLAGS += -DDESKTOP
+PACKAGE_CPPFLAGS += -DDESKTOP
 endif
 
 #-- GPE libs
@@ -33,19 +33,19 @@ CVBUILD = no
 endif
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS  += -I../../libgpewidget
-LDFLAGS += -L../../libgpewidget
+PACKAGE_CFLAGS  += -I../../libgpewidget
+PACKAGE_LDFLAGS += -L../../libgpewidget
 endif
 
 LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 
 #-- GTK2
-CFLAGS  +=  #-DGTK_ENABLE_BROKEN
-CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
-LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
+PACKAGE_CFLAGS  +=  #-DGTK_ENABLE_BROKEN
+PACKAGE_CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
+PACKAGE_LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
 
 #-- SQLite
-LDFLAGS += -lsqlite
+PACKAGE_LDFLAGS += -lsqlite
 
 #.SUFFIXES: .d
 
@@ -54,9 +54,12 @@ default: $(PACKAGE)
 ARM_BIN = $(PACKAGE)-$(VERSION)-arm-striped
 arm: $(ARM_BIN)
 
+.c.o:;
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(PACKAGE_CFLAGS) $(PACKAGE_CPPFLAGS) -c $< -o $@
+
 #--package
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 $(ARM_BIN):
 	../utils/dummy-arm-bin &> /dev/null && make $(PACKAGE)

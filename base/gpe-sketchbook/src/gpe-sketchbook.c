@@ -17,6 +17,7 @@
  */
 #include <gtk/gtk.h>
 #include <stdlib.h> //exit
+#include <locale.h>
 
 //--GPE libs
 #include "gpe/init.h"

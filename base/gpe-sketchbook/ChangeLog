@@ -1,3 +1,8 @@
+2004-05-03  Philip Blundell  <philb@gnu.org>
+
+	* src/Makefile: Use PACKAGE_CFLAGS, etc.
+	* src/gpe-sketchbook.c: Include <locale.h>.
+
 2003-07-06  Moray Allan  <moray@sermisy.org>
 
 	* Makefile (install-program): Install .desktop file with .desktop
