@@ -99,7 +99,7 @@ install-program: all $(GLADE) bluez.conf
 	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) bnep-helper rfcomm-helper
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) bnep-helper rfcomm-helper bnep-helper.o rfcomm-helper.o
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
