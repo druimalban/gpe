@@ -24,14 +24,14 @@ void set_conf_defaults(GtkWidget *top, ipaq_conf_t *conf)
   wgt = sleep_enable;
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), (ival > 0));
   wgt = sleep_idle_spin;
-  gtk_spin_button_set_value((GtkSpinButton *)wgt, (gfloat)ival);
+  gtk_range_set_value(GTK_RANGE(wgt), (gfloat)ival);
   gtk_widget_set_sensitive(wgt, (ival > 0));
 
   ival = getConfigInt(conf, "dim_time");
   wgt = dim_enable;
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), (ival > 0));
   wgt = dim_spin;
-  gtk_spin_button_set_value((GtkSpinButton *)wgt, (gfloat)ival);
+  gtk_range_set_value(GTK_RANGE(wgt), (gfloat)ival);
   gtk_widget_set_sensitive(wgt, (ival > 0));
 
   wgt = sleep_apm;

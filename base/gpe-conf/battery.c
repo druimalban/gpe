@@ -297,6 +297,8 @@ gint update_bat_values(gpointer data)
 							sprintf(tmp,"%s",_("Status: high"));
 						else
 							sprintf(tmp,"%s",_("Status: full"));
+						if (percent >=0 && percent <=25)
+							sprintf(tmp,"%s",_("Status: low"));
 					break;
 					case 0x01:
 						sprintf(tmp,"%s",_("Status: low"));

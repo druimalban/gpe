@@ -43,19 +43,19 @@ irq_done_clicked (GtkButton       *button,
 		  gpointer         user_data);
 
 void
-on_sleep_idle_spin_activate (GtkEditable     *editable,
+on_sleep_idle_spin_activate (GtkRange     *range,
 			     gpointer         user_data);
 
 void
-on_sleep_idle_spin_changed (GtkEditable     *editable,
+on_sleep_idle_spin_changed (GtkRange     *range,
 			    gpointer         user_data);
 
 void
-on_dim_spin_activate (GtkEditable     *editable,
+on_dim_spin_activate (GtkRange     *range,
 		      gpointer         user_data);
 
 void
-on_dim_spin_changed (GtkEditable     *editable,
+on_dim_spin_changed (GtkRange     *range,
 		     gpointer         user_data);
 			 
 gboolean

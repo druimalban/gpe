@@ -1,3 +1,9 @@
+2004-08-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Released Version 0.1.14
+	* sleep/*: Second stage of sleep GUI rework.
+	* battery.c: Added hack to indicate low battery even if APM reports high.
+
 2004-08-15	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
 	* sleep/callbacks.*: Started to change GUI from spinbuttons to sliders.

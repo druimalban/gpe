@@ -53,7 +53,7 @@ change_scale_label (GtkScale *scale, gdouble val)
 }
 
 void
-on_sleep_idle_spin_activate (GtkEditable     *editable,
+on_sleep_idle_spin_activate (GtkRange     *range,
 			     gpointer         user_data)
 {
   GtkWidget	*wgt;
@@ -64,7 +64,7 @@ on_sleep_idle_spin_activate (GtkEditable     *editable,
 
 
 void
-on_sleep_idle_spin_changed (GtkEditable     *editable,
+on_sleep_idle_spin_changed (GtkRange     *range,
 			    gpointer         user_data)
 {
   GtkWidget	*wgt;
@@ -90,7 +90,7 @@ AS_checked (GtkToggleButton *togglebutton,
 }
 
 void
-on_dim_spin_activate (GtkEditable     *editable,
+on_dim_spin_activate (GtkRange  *range,
 		      gpointer         user_data)
 {
   GtkWidget	*wgt;
@@ -101,7 +101,7 @@ on_dim_spin_activate (GtkEditable     *editable,
 
 
 void
-on_dim_spin_changed (GtkEditable     *editable,
+on_dim_spin_changed (GtkRange  *range,
 		     gpointer         user_data)
 {
   GtkWidget	*wgt;
@@ -227,7 +227,7 @@ on_sleep_idle_spin_focus_out_event     (GtkWidget       *widget,
                                         GdkEventFocus   *event,
                                         gpointer         user_data)
 {
-  on_sleep_idle_spin_changed(GTK_EDITABLE(widget), user_data);
+  on_sleep_idle_spin_changed(GTK_RANGE(widget), user_data);
   return FALSE;
 }
 
@@ -237,7 +237,7 @@ on_dim_spin_focus_out_event            (GtkWidget       *widget,
                                         GdkEventFocus   *event,
                                         gpointer         user_data)
 {
-  on_dim_spin_changed(GTK_EDITABLE(widget), user_data);
+  on_dim_spin_changed(GTK_RANGE(widget), user_data);
   return FALSE;
 }
 
