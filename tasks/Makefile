@@ -121,7 +121,7 @@ DEP_gpe-collateral-gtk2 = \
 #------------------------------------------
 
 #------------------------------------------ PIM applications
-VER_gpe-task-pim = 0.2
+VER_gpe-task-pim = 0.3
 DEP_gpe-task-pim = \
     gpe-task-base, \
     gpe-calendar2, \
@@ -133,7 +133,11 @@ DEP_gpe-task-pim = \
     gpe-todo2, \
     \
     gpe-minicalc2, \
-    gpe-calculator2
+    gpe-calculator2, \
+    \
+    figment, \
+    gpe-timesheet2, \
+    greader
 #FIXME: 2 calculators!
 
 #------------------------------------------ System utilities
@@ -164,10 +168,7 @@ DEP_gpe-task-mmedia = \
 VER_gpe-task-extra-apps = 0.3
 DEP_gpe-task-extra-apps = \
     gpe-task-base, \
-    figment, \
-    gpe-timesheet2, \
-    gpe-filemanager2, \
-    greader
+    gpe-filemanager2
 
 #------------------------------------------ Games
 VER_gpe-task-games = 0.2
