@@ -1,5 +1,13 @@
 GPE sketchbook NEWS
 
+* 0.2.1 2003-02-25
+- reordered buttons in the filebox for better handling
+  (New and Save should be used the most, so closer to the stylus)
+- removed my own dialog box, use the great gpe_question_ask()
+- fixed brushbox to display the selected brush with GTK2
+- use gtk_image_new_from_pixbuf() instead of gpe_render_icon()
+- updated framework (Makefiles, i18n)
+
 * 0.2.0 2003-02-08
 - base for full GTK2 port (GTK1 will be droped)
 - sketchpad window: moved the file buttons into a filesbox,
