@@ -16,7 +16,12 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CFLAGS += `pkg-config --cflags gtk+-2.0` -I../libgpewidget
+ifeq ($(CVSBUILD),yes)
+CPPFLAGS +=  -I../libgpewidget
+LDFLAGS += -L../libgpewidget
+endif
+
+CFLAGS += `pkg-config --cflags gtk+-2.0`
 LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
