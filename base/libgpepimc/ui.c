@@ -76,6 +76,9 @@ new_category (GtkWidget *w, GtkListStore *list_store)
 
   window = gtk_dialog_new ();
 
+  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
+  gtk_window_set_transient_for (GTK_WINDOW (window), GTK_WINDOW (gtk_widget_get_toplevel (w)));
+
   displaymigration_mark_window (window);
 
   vbox = GTK_DIALOG (window)->vbox;
