@@ -1,3 +1,7 @@
+2005-03-03  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/tmpl/*.sgml: More documentation (Question).
+
 2005-02-14  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/i*.sgml: More documentation.
