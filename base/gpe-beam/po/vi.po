@@ -1,67 +1,66 @@
-# French translation for gpe-beam.
-# Copyright (C) 2003 Florian Boor <florian.boor@kernelconcepts.de> 
-# This file is distributed under the same license as the gpe-beam package.
-# Luc Pionchon <luc@handhelds.org>, 2003, 2004.
+# Vietnamese Translation for gpe-beam-0.2.6.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-beam 0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-10-16 14:18+0200\n"
-"PO-Revision-Date: 2004-11-06 11:06+0200\n"
-"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
-"Language-Team: French <traduc@traduc.org>\n"
+"PO-Revision-Date: 2005-02-01 19:45+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.c:167
 msgid "Error"
-msgstr "Erreur"
+msgstr "Lỗi"
 
 #: main.c:172
 msgid "Failed"
-msgstr "Echec"
+msgstr "Thất bại rồi"
 
 #: main.c:175
 msgid "Done"
-msgstr "Fait"
+msgstr "Xong rồi"
 
 #: main.c:178
 msgid "Connecting..."
-msgstr "Connection..."
+msgstr "Đang kết nối..."
 
 #: main.c:182
 msgid "Disconnecting..."
-msgstr "D�connection..."
+msgstr "Đang ngắt kết nối..."
 
 #: main.c:185
 msgid "Sending..."
-msgstr "Envoi..."
+msgstr "Đang gởi..."
 
 #: main.c:188
 msgid "Receiving"
-msgstr "R�ception"
+msgstr "Đang nhận"
 
 #: main.c:197
 msgid "Waiting for incoming connection"
-msgstr "En attente de connection"
+msgstr "Đang đời sự kết nối đến vào"
 
 #: main.c:200
 msgid "Connected"
-msgstr "Connect�"
+msgstr "Kết nối rồi"
 
 #: main.c:203
 msgid "Disconnecting"
-msgstr "D�connection"
+msgstr "Đang ngắt kết nối"
 
 #: main.c:224
 msgid "Telephony"
-msgstr "T�l�phone"
+msgstr "Điện thoại"
 
 #: main.c:230
 msgid "File Server"
-msgstr "Serveur de fichiers"
+msgstr "Máy chủ tập tin"
 
 #: main.c:236
 msgid "IrCOMM"
@@ -77,175 +76,175 @@ msgstr "PnP"
 
 #: main.c:257
 msgid "PDA/Palmtop"
-msgstr "Ordinateur de poche"
+msgstr "Máy cầm tay"
 
 #: main.c:263
 msgid "Computer"
-msgstr "Ordinateur"
+msgstr "Máy vi tính"
 
 #: main.c:269
 msgid "Printer"
-msgstr "Imprimante"
+msgstr "Máy in"
 
 #: main.c:275
 msgid "Modem"
-msgstr "Modem"
+msgstr "Mô-đem"
 
 #: main.c:281
 msgid "Fax"
-msgstr "Fax"
+msgstr "Điện thư"
 
 #: main.c:287
 msgid "LAN Access"
-msgstr "R�seau local (LAN)"
+msgstr "Truy cấp mạng địa phương"
 
 #: main.c:361
 msgid "Transmitted file"
-msgstr "Fichier transmis"
+msgstr "Đã truyền tập tin rồi"
 
 #: main.c:370
 msgid "Could not transmit file"
-msgstr "Impossible de transmettre le fichier"
+msgstr "Không truyền được tập tin"
 
 #: main.c:396 main.c:447
 msgid "Unable to start file transmit."
-msgstr "Impossible de commencer la transmission du fichier"
+msgstr "Không bắt đầu được việc truyền tập tin"
 
 #: main.c:419
 msgid "IR Receive and Transmit........."
-msgstr "IR Re�oit et Transmet........."
+msgstr "Nhận và Truyền loại IR........."
 
 #: main.c:462
 msgid "IR Receive and Transmit....."
-msgstr "IR Re�oit et Transmet......."
+msgstr "Nhận và Truyền loại IR....."
 
 #: main.c:471 main.c:473
 msgid "Error opening IR client."
-msgstr "Erreur � l'ouverture du client IR"
+msgstr "Gặp lỗi khi mở ứng dụng khách IR."
 
 #: main.c:480
 msgid "Select file to transmit"
-msgstr "S�lectionner le fichier � transmettre"
+msgstr "Chọn tập tin để truyền"
 
 #: main.c:504
 msgid "Could not start import tool."
-msgstr "Impossible de d�marrer l'outil d'import."
+msgstr "Đã không bắt đầu được công cụ nạp."
 
 #: main.c:511
 msgid "vCard was imported successfully."
-msgstr "la vCard a �t� import�e avec succ�s."
+msgstr "Đã nạp vCard rồi."
 
 #: main.c:519
 msgid "Import of vCard failed."
-msgstr "Echec de l'import de vCard."
+msgstr "Đã không nạp vCard được."
 
 #: main.c:548
 #, c-format
 msgid "File '%s' looks like a vCard, do you want to import it?"
-msgstr "Le fichier %s semble �tre une vCard, dois-je l'importer ?"
+msgstr "Tập tin '%s' hình như vCard, bạn có muốn nạp nó không?"
 
 #: main.c:568 main.c:630
 msgid "Unable to start receiver."
-msgstr "Impossible de d�marrer l'outil de r�ception."
+msgstr "Không bắt đầu được trình nhận."
 
 #: main.c:582
 msgid "IR Receive and transmit control"
-msgstr "Transmition et R�ception par InfraRouge"
+msgstr "Điều kiện nhận và truyền IR"
 
 #: main.c:592 main.c:595
 msgid "Error opening IR server."
-msgstr "Erreur � l'ouverture du serveur IR"
+msgstr "Gặp lỗi khi mở máy chủ IR"
 
 #: main.c:607
 msgid "Received file"
-msgstr "Fichier re�u"
+msgstr "Đã nhận tập tin rồi"
 
 #: main.c:645
 msgid "Transmitting VCard"
-msgstr "Transmition de la vCard"
+msgstr "Đang truyền vCard"
 
 #: main.c:743
 msgid "Name:"
-msgstr "Nom :"
+msgstr "Tên:"
 
 #: main.c:744
 msgid "Services:"
-msgstr "Services :"
+msgstr "Dịch vụ:"
 
 #: main.c:745
 msgid "Address:"
-msgstr "Adresse :"
+msgstr "Địa chỉ:"
 
 #: main.c:752
 msgid "Peer Information"
-msgstr "Partenaire"
+msgstr "Thông tin ngang hàng"
 
 #: main.c:755
 msgid "Peer Actions"
-msgstr "Actions du partenaire"
+msgstr "Hành động ngang hàng"
 
 #: main.c:763 main.c:991
 msgid "Send File"
-msgstr "Envoie un fichier"
+msgstr "Gởi tập tin"
 
 #: main.c:771 main.c:992
 msgid "Receive File"
-msgstr "Re�oit un fichier"
+msgstr "Nhận tập tin"
 
 #: main.c:821 main.c:886
 msgid "IR transceiver on"
-msgstr "Transmetteur/R�cepteur IR allum�"
+msgstr "Máy thu phát mở rồi"
 
 #: main.c:823 main.c:910
 msgid "IR transceiver off"
-msgstr "Transmetteur/R�cepteur IR �teint"
+msgstr "Máy thu phát tất rồi"
 
 #: main.c:834
 msgid "Infrared Control"
-msgstr "Communication Infra Rouge"
+msgstr "Điều kiện hồng ngoạI"
 
 #: main.c:983
 msgid "IrDa tool"
-msgstr "Communication Infra Rouge"
+msgstr "Công cụ IrDA"
 
 #: main.c:988
 msgid "Switch IR on"
-msgstr "Allumer l'IR"
+msgstr "Mở IR"
 
 #: main.c:989
 msgid "Switch IR off"
-msgstr "�teindre l'IR"
+msgstr "Tất IR"
 
 #: main.c:990
 msgid "Send vCard"
-msgstr "Envoie la vCard"
+msgstr "Gởi vCard"
 
 #: main.c:993
 msgid "Controls..."
-msgstr "Contr�les..."
+msgstr "Điều kiện..."
 
 #: main.c:994
 msgid "Remove from dock"
-msgstr "Retirer du dock"
+msgstr "Bỏ ra neo"
 
 #: main.c:1061
 msgid "This is the infrared communications control."
-msgstr "Programme d'�change de donn�es par infrarouge."
+msgstr "Đây là điều kiện truyền hồng ngoại."
 
 #: dbus.c:76
 #, c-format
 msgid "Failed to acquire service: %s"
-msgstr "Echec du service : %s"
+msgstr "Đã không gọi dịch vụ được: %s"
 
 #: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "Impossible d'ouvrir une connection avec le bus de donn�es : %s"
+msgstr "Đã không mở được sự kết nối đến bộ nối thông điệp phiên: %s"
 
 #: gpe-beam.desktop.in.h:1
 msgid "IrDa control"
-msgstr "Communication Infra Rouge"
+msgstr "Điều kiện IrDA"
 
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
-msgstr "Programme d'�change de donn�es par infrarouge"
+msgstr "Bảng điều kiện truyền hồng ngoại"
