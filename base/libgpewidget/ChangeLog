@@ -1,3 +1,7 @@
+2004-02-08  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (IN_LIBGPEWIDGET): Define.
+
 2004-01-18  Philip Blundell  <philb@gnu.org>
 
 	* windows.c: Add object interface.  Rename to ...
