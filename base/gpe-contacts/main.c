@@ -279,7 +279,7 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
           if (tv && tv->value)
             {
               if (table == NULL) 
-                 table = gtk_table_new (length, gpe_get_boxspacing(), FALSE);
+                 table = gtk_table_new (length, 2, FALSE);
               w = gtk_label_new (NULL);
               gtk_misc_set_alignment(GTK_MISC(w),0.0,0.5);
               gtk_label_set_text(GTK_LABEL(w), tv->value);
@@ -312,8 +312,9 @@ pop_singles (GtkWidget *vbox, GSList *list, struct person *p)
         }
     if (table)
       {
-        gtk_table_set_col_spacings (GTK_TABLE (table), 2);
-        gtk_container_set_border_width (GTK_CONTAINER (table), 2);
+        gtk_table_set_col_spacings (GTK_TABLE (table), gpe_get_boxspacing());
+        gtk_table_set_row_spacings (GTK_TABLE (table), gpe_get_boxspacing());
+        gtk_container_set_border_width (GTK_CONTAINER (table), 0);
   
         gtk_widget_show_all(table);
         gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 4);
@@ -430,6 +431,8 @@ show_details (struct person *p)
   struct tag_value *curtag;
   GList *wlist, *witer;
   GSList *page;
+  GtkWidget *label;
+  gchar *text;
 
   table = GTK_TABLE (lookup_widget (mainw, "tabDetail"));
   
@@ -444,9 +447,11 @@ show_details (struct person *p)
           g_list_free (wlist);
         }
       i = 1;
-      if (p != NULL)
+      if (p != NULL) /* add contact data */
         {
-          GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+          GtkWidget *vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
+          gchar *catstring = build_categories_string(p);
+        
           gtk_table_attach(GTK_TABLE(table), vbox, 0, 1, 0, 1, GTK_FILL, GTK_FILL, 0, 0);
           for (page = edit_pages; page; page = page->next) /* we use data layout to structure widgets */
             {
@@ -455,6 +460,26 @@ show_details (struct person *p)
                if (!e->hidden)
                  build_children (vbox, e->children, p);
             }
+          if (catstring)
+            {
+              text = g_strdup_printf("%s: %s", _("Categories"), catstring);
+              label = gtk_label_new(NULL);
+              gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+              gtk_label_set_markup(GTK_LABEL(label), text);
+              gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2, 
+                               GTK_FILL, GTK_FILL, 0, 0);
+              g_free(text);
+            }
+        }
+      else  /* just add some feedback */
+        {
+          text = g_strdup_printf("<b>%s</b>", _("No contact selected."));
+          label = gtk_label_new(NULL);
+          gtk_misc_set_alignment(GTK_MISC(label), 0.5, 0.5);
+          gtk_label_set_markup(GTK_LABEL(label), text);
+          gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1, 
+                           GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+          g_free(text);
         }
       gtk_widget_show_all(GTK_WIDGET(table));
     }

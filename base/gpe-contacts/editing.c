@@ -163,7 +163,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
             g_free (markup);
             pop_singles (vbox, singles, pw, visible);
             singles = NULL;
-            gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
+            gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, TRUE, 0);
             /* hidden group */
             build_children (vbox, e->children, pw, !e->hidden);
             if (e->hidden)
@@ -201,7 +201,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
             }
           else
             w = ww;
-          gtk_box_pack_start (GTK_BOX (vbox), w, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, TRUE, 0);
           add_tag (e->tag, ww, pw);
         break;
       
@@ -239,7 +239,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
         case ITEM_IMAGE:
         {
           GtkWidget *l = gtk_label_new (e->name);
-          GtkWidget *hbox, *image, *btn;
+          GtkWidget *hbox, *image, *btn, *sw, *vp;
           pop_singles (vbox, singles, pw, visible);
           singles = NULL;
           
@@ -249,8 +249,15 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
 
           btn = gtk_button_new();
           image = gtk_image_new();
+          vp = gtk_viewport_new(NULL, NULL);
+          gtk_viewport_set_shadow_type(GTK_VIEWPORT(vp), GTK_SHADOW_NONE);
+          sw = gtk_scrolled_window_new(NULL, NULL);
+          gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(sw), 
+                                         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+          gtk_container_add(GTK_CONTAINER(vp), btn);
+          gtk_container_add(GTK_CONTAINER(sw), vp);
           gtk_container_add(GTK_CONTAINER(btn), image);
-          gtk_box_pack_start (GTK_BOX (hbox), btn, TRUE, TRUE, 0);
+          gtk_box_pack_start (GTK_BOX (hbox), sw, TRUE, TRUE, 0);
           gtk_widget_show_all(hbox);
           gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 
                               gpe_get_boxspacing());
@@ -427,7 +434,7 @@ edit_window (void)
           gtk_misc_set_alignment (GTK_MISC (catlabel), 0.0, 0.5);  
           gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, gpe_get_boxspacing());
           gtk_box_pack_start (GTK_BOX (cathbox), catlabel, TRUE, TRUE, 0);
-          gtk_box_pack_start (GTK_BOX (vbox), cathbox, TRUE, FALSE, gpe_get_border());
+          gtk_box_pack_start (GTK_BOX (vbox), cathbox, FALSE, TRUE, gpe_get_border());
           g_signal_connect (G_OBJECT (catbutton), "clicked",
 		    G_CALLBACK (on_categories_clicked), w);
           g_object_set_data (G_OBJECT (w), "categories-label", catlabel);
@@ -459,7 +466,7 @@ get_categories_list (struct person *p)
   return list;
 }
 
-static gchar *
+gchar *
 build_categories_string (struct person *p)
 {
   gchar *s = NULL;

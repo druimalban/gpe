@@ -1,3 +1,12 @@
+2004-10-05  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Makefile: Version is 0.30 now.
+    * main.c (pop_singles): Increased spacing between widgets.
+    * editing.c: Changed some packing to improve image display.
+    * proto.h, editing.c: Made build_categories_string() public available.
+    * main.c (show_details): Added message if no contact selected.
+                             Shows categories now.
+
 2004-10-04  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c (window_key_press_event): Delete key deletes entry if not used for
