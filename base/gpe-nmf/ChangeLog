@@ -3,6 +3,11 @@
 	* playlist_edit.c: Use GtkFileSelection in place of
 	GtkMiniFileSelection.
 
+	* Makefile (install): Install .desktop file.
+	* gpe-nmf.c (my_icons): Add close, media-rew, media-fwd, dir-up.
+	(main): Use close icon instead of cancel.
+	* backend/Maekfile (LDFLAGS, CPPFLAGS): Use gstreamer-0.5.
+
 2002-12-11  Robert Mibus  <mibus@handhelds.org>
 
         * backend/playlist_db.[ch]: Add a playlist_get_length() function
