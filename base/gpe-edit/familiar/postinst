@@ -3,4 +3,4 @@
 update_mime_db
 
 # always return true:
-return 0
+exit 0

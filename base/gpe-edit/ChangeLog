@@ -1,3 +1,7 @@
+2003-02-26  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/postinst: Replace "return" call with "exit".
+
 2003-02-24  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/postinst: Always return true.
