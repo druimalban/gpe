@@ -1,3 +1,7 @@
+2004-06-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Released V 0.1.10
+	* Removed obsolete file.
+
 2004-06-08	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* ipaqscreen/rotation.c: Finally made Xrandr work.
 	* cfgfile.c: Added missing initialisation of GError.
