@@ -418,6 +418,7 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   while ((opt = getopt (argc,argv,"hktg:")) != EOF)
     {
@@ -539,12 +540,6 @@ main (int argc, char *argv[])
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
-
-  setlocale (LC_ALL, "");
-
-  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
-  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   /* FIXME: check error */
   photopixbuf = gdk_pixbuf_new_from_file (photofile, NULL);

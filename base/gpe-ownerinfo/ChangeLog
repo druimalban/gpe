@@ -1,5 +1,10 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
+	* gpe-ownerinfo2.c (main): Remove duplicate locale code.  Move
+	bind_textdomain_codeset to correct place.
+
+2003-02-17  Philip Blundell  <philb@gnu.org>
+
 	* gpe-ownerinfo2.c (main): Remove #ifdef ENABLE_NLS.
 	(main): Call bind_textdomain_codeset for UTF-8.
 
