@@ -417,22 +417,6 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 }
 
 void
-get_networks (GtkWidget *combo, GHashTable *network_hash)
-{
-  GList *popdown_strings = NULL;
-  GSList *iter;
- 
-  iter = sql_networks; 
-  while (iter)
-  {
-    popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
-    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, ((struct sql_network *) iter->data)->servers);
-    iter = iter->next;
-  }
-  gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
-}
-
-void
 new_connection_dialog ()
 {
   GtkWidget *window, *table, *vbox, *hbox, *button_hbox, *label, *hsep;
@@ -441,8 +425,7 @@ new_connection_dialog ()
   GdkPixmap *pmap;
   GdkBitmap *bmap;
 
-  GHashTable *network_hash;
-  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
+  GHashTable *network_hash = NULL;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - New Connection");
@@ -501,6 +484,8 @@ new_connection_dialog ()
   g_object_set_data (G_OBJECT (connect_button), "nick_entry", (gpointer) nick_entry);
   g_object_set_data (G_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
   g_object_set_data (G_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
+  g_object_set_data (G_OBJECT (network_properties_button), "network_combo", (gpointer) network_combo);
+  g_object_set_data (G_OBJECT (network_properties_button), "network_hash", (gpointer) network_hash);
   g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "server_combo", (gpointer) server_combo);
   g_object_set_data (G_OBJECT (GTK_COMBO (network_combo)->list), "entry", (gpointer) GTK_COMBO (network_combo)->entry);
 

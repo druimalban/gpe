@@ -49,6 +49,24 @@ kill_widget (GtkWidget *parent, GtkWidget *widget)
 }
 
 void
+get_networks (GtkWidget *combo, GHashTable *network_hash)
+{
+  GList *popdown_strings = NULL;
+  GSList *iter;
+
+  network_hash = g_hash_table_new (g_str_hash, g_str_equal);
+
+  iter = sql_networks; 
+  while (iter)
+  {
+    popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
+    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, ((struct sql_network *) iter->data)->servers);
+    iter = iter->next;
+  }
+  gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
+}
+
+void
 networks_config_add_from_sql ()
 {
   GSList *iter;
@@ -362,7 +380,13 @@ networks_config_edit ()
 }
 
 void
-networks_config_window ()
+networks_config_window_close (GtkWidget *widget)
+{
+  get_networks (g_object_get_data (G_OBJECT (widget), "network_combo"), g_object_get_data (G_OBJECT (widget), "network_hash"));
+}
+
+void
+networks_config_window (GtkWidget *widget)
 {
   GtkWidget *window, *vbox, *button_hbox, *hsep, *scroll;
   GtkWidget *new_button, *edit_button, *delete_button;
@@ -374,10 +398,12 @@ networks_config_window ()
   guint window_x = 240, window_y = 310;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  g_object_set_data (G_OBJECT (window), "network_combo", (gpointer) g_object_get_data (G_OBJECT (widget), "network_combo"));
+  g_object_set_data (G_OBJECT (window), "network_hash", (gpointer) g_object_get_data (G_OBJECT (widget), "network_hash"));
   gtk_window_set_title (GTK_WINDOW (window), "IRC Client - Configuration");
   gtk_widget_set_usize (GTK_WIDGET (window), window_x, window_y);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
-		      G_CALLBACK (gtk_widget_destroy), NULL);
+		      G_CALLBACK (networks_config_window_close), NULL);
 
   gtk_widget_realize (window);
 
