@@ -81,16 +81,21 @@ new_todo_item (GtkWidget *w, gpointer user_data)
 static void
 purge_completed (GtkWidget *w, gpointer list)
 {
-  GSList *iter = items;
-  
-  while (iter)
+  if (gpe_question_ask (_("Permanently delete all completed items?"), _("Confirm"), 
+			"question", _("Delete"), "ok", _("Cancel"), "cancel", NULL) == 0)
     {
-      struct todo_item *i = iter->data;
-      GSList *new_iter = iter->next;
-      if (i->state == COMPLETED)
-	delete_item (i);
-      
-      iter = new_iter;
+      GSList *iter = items;
+      guint i;
+
+      while (iter)
+	{
+	  struct todo_item *i = iter->data;
+	  GSList *new_iter = iter->next;
+	  if (i->state == COMPLETED)
+	    delete_item (i);
+	  
+	  iter = new_iter;
+	}
     }
   
   refresh_items ();
@@ -99,7 +104,14 @@ purge_completed (GtkWidget *w, gpointer list)
 static void
 show_hide_completed (GtkWidget *w, gpointer list)
 {
-  hide = ! hide;
+  GSList *iter = items;
+
+  for (iter = items; iter; iter = iter->next)
+    {
+      struct todo_item *i = iter->data;
+      i->was_complete =  (i->state == COMPLETED) ? TRUE : FALSE;
+    }
+    
   refresh_items ();
 }
 
@@ -114,6 +126,41 @@ item_layout (struct todo_item *i)
 }
 #endif
 
+static void
+draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct todo_item *i, guint skew)
+{
+  GdkGC *black_gc = widget->style->black_gc;
+#if GTK_MAJOR_VERSION < 2
+  GdkFont *font = widget->style->font;
+#endif
+
+#if GTK_MAJOR_VERSION < 2
+
+  gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
+		 i->summary, strlen (i->summary));
+
+  if (i->state == COMPLETED)
+    gdk_draw_line (drawable, black_gc, xcol, 
+		   y + ystep / 2, 
+		   18 + gdk_string_width (font, i->summary), 
+		   y + ystep / 2);
+#else
+  PangoLayout *l = item_layout (i);
+  
+  gtk_paint_layout (widget->style,
+		    widget->window,
+		    GTK_WIDGET_STATE (widget),
+		    FALSE,
+		    &event->area,
+		    widget,
+		    "label",
+		    xcol, y,
+		    l);
+#endif
+  gdk_draw_pixmap (drawable, black_gc, (i->state == COMPLETED) ? tick_pixmap : box_pixmap,
+		   2, 0, 2, y - skew, 14, 14);
+}
+
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEventExpose  *event,
@@ -121,17 +168,12 @@ draw_expose_event (GtkWidget *widget,
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
-  GdkGC *black_gc;
-  GdkGC *gray_gc;
   GdkGC *white_gc;
   guint max_width;
   guint max_height;
   guint y;
   guint skew = 2;
   GSList *iter;
-#if GTK_MAJOR_VERSION < 2
-  GdkFont *font = widget->style->font;
-#endif
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
@@ -139,8 +181,6 @@ draw_expose_event (GtkWidget *widget,
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
   white_gc = widget->style->white_gc;
-  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
-  black_gc = widget->style->black_gc;
   max_width = widget->allocation.width;
   max_height = widget->allocation.height;
 
@@ -165,70 +205,29 @@ draw_expose_event (GtkWidget *widget,
   for (iter = display_items; iter; iter = iter->next)
     {
       struct todo_item *i = iter->data;
-      
-      if (i->state != COMPLETED)
-	{
-#if GTK_MAJOR_VERSION < 2
-	  gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-			 i->summary, strlen (i->summary));
-#else
-	  PangoLayout *l = item_layout (i);
 
-	  gtk_paint_layout (widget->style,
-			    widget->window,
-			    GTK_WIDGET_STATE (widget),
-			    FALSE,
-			    &event->area,
-			    widget,
-			    "label",
-			    xcol, y,
-			    l);
-#endif
+      if (! i->was_complete)
+	{
+	  draw_item (drawable, widget, xcol, y, i, skew);
 	  
-	  gdk_draw_pixmap (drawable, black_gc, box_pixmap,
-			   2, 0, 2, y - skew, 14, 14);
 	  i->pos=y/ystep;
 	  y += ystep;
 	}
-      
     }
 
-  if (!hide) 
+  for (iter = display_items; iter; iter = iter->next)
     {
-      for (iter = display_items; iter; iter = iter->next)
-	{
-	  struct todo_item *i = iter->data;
-	  
-	  if (i->state == COMPLETED)
-	    {
-#if GTK_MAJOR_VERSION < 2
-	      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
-			     i->summary, strlen (i->summary));
-	      
-	      gdk_draw_line (drawable, black_gc, xcol, 
-			     y + ystep / 2, 
-			     18 + gdk_string_width (font, i->summary), 
-			     y + ystep / 2);
-#else
-	      PangoLayout *l = item_layout (i);
+      struct todo_item *i = iter->data;
 
-	      gtk_paint_layout (widget->style,
-				widget->window,
-				GTK_WIDGET_STATE (widget),
-				FALSE,
-				&event->area,
-				widget,
-				"label",
-				xcol, y,
-				l);
-#endif
-	      gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
-			       2, 0, 2, y - skew, 14, 14);
-	      i->pos=y/ystep;
-	      y += ystep;
-	    }
+      if (i->was_complete)
+	{
+	  draw_item (drawable, widget, xcol, y, i, skew);
+	  
+	  i->pos=y/ystep;
+	  y += ystep;
 	}
     }
+
 
   return TRUE;
 }

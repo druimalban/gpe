@@ -25,8 +25,6 @@
 GSList *lists;
 
 static sqlite *sqliteh_here;
-extern void converted_item (struct todo_item *i);
-extern int converted_category (const char *title);
 
 struct todo_list 
 {
@@ -55,9 +53,8 @@ list_callback0 (void *arg, int argc, char **argv, char **names)
       new_list (atoi (argv[0]), g_strdup (argv[1]));
 
       converted_category (g_strdup (argv[1]));
-      return 0;
-      
     }
+
   return 0;
 }
 
@@ -100,15 +97,14 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
           struct todo_list *l = iter->data;
 	  if (l->id == list)
 	  {
-	    t->id=l->id;
-	    t->title=l->title;
+	    t->id = l->id;
+	    t->title = l->title;
 	    i->categories = g_slist_append (i->categories, (gpointer)(t->id));
 	    break;
           }
 	}
 	
-      converted_item(i);
-	
+      converted_item (i);
     }
   
   return 0;
@@ -119,27 +115,19 @@ convert_old_db (int oldversion, sqlite *sqliteh)
 {
   char *err;
   
-  sqliteh_here=sqliteh;
+  sqliteh_here = sqliteh;
   
-  if (oldversion==0) 
+  if (oldversion == 0) 
     {
-      
-      if (sqlite_exec (sqliteh, "select uid,description from todo_lists",
-		   list_callback0, NULL, &err))
-      {
-        free (err);
-      }
+      sqlite_exec (sqliteh, "select uid,description from todo_lists",
+		   list_callback0, NULL, NULL);
 
-      if (sqlite_exec (sqliteh, 
-		   "select uid,list,summary,description,state,due_by from todo_items",
-		   item_callback0, NULL, &err))
-      {
-        free (err);
-      }
-
+      sqlite_exec (sqliteh, 
+		       "select uid,list,summary,description,state,due_by from todo_items",
+		   item_callback0, NULL, NULL);
     }
-
-  oldversion=1; /* set equal to new version */
+  
+  oldversion = 1; /* set equal to new version */
   
   if (sqlite_exec_printf (sqliteh, 
 			  "insert into todo_dbinfo (version) values (%d)", 

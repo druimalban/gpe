@@ -133,6 +133,8 @@ item_callback (void *arg, int argc, char **argv, char **names)
 	  free (err);
 	  return 0;
 	}
+      if (i->state == COMPLETED)
+	i->was_complete = TRUE;
       items = g_slist_append (items, i);
     }
   return 0;
@@ -274,7 +276,7 @@ list_sort_func (gconstpointer a, gconstpointer b)
 	sqlite_exec_printf (db, "insert into todo values (%d, '%q', '" ## format ## "')", \
 			    NULL, NULL, &err, id, key, value)
 
-void
+gboolean
 push_item (struct todo_item *i)
 {
   char *err;
@@ -312,27 +314,28 @@ push_item (struct todo_item *i)
   if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
     goto error;
 
-  return;
+  return TRUE;
 
  error:
   if (rollback)
     sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
   gpe_error_box (err);
   free (err);
+  return FALSE;
 }
 
-void converted_item (struct todo_item *i)
+gboolean 
+converted_item (struct todo_item *i)
 {
   char *err;
   if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
-    return NULL;
+    return FALSE;
   
   i->id = sqlite_last_insert_rowid (sqliteh);
 
   items = g_slist_append (items, i);
-  push_item(i);
-  
+  return push_item (i);
 }
 
 struct todo_item *

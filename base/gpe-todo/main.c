@@ -21,15 +21,16 @@
 #include "todo-sql.h"
 
 static struct gpe_icon my_icons[] = {
-  { "ok", "ok" },
-  { "cancel", "cancel" },
-  { "save", "save" },
-  { "new", "new" },
-  { "hide", "hide" },
-  { "properties", "properties" },
-  { "delete", "delete" },
-  { "cancel", "cancel" },
-  { "exit", "exit" },
+  { "ok", },
+  { "cancel", },
+  { "save", },
+  { "new", },
+  { "hide", },
+  { "properties", },
+  { "delete",  },
+  { "cancel", },
+  { "exit", },
+  { "question" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { NULL, NULL }
 };
@@ -43,8 +44,6 @@ GtkWidget *window;
 
 extern GtkWidget *top_level (GtkWidget *window);
 
-int hide=0;
-  
 static void
 open_window (void)
 {

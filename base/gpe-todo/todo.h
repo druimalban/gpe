@@ -27,6 +27,7 @@ struct todo_item
   const char *what;
   const char *summary;
   item_state state;
+  gboolean was_complete;
   GSList *categories;
 #if GTK_MAJOR_VERSION >= 2
   PangoLayout *layout;
@@ -45,13 +46,11 @@ extern GSList *categories, *items;
 
 extern struct todo_item *new_item (void);
 extern GtkWidget *edit_item (struct todo_item *item);
-extern void push_item (struct todo_item *i);
+extern gboolean push_item (struct todo_item *i);
 extern void delete_item (struct todo_item *i);
 
 extern struct todo_category *new_category (const char *title);
 extern void del_category (struct todo_category *);
-
-extern int hide;
 
 extern void configure (GtkWidget *w, gpointer list);
 

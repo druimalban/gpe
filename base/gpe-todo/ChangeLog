@@ -1,3 +1,25 @@
+2002-09-29  Philip Blundell  <philb@gnu.org>
+
+	* main.c (hide): Deleted.
+	(my_icons): Add question.  Remove redundant strings.
+	* todo.h (hide): Likewise.
+	* list-ui.c (draw_item): New function, broken out of
+	draw_expose_event.
+	(draw_expose_event): Use i->was_complete to determine sort order.
+	Remove unused variables.
+	(show_hide_completed): Just update i->was_complete for each item.
+	(purge_completed): Ask user for confirmation.
+	* old-db.c (list_callback0): Remove unnecessary return.
+	(item_callback0): Reformat.
+	(convert_old_db): Remove useless error handling.
+	(converted_item, converted_category): Delete prototypes.
+	* todo.h (struct todo_item): Add "was_complete".
+	(push_item): Return gboolean.
+	* todo-sql.h (converted_item, converted_category): New prototypes.
+	* todo-sql.c (converted_item): Return gboolean.
+	(push_item): Likewise.
+	(item_callback): Set was_complete if appropriate.
+
 2002-09-05  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* todo-sql.c : add "converted" subroutines to add stuff from old schema
