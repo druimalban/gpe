@@ -1,6 +1,9 @@
 2003-02-01  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (clean): Depend on clean-po.
+	(LINGUAS): Remove en_AU.
+
+	* po/en_AU.po: Deleted.
 
 	* pixmaps.c (gpe_load_one_icon): Remove redundancy in error message.
 
