@@ -575,8 +575,6 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		row = il->_priv->mrow;
 		col = il->_priv->mcol;
 		
-		il->_priv->mcol = il->_priv->mrow = -1;
-
 		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
 
 		return FALSE;
