@@ -19,7 +19,7 @@ Contents
 Introduction to GPE
 ===================
 
-GPE is the GNU Palmtop Environment.
+GPE is the GPE Palmtop Environment.
 
 It is a free (as in speech) environment designed for handheld computers such
 as the iPAQ. It is based around X11 and GTK.
