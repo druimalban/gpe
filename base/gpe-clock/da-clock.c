@@ -141,6 +141,9 @@ draw_clock (GtkWidget *widget,
   draw_hand (drawable, black_gc, hour_angle, x_offset, y_offset, clock_radius, 
 	     2 * clock_radius / 3);
 
+  gdk_gc_set_clip_rectangle (black_gc, NULL);
+  gdk_gc_set_clip_rectangle (white_gc, NULL);
+
   return TRUE;
 }
 
