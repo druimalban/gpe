@@ -36,18 +36,22 @@
 enum { PORTRAIT, LANDSCAPE };
 enum { NO_SPEC, TILED_BG_IMG, STRECHED_BG_IMG, SOLID_BG_COL, MBDESKTOP_BG };
 
-struct {
-	GtkWidget *toplevel;            /* top-level window */
-	  GtkWidget *vbox1;             /* top-level vertical box */
-	    GtkWidget *vpan1;
+struct window_s {
+    GtkWidget *toplevel;            /* top-level window */
+      GtkWidget *vbox1;             /* top-level vertical box */
+        GtkWidget *vpan1;
 
-	gint mode;    /* either PORTRAIT or LANDSCAPE */
-} window;
+    gint mode;    /* either PORTRAIT or LANDSCAPE */
+};
 
-struct {
+extern struct window_s window;
+
+struct conf_s {
     int bg;
     XSettingsClient *xst_client;
-} conf;
+};
+
+extern struct conf_s conf;
 
 struct myscroll {
 	GtkAdjustment *adjust;

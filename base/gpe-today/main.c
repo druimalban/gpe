@@ -17,6 +17,9 @@
 #include "xsettings-client.h"
 #include "today.h"
 
+struct window_s window;
+struct conf_s conf;
+
 extern gboolean start_xsettings(void);
 
 /* Private functions, public ones are in today.h */
