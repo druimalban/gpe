@@ -1,3 +1,23 @@
+2002-10-16  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.28 released.
+
+2002-10-16  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Fix busted config file handling.
+	(GPE_LOGIN_CONF): Move to /etc/gpe/gpe-login.conf.
+
+2002-10-16  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.27 released.
+	* gpe-session-scripts 0.22 released.
+
+2002-10-15  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/10setroot: Deleted.
+
+	* gpe-login.c (main): Add support for /etc/gpe-login.conf.
+
 2002-10-12  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.21 released.

@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -47,6 +48,7 @@
 #define PASSWORD_FILE "/etc/passwd"
 #define GROUP_FILE "/etc/group"
 #define SHELL "/bin/sh"
+#define GPE_LOGIN_CONF "/etc/gpe/gpe-login.conf"
 
 #define bin_to_ascii(c) ((c)>=38?((c)-38+'a'):(c)>=12?((c)-12+'A'):(c)+'.')
 
@@ -616,6 +618,7 @@ main (int argc, char *argv[])
   gboolean flag_geom = FALSE;
   gboolean flag_transparent = FALSE;
   gboolean flag_xkbd = FALSE;
+  FILE *cfp;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -624,6 +627,42 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+
+  cfp = fopen (GPE_LOGIN_CONF, "r");
+  if (cfp)
+    {
+      char buf[256];
+      char *p;
+      while (!feof (cfp))
+	{
+	  if (p = fgets (buf, sizeof (buf), cfp), p != NULL)
+	    {
+	      while (*p && isspace (p[strlen (p) - 1]))
+		p[strlen (p) - 1] = 0;
+
+	      while (isspace (*p))
+		p++;
+
+	      if (*p == '#' || *p == 0)
+		continue;
+
+	      if (!strcmp (p, "transparent"))
+		flag_transparent = TRUE;
+	      else if (!strcmp (p, "hard-keys"))
+		hard_keys_mode = TRUE;
+	      else if (!strncmp (p, "xkbd", 4))
+		{
+		  char *q = p + 4;
+		  while (isspace (*p))
+		    p++;
+		  force_xkbd = TRUE;
+		  if (*q && *q != '\n')
+		    xkbd_str = q;
+		}
+	    }
+	}
+      fclose (cfp);
+    }
 
   for (i = 1; i < argc; i++)
     {
