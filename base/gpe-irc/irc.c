@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/select.h>
+#include <unistd.h>
 #include <netdb.h>
 #include <glib.h>
 
@@ -49,6 +51,40 @@ typedef struct
   IRCUserInfo *user_info;
   IRCGtkWidgets *widgets;
 } IRCServer;
+
+gboolean
+irc_server_read (IRCServer *server)
+{
+  fd_set rfds;
+  struct timeval tv;
+  int data_waiting;
+  char buf[256];
+
+  FD_ZERO (&rfds);
+  FD_SET (server->fd, &rfds);
+
+  if (server->fd == -1)
+    printf ("No socket open!\n");
+
+  while (1)
+  {
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    printf ("Checking for data...\n");
+    data_waiting = select (server->fd + 1, &rfds, NULL, NULL, &tv);
+
+    if (data_waiting)
+    {
+      printf ("Data waiting.\n");
+      read (server->fd, buf, sizeof (buf));
+      printf ("Data: %s\n", buf);
+    }
+    else
+      sleep (.1);
+  }
+
+  return FALSE;
+}
 
 /* Send a the users message to specified channel on specified server */
 gboolean
@@ -90,6 +126,7 @@ irc_server_login_init (IRCServer *server)
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
   irc_server_join_channel (server, "#gpe");
 
+  irc_server_read (server);
   return TRUE;
 }
 
