@@ -26,7 +26,8 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 
 LDFLAGS += -lXsettings -lXsettings-client -lcrypt
-CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE 
+CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` 
@@ -88,7 +89,6 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
 PIXMAPS = gpe-config-apm.png
-#PIXMAPS += gpe-config-appmgr.png
 PIXMAPS += gpe-config-ipaqscreen.png
 PIXMAPS += gpe-config-kbd.png
 PIXMAPS += gpe-config-keyctl.png
@@ -131,7 +131,8 @@ gpe-confsuid: gpe-confsuid.c
 	$(STRIP) gpe-confsuid
 
 install-program: gpe-conf
-	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
+	mkdir -p $(DESTDIR)/CONTROL
+	sed -e s/VERSION/$(VERSION)/ < familiar/control1 > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
 	$(INSTALL) -m 644 familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
 	$(INSTALL) -m 644 keyboards.def $(DESTDIR)/etc/gpe/

@@ -325,7 +325,10 @@ int main(int argc, char **argv)
   int pipe1[2];
   int pipe2[2];
 
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
 
   if(pipe(pipe1))
     {
