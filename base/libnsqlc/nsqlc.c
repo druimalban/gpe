@@ -26,7 +26,8 @@
 
 struct nsqlc
 {
-  int fd;
+  int infd;
+  int outfd;
   int seq;
 
   int busy;
@@ -68,7 +69,7 @@ write_command (nsqlc *ctx, const char *cmd, ...)
 
   free (buf);
 
-  write (ctx->fd, buf2, strlen (buf2));
+  write (ctx->outfd, buf2, strlen (buf2));
 
   g_free (buf2);
 }
@@ -174,7 +175,7 @@ read_response (struct nsqlc_query_context *q)
       int rc;
       char c;
 
-      rc = read (ctx->fd, &c, 1);
+      rc = read (ctx->infd, &c, 1);
       if (rc < 0)
 	{
 	  perror ("read");
@@ -295,7 +296,7 @@ nsqlc_open (const char *database, int mode, char **errmsg)
 
   ctx = g_malloc0 (sizeof (struct nsqlc));
 
-  ctx->fd = fd;
+  ctx->infd = ctx->outfd = fd;
   ctx->hostname = g_strdup (hostname);
   ctx->username = g_strdup (username);
   ctx->filename = g_strdup (filename);
