@@ -32,7 +32,7 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-PIXMAPS = bell.xpm
+PIXMAPS = bell.png
 
 all: $(PACKAGE)
 
