@@ -110,11 +110,11 @@ channel_active(int chan)
 	if (!mixer_names[chan]) 
 		return FALSE;
 
-	if (!show_channels)
-		return TRUE;
-	
 	if (!((1 << chan) & devmask))
 		return FALSE;
+	
+	if (!show_channels)
+		return TRUE;
 	
 	while (show_channels[i])
 		if (!strcmp(show_channels[i++], mixer_names[chan]))
