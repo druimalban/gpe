@@ -20,7 +20,7 @@ endif
 CFLAGS += -MD `pkg-config --cflags gtk+-2.0`
 LDFLAGS += `pkg-config --libs gtk+-2.0` -lgcrypt
 
-HEADERS = displaymigration.h auth.h crypt.h
+HEADERS = libdisplaymigration/displaymigration.h libdisplaymigration/auth.h libdisplaymigration/crypt.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
