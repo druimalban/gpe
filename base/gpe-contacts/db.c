@@ -234,8 +234,9 @@ new_person_id (guint * id)
 gint 
 sort_entries(struct person * a, struct person * b)
 {
-  gint s = strcoll (a->family_name, b->family_name);
-  
+  gint s = 0;
+  if (a->family_name && b->family_name)
+      s = strcoll (a->family_name, b->family_name);
   return s ? s : strcoll (a->name, b->name);
 }
 
