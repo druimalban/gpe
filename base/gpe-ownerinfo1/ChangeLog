@@ -1,8 +1,19 @@
+2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/control (Version): Bump up to 0.04-1.
+
+	* src/main.c (main): Make usage text (the default address) a bit
+	clearer.
+	(main): Control transparency with the -t option.
+	(main): Fix RCS $Revision tag in help text.
+
 2002-09-04  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/Makefile.am (Module): This should set PREFIX correctly, even
 	though not properly.
 
+	* Version 0.04 is released (with transparency off).
+	
 	* src/main.c (main): Make only transparent when running on the iPAQ.
 
 2002-09-03  Colin Marquardt  <colin@marquardt-home.de>

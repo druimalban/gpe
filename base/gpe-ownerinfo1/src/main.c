@@ -62,6 +62,7 @@ main (int argc, char *argv[])
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   FILE *fp;
   gchar * geometry = NULL;
+  gboolean flag_transparent = FALSE;
   gint x = -1, y = -1, h = 0, w = 0;
   gint val;
   gint opt;
@@ -74,21 +75,27 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 
-  while ((opt = getopt (argc,argv,"hg:")) != EOF)
+  while ((opt = getopt (argc,argv,"htg:")) != EOF)
     {
       switch (opt) {
       case 'g':
 	geometry = optarg;
 	break;
+      case 't':
+	flag_transparent = TRUE;
+	break;
       case 'h':
-	printf ("GPE Owner Info $Revision\n");
+	printf ("GPE Owner Info $Revision$\n");
 	printf ("\n");
-	printf ("Valid options: -g GEOMETRY   window geometry (default: 240x120+0+200)\n");
-	printf ("               -h            this help text\n");
+	printf ("Valid options:\n");
+	printf ("   -g GEOMETRY  window geometry (default: 240x120+0+200)\n");
+	printf ("   -t           make window transparent\n");
+	printf ("   -h           this help text\n");
 	exit (1);
       case '?':
 	if (isprint (optopt))
-	  fprintf (stderr, "gpe-ownerinfo: Unknown option -%c'.\n", optopt);
+	  ;
+	/* fprintf (stderr, "gpe-ownerinfo: Unknown option -%c'.\n", optopt); */
 	else
 	  fprintf (stderr,
 		   "gpe-ownerinfo: Unknown option character \\x%x'.\n",
@@ -105,7 +112,7 @@ main (int argc, char *argv[])
   ownername    = g_strdup ("GPE User");
   owneremail   = g_strdup ("nobody@localhost.localdomain");
   ownerphone   = g_strdup ("+99 (9999) 999-9999");
-  owneraddress = g_strdup ("Please use\n\"GPE Configuration\"\nto change this data.");
+  owneraddress = g_strdup ("The user 'root' can use\n\"GPE Configuration\" ('Owner')\nto change this data.");
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
@@ -226,7 +233,7 @@ main (int argc, char *argv[])
   */
 
   /* make window transparent if running on the iPAQ: */
-  if (gpe_stylus_mode ()) {
+  if (flag_transparent) {
     widget = lookup_widget (GPE_Ownerinfo, "viewport1");
     widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
     gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
