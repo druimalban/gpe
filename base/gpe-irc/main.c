@@ -88,6 +88,28 @@ kill_widget (GtkWidget *parent, GtkWidget *widget)
   gtk_widget_destroy (widget);
 }
 
+gchar *
+remove_invalid_utf8_chars (gchar *text)
+{
+  int char_num = 0;
+  gunichar valid_unicode;
+  gchar *valid_text = NULL, valid_utf8;
+
+  while (char_num < strlen (text))
+  {
+    valid_unicode = g_utf8_get_char_validated (text[char_num], -1);
+
+    if (valid_unicode != -1)
+    {
+      g_unichar_to_utf8 (valid_unicode, &valid_utf8);
+      valid_text = g_realloc (valid_text, strlen (valid_text) + 2);
+      valid_text[char_num] = valid_utf8;
+    }
+  }
+
+  return valid_text;
+}
+
 void
 update_text_view (gchar *text)
 {
@@ -97,9 +119,11 @@ update_text_view (gchar *text)
 
   if (text)
   {
+    //printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
     vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
+    text = remove_invalid_utf8_chars (text);
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
     gtk_text_buffer_insert (text_buffer, &end, text, strlen (text));
     gtk_adjustment_set_value (vadjust, vadjust->upper);
@@ -133,8 +157,8 @@ button_clicked (GtkWidget *button)
       selected_button = button;
       selected_server = server;
       clear_text_view ();
-      printf ("Button's text passed: %s\n", server->text->str);
-      //update_text_view (server->text->str);
+      //printf ("Button's text passed: %s\n", server->text->str);
+      update_text_view (server->text->str);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
     }
   }
