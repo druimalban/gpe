@@ -36,6 +36,7 @@ static struct gpe_icon my_icons[] = {
 };
 
 static GtkWidget *entry;
+static GtkWidget *window;
 
 #define _(x) gettext(x)
 
@@ -60,6 +61,7 @@ do_su (void)
   rp = result;
 
   gtk_entry_set_text (GTK_ENTRY (entry), "");
+  gtk_widget_hide (window);
 
   pid = forkpty (&pty, NULL, NULL, NULL);
   
@@ -111,6 +113,7 @@ do_su (void)
     {
       gpe_error_box (result);
       kill (pid, 15);
+      gtk_widget_show (window);
     }
   else
     gtk_main_quit ();
@@ -121,7 +124,6 @@ main (int argc, char *argv[])
 {
   GdkPixbuf *p;
   GtkWidget *pw;
-  GtkWidget *window;
   GtkWidget *hbox, *vbox;
   GtkWidget *label;
   GtkWidget *buttonok, *buttoncancel;
