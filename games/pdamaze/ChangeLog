@@ -1,3 +1,7 @@
+2003-07-13  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install-program): Install as pdamaze, not pdamaze.host.
+
 2002-08-04  Colin Marquardt  <colin@marquardt-home.de>
 
 	* familiar/control (Module): Fix typo.
