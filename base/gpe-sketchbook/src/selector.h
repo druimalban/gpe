@@ -39,14 +39,15 @@ typedef struct _selector {
 extern Selector selector;
 
 enum{//Entry id for the list store
-  ENTRY_TITLE = 0,
-  ENTRY_URL,
-  ENTRY_THUMBNAIL,
-  ENTRY_ICONLISTITEM,
+  ENTRY_TITLE        = 0,
+  ENTRY_ID           = 1,
+  ENTRY_URL          = 2 ,
+  ENTRY_THUMBNAIL    = 3,
+  ENTRY_ICONLISTITEM = 4,
   NUM_ENTRIES
 };
 
-void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail);
+void selector_add_note(gint id, gchar * title, gchar * url, GdkPixbuf * thumbnail);
 void load_thumbnails();
 
 extern gint sketch_list_size;

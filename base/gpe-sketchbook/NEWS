@@ -1,6 +1,7 @@
 GPE sketchbook NEWS
 
-* 
+* cvs
+- store notes into sqlite DB (open door to many improvements :)
 
 * 0.2.7 2003-10-12
 - insert a default sketch when the .sketchbook folder is created (#984).

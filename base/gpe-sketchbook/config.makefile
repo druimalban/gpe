@@ -13,6 +13,7 @@ MEMBERS = \
 	sketchpad	     \
 	sketchpad-cb	     \
 	sketchpad-gui	     \
+        db                   \
 	files 
 
 ifndef PREFIX

@@ -26,6 +26,7 @@
 #include "files.h"
 #include "selector.h"
 #include "selector-cb.h"
+#include "db.h"
 
 #include "dock.h"
 #include "gpe/question.h"
@@ -163,16 +164,20 @@ gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
 
 void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   gchar     * filename  = NULL;
+  gchar     * title     = NULL;
   GdkPixbuf * thumbnail = NULL;
   GObject   * iconlist_item = NULL;
   GtkTreeIter iter;
+  gint note_id = -1;
 
   if(!is_current_sketch_modified){
     popup_menu_close (sketchpad.files_popup_button);
     return;
   }
+
   if(is_current_sketch_new){
     filename = file_new_fullpath_filename();
+    title    = make_label_from_filename(filename); //FIXME: "New sketch"
   }
   else{
     //access the existing row data
@@ -188,6 +193,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
                        -1);
   }
 
+  g_printerr("Saving %s", filename);
   file_save(filename); //FIXME: should catch saving errors
   
   if(selector.thumbnails_notloaded == FALSE){//--make thumbnail
@@ -206,7 +212,23 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     current_sketch = sketch_list_size;
     sketch_list_size++;
 
-    selector_add_note(make_label_from_filename(filename), filename, thumbnail);
+    //--Add to DB
+    {
+      GTimeVal current_time; //struct GTimeVal{  glong tv_sec;  glong tv_usec;};
+      Note note;
+      
+      g_get_current_time(&current_time);
+      
+      note.type    = DB_NOTE_TYPE_SKETCH;
+      note.title   = title;
+      note.created = current_time.tv_sec;
+      note.updated = current_time.tv_sec;
+      note.url     = filename;  
+      
+      note_id = db_insert_note(&note);
+    }
+
+    selector_add_note(note_id, title, filename, thumbnail);
   }
   else if(selector.thumbnails_notloaded == FALSE){
     //update icon_view

@@ -36,14 +36,23 @@
 #include "files.h"
 #include "sketchpad.h"
 #include "gpe-sketchbook.h"
+#include "db.h"
 
 //--i18n
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
+#define DEBUG
+#ifdef DEBUG
+#define TRACE(message...) {g_printerr(message); g_printerr("\n");}
+#else
+#define TRACE(message...) 
+#endif
+
 Selector selector;
 
 gint sketch_list_size;
+
 gint current_sketch;
 gboolean is_current_sketch_selected;
 
@@ -53,10 +62,11 @@ void selector_init(){
   GtkListStore * store;
   
   store = gtk_list_store_new (NUM_ENTRIES,
-                              G_TYPE_STRING,//title
-                              G_TYPE_STRING,//note's url
-                              GDK_TYPE_PIXBUF,//thumbnail
-                              G_TYPE_OBJECT//GPEIconListItem
+                              /*0*/G_TYPE_STRING,  //title
+                              /*1*/G_TYPE_INT,     //id
+                              /*2*/G_TYPE_STRING,  //note's url
+                              /*3*/GDK_TYPE_PIXBUF,//thumbnail
+                              /*4*/G_TYPE_OBJECT   //GPEIconListItem
                               );
   selector.listmodel = GTK_TREE_MODEL(store);
 
@@ -67,13 +77,15 @@ void selector_init(){
 
 }//selector_init()
 
-void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
+
+void selector_add_note(gint id, gchar * title, gchar * url, GdkPixbuf * thumbnail){
   GtkListStore * store;
   GtkTreeIter iter;
 
   store = GTK_LIST_STORE(selector.listmodel);
   gtk_list_store_append (store, &iter);
   gtk_list_store_set (store, &iter,
+                      ENTRY_ID,        id,
                       ENTRY_TITLE,     title,
                       ENTRY_URL,       url,
                       ENTRY_THUMBNAIL, thumbnail,
@@ -94,57 +106,25 @@ void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
   }
 }
 
-void window_selector_init(GtkWidget * window_selector){
-  struct dirent ** direntries;
-  int scandir_nb_entries;
-  int scandir_errno;
 
-  //--fill the List
-  scandir_nb_entries = scandir (sketchbook.save_dir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
-  scandir_errno = errno;
-  if (scandir_nb_entries == -1){//scandir error
-    //might not exist, try to create it:
-    if( mkdir(sketchbook.save_dir, S_IRWXU) == -1){
+void window_selector_init(GtkWidget * window_selector){
+
+  if( mkdir(sketchbook.save_dir, S_IRWXU) == -1){
+    if(errno != EEXIST){
       switch(errno){
-        case EEXIST: //already exists
-          gpe_error_box_fmt(_("Cannot read the sketchbook directory: %s. Exit."),
-                            strerror(scandir_errno));
-          break;
         case EACCES: //write permission is denied
         case ENOSPC: //file system doesn't have enough room
         default:
           /* TRANSLATORS: %s are: [folder name] [error message]*/
           gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchbook.save_dir, strerror(errno));
+          app_quit();
+          return;
       }
-      app_quit();
-    }
-    {//then insert a dummy sketch (so the list does not appear empty)
-      gchar * command;
-      command = g_strdup_printf("cp -f %s/share/gpe/pixmaps/default/gpe-sketchbook/welcome.png %s/2003-00-00_00-00-00.png", PREFIX, sketchbook.save_dir);
-      system (command);
-      g_free(command);
-      scandir_nb_entries = scandir (sketchbook.save_dir,
-                                    &direntries,
-                                    _direntry_selector,
-                                    alphasort);//FIXME: --> file.c
-      /**/g_printerr("inserted %d\n", scandir_nb_entries);
     }
   }
-  /*else*/{ //if empty, added a dummy sketch so do it in any case
-    gchar * fullpath_filename;
-    gchar * title;
-    int i;
-    for(i = 0; i < scandir_nb_entries; i++){
 
-      title = make_label_from_filename(direntries[i]->d_name);
-      fullpath_filename = g_strdup_printf("%s%s", sketchbook.save_dir, direntries[i]->d_name);
-      selector_add_note(title, fullpath_filename, NULL /*thumbnail*/);
+  db_load_notes();
 
-      sketch_list_size++;
-    }
-
-    free(direntries);
-  }//else
 }//window_selector_init()
 
 void load_thumbnails(){
@@ -249,7 +229,8 @@ void delete_current_sketch(){
   gboolean got_it;
   GtkTreePath * path;
   gchar * fullpath_filename;
-  
+  gint    id;
+
   model = GTK_TREE_MODEL(selector.listmodel);
 
   path = gtk_tree_path_new_from_indices (current_sketch, -1);
@@ -260,13 +241,17 @@ void delete_current_sketch(){
 
   gtk_tree_model_get(model, &iter,
                      ENTRY_URL, &fullpath_filename,
+                     ENTRY_ID,  &id,
                      -1);
   
   //--Delete the selected sketch
   is_deleted = file_delete(fullpath_filename);
-  
+
   if(is_deleted){
     GObject * iconlist_item;
+
+    db_delete_note(id);
+
     gtk_tree_model_get(model, &iter,
                        ENTRY_ICONLISTITEM, &iconlist_item,
                        -1);

@@ -33,6 +33,8 @@
 #include "selector-gui.h"
 #include "selector-cb.h" //on_button_selector_change_view_clicked()
 
+#include "db.h"
+
 //--i18n
 #include <libintl.h>
 #define _(_x) gettext (_x)
@@ -40,7 +42,7 @@
 
 Sketchbook sketchbook;
 
-#define SKETCHPAD_HOME_DIR ".sketchbook"
+#define SKETCHPAD_HOME_DIR ".gpe/sketchbook"
 
 static struct gpe_icon my_icons[] = {
   //Apps icon
@@ -95,6 +97,9 @@ int main (int argc, char ** argv){
 
 void app_init(int argc, char ** argv){
   sketchbook.save_dir = g_strdup_printf("%s/%s/", g_get_home_dir(), SKETCHPAD_HOME_DIR);
+
+  db_open();
+
   selector_init();
   sketchpad_init();
   prefs_reset_defaults();
@@ -102,6 +107,9 @@ void app_init(int argc, char ** argv){
 }
 
 void app_quit(){
+
+  db_close();
+
   prefs_save_settings();
   gpe_prefs_exit();
   gtk_exit (0);
