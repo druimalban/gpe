@@ -62,7 +62,7 @@ void  usqld_init_protocol(){
   XDR_schema * connect_elems[2];
   XDR_schema * err_elems[2];
   
-  XDR_union_discrim  elems[9];
+  XDR_union_discrim  elems[10];
   
   elems[0].t = eof_packet = XDR_schema_new_void();
   elems[0].d = PICKLE_EOF;
@@ -91,11 +91,14 @@ void  usqld_init_protocol(){
 
   elems[7].t = XDR_schema_new_void();
   elems[7].d = PICKLE_OK;
-  
-  elems[8].t = XDR_schema_new_void();
-  elems[8].d = PICKLE_INTERRUPT;
-  
-  usqld_protocol_schema = XDR_schema_new_type_union(9,elems);
+   
+   elems[8].t = XDR_schema_new_void();
+   elems[8].d = PICKLE_INTERRUPT;
+   
+   elems[9].t = XDR_schema_new_void();
+   elems[9].d = PICKLE_INTERRUPTED;
+
+  usqld_protocol_schema = XDR_schema_new_type_union(10,elems);
 }
 
 pthread_once_t init_protocol_once = PTHREAD_ONCE_INIT;

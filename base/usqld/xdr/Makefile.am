@@ -7,4 +7,4 @@ libxdr_la_SOURCES = xdr-deserialize.c  xdr-schema.c  xdr-serialize.c \
 		  xdr-tree.c xdr.h
 LDFLAGS=-L../
 
-CFLAGS=-g -Wall
+CFLAGS=-Os -Wall -g

@@ -167,7 +167,7 @@ int usqld_exec(
   usqld_packet * out_p = NULL,*in_p = NULL;
   int rv,complete;
   char ** heads=  NULL,**rowdata = NULL;
-  unsigned int nrows;
+  unsigned int nrows = 0;
 
   if(con->server_fd==-1){
     *errmsg =strdup("Connection does not seem to be open");

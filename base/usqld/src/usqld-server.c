@@ -8,9 +8,9 @@
 #include <fcntl.h>
 #include <unistd.h> 
 #include <string.h>
+#include <ctype.h>
 #include <pthread.h>
 #include <signal.h>
-#include <popt.h>
 
 #include "usqld-protocol.h"
 #include "usqld-server.h"
@@ -28,31 +28,31 @@ int main(int argc, char * argv[])
    int single_thread =0;
    char * database_dir = NULL;
    char c;
-   
-   poptContext optCon;
-   
-   struct poptOption cmdOptions[]= {
-     {"single-thread",
-      'X',
-      POPT_ARG_NONE,
-      &single_thread,
-      0,
-      "run im debugging,single thread mode"},
-     {"database-dir",
-      'd',
-      POPT_ARG_STRING,
-      &database_dir,
-      0,"Data base directory"},
-     POPT_AUTOHELP
-     {NULL,0,0,NULL,0}
-   };
-      
-      
-   optCon = poptGetContext(NULL,argc,argv,cmdOptions,0);
-   while((c= poptGetNextOpt(optCon))>=0){
+
+   while((c = getopt(argc,argv,"xd:"))!=-1){
+      switch(c){	 
+       case 'x':
+	 single_thread = 1;
+	 break;
+       case  'd':
+	 database_dir = optarg;
+	 break;
+       case '?':
+	 if (isprint (optopt))
+	   fprintf (stderr, "Unknown option -%c'.\n", optopt);
+	 else
+	   fprintf (stderr,
+		    "Unknown option character \\x%x'.\n",
+		    optopt);
+	 break;
+       default:
+	 printf("err\n");
+	 exit(1);
+      }
    }
    
-   poptFreeContext(optCon);
+   
+	
    if(!database_dir)
      database_dir = "/tmp/";
 
@@ -68,8 +68,6 @@ int main(int argc, char * argv[])
        exit(1);
      }
 
-
-   
    myaddr.sin_family = PF_INET;
    myaddr.sin_port = htons(USQLD_SERVER_PORT);
    myaddr.sin_addr.s_addr = INADDR_ANY;

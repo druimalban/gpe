@@ -40,9 +40,9 @@ typedef struct{
 unsigned int usqld_peek_next_packet(int fd){
   unsigned char header[4];
   
- //  if(4== recv(fd,header,4,MSG_DONTWAIT|MSG_PEEK)){
-  //     return ntohl(*((unsigned int *)header));
-  //  }
+   if(4== recv(fd,header,4,MSG_DONTWAIT|MSG_PEEK)){
+      return ntohl(*((unsigned int *)header));
+   }
    return 0;
 }
 
@@ -120,10 +120,10 @@ int usqld_send_row(usqld_row_context * rc,
   XDR_tree_compound *field_elems;
   int i;
   int rv;
-  fprintf(stderr,"about to try sending a row\n");  
+//  fprintf(stderr,"about to try sending a row\n");  
   if(PICKLE_INTERRUPT==usqld_peek_next_packet(rc->tc->client_fd)){
     usqld_packet * p;
-    fprintf(stderr,"Interupted!\n");
+//    fprintf(stderr,"Interupted!\n");
     
     usqld_recv_packet(rc->tc->client_fd,&p);
     XDR_tree_free(p);
@@ -215,7 +215,8 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
           XDR_TREE_STR(
 	    XDR_t_get_comp_elem(XDR_TREE_COMPOUND(packet),1)));
 
-  fprintf(stderr,"About to try and exec the sql: \"%s\"\n",sql);
+
+//  fprintf(stderr,"About to try and exec the sql: \"%s\"\n",sql);
  
   if(SQLITE_OK!=(rv=sqlite_exec(tc->db,
 				sql,
