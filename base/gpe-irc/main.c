@@ -142,7 +142,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
 
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
-  server->text = g_malloc (sizeof (*server->text));
+  server->text = g_string_new ("");
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
 
   server_combo_entry = gtk_object_get_data (GTK_OBJECT (parent), "server_combo_entry");
