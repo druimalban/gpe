@@ -26,5 +26,6 @@ extern void toggle_popup_menu (GtkWidget *parent_button, GtkWidget *(construct_f
 extern void popup_menu_close (GtkWidget *parent_button);
 
 extern GtkWidget *popup_menu_button_new_type_font (void *(callback_func)());
+extern GtkWidget *popup_menu_button_new_type_color (void *(callback_func)());
 
 #endif
