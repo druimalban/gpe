@@ -4,9 +4,3 @@ need to queue up redrawing, rather than do immediately (?)
 i.e. avoid getting behind the mouse (esp. when dragging)
 - better to jump to most recent position
 
-
-get nicer colour scheme?
-
-
-work out why getting speckled junk - because of limited precision???
--- or, more likely, getting maths wrong somehow?
