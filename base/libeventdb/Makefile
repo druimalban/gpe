@@ -6,7 +6,7 @@ PACKAGE = libeventdb
 
 MEMBERS = event-db old-db 
 
-SONAME = libeventdb.so
+SONAME = libeventdb.so.0
 CONTROL = control
 
 CFLAGS = `pkg-config --cflags glib-2.0`
