@@ -1,3 +1,7 @@
+2005-03-14  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Removed obsolete inclusion of render.h
+
 2005-01-16  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.61 released.
