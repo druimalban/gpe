@@ -150,8 +150,8 @@ gboolean
 smallbox_x2 (gchar *title, struct box_desc2 *d)
 {
   GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *buttonok = gtk_button_new_with_label (_("OK"));
-  GtkWidget *buttoncancel = gtk_button_new_with_label (_("Cancel"));
+  GtkWidget *buttonok  = gpe_picture_button (window->style, _("OK"), "ok");
+  GtkWidget *buttoncancel  = gpe_picture_button (window->style, _("Cancel"), "cancel");
   GtkWidget *table;
   GtkWidget **entry;
   gboolean destroyed = FALSE;
@@ -177,18 +177,25 @@ smallbox_x2 (gchar *title, struct box_desc2 *d)
     {
       GtkWidget *label = gtk_label_new (di->label);
       if (di->suggestions)
-	entry[i] = make_combo (di->suggestions);
+	{
+	  GtkWidget *combo = make_combo (di->suggestions);
+	  entry[i] = GTK_COMBO (combo)->entry;
+	  gtk_widget_show (combo);
+	  gtk_table_attach_defaults (GTK_TABLE (table), combo, 1, 2, i, i + 1);
+	}
       else
-	entry[i] = gtk_entry_new ();
+	{
+	  entry[i] = gtk_entry_new ();
+	  gtk_widget_show (entry[i]);
+	  gtk_table_attach_defaults (GTK_TABLE (table), entry[i], 1, 2, i, i + 1);
+	}
 
       if (di->value)
 	gtk_entry_set_text (GTK_ENTRY (entry[i]), di->value);
 
-      gtk_widget_show (entry[i]);
       gtk_widget_show (label);
 
       gtk_table_attach_defaults (GTK_TABLE (table), label, 0, 1, i, i + 1);
-      gtk_table_attach_defaults (GTK_TABLE (table), entry[i], 1, 2, i, i + 1);
 
       i++;
       di++;

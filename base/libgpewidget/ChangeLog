@@ -1,3 +1,19 @@
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.30 released.
+
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
+	* gtksimplemenu.c (gtk_simple_menu_flush): New function.
+	* gpe/gtksimplemenu.h (gtk_simple_menu_flush): Add prototype.
+
+	* smallbox.c (smallbox_x2): Use picture buttons.  Correctly
+	extract entry field from combo box.
+
+2002-11-30  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.29 released.
+	
 2002-11-30  Philip Blundell  <philb@gnu.org>
 
 	* gtkgpepixmap2.c (gtk_gpe_pixmap_init): Add missing

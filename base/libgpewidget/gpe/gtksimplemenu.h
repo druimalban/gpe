@@ -26,5 +26,6 @@ GtkWidget      *gtk_simple_menu_new		(void);
 
 guint		gtk_simple_menu_get_result	(GtkSimpleMenu *sel);
 void            gtk_simple_menu_append_item	(GtkSimpleMenu *sel, const gchar *items);
+void		gtk_simple_menu_flush		(GtkSimpleMenu *sel);
 
 #endif

@@ -140,3 +140,9 @@ gtk_simple_menu_append_item (GtkSimpleMenu *sm, const gchar *s)
   if (sm->nr == 1)
     gtk_option_menu_set_history (GTK_OPTION_MENU (sm), 0);
 }
+
+void
+gtk_simple_menu_flush (GtkSimpleMenu *sm)
+{
+  gtk_simple_menu_init (sm);
+}
