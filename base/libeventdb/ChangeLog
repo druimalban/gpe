@@ -1,3 +1,8 @@
+2003-01-06  Philip Blundell  <philb@gnu.org>
+
+	* event-db.c, event-db.h: Move latest version here from
+	gpe-calendar.
+
 2003-01-06  Luis Oliveira  <luis@handhelds.org>
 
 	* First import.
