@@ -120,15 +120,15 @@ click_ok (GtkWidget *widget,
   if (t->item)
     {
       if (t->item->what)
-	{
-	  g_free ((char *)t->item->what);
-	  t->item->what = NULL;
-	}
+        {
+          g_free ((char *)t->item->what);
+          t->item->what = NULL;
+        }
       if (t->item->summary)
-	{
-	  g_free ((char *)t->item->summary);
-	  t->item->summary = NULL;
-	}
+        {
+          g_free ((char *)t->item->summary);
+          t->item->summary = NULL;
+        }
     }
   else
     t->item = todo_db_new_item ();
@@ -205,16 +205,16 @@ build_categories_string (struct edit_todo *t)
       cat = gpe_pim_category_name ((int)iter->data);
 
       if (cat)
-	{
-	  if (s)
-	    {
-	      char *ns = g_strdup_printf ("%s, %s", s, cat);
-	      g_free (s);
-	      s = ns;
+        {
+          if (s)
+            {
+              char *ns = g_strdup_printf ("%s, %s", s, cat);
+              g_free (s);
+              s = ns;
+            }
+          else
+            s = g_strdup (cat);
 	    }
-	  else
-	    s = g_strdup (cat);
-	}
     }
 
   return s;
@@ -255,50 +255,78 @@ change_categories (GtkWidget *w, struct edit_todo *t)
 GtkWidget *
 edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *top_vbox;
-  GtkWidget *vbox;
+  GtkWidget *window;
+  GtkWidget *table = gtk_table_new(5, 5, FALSE);
+  GtkWidget *top_vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *text = gtk_text_view_new ();
-  GtkWidget *duebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
   GtkWidget *buttondelete;
-  GtkWidget *priority_label, *priority_menu, *priority_optionmenu;
-  GtkWidget *hbox_state;
+  GtkWidget *label_priority = gtk_label_new (_("Priority:"));
+  GtkWidget *priority_menu, *priority_optionmenu;
+  GtkWidget *label_state = gtk_label_new (_("Status:"));
   GtkWidget *state = gtk_option_menu_new ();
   GtkWidget *state_menu;
   GtkWidget *label_summary = gtk_label_new (_("Summary:"));
   GtkWidget *label_details = gtk_label_new (_("Details:"));
   GtkWidget *entry_summary = gtk_entry_new ();
-  GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
-  GtkWidget *hbox_categories = NULL;
-  GtkWidget *scrolled_window, *viewport;
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *viewport = gtk_viewport_new(NULL, NULL);
+  GtkWidget *button_categories = gtk_button_new_with_label (_("Categories:"));
+  GtkWidget *label_categories = gtk_label_new ("");
+  gchar *s = NULL;
   struct edit_todo *t;
-  guint i;
+  guint i = 0, pos = 0;
+  gboolean large_screen = (gdk_screen_width() > 400);
+  gboolean mode_landscape = (gdk_screen_width() > gdk_screen_height());
+  guint gpe_spacing = gpe_get_boxspacing();
   struct tm tm;
   time_t the_time;
 
   t = g_malloc (sizeof (struct edit_todo));
 
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  
+  /* make it a dialog if it is large enough */
+  if (large_screen)
+    {
+      gtk_window_set_type_hint(GTK_WINDOW(window),
+                               GDK_WINDOW_TYPE_HINT_DIALOG);
+    }
+    
   gtk_window_set_transient_for(GTK_WINDOW(window), parent);
   gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+  gtk_container_set_border_width (GTK_CONTAINER (window),
+                                  gpe_get_border ());
   displaymigration_mark_window (window);
+  if (large_screen)
+    {
+        if (mode_landscape)
+          gtk_window_set_default_size (GTK_WINDOW (window), 400, 320);
+        else
+          gtk_window_set_default_size (GTK_WINDOW (window), 320, 400);
+    }
+  else
+    gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
-  top_vbox = gtk_vbox_new (FALSE, 0);
-  vbox = gtk_vbox_new (FALSE, 0);
-
-  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
-				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-  viewport = gtk_viewport_new(NULL, NULL);
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   gtk_viewport_set_shadow_type(GTK_VIEWPORT(viewport), GTK_SHADOW_NONE);
+  gtk_container_add (GTK_CONTAINER (viewport), table);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), viewport);
+  
+  gtk_container_set_border_width(GTK_CONTAINER(buttonbox), 0);
   
   buttonok = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
 
+  
+  gtk_table_set_col_spacings (GTK_TABLE(table), gpe_spacing);
+  gtk_table_set_row_spacings (GTK_TABLE(table), gpe_spacing);
+  gtk_box_set_spacing (GTK_BOX(top_vbox), gpe_spacing);
+    
   state_menu = gtk_menu_new ();
   for (i = 0; i < sizeof (state_map) / sizeof (state_map[0]); i++)
     {
@@ -325,42 +353,29 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   else
     {
       if (initial_category != -1)
-	t->selected_categories = g_slist_append (NULL, (gpointer)initial_category);
+        t->selected_categories = g_slist_append (NULL, (gpointer)initial_category);
       else
-	t->selected_categories = NULL;
+        t->selected_categories = NULL;
     }
 
-  {
-    GtkWidget *button = gtk_button_new_with_label (_("Categories:"));
-    GtkWidget *label = gtk_label_new ("");
-    gchar *s = NULL;
+  s = build_categories_string (t);
+  if (s)
+    {
+      gtk_label_set_text (GTK_LABEL (label_categories), s);
+      g_free (s);
+    }
+     
+  gtk_misc_set_alignment (GTK_MISC (label_categories), 0.0, 0.5);
+  gtk_label_set_line_wrap(GTK_LABEL (label_categories), TRUE);
 
-    s = build_categories_string (t);
+  gtk_button_set_alignment(GTK_BUTTON(button_categories), 0.0, 0.5);    
     
-    if (s)
-      {
-	gtk_label_set_text (GTK_LABEL (label), s);
-	g_free (s);
-      }
-    
-    gtk_widget_show (label);
-    gtk_widget_show (button);
-    hbox_categories = gtk_hbox_new (FALSE, 0);
-    gtk_widget_show (hbox_categories);
-    gtk_box_pack_start (GTK_BOX (hbox_categories), button, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (hbox_categories), label, TRUE, TRUE, 4);
-    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-    
-    g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (change_categories), t);
-    
-    t->categories_label = label;
-  }
-
+  g_signal_connect (G_OBJECT (button_categories), "clicked", 
+                    G_CALLBACK (change_categories), t);
+  
+  t->categories_label = label_categories;
   t->item = item;
   
-  gtk_box_pack_start (GTK_BOX (duebox), t->duetoggle, FALSE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (duebox), t->duedate, TRUE, TRUE, 1);
-
   gtk_signal_connect (GTK_OBJECT (t->duetoggle), "clicked",
 		      GTK_SIGNAL_FUNC (due_toggle_clicked), t);
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
@@ -370,46 +385,73 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_signal_connect (GTK_OBJECT (buttondelete), "clicked",
 		      GTK_SIGNAL_FUNC (click_delete), window);
 
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
-  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 0);
 
   gtk_option_menu_set_menu (GTK_OPTION_MENU (state), state_menu);
 
-  gtk_box_pack_start (GTK_BOX (hbox_summary), label_summary, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox_summary), entry_summary, TRUE, TRUE, 2);
-
-  hbox_state = gtk_hbox_new (FALSE, 0);
-
-  priority_label = gtk_label_new (_("Priority:"));
   priority_optionmenu = gtk_option_menu_new ();
   gtk_option_menu_set_menu (GTK_OPTION_MENU (priority_optionmenu), priority_menu);
 
-  gtk_box_pack_start (GTK_BOX (hbox_state), state, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_state), priority_label, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (hbox_state), priority_optionmenu, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox_state, FALSE, FALSE, 2);
-
-  gtk_box_pack_start (GTK_BOX (vbox), hbox_categories, FALSE, FALSE, 2);
-  
   gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.5);
-  gtk_box_pack_start (GTK_BOX (vbox), label_details, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), text, TRUE, TRUE, 2);
-
+  gtk_misc_set_alignment (GTK_MISC (label_summary), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label_priority), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (label_state), 0.0, 0.5);
+  
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text), TRUE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
   gtk_widget_set_usize (text, -1, 88);
-
-  gtk_container_set_border_width (GTK_CONTAINER (window),
-				  gpe_get_border ());
-  gtk_container_add (GTK_CONTAINER (viewport), vbox);
-  gtk_container_add (GTK_CONTAINER (scrolled_window), viewport);
-
-  gtk_box_pack_start (GTK_BOX (top_vbox), scrolled_window, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (top_vbox), buttonbox, FALSE, FALSE, 2);
+  
+  /* Summary */
+  gtk_table_attach(GTK_TABLE(table), label_summary, 0, 1, pos, pos+1, 
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), entry_summary, 1, 5, pos, pos+1,
+                   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+  pos++;
+  /* Due date */                 
+  gtk_table_attach(GTK_TABLE(table), t->duetoggle, 0, 1, pos, pos+1,
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), t->duedate, 1, 5, pos, pos+1,
+                   GTK_FILL, GTK_FILL, 0, 0);
+  pos++;
+  /* Priority */ 
+  gtk_table_attach(GTK_TABLE(table), label_priority, 0, 1, pos, pos+1,
+                   GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), priority_optionmenu, 1, 
+                   mode_landscape ? 3 : 5, pos, pos+1, GTK_FILL, GTK_FILL, 0, 0);
+  /* State */                 
+  if (mode_landscape)
+    {    
+      gtk_table_attach(GTK_TABLE(table), label_state, 3, 4, pos, pos+1,
+                       GTK_FILL, GTK_FILL, 0, 0);
+      gtk_table_attach(GTK_TABLE(table), state, 4, 5, pos, pos+1,
+                       GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+    }
+  else
+    {
+      pos++;
+      gtk_table_attach(GTK_TABLE(table), label_state, 0, 1, pos, pos+1,
+                       GTK_FILL, GTK_FILL, 0, 0);
+      gtk_table_attach(GTK_TABLE(table), state, 1, 5, pos, pos+1,
+                       GTK_FILL, GTK_FILL, 0, 0);
+    }
+    pos++;
+  /* Categories */
+  gtk_table_attach(GTK_TABLE(table), button_categories, 0, 2, pos, pos+1,
+                   GTK_SHRINK | GTK_FILL, GTK_FILL, 0, 0);
+  gtk_table_attach(GTK_TABLE(table), label_categories, 2, 5, pos, pos+1,
+                   GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+  pos++;
+  /* Details */
+  gtk_table_attach(GTK_TABLE(table), label_details, 0, 1, pos, pos+1,
+                   GTK_FILL, GTK_FILL, 0, 0);
+  pos++;
+  gtk_table_attach(GTK_TABLE(table), text, 0, 5, pos, pos+1,
+                   GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+  
+  gtk_box_pack_start (GTK_BOX (top_vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (top_vbox), buttonbox, FALSE, FALSE, 0);
 
   gtk_container_add (GTK_CONTAINER (window), top_vbox);
 
@@ -421,28 +463,27 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
     {
       int prio_level = 1;
       if (item->what)
-	gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text)), 
-				  item->what, -1);
+        gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text)), 
+                                  item->what, -1);
       if (item->summary)
-	gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
+        gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
       gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);
       if (item->priority > PRIORITY_STANDARD)
-	prio_level = 0;
+        prio_level = 0;
       else if (item->priority < PRIORITY_STANDARD)
-	prio_level = 2;
+        prio_level = 2;
       gtk_option_menu_set_history (GTK_OPTION_MENU (priority_optionmenu), prio_level);
       t->state = item->state;
       t->priority = item->priority;
 
       if (item->time)
-	{
-	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->duetoggle), 
-					TRUE);
-	  the_time = item->time;
-	}
+        {
+          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->duetoggle), TRUE);
+          the_time = item->time;
+        }
       else
-	gtk_widget_set_sensitive (t->duedate, FALSE);
-
+        gtk_widget_set_sensitive (t->duedate, FALSE);
+      
       gtk_window_set_title (GTK_WINDOW (window), _("Edit to-do item"));
     }
   else
@@ -460,13 +501,11 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 
   localtime_r (&the_time, &tm);
   gtk_date_combo_set_date (GTK_DATE_COMBO (t->duedate),
-			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+                           tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
   
   gtk_object_set_data_full (GTK_OBJECT (window), "todo", t, destroy_user_data);
 
   gpe_set_window_icon (window, "icon");
-
-  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
   return window;
 }

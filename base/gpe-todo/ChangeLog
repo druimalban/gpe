@@ -1,3 +1,6 @@
+2005-04-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* list-ui.c: Some formating fixes, major restructuring of dialog creation.
 
 2005-03-31  Florian Boor  <florian.boor@kernelconcepts.de>
 
