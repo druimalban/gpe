@@ -1,3 +1,7 @@
+2004-02-13  Phil Blundell  <pb@nexus.co.uk>
+
+	* gpe-session-scripts 0.58 released.
+
 2004-02-13  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* gpe-logout.sh: Fix to work with matchbox >= 0.8
