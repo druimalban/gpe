@@ -352,8 +352,7 @@ month_view_update ()
     {
       struct render_ctl *c = &rc[day];
       if (c->popup.events)
-	c->popup.events = NULL;
-
+        c->popup.events = NULL;
     }
 
   for (day = 1; day <= days; day++)

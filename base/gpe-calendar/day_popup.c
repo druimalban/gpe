@@ -16,6 +16,7 @@
 #include <libintl.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
@@ -71,6 +72,18 @@ selection_made (GtkWidget *clist, gint row, gint column,
       gtk_widget_destroy (widget);
     }
 }
+
+static gboolean
+key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *window)
+{
+  if (k->keyval == GDK_Escape) 
+  {
+    gtk_widget_destroy(window);
+    return TRUE;
+  }
+  return FALSE;
+}
+
 
 GtkWidget *
 day_popup (GtkWidget *parent, struct day_popup *p)
@@ -184,6 +197,9 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   g_signal_connect (G_OBJECT (day_button), "clicked",
                     G_CALLBACK (day_clicked), window);
 
+  g_signal_connect (G_OBJECT (window), "key_press_event", 
+		    G_CALLBACK (key_press_event), window);
+    
   g_object_set_data (G_OBJECT (window), "popup-data", (gpointer) p);
 
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 4);

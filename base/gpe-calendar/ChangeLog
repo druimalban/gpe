@@ -1,5 +1,7 @@
 2004-07-16  Florian Boor <florian.boor@kernelconcepts.de>
-
+    
+    * day_popup.c: Started some keyboard controls.
+    * week_view.c: More keyboard controls and basic popups.
     * week_view.c: Very basic keyboard controls for week view.
     * week_view.c: Formating updates, minor painting improvements.
     

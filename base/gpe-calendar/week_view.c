@@ -21,6 +21,7 @@
 
 #include "globals.h"
 #include "week_view.h"
+#include "day_popup.h"
 
 #include "gtkdatesel.h"
 
@@ -33,6 +34,15 @@ static GtkWidget *datesel;
 
 static guint time_width, available_width;
 
+static struct render_ctl *c_old;
+
+struct render_ctl
+{
+  struct day_popup popup;
+  gboolean valid;
+  gboolean today;
+};
+
 struct week_day
 {
   guint y0, y1;
@@ -41,6 +51,7 @@ struct week_day
   gboolean is_today;
   gboolean is_active;
   gboolean initialized;
+  struct render_ctl rc;
 } week_days[7];
 
 static gint
@@ -136,32 +147,32 @@ draw_expose_event (GtkWidget *widget,
 	      event_details_t evd = event_db_get_details (ev);
 	      
 	      if ((ev->flags & FLAG_UNTIMED) == 0)
-		{
-		  if (ev->mark == FALSE)
-		    {
-		      gchar *buffer;
-		      localtime_r (&ev->start, &tm);
-		      strftime (buf, sizeof (buf), "%H:%M", &tm);
-		      buffer = g_locale_to_utf8 (buf, -1, NULL,
-						 NULL, NULL);
-		      pango_layout_set_text (pl_evt, buffer, strlen (buffer));
-		      gtk_paint_layout (widget->style,
-					widget->window,
-					GTK_WIDGET_STATE (widget),
-					FALSE,
-					&event->area,
-					widget,
-					"label",
-					2, y - 2,
-					pl_evt);
-
-		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
-		      if (height < pr.height)
-                height = pr.height;
-		      ev->mark = TRUE;
-		      g_free (buffer);
-		    }
-		}
+            {
+              if (ev->mark == FALSE)
+                {
+                  gchar *buffer;
+                  localtime_r (&ev->start, &tm);
+                  strftime (buf, sizeof (buf), "%H:%M", &tm);
+                  buffer = g_locale_to_utf8 (buf, -1, NULL,
+                             NULL, NULL);
+                  pango_layout_set_text (pl_evt, buffer, strlen (buffer));
+                  gtk_paint_layout (widget->style,
+                        widget->window,
+                        GTK_WIDGET_STATE (widget),
+                        FALSE,
+                        &event->area,
+                        widget,
+                        "label",
+                        2, y - 2,
+                        pl_evt);
+    
+                  pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+                  if (height < pr.height)
+                    height = pr.height;
+                  ev->mark = TRUE;
+                  g_free (buffer);
+                }
+              }
 
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
 	      pango_layout_set_text (pl_evt, evd->summary, -1);
@@ -227,6 +238,7 @@ week_view_update (void)
     {
       char buf[32];
       struct week_day *d = &week_days[day];
+      struct render_ctl *c = &d->rc;
 
       if (d->events)
         event_db_list_destroy (d->events);
@@ -250,10 +262,20 @@ week_view_update (void)
 	     g_free (d->string);
       d->string = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 
+      c->popup.day = tm.tm_mday;
+      c->popup.year = tm.tm_year;
+      c->popup.month = tm.tm_mon;
+ 	  c->valid = TRUE;
+	  c->popup.events = week_days[day].events;
+      c->today = ((tm.tm_year == today.tm_year + 1900
+		   && tm.tm_mon == today.tm_mon
+		   && tm.tm_mday == today.tm_mday)) ? TRUE : FALSE;
+      
       t += SECONDS_IN_DAY;
 
       for (iter = week_days[day].events; iter; iter = iter->next)
         ((event_t)iter->data)->mark = FALSE;
+      
     }
 
   for (day = 0; day < 7; day++)
@@ -318,14 +340,14 @@ week_view_update (void)
 	    }
 	}
 
-      if (height < min_cell_height)
-	height = min_cell_height;
+    if (height < min_cell_height)
+      height = min_cell_height;
 
       week_days[day].y0 = y;
       y += height;
       week_days[day].y1 = y;
-    }
-
+    }    
+    
   gtk_widget_set_usize (week_view_draw, -1, y);
 
   gtk_widget_draw (week_view_draw, NULL);
@@ -355,6 +377,7 @@ static gboolean
 week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *notebook)
 {
   int i;
+  struct render_ctl *c;
   
   if (k->keyval == GDK_Down) 
   {
@@ -380,8 +403,128 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *noteboo
         }
     return TRUE;
   }
+
+  if (k->keyval == GDK_space)
+    {
+      for (i=0;i<7;i++)
+          if (week_days[i].is_active) break;
+            
+      c = &week_days[i].rc;
+      if (c->valid)
+        {
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+              if (c != c_old) 
+            {
+              pop_window = day_popup (main_window, &c->popup);
+              c_old = c;
+            }
+           else 
+            {
+              pop_window = NULL;
+              c_old = NULL;
+            }
+         }
+         return TRUE;
+     }  
+     
+  if (k->keyval == GDK_Return)
+    {
+      for (i=0;i<7;i++)
+          if (week_days[i].is_active) break;
+            
+      c = &week_days[i].rc;
+      if (c->valid)
+        {
+          struct tm tm;
+          time_t selected_time;
+          localtime_r (&viewtime, &tm);
+          tm.tm_year = c->popup.year - 1900;
+          tm.tm_mon = c->popup.month;
+          tm.tm_mday = c->popup.day;
+          tm.tm_hour = 0;
+          tm.tm_min = 0;
+          tm.tm_sec = 0;
+          selected_time = mktime (&tm);
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+          printf("st %i\n",selected_time);
+          set_time_and_day_view (selected_time);    
+        }
+      return TRUE; 
+    }
+  
   return FALSE;
 }
+
+
+static int
+get_day_from_y(int yc)
+{
+  int i;
+  for (i=0;i<7;i++)
+    {
+      if ((week_days[i].y0 <= yc) && (week_days[i].y1 >= yc))
+        return i;
+    }
+  return 0;
+}
+
+
+static gboolean
+week_view_button_press (GtkWidget *widget,
+	                    GdkEventButton *event,
+	                    gpointer d)
+{
+  guint y = event->y;
+  struct render_ctl *c;
+
+  if (event->button != 1)
+    return FALSE;
+
+  c = &week_days[get_day_from_y(y)].rc;
+  if (c->valid)
+    {
+      if (event->type == GDK_BUTTON_PRESS)
+        {
+          int i;
+          for (i=0;i<7;i++)
+             week_days[i].is_active = FALSE;
+          week_days[get_day_from_y(y)].is_active = TRUE;
+          week_view_update();
+          
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+    
+          if (c != c_old) 
+            {
+              pop_window = day_popup (main_window, &c->popup);
+              c_old = c;
+            }
+          else 
+            {
+              pop_window = NULL;
+              c_old = NULL;
+            }
+        }
+      else if (event->type == GDK_2BUTTON_PRESS)
+        {
+          struct tm tm;
+          time_t selected_time;
+          localtime_r (&viewtime, &tm);
+          tm.tm_year = c->popup.year - 1900;
+          tm.tm_mon = c->popup.month;
+          tm.tm_mday = c->popup.day;
+          selected_time = mktime (&tm);
+          if (pop_window) 
+            gtk_widget_destroy (pop_window);
+          set_time_and_day_view (selected_time);    
+        }
+    }
+  
+  return TRUE;
+}
+
 
 GtkWidget *
 week_view (void)
@@ -420,6 +563,10 @@ week_view (void)
   gtk_widget_grab_focus(datesel);
   g_signal_connect (G_OBJECT (datesel), "key_press_event", 
 		    G_CALLBACK (week_view_key_press_event), NULL);
+  g_signal_connect(G_OBJECT (draw), "button-press-event",
+                   G_CALLBACK (week_view_button_press), NULL);
+
+  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
   
   return vbox;
 }
