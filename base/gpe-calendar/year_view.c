@@ -16,10 +16,10 @@
 
 #include <gtk/gtk.h>
 #include <gpe/gtkdatesel.h>
+#include <gpe/event-db.h>
 
 #include "globals.h"
 #include "year_view.h"
-#include "event-db.h"
 
 static GtkWidget *g_draw;
 

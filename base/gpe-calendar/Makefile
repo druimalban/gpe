@@ -5,7 +5,7 @@ GTK2 = yes
 
 LINGUAS = de pt_PT
 
-MEMBERS = main day_view week_view future_view event-ui event-db month_view day_popup old-db xsettings
+MEMBERS = main day_view week_view future_view event-ui month_view day_popup old-db xsettings
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -15,7 +15,7 @@ GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 GTKLDFLAGS = `gtk-config --libs`
 endif
 
-CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget
+CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence
@@ -38,7 +38,7 @@ PIXMAPS = close.xpm config.xpm dayview.xpm futureview.xpm monthview.xpm new.xpm 
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -leventdb -lsqlite $(LDFLAGS)
 
 install: all install-mo
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done

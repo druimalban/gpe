@@ -18,7 +18,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
-#include "event-db.h"
+#include <gpe/event-db.h>
 #include "event-ui.h"
 #include <gpe/gtkdatesel.h>
 #include "globals.h"

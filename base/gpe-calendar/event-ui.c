@@ -22,9 +22,9 @@
 #include <gpe/gtkdatecombo.h>
 #include <gpe/errorbox.h>
 #include <gpe/gtksimplemenu.h>
+#include <gpe/event-db.h>
 
 #include "globals.h"
-#include "event-db.h"
 #include "event-ui.h"
 
 #define _(_x) gettext (_x)

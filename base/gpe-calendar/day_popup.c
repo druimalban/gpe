@@ -19,9 +19,9 @@
 
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
+#include <gpe/event-db.h>
 
 #include "globals.h"
-#include "event-db.h"
 #include "event-ui.h"
 #include "day_popup.h"
 

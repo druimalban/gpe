@@ -17,9 +17,9 @@
 #include <gtk/gtk.h>
 
 #include <gpe/gtkdatesel.h>
+#include <gpe/event-db.h>
 
 #include "globals.h"
-#include "event-db.h"
 #include "week_view.h"
 
 #define _(x) gettext(x)

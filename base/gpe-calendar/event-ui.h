@@ -14,7 +14,7 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#include "event-db.h"
+#include <gpe/event-db.h>
 
 extern GtkWidget *new_event(time_t t, guint timesel);
 extern GtkWidget *edit_event(event_t ev);

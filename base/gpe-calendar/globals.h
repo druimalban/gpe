@@ -9,7 +9,7 @@
 
 #include <gtk/gtk.h>
 #include <time.h>
-#include "event-db.h"
+#include <gpe/event-db.h>
 
 extern GList *times;
 extern time_t viewtime;

@@ -1,5 +1,24 @@
 2003-01-06  Philip Blundell  <philb@gnu.org>
 
+	* event-db.c, event-db.h: Deleted; moved to ../libeventdb.
+
+2003-01-06  Luis Oliveira  <luis@handhelds.org>
+
+	* Makefile (MEMBERS): remove event-db and old-db.
+	(CPPFLAGS): add -I../libeventdb.
+	Linking against libeventdb.
+	* day_popup.c: Change "event-db.h" for <gpe/event-db.h>
+	* day_view.c: Likewise.
+	* event-ui.c: Likewise.
+	* event-ui.h: Likewise.
+	* globals.h: Likewise.
+	* month_view.c: Likewise.
+	* week_view.c: Likewise.
+	* year_view.c: Likewise.
+	* familiar/control1 (Depends): Add libeventdb0.
+
+2003-01-06  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.32 released.
 
 2003-01-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
