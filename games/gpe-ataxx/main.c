@@ -83,7 +83,7 @@ int gameIteration (gpointer inutile) {
 	if (!bouge) {
 		if (moteurResult == 3) {
 			/* Fin du jeu */
-			smsg ("End of game");
+			smsg (_("End of game"));
 		}
 		else if (moteurResult != 0) {
 			//		Coords nullCoords;
@@ -98,13 +98,13 @@ int gameIteration (gpointer inutile) {
 			moteurResult = Moteur (selected, nullCoords);
 			if (abs(moteurResult) == 1) {
 				if (moteurResult == blanc)
-					smsg("White must skip a turn");
+					smsg(_("White must skip a turn"));
 				if (moteurResult == noir)
-					smsg("Black must skip a turn");
+					smsg(_("Black must skip a turn"));
 			}
 			else if (moteurResult == 2) {
 				char s[255];
-				sprintf (s,"%s plays", coulact==noir?"Black":"White");
+				sprintf (s,_("%s plays"), coulact==noir?_("Black"):_("White"));
 				smsg (s);
 			}
 			// FAIRE UNE PAUSE POUR GTK.. (genre 1 sec)
@@ -146,7 +146,7 @@ void sendCoords (Coords clickedCell)
 			moteurResult = Moteur (selected, clickedCell);
 			if (moteurResult == 2) {
 				char s[255];
-				sprintf (s,"%s plays", coulact==noir?"Black":"White");
+				sprintf (s,_("%s plays"), coulact==noir?_("Black"):_("White"));
 				smsg (s);
 				drawPlateau ();
 			}
@@ -163,7 +163,7 @@ void sendCoords (Coords clickedCell)
 		}
 		else if (moteurResult != 3) {
 			char s[255];
-			sprintf (s,"Invalid move... %s plays", coulact==noir?"Black":"White");
+			sprintf (s,_("Invalid move... %s plays"), coulact==noir?_("Black"):_("White"));
 			smsg (s);
 		}
 	}
@@ -344,20 +344,20 @@ void drawPlateau () {
 
 	h = compter (noir);
 	if (h > 1)
-		sprintf (tmp, "%d cells", h);
+		sprintf (tmp, _("%d cells"), h);
 	else if (h==0)
-		strcpy (tmp, "No cells");
+		strcpy (tmp, _("No cells"));
 	else if (h==1)
-		strcpy (tmp, "1 cell");
+		strcpy (tmp, _("1 cell"));
 	gtk_label_set_text (l_black, tmp);
 
 	h = compter (blanc);
 	if (h > 1)
-		sprintf (tmp, "%d cells", h);
+		sprintf (tmp, _("%d cells"), h);
 	else if (h==0)
-		strcpy (tmp, "No cells");
+		strcpy (tmp, _("No cells"));
 	else if (h==1)
-		strcpy (tmp, "1 cell");
+		strcpy (tmp, _("1 cell"));
 	gtk_label_set_text (l_white, tmp);
 }
 
@@ -438,7 +438,7 @@ prefs (void)
 
   old_depth=depth;
   
-  button = gtk_radio_button_new_with_label (NULL, "Novice");
+  button = gtk_radio_button_new_with_label (NULL, _("Novice"));
   if (depth == 1)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -447,7 +447,7 @@ prefs (void)
   gtk_widget_show (button);
 
   button = gtk_radio_button_new_with_label
-    (gtk_radio_button_group (GTK_RADIO_BUTTON(button)), "Easy");
+    (gtk_radio_button_group (GTK_RADIO_BUTTON(button)), _("Easy"));
   if (depth == 2)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -456,7 +456,7 @@ prefs (void)
   gtk_widget_show (button);
 
   button = gtk_radio_button_new_with_label
-    (gtk_radio_button_group (GTK_RADIO_BUTTON(button)), "Medium");
+    (gtk_radio_button_group (GTK_RADIO_BUTTON(button)), _("Medium"));
   if (depth == 4)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -465,7 +465,7 @@ prefs (void)
   gtk_widget_show (button);
 
   button = gtk_radio_button_new_with_label
-    (gtk_radio_button_group (GTK_RADIO_BUTTON(button)), "Difficult");
+    (gtk_radio_button_group (GTK_RADIO_BUTTON(button)), _("Difficult"));
   if (depth == 5)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (button), TRUE);
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -534,6 +534,7 @@ main (int argc, char *argv[])
   gpe_application_init (&argc, &argv);
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
   gpe_load_icons (my_icons);
