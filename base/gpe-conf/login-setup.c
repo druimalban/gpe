@@ -65,7 +65,7 @@ gboolean have_password(void)
 	pw = getpwuid(getuid());
 	
 	if (pw)
-		if (pw->pw_passwd) 
+		if ((pw->pw_passwd) && (strlen(pw->pw_passwd)))
 			return TRUE;
 	
 	return FALSE;
