@@ -29,6 +29,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/errorbox.h>
+#include <gpe/spacing.h>
 #include <gpe/gpe-iconlist.h>
 #include <gpe/tray.h>
 #include <gpe/popup.h>
@@ -95,6 +96,9 @@ bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf)
 
   gtk_window_set_type_hint (GTK_WINDOW (window), GDK_WINDOW_TYPE_HINT_DIALOG);
   
+  gtk_container_set_border_width (GTK_CONTAINER (hbox),
+					gpe_get_border ());
+	
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 
   gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
