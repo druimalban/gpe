@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-soundbite
 #DEBUG = yes
 CVSBUILD = yes
-ESD = no
+ESD = yes
 
 MEMBERS = main gsm-codec
 ifeq ($(ESD),yes)
