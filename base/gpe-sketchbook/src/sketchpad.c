@@ -65,8 +65,8 @@ void sketchpad_init(){
   drawing_area_pixmap_buffer = NULL;
   is_current_sketch_modified = FALSE;
 
-  drawing_area_width  = 230;
-  drawing_area_height = 250;
+  drawing_area_width  = 320;//230;
+  drawing_area_height = 320;//250;
 
   prev_pos_x = NO_PREV_POS;
   prev_pos_y = NO_PREV_POS;
@@ -113,6 +113,9 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   cursor_eraser  = cursor_eraser_small;
   current_cursor = &cursor_pen;
   
+  //keyboard focus to the drawing area
+  gtk_widget_grab_focus   (drawing_area);
+
 }//window_sketchpad_init()
 
 GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height){//gint diameter){

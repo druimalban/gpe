@@ -96,7 +96,10 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
                          | GDK_POINTER_MOTION_HINT_MASK
                          | GDK_BUTTON_PRESS_MASK
                          | GDK_BUTTON_RELEASE_MASK
+                         | GDK_KEY_PRESS_MASK
                          | GDK_LEAVE_NOTIFY_MASK);
+
+  GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS);
 
   //--signals connections
   gtk_signal_connect (GTK_OBJECT (drawing_area), "configure_event",
@@ -115,6 +118,10 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
                       GTK_SIGNAL_FUNC (on_drawing_area_button_release_event),
                       NULL);
 
+  gtk_signal_connect_after (GTK_OBJECT (drawing_area), "key_press_event",
+                            GTK_SIGNAL_FUNC (on_drawing_area_key_press_event),
+                            scrolledwindow);
+
   //--packing
   gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow),
                                         drawing_area);
@@ -125,9 +132,6 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
   return scrolledwindow;
 }//sketchpad_build_scrollable_drawing_area()
 
-
-/*try*/void on_button_brushes_clicked (GtkButton *button, gpointer user_data);
-/*try*/void on_button_colors_clicked  (GtkButton *button, gpointer user_data);
 GtkWidget * brushbox_new();
 GtkWidget * colorbox_new();
 

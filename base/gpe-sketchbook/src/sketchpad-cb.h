@@ -51,6 +51,7 @@ gboolean on_drawing_area_button_press_event  (GtkWidget *widget,
                                               GdkEventButton    *event, gpointer user_data);
 gboolean on_drawing_area_button_release_event(GtkWidget *widget,
                                               GdkEventButton    *event, gpointer user_data);
-
+gboolean on_drawing_area_key_press_event     (GtkWidget *widget,
+                                              GdkEventKey       *event, gpointer user_data);
 
 #endif

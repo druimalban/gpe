@@ -1,3 +1,13 @@
+2002-09-13  Luc Pionchon  <luc.pionchon@welho.com>
+
+	* src/sketchpad-gui.c src/sketchpad-cb.[ch]: added support for
+	keypad scrolling.
+
+	* src/sketchpad.c: grow the sketches size to 320x320. If unused
+	area, it just grows the file of about 1Ko, and allow a fullscreen
+	drawing area in both landscape/portrait modes - which is much
+	nicer ;)	
+
 2002-08-91  Luc Pionchon <luc.pionchon@welho.com>
 
 	* sketchpad-gui.[ch] sketchpad-cb.c: fixed the pb of popup being under

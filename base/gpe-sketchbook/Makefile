@@ -17,7 +17,7 @@ arm:
 #--deployment
 #ARM_BIN = $(PACKAGE)-$(VERSION)-arm-striped
 ARM_BIN = $(PACKAGE)
-install: all install-mo
+install:  install-mo #all
 	for i in $(PIXMAPS); do \
 	install -D pixmaps/$$i     $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/$$i;\
 	done
