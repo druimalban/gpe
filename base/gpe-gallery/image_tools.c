@@ -191,7 +191,7 @@ GdkPixbuf* image_rotate( GdkPixbuf* pixbuf, int degrees ) {
     if( degrees % 90 ) {
 
         new_width += 2;
-        new_height++;
+        new_height += 2;
 
     }
     else 

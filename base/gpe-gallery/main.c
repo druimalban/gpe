@@ -159,10 +159,14 @@ pan (GtkWidget *w, GdkEventMotion *m)
   x -= dx;
   y -= dy;
 
-  if (x < x_max)
-    gtk_adjustment_set_value (h_adjust, x);
-  if (y < y_max)
-    gtk_adjustment_set_value (v_adjust, y);
+  if (x > x_max)
+    x = x_max;
+
+  if (y > y_max)
+    y = y_max;
+
+  gtk_adjustment_set_value (h_adjust, x);
+  gtk_adjustment_set_value (v_adjust, y);
 }
 
 void
