@@ -13,6 +13,8 @@
 #include <libintl.h>
 #include <locale.h>
 #include <pty.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include <gtk/gtk.h>
 
@@ -41,12 +43,13 @@ do_su (void)
   gchar *password = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
   int pty;
   pid_t pid;
-  size_t pwlen = strlen (password), n;
+  size_t pwlen = strlen (password);
   char buf[256];
   size_t rlen = 256;
   char *result, *rp;
   gboolean newline = FALSE;
   char cr = 10;
+  int n;
 
   result = g_malloc (rlen);
   rp = result;
@@ -57,16 +60,17 @@ do_su (void)
   
   if (pid == 0)
     {
-      execl (SU, SU, "-c", "x-terminal-emulator &", NULL);
+      struct termios tp;
+      if (tcgetattr (1, &tp))
+	perror ("tcgetattr");
+      cfmakeraw (&tp);
+      if (tcsetattr (1, TCSANOW, &tp))
+        perror ("tcsetattr");
+      execl (SU, SU, "-c", "x-terminal-emulator", NULL);
       exit (1);
     }
 
-  if (read (pty, buf, 1) < 0)
-    {
-      gpe_error_box (_("Unable to log in"));
-      return;
-    }
-
+  sleep (1);
   write (pty, password, pwlen);
   write (pty, &cr, 1);
   memset (password, 0, pwlen);
@@ -146,7 +150,7 @@ main (int argc, char *argv[])
 
   gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
-		      hbox, TRUE, FALSE, 0);
+		      hbox, FALSE, FALSE, 0);
 
   gtk_widget_realize (window);
 
