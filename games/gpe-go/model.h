@@ -13,6 +13,8 @@ typedef struct _go {
   GtkWidget * window;
   GtkWidget * notebook;
 
+  GtkWidget * status;
+
   GdkPixmap * drawing_area_pixmap_buffer;
   GtkWidget * drawing_area;
 

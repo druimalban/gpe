@@ -29,7 +29,6 @@
 
 #ifdef DEBUG
 #define TRACE(message...) {g_printerr(message); g_printerr("\n");}
-//g_printerr("DEBUG *** %s, line %u: ", __FILE__, __LINE__);
 #else
 #define TRACE(message...) 
 #endif
@@ -65,8 +64,8 @@ void free_hitem(Hitem * hitem){
 
 gboolean is_same_hitem(Hitem * a, Hitem * b){
   if(1
-     && a->col   == b->col
-     && a->row   == b->row
+     && a->col    == b->col
+     && a->row    == b->row
      && a->item   == b->item
      && a->action == b->action) return TRUE;
   return FALSE;
@@ -164,7 +163,7 @@ void init_new_game(int game_size){
   TRACE("init NEW GAME %d", go.game_size);
 
   //dimensions
-  go.board_size = BOARD_SIZE;//240
+  go.board_size = BOARD_SIZE;
   go.stone_space = 1;
   go.grid_stroke = 1;
 
@@ -196,7 +195,7 @@ void init_new_game(int game_size){
                       -1, //gint max_depth,
                       delete_hitem,
                       NULL);
-    g_node_destroy (go.history_root);//does it free the hitems?
+    g_node_destroy (go.history_root);
   }
   go.history_root = g_node_new (NULL);
   go.history      = go.history_root;
@@ -314,7 +313,7 @@ int main (int argc, char ** argv){
   gtk_main ();
 
   return 0;
-}//main()
+}
 
 
 #define PIXMAPS_SRC  PREFIX "/share/gpe/pixmaps/default/" PACKAGE "/"
@@ -349,7 +348,7 @@ void scale_graphics(){
                                             GDK_INTERP_BILINEAR);
   }
   else {//draw it yourself
-    //gdk_draw_arc(go.pixbuf_black_stone,
+    //gdk_draw_arc(_black_stone,
     //             widget->style->black_gc,
     //             TRUE,
     //             0, 0,
@@ -369,13 +368,13 @@ void scale_graphics(){
                                             GDK_INTERP_BILINEAR);
   }
   else {//draw it yourself
-    //gdk_draw_arc(go.pixbuf_white_stone,
+    //gdk_draw_arc(_white_stone,
     //             widget->style->white_gc,
     //             TRUE,
     //             rect.x, rect.y,
     //             rect.width, rect.height,
     //             0, 23040);//23040 == 360*64
-    //gdk_draw_arc(go.pixbuf_white_stone, //black border
+    //gdk_draw_arc(_white_stone, //black border
     //             widget->style->black_gc,
     //             FALSE,
     //             rect.x, rect.y,
@@ -593,7 +592,6 @@ void update_last_played_mark_to(int next_col, int next_row){
 }
 
 void put_stone(GoItem color, int col, int row){
-  //if(go.grid[col][row] != EMPTY) return;
   go.grid[col][row] = color;
   paint_stone(col, row, color);
 }
@@ -604,21 +602,16 @@ void remove_stone(int col, int row){
   unpaint_stone(col, row);
 }
 
-
-//------- drawing area callbacks
 gboolean
 on_drawing_area_configure_event (GtkWidget         * widget,
                                  GdkEventConfigure * event,
                                  gpointer            user_data){
-  TRACE("configure event");
   //when window is created or resized
-  //if (pixmap)  gdk_pixmap_unref(pixmap);
   if(!go.drawing_area_pixmap_buffer){
     go.drawing_area_pixmap_buffer = gdk_pixmap_new(widget->window,
                                                    BOARD_SIZE,
                                                    BOARD_SIZE,
                                                    -1);
-    //paint_board(widget); not here!
   }
   return TRUE;
 }
@@ -628,7 +621,6 @@ gboolean
 on_drawing_area_expose_event (GtkWidget       *widget,
                               GdkEventExpose  *event,
                               gpointer         user_data){
-  //TRACE("expose event (%d,%d)", event->area.x, event->area.y);
   //refresh the part outdated by the event
   gdk_draw_pixmap(widget->window,
                   widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
@@ -663,7 +655,6 @@ void clear_stamps(){
 }
 
 void stamp_group_of(int col, int row){
-  //**/char c;
   int x,y;
 
   int my_color;
@@ -671,83 +662,34 @@ void stamp_group_of(int col, int row){
 
   stamp(col,row);
 
-  //TRACE("Examining %d %d (%d)",col,row, my_color);
-  //**/_print_grid();
-  //**/scanf("%c",&c);scanf("%c",&c);
-
   x = col;
   y = row - 1;
   if(row>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = col + 1;
   y = row;
   if(col<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = col;
   y = row + 1;
   if(row<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = col - 1;
   y = row;
   if(col>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
-}
-
-int size_group_of(int col, int row){
-  //**/char c;
-  int count = 1;
-  int my_color;
-  int x,y;
-  my_color = go.grid[col][row];
-
-  stamp(col,row);
-
-  //TRACE("I am          %d %d (%d)",col,row, my_color);
-  //**/_print_grid();
-  //**/scanf("%c",&c);scanf("%c",&c);
-
-  x = col;
-  y = row - 1;
-  if(row>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    count += size_group_of(x,y);
-  }
-  x = col + 1;
-  y = row;
-  if(col<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    count += size_group_of(x,y);
-  }
-  x = col;
-  y = row + 1;
-  if(row<go.game_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    count += size_group_of(x,y);
-  }
-  x = col - 1;
-  y = row;
-  if(col>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    count += size_group_of(x,y);
-  }
-  return count;
 }
 
 gboolean is_alive_group_of(int col, int row){
-  //**/char c;
   int my_color;
   int x,y;
   my_color = go.grid[col][row];
 
   stamp(col,row);
-
-  //TRACE("I am          %d %d (%d)",col,row, my_color);
-  //**/_print_grid();
-  //**/scanf("%c",&c);scanf("%c",&c);
 
   x = col;     //NORTH
   y = row - 1;
@@ -781,7 +723,8 @@ gboolean is_alive_group_of(int col, int row){
   return FALSE;
 }
 
-int kill_group_of(int col, int row){//returns number of stones killed
+/* returns the number of stones killed */
+int kill_group_of(int col, int row){
   int count;
   int i,j;
 
@@ -809,41 +752,34 @@ void update_capture_label(){
   free(go.capture_string);
   go.capture_string = (char *) malloc (20 * sizeof(char));
   sprintf(go.capture_string, _("B:%d  W:%d "), go.black_captures, go.white_captures);
-  //TRACE("Capture points: %s", go.capture_string);
   gtk_label_set_text (GTK_LABEL (go.capture_label), go.capture_string);
 }
 
 void redo_turn();
 void play_at(int col, int row){
-  //TRACE("Play at %d %d", col, row);
   if( col < 1 || go.game_size < col ||
       row < 1 || go.game_size < row ){
-    //TRACE("--> out of bounds");
     return;
   }
-  if(go.lock_variation_choice){//variation choice
+  if(go.lock_variation_choice){
     if(!is_stamped(col, row)) return;
     redo_turn();
     return;
   }
   if(go.grid[col][row] != EMPTY){
-    //TRACE("--> not empty");
     return;
   }
 
-  {
+  
+  {//--play the stone
     GoItem color;
     color = color_to_play();
-
     put_stone(color, col, row);
-
     update_last_played_mark_to(col, row);
-
     append_hitem(PLAY, color, col, row);
   }
 
-  //--check if groups to kill
-  {
+  {//--check if groups to kill
     int opp_color;
     int x, y;
 
@@ -885,21 +821,43 @@ void play_at(int col, int row){
   }
   update_capture_label();
 
+  {//--Check for suicide
+  }
+
   //--next turn
   go.turn++;
 }
 
+void variation_choice(){
+  int i;
+  GNode * child;
+  int children;
+  children = g_node_n_children(go.history);
+  //--display possible variations, and restrict input to them (lock)
+  
+  clear_stamps();
+  for(i=0; i<children; i++){
+    Hitem * item;
+    child = g_node_nth_child (go.history, i);
+    item = child->data;
+    
+    stamp(item->col, item->row);
+    paint_mark(item->col, item->row, MARK_SPOT, &red);
+    if(is_on_main_branch(child)){
+      //add extra mark on main branch's move
+      paint_mark(item->col, item->row, MARK_SQUARE, &blue);
+      go.variation_main_branch_node = child;
+    }
+  }
+  go.lock_variation_choice = TRUE;
+}
 
-void undo_turn(){
-  Hitem * hitem;
-
-  if(go.lock_variation_choice){//clear marks
+void clear_variation_choice(){
     int i;
     int children;
     GNode * child;
 
     children = g_node_n_children(go.history);
-    child = g_node_first_child (go.history);
     //unpaint SPOTS
     for(i=0; i<children; i++){
       Hitem * item;
@@ -908,8 +866,14 @@ void undo_turn(){
       unpaint_stone(item->col, item->row);
     }
     clear_stamps();
-    go.lock_variation_choice = FALSE;
+    go.lock_variation_choice = FALSE;  
+}
 
+void undo_turn(){
+  Hitem * hitem;
+
+  if(go.lock_variation_choice){
+    clear_variation_choice();
     return;
   }
 
@@ -921,7 +885,8 @@ void undo_turn(){
   hitem = go.history->data;
 
   while(hitem->action == CAPTURE){
-    put_stone(hitem->item, hitem->col, hitem->row);//FIXME: don't update screen each time!
+    put_stone(hitem->item, hitem->col, hitem->row);
+
     if(hitem->item == BLACK_STONE) go.white_captures--;
     else go.black_captures--;
 
@@ -954,31 +919,8 @@ void undo_turn(){
     }
   }
 
-  //mark variations
-  {
-    int children;
-    children = g_node_n_children(go.history);
-    if(children > 1){
-      //--display possible variations, and restrict input to them (lock)
-      int i;
-      GNode * child;
-      
-      clear_stamps();
-      for(i=0; i<children; i++){
-        Hitem * item;
-        child = g_node_nth_child (go.history, i);
-        item = child->data;
-        
-        stamp(item->col, item->row);
-        paint_mark(item->col, item->row, MARK_SPOT, &red);
-        if(is_on_main_branch(child)){
-          //add extra mark on main branch's move
-          paint_mark(item->col, item->row, MARK_SQUARE, &blue);
-          go.variation_main_branch_node = child;
-        }
-      }
-      go.lock_variation_choice = TRUE;
-    }
+  if(g_node_n_children(go.history) > 1){
+    variation_choice();
   }
 }
 
@@ -1000,30 +942,9 @@ void redo_turn(){
     GNode * choosen_child;
     choosen_child = g_node_first_child (go.history);
 
-    if(children > 1){//variations
+    if(children > 1){
       if(go.lock_variation_choice == FALSE){
-        //--display possible variations, and restrict input to them (lock)
-        int i;
-        GNode * child;
-        TRACE("VARIATIONS: %d", children -1);
-        
-        clear_stamps();
-        for(i=0; i<children; i++){
-          Hitem * item;
-          child = g_node_nth_child (go.history, i);
-          item = child->data;
-          
-          stamp(item->col, item->row);
-          paint_mark(item->col, item->row, MARK_SPOT, &red);
-          if(is_on_main_branch(child)){
-            //add extra mark on main branch's move
-            paint_mark(item->col, item->row, MARK_SQUARE, &blue);
-            go.variation_main_branch_node = child;
-          }
-
-          //FIXME: need to mark also branches starting by "PASS"
-        }
-        go.lock_variation_choice = TRUE;
+        variation_choice();
         return;
       }
       else{
@@ -1049,15 +970,7 @@ void redo_turn(){
           go.main_branch = get_first_leaf(choosen_child);
         }
 
-        //unpaint SPOTS
-        for(i=0; i<children; i++){
-          Hitem * item;
-          child = g_node_nth_child (go.history, i);
-          item = child->data;
-          unpaint_stone(item->col, item->row);
-        }
-        clear_stamps();
-        go.lock_variation_choice = FALSE;
+        clear_variation_choice();
       }
     }//if variations
     
@@ -1065,10 +978,6 @@ void redo_turn(){
   }
 
   hitem = go.history->data;
-
-  //TRACE("================try");
-  ///**/_print_hitem(hitem);
-  //TRACE("================");
 
   if(hitem->action == PASS){
     TRACE("***> rePASS");
@@ -1089,10 +998,10 @@ void redo_turn(){
 
         node = g_node_nth_child (go.history, 0);
         hitem = node->data;
-      
+
         while(hitem && hitem->action == CAPTURE){
           TRACE("***> remove %d %d", hitem->col, hitem->row);
-          remove_stone(hitem->col, hitem->row);//FIXME: don't update screen each time!
+          remove_stone(hitem->col, hitem->row);
           if(hitem->item == BLACK_STONE) go.white_captures++;
           else go.black_captures++;
           
@@ -1123,11 +1032,6 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
   return FALSE;
 }
 
-/*
-  Property index of FF[1]-FF[4]
-  http://www.red-bean.com/sgf/proplist_ff.html
-*/
-
 void _save_hitem_sgf(FILE * f, Hitem * hitem){
 //  ;B[am]BL[1791];W[al]WL[1799]
   char item;
@@ -1145,7 +1049,7 @@ void _save_tree_to_sgf_from (GNode *node, FILE * f){
 
   if(node->parent && g_node_n_children(node->parent) > 1){
     has_siblings = TRUE;
-    fprintf(f, "\n  (");
+    fprintf(f, "\n (");
   }
 
   if(node->data) _save_hitem_sgf(f, node->data);
@@ -1156,7 +1060,7 @@ void _save_tree_to_sgf_from (GNode *node, FILE * f){
       node = node->next;
   }
 
-  if(has_siblings) fprintf(f, ")\n");  
+  if(has_siblings) fprintf(f, " )\n");  
 }
 
 void save_game(){
@@ -1175,7 +1079,6 @@ void save_game(){
   }
   f = fopen(filename_sgf, "w");
   if(!f){
-    //error
     gtk_widget_hide (go.file_selector);
     gpe_error_box_fmt (_("Cannot save the game into %s."), filename_sgf);
     return;
@@ -1184,21 +1087,16 @@ void save_game(){
 
 
   //--Save history
-
-  //headers
   fprintf(f, "(;GM[1]FF[3]\n");
   fprintf(f, "RU[Japanese]SZ[%d]\n", go.game_size);
   fprintf(f, "PW[%s]\n", "white");
   fprintf(f, "PB[%s]\n", "black");
 
-  //history tree
   _save_tree_to_sgf_from (go.history_root, f);
 
-  //footer
   fprintf(f, "\n)\n");
 
   fclose(f);
-  //gtk_widget_hide (go.file_selector);
 }
 
 void load_game(){
@@ -1269,16 +1167,13 @@ void on_button_last_pressed(GtkWidget *widget, gpointer unused){
 }
 
 void on_button_prev_pressed (void){
-  TRACE("prev");
   undo_turn();
 }
 void on_button_next_pressed (void){
-  TRACE("next");
   redo_turn();
 }
 
 void on_button_pass_clicked (void){
-  TRACE("pass");
   if(go.lock_variation_choice) return;
   pass_turn();
 }
@@ -1289,8 +1184,6 @@ void on_button_newgame_cancel_clicked (void){
 
 void on_button_newgame_ok_clicked (void){
   init_new_game(go.selected_game_size);
-  //scale_graphics();
-  //paint_board(go.drawing_area);
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
 }
 
@@ -1307,10 +1200,6 @@ void on_button_game_load_clicked(GtkButton *button, gpointer unused){
   popup_menu_close(go.game_popup_button);//FIXME: connect function on "clicked"
   go.save_game = FALSE;
   gtk_widget_show (go.file_selector);
-
-//  gpe_question_ask (_("On its way, wait...\n(the next release ;)"),
-//                    _("Warning"), "!gtk-dialog-warning",
-//                    _("OK"), "!gtk-ok", NULL);
 }
 
 void on_radiobutton_size_clicked (GtkButton *button, gpointer size){
@@ -1330,8 +1219,6 @@ void on_spinbutton_value_changed(GtkSpinButton *spinbutton,
 }
 
 GtkWidget * build_new_game_dialog(){
-  //FIXME: make a pretty dialog!!!
-
   GtkWidget * top_level_container;
 
   //containers
@@ -1386,19 +1273,19 @@ GtkWidget * build_new_game_dialog(){
   group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton1));
   gtk_box_pack_start (GTK_BOX (vbox), radiobutton1, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton1), "clicked",
-                      G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(9));
+                    G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(9));
 
   radiobutton3 = gtk_radio_button_new_with_label (group_game_size_group, "13");
   group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton3));
   gtk_box_pack_start (GTK_BOX (vbox), radiobutton3, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton3), "clicked",
-                      G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(13));
+                    G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(13));
 
   radiobutton4 = gtk_radio_button_new_with_label (group_game_size_group, "19");
   group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton4));
   gtk_box_pack_start (GTK_BOX (vbox), radiobutton4, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton4), "clicked",
-                      G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(19));
+                    G_CALLBACK (on_radiobutton_size_clicked), GINT_TO_POINTER(19));
 
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -1407,18 +1294,17 @@ GtkWidget * build_new_game_dialog(){
   group_game_size_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
   gtk_box_pack_start (GTK_BOX (hbox), radiobutton2, FALSE, FALSE, 0);
   g_signal_connect (G_OBJECT (radiobutton2), "clicked",
-                      G_CALLBACK (on_radiobutton_size_clicked), NULL);
+                    G_CALLBACK (on_radiobutton_size_clicked), NULL);
 
   spinbutton1_adj = gtk_adjustment_new (21, 4, 26, 1, 10, 10);
   spinbutton1 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton1_adj), 1, 0);
   g_signal_connect (G_OBJECT (spinbutton1), "value-changed",
-                      G_CALLBACK (on_spinbutton_value_changed), radiobutton2);
+                    G_CALLBACK (on_spinbutton_value_changed), radiobutton2);
 
   gtk_box_pack_start (GTK_BOX (hbox), spinbutton1, FALSE, FALSE, 0);
 
   //default
   go.selected_game_size = 19;
-   //..._set_active() calls on_radiobutton_brush_clicked ()
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton4), TRUE);
 
   go.game_size_spiner = spinbutton1;
@@ -1512,7 +1398,6 @@ void gui_init(){
 
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 280);
-  //gtk_window_set_position     (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 #endif
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (app_quit), NULL);
@@ -1526,45 +1411,43 @@ void gui_init(){
                               GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  //[game] popup menu
-  {
-    GtkWidget * game_popup_button;
-
-    game_popup_button = popup_menu_button_new_from_stock (GTK_STOCK_NEW,
-                                                          _game_popup_menu_new, NULL);
-    gtk_button_set_relief (GTK_BUTTON (game_popup_button), GTK_RELIEF_NONE);
-    gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar),
-                              game_popup_button, _("Game menu"), _("Game menu"));
-    go.game_popup_button = game_popup_button;
-  }
+  //[game] popup menu ici
+  widget = popup_menu_button_new_from_stock (GTK_STOCK_NEW,
+                                             _game_popup_menu_new, NULL);
+  gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
+  gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), widget,
+                            _("Game menu"), _("Game menu"));
+  go.game_popup_button = widget;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   //[FIRST] button
   image = gtk_image_new_from_stock (GTK_STOCK_GOTO_FIRST, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   _("First"), _("Go to the beginning of the game"), _("Go to the beginning of the game"),
-			   image, GTK_SIGNAL_FUNC (on_button_first_pressed), NULL);
-
+                           _("First"),
+                           _("Go to the beginning of the game"),
+                           _("Go to the beginning of the game"),
+                           image, GTK_SIGNAL_FUNC (on_button_first_pressed), NULL);
 
   //[UNDO] button
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   _("Undo"), _("Undo"), _("Undo"),
-			   image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
+                           _("Undo"), _("Undo"), _("Undo"),
+                           image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
 
   //[REDO] button
   image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
-
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   _("Redo"), _("Redo"), _("Redo"),
-			   image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL); 
+                           _("Redo"), _("Redo"), _("Redo"),
+                           image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
 
   //[LAST] button
   image = gtk_image_new_from_stock (GTK_STOCK_GOTO_LAST, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
-			   _("Last"), _("Go to the end of the game"), _("Go to the end of the game"),
-			   image, GTK_SIGNAL_FUNC (on_button_last_pressed), NULL);
+                           _("Last"),
+                           _("Go to the end of the game"),
+                           _("Go to the end of the game"),
+                           image, GTK_SIGNAL_FUNC (on_button_last_pressed), NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -1584,7 +1467,7 @@ void gui_init(){
                            _("Pass"), _("Pass your turn"), _("Pass your turn"),
                            image, GTK_SIGNAL_FUNC (on_button_pass_clicked), NULL);
 
-  //file selector
+  //--file selector
   widget = gtk_file_selection_new (NULL/*_("Save as...")*/);
 
   g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
@@ -1598,13 +1481,11 @@ void gui_init(){
                             (gpointer) widget); 
 
   g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (widget)->cancel_button),
-                             "clicked",
-                             G_CALLBACK (gtk_widget_hide),
-                             (gpointer) widget);
+                            "clicked",
+                            G_CALLBACK (gtk_widget_hide),
+                            (gpointer) widget);
 
-
-
-  //gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf"); //FIXME...
+  //gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf");
   go.file_selector = widget;
 
   //--drawing area (Go Board)
@@ -1625,32 +1506,28 @@ void gui_init(){
   g_signal_connect (G_OBJECT (drawing_area), "button_release_event",
                     G_CALLBACK (on_drawing_area_button_release_event), NULL);
 
-  //--New game page
+  //--Status bar
+  widget = gtk_statusbar_new();
+  gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(widget), FALSE);
+  gtk_statusbar_push(GTK_STATUSBAR(widget), 0, "let's go!");
+  go.status = widget;
+
+  //--New game settings page
   new_game_dialog = build_new_game_dialog();
+
 
   //--packing
 
-  //main page
   vbox = gtk_vbox_new (FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
-  {
-    GtkWidget * status;
-    status = gtk_statusbar_new();
-    gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(status), FALSE);
-    gtk_box_pack_start (GTK_BOX (vbox), status, FALSE, FALSE, 0);
-   
-    gtk_statusbar_push(GTK_STATUSBAR(status), 0, "let's go!");
+  gtk_box_pack_start (GTK_BOX (vbox), go.status,    FALSE, FALSE, 0);
 
-  }
-
-  //
   widget = gtk_notebook_new();
   go.notebook = widget;
   gtk_notebook_set_show_border(GTK_NOTEBOOK(widget), FALSE);
   gtk_notebook_set_show_tabs  (GTK_NOTEBOOK(widget), FALSE);
-  //g_signal_connect (G_OBJECT (notebook), "switch_page", G_CALLBACK(on_notebook_switch_page), NULL);
 
   gtk_notebook_insert_page(GTK_NOTEBOOK(widget), vbox,  NULL, PAGE_BOARD);
   gtk_notebook_insert_page(GTK_NOTEBOOK(widget), new_game_dialog, NULL, PAGE_GAME_SETTINGS);
@@ -1660,9 +1537,5 @@ void gui_init(){
   gtk_widget_show_all (window);
   gtk_notebook_set_page(GTK_NOTEBOOK(widget), PAGE_BOARD);
 
-  //load_graphics();
-  //scale_graphics();
-  //paint_board(drawing_area);
-  
 }//gui_init()
 
