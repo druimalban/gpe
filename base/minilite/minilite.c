@@ -629,8 +629,6 @@ external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
     gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
     gdk_bitmap_unref (bitmap);
     gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
-	/* make sure we want to resize all the time */
-	gtk_widget_set_size_request(GTK_WIDGET(window), size , size);
   }
   return FALSE;
 }
@@ -662,9 +660,7 @@ main (int argc, char **argv)
 
   window = gtk_plug_new (0);
   gtk_window_set_resizable(GTK_WINDOW(window),TRUE);
-  gtk_widget_set_usize (window, 16, 16);
-   /* this makes it scale up to 48pixels child size if possible */	
-  gtk_widget_set_size_request(window,50,50);
+    
   gtk_widget_realize (window);
 
   if (gpe_load_icons (my_icons) == FALSE) {

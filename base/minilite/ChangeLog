@@ -1,3 +1,9 @@
+2004-12-22	Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Released version 0.47.
+    * Makefile: New version.
+    * minilite.c: Fixed icon resizing.
+    
 2004-11-23	Florian Boor <florian.boor@kernelconcepts.de>
 
     * Released Version 0.46
