@@ -122,7 +122,7 @@ programs_sql_start (void)
 
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select uid,name,mime,icon from mime_programs",
+  if (sqlite_exec (sqliteh, "select uid,name,mime,command from mime_programs",
 		   mime_program_callback, NULL, &err))
     {
       gpe_error_box (err);
