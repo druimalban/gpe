@@ -204,7 +204,7 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 static gboolean
 login_correct (GtkWidget *entry, struct passwd **pwe_ret)
 {
-  gchar *pwstr;
+  const gchar *pwstr;
   struct passwd *pwe;
   struct spwd *spe;
   char *p;
@@ -284,7 +284,7 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
 static void
 enter_newuser_callback (GtkWidget *widget, gpointer h)
 {
-  gchar *username, *fullname, *password, *confirm;
+  const gchar *username, *fullname, *password, *confirm;
   char *cryptstr;
   struct passwd *pwe;
   struct group *gre;

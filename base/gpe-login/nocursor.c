@@ -8,7 +8,9 @@
  */
 
 #include <X11/Xlib.h>
+#include <gtk/gtk.h>
 #include <gdk/gdk.h>
+#include <gdk/gdkx.h>
 #include <gdk/gdkprivate.h>
 
 #include <gpe/stylus.h>
@@ -19,12 +21,14 @@ static void
 _gdk_window_set_cursor (GdkWindow *window,
 			GdkCursor *cursor)
 {
+  Cursor xcursor;
+
+#if GTK_MAJOR_VERSION < 2
   GdkWindowPrivate *window_private;
   GdkCursorPrivate *cursor_private;
-  Cursor xcursor;
-  
+
   g_return_if_fail (window != NULL);
-  
+
   window_private = (GdkWindowPrivate*) window;
   cursor_private = (GdkCursorPrivate*) cursor;
   
@@ -32,9 +36,18 @@ _gdk_window_set_cursor (GdkWindow *window,
     xcursor = None;
   else
     xcursor = cursor_private->xcursor;
-  
+
   if (!window_private->destroyed)
     XDefineCursor (window_private->xdisplay, window_private->xwindow, xcursor);
+#else
+  if (!cursor)
+    xcursor = None;
+  else
+    xcursor = gdk_x11_cursor_get_xcursor (cursor);
+  
+  if (!GDK_WINDOW_DESTROYED (window))
+    XDefineCursor (GDK_WINDOW_XDISPLAY (window), GDK_WINDOW_XWINDOW (window), xcursor);
+#endif
 }
 
 void
