@@ -138,7 +138,7 @@ click_ok(GtkWidget *widget,
 
   if (t->item)
     {
-      g_free (t->item->what);
+      g_free ((char *)t->item->what);
       t->item->what = what;
       t->item->time = when;
       t->item->state = state;
