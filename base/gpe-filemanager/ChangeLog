@@ -1,4 +1,7 @@
 2004-05-16  Florian Boor  <florian.boor@kernelconcepts.de>
+    * main.c: transfer_callback(): Impemented query dialogs for error 
+      and overwrite queries.
+    * main.c: Fixed multiple warnings, formating and removed old cruft.
 	* main.c: transfer_callback(): Some lines to invoke decisions.
 
 2004-05-15  Florian Boor  <florian.boor@kernelconcepts.de>
