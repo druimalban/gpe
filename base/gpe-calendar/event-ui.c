@@ -1209,6 +1209,10 @@ new_event (time_t t, guint timesel)
       gtk_notebook_set_page (GTK_NOTEBOOK (s->notebookedit), 0);
       gtk_entry_set_text (GTK_ENTRY (s->summary), "");
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (s->description)), "", -1);
+
+      gtk_option_menu_set_history (GTK_OPTION_MENU (s->optionmenutype), 0);
+      s->page = 0;
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
     }
 
   return w;
@@ -1257,7 +1261,9 @@ edit_event (event_t ev)
        * and "Reminder" is at index = 1 */
       gtk_option_menu_set_history (GTK_OPTION_MENU (s->optionmenutype),
                                    ev->duration == 0);
-    
+      s->page = (ev->duration == 0);
+      gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), s->page);
+ 
       if (ev->flags & FLAG_ALARM)
         {
 	  unsigned int unit = 0;	/* minutes */

@@ -1,3 +1,9 @@
+2003-04-27  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (edit_event): Set event-type notebook to appropriate
+	page.
+	(new_event): Likewise.  Set option-menu as well.
+
 2003-04-25  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.43 released.
