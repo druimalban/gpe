@@ -29,3 +29,7 @@ users_on_changepasswd_clicked                (GtkButton       *button,
 void
 users_on_passwdcancel_clicked                (GtkButton       *button,
                                         gpointer         user_data);
+
+void
+password_change_clicked                (GtkButton       *button,
+                                        gpointer         user_data);

@@ -1,3 +1,10 @@
+2004-08-29	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* theme.c: Changed some spellings from AE to BE.
+	* main.c, main-info.c: Set default button.
+	* users/*: Added password change dialog, changed default settings.
+	           (not finished)
+
 2004-08-25	Ole Reinhardt   <ole.reinhardt@kernelconcepts.de>
 	* network.c: Support for Wireless LAN devices, automatically WiFi detection,
 	             improved automaticaly device detection (add device command)

@@ -76,15 +76,13 @@ users_on_edit_clicked                      (GtkButton       *button,
 	cur =cur->next;
     while(i>0)
       {
-	cur =cur->next;
-	while(IsHidden(cur))
-	  cur =cur->next;
-	i--;
+        cur =cur->next;
+        while(IsHidden(cur))
+        cur =cur->next;
+        i--;
       }
     gtk_widget_show(create_userchange (cur,mainw));
-    
   }
-
 }
 
 void
@@ -99,19 +97,19 @@ users_on_delete_clicked                      (GtkButton       *button,
     uint i=GPOINTER_TO_UINT(tmp->data);
     while(IsHidden(cur))
       {
-	prec = &cur->next;
-	cur =cur->next;
+        prec = &cur->next;
+        cur =cur->next;
       }
     while(i>0)
       {
-	prec = &cur->next;
-	cur =cur->next;
-	while(IsHidden(cur))
-	  {
-	    prec = &cur->next;
-	    cur =cur->next;
-	  }
-	i--;
+        prec = &cur->next;
+        cur =cur->next;
+        while(IsHidden(cur))
+		{
+	      prec = &cur->next;
+	      cur =cur->next;
+        }
+       i--;
       }
     if(cur->pw.pw_uid < MINUSERUID)
       gpe_error_box(_("You can't remove\n system users!"));
@@ -246,4 +244,20 @@ users_on_passwdcancel_clicked                (GtkButton       *button,
   passw *self=(passw *)user_data;
   gtk_widget_destroy(self->w);
 
+}
+
+void
+password_change_clicked                (GtkButton       *button,
+                                        gpointer         user_data)
+{
+	pwlist *cur = pwroot;
+ 	while (cur)
+ 	{
+		if (!strcmp(g_get_user_name(),cur->pw.pw_name))
+		{
+    		gtk_widget_show(create_passwindow (cur, mainw));
+			break;
+		}
+		cur = cur->next;
+	}
 }

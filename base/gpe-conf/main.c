@@ -191,6 +191,7 @@ void item_select(int useronly, gpointer user_data)
   if(applets[self.cur_applet].Save != &Unimplemented_Save)
   {
     gtk_widget_show(self.save);
+	gtk_widget_grab_default(self.save);
   }
   else
   {
@@ -203,6 +204,7 @@ void item_select(int useronly, gpointer user_data)
 	{
       gtk_widget_hide(self.cancel);
       gtk_widget_show(self.dismiss);
+      gtk_widget_grab_default(self.dismiss);
 	}
     else
 	{
@@ -263,10 +265,12 @@ void make_container()
   gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,FALSE, TRUE, 0);
 
   self.save = gpe_button_new_from_stock(GTK_STOCK_OK,GPE_BUTTON_TYPE_BOTH);
+  GTK_WIDGET_SET_FLAGS(self.save, GTK_CAN_DEFAULT);
   
   gtk_box_pack_start(GTK_BOX(hbuttons),self.save,FALSE, TRUE, 0);
 
   self.dismiss = gpe_button_new_from_stock(GTK_STOCK_CLOSE,GPE_BUTTON_TYPE_BOTH);
+  GTK_WIDGET_SET_FLAGS(self.dismiss, GTK_CAN_DEFAULT);
   gtk_box_pack_start(GTK_BOX(hbuttons),self.dismiss,FALSE, TRUE, 0);
   
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
@@ -314,25 +318,25 @@ void main_one(int argc, char **argv,int applet)
   /* If no task? - start applet */
   if (!handled)
   { 
-  initwindow();
-
-  self.vbox = gtk_vbox_new(FALSE,0);
-  gtk_container_add(GTK_CONTAINER(self.w),self.vbox);
-
-  self.cur_applet = -1;
-  self.applet = NULL;
-
-  make_container();
-
-  gpe_set_window_icon(self.w,"icon");
-  gtk_widget_show_all(self.w);
- 
-  gtk_widget_show(self.w);
-
-   
-  item_select(user_only_setup, (gpointer)applet);
-  gtk_main();
-  gtk_exit(0);
+	  initwindow();
+	
+	  self.vbox = gtk_vbox_new(FALSE,0);
+	  gtk_container_add(GTK_CONTAINER(self.w),self.vbox);
+	
+	  self.cur_applet = -1;
+	  self.applet = NULL;
+	
+	  make_container();
+	
+	  gpe_set_window_icon(self.w,"icon");
+	  gtk_widget_show_all(self.w);
+	 
+	  gtk_widget_show(self.w);
+	
+	   
+	  item_select(user_only_setup, (gpointer)applet);
+	  gtk_main();
+	  gtk_exit(0);
   }
   return ;
   

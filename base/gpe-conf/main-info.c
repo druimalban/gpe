@@ -95,6 +95,7 @@ void make_container(int whichtab)
   gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_boxspacing());
 
   self.dismiss = gpe_button_new_from_stock(GTK_STOCK_CLOSE,GPE_BUTTON_TYPE_BOTH);
+  GTK_WIDGET_SET_FLAGS(self.dismiss, GTK_CAN_DEFAULT);
   gtk_box_pack_start(GTK_BOX(hbuttons),self.dismiss,FALSE, TRUE, 0);
   
   gtk_signal_connect (GTK_OBJECT(self.dismiss), "clicked",
@@ -105,6 +106,7 @@ void make_container(int whichtab)
 	
   gtk_widget_show(self.applet);
   gtk_widget_show_all(hbuttons);
+  gtk_widget_grab_default(self.dismiss);
 }
 
 

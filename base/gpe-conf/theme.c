@@ -734,7 +734,7 @@ on_color_select (GtkWidget * widget, GdkEvent * event)
   GtkWidget *w;
   GtkStyle *astyle = gtk_widget_get_style(widget);
 	
-  w = gtk_dialog_new_with_buttons (_("Select color"), GTK_WINDOW (mainw),
+  w = gtk_dialog_new_with_buttons (_("Select colour"), GTK_WINDOW (mainw),
 				   GTK_DIALOG_MODAL |
 				   GTK_DIALOG_DESTROY_WITH_PARENT,
 				   GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
@@ -868,7 +868,7 @@ Theme_Save ()
 	system(confstr);
 	free(confstr);
 	
-	/* desktop font color */
+	/* desktop font colour */
 	confstr = get_color_from_widget(self.bColorFont);
 	system_printf (CMD_XST " write %s%s str %s", KEY_MATCHBOX, "Desktop/FontColor", confstr);
 	free(confstr);
@@ -1036,7 +1036,7 @@ Theme_Build_Objects ()
   g_signal_connect (GTK_OBJECT (self.cDefault), "toggled",
 		       (update_enabled_widgets), NULL);
 			
-  label = gtk_radio_button_new_with_label (NULL, _("Solid color"));
+  label = gtk_radio_button_new_with_label (NULL, _("Solid colour"));
   rg_background = label;
   self.rbSolid = label;
   g_signal_connect (GTK_OBJECT (label), "toggled",
@@ -1059,7 +1059,7 @@ Theme_Build_Objects ()
   gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
   
   self.bColor1 = gtk_button_new();
-  gtk_button_set_label(GTK_BUTTON(self.bColor1),_("Color"));
+  gtk_button_set_label(GTK_BUTTON(self.bColor1),_("Colour"));
   g_signal_connect (GTK_OBJECT (self.bColor1), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bColor1, 1, 2, 2, 3,
@@ -1069,7 +1069,7 @@ Theme_Build_Objects ()
   label =
     gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
 						 (rg_background),
-						 _("Color gradient"));
+						 _("Colour gradient"));
   g_signal_connect (GTK_OBJECT (label), "toggled",
 		       (update_enabled_widgets), NULL);
   self.rbGrad = label;
@@ -1078,7 +1078,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
 
   self.bColor2 = gtk_button_new();
-  gtk_button_set_label(GTK_BUTTON(self.bColor2),_("Color"));
+  gtk_button_set_label(GTK_BUTTON(self.bColor2),_("Colour"));
   g_signal_connect (GTK_OBJECT (self.bColor2), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
 			
@@ -1231,13 +1231,13 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   g_signal_connect(G_OBJECT(self.spFS),"value-changed",G_CALLBACK(on_font_size_change),NULL);	
   
-  label = gtk_label_new(_("Color"));
+  label = gtk_label_new(_("Colour"));
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
   gtk_table_attach (GTK_TABLE (table), label, 3, 4, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
   self.bColorFont = gtk_button_new();
-  gtk_button_set_label(GTK_BUTTON(self.bColorFont),_("Color"));
+  gtk_button_set_label(GTK_BUTTON(self.bColorFont),_("Colour"));
   g_signal_connect (GTK_OBJECT (self.bColorFont), "clicked",
 		    G_CALLBACK (on_color_select), NULL);
   gtk_table_attach (GTK_TABLE (table), self.bColorFont, 3, 4, 2, 3,

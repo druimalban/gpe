@@ -210,6 +210,7 @@ Users_Build_Objects (void)
   GtkWidget *button1;
   GtkWidget *button2;
   GtkWidget *button3;
+  GtkWidget *button4;
 
   listTitles[0] = _("User Name");
   listTitles[1] = _("User Info");
@@ -243,6 +244,10 @@ Users_Build_Objects (void)
 			   _("Delete user"), _("Delete existing user"), pw,
 			   GTK_SIGNAL_FUNC (users_on_delete_clicked), NULL);
 
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("lock"));
+  button4 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Password"),
+			   _("Change password"), NULL, pw,
+			   GTK_SIGNAL_FUNC (password_change_clicked), NULL);
 			   
   user_list = gtk_clist_new_with_titles (3,listTitles);
   pw = gtk_scrolled_window_new(NULL,NULL);
@@ -400,6 +405,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), cancel);
 
   save = gpe_button_new_from_stock(GTK_STOCK_OK,GPE_BUTTON_TYPE_BOTH);
+  GTK_WIDGET_SET_FLAGS(save, GTK_CAN_DEFAULT);
   gtk_widget_show (save);
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), save);
 
@@ -408,7 +414,14 @@ create_userchange (pwlist *init,GtkWidget *parent)
       gtk_entry_set_editable(GTK_ENTRY(self->username),FALSE);
       gtk_entry_set_editable(GTK_ENTRY(self->home),FALSE);
     }
+  else	
+    {
+      gtk_widget_set_sensitive(self->username,FALSE);
+      gtk_widget_set_sensitive(self->home,FALSE);
+    }
 
+  gtk_widget_grab_default(save);
+	
   gtk_signal_connect (GTK_OBJECT (passwd), "clicked",
                       GTK_SIGNAL_FUNC (users_on_passwd_clicked),
                       (gpointer) self);
@@ -538,6 +551,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   gtk_container_add (GTK_CONTAINER (hbuttonbox3), changepasswd);
   GTK_WIDGET_SET_FLAGS (changepasswd, GTK_CAN_DEFAULT);
 
+  gtk_widget_grab_default(changepasswd);
   gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
                       GTK_SIGNAL_FUNC (users_on_passwdcancel_clicked),
                       (gpointer)self);
