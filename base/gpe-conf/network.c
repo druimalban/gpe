@@ -101,6 +101,7 @@ show_current_config (GtkWidget * button)
 
 	label = gtk_label_new (NULL);
 	gtk_label_set_markup (GTK_LABEL (label), buffer);
+	gtk_label_set_selectable(GTK_LABEL(label),TRUE);
 	gtk_widget_show (label);
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG (w)->vbox), label);
 	g_signal_connect_swapped (GTK_OBJECT (w),

@@ -123,6 +123,7 @@ static struct
 
 static int trc = 0;  // countdown for waiting for time change
 static int isdst;    // is a dst active?
+static int need_warning = FALSE;
 
 /* --- local intelligence --- */
 
@@ -293,6 +294,15 @@ void GetInternetTime()
   suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
   trc = 10;
   gtk_timeout_add(500,refresh_time,NULL);
+}
+
+
+static void
+do_tabchange (GtkNotebook * notebook,
+	      GtkNotebookPage * page, guint page_num, gpointer user_data)
+{
+	if (page_num == 1)
+		need_warning = TRUE;
 }
 
 
@@ -543,6 +553,8 @@ GtkWidget *Time_Build_Objects()
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.usedst),strlen(tzi.dstname));
 
   update_enabled_widgets(NULL);
+  g_signal_connect_after (G_OBJECT (notebook), "switch-page",
+			G_CALLBACK (do_tabchange), NULL);
   
   return notebook;
 }
@@ -558,7 +570,8 @@ void Time_Save()
   time_t t;
   char* par = malloc(100);
   tzinfo tz;
- 
+  GtkWidget *dialog;	
+  
    /* set timezone */
     
   for (s=0;s<=TZ_MAXINDEX;s++)
@@ -621,9 +634,18 @@ void Time_Save()
   
   /* set time */
   snprintf(par,99,"%ld",t);
-  suid_exec("STIM",par);
-  
+  suid_exec("STIM",par);  
   free(par);  
+  if (need_warning)
+  {
+	dialog = gtk_message_dialog_new (GTK_WINDOW (mainw),
+						 GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_WARNING,
+						 GTK_BUTTONS_OK,
+						 _
+						 ("To make timezone settings take effect, you'll need to log out and log in again."));
+    gtk_dialog_run(GTK_DIALOG(dialog));
+  }
 }
 
 void Time_Restore()

@@ -1815,7 +1815,7 @@ char* if_to_infostr(struct interface *ptr)
     if (hw == NULL)
 	hw = get_hwntype(-1);
 
-    sprintf(tmp,_("<span foreground=\"#0000E0\"> Interface: <i>%s</i></span>\nType: %s\n"), ptr->name, _(hw->title));
+    sprintf(tmp,_("<b>Interface %s</b>\nType: %s\n"), ptr->name, _(hw->title));
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
     /* For some hardware types (eg Ash, ATM) we don't print the 
@@ -1823,7 +1823,7 @@ char* if_to_infostr(struct interface *ptr)
     if (hw->print != NULL && (! (hw_null_address(hw, ptr->hwaddr) &&
 				  hw->suppress_null_addr)))
 	{
-		sprintf(tmp,_("HWaddr: %s\n"), hw->print(ptr->hwaddr));
+		sprintf(tmp,_("HWaddr (MAC): %s\n"), hw->print(ptr->hwaddr));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
@@ -1855,14 +1855,14 @@ char* if_to_infostr(struct interface *ptr)
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
+	sprintf(tmp,_("Netmask: %s\n"), ap->sprint(&ptr->netmask, 1));
+	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
+	strcat(buffer,tmp);
 	if (ptr->flags & IFF_BROADCAST) {
 	    sprintf(tmp,_("Broadcast: %s\n"), ap->sprint(&ptr->broadaddr, 1));
 		buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 		strcat(buffer,tmp);
 	}
-	sprintf(tmp,_("Netmask: %s\n"), ap->sprint(&ptr->netmask, 1));
-	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
-	strcat(buffer,tmp);
     }
 #endif
 

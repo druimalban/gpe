@@ -1,5 +1,8 @@
 When			Who				Where						What
 
+29.05.2003		Florian			
+								timeanddate.c				Added warning message for TZ changes.
+
 06.05.2003		Florian			cardinfo.c					Device class now shown as text, some display and format updates. 
 								timeanddate.c				Removed unused vars.
 								Makefile					Version update.
