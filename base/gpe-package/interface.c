@@ -26,7 +26,9 @@
 
 #include <locale.h>
 #include <libintl.h>
+
 #define _(x) gettext(x)
+#define N_(_x) (_x)
 
 #include <gtk/gtk.h>
 
@@ -43,8 +45,6 @@
 #include "main.h"
 #include "filechooser.h"
 #include "feededit.h"
-
-#define N_(x) (x)
 
 #define MI_FILE             1
 #define MI_FILE_INSTALL     2

@@ -1,3 +1,7 @@
+2005-02-07 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* interface.c: Fixed i8n support for menus.
+
 2005-02-04 Florian Boor <florian.boor@kernelconcepts.de>
 
 	* interface.c: Minor fixes.
