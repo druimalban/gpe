@@ -47,6 +47,7 @@ install-program: all
 	install -m 644 bt-off.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 cellphone.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	install -m 644 network.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
+	install -m 644 Computer.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)/etc/bluetooth/

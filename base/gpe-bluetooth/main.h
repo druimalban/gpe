@@ -16,7 +16,6 @@ struct bt_device
   bt_device_type type;
   guint port;
   pid_t pid;
-  GtkWidget *window, *button;
 };
 
 extern gboolean radio_is_on;

@@ -56,6 +56,7 @@ struct gpe_icon my_icons[] = {
   { "bt-off", "bluetooth/bt-off" },
   { "cellphone", "bluetooth/cellphone" },
   { "network", "bluetooth/network" },
+  { "computer", "bluetooth/Computer" },
   { "bt-logo" },
   { NULL }
 };
@@ -65,13 +66,15 @@ static GtkWidget *icon;
 static pid_t hcid_pid;
 static pid_t hciattach_pid;
 
-static GtkWidget *menu;
+static GtkWidget *menu, *device_menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
 static GtkWidget *devices_window;
 static GtkWidget *iconlist;
 
 static GSList *devices;
+
+static struct bt_device *this_device;
 
 gboolean radio_is_on;
 
@@ -139,6 +142,9 @@ do_run_scan (void)
 
       switch (bd->class & 0x1f00)
 	{
+	case 0x100:
+	  bd->pixbuf = gpe_find_icon ("computer");
+	  break;
 	case 0x200:
 	  bd->pixbuf = gpe_find_icon ("cellphone");
 	  break;
@@ -270,98 +276,83 @@ devices_window_destroyed (void)
 }
 
 static void
-window_destroyed (GtkWidget *window, gpointer data)
+device_info (struct bt_device *bd)
 {
-  struct bt_device *bd = (struct bt_device *)data;
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
+  GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
+  GtkWidget *labelname = gtk_label_new (bd->name);
+  GtkWidget *labeladdr = gtk_label_new (batostr (&bd->bdaddr));
+  GtkWidget *image = gtk_image_new_from_pixbuf (bd->pixbuf);
+  GtkWidget *dismiss = gtk_button_new_from_stock (GTK_STOCK_OK);
 
-  bd->window = NULL;
-  bd->button = NULL;
+  gtk_window_set_title (GTK_WINDOW (window), _("Device information"));
+  gpe_set_window_icon (GTK_WIDGET (window), "bt-logo");
+
+  gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
+      
+  gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
+      
+  gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
+  gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
+      
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox1, FALSE, FALSE, 0);
+
+  if (bd->type == 0)
+    sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
+  
+  if (bd->type != BT_UNKNOWN)
+    {
+      GtkWidget *label;
+      char str[80];
+      
+      strcpy (str, _("Service class: "));
+      switch (bd->type)
+	{
+	case BT_DUN:
+	  strcat (str, _("Dial-Up Network"));
+	  break;
+	case BT_LAP:
+	  strcat (str, _("LAN Access"));
+	  break;
+	case BT_NAP:
+	  strcat (str, _("PAN NAP"));
+	  break;
+	default:
+	  strcat (str, _("unknown"));
+	  break;
+	}
+      
+      label = gtk_label_new (str);
+      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
+      gtk_widget_show (label);
+      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, FALSE, FALSE, 4);
+    }
+  
+  gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), dismiss, FALSE, FALSE, 0);
+  
+  gtk_widget_realize (window);
+  gdk_window_set_transient_for (window->window, devices_window->window);
+  
+  gtk_widget_show_all (window);
+  
+  g_signal_connect_swapped (G_OBJECT (dismiss), "clicked", G_CALLBACK (gtk_widget_destroy), window);
+}
+
+static void
+show_device_info (void)
+{
+  device_info (this_device);
 }
 
 static void
 device_clicked (GtkWidget *w, gpointer data)
 {
-  struct bt_device *bd = (struct bt_device *)data;
+  this_device = (struct bt_device *)data;
 
-  if (bd->window == NULL)
-    {
-      GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-      GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
-      GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
-      GtkWidget *labelname = gtk_label_new (bd->name);
-      GtkWidget *labeladdr = gtk_label_new (batostr (&bd->bdaddr));
-      GtkWidget *image = gtk_image_new_from_pixbuf (bd->pixbuf);
-      GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
-
-      gtk_widget_show (vbox1);
-      gtk_widget_show (hbox1);
-      gtk_widget_show (vbox2);
-      gtk_widget_show (labelname);
-      gtk_widget_show (labeladdr);
-      gtk_widget_show (image);
-
-      gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
-      gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
-      
-      gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
-      
-      gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
-      gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
-      
-      gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, FALSE, 0);
-
-      if (bd->type == 0)
-	sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
-
-      if (bd->type != BT_UNKNOWN)
-	{
-	  GtkWidget *label;
-	  char str[80];
-	  
-	  strcpy (str, _("Service class: "));
-	  switch (bd->type)
-	    {
-	    case BT_DUN:
-	      strcat (str, _("Dial-Up Network"));
-	      break;
-	    case BT_LAP:
-	      strcat (str, _("LAN Access"));
-	      break;
-	    case BT_NAP:
-	      strcat (str, _("PAN NAP"));
-	      break;
-	    default:
-	      strcat (str, _("unknown"));
-	      break;
-	    }
-	  
-	  label = gtk_label_new (str);
-	  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	  gtk_widget_show (label);
-	  gtk_box_pack_start (GTK_BOX (vbox2), label, FALSE, FALSE, 4);
-	}
-      
-      if (bd->type == BT_LAP)
-	{
-	  GtkWidget *button = gtk_button_new_with_label (bd->pid ? _("Disconnect") : _("Connect"));
-	  gtk_widget_show (button);
-	  gtk_box_pack_start (GTK_BOX (vbox2), button, FALSE, FALSE, 4);
-	  bd->button = button;
-	  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (dun_button_clicked), bd);
-	}
-      
-      gtk_container_add (GTK_CONTAINER (window), vbox2);
-      
-      gtk_widget_realize (window);
-      gdk_window_set_transient_for (window->window, devices_window->window);
-      
-      gtk_widget_show (window);
-      
-      bd->window = window;
-      
-      g_signal_connect (G_OBJECT (window), "destroy", G_CALLBACK (window_destroyed), bd);
-    }
+  gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, w, 1, GDK_CURRENT_TIME);
 }
 
 static gboolean
@@ -459,13 +450,21 @@ main (int argc, char *argv[])
   Display *dpy;
   GtkWidget *window;
   GdkBitmap *bitmap;
-  GtkWidget *menu_remove;
+  GtkWidget *menu_remove, *details;
   GtkTooltips *tooltips;
+  int dd;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   setlocale (LC_ALL, "");
+
+  dd = hci_open_dev (0);
+  if (dd != -1)
+    {
+      radio_is_on = TRUE;
+      hci_close_dev (dd);
+    }
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
@@ -489,9 +488,12 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
-  gtk_widget_set_sensitive (menu_devices, FALSE);
+  if (! radio_is_on)
+    {
+      gtk_widget_set_sensitive (menu_devices, FALSE);
+      gtk_widget_show (menu_radio_on);
+    }
 
-  gtk_widget_show (menu_radio_on);
   gtk_widget_show (menu_devices);
   gtk_widget_show (menu_remove);
 
@@ -500,16 +502,25 @@ main (int argc, char *argv[])
   gtk_menu_append (GTK_MENU (menu), menu_devices);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
 
+  device_menu = gtk_menu_new ();
+  details = gtk_menu_item_new_with_label (_("Details ..."));
+
+  g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), NULL);
+
+  gtk_widget_show (details);
+
+  gtk_menu_append (GTK_MENU (device_menu), details);
+
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  icon = gtk_image_new_from_pixbuf (gpe_find_icon ("bt-off"));
+  icon = gtk_image_new_from_pixbuf (gpe_find_icon (radio_is_on ? "bt-on" : "bt-off"));
   gtk_widget_show (icon);
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
+  gtk_widget_shape_combine_mask (window, bitmap, 2, 2);
   gdk_bitmap_unref (bitmap);
 
-  gpe_set_window_icon (window, "bt-off");
+  gpe_set_window_icon (window, "bt-on");
 
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the Bluetooth control.\nTap here to turn the radio on and off, or to see a list of Bluetooth devices."), NULL);

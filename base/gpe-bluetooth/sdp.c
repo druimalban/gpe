@@ -45,7 +45,7 @@
 
 #define _(x) gettext(x)
 
-static uuid_t lap_uuid, dun_uuid, rfcomm_uuid;
+static uuid_t lap_uuid, dun_uuid, rfcomm_uuid, nap_uuid;
 
 gboolean
 sdp_browse_device (struct bt_device *bd, uint16_t group_id)
@@ -94,6 +94,8 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 		bd->type = BT_LAP;
 	      else if (sdp_uuid_cmp (u, &dun_uuid) == 0)
 		bd->type = BT_DUN;
+	      else if (sdp_uuid_cmp (u, &nap_uuid) == 0)
+		bd->type = BT_NAP;
 
 	      next = list->next;
 	      free (list);
@@ -156,5 +158,6 @@ init_sdp_uuids (void)
 {
   sdp_uuid16_create (&lap_uuid, LAN_ACCESS_SVCLASS_ID);
   sdp_uuid16_create (&dun_uuid, DIALUP_NET_SVCLASS_ID);
+  sdp_uuid16_create (&nap_uuid, NAP_SVCLASS_ID);
   sdp_uuid16_create (&rfcomm_uuid, RFCOMM_UUID);
 }
