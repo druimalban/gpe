@@ -1,6 +1,6 @@
 [Desktop Entry]
 _Name=Show Logs
-_Comment=Accesss System Log 
+_Comment=Access System Log 
 Exec=gpe-conf logread
 Terminal=0
 Type=Application

@@ -1,5 +1,5 @@
 [Desktop Entry]
-_Name= Serial Ports
+_Name=Serial Ports
 _Comment=Serial Port Settings
 Exec=gpe-conf serial
 Terminal=0
