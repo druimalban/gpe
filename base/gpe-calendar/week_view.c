@@ -228,14 +228,14 @@ week_view(void)
 		      GTK_SIGNAL_FUNC (draw_expose_event),
 		      datesel);
   
-  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
 				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
+  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
-  gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
 
   gtk_signal_connect (GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), NULL);

@@ -129,9 +129,9 @@ year_view(void)
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled), 
 					 table);
 
-  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);  
+  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0); 
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0); 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
 		       (gpointer) year_view_update);
 

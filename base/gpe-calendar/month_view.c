@@ -283,8 +283,8 @@ month_view(void)
   
   gtk_container_add (GTK_CONTAINER (scrolled_window), day_list);
   
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
 
   gtk_signal_connect(GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), day_list);

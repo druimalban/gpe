@@ -121,30 +121,15 @@ new_appointment(void)
   gtk_widget_show (appt);
 }
 
-static GtkItemFactoryEntry menu_items[] = {
-  { "/_File",              NULL,         NULL, 0, "<Branch>" },
-  { "/File/Quit",          "",           gtk_main_quit, 0, NULL },
-  { "/_View",              NULL,         NULL, 0, "<Branch>" },
-  { "/View/_Future",	   NULL,	 set_future_view, 0, NULL },
-  { "/View/_Day",          NULL,         set_day_view, 0, NULL },
-  { "/View/_Week",         NULL,         set_week_view, 0, NULL },
-  { "/View/_Month",        NULL,         set_month_view, 0, NULL },
-  { "/View/_Year",         NULL,         set_year_view, 0, NULL },
-  { "/_New",               NULL,         NULL, 0, "<Branch>" },
-  { "/New/_Appointment",   NULL,         new_appointment, 0, NULL },
-  { "/_Help"       ,       NULL,         NULL, 0, "<LastBranch>" },
-  { "/Help/_About",        NULL,         about, 0, NULL },
-};
-
 int
 main(int argc, char *argv[])
 {
-  GtkWidget *menubar;
+  GtkWidget *toolbar;
+  GdkPixmap *tmp_pix;
+  GdkBitmap *tmp_mask;
+  GtkWidget *new_pixmap, *today_pixmap, *future_pixmap, *day_pixmap, *week_pixmap, *month_pixmap, *year_pixmap;
   GtkWidget *vbox;
-  GtkItemFactory *item_factory;
   guint hour;
-
-  gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -190,14 +175,44 @@ main(int argc, char *argv[])
       abort ();
     }
 
-  item_factory = gtk_item_factory_new (GTK_TYPE_MENU_BAR, "<main>", 
-                                       NULL);
-  gtk_item_factory_create_items (item_factory, nmenu_items, menu_items, NULL);
-  menubar = gtk_item_factory_get_widget (item_factory, "<main>");
-
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/new.xpm");
+  new_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/today.xpm");
+  today_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/futureview.xpm");
+  future_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/dayview.xpm");
+  day_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/weekview.xpm");
+  week_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/monthview.xpm");
+  month_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  tmp_pix = gdk_pixmap_create_from_xpm (window->window, &tmp_mask, NULL, "pixmaps/yearview.xpm");
+  year_pixmap = gtk_pixmap_new (tmp_pix, tmp_mask);
+
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
+
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "New Appointment", "New Appointment", "New Appointment", GTK_WIDGET (new_pixmap), new_appointment, NULL);
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Today", "Today", "Today", GTK_WIDGET (today_pixmap), new_appointment, NULL);
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Future View", "Future View", "Future View", GTK_WIDGET (future_pixmap), set_future_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Day View", "Day View", "Day View", GTK_WIDGET (day_pixmap), set_day_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Week View", "Week View", "Week View", GTK_WIDGET (week_pixmap), set_week_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Month View", "Month View", "Month View", GTK_WIDGET (month_pixmap), set_month_view, NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), "Year View", "Year View", "Year View", GTK_WIDGET (year_pixmap), set_year_view, NULL);
 
   time (&viewtime);
   week = week_view ();
@@ -206,7 +221,7 @@ main(int argc, char *argv[])
   future = future_view ();
   year = year_view ();
 
-  gtk_box_pack_start (GTK_BOX (vbox), menubar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), day, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), week, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), month, TRUE, TRUE, 0);
@@ -219,7 +234,7 @@ main(int argc, char *argv[])
 
   gtk_widget_show (window);
   gtk_widget_show (vbox);
-  gtk_widget_show (menubar);
+  gtk_widget_show (toolbar);
 
   new_view (day);
   
