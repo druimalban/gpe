@@ -1,4 +1,10 @@
+08/19/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- send-vcard.c: Fixed bug that causes crash if any command line argument 
+	                is given.
+
 08/18/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
 	- Several fixes and tweaks in vcard import
 	- New vcard in tests, Nokia 9210
 	- #define insert(a,b) defined with {} now to avoid ambiguos else constructs.

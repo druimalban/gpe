@@ -442,7 +442,7 @@ do_import_file(GtkWidget *dlg,gint response,char *filename)
 							  GTK_DIALOG_DESTROY_WITH_PARENT,
 							  GTK_MESSAGE_INFO,
 							  GTK_BUTTONS_CLOSE,
-							  _("VCARD was successfully imorted."));
+							  _("VCARD was imorted successfully."));
 			break;
 		default:
 			dlg = gtk_message_dialog_new

@@ -86,7 +86,7 @@ main (int argc, char *argv[])
   if (argc > 1)
     {
       uid = atoi (argv[1]);
-      export_one_vcard (db);
+      export_one_vcard (uid);
     }
   else
     sqlite_exec (db, "select urn from contacts_urn", read_one, NULL, NULL);
