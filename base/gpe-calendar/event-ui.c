@@ -727,6 +727,33 @@ new_event(time_t t, guint timesel, event_t ev)
 	        		       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 	      gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 	        		       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+	      
+	      if(ev->alarm!=-1) {
+		      
+	        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(s->alarmspin), ev->alarm);
+		
+	      }
+  
+  
+	      switch(ev->recur.type)
+	      	{
+			case RECUR_NONE:
+			  break;
+			case RECUR_DAILY:
+			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttondaily), TRUE);
+			  break;
+			case RECUR_WEEKLY:
+			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonweekly), TRUE);
+			  break;
+			case RECUR_MONTHLY:
+			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonmonthly), TRUE);
+			  break;
+			case RECUR_YEARLY:
+			  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly), TRUE);
+			  break;
+		}
+  
       }    
 
      

@@ -25,8 +25,6 @@
 
 extern void about (void);
 
-extern GtkWidget *new_event (time_t t, guint timesel, event_t *ev);
-
 GdkFont *timefont;
 GdkFont *datefont;
 GdkFont *yearfont;

@@ -21,7 +21,6 @@
 #include "globals.h"
 #include "day_view.h"
 
-extern GtkWidget *new_event(time_t t, guint timesel, event_t ev);
 extern GdkFont *timefont, *datefont;
   
 gint bias = 8;
@@ -42,7 +41,7 @@ void selection_made( GtkWidget      *clist,
       GtkWidget *appt;
       struct tm tm;
       
-      ev=gtk_clist_get_row_data(GTK_CLIST(day_list), row);
+      ev=gtk_clist_get_row_data(GTK_CLIST(clist), row);
       if (ev) localtime_r (&(ev->start), &tm);
       else {
 	      localtime_r (&viewtime, &tm);

@@ -195,11 +195,12 @@ event_db_list_for_period (time_t start, time_t end)
       if (ev->start > end)
 	break;
 
-      /* Skip dead events, ie if "repeat until" time is past */
+      /* Skip dead events, ie if "repeat until" time is past 
       if (ev->recur.end < start)
 	continue;
-
-      /* ... */
+*/
+      /* this will need to be fixed.... */
+      list = g_slist_append (list, ev);
     }
 
   return list;

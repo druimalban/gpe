@@ -18,8 +18,13 @@
 #include "gtkdatesel.h"
 #include "globals.h"
 #include "future_view.h"
-#include "event-db.h"
 
+extern void selection_made( GtkWidget      *clist,
+                     gint            row,
+                     gint            column,
+                     GdkEventButton *event,
+                     GtkWidget      *widget);
+		     
 static gint
 future_view_update ()
 {
@@ -89,6 +94,10 @@ future_view(void)
   
   future_list = gtk_clist_new(2);
   
+  gtk_signal_connect(GTK_OBJECT(future_list), "select_row",
+                       GTK_SIGNAL_FUNC(selection_made),
+                       NULL);
+
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   
