@@ -611,6 +611,7 @@ main (int argc, char *argv[])
   GtkWidget *window;
   GdkBitmap *bitmap;
   GtkWidget *menu_remove;
+  GtkWidget *tooltips;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -660,6 +661,11 @@ main (int argc, char *argv[])
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
   gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
   gdk_bitmap_unref (bitmap);
+
+  gpe_set_window_icon (window, "bt-off");
+
+  tooltips = gtk_tooltips_new ();
+  gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window, _("This is the Bluetooth control.\nTap here to turn the radio on and off, or to see a list of Bluetooth devices."), NULL);
 
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
