@@ -7,6 +7,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <time.h>
+
 extern GdkFont *timefont;
 extern GdkFont *datefont;
 extern GdkFont *yearfont;
