@@ -1,3 +1,8 @@
+2003-05-14  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (freshen-po): New target.
+	(TRANSLATION_SITE): Define.
+
 2003-04-30  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.dpkg_ipkg (ipkg): Call ipkg-build with '-o 0 -g 0'.
