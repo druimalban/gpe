@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-13 19:07+0200\n"
+"POT-Creation-Date: 2004-10-16 11:58+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,212 +16,220 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:156
+#: main.c:160
 msgid "Error"
 msgstr ""
 
-#: main.c:161
+#: main.c:165
 msgid "Failed"
 msgstr ""
 
-#: main.c:164
+#: main.c:168
 msgid "Done"
 msgstr ""
 
-#: main.c:167
+#: main.c:171
 msgid "Connecting..."
 msgstr ""
 
-#: main.c:171
+#: main.c:175
 msgid "Disconnecting..."
 msgstr ""
 
-#: main.c:174
+#: main.c:178
 msgid "Sending..."
 msgstr ""
 
-#: main.c:177
+#: main.c:181
 msgid "Receiving"
 msgstr ""
 
-#: main.c:186
+#: main.c:190
 msgid "Waiting for incoming connection"
 msgstr ""
 
-#: main.c:189
+#: main.c:193
 msgid "Connected"
 msgstr ""
 
-#: main.c:192
+#: main.c:196
 msgid "Disconnecting"
 msgstr ""
 
-#: main.c:213
+#: main.c:217
 msgid "Telephony"
 msgstr ""
 
-#: main.c:219
+#: main.c:223
 msgid "File Server"
 msgstr ""
 
-#: main.c:225
+#: main.c:229
 msgid "IrCOMM"
 msgstr ""
 
-#: main.c:231
+#: main.c:235
 msgid "IrOBEX"
 msgstr ""
 
-#: main.c:240
+#: main.c:244
 msgid "PnP"
 msgstr ""
 
-#: main.c:246
+#: main.c:250
 msgid "PDA/Palmtop"
 msgstr ""
 
-#: main.c:252
+#: main.c:256
 msgid "Computer"
 msgstr ""
 
-#: main.c:258
+#: main.c:262
 msgid "Printer"
 msgstr ""
 
-#: main.c:264
+#: main.c:268
 msgid "Modem"
 msgstr ""
 
-#: main.c:270
+#: main.c:274
 msgid "Fax"
 msgstr ""
 
-#: main.c:276
+#: main.c:280
 msgid "LAN Access"
 msgstr ""
 
-#: main.c:350
+#: main.c:354
 msgid "Transmitted file"
 msgstr ""
 
-#: main.c:359
+#: main.c:363
 msgid "Could not transmit file"
 msgstr ""
 
-#: main.c:385 main.c:436
+#: main.c:389 main.c:440
 msgid "Unable to start file transmit."
 msgstr ""
 
-#: main.c:408 main.c:451
+#: main.c:412
 msgid "IR Receive and Transmit........."
 msgstr ""
 
-#: main.c:460 main.c:462
+#: main.c:455
+msgid "IR Receive and Transmit....."
+msgstr ""
+
+#: main.c:464 main.c:466
 msgid "Error opening IR client."
 msgstr ""
 
-#: main.c:469
+#: main.c:473
 msgid "Select file to transmit"
 msgstr ""
 
-#: main.c:494
+#: main.c:497
 msgid "Could not start import tool."
 msgstr ""
 
-#: main.c:501
+#: main.c:504
 msgid "vCard was imported successfully."
 msgstr ""
 
-#: main.c:509
+#: main.c:512
 msgid "Import of vCard failed."
 msgstr ""
 
-#: main.c:538
+#: main.c:541
 #, c-format
 msgid "File '%s' looks like a vCard, do you want to import it?"
 msgstr ""
 
-#: main.c:558 main.c:620
+#: main.c:561 main.c:623
 msgid "Unable to start receiver."
 msgstr ""
 
-#: main.c:572
+#: main.c:575
 msgid "IR Receive and transmit control"
 msgstr ""
 
-#: main.c:582 main.c:585
+#: main.c:585 main.c:588
 msgid "Error opening IR server."
 msgstr ""
 
-#: main.c:597
+#: main.c:600
 msgid "Received file"
 msgstr ""
 
-#: main.c:714
+#: main.c:638
+msgid "Transmitting VCard"
+msgstr ""
+
+#: main.c:736
 msgid "Name:"
 msgstr ""
 
-#: main.c:715
+#: main.c:737
 msgid "Services:"
 msgstr ""
 
-#: main.c:716
+#: main.c:738
 msgid "Address:"
 msgstr ""
 
-#: main.c:723
+#: main.c:745
 msgid "Peer Information"
 msgstr ""
 
-#: main.c:726
+#: main.c:748
 msgid "Peer Actions"
 msgstr ""
 
-#: main.c:734
+#: main.c:756 main.c:980
 msgid "Send File"
 msgstr ""
 
-#: main.c:742
+#: main.c:764 main.c:981
 msgid "Receive File"
 msgstr ""
 
-#: main.c:792 main.c:861
+#: main.c:814 main.c:883
 msgid "IR transceiver on"
 msgstr ""
 
-#: main.c:794 main.c:883
+#: main.c:816 main.c:905
 msgid "IR transceiver off"
 msgstr ""
 
-#: main.c:805
+#: main.c:827
 msgid "Infrared Control"
 msgstr ""
 
-#: main.c:947 gpe-beam.desktop.in.h:1
-msgid "IrDa control"
+#: main.c:972
+msgid "IrDa tool"
 msgstr ""
 
-#: main.c:949
+#: main.c:977
 msgid "Switch IR on"
 msgstr ""
 
-#: main.c:950
+#: main.c:978
 msgid "Switch IR off"
 msgstr ""
 
-#: main.c:951
+#: main.c:979
 msgid "Send vCard"
 msgstr ""
 
-#: main.c:952
+#: main.c:982
 msgid "Controls..."
 msgstr ""
 
-#: main.c:953
+#: main.c:983
 msgid "Remove from dock"
 msgstr ""
 
-#: main.c:1001
+#: main.c:1050
 msgid "This is the infrared communications control."
 msgstr ""
 
@@ -233,6 +241,10 @@ msgstr ""
 #: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
+msgstr ""
+
+#: gpe-beam.desktop.in.h:1
+msgid "IrDa control"
 msgstr ""
 
 #: gpe-beam.desktop.in.h:2

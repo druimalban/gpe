@@ -687,8 +687,8 @@ get_irstatus (void)
 	}
 	if (have_peer != success)
 	{
-		set_image(0, 0);
 		have_peer = success;
+		set_image(0, 0);
 	}
 	return TRUE;
 }
