@@ -98,8 +98,11 @@ GdkWindow *dock_window;
 static GSList *devices = NULL;
 
 
+/* some forwards */
+
 static gboolean run_scan (void);
 static void radio_off (void);
+static void radio_on (void);
 static void list_add_net (netinfo_t * ni);
 static void send_command (command_t cmd, int par);
 static void send_usernet (usernetinfo_t * usernet);
@@ -246,7 +249,6 @@ fork_scanner ()
 static gboolean
 devices_window_destroyed (void)
 {
-	int i;
 	devices_window = NULL;
 
 	/* stop updates from scanner */
@@ -254,11 +256,6 @@ devices_window_destroyed (void)
 	{
 		gtk_timeout_remove (timeout_id);
 		timeout_id = 0;
-	}
-	for (i = 0; i < netcount; i++)
-	{
-		gdk_pixbuf_unref (netlist[i]->pix);
-		netlist[i]->visible = FALSE;
 	}
 	cfg.autosend = FALSE;
 	send_config ();
@@ -396,9 +393,8 @@ radio_off (void)
 		gtk_timeout_remove(timeout_id);
 		timeout_id = 0;
 	}
-*/ gtk_widget_hide (menu_radio_off);
+*/	gtk_widget_hide (menu_radio_off);
 	gtk_widget_show (menu_radio_on);
-	gtk_widget_set_sensitive (menu_devices, FALSE);
 
 	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
 				   gpe_find_icon ("scan-off"));
@@ -448,7 +444,6 @@ update_netlist (psnetinfo_t * anet)
 	int i;
 	int found = FALSE;
 	usernetinfo_t *snet;
-#warning update for broken adhoc here
 	for (i = 0; i < netcount; i++)
 		if (!strncmp (anet->bssid, netlist[i]->net.bssid, 17))
 		{
@@ -509,15 +504,17 @@ do_message_info (psinfo_t * psi)
 		break;
 	case I_FAILED:
 		if ((net_request_nr >= 0) && (netlist[net_request_nr]->netinfo.mode == 1))
-			gpe_perror_box_nonblocking (_
+			gpe_error_box_nonblocking (_
 					    ("Ad-Hoc connections setup complete."));
 		else
-			gpe_perror_box_nonblocking (_
+			gpe_error_box_nonblocking (_
 					    ("Could not connect to wireless LAN."));
 		break;
 	case I_ERRCARD:
 	case I_NOCARD:
-			gpe_perror_box_nonblocking (psi->message);
+			gpe_error_box_nonblocking (psi->message);
+			radio_off();
+	break;
 	default:
 		break;
 	}
@@ -533,9 +530,15 @@ get_networks (void)
 	pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
 	while (poll (pfd, 1, 300) > 0)
 	{
+		if ((pfd[0].revents & POLLERR) || (pfd[0].revents & POLLHUP))
+		{
+			perror ("Err: connection lost");
+			radio_off ();
+			return FALSE;
+		}
 		if (read (sock, (void *) &msg, sizeof (psmessage_t)) < 0)
 		{
-			perror ("err receiving data packet");
+			perror ("Err receiving data packet");
 			radio_off ();
 			return FALSE;
 		}
@@ -778,6 +781,8 @@ run_scan (void)
 {
 	GtkWidget *w;
 
+	if (radio_is_on == FALSE) radio_on();
+	
 	gdk_threads_enter ();
 	w = bt_progress_dialog (_("Scanning for networks..."),
 				gpe_find_icon ("gpe-aerial"));
@@ -823,7 +828,6 @@ radio_on (void)
 
 	gtk_widget_hide (menu_radio_on);
 	gtk_widget_show (menu_radio_off);
-	gtk_widget_set_sensitive (menu_devices, TRUE);
 
 	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
 				   gpe_find_icon ("scan-on"));
@@ -997,7 +1001,6 @@ main (int argc, char *argv[])
 
 	if (!radio_is_on)
 	{
-		gtk_widget_set_sensitive (menu_devices, FALSE);
 		gtk_widget_show (menu_radio_on);
 	}
 

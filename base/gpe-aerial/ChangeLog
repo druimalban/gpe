@@ -1,3 +1,9 @@
+06/06/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c	Fixed some wrong dialog calls.
+				Added error handling to poll call.
+				Fixed multiple network displaying.
+				"Networks..." now starts scanner too.
+
 06/05/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c	New: Display messages from prismstumbler.
 	Makefile	New version.
