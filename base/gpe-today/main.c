@@ -30,6 +30,7 @@
 /* Private functions, public ones are in today.h */
 static void init_main_window (void);
 static void load_modules (void);
+static void set_bg_pixmap (GtkWidget *);
 
 int main(int argc, char **argv)
 {
@@ -40,7 +41,8 @@ int main(int argc, char **argv)
 	
 	init_main_window();
 	load_modules();
-	
+	set_bg_pixmap(window.toplevel);	
+
 	gtk_widget_show_all(window.toplevel);
 	
 	gtk_main();
@@ -48,58 +50,49 @@ int main(int argc, char **argv)
 	exit(0);
 }
 
-static gboolean free_pixmap (Pixmap pix)
-{
-	XFreePixmap (GDK_DISPLAY(), pix);
-	return TRUE;
-}
-
 static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 				gpointer data)
 {
-	Pixmap rmap;
-	GdkPixmap *old_pix = g_object_get_data (G_OBJECT (wid), "bg-pixmap");
-
 	if ((wid->allocation.height >= wid->allocation.width) == window.mode) {
 		window.mode = !window.mode;
-	}
-
-	rmap = GetRootPixmap(GDK_DISPLAY());
-
-	if (rmap != None) {
-		Pixmap pmap = CutWinPixmap(GDK_DISPLAY(),
-		                    GDK_WINDOW_XWINDOW(wid->window), rmap,
-		                    GDK_GC_XGC(wid->style->black_gc));
-		
-		if (pmap != None) {
-			GdkPixmap *pix = gdk_pixmap_foreign_new(pmap);
-			wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
-			wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
-			wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
-			g_object_ref(pix);
-			g_object_ref(pix);
-			gtk_widget_set_style(wid, wid->style);
-			g_object_set_data_full (G_OBJECT (pix), "pixmap", (void *)pmap,
-						(GDestroyNotify)free_pixmap);
-			g_object_set_data (G_OBJECT (wid), "bg-pixmap", pix);
-		}
+		set_bg_pixmap(wid);
+		g_print("ROTATION\n");
 	}
 
 	/* refresh various modules */
 	/* weird stuff going on here, MUST draw scroll's BEFORE toplevel */
-	gtk_widget_queue_draw(calendar.scroll->draw);
+/*	gtk_widget_queue_draw(calendar.scroll->draw);
 	gtk_widget_queue_draw(todo.scroll->draw);
 	gtk_widget_queue_draw(todo.toplevel);
 	gtk_widget_queue_draw(calendar.toplevel);
-	gtk_widget_queue_draw(window.vpan1);
+	gtk_widget_queue_draw(window.vpan1);*/
+
+	return FALSE;
+}
+
+static void set_bg_pixmap(GtkWidget *wid)
+{
+	Pixmap rmap;
+	GdkPixmap *old_pix = g_object_get_data(G_OBJECT(wid), "bg-pixmap");
+
+	rmap = GetRootPixmap(GDK_DISPLAY());
+
+	if (rmap != None) {
+		GdkPixmap *pix = gdk_pixmap_foreign_new(rmap);
+		wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
+		wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
+		wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
+		g_object_ref(pix);
+		g_object_ref(pix);
+		gtk_widget_set_style(wid, wid->style);
+		g_object_set_data(G_OBJECT(wid), "bg-pixmap", pix);
+	}
 
 	if (old_pix) {
 		g_object_unref(old_pix);
 		g_object_unref(old_pix);
 		g_object_unref(old_pix);
 	}
-
-	return FALSE;
 }
 
 static void init_main_window(void)
