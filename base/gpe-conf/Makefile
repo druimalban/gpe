@@ -1,10 +1,10 @@
 PACKAGE = gpe-conf
-VERSION = 0.1.12
+VERSION = 0.1.13
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
-PREFIX = /usr/
+PREFIX = /usr/local
 DESTDIR = /
 PACKAGETOOL = no
 STRIP = strip

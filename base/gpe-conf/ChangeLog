@@ -1,5 +1,8 @@
 2004-08-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
+	* logread.c: Session log scrollbars appear only if necessary now.
+	* Makefile: Working on V 0.1.13, changed default PREFIX to /usr/local
+	* login-setup.c: Removed obsolete #endif
 	* suid.c, users/callbacks.c: Implemented removing a users home directory.
 	
 2004-08-08	Florian Boor  	<florian.boor@kernelconcepts.de>

@@ -22,7 +22,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
-#endif
 #include <time.h>
 #include <unistd.h> /* for readlink () */
 

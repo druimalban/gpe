@@ -252,6 +252,8 @@ Logread_Build_Objects (void)
   gtk_box_pack_start(GTK_BOX(vbox),tw,FALSE,TRUE,0);
 
   tc = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(tc),
+		GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
   gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(tc),GTK_SHADOW_IN);
   gtk_box_pack_start(GTK_BOX(vbox),tc,TRUE,TRUE,0);
 
