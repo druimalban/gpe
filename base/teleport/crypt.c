@@ -16,7 +16,8 @@
 
 #include <libdisplaymigration/auth.h>
 #include <libdisplaymigration/crypt.h>
-#include <libdisplaymigration/keygen.h>
+
+#include "keygen.h"
 
 static struct rsa_key private_key;
 static u_int32_t key_id;

@@ -11,14 +11,14 @@ GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall -I../libdm
+CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
 MEMBERS = teleport crypt displays keygen
 
-CFLAGS += -I../libdm `libgcrypt-config --cflags`
-LDFLAGS += -L../libdm -ldm `libgcrypt-config --libs`
+CFLAGS += -I../libdisplaymigration `libgcrypt-config --cflags`
+LDFLAGS += -L../libdisplaymigration -ldisplaymigration `libgcrypt-config --libs`
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O -g
