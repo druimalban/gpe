@@ -64,7 +64,7 @@ gpe_load_one_icon (const char *filename, gchar **error)
 
   if (pb == NULL && error)
     {
-      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon \"%s\""),
+      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon\n\"%s\""),
 		filename);
       buf[sizeof (buf)-1] = 0;
       *error = g_strdup (buf);
