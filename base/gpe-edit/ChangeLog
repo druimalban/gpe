@@ -1,3 +1,8 @@
+2003-08-05  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add nl.
+	* po/nl.po: New file, courtes Elros Cyriatan.
+
 2003-08-01  luc  <luc@handhelds.org>
 
 	* main.c (select_save_file_as): i18n cosmetic.

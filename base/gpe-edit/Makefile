@@ -5,7 +5,7 @@ CVSBUILD = yes
 VERSION = 0.18
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW fr ro wa sv
+LINGUAS = id pt de zh_TW fr ro wa sv nl
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 
