@@ -51,7 +51,7 @@ gint loading_directory = 0;
 
 guint slideshow_timer = 0;
 
-guint x_start, y_start;
+guint x_start, y_start, x_max, y_max;
 
 struct gpe_icon my_icons[] = {
   { "open", "open" },
@@ -117,6 +117,9 @@ button_down (GtkWidget *w, GdkEventButton *b)
   x_start = b->x;
   y_start = b->y;
 
+  x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 10);
+  y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10);
+
   gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
 		    NULL, NULL, b->time);
 }
@@ -144,18 +147,6 @@ motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
   gtk_image_set_from_pixbuf (image_widget, rotate_pixbuf);
 }
 
-#if 0
-void
-pan (GtkWidget *w, GdkEventMotion *m)
-{
-  gint x = m->x - x_start, y = m->y - y_start;
-
-  if (x < (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 10))
-    gtk_adjustment_set_value (h_adjust, (double) x);
-  if (y < (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 10))
-    gtk_adjustment_set_value (v_adjust, (double) y);
-}
-#else
 void
 pan (GtkWidget *w, GdkEventMotion *m)
 {
@@ -168,10 +159,11 @@ pan (GtkWidget *w, GdkEventMotion *m)
   x -= dx;
   y -= dy;
 
-  gtk_adjustment_set_value (h_adjust, x);
-  gtk_adjustment_set_value (v_adjust, y);
+  if (x < x_max)
+    gtk_adjustment_set_value (h_adjust, x);
+  if (y < y_max)
+    gtk_adjustment_set_value (v_adjust, y);
 }
-#endif
 
 void
 show_image (GtkWidget *widget, gpointer *udata)
@@ -194,6 +186,15 @@ show_image (GtkWidget *widget, gpointer *udata)
   gtk_widget_show (scrolled_window);
 
   printf ("You just clicked on an image called %s\n", filename);
+}
+
+void
+open_from_file (gchar *filename)
+{
+  GList *buf;
+
+  buf = g_list_append (buf, (gpointer) filename);
+  show_image (NULL, buf);
 }
 
 void
@@ -728,7 +729,7 @@ main (int argc, char *argv[])
 
   if (argc > 1)
   {
-    show_image (NULL, (gpointer) argv[1]);
+    open_from_file (argv[1]);
   }
 
   gtk_main();
