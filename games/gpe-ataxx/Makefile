@@ -5,6 +5,8 @@ LINGUAS =
 #LDFLAGS=-lXinerama
 STRIP=strip
 
+BUILD = ../../base/build/
+
 MEMBERS = callbacks gameutils moteur deepblue support globals main
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
@@ -49,5 +51,6 @@ install-program: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../../base/build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
 -include $(DEPS)
