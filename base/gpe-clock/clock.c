@@ -44,6 +44,8 @@ static gchar *alarm_file, *prefs_file;
 static gboolean show_seconds;
 static int format = FORMAT_ANALOGUE;
 
+#define SHORT_TERM_ALARMS
+
 struct alarm_state
 {
   gboolean active;
@@ -226,6 +228,11 @@ load_alarm_details (void)
       struct tm tm;
       time (&now);
       localtime_r (&now, &tm);
+
+#ifdef SHORT_TERM_ALARMS
+      state.hour = tm.tm_hour;
+      state.minute = tm.tm_min;
+#endif
 
       if (time_past_already (&state, &tm, TRUE))
 	{
