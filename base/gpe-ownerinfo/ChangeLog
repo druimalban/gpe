@@ -1,3 +1,13 @@
+2004-07-04  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.24 released.
+	
+2004-07-04  Philip Blundell  <philb@gnu.org>
+
+	* gpe-ownerinfo.c (gpe_owner_info): Add some blank space
+	underneath the smallphotobutton, so it doesn't grow too tall and
+	thin.
+
 2004-06-21  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/es.po: New file courtesy J.Manrique.

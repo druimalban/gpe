@@ -340,6 +340,7 @@ gpe_owner_info (void)
   GtkWidget *bigphotodrawingarea;
   GtkWidget *rightcolvbox;
   GtkWidget *addresshbox;
+  GtkWidget *emptyvbox;
   GtkSizeGroup *sizegroup;
   GtkObject *adjustment;
   gint upgrade_result = UPGRADE_ERROR;
@@ -486,6 +487,8 @@ gpe_owner_info (void)
   GTK_WIDGET_UNSET_FLAGS (smallphotobutton, GTK_CAN_FOCUS);
   //  gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
   gtk_box_pack_start (GTK_BOX (address_button_vbox), smallphotobutton, TRUE, TRUE, 0);
+  emptyvbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (address_button_vbox), emptyvbox, TRUE, TRUE, 0);
 
   smallphotodrawingarea = gtk_drawing_area_new ();
   gtk_widget_add_events (GTK_WIDGET (smallphotodrawingarea),

@@ -1,6 +1,6 @@
 #USER = cmarqu
 PACKAGE = gpe-ownerinfo
-VERSION = 0.23
+VERSION = 0.24
 
 PREFIX = /usr/local
 DEBUG = no
