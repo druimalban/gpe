@@ -1,3 +1,15 @@
+2003-03-07  Damien Tanner  <dctanner@handhelds.org>
+
+	* gpe/popup_menu.h: New popup_menu code taken from gpe-word.
+
+2003-03-07  Damien Tanner  <dctanner@handhelds.org>
+
+	* popup_menu.c: New popup_menu code taken from gpe-word.
+
+2003-03-07  Damien Tanner  <dctanner@handhelds.org>
+
+	* Makefile (MEMBERS): Add popup_menu
+
 2003-03-06  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (HEADERS): Add question.h, windows.h.
