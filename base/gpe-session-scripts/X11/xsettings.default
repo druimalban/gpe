@@ -2,3 +2,4 @@ Gtk/FontName:S:Sans 8
 Net/ThemeName:S:Angelistic
 Gtk/IconSizes:S:gtk-dialog=30,30:gtk-button=16,16
 Gtk/ToolbarIconSize:I:2
+Gtk/ToolbarStyle:I:2
