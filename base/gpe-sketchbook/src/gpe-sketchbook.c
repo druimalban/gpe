@@ -54,8 +54,6 @@ static struct gpe_icon my_icons[] = {
   { "list",       "list-view"},
   { "icons",      "icon-view"},
 
-  { "files",     "gpe-sketchbook/file-entry"},
-
   //own icons
   { "tool_pencil",  "gpe-sketchbook/tool_pencil"},
   { "tool_eraser",  "gpe-sketchbook/tool_eraser"},

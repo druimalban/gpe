@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-02 01:47+0300\n"
+"POT-Creation-Date: 2003-04-02 02:14+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:110
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
 msgid "Sketchbook"
 msgstr ""
 
