@@ -3,7 +3,7 @@
 # Broadcast hotplug events on D-BUS and then call the appropriate agent
 
 OBJECT="/org/handhelds/gpe/hotplug"
-MESSAGE="org.handhelds.gpe.HotplugEvent"
+MESSAGE="org.handhelds.gpe.hotplug.HotplugEvent"
 
 invoke_dbus () 
 {
