@@ -1,3 +1,8 @@
+2003-02-20  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (clean-po): Also remove .desktop.in.h.
+	(extract-po): Ensure that $(DIR_PO) is created.
+
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation ($(PACKAGE).desktop): Fix disastrous typo
