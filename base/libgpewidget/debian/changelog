@@ -1,3 +1,9 @@
+libgpewidget (0.62-1) unstable; urgency=low
+
+  * New upstream version, closes: #196989
+
+ -- Philip Blundell <pb@debian.org>  Sat, 28 Jun 2003 08:46:41 +0100
+
 libgpewidget (0.44-2) unstable; urgency=low
 
   * Build-depend on recode.
