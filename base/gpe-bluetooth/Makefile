@@ -33,7 +33,7 @@ LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0`
 ifeq ($(USE_LIBMBDOCK),yes)
 LDFLAGS += -lmbdock -L/usr/X11R6/lib 
 endif
-LDFLAGS += -lbluetooth -lsdp
+LDFLAGS += -lbluetooth -lsdp -lpthread
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 

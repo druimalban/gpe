@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <pthread.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -41,12 +42,15 @@
 
 #define HCIATTACH "/etc/bluetooth/hciattach"
 
+static pthread_t scan_thread;
+static gboolean scan_complete;
+
 struct gpe_icon my_icons[] = {
-  { "bluetooth/bt-on" },
-  { "bluetooth/bt-off" },
-  { "bluetooth/cellphone" },
-  { "bluetooth/network" },
-  { "bt-logo" ),
+  { "bt-on", "bluetooth/bt-on" },
+  { "bt-off", "bluetooth/bt-off" },
+  { "cellphone", "bluetooth/cellphone" },
+  { "network", "bluetooth/network" },
+  { "bt-logo" },
   { NULL }
 };
 
@@ -74,7 +78,7 @@ static gboolean radio_is_on;
 static GSList *devices;
 
 static gboolean
-run_scan (void)
+do_run_scan (void)
 {
   bdaddr_t bdaddr;
   inquiry_info *info = NULL;
@@ -143,7 +147,16 @@ run_scan (void)
   
   close (dd);
   close (dev_id);
+
   return TRUE;
+}
+
+static void
+run_scan (void)
+{
+  do_run_scan ();
+
+  scan_complete = TRUE;
 }
 
 static pid_t
@@ -229,7 +242,7 @@ devices_window_destroyed (void)
 }
 
 static gboolean
-browse_device (bdaddr_t *bdaddr)
+browse_device (bdaddr_t *hbdaddr)
 {
   GSList *attrid, *search;
   GSList *pSeq = NULL;
@@ -238,21 +251,19 @@ browse_device (bdaddr_t *bdaddr)
   uint16_t count = 0;
   int status = -1, i;
   uuid_t group;
+  bdaddr_t bdaddr;
+
+  baswap (&bdaddr, hbdaddr);
 
   sdp_create_uuid16 (&group, PUBLIC_BROWSE_GROUP);
 
-  printf ("Searching %s\n", batostr (bdaddr));
-
   attrid = g_slist_append (NULL, &range);
   search = g_slist_append (NULL, &group);
-  status = sdp_service_search_attr_req (bdaddr, search, SDP_ATTR_REQ_RANGE,
+  status = sdp_service_search_attr_req (&bdaddr, search, SDP_ATTR_REQ_RANGE,
 					attrid, 65535, &pSeq, &count);
 
   if (status) 
-    {
-      gpe_error_box_fmt (_("Service search failed (status %x)"), status);
-      return FALSE;
-    }
+    return FALSE;
 
   for (i = 0; i < (int) g_slist_length(pSeq); i++) 
     {
@@ -263,7 +274,7 @@ browse_device (bdaddr_t *bdaddr)
 
     }
   
-  return status;
+  return TRUE;
 }
 
 static void
@@ -291,8 +302,8 @@ device_clicked (GtkWidget *w, gpointer data)
   gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
+  gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
 
   gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, FALSE, 0);
 
@@ -306,11 +317,31 @@ device_clicked (GtkWidget *w, gpointer data)
   browse_device (&bd->bdaddr);
 }
 
+static gboolean
+check_scan_complete (void)
+{
+  if (scan_complete)
+    {
+      GSList *iter;
+
+      pthread_join (scan_thread, NULL);
+      gpe_iconlist_clear (GPE_ICONLIST (iconlist));
+      
+      for (iter = devices; iter; iter = iter->next)
+	{
+	  struct bt_device *bd = iter->data;
+	  gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
+	}
+
+      return FALSE;
+    }
+
+  return TRUE;
+}
+
 static void
 show_devices (void)
 {
-  GSList *iter;
-
   if (devices_window == NULL)
     {
       devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -331,15 +362,11 @@ show_devices (void)
 
   gtk_widget_show (devices_window);
 
-  run_scan ();
-
-  gpe_iconlist_clear (GPE_ICONLIST (iconlist));
-
-  for (iter = devices; iter; iter = iter->next)
-    {
-      struct bt_device *bd = iter->data;
-      gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
-    }
+  scan_complete = FALSE;
+  if (pthread_create (&scan_thread, 0, run_scan, NULL))
+    gpe_perror_box (_("Unable to scan"));
+  else
+    gtk_timeout_add (100, G_CALLBACK (check_scan_complete), NULL);
 }
 
 static void
@@ -440,7 +467,7 @@ main (int argc, char *argv[])
   icon = gtk_image_new_from_pixbuf (gpe_find_icon ("bt-off"));
   gtk_widget_show (icon);
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
-  gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
+  gtk_widget_shape_combine_mask (window, bitmap, 2, 0);
   gdk_bitmap_unref (bitmap);
 
   g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
