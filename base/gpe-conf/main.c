@@ -57,7 +57,7 @@ static struct {
   GtkWidget *applet;
   GtkWidget *vbox;
   GtkWidget *viewport;
-  GtkWidget *frame;
+  //  GtkWidget *frame;
 
   GtkWidget *save;
   GtkWidget *cancel;
@@ -137,9 +137,11 @@ void item_select(GtkWidget *ignored, gpointer user_data)
 
   self.applet = applets[i].Build_Objects();
   gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
-  gtk_frame_set_label(GTK_FRAME(self.frame),applets[i].frame_label);
+  //gtk_frame_set_label(GTK_FRAME(self.frame),applets[i].frame_label);
   gtk_widget_show_all(self.applet);
 
+  gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
+  
   if(applets[self.cur_applet].Save != &Unimplemented_Save)
     gtk_widget_show(self.save);
   else
@@ -181,19 +183,6 @@ void initwindow()
 
 
 }
-// it is a small hack to let these %$#$ buttons glue to bottom..
-
-static int curHeight = 0;
-void WindowDrawEvent              (GtkWidget       *widget,
-                                   GdkRectangle    *area,
-				   gpointer         user_data)
-{
-  if(curHeight != self.w->allocation.height)
-    {
-      curHeight = self.w->allocation.height;
-      gtk_widget_set_usize(GTK_WIDGET(self.frame),200, self.w->allocation.height-40);
-    }
-}
 
 void make_container()
 {
@@ -207,20 +196,10 @@ void make_container()
   gtk_container_add (GTK_CONTAINER (scrolledwindow),self.viewport);
   gtk_viewport_set_shadow_type (GTK_VIEWPORT (self.viewport), GTK_SHADOW_NONE);
 
-
-  self.frame = gtk_frame_new ("About GPE Configuration");
-
-  //  WindowDrawEvent(NULL,NULL,NULL);
-  gtk_signal_connect (GTK_OBJECT (self.w), "check-resize",
-                      GTK_SIGNAL_FUNC (WindowDrawEvent),
-                      NULL);
-
-  //  gtk_container_add(GTK_CONTAINER(scrolledwindow),self.frame);
-  gtk_container_add(GTK_CONTAINER(self.vbox),self.frame);
-  gtk_container_add (GTK_CONTAINER (self.frame), scrolledwindow);
+  gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
 
   hbuttons = gtk_hbutton_box_new();
-  gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons,TRUE, TRUE, 0);
+  gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons, FALSE, TRUE, 0);
 
   self.cancel = gpe_picture_button (self.w->style, ("Cancel"), "cancel");
   gtk_box_pack_start(GTK_BOX(hbuttons),self.cancel,TRUE, TRUE, 0);
@@ -267,7 +246,7 @@ void main_all()
   
   make_container();
 
-  self.applet = gtk_label_new("GPE Configuration\nby Pierre Tardy\n\nInspired by sysset \nby James Weatherall.");
+  self.applet = gtk_label_new("GPE Configuration\nby Pierre Tardy\n\nInspired by sysset\nby James Weatherall.");
   gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
 
   ntree =  gtk_tree_new();
