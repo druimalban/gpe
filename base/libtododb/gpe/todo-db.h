@@ -27,13 +27,11 @@ struct todo_category
   int id;
 };
 
-extern GSList *todo_db_categories, *todo_db_items;
-
-extern struct todo_db_item *todo_db_new_item (void);
-extern gboolean todo_db_push_item (struct todo_db_item *i);
-extern void todo_db_delete_item (struct todo_db_item *i);
-extern struct todo_db_category *todo_db_new_category (const char *title);
-extern void todo_db_del_category (struct todo_db_category *);
+extern struct todo_item *todo_db_new_item (void);
+extern gboolean todo_db_push_item (struct todo_item *i);
+extern void todo_db_delete_item (struct todo_item *i);
+extern struct todo_category *todo_db_new_category (const char *title);
+extern void todo_db_del_category (struct todo_category *);
 
 extern GSList *todo_db_get_items_list(void);
 extern GSList *todo_db_get_categories_list(void);
