@@ -1185,11 +1185,9 @@ void save_game(){
 
   //headers
   fprintf(f, "(;GM[1]FF[3]\n");
-  fprintf(f, "RU[Japanese]SZ[%d]H[%d]KM[%f]\n", go.game_size, 0, 0.5/*komi*/);
+  fprintf(f, "RU[Japanese]SZ[%d]\n", go.game_size);
   fprintf(f, "PW[%s]\n", "white");
   fprintf(f, "PB[%s]\n", "black");
-  fprintf(f, "GN[%s]\n", "the game of the year");
-  fprintf(f, "DT[%s]\n", "yyyy-mm-dd");
 
   //history tree
   _save_tree_to_sgf_from (go.history_root, f);
@@ -1267,6 +1265,7 @@ void gui_init(){
   gtk_toolbar_set_orientation(GTK_TOOLBAR (toolbar),
                               GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
 
   image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
