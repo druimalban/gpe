@@ -63,7 +63,11 @@ struct {
    GtkWidget *b0;
    GtkWidget *hb2;
    GtkWidget *sw2;
+#ifndef GTK1
+   GtkWidget *sw3;
+#else
    GtkWidget *hb3;
+#endif
    GtkWidget *vb3;
    GtkWidget *b2;
    GtkWidget *folderoption;
@@ -72,8 +76,9 @@ struct {
    GtkWidget *mt;
 #ifndef GTK1
    GtkTextBuffer *mtb;
-#endif
+#else
    GtkWidget *mtsb;
+#endif
    GtkTooltips *tt;
 
    GtkWidget *configb;
@@ -1593,8 +1598,16 @@ int main(int argc, char **argv)
    gtk_widget_show(self.sw2);
 
    //msg body
+#ifndef GTK1   
+   self.sw3=gtk_scrolled_window_new(NULL,NULL); 
+   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(self.sw3),GTK_POLICY_NEVER,GTK_POLICY_ALWAYS);
+   gtk_paned_add2 ((GtkPaned *)self.b2, self.sw3 );
+   gtk_widget_show(self.sw3);
+#else
    self.hb3=gtk_hbox_new(FALSE,0);
-     gtk_paned_add2 ((GtkPaned *)self.b2, self.hb3 );
+   gtk_paned_add2 ((GtkPaned *)self.b2, self.hb3 );
+   gtk_widget_show(self.hb3);
+#endif
    self.vb3=gtk_vbox_new(FALSE,0);
    gtk_widget_show(self.vb3);
 
@@ -1606,7 +1619,6 @@ int main(int argc, char **argv)
      gtk_box_pack_start (GTK_BOX (self.vb3), self.folderoption, FALSE, FALSE, 0);
      gtk_paned_add1 ((GtkPaned *)self.b2, self.vb3);
      gtk_box_pack_start (GTK_BOX (self.vb3), self.sw2, TRUE, TRUE, 0);
-   gtk_widget_show(self.hb3);
 
 
    // buttons
@@ -1671,18 +1683,16 @@ int main(int argc, char **argv)
    self.mt=gtk_text_view_new();
    self.mtb=gtk_text_view_get_buffer (GTK_TEXT_VIEW (self.mt));
    gtk_text_view_set_editable(GTK_TEXT_VIEW(self.mt),FALSE);
-   // fixme gtk_text_view_set_word_wrap(GTK_TEXT_VIEW(self.mt),TRUE);
-   // fixme gtk_text_view_set_line_wrap(GTK_TEXT_VIEW(self.mt),TRUE);
+   gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(self.mt),GTK_WRAP_WORD);
+   gtk_container_add (GTK_CONTAINER (self.sw3), self.mt);
 #else
    self.mt=gtk_text_new(NULL,NULL);
    gtk_text_set_editable(GTK_TEXT(self.mt),FALSE);
    gtk_text_set_word_wrap(GTK_TEXT(self.mt),TRUE);
    gtk_text_set_line_wrap(GTK_TEXT(self.mt),TRUE);
+   gtk_box_pack_start (GTK_BOX (self.hb3), self.mt, TRUE, TRUE, 0);
 #endif
-     gtk_box_pack_start (GTK_BOX (self.hb3), self.mt, TRUE, TRUE, 0);
-#ifndef GTK1
-     //fixme
-#else
+#ifdef GTK1
    self.mtsb=gtk_vscrollbar_new(GTK_TEXT(self.mt)->vadj);
      gtk_box_pack_start (GTK_BOX (self.hb3), self.mtsb, FALSE, FALSE, 0);
    gtk_widget_queue_resize(self.mtsb);
