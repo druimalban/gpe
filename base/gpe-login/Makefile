@@ -5,6 +5,7 @@ GTK2 = yes
 VERSION = 0.65
 DEBUG = no
 
+#FIXME: add: zh_TW hu ro ru sr sk
 LINGUAS = de sv wa nl pt cs fr
 
 CONTROL_GPE_LOGIN = control1
