@@ -31,10 +31,11 @@
 
 #define WINDOW_NAME "Gallery"
 #define _(_x) gettext (_x)
-GtkWidget *window;
-GtkWidget *scrolled_window;
+GtkWidget *window, *vbox2;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget;
+GtkWidget *loading_toolbar, *tools_toolbar;
+GtkWidget *loading_progress_bar;
 GList *image_filenames;
 
 // 0 = Detailed list
@@ -92,8 +93,12 @@ render_images ()
 
     gpe_iconlist_add_item (GPE_ICONLIST(il), "Image", image_filename, NULL);
 
-    this_item = this_item->next;
+    gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
 
+    while (gtk_events_pending ())
+      gtk_main_iteration ();
+
+    this_item = this_item->next;
   }
 
   gtk_widget_show (il);
@@ -110,6 +115,9 @@ add_directory (gchar *directory)
   loading_directory = 1;
   printf ("Selected directory: %s\n", directory);
   g_list_free (image_filenames);
+
+  gtk_widget_hide (tools_toolbar);
+  gtk_widget_show (loading_toolbar);
 
   dir = opendir (directory);
   if (dir)
@@ -136,8 +144,10 @@ add_directory (gchar *directory)
       }
     }
     view_widget = render_images (image_filenames);
-    gtk_scrolled_window_add_with_viewport (scrolled_window, GTK_WIDGET (view_widget));
-    gtk_widget_show (view_widget);
+    gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
+
+    gtk_widget_hide (loading_toolbar);
+    gtk_widget_show (tools_toolbar);
   }
 }
 
@@ -240,7 +250,7 @@ show_dirbrowser (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *toolbar2, *info_label;
+  GtkWidget *vbox, *hbox, *toolbar, *info_label, *loading_label;
   GtkWidget *view_option_menu, *view_menu, *view_menu_item;
   GdkPixbuf *p;
   GtkWidget *pw;
@@ -270,7 +280,7 @@ main (int argc, char *argv[])
 
   hbox = gtk_hbox_new (FALSE, 0);
 
-  view_widget = gtk_vbox_new (FALSE, 0);
+  vbox2 = gtk_vbox_new (FALSE, 0);
 
   view_option_menu = gtk_option_menu_new ();
   view_menu = gtk_menu_new ();
@@ -288,7 +298,10 @@ main (int argc, char *argv[])
   //gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
   //   (GtkSignalFunc) set_view, "list");
 
+  loading_label = gtk_label_new ("Loading...");
   info_label = gtk_label_new ("No Image");
+
+  loading_progress_bar = gtk_progress_bar_new ();
 
 #if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
@@ -301,17 +314,24 @@ main (int argc, char *argv[])
 #endif
 
 #if GTK_MAJOR_VERSION < 2
-  toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_SPACE_LINE);
+  tools_toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (tools_toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style (GTK_TOOLBAR (tools_toolbar), GTK_TOOLBAR_SPACE_LINE);
 #else
-  toolbar2 = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
+  tools_toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (tools_toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (tools_toolbar), GTK_TOOLBAR_ICONS);
 #endif
 
-  scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+#if GTK_MAJOR_VERSION < 2
+  loading_toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (loading_toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style (GTK_TOOLBAR (loading_toolbar), GTK_TOOLBAR_SPACE_LINE);
+#else
+  loading_toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (loading_toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (loading_toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   p = gpe_find_icon ("open");
   pw = gpe_render_icon (window->style, p);
@@ -349,56 +369,69 @@ main (int argc, char *argv[])
 
   p = gpe_find_icon ("fullscreen");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Fullscreen"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Fullscreen"), 
 			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, NULL, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar2));
+  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
   p = gpe_find_icon ("zoom_in");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom In"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom In"), 
 			   _("Zoom In"), _("Zoom In"), pw, NULL, NULL);
 
   p = gpe_find_icon ("zoom_out");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom Out"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom Out"), 
 			   _("Zoom Out"), _("Zoom Out"), pw, NULL, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar2));
+  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
   p = gpe_find_icon ("zoom_1");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom 1:1"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom 1:1"), 
 			   _("Zoom 1:1"), _("Zoom 1:1"), pw, NULL, NULL);
 
   p = gpe_find_icon ("zoom_fit");
   pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Zoom to Fit"), 
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom to Fit"), 
 			   _("Zoom to Fit"), _("Zoom to Fit"), pw, NULL, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar2));
+  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
-  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar2), info_label,
+  gtk_toolbar_append_widget (GTK_TOOLBAR (tools_toolbar), info_label,
 			   _("Image Infomation"), _("Image Infomation"));
+
+  gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_label,
+			   _("Loading..."), _("Loading..."));
+
+  gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_progress_bar,
+			   _("Progress"), _("Progress"));
+
+  p = gpe_find_icon ("stop");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (loading_toolbar), _("Stop Loading"), 
+			   _("Stop Loading"), _("Stop Loading"), pw, NULL, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), toolbar2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), loading_toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), tools_toolbar, FALSE, FALSE, 0);
 
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
 
   gtk_widget_show (window);
   gtk_widget_show (vbox);
+  gtk_widget_show (vbox2);
   gtk_widget_show (hbox);
   gtk_widget_show (toolbar);
-  gtk_widget_show (toolbar2);
   gtk_widget_show (info_label);
+  gtk_widget_show (loading_label);
+  gtk_widget_show (loading_progress_bar);
   gtk_widget_show (view_option_menu);
   gtk_widget_show (view_menu);
-  gtk_widget_show (scrolled_window);
 
   gtk_main();
   return 0;
