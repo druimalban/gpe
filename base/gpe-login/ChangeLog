@@ -1,3 +1,9 @@
+2003-03-30  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xinit: Deleted; moved to gpe-dm package.
+	* X11/Xserver: Likewise.
+	* X11/Xsession: Likewise.
+
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.48 released.
