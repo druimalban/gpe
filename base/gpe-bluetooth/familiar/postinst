@@ -1,3 +1,3 @@
 #!/bin/sh
 
-chmod u+s /sbin/hciattach /sbin/hciconfig /usr/lib/gpe-bluetooth/bnep-helper
+chmod u+s /sbin/hciattach /sbin/hciconfig /usr/lib/gpe-bluetooth/bnep-helper /usr/lib/gpe-bluetooth/rfcomm-helper
