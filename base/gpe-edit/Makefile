@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.22
+VERSION = 0.23
 
 MEMBERS = main
 #FIXME: add: cs ru sr ('de' is not on TP?)

@@ -1,3 +1,8 @@
+
+2004-06-04  Florian Boor <florian.boor@kernelconcepts.de>
+	* Version 0.23 released
+	* Makefile: V 0.23
+
 2004-06-04  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: (main): Removed hardcoded toolbar style.
