@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-30 00:37+0000\n"
+"POT-Creation-Date: 2003-01-04 14:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -85,7 +85,7 @@ msgstr ""
 msgid "New directory"
 msgstr ""
 
-#: what.c:58
+#: what.c:59
 msgid "No help available."
 msgstr ""
 
@@ -98,7 +98,7 @@ msgid "%B"
 msgstr ""
 
 #: gtkdatesel.c:188
-msgid "Week %W"
+msgid "Week %V"
 msgstr ""
 
 #: gtkdatesel.c:194
