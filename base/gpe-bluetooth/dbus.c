@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -89,24 +89,45 @@ gpe_bluetooth_init_dbus (void)
 
   dbus_error_init (&error);
   connection = dbus_bus_get (DBUS_BUS_SYSTEM, &error);
-  if (connection == NULL)
+  if (connection)
     {
-      gpe_error_box_fmt ("Failed to open connection to system message bus: %s\n",
+      dbus_connection_setup_with_g_main (connection, NULL);
+
+      dbus_connection_register_object_path (connection, object_path1, &dbus_pin_vtable, NULL);
+
+      dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
+      if (dbus_error_is_set (&error))
+	{
+	  gpe_error_box_fmt (_("Failed to acquire service: %s"), error.message);
+	  dbus_error_free (&error);
+	}
+    }
+  else
+    {
+      gpe_error_box_fmt (_("Failed to open connection to system message bus: %s"),
 			 error.message);
       dbus_error_free (&error);
-      exit (1);
     }
 
-  dbus_connection_setup_with_g_main (connection, NULL);
-
-  dbus_connection_register_object_path (connection, object_path1, &dbus_pin_vtable, NULL);
-  dbus_connection_register_object_path (connection, object_path2, &dbus_obex_vtable, NULL);
-
-  dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
-  if (dbus_error_is_set (&error))
+  dbus_error_init (&error);
+  connection = dbus_bus_get (DBUS_BUS_SESSION, &error);
+  if (connection)
     {
-      fprintf (stderr, "Failed to acquire service: %s\n", error.message);
+      dbus_connection_setup_with_g_main (connection, NULL);
+
+      dbus_connection_register_object_path (connection, object_path2, &dbus_obex_vtable, NULL);
+
+      dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
+      if (dbus_error_is_set (&error))
+	{
+	  gpe_error_box_fmt (_("Failed to acquire service: %s"), error.message);
+	  dbus_error_free (&error);
+	}
+    }
+  else
+    {
+      gpe_error_box_fmt (_("Failed to open connection to session message bus: %s"),
+			 error.message);
       dbus_error_free (&error);
-      exit (1);
     }
 }
