@@ -33,7 +33,7 @@
 #define _(_x) gettext (_x)
 GtkWidget *window, *vbox2;
 GtkWidget *dirbrowser_window;
-GtkWidget *view_widget;
+GtkWidget *view_widget, *image_widget;
 GtkWidget *loading_toolbar, *tools_toolbar;
 GtkWidget *loading_progress_bar;
 GList *image_filenames;
@@ -75,12 +75,34 @@ update_window_title (void)
   gtk_window_set_title (GTK_WINDOW (window), window_title);
 }
 
+void
+show_image (GtkWidget *widget, gpointer udata)
+{
+  gtk_widget_hide (view_widget);
+
+  image_widget = gtk_image_new_from_file ((gchar *) udata);
+  gtk_box_pack_start (GTK_BOX (vbox2), image_widget, TRUE, TRUE, 0);
+
+  gtk_widget_show (tools_toolbar);
+  gtk_widget_show (image_widget);
+
+  printf ("You just clicked on an image called %s\n", (gchar *) udata);
+}
+
+void
+hide_image ()
+{
+  gtk_widget_destroy (image_widget);
+  gtk_widget_hide (tools_toolbar);
+  gtk_widget_show (view_widget);
+}
+
 GtkWidget *
 render_images ()
 {
   GtkWidget *il;
   GList *this_item;
-  gchar *image_filename;
+  gchar *image_filename, *buf;
 
   il = gpe_iconlist_new ();
   printf ("Starting rendering...\n");
@@ -88,10 +110,11 @@ render_images ()
   while (this_item)
   {
     image_filename = (gchar *) this_item->data;
+    buf = g_strdup (image_filename);
 
     printf ("Rendering image %s\n", image_filename);
 
-    gpe_iconlist_add_item (GPE_ICONLIST(il), "Image", image_filename, NULL);
+    gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, (gpointer) image_filename);
 
     gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
 
@@ -108,7 +131,7 @@ render_images ()
 void
 add_directory (gchar *directory)
 {
-  gchar *filename, *buf;
+  gchar *filename, *imagename, *buf;
   struct dirent *d;
   DIR *dir;
 
@@ -116,7 +139,6 @@ add_directory (gchar *directory)
   printf ("Selected directory: %s\n", directory);
   g_list_free (image_filenames);
 
-  gtk_widget_hide (tools_toolbar);
   gtk_widget_show (loading_toolbar);
 
   dir = opendir (directory);
@@ -138,16 +160,20 @@ add_directory (gchar *directory)
 
         if (stat (filename, &s) == 0)
         {
-	  printf ("Added %s\n", filename);
-	  image_filenames = g_list_append (image_filenames, (gpointer) filename);
+	  if (strstr (filename, ".png") || strstr (filename, ".jpg"))
+	  {
+	    //printf ("Added %s\n", filename);
+	    image_filenames = g_list_append (image_filenames, (gpointer) filename);
+	  }
 	}
       }
     }
     view_widget = render_images (image_filenames);
+    gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
+		        GTK_SIGNAL_FUNC (show_image), NULL);
     gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
 
     gtk_widget_hide (loading_toolbar);
-    gtk_widget_show (tools_toolbar);
   }
 }
 
@@ -353,7 +379,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("cancel");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Close image"), 
-			   _("Close image"), _("Close image"), pw, NULL, NULL);
+			   _("Close image"), _("Close image"), pw, hide_image, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
