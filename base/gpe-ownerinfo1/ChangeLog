@@ -1,0 +1,8 @@
+2002-07-21  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/Makefile.am: Pull in libgpewidget.
+
+	* src/main.c: Overwrite the values from the XML file (for demo
+	purposes).
+
+

@@ -2,6 +2,7 @@
 
 INCLUDES = \
 	-I$(top_srcdir)/intl \
+	-I$(top_srcdir)/../libgpewidget `gdk-pixbuf-config --cflags` \
 	@GTK_CFLAGS@
 
 bin_PROGRAMS = gpe-ownerinfo
@@ -12,5 +13,6 @@ gpe_ownerinfo_SOURCES = \
 	interface.c interface.h \
 	callbacks.c callbacks.h
 
-gpe_ownerinfo_LDADD = @GTK_LIBS@ $(INTLLIBS)
+gpe_ownerinfo_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite \
+	@GTK_LIBS@ $(INTLLIBS)
 

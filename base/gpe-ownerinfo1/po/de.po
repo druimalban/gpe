@@ -1,0 +1,70 @@
+# Translation file for GPE Owner Info.
+# Copyright (C) 2002 Colin Marquardt
+# Colin Marquardt <ipaq@marquardt-home.de>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-ownerinfo\n"
+"POT-Creation-Date: 2002-07-20 23:25+0200\n"
+"PO-Revision-Date: 2002-07-20 23:34+0200\n"
+"Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/interface.c:40
+msgid "GPE Owner Info"
+msgstr "GPE Eigentümerinformation"
+
+#: src/interface.c:44
+msgid "Owner Info"
+msgstr "Eigentümerinformation"
+
+#: src/interface.c:60
+msgid "Name:"
+msgstr "Name:"
+
+#: src/interface.c:73
+msgid "Foo Bar"
+msgstr "Foo Bar"
+
+#: src/interface.c:86
+msgid "E-Mail:"
+msgstr "E-Mail:"
+
+#: src/interface.c:99
+msgid "ipaq@handhelds.org"
+msgstr ""
+
+#: src/interface.c:112
+msgid "Phone:"
+msgstr "Telefon:"
+
+#: src/interface.c:125
+msgid "+99 (9999) 999-9999"
+msgstr "+99 (9999) 999-9999"
+
+#: src/interface.c:138
+msgid "Address:"
+msgstr "Addresse:"
+
+#: src/interface.c:172
+msgid ""
+"Nosuch Lane 42\n"
+"X-12345 Quux\n"
+"Foobarland"
+msgstr ""
+"Nosuch Lane 42\n"
+"X-12345 Quux\n"
+"Foobarland"
+
+#: src/support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Couldn't find pixmap file: %s"
+
+#: src/support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Error loading pixmap file: %s"
