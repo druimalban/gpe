@@ -19,6 +19,7 @@
 #include "init.h"
 #include "pixmaps.h"
 #include "render.h"
+#include "what.h"
 
 #include "event-db.h"
 #include "event-ui.h"

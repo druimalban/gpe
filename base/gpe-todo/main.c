@@ -20,6 +20,7 @@
 #include "todo-sql.h"
 #include "pixmaps.h"
 #include "init.h"
+#include "what.h"
 
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
