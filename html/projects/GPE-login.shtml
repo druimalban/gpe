@@ -1,0 +1,33 @@
+
+<!--#set var="addtitle" value="Todo List"-->
+<!--#set var="pagename" value="todo"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<H2>Coordinator</H2>
+<p>
+The coordinator for this sub-project is Philip Blundell
+(<a HREF="mailto:philb@gnu.org">philb@gnu.org</a>) . If you want to 
+contribute to this project, please contact him directly.
+</p>
+
+<H2>Function</H2>
+<P>
+The login program serves two purposes.  First, it provides password
+protection for your personal data; second, it allows multiple users
+to share a single devices.
+</P>
+
+<H2>Status</H2>
+<P>
+The source code can be found in <A href="../cvs.shtml">CVS</A>,
+module <b>gpe-login</b>.  Precompiled binaries for iPAQ are available
+in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
+</P>
+
+<H2>Screenshot</H2>
+
+<IMG SRC="../images/gpe-login.png">
+
+<!--#include virtual="/includes/foot.shtml"-->
