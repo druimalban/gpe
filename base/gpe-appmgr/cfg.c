@@ -24,9 +24,11 @@
 
 #include "cfg.h"
 #include "package.h"
+//#include "xsettings.c"
 
 void cfg_load ()
 {
+#if 0
 	struct package *p=NULL;
 	char *home_dir;
 	char config_path[]=".gpe/gpe-appmgr";
@@ -131,10 +133,12 @@ void cfg_load ()
 	}
 
 	package_free (p);
+#endif
 }
 
 void cfg_load_if_newer (time_t when)
 {
+#if 0
 	struct stat buf;
 	const char *home;
 
@@ -152,4 +156,5 @@ void cfg_load_if_newer (time_t when)
 	}
 
 	cfg_load();
+#endif
 }

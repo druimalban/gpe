@@ -47,6 +47,10 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
+#include <gpe/spacing.h>
+
+//#include "gpeiconlist.h"
+#include "gpe-iconlist.h"
 
 /* everything else */
 #include "main.h"
@@ -68,9 +72,7 @@
 #define DBG(x) ;
 #endif
 
-GList *items=NULL;
 GList *recent_items=NULL;
-GList *groups=NULL;
 GList *forced_groups=NULL;
 
 GtkWidget *current_button=NULL;
@@ -89,18 +91,18 @@ GdkPixbuf *default_pixbuf;
 
 struct gpe_icon my_icons[] = {
 	{ "icon", "/usr/share/pixmaps/gpe-appmgr.png" },
+	//{ "bg", "/home/mibus/bg.png" },
 	{NULL, NULL}
 };
 
-GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw);
 void create_recent_list ();
 void create_recent_box(GtkBox *cont);
 char *translate_group_name (char *name);
 
-void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
-{
+void autohide_labels (int page) {
 	GtkWidget *hb;
 	int i=0;
+	int pagenum = page == -1 ? gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook)) - 1 : page;
 
 	if (!cfg_options.auto_hide_group_labels)
 		return;
@@ -110,11 +112,12 @@ void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 		GtkWidget *page_contents;
 		GList *children;
 
-		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK(nb), i);
+		page_contents = gtk_notebook_get_nth_page (GTK_NOTEBOOK(notebook), i);
 		if (!page_contents)
 			break;
 
-		hb = gtk_notebook_get_tab_label (GTK_NOTEBOOK(nb), page_contents);
+
+		hb = gtk_notebook_get_tab_label (GTK_NOTEBOOK(notebook), page_contents);
 		if (!hb)
 			continue;
 
@@ -138,12 +141,18 @@ void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 	}
 }
 
+void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
+{
+	autohide_labels (pagenum);
+}
+
 gint unignore_press (gpointer data)
 {
 	ignore_press = 0;
 	return FALSE;
 }
 
+#if 0
 /* Callback for selecting a program to run */
 gint btn_released (GtkObject *btn, gpointer data)
 {
@@ -251,6 +260,7 @@ gint btn_leave (GtkWidget *btn, GdkEventCrossing *event)
 	current_button_is_down = 0;
 	return TRUE;
 }
+#endif
 
 /* Remove the appmgr (not plugin) tabs from the notebook */
 void clear_appmgr_tabs ()
@@ -305,80 +315,6 @@ char *find_icon (char *base)
 		g_free (temp);
 	}
 	return NULL;
-}
-
-/* Limit the title to two lines at <68px wide
-   Eeeevil and Uuuugly but it works just fine AFAIK */
-void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
-{
-#ifdef GTK2
-	char *title;
-	if (strlen (full_title) > 10)
-		title = g_strdup_printf ("%.8s...", full_title);
-	else
-		title = g_strdup (full_title);
-	gtk_label_set_text (GTK_LABEL(label), title);
-	g_free (title);
-#else
-	int i;
-	char *title=NULL;
-	char *last_break=NULL;
-
-	DBG ((stderr, "make_nice_title: %s\n", full_title));
-
-	g_assert (label != NULL);
-	g_assert (font != NULL);
-	g_assert (full_title != NULL);
-
-	title = g_strdup (full_title);
-	for (i=0;i<strlen(title);i++)
-	{
-		if (gdk_text_width (font, title, i) >= 68)
-		{
-			if (last_break)
-			{
-				char *t;
-				int k;
-				int done=0;
-				*last_break = '\n';
-				t = last_break+1;
-				for (k=0;k<strlen(t) && !done;k++)
-				{
-					if (gdk_text_width (font, t, k) >= 68)
-					{
-						/* Cut the title short & make it end in "..." */
-						int j;
-						if (k > 0)
-							*(t + --k) = 0;
-						for (j=0;j<3;j++)
-							*(t + --k) = '.';
-						done = 1;
-					}
-				}
-				break;
-			} else
-			{
-				/* Cut the title short & make it end in "..." */
-				int j;
-				if (i > 0)
-					*(title + --i) = 0;
-				for (j=0;j<3;j++)
-					*(title + --i) = '.';
-				break;
-			}
-		}
-
-		/* Note if this character can be changed to a newline safely.
-		 * This is done now not at the top because bad wrapping can
-		 * occur if it is the "breakable character" pushes the string
-		 * past the 70 pixel width. */
-		if (title[i] == ' ')
-			last_break = title + i;
-	}
-
-	gtk_label_set_text (GTK_LABEL (label), title);
-	g_free (title);
-#endif
 }
 
 GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
@@ -455,7 +391,7 @@ void create_recent_list ()
 	GtkWidget *w;
 
 	TRACE("create_recent_list");
-
+#if 0
 	if (recent_tab == NULL)
 		return;
 
@@ -514,185 +450,64 @@ void create_recent_list ()
 	}
 
 	gtk_widget_show_all (recent_tab);
+#endif
+}
+
+void cb_clicked (GtkWidget *il, gpointer udata, gpointer data) {
+	struct package *p;
+	p = udata;
+	printf ("Clicked: %s\n", package_get_data (p, "title"));
+	run_program (package_get_data (p, "command"),
+		     cfg_options.use_windowtitle ? package_get_data (p, "windowtitle") : NULL);
+}
+
+void cb_popup (GtkWidget *il, gpointer udata, gpointer data) {
+	struct package *p;
+	p = udata;
+	printf ("Popup: %s\n", package_get_data (p, "title"));
+	popup_menu_activate (udata);
 }
 
 /* Make the contents for a notebook tab.
  * Generally we only want one group, but NULL means
  * ignore group setting (ie. "All").
  */
-GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw)
+GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style)
 {
-	GtkWidget *tbl;
-	GtkWidget *sw;
+	GtkWidget *il;
 	GList *this_item;
-	int i=0;
-	int cols;
+	//char *icon_file;
 
-	if (style == TAB_VIEW_ICONS)
-	{
-		/* Get the number of columns assuming 70px per item, 20px scrollbar */
-		/* This should really find out how much space it *can* use */
-		if (window->allocation.width - 20 > 70) 
-			cols = (window->allocation.width - 20) / 70;
-		else
-			cols = 1;
-	}
-	else
-		cols = 1;
+	il = gpe_iconlist_new ();
 
-	tbl = gtk_table_new (3,cols,TRUE);
+	gtk_signal_connect (GTK_OBJECT (il), "clicked", (GtkSignalFunc)cb_clicked, NULL);
+	gtk_signal_connect (GTK_OBJECT (il), "show_popup", (GtkSignalFunc)cb_popup, NULL);
+	//icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", current_group ? current_group : "All");
+	//gpe_iconlist_set_bg (il, icon_file);
+	//g_free (icon_file);
 
-	/* Make the scrolled window */
-	if (!curr_sw) /* We might already have one made for us */
-		sw = gtk_scrolled_window_new (NULL, NULL);
-	else
-		sw = curr_sw;
+	gpe_iconlist_set_bg (GPE_ICONLIST(il), "/usr/share/pixmaps/gpe-default-bg.png");
 
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(sw),
-					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw), tbl);
 
 	this_item = all_items;
 	while (this_item)
 	{
 		struct package *p;
-		GtkWidget *btn, *vb;
 
 		p = (struct package *) this_item->data;
 
-		/* Is the program going to appear in this group? */
-		if (current_group && strcmp (current_group, package_get_data (p, "section")))
-		{
-			this_item = g_list_next (this_item);
-			continue;
-		}
+		if (!current_group || (current_group && !strcmp (current_group, package_get_data (p, "section"))))
+			gpe_iconlist_add_item (GPE_ICONLIST(il),
+					       package_get_data (p, "title"),
+					       get_icon_fn (p, 48),
+					       (gpointer)p);
+		
+		this_item = this_item->next;
 
-		if (style == TAB_VIEW_ICONS)
-		{
-			GdkFont *font=NULL; /* Font in the label */
-			GtkWidget *lbl;
-			char *icon;
-			GdkPixbuf *pixbuf = NULL;
-			GtkWidget *pixmap;
-
-			/* Button picture */
-			icon = find_icon (get_closest_icon (p, cfg_options.list_icon_size));
-			if (icon)
-			{
-#ifdef GTK2
-				pixbuf = gdk_pixbuf_new_from_file (icon, NULL);
-#else
-				pixbuf = gdk_pixbuf_new_from_file (icon);
-#endif
-				free (icon);
-			}
-			if (!pixbuf) {
-				if (!default_pixbuf)
-#ifdef GTK2
-					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program.png", NULL);
-#else
-					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program.png");
-#endif
-				pixbuf = default_pixbuf;
-			}
-
-			/* Button label */
-			lbl = gtk_label_new("");
-
-			/* Get the font used by the label */
-#ifndef GTK2
-			if (gtk_rc_get_style (lbl))
-				font = gtk_rc_get_style (lbl)->font;
-			else
-				font = gtk_widget_get_style (lbl)->font;
-
-#endif
-			make_nice_title (lbl, font, package_get_data (p, "title"));
-
-			/* Button VBox */
-			vb = gtk_vbox_new(0,0);
-			gtk_box_pack_end_defaults (GTK_BOX(vb),lbl);
-			if (pixbuf) {
-				GdkPixbuf *spixbuf = gdk_pixbuf_scale_simple (pixbuf, cfg_options.list_icon_size, cfg_options.list_icon_size, GDK_INTERP_BILINEAR);
-				if (pixbuf != default_pixbuf)
-					gdk_pixbuf_unref (pixbuf);
-
-				pixmap = gpe_render_icon (notebook->style, 
-							  spixbuf);
-				gdk_pixbuf_unref (spixbuf);
-				gtk_box_pack_end_defaults (GTK_BOX(vb), 
-							   pixmap);
-			}
-
-			/* The 'button' itself */
-			btn = gtk_event_box_new ();
-#ifdef GTK2
-#else
-			/* The "Ay" is arbitrary; I figure'd it'd give a decent approximation at the
-			   max. height of the font */
-			gtk_widget_set_usize (btn, 70, 55 + 2*gdk_text_height(font, "Ay", 2));
-#endif
-
-		} else /* Thus style == TAB_VIEW_LIST */
-		{
-			GtkWidget *img=NULL,*lbl;
-			char *icon;
-
-			/* Button picture */
-			icon = find_icon (get_closest_icon (p, 16));
-			if (icon)
-			{
-				img = create_icon_pixmap (tbl->style, icon, 16);
-				free (icon);
-			}
-			if (!img)
-				img = create_icon_pixmap (tbl->style,
-							  "/usr/share/pixmaps/menu_unknown_program16.png",
-							  16);
-
-			/* Button label */
-			lbl = gtk_label_new(package_get_data (p, "title"));
-			gtk_label_set_justify (GTK_LABEL(lbl), GTK_JUSTIFY_LEFT);
-			gtk_widget_set_usize (lbl, 0, 16);
-
-			/* Button HBox */
-			vb = gtk_hbox_new (0,0);
-
-			/* Pad it up */
-			gtk_box_pack_end_defaults (GTK_BOX(vb),gtk_label_new(""));
-
-			/* Put the label and pixmap in the box */
-			gtk_box_pack_end (GTK_BOX(vb),lbl, 0, 0, 0);
-			if (img)
-				gtk_box_pack_end (GTK_BOX(vb),img, 0, 0, 0);
-
-
-			/* The button itself */
-			btn = gtk_event_box_new ();
-		}
-
-		gtk_container_add (GTK_CONTAINER(btn),vb);
-		gtk_object_set_data (GTK_OBJECT(btn), "program", (gpointer)p);
-		gtk_signal_connect( GTK_OBJECT(btn), "button_release_event",
-				    GTK_SIGNAL_FUNC(btn_released), NULL);
-		gtk_signal_connect( GTK_OBJECT(btn), "button_press_event",
-				    GTK_SIGNAL_FUNC(btn_pressed), NULL);
-		gtk_signal_connect( GTK_OBJECT(btn), "enter_notify_event",
-				    GTK_SIGNAL_FUNC(btn_enter), NULL);
-		gtk_signal_connect( GTK_OBJECT(btn), "leave_notify_event",
-				    GTK_SIGNAL_FUNC(btn_leave), NULL);
-
-		/* Put the button in the table */
-		gtk_table_attach_defaults (GTK_TABLE(tbl), btn,
-					   i%cols,i%cols+1,i/cols,i/cols+1);
-
-		i++;
-
-		this_item = g_list_next (this_item);
 	}
 
-	gtk_widget_show_all(sw);
-	return sw;
+	gtk_widget_show (il);
+	return il;
 }
 
 /* Creates the image/label combo for a tab.
@@ -749,19 +564,13 @@ void refresh_tabs ()
 
 	clear_appmgr_tabs ();
 
-	/* Create the 'All' tab if wanted */
-	if (cfg_options.show_all_group)
-		gtk_notebook_append_page (GTK_NOTEBOOK(notebook),
-					  create_tab (items, NULL, cfg_options.tab_view, NULL),
-					  create_group_tab_label("All", notebook->style));
-
 	/* Create the normal tabs if wanted */
 	l = groups;
 	while (l)
 	{
 		gtk_notebook_append_page (
 			GTK_NOTEBOOK(notebook),
-			create_tab (items, l->data, cfg_options.tab_view, NULL),
+			create_tab (items, l->data, cfg_options.tab_view),
 			create_group_tab_label(l->data, notebook->style));
 
 		l = l->next;
@@ -909,6 +718,36 @@ char *translate_group_name (char *name)
 	return name;
 }
 
+/* clean_up():
+ * free all data etc.
+ */
+void clean_up ()
+{
+	GList *l;
+
+	TRACE("clean_up");
+
+	l = items;
+	while (l)
+	{
+		if (l->data)
+			package_free ((struct package *)l->data);
+		l = l->next;
+	}
+	g_list_free (items);
+
+	l = groups;
+	while (l)
+	{
+		if (l->data)
+			free (l->data);
+		l = l->next;
+	}
+	g_list_free (groups);
+
+	groups = items = NULL;
+}
+
 void cb_package_add (struct package *p)
 {
 	TRACE ("cb_package_add");
@@ -939,7 +778,7 @@ void cb_package_add (struct package *p)
 /* Reloads the menu files into memory */
 int refresh_list ()
 {
-	GList *l, *old_items, *old_groups;
+//	GList *l, *old_items, *old_groups;
 	GList *ignored_items;
 	DIR *dir;
 	struct dirent *entry;
@@ -974,10 +813,11 @@ int refresh_list ()
 	/* Remove the tap-hold popup menu timeout if it's there */
 	popup_menu_cancel ();
 
-	old_items = items;
-	old_groups = groups;
+//	old_items = items;
+//	old_groups = groups;
 
-	items = groups = NULL;
+//	items = groups = NULL;
+	clean_up ();
 
 	/* flush old translations */
 	for (j = translate_list; j; j = j->next) {
@@ -1020,6 +860,7 @@ int refresh_list ()
 
 	groups = g_list_concat (forced_groups, groups);
 
+#if 0
 	/* free the old data. note that we do it now so that
 	   any stuff that references it can't ever
 	   reference invalid data */
@@ -1040,6 +881,7 @@ int refresh_list ()
 		l = l->next;
 	}
 	g_list_free (old_groups);
+#endif
 
 	/* We allocated a string for the user's menu dir; free it */
 	if (user_menu)
@@ -1065,6 +907,8 @@ void cb_win_draw (GtkWidget *widget,
 {
 	static int last_width = 0;
 	TRACE ("cb_win_draw");
+	if (last_width)
+		return;
 	DBG((stderr, "window: %p\n", window));
 	DBG((stderr, "last_width: %d\n", last_width));
 	DBG((stderr, "window->allocation.width: %d\n",
@@ -1251,10 +1095,13 @@ gint on_window_delete (GtkObject *object, gpointer data)
 void create_main_window()
 {
 	GtkWidget *vbox;
+//	GtkWidget *widget, *sw;
 	TRACE ("create_main_window");
+
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
 	gtk_window_set_title (GTK_WINDOW(window), "Programs");
-	gtk_widget_set_usize (window, 220,280);
+	gtk_widget_set_usize (window, 235,280);
 	gtk_widget_realize (window);
 	set_window_pixmap();
 
@@ -1265,9 +1112,6 @@ void create_main_window()
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
 			    (GtkSignalFunc)gtk_main_quit, NULL);
 #endif
-	
-	gtk_signal_connect (GTK_OBJECT(window), "size-allocate",
-			    (GtkSignalFunc)cb_win_draw, NULL);
 
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_homogeneous_tabs(GTK_NOTEBOOK(notebook), FALSE);
@@ -1278,8 +1122,10 @@ void create_main_window()
 
 	/* If a person releases the stylus when over the table, we want
 	   current_button etc. to get cleared properly, so: */
+	/*
 	gtk_signal_connect( GTK_OBJECT(notebook), "button_release_event",
 			    GTK_SIGNAL_FUNC(btn_released), NULL);
+	*/
 
 	vbox = gtk_vbox_new(0,0);
 	gtk_container_add (GTK_CONTAINER (window), vbox);
@@ -1293,37 +1139,9 @@ void create_main_window()
 	/* Send all key events to the one place */
 	gtk_key_snooper_install ((GtkKeySnoopFunc)keysnoop,NULL);
 
-	//draw_timeout_id = gtk_timeout_add (0, (GtkFunction)cb_win_draw_real, NULL);
 	cb_win_draw (NULL, NULL);
 }
 
-/* clean_up():
- * free all data etc.
- */
-void clean_up ()
-{
-	GList *l;
-
-	TRACE("clean_up");
-
-	l = items;
-	while (l)
-	{
-		if (l->data)
-			package_free ((struct package *)l->data);
-		l = l->next;
-	}
-	g_list_free (items);
-
-	l = groups;
-	while (l)
-	{
-		if (l->data)
-			free (l->data);
-		l = l->next;
-	}
-	g_list_free (groups);
-}
 /* main():
  * init the libs, setup the signal handler,
  * run gtk bits
@@ -1331,6 +1149,9 @@ void clean_up ()
 int main(int argc, char *argv[]) {
         struct sigaction sa_old, sa_new;
 	TRACE ("main");
+
+	/* Hmm */
+	items = groups = NULL;
 
 	/* Init gtk & friends */
 	if (gpe_application_init (&argc, &argv) == FALSE)
@@ -1340,7 +1161,7 @@ int main(int argc, char *argv[]) {
 		exit (1);
 
 	/* load our configuration */
-	cfg_load ();
+//	cfg_load ();
 
 	/* update the menu data */
 	refresh_list ();
@@ -1358,6 +1179,8 @@ int main(int argc, char *argv[]) {
 	signal (SIGCHLD, SIG_IGN);
 
 	last_update = time (NULL);
+
+	gpe_appmgr_start_xsettings ();
 
 	/* start the event loop */
 	gtk_main();

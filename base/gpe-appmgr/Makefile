@@ -1,10 +1,11 @@
+GTK2 = yes
 NATIVE = no
 CVSBUILD = yes
 DEBUG = no
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget
-CFLAGS += -I../libgpewidget
+LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client
+CFLAGS += -I../libgpewidget -I../libxsettings-client -I../libxsettings
 else
 CFLAGS += -I/usr/include/gpe
 endif
@@ -19,7 +20,7 @@ ifeq ($(NATIVE),yes)
 STRIP=strip
 
 ifeq ($(GTK2),yes)
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0`
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` #-lXinerama
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
 else
 LDFLAGS += -lgpewidget `gtk-config --libs` `gdk-pixbuf-config --libs`
@@ -33,7 +34,7 @@ STRIP=arm-linux-strip
 
 ifeq ($(GTK2),yes)
 #LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0 | sed "s/-L.*lib //"`
-LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0
+LDFLAGS += -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgdk_pixbuf-2.0 -lm -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lXinerama
 CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
 
 else
@@ -43,6 +44,8 @@ CFLAGS += -I/usr/local/arm/arm-linux/include `gtk-config --cflags` -I/usr/includ
 endif #GTK2?
 
 endif #native or cross-compile
+
+LDFLAGS += -lXsettings -lXsettings-client
 
 
 INSTALL=install
@@ -54,7 +57,7 @@ ETCDIR=etc
 
 CFLAGS += -D_GNU_SOURCE
 
-OBJS=main.o xsi.o popupmenu.o package.o cfg.o properties.o gnome-exec.o plugin.o tray.o
+OBJS=main.o xsi.o popupmenu.o package.o cfg.o properties.o gnome-exec.o plugin.o tray.o xsettings.o
 
 all: gpe-appmgr
 

@@ -143,8 +143,3 @@ void popup_menu_cancel (void)
 		menu_timeout_id = 0;
 	}
 }
-
-void popup_menu_later (int delay, gpointer data)
-{
-	menu_timeout_id = gtk_timeout_add (delay, popup_menu_activate, data);
-}

@@ -22,10 +22,17 @@ GtkWidget *window;
 GtkWidget *notebook;
 GtkWidget *recent_box;
 
+/* The items */
+GList *items;
+GList *groups;
+
 /* Refresh the UI with the icons */
 void refresh_tabs (void);
 
 /* Creates the image/label combo for a tab */
 GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style);
+
+/* Refreshes the tab labels for autohide */
+void autohide_labels (int page);
 
 #endif

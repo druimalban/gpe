@@ -36,6 +36,8 @@
 #include <X11/Xos.h>
 #include <X11/Xproto.h>
 
+#include <X11/Xatom.h> // XA_*
+
 #include <glib.h>
 #include "xsi.h"
 
@@ -48,6 +50,44 @@ Display *display;
 int screen;
 int debug;
 Atom wm_state_atom = 0;
+
+char *atom_names[] = {
+	/* clients */
+	"KWM_WIN_ICON",
+	"WM_STATE",
+	"_MOTIF_WM_HINTS",
+	"_NET_WM_STATE",
+	"_NET_WM_STATE_SKIP_TASKBAR",
+	"_NET_WM_STATE_SHADED",
+	"_NET_WM_DESKTOP",
+	"_NET_WM_WINDOW_TYPE",
+	"_NET_WM_WINDOW_TYPE_DOCK", /* 8 */
+	"_NET_WM_STRUT",
+	"_WIN_HINTS",
+	/* root */
+	"_NET_CLIENT_LIST",
+	"_NET_NUMBER_OF_DESKTOPS",
+	"_NET_CURRENT_DESKTOP",
+};
+
+#define ATOM_COUNT (sizeof (atom_names) / sizeof (atom_names[0]))
+
+Atom atoms[ATOM_COUNT];
+
+#define atom_KWM_WIN_ICON atoms[0]
+#define atom_WM_STATE atoms[1]
+#define atom__MOTIF_WM_HINTS atoms[2]
+#define atom__NET_WM_STATE atoms[3]
+#define atom__NET_WM_STATE_SKIP_TASKBAR atoms[4]
+#define atom__NET_WM_STATE_SHADED atoms[5]
+#define atom__NET_WM_DESKTOP atoms[6]
+#define atom__NET_WM_WINDOW_TYPE atoms[7]
+#define atom__NET_WM_WINDOW_TYPE_DOCK atoms[8]
+#define atom__NET_WM_STRUT atoms[9]
+#define atom__WIN_HINTS atoms[10]
+#define atom__NET_CLIENT_LIST atoms[11]
+#define atom__NET_NUMBER_OF_DESKTOPS atoms[12]
+#define atom__NET_CURRENT_DESKTOP atoms[13]
 
 struct window_info *window_info_new (Window xid, char *name)
 {
@@ -108,6 +148,26 @@ GList *get_windows_with_name (char *name)
 	return get_windows_with_name_in (display, RootWindow(display, screen), name);
 }
 
+void *
+get_prop_data (Window win, Atom prop, Atom type, int *items)
+{
+	Atom type_ret;
+	int format_ret;
+	unsigned long items_ret;
+	unsigned long after_ret;
+	unsigned char *prop_data;
+
+	prop_data = 0;
+
+	XGetWindowProperty (display, win, prop, 0, 0x7fffffff, False,
+			    type, &type_ret, &format_ret, &items_ret,
+			    &after_ret, &prop_data);
+	if (items)
+		*items = items_ret;
+
+	return prop_data;
+}
+
 /*
  * Window_With_Name: routine to locate a window with a given name on a display.
  *                   If no window with the given name is found, 0 is returned.
@@ -115,80 +175,30 @@ GList *get_windows_with_name (char *name)
  *                   one found will be returned.  Only top and its subwindows
  *                   are looked at.  Normally, top should be the RootWindow.
  */
-Window Window_With_Name(dpy, top, name)
-     Display *dpy;
-     Window top;
-     char *name;
+Window Window_With_Name(Display *dpy, Window top, char *name)
 {
-        Window *children, dummy;
-        unsigned int nchildren;
-        int i;
-        Window w=0;
-        char *window_name;
+	Window *win, ret=0;
+	int num=-1, i;
 
-        if (XFetchName(dpy, top, &window_name) && !fnmatch(name, window_name, FNM_PERIOD))
-          return(top);
+	XInternAtoms (display, atom_names, ATOM_COUNT, False, atoms);
 
-        if (!XQueryTree(dpy, top, &dummy, &dummy, &children, &nchildren))
-          return(0);
+	win = get_prop_data (top, atom__NET_CLIENT_LIST, XA_WINDOW, &num);
 
-        for (i=0; i<nchildren; i++) {
-                w = Window_With_Name(dpy, children[i], name);
-                if (w)
-                  break;
-        }
-        if (children) XFree ((char *)children);
-        return(w);
-}
+	for (i=0;i<num;i++) {
+		char *wname;
+		wname = get_prop_data (win[i], XA_WM_NAME, XA_STRING, 0);
+		if (!wname)
+			continue;
 
-static Window
-TryChildren(Display *dpy, Window win, Atom WM_STATE)
-{
-	Window root, parent;
-	Window *children;
-	unsigned int nchildren;
-	unsigned int i;
-	Atom type = None;
-	int format;
-	unsigned long nitems, after;
-	unsigned char *data;
-	Window inf = 0;
-
-	if (!XQueryTree(dpy, win, &root, &parent, &children, &nchildren))
-		return 0;
-	for (i = 0; !inf && (i < nchildren); i++) 
-	{
-		XGetWindowProperty(dpy, children[i], WM_STATE, 0, 0, False,
-	                        AnyPropertyType, &type, &format, &nitems,
-	                        &after, &data);
-		if (type)
-			inf = children[i];
+		if (!fnmatch(name, wname, 0)) {
+			ret = win[i];
+			break;
+		}
 	}
-	for (i = 0; !inf && (i < nchildren); i++)
-		inf = TryChildren(dpy, children[i], WM_STATE);
-	if (children) XFree((char *)children);
-	return inf;
-}
 
-Window
-ClientWindow(Display *dpy, Window win)
-{
-	 Atom type = None;
-	 int format;
-	 unsigned long nitems, after;
-	 unsigned char *data;
-	 Window inf;
+	XFree (win);
 
-	 if (!wm_state_atom)
-	     return win;
-	 XGetWindowProperty(dpy, win, wm_state_atom, 0, 0, False, AnyPropertyType,
-	                    &type, &format, &nitems, &after, &data);
-	 if (type)
-	     return win;
-	 inf = TryChildren(dpy, win, wm_state_atom);
-	 if (!inf)
-	     inf = win;
-	 return inf;
+	return ret;
 }
 
 //
@@ -242,22 +252,6 @@ void raise_window(Display *display, Window w)
 void raise_window_default(Window w)
 {
 	raise_window (display, w);
-}
-
-static void sendClientMessage(Window sendTo, Window w, Atom a, long x)
-{
-	XEvent ev;
-	long mask;
-
-	memset(&ev, 0, sizeof(ev));
-	ev.xclient.type = ClientMessage;
-	ev.xclient.window = w;
-	ev.xclient.message_type = a;
-	ev.xclient.format = 32;
-	ev.xclient.data.l[0] = x;
-	ev.xclient.data.l[1] = CurrentTime;
-	mask = 0L;
-	XSendEvent(display, sendTo, False, mask, &ev);
 }
 
 int run_program (char *exec, char *name)

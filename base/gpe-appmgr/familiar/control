@@ -1,8 +1,8 @@
-Package: gpe-appmgr
+Package: gpe-appmgr2
 Section: base
 Priority: optional
-Version: 0.9-2
+Version: 0.10
 Architecture: arm
 Maintainer: Robert Mibus <mibus@bigpond.com>
-Depends: libgtk1.2, libgpewidget0, libgdk-pixbuf2
+Depends: libgpewidget1
 Description: A PalmOS-style launcher for GPE
