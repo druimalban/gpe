@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-setbg
 DEBUG = yes
 CVSBUILD = yes
+VERSION = 0.02-1
 
 MEMBERS = $(PACKAGE)
 
