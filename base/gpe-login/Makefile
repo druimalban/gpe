@@ -44,8 +44,6 @@ gpe-login: $(OBJS)
 gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $^ $(LDFLAGS) `pkg-config --libs x11`
 
-install: install-scripts
-
 install-program: gpe-login gpe-lock-display
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
@@ -65,34 +63,6 @@ install-program: gpe-login gpe-lock-display
 	install -m 644 locale.alias $(DESTDIR)/etc/gpe/
 	install -d $(DESTDIR)/etc/sysconfig
 	install -m 644 gpe-login.sysconfig $(DESTDIR)/etc/sysconfig/gpelogin
-
-install-scripts: gpe-logout.desktop
-	for i in X11/Xsession.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
-	install -d $(DESTDIR)$(PREFIX)/bin
-	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
-	install -d $(DESTDIR)/etc/gpe
-	install -m 644 X11/xsettings.default $(DESTDIR)/etc/gpe/
-	install -m 644 standard.mbdock $(DESTDIR)/etc/gpe/gpe.mbdock
-	install -m 644 X11/Xdefaults $(DESTDIR)/etc/X11/
-	mkdir -p familiar/dist.gpe-session-scripts/usr/share/pixmaps
-	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps
-	mkdir -p familiar/dist.gpe-session-scripts/usr/share/applications
-	install -m 644 gpe-logout.desktop familiar/dist.gpe-session-scripts/usr/share/applications
-	mkdir -p familiar/dist.gpe-session-scripts/usr/bin
-	install gpe-logout.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-logout
-	install gpe-auto-bluetooth.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-auto-bluetooth
-
-scripts-ipkg:
-	rm -rf familiar/dist.gpe-session-scripts
-	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
-	sed 's$$SOURCE$$$(SOURCE)$$' < familiar/control.gpe-session-scripts > familiar/dist.gpe-session-scripts/CONTROL/control
-	install familiar/postinst.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/postinst
-	make DESTDIR=`pwd`/familiar/dist.gpe-session-scripts PREFIX=/usr install-scripts
-	chown -R root.root familiar/dist.gpe-session-scripts
-	ipkg-build familiar/dist.gpe-session-scripts
-	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; fi
-
-ipkg: scripts-ipkg
 
 clean: clean-po
 	rm -f gpe-login $(OBJS) $(DEPS) gpe-lock-display gpe-lock-display.o nocursor.o
