@@ -1,5 +1,7 @@
 2004-04-09  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-flyer.tex, gpe-flyer_de.tex: freedesktop.org Xserver
+
 	* gpe-flyer_de.tex: New translation. Untested, need to fix my font
 	setup.
 
