@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
+VERSION = 0.41
 
 ifeq ($(GTK2),yes)
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`

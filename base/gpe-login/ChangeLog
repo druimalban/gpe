@@ -1,5 +1,11 @@
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.41 released.
+	
+2003-02-21  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-login1 (Depends): Add gpe-login-locale*.
+
 	* Makefile: Include Makefile.translation and $(DEPS).
 	(install-scripts): Depend on gpe-logout.desktop.
 	(EXTRA_DESKTOPS): Define.
