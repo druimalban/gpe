@@ -1,3 +1,8 @@
+2002-07-21  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gtkrc: Remove boldness (and thus explicit setting of the font)
+	from style gpe_login_result.
+
 2002-07-21  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.14 released.
@@ -19,8 +24,6 @@
 
 2002-07-20  Philip Blundell  <philb@gnu.org>
 
-	* pixmaps.c (gpe_load_one_icon): Avoid use of NULL theme_dir.
-
 	* init.c (gpe_application_init): Don't attempt to create ~/.gpe when
 	HOME not set.
 
@@ -30,11 +33,11 @@
 
 	* gtkrc: Rename gpe_login_incorrect to gpe_login_result.
 
-	* init.c: Fix user gtkrc file.
+	* init.c (gpe_application_init): Fix user gtkrc file.
 
 	* Makefile: Install gtkrc file.
 
-	* init.c (main): Add default resource files, doesn't work yet.
+	* init.c (gpe_application_init): Add default resource files, doesn't work yet.
 
 2002-07-17  Philip Blundell  <pb@nexus.co.uk>
 
