@@ -25,7 +25,7 @@ CFLAGS += -MD
 
 CPPFLAGS += -I. -I../libgpewidget
 
-HEADERS = todo-db.h
+HEADERS = gpe/todo-db.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -49,7 +49,7 @@ $(SONAME): $(OBJS)
 	$(CC) $(CFLAGS) -S $<
 
 install-devel:
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libtododb.so
 
 clean:
