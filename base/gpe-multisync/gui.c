@@ -23,7 +23,7 @@ ok_clicked (GtkWidget *w, GtkWidget *data)
 {
   gpe_conn *conn;
 
-  conn = g_object_get_data (G_OBJECT (w), "conn");
+  conn = g_object_get_data (G_OBJECT (data), "conn");
   gpe_save_config (conn);
 
   gtk_widget_destroy (data);
@@ -35,6 +35,8 @@ delete_window (GtkWidget *w)
   gpe_conn *conn;
 
   conn = g_object_get_data (G_OBJECT (w), "conn");
+  g_free (conn->username);
+  g_free (conn->device_addr);
   g_free (conn);
 
   sync_plugin_window_closed ();
@@ -61,6 +63,8 @@ open_option_window (sync_pair *pair, connection_type type)
 
   conn = g_malloc0 (sizeof (*conn));
 
+  conn->sync_pair = pair;
+
   config_window = glade_xml_get_widget (xml, "gpe_config");
 
   gpe_load_config (conn);
@@ -68,6 +72,12 @@ open_option_window (sync_pair *pair, connection_type type)
   g_object_set_data (G_OBJECT (config_window), "conn", conn);
 
   g_signal_connect (G_OBJECT (config_window), "destroy", G_CALLBACK (delete_window), NULL);
+
+  w = glade_xml_get_widget (xml, "entry1");
+  gtk_entry_set_text (GTK_ENTRY (w), conn->username);
+
+  w = glade_xml_get_widget (xml, "combo1");
+  gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (w)->entry), conn->device_addr);
 
   w = glade_xml_get_widget (xml, "cancelbutton1");
   g_signal_connect (G_OBJECT (w), "clicked", G_CALLBACK (cancel_clicked), config_window);
