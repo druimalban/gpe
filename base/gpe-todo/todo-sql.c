@@ -110,6 +110,13 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
 	i->state = atoi (argv[1]);
       else if (!strcmp (argv[0], "CATEGORY"))
 	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
+      else if (!strcmp (argv[0], "DUE"))
+	{
+	  struct tm tm;
+	  memset (&tm, 0, sizeof (tm));
+	  if (strptime (argv[1], "%F", &tm))
+	    i->time = mktime (&tm);
+	}
     }
 
   return 0;
@@ -299,7 +306,7 @@ push_item (struct todo_item *i)
       char d_buf[32];
       struct tm tm;
       localtime_r (&i->time, &tm);
-      strftime (d_buf, sizeof(d_buf), "%F", &tm);
+      strftime (d_buf, sizeof (d_buf), "%F", &tm);
       if (insert_values (sqliteh, i->id, "DUE", "%q", d_buf))
 	goto error;
     }

@@ -1,5 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-todo
+GTK2 = yes
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
