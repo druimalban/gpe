@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@
 
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
+#include <dbus/dbus-glib-lowlevel.h>
 
 #include "pin-ui.h"
 
@@ -64,8 +65,8 @@ bluez_pin_dbus_server_run (void)
 {
   DBusConnection *connection;
   DBusError error;
-  static const char *old_object_path[] = { "org", "handhelds", "gpe", "bluez", "PinAgent", NULL };
-  static const char *new_object_path[] = { "org", "bluez", "PinAgent", NULL };
+  static const char *old_object_path = "/org/handhelds/gpe/bluez/PinAgent";
+  static const char *new_object_path = "/org/bluez/PinAgent"; 
   int errors = 0;
 
   dbus_error_init (&error);
