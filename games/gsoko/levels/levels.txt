@@ -1,0 +1,19 @@
+A level is described by 16 lines of 20 characters with the meaning
+detailed here:
+
+  = empty square
+x = container
+@ = wall
+o = box
+# = 'contained' box
+
+< = character facing left
+> = right
+^ = up
+v = down
+
+( = left over a container
+) = ...
+A
+V
+

@@ -1,0 +1,55 @@
+gSoko 0.3 - a Sokoban clone for gtk+
+(c) 2000-2001 Jean-Michel Grimaldi <jm@via.ecp.fr>
+Homepage: http://www.via.ecp.fr/~jm/gsoko.html
+
+- What is gSoko?
+- Requirements
+- Current and future features
+- How to run gSoko
+- How to uninstall gSoko
+
+What is gSoko?
+--------------
+gSoko is a gtk+ clone of the famous Sokoban game.
+The goal of the game is to push all the boxes on the squares with a red
+pattern.
+
+gSoko is designed to run on Linux boxes, but it might also compile
+under other systems where the gtk+ libs are available (e.g. Windows).
+
+gSoko is free software, released under the GNU General Public License
+(though the code is not very clean yet).
+
+Requirements
+------------
+The gtk+ 1.2.0 (or better) libraries are needed (http://www.gtk.org/).
+If you have The Gimp installed, you already have them.
+
+Current and future features
+---------------------------
+Latest version of gSoko is 0.3.
+
+Its features include:
+ * 50 levels (more to come)
+ * automatically save/reload level to/from $HOME/.gsokorc
+ * unlimited undo
+ * nice graphics (thx The Gimp) 
+
+Future versions should bring:
+ * score
+ * more levels
+ * more customizable graphics: skins
+ * cleaner code 
+
+How to run gSoko
+----------------
+ * From the binaries : just execute gsoko
+ * From the sources : 'make', then './gsoko'
+
+When you quit, a .gsokorc file will be created in your home directory.
+It contains the level you reached.
+
+How to uninstall gSoko
+----------------------
+Just remove the gsoko directory and the .gsokorc file.
+

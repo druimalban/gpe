@@ -1,0 +1,13 @@
+gSoko 0.3 - a Sokoban clone for gtk+
+(c) 2000-2001 Jean-Michel Grimaldi <jm@via.ecp.fr>
+
+This file describes the changes that occurred between the successive
+versions of gSoko.
+
+0.1 -> 0.3
+----------
+ * added clean target in the makefile, plus CHANGES and README files
+ And thanks to Gilles Arnaud:
+ * automatically save/reload level to/from $HOME/.gsokorc
+ * unlimited undo
+
