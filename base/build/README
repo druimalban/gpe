@@ -4,6 +4,11 @@ Some comments about how to use the Makefiles collected here.
 Makefile.dpkg_ipkg
 ------------------
 
+This Makefile provides an 'install' target that depends on both
+'install-program' and 'install-mo'. Applications should only provide
+an 'install-program' target, not 'install'.
+
+
 Use a dynamic path to the "build/" directory, since the tarball
 created by 'make dist' will contain the Makefile.dpkg_ipkg in
 "foo-0.23/build/". Define it as follows:

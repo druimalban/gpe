@@ -1,3 +1,13 @@
+2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* README: Talk about the 'install' target a bit.
+
+	* Makefile.dpkg_ipkg (ipkg): Don't use 'make install' but 'make
+	install-program'.
+
+	(install): Depend on both 'install-program' and 'install-mo'. This
+	replaces the 'install' target from the app specific makefiles.
+
 2003-03-07  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.translation (dist-prep): New target, depending on

@@ -5,8 +5,10 @@ DEBUG = no
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libxsettings  -L../libxsettings-client -L../libdotdesktop
 CFLAGS += -I../libgpewidget -I../libxsettings-client -I../libxsettings -I../libdotdesktop
+BUILD = ../build
 else
 CFLAGS += -I/usr/include/gpe
+BUILD = build
 endif
 
 ifeq ($(DEBUG),yes)
@@ -51,7 +53,7 @@ all: gpe-appmgr
 gpe-appmgr: $(OBJS)
 	$(CC) -o gpe-appmgr $(OBJS) $(LDFLAGS)
 
-install: gpe-appmgr
+install-program: all
 	$(INSTALL) -D gpe-appmgr $(DESTDIR)/$(BINDIR)/gpe-appmgr
 	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-appmgr
 	mkdir -p $(DESTDIR)/$(PREFIX)/share/pixmaps
@@ -66,5 +68,5 @@ distclean: clean
 	rm -f *.ipk
 	rm -rf familiar/dist
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg

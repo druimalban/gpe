@@ -23,7 +23,9 @@ po-files = $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
 all-mo: $(mo-files)
 
 install-mo: all-mo
-	for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 $(DIR_PO)/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done
+	if [ "x$(LINGUAS)" != "x" ]; then \
+		for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 $(DIR_PO)/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done \
+	fi;
 
 .po8.mo:;
 	msgfmt -o $@ $<

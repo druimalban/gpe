@@ -1,2 +1,10 @@
+2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install-program): New name for 'install' ('install' is
+	now provided by Makefile.dpkg_ipkg).  
+	(CVSBUILD): New variable.
+	(BUILD): New variable.
+	Use Makefile.translation.
+
 021021 NF:
 	removed unnecessary system() calls from callback.c
