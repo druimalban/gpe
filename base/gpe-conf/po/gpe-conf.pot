@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-06-11 18:07+0200\n"
+"POT-Creation-Date: 2003-07-02 21:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,27 +16,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:318
+#: main.c:286
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr ""
+
+#: main.c:341
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:345
+#: main.c:369
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:346
+#: main.c:370
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:360
+#: main.c:383
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:361
+#: main.c:384
 msgid ""
 "\n"
 "\n"
@@ -299,7 +303,7 @@ msgstr ""
 msgid "Tap here to select this keyboard model."
 msgstr ""
 
-#: keyboard.c:315
+#: keyboard.c:315 packages.c:183 packages.c:364
 msgid "Install"
 msgstr ""
 
@@ -906,231 +910,268 @@ msgstr ""
 msgid "System Log"
 msgstr ""
 
-#: packages.c:62
+#: packages.c:66
+msgid "Removing package"
+msgstr ""
+
+#: packages.c:71
 msgid "Installing package"
 msgstr ""
 
-#: packages.c:140 packages.c:245
+#: packages.c:150 packages.c:324
 msgid "Start"
 msgstr ""
 
-#: packages.c:142
+#: packages.c:155
 msgid "Update finished. Please check log messages for errors."
 msgstr ""
 
-#: packages.c:163
+#: packages.c:184 packages.c:370
+msgid "Remove"
+msgstr ""
+
+#: packages.c:185
+msgid "Install/Removal finished. Please check log messages for errors."
+msgstr ""
+
+#: packages.c:205
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr ""
 
-#: packages.c:186
+#: packages.c:229 packages.c:253
 msgid "Running..."
 msgstr ""
 
-#: packages.c:235
+#: packages.c:314
 msgid "Update"
 msgstr ""
 
-#: packages.c:240
+#: packages.c:319
 msgid "Update from network"
 msgstr ""
 
-#: packages.c:249
+#: packages.c:328
 msgid "Update entire system over an internet connection."
 msgstr ""
 
-#: packages.c:253
+#: packages.c:332 packages.c:378
 msgid "Activity log"
 msgstr ""
 
-#: packages.c:261
+#: packages.c:340
 msgid ""
 "This window shows all output from the packet manager that performs the "
 "update."
 msgstr ""
 
-#: cardinfo.c:234
+#: packages.c:350
+msgid "Install/Remove"
+msgstr ""
+
+#: packages.c:355
+msgid "Install/Remove a package"
+msgstr ""
+
+#: packages.c:362
+msgid "Enter name of package to be installed here."
+msgstr ""
+
+#: packages.c:368
+msgid "Install a package from a configured source."
+msgstr ""
+
+#: packages.c:374
+msgid "Remove the package."
+msgstr ""
+
+#: packages.c:386
+msgid ""
+"This window shows all output from the packet manager installing the package."
+msgstr ""
+
+#: cardinfo.c:247 cardinfo.c:315
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:426
+#: cardinfo.c:520
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:432
+#: cardinfo.c:526
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:436
+#: cardinfo.c:530
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:511
+#: cardinfo.c:605
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:530
+#: cardinfo.c:624
 msgid "No pcmcia driver in /proc/devices"
 msgstr ""
 
-#: cardinfo.c:533
+#: cardinfo.c:627
 msgid "Could not open /proc/devices"
 msgstr ""
 
-#: cardinfo.c:545
+#: cardinfo.c:639
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:554
+#: cardinfo.c:648
 msgid "Card Services release does not match!"
 msgstr ""
 
-#: cardinfo.c:559
+#: cardinfo.c:653
 msgid "Could not get CS revision info!\n"
 msgstr ""
 
-#: cardinfo.c:716
+#: cardinfo.c:810
 msgid "flock(stabfile) failed)"
 msgstr ""
 
-#: cardinfo.c:732
+#: cardinfo.c:826
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:841
+#: cardinfo.c:935
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:859
+#: cardinfo.c:953
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:874
+#: cardinfo.c:968
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1068 cardinfo.c:1239 cardinfo.c:1240
+#: cardinfo.c:1160 cardinfo.c:1331 cardinfo.c:1332
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1077
+#: cardinfo.c:1169
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1087
+#: cardinfo.c:1179
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1193 cardinfo.c:1199
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1101 cardinfo.c:1107
+#: cardinfo.c:1193 cardinfo.c:1199
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1180
+#: cardinfo.c:1272
 msgid "Insert Card"
 msgstr ""
 
-#: cardinfo.c:1182
+#: cardinfo.c:1274
 msgid "Tap here to start card insertion manually."
 msgstr ""
 
-#: cardinfo.c:1190
+#: cardinfo.c:1282
 msgid "Eject Card"
 msgstr ""
 
-#: cardinfo.c:1192
+#: cardinfo.c:1284
 msgid "Tap here to eject card manually."
 msgstr ""
 
-#: cardinfo.c:1200
+#: cardinfo.c:1292
 msgid "Suspend Card"
 msgstr ""
 
-#: cardinfo.c:1202
+#: cardinfo.c:1294
 msgid "Tap here to suspend current card."
 msgstr ""
 
-#: cardinfo.c:1210
+#: cardinfo.c:1302
 msgid "Resume Card"
 msgstr ""
 
-#: cardinfo.c:1212
+#: cardinfo.c:1304
 msgid "Tap here to resume current card."
 msgstr ""
 
-#: cardinfo.c:1220
+#: cardinfo.c:1312
 msgid "Reset Card"
 msgstr ""
 
-#: cardinfo.c:1221
+#: cardinfo.c:1313
 msgid "Tap here to reset current card."
 msgstr ""
 
-#: cardinfo.c:1229 cardinfo.c:1230
+#: cardinfo.c:1321 cardinfo.c:1322
 msgid "Reset Card Manager"
 msgstr ""
 
-#: cardinfo.c:1232
+#: cardinfo.c:1324
 msgid ""
 "Tap here to reset card manager. This commits all updates to pcmcia config "
 "files."
 msgstr ""
 
-#: cardinfo.c:1242
+#: cardinfo.c:1334
 msgid ""
 "Tap here to assign a driver to this card / change current driver assignment."
 msgstr ""
 
-#: cardinfo.c:1249 cardinfo.c:1250
+#: cardinfo.c:1341 cardinfo.c:1342
 msgid "Exit applet"
 msgstr ""
 
-#: cardinfo.c:1259 cardinfo.c:1272
+#: cardinfo.c:1351 cardinfo.c:1364
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1267
+#: cardinfo.c:1359
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1298
+#: cardinfo.c:1390
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1307
+#: cardinfo.c:1399
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1308
+#: cardinfo.c:1400
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1309
+#: cardinfo.c:1401
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1310
+#: cardinfo.c:1402
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1311
+#: cardinfo.c:1403
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1312
+#: cardinfo.c:1404
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1319
+#: cardinfo.c:1411
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1336
+#: cardinfo.c:1428
 msgid "PCMCIA initialisation failed"
 msgstr ""
 

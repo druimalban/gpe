@@ -1,5 +1,6 @@
 When			Who				Where						What
 
+
 01.07.2003		Florian			cardinfo.*					Added support for wlan-ng driver. Changing from/to 
 								suid.c						this driver is now possible. 
 															Fixed displaying bug.
@@ -26,6 +27,9 @@ When			Who				Where						What
 								theme.c						New feature for matchbox 0.6: Icon size changing.
 															Changed some xsettings values.
 															Removed some obsolete cruft...
+															
+29.05.2003		Florian			control1					Version update, removed gpe-appmgr desktop files. Should be shipped with appmgr. 
+
 29.05.2003		Florian			
 								timeanddate.c				Added warning message for TZ changes.
 
