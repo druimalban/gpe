@@ -30,12 +30,14 @@
 #include <gpe/gpeclockface.h>
 #include <gpe/schedule.h>
 
-GtkWidget *panel_window, *time_label;
+GtkWidget *panel_window, *time_label, *face;
+GtkObject *hour_adj, *minute_adj;
 
 #define _(x) gettext(x)
 
 static gboolean show_seconds;
 static gboolean format_24 = TRUE;
+static gboolean flag_graphical = FALSE;
 
 static gchar *alarm_file, *prefs_file;
 
@@ -283,7 +285,7 @@ set_alarm (struct alarm_state *alarm)
 }
 
 static void
-update_time (GtkWidget *label)
+update_time_label (GtkWidget *label)
 {
   char buf[256];
   time_t t;
@@ -307,10 +309,32 @@ update_time (GtkWidget *label)
 }
 
 static void
+update_time_face (void)
+{
+  time_t t;
+  struct tm tm;
+
+  time (&t);
+  localtime_r (&t, &tm);
+
+  gtk_adjustment_set_value (hour_adj, tm.tm_hour);
+  gtk_adjustment_set_value (minute_adj, tm.tm_min);
+}
+
+static void
+update_time (void)
+{
+  if (flag_graphical)
+    update_time_face ();
+  else
+    update_time_label (time_label);
+}
+
+static void
 set_seconds (GtkWidget *w, GtkWidget *time_label)
 {
   show_seconds = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
-  update_time (time_label);
+  update_time ();
   flush_prefs ();
 }
 
@@ -318,7 +342,7 @@ static void
 set_format (GtkWidget *w, GtkWidget *time_label)
 {
   format_24 = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
-  update_time (time_label);
+  update_time ();
   flush_prefs ();
 }
 
@@ -580,6 +604,30 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
+  while (1)
+    {
+      int this_option_optind = optind ? optind : 1;
+      int option_index = 0;
+      int c;
+
+      static struct option long_options[] = {
+	{"graphical", 0, 0, 'g'},
+	{0, 0, 0, 0}
+      };
+      
+      c = getopt_long (argc, argv, "d",
+		       long_options, &option_index);
+      if (c == -1)
+	break;
+
+      switch (c)
+	{
+	case 'g':
+	  flag_graphical = TRUE;
+	  break;
+	}
+    }
+
   alarm_file = g_strdup_printf ("%s/.gpe/alarm", g_get_home_dir ());
   prefs_file = g_strdup_printf ("%s/.gpe/clock_prefs", g_get_home_dir ());
 
@@ -597,11 +645,27 @@ main (int argc, char *argv[])
 
   panel_window = gtk_plug_new (0);
 
-  time_label = gtk_label_new (NULL);
+  if (flag_graphical)
+    {
+      hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
+      minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
+  
+      face = gpe_clock_face_new (GTK_ADJUSTMENT (hour_adj), GTK_ADJUSTMENT (minute_adj), NULL);
+      gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (face), FALSE);
+      gpe_clock_face_set_radius (GPE_CLOCK_FACE (face), 16);
+      gpe_clock_face_set_label_hours (GPE_CLOCK_FACE (face), FALSE);
+      gpe_clock_face_set_hand_width (GPE_CLOCK_FACE (face), 1.0);
+      
+      gtk_container_add (GTK_CONTAINER (panel_window), face);
+    }
+  else
+    {
+      time_label = gtk_label_new (NULL);
 
-  update_time (time_label);
+      update_time_label (time_label);
 
-  gtk_container_add (GTK_CONTAINER (panel_window), time_label);
+      gtk_container_add (GTK_CONTAINER (panel_window), time_label);
+    }
 
   gtk_widget_realize (panel_window);
 
@@ -636,7 +700,7 @@ main (int argc, char *argv[])
   tooltips = gtk_tooltips_new ();
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, change the display format, or remove this program from the panel."), NULL);
 
-  g_timeout_add (1000, (GtkFunction) update_time, time_label);
+  g_timeout_add (1000, (GtkFunction) update_time, NULL);
 
   gtk_main ();
 

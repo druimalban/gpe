@@ -10,17 +10,9 @@ LINGUAS = nl pt cs fr
 
 MEMBERS = clock 
 
-CPPFLAGS = -D_GNU_SOURCE -I../libschedule $(GPECFLAGS)
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD -Wall
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 .SUFFIXES: .d
 
@@ -29,15 +21,19 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 ifeq ($(CVSBUILD),yes)
+PACKAGE_CFLAGS += -I../libschedule 
+PACKAGE_LDFLAGS += -L../libschedule 
 BUILD = ../build
 else
 BUILD = build
 endif
 
+PACKAGE_LDFLAGS += -lschedule
+
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(GPELIBS) -L../libschedule -lschedule $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
