@@ -394,17 +394,19 @@ get_networks (GtkWidget *combo, GHashTable *network_hash)
   GList *popdown_strings = NULL;
   GSList *iter;
 
-  iter = sql_networks; 
-  while (iter)
+  iter = sql_networks;
+  if (iter != NULL)
   {
-    printf ("Done iter\n");
-    popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
-    if (((struct sql_network *) iter->data)->servers != NULL)
-      printf ("Added server name %s and server %s\n", ((struct sql_network *) iter->data)->name, ((struct sql_network_server *) ((struct sql_network *) iter->data)->servers->data)->name);
-    g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) ((struct sql_network *) iter->data)->servers);
-    iter = iter->next;
+    while (iter)
+    {
+      popdown_strings = g_list_append (popdown_strings, (gpointer) ((struct sql_network *) iter->data)->name);
+      if (((struct sql_network *) iter->data)->servers != NULL)
+        g_hash_table_insert (network_hash, (gpointer) ((struct sql_network *) iter->data)->name, (gpointer) ((struct sql_network *) iter->data)->servers);
+      iter = iter->next;
+    }
+    gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), ((struct sql_network *) sql_networks->data)->name);
   }
-  gtk_combo_set_popdown_strings (GTK_COMBO (combo), popdown_strings);
 }
 
 void
@@ -420,22 +422,20 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
   server_combo = g_object_get_data (G_OBJECT (widget), "server_combo");
 
   network_name = (gchar *) gtk_entry_get_text (GTK_ENTRY (entry));
-printf ("network_name len = %d\n", strlen (network_name));
-  //if (strlen (network_name) > 0)
-    iter = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
-  printf ("Network name = %s\n", network_name);
+  if (strlen (network_name) > 0)
+    servers = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
+  iter = servers;
   if (iter != NULL)
   {
-  printf ("Are servers\n");
-	while (iter)
-	{
-	printf ("added server\n");
-		popdown_strings = g_list_append(popdown_strings, (gpointer) ((struct sql_network_server *) iter->data)->name);
-		iter = iter->next;
-	}
+    while (iter)
+    {
+      popdown_strings = g_list_append(popdown_strings, (gpointer) ((struct sql_network_server *) iter->data)->name);
+      iter = iter->next;
+    }
 
     gtk_combo_set_popdown_strings (GTK_COMBO (server_combo), popdown_strings);
-	g_list_free(popdown_strings);
+    g_list_free(popdown_strings);
+    gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (server_combo)->entry), ((struct sql_network_server *) servers->data)->name);
   }
 }
 

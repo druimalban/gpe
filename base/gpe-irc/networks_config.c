@@ -157,7 +157,6 @@ networks_config_new_server (GtkWidget *widget, struct sql_network *network)
   GtkTreeIter iter;
 
   list_store = g_object_get_data (G_OBJECT (widget), "list_store");
-  printf ("network->id = %d\n", network->id);
   server = new_sql_network_server ("Untitled", 6667, network);
 
   gtk_list_store_append (list_store, &iter);
