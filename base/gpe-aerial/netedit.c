@@ -334,3 +334,135 @@ network_edit (netinfo_t * ni)
 	g_signal_connect_swapped (G_OBJECT (bCancel), "clicked",
 				  G_CALLBACK (gtk_widget_destroy), window);
 }
+
+
+void
+network_info (netinfo_t * ni)
+{
+	char *tmp;
+	GtkWidget *window = gtk_dialog_new ();
+	GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
+	GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
+	GtkWidget *labelname = gtk_label_new (NULL);
+	GtkWidget *labeladdr = gtk_label_new (NULL);
+	GtkWidget *image = gtk_image_new_from_pixbuf (ni->pix);
+	GtkWidget *dismiss = gtk_button_new_from_stock (GTK_STOCK_OK);
+	GtkWidget *lType = gtk_label_new (NULL);
+	GtkWidget *lSignal = gtk_label_new (NULL);
+	GtkWidget *lSpeed = gtk_label_new (NULL);
+	GtkWidget *lChannel = gtk_label_new (NULL);
+	GtkWidget *lWEP = gtk_label_new (NULL);
+	GtkWidget *lSubnet = gtk_label_new (NULL);
+	GtkWidget *lIPSec = gtk_label_new (NULL);
+	GtkWidget *lDhcp = gtk_label_new (NULL);
+
+	gtk_window_set_title (GTK_WINDOW (window), _("Network information"));
+	gpe_set_window_icon (GTK_WIDGET (window), "gpe-aerial");
+	gtk_box_set_spacing (GTK_BOX (vbox1), gpe_get_boxspacing ());
+
+	tmp = g_strdup_printf ("<b>%s</b>", ni->netinfo.ssid);
+	gtk_label_set_markup (GTK_LABEL (labelname), tmp);
+	g_free (tmp);
+
+	tmp = g_strdup_printf ("BSSID:%s", ni->netinfo.bssid);
+	gtk_label_set_markup (GTK_LABEL (labeladdr), tmp);
+	g_free (tmp);
+
+	if (ni->net.isadhoc)
+		tmp = g_strdup_printf ("%s: %s", _("Mode"), "Ad-Hoc (IBSS)");
+	else
+		tmp = g_strdup_printf ("%s: %s", _("Mode"), "Managed (BSS)");
+
+	gtk_label_set_text (GTK_LABEL (lType), tmp);
+
+	g_free (tmp);
+	tmp = g_strdup_printf ("%s: %d", _("Max. signal"),
+			       ni->net.maxsiglevel);
+	gtk_label_set_text (GTK_LABEL (lSignal), tmp);
+	g_free (tmp);
+	if (ni->net.speed)
+		tmp = g_strdup_printf ("%s: %3.1f Mb/s", _("Speed"),
+				       (float) ni->net.speed / 1000.0);
+	else
+		tmp = g_strdup_printf ("%s: %s", _("Speed"),
+				       _("<i>unknown</i>"));
+	gtk_label_set_markup (GTK_LABEL (lSpeed), tmp);
+	g_free (tmp);
+	tmp = g_strdup_printf ("%s: %d", _("Channel"), ni->netinfo.channel);
+	gtk_label_set_text (GTK_LABEL (lChannel), tmp);
+	g_free (tmp);
+	if (ni->net.wep)
+		tmp = g_strdup_printf ("%s: %s", _("WEP enabled"), _("yes"));
+	else
+		tmp = g_strdup_printf ("%s: %s", _("WEP enabled"), _("no"));
+	gtk_label_set_text (GTK_LABEL (lWEP), tmp);
+	g_free (tmp);
+	if (ni->net.ipsec)
+		tmp = g_strdup_printf ("%s: %s", _("IPSec detected"),
+				       _("yes"));
+	else
+		tmp = g_strdup_printf ("%s: %s", _("IPSec detected"),
+				       _("no"));
+	gtk_label_set_text (GTK_LABEL (lIPSec), tmp);
+	g_free (tmp);
+	if (ni->netinfo.dhcp)
+		tmp = g_strdup_printf ("%s: %s", _("DHCP detected"),
+				       _("yes"));
+	else
+		tmp = g_strdup_printf ("%s: %s", _("DHCP detected"), _("no"));
+	gtk_label_set_text (GTK_LABEL (lDhcp), tmp);
+	g_free (tmp);
+	if (ni->net.ip_range[0])
+		tmp = g_strdup_printf ("%s: %hhu.%hhu.%hhu.%hhu", _("Subnet"),
+				       ni->net.ip_range[0],
+				       ni->net.ip_range[1],
+				       ni->net.ip_range[2],
+				       ni->net.ip_range[3]);
+	else
+		tmp = g_strdup_printf ("%s: %s", _("Subnet"),
+				       _("<i>unknown</i>"));
+	gtk_label_set_markup (GTK_LABEL (lSubnet), tmp);
+	g_free (tmp);
+
+	gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lType), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lSignal), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lSpeed), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lChannel), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lWEP), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lIPSec), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lSubnet), 0.0, 0.5);
+	gtk_misc_set_alignment (GTK_MISC (lDhcp), 0.0, 0.5);
+
+	gtk_misc_set_alignment (GTK_MISC (image), 0.0, 0.0);
+	gtk_widget_set_size_request (image, 44, -1);
+
+	gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lType, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lSignal, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lSpeed, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lChannel, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lWEP, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lIPSec, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lDhcp, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (vbox1), lSubnet, TRUE, TRUE, 0);
+
+	gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 8);
+	gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 8);
+
+	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox1, FALSE,
+			    FALSE, 0);
+
+	gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), dismiss,
+			  FALSE, FALSE, 0);
+
+	gtk_widget_realize (window);
+	gdk_window_set_transient_for (window->window, devices_window->window);
+
+	gtk_widget_show_all (window);
+
+	g_signal_connect_swapped (G_OBJECT (dismiss), "clicked",
+				  G_CALLBACK (gtk_widget_destroy), window);
+}

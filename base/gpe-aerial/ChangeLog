@@ -1,4 +1,10 @@
 06/06/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- main.c	Moved network details dialog code.
+	- netedit.*
+				Added signal / link level meter in icon.
+	*16*.png	Tried to update icons... without success.
+
+06/06/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c	Fixed some wrong dialog calls.
 				Added error handling to poll call.
 				Fixed multiple network displaying.
