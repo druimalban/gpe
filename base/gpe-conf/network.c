@@ -391,7 +391,8 @@ GtkWidget* create_nwstatic_widgets(NWInterface_t iface)
 	create_editable_entry(&iface, ctable, "address", _("Address"), iface.address, 1);
 	create_editable_entry(&iface, ctable, "netmask",_("Netmask"), iface.netmask, 2);
 	create_editable_entry(&iface, ctable, "broadcast",_("Broadcast"), iface.broadcast, 3);
-	create_editable_entry(&iface, ctable, "network",_("Network"), iface.network, 4);
+// Shouldn't be necessary anymore
+//	create_editable_entry(&iface, ctable, "network",_("Network"), iface.network, 4);
 	create_editable_entry(&iface, ctable, "gateway",_("Gateway"), iface.gateway, 5);
 	return ctable;
 }

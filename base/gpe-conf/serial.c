@@ -39,6 +39,7 @@
 #define GPE_SERIAL_CONF_DIR "/etc/gpe/gpe-conf-serial"
 #define IPAQ_SERIAL "/dev/ttySA0"
 #define GPSD_STARTUP_SCRIPT "/etc/init.d/gpsd"
+#define GPSD_STARTUP_LINK "/etc/rc2.d/S96gpsd"
 #define INITTAB "/etc/inittab"
 
 #define PARAM_BOOL 0
@@ -112,6 +113,8 @@ void assign_serial_port(t_serial_assignment type)
 				system(GPSD_STARTUP_SCRIPT " stop");
 				system("killall gpsd.bin"); // due to a bug in gpsd initscript
 				system(GPSD_STARTUP_SCRIPT " start");
+				if (access(GPSD_STARTUP_LINK,F_OK))  // create link if not there
+					system("ln -s " GPSD_STARTUP_SCRIPT " " GPSD_STARTUP_LINK);
 			}					
 			change_cfg_value(INITTAB,"T0","34:respawn:/sbin/getty -L ttyC0 115200 vt100",':');
 			system("telinit 3");

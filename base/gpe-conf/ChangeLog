@@ -1,5 +1,11 @@
 When			Who				Where						What
 
+05.05.2003		Florian			cardinfo.c					Major formating changes.
+															Shows as text if no driver is loaded.
+															Fixed bug that caused gpe-conf to crash.
+								network.c					Removed obsolete entry for network setting.
+								serial.c					Added creation of gpsd startup link.
+
 02.05.2003		Florian			network.c					Added dialog that hows current interface configuration.
 								tools/interface.*			New files, containing interface config collecting stuff.
 
