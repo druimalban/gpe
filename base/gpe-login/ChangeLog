@@ -1,3 +1,10 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-login.c (main): Add some padding/alignment/justification
+	stuff, remove explicit width settings from username option and
+	password entry field. Let's hope it does look better on the iPAQ;
+	it certainly does in Xnest where I have bigger fonts.
+ 
 2002-07-27  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-xcalibrate.sh: New file. Runs xcalibrate and writes the

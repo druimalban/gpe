@@ -598,13 +598,10 @@ main (int argc, char *argv[])
       entry = gtk_entry_new ();
       gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 
-      gtk_widget_set_usize (entry, 120, -1);
-      gtk_widget_set_usize (option, 120, -1);
-
       gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
       
-      hbox_password = gtk_hbox_new (FALSE, 0);
+      hbox_password = gtk_hbox_new (FALSE, 5);
       gtk_box_pack_start (GTK_BOX (hbox_password), entry, TRUE, TRUE, 0);
       gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
       
@@ -613,7 +610,11 @@ main (int argc, char *argv[])
       gtk_table_attach_defaults (GTK_TABLE (table), option, 1, 2, 0, 1);
       gtk_table_attach_defaults (GTK_TABLE (table), password_label, 0, 1, 1, 2);
       gtk_table_attach_defaults (GTK_TABLE (table), hbox_password, 1, 2, 1, 2);
-      
+      gtk_label_set_justify (GTK_LABEL (login_label), GTK_JUSTIFY_LEFT);
+      gtk_misc_set_alignment (GTK_MISC (login_label), 0, 0.5);
+      gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
+      gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
+
       vbox = gtk_vbox_new (FALSE, 0);
 
       gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
