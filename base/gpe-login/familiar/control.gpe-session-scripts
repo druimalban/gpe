@@ -1,7 +1,7 @@
 Package: gpe-session-scripts
 Section: x11
 Priority: optional
-Version: 0.51
+Version: 0.52
 Architecture: all
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: matchbox, gpe-session-starter, xtscal | xcalibrate (>= 0.2-2), keylaunch, ipaq-sleep, gpe-question, apmd, blueprobe, gpe-bluetooth, gpe-clock
