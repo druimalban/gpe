@@ -44,6 +44,7 @@ static struct gpe_icon my_icons[] = {
 GtkWidget *window = NULL;
 GtkWidget *progress_bar = NULL;
 GtkWidget *file_selector = NULL;
+gboolean gpe_initialised = FALSE;
 
 extern gboolean stop;
 gboolean playing = FALSE;
@@ -60,6 +61,21 @@ sigint (int signal)
 {
   printf ("received sigint\n");
   stop = TRUE;
+}
+
+void exit_with_error (char *error)
+{
+  /* do we need this? : stop_sound (); */
+  if (!gpe_initialised)
+    {
+      if (gpe_application_init (NULL, NULL) == FALSE)
+        {
+	  fprintf (stderr, "%s\n", error);
+          exit (1);
+        }
+    }
+  gpe_error_box (error);
+  gtk_exit(1);
 }
 
 void stop_sound (void)
@@ -146,7 +162,7 @@ void start_sound (void)
         else
         {
 	   if (infd < 0)
-	     fprintf (stderr, "Error opening sound device for reading\n");
+	     exit_with_error ("Error opening sound device for reading");
            if (outfd < 0)
              perror (filename);
            exit(1);
@@ -184,7 +200,7 @@ void start_sound (void)
 	   if (infd < 0)
              perror (filename);
            if (outfd < 0)
-             fprintf (stderr, "Error opening sound device for writing\n");
+	     exit_with_error ("Error opening sound device for writing");
            exit(1);
         }
     }
@@ -267,6 +283,11 @@ file_chosen_signal (GtkFileSelection *selector, gpointer user_data)
   gtk_widget_destroy (file_selector);
 }
 
+void syntax_message (FILE *f)
+{
+      fprintf (f, "syntax: gpe-soundbite play|record [filename]\n");
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -279,7 +300,7 @@ main(int argc, char *argv[])
 
   if (argc < 2)
     {
-      fprintf (stderr, "syntax: gpe-soundbite play|record [filename]\n");
+      syntax_message (stderr);
       exit (1);
     }
 
@@ -295,7 +316,7 @@ main(int argc, char *argv[])
     }
   else
     {
-      fprintf (stderr, "unknown command line option\n");
+      syntax_message (stderr);
       exit(1);
     }
 
