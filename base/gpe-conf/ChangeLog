@@ -1,6 +1,6 @@
 2004-10-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 
-	* sound.c: Started to implement alarm test function.
+	* sound.c: Implemented alarm test function.
 	* ownerinfo.c: Introduced defines for image size. Increased size to 64x64.
 	* screen/main.c, callbacks.h: disabled screensaver setting. (Currently
 	                              useless on a PDA). Changed display layout.

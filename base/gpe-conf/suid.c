@@ -359,13 +359,13 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "CPIF") == 0)  // installs a new interfaces file
 				{
 					fscanf (in, "%100s", arg2);	// to forget soon...
-					system ("/usr/bin/killall dhcpcd");
 					strcpy (arg1, "/tmp/interfaces");
 					strcpy (arg2, "/etc/network/interfaces");
-					system_printf ("/bin/cp %s %s", arg1,arg2);
+					system ("/etc/init.d/networking stop");
+					system_printf ("/bin/cp %s %s", arg1, arg2);
 					system_printf ("chmod 0644 %s", arg2);
 					system_printf ("/bin/rm -f %s", arg1);
-					system ("/etc/init.d/networking restart");
+					system ("/etc/init.d/networking start");
 				}
 				else if (strcmp (cmd, "CPOI") == 0)  // rewrites owner information data
 				{

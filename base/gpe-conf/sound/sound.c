@@ -91,10 +91,41 @@ static void
 on_test_clicked(GtkButton *b, gpointer userdata)
 {
 	int level = get_alarm_level();
-	int cur_pcm, cur_vol;
-/*	
-	set_volume (self.channels[cn].nr, self.channels[cn].value);
-*/
+	int cur_pcm = 50, cur_vol = 50, i;
+	int num_pcm = -1, num_vol = -1;
+	
+	/* search channels */
+	for (i = 0; i < self.num_channels; i++)
+	{
+		if (!strcmp(self.channels[i].name, "pcm"))
+			num_pcm = i;
+		if (!strcmp(self.channels[i].name, "vol"))
+			num_vol = i;
+	}
+
+	/* save setings */
+	if (num_pcm >= 0) 
+		cur_pcm = get_volume(self.channels[num_pcm].nr);
+	if (num_vol >= 0) 
+		cur_vol = get_volume(self.channels[num_vol].nr);
+	
+	/* set volume and play sample */
+	if (num_vol >= 0) 
+		set_volume (self.channels[num_vol].nr, level);
+	if (num_pcm >= 0)
+	{
+		if (num_vol >= 0)
+			set_volume (self.channels[num_pcm].nr, 100);
+		else
+			set_volume (self.channels[num_pcm].nr, level);
+	}
+	play_sample(SOUND_SAMPLE);
+	
+	/* restore settings */
+	if (num_vol >= 0)
+		set_volume (self.channels[num_vol].nr, cur_vol);
+	if (num_pcm >= 0)
+		set_volume (self.channels[num_pcm].nr, cur_pcm);
 }
 
 static void
@@ -300,6 +331,7 @@ Sound_Build_Objects (void)
 	self.bTest = gtk_button_new_with_label(_("Test"));
 	g_signal_connect (G_OBJECT(self.bTest), "clicked",
 	                  G_CALLBACK (on_test_clicked), NULL);
+	gtk_widget_set_sensitive(self.bTest, get_alarm_enabled() && !get_alarm_automatic());
 	
 	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
 	gtk_scale_set_draw_value(GTK_SCALE(slider), FALSE);
