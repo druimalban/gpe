@@ -1,4 +1,5 @@
 2003-10-19	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* po/cs.po: New Czech translation.
 	* suid.c: Fixed a bug causing broken config files. 
 
 2003-10-16	Florian Boor  	<florian.boor@kernelconcepts.de>
