@@ -1,0 +1,33 @@
+# Swedish messages for gpe-taskmanager.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-taskmanager 0.14\n"
+"POT-Creation-Date: 2003-08-17 14:08+0100\n"
+"PO-Revision-Date: 2003-09-08 14:54+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-taskmanager.c:226
+msgid "No program is selected"
+msgstr "Inget program är valt"
+
+#: gpe-taskmanager.c:246
+msgid "Icon"
+msgstr "Ikon"
+
+#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
+msgid "Running programs"
+msgstr "Körande program"
+
+#: gpe-taskmanager.c:260
+msgid "Kill program"
+msgstr "Döda program"
+
+#~ msgid "Run program"
+#~ msgstr "Kör program"

@@ -3,10 +3,9 @@ PREFIX = /usr/local
 DEBUG = no
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.16.1
+VERSION = 0.17
 
-#FIXME: add: de pt ro ru sr sk sv
-LINGUAS = nl cs fr
+LINGUAS = nl cs fr de pt ro ru sr sk sv
 
 MEMBERS = gpe-taskmanager
 
