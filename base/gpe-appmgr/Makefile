@@ -4,8 +4,8 @@ PACKAGE = gpe-appmgr
 VERSION = 2.4
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch 
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch -L../libxsettings-client -lXsettings-client
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch -I../libxsettings-client -I../libxsettings
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch -Wl,-rpath-link,../libxsettings -L../libxsettings-client -lXsettings-client
 
 DESTDIR=
 PREFIX=/usr

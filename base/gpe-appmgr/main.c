@@ -638,15 +638,14 @@ main (int argc, char *argv[])
 	}
     }
 
-  g = make_group ("Office");
-  g->categories = g_list_append (g->categories, "Office");
-  g->categories = g_list_append (g->categories, "Viewer");
+  g = make_group ("PIM");
+  g->categories = g_list_append (g->categories, "PIM");
   g = make_group ("Internet");
   g->categories = g_list_append (g->categories, "Internet");
   g->categories = g_list_append (g->categories, "Network");
   g->categories = g_list_append (g->categories, "PPP");
-  g = make_group ("PIM");
-  g->categories = g_list_append (g->categories, "PIM");
+  g = make_group ("Games");
+  g->categories = g_list_append (g->categories, "Game");
   g = make_group ("Settings");
   g->categories = g_list_append (g->categories, "SystemSettings");
   g->categories = g_list_append (g->categories, "Settings");

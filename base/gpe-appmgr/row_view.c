@@ -57,6 +57,9 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
+#include <cairo.h>
+#include <math.h>
+
 //#define DEBUG
 #ifdef DEBUG
 #define DBG(x) {fprintf x ;}
@@ -80,8 +83,10 @@ static GSList *rows, *labels;
 
 #define DEFAULT_BACKGROUND PREFIX "/share/gpe/pixmaps/default/gpe-appmgr/desktop-background.png"
 
-#define ICONLIST_WIDTH		576
-#define ICONLIST_XOFFSET	16;
+#define ICONLIST_WIDTH		560
+#define ICONLIST_XOFFSET	52
+
+#define LABEL_WIDTH		24
 
 #define N_(x)  (x)
 
@@ -139,6 +144,57 @@ static void
 run_callback (GObject *obj, GdkEventButton *ev, GnomeDesktopFile *p)
 {
   run_package (p, obj);
+}
+
+static GtkWidget *
+make_label (char *text, int height)
+{
+  GdkVisual *gv;
+  GdkColormap *gcm;
+  GdkPixmap *pixmap;
+  cairo_t *cr;
+  cairo_surface_t *surface;
+  cairo_text_extents_t extents;
+
+  pixmap = gdk_pixmap_new (programs_fixed->window, LABEL_WIDTH, height, -1);
+
+  gv = gdk_window_get_visual (programs_fixed->window);
+  gcm = gdk_drawable_get_colormap (programs_fixed->window);
+
+  cr = cairo_create ();
+  surface = cairo_xlib_surface_create (GDK_WINDOW_XDISPLAY (pixmap), GDK_WINDOW_XWINDOW (pixmap), 
+				       gdk_x11_visual_get_xvisual (gv), 0, 
+				       gdk_x11_colormap_get_xcolormap (gcm));
+
+  cairo_set_target_surface (cr, surface);
+
+  cairo_set_rgb_color (cr, 1.0, 1.0, 1.0);
+  cairo_rectangle (cr, 0, 0, LABEL_WIDTH, height);
+  cairo_fill (cr);
+
+  cairo_set_rgb_color (cr, 0xa5 / 255.0, 0xae / 255.0, 0xbf / 255.0);
+  cairo_move_to (cr, LABEL_WIDTH, 0);
+  cairo_line_to (cr, 0, 0);
+  cairo_line_to (cr, 0, height);
+  cairo_line_to (cr, LABEL_WIDTH, height);
+  cairo_stroke (cr);
+
+  cairo_select_font (cr, "Sans", CAIRO_FONT_SLANT_NORMAL,
+		     CAIRO_FONT_WEIGHT_BOLD);
+  cairo_scale_font (cr, 16.0);
+
+  cairo_text_extents (cr, text, &extents);
+
+  cairo_move_to (cr, 18, (height + extents.width) / 2);
+
+  cairo_rotate (cr, -M_PI/2);
+  cairo_set_rgb_color (cr, 0, 0, 1.0);
+  cairo_show_text (cr, text);
+
+  cairo_destroy (cr);
+  cairo_surface_destroy (surface);
+
+  return gtk_image_new_from_pixmap (pixmap, NULL);
 }
 
 /* Make the contents for a notebook tab.
@@ -210,20 +266,18 @@ add_row (GtkWidget *row, gint cur_y, gchar *label)
 
   if (label)
     {
-      GdkPixbuf *p = gpe_find_icon (label);
-      if (p)
-	{
-	  GtkWidget *w = gtk_image_new_from_pixbuf (p);
-	  alloc.x -= 24;
-	  gtk_widget_size_request (w, &req);
-	  alloc.width = req.width;
-	  alloc.height = req.height;
-	  gtk_widget_size_allocate (w, &alloc);
-	  gtk_fixed_put (GTK_FIXED (programs_fixed), w, alloc.x, alloc.y);
-	  gtk_widget_show (w);
-
-	  labels = g_slist_prepend (labels, w);
-	}
+      GtkWidget *w;
+      
+      w = make_label (label, req.height);
+      alloc.x -= LABEL_WIDTH;
+      gtk_widget_size_request (w, &req);
+      alloc.width = req.width;
+      alloc.height = req.height;
+      gtk_widget_size_allocate (w, &alloc);
+      gtk_fixed_put (GTK_FIXED (programs_fixed), w, alloc.x, alloc.y);
+      gtk_widget_show (w);
+      
+      labels = g_slist_prepend (labels, w);
     }
 
   return cur_y;
@@ -256,9 +310,11 @@ refresh_callback (void)
   for (l = groups; l; l = l->next)
     {
       struct package_group *group = l->data;
-      gchar *label = NULL;
 
       if (group->hide)
+	continue;
+
+      if (group->items == NULL)
 	continue;
 
       row = create_row (group->items, group->name);
@@ -266,7 +322,7 @@ refresh_callback (void)
 
       rows = g_slist_prepend (rows, row);
 
-      cur_y = add_row (row, cur_y, NULL);
+      cur_y = add_row (row, cur_y, group->name);
     }
 }
 
