@@ -6,17 +6,23 @@
 
 # May 23, 2001 - September 4, 2001
 
+PREFIX = /usr/local
 
 CC=$(PROGPREFIX)gcc
 STRIP=$(PROGPREFIX)strip
 
-CFLAGS=-Os -fomit-frame-pointer -Wall -I/usr/include $(EXTRA_CFLAGS) `gdk-pixbuf-config --cflags`
+CFLAGS=-Os -fomit-frame-pointer -Wall -I/usr/include $(EXTRA_CFLAGS) `gdk-pixbuf-config --cflags` -DPREFIX=\"$(PREFIX)\"
 XLIB=-L$(LIBDIR) -lX11 `gdk-pixbuf-config --libs`
-
-IMAGES=$(shell /bin/ls images/*.xpm)
 
 
 all:	host
+
+install: all
+	install -D pdamaze.host $(DESTDIR)$(PREFIX)/bin/pdamaze
+	mkdir -p $(DESTDIR)$(PREFIX)/share/pdamaze
+	for i in images/*.png; do install -m 664 $$i $(DESTDIR)$(PREFIX)/share/pdamaze/; done
+	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
+	install -m 664 pdamaze.menu $(DESTDIR)$(PREFIX)/lib/menu
 
 host:
 	make \
@@ -42,9 +48,17 @@ clean:
 	-rm pdamaze.host pdamaze.mips pdamaze.snow
 
 
-$(TARGET):	pdamaze.c $(IMAGES)
+$(TARGET):	pdamaze.c
 	$(CC) $(CFLAGS) pdamaze.c $(XLIB) -o $(TARGET)
 	$(STRIP) $(TARGET)
 	$(STRIP) --remove-section .compact_rel $(TARGET)
 	$(STRIP) --remove-section .note $(TARGET)
 	$(STRIP) --remove-section .comment $(TARGET)
+
+ipkg:
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/control familiar/dist/CONTROL
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist

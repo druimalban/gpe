@@ -1,0 +1,8 @@
+Package: pdamaze
+Section: games
+Priority: optional
+Version: 0.01
+Architecture: arm
+Maintainer: Phil Blundell <pb@handhelds.org>
+Depends: libgpewidget0 (>= 0.08)
+Description: Simple first-person maze game#

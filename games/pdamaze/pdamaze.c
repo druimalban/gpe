@@ -108,7 +108,6 @@ struct
  { "far_right", &pix_far_right },
  { "far_right_bright", &pix_far_right_bright },
  { "ground", &pix_ground },
- { "loading", &pix_loading },
  { "middle_center", &pix_mid_center },
  { "middle_center_bright", &pix_mid_center_bright },
  { "middle_left", &pix_mid_left },
@@ -180,7 +179,7 @@ load_pixmaps (void)
       GdkBitmap *bmap;
       char buf[256];
 
-      sprintf (buf, "/usr/share/pdamaze/%s.png", loadpix[i].name);
+      sprintf (buf, PREFIX "/share/pdamaze/%s.png", loadpix[i].name);
 
       p = gdk_pixbuf_new_from_file (buf);
       gdk_pixbuf_render_pixmap_and_mask (p, &pmap, &bmap, 127);
@@ -1442,8 +1441,6 @@ void setup(void)
                 DefaultDepthOfScreen(DefaultScreenOfDisplay(display)));
 
 
-  pix_loading = -1;
-  
   load_pixmaps ();
 
   /* Bring window up! */
