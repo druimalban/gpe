@@ -230,6 +230,8 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
   GtkListStore *list_store;
   GSList *old_categories, *i;
   GSList *selected_categories = NULL;
+  void (*callback) (GtkWidget *, GSList *, gpointer);
+  gpointer data;
 
   window = GTK_WIDGET (p);
   list_store = g_object_get_data (G_OBJECT (window), "list_store");
@@ -289,6 +291,14 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
     }
 
   g_slist_free (old_categories);
+
+  callback = g_object_get_data (G_OBJECT (window), "callback");
+  data = g_object_get_data (G_OBJECT (window), "callback-data");
+
+  if (callback)
+    (*callback) (window, selected_categories, data);
+
+  g_slist_free (selected_categories);
 
   gtk_widget_destroy (window);
 }
@@ -395,6 +405,9 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));
 
   g_signal_connect_swapped (G_OBJECT (window), "destroy", G_CALLBACK (g_object_unref), list_store);
+
+  g_object_set_data (G_OBJECT (window), "callback", callback);
+  g_object_set_data (G_OBJECT (window), "callback-data", data);
 
   gtk_widget_show_all (window);
 
