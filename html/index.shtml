@@ -4,10 +4,11 @@
 
 <p>
 
-This is the web page of GPE. GPE is a project whose aim is to provide a
-Free Software GUI environment for Palmtop/Handheld computers running
-the GNU/Linux&trade; operating system.
-GPE uses the X Window system with the GTK+ toolkit.
+This is the web page for the GPE Palmtop Environment.  GPE aims to
+provide a Free Software GUI environment for Palmtop/Handheld computers
+running the GNU/Linux&trade; operating system.  GPE uses the <A
+href="http://www.xfree86.org">X Window System</A> with the <A
+href="http://www.gtk.org/">GTK+ toolkit</A>.
 </p>
 
 <p>
