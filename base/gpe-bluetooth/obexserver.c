@@ -148,11 +148,10 @@ obex_conn_event (obex_t *handle, obex_object_t *object, int mode, int event, int
     }
 }
 
-void
+static void
 obex_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex_cmd, int obex_rsp)
 {
   obex_t *obex;
-  struct chan *chan;
 
   switch (event)
     {

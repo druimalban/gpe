@@ -35,22 +35,38 @@
 #include <gpe/errorbox.h>
 
 #include "obexclient.h"
+#include "obex-glib.h"
 #include "main.h"
+#include "sdp.h"
 
 #define _(x) gettext(x)
 
 typedef void (*obex_push_callback)(gboolean success, gpointer data);
 
+enum req_state
+  {
+    STATE_CONNECT,
+    STATE_PUT,
+    STATE_DISCONNECT
+  };
+
 struct obex_push_req
 {
+  bdaddr_t bdaddr;
   const gchar *filename;
   const gchar *mimetype;
   const gchar *data;
   size_t len;
+  obex_t *obex;
+  enum req_state state;
+  GtkWidget *progress_dialog;
 
   GCallback callback;
   gpointer cb_data;
 };
+
+static GStaticMutex active_reqs_mutex = G_STATIC_MUTEX_INIT;
+static GList *active_reqs;
 
 static void
 run_callback (struct obex_push_req *req, gboolean result)
@@ -60,6 +76,181 @@ run_callback (struct obex_push_req *req, gboolean result)
   cb = (obex_push_callback)req->callback;
 
   (*cb)(result, req->cb_data);
+
+  g_free (req);
+}
+
+static gboolean
+find_obex_service (bdaddr_t *bdaddr, int *port)
+{
+  sdp_list_t *attrid, *search, *seq, *next;
+  uint32_t range = 0x0000ffff;
+  int status = -1;
+  uuid_t group;
+  sdp_session_t *sess;
+  gboolean found = FALSE;
+
+  sdp_uuid16_create (&group, OBEX_OBJPUSH_SVCLASS_ID);
+
+  attrid = sdp_list_append (0, &range);
+  search = sdp_list_append (0, &group);
+  sess = sdp_connect (BDADDR_ANY, bdaddr, 0);
+  if (!sess) 
+    return FALSE;
+
+  status = sdp_service_search_attr_req (sess, search, SDP_ATTR_REQ_RANGE, attrid, &seq);
+  if (status) 
+    {
+      sdp_close (sess);
+      return FALSE;
+    }
+
+  for (; seq; seq = next)
+    {
+      sdp_record_t *svcrec = (sdp_record_t *) seq->data;
+
+      if (sdp_find_rfcomm (svcrec, port))
+	found = TRUE;
+
+      next = seq->next;
+      free (seq);
+      sdp_record_free (svcrec);
+    }
+
+  sdp_close (sess);
+
+  return found;
+}
+
+static struct obex_push_req *
+find_request (obex_t *obex)
+{
+  struct obex_push_req *req = NULL;
+  GList *i;
+
+  g_static_mutex_lock (&active_reqs_mutex);
+  for (i = active_reqs; i; i = i->next)
+    {
+      struct obex_push_req *r = i->data;
+      if (r->obex == obex)
+	{
+	  req = r;
+	  break;
+	}
+    }
+  g_static_mutex_unlock (&active_reqs_mutex);
+  
+  return req;
+}
+
+static void
+obex_event (obex_t *obex, obex_object_t *old_object, int mode, int event, int obex_cmd, int obex_rsp)
+{
+  obex_object_t *object;
+  struct obex_push_req *req;
+  obex_headerdata_t hdd;
+
+  req = find_request (obex);
+
+  switch (event)
+    {
+    case OBEX_EV_REQDONE:
+      switch (req->state)
+	{
+	case STATE_CONNECT:
+	  gdk_threads_enter ();
+	  bt_progress_dialog_update (req->progress_dialog, _("Sending data"));
+	  gdk_flush ();
+	  gdk_threads_leave ();
+	  object = OBEX_ObjectNew (req->obex, OBEX_CMD_PUT);
+	  hdd.bq4 = req->len;
+	  OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_LENGTH, hdd, sizeof (uint32_t), 0);
+	  hdd.bs = req->data;
+	  OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_BODY, hdd, req->len, 0);
+	  OBEX_Request (req->obex, object);
+	  req->state = STATE_PUT;
+	  break;
+	case STATE_PUT:
+	  object = OBEX_ObjectNew (req->obex, OBEX_CMD_DISCONNECT);
+	  OBEX_Request (req->obex, object);
+	  req->state = STATE_DISCONNECT;
+	  break;
+	case STATE_DISCONNECT:
+	  gdk_threads_enter ();
+	  gtk_widget_destroy (req->progress_dialog);
+	  gdk_flush ();
+	  gdk_threads_leave ();
+	  g_static_mutex_lock (&active_reqs_mutex);
+	  active_reqs = g_list_remove (active_reqs, req);
+	  g_static_mutex_unlock (&active_reqs_mutex);
+	  obex_disconnect_input (req->obex);
+	  OBEX_Cleanup (req->obex);
+	  run_callback (req, TRUE);
+	  break;
+	}
+      break;
+    default:
+      printf ("unknown obex client event %d\n", event);
+    }
+}
+
+static void
+obex_do_connect (gpointer data)
+{
+  struct obex_push_req *req = (struct obex_push_req *)data;
+  int port;
+  gchar *text;
+  GtkWidget *w;
+  obex_object_t *object;
+  
+  gdk_threads_enter ();
+  w = bt_progress_dialog (_("Connecting"), gpe_find_icon ("bt-logo"));
+  gtk_widget_show_all (w);
+  gdk_flush ();
+  gdk_threads_leave ();
+
+  if (find_obex_service (&req->bdaddr, &port) == FALSE)
+    {
+      gdk_threads_enter ();
+      gpe_error_box_nonblocking (_("Selected device lacks OBEX support"));
+      gdk_threads_leave ();
+      run_callback (req, FALSE);	   
+      return;
+    }
+
+  req->obex = OBEX_Init (OBEX_TRANS_BLUETOOTH, obex_event, 0);
+  if (req->obex == NULL)
+    {
+      text = _("Unable to create OBEX object");
+      goto error;
+    }
+
+  if (BtOBEX_TransportConnect (req->obex, BDADDR_ANY, &req->bdaddr, port) < 0)
+    {
+      OBEX_Cleanup (req->obex);
+      text = _("Unable to connect");
+      goto error;
+    }
+
+  obex_connect_input (req->obex);
+
+  req->progress_dialog = w;
+  req->state = STATE_CONNECT;
+  g_static_mutex_lock (&active_reqs_mutex);
+  active_reqs = g_list_append (active_reqs, req);
+  g_static_mutex_unlock (&active_reqs_mutex);  
+
+  object = OBEX_ObjectNew (req->obex, OBEX_CMD_CONNECT);
+  OBEX_Request (req->obex, object);
+  return;
+
+ error:
+  gdk_threads_enter ();
+  gtk_widget_destroy (w);
+  gdk_flush ();
+  gpe_perror_box_nonblocking (text);
+  gdk_threads_leave ();
+  run_callback (req, FALSE);
 }
 
 static void
@@ -69,10 +260,7 @@ cancel_clicked (GtkWidget *w, GtkWidget *dialog)
 
   req = g_object_get_data (G_OBJECT (dialog), "req");
 
-  gdk_threads_enter ();
   gtk_widget_destroy (dialog);
-  gdk_flush ();
-  gdk_threads_leave ();
 
   run_callback (req, FALSE);
 }
@@ -81,10 +269,70 @@ static void
 ok_clicked (GtkWidget *w, GtkWidget *dialog)
 {
   struct obex_push_req *req;
+  GtkWidget *tree_view;
+  GtkTreeSelection *sel;
+  GList *list, *i;
+  GtkTreePath *path;
+  GtkTreeModel *model;
+  bdaddr_t *bdaddr;
+  GtkTreeIter iter;
+  GThread *thread;
 
   req = g_object_get_data (G_OBJECT (dialog), "req");
+  tree_view = g_object_get_data (G_OBJECT (dialog), "tree_view");
 
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+
+  list = gtk_tree_selection_get_selected_rows (sel, &model);
+
+  if (list == NULL)
+    {
+      gtk_widget_destroy (dialog);
+      gpe_error_box_nonblocking (_("No destination selected"));
+      run_callback (req, FALSE);
+      return;
+    }
+
+  path = list->data;
+  gtk_tree_model_get_iter (model, &iter, path);
+  gtk_tree_model_get (model, &iter, 2, &bdaddr, -1);
+  memcpy (&req->bdaddr, bdaddr, sizeof (*bdaddr));
+
+  for (i = list; i; i = i->next)
+    {
+      path = i->data;
+      gtk_tree_path_free (path);
+    }
+
+  g_list_free (list);
+
+  thread = g_thread_create ((GThreadFunc) obex_do_connect, req, FALSE, NULL);
+
+  if (thread == NULL)
+    run_callback (req, FALSE);
+  
   gtk_widget_destroy (dialog);
+}
+
+static void
+free_bdaddrs (GtkWidget *w, GtkListStore *list_store)
+{
+  GtkTreeIter iter;
+
+  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+    {
+      do 
+	{
+	  bdaddr_t *bdaddr;
+	  gchar *str;
+	  GdkPixbuf *pixbuf;
+
+	  gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0, &pixbuf, 1, &str, 2, &bdaddr, -1);
+	  g_free (bdaddr);
+	  g_free (str);
+	  gdk_pixbuf_unref (pixbuf);
+	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+    }
 }
 
 static gboolean
@@ -157,7 +405,7 @@ obex_choose_destination (gpointer data)
       str = g_strdup (name);
 
       bdaddr = g_malloc (sizeof (*bdaddr));
-      baswap (bdaddr, &(info+i)->bdaddr);
+      memcpy (bdaddr, &(info+i)->bdaddr, sizeof (*bdaddr));
 
       gdk_threads_enter ();			// probably not required
       gtk_list_store_append (list_store, &iter);
@@ -197,8 +445,11 @@ obex_choose_destination (gpointer data)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area), ok_button, FALSE, FALSE, 0);
 
   g_object_set_data (G_OBJECT (dialog), "req", req);
+  g_object_set_data (G_OBJECT (dialog), "tree_view", tree_view);
   g_signal_connect (G_OBJECT (ok_button), "clicked", G_CALLBACK (ok_clicked), dialog);
   g_signal_connect (G_OBJECT (cancel_button), "clicked", G_CALLBACK (cancel_clicked), dialog);  
+
+  g_signal_connect (G_OBJECT (dialog), "destroy", G_CALLBACK (free_bdaddrs), list_store);
 
   gtk_window_set_default_size (GTK_WINDOW (dialog), 240, 320);
   gtk_window_set_title (GTK_WINDOW (dialog), _("Select destination"));
@@ -269,7 +520,7 @@ struct file_push_context
 };
 
 static void
-file_push_done (gpointer data)
+file_push_done (gboolean result, gpointer data)
 {
   struct file_push_context *c = data;
 

@@ -66,15 +66,14 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
   search = sdp_list_append (0, &group);
   sess = sdp_connect (BDADDR_ANY, &bdaddr, 0);
   if (!sess) 
-    {
-      ba2str (&bdaddr, str);
-      fprintf (stderr, "Failed to connect to SDP server on %s\n", str);
-      return FALSE;
-    }
+    return FALSE;
   status = sdp_service_search_attr_req (sess, search, SDP_ATTR_REQ_RANGE, attrid, &seq);
 
   if (status) 
-    return FALSE;
+    {
+      sdp_close (sess);
+      return FALSE;
+    }
 
   for (; seq; seq = next)
     {
