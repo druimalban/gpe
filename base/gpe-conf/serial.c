@@ -93,29 +93,43 @@ void assign_serial_port(t_serial_assignment type)
 		case SA_NONE:
 			if (gpsd_installed)
 			{	
-				if (!access(GPSD_STARTUP_SCRIPT,X_OK)) system(GPSD_STARTUP_SCRIPT " stop");		
+				if (!access(GPSD_STARTUP_SCRIPT,X_OK)) 
+				{	
+					system(GPSD_STARTUP_SCRIPT " stop");
+					system("killall gpsd.bin");
+				}					
 				system("chmod a-x " GPSD_STARTUP_SCRIPT);
 			}
-			system("init 4");
-			change_cfg_value(INITTAB,"id","4:initdefault:",':');
+			/* we move getty to higher runlevels */
+			change_cfg_value(INITTAB,"T0","34:respawn:/sbin/getty -L ttyC0 115200 vt100",':');
+			system("telinit 3");
+			system("telinit 2");
 		break;
 		case SA_GPSD:
 			if (gpsd_installed) 
 			{
 				system ("chmod a+x " GPSD_STARTUP_SCRIPT);
-				system(GPSD_STARTUP_SCRIPT " restart");
+				system(GPSD_STARTUP_SCRIPT " stop");
+				system("killall gpsd.bin"); // due to a bug in gpsd initscript
+				system(GPSD_STARTUP_SCRIPT " start");
 			}					
-			change_cfg_value(INITTAB,"id","4:initdefault:",':');
-			system("init 4");
+			change_cfg_value(INITTAB,"T0","34:respawn:/sbin/getty -L ttyC0 115200 vt100",':');
+			system("telinit 3");
+			system("telinit 2");
 		break;
 		case SA_CONSOLE:
 			if (gpsd_installed) 
 			{
-				if (!access(GPSD_STARTUP_SCRIPT,X_OK)) system(GPSD_STARTUP_SCRIPT " stop");		
+				if (!access(GPSD_STARTUP_SCRIPT,X_OK)) 
+				{	
+					system(GPSD_STARTUP_SCRIPT " stop");
+					system("killall gpsd.bin");
+				}					
 				system ("chmod a-x " GPSD_STARTUP_SCRIPT);
 			}
-			change_cfg_value(INITTAB,"id","2:initdefault:",':');
-			system("init 2");
+			change_cfg_value(INITTAB,"T0","23:respawn:/sbin/getty -L ttyC0 115200 vt100",':');
+			system("telinit 3");
+			system("telinit 2");
 		break;
 	}		
 }
@@ -124,13 +138,13 @@ int get_serial_port_assignment()
 {
 	int i;
 	
-	if (parse_pipe("cat " INITTAB ,"id:%1d:initdefault:",&i))
+	if (parse_pipe("cat " INITTAB ,"T0:%d",&i))
 	{
 		gpe_error_box(_("Couldn't find default runlevel!"));
 	}
 	
 	/* familiar runs getty on ttySA0 in runlevel 2 and 3 */ 
-	if ((i==2) || (i==3)) return SA_CONSOLE;
+	if (i==23) return SA_CONSOLE;
 	
 	/* if not, gpsd strtup might be active */
 	if (!access(GPSD_STARTUP_SCRIPT,X_OK)) return SA_GPSD;
