@@ -1,7 +1,7 @@
 Package: gpe-soundbite
 Section: base
 Priority: optional
-Version: 0.099
+Version: 0.0999
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libgtk1.2, libgpewidget0 (>= 0.05), gpe-icons (>= 0.04), libgsm1, libesd0
@@ -9,4 +9,3 @@ Description: Audio note recorder for GPE.
  gpe-soundbite allows you to record and play back spoken notes. Audio files
  are compressed using GSM speech compression before they are written to disk,
  greatly reducing the space they take up.
- .
