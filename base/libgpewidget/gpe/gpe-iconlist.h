@@ -62,6 +62,13 @@ void 	gpe_iconlist_add_item	(GPEIconList * self,
 					char * title,
 					char * icon,
 					gpointer udata);
+void 	gpe_iconlist_add_item_pixbuf	(GPEIconList * self,
+					char * title,
+					GdkPixbuf * icon,
+					gpointer udata);
+void 	gpe_iconlist_set_embolden	(GPEIconList * self,
+					gboolean yes);
+void 	gpe_iconlist_clear	(GPEIconList * self);
 
 /*
  * Signal connection wrapper macros

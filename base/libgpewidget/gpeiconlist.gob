@@ -22,8 +22,17 @@ requires 2.0.0
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include "gpe-iconlist.h"
+
+#undef CHIT_CHAT
+
+#ifdef CHIT_CHAT
+#define MAYBE_PRINTF printf
+#else
+#define MAYBE_PRINTF(s, ...) do { } while (0)
+#endif
 
 struct ILIcon
 {
@@ -43,6 +52,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private int mcol = -1;
 	private int mrow = -1;
 	private int popup_timeout = 0;
+	private gboolean flag_embolden = TRUE;
 
 /* Signals */
 	signal last NONE(POINTER)
@@ -107,7 +117,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		PangoRectangle pr;
 		int label_height;
 
-		printf ("_title_height\n");
+		MAYBE_PRINTF ("_title_height\n");
 		/* Pango font rendering setup */
 		if ((pc = gtk_widget_get_pango_context (GTK_WIDGET(widget))) == NULL)
 			pc = gtk_widget_create_pango_context (GTK_WIDGET(widget));
@@ -134,7 +144,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		int label_height;
 		int i;
 
-		printf ("iconlist_expose (%d,%d) (%dx%d)\n", event->area.x, event->area.y, event->area.width, event->area.height);
+		MAYBE_PRINTF ("iconlist_expose (%d,%d) (%dx%d)\n", event->area.x, event->area.y, event->area.width, event->area.height);
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
 		/* Pango font rendering setup */
@@ -171,7 +181,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 					      1,//(double) widget->allocation.height / gdk_pixbuf_get_height (il->_priv->bgpixbuf),
 					      GDK_INTERP_BILINEAR, 255);
 */
-		printf ("bg:\n");
+		MAYBE_PRINTF ("bg:\n");
 		if (il->_priv->bgpixbuf)
 			for (i=0; i < il->_priv->rows * (60 + label_height); i += gdk_pixbuf_get_height(il->_priv->bgpixbuf)) {
 				GdkRectangle r1, dst;
@@ -179,9 +189,9 @@ class GPE:IconList from Gtk:Scrolled:Window {
 				r1.width = gdk_pixbuf_get_width (il->_priv->bgpixbuf);
 				r1.height = gdk_pixbuf_get_height (il->_priv->bgpixbuf);
 
-				printf ("placing bg image at (0,%d)\n", i);
-				printf ("of maximum height %d\n", il->_priv->rows * (60 + label_height));
-				printf ("image height = %d\n", gdk_pixbuf_get_height (il->_priv->bgpixbuf));
+				MAYBE_PRINTF ("placing bg image at (0,%d)\n", i);
+				MAYBE_PRINTF ("of maximum height %d\n", il->_priv->rows * (60 + label_height));
+				MAYBE_PRINTF ("image height = %d\n", gdk_pixbuf_get_height (il->_priv->bgpixbuf));
 				if (gdk_rectangle_intersect (&r1, &(event->area), &dst)) {
 					gdk_pixbuf_composite (il->_priv->bgpixbuf, dest,
 							      dst.x-event->area.x,
@@ -193,9 +203,9 @@ class GPE:IconList from Gtk:Scrolled:Window {
 							      GDK_INTERP_BILINEAR, 255);
 				}
 			}
-		printf (":done\n");
+		MAYBE_PRINTF (":done\n");
 
-		printf ("icons:\n");
+		MAYBE_PRINTF ("icons:\n");
 		icons = il->_priv->icons;
 		while (icons) {
 			GdkRectangle r1, r2, dst;
@@ -245,21 +255,21 @@ class GPE:IconList from Gtk:Scrolled:Window {
 
 			icons = icons->next;
 		}
-		printf (":done\n");
+		MAYBE_PRINTF (":done\n");
 
-		printf ("render:\n");
+		MAYBE_PRINTF ("render:\n");
 		/* Dump to drawingarea */
 		gdk_pixbuf_render_to_drawable (dest, widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
 					       0, 0, event->area.x, event->area.y,
 					       event->area.width, event->area.height,
 					       GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
-		printf (":done\n");
+		MAYBE_PRINTF (":done\n");
 
 		gdk_pixbuf_unref (dest);
 
 		col = row = 0;
 
-		printf ("text:\n");
+		MAYBE_PRINTF ("text:\n");
 		icons = il->_priv->icons;
 		while (icons) {
 			GdkRectangle r1, r2, dst;
@@ -286,7 +296,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 				slen = strlen (stxt);
 
 				selected = (il->_priv->mrow == row && il->_priv->mcol == col);
-				if (selected) {
+				if (selected && il->_priv->flag_embolden) {
 					char *newtxt;
 					newtxt = g_strdup_printf ("<b>%s</b>", stxt);
 					pango_layout_set_markup (pl, newtxt, -1);
@@ -303,7 +313,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 					if (stxt[slen-2] == ' ')
 						slen--;
 
-					if (selected)
+					if (selected && il->_priv->flag_embolden)
 						fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
 					else
 						fmt = g_strdup_printf ("%%.%ds...", --slen);
@@ -331,24 +341,52 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			icons = icons->next;
 		}
 
-		printf ("done expose\n");
+		MAYBE_PRINTF ("done expose\n");
 		return TRUE;
 	}
 
-	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata)
+	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata, GdkPixbuf *pb)
 	{
 		struct ILIcon *ret;
 		ret = (struct ILIcon *) malloc (sizeof (struct ILIcon));
 		ret->title = title;
 		ret->icon = icon;
 		ret->udata = udata;
-		ret->pb = NULL;
+		ret->pb = pb;
 		return ret;
 	}
 
 	public void add_item (self, char *title, char *icon, gpointer udata)
 	{
-		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, icon, udata));
+		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, icon, udata, NULL));
+		gtk_widget_draw (GTK_WIDGET (self), NULL);
+	}
+
+	public void add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
+	{
+		gdk_pixbuf_ref (icon);
+		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, NULL, udata, icon));
+		gtk_widget_draw (GTK_WIDGET (self), NULL);
+	}
+
+	public void set_embolden (self, gboolean yes)
+	{
+		self->_priv->flag_embolden = yes;
+	}
+
+	public void clear (self)
+	{
+		GList *iter;
+		for (iter = self->_priv->icons; iter; iter = iter->next) {
+			struct ILIcon *i = (struct ILIcon *)iter->data;
+			if (i->pb)
+				gdk_pixbuf_unref (i->pb);
+			free (i);
+		}
+		
+		g_list_free (self->_priv->icons);
+		self->_priv->icons = NULL;
+		gtk_widget_draw (GTK_WIDGET (self), NULL);
 	}
 
 	override (Gtk:Widget)
@@ -360,13 +398,13 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		GPEIconList *il;
 		il = GPE_ICONLIST(self);
 
-		printf ("iconlist: size_allocate\n");
+		MAYBE_PRINTF ("iconlist: size_allocate\n");
 
 		if ((int)g_object_get_data (G_OBJECT(il), "size_x") == allocation->width &&
 		    (int)g_object_get_data (G_OBJECT(il), "size_y") == allocation->height)
 			return;
 
-		printf ("new size: %dx%d\n", allocation->width, allocation->height);
+		MAYBE_PRINTF ("new size: %dx%d\n", allocation->width, allocation->height);
 
 		g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
 		g_object_set_data (G_OBJECT(il), "size_y", (gpointer)allocation->height);
@@ -433,7 +471,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		GPEIconList *il;
 		int row, col;
 
-		printf ("button_release\n");
+		MAYBE_PRINTF ("button_release\n");
 
 		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
 
@@ -462,12 +500,12 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		col = il->_priv->mcol;
 
 		il->_priv->mcol = il->_priv->mrow = -1;
-		
+		/*
 		gdk_pointer_grab (GTK_WIDGET(il)->window,
 				  TRUE,
 				  GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK,
 				  NULL, NULL, GDK_CURRENT_TIME);
-
+		*/
 		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
 
 		gpe_iconlist__refresh_containing (GTK_WIDGET(gtk_object_get_data (GTK_OBJECT(il), "da")),
