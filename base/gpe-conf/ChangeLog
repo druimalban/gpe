@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+31.07.2003		Florian			po/fr.po					Updated French translation.
+
 30.07.2003		Florian			main.c						Applied better UTF8 patch from Libor Klepac <elkropac@students.zcu.cz>
 								Makefile					Removed obsolete control files. Some minor changes.
 								familiar/control1										
