@@ -1,3 +1,8 @@
+2004-08-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* applets.c, suid.*: Checks for empty root password now and supresses
+	                     dialog in this case.
+
 2004-08-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
 	* logread.c: Session log scrollbars appear only if necessary now.

@@ -348,7 +348,7 @@ suid_exec (const char *cmd, const char *params)
 
 	struct passwd *pwent;
 
-	if ((password) || (check_user_access (cmd) == TRUE))
+	if ((password) || (check_user_access (cmd) == TRUE) || no_root_passwd())
 	{
 		fprintf (suidout, "%s\n%s\n%s\n", cmd, "<none>", params);
 		fflush (suidout);

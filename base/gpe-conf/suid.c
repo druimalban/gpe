@@ -564,6 +564,26 @@ verify_pass (gpointer user_data)
 	}
 }
 
+gboolean
+no_root_passwd (void)
+{
+	struct passwd *pwent;
+	setpwent ();
+	pwent = getpwent ();
+	while (pwent)
+	{
+		if (strcmp (pwent->pw_name, "root") == 0)
+		{
+			if (!pwent->pw_passwd || !strlen(pwent->pw_passwd))
+				return TRUE;
+			else
+				return FALSE;
+		}
+		pwent = getpwent ();
+	}
+	return FALSE;
+}
+
 #ifdef __DARWIN__		// to compile/test under powerpc macosx
 int
 stime (time_t * t)
