@@ -33,22 +33,8 @@ static struct gpe_icon my_icons[] = {
 #define _(x) gettext(x)
 
 void
-on_window_destroy                  (GtkObject       *object,
-                                        gpointer         user_data)
-{
-  gtk_exit (0);
-}
-
-void
-on_cancel_button_clicked                (GtkButton       *button,
-                                        gpointer         user_data)
-{
-  gtk_exit(0);
-}
-
-void
 on_ok_button_clicked                (GtkButton       *button,
-                                        gpointer         user_data)
+				     gpointer         user_data)
 {
   execlp ("/usr/bin/mbcontrol", "mbcontrol", "-exit", NULL);
   gtk_exit(0);
@@ -57,8 +43,8 @@ on_ok_button_clicked                (GtkButton       *button,
 int
 main(int argc, char *argv[])
 {
-  GtkWidget *window, *fakeparentwindow, *hbox, *label, *icon;
-  GtkWidget *buttonok, *buttoncancel;
+  GtkWidget *window, *hbox, *label, *icon, *vbox, *buttonhbox;
+  GtkWidget *buttonok, *buttoncancel, *frame;
   GdkPixbuf *p;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -76,37 +62,33 @@ main(int argc, char *argv[])
       gtk_exit (1);
     }
 
-  fakeparentwindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize (fakeparentwindow);
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  window = gtk_dialog_new ();
-  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW (fakeparentwindow));
-
-  /* set no window title in accordance to the Gnome 2 HIG */
-  gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
-
-  gtk_window_set_title (GTK_WINDOW(window), "");
   gtk_widget_realize (window);
  
-  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
+  /* set no window title in accordance to the Gnome 2 HIG */
+  gtk_window_set_decorated (GTK_WINDOW (window), FALSE);
+  gtk_window_set_title (GTK_WINDOW (window), "");
+
+  gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_DIALOG);
+
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
 
   hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox);
+  vbox = gtk_vbox_new (FALSE, 0);
+  buttonhbox = gtk_hbox_new (FALSE, 0);
 
-  /* FIXME: GTK2: set this text in bold */
   label = gtk_label_new (_("Are you sure you want to log out?"));
 
-  gtk_widget_show (label);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 
   p = gpe_find_icon ("logout");
-  icon = gpe_render_icon (GTK_DIALOG (window)->vbox->style, p);
+  icon = gpe_render_icon (vbox->style, p);
   gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
   gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
   /* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
@@ -121,22 +103,23 @@ main(int argc, char *argv[])
 
   buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
-                      GTK_SIGNAL_FUNC (on_cancel_button_clicked),
+                      GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
 
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
-                      buttonok);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
+  gtk_container_add (GTK_CONTAINER (buttonhbox),
+		     buttonok);
+  gtk_container_add (GTK_CONTAINER (buttonhbox),
                      buttoncancel);
 
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), buttonhbox, FALSE, FALSE, 0);
 
   /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
-  gtk_container_set_border_width (GTK_CONTAINER (hbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
 
-  gtk_signal_connect (GTK_OBJECT (window), "destroy",
-                      GTK_SIGNAL_FUNC (on_window_destroy),
-                      NULL);
+  frame = gtk_frame_new (NULL);
+  gtk_container_add (GTK_CONTAINER (frame), vbox);
+  gtk_container_add (GTK_CONTAINER (window), frame);
 
   gtk_widget_show_all (window);
 
