@@ -10,15 +10,15 @@ DESTDIR=
 PREFIX=/usr
 BINDIR=$(PREFIX)/bin
 
-OBJS=main.o xsi.o popupmenu.o package.o cfg.o properties.o
+OBJS=main.o xsi.o popupmenu.o package.o cfg.o properties.o gnome-exec.o
 
 all: gpe-appmgr gpe-appmgr-setup
 
 gpe-appmgr: $(OBJS)
 	$(CC) -o gpe-appmgr $(OBJS) $(LDFLAGS)
 
-gpe-appmgr-setup: appmgr_setup.c package.o
-	$(CC) -o gpe-appmgr-setup appmgr_setup.c package.o $(LDFLAGS) $(CFLAGS)
+gpe-appmgr-setup: appmgr_setup.c package.o cfg.o
+	$(CC) -o gpe-appmgr-setup appmgr_setup.c package.o cfg.o $(LDFLAGS) $(CFLAGS)
 
 install: gpe-appmgr gpe-appmgr-setup
 	$(INSTALL) gpe-appmgr $(DESTDIR)/$(BINDIR)/gpe-appmgr
@@ -35,4 +35,4 @@ clean:
 
 distclean: clean
 	rm -f *.ipk
-	rm -f dist/usr/bin/gpe-appmgr*
+	rm -f dist/usr/bin/*

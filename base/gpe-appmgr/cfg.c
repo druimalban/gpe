@@ -17,6 +17,11 @@
 #include <stdio.h>
 #include <ctype.h>
 
+/* For stat() */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include "cfg.h"
 #include "package.h"
 
@@ -31,7 +36,7 @@ void cfg_load ()
 	cfg_options.show_all_group = 0;
 	cfg_options.auto_hide_group_labels = 1;
 	cfg_options.tab_view = TAB_VIEW_ICONS;
-	cfg_options.recent_apps = -1;
+	cfg_options.show_recent_apps = 0;
 
 	home_dir = (char*) getenv("HOME");
 	if (home_dir)
@@ -71,10 +76,17 @@ void cfg_load ()
 		}
 	}
 
-	/* How many 'recent' apps to have */
-	if ((s = package_get_data (p, "recent_apps")))
+	/* Whether to have a 'Recent' tab */
+	if ((s = package_get_data (p, "show_recent_apps")))
 	{
-		sscanf(s, "%d", cfg_options.recent_apps);
+		switch (tolower(*s))
+		{
+		case '1':
+		case 'y':
+		case 't':
+			cfg_options.show_recent_apps = 1;
+			break;
+		}
 	}
 
 	if ((s = package_get_data (p, "tab_view")))
@@ -85,4 +97,27 @@ void cfg_load ()
 			cfg_options.tab_view = TAB_VIEW_LIST;
 		}
 	}
+}
+
+void cfg_load_if_newer (time_t when)
+{
+	struct stat buf;
+	char *home_dir=NULL;
+	char config_path[]=".gpe/gpe-appmgr";
+	char *s=NULL;
+
+	home_dir = (char*) getenv("HOME");
+	if (home_dir)
+	{
+		s = (char*) malloc (strlen (home_dir) + strlen (config_path) + 1);
+		sprintf (s, "%s/%s", home_dir, config_path);
+	}
+
+	if (s) {
+		stat (s, &buf);
+		if (buf.st_mtime <= when) {
+			return;
+		}
+	}
+	cfg_load();
 }

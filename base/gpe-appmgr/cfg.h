@@ -18,14 +18,22 @@
 
 #include "main.h"
 
+/* View types for the tabs */
+typedef enum
+{
+        TAB_VIEW_ICONS,
+        TAB_VIEW_LIST,
+} tab_view_style;
+
 struct cfg_options_s
 {
 	int show_all_group;
 	int auto_hide_group_labels;
-	int recent_apps;
+	int show_recent_apps;
 	tab_view_style tab_view;
 } cfg_options;
 
 void cfg_load ();
+void cfg_load_if_newer (time_t when);
 
 #endif

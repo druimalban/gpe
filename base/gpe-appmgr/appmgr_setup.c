@@ -25,6 +25,7 @@
 #include <unistd.h>
 
 #include "package.h"
+#include "cfg.h"
 
 struct package *config=NULL;
 
@@ -32,57 +33,35 @@ GtkWidget *all_group_check=NULL;
 GtkWidget *tab_view_icon=NULL;
 GtkWidget *tab_view_list=NULL;
 GtkWidget *auto_hide_group_labels_check=NULL;
+GtkWidget *show_recent_check=NULL;
 
 void page_add (GtkVBox *vb)
 {
 	GtkWidget *frame, *lvbox;
-	char *fn;
-	char *s;
 
-	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr", g_get_home_dir());
-	if (fn)
-		config = package_read (fn);
-	if (!config)
-		config = package_read ("/usr/share/gpe/config/gpe-appmgr");
-	g_free (fn);
+	cfg_load();
 
 	/* Show the 'All' group */
 	all_group_check =
 		gtk_check_button_new_with_label ("Show 'All' group");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(all_group_check),
-				      FALSE);
+				      cfg_options.show_all_group);
 
-	if ((s = package_get_data (config, "show_all_group")))
-		switch (tolower(*s))
-		{
-		case '1':
-		case 'y':
-		case 't':
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(all_group_check),
-						      TRUE);
-		}
 	gtk_box_pack_start_defaults (GTK_BOX(vb), all_group_check);
 
 	/* Autohide group titles */
 	auto_hide_group_labels_check =
 		gtk_check_button_new_with_label ("Auto-hide group labels");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check),
-				      FALSE);
-
-	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check),
-				      TRUE);
-	if ((s = package_get_data (config, "auto_hide_group_labels")))
-		switch (tolower(*s))
-		{
-		case '1':
-		case 'y':
-		case 't':
-			break;
-		default:
-			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(auto_hide_group_labels_check),
-						      FALSE);
-		}
+				      cfg_options.auto_hide_group_labels);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), auto_hide_group_labels_check);
+
+	/* Show 'recent' tab */
+	show_recent_check =
+		gtk_check_button_new_with_label ("Show 'Recent' tab");
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(show_recent_check),
+				      cfg_options.show_recent_apps);
+	gtk_box_pack_start_defaults (GTK_BOX(vb), show_recent_check);
 
 
 	/* Tab view type */
@@ -90,22 +69,16 @@ void page_add (GtkVBox *vb)
 	gtk_box_pack_start_defaults (GTK_BOX(vb), frame);
 	lvbox = gtk_vbox_new (0,0);
 	gtk_container_add (GTK_CONTAINER(frame), lvbox);
+
+	/* ->Icon */
 	tab_view_icon = gtk_radio_button_new_with_label (NULL, "Icon");
 	gtk_box_pack_start_defaults (GTK_BOX(lvbox), tab_view_icon);
+
+	/* ->List */
 	tab_view_list = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON(tab_view_icon), "List");
 	gtk_box_pack_start_defaults (GTK_BOX(lvbox), tab_view_list);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(tab_view_list),
-				      FALSE);
-
-	if ((s = package_get_data (config, "tab_view")))
-        {
-                switch (tolower(*s))
-                {
-                case 'l':
-                        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(tab_view_list),
-						      TRUE);
-                }
-        }
+				      cfg_options.tab_view == TAB_VIEW_LIST);
 
 	gtk_widget_show_all (GTK_WIDGET(vb));
 }
@@ -131,6 +104,11 @@ void page_close (void)
 		package_set_data (config, "auto_hide_group_labels", "yes");
 	else
 		package_set_data (config, "auto_hide_group_labels", "no");
+
+	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(show_recent_check)))
+		package_set_data (config, "show_recent_apps", "yes");
+	else
+		package_set_data (config, "show_recent_apps", "no");
 
 	if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(tab_view_icon)))
 		package_set_data (config, "tab_view", "icon");

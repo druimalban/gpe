@@ -20,15 +20,9 @@
 /* main window */
 GtkWidget *window;
 GtkWidget *notebook;
+GtkWidget *recent_box;
 
 /* Refresh the UI with the icons */
 void refresh_tabs (void);
-
-/* View types for the tabs */
-typedef enum
-{
-	TAB_VIEW_ICONS,
-	TAB_VIEW_LIST,
-} tab_view_style;
 
 #endif

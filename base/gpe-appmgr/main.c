@@ -31,6 +31,11 @@
 /* malloc / free */
 #include <stdlib.h>
 
+/* time() */
+#include <time.h>
+
+#include <X11/Xatom.h>
+
 /* everything else */
 #include "main.h"
 #include "cfg.h"
@@ -38,12 +43,32 @@
 #include "popupmenu.h"
 #include "xsi.h"
 
+#define DEBUG
+#ifdef DEBUG
+#define DBG(x) {fprintf x ;}
+#define TRACE(x) {fprintf(stderr,"TRACE: " x "\n");}
+#else
+#define TRACE(x) ;
+#define DBG(x) ;
+#endif
+
 GList *items=NULL;
+GList *recent_items=NULL;
 GList *groups=NULL;
 GList *forced_groups=NULL;
 
 GtkWidget *current_button=NULL;
 int current_button_is_down=0;
+
+GtkWidget *recent_tab=NULL;
+
+time_t last_update=0;
+
+/* For not starting an app twice after a double click */
+int ignore_press = 0;
+
+GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw);
+void create_recent_list ();
 
 void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 {
@@ -83,13 +108,24 @@ void nb_switch (GtkNotebook *nb, GtkNotebookPage *page, guint pagenum)
 	}
 }
 
+gint unignore_press (gpointer data)
+{
+	ignore_press = 0;
+	return FALSE;
+}
+
 /* Callback for selecting a program to run */
 gint btn_released (GtkObject *btn, gpointer data)
 {
 	struct package *p;
+	GList *l;
+
 	popup_menu_cancel ();
+
 	gtk_widget_set_state (GTK_WIDGET(btn), GTK_STATE_NORMAL);
 
+	/* Clear the variables stating what button is down etc. 
+	 * and close if we're not on the original button */
 	if (GTK_WIDGET(btn) != current_button || !current_button_is_down)
 	{
 		current_button = NULL;
@@ -97,8 +133,40 @@ gint btn_released (GtkObject *btn, gpointer data)
 		return TRUE;
 	}
 
+	if (!GTK_IS_EVENT_BOX(btn)) /* Could be the notebook! */
+		return TRUE;
+
+	if (ignore_press)
+		return TRUE;
+
+	/* So we ignore a second press within 1000msec */
+	ignore_press = 1;
+	gtk_timeout_add (1000, unignore_press, NULL);
+
 	p = (struct package *) gtk_object_get_data (GTK_OBJECT(btn), "program");
 	run_program (package_get_data (p, "command"), package_get_data (p, "windowtitle"));
+
+	/* Add it to the recently-run list
+	   Remove it first if it's already there
+	   (so it moves to the front) */
+	if ((l = g_list_find (recent_items, p)))
+		recent_items = g_list_remove_link(recent_items, l);
+
+	if (cfg_options.show_recent_apps)
+	{
+		recent_items = g_list_prepend (recent_items, p);
+
+		while (g_list_length (recent_items) > 9)
+		{
+			recent_items = g_list_remove_link(recent_items,
+							  g_list_last (recent_items));
+		}
+
+		create_recent_list ();
+	} else {
+		g_list_free (recent_items);
+		recent_items = NULL;
+	}
 
 	return TRUE;	
 }
@@ -112,6 +180,10 @@ gint btn_pressed (GtkWidget *btn, GdkEventButton *ev, gpointer data)
 	/* We only want left mouse button events */
 	if (ev && (!(ev->button == 1)))
 	    return TRUE;
+
+	if (ignore_press) /* Ignore double clicks! */ {
+		return TRUE;
+	}
 
 	current_button = btn;
 	current_button_is_down = 1;
@@ -257,11 +329,141 @@ void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
 	g_free (title);
 }
 
+GtkWidget *create_icon_pixmap (char *fn, int size)
+{
+	GdkImlibImage *image;
+	GdkPixmap *pm;
+	GdkBitmap *bm;
+	GtkWidget *pixmap;
+
+	image = gdk_imlib_load_image(fn);
+	if (!image)
+		return NULL;
+	if (gdk_imlib_render(image, size,size) <= 0)
+		return NULL;
+	pm = gdk_imlib_copy_image(image);
+	bm = gdk_imlib_copy_mask(image);
+	pixmap = gtk_pixmap_new (pm,bm);
+
+	gdk_imlib_destroy_image(image);
+
+	return pixmap;
+}
+
+char *get_closest_icon (struct package *p, int iconsize)
+{
+	char tmp[1024];
+	char *fn;
+
+	snprintf (tmp, 1000, "icon%d", iconsize);
+	fn = package_get_data (p, tmp);
+	if (!fn)
+		fn = package_get_data (p, "icon");
+	if (!fn)
+		fn = package_get_data (p, "icon48");
+	if (!fn)
+	{
+		/* TODO: run 48->16
+		 * maybe get actual closest, preferring larger?
+		 */
+	}
+
+	return fn;
+}
+
+char *get_icon_fn (struct package *p, int iconsize)
+{
+	char *fn, *full_fn;
+
+	fn = get_closest_icon(p,iconsize);
+	if (!fn)
+		return fn;
+	full_fn = find_icon(fn);
+
+	return full_fn;
+}
+
+int has_icon (struct package *p)
+{
+	if (get_icon_fn(p,0))
+		return 1;
+	else
+		return 0;
+}
+
+void create_recent_list ()
+{
+	GtkWidget *hb;
+	GList *this_item;
+	GList *cl;
+	GtkWidget *w;
+
+	TRACE("create_recent_list");
+
+	/* Remove the previous list */
+	cl = gtk_container_children(GTK_CONTAINER(recent_tab));
+	if (cl)
+	{
+		w = cl->data;
+		gtk_widget_destroy (w);
+	}
+
+	hb = gtk_hbox_new (0,0);
+
+	this_item = recent_items;
+	while (this_item)
+	{
+		struct package *p;
+		GtkWidget *btn;
+		GtkWidget *img=NULL;
+		GdkPixmap *pm;
+		GdkBitmap *bm;
+		char *icon;
+
+		p = (struct package *) this_item->data;
+		DBG((stderr, "recent info: %s\n", package_get_data (p, "title")));
+		/* Button picture */
+		icon = find_icon (get_closest_icon (p, 16));
+		if (icon)
+		{
+			img = create_icon_pixmap (icon, 16);
+			free (icon);
+		}
+		if (!img)
+			if (gdk_imlib_load_file_to_pixmap("/usr/share/pixmaps/menu_unknown_program16.png",&pm,&bm))
+				img = gtk_pixmap_new (pm, bm);
+
+		/* The button itself */
+		btn = gtk_event_box_new ();
+
+		gtk_container_add (GTK_CONTAINER(btn),img);
+		gtk_object_set_data (GTK_OBJECT(btn), "program", (gpointer)p);
+		gtk_signal_connect( GTK_OBJECT(btn), "button_release_event",
+				    GTK_SIGNAL_FUNC(btn_released), NULL);
+		gtk_signal_connect( GTK_OBJECT(btn), "button_press_event",
+				    GTK_SIGNAL_FUNC(btn_pressed), NULL);
+		gtk_signal_connect( GTK_OBJECT(btn), "enter_notify_event",
+				    GTK_SIGNAL_FUNC(btn_enter), NULL);
+		gtk_signal_connect( GTK_OBJECT(btn), "leave_notify_event",
+				    GTK_SIGNAL_FUNC(btn_leave), NULL);
+
+		gtk_box_pack_start (GTK_BOX(hb), btn, 0, 0, 0);
+
+		this_item = this_item->next;
+	}
+
+	/* Add the updated list */
+	gtk_container_add(GTK_CONTAINER(recent_tab),
+			  hb);
+
+	gtk_widget_show_all (recent_tab);
+}
+
 /* Make the contents for a notebook tab.
  * Generally we only want one group, but NULL means
  * ignore group setting (ie. "All").
  */
-GtkWidget *create_tab (char *current_group, tab_view_style style)
+GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw)
 {
 	GtkWidget *tbl;
 	GtkWidget *sw;
@@ -284,12 +486,16 @@ GtkWidget *create_tab (char *current_group, tab_view_style style)
 	tbl = gtk_table_new (3,cols,TRUE);
 
 	/* Make the scrolled window */
-	sw = gtk_scrolled_window_new (NULL, NULL);
+	if (!curr_sw) /* We might already have one made for us */
+		sw = gtk_scrolled_window_new (NULL, NULL);
+	else
+		sw = curr_sw;
+
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(sw),
 					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(sw), tbl);
 
-	this_item = items;
+	this_item = all_items;
 	while (this_item)
 	{
 		struct package *p;
@@ -313,11 +519,10 @@ GtkWidget *create_tab (char *current_group, tab_view_style style)
 			char *icon;
 
 			/* Button picture */
-			icon = find_icon (package_get_data (p, "icon48"));
+			icon = find_icon (get_closest_icon (p, 48));
 			if (icon)
 			{
-				if (gdk_imlib_load_file_to_pixmap(icon, &pm, &bm))
-					img = gtk_pixmap_new (pm,bm);
+				img = create_icon_pixmap (icon, 48);
 				free (icon);
 			}
 			if (!img)
@@ -356,11 +561,10 @@ GtkWidget *create_tab (char *current_group, tab_view_style style)
 			char *icon;
 
 			/* Button picture */
-			icon = find_icon (package_get_data (p, "icon16"));
+			icon = find_icon (get_closest_icon (p, 16));
 			if (icon)
 			{
-				if (gdk_imlib_load_file_to_pixmap(icon, &pm, &bm))
-					img = gtk_pixmap_new (pm,bm);
+				img = create_icon_pixmap (icon, 16);
 				free (icon);
 			}
 			if (!img)
@@ -408,6 +612,7 @@ GtkWidget *create_tab (char *current_group, tab_view_style style)
 		this_item = g_list_next (this_item);
 	}
 
+	gtk_widget_show_all(sw);
 	return sw;
 }
 
@@ -469,25 +674,26 @@ void refresh_tabs ()
 {
 	GList *l;
 	int old_tab;
+	TRACE ("refresh_tabs");
 
 	old_tab = gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook));
 
 	clear_tabs ();
 
-	/* Create the tabs */
-
+	/* Create the 'All' tab if wanted */
 	if (cfg_options.show_all_group)
 		gtk_notebook_append_page (GTK_NOTEBOOK(notebook),
-					  create_tab (NULL, cfg_options.tab_view),
+					  create_tab (items, NULL, cfg_options.tab_view, NULL),
 					  create_group_tab_label("All"));
 
+	/* Create the normal tabs if wanted */
 	l = groups;
 	while (l)
 	{
 		if (group_has_items (l->data))
 			gtk_notebook_append_page (
 				GTK_NOTEBOOK(notebook),
-				create_tab (l->data, cfg_options.tab_view),
+				create_tab (items, l->data, cfg_options.tab_view, NULL),
 				create_group_tab_label(l->data));
 		l = l->next;
 	}
@@ -556,11 +762,13 @@ GList *load_ignored_items ()
 
 void cb_package_add (struct package *p)
 {
+	TRACE ("cb_package_add");
+
 	/* add the item to the list */
 	if (p)
 	{
-				/* The package has to provide a 48x48 icon and a section */
-		if (package_get_data (p, "icon48") && package_get_data (p, "section"))
+		/* The package has to provide an icon and a section */
+		if (has_icon (p) && package_get_data (p, "section"))
 		{
 			/* Don't allow X/Y section names (eg. "Games/Strategy") */
 			if (strchr (package_get_data (p, "section"), '/'))
@@ -572,7 +780,6 @@ void cb_package_add (struct package *p)
 			    (g_list_find_custom (forced_groups, package_get_data (p, "section"),
 						 (GCompareFunc) strcmp) == NULL))
 				groups = g_list_insert_sorted (groups, strdup(package_get_data(p,"section")), (GCompareFunc)strcasecmp);
-
 		}
 		else
 			package_free (p);
@@ -580,7 +787,7 @@ void cb_package_add (struct package *p)
 	}
 }
 
-/* Reloads the menu files into memory, causes the UI to refresh */
+/* Reloads the menu files into memory */
 int refresh_list ()
 {
 	GList *l, *old_items, *old_groups;
@@ -599,6 +806,9 @@ int refresh_list ()
 		NULL, /* Placeholder for ~/.gpe/menu */
 		NULL
 	};
+
+	TRACE ("refresh_list");
+
 	if ((home_dir = (char*) getenv ("HOME")))
 	{
 		for (i=0;directories[i];i++)
@@ -606,6 +816,11 @@ int refresh_list ()
 		directories[i] = user_menu = g_strdup_printf ("%s/.gpe/menu", home_dir);
 	}
 
+	/* Wipe out 'recent' list */
+	recent_items = NULL;
+	create_recent_list ();
+
+	/* Remove the tap-hold popup menu timeout if it's there */
 	popup_menu_cancel ();
 
 	old_items = items;
@@ -635,6 +850,7 @@ int refresh_list ()
 				g_free (temp);
 				continue;
 			}
+
 			package_read_to (temp, cb_package_add);
 			g_free (temp);
 		}
@@ -681,12 +897,18 @@ void cb_win_draw (GtkWidget *widget,
 		  gpointer user_data)
 {
 	static int last_width = 0;
+	TRACE ("cb_win_draw");
+	DBG((stderr, "window: %p\n", window));
+	DBG((stderr, "last_width: %d\n", last_width));
+	DBG((stderr, "window->allocation.width: %d\n",
+				window->allocation.width));
 
 	if (window && last_width != window->allocation.width)
 	{
 		last_width = window->allocation.width;
 		refresh_tabs();
 	}
+	TRACE("cb_win_draw: end");
 }
 
 /* run on SIGHUP
@@ -694,9 +916,40 @@ void cb_win_draw (GtkWidget *widget,
  * program was just added */
 static void catch_signal (int signo)
 {
-	cfg_load ();
+	TRACE ("catch_signal");
+	/* FIXME: transfer this if needed */
+	recent_items = NULL;
+
+	cfg_load_if_newer (last_update);
 	refresh_list ();
 	refresh_tabs();
+	last_update = time (NULL);
+}
+
+/* Create the 'recent' list as a dock app or normal widget */
+void create_recent_box(GtkBox *cont)
+{
+        recent_tab = gtk_vbox_new(0,0);
+
+	if (cont)
+	{
+		gtk_box_pack_start (GTK_BOX(cont), recent_tab,0,0,0);
+		gtk_widget_show (recent_tab);
+	} else {
+		GdkAtom window_type;
+		GdkAtom window_type_dock;
+		GtkWidget *w;
+
+		w = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		gtk_container_set_border_width(GTK_CONTAINER (w), 0);
+		gtk_container_add(GTK_CONTAINER(w), recent_tab);
+
+		window_type = gdk_atom_intern("_NET_WM_WINDOW_TYPE", FALSE);
+		window_type_dock = gdk_atom_intern("_NET_WM_WINDOW_TYPE_DOCK", FALSE);
+		gtk_widget_realize(w);
+		gdk_property_change(w->window, window_type, XA_ATOM, 32, GDK_PROP_MODE_REPLACE, (guchar *) &window_type_dock, 1);
+		gtk_widget_show_all (w);
+	}
 }
 
 /* Create the UI for the main window and
@@ -704,13 +957,22 @@ static void catch_signal (int signo)
  */
 void create_main_window()
 {
+	GtkWidget *vbox;
+	TRACE ("create_main_window");
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title (GTK_WINDOW(window), "Programs");
 	gtk_widget_set_usize (window, 220,280);
+
+#ifndef DEBUG
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
 			    (GtkSignalFunc)gtk_widget_show, NULL);
+#else
+	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
+			    (GtkSignalFunc)gtk_main_quit, NULL);
+#endif
 	gtk_signal_connect (GTK_OBJECT(window), "draw",
 			    (GtkSignalFunc)cb_win_draw, NULL);
+
 	notebook = gtk_notebook_new ();
 	gtk_notebook_set_homogeneous_tabs(GTK_NOTEBOOK(notebook), FALSE);
 	gtk_notebook_set_scrollable (GTK_NOTEBOOK(notebook), TRUE);
@@ -723,17 +985,56 @@ void create_main_window()
 	gtk_signal_connect( GTK_OBJECT(notebook), "button_release_event",
 			    GTK_SIGNAL_FUNC(btn_released), NULL);
 
-	gtk_container_add (GTK_CONTAINER (window), notebook);
+	vbox = gtk_vbox_new(0,0);
+	gtk_box_pack_start (GTK_BOX(vbox), notebook, 1, 1, 0);
+
+#if 1 // TEST ME!!!
+	gtk_box_pack_start (GTK_BOX(vbox), recent_tab = gtk_vbox_new(0,0) ,0,0,0);
+#else
+	//create_recent_box (GTK_BOX(vbox));
+	create_recent_box (NULL);
+//	gtk_box_pack_start (GTK_BOX(vbox), gtk_label_new("Hi!"),0,0,0);
+#endif
+
+	gtk_container_add (GTK_CONTAINER (window), vbox);
 
 	gtk_widget_show_all (window);
 }
 
+/* clean_up():
+ * free all data etc.
+ */
+void clean_up ()
+{
+	GList *l;
+
+	TRACE("clean_up");
+
+	l = items;
+	while (l)
+	{
+		if (l->data)
+			package_free ((struct package *)l->data);
+		l = l->next;
+	}
+	g_list_free (items);
+
+	l = groups;
+	while (l)
+	{
+		if (l->data)
+			free (l->data);
+		l = l->next;
+	}
+	g_list_free (groups);
+}
 /* main():
  * init the libs, setup the signal handler,
  * run gtk bits
  */
 int main(int argc, char *argv[]) {
         struct sigaction sa_old, sa_new;
+	TRACE ("main");
 
 	/* Init gtk & friends */
 	gtk_init (&argc, &argv);
@@ -756,8 +1057,11 @@ int main(int argc, char *argv[]) {
 	/* update the menu data */
 	refresh_list ();
 
+	last_update = time (NULL);
+
 	/* start the event loop */
 	gtk_main();
 
+	clean_up();
 	return 0;
 }

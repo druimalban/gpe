@@ -39,6 +39,8 @@
 #include <glib.h>
 #include "xsi.h"
 
+#include "gnome-exec.h"
+
 //#define FALSE	0
 //#define TRUE	1
 
@@ -287,6 +289,9 @@ int run_program (char *exec, char *name)
 	// Otherwise, we fork the passed program.
 	if (xid == 0)
 	{
+		char *cmd[] = {"/bin/sh", "-c", exec};
+		gnome_execute_async (NULL, 3, cmd);
+/* Don't need this now:
 		XCloseDisplay(display);
 
 		switch (fork())
@@ -303,6 +308,7 @@ int run_program (char *exec, char *name)
 			return -1;
 	              	break;
 	        }
+*/
 
 	}
 	else
