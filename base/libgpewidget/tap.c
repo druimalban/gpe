@@ -54,8 +54,7 @@ filter (GdkEvent *ev, gpointer data)
     }
   else if (ev->type == GDK_BUTTON_RELEASE 
 	   && ev->button.button == 1 
-	   && t 
-	   && t->ev.any.window == ev->any.window)
+	   && t)
     {
       t->flag = FALSE;
       t = NULL;
