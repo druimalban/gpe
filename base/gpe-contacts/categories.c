@@ -79,7 +79,6 @@ categories_ok (GtkWidget *w, gpointer p)
 
       db_del_category (c);
     }
-#endif
 
   g_slist_free (old_categories);
 
@@ -87,6 +86,7 @@ categories_ok (GtkWidget *w, gpointer p)
 				 build_categories_string (t->selected_categories));
 
   categories_menu ();
+#endif
 
   gtk_widget_destroy (window);
 }
