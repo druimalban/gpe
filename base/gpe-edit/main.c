@@ -23,13 +23,15 @@
 #include "errorbox.h"
 #include "render.h"
 #include "pixmaps.h"
+#include "question.h"
 #include "gtkminifilesel.h"
 
 #define WINDOW_NAME "GPE Edit"
 #define _(_x) gettext (_x)
 
 gchar *buffer;
-gchar *filename = "";
+gchar *filename = NULL;
+int file_modified = 0;
 
 GtkWidget *main_window;
 GtkWidget *text_area;
@@ -48,13 +50,16 @@ struct gpe_icon my_icons[] = {
   { "dir-up", "dir-up" },
   { "ok", "ok" },
   { "cancel", "cancel" },
+  { "stop", "stop" },
+  { "question", "question" },
+  { "error", "error" },
   { "icon", PREFIX "/share/pixmaps/gpe-edit.png" },
   {NULL, NULL}
 };
 
 guint window_x = 240, window_y = 310;
 
-void
+static void
 clear_text_area (void)
 {
   gtk_text_freeze (GTK_TEXT (text_area));
@@ -62,21 +67,26 @@ clear_text_area (void)
   gtk_text_thaw (GTK_TEXT (text_area));
 }
 
-void
+static void
 update_window_title (void)
 {
   gchar *window_title;
   gchar *displayname;
 
-  if (filename == "")
+  if (filename == NULL)
   {
-    displayname = g_malloc (strlen (_("Untitled")));
+    displayname = g_malloc (strlen (_("Untitled")) + 2);
     strcpy (displayname, _("Untitled"));
   }
   else
   {
-    displayname = g_malloc (strlen (basename (filename)));
+    displayname = g_malloc (strlen (basename (filename)) + 2);
     strcpy (displayname, basename (filename));
+  }
+
+  if (file_modified == 1)
+  {
+    strcat (displayname, " *");
   }
 
   window_title = g_malloc (strlen (WINDOW_NAME " - ") + strlen (displayname) + 1);
@@ -85,7 +95,17 @@ update_window_title (void)
   gtk_window_set_title (GTK_WINDOW (main_window), window_title);
 }
 
-void
+static void
+text_changed (void)
+{
+  if (file_modified == 0)
+  {
+    file_modified = 1;
+    update_window_title ();
+  }
+}
+
+static void
 new_file (void)
 {
   clear_text_area ();
@@ -93,7 +113,7 @@ new_file (void)
   update_window_title ();
 }
 
-void
+static void
 open_file (GtkFileSelection *selector, gpointer user_data)
 {
   struct stat file_stat;
@@ -123,7 +143,7 @@ open_file (GtkFileSelection *selector, gpointer user_data)
   gtk_widget_destroy (file_selector);
 }
 
-void
+static void
 save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
   guint text_length;
@@ -145,13 +165,14 @@ save_file_as (GtkFileSelection *selector, gpointer user_data)
     fclose (fp);
     g_free (buffer);
 
+    file_modified = 0;
     update_window_title ();
   }
 
   gtk_widget_destroy (file_selector);
 }
 
-void
+static void
 select_open_file (void)
 {
   file_selector = gtk_mini_file_selection_new ("Open File ...");
@@ -165,9 +186,19 @@ select_open_file (void)
   gtk_widget_show (file_selector);
 }
 
-void
+static void
 select_save_file_as (void)
 {
+  gchar *suggested_filename;
+  guint text_length;
+
+  text_length = gtk_text_get_length (GTK_TEXT (text_area));
+  if (text_length > 10)
+    text_length = 10;
+
+  suggested_filename = g_malloc (text_length);
+  suggested_filename = gtk_editable_get_chars (GTK_EDITABLE (text_area), 0, text_length);
+
   file_selector = gtk_mini_file_selection_new ("Save As ..");
 
   gtk_signal_connect (GTK_OBJECT (file_selector),
@@ -176,16 +207,24 @@ select_save_file_as (void)
   gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
+
+  gtk_entry_set_text (GTK_ENTRY (GTK_MINI_FILE_SELECTION (file_selector)->entry), suggested_filename);
+
   gtk_widget_show (file_selector);
+
+  g_free (suggested_filename);
+  while (GTK_IS_WIDGET(file_selector))
+    while (gtk_events_pending())
+      gtk_main_iteration_do(FALSE);
 }
 
-void
+static void
 save_file (void)
 {
   guint text_length;
   FILE *fp;
 
-  if ( filename == "" )
+  if ( filename == NULL )
   {
     select_save_file_as ();
   }
@@ -204,23 +243,45 @@ save_file (void)
       fwrite (buffer, 1, text_length, fp);
       fclose (fp);
       g_free (buffer);
+
+    file_modified = 0;
+    update_window_title ();
     }
   }
 }
 
-void
+static void
+ask_save_before_exit (void)
+{
+
+  if (file_modified == 1)
+  {
+    switch (gpe_question_ask ("Save current file before exiting?", _("Question"), "question",
+    _("Don't save"), "stop", _("Save"), "save"))
+    {
+    case 1: /* Save */
+      save_file ();
+    case 0: /* Don't Save */
+      gtk_exit (0);
+      default:
+    }
+  } else
+    gtk_exit(0);
+}
+
+static void
 cut_selection (void)
 {
   gtk_editable_cut_clipboard (GTK_EDITABLE (text_area));
 }
 
-void
+static void
 copy_selection (void)
 {
   gtk_editable_copy_clipboard (GTK_EDITABLE (text_area));
 }
 
-void
+static void
 paste_clipboard (void)
 {
   gtk_editable_paste_clipboard (GTK_EDITABLE (text_area));
@@ -271,6 +332,8 @@ main (int argc, char *argv[])
 
   text_area = gtk_text_new (NULL, NULL);
   gtk_text_set_editable (GTK_TEXT (text_area), TRUE);
+  gtk_signal_connect (GTK_OBJECT (text_area), "changed",
+		      GTK_SIGNAL_FUNC (text_changed), NULL);
 
   p = gpe_find_icon ("new");
   pw = gpe_render_icon (main_window->style, p);
@@ -314,7 +377,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("exit");
   pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
-			   _("Exit"), _("Exit"), pw, gtk_exit, NULL);
+			   _("Exit"), _("Exit"), pw, ask_save_before_exit, NULL);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);

@@ -1,3 +1,15 @@
+2002-08-10  Robert Mibus  <mibus@handhelds.org>
+
+	* main.c: Fix dc's brain-deadness string handling :)
+
+	* main.c: Fix ask-filename-on-save-on-exit handling.
+
+        * <dc_> Thanks mibus =P
+
+2002-08-08  Damien Tanner  <dctanner@magenet.com>
+
+	* Ask if the user would like to save his document before exiting
+
 2002-08-05  Philip Blundell  <philb@gnu.org>
 
 	* familiar/control1 (Description): New file.

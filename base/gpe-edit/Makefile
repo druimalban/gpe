@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-edit
-#DEBUG = yes
+DEBUG = yes
 CVSBUILD = yes
 
 MEMBERS = main
