@@ -1,3 +1,6 @@
+2004-08-25 Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Released V 0.0.12
 
 2004-08-24 Florian Boor <florian.boor@kernelconcepts.de>
 	Makefile: Install binary suid.
