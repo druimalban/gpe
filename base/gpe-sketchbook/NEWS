@@ -1,6 +1,7 @@
 GPE sketchbook NEWS
 
 * cvs
+- use GTK IconListView (allow selection)
 - add "Exit" action in menus
 - list: put sketch actions in a popup menu
 - list: makes columns sortable

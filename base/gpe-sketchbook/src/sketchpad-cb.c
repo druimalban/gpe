@@ -30,7 +30,6 @@
 
 #include "dock.h"
 #include "gpe/question.h"
-#include "gpe/gpeiconlistview.h"
 #include "gpe/popup_menu.h"
 
 //--i18n
@@ -198,7 +197,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
                        -1);
   }
 
-  g_printerr("Saving %s", filename);
+  g_printerr("Saving %s\n", filename);
   file_save(filename); //FIXME: should catch saving errors
   
   if(selector.thumbnails_notloaded == FALSE){//--make thumbnail
@@ -255,10 +254,6 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
       g_free(updated_label);
     }
 
-    if(selector.thumbnails_notloaded == FALSE){
-      //update icon_view
-      gpe_icon_list_view_set_item_icon(GPE_ICON_LIST_VIEW(selector.iconlist), iconlist_item, thumbnail);
-    }
   }
 
   is_current_sketch_modified = FALSE;

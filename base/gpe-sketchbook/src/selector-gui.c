@@ -27,7 +27,6 @@
 //gpe libs
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
-#include "gpe/gpeiconlistview.h"
 #include "gpe/popup_menu.h"
 #include "gpe/picturebutton.h"
 
@@ -80,9 +79,12 @@ GtkWidget * selector_gui(){
   //--show all except top level window AND one view
   gtk_widget_show(vbox);//top box
   gtk_widget_show_all(hbox);//toolbar
-  icons_mode = FALSE;
-  if(icons_mode) gtk_widget_show_all(selector.iconlist);
-  else           gtk_widget_show_all(selector.textlist);
+
+  //icons_mode = FALSE;
+  //if(icons_mode) gtk_widget_show_all(selector.iconlist);
+  //else           gtk_widget_show_all(selector.textlist);
+  gtk_widget_show_all(selector.textlist);
+  gtk_widget_show_all(selector.iconlist);
 
   return vbox;
 }
@@ -280,55 +282,76 @@ GtkWidget * build_scrollable_textlist(){
 }
 
 
-void on_iconlist_clicked    (GtkWidget * iconlist, gpointer il_data, gpointer data);
-//void on_iconlist_show_popup (GtkWidget * iconlist, gpointer il_data, gpointer data);
+void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *treepath, gpointer user_data);
 
 GtkWidget * build_scrollable_iconlist(GtkWidget * window){
-  GtkWidget * iconlist;
+  GtkWidget * scrolledwindow;//to return
+  GtkWidget * icon_view;
+  GtkTreeModel * model;
 
-  iconlist = gpe_icon_list_view_new();
-  gpe_icon_list_view_set_icon_size (GPE_ICON_LIST_VIEW(iconlist), THUMBNAIL_SIZE);
-  gpe_icon_list_view_set_bg_color  (GPE_ICON_LIST_VIEW(iconlist), 0xbabac444);//0xddddd444);//light grey 
-  gpe_icon_list_view_set_show_title(GPE_ICON_LIST_VIEW(iconlist), FALSE);
-  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW(iconlist), 4);
+  model = selector.listmodel;
 
-  g_signal_connect (G_OBJECT (iconlist), "clicked",
-                    G_CALLBACK (on_iconlist_clicked), NULL);
-  //g_signal_connect (G_OBJECT (iconlist), "show_popup",
-  //                  G_CALLBACK (on_iconlist_show_popup), NULL);
+  icon_view = gtk_icon_view_new_with_model (model);
+  gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (icon_view), GTK_SELECTION_SINGLE);
+  g_object_unref (model);
+  
+  selector.iconlistview = icon_view;
 
-  return iconlist;
+  gtk_icon_view_set_margin(GTK_ICON_VIEW(selector.iconlistview), 3);
+  //g_printerr("margin : %d\n"
+  //           "spacing: %d\n"
+  //           "column : %d\n"
+  //           "row    : %d\n"
+  //           , gtk_icon_view_get_margin         (GTK_ICON_VIEW(selector.iconlistview))
+  //           , gtk_icon_view_get_spacing        (GTK_ICON_VIEW(selector.iconlistview))
+  //           , gtk_icon_view_get_column_spacing (GTK_ICON_VIEW(selector.iconlistview))
+  //           , gtk_icon_view_get_row_spacing    (GTK_ICON_VIEW(selector.iconlistview))
+  //           );
+
+
+  /* We now set which model columns that correspont to the text
+   * and pixbuf of each item
+   */
+  //gtk_icon_view_set_text_column   (GTK_ICON_VIEW (icon_view), ENTRY_TITLE);
+  gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), ENTRY_THUMBNAIL);
+  
+  /* Connect to the "item_activated" signal */
+  g_signal_connect (icon_view, "item_activated", G_CALLBACK (on_iconlist_item_activated), model);
+
+  //--Scrolled window and packing
+  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow), GTK_WIDGET(icon_view));
+
+  return scrolledwindow;
+
 }
 
 //FIXME: to move to selector-cb.c/h
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
-void on_iconlist_clicked (GtkWidget * iconlist, gpointer iter, gpointer data) {
-  //**/g_printerr("ICONLIST> %s\n", (char *)data);
-  GtkTreeModel * model;
+
+void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *tree_path, gpointer user_data){
+  GtkTreeModel *model;
+  GtkTreeIter iter;
   gchar * fullpath_filename;
-        
-  model = GTK_TREE_MODEL(selector.listmodel);
+  gint * indices;
 
-  gtk_tree_model_get(model, (GtkTreeIter *)iter,
-                     ENTRY_URL, &fullpath_filename, -1);
+  /**/g_printerr("Icon list item activated.\n");
+  
+  model = selector.listmodel;
 
-  {
-    GtkTreePath * path;
-    gint * indices;
-    path = gtk_tree_model_get_path(selector.listmodel, iter);
-    indices = gtk_tree_path_get_indices(path);
+  gtk_tree_model_get_iter (model, &iter, tree_path);
+  gtk_tree_model_get (model, &iter,
+                      ENTRY_URL, &fullpath_filename,
+                      -1);
 
-    current_sketch = indices[0];
-
-    gtk_tree_path_free(path);
-  }
+  indices = gtk_tree_path_get_indices(tree_path);
+  current_sketch = indices[0];
   set_current_sketch_selected();
 
   sketchpad_open_file(fullpath_filename);
+  g_free(fullpath_filename);
   switch_to_page(PAGE_SKETCHPAD);
 }
-
-//void on_iconlist_show_popup (GtkWidget *il, gpointer note, gpointer data) {
-//  /**/g_printerr("ICONLIST> %s", data);
-//}

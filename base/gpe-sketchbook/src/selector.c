@@ -27,8 +27,6 @@
 #include <time.h>   //localtime
 
 #include "gpe/errorbox.h"
-#include "gpe/gpeiconlistview.h"
-#include "gpe/gpeiconlistitem.h"
 
 #include "selector.h"
 #include "selector-gui.h"
@@ -78,6 +76,17 @@ void selector_init(){
 
 }//selector_init()
 
+static const char * default_thumbnail_xpm[] = {
+"5 5 2 1",
+" 	c #000000",
+".	c #FFFFFF",
+"     ",
+" ... ",
+" . . ",
+" ... ",
+"     "};
+
+static GdkPixbuf * default_thumbnail = NULL;
 
 void selector_add_note(gint id,
                        gchar * title,
@@ -91,6 +100,14 @@ void selector_add_note(gint id,
 
   created_label = get_time_label(created);
   updated_label = get_time_label(updated);
+
+  if(!thumbnail){
+    if(!default_thumbnail){
+      default_thumbnail = gdk_pixbuf_new_from_xpm_data((gchar const **)default_thumbnail_xpm);
+    }
+
+    thumbnail = default_thumbnail;
+  }
   
   store = GTK_LIST_STORE(selector.listmodel);
   gtk_list_store_append (store, &iter);
@@ -106,22 +123,11 @@ void selector_add_note(gint id,
                       -1);
 
   //free items, liststore takes a copy
-  g_free(url);  
-  g_free(title);
+  g_free(url);   //to be done by calling function
+  g_free(title); //to be done by calling function
   g_free(created_label);
   g_free(updated_label);
 
-  //gpe-iconlist is not linked to the model, so update it
-  if(thumbnail){
-    GObject * item;
-    item = gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW(selector.iconlist),
-                                         NULL, //title
-                                         thumbnail,//icon
-                                         gtk_tree_iter_copy(&iter));//udata
-    gtk_list_store_set (store, &iter,
-                        ENTRY_ICONLISTITEM, item,
-                        -1);  
-  }
 }
 
 
@@ -153,8 +159,6 @@ void load_thumbnails(){
   gchar     * filename;
   GdkPixbuf * pixbuf;
   GdkPixbuf * thumbnail;
-  GObject   * item;
- 
 
   model = GTK_TREE_MODEL(selector.listmodel);
 
@@ -170,12 +174,6 @@ void load_thumbnails(){
                                          GDK_INTERP_BILINEAR);
     gdk_pixbuf_unref(pixbuf);
     gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_THUMBNAIL, thumbnail, -1);
-
-    item = gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW(selector.iconlist),
-                                         NULL, //title
-                                         thumbnail,//icon
-                                         gtk_tree_iter_copy(&iter));//udata
-    gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_ICONLISTITEM, item, -1);  
 
     while (gtk_events_pending ()) gtk_main_iteration ();
 
@@ -223,8 +221,6 @@ void delete_current_sketch(){
     gtk_tree_model_get(model, &iter,
                        ENTRY_ICONLISTITEM, &iconlist_item,
                        -1);
-
-    gpe_icon_list_view_remove_item(GPE_ICON_LIST_VIEW(selector.iconlist), iconlist_item);
 
     gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 

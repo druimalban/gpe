@@ -23,9 +23,10 @@
 #define THUMBNAIL_SIZE 64
 
 typedef struct _selector {
-  GtkWidget * iconlist;//top level container (the gpe_iconlist itself)
+  GtkWidget * iconlist;//top level container (scrolled_window containing the icon list)
   GtkWidget * textlist;//top level container (scrolled_window containing the list)
 
+  GtkWidget * iconlistview;
   GtkWidget * textlistview;
 
   GtkTreeModel * listmodel;
