@@ -6,4 +6,4 @@ Architecture: arm
 Maintainer: Luc Pionchon <luc.pionchon@welho.com>
 Depends: libgtk1.2, libgpewidget0, libpng2, libgdk-pixbuf2, gpe-icons
 Description: A GPE notebook to sketch your notes
-Provides gpe-sketchbook
+Provides: gpe-sketchbook

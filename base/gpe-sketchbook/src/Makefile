@@ -7,7 +7,8 @@ CONTROL_FILE = ../familiar/control
 endif
 
 VERSION = $(shell grep 'Version: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
-PACKAGE = $(shell grep 'Package: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
+PACKAGE = gpe-sketchbook
+#PACKAGE = $(shell grep 'Package: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
 
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
@@ -31,7 +32,12 @@ endif
 #-- GPE widgets
 LIB_GPE_WIDGET = ../../libgpewidget
 CFLAGS  += -I$(LIB_GPE_WIDGET)
-LDFLAGS += -L$(LIB_GPE_WIDGET)
+ifeq ($(GTK2),yes)
+LDFLAGS += `ln -sf ../../libgpewidget/libgpewidget.so.1 libgpewidget.so`
+else
+LDFLAGS += `ln -sf ../../libgpewidget/libgpewidget.so.0 libgpewidget.so`
+endif
+LDFLAGS += -L.
 
 LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-10-26 14:23+0300\n"
+"POT-Creation-Date: 2002-11-06 18:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,18 +45,18 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: src/selector-cb.c:127
+#: src/selector-cb.c:128
 msgid "a notebook to sketch your notes"
 msgstr ""
 
-#: src/selector-cb.c:129
+#: src/selector-cb.c:130
 msgid ""
 "The application provides two main windows: the Selector, and the Sketchpad.\n"
 "You select your sketchs with the Selector.\n"
 "You sketch your notes with the Sketchpad."
 msgstr ""
 
-#: src/selector-cb.c:134
+#: src/selector-cb.c:135
 msgid ""
 "(c) 2002 Luc Pionchon\n"
 "Distributed under GPL"
@@ -80,15 +80,15 @@ msgstr ""
 msgid "Save last sketch?"
 msgstr ""
 
-#: src/files-png.c:162
+#: src/files-png.c:166
 msgid ""
 "Keys for PNG tEXt chunks must have at least 1 and at most 79 characters."
 msgstr ""
 
-#: src/files-png.c:170
+#: src/files-png.c:174
 msgid "Keys for PNG tEXt chunks must be ASCII characters."
 msgstr ""
 
-#: src/files-png.c:191
+#: src/files-png.c:195
 msgid "Value for PNG tEXt chunk can not be converted to ISO-8859-1 encoding."
 msgstr ""
