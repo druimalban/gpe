@@ -1,3 +1,8 @@
+2005-03-18  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/Makefile: Support for documentation in code.
+	* gtksimplemenu.c, doc/tmpl/gtksimplemenu.sgml: Some documentaton.
+
 2005-03-17  Florian Boor <florian@kernelconcepts.de>
 
 	* Removed obsolete files, removed obsolete sections from manual.

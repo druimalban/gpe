@@ -88,6 +88,12 @@ gtk_simple_menu_get_type (void)
   return simple_menu_type;
 }
 
+/**
+ * gtk_simple_menu_new:
+ * 
+ * Create a new simple menu widget.
+ * Returns: New widget.
+ */
 GtkWidget *
 gtk_simple_menu_new (void)
 {
