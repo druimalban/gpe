@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <crypt.h>
 #include <glib.h>
+#include <sys/stat.h>
 
 #include "suid.h"
 #include "applets.h"
@@ -264,6 +265,28 @@ set_timezone (gchar * zone)
   g_strfreev (proflines);
 }
 
+/* 
+	Creating a new homedir for a user.
+*/
+void
+create_homedir(char *dir, char *user)
+{
+	struct passwd *pwent;
+
+	printf("dir: %s\n",dir);
+	printf("user: %s\n",user);
+	if (g_str_has_prefix(dir,"/home/"))
+	{
+		pwent = getpwnam(user);
+		if (pwent)
+		{
+			mkdir(dir,S_IRWXU);
+			chown(dir,pwent->pw_uid,pwent->pw_gid);
+		}
+	}
+}
+
+
 /*
 	This will check if user is allowed to execute desired command. 
 */
@@ -413,6 +436,12 @@ suidloop (int write, int read)
 	      {
 		fscanf (in, "%d", &numarg);
 		update_light_status (numarg);
+	      }
+	    else if (strcmp (cmd, "CRHD") == 0)
+	      {
+		fscanf (in, "%100s", arg1); // directory
+		fscanf (in, "%100s", arg2); // username
+		create_homedir (arg1, arg2);
 	      }
 #if 0
 	    if (bin)		// fork and exec

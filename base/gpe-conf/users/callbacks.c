@@ -73,6 +73,7 @@ users_on_edit_clicked                      (GtkButton       *button,
   }
 
 }
+
 void
 users_on_delete_clicked                      (GtkButton       *button,
                                         gpointer         user_data)
@@ -128,17 +129,18 @@ users_on_save_clicked                        (GtkButton       *button,
 {
   userw *self=(userw *)user_data;
   
+  gchar *tmp = NULL;
+  const gchar *homedir;
+  const gchar *user = gtk_entry_get_text(GTK_ENTRY(self->username));
   
-  gchar *tmp = gtk_entry_get_text(GTK_ENTRY(self->username));
-  
-  if(strcmp(tmp,"newuser")==0)
+  if(strcmp(user,"newuser")==0)
     {
       gpe_error_box(_("Please choose a user name."));
       return ;
     }
   
   free(self->cur->pw.pw_name);
-  self->cur->pw.pw_name = strdup(tmp); 
+  self->cur->pw.pw_name = strdup(user); 
 
   tmp = gtk_entry_get_text(GTK_ENTRY(self->gecos));
   free(self->cur->pw.pw_gecos);
@@ -148,18 +150,18 @@ users_on_save_clicked                        (GtkButton       *button,
   free(self->cur->pw.pw_shell);
   self->cur->pw.pw_shell = strdup(tmp);
 
-  tmp = gtk_entry_get_text(GTK_ENTRY(self->home));
-  if(strcmp(tmp,"/home/newuser")==0)
+  homedir = gtk_entry_get_text(GTK_ENTRY(self->home));
+  if(strcmp(homedir,"/home/newuser")==0)
     {
-      gpe_error_box(_("Please choose a home."));
+      gpe_error_box(_("Please choose a home directory."));
       return ;
     }
-  else // create dir
+  else // create dir later, user maybe doesn't exist
     {
     }
 
   free(self->cur->pw.pw_dir);
-  self->cur->pw.pw_dir = strdup(tmp);
+  self->cur->pw.pw_dir = strdup(homedir);
 
   gtk_widget_destroy(self->w);
   ReloadList();

@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+20.03.2003		Florian			users/* suid.c				Added homedir creation.
+
 12.03.2003		Florian			logread.c logread.h			Added system info - logread applet.
 								gpe-conf-logread.desktop
 								gpe-config-logread.png	

@@ -37,6 +37,7 @@ guint widget_padding_x;
 guint widget_padding_y;
 guint widget_padding_y_even;
 guint widget_padding_y_odd;
+GtkWidget *user_list;
 
 void
 InitSpacings () {
@@ -76,6 +77,7 @@ int IsHidden(pwlist *cur)
   return     !((cur->pw.pw_uid>=MINUSERUID && cur->pw.pw_uid<65534) || cur->pw.pw_uid ==0);
 
 }
+
 void InitPwList()
 {
   struct passwd *pwent;
@@ -105,7 +107,7 @@ void InitPwList()
     }
   
 }
-GtkWidget *user_list;
+
  
 void ReloadList()
 {
@@ -152,6 +154,7 @@ void Users_Free_Objects()
 void Users_Save()
 {
   pwlist *cur = pwroot;
+  gchar *tmp;
   FILE *f = fopen("/tmp/passwd","w");
 
   while(cur != NULL)
@@ -168,8 +171,21 @@ void Users_Save()
     }
   fclose(f);
   
- suid_exec("CPPW","");
- sleep(1);
+  suid_exec("CPPW","");
+  sleep(1);
+  cur = pwroot;
+  while(cur != NULL)
+    {
+      /* check users homedir */
+		if (access(cur->pw.pw_dir,F_OK))
+		{			
+			tmp = malloc(sizeof(char)*(strlen(cur->pw.pw_dir)+strlen(cur->pw.pw_name)+2));
+			sprintf(tmp,"%s\n%s",cur->pw.pw_dir,cur->pw.pw_name);
+			suid_exec("CRHD",tmp);
+			free(tmp);
+		}
+      cur = cur->next;
+    }
 }
 
 void Users_Restore()
