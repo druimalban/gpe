@@ -24,6 +24,7 @@ static void _dictionary_update_lookup_hash( Dictionary* dict ) {
 
    
     current_char = ( (char*) dict->list->data )[0];
+    g_hash_table_replace( dict->lookup_hash, GINT_TO_POINTER( (int) current_char ), dict->list );
     
     for( node = dict->list->next; node; node = node->next ) {
 
@@ -52,6 +53,9 @@ void dictionary_destroy( Dictionary* dict ) {
         free( node->data );
     g_list_free( dict->list );
 
+    if( dict->last_word )
+        free( dict->last_word );
+    
     g_hash_table_destroy( dict->lookup_hash );
 
 }
@@ -164,6 +168,8 @@ Dictionary* dictionary_new() {
     dict = (Dictionary*) malloc( sizeof( Dictionary ) );
     dict->list = NULL;
     dict->lookup_hash = NULL;
+    dict->last_word = strdup( "" );
+    dict->last_node = NULL;
 
     return dict;
 
@@ -212,35 +218,85 @@ void dictionary_load( Dictionary* dict, char* filename ) {
             buffer[ i - 1 ] = '\0';
 
 
-        dictionary_add_word( dict, buffer, FALSE );
+        dict->list = g_list_prepend( dict->list, strdup( buffer ) );
+        //dictionary_add_word( dict, buffer, FALSE );
 
     }
 
+    dict->list = g_list_reverse( dict->list );
+    
     fclose( file );
 
     _dictionary_update_lookup_hash( dict );
 
 }
 
-char* dictionary_predict_word( Dictionary* dict, const char* word ) {
+void dictionary_predict_reset( Dictionary* dict ) {
+
+    if( dict == NULL )
+        return;
+    
+    free( dict->last_word );
+    dict->last_word = strdup( "" );
+    dict->last_node = NULL;
+
+
+}
+
+char* dictionary_predict_word( Dictionary* dict, char* word ) {
 
     GList* node;
     int i, j, k, last_pos, current_pos, old_pos, size;
     char current_char;
     char* current_word;
 
-    if( dict == NULL )
+    if( dict == NULL ) 
         return NULL;
+
     
+    if(  word == NULL || word[0] == '\0' ) {
+
+        free( dict->last_word );
+        dict->last_word = strdup( "" );
+        dict->last_node = NULL;
+
+        return NULL;
+
+    }
+
     current_char = tolower( word[0] );
     node = g_hash_table_lookup( dict->lookup_hash, GINT_TO_POINTER( (int) current_char ) );
-    
+   
     if( node == NULL ) 
         return NULL;
 
     size = strlen( word );
     last_pos = 0;
 
+    //fprintf( stderr, "%s == %s, %d->%d\n", word, dict->last_word, dict->last_node, ( dict->last_node != NULL ? dict->last_node->next : -1 ) );
+    
+    if( dict->last_word && strcmp( dict->last_word, word ) == 0 && dict->last_node && dict->last_node->next) {
+
+        current_word = (char*) dict->last_node->next->data;
+
+        if( strncmp( current_word, word, size ) == 0 ) {
+
+            free( dict->last_word );
+            dict->last_word = strdup( word );
+
+            dict->last_node = dict->last_node->next;
+            return current_word;
+
+        }
+
+    }
+
+    //if( dict->last_word && strncmp( dict->last_word, word, sizeof( dict->last_word ) ) == 0 )
+    //    node = dict->last_node;
+    
+    free( dict->last_word );
+    dict->last_word = strdup( word );
+    
     while( node ) {
 
         current_word = (char*) node->data;
@@ -251,8 +307,12 @@ char* dictionary_predict_word( Dictionary* dict, const char* word ) {
         for( j = 0; j < size && current_word[j] == word[j]; j++ )
             ;
 
-        if( j == size ) 
+        if( j == size ) {
+
+            dict->last_node = node;
             return current_word;
+
+        }
         else if( j < last_pos )
             break;
         else
@@ -262,6 +322,10 @@ char* dictionary_predict_word( Dictionary* dict, const char* word ) {
 
     }
     
+    free( dict->last_word );
+    dict->last_word = strdup(""); 
+    dict->last_node = NULL;
+
     return NULL;
 
 }

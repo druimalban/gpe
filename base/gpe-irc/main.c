@@ -479,6 +479,8 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
   gchar *entry_text;
 
+  //irc_input_entry_key_press (widget, event, data);
+
   if (selected_channel != NULL)
   {
     entry_text = gtk_entry_get_text (main_entry);
@@ -489,7 +491,7 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     }
   }
 
-  return TRUE;
+  return FALSE;
 }
 
 int
@@ -541,8 +543,6 @@ main (int argc, char *argv[])
   gtk_text_view_set_editable (GTK_TEXT_VIEW (main_text_view), FALSE);
 
   main_entry = gtk_entry_new ();
-  //gtk_signal_connect(GTK_OBJECT (main_entry), "key-press-event",
-  //	     GTK_SIGNAL_FUNC (entry_key_press), NULL);
 
   users_list_store = gtk_list_store_new (1, G_TYPE_STRING);
   users_tree_view = gtk_tree_view_new_with_model (users_list_store);
@@ -566,7 +566,9 @@ main (int argc, char *argv[])
   users_button_label = gtk_label_new ("u\ns\ne\nr\ns");
   gtk_misc_set_alignment (GTK_MISC (users_button_label), 0.5, 0.5);
 
-  irc_input_create ("dictionary", quick_button, smiley_button, main_entry);
+  irc_input_create ("dictionary", main_entry, quick_button, "quick_list", smiley_button, "smiley_list");
+  gtk_signal_connect(GTK_OBJECT (main_entry), "key-press-event",
+  	     GTK_SIGNAL_FUNC (entry_key_press), NULL);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_container_add (GTK_CONTAINER (scroll), GTK_WIDGET (main_text_view));

@@ -1,5 +1,8 @@
 
 #include "dictionary.h"
 
-extern void irc_input_create(gchar *dict_file, GtkWidget *quick_button, GtkWidget *smiley_button, GtkWidget *entry);
-extern void irc_input_set_nick_dictionary( Dictionary* dict );
+void irc_input_create( char* dict_filename, 
+                             GtkWidget* entry, 
+                             GtkWidget* quick_button, char* quick_filename,
+                             GtkWidget* smiley_button, char* smiley_filename ); 
+void irc_input_set_nick_dictionary( Dictionary* dict );
