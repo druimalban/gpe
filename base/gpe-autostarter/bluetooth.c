@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@ void
 handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter)
 {
   int type;
-  char *action, *interface;
+  char *action;
 
   if (! dbus_message_iter_next (iter))
     return;
@@ -42,16 +42,7 @@ handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter)
 
   action = dbus_message_iter_get_string (iter);
 
-  if (! dbus_message_iter_next (iter))
-    return;
-
-  type = dbus_message_iter_get_arg_type (iter);
-  if (type != DBUS_TYPE_STRING)
-    return;
-
-  interface = dbus_message_iter_get_string (iter);
-
-  if (! strcmp (action, "register"))
+  if (! strcmp (action, "register") || ! strcmp (action, "add"))
     {
       pid_t pid;
 
@@ -66,7 +57,7 @@ handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter)
 
       gpe_bluetooth_pid = pid;
     }
-  else if (! strcmp (action, "unregister"))
+  else if (! strcmp (action, "unregister") || ! strcmp (action, "remove"))
     {
       if (gpe_bluetooth_pid)
 	{
@@ -75,4 +66,3 @@ handle_bluetooth_message (DBusMessage *message, DBusMessageIter *iter)
 	}
     }
 }
-
