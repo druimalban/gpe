@@ -47,20 +47,20 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: gpe-word
+all: $(PACKAGE)
 
-gpe-word: $(OBJS)
+$(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all
-	install -D gpe-word $(DESTDIR)$(PREFIX)/bin/gpe-word
-	install -D -m 644 gpe-word.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-word.png
+	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-word
+	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
-	rm -f gpe-word $(OBJS)
+	rm -f $(PACKAGE) $(OBJS)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
