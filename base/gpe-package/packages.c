@@ -22,7 +22,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <gdk/gdk.h>
-#include <ipkglib.h>
+#include <libipkg.h>
 
 #include "packages.h"
 #include "main.h"

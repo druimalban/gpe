@@ -1,7 +1,7 @@
 #ifndef GPE_PACKAGES_H
 #define GPE_PACKAGES_H
 
-#include <ipkglib.h> /* types */
+#include <libipkg.h> /* types */
 
 #define LEN_PARAMS 255
 #define LEN_LIST  1024

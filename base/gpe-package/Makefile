@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.7
+VERSION = 0.0.8
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -20,6 +20,8 @@ else
 CFLAGS += -I/usr/local/include/gpe
 BUILD = build
 endif
+
+MEMBERS  = main interface packages filesel
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG
@@ -59,8 +61,6 @@ LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0 -lXinerama
 
 endif #native or cross-compile
 
-
-MEMBERS  = main interface packages
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

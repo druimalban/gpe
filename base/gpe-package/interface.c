@@ -29,7 +29,7 @@
 
 #include <gtk/gtk.h>
 
-#include <ipkglib.h>
+#include <libipkg.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -39,6 +39,7 @@
 #include "packages.h"
 #include "interface.h"
 #include "main.h"
+#include "filesel.h"
 
 /* --- module global variables --- */
 void create_fMain (void);
@@ -54,7 +55,7 @@ static GtkWidget *notebook;
 static GtkWidget *txLog;
 static GtkWidget *treeview;
 static GtkTreeStore *store = NULL;
-static GtkWidget *bUpdate, *bApply, *bSysUpgrade;
+static GtkWidget *bUpdate, *bApply, *bSysUpgrade, *bSelectLocal;
 static GtkWidget *sbar;
 static GtkWidget *fMain;
 static GtkWidget *dlgAction = NULL;
@@ -67,6 +68,7 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "exit" },
   { "refresh" },
+  { "local-package", "local-package-16" },
   { "icon", PREFIX "/share/pixmaps/gpe-packages.png" }
 };
 
@@ -459,7 +461,7 @@ mainloop (int argc, char *argv[])
 {
 	struct sockaddr_un name;
 	
-	sleep(1);
+	sleep(1); /* wait for second process to initialize */
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
@@ -512,6 +514,13 @@ int
 do_package_check(const char *package)
 {
 	return 0;
+}
+
+
+void
+on_select_local(GtkButton *button, gpointer user_data)
+{
+	ask_user_a_file("/tmp",_("Select package file"),NULL,NULL,NULL);
 }
 
 
@@ -662,10 +671,15 @@ create_fMain (void)
 			   _("Update System"), _("Update entire system over an internet connection."), pw,
 			   (GtkSignalFunc) on_system_update_clicked , NULL);
 
-//  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("send_and_recieve"));
   bApply = gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_APPLY,
 			   _("Apply package selection"), _("Apply package selection"),
 			   (GtkSignalFunc) on_package_install_clicked , NULL, -1);
+			   
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("local-package"));
+  bSelectLocal = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Install package"),
+			   _("Install package"), 
+			   _("Select a package in local filesystem to install."), pw,
+			   (GtkSignalFunc) on_select_local , NULL);
 			   
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   

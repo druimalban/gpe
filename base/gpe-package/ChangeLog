@@ -1,4 +1,9 @@
-
+2003-10-28 Florian Boor <florian.boor@kernelconcepts.de>
+	* packages.*, interface.c: Changed to renamed header files.
+	* filesel.*: new files (from gpe-beam)
+	* Addd pixmaps/local-package-16.png
+	* File selector code.
+	
 2003-10-27 Florian Boor <florian.boor@kernelconcepts.de>
 	* Improved icon (by jimmac - thanks)
 
