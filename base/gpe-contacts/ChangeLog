@@ -1,5 +1,8 @@
 2004-02-29  Phil Blundell  <pb@nexus.co.uk>
 
+	* familiar/control1 (Depends): Add libgpevtype0, libmimedir0,
+	dbus-glib-1.
+
 	* main.c (list_button_press_event): Only show menu item for
 	bluetooth export if gpe-bluetooth service is available.
 	(popup_init): Save pointer to this item.
