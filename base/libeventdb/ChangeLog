@@ -1,3 +1,7 @@
+2003-01-18  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.02 released.
+
 2003-01-13  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* event-db.c: add event_db_list_alarms_for_period + flag
