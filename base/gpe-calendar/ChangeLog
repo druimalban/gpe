@@ -1,3 +1,8 @@
+2003-07-13  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile (CFLAGS): Use libdisplaymigration in place of libdm.
+	(LDFLAGS): Likewise.
+
 2003-07-08  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 	
 	* Makefile: released version 0.44
