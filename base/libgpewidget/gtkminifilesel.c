@@ -23,7 +23,11 @@
 
 #define _(x) gettext(x)
 
+#define COMPLETED 0
+#define LAST_SIGNAL 1
+
 static GtkWindowClass *parent_class;
+static guint signals[LAST_SIGNAL] = { 0 };
 
 static void set_directory (GtkMiniFileSelection *fs, char *directory);
 
@@ -174,8 +178,8 @@ set_members (GtkWidget *clist, char *directory)
       closedir (dir);
     }
 
-  g_slist_sort (subdirs, (GCompareFunc)strcoll);
-  g_slist_sort (files, (GCompareFunc)strcoll);
+  subdirs = g_slist_sort (subdirs, (GCompareFunc)strcoll);
+  files = g_slist_sort (files, (GCompareFunc)strcoll);
 
   if (strcmp (directory, "/") != 0)
     {
@@ -262,6 +266,7 @@ selection_made(GtkWidget      *clist,
 	case 0:
 	  {
 	    gtk_entry_set_text (GTK_ENTRY (fs->entry), text);
+	    gtk_signal_emit (GTK_OBJECT (fs), signals[COMPLETED]);
 	    break;
 	  }
 	}
@@ -271,6 +276,12 @@ selection_made(GtkWidget      *clist,
       if (type == 0)
 	gtk_entry_set_text (GTK_ENTRY (fs->entry), text);
     }
+}
+
+static void
+emit_completed (GtkWidget *w, gpointer p)
+{
+  gtk_signal_emit (GTK_OBJECT (p), signals[COMPLETED]);
 }
 
 static void
@@ -316,6 +327,10 @@ gtk_mini_file_selection_init (GtkMiniFileSelection *fs)
   gtk_widget_show (fs->ok_button);
   gtk_box_pack_start (GTK_BOX (hbox), fs->ok_button, TRUE, TRUE, 0);
 
+  gtk_signal_connect (GTK_OBJECT (fs->ok_button), "clicked", 
+		      emit_completed, fs);
+  gtk_signal_connect (GTK_OBJECT (fs->entry), "activate", emit_completed, fs);
+
   fs->directory = NULL;
   set_directory (fs, get_current_dir_name ());
 }
@@ -342,6 +357,17 @@ gtk_mini_file_selection_class_init (GtkMiniFileSelectionClass * klass)
   widget_class->size_request = gtk_mini_file_selection_size_request;
   widget_class->size_allocate = gtk_mini_file_selection_size_allocate;
   widget_class->show = gtk_mini_file_selection_show;
+
+  klass->completed = NULL;
+
+  signals[0] = gtk_signal_new ("completed",
+			       GTK_RUN_FIRST | GTK_RUN_ACTION,
+			       oclass->type,
+			       GTK_SIGNAL_OFFSET (GtkMiniFileSelectionClass, completed),
+			       gtk_marshal_NONE__NONE,
+			       GTK_TYPE_NONE, 0);
+
+  gtk_object_class_add_signals (oclass, signals, LAST_SIGNAL);
 }
 
 guint
@@ -374,4 +400,15 @@ gtk_mini_file_selection_new (const gchar *title)
   GtkWidget *w = GTK_WIDGET (gtk_type_new (gtk_mini_file_selection_get_type ()));
   gtk_window_set_title (GTK_WINDOW (w), title);
   return w;
+}
+
+gchar *
+gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs)
+{
+  size_t dl = strlen (fs->directory);
+  gchar *chars = gtk_editable_get_chars (GTK_EDITABLE (fs->entry), 0, -1);
+  gchar *buf = g_malloc (strlen (chars) + dl + 2);
+  sprintf (buf, "%s/%s", fs->directory, chars);
+  g_free (chars);
+  return buf;
 }

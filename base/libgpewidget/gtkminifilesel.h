@@ -30,14 +30,18 @@ struct _GtkMiniFileSelection
   char *directory;
 };
 
-struct _GtkMiniFileSelectionClass {
+typedef struct _GtkMiniFileSelection	   GtkMiniFileSelection;
+
+struct _GtkMiniFileSelectionClass 
+{
   GtkWindowClass parent_class;
+  void (* completed)  (GtkMiniFileSelection *fs);
 };
 
-typedef struct _GtkMiniFileSelection	   GtkMiniFileSelection;
 typedef struct _GtkMiniFileSelectionClass  GtkMiniFileSelectionClass;
 
 GtkType		gtk_mini_file_selection_get_type	   (void);
 GtkWidget      *gtk_mini_file_selection_new (const gchar *title);
+gchar * gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs);
 
 #endif
