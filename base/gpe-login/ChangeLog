@@ -1,5 +1,10 @@
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.33 released.
+	* gpe-session-scripts 0.30 released.
+	
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c: Remove spurious include of gdk_imlib.h.
 
 	* familiar/postinst.gpe-login, familiar/postrm.gpe-login: New.
