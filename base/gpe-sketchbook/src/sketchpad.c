@@ -24,6 +24,8 @@
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
+Sketchpad sketchpad;
+
 GtkWidget * window_sketchpad;
 GtkWidget * drawing_area;
 GdkPixmap * drawing_area_pixmap_buffer;
@@ -111,13 +113,19 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   cursor_eraser_large  = _eraser_cursors_new(large_bits,  large_width,  large_height);
   cursor_eraser_xlarge = _eraser_cursors_new(xlarge_bits, xlarge_width, xlarge_height);
 
-  //defaults cursor
+  //--defaults cursor
   cursor_pen     = cursor_none;
   cursor_eraser  = cursor_eraser_small;
   current_cursor = &cursor_pen;
   
+  //--default tools
+  //..._set_active() calls on_radiobutton_brush_clicked ()
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_tools_pencil), TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_brush_medium), TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_color_black),  TRUE);
+
   //keyboard focus to the drawing area
-  gtk_widget_grab_focus   (drawing_area);
+  gtk_widget_grab_focus   (drawing_area); //FIXME: keypad events removed!
 
 }//window_sketchpad_init()
 
@@ -170,7 +178,7 @@ void sketchpad_set_brush_s (gchar * _brush){
     brush = SMALL;
     cursor_eraser = cursor_eraser_small;
   }
-  gdk_window_set_cursor(drawing_area->window, *current_cursor);
+  if(drawing_area->window) gdk_window_set_cursor(drawing_area->window, *current_cursor);
 }
 
 void sketchpad_reset_title(){

@@ -189,8 +189,10 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   tool_group = NULL;
   MAKE_ITEM_RADIOBUTTON (tool, pencil, "pencil");
   MAKE_ITEM_RADIOBUTTON (tool, eraser, "eraser");
-  //default tool
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_tool_pencil), TRUE);
+
+  //keep a ref to set default //FIXME: get default from preference (when implemented!)
+  sketchpad.button_tools_pencil  = radiobutton_tool_pencil;
+  sketchpad.button_tools_eraser  = radiobutton_tool_eraser;
 
   //--brushbox
   button_brushes = gtk_button_new();
@@ -303,8 +305,11 @@ GtkWidget * brushbox_new(){
   PACK_BRUSH_RADIOBUTTON (large,  1, 2, 0, 1);
   PACK_BRUSH_RADIOBUTTON (xlarge, 1, 2, 1, 2);
 
-  //default brush //FIXME: other than "small" crashes!!!!
-  //gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_brush_medium), TRUE);
+  //keep a ref to set default //FIXME: get default from preference (when implemented!)
+  sketchpad.button_brush_small  = radiobutton_brush_small;
+  sketchpad.button_brush_medium = radiobutton_brush_medium;
+  sketchpad.button_brush_large  = radiobutton_brush_large;
+  sketchpad.button_brush_xlarge = radiobutton_brush_xlarge;
 
   return brushbox;
 }//brushbox_new()
@@ -344,8 +349,11 @@ GtkWidget * colorbox_new(){
   MAKE_COLOR_RADIOBUTTON (green, 1, 2, 1, 2);
   MAKE_COLOR_RADIOBUTTON (blue , 1, 2, 0, 1);
 
-  //current selected (...)
-  //gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton_color_ ...),  TRUE);
+  //keep a ref to set default //FIXME: get default from preference (when implemented!)
+  sketchpad.button_color_blue  = radiobutton_color_blue; 
+  sketchpad.button_color_green = radiobutton_color_green;
+  sketchpad.button_color_red   = radiobutton_color_red;  
+  sketchpad.button_color_black = radiobutton_color_black;
 
   return colorbox;
 }//colorbox_new()

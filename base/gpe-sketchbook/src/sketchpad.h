@@ -20,6 +20,29 @@
 
 #include <gtk/gtk.h>
 
+
+typedef struct _sketchpad {
+  //GtkWidget * scrollable_drawing_area;
+  //GtkWidget * drawing_area;
+
+  //GtkWidget * files_toolbar;
+
+  //GtkWidget * drawing_toolbar;
+  GtkWidget * button_tools_pencil;
+  GtkWidget * button_tools_eraser;
+  //GtkWidget * brush_selection_button;
+  GtkWidget * button_brush_small;
+  GtkWidget * button_brush_medium;
+  GtkWidget * button_brush_large;
+  GtkWidget * button_brush_xlarge;
+  //GtkWidget * color_selection_button;
+  GtkWidget * button_color_blue  ;
+  GtkWidget * button_color_green ;
+  GtkWidget * button_color_red   ;
+  GtkWidget * button_color_black ;
+} Sketchpad;
+extern Sketchpad sketchpad;
+
 extern GtkWidget * window_sketchpad;
 extern GtkWidget * drawing_area;
 
