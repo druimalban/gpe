@@ -189,6 +189,9 @@ void svgalib_loop(struct map_s *mptr);
 void do_die(struct map_s *mptr);
 void do_end_level(struct map_s *mptr);
 void do_transport(struct map_s *mptr);
+void clearscreen(void);
+void write_text(int x, int y, char *string);
+void wait_until_event(void);
 
 /*
  * sound.c

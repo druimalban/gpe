@@ -34,6 +34,7 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "repton.h"
 
@@ -53,9 +54,10 @@ rectangle(int x0, int y0, int x1, int y1, int c)
 extern SDL_Surface *scr_physical;
 
 void
-gl_putbox(struct map_s *mptr, int x, int y, int w, int h, char *p)
+gl_putbox(struct map_s *mptr, int x, int y, int w, int h, mapobj o)
 {
 	int i, j;
+	unsigned char *p = (unsigned char *)o;
 
 	for (i = 0; i < w; i++) {
 		for (j = 0; j < h; j++) {
