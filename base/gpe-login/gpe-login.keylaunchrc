@@ -1,2 +1,2 @@
 key=???XF86AudioRecord:xcalibrate:/usr/bin/gpe-xcalibrate.sh
-key=???XF86PowerDown::/usr/bin/apm --suspend
+key=???XF86PowerDown:-:/usr/bin/apm --suspend

@@ -1,3 +1,20 @@
+2002-11-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.25 released.
+
+2002-11-23  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xinit.d/30xTs_Calibrate: If /etc/xcalibrate.conf is missing,
+	run xcalibrate to generate it.
+
+2002-11-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.24 released.
+
+2002-11-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.keylaunchrc: Add missing field.
+
 2002-11-15  Philip Blundell  <philb@gnu.org>
 
 	* gpe-dm 0.17 released.

@@ -17,12 +17,12 @@ CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer -I../librootimage
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
+CFLAGS += -I../libgpewidget -I../librootimage
+LDFLAGS += -L../libgpewidget -L../librootimage
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget
+LDFLAGS += -lgpewidget -lrootimage
 
 all: gpe-login gpe-logout gpe-dm gpe-lock-display mo
 
