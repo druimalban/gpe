@@ -48,6 +48,10 @@ install-devel:
 clean:
 	rm -f $(OBJS) $(SONAME) libeventdb.so $(DEPS)
 
+install: $(SONAME) install-mo
+	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+
 include ../build/Makefile.translation
 include ../build/Makefile.dpkg_ipkg
 -include $(DEPS)
