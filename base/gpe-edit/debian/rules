@@ -48,6 +48,7 @@ install: build
 
 	# Add here commands to install the package into debian/gpe-edit.
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/gpe-edit PREFIX=/usr
+	mv $(CURDIR)/debian/gpe-edit/usr/lib/menu/gpe-edit $(CURDIR)/debian/gpe-edit.menu
 
 
 # Build architecture-independent files here.
