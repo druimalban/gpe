@@ -140,7 +140,7 @@ gpe_launch_get_binary_for_window (Display *dpy, Window w)
     {
       struct client_map *c = l->data;
       if (c->window == w)
-	return c->binary;
+	return g_strdup (c->binary);
     }
   
   return NULL;
