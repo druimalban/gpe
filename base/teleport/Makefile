@@ -14,6 +14,9 @@ CFLAGS += -MD
 
 MEMBERS = teleport
 
+CFLAGS += -Os -fomit-frame-pointer
+LDFLAGS += 
+
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))

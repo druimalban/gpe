@@ -14,6 +14,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
+#include <stdio.h>
 #include <libintl.h>
 
 #include <gpe/init.h>
@@ -24,12 +25,13 @@
 
 #define _(x) gettext(x)
 
-Display *dpy;
 Atom migrate_ok_atom;
 Atom migrate_atom;
 Atom string_atom;
-
+GdkWindow *grab_window;
 GtkListStore *list_store;
+
+gboolean grabbed;
 
 struct gpe_icon
 my_icons[] = 
@@ -47,21 +49,23 @@ struct display
 };
 
 static GSList *displays;
+struct display *selected_dpy;
 
 void
-send_message (Display *dpy, Window w, char *host, int screen)
+send_message (Display *dpy, Window w, char *host, int display, int screen)
 {
   char buf[256];
   buf[0] = screen;
   strcpy (buf + 1, host);
+  sprintf (buf + 1 + strlen (host), ":%d", display);
   
-  XChangeProperty (dpy, w, migrate_atom, string_atom, 8, PropModeReplace, buf, strlen (host) + 1);
+  XChangeProperty (dpy, w, migrate_atom, string_atom, 8, PropModeReplace, buf, strlen (buf + 1) + 1);
 
   XFlush (dpy);
 }
 
 static int
-handle_click (Window w)
+handle_click (Display *dpy, Window w)
 {
   Atom type;
   int format;
@@ -80,7 +84,7 @@ handle_click (Window w)
 	XFree (children);
 
       if (root != w && root != parent)
-	return handle_click (parent);
+	return handle_click (dpy, parent);
 
       return None;
     }
@@ -93,7 +97,7 @@ handle_click (Window w)
 
 static Window 
 find_deepest_window (Display *dpy, Window grandfather, Window parent,
-		     int x, int y, int *rx, int *ry)
+		     int x, int y)
 {
   int dest_x, dest_y;
   Window child;
@@ -102,14 +106,9 @@ find_deepest_window (Display *dpy, Window grandfather, Window parent,
 			 &dest_x, &dest_y, &child);
 
   if (child == None)
-    {
-      *rx = dest_x;
-      *ry = dest_y;
-
-      return parent;
-    }
+    return parent;
   
-  return find_deepest_window(dpy, parent, child, dest_x, dest_y, rx, ry);
+  return find_deepest_window(dpy, parent, child, dest_x, dest_y);
 }
 
 void
@@ -181,15 +180,19 @@ go_callback (GtkWidget *button, GtkWidget *list_view)
 
   if (gtk_tree_selection_get_selected (sel, &model, &iter))
     {
-      struct display *d;
-      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &d, -1);
+      Display *dpy = GDK_DISPLAY ();
 
-      /* ... */
+      gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &selected_dpy, -1);
+
+      grabbed = TRUE;
+
+      XGrabPointer (dpy, RootWindow (dpy, 0), False, ButtonReleaseMask,
+		    GrabModeAsync, GrabModeAsync,
+		    None, None, CurrentTime);
     }
   else
     gpe_error_box (_("No display selected"));
 }
-
 
 void
 add_callback (void)
@@ -297,20 +300,59 @@ open_window (void)
 
   g_signal_connect (G_OBJECT (add_button), "clicked", G_CALLBACK (add_callback), NULL);
   g_signal_connect (G_OBJECT (remove_button), "clicked", G_CALLBACK (remove_callback), list_view);
+  g_signal_connect (G_OBJECT (go_button), "clicked", G_CALLBACK (go_callback), list_view);
 
   gtk_widget_show_all (window);
+}
+
+GdkFilterReturn
+window_filter (GdkXEvent *xev, GdkEvent *gev, gpointer d)
+{
+  XEvent *ev = (XEvent *)xev;
+  Display *dpy = ev->xany.display;
+
+  if (ev->xany.type == ButtonRelease
+      && ev->xbutton.window == RootWindow (dpy, 0))
+    {
+      Window w;
+
+      XUngrabPointer (dpy, ev->xbutton.time);
+
+      w = find_deepest_window (dpy, RootWindow (dpy, 0), RootWindow (dpy, 0),
+			       ev->xbutton.x, ev->xbutton.y);
+
+      w = handle_click (dpy, w);
+
+      if (w == None)
+	gpe_error_box (_("This application is not migration-capable"));
+      else
+	send_message (dpy, w, selected_dpy->host, selected_dpy->dpy, selected_dpy->screen);
+
+      return GDK_FILTER_REMOVE;
+    }
+
+  return GDK_FILTER_CONTINUE;
 }
 
 int
 main (int argc, char *argv[])
 {
+  Display *dpy;
+
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  dpy = GDK_DISPLAY ();
+  string_atom = XInternAtom (dpy, "STRING", False);
+  migrate_ok_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE_OK", False);
+  migrate_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE", False);
+
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_POINTER);
+
+  gdk_window_add_filter (NULL, window_filter, NULL);
 
   open_window ();
 
