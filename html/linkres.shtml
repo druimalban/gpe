@@ -5,21 +5,19 @@
 <!--#include virtual="includes/head.shtml"-->
 
 <H3>GPE Wiki</H3>
-<P>
+
 <UL>
 <LI><A HREF="http://www.handhelds.org/z/wiki/GPE">http://www.handhelds.org/z/wiki/GPE</A>
 </UL>
-</P>
 
 <H3>The handhelds.org site</H3>
-<P>
+
 <UL>
 <LI><A HREF="http://www.handhelds.org">http://www.handhelds.org</A>
 </UL>
-</P>
 
 <H3>Useful standards</H3>
-<P>
+
 <UL>
 <LI> IETF/IMC iCalendar<BR>
 <A HREF="http://www.imc.org/ietf-calendar/">http://www.imc.org/ietf-calendar/</A>
@@ -32,26 +30,24 @@ SyncML library<BR>
 <LI> freedesktop / XDG<BR>
 <A HREF="http://www.freedesktop.org/">http://www.freedesktop.org</A>
 </UL>
-</P>
 
 <H3>Useful documentation</H3>
-<P>
+
 <UL>
 <LI> GNOME Human Interface Guidelines (1.0)<BR>
 <A HREF="http://developer.gnome.org/projects/gup/hig/1.0/">http://developer.gnome.org/projects/gup/hig/1.0/</A>
 <LI> Apple Newton application interface guidelines<BR>
 <A HREF="http://www.unna.org/unna/development/documentation/">http://www.unna.org/unna/development/documentation/</A>
 </UL>
-</P>
 
 
 <H3>Interesting applications</H3>
-<P>
+
 <UL>
 <LI>Sam J. Engstr&ouml;m has a nice collection<BR>
 <A HREF="http://www.samengstrom.com/ipaq/">http://www.samengstrom.com/ipaq/</A>
 <LI>sqlite is the database engine library used by some applications and usqld<BR>
 <A HREF="http://www.hwaci.com/sqlite/">http://www.hwaci.com/sqlite/</A>
 </UL>
-</P>
+
 <!--#include virtual="includes/foot.shtml"-->
