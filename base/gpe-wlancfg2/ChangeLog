@@ -1,3 +1,9 @@
+08/20/2004	Florian Boor <florian.boor@kernelconcepts.de>
+
+	- config_parser.c: Improved card reset after changes.
+	- gpe-wlancfg.desktop.in: Fix to become quiet. We don't want to make 
+	                          gpe-su report error messages.
+
 08/19/2004	Florian Boor <florian.boor@kernelconcepts.de>
 	- Added button to apply changes.
 	- Released V 0.2.7

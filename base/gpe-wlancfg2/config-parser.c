@@ -315,13 +315,20 @@ int line_in_delete_list(int linenr)
 	return(FALSE);
 }
 
-void reset_pcmcia_socket(int sock)
+void reset_pcmcia_socket(int sock, gchar *dev)
 {
 	gchar command[30];
 	
-	sprintf(command, "exec cardctl eject %d\n", sock);
+	sprintf(command, "exec /sbin/ifdown %s", dev);
 	system(command);
-	sprintf(command,  "exec cardctl insert %d\n", sock);
+	sprintf(command, "exec /sbin/ifconfig %s down", dev);
+	system(command);
+	sprintf(command, "exec /sbin/cardctl eject %d", sock);
+	system(command);
+	sprintf(command,  "exec /sbin/cardctl insert %d", sock);
+	system(command);	
+	usleep(200000);
+	sprintf(command, "exec /sbin/ifup %s", dev);
 	system(command);	
 }
 
@@ -335,6 +342,7 @@ void restart_socket(void)
 	int        sockcount;
 	char       drbuf[127];
 	int        i;
+	char*      sockdevs[10];
 
 	const char *drivers[] = {"orinoco_cs","wvlan_cs","wavelan_cs","prism2_cs","spectrum24_cs","hostap_cs","airo_cs"};
 #define NUM_DRIVERS 7
@@ -367,11 +375,15 @@ void restart_socket(void)
 	sockcount=0;
 	while (fgets(linebuf, sizeof(linebuf)-1, fd) != NULL)
 	{
-		if (2 == sscanf(linebuf, "%d %*s %s %*s %*s", &sock, drbuf))
+		char device[9];
+		if (3 == sscanf(linebuf, "%d %*s %s %*s %8s", &sock, drbuf, device))
 		{
 			for (i = 0; i < NUM_DRIVERS; i++) 
 				if (strcmp(drbuf, drivers[i]) == 0)
-					socks[sockcount++]=sock;
+				  {
+					socks[sockcount]=sock;
+					sockdevs[sockcount++]=g_strdup(device);
+				  }
 			if (sockcount==10) break;
 		}
 	}
@@ -380,7 +392,10 @@ void restart_socket(void)
 	fclose(fd);	
 	
 	for (i=0; i<sockcount; i++)
-		reset_pcmcia_socket(socks[i]);		
+	{
+		reset_pcmcia_socket(socks[i], sockdevs[i]);	
+		g_free(sockdevs[i]);
+	}
 }
 
 

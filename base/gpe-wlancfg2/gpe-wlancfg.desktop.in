@@ -1,7 +1,7 @@
 [Desktop Entry]
 _Name=WLAN Config
 _Comment=GPE WLAN Config
-Exec=gpe-su -c gpe-wlancfg
+Exec=gpe-su -c 'gpe-wlancfg > /dev/null 2>&1'
 Terminal=0
 Type=Application
 Icon=gpe-wlancfg.png
