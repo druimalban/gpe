@@ -51,7 +51,7 @@ install-program: all $(PACKAGE).desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s gpe-contacts $(DESTDIR)$(PREFIX)/bin/gpe-contacts
 	install -d $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 gpe-contacts.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-contacts
+	install -m 644 gpe-contacts.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 icons/gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-contacts.png
 	install -d $(DESTDIR)$(pkgdatadir)

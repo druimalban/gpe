@@ -21,7 +21,7 @@ install-program:
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	install gpe-dataconf.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-dataconf
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 gpe-dataconf.desktop $(DESTDIR)$(PREFIX)/share/applications/gpe-dataconf
+	install -m 644 gpe-dataconf.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 icons/gpe-dataconf.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-dataconf.png
 	mkdir -p $(DESTDIR)$(pkgdatadir)

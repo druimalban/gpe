@@ -47,7 +47,7 @@ install-program: all
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -d $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
 	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-taskmanager
 	install -m 644 xkill.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-taskmanager/
 
