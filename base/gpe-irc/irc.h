@@ -39,10 +39,11 @@ typedef struct
   GList *users;
 } IRCChannel;
 
-enum irc_type
+enum button_types
 {
   IRC_SERVER,
-  IRC_CHANNEL
+  IRC_CHANNEL,
+  CLOSE_BUTTON,
 };
 
 
@@ -54,7 +55,7 @@ extern gboolean irc_server_disconnect (IRCServer *server);
 extern gboolean irc_privmsg (IRCServer *server, gchar *target, gchar *msg);
 extern gboolean irc_notice (IRCServer *server, gchar *target, gchar *msg);
 extern gboolean irc_quit (IRCServer *server, gchar *reason);
-extern gboolean irc_join (IRCServer *server, gchar *channel);
+extern gboolean irc_join (IRCServer *server, const gchar *channel);
 extern gboolean irc_part (IRCServer *server, gchar *channel, gchar *reason);
 extern gboolean irc_pong (IRCServer *server, gchar *target);
 

@@ -33,7 +33,8 @@ GSList *sql_networks;
 static gint rows = 0;
 
 static struct sql_network *
-new_sql_network_internal (int id, const char *name, const char *nick, const char *real_name, const char *password)
+new_sql_network_internal (int id, const char *name, const char *nick,
+                          const char *real_name, const char *password)
 {
   struct sql_network *e = g_malloc (sizeof (struct sql_network));
 
@@ -50,9 +51,11 @@ new_sql_network_internal (int id, const char *name, const char *nick, const char
 }
 
 static struct sql_network_server *
-new_sql_network_server_internal (int id, const char *name, int port, struct sql_network *parent_network)
+new_sql_network_server_internal (int id, const char *name, int port,
+                                 struct sql_network *parent_network)
 {
-  struct sql_network_server *e = g_malloc (sizeof (struct sql_network_server));
+  struct sql_network_server *e =
+    g_malloc (sizeof (struct sql_network_server));
 
   e->id = id;
   e->name = name;
@@ -64,35 +67,41 @@ new_sql_network_server_internal (int id, const char *name, int port, struct sql_
 }
 
 struct sql_network *
-new_sql_network (const char *name, const char *nick, const char *real_name, const char *password)
+new_sql_network (const char *name, const char *nick, const char *real_name,
+                 const char *password)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "insert into networks values (NULL, '%q', '%q', '%q', '%q')",
-			  NULL, NULL, &err, name, nick, real_name, password))
+  if (sqlite_exec_printf
+      (sqliteh, "insert into networks values (NULL, '%q', '%q', '%q', '%q')",
+       NULL, NULL, &err, name, nick, real_name, password))
     {
       gpe_error_box (err);
       free (err);
       return NULL;
     }
 
-  return new_sql_network_internal (sqlite_last_insert_rowid (sqliteh), name, nick, real_name, password);
+  return new_sql_network_internal (sqlite_last_insert_rowid (sqliteh), name,
+                                   nick, real_name, password);
 }
 
 struct sql_network_server *
-new_sql_network_server (const char *name, int port, struct sql_network *network)
+new_sql_network_server (const char *name, int port,
+                        struct sql_network *network)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "insert into servers values (NULL, '%q', '%d', '%d')",
-			  NULL, NULL, &err, name, port, network->id))
+  if (sqlite_exec_printf
+      (sqliteh, "insert into servers values (NULL, '%q', '%d', '%d')", NULL,
+       NULL, &err, name, port, network->id))
     {
       gpe_error_box (err);
       free (err);
       return NULL;
     }
 
-  return new_sql_network_server_internal (sqlite_last_insert_rowid (sqliteh), name, port, network);
+  return new_sql_network_server_internal (sqlite_last_insert_rowid (sqliteh),
+                                          name, port, network);
 }
 
 void
@@ -100,8 +109,10 @@ edit_sql_network (struct sql_network *network)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "replace into networks values ('%d', '%q', '%q', '%q', '%q')",
-			  NULL, NULL, &err, network->id, network->name, network->nick, network->real_name, network->password))
+  if (sqlite_exec_printf
+      (sqliteh, "replace into networks values ('%d', '%q', '%q', '%q', '%q')",
+       NULL, NULL, &err, network->id, network->name, network->nick,
+       network->real_name, network->password))
     {
       gpe_error_box (err);
       free (err);
@@ -110,12 +121,15 @@ edit_sql_network (struct sql_network *network)
 
 
 void
-edit_sql_network_server (struct sql_network_server *network_server, struct sql_network *network)
+edit_sql_network_server (struct sql_network_server *network_server,
+                         struct sql_network *network)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "replace into servers values ('%d', '%q', '%d', '%d')",
-			  NULL, NULL, &err, network_server->id, network_server->name, network_server->port, network->id))
+  if (sqlite_exec_printf
+      (sqliteh, "replace into servers values ('%d', '%q', '%d', '%d')", NULL,
+       NULL, &err, network_server->id, network_server->name,
+       network_server->port, network->id))
     {
       gpe_error_box (err);
       free (err);
@@ -128,8 +142,7 @@ del_sql_network (struct sql_network *e)
   char *err;
 
   if (sqlite_exec_printf (sqliteh, "delete from networks where uid=%d",
-			  NULL, NULL, &err,
-			  e->id))
+                          NULL, NULL, &err, e->id))
     {
       gpe_error_box (err);
       free (err);
@@ -144,8 +157,7 @@ del_sql_network_server (struct sql_network *e, struct sql_network_server *s)
   char *err;
 
   if (sqlite_exec_printf (sqliteh, "delete from servers where uid=%d",
-			  NULL, NULL, &err,
-			  s->id))
+                          NULL, NULL, &err, s->id))
     {
       gpe_error_box (err);
       free (err);
@@ -159,8 +171,7 @@ del_sql_networks_all ()
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "delete from networks",
-			  NULL, NULL, &err))
+  if (sqlite_exec_printf (sqliteh, "delete from networks", NULL, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
@@ -171,7 +182,9 @@ static int
 sql_network_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 5 && argv[0] && argv[1])
-    new_sql_network_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]), g_strdup (argv[3]), g_strdup (argv[4]));
+    new_sql_network_internal (atoi (argv[0]), g_strdup (argv[1]),
+                              g_strdup (argv[2]), g_strdup (argv[3]),
+                              g_strdup (argv[4]));
   rows++;
   return 0;
 }
@@ -193,11 +206,16 @@ sql_network_server_callback (void *arg, int argc, char **argv, char **names)
   GSList *server_network;
 
   if (argc == 4 && argv[0] && argv[1])
-  {
-    server_network = g_slist_find_custom (sql_networks, (gconstpointer) atoi (argv[3]), find_network);
-    if (server_network != NULL)
-      new_sql_network_server_internal (atoi (argv[0]), g_strdup (argv[1]), atoi (argv[2]), (struct sql_network *) server_network->data);
-  }
+    {
+      server_network =
+        g_slist_find_custom (sql_networks, (gconstpointer) atoi (argv[3]),
+                             find_network);
+      if (server_network != NULL)
+        new_sql_network_server_internal (atoi (argv[0]), g_strdup (argv[1]),
+                                         atoi (argv[2]),
+                                         (struct sql_network *)
+                                         server_network->data);
+    }
   return 0;
 }
 
@@ -215,16 +233,16 @@ add_default_sql_networks (void)
 int
 networks_sql_start (void)
 {
-  static const char *schema1_str = 
+  static const char *schema1_str =
     "create table networks (uid INTEGER PRIMARY KEY, name TEXT, nick TEXT, real_name TEXT, password TEXT)";
-  static const char *schema2_str = 
+  static const char *schema2_str =
     "create table servers (uid INTEGER PRIMARY KEY, name TEXT, port INTEGER, network INTEGER)";
 
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
   size_t len;
-  if (home == NULL) 
+  if (home == NULL)
     home = "";
   len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
@@ -242,15 +260,16 @@ networks_sql_start (void)
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select uid,name,nick,real_name,password from networks",
-		   sql_network_callback, NULL, &err))
+  if (sqlite_exec
+      (sqliteh, "select uid,name,nick,real_name,password from networks",
+       sql_network_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
       return -1;
     }
   if (sqlite_exec (sqliteh, "select uid,name,port,network from servers",
-		   sql_network_server_callback, NULL, &err))
+                   sql_network_server_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
@@ -268,12 +287,3 @@ networks_sql_close (void)
 {
   sqlite_close (sqliteh);
 }
-
-
-
-
-
-
-
-
-

@@ -35,7 +35,8 @@ gint general_rows = 0;
 static void
 new_sql_general_tag_internal (int id, const char *property, const char *value)
 {
-  g_hash_table_insert (sql_general_config, (gpointer) property, (gpointer) value);
+  g_hash_table_insert (sql_general_config, (gpointer) property,
+                       (gpointer) value);
 }
 
 void
@@ -43,14 +44,16 @@ new_sql_general_tag (const char *property, const char *value)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "insert into config values (NULL, '%q', '%q')",
-			  NULL, NULL, &err, property, value))
+  if (sqlite_exec_printf
+      (sqliteh, "insert into config values (NULL, '%q', '%q')", NULL, NULL,
+       &err, property, value))
     {
       gpe_error_box (err);
       free (err);
     }
 
-  g_hash_table_insert (sql_general_config, (gpointer) property, (gpointer) value);
+  g_hash_table_insert (sql_general_config, (gpointer) property,
+                       (gpointer) value);
 }
 
 void
@@ -58,24 +61,27 @@ edit_sql_general_tag (const char *property, const char *value)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "update config set value='%q' where property='%q'",
-			  NULL, NULL, &err, value, property))
+  if (sqlite_exec_printf
+      (sqliteh, "update config set value='%q' where property='%q'", NULL,
+       NULL, &err, value, property))
     {
       gpe_error_box (err);
       free (err);
     }
 
-  g_hash_table_insert (sql_general_config, (gpointer) property, (gpointer) value);
+  g_hash_table_insert (sql_general_config, (gpointer) property,
+                       (gpointer) value);
 }
 
 static int
 sql_general_tag_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 3 && argv[0] && argv[1])
-  {
-    new_sql_general_tag_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]));
-    general_rows++;
-  }
+    {
+      new_sql_general_tag_internal (atoi (argv[0]), g_strdup (argv[1]),
+                                    g_strdup (argv[2]));
+      general_rows++;
+    }
   return 0;
 }
 
@@ -95,14 +101,14 @@ add_default_sql_tags (void)
 int
 general_sql_start (void)
 {
-  static const char *schema1_str = 
+  static const char *schema1_str =
     "create table config (uid INTEGER PRIMARY KEY, property TEXT, value TEXT)";
 
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
   size_t len;
-  if (home == NULL) 
+  if (home == NULL)
     home = "";
   len = strlen (home) + strlen (fname) + 1;
   buf = g_malloc (len);
@@ -122,7 +128,7 @@ general_sql_start (void)
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
 
   if (sqlite_exec (sqliteh, "select uid,property,value from config",
-		   sql_general_tag_callback, NULL, &err))
+                   sql_general_tag_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
