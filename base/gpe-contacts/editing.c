@@ -7,7 +7,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <signal.h>
+#include <stdlib.h>
 #include <gtk/gtk.h>
 
 #include <gpe/errorbox.h>
@@ -85,14 +85,17 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
       switch (e->type)
 	{
 	case GROUP:
-	  pop_singles (vbox, singles, pw);
-	  singles = NULL;
-	  w = gtk_frame_new (e->name);
-	  ww = gtk_vbox_new (FALSE, 0);
-	  gtk_container_add (GTK_CONTAINER (w), ww);
-	  gtk_container_set_border_width (GTK_CONTAINER (w), 2);
-	  build_children (ww, e->children, pw);
-	  gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 4);
+	  {
+	    gchar *markup = g_strdup_printf ("<b>%s</b>", e->name);
+	    w = gtk_label_new (NULL);
+	    gtk_label_set_markup (GTK_LABEL (w), markup);
+	    gtk_misc_set_alignment (GTK_MISC (w), 0, 0.5);
+	    g_free (markup);
+	    pop_singles (vbox, singles, pw);
+	    singles = NULL;
+	    gtk_box_pack_start (GTK_BOX (vbox), w, FALSE, FALSE, 0);
+	    build_children (vbox, e->children, pw);
+	  }
 	  break;
 
 	case ITEM_MULTI_LINE:
@@ -250,7 +253,6 @@ create_edit (void)
 	  struct category *c = iter->data;
 	  GtkWidget *w = gtk_check_button_new_with_label (c->name);
 	  gtk_object_set_data (GTK_OBJECT (w), "category", (gpointer)c->id);
-	  gtk_widget_show (w);
 	  gtk_box_pack_start (GTK_BOX (cbox), w, FALSE, FALSE, 0);
 	  g_free (c->name);
 	  g_free (c);
@@ -319,14 +321,13 @@ edit_window (void)
       GtkWidget *label = gtk_label_new (e->name);
       GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
 
+      gtk_container_set_border_width (GTK_CONTAINER (vbox), 2);
+
       build_children (vbox, e->children, w);
 
-      gtk_widget_show_all (vbox);
-      gtk_widget_show (label);
       gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				      GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
       gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
-      gtk_widget_show (scrolled_window);
 
       gtk_notebook_append_page (GTK_NOTEBOOK (book), scrolled_window, label);
     }

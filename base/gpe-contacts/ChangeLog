@@ -1,3 +1,18 @@
+2003-03-17  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.12 released
+
+2003-03-17  Philip Blundell  <philb@gnu.org>
+
+	* editing.c: Include stdlib.h to fix warning.
+	(edit_window): Remove spurious gtk_widget_show.
+	(create_edit): Likewise.
+	(build_children): Don't make a frame for groups, just put a label
+	above the members.
+
+	* callbacks.c (on_edit_save_clicked): Cope with GtkTextView
+	elements.
+
 2003-03-15  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (install): Depend on .desktop file.

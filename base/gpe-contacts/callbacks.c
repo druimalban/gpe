@@ -96,7 +96,16 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
        tags; tags = tags->next)
     {
       GtkWidget *w = tags->data;
-      gchar *text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+      gchar *text;
+      if (GTK_IS_EDITABLE (w))
+	text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+      else
+	{
+	  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
+	  GtkTextIter start, end;
+	  gtk_text_buffer_get_bounds (buf, &start, &end);
+	  text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+	}
       gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
       db_set_data (p, tag, text);
     }
