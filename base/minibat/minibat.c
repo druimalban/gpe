@@ -63,12 +63,6 @@ struct apm_reply {
 #define AC_POWER    2
 #define BATT_STATUS 3
 
-#define WIN_WIDTH  8
-#define WIN_HEIGHT 14
-
-#define CLOCK_DISP 1
-#define BATT_DISP  0
-
 #ifndef AC_LINE_STATUS_ON
 #define AC_LINE_STATUS_ON 1
 #endif
@@ -467,6 +461,8 @@ main (int argc, char **argv)
 		       &colortmp,
 		       &fg_xftcol);
   }
+
+  text_offset = 2 * (msg_font->ascent + msg_font->descent);
 
   gc = XCreateGC(dpy, win_root, 0, NULL);
   mask_gc_0 = XCreateGC (dpy, popup_mask, 0, NULL);
