@@ -1,4 +1,4 @@
 #!/bin/sh
 PID=`pidof gpe-appmgr`
-[ "$PID" ] && kill -HUP $PID
+[ "$PID" ] && kill -HUP $PID || exit 0
 
