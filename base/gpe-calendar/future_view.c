@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,13 +18,10 @@
 #include "gtkdatesel.h"
 #include "globals.h"
 #include "future_view.h"
+#include "clist_view.h"
 
-extern void selection_made( GtkWidget      *clist,
-                     gint            row,
-                     gint            column,
-                     GdkEventButton *event,
-                     GtkWidget      *widget);
-		     
+GtkWidget *future_list;
+
 static gint
 future_view_update ()
 {
@@ -84,23 +81,23 @@ future_view_update ()
 GtkWidget *
 future_view(void)
 {
-  time_t t=time(NULL);
+  time_t t = time (NULL);
   struct tm tm;
   char buf[64];
   
-  GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *label;
   
   localtime_r(&t, &tm);
-  strftime (buf, sizeof(buf), "%A, %d %b %Y", &tm);
+  strftime (buf, sizeof (buf), "%A, %d %b %Y", &tm);
   
   label = gtk_label_new (buf);
   
-  future_list = gtk_clist_new(2);
+  future_list = gtk_clist_new (2);
   
-  gtk_signal_connect(GTK_OBJECT(future_list), "select_row",
-                       GTK_SIGNAL_FUNC(selection_made),
+  gtk_signal_connect(GTK_OBJECT (future_list), "select_row",
+                       GTK_SIGNAL_FUNC (selection_made),
                        NULL);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
@@ -108,7 +105,7 @@ future_view(void)
   
   future_view_update();
   
-  gtk_container_add(GTK_CONTAINER(scrolled_window), future_list);
+  gtk_container_add (GTK_CONTAINER (scrolled_window), future_list);
   
   gtk_box_pack_start (GTK_BOX(vbox), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);

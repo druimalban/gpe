@@ -28,7 +28,6 @@ extern void about (void);
 GdkFont *timefont;
 GdkFont *datefont;
 GdkFont *yearfont;
-GtkWidget *day_list, *future_list;
 GList *times;
 time_t viewtime;
 

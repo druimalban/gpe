@@ -20,43 +20,16 @@
 #include "gtkdatesel.h"
 #include "globals.h"
 #include "day_view.h"
+#include "clist_view.h"
 
 extern GdkFont *timefont, *datefont;
   
 gint bias = 8;
 
 GSList *strings;
+GtkWidget *day_list;
 
 #define SECONDS_IN_DAY (24*60*60)
-
-void selection_made( GtkWidget      *clist,
-                     gint            row,
-                     gint            column,
-                     GdkEventButton *event,
-                     GtkWidget      *widget)
-{
-  event_t ev;
-    
-  if (event->type == GDK_2BUTTON_PRESS)
-    {
-      guint hour = row;
-      GtkWidget *appt;
-      struct tm tm;
-      
-      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      if (ev) 
-	appt = edit_event (ev);
-      else 
-	{
-	  localtime_r (&viewtime, &tm);
-	  tm.tm_hour = hour+1;
-	  tm.tm_min = 0;
-	  tm.tm_sec = 0;
-	  appt = new_event (mktime (&tm), 1);
-	}
-      gtk_widget_show (appt);
-    }
-}
 
 static char *
 format_event (event_t ev)
@@ -238,21 +211,21 @@ changed_callback(GtkWidget *widget,
 		 GtkWidget *clist)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
-  day_view_update();
+  day_view_update ();
 }
 
 GtkWidget *
 day_view(void)
 {
-  GtkWidget *vbox = gtk_vbox_new(FALSE, 0);
+  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_FULL);
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   
-  day_list = gtk_clist_new(2);
+  day_list = gtk_clist_new (2);
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (datesel));
   
-  gtk_signal_connect(GTK_OBJECT(day_list), "select_row",
-                       GTK_SIGNAL_FUNC(selection_made),
+  gtk_signal_connect (GTK_OBJECT (day_list), "select_row",
+                       GTK_SIGNAL_FUNC (selection_made),
                        NULL);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
@@ -263,7 +236,7 @@ day_view(void)
   
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  
+
   gtk_signal_connect(GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), day_list);
   
