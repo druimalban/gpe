@@ -1,0 +1,7 @@
+
+libgpedb is a generic sql database wrapper for transparent switch sqlite and
+usqld database backends at compile time. 
+
+Maintainer is Florian Boor <florian.boor@kernelconcepts.de>
+
+ 

@@ -1,0 +1,9 @@
+Package: libgpedb
+Section: base
+Priority: essential
+Version: 0.3
+Architecture: arm
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Depends: libgpe
+Description: transparent sql database wrapper
+

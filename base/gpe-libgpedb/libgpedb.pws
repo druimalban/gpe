@@ -1,0 +1,27 @@
+
+[filenumbers]
+0=63
+1=25
+2=17
+
+[filemarkers]
+0=
+1=
+2=
+
+[executer]
+RunInTerminal=true
+
+[Project DBase]
+ShowLocals=true
+
+[filelist]
+0=/home/fuchs/Projekte/gpe/todo.txt
+1=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/src/gpe-sql.c
+2=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/include/gpe-sql.h
+
+[replace_text]
+0=wdcmain
+
+[find_text]
+0=mainw
