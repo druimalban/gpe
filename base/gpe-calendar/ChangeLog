@@ -1,3 +1,7 @@
+2004-03-25  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.52 released.
+
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (PACKAGE_LDFLAGS, PACKAGE_CFLAGS, PACKAGE_CPPFLAGS):
