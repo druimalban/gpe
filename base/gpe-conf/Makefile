@@ -10,6 +10,7 @@ PACKAGETOOL = no
 STRIP = strip
 MACHINE = unknown
 
+CFLAGS += -MD
 
 LINGUAS = pt ro de fr cs nl sv sk ru
 
@@ -189,7 +190,9 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop
+	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop *.d
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
+
+-include $(DEPS)
