@@ -102,6 +102,7 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
 
   label = gtk_label_new (qn);
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
 
 

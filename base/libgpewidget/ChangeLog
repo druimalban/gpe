@@ -1,5 +1,7 @@
 2003-02-01  Philip Blundell  <philb@gnu.org>
 
+	* question.c (gpe_question_ask): Set line wrapping on.
+
 	* Makefile (clean): Depend on clean-po.
 	(LINGUAS): Remove en_AU.
 
@@ -9,7 +11,7 @@
 
 	* errorbox.c (do_gpe_error_box): Use stock button.
 	* smallbox.c (smallbox_x2): Likewise.
-	(smallbox_x): Likewise,
+	(smallbox_x): Likewise.
 
 	* debian/control, debian/changelog: Update.
 
