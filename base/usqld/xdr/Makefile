@@ -87,7 +87,7 @@ libxdr_la_SOURCES = xdr-deserialize.c  xdr-schema.c  xdr-serialize.c \
 
 LDFLAGS = -L../
 
-CFLAGS = -Os
+CFLAGS = -Os -g 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 LTLIBRARIES =  $(lib_LTLIBRARIES)

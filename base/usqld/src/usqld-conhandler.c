@@ -9,7 +9,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <sqlite.h>
-
+#include <assert.h>
+#include "usqld-server.h"
 #include "usqld-conhandler.h"
 #include "usqld-protocol.h"
 typedef struct{
@@ -19,8 +20,8 @@ typedef struct{
   usqld_config * config;
 }usqld_tc;
 
-int  usqd_do_connect(usqld_tc * tc,usqld_packet * p){
-  char * db = NULL;
+int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
+  char * database = NULL;
   char * version = NULL;
   XDR_tree * content;
   usqld_packet * reply = NULL;
@@ -32,10 +33,12 @@ int  usqd_do_connect(usqld_tc * tc,usqld_packet * p){
     reply = usqld_error_packet(SQLITE_CANTOPEN,"database already open");
     goto connect_send_reply;
   }
+
   content = XDR_t_get_union_t(p);
-  version = XDR_t_get_comp_elem(content,0);
-  database = XDR_t_get_comp_elem(content,1);
-  if(strcmp(version,USQLD_PROTOCOL_VERSION)!=){
+  version = XDR_t_get_string(XDR_t_get_comp_elem(content,0));
+  database = XDR_t_get_string(XDR_t_get_comp_elem(content,1));
+  fprintf(stderr,"got connect (%s,%s)\n",version,database);
+  if(strcmp(version,USQLD_PROTOCOL_VERSION)!=0){
     char buf[256];
     snprintf(buf,256,"Your client's protocol version (%s) does not match"\
 	     " the server version (%s)",version,USQLD_PROTOCOL_VERSION);
@@ -43,21 +46,22 @@ int  usqd_do_connect(usqld_tc * tc,usqld_packet * p){
     reply = usqld_error_packet(USQLD_VERSION_MISMATCH,buf);
     goto connect_send_reply;
   }
-  strncpy(512,fn_buf,tc->config->db_base_dir);
+  strncpy(fn_buf,tc->config->db_base_dir,512);
   strcat(fn_buf,database);
   
   if(NULL==(tc->db=sqlite_open(fn_buf,0644,&errmsg))){
     reply = usqld_error_packet(SQLITE_CANTOPEN,errmsg);
     goto connect_send_reply;
   }
-  tc->database = strcpy(database);
+  tc->database_name = strdup(database);
   /*we are set*/
+  fprintf(stderr,"sending OK\n");
   reply = usqld_ok_packet();
   goto connect_send_reply;
  connect_send_reply:
   assert(reply!=NULL);
-  rv =  usqld_send_packet(reply);
-  XDR_tree_free(reply);
+  rv =  usqld_send_packet(tc->client_fd,reply);
+  //XDR_tree_free(reply);
   return rv; 
 }
 
@@ -73,13 +77,14 @@ int usqld_send_row(usqld_row_context * rc,
 		   char ** fields){
   XDR_tree * rowpacket = NULL,*field_elems;
   int i;
-    
+  int rv;
+
   if(!rc->headsent){
     XDR_tree  * srpacket = NULL, *head_elems;
 
     XDR_tree_new_compound(XDR_VARARRAY,
 			  nfields,
-			  &head_elems);
+			  (XDR_tree_compound**)&head_elems);
     for( i =0;i<nfields;i++){
       XDR_t_get_comp_elem(head_elems,i) = XDR_tree_new_string(heads[i]);
     }
@@ -87,50 +92,71 @@ int usqld_send_row(usqld_row_context * rc,
     
     srpacket = XDR_tree_new_union(PICKLE_STARTROWS,
 				  head_elems);
-    if(USQLD_OK!=(rv=usqld_send_packet(tc->client_fd,
+    if(USQLD_OK!=(rv=usqld_send_packet(rc->tc->client_fd,
 				       srpacket))){
-      XDR_tree_free(srpacket);
+      //XDR_tree_free(srpacket);
       rc->rv = rv;
       return -1;			 
     }
-    XDR_tree_free(srpacket);
+    //XDR_tree_free(srpacket);
     rc->headsent = 1;
   }
   
   XDR_tree_new_compound(XDR_VARARRAY,
 			nfields,
-			&field_elems);
+			(XDR_tree_compound**)&field_elems);
   
-  for(int i = 0;i<nfields;i++){
+  for(i = 0;i<nfields;i++){
     XDR_t_get_comp_elem(field_elems,i) = XDR_tree_new_string(fields[i]);
   }
   rowpacket = XDR_tree_new_union(PICKLE_ROW,
 				 field_elems);
 
-  if(USQLD_OK!=(rv=usqld_send_packet(tc->client_fd,
-				     srpacket))){
-      XDR_tree_free(srpacket);
+  if(USQLD_OK!=(rv=usqld_send_packet(rc->tc->client_fd,
+				     rowpacket))){
+      //XDR_tree_free(rowpacket);
       rc->rv = rv;
       return -1;			 
       
   }
-  XDR_tree_free(srpacket);
+  //XDR_tree_free(rowpacket);
   return 0;  
 }
 
 int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
   XDR_tree * reply = NULL;
   int rv;
+  char * sql,*errmsg;
+  usqld_row_context rc;
+  
+  rc.tc = tc;
+  rc.rv =0;
+  rc.headsent = 0;
+
   if(NULL==tc->db){
     reply = usqld_error_packet(USQLD_NOT_OPEN,
 			       "You do not have a database open");
     goto query_send_reply;
   }
+  sql = XDR_t_get_string(XDR_t_get_comp_elem(packet,1));
+  fprintf(stderr,"About to try and exec the sql: \"%s\"\n",sql);
+  
+  if(SQLITE_OK!=(rv=sqlite_exec(tc->db,
+				sql,
+				(sqlite_callback)usqld_send_row,
+				(void*)&rc,
+				&errmsg))){
+    
+  }
+  
+	      
+	      
+	      
   
  query_send_reply:
   assert(reply!=NULL);
-  rv =  usqld_send_packet(reply);
-  XDR_tree_free(reply);
+  rv =  usqld_send_packet(tc->client_fd,reply);
+  //XDR_tree_free(reply);
   return rv; 
   
 }
@@ -165,12 +191,17 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
       break;
     }
   }
+  if(rv!=USQLD_OK){
+    fprintf(stderr,"error %d while demarshalling request\n",rv);
+  }
   
+
+  close(tc.client_fd);
   if(tc.db){
     sqlite_close(tc.db);
   }
-  if(tc.database){
-    free(tc.database);
+  if(tc.database_name){
+    free(tc.database_name);
   }
 
   return NULL;

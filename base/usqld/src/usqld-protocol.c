@@ -29,7 +29,7 @@ XDR_schema * usqld_make_protocol(){
     *start_rows_packet,
     *rows_packet,
     *eof_packet,
-    *err_packet;
+    *error_packet;
   
   XDR_schema * connect_elems[2];
   XDR_schema * err_elems[2];
@@ -64,7 +64,7 @@ XDR_schema * usqld_make_protocol(){
   elems[7].t = XDR_schema_new_void();
   elems[7].d =PICKLE_OK;
   
-  protocol = XDR_schema_new_type_union(7,elems);   
+  protocol = XDR_schema_new_type_union(8,elems);   
   
 
   return protocol;
@@ -77,12 +77,12 @@ XDR_schema * usqld_make_protocol(){
   this does rather assume pthreads...
  */
 XDR_schema * usqld_get_protocol(){
-   assert(0!=pthread_mutex_lock(&protocol_schema_lock));
+   assert(0==pthread_mutex_lock(&protocol_schema_lock));
    {  
      if(usqld_protocol_schema==NULL)
        usqld_protocol_schema=usqld_make_protocol();
    }
-   assert(0!=pthread_mutex_unlock(&protocol_schema_lock));
+   assert(0==pthread_mutex_unlock(&protocol_schema_lock));
    return usqld_protocol_schema;
 }
 
@@ -122,7 +122,6 @@ usqld_packet * usqld_error_packet(int errcode, const char * str){
 
 usqld_packet * usqld_ok_packet(){
   XDR_tree * p;
-  
-  p = XDR_tree_new_union(PICKLE_OK,NULL);
+  p = XDR_tree_new_union(PICKLE_OK,XDR_tree_new_void());
   return p;
 }

@@ -176,6 +176,7 @@ XDR_tree * XDR_tree_new_opaque(XDR_type type,
   XDR_tree_new_opaque(XDR_VAROPAQUE,0,l,d)
 XDR_tree * XDR_tree_new_string(char * data);
 XDR_tree * XDR_tree_new_num(XDR_type t,u_int32_t val);
+
 #define XDR_tree_new_int(v) XDR_tree_new_num(XDR_INT,(u_int32_t)v)
 #define XDR_tree_new_uint(v) XDR_tree_new_num(XDR_UINT,(u_int32_t)v)
 #define XDR_tree_new_bool(v) XDR_tree_new_num(XDR_BOOL,(u_int32_t)v)
@@ -187,20 +188,20 @@ XDR_tree * XDR_tree_new_xhyper(XDR_type t,u_int64_t val);
 #define  XDR_tree_new_hyper(val) XDR_tree_new_xhyper(XDR_HYPER,(u_int64_t)val)
 XDR_tree * XDR_tree_new_float(float val);
 XDR_tree * XDR_tree_new_double(double val);
-
+XDR_tree * XDR_tree_new_void();
 /*accessors*/
-#define XDR_t_get_union_disc(t)  ((XDR_tree_simple*)\
+#define XDR_t_get_union_disc(t)  (((XDR_tree_simple*)\
 					 ((XDR_tree_compound*)\
-					  t)->subelems[0])->val.uintVal
-#define XDR_t_get_union_t(t)  ((XDR_tree_compound*)\
-					  t)->subelems[1])
+					  t)->subelems[0])->val.uintVal)
+#define XDR_t_get_union_t(t)  (((XDR_tree_compound*)t)->subelems[1])
 
-#define XDR_t_get_string(t)  ((XDR_tree_str *)t->data)
-#define XDR_t_get_data(t)  ((XDR_tree_str *)t->data)
-#define XDR_t_get_data_len(t)  ((XDR_tree_str *)t->len)
+#define XDR_t_get_string(t)  (((XDR_tree_str *)t)->data)
+#define XDR_t_get_data(t)  (((XDR_tree_str *)t)->data)
+#define XDR_t_get_data_len(t)  (((XDR_tree_str *)t)->len)
 
-#define XDR_t_get_comp_elem(t,n) ((XDR_tree_compound*)t->subelems[n])
-
+#define XDR_t_get_comp_elem(t,n) (((XDR_tree_compound*)t)->subelems[n])
+#define XDR_t_get_uint(t) (((XDR_tree_simple *)t)->val.uintVal)
+#define XDR_t_get_comp_len(t) (((XDR_tree_compound*)t)->nelems)
 void XDR_tree_dump(XDR_tree*t);
 void XDR_tree_free(XDR_tree * t);
 void XDR_dump_schema(XDR_schema *s);

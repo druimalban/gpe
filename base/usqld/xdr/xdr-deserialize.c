@@ -8,7 +8,9 @@
 int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
   unsigned char buf[4];
   int rv = XDR_OK;
-  
+  char * reason;
+  fprintf(stderr,"deserialize:about to try and read a %s\n",
+	  XDR_find_type_name(s->type));
   switch(s->type){
   case XDR_INT:
   case XDR_BOOL:
@@ -134,6 +136,7 @@ int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
       }
       
       if(NULL==d_t){
+	fprintf(stderr,"demarshal UNION: discriminant type %u not found\n",d_val);
 	return XDR_SCHEMA_VIOLATION;
       }
       if(XDR_OK!=(rv=XDR_tree_new_compound(XDR_UNION,2,&t))){
@@ -153,9 +156,10 @@ int  XDR_deserialize_elem(XDR_schema *s,int fd, XDR_tree **out_t){
     *out_t = NULL;
     break;
   default:
+    fprintf(stderr,"demarshal:unknown protocol element,expected %s\n",XDR_find_type_name(s->type));
     return XDR_SCHEMA_VIOLATION;
   }
-  
+  fprintf(stderr,"succesfully read a %s\n",XDR_find_type_name(s->type));
   return XDR_OK;
 }
 

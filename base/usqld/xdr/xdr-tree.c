@@ -6,7 +6,7 @@
 int  XDR_tree_new_compound(XDR_type type,
 			   size_t nelems,
 			   XDR_tree_compound ** out_t){
-  XDR_tree_compound * t ;
+  XDR_tree_compound * t;
   assert(NULL!=out_t);
 
   t = mylloc(XDR_tree_compound);
@@ -28,7 +28,7 @@ void XDR_tree_new_simple(XDR_type type,XDR_tree_simple **out_t){
   XDR_tree_simple * t = mylloc(XDR_tree_simple);
   assert(NULL!=t);
   t->type = type;
-  bzero(t->val,sizeof(XDR_tree_simple_val));
+  bzero(&(t->val),sizeof(XDR_tree_simple_val));
   *out_t = t;
 }
 
@@ -231,4 +231,12 @@ void XDR_tree_dump_r(XDR_tree*t,int indent){
 
 void XDR_tree_dump(XDR_tree*t){
   XDR_tree_dump_r(t,0);
+}
+
+XDR_tree * XDR_tree_new_void(){
+  XDR_tree * tree;
+  tree = mylloc(XDR_tree);
+  bzero(tree,sizeof(XDR_tree));
+  tree->type = XDR_VOID;
+  return tree;
 }

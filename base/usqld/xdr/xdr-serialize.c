@@ -8,7 +8,13 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
   unsigned char buf[4];
   int rv = XDR_OK;
   char * reason;
-
+  char errbuf[1024];
+  
+  fprintf(stderr,
+	  "About to serialize a %s using a %s\n",
+	  XDR_find_type_name(s->type),
+	  (t==NULL?"NULL":XDR_find_type_name(s->type)));
+  
   if(s->type!=t->type){
     fprintf(stderr,"errrr, schema says %s, but type says %s\n",
 	    XDR_find_type_name(s->type),
@@ -95,12 +101,11 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
     {
       size_t nelems;
       int i;
-      if((nelems= ((XDR_struct *)t)->num_elems)!=
-	 ((XDR_tree_compound *)s)->nelems)
-	rv=XDR_SCHEMA_VIOLATION;
-      reason ="number of struct elems differ";
-      goto serialize_failed_output;
-      
+      if((nelems= ((XDR_struct *)s)->num_elems)!=
+	 ((XDR_tree_compound *)t)->nelems){
+	rv=XDR_SCHEMA_VIOLATION;	
+	goto serialize_failed_output;
+      }      
       for(i = 0;i<nelems;i++){
 	if(XDR_OK!=(rv=XDR_serialize_elem(((XDR_struct *)s)->elems[i],
 					  ((XDR_tree_compound*)t)->subelems[i],fd)))
@@ -120,12 +125,12 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
 	rv=XDR_SCHEMA_VIOLATION;
 	goto serialize_failed_output;
       }
-      if( ((XDR_tree_compound*)t)->subelems[0]->type!=XDR_UINT){
+      if( XDR_t_get_comp_elem(t,0)->type!=XDR_UINT){
 	reason = "union first elem is not a UINT";
 	rv=XDR_SCHEMA_VIOLATION;
 	goto serialize_failed_output;
       }
-      d_val = ((XDR_tree_simple*)(((XDR_tree_compound*)t)->subelems[0]))->val.uintVal;
+      d_val = ((XDR_tree_simple*)XDR_t_get_comp_elem(t,0))->val.uintVal;
       
       for(i=0;i<((XDR_type_union*)s)->num_alternatives;i++){
 	if(((XDR_type_union*)s)->elems[i].d==d_val){
@@ -134,21 +139,38 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
 	}
       }
       
-      if(NULL==d_t || 
-	 ((XDR_tree_compound*)t)->subelems[1]->type!=d_t->type)
-	{
-	  reason = "union target does not match data";
-	  rv=XDR_SCHEMA_VIOLATION;
-	  goto serialize_failed_output;
-	}
+      if(NULL==d_t ){
+	sprintf(errbuf,
+		"The union discriminator of %d did not"\
+		" match a schema element\n",
+		d_val);
+		
+	reason = errbuf;
+	rv=XDR_SCHEMA_VIOLATION;
+	goto serialize_failed_output;
+	
+      }
+      
+      if(XDR_t_get_comp_elem(t,1)->type!=d_t->type){
+	sprintf(errbuf,
+		"desired target of %s does not match given type of %s\n",
+		XDR_find_type_name(XDR_t_get_comp_elem(t,1)->type),
+		XDR_find_type_name(d_t->type));
+	reason = errbuf;
+	rv=XDR_SCHEMA_VIOLATION;
+	goto serialize_failed_output;
+	  
+      }
+      
       
       *((int*)buf) = htonl(d_val);
       if(-1==write(fd,buf,4))
 	return XDR_IO_ERROR;
       
-      if(XDR_OK!=(rv=XDR_serialize_elem(d_t,((XDR_tree_compound*)t)->subelems[1],
+      if(XDR_OK!=(rv=XDR_serialize_elem(d_t,
+					((XDR_tree_compound*)t)->subelems[1],
 					fd)))
-	return rv;     
+	return rv;
     }
     break;
   case XDR_VOID:
@@ -161,7 +183,7 @@ int  XDR_serialize_elem(XDR_schema * s, XDR_tree *t,int fd){
   
   return XDR_OK;
  serialize_failed_output:
-  fprintf(stderr,"decerialization failed because %s, "\
+  fprintf(stderr,"serialization failed because %s, "\
 	  "while processing data elemm of type %s, and schema elem of type %s",
 	  reason,
 	  XDR_find_type_name(t->type),

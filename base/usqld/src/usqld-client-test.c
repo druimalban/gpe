@@ -3,39 +3,36 @@
 #include <sys/un.h>
 #include <netinet/in.h>
 #include <stdio.h>
+#include "usql.h"
+
+int test_print_results(void * f,int nrows,char ** heads,char ** vals){
+  int i;
+  for(i = 0;i<nrows;i++){
+    printf("%s\t|",heads[i]);
+  }
+  printf("\n");
+  for(i = 0;i<nrows;i++){
+    printf("%s\t|",vals[i]);
+  }
+  printf("\n");
+  return 0;
+}
+
 int main (int argc, char ** argv) 
 {
-   
-   struct sockaddr_un srvaddr;
-   char msgbuf[100];
-   int fd;
-   socklen_t len;
-   
-   
-   fd = socket(PF_UNIX,SOCK_DGRAM,0);
-   if(-1==fd)
-     {
-	fprintf(stderr,"erk, socket won't open\n");
-	exit(1);
-     }
-   
-   srvaddr.sun_family =AF_UNIX;
-   strcpy(srvaddr.sun_path,"/tmp/usqld.sock");
-   
-   
-   while(1)
-     {
-	time_t thetime;
-	thetime = time(NULL);
-	
-	snprintf(msgbuf,100,"The time is now  %s",ctime(&thetime));
-	if(-1==sendto(fd,msgbuf, strlen(msgbuf), 0,
-		      (struct sockaddr *)&srvaddr, sizeof(srvaddr)))
-	  {
-	     fprintf(stderr,"Sending message [%s] failed\n",msgbuf);
-	  }
-	else
-	  printf("sent %s to server\n",msgbuf);
-	sleep(1);
-     }
+  usqld_conn * con;
+  char * errstring;
+  if(NULL==(con=usqld_connect("occ2.cs.bath.ac.uk",
+			      "test",&errstring))){
+    fprintf(stderr,"couldn't connect to database: %s\n",errstring);
+    exit(1);
+  }
+  fprintf(stderr,"connected to database\n");
+  
+    if(USQLD_OK!=
+       usqld_exec(con,
+		  "SELECT x,y from foo",
+		  test_print_results,NULL,&errstring)){
+      fprintf(stderr,"couldn't query database: %s\n",errstring);
+    }
 }
