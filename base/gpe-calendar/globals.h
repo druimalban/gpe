@@ -20,7 +20,9 @@ extern time_t viewtime;
 
 #define VERSION "0.0 (20020510)"
 
-extern GtkWidget *new_event(time_t t, guint timesel, event_t ev);
+extern GtkWidget *new_event(time_t t, guint timesel);
+extern GtkWidget *edit_event(event_t ev);
+
 extern void update_current_view (void);
 
 extern GtkWidget *day_list, *future_list;
