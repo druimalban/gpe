@@ -177,11 +177,17 @@ load_pixmaps (void)
       GdkPixbuf *p;
       GdkPixmap *pmap;
       GdkBitmap *bmap;
-      char buf[256];
+      char *buf;
 
-      sprintf (buf, PREFIX "/share/pdamaze/%s.png", loadpix[i].name);
+      buf = g_strdup_printf (PREFIX "/share/pdamaze/%s.png", loadpix[i].name);
 
       p = gdk_pixbuf_new_from_file (buf);
+      if (!p)
+	{
+	  fprintf (stderr, "Couldn't load %s\n", buf);
+	  exit (1);
+	}
+      free (buf);
       gdk_pixbuf_render_pixmap_and_mask (p, &pmap, &bmap, 127);
       *loadpix[i].map = ((GdkWindowPrivate *)pmap)->xwindow;
     }
