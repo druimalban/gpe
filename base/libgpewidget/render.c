@@ -29,10 +29,10 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
       guchar *ptr = gdk_pixbuf_get_pixels (composited);
       guchar *sptr = gdk_pixbuf_get_pixels (pixbuf);
       guchar br, bg, bb;
-      
+
       stride = gdk_pixbuf_get_rowstride (composited);
       sstride = gdk_pixbuf_get_rowstride (pixbuf);
-      
+
       br = bgcol->red >> 8;
       bg = bgcol->green >> 8;
       bb = bgcol->blue >> 8;
@@ -52,13 +52,13 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 	      sb = *sp++;
 	      sa = *sp++;
 	      
-	      if (sa == 255 || sa == 0) 
+	      if (sa == 255 || sa == 0)
 		{
 		  /* fully opaque or fully transparent is trivial */
 		  red = sr;
 		  green = sg;
 		  blue = sb;
-		} 
+		}
 	      else 
 		{
 		  guint r1 = (guint)sr * sa;
@@ -76,7 +76,7 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 	      *p++ = red;
 	      *p++ = green;
 	      *p++ = blue;
-	      *p++ = sa;
+	      *p++ = sa ? 255 : 0;
 	    }
 	}
       
