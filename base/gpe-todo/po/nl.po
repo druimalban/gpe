@@ -1,0 +1,147 @@
+# Dutch translation of gpe-todo.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-todo package.
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-todo 0.32\n"
+"POT-Creation-Date: 2003-02-14 19:50+0000\n"
+"PO-Revision-Date: 2003-08-05 14:31+0100\n"
+"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
+"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:60
+msgid "To-do list"
+msgstr "Te-doen lijst"
+
+#: todo-ui.c:269
+msgid "Select categories"
+msgstr "Categorieen selecteren"
+
+#: todo-ui.c:291
+msgid "Summary:"
+msgstr "Samenvatting:"
+
+#: todo-ui.c:292
+msgid "Details"
+msgstr "Details:"
+
+#: todo-ui.c:298
+msgid "Not started"
+msgstr "Niet gestart"
+
+#: todo-ui.c:298
+msgid "In progress"
+msgstr "bezig"
+
+#: todo-ui.c:299
+msgid "Completed"
+msgstr "Voltooid"
+
+#: todo-ui.c:321
+msgid "Due:"
+msgstr "Tijdstip:"
+
+#: todo-ui.c:336
+msgid "Categories:"
+msgstr "Categorieen:"
+
+#: todo-ui.c:429
+msgid "Edit to-do item"
+msgstr "Te-doen punt bewerken"
+
+#: todo-ui.c:436
+msgid "New item"
+msgstr "Nieuw punt"
+
+#: list-ui.c:52
+msgid "All items"
+msgstr "Alle punten"
+
+#: list-ui.c:81
+msgid "Permanently delete all completed items?"
+msgstr "Permanent alle voltooide punten verwijderen?"
+
+#: list-ui.c:81
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#: list-ui.c:82 configure.c:217
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: list-ui.c:82
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: list-ui.c:333 configure.c:210
+msgid "New"
+msgstr "Nieuw"
+
+#: list-ui.c:334 list-ui.c:335
+msgid "Add a new item"
+msgstr "Een nieuw punt toevoegen"
+
+#: list-ui.c:340
+msgid "Configure"
+msgstr "Instellen"
+
+#: list-ui.c:341 list-ui.c:342
+msgid "Configure categories"
+msgstr "Categorieen instellen"
+
+#: list-ui.c:347
+msgid "Purge"
+msgstr "Opschonen"
+
+#: list-ui.c:348 list-ui.c:349
+msgid "Purge completed items"
+msgstr "Voltooide punten opschonen"
+
+#: list-ui.c:354
+msgid "Re-sort"
+msgstr "Opnieuw sorteren"
+
+#: list-ui.c:355 list-ui.c:356
+msgid "Move completed items to the end of the list"
+msgstr "Voltooide punten verplaatsen naar einde lijst"
+
+#: list-ui.c:361
+msgid "Exit"
+msgstr "Afsluiten"
+
+#: list-ui.c:362 list-ui.c:363
+msgid "Exit the program"
+msgstr "Het programma afsluiten"
+
+#: configure.c:58
+msgid "Category name must not be blank"
+msgstr "Categorienaam mag niet leeg zijn"
+
+#: configure.c:68
+msgid "A category by that name already exists"
+msgstr "Er bestaat al een categorie met die naam"
+
+#: configure.c:106
+msgid "To-do list: Categories"
+msgstr "Te-doen lijst: Categorieen"
+
+#: configure.c:139
+msgid "New category"
+msgstr "Nieuwe categorie"
+
+#: configure.c:172
+msgid "Categories"
+msgstr "Categorieen"
+
+#: configure.c:211 configure.c:212
+msgid "Create a new category"
+msgstr "Een nieuwe categorie maken"
+
+#: configure.c:218 configure.c:219
+msgid "Delete the selected category"
+msgstr "De geselecteerde categorie verwijderen"

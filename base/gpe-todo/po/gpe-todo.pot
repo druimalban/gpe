@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-02-25 23:10+0000\n"
+"POT-Creation-Date: 2004-03-25 20:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,31 +48,31 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
-#: todo-ui.c:263
+#: todo-ui.c:265
 msgid "Summary:"
 msgstr ""
 
-#: todo-ui.c:264
+#: todo-ui.c:266
 msgid "Details:"
 msgstr ""
 
-#: todo-ui.c:307
+#: todo-ui.c:309
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:321
+#: todo-ui.c:323
 msgid "Categories:"
 msgstr ""
 
-#: todo-ui.c:371
+#: todo-ui.c:373
 msgid "Pri:"
 msgstr ""
 
-#: todo-ui.c:432
+#: todo-ui.c:434
 msgid "Edit to-do item"
 msgstr ""
 
-#: todo-ui.c:441 list-ui.c:293
+#: todo-ui.c:443 list-ui.c:293
 msgid "New item"
 msgstr ""
 

@@ -1,3 +1,15 @@
+2004-06-23  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.47 released.
+
+2004-06-23  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add nl, ru, sr, sk, sv, wa, es.
+
+2004-03-25  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Version 0.46 released.
+
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (PACKAGE_CPPFLAGS, PACKAGE_CFLAGS, PACKAGE_LDFLAGS):
