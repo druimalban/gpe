@@ -10,7 +10,10 @@ ipaqscreen_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
-	callbacks.c callbacks.h
+	callbacks.c callbacks.h \
+	brightness.c brightness.h \
+	calibrate.c calibrate.h \
+	rotation.c rotation.h
 
 ipaqscreen_LDADD = @GTK_LIBS@ $(INTLLIBS)
 
