@@ -67,6 +67,15 @@ struct gpe_icon my_icons[] = {
 	{NULL}
 };
 
+const char *dhcpcommands[] = {
+	"/sbin/dhcpcd %s &",
+	"/sbin/dhclient %s &",
+	"/sbin/udhcpc -i %s &",
+	"/usr/sbin/dhcpcd %s &",
+	"/usr/sbin/udhcpc -i %s &",
+	NULL
+};
+
 enum
 {
 	COL_ICON,
@@ -84,7 +93,7 @@ static GtkWidget *icon;
 static pid_t scanner_pid;
 static int sock;
 static psconfig_t cfg = { 0, "eth0", DT_ORINOCO, 40000, 0 ,0, FALSE,
-		"/tmp/spotkoord.txt", "/tmp/psdump.pcap", FALSE};
+		"/tmp/spotkoord.txt", "/tmp/psdump.pcap", FALSE, 0};
 static netinfo_t **netlist = NULL;
 static int netcount = 0;
 static guint timeout_id = 0;
@@ -118,6 +127,22 @@ static GtkTreeStore *store;
 static GtkWidget *tree;
 static GtkCellRenderer *renderer;
 
+/* find a valid dhcp command */
+static int
+check_dhcp(void)
+{
+	int i = 0;
+	char cmd[50];
+	
+	while (dhcpcommands[i])
+	{
+		sscanf(dhcpcommands[i], "%50s", cmd);
+		if (!access(cmd, F_OK))
+			return i;
+		i++;		
+	}	
+	return 0;	
+}
 
 /* send command to turn off device */
 static void
@@ -388,7 +413,7 @@ show_networks (void)
 	if (devices_window == NULL)
 	{
 		devices_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
+		gtk_window_set_default_size(GTK_WINDOW(devices_window), 240, 310);
 		gtk_window_set_title (GTK_WINDOW (devices_window),
 				      _("Wireless networks"));
 		gpe_set_window_icon (devices_window, "gpe-aerial");
@@ -1068,6 +1093,8 @@ main (int argc, char *argv[])
 
 	dock_window = window->window;
 	gpe_system_tray_dock (window->window);
+
+	cfg.dhcpcommand = check_dhcp();
 
 	gtk_timeout_add (1000, (GtkFunction) update_linklevel, NULL);
 
