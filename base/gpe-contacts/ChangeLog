@@ -1,5 +1,8 @@
 2004-11-14  Phil Blundell  <pb@nexus.co.uk>
 
+	* editing.c (pop_singles): Set expand=FALSE when packing table
+	into vbox.
+
 	* db.c (db_get_config_tag): Avoid segfault if query returns no data.
 
 2004-11-07  Phil Blundell  <pb@nexus.co.uk>
