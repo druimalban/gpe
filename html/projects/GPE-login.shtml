@@ -19,14 +19,36 @@ protection for your personal data; second, it allows multiple users
 to share a single device.
 </P>
 
+<P>
+gpe-dm starts the X server, then runs /etc/X11/Xinit as root (which
+in turn calls in everything in /etc/X11/Xinit.d).  Once Xinit has
+finished, it launches gpe-login, which runs /etc/X11/gpe-login.setup
+(also as root), then displays its UI and prompts the user to log in.
+Once the user is authenticated, it runs ~/.xsession if it exists, and
+/etc/X11/Xsession if not, both as the user.
+</P>
+
+<P>
+The Xsession file needs to end by running the window manager, 
+session manager, or some other long-living thing.  
+Once Xsession returns, gpe-dm will do a server reset and start 
+the whole cycle again.
+</P>
+
+<P>
+Processes started by Xinit survive into the user's session, whereas
+things run from gpe-login.setup are terminated before Xsession starts.
+</P>
+
 <H2>Status</H2>
 <P>
 The source code can be found in <A href="../cvs.shtml">CVS</A>,
 module <b>gpe-login</b>.  Precompiled binaries for iPAQ are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
+(Packages gpe-login and gpe-dm)
 </P>
 <P>
-Some example startup scripts are provided 
+Some example startup scripts are provided
 <A href="ftp://ftp.handhelds.org/pub/projects/gpe/xstuff.tgz">here</A>.
 </P>
 
