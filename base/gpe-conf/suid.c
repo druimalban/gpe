@@ -369,6 +369,7 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "CPIF") == 0)  // installs a new interfaces file
 				{
+#warning fixme system_printf
 					fscanf (in, "%100s", arg2);	// to forget soon...
 					bin = "/bin/cp";
 					system ("killall dhcpcd");

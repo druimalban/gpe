@@ -1,3 +1,7 @@
+2003-11-04	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* network.c: Allow users to view config. Some minor cleanups.
+	* cfgfile.c: Fixed bug causing wrong parameters for some interfaces.
+
 2003-11-03	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* suid.c: Fixed bug that caused a crash on error syncing time.
 	* timeanddate.c: Replaced a dissapeared timeserver.

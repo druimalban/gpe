@@ -203,6 +203,9 @@ gint get_scheme_list()
 		{
 			l++;
 			k=0;
+			memset(option1,0,32);
+			memset(option2,0,32);
+			
 			for (j=0;j<strlen(configtext[i]);j++)
 			{
 				if (configtext[i][j]==' ') {
@@ -243,7 +246,7 @@ gint get_scheme_list()
 			iflist[l-1].isloop = FALSE;
 			iflist[l-1].isdhcp = FALSE;
 			iflist[l-1].isppp = FALSE;
-			
+		
 			// strstr could make this easier!
 			if (!strcmp("inet",option1)) iflist[l-1].isinet = TRUE;
 			if (!strcmp("inet",option2)) iflist[l-1].isinet = TRUE;
@@ -397,7 +400,6 @@ gint write_sections()
 	gint svd[10];
 	gint lastwpos = 0;
 	gint last_i;
-	//gboolean auto_set = FALSE;
 	
 	
 	for (i=0;i<configlen;i++)

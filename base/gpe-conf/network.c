@@ -629,8 +629,8 @@ create_nwppp_widgets (NWInterface_t iface)
 	// page items  
 	create_editable_entry (&iface, ctable, "provider", _("Provider"),
 			       iface.provider,
-			       _
-			       ("Here you need to enter the name of the provider configuration to use for this interface."),
+			       _("Here you need to enter the name of the provider " \
+				   "configuration to use for this interface."),
 			       1);
 	return ctable;
 }
@@ -696,16 +696,16 @@ create_global_widgets ()
 	//proxy for dillo
 	tmpval = get_file_var (cfgfile, "http_proxy");
 	create_editable_entry_simple (ctable, "proxy", _("Proxy"), tmpval,
-				      _
-				      ("If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"),
+				      _("If you want/need to use a proxy, enter it here. "\
+	                  "(This only applies to dillo for now.)"),
 				      1);
 	g_free (tmpval);
 
 	tmpval = get_file_var (cfgfile, "no_proxy");
 	create_editable_entry_simple (ctable, "no_proxy", _("No proxy for"),
 				      tmpval,
-				      _
-				      ("Here you should enter your local domain for that you don't want to use a proxy."),
+				      _("Here you should enter your local domain for that you" \
+	                   " don't want to use a proxy."),
 				      2);
 	g_free (tmpval);
 
@@ -784,8 +784,6 @@ Network_Save ()
 	GtkWidget *entry;
 	gchar wname[100];
 	gchar *newval;
-
-	//if (!(access(NET_CONFIGFILE,W_OK) == 0)) return; // we are not allowed to write config
 
 	// traverse all...
 	for (sect = 0; sect < iflen; sect++)
@@ -998,9 +996,6 @@ Network_Build_Objects ()
 					  (GtkSignalFunc) show_current_config,
 					  NULL);
 
-	if (!have_access)
-		gtk_widget_set_sensitive (button, FALSE);
-
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
 	label = gtk_image_new_from_pixbuf (gpe_find_icon ("exit"));
@@ -1026,10 +1021,8 @@ Network_Build_Objects ()
 	{
 		num_int = get_scheme_list ();
 	}
-
 	// create and add globals section
 	ctable = create_global_widgets ();
-	//if (!have_access) gtk_widget_set_sensitive(ctable,FALSE);
 	label = gtk_label_new (_("global"));
 	gtk_notebook_append_page (GTK_NOTEBOOK (table), GTK_WIDGET (ctable),
 				  label);
