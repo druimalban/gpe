@@ -70,11 +70,11 @@ static void init_main_window(void)
 	gtk_container_add(GTK_CONTAINER(window.toplevel), window.vbox1);
 
 	/* final stuff */
-	gtk_signal_connect(GTK_OBJECT(window.toplevel), "destroy",
-			   GTK_SIGNAL_FUNC(gtk_exit), NULL);
+	g_signal_connect(GTK_OBJECT(window.toplevel), "destroy",
+			   G_CALLBACK(gtk_exit), NULL);
 
-	gtk_signal_connect(GTK_OBJECT(window.toplevel), "size_allocate",
-			   GTK_SIGNAL_FUNC(resize_callback), NULL);
+	g_signal_connect(G_OBJECT(window.toplevel), "size_allocate",
+			   G_CALLBACK(resize_callback), NULL);
 }
 
 static void load_modules(void)
