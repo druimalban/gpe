@@ -1,4 +1,4 @@
-2004-07-29 Florian Boor <florian.boor@kernelconceps.de>
+2004-07-29 Florian Boor <florian.boor@kernelconcepts.de>
 	
 	* Released Version 0.6
 	* Makefile: New version.
@@ -18,14 +18,14 @@
 	* backend.h (struct): Add interface.
 	* main.c (main): Call find_iptables before other backend functions.
 	
-2004-06-18 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-18 Florian Boor <florian.boor@kernelconcepts.de>
 	* Released V 0.5
 	* improved postinst.
 	* backend.c: Improved rule handling. Removes policies now. 
 	* backend.c: Iptables autoprobing.
 	* interface.c: Minor fixes.	
 
-2004-06-11 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-11 Florian Boor <florian.boor@kernelconcepts.de>
 	* Released V 0.4
 	* Makefile: Install new stuff.
 	* postinst: Creates default links for script now.
@@ -34,11 +34,11 @@
 	* main.c: Moved stupdly misplaced kill() call. 
 	          Thanks to Phil for finding this.
 
-2004-06-10 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-10 Florian Boor <florian.boor@kernelconcepts.de>
 	* backend.c: Fixed missing unlink of socket endpoint.
 	* interface.c: Fixed handling of config flag. Fixed small memory leak.
 
-2004-06-09 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-09 Florian Boor <florian.boor@kernelconcepts.de>
 	* Released V 0.3
 	* editrule.c: Gui updates to look better on small displays.
 	* backend.c, Makefile: Use different iptables commands on different 
@@ -48,30 +48,30 @@
 	* main.c: Added command line switch "--active" that triggers activating 
 		stored rules.
 	
-2004-06-07 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-07 Florian Boor <florian.boor@kernelconcepts.de>
 	* Makefile: Another fix: Install binary suid root.
 	* Makefile: Some improvements to be oe-compatible.
 	* control: Added iptables to dependencies.
 	* Makefile: New version number.
 	* Released V 0.2
 
-2004-06-05 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-05 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Set config flag to make network app restore rules.
 	
-2004-06-04 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-04 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: some simplification.
 	* interface.c: Added default rule.
 	* backend.c: Added connection states support.
 	* interface.c, backend.c: Implemented shutdown.
 	* New file: TODO
 
-2004-06-02 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-02 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Fixed icon declaration bug.
 	* editrule.c: Added much stuff.
 	* interface.c: Implemented several checks, removing, active change...
 	* backend.c: Simplified stuff, implemented applying and several other commands.
 
-2004-06-01 Florian Boor <florian.boor@kernelconceps.de>
+2004-06-01 Florian Boor <florian.boor@kernelconcepts.de>
 	* Introduced this file
 	* backend.c: Make backend honor active flag.
 	* editrule*: Added rule editor.
