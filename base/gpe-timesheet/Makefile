@@ -46,7 +46,7 @@ install: all install-mo
 	install -m 644 gpe-timesheet.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-timesheet
 
 clean:
-	rm -f gpe-timesheet $(OBJS)
+	rm -f gpe-timesheet $(OBJS) $(DEPS)
 
 -include $(DEPS)
 

@@ -1,0 +1,5 @@
+2002-10-06  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Set window title.
+	
+

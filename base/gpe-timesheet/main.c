@@ -398,8 +398,12 @@ main(int argc, char *argv[])
 		      gtk_main_quit, NULL);
 
   gtk_widget_realize (window);
+
   if (gpe_find_icon_pixmap ("gpe-timesheet", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
+
+  gtk_window_set_title (GTK_WINDOW (window), "Timesheet");
+
   gtk_widget_show (window);
 
   gtk_clist_set_column_width (GTK_CLIST (tree), 0, 
