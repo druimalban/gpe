@@ -29,7 +29,7 @@ endif
 INSTALL=install
 
 DESTDIR=
-PREFIX=/usr
+PREFIX=/usr/local
 BINDIR=$(PREFIX)/bin
 ETCDIR=etc
 
@@ -56,7 +56,7 @@ install: gpe-appmgr gpe-appmgr-setup
 	$(INSTALL) -D dist/usr/lib/menu/gpe-appmgr-setup $(DESTDIR)/$(PREFIX)/lib/menu/gpe-appmgr-setup
 
 ipk:
-	make DESTDIR=`pwd`/build all install
+	make PREFIX=/usr DESTDIR=`pwd`/build all install
 	$(INSTALL) -D dist/CONTROL/control build/CONTROL/control
 	ipkg-build build
 
