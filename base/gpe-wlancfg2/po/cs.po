@@ -1,0 +1,827 @@
+# translation of gpe-wlancfg.po to Czech
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-wlancfg 0.2.3\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2003-08-25 22:49+0100\n"
+"Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/callbacks.c:582
+msgid ""
+"Settings have been changed.\n"
+"Do you want to save the settings?"
+msgstr ""
+"Nastavení bylo změněno.\n"
+"Chcete uložit změny?"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/callbacks.c:658
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/callbacks.c:1217
+msgid ""
+"Settings habe been changed.\n"
+"Do you want to save the settings?"
+msgstr ""
+"Nastavení bylo změněno.\n"
+"Chcete uložit změny?"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/callbacks.c:811
+msgid "Do you realy want to delete this entry??"
+msgstr "Opravdu chcete smazat tuto položku??"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:58
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:108
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:128
+#, c-format
+msgid "Could not open input file %s\n"
+msgstr "Nemohu otevřít vstupní soubor %s\n"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:80
+msgid ""
+"The wireless.opts file is broken.\n"
+"Shall I create a new one?"
+msgstr ""
+"Nastavení bezdr. sítě je poškozeno\n"
+"Mám vytvořit nové?"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:90
+msgid ""
+"The wireless.opts file has syntax errors.\n"
+"Perhaps you can't see all entries"
+msgstr ""
+"Nastavení bezdr. sítě obsahuje syntaktické chyby.\n"
+"Možná nebudou zobrazeny všechny položky."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:97
+msgid "Creating new wireless.opts file\n"
+msgstr "Vytvářím nový konfigurační soubor\n"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:355
+msgid "Can't open stab file, is PCMCIA running? "
+msgstr "Nemohu otevřít stab soubor, je PCMCIA aktivní?"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/config-parser.c:361
+msgid "Locking stabfile failed."
+msgstr "Uzamknutí stabfile selhalo."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:27
+msgid ""
+"Scheme\n"
+"\n"
+" \t\tDifferent WLAN cards may use different settings. Also different \tsituations may require different settings. Using schemes it is possible to \tdefine several profiles for different situations and hardware combinations. \tThe setting string may contain the globbing characters '*' and '?' for \tmatching.\n"
+"\n"
+" \t\tSchemes are identified by\n"
+"\n"
+" \t\tScheme name\n"
+"\n"
+" \tA simple string identifying a situation like e.g.\n"
+" \t\thome\n"
+" \t\toffice\n"
+" \t\t*\n"
+" \tMostly defaults to *\n"
+"\n"
+" \t\tSocket \n"
+"\n"
+" \tThe device socket number, usually 0 or 1. \n"
+" \tMostly defaults to *\n"
+"\n"
+" \t\tInstance\n"
+"\n"
+" \t???\n"
+" \tMostly defaults to *\n"
+"\n"
+" \t\tHW-Address\n"
+"\n"
+" \tThe hardware address of the card. This makes it possible to \tidentify different hardware vendors and to set hardware \tspecific settings. Here the globbing characters\thelp to \tmatch a whole vendor device address range like e.g.\n"
+" \t\t00:60:1D:*|*,*,*,00:02:2D:*\n"
+" \twhich matches almost all original Lucent Wavelan cards."
+msgstr ""
+"Profil\n"
+"\n"
+"Různé WLAN karty mohou být rozdílně nastaveny. Rozdílné situace také mohou vyžadovat změnu nastavení. Pomocí profilů si můžete přednastavit několik různých nastavení pro různé kombinace karet a podmínek. Nastavení může obsahovat znaky '*' a '?' ve významu žolíků.\n"
+"\n"
+" Profily se rozlišují podle\n"
+"\n"
+" \tJméno profilu\n"
+"\n"
+" \t Krátký řetězec popisující\n"
+" \t situaci, např.\n"
+" \t   doma\n"
+" \t   v práci\n"
+" \t   *\n"
+" \t Většinou nastaveno na *\n"
+"\n"
+" \tZásuvka\n"
+"\n"
+" \t Číslo zásuvky zařízení,\n"
+" \t obvykle 0 nebo 1. \n"
+" \t Většinou nastaveno na *\n"
+"\n"
+" \tInstance\n"
+"\n"
+" \t ???\n"
+" \t Většinou nastaveno na *\n"
+"\n"
+" \tHW-Adresa\n"
+"\n"
+" \t Hardwarová adresa karty.\n"
+" \t S její pomocí lze určit\n"
+" \t výrobce hardwaru a podle\n"
+" \t toho nastavit.\n"
+" \t Pomocí znaků '*' a '?' můžete\n"
+" \t nastavit rozsahy adres výrobců\n"
+" \t zařízení, např\n"
+" \t  00:60:1D:*|*,*,*,00:02:2D:*\n"
+" \t platí pro skoro všechny karty od\n"
+" \t Lucent."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:62
+msgid ""
+"General Settings\n"
+"\n"
+" \tInfo:\n"
+"\n"
+" \t\tFree form informational string, has no function.\n"
+"\n"
+" \t\tESSID:\n"
+"\n"
+" \t\tNetwork name, sometimes also called Domain ID. Identifies your network, most \tWLAN cards get this automatically from the access point in managed mode, other \tcards require to specify a name. In Ad-Hoc mode the same name \tshould be specified on all participating nodes.\n"
+"\n"
+" \t\tNWID:\n"
+"\n"
+" \t\tNetwork ID, specifies nodes belonging to the same cell.\n"
+"\n"
+" \t\tMode:\n"
+"\n"
+"\t\tValid choices are:\n"
+"\n"
+" \t\tAd-Hoc\n"
+"\n"
+"\t\t\tSometimes also called\n"
+" \t\tDemo mode, nodes\n"
+" \t\twithout access point\n"
+"\n"
+" \t\tManaged\n"
+"\n"
+" \t\t\tManaged network with\n"
+" \t\taccess point\n"
+"\n"
+" \t\tMaster\n"
+"\n"
+" \t\tThe nodes acts as master or\n"
+" \t\taccess point, not supported\n"
+" \t\tby all cards.\n"
+"\n"
+" \t\tRepeater\n"
+"\n"
+" \t\tforwarder, not supported\n"
+" \t\tby all cards.\n"
+"\n"
+" \t\tSecondary\n"
+"\n"
+" \t\tThe node acts as secondary\n"
+" \t\tor backup master, not\n"
+" \t\tsupported by all cards.\n"
+"\n"
+" \t\tAuto\n"
+"\n"
+" \t\t\tTry to automatically\n"
+" \t\tdetermine operation mode\n"
+" \t\tor use card's default mode."
+msgstr ""
+"Obecné nastavení\n"
+"\n"
+" Info:\n"
+"\n"
+"\tŘetězec, který má pouze informační hodnotu, žádnou funkci.\n"
+"\n"
+" ESSID:\n"
+"\n"
+"\tJméno sítě, občas nazýváno\n"
+"\tID Domény. Identifikuje síť,\n"
+"\tvětšina WLAN karet přebírá\n"
+"\tESSID automaticky z access\n"
+"\tpointu pokud je v managed\n"
+"\tmódu, ostatní karty vyžadují\n"
+"\truční doplnění jména.\n"
+"\tV Ad-Hoc módu by mělo být\n"
+"\tstejné jméno zadáno\n"
+"\tna všech komunikujících uzlech.\n"
+"\n"
+" NWID:\n"
+"\n"
+"\tID sítě, určuje uzly\n"
+"\tpatřící do stejné buňky.\n"
+"\n"
+" Mód:\n"
+"\n"
+"\tPřípustné hodnoty:\n"
+"\n"
+"\tAd-Hoc\n"
+"\n"
+"\t\tObčas také nazýváno\n"
+"\t\tDemo mód, uzly\n"
+"\t\tbez access pointu.\n"
+"\n"
+" \tManaged\n"
+"\n"
+" \t\tSíť je řízena\n"
+" \t\taccess pointem.\n"
+"\n"
+" \tMaster\n"
+"\n"
+" \t\tUzel funguje jako master\n"
+" \t\tnebo access point,\n"
+" \t\tnení podporováno\n"
+" \t\tvšemi kartami.\n"
+"\n"
+" \tRepeater\n"
+"\n"
+" \t\topakovač,\n"
+" \t\tnení podporováno\n"
+" \t\tvšemi kartami.\n"
+"\n"
+" \tSecondary\n"
+"\n"
+" \t\tUzel funguje jako záložní\n"
+" \t\tmaster, není podporováno\n"
+" \t\tvšemi kartami.\n"
+"\n"
+" \tAuto\n"
+"\n"
+" \t\tPokusí se automaticky\n"
+" \t\tnastavit provozní mód\n"
+" \t\tnebo použije\n"
+" \t\tstandardní podle karty."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:114
+msgid ""
+"RF Parameters \n"
+"\n"
+" \t\tChannel specification\n"
+"\n"
+" \tThe WaveLAN frequency band is \tfrom 2.4GHz up to 2.4836GHz \tis devided into up to 14 \tchannels. Not all cards support \tall channels. \n"
+" \tFor Ad-Hoc mode a fixed \tcommon channel / freqency for \tthe participating nodes has to be \tspecified. For some access \tpoint - card combinations it can \tbe necessary to specify the \taccess point's control channel \there.\n"
+" \tThe channel can be either \tspecified by it's frequency or \tchannel number.\n"
+"\n"
+"\t\tRate\n"
+"\n"
+" \tSpecifies the transmission rate, \tdepending on the card \t1MBit/sec, or 11MBit/sec are \tsupported. Auto selects the \tcard's default rate."
+msgstr ""
+"Nastavení rádiových frekvencí\n"
+"\n"
+" Určení kanálu\n"
+"\n"
+" \t Frekvenční pásmo WaveLAN je\n"
+" \t je od 2.4GHz do 2.4836GHz  a\n"
+" \t je rozděleno až na 14 kanálů.\n"
+" \t Některé karty nepodporují\n"
+" \t všechny kanály. \n"
+" \t Pro Ad-Hoc mód je třeba\n"
+" \t přesně určit kanál/frekvenci\n"
+" \t ,na které běží všechny uzly.\n"
+" \t Pro některé kombinace access\n"
+" \t point - karta je třeba zadat\n"
+" \t kontrolní kanál access pointu\n"
+" \t Kanál lze zadat buď pomocí\n"
+" \t frekvence nebo čísla kanálu.\n"
+"\n"
+" Rychlost\n"
+"\n"
+" \t Určuje přenosovou rychlost\n"
+" \t podle typu karty jsou k dispozici\n"
+" \t rychlosti 1MBit/s nebo 11MBit/s\n"
+"  \t Rychlost lze také určit\n"
+" \t automaticky podle karty"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:142
+msgid ""
+"WEP Encryption\n"
+"\n"
+" \t\tEncryption\n"
+"\n"
+" \t\tOn - Enable link encryption\n"
+" \tOff - Disable link encryption\n"
+"\n"
+" \t\tMode\n"
+"\n"
+" \t\tOpen\n"
+" \t\tAlso accept not encrypted\n"
+" \t\tdata packets\n"
+" \tRestricted\n"
+" \t\tOnly accept correctly\n"
+" \t\tencrypted data packets."
+msgstr ""
+"Šifrování WEP\n"
+"\n"
+" Šifrování\n"
+"\n"
+" \tPovolit - Povolit šifrování přenosu\n"
+" \tZakázat - Zakázat šifrování přenosu\n"
+"\n"
+"Mód\n"
+"\n"
+" \tOtevřený\n"
+" \t  Povolit i nešifrované\n"
+" \t  datové přenosy\n"
+" \tOmezený\n"
+" \t  Povolit pouze správně\n"
+" \t  šifrované datové přenosy."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:159
+msgid ""
+"Encryption Keys\n"
+"\n"
+" \t\tEncryption keys can be specified either as HEX encoded strings like \n"
+"\t\t0123-4567-89\n"
+" \tor\n"
+" \t\t0a2d46ff3c\n"
+" \tor as simple strings which will be converted to numerical keys automatically.\n"
+"\n"
+" \t\tUp to 4 different keys can be configured but only one of them \tcan be active at a time."
+msgstr ""
+"Šifrovací klíče\n"
+"\n"
+" \tKlíče mohou být zadány\n"
+" \tjako hexadecimální řetězce\n"
+" \tnapř.\n"
+" \t  0123-4567-89\n"
+" \tnebo\n"
+" \t  0a2d46ff3c\n"
+" \tnebo jako normální řetězce\n"
+" \tkteré budou automaticky\n"
+" \tpřevedeny na číselné klíče.\n"
+"\n"
+" \tMůžete zadat až 4 různé klíče,\n"
+" \tale pouze jeden z nich může \n"
+" \tbýt používán."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:171
+msgid ""
+"Expert settings\n"
+"\n"
+" \t\tAll WLAN settings are performed through two utility programs \tcalled 'iwconfig' and 'iwpriv'. Those utilities provide even more \toptions than are usually necessary to get your WLAN up and running. \tIf one of those seldomly options has to be used it can be specified \there as it would be on the utilitie's commandline.\n"
+"\n"
+" \t\tFor example some Orinico based need an extra iwpriv option to \tproperly enable Ad-Hoc or\n"
+"\n"
+" \tMaster mode:\n"
+" \tAd-Hoc:\n"
+" \t\tset_port3 1\n"
+" \tMaster:\n"
+" \t\tset_port3 0\n"
+" \t\tAdditionally options for the iwspy utility can be specified. \n"
+"\n"
+" \t\tBe aware of the fact that wrong options can cause the settings \tprocess to fail, not only the additional settings!\n"
+"\n"
+" \t\tFor more information on the iwconfig, iwspy and iwpriv \tutilities please consult the extra documentation."
+msgstr ""
+"Pokročilé nastavení\n"
+"\n"
+"Nastavování WLAN je prováděno pomocí dvou programů 'iwconfig' a 'iwpriv'. Tyto programy nabízejí další nastavení,které obvykle není potřeba k provozu WLAN sítě. Pokud přesto chcete použít tyto volby, můžete je zadat zde do příkazové řádky programu.\n"
+"Například některé karty založené na Orinoco potřebují další nastavení iwpriv pro korektní funkci Ad-Hoc nebo Master mód:\n"
+"\t  Ad-Hoc:\n"
+"\t   set_port3 1\n"
+"\t  Master:\n"
+"\t   set_port3 0\n"
+"Lze také zadat další nastavení pro iwspy\n"
+"\n"
+"Vemte prosím na vědomí, že nesprávným nastavením můžete zabránit správnému fungování sítě!\n"
+"Pokud chcete získat více informací o iwconfig, iwspy and iwpriv přečtěte si prosím dokumentaci."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/helptext.c:196
+msgid ""
+"Basic Settings\n"
+"\n"
+"ESSID:\n"
+"\n"
+"Network name, sometimes also called Domain ID. Identifies your network, most WLAN cards get this automatically from the access point in managed mode, other cards require to specify a name. In Ad-Hoc mode the same name should be specified on all participating nodes.\n"
+"\n"
+" Mode:\n"
+"\n"
+"Valid choices are:\n"
+"\n"
+"\tAd-Hoc\n"
+"\n"
+"\tSometimes also called\n"
+"\tDemo mode, nodes\n"
+"\twithout access point\n"
+"\n"
+"\tManaged\n"
+"\n"
+"\tManaged network with\n"
+"\taccess point\n"
+"\n"
+" Channel:\n"
+"\n"
+"Usually the wireless LAN card detects the channel automatically in infrastructure mode. In Ad-Hoc you need to set it to the same setting like any other node in the desired net."
+msgstr ""
+"Základní nastavení\n"
+"\n"
+"ESSID:\n"
+"\n"
+" Jméno sítě, občas nazýváno\n"
+" ID Domény. Identifikuje síť,\n"
+" většina WLAN karet přebírá\n"
+" ESSID automaticky z access\n"
+" pointu pokud je v managed\n"
+" módu, ostatní karty vyžadují\n"
+" ruční doplnění jména.\n"
+" V Ad-Hoc módu by mělo být\n"
+" stejné jméno zadáno\n"
+" na všech komunikujících uzlech.\n"
+"\n"
+" Mód:\n"
+"\n"
+" Přípustné hodnoty:\n"
+"\n"
+"\tAd-Hoc\n"
+"\n"
+"\t Občas také nazýváno\n"
+"\t Demo mód, uzly\n"
+"\t bez access pointu.\n"
+"\n"
+"\tManaged\n"
+"\n"
+"\t Síť je řízena\n"
+"\t access pointem.\n"
+"\n"
+"Kanál:\n"
+"\n"
+"WLAN karty obvykle detekují kanál automaticky v síti typu infrastruktura. V Ad-Hoc musíte kanál nastavit na stejnou hodnotu jakou mají i ostatní uzly v síti."
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:42
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:139
+msgid "Help"
+msgstr "Nápověda"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:68
+msgid "Ok"
+msgstr "Budiž"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:240
+msgid "GPE WLAN config"
+msgstr "GPE nastavení WLAN"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:275
+msgid "Tab1"
+msgstr "Tab1"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:302
+msgid "Profile:"
+msgstr "Profil:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:311
+msgid "Socket:"
+msgstr "Zásuvka:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:320
+msgid "Instance:"
+msgstr "Instance:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:329
+msgid "MAC:"
+msgstr "MAC:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:344
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:352
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:360
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:368
+msgid "*"
+msgstr "*"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:370
+msgid "Profile"
+msgstr "Profil"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:384
+msgid "Info:"
+msgstr "Info:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:393
+msgid "ESSID:"
+msgstr "ESSID:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:402
+msgid "NWID:"
+msgstr "NWID:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:411
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:615
+msgid "Mode:"
+msgstr "Mód:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:426
+msgid "IEEE 802.11 WLAN"
+msgstr "IEEE 802.11 WLAN"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:434
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1032
+msgid "any"
+msgstr "jakékoliv"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:453
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1043
+msgid "Ad-Hoc"
+msgstr "Ad-Hoc"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:458
+msgid "Managed"
+msgstr "Managed"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:463
+msgid "Master"
+msgstr "Master"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:468
+msgid "Repeater"
+msgstr "Repeater"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:473
+msgid "Secondary"
+msgstr "Secondary"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:478
+msgid "auto"
+msgstr "auto"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:485
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1061
+msgid "General"
+msgstr "Obecné"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:499
+msgid "Use default channel"
+msgstr "Používat standardní kanál"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:508
+msgid "Frequency:"
+msgstr "Frekvence:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:517
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:983
+msgid "Channel:"
+msgstr "Kanál:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:544
+msgid "Ghz"
+msgstr "Ghz"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:553
+msgid "Rate:"
+msgstr "Rychlost:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:572
+msgid "Auto"
+msgstr "Automaticky"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:577
+msgid "1M"
+msgstr "1M"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:582
+msgid "2M"
+msgstr "2M"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:587
+msgid "11M"
+msgstr "11M"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:601
+msgid "RF-Params"
+msgstr "Frekvence"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:638
+msgid "Open"
+msgstr "Otevřený"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:645
+msgid "Restricted"
+msgstr "Omezený"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:659
+msgid "On"
+msgstr "Povolit"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:666
+msgid "Off"
+msgstr "Zakázat"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:673
+msgid "Encryption:"
+msgstr "Šifrování:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:682
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1259
+msgid "WEP"
+msgstr "WEP"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:703
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1167
+msgid "Key format:"
+msgstr "Formát klíčů:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:719
+msgid "Hex values"
+msgstr "Hexadecimální hodnoty"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:726
+msgid "String values"
+msgstr "Textové řetězce"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:733
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1136
+msgid "Key #1:"
+msgstr "Klíč č. 1:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:742
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1120
+msgid "Key #2:"
+msgstr "Klíč č. 2:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:751
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1106
+msgid "Key #3:"
+msgstr "Klíč č. 3:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:760
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1092
+msgid "Key #4:"
+msgstr "Klíč č. 4:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:797
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1075
+msgid "Active key:"
+msgstr "Používat klíč č.:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:814
+msgid "Keys"
+msgstr "Klíče"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:828
+msgid ""
+"Additional expert settings\n"
+"USE WITH CARE"
+msgstr ""
+"Další pokročilé nastavení\n"
+"POUŽÍVEJTE S ROZVAHOU"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:836
+msgid "Sens:"
+msgstr "Sens:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:845
+msgid "RTS:"
+msgstr "RTS:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:854
+msgid "Frag:"
+msgstr "Frag:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:863
+msgid "iwconfig:"
+msgstr "iwconfig:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:872
+msgid "iwspy:"
+msgstr "iwspy:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:881
+msgid "iwpriv:"
+msgstr "iwpriv:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:932
+msgid "Expert"
+msgstr "Pokročilé"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:956
+msgid "Tab2"
+msgstr "Tab2"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:992
+msgid "Network type:"
+msgstr "Typ sítě:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1001
+msgid "Basic Settings"
+msgstr "Základní nastavení"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1019
+msgid "default"
+msgstr "standardní"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1034
+msgid "Network name (ESSID):"
+msgstr "Jméno sítě (ESSID):"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1052
+msgid "Infrastructure"
+msgstr "Infrastruktura"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1176
+msgid "Open system"
+msgstr "Otevřený systém"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1186
+msgid "Shared key"
+msgstr "Sdílený klíč"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1195
+msgid "Hex"
+msgstr "Hex"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1205
+msgid "String"
+msgstr "Řetězec"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1214
+msgid "Authentication type:"
+msgstr "Způsob ověření:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1223
+msgid "Enable"
+msgstr "Povolit"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1232
+msgid "Disable"
+msgstr "Zakázat"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1241
+msgid "WEP:"
+msgstr "WEP:"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1250
+msgid "Encryption Settings"
+msgstr "Nastavení šifrování"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/interface.c:1265
+msgid "Tab3"
+msgstr "Tab3"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:98
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:99
+msgid "New profile"
+msgstr "Nový profil"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:103
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:104
+msgid "Edit profile"
+msgstr "Editovat profil"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:108
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:109
+msgid "Delete profile"
+msgstr "Smazat profil"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:114
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:115
+msgid "Basic settings"
+msgstr "Základní nastavení"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:120
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:121
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:144
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:145
+msgid "Exit"
+msgstr "Zavřít"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:135
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:136
+msgid "Expert settings"
+msgstr "Pokročilé nastavení"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:140
+msgid "Fulltext help"
+msgstr "Fulltextová nápověda"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:157
+msgid "Scheme"
+msgstr "Profil"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:166
+msgid "Socket"
+msgstr "Zásuvka"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:175
+msgid "Instance"
+msgstr "Instance"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/main.c:184
+msgid "MAC"
+msgstr "MAC"
+
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/support.c:90
+#: /usr/src/familiar/gpe/base/gpe-wlancfg2/support.c:114
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Nemohu nalézt obrázek: %s"
+
+#: gpe-wlancfg.desktop.in.h:1
+msgid "WLAN Config"
+msgstr "Nastavení WLAN"
+
+#: gpe-wlancfg.desktop.in.h:2
+msgid "GPE WLAN Config"
+msgstr "GPE Nastavení bezdrátových sítí"
+

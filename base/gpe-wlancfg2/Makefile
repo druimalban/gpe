@@ -15,7 +15,7 @@
 PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
 DEBUG = no
-LINGUAS = 
+LINGUAS = cs
 VERSION = 0.2.3
 GTK2 = yes
 BUILD = ../build

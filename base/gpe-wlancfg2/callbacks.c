@@ -579,7 +579,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_QUESTION,
                                                  GTK_BUTTONS_YES_NO,
-                                                 _("Settings habe been changed.\nDo you want to save the settings?"));
+                                                 _("Settings have been changed.\nDo you want to save the settings?"));
 			answer = gtk_dialog_run(GTK_DIALOG(dialog));
 			gtk_widget_destroy(dialog);
 
@@ -655,7 +655,7 @@ gboolean on_GPE_WLANCFG_de_event(GtkWidget *widget, GdkEvent *event, gpointer us
                                                  GTK_DIALOG_DESTROY_WITH_PARENT,
                                                  GTK_MESSAGE_QUESTION,
                                                  GTK_BUTTONS_YES_NO,
-                                                 _("Settings habe been changed.\nDo you want to save the settings?"));
+                                                 _("Settings have been changed.\nDo you want to save the settings?"));
 			answer = gtk_dialog_run(GTK_DIALOG(dialog));
 			gtk_widget_destroy(dialog);
 			if (answer != GTK_RESPONSE_YES) 
@@ -1144,7 +1144,7 @@ void on_btnHelp_clicked(GtkButton *button, gpointer user_data)
 
 	notebook = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbPseudoMain");
 
-	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)) == 0) // advanced view
+	if (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)) == 1) // advanced view
 	{
 		notebook = lookup_widget(GTK_WIDGET(GPE_WLANCFG), "nbConfigSelection");
 		switch (gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)))
@@ -1214,7 +1214,7 @@ void on_btnExpert_clicked (GtkButton *button, gpointer user_data)
 					 GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_QUESTION,
 					 GTK_BUTTONS_YES_NO,
-					 _("Settings habe been changed.\nDo you want to save the settings?"));
+					 _("Settings have been changed.\nDo you want to save the settings?"));
 		answer = gtk_dialog_run(GTK_DIALOG(dialog));
 		gtk_widget_destroy(dialog);
 		if (answer != GTK_RESPONSE_YES) 

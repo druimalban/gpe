@@ -1,3 +1,10 @@
+08/26/2003	Florian Boor <florian.boor@kernelconcepts.de>
+
+	- Added Czech translation 
+	- Updated pot
+	- Applied patch for .desktop translation
+	- Appliad patch to correct some problems and typos in callbacks.
+
 08/13/2003	Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- released V 0.2.3

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-08-13 23:23+0200\n"
+"POT-Creation-Date: 2003-08-26 10:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -599,10 +599,18 @@ msgstr ""
 
 #: callbacks.c:582 callbacks.c:658 callbacks.c:1217
 msgid ""
-"Settings habe been changed.\n"
+"Settings have been changed.\n"
 "Do you want to save the settings?"
 msgstr ""
 
 #: callbacks.c:811
 msgid "Do you realy want to delete this entry??"
+msgstr ""
+
+#: gpe-wlancfg.desktop.in.h:1
+msgid "GPE WLAN Config"
+msgstr ""
+
+#: gpe-wlancfg.desktop.in.h:2
+msgid "WLAN Config"
 msgstr ""
