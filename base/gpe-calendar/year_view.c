@@ -30,36 +30,21 @@ static const nl_item months[] = { MON_1, MON_2, MON_3, MON_4,
 
 static unsigned int day_event_bits[(366 / sizeof(unsigned int)) + 1];
 
-static guint
-day_of_week(guint year, guint month, guint day)
-{
-  guint result;
-
-  if (month < 3) 
-    {
-      month += 12;
-      --year;
-    }
-
-  result = day + (13 * month - 27)/5 + year + year/4
-    - year/100 + year/400;
-  return ((result + 6) % 7);
-}
-
-
 static void
 year_view_update (void)
 {
-  guint i;
+  guint i, dy = 0, year;
   time_t basetime;
-  struct tm *tm = localtime (&viewtime);
-  tm->tm_mday = 1;
-  tm->tm_mon = 0;
-  tm->tm_yday = 0;
-  tm->tm_hour = 0;
-  tm->tm_min = 0;
-  tm->tm_sec = 0;
-  basetime = mktime (tm);
+  struct tm tm;
+  localtime_r (&viewtime, &tm);
+  year = tm.tm_year + 1900;
+  tm.tm_mday = 1;
+  tm.tm_mon = 0;
+  tm.tm_yday = 0;
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  basetime = mktime (&tm);
 
   memset (day_event_bits, 0, sizeof (day_event_bits));
 
@@ -76,14 +61,39 @@ year_view_update (void)
 
   for (i = 0; i < 12; i++)
     {
+      guint md, days;
       gtk_calendar_freeze (GTK_CALENDAR (cal[i]));
       gtk_calendar_select_month (GTK_CALENDAR (cal[i]),
-				 i, tm->tm_year + 1900);
+				 i, year);
       gtk_calendar_clear_marks (GTK_CALENDAR (cal[i]));
+
+      days = days_in_month (year, i);
+
+      for (md = 0; md < days; md++)
+	{
+	  if (day_event_bits[dy / sizeof (unsigned int)] & 
+	      1 << (dy % sizeof (unsigned int)))
+	    gtk_calendar_mark_day (GTK_CALENDAR (cal[i]), md);
+	  dy++;
+	}
+
       gtk_calendar_thaw (GTK_CALENDAR (cal[i]));
     }
 
   gtk_widget_draw (g_table, NULL);
+}
+
+static void
+day_selected (GtkWidget *w, gpointer d)
+{
+  struct tm tm;
+
+  memset (&tm, 0, sizeof (tm));
+  gtk_calendar_get_date (GTK_CALENDAR (w),
+			 &tm.tm_year, &tm.tm_mon, &tm.tm_mday);
+  tm.tm_year -= 1900;
+  viewtime = mktime (&tm);
+  set_day_view ();
 }
 
 GtkWidget *
@@ -110,7 +120,10 @@ year_view(void)
       gtk_table_attach_defaults (GTK_TABLE (table),
 				 label,
 				 x, x+1,
-				 y, y+1);      
+				 y, y+1);
+
+      gtk_signal_connect (GTK_OBJECT (cal[i]), "day-selected-double-click",
+			  GTK_SIGNAL_FUNC (day_selected), NULL);
     }
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled), 

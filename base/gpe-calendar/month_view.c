@@ -85,8 +85,9 @@ selection_made( GtkWidget      *clist,
 	  char *t;
 	  gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t);
 	  localtime_r (&viewtime, &tm);
-	  strptime (t, TIMEFMT, &tm);
-	  gtk_widget_show (new_event (mktime (&tm), 1));
+	  strptime (t, MONTHTIMEFMT, &tm);
+	  viewtime = mktime (&tm);
+	  set_day_view ();
 	}
     }
 }
@@ -125,7 +126,8 @@ month_view_update ()
       light_style = gtk_style_copy (gtk_widget_get_style (day_list));
       dark_style = gtk_style_copy (gtk_widget_get_style (day_list));
       time_style = gtk_style_copy (gtk_widget_get_style (day_list));
-      
+      time_style->font = datefont;
+ 
       for (j = 0; j < 5; j++) 
 	{
 	  light_style->base[j] = light_color;
@@ -197,7 +199,7 @@ month_view_update ()
 	} 
 
       line_info[1] = text;
-      strftime (buf, sizeof (buf), "%a %d", &tm_start);
+      strftime (buf, sizeof (buf), MONTHTIMEFMT, &tm_start);
       line_info[0] = buf;
      
       if (! width_set)

@@ -84,7 +84,7 @@ new_view (GtkWidget *widget)
   update_current_view ();
 }
 
-static void
+void
 set_day_view(void)
 {
   new_view (day);
