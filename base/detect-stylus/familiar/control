@@ -1,7 +1,7 @@
 Package: detect-stylus
 Section: x11
 Priority: optional
-Version: 0.04
+Version: 0.05
 Architecture: arm
 Depends: xlibs, xbase-clients
 Maintainer: Phil Blundell <pb@debian.org>
