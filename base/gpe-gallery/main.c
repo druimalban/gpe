@@ -309,8 +309,8 @@ image_zoom_fit ()
   if (!scaled_image_pixbuf)
     scaled_image_pixbuf = image_pixbuf;
 
-  widget_width = view_widget->allocation.width;
-  widget_height = view_widget->allocation.height - (tools_toolbar->allocation.height);
+  widget_width = image_widget->allocation.width;
+  widget_height = image_widget->allocation.height - (tools_toolbar->allocation.height);
 
   width = gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf));
   height = gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf));
@@ -769,7 +769,6 @@ main (int argc, char *argv[])
   gtk_widget_show (window);
   gtk_widget_show (vbox);
   gtk_widget_show (vbox2);
-  gtk_widget_show (hbox);
   gtk_widget_show (toolbar);
   gtk_widget_show (loading_label);
   gtk_widget_show (loading_progress_bar);
@@ -779,6 +778,10 @@ main (int argc, char *argv[])
   if (argc > 1)
   {
     open_from_file (argv[1]);
+  }
+  else
+  {
+    gtk_widget_show (hbox);
   }
 
   gtk_main();
