@@ -2,7 +2,7 @@
 <P> 
 <SMALL>
 Last modified: <!--#echo var="LAST_MODIFIED"-->. 
-Page maintained by <!--#echo var="author"--> <a href='mailto:<!--#echo var="authoremail"-->'>&lt<!--#echo var="authoremail"-->&gt;</a>.
+Page maintained by <!--#echo var="author"--> <a href='mailto:<!--#echo var="authoremail"-->'>&lt;<!--#echo var="authoremail"-->&gt;</a>.
 </SMALL>
 </P>
 </td> 
