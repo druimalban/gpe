@@ -1,3 +1,8 @@
+2003-09-06  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (all-desktop): New.  Patch from libor
+	klepac.
+
 2003-09-05  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (check-source): New, broken out from ipkg

@@ -18,7 +18,17 @@ endif
 mo-files = $(patsubst %,$(DIR_PO)/%.mo,$(LINGUAS))
 po-files = $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
 
+ifeq ($(shell if [ -f $(PACKAGE).desktop.in ]; then echo present; fi;),present)
+desktop-files += $(PACKAGE).desktop
+endif
+
+ifneq ($(EXTRA_DESKTOPS),)
+desktop-files += $(patsubst %.desktop.in,%.desktop,$(EXTRA_DESKTOPS))
+endif
+
 all-mo: $(mo-files)
+
+all-desktop: $(desktop-files)
 
 install-mo: all-mo
 	if [ "x$(LINGUAS)" != "x" ]; then \
