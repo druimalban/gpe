@@ -5,39 +5,42 @@
 
 #include "irc.h"
 #include "irc_parse.h"
+#include "ctcp.h"
 
 #define NICK_MAXLEN			30
 
-#define STRIP_COLON(x)		if(x[0] == ':') x++
 
 static gboolean irc_parse_ping(IRCServer *server, gchar *prefix, gchar *params);
 static gboolean irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params);
+static gboolean irc_parse_notice(IRCServer *server, gchar *prefix, gchar *params);
 static gboolean irc_parse_nick(IRCServer *server, gchar *prefix, gchar *params);
 
 static gboolean irc_parse_join(IRCServer *server, gchar *prefix, gchar *params);
 static gboolean irc_parse_part(IRCServer *server, gchar *prefix, gchar *params);
-
 
 typedef struct
 {
 	gchar *cmd;
 	gboolean (* func) (IRCServer *server, gchar *prefix, gchar *params);
 }
-msg;
+msg_t;
+
 
 /* Table for messages from the server. */
-msg msgtable[] =
+msg_t msgtable[] =
 {
 	{ "PING",		irc_parse_ping },
 	{ "PRIVMSG",	irc_parse_privmsg },
 	{ "NICK",		irc_parse_nick },
 	{ "JOIN",		irc_parse_join },
 	{ "PART",		irc_parse_part },
+	{ "NOTICE",		irc_parse_notice },
 	{ NULL, NULL }
 };
 
 
-static gchar *
+
+gchar *
 irc_prefix_to_nick(gchar *prefix)
 {
 	gchar *nick = NULL;
@@ -126,6 +129,11 @@ irc_parse_ping(IRCServer *server, gchar *prefix, gchar *params)
 	return TRUE;
 }
 
+static gboolean
+irc_parse_notice(IRCServer *server, gchar *prefix, gchar *params)
+{
+	return TRUE;
+}
 
 static gboolean
 irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params)
@@ -139,24 +147,17 @@ irc_parse_privmsg(IRCServer *server, gchar *prefix, gchar *params)
 	STRIP_COLON(params);
 	str_array = irc_params_split(params);
 
-	if(strstr(str_array[1], "ACTION ") == str_array[1])
+	if(str_array && *str_array && *(str_array + 1))
 	{
-		gchar *t = NULL;
-
-		/* A bit nasty */
-		str_array[1] += 8;
-		while((t = strchr(str_array[1], '')))
+		if(!ctcp_parse(server, prefix, str_array[0], str_array[1]))
 		{
-			*t = '\0';
+			g_string_printf(gstr, "%s: %s\n", nick, str_array[1]);
 		}
-		g_string_printf(gstr, "%s %s\n", nick, str_array[1]);
-	}
-	else
-	{
-		g_string_printf(gstr, "%s: %s\n", nick, str_array[1]);
+
+		update_text_view(gstr);
+		g_strfreev(str_array);
 	}
 
-	update_text_view(gstr);
 	g_free(nick);
 	g_string_free(gstr, TRUE);
 
@@ -210,31 +211,35 @@ irc_parse_part(IRCServer *server, gchar *prefix, gchar *params)
 	STRIP_COLON(params);
 	str_array = irc_params_split(params);
 
-	g_strstrip(str_array[0]);
-	g_strstrip(str_array[1]);
-
-	if(irc_prefix_is_self(server, prefix))
+	if(str_array && *str_array && *(str_array + 1))
 	{
-		/* I just parted a channel! */
-		part_channel(server, str_array[0]);
-		g_string_printf(gstr, "You've parted %s.", str_array[0]);
-	}
-	else
-	{
-		/* Someone else has joined the channel */
-		gchar *nick = irc_prefix_to_nick(prefix);
-		g_string_printf(gstr, "%s has parted %s.", nick, str_array[0]);
-		g_free(nick);
+		g_strstrip(str_array[0]);
+		g_strstrip(str_array[1]);
+
+		if(irc_prefix_is_self(server, prefix))
+		{
+			/* I just parted a channel! */
+			//part_channel(server, str_array[0]);
+			g_string_printf(gstr, "You've parted %s.", str_array[0]);
+		}
+		else
+		{
+			/* Someone else has joined the channel */
+			gchar *nick = irc_prefix_to_nick(prefix);
+			g_string_printf(gstr, "%s has parted %s.", nick, str_array[0]);
+			g_free(nick);
+		}
+
+		if(strlen(str_array[1]))
+		{
+			g_string_append_printf(gstr, " (%s)", str_array[1]);
+		}
+
+		g_string_append(gstr, "\n");
+		update_text_view(gstr);
+
 	}
 
-	if(strlen(str_array[1]))
-	{
-		g_string_append_printf(gstr, " (%s)", str_array[1]);
-	}
-
-	g_string_append(gstr, "\n");
-
-	update_text_view(gstr);
 	g_string_free(gstr, TRUE);
 	g_strfreev(str_array);
 
@@ -252,6 +257,7 @@ irc_server_parse(IRCServer *server, gchar *line)
 	gchar *prefix = NULL;
 	gchar *cmd = NULL;
 	gchar *params = NULL;
+
 	gchar **str_array = NULL;
 	gchar **tmp = NULL;
 	int cnt = 0;
@@ -274,7 +280,7 @@ irc_server_parse(IRCServer *server, gchar *line)
 
 	str_array = g_strsplit(line, " ", 3);
 
-	if(str_array)
+	if(str_array && *str_array)
 	{
 		for(tmp = str_array; *tmp != NULL; tmp++, cnt++)
 		{
@@ -287,16 +293,12 @@ irc_server_parse(IRCServer *server, gchar *line)
 					cmd = g_strdup(*tmp);
 					break;
 				case 2:
-					/* Getting rid of the \n */
 					params = g_strdup(*tmp);
 					break;
 				default:
 					break;
 			}
 		}
-
-		g_strfreev(str_array);
-
 
 
 		if(cmd)
@@ -349,6 +351,8 @@ irc_server_parse(IRCServer *server, gchar *line)
 		g_free(params);
 
 	}
+
+	g_strfreev(str_array);
 
 	return TRUE;
 }

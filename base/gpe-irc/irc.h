@@ -48,6 +48,7 @@ extern gboolean irc_server_disconnect (IRCServer *server);
 
 /* Message */
 extern gboolean irc_privmsg (IRCServer *server, gchar *target, gchar *msg);
+extern gboolean irc_notice (IRCServer *server, gchar *target, gchar *msg);
 extern gboolean irc_quit (IRCServer *server, gchar *reason);
 extern gboolean irc_join (IRCServer *server, gchar *channel);
 extern gboolean irc_part (IRCServer *server, gchar *channel, gchar *reason);

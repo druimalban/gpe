@@ -99,6 +99,20 @@ irc_part (IRCServer *server, gchar *channel, gchar *reason)
 	return ret;
 }
 
+
+gboolean
+irc_notice (IRCServer *server, gchar *target, gchar *msg)
+{
+	gboolean ret = FALSE;
+	gchar *str;
+	
+	str = g_strdup_printf("%s :%s", target, msg);
+	ret = irc_server_send(server, "NOTICE", str);
+	g_free(str);
+	return ret;
+}
+
+
 gboolean
 irc_privmsg (IRCServer *server, gchar *target, gchar *msg)
 {
@@ -341,7 +355,7 @@ irc_server_login (IRCServer *server)
 gboolean
 irc_server_connect (IRCServer *server)
 {
-  int fd, connect_result;
+  int fd, connect_result = -1;
   struct addrinfo *address;
 
   if (getaddrinfo (server->name, SERVICE, NULL, &address) != 0)

@@ -234,7 +234,9 @@ join_channel (IRCServer *server, gchar *channel_name)
 void
 part_channel (IRCServer *server, IRCChannel *channel)
 {
+  /* FIXME: It doesn't work that way actually */
   irc_part (server, channel->name, "GPE IRC");
+
   gtk_widget_destroy (channel->button);
   g_hash_table_remove (server->channel, (gconstpointer) channel->name);
   g_free (channel);
