@@ -80,6 +80,12 @@ GtkWidget * sketchpad_gui(GtkWidget * toplevel_window){
   scrollable_drawing_area = sketchpad_build_scrollable_drawing_area(drawing_area_width,
                                                                     drawing_area_height);
 
+  // Watch for scroll-worthy keypresses
+  // Oddly, home/end/pgup/pgdown get to the vscrollbar even without this
+  // but those are useless on an ipaq...
+  gtk_signal_connect (GTK_OBJECT (toplevel_window), "key-press-event",
+                      GTK_SIGNAL_FUNC (on_key_press), scrollable_drawing_area);
+
   gpe_dock_add_app_content(dock, scrollable_drawing_area);
   gpe_dock_add_toolbar    (dock, (GtkToolbar*)drawing_toolbar, GTK_ORIENTATION_HORIZONTAL);
 
@@ -87,15 +93,48 @@ GtkWidget * sketchpad_gui(GtkWidget * toplevel_window){
   return gpe_dock(dock);
 }
 
+/*
+ * Scrollbars (GtkRange) emit an adjust_bounds signal whenever the arrow
+ * is clicked or the thumb is drug, before the position is actually moved.
+ * If the scrollbar is already at the end, grow the current pixmap.
+ */
+static gboolean sketchpad_scroll_adjust_bounds(GtkRange *range,
+					       gdouble newVal, gpointer data){
+  GtkAdjustment *adj = gtk_range_get_adjustment(range);
+  gboolean isHoriz = GPOINTER_TO_INT(data);
+
+  // Only make the adjustment if an arrow button was pressed
+  // (i.e. we are trying to move step_increment - not dragging the scrollbar).
+  // Take rounding errors into account
+  #define ROUGHLY_EQUAL(x, y) ((x) - (y) >= -0.02 && (x) - (y) <= 0.02)
+
+  if (adj->value + adj->page_size >= adj->upper
+      && ROUGHLY_EQUAL(newVal, adj->value + adj->step_increment)){
+    sketchpad_expand(adj, isHoriz, adj->step_increment);
+  }
+  else if (adj->value <= adj->lower
+           && ROUGHLY_EQUAL(newVal, adj->value - adj->step_increment)){
+    sketchpad_expand(adj, isHoriz, -adj->step_increment);
+  }
+  return FALSE;		// keep propagating the signal
+}
+
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
-  GtkWidget *scrolledwindow;
+  GtkScrolledWindow *scrolledwindow;
   GtkWidget *drawing_area;
 
   //--scroled window
-  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-                                  GTK_POLICY_AUTOMATIC,
-                                  GTK_POLICY_AUTOMATIC);
+  scrolledwindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new (NULL, NULL));
+  gtk_scrolled_window_set_policy (scrolledwindow,
+                                  GTK_POLICY_ALWAYS,
+                                  GTK_POLICY_ALWAYS);
+
+  gtk_signal_connect (GTK_OBJECT (scrolledwindow->vscrollbar), "adjust_bounds",
+                      GTK_SIGNAL_FUNC (sketchpad_scroll_adjust_bounds),
+		      GINT_TO_POINTER(FALSE));
+  gtk_signal_connect (GTK_OBJECT (scrolledwindow->hscrollbar), "adjust_bounds",
+                      GTK_SIGNAL_FUNC (sketchpad_scroll_adjust_bounds),
+		      GINT_TO_POINTER(TRUE));
 
   //--drawing area
   drawing_area = gtk_drawing_area_new ();
@@ -126,13 +165,12 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
                       NULL);
 
   //--packing
-  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow),
-                                        drawing_area);
+  gtk_scrolled_window_add_with_viewport(scrolledwindow, drawing_area);
 
   //--set a ref to the drawing area
   sketchpad_set_drawing_area(drawing_area);
 
-  return scrolledwindow;
+  return GTK_WIDGET(scrolledwindow);
 }//sketchpad_build_scrollable_drawing_area()
 
 GtkWidget * brushbox_new();
@@ -175,7 +213,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   radiobutton_ ##TYPE ##_ ##ITEM    = gtk_radio_button_new (TYPE ##_group);\
   TYPE ##_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM));\
   \
-  pixbuf = gpe_find_icon (  TOSTRING(##TYPE ##_ ##ITEM)  );\
+  pixbuf = gpe_find_icon (  TOSTRING(TYPE ##_ ##ITEM)  );\
   pixmap = gtk_image_new_from_pixbuf (pixbuf);\
   gtk_button_set_relief (GTK_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), GTK_RELIEF_NONE);\
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_ ##TYPE ##_ ##ITEM), FALSE);\
@@ -335,12 +373,12 @@ GtkWidget * colorbox_new(){
   color_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton_color_ ##color));\
   \
   gtk_widget_set_usize (radiobutton_color_ ##color, 20, 20);\
-  colorbox_button_set_color(radiobutton_color_ ##color, &##color);\
+  colorbox_button_set_color(radiobutton_color_ ##color, &color);\
   gtk_button_set_relief (GTK_BUTTON (radiobutton_color_ ##color), GTK_RELIEF_NONE);\
   gtk_toggle_button_set_mode (GTK_TOGGLE_BUTTON (radiobutton_color_ ##color), FALSE);\
   \
   gtk_signal_connect (GTK_OBJECT (radiobutton_color_ ##color), "clicked",\
-                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), &##color);\
+                      GTK_SIGNAL_FUNC (on_radiobutton_color_clicked), &color);\
   \
   gtk_table_attach (GTK_TABLE (table_colors), radiobutton_color_ ##color, x, y, a, b, \
                     (GtkAttachOptions) (GTK_FILL), (GtkAttachOptions) (GTK_FILL), 0, 0);

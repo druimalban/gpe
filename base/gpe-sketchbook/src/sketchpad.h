@@ -62,6 +62,7 @@ void sketchpad_open_file(gchar * fullpath_filename);
 void sketchpad_new_sketch();
 void sketchpad_reset_title();
 void sketchpad_import_image(void);
+void sketchpad_expand(GtkAdjustment *adj, gboolean isHoriz, int numPix);
 
 //--drawing functions
 void draw_point(gdouble x, gdouble y);

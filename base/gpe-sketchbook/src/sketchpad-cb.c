@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "sketchpad-cb.h"
 #include "sketchpad-gui.h"
@@ -109,6 +110,43 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
     gtk_widget_set_sensitive(selector.button_delete, TRUE);
   }
   switch_to_page(PAGE_SELECTOR);
+}
+
+
+gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
+  GtkScrolledWindow *sw = GTK_SCROLLED_WINDOW(data);
+  gboolean isHoriz;
+  GtkScrollType scroll;
+
+  // ignore key events if not showing a drawing area
+  if (gtk_notebook_get_current_page(sketchbook.notebook) != PAGE_SKETCHPAD)
+    return FALSE;
+
+  switch (ev->keyval){
+    case GDK_Left:
+      scroll = GTK_SCROLL_STEP_BACKWARD;
+      isHoriz = TRUE;
+      break;
+    case GDK_Right:
+      scroll = GTK_SCROLL_STEP_FORWARD;
+      isHoriz = TRUE;
+      break;
+    case GDK_Up:
+      scroll = GTK_SCROLL_STEP_BACKWARD;
+      isHoriz = FALSE;
+      break;
+    case GDK_Down:
+      scroll = GTK_SCROLL_STEP_FORWARD;
+      isHoriz = FALSE;
+      break;
+    default:
+      return FALSE;  // not handled here
+  }
+
+  // Pass the event off to the scrollbar
+  gtk_signal_emit_by_name(GTK_OBJECT(isHoriz ? sw->hscrollbar : sw->vscrollbar),
+                          "move-slider", scroll);
+  return TRUE;       // we handled it
 }
 
 //---------------------------------------------------------

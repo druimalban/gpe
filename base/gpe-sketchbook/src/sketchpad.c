@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+#include <stdlib.h>
 #include "gpe/errorbox.h"
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
@@ -122,8 +123,6 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_tools_pencil), TRUE);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_brush_medium), TRUE);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_color_black),  TRUE);
-
-  gtk_widget_grab_focus(drawing_area);
 
 }//window_sketchpad_init()
 
@@ -248,6 +247,44 @@ void sketchpad_import_image(void){
        "clicked", GTK_SIGNAL_FUNC(gtk_widget_destroy), file_selector);
 
   gtk_widget_show(file_selector);
+}
+
+/*
+ * Expands the image vertically or horizontally by the given number of pixels.
+ * If numPix is negative, expands on the top/left and moves everything over.
+ */
+void sketchpad_expand(GtkAdjustment *adj, gboolean isHoriz, int numPix){
+  int oldWidth = drawing_area_width;
+  int oldHeight = drawing_area_height;
+  int n = abs(numPix);
+  GdkPixmap *oldbuff;
+
+  if (isHoriz)
+    drawing_area_width += n;
+  else
+    drawing_area_height += n;
+
+  // let reset_drawing_area() handle the resize & blank
+  oldbuff = drawing_area_pixmap_buffer;
+  gdk_pixmap_ref(oldbuff);
+  reset_drawing_area();
+
+  // copy in the old pixmap
+  gdk_draw_drawable(GDK_DRAWABLE(drawing_area_pixmap_buffer), graphical_context,
+                    GDK_DRAWABLE(oldbuff),
+		    0, 0,
+		    isHoriz ? (numPix > 0 ? 0 : n) : 0,	// xdest
+		    isHoriz ? 0 : (numPix > 0 ? 0 : n),	// ydest
+		    oldWidth, oldHeight);
+  gdk_pixmap_unref(oldbuff);
+
+  // If the image grew down or to the right, update the scroll bounds so
+  // the image is scrolled all the way to the new bottom/right.
+  if (numPix > 0){
+    adj->upper += numPix;
+    gtk_adjustment_changed(adj);
+  }
+  // don't mark the sketch as modified till they actually draw something in it
 }
 
 void sketchpad_set_drawing_area(GtkWidget * a_drawing_area){
