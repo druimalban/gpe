@@ -26,6 +26,7 @@
 #include "irc.h"
 #include "irc_input.h"
 #include "dictionary.h"
+#include "networks_config.h"
 
 #define WINDOW_NAME "IRC Client"
 #define _(_x) gettext (_x)
@@ -35,6 +36,7 @@ struct gpe_icon my_icons[] = {
   { "delete", "delete" },
   { "edit", "edit" },
   { "properties", "properties" },
+  { "preferences", "preferences" },
   { "close", "close" },
   { "stop", "stop" },
   { "error", "error" },
@@ -448,10 +450,12 @@ new_connection_dialog ()
   gtk_object_set_data (GTK_OBJECT (connect_button), "real_name_entry", (gpointer) real_name_entry);
   gtk_object_set_data (GTK_OBJECT (connect_button), "password_entry", (gpointer) password_entry);
 
-  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
-    		      GTK_SIGNAL_FUNC (kill_widget), window);
   gtk_signal_connect (GTK_OBJECT (connect_button), "clicked",
     		      GTK_SIGNAL_FUNC (new_connection), window);
+  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
+    		      GTK_SIGNAL_FUNC (kill_widget), window);
+  gtk_signal_connect (GTK_OBJECT (network_properties_button), "clicked",
+    		      GTK_SIGNAL_FUNC (networks_config_window), NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
@@ -477,7 +481,7 @@ new_connection_dialog ()
 gboolean
 entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 {
-  gchar *entry_text;
+  gchar *entry_text, *display_text;
 
   //irc_input_entry_key_press (widget, event, data);
 
@@ -488,6 +492,10 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
     if (event->keyval == GDK_Return && strlen (entry_text) > 0)
     {
       irc_privmsg (selected_server, selected_channel->name, entry_text);
+      display_text = g_strdup_printf ("\n%s: %s", selected_server->user_info->nick, entry_text);
+      selected_server->text = g_string_append (selected_server->text, display_text);
+      update_text_view (g_string_new (display_text));
+      gtk_entry_set_text (GTK_ENTRY (main_entry), "");
     }
   }
 

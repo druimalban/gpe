@@ -4,7 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 
-MEMBERS = main irc irc_input dictionary
+MEMBERS = main irc irc_input dictionary networks_config
 LINGUAS = de
 
 ifeq ($(GTK2),yes)
