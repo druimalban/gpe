@@ -952,16 +952,11 @@ Network_Build_Objects ()
 	gtk_object_set_data (GTK_OBJECT (tablebox), "tooltips", tooltips);
 
 	// create toolbar
-#if GTK_MAJOR_VERSION < 2
-	toolbar =
-		gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL,
-				 GTK_TOOLBAR_ICONS);
-#else
 	toolbar = gtk_toolbar_new ();
 	gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
 				     GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
+
 	gtk_widget_set_name (toolbar, "toolbar");
 	gtk_widget_ref (toolbar);
 	gtk_widget_show (toolbar);

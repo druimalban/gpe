@@ -15,12 +15,8 @@ static void gtk_colombo_destroy(GtkObject* colombo) {
 
 	if (GTK_COLOMBO(colombo)->popwin)
 	{
-#ifndef GTK1
 		gtk_widget_destroy(GTK_COLOMBO(colombo)->popwin);
         	//gtk_widget_unref(GTK_COLOMBO(colombo)->popwin);
-#else
-        	gtk_object_unref(GTK_OBJECT(GTK_COLOMBO(colombo)->popwin));
-#endif
 		GTK_COLOMBO(colombo)->popwin=NULL;
 	}
 
@@ -148,15 +144,9 @@ void gtk_colombo_init (GtkColombo *colombo) {
 	//colombo->list_change_id=
 	gtk_signal_connect(GTK_OBJECT(colombo->list), "selection_changed",
 		(GtkSignalFunc)gtk_colombo_update_entry, colombo);
-#ifdef GTK1
-	colombo->entry_change_id=gtk_signal_connect(GTK_OBJECT(colombo),
-		"key_press_event",
-		(GtkSignalFunc)gtk_colombo_popup_list,colombo);
-#else
 	colombo->entry_change_id=gtk_signal_connect(GTK_OBJECT(colombo),
 		"key_release_event",
 		(GtkSignalFunc)gtk_colombo_popup_list,colombo);
-#endif
 	//colombo->entry_change_id=
 	gtk_signal_connect(GTK_OBJECT(colombo),"focus_out_event",
 		(GtkSignalFunc)gtk_colombo_hide_list,colombo);
@@ -174,10 +164,8 @@ guint gtk_colombo_get_type ()
                         (GtkClassInitFunc) gtk_colombo_class_init,
                         (GtkObjectInitFunc) gtk_colombo_init,
                         NULL,
-#ifndef GTK1
 			NULL,
 			(GtkClassInitFunc) NULL,
-#endif
                 };
 
                 colombo_type = gtk_type_unique (gtk_entry_get_type (), &colombo_info);

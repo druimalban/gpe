@@ -175,11 +175,7 @@ void new_highscore_name()
   GtkWidget *label = gtk_label_new ("Your Name:");
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 
-#if GTK_MAJOR_VERSION >= 2
   new_highscore_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-#else
-  new_highscore_window = gtk_window_new (GTK_WINDOW_DIALOG);
-#endif
   
   highscore_name_entry = gtk_entry_new ();
   ok = gtk_button_new_from_stock (GTK_STOCK_OK);
@@ -522,18 +518,10 @@ int main(int argc,char *argv[])
 	gtk_widget_show(toolbar_hbox);
 
 	// toolbar
-#if GTK_MAJOR_VERSION >= 2
 	toolbar = gtk_toolbar_new ();
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_ICONS);
 	gtk_box_pack_start(GTK_BOX(toolbar_hbox),toolbar,FALSE,FALSE,0);
 	gtk_widget_show(toolbar);
-#else
-	toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-	gtk_box_pack_start(GTK_BOX(toolbar_hbox),toolbar,FALSE,FALSE,0);
-	gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-	gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-	gtk_widget_show(toolbar);
-#endif
 
 	pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	menu_game_start = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New game"), 
@@ -557,18 +545,10 @@ int main(int argc,char *argv[])
 			   _("Highscores"), _("Highscores"), pw, show_highscore_wrapper, NULL);
 
 	// toolbar 2
-#if GTK_MAJOR_VERSION >= 2
 	toolbar2 = gtk_toolbar_new ();
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar2), GTK_TOOLBAR_ICONS);
         gtk_box_pack_end(GTK_BOX(toolbar_hbox),toolbar2,FALSE,FALSE,0);
 	gtk_widget_show(toolbar2);
-#else
-	toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-	gtk_box_pack_end(GTK_BOX(toolbar_hbox),toolbar2,FALSE,FALSE,0);
-	gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
-	gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_SPACE_LINE);
-	gtk_widget_show(toolbar2);
-#endif
 
 	pw = gtk_image_new_from_stock (GTK_STOCK_HELP, GTK_ICON_SIZE_SMALL_TOOLBAR);
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), _("Help"), 

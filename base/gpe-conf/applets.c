@@ -219,12 +219,7 @@ void ask_user_a_file(char *path, char *prompt,
     s->Cancel=Cancel;
     s->data=data;
   
-#if GTK_MAJOR_VERSION >= 2
-  GTK_WINDOW (fileselection1)->type = GTK_WINDOW_TOPLEVEL;
-#else
-  GTK_WINDOW (fileselection1)->type = GTK_WINDOW_DIALOG;
-#endif
-
+    GTK_WINDOW (fileselection1)->type = GTK_WINDOW_TOPLEVEL;
     
     gtk_widget_show (ok_button1);
     gtk_signal_connect (GTK_OBJECT (ok_button1), "clicked",

@@ -1,5 +1,10 @@
 When			Who				Where						What
 
+06.07.2003		Moray			Makefile	No longer install old-style menu file.
+						applets.c	Removed legacy GTK1 code.
+						keyctl.c	Removed legacy GTK1 code.
+						network.c	Removed legacy GTK1 code.
+
 06.07.2003		Florian			storage.c					Fixed storage info show rootfs with new mountpoint.
 															Made memory info displaying first for faster feedback.
 															Major reformating.
