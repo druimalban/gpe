@@ -453,7 +453,6 @@ GtkWidget *
 top_level (GtkWidget *window)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *toolbar;
   GtkWidget *option = gtk_option_menu_new ();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
@@ -524,8 +523,6 @@ top_level (GtkWidget *window)
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gtk_main_quit), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
   list_store = gtk_list_store_new (6, 
                                    GDK_TYPE_PIXBUF, 
                                    G_TYPE_STRING, 
@@ -556,7 +553,7 @@ top_level (GtkWidget *window)
     gtk_tree_view_column_set_expand(col, TRUE);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
 
-    if (gdk_screen_width() > 400)
+    if (large_screen)
       {
         renderer = gtk_cell_renderer_text_new ();
         col = gtk_tree_view_column_new_with_attributes (_("Priority"), renderer,
