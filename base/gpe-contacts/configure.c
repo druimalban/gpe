@@ -33,7 +33,6 @@
 #include "db.h"
 #include "structure.h"
 #include "proto.h"
-#include "callbacks.h"
 
 extern GtkWidget *mainw;
 extern gboolean panel_config_has_changed;

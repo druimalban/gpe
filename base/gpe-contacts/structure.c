@@ -14,8 +14,6 @@
 
 #include <libxml/parser.h>
 
-#include "callbacks.h"
-
 #include <gpe/pixmaps.h>
 #include <gpe/gtkdatecombo.h>
 #include <gpe/smallbox.h>

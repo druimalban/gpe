@@ -33,7 +33,6 @@
 #include "db.h"
 #include "structure.h"
 #include "proto.h"
-#include "callbacks.h"
 
 #define MY_PIXMAPS_DIR PREFIX "/share/pixmaps/"
 #define TAB_CONFIG_LOCAL ".contacts-tab"

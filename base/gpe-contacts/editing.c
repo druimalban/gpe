@@ -18,9 +18,13 @@
 
 #include "support.h"
 #include "structure.h"
-#include "callbacks.h"
 #include "db.h"
 #include "categories.h"
+
+void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
+void on_edit_save_clicked (GtkButton * button, gpointer user_data);
+void on_edit_bt_image_clicked (GtkButton * button, gpointer user_data);
+void on_categories_clicked (GtkButton *button, gpointer user_data);
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)

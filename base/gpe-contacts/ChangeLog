@@ -7,12 +7,18 @@
 	(on_bDetAdd_clicked, on_bDetRemove_clicked, on_clist8_select_row,
 	on_clist8_unselect_row, on_setup_destroy): Move to new file
 	configure.c.
-	* main.c (create_pageSetup, configure): Move to configure.c.
+	* callbacks.h: Deleted.
+	* main.c: Remove #include callbacks.h.
+	(create_pageSetup, configure): Move to configure.c.
 	(build_categories_string, store_special_fields, edit_person): Move
 	to editing.c.
 	* Makefile (MEMBERS): Delete callbacks.  Add configure.
 	* proto.h (configure, edit_person, update_display,
 	load_panel_config): Add prototypes.
+	* editing.c: Add forward decls for signal handlers.  Remove
+	#include callbacks.h.
+	* structure.c, configure.c: Remove #include callbacks.h.
+	* support.c: Remove unused code.
 
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
