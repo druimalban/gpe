@@ -3,7 +3,7 @@ PREFIX = /usr/local
 VERSION = 0.02
 CVSBUILD = yes
 #DEBUG = yes 
-#LINGUAS = pt_PT
+LINGUAS = pt
 
 MEMBERS = main todo calendar date
 
@@ -20,7 +20,7 @@ CFLAGS = -Os -fomit-frame-pointer
 endif
 
 CFLAGS += -Wall $(GTKCFLAGS)
-LDFLAGS += $(GTKLDFLAGS) -L../libeventdb -leventdb -L../libtododb -ltododb -L../librootimage -lrootimage
+LDFLAGS += $(GTKLDFLAGS) -L/usr/local/lib -static  -static-libgcc -L../libeventdb -leventdb -L../libtododb -ltododb -L../librootimage -lrootimage
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 #CFLAGS += -MD
 
