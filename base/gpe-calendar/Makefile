@@ -46,12 +46,12 @@ install: all install-po
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-calendar
 
 ipkg:
-	rm -rf dist
-	mkdir -p dist/CONTROL
-	cp control postinst dist/CONTROL
-	make DESTDIR=`pwd`/dist PREFIX=/usr install
-	chown -R root.root dist
-	ipkg-build dist
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/control familiar/postinst familiar/dist/CONTROL
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
 
 clean:
 	rm -f gpe-calendar $(OBJS) $(DEPS)

@@ -1,8 +1,8 @@
 Package: gpe-calendar
 Section: base
 Priority: optional
-Version: 0.04
+Version: 0.05
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, gdk-imlib1, sqlite, gpe-icons (>= 0.02), libgpewidget0 (>= 0.03)
+Depends: libgtk1.2, sqlite, gpe-icons (>= 0.04), libgpewidget0 (>= 0.05), libgdk-pixbuf2
 Description: GPE calendar
