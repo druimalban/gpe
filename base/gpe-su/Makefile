@@ -4,6 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.10
 
+#FIXME: add: ru sr
 LINGUAS = nl pt fr sk cs de sv ro
 
 MEMBERS = gpe-su
