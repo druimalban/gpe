@@ -33,9 +33,9 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
       stride = gdk_pixbuf_get_rowstride (composited);
       sstride = gdk_pixbuf_get_rowstride (pixbuf);
       
-      br = bgcol->red;
-      bg = bgcol->green;
-      bb = bgcol->blue;
+      br = bgcol->red >> 8;
+      bg = bgcol->green >> 8;
+      bb = bgcol->blue >> 8;
       
       for (y = 0; y < height; y++) 
 	{
@@ -70,7 +70,7 @@ gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
 		  red = (r1 + r2) / 256;
 		  green = (g1 + g2) / 256;
 		  blue = (b1 + b2) / 256;
-		}
+	        }
 	      
 	      *p++ = red;
 	      *p++ = green;
