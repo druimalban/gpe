@@ -144,7 +144,7 @@ sort_by_priority (gconstpointer a, gconstpointer b)
   ia = (struct todo_item *)a;
   ib = (struct todo_item *)b;
 
-  return ia->priority - ib->priority;
+  return ib->priority - ia->priority;
 }
 
 void
@@ -156,7 +156,7 @@ refresh_items (void)
 
   list = g_slist_copy (todo_db_get_items_list ());
 
-  g_slist_sort (list, sort_by_priority);
+  list = g_slist_sort (list, sort_by_priority);
 
   for (iter = list; iter; iter = iter->next)
     {

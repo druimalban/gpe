@@ -1,3 +1,9 @@
+2004-08-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* list-ui.c (sort_by_priority): Swap sense of comparison.
+	(refresh_items): Add missing assignment of g_slist_sort return
+	value.
+
 2004-06-23  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.47 released.
