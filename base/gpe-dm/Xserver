@@ -29,9 +29,9 @@ fi
 # start off server in conventional location.
 case `module_id` in
 	"HP iPAQ H3100" | "HP iPAQ H3800")
-		ARGS="$ARGS -screen 240x320@90 -rgba vrgb" ;;
+		ARGS="$ARGS -screen 320x240@90 -rgba vrgb" ;;
 	"HP iPAQ H3600" | "HP iPAQ H3700" | "HP iPAQ H3900")
-		ARGS="$ARGS -screen 240x320@270 -rgba vbgr" ;;
+		ARGS="$ARGS -screen 320x240@270 -rgba vbgr" ;;
 	"HP iPAQ H5400")
 		ARGS="$ARGS -rgba rgb" ;;
 	# both 'Sharp-Collie' and just 'Collie' have been reported
