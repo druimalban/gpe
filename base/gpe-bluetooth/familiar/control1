@@ -4,5 +4,6 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), bluez-pin2, bluez-libs, bluez-utils, bluez-sdp, dbus-glib-1, libsqlite0
+Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61), bluez-libs, bluez-utils, bluez-sdp, dbus-glib-1, libsqlite0
+Conflicts: bluez-pin2, bluez-pin
 Description: GPE Bluetooth manager
