@@ -204,6 +204,7 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
       if (gdk_rectangle_intersect (&r1, &r2, &dst))
 	{
 	  gboolean selected = FALSE;
+	  GtkStateType state;
 
 	  if (il->mrow == row && il->mcol == col)
 	    selected = TRUE;
