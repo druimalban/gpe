@@ -43,37 +43,33 @@
 
 Selector selector;
 
-GdkColor bg_color;//alternate color for list cells
-
 gint sketch_list_size;
 gint current_sketch;
 gboolean is_current_sketch_selected;
 
 int _direntry_selector(const struct dirent * direntry);
-void _clist_update_alternate_colors_from(GtkCList * clist, gint index);
 
 void selector_init(){
+  GtkListStore * store;
+  
+  store = gtk_list_store_new (NUM_ENTRIES,
+                              G_TYPE_STRING,//title
+                              G_TYPE_STRING,//note's url
+                              G_TYPE_OBJECT//thumbnail
+                              );
+  selector.listmodel = GTK_TREE_MODEL(store);
+
   sketch_list_size = 0;
   current_sketch   = SKETCH_NEW;
+
 }//selector_init()
 
 void window_selector_init(GtkWidget * window_selector){
   struct dirent ** direntries;
   int scandir_nb_entries;
   int scandir_errno;
-  GdkColormap * colormap;
 
-  //--alternate bg color for list items
-  colormap = gdk_colormap_get_system();
-  bg_color.red   = 65535;
-  bg_color.green = 65535;
-  bg_color.blue  = 40000;
-  gdk_colormap_alloc_color(colormap, &bg_color, FALSE, TRUE);
-
-  //--Clist init
-  gtk_clist_column_titles_hide(GTK_CLIST(selector.textlistview));//no title (single column)
-
-  //--fill CList
+  //--fill the List
   scandir_nb_entries = scandir (sketchbook.save_dir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
   scandir_errno = errno;
   if (scandir_nb_entries == -1){//scandir error
@@ -106,40 +102,45 @@ void window_selector_init(GtkWidget * window_selector){
   }
   /*else*/{ //if empty, added a dummy sketch so do it in any case
     gchar * fullpath_filename;
-    gchar * line_text[1];
-    int line;
+    gchar * title;
+    GdkPixbuf * thumbnail;
     int i;
+    GtkListStore * store;
+    GtkTreeIter iter;
     
+    store = GTK_LIST_STORE(selector.listmodel);
     for(i = 0; i < scandir_nb_entries; i++){
-      Note * note;
+      //Note * note;
 
-      line_text[0] = make_label_from_filename(direntries[i]->d_name);
+      title = make_label_from_filename(direntries[i]->d_name);
       fullpath_filename = g_strdup_printf("%s%s", sketchbook.save_dir, direntries[i]->d_name);
 
-      line = gtk_clist_append(GTK_CLIST(selector.textlistview), line_text);
-      note = note_new();
-      note->fullpath_filename = fullpath_filename;
-
+      //FIXME: do not load all the sketches now
       {//--update thumbnail
         GdkPixbuf * pixbuf;
-        GdkPixbuf * pixbuf_scaled;
-        pixbuf = gdk_pixbuf_new_from_file(note->fullpath_filename, NULL); //GError **error
-        pixbuf_scaled = gdk_pixbuf_scale_simple (pixbuf, //FIXME: let iconlist do that!
-                                                 THUMBNAIL_SIZE, THUMBNAIL_SIZE,
-                                                 GDK_INTERP_BILINEAR);
+        pixbuf = gdk_pixbuf_new_from_file(fullpath_filename, NULL); //GError **error
+        thumbnail = gdk_pixbuf_scale_simple (pixbuf, //FIXME: let iconlist do that!
+                                             THUMBNAIL_SIZE, THUMBNAIL_SIZE,
+                                             GDK_INTERP_BILINEAR);
         gdk_pixbuf_unref(pixbuf);
-        note->thumbnail = pixbuf_scaled;
       }
+
+      gtk_list_store_append (store, &iter);
+      gtk_list_store_set (store, &iter,
+                          ENTRY_TITLE,     title,
+                          ENTRY_URL,       fullpath_filename,
+                          ENTRY_THUMBNAIL, thumbnail,
+                          -1);
+
       gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
                                     NULL,//"Sketch",
-                                    note->thumbnail,//icon
-                                    note);//udata
-      gtk_clist_set_row_data_full(GTK_CLIST(selector.textlistview), line, note, note_destroy);
+                                    thumbnail,//icon
+                                    /*note*/NULL);//udata
+
       //do NOT g_free(fullpath_filename) now! :)
-      if(i%2) gtk_clist_set_background(GTK_CLIST(selector.textlistview), i, &bg_color);
       sketch_list_size++;
 
-      g_free(line_text[0]);
+      g_free(title);//???
     }
 
     free(direntries);
@@ -199,17 +200,33 @@ int _direntry_selector (const struct dirent * direntry){
 }
 
 void delete_current_sketch(){
-  Note * note;
   gboolean is_deleted = FALSE;
   
-  note = gtk_clist_get_row_data(GTK_CLIST(selector.textlistview), current_sketch);
-  is_deleted = file_delete(note->fullpath_filename);
+  GtkTreeView * treeview;
+  GtkTreeSelection * selection;
+  gboolean selected;
+  GtkTreeModel * model;
+  GtkTreeIter iter;
+  gchar * fullpath_filename;
+  
+  treeview = GTK_TREE_VIEW(selector.textlistview);
+  model = GTK_TREE_MODEL(selector.listmodel);
+  selection = gtk_tree_view_get_selection(treeview);
+  selected = gtk_tree_selection_get_selected (selection, &model, &iter);        
+  if(!selected) return;
 
+  //--Delete the selected sketch
+  gtk_tree_model_get(model, &iter,
+                     ENTRY_URL, &fullpath_filename, -1);
+  
+  is_deleted = file_delete(fullpath_filename);
+  
   if(is_deleted){
-    gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(selector.iconlist), note);
+    //FIXME: remove from iconlist
+    //gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(selector.iconlist), note);
 
-    _clist_update_alternate_colors_from(GTK_CLIST(selector.textlistview), current_sketch);
-    gtk_clist_remove(GTK_CLIST(selector.textlistview), current_sketch);
+    gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+
 
     if(is_current_sketch_last) current_sketch--;
     sketch_list_size--;
@@ -226,15 +243,20 @@ void delete_current_sketch(){
 }
 
 void open_indexed_sketch(gint index){
-  Note * note;
-  note = gtk_clist_get_row_data(GTK_CLIST(selector.textlistview), index);
-  sketchpad_open_file(note->fullpath_filename);
+  GtkTreeModel * model;
+  GtkTreeIter iter;
+  gboolean got_it;
+  gchar * path_string;
+  gchar * fullpath_filename;
+  
+  model = GTK_TREE_MODEL(selector.listmodel);
+
+  path_string = g_strdup_printf("%d", index);
+  got_it = gtk_tree_model_get_iter_from_string(model, &iter, path_string);
+  if(!got_it) return;
+
+  gtk_tree_model_get(model, &iter, ENTRY_URL, &fullpath_filename, -1);
+  sketchpad_open_file(fullpath_filename);
+  g_free(path_string);
 }
 
-void _clist_update_alternate_colors_from(GtkCList * clist, gint index){
-  gint i;
-  for(i = index; i < sketch_list_size; i++){
-    if(i%2) gtk_clist_set_background(clist, i, &white);
-    else    gtk_clist_set_background(clist, i, &bg_color);
-  }
-}

@@ -28,13 +28,20 @@ typedef struct _selector {
 
   GtkWidget * textlistview;
 
+  GtkTreeModel * listmodel;
+
   GtkWidget * button_edit;  //to set unsensitive
   GtkWidget * button_delete;//to set unsensitive
   GtkWidget * button_view;  //to switch the icon (from gpe-sketchbook.c)
 } Selector;
 extern Selector selector;
 
-extern GdkColor bg_color;
+enum{//Entry id for the list store
+  ENTRY_TITLE = 0,
+  ENTRY_URL,
+  ENTRY_THUMBNAIL,
+  NUM_ENTRIES
+};
 
 extern gint sketch_list_size;
 #define is_sketch_list_empty (sketch_list_size == 0)

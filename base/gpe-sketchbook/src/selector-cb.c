@@ -115,41 +115,44 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
   if(button) _switch_icon(button);
 }
 
+gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_model){
+  switch(event->type){
+    case GDK_2BUTTON_PRESS://double click --> activate the item
+      {
+        GtkTreeSelection * selection;
+        gboolean selected;
+        GtkTreeModel * model;
+        GtkTreeIter iter;
+        gchar * fullpath_filename;
+        
+        model = GTK_TREE_MODEL(the_model);
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+        selected = gtk_tree_selection_get_selected (selection, &model, &iter);        
+        if(!selected) return TRUE;
+
+        //--Open the selected sketch
+        gtk_tree_model_get(model, &iter,
+                           ENTRY_URL, &fullpath_filename, -1);
+        sketchpad_open_file(fullpath_filename);//NOTE: keep an index and open_indexed()
+        switch_to_page(PAGE_SKETCHPAD);
+        return TRUE;
+      }
+    case GDK_BUTTON_PRESS:
 
 
-void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
-                                   GdkEvent *event, gpointer user_data){
-  if(event == NULL) return;//explicit call, user_func does nothing.
-  current_sketch = row;
-  set_current_sketch_selected();
-  gtk_widget_set_sensitive(selector.button_edit,   TRUE);
-  gtk_widget_set_sensitive(selector.button_delete, TRUE);
 
-  if(event->type == GDK_2BUTTON_PRESS){//--> double click = open related sketch
-    Note * note;
-    note = gtk_clist_get_row_data(clist, row);
-    sketchpad_open_file(note->fullpath_filename);
-    switch_to_page(PAGE_SKETCHPAD);
+      //FIXME: cannot use the index of the CList.
+      current_sketch = 0;
+
+
+
+      set_current_sketch_selected();
+      gtk_widget_set_sensitive(selector.button_edit,   TRUE);
+      gtk_widget_set_sensitive(selector.button_delete, TRUE);
+      return FALSE;
+
+    default: return FALSE;//FALSE to propagate the event further
   }
-}
-
-void on_clist_selector_unselect_row (GtkCList *clist, gint row, gint column,
-                                     GdkEvent *event, gpointer user_data){
-  if(event == NULL) return;//explicit call, user_func does nothing.
-  if(row == current_sketch) set_current_sketch_unselected();
-  gtk_widget_set_sensitive(selector.button_edit,   FALSE);
-  gtk_widget_set_sensitive(selector.button_delete, FALSE);
-}
-
-void on_clist_selector_click_column (GtkCList *clist, gint column, gpointer user_data){
-  //do nothing, as column is hidden!
-}
-
-void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
-  if(!is_current_sketch_selected) current_sketch = SKETCH_NEW;
-  if(is_current_sketch_new) sketchpad_new_sketch();
-  else open_indexed_sketch(current_sketch);
-  switch_to_page(PAGE_SKETCHPAD);
 }
 
 void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused){

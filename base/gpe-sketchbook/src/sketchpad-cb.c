@@ -93,19 +93,25 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
   if(is_current_sketch_new){
-    gtk_clist_unselect_all(GTK_CLIST(selector.textlistview));
-    GTK_CLIST(selector.textlistview)->focus_row = -1;
+    g_signal_emit_by_name(G_OBJECT(selector.textlistview), "unselect-all", NULL);//FIXME: wrong params
     gtk_widget_set_sensitive(selector.button_edit,   FALSE);
     gtk_widget_set_sensitive(selector.button_delete, FALSE);
   }
   else{
+    GtkTreeSelection * selection;
+    GtkTreePath * path;
+    gchar * path_string;
+
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(selector.textlistview));
+    path_string = g_strdup_printf("%d", current_sketch);
+    /**/g_printerr("Selecting %d", current_sketch);
+    path = gtk_tree_path_new_from_string(path_string);
+    g_free(path_string);
+    gtk_tree_selection_select_path(selection, path);
+
     //set the current one selected
     set_current_sketch_selected();
-    gtk_clist_select_row(GTK_CLIST(selector.textlistview), current_sketch, 1);
-    GTK_CLIST(selector.textlistview)->focus_row = current_sketch;
-    gtk_signal_emit_by_name((GtkObject *)selector.textlistview, "select-row",
-                            current_sketch, 1,
-                            NULL, NULL);//highlight the selected item
+
     gtk_widget_set_sensitive(selector.button_edit,   TRUE);
     gtk_widget_set_sensitive(selector.button_delete, TRUE);
   }
@@ -190,7 +196,6 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     current_sketch = gtk_clist_append(GTK_CLIST(selector.textlistview), name);
     g_free(name[0]);
     gtk_clist_set_row_data_full(GTK_CLIST(selector.textlistview), current_sketch, note, note_destroy);
-    if(current_sketch%2) gtk_clist_set_background(GTK_CLIST(selector.textlistview), current_sketch, &bg_color);
 
     gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
                                   NULL,// "Sketch"

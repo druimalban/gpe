@@ -147,30 +147,43 @@ GtkWidget * build_selector_toolbar(){
   return toolbar;
 }
 
+
 GtkWidget * build_scrollable_textlist(){
   GtkWidget * scrolledwindow;//to return
-  GtkWidget * clist_selector;
-  GtkWidget * label_Clist_column1;
 
-  clist_selector = gtk_clist_new (1);
-  selector.textlistview = clist_selector;//set a ref to the clist
+  GtkTreeView  * treeview;
+  GtkTreeModel * model;
 
-  gtk_clist_set_column_width (GTK_CLIST (clist_selector), 0, 80);
-  gtk_clist_column_titles_show (GTK_CLIST (clist_selector));
-  label_Clist_column1 = gtk_label_new ("column 1");
-  gtk_clist_set_column_widget (GTK_CLIST (clist_selector), 0, label_Clist_column1);
+  GtkTreeViewColumn * column;
+  GtkCellRenderer   * renderer;
 
-  gtk_signal_connect (GTK_OBJECT (clist_selector), "select_row",
-                      GTK_SIGNAL_FUNC (on_clist_selector_select_row), NULL);
-  gtk_signal_connect (GTK_OBJECT (clist_selector), "click_column",
-                      GTK_SIGNAL_FUNC (on_clist_selector_click_column), NULL);
-  gtk_signal_connect (GTK_OBJECT (clist_selector), "unselect_row",
-                      GTK_SIGNAL_FUNC (on_clist_selector_unselect_row), NULL);
+  model = selector.listmodel;
+  treeview = (GtkTreeView *) gtk_tree_view_new_with_model (model);
 
+  gtk_tree_view_set_rules_hint(treeview, TRUE);//request alternate color
+  gtk_tree_selection_set_mode(gtk_tree_view_get_selection(treeview), GTK_SELECTION_SINGLE);
+  gtk_tree_view_set_headers_visible(treeview, FALSE);
+
+  g_signal_connect(G_OBJECT(treeview), "event", G_CALLBACK(on_treeview_event), model);
+
+  g_object_unref(G_OBJECT(model));//treeview keep a ref on its model
+  selector.textlistview = GTK_WIDGET(treeview);
+
+  //--COLUMN: title
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("title", renderer,
+                                                     "text", ENTRY_TITLE,
+                                                     //"editable", TRUE,
+                                                     NULL);
+  //g_signal_connect (G_OBJECT (renderer), "edited", G_CALLBACK (on_title_edited), model);
+  gtk_tree_view_column_set_sort_column_id (column, ENTRY_TITLE);
+  gtk_tree_view_append_column (treeview, column);
+
+  //--Scrolled window and packing
   scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
                                   GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow), clist_selector);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow), GTK_WIDGET(treeview));
 
   return scrolledwindow;
 }
