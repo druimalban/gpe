@@ -1,3 +1,12 @@
+2004-07-03  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.36 released.
+	
+2004-07-03  Philip Blundell  <philb@gnu.org>
+
+	* Xserver: Add -pn to ARGS.  Only use -mouse for ucb1x00 if
+	TSLIB_TSDEVICE not set.  Use -rgba rgb for Simpad.
+
 2004-06-13  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.35 released.

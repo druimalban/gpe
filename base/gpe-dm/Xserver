@@ -19,10 +19,10 @@ module_id() {
 export USER=root
 export HOME=/root
 
-ARGS="-dpi 100 -br"
+ARGS="-dpi 100 -br -pn"
 
 # use ucb 1x00 touchscreen if present
-if [ -e /dev/touchscreen/ucb1x00 ]; then
+if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then
   ARGS="$ARGS -mouse /dev/touchscreen/ucb1x00"
 fi
 
@@ -40,6 +40,8 @@ case `module_id` in
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		ARGS="$ARGS -rgba rgb"
 		export TSLIB_TSDEVICE="/dev/sharp_ts" ;;
+	"Simpad")
+		ARGS="$ARGS -rgba rgb" ;;
 esac
 
 exec $XSERVER $ARGS $*
