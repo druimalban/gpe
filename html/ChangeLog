@@ -1,3 +1,22 @@
+2003-07-31  Philip Blundell  <philb@gnu.org>
+
+	* gpe-news.php: Use 'clean' theme.
+	* css/style.css: Update appropriately.
+
+	* includes/menu.php: One copy of Screenshots link is enough.
+
+2003-07-19  Philip Blundell  <philb@gnu.org>
+
+	* documentation.shtml, contact.shtml, linkres.shtml, index.shtml,
+	download.shtml: Deleted, replaced by...
+	* documentation.phtml, contact.phtml, linkres.phtml, index.phtml,
+	download.phtml: ... these.  Use PHP rather than SSI.
+	* includes/foot.php, includes/menu.php, includes/head.php: New
+	files.
+
+	* gpe-news.php: New file.
+	* css/style.css: Add styles used by news section.
+
 2003-07-15  Colin Marquardt  <colin@marquardt-home.de>
 
 	* documentation/uml_gtk2_xcompile.shtml: First version. Many
