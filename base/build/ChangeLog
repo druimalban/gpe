@@ -1,3 +1,11 @@
+2003-02-15  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (real-translation-package): Renamed from
+	translation-package.  Don't run install-mo.  Depend on all-mo.
+	Install files with install not cp.  Correct name of installed .po
+	file.
+	(translation-ipkg): New rule.
+
 2003-02-14  Philip Blundell  <philb@gnu.org>
 
 	* familiar/control.translation: Depend on virtual-locale-CC not

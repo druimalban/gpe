@@ -43,17 +43,18 @@ MAINTAINER = $(shell grep 'Maintainer: ' familiar/$(CONTROL) | cut -d ' ' -f 2-)
 transdist := familiar/dist-translation
 templates := ../build/familiar
 
-translation-package:
-	make DESTDIR=$(transdist) install-mo
+real-translation-package: all-mo
 	rm -rf $(transdist)
 	for LINGUA in $(LINGUAS); do \
 		i=$$(echo $$LINGUA | tr '[A-Z_]' '[a-z-]'); \
 		mkdir -p $(transdist)/$$i/CONTROL; \
 		mkdir -p $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES; \
-		cp $(DESTDIR)$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/$(PACKAGE).mo $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/; \
+		install -m 644 po/$$LINGUA.mo $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/$(PACKAGE).mo; \
 		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(PACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
-		cp $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
+		install $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
 		chown -R root.root $(transdist)/$$i; \
 		$(IPKG_BUILD) $(transdist)/$$i; \
 	done
 
+translation-ipkg:
+	make PREFIX=/usr real-translation-package
