@@ -20,6 +20,7 @@
 
 gchar *Ntpservers[5]=
   {
+    "time.handhelds.org",
     "time.apple.com",
     "time.esec.com.au",
     "ptbtime1.ptb.de",
