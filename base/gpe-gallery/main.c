@@ -56,6 +56,8 @@ guint slideshow_timer = 0;
 guint x_start, y_start, x_max, y_max;
 double xadj_start, yadj_start;
 
+gboolean rotate_flag;
+
 struct gpe_icon my_icons[] = {
   { "open", "open" },
   { "left", "left" },
@@ -112,12 +114,13 @@ rotate_button_down (GtkWidget *w, GdkEventButton *b)
 
   starting_angle = a;
 
-  gdk_pointer_grab (w->window, FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+  gdk_pointer_grab (w->window, FALSE, 
+		    GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
 		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
 }
 
 void
-button_down (GtkWidget *w, GdkEventButton *b)
+pan_button_down (GtkWidget *w, GdkEventButton *b)
 {
   x_start = b->x_root;
   y_start = b->y_root;
@@ -128,8 +131,18 @@ button_down (GtkWidget *w, GdkEventButton *b)
   x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 4);
   y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 4);
 
-  gdk_pointer_grab (w->window, FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+  gdk_pointer_grab (w->window, 
+		    FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
 		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
+}
+
+void
+button_down (GtkWidget *w, GdkEventButton *b)
+{
+  if (rotate_flag)
+    rotate_button_down (w, b);
+  else
+    pan_button_down (w, b);
 }
 
 void
@@ -139,7 +152,7 @@ button_up (GtkWidget *w, GdkEventButton *b)
 }
 
 void
-motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
+rotate (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 {
   int x = m->x, y = m->y;
   double a = angle (w, x, y);
@@ -153,6 +166,8 @@ motion (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
   rotate_pixbuf = image_rotate (image_pixbuf, deg);
 
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), rotate_pixbuf);
+
+  gdk_window_get_pointer (w->window, NULL, NULL, NULL);
 }
 
 void
@@ -172,6 +187,33 @@ pan (GtkWidget *w, GdkEventMotion *m)
 
   gtk_adjustment_set_value (h_adjust, x);
   gtk_adjustment_set_value (v_adjust, y);
+
+  gdk_window_get_pointer (w->window, NULL, NULL, NULL);
+}
+
+void
+motion_notify (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
+{
+  if (rotate_flag)
+    rotate (w, m, pixbuf);
+  else
+    pan (w, m);
+}
+
+gboolean
+set_rotate (GtkWidget *w)
+{
+  rotate_flag = TRUE;
+
+  return TRUE;
+}
+
+gboolean
+set_pan (GtkWidget *w)
+{
+  rotate_flag = FALSE;
+
+  return TRUE;
 }
 
 void
@@ -569,7 +611,7 @@ main (int argc, char *argv[])
 
   gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_down), NULL);
   gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_up), NULL);
-  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (pan), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), NULL);
 
   gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
@@ -695,12 +737,12 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("pan");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Pan"), 
-			   _("Toggle Pan"), _("Toggle Pan"), pw, NULL, NULL);
+			   _("Toggle Pan"), _("Toggle Pan"), pw, set_pan, NULL);
 
   p = gpe_find_icon ("rotate");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Rotate"), 
-			   _("Toggle Rotate"), _("Toggle Rotate"), pw, NULL, NULL);
+			   _("Toggle Rotate"), _("Toggle Rotate"), pw, set_rotate, NULL);
 
   gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_label,
 			   _("Loading..."), _("Loading..."));
