@@ -35,8 +35,9 @@ install-program: $(SONAME)
 	install -d $(DESTDIR)$(PREFIX)/lib
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
-install-devel:
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+install-devel: install-program
+	install -d $(DESTDIR)$(PREFIX)/include/gpe
+	for i in $(HEADERS); do install -m 644 gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libsoundgen.so
 
 clean:
