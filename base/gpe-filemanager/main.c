@@ -375,19 +375,20 @@ button_leave (GtkWidget *button, GdkEventCrossing *event)
 void
 button_clicked (GtkWidget *widget, gpointer udata)
 {
+  printf ("My type is %s\n", ((struct file_infomation *) udata)->type);
+
   if (strcmp (((struct file_infomation *) udata)->type, "file") == 0)
   {
-    if (((struct file_infomation *) udata)->mime != NULL)
-    {
-      run_program (((struct file_infomation *) udata)->filename,((struct file_infomation *) udata)->mime ->program);
-    }
-    else
-    {
-      ask_open_with (((struct file_infomation *) udata)->filename);
-    }
+    run_program (((struct file_infomation *) udata)->filename,((struct file_infomation *) udata)->mime ->program);
   }
-  else if (strcmp (((struct file_infomation *) udata)->type, "directory") == 0)
+  else if (strcmp (((struct file_infomation *) udata)->type, "regular") == 0)
+  {
+    ask_open_with (((struct file_infomation *) udata)->filename);
+  }
+  else
+  {
     browse_directory (((struct file_infomation *) udata)->filename);
+  }
 }
 
 void
