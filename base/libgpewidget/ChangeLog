@@ -1,3 +1,8 @@
+2005-03-11  Florian Boor <florian@kernelconcepts.de>
+
+	* render.c, gpe/render.h, doc/libgpewidget-render.html: removed (obsolete)
+	* Makefile: Update members.
+
 2005-03-09  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/*.sgml: More documentation (Init, Spacing).
