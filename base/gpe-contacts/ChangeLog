@@ -1,4 +1,6 @@
 2004-08-04  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Released Version 0.24
     
     * editing.c, *.xml, structure.c: Support for name detail fields hidden in 
                                      main window.
