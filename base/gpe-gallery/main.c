@@ -48,6 +48,7 @@ GList *image_filenames;
 // 1 = Thumbs
 gint current_view = 0;
 gint loading_directory = 0;
+gboolean confine_pointer_to_window;
 
 guint slideshow_timer = 0;
 
@@ -107,8 +108,8 @@ rotate_button_down (GtkWidget *w, GdkEventButton *b)
 
   starting_angle = a;
 
-  gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
-		    NULL, NULL, b->time);
+  gdk_pointer_grab (w->window, FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
 }
 
 void
@@ -120,8 +121,8 @@ button_down (GtkWidget *w, GdkEventButton *b)
   x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 2);
   y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 2);
 
-  gdk_pointer_grab (w->window, TRUE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
-		    w->window, NULL, b->time);
+  gdk_pointer_grab (w->window, FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
 }
 
 void
