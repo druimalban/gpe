@@ -1,3 +1,11 @@
+2003-02-12  Philip Blundell  <philb@gnu.org>
+
+	* question.c (add_button): New parameter box.  Pack buttons into
+	this container.
+	(gpe_question_ask): Use plain GtkWindow in place of GtkDialog.  If
+	no title desired, set window as no decorations and provide a frame.
+	(gpe_question_ask_yn): Add link warning to discourage use.
+
 2003-02-11  Philip Blundell  <philb@gnu.org>
 
 	* stylus.c (gpe_stylus_mode): Add missing _ to property name.
