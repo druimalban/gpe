@@ -1,51 +1,81 @@
 <?xml version="1.0"?>
 <opml>
-  <head>
-    <expansionState>1,8,24,25,32,33</expansionState>
-  </head>
-  <body>
-    <outline text="Main">
-      <outline text="App Manager"/>
-      <outline text="Beam"/>
-      <outline text="Bluetooth"/>
-      <outline text="Calculator"/>
-      <outline text="Calendar"/>
-      <outline text="Conf"/>
-      <outline text="Contacts">
-        <outline text="make font sizes of notebook tabs auto adjust to required size"/>
-      </outline>
-      <outline text="Database editor"/>
-      <outline text="Edit"/>
-      <outline text="Filemanager"/>
-      <outline text="Gallery"/>
-      <outline text="IRC"/>
-      <outline text="Login"/>
-      <outline text="Mail"/>
-      <outline text="NMF"/>
-      <outline text="Sketchbook"/>
-      <outline text="Soundbite"/>
-      <outline text="Timesheet"/>
-      <outline text="Today"/>
-      <outline text="Todo"/>
-      <outline text="Word"/>
-    </outline>
-    <outline text="Libraries">
-      <outline text="GPE">
-        <outline text="GPE"/>
-        <outline text="Conf"/>
-        <outline text="Database"/>
-        <outline text="Widget"/>
-      </outline>
-      <outline text="Todo DB"/>
-      <outline text="Soundgen"/>
-    </outline>
-    <outline text="Matchbox">
-      <outline text="Dockapps">
-        <outline text="Battery"/>
-        <outline text="Clipboard"/>
-        <outline text="Frontlight control"/>
-        <outline text="Theme changer"/>
-      </outline>
-    </outline>
-  </body>
+<head>
+<expansionState>4,11,23,34,46</expansionState>
+</head>
+<body>
+<outline text="Kernel 2.4.19">
+<outline text="ipsec x.509 support"/>
+<outline text="ipsec needs awk"/>
+</outline>
+<outline text="Main">
+<outline text="App Manager"/>
+<outline text="Beam"/>
+<outline text="Bluetooth"/>
+<outline text="Calculator"/>
+<outline text="Calendar">
+<outline text="doubleclick in list after start: &quot;new item&quot; is not shown correct"/>
+</outline>
+<outline text="Conf">
+<outline text="serial setup"/>
+<outline text="pcmcia control + driver binding utility"/>
+<outline text="more fine grained user access control"/>
+<outline text="network options for irda/usb/bluetooth"/>
+<outline text="storage setup functions (mount points)"/>
+</outline>
+<outline text="Figment">
+<outline text="title should be Figment - not Figment ::"/>
+</outline>
+<outline text="Contacts">
+<outline text="make font sizes of notebook tabs auto adjust to required size"/>
+</outline>
+<outline text="Database editor"/>
+<outline text="Edit"/>
+<outline text="Filemanager">
+<outline text="application bindings (mime types)"/>
+<outline text="copy + paste"/>
+<outline text="mark executables"/>
+<outline text="handle symlinks to directories + create symlinks"/>
+<outline text="list view"/>
+</outline>
+<outline text="Gallery"/>
+<outline text="IRC"/>
+<outline text="Login"/>
+<outline text="Mail"/>
+<outline text="NMF"/>
+<outline text="Rxvt-aa">
+<outline text="scrollbar -&gt; right"/>
+<outline text=".desktop starts the wrong binary"/>
+</outline>
+<outline text="Sketchbook"/>
+<outline text="Soundbite"/>
+<outline text="Textedit">
+<outline text="search bar wastes space"/>
+<outline text="new ipk necessary"/>
+</outline>
+<outline text="Timesheet"/>
+<outline text="Today"/>
+<outline text="Todo"/>
+<outline text="Word"/>
+</outline>
+<outline text="Libraries">
+<outline text="GPE">
+<outline text="GPE"/>
+<outline text="Conf"/>
+<outline text="Database"/>
+<outline text="Widget"/>
+</outline>
+<outline text="Todo DB"/>
+<outline text="Soundgen"/>
+</outline>
+<outline text="Matchbox">
+<outline text="Dockapps">
+<outline text="Battery"/>
+<outline text="Clipboard"/>
+<outline text="Frontlight control"/>
+<outline text="Theme changer"/>
+</outline>
+<outline text="allows some applications (e.g. for gpe-nmf this make no sense) to start twice"/>
+</outline>
+</body>
 </opml>
