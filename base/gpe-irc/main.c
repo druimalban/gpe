@@ -384,7 +384,6 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   g_io_add_watch (server->io_channel, G_IO_HUP, watch_disconnect_from_server, (gpointer) server);
   */
 
-  join_channel (server, "#gpe");
 }
 
 void
