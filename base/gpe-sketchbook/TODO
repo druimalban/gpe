@@ -1,11 +1,11 @@
 [ ]BUGS
+	[X]color: after first use, the eventbox does not pass the events to the button.
 	---
 	[ ]when create/save FAST, (<1s) two files with same name --> overwrite, BUT two entries in the clist!
-	[ ]grab keyevent (for joypad scrolling) + xstroke --> mess!
+	[X]grab keyevent (for joypad scrolling) + xstroke --> mess!
 	[ ]check memory leaks (free/unref)
 [ ]GENERAL todo
-	[ ]link against libpng12 instead of libpng3
-	[ ]add .desktop
+	[ ]submit pot to TP
 	[ ]thumbnails table, improvements
 	[ ]GTK2, improvements
 	---
@@ -19,7 +19,6 @@
 	[ ]open/save file, check success/failure
 	[ ]check GTK warnings / assertion failed
 	[ ]add cmd line options support (std --version --help)
-	[ ]use release tags in CVS
 	[ ]when allocation, check if != NULL (limited memory)
 	[ ]code cleaning!!!
 [ ]FEATURES ideas

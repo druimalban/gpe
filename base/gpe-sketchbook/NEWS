@@ -1,5 +1,11 @@
 GPE sketchbook NEWS
 
+* 0.2.2 2003-03-10
+- improved window title
+- fixed colorbox bug)
+- on [prev] and [next], ask to save if current modified
+- fixed #175 (window flickering is needed to save before exiting) 
+
 * 0.2.1 2003-02-25
 - reordered buttons in the filebox for better handling
   (New and Save should be used the most, so closer to the stylus)

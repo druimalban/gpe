@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-24 17:15+0200\n"
+"POT-Creation-Date: 2003-03-10 00:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,70 +14,82 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:111
-msgid "Sketch selector"
+#: gpe-sketchbook.desktop.in.h:2 src/selector.c:68
+msgid "Sketchbook"
 msgstr ""
 
-#: src/selector.c:81
+#: src/selector.c:84
 msgid "Couldn't open the directory"
 msgstr ""
 
-#: src/selector.c:88
+#: src/selector.c:91
 #, c-format
 msgid "Can not create %s, exit.\n"
 msgstr ""
 
-#: src/selector.c:146
+#: src/selector.c:149
 #, c-format
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:65 src/sketchpad-cb.c:169
-msgid "Delete sketch?"
+#: src/selector-cb.c:63 src/sketchpad-cb.c:183
+msgid "Delete current sketch?"
 msgstr ""
 
-#: src/selector-cb.c:65 src/sketchpad-cb.c:73 src/sketchpad-cb.c:149
-#: src/sketchpad-cb.c:169
+#: src/selector-cb.c:63 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:183
+msgid "Question"
+msgstr ""
+
+#: src/selector-cb.c:64 src/sketchpad-cb.c:184
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:65 src/sketchpad-cb.c:169
+#: src/selector-cb.c:64 src/sketchpad-cb.c:184
 msgid "Delete"
 msgstr ""
 
-#: src/selector-cb.c:128
+#: src/selector-cb.c:126
 msgid "a notebook to sketch your notes"
 msgstr ""
 
-#: src/selector-cb.c:130
+#: src/selector-cb.c:128
 msgid ""
 "The application provides two main windows: the Selector, and the Sketchpad.\n"
 "You select your sketchs with the Selector.\n"
 "You sketch your notes with the Sketchpad."
 msgstr ""
 
-#: src/selector-cb.c:135
+#: src/selector-cb.c:133
 msgid ""
 "(c) 2002 Luc Pionchon\n"
 "Distributed under GPL"
 msgstr ""
 
-#: src/sketchpad-cb.c:47
+#: src/sketchpad.c:182
+msgid " "
+msgstr ""
+
+#: src/sketchpad.c:183
+msgid "new"
+msgstr ""
+
+#: src/sketchpad-cb.c:46
 msgid ""
-"Sketch modified;\n"
+"Sketch modified,\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:48
-msgid "Exit"
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+msgid "Discard"
 msgstr ""
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:73 src/sketchpad-cb.c:149
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:73 src/sketchpad-cb.c:149
-msgid "Save last sketch?"
+#: src/sketchpad-cb.c:76
+msgid "Save current sketch?"
 msgstr ""
 
 #: src/files-png.c:180
@@ -95,8 +107,4 @@ msgstr ""
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
-msgstr ""
-
-#: gpe-sketchbook.desktop.in.h:2
-msgid "Sketchbook"
 msgstr ""

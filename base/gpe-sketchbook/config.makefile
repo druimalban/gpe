@@ -1,7 +1,7 @@
 PREFIX  = /usr/local
 GTK2 = yes
 
-VERSION = 0.2.1
+VERSION = 0.2.2
 
 PACKAGE = gpe-sketchbook
 
