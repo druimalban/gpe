@@ -38,7 +38,7 @@ $(OBJS): %.o: %.c $(HEADERS)
 
 install-program: all
 	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
-	install -D $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
+	install -D -m 644 $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
 	install -d $(DESTDIR)/etc/X11/Xinit.d
