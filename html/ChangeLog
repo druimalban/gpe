@@ -1,5 +1,9 @@
 2003-12-16  Colin Marquardt  <colin@marquardt-home.de>
 
+	* includes/menu.php: Name section "Mailing list/IRC".
+
+	* includes/foot.php: Link "Last modified" to ChangeLog.
+
 	* includes/menu.php: Use &middot; instead of |, looks nicer.
 
 	* includes/foot.php: Fix "Last modified".

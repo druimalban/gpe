@@ -24,7 +24,7 @@ function menu_entry($page, $title, $link,$thispage)
  &middot;
 <?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
  &middot;
-<?php menu_entry("contact", "Mailing list", "/contact.phtml", $pagename); ?>
+<?php menu_entry("contact", "Mailing list/IRC", "/contact.phtml", $pagename); ?>
  &middot;
 <A href="http://handhelds.org/bugzilla/">Bugs</A>
  &middot;
