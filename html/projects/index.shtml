@@ -6,8 +6,8 @@
 <!--#include virtual="/includes/head.shtml"-->
 
 The following projects are relevant to GPE: 
-
-Core software/libraries:<br>
+<p>
+Base software/libraries:<br>
 <ul> 
 <LI> <I><A HREF="GPE-usqld.shtml">uSQLd Database Engine</A></I> A minimimalist database engine base upon <a href="http://www.hwaci.com/sw/sqlite/"> SQLite</a>
 </ul>
