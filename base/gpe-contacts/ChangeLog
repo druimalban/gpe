@@ -1,5 +1,12 @@
 2002-08-25  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.04 released.
+
+2002-08-25  Philip Blundell  <philb@gnu.org>
+
+	* src/main.c (store_special_fields): Avoid crash when NULL passed
+	in or no category widgets exist.
+
 	* evo2gpe.py: New file, courtesy Robert Mibus.
 
 2002-08-24  Philip Blundell  <philb@gnu.org>
