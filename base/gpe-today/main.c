@@ -17,13 +17,14 @@
 #include "xsettings-client.h"
 #include "today.h"
 
-extern gboolean start_xsettings (void);
+extern gboolean start_xsettings(void);
 
 /* Private functions, public ones are in today.h */
-static void init_main_window (void);
-static void load_modules (void);
+static void init_main_window(void);
+static void load_modules(void);
 static void set_bg_pixmap(const char *path);
 static void set_bg_color(const char *color);
+static void refresh_widgets(void);
 
 int main(int argc, char **argv)
 {
@@ -56,6 +57,13 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 		g_print("ROTATION\n");
 	}
 
+        refresh_widgets();
+
+        return FALSE;
+}
+
+static void refresh_widgets(void)
+{
 	/* refresh various modules, not sure why this is necessary */
 	/* weird stuff going on here, MUST draw scroll's BEFORE toplevel */
 	gtk_widget_queue_draw(calendar.scroll->draw);
@@ -63,8 +71,6 @@ static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 	gtk_widget_queue_draw(todo.toplevel);
 	gtk_widget_queue_draw(calendar.toplevel);
 	gtk_widget_queue_draw(window.vpan1);
-
-	return FALSE;
 }
 
 #define MATCHBOX_BG "MATCHBOX/Background"
@@ -157,12 +163,14 @@ static void set_bg_pixmap(const char *path)
             g_object_unref(old_pix);
             g_object_unref(old_pix);
 	}
+
+        refresh_widgets();
     }
 }
 
 static void set_bg_color(const char *color)
 {
-
+    /* TODO */
 }
 
 static void init_main_window(void)
