@@ -1,0 +1,39 @@
+# Finnish translation for gpe-today.
+# Copyright (C) 2005 Lauri Nurmi <lanurmi@iki.fi>
+# This file is distributed under the same license as the gpe-today package.
+# Lauri Nurmi <lanurmi@iki.fi>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2005-03-06 13:23+0200\n"
+"Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:179 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#: todo.c:40
+msgid "No todo items"
+msgstr "Ei tehtäviä töitä"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "Ei tapahtumia tänään"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "Koko päivän tapahtuma"
+
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "XSettings-asiakkaan luominen ei onnistu"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "GPE Tänään"

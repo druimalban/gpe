@@ -1,0 +1,31 @@
+# Finnish translation for gpe-taskmanager.
+# Copyright (C) 2005 Lauri Nurmi <lanurmi@iki.fi>
+# This file is distributed under the same license as the gpe-taskmanager package.
+# Lauri Nurmi <lanurmi@iki.fi>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-taskmanager 0.14\n"
+"POT-Creation-Date: 2003-08-17 14:08+0100\n"
+"PO-Revision-Date: 2005-03-06 13:23+0200\n"
+"Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-taskmanager.c:226
+msgid "No program is selected"
+msgstr "Ohjelmaa ei ole valittu"
+
+#: gpe-taskmanager.c:246
+msgid "Icon"
+msgstr "Kuvake"
+
+#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
+msgid "Running programs"
+msgstr "Käynnissä olevat ohjelmat"
+
+#: gpe-taskmanager.c:260
+msgid "Kill program"
+msgstr "Tapa ohjelma"

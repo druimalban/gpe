@@ -1,0 +1,41 @@
+# Vietnamese Translation for libgpewidget-0.56.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgpewidget 0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2005-02-06 19:01+1030\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "Lỗi-GPE: %s\n"
+
+#: pixmaps.c:82
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr "Không tải được biểu tượng \"%s\""
+
+#: pixmaps.c:168
+#, c-format
+msgid "Icon \"%s\" not loaded"
+msgstr "Biểu tượng \"%s\" chưa được tải"
+
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Chưa chọn thư mục."
+
+#: what.c:78
+msgid "No help available."
+msgstr "Không có trợ giúp."
+
+#: question.c:175
+msgid "Question"
+msgstr "Câu hỏi"
