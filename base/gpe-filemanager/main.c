@@ -21,11 +21,15 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <libgnomevfs/gnome-vfs.h>
+#include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
+#include <libgnomevfs/gnome-vfs-mime-utils.h>
+#include <libgnomevfs/gnome-vfs-mime-info.h>
 #include <libgnomevfs/gnome-vfs-module-callback.h>
 #include <libgnomevfs/gnome-vfs-standard-callbacks.h>
 #include <libgnomevfs/gnome-vfs-xfer.h>
 #include <libgnomevfs/gnome-vfs-types.h>
+#include <libgnomevfs/gnome-vfs-application-registry.h>
 
 
 #include <gpe/init.h>
@@ -845,19 +849,42 @@ ask_open_with (FileInformation *file_info)
   else
     applications = gnome_vfs_mime_get_all_applications (file_info->vfs->mime_type);
 
-  while (applications)
+  if (applications)
   {
-    application = (GnomeVFSMimeApplication *)(((GList *)applications)->data);
+    while (applications)
+    {
+      application = (GnomeVFSMimeApplication *)(((GList *)applications)->data);
 
-    row_text[0] = application->name;
-    gtk_clist_append (GTK_CLIST (clist), row_text);
-    gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application);
+      row_text[0] = application->name;
+      gtk_clist_append (GTK_CLIST (clist), row_text);
+      gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application);
 
-    printf ("Got application %s\n", ((GnomeVFSMimeApplication *)(((GList *)applications)->data))->command);
-    applications = applications->next;
-    row_num ++;
+      printf ("Got application %s\n", 
+		((GnomeVFSMimeApplication *)(((GList *)applications)->data))->command);
+      applications = applications->next;
+      row_num ++;
+    }
   }
+  else
+  {
+	GList *r_applications = 
+	  gnome_vfs_application_registry_get_applications(file_info->vfs->mime_type);
+	  
+    while (r_applications)
+    {
+      GnomeVFSMimeApplication *application = 
+	    gnome_vfs_application_registry_get_mime_application(r_applications->data);
+      row_text[0] = application->name;
+      gtk_clist_append (GTK_CLIST (clist), row_text);
+      gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application);
 
+      printf ("Application from registry %s\n", 
+		((GnomeVFSMimeApplication *)(application)->command));
+      r_applications = r_applications->next;
+      row_num ++;
+    }
+  }
+  
 /*
   if (mime_programs)
   {
@@ -970,7 +997,7 @@ printf("mt: %s\n",file_info->vfs->mime_type);
       uri = gnome_vfs_uri_new (file_info->vfs->symlink_name);
       file_info->vfs = gnome_vfs_file_info_new ();
 
-      if (gnome_vfs_get_file_info_uri (uri, vfs, GNOME_VFS_FILE_INFO_DEFAULT) 
+      if (gnome_vfs_get_file_info_uri (uri, vfs, GNOME_VFS_FILE_INFO_DEFAULT)
           != GNOME_VFS_OK) {
             gpe_error_box_fmt (_("Symbolic link %s leads to inaccessable file!"), file_info->filename);
             return;
@@ -1014,14 +1041,14 @@ printf("mt: %s\n",file_info->vfs->mime_type);
 }
 
 
-const gchar *
+gchar *
 find_icon_path (gchar *mime_type)
 {
   struct stat s;
   gchar *mime_icon;
   gchar *mime_path, *p;
 
-  mime_icon = gnome_vfs_mime_get_icon (mime_type);
+  mime_icon = g_strdup(gnome_vfs_mime_get_icon (mime_type));
   if (mime_icon)
   {
     if (mime_icon[0] == '/')
@@ -1083,7 +1110,7 @@ void
 add_icon (FileInformation *file_info)
 {
   GdkPixbuf *pixbuf = NULL;
-  const gchar *mime_icon;
+  gchar *mime_icon;
   
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/directory.png");
@@ -1101,6 +1128,7 @@ add_icon (FileInformation *file_info)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 
   pixbuf = get_pixbuf (mime_icon);
+  g_free(mime_icon);
   
   /* now be careful */
   if (view_is_icons)
@@ -1727,7 +1755,10 @@ main (int argc, char *argv[])
 						  (GnomeVFSModuleCallback) auth_callback,
 						  NULL,
 						  NULL);
-                    
+						  
+  gnome_vfs_mime_info_reload();
+  gnome_vfs_application_registry_reload();
+
   set_directory_home (NULL);
 
   gtk_main();

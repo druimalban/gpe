@@ -1,3 +1,7 @@
+2004-07-01  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: Added support for application registry.
+	* main.c, Makefile: Fixed several warnings and minor bugs.
+	
 2004-06-28  Florian Boor  <florian.boor@kernelconcepts.de>
 	* main.c: add_icon() Improved displaying of ctime in list view.
 	* main.c: Improved handling of SMB shares. Some minor fixes.

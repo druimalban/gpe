@@ -16,7 +16,7 @@ else
 BUILD = build
 endif
 
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1 gnome-vfs-2.0 gtk+-2.0` 
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1 gnome-vfs-2.0 gtk+-2.0 gnome-vfs-module-2.0` 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite `pkg-config --libs dbus-glib-1 gtk+-2.0` -pthread -Wl --export-dynamic -lgnomevfs-2 -lgobject-2.0 -lgthread-2.0  
 
