@@ -10,8 +10,8 @@ MEMBERS = event-db old-db
 
 SONAME = $(PACKAGE).so.0
 
-CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
-LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget
+CFLAGS = $(shell pkg-config --cflags glib-2.0) $(GPECFLAGS) -DG_DISABLE_DEPRECATED
+LDFLAGS = $(shell pkg-config --libs glib-2.0) -lsqlite $(GPELIBS)
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 
@@ -37,7 +37,7 @@ else
 BUILD = build
 endif
 
-all: $(PACKAGE).so
+all: $(PACKAGE).so $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
 
 $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
@@ -48,12 +48,12 @@ $(SONAME): $(OBJS)
 .c.s:;
 	$(CC) $(CFLAGS) -S $<
 
-install-devel:
+install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
 
 clean:
-	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS)
+	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
 
 install-program: $(SONAME)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/

@@ -1,0 +1,11 @@
+prefix=PREFIX
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libeventdb
+Description: GPE Event Database Library
+Version: VERSION
+Requires: glib-2.0, libgpewidget
+Libs: -L${libdir} -leventdb
+Cflags: -I${includedir}
