@@ -645,7 +645,7 @@ GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style)
 {
 	GtkWidget *img=NULL,*lbl,*hb;
 
-	img = create_icon_pixmap (style, icon_file, 16);
+	img = create_icon_pixmap (style, icon_file, 18);
 	if (!img)
 		img = create_icon_pixmap (style, "/usr/share/pixmaps/menu_unknown_group16.png", 16);
 
@@ -729,6 +729,8 @@ void refresh_tabs ()
 
 	if (old_tab != -1)
 		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
+
+	TRACE ("refresh_tabs: <end>");
 }
 
 GList *load_simple_list (char *fn)
