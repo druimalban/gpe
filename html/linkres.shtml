@@ -17,7 +17,9 @@
 <LI> IETF/IMC vCard and vCalendar<BR>
 <A HREF="http://www.imc.org/pdi/">http://www.imc.org/pdi/</A>
 <LI> SyncML<BR>
-<A HREF="http://www.syncml.org">http://www.syncml.org</A>
+<A HREF="http://www.syncml.org">http://www.syncml.org</A><BR>
+SyncML library<BR>
+<A HREF="http://libsyncml.sourceforge.net/">http://libsyncml.sourceforge.net/</A>
 </UL>
 </P>
 

@@ -1,7 +1,10 @@
-<p> 
-Last modified: <!--#echo var="LAST_MODIFIED"--> 
-<p>
+<HR>
+<P> 
+<SMALL>
+Last modified: <!--#echo var="LAST_MODIFIED"-->,
 Page Maintained by <!--#echo var="author"--> <a href='mailto:<!--#echo var="authoremail"-->'><!--#echo var="authoremail"--></a>
+</SMALL>
+</P>
 </td> 
 </tr>
 </table> 

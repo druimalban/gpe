@@ -3,13 +3,15 @@
 <!--#set var="pagename" value="projects"-->
 <!--#set var="author" value="Nils Faerber"-->
 <!--#set var="authoremail" value="nils@handhelds.org"-->
-<!--#include virtual="/includes/head.shtml"-->
+<!--#include virtual="../includes/head.shtml"-->
 
 The following projects are relevant to GPE: 
 <p>
 Base software/libraries:<br>
 <ul> 
 <LI> <I><A HREF="GPE-usqld.shtml">uSQLd Database Engine</A></I> A minimimalist database engine base upon <a href="http://www.hwaci.com/sw/sqlite/"> SQLite</a>
+<LI> <I><A HREF="http://www.gtk.org">GTK+ Toolkit</A></I> Graphical User
+Interface (GUI) toolkit for X11 (not maintained by the GPE project)
 </ul>
 
  Applications:<BR>

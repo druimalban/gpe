@@ -3,7 +3,7 @@
 <!--#if expr="x${pagename}=xhome" -->
 <b>Home</b>
 <!--#else -->
-<A href="/gpe.shtml">Home</a>
+<A href="/index.shtml">Home</a>
 <!--#endif -->
 |
 <!--#if expr="x${pagename}=xprojects" -->
@@ -19,7 +19,7 @@
 <!--#endif -->
 |
 <!--#if expr="x${pagename}=xcvs" -->
-<b>Standards</b>
+<b>CVS</b>
 <!--#else -->
 <A href="/cvs.shtml">CVS</a>
 <!--#endif -->
