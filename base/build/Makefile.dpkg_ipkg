@@ -5,6 +5,9 @@
 
 CONTROL = `if test -e familiar/control1; then echo control1; else echo control; fi`
 
+# URL to source tarball
+SOURCE = ftp://gpe.handhelds.org/gpe/source/$(PACKAGE)-$(VERSION).tar.gz
+
 # can change this to e.g. /var/tmp/deb
 DEB_PATH = ../deb
 
@@ -29,7 +32,7 @@ install: install-program install-mo
 ipkg: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
-	sed 's:VERSION:$(VERSION):' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
+	sed 's:VERSION:$(VERSION):;s:SOURCE:$(SOURCE):' < familiar/$(CONTROL) > familiar/dist/CONTROL/control
 	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
 	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
 	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
