@@ -206,8 +206,8 @@ int try_to_raise_window (Display *display, char *window)
 
 			wm_state_atom = XInternAtom(display, "WM_STATE", True);
         		XGetWindowAttributes(display, xid, &xid_attrib);
-			if (xid_attrib.map_state == IsUnmapped /* ||
-				wm_state(display, xid) != NormalState */)
+			if (xid_attrib.map_state == IsUnmapped ||
+				wm_state(display, xid) != NormalState)
 			{
 				raise_window (display, xid);
 				printf ("raised window\n");
