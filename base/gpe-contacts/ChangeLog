@@ -1,5 +1,12 @@
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
+	* src/main.c (edit_contact): New function.
+	(my_icons): Add edit.
+	(main): Add "edit" icon to toolbar.
+	(selection_made): Remove redundant code.
+
+2002-12-01  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.06 released.
 	
 2002-12-01  Philip Blundell  <philb@gnu.org>

@@ -47,6 +47,7 @@ struct gpe_icon my_icons[] = {
   { "new" },
   { "save" },
   { "cancel" },
+  { "edit" },
   { "properties" },
   { "frame", MY_PIXMAPS_DIR "/frame.xpm" },
   { "notebook", MY_PIXMAPS_DIR "/notebook.xpm" },
@@ -67,6 +68,7 @@ update_categories (void)
   for (iter = categories; iter; iter = iter->next)
     {
       struct category *c = iter->data;
+      printf("append %s\n", c->name);
       gtk_simple_menu_append_item (menu, c->name);
     }
 
@@ -149,6 +151,18 @@ static void
 new_contact(GtkWidget *widget, gpointer d)
 {
   edit_person (NULL);
+}
+
+static void
+edit_contact (GtkWidget *widget, gpointer d)
+{
+  if (GTK_CLIST (clist)->selection)
+    {
+      guint row = (guint)(GTK_CLIST (clist)->selection->data);
+      guint uid = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      struct person *p = db_get_by_uid (uid);
+      edit_person (p);
+    }
 }
 
 static void
@@ -332,11 +346,8 @@ show_details (struct person *p)
 }
 
 void 
-selection_made (GtkWidget      *clist,
-		gint            row,
-		gint            column,
-		GdkEventButton *event,
-		GtkWidget      *widget)
+selection_made (GtkWidget *clist, gint row, gint column, 
+		GdkEventButton *event, GtkWidget *widget)
 {
   guint id;
   struct person *p;
@@ -346,10 +357,7 @@ selection_made (GtkWidget      *clist,
   show_details (p);
     
   if (event->type == GDK_2BUTTON_PRESS)
-    {
-      id = (guint)gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      edit_person (p);
-    }
+    edit_person (p);
   else
     discard_person (p);
 }
@@ -441,6 +449,11 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Contact"), 
 			   _("New Contact"), _("New Contact"),
 			   pw, (GtkSignalFunc)new_contact, NULL);
+
+  pw = gpe_render_icon (mainw->style, gpe_find_icon ("edit"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit Contact"), 
+			   _("Edit Contact"), _("Edit Contact"),
+			   pw, (GtkSignalFunc)edit_contact, NULL);
 
   pw = gpe_render_icon (mainw->style, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete Contact"), 

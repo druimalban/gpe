@@ -236,10 +236,11 @@ db_get_entries (void)
 
 #ifdef USE_USQLD	
   r = usqld_exec (db, "select urn,value from contacts where tag='NAME'",
+		   read_one_entry, &list, &err);
 #else
   r = sqlite_exec (db, "select urn,value from contacts where tag='NAME'",
+		   read_one_entry, &list, &err);
 #endif
-	read_one_entry, &list, &err);
   return list;
 }
 
