@@ -1,3 +1,7 @@
+2002-08-17  Moray Allan  <moray@sermisy.org>
+
+	* main.c, calibrate.c: Added 'gpe/' to header file locations.
+
 2002-08-07  Moray Allan  <moray@sermisy.org>
 
 	* Version 0.0.2 uploaded to archive.

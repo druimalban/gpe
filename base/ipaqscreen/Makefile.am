@@ -1,6 +1,12 @@
 ## Process this file with automake to produce Makefile.in
 
+prefix=@prefix@
+
+PREFIX=/usr/local
+
 SUBDIRS = intl po src
+
+AM_INSTALL_PROGRAM_FLAGS=-s install
 
 EXTRA_DIST = \
 	autogen.sh \
@@ -8,27 +14,9 @@ EXTRA_DIST = \
 
 install-data-local:
 	@$(NORMAL_INSTALL)
-	if test -d $(srcdir)/pixmaps; then \
-	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
-	  for pixmap in $(srcdir)/pixmaps/*; do \
-	    if test -f $$pixmap; then \
-	      $(INSTALL_DATA) $$pixmap $(DESTDIR)$(pkgdatadir)/pixmaps; \
-	    fi \
-	  done \
-	fi
 	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/pixmaps
 	$(INSTALL_DATA) $(srcdir)/ipaqscreen.png $(DESTDIR)$(PREFIX)/share/pixmaps
 	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/lib/menu
 	$(INSTALL_DATA) $(srcdir)/ipaqscreen.menu $(DESTDIR)$(PREFIX)/lib/menu/ipaqscreen
-
-dist-hook:
-	if test -d pixmaps; then \
-	  mkdir $(distdir)/pixmaps; \
-	  for pixmap in pixmaps/*; do \
-	    if test -f $$pixmap; then \
-	      cp -p $$pixmap $(distdir)/pixmaps; \
-	    fi \
-	  done \
-	fi
 
 include ../build/Makefile.dpkg_ipkg
