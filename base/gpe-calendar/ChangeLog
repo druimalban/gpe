@@ -1,5 +1,15 @@
 2002-10-12  Philip Blundell  <philb@gnu.org>
 
+	* week_view.c (draw_expose_event): Only draw black separator when
+	appropriate to do so.
+	(week_view_update): Put untimed events at start of list.
+	Calculate required height appropriately for Pango.
+
+	* main.c (main): Put all views inside a GtkNotebook.
+	(new_view): Select the appropriate page.
+
+2002-10-12  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (GTK2): Default is yes.
 
 	* main.c (main): Fix warnings.

@@ -37,6 +37,7 @@ GList *times;
 time_t viewtime;
 
 GtkWidget *main_window, *pop_window;
+GtkWidget *notebook;
 
 GdkFont *yearfont, *datefont;
 
@@ -100,16 +101,24 @@ update_current_view (void)
 static void
 new_view (GtkWidget *widget)
 {
-  if (current_view)
-    gtk_widget_hide (current_view);
+  guint i = 0;
+  GtkWidget *w;
 
   if (pop_window)
     gtk_widget_destroy (pop_window);
-  
-  gtk_widget_show (widget);
-  current_view = widget;
 
-  update_current_view ();
+  do 
+    {
+      w = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), i);
+      if (w == widget)
+	{
+	  current_view = w;
+	  update_current_view ();
+	  gtk_notebook_set_page (GTK_NOTEBOOK (notebook), i);
+	  return;
+	}
+      i++;
+    } while (w != NULL);
 }
 
 void
@@ -195,6 +204,7 @@ main (int argc, char *argv[])
     }
 
   vbox = gtk_vbox_new (FALSE, 0);
+  notebook = gtk_notebook_new ();
 
   time (&viewtime);
   week = week_view ();
@@ -277,11 +287,23 @@ main (int argc, char *argv[])
 			   _("Exit"), _("Exit"), pw, GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), day, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), week, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), month, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), future, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), year, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
+
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
+
+  gtk_widget_show (day);
+  gtk_widget_show (week);
+  gtk_widget_show (month);
+  gtk_widget_show (year);
+  gtk_widget_show (future);
+
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), day, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), week, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), month, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), year, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), future, NULL);
+
+  gtk_widget_show (notebook);
 
   gtk_container_add (GTK_CONTAINER (main_window), vbox);
 
