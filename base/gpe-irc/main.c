@@ -891,8 +891,7 @@ main (int argc, char *argv[])
   menu_item = gtk_image_menu_item_new_with_label ("New Connection");
   g_signal_connect (GTK_OBJECT (menu_item), "activate",
                     G_CALLBACK (new_connection_dialog), NULL);
-  menu_item_image =
-    gtk_image_new_from_pixbuf (gpe_find_icon ("globe"));
+  menu_item_image = gtk_image_new_from_pixbuf(gpe_find_icon ("globe"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item),
                                  menu_item_image);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);

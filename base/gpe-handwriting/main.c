@@ -21,7 +21,6 @@
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/errorbox.h>
 
 static struct gpe_icon my_icons[] = {

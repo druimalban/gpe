@@ -1,0 +1,4 @@
+2005-04-02  Luc Pionchon  <luc@handhelds.org>
+
+	* gpe-code.c (main): replaced gpe_render_icon by gtk_image_new_from_pixbuf
+

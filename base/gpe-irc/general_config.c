@@ -15,7 +15,6 @@
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
@@ -104,35 +103,35 @@ make_option_menu (gchar * tag_name)
   option_menu = gtk_option_menu_new ();
 
   menu_item = gtk_image_menu_item_new_with_label ("Black");
-  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("black"));
+  swatch = gtk_image_new_from_pixbuf (gpe_find_icon ("black"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("White");
-  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("white"));
+  swatch = gtk_image_new_from_pixbuf (gpe_find_icon ("white"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("Red");
-  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("red"));
+  swatch = gtk_image_new_from_pixbuf (gpe_find_icon ("red"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("Blue");
-  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("blue"));
+  swatch = gtk_image_new_from_pixbuf (gpe_find_icon ("blue"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);
   gtk_widget_show (menu_item);
 
   menu_item = gtk_image_menu_item_new_with_label ("Green");
-  swatch = gpe_render_icon (menu_item->style, gpe_find_icon ("green"));
+  swatch = gtk_image_new_from_pixbuf (gpe_find_icon ("green"));
   gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (menu_item), swatch);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (swatch);

@@ -1,0 +1,8 @@
+2005-04-02  Luc Pionchon  <luc@handhelds.org>
+
+	* main.c (main): replaced gpe_find_icon by gtk_image_new_from_pixbuf
+	                 removed unused "#include render.h"
+	* general_config.c (make_option_menu): Likewise.
+	* networks_config.c: removed unused "#include render.h"
+	(networks_config_edit_window): removed unused variable
+

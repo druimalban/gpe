@@ -15,7 +15,6 @@
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
@@ -255,7 +254,6 @@ networks_config_edit_window (struct sql_network *network)
   GtkWidget *nick_entry, *real_name_entry, *password_entry;
   GtkWidget *save_button, *close_button, *new_server_button,
     *delete_server_button;
-  GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
   GtkTreeView *tree_view;
   GtkListStore *list_store;
@@ -446,7 +444,6 @@ networks_config_window (GtkWidget * widget)
     *hsep, *scroll;
   GtkWidget *new_button, *edit_button, *delete_button, *save_button,
     *close_button;
-  GtkTreeViewColumn *column;
   GtkCellRenderer *renderer;
   GdkPixmap *pmap;
   GdkBitmap *bmap;

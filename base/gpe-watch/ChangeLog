@@ -1,3 +1,7 @@
+2005-04-02  Luc Pionchon  <luc@handhelds.org>
+
+	* gpe-watch.c: removed unused "#include render.h"
+
 2005-03-14	Florian Boor <florian@kernelconcepts.de>
 		- Changed category to "Utility".
 

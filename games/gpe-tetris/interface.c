@@ -8,7 +8,6 @@
 #include "tetris.h"
 
 #include <gpe/init.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 
@@ -472,8 +471,6 @@ int main(int argc,char *argv[])
 	GdkBitmap *mask;
 	GtkWidget *pw;
 	GdkPixbuf *p;
-	GdkPixmap *pmap;
-	GdkBitmap *bmap;
 	
 	gtk_init(&argc,&argv);
 
@@ -528,19 +525,19 @@ int main(int argc,char *argv[])
 			   _("New game"), _("New game"), pw, show_new_game, NULL);
 
 	p = gpe_find_icon ("stop");
-	pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
 	menu_game_stop = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop game"), 
-			   _("Stop game"), _("Stop game"), pw, game_start_stop, NULL);
+			   _("Stop game"), _("Stop game"), pw,  GTK_SIGNAL_FUNC(game_start_stop), NULL);
 	gtk_widget_set_sensitive(menu_game_stop,FALSE);
 
 	p = gpe_find_icon ("pause");
-	pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
 	menu_game_pause = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Pause game"), 
 			   _("Pause game"), _("Pause game"), pw, game_set_pause, NULL);
 	gtk_widget_set_sensitive(menu_game_pause,FALSE);
 
 	p = gpe_find_icon ("highscores");
-	pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf (p);
 	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Highscores"), 
 			   _("Highscores"), _("Highscores"), pw, show_highscore_wrapper, NULL);
 

@@ -27,7 +27,6 @@
 #include <gdk/gdk.h>
 
 #include <gpe/init.h>
-#include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/gpe-iconlist.h>

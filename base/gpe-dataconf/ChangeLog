@@ -1,0 +1,6 @@
+2005-04-02  Luc Pionchon  <luc@handhelds.org>
+
+	* src/main.c: removed unused "#include render.h"
+	* src/questionfx.c: Likewise.
+
+

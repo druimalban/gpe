@@ -29,7 +29,6 @@
 #include <gpe/init.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
-#include <gpe/render.h>
 #include <gpe/stylus.h>
 #include <gpe/translabel.h>
 

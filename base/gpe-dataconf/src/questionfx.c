@@ -18,7 +18,6 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "../include/questionfx.h"
-#include "gpe/render.h"
 #include "gpe/picturebutton.h"
 #include "gpe/pixmaps.h"
 

@@ -384,13 +384,13 @@ int main( int argc, char *argv[] )
     gtk_window_set_title (GTK_WINDOW (window), _("CodeBreaker"));
 
     p = gpe_find_icon ("new");
-    pw = gpe_render_icon (window->style, p);
+    pw = gtk_image_new_from_pixbuf (p);
     gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
     			     _("New"), _("New game"), _("Tap here to start a new game."),
     			     pw, GTK_SIGNAL_FUNC (newGame), NULL);
 
     p = gpe_find_icon ("exit");
-    pw = gpe_render_icon (window->style, p);
+    pw = gtk_image_new_from_pixbuf (p);
     gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
     			     _("Exit"), _("Exit the program."), pw, 
     			     GTK_SIGNAL_FUNC (gtk_exit), NULL);

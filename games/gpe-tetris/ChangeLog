@@ -1,3 +1,11 @@
+2005-04-02  Luc Pionchon  <luc@handhelds.org>
+
+	* highscore.c: removed unused "#include render.h"
+	* interface.c (main): replaced gpe_render_icon by gtk_image_new_from_pixbuf
+	  and removed unused "#include render.h"
+	  (main): removed unused variable pmap, bmap
+	  (main): cast game_start_stop to GtkSignalFunc
+
 2004-09-18  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile: Update to latest standards.
