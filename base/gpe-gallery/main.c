@@ -78,9 +78,13 @@ update_window_title (void)
 void
 show_image (GtkWidget *widget, gpointer udata)
 {
+  gchar *filename;
+
+  filename = (GList *) udata)->data;
+
   gtk_widget_hide (view_widget);
 
-  image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) udata, NULL);
+  image_pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
 
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   gtk_box_pack_start (GTK_BOX (vbox2), image_widget, TRUE, TRUE, 0);
@@ -88,7 +92,7 @@ show_image (GtkWidget *widget, gpointer udata)
   gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_widget);
 
-  printf ("You just clicked on an image called %s\n", (gchar *) udata);
+  printf ("You just clicked on an image called %s\n", filename);
 }
 
 void
@@ -215,7 +219,7 @@ render_images ()
 
     printf ("Rendering image %s\n", image_filename);
 
-    gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, (gpointer) image_filename);
+    gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, (gpointer) this_item);
 
     gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
 
@@ -239,6 +243,12 @@ add_directory (gchar *directory)
   loading_directory = 1;
   printf ("Selected directory: %s\n", directory);
   g_list_free (image_filenames);
+
+  if (image_widget)
+  {
+    gtk_widget_destroy (image_widget);
+    gtk_widget_hide (tools_toolbar);
+  }
 
   gtk_widget_show (loading_toolbar);
 
