@@ -19,7 +19,7 @@
 #include <fcntl.h>  //open()
 #include <unistd.h> //close()
 
-GScanner *scanner;
+GScanner *scanner = NULL;
 
 #define G_TOKEN_SEMICOLON ';'
 
@@ -123,7 +123,7 @@ gchar * sgf_symbol_description(guint token){
   return NULL;
 }
 
-int last_sgf_property = 0;
+int last_sgf_property;
 
 /* Assuming scanner has eaten "[" */
 guint parse_sgf_number    (GScanner *scanner){/*int*/
@@ -328,18 +328,9 @@ static guint parse_sgf_CValueType (GScanner *scanner){
   return expected_token;
 }
 
+GScanner * sgf_scanner_new(){
+  GScanner * scanner;
 
-//------------------------------------------------------------------------
-int load_sgf_file(const char * filename){
-  int file_descriptor;
-  int gametree_level;
-  gint  content = 0;// see case: G_TOKEN_IDENTIFIER
-
-  sgf_parsed_init();
-
-  last_sgf_property = 0;
-
-  //--Config scanner
   scanner = g_scanner_new (NULL);
 
   //Character sets
@@ -392,9 +383,23 @@ int load_sgf_file(const char * filename){
       symbol_p++;
   }
 
+  return scanner;
+}
+
+//------------------------------------------------------------------------
+int load_sgf_file(const char * filename){
+  int file_descriptor;
+  int gametree_level;
+  gint  content = 0;// see case: G_TOKEN_IDENTIFIER
+
+  sgf_parsed_init();
+
+  last_sgf_property = 0;
+
+  //--Config scanner
+  if(!scanner) scanner = sgf_scanner_new();
 
   //--Load the file
-
   file_descriptor = open(filename, O_RDONLY);
   if(file_descriptor == -1){
     g_printerr("Error opening %s\n", filename);
@@ -548,7 +553,7 @@ int load_sgf_file(const char * filename){
   }//while
 
   //--Clean up
-  g_scanner_destroy (scanner);
+  //g_scanner_destroy (scanner);
   close(file_descriptor);
 
   sgf_parsed_end();
