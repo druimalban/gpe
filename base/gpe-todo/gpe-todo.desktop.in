@@ -6,6 +6,6 @@ Exec=gpe-todo
 Terminal=false
 Type=Application
 Icon=gpe-todo.png
-Categories=Application;PIM;GPE;
+Categories=Application;PIM;Office;GPE;
 StartupNotify=true
 SingleInstance=true
