@@ -45,6 +45,19 @@ clicked (GtkWidget *w)
   XChangeProperty (dpy, root, atom, XA_INTEGER, 8, PropModeReplace, &b, 1);
 }
 
+static GdkFilterReturn
+filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
+{
+  XEvent *xev = (XEvent *)xevp;
+  
+  if (xev->type == ClientMessage)
+    {
+      XAnyEvent *any = (XAnyEvent *)xev;
+      tray_handle_event (any->display, any->window, xev);
+    }
+  return GDK_FILTER_CONTINUE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -81,8 +94,6 @@ main (int argc, char *argv[])
   root = RootWindow (dpy, 0);
   atom = XInternAtom (dpy, "GPE_WHAT", 0);
 
-  gtk_widget_show (window);
-
   window_type_atom = XInternAtom (dpy, "_NET_WM_WINDOW_TYPE", False);
   window_type_dock_atom = XInternAtom (dpy,
 				       "_NET_WM_WINDOW_TYPE_DOCK", False);
@@ -92,6 +103,9 @@ main (int argc, char *argv[])
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
   tray_init (dpy, GDK_WINDOW_XWINDOW (window->window));
+
+  XSelectInput (dpy, GDK_WINDOW_XWINDOW (window->window), ClientMessageMask);
+  gdk_window_add_filter (window->window, filter, 0);
 
   gtk_main ();
 
