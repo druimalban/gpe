@@ -106,10 +106,10 @@ adb_SOURCES = \
 	support.c support.h \
 	interface.c interface.h \
 	callbacks.c callbacks.h \
-	structure.c db.c pixmaps.c
+	structure.c db.c
 
 
-adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2
+adb_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -118,8 +118,7 @@ bin_PROGRAMS = adb$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_adb_OBJECTS = main.$(OBJEXT) support.$(OBJEXT) interface.$(OBJEXT) \
-	callbacks.$(OBJEXT) structure.$(OBJEXT) db.$(OBJEXT) \
-	pixmaps.$(OBJEXT)
+	callbacks.$(OBJEXT) structure.$(OBJEXT) db.$(OBJEXT)
 adb_OBJECTS = $(am_adb_OBJECTS)
 adb_DEPENDENCIES =
 adb_LDFLAGS =
@@ -132,8 +131,7 @@ LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/callbacks.Po $(DEPDIR)/db.Po \
 @AMDEP_TRUE@	$(DEPDIR)/interface.Po $(DEPDIR)/main.Po \
-@AMDEP_TRUE@	$(DEPDIR)/pixmaps.Po $(DEPDIR)/structure.Po \
-@AMDEP_TRUE@	$(DEPDIR)/support.Po
+@AMDEP_TRUE@	$(DEPDIR)/structure.Po $(DEPDIR)/support.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -191,7 +189,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/db.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/pixmaps.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/structure.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/support.Po@am__quote@
 

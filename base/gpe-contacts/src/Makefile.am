@@ -13,4 +13,4 @@ adb_SOURCES = \
 	callbacks.c callbacks.h \
 	structure.c db.c
 
-adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2
+adb_LDADD = -L$(top_srcdir)/../libgpewidget -lgpewidget -lsqlite -lxml2 @GTK_LIBS@

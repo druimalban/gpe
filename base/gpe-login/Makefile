@@ -1,7 +1,7 @@
 CFLAGS = `gtk-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget
 
 gpe-login: gpe-login.o
-	$(CC) -o $@ $< `gtk-config --libs` -lcrypt -lgdk_imlib -L../libgpewidget -lgpewidget
+	$(CC) -o $@ $< -lgpewidget `gtk-config --libs` -lcrypt -lgdk_imlib -L../libgpewidget
 
 gpe-login.o: gpe-login.c
 	$(CC) -c $(CFLAGS) -o $@ $<
