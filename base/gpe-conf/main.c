@@ -109,6 +109,7 @@ struct gpe_icon my_icons[] = {
   { "media-play" },
   { "media-stop" },
   { "ipaq" },
+  { "exit" },
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
   { "default-bg", PREFIX "/share/pixmaps/gpe-default-bg.png" }, 

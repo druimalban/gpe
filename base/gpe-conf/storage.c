@@ -137,31 +137,35 @@ toolbar_set_style (GtkWidget * bar, gint percent)
 	  {	  
 	  	rc_style->bg[GTK_STATE_PRELIGHT] = green;
 	  	rc_style->base[GTK_STATE_PRELIGHT] = green;
+        rc_style->base[GTK_STATE_SELECTED] = green;
+        rc_style->bg[GTK_STATE_SELECTED] = green;
 	  }
       else if (percent < 95) 
 	  {	  
 	  	rc_style->bg[GTK_STATE_PRELIGHT] = yellow;
 	  	rc_style->base[GTK_STATE_PRELIGHT] = yellow;
+        rc_style->base[GTK_STATE_SELECTED] = yellow;
+        rc_style->bg[GTK_STATE_SELECTED] = yellow;
 	  }
       else 
 	  {	  
 	  	rc_style->bg[GTK_STATE_PRELIGHT] = red;
 	  	rc_style->base[GTK_STATE_PRELIGHT] = red;
+        rc_style->base[GTK_STATE_SELECTED] = red;
+        rc_style->bg[GTK_STATE_SELECTED] = red;
 	  }
 	  
       rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_BG;
       rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_BASE;
+      rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BASE;
+      rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BG;
 
 //end		
 
-      rc_style->base[GTK_STATE_SELECTED] = red;
       rc_style->fg[GTK_STATE_SELECTED] = white;
-      rc_style->bg[GTK_STATE_SELECTED] = red;
       rc_style->text[GTK_STATE_SELECTED] = white;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_FG;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_TEXT;
-      rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BASE;
-      rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BG;
       rc_style->text[GTK_STATE_NORMAL] = white;
       rc_style->fg[GTK_STATE_NORMAL] = white;
 /* bar background */	  

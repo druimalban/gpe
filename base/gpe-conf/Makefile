@@ -110,6 +110,10 @@ PIXMAPS += gpe-config-storage.png
 PIXMAPS += gpe-config-serial.png
 PIXMAPS += gpe-config-packages.png
 PIXMAPS += gpe-config-cardinfo.png
+PIXMAPS += menu-assign.png menu-eject.png menu-insert.png 
+PIXMAPS += menu-reset2.png menu-reset.png menu-resume.png menu-suspend.png
+PIXMAPS += pccard-cdrom.png pccard-ide.png pccard-memory.png
+PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
 
 all: $(PACKAGE) 
 
@@ -125,6 +129,7 @@ gpe-confsuid: gpe-confsuid.c
 install: gpe-conf
 	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
 	mkdir -p $(DESTDIR)/etc/gpe
+	$(INSTALL) familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
 	mkdir -p $(DESTDIR)$(BINDIR)
 	$(INSTALL) gpe-conf $(DESTDIR)/$(BINDIR)/gpe-conf
 	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-conf

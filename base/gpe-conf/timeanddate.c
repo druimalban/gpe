@@ -156,6 +156,9 @@ tzinfo get_tz_info(char *tzstr)
 	result.utcofs_m = 0;
 	result.utcdstofs_h = 0;
 	result.utcdstofs_m = 0;	
+
+	/* if no valid TZ is set, return defaults */
+	if ((!tzstr) || (strlen(tzstr)<3)) return result;
 	
 	/* get timezone name */ 
 	while ((i<strlen(tzstr)) && (isalpha(tzstr[i])) && (i < 5))
@@ -259,9 +262,9 @@ GtkWidget *Time_Build_Objects()
   GtkObject *adj;
   GtkTooltips *tooltips;
   // get the time and the date.
-  time_t t = time(NULL);
-  struct tm *tsptr = localtime(&t);
-  struct tm ts = *tsptr;     /* gtk_cal seems to modify the ptr
+  time_t t;
+  struct tm *tsptr;
+  struct tm ts;     /* gtk_cal seems to modify the ptr
 				returned by localtime, so we duplicate it.. */
 
   guint gpe_catspacing = gpe_get_catspacing ();
@@ -274,6 +277,9 @@ GtkWidget *Time_Build_Objects()
   
   tzinfo tzi;
   
+  time(&t);
+  tsptr = localtime(&t);
+  ts = *tsptr;
   ts.tm_year+=1900;
 
   if(ts.tm_year < 2002)
@@ -495,10 +501,14 @@ void Time_Save()
 
 void Time_Restore()
 {
-  time_t t = time(NULL);
-  struct tm *tsptr = localtime(&t);
-  struct tm ts = *tsptr;     /* gtk_cal seems to modify the ptr
+  time_t t;
+  struct tm *tsptr;
+  struct tm ts;     /* gtk_cal seems to modify the ptr
 				returned by localtime, so we duplicate it.. */
+  
+  time(&t);
+  tsptr = localtime(&t);
+  ts = *tsptr;
   gtk_calendar_select_month(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),ts.tm_mon,ts.tm_year+1900);
   gtk_calendar_select_day(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),ts.tm_mday);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.h),ts.tm_hour);

@@ -323,10 +323,10 @@ int suid_exec(const char* cmd,const char* params)
 	  dialog = 	gtk_dialog_new_with_buttons ("Root access",
                                                   GTK_WINDOW(mainw),
                                                   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                  GTK_STOCK_OK,
-                                                  GTK_RESPONSE_ACCEPT,
                                                   GTK_STOCK_CANCEL,
                                                   GTK_RESPONSE_REJECT,
+                                                  GTK_STOCK_OK,
+                                                  GTK_RESPONSE_ACCEPT,
                                                   NULL);
 	  label =
 		gtk_label_new (_("Some options are only\naccessible for user root.\nPlease enter password."));

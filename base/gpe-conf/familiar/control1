@@ -4,6 +4,6 @@ Priority: optional
 Version: 0.0.9-4
 Architecture: arm
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
-Depends: libgpewidget1 (>= 0.25), libdotdesktop, gpe-icons (>= 0.13)
+Depends: libgpewidget1 (>= 0.25), libdotdesktop
 Description: A set of configuration GUI
 Replaces: gpe-conf

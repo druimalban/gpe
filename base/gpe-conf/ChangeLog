@@ -1,5 +1,11 @@
 When			Who				Where						What
 
+06.04.2003		Florian			timeanddate.c				Fixed bug causing applet to segfault.
+								Makefile					Added default config file.
+								gpe-conf.config				Fixed storage bar color bug. (red if started as user)
+								storage.c					Applied Colins patch to change button order.
+								applets.c					Added new icons to Makefile.
+
 04.04.2003		Florian			cardinfo.c					Some minor updates in pcmcia frontend.
 								misc.*						Added network check.
 								timeanddate.c				"Get time from net" now only active if network is up.

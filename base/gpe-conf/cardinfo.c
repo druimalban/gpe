@@ -973,6 +973,12 @@ Cardinfo_Build_Objects (void)
   toolicons[1] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Assign Driver"), 
 			   _("Assign Driver"), _("Tap here to assign a driver to this card / change current driver assignment."),
 			   label, (GtkSignalFunc) do_driver_dialog, NULL);
+  gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
+
+  label = gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit applet"),
+			   _("Exit applet"), _("Exit applet"), label,
+			   (GtkSignalFunc) gtk_main_quit, NULL);
 			   
 
   /* socket tabs */	
