@@ -4,6 +4,7 @@
 				Updating of user network structs.
 				Updated behaviout for closing/opening devices window.
 	- netedit.* Added network editor.				
+	- Connection feedback handling... 
 
 05/18/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
