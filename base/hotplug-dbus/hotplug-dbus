@@ -3,7 +3,7 @@
 # Broadcast hotplug events on D-BUS and then call the appropriate agent
 
 OBJECT="/org/handhelds/gpe/hotplug"
-MESSAGE="HotplugEvent"
+MESSAGE="org.handhelds.gpe.HotplugEvent"
 
 invoke_dbus () 
 {
@@ -26,5 +26,3 @@ bluetooth)
 	invoke_dbus $*
 	;;
 esac
-
-exec /sbin/hotplug $*

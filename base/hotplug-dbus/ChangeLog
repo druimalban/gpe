@@ -1,3 +1,12 @@
+2004-10-17  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.8 released.
+
+2004-10-17  Phil Blundell  <pb@nexus.co.uk>
+
+	* hotplug-dbus: Remove tail-call to /sbin/hotplug causing
+	disastrous loop.
+
 2004-10-16  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.7 released.
