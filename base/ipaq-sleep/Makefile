@@ -10,11 +10,11 @@ install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/init.d
-#CM	mkdir -p $(DESTDIR)/etc/rc2.d
+	mkdir -p $(DESTDIR)/etc/rc2.d
 	install ipaq-sleep.init $(DESTDIR)/etc/init.d/ipaq-sleep
-#CM	ln -sf /etc/init.d/ipaq-sleep $(DESTDIR)/etc/rc2.d/S99ipaq-sleep
+	ln -sf /etc/init.d/ipaq-sleep $(DESTDIR)/etc/rc2.d/S99ipaq-sleep
 	install ipaq-sleep.conf $(DESTDIR)/etc/ipaq-sleep.conf
-#CM	install -D ipaq-sleep.session $(DESTDIR)/etc/X11/Xsession-gpe.d/69ipaq-sleep
+	install -D ipaq-sleep.session $(DESTDIR)/etc/X11/Xsession.d/69ipaq-sleep
 
 upstream: clean
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
@@ -26,6 +26,9 @@ ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/control familiar/dist/CONTROL
+	cp familiar/conffiles familiar/dist/CONTROL
+	cp familiar/preinst familiar/dist/CONTROL
+	cp familiar/postinst familiar/dist/CONTROL
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if test -d /etc/X11/Xsession-gpe.d/; then 
+    ln -fs /etc/X11/Xsession.d/69ipaq-sleep /etc/X11/Xsession-gpe.d/69ipaq-sleep
+fi
+
+exit 0

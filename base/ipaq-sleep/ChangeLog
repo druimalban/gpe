@@ -1,5 +1,12 @@
 2002-07-22  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile (ipkg): Copy familiar/preinst, familiar/postinst and
+	familiar/conffiles to /familiar/dist/ too.
+
+	* familiar/postinst (Module): New file. 
+	Symlinks/etc/X11/Xsession.d/69ipaq-sleep to
+	/etc/X11/Xsession-gpe.d/69ipaq-sleep.
+
 	* familiar/preinst (Module),
 	  familiar/control (Module),
 	  familiar/conffiles (Module),
