@@ -1,3 +1,7 @@
+2002-09-04  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.20 released.
+
 2002-09-02  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (new_event): Fix calculation of end time when
