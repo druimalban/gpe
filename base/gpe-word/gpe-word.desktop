@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Word Processer
+Comment=GPE Word
+Exec=gpe-word
+Terminal=0
+Type=Application
+Icon=gpe-word.png
+Categories=Application;PIM;GPE
+StartupNotify=True
