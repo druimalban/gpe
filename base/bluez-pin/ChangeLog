@@ -1,3 +1,9 @@
+2003-06-21  Philip Blundell  <philb@gnu.org>
+
+	* bluez-pin.c: Removed.
+	* main.c, ui.c, dbus.c: New files, derived from above.  Remove
+	database code.
+	
 2003-06-18  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (GTKCFLAGS): Add D-BUS.
