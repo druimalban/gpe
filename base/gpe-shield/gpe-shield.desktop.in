@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Desktop Firewall
+_Comment=Change security settings and access control
+Exec=gpe-shield
+Terminal=0
+Type=Application
+Icon=gpe-shield.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True
+SingleInstance=True

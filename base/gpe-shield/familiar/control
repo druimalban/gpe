@@ -1,0 +1,9 @@
+Package: gpe-shield
+Section: base
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Depends: libgpewidget1 (>= 0.40)
+Description: GPE desktop firewall for mobile devices.
+Source: ftp://ftp.handhelds.org/pub/projects/gpe/source/gpe-shield-VERSION.tar.gz

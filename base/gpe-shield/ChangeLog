@@ -1,0 +1,11 @@
+2004-06-02 Florian Boor <florian.boor@kernelconceps.de>
+	* interface.c: Fixed icon declaration bug.
+	* editrule.c: Added much stuff.
+	* interface.c: Implemented several checks, removing, active change...
+	* backend.c: Simplified stuff, implemented applying and several other commands.
+
+2004-06-01 Florian Boor <florian.boor@kernelconceps.de>
+	* Introduced this file
+	* backend.c: Make backend honor active flag.
+	* editrule*: Added rule editor.
+	* interface.c: New button: Edit rule.
