@@ -3,7 +3,7 @@ PACKAGE = detect-stylus
 STRIP = strip
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.12
+VERSION = 0.13
 
 MEMBERS = detect-stylus
 
