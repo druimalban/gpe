@@ -738,7 +738,9 @@ do_search (GObject *obj, GtkWidget *entry)
 {
   gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
-  GSList *all_entries = db_get_entries (), *iter = NULL;
+  gchar *cat_id = NULL;
+/*   GSList *all_entries = db_get_entries (), *iter = NULL; */
+  GSList *sel_entries = NULL, *iter = NULL;
   struct gpe_pim_category *c = NULL;
   GtkTreePath *path;
 
@@ -747,33 +749,35 @@ do_search (GObject *obj, GtkWidget *entry)
       GSList *l = gpe_pim_categories_list ();
       GSList *ll = g_slist_nth (l, category - 1);
 
-      if (ll)
-        c = ll->data;
+      if (ll) 
+        {
+          c = ll->data;
+          cat_id = g_strdup_printf("%u", c->id);
+        }
 
       g_slist_free (l);
     }
 
-  all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
+  /* Todo cat  */
+  sel_entries = db_get_entries_list (text, cat_id);
+  sel_entries = g_slist_sort (sel_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
   show_details(NULL);
 
-  for (iter = all_entries; iter; iter = iter->next)
+  for (iter = sel_entries; iter; iter = iter->next)
     {
       struct person *p = iter->data;
       GtkTreeIter titer;
       
-      if (match_for_search (p, text, c))
-        {
-	      gtk_list_store_append (list_store, &titer);
-	      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
-        }
+      gtk_list_store_append (list_store, &titer);
+      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
 
       discard_person (p);
     }
   
-  g_slist_free (all_entries);
-  if (text) 
+  g_slist_free (sel_entries);
+  if (text)
     g_free (text);
   
   /* select first */
@@ -786,7 +790,8 @@ static void
 do_find (void)
 {
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
-  GSList *all_entries = do_find_contacts(GTK_WINDOW(mainw)), *iter = NULL;
+  gchar *cat_id = NULL;
+  GSList *all_entries = NULL, *iter = NULL;
   struct gpe_pim_category *c = NULL;
   GtkTreePath *path;
 
@@ -796,11 +801,15 @@ do_find (void)
       GSList *ll = g_slist_nth (l, category - 1);
 
       if (ll)
-        c = ll->data;
+        {
+          c = ll->data;
+          cat_id = g_strdup_printf("%u", c->id);
+        }
 
       g_slist_free (l);
     }
 
+  all_entries = do_find_contacts(GTK_WINDOW(mainw), cat_id);
   all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);

@@ -38,7 +38,9 @@ extern void discard_person (struct person *);
 extern void db_set_data (struct person *, gchar *tag, gchar *value);
 extern struct tag_value *db_find_tag (struct person *p, gchar *tag);
 extern GSList *db_get_entries (void);
-extern GSList *db_get_entries_filtered (const gchar *str);
+extern GSList *db_get_entries_finddlg (const gchar *str, const gchar *cat);
+extern GSList *db_get_entries_list (const gchar *name, const gchar *cat);
+
 extern struct person *db_get_by_uid (guint uid);
 extern gboolean db_delete_by_uid (guint uid);
 extern void db_set_multi_data (struct person *p, gchar *tag, gchar *value);

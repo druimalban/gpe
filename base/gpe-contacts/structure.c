@@ -552,7 +552,7 @@ load_well_known_tags (void)
 	    h++;
 	  *h = 0;	// dump trailing whitespace
 	  if (*s)
-	    well_known_tags = g_list_append (well_known_tags, g_strdup (s));
+	    well_known_tags = g_list_append (well_known_tags, g_ascii_strup (s, -1));
 	}
       fclose (fp);
     }

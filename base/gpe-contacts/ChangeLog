@@ -1,3 +1,12 @@
+2004-11-25  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * structure.c (load_well_known_tags): Make sure all tags are uppercase.
+    * db.c: New functions (db_check_tags, check_one_tag) to make sure all
+            tags are upercase.
+    * finddlg.c, finddlg.h, db.c, db.h, main.c: Applied patch to speed up 
+                                                search using SQL. Thanks
+                                                to Christian Gillot for this.
+            
 2004-11-18  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.33 released.

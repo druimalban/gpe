@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-12 16:27+0200\n"
+"POT-Creation-Date: 2004-10-17 00:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,112 +16,120 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: db.c:76
+#: db.c:70
 msgid "Name"
 msgstr ""
 
-#: db.c:77
+#: db.c:71
 msgid "Phone"
 msgstr ""
 
-#: db.c:78
+#: db.c:72
 msgid "EMail"
 msgstr ""
 
-#: editing.c:107 main.c:1212
+#: editing.c:108 main.c:1218
 msgid "Details"
 msgstr ""
 
-#: editing.c:226
+#: editing.c:227
 msgid "no year"
 msgstr ""
 
-#: editing.c:435 main.c:469 main.c:596
+#: editing.c:436 main.c:470 main.c:597
 msgid "Categories"
 msgstr ""
 
-#: editing.c:533
-msgid "New Contact"
-msgstr ""
-
-#: editing.c:535
-msgid "Edit Contact"
-msgstr ""
-
-#: editing.c:964
+#: editing.c:972
 msgid "Select image"
 msgstr ""
 
-#: main.c:85 main.c:197
+#: main.c:80 main.c:182
+msgid "Edit Contact"
+msgstr ""
+
+#: main.c:86 main.c:198
 msgid "Really delete this contact?"
 msgstr ""
 
-#: main.c:85 main.c:197 structure.c:176
+#: main.c:86 main.c:198 structure.c:176
 msgid "Confirm"
 msgstr ""
 
-#: main.c:137
+#: main.c:138
 msgid "All categories"
 msgstr ""
 
-#: main.c:480
+#: main.c:160
+msgid "New Contact"
+msgstr ""
+
+#: main.c:481
 msgid "No contact selected."
 msgstr ""
 
-#: main.c:552 main.c:1266 main.c:1332
+#: main.c:553 main.c:1272 main.c:1338
 msgid "Contact"
 msgstr ""
 
-#: main.c:1176 gpe-contacts.desktop.in.h:1
+#: main.c:1182 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:1189
+#: main.c:1195
 msgid "Tap this button to add a new contact."
 msgstr ""
 
-#: main.c:1196
+#: main.c:1202
 msgid "Edit"
 msgstr ""
 
-#: main.c:1197
+#: main.c:1203
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:1203
+#: main.c:1209
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:1213
+#: main.c:1219
 msgid "Tap here to show contacts details."
 msgstr ""
 
-#: main.c:1222
+#: main.c:1228
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: main.c:1227
+#: main.c:1233
 msgid "Properties"
 msgstr ""
 
-#: main.c:1227
+#: main.c:1233
 msgid "Tap here to configure this program."
 msgstr ""
 
-#: main.c:1233
+#: main.c:1239
 msgid "Close"
 msgstr ""
 
-#: main.c:1233
+#: main.c:1239
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:1292
+#: main.c:1298
 msgid "Find:"
 msgstr ""
 
-#: main.c:1299
+#: main.c:1305
 msgid "in"
+msgstr ""
+
+#: main.c:1491
+msgid "My Card"
+msgstr ""
+
+#: main.c:1494
+msgid "Saving vcard failed"
 msgstr ""
 
 #: structure.c:105 structure.c:235
@@ -261,7 +269,7 @@ msgstr ""
 msgid "Contacts: Configuration"
 msgstr ""
 
-#: export.c:118
+#: export.c:158
 msgid "Save as..."
 msgstr ""
 
@@ -353,4 +361,12 @@ msgstr ""
 
 #: gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
+msgstr ""
+
+#: edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr ""
+
+#: edit-vcard.desktop.in.h:2
+msgid "My VCard"
 msgstr ""

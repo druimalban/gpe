@@ -42,6 +42,53 @@ static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY
 /* this one is for config data */
 static const char *schema4_str = "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
 
+static int
+check_one_tag (void *arg, int argc, char **argv, char **names)
+{
+  GSList **list = (GSList **) arg;
+  gchar *utag = g_ascii_strup (argv[0], -1);
+
+  if (argc && (argv[0][0] != 0) && strcmp(argv[0], utag))
+    *list = g_slist_append(*list, g_strdup(argv[0]));
+  g_free(utag);
+  return 0;
+}
+
+static void 
+db_check_tags(void)
+{
+  char *err;
+  int r;
+  GSList *list = NULL;
+
+  r = sqlite_exec (db, "select tag from contacts",
+                   check_one_tag, &list, &err);
+
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+  
+  if (list)
+    {
+      GSList *iter;
+
+      for (iter = list; iter; iter = iter->next)
+        {
+           gchar *utag = g_ascii_strup (iter->data, -1);
+           r = sqlite_exec_printf (db, "update contacts set tag='%q' where (tag='%q')", 
+                                   NULL, NULL, &err, utag, iter->data);
+           if (r) 
+             fprintf(stderr, "Err: %s\n", err);
+           if (r)
+             free (err);
+           g_free(iter->data);
+        }
+      g_slist_free(list);
+    }
+}
+
 int 
 db_open (gboolean open_vcard)
 {
@@ -76,6 +123,8 @@ db_open (gboolean open_vcard)
 
   migrate_old_categories (db);
 
+  db_check_tags();
+  
   return 0;
 }
 
@@ -107,6 +156,7 @@ load_structure (void)
   g_free (buf);
   return rc;
 }
+
 
 struct tag_value *
 new_tag_value (gchar * tag, gchar * value)
@@ -176,7 +226,7 @@ new_person_id (guint * id)
 }
 
 gint 
-sort_entries (struct person * a, struct person * b)
+sort_entries(struct person * a, struct person * b)
 {
   return strcoll (a->name, b->name);
 }
@@ -273,19 +323,85 @@ db_get_entries (void)
 }
 
 GSList *
-db_get_entries_filtered (const gchar *str)
+db_get_entries_list (const gchar *name, const gchar *cat)
 {
   GSList *list = NULL;
   char *err;
   int r;
   gchar *strsearch;
 
-  if ((!str) || !strlen(str)) 
+  gboolean no_cat = (!cat) || (!strlen(cat));
+  gboolean no_name = (!name) && (!strlen(name));
+
+  if (no_name && no_cat) 
     return db_get_entries();
   
+  strsearch = g_strdup_printf("%%%s%%", name);
+
+  if (no_name && !no_cat) 
+    {
+      r = sqlite_exec_printf 
+        (db, "select distinct urn from contacts where tag = 'CATEGORY' and value like '%q'",
+         read_one_entry, &list, &err, cat);
+    }
+  else if (no_cat)
+    {
+      r = sqlite_exec_printf 
+        (db, "select distinct urn from contacts where (tag = 'NAME' or tag = 'GIVEN_NAME' or tag = 'FAMILY_NAME' or tag = 'COMPANY' or tag = 'MIDDLE_NAME') and value like '%q'",
+         read_one_entry, &list, &err, strsearch);
+    } 
+  else 
+    {
+      r = sqlite_exec_printf 
+        (db, "select urn from contacts where tag = 'CATEGORY' and value = '%q' and urn IN (select distinct urn from contacts where (tag = 'NAME' or tag = 'GIVEN_NAME' or tag = 'FAMILY_NAME' or tag = 'COMPANY' or tag = 'MIDDLE_NAME') and value like '%q')",
+         read_one_entry, &list, &err, cat, strsearch);
+    }
+ 
+  g_free(strsearch);
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  return list;
+}
+
+
+GSList *
+db_get_entries_finddlg (const gchar *str, const gchar *cat)
+{
+  GSList *list = NULL;
+  char *err;
+  int r;
+  gchar *strsearch;
+  gboolean has_cat = cat && strlen(cat);
+  gboolean has_str = str && strlen(str);
+
+  if (!has_cat && !has_str) 
+    {
+      return db_get_entries();
+    } 
+
   strsearch = g_strdup_printf("%%%s%%", str); 
-  r = sqlite_exec_printf (db, "select distinct urn from contacts where value like '%q'",
-		   read_one_entry, &list, &err, strsearch);
+
+  if (has_cat && has_str) 
+    {
+      r = sqlite_exec_printf (db, "select urn from contacts where (tag = 'CATEGORY' or tag = 'category') and value = '%q' and urn in (select distinct urn from contacts where value like '%q');",
+                              read_one_entry, &list, &err, cat, strsearch);
+    } 
+  else if (has_cat)
+    {
+      r = sqlite_exec_printf (db, "select distinct urn from contacts where category = '%q'",
+                              read_one_entry, &list, &err, cat);
+    }
+  else
+    {
+      r = sqlite_exec_printf (db, "select distinct urn from contacts where value like '%q'",
+                              read_one_entry, &list, &err, strsearch);
+    }
+  
   g_free(strsearch);
   if (r)
     {
