@@ -1218,11 +1218,13 @@ void on_button_game_new_clicked(GtkButton *button, gpointer unused){
 void on_button_game_save_clicked(GtkButton *button, gpointer unused){
   popup_menu_close(go.game_popup_button);
   go.save_game = TRUE;
+  gtk_window_set_title( GTK_WINDOW(go.file_selector), _("Save game as..."));
   gtk_widget_show (go.file_selector);
 }
 void on_button_game_load_clicked(GtkButton *button, gpointer unused){
   popup_menu_close(go.game_popup_button);//FIXME: connect function on "clicked"
   go.save_game = FALSE;
+  gtk_window_set_title( GTK_WINDOW(go.file_selector), _("Load game..."));
   gtk_widget_show (go.file_selector);
 }
 
@@ -1595,7 +1597,7 @@ void gui_init(){
                            image, GTK_SIGNAL_FUNC (on_button_pass_clicked), NULL);
 
   //--file selector
-  widget = gtk_file_selection_new (NULL/*_("Save as...")*/);
+  widget = gtk_file_selection_new (NULL);
 
   g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
                     "clicked",
