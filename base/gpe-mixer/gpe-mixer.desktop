@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Mixer
-Comment=Audio Mixer
-Exec=gpe-mixer
-Terminal=0
-Type=Application
-Icon=gpe-mixer.png
-Categories=Application;AudioVideo;GPE
-SingleInstance=true
