@@ -79,7 +79,6 @@ main (int argc, char *argv[])
 
   window = gtk_plug_new (0);
   gtk_widget_realize (window);
-  gdkw = window->window;
   
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
