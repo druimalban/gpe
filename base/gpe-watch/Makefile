@@ -48,7 +48,8 @@ install-program: all $(PACKAGE).desktop
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(PACKAGE).desktop
+	rm -f $(PACKAGE) $(OBJS) $(PACKAGE).desktop *.ipk
+	rm -rf familiar/dist
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
