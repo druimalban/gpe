@@ -1,3 +1,9 @@
+2003-03-07  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-flyer.tex: Make it use spanish translation.
+
+	* gpe-flyer_es.tex: Translation from J. Manrique Lopez.	
+
 2003-03-05  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-flyer.tex: Add info on how to create flyers that are 3-up on
