@@ -1,5 +1,9 @@
 2003-09-21  Colin Marquardt  <colin@marquardt-home.de>
 
+	* cardinfo.c (Cardinfo_Build_Objects): Fix typo.
+
+	* gpe-conf-users.desktop.in (_Comment): Fix typo.
+
 	* gpe-conf-serial.desktop.in (_Name): Fix typo.
 
 	* gpe-conf-logread.desktop.in (_Comment): Fix typo.

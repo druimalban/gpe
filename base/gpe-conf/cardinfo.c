@@ -1334,7 +1334,7 @@ Cardinfo_Build_Objects (void)
 				 _("Reset Card Manager"),
 				 _("Reset Card Manager"),
 				 _
-				 ("Click here to reset card manager. This commits all updates to pcmcia config files."),
+				 ("Click here to reset card manager. This commits all updates to PCMCIA config files."),
 				 label, (GtkSignalFunc) reset_cardmgr, NULL);
 
 	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
@@ -1344,7 +1344,7 @@ Cardinfo_Build_Objects (void)
 					 _("Assign Driver"),
 					 _("Assign Driver"),
 					 _
-					 ("Click here to assign a driver to this card / change current driver assignment."),
+					 ("Click here to assign a driver to this card or change current driver assignment."),
 					 label,
 					 (GtkSignalFunc) do_driver_dialog,
 					 NULL);
