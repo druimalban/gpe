@@ -41,13 +41,13 @@ static struct gpe_icon my_icons[] = {
 
 #define _(x) gettext(x)
 
-GtkWidget *window;
-GtkWidget *progress_bar;
+GtkWidget *window = NULL;
+GtkWidget *progress_bar = NULL;
 GtkWidget *file_selector = NULL;
 
 extern gboolean stop;
-gboolean playing;
-gboolean recording = -1;
+gboolean playing = FALSE;
+gboolean recording = FALSE;
 GTimer *timer = NULL;
 pid_t sound_process;
 
@@ -84,8 +84,12 @@ gint continue_sound (gpointer data)
 {
   gdouble time;
   pid_t pid;
-  time = g_timer_elapsed (timer, NULL);
-  gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, time);
+
+  if (progress_bar)
+  {
+    time = g_timer_elapsed (timer, NULL);
+    gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, time);
+  }
 
   pid = waitpid (sound_process, NULL, WNOHANG);
   if (pid != 0)
@@ -107,10 +111,13 @@ void start_sound (void)
      progress bar here - to do that we need to find out in advance how
      long (in seconds) the sound file is */
 
-  gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
-  gtk_progress_set_format_string (GTK_PROGRESS(progress_bar), _("%v s"));
-  gtk_progress_set_text_alignment (GTK_PROGRESS(progress_bar), 0.5, 0.5);
-  gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), TRUE);
+  if (progress_bar)
+  {
+    gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
+    gtk_progress_set_format_string (GTK_PROGRESS(progress_bar), _("%v s"));
+    gtk_progress_set_text_alignment (GTK_PROGRESS(progress_bar), 0.5, 0.5);
+    gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), TRUE);
+  }
 
   if (recording)
     {
@@ -189,7 +196,10 @@ void start_sound (void)
   timer = g_timer_new ();
   g_timer_start (timer);
 
-  gtk_widget_show (window);
+  if (window)
+  {
+    gtk_widget_show (window);
+  }
 }
 
 void
@@ -214,6 +224,15 @@ on_ok_button_clicked                (GtkButton       *button,
 {
   stop_sound();
   gtk_exit(0);
+}
+
+void
+file_selector_destroy_signal (GtkFileSelection *selector, gpointer user_data)
+{
+  if (!filename)
+  {
+    exit(0);
+  }
 }
 
 void
@@ -243,9 +262,6 @@ main(int argc, char *argv[])
   GtkWidget *label;
   GtkWidget *buttonok, *buttoncancel;
 
-  if (gpe_application_init (&argc, &argv) == FALSE)
-    exit (1);
-
   /* presumably this argument parsing should be done more nicely: */
 
   if (argc < 2)
@@ -272,11 +288,46 @@ main(int argc, char *argv[])
 
   if (argc >= 3)
     {
-      filename = argv[2];
+      if (!strcmp (argv[2], "--autogenerate-filename"))
+        {
+          time_t currenttime;
+          currenttime = time(NULL);
+          filename = g_strdup_printf ("%s/Voice memo at %s", getenv("HOME"), ctime(&currenttime));
+        }
+      else
+        {
+          filename = argv[2];
+        }
     }
   else
     {
       filename = NULL;
+    }
+
+  if (filename)
+    {
+      start_sound ();
+    }
+
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    exit (1);
+
+  if (filename == NULL)
+    {
+      if (playing)
+        file_selector = gtk_mini_file_selection_new ("Open audio note");
+      else
+        file_selector = gtk_mini_file_selection_new ("Save audio note as");
+
+      gtk_signal_connect (GTK_OBJECT (file_selector),
+                      "completed", GTK_SIGNAL_FUNC (file_chosen_signal), NULL);
+      gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
+                             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
+                             (gpointer) file_selector);
+      gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)),
+                             "destroy", GTK_SIGNAL_FUNC (file_selector_destroy_signal),
+                             (gpointer) file_selector);
+      gtk_widget_show (file_selector);
     }
 
   setlocale (LC_ALL, "");
@@ -338,25 +389,6 @@ main(int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (window), "destroy",
                       GTK_SIGNAL_FUNC (on_window_destroy),
                       NULL);
-
-  if (filename == NULL)
-    {
-      if (playing)
-        file_selector = gtk_mini_file_selection_new ("Open audio note");
-      else
-        file_selector = gtk_mini_file_selection_new ("Save audio note as");
-
-      gtk_signal_connect (GTK_OBJECT (file_selector),
-                      "completed", GTK_SIGNAL_FUNC (file_chosen_signal), NULL);
-      gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
-                             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-                             (gpointer) file_selector);
-      gtk_widget_show (file_selector);
-    }
-  else
-    {
-      start_sound ();
-    }
 
   gtk_main ();
 
