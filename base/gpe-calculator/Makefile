@@ -2,6 +2,7 @@ PACKAGE = gpe-calculator
 PREFIX = /usr/local
 DEBUG = no
 CVSBUILD = yes
+VERSION = 0.2
 
 MEMBERS = calc_basic  display interface math_functions callbacks general_functions  main support
 
