@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-07-17 10:13+0100\n"
+"POT-Creation-Date: 2002-08-12 23:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,15 +14,78 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: dirbrowser.c:307 errorbox.c:48 gtkminifilesel.c:370 smallbox.c:46
+#: about.c:118 dirbrowser.c:307 errorbox.c:48 gtkminifilesel.c:675
+#: smallbox.c:46 smallbox.c:149
 msgid "OK"
 msgstr ""
 
-#: pixmaps.c:57
+#: pixmaps.c:67
 #, c-format
 msgid "Unable to load icon \"%s\""
 msgstr ""
 
-#: dirbrowser.c:315 gtkminifilesel.c:366 smallbox.c:47
+#: dirbrowser.c:315 gtkminifilesel.c:150 gtkminifilesel.c:199
+#: gtkminifilesel.c:243 gtkminifilesel.c:671 smallbox.c:47 smallbox.c:150
 msgid "Cancel"
+msgstr ""
+
+#: gtkminifilesel.c:134 gtkminifilesel.c:154 gtkminifilesel.c:276
+msgid "Rename"
+msgstr ""
+
+#: gtkminifilesel.c:143
+msgid "New name:"
+msgstr ""
+
+#: gtkminifilesel.c:182 gtkminifilesel.c:203 gtkminifilesel.c:281
+msgid "Delete"
+msgstr ""
+
+#: gtkminifilesel.c:191
+#, c-format
+msgid "Do you really want to delete %s"
+msgstr ""
+
+#: gtkminifilesel.c:227
+msgid "Create directory"
+msgstr ""
+
+#: gtkminifilesel.c:247
+msgid "Create"
+msgstr ""
+
+#: gtkminifilesel.c:271
+msgid "New directory"
+msgstr ""
+
+#: gtkdatesel.c:176
+msgid "%Y"
+msgstr ""
+
+#: gtkdatesel.c:182
+msgid "%B"
+msgstr ""
+
+#: gtkdatesel.c:188
+msgid "Week %W"
+msgstr ""
+
+#: gtkdatesel.c:194
+msgid "%a, %d"
+msgstr ""
+
+#: question.c:112
+msgid "Question"
+msgstr ""
+
+#: question.c:113
+msgid "No"
+msgstr ""
+
+#: question.c:113
+msgid "Yes"
+msgstr ""
+
+#: about.c:55
+msgid "About "
 msgstr ""
