@@ -1,5 +1,10 @@
 2002-12-22  Philip Blundell  <philb@gnu.org>
 
+	* pixmaps.c (gpe_set_window_icon): New function.
+	(gpe_find_icon_pixmap): Don't check return code from
+	gpe_find_icon.
+	* gpe/pixmaps.h (gpe_set_window_icon): New prototype.
+
 	* what.c (gpe_what_init): Use gpe_try_find_icon rather than
 	gpe_find_icon.  On failure, display an error and give up
 	initialisation.

@@ -168,14 +168,21 @@ gboolean
 gpe_find_icon_pixmap (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
 {
   GdkPixbuf *pixbuf = gpe_find_icon (name);
-  if (pixbuf)
-    {
-      gdk_pixbuf_render_pixmap_and_mask (pixbuf,
-					 pixmap,
-					 bitmap,
-					 127);      
-      return TRUE;
-    }
-  return FALSE;
+  gdk_pixbuf_render_pixmap_and_mask (pixbuf,
+				     pixmap,
+				     bitmap,
+				     127);
+  return TRUE;
 }
 
+void
+gpe_set_window_icon (GtkWidget *window, gchar *icon)
+{
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
+
+  gtk_widget_realize (window);
+
+  gpe_find_icon_pixmap (icon, &pmap, &bmap);
+  gdk_window_set_icon (window->window, NULL, pmap, bmap);
+}
