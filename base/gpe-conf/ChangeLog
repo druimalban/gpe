@@ -1,5 +1,7 @@
 When			Who				Where						What
 
+07.07.2003		Florian			battery.c					Changed label for not installed battery.
+
 07.07.2003		Florian			storage.c					Added some space, some smaller optical changes.
 								battery.*					New applet: Battery info!
 								gpe-conf-battery.desktop

@@ -232,9 +232,9 @@ gchar tmp[128];
 		
 	} else {
 		gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(batt_ext.bar),0);
-		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),_("unkn."));
+		gtk_progress_bar_set_text(GTK_PROGRESS_BAR(batt_ext.bar),_(""));
 	
-		gtk_label_set_text(GTK_LABEL(batt_ext.lchem),_("unknown"));
+		gtk_label_set_text(GTK_LABEL(batt_ext.lchem),_("not installed"));
 	
 		gtk_label_set_text(GTK_LABEL(batt_ext.lstate),_("Status: unknown"));
 
