@@ -1,0 +1,31 @@
+# French translation for gpe-taskmanager
+# Copyright (C) 2003 Philip Blundell <philb@gnu.org>
+# This file is distributed under the same license as the PACKAGE package.
+# Luc Pionchon <luc@handhelds.org>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-taskmanager 0.14\n"
+"POT-Creation-Date: 2003-08-17 14:08+0100\n"
+"PO-Revision-Date: 2003-10-16 20:14+0300\n"
+"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-taskmanager.c:226
+msgid "No program is selected"
+msgstr "Aucun programme sélectionné"
+
+#: gpe-taskmanager.c:246
+msgid "Icon"
+msgstr "Icone"
+
+#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
+msgid "Running programs"
+msgstr "Programmes actifs"
+
+#: gpe-taskmanager.c:260
+msgid "Kill program"
+msgstr "Fermer le programme"
