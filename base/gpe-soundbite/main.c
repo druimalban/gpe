@@ -46,11 +46,13 @@ GtkWidget *progress_bar = NULL;
 GtkWidget *file_selector = NULL;
 gboolean gpe_initialised = FALSE;
 
-extern gboolean stop;
-gboolean playing = FALSE;
-gboolean recording = FALSE;
-GTimer *timer = NULL;
-pid_t sound_process;
+extern gboolean stop; /* set to TRUE when the sound process is trying to end */
+gboolean playing = FALSE; /* are we playing back a recording? */
+gboolean recording = FALSE; /* (or) are we making a new recording */
+GTimer *timer = NULL; /* timer used to provide callbacks */
+pid_t sound_process; /* process ID of child that plays or records */
+
+gdouble playlength; /* length in seconds of file we're playing */
 
 gchar *filename;
 
@@ -105,18 +107,33 @@ gint continue_sound (gpointer data)
   pid_t pid;
 
   if (progress_bar)
-  {
-    time = g_timer_elapsed (timer, NULL);
-    gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, time);
-  }
-
-  pid = waitpid (sound_process, NULL, WNOHANG);
-  if (pid != 0)
     {
-      if (pid < 0)
-       perror ("waitpid");
-      stop_sound ();
-      gtk_exit (0);
+      time = g_timer_elapsed (timer, NULL);
+      if (recording)
+        {
+          gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, time);
+        }
+      else
+        {
+          if (time >= playlength)
+            gtk_exit (0);
+          gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, playlength);
+        }
+    }
+
+  if (sound_process)
+    {
+      pid = waitpid (sound_process, NULL, WNOHANG);
+      if (pid != 0)
+        {
+          if (pid < 0)
+            perror ("waitpid");
+          stop_sound ();
+          if (recording)
+            gtk_exit (0);
+          else
+            sound_process = 0;
+        }
     }
 
   return TRUE;
@@ -172,6 +189,12 @@ void start_sound (void)
   else
     {
       int infd, outfd;
+      struct stat buf;
+
+      if (stat (filename, &buf) != 0)
+	perror ("stat");
+      playlength = buf.st_size / (1650*2);
+
       infd = open (filename, O_RDONLY);
       outfd = sound_device_open (O_WRONLY);
 
@@ -189,8 +212,8 @@ void start_sound (void)
               {
                 signal (SIGINT, sigint);
                 sound_decode (infd, outfd);
-               close (infd);
-               close (outfd);
+                close (infd);
+                close (outfd);
                 exit (0);
               }
             else
@@ -248,7 +271,8 @@ on_cancel_button_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
   stop_sound();
-  remove (filename);
+  if (recording)
+    remove (filename);
   gtk_exit(0);
 }
 
@@ -412,18 +436,19 @@ main(int argc, char *argv[])
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
   progress_bar = gtk_progress_bar_new ();
-  gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
   gtk_progress_set_format_string (GTK_PROGRESS(progress_bar), _("%v s"));
   gtk_progress_set_text_alignment (GTK_PROGRESS(progress_bar), 0.5, 0.5);
-  gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), TRUE);
+  gtk_progress_set_show_text (GTK_PROGRESS(progress_bar), FALSE);
 
   gtk_widget_show (progress_bar);
   if (playing)
     {
+      gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), FALSE);
       label = gtk_label_new (_("Playing"));
     }
   else
     {
+      gtk_progress_set_activity_mode (GTK_PROGRESS(progress_bar), TRUE);
       label = gtk_label_new (_("Recording"));
     }
   gtk_widget_show (label);
