@@ -13,9 +13,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <getopt.h>
+#include <ctype.h>
 
 #include <X11/Xlib.h>
-#include <X11/Xatom.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
@@ -30,7 +31,6 @@
 #include "support.h"
 
 #define GPE_OWNERINFO_DATA "/etc/gpe/gpe-ownerinfo.data"
-#define GPE_OWNERINFO_GEOM "/etc/X11/gpe-ownerinfo.geometry"
 
 int
 main (int argc, char *argv[])
@@ -38,12 +38,13 @@ main (int argc, char *argv[])
   GtkWidget *GPE_Ownerinfo;
   GtkWidget *widget;
   guint num_char = 0;
-
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   FILE *fp;
+  gchar * geometry = NULL;
+  int x = -1, y = -1, h = 0, w = 0;
+  int val;
+  int opt;
 
-  gboolean geometry_set = FALSE;
-  
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
 
@@ -59,55 +60,56 @@ main (int argc, char *argv[])
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
 
-  ownername    = g_strdup("GPE User");
-  owneremail   = g_strdup("nobody@localhost.localdomain");
-  ownerphone   = g_strdup("+99 (9999) 999-9999");
-  owneraddress = g_strdup("Edit file\n/etc/X11/gpe-ownerinfo.geometry\nto change this data.");
+  while ((opt = getopt (argc,argv,"hg:")) != EOF)
+    {
+      switch (opt) {
+      case 'g':
+	geometry = optarg;
+	break;
+      case 'h':
+	printf ("GPE Owner Info $Revision\n");
+	printf ("\n");
+	printf ("Valid options: -g GEOMETRY   window geometry (default: 240x120+0+200)\n");
+	printf ("               -h            this help text\n");
+	exit(1);
+      case '?':
+	if (isprint (optopt))
+	  fprintf (stderr, "gpe-ownerinfo: Unknown option -%c'.\n", optopt);
+	else
+	  fprintf (stderr,
+		   "gpe-ownerinfo: Unknown option character \\x%x'.\n",
+		   optopt);
+	break;
+      default:
+	fprintf (stderr,
+		 "gpe-ownerinfo: Unknown error while parsing command line. Command was %c\n",
+		 opt);
+	exit(1);
+      }
+    }
+    
+  ownername    = g_strdup ("GPE User");
+  owneremail   = g_strdup ("nobody@localhost.localdomain");
+  ownerphone   = g_strdup ("+99 (9999) 999-9999");
+  owneraddress = g_strdup ("Edit file\n/etc/gpe/gpe-ownerinfo.data\nto change this data.");
 
   GPE_Ownerinfo = create_GPE_Ownerinfo ();
 
-  fp = fopen (GPE_OWNERINFO_GEOM, "r");
-  if (fp)
+  if (geometry)
     {
-      char buf[1024];
-      if (fgets (buf, sizeof (buf), fp))
-	{
-	  int x = -1, y = -1, h, w;
-	  int val;
-	  buf[strlen(buf)-1] = 0;
-	  val = XParseGeometry (buf, &x, &y, &w, &h);
-	  if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
-	    {
-	      gtk_widget_set_usize (GPE_Ownerinfo, w, h);
-	      geometry_set = TRUE;
-	    }
-	  if (val & (XValue | YValue))
-	    gtk_widget_set_uposition (GPE_Ownerinfo, x, y);
-	}
-      fclose (fp);
+      printf ("set!");
+      val = XParseGeometry (geometry, &x, &y, &w, &h);
+      if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
+	gtk_widget_set_usize (GPE_Ownerinfo, w, h);
+      if (val & (XValue | YValue))
+	gtk_widget_set_uposition (GPE_Ownerinfo, x, y);
     }
-  
-  if (geometry_set == FALSE)
+  else
     {
-      /* If no window manager is running, set size to full-screen */
-      /*
-	<mallum> pb: request the 'SubstructureRedirect' event mask on the root window
-	<mallum> pb: if that fails, theres already a window manager running
-      */
-      GdkEventMask ev = gdk_window_get_events (GPE_Ownerinfo->window);
-      int r;
-      gdk_error_trap_push ();
-      XSelectInput (GDK_WINDOW_XDISPLAY (GPE_Ownerinfo->window),
-		    RootWindow (GDK_WINDOW_XDISPLAY (GPE_Ownerinfo->window), 0),
-		    SubstructureRedirectMask);
-      gdk_flush ();
-      r = gdk_error_trap_pop ();
-      gdk_window_set_events (GPE_Ownerinfo->window, ev);
-      if (r == 0)
-	{
-	  gtk_widget_set_usize (GPE_Ownerinfo, gdk_screen_width (), gdk_screen_height ());
-	  geometry_set = TRUE;
-	}
+      printf ("not set!");
+      
+      gtk_widget_set_usize (GPE_Ownerinfo, 240, 120);
+      gtk_widget_set_uposition (GPE_Ownerinfo, 0, 200);
     }
 
   fp = fopen (GPE_OWNERINFO_DATA, "r");

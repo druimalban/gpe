@@ -18,7 +18,6 @@ install-data-local:
 	    fi \
 	  done \
 	fi
-	$(INSTALL_DATA) gpe-ownerinfo.geometry /etc/X11/gpe-ownerinfo.geometry
 	$(mkinstalldirs) /etc/gpe/
 	if test ! -e /etc/gpe/gpe-ownerinfo.data; then \
 	  $(INSTALL_DATA) gpe-ownerinfo.data /etc/gpe/gpe-ownerinfo.data; \
