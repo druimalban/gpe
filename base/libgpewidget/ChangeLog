@@ -1,5 +1,9 @@
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.55 released.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
 	* translabel.c (label_translation): Correct property names.
 
 2003-03-24  Luc Pionchon  <luc@handhelds.org>
