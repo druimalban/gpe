@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <locale.h>
-#include "desktop_file.h"
+#include "gpe/desktop_file.h"
 
 
 #include <libintl.h>
