@@ -1,5 +1,17 @@
 2002-09-05  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.22 released.
+
+2002-09-05  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (gpe-login): Use $^ not $<.
+	(gpe-logout): Likewise.
+	(gpe-dm): Likewise.
+	(gpe-lock-display): Likewise.
+	(clean): Remove nocursor.o too.
+	
+2002-09-05  Philip Blundell  <philb@gnu.org>
+
 	* gpe-session-scripts 0.18 released.
 	
 2002-09-05  Philip Blundell  <philb@gnu.org>

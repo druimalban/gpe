@@ -35,16 +35,16 @@ po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot $^
 
 gpe-login: gpe-login.o nocursor.o
-	$(CC) -o $@ $< $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
+	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
 
 gpe-logout: gpe-logout.o
-	$(CC) -o $@ $< $(LDFLAGS) $(GTKLDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
 
 gpe-dm: gpe-dm.o
-	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
+	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
 gpe-lock-display: gpe-lock-display.o
-	$(CC) -o $@ $< -L/usr/X11R6/lib -lX11
+	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
 install: install-dm install-login
 
@@ -105,4 +105,4 @@ ipkg:
 	ipkg-build familiar/dist.gpe-session-scripts
 
 clean:
-	rm -f gpe-login gpe-login.o gpe-logout gpe-logout.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o
+	rm -f gpe-login gpe-login.o gpe-logout gpe-logout.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o
