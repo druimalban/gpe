@@ -25,6 +25,7 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
+#include <gpe/spacing.h>
 
 #include <libdm.h>
 
@@ -132,16 +133,19 @@ new_file (void)
 }
 
 static void
-open_file (char *new_filename)
+open_file (const char *new_filename)
 {
   struct stat file_stat;
+  gchar *old_filename;
   FILE *fp;
-
+  
+  old_filename = filename;
   filename = g_strdup (new_filename);
 
   if ( (fp = fopen(filename, "r")) == NULL)
   {
     gpe_perror_box (filename);
+	filename = old_filename;
   }
   else
   {
@@ -184,18 +188,19 @@ open_file (char *new_filename)
     file_modified = 0;
 
     update_window_title ();
+    if (old_filename) free(filename);
   }
 }
 
 static void
 open_file_from_filesel (GtkFileSelection *selector, gpointer user_data)
 {
-
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
-
+  char *fname = NULL;
+  
+  fname = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
   gtk_widget_destroy (file_selector);
-
-  open_file (filename);
+  open_file (fname);
+  if (fname) free(fname);
 }
 
 static void
@@ -240,7 +245,8 @@ do_save_file (gchar *filename)
 static void
 save_file_as (GtkFileSelection *selector, gpointer user_data)
 {
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector));
+  if (filename) g_free(filename);
+  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
   
   do_save_file (filename);
 
@@ -426,27 +432,25 @@ do_replace_string (GtkWidget *widget)
 static void
 search_string (GtkWidget *widget, GtkWidget *parent_vbox)
 {
-  GtkWidget *hbox1, *hbox2, *entry, *find, *label;
+  GtkWidget *hbox1, *entry, *find, *label;
 
   if (search_replace_open == 0)
   {
     search_replace_vbox = gtk_vbox_new (FALSE, 0);
     hbox1 = gtk_hbox_new (FALSE, 0);
-    hbox2 = gtk_hbox_new (FALSE, 0);
-    label = gtk_label_new (_("Search for:"));
+    label = gtk_label_new (_("Search for: "));
     entry = gtk_entry_new ();
 
-    find = gpe_picture_button (hbox2->style, _("Find"), "search");
+    find = gpe_picture_button (hbox1->style, _("Find"), "search");
 
     gtk_box_pack_end (GTK_BOX (parent_vbox), search_replace_vbox, FALSE, FALSE, 0);
 
     gtk_box_pack_start (GTK_BOX (search_replace_vbox), hbox1, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (search_replace_vbox), hbox2, FALSE, FALSE, 0);
 
     gtk_box_pack_start (GTK_BOX (hbox1), label, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (hbox1), entry, TRUE, TRUE, 0);
 
-    gtk_box_pack_end (GTK_BOX (hbox2), find, FALSE, FALSE, 0);
+    gtk_box_pack_end (GTK_BOX (hbox1), find, FALSE, FALSE, 0);
 
     gtk_object_set_data (GTK_OBJECT (find), "entry", (gpointer) entry);
 
@@ -455,7 +459,6 @@ search_string (GtkWidget *widget, GtkWidget *parent_vbox)
 
     gtk_widget_show (search_replace_vbox);
     gtk_widget_show (hbox1);
-    gtk_widget_show (hbox2);
     gtk_widget_show (label);
     gtk_widget_show (entry);
     gtk_widget_show (find);
@@ -474,37 +477,35 @@ search_string (GtkWidget *widget, GtkWidget *parent_vbox)
 static void
 replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
 {
-  GtkWidget *hbox1, *hbox2, *hbox3, *entry1, *entry2, *replace, *find, *label1, *label2;
+  GtkWidget *entry1, *entry2, *replace, *find, *label1, *label2;
 
   if (search_replace_open == 0)
     {
-    search_replace_vbox = gtk_vbox_new (FALSE, 0);
-    hbox1 = gtk_hbox_new (FALSE, 0);
-    hbox2 = gtk_hbox_new (FALSE, 0);
-    hbox3 = gtk_hbox_new (FALSE, 0);
+	search_replace_vbox = gtk_table_new(2,3,FALSE);
+
+    gtk_container_set_border_width (GTK_CONTAINER (search_replace_vbox), gpe_get_border() / 3);
+    gtk_table_set_row_spacings (GTK_TABLE (search_replace_vbox), 0);
+    gtk_table_set_col_spacings (GTK_TABLE (search_replace_vbox), gpe_get_boxspacing());
+		
     label1 = gtk_label_new (_("Search for:"));
+	gtk_misc_set_alignment(GTK_MISC(label1),0.0,0.5);
     label2 = gtk_label_new (_("Replace with:"));
+	gtk_misc_set_alignment(GTK_MISC(label2),0.0,0.5);
     entry1 = gtk_entry_new ();
     entry2 = gtk_entry_new ();
 
-    replace = gpe_picture_button (hbox2->style, _("Replace"), "search_and_replace");
-    find = gpe_picture_button (hbox2->style, _("Find"), "search");
+    replace = gpe_picture_button (search_replace_vbox->style, _("Replace"), "search_and_replace");
+    find = gpe_picture_button (search_replace_vbox->style, _("Find"), "search");
 
     gtk_box_pack_end (GTK_BOX (parent_vbox), search_replace_vbox, FALSE, FALSE, 0);
-
-    gtk_box_pack_start (GTK_BOX (search_replace_vbox), hbox1, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (search_replace_vbox), hbox2, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (search_replace_vbox), hbox3, FALSE, FALSE, 0);
-
-    gtk_box_pack_start (GTK_BOX (hbox1), label1, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (hbox1), entry1, TRUE, TRUE, 0);
-
-    gtk_box_pack_start (GTK_BOX (hbox2), label2, FALSE, FALSE, 0);
-    gtk_box_pack_start (GTK_BOX (hbox2), entry2, TRUE, TRUE, 0);
-
-    gtk_box_pack_end (GTK_BOX (hbox3), find, FALSE, FALSE, 0);
-    gtk_box_pack_end (GTK_BOX (hbox3), replace, FALSE, FALSE, 0);
-
+		
+ 	gtk_table_attach(GTK_TABLE(search_replace_vbox),label1,0,1,0,1,GTK_FILL,0,0,0);
+ 	gtk_table_attach(GTK_TABLE(search_replace_vbox),label2,0,1,1,2,GTK_FILL,0,0,0);
+ 	gtk_table_attach(GTK_TABLE(search_replace_vbox),entry1,1,2,0,1,GTK_FILL|GTK_EXPAND,0,0,0);
+ 	gtk_table_attach(GTK_TABLE(search_replace_vbox),entry2,1,2,1,2,GTK_FILL|GTK_EXPAND,0,0,0);
+ 	gtk_table_attach(GTK_TABLE(search_replace_vbox),find,2,3,0,1,GTK_FILL,0,0,0);
+ 	gtk_table_attach(GTK_TABLE(search_replace_vbox),replace,2,3,1,2,GTK_FILL,0,0,0);
+	
     gtk_object_set_data (GTK_OBJECT (replace), "entry", (gpointer) entry2);
     gtk_object_set_data (GTK_OBJECT (find), "entry", (gpointer) entry1);
 
@@ -515,9 +516,6 @@ replace_string (GtkWidget *widget, GtkWidget *parent_vbox)
     		        GTK_SIGNAL_FUNC (do_replace_string), NULL);
 
     gtk_widget_show (search_replace_vbox);
-    gtk_widget_show (hbox1);
-    gtk_widget_show (hbox2);
-    gtk_widget_show (hbox3);
     gtk_widget_show (label1);
     gtk_widget_show (label2);
     gtk_widget_show (entry1);
@@ -538,9 +536,8 @@ int
 main (int argc, char *argv[])
 {
   GtkWidget *vbox, *toolbar, *scroll;
+  GtkTooltips *tooltips;
   GtkWidget *toolbar_icon;
-  GdkPixbuf *p;
-  GtkWidget *pw;
   GtkTextBuffer *buf;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -563,6 +560,7 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	
   update_window_title ();
   gtk_widget_set_usize (GTK_WIDGET (main_window), window_x, window_y);
   g_signal_connect (GTK_OBJECT (main_window), "delete-event",
@@ -574,6 +572,9 @@ main (int argc, char *argv[])
 
   gtk_widget_realize (main_window);
 
+  tooltips = gtk_tooltips_new();
+  gtk_object_set_data(GTK_OBJECT(main_window),"tooltips",tooltips);
+	
   vbox = gtk_vbox_new (FALSE, 0);
 
 #if GTK_MAJOR_VERSION < 2
@@ -592,6 +593,8 @@ main (int argc, char *argv[])
   text_area = gtk_text_view_new ();
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text_area), GTK_WRAP_WORD);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text_area), TRUE);
+  gtk_tooltips_set_tip(tooltips,text_area,_("File editing field, additional functions are available by tab&hold or right click."),NULL);
+
   buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text_area));
   g_signal_connect (G_OBJECT (buf), "changed",
 		      GTK_SIGNAL_FUNC (text_changed), NULL);
@@ -616,11 +619,25 @@ main (int argc, char *argv[])
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Search"), 
-			   _("Search for a string"), _("Search for a string"), toolbar_icon, search_string, vbox);
+			   _("Search text for a string"), _("Search text for a string"), toolbar_icon, GTK_SIGNAL_FUNC(search_string), vbox);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_FIND_AND_REPLACE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Replace"), 
-			   _("Replace a string"), _("Replace a string"), toolbar_icon, replace_string, vbox);
+			   _("Replace a string"), _("Replace a string"), toolbar_icon, GTK_SIGNAL_FUNC(replace_string), vbox);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+  
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_COPY, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Copy"), 
+			   _("Copy selected, paste is possible by tab&hold"), _("Copy selected, paste is possible by tab&hold"), toolbar_icon, copy_selection, vbox);
+/*
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_PASTE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Paste"), 
+			   _("Paste from clipboard"), _("Paste from clipboard"), toolbar_icon, paste_clipboard, vbox);
+*/			   
+  toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Quit"), 
+			   _("Exit gpe-edit"), _("Exit gpe-edit"), toolbar_icon, ask_save_before_exit, vbox);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
@@ -637,7 +654,6 @@ main (int argc, char *argv[])
 
   if (argc > 1)
   {
-    filename = argv[1];
     open_file (argv[1]);
   }
 
@@ -646,4 +662,3 @@ main (int argc, char *argv[])
   gtk_main();
   return 0;
 }
-

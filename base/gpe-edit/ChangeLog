@@ -1,3 +1,12 @@
+2003-04-14  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Makefile: new version
+	* main.c reworked layout of find/replace boxes.
+	Added quit button like other applications have.
+	Added copy button to toolbar, because copy doesn't work with tab+hold.
+	Changed handling of filename.
+	Some other small cleanups and fixes.
+
 2003-03-30  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (install-program): Remove strip.  Use install -d in
@@ -95,4 +104,3 @@
 
 	* gpe-edit.menu: Give full path to icon. Move to section PIM (to
 	conform to http://familiar.handhelds.org/policy/menu.html)
-
