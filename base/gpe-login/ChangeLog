@@ -1,3 +1,13 @@
+2002-07-27  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-xcalibrate.sh: New file. Runs xcalibrate and writes the
+	config file.
+
+	* Makefile (install-login): Install gpe-xcalibrate.sh.
+
+	* gpe-login.keylaunchrc: Call wrapper script that also saves the
+	xcalibrate configuration.
+
 2002-07-25  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (main): Correct geometry parsing.
