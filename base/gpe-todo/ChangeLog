@@ -4,7 +4,8 @@
 
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
-	* Makefile: Remove GTK 1 support.
+	* Makefile: Remove GTK 1 support.  Set CFLAGS, LDFLAGS according
+	to $(DEBUG).
 
 2003-03-23  Damien Tanner  <dctanner@handhelds.org>
 

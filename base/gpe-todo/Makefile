@@ -3,6 +3,7 @@ PACKAGE = gpe-todo
 GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.35
+DEBUG = no
 
 LINGUAS = de id pt
 
@@ -14,6 +15,13 @@ CPPFLAGS += -D_GNU_SOURCE
 CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm -I../libtododb
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
+
+ifeq ($(DEBUG),yes)
+CFLAGS += -O2 -g
+LDFLAGS = -g
+else
+CFLAGS += -Os -fomit-frame-pointer
+endif
 
 MEMBERS = main todo-ui list-ui configure
 
