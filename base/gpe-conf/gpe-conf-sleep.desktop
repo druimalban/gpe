@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Sleep Configuration	
+Comment=Sleep Configuration
+Exec=gpe-conf sleep
+Terminal=0
+Type=Application
+Icon=gpe-config-sleep.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

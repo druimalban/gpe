@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Network Setup
+Comment=Network Setup
+Exec=gpe-conf network
+Terminal=0
+Type=Application
+Icon=gpe-config-network.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

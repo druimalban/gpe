@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Screen Setup
+Comment=Screen Setup
+Exec=gpe-conf ipaqscreen
+Terminal=0
+Type=Application
+Icon=gpe-config-ipaqscreen.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

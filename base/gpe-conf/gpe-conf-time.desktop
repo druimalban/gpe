@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Date and Time
+Comment=Date and Time Setup
+Exec=gpe-conf time
+Terminal=0
+Type=Application
+Icon=gpe-config-time.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

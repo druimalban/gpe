@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Button Configuration
+Comment=Button Configuration
+Exec=gpe-conf keyctl
+Terminal=0
+Type=Application
+Icon=gpe-config-keyctl.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

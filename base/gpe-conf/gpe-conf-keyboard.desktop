@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Virtual Keyboard
+Comment=Virtual Keyboard Setup
+Exec=gpe-conf keyboard
+Terminal=0
+Type=Application
+Icon=gpe-config-keyboard.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

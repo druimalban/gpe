@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Launcher Setup
+Comment=Application Launcher Setup
+Exec=gpe-conf appmgr
+Terminal=0
+Type=Application
+Icon=gpe-config-appmgr.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

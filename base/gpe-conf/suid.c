@@ -74,8 +74,9 @@ void suidloop(int write,int read)
 	  if(strcmp(cmd,"NTPD")==0)
 	    {
 	      bin = "/usr/sbin/ntpdate";
-	      fscanf(in, "%100s",arg1);
-	      numarg = 1;
+          sprintf(arg1,"-b");
+	      fscanf(in, "%100s",arg2);
+	      numarg = 2;
 	    }
 	  else if(strcmp(cmd,"STIM")==0)
 	    {

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=User Manager
+Comment=Manage local Users 
+Exec=gpe-conf users
+Terminal=0
+Type=Application
+Icon=gpe-config-users.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Configuration Tools
+Comment=GPE Configuration Tools
+Exec=gpe-conf
+Terminal=0
+Type=Application
+Icon=gpe-config.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True
