@@ -1,4 +1,4 @@
-LINGUAS =
+LINGUAS = de
 
 .SUFFIXES: .mo .po
 
