@@ -73,6 +73,20 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
     }
   }
   switch_windows(window_sketchpad, window_selector);
+
+  if(is_current_sketch_new){
+    gtk_clist_unselect_all(selector_clist);
+    GTK_CLIST(selector_clist)->focus_row = -1;
+  }
+  else{
+    //set the current one selected
+    set_current_sketch_selected();
+    gtk_clist_select_row(selector_clist, current_sketch, 1);
+    GTK_CLIST(selector_clist)->focus_row = current_sketch;
+    gtk_signal_emit_by_name((GtkObject *)selector_clist, "select-row",
+                            current_sketch, 1,
+                            NULL, NULL);//highlight the selected item
+  }
 }
 
 //---------------------------------------------------------
@@ -95,8 +109,6 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
     current_sketch = gtk_clist_append(selector_clist, name);
     sketchpad_set_title(name[0]);
     g_free(name[0]);
-
-    gtk_clist_select_row(selector_clist, current_sketch, 1);
     gtk_clist_set_row_data_full(selector_clist, current_sketch, fullpath_filename, g_free);
     if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
   }
@@ -131,8 +143,6 @@ void on_button_file_prev_clicked (GtkButton *button, gpointer user_data){
   if(is_current_sketch_new) current_sketch = SKETCH_LAST;
   else current_sketch--;
   open_indexed_sketch(current_sketch);
-  //FIXME: the following selects the row BUT does NOT turn it in darkblue
-  gtk_clist_select_row(selector_clist, current_sketch, 1);
 }
 
 
@@ -146,8 +156,6 @@ void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
   //else
   current_sketch++;
   open_indexed_sketch(current_sketch);
-  //FIXME: the following selects the row BUT does NOT turn it in darkblue
-  gtk_clist_select_row(selector_clist, current_sketch, 1);
 }
 
 //---------------------------------------------------------

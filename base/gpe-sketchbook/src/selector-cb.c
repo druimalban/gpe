@@ -64,10 +64,12 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
   if(confirm_action_dialog_box(_("Delete sketch?"),_("Cancel"),_("Delete"))){
     delete_current_sketch();  
   }
+
 }
 
 void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,
                                    GdkEvent *event, gpointer user_data){
+  if(event == NULL) return;//explicit call, user_func does nothing.
   current_sketch = row;
   set_current_sketch_selected();
 
