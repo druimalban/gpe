@@ -1,9 +1,10 @@
 PACKAGE = gpe-shield
-VERSION = 0.3
+VERSION = 0.31
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
+STRIP = strip
 PREFIX = /usr/local
 DESTDIR = /
 MACHINE = other
@@ -67,9 +68,11 @@ install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
 	sed -e s/VERSION/$(VERSION)/ < familiar/control > $(DESTDIR)/CONTROL/control
 	mkdir -p $(DESTDIR)/etc/gpe
+#	touch $(DESTDIR)/etc/gpe/gpe-shield-load
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) -m 4755 $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	$(INSTALL) -m 755 ipshield $(DESTDIR)/etc/init.d/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications

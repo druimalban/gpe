@@ -75,7 +75,6 @@
 #define HELPMESSAGE "GPE-Shield\nVersion " VERSION \
 		"\nGPE desktop firewall\n\nflorian.boor@kernelconcepts.de"
 #define NOHELPMESSAGE N_("Displaying help failed.")
-#define LOADRULES_MARK ".gpe/gpe-shield-load"
 
 /* --- module global variables --- */
 
@@ -504,21 +503,10 @@ on_help_clicked (GtkWidget * w)
 void
 change_network_control (GtkWidget * w)
 {
-	int fh;
-	char *file = g_strdup_printf("%s/%s",g_get_home_dir(),LOADRULES_MARK);
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
-	{
-		if ((fh = open(file,O_CREAT | O_RDWR | O_TRUNC)) < 0)
-			gpe_perror_box(_("Cannot save setting."));
-		else
-			close(fh);
-	}
+		send_message(PK_COMMAND,CMD_CFG_LOAD,NULL);
 	else
-	{
-		if (remove(file) < 0)
-			gpe_perror_box(_("Cannot save setting."));
-	}
-	g_free(file);
+		send_message(PK_COMMAND,CMD_CFG_DONTLOAD,NULL);
 }
 
 
@@ -526,13 +514,12 @@ gboolean
 get_network_control (void)
 {
 	gboolean result;
-	char *file = g_strdup_printf("%s/%s",g_get_home_dir(),LOADRULES_MARK);
 	
-	if (!access(file,F_OK))
+	if (!access(LOADRULES_MARK,F_OK))
 		result = TRUE;
 	else
 		result = FALSE;
-	g_free(file);
+	
 	return result;
 }
 

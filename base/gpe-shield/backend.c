@@ -345,8 +345,8 @@ send_message (pkcontent_t ctype, rule_t *rule)
 static void
 do_shutdown()
 {
-	system(IPTABLES_CMD " --flush"); /* cleans all existing iptables settings */
-	system(IPTABLES_CMD " -P INPUT ACCEPT"); /* reset input policy */
+//	system(IPTABLES_CMD " --flush"); /* cleans all existing iptables settings */
+//	system(IPTABLES_CMD " -P INPUT ACCEPT"); /* reset input policy */
 }
 
 static int
@@ -398,6 +398,25 @@ wait_message ()
 
 
 static void
+do_change_cfg_load(gboolean doit)
+{
+	int fh;
+	if (doit)
+	{
+		if ((fh = open(LOADRULES_MARK,O_CREAT | O_RDWR | O_TRUNC)) < 0)
+			perror("Cannot save setting.");
+		else
+			close(fh);
+	}
+	else
+	{
+		if (remove(LOADRULES_MARK) < 0)
+			perror("Cannot save setting.");
+	}
+}
+
+
+static void
 do_command (pkcommand_t command, rule_t rule)
 {
 	switch (command)
@@ -426,6 +445,12 @@ do_command (pkcommand_t command, rule_t rule)
 	break;
 	case CMD_SHUTDOWN:
 		do_shutdown();
+	break;
+	case CMD_CFG_LOAD:
+		do_change_cfg_load(TRUE);
+	break;
+	case CMD_CFG_DONTLOAD:
+		do_change_cfg_load(FALSE);
 	break;
 	default:
 	break;

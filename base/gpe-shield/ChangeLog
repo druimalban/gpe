@@ -1,4 +1,9 @@
 2004-06-11 Florian Boor <florian.boor@kernelconceps.de>
+	* Released V 0.4
+	* Makefile: Install new stuff.
+	* postinst: Creates default links for script now.
+	* ipshield: New init script that restores rules.
+	* interface.c, backend.*: Made load rules setting system wide.
 	* main.c: Moved stupdly misplaced kill() call. 
 	          Thanks to Phil for finding this.
 

@@ -2,3 +2,4 @@
 
 chmod +s /usr/bin/gpe-shield
 
+update-rc.d ipshield defaults

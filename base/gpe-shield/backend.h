@@ -65,7 +65,9 @@ typedef enum
 	CMD_CLEAR,
 	CMD_LOAD,
 	CMD_SAVE,
-	CMD_CHANGE
+	CMD_CHANGE,
+	CMD_CFG_LOAD,
+	CMD_CFG_DONTLOAD
 }
 pkcommand_t;
 
@@ -104,6 +106,7 @@ typedef struct
 pkmessage_t;
 
 #define PK_SOCKET "/tmp/.gpe_shield_icm"
+#define LOADRULES_MARK "/etc/gpe/gpe-shield-load"
 
 extern int suidloop (int sock);
 extern void do_rules_apply();
