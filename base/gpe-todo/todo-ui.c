@@ -407,7 +407,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   gtk_container_set_border_width (GTK_CONTAINER (window),
 				  gpe_get_border ());
   gtk_container_add (GTK_CONTAINER (window), scrolled_window);
-  gtk_container_add (GTK_CONTAINER (scrolled_window), vbox);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
 
   gtk_widget_grab_focus (entry_summary);
 
@@ -452,6 +452,8 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   gtk_object_set_data_full (GTK_OBJECT (window), "todo", t, destroy_user_data);
 
   gpe_set_window_icon (window, "icon");
+
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
   return window;
 }

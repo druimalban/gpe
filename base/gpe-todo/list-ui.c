@@ -359,7 +359,7 @@ top_level (GtkWidget *window)
   gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
 
   /* List */
-  gtk_box_pack_start (GTK_BOX (hbox), option, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), option, FALSE, FALSE, 0);
 
   /* | */
   gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
@@ -373,7 +373,7 @@ top_level (GtkWidget *window)
 			    G_CALLBACK (gtk_main_quit), NULL, -1);
 
   /* Exit */
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   
