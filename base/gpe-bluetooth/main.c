@@ -545,13 +545,11 @@ main (int argc, char *argv[])
   menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
   menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
   menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
-  menu_file = gtk_menu_item_new_with_label (_("Send file ..."));
   menu_remove = gtk_menu_item_new_with_label (_("Remove from panel"));
 
   g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
   g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off), NULL);
   g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
-  g_signal_connect (G_OBJECT (menu_file), "activate", G_CALLBACK (send_file_dialog), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
   if (! radio_is_on)

@@ -8,7 +8,7 @@ VERSION = 0.34
 
 GLADE = bluez-pin-gpe.glade
 
-MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown obexclient obex-glib obexclient-dbus obexclient-file
+MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown obexclient obex-glib obexclient-dbus
 
 ifeq ($(CVSBUILD),yes)
 LIBGPEVTYPE_PC = libgpevtype-uninstalled
