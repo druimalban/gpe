@@ -11,7 +11,6 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include "interface.h"
 #include "support.h"
 #include "db.h"
 #include "proto.h"

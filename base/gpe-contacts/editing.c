@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,7 +15,6 @@
 #include <gpe/gtkdatecombo.h>
 #include <gpe/picturebutton.h>
 
-#include "interface.h"
 #include "support.h"
 #include "structure.h"
 #include "callbacks.h"

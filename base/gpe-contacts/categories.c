@@ -17,7 +17,6 @@
 #include <gpe/pixmaps.h>
 #include <libdisplaymigration/displaymigration.h>
 
-#include "interface.h"
 #include "support.h"
 #include "db.h"
 #include "proto.h"

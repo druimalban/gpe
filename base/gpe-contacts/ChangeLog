@@ -1,5 +1,14 @@
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (MEMBERS): Remove interface.
+	* interface.c: Deleted.
+	* interface.h: Likewise.
+	* callbacks.c: Remove #include of interface.h.
+	* structure.c: Likewise.
+	* main.c: Likewise.
+	* categories.c: Likewise.
+	* editing.c: Likewise.
+
 	* db.c: Remove usqld cruft.
 
 2004-02-16  Philip Blundell  <philb@gnu.org>

@@ -23,7 +23,6 @@
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
 
-#include "interface.h"
 #include "support.h"
 #include "structure.h"
 

@@ -29,7 +29,6 @@
 #include <gpe/gtksimplemenu.h>
 #include <gpe/picturebutton.h>
 
-#include "interface.h"
 #include "support.h"
 #include "db.h"
 #include "structure.h"
