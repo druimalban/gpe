@@ -1,7 +1,7 @@
 PACKAGE = gpe-code
 PREFIX = /usr/local
 DEBUG = no
-LINGUAS = cs
+#LINGUAS = cs
 VERSION = 0.2
 MEMBERS = code_breaker gtk_graphic_funcs gtk_style_funcs gtk_timer gtk_usefull_funcs usefull_funcs
 
@@ -33,7 +33,7 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^  $(GTKLDFLAGS) $(LDFLAGS)
 
-install: all 
+install-program: all $(PACKAGE).desktop
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
