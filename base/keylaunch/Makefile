@@ -12,7 +12,7 @@ DESTDIR	  =
 PREFIX    = /usr
 RCFILE1	  = .$(PROG)rc
 RCFILE2   = /etc/$(PROG)rc
-DEFINES   = -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" #-DDEBUG
+DEFINES   = -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" -DDEBUG
 
 OBJS      = $(PROG).o xsi.o
 
