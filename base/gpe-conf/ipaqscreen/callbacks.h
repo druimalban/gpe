@@ -2,7 +2,7 @@ typedef struct
 {
   GtkWidget *table;
   GtkWidget *hbox2;
-  GtkWidget *lightl, *lightstl;
+  GtkWidget *lightl;
   GtkWidget *brightnessl;
   GtkWidget *brightness;
   GtkWidget *screensaverl;
@@ -15,7 +15,6 @@ typedef struct
   GtkWidget *rotationl;
   GtkWidget *touchscreen;
   GtkWidget *calibrate;
-  GtkWidget *rbLightswitch1, *rbLightswitch2;
   GtkObject* adjSaver;
 }tself;
 
@@ -36,5 +35,3 @@ on_calibrate_button_clicked            (GtkButton       *button,
                                         gpointer         user_data);
 
 gint on_light_check(gpointer adj);
-
-void on_light_on (GtkWidget *sender, gpointer user_data);

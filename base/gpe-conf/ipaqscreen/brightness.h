@@ -1,6 +1,6 @@
 
-void turn_light(int status);
-int get_light_state ();
+
+void init_light(void);
 
 void set_brightness (int brightness);
 

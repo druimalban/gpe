@@ -1,3 +1,9 @@
+2004-06-28	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* ipaqscreen/main.c, brightness*, callbacks.*: Merged in new
+	  functions from minilite.c. Removed obsolete on/off setting.
+	* suid.c: Removed obsolete light on/off stuff.	
+
 2004-06-18  Philip Blundell  <philb@gnu.org>
 
 	* gpe-conf.desktop.in: Correct icon name.

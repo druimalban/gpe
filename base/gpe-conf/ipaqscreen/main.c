@@ -1,7 +1,8 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>, Moray Allan <moray@sermisy.org>
+ * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>, 
+ *   Moray Allan <moray@sermisy.org>
  *               2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -38,10 +39,10 @@ static int rotation_available;
 static struct
 {
 	int brightness;
-	int light;
 	int orientation;
 	int screensaver;
 }initval;
+
 // type moved to callbacks.h
 tself self;
 
@@ -81,6 +82,9 @@ GtkWidget *ipaqscreen_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
+  init_light();
+
+
   ss_sec = xset_get_ss_sec();
   initval.screensaver = ss_sec;
   
@@ -103,12 +107,6 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_misc_set_alignment(GTK_MISC(self.brightnessl),0.0,0.5);
   tstr = g_strdup_printf ("%s", _("Brightness"));
   gtk_label_set_markup (GTK_LABEL (self.brightnessl), tstr);
-  g_free(tstr);
-  
-  self.lightstl = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(self.lightstl),0.0,0.5);
-  tstr = g_strdup_printf ("%s", _("State"));
-  gtk_label_set_markup (GTK_LABEL (self.lightstl), tstr);
   g_free(tstr);
   
   adjLight = gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0);
@@ -171,10 +169,6 @@ GtkWidget *ipaqscreen_Build_Objects()
 	
   self.calibrate = gtk_button_new_with_label(_("Calibrate"));
 	
-  self.rbLightswitch1 = gtk_radio_button_new_with_label(NULL,_("on"));
-  self.rbLightswitch2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.rbLightswitch1),_("off"));
-
-	
   gtk_table_attach (GTK_TABLE (self.table), self.lightl, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
@@ -188,20 +182,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_table_attach (GTK_TABLE (self.table), self.brightness, 1, 2, 1, 2,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-					
-  gtk_table_attach (GTK_TABLE (self.table), self.lightstl, 0, 1, 2, 3,
-                    (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-  gtk_misc_set_padding (GTK_MISC (self.lightstl),
-			gpe_boxspacing, gpe_boxspacing);
-
-  hbox = gtk_hbox_new(FALSE,gpe_boxspacing);
-  gtk_box_pack_start(GTK_BOX(hbox),self.rbLightswitch1,FALSE,TRUE,0);
-  gtk_box_pack_start_defaults(GTK_BOX(hbox),self.rbLightswitch2);
-  gtk_table_attach (GTK_TABLE (self.table), hbox, 1, 2, 2, 3,
-                    (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-					
+										
   gtk_table_attach (GTK_TABLE (self.table), self.screensaverl, 0, 1, 3, 4,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
@@ -265,19 +246,9 @@ GtkWidget *ipaqscreen_Build_Objects()
                       GTK_SIGNAL_FUNC (on_calibrate_button_clicked),
                       NULL);
   
-  gtk_signal_connect (GTK_OBJECT (self.rbLightswitch1), "toggled",
-                      GTK_SIGNAL_FUNC (on_light_on),
-                      (gpointer)self.rbLightswitch1);
-
   initval.brightness = get_brightness();
-  initval.light = get_light_state();
   initval.orientation = get_rotation();
-  
-  if (initval.light)
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),TRUE);
-  else
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch2),TRUE);
-  
+    
   gtk_timeout_add(2000,(GtkFunction)on_light_check,(gpointer)adjLight);
     
   initialising = 0;
@@ -340,6 +311,5 @@ void ipaqscreen_Save()
 void ipaqscreen_Restore()
 {
   set_brightness(initval.brightness);
-  turn_light(initval.light);
   set_rotation(initval.orientation);
 }

@@ -61,13 +61,6 @@ update_packages ()
 #endif
 
 void
-update_light_status (int state)
-{
-	if ((state >= 0) && (state <= 1))
-		turn_light (state);
-}
-
-void
 update_screen_brightness (int br)
 {
 	set_brightness (br);
@@ -421,11 +414,6 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%d", &numarg);
 					update_screen_rotation (numarg);
-				}
-				else if (strcmp (cmd, "SCRL") == 0)  // chnage frontlight state
-				{
-					fscanf (in, "%d", &numarg);
-					update_light_status (numarg);
 				}
 				else if (strcmp (cmd, "CRHD") == 0)  // create a users home directory
 				{

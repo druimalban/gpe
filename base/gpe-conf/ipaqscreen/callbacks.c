@@ -27,27 +27,12 @@
 
 extern tself self;
 
-void
-on_light_on (GtkWidget *sender, gpointer user_data)
-{
-	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(user_data)))
-		suid_exec("SCRL","1");
-	else
-		suid_exec("SCRL","0");
-}
 
 gint 
 on_light_check(gpointer adj)
 {
-  if (get_light_state())
-  {
-    gtk_adjustment_set_value(GTK_RANGE(self.brightness)->adjustment,(gfloat) get_brightness() / 2.55);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),TRUE);
-  }
-  else
-  {
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch2),TRUE);
-  }
+	gtk_adjustment_set_value(GTK_RANGE(self.brightness)->adjustment,
+		(gfloat) get_brightness() / 2.55);
   return TRUE;	
 }
 
