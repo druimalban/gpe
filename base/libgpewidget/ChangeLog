@@ -1,3 +1,7 @@
+2003-03-08  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe/spacing.h: Define GPE_GNOME_SCALING.
+
 2003-03-08  Philip Blundell  <philb@gnu.org>
 
 	* po/id.po: New file from Translation Project.
