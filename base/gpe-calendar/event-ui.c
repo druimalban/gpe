@@ -693,6 +693,10 @@ click_categories (GtkWidget *b, GtkWidget *w)
   s = g_object_get_data (G_OBJECT (w), "edit_state");
   
   ui = gpe_pim_categories_dialog (s->categories, G_CALLBACK (update_categories), s);
+
+  gtk_window_set_transient_for(GTK_WINDOW(ui),
+                               GTK_WINDOW(gtk_widget_get_toplevel(b)));
+  gtk_window_set_modal(GTK_WINDOW(ui), TRUE);
 }
 
 gboolean

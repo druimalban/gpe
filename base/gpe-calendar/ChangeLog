@@ -1,3 +1,8 @@
+2004-11-25  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* event-ui.c: Applied patch to fix transientness, thanks to
+          Christian Gillot for this patch.
+
 2004-11-15  Phil Blundell  <pb@nexus.co.uk>
 
 	* week_view.c (week_view_button_press): Bring popup behaviour in
