@@ -63,13 +63,11 @@ scan_dir (GtkTreeStore *store, GtkTreeIter *iter, gchar *path)
 {
   DIR *dir;
   struct dirent *de;
+  GList *entries = NULL, *i;
 
   dir = opendir (path);
   if (dir == NULL)
-    {
-      fprintf (stderr, "Can't opendir %s\n", path);
-      return;
-    }
+    return;
 
   while (de = readdir (dir), de != NULL)
     {
@@ -79,10 +77,18 @@ scan_dir (GtkTreeStore *store, GtkTreeIter *iter, gchar *path)
       if (de->d_type != DT_DIR)
 	continue;
       name = g_strdup_printf ("%s%s/", path, de->d_name);
+      entries = g_list_insert_sorted (entries, name, (GCompareFunc)strcoll);
+    }
+  closedir (dir);
+  
+  for (i = entries; i; i = i->next)
+    {
+      gchar *name;
+      name = i->data;
       add_dir (store, iter, name, NULL);
       g_free (name);
     }
-  closedir (dir);
+  g_list_free (entries);
 }
 
 static void
@@ -227,6 +233,9 @@ gpe_create_dir_browser (gchar * title, gchar *current_path,
   gtk_widget_show (cancel_button);
   gtk_widget_show (scrolled_window);
   gtk_widget_show (tree_view);
+  
+  GTK_WIDGET_SET_FLAGS (ok_button, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default (ok_button);
 
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 
