@@ -20,13 +20,15 @@
 #include "globals.h"
 #include "event-db.h"
 #include "week_view.h"
+#include "event-ui.h"
 
 #define _(x) gettext(x)
 
-static GtkWidget *week_view_draw;
 static struct tm today;
-static guint min_cell_height = 38;
 static GtkWidget *datesel;
+
+static GtkWidget *list[7];
+static GtkWidget *week_view_vbox;
 
 struct week_day
 {
@@ -36,110 +38,69 @@ struct week_day
   gboolean is_today;
 } week_days[7];
 
-static gint
-draw_expose_event (GtkWidget *widget,
+static void 
+selection_made(GtkWidget *w, 
+	       gint            row,
+	       gint            column,
+	       GdkEventButton *event,
+	       GtkWidget      *widget)
+{
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      event_t ev = gtk_clist_get_row_data (GTK_CLIST (w), row);
+      if (ev)
+	{
+	  GtkWidget *appt = edit_event (ev);
+	  gtk_widget_show (appt);
+	}
+    }
+}
+
+static int
+draw_header(GtkWidget *widget,
 		   GdkEventExpose *event,
 		   gpointer user_data)
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
+  guint width, height;
   GdkGC *black_gc;
-  GdkGC *gray_gc;
   GdkGC *white_gc;
-  GdkGC *red_gc;
-  guint max_width;
-  guint max_height;
-  guint day;
-  GdkColor red;
-  GdkColormap *colormap;
+  guint w;
+  GdkFont *font = widget->style->font;
+  struct week_day *wp = (struct week_day *)user_data;
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
-  red_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (red_gc, widget->style->black_gc);
-  colormap = gdk_window_get_colormap (widget->window);
-  red.red = 0xffff;
-  red.green = 0;
-  red.blue = 0;
-  gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
-  gdk_gc_set_foreground (red_gc, &red);
+  white_gc = widget->style->white_gc;
+  black_gc = widget->style->black_gc;
+  
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+  gdk_gc_set_clip_rectangle (widget->style->base_gc[GTK_STATE_ACTIVE],
+			     &event->area);
 
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
-  white_gc = widget->style->white_gc;
-  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
-  black_gc = widget->style->black_gc;
-  max_width = widget->allocation.width;
-  max_height = widget->allocation.height;
 
-  gdk_gc_set_clip_rectangle (black_gc, &event->area);
-  gdk_gc_set_clip_rectangle (red_gc, &event->area);
-  gdk_gc_set_clip_rectangle (gray_gc, &event->area);
-  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+  width = widget->allocation.width;
+  height = widget->allocation.height;
 
-  for (day = 0; day < 7; day++)
-    {
-      GSList *iter;
-      for (iter = week_days[day].events; iter; iter = iter->next)
-	((event_t)iter->data)->mark = FALSE;
-    }
+  gdk_draw_rectangle (drawable,
+		      widget->style->base_gc[GTK_STATE_ACTIVE],
+		      TRUE, 0, 0, width, height);
 
-  for (day = 0; day < 7; day++)
-    {
-      guint x, y = week_days[day].y;
-      GSList *iter;
+  gdk_draw_line (drawable, black_gc,
+		 0, 0, width, 0);
+  w = gdk_string_width (font, wp->string);
+  gdk_draw_text (drawable, font, black_gc,
+		 width - w, font->ascent, wp->string, strlen (wp->string));
 
-      if (day)
-	gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
-
-      gdk_draw_rectangle (drawable, white_gc, 
-			  TRUE, 0, y + 1, max_width, max_height);
-
-      x = max_width - gdk_string_width (datefont, week_days[day].string) - 8;
-      gdk_draw_text (drawable, datefont,
-		     week_days[day].is_today ? red_gc : black_gc,
-		    x, y + datefont->ascent + 1, week_days[day].string, 
-		     strlen (week_days[day].string));
-
-      y += datefont->ascent + datefont->descent;
-
-      if (week_days[day].events)
-	{
-	  for (iter = week_days[day].events; iter; iter = iter->next)
-	    {
-	      GdkFont *font = widget->style->font;
-	      char buf[256];
-	      struct tm tm;
-	      char *p = buf;
-	      event_t ev = iter->data;
-	      event_details_t evd = event_db_get_details (ev);
-	      size_t s = sizeof (buf), l;
-	      if (ev->mark)
-		{
-		  p = stpcpy (p, _("(contd...) "));
-		  s -= (p - buf);
-		}
-	      else
-		{
-		  localtime_r (&ev->start, &tm);
-		  l = strftime (p, s, TIMEFMT, &tm);
-		  s -= l;
-		  p += l;
-		  ev->mark = TRUE;
-		}
-	      snprintf (p, s - 1, " %s", evd->summary);
-	      p[s - 1] = 0;
-	      
-	      gdk_draw_text (drawable, font, black_gc,
-			     4, y + font->ascent,
-			     buf, strlen (buf));
-	      y += font->ascent + font->descent;
-	    }
-	}
-    }
-
-  gdk_gc_unref (red_gc);
+  gdk_gc_set_clip_rectangle (black_gc, NULL);
+  gdk_gc_set_clip_rectangle (white_gc, NULL);
+  gdk_gc_set_clip_rectangle (widget->style->base_gc[GTK_STATE_ACTIVE],
+			     NULL);
 
   return TRUE;
 }
@@ -150,7 +111,6 @@ week_view_update (void)
   guint day;
   time_t t = time (NULL);
   struct tm tm;
-  guint y = 0;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
   gtk_widget_draw (datesel, NULL);
@@ -168,13 +128,11 @@ week_view_update (void)
     {
       char buf[32];
       GSList *iter;      
-      guint height = datefont->ascent + datefont->descent;
 
       if (week_days[day].events)
 	event_db_list_destroy (week_days[day].events);
 
       week_days[day].events = event_db_list_for_period (t, t + SECONDS_IN_DAY - 1);
-      week_days[day].y = y;
 
       localtime_r (&t, &tm);
       week_days[day].is_today = (tm.tm_mday == today.tm_mday 
@@ -185,24 +143,42 @@ week_view_update (void)
 	g_free (week_days[day].string);
       week_days[day].string = g_strdup (buf);
 
-      t += SECONDS_IN_DAY;
-
       if (week_days[day].events)
 	{
 	  for (iter = week_days[day].events; iter; iter = iter->next)
-	    height += week_view_draw->style->font->ascent + 
-	      week_view_draw->style->font->descent;
+	    {
+	      event_t ev = iter->data;
+	      ev->mark = FALSE;
+	    }
 	}
 
-      if (height < min_cell_height)
-	height = min_cell_height;
-
-      y += height;
+      t += SECONDS_IN_DAY;
     }
 
-  gtk_widget_set_usize (week_view_draw, -1, y);
+  for (day = 0; day < 7; day++)
+    {
+      gtk_clist_clear (GTK_CLIST (list[day]));
 
-  gtk_widget_draw (week_view_draw, NULL);
+      if (week_days[day].events)
+	{
+	  GSList *iter;
+	  guint row = 0;
+
+	  for (iter = week_days[day].events; iter; iter = iter->next)
+	    {
+	      event_t ev = iter->data;
+	      event_details_t evd = event_db_get_details (ev);
+	      gchar *line_info[2];
+	      line_info[0] = NULL;
+	      line_info[1] = evd->summary;
+	      gtk_clist_append (GTK_CLIST (list[day]), line_info);
+	      gtk_clist_set_row_data (GTK_CLIST (list[day]), row, ev);
+	      row++;
+	    }
+	}
+    }
+
+  gtk_widget_draw (week_view_vbox, NULL);
 }
 
 static void
@@ -218,20 +194,39 @@ GtkWidget *
 week_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
+  guint i;
 
   datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
 
-  gtk_signal_connect (GTK_OBJECT (draw),
-		      "expose_event",
-		      GTK_SIGNAL_FUNC (draw_expose_event),
-		      datesel);
-  
-
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), draw);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scroller), 
+					 vbox2);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
 				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
+  for (i = 0; i < 7; i++)
+    {
+      GtkWidget *draw = gtk_drawing_area_new ();
+
+      gtk_widget_set_usize (draw, -1, draw->style->font->ascent 
+			    + draw->style->font->descent);
+      gtk_widget_show (draw);
+
+      list[i] = gtk_clist_new (2);
+      gtk_clist_set_shadow_type (GTK_CLIST (list[i]), GTK_SHADOW_NONE);
+      gtk_widget_show (list[i]);
+
+      gtk_signal_connect (GTK_OBJECT (list[i]), "select_row",
+			 GTK_SIGNAL_FUNC (selection_made),
+			 NULL);
+
+      gtk_box_pack_start (GTK_BOX (vbox2), draw, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox2), list[i], TRUE, TRUE, 0);
+
+      gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
+			  GTK_SIGNAL_FUNC (draw_header), &week_days[i]);
+    }
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
@@ -242,7 +237,7 @@ week_view(void)
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook",
                        (gpointer) week_view_update);
 
-  week_view_draw = draw;
+  week_view_vbox = vbox;
 
   return vbox;
 }
