@@ -1,5 +1,9 @@
 2003-01-04  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.39 released.
+
+2003-01-04  Philip Blundell  <philb@gnu.org>
+
 	* tray.c (gpe_system_tray_dock): Remove accidental dependency on
 	multihead-aware libgdk-x11.
 
