@@ -7,17 +7,170 @@
 <H2>libgpewidget</H2>
 
 <p>
-Many GPE applications share a collection of common widgets and other routines.  These live in the <B>libgpewidget</B> shared library.
+<B>libgpewidget</B> contains a collection of widgets and other common
+    code shared by many GPE applications.
+</p>
+
+<H3>Features</H3>
+
+<H4>GPE-specific widgets:</H4>
+<UL>
+<li><i>GtkDateCombo</i>: a date entry field with a pop-up calendar</li>
+<li><i>GtkDateSel</i>: a date selector</li>
+<li><i>GtkMiniFileSel</i>: a replacement for GtkFileSelection</li>
+<li><i>GtkGpePixmap</i>: a prelight-aware replacement for
+      GtkPixmap</li>
+</UL>
+
+<H4>Gtk widget overrides:</H4>
+<UL>
+<li><i>GtkEntry</i>: enforces smaller minimum width
+<li><i>GtkDialog</i>: sets "transient_for" property on window
+<li><i>GtkTooltips</i>: tips suppressed when in "stylus" mode
+</UL>
+
+<H4>Miscellaneous</H4>
+<UL>
+<li>Common application initialisation</li>
+<li>Icon handling; pixmap loading and alpha blending</li>
+<li>Client-side modal help support (see <A href="GPE-what.shtml">gpe-what</A>)</li>
+<li>Overrides gdk_screen_width to look at the size of the root window
+      rather than using <CODE>DisplayWidth</CODE>; similarly for
+      gdk_screen_height.  (This improves behaviour in the presence of
+      rotation.)</li>
+<li><CODE>gpe_stylus_mode</CODE>: is this a pen-based display?</li>
+<li>Common dialog handling</li>
+<li>Text-and-picture buttons in dialog boxes</li>
+<li>XMMS-style directory browser</li>
+<li>Conceals X cursor when stylus mode is selected.</li>
+</UL>
+
+<H3>Using libgpewidget</H3>
+
+<p>
+Add <CODE>-lgpewidget</CODE> to your final link command line.  You
+    should put libgpewidget before any other Gtk-related libraries in
+    the link order, to ensure that its widget overrides work
+    correctly.
+</p>
+<p>
+Gtk-based programs should consider calling at least
+    <CODE>gpe_application_init</CODE> even if they don't plan to use
+    any other library features.
+</p>
+
+<H4>Application startup</H4>
+<PRE>
+#include &LT;gpe/init.h&GT;
+
+extern gboolean gpe_application_init (int *argc, char **argv[]);
+</PRE>
+
+<p>
+<CODE>gpe_application_init</CODE> is a direct replacement for
+  <CODE>gtk_init</CODE>.  It calls <CODE>gtk_init</CODE>,
+  <CODE>gtk_set_locale</CODE>, creates the <CODE>~/.gpe</CODE>
+  directory, and initialises any internal modules as required.
 </p>
 
 <p>
-Libgpewidget includes:
-
-<ul>
-<li><i>GtkDateCombo</i>: a date entry field with a pop-up calendar</li>
-<li><i>GtkDateSel</i>: a date selector</li>
-<li><i>GtkEntry</i>: transparent override for the Gtk widget, with a smaller minium size
-</ul>
+<CODE>gpe_application_init</CODE> returns <CODE>TRUE</CODE> if
+    initialisation was successful.
 </p>
 
+<p>
+This function should be called before using any other routines from
+    libgpewidget.
+</p>
+
+<H4>Icon handling</H4>
+
+<PRE>
+#include &LT;gpe/pixmaps.h&GT;
+
+struct gpe_icon
+{
+  const char *shortname;
+  const char *filename;
+};
+
+extern gboolean gpe_load_icons (struct gpe_icon *);
+extern GdkPixbuf *gpe_find_icon (const char *name);
+extern gboolean gpe_find_icon_pixmap (const char *name,
+				      GdkPixmap **pixmap,
+				      GdkBitmap **bitmap);
+</PRE>
+
+<p>
+libgpewidget provides common routines to handle application icons.
+    Each application should define an array of <CODE>struct
+      gpe_icon</CODE> listing all the icons that are required for
+    operation.
+</p>
+
+<p>
+In the commonest case, only the <CODE>shortname</CODE> needs to be
+    provided.  This is the string that you will later pass to
+    <CODE>gpe_find_icon</CODE> to retrieve the image data;
+    libgpewidget will search for a file named
+    <CODE>shortname.png<CODE>, first in <CODE>~/.gpe/pixmaps</CODE> and
+	then in <CODE>PREFIX/share/gpe/pixmaps/default</CODE>.
+</p>
+
+<p>If the <CODE>filename</CODE> is specified, and does not begin with
+    a slash character, libgpewidget searches for <CODE>filename</CODE>
+    in the same directories described above.  If <CODE>filename</CODE>
+    does start with a slash character, libgpewidget interprets it as
+    an absolute pathname and looks only at the specified location.
+</p>
+
+<p><CODE>gpe_load_icons</CODE> returns <CODE>TRUE</CODE> if all the
+    icons were loaded successfully.  Missing icons or other problems
+    will result in error boxes being displayed to the user.
+</p>
+
+<p>To retrieve image data, call <CODE>gpe_find_icon</CODE> or
+    <CODE>gpe_find_icon_pixmap</CODE>.  The latter returns a
+    GdkPixmap/GdkBitmap pair containing the image data and mask.  If
+    the image has an alpha channel wider than a single bit, you will
+    probably obtain better results by using <CODE>gpe_find_icon</CODE>
+    and performing alpha blending.
+</p>
+
+<p><CODE>gpe_find_icon</CODE> returns NULL if the icon could not be
+    located.  <CODE>gpe_find_icon_pixmap</CODE> returns TRUE on
+    success and FALSE on failure.
+</p>
+
+<H4>Alpha-blended buttons</H4>
+
+<PRE>
+
+#include &LT;gpe/render.h&GT;
+
+extern GtkWidget *gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf);
+
+</PRE>
+
+<p>
+<CODE>gpe_render_icon</CODE> alpha-blends a pixbuf onto a background
+    given by a GtkStyle, and returns the result as a
+    <CODE>GtkGpePixmap</CODE> widget.
+</p> 
+
+<H4>Pictorial buttons in dialog boxes</H4>
+
+<PRE>
+#include &LT;gpe/picturebutton.h&GT;
+
+extern GtkWidget *gpe_picture_button (GtkStyle *style, 
+				      gchar *text, gchar *icon);
+</PRE>
+
+<p><CODE>gpe_picture_button</CODE> is a convenience function for
+    creating dialog box buttons.  It returns a GtkButton widget
+    containing an icon and a short text label.  The icon is specified
+    by name, as with <CODE>gpe_find_icon</CODE>.
+</p>
+    
 <!--#include virtual="/includes/foot.shtml"-->
