@@ -8,7 +8,7 @@ MEMBERS = main
 LINGUAS = de
 
 ifeq ($(GTK2),yes)
-CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
 else
 CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
