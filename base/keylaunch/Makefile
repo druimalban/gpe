@@ -10,8 +10,8 @@ PROG      = keylaunch
 # Next two lines were edited/added for Debian packaging
 DESTDIR	  =
 PREFIX    = $(DESTDIR)/usr
-RCFILE1   = /etc/$(PROG)rc
-RCFILE2	  = .$(PROG)rc
+RCFILE1	  = .$(PROG)rc
+RCFILE2   = /etc/$(PROG)rc
 DEFINES   = -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" #-DDEBUG
 
 OBJS      = $(PROG).o  
