@@ -43,35 +43,53 @@ db_open(void)
   return 0;
 }
 
-int
-main (int argc, char *argv[])
+void
+export_one_vcard (int uid)
 {
-  guint uid;
   MIMEDirVCard *vcard;
   gchar *str;
   GError *err = NULL;
   GIOChannel *channel;
+
+  vcard = gpe_export_vcard (db, uid);
+
+  if (vcard)
+    {
+      str = mimedir_vcard_write_to_string (vcard);
+
+      fprintf (stderr, "%s\n", str);
+    }
+  else
+    fprintf (stderr, "Cannot generate vCard\n");
+}
+
+int
+read_one (void *ignore, int argc, char *argv[], void *data)
+{
+  int uid = atoi (argv[0]);
+  export_one_vcard (uid);
+  return 0;
+}
+
+int
+main (int argc, char *argv[])
+{
+  guint uid;
   FILE *fp;
   char line[256];
 
   g_type_init ();
 
-  if (argc < 2)
-    {
-      fprintf (stderr, "usage: %s uid\n", argv[0]);
-      exit (1);
-    }
-
-  uid = atoi (argv[1]);
-
   if (db_open ())
     exit (1);
 
-  vcard = gpe_export_vcard (db, uid);
-
-  str = mimedir_vcard_write_to_string (vcard);
-
-  fprintf (stderr, "%s\n", str);
+  if (argc > 1)
+    {
+      uid = atoi (argv[1]);
+      export_one_vcard (db);
+    }
+  else
+    sqlite_exec (db, "select urn from contacts_urn", read_one, NULL, NULL);
 
   exit (0);
 }
