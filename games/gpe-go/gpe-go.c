@@ -16,18 +16,23 @@
 #include "gpe/init.h"
 #include "gpe/pixmaps.h"
 
-
 //--i18n
 #include <libintl.h>
 #define _(_x) gettext (_x)
 
+//#define TURN_LABEL
+#ifdef DEBUG
+#define TRACE(message...) {g_printerr(message); g_printerr("\n");}
+//g_printerr("DEBUG *** %s, line %u: ", __FILE__, __LINE__);
+#else
+#define TRACE(message...) 
+#endif
+
 static struct gpe_icon my_icons[] = {
   { "this_app_icon", PREFIX "/share/pixmaps/gpe-go.png" },
 
-  { "new",        "new"   },
+  //{ "new",        "new"   },
   { "prefs",      "preferences"  },
-  { "left",       "left"  },
-  { "right",      "right" },
 
   //{ "remove",     "gpe-go/stock_clear_24"},
 
@@ -47,6 +52,12 @@ typedef struct _go {
   GdkPixmap * pixmap_empty_board;
 
   GtkWidget * capture_label;
+  char      * capture_string;
+
+#ifdef TURN_LABEL
+  GtkWidget * turn_label;
+  char      * turn_string;
+#endif
 
   int grid_margin;//px
   int grid_space; //px
@@ -65,19 +76,77 @@ typedef struct _go {
   int black_captures; 
 
   int turn;
+  int last_turn;
 
-  //GList * history;
+  GList * history;
 
 } Go;
 
 Go go;
-
 
 typedef enum {
   EMPTY = 0,
   BLACK_STONE,
   WHITE_STONE,
 } GoItem;
+
+typedef enum {
+  PASS,
+  PLAY,
+  CAPTURE,
+} GoAction;
+
+typedef struct _hist_item{
+  GoAction action;
+  GoItem   item;
+  int posx;
+  int posy;
+} Hitem;
+
+Hitem * new_hitem(){
+  Hitem * hitem;
+  hitem = (Hitem *) malloc (sizeof(Hitem));
+  return hitem;
+}
+
+void free_hitem(Hitem * hitem){
+  if(hitem) free(hitem);
+}
+
+void append_hitem(GoAction action, GoItem item, int gox, int goy){
+  Hitem * hitem;
+
+  hitem = new_hitem();
+
+  hitem->action = action;
+  hitem->item   = item;
+  hitem->posx   = gox;
+  hitem->posy   = goy;
+
+  //if current is not the last, cut the old branch
+  if(go.history != g_list_last(go.history) || (go.turn == 1 && go.history)){
+    GList * c;
+    int turns_droped = 0;
+
+    if(go.turn == 1) c = go.history;
+    else c = go.history->next;
+
+    c->prev = NULL;
+    go.history->next = NULL; //cut the old branch!
+    while (c->next){//and destroy it.
+      if( ((Hitem *)(c->data))->action == PLAY) turns_droped++;
+      free_hitem(c->data);
+      c = g_list_delete_link (c, c);
+    }
+    go.last_turn -= turns_droped;
+  }
+
+  //append item
+  go.history = g_list_append (go.history, hitem);
+
+  go.history = g_list_last(go.history);
+}
+
 
 
 
@@ -107,14 +176,17 @@ void app_init(int argc, char ** argv){
   for(i=1; i<= go.grid_size; i++) for(j=1; j<=go.grid_size; j++) go.stamps[i][j]=0;
 
   //--init game
+  go.history = NULL;
+
   go.white_captures = 0;
   go.black_captures = 0;
+
   go.turn = 0;
+  go.last_turn = 0;
 
   //--some ui init... FIXME: to move 
   go.grid_space  = BOARD_SIZE / (go.grid_size - 1 + 1.5/*= margin prop*/);
   go.grid_margin = (BOARD_SIZE - (go.grid_size - 1) * go.grid_space ) / 2;
-
 }
 
 void app_quit(){
@@ -123,20 +195,51 @@ void app_quit(){
 
 void _print_gird(){
   int i,j;
-  g_printerr("     ");
-  for(j=1; j<= go.grid_size; j++) g_printerr("%2d ", j);
-  g_printerr("\n");
+  g_print("     ");
+  for(j=1; j<= go.grid_size; j++) g_print("%2d ", j);
+  g_print("\n");
   for(j=1; j<= go.grid_size; j++){
-    g_printerr("%2d : ", j);
+    g_print("%2d : ", j);
     for(i=1; i<=go.grid_size; i++){
-      if(go.grid[i][j] == 0) g_printerr(" %c ",'-');
+      if(go.grid[i][j] == 0) g_print(" %c ",'-');
       else{
-        if(go.stamps[i][j]) g_printerr("*%d*",go.grid[i][j]);
-        else g_printerr("%2d ",go.grid[i][j]);
+        if(go.stamps[i][j]) g_print("*%d*",go.grid[i][j]);
+        else g_print("%2d ",go.grid[i][j]);
       }
     }
-    g_printerr("\n");
+    g_print("\n");
   }
+}
+
+void _print_hitem(Hitem * hitem){
+  char action;
+  char item;
+
+  if(!hitem) return;
+
+  switch(hitem->action){
+  case PASS   : action = '='; break;
+  case PLAY   : action = '+'; break;
+  case CAPTURE: action = '-'; break;
+  default: action = ' ';
+  }
+  switch(hitem->item){
+  case BLACK_STONE: item = 'B'; break;
+  case WHITE_STONE: item = 'W'; break;
+  default: item = ' ';
+  }
+  g_print("%c %c: %d %d\n", action, item, hitem->posx, hitem->posy);
+}
+void _print_history(){
+  GList * c;
+  c =g_list_first(go.history);
+  if(!c) return;
+  do{
+    if (c == go.history) g_print("-----------\\\n");
+    _print_hitem(c->data);
+    if (c == go.history) g_print("-----------/\n");
+    c = c->next;
+  }while (c);
 }
 
 void gui_init();
@@ -263,7 +366,7 @@ void paint_board(GtkWidget * widget){
   //--grid
   space  = go.grid_space ;
   margin = go.grid_margin;
-  g_printerr("space: %d, margin: %d\n", space, margin);
+  TRACE("space: %d, margin: %d", space, margin);
   
   for(i=0; i< go.grid_size; i++){
     gdk_draw_line(go.pixmap_empty_board,
@@ -274,10 +377,10 @@ void paint_board(GtkWidget * widget){
                   widget->style->black_gc,
                   margin, space * i + margin,
                   BOARD_SIZE - margin, space * i + margin);
-    //**/g_printerr("%2d (%3d,%3d) (%3d,%3d)\n",
-    //**/            i + 1,
-    //**/            space * i, margin + space,
-    //**/            space * i, BOARD_SIZE - margin - space);
+    TRACE("%2d (%3d,%3d) (%3d,%3d)",
+          i + 1,
+          space * i, margin + space,
+          space * i, BOARD_SIZE - margin - space);
   }
   //--advantage points
 
@@ -326,56 +429,67 @@ void paint_board(GtkWidget * widget){
 }
 
 
-
-void remove_stone(int gox, int goy){
+void unpaint_stone(int x, int y){
   GdkRectangle rect;
 
-  if(go.grid[gox][goy] == 0) return;
-
-  rect.x = (gox -1) * go.grid_space + go.grid_margin - go.grid_space / 2;
-  rect.y = (goy -1) * go.grid_space + go.grid_margin - go.grid_space / 2;
+  rect.x = x;
+  rect.y = y;
   rect.width = rect.height = go.grid_space -1;
+
   gdk_draw_drawable (go.drawing_area_pixmap_buffer,
                      go.drawing_area->style->black_gc,
                      go.pixmap_empty_board,
                      rect.x, rect.y, rect.x, rect.y,
                      rect.width, rect.height);
   gtk_widget_draw (go.drawing_area, &rect);
-
-  go.grid[gox][goy] = 0;
 }
 
 
-void paint_stone(GtkWidget * widget, int x, int y, GoItem item){
+void paint_stone(int x, int y, GoItem item){
   GdkRectangle rect;
 
   rect.x = x +1;
   rect.y = y +1;
   rect.width = rect.height = go.grid_space -2;
 
-  /**/g_printerr("paint\n");
+  TRACE("paint");
  
   switch (item){
   case BLACK_STONE:
-      gdk_draw_pixbuf(go.drawing_area_pixmap_buffer,
-                      widget->style->white_gc,
-                      go.pixbuf_black_stone,
-                      0, 0, rect.x, rect.y,
-                      -1, -1,
-                      GDK_RGB_DITHER_NONE, 0, 0);
+    gdk_draw_pixbuf(go.drawing_area_pixmap_buffer,
+                    go.drawing_area->style->white_gc,
+                    go.pixbuf_black_stone,
+                    0, 0, rect.x, rect.y,
+                    -1, -1,
+                    GDK_RGB_DITHER_NONE, 0, 0);
     break;
   case WHITE_STONE:
-      gdk_draw_pixbuf(go.drawing_area_pixmap_buffer,
-                      widget->style->white_gc,
-                      go.pixbuf_white_stone,
-                      0, 0, rect.x, rect.y,
-                      -1, -1,
-                      GDK_RGB_DITHER_NONE, 0, 0);
-      break;
+    gdk_draw_pixbuf(go.drawing_area_pixmap_buffer,
+                    go.drawing_area->style->white_gc,
+                    go.pixbuf_white_stone,
+                    0, 0, rect.x, rect.y,
+                    -1, -1,
+                    GDK_RGB_DITHER_NONE, 0, 0);
+    break;
   case EMPTY:
     break;
   }//switch item
   gtk_widget_draw (go.drawing_area, &rect);
+}
+
+void put_stone(GoItem color, int gox, int goy){
+  if(go.grid[gox][goy] != EMPTY) return;
+  paint_stone((gox -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
+              (goy -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
+              color);
+  go.grid[gox][goy] = color;
+}
+
+void remove_stone(int gox, int goy){
+  if(go.grid[gox][goy] == EMPTY) return;
+  unpaint_stone((gox -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
+                (goy -1) * go.grid_space + go.grid_margin - go.grid_space / 2);
+  go.grid[gox][goy] = EMPTY;
 }
 
 
@@ -384,7 +498,7 @@ gboolean
 on_drawing_area_configure_event (GtkWidget         * widget,
                                  GdkEventConfigure * event,
                                  gpointer            user_data){
-  /**/g_printerr("configure event\n");
+  TRACE("configure event");
   //when window is created or resized
   //if (pixmap)  gdk_pixmap_unref(pixmap);
   if(!go.drawing_area_pixmap_buffer){
@@ -392,12 +506,6 @@ on_drawing_area_configure_event (GtkWidget         * widget,
                                                    BOARD_SIZE,
                                                    BOARD_SIZE,
                                                    -1);
-    //    /**/gdk_draw_rectangle (go.drawing_area_pixmap_buffer,
-    //                            widget->style->white_gc,
-    //                            TRUE,
-    //                            0, 0,
-    //                            BOARD_SIZE,
-    //                            BOARD_SIZE);
     paint_board(widget);
   }
   return TRUE;
@@ -408,7 +516,7 @@ gboolean
 on_drawing_area_expose_event (GtkWidget       *widget,
                               GdkEventExpose  *event,
                               gpointer         user_data){
-  //**/g_printerr("expose event (%d,%d)\n", event->area.x, event->area.y);
+  //TRACE("expose event (%d,%d)", event->area.x, event->area.y);
   //refresh the part outdated by the event
   gdk_draw_pixmap(widget->window,
                   widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
@@ -439,7 +547,7 @@ on_drawing_area_motion_notify_event(GtkWidget       *widget,
 
   go.x = (x - go.grid_margin - go.grid_space / 2 + 0.1) / go.grid_space +2;
   go.y = (y - go.grid_margin - go.grid_space / 2 + 0.1) / go.grid_space +2;
-  //**/g_printerr("[%d,%d] (%d,%d) %d\n", go.x, go.y, x, y, state);
+  //TRACE("[%d,%d] (%d,%d) %d", go.x, go.y, x, y, state);
 
 
   if (state & GDK_BUTTON1_MASK){
@@ -453,7 +561,7 @@ gboolean
 on_drawing_area_button_press_event(GtkWidget       *widget,
                                    GdkEventButton  *event,
                                    gpointer         user_data){
-  //**/g_printerr("press\n");
+  //TRACE("press");
   return FALSE;
 }
 
@@ -482,32 +590,32 @@ void stamp_group_of(int gox, int goy){
 
   stamp(gox,goy);
 
-  //**/g_printerr("Examining %d %d (%d)\n",gox,goy, my_color);
+  //TRACE("Examining %d %d (%d)",gox,goy, my_color);
   //**/_print_gird();
   //**/scanf("%c",&c);scanf("%c",&c);
 
   x = gox;
   y = goy - 1;
   if(goy>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //**/g_printerr("Now examining %d %d (%d)\n",x,y, go.grid[x][y]);
+    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = gox + 1;
   y = goy;
   if(gox<go.grid_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //**/g_printerr("Now examining %d %d (%d)\n",x,y, go.grid[x][y]);
+    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = gox;
   y = goy + 1;
   if(goy<go.grid_size && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //**/g_printerr("Now examining %d %d (%d)\n",x,y, go.grid[x][y]);
+    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
   x = gox - 1;
   y = goy;
   if(gox>1 && go.grid[x][y] == my_color && !go.stamps[x][y]){
-    //**/g_printerr("Now examining %d %d (%d)\n",x,y, go.grid[x][y]);
+    //TRACE("Now examining %d %d (%d)",x,y, go.grid[x][y]);
     stamp_group_of(x,y);
   }
 }
@@ -521,7 +629,7 @@ int size_group_of(int gox, int goy){
 
   stamp(gox,goy);
 
-  //**/g_printerr("I am          %d %d (%d)\n",gox,goy, my_color);
+  //TRACE("I am          %d %d (%d)",gox,goy, my_color);
   //**/_print_gird();
   //**/scanf("%c",&c);scanf("%c",&c);
 
@@ -556,7 +664,7 @@ gboolean is_alive_group_of(int gox, int goy){
 
   stamp(gox,goy);
 
-  //**/g_printerr("I am          %d %d (%d)\n",gox,goy, my_color);
+  //TRACE("I am          %d %d (%d)",gox,goy, my_color);
   //**/_print_gird();
   //**/scanf("%c",&c);scanf("%c",&c);
 
@@ -603,7 +711,11 @@ int kill_group_of(int gox, int goy){//returns number of stones killed
   for(i=1; i<= go.grid_size; i++){
     for(j=1; j<=go.grid_size; j++){
       if(go.stamps[i][j]){
+
+        append_hitem(CAPTURE, go.grid[i][j], i, j);
+
         remove_stone(i,j);
+
         count++;
       }
     }
@@ -612,33 +724,44 @@ int kill_group_of(int gox, int goy){//returns number of stones killed
   return count;
 }
 
+void update_capture_label(){
+  free(go.capture_string);
+  go.capture_string = (char *) malloc (20 * sizeof(char));
+  sprintf(go.capture_string, "B:%d  W:%d ", go.black_captures, go.white_captures);
+  //TRACE("Capture points: %s", go.capture_string);
+  gtk_label_set_text (GTK_LABEL (go.capture_label), go.capture_string);
+}
+
+#ifdef TURN_LABEL
+void update_turn_label(){
+  free(go.turn_string);
+  go.turn_string = (char *) malloc (20 * sizeof(char));
+  sprintf(go.turn_string, "%d/%d", go.turn, go.last_turn);
+  gtk_label_set_text (GTK_LABEL (go.turn_label), go.turn_string);
+}
+#endif
 
 void play_at(int gox, int goy){
-  /**/g_printerr("Play at %d %d", gox, goy);
+  //TRACE("Play at %d %d", gox, goy);
   if( gox < 1 || go.grid_size < gox ||
       goy < 1 || go.grid_size < goy ){
-    /**/g_printerr("--> out of bounds\n");
+    //TRACE("--> out of bounds");
     return;
   }
   if(go.grid[gox][goy] != 0){
-    /**/g_printerr("--> not empty\n");
-
-    //g_printerr("KILLED: %d\n", kill_group_of(gox, goy));
-    //g_printerr("ALIVE: %s\n", is_alive_group_of(gox, goy)?"TRUE":"FALSE");
-    //g_printerr("COUNT: %d\n", size_group_of(gox, goy));
-    //stamp_group_of(gox, goy);
-    //remove_stone(gox, goy);
-    clear_stamps();
+    //TRACE("--> not empty");
     return;
   }
-  /**/g_printerr("\n");
+  //TRACE("");
 
-  paint_stone(go.drawing_area,
-              (gox -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-              (goy -1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-              (go.turn%2)?WHITE_STONE:BLACK_STONE);
+  {
+    GoItem color;
+    color = (go.turn%2)?WHITE_STONE:BLACK_STONE;
 
-  go.grid[gox][goy] = (go.turn%2)?WHITE_STONE:BLACK_STONE;
+    put_stone(color, gox, goy);
+
+    append_hitem(PLAY, color, gox, goy);
+  }
 
   //--check if groups to kill
   {
@@ -681,30 +804,113 @@ void play_at(int gox, int goy){
       *captured += kill_group_of(x,y);
     }
   }
+  update_capture_label();
 
-  {//--update capture label
-    char * new_label_string = NULL;
-    new_label_string = (char *) malloc (100 * sizeof(char));
-    g_printerr("Capture points: W %d - B %d\n", go.white_captures, go.black_captures);
-    sprintf(new_label_string, "B: %d W: %d", go.black_captures, go.white_captures);
-    g_printerr("Capture points: %s\n", new_label_string);
-    gtk_label_set_text (GTK_LABEL (go.capture_label), new_label_string);
-  }
   //--next turn
   go.turn++;
+  go.last_turn++;
+#ifdef TURN_LABEL
+  update_turn_label();
+#endif
+}
+
+
+void undo_turn(){
+  Hitem * hitem;
+
+  if(!go.history || go.turn == 0) return;
+
+  hitem = go.history->data;
+
+  while(hitem->action == CAPTURE){
+    put_stone(hitem->item, hitem->posx, hitem->posy);//FIXME: don't update screen each time!
+    if(hitem->item == BLACK_STONE) go.white_captures--;
+    else go.black_captures--;
+
+    if(go.history->prev) go.history = go.history->prev;
+    hitem = go.history->data;
+  }
+  update_capture_label();
+
+  if(hitem->action == PLAY){
+    remove_stone(hitem->posx, hitem->posy);
+    go.turn--;
+  }
+  else if(hitem->action == PASS){
+    go.turn--;
+  }
+#ifdef TURN_LABEL
+  update_turn_label();
+#endif
+
+  if(go.history->prev) go.history = go.history->prev;
+}
+
+void redo_turn(){
+  Hitem * hitem = NULL;
+ 
+  TRACE("*************************************");
+  //**/_print_history();
+
+  if(!go.history || !go.history->next /*|| go.turn >= go.last_turn*/){
+    TRACE("================do nothing");
+    return;
+  }
+
+  if(go.turn >= 1 && go.history->next) go.history = go.history->next;
+
+  hitem = go.history->data;
+
+  //TRACE("================try");
+  ///**/_print_hitem(hitem);
+  //TRACE("================");
+
+  if(hitem->action == PASS){
+    TRACE("***> rePASS");
+    go.turn++;
+  }
+  else if(hitem->action == PLAY){
+    TRACE("***> rePLAY %d %d", hitem->posx, hitem->posy);
+    put_stone(hitem->item, hitem->posx, hitem->posy);
+    go.turn++;
+
+    {//revert capture if there are.
+      GList * c;
+      if(go.history->next){
+
+        c = go.history->next;
+        hitem = c->data;
+      
+        while(hitem && hitem->action == CAPTURE){
+          TRACE("***> remove %d %d", hitem->posx, hitem->posy);
+          remove_stone(hitem->posx, hitem->posy);//FIXME: don't update screen each time!
+          if(hitem->item == BLACK_STONE) go.white_captures++;
+          else go.black_captures++;
+          
+          go.history = c;
+          if(go.history->next){
+            c = go.history->next;
+            hitem = c->data;
+          }
+          else hitem = NULL;
+        }
+        update_capture_label();
+      }
+    }
+
+  }
+#ifdef TURN_LABEL
+  update_turn_label();
+#endif
+
+  TRACE("*************************************");
 }
 
 gboolean
 on_drawing_area_button_release_event(GtkWidget       *widget,
                                      GdkEventButton  *event,
                                      gpointer         user_data){
-  /**/g_printerr("release\n");
-
-  //**/paint_stone(widget,
-  //**/            (go.x - 1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-  //**/            (go.y - 1) * go.grid_space + go.grid_margin - go.grid_space / 2,
-  //**/            (go.turn%2)?WHITE_STONE:BLACK_STONE);
-  //**/go.turn++;
+  TRACE("release");
 
   play_at(go.x, go.y);
 
@@ -712,14 +918,30 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
 }
 
 void on_button_pref_pressed (void){
-  /**/g_printerr("Preferences.\n");
-  _print_gird();
+  TRACE("-------------------------------------\\");
+  TRACE("Preferences.");
+  //**/_print_gird();
+  /**/_print_history();
+  TRACE("turn %d", go.turn);
+  TRACE("last %d", go.last_turn);
+  TRACE("list %d", g_list_length(g_list_first(go.history)));
+  TRACE("-------------------------------------/");
+
 }
 void on_button_prev_pressed (void){
-  /**/g_printerr("prev\n");
+  TRACE("prev");
+  undo_turn();
 }
 void on_button_next_pressed (void){
-  /**/g_printerr("next\n");
+  TRACE("next");
+  redo_turn();
+}
+
+void on_button_pass_clicked (void){
+  TRACE("pass");
+  append_hitem(PASS, EMPTY, 0, 0);
+  go.turn++;
+  go.last_turn++;
 }
 
 void gui_init(){
@@ -731,6 +953,9 @@ void gui_init(){
   GtkWidget * image;
 
   GtkWidget * capture_label;
+#ifdef TURN_LABEL
+  GtkWidget * turn_label;
+#endif
 
   GtkWidget   * drawing_area;
 
@@ -755,19 +980,36 @@ void gui_init(){
                               GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style      (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  pixbuf = gpe_find_icon ("left");
-  image = gtk_image_new_from_pixbuf(pixbuf);
+  image = gtk_image_new_from_stock (GTK_STOCK_UNDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   NULL, NULL, NULL,
 			   image, GTK_SIGNAL_FUNC (on_button_prev_pressed), NULL);
-  gdk_pixbuf_unref(pixbuf);
 
-  pixbuf = gpe_find_icon ("right");
-  image = gtk_image_new_from_pixbuf(pixbuf);
+#ifdef TURN_LABEL
+  //Turn label
+  turn_label = gtk_label_new("0/0");
+  
+  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), turn_label, NULL, NULL);
+  go.turn_label = turn_label;
+#endif
+
+  image = gtk_image_new_from_stock (GTK_STOCK_REDO, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 			   NULL, NULL, NULL,
 			   image, GTK_SIGNAL_FUNC (on_button_next_pressed), NULL);
-  gdk_pixbuf_unref(pixbuf);
+ 
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+
+  //Capture label, 
+  //let put it in the toolbar. Will find a better place later
+  capture_label = gtk_label_new("B:0  W:0 ");
+  
+  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), capture_label, NULL, NULL);
+  go.capture_label = capture_label;
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
 
   pixbuf = gpe_find_icon ("prefs");
   image = gtk_image_new_from_pixbuf(pixbuf);
@@ -776,12 +1018,18 @@ void gui_init(){
 			   image, GTK_SIGNAL_FUNC (on_button_pref_pressed), NULL);
   gdk_pixbuf_unref(pixbuf);
 
-  //--Capture label
-  capture_label = gtk_label_new(NULL);
-  
-  //let put it in the toolbar. Will find a better place later
-  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), capture_label, NULL, NULL);
-  go.capture_label = capture_label;
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  {// [PASS] button
+    GtkWidget * button;
+    button = gtk_button_new_with_label ("PASS");
+    gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_NONE);
+    g_signal_connect (G_OBJECT (button), "clicked",
+                      G_CALLBACK (on_button_pass_clicked), NULL);
+
+    gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), button, NULL, NULL);
+  }
 
   //--drawing area (Go Board)
   drawing_area = gtk_drawing_area_new ();

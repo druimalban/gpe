@@ -1,4 +1,4 @@
-VERSION = 0.02
+VERSION = 0.03
 
 PACKAGE = gpe-go
 PREFIX = /usr/local
@@ -7,7 +7,7 @@ LINGUAS =
 
 MEMBERS = gpe-go
 
-PIXMAPS = stock_clear_24.png board white.png black.png
+PIXMAPS = board white.png black.png
 
 GTKCFLAGS   = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
@@ -53,7 +53,8 @@ install-program: all
 	done
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) $(DEPS) *~ .*~
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+	find . -name "*~" -exec rm -f {} \;
 
 include ../../base/build/Makefile.dpkg_ipkg
 -include $(DEPS)
