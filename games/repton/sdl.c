@@ -52,7 +52,7 @@
 #define WIDTH 320
 #define HEIGHT 200
 
-SDL_Surface *scr_virtual, *scr_physical;
+SDL_Surface *scr_physical;
 
 static int dead, endlevel;
 
@@ -200,10 +200,8 @@ check_keyboard(struct map_s *mptr)
 		go_down(mptr);
 		svgalib_draw_map(mptr);
 	}
-#if 0
-	else if (keyboard_keypressed(SCANCODE_M))
+	else if (keydown[SDLK_m])
 		showmap(mptr);
-#endif
 	else if (keydown[SDLK_q] || keydown[SDLK_ESCAPE])
 		return 1;
 
@@ -313,7 +311,7 @@ load_image(char *filename)
 
 #include "font_8x8.c"
 
-static void
+void
 write_text (int x, int y, char *string)
 {
 	while (*string) {
@@ -338,7 +336,7 @@ write_text (int x, int y, char *string)
 	SDL_UpdateRect (scr_physical, 0, 0, 0, 0);
 }
 
-static void
+void
 clearscreen (void)
 {
 	memset (scr_physical->pixels, 0, WIDTH * HEIGHT * 2);
@@ -373,7 +371,7 @@ redraw_main_screen(char *episode, int level)
 	WRITE_CENTERED(190, buf);
 }
 
-static void
+void
 wait_until_event(void)
 {
 	for (;;) {
