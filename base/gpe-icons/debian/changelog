@@ -1,3 +1,9 @@
+gpe-icons (0.07-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Philip Blundell <pb@debian.org>  Wed, 10 Jul 2002 21:44:26 +0100
+
 gpe-icons (0.04-1) unstable; urgency=low
 
   * Initial Release.
