@@ -1,3 +1,14 @@
+2002-08-30  Luc Pionchon <luc.pionchon@welho.org>
+
+	* Makefile config.makefile src/Makefile: improvement and bug fix.
+	* gpe-sketchbook.c & icons: update. removed color icons.
+	* removed BUGS: bugs moved to bugzilla
+	* control: update version number
+	* sketchpad-cb.[ch] sketchpad-gui.[ch] sketchpad.[ch]: moved drawing
+	           tools to GtkToolbar (will allow Horiz/Vert switching).
+		   moved brush/color selectors into popup windows.
+		   also cleaned color management.
+
 2002-07-30  Philip Blundell  <philb@gnu.org>
 
 	* gpe-sketchbook.menu: Move to PIM section.
