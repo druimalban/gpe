@@ -40,11 +40,14 @@ $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install: all install-mo
-	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-julia
-	install -m 644 pixmaps/zoom_in.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-julia/zoom_in.png
-	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-julia/zoom_out.png
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
+	install -m 644 pixmaps/zoom_in.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/zoom_in.png
+	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/zoom_out.png
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
+        install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE)-play
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
