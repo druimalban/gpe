@@ -1,3 +1,7 @@
+2003-08-02  Philip Blundell  <philb@gnu.org>
+
+	* README: Mention make freshen-po too.
+
 2003-08-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* README: Mention Source: field in the control file; mention

@@ -63,6 +63,9 @@ out 'po/<langcode>.po'.
 
 Run 'make translation-package'.
 
+Use 'make freshen-po' to retrieve the latest PO files for all
+languages mentioned in $(LINGUAS).  It is a good idea to do this
+prior to building a new release.
 
 
 See http://handhelds.org/z/wiki/IpkgHackForLocales
