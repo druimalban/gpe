@@ -1,5 +1,9 @@
 2003-01-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
+	* Makefile: delete year_view
+
+2003-01-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
 	* gpe-calendar.session: add a Xsession.d file to schedule
 	next alarms at login time 
 	* Makefile: install new Xsession.d file

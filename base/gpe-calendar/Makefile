@@ -5,7 +5,7 @@ GTK2 = yes
 
 LINGUAS = de pt_PT
 
-MEMBERS = main day_view week_view future_view event-ui event-db year_view month_view day_popup old-db xsettings
+MEMBERS = main day_view week_view future_view event-ui event-db month_view day_popup old-db xsettings
 
 ifeq ($(GTK2),yes)
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
