@@ -1244,7 +1244,8 @@ GtkWidget * build_new_game_dialog(){
 
   //--title
   label = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label), "<big><b>New Game</b></big>");
+  /* TRANSLATORS: ignore <xxx> tags */
+  gtk_label_set_markup (GTK_LABEL (label), _("<big><b>New Game</b></big>"));
 
   //image
   pixbuf = gpe_find_icon ("this_app_icon");
@@ -1265,7 +1266,7 @@ GtkWidget * build_new_game_dialog(){
   vbox = gtk_vbox_new (FALSE, 5);
 
   label = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label), "<b>Game Size</b>");
+  gtk_label_set_markup (GTK_LABEL (label), _("<b>Game Size</b>"));
   gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
 
