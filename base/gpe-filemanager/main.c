@@ -505,6 +505,7 @@ make_view (gchar *view)
 
   loaded_icons = g_hash_table_new (NULL, NULL);
   gpe_iconlist_clear (view_widget);
+  gtk_widget_draw (view_widget, NULL);
 
   uri = gnome_vfs_uri_new (current_directory);
 
@@ -535,6 +536,7 @@ make_view (gchar *view)
     if (result != GNOME_VFS_OK)
       break;
   }
+  gtk_widget_draw (view_widget, NULL);
   gnome_vfs_directory_close (handle);
   loading_directory = 0;
 }
