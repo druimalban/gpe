@@ -429,9 +429,6 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
               viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
               week_view_update();
             }
-          else
-            gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-		                         GTK_DIR_DOWN);  
           break;
         }
     return TRUE;
@@ -449,9 +446,6 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
               viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
               week_view_update();
             }
-          else
-            gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-		                         GTK_DIR_UP);  
           break;
         }
     return TRUE;

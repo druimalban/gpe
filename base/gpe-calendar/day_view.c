@@ -100,14 +100,7 @@ list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
   if (k->keyval == GDK_Up)
   {
     gtk_clist_select_row(GTK_CLIST(clist),row-1, 0);
-    if (!row)
-      {
-        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(clist)),
-		                         GTK_DIR_UP);
-        return TRUE;
-      }
-    else
-      return FALSE;
+    return FALSE;
   }
   
   if (k->keyval == GDK_Down)
@@ -115,8 +108,6 @@ list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
     gtk_clist_select_row(GTK_CLIST(clist),row + 1, 0);
     if (row == lastrow)
       {
-        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(clist)),
-		                      GTK_DIR_TAB_FORWARD);
         lastrow = -1;
         return TRUE;
       }

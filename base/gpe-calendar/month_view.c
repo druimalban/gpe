@@ -492,9 +492,6 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
                                    rc[active_day].popup.day);
           month_view_update();
         }
-      else
-        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-                             GTK_DIR_DOWN);  
       return TRUE;
     }
     
@@ -508,9 +505,6 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
                                    rc[active_day].popup.day);
           month_view_update();
         }
-      else
-        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-                             GTK_DIR_UP);  
       return TRUE;
     }
 
@@ -524,9 +518,6 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
                                    rc[active_day].popup.day);
           month_view_update();
         }
-      else
-        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-                             GTK_DIR_DOWN);  
       return TRUE;
     }
     
@@ -540,9 +531,6 @@ month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_d
                                    rc[active_day].popup.day);
           month_view_update();
         }
-      else
-        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
-                             GTK_DIR_UP);  
       return TRUE;
     }
     
