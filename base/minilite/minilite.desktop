@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Frontlight control
+Comment=Panel based frontlight control
+Exec=minilite
+Type=PanelApp
+Icon=minilite.png
+Categories=Panel;Utility
