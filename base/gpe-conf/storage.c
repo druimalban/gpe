@@ -49,7 +49,7 @@ typedef struct
   char *mountpoint;
   int type;
   GtkWidget *bar;
-  GtkWidget *label, *label2;
+  GtkWidget *label, *label2, *label3;
   int present;
 }
 tfs;
@@ -74,8 +74,9 @@ which_fs_type (char *fsline)
   return FS_T_UNKNOWN;
 }
 
+/* from minisys */
 int
-system_memory (void)
+system_memory (void) 
 {
   u_int64_t my_mem_used, my_mem_max;
   u_int64_t my_swap_max;
@@ -102,7 +103,6 @@ system_memory (void)
 
       my_mem_used = ah + ab - af - ae;
 
-      //msd.mem_percent = (100 * msd.mem_used) / msd.mem_max;
       meminfo.total = my_mem_max / 1024;
       meminfo.used = my_mem_used / 1024;
       meminfo.avail = (my_mem_max - my_mem_used) / 1024;
@@ -113,22 +113,46 @@ system_memory (void)
 
 
 void
-toolbar_set_style (GtkWidget * bar)
+toolbar_set_style (GtkWidget * bar, gint percent)
 {
   GtkStyle *astyle;
   GtkRcStyle *rc_style;
   static const GdkColor blue = { 0, 0, 0x0000, 0xf000 };
   static const GdkColor red = { 0, 0xd000, 0x0000, 0x0000 };
+  static const GdkColor green = { 0, 0x0000, 0xd000, 0x0000 };
   static const GdkColor white = { 0, 0xffff, 0xffff, 0xffff };
-
+  static const GdkColor yellow = { 0, 0xffff, 0xeeee, 0x0000 };
   astyle = gtk_widget_get_style (bar);
   rc_style = gtk_rc_style_new ();
   if (astyle)
     {
+/* bar active */		
+//text		
       rc_style->fg[GTK_STATE_PRELIGHT] = white;
       rc_style->text[GTK_STATE_PRELIGHT] = white;
       rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_FG;
       rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_TEXT;
+//bar
+      if (percent < 80) 
+	  {	  
+	  	rc_style->bg[GTK_STATE_PRELIGHT] = green;
+	  	rc_style->base[GTK_STATE_PRELIGHT] = green;
+	  }
+      else if (percent < 95) 
+	  {	  
+	  	rc_style->bg[GTK_STATE_PRELIGHT] = yellow;
+	  	rc_style->base[GTK_STATE_PRELIGHT] = yellow;
+	  }
+      else 
+	  {	  
+	  	rc_style->bg[GTK_STATE_PRELIGHT] = red;
+	  	rc_style->base[GTK_STATE_PRELIGHT] = red;
+	  }
+	  
+      rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_BG;
+      rc_style->color_flags[GTK_STATE_PRELIGHT] |= GTK_RC_BASE;
+
+//end		
 
       rc_style->base[GTK_STATE_SELECTED] = red;
       rc_style->fg[GTK_STATE_SELECTED] = white;
@@ -138,11 +162,12 @@ toolbar_set_style (GtkWidget * bar)
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_TEXT;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BASE;
       rc_style->color_flags[GTK_STATE_SELECTED] |= GTK_RC_BG;
-
       rc_style->text[GTK_STATE_NORMAL] = white;
-      rc_style->base[GTK_STATE_NORMAL] = blue;
       rc_style->fg[GTK_STATE_NORMAL] = white;
+/* bar background */	  
+      rc_style->base[GTK_STATE_NORMAL] = blue;
       rc_style->bg[GTK_STATE_NORMAL] = blue;
+			  
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_FG;
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_TEXT;
       rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_BASE;
@@ -163,7 +188,6 @@ update_status ()
   static char cnew[255], cnew2[255], cnew3[255];
   int fs_pos = 0;
   int i;
-  GtkWidget *frame, *vbox1;
 
   pipe = popen ("/bin/df -k", "r");
 
@@ -186,39 +210,36 @@ update_status ()
 		  filesystems[fs_count - 1].name = NULL;
 		  filesystems[fs_count - 1].mountpoint = NULL;
 		  filesystems[fs_count - 1].label = gtk_label_new (NULL);
-		  gtk_label_set_justify (GTK_LABEL
-					 (filesystems[fs_count - 1].label),
-					 GTK_JUSTIFY_LEFT);
 		  gtk_misc_set_alignment (GTK_MISC
 					  (filesystems[fs_count - 1].label),
 					  0, 0.5);
-		  frame = gtk_frame_new (NULL);
-		  gtk_widget_set_size_request (frame, 190, -1);
-		  gtk_frame_set_label_widget (GTK_FRAME (frame),
-					      filesystems[fs_count -
-							  1].label);
+			
+	      gtk_box_pack_start(GTK_BOX(vbox),filesystems[fs_count - 1].label,
+			FALSE,FALSE,3);
 
-		  vbox1 = gtk_vbox_new (TRUE, gpe_get_catspacing ());
-		  gtk_container_add (GTK_CONTAINER (frame), vbox1);
 		  filesystems[fs_count - 1].bar = gtk_progress_bar_new ();
 		  gtk_widget_set_sensitive (filesystems[fs_count - 1].bar,
 					    TRUE);
-		  toolbar_set_style (filesystems[fs_count - 1].bar);
-		  gtk_box_pack_start (GTK_BOX (vbox1),
+		  toolbar_set_style (filesystems[fs_count - 1].bar,(int)((float)filesystems[fs_count - 1].used/(float)filesystems[fs_count - 1].total*100.0));
+		  gtk_box_pack_start (GTK_BOX (vbox),
 				      filesystems[fs_count - 1].bar, FALSE,
 				      FALSE, 0);
-		  filesystems[fs_count - 1].label2 = gtk_label_new (NULL);
-		  gtk_box_pack_start (GTK_BOX (vbox1),
-				      filesystems[fs_count - 1].label2, FALSE,
+		  filesystems[fs_count - 1].label3 = gtk_label_new (NULL);
+		  gtk_misc_set_alignment (GTK_MISC
+					  (filesystems[fs_count - 1].label3),
+					  0.0, 0.5);
+		  gtk_box_pack_start (GTK_BOX (vbox),
+				      filesystems[fs_count - 1].label3, FALSE,
 				      FALSE, 0);
-		  gtk_label_set_justify (GTK_LABEL
-					 (filesystems[fs_count - 1].label2),
-					 GTK_JUSTIFY_LEFT);
+					  
+		  filesystems[fs_count - 1].label2 = gtk_label_new (NULL);
 		  gtk_misc_set_alignment (GTK_MISC
 					  (filesystems[fs_count - 1].label2),
-					  0, 0.5);
-		  gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
-		  gtk_widget_show_all (frame);
+					  0.0, 0.5);
+		  gtk_box_pack_start (GTK_BOX (vbox),
+				      filesystems[fs_count - 1].label2, FALSE,
+				      FALSE, 0);
+		  gtk_widget_show_all (vbox);
 		}
 	      // mark current fs
 	      filesystems[fs_pos - 1].present = TRUE;
@@ -240,7 +261,7 @@ update_status ()
 		  fstr =
 		    g_strdup_printf ("%s %s %s",
 				     "<b><span foreground=\"black\">",
-				     _("Flash"), "</span></b>");
+				     _("Internal Flash"), "</span></b>");
 		  break;
 		case FS_T_MMC:
 		  fstr =
@@ -272,17 +293,10 @@ update_status ()
 								 1].used /
 					     (float) filesystems[fs_pos -
 								 1].total);
-	      sprintf (cnew2, "%4.1f%% used",
-		       ((float) filesystems[fs_pos - 1].used /
-			(float) filesystems[fs_pos - 1].total) * 100.0);
-	      gtk_progress_bar_set_text (GTK_PROGRESS_BAR
-					 (filesystems[fs_pos - 1].bar),
-					 cnew2);
-
 	      fstr =
 		g_strdup_printf ("%s %s %4.1f MB, %s <i>%s</i> %s",
 				 "<span foreground=\"black\">",
-				 _("Total size:"),
+				 _("Total:"),
 				 (float) filesystems[fs_pos -
 						     1].total / 1024.0,
 				 _("Mounted at"),
@@ -291,6 +305,11 @@ update_status ()
 	      gtk_label_set_markup (GTK_LABEL
 				    (filesystems[fs_pos - 1].label2), fstr);
 	      g_free (fstr);
+	      sprintf (cnew2, "%s: <i>%4.1f</i> MB",_("Free space"),
+		       ((float) filesystems[fs_pos - 1].total -
+			(float) filesystems[fs_pos - 1].used)/1024.0);
+	      gtk_label_set_markup (GTK_LABEL (filesystems[fs_pos - 1].label3), cnew2);
+	      toolbar_set_style (filesystems[fs_pos - 1].bar,(int)((float)filesystems[fs_pos - 1].used/(float)filesystems[fs_pos - 1].total*100.0));
 	    }
 	}
       pclose (pipe);
@@ -303,8 +322,8 @@ update_status ()
 	{
 	  gtk_widget_destroy (filesystems[fs_pos].bar);
 	  gtk_widget_destroy (filesystems[fs_pos].label2);
-	  gtk_widget_destroy (gtk_widget_get_parent
-			      (filesystems[fs_pos].label));
+	  gtk_widget_destroy (filesystems[fs_pos].label3);
+	  gtk_widget_destroy (filesystems[fs_pos].label);
 	  fs_count--;
 	  for (i = fs_pos; i < fs_count; i++)
 	    filesystems[i] = filesystems[i + 1];
@@ -330,16 +349,17 @@ update_status ()
       gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (meminfo.bar),
 				     (float) meminfo.used /
 				     (float) meminfo.total);
-      sprintf (cnew2, "%4.1f%% used",
-	       ((float) meminfo.used / (float) meminfo.total) * 100.0);
-      gtk_progress_bar_set_text (GTK_PROGRESS_BAR (meminfo.bar), cnew2);
+ 	  sprintf (cnew2, "%s : <i>%4.1f</i> MB",_("Free memory"),
+		       ((float) meminfo.total -	(float) meminfo.used)/1024.0);
+	  gtk_label_set_markup (GTK_LABEL (meminfo.label3), cnew2);
 
       fstr =
 	g_strdup_printf ("%s %s %4.1f MB %s",
-			 "<span foreground=\"black\">", _("Total size:"),
+			 "<span foreground=\"black\">", _("Total:"),
 			 (float) meminfo.total / 1024.0, "</span>");
       gtk_label_set_markup (GTK_LABEL (meminfo.label2), fstr);
       g_free (fstr);
+      toolbar_set_style (meminfo.bar,(int)((float)meminfo.used/(float)meminfo.total*100.0)+20);
     }
 
   return TRUE;
@@ -365,14 +385,14 @@ Storage_Restore ()
 GtkWidget *
 Storage_Build_Objects (void)
 {
-  static GtkWidget *label1, *frame, *vbox1;
+  static GtkWidget *label1;
   gchar *fstr = NULL;
   FILE *pipe;
   static char cur[256];
   static char cnew[255], cnew2[255], cnew3[255];
   static GtkWidget *bar_flash;
 
-  vbox = gtk_vbox_new (FALSE, gpe_get_catspacing ());
+  vbox = gtk_vbox_new (FALSE, 1);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_get_border ());
 
 
@@ -396,15 +416,13 @@ Storage_Build_Objects (void)
 	      filesystems[fs_count - 1].name = g_strdup (cnew);
 	      filesystems[fs_count - 1].mountpoint = g_strdup (cnew3);
 
-	      //if ((filesystems[fs_count - 1].type != FS_T_UNKNOWN) && (!feof(pipe)))
-	      //  {
 	      switch (filesystems[fs_count - 1].type)
 		{
 		case FS_T_FLASH:
 		  fstr =
 		    g_strdup_printf ("%s %s %s",
 				     "<b><span foreground=\"black\">",
-				     _("Flash"), "</span></b>");
+				     _("Internal Flash"), "</span></b>");
 		  break;
 		case FS_T_MMC:
 		  fstr =
@@ -430,36 +448,36 @@ Storage_Build_Objects (void)
 	      filesystems[fs_count - 1].label = label1;
 	      gtk_label_set_markup (GTK_LABEL (label1), fstr);
 	      g_free (fstr);
-
 	      gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
-	      gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
-	      frame = gtk_frame_new (NULL);
-	      gtk_widget_set_size_request (frame, 190, -1);
-	      gtk_frame_set_label_widget (GTK_FRAME (frame), label1);
-	      vbox1 = gtk_vbox_new (TRUE, gpe_get_catspacing ());
-	      gtk_container_add (GTK_CONTAINER (frame), vbox1);
+	      gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+		
+	      gtk_box_pack_start(GTK_BOX(vbox),label1,FALSE,FALSE,3);
+		
 	      bar_flash = gtk_progress_bar_new ();
 	      filesystems[fs_count - 1].bar = bar_flash;
 	      gtk_widget_set_sensitive (bar_flash, TRUE);
-	      toolbar_set_style (bar_flash);
-	      gtk_box_pack_start (GTK_BOX (vbox1), bar_flash, FALSE, FALSE,
-				  0);
+	      toolbar_set_style (bar_flash,(int)((float)filesystems[fs_count - 1].used/(float)filesystems[fs_count - 1].total*100.0));
+	      gtk_box_pack_start (GTK_BOX (vbox), bar_flash, FALSE, FALSE,0);
 	      gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (bar_flash),
 					     (float) filesystems[fs_count -
 								 1].used /
 					     (float) filesystems[fs_count -
 								 1].total);
-	      sprintf (cnew2, "%4.1f%% used",
-		       ((float) filesystems[fs_count - 1].used /
-			(float) filesystems[fs_count - 1].total) * 100.0);
-	      gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar_flash), cnew2);
-
+	      sprintf (cnew2, "%s: <i>%4.1f</i> MB",_("Free space"),
+		       ((float) filesystems[fs_count - 1].total -
+			(float) filesystems[fs_count - 1].used)/1024.0);
+	      label1 = gtk_label_new (NULL);
+	      filesystems[fs_count - 1].label3 = label1;
+	      gtk_label_set_markup (GTK_LABEL (label1), cnew2);
+	      gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+	      gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE,0);
+			
 	      label1 = gtk_label_new (NULL);
 	      filesystems[fs_count - 1].label2 = label1;
 	      fstr =
-		g_strdup_printf ("%s %s %4.1f MB, %s <i>%s</i> %s",
+		  g_strdup_printf ("%s %s %4.1f MB, %s <i>%s</i> %s",
 				 "<span foreground=\"black\">",
-				 _("Total size:"),
+				 _("Total:"),
 				 (float) filesystems[fs_count -
 						     1].total / 1024.0,
 				 _("Mounted at"),
@@ -467,10 +485,8 @@ Storage_Build_Objects (void)
 				 "</span>");
 	      gtk_label_set_markup (GTK_LABEL (label1), fstr);
 	      g_free (fstr);
-	      gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
-	      gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
-	      gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
-	      gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
+	      gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+	      gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
 	    }
 	}
       pclose (pipe);
@@ -483,46 +499,45 @@ Storage_Build_Objects (void)
   if (!system_memory ())
     {
       fstr =
-	g_strdup_printf ("%s %s %s",
+	  g_strdup_printf ("%s %s %s",
 			 "<b><span foreground=\"black\">",
-			 _("System memory"), "</span></b>");
+			 _("System Memory"), "</span></b>");
       label1 = gtk_label_new (NULL);
       meminfo.label = label1;
       gtk_label_set_markup (GTK_LABEL (label1), fstr);
       g_free (fstr);
-
       gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
       gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
-      frame = gtk_frame_new (NULL);
-      gtk_frame_set_label_widget (GTK_FRAME (frame), label1);
-      vbox1 = gtk_vbox_new (TRUE, gpe_get_catspacing ());
-      gtk_container_add (GTK_CONTAINER (frame), vbox1);
+      gtk_box_pack_start(GTK_BOX(vbox),label1,FALSE,FALSE,3);
+			  
       bar_flash = gtk_progress_bar_new ();
       meminfo.bar = bar_flash;
       gtk_widget_set_sensitive (bar_flash, TRUE);
-      toolbar_set_style (bar_flash);
-      gtk_box_pack_start (GTK_BOX (vbox1), bar_flash, FALSE, FALSE, 0);
+      toolbar_set_style (bar_flash,(int)((float)meminfo.used/(float)meminfo.total*100.0)+20);
+      gtk_box_pack_start (GTK_BOX (vbox), bar_flash, FALSE, FALSE, 0);
       gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (bar_flash),
 				     (float) meminfo.used /
 				     (float) meminfo.total);
-      sprintf (cnew2, "%4.1f%% used",
-	       ((float) meminfo.used / (float) meminfo.total) * 100.0);
-      gtk_progress_bar_set_text (GTK_PROGRESS_BAR (bar_flash), cnew2);
-
+	  sprintf (cnew2, "%s: <i>%4.1f</i> MB",_("Free memory"),
+		       ((float) meminfo.total -	(float) meminfo.used)/1024.0);
+	  label1 = gtk_label_new (NULL);
+      gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+	  meminfo.label3 = label1;
+	  gtk_label_set_markup (GTK_LABEL (label1), cnew2);
+	  gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE,0);
+		   
       label1 = gtk_label_new (NULL);
       meminfo.label2 = label1;
       fstr =
-	g_strdup_printf ("%s %s %4.1f MB %s",
-			 "<span foreground=\"black\">", _("Total size:"),
+	  g_strdup_printf ("%s %s %4.1f MB %s",
+			 "<span foreground=\"black\">", _("Total:"),
 			 (float) meminfo.total / 1024.0, "</span>");
       gtk_label_set_markup (GTK_LABEL (label1), fstr);
       g_free (fstr);
-      gtk_box_pack_start (GTK_BOX (vbox1), label1, FALSE, FALSE, 0);
-      gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
-      gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
-      gtk_box_pack_start (GTK_BOX (vbox), frame, FALSE, FALSE, 0);
+      gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
+      gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
     }
 
-  gtk_timeout_add (2500, (GtkFunction) update_status, NULL);
+  gtk_timeout_add (1600, (GtkFunction) update_status, NULL);
   return vbox;
 }
