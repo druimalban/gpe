@@ -69,6 +69,8 @@ gchar *current_directory = "";
 gchar *current_view = "icons";
 gint current_zoom = 28;
 
+GHashTable *loaded_icons;
+
 typedef struct
 {
   gchar *filename;
@@ -441,11 +443,31 @@ find_icon_path (gchar *mime_type)
   return g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 }
 
+GdkPixbuf *
+get_pixbuf (gchar *filename)
+{
+  GdkPixbuf *pixbuf;
+
+  pixbuf = g_hash_table_lookup (loaded_icons, (gconstpointer) filename);
+
+  if ((GdkPixbuf *) pixbuf)
+  {
+    return (GdkPixbuf *) pixbuf;
+  }
+  else
+  {
+    pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+    g_hash_table_insert (loaded_icons, (gpointer) filename, (gpointer) pixbuf);
+    reutrn pixbuf;
+  }
+}
+
 void
 add_icon (FileInfomation *file_info)
 {
   struct stat file_stats;
   GSList *iter;
+  GdkPixbuf *pixbuf;
   gchar *mime_icon, *mime_type;
 
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
@@ -462,7 +484,8 @@ add_icon (FileInfomation *file_info)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 
   //printf ("Image Filename: %s\n", mime_icon);
-  gpe_iconlist_add_item (GPE_ICONLIST (view_widget), file_info->vfs->name, mime_icon, (gpointer) file_info);
+  pixbuf = get_pixbuf (mime_icon);
+  gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (view_widget), file_info->vfs->name, pixbuf, (gpointer) file_info);
 }
 
 gint
