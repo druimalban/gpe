@@ -262,10 +262,76 @@ sn_display_for_display (Display *dpy)
   return map->sn_dpy;
 }
 
+static void
+kill_pending_startup (struct sn_display_map *map, const char *id)
+{
+  GSList *l;
+  struct startup_record *sr;
+
+  for (l = map->pending_startups; l; l = l->next)
+    {
+      sr = l->data;
+
+      if (!strcmp (sr->startup_id, id))
+	{
+	  map->pending_startups = g_slist_remove (map->pending_startups, sr);
+	  g_free ((void *)sr->startup_id);
+	  g_free ((void *)sr->binary);
+	  g_free (sr);
+	  return;
+	}
+    }
+}
+
+static void
+global_monitor_event (SnMonitorEvent *event, void *user_data)
+{
+  SnMonitorContext *context;
+  SnStartupSequence *sequence;
+  const char *id;
+  struct sn_display_map *map = user_data;
+  struct startup_record *sr;
+
+  context = sn_monitor_event_get_context (event);
+  sequence = sn_monitor_event_get_startup_sequence (event);
+  id = sn_startup_sequence_get_id (sequence);
+
+  switch (sn_monitor_event_get_type (event))
+    {
+    case SN_MONITOR_EVENT_INITIATED:
+      sr = g_malloc (sizeof (*sr));
+      sr->binary = g_strdup (sn_startup_sequence_get_binary_name (sequence));
+      sr->startup_id = g_strdup (id);
+      map->pending_startups = g_slist_prepend (map->pending_startups, sr);
+      break;
+      
+    case SN_MONITOR_EVENT_COMPLETED:
+      kill_pending_startup (map, id);
+      sn_monitor_context_unref (context);
+      break;
+      
+    case SN_MONITOR_EVENT_CANCELED:
+      kill_pending_startup (map, id);
+      sn_monitor_context_unref (context);
+      break;
+    }
+}
+
 void
 gpe_launch_monitor_display (Display *dpy)
 {
-  sn_display_for_display (dpy);
+  GSList *l;
+  struct sn_display_map *map;
+  SnDisplay *sn_dpy;
+
+  sn_dpy = sn_display_for_display (dpy);
+  
+  for (l = sn_display_list; l; l = l->next)
+    {
+      map = l->data;
+      if (map->dpy == dpy)
+	sn_monitor_context_new (sn_dpy, DefaultScreen (dpy), global_monitor_event, map, NULL);
+    }
 }
 
 static void
