@@ -1,0 +1,5 @@
+2003-08-31	Nils Faerber <nils@kernelconcepts.de>
+		- Initial release
+		- Intented as a watch / wrist-watch replacement ;)
+		- Also as demo for the nice analog clock widget from
+		  libgpewidget (thanks to Philip and Damien!)

@@ -1,0 +1,5 @@
+Nils Faerber <nils@kernelconcepts.de>
+	Code & design
+
+Thanks to Philip Blundell for creating gpeclockface in the first place and
+his help making it finally work inside a managed window instead of popup.

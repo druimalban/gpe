@@ -1,0 +1,9 @@
+[Desktop Entry]
+_Name=Watch
+_Comment=Watch
+Exec=gpe-watch
+Terminal=0
+Type=Application
+Icon=gpe-watch.png
+Categories=Application;GPE
+SingleInstance=true

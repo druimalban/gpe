@@ -1,0 +1,6 @@
+GPE Watch
+
+	Shows an analog clockface displaying the time of day.
+
+Options:
+	-d	Create a dialoag window instead of a toplevel window
