@@ -113,8 +113,14 @@ day_popup (GtkWidget *parent, struct day_popup *p)
       guint row = 0;
       contents = gtk_clist_new (1);
 
+      gtk_clist_freeze (GTK_CLIST (contents));
+      gtk_clist_clear (GTK_CLIST (contents));
+  
       while (events)
 	{
+	  GdkPixmap *pmap;
+	  GdkBitmap *bmap;
+	  
 	  event_t ev = events->data;
 	  event_details_t evd = event_db_get_details (ev);
 	  char *p = buf;
@@ -135,10 +141,30 @@ day_popup (GtkWidget *parent, struct day_popup *p)
 
 	  gtk_clist_set_row_data (GTK_CLIST (contents), row, (gpointer)(ev->uid));
 
+	  if ((ev->flags & FLAG_ALARM) && (ev->flags & FLAG_RECUR))
+	    {
+	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
+		gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+				       pmap, bmap);
+	    }
+	  else if (ev->flags & FLAG_ALARM)
+	    { 
+	      if (gpe_find_icon_pixmap ("bell", &pmap, &bmap))
+		gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+				       pmap, bmap);
+	    }
+	  else if (ev->flags & FLAG_RECUR)
+	    {
+	      if (gpe_find_icon_pixmap ("recur", &pmap, &bmap))
+		gtk_clist_set_pixtext (GTK_CLIST (contents), row, 0, buf, 5,
+				       pmap, bmap);
+	    }
+	    
 	  row++;
 	  events = events->next;
 	}
-
+	
+      gtk_clist_thaw (GTK_CLIST (contents));
       gtk_signal_connect (GTK_OBJECT (contents), "select_row",
 			  GTK_SIGNAL_FUNC (selection_made),
 			  window);
