@@ -33,7 +33,7 @@ enum irc_type
   IRC_CHANNEL
 };
 
-extern gchar *irc_server_read (IRCServer *server);
+extern gint irc_server_read (IRCServer *server, gchar **passback_message);
 
 extern gboolean irc_channel_send_message (IRCServer *server, gchar *message);
 

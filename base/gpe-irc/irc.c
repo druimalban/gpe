@@ -21,8 +21,8 @@
 
 #define SERVICE "ircd"
 
-gchar *
-irc_server_read (IRCServer *server)
+gint
+irc_server_read (IRCServer *server, gchar **passback_message)
 {
   fd_set rfds;
   int data_waiting, buf_len, char_num = 0, message_num = 1;
@@ -38,11 +38,11 @@ irc_server_read (IRCServer *server)
   if (server->fd == -1)
   {
     printf ("No socket open!\n");
-    return NULL;
+    return 0;
   }
 
   if (!select (server->fd + 1, &rfds, NULL, NULL, &tv))
-    return FALSE;
+    return 0;
 
   message = g_malloc (2);
   message[0] = '\n';
@@ -60,25 +60,26 @@ irc_server_read (IRCServer *server)
     if (data_waiting)
     {
       buf_len = read (server->fd, buf, sizeof (buf));
-      if (buf_len != -1)
+      if (buf_len < 1)
+        return -1;
+
+      if (buf[0] == '\n')
       {
-        if (buf[0] == '\n')
-        {
-          message[message_num - 1] = '\0';
-	  printf ("strlen %d -- %s", strlen (message), message);
-	  message_num = 1;
-          return message;
-        }
-
-        message = g_realloc (message, message_num + 2);
-        message[message_num] = buf[0];
-
-        message_num++;
+        message[message_num - 1] = '\0';
+        printf ("strlen %d -- %s", strlen (message), message);
+        message_num = 1;
+        *passback_message = g_strdup (message);
+        return 0;
       }
+
+      message = g_realloc (message, message_num + 2);
+      message[message_num] = buf[0];
+
+      message_num++;
     }
   }
 
-  return NULL;
+  return -1;
 }
 
 /* Send a the users message to specified channel on specified server */

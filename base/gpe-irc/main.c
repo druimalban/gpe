@@ -169,18 +169,20 @@ do_irc_iter ()
 
   iter = g_list_first (servers);
 
-  while (iter)
+  while (iter != NULL)
   {
     //printf ("----- Reading from irc server %s\n", ((IRCServer *) iter->data)->name);
-    text = irc_server_read ((IRCServer *) iter->data);
+    if (irc_server_read ((IRCServer *) iter->data, &text) == -1)
+      break;
 
-    if (text)
+    printf ("--------------------%s\n\n", text);
+    if (text != NULL)
     {
       if ((IRCServer *) iter->data == selected_server)
 	update_text_view (text);
       //printf ("--------------------%s\n\n", text);
       ((IRCServer *) iter->data)->text = g_string_append (((IRCServer *) iter->data)->text, text);
-      printf ("--------------------%s\n\n", ((IRCServer *) iter->data)->text);
+      printf ("--------------------%s\n\n", ((IRCServer *) iter->data)->text->str);
     }
 
     iter = iter->next;
@@ -432,10 +434,13 @@ main (int argc, char *argv[])
 
   while (1)
   {
-    do_irc_iter ();
+    if (servers != NULL)
+      do_irc_iter ();
 
-    while (gtk_events_pending ())
-      gtk_main_iteration ();
+    sleep (1);
+
+    //while (gtk_events_pending ())
+    // gtk_main_iteration ();
   }
 
   return 0;
