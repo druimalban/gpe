@@ -1110,19 +1110,24 @@ add_icon (FileInformation *file_info)
 	GtkTreeIter iter;
     GdkPixbuf *pb;
 	gchar *size;
+	gchar *time;
 	  
 	pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
 	size = gnome_vfs_format_file_size_for_display(file_info->vfs->size); 
-	gtk_tree_store_append (store, &iter, NULL);
+	time = g_strdup(ctime(&file_info->vfs->ctime));
+	time[strlen(time)-1] = 0; /* strip newline */
 	  
+	gtk_tree_store_append (store, &iter, NULL);
+	
     gtk_tree_store_set (store, &iter,
 	    COL_NAME, file_info->vfs->name,
 	    COL_SIZE, size,
-	    COL_CHANGED, ctime(&file_info->vfs->ctime),
+	    COL_CHANGED, time,
 		COL_ICON, pb,
 		COL_DATA, (gpointer) file_info,
     	-1);
 	g_free(size);
+	g_free(time);
 	gdk_pixbuf_unref(pb);
   }	  
 }
