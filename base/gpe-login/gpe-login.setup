@@ -8,7 +8,6 @@ fi
 
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
 ipaq-sleep -u 60 -o 30 -n &
-xstroke &
 
 # check if the user wants a bg image at all:
 if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
