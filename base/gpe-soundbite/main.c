@@ -30,7 +30,6 @@
 #include <gpe/picturebutton.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
-#include <gpe/gtkminifilesel.h>
 #include <gpe/errorbox.h>
 
 #include "gsm-codec.h"
@@ -335,7 +334,7 @@ file_selector_destroy_signal (GtkFileSelection *selector, gpointer user_data)
 void
 file_chosen_signal (GtkFileSelection *selector, gpointer user_data)
 {
-  filename = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (file_selector));
+  filename = g_strdup (gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
 
   if (recording && !strchr (filename, '.'))
     {
@@ -475,18 +474,32 @@ main(int argc, char *argv[])
   if (filename == NULL)
     {
       if (playing)
-        file_selector = gtk_mini_file_selection_new ("Open audio note");
+        file_selector = gtk_file_selection_new ("Open audio note");
       else
-        file_selector = gtk_mini_file_selection_new ("Save audio note as");
+        file_selector = gtk_file_selection_new ("Save audio note as");
 
       gtk_signal_connect (GTK_OBJECT (file_selector),
                       "completed", GTK_SIGNAL_FUNC (file_chosen_signal), NULL);
-      gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)->cancel_button),
-                             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
-                             (gpointer) file_selector);
-      gtk_signal_connect_object (GTK_OBJECT (GTK_MINI_FILE_SELECTION(file_selector)),
+
+      gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
+                        "clicked",
+                        GTK_SIGNAL_FUNC (file_chosen_signal),
+                        NULL);
+
+      gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->ok_button),
+                          "clicked",
+                          GTK_SIGNAL_FUNC (gtk_widget_destroy),
+                          (gpointer) file_selector);
+
+      gtk_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (file_selector)->cancel_button),
+                          "clicked",
+                          GTK_SIGNAL_FUNC (file_selector_destroy_signal),
+                          (gpointer) file_selector);
+
+      gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)),
                              "destroy", GTK_SIGNAL_FUNC (file_selector_destroy_signal),
                              (gpointer) file_selector);
+
       gtk_widget_show (file_selector);
     }
 
