@@ -15,6 +15,10 @@
 #include <math.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
+
+#include <X11/extensions/Xrender.h>
+#include <X11/Xft/Xft.h>
 
 static int clock_radius = 64, border = 2;
 
@@ -25,6 +29,26 @@ static gboolean hand = TRUE;
 static GtkAdjustment *hour_adj, *minute_adj;
 static GdkPixbuf *clock_background, *day_night_wheel;
 
+static Display *dpy;
+
+static XftColor color;
+
+static XftDraw *draw;
+
+static Picture image_pict, src_pict;
+
+static XftDraw *
+make_draw (GdkDrawable *drawable)
+{
+  GdkVisual *gv = gdk_window_get_visual (drawable);
+  GdkColormap *gcm = gdk_drawable_get_colormap (drawable);
+  XftDraw *draw = XftDrawCreate (dpy, GDK_WINDOW_XWINDOW (drawable),
+				 gdk_x11_visual_get_xvisual (gv),
+				 gdk_x11_colormap_get_xcolormap (gcm));
+
+  return draw;
+}
+
 static void
 draw_hand (GdkDrawable *drawable, 
 	   GdkGC *gc, 
@@ -34,8 +58,18 @@ draw_hand (GdkDrawable *drawable,
 	   guint length)
 {
   GdkPoint points[5];
+  XPointDouble poly[5];
   int i;
   double sa = sin (angle), ca = cos (angle);
+
+  dpy = GDK_WINDOW_XDISPLAY (drawable);
+
+  if (! draw)
+    draw = make_draw (drawable);
+  if (! image_pict)
+    image_pict = XftDrawPicture (draw);
+  if (! src_pict)
+    src_pict = XftDrawSrcPicture (draw, &color);
 
   points[0].x = 2;
   points[0].y = 0;
@@ -64,12 +98,27 @@ draw_hand (GdkDrawable *drawable,
     {
       points[i].x += x_offset + clock_radius;
       points[i].y += y_offset + clock_radius;
+
+      poly[i].x = points[i].x;
+      poly[i].y = points[i].y;
     }
 
   /* Xrotated = X * COS(angle) - Y * SIN(angle)        
      Yrotated = X * SIN(angle) + Y * COS(angle) */
 
-  gdk_draw_polygon (drawable, gc, TRUE, points, 5);
+  {
+    XRenderPictureAttributes att;
+    att.poly_edge = PolyEdgeSmooth;
+    XRenderChangePicture (dpy, image_pict, CPPolyEdge, &att);
+  }
+
+  XRenderCompositeDoublePoly (dpy,
+			      PictOpOver,
+			      src_pict, 
+			      image_pict,
+			      None,
+			      0, 0, 0, 0,
+			      poly, 5, EvenOddRule);
 }
 
 static gint
@@ -132,7 +181,7 @@ draw_clock (GtkWidget *widget,
   }
   else
     gdk_pixbuf_render_to_drawable (clock_background, drawable, black_gc, 0, 0, x_offset, y_offset, gdk_pixbuf_get_width (clock_background), gdk_pixbuf_get_height (clock_background), GDK_RGB_DITHER_NONE, 0, 0);
-
+ 
   gdk_pixbuf_render_to_drawable (day_night_wheel, drawable, white_gc, 0, 0, (x_offset + clock_radius) - (gdk_pixbuf_get_width (day_night_wheel) / 2), (y_offset + clock_radius) - (gdk_pixbuf_get_height (day_night_wheel) / 2), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
 
   minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
@@ -217,9 +266,9 @@ static void
 adjustment_value_changed (GObject *a, GtkWidget *w)
 {
   GdkRegion *region = gdk_region_rectangle (&w->allocation);
-  gdk_window_begin_paint_region (w->window, region);
+  //  gdk_window_begin_paint_region (w->window, region);
   draw_clock (w, NULL, NULL);
-  gdk_window_end_paint (w->window);
+  //gdk_window_end_paint (w->window);
   gdk_region_destroy (region);
 }
 
@@ -246,6 +295,12 @@ clock_widget (GtkAdjustment *hadj, GtkAdjustment *madj)
 
   g_signal_connect (G_OBJECT (hadj), "value_changed", G_CALLBACK (adjustment_value_changed), w);
   g_signal_connect (G_OBJECT (madj), "value_changed", G_CALLBACK (adjustment_value_changed), w);
+
+  gtk_widget_set_double_buffered (GTK_WIDGET (w), FALSE);
+
+  color.color.blue = 0xffff;
+  color.color.red = color.color.green = 0;
+  color.color.alpha = 0x4000;
 
   return w;
 }
