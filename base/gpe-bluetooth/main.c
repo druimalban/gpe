@@ -112,7 +112,7 @@ do_run_scan (void)
       return FALSE;
     }
 
-  dd = hci_open_dev(dev_id);
+  dd = hci_open_dev(0/*dev_id*/);
   if (dd < 0) 
     {
       gpe_perror_box ("HCI device open failed");
@@ -143,7 +143,7 @@ do_run_scan (void)
 	continue;
 
       memset(name, 0, sizeof(name));
-      if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 100000) < 0)
+      if (hci_read_remote_name (dd, &(info+i)->bdaddr, sizeof(name), name, 25000) < 0)
 	strcpy (name, _("unknown"));
 
       bd = g_malloc (sizeof (struct bt_device));
