@@ -97,7 +97,7 @@ GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf, gint rotation)
   int x, y, b, width, height, new_width, new_height, rowstride, new_rowstride, channels;
   GdkPixbuf* return_pixbuf;
   guchar *image, *return_image;
-
+	
   rowstride = gdk_pixbuf_get_rowstride (GDK_PIXBUF (pixbuf));
   channels = gdk_pixbuf_get_n_channels (GDK_PIXBUF (pixbuf));
 
@@ -137,19 +137,20 @@ GdkPixbuf* image_tools_rotate( GdkPixbuf* pixbuf, gint rotation)
          switch (rotation)
            {
              case 0:
-               return_image[x * new_rowstride + y * channels + b] = 
-		         image[x * rowstride + y * channels + b];
+               return_image[y * new_rowstride + x * channels + b] = 
+		         image[x * channels + y * rowstride + b];
              break;
-             case 1:             
+             case 3:             
                return_image[x * new_rowstride + y * channels + b] = 
 		         image[y * rowstride + (width - x - 1) * channels + b];
              break;
              case 2:
+                return_image[y * new_rowstride + x * channels + b] = 
+		         image[(width - x - 1) * channels + (height - y - 1) * rowstride + b];
+            break;
+             case 1:
                return_image[x * new_rowstride + y * channels + b] = 
-		         image[(height - y - 1) * rowstride + (width - x - 1) * channels + b];
-                printf("pos %i\n", (height - y - 1) * rowstride + (width - x - 1) * channels + b);
-             break;
-             case 3:
+		         image[(height - y - 1) * rowstride + x * channels + b];
              break;
            }
       }

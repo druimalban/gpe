@@ -66,7 +66,7 @@ guint slideshow_timer = 0;
 guint fullscreen_toolbar_timer = 0;
 guint fullscreen_pointer_timer = 0;
 
-guint x_start, y_start, x_max, y_max;
+gint x_start, y_start, x_max, y_max;
 gint pointer_x, pointer_y = 0;
 double xadj_start, yadj_start;
 guint zoom_timer_id = 0;
@@ -179,7 +179,8 @@ pan_button_down (GtkWidget *w, GdkEventButton *b, GtkWidget *scrolled_window)
   x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 4);
   y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 4);
 
-  gdk_pointer_grab (w->window, 
+  if ((x_max > 0) && (y_max > 0))
+    gdk_pointer_grab (w->window, 
 		    FALSE, GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
 		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
 }
@@ -230,13 +231,14 @@ show_image (GtkWidget *widget, GList *image_filename)
   gint widget_width, widget_height;
   float width_ratio, height_ratio;
   float scale_width_ratio, scale_height_ratio;
+  GdkPixbuf *pixbuf = NULL;
 
   if (view_widget)
   	gtk_widget_hide (view_widget);
 
   image_filenames = image_filename;
   image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filename->data, NULL);
-
+    
   widget_width = main_scrolled_window->allocation.width - 5;
   widget_height = main_scrolled_window->allocation.height - 5;
   if (widget_width <= 0)
@@ -272,6 +274,15 @@ show_image (GtkWidget *widget, GList *image_filename)
                              (int)(widget_width * scale_width_ratio), 
                              (int)(widget_height * scale_height_ratio), 
                              GDK_INTERP_BILINEAR);
+  /* rotate image to current setting */
+  if (current_rotation)
+    {
+      pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf), 
+		                           current_rotation);
+      g_object_unref (scaled_image_pixbuf);
+      scaled_image_pixbuf = pixbuf;
+	}
+	
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), 
                              GDK_PIXBUF (scaled_image_pixbuf));
   
@@ -320,7 +331,7 @@ image_rotate ()
   //gtk_timeout_remove (zoom_timer_id);
   current_rotation++;
   current_rotation = current_rotation % 4;
-  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf), 2);
+  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf), 1);
   g_object_unref (scaled_image_pixbuf);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (pixbuf));
   scaled_image_pixbuf = pixbuf;
@@ -807,6 +818,7 @@ add_directory (gchar *directory)
   DIR *dir;
 
   loading_directory = 1;
+  current_rotation = 0;
   
   for (tl=g_list_first(image_filenames);tl;tl=g_list_next(tl))
 	  g_free(tl->data);

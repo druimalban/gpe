@@ -1,6 +1,8 @@
-2004-00-06  Florian Boor  <florian.boor@kernelconcepts.de>
+2004-09-06  Florian Boor  <florian.boor@kernelconcepts.de>
 
-    * main.c, image_tools.c: Started to fix rotation.
+	* main.c: Make images that fit in size unmovable.
+	* main.c: Remember last rotation setting.
+    * main.c, image_tools.c: Fixed rotation.
 
 2004-08-30  Florian Boor  <florian.boor@kernelconcepts.de>
 
