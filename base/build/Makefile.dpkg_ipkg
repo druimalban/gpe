@@ -57,6 +57,7 @@ printinfo:
 	@printf "Please upload a tarball (created with 'make dist') to\n"
 	@printf "   ftp://ftp.handhelds.org/pub/projects/gpe/\n"
 	@printf "   (handhelds.org:~ftp/pub/projects/gpe/source)\n"
+	@printf "You can use 'make dist-upload' to do that.\n"
 	@printf '-------------------------------------------------------------------------------\n'
 
 tag: 
