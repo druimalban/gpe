@@ -32,6 +32,9 @@ gpe_load_one_icon (const char *filename, gchar **error)
   const gchar *pathname;
   char buf[1024];
   GdkPixbuf *pb;
+#if GDK_PIXBUF_MAJOR >= 2
+  GError *g_error = NULL;
+#endif
   
   if (filename[0] == '/')
     {
@@ -59,13 +62,19 @@ gpe_load_one_icon (const char *filename, gchar **error)
 #if GDK_PIXBUF_MAJOR < 2
   pb = gdk_pixbuf_new_from_file (pathname);
 #else
-  pb = gdk_pixbuf_new_from_file (pathname, NULL);
+  pb = gdk_pixbuf_new_from_file (pathname, &g_error);
 #endif
 
   if (pb == NULL && error)
     {
-      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon\n\"%s\""),
+#if GDK_PIXBUF_MAJOR < 2
+      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon \"%s\""),
 		filename);
+#else
+      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon \"%s\": %s"),
+		filename, g_error->message);
+      g_error_free (g_error);
+#endif
       buf[sizeof (buf)-1] = 0;
       *error = g_strdup (buf);
     }
@@ -84,20 +93,20 @@ gpe_load_icons (struct gpe_icon *p)
   if (home == NULL)
     home = "/";
 
-  if (theme_dir)
-    abort ();
-
-  s = strlen (home) + strlen (theme_dir_tail) + 1;
-  buf = alloca (s);
-  strcpy (buf, home);
-  strcat (buf, theme_dir_tail);
+  if (theme_dir == NULL)
+    {
+      s = strlen (home) + strlen (theme_dir_tail) + 1;
+      buf = alloca (s);
+      strcpy (buf, home);
+      strcat (buf, theme_dir_tail);
   
-  if (access (buf, F_OK) == 0)
-    theme_dir = g_strdup (buf);
-  else
-    theme_dir = default_theme_dir;
+      if (access (buf, F_OK) == 0)
+	theme_dir = g_strdup (buf);
+      else
+	theme_dir = default_theme_dir;
  
-  g_datalist_init (&pbdata);
+      g_datalist_init (&pbdata);
+    }
   
   while (p->shortname)
     {
@@ -129,18 +138,18 @@ gpe_find_icon (const char *name)
     {
       GdkPixbuf *buf = gpe_load_one_icon (name, &error);
       if (buf)
-      {
-        p = g_malloc (sizeof (struct gpe_icon));
-        p->shortname = g_strdup (name);
-        p->pixbuf = buf;
-        g_datalist_set_data (&pbdata, p->shortname, p);
-      }
+	{
+	  p = g_malloc (sizeof (struct gpe_icon));
+	  p->shortname = g_strdup (name);
+	  p->pixbuf = buf;
+	  g_datalist_set_data (&pbdata, p->shortname, p);
+	}
       else
-      {
-	fprintf (stderr, error);
-      }
+	{
+	  fprintf (stderr, error);
+	}
     }
-
+  
   return p ? p->pixbuf : NULL;
 }
 
