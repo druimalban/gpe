@@ -1,5 +1,7 @@
 2003-03-16  Damien Tanner  <dctanner@gekk>
 
+	* main.c: Working fullscreen toggle.
+
 	* image_tools.c (image_tools_rotate): Rotates 90 degrees at a time.
 	(image_tools_rotate): Fixed bug that cause a black dot in the corner of the image when rotating.
 

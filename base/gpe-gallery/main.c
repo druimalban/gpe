@@ -42,7 +42,7 @@
 #define MARGIN_X 2
 #define MARGIN_Y 2
 
-GtkWidget *window, *vbox2, *scrolled_window;
+GtkWidget *window, *main_scrolled_window, *fullscreen_window, *fullscreen_toggle_popup, *vbox2;
 GtkWidget *dirbrowser_window;
 GtkWidget *view_widget, *image_widget;
 GdkPixbuf *image_pixbuf, *scaled_image_pixbuf;
@@ -56,6 +56,7 @@ GList *image_filenames;
 // 1 = Thumbs
 gint current_view = 0;
 gint loading_directory = 0;
+gint fullscreen_state = 0;
 gboolean confine_pointer_to_window;
 
 guint slideshow_timer = 0;
@@ -102,8 +103,6 @@ typedef struct {
 
 guint window_x = 240, window_y = 310;
 
-static double starting_angle;	// for rotating drags
-
 static void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
 {
@@ -119,25 +118,14 @@ update_window_title (void)
   gtk_window_set_title (GTK_WINDOW (window), window_title);
 }
 
-static double
-angle (GtkWidget *w, int x, int y)
-{
-  int dx = x - (w->allocation.width / 2),
-    dy = y - (w->allocation.height / 2);
-
-  double a = atan2 ((double)dy, (double)dx);
-
-  return a;
-}
-
 static void
-pan_button_down (GtkWidget *w, GdkEventButton *b)
+pan_button_down (GtkWidget *w, GdkEventButton *b, GtkWidget *scrolled_window)
 {
   x_start = b->x_root;
   y_start = b->y_root;
 
-  xadj_start = gtk_adjustment_get_value (h_adjust);
-  yadj_start = gtk_adjustment_get_value (v_adjust);
+  xadj_start = gtk_adjustment_get_value (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window)));
+  yadj_start = gtk_adjustment_get_value (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window)));
 
   x_max = (gdk_pixbuf_get_width (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.width - 4);
   y_max = (gdk_pixbuf_get_height (GDK_PIXBUF (scaled_image_pixbuf))) - (scrolled_window->allocation.height - 4);
@@ -148,9 +136,9 @@ pan_button_down (GtkWidget *w, GdkEventButton *b)
 }
 
 static void
-button_down (GtkWidget *w, GdkEventButton *b)
+button_down (GtkWidget *w, GdkEventButton *b, GtkWidget *scrolled_window)
 {
-  pan_button_down (w, b);
+  pan_button_down (w, b, scrolled_window);
 }
 
 static void
@@ -160,7 +148,7 @@ button_up (GtkWidget *w, GdkEventButton *b)
 }
 
 static void
-pan (GtkWidget *w, GdkEventMotion *m)
+pan (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
 {
   gint dx = m->x_root - x_start, dy = m->y_root - y_start;
   double x, y;
@@ -174,16 +162,16 @@ pan (GtkWidget *w, GdkEventMotion *m)
   if (y > y_max)
     y = y_max;
 
-  gtk_adjustment_set_value (h_adjust, x);
-  gtk_adjustment_set_value (v_adjust, y);
+  gtk_adjustment_set_value (gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window)), x);
+  gtk_adjustment_set_value (gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window)), y);
 
   gdk_window_get_pointer (w->window, NULL, NULL, NULL);
 }
 
 static void
-motion_notify (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
+motion_notify (GtkWidget *w, GdkEventMotion *m, GtkWidget *scrolled_window)
 {
-  pan (w, m);
+  pan (w, m, scrolled_window);
 }
 
 static void
@@ -204,7 +192,7 @@ show_image (GtkWidget *widget, GList *loaded_filenames)
   gtk_widget_show (tools_toolbar);
   gtk_widget_show (image_event_box);
   gtk_widget_show (image_widget);
-  gtk_widget_show (scrolled_window);
+  gtk_widget_show (main_scrolled_window);
 }
 
 static void
@@ -214,6 +202,53 @@ open_from_file (gchar *filename)
 
   buf = g_list_append (buf, (gpointer) filename);
   show_image (NULL, buf);
+}
+
+static void
+toggle_fullscreen ()
+{
+  GtkWidget *scrolled_window, *image_widget, *image_event_box, *close_button;
+
+  if (fullscreen_state == 1)
+  {
+    gtk_widget_destroy (fullscreen_window);
+    gtk_widget_destroy (fullscreen_toggle_popup);
+    fullscreen_state = 0;
+  }
+  else if (fullscreen_state == 0)
+  {
+    fullscreen_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+
+    scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+
+    image_widget = gtk_image_new_from_pixbuf (scaled_image_pixbuf);
+    image_event_box = gtk_event_box_new ();
+    gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), image_event_box);
+
+    gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_down), scrolled_window);
+    gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_up), NULL);
+    gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), scrolled_window);
+
+    gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+
+    gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
+    gtk_container_add (GTK_CONTAINER (fullscreen_window), scrolled_window);
+
+    gtk_widget_set_size_request (fullscreen_window, gdk_screen_width (), gdk_screen_height ());
+    gtk_widget_show_all (fullscreen_window);
+
+    gdk_window_fullscreen (GDK_WINDOW (fullscreen_window->window));
+
+    fullscreen_toggle_popup = gtk_window_new (GTK_WINDOW_POPUP);
+    close_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
+    g_signal_connect (G_OBJECT (close_button), "clicked",
+		      G_CALLBACK (toggle_fullscreen), NULL);
+    gtk_container_add (GTK_CONTAINER (fullscreen_toggle_popup), close_button);
+    gtk_widget_show_all (fullscreen_toggle_popup);
+
+    fullscreen_state = 1;
+  }
 }
 
 static gboolean
@@ -240,11 +275,11 @@ image_rotate ()
   if (!scaled_image_pixbuf)
     scaled_image_pixbuf = image_pixbuf;
 
-  pixbuf = image_tools_rotate (GDK_PIXBUF (image_pixbuf), 90);
+  pixbuf = image_tools_rotate (GDK_PIXBUF (image_pixbuf));
   g_object_unref (image_pixbuf);
   image_pixbuf = pixbuf;
 
-  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf), 90);
+  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf));
   g_object_unref (scaled_image_pixbuf);
   scaled_image_pixbuf = pixbuf;
 
@@ -354,7 +389,7 @@ hide_image ()
     gtk_widget_hide (image_widget);
     gtk_widget_hide (image_event_box);
     gtk_widget_hide (tools_toolbar);
-    gtk_widget_hide (scrolled_window);
+    gtk_widget_hide (main_scrolled_window);
     gtk_widget_show (view_widget);
   }
 }
@@ -527,9 +562,9 @@ render_list_view ()
 
   drawing_area = gtk_drawing_area_new ();
   gtk_widget_set_size_request (GTK_WIDGET (drawing_area), scrolled_window_requisition.width, num_items * (MAX_ICON_SIZE + (MARGIN_Y * 2) + 1));
-  g_signal_connect (G_OBJECT (drawing_area), "expose_event",  
+  g_signal_connect (G_OBJECT (drawing_area), "expose_event", 
                     G_CALLBACK (render_list_view_expose_event), loaded_images);
-  g_signal_connect (G_OBJECT (scrolled_window), "destroy",  
+  g_signal_connect (G_OBJECT (scrolled_window), "destroy",
                     G_CALLBACK (render_list_view_free), loaded_images);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), drawing_area);
@@ -577,7 +612,7 @@ render_view (GtkWidget *parent, gint view)
     gtk_widget_hide (image_widget);
     gtk_widget_hide (image_event_box);
     gtk_widget_hide (tools_toolbar);
-    gtk_widget_hide (scrolled_window);
+    gtk_widget_hide (main_scrolled_window);
   }
 
   gtk_widget_show (loading_toolbar);
@@ -763,7 +798,7 @@ show_dirbrowser (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *toolbar, *loading_label, *toolbar_icon;
+  GtkWidget *vbox, *scrolled_window, *toolbar, *loading_label, *toolbar_icon;
   GdkPixbuf *p;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
@@ -794,19 +829,17 @@ main (int argc, char *argv[])
   vbox2 = gtk_vbox_new (FALSE, 0);
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  main_scrolled_window = scrolled_window;
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_NEVER, GTK_POLICY_NEVER);
-
-  h_adjust = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
-  v_adjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
 
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   image_event_box = gtk_event_box_new ();
   gtk_container_add (GTK_CONTAINER (image_event_box), image_widget);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), image_event_box);
 
-  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_down), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "button-press-event", GTK_SIGNAL_FUNC (button_down), scrolled_window);
   gtk_signal_connect (GTK_OBJECT (image_event_box), "button-release-event", GTK_SIGNAL_FUNC (button_up), NULL);
-  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), NULL);
+  gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), scrolled_window);
 
   gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
@@ -884,7 +917,7 @@ main (int argc, char *argv[])
   p = gpe_find_icon ("fullscreen");
   toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Fullscreen"), 
-			   _("Toggle fullscreen"), _("Toggle fullscreen"), toolbar_icon, NULL, NULL);
+			   _("Toggle fullscreen"), _("Toggle fullscreen"), toolbar_icon, toggle_fullscreen, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
