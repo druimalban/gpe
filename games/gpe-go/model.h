@@ -108,6 +108,7 @@ typedef struct _hist_item{
   GoItem   item;
   int col;
   int row;
+  gchar * comment;
   //GList * captured; FIXME: to use
 } Hitem;
 

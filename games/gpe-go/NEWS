@@ -2,6 +2,11 @@ GPE go NEWS
 
 * cvs
 - 
+- basic comment support:
+  save/load comments in sfg
+  display in status bar
+- added comment editor
+- disallow suicides
 
 * 0.05 2003-11-09 "I am going to..."
 - added [first] [last] buttons

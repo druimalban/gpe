@@ -60,7 +60,10 @@ Hitem * new_hitem(){
 }
 
 void free_hitem(Hitem * hitem){
-  if(hitem) free(hitem);
+  if(hitem){
+    if(hitem->comment) free(hitem->comment);
+    free(hitem);
+  }
 }
 
 gboolean is_same_hitem(Hitem * a, Hitem * b){
@@ -84,6 +87,7 @@ void append_hitem(GoAction action, GoItem item, int col, int row){
   hitem->item   = item;
   hitem->col   = col;
   hitem->row   = row;
+  hitem->comment = NULL;
 
   // if the node/data exist, move to this node,
   // do NOT create a new branch (child) (== no twins!)
@@ -107,12 +111,16 @@ gboolean delete_hitem(GNode * node, gpointer unused_data){
   return FALSE;
 }
 
+void status_update_current();
+
 GoItem color_to_play(){ return (go.turn%2)?WHITE_STONE:BLACK_STONE;}
 void update_last_played_mark_to(int next_col, int next_row);
 void pass_turn(){
   append_hitem(PASS, color_to_play(), 0, 0);
   go.turn++;
   update_last_played_mark_to(0, 0);
+
+  status_update_current();
 }
 
 gboolean is_on_main_branch(GNode * node){
@@ -151,6 +159,7 @@ void free_table(char ** table, int size){
   if(table) free(table);
 }
 
+void status_update_fmt(const char * format, ...);
 void update_capture_label();
 void scale_graphics();
 void paint_board(GtkWidget * widget);
@@ -163,6 +172,8 @@ void init_new_game(int game_size){
   go.game_size = game_size;
 
   TRACE("init NEW GAME %d", go.game_size);
+
+  status_update_fmt("New game %dx%d", go.game_size, go.game_size);
 
   //dimensions
   go.board_size = BOARD_SIZE;
@@ -751,6 +762,53 @@ int kill_group_of(int col, int row){
   return count;
 }
 
+void status_update(char * message){
+  gtk_statusbar_pop (GTK_STATUSBAR(go.status), 0);
+  gtk_statusbar_push(GTK_STATUSBAR(go.status), 0, message);
+}
+#include <stdarg.h>
+void status_update_fmt(const char * format, ...){
+  gchar * message;
+  va_list ap;
+  va_start (ap, format);
+  va_start (ap, format);
+  vasprintf (&message, format, ap);
+  va_end (ap);
+
+  status_update(message);
+}
+
+void status_update_current(){
+  Hitem * hitem;
+  char item;
+  gchar * message;
+
+  hitem = go.history->data;
+  if(!hitem){
+    return;
+  }
+
+  switch(hitem->item){
+    case BLACK_STONE: item = 'B'; break;
+    case WHITE_STONE: item = 'W'; break;
+    default: item = '-';
+  }
+
+  if(hitem->action == PASS){
+    message = g_strdup_printf(" %c PASS", item);
+  }
+  else /*if(hitem->action == PLAY)*/{
+    message = g_strdup_printf(" %c (%d,%d) ", item, hitem->row, hitem->col);
+  }
+
+  if(hitem->comment){
+    status_update_fmt("%s - %s", message, hitem->comment);
+  }
+  else{
+    status_update(message);
+  }
+}
+
 void update_capture_label(){
   free(go.capture_string);
   go.capture_string = (char *) malloc (20 * sizeof(char));
@@ -846,6 +904,8 @@ void play_at(int col, int row){
     color = color_to_play();
     update_last_played_mark_to(col, row);
 
+    status_update_current();
+
     //--next turn
     go.turn++;
   }
@@ -874,6 +934,7 @@ void variation_choice(){
     }
   }
   go.lock_variation_choice = TRUE;
+  gtk_statusbar_push(GTK_STATUSBAR(go.status), 1, _("Variation choice"));
 }
 
 void clear_variation_choice(){
@@ -891,6 +952,7 @@ void clear_variation_choice(){
     }
     clear_stamps();
     go.lock_variation_choice = FALSE;  
+    gtk_statusbar_pop (GTK_STATUSBAR(go.status), 1);
 }
 
 void undo_turn(){
@@ -942,6 +1004,8 @@ void undo_turn(){
       update_last_played_mark_to(item->col, item->row);
     }
   }
+
+  status_update_current();
 
   if(g_node_n_children(go.history) > 1){
     variation_choice();
@@ -1041,7 +1105,7 @@ void redo_turn(){
     }
 
   }
-
+  status_update_current();
 }
 
 gboolean
@@ -1066,6 +1130,9 @@ void _save_hitem_sgf(FILE * f, Hitem * hitem){
   else if(hitem->action == PLAY) fprintf(f, ";%c[%c%c]", item,
                                          hitem->col + 'a' -1,
                                          hitem->row + 'a' -1);
+  if(hitem->comment){
+    fprintf(f, "C[%s]", hitem->comment);//FIXME: escape string!!!
+  }
 }
 
 void _save_tree_to_sgf_from (GNode *node, FILE * f){
@@ -1375,7 +1442,17 @@ GtkWidget * build_new_game_dialog(){
 }
 
 void on_button_edit_comment_clicked(){
-  //gtk_text_buffer_set_text (go.comment_buffer, "Hello, this is some text", -1);
+  Hitem * hitem;
+
+  if(go.lock_variation_choice) return;
+
+  hitem = go.history->data;
+  if(hitem && hitem->comment){
+    gtk_text_buffer_set_text (go.comment_buffer, hitem->comment, -1);
+  }
+  else{
+    gtk_text_buffer_set_text (go.comment_buffer, "", -1);
+  }
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_COMMENT_EDITOR);
 }
 
@@ -1384,7 +1461,24 @@ void on_button_comment_cancel_clicked (void){
 }
 
 void on_button_comment_ok_clicked (void){
-  TRACE("******* COmment OK -- need to save changes");
+  gchar * s;
+  GtkTextIter it_start;
+  GtkTextIter it_end;
+
+  gtk_text_buffer_get_bounds (go.comment_buffer, &it_start, &it_end);
+  s = gtk_text_buffer_get_text (go.comment_buffer, &it_start, &it_end, FALSE);
+  TRACE("Got -->%s<--", s);
+
+  if(go.history->data){
+    Hitem * hitem;
+    hitem = go.history->data;
+    if(hitem->comment) free(hitem->comment);
+    //FIXME: dont if s is empty...
+    //FIXME: dont if s is unchanged
+    //FIXME: strip s, escape \n
+    hitem->comment = s;
+  }
+  status_update_current();
   gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
 }
 
@@ -1508,7 +1602,6 @@ void gui_init(){
 
   GtkWidget * window;
   GtkWidget * vbox;
-  GtkWidget * hbox;
 
   GtkWidget * new_game_dialog;
   GtkWidget * comment_editor;
@@ -1637,23 +1730,21 @@ void gui_init(){
 
 
   //--Status bar
-  hbox = gtk_hbox_new(FALSE, 0);
-
-  //Status
   widget = gtk_statusbar_new();
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(widget), FALSE);
-  gtk_statusbar_push(GTK_STATUSBAR(widget), 0, "let's go!");
   go.status = widget;
 
-  gtk_box_pack_start (GTK_BOX (hbox), widget, TRUE, TRUE, 0);
+  {//Status expansion
+    GtkWidget * event_box;
+    event_box = gtk_event_box_new();
+    gtk_widget_set_events (event_box, GDK_BUTTON_PRESS_MASK);
+    g_signal_connect (G_OBJECT (event_box), "button_press_event",
+                      G_CALLBACK (on_button_edit_comment_clicked), NULL);
 
-  //Status expansion
-  widget = gtk_button_new_with_label("...");
-  //NOTE: reduce height!!!
-  gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
-  g_signal_connect (G_OBJECT (widget), "clicked",
-                    G_CALLBACK (on_button_edit_comment_clicked), NULL);
-  gtk_box_pack_start (GTK_BOX (hbox), widget, FALSE, FALSE, 0);
+    widget = gtk_label_new("... ");
+    gtk_container_add (GTK_CONTAINER (event_box), widget);
+    gtk_box_pack_start (GTK_BOX (go.status), event_box, FALSE, FALSE, 0);
+  }
 
   //--Comment editor
   comment_editor = build_comment_editor();
@@ -1668,7 +1759,7 @@ void gui_init(){
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), drawing_area, TRUE,  TRUE,  0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0); //go.status,    FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), go.status,    FALSE, FALSE, 0);
 
   widget = gtk_notebook_new();
   go.notebook = widget;

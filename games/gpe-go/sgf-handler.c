@@ -84,6 +84,13 @@ void sgf_parsed_prop_int(PropIdent prop_id, int value){
 
 void sgf_parsed_prop_string(PropIdent prop_id, const char * s){
   switch(prop_id){
+  case SYMBOL_C:
+    if(go.history && go.history->data){
+      Hitem * hitem;
+      hitem = go.history->data;
+      hitem->comment = g_strdup(s);
+    }
+    break;
   case SYMBOL_RU:
   case SYMBOL_PW:
   case SYMBOL_PB:
