@@ -349,7 +349,33 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 static void
 gpe_clock_face_realize (GtkWidget *widget)
 {
-  (* GTK_WIDGET_CLASS (parent_class)->realize) (widget);
+  GdkWindowAttr attributes;
+  gint attributes_mask;
+
+  GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+    
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.x = widget->allocation.x;
+  attributes.y = widget->allocation.y;
+  attributes.width = widget->allocation.width;
+  attributes.height = widget->allocation.height;
+  attributes.wclass = GDK_INPUT_OUTPUT;
+  attributes.visual = gtk_widget_get_visual (widget);
+  attributes.colormap = gtk_widget_get_colormap (widget);
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_EXPOSURE_MASK |
+			    GDK_POINTER_MOTION_MASK |
+			    GDK_BUTTON_PRESS_MASK |
+			    GDK_BUTTON_RELEASE_MASK |
+			    GDK_POINTER_MOTION_HINT_MASK);
+
+  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL | GDK_WA_COLORMAP;
+
+  widget->window = gdk_window_new (gtk_widget_get_parent_window (widget), &attributes, attributes_mask);
+  gdk_window_set_user_data (widget->window, widget);
+
+  widget->style = gtk_style_attach (widget->style, widget->window);
+  gtk_style_set_background (widget->style, widget->window, GTK_STATE_ACTIVE);
 
   gpe_clock_face_prepare_xrender (widget);
 }
@@ -407,8 +433,6 @@ gpe_clock_face_size_request (GtkWidget	  *widget,
 static void
 gpe_clock_face_init (GpeClockFace *clock)
 {
-  GTK_WIDGET_SET_FLAGS (clock, GTK_NO_WINDOW);
-
   if (clock_background == NULL)
     clock_background = gdk_pixbuf_new_from_file (PREFIX "/share/libgpewidget/clock.png", NULL);
   
