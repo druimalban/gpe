@@ -288,6 +288,9 @@ image_rotate () // BROKEN
   scaled_image_pixbuf = pixbuf;
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
+
+  if (fullscreen_state == 1)
+    show_fullscreen_toolbar ();
 }
 
 static void
@@ -322,6 +325,9 @@ image_zoom_in ()
   g_object_unref (image_pixbuf);
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
+
+  if (fullscreen_state == 1)
+    show_fullscreen_toolbar ();
 }
 
 void
@@ -343,6 +349,8 @@ image_zoom_out ()
 
   zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
 
+  if (fullscreen_state == 1)
+    show_fullscreen_toolbar ();
 }
 
 void
@@ -351,6 +359,9 @@ image_zoom_1 ()
   g_object_unref (scaled_image_pixbuf);
   scaled_image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filenames->data, NULL);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+
+  if (fullscreen_state == 1)
+    show_fullscreen_toolbar ();
 }
 
 void
@@ -394,6 +405,9 @@ image_zoom_fit ()
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), widget_width * scale_width_ratio, widget_height * scale_height_ratio, GDK_INTERP_BILINEAR);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
   g_object_unref (image_pixbuf);
+
+  if (fullscreen_state == 1)
+    show_fullscreen_toolbar ();
 }
 
 static void
@@ -783,6 +797,9 @@ next_image (gpointer data)
 
     show_image (NULL, image_filenames);
 
+    if (fullscreen_state == 1)
+      show_fullscreen_toolbar ();
+
     return TRUE;
   }
   else
@@ -800,6 +817,9 @@ previous_image ()
       image_filenames = g_list_last (image_filenames);
 
     show_image (NULL, image_filenames);
+
+    if (fullscreen_state == 1)
+      show_fullscreen_toolbar ();
 
     return TRUE;
   }
@@ -942,6 +962,7 @@ toggle_fullscreen ()
   fullscreen_toolbar_popup = gtk_window_new (GTK_WINDOW_POPUP);
 
   fullscreen_toolbar = gtk_toolbar_new ();
+  gtk_signal_connect (GTK_OBJECT (fullscreen_toolbar), "button-press-event", GTK_SIGNAL_FUNC (show_fullscreen_toolbar), NULL);
   gtk_toolbar_set_orientation (GTK_TOOLBAR (fullscreen_toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   toolbar_icon = gtk_image_new_from_stock (GTK_STOCK_GO_BACK , GTK_ICON_SIZE_SMALL_TOOLBAR);
