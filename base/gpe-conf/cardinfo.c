@@ -120,11 +120,16 @@ static void save_config(char *config, int socket)
 	int new;
 	
 	cfg = g_strsplit(config,"\n",4); // idstr,version,manfid,binding
-	cur_bind = st[socket].card.str; // current driver binding
+	cur_bind = malloc(strlen(st[socket].card.str)-5); // current driver binding
+	snprintf(cur_bind,strlen(st[socket].card.str)-6,st[socket].card.str+3);
 	
 	new = g_str_has_prefix(g_strchomp(cur_bind),"unsupported card"); // check if this is a known card
 	
-	if (!new) cur_bind = cfg[0];  // cur_bind holds the ident line we search for
+	if (new)
+	{		
+		free(cur_bind);
+		cur_bind = cfg[0];  // cur_bind holds the ident line we search for		
+	}
 	
   tmpval = "";
   if (!g_file_get_contents (pcmcia_cfgfile, &content, &length, &err))
@@ -139,6 +144,7 @@ static void save_config(char *config, int socket)
   lines = g_strsplit (content, "\n", 4096);
   g_free (content);
 
+printf("search:%s\n",g_strchomp(cur_bind));  
   new = TRUE;
   while (lines[i])
 	{
@@ -169,7 +175,9 @@ static void save_config(char *config, int socket)
 	    delim = lines[i];
 		lines[i] = g_strdup_printf("%s",cfg[3]);
 		free(delim);
+		i++;
 	  }
+      lines[i] = g_strdup("");
 	}	  
 	  i++;
 	}
@@ -179,7 +187,9 @@ writefile:
 	
   if (new)
     {
-      lines = realloc (lines, (i+4) * sizeof (gchar *));
+      lines = realloc (lines, (i+5) * sizeof (gchar *));
+      lines[i] = g_strdup("");
+      i++;
       lines[i] = g_strdup_printf("%s",cfg[0]);
       i++;
       if ((config[1]) && strlen(cfg[1]))
@@ -197,7 +207,9 @@ writefile:
 	    lines[i] = g_strdup_printf("%s",cfg[3]);
         i++;
       }
-        lines[i] = NULL;
+      lines[i] = g_strdup("");
+      i++;
+      lines[i] = NULL;
     }
   
   fnew = fopen (pcmcia_tmpcfgfile, "w");
@@ -297,7 +309,7 @@ static char* get_card_ident(int socket)
 				strncat(result,"0x",2);
 				strncat(result,buffer+7,5);
 				strncat(result," 0x",3);
-				strncat(result,buffer+13,4);
+				strncat(result,buffer+12,4);
 				strncat(result,"\n",1);
 			}
 			if (strstr(buffer,"FUNCID="))

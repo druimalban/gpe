@@ -1,17 +1,19 @@
 When			Who				Where						What
 
-04.03.2003		Florian			cardinfo.*					Finished pcmcia driver assignment/changing task.
+04.04.2003		Florian			cardinfo.c					Fixed some bugs in card handling. Should look better now and find all known cards.
+
+04.04.2003		Florian			cardinfo.*					Finished pcmcia driver assignment/changing task.
 								suid.c						Added workaround for the not working cardmgr reset in familiar.
 								packages.h					Added missing declaration.
 
-03.03.2003		Florian			cardinfo.c					Buttonbar for manual card control, parser to create a driver list.
+03.04.2003		Florian			cardinfo.c					Buttonbar for manual card control, parser to create a driver list.
 															Logread now updates as expected.
 															Suid task for cardmgr reset.
 															GUI improvements.
 
-02.03.2003		Florian			cardinfo.c					Changed colors to be darker. 
+02.04.2003		Florian			cardinfo.c					Changed colors to be darker. 
 
-01.03.2003		Florian			cardinfo.* 					Added PCMCIA/CF card information and control applet.
+01.04.2003		Florian			cardinfo.* 					Added PCMCIA/CF card information and control applet.
 								control1					Updated version info.			
 								main.c
 								Makefile
