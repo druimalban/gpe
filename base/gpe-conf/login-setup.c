@@ -90,6 +90,7 @@ GtkWidget *Login_Setup_Build_Objects()
   guint gpe_border     = gpe_get_border ();
 
   gint bytes;
+  gchar *tstr;
 
   if ((bytes = readlink (GPE_LOGIN_BG_LINKED_FILE,
 			 login_bg_filename,
@@ -149,8 +150,10 @@ GtkWidget *Login_Setup_Build_Objects()
   gtk_box_pack_start (GTK_BOX (categories), catvbox1, TRUE, TRUE, 0);
   
   catlabel1 = gtk_label_new (NULL);
-  /* TRANSLATORS: Please ignore the tags <> */
-  gtk_label_set_markup(GTK_LABEL(catlabel1),_("<b>General</b>"));
+  
+  tstr = g_strdup_printf("<b>%s</b>",_("General"));
+  gtk_label_set_markup(GTK_LABEL(catlabel1),tstr);
+  g_free(tstr);
   gtk_box_pack_start (GTK_BOX (catvbox1), catlabel1, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (catlabel1), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (catlabel1), 0, 0.5);

@@ -1,6 +1,6 @@
 [Desktop Entry]
 _Name=User Manager
-_Comment=Manage local users 
+_Comment=Manage local users
 Exec=gpe-conf users
 Terminal=0
 Type=Application

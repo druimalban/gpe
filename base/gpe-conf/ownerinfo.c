@@ -81,14 +81,16 @@ GtkWidget *Ownerinfo_Build_Objects()
   guint gpe_border     = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
   gboolean datafile_writable = FALSE;
-
+  gchar *tstr = NULL;
+  
   /* ======================================================================== */
   /* get the data from the file if existant */
   ownerphotofile = g_strdup ("ownerphoto");
   ownername      = g_strdup ("GPE User");
   owneremail     = g_strdup ("nobody@localhost.localdomain");
   ownerphone     = g_strdup ("+99 (9999) 999-9999");
-  owneraddress   = g_strdup ("Data stored in\n/etc/gpe/gpe-ownerinfo.data.");
+  owneraddress   = g_strdup ("Use Settings->Owner Information to " \
+  			"change.\nData stored in\n/etc/gpe/gpe-ownerinfo.data.");
 
   /* 
    * GTK_EXPAND  the widget should expand to take up any extra space
@@ -194,7 +196,10 @@ GtkWidget *Ownerinfo_Build_Objects()
   hbox = gtk_hbox_new (FALSE, 0);
 
   lHeader = gtk_label_new (NULL);
-  gtk_label_set_markup(GTK_LABEL(lHeader),_("<b>Information about  the Owner</b>"));
+  tstr = g_strdup_printf("<b>%s</b>",_("Information about the Owner"));
+  gtk_label_set_markup(GTK_LABEL(lHeader),tstr);
+  g_free(tstr);
+  
   gtk_label_set_justify (GTK_LABEL (lHeader), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (lHeader), 0, 0.5);
   gtk_box_pack_start (GTK_BOX (vbox), lHeader, FALSE, TRUE, 0);
