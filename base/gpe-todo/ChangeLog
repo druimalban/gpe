@@ -9,6 +9,7 @@
 	Remove unused variables.
 	(show_hide_completed): Just update i->was_complete for each item.
 	(purge_completed): Ask user for confirmation.
+	(top_level): Update tooltip for "hide" icon.
 	* old-db.c (list_callback0): Remove unnecessary return.
 	(item_callback0): Reformat.
 	(convert_old_db): Remove useless error handling.

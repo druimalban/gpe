@@ -369,9 +369,9 @@ top_level (GtkWidget *window)
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("hide"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
-			   _("Show/Hide"), 
-			   _("Show/Hide completed items"), 
-			   _("Show/Hide completed items"),
+			   _("Re-sort"), 
+			   _("Move completed items to the end of the list"), 
+			   _("Move completed items to the end of the list"),
 			   pw, show_hide_completed, NULL);
 
   pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
