@@ -44,7 +44,7 @@ ETCDIR=etc
 
 CFLAGS += -D_GNU_SOURCE
 
-OBJS=main.o xsi.o popupmenu.o package.o cfg.o properties.o gnome-exec.o plugin.o tray.o xsettings.o
+OBJS=main.o xsi.o popupmenu.o package.o properties.o gnome-exec.o plugin.o tray.o xsettings.o
 
 all: gpe-appmgr
 
