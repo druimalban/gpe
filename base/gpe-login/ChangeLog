@@ -1,3 +1,12 @@
+2002-12-07  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (filter): Spawn xkbd here.  Create a new socket and
+	pack it into the box.
+	(main): In autolock mode, don't create a socket or spawn xkbd.
+	Just make an event box to hold the socket.
+	(enter_lock_callback): Kill xkbd.
+	(spawn_xkbd, parse_xkbd_args): Move higher in file.
+
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
 	* gpe-dm.c (main): Call openlog.  Replace fork with vfork.

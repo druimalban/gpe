@@ -57,7 +57,7 @@ static GtkWidget *label_result;
 static gboolean have_users;
 static pid_t setup_pid;
 static pid_t kbd_pid;
-static const char *xkbd_path = "/usr/bin/xkbd";
+static const char *xkbd_path = "xkbd";
 static const char *xkbd_str;
 static gboolean force_xkbd;
 
@@ -70,6 +70,7 @@ static gboolean hard_keys_mode;
 static GtkWidget *window;
 static GtkWidget *focus;
 static GtkWidget *socket = NULL;
+static GtkWidget *socket_box;
 
 static guint xkbd_xid;
 
@@ -119,6 +120,120 @@ cleanup_children (void)
 
   if (kbd_pid)
     kill (kbd_pid, 15);
+}
+
+#define MAX_ARGS 8
+
+static void
+parse_xkbd_args (char *cmd, char **argv)
+{
+  char *p = cmd;
+  char *buf = alloca (strlen (cmd) + 1), *bufp = buf;
+  int nargs = 0;
+  int escape = 0, squote = 0, dquote = 0;
+
+  while (*p)
+    {
+      if (escape)
+	{
+	  *bufp++ = *p;
+	  escape = 0;
+	}
+      else
+	{
+	  switch (*p)
+	    {
+	    case '\\':
+	      escape = 1;
+	      break;
+	    case '"':
+	      if (squote)
+		*bufp++ = *p;
+	      else
+		dquote = !dquote;
+	      break;
+	    case '\'':
+	      if (dquote)
+		*bufp++ = *p;
+	      else
+		squote = !squote;
+	      break;
+	    case ' ':
+	      if (!squote && !dquote)
+		{
+		  *bufp = 0;
+		  if (nargs < MAX_ARGS)
+		    argv[nargs++] = strdup (buf);
+		  bufp = buf;
+		  break;
+		}
+	    default:
+	      *bufp++ = *p;
+	      break;
+	    }
+	}
+      p++;
+    }
+  
+  if (bufp != buf)
+    {
+      *bufp = 0;
+      if (nargs < MAX_ARGS)
+	argv[nargs++] = strdup (buf);
+    }
+
+  argv[nargs] = NULL;
+}
+
+static void
+spawn_xkbd (void)
+{
+  int fd[2];
+
+  pipe (fd);
+  kbd_pid = fork ();
+  if (kbd_pid == 0)
+    {
+      char *xkbd_args[MAX_ARGS + 1];
+      close (fd[0]);
+      if (dup2 (fd[1], 1) < 0)
+	perror ("dup2");
+      close (fd[1]);
+      if (fcntl (1, F_SETFD, 0))
+	perror ("fcntl");
+      xkbd_args[0] = (char *)xkbd_path;
+      xkbd_args[1] = "-xid";
+      if (xkbd_str)
+	parse_xkbd_args (xkbd_str, xkbd_args + 2);
+      else
+	xkbd_args[2] = NULL;
+      execvp (xkbd_path, xkbd_args);
+      perror (xkbd_path);
+      _exit (1);
+    }
+  
+  close (fd[1]);
+  
+  {
+    char buf[256];
+    char c;
+    int a = 0;
+    size_t n;
+    
+    do {
+      n = read (fd[0], &c, 1);
+      if (n)
+	{
+	  buf[a++] = c;
+	}
+    } while (n && (c != 10) && (a < (sizeof (buf) - 1)));
+    
+    if (a)
+      {
+	buf[a] = 0;
+	xkbd_xid = atoi (buf);
+      }
+  }
 }
 
 static void
@@ -276,6 +391,7 @@ enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
     {
       gdk_keyboard_ungrab (GDK_CURRENT_TIME);
       gtk_widget_hide (window);
+      kill (kbd_pid, 15);
     }
   else
     gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
@@ -293,13 +409,19 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
     {
       if (xev->xproperty.atom == suspended_atom)
 	{
+	  spawn_xkbd ();
 	  gtk_label_set_text (GTK_LABEL (label_result), "");
 	  gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 	  gtk_widget_show_all (window);
 	  gtk_widget_grab_focus (focus);
 	  gdk_keyboard_grab (focus->window, TRUE, GDK_CURRENT_TIME);
-	  if (xkbd_xid && socket)
-	    gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
+	  if (xkbd_xid)
+	    {
+	      socket = gtk_socket_new ();
+	      gtk_widget_show (socket);
+	      gtk_container_add (GTK_CONTAINER (socket_box), socket);
+	      gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
+	    }
 	}
     }
 
@@ -423,124 +545,6 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   do_login (username, uid, gid, home, "/bin/sh");
 
   gtk_main_quit ();
-}
-
-#define MAX_ARGS 8
-
-static void
-parse_xkbd_args (char *cmd, char **argv)
-{
-  char *p = cmd;
-  char *buf = alloca (strlen (cmd) + 1), *bufp = buf;
-  int nargs = 0;
-  int escape = 0, squote = 0, dquote = 0;
-
-  while (*p)
-    {
-      if (escape)
-	{
-	  *bufp++ = *p;
-	  escape = 0;
-	}
-      else
-	{
-	  switch (*p)
-	    {
-	    case '\\':
-	      escape = 1;
-	      break;
-	    case '"':
-	      if (squote)
-		*bufp++ = *p;
-	      else
-		dquote = !dquote;
-	      break;
-	    case '\'':
-	      if (dquote)
-		*bufp++ = *p;
-	      else
-		squote = !squote;
-	      break;
-	    case ' ':
-	      if (!squote && !dquote)
-		{
-		  *bufp = 0;
-		  if (nargs < MAX_ARGS)
-		    argv[nargs++] = strdup (buf);
-		  bufp = buf;
-		  break;
-		}
-	    default:
-	      *bufp++ = *p;
-	      break;
-	    }
-	}
-      p++;
-    }
-  
-  if (bufp != buf)
-    {
-      *bufp = 0;
-      if (nargs < MAX_ARGS)
-	argv[nargs++] = strdup (buf);
-    }
-
-  argv[nargs] = NULL;
-}
-
-static GtkWidget *
-spawn_xkbd (void)
-{
-  GtkWidget *socket = NULL;
-  int fd[2];
-
-  socket = gtk_socket_new ();
-  pipe (fd);
-  kbd_pid = fork ();
-  if (kbd_pid == 0)
-    {
-      char *xkbd_args[MAX_ARGS + 1];
-      close (fd[0]);
-      if (dup2 (fd[1], 1) < 0)
-	perror ("dup2");
-      close (fd[1]);
-      if (fcntl (1, F_SETFD, 0))
-	perror ("fcntl");
-      xkbd_args[0] = (char *)xkbd_path;
-      xkbd_args[1] = "-xid";
-      if (xkbd_str)
-	parse_xkbd_args (xkbd_str, xkbd_args + 2);
-      else
-	xkbd_args[2] = NULL;
-      execv (xkbd_path, xkbd_args);
-      perror (xkbd_path);
-      _exit (1);
-    }
-  
-  close (fd[1]);
-  
-  {
-    char buf[256];
-    char c;
-    int a = 0;
-    size_t n;
-    
-    do {
-      n = read (fd[0], &c, 1);
-      if (n)
-	{
-	  buf[a++] = c;
-	}
-    } while (n && (c != 10) && (a < (sizeof (buf) - 1)));
-    
-    if (a)
-      {
-	buf[a] = 0;
-	xkbd_xid = atoi (buf);
-      }
-  }
-
-  return socket;
 }
 
 static void
@@ -730,6 +734,8 @@ main (int argc, char *argv[])
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
+
   if (hard_keys_mode)
     {
       key_map_t *k = keymap;
@@ -744,10 +750,10 @@ main (int argc, char *argv[])
       hard_key_buf[hard_key_length] = 0;
     }
 
-  if (!hard_keys_mode || force_xkbd)
+  if (!autolock_mode && (!hard_keys_mode || force_xkbd))
     {
-      if (access (xkbd_path, X_OK) == 0)
-	socket = spawn_xkbd ();
+      socket = gtk_socket_new ();
+      spawn_xkbd ();
     }
 
   gtk_widget_realize (window);
@@ -903,6 +909,12 @@ main (int argc, char *argv[])
 
       if (socket)
 	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
+      else
+	{
+	  socket_box = gtk_event_box_new ();
+	  gtk_widget_show (socket_box);
+	  gtk_box_pack_start (GTK_BOX (vbox), socket_box, TRUE, TRUE, 0);
+	}
 
       gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
