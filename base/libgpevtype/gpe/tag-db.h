@@ -12,8 +12,8 @@
 
 typedef struct
 {
-  char *tag;
-  char *value;
+  const char *tag;
+  const char *value;
 } gpe_tag_pair;
 
 #endif
