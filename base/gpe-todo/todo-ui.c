@@ -26,6 +26,7 @@
 #include "todo.h"
 
 #define _(_x) gettext(_x)
+#define N_(_x) (_x)
 
 struct category_map
 {
@@ -43,6 +44,7 @@ struct edit_todo
   struct todo_item *item;
 
   item_state state;
+  guint priority;
   
   GSList *selected_categories;
   GtkWidget *categories_label;
@@ -143,27 +145,6 @@ click_ok (GtkWidget *widget,
   refresh_items ();
 
   gtk_widget_destroy (window);
-}
-
-static void
-state_func_0(GtkMenuItem *w, gpointer p)
-{
-  struct edit_todo *t = p;
-  t->state = NOT_STARTED;
-}
-
-static void
-state_func_1(GtkMenuItem *w, gpointer p)
-{
-  struct edit_todo *t = p;
-  t->state = IN_PROGRESS;
-}
-
-static void
-state_func_2(GtkMenuItem *w, gpointer p)
-{
-  struct edit_todo *t = p;
-  t->state = COMPLETED;
 }
 
 static gchar *
@@ -558,6 +539,49 @@ change_categories (GtkWidget *w, gpointer p)
   gtk_widget_show_all (window);
 }
 
+struct menu_map
+{
+  gchar *string;
+  gint value;
+};
+
+struct menu_map
+state_map[] =
+  {
+    { N_("Not started"),	NOT_STARTED },
+    { N_("In progress"),	IN_PROGRESS },
+    { N_("Completed"),		COMPLETED },
+    { N_("Abandoned"),		ABANDONED },
+  };
+
+struct menu_map
+priority_map[] = 
+  {
+    { N_("High"),		PRIORITY_HIGH },
+    { N_("Standard"),		PRIORITY_STANDARD },
+    { N_("Low"),		PRIORITY_LOW },
+  };
+
+static void
+set_item_state (GtkMenuItem *w, gpointer p)
+{
+  struct edit_todo *t = p;
+  struct menu_map *m;
+
+  m = g_object_get_data (G_OBJECT (w), "menu-map");
+  t->state = m->value;
+}
+
+static void
+set_item_priority (GtkMenuItem *w, gpointer p)
+{
+  struct edit_todo *t = p;
+  struct menu_map *m;
+
+  m = g_object_get_data (G_OBJECT (w), "menu-map");
+  t->priority = m->value;
+}
+
 /*
  * Pass item=NULL to create a new item;
  * if item=NULL, you may pass the item's initial category.
@@ -566,48 +590,62 @@ GtkWidget *
 edit_item (struct todo_item *item, struct todo_category *initial_category)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+  GtkWidget *top_vbox;
+  GtkWidget *vbox;
   GtkWidget *text = gtk_text_view_new ();
   GtkWidget *duebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
   GtkWidget *buttoncancel;
-    GtkWidget *buttondelete;
+  GtkWidget *buttondelete;
+  GtkWidget *priority_label, *priority_menu, *priority_optionmenu;
+  GtkWidget *hbox_state;
   GtkWidget *state = gtk_option_menu_new ();
-  GtkWidget *state_menu = gtk_menu_new ();
+  GtkWidget *state_menu;
   GtkWidget *label_summary = gtk_label_new (_("Summary:"));
   GtkWidget *label_details = gtk_label_new (_("Details:"));
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   GtkWidget *hbox_categories = NULL;
   GtkWidget *scrolled_window;
-  struct edit_todo *t = g_malloc (sizeof (struct edit_todo));
-
-  const char *state_strings[] = { _("Not started"), _("In progress"),
-				  _("Completed") };
-  void (*state_funcs[3])(GtkMenuItem *, gpointer) = 
-    { state_func_0, state_func_1, state_func_2 };
+  struct edit_todo *t;
   guint i;
   struct tm tm;
   time_t the_time;
 
+  t = g_malloc (sizeof (struct edit_todo));
+
   displaymigration_mark_window (window);
+
+  top_vbox = gtk_vbox_new (FALSE, 0);
+  vbox = gtk_vbox_new (FALSE, 0);
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-  buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
-  buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
-  buttondelete = gpe_button_new_from_stock (GTK_STOCK_DELETE, GPE_BUTTON_TYPE_BOTH);
- 
-  for (i = 0; i < 3; i++)
+  buttonok = gtk_button_new_from_stock (GTK_STOCK_SAVE);
+  buttoncancel = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  buttondelete = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+
+  state_menu = gtk_menu_new ();
+  for (i = 0; i < sizeof (state_map) / sizeof (state_map[0]); i++)
     {
-      GtkWidget *l = gtk_menu_item_new_with_label (state_strings[i]);
+      GtkWidget *l = gtk_menu_item_new_with_label (gettext (state_map[i].string));
+      g_object_set_data (G_OBJECT (l), "menu-map", &state_map[i]);
       gtk_menu_append (GTK_MENU (state_menu), l);
-      gtk_signal_connect (GTK_OBJECT (l), "activate", (GtkSignalFunc)state_funcs[i], t);
+      g_signal_connect (G_OBJECT (l), "activate", G_CALLBACK (set_item_state), t);
     }
 		   
+  priority_menu = gtk_menu_new ();
+  for (i = 0; i < sizeof (priority_map) / sizeof (priority_map[0]); i++)
+    {
+      GtkWidget *l = gtk_menu_item_new_with_label (gettext (priority_map[i].string));
+      g_object_set_data (G_OBJECT (l), "menu-map", &priority_map[i]);
+      gtk_menu_append (GTK_MENU (priority_menu), l);
+      g_signal_connect (G_OBJECT (l), "activate", G_CALLBACK (set_item_priority), t);
+    }
+
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
 
@@ -670,16 +708,25 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   gtk_box_pack_start (GTK_BOX (hbox_summary), label_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (hbox_summary), entry_summary, TRUE, TRUE, 2);
 
+  hbox_state = gtk_hbox_new (FALSE, 0);
+
+  priority_label = gtk_label_new (_("Priority:"));
+  priority_optionmenu = gtk_option_menu_new ();
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (priority_optionmenu), priority_menu);
+
+  gtk_box_pack_start (GTK_BOX (hbox_state), state, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox_state), priority_label, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (hbox_state), priority_optionmenu, FALSE, FALSE, 2);
+
   gtk_box_pack_start (GTK_BOX (vbox), hbox_summary, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), duebox, FALSE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), state, FALSE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox_state, FALSE, FALSE, 2);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox_categories, FALSE, FALSE, 2);
   
   gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.5);
   gtk_box_pack_start (GTK_BOX (vbox), label_details, FALSE, FALSE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), text, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
 
   gtk_text_view_set_editable (GTK_TEXT_VIEW (text), TRUE);
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
@@ -687,8 +734,12 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   gtk_container_set_border_width (GTK_CONTAINER (window),
 				  gpe_get_border ());
-  gtk_container_add (GTK_CONTAINER (window), scrolled_window);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), vbox);
+
+  gtk_box_pack_start (GTK_BOX (top_vbox), scrolled_window, TRUE, TRUE, 2);
+  gtk_box_pack_start (GTK_BOX (top_vbox), buttonbox, FALSE, FALSE, 2);
+
+  gtk_container_add (GTK_CONTAINER (window), top_vbox);
 
   gtk_widget_grab_focus (entry_summary);
 

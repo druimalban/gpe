@@ -1,5 +1,14 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* todo-ui.c (edit_item): Move action buttons outside of scrolled
+	window.  Rewrite handling of "state" menu; add ABANDONED.  Add new
+	optionmenu for priority.
+	(set_item_state, set_item_priority): New.
+	(state_func_0, state_func_1, state_func_2): Deleted.
+	(struct edit_todo): Add priority.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.41 released.
 
 2004-02-15  Philip Blundell  <philb@gnu.org>
