@@ -18,12 +18,15 @@
 #include <gtk/gtk.h>
 
 #include <dirent.h> //filesystem acces
+#include <errno.h>  //errors
 #include <stdio.h>  //perror
 #include <stdlib.h> //free
 #include <string.h> //tokens
 #include <sys/stat.h> //mkdir
 #include <sys/types.h>//mkdir
 #include <asm/errno.h>//mkdir
+
+#include "gpe/errorbox.h"
 
 #include "selector.h"
 #include "selector-gui.h"
@@ -61,7 +64,8 @@ void set_selector_clist(GtkCList * clist){
 }
 void window_selector_init(GtkWidget * window_selector){
   struct dirent ** direntries;
-  int n;
+  int scandir_nb_entries;
+  int scandir_errno;
   GdkColormap * colormap;
 
   //--window title
@@ -78,18 +82,22 @@ void window_selector_init(GtkWidget * window_selector){
   gtk_clist_column_titles_hide(selector_clist);//no title (single column)
 
   //--fill CList
-  n = scandir (sketchdir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
-  if (n == -1){
-    int res = 0;
-    perror (_("Couldn't open the directory"));//FIXME: use gpe_error
+  scandir_nb_entries = scandir (sketchdir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
+  scandir_errno = errno;
+  if (scandir_nb_entries == -1){//scandir error
     //might not exist, try to create it:
-    res = mkdir(sketchdir, S_IRWXU);
-    switch(res){
-      case EACCES: //write permission is denied
-      case EEXIST: //already exists
-      case ENOSPC: //file system doesn't have enough room
-        g_printerr(_("Can not create %s, exit.\n"), sketchdir);//FIXME: use gpe_error
-        app_quit();
+    if( mkdir(sketchdir, S_IRWXU) == -1){
+      switch(errno){
+        case EEXIST: //already exists
+          gpe_error_box_fmt(_("Cannot read the sketchbook directory: %s. Exit."),
+                            sys_errlist[scandir_errno]);
+          break;
+        case EACCES: //write permission is denied
+        case ENOSPC: //file system doesn't have enough room
+        default:
+          gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchdir, sys_errlist[errno]);
+      }
+      app_quit();
     }
   }
   else{
@@ -98,7 +106,7 @@ void window_selector_init(GtkWidget * window_selector){
     int line;
     int i;
     
-    for(i = 0; i < n; i++){
+    for(i = 0; i < scandir_nb_entries; i++){
       Note * note;
 
       line_text[0] = make_label_from_filename(direntries[i]->d_name);
