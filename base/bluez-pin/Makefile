@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = bluez-pin
 CVSBUILD = yes
 GTK2 = yes
-LINGUAS = eo fr id ga
+LINGUAS = eo fr id ga wa
 VERSION = 0.20
 
 ifeq ($(CVSBUILD),yes)

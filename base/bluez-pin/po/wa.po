@@ -1,0 +1,38 @@
+# Translation into the walloon language.
+# Copyright (C) 2003 THE PACKAGE'S COPYRIGHT HOLDER
+# Pablo Saratxaga <pablo@walon.org>, 2003
+msgid ""
+msgstr ""
+"Project-Id-Version: bluez-pin 0.08\n"
+"POT-Creation-Date: 2003-02-21 00:12+0000\n"
+"PO-Revision-Date: 2003-06-25 20:08+0100\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bluez-pin.c:127
+msgid "Outgoing connection to"
+msgstr "Raloyaedje e rexhowe viè"
+
+#: bluez-pin.c:128
+msgid "Incoming connection from"
+msgstr "Raloyaedje en intrêye di"
+
+#: bluez-pin.c:134
+msgid "PIN:"
+msgstr "PIN:"
+
+#: bluez-pin.c:137
+msgid "Save in database"
+msgstr "Schaper e l' båze di dnêyes"
+
+#: bluez-pin.c:179
+msgid "Bluetooth PIN"
+msgstr "PIN di Bluetooth"
+
+#: bluez-pin.c:191
+#, c-format
+msgid "Usage: %s <in|out> <address>\n"
+msgstr "Po s' è siervi: %s <in|out> <adresse>\n"

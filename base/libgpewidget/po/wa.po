@@ -1,0 +1,42 @@
+# Walloon translation of libgpewidget.
+# Copyright (C) 2003 THE libgpewidget'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the libgpewidget package.
+# Pablo Saratxaga <pablo@walon.org>, 2003.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: libgpewidget 0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2003-06-26 02:18+0200\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "AROKE-GPE: %s\n"
+
+#: pixmaps.c:82
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr "Dji n' sai tcherdjî l' imådjete «%s»"
+
+#: pixmaps.c:168
+#, c-format
+msgid "Icon \"%s\" not loaded"
+msgstr "Imådjete «%s» nén tcherdjeye"
+
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Nou ridant di tchoezi."
+
+#: what.c:78
+msgid "No help available."
+msgstr "Nole aidance."
+
+#: question.c:175
+msgid "Question"
+msgstr "Kesse"
