@@ -1,5 +1,11 @@
 2002-06-19  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.c (read_key_events): New function.
+	(key_pressed): Likewise.
+	(main): Handle key-pressed events.
+
+2002-06-19  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login.c (do_login): Become session leader.
 
 	* gpe-dm.c (shutdown): New function.

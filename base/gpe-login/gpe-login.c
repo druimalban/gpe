@@ -35,7 +35,8 @@
 #define _(x) gettext(x)
 
 #define GPE_ICON PREFIX "/share/gpe/pixmaps/gpe-logo.png"
-#define GPE_LOGIN_SETUP "/etc/X11/gpe-login-setup"
+#define GPE_LOGIN_SETUP "/etc/X11/gpe-login.setup"
+#define KEY_EVENTS_FILE "/etc/X11/gpe-login.buttons"
 #define PASSWORD_FILE "/etc/passwd"
 #define GROUP_FILE "/etc/group"
 #define SHELL "/bin/sh"
@@ -52,11 +53,76 @@ static const char *xkbd_path = "/usr/bin/xkbd";
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
 
+struct keymap
+{
+  guint keyval;
+  const gchar *cmd;
+};
+
+static GSList *key_events;
+
 static struct gpe_icon my_icons[] = {
   { "logo", GPE_ICON },
   { "ok", "ok" },
   { NULL, NULL }
 };
+
+static void
+read_key_events (void)
+{
+  char buffer[1024];
+  FILE *fp = fopen (KEY_EVENTS_FILE);
+  if (fp)
+    {
+      while (!feof (fp))
+	{
+	  char *p, *cmd = NULL;
+	  struct keymap *k;
+	  guint keyval;
+	  fgets (buffer, sizeof (buffer), fp);
+	  p = buffer;
+	  while (*p)
+	    {
+	      if (*p == ' ' || *p == '\t')
+		{
+		  cmd = p;
+		  *p = 0;
+		  break;
+		}
+	      p++;
+	    }
+
+	  if (cmd == NULL)
+	    continue;
+
+	  keyval = gdk_keyval_from_name (buffer);
+	  
+	  if (keyval == GDK_VoidSymbol)
+	    continue;
+	  
+	  while (*cmd == ' ' || *cmd == '\t')
+	    cmd++;
+	  p = cmd;
+	  while (*p)
+	    {
+	      if (*p == '\n') 
+		*p = 0;
+	      p++;
+	    }
+
+	  if (*cmd == 0)
+	    continue;
+
+	  k = g_malloc (sizeof (struct keymap));
+	  k->cmd = g_strdup (cmd);
+	  k->keyval = keyval;
+	  
+	  key_events = g_slist_append (key_events, k);
+	}
+
+      fclose (fp);
+    }
+}
 
 static void
 cleanup_children (void)
@@ -269,6 +335,29 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   gtk_main_quit ();
 }
 
+static gboolean
+key_pressed (GtkWidget *widget,
+	     GdkEventKey *event,
+	     gpointer user_data)
+{
+  GSList *iter;
+  for (iter = key_events; iter; iter = iter->next)
+    {
+      struct keymap *k = iter->data;
+      if (k->keyval == event->keyval)
+	{
+	  pid_t cpid = fork ();
+	  if (cpid == 0)
+	    {
+	      system (k->cmd);
+	      _exit (0);
+	    }
+	  return TRUE;
+	}
+    }
+  return FALSE;
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -293,6 +382,8 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   gpe_load_icons (my_icons);
+
+  read_key_events ();
 
   if (access (GPE_LOGIN_SETUP, X_OK) == 0)
     {
@@ -531,6 +622,9 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 5);
 
   gtk_container_add (GTK_CONTAINER (window), vbox2);
+
+  gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
+  gtk_signal_connect (GTK_OBJECT (window), "key-press-event", key_pressed, NULL)
 
   gtk_widget_show_all (window);
 
