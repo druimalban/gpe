@@ -35,6 +35,7 @@
 #include "ipaqscreen/rotation.h"
 #include "packages.h"
 #include "serial.h"
+#include "cardinfo.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -43,6 +44,7 @@ static int know_global_user_access = FALSE;
 
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
+
 
 void update_packages()
 {
@@ -476,6 +478,11 @@ suidloop (int write, int read)
 	      {
 		fscanf (in, "%d", &numarg);
 		assign_serial_port(numarg);
+	      }
+	    else if (strcmp (cmd, "CMRE") == 0)
+	      {
+		fscanf (in, "%s", arg1);
+		do_reset();
 	      }
 #if 0
 	    if (bin)		// fork and exec

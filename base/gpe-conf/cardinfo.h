@@ -22,6 +22,7 @@ extern socket_info_t st[];
 extern int ns;
 
 int init_pcmcia_suid();
+void do_reset();
 
 GtkWidget *Cardinfo_Build_Objects();
 void Cardinfo_Free_Objects();

@@ -1,11 +1,16 @@
 When			Who				Where						What
 
+03.03.2003		Florian			cardinfo.c					Buttonbar for manual card control, parser to create a driver list.
+															Logread now updates as expected.
+															Suid task for cardmgr reset.
+															GUI improvements.
+
 02.03.2003		Florian			cardinfo.c					Changed colors to be darker. 
 
 01.03.2003		Florian			cardinfo.* 					Added PCMCIA/CF card information and control applet.
-						control1					Updated version info.			
-						main.c
-						Makefile
+								control1					Updated version info.			
+								main.c
+								Makefile
 
 31.03.2003		Florian			serial.c					Changed getty switching to prevent problems.
 

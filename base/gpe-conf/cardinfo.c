@@ -79,11 +79,16 @@ static event_tag_t event_tag[] = {
 
 #define NTAGS (sizeof(event_tag)/sizeof(event_tag_t))
 
+
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
+static GtkWidget *bookbox;
+
+static GtkWidget *toolicons[7];
 
 int ns;
+static int changed_tab = FALSE;
 socket_info_t st[MAX_SOCK];
 
 static char *pidfile = "/var/run/cardmgr.pid";
@@ -91,7 +96,32 @@ static char *stabfile;
 
 #define PIXMAP_PATH PREFIX "/share/pixmaps/"
 
+
 /* --- local intelligence --- */
+
+static GList *get_driver_list(void *param)
+{
+	FILE *pipe;
+	char buffer[256], dr[128];
+	GList *drivers = NULL;
+	
+	pipe = popen ("grep device /etc/pcmcia/config | grep -v \"#\"", "r");
+
+	if (pipe > 0)
+    {
+  		while ((feof(pipe) == 0))
+    	{
+      		fgets (buffer, 255, pipe);
+			if (sscanf(buffer,"device \"%s\"",dr))
+			{
+		    	dr[strcspn(dr, "\"")] = '\0';
+				g_list_append(drivers,g_strdup(dr));
+			}
+    	}
+      pclose (pipe);
+    }
+	return drivers;
+}
 
 static void do_alert(char *fmt, ...)
 {
@@ -103,7 +133,7 @@ static void do_alert(char *fmt, ...)
     va_end(args);
 } /* do_alert */
 
-static void do_reset(GtkWidget *button)
+void do_reset()
 {
     FILE *f;
     pid_t pid;
@@ -120,6 +150,12 @@ static void do_reset(GtkWidget *button)
     if (kill(pid, SIGHUP) != 0)
 	do_alert("%s %s", _("Could not signal cardmgr:"),strerror(errno));
 }
+
+static void reset_cardmgr(GtkWidget *button)
+{
+	suid_exec("CMRE","CMRE");
+}
+
 
 static int lookup_dev(char *name)
 {
@@ -341,7 +377,8 @@ static int do_update(GtkWidget *widget)
 	for (i = 0; i < ns; i++) {
 	    if (!fgets(s, 80, f)) break;
 	    s[strlen(s)-1] = '\0';
-	    update_field(&st[i].card, s+9);
+		snprintf(d,80,"<b>%s</b>",s+9);
+	    update_field(&st[i].card, d);
 	    *d = '\0';
 	    *type = '\0';
 	    *drv = '\0';
@@ -395,39 +432,44 @@ static int do_update(GtkWidget *widget)
 	    }
 	}
 	
-	if (state != st[i].o_state) {
+	if ((state != st[i].o_state) || changed_tab) {
 	    st[i].o_state = state;
-	    for (j = 1; j <= 6; j++)
-//		fl_set_menu_item_mode(st[i].menu, j, FL_PUP_GRAY);
+		if (i == (changed_tab-1)) changed_tab = 0;
+		if (i == gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook)))
+		{
+	      for (j = 1; j <= 6; j++)
+		  gtk_widget_set_sensitive(toolicons[j],FALSE);
+	    }
+		j = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
 	    switch (state) {
 	    case S_EMPTY:
 		update_field(&st[i].state, "");
 		break;
 	    case S_PRESENT:
-//		fl_set_menu_item_mode(st[i].menu, 6, FL_PUP_NONE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[6],TRUE);
 		update_field(&st[i].state, "");
 		break;
 	    case S_READY:
-/*		fl_set_menu_item_mode(st[i].menu, 1, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 2, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 3, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 5, FL_PUP_NONE);
-*/		snprintf(d,80,"<span foreground=\"#00A000\">%s</span>",_("ready"));
+		if (j == i) gtk_widget_set_sensitive(toolicons[1],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[2],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[3],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[5],TRUE);
+		snprintf(d,80,"<span foreground=\"#00A000\">%s</span>",_("ready"));
 		update_field(&st[i].state, d);
 		break;
 	    case S_BUSY:
-/*		fl_set_menu_item_mode(st[i].menu, 1, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 2, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 3, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 5, FL_PUP_NONE);
-*/		snprintf(d,80,"<span foreground=\"#B00000\">%s</span>",_("not ready"));
+		if (j == i) gtk_widget_set_sensitive(toolicons[1],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[2],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[3],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[5],TRUE);
+		snprintf(d,80,"<span foreground=\"#B00000\">%s</span>",_("not ready"));
 		update_field(&st[i].state, d);
 		break;
 	    case S_SUSPEND:
-/*		fl_set_menu_item_mode(st[i].menu, 1, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 4, FL_PUP_NONE);
-		fl_set_menu_item_mode(st[i].menu, 5, FL_PUP_NONE);
-*/		snprintf(d,80,"<span foreground=\"#000090\">%s</span>",_("suspended"));
+		if (j == i) gtk_widget_set_sensitive(toolicons[1],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[4],TRUE);
+		if (j == i) gtk_widget_set_sensitive(toolicons[5],TRUE);
+		snprintf(d,80,"<span foreground=\"#000090\">%s</span>",_("suspended"));
 		update_field(&st[i].state, d);
 		break;
 	    }
@@ -464,6 +506,36 @@ static int do_update(GtkWidget *widget)
 	return TRUE;
 }
 
+static void do_menu(GtkWidget *button, int op)
+{
+    int ret = 0;
+	int i = gtk_notebook_get_current_page(GTK_NOTEBOOK(notebook));
+
+    switch (op) {
+    case 1:
+	break;
+    case 2:
+	ret = ioctl(st[i].fd, DS_RESET_CARD); break;
+    case 3:
+	ret = ioctl(st[i].fd, DS_SUSPEND_CARD); break;
+    case 4:
+	ret = ioctl(st[i].fd, DS_RESUME_CARD); break;
+    case 5:
+	ret = ioctl(st[i].fd, DS_EJECT_CARD); break;
+    case 6:
+	ret = ioctl(st[i].fd, DS_INSERT_CARD); break;
+    }
+    if (ret != 0)
+	do_alert("%s: %s", _("Operation failed"), strerror(errno));
+} /* do_menu */
+
+static void do_tabchange(GtkNotebook *notebook,
+                                     GtkNotebookPage *page,
+                                     guint page_num,
+                                     gpointer user_data)
+{
+	changed_tab = page_num+1;
+}
 
 /* --- gpe-conf interface --- */
 
@@ -489,16 +561,66 @@ Cardinfo_Build_Objects (void)
 {
   GtkWidget *label, *ctype_pixmap;
   GtkWidget *table, *hbox;
+  GtkWidget *toolbar;
   gchar iname[100];
   GtkTooltips *tooltips;
   int i;
 	
   tooltips = gtk_tooltips_new();
   
+  bookbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
+  gtk_container_set_border_width (GTK_CONTAINER (bookbox), 0);
+	
   notebook = gtk_notebook_new();
-  gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
+  gtk_container_set_border_width (GTK_CONTAINER (notebook), 0);
   gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
+  g_signal_connect_after(G_OBJECT(notebook),"switch-page",G_CALLBACK(do_tabchange),NULL);
+	
+  /* toolbar and packing */
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
+			       GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+  gtk_box_pack_start (GTK_BOX (bookbox), toolbar, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (bookbox), notebook, TRUE, FALSE, 0);
+
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-insert",16));
+  toolicons[6] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Insert Card"), 
+			   _("Insert Card"), _("Tap here to start card insertion manually."),
+			   label, (GtkSignalFunc) do_menu, (void*)6);
+		   
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-eject",16));
+  toolicons[5] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Eject Card"), 
+			   _("Eject Card"), _("Tap here to eject card manually."),
+			   label, (GtkSignalFunc) do_menu, (void*)5);
+			   
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-suspend",16));
+  toolicons[3] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Suspend Card"), 
+			   _("Suspend Card"), _("Tap here to suspend current card."),
+			   label, (GtkSignalFunc) do_menu, (void*)3);
+			   
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-resume",16));
+  toolicons[4] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Resume Card"), 
+			   _("Resume Card"), _("Tap here to resume current card."),
+			   label, (GtkSignalFunc) do_menu, (void*)4);
+			   
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-reset",16));
+  toolicons[2] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Reset Card"), 
+			   _("Reset Card"), _("Tap here to reset current card."),
+			   label, (GtkSignalFunc) do_menu, (void*)2);
+  gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
   
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-reset2",16));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Reset Card Manager"), 
+			   _("Reset Card Manager"), _("Tap here to reset card manager. This commits all updates to pcmcia config files."),
+			   label, (GtkSignalFunc) reset_cardmgr, NULL);
+
+  label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("menu-assign",16));
+  toolicons[1] = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Assign Driver"), 
+			   _("Assign Driver"), _("Tap here to assign a driver to this card / change current driver assignment."),
+			   label, (GtkSignalFunc) get_driver_list, NULL);
+			   
+  /* socket tabs */	
   for (i=0;i<ns;i++)
   {
 	  table = gtk_table_new(3,8,FALSE);
@@ -514,28 +636,29 @@ Cardinfo_Build_Objects (void)
 		
 	  /* box for header */
 	  hbox = gtk_hbox_new(FALSE,gpe_get_boxspacing());
+	  gtk_container_set_border_width(GTK_CONTAINER(hbox),0);
+ 	  gtk_table_attach(GTK_TABLE(table),hbox,0,3,0,1,GTK_FILL,0,0,0);
 	  
-	  /* top label */
-	  label = gtk_label_new(NULL);
-	  snprintf(iname,100,"<b>%s %d</b>",_("Information for socket"),i);
-	  gtk_label_set_markup(GTK_LABEL(label),iname);
-	  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
-      gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
-
 	  /* graphic button */
 	  label = gtk_button_new();
-	  gtk_widget_set_size_request(label,55,55);
 	  st[i].statusbutton = label;
-      gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,5);
+      gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
 	  gtk_button_set_relief(GTK_BUTTON(label),GTK_RELIEF_NONE);
 	  
       ctype_pixmap = gpe_create_pixmap (label, PIXMAP_PATH "pccard-unknown.png", 48, 48);
       gtk_container_add (GTK_CONTAINER(label), ctype_pixmap);
-	  
- 	  gtk_table_attach(GTK_TABLE(table),hbox,0,4,0,1,GTK_FILL,0,0,0);
-     
+
+	  /* top label */
+	  label = gtk_label_new(NULL);
+	  snprintf(iname,100,"<b>%s %d</b>",_("Information for socket"),i);
+	  gtk_label_set_markup(GTK_LABEL(label),iname);
+	  gtk_misc_set_alignment(GTK_MISC(label),0.5,0.5);
+      gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
+ 
+	  st[i].card.widget = label;
+	  st[i].card.str = strdup("");
+ 
 	  /* fields */
-	  new_field(&st[i].card,table,1,_("Card:"));
 	  new_field(&st[i].state,table,2,_("State:"));
 	  new_field(&st[i].dev,table,3,_("Device:"));
 	  new_field(&st[i].driver,table,4,_("Driver:"));
@@ -545,7 +668,11 @@ Cardinfo_Build_Objects (void)
 
 	  /* flags */
 	  hbox = gtk_hbox_new(TRUE,gpe_get_boxspacing());
-      gtk_table_attach(GTK_TABLE(table),hbox,0,3,8,9,GTK_FILL,0,0,3);
+      gtk_table_attach(GTK_TABLE(table),hbox,0,4,8,9,GTK_FILL,0,0,2);
+	  
+	  label = gtk_label_new(_("Flags:"));
+	  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.0);
+	  gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
 	  
 	  new_flag(&st[i].cd,hbox,"CD");
 	  new_flag(&st[i].vcc,hbox,"VCC");
@@ -555,5 +682,5 @@ Cardinfo_Build_Objects (void)
   }
   
   gtk_timeout_add(500,(GtkFunction)do_update,NULL);
-  return notebook;
+  return bookbox;
 }

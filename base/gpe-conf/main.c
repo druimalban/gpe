@@ -112,6 +112,13 @@ struct gpe_icon my_icons[] = {
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
   { "default-bg", PREFIX "/share/pixmaps/gpe-default-bg.png" }, 
+  { "menu-insert", PREFIX "/share/pixmaps/menu-insert.png" }, 
+  { "menu-eject", PREFIX "/share/pixmaps/menu-eject.png" }, 
+  { "menu-suspend", PREFIX "/share/pixmaps/menu-suspend.png" }, 
+  { "menu-resume", PREFIX "/share/pixmaps/menu-resume.png" }, 
+  { "menu-reset", PREFIX "/share/pixmaps/menu-reset.png" }, 
+  { "menu-reset2", PREFIX "/share/pixmaps/menu-reset2.png" }, 
+  { "menu-assign", PREFIX "/share/pixmaps/menu-assign.png" }, 
   { NULL, NULL }
 };
 
