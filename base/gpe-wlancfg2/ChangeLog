@@ -1,5 +1,7 @@
 08/13/2003	Florian Boor <florian.boor@kernelconcepts.de>
 	
+	- released V 0.2.3
+	- updated Makefile and removed furter obsolete files.
 	- created new pot file, removed obsolete cruft.
 	- Makefile is now a real gpe makefile
 	- Added "default" checkbox.
