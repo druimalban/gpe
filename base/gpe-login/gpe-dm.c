@@ -53,7 +53,10 @@ start_server (gboolean crashed)
 
   xserver_pid = fork ();
   if (xserver_pid == 0)
+    {
       execl (XSERVER, XSERVER, dpy, NULL);
+      _exit (1);
+    }
   server_started = t;
 }
 
@@ -78,13 +81,19 @@ main(int argc, char *argv[])
       sleep (1);
       xinit_pid = fork ();
       if (xinit_pid == 0)
-	execl (XINIT, XINIT, NULL);
+	{
+	  execl (XINIT, XINIT, NULL);
+	  _exit (1);
+	}
       waitpid (xinit_pid, NULL, 0);
 
       /* start gpe-login */
       session_pid = fork ();
       if (session_pid == 0)
-	execl (LOGIN, LOGIN, NULL);
+	{
+	  execl (LOGIN, LOGIN, NULL);
+	  _exit (1);
+	}
 
       /* wait for news */
       while (!f)
