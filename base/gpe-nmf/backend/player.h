@@ -10,6 +10,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <gst/gst.h>
+
 #include "playlist_db.h"
 
 typedef struct player *player_t;
@@ -18,8 +20,7 @@ struct player_status
 {
   struct playlist *item;
   unsigned long sample_rate;
-  unsigned long long time;
-  unsigned long long total_time;
+  GstClockTime time, total_time;
   gboolean changed;
 };
 

@@ -15,14 +15,23 @@
 
 #define _(x) gettext(x)
 
+typedef enum
+  {
+    PLAYER_STATE_NULL,
+    PLAYER_STATE_PLAYING,
+    PLAYER_STATE_STOPPING
+  } player_state;
+
 struct player
 {
   struct playlist *list;
   struct playlist *cur;
   guint idx;
 
-  gboolean stopping;
+  player_state state;
   GstElement *filesrc, *decoder, *audiosink, *thread;
+  GstScheduler *sched;
+  GstClock *clock;
 };
 
 static gboolean play_track (player_t p, struct playlist *t);
@@ -70,7 +79,7 @@ player_get_playlist (player_t p)
 static void
 abandon_track (player_t p)
 {
-  p->stopping = TRUE;
+  p->state = PLAYER_STATE_STOPPING;
   gst_element_set_state (p->thread, GST_STATE_NULL);
   p->thread = NULL;
 }
@@ -97,26 +106,36 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
 {
   fprintf (stderr, "State changed: %d -> %d\n", old_state, new_state);
 
-  if (old_state == GST_STATE_PLAYING && new_state == GST_STATE_PAUSED)
+  if (new_state == GST_STATE_PLAYING)
+    {
+      p->state = PLAYER_STATE_PLAYING;
+      p->sched = GST_ELEMENT_SCHED (p->thread);
+      p->clock = gst_scheduler_get_clock (p->sched);
+    }
+  else if (old_state == GST_STATE_PLAYING && new_state == GST_STATE_PAUSED)
     {
       printf ("Play finished.\n");
       gst_element_set_state (elt, GST_STATE_NULL);
       p->thread = NULL;
     }
-  else if (new_state == GST_STATE_NULL && !p->stopping)
+  else if (new_state == GST_STATE_NULL)
     {
-      printf ("Next track.\n");
-      
-      p->idx++;
-      p->cur = playlist_fetch_item (p->list, p->idx);
-      
-      if (p->cur)
-	play_track (p, p->cur);
-      else
+      if (p->state == PLAYER_STATE_PLAYING)
 	{
-	  p->idx = 0;
-	  fprintf (stderr, "No more tracks.\n");
+	  printf ("Next track.\n");
+	  
+	  p->idx++;
+	  p->cur = playlist_fetch_item (p->list, p->idx);
+	  
+	  if (p->cur)
+	    play_track (p, p->cur);
+	  else
+	    {
+	      p->idx = 0;
+	      fprintf (stderr, "No more tracks.\n");
+	    }
 	}
+      p->state = PLAYER_STATE_NULL;
     }
 }
 
@@ -142,8 +161,6 @@ play_track (player_t p, struct playlist *t)
   assert (!p->thread);
 
   fprintf (stderr, "play %s\n", t->data.track.url);
-
-  p->stopping = FALSE;
 
   p->thread = gst_thread_new ("thread");
   g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
@@ -187,6 +204,11 @@ void
 player_status (player_t p, struct player_status *s)
 {
   memset (s, 0, sizeof (*s));
+  if (p->state == PLAYER_STATE_PLAYING)
+    {
+      GstClockTime t = gst_clock_get_time (p->clock);
+      printf ("time %llx\n", t);
+    }
 }
 
 void 

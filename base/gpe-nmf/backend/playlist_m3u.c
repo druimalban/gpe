@@ -12,7 +12,7 @@
 #include <ctype.h>
 
 #include "playlist_db.h"
-#include "decoder.h"
+#include "player.h"
 
 struct playlist *
 playlist_m3u_load (gchar *s)
