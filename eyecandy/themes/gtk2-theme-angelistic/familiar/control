@@ -1,0 +1,8 @@
+Package: gtk2-theme-angelistic
+Section: x11
+Priority: optional
+Version: 0.02
+Architecture: all
+Maintainer: Damien Tanner <dctanner@magenet.com>
+Depends: libgtk2.0-0, gtk2-engines-mist
+Description: Flat and basic theme for the gtk2 mist engine.
