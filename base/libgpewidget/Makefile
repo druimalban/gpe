@@ -2,6 +2,8 @@ PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
 GTK2 = yes
+VERSION = 0.44
+CVSBUILD = yes
 
 GTKRC = gtkrc
 
@@ -17,6 +19,12 @@ else
 MEMBERS += gpetooltips gtkgpepixmap about
 SONAME = libgpewidget.so.0
 CONTROL = control
+endif
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
 endif
 
 ifeq ($(GTK2),yes)
@@ -58,15 +66,6 @@ gpe-iconlist.c: gpeiconlist.gob
 libgpewidget.a: $(OBJS)
 	ar cq $@ $^
 
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
-
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a libgpewidget libgpewidget-$$VERSION.orig; tar czf libgpewidget_$$VERSION.orig.tar.gz --exclude=libgpewidget-$$VERSION.orig/debian --exclude=libgpewidget-$$VERSION.orig/CVS --exclude=libgpewidget-$$VERSION.orig/familiar libgpewidget-$$VERSION.orig ; rm -rf libgpewidget-$$VERSION.orig )
-
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage -sa ; cd ..; rm -rf $$PV)
-
 install: $(SONAME) install-mo
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
@@ -75,21 +74,13 @@ ifneq ($(GTK2),yes)
 endif
 
 install-devel:
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
-
-ipkg: clean
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
-	cp familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
 
 clean:
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS)
 
-include ../build/Makefile.translation
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
 
 -include $(DEPS)
