@@ -4,5 +4,6 @@ Priority: optional
 Version: 0.2
 Architecture: arm
 Maintainer: Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
-Depends: libgtk2.0, libgpewidget (>= 0.24), gpe-icons(>= 0.15)
+Depends: libgtk2.0-0, libgpewidget1 (>= 0.24), gpe-icons(>= 0.15)
 Description: GPE WLAN config
+Replaces: gpe-wlancfg
