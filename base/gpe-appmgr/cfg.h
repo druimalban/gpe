@@ -16,8 +16,6 @@
 #ifndef CFG_H
 #define CFG_H
 
-//#include "main.h"
-
 /* View types for the tabs */
 typedef enum
 {
@@ -43,8 +41,5 @@ struct cfg_options_s
 	window_close_command on_window_close;
 	int use_windowtitle;
 } cfg_options;
-
-void cfg_load ();
-void cfg_load_if_newer (time_t when);
 
 #endif

@@ -38,18 +38,13 @@ notify_func (const char       *name,
 	{
 	  if (setting->type == XSETTINGS_TYPE_INT)
 	    {
-		    printf ("set to %d\n", setting->data.v_int);
 
 		    if (cfg_options.show_all_group)
 			    gtk_notebook_remove_page (GTK_NOTEBOOK(notebook), 0);
 
 		    cfg_options.show_all_group = setting->data.v_int;
 
-		    /* Create the 'All' tab if wanted */
-		    if (cfg_options.show_all_group)
-			    gtk_notebook_prepend_page (GTK_NOTEBOOK(notebook),
-						       create_tab (items, NULL, cfg_options.tab_view),
-						       create_group_tab_label("All", notebook->style));
+		    create_all_tab();
 
 		    gtk_notebook_set_page (GTK_NOTEBOOK(notebook), 0);
 	    }
@@ -117,6 +112,16 @@ gpe_appmgr_start_xsettings (void)
 {
   Display *dpy = GDK_DISPLAY ();
 
+	/* Default options */
+	cfg_options.show_all_group = 0;
+	cfg_options.auto_hide_group_labels = 1;
+	cfg_options.tab_view = TAB_VIEW_ICONS;
+	cfg_options.list_icon_size = 48;
+	cfg_options.show_recent_apps = 0;
+	cfg_options.recent_apps_number = 4;
+	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
+	cfg_options.use_windowtitle = 1;
+
   client = xsettings_client_new (dpy, DefaultScreen (dpy), notify_func, watch_func, NULL);
   if (client == NULL)
     {
@@ -126,13 +131,5 @@ gpe_appmgr_start_xsettings (void)
 
 //  push_new_changes = TRUE;
 
-	/* Default options */
-	cfg_options.show_all_group = 0;
-	cfg_options.auto_hide_group_labels = 1;
-	cfg_options.tab_view = TAB_VIEW_ICONS;
-	cfg_options.show_recent_apps = 0;
-	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
-	cfg_options.use_windowtitle = 1;
-
-  return TRUE;
+	return TRUE;
 }

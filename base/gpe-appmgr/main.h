@@ -38,6 +38,8 @@ GtkWidget *create_group_tab_label (char *group, GtkStyle *style);
 /* Creates a tab */
 GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style);
 
+/* Create and prepend the 'All' tab */
+void create_all_tab ();
 
 /* Refreshes the tab labels for autohide */
 void autohide_labels (int page);

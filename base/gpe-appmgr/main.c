@@ -298,6 +298,7 @@ gboolean btn_clicked (GtkWidget *widget,
 		      gpointer user_data)
 {
 	run_package ((struct package *)user_data);
+	return TRUE;
 }
 
 void create_recent_list ()
@@ -309,7 +310,6 @@ void create_recent_list ()
 
 	TRACE("create_recent_list");
 
-	printf ("recent_tab = %ld\n", recent_tab);
 	if (recent_tab == NULL)
 		return;
 
@@ -327,7 +327,7 @@ void create_recent_list ()
 			  hb);
 
 	this_item = recent_items;
-	printf ("recent_items = %ld\n", recent_items);
+
 	while (this_item)
 	{
 		struct package *p;
@@ -375,7 +375,7 @@ void cb_popup (GtkWidget *il, gpointer udata, gpointer data) {
 	struct package *p;
 	p = udata;
 	printf ("Popup: %s\n", package_get_data (p, "title"));
-	popup_menu_activate (udata);
+	popup_menu_activate (udata, il);
 }
 
 /* Make the contents for a notebook tab.
@@ -459,6 +459,17 @@ GtkWidget *create_group_tab_label (char *group, GtkStyle *style)
 	return hb;
 }
 
+void create_all_tab ()
+{
+	TRACE ("create_all_tab");
+	DBG((stderr, "Show 'All' group? %s\n", cfg_options.show_all_group ? "Yes" : "No"));
+	/* Create the 'All' tab if wanted */
+	if (cfg_options.show_all_group)
+		gtk_notebook_prepend_page (GTK_NOTEBOOK(notebook),
+					   create_tab (items, NULL, cfg_options.tab_view),
+					   create_group_tab_label("All", notebook->style));
+}
+
 /* Wipe the old tabs / icons and replace them with whats
  * currently supposed to be there */
 void refresh_tabs ()
@@ -473,6 +484,8 @@ void refresh_tabs ()
 	gtk_widget_hide (notebook);
 
 	clear_appmgr_tabs ();
+
+	create_all_tab ();
 
 	/* Create the normal tabs if wanted */
 	l = groups;
@@ -840,31 +853,15 @@ static void catch_signal (int signo)
 	/* FIXME: transfer this if needed */
 	recent_items = NULL; /* won't this leak? */
 
-	cfg_load_if_newer (last_update);
 	refresh_list ();
 	refresh_tabs();
 	last_update = time (NULL);
 }
 
-static GdkFilterReturn
-filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
-{
-  XEvent *xev = (XEvent *)xevp;
-  
-  if (xev->type == ClientMessage || xev->type == ReparentNotify)
-    {
-      XAnyEvent *any = (XAnyEvent *)xev;
-      tray_handle_event (any->display, any->window, xev);
-      if (xev->type == ReparentNotify)
-	gtk_widget_show_all (GTK_WIDGET (p));
-    }
-  return GDK_FILTER_CONTINUE;
-}
-
 /* Create the 'recent' list as a dock app or normal widget */
 void create_recent_box()
 {
-	static GtkWidget *w=NULL, *l;
+	static GtkWidget *w=NULL;
 	TRACE ("create_recent_box");
 
 	if (cfg_options.show_recent_apps) {
@@ -1037,9 +1034,6 @@ int main(int argc, char *argv[]) {
 
 	if (gpe_load_icons (my_icons) == FALSE)
 		exit (1);
-
-	/* load our configuration defaults */
-	cfg_load ();
 
 	/* update the menu data */
 	refresh_list ();
