@@ -270,7 +270,8 @@ gtk_date_sel_paint (GtkWidget    *widget,
 		    GdkRectangle *area)
 {
   GtkDateSel *sel;
-  guint leftspace, l, r;
+  gint leftspace;
+  guint l, r;
 
   g_return_if_fail (widget != NULL);
   g_return_if_fail (GTK_IS_DATE_SEL (widget));
@@ -510,6 +511,8 @@ gtk_date_sel_button_press (GtkWidget      *widget,
 			   GdkEventButton *event)
 {
   GtkDateSel *sel;
+  gint leftspace;
+  guint x;
 
   g_return_val_if_fail (widget != NULL, FALSE);
   g_return_val_if_fail (GTK_IS_DATE_SEL (widget), FALSE);
@@ -517,47 +520,50 @@ gtk_date_sel_button_press (GtkWidget      *widget,
 
   sel = GTK_DATE_SEL (widget);
 
+  leftspace = (widget->allocation.width - widget->requisition.width) / 2;
+  x = event->x - leftspace;
+
   switch (sel->mode)
     {
     case GTKDATESEL_YEAR:
-      if (event->x < ARROW_SIZE)
+      if (x < ARROW_SIZE)
 	year_click(sel, -1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->year_width + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->year_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
 	year_click(sel, 1);
       break;
 
     case GTKDATESEL_WEEK:
-      if (event->x < ARROW_SIZE)
+      if (x < ARROW_SIZE)
 	week_click(sel, -1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->week_width + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->week_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE))
 	week_click(sel, 1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
 	year_click(sel, -1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->week_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
 	year_click(sel, 1);
       break;
 
     case GTKDATESEL_FULL:
-      if (event->x < ARROW_SIZE)
+      if (x < ARROW_SIZE)
 	day_click(sel, -1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->day_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE))
 	day_click(sel, 1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
 	month_click(sel, -1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE))
 	month_click(sel, 1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE))
 	year_click(sel, -1);
-      else if (event->x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
-	       && event->x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
+      else if (x > (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD)
+	       && x < (ARROW_SIZE + PAD + sel->day_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->month_width + PAD + ARROW_SIZE + PAD + ARROW_SIZE + PAD + sel->year_width + PAD + ARROW_SIZE))
 	year_click(sel, 1);
       break;
     }
