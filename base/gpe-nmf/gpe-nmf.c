@@ -15,8 +15,10 @@
 #include <pty.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 #include "pixmaps.h"
 #include "init.h"
@@ -44,6 +46,8 @@ main (int argc, char *argv[])
   GdkColor col;
   GtkStyle *style;
   gchar *color = "gray80";
+  Atom window_type_atom, window_type_toolbar_atom;
+  Display *dpy;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -63,6 +67,17 @@ main (int argc, char *argv[])
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (window);
+
+  dpy = GDK_WINDOW_XDISPLAY (window->window);
+
+  window_type_atom =
+    XInternAtom (dpy, "_NET_WM_WINDOW_TYPE" , False);
+  window_type_toolbar_atom =
+    XInternAtom (dpy, "_NET_WM_WINDOW_TYPE_TOOLBAR",False);
+
+  XChangeProperty (dpy, GDK_WINDOW_XWINDOW (window->window), 
+		   window_type_atom, XA_ATOM, 32, PropModeReplace, 
+		  (unsigned char *) &window_type_toolbar_atom, 1);
 
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
