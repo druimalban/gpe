@@ -1,3 +1,8 @@
+2005-04-02	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* keyboard.c: Improved GUI.
+	* Makefile: Add missing X11 libraries.
+
 2005-04-01	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* HACKING: Update tasks.

@@ -55,10 +55,12 @@ endif
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0` 
+XCFLAGS = `pkg-config --cflags x11`
+XLIBS = `pkg-config --libs x11`
 
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. 
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) $(GTKCFLAGS) -I.
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS)-lXsettings -lXsettings-client -lcrypt -lXrandr 
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) $(GTKCFLAGS) -I. $(XCFLAGS)  
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLIBS) $(XLIBS) -lXsettings -lXsettings-client -lcrypt -lXrandr 
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG

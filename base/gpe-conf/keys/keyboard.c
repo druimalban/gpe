@@ -70,7 +70,7 @@ gchar keyboard_port[PATH_MAX] = {0};
 static GtkWidget *cbPort;
 
 /* TRANSLATORS: Keyboard names below are brand names, 
-   check local names or keep original names */
+   please check local names or keep original names */
 t_keyboard ktable[] = {
 	{"none", KBD_TYPE_NONE, N_("none")},
 	{"foldable", KBD_TYPE_FOLDABLE, N_("Foldable")},
@@ -175,11 +175,19 @@ char buf[PATH_MAX];
 }
 
 static void
-keyboard_selected(GtkToggleButton *tb, gpointer data)
+keyboard_selected(GtkWidget *tb,  GdkEventButton *event, gpointer data)
 {
-	int keyboard = (int)data;
-	if (gtk_toggle_button_get_active(tb))
-		keyboard_type = keyboard;
+	int i;
+	const gchar *sel = gtk_entry_get_text(GTK_ENTRY(tb));
+	
+	for (i = 0; i < KBD_TYPE_MAX; i++)
+	{
+    	if (! strcmp(sel, ktable[i].name))
+		{
+			keyboard_type = ktable[i].type;
+			break;
+		}
+	}
 }
 
 /* this is run suid root apply the settings */
@@ -217,6 +225,7 @@ Keyboard_Build_Objects (void)
 	gchar *buf;
 	GtkTooltips *tooltips;
 	GSList *ports = NULL;
+	GSList *keyboards = NULL;
 	int i;
 	
 	parse_config(KBDD_CONFIG, &keyboard_type, &keyboard_port);
@@ -276,25 +285,20 @@ Keyboard_Build_Objects (void)
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 	gtk_table_attach (GTK_TABLE (table), label, 0, 2, 2, 3,
 	                  GTK_FILL, GTK_FILL, 0, 0);
-	cbAny = gtk_radio_button_new_with_label(NULL, ktable[KBD_TYPE_NONE].name);
-	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 3, 4,
-	                  GTK_FILL, GTK_FILL, 0, 0);
-	g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
-	                       G_CALLBACK(keyboard_selected), (gpointer)KBD_TYPE_NONE);
 	
-	for (i = 1; i < KBD_TYPE_MAX; i++)
+	cbAny = gtk_combo_new();
+	for (i = 0; i < KBD_TYPE_MAX; i++)
 	{
-		cbAny = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(cbAny), 
-		                                                    ktable[i].name);
-		gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, i+4, i+5,
-		                  GTK_FILL, GTK_FILL, 0, 0);
+    	keyboards = g_slist_append(keyboards, ktable[i].name);
 		if (keyboard_type == ktable[i].type)
-			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbAny), TRUE);
-		g_signal_connect_after(G_OBJECT(cbAny), "toggled", 
-		                       G_CALLBACK(keyboard_selected), 
-		                       (gpointer)(ktable[i].type));
+			gtk_entry_set_text(GTK_ENTRY(GTK_COMBO(cbAny)->entry), ktable[i].name);
 	}
-	
+	gtk_combo_set_popdown_strings(GTK_COMBO(cbAny), (GList *)keyboards);
+	gtk_combo_set_value_in_list(GTK_COMBO(cbAny), TRUE, FALSE);
+	g_signal_connect_after(G_OBJECT(GTK_COMBO(cbAny)->entry), "changed", 
+	                       G_CALLBACK(keyboard_selected), NULL);
+	gtk_table_attach (GTK_TABLE (table), cbAny, 0, 2, 4, 5,
+	                  GTK_FILL, GTK_FILL, 0, 0);
 	g_free(buf);
 	return sw;
 }
