@@ -220,6 +220,7 @@ handle_click (Window w, Window orig_w, int x, int y)
   event.data.l[0] = win_panel;
   event.data.l[1] = x;
   event.data.l[2] = y;
+  event.data.l[3] = help_atom;
 
   XSendEvent (dpy, w, False, 0, (XEvent *)&event);
 
