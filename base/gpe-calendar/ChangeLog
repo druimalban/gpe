@@ -1,5 +1,8 @@
 2002-08-05  Colin Marquardt  <colin@marquardt-home.de>
 
+	* po/Makefile (translation-package): Get control and postinst from
+	control.translation and postinst.translation.
+
 	* Makefile (translation-package): New target to automatically
 	make translation packages. Just calls the same target in po/Makefile.
 
