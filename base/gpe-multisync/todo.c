@@ -105,7 +105,8 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
    
   g_object_unref (vcal);
 
-  store_tag_data (db->db, "todo", id, tags, TRUE);
+  nsqlc_exec_printf (db->db, "delete from todo where uid='%q'", NULL, NULL, NULL, uid);
+  store_tag_data (db->db, "todo", id, tags, FALSE);
 
   sprintf (returnuid, "%d", id);
   *returnuidlen = strlen (returnuid);
