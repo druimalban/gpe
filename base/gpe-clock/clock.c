@@ -31,6 +31,7 @@
 #include <gpe/gpeclockface.h>
 #include <gpe/schedule.h>
 #include <gpe/launch.h>
+#include <gpe/infoprint.h>
 
 Display *dpy;
 
@@ -616,6 +617,8 @@ alarm_window (void)
   if (alarm_window_open)
     return;
 
+  alarm_window_open = TRUE;
+
   time_label = gtk_label_new (_("Time:"));
 
   spacing = gpe_get_boxspacing ();
@@ -920,6 +923,10 @@ main (int argc, char *argv[])
   gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), panel_window, _("This is the clock.\nTap here to set the alarm, set the time, or change the display format."), NULL);
 
   g_timeout_add (1000, (GtkFunction) update_time, NULL);
+
+  XSelectInput (dpy, DefaultRootWindow (dpy), PropertyChangeMask);
+  gpe_launch_install_filter ();
+  gpe_launch_monitor_display (dpy);
 
   gtk_main ();
 
