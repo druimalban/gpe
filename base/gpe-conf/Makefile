@@ -7,7 +7,7 @@ IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
-PACKAGETOOL = no
+PACKAGETOOL = yes
 
 LINGUAS = pt ro de fr cs nl sv sk ru
 EXTRA_DESKTOPS = \

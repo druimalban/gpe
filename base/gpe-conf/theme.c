@@ -61,6 +61,7 @@ static struct
   GtkWidget *spFS, *bFont, *bColorFont;
   GtkWidget *spFSApp, *bFontApp;
   GtkWidget *slIconSize;
+  GtkWidget *slToolbarSize;
   GtkWidget *cDefault;
 }
 self;
@@ -474,6 +475,18 @@ notify_func (const char *name,
 		}
 	  }
     }
+   if (strncmp (name, KEY_GTK, strlen (KEY_GTK)) == 0)
+    {
+      char *p = (char *) name + strlen (KEY_GTK);
+
+ 	  if (!strcmp (p, "ToolbarIconSize"))
+	  {
+	  if (setting->type == XSETTINGS_TYPE_INT)
+	    {
+			gtk_range_set_value(GTK_RANGE(self.slToolbarSize),(float)setting->data.v_int);
+		}
+	  }
+    }
    if (strncmp (name, KEY_THEME, strlen (KEY_THEME)) == 0)
     {
       char *p = (char *) name + strlen (KEY_THEME);
@@ -819,6 +832,10 @@ Theme_Save ()
 	/* desktop icon size */
 	fs = (int)gtk_range_get_value(GTK_RANGE(self.slIconSize));
 	system_printf ("xst write %s%s int %d", KEY_MATCHBOX, "Desktop/IconSize", fs);
+	
+	/* desktop icon size */
+	fs = (int)gtk_range_get_value(GTK_RANGE(self.slToolbarSize));
+	system_printf ("xst write %s%s int %d", KEY_GTK, "ToolbarIconSize", fs);
 }
 
 void
@@ -888,7 +905,7 @@ Theme_Build_Objects ()
   gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, TRUE, 0);
 
   self.cbTheme = gtk_combo_new ();
-  themeitems = make_items_from_dir (matchboxpath);
+  themeitems = make_items_from_dir (matchboxpath,"matchbox");
   gtk_combo_set_popdown_strings (GTK_COMBO (self.cbTheme), themeitems);
   gtk_combo_set_value_in_list (GTK_COMBO (self.cbTheme), TRUE, FALSE);
   gtk_editable_set_editable (GTK_EDITABLE(GTK_COMBO(self.cbTheme)->entry), FALSE);
@@ -907,12 +924,28 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   
-  self.slIconSize = gtk_hscale_new_with_range(12.0,48.0,2.0);
+  self.slIconSize = gtk_hscale_new_with_range(16.0,64.0,2.0);
   gtk_table_attach (GTK_TABLE (table), self.slIconSize, 0, 4, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_range_set_value(GTK_RANGE(self.slIconSize),32.0);  
+  gtk_range_set_increments(GTK_RANGE(self.slIconSize),2.0,4.0);
   
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.9);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Icon Size"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 4, 5,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  
+  self.slToolbarSize = gtk_hscale_new_with_range(1.0,3.0,1.0);
+  gtk_table_attach (GTK_TABLE (table), self.slToolbarSize, 0, 4, 5, 6,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  gtk_range_set_value(GTK_RANGE(self.slToolbarSize),2.0);  
+  gtk_range_set_increments(GTK_RANGE(self.slToolbarSize),1.0,1.0);
  /*---------------------------------------------*/
 
   label = gtk_label_new (_("Background"));
@@ -1072,7 +1105,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFS = gtk_spin_button_new_with_range(1,20,1);
+  self.spFS = gtk_spin_button_new_with_range(5,20,1);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),8.0);
   gtk_table_attach (GTK_TABLE (table), self.spFS, 1, 2, 2, 3,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1128,7 +1161,7 @@ Theme_Build_Objects ()
   gtk_table_attach (GTK_TABLE (table), label, 1, 2, 5, 6,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), gpe_boxspacing, 0);
-  self.spFSApp = gtk_spin_button_new_with_range(1,20,1);
+  self.spFSApp = gtk_spin_button_new_with_range(5,20,1);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),8.0);
   gtk_table_attach (GTK_TABLE (table), self.spFSApp, 1, 2, 6, 7,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -1204,6 +1237,8 @@ on_font_select_desk(GtkWidget * widget, gpointer style)
 	pango_font_description_set_size(GTK_RC_STYLE(style)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS))*PANGO_SCALE);
 	label = g_object_get_data(G_OBJECT(self.bFont),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
+	select_font_popup(self.bFont);
+	on_font_size_change(self.spFS,GTK_SCROLL_NONE);
 }
 
 static void
@@ -1214,21 +1249,10 @@ on_font_select_app(GtkWidget * widget, gpointer style)
 	pango_font_description_set_size(GTK_RC_STYLE(style)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFSApp))*PANGO_SCALE);
 	label = g_object_get_data(G_OBJECT(self.bFontApp),"label");
 	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
+	select_font_popup(self.bFontApp);
+	on_font_size_change(self.spFSApp,GTK_SCROLL_NONE);
 }
 
-/*
-static void
-on_font_select(char* desc)
-{
-	GtkRcStyle *astyle = gtk_rc_style_new();
-printf("cb %s\n",desc);
-    astyle->font_desc = pango_font_description_from_string (desc);
-	pango_font_description_set_size(GTK_RC_STYLE(astyle)->font_desc,gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.spFS))*PANGO_SCALE);
-    gtk_widget_modify_style (self.demolabel, astyle);
-//	label = g_object_get_data(G_OBJECT(self.bFont),"label");
-//	gtk_label_set_text(GTK_LABEL(label),pango_font_description_get_family(GTK_RC_STYLE(style)->font_desc));	
-}
-*/
 
 static void
 on_font_size_change(GtkSpinButton *spinbutton,GtkScrollType arg1)

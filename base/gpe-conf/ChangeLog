@@ -1,3 +1,10 @@
+2003-12-27	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* gpe-conf-theme.desktop.in: Renamed to "Appearance".
+	* theme.c: Changed some size limits (fonts, icons)
+	* theme.c, applets.*: Filter theme to display only matchbox-enabled themes.
+	* theme.c: Make font selectors close automatically.
+	* theme.c: Added toolbar size changing facility.
+	
 2003-12-04	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* timeanddate.c: Removed some old stuff.
 	* suid.c, main.c, Makefile: Make package tool optional.

@@ -117,21 +117,31 @@ make_menu_from_dir (char *path, int (*entrytest) (char *path), char *current)
 	return menu;
 }
 
+
+/* 
+  Returns a list of directory names in a path containing 
+  something given by filter.
+*/
 GList *
-make_items_from_dir (char *path)
+make_items_from_dir (char *path, char* filter)
 {
 	DIR *dir;
 	struct dirent *entry;
 	GList *items = NULL;
+	char *filterpath = NULL;
 	dir = opendir (path);
+	
 	if (dir)
 	{
 		while ((entry = readdir (dir)))
 		{
 			if (entry->d_name[0] == '.')
 				continue;
-			items = g_list_append (items,
+			filterpath = g_strdup_printf("%s/%s/%s",path,entry->d_name,filter);
+			if (!access(filterpath,F_OK))
+				items = g_list_append (items,
 					       g_strdup (entry->d_name));
+			g_free(filterpath);
 		}
 		closedir (dir);
 	}
