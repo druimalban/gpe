@@ -1,3 +1,10 @@
+05/19/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- main.c	Several updates in scanner control.
+				Updating of user network structs.
+				Updated behaviout for closing/opening devices window.
+	- netedit.* Added network editor.				
+
 05/18/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
 	- main.c	Added usage of netdb.

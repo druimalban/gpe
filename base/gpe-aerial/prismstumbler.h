@@ -40,13 +40,15 @@
 
 #define PS_SOCKET "/tmp/.psintercom"
 #define DHCP_COMMAND "dhcpcd -i %s &"
+#define SEQ_USERNET 0xFFFF
 
 typedef enum
 {
 	msg_network,
 	msg_config,
 	msg_gps,
-	msg_command
+	msg_command,
+	msg_usernet
 }
 psmsgtype_t;
 
@@ -148,6 +150,34 @@ psnetinfo_t;
 
 typedef struct
 {
+	char bssid[20];
+	char ssid[33];
+	int mode; 		// o = managed, 1 = ad-hoc
+	int wep;
+	int dhcp;
+	int channel;
+	unsigned char ip[4];
+	unsigned char netmask[4];
+	unsigned char gateway[4];
+	char wep_key[48];
+	int inrange;	
+	ulong userset;
+}
+usernetinfo_t;
+
+#define USET_BSSID 		0x0000
+#define USET_SSID  		0x0001
+#define USET_MODE 	 	0x0002
+#define USET_WEP   		0x0004
+#define USET_DHCP  		0x0008
+#define USET_CHANNEL	0x0010
+#define USET_IP			0x0020
+#define USET_NETMASK	0x0040
+#define USET_GATEWAY	0x0080
+#define USET_WEPKEY		0x0100
+
+typedef struct
+{
 	psmsgtype_t type;
 	union
 	{
@@ -155,6 +185,7 @@ typedef struct
 		psconfig_t cfg;
 		pscommand_t command;
 		psgps_t gps;
+		usernetinfo_t usernet;
 	}content;
 }
 psmessage_t;

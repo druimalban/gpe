@@ -72,7 +72,7 @@ static guint timeout_id = 0;
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
 static GtkWidget *menu_devices;
-static GtkWidget *devices_window;
+GtkWidget *devices_window;
 static GtkWidget *iconlist;
 
 gboolean radio_is_on = FALSE;
@@ -84,13 +84,15 @@ static gboolean run_scan (void);
 static void radio_off (void);
 static void list_add_net (netinfo_t * ni);
 static void send_command (command_t cmd, int par);
+static void send_usernet (usernetinfo_t* usernet);
 
 
 
 static void
 net_enter_data (GtkWidget * w, netinfo_t * this_net)
 {
-	
+	radio_off();
+	network_edit(this_net);
 }
 
 
@@ -99,7 +101,35 @@ check_connection (GtkWidget * w, netinfo_t * this_net)
 {
 	/* we need to switch the scanner off */
 	radio_off ();
-	send_command(C_ASSOCIATE, this_net->net.seqnr);
+	send_usernet(&this_net->netinfo);
+	send_command(C_ASSOCIATE, SEQ_USERNET);
+}
+
+static void
+update_usernet(netinfo_t *ni)
+{
+	if (!(ni->netinfo.userset & USET_BSSID))
+		sprintf(ni->netinfo.bssid,"%s",ni->net.bssid);
+	if (!(ni->netinfo.userset & USET_SSID))
+		sprintf(ni->netinfo.ssid,"%s",ni->net.ssid);
+	if (!(ni->netinfo.userset & USET_MODE))
+		ni->netinfo.mode = ni->net.isadhoc;
+	if (!(ni->netinfo.userset & USET_WEP))
+		ni->netinfo.wep = ni->net.wep;
+	if (!(ni->netinfo.userset & USET_DHCP))
+		ni->netinfo.dhcp = ni->net.dhcp;
+	if (!(ni->netinfo.userset & USET_CHANNEL))
+		ni->netinfo.channel = ni->net.channel;
+	if (!(ni->netinfo.userset & USET_NETMASK))
+	{
+		if (ni->net.ip_range[0]) ni->netinfo.netmask[0] = 255; 
+		if (ni->net.ip_range[1]) ni->netinfo.netmask[1] = 255; 
+		if (ni->net.ip_range[2]) ni->netinfo.netmask[2] = 255; 
+		if (ni->net.ip_range[3]) ni->netinfo.netmask[3] = 255; 
+	}
+	if (!(ni->netinfo.userset & USET_WEPKEY))
+		memcpy(&ni->netinfo.wep_key,&ni->net.wep_key,48);
+	ni->netinfo.inrange = TRUE;	
 }
 
 
@@ -113,6 +143,20 @@ send_config ()
 	if (write (sock, (void *) &msg, sizeof (psmessage_t)) < 0)
 	{
 		perror ("err sending config data");
+	}
+}
+
+
+static void
+send_usernet (usernetinfo_t* usernet)
+{
+	psmessage_t msg;
+	msg.type = msg_usernet;
+	msg.content.usernet = *usernet;
+
+	if (write (sock, (void *) &msg, sizeof (psmessage_t)) < 0)
+	{
+		perror ("err sending user netinfo");
 	}
 }
 
@@ -155,6 +199,7 @@ fork_scanner ()
 static gboolean
 devices_window_destroyed (void)
 {
+	int i;
 	devices_window = NULL;
 	
 	/* stop updates from scanner */
@@ -162,6 +207,11 @@ devices_window_destroyed (void)
 	{
 		gtk_timeout_remove(timeout_id);
 		timeout_id = 0;
+	}
+	for (i=0;i<netcount;i++)
+	{
+		gdk_pixbuf_unref (netlist[i]->pix);
+		netlist[i]->visible = FALSE;
 	}
 	cfg.autosend = FALSE;
 	send_config ();
@@ -237,12 +287,16 @@ do_stop_radio (void)
 {
 	radio_is_on = FALSE;
 
-	if (scanner_pid)
+	cfg.scan = FALSE;
+	
+	/* inform scanner */
+	send_config();
+/*	if (scanner_pid)
 	{
 		kill (scanner_pid, 15);
 		scanner_pid = 0;
 	}
-
+*/
 }
 
 
@@ -261,8 +315,8 @@ radio_off (void)
 	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
 				   gpe_find_icon ("scan-off"));
 
-	if (sock >= 0)
-		close (sock);
+//	if (sock >= 0)
+//		close (sock);
 
 	do_stop_radio ();
 }
@@ -301,14 +355,19 @@ update_netlist (psnetinfo_t * anet)
 				update_image(netlist[i]);
 			}
 			memcpy (&netlist[i]->net, anet, sizeof (psnetinfo_t));
+			update_usernet(netlist[i]);
+			if (!netlist[i]->visible) list_add_net(netlist[i]);
 		}
 	if (!found)
 	{
 		netcount++;
 		netlist = realloc (netlist, netcount * sizeof (netinfo_t*));
 		netlist[netcount - 1] = malloc (sizeof (netinfo_t));
+		memset (&netlist[netcount - 1]->netinfo,0,sizeof(usernetinfo_t));
 		memcpy (&netlist[netcount - 1]->net, anet,
 			sizeof (psnetinfo_t));
+		update_usernet(netlist[netcount -1]);
+		netlist[netcount - 1]->visible = FALSE;
 		list_add_net(netlist[netcount - 1]);
 	}
 }
@@ -373,11 +432,11 @@ network_info (netinfo_t * ni)
 	gpe_set_window_icon (GTK_WIDGET (window), "gpe-aerial");
 	gtk_box_set_spacing(GTK_BOX(vbox1),gpe_get_boxspacing());
 
-	tmp = g_strdup_printf ("<b>%s</b>", ni->net.ssid);
+	tmp = g_strdup_printf ("<b>%s</b>", ni->netinfo.ssid);
 	gtk_label_set_markup (GTK_LABEL (labelname), tmp);
 	g_free (tmp);
 
-	tmp = g_strdup_printf ("BSSID:%s", ni->net.bssid);
+	tmp = g_strdup_printf ("BSSID:%s", ni->netinfo.bssid);
 	gtk_label_set_markup (GTK_LABEL (labeladdr), tmp);
 	g_free (tmp);
 	
@@ -399,7 +458,7 @@ network_info (netinfo_t * ni)
 		tmp = g_strdup_printf ("%s: %s", _("Speed"), _("<i>unknown</i>"));
 	gtk_label_set_markup (GTK_LABEL (lSpeed), tmp);
 	g_free (tmp);
-	tmp = g_strdup_printf ("%s: %d", _("Channel"), ni->net.channel);
+	tmp = g_strdup_printf ("%s: %d", _("Channel"), ni->netinfo.channel);
 	gtk_label_set_text (GTK_LABEL (lChannel), tmp);
 	g_free (tmp);
 	if (ni->net.wep)
@@ -414,7 +473,7 @@ network_info (netinfo_t * ni)
 		tmp = g_strdup_printf ("%s: %s", _("IPSec detected"), _("no"));
 	gtk_label_set_text (GTK_LABEL (lIPSec), tmp);
 	g_free (tmp);
-	if (ni->net.dhcp)
+	if (ni->netinfo.dhcp)
 		tmp = g_strdup_printf ("%s: %s", _("DHCP detected"), _("yes"));
 	else
 		tmp = g_strdup_printf ("%s: %s", _("DHCP detected"), _("no"));
@@ -441,7 +500,8 @@ network_info (netinfo_t * ni)
 	gtk_misc_set_alignment (GTK_MISC (lDhcp), 0.0, 0.5);
 
 	gtk_misc_set_alignment (GTK_MISC (image), 0.0, 0.0);
-
+	gtk_widget_set_size_request(image,44,-1);
+	
 	gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
 	gtk_box_pack_start (GTK_BOX (vbox1), lType, TRUE, TRUE, 0);
@@ -488,7 +548,7 @@ device_clicked (GtkWidget * widget, GdkEventButton * e, gpointer data)
 
 	device_menu = gtk_menu_new ();
 
-	details = gtk_menu_item_new_with_label (_("Details ..."));
+	details = gtk_menu_item_new_with_label (_("Details..."));
 	g_signal_connect (G_OBJECT (details), "activate",
 			  G_CALLBACK (show_network_info), ni);
 	gtk_widget_show (details);
@@ -501,7 +561,7 @@ device_clicked (GtkWidget * widget, GdkEventButton * e, gpointer data)
 	gtk_menu_append (GTK_MENU (device_menu), details);
 	gtk_widget_set_sensitive (details, TRUE);
 
-	details = gtk_menu_item_new_with_label (_("Try connect ..."));
+	details = gtk_menu_item_new_with_label (_("Try connect..."));
 	g_signal_connect (G_OBJECT (details), "activate",
 			  G_CALLBACK (check_connection), ni);
 	gtk_widget_show (details);
@@ -517,7 +577,6 @@ list_add_net (netinfo_t * ni)
 {
 	GObject *item;
 
-printf("adding %s %s\n",ni->net.ssid,ni->net.bssid);
 	if (ni->net.isadhoc)
 		ni->pix = gpe_find_icon ("network");
 	else
@@ -538,6 +597,7 @@ printf("adding %s %s\n",ni->net.ssid,ni->net.bssid);
 	gtk_widget_show_all(GTK_WIDGET(devices_window));
 	g_signal_connect (G_OBJECT (item), "button-release",
 			  G_CALLBACK (device_clicked), ni);
+	ni->visible = TRUE;
 }
 
 
@@ -598,29 +658,33 @@ radio_on (void)
 	radio_is_on = TRUE;
 	sigemptyset (&sigs);
 	sigaddset (&sigs, SIGCHLD);
-	sigprocmask (SIG_BLOCK, &sigs, NULL);
-	scanner_pid = fork_scanner ();
-	sigprocmask (SIG_UNBLOCK, &sigs, NULL);
-
-	usleep (200000);
-	sock = socket (AF_UNIX, SOCK_STREAM, 0);
-	if (sock < 0)
+	/* start and connect to scanner */
+	if (scanner_pid == 0) 
 	{
-		perror ("opening datagram socket");
-		radio_off ();
-		return;
-	}
+		sigprocmask (SIG_BLOCK, &sigs, NULL);
+		scanner_pid = fork_scanner ();
+		sigprocmask (SIG_UNBLOCK, &sigs, NULL);
 
-	name.sun_family = AF_UNIX;
-	strcpy (name.sun_path, PS_SOCKET);
-	if (connect (sock, (struct sockaddr *) &name, SUN_LEN (&name)))
-	{
-		perror ("connecting to socket");
-		radio_off ();
-		return;
-	}
+		usleep (200000);
+		sock = socket (AF_UNIX, SOCK_STREAM, 0);
+		if (sock < 0)
+		{
+			perror ("opening datagram socket");
+			radio_off ();
+			return;
+		}
 
+		name.sun_family = AF_UNIX;
+		strcpy (name.sun_path, PS_SOCKET);
+		if (connect (sock, (struct sockaddr *) &name, SUN_LEN (&name)))
+		{
+			perror ("connecting to socket");
+			radio_off ();
+			return;
+		}
+	}
 	cfg.autosend = FALSE;
+	cfg.scan = TRUE;
 	send_config ();
 	send_command(C_DETECT_CARD,0);
 	printf ("socket -->%s\n", PS_SOCKET);
@@ -673,6 +737,22 @@ clicked (GtkWidget * w, GdkEventButton * ev)
 			w, ev->button, ev->time);
 }
 
+static void
+aerial_shutdown()
+{
+	cfg.scan = FALSE;
+	
+	/* inform scanner */
+	send_config();
+	if (scanner_pid)
+	{
+		kill (scanner_pid, 15);
+		scanner_pid = 0;
+	}
+	
+	gtk_main_quit();
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -716,7 +796,7 @@ main (int argc, char *argv[])
 	g_signal_connect (G_OBJECT (menu_devices), "activate",
 			  G_CALLBACK (show_networks), NULL);
 	g_signal_connect (G_OBJECT (menu_remove), "activate",
-			  G_CALLBACK (gtk_main_quit), NULL);
+			  G_CALLBACK (aerial_shutdown), NULL);
 
 	if (!radio_is_on)
 	{
