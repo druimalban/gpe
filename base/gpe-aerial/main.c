@@ -937,12 +937,10 @@ external_event(GtkWindow *window, GdkEventConfigure *event, gpointer user_data)
     sbuf = gpe_find_icon(radio_is_on ? "scan-on" : "scan-off");
     dbuf = gdk_pixbuf_scale_simple(sbuf,size, size,GDK_INTERP_HYPER);
     gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &bitmap, 128);
-    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 0, 0);
-    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 0, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
+    gtk_widget_shape_combine_mask (GTK_WIDGET(window), bitmap, 1, 0);
     gdk_bitmap_unref (bitmap);
     gtk_image_set_from_pixbuf(GTK_IMAGE(icon),dbuf);
-	/* make sure we want to resize all the time */
-	gtk_widget_set_size_request(GTK_WIDGET(window),size+1,size);
   }
   return FALSE;
 }
@@ -991,9 +989,8 @@ main (int argc, char *argv[])
 				    G_TYPE_STRING);
 
 	window = gtk_plug_new (0);
-	gtk_widget_set_usize (window, 16, 16);
-	/* this makes it scale up to 48pixels child size if possible */	
-	gtk_widget_set_size_request(window,50,50);
+	gtk_window_set_resizable(GTK_WINDOW(window),TRUE);
+
 	gtk_widget_realize (window);
 
 	gtk_window_set_title (GTK_WINDOW (window), _("Wireless LAN control"));
@@ -1044,7 +1041,7 @@ main (int argc, char *argv[])
 	gtk_widget_show (icon);
 	gtk_misc_set_alignment(GTK_MISC(icon),0.0,0.5);
 	gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("scan-off"), NULL,
-					   &bitmap, 128);
+					   &bitmap, 255);
 	
 	gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 	gdk_bitmap_unref (bitmap);

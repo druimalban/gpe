@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.11
+VERSION = 0.2.12
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install

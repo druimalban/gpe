@@ -1,3 +1,8 @@
+2005-01-04		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* main.c: Fixed window resizing. Still missing: Larger pixmaps.
+	* Makefile: New version: 0.2.12
+
 2005-01-01  Luc Pionchon  <luc@handhelds.org>
 
 	* netedit.c (network_info): removed markup from i18n'ed strings

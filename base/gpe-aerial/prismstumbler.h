@@ -52,8 +52,10 @@ extern "C" {
 #define PIC_SCANNER_ON PREFIX "/share/pixmaps/stock_record_on.png"
 #define PIC_DUMP_ON PREFIX "/share/pixmaps/stock_jump_on.png"
 
+extern const char *dhcpcommands[];
 
-#define DHCP_COMMAND "/sbin/dhcpcd %s &"
+#define DHCP_CMDCOUNT 3
+
 #define SEQ_USERNET 0xFFFF
 
 
@@ -130,7 +132,8 @@ typedef struct
 	int autosend;
 	char wpfile[255];
 	char dumpfile[255];
-	int dumptofile;	
+	int dumptofile;
+	int dhcpcommand;
 }
 psconfig_t;
 
