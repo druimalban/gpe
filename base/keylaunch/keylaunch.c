@@ -483,9 +483,9 @@ main (int argc, char *argv[])
 	    ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
 	  for (k = key; k != NULL; k = k->next)
 	    if (k->keycode == ev.xkey.keycode
-	      && (k->modifier == AnyModifier
-	          || k->modifier == ev.xkey.state)
-	      && (k->press_time.tv_sec || k->press_time.tv_usec))
+		&& (k->modifier == AnyModifier
+		    || k->modifier == ev.xkey.state)
+		&& (k->press_time.tv_sec || k->press_time.tv_usec))
 	      {
 	        struct timeval key_release_time;
 	        struct timeval time_elapsed;
@@ -526,13 +526,14 @@ main (int argc, char *argv[])
 		parse_rc (rc_file);
 		k = lastkey;
 	      }
+	}
 
 #ifdef CHECK_RC
-            if (get_last_update (rc_file) != last_update)
-	      {
-		free_keys ();
-		parse_rc (rc_file);
-	      }
+      if (get_last_update (rc_file) != last_update)
+	{
+	  free_keys ();
+	  parse_rc (rc_file);
+	}
 #endif
 
     }
