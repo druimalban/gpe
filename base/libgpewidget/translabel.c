@@ -93,8 +93,8 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 static void
 label_translation (GtkWidget *w, void *pointer)
 {
-  gchar *domain = g_object_get_data (G_OBJECT (w), "domain");
-  gchar *string = g_object_get_data (G_OBJECT (w), "string");
+  gchar *domain = g_object_get_data (G_OBJECT (w), "translate-domain");
+  gchar *string = g_object_get_data (G_OBJECT (w), "translate-string");
 		  
   gtk_label_set_text (GTK_LABEL (w), dgettext (domain, string));
 }

@@ -1,3 +1,7 @@
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
+	* translabel.c (label_translation): Correct property names.
+
 2003-03-24  Luc Pionchon  <luc@handhelds.org>
 
 	* gpeiconlist.gob (_recalc_size): use viewport's allocation to
