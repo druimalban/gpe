@@ -73,7 +73,7 @@ vevent_interpret_tag (MIMEDirVEvent *event, const char *tag, const char *value)
 
 	  date = mimedir_datetime_new_from_date (tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 
-	  g_object_set (G_OBJECT (event), "start", date, NULL);
+	  g_object_set (G_OBJECT (event), "dtstart", date, NULL);
 	}
 
       return TRUE;
