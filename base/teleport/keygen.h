@@ -17,5 +17,6 @@ extern gchar *home_dir;
 extern int generate_key (struct rsa_key *rv);
 extern gboolean write_public (struct rsa_key *k);
 extern gboolean write_secret (struct rsa_key *k);
+extern unsigned long private_key_id (struct rsa_key *k);
 
 #endif

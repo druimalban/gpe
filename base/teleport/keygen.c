@@ -62,6 +62,15 @@ generate_key (struct rsa_key *rv)
   return 0;
 }
 
+unsigned long
+private_key_id (struct rsa_key *k)
+{
+  char *n = hex_from_mpi (k->n);
+  unsigned long id = strtoul (n + (strlen (n) - 8), NULL, 16);
+  gcry_free (n);
+  return id;
+}
+
 gboolean
 write_public (struct rsa_key *k)
 {

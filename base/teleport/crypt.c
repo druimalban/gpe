@@ -101,5 +101,7 @@ crypt_init (void)
       generate_key (&private_key);
       write_public (&private_key);
       write_secret (&private_key);
+
+      key_id = private_key_id (&private_key);
     }
 }

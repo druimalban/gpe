@@ -290,7 +290,7 @@ open_window (void)
 
   add_button = gpe_button_new_from_stock (GTK_STOCK_ADD, GPE_BUTTON_TYPE_ICON);
   remove_button = gpe_button_new_from_stock (GTK_STOCK_REMOVE, GPE_BUTTON_TYPE_ICON);
-  go_button = gpe_button_new_from_stock (GTK_STOCK_YES, GPE_BUTTON_TYPE_ICON);
+  go_button = gpe_button_new_from_stock (GTK_STOCK_EXECUTE, GPE_BUTTON_TYPE_ICON);
 
   hbox = gtk_hbox_new (FALSE, 0);
   vbox = gtk_vbox_new (FALSE, 0);
@@ -326,6 +326,8 @@ open_window (void)
   g_signal_connect (G_OBJECT (add_button), "clicked", G_CALLBACK (add_callback), NULL);
   g_signal_connect (G_OBJECT (remove_button), "clicked", G_CALLBACK (remove_callback), list_view);
   g_signal_connect (G_OBJECT (go_button), "clicked", G_CALLBACK (go_callback), list_view);
+
+  g_signal_connect (G_OBJECT (window), "delete-event", G_CALLBACK (g_main_loop_quit), NULL);
 
   gtk_widget_show_all (window);
 }
