@@ -90,8 +90,7 @@ real-translation-package: all-mo
 		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(BINPACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
 		install $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
 		chown -R root.root $(transdist)/$$i; \
-		$(IPKG_BUILD) $(transdist)/$$i; \
-		printf "$(PACKAGE)-$${i}_$(VERSION)_all.ipk " >> $(ipkglist); \
+		$(IPKG_BUILD) $(transdist)/$$i | sed 's/^Packaged .*into //; t 1; d; : 1; s:.*/::' >> $(ipkglist); \
 	done
 
 translation-ipkg:

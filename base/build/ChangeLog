@@ -1,5 +1,8 @@
 2003-09-06  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.translation (real-translation-package): Parse output
+	from ipkg-build to get package filename rather than guessing.
+
 	* Makefile.dpkg_ipkg (ipkg): Build .batch file listing all
 	generated packages and their md5sums.
 
