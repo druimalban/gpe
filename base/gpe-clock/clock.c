@@ -274,16 +274,6 @@ set_alarm (struct alarm_state *alarm)
 	  alarm->day = tm.tm_mday;
 	}
 
-      {
-	struct tm ltm, utm;
-
-	localtime_r (&t, &ltm);
-	gmtime_r (&t, &utm);
-
-	printf ("local time %s\n", asctime (&ltm));
-	printf ("universal time %s %d\n", asctime (&utm), t);
-      }
-
       if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm\n") == FALSE)
 	{
 	  gpe_error_box (_("Unable to set alarm"));
