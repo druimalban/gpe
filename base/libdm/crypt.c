@@ -31,7 +31,7 @@ hex_from_mpi (GcryMPI m)
 }
 
 void
-libdm_crypt_create_hash (char *display, char *challenge, size_t len, char *result)
+displaymigration_crypt_create_hash (char *display, char *challenge, size_t len, char *result)
 {
   size_t dlen = strlen (display);
   gchar *buf = g_malloc (dlen + 1 + len);
@@ -82,7 +82,7 @@ do_encode_md (const unsigned char *digest, size_t digestlen, int algo,
 }
 
 gboolean
-libdm_crypt_sign_hash (struct rsa_key *k, char *hash, gchar **result)
+displaymigration_crypt_sign_hash (struct rsa_key *k, char *hash, gchar **result)
 {
   GcryMPI mpi;
   GcrySexp data, sig, key;
@@ -122,7 +122,7 @@ libdm_crypt_sign_hash (struct rsa_key *k, char *hash, gchar **result)
 }
 
 gboolean
-libdm_crypt_check_signature (struct rsa_key *k, char *hash, char *sigbuf)
+displaymigration_crypt_check_signature (struct rsa_key *k, char *hash, char *sigbuf)
 {
   GcryMPI mpi, mpi2;
   GcrySexp data, sig, key;

@@ -7,17 +7,17 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef AUTH_H
-#define AUTH_H
+#ifndef DISPLAYMIGRATION_AUTH_H
+#define DISPLAYMIGRATION_AUTH_H
 
 #include <gcrypt.h>
 #include <glib.h>
 
-extern void libdm_auth_update_challenge (void);
-extern void libdm_auth_generate_challenge (void);
+extern void displaymigration_auth_update_challenge (void);
+extern void displaymigration_auth_generate_challenge (void);
 
-extern gboolean libdm_auth_validate_request (char *display, char *data);
+extern gboolean displaymigration_auth_validate_request (char *display, char *data);
 
-extern gchar *libdm_auth_challenge_string;
+extern gchar *displaymigration_auth_challenge_string;
 
 #endif

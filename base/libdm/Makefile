@@ -1,5 +1,5 @@
 PREFIX = /usr/local
-PACKAGE = libdm
+PACKAGE = libdisplaymigration
 DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.25
@@ -20,7 +20,7 @@ endif
 CFLAGS += -MD `pkg-config --cflags gtk+-2.0`
 LDFLAGS += `pkg-config --libs gtk+-2.0` -lgcrypt
 
-HEADERS = 
+HEADERS = displaymigration.h auth.h crypt.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -48,7 +48,7 @@ install-program: $(SONAME)
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel:
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/displaymigration/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
 
 clean:

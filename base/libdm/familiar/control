@@ -1,4 +1,4 @@
-Package: libdm0
+Package: libdisplaymigration0
 Section: base
 Priority: optional
 Version: VERSION

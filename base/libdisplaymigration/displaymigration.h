@@ -7,10 +7,10 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef LIBDM_H
-#define LIBDM_H
+#ifndef DISPLAYMIGRATION_H
+#define DISPLAYMIGRATION_H
 
-extern void libdm_init (void);
-extern void libdm_mark_window (GtkWidget *);
+extern void displaymigration_init (void);
+extern void displaymigration_mark_window (GtkWidget *);
 
 #endif

@@ -17,7 +17,7 @@
 
 #define CHALLENGE_LEN 64
 
-gchar *libdm_auth_challenge_string;
+gchar *displaymigration_auth_challenge_string;
 
 static unsigned char challenge_bytes[CHALLENGE_LEN];
 static unsigned long challenge_seq;
@@ -25,15 +25,15 @@ static unsigned long challenge_seq;
 #define hexbyte(x)  ((x) >= 10 ? (x) + 'a' - 10 : (x) + '0')
 
 void 
-libdm_auth_update_challenge (void)
+displaymigration_auth_update_challenge (void)
 {
   int i;
   unsigned char *p;
 
-  if (libdm_auth_challenge_string == NULL)
-    libdm_auth_challenge_string = g_malloc ((CHALLENGE_LEN * 2) + 9);
+  if (displaymigration_auth_challenge_string == NULL)
+    displaymigration_auth_challenge_string = g_malloc ((CHALLENGE_LEN * 2) + 9);
 
-  p = libdm_auth_challenge_string;
+  p = displaymigration_auth_challenge_string;
 
   for (i = 0; i < CHALLENGE_LEN; i++)
     {
@@ -45,10 +45,10 @@ libdm_auth_update_challenge (void)
 }
 
 void
-libdm_auth_generate_challenge (void)
+displaymigration_auth_generate_challenge (void)
 {
   gcry_randomize (challenge_bytes, sizeof (challenge_bytes), GCRY_STRONG_RANDOM);
-  libdm_auth_update_challenge ();
+  displaymigration_auth_update_challenge ();
 }
 
 static struct rsa_key *
@@ -116,7 +116,7 @@ free_pubkey (struct rsa_key *k)
 }
 
 gboolean
-libdm_auth_validate_request (char *display, char *data)
+displaymigration_auth_validate_request (char *display, char *data)
 {
   u_int32_t key_id;
   char *ep;
@@ -138,10 +138,10 @@ libdm_auth_validate_request (char *display, char *data)
   if (k == NULL)
     return FALSE;
 
-  libdm_crypt_create_hash (display, libdm_auth_challenge_string, 
-			   strlen (libdm_auth_challenge_string), hash);
+  displaymigration_crypt_create_hash (display, displaymigration_auth_challenge_string, 
+			   strlen (displaymigration_auth_challenge_string), hash);
 
-  rc = libdm_crypt_check_signature (k, hash, p);
+  rc = displaymigration_crypt_check_signature (k, hash, p);
 
   free_pubkey (k);
 

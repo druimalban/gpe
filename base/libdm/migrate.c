@@ -21,7 +21,7 @@
 #include <gdk/gdkx.h>
 
 #include "auth.h"
-#include "libdm.h"
+#include "displaymigration.h"
 
 #define _(x) gettext(x)
 
@@ -38,7 +38,7 @@ static gboolean no_auth;
 
 static GSList *all_widgets;
 
-static gboolean libdm_initialised;
+static gboolean displaymigration_initialised;
 
 static int
 do_change_display (GtkWidget *w, char *display_name)
@@ -82,8 +82,8 @@ static void
 set_challenge_on_window (GdkWindow *window)
 {
   gdk_property_change (window, rsa_challenge_gdkatom, string_gdkatom,
-		       8, GDK_PROP_MODE_REPLACE, libdm_auth_challenge_string, 
-		       strlen (libdm_auth_challenge_string));
+		       8, GDK_PROP_MODE_REPLACE, displaymigration_auth_challenge_string, 
+		       strlen (displaymigration_auth_challenge_string));
 }
 
 static void
@@ -91,7 +91,7 @@ update_challenge_on_windows (void)
 {
   GSList *i;
 
-  libdm_auth_update_challenge ();
+  displaymigration_auth_update_challenge ();
 
   for (i = all_widgets; i; i = i->next)
     {
@@ -160,7 +160,7 @@ handle_request (GdkWindow *gwindow, char *prop)
 	return DISPLAY_CHANGE_AUTHENTICATION_BAD;
       else if (!strcasecmp (auth_method, "rsa-sig"))
 	{
-	  if (libdm_auth_validate_request (target, auth_data) == FALSE)
+	  if (displaymigration_auth_validate_request (target, auth_data) == FALSE)
 	    return DISPLAY_CHANGE_AUTHENTICATION_BAD;
 	}
       else
@@ -249,11 +249,11 @@ unrealize_window (GtkWidget *w)
 }
 
 void
-libdm_mark_window (GtkWidget *w)
+displaymigration_mark_window (GtkWidget *w)
 {
-  if (! libdm_initialised)
+  if (! displaymigration_initialised)
     {
-      g_warning ("libdm not initialised yet");
+      g_warning ("displaymigration not initialised yet");
       return;
     }
 
@@ -271,11 +271,11 @@ libdm_mark_window (GtkWidget *w)
       g_signal_connect (G_OBJECT (w), "unrealize", G_CALLBACK (unrealize_window), NULL);
     }
   else
-    g_signal_connect (G_OBJECT (w), "realize", G_CALLBACK (libdm_mark_window), NULL);
+    g_signal_connect (G_OBJECT (w), "realize", G_CALLBACK (displaymigration_mark_window), NULL);
 }
 
 void
-libdm_init (void)
+displaymigration_init (void)
 {
   if (getenv ("GPE_DISPLAY_MIGRATION_NO_AUTH") != NULL)
     no_auth = TRUE;
@@ -284,7 +284,7 @@ libdm_init (void)
   display_change_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE", FALSE);
   rsa_challenge_gdkatom = gdk_atom_intern ("_GPE_DISPLAY_CHANGE_RSA_CHALLENGE", FALSE);
 
-  libdm_auth_generate_challenge ();
+  displaymigration_auth_generate_challenge ();
 
-  libdm_initialised = TRUE;
+  displaymigration_initialised = TRUE;
 }
