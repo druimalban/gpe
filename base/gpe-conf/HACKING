@@ -12,13 +12,13 @@ You are welcome to participate at gpe and gpe-conf.
 * Adaption to other hardware platforms than iPAQ. 
   - Button configuration and serial setup for SimPad.
   - Button configuration for Zaurus.
-  - Add wireless config capabilities and config wizzard to network config tool.
+  - Add config wizzard to network config tool.
   - Change date/time setup tool to use timezone definition files.
   - Update owner information setup to create a personal VCARD.
   - Login setup needs the ability to configure autologin.
 
 
--> Here are some instruction to add a new module (Applet) to gpe conf.
+-> Here are some instruction to add a new module (Applet) to gpe-conf.
 
 * An applet should provide at least one function:
 
@@ -34,7 +34,7 @@ You are welcome to participate at gpe and gpe-conf.
   void AppletName_Save()
 
 	This callback is called when the Save button is clicked.
-	This button should make your applet *Save* the changes on the "Harddisk"
+	The save button should make your applet *Save* the changes on the "Harddisk"
 	This is not an apply button, changes should been made on the fly (they take effect immediately).
 
   void AppletName_Restore()
@@ -47,6 +47,9 @@ You are welcome to participate at gpe and gpe-conf.
 	Dont release the widgets childs of the Widget you return in Build_Objects, they are freed by the core
 
 If you do not provide these functions, the button associated is just hidden.
+
+For an example look at the "sound" subdirectory, the sound applet reflects
+the latest applet design. 
 
 * Declaring the Applet
   

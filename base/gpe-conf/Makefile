@@ -28,6 +28,7 @@ PACKAGE_CPPFLAGS += -DMACH_SIMPAD
 PACKAGE_CFLAGS += -DMACH_SIMPAD
 endif
 
+
 EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
 	gpe-conf-cardinfo.desktop.in \
@@ -92,6 +93,7 @@ MEMBERS += tools/interface
 MEMBERS += tasks
 MEMBERS += users/passwd
 MEMBERS += sound/sound
+MEMBERS += sound/soundctrl
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage
@@ -191,6 +193,8 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 pixmaps/ipaq.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/ipaq.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
+	$(INSTALL) -d $(DESTDIR)$(PREFIX)/share/gpe-conf
+	$(INSTALL) -m 644 data/activate.wav $(DESTDIR)$(PREFIX)/share/gpe-conf/activate.wav
 
 clean:
 	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop *.d

@@ -181,12 +181,12 @@ update_status ()
 					       (float) meminfo.used /
 					       (float) meminfo.total);
     /* TRANSLATORS: MB == Mega Bytes*/
-		sprintf (cnew2, "%s : <i>%4.1f</i> %s", _("Free memory"),
+		sprintf (cnew2, "%s: <i>%4.1f</i> %s", _("Free memory"),
 			 ((float) meminfo.total -
 			  (float) meminfo.used) / 1024.0, _("MB"));
 		gtk_label_set_markup (GTK_LABEL (meminfo.label3), cnew2);
 
-		fstr = g_strdup_printf ("%s %s %4.1f %s %s",
+		fstr = g_strdup_printf ("%s%s %4.1f %s %s",
 					"<span foreground=\"black\">",
 					_("Total:"),
 					(float) meminfo.total / 1024.0,

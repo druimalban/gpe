@@ -123,7 +123,9 @@ struct Applet applets[]=
 		"Keyboard" ,"keyboard", "External Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-keyboard.png"},
 #endif		
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
-		"Task nameserver" ,"task_nameserver","Task for changing nameserver", NULL}
+		"Task nameserver" ,"task_nameserver","Task for changing nameserver", PREFIX "/share/pixmaps/gpe-config-admin.png"},
+    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
+		"Task sound" ,"task_sound","Command line task saving/restoring sound settings.", PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
   
 struct gpe_icon my_icons[] = {
@@ -140,6 +142,7 @@ struct gpe_icon my_icons[] = {
   { "icon", NULL },
   { NULL, NULL }
 };
+
 
 #define count_icons 11
 
@@ -315,6 +318,15 @@ void main_one(int argc, char **argv,int applet)
 	  {
 		  user_only_setup = TRUE;
 	  }
+	  if (!strcmp(argv[1],"task_sound"))
+	  {
+		  handled = TRUE;
+		  if (argc == 3)
+			  task_sound(argv[2]);
+		  else
+			  fprintf(stderr,_("'task_sound' needs (s)ave/(r)estore as argument.\n"));
+		  exit(0);
+	  }
   }
   
   /* If no task? - start applet */
@@ -330,7 +342,7 @@ void main_one(int argc, char **argv,int applet)
 	
 	  make_container();
 	
-	  gpe_set_window_icon(self.w,"icon");
+	  gpe_set_window_icon(self.w, "icon");
 	  gtk_widget_show_all(self.w);
 	 
 	  gtk_widget_show(self.w);
@@ -413,7 +425,10 @@ int main(int argc, char **argv)
 	  for( i = 0 ; i < applets_nb ; i++)
 	    {
           if (strcmp(argv[1], applets[i].name) == 0)
-          main_one(argc,argv,i);
+		  {
+          	main_one(argc, argv, i);
+			break;
+		  }
 	    }
 	  if (i == applets_nb)
 	    {
