@@ -34,16 +34,19 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
+#include <bluetooth/sdp.h>
+#include <bluetooth/sdp_lib.h>
 
 #define _(x) gettext(x)
 
 #define HCIATTACH "/etc/bluetooth/hciattach"
 
 struct gpe_icon my_icons[] = {
-  { "bt-on" },
-  { "bt-off" },
-  { "cellphone" },
-  { "network" },
+  { "bluetooth/bt-on" },
+  { "bluetooth/bt-off" },
+  { "bluetooth/cellphone" },
+  { "bluetooth/network" },
+  { "bt-logo" ),
   { NULL }
 };
 
@@ -52,6 +55,7 @@ struct bt_device
   gchar *name;
   guint class;
   bdaddr_t bdaddr;
+  GdkPixbuf *pixbuf;
 };
 
 static GtkWidget *icon;
@@ -119,6 +123,21 @@ run_scan (void)
       bd->name = g_strdup (name);
       memcpy (&bd->bdaddr, &bdaddr, sizeof (bdaddr));
       bd->class = ((info+i)->dev_class[2] << 16) | ((info+i)->dev_class[1] << 8) | (info+i)->dev_class[0];
+
+      switch (bd->class & 0x1f00)
+	{
+	case 0x200:
+	  bd->pixbuf = gpe_find_icon ("cellphone");
+	  break;
+	case 0x300:
+	  bd->pixbuf = gpe_find_icon ("network");
+	  break;
+	default:
+	  bd->pixbuf = gpe_find_icon ("bt-logo");
+	  break;
+	}
+      gdk_pixbuf_ref (bd->pixbuf);
+
       devices = g_slist_append (devices, bd);
     }
   
@@ -218,63 +237,73 @@ browse_device (bdaddr_t *bdaddr)
   uint32_t range = 0x0000ffff;
   uint16_t count = 0;
   int status = -1, i;
-  sdp_access_proto_t *access_proto = NULL;
   uuid_t group;
-  char str[20];
 
   sdp_create_uuid16 (&group, PUBLIC_BROWSE_GROUP);
 
-  attrid = g_slist_append(NULL, &range);
-  search = g_slist_append(NULL, &group);
-  status = sdp_service_search_attr_req(bdaddr, search, SDP_ATTR_REQ_RANGE,
-				       attrid, 65535, &pSeq, &count);
+  printf ("Searching %s\n", batostr (bdaddr));
+
+  attrid = g_slist_append (NULL, &range);
+  search = g_slist_append (NULL, &group);
+  status = sdp_service_search_attr_req (bdaddr, search, SDP_ATTR_REQ_RANGE,
+					attrid, 65535, &pSeq, &count);
 
   if (status) 
     {
-      gpe_error_box (_("Service search failed"));
+      gpe_error_box_fmt (_("Service search failed (status %x)"), status);
       return FALSE;
     }
 
-  for (i = 0; i < (int) g_slist_length(pSeq); i++) {
-    uint32_t svcrec;
-    svcrec = *(uint32_t *) g_slist_nth_data(pSeq, i);
-    
-    sdp_svcrec_print(bdaddr, svcrec);
-    
-    printf("Service RecHandle: 0x%x\n", svcrec);
-    
-    if (sdp_get_svclass_id_list(bdaddr, svcrec, &pGSList) == 0) {
-      printf("Service Class ID List:\n");
-      g_slist_foreach(pGSList, print_service_class, NULL);
-    }
-    
-    if (sdp_get_access_proto(bdaddr, svcrec, &access_proto) == 0) {
-      printf("Protocol Descriptor List:\n");
-      g_slist_foreach(access_proto->seq, 
-		      print_access_proto, NULL);
-    }
-    
-    if (sdp_get_lang_attr(bdaddr, svcrec, &pGSList) == 0) {
-      printf("Language Base Atrr List:\n");
-      g_slist_foreach(pGSList, print_lang_attr, NULL);
-    }
-    
-    if (sdp_get_profile_desc(bdaddr, svcrec, &pGSList) == 0) {
-      printf("Profile Descriptor List:\n");
-      g_slist_foreach(pGSList, print_profile_desc, NULL);
-    }
-    
-    printf("\n");
-    
-    if (sdp_is_group(bdaddr, svcrec)) {
-      uuid_t grp;
-      sdp_get_group_id(bdaddr, svcrec, &grp);
-      if (grp.value.uuid16 != group.value.uuid16)
-	do_browse(bdaddr, &grp);
-    }
-  }
+  for (i = 0; i < (int) g_slist_length(pSeq); i++) 
+    {
+      uint32_t svcrec;
+      svcrec = *(uint32_t *) g_slist_nth_data(pSeq, i);
 
+      /* ... */
+
+    }
+  
   return status;
+}
+
+static void
+device_clicked (GtkWidget *w, gpointer data)
+{
+  struct bt_device *bd = (struct bt_device *)data;
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
+  GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
+  GtkWidget *labelname = gtk_label_new (bd->name);
+  GtkWidget *labeladdr = gtk_label_new (batostr (&bd->bdaddr));
+  GtkWidget *image = gtk_image_new_from_pixbuf (bd->pixbuf);
+  GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
+
+  gtk_widget_show (vbox1);
+  gtk_widget_show (hbox1);
+  gtk_widget_show (vbox2);
+  gtk_widget_show (labelname);
+  gtk_widget_show (labeladdr);
+  gtk_widget_show (image);
+
+  gtk_misc_set_alignment (GTK_MISC (labelname), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (labeladdr), 0.0, 0.5);
+
+  gtk_box_pack_start (GTK_BOX (vbox1), labelname, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), labeladdr, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (hbox1), vbox1, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox1), image, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (vbox2), hbox1, FALSE, FALSE, 0);
+
+  gtk_container_add (GTK_CONTAINER (window), vbox2);
+
+  gtk_widget_realize (window);
+  gdk_window_set_transient_for (window->window, devices_window->window);
+  
+  gtk_widget_show (window);
+
+  browse_device (&bd->bdaddr);
 }
 
 static void
@@ -291,32 +320,25 @@ show_devices (void)
       iconlist = gpe_iconlist_new ();
       gtk_widget_show (iconlist);
       gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
+      gpe_iconlist_set_embolden (GPE_ICONLIST (iconlist), FALSE);
 
-      gtk_signal_connect (devices_window, "destroy", GTK_SIGNAL_FUNC (devices_window_destroyed), NULL);
+      g_signal_connect (G_OBJECT (iconlist), "clicked", 
+			G_CALLBACK (device_clicked), NULL);
+      
+      g_signal_connect (G_OBJECT (devices_window), "destroy", 
+			G_CALLBACK (devices_window_destroyed), NULL);
     }
 
   gtk_widget_show (devices_window);
 
   run_scan ();
 
+  gpe_iconlist_clear (GPE_ICONLIST (iconlist));
+
   for (iter = devices; iter; iter = iter->next)
     {
       struct bt_device *bd = iter->data;
-      gchar *icon = NULL;
-      switch (bd->class & 0x1f00)
-	{
-	case 0x200:
-	  icon = PREFIX "/share/gpe/pixmaps/default/cellphone.png";
-	  break;
-	case 0x300:
-	  icon = PREFIX "/share/gpe/pixmaps/default/network.png";
-	  break;
-	default:
-	  printf("Don't know what to do about class %x\n", bd->class & 0x1f00);
-	  break;
-	}
-      fprintf (stderr, "icon is %s\n", icon);
-      gpe_iconlist_add_item (iconlist, bd->name, icon, NULL);
+      gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
     }
 }
 
@@ -386,6 +408,8 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
+  sdp_init ();
+
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
@@ -397,9 +421,9 @@ main (int argc, char *argv[])
   menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
   menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
 
-  gtk_signal_connect (GTK_OBJECT (menu_radio_on), "activate", GTK_SIGNAL_FUNC (radio_on), NULL);
-  gtk_signal_connect (GTK_OBJECT (menu_radio_off), "activate", GTK_SIGNAL_FUNC (radio_off), NULL);
-  gtk_signal_connect (GTK_OBJECT (menu_devices), "activate", GTK_SIGNAL_FUNC (show_devices), NULL);
+  g_signal_connect (G_OBJECT (menu_radio_on), "activate", G_CALLBACK (radio_on), NULL);
+  g_signal_connect (G_OBJECT (menu_radio_off), "activate", G_CALLBACK (radio_off), NULL);
+  g_signal_connect (G_OBJECT (menu_devices), "activate", G_CALLBACK (show_devices), NULL);
 
   gtk_widget_set_sensitive (menu_devices, FALSE);
 
@@ -413,14 +437,13 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
-  icon = gtk_image_new ();
+  icon = gtk_image_new_from_pixbuf (gpe_find_icon ("bt-off"));
   gtk_widget_show (icon);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
   gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("bt-off"), NULL, &bitmap, 255);
   gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
   gdk_bitmap_unref (bitmap);
 
-  gtk_signal_connect (GTK_OBJECT (window), "button-press-event", GTK_SIGNAL_FUNC (clicked), NULL);
+  g_signal_connect (G_OBJECT (window), "button-press-event", G_CALLBACK (clicked), NULL);
   gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
 
   gtk_container_add (GTK_CONTAINER (window), icon);
