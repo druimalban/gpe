@@ -46,7 +46,9 @@ int battery_level = 0;
 int apmvalue=0, no_sleep=0;
 time_t oldpidtime=0;
 
+#ifdef DEBUG
 FILE *dgfp;
+#endif
 		
 Display *dpy;
 Window root;		    /* The root window (which holds MIT_SCREEN_SAVER
@@ -645,7 +647,9 @@ void main_loop (void) {
 				if (sscanf(iline,"%d: %ld",&i, &v) == 2 && 
 			   	 irqs[i] && irq_count[i] != v) {
 					activity=1;
+#ifdef DEBUG
 					if (debug) fprintf(dgfp,"IRQ activity %d\n", i);
+#endif
 					irq_count[i] = v;
 				}
 			}
@@ -726,8 +730,10 @@ void main_loop (void) {
 			}
 			
 		}
-		
+
+#ifdef DEBUG		
 		if (debug) fflush(dgfp);
+#endif
 		sleep(sleep_time);
 		
 		newTime=time(NULL);
@@ -760,14 +766,18 @@ void main_loop (void) {
 int main (int argc, char **argv) {
 	int try=0, tmpX=0, checkinit=0;
 	
-	dgfp=fopen("/tmp/ipaq-sleep.log", "a");
-	if (! dgfp) {
-		fprintf(stderr, "problem opening ipaq-sleep.log\n");
-		exit(1);
-	}
-	
 	signal (SIGCHLD, SIG_IGN);
 	parse_command_line(argc, argv);
+
+#ifdef DEBUG
+	if (debug) {
+		dgfp=fopen("/tmp/ipaq-sleep.log", "a");
+		if (! dgfp) {
+			fprintf(stderr, "problem opening ipaq-sleep.log\n");
+			exit(1);
+		}
+	}
+#endif
 	
 	if (daemonize) {
 		if (daemon(1,1) == -1) {
