@@ -143,7 +143,6 @@ draw_expose_event (GtkWidget *widget,
 static void
 day_view_update(void)
 {
-  GSList *iter;
   unsigned int i; 
   time_t basetime;
   struct tm *tm = localtime (&viewtime);
@@ -160,6 +159,19 @@ day_view_update(void)
       day_events[i] = event_db_list_for_period (basetime + (i * 60 * 60),
 						basetime + 
 						((i + 1) * 60 * 60) - 1);
+    }
+
+  /* flush out duplicates */
+  for (i = 0; i < 23; i++)
+    {
+      GSList *iter;
+      
+      for (iter = day_events[i]; iter; iter = g_slist_next (iter))
+	{
+	  guint j;
+	  for (j = i + 1; j < 24; j++)
+	    day_events[j] = g_slist_remove (day_events[j], iter->data);
+	}
     }
 
   gtk_widget_draw (g_draw, NULL);
