@@ -22,7 +22,8 @@ install-data-local:
 	fi
 	$(mkinstalldirs) $(DESTDIR)/etc/gpe/
 	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/gpe/
-	$(INSTALL_DATA) gpe-ownerinfo-bg.png $(DESTDIR)$(PREFIX)/share/gpe/gpe-ownerinfo-bg.png
+#	$(INSTALL_DATA) gpe-ownerinfo-bg.png $(DESTDIR)$(PREFIX)/share/gpe/gpe-ownerinfo-bg.png
+	strip $(DESTDIR)$(PREFIX)/bin/gpe-ownerinfo
 
 dist-hook:
 	if test -d pixmaps; then \

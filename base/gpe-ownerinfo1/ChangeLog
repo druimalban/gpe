@@ -1,5 +1,17 @@
 2002-08-21  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Version 0.03 released.
+
+	* src/interface.c (Module): Generated anew.
+
+	* familiar/control (Module): Version is now 0.03.
+
+	* gpe-ownerinfo.glade (Module): Move Phone before Address.
+
+	* Makefile.am (install-data-local): Don't install
+	gpe-ownerinfo-bg.png for now, it's too big.
+	(install-data-local): Strip the binary.
+
 	* src/Makefile.am (gpe_ownerinfo_LDADD): We don't need to link
 	against sqlite.
 	(gpe_ownerinfo_LDFLAGS): New variable. Needed for compiling on the
