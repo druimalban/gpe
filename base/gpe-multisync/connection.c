@@ -20,7 +20,7 @@
 #include <gpe/tag-db.h>
 
 nsqlc *
-gpe_connect_one (gpe_conn *conn, gchar *db, char **err)
+gpe_connect_one (gpe_conn *conn, const gchar *db, char **err)
 {
   gchar *path;
   nsqlc *r;
@@ -36,35 +36,12 @@ gpe_connect_one (gpe_conn *conn, gchar *db, char **err)
   return r;
 }
 
-gboolean
-gpe_connect (gpe_conn *conn)
-{
-  char *err = NULL;
-
-  conn->calendar = gpe_connect_one (conn, "calendar", &err);
-  if (!conn->calendar)
-    fprintf (stderr, "Error: %s\n", err);
-  conn->todo = gpe_connect_one (conn, "todo", &err);
-  if (!conn->todo)
-    fprintf (stderr, "Error: %s\n", err);
-  conn->contacts = gpe_connect_one (conn, "contacts", &err);
-  if (!conn->contacts)
-    fprintf (stderr, "Error: %s\n", err);
-
-  return TRUE;
-}
-
 void
-gpe_disconnect (gpe_conn *conn)
+gpe_disconnect (struct db *db)
 {
-  if (conn->calendar)
-    nsqlc_close (conn->calendar);
-
-  if (conn->contacts)
-    nsqlc_close (conn->contacts);
-
-  if (conn->todo)
-    nsqlc_close (conn->todo);
+  if (db->db)
+    nsqlc_close (db->db);
+  db->db = NULL;
 }
 
 static int

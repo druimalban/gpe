@@ -20,11 +20,11 @@
 #include <gpe/tag-db.h>
 
 GList *
-sync_contacts (GList *data, gpe_conn *conn, int newdb)
+contacts_get_changes (struct db *db, GList *data, int newdb)
 {
   GSList *list, *i;
   
-  list = fetch_uid_list (conn->contacts, "select distinct urn from contacts_urn");
+  list = fetch_uid_list (db->db, "select distinct urn from contacts_urn");
   
   for (i = list; i; i = i->next)
     {
@@ -34,7 +34,7 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
       changed_object *obj;
       int urn = (int)i->data;
       
-      tags = fetch_tag_data (conn->contacts, "select tag,value from contacts where urn=%d", urn);
+      tags = fetch_tag_data (db->db, "select tag,value from contacts where urn=%d", urn);
       vcard = vcard_from_tags (tags);
       gpe_tag_list_free (tags);
       string = mimedir_vcard_write_to_string (vcard);
@@ -55,14 +55,14 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
 }
 
 gboolean
-push_contact (gpe_conn *conn, const char *obj, const char *uid, 
-	      char *returnuid, int *returnuidlen, GError **error)
+contacts_push_object (struct db *db, const char *obj, const char *uid, 
+		      char *returnuid, int *returnuidlen, GError **err)
 {
   GSList *tags;
   MIMEDirVCard *vcard;
   int id;
 
-  vcard = mimedir_vcard_new_from_string (obj, error);
+  vcard = mimedir_vcard_new_from_string (obj, err);
   if (vcard == NULL)
     return FALSE;
 
@@ -73,13 +73,29 @@ push_contact (gpe_conn *conn, const char *obj, const char *uid,
   else
     id = 0;
     
-  store_tag_data (conn->contacts, "contacts", id, tags, TRUE);
+  store_tag_data (db->db, "contacts", id, tags, TRUE);
 
   return TRUE;
 }
 
 gboolean
-delete_contact (gpe_conn *conn, const char *uid, gboolean soft)
+contacts_delete_object (struct db *db, const char *uid, gboolean soft)
 {
   return FALSE;
+}
+
+struct db contacts_db = 
+{
+  .type = SYNC_OBJECT_TYPE_PHONEBOOK,
+  .name = "contacts",
+
+  .get_changes = contacts_get_changes,
+  .push_object = contacts_push_object,
+  .delete_object = contacts_delete_object,
+};
+
+void
+contacts_init (gpe_conn *conn)
+{
+  conn->db_list = g_slist_append (conn->db_list, &contacts_db);
 }

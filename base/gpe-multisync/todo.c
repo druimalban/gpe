@@ -22,11 +22,11 @@
 #include <mimedir/mimedir-vcal.h>
 
 GList *
-sync_todo (GList *data, gpe_conn *conn, int newdb)
+todo_get_changes (struct db *db, GList *data, int newdb)
 {
   GSList *list, *i;
   
-  list = fetch_uid_list (conn->todo, "select distinct uid from todo_urn");
+  list = fetch_uid_list (db->db, "select distinct uid from todo_urn");
   
   for (i = list; i; i = i->next)
     {
@@ -37,7 +37,7 @@ sync_todo (GList *data, gpe_conn *conn, int newdb)
       changed_object *obj;
       int urn = (int)i->data;
       
-      tags = fetch_tag_data (conn->todo, "select tag,value from todo where uid=%d", urn);
+      tags = fetch_tag_data (db->db, "select tag,value from todo where uid=%d", urn);
       vtodo = vtodo_from_tags (tags);
       gpe_tag_list_free (tags);
       vcal = mimedir_vcal_new ();
@@ -61,14 +61,30 @@ sync_todo (GList *data, gpe_conn *conn, int newdb)
 }
 
 gboolean
-push_todo (gpe_conn *conn, const char *obj, const char *uid, 
-	   char *returnuid, int *returnuidlen, GError **err)
+todo_push_object (struct db *db, const char *obj, const char *uid, 
+		  char *returnuid, int *returnuidlen, GError **err)
 {
   return FALSE;
 }
 
 gboolean
-delete_todo (gpe_conn *conn, const char *uid, gboolean soft)
+todo_delete_object (struct db *db, const char *uid, gboolean soft)
 {
   return FALSE;
+}
+
+struct db todo_db = 
+{
+  .type = SYNC_OBJECT_TYPE_TODO,
+  .name = "todo",
+
+  .get_changes = todo_get_changes,
+  .push_object = todo_push_object,
+  .delete_object = todo_delete_object,
+};
+
+void
+todo_init (gpe_conn *conn)
+{
+  conn->db_list = g_slist_append (conn->db_list, &todo_db);
 }

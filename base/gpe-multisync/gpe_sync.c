@@ -80,13 +80,19 @@ gpe_conn*
 sync_connect (sync_pair* handle, connection_type type,
 	      sync_object_type object_types) 
 {
+  GSList *i;
   gpe_conn *conn = NULL;
   char* errmsg = NULL;
+  gboolean failed = FALSE;
   
-  conn = g_malloc0(sizeof(gpe_conn));
-  g_assert(conn);
+  conn = g_malloc0 (sizeof (gpe_conn));
+  g_assert (conn);
   conn->sync_pair = handle;
   conn->commondata.object_types = object_types;
+
+  calendar_init (conn);
+  todo_init (conn);
+  contacts_init (conn);
   
   GPE_DEBUG(conn, "sync_connect");  
   
@@ -98,15 +104,26 @@ sync_connect (sync_pair* handle, connection_type type,
     sync_set_requestfailederror (errmsg, conn->sync_pair);
     return conn;
   }  
-  
-  /* connect to the device and pull the required data back */
-  if (! gpe_connect (conn))
+
+  for (i = conn->db_list; i; i = i->next)
     {
-      errmsg = g_strdup_printf (_("Failed to connect to %s"), conn->device_addr);
-      sync_set_requestfailederror (errmsg, conn->sync_pair);
+      struct db *db = i->data;
+  
+      db->db = gpe_connect_one (conn, db->name, &errmsg);
+
+      if (!db->db)
+	{
+	  failed = TRUE;
+	  break;
+	}
+    }
+
+  if (failed)
+    {
+      sync_set_requestfailederror (g_strdup (errmsg), conn->sync_pair);
       return conn;
     }
-  
+
   sync_set_requestdone (conn->sync_pair);
   return conn;
 }
@@ -120,11 +137,17 @@ sync_connect (sync_pair* handle, connection_type type,
 void 
 sync_disconnect (gpe_conn *conn) 
 {
+  GSList *i;
   sync_pair *sync_pair = conn->sync_pair;
       
   GPE_DEBUG(conn, "sync_disconnect");    
   
-  gpe_disconnect (conn);
+  for (i = conn->db_list; i; i = i->next)
+    {
+      struct db *db = i->data;
+
+      gpe_disconnect (db);
+    }
 
   /* cleanup memory from the connection */
   if (conn->device_addr)
@@ -167,22 +190,22 @@ sync_disconnect (gpe_conn *conn)
 void 
 get_changes (gpe_conn *conn, sync_object_type newdbs) 
 {
+  GSList *i;
   GList *changes = NULL;
   sync_object_type retnewdbs = 0;
   change_info *chinfo;
 
   GPE_DEBUG(conn, "get_changes"); 
 
-  nsqlc_get_time (conn->calendar, &conn->current_timestamp, NULL);
-  
-  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_CALENDAR)
-    changes = sync_calendar (changes, conn, newdbs & SYNC_OBJECT_TYPE_CALENDAR);
-  
-  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_PHONEBOOK) 
-    changes = sync_contacts (changes, conn, newdbs & SYNC_OBJECT_TYPE_PHONEBOOK);
-  
-  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_TODO)
-    changes = sync_todo (changes, conn, newdbs & SYNC_OBJECT_TYPE_TODO);
+  for (i = conn->db_list; i; i = i->next)
+    {
+      struct db *db = i->data;
+
+      nsqlc_get_time (db->db, &db->current_timestamp, NULL);
+
+      if (conn->commondata.object_types & db->type)
+	changes = db->get_changes (db, changes, newdbs & db->type);
+    }
   
   /* Allocate the change_info struct */
   chinfo = g_malloc0 (sizeof (change_info));
@@ -217,26 +240,17 @@ syncobj_modify (gpe_conn *conn, char* object, char *uid,
 		sync_object_type objtype, char *returnuid, int *returnuidlen) 
 {
   GError *err = NULL;
+  GSList *i;
 
   GPE_DEBUG (conn, "syncobj_modify");  
   
-  /* 
-   * calendar
-   */
-  if (objtype & (SYNC_OBJECT_TYPE_CALENDAR))
-    push_calendar (conn, object, uid, returnuid, returnuidlen, &err);
-  
-  /* 
-   * phonebook
-   */
-  else if (objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
-    push_contact (conn, object, uid, returnuid, returnuidlen, &err);
-  
-  /* 
-   * todo list
-   */
-  else if (objtype & (SYNC_OBJECT_TYPE_TODO))
-    push_todo (conn, object, uid, returnuid, returnuidlen, &err);
+  for (i = conn->db_list; i; i = i->next)
+    {
+      struct db *db = i->data;
+
+      if (objtype & db->type)
+	db->push_object (db, object, uid, returnuid, returnuidlen, &err);
+    }
   
   sync_set_requestdone (conn->sync_pair);
 }
@@ -252,6 +266,7 @@ syncobj_delete (gpe_conn *conn, char *uid,
 		sync_object_type objtype, int softdelete) 
 {
   gboolean soft = softdelete ? TRUE : FALSE;
+  GSList *i;
 
   GPE_DEBUG (conn, "syncobj_delete");
    
@@ -262,23 +277,13 @@ syncobj_delete (gpe_conn *conn, char *uid,
     return;
   }
   
-  /* 
-   * calendar
-   */
-  if (objtype & (SYNC_OBJECT_TYPE_CALENDAR))
-    delete_calendar (conn, uid, soft);
+  for (i = conn->db_list; i; i = i->next)
+    {
+      struct db *db = i->data;
 
-  /* 
-   * phonebook
-   */
-  else if (objtype & (SYNC_OBJECT_TYPE_PHONEBOOK))
-    delete_contact (conn, uid, soft);
-
-  /* 
-   * todo list
-   */
-  else if (objtype & (SYNC_OBJECT_TYPE_TODO))
-    delete_todo (conn, uid, soft);
+      if (objtype & db->type)
+	db->delete_object (db, uid, soft);
+    }
   
   sync_set_requestdone (conn->sync_pair);
 }

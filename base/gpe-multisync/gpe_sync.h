@@ -10,44 +10,46 @@
 #include "multisync.h"
 
 #include <nsqlc.h>
+#include <glib.h>
 
-/* opie connection definition */
-typedef struct {
+typedef struct 
+{
   client_connection commondata;
   sync_pair *sync_pair;
   char* device_addr;
   char* username;
 
+  GSList *db_list;
+} gpe_conn;
+
+struct db
+{
+  const gchar *name;
+  int type;
+
+  GList *(*get_changes)(struct db *db, GList *data, int newdb);
+  gboolean (*push_object)(struct db *db, const char *obj, const char *uid,
+			  char *returnuid, int *returnuidlen, GError **err);
+  gboolean (*delete_object)(struct db *db, const char *uid, gboolean soft);
+  
+  nsqlc *db;
   time_t last_timestamp;
   time_t current_timestamp;
-
-  nsqlc *calendar, *contacts, *todo;
-} gpe_conn;
+};
 
 #define GPE_DEBUG(conn, x) fprintf (stderr, "%s\n", (x))
 
-extern gboolean gpe_connect (gpe_conn *conn);
-extern void gpe_disconnect (gpe_conn *conn);
+extern nsqlc *gpe_connect_one (gpe_conn *conn, const gchar *db, char **errmsg);
+extern void gpe_disconnect (struct db *db);
 
 extern gboolean gpe_load_config (gpe_conn *conn);
 extern gboolean gpe_save_config (gpe_conn *conn);
-
-extern GList *sync_calendar (GList *data, gpe_conn *conn, int newdb);
-extern GList *sync_contacts (GList *data, gpe_conn *conn, int newdb);
-extern GList *sync_todo (GList *data, gpe_conn *conn, int newdb);
-
-extern gboolean push_calendar (gpe_conn *conn, const char *obj, const char *uid, 
-			       char *returnuid, int *returnuidlen, GError **err);
-extern gboolean push_contact (gpe_conn *conn, const char *obj, const char *uid, 
-			      char *returnuid, int *returnuidlen, GError **err);
-extern gboolean push_todo (gpe_conn *conn, const char *obj, const char *uid, 
-			   char *returnuid, int *returnuidlen, GError **err);
-
-extern gboolean delete_calendar (gpe_conn *conn, const char *uid, gboolean soft);
-extern gboolean delete_contact (gpe_conn *conn, const char *uid, gboolean soft);
-extern gboolean delete_todo (gpe_conn *conn, const char *uid, gboolean soft);
 
 extern GSList *fetch_uid_list (nsqlc *db, const gchar *query, ...);
 extern GSList *fetch_tag_data (nsqlc *db, const gchar *query_str, guint id);
 
 extern gboolean store_tag_data (nsqlc *db, const gchar *table, guint id, GSList *tags, gboolean delete);
+
+extern void calendar_init (gpe_conn *conn);
+extern void todo_init (gpe_conn *conn);
+extern void contacts_init (gpe_conn *conn);

@@ -22,15 +22,15 @@
 #include <mimedir/mimedir-vcal.h>
 
 GList *
-sync_calendar (GList *data, gpe_conn *conn, int newdb)
+calendar_get_changes (struct db *db, GList *data, int newdb)
 {
   GSList *list, *i;
   
   if (newdb)
-    list = fetch_uid_list (conn->calendar, "select distinct uid from calendar_urn");
+    list = fetch_uid_list (db->db, "select distinct uid from calendar_urn");
   else
-    list = fetch_uid_list (conn->calendar, "select uid from calendar where tag='modified' and value>%d",
-			   conn->last_timestamp);
+    list = fetch_uid_list (db->db, "select uid from calendar where tag='modified' and value>%d",
+			   db->last_timestamp);
 
   for (i = list; i; i = i->next)
     {
@@ -41,7 +41,7 @@ sync_calendar (GList *data, gpe_conn *conn, int newdb)
       changed_object *obj;
       int urn = (int)i->data;
       
-      tags = fetch_tag_data (conn->calendar, "select tag,value from calendar where uid=%d", urn);
+      tags = fetch_tag_data (db->db, "select tag,value from calendar where uid=%d", urn);
       vevent = vevent_from_tags (tags);
       gpe_tag_list_free (tags);
       vcal = mimedir_vcal_new ();
@@ -65,14 +65,30 @@ sync_calendar (GList *data, gpe_conn *conn, int newdb)
 }
 
 gboolean
-push_calendar (gpe_conn *conn, const char *obj, const char *uid, 
-	       char *returnuid, int *returnuidlen, GError **err)
+calendar_push_object (struct db *db, const char *obj, const char *uid, 
+		      char *returnuid, int *returnuidlen, GError **err)
 {
   return FALSE;
 }
 
 gboolean
-delete_calendar (gpe_conn *conn, const char *uid, gboolean soft)
+calendar_delete_object (struct db *db, const char *uid, gboolean soft)
 {
   return FALSE;
+}
+
+struct db calendar_db = 
+{
+  .type = SYNC_OBJECT_TYPE_CALENDAR,
+  .name = "calendar",
+
+  .get_changes = calendar_get_changes,
+  .push_object = calendar_push_object,
+  .delete_object = calendar_delete_object,
+};
+
+void
+calendar_init (gpe_conn *conn)
+{
+  conn->db_list = g_slist_append (conn->db_list, &calendar_db);
 }
