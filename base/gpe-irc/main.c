@@ -203,7 +203,7 @@ join_channel (IRCServer *server, gchar *channel_name)
 
   if (channel_name[0] == '#' || channel_name[0] == '&')
   {
-    irc_join (server, channel_name);
+    //irc_join (server, channel_name);
 
     channel = g_malloc (sizeof (*channel));
     channel->name = g_strdup (channel_name);
@@ -232,9 +232,9 @@ join_channel (IRCServer *server, gchar *channel_name)
 }
 
 void
-quit_channel (IRCServer *server, IRCChannel *channel)
+part_channel (IRCServer *server, IRCChannel *channel)
 {
-  irc_part (server, channel->name, "GPE IRC");
+  //irc_part (server, channel->name, "GPE IRC");
   gtk_widget_destroy (channel->button);
   g_hash_table_remove (server->channel, (gconstpointer) channel->name);
   g_free (channel);
@@ -243,9 +243,9 @@ quit_channel (IRCServer *server, IRCChannel *channel)
 }
 
 void
-quit_channel_from_hash (gpointer key, gpointer value, gpointer data)
+part_channel_from_hash (gpointer key, gpointer value, gpointer data)
 {
-  quit_channel ((IRCServer *) data, (IRCChannel *) value);
+  part_channel ((IRCServer *) data, (IRCChannel *) value);
 }
 
 void
@@ -260,7 +260,7 @@ disconnect_from_server (IRCServer *server)
   irc_quit (server, "GPE IRC");
   server->connected = FALSE;
   g_io_channel_shutdown (server->io_channel, FALSE, NULL);
-  g_hash_table_foreach (server->channel, quit_channel_from_hash, (gpointer) server);
+  g_hash_table_foreach (server->channel, part_channel_from_hash, (gpointer) server);
 
   servers = g_list_remove (servers, (gconstpointer) server);                                            
   if (servers != NULL)
@@ -285,10 +285,11 @@ close_button_clicked ()
     if (gtk_object_get_data (GTK_OBJECT (selected_button), "type") == IRC_SERVER)
       disconnect_from_server (selected_server);
     else
-      quit_channel (selected_server, selected_channel);
+      part_channel (selected_server, selected_channel);
   }
 }
 
+/*
 gboolean
 watch_disconnect_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 {
@@ -326,6 +327,7 @@ get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 
   return TRUE;
 }
+*/
 
 void
 new_connection (GtkWidget *parent, GtkWidget *parent_window)
@@ -338,6 +340,7 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
   server->text = g_string_new ("");
+  server->prefix = NULL;
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
 
   server_combo_entry = gtk_object_get_data (GTK_OBJECT (parent), "server_combo_entry");
@@ -376,10 +379,12 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   gtk_widget_destroy (parent_window);
 
   irc_server_connect (server);
+  /*
   g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, (gpointer) server);
   g_io_add_watch (server->io_channel, G_IO_HUP, watch_disconnect_from_server, (gpointer) server);
+  */
 
-  join_channel (server, "#gpe");
+  //join_channel (server, "#gpe");
 }
 
 void
@@ -490,8 +495,10 @@ entry_key_press (GtkWidget *widget, GdkEventKey *event, gpointer data)
 
     if (event->keyval == GDK_Return && strlen (entry_text) > 0)
     {
+      GString *gstr = g_string_new(selected_server->user_info->nick);
+
       irc_privmsg (selected_server, selected_channel->name, entry_text);
-      display_text = g_strdup_printf ("\n%s: %s", selected_server->user_info->nick, entry_text);
+      display_text = g_strdup_printf ("%s: %s\n", selected_server->user_info->nick, entry_text);
       selected_server->text = g_string_append (selected_server->text, display_text);
       update_text_view (g_string_new (display_text));
       gtk_entry_set_text (GTK_ENTRY (main_entry), "");
