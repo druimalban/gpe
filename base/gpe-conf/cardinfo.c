@@ -100,6 +100,7 @@ static event_tag_t event_tag[] = {
 static void do_menu (GtkWidget * button, int op);
 static void do_driver_dialog (GtkWidget * parent_button);
 
+/*TRANSLATORS: Menu description, '_' are accelerator keys */
 static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_Card"),         NULL,         NULL, 0, "<Branch>" },
   { N_("/Card/_Insert"), "", do_menu, MI_CARD_INSERT, "<Item>",(void *) 6},
