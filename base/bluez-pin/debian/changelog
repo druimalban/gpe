@@ -1,3 +1,9 @@
+bluez-pin (0.22-1) unstable; urgency=low
+
+  * Update to work with D-BUS 0.20.  (Closes: #230254)
+
+ -- Philip Blundell <pb@handhelds.org>  Wed,  4 Feb 2004 20:13:11 +0000
+
 bluez-pin (0.21-3) unstable; urgency=low
 
   * Install dbus config file to correct location, courtesy Dagfinn 
