@@ -122,7 +122,7 @@ DEP_gpe-collateral-gtk2 = \
 #------------------------------------------
 
 #------------------------------------------ PIM applications
-VER_gpe-task-pim = 0.4
+VER_gpe-task-pim = 0.5
 DEP_gpe-task-pim = \
     gpe-task-base, \
     gpe-calendar2, \
@@ -137,7 +137,8 @@ DEP_gpe-task-pim = \
     \
     figment, \
     gpe-timesheet2, \
-    greader
+    greader, \
+    gpe-watch
 #FIXME: 2 calculators!
 
 #------------------------------------------ System utilities
