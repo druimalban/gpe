@@ -16,6 +16,7 @@
 
 #include "stream.h"
 #include "decoder_i.h"
+#include "audio.h"
 
 #define OGGBUFSIZ	4096
 
@@ -28,7 +29,7 @@ struct vorbis_context
   struct decoder_engine *engine;
 
   struct stream *s;
-  int fd;
+  audio_t audio;
 
   OggVorbis_File vf;
   vorbis_comment *vc;
@@ -92,7 +93,7 @@ vorbis_play_loop (void *vv)
 	} 
       else 
 	{
-	  write (v->fd, buffer, ret);
+	  audio_write (v->audio, buffer, ret);
 
 	  /* did we enter a new logical bitstream? */
 	  if (old_section != v->current_section && old_section != -1) 
@@ -140,13 +141,13 @@ static ov_callbacks vorbisfile_callbacks =
   };
 
 static void *
-vorbis_open (struct stream *s, int fd)
+vorbis_open (struct stream *s, audio_t audio)
 {
   struct vorbis_context *v = g_malloc (sizeof (struct vorbis_context));
   int ret;
 
   v->engine = &the_decoder;
-  v->fd = fd;
+  v->audio = audio;
   v->s = s;
   v->eos = FALSE;
   

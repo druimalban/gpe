@@ -168,6 +168,14 @@ prev_clicked (GtkWidget *w, player_t p)
   update_track_info (ps.item);
 }
 
+static void
+set_volume (GtkObject *o, player_t p)
+{
+  GtkAdjustment *a = GTK_ADJUSTMENT (o);
+  int volume = 256 - (a->value * 256);
+  player_set_volume (p, volume);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -336,6 +344,8 @@ main (int argc, char *argv[])
   vol_slider = gtk_vscale_new (GTK_ADJUSTMENT (vol_adjust));
   gtk_scale_set_draw_value (GTK_SCALE (vol_slider), FALSE);
   gtk_widget_set_style (vol_slider, style);
+  gtk_signal_connect (GTK_OBJECT (vol_adjust), "value-changed", 
+		      GTK_SIGNAL_FUNC (set_volume), player);
 
   slider_adjustment = (GtkAdjustment *) gtk_adjustment_new (0.0, 0.0, 0.0, 
 						     0.0, 0.0, 0.0);
@@ -344,7 +354,7 @@ main (int argc, char *argv[])
   gtk_scale_set_draw_value(GTK_SCALE(slider), FALSE);
   gtk_widget_set_style (slider, style);
   GTK_WIDGET_UNSET_FLAGS (slider, GTK_CAN_FOCUS);
-  gtk_range_set_update_policy(GTK_RANGE(slider), GTK_UPDATE_CONTINUOUS);
+  gtk_range_set_update_policy (GTK_RANGE (slider), GTK_UPDATE_CONTINUOUS);
 
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 

@@ -10,10 +10,12 @@
 #ifndef AUDIO_H
 #define AUDIO_H
 
+#include <glib.h>
+
 typedef struct audio *audio_t;
 
 extern audio_t audio_open (void);
-extern int audio_write (audio_t, void *, size_t);
+extern gboolean audio_write (audio_t, void *, size_t);
 extern void audio_close (audio_t);
 extern void audio_set_rate (audio_t, guint);
 

@@ -16,6 +16,7 @@
 
 #include "stream.h"
 #include "decoder_i.h"
+#include "audio.h"
 
 #define MADBUFSIZ	8192
 
@@ -24,7 +25,7 @@ struct mad_context
   struct decoder_engine *engine;
 
   struct stream *s;
-  int fd;
+  audio_t audio;
 
   pthread_t thread;
 
@@ -146,13 +147,13 @@ enum mad_flow output(void *data,
 
     if (op == OBUFSIZ)
       {
-	write (c->fd, obuf, op * 2);
+	audio_write (c->audio, obuf, op * 2);
 	op = 0;
       }
   }
 
   if (op)
-    write (c->fd, obuf, op * 2);
+    audio_write (c->audio, obuf, op * 2);
 
   return MAD_FLOW_CONTINUE;
 }
@@ -197,13 +198,13 @@ mad_play_loop (void *d)
 }
 
 static void *
-mad_open (struct stream *s, int fd)
+mad_open (struct stream *s, audio_t audio)
 {
   struct mad_context *c = g_malloc (sizeof (struct mad_context));
   int ret;
 
   c->engine = &the_decoder;
-  c->fd = fd;
+  c->audio = audio;
   c->s = s;
   c->finished = FALSE;
   c->bytes_read = 0;

@@ -9,7 +9,7 @@ CODECS = d-vorbis.so d-mad.so
 BACKEND = libgpenmf.so.0
 BACKEND_SO = libgpenmf.so
 
-MEMBERS = decoder stream file_stream playlist_db playlist_xml player
+MEMBERS = decoder stream file_stream playlist_db playlist_xml player audio
 MAD_MEMBERS = mad playlist_id3
 OGG_MEMBERS = vorbis playlist_ogg
 

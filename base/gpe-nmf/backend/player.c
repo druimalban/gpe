@@ -22,6 +22,7 @@ struct player
 
   decoder_t decoder;
   stream_t stream;
+  audio_t audio;
 };
 
 player_t
@@ -29,7 +30,7 @@ player_new (void)
 {
   player_t p = g_malloc (sizeof (struct player));
   memset (p, 0, sizeof (struct player));
-  output = esd_play_stream_fallback (ESD_BITS16 | ESD_STEREO | ESD_STREAM | ESD_PLAY, 44100, NULL, NULL);
+  p->audio = audio_open ();
   return p;
 }
 
@@ -80,7 +81,7 @@ player_play (player_t p)
 	  p->cur = NULL;
 	  return;
 	}
-      p->decoder = decoder_open (p->cur->data.track.url, p->stream, output);
+      p->decoder = decoder_open (p->cur->data.track.url, p->stream, p->audio);
       if (p->decoder == NULL)
 	{
 	  stream_close (p->stream);
@@ -126,4 +127,10 @@ player_prev_track (player_t p)
       p->idx--;
       player_play (p);
     }
+}
+
+void 
+player_set_volume (player_t p, int v)
+{
+  audio_set_volume (p->audio, v);
 }
