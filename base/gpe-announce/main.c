@@ -31,8 +31,8 @@
 #define _(_x) gettext (_x)
 
 struct gpe_icon my_icons[] = {
-  { "bell", "bell" },
-  {NULL, NULL}
+  { "bell" },
+  { NULL, }
 };
 
 int times=0;
@@ -62,8 +62,6 @@ main (int argc, char *argv[])
   }
   else
     announcetext=argv[1];
-  
-  gtk_init (&argc, &argv);
   
   window = create_window (announcetext);
   gtk_widget_show (window);
