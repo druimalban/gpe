@@ -1,19 +1,23 @@
 #!/bin/sh
+
 module_id() {
-    grep "Module ID" /proc/hal/assets | sed "s/.*://"
-    }
+    ## used to read from assets, but sometimes assets is corrupted
+    # grep "Module ID" /proc/hal/assets | sed "s/.*://"
+    echo ' iPAQ' `cat /proc/hal/model`
+}
 
 case $1 in
 'start')
 	DIR=/usr/share/gpe/bootsplash
 	FN=""
-# start off server in conventional location.
+	# start off server in conventional location.
 	echo `module_id`
 	case `module_id` in
 		" iPAQ 3100" )	    ;;
 		" iPAQ 3600" )	    ;;
 		" iPAQ 3700" )	    ;;
 		" iPAQ 3800" )	    ARGS="--flip" ;;
+#		" iPAQ 3900" )	    ARGS="--flip" ;;
 	esac
 	/usr/bin/gpe-bootsplash $ARGS
 	;;
