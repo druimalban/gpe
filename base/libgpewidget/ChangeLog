@@ -1,3 +1,10 @@
+2004-09-02  Phil Blundell  <pb@nexus.co.uk>
+
+	* infoprint.c: New file.
+	* gpe/infoprint.h: Likewise.
+	* Makefile (MEMBERS): Add infoprint.
+	(HEADERS): Add infoprint.h.
+
 2004-08-23  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile: Version 0.89 released.

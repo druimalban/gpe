@@ -9,7 +9,7 @@ IN_LIBGPEWIDGET = yes
 
 LINGUAS = ro de id pt fr ga wa sv nl cs es
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp gpeiconlistview gpewindowbits
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist gpehelp gpeiconlistview gpewindowbits infoprint
 
 SONAME = libgpewidget.so.1
 BINPACKAGE = libgpewidget1
@@ -33,7 +33,7 @@ PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo)
 PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo)
 endif
 
-HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h tray.h popup.h gpeiconlistview.h gpeclockface.h gpeiconlistitem.h
+HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h tray.h popup.h gpeiconlistview.h gpeclockface.h gpeiconlistitem.h infoprint.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
