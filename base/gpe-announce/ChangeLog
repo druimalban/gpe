@@ -1,3 +1,10 @@
+2004-10-11  Florian Boor <florian@kernelconcepts.de>
+	* Released Version 0.12
+	* callbacks.c: We set PCM level to 100% at start to avoid missing alarms
+	               if PCM level is low. The original value is restored after
+				   alarm has finished.
+	* Makefile: New version number.
+
 2004-10-08  Florian Boor <florian@kernelconcepts.de>
 
 	* Released Version 0.11

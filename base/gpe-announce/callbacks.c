@@ -48,7 +48,7 @@ static gboolean PlayAlarmStop = TRUE;
 static int sound_config;
 
 int fd;
-int curl, curr;	
+int curl, curr, curpcml, curpcmr;	
 pthread_t SoundThread;
 
 int buzzerfd = -1;
@@ -138,7 +138,7 @@ int get_config (void)
 	return result;	
 }
 
-int get_vol(int *left, int *right)
+int get_vol(int *left, int *right, int channel)
 {
 	int vol;
 	int err;
@@ -147,7 +147,7 @@ int get_vol(int *left, int *right)
 	fd = open(mixer, O_RDONLY);
 	if(fd == -1)
 		printf("Unable to open mixer device: %s\n", mixer);
-	err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol);
+	err = ioctl(fd, channel, &vol);
 	if(err != -1) {
 		*left = vol & 0xff;
 		*right = (vol >> 8) & 0xff;
@@ -157,7 +157,7 @@ int get_vol(int *left, int *right)
 }
 
 
-int set_vol(int left, int right)
+int set_vol(int left, int right, int channel)
 {
 	int vol = left | (right << 8);
 	int err;
@@ -166,7 +166,7 @@ int set_vol(int left, int right)
 	fd = open(mixer, O_RDONLY);
 	if(fd == -1)
 		printf("Unable to open mixer device: %s\n", mixer);
-	err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);
+	err = ioctl(fd, MIXER_WRITE(channel), &vol);
 	close(fd);
 
 return err;
@@ -221,37 +221,37 @@ void play_melody(guint Tone1Pitch, guint Tone1Duration,
 		if (sound_config == CFG_AUTOMATIC)
 			switch (times) {
 				case 0:
-					set_vol(50,50);
+					set_vol(50,50,SOUND_MIXER_VOLUME);
 					break;
 				case 1:
-					set_vol(55,55);
+					set_vol(55,55,SOUND_MIXER_VOLUME);
 					break;
 				case 2:
-					set_vol(60,60);
+					set_vol(60,60,SOUND_MIXER_VOLUME);
 					break;
 				case 3:
-					set_vol(65,65);
+					set_vol(65,65,SOUND_MIXER_VOLUME);
 					break;
 				case 4:
-					set_vol(70,70);
+					set_vol(70,70,SOUND_MIXER_VOLUME);
 					break;
 				case 5:
-					set_vol(75,75);
+					set_vol(75,75,SOUND_MIXER_VOLUME);
 					break;
 				case 6:
-					set_vol(80,80);
+					set_vol(80,80,SOUND_MIXER_VOLUME);
 					break;
 				case 7:
-					set_vol(85,85);
+					set_vol(85,85,SOUND_MIXER_VOLUME);
 					break;
 				case 8:
-					set_vol(90,90);
+					set_vol(90,90,SOUND_MIXER_VOLUME);
 					break;
 				case 9:
-					set_vol(95,95);
+					set_vol(95,95,SOUND_MIXER_VOLUME);
 					break;
 				case 10:
-					set_vol(100,100);
+					set_vol(100,100,SOUND_MIXER_VOLUME);
 					break;
 				default:
 					break;
@@ -303,9 +303,11 @@ gint bells_and_whistles ()
 	
 	open_buzzer ();
   
-	if(get_vol(&curl, &curr) == -1)
+	if((get_vol(&curl, &curr, SOUND_MIXER_VOLUME) == -1)
+		|| (get_vol(&curpcml, &curpcmr, SOUND_MIXER_PCM) == -1))
 		printf("Unable to get volume\n");
-
+	set_vol(100, 100, SOUND_MIXER_PCM);
+	
 	signal (SIGINT, buzzer_off);
 
 	if (sound_config != CFG_NOSOUND)
@@ -314,9 +316,9 @@ gint bells_and_whistles ()
 	if (sound_config != CFG_NOSOUND)
 	{
 		if (sound_config == CFG_AUTOMATIC)
-			set_vol(50,50);
+			set_vol(50, 50, SOUND_MIXER_VOLUME);
 		else
-			set_vol(sound_config, sound_config);
+			set_vol(sound_config, sound_config, SOUND_MIXER_VOLUME);
 	}
 	PlayAlarmStop = FALSE;
 	if (pthread_create(&SoundThread, NULL, play_alarm, NULL) != 0) {
@@ -336,7 +338,8 @@ gint on_snooze_clicked (GtkButton *button, gpointer user_data)
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);
 	pthread_join(SoundThread, NULL);
-	set_vol(curl, curr);
+	set_vol(curl, curr, SOUND_MIXER_VOLUME);
+	set_vol(curpcml, curpcmr, SOUND_MIXER_PCM);
 
 	AlarmComment = gtk_object_get_data (AlarmWin, "AlarmComment");
 	HoursSpin = GTK_SPIN_BUTTON (gtk_object_get_data (AlarmWin,
@@ -363,7 +366,8 @@ gint on_ok_clicked (GtkButton *button, gpointer user_data)
 	PlayAlarmStop = TRUE;
 	set_buzzer (0, 0);
 	pthread_join(SoundThread, NULL);
-	set_vol(curl, curr);
+	set_vol(curl, curr, SOUND_MIXER_VOLUME);
+	set_vol(curpcml, curpcmr, SOUND_MIXER_PCM);
 	
 	gtk_main_quit();
 	return(FALSE);
