@@ -23,6 +23,8 @@
 extern GtkWidget * window_sketchpad;
 extern GtkWidget * drawing_area;
 
+extern gboolean is_current_sketch_modified;
+
 #define SKETCHPAD_TITLE_NEW "new"
 
 void sketchpad_init();

@@ -24,6 +24,8 @@ GtkWidget * window_sketchpad;
 GtkWidget * drawing_area;
 GdkPixmap * drawing_area_pixmap_buffer;
 
+gboolean is_current_sketch_modified;
+
 GdkGC * graphical_context;
 GdkColormap * colormap;
 GdkColor * current_color;//FIXME: use that to ref the current color
@@ -57,6 +59,7 @@ void    clear_drawing_area       ();
 
 void sketchpad_init(){
   drawing_area_pixmap_buffer = NULL;
+  is_current_sketch_modified = FALSE;
 
   drawing_area_width  = 230;
   drawing_area_height = 250;
@@ -181,6 +184,7 @@ void sketchpad_open_file(gchar * fullpath_filename, const gchar * name){
   //**/g_printerr("sketchpad open: %s\n", fullpath_filename);
   file_load(fullpath_filename);
   sketchpad_set_title(name);
+  is_current_sketch_modified = FALSE;
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){
@@ -223,6 +227,7 @@ void draw_point(gdouble x, gdouble y){
 
   updated_rectangle = & ellipse;
   gtk_widget_draw (drawing_area, updated_rectangle);
+  is_current_sketch_modified = TRUE;
 }//draw_point()
 
 void draw_line (gdouble x1, gdouble y1,
@@ -244,6 +249,7 @@ void draw_line (gdouble x1, gdouble y1,
   updated_rectangle.width  = ABS(x1 - x2) + 2* brush + 1;
   updated_rectangle.height = ABS(y1 - y2) + 2* brush + 1;
   gtk_widget_draw (drawing_area, &updated_rectangle);
+  is_current_sketch_modified = TRUE;
 }
 
 void reset_drawing_area(){

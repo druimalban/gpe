@@ -34,25 +34,23 @@
 //---------------------------------------------------------
 //--------------------- GENERAL ---------------------------
 void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
-  int ret;
-  gtk_widget_show (GTK_WIDGET(object));
-  //FIXME: use gpe_question
-  if(confirm_action_dialog_box(_("Before quitting,\nsave last sketch?"),_("Save"))) ret = 1;
-  else ret = 0;
-  //ret = gpe_question_ask_yn ("Save sketch?");
-  switch (ret) {
-    case 1:
+  if(is_current_sketch_modified){
+    gtk_widget_show (GTK_WIDGET(object));
+    //FIXME: use gpe_question
+    if(confirm_action_dialog_box(_("Before quitting,\nsave last sketch?"),_("Save"))){
       on_button_file_save_clicked(NULL,NULL);
-    case 0:
-      app_quit();
-      break;
-    case -1:
-    default:
-      break;
-  }  
+    }
+  }
+  app_quit();
 }
 
 void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
+  if(is_current_sketch_modified){
+    //FIXME: use gpe_question
+    if(confirm_action_dialog_box(_("Save last sketch?"),_("Save"))){
+      on_button_file_save_clicked(NULL,NULL);
+    }
+  }
   switch_windows(window_sketchpad, window_selector);
 }
 
@@ -61,7 +59,7 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
 void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
   gchar * fullpath_filename;
 
-  //if(is_current_sketch_unmodified) return; FIXME: feature to add!
+  if(!is_current_sketch_modified) return;
 
   if(is_current_sketch_new) fullpath_filename = file_new_fullpath_filename();
   else fullpath_filename = (gchar *) gtk_clist_get_row_data(selector_clist, current_sketch);
@@ -81,11 +79,17 @@ void on_button_file_save_clicked(GtkButton *button, gpointer user_data){
     gtk_clist_set_row_data_full(selector_clist, current_sketch, fullpath_filename, g_free);
     if(current_sketch%2) gtk_clist_set_background(selector_clist, current_sketch, &bg_color);
   }
+  is_current_sketch_modified = FALSE;
 }
 
 
 void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
-  //FIXME: maybe save the previous one if unsaved
+  if(is_current_sketch_modified){
+    //FIXME: use gpe_question
+    if(confirm_action_dialog_box(_("Save last sketch?"),_("Save"))){
+      on_button_file_save_clicked(NULL,NULL);
+    }
+  }
   current_sketch = SKETCH_NEW;
   sketchpad_new_sketch();
 }
