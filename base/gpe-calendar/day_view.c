@@ -27,6 +27,7 @@
 static GSList *strings;
 static GtkWidget *day_list;
 static GtkWidget *datesel;
+static GtkAdjustment *scroll_adjustment;
 
 static GtkStyle *light_style, *dark_style, *time_style;
 static GdkColor light_color, dark_color, time_color;
@@ -129,6 +130,7 @@ day_view_update ()
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (day_list), NULL);
   PangoRectangle pr;
 #endif
+  double pos;
      
   widget_width = day_list->allocation.width;
 
@@ -172,6 +174,8 @@ day_view_update ()
     }
 
   localtime_r (&viewtime, &tm_start);
+  pos = 24 / (tm_start.tm_hour + 1);
+  gtk_adjustment_set_value (scroll_adjustment, pos);
   tm_start.tm_hour = 0;
   tm_start.tm_min = 0;
   tm_start.tm_sec = 0;
@@ -387,11 +391,13 @@ day_view(void)
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
 
-  gtk_signal_connect(GTK_OBJECT (datesel), "changed",
+  gtk_signal_connect (GTK_OBJECT (datesel), "changed",
 		     GTK_SIGNAL_FUNC (changed_callback), day_list);
   
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
 		       (gpointer) update_hook_callback);
+
+  scroll_adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
 
   return vbox;
 }

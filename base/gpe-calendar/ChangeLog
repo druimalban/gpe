@@ -1,5 +1,10 @@
 2002-11-30  Philip Blundell  <philb@gnu.org>
 
+	* day_view.c (day_view_update): Set scroll position to current
+	hour.
+	(scroll_adjustment): New global.
+	(day_view): Initialise it.
+
 	* event-ui.c (edit_event): Explicitly set state of more widgets.
 	(new_event): Likewise.
 
