@@ -42,18 +42,6 @@
 #define DHCP_COMMAND "dhcpcd -i %s &"
 #define SEQ_USERNET 0xFFFF
 
-#define USET_BSSID 		0x0000
-#define USET_SSID  		0x0001
-#define USET_MODE 	 	0x0002
-#define USET_WEP   		0x0004
-#define USET_DHCP  		0x0008
-#define USET_CHANNEL	0x0010
-#define USET_IP			0x0020
-#define USET_NETMASK	0x0040
-#define USET_GATEWAY	0x0080
-#define USET_WEPKEY		0x0100
-
-
 typedef enum
 {
 	msg_network,
@@ -177,6 +165,16 @@ typedef struct
 }
 usernetinfo_t;
 
+#define USET_BSSID 		0x0000
+#define USET_SSID  		0x0001
+#define USET_MODE 	 	0x0002
+#define USET_WEP   		0x0004
+#define USET_DHCP  		0x0008
+#define USET_CHANNEL	0x0010
+#define USET_IP			0x0020
+#define USET_NETMASK	0x0040
+#define USET_GATEWAY	0x0080
+#define USET_WEPKEY		0x0100
 
 typedef struct
 {
