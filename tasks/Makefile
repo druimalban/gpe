@@ -89,7 +89,7 @@ DEP_gpe-task-base = \
     minibat, \
     minipredict, \
     matchbox-panel-hacks, \
-    mbinputmgr,
+    mbinputmgr, \
     \
     xstroke, \
     xkbd, \
