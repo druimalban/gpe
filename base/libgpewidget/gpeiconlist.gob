@@ -26,7 +26,7 @@ requires 2.0.0
 #include <gtk/gtk.h>
 #include "gpe-iconlist.h"
 
-#undef CHIT_CHAT
+#undef  CHIT_CHAT
 
 #ifdef CHIT_CHAT
 #define MAYBE_PRINTF printf
@@ -53,11 +53,20 @@ struct ILIcon
 	GdkPixbuf *pb_scaled;
 };
 
+//private structure used to find an icon from its data, see _find_from_udata()
+struct _Pack
+{
+  gpointer udata;        //udata to find
+  struct ILIcon * icon;  //the icon if found, NULL if not found
+};
+
 %}
 
 class GPE:IconList from Gtk:Scrolled:Window {
 	private GList *icons = NULL;
 	private GdkPixbuf *bgpixbuf = NULL;
+  private guint32 bgcolor = 0xffffffff; //Whiten the background
+                                        //-> for use with a transparent bg? cool... 
 	private int rows = 1;
 	private int cols = 1;
 	private int mcol = -1;
@@ -133,6 +142,11 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		self->_priv->bgpixbuf = bg;
 	}
 
+	public void set_bg_color (GPE::IconList *self, guint32 color)
+	{
+		self->_priv->bgcolor = color;
+	}
+
 /* Helper - max. height of a label */
 	private gint _title_height (GPEIconList *widget) {
 		PangoContext *pc;
@@ -164,6 +178,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			   || h < il->_priv->icon_size - 1) {
 				double ratio = (double)il->_priv->icon_size / (double)h; 
 				guint new_width = gdk_pixbuf_get_width (icon->pb) * ratio;
+        MAYBE_PRINTF("scaling pixbuf.\n");
 				icon->pb_scaled = gdk_pixbuf_scale_simple (icon->pb, new_width, il->_priv->icon_size, GDK_INTERP_BILINEAR);
 			} else {
 				gdk_pixbuf_ref (icon->pb);
@@ -209,9 +224,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
 				       event->area.width, event->area.height);
 
-		/* Whiten the background
-		   -> for use with a transparent bg? cool... */
-		gdk_pixbuf_fill (dest, 0xffffffff);
+		/* set the background color */
+		gdk_pixbuf_fill (dest, il->_priv->bgcolor);
 
 		/* Paint the background image, scaled */
 /*
@@ -432,6 +446,58 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		ret->pb_scaled = NULL;
 		return ret;
 	}
+
+  /* Update an existing icon found from its udata. */
+	public void update_icon_item_with_udata (self, GdkPixbuf * pixbuf, gpointer udata)
+	{
+    struct _Pack pak;
+    pak.udata = udata;
+    pak.icon  = NULL;
+    g_list_foreach (self->_priv->icons, gpe_iconlist__find_from_udata, &pak);
+
+    if(pak.icon != NULL)
+    {
+      MAYBE_PRINTF("update icon: %s.\n", pak.icon->title);
+
+      gdk_pixbuf_unref(pak.icon->pb);
+      gdk_pixbuf_unref(pak.icon->pb_scaled);
+
+      pak.icon->pb = pixbuf;
+      gdk_pixbuf_ref(pak.icon->pb);
+      gpe_iconlist__check_icon_size (self, pak.icon);
+    }
+    else
+    {
+      MAYBE_PRINTF("icon to update NOT found :(\n");
+    }
+		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+	}
+
+  private void _find_from_udata (gpointer icon, gpointer data_pak){
+    if( ((struct ILIcon *)icon)->udata == ((struct _Pack *)data_pak)->udata ){
+      ((struct _Pack *)data_pak)->icon = icon;
+    }
+  }
+  /** Removes an icon found from its udata. */
+	public void remove_item_with_udata (self, gpointer udata)
+	{
+    struct _Pack pak;
+    pak.udata = udata;
+    pak.icon  = NULL;
+    g_list_foreach (self->_priv->icons, gpe_iconlist__find_from_udata, &pak);
+
+    if(pak.icon != NULL)
+    {
+      MAYBE_PRINTF("remove icon: %s.\n", ((struct ILIcon *)pak.icon)->title);
+      self->_priv->icons = g_list_remove (self->_priv->icons, pak.icon);
+    }
+    else
+    {
+      MAYBE_PRINTF("icon to remove NOT found :(\n");
+    }
+		gpe_iconlist__recalc_size (self, &GTK_WIDGET(self)->allocation);
+	}
+
 
 	public void add_item (self, char *title, char *icon, gpointer udata)
 	{

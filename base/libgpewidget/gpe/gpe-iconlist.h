@@ -60,6 +60,13 @@ void 	gpe_iconlist_set_bg	(GPEIconList * self,
 					char * bg);
 void 	gpe_iconlist_set_bg_pixmap	(GPEIconList * self,
 					GdkPixbuf * bg);
+void 	gpe_iconlist_set_bg_color	(GPEIconList * self,
+					guint32 color);
+void 	gpe_iconlist_update_icon_item_with_udata	(GPEIconList * self,
+					GdkPixbuf * pixbuf,
+					gpointer udata);
+void 	gpe_iconlist_remove_item_with_udata	(GPEIconList * self,
+					gpointer udata);
 void 	gpe_iconlist_add_item	(GPEIconList * self,
 					char * title,
 					char * icon,

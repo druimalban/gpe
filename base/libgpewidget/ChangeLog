@@ -1,3 +1,10 @@
+2003-03-16  Luc Pionchon  <luc@handhelds.org>
+
+	* gpeiconlist.gob (set_bg_color): New public function to set the bg color
+	(update_icon_item_with_udata): New public function to update an icon
+	(remove_item_with_udata): New public function to remove an icon
+	(_find_from_udata): New private function used by update_icon_item_with_udata() and remove_item_with_udata.
+
 2003-03-15  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.53 released.
