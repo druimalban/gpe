@@ -18,7 +18,7 @@
 #   that's it.
 #------------------------
 
-VERSION = 0.43
+VERSION = 0.44
 
 ALL_TASKS = \
     gpe2 \
@@ -111,6 +111,7 @@ DEP_gpe-task-base = \
     mbinputmgr, \
     \
     xstroke, \
+    rosetta, \
     xkbd, \
     mbmerlin, \
     \
