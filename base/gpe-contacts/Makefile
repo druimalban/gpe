@@ -4,7 +4,7 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.17
+VERSION = 0.18
 DEBUG = no
 
 LINGUAS = de sv cs nl hu ro ru sr sk
