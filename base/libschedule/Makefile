@@ -23,7 +23,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD
 
-CPPFLAGS += -I. -I../libgpewidget
+CPPFLAGS += -I.
 
 HEADERS = schedule.h
 
@@ -43,14 +43,16 @@ $(SONAME): $(OBJS)
 	$(CC) $(CFLAGS) -S $<
 
 install-devel:
-	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	install -d $(DESTDIR)$(PREFIX)/include/gpe
+	for i in $(HEADERS); do install -m 644 gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	install -d $(DESTDIR)$(PREFIX)/lib
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libeventdb.so
 
 clean:
 	rm -f $(OBJS) $(SONAME) libeventdb.so $(DEPS)
 
 install-program: $(SONAME) install-mo
-	install -d $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install -d $(DESTDIR)$(PREFIX)/lib
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 include ../build/Makefile.translation
