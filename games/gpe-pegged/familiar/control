@@ -1,8 +1,10 @@
 Package: gpe-pegged
-Version: 0.4
+Version: 0.5
 Section: games
 Priority: optional
 Architecture: arm
 Depends: libgtk2.0-0, libgpewidget1
 Maintainer: Robert Mibus <mibus@handhelds.org>
 Description: A pegs-in-a-block game.
+Source: gpe-pegged-0.5.tar.gz
+
