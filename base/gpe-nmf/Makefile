@@ -43,7 +43,7 @@ backend:
 	make -C backend PREFIX=$(PREFIX) GST=$(GST) GST_VERSION=$(GST_VERSION) CVSBUILD=$(CVSBUILD)
 
 $(PACKAGE): $(OBJS) $(LIB)
-	$(CC) -o $@ $^ $(PACKAGE_LDFLAGS) -Lbackend -lgpenmf
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -Lbackend -lgpenmf
 
 install-program: all $(PACKAGE).desktop
 	make -C backend PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) install

@@ -1,3 +1,12 @@
+2004-09-21  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Applied patches by Chris Lord <cwiiis@blueyonder.co.uk> fixing:
+          - Pause button
+          -Progress from one track to the next
+          -No dependence on gnome-vfs by default (though it can be used optionally still)
+          -Progress bar
+          -Time display
+
 
 2004-07-06  Florian Boor  <florian.boor@kernelconcepts.de>
 

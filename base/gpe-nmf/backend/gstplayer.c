@@ -1,5 +1,9 @@
 /*
  * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Changes (C) 2004 Chris Lord <cwiiis@handhelds.org> :
+ * - Enable progress slider
+ * - Fix time display
+ * - Add seeking
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,34 +22,6 @@
 
 #define _(x) gettext(x)
 
-typedef enum
-  {
-    PLAYER_STATE_NULL,
-    PLAYER_STATE_PLAYING,
-    PLAYER_STATE_STOPPING,
-    PLAYER_STATE_NEXT_TRACK
-  } player_state;
-
-struct player
-{
-  struct playlist *list;
-  struct playlist *cur;
-  guint idx;
-  int *shuffle_list;
-  gboolean new_track;
-
-  player_state state;
-  GstElement *filesrc, *decoder, *audiosink, *thread, *volume;
-  GstScheduler *sched;
-  GstClock *clock;
-
-  int opt_shuffle;
-  int opt_loop;
-
-  char *source_elem;
-  char *sink_elem;
-};
-
 static gboolean play_track (player_t p, struct playlist *t);
 
 player_t
@@ -56,7 +32,7 @@ player_new (void)
   char *sink = getenv ("NMF_SINK");
 
   if (!src)
-    src = "gnomevfssrc";
+    src = "filesrc";
   if (!sink)
     sink = "esdsink";
 
@@ -155,7 +131,8 @@ player_get_playlist (player_t p)
 static void
 abandon_track (player_t p)
 {
-  p->state = PLAYER_STATE_STOPPING;
+  if( p->state != PLAYER_STATE_NEXT_TRACK )
+  	p->state = PLAYER_STATE_STOPPING;
   if (p->thread)
     {
       gst_element_set_state (p->thread, GST_STATE_NULL);
@@ -177,8 +154,7 @@ step_track (player_t p, int n)
   assert (p);
   assert (n != 0);
 
-  /* This handles playing - what about paused? */
-  if (p->state == PLAYER_STATE_PLAYING)
+  if (p->state == PLAYER_STATE_PLAYING || p->state == PLAYER_STATE_PAUSED)
     abandon_track (p);
 
   if (n > 0)
@@ -206,31 +182,30 @@ step_track (player_t p, int n)
 }
 
 static void
-error_callback (GObject *object, GstObject *orig, gchar *error, player_t p)
+error_callback (GstElement *gstelement, GstElement *orig, GstStreamError *error_code, gchar *error, player_t p)
 {
-  g_print ("ERROR: %s: %s\n", GST_OBJECT_NAME (orig), error);
+  g_print ("ERROR: %s: %s\n", GST_OBJECT_NAME (gstelement), error);
 
-  gst_element_set_state (GST_ELEMENT (orig), GST_STATE_NULL);  
+  p->state = PLAYER_STATE_NEXT_TRACK;
+  player_stop (p);
+//  gst_element_set_state (GST_ELEMENT (orig), GST_STATE_NULL);  
 }
 
 static void
 thread_shutdown (GstElement *elt, player_t p)
 {
-  player_state old_player_state = p->state;
-
-  fprintf (stderr, "player %p: thread has stopped.\n", p);
 
   p->thread = NULL;
-  p->state = PLAYER_STATE_NULL;
-
-  if (old_player_state == PLAYER_STATE_NEXT_TRACK)
-    {
-      fprintf (stderr, "player %p: next track.\n", p);
-
-      step_track (p, 1);
-    }
+  
+  if( p->state == PLAYER_STATE_NEXT_TRACK )
+  {
+    p->state = PLAYER_STATE_NULL;
+  	player_next_track(p);
+  }
+  else
+	  p->state = PLAYER_STATE_NULL;
 }
-
+/*
 static void
 state_change (GstElement *elt, GstElementState old_state, GstElementState new_state, player_t p)
 {
@@ -239,19 +214,19 @@ state_change (GstElement *elt, GstElementState old_state, GstElementState new_st
   if (new_state == GST_STATE_PLAYING)
     {
       p->state = PLAYER_STATE_PLAYING;
-      p->sched = GST_ELEMENT_SCHED (p->thread);
-      p->clock = gst_scheduler_get_clock (p->sched);
     }
-  else if (old_state == GST_STATE_PLAYING && new_state == GST_STATE_PAUSED)
+  if (new_state == GST_STATE_PAUSED)
     {
-      fprintf (stderr, "player %p: Play finished.\n", p);
-      if (p->state == PLAYER_STATE_PLAYING)
-	{
-	  fprintf (stderr, "player %p: Setting element state to NULL.\n", p);
-	  gst_element_set_state (elt, GST_STATE_NULL);
-	  p->state = PLAYER_STATE_NEXT_TRACK;
-	}
+      p->state = PLAYER_STATE_PAUSED;
     }
+}
+*/
+
+static void
+eos (GstElement *elt, player_t p)
+{
+	p->state = PLAYER_STATE_NEXT_TRACK;
+//	player_next_track(p);
 }
 
 static void
@@ -321,9 +296,7 @@ build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 
   gst_bin_add_many (GST_BIN (p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
 
-  gst_element_connect (p->filesrc, p->decoder);
-  gst_element_connect (p->decoder, p->volume);
-  gst_element_connect (p->volume, p->audiosink);
+  gst_element_link_many (p->filesrc, p->decoder, p->volume, p->audiosink, NULL );
 }
 
 static gboolean
@@ -341,29 +314,56 @@ play_track (player_t p, struct playlist *t)
   build_pipeline (p, t, TRUE);
 
   g_signal_connect (p->thread, "shutdown", G_CALLBACK (thread_shutdown), p);
-  g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
+//  g_signal_connect (p->thread, "state_change", G_CALLBACK (state_change), p);
+  g_signal_connect (p->thread, "eos", G_CALLBACK (eos), p);
   g_signal_connect (p->thread, "error", G_CALLBACK (error_callback), p);
   g_signal_connect (p->thread, "deep_notify::metadata", G_CALLBACK (metadata_notify), p);
 
-  gst_element_set_state (p->thread, GST_STATE_PLAYING);
-
-  return TRUE;
+  p->state = PLAYER_STATE_PLAYING;
+  return gst_element_set_state (p->thread, GST_STATE_PLAYING);
 }
 
 gboolean
 player_play (player_t p)
 {
-  if (p->list)
-    {
-      if (p->opt_shuffle)
-	p->cur = playlist_fetch_item (p->list, p->shuffle_list[p->idx]);
-      else
-	p->cur = playlist_fetch_item (p->list, p->idx);
-      
-      if (p->cur)
-	play_track (p, p->cur);
-    }
+  if( p->state != PLAYER_STATE_PAUSED )
+  {
+	  if (p->list)
+	    {
+	      if (p->opt_shuffle)
+		p->cur = playlist_fetch_item (p->list, p->shuffle_list[p->idx]);
+	      else
+		p->cur = playlist_fetch_item (p->list, p->idx);
+	      
+	      if (p->cur)
+		return play_track (p, p->cur);
+	    }
+  }
+  else
+  {
+  	if( gst_element_set_state( p->thread, GST_STATE_PLAYING ) )
+  	{
+  		p->state = PLAYER_STATE_PLAYING;
+  		return TRUE;
+  	}
+  }
 
+  return FALSE;
+}
+
+gboolean
+player_pause (player_t p)
+{
+  if( p->state == PLAYER_STATE_PLAYING )
+  {
+  	if( gst_element_set_state( p->thread, GST_STATE_PAUSED ) )
+  	{
+  		p->state = PLAYER_STATE_PAUSED;
+  		return TRUE;
+  	}
+    else
+        return FALSE;
+  }
   return TRUE;
 }
 
@@ -375,14 +375,16 @@ player_status (player_t p, struct player_status *s)
   s->item = p->cur;
   s->changed = p->new_track;
   p->new_track = FALSE;
+  s->state = p->state;
 
   if (p->state == PLAYER_STATE_PLAYING)
     {
-      GstClockTime t = gst_clock_get_time (p->clock);
-#if 0
-      fprintf (stderr, "player %p: tick %llx\n", p, t);
-#endif
-      s->time = t;
+      GstFormat format = GST_FORMAT_TIME;
+      gint64 time;
+      gst_element_query( p->audiosink, GST_QUERY_POSITION, &format, &time);
+      s->time = (double)time / (double)GST_SECOND;
+      gst_element_query( p->audiosink, GST_QUERY_TOTAL, &format, &time);
+      s->total_time = (double)time / (double)GST_SECOND;
     }
 }
 void 
@@ -407,6 +409,15 @@ player_set_volume (player_t p, int v)
   g_value_set_float (&value, (float)v / 256);
   
   g_object_set_property (G_OBJECT (p->volume), "volume", &value);
+}
+
+void
+player_seek (player_t p, double progress)
+{
+	gint64 total_time;
+    GstFormat format = GST_FORMAT_BYTES;
+    gst_element_query( p->filesrc, GST_QUERY_POSITION, &format, &total_time);
+    gst_element_seek( p->filesrc, GST_SEEK_METHOD_SET, (guint64)((double)total_time * progress) );
 }
 
 #if 0

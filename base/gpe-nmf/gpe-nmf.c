@@ -1,5 +1,9 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Changes (C) 2004 Chris Lord <cwiiis@handhelds.org> :
+ * - Enable progress slider
+ * - Fix time display
+ * - Add seeking
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,9 +19,7 @@
 #include <sys/time.h>
 #include <assert.h>
 #include <libintl.h>
-#ifdef GST_NMF
 #include <gst/gst.h>
-#endif
 
 #include <gtk/gtk.h>
 
@@ -92,6 +94,18 @@ play_clicked (GtkWidget *w, struct nmf_frontend *fe)
       update_track_info (fe, ps.item);
       fe->playing = TRUE;
     }
+    else
+    	if( fe->player->state == PLAYER_STATE_PAUSED )
+    		player_play (fe->player);
+}
+
+static void
+pause_clicked (GtkWidget *w, struct nmf_frontend *fe)
+{
+	if(fe->playing)
+	{
+		player_pause (fe->player);
+	}
 }
 
 static void
@@ -129,26 +143,32 @@ set_volume (GtkObject *o, player_t p)
 }
 
 static void
+set_position (GtkObject *o, player_t p)
+{
+  GtkAdjustment *a = GTK_ADJUSTMENT (o);
+  player_seek (p, a->value);
+}
+
+static void
 update_time (struct nmf_frontend *fe, struct player_status *ps)
 {
   char buf[32];
-
-  unsigned long seconds = ps->time / GST_SECOND;
-  unsigned long minutes = seconds / 60;
-  seconds = seconds % 60;
-
-  snprintf (buf, sizeof (buf)-1, "%02d:%02d", minutes, seconds);
+  
+  snprintf (buf, sizeof (buf)-1, "%02d:%02d", (int)ps->time / 60, (int)ps->time % 60 );
   buf[sizeof (buf)-1] = 0;
   gtk_label_set_text (GTK_LABEL (fe->time_label), buf);
- 
-#if 0 
+  
+  if( ps->state == PLAYER_STATE_NEXT_TRACK )
+  {
+			update_track_info (fe, ps->item);
+  }
+  
   if (ps->total_time)
     {
-      double d = (double)ps->time / (double)ps->total_time;
+      double d = ps->time / ps->total_time;
       gtk_adjustment_set_value (fe->progress_adjustment, d);
       gtk_widget_draw (fe->progress_slider, NULL);
     }
-#endif
 }
 
 static gboolean
@@ -194,9 +214,7 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-#ifdef GST_NMF
   gst_init (&argc, &argv);
-#endif
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
@@ -219,10 +237,7 @@ main (int argc, char *argv[])
   player_play (fe->player);
 
   fe->playlist = playlist_new_list ();
-#ifndef GST_NMF
-  player_error_handler (fe->player, gpe_error_box);
-#endif
-  g_timeout_add (250, (GSourceFunc)player_poll_func, fe);
+  g_timeout_add (500, (GSourceFunc)player_poll_func, fe);
 
   fe->playlist_widget = playlist_edit (fe, NULL);
 
@@ -279,6 +294,8 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (pause_button), w);
   gtk_widget_set_usize (pause_button, -1, button_height);
   gtk_widget_show (w);
+  g_signal_connect (G_OBJECT (pause_button), "clicked", 
+		    G_CALLBACK (pause_clicked), fe);
 
   w = gtk_image_new_from_pixbuf (gpe_find_icon ("media-stop"));
   stop_button = gtk_button_new ();
@@ -377,15 +394,17 @@ main (int argc, char *argv[])
   gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
   gtk_widget_set_style (fe->progress_slider, style);
   gtk_widget_set_usize (fe->progress_slider, -1, 16);
+  // Disable the slider (until it works)
+  gtk_widget_set_sensitive (fe->progress_slider, FALSE);
+//  g_signal_connect (G_OBJECT (fe->progress_adjustment), "value-changed", 
+//		    G_CALLBACK (set_position), fe->player);
 
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 
   gtk_box_pack_start (GTK_BOX (hbox2), vol_slider, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
 
-#if SLIDER_WORKS
   gtk_box_pack_start (GTK_BOX (hbox4), fe->progress_slider, TRUE, TRUE, 0);
-#endif
   gtk_box_pack_start (GTK_BOX (hbox4), fe->time_label, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox3, TRUE, TRUE, 0);
@@ -410,9 +429,7 @@ main (int argc, char *argv[])
   gtk_widget_show (fe->time_label);
   gtk_widget_show (fe->artist_label);
   gtk_widget_show (fe->title_label);
-#if SLIDER_WORKS
   gtk_widget_show (fe->progress_slider);
-#endif
   gtk_widget_show (vol_slider);
 
   gtk_widget_show (vbox);

@@ -48,7 +48,7 @@ $(BACKEND): $(OBJS)
 clean:
 	rm -f $(DEPS) $(OBJS) $(OGG_OBJS) $(MAD_OBJS) $(BACKEND) d-vorbis.so d-mad.so
 
-install_program: all
+install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/lib
 	install -s $(BACKEND) $(DESTDIR)$(PREFIX)/lib/$(BACKEND)
 	for i in $(CODECS); do install -s $$i $(DESTDIR)$(PREFIX)/lib/gpe-nmf/decoders/$$i; done
