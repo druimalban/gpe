@@ -1,3 +1,12 @@
+2003-01-06  Moray Allan  <moray@handhelds.org>
+
+	* main.c: Removed use of GtkMiniFileSelection, in favour of the
+	ordinary GtkFileSelection.
+
+2002-12-11  Moray Allan  <moray@handhelds.org>
+
+	* main.c: Add 'stream' option to send audio to stdout.
+
 2002-10-06  Philip Blundell  <philb@gnu.org>
 
 	* main.c: Update paths to libgpewidget headers.
