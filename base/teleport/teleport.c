@@ -303,7 +303,7 @@ open_window (GSList *clients)
   for (i = displays; i; i = i->next)
     {
       struct display *d = i->data;
-      strings = g_list_append (strings, d->str);
+      strings = g_list_prepend (strings, d->str);
     }
 
   window = gtk_dialog_new ();
@@ -344,11 +344,22 @@ open_window (GSList *clients)
       gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
     }
 
+  if (clients)
+    {
+      gtk_option_menu_set_history (GTK_OPTION_MENU (option_menu), 0);
+      selected_client = clients->data;
+    }
+  else
+    {
+      gpe_error_box (_("There are no windows on the current display which support migration."));
+      exit (0);	
+    }
+
   quit_button = gtk_button_new_from_stock (GTK_STOCK_CLOSE);
   go_button = gtk_button_new_from_stock (GTK_STOCK_EXECUTE);
 
-  gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), go_button, FALSE, FALSE, 0);
   gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), quit_button, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), go_button, FALSE, FALSE, 0);
 
   gtk_window_set_title (GTK_WINDOW (window), _("Teleport"));
   gpe_set_window_icon (GTK_WIDGET (window), "icon");
