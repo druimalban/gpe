@@ -45,6 +45,7 @@ static pid_t hciattach_pid;
 
 static GtkWidget *menu;
 static GtkWidget *menu_radio_on, *menu_radio_off;
+static GtkWidget *menu_devices;
 
 static gboolean radio_is_on;
 
@@ -74,6 +75,8 @@ radio_on (void)
 
   gtk_widget_hide (menu_radio_on);
   gtk_widget_show (menu_radio_off);
+  gtk_widget_set_sensitive (menu_devices, TRUE);
+
   gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-on"));
   radio_is_on = TRUE;
   sigemptyset (&sigs);
@@ -90,6 +93,8 @@ radio_off (void)
 {
   gtk_widget_hide (menu_radio_off);
   gtk_widget_show (menu_radio_on);
+  gtk_widget_set_sensitive (menu_devices, FALSE);
+
   gtk_image_set_from_pixbuf (GTK_IMAGE (icon), gpe_find_icon ("bt-off"));
   radio_is_on = FALSE;
   if (hcid_pid)
@@ -102,6 +107,7 @@ radio_off (void)
       kill (hciattach_pid, 15);
       hciattach_pid = 0;
     }
+  system ("hciconfig hci0 down");
 }
 
 static void
@@ -122,7 +128,7 @@ sigchld_handler (int sig)
       gpe_error_box (_("hciattach died unexpectedly"));
       radio_off ();
     }
-  else
+  else if (p != -1)
     {
       fprintf (stderr, "unknown pid %d exited\n", p);
     }
@@ -173,14 +179,20 @@ main (int argc, char *argv[])
   menu = gtk_menu_new ();
   menu_radio_on = gtk_menu_item_new_with_label (_("Switch radio on"));
   menu_radio_off = gtk_menu_item_new_with_label (_("Switch radio off"));
+  menu_devices = gtk_menu_item_new_with_label (_("Devices..."));
 
   gtk_signal_connect (GTK_OBJECT (menu_radio_on), "activate", GTK_SIGNAL_FUNC (radio_on), NULL);
   gtk_signal_connect (GTK_OBJECT (menu_radio_off), "activate", GTK_SIGNAL_FUNC (radio_off), NULL);
+  gtk_signal_connect (GTK_OBJECT (menu_radio_off), "activate", GTK_SIGNAL_FUNC (show_devices), NULL);
+
+  gtk_widget_set_sensitive (menu_devices, FALSE);
 
   gtk_widget_show (menu_radio_on);
+  gtk_widget_show (menu_devices);
 
   gtk_menu_append (GTK_MENU (menu), menu_radio_on);
   gtk_menu_append (GTK_MENU (menu), menu_radio_off);
+  gtk_menu_append (GTK_MENU (menu), menu_devices);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
