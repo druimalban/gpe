@@ -1,0 +1,8 @@
+?package(gpe-gallery): \
+ needs=x11 \
+ title="Image Gallery" \
+ logtitle="Image Gallery" \
+ command=gpe-edit \
+ icon48=/usr/share/pixmaps/gpe-gallery.png \
+ section=PIM \
+ windowtitle="GPE Gallery *"
