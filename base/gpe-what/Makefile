@@ -2,9 +2,9 @@ PREFIX = /usr/local
 PACKAGE = gpe-what
 #DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.28
+VERSION = 0.29
 
-MEMBERS = gpe-what
+MEMBERS = gpe-what mbtray
 
 GTKCFLAGS = `pkg-config --cflags glib-2.0` `pkg-config --cflags pangoxft` `pkg-config --cflags xft`
 GTKLDFLAGS += `pkg-config --libs glib-2.0` `pkg-config --libs pangoxft` `pkg-config --libs xft`
@@ -20,11 +20,11 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-LDFLAGS += -lmb
-
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+
+LDFLAGS += -lmb
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
