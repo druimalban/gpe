@@ -20,7 +20,8 @@ GPE sketchbook NEWS
 - improved window title
 - fixed colorbox bug)
 - on [prev] and [next], ask to save if current modified
-- fixed #175 (window flickering is needed to save before exiting) 
+- fixed #175 (window flickering if needed to save before exiting) 
+- removed scrolling with joypad (it messes when xstroke is ON))
 
 * 0.2.1 2003-02-25
 - reordered buttons in the filebox for better handling

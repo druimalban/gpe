@@ -4,7 +4,7 @@ VERSION = 0.2.5
 
 PACKAGE = gpe-sketchbook
 
-LINGUAS = 
+LINGUAS = fr pt de 
 MEMBERS = \
 	gpe-sketchbook       \
 	dock                 \

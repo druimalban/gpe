@@ -1,85 +1,86 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# German translation for gpe-sketchbook.
+# Copyright (C) 2002, 2003 Luc Pionchon <luc@handhelds.org>
+# Colin Marquardt <colin@marquardt-home.de>, 2003.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: gpe-sketchbook 0.2.5\n"
 "POT-Creation-Date: 2003-04-02 02:26+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2003-04-08 21:31+0200\n"
+"Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
+"Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
 msgid "Sketchbook"
-msgstr ""
+msgstr "Skizzenbuch"
 
 #: src/selector.c:87
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
-msgstr ""
+msgstr "Kann das Skizzenbuch-Verzeichnis nicht lesen: %s. Beende."
 
 #: src/selector.c:93
 #, c-format
 msgid "Cannot create %s: %s. Exit."
-msgstr ""
+msgstr "Kann %s nicht erzeugen: %s. Beende."
 
 #: src/selector.c:164
 #, c-format
 msgid "%s  at  %s"
-msgstr ""
+msgstr "%s  um  %s"
 
 #: src/selector-cb.c:70 src/sketchpad-cb.c:197
 msgid "Delete current sketch?"
-msgstr ""
+msgstr "Aktuelle Skizze löschen?"
 
 #: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
 #: src/sketchpad-cb.c:197
 msgid "Question"
-msgstr ""
+msgstr "Frage"
 
 #: src/selector-cb.c:71 src/sketchpad-cb.c:198
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: src/sketchpad.c:184
 msgid "new"
-msgstr ""
+msgstr "neu"
 
 #: src/sketchpad-cb.c:46
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
+"Skizze verändert,\n"
+"vor dem Beenden speichern?"
 
 #: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 msgid "Discard"
-msgstr ""
+msgstr "Verwerfen"
 
 #: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 #: src/sketchpad-cb.c:76
 msgid "Save current sketch?"
-msgstr ""
+msgstr "Speichere aktuelle Skizze?"
 
 #: src/sketchpad-gui.c:426
 msgid "New"
-msgstr ""
+msgstr "Neu"
 
 #: src/sketchpad-gui.c:429
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschaften"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
-msgstr ""
+msgstr "GPE-Skizzenbuch"
