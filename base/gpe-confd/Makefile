@@ -2,25 +2,18 @@ PREFIX = /usr/local
 PACKAGE = gpe-confd
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.13
+VERSION = 0.14
 
 MEMBERS = main xsettings-manager
 
-GTKCFLAGS = `pkg-config --cflags glib-2.0`
-GTKLDFLAGS += `pkg-config --libs glib-2.0`
-
-CPPFLAGS += -D_GNU_SOURCE
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CFLAGS += -I../libxsettings
+PACKAGE_LDFLAGS += -L../libxsettings
 endif
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-LDFLAGS += -lsqlite $(GTKLDFLAGS) -L../libxsettings -lXsettings
-CPPFLAGS += $(GTKCFLAGS) -I../libxsettings
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) -lsqlite `pkg-config --libs glib-2.0` -lXsettings
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0`
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -35,7 +28,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: $(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/bin
