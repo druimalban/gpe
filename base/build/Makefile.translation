@@ -5,7 +5,7 @@ CONTROL = `if test -e familiar/control1; then echo control1; else echo control; 
 # use ipkg-build or ipkg-deb-build
 IPKG_BUILD := ipkg-build
 
-TRANSLATION_SITE := http://www.iro.umontreal.ca/contrib/po/maint
+TRANSLATION_SITE := http://www.iro.umontreal.ca/~gnutra/maint/
 
 ifeq ($(DIR_PO),)
 DIR_PO := po

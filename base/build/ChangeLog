@@ -1,3 +1,7 @@
+2003-10-08  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (TRANSLATION_SITE): Update with new URL.
+
 2003-09-14  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (GTKCFLAGS, GTKLIBS): Define.
