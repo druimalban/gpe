@@ -1,9 +1,14 @@
-05/15/2003		Florian Boor
+05/16/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	
+	- main.c	Change icon if adhoc is detected.
+	- scanner backend auto configuration
+
+05/15/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	
 	- main.c 	Details dialog major upgrade.
-			Changed scanner to run longer.
-			Updted memory management.
-			Added scanner background activity.
+				Changed scanner to run longer.
+				Updated memory management.
+				Added scanner background activity.
 
 05/14/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	

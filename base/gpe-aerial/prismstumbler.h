@@ -34,9 +34,9 @@
 #define PMAX 20
 #define RBUFFER_SIZE 10
 
-#define DT_PRISM 0
-#define DT_ORINOCO 1
-#define DT_HOSTAP 2
+#define DT_PRISM   0x01
+#define DT_ORINOCO 0x02
+#define DT_HOSTAP  0x04
 
 #define PS_SOCKET "/tmp/.psintercom"
 
@@ -53,7 +53,9 @@ typedef enum
 {
 	C_NONE,
 	C_SENDLIST,
-	C_CLEARLIST
+	C_CLEARLIST,
+	C_DETECT_CARD,
+	C_ASSOCIATE
 }
 command_t;
 
@@ -68,7 +70,7 @@ psgps_t;
 typedef struct
 {
 	int scan;
-	char device[5];
+	char device[6];
 	int devtype;
 	int delay;
 	int filter;

@@ -258,6 +258,23 @@ radio_off (void)
 
 
 static void
+update_image(netinfo_t *ni)
+{
+	gdk_pixbuf_unref(ni->pix);
+	
+	if (ni->net.isadhoc)
+		ni->pix = gpe_find_icon ("network");
+	else
+		ni->pix = gpe_find_icon ("gpe-aerial");
+	gdk_pixbuf_ref (ni->pix);
+	
+	gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST(iconlist),
+					ni->pix,
+					ni);
+}
+
+
+static void
 update_netlist (psnetinfo_t * anet)
 {
 	int i;
@@ -267,6 +284,11 @@ update_netlist (psnetinfo_t * anet)
 		if (!strncmp (anet->bssid, netlist[i]->net.bssid, 17))
 		{
 			found = TRUE;
+			if (anet->isadhoc != netlist[i]->net.isadhoc)
+			{
+				netlist[i]->net.isadhoc = anet->isadhoc;
+				update_image(netlist[i]);
+			}
 			memcpy (&netlist[i]->net, anet, sizeof (psnetinfo_t));
 		}
 	if (!found)
@@ -301,8 +323,6 @@ get_networks (void)
 			switch (msg.type)
 			{
 			case (msg_network):
-				printf ("got net: %s\n",
-					msg.content.net.bssid);
 				update_netlist (&msg.content.net);
 				break;
 			case (msg_config):
@@ -326,7 +346,7 @@ network_info (netinfo_t * ni)
 	GtkWidget *vbox1 = gtk_vbox_new (FALSE, 0);
 	GtkWidget *hbox1 = gtk_hbox_new (FALSE, 0);
 	GtkWidget *labelname = gtk_label_new (NULL);
-	GtkWidget *labeladdr = gtk_label_new (ni->net.bssid);
+	GtkWidget *labeladdr = gtk_label_new (NULL);
 	GtkWidget *image = gtk_image_new_from_pixbuf (ni->pix);
 	GtkWidget *dismiss = gtk_button_new_from_stock (GTK_STOCK_OK);
 	GtkWidget *lType = gtk_label_new (NULL);
@@ -342,10 +362,14 @@ network_info (netinfo_t * ni)
 	gpe_set_window_icon (GTK_WIDGET (window), "gpe-aerial");
 	gtk_box_set_spacing(GTK_BOX(vbox1),gpe_get_boxspacing());
 
-	tmp = g_strdup_printf ("<b>BSSID: %s</b>", ni->net.ssid);
+	tmp = g_strdup_printf ("<b>%s</b>", ni->net.ssid);
 	gtk_label_set_markup (GTK_LABEL (labelname), tmp);
 	g_free (tmp);
 
+	tmp = g_strdup_printf ("BSSID:%s", ni->net.bssid);
+	gtk_label_set_markup (GTK_LABEL (labeladdr), tmp);
+	g_free (tmp);
+	
 	if (ni->net.isadhoc)
 		tmp = g_strdup_printf ("%s: %s", _("Mode"), "Ad-Hoc (IBSS)");
 	else
@@ -519,7 +543,7 @@ run_scan (void)
 	cfg.autosend = TRUE;
 	send_config ();
 
-	if (netcount <= 0)
+/*	if (netcount <= 0)
 	{
 		gdk_threads_enter ();
 		gtk_widget_destroy (w);
@@ -529,7 +553,7 @@ run_scan (void)
 		gdk_threads_leave ();
 		return FALSE;
 	}
-
+*/
 	gdk_threads_enter ();
 	gtk_widget_destroy (w);
 	gtk_widget_show_all (devices_window);
@@ -580,6 +604,7 @@ radio_on (void)
 
 	cfg.autosend = FALSE;
 	send_config ();
+	send_command(C_DETECT_CARD);
 	printf ("socket -->%s\n", PS_SOCKET);
 }
 
