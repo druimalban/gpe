@@ -1,0 +1,13 @@
+#! /bin/sh
+
+# check if the user wants a bg image at all:
+if [ ! -e /etc/gpe/gpe-login-bg.dontshow ]; then
+    # if yes, but the default symlink is not there, create it
+    if [ ! -e /etc/gpe/gpe-login-bg.png ]; then
+	ln -s /usr/share/pixmaps/gpe-default-bg.png /etc/gpe/gpe-login-bg.png
+##	update-alternatives --install \
+##	    /etc/gpe/gpe-login-bg.png \
+##	    gpe-default-bg.png \
+##	    /usr/share/pixmaps/gpe-default-bg.png 5
+    fi
+fi
