@@ -32,7 +32,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `gtk-config --libs` -lutil
+LDFLAGS += -lgpewidget -lutil
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
