@@ -1,3 +1,7 @@
+2002-09-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* familiar/control (Suggests): Suggest gpe-setbg.
+
 2002-09-16  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c (main): Use pb's suggestion for getting and

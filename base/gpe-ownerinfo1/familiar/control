@@ -5,5 +5,5 @@ Version: 0.04-4
 Architecture: arm
 Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
 Depends: libgtk1.2, libgpewidget0 (>= 0.23), gpe-icons (>= 0.13), gpe-login (>= 0.21)
-Suggests: gpe-conf (>= 0.0.3)
+Suggests: gpe-conf (>= 0.0.3), gpe-setbg
 Description: Displays owner information
