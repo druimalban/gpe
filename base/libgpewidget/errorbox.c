@@ -77,7 +77,7 @@ gpe_perror_box(char *text)
   char *p = strerror (errno);
   char *buf = g_malloc (strlen (p) + strlen (text) + 3);
   strcpy (buf, text);
-  strcat (buf, ": ");
+  strcat (buf, ":\n");
   strcat (buf, p);
   gpe_error_box (buf);
   g_free (buf);
