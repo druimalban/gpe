@@ -3,20 +3,55 @@
 <!--#include virtual="includes/head.shtml"-->
 
 <P>
-<h2> Mailing List</h2> 
+<h2>Mailing List</h2> 
 The main point of contact for the GPE project is the mailing list
-<I><a href="mailto:gpe@handhelds.org">gpe@handhelds.org</a></I>
+<a href="mailto:gpe@handhelds.org">gpe@handhelds.org</a>.
 </P>
+
 <p> 
-To subscribe to the list go to <BR>
-<a href="http://handhelds.org/mailman/listinfo/gpe">http://handhelds.org/mailman/listinfo/gpe</a> and follow the instructions. 
+To subscribe to the list go to
+<a href="http://handhelds.org/mailman/listinfo/gpe">http://handhelds.org/mailman/listinfo/gpe</a>
+and follow the instructions. 
 </P>
+
 <P>
-You can read past articles in the mailinglist archive at<BR>
-<A HREF="http://handhelds.org/pipermail/gpe/">http://handhelds.org/pipermail/gpe/</A>
+You can read past articles in the mailing list archive at
+<A HREF="http://handhelds.org/pipermail/gpe/">http://handhelds.org/pipermail/gpe/</A>.
 </P>
+
 <P>
 <h2>IRC</h2> 
-GPE coders can be sometimes be found on the #gpe channel of irc.handhelds.org (port 6667)
+GPE coders and users can be be found on the #gpe channel of irc.handhelds.org (port 6667).
+
+<P>
+<h2>GPE around the globe</h2> 
+
+GPE team members are spread all around the globe. If you're a GPE
+user/developer/hacker and are headed somewhere, check here too see if
+there's anyone you can visit!
+</p>
+<p>
+<table border="0" width="100%">
+<tr><th width="15%"></th><th width="20%"></th><th width="65%"></th></tr>
+<tr><td><b>IRC nick</b></td> <td><b>Real name</b></td>   <td><b>Location</b></td></tr>
+<tr><td>moray</td>           <td>Moray Allen</td>        <td>Edinburgh, Scotland</td></tr>
+<tr><td>pb</td>              <td>Philip Blundell</td>    <td>Cambridge, England</td></tr>
+<tr><td>dc</td>              <td>Damien Tanner</td>      <td>London, England</td></tr>
+<tr><td>mallum</td>          <td>Matthew Allum</td>      <td>East London, England</td></tr>
+<tr><td>nils</td>            <td>Nils Färber</td>        <td>Netphen, Germany</td></tr>
+<tr><td>colin</td>           <td>Colin Marquardt</td>    <td>Stuttgart, Germany</td></tr>
+<tr><td>mccarthy</td>        <td>Joseph McCarthy</td>    <td>Pittsburgh, USA</td></tr>
+<tr><td>mibus</td>           <td>Robert Mibus</td>       <td>Adelaide, Australia</td></tr>
+</table>
+</p>
+
+<p>
+<!-- xplanet -shade 100 -markerfile ../people.coord -output people.png -geometry 640x480 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -->
+<img src="images/people.png">
+<br>
+<!-- xplanet -shade 100 -markerfile ../people.coord -output people_eu.png -geometry 320x240 -font /usr/X11R6/lib/X11/fonts/TrueType/Verdana.ttf -fontsize 9 -lat 050.00 -lon 000.00 -projection orthographic -radius 200 -->
+<img src="images/people_eu.png">
+</p>
+
 
 <!--#include virtual="includes/foot.shtml"-->
