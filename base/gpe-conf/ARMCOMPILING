@@ -1,5 +1,6 @@
 # here are the few scripts to fastly compile it on ipaq*.handhelds.org
-cat >> $HOME/.bash_profile <<EOF #this file is read by bash when you log, define some envs
+
+add these lines to $HOME/.bash_profile  #this file is read by bash when you log, define some envs
 
 #additional path for gdk-pixbuf
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/X11R6/bin:/home/tardyp/bin 
@@ -11,5 +12,18 @@ export pc=`echo $SSH_CLIENT |cut -d " " -f 1`
 export DISPLAY=$pc:0
 export HOMEUSER=mustchange  # the user you use at home
 export DEFAULTMODULE = gpe-conf #configure your current module
-EOF
+--EOF
+configuration needed:
+at home:
+working sshd deamon
+working sudo configuration with root privilege for your usual user
+sudo mkdir /armbins # will host your ARM bins for ipkg build and to scp to your ipaq.
+sudo chown homeuser.homeuser /armbins
 
+make tgz # at home, it will make a /tmp/ss.tgz snapshoot of your CVS tree
+
+#do this in /gpe/base
+getss # on ipaq*.handhelds.org will get your /tmp/ss.tgz, compile it and upload the bin to your /armbins
+
+sendss #will send your file to /armbins
+make sendss # the same
