@@ -6,3 +6,5 @@ INCLUDES = @STYLUS_CFLAGS@
 LDADD = @STYLUS_LIBS@
 
 libgtkstylus_la_SOURCES = tap.c
+
+include gpe-dist.am
