@@ -3,7 +3,7 @@ PACKAGE = libgpewidget
 
 GTKRC = gtkrc
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize question
 
 ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gtkgpepixmap2
