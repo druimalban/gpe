@@ -2,20 +2,11 @@ PACKAGE = minilite
 PREFIX = /usr
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.31
+VERSION = 0.32
 INSTALL = install
 LINGUAS = 
-FORDEVICE = ipaq
 
 MEMBERS = minilite
-
-ifeq ($(FORDEVICE),ipaq)
-CPPFLAGS = -Wall -D_GNU_SOURCE -DIPAQ
-endif
-
-ifeq ($(FORDEVICE),integral)
-CPPFLAGS = -Wall -D_GNU_SOURCE -DINTEGRAL
-endif
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g

@@ -1,3 +1,8 @@
+2004-06-20	Florian Boor <florian.boor@kernelconcepts.de>
+	* Major rework: 
+		We detect the device at runtime now.
+		Added Zaurus support.
+		Sucessfulls tested on H5550 and Collie.
 
 2004-04-19	Florian Boor <florian.boor@kernelconcepts.de>
 	* Added support for H&W integral 90200 device. (alternate to ipaq)

@@ -29,7 +29,16 @@
 #include <gpe/tray.h>
 #include <gpe/popup.h>
 
-#ifdef IPAQ
+typedef enum
+{
+	P_NONE,
+	P_IPAQ,
+	P_ZAURUS,
+	P_CORGI,
+	P_INTEGRAL,
+	P_SIMPAD
+}t_platform;
+
 /* for iPAQ touchscreen */
 #include <linux/h3600_ts.h>
 #define TS_DEV "/dev/touchscreen/0raw"
@@ -39,11 +48,17 @@
 #define H19XX 3
 #define H22XX 4
 char IpaqModel = -1;
-#endif
 
-#ifdef INTEGRAL
+/* for Integral 90200 */
 #define PROC_LIGHT "/proc/hw90200/backlight"
-#endif
+
+/* for Sharp Corgi */
+#define CORGI_FL "/proc/driver/fl/corgi-bl"
+
+/* other Zauri */
+#define ZAURUS_FL "/dev/fl"
+#define FL_IOCTL_STEP_CONTRAST    100
+
 
 GtkWidget *slider_window;
 GtkWidget *window, *slider;
@@ -58,10 +73,166 @@ struct gpe_icon my_icons[] = {
 };
 
 int window_open;
-int light_fd=-1;	/* filedescriptor to backlight device */
+t_platform platform = P_NONE;
+
+static t_platform
+detect_platform(void)
+{
+	if (!access(TS_DEV,R_OK))
+		return P_IPAQ;
+	if (!access(PROC_LIGHT,R_OK))
+		return P_INTEGRAL;
+	if (!access(CORGI_FL,R_OK))
+		return P_CORGI;
+	if (!access(ZAURUS_FL,R_OK))
+		return P_ZAURUS;
+	return P_NONE;
+}
 
 
-#ifdef IPAQ
+int 
+corgi_set_level(int level)
+{
+	int fd, val, len, res;
+	gchar buf[20];
+	
+	if ((fd = open(CORGI_FL, O_WRONLY)) >= 0)
+	{
+		val = (level == 1) ? 1 : level * ( 17.0 / 255.0 );
+		len = snprintf(buf, 20, "0x%x\n", val);
+		res = (write (fd, buf, len) >= 0);
+		close (fd);
+    }
+	return ((res < 0) ? -1 : level);
+}
+
+int 
+corgi_get_level(void)
+{
+	int val, res;
+	FILE *fd;
+	
+	if ((fd = fopen(CORGI_FL, O_RDONLY)) != NULL)
+	{
+		res = fscanf(fd, "0x%x", &val);
+		fclose (fd);
+		if (res) 
+			return ((val * 255) / 17);
+    }
+	return (-1);
+}
+
+int 
+zaurus_set_level(int level)
+{
+	int fd, val, len, res;
+	gchar buf[20];
+	
+	if ((fd = open(ZAURUS_FL, O_WRONLY)) >= 0)
+	{
+		val = (level * 4 + 127) / 255;
+		if (level && !val)
+			val = 1;
+            res = ioctl(fd, FL_IOCTL_STEP_CONTRAST, val);
+		close (fd);
+    }
+	return (res != 0) ? -1 : level;
+}
+
+int 
+zaurus_get_level(void)
+{
+	int fd, val;
+/*	
+	if ((fd = open(ZAURUS_FL, O_WRONLY )) >= 0 )
+	{
+		res = ioctl(fd, FL_IOCTL_GET_STEP_CONTRAST, &val);
+		close (fd);
+    }
+	return (res != 0) ? -1 : ((val*255-127) / 4);
+*/
+	return 25;	
+}
+
+
+int 
+ipaq_set_level(int level)
+{
+	int light_fd;
+	struct h3600_ts_backlight bl;
+
+	light_fd = open (TS_DEV, O_RDONLY);
+	if (light_fd > 0) {
+  		bl.brightness = level;
+  		bl.power = (level > 0) ? FLITE_PWR_ON : FLITE_PWR_OFF;
+ 		if (ioctl (light_fd, TS_SET_BACKLIGHT, &bl) != 0)
+		{
+			close(light_fd);
+    		return -1;
+		}
+  		else
+		{
+			close(light_fd);
+    		return level;
+		}
+	}
+	return -1;
+}
+
+int 
+ipaq_get_level(void)
+{
+	int light_fd;
+	struct h3600_ts_backlight bl;
+
+	light_fd = open (TS_DEV, O_RDONLY);
+	if (light_fd > 0) {
+ 		if (ioctl (light_fd, TS_GET_BACKLIGHT, &bl) != 0)
+		{
+			close(light_fd);
+    		return -1;
+		}
+  		else
+		{
+			close(light_fd);
+    		return bl.brightness;
+		}
+	}
+	return -1;
+}
+
+int 
+integral_set_level(int level)
+{
+  FILE *f_light;
+  
+  f_light = fopen(PROC_LIGHT,"w");
+  if (f_light >= 0)
+  {
+  	fprintf(f_light,"%i\n", level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+return level;
+}
+
+int 
+integral_get_level(void)
+{
+  FILE *f_light;
+  int level;
+  
+  f_light = fopen(PROC_LIGHT,"r");
+  if (f_light >= 0)
+  {
+  	fscanf(f_light,"%i", &level);
+  	fclose(f_light);
+	return level;
+  }
+  return -1;
+}  
+  
 int
 get_ipaq_model (void)
 {
@@ -89,36 +260,25 @@ get_ipaq_model (void)
 
 return IpaqModel;
 }
-#endif
 
 int 
 set_level (int level)
 {
-#ifdef IPAQ
-  struct h3600_ts_backlight bl;
-
-  bl.brightness = level;
-  bl.power = (level > 0) ? FLITE_PWR_ON : FLITE_PWR_OFF;
-
-  if (ioctl (light_fd, TS_SET_BACKLIGHT, &bl) != 0)
-    return -1;
-  else
-    return level;
-#else
-#ifdef INTEGRAL
-  FILE *f_light;
-  
-  f_light = fopen(PROC_LIGHT,"w");
-  if (f_light >= 0)
-  {
-  	fprintf(f_light,"%i\n", level);
-  	fclose(f_light);
-	return level;
-  }
-  return -1;
-#endif  
-return level;
-#endif
+	switch (platform)
+	{
+	case P_IPAQ:
+		return ipaq_set_level(level);
+	break;
+	case P_ZAURUS:
+		return zaurus_set_level(level);
+	break;
+	case P_CORGI:
+		return corgi_set_level(level);
+	break;
+	case P_INTEGRAL:
+		return integral_set_level(level);
+	break;
+	}
 }
 
 void
@@ -134,29 +294,22 @@ value_changed (GtkAdjustment *adj)
 int
 read_old_level (void)
 {
-#ifdef IPAQ
-  struct h3600_ts_backlight bl;
-
-  if (ioctl (light_fd, TS_GET_BACKLIGHT, &bl) != 0)
-    return -1;
-  else
-    return bl.brightness;
-#else 
-#ifdef INTEGRAL
-  FILE *f_light;
-  int level;
-  
-  f_light = fopen(PROC_LIGHT,"r");
-  if (f_light >= 0)
-  {
-  	fscanf(f_light,"%i", &level);
-  	fclose(f_light);
-	return level;
-  }
-  return -1;
-#endif
+	switch (platform)
+	{
+	case P_IPAQ:
+		return ipaq_get_level();
+	break;
+	case P_ZAURUS:
+		return zaurus_get_level();
+	break;
+	case P_CORGI:
+		return corgi_get_level();
+	break;
+	case P_INTEGRAL:
+		return integral_get_level();
+	break;
+	}
   return 0;
-#endif
 }
 
 static void
@@ -204,17 +357,13 @@ main (int argc, char **argv)
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-#ifdef IPAQ
-  light_fd = open (TS_DEV, O_RDONLY);
-  if (light_fd <= 0) {
-    gpe_perror_box (_("Opening touchscreen device" TS_DEV));
-    exit (1);
-  }
-  if (get_ipaq_model() == -1) {
-    gpe_perror_box (_("Determining iPaq model"));
-    exit (1);
-  }
-#endif
+  platform = detect_platform();
+  
+  if (platform == P_IPAQ)
+	  if (get_ipaq_model() == -1) {
+      gpe_perror_box (_("Determining iPaq model"));
+      exit (1);
+    }
 
   window = gtk_plug_new (0);
   gtk_widget_set_usize (window, 16, 16);
@@ -244,7 +393,7 @@ main (int argc, char **argv)
   gpe_system_tray_dock (window->window);
 
   slider_window = gtk_window_new (GTK_WINDOW_POPUP);
-#ifdef IPAQ
+  if (platform == P_IPAQ)
   switch (IpaqModel) {
     case H36XX:
       slider = gtk_vscale_new_with_range (0, 255, 1);
@@ -265,9 +414,8 @@ main (int argc, char **argv)
       slider = gtk_vscale_new_with_range (0, 255, 1);
       break;
   }
-#else
-  slider = gtk_vscale_new_with_range (0, 255, 1);
-#endif
+  else
+  	slider = gtk_vscale_new_with_range (0, 255, 1);
 
   gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
   gtk_widget_set_usize (slider_window, -1, SLIDER_HEIGHT);
