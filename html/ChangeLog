@@ -1,5 +1,7 @@
 2003-06-09  Colin Marquardt  <colin@marquardt-home.de>
 
+	* screenshots.shtml: Nicer source layout. Add captions.
+
 	* documentation/wireless.shtml: New addtitle and pagename. Use
 	scaps from CVS.
 	Revert "pagename".

@@ -2,42 +2,60 @@
 <!--#set var="pagename" value="screenshots"-->
 <!--#include virtual="includes/head.shtml"-->
 
-<p>
-<table border=0><tr><td>
-<p>
-<img src="images/gpe-login.png" alt="gpe-login">
-</td><td>
-<img src="images/gpe-appmgr.png" alt="gpe-appmgr">
-</td><td>
-<img src="images/terminal.png" alt="rxvt">
-</td></tr><tr><td>
-<p>
-<img src="images/calendar-month.png" alt="gpe-calendar">
-</td><td>
-<img src="images/calendar-event.png" alt="gpe-calendar">
-</td><td>
-<img src="images/gpe-edit.png" alt="gpe-edit">
-</td></tr><tr><td>
-<p>
-<img src="images/gpe-soundbite.png" alt="gpe-soundbite">
-</td><td>
-<img src="images/gpe-tetris.png" alt="gpe-tetris">
-</td><td>
-<img src="images/gpe-todo.png" alt="gpe-todo">
-</td></tr><tr><td>
-<p>
-<img src="images/gpe-filemanager.png" alt="gpe-filemanager">
-</td><td>
-<img src="images/gpe-conf-buttons.png" alt="gpe-conf">
-</td><td>
-<img src="images/gpe-contacts.png" alt="gpe-contacts">
-</td></tr><tr><td>
-<p>
-<img src="images/gpe-sketchbook-select-icon.png" alt="gpe-sketchbook">
-</td><td>
-<img src="images/gpe-sketchbook-sketch1.png" alt="gpe-sketchbook">
-</td><td>
-</td></tr>
+<table border=0>
+  <tr>
+    <td>
+      <img src="images/gpe-login.png" alt="gpe-login">
+      <p>GPE login dialog
+    </td><td>
+      <img src="images/gpe-appmgr.png" alt="gpe-appmgr">
+      <p>GPE Application manager
+    </td><td>
+      <img src="images/terminal.png" alt="rxvt">
+      <p>Terminal, rxvt
+    </td>
+  </tr><tr>
+    <td>
+      <img src="images/calendar-month.png" alt="gpe-calendar">
+      <p>GPE Calendar, month view
+    </td><td>
+      <img src="images/calendar-event.png" alt="gpe-calendar">
+      <p>GPE Calendar, event
+    </td><td>
+      <img src="images/gpe-edit.png" alt="gpe-edit">
+      <p>GPE editor
+    </td>
+  </tr><tr>
+    <td>
+      <img src="images/gpe-soundbite.png" alt="gpe-soundbite">
+      <p>GPE sound recorder
+    </td><td>
+      <img src="images/gpe-tetris.png" alt="gpe-tetris">
+      <p>Yes, we have tetris too!
+    </td><td>
+      <img src="images/gpe-todo.png" alt="gpe-todo">
+      <p>GPE to-do list
+    </td>
+  </tr><tr>
+    <td>
+      <img src="images/gpe-filemanager.png" alt="gpe-filemanager">
+      <p>GPE file manager
+    </td><td>
+      <img src="images/gpe-conf-buttons.png" alt="gpe-conf">
+      <p>GPE button configurator
+    </td><td>
+      <img src="images/gpe-contacts.png" alt="gpe-contacts">
+      <p>GPE contacts application
+    </td>
+  </tr><tr>
+    <td>
+      <img src="images/gpe-sketchbook-select-icon.png" alt="gpe-sketchbook">
+      <p>GPE Sketchbook, icon view
+    </td><td>
+      <img src="images/gpe-sketchbook-sketch1.png" alt="gpe-sketchbook">
+      <p>GPE Sketchbook, editing
+    </td>
+  </tr>
 </table>
 
 <!--#include virtual="includes/foot.shtml"-->
