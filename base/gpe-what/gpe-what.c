@@ -263,7 +263,6 @@ int
 main (int argc, char *argv[])
 {
   PangoContext *pango_ctx;
-  PangoFontMap *fontmap;
   PangoFontDescription *fontdes;
   XRenderColor colortmp;
   XColor c;
@@ -324,35 +323,32 @@ main (int argc, char *argv[])
   string_atom = XInternAtom (dpy, "STRING", False);
   
   pango_ctx = pango_xft_get_context (dpy, DefaultScreen (dpy));
-  pango_layout = pango_layout_new (pango_ctx);
 
-  fontmap = pango_xft_get_font_map (dpy, DefaultScreen (dpy));
   fontdes = pango_font_description_new ();
 
-  pango_font_description_set_family (fontdes, "Sans");
-  pango_font_description_set_size (fontdes, 8 * PANGO_SCALE);
+  pango_font_description_set_family_static (fontdes, "Sans");
+  pango_font_description_set_size (fontdes, 10 * PANGO_SCALE);
   
-  pango_font = pango_font_map_load_font (fontmap, pango_ctx, fontdes);
+  pango_context_set_font_description (pango_ctx, fontdes);
+
+  pango_font = pango_context_load_font (pango_ctx, fontdes);
   pango_metrics = pango_font_get_metrics (pango_font, NULL);
 
-  pango_layout_set_font_description (pango_layout, fontdes);
+  pango_layout = pango_layout_new (pango_ctx);
   pango_layout_set_justify (pango_layout, TRUE);
 
-  pango_layout_set_width (pango_layout, 120 * PANGO_SCALE);
+  pango_layout_set_width (pango_layout, 180 * PANGO_SCALE);
 
-  colortmp.red   = 0xffff;
-  colortmp.green = 0xffff;
-  colortmp.blue  = 0xffff;
+  colortmp.red   = 0;
+  colortmp.green = 0;
+  colortmp.blue  = 0;
   colortmp.alpha = 0xffff;
 
   XftColorAllocValue (dpy, DefaultVisual(dpy, screen),
 		      DefaultColormap (dpy, screen),
 		      &colortmp, &fg_xftcol);
 
-  c.red   = 0;
-  c.green = 0;
-  c.blue  = 0xffff;
-
+  XParseColor (dpy, DefaultColormap (dpy, screen), "gold", &c);
   XAllocColor (dpy, DefaultColormap (dpy, screen), &c);
   bgcol = c.pixel;
 
@@ -444,7 +440,7 @@ main (int argc, char *argv[])
 
 	case ClientMessage:
 	  if (xev.xclient.message_type == help_atom)
-	    popup_box (_("This is the interactive help icon."), -1, last_x, last_y);
+	    popup_box (_("This is the interactive help button.  Tap here and then on another icon to get help."), -1, last_x, last_y);
 	  break;
 
 	case PropertyNotify:
