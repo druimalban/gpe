@@ -18,8 +18,11 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
+ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libdisplaymigration
-LDFLAGS += -L../libdisplaymigration -ldisplaymigration
+LDFLAGS += -L../libdisplaymigration
+endif
+LDFLAGS += -ldisplaymigration
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
