@@ -1,8 +1,23 @@
+2002-06-16  Philip Blundell  <pb@kc.cam.armlinux.org>
+
 2002-06-16  Philip Blundell  <pb@debian.org>
 
 	* Makefile (MEMBERS): Add gtkgpepixmap.
 	* gtkgpepixmap.c: New file.
 	* gtkgpepixmap.h: Likewise.
+
+	* errorbox.c: Use dgettext not gettext.
+	* gtkminifilesel.c: Likewise.
+	* pixmaps.c: Likewise.
+	* smallbox.c: Likewise.
+
+	* pixmaps.c (gpe_load_icons): New function.
+	(gpe_find_icon): Likewise.
+	(gpe_find_icon_pixmap): Likewise.
+	* pixmaps.h (struct gpe_icon): New.
+	(gpe_load_icons): New prototype.
+	(gpe_find_icon): Likewise.
+	(gpe_find_icon_pixmap): Likewise.
 
 2002-06-16  Philip Blundell  <pb@debian.org>
 
