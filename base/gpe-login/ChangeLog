@@ -1,3 +1,7 @@
+2003-02-22  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.44 released.
+
 2003-02-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-login.c: Cosmetics. Remove border to be consistent with
