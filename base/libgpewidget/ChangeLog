@@ -564,4 +564,7 @@
 	* errorbox.c: Likewise.
 	* Makefile: Add gdk-pixbuf flags to compile and link.
 	
+2002-10-20  Moray Allan  <moray@handhelds.org>
 
+	* pixmaps.c: Removed unnecessary abort().
+	* question.c: Cope with failure to find an icon.

@@ -83,8 +83,11 @@ gpe_question_ask (char *qn, char *title, char *iconname, ...)
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
 
   p = gpe_find_icon (iconname);
-  icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);
-  gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+  if (p != NULL)
+  {
+    icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);
+    gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
+  }
 
   label = gtk_label_new (qn);
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
