@@ -26,6 +26,7 @@
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
   { "cancel", "cancel" },
+  { "logout", PREFIX "/share/pixmaps/gpe-logout.png" },
   { NULL, NULL }
 };
 
@@ -97,12 +98,10 @@ main(int argc, char *argv[])
   gtk_widget_show (label);
   gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
 
-  p = gpe_find_icon ("error");
+  p = gpe_find_icon ("logout");
   icon = gpe_render_icon (GTK_DIALOG(window)->vbox->style, p);
   gtk_box_pack_start (GTK_BOX (hbox), icon, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
-                      hbox, TRUE, FALSE, 0);
 
   gtk_widget_realize (window);
 
