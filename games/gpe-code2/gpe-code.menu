@@ -1,3 +1,0 @@
-?package(gpe-code):needs=x11 section=Games\
-  title="Codebreaker" command=gpe-code
-  icon=/usr/share/pixmaps/gpe-code.png
