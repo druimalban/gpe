@@ -12,15 +12,13 @@
 
 #include "render.h"
 
-GtkWidget *
-gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
+static void
+gpe_render_pixmap(GdkColor *bgcol, GdkPixbuf *pixbuf, GdkPixmap **pixmap,
+		  GdkBitmap **bitmap)
 {
-  GtkWidget *widget;
   guint width = gdk_pixbuf_get_width (pixbuf),
     height = gdk_pixbuf_get_height (pixbuf);
   guint depth = gdk_pixbuf_get_bits_per_sample (pixbuf);
-  GdkPixmap *pixmap = NULL;
-  GdkBitmap *bitmap = NULL;
   
   if (gdk_pixbuf_get_has_alpha (pixbuf))	
     {
@@ -34,9 +32,9 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
       stride = gdk_pixbuf_get_rowstride (composited);
       sstride = gdk_pixbuf_get_rowstride (pixbuf);
       
-      br = style->bg[GTK_STATE_NORMAL].red;
-      bg = style->bg[GTK_STATE_NORMAL].green;
-      bb = style->bg[GTK_STATE_NORMAL].blue;
+      br = bgcol->red;
+      bg = bgcol->green;
+      bb = bgcol->blue;
       
       for (y = 0; y < height; y++) 
 	{
@@ -81,15 +79,30 @@ gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
 	}
       
       gdk_pixbuf_render_pixmap_and_mask (composited, 
-					 &pixmap, &bitmap, 1);
+					 pixmap, bitmap, 1);
 
       gdk_pixbuf_unref (composited);
     }
   else
     gdk_pixbuf_render_pixmap_and_mask (pixbuf,
-				       &pixmap, &bitmap, 1);
+				       pixmap, bitmap, 127);
+}
+
+GtkWidget *
+gpe_render_icon(GtkStyle *style, GdkPixbuf *pixbuf)
+{
+  GtkWidget *widget;
+  GdkPixmap *pixmap;
+  GdkBitmap *bitmap;
+
+  gpe_render_pixmap (&style->bg[GTK_STATE_NORMAL], pixbuf,
+		     &pixmap, &bitmap);
   
   widget = gtk_pixmap_new (pixmap, bitmap);
+  
+  gpe_render_pixmap (&style->bg[GTK_STATE_PRELIGHT], pixbuf,
+		     &pixmap, &bitmap);
+  gtk_pixmap_set_prelight (GTK_PIXMAP (widget), pixmap);
   
   return widget;
 }
