@@ -39,6 +39,8 @@
 #include "main.h"
 #include "sdp.h"
 
+#define WRONG_ARGS_ERROR "org.handhelds.gpe.bluez.Error.WrongArgs"
+
 #define _(x) gettext(x)
 
 struct dbus_push_context
@@ -60,6 +62,8 @@ push_done (gboolean result, struct dbus_push_context *ctx)
 
   dbus_connection_send (ctx->connection, ctx->reply, NULL);
 
+  dbus_message_unref (ctx->reply);
+
   g_free (ctx);
 }
 
@@ -68,17 +72,13 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
 {
   DBusMessageIter iter;
   DBusMessage *reply;
-  gchar *filename, *mime_type;
-  unsigned char *data;
+  gchar *filename = NULL, *mime_type = NULL;
+  unsigned char *data = NULL;
   size_t len;
   struct dbus_push_context *ctx;
 
   dbus_message_iter_init (message, &iter);
  
-  reply = dbus_message_new_method_return (message);
-  if (!reply)
-    return DBUS_HANDLER_RESULT_NEED_MEMORY;
-
   if (dbus_message_iter_get_arg_type (&iter) != DBUS_TYPE_STRING)
     goto wrong_args;
 
@@ -101,6 +101,16 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
 
   dbus_message_iter_get_byte_array (&iter, &data, &len);
 
+  reply = dbus_message_new_method_return (message);
+  if (!reply)
+    {
+      dbus_free (filename);
+      dbus_free (mime_type);
+      dbus_free (data);
+
+      return DBUS_HANDLER_RESULT_NEED_MEMORY;
+    }
+
   ctx = g_new (struct dbus_push_context, 1);
 
   ctx->filename = filename;
@@ -114,6 +124,21 @@ obex_client_handle_dbus_request (DBusConnection *connection, DBusMessage *messag
   return DBUS_HANDLER_RESULT_HANDLED;
 
  wrong_args:
-  g_critical ("wrong args");
+  if (filename)
+    dbus_free (filename);
+
+  if (mime_type)
+    dbus_free (mime_type);
+
+  if (data)
+    dbus_free (data);
+
+  reply = dbus_message_new_error (message, WRONG_ARGS_ERROR,
+				  "Wrong arguments for ObjectPush method");
+
+  dbus_connection_send (connection, reply, NULL);
+
+  dbus_message_unref (reply);
+
   return DBUS_HANDLER_RESULT_HANDLED;
 }
