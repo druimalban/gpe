@@ -64,7 +64,7 @@ gchar **channels = NULL;
 /* mixer handling */
 char *mixer_labels[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_LABELS;
 char *mixer_names[SOUND_MIXER_NRDEVICES] = SOUND_DEVICE_NAMES;
-int devmask = 0, recmask = 0, recsrc = 0;
+int devmask = 0;
 int mixfd;
 
 static gboolean 
@@ -252,14 +252,6 @@ gchar *cstr = NULL;
 	}
 	if (ioctl(mixfd, SOUND_MIXER_READ_DEVMASK, &devmask) == -1) {
 		gpe_perror_box("SOUND_MIXER_READ_DEVMASK");
-		exit(1);
-	}
-	if (ioctl(mixfd, SOUND_MIXER_READ_RECMASK, &recmask) == -1) {
-		gpe_perror_box("SOUND_MIXER_READ_RECMASK");
-		exit(1);
-	}
-	if (ioctl(mixfd, SOUND_MIXER_READ_RECSRC, &recsrc) == -1) {
-		gpe_perror_box("SOUND_MIXER_READ_RECSRC");
 		exit(1);
 	}
 
