@@ -1,3 +1,14 @@
+2003-01-07  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.42 released.
+
+2003-01-06  Damien Tanner  <dctanner@handhelds.org>
+
+	* picturebutton.c (gpe_button_new_from_stock): New.
+	* gpe/picturebutton.h (gpe_button_new_from_stock): Likewise.
+	(GPE_BUTTON_TYPE_ICON, GPE_BUTTON_TYPE_LABEL,
+	GPE_BUTTON_TYPE_BOTH): Likewise.
+
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (MEMBERS): Remove gtkminifilesel.
