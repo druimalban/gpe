@@ -385,6 +385,7 @@ run_scan (void)
   gtk_widget_show_all (devices_window);
 
   bt_progress_dialog_update (w, _("Retrieving service information"));
+  gdk_flush ();
 
   for (iter = devices; iter; iter = iter->next)
     {
@@ -395,6 +396,7 @@ run_scan (void)
       
       if (bd->sdp == FALSE)
 	{
+	  gdk_flush ();
 	  gdk_threads_leave ();
 
 	  bd->sdp = TRUE;
@@ -405,6 +407,7 @@ run_scan (void)
     }
 
   gtk_widget_destroy (w);
+  gdk_flush ();
 
   gdk_threads_leave ();
 

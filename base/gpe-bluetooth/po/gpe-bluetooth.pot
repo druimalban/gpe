@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-12-07 19:11+0000\n"
+"POT-Creation-Date: 2004-01-19 00:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,7 +77,7 @@ msgid "Devices..."
 msgstr ""
 
 #: main.c:525
-msgid "Remove from dock"
+msgid "Remove from panel"
 msgstr ""
 
 #: main.c:558
@@ -136,18 +136,18 @@ msgstr ""
 msgid "Connect LAP"
 msgstr ""
 
-#: pin-ui.c:134
+#: pin-ui.c:154
+msgid "Bluetooth PIN"
+msgstr ""
+
+#: pin-ui.c:164
 #, c-format
 msgid "Outgoing connection to %s"
 msgstr ""
 
-#: pin-ui.c:135
+#: pin-ui.c:165
 #, c-format
 msgid "Incoming connection from %s"
-msgstr ""
-
-#: pin-ui.c:163
-msgid "Bluetooth PIN"
 msgstr ""
 
 #: headset.c:148
