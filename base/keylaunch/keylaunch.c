@@ -36,6 +36,8 @@
 
 #include "xsi.h"
 
+#undef CHECK_RC
+
 typedef struct _Key Key;
 
 struct _Key
@@ -46,6 +48,7 @@ struct _Key
   int long_press;
   Key *next;
   char *window;
+  struct timeval press_time;
 };
 
 Display *dpy;
@@ -53,8 +56,9 @@ Window root;
 Key *key = NULL;
 Key *lastkey = NULL;
 int NumLockMask, CapsLockMask, ScrollLockMask;
+#ifdef CHECK_RC
 time_t last_update;
-struct timeval key_press_time;
+#endif
 char *rc_file;
 
 /*
@@ -75,6 +79,7 @@ print_error (char *error, int critical)
     exit (1);
 }
 
+#ifdef CHECK_RC
 time_t
 get_last_update (char *rc_file)
 {
@@ -85,6 +90,7 @@ get_last_update (char *rc_file)
     stat_buf.st_mtime = last_update;
   return stat_buf.st_mtime;
 }
+#endif
 
 /*
  *
@@ -212,7 +218,7 @@ create_new_key (char *key_string)
 
   grab_key (k->keycode, k->modifier, root);
   k->command = strdup (command);
-  if (window)
+  if (window && strcmp (window, "-"))
     k->window = strdup (window);
   else
     k->window = NULL;
@@ -300,7 +306,9 @@ parse_rc (char *rc_file)
 	}
       fclose (rc);
     }
+#ifdef CHECK_RC
   last_update = get_last_update (rc_file);
+#endif
 }
 
 /*
@@ -419,105 +427,114 @@ main (int argc, char *argv[])
 {
   initialize (argc, argv);
 
+  signal (SIGCHLD, SIG_IGN);
+
   while (1)
     {
-      while (XPending (dpy))
-	{
-	  XEvent ev;
-	  Key *k;
+      XEvent ev;
+      Key *k;
 
-	  waitpid (-1, NULL, WNOHANG);
+      XNextEvent (dpy, &ev);
+      if (ev.type == KeyPress)
+        {
+#ifdef DEBUG
+          fprintf (stderr, "key press event...\n");
+#endif
 
-	  XNextEvent (dpy, &ev);
-	  if (ev.type == KeyPress)
-	    {
-	      struct timeval time_now;
-	      struct timeval time_elapsed;
+	  ev.xkey.state =
+	    ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
+	  for (k = key; k != NULL; k = k->next)
+	    if (k->keycode == ev.xkey.keycode
+	        && (k->modifier == AnyModifier
+	            || k->modifier == ev.xkey.state))
+	      {
+	        struct timeval time_now;
+	        struct timeval time_elapsed;
+	        gettimeofday (&time_now, NULL);
 
-	      gettimeofday (&time_now, NULL);
-
-	      fprintf (stderr, "key press event...\n");
-
-	      timersub (&time_now, &key_press_time, &time_elapsed);
-	      if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
-		{
-		  fprintf (stderr, "ignoring - too soon after previous\n");
-		  key_press_time.tv_sec = 0;
-		  key_press_time.tv_usec = 0;
-		}
-	      else
-		{
-		  key_press_time = time_now;
-		}
-	    }
-	  else if ((ev.type == KeyRelease) && (key_press_time.tv_sec || key_press_time.tv_usec))
-	    {
-	      KeySym t;
-	      char *t2;
-	      struct timeval key_release_time;
-	      struct timeval time_elapsed;
-	      int long_press = 0;
-
-	      fprintf (stderr, "key release event...\n");
-
-	      gettimeofday (&key_release_time, NULL);
-
-	      timersub (&key_release_time, &key_press_time, &time_elapsed);
-	      if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
-		{
-		  fprintf (stderr, "short press\n");
-		}
-	      else
-		{
-		  fprintf (stderr, "long press\n");
-		  long_press = 1;
-		}
-
-	      ev.xkey.state =
-		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
-	      for (k = key; k != NULL; k = k->next)
-		if (k->keycode == ev.xkey.keycode
-		    && (k->long_press == long_press)
-		    && (k->modifier == AnyModifier
-			|| k->modifier == ev.xkey.state))
+	        timersub (&time_now, &k->press_time, &time_elapsed);
+	        if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
 		  {
-		    if (k->window == NULL
-			|| (try_to_raise_window (dpy, k->window) != 0))
-		      {
-			fprintf (stderr, "running program\n");
-			fork_exec (k->command);
-		      }
+		    fprintf (stderr, "ignoring - too soon after previous\n");
+		    k->press_time.tv_sec = 0;
+		    k->press_time.tv_usec = 0;
 		  }
-
-	      t = XKeycodeToKeysym (dpy, ev.xkey.keycode, 0);
-	      t2 = XKeysymToString (t);
-	      fprintf (stderr, "key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
-		      ev.xkey.state);
-
-	      ev.xkey.state =
-		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
-	      for (k = key; k != NULL; k = k->next)
-		if (k->keycode == ev.xkey.keycode
-		    && (k->modifier == AnyModifier
-			|| k->modifier == ev.xkey.state))
+	        else
 		  {
-		    free_keys ();
-		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
-		    XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
-		    fprintf (stderr, "faking key event\n");
-		    parse_rc (rc_file);
-		    k = lastkey;
+		    k->press_time = time_now;
 		  }
-	    }
-	  /*
-	     if (get_last_update (rc_file) != last_update)
-	     {
-	     free_keys ();
-	     parse_rc (rc_file);
-	     }
-	   */
+	      }
 	}
-      usleep (1);
+      else if (ev.type == KeyRelease)
+	{
+	  KeySym t;
+	  char *t2;
+#ifdef DEBUG
+	  fprintf (stderr, "key release event...\n");
+#endif
+	  t = XKeycodeToKeysym (dpy, ev.xkey.keycode, 0);
+	  t2 = XKeysymToString (t);
+#ifdef DEBUG
+	  printf ("key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
+	          ev.xkey.state);
+#endif
+
+	  ev.xkey.state =
+	    ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
+	  for (k = key; k != NULL; k = k->next)
+	    if (k->keycode == ev.xkey.keycode
+	      && (k->modifier == AnyModifier
+	          || k->modifier == ev.xkey.state)
+	      && (k->press_time.tv_sec || k->press_time.tv_usec))
+	      {
+	        struct timeval key_release_time;
+	        struct timeval time_elapsed;
+	        int long_press = 0;
+
+	        gettimeofday (&key_release_time, NULL);
+
+	        timersub (&key_release_time, &k->press_time, &time_elapsed);
+	        if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
+		  {
+#ifdef DEBUG
+		    fprintf (stderr, "short press\n");
+#endif
+		  }
+	        else
+		  {
+#ifdef DEBUG
+		    fprintf (stderr, "long press\n");
+#endif
+		    long_press = 1;
+		  }
+
+	        if (k->window == NULL
+		    || (try_to_raise_window (dpy, k->window) != 0))
+		  {
+#ifdef DEBUG
+		    fprintf (stderr, "running program\n");
+#endif
+		    fork_exec (k->command);
+		  }
+
+		free_keys ();
+		XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
+		XTestFakeKeyEvent (dpy, ev.xkey.keycode, False, 0);
+#ifdef DEBUG
+		printf ("faking key event\n");
+#endif
+		parse_rc (rc_file);
+		k = lastkey;
+	      }
+
+#ifdef CHECK_RC
+            if (get_last_update (rc_file) != last_update)
+	      {
+		free_keys ();
+		parse_rc (rc_file);
+	      }
+#endif
+
     }
   return 0;
 }
