@@ -290,32 +290,53 @@ top_level (GtkWidget *window)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *sep = gtk_vseparator_new ();
-  GtkWidget *toolbar, *toolbar2;
+  GtkWidget *toolbar;
   GtkWidget *option = gtk_option_menu_new ();
   GtkWidget *pw;
   GtkWidget *draw = gtk_drawing_area_new();
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
 
-  toolbar = gtk_toolbar_new ();
-  toolbar2 = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar2), GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
-
   g_option = option;
   categories_menu ();
+
+  /* Design the Tool Bar a little better, see Bug 733 */
+  /* New | Conf | Purge Down | List | Exit */
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
 			    _("New item"), _("Tap here to add a new item."),
 			    G_CALLBACK (new_todo_item), NULL, -1);
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_PROPERTIES, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  /* New */
+  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+
+  /* | */
+  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
+
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
+  pw = gtk_image_new_from_stock (GTK_STOCK_PROPERTIES, 
+		  gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Configure"), 
 			   _("Configure categories"), 
 			   _("Tap here to configure categories."),
 			   pw, GTK_SIGNAL_FUNC (configure), NULL);
+
+  /* Conf */
+  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+
+  /* | */
+  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
+
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
   pw = gtk_image_new_from_stock (GTK_STOCK_CLEAR, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
@@ -331,14 +352,29 @@ top_level (GtkWidget *window)
 			   _("Tap here to move completed items to the end of the list."),
 			   pw, GTK_SIGNAL_FUNC (show_hide_completed), NULL);
 
+  /* Purge Down */
+  gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
+
+  /* | */
+  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
+
+  /* List */
+  gtk_box_pack_start (GTK_BOX (hbox), option, TRUE, TRUE, 0);
+
+  /* | */
+  gtk_box_pack_start (GTK_BOX (hbox), gtk_vseparator_new(), FALSE, FALSE, 0);
+
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
 			    _("Quit"), _("Tap here to quit the program."),
 			    G_CALLBACK (gtk_main_quit), NULL, -1);
 
+  /* Exit */
   gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), option, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
+
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   
   g_signal_connect (G_OBJECT (draw), "expose_event",
