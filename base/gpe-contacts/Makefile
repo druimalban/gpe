@@ -6,7 +6,7 @@ CVSBUILD = yes
 STRIP = strip
 VERSION = 0.16
 
-LINGUAS = de sv zh_TW cs nl fr hu pt ro ru sr sk
+LINGUAS = de sv cs nl hu pt ro ru sr sk
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
