@@ -50,11 +50,11 @@ install-program: all $(PACKAGE).desktop
 	install -d $(DESTDIR)$(pkgdatadir)
 	install -m 644 contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
 	install -m 644 well-known-tags $(DESTDIR)$(pkgdatadir)/well-known-tags
-	install -d $(MYPIXMAPSDIR)
-	install -m 644 icons/frame.png $(MYPIXMAPSDIR)/frame.png
-	install -m 644 icons/entry.png $(MYPIXMAPSDIR)/entry.png
-	install -m 644 icons/notebook.png $(MYPIXMAPSDIR)/notebook.png
-	install -m 644 icons/export.png $(MYPIXMAPSDIR)/export.png
+	install -d $(DESTDIR)$(MYPIXMAPSDIR)
+	install -m 644 icons/frame.png $(DESTDIR)$(MYPIXMAPSDIR)/frame.png
+	install -m 644 icons/entry.png $(DESTDIR)$(MYPIXMAPSDIR)/entry.png
+	install -m 644 icons/notebook.png $(DESTDIR)$(MYPIXMAPSDIR)/notebook.png
+	install -m 644 icons/export.png $(DESTDIR)$(MYPIXMAPSDIR)/export.png
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
