@@ -105,7 +105,8 @@ adb_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
-	callbacks.c callbacks.h
+	callbacks.c callbacks.h \
+	structure.c
 
 
 adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget
@@ -117,7 +118,7 @@ bin_PROGRAMS = adb$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_adb_OBJECTS = main.$(OBJEXT) support.$(OBJEXT) interface.$(OBJEXT) \
-	callbacks.$(OBJEXT)
+	callbacks.$(OBJEXT) structure.$(OBJEXT)
 adb_OBJECTS = $(am_adb_OBJECTS)
 adb_DEPENDENCIES =
 adb_LDFLAGS =
@@ -129,7 +130,8 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/callbacks.Po $(DEPDIR)/interface.Po \
-@AMDEP_TRUE@	$(DEPDIR)/main.Po $(DEPDIR)/support.Po
+@AMDEP_TRUE@	$(DEPDIR)/main.Po $(DEPDIR)/structure.Po \
+@AMDEP_TRUE@	$(DEPDIR)/support.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -186,6 +188,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/callbacks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/interface.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/structure.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/support.Po@am__quote@
 
 distclean-depend:

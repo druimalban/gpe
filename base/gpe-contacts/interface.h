@@ -5,3 +5,5 @@
 GtkWidget* create_main (void);
 GtkWidget* create_detailview (void);
 GtkWidget* create_edit (void);
+GtkWidget* create_structure (void);
+GtkWidget* create_structure_item (void);

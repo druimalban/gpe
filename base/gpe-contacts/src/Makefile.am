@@ -10,6 +10,7 @@ adb_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
-	callbacks.c callbacks.h
+	callbacks.c callbacks.h \
+	structure.c
 
 adb_LDADD = @GTK_LIBS@ -L$(top_srcdir)/../libgpewidget -lgpewidget

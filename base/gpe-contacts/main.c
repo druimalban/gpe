@@ -42,6 +42,9 @@ main (int argc, char *argv[])
   /* gtk_widget_show (fileselection1); */
 #endif
 
+  initial_structure ();
+  edit_structure ();
+
   gtk_main ();
   return 0;
 }

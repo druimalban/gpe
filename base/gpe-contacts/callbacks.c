@@ -71,3 +71,36 @@ on_edit_bt_image_clicked (GtkButton       *button,
   gtk_widget_show_all (filesel);
 }
 
+#if 0
+void
+structure_add_clicked                  (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+structure_edit_clicked                 (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+structure_delete_clicked               (GtkButton       *button,
+                                        gpointer         user_data)
+{
+
+}
+#endif
+
+
+void
+on_structure_test                      (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  try_it ();
+}
+

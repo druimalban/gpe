@@ -531,9 +531,11 @@ create_edit (void)
   GtkWidget *label21;
   GtkWidget *vbox9;
   GtkWidget *frame10;
-  GtkWidget *label36;
+  GtkWidget *scrolledwindow4;
+  GtkWidget *home_address;
   GtkWidget *frame11;
-  GtkWidget *label37;
+  GtkWidget *scrolledwindow5;
+  GtkWidget *work_address;
   GtkWidget *label17;
   GtkWidget *scrolledwindow2;
   GtkWidget *edit_notes;
@@ -551,7 +553,6 @@ create_edit (void)
   gtk_object_set_data (GTK_OBJECT (edit), "edit", edit);
   gtk_widget_set_usize (edit, 240, 320);
   gtk_window_set_title (GTK_WINDOW (edit), _("Edit Contact"));
-  gtk_window_set_default_size (GTK_WINDOW (edit), 240, 320);
   gtk_window_set_policy (GTK_WINDOW (edit), FALSE, FALSE, FALSE);
 
   vbox7 = gtk_vbox_new (FALSE, 0);
@@ -1111,13 +1112,22 @@ create_edit (void)
   gtk_widget_show (frame10);
   gtk_box_pack_start (GTK_BOX (vbox9), frame10, TRUE, TRUE, 0);
 
-  label36 = gtk_label_new (_("label36"));
-  gtk_widget_set_name (label36, "label36");
-  gtk_widget_ref (label36);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label36", label36,
+  scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_name (scrolledwindow4, "scrolledwindow4");
+  gtk_widget_ref (scrolledwindow4);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "scrolledwindow4", scrolledwindow4,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label36);
-  gtk_container_add (GTK_CONTAINER (frame10), label36);
+  gtk_widget_show (scrolledwindow4);
+  gtk_container_add (GTK_CONTAINER (frame10), scrolledwindow4);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow4), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
+  home_address = gtk_text_new (NULL, NULL);
+  gtk_widget_set_name (home_address, "home_address");
+  gtk_widget_ref (home_address);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "home_address", home_address,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (home_address);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow4), home_address);
 
   frame11 = gtk_frame_new (_("Work"));
   gtk_widget_set_name (frame11, "frame11");
@@ -1127,13 +1137,22 @@ create_edit (void)
   gtk_widget_show (frame11);
   gtk_box_pack_start (GTK_BOX (vbox9), frame11, TRUE, TRUE, 0);
 
-  label37 = gtk_label_new (_("label37"));
-  gtk_widget_set_name (label37, "label37");
-  gtk_widget_ref (label37);
-  gtk_object_set_data_full (GTK_OBJECT (edit), "label37", label37,
+  scrolledwindow5 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_name (scrolledwindow5, "scrolledwindow5");
+  gtk_widget_ref (scrolledwindow5);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "scrolledwindow5", scrolledwindow5,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (label37);
-  gtk_container_add (GTK_CONTAINER (frame11), label37);
+  gtk_widget_show (scrolledwindow5);
+  gtk_container_add (GTK_CONTAINER (frame11), scrolledwindow5);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow5), GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
+
+  work_address = gtk_text_new (NULL, NULL);
+  gtk_widget_set_name (work_address, "work_address");
+  gtk_widget_ref (work_address);
+  gtk_object_set_data_full (GTK_OBJECT (edit), "work_address", work_address,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (work_address);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow5), work_address);
 
   label17 = gtk_label_new (_("Addresses"));
   gtk_widget_set_name (label17, "label17");
@@ -1160,8 +1179,6 @@ create_edit (void)
   gtk_widget_show (edit_notes);
   gtk_container_add (GTK_CONTAINER (scrolledwindow2), edit_notes);
   gtk_text_set_editable (GTK_TEXT (edit_notes), TRUE);
-  gtk_text_insert (GTK_TEXT (edit_notes), NULL, NULL, NULL,
-                   _("\n\nSpace for some arbitrary text..."), strlen(_("\n\nSpace for some arbitrary text...")));
 
   label18 = gtk_label_new (_("Notes"));
   gtk_widget_set_name (label18, "label18");
@@ -1217,5 +1234,290 @@ create_edit (void)
   gtk_object_set_data (GTK_OBJECT (edit), "tooltips", tooltips);
 
   return edit;
+}
+
+GtkWidget*
+create_structure (void)
+{
+  GtkWidget *structure;
+  GtkWidget *vbox10;
+  GtkWidget *scrolledwindow6;
+  GtkWidget *ctree1;
+  GtkWidget *label42;
+  GtkWidget *label43;
+  GtkWidget *hbox5;
+  GtkWidget *button1;
+  GtkWidget *button2;
+  GtkWidget *button3;
+  GtkWidget *button6;
+
+  structure = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_set_name (structure, "structure");
+  gtk_object_set_data (GTK_OBJECT (structure), "structure", structure);
+  gtk_window_set_title (GTK_WINDOW (structure), _("window1"));
+  gtk_window_set_default_size (GTK_WINDOW (structure), 240, 320);
+
+  vbox10 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox10, "vbox10");
+  gtk_widget_ref (vbox10);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "vbox10", vbox10,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox10);
+  gtk_container_add (GTK_CONTAINER (structure), vbox10);
+
+  scrolledwindow6 = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_name (scrolledwindow6, "scrolledwindow6");
+  gtk_widget_ref (scrolledwindow6);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "scrolledwindow6", scrolledwindow6,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (scrolledwindow6);
+  gtk_box_pack_start (GTK_BOX (vbox10), scrolledwindow6, TRUE, TRUE, 0);
+
+  ctree1 = gtk_ctree_new (2, 0);
+  gtk_widget_set_name (ctree1, "ctree1");
+  gtk_widget_ref (ctree1);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "ctree1", ctree1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (ctree1);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow6), ctree1);
+  gtk_clist_set_column_width (GTK_CLIST (ctree1), 0, 80);
+  gtk_clist_set_column_width (GTK_CLIST (ctree1), 1, 80);
+  gtk_clist_column_titles_hide (GTK_CLIST (ctree1));
+
+  label42 = gtk_label_new (_("label42"));
+  gtk_widget_set_name (label42, "label42");
+  gtk_widget_ref (label42);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "label42", label42,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label42);
+  gtk_clist_set_column_widget (GTK_CLIST (ctree1), 0, label42);
+
+  label43 = gtk_label_new (_("label43"));
+  gtk_widget_set_name (label43, "label43");
+  gtk_widget_ref (label43);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "label43", label43,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label43);
+  gtk_clist_set_column_widget (GTK_CLIST (ctree1), 1, label43);
+
+  hbox5 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox5, "hbox5");
+  gtk_widget_ref (hbox5);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "hbox5", hbox5,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox5);
+  gtk_box_pack_start (GTK_BOX (vbox10), hbox5, FALSE, FALSE, 0);
+
+  button1 = gtk_button_new_with_label (_("Add"));
+  gtk_widget_set_name (button1, "button1");
+  gtk_widget_ref (button1);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "button1", button1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button1);
+  gtk_box_pack_start (GTK_BOX (hbox5), button1, TRUE, TRUE, 0);
+
+  button2 = gtk_button_new_with_label (_("Edit"));
+  gtk_widget_set_name (button2, "button2");
+  gtk_widget_ref (button2);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "button2", button2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button2);
+  gtk_box_pack_start (GTK_BOX (hbox5), button2, TRUE, TRUE, 0);
+
+  button3 = gtk_button_new_with_label (_("Delete"));
+  gtk_widget_set_name (button3, "button3");
+  gtk_widget_ref (button3);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "button3", button3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button3);
+  gtk_box_pack_start (GTK_BOX (hbox5), button3, TRUE, TRUE, 0);
+
+  button6 = gtk_button_new_with_label (_("Test"));
+  gtk_widget_set_name (button6, "button6");
+  gtk_widget_ref (button6);
+  gtk_object_set_data_full (GTK_OBJECT (structure), "button6", button6,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button6);
+  gtk_box_pack_start (GTK_BOX (hbox5), button6, FALSE, FALSE, 0);
+
+  gtk_signal_connect (GTK_OBJECT (button1), "clicked",
+                      GTK_SIGNAL_FUNC (structure_add_clicked),
+                      ctree1);
+  gtk_signal_connect (GTK_OBJECT (button2), "clicked",
+                      GTK_SIGNAL_FUNC (structure_edit_clicked),
+                      ctree1);
+  gtk_signal_connect (GTK_OBJECT (button3), "clicked",
+                      GTK_SIGNAL_FUNC (structure_delete_clicked),
+                      ctree1);
+  gtk_signal_connect (GTK_OBJECT (button6), "clicked",
+                      GTK_SIGNAL_FUNC (on_structure_test),
+                      NULL);
+
+  return structure;
+}
+
+GtkWidget*
+create_structure_item (void)
+{
+  GtkWidget *structure_item;
+  GtkWidget *vbox11;
+  GtkWidget *hbox7;
+  GtkWidget *label39;
+  GtkWidget *optionmenu1;
+  GtkWidget *optionmenu1_menu;
+  GtkWidget *glade_menuitem;
+  GtkWidget *vbox12;
+  GtkWidget *hbox8;
+  GtkWidget *label40;
+  GtkWidget *entry16;
+  GtkWidget *hbox9;
+  GtkWidget *label41;
+  GSList *hbox9_group = NULL;
+  GtkWidget *radiobutton2;
+  GtkWidget *radiobutton3;
+  GtkWidget *hbox6;
+  GtkWidget *button4;
+  GtkWidget *button5;
+
+  structure_item = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_set_name (structure_item, "structure_item");
+  gtk_object_set_data (GTK_OBJECT (structure_item), "structure_item", structure_item);
+  gtk_window_set_title (GTK_WINDOW (structure_item), _("window2"));
+  gtk_window_set_default_size (GTK_WINDOW (structure_item), 240, 320);
+
+  vbox11 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox11, "vbox11");
+  gtk_widget_ref (vbox11);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "vbox11", vbox11,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox11);
+  gtk_container_add (GTK_CONTAINER (structure_item), vbox11);
+
+  hbox7 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox7, "hbox7");
+  gtk_widget_ref (hbox7);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "hbox7", hbox7,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox7);
+  gtk_box_pack_start (GTK_BOX (vbox11), hbox7, FALSE, FALSE, 0);
+
+  label39 = gtk_label_new (_("Class:"));
+  gtk_widget_set_name (label39, "label39");
+  gtk_widget_ref (label39);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "label39", label39,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label39);
+  gtk_box_pack_start (GTK_BOX (hbox7), label39, FALSE, FALSE, 4);
+
+  optionmenu1 = gtk_option_menu_new ();
+  gtk_widget_set_name (optionmenu1, "optionmenu1");
+  gtk_widget_ref (optionmenu1);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "optionmenu1", optionmenu1,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (optionmenu1);
+  gtk_box_pack_start (GTK_BOX (hbox7), optionmenu1, TRUE, TRUE, 4);
+  optionmenu1_menu = gtk_menu_new ();
+  glade_menuitem = gtk_menu_item_new_with_label (_("Page"));
+  gtk_widget_show (glade_menuitem);
+  gtk_menu_append (GTK_MENU (optionmenu1_menu), glade_menuitem);
+  glade_menuitem = gtk_menu_item_new_with_label (_("Group"));
+  gtk_widget_show (glade_menuitem);
+  gtk_menu_append (GTK_MENU (optionmenu1_menu), glade_menuitem);
+  glade_menuitem = gtk_menu_item_new_with_label (_("Item"));
+  gtk_widget_show (glade_menuitem);
+  gtk_menu_append (GTK_MENU (optionmenu1_menu), glade_menuitem);
+  gtk_option_menu_set_menu (GTK_OPTION_MENU (optionmenu1), optionmenu1_menu);
+
+  vbox12 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_set_name (vbox12, "vbox12");
+  gtk_widget_ref (vbox12);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "vbox12", vbox12,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (vbox12);
+  gtk_box_pack_start (GTK_BOX (vbox11), vbox12, FALSE, FALSE, 4);
+
+  hbox8 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox8, "hbox8");
+  gtk_widget_ref (hbox8);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "hbox8", hbox8,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox8);
+  gtk_box_pack_start (GTK_BOX (vbox12), hbox8, TRUE, TRUE, 0);
+
+  label40 = gtk_label_new (_("Name:"));
+  gtk_widget_set_name (label40, "label40");
+  gtk_widget_ref (label40);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "label40", label40,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label40);
+  gtk_box_pack_start (GTK_BOX (hbox8), label40, FALSE, FALSE, 4);
+
+  entry16 = gtk_entry_new ();
+  gtk_widget_set_name (entry16, "entry16");
+  gtk_widget_ref (entry16);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "entry16", entry16,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (entry16);
+  gtk_box_pack_start (GTK_BOX (hbox8), entry16, TRUE, TRUE, 4);
+
+  hbox9 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox9, "hbox9");
+  gtk_widget_ref (hbox9);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "hbox9", hbox9,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox9);
+  gtk_box_pack_start (GTK_BOX (vbox12), hbox9, FALSE, FALSE, 4);
+
+  label41 = gtk_label_new (_("Field size:"));
+  gtk_widget_set_name (label41, "label41");
+  gtk_widget_ref (label41);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "label41", label41,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label41);
+  gtk_box_pack_start (GTK_BOX (hbox9), label41, FALSE, FALSE, 4);
+
+  radiobutton2 = gtk_radio_button_new_with_label (hbox9_group, _("Single line"));
+  hbox9_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton2));
+  gtk_widget_set_name (radiobutton2, "radiobutton2");
+  gtk_widget_ref (radiobutton2);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "radiobutton2", radiobutton2,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (radiobutton2);
+  gtk_box_pack_start (GTK_BOX (hbox9), radiobutton2, TRUE, FALSE, 9);
+
+  radiobutton3 = gtk_radio_button_new_with_label (hbox9_group, _("Multiple lines"));
+  hbox9_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobutton3));
+  gtk_widget_set_name (radiobutton3, "radiobutton3");
+  gtk_widget_ref (radiobutton3);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "radiobutton3", radiobutton3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (radiobutton3);
+  gtk_box_pack_start (GTK_BOX (hbox9), radiobutton3, FALSE, FALSE, 4);
+
+  hbox6 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_set_name (hbox6, "hbox6");
+  gtk_widget_ref (hbox6);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "hbox6", hbox6,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (hbox6);
+  gtk_box_pack_end (GTK_BOX (vbox11), hbox6, FALSE, FALSE, 0);
+
+  button4 = gtk_button_new_with_label (_("OK"));
+  gtk_widget_set_name (button4, "button4");
+  gtk_widget_ref (button4);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "button4", button4,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button4);
+  gtk_box_pack_start (GTK_BOX (hbox6), button4, TRUE, TRUE, 0);
+
+  button5 = gtk_button_new_with_label (_("Cancel"));
+  gtk_widget_set_name (button5, "button5");
+  gtk_widget_ref (button5);
+  gtk_object_set_data_full (GTK_OBJECT (structure_item), "button5", button5,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (button5);
+  gtk_box_pack_start (GTK_BOX (hbox6), button5, TRUE, TRUE, 0);
+
+  return structure_item;
 }
 
