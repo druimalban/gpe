@@ -460,6 +460,7 @@ main(int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     {
