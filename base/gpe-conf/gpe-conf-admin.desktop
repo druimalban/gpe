@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name= Global Config
-Comment=Global GPE Conf Settings
+Name=User Access
+Comment=User access administration
 Exec=gpe-conf admin
 Terminal=0
 Type=Application

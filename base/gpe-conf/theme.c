@@ -836,6 +836,7 @@ Theme_Build_Objects ()
   themeitems = make_items_from_dir (matchboxpath);
   gtk_combo_set_popdown_strings (GTK_COMBO (self.cbTheme), themeitems);
   gtk_combo_set_value_in_list (GTK_COMBO (self.cbTheme), TRUE, FALSE);
+  gtk_editable_set_editable (GTK_EDITABLE(GTK_COMBO(self.cbTheme)->entry), FALSE);
   gtk_widget_set_size_request (self.cbTheme, 120, -1);
   gtk_box_pack_start (GTK_BOX (hbox), self.cbTheme, FALSE, TRUE, 0);
 

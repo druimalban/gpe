@@ -380,11 +380,11 @@ create_userchange (pwlist *init,GtkWidget *parent)
 
   hbuttonbox2 =  GTK_DIALOG (userchange)->action_area;
 
-  cancel = gpe_picture_button (wstyle,_("Cancel"),"cancel");
+  cancel = gpe_button_new_from_stock(GTK_STOCK_CANCEL,GPE_BUTTON_TYPE_BOTH);
   gtk_widget_show (cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), cancel);
 
-  save = gpe_picture_button (wstyle,_("OK"),"ok");
+  save = gpe_button_new_from_stock(GTK_STOCK_OK,GPE_BUTTON_TYPE_BOTH);
   gtk_widget_show (save);
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), save);
 
@@ -511,13 +511,13 @@ create_passwindow (pwlist *init,GtkWidget *parent)
 
   hbuttonbox3 = GTK_DIALOG (passwindow)->action_area;
 
-  cancel = gpe_picture_button (wstyle,_("Cancel"),"cancel");
+  cancel = gpe_button_new_from_stock(GTK_STOCK_CANCEL,GPE_BUTTON_TYPE_BOTH);
 
   gtk_widget_show (cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox3), cancel);
   GTK_WIDGET_SET_FLAGS (cancel, GTK_CAN_DEFAULT);
 
-  changepasswd = gpe_picture_button (wstyle,_("OK"),"ok");
+  changepasswd = gpe_button_new_from_stock(GTK_STOCK_OK,GPE_BUTTON_TYPE_BOTH);
 
   gtk_widget_show (changepasswd);
   gtk_container_add (GTK_CONTAINER (hbuttonbox3), changepasswd);

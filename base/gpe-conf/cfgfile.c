@@ -397,20 +397,20 @@ gint write_sections()
 	gint svd[10];
 	gint lastwpos = 0;
 	gint last_i;
-	gboolean auto_set = FALSE;
+	//gboolean auto_set = FALSE;
 	
 	
 	for (i=0;i<configlen;i++)
 	{
 		get_param_val(configtext[i],paramval,ifname);	// get next tokens
-		
+		/* handled by hotplug
 		if (!strcmp("auto",paramval))
 		{
 			auto_set = TRUE;
 			free(configtext[i]);
 			configtext[i] = g_strdup_printf("auto %s\n",get_iflist());
 		}
-		
+		*/
 		if (!strcmp("iface",paramval))
 		{
 			in_section = TRUE;
@@ -605,11 +605,11 @@ gint write_sections()
 		} //if status
 	
 	/* handle auto line if not yet done */
-	if (auto_set == FALSE)
+	/*if (auto_set == FALSE) 
 	{
 		add_line(configlen,g_strdup_printf("auto %s\n",get_iflist()));
 	}
-		
+	*/
 	// write file
 	configfile = fopen(NET_NEWFILE,"w");
 	if (configfile)

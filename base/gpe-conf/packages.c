@@ -47,6 +47,23 @@ static GtkWidget *bUpdate;
 
 /* --- local intelligence --- */
 
+/*
+ *	Installs an ipk package.
+ */
+int do_package_install(char *package)
+{
+	return TRUE;
+}
+
+/* 
+ * Checks if the given packeage is installed.
+ */
+int do_package_check(char *package)
+{
+	return FALSE;
+}
+
+
 gboolean poll_log_pipe()
 {
   static char str[256];
