@@ -44,9 +44,9 @@
 #include <locale.h>
 
 /* GPE */
-#include "init.h"
-#include "pixmaps.h"
-#include "render.h"
+#include <gpe/init.h>
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
 
 /* everything else */
 #include "main.h"
