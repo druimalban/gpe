@@ -4,7 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 
-MEMBERS = main irc irc_input dictionary networks_config networks_config_sql irc_parse ctcp
+MEMBERS = main irc irc_input dictionary general_config general_config_sql networks_config networks_config_sql irc_parse ctcp
 LINGUAS = de
 
 ifeq ($(GTK2),yes)

@@ -26,6 +26,8 @@
 #include "irc.h"
 #include "irc_input.h"
 #include "dictionary.h"
+#include "general_config_sql.h"
+#include "general_config.h"
 #include "networks_config_sql.h"
 #include "networks_config.h"
 
@@ -697,8 +699,8 @@ main (int argc, char *argv[])
   menu = gtk_menu_new ();
 
   menu_item = gtk_image_menu_item_new_from_stock (GTK_STOCK_PREFERENCES, NULL);
-  //g_signal_connect (GTK_OBJECT (menu_item), "activate",
-  //		    G_CALLBACK (), NULL);
+  g_signal_connect (GTK_OBJECT (menu_item), "activate",
+  		    G_CALLBACK (general_config_window), NULL);
   gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);
   gtk_widget_show (menu_item);
 

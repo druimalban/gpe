@@ -30,7 +30,7 @@ static const char *fname = "/.gpe/irc";
 
 GSList *sql_networks;
 
-gint rows = 0;
+static gint rows = 0;
 
 static struct sql_network *
 new_sql_network_internal (int id, const char *name, const char *nick, const char *real_name, const char *password)
