@@ -290,7 +290,7 @@ main (int argc, char **argv)
    * root window (but not all as INITIATE messages go to
    * all root windows)
    */
-  XSelectInput (xdisplay, root, PropertyChangeMask);
+  XSelectInput (xdisplay, root, PropertyChangeMask | StructureNotifyMask);
   
   display = sn_display_new (xdisplay,
                             error_trap_push,
