@@ -184,6 +184,8 @@ scan_fstab(void)
             { 
               if (strstr(path, "card") || strstr(path, "mmc"))
                 add_storage(_("MMC-Card"), path, TRUE);
+              else if (strstr(path, "pc"))
+                add_storage(_("PC-Card"), path, TRUE);
               else if (strstr(path, "cf") || strstr(path, "hda"))
                 add_storage(_("CF-Card"), path, TRUE);
               else if (strstr(path, "usb") && !strstr(path, "proc"))
