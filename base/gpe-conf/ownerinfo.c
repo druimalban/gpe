@@ -66,9 +66,7 @@ GtkWidget *Ownerinfo_Build_Objects()
 {
   GtkWidget *table;
   GtkWidget *vbox, *hbox, *label, *icon;
-  GtkWidget *scrolledwindow;
   GtkWidget *scrolledwindow1;
-  GtkWidget *viewport;
   GtkWidget *viewport1;
   GtkWidget *owner_photofile_label;
   GtkWidget *owner_name_label;
@@ -212,17 +210,8 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ======================================================================== */
   /* draw the GUI */
-  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  viewport = gtk_viewport_new (NULL, NULL);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow), viewport);
-  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
-
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox);
-  gtk_container_add (GTK_CONTAINER (viewport), vbox);
   /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
   gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
   
@@ -376,7 +365,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   else 
     gtk_widget_set_sensitive (table, FALSE);
  
-  return scrolledwindow;
+  return vbox;
 
 }
 
