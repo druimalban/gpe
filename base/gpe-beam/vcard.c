@@ -131,7 +131,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
   char *err;
   guint id;
   struct tag_map *t = &map[0];
-  GSList *l;
+  GList *l;
 
   if (sqlite_exec (db, "begin transaction", NULL, NULL, &err))
     {
@@ -175,12 +175,12 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	{
 	  g_object_get (G_OBJECT (address), "home", &home, NULL);
 	  g_object_get (G_OBJECT (address), "work", &work, NULL);
-	  if (home)
+	  if (home || !work)
 	    insert ("home.address", s);
 	  if (work)
 	    insert ("work.address", s);
 	}
-      l = g_slist_next (l);
+      l = g_list_next (l);
     }
 
   g_object_get (G_OBJECT (vcard), "email-list", &l, NULL);
@@ -194,7 +194,7 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
       if (s)
 	insert ("home.email", s);
 
-      l = g_slist_next (l);
+      l = g_list_next (l);
     }
 
   g_object_get (G_OBJECT (vcard), "phone-list", &l, NULL);
@@ -210,13 +210,13 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
 	{
 	  g_object_get (G_OBJECT (phone), "home", &home, NULL);
 	  g_object_get (G_OBJECT (phone), "work", &work, NULL);
-	  if (home)
+	  if (home || !work)
 	    insert ("home.phone", s);
 	  if (work)
 	    insert ("work.phone", s);
 	}
 
-      l = g_slist_next (l);
+      l = g_list_next (l);
     }
 
   if (sqlite_exec (db, "commit transaction", NULL, NULL, &err))
