@@ -34,3 +34,7 @@ extern void add_new_event(struct todo_list *list, time_t t,
 			  const char *what, item_state state, 
 			  const char *summary, int uid);
 extern void sql_add_item (struct todo_item *i, int list_id);
+extern gint list_sort_func (gconstpointer a, gconstpointer b);
+extern void push_item (struct todo_item *i);
+extern void delete_item (struct todo_list *list, struct todo_item *i);
+

@@ -16,15 +16,41 @@
 
 #include "todo.h"
 
+#include "tick.xpm"
+#include "box.xpm"
+
 #define _(_x) gettext(_x)
 
-static int ystep;
+static GdkPixmap *tick_pixmap, *box_pixmap;
+static GdkBitmap *tick_bitmap, *box_bitmap;
+
+static guint ystep;
+static guint xcol = 18;
 
 static void
 new_todo_item(GtkWidget *w, gpointer list)
 {
   GtkWidget *todo = edit_todo (list, NULL);
   gtk_widget_show_all (todo);
+}
+
+static void
+purge_completed(GtkWidget *w, gpointer list)
+{
+  struct todo_list *t = (struct todo_list *)list;
+  GList *iter = t->items;
+  
+  while (iter)
+    {
+      struct todo_item *i = iter->data;
+      GList *new_iter = iter->next;
+      if (i->state == COMPLETED)
+	delete_item (t, i);
+
+      iter = new_iter;
+    }
+
+  gtk_widget_draw (t->widget, NULL);
 }
 
 static gint
@@ -39,7 +65,8 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *white_gc;
   guint max_width;
   guint max_height;
-  guint hour, y;
+  guint y;
+  guint skew = 2;
   struct todo_list *t = (struct todo_list *)user_data;
   GList *iter;
   GdkFont *font = widget->style->font;
@@ -56,22 +83,46 @@ draw_expose_event (GtkWidget *widget,
   max_height = widget->allocation.height;
 
   ystep = font->ascent + font->descent;
+  if (ystep < 14)
+    ystep = 14;
 
+  if (! tick_pixmap)
+    {
+      tick_pixmap = gdk_pixmap_create_from_xpm_d (widget->window,
+						  &tick_bitmap,
+						  NULL,
+						  tick_xpm);
+      box_pixmap = gdk_pixmap_create_from_xpm_d (widget->window,
+						 &box_bitmap,
+						 NULL,
+						 box_xpm);
+    }
+  
   gdk_draw_rectangle(drawable, white_gc, TRUE, 0, 0, max_width, max_height);
 
-  y = 0;
+  y = skew;
 
   for (iter = t->items; iter; iter = iter->next)
     {
       struct todo_item *i = iter->data;
 
-      gdk_draw_text (drawable, font, black_gc, 4, y + font->ascent, 
+      gdk_draw_text (drawable, font, black_gc, xcol, y + font->ascent, 
 		    i->summary, strlen(i->summary));
 
       if (i->state == COMPLETED)
-	gdk_draw_line (drawable, black_gc, 4, y + font->ascent / 2, 
-		       4 + gdk_string_width (font, i->summary), 
-		       y + font->ascent / 2);
+	{
+	  gdk_draw_line (drawable, black_gc, xcol, 
+			 y + (font->ascent + font->descent) / 2, 
+			 18 + gdk_string_width (font, i->summary), 
+			 y + (font->ascent + font->descent) / 2);
+	  gdk_draw_pixmap (drawable, black_gc, tick_pixmap,
+			   2, 0, 2, y - skew, 14, 14);
+	}
+      else
+	{
+	  gdk_draw_pixmap (drawable, black_gc, box_pixmap,
+			   2, 0, 2, y - skew, 14, 14);
+	}
 
       y += ystep;
     }
@@ -84,9 +135,29 @@ draw_click_event (GtkWidget *widget,
 		  GdkEventButton *event,
 		  struct todo_list *list)
 {
-  if (event->type == GDK_2BUTTON_PRESS)
+  unsigned int idx = event->y / ystep;
+
+  if (event->type == GDK_BUTTON_PRESS && event->x < xcol)
     {
-      unsigned int idx = event->y / ystep;
+      GList *i = list->items;
+      while (idx && i)
+	{
+	  i = i->next;
+	  idx--;
+	}
+      if (i)
+	{
+	  struct todo_item *ti = i->data;
+	  if (ti->state == COMPLETED)
+	    ti->state = NOT_STARTED;
+	  else
+	    ti->state = COMPLETED;
+	  
+	  gtk_widget_draw (list->widget, NULL);
+	}
+    }
+  else if (event->type == GDK_2BUTTON_PRESS)
+    {
       GList *i = list->items;
       while (idx && i)
 	{
@@ -105,8 +176,9 @@ display_list (GtkWidget *notebook, struct todo_list *list)
   GtkWidget *label = gtk_label_new (list->title);
   GtkWidget *buttons = gtk_hbox_new (FALSE, 0);
   GtkWidget *new_event = gtk_button_new_with_label ("New item");
+  GtkWidget *purge = gtk_button_new_with_label ("Purge completed");
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  
+
   gtk_signal_connect (GTK_OBJECT (draw), "expose_event",
 		      GTK_SIGNAL_FUNC (draw_expose_event),
 		      list);
@@ -117,12 +189,15 @@ display_list (GtkWidget *notebook, struct todo_list *list)
   gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK);
 
   gtk_box_pack_end (GTK_BOX (buttons), new_event, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (buttons), purge, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), draw, TRUE, TRUE, 0);
   gtk_box_pack_end (GTK_BOX (vbox), buttons, FALSE, FALSE, 0);
 
   gtk_signal_connect (GTK_OBJECT (new_event), "clicked",
 		      GTK_SIGNAL_FUNC (new_todo_item), list);
+  gtk_signal_connect (GTK_OBJECT (purge), "clicked",
+		      GTK_SIGNAL_FUNC (purge_completed), list);
 
   gtk_widget_show_all (vbox);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox, label);
@@ -184,4 +259,3 @@ top_level (void)
 
   return notebook;
 }
-

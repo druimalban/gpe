@@ -7,6 +7,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#define _XOPEN_SOURCE
+
 #include <sys/types.h>
 #include <stdlib.h>
 #include <time.h>
@@ -40,9 +42,7 @@ item_callback (void *arg, int argc, char **argv, char **names)
       char *due = argv[5];
 
       GSList *iter;
-      struct todo_list *l;
       time_t t = (time_t)0;
-      int uid = 0;
 
       for (iter = lists; iter; iter = iter->next)
 	{
@@ -55,12 +55,20 @@ item_callback (void *arg, int argc, char **argv, char **names)
       if (iter == NULL)
 	return 0;
 
-      if (next_uid < uid)
-	next_uid = uid;
+      if (next_uid < id)
+	next_uid = id;
+
+      if (due[0])
+	{
+	  struct tm tm;
+	  memset (&tm, 0, sizeof (tm));
+	  strptime (due, "%F", &tm);
+	  t = mktime (&tm);
+	}
 
       add_new_item_internal ((struct todo_list *)iter->data, 
 			     t, g_strdup (description), state, 
-			     g_strdup (summary), uid);
+			     g_strdup (summary), id);
     }
 
   return 0;
@@ -177,10 +185,19 @@ add_new_item_sql (struct todo_item *i, int list_id)
     }
 }
 
-static gint
-insert_sort_func (gconstpointer a, gconstpointer b)
+gint
+list_sort_func (gconstpointer a, gconstpointer b)
 {
   const struct todo_item *ia = a, *ib = b;
+
+  if (ia->time == ib->time)
+    return 0;
+
+  if (ia->time == 0)
+    return 1;
+  if (ib->time == 0)
+    return -1;
+
   return ia->time - ib->time;
 }
 
@@ -196,7 +213,7 @@ add_new_item_internal(struct todo_list *list, time_t t, const char *what,
   i->state = state;
   i->summary = summary;
 
-  list->items = g_list_insert_sorted (list->items, i, insert_sort_func);
+  list->items = g_list_insert_sorted (list->items, i, list_sort_func);
 
   return i;
 }

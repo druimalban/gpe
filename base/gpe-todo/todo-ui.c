@@ -56,6 +56,16 @@ click_cancel(GtkWidget *widget,
 }
 
 static void
+click_delete(GtkWidget *widget,
+	     GtkWindow *window)
+{
+  struct edit_todo *t = gtk_object_get_data (GTK_OBJECT (window), "todo");
+  
+  if (t->item)
+    delete_item (t->list, t->item);
+}
+
+static void
 click_ok(GtkWidget *widget,
 	 GtkWidget *window)
 {
@@ -88,6 +98,7 @@ click_ok(GtkWidget *widget,
       t->item->time = when;
       t->item->state = t->state;
       push_item (t->item);
+      t->list->items = g_list_sort (t->list->items, list_sort_func);
     }
   else
     add_new_item (t->list, when, what, t->state, summary, new_unique_id ());
@@ -137,13 +148,14 @@ edit_todo(struct todo_list *list, struct todo_item *item)
   GtkWidget *entry_summary = gtk_entry_new ();
   GtkWidget *hbox_summary = gtk_hbox_new (FALSE, 0);
   struct edit_todo *t = g_malloc(sizeof(struct edit_todo));
-  time_t the_time;
 
   const char *state_strings[] = { _("Not started"), _("In progress"),
 				  _("Completed") };
   void (*state_funcs[3])(GtkMenuItem *, gpointer) = 
     { state_func_0, state_func_1, state_func_2 };
   guint i;
+  struct tm tm;
+  time_t the_time;
  
   for (i = 0; i < 3; i++)
     {
@@ -172,6 +184,8 @@ edit_todo(struct todo_list *list, struct todo_item *item)
 		      GTK_SIGNAL_FUNC (click_ok), window);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
 		      GTK_SIGNAL_FUNC (click_cancel), window);
+  gtk_signal_connect (GTK_OBJECT (buttondelete), "clicked",
+		      GTK_SIGNAL_FUNC (click_delete), window);
 
   gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
@@ -197,26 +211,39 @@ edit_todo(struct todo_list *list, struct todo_item *item)
 
   gtk_widget_grab_focus (entry_summary);
 
+  the_time = time (NULL);
+
   if (item)
     {
       gint p = 0;
-      the_time = item->time;
       gtk_editable_insert_text (GTK_EDITABLE (text), item->what, 
 				strlen (item->what), &p);
       gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
       gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);
       t->state = item->state;
+
+      if (item->time)
+	{
+	  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (t->duetoggle), 
+					TRUE);
+	  the_time = item->time;
+	}
+      else
+	gtk_widget_set_sensitive (t->duedate, FALSE);
     }
   else
     {
       t->state = NOT_STARTED;
-      time (&the_time);
       gtk_widget_set_sensitive (buttondelete, FALSE);
       gtk_widget_set_sensitive (t->duedate, FALSE);
     }
 
   t->text = text;
   t->summary = entry_summary;
+
+  localtime_r (&the_time, &tm);
+  gtk_date_combo_set_date (GTK_DATE_COMBO (t->duedate),
+			   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
   
   gtk_object_set_data_full (GTK_OBJECT (window), "todo", t, destroy_user_data);
 
