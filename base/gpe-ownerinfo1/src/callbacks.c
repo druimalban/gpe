@@ -52,7 +52,7 @@ on_bigphotobutton_size_allocate        (GtkWidget       *widget,
 
   /*
    * gtk_container_children() brought to me by PaxAnima. Thanks.
-   * It looks like in GTK2, this is gtk_container__get_children().
+   * It looks like in GTK2, this is gtk_container_get_children().
    */
   if (gtk_container_children (GTK_CONTAINER (bigphotobutton)) == NULL) {
     gtk_widget_show (bigphoto);
@@ -80,7 +80,7 @@ on_smallphotobutton_size_allocate      (GtkWidget       *widget,
 
   /*
    * gtk_container_children() brought to me by PaxAnima. Thanks.
-   * It looks like in GTK2, this is gtk_container__get_children().
+   * It looks like in GTK2, this is gtk_container_get_children().
    */
   if (gtk_container_children (GTK_CONTAINER (smallphotobutton)) == NULL) {
     gtk_widget_show (smallphoto);
