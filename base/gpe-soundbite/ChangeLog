@@ -1,3 +1,7 @@
+2003-06-10  Moray Allan  <moray@handhelds.org>
+
+	* Makefile: Give appropriate permissions to PNGs we install.
+
 2003-04-01  Moray Allan  <moray@handhelds.org>
 
 	* Makefile: Build for GTK2 by default.
