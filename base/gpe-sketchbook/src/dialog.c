@@ -14,7 +14,9 @@
 #include "gpe/render.h"
 #include "gpe/picturebutton.h"
 
-#define _(_x) (_x) //gettext(_x)
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
 
 gboolean user_choice;
 #define ACTION TRUE

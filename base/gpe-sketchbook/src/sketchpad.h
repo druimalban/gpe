@@ -25,7 +25,7 @@ extern GtkWidget * drawing_area;
 
 extern gboolean is_current_sketch_modified;
 
-#define SKETCHPAD_TITLE_NEW "new"
+#define SKETCHPAD_TITLE_NEW _("new")  //FIXME: not noticed by xgettext
 
 void sketchpad_init();
 void window_sketchpad_init(GtkWidget * window_sketchpad);

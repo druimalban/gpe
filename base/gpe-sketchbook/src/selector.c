@@ -30,6 +30,10 @@
 #include "sketchpad.h"
 #include "gpe-sketchbook.h"
 
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
+
 GtkWidget * window_selector;
 GtkCList  * selector_clist; 
 GdkColor bg_color;//alternate color for list cells
@@ -68,14 +72,14 @@ void window_selector_init(GtkWidget * window_selector){
   n = scandir (sketchdir, &direntries, _direntry_selector, alphasort);//FIXME: --> file.c
   if (n == -1){
     int res = 0;
-    perror ("Couldn't open the directory");
+    perror (_("Couldn't open the directory"));//FIXME: use gpe_error
     //might not exist, try to create it:
     res = mkdir(sketchdir, S_IRWXU);
     switch(res){
       case EACCES: //write permission is denied
       case EEXIST: //already exists
       case ENOSPC: //file system doesn't have enough room
-        g_printerr("Can not create %s, exit.\n", sketchdir);
+        g_printerr(_("Can not create %s, exit.\n"), sketchdir);//FIXME: use gpe_error
         app_quit();
     }
   }
@@ -121,8 +125,8 @@ gchar * make_label_from_filename(const gchar * filename){
   time_token = strtok(NULL, ".");
   if(!time_token) return g_strdup_printf("%s", g_strdelimit(date_token, "-", ' '));
 
-  label = g_strdup_printf("%s  at  %s",
-                          g_strdelimit(date_token, "-", ' '),
+  label = g_strdup_printf(_("%s  at  %s"),
+                          g_strdelimit(date_token, "-", ' '), //FIXME: localize date/time
                           g_strdelimit(time_token, "-", ':'));
   free(s);
   return label;

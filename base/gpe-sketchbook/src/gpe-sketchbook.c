@@ -28,6 +28,10 @@
 #include "selector.h"
 #include "selector-gui.h"
 
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
+
 gchar * sketchdir;
 #define SKETCHPAD_HOME_DIR ".sketchbook"
 
@@ -69,12 +73,11 @@ void gui_init();
 int main (int argc, char ** argv){
 
   if (gpe_application_init (&argc, &argv) == FALSE) exit (1);
-
-//  setlocale (LC_ALL, "");
-//  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-//  textdomain (PACKAGE);
-
   if (gpe_load_icons (my_icons) == FALSE) exit (1);
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+  setlocale (LC_ALL, "");
 
   app_init (argc, argv);
   gui_init ();
@@ -102,13 +105,13 @@ void gui_init(){
 
   window_selector = create_window_selector();
   window_selector_init(window_selector);
-  gtk_window_set_title (GTK_WINDOW (window_selector), "Sketch selector");
+  gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketch selector"));
 
   window_sketchpad = sketchpad_build_window();
   window_sketchpad_init(window_sketchpad);
   //gtk_window_set_title (GTK_WINDOW (window_sketchpad), "Sketch: new");
 
-#ifdef DESKTOP
+#ifdef DESKTOP //FIXME: to move into related -gui.c
   gtk_window_set_position (GTK_WINDOW (window_selector),  GTK_WIN_POS_CENTER);
   gtk_window_set_position (GTK_WINDOW (window_sketchpad), GTK_WIN_POS_CENTER);
 #endif

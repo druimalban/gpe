@@ -1,55 +1,62 @@
-include config.makefile
+#include ./config.makefile
+PREFIX  = /usr/local
 
-all: $(PACKAGE) #mo
+LINGUAS = fr
+MEMBERS = \
+	gpe-sketchbook       \
+	dialog               \
+	selector	     \
+	selector-cb	     \
+	selector-gui	     \
+	sketchpad	     \
+	sketchpad-cb	     \
+	sketchpad-gui	     \
+	files		     \
+	files-png	     
+SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
+
+PIXMAPS = `cd pixmaps && ls *.png`
+
+PACKAGE = $(shell grep 'Package: ' familiar/control | cut -d ' ' -f 2)
+VERSION = $(shell grep 'Version: ' familiar/control | cut -d ' ' -f 2)
+
+all: $(PACKAGE) all-mo
 
 #--package
 $(PACKAGE):
 	cd src && make $(PACKAGE)
 arm:
 	cd src && make arm
-clean:
-	rm -rf *~ .*~
-	cd src && make clean
-
-##--i10n
-#mo:
-#	make -C po
-#
-#install-po:
-#	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
-#
-#update-po: po/$(PACKAGE).pot
-#
-#po/$(PACKAGE).pot: $(SOURCES)
-#	xgettext -k_ -o po/$(PACKAGE).pot $^
 
 #--deployment
 #ARM_BIN = $(PACKAGE)-$(VERSION)-arm-striped
 ARM_BIN = $(PACKAGE)
-install: all #install-po
-	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/$$i; done
-	install -D src/$(ARM_BIN) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+install: all install-mo
+	for i in $(PIXMAPS); do \
+	install -D pixmaps/$$i     $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/$$i;\
+	done
+	install -D src/$(ARM_BIN)  $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
-	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
+	install -D $(PACKAGE).png  $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 
 
-CONTROL = familiar/dist/CONTROL
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p $(CONTROL)
-	echo "Package: "  $(PACKAGE)   > $(CONTROL)/control
-	echo "Section: "  $(SECTION)  >> $(CONTROL)/control
-	echo "Priority: " $(PRIORITY) >> $(CONTROL)/control
-	echo "Version: "  $(VERSION)  >> $(CONTROL)/control
-	echo "Architecture: arm"      >> $(CONTROL)/control
-	echo "Maintainer: "$(MAINTAINER)" <"$(MAINTAINER_MAIL)">" >> $(CONTROL)/control
-	echo "Depends: "  $(DEPENDS)  >> $(CONTROL)/control
-	echo "Description: "$(PACKAGE_DESCR) >> $(CONTROL)/control
-	cp familiar/postinst $(CONTROL)
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-#	ipkg-build familiar/dist || ./utils/ipkg-build familiar/dist
-	./utils/ipkg-build familiar/dist
+#CONTROL = familiar/dist/CONTROL
+#ipkg:
+#	rm -rf familiar/dist
+#	mkdir -p $(CONTROL)
+#	echo "Package: "  $(PACKAGE)   > $(CONTROL)/control
+#	echo "Section: "  $(SECTION)  >> $(CONTROL)/control
+#	echo "Priority: " $(PRIORITY) >> $(CONTROL)/control
+#	echo "Version: "  $(VERSION)  >> $(CONTROL)/control
+#	echo "Architecture: arm"      >> $(CONTROL)/control
+#	echo "Maintainer: "$(MAINTAINER)" <"$(MAINTAINER_MAIL)">" >> $(CONTROL)/control
+#	echo "Depends: "  $(DEPENDS)  >> $(CONTROL)/control
+#	echo "Description: "$(PACKAGE_DESCR) >> $(CONTROL)/control
+#	cp familiar/postinst $(CONTROL)
+#	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
+#	chown -R root.root familiar/dist
+##	ipkg-build familiar/dist || ./utils/ipkg-build familiar/dist
+#	./utils/ipkg-build familiar/dist
 
 DIST_NAME = $(PACKAGE)-$(VERSION)
 #DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(EXTRA_DIST)
@@ -67,4 +74,11 @@ dist:
 	cp familiar/postinst $(DIST_NAME)/familiar
 	tar zcf $(DIST_NAME).tgz $(DIST_NAME)
 	rm -rf $(DIST_NAME)
+
+clean: clean-po
+	rm -rf *~ .*~
+	cd src && make clean
+
+include ../build/Makefile.translation
+include ../build/Makefile.dpkg_ipkg
 

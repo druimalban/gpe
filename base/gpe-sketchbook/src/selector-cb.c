@@ -29,7 +29,9 @@
 #include "gpe/question.h"
 #include "dialog.h"
 
-#define _(_x) (_x) //gettext(_x)
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
 
 void switch_windows(GtkWidget * window_to_hide, GtkWidget * window_to_show){
   gtk_widget_hide (window_to_hide);
@@ -102,14 +104,14 @@ void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
             //icon
             "this_app_icon",
             //short description
-            "a notebook to sketch your notes",
+            _("a notebook to sketch your notes"),
             //minihelp
-            "The application provides two main windows: "
+            _("The application provides two main windows: "
             "the Selector, and the Sketchpad.\n"
             "You select your sketchs with the Selector.\n"
-            "You sketch your notes with the Sketchpad.",
+            "You sketch your notes with the Sketchpad."),
             //legal
-            "(c) 2002 Luc Pionchon\n"
-            "Distributed under GPL");
+            _("(c) 2002 Luc Pionchon\n" //FIXME: use build variables
+            "Distributed under GPL"));
 }
 

@@ -110,6 +110,7 @@ gint file_load_png(const gchar * fullpath_filename){
 }//file_load_png()
 
 
+#define _(x) (x) //do not translate gdk-pixbuf error messages
 //-----------------------------------------------------------
 // The following is borrowed to GTK+ 2.0 (gdkpixbuf/io-png.c)
 // to be removed when using GTK+ 2.0

@@ -29,7 +29,9 @@
 #include "dialog.h"
 #include "gpe/question.h"
 
-#define _(_x) (_x) //gettext(_x)
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
 
 //---------------------------------------------------------
 //--------------------- GENERAL ---------------------------

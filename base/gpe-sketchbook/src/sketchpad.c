@@ -20,6 +20,10 @@
 #include "files.h"
 #include "selector.h"
 
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
+
 GtkWidget * window_sketchpad;
 GtkWidget * drawing_area;
 GdkPixmap * drawing_area_pixmap_buffer;
