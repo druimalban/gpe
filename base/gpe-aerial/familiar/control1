@@ -1,0 +1,9 @@
+Package: gpe-aerial
+Section: x11
+Priority: optional
+Version: VERSION
+Architecture: arm
+Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
+Depends: libgtk2.0-0, gpe-icons (>= 0.18), libgpewidget1 (>= 0.61)
+Description: GPE wireless LAN communication applet
+

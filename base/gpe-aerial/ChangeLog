@@ -1,0 +1,7 @@
+05/09/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
+	- Created this file
+	- Major reordering this project
+	- New Makefile
+	- Adapted dockapp from gpe-bluetooth
+	- new icons
