@@ -40,6 +40,130 @@ void _print_prefs(){
 #endif /* DEBUG */
 
 
+
+//------------------------------------------------------------ XSettings
+#define KEY_BASE "GPE/SKETCHBOOK"
+
+#include <gpe/errorbox.h>
+
+#include <gdk/gdkx.h> //GDK_DISPLAY
+
+#include "xsettings-common.h"
+#include "xsettings-client.h"
+
+void _fetch_bool(XSettingsClient * client, const char * key, gboolean * bool){
+  XSettingsSetting * setting;
+  gchar * name;
+  name = g_strdup_printf("%s/%s", KEY_BASE, key);
+  if (xsettings_client_get_setting (client, name, &setting) == XSETTINGS_SUCCESS){
+    if(setting->type == XSETTINGS_TYPE_INT){
+      * bool = (setting->data.v_int)?TRUE:FALSE;
+      /**/g_printerr("%s, set to: %d\n", name, setting->data.v_int);
+    }
+    xsettings_setting_free(setting);
+  }
+  else /**/g_printerr("no %s\n", name);
+  g_free(name);
+}
+
+void prefs_fetch_settings(){
+  Display * dpy = GDK_DISPLAY ();
+  XSettingsClient  * client;
+
+  //--Setup client
+  client = xsettings_client_new (dpy, DefaultScreen (dpy), NULL, NULL, NULL);
+  if (client == NULL){
+      gpe_error_box (_("Cannot create XSettings client.\nUse default preferences."));
+      return;
+  }
+
+  //--Retrieve values
+  _fetch_bool(client, "joypad-scroll",  &(sketchbook.prefs.joypad_scroll));
+  _fetch_bool(client, "grow-on-scroll", &(sketchbook.prefs.grow_on_scroll));
+
+  //--Close client
+  xsettings_client_destroy (client);
+}
+
+void _write_setting_int(Display * dpy, Window win,
+                        Atom gpe_settings_update_atom,
+                        Window manager,
+                        const char * key,
+                        const gint value){
+
+  XSettingsType type;
+  size_t length = 0;
+  size_t name_len;
+  gchar *buffer;
+  XClientMessageEvent ev;
+  gboolean done = FALSE;
+  gchar * name;
+
+  name = g_strdup_printf("%s/%s", KEY_BASE, key);
+
+  type = XSETTINGS_TYPE_INT;
+  length = 4;
+
+  name_len = strlen (name);
+  name_len = (name_len + 3) & ~3;
+  buffer = g_malloc (length + 4 + name_len);
+  *buffer = type;
+  buffer[1] = 0;
+  buffer[2] = name_len & 0xff;
+  buffer[3] = (name_len >> 8) & 0xff;
+  memcpy (buffer + 4, name, name_len);
+  
+  *((unsigned long *)(buffer + 4 + name_len)) = value;
+
+  XChangeProperty (dpy, win, gpe_settings_update_atom, gpe_settings_update_atom,
+                   8, PropModeReplace, buffer, length + 4 + name_len);
+      
+  g_free (buffer);
+
+  XSelectInput (dpy, win, PropertyChangeMask);
+      
+  ev.type = ClientMessage;
+  ev.window = win;
+  ev.message_type = gpe_settings_update_atom;
+  ev.format = 32;
+  ev.data.l[0] = gpe_settings_update_atom;
+  XSendEvent (dpy, manager, FALSE, 0, (XEvent *)&ev);
+  
+  while (! done){
+    XEvent ev;
+    XNextEvent (dpy, &ev);
+    switch (ev.xany.type){
+    case PropertyNotify:
+      if (ev.xproperty.window == win
+          && ev.xproperty.atom == gpe_settings_update_atom)
+        done = TRUE;
+      break;
+    }
+  }
+}
+
+void prefs_save_settings(){
+  Display * dpy = GDK_DISPLAY();
+  Atom gpe_settings_update_atom = XInternAtom (dpy, "_GPE_SETTINGS_UPDATE", 0);
+  Window manager = XGetSelectionOwner (dpy, gpe_settings_update_atom);
+  Window win;
+
+  if (manager == None){
+    gpe_error_box( _("gpe-confd is not running.\nCannot save the preferences."));
+    return;
+  }
+  win = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 1, 1, 1, 1, 0, 0, 0);// ???
+
+  _write_setting_int(dpy, win, gpe_settings_update_atom, manager,
+                     "joypad-scroll",  (sketchbook.prefs.joypad_scroll)?1:0);
+  _write_setting_int(dpy, win, gpe_settings_update_atom, manager,
+                     "grow-on-scroll", (sketchbook.prefs.grow_on_scroll)?1:0);
+
+}
+
+//-----------------------------------------------------------------------------
+
+
 struct {
   GtkWidget * joypad_scroll;
   GtkWidget * grow_on_scroll;
@@ -60,6 +184,7 @@ void reset_prefs_from_gui(){
 
 void on_button_ok_clicked (GtkButton *button, gpointer _unused){
   reset_prefs_from_gui();
+  prefs_save_settings();//FIXME: should be done only when exit application
   gtk_notebook_set_page(sketchbook.notebook, PAGE_SELECTOR);
   //**/_print_prefs();
 }

@@ -27,6 +27,8 @@ typedef struct _preferences {
 } Preferences;
 
 void prefs_reset_defaults();
+void prefs_fetch_settings();
+void prefs_save_settings();
 
 GtkWidget * preferences_gui(GtkWidget * window);
 

@@ -92,6 +92,7 @@ void app_init(int argc, char ** argv){
   selector_init();
   sketchpad_init();
   prefs_reset_defaults();
+  prefs_fetch_settings();
 }
 
 void app_quit(){

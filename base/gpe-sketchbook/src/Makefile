@@ -11,8 +11,9 @@ CFLAGS += -Wall
 CFLAGS += -MD #(deps)
 
 ifeq ($(DEBUG),yes)
-CFLAGS  += -O2 -g
-LDFLAGS += -g
+CPPFLAGS += -DDEBUG=yes
+CFLAGS   += -O2 -g
+LDFLAGS  += -g
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
@@ -44,6 +45,15 @@ LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
 CFLAGS  +=  #-DGTK_ENABLE_BROKEN
 CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
 LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
+
+#-- XSettings
+ifeq ($(CVSBUILD),yes)
+CFLAGS  += -I../../libxsettings -I../../libxsettings-client
+LDFLAGS += -L../../libxsettings -L../../libxsettings-client -lXsettings-client
+else
+LDFLAGS += -lXsettings-client
+endif
+
 
 #-- SQLite
 ifdef USE_SQLITE
