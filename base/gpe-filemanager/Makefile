@@ -9,7 +9,6 @@ SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 MEMBERS = main mime-sql mime-programs-sql
 
 CFLAGS = `pkg-config --cflags gtk+-2.0 gnome-vfs-2.0`
-CONTROL = control1
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)

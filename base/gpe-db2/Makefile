@@ -24,7 +24,6 @@ MEMBERS = main interface callbacks support db-funcs
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += -lX11 `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
-CONTROL = control1
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -DENABLE_NLS -I../libgpewidget
 ifeq ($(DEBUG),yes)

@@ -8,7 +8,6 @@ MEMBERS = main irc irc_input dictionary general_config general_config_sql networ
 LINGUAS = 
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
-CONTROL = control1
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)

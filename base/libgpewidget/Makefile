@@ -1,7 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = libgpewidget
 DEBUG = no
-GTK2 = yes
 VERSION = 0.62
 CVSBUILD = yes
 
@@ -10,7 +9,6 @@ LINGUAS = ro de id pt fr ga wa sv
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist
 
 SONAME = libgpewidget.so.1
-CONTROL = control1
 BINPACKAGE = libgpewidget1
 
 ifeq ($(CVSBUILD),yes)

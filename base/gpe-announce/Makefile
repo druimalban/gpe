@@ -23,7 +23,6 @@ MEMBERS = main interface callbacks
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
-CONTROL = control1
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget -I../libsoundgen -I../libschedule
 ifeq ($(DEBUG),yes)

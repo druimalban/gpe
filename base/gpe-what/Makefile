@@ -8,7 +8,6 @@ MEMBERS = gpe-what
 
 GTKCFLAGS = `pkg-config --cflags glib-2.0` `pkg-config --cflags pangoxft` `pkg-config --cflags xft`
 GTKLDFLAGS += `pkg-config --libs glib-2.0` `pkg-config --libs pangoxft` `pkg-config --libs xft`
-CONTROL = control
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 LDFLAGS = $(GTKLDFLAGS)

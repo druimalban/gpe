@@ -9,7 +9,6 @@ LINGUAS =
 MEMBERS = migrate auth crypt
 
 SONAME = $(PACKAGE).so.0
-CONTROL = control
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)

@@ -8,7 +8,6 @@ MEMBERS = main
 LINGUAS = id pt de zh_TW fr ro wa sv
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
-CONTROL = control1
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)

@@ -7,7 +7,6 @@ CVSBUILD = yes
 LINGUAS = de hu id pt fr zh_TW ro
 
 MEMBERS = $(PACKAGE)
-CONTROL = control1
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget -I../librootimage
@@ -21,7 +20,6 @@ LDFLAGS += -lgpewidget -lrootimage
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-CONTROL = control1
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
 ifeq ($(DEBUG),yes)

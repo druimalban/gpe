@@ -7,7 +7,6 @@ GTK2 = yes
 MEMBERS = minitheme
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
-CONTROL = control1
 
 CFLAGS += -D_GNU_SOURCE -Wall
 

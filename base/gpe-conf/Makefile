@@ -30,7 +30,6 @@ CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` 
-CONTROL = control1
 
 # setup how to compile
 ifeq ($(NATIVE),yes)

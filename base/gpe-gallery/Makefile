@@ -7,7 +7,6 @@ VERSION = 0.8.1
 MEMBERS = main image_tools
 
 CFLAGS = `pkg-config --cflags gtk+-2.0`
-CONTROL = control1
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)

@@ -1,7 +1,5 @@
 include ./config.makefile
 
-CONTROL_FILE = familiar/control1
-GTK2 = yes
 SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
 
 PIXMAPS = `cd pixmaps && ls *.png`

@@ -9,7 +9,6 @@ LINGUAS =
 MEMBERS = event-db old-db 
 
 SONAME = $(PACKAGE).so.0
-CONTROL = control
 
 CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
 LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget

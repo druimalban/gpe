@@ -7,8 +7,6 @@ GTK2 = yes
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
-CONTROL = control1
-
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
