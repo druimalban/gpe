@@ -7,7 +7,7 @@ VERSION = 0.26
 
 MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset
 
-CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` -Wall
+CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` -Wall
 
 CPPFLAGS += -D_GNU_SOURCE -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
 
@@ -26,7 +26,7 @@ else
 CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1`
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0`
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
