@@ -31,8 +31,59 @@
 
 #define _(x)  (x)
 
+#define DB_NAME "/.gpe/calendar"
+
 static void
-do_import_vcal (MIMEDirVCal *cal)
+do_import_vevent (MIMEDirVEvent *event)
+{
+  sqlite *db;
+  GSList *tags, *i;
+  char *buf;
+  const gchar *home;
+  char *err = NULL;
+  int id;
+
+  home = g_get_home_dir ();
+  
+  buf = g_strdup_printf ("%s%s", home, DB_NAME);
+
+  db = sqlite_open (buf, 0, &err);
+  g_free (buf);
+
+  if (db == NULL)
+    {
+      gpe_error_box (err);
+      free (err);
+      return;
+    }
+ 
+  if (sqlite_exec (db, "insert into calendar_urn values (NULL)", NULL, NULL, &err) != SQLITE_OK)
+    {
+      gpe_error_box (err);
+      free (err);
+      sqlite_close (db);
+      return;
+    }
+
+  id = sqlite_last_insert_rowid (db);
+
+  tags = vevent_to_tags (event);
+
+  for (i = tags; i; i = i->next)
+    {
+      gpe_tag_pair *t = i->data;
+
+      sqlite_exec_printf (db, "insert into calendar values ('%d', '%q', '%q')", NULL, NULL, NULL,
+			  id, t->tag, t->value);
+    }
+  
+  gpe_tag_list_free (tags);
+
+  sqlite_close (db);
+}
+
+static void
+do_import_vevent (MIMEDirVEvent *event)
 {
 }
 
