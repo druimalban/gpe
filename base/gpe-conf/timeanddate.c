@@ -14,6 +14,7 @@
 #include <time.h>
 #include "applets.h"
 #include "timeanddate.h"
+#include "suid.h"
 
 static struct 
 {
@@ -31,7 +32,10 @@ static struct
 
 void GetInternetTime()
 {
-  system_printf("gpe-confsuid --sntime %s",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
+  fprintf(suidout,"NTPD\n%s\n",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
+  fflush(suidout);
+  printf("\n");
+  sleep(1);
   Time_Restore();
 }
 
@@ -115,7 +119,8 @@ void Time_Save()
   tm.tm_sec=s;
   tm.tm_isdst = 0;
   t=mktime(&tm);
-  system_printf("gpe-confsuid --stime %ld",t);
+  fprintf(suidout,"STIM %ld",t);
+  fflush(suidout);
   //  stime(&t);
 }
 void Time_Restore()

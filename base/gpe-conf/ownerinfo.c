@@ -31,7 +31,13 @@
 
 #include "applets.h"
 #include "ownerinfo.h"
-
+char *dirname(char *s)
+{
+	int i;
+	for(i=strlen(s);i && s[i]!='/'; i--);
+	s[i]=0;
+	return s;
+}
 #define CURRENT_DATAFILE_VER 2
 
 /* WARNING: don't mess with this! */

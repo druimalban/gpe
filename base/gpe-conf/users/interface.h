@@ -17,6 +17,7 @@ extern pwlist *pwroot;
 
 typedef struct userw_s
 {
+  GtkWidget *w;
   GtkWidget *username;
   GtkWidget *gecos;
   GtkWidget *shell;
@@ -26,6 +27,7 @@ typedef struct userw_s
 
 typedef struct passw_s
 {
+  GtkWidget *w;
   GtkWidget *oldpasswd;
   GtkWidget *newpasswd;
   GtkWidget *newpasswd2;

@@ -1,12 +1,10 @@
-/*
- * NE PAS ÉDITER CE FICHIER - il est généré par Glade.
- */
 
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <gtk/gtk.h>
 
@@ -15,6 +13,7 @@
 #include <gpe/picturebutton.h>
 
 #include "../applets.h"
+#include "../suid.h"
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
@@ -32,24 +31,29 @@ void InitPwList()
   pwlist **prec = &pwroot;
   pwlist *cur;
 
-  pwent = getpwent();
-  while(pwent)
+  setpwent();
+  if(!pwroot)
     {
-      cur = malloc(sizeof(pwlist));
-      cur->pw = *pwent;
-      pwent = &cur->pw;
-      pwent->pw_name = strdup(pwent->pw_name);
-      pwent->pw_passwd = strdup(pwent->pw_passwd);
-      pwent->pw_gecos = strdup(pwent->pw_gecos);
-      pwent->pw_dir = strdup(pwent->pw_dir);
-      pwent->pw_shell = strdup(pwent->pw_shell);
-      cur->next = 0;
-      *prec=cur;
-      prec=&cur->next;
       pwent = getpwent();
+      while(pwent)
+	{
+	  cur = malloc(sizeof(pwlist));
+	  cur->pw = *pwent;
+	  pwent = &cur->pw;
+	  pwent->pw_name = strdup(pwent->pw_name);
+	  pwent->pw_passwd = strdup(pwent->pw_passwd);
+	  pwent->pw_gecos = strdup(pwent->pw_gecos);
+	  pwent->pw_dir = strdup(pwent->pw_dir);
+	  pwent->pw_shell = strdup(pwent->pw_shell);
+	  cur->next = 0;
+	  *prec=cur;
+	  prec=&cur->next;
+	  pwent = getpwent();
+	}
+      endpwent();
     }
+  
 }
-
 GtkWidget *user_list;
  
 void ReloadList()
@@ -75,6 +79,55 @@ void ReloadList()
       cur = cur->next;
     }
   gtk_clist_columns_autosize      ((GtkCList *)user_list);
+}
+
+void Users_Free_Objects()
+{
+  pwlist *cur = pwroot,*next;
+  while(cur != NULL)
+    {
+      next=cur->next;
+      free(cur->pw.pw_name);
+      free(cur->pw.pw_passwd);
+      free(cur->pw.pw_gecos);
+      free(cur->pw.pw_dir);
+      free(cur->pw.pw_shell);
+      free(cur);
+      cur = next;
+    }
+  pwroot = 0;
+}
+
+void Users_Save()
+{
+  pwlist *cur = pwroot,*next;
+  FILE *f = fopen("/tmp/passwd","w");
+
+  while(cur != NULL)
+    {
+      fprintf(f,"%s:%s:%d:%d:%s:%s:%s\n",
+	      cur->pw.pw_name,
+	      cur->pw.pw_passwd,
+	      cur->pw.pw_uid,
+	      cur->pw.pw_gid,
+	      cur->pw.pw_gecos,
+	      cur->pw.pw_dir,
+	      cur->pw.pw_shell);
+      cur = cur->next;
+    }
+  fclose(f);
+  if(ask_root_passwd())
+    {
+      fprintf(suidout,"CPPW\n");
+      fflush(suidout);
+    }
+}
+
+void Users_Restore()
+{
+  Users_Free_Objects();
+  InitPwList();
+  ReloadList();
 }
 
 GtkWidget*
@@ -135,7 +188,6 @@ create_userchange (pwlist *init,GtkWidget *parent)
 {
   GtkWidget *userchange;
   GtkWidget *vbox2;
-  GtkWidget *frame1;
   GtkWidget *table1;
   GtkWidget *label1;
   GtkWidget *label2;
@@ -149,26 +201,19 @@ create_userchange (pwlist *init,GtkWidget *parent)
   GtkWidget *cancel;
   userw     *self = malloc (sizeof(userw));
 
-  userchange = gtk_dialog_new ();
+  self->cur = init;
+  self->w = userchange = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(userchange), GTK_WINDOW(parent));
   gtk_window_set_title (GTK_WINDOW (userchange), _("Add user"));
   gtk_window_set_modal (GTK_WINDOW (userchange), TRUE);
 
-  vbox2 = gtk_vbox_new (FALSE, 0);
+  vbox2 = GTK_DIALOG (userchange)->vbox;
 
-  gtk_widget_show (vbox2);
-  gtk_container_add (GTK_CONTAINER (userchange), vbox2);
-
-  frame1 = gtk_frame_new (_("Add user"));
-
-  gtk_widget_show (frame1);
-
-  gtk_box_pack_start (GTK_BOX (vbox2), frame1, TRUE, TRUE, 0);
 
   table1 = gtk_table_new (5, 2, FALSE);
 
   gtk_widget_show (table1);
-  gtk_container_add (GTK_CONTAINER (frame1), table1);
+  gtk_container_add (GTK_CONTAINER (vbox2), table1);
 
   label1 = gtk_label_new (_("Username"));
 
@@ -253,21 +298,15 @@ create_userchange (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (0),
                     (GtkAttachOptions) (0), 0, 0);
 
-  hbuttonbox2 = gtk_hbutton_box_new ();
-
-  gtk_widget_show (hbuttonbox2);
-  gtk_box_pack_start (GTK_BOX (vbox2), hbuttonbox2, FALSE, FALSE, 0);
-
-  save = gpe_picture_button (wstyle,_("Ok"),"ok");
-
-  gtk_widget_show (save);
-  gtk_container_add (GTK_CONTAINER (hbuttonbox2), save);
-  GTK_WIDGET_SET_FLAGS (save, GTK_CAN_DEFAULT);
+  hbuttonbox2 =  GTK_DIALOG (userchange)->action_area;
 
   cancel = gpe_picture_button (wstyle,_("Cancel"),"cancel");
-
   gtk_widget_show (cancel);
   gtk_container_add (GTK_CONTAINER (hbuttonbox2), cancel);
+
+  save = gpe_picture_button (wstyle,_("Ok"),"ok");
+  gtk_widget_show (save);
+  gtk_container_add (GTK_CONTAINER (hbuttonbox2), save);
 
   if(strcmp(init->pw.pw_name,"newuser"))
     {
@@ -285,9 +324,9 @@ create_userchange (pwlist *init,GtkWidget *parent)
                             GTK_SIGNAL_FUNC (users_on_cancel_clicked),
                             (gpointer) self);
 
+
   gtk_signal_connect (GTK_OBJECT(userchange) , "destroy", 
 		      (GtkSignalFunc) freedata, (gpointer)self); // in case of destruction by close (X) button
-
   return userchange;
 }
 
@@ -296,7 +335,6 @@ create_passwindow (pwlist *init,GtkWidget *parent)
 {
   GtkWidget *passwindow;
   GtkWidget *vbox3;
-  GtkWidget *frame2;
   GtkWidget *table3;
   GtkWidget *label6;
   GtkWidget *label7;
@@ -307,25 +345,18 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   passw     *self = malloc(sizeof(passw));
   GdkPixbuf *p = gpe_find_icon ("lock");
 
-  passwindow = gtk_dialog_new ();
+  self->cur = init;
+  self->w = passwindow = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(passwindow), GTK_WINDOW(parent));
   gtk_window_set_title (GTK_WINDOW (passwindow), _("Change passwd"));
   gtk_window_set_modal (GTK_WINDOW (passwindow), TRUE);
 
-  vbox3 = gtk_vbox_new (FALSE, 0);
-
-  gtk_widget_show (vbox3);
-  gtk_container_add (GTK_CONTAINER (passwindow), vbox3);
-
-  frame2 = gtk_frame_new (NULL);
-
-  gtk_widget_show (frame2);
-  gtk_box_pack_start (GTK_BOX (vbox3), frame2, TRUE, TRUE, 0);
+  vbox3 = GTK_DIALOG (passwindow)->vbox;
 
   table3 = gtk_table_new (3, 3, FALSE);
 
   gtk_widget_show (table3);
-  gtk_container_add (GTK_CONTAINER (frame2), table3);
+  gtk_container_add (GTK_CONTAINER (vbox3), table3);
 
   if(p)
     {
@@ -336,7 +367,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
     }
-  label6 = gtk_label_new (_("Old Passwd"));
+  label6 = gtk_label_new (_("Old Passwd:"));
 
   gtk_widget_show (label6);
   gtk_table_attach (GTK_TABLE (table3), label6, 1, 2, 0, 1,
@@ -344,7 +375,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label6), 0, 0.5);
 
-  label7 = gtk_label_new (_("New Passwd"));
+  label7 = gtk_label_new (_("New Passwd:"));
 
   gtk_widget_show (label7);
   gtk_table_attach (GTK_TABLE (table3), label7, 1, 2, 1, 2,
@@ -352,7 +383,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (label7), 0, 0.5);
 
-  label8 = gtk_label_new (_("Confirm"));
+  label8 = gtk_label_new (_("Confirm:"));
 
   gtk_widget_show (label8);
   gtk_table_attach (GTK_TABLE (table3), label8, 1, 2, 2, 3,
@@ -374,6 +405,7 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   gtk_table_attach (GTK_TABLE (table3), self->newpasswd, 2, 3, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_visibility (GTK_ENTRY (self->newpasswd), FALSE);
 
   self->newpasswd2 = gtk_entry_new ();
 
@@ -381,11 +413,11 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   gtk_table_attach (GTK_TABLE (table3), self->newpasswd2, 2, 3, 2, 3,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_entry_set_visibility (GTK_ENTRY (self->newpasswd2), FALSE);
 
-  hbuttonbox3 = gtk_hbutton_box_new ();
 
-  gtk_widget_show (hbuttonbox3);
-  gtk_box_pack_start (GTK_BOX (vbox3), hbuttonbox3, FALSE, TRUE, 0);
+
+  hbuttonbox3 = GTK_DIALOG (passwindow)->action_area;
 
   cancel = gpe_picture_button (wstyle,_("Cancel"),"cancel");
 
@@ -401,10 +433,10 @@ create_passwindow (pwlist *init,GtkWidget *parent)
 
   gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
                       GTK_SIGNAL_FUNC (users_on_passwdcancel_clicked),
-                      NULL);
+                      (gpointer)self);
   gtk_signal_connect (GTK_OBJECT (changepasswd), "clicked",
                       GTK_SIGNAL_FUNC (users_on_changepasswd_clicked),
-                      NULL);
+                      (gpointer)self);
 
   gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
 		      (GtkSignalFunc) freedata, (gpointer)self); // in case of destruction by close (X) button

@@ -9,7 +9,7 @@ endif
 CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Os -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
 CC = gcc
 
-MEMBERS  = main applets parser
+MEMBERS  = main applets parser suid
 MEMBERS += unimplemented
 MEMBERS += timeanddate
 MEMBERS += appmgr_setup ../gpe-appmgr/package ../gpe-appmgr/cfg

@@ -41,5 +41,6 @@ freedata                               (GtkWidget       *ignored,
 
 extern struct gpe_icon my_icons[];
 extern GtkStyle *wstyle; // for pixmaps
+extern GtkWidget *mainw; // for dialogs
 
 #endif

@@ -18,9 +18,11 @@
 #include <unistd.h>
 #include <signal.h>
 #include <time.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
+#include "suid.h"
 #include "applets.h"
 #include "timeanddate.h"
 #include "appmgr_setup.h"
@@ -40,6 +42,7 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 
+int suidPID;
 
 GtkStyle *wstyle;
 static struct {
@@ -57,6 +60,8 @@ static struct {
 
 }self;
 
+GtkWidget *mainw; // for dialogs
+
 struct Applet applets[]=
   {
     { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time" ,"Time and Date Setup"},
@@ -68,7 +73,7 @@ struct Applet applets[]=
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global Appearance Setup"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Configuration"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore , "Owner" ,"ownerinfo","Owner Information"},
-//    { &Users_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Users" ,"users","Users Administration"},
+    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","Users Administration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
@@ -137,7 +142,11 @@ void item_select(GtkWidget *ignored, gpointer user_data)
   else
     gtk_widget_hide(self.cancel);
 }
-
+int killchild()
+{
+  kill(suidPID,SIGTERM);
+ return 0; 
+}
 void initwindow()
 {
   if (gpe_application_init (NULL, NULL) == FALSE)
@@ -147,14 +156,17 @@ void initwindow()
     exit (1);
 
    // main window
-   self.w=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+   self.w= mainw = gtk_window_new(GTK_WINDOW_TOPLEVEL);
    wstyle = self.w->style;
    gtk_window_set_title(GTK_WINDOW(self.w),"GPE-Conf " VERSION);
-   gtk_widget_set_usize(GTK_WIDGET(self.w),240, 300);
+   gtk_widget_set_usize(GTK_WIDGET(self.w),300, 400);
 
 
    gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
 		       (GtkSignalFunc) gtk_main_quit, NULL);
+
+   gtk_signal_connect (GTK_OBJECT(self.w), "delete-event",
+		       (GtkSignalFunc) killchild, NULL);
 
    gtk_signal_connect (GTK_OBJECT(self.w), "destroy", 
       (GtkSignalFunc) gtk_main_quit, NULL);
@@ -309,25 +321,62 @@ void main_one(int argc, char **argv,int applet)
 int main(int argc, char **argv)
 {
   int i;
-  if(argc == 1)
+  int pipe1[2];
+  int pipe2[2];
+
+  if(pipe(pipe1))
     {
-      main_all(argc,argv);
+      fprintf(stderr, "cant pipe\n");
+      exit(errno);
     }
-  else
+  if(pipe(pipe2))
     {
-      for( i = 0 ; i< applets_nb ; i++)
+      fprintf(stderr, "cant pipe\n");
+      exit(errno);
+    }
+
+  switch(suidPID = fork())
+    {
+    case -1:
+      fprintf(stderr, "cant fork\n");
+      exit(errno);
+    case 0:
+      close(pipe1[0]);
+      close(pipe2[1]);
+      suidloop(pipe1[1],pipe2[0]);
+      exit(0);
+    default:
+      close(pipe2[0]);
+      close(pipe1[1]);
+      suidout = fdopen(pipe2[1],"w");
+      suidin = fdopen(pipe1[0],"r");
+      seteuid(getuid()); // abandon privilege..
+
+      if(argc == 1)
 	{
-	  if(strcmp(argv[1], applets[i].name) == 0)
-	    main_one(argc,argv,i);
+	  main_all(argc,argv);
 	}
-      if (i ==applets_nb)
+      else
 	{
-	  fprintf(stderr,"Applet %s unknown!\n",argv[1]);
-	  printf("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n");
 	  for( i = 0 ; i< applets_nb ; i++)
-	    if(applets[i].Build_Objects != Unimplemented_Build_Objects)
-	      printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
+	    {
+	      if(strcmp(argv[1], applets[i].name) == 0)
+		main_one(argc,argv,i);
+	    }
+	  if (i ==applets_nb)
+	    {
+	      fprintf(stderr,"Applet %s unknown!\n",argv[1]);
+	      printf("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n");
+	      for( i = 0 ; i< applets_nb ; i++)
+		if(applets[i].Build_Objects != Unimplemented_Build_Objects)
+		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
+	    }
 	}
+      fclose(suidout);
+      fclose(suidin);
+      kill(suidPID,SIGTERM);
     }
-  return 0;
+      return 0;
 }
+
+
