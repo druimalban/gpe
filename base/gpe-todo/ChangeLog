@@ -1,5 +1,11 @@
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.43 released.
+
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
+	* familiar/control (Depends): Demand libtododb 0.04.
+
 	* Makefile (CPPFLAGS, LDFLAGS): Add libgpepimc.
 	* main.c (main): Call gpe_pim_categories_init.
 	* todo.h (edit_item): Second arg is int, not pointer.
