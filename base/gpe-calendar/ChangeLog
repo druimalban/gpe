@@ -1,5 +1,9 @@
 2002-10-17  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.25 released.
+
+2002-10-17  Philip Blundell  <philb@gnu.org>
+
 	* main.c (main): Call gpe_calendar_start_xsettings.
 	(day_view_combined_times): Define.
 	* xsettings.c: New file.
