@@ -24,20 +24,24 @@
 #include <time.h>
 #include "applets.h"
 #include "network.h"
-#include "gpe/errorbox.h"
 #include "parser.h"
 
+#include <gpe/errorbox.h>
+#include <gpe/spacing.h>
 
 GtkWidget *Network_Build_Objects()
 {  
   FILE *pipe;
   GtkWidget *label;
   GtkWidget *table;
+  guint gpe_boxspacing = gpe_get_boxspacing ();
+  guint gpe_border     = gpe_get_border ();
   gint row = 0,col=2;
   int new=1,i, shift;
 
 
   table = gtk_table_new(row,2,FALSE);
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
 
   pipe = popen ("LC_ALL=C /sbin/ifconfig", "r");
   
@@ -56,9 +60,9 @@ GtkWidget *Network_Build_Objects()
 	      gtk_table_resize(GTK_TABLE(table),row,col);
 	      label = gtk_label_new(buffer2);
 	      gtk_table_attach (GTK_TABLE (table), label, 0, 1, row-1, row,
-				(GtkAttachOptions) ( GTK_FILL),
-/* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 6, 6/2);
+				(GtkAttachOptions) (GTK_FILL),
+				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				gpe_boxspacing, gpe_boxspacing);
 
 	    }
 	  if ((shift = mystrcmp (buffer, "inet addr:")) != -1)
@@ -72,8 +76,8 @@ GtkWidget *Network_Build_Objects()
 	      
 	      gtk_table_attach (GTK_TABLE (table), label, 1, 2, row-1, row,
 				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-/* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
-				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 6, 6/2);
+				(GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+				gpe_boxspacing, gpe_boxspacing);
 	    }
 	  fgets (buffer, 255, pipe);
 	}
@@ -85,5 +89,4 @@ GtkWidget *Network_Build_Objects()
     }
   
   return table;
-
 }

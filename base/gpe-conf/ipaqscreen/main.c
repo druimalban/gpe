@@ -19,7 +19,8 @@
 
 #include <gtk/gtk.h>
 
-#include "gpe/init.h"
+#include <gpe/init.h>
+#include <gpe/spacing.h>
 
 #include "brightness.h"
 #include "rotation.h"
@@ -57,15 +58,15 @@ GtkWidget *ipaqscreen_Build_Objects()
   guint i;
   int ss_sec;
 
+  guint gpe_boxspacing = gpe_get_boxspacing ();
+  guint gpe_border     = gpe_get_border ();
+
   GtkAttachOptions table_attach_left_col_x;
   GtkAttachOptions table_attach_left_col_y;
   GtkAttachOptions table_attach_right_col_x;
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
-  guint widget_padding_x;
-  guint widget_padding_y_even;
-  guint widget_padding_y_odd;
 
   /* 
    * GTK_EXPAND  the widget should expand to take up any extra space
@@ -93,17 +94,13 @@ GtkWidget *ipaqscreen_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
-  widget_padding_x = 5;
-  widget_padding_y_even = 5; /* padding in y direction for widgets in an even row */
-  widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
-
   ss_sec = xset_get_ss_sec();
   /* ======================================================================== */
   /* draw the GUI */
 
   self.table = gtk_table_new(2,6,FALSE);
   gtk_widget_set_name (self.table, "table");
-  gtk_container_set_border_width (GTK_CONTAINER (self.table), widget_padding_x);
+  gtk_container_set_border_width (GTK_CONTAINER (self.table), gpe_border);
 
   self.brightnessl = gtk_label_new("Brightness:");
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0)));
@@ -140,71 +137,71 @@ GtkWidget *ipaqscreen_Build_Objects()
 
   gtk_table_attach (GTK_TABLE (self.table), self.brightnessl, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
-                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.brightnessl), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (self.brightnessl), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.brightnessl),
-			widget_padding_x, widget_padding_y_even);
+			gpe_boxspacing, gpe_boxspacing);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*self.brightnessl' style 'gpe_labels'");
   gtk_widget_set_name (self.brightnessl, "self.brightnessl");
 
   gtk_table_attach (GTK_TABLE (self.table), self.brightness, 1, 2, 0, 1,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
   gtk_table_attach (GTK_TABLE (self.table), self.screensaverl, 0, 1, 1, 3,
                     (GtkAttachOptions) (table_attach_left_col_x),
-                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.screensaverl), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (self.screensaverl), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.screensaverl),
-			widget_padding_x, widget_padding_y_even);
+			gpe_boxspacing, gpe_boxspacing);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*self.screensaverl' style 'gpe_labels'");
   gtk_widget_set_name (self.screensaverl, "self.screensaverl");
 
   gtk_table_attach (GTK_TABLE (self.table), self.screensaverl2, 1, 2, 1, 2,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
 /*  gtk_table_attach (GTK_TABLE (self.table), self.screensaverbt, 2, 3, 1, 3,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 4);
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, gpe_boxspacing);
 */
   gtk_table_attach (GTK_TABLE (self.table), self.screensaver, 1, 2, 2, 3,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
   gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 3, 4,
                     (GtkAttachOptions) (table_attach_left_col_x),
-                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.rotationl), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (self.rotationl), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.rotationl),
-			widget_padding_x, widget_padding_y_even);
+			gpe_boxspacing, gpe_boxspacing);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*self.rotationl' style 'gpe_labels'");
   gtk_widget_set_name (self.rotationl, "self.rotationl");
 
   gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 3, 4,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
   gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 4, 5,
                     (GtkAttachOptions) (table_attach_left_col_x),
-                    (GtkAttachOptions) (table_attach_left_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.touchscreen), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (self.touchscreen), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (self.touchscreen),
-			widget_padding_x, widget_padding_y_even);
+			gpe_boxspacing, gpe_boxspacing);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*self.touchscreen' style 'gpe_labels'");
   gtk_widget_set_name (self.touchscreen, "self.touchscreen");
 
   gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 4, 5,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 4);
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
 
   gtk_signal_connect (GTK_OBJECT (self.brightness), "draw",

@@ -14,6 +14,8 @@
 #include <time.h>
 #include "applets.h"
 
+#include <gpe/spacing.h>
+
 #define XKBD_DIR "/usr/share/xkbd/"
 
 
@@ -102,9 +104,11 @@ GtkWidget *Kbd_Build_Objects()
   GtkWidget *opt1;
   char *user_kbdrc;
 
-  vbox = gtk_vbox_new (0,0);
-  /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  guint gpe_boxspacing = gpe_get_boxspacing ();
+  guint gpe_border = gpe_get_border ();
+
+  vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_border);
 
   opt1 = setup_kb (vbox, NULL, _("Standard"), XKBD_DIR "kbdconfig");
   setup_kb (vbox, opt1, _("Tiny"), XKBD_DIR "kbdconfig.tiny");

@@ -24,8 +24,11 @@
 #include <time.h>
 #include "applets.h"
 #include "theme.h"
-#include "gpe/errorbox.h"
-#include "gpe/question.h"
+
+#include <gpe/errorbox.h>
+#include <gpe/question.h>
+#include <gpe/spacing.h>
+
 
 static struct
 {
@@ -247,14 +250,9 @@ GtkWidget *Theme_Build_Objects()
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
-  guint border_width;
-  guint col_spacing;
-  guint row_spacing;
-  guint widget_padding_x;
-  guint widget_padding_y;
-  guint widget_padding_y_even;
-  guint widget_padding_y_odd;
- 
+  guint gpe_border     = gpe_get_border ();
+  guint gpe_boxspacing = gpe_get_boxspacing ();
+
   /* 
    * GTK_EXPAND  the widget should expand to take up any extra space
                  in its container that has been allocated.
@@ -281,14 +279,6 @@ GtkWidget *Theme_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
-  border_width = 6;
-  col_spacing = 6;
-  row_spacing = 6;
-  widget_padding_x = 0; /* add space with col_spacing */
-  widget_padding_y = 0; /* add space with row_spacing */
-  widget_padding_y_even = 6; /* padding in y direction for widgets in an even row */
-  widget_padding_y_odd  = 6; /* padding in y direction for widgets in an odd row  */
-
   /* ======================================================================== */
   /* draw the GUI */
   scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
@@ -302,9 +292,9 @@ GtkWidget *Theme_Build_Objects()
   table = gtk_table_new(3,2,FALSE);
   gtk_widget_set_name (table, "table");
   gtk_container_add (GTK_CONTAINER (viewport), table);
-  gtk_container_set_border_width (GTK_CONTAINER (table), border_width);
-  gtk_table_set_row_spacings (GTK_TABLE (table), row_spacing);
-  gtk_table_set_col_spacings (GTK_TABLE (table), col_spacing);
+  gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
+  gtk_table_set_row_spacings (GTK_TABLE (table), gpe_boxspacing);
+  gtk_table_set_col_spacings (GTK_TABLE (table), gpe_boxspacing);
 
   /* ------------------------------------------------------------------------ */
   label = gtk_label_new(_("Matchbox Theme:"));
@@ -314,7 +304,7 @@ GtkWidget *Theme_Build_Objects()
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
-			widget_padding_x, widget_padding_y_even);
+			gpe_boxspacing, gpe_boxspacing);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
@@ -333,8 +323,6 @@ GtkWidget *Theme_Build_Objects()
                       GTK_SIGNAL_FUNC (on_matchbox_entry_changed),
                       NULL);
 
-
-  
   label = gtk_label_new(_("GTK+ Theme:"));
   gtk_table_attach (GTK_TABLE (table), label, 0, 1, 1, 2,
 		    (GtkAttachOptions) (table_attach_left_col_x),
@@ -342,7 +330,7 @@ GtkWidget *Theme_Build_Objects()
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
-			widget_padding_x, widget_padding_y_even);
+			gpe_boxspacing, gpe_boxspacing);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
   /* make the label grey: */
   gtk_rc_parse_string ("widget '*label' style 'gpe_labels'");
@@ -368,7 +356,7 @@ GtkWidget *Theme_Build_Objects()
   gtk_label_set_justify (GTK_LABEL (label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label),
-			widget_padding_x, widget_padding_y_odd);
+			gpe_boxspacing, gpe_boxspacing);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
 
   /* give the label a style: */

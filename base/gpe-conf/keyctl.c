@@ -19,7 +19,7 @@
 #include "applets.h"
 #include "keyctl.h"
 
-
+#include <gpe/spacing.h>
 
 
 char buttons[5][1024];
@@ -105,13 +105,14 @@ on_button_clicked                      (GtkButton       *button,
 
 GtkWidget *Keyctl_Build_Objects()
 {
+  guint gpe_border = gpe_get_border ();
   GtkWidget *layout1 = gtk_layout_new (NULL, NULL);
   GtkWidget *button_1 = gtk_button_new_with_label ("Record");
   GtkWidget *button_2 = gtk_button_new_with_label ("Calendar");
   GtkWidget *button_5 = gtk_button_new_with_label ("Menu");
   GtkWidget *button_3 = gtk_button_new_with_label ("Contacts");
   GtkWidget *button_4 = gtk_button_new_with_label ("Q");
-  GtkWidget *scroll = gtk_scrolled_window_new( 
+  GtkWidget *scroll = gtk_scrolled_window_new(
 					      GTK_ADJUSTMENT(gtk_adjustment_new(0,0,230,1,10,240)),
 					      GTK_ADJUSTMENT(gtk_adjustment_new(0,0,220,1,10,240)));
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
@@ -127,6 +128,10 @@ GtkWidget *Keyctl_Build_Objects()
   gtk_widget_show (layout1);
   gtk_container_add (GTK_CONTAINER (scroll), layout1);
   gtk_layout_set_size (GTK_LAYOUT (layout1), 230, 220);
+
+#warning FIXME: this aint right... :)
+  /* gtk_container_set_border_width (GTK_CONTAINER (scroll), gpe_border); */
+  
   GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->hadjustment)->step_increment = 10;
   GTK_ADJUSTMENT (GTK_LAYOUT (layout1)->vadjustment)->step_increment = 10;
 

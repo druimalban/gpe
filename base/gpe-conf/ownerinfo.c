@@ -28,6 +28,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
+#include <gpe/spacing.h>
 
 #include "applets.h"
 #include "ownerinfo.h"
@@ -83,9 +84,8 @@ GtkWidget *Ownerinfo_Build_Objects()
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
-  guint widget_padding_x;
-  guint widget_padding_y_even;
-  guint widget_padding_y_odd;
+  guint gpe_border     = gpe_get_border ();
+  guint gpe_boxspacing = gpe_get_boxspacing ();
   gboolean datafile_writable = FALSE;
 
   /* ======================================================================== */
@@ -122,11 +122,6 @@ GtkWidget *Ownerinfo_Build_Objects()
   table_justify_left_col = GTK_JUSTIFY_LEFT;
   table_justify_right_col = GTK_JUSTIFY_LEFT;
 
-  widget_padding_x = 6;
-  widget_padding_y_even = 6; /* padding in y direction for widgets in an even row */
-  widget_padding_y_odd  = 0; /* padding in y direction for widgets in an odd row  */
-  
-
   fp = fopen (GPE_OWNERINFO_DATA, "r");
   if (fp)
     {
@@ -136,7 +131,7 @@ GtkWidget *Ownerinfo_Build_Objects()
 
       upgrade_result = maybe_upgrade_datafile ();
 
-      printf ("upgrade_result: %d\n", upgrade_result);
+      /* printf ("upgrade_result: %d\n", upgrade_result); */
       
       if (upgrade_result == UPGRADE_NOT_NEEDED) {	
 	/*  we have at least version 2, so we need to skip the 1st line
@@ -211,10 +206,14 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ======================================================================== */
   /* draw the GUI */
-  vbox = gtk_vbox_new (FALSE, 0);
+
+  /*
+   * Use 2*gpe_boxspacing here because this is a single width,
+   * whereas normally gpe_boxspacing is around *each* of two adjacent widgets:
+   */
+  vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_widget_show (vbox);
-  /* FIXME: do not hardcode the border width here, but use a global GPE constant [CM] */
-  gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_border);
   
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (hbox);
@@ -230,13 +229,13 @@ GtkWidget *Ownerinfo_Build_Objects()
   icon = gpe_render_icon (hbox->style, pixbuf);
   gtk_misc_set_alignment (GTK_MISC (icon), 0, 0);
   gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, TRUE, 0);
-  /* FIXME: do not hardcode the spacing here, but use a global GPE constant [CM] */
-  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 6);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 2*gpe_boxspacing);
   if (!datafile_writable)
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, TRUE, 0);
  
   table = gtk_table_new (6, 2, FALSE);
   gtk_widget_set_name (table, "table");
+  gtk_table_set_col_spacings (GTK_TABLE (table), 2*gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
 
   /* ------------------------------------------------------------------------ */
@@ -246,8 +245,7 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_name_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_name_label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_name_label),
-			widget_padding_x, widget_padding_y_even);
+  gtk_misc_set_padding (GTK_MISC (owner_name_label), 0, gpe_boxspacing);
 
   name = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (name), ownername);
@@ -262,8 +260,7 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_email_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_email_label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_email_label),
-			widget_padding_x, widget_padding_y_odd);
+  gtk_misc_set_padding (GTK_MISC (owner_email_label), 0, gpe_boxspacing);
 
   email = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (email), owneremail);
@@ -278,8 +275,7 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_phone_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_phone_label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_phone_label),
-			widget_padding_x, widget_padding_y_even);
+  gtk_misc_set_padding (GTK_MISC (owner_phone_label), 0, gpe_boxspacing);
 
   phone = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (phone), ownerphone);
@@ -291,17 +287,16 @@ GtkWidget *Ownerinfo_Build_Objects()
   owner_address_label = gtk_label_new (_("Address:"));
   gtk_table_attach (GTK_TABLE (table), owner_address_label, 0, 1, 3, 4,
                     (GtkAttachOptions) (table_attach_left_col_x),
-                    (GtkAttachOptions) (table_attach_left_col_y | GTK_FILL ), 0, 0);
+                    (GtkAttachOptions) (table_attach_left_col_y | GTK_FILL ),
+		    0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (owner_address_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
-  gtk_misc_set_padding (GTK_MISC (owner_address_label),
-			widget_padding_x, widget_padding_y_odd);
-
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
   gtk_table_attach (GTK_TABLE (table), scrolledwindow1, 1, 2, 3, 4,
                     (GtkAttachOptions) (table_attach_right_col_x),
-                    (GtkAttachOptions) (table_attach_right_col_y), 0, 0);
+                    (GtkAttachOptions) (table_attach_right_col_y),
+		    0, gpe_boxspacing);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1),
 				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
@@ -322,8 +317,7 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_photofile_label), table_justify_left_col);
   gtk_misc_set_alignment (GTK_MISC (owner_photofile_label), 0, 0.5);
-  gtk_misc_set_padding (GTK_MISC (owner_photofile_label),
-			widget_padding_x, widget_padding_y_even);
+  gtk_misc_set_padding (GTK_MISC (owner_photofile_label), 0, gpe_boxspacing);
 
   photofile = gtk_entry_new ();
   gtk_entry_set_text (GTK_ENTRY (photofile), ownerphotofile);
@@ -502,7 +496,7 @@ maybe_upgrade_datafile ()
     return (UPGRADE_ERROR);
   }
   else {
-    printf ("Had found version %d.\n", version);
+    /* printf ("Had found version %d.\n", version); */
     return UPGRADE_NOT_NEEDED;
   }
 }
@@ -628,8 +622,6 @@ create_pixmap                          (GtkWidget       *widget,
 				gdk_pixbuf_scale_simple
 				(icon, width * scale, height * scale, GDK_INTERP_BILINEAR));
   
-  /* gdk_pixbuf_unref(icon); FIXME: needed? gives trouble... */
-
   return pixmap;  
 }
 

@@ -200,9 +200,8 @@ Users_Build_Objects (void)
 
   hbuttonbox1 = gtk_hbutton_box_new ();
   gtk_hbutton_box_set_spacing_default (0);
-  //  gtk_hbutton_box_set_layout_default (GTK_BUTTONBOX_START);
-  gtk_button_box_set_layout(hbuttonbox1,GTK_BUTTONBOX_START);
-  gtk_button_box_set_child_size(hbuttonbox1,20,-1);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_START);
+  gtk_button_box_set_child_size (GTK_BUTTON_BOX (hbuttonbox1), 20, -1);
 
   gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, FALSE, 0);
 

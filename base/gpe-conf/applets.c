@@ -25,9 +25,8 @@
 #define _XOPEN_SOURCE /* Pour GlibC2 */
 #include <time.h>
 #include "applets.h"
-#include "gpe/gtkminifilesel.h"
-#include "gpe/gtkminifilesel.h"
-#include "gpe/errorbox.h"
+#include <gpe/gtkminifilesel.h>
+#include <gpe/errorbox.h>
 
 
 /***************************************************************************************/
