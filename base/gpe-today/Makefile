@@ -1,6 +1,6 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
-VERSION = 0.01
+VERSION = 0.02
 CVSBUILD = yes
 #DEBUG = yes 
 #LINGUAS = pt_PT
@@ -14,7 +14,7 @@ CPPFLAGS = -I../libgpewidget -I../libeventdb -I../libtododb -I../librootimage -D
 
 ifeq ($(DEBUG),yes)
 CFLAGS = -g
-#LDFLAGS = -lefence
+LDFLAGS = -lefence
 else
 CFLAGS = -Os -fomit-frame-pointer
 endif
