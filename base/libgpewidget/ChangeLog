@@ -1,3 +1,7 @@
+2005-03-09  Florian Boor <florian@kernelconcepts.de>
+
+	* doc/tmpl/*.sgml: More documentation (Init, Spacing).
+	
 2005-03-04  Florian Boor <florian@kernelconcepts.de>
 
 	* doc/tmpl/*.sgml: More documentation (Smallbox, Render).

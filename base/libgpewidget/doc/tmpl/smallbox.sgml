@@ -44,3 +44,5 @@ This function displays an input dialog box to query a user for text input.
 @labeltext: Query text displayed inside the box.
 @dval: Default value
 @Returns: Entered text if user taps OK, NULL otherwise.
+
+

@@ -28,10 +28,12 @@ application. It replaces gtk_init() which is used in normal GTK applications.
 
 <!-- ##### FUNCTION gpe_saved_args ##### -->
 <para>
-
+Returns the arguments passed to gpe_application_init(). The returned values are
+pointers to the data stored by gpe_application_init(), don't modify them if
+you don't exactly know what are you doing.
 </para>
 
-@argc: 
-@argv: 
+@argc: Filled with number of arguments in argv.
+@argv: Argument vector.
 
 
