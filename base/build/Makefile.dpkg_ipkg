@@ -18,16 +18,16 @@ else
 LIBGPEWIDGET_PC = libgpewidget
 endif
 
-$(eval GPECFLAGS = $(shell $(PC_EXTRA) pkg-config --cflags $(LIBGPEWIDGET_PC)))
-$(eval GPELIBS = $(shell $(PC_EXTRA) pkg-config --libs $(LIBGPEWIDGET_PC)))
+GPECFLAGS = $(shell $(PC_EXTRA) pkg-config --cflags $(LIBGPEWIDGET_PC))
+GPELIBS = $(shell $(PC_EXTRA) pkg-config --libs $(LIBGPEWIDGET_PC))
 
-$(eval GTKCFLAGS = $(shell pkg-config --cflags gtk+-2.0))
-$(eval GTKLIBS = $(shell pkg-config --libs gtk+-2.0))
+GTKCFLAGS = $(shell pkg-config --cflags gtk+-2.0)
+GTKLIBS = $(shell pkg-config --libs gtk+-2.0)
 
 dist: check-source clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	mkdir ../$(PACKAGE)-$(VERSION)
-	( tar cf - --exclude "*/CVS" --exclude CVS --exclude "*~" --exclude "#*#" --exclude "debian" --exclude "familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" --exclude "*.mo" --exclude "*.d" * ) | (cd ../$(PACKAGE)-$(VERSION); tar xf -)
+	( tar cf - --exclude "*/CVS" --exclude CVS --exclude "*~" --exclude "#*#" --exclude "debian" --exclude "familiar" --exclude ".*" --exclude "*.ipk" --exclude "*.ipk.*" --exclude "*.mo" --exclude "*.d" --exclude "*.batch" --exclude "translation-ipkgs.txt" * ) | (cd ../$(PACKAGE)-$(VERSION); tar xf -)
 	( cd ../$(PACKAGE)-$(VERSION); mkdir build; cp $(BUILD)/Makefile.dpkg_ipkg $(BUILD)/Makefile.translation build/ ; sed 's:^CVSBUILD.*:CVSBUILD = no:' < Makefile > Makefile.new; mv Makefile.new Makefile )
 	( cd .. ; tar cf - $(PACKAGE)-$(VERSION) | gzip -9 >$(PACKAGE)-$(VERSION).tar.gz )
 	rm -rf ../$(PACKAGE)-$(VERSION)
