@@ -21,12 +21,12 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
-#include "pixmaps.h"
-#include "init.h"
-#include "render.h"
-#include "picturebutton.h"
-#include "errorbox.h"
-#include "gtkminifilesel.h"
+#include <gpe/pixmaps.h>
+#include <gpe/init.h>
+#include <gpe/render.h>
+#include <gpe/picturebutton.h>
+#include <gpe/errorbox.h>
+#include <gpe/gtkminifilesel.h>
 
 #include "playlist_db.h"
 #include "player.h"
