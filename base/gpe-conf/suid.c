@@ -101,7 +101,8 @@ update_dns_server (const gchar * server)
 void
 update_time_from_net (const gchar * server)
 {
-	if (system_printf ("/usr/sbin/ntpdate -b %s", server))
+	char *tstr = g_strdup_printf ("/usr/sbin/ntpdate -b %s", server);
+	if (system(tstr))
 	{
 		fprintf (stderr, "failed to execute ntpdate\n");
 	}
@@ -109,6 +110,7 @@ update_time_from_net (const gchar * server)
 	{
 		system ("echo > /var/spool/at/trigger");
 	}
+	g_free(tstr);
 }
 
 

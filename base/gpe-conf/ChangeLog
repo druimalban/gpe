@@ -1,4 +1,7 @@
-
+2003-11-03	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* suid.c: Fixed bug that caused a crash on error syncing time.
+	* timeanddate.c: Replaced a dissapeared timeserver.
+	
 2003-10-30	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* tools/interface.c: Added IPv6 patch by Libor Klepac
 	* Added Russian translation by Pavel Maryanov - many thanks!

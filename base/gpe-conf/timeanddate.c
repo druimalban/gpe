@@ -50,7 +50,7 @@ gchar *Ntpservers[6]=
   {
     "time.handhelds.org",
     "time.apple.com",
-    "time.esec.com.au",
+    "ntp2.uni-siegen.de",
     "ptbtime1.ptb.de",
     "ntp2c.mcc.ac.uk",
     "ntppub.tamu.edu"
