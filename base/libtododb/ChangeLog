@@ -1,5 +1,9 @@
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.04 released.
+
+2004-02-22  Phil Blundell  <pb@nexus.co.uk>
+
 	* gpe/todo-db.h: (struct todo_category): Deleted.
 	(todo_db_destroy_category): Likewise.
 	(todo_db_del_category): Likewise.
