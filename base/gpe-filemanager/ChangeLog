@@ -1,3 +1,6 @@
+2004-06-28  Florian Boor  <florian.boor@kernelconcepts.de>
+	* main.c: Improved handling of SMB shares. Some minor fixes.
+	* Makefile: Working on V 0.16.
 
 2004-06-10  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Released V 0.15

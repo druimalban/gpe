@@ -958,7 +958,8 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
   if (file_info == NULL)
     return;
-
+printf("mt: %s\n",file_info->vfs->mime_type);
+  
   /* Handle Symbolic Links -- CM */
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK) {
     GnomeVFSURI *uri = gnome_vfs_uri_new (file_info->vfs->symlink_name);
@@ -971,7 +972,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
       if (gnome_vfs_get_file_info_uri (uri, vfs, GNOME_VFS_FILE_INFO_DEFAULT) 
           != GNOME_VFS_OK) {
-            printf ("Symbolic link %s leads to inaccessable file!\n", file_info->filename);
+            gpe_error_box_fmt (_("Symbolic link %s leads to inaccessable file!"), file_info->filename);
             return;
       }
 
@@ -979,12 +980,14 @@ button_clicked (GtkWidget *widget, gpointer udata)
     } while (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK && (--cur_depth > 0));
 
     if (cur_depth <= 0) {
-      printf ("max symbolic link depth exceeded for %s\n", file_info->filename);
+      gpe_error_box_fmt (_("Maximum symbolic link depth exceeded for %s"), file_info->filename);
       return;
     }
   }
   
-    if ((file_info->vfs->mime_type) && (!strcmp(file_info->vfs->mime_type,"application/x-gnome-app-info")))
+    if ((file_info->vfs->mime_type) && 
+		((!strcmp(file_info->vfs->mime_type,"application/x-desktop") && !file_info->vfs->size) 
+		 || strstr(file_info->vfs->mime_type,"x-directory/")))
         browse_directory (file_info->filename);
     else    
       if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
@@ -1217,12 +1220,19 @@ make_view ()
     case GNOME_VFS_ERROR_READ_ONLY_FILE_SYSTEM:
       error = g_strdup ("Read only file system.");
       break;
+	case GNOME_VFS_ERROR_NOT_FOUND:
+	case GNOME_VFS_ERROR_GENERIC:
+	break;
     default:
       error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
       break;
     }
-    gpe_error_box (error);
-    g_free (error);
+//printf("err: %i\n",open_dir_result);
+	if (error)
+	{
+	  gpe_error_box (error);
+      g_free (error);
+	}
   }  
   for (iter = list; iter; iter = iter->next)
     add_icon (iter->data);
@@ -1256,6 +1266,43 @@ add_history (gchar *directory)
 static void
 browse_directory (gchar *directory)
 {
+  /* some hacks to handle nasty smb urls */
+  if (g_str_has_prefix(directory,"smb:"))
+  {
+	int i, j, result;
+	GnomeVFSDirectoryHandle *handle;
+	char *mark = strstr(directory,"///");
+	if (mark)
+	{
+	   for (i=mark-directory+2;i<strlen(directory)-1;i++)
+		   directory[i] = directory[i+1];
+	   directory[strlen(directory)-1] = 0;
+	}
+	/* check if we can open it, if not strip workgroup */
+	if (strlen(directory) > 6) 
+	{
+		result = 
+			gnome_vfs_directory_open (&handle, directory, 
+								  GNOME_VFS_FILE_INFO_FORCE_FAST_MIME_TYPE);
+		if (result != GNOME_VFS_OK)
+		{
+			if (result == GNOME_VFS_ERROR_NOT_A_DIRECTORY)
+			{
+				mark = strstr(directory+6,"/");
+				j = mark - (directory+5);
+				if (mark && (j>1))
+				{
+					for (i=5;i<strlen(directory)-j;i++)
+				   		directory[i] = directory[i+j];
+			   		directory[strlen(directory)-j] = 0;
+				}
+			}
+		}
+		else
+			gnome_vfs_directory_close(handle);
+	}
+  }
+
   if (current_directory) 
     g_free(current_directory);
   current_directory = g_strdup (directory);
