@@ -17,28 +17,27 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#include "spacing.h"
+#include <glib.h>
+
+/*
+ * How much to scale down the spacings defined in the Gnome 2 HIG
+ *   (http://developer.gnome.org/projects/gup/hig/1.0/layout.html#layout-window)
+ * for GPE:
+ */
+#define GPE_GNOME_SCALING 2
+
+/* See also
+ *  http://mail.gnome.org/archives/gtk-devel-list/2003-February/msg00009.html
+ */
 
 /* the spacing for categories in a dialog: */
-guint
-gpe_get_catspacing () {
-  return 18/GPE_GNOME_SCALING;
-}
+guint gpe_get_catspacing (void);
 
 /* the indent for categories in a dialog: */
-gchar *
-gpe_get_catindent () {
-  return "  "; /* Gnome 2 uses four spaces */
-}
+gchar *gpe_get_catindent (void);
 
 /* the border for e.g. a GtkDialog: */
-guint
-gpe_get_border () {
-  return 12/GPE_GNOME_SCALING;
-}
+guint gpe_get_border (void);
 
 /* the spacing in boxes: */
-guint
-gpe_get_boxspacing () {
-  return 6/GPE_GNOME_SCALING;
-}
+guint gpe_get_boxspacing (void);
