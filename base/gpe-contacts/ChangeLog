@@ -1,7 +1,9 @@
 2004-10-12  Florian Boor <florian.boor@kernelconcepts.de>
     
+    * Released Version 0.31
     * main.c: Using of find dialog, Ctrl+f, button (landscape)
     * finddlg.[c/h]: New files for find dialog.
+    * Makefile: Added new files, changed version number.
     * db.c, db.h (db_get_entries_filtered): New search function to return
                                             contacts that contain a given 
                                             string.    
