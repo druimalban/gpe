@@ -1,8 +1,15 @@
 2002-07-10  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (HEADERS): Add picturebutton.h, dammit.
+
+2002-07-10  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (HEADERS): Add what.h, stylus.h
+
+2002-07-10  Philip Blundell  <philb@gnu.org>
+
 	* debian/rules (build): Set PREFIX=/usr
 	* debian/control: Add more build-depends
-	* Makefile (HEADERS): Add what.h, stylus.h
 	
 2002-07-09  Philip Blundell  <philb@gnu.org>
 

@@ -14,7 +14,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD
 
-HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h what.h stylus.h
+HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkminifilesel.h gtkdatecombo.h gtkdatesel.h dirbrowser.h what.h stylus.h picturebutton.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -40,7 +40,7 @@ upstream: clean
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a libgpewidget libgpewidget-$$VERSION.orig; tar czf libgpewidget_$$VERSION.orig.tar.gz --exclude=libgpewidget-$$VERSION.orig/debian --exclude=libgpewidget-$$VERSION.orig/CVS --exclude=libgpewidget-$$VERSION.orig/familiar libgpewidget-$$VERSION.orig ; rm -rf libgpewidget-$$VERSION.orig )
 
 dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
+	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage -sa ; cd ..; rm -rf $$PV)
 
 install: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
