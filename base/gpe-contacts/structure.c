@@ -229,9 +229,16 @@ edit_structure (void)
   GtkWidget *tree = gtk_ctree_new (2, 0);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 
-					GTK_TOOLBAR_ICONS);
+  GtkWidget *toolbar;
   GtkWidget *pw;
+
+#if GTK_MAJOR_VERSION < 2
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   gtk_widget_show (vbox);
   gtk_widget_show (scrolled);

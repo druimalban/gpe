@@ -92,22 +92,25 @@ store_special_fields (GtkWidget *edit, struct person *p)
   else
     gtk_date_combo_clear (GTK_DATE_COMBO (w));
 
-  bl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
-  if (bl)
+  if (p)
     {
-      for (l = p->data; l; l = l->next)
+      bl = gtk_object_get_data (GTK_OBJECT (edit), "category-widgets");
+      if (bl)
 	{
-	  v = l->data;
-	  if (!strcmp (v->tag, "CATEGORY")
-	      && v->value)
+	  for (l = p->data; l; l = l->next)
 	    {
-	      guint c = atoi (v->value);
-	      GSList *i;
-	      for (i = bl; i; i = i->next)
+	      v = l->data;
+	      if (!strcmp (v->tag, "CATEGORY")
+		  && v->value)
 		{
-		  GtkWidget *w = i->data;
-		  if ((guint)gtk_object_get_data (GTK_OBJECT (w), "category") == c)
-		    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+		  guint c = atoi (v->value);
+		  GSList *i;
+		  for (i = bl; i; i = i->next)
+		    {
+		      GtkWidget *w = i->data;
+		      if ((guint)gtk_object_get_data (GTK_OBJECT (w), "category") == c)
+			gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (w), TRUE);
+		    }
 		}
 	    }
 	}
@@ -189,9 +192,15 @@ config_categories_box(void)
   GtkWidget *pw;
   GSList *categories;
 
+#if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
   gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
+#else
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+#endif
 
   gtk_widget_show (toolbar);
 

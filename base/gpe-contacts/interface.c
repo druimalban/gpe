@@ -69,7 +69,14 @@ create_main (void)
   gtk_button_box_set_child_size (GTK_BUTTON_BOX (hbuttonbox1), 50, 20);
   gtk_button_box_set_child_ipadding (GTK_BUTTON_BOX (hbuttonbox1), 3, 0);
 
+#if GTK_MAJOR_VERSION < 2
   toolbar1 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+#else
+  toolbar1 = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar1), GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar1), GTK_TOOLBAR_ICONS);
+#endif
+
   gtk_widget_set_name (toolbar1, "toolbar1");
   gtk_widget_ref (toolbar1);
   gtk_object_set_data_full (GTK_OBJECT (main), "toolbar1", toolbar1,
@@ -183,6 +190,7 @@ create_main (void)
   return main;
 }
 
+#if 0
 GtkWidget*
 create_detailview (void)
 {
@@ -469,4 +477,4 @@ create_detailview (void)
 
   return detailview;
 }
-
+#endif
