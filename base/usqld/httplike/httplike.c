@@ -88,13 +88,18 @@ void httplike_parse_error(httplike_socket * sock,
     sock->on_error(sock,err,msg);
 }
 
+void pc_buffer_reset(httplike_parse_context * pc);
+
 httplike_socket* httplike_new_socket(int fd){
 
   httplike_socket * sock;
 
   sock = XDR_malloc(httplike_socket);
   bzero(sock,sizeof(httplike_socket));
+  
   sock->fd = fd;
+  sock->state= HTTPLIKE_STATE_IDLE;
+  pc_buffer_reset(&(sock->pc));
   return sock;
 }
 
@@ -174,7 +179,8 @@ void httplike_handle_state_exit(httplike_socket * sock,
 			   httplike_internal_state state,
 			   httplike_internal_state next){
   httplike_packet *  packet =  &(pc->packet);
-  
+
+  fprintf(stderr,"leaving state %d for state %d\n",state,next);  
   switch (state){
   
   case HTPL_IS_INIT: 
@@ -295,20 +301,22 @@ void httplike_consume_content(httplike_socket * sock,
 
 
   
-
 void httplike_pump_socket(httplike_socket *sock){
-  
   assert(sock!=NULL);
-  
-  if(sock->state!=HTTPLIKE_STATE_CLOSED){
-    int nb;
-    httplike_parse_context * pc; 
-    pc = &(sock->pc);
-    char netbuf[HTTPLIKE_NET_BUF_LEN];
-    while((nb=recv(sock->fd,netbuf,HTTPLIKE_NET_BUF_LEN,MSG_DONTWAIT))){
-      httplike_consume_content(sock,netbuf,nb);
+  int  nb=0;
+  do{
+    if(sock->state!=HTTPLIKE_STATE_CLOSED){
+      
+      char netbuf[HTTPLIKE_NET_BUF_LEN];
+      if((nb=recv(sock->fd,netbuf,HTTPLIKE_NET_BUF_LEN,MSG_DONTWAIT)>0)){
+	fprintf(stderr,"got %d bytes of data dispatching\n",nb);
+	httplike_consume_content(sock,netbuf,nb);
+      }else{
+	fprintf(stderr,"end of pump, no more data to report capn\n");
+      }
     }
-  }
+  }while(sock->state!=HTTPLIKE_STATE_CLOSED && 
+	 nb!=0);
 }
 
 
@@ -327,24 +335,146 @@ int httplile_socket_fd(httplike_socket * sock){
   return(sock->fd);
 }
 
-int httplike_socket_destroy(httplike_socket* sock){
+void httplike_socket_destroy(httplike_socket* sock){
   assert(sock);
+  if(sock->data && sock->dest_data)
+    sock->dest_data(sock,sock->data);
+
+  if(sock->pc.parsebuf)
+    XDR_free(sock->pc.parsebuf);
   
 }
 
 
 void * httplike_socket_get_data(httplike_socket * sock){
-  assert(sock);
-  return sock->data;
-  
+  return p_get(sock,&(sock->data));
 }
 
-void * httplike_socket_set_data(httplike_socket * sock, voiid * data){
-  void * data;
-  assert(sock);
-  
+void * httplike_socket_set_data(httplike_socket * sock, void * data){
+  return p_set(sock,&(sock->data),data);
 }
-httplike_data_destructor_func httplike_socket_get_data_destructor(httplike_socket * sock){
-  assert(sock);
-  return sock->dest_data;
+httplike_data_destructor_func 
+httplike_socket_get_data_destructor(httplike_socket * sock){
+  return p_get(sock,&(sock->dest_data));
+}
+
+httplike_data_destructor_func 
+httplike_socket_set_data_destructor(httplike_socket * sock,httplike_data_destructor_func func){
+  return p_set(sock,&(sock->dest_data),func);
+}
+
+
+int httplike_packet_add_header(httplike_packet * packet,
+			       const char * h_name,
+			       const char * h_val){
+  int i;
+  
+  assert(packet!=NULL);
+
+  if(strcasecmp(h_name,HTTPLIKE_HEADER_CONTENT_LEN)==0){
+    return 0;
+  }
+
+  for(i = 0;i<packet->nheader;i++){
+    if(strcasecmp(h_name,packet->headers[i].h_name)==0){
+      if(packet->headers[i].h_val){
+	free(packet->headers[i].h_val);
+	packet->headers[i].h_val = strdup(h_val);
+	return 1;
+      }
+    }
+  }
+  
+  if(packet->nheader==HTTPLIKE_MAX_HEADERS)
+    return 0;
+  
+  packet->headers[packet->nheader].h_name = strdup(h_name);
+  packet->headers[packet->nheader++].h_name = strdup(h_val);
+  return 0;
+}
+
+
+char * httplike_packet_get_header(httplike_packet * packet,
+				  const char * h_name){
+  int i;
+
+  assert(packet!=NULL);
+  for(i =0;i<packet->nheader;i++)
+    if(0==strcasecmp(packet->headers[i].h_name,h_name))
+      return packet->headers[i].h_val;
+  
+  return NULL;
+}
+
+void httplike_packet_free_headers(httplike_packet *packet){
+  assert(packet!=NULL);
+  int i;
+  for(i =0;i<packet->nheader;i++){
+    if(packet->headers[i].h_name)
+      XDR_free(packet->headers[i].h_name);
+    if(packet->headers[i].h_val)
+      XDR_free(packet->headers[i].h_val);
+    packet->nheader = 0;
+  }
+}
+
+
+int httplike_socket_send_packet(httplike_socket *sock, httplike_packet *packet){
+  size_t w_len;
+  char h_len_val[128];
+  char wbuf[2048];
+  int i;
+  assert(sock!=NULL);
+  assert(packet!=NULL);
+  
+  snprintf(h_len_val,128,"%d",packet->content_len);
+  httplike_packet_add_header(packet,HTTPLIKE_HEADER_CONTENT_LEN,h_len_val);
+  snprintf(wbuf,2048,"%s %s %s\n",packet->operation, packet->operand, packet->version);
+
+  w_len =strlen(wbuf);
+  if(0==write(sock->fd,wbuf,w_len)){
+    return 0;
+  }
+
+  for(i=0;i<packet->nheader;i++){
+    snprintf(wbuf,2048,"%s:%s\n",packet->headers[i].h_name,packet->headers[i].h_val);
+    w_len =strlen(wbuf);
+    if(0==write(sock->fd,wbuf,w_len)){
+      return 0;
+    }
+  }
+
+  if(0==write(sock->fd,"\n",1)){
+    return 0;
+  }
+
+  if(0==write(sock->fd,packet->content,packet->content_len)){
+    return 0;
+  }
+  return 1;
+}
+
+void httplike_dump_packet(httplike_packet * packet){
+  int i =0;
+  char * content_type_header;
+  
+  fprintf(stderr,"httplike packet:\n");
+  fprintf(stderr,"Opn:\"%s\"\nOperand:\"%s\"\nVersion:\"%s\"\n",
+	 packet->operation,
+	 packet->operand,
+	 packet->version);
+  
+  fprintf(stderr,"Headers:\n__________\n");
+
+  for(i= 0;i<packet->nheader;i++){
+    fprintf(stderr,"\"%s\":\"%s\"\n",packet->headers[i].h_name,packet->headers[i].h_val);
+  }  
+  
+  content_type_header = httplike_packet_get_header(packet,"Content-type");
+  
+  if(content_type_header && strcasecmp(content_type_header,"text/plain")==0){
+    fprintf(stderr,"got text content (%d):%s\n",packet->content_len,packet->content);    
+  }else{
+    fprintf(stderr,"got non-text content (%d)\n",packet->content_len);
+  }
 }

@@ -88,7 +88,6 @@ typedef struct  httplike_packet {
   unsigned int nheader;
   httplike_header headers[HTTPLIKE_MAX_HEADERS];
   //  unsigned int headers_len;
-
   char * operation;
   char * operand;
   char * version;
@@ -162,11 +161,42 @@ httplike_error_func  httplike_socket_set_error_func(httplike_socket * sock,
 
 httplike_error_func  httplike_socket_get_error_func(httplike_socket * sock);
 
+
+void * httplike_socket_set_data(httplike_socket * sock, void * data);
+void * httplike_socket_get_data(httplike_socket * sock);
+
+httplike_data_destructor_func  httplike_socket_get_data_destructor(httplike_socket * sock);
+httplike_data_destructor_func  httplike_socket_set_data_destructor(httplike_socket * sock,httplike_data_destructor_func dest);
+
 httplike_socket* httplike_new_socket(int fd);
 
-int httplike_socket_destroy(httplike_socket * sock);
+void httplike_socket_destroy(httplike_socket * sock);
 
+/**
+ * pumps a socket, if there is any data. 
+ */
 void httplike_pump_socket(httplike_socket *sock);
-int httplike_socket_busy(httplike_socket *sock);
 
+/**
+ */
+int  httplike_socket_busy(httplike_socket *sock);
+
+/**
+ * adds a header to a packet copies the header fields duplicate
+ * headers will be replaced, and Content-length headers are not
+ * allowed.
+ */
+int httplike_packet_add_header(httplike_packet * packet,
+			       const char * h_name,
+			       const char * h_val);
+/**
+ * returns a header iff found or NULL
+ */
+char * httplike_packet_get_header(httplike_packet * packet,
+				  const char * h_name);
+
+void httplike_packet_free_headers(httplike_packet *packet);
+
+int httplike_socket_send_packet(httplike_socket *sock, httplike_packet *packet);
+void httplike_dump_packet(httplike_packet * packet);
 #endif
