@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-18 17:55+0200\n"
+"POT-Creation-Date: 2003-09-24 18:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,7 +154,7 @@ msgid ""
 "again."
 msgstr ""
 
-#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
+#: appmgr_setup.c:189 gpe-admin.c:86
 msgid "General"
 msgstr ""
 
@@ -339,272 +339,276 @@ msgstr ""
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:228 keyctl.c:162
+#: network.c:228 keyctl.c:163
 msgid "Question"
 msgstr ""
 
-#: network.c:443
+#: network.c:444
 msgid "Address"
 msgstr ""
 
-#: network.c:446
+#: network.c:447
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr ""
 
-#: network.c:448
+#: network.c:449
 msgid "Netmask"
 msgstr ""
 
-#: network.c:451
+#: network.c:452
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr ""
 
-#: network.c:453
+#: network.c:454
 msgid "Broadcast"
 msgstr ""
 
-#: network.c:456
+#: network.c:457
 msgid ""
 "Enter your broadcast address here, usually the same like your IP with 255 as "
 "last number."
 msgstr ""
 
-#: network.c:458
+#: network.c:459
 msgid "Gateway"
 msgstr ""
 
-#: network.c:461
+#: network.c:462
 msgid "Enter the IP Address of your default gateway here."
 msgstr ""
 
-#: network.c:543
+#: network.c:544
 msgid "Hostname"
 msgstr ""
 
-#: network.c:546
+#: network.c:547
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr ""
 
-#: network.c:629
+#: network.c:630
 msgid "Provider"
 msgstr ""
 
-#: network.c:632
+#: network.c:633
 msgid ""
 "Here you need to enter the name of the provider configuration to use for "
 "this interface."
 msgstr ""
 
-#: network.c:656
+#: network.c:657
 msgid "Global Settings"
 msgstr ""
 
-#: network.c:697
+#: network.c:698
 msgid "Proxy"
 msgstr ""
 
-#: network.c:699
+#: network.c:700
 msgid ""
 "If you want/need to use a proxy, enter it here. (This only applies to dillo "
 "for now.)"
 msgstr ""
 
-#: network.c:704
+#: network.c:705
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:707
+#: network.c:708
 msgid ""
 "Here you should enter your local domain for that you don't want to use a "
 "proxy."
 msgstr ""
 
-#: network.c:716
+#: network.c:717
 msgid "Use DHCP in any case (usually not needed)."
 msgstr ""
 
-#: network.c:718
+#: network.c:719
 msgid "Use DHCP"
 msgstr ""
 
-#: network.c:733
+#: network.c:734
 msgid "yes"
 msgstr ""
 
-#: network.c:744
+#: network.c:745
 msgid "no"
 msgstr ""
 
-#: network.c:757
+#: network.c:758
 msgid "DNS server"
 msgstr ""
 
-#: network.c:760
+#: network.c:761
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: network.c:941
+#: network.c:942
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
 "\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: network.c:968 network.c:969
+#: network.c:969 network.c:970
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:970
+#: network.c:971
 msgid "Add a new Interface"
 msgstr ""
 
-#: network.c:978 network.c:979
+#: network.c:979 network.c:980
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:980
+#: network.c:981
 msgid "Remove current Interface"
 msgstr ""
 
-#: network.c:993
+#: network.c:994
 msgid "Information"
 msgstr ""
 
-#: network.c:994 network.c:995
+#: network.c:995 network.c:996
 msgid "Show current configuration."
 msgstr ""
 
-#: network.c:1006
+#: network.c:1007
 msgid "Close"
 msgstr ""
 
-#: network.c:1007 network.c:1008
+#: network.c:1008 network.c:1009
 msgid "Close network tool"
 msgstr ""
 
-#: network.c:1023
+#: network.c:1024
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:1032
+#: network.c:1033
 msgid "global"
 msgstr ""
 
-#: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
-msgid "Color"
-msgstr ""
-
-#: theme.c:393
+#: theme.c:398
 msgid "Red"
 msgstr ""
 
-#: theme.c:398
+#: theme.c:403
 msgid "Green"
 msgstr ""
 
-#: theme.c:403
+#: theme.c:408
 msgid "Blue"
 msgstr ""
 
-#: theme.c:654
+#: theme.c:659
 msgid "Select color"
 msgstr ""
 
-#: theme.c:680 theme.c:746
+#: theme.c:685 theme.c:751
 msgid ""
 "You don't have read access\n"
 "to selected background image!"
 msgstr ""
 
-#: theme.c:828
+#: theme.c:833
 msgid "Theme"
 msgstr ""
 
-#: theme.c:837
+#: theme.c:842
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:849
+#: theme.c:854
 msgid "Name"
 msgstr ""
 
-#: theme.c:865
+#: theme.c:870
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:879
+#: theme.c:884
 msgid "Background"
 msgstr ""
 
-#: theme.c:890
+#: theme.c:895
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:897
+#: theme.c:902
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:911
+#: theme.c:916
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:915
+#: theme.c:920
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:931
+#: theme.c:925 theme.c:945 theme.c:1041 theme.c:1047
+msgid "Color"
+msgstr ""
+
+#: theme.c:936
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:951
+#: theme.c:956
 msgid "Image"
 msgstr ""
 
-#: theme.c:977
+#: theme.c:982
 msgid "Centered"
 msgstr ""
 
-#: theme.c:981
+#: theme.c:986
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:984
+#: theme.c:989
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:989
+#: theme.c:994
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:998 theme.c:1018
+#: theme.c:1003 theme.c:1023
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1005 theme.c:1060
+#: theme.c:1010 theme.c:1065
 msgid "Family"
 msgstr ""
 
-#: theme.c:1025 theme.c:1080
+#: theme.c:1030 theme.c:1085
 msgid "Size"
 msgstr ""
 
-#: theme.c:1053 theme.c:1073
+#: theme.c:1058 theme.c:1078
 msgid "Application Font"
 msgstr ""
 
-#: keyctl.c:162
+#: keyctl.c:163
 msgid "Reset button config to default?"
 msgstr ""
 
-#: keyctl.c:199
+#: keyctl.c:200
 msgid "Defaults"
 msgstr ""
 
-#: keyctl.c:304
+#: keyctl.c:299
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr ""
 
-#: ownerinfo.c:201
+#: ownerinfo.c:197
+msgid "<b>Information about  the Owner</b>"
+msgstr ""
+
+#: ownerinfo.c:202
 msgid "Only the user 'root' is allowed to change this information"
 msgstr ""
 
@@ -624,23 +628,28 @@ msgstr ""
 msgid "Photofile:"
 msgstr ""
 
-#: login-setup.c:131
+#: login-setup.c:130
 msgid "Some or all of these settings can only be changed by the user 'root'."
 msgstr ""
 
-#: login-setup.c:167
+#. TRANSLATORS: Please ignore the tags <>
+#: login-setup.c:153
+msgid "<b>General</b>"
+msgstr ""
+
+#: login-setup.c:168
 msgid "Show owner information at login."
 msgstr ""
 
-#: login-setup.c:169
+#: login-setup.c:170
 msgid "Use background image for login screen."
 msgstr ""
 
-#: login-setup.c:171
+#: login-setup.c:172
 msgid "Lock display on suspend."
 msgstr ""
 
-#: login-setup.c:184
+#: login-setup.c:185
 msgid "Image:"
 msgstr ""
 
@@ -938,8 +947,8 @@ msgstr ""
 
 #: serial.c:395
 msgid ""
-"The GPS receiver is a sends NMEA data. (default, no need to change for most "
-"receivers)"
+"The GPS receiver sends NMEA data (default, no need to change for most "
+"receivers)."
 msgstr ""
 
 #: serial.c:401
@@ -959,11 +968,11 @@ msgid "Can't find circular buffer, is syslog running?"
 msgstr ""
 
 #: logread.c:113
-msgid "Can't get access to circular buffer from syslogd."
+msgid "Can't get access to syslogd's circular buffer."
 msgstr ""
 
 #: logread.c:119
-msgid "Can't get access to semaphone(s) for circular buffer from syslogd."
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
 msgstr ""
 
 #: logread.c:144
@@ -1194,13 +1203,13 @@ msgstr ""
 
 #: cardinfo.c:1337
 msgid ""
-"Click here to reset card manager. This commits all updates to pcmcia config "
+"Click here to reset card manager. This commits all updates to PCMCIA config "
 "files."
 msgstr ""
 
 #: cardinfo.c:1347
 msgid ""
-"Click here to assign a driver to this card / change current driver "
+"Click here to assign a driver to this card or change current driver "
 "assignment."
 msgstr ""
 
@@ -1503,80 +1512,80 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: battery.c:79
+#: battery.c:81
 #, c-format
 msgid "could not open touchscreen device '%s'\n"
 msgstr ""
 
-#: battery.c:127 battery.c:179
+#: battery.c:130 battery.c:182
 msgid "Status: high"
 msgstr ""
 
-#: battery.c:130 battery.c:182
+#: battery.c:133 battery.c:185
 msgid "Status: low"
 msgstr ""
 
-#: battery.c:133 battery.c:185
+#: battery.c:136 battery.c:188
 msgid "Status: critical"
 msgstr ""
 
-#: battery.c:136 battery.c:188
+#: battery.c:139 battery.c:191
 msgid "Status: charging"
 msgstr ""
 
-#: battery.c:139 battery.c:191
+#: battery.c:142 battery.c:194
 msgid "Status: charge main"
 msgstr ""
 
-#: battery.c:142
+#: battery.c:145
 msgid "Status: dead"
 msgstr ""
 
-#: battery.c:145 battery.c:197
+#: battery.c:148 battery.c:200
 msgid "Status: full"
 msgstr ""
 
-#: battery.c:148 battery.c:200
+#: battery.c:151 battery.c:203
 msgid "Status: no battery"
 msgstr ""
 
-#: battery.c:151 battery.c:203 battery.c:222
+#: battery.c:154 battery.c:206 battery.c:225
 msgid "Status: unknown"
 msgstr ""
 
-#: battery.c:155 battery.c:207
+#: battery.c:158 battery.c:210
 msgid "Voltage"
 msgstr ""
 
-#: battery.c:159 battery.c:211
+#: battery.c:162 battery.c:214
 msgid "AC connected"
 msgstr ""
 
-#: battery.c:161 battery.c:213
+#: battery.c:164 battery.c:216
 msgid "Lifetime"
 msgstr ""
 
-#: battery.c:194
+#: battery.c:197
 msgid "Status: not installed"
 msgstr ""
 
-#: battery.c:220
+#: battery.c:223
 msgid "not installed"
 msgstr ""
 
-#: battery.c:224
+#: battery.c:227
 msgid "Voltage: unknown"
 msgstr ""
 
-#: battery.c:226
+#: battery.c:229
 msgid "Lifetime: unknown"
 msgstr ""
 
-#: battery.c:265
+#: battery.c:269
 msgid "Internal battery"
 msgstr ""
 
-#: battery.c:269
+#: battery.c:273
 msgid "Jacket battery"
 msgstr ""
 
@@ -1637,7 +1646,7 @@ msgid "Login Setup"
 msgstr ""
 
 #: gpe-conf-logread.desktop.in.h:1
-msgid "Accesss System Log "
+msgid "Access System Log "
 msgstr ""
 
 #: gpe-conf-logread.desktop.in.h:2
@@ -1665,11 +1674,11 @@ msgid "Update installed packages"
 msgstr ""
 
 #: gpe-conf-serial.desktop.in.h:1
-msgid " Serial Ports"
+msgid "Serial Port Settings"
 msgstr ""
 
 #: gpe-conf-serial.desktop.in.h:2
-msgid "Serial Port Settings"
+msgid "Serial Ports"
 msgstr ""
 
 #: gpe-conf-sleep.desktop.in.h:1
@@ -1705,7 +1714,7 @@ msgid "Setup Date and Time"
 msgstr ""
 
 #: gpe-conf-users.desktop.in.h:1
-msgid "Manage local Users "
+msgid "Manage local users "
 msgstr ""
 
 #: gpe-conf-users.desktop.in.h:2
