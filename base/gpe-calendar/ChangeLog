@@ -1,3 +1,11 @@
+2003-03-29  Luis Oliveira  <luis@handhelds.org>
+
+	* event-ui.c (edit_event): Set type menu to Appointment/Reminder.
+	(set_notebook_page): Use gtk_option_menu_get_history() instead of
+	gtk_simple_menu_get_result().
+	(build_edit_event_window): Connect "changed" signal to the type
+	GtkSimpleMenu instead of "item-changed".
+
 2003-03-29  Philip Blundell  <philb@gnu.org>
 
 	* week_view.c (draw_expose_event): Rearrange decls for pre-C99

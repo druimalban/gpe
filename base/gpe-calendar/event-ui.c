@@ -514,7 +514,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 static gboolean
 set_notebook_page (GtkWidget *w, struct edit_state *s)
 {
-  guint i = gtk_simple_menu_get_result (GTK_SIMPLE_MENU (w));
+  guint i = gtk_option_menu_get_history (GTK_OPTION_MENU (w));
   gtk_notebook_set_page (GTK_NOTEBOOK (s->notebooktype), i);
   s->page = i;
   gtk_widget_draw (s->notebooktype, NULL);
@@ -648,7 +648,7 @@ build_edit_event_window (void)
 #if 0
   gtk_simple_menu_append_item (GTK_SIMPLE_MENU (s->optionmenutype), _("Task"));
 #endif
-  g_signal_connect (G_OBJECT (s->optionmenutype), "item-changed",
+  g_signal_connect (G_OBJECT (s->optionmenutype), "changed",
                     G_CALLBACK (set_notebook_page), s);
 
   s->optionmenutask   = gtk_simple_menu_new ();
@@ -1251,6 +1251,11 @@ edit_event (event_t ev)
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
                                tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
 
+      /* we assume that "Appointment" is at index = 0
+       * and "Reminder" is at index = 1 */
+      gtk_option_menu_set_history (GTK_OPTION_MENU (s->optionmenutype),
+                                   ev->duration == 0);
+    
       if (ev->flags & FLAG_ALARM)
         {
           gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
