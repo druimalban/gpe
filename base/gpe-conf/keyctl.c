@@ -43,6 +43,7 @@ static char *keylaunchrc = NULL;
 static gboolean menuselect = FALSE;
 #define NUM_BUTTONS 5
 #define NUM_COMMANDS 9
+#define KEYLAUNCH_BIN PREFIX "/bin/keylaunch"
 
 /* local types */
 
@@ -144,7 +145,7 @@ init_buttons ()
 		/* load from configfile */
 		while (getline(&buffer,&len,fd) > 0)
 		{
-			for (i=0;i<NUM_BUTTONS;i++)
+			for (i = 0;i < NUM_BUTTONS;i++)
 				if (strlen(buffer) && (buffer[0] !='#') && 
 					strstr(buffer,buttondef[i].ident) &&
 					!strstr(buffer,"???Combine"))
@@ -356,9 +357,9 @@ Keyctl_Build_Objects ()
 				   G_CALLBACK(on_edit_changed), NULL);
 	
 	gtk_widget_grab_focus(self.button[0]);
-	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
 	
 	init_buttons ();
+	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
 	
 	return vbox;
 }
@@ -376,6 +377,7 @@ Keyctl_Save ()
 	GError *err = NULL;
 	char **cfglines = NULL;
 	gsize len = 0;
+	pid_t p_kl;
 
 	/* get current edit value */
 	g_free(buttondef[active_button].command);
@@ -450,6 +452,23 @@ Keyctl_Save ()
 	}
 	fclose (fd);
 	g_strfreev(cfglines);
+	
+	/* try to get rid of running keylaunch */
+	system("/usr/bin/killall keylaunch");
+	
+	/* start a new keylaunch process */
+	p_kl = fork();
+	switch (p_kl)
+	{
+		case -1: 
+			gpe_error_box (_("Could not restart key handler!\n"));
+		break;
+		case  0: 
+				execlp(KEYLAUNCH_BIN,NULL);
+		break;
+		default: 
+		break;
+	} 
 }
 
 void
