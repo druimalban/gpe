@@ -1,0 +1,6 @@
+2003-09-26	Nils Faerber <nils@kernelconcepts.de>
+	* bump to version 0.30
+	* removed system() calls and replaced with ioctl()s
+
+all before	Philip Blundell  <philb@gnu.org>
+	* initial code

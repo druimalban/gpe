@@ -2,13 +2,13 @@ PACKAGE = minilite
 PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.22
+VERSION = 0.30
 
 LINGUAS = 
 
 MEMBERS = minilite
 
-CPPFLAGS = -D_GNU_SOURCE
+CPPFLAGS = -D_GNU_SOURCE -DIPAQ
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g #-lefence

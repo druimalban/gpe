@@ -29,6 +29,12 @@
 #include <gpe/tray.h>
 #include <gpe/popup.h>
 
+#ifdef IPAQ
+/* for iPAQ touchscreen */
+#include <linux/h3600_ts.h>
+#define TS_DEV "/dev/touchscreen/0raw"
+#endif
+
 GtkWidget *slider_window;
 GtkWidget *window;
 
@@ -42,25 +48,24 @@ struct gpe_icon my_icons[] = {
 };
 
 int window_open;
+int light_fd=-1;	/* filedescriptor to backlight device */
 
 int 
 set_level (int level)
 {
-  char buf[64];
+#ifdef IPAQ
+  struct h3600_ts_backlight bl;
 
-  if (level == 0)
-    {
-      system ("bl off");
-      return -1;
-    }
+  bl.brightness = level;
+  bl.power = (level > 0) ? FLITE_PWR_ON : FLITE_PWR_OFF;
 
-  if (level > 255) level = 255;
-
-  snprintf (buf, sizeof (buf) - 1, "bl %d", level);
-  buf[sizeof (buf) - 1] = 0;
-  system (buf);
-    
-  return level;
+  if (ioctl (light_fd, TS_SET_BACKLIGHT, &bl) != 0)
+    return -1;
+  else
+    return level;
+#else
+return level;
+#endif
 }
 
 void
@@ -76,19 +81,16 @@ value_changed (GtkAdjustment *adj)
 int
 read_old_level (void)
 {
-  int level = 0;
-  FILE *fp = popen ("bl", "r");
-  if (fp)
-    {
-      char buf[64];
-      if (fgets (buf, sizeof (buf), fp))
-	{
-	  char *str;
-	  sscanf (buf, "%s %d", &str, &level);
-	}
-      fclose (fp);
-    }
-  return level;
+#ifdef IPAQ
+  struct h3600_ts_backlight bl;
+
+  if (ioctl (light_fd, TS_GET_BACKLIGHT, &bl) != 0)
+    return -1;
+  else
+    return bl.brightness;
+#else
+return 0;
+#endif
 }
 
 static void
@@ -135,12 +137,22 @@ main (int argc, char **argv)
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
+#ifdef IPAQ
+  light_fd = open (TS_DEV, O_RDONLY);
+  if (light_fd <= 0) {
+    gpe_perror_box (_("Opening touchscreen device" TS_DEV));
+    exit (1);
+  }
+#endif
+
   window = gtk_plug_new (0);
   gtk_widget_set_usize (window, 16, 16);
   gtk_widget_realize (window);
 
-  if (gpe_load_icons (my_icons) == FALSE)
+  if (gpe_load_icons (my_icons) == FALSE) {
+    gpe_error_box (_("Failed to load icons"));
     exit (1);
+  }
 
   gtk_window_set_title (GTK_WINDOW (window), _("Frontlight control"));
   gpe_set_window_icon (GTK_WIDGET (window), "minilite");
