@@ -1,4 +1,4 @@
-<!--#set var="addtitle" value="GPE Palmtop Environment"-->
+<!--#set var="addtitle" value="The GPE Palmtop Environment"-->
 <!--#set var="pagename" value="home"-->
 <!--#include virtual="includes/head.shtml"-->
 
