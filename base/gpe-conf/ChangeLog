@@ -1,5 +1,6 @@
 2004-11-10	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* soundctl.c: Restrict channel loading to active channels.
 	* tasks.c: Fixed bug caused sound to be muted on restore.
 
 2004-11-06	Florian Boor  	<florian.boor@kernelconcepts.de>

@@ -48,7 +48,7 @@ task_sound(char *action)
 	else if ((action[0] == 'r') || !strcmp(action, "restore"))
 	{
 		sound_init();
-		sound_load_settings();
+		
 		if (get_mute_status())
 			set_mute_status(TRUE);
 	}

@@ -102,19 +102,22 @@ play_sample(char *filename)
 }
 
 
-static gboolean 
-channel_active(const gchar *name)
+static int
+channel_active(int chan)
 {
 	int i = 0;
 	
-	if (!name) 
+	if (!mixer_names[chan]) 
 		return FALSE;
 
 	if (!show_channels)
 		return TRUE;
 	
+	if (!((1 << chan) & devmask))
+		return FALSE;
+	
 	while (show_channels[i])
-		if (!strcmp(show_channels[i++], name))
+		if (!strcmp(show_channels[i++], mixer_names[chan]))
 			return TRUE;
 		
 	return (FALSE);
@@ -174,18 +177,20 @@ sound_load_settings(void)
 			ret = sscanf(buf, "%d %d", &nc, &val);			
 			if ((ret == 2) && (nc >= 0) && (nc <= SOUND_MIXER_NRDEVICES))
 			{
-				if (muted)
+				if (channel_active(nc))
 				{
-					set_volume(mchannels[nc].nr, 0);
-					mchannels[nc].backupval = val;
-					mchannels[nc].value = val;
+					if (muted)
+					{
+						set_volume(mchannels[nc].nr, 0);
+						mchannels[nc].backupval = val;
+						mchannels[nc].value = val;
+					}
+					else
+					{
+						mchannels[nc].value = val;
+						set_volume(mchannels[nc].nr, val);
+					}
 				}
-				else
-				{
-					mchannels[nc].value = val;
-					set_volume(mchannels[nc].nr, val);
-				}
-	
 			}
 		}
 		fclose(cfgfile);
@@ -274,7 +279,7 @@ sound_init(void)
 		
 	for (i = 0; i < SOUND_MIXER_NRDEVICES; i++)
 	{
-		if (((1 << i) & devmask) && channel_active(mixer_names[i])) 
+		if (channel_active(i)) 
 		{
 			mchannels[active_channels].nr = i; /* channel number */
 			if (i) /* name and label */
