@@ -29,7 +29,6 @@ static pid_t xserver_pid;
 static pid_t session_pid;
 
 static char *dpyname;
-static Display *dpy;
 
 static time_t server_started;
 
@@ -111,10 +110,6 @@ main(int argc, char *argv[])
     {
       pid_t wpid;
       gboolean f = FALSE;
-
-      dpy = XOpenDisplay (dpyname);
-      if (dpy == NULL)
-	continue;
 
       /* start session */
       session_pid = fork ();

@@ -1,3 +1,21 @@
+2002-10-25  Philip Blundell  <philb@gnu.org>
+
+	* gpe-dm.c: Don't open connection to X server.
+
+	* Makefile (CFLAGS): Search ../librootimage for headers.
+	(gpe-login): Remove rootpixmap.o
+	* gpe-login.c (mapped): Add extra arg to rootimage functions.
+	* rootpixmap.c: Deleted.
+	* rootpixmap.h: Deleted also.
+
+2002-10-22  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.29 released.
+
+2002-10-22  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (do_login): Call initgroups.
+
 2002-10-16  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.28 released.

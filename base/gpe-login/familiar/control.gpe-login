@@ -1,7 +1,7 @@
 Package: gpe-login
 Section: x11
 Priority: optional
-Version: 0.27
+Version: 0.29
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: libgtk1.2, gpe-icons (>= 0.05), libgpewidget0 (>= 0.07), xkbd

@@ -13,7 +13,7 @@ GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 CONTROL_GPE_LOGIN = control.gpe-login
 endif
 
-CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer
+CFLAGS = $(GTKCFLAGS) -Os -Wall -fomit-frame-pointer -I../librootimage
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 ifeq ($(CVSBUILD),yes)
@@ -37,7 +37,7 @@ update-po: po/$(PACKAGE).pot
 po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot $^
 
-gpe-login: gpe-login.o nocursor.o rootpixmap.o
+gpe-login: gpe-login.o nocursor.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
 
 gpe-logout: gpe-logout.o

@@ -211,6 +211,9 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
     perror ("setsid");
   
   /* establish the user's environment */
+  if (initgroups (name, gid))
+    perror ("initgroups");
+
   if (setgid (gid))
     perror ("setgid");
 
@@ -587,11 +590,11 @@ key_press_event (GtkWidget *window, GdkEventKey *event)
 static void
 mapped (GtkWidget *window)
 {
-  Pixmap rmap = GetRootPixmap ();
+  Pixmap rmap = GetRootPixmap (GDK_DISPLAY ());
   if (rmap != None)
     {
       Pixmap pmap;
-      pmap = CutWinPixmap (GDK_WINDOW_XWINDOW (window->window), rmap, 
+      pmap = CutWinPixmap (GDK_DISPLAY(), GDK_WINDOW_XWINDOW (window->window), rmap, 
 			   GDK_GC_XGC (window->style->black_gc));
       if (pmap != None)
 	{
