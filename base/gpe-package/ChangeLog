@@ -1,3 +1,8 @@
+
+2004-01-19 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c, *.desktop.in: Fixed some other bugs due to filename change.
+	* Makefile: Added local package icon to install list.
+
 2004-01-17 Florian Boor <florian.boor@kernelconcepts.de>
 	* packages.c: Another fix, works again.
 	* Renamed pixmap file.

@@ -68,8 +68,8 @@ struct gpe_icon my_icons[] = {
   { "properties" },
   { "exit" },
   { "refresh" },
-  { "local-package", "local-package-16" },
-  { "icon", PREFIX "/share/pixmaps/gpe-packages.png" }
+  { "local-package", PREFIX "/share/pixmaps/local-package-16" },
+  { "icon", PREFIX "/share/pixmaps/gpe-package.png" }
 };
 
 

@@ -68,7 +68,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
-PIXMAPS = gpe-package.png
+PIXMAPS = gpe-package.png local-package-16.png
 
 all: $(PACKAGE) 
 
