@@ -1,3 +1,7 @@
+2005-02-12		Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Released Version 0.5
+
 2005-02-08		Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Add icon resize capabilities.
