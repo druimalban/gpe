@@ -79,7 +79,7 @@ decode_string (unsigned char *c)
 {
   unsigned char *r, *p;
 
-  r = g_malloc (strlen (c));
+  r = g_malloc (strlen (c) + 1);
   p = r;
 
   while (*c)
