@@ -1,5 +1,6 @@
 2004-07-14  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * main.c: Added command line switch "-n" to turn off configuration dialog.
     * editing.c: on_edit_bt_image_clicked(): Dialog is now modal.
     * po/es.po: Added file to avoid build error.
     * editing.c: Improved date settings.

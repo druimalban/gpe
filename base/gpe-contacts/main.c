@@ -630,7 +630,7 @@ create_popup (GtkWidget *window)
 }
 
 static GtkWidget *
-create_main (void)
+create_main (gboolean show_config_button)
 {
   GtkWidget *main_window;
   GtkWidget *vbox1;
@@ -685,9 +685,10 @@ create_main (void)
   g_object_set_data (G_OBJECT (main_window), "delete-button", b);
   gtk_widget_set_sensitive (b, FALSE);
 
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
+  if (show_config_button)
+    gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_PROPERTIES,
 			    _("Properties"), _("Tap here to configure the program."),
-			    G_CALLBACK (configure), NULL, -1);
+  			    G_CALLBACK (configure), NULL, -1);
 				
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
 
@@ -792,6 +793,9 @@ create_main (void)
 int
 main (int argc, char *argv[])
 {
+  int arg;
+  gboolean show_config_button = TRUE;
+  
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
 
@@ -806,6 +810,16 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  /* check command line args */
+  while ((arg = getopt(argc, argv, "n")) >= 0)
+  {
+    if (arg == 'n') 
+      {
+        show_config_button = FALSE;
+        break;
+      }
+  }    
+  
   if (db_open ())
     exit (1);
 
@@ -817,7 +831,7 @@ main (int argc, char *argv[])
 
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
 
-  mainw = create_main ();
+  mainw = create_main (show_config_button);
   popup_menu = create_popup (mainw);
   update_categories ();
   show_details (NULL);
