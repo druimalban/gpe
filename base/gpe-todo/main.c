@@ -26,6 +26,8 @@ struct todo_list *lists = NULL;
 
 static int ystep = 16;
 
+GtkWidget *edit_todo(struct todo_list *list, struct todo_item *item);
+
 void
 add_new_event(struct todo_list *list, time_t t, const char *what, item_state state)
 {
