@@ -9,6 +9,9 @@
 
 #include <time.h>
 #include <gtk/gtk.h>
+
+#include "stylus.h"
+
 #include "gtkdatecombo.h"
 
 static void
@@ -116,7 +119,8 @@ gtk_date_combo_init (GtkDateCombo *combo)
   gtk_signal_connect (GTK_OBJECT (combo->button), "clicked",
 		      GTK_SIGNAL_FUNC (drop_calendar), combo);
 
-  gtk_signal_connect (GTK_OBJECT (combo->cal), "day-selected-double-click",
+  gtk_signal_connect (GTK_OBJECT (combo->cal), 
+		      gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
 		      GTK_SIGNAL_FUNC (click_calendar), combo);
 }
 
