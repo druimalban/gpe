@@ -1,3 +1,7 @@
+2004-11-06	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* login-setup.*, suid.c: Implemented autologin switch. Fixed some formating.
+
 2004-11-05	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* main.c: Changed some default sizes.

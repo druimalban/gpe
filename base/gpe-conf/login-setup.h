@@ -34,3 +34,6 @@ void
 on_login_bg_file_button_size_allocate (GtkWidget       *widget,
                                        GtkAllocation   *allocation,
                                        gpointer         user_data);
+
+void
+set_autologin_setting(gboolean state);

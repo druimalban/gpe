@@ -146,8 +146,7 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val,
 
 	while (lines[i])
 	{
-		if ((g_strrstr (g_strchomp (lines[i]), var))
-		    && (!g_str_has_prefix (g_strchomp (lines[i]), "#")))
+		if (g_str_has_prefix (g_strchomp (lines[i]), var))
 		{
 			delim = lines[i];
 			if (seperator)
@@ -525,6 +524,11 @@ suidloop (int write, int read)
 					cmd = g_strdup_printf("rm -rf /home%s", arg1);
 					system (cmd);
 					g_free(cmd);
+				}
+				else if (strcmp (cmd, "SALI") == 0)  /* Set autologin */
+				{
+					fscanf (in, "%100s", arg1);
+					set_autologin_setting(atol(arg1) ? TRUE : FALSE);
 				}
 				else if (strcmp (cmd, "CHPW") == 0)  // change users password
 				{

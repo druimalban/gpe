@@ -2,6 +2,7 @@
  * login-setup module for gpe-conf
  *
  * Copyright (C) 2002 Colin Marquardt <ipaq@marquardt-home.de>
+ *               2004 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,19 +34,24 @@
 #include "applets.h"
 #include "misc.h"
 #include "login-setup.h"
+#include "suid.h"
 
+#define FILE_GPELOGIN "/etc/sysconfig/gpelogin"
  
 GtkWidget *login_bg_show_check  = NULL;
 GtkWidget *ownerinfo_show_check = NULL;
+GtkWidget *autologin_check = NULL;
 GtkWidget *login_bg_pixmap;
 GtkWidget *login_lock_display_check;
 GtkWidget *controlvbox1;
 
 gboolean login_lock_display = FALSE;
 gboolean ownerinfo_show = FALSE;
+gboolean autologin = FALSE;
 
 gboolean ownerinfo_show_initial = FALSE;
 gboolean login_lock_display_initial  = FALSE;
+gboolean autologin_initial  = FALSE;
 
 gboolean ownerinfo_show_writable = FALSE;
 gboolean login_lock_script_writable  = FALSE;
@@ -55,7 +61,44 @@ guint hsync = 36;
 
 static gchar login_bg_filename[PATH_MAX + 1] = "<none>";
 
-void update_login_lock (GtkWidget *togglebutton,gpointer  user_data);
+void update_login_lock (GtkWidget *togglebutton, gpointer user_data);
+void update_autologin (GtkWidget *togglebutton, gpointer user_data);
+
+static gboolean
+get_autologin_setting(void)
+{
+	gchar val[128];
+	FILE *fp;
+	gboolean result = FALSE;
+
+	memset(val, 0, 128);
+		
+	fp = fopen(FILE_GPELOGIN, "r");
+	
+	if (fp)
+	{
+		while (fgets(val, 128, fp))
+		{
+			gchar *vp;
+			if ((vp = strstr(val, "AUTOLOGIN=\"")))
+			{	
+				if (!strncasecmp(vp + 11, "true", 4))
+					result = TRUE;
+				break;
+			}
+		}
+		fclose(fp);
+	}
+	return result;
+}
+
+void
+set_autologin_setting(gboolean state)
+{
+	change_cfg_value(FILE_GPELOGIN, 
+	                 "AUTOLOGIN", 
+	                 state ? "\"true\"" : "\"false\"", '=');
+}
 
 static
 gboolean have_password(void)
@@ -167,27 +210,39 @@ GtkWidget *Login_Setup_Build_Objects()
 	gtk_widget_set_sensitive(GTK_WIDGET(login_lock_display_check), FALSE);
   }
 
+  autologin_check =
+    gtk_check_button_new_with_label (_("Automatic login. \n  (without password)"));
+  
   /* check the dontshow files to set initial values for the checkboxes */
   get_initial_values();
   ownerinfo_show = ownerinfo_show_initial;
   login_lock_display  = login_lock_display_initial;
+  autologin  = autologin_initial;
 
   gtk_box_pack_start (GTK_BOX(controlvbox1), ownerinfo_show_check, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX(controlvbox1), login_lock_display_check, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX(controlvbox1), autologin_check, FALSE, FALSE, 0);
 
   /* ------------------------------------------------------------------------ */
-  gtk_signal_connect (GTK_OBJECT (ownerinfo_show_check), "clicked",
-                      GTK_SIGNAL_FUNC (update_ownerinfo_show),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (login_lock_display_check), "clicked",
-                      GTK_SIGNAL_FUNC (update_login_lock),
-                      NULL);
+  g_signal_connect (G_OBJECT (ownerinfo_show_check), "toggled",
+                    G_CALLBACK (update_ownerinfo_show), NULL);
+  
+  g_signal_connect (G_OBJECT (login_lock_display_check), "toggled",
+                    G_CALLBACK (update_login_lock), NULL);
 
+  g_signal_connect (G_OBJECT (autologin_check), "toggled",
+                    G_CALLBACK (update_autologin), NULL);
+					  
   if (ownerinfo_show_writable)
+  {
     gtk_widget_set_sensitive (ownerinfo_show_check, TRUE);
+    gtk_widget_set_sensitive (autologin_check, TRUE);
+  }
   else 
+  {
     gtk_widget_set_sensitive (ownerinfo_show_check, FALSE);
-
+    gtk_widget_set_sensitive (autologin_check, TRUE);
+  }
   return mainvbox;
 }
 
@@ -202,10 +257,10 @@ Login_Setup_Save ()
   char tmp[255];
   /* other settings apply immediately without saving, no explicit save necessary */
   /* here we should check if save is necessary */
-  if (!access(login_bg_filename,F_OK))
+  if (!access(login_bg_filename, F_OK))
   {
-  	snprintf(tmp,255,"%s",login_bg_filename);
-  	suid_exec("ULBF",tmp);
+  	snprintf(tmp, 255, "%s", login_bg_filename);
+  	suid_exec("ULBF", tmp);
   }
 }
 
@@ -220,6 +275,10 @@ Login_Setup_Restore ()
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_lock_display_check),
 				login_lock_display_initial);
   login_lock_display = login_lock_display_initial;
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(autologin_check),
+				autologin_initial);
+  autologin = autologin_initial;
 }
 
 
@@ -234,16 +293,21 @@ get_initial_values ()
   else
     ownerinfo_show_initial = TRUE;
 
-  if (access(GPE_LOGIN_LOCK_SCRIPT,X_OK) < 0) 	
+  if (access(GPE_LOGIN_LOCK_SCRIPT, X_OK) < 0) 	
     login_lock_display_initial = FALSE;
   else
     login_lock_display_initial = TRUE;
-    
+  
+  autologin_initial = get_autologin_setting();
+  
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ownerinfo_show_check),
 				ownerinfo_show_initial);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(login_lock_display_check),
 				login_lock_display_initial);
+  
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(autologin_check),
+				autologin_initial);
 }
 
 void 
@@ -256,17 +320,27 @@ update_ownerinfo_show ()
   else
     ownerinfo_show = FALSE;
 
-  sprintf(uc,"%i",ownerinfo_show);
-  suid_exec("UOIS",uc);
+  sprintf(uc, "%i", ownerinfo_show);
+  suid_exec("UOIS", uc);
 }
 
 
 void 
-update_login_lock (GtkWidget *togglebutton,gpointer  user_data)
+update_login_lock (GtkWidget *togglebutton, gpointer  user_data)
 {
   char uc[3];
   login_lock_display = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(togglebutton));
 
-  sprintf(uc,"%i",login_lock_display);
-  suid_exec("ULDS",uc);
+  sprintf(uc, "%i", login_lock_display);
+  suid_exec("ULDS", uc);
+}
+
+void 
+update_autologin (GtkWidget *togglebutton, gpointer  user_data)
+{
+  char uc[3];
+	
+  autologin = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(togglebutton));
+  sprintf(uc, "%i", autologin);
+  suid_exec("SALI", uc);
 }
