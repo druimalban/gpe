@@ -1,8 +1,11 @@
-<!--#set var="addtitle" value="CVS"-->
-<!--#set var="pagename" value="cvs"-->
-<!--#include virtual="includes/head.shtml"-->
-<!--#set var="author" value="Colin Marquardt"-->
-<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
+<?php
+$addtitle="CVS";
+$pagename="cvs";
+$author="Colin Marquardt";
+$authoremail="gpe-web@marquardt-home.de";
+
+include ("includes/head.php");
+?>
 
 <H2>Accessing the GPE CVS repository</H2>
 <p>
@@ -65,4 +68,4 @@ applications:
       $ make install
    </pre>
 
-<!--#include virtual="includes/foot.shtml"-->
+<?php include ("includes/foot.php"); ?>

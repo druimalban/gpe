@@ -1,6 +1,9 @@
-<!--#set var="addtitle" value="Downloads"-->
-<!--#set var="pagename" value="download"-->
-<!--#include virtual="includes/head.shtml"-->
+<?php
+$addtitle="Download";
+$pagename="download";
+
+include ("includes/head.php");
+?>
 
 <h2>Binaries</h2>
 <p>
@@ -27,9 +30,10 @@ is an installation guide for Familiar Linux. Where it talks about a
 <h2>Source</h2>
 <p>
 The latest development sources for GPE components can be found in the
-<a href="/cvs.shtml">GPE CVS</a> archive. 
+<a href="/cvs.php">GPE CVS</a> archive. 
 
-Some tarballs are collected 
-<a href="ftp://ftp.handhelds.org/pub/projects/gpe/source">here</a>.
+Some tarballs are collected at
+<a href="ftp://gpe.handhelds.org/gpe/source/">ftp://gpe.handhelds.org/gpe/source/</a>.
 </p>
-<!--#include virtual="includes/foot.shtml"-->
+
+<?php include ("includes/foot.php"); ?>

@@ -24,13 +24,13 @@ function menu_entry($page, $title, $link,$thispage)
  |
 <?php menu_entry("download", "Download", "/download.shtml", $pagename); ?>
  |
-<?php menu_entry("contact", "Mailing list", "/contact.shtml", $pagename); ?>
+<?php menu_entry("contact", "Mailing list", "/contact.php", $pagename); ?>
  |
 <?php menu_entry("screenshots", "Screenshots", "/screenshots/", $pagename); ?>
  |
 <A href="http://handhelds.org/bugzilla/">Bugs</A>
  |
-<?php menu_entry("cvs", "CVS", "/cvs.shtml", $pagename); ?>
+<?php menu_entry("cvs", "CVS", "/cvs.php", $pagename); ?>
  |
 <?php menu_entry("linkres", "Links/Resources", "/linkres.shtml", $pagename); ?>
 

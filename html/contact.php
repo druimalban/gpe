@@ -1,8 +1,11 @@
-<!--#set var="addtitle" value="Contacting us"-->
-<!--#set var="pagename" value="contact"-->
-<!--#include virtual="includes/head.shtml"-->
-<!--#set var="author" value="Colin Marquardt"-->
-<!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
+<?php
+$addtitle="Contacting us";
+$pagename="contact";
+$author="Colin Marquardt";
+$authoremail="gpe-web@marquardt-home.de";
+
+include ("includes/head.php");
+?>
 
 <h2>Getting involved</h2> 
 <p>
@@ -64,13 +67,13 @@ there's anyone you can visit!
 <tr><td>zoot</td>              <td>Owen Cliffe</td>        <td>Bath, England</td></tr>
 <tr><td>dc</td>                <td>Damien Tanner</td>      <td>London, England</td></tr>
 <tr><td>mallum</td>            <td>Matthew Allum</td>      <td>East London, England</td></tr>
-<tr><td>nils</td>              <td>Nils Faerber</td>       <td>Netphen, Germany</td></tr>
+<tr><td>nilsf</td>             <td>Nils Faerber</td>       <td>Netphen, Germany</td></tr>
 <tr><td>florian</td>           <td>Florian Boor</td>       <td>Netphen, Germany</td></tr>
 <tr><td>ole</td>               <td>Ole Reinhardt</td>      <td>Netphen, Germany</td></tr>
 <tr><td>colin</td>             <td>Colin Marquardt</td>    <td>Stuttgart, Germany</td></tr>
 <tr><td>pierre</td>            <td>Pierre Tardy</td>       <td>Clermont-Ferrand, France</td></tr>
 <tr><td>jamey</td>             <td>Jamey Hicks</td>        <td>Cambridge, MA, USA</td></tr>
-<tr><td>jg</td>                <td>Jim Gettys</td>       <td>Cambridge, MA, USA</td></tr>
+<tr><td>jg</td>                <td>Jim Gettys</td>         <td>Cambridge, MA, USA</td></tr>
 <tr><td>wizly</td>             <td>M&agrave;rius Mont&oacute;n</td>      <td>Barcelona, Spain</td></tr>
 <tr><td>mccarthy</td>          <td>Joseph McCarthy</td>    <td>Pittsburgh, PA, USA</td></tr>
 <tr><td>ED</td>                <td>Erez Doron</td>         <td>Tel Aviv, Israel</td></tr>
@@ -84,4 +87,5 @@ there's anyone you can visit!
 <br>
 <img src="images/people_eu.png" width="600" height="300" alt="(There are GPE hackers in several European countries, though the most are probably in the UK.)">
 </p>
-<!--#include virtual="includes/foot.shtml"-->
+
+<?php include ("includes/foot.php"); ?>
