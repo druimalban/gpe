@@ -1,3 +1,8 @@
-#!/bin/sh
-[ -x /usr/bin/update-menus ] && update-menus
+#! /bin/sh
 
+if test -x /usr/bin/update-menus; then
+    update-menus;
+fi
+
+# return success
+exit 0;

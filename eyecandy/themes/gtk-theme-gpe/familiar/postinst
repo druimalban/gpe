@@ -2,3 +2,5 @@
 
 update-alternatives --install /etc/gtk/gtkrc etc-gtkrc /usr/share/themes/GPE/gtk/gtkrc 75
 
+# return success
+exit 0;
