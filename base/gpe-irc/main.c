@@ -98,7 +98,7 @@ main (int argc, char *argv[])
   server = g_malloc (sizeof (*server));
   server->user_info = g_malloc (sizeof (*server->user_info));
 
-  server->name = g_strdup ("irc.jecx.net");
+  server->name = g_strdup ("irc.handhelds.org");
   server->user_info->nick = g_strdup ("dc_1337-irc");
   server->user_info->username = g_strdup ("dc_1337-irc");
   server->user_info->real_name = g_strdup ("dc_1337-irc");

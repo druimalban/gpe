@@ -118,7 +118,7 @@ gboolean
 irc_server_login_init (IRCServer *server)
 {
   server->channel = g_hash_table_new (g_str_hash, g_str_equal);
-  irc_server_join_channel (server, "#lobby");
+  irc_server_join_channel (server, "#gpe");
 
   return TRUE;
 }
