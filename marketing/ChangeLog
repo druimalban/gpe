@@ -1,5 +1,11 @@
 2003-03-03  Colin Marquardt  <colin@marquardt-home.de>
 
+	* gpe-flyer.tex: Add link to IRC channel #gpe.
+	Mention LGPL/GPL.
+	Example for input'ing another language (commented out).
+	Add Revision and Date from RCS tags in the text - let's see if
+	that works like intended.
+
 	* gpe-flyer.[tex,pdf]: Version that I used for the 
 	"5. ChemnitzerLinux-Tag".
 

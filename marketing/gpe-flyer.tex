@@ -21,7 +21,7 @@
     pdftitle={GPE Flyer},
     pdfauthor={Colin Marquardt},
     pdfsubject={$Revision$, $Date$},
-    pdfkeywords={gpe marketing features technology flyer},
+    pdfkeywords={GPE Palmtop Environment marketing features technology flyer},
 }
 
 % ------------------------------------------------------------------------------
@@ -37,8 +37,11 @@ GPE: The GPE Palmtop Environment
 }
 
 \smallskip
-\href{http://gpe.handhelds.org}{\texttt{gpe.handhelds.org}} --
-\href{mailto:gpe@handhelds.org}{\texttt{mailto:gpe@handhelds.org}}
+\small{
+  \href{http://gpe.handhelds.org}{\texttt{http://gpe.handhelds.org}} --
+  \href{mailto:gpe@handhelds.org}{\texttt{mailto:gpe@handhelds.org}} -- 
+  \href{irc://freenode.net:ircd/\#gpe}{\texttt{irc://freenode.net:ircd/\#gpe}}
+}
 
 \smallskip
 A Free Software GUI environment targeted at palmtop/handheld
@@ -52,9 +55,9 @@ for handhelds«.
 \smallskip
 \textbf{Key Features}
 \begin{compactitem}
-   \item Custom GTK-based widget library
+   \item Custom GTK-based widget library (LGPL)
    \item Applications: calendar, to do list, address book, media
-     player, notebook, games, and more
+     player, notebook, games, and more (GPL)
    \item System utilities including Wi-Fi and Bluetooth manager
    \item Internationalization
    \item Display migration: »teleport« running applications to other
@@ -80,7 +83,7 @@ for handhelds«.
 \end{compactitem}
 
 \smallskip
-\textit{Users and developers welcome!}
+\textit{Users and developers welcome!}\hfill\tiny{\$Revision$, \$Date$}
 }
 
 % ------------------------------------------------------------------------------
@@ -91,6 +94,9 @@ for handhelds«.
 \RaggedRight
 \begin{table}
   \begin{tabular}{p{\textwidth/2-1cm}p{1cm}p{\textwidth/2-1cm}}%
+
+    %% input another language file (that is using \renewcommand{\flyertext})
+    % \input{flyertext_es}
     \flyertext{} & & \flyertext{}\\[1cm]
     \flyertext{} & & \flyertext{}
 %    \\\vspace{1cm}%
