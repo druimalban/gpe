@@ -1644,18 +1644,18 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
-
+  
   bluetooth_init ();
 
-	/* init tree storage stuff */
-	store = gtk_tree_store_new (N_COLUMNS,
-  		G_TYPE_OBJECT,
-		G_TYPE_STRING,
-	 	G_TYPE_STRING,
-		G_TYPE_INT,
-		G_TYPE_STRING,
-		G_TYPE_STRING,
-		G_TYPE_POINTER);
+  /* init tree storage stuff */
+  store = gtk_tree_store_new (N_COLUMNS,
+                              G_TYPE_OBJECT,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_INT,
+                              G_TYPE_STRING,
+                              G_TYPE_STRING,
+                              G_TYPE_POINTER);
   
   /* main window */
   size_x = gdk_screen_width() / 2;
