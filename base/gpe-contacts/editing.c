@@ -252,13 +252,13 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw, gboolean visib
 
           btn = gtk_button_new();
           image = gtk_image_new();
-          gtk_container_add(GTK_CONTAINER(btn),image);
+          gtk_container_add(GTK_CONTAINER(btn), image);
           gtk_box_pack_start (GTK_BOX (hbox), btn, TRUE, TRUE, 0);
           gtk_widget_show_all(hbox);
           gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 
-            gpe_get_boxspacing());
+                              gpe_get_boxspacing());
           g_signal_connect (G_OBJECT (btn), "clicked",
-		    G_CALLBACK (on_edit_bt_image_clicked), image);
+		                    G_CALLBACK (on_edit_bt_image_clicked), image);
           
           add_tag (e->tag, image, pw);
         }
@@ -573,9 +573,11 @@ edit_person (struct person *p, gboolean isnew)
                 }
               else if (GTK_IS_IMAGE(w))
                 {
-                  g_object_set_data(G_OBJECT(w),"filename",v->value);
-                  if ((v->value) && !access(v->value,R_OK))
-                    gtk_image_set_from_file(GTK_IMAGE(w), v->value);
+                  if ((v->value) && !access(v->value,R_OK)) 
+                    {
+                      g_object_set_data(G_OBJECT(w),"filename",v->value);
+                      gtk_image_set_from_file(GTK_IMAGE(w), v->value);
+                    }
                   else
                     gtk_image_set_from_stock(GTK_IMAGE(w), 
                       GTK_STOCK_MISSING_IMAGE, GTK_ICON_SIZE_BUTTON);
@@ -723,7 +725,6 @@ char *suffix = NULL;
    
   if (!nametext) return;
   if (strlen(nametext) < 3) return;
-      
     sp = g_strdup(nametext);
 
     /* scan first element for title */
@@ -792,6 +793,7 @@ char *suffix = NULL;
     switch (num_elements)
       {
         case 0: 
+        case EOF:
         break;
         case 1: 
           last = e[0];
@@ -830,15 +832,18 @@ char *suffix = NULL;
             }
           else
             {
-              first = sp;
-              last = strrchr(sp, ' ') + 1;
-              while (strlen(last) && isblank(last[0]))
-                last++;
-              strrchr(sp, ' ')[0] = 0;
-              middle = strrchr(first, ' ') + 1;
-              while (strlen(middle) && isblank(middle[0]))
-                middle++;
-              strrchr(first, ' ')[0] = 0;
+              if (strlen(g_strstrip(sp)))
+                {
+                  first = sp;
+                  last = strrchr(sp, ' ') + 1;
+                  while (strlen(last) && isblank(last[0]))
+                    last++;
+                  strrchr(sp, ' ')[0] = 0;
+                  middle = strrchr(first, ' ') + 1;
+                  while (strlen(middle) && isblank(middle[0]))
+                    middle++;
+                  strrchr(first, ' ')[0] = 0;
+                }
             }
         break;
       }
@@ -886,7 +891,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
         }
         else if (GTK_IS_IMAGE(w))
           {
-            text = g_object_get_data(G_OBJECT(w),"filename");
+            text = g_strdup(g_object_get_data(G_OBJECT(w), "filename"));
           }
         else
         {
@@ -934,15 +939,13 @@ store_filename (GtkWidget *widget, gpointer user_data)
 {
   GtkWidget *selector = GTK_WIDGET(user_data);
   GtkWidget *image = g_object_get_data(G_OBJECT(selector), "image");
-  gchar *old_file;
   const gchar *selected_filename =
     gtk_file_selection_get_filename (GTK_FILE_SELECTION (selector));
   
   if (selected_filename)
     {
-       old_file = g_object_get_data(G_OBJECT(image),"filename");
-       g_free(old_file);
-       g_object_set_data(G_OBJECT(image),"filename",g_strdup(selected_filename));
+       g_object_set_data(G_OBJECT(image), "filename", 
+                         g_strdup(selected_filename));
        gtk_image_set_from_file(GTK_IMAGE(image), selected_filename);
     }
 }
@@ -950,11 +953,11 @@ store_filename (GtkWidget *widget, gpointer user_data)
 void
 on_edit_bt_image_clicked (GtkWidget *bimage, gpointer user_data)
 {
-  GtkWidget *filesel = gtk_file_selection_new ("Select image");
+  GtkWidget *filesel = gtk_file_selection_new (_("Select image"));
   
   gtk_window_set_transient_for(GTK_WINDOW(filesel),
                                GTK_WINDOW(gtk_widget_get_toplevel(bimage)));
-  gtk_window_set_modal(GTK_WINDOW(filesel),TRUE);
+  gtk_window_set_modal(GTK_WINDOW(filesel), TRUE);
   gtk_file_selection_hide_fileop_buttons(GTK_FILE_SELECTION(filesel));
   
   g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
@@ -968,7 +971,7 @@ on_edit_bt_image_clicked (GtkWidget *bimage, gpointer user_data)
 		    "clicked", G_CALLBACK (gtk_widget_destroy),
 		    (gpointer) filesel);
   
-  g_object_set_data(G_OBJECT(filesel),"image",user_data);
+  g_object_set_data(G_OBJECT(filesel),"image", user_data);
   
   gtk_widget_show_all (filesel);
 }

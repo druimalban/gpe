@@ -1,3 +1,10 @@
+2004-09-27  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Some minor bugfixes and speed improvements.
+              Minor formating fixes, removed some old cruft.
+    * editing.c: Fixed two bugs causing segfaults in store_filename() and
+                 store_name_fields().
+
 2004-09-20  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Released V 0.29

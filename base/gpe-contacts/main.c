@@ -448,6 +448,9 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   gchar *name;
   gchar *company;
   
+  if ((text == NULL) && (cat == NULL)) /* some speedup */
+    return TRUE;
+  
   if (p->given_name)
     gn = g_utf8_strdown(p->given_name, -1);
   else
@@ -492,22 +495,6 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   if (name) g_free(name);
   if (company) g_free(company);
     
-/* alternate method if nothing found 
-  if ...
-    
-  else
-    {
-      gchar *lname = g_utf8_strdown (p->name, -1);
-    
-      if (strstr (lname, text) == NULL)
-        {
-          g_free (lname);
-          return FALSE;
-        }
-    }
-
-  g_free (lname);
-*/
   if (cat)
     {
       GSList *l;
@@ -539,7 +526,7 @@ do_search (GObject *obj, GtkWidget *entry)
 {
   gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
-  GSList *all_entries = db_get_entries (), *iter;
+  GSList *all_entries = db_get_entries (), *iter = NULL;
   struct gpe_pim_category *c = NULL;
 
   if (category)
@@ -561,19 +548,20 @@ do_search (GObject *obj, GtkWidget *entry)
   for (iter = all_entries; iter; iter = iter->next)
     {
       struct person *p = iter->data;
-      GtkTreeIter iter;
+      GtkTreeIter titer;
       
       if (match_for_search (p, text, c))
         {
-	      gtk_list_store_append (list_store, &iter);
-	      gtk_list_store_set (list_store, &iter, 0, p->name, 1, p->id, -1);
+	      gtk_list_store_append (list_store, &titer);
+	      gtk_list_store_set (list_store, &titer, 0, p->name, 1, p->id, -1);
         }
 
       discard_person (p);
     }
   
   g_slist_free (all_entries);
-  g_free (text);
+  if (text) 
+    g_free (text);
 }
 
 #define SEARCH_DELAY  200
@@ -616,7 +604,8 @@ update_display (void)
 {
   GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
   update_categories ();
-  selection_made(sel, G_OBJECT(gtk_widget_get_toplevel(search_entry)));
+  if (sel)
+    selection_made(sel, G_OBJECT(gtk_widget_get_toplevel(search_entry)));
   do_search (G_OBJECT (search_entry), search_entry);
 }
 
