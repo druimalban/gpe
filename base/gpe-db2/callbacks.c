@@ -20,7 +20,6 @@
 
 #include <gtk/gtk.h>
 
-#include <gpe/gtkminifilesel.h>
 
 #include "callbacks.h"
 #include "interface.h"
@@ -38,6 +37,7 @@ extern GtkWidget *DBFileSelector;
 static gint DBTableListSelectedRow = -1;
 static gboolean MainMenuShown = FALSE;
 static GtkWidget **EditFields;
+gint NumberFields = 0;
 
 gint DBSelected(gchar *dbname);
 
@@ -111,6 +111,7 @@ guint i;
 	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), edit_table);
 
 	EditFields=(GtkWidget **)malloc(nrentries * sizeof(GtkWidget *));
+	NumberFields=nrentries;
 	for (i=0; i<nrentries; i++) {
 		label=gtk_label_new(names[i]);
 		gtk_widget_ref(label);
@@ -354,7 +355,7 @@ on_GPE_DB_Main_de_event                (GtkWidget       *widget,
                                         gpointer         user_data)
 {
 GtkWidget *PseudoMain;
-gint MainPage;
+gint MainPage, i;
 
 	PseudoMain=lookup_widget(GPE_DB_Main, "PseudoMain");
 	MainPage=gtk_notebook_get_current_page(GTK_NOTEBOOK(PseudoMain));
@@ -365,7 +366,7 @@ gint MainPage;
 		GtkWidget *widget;
 
 		gtk_notebook_set_page(GTK_NOTEBOOK(PseudoMain), 0);
-		/* FIXME: Remove all the widgets and lists ! */
+		/* FIXME: Remove all the widgets and lists !? */
 		widget=lookup_widget(GPE_DB_Main, "EntryEdit");
 		gtk_widget_destroy(widget);
 		gtk_notebook_remove_page(GTK_NOTEBOOK(PseudoMain),2);
@@ -375,6 +376,10 @@ gint MainPage;
 		free(EditFields);
 	} else if (MainPage == 2) {
 		gtk_notebook_set_page(GTK_NOTEBOOK(PseudoMain), 1);
+		g_print("Leaving Edit fields\n");
+		for (i=0; i<NumberFields; i++) {
+			g_print("%d: '%s'\n", i, gtk_entry_get_text((GTK_ENTRY(EditFields[i]))));
+		}
 	}
 
 return TRUE;

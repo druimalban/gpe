@@ -28,7 +28,6 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
-#include <gpe/gtkminifilesel.h>
 
 #include "interface.h"
 #include "support.h"
@@ -74,10 +73,7 @@ GtkWidget *widget;
   gtk_signal_connect_object (GTK_OBJECT(GTK_FILE_SELECTION(DBFileSelector)->ok_button),
                              "clicked",GTK_SIGNAL_FUNC(on_DBSelectionOK_clicked),
                              (gpointer) DBFileSelector);
-/*
-  gtk_signal_connect(GTK_OBJECT(DBFileSelector),"completed",
-                     GTK_SIGNAL_FUNC(on_DBSelectionOK_clicked), NULL);
-*/
+
   if (getenv("HOME") != NULL) {
   	initpath[0]='\0';
   	strcpy(initpath, getenv("HOME"));
@@ -85,7 +81,6 @@ GtkWidget *widget;
   	gtk_file_selection_set_filename(GTK_FILE_SELECTION(DBFileSelector), initpath);
   }
 
-  /*DBSelected("/opt/home/nils/calendar");*/
   gtk_widget_show (GPE_DB_Main);
 
   gtk_main ();
