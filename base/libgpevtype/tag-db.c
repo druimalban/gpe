@@ -7,15 +7,22 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#ifndef TAG_DB_H
-#define TAG_DB_H
+#include <glib.h>
+#include <gpe/tag-db.h>
 
-typedef struct
+void
+gpe_tag_list_free (GSList *tags)
 {
-  const char *tag;
-  const char *value;
-} gpe_tag_pair;
+  GSList *i;
 
-extern void gpe_tag_list_free (GSList *tags);
+  for (i = tags; i; i = i->next)
+    {
+      gpe_tag_pair *p = i->data;
+      
+      g_free ((void *)p->tag);
+      g_free ((void *)p->value);
+      g_free (p);
+    }
 
-#endif
+  g_slist_free (tags);
+}
