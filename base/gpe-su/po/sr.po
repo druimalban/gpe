@@ -1,0 +1,26 @@
+# Serbian translation of `gpe-su'.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the `gpe-su' package.
+# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-su 0.09\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2003-11-30 22:31-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"Language-Team: Serbian <sr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-su.c:164
+msgid "Enter password for root:"
+msgstr "Унесите администраторову (root) лозинку:"
+
+#: gpe-su.desktop.in.h:1
+msgid "Root shell"
+msgstr "Администраторска (root) шкољка"
+
+#: gpe-su.desktop.in.h:2
+msgid "gpe-su"
+msgstr "gpe-su"

@@ -1,0 +1,28 @@
+# Localización en castellano de gpe-su
+# Copyright © 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-su package.
+# J.Manrique <jsmanrique@asturlinux.org>, 2004.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-su 0.09\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2004-06-18 17:00+0100\n"
+"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-su.c:164
+msgid "Enter password for root:"
+msgstr "Introduzca clave de root:"
+
+#: gpe-su.desktop.in.h:1
+msgid "Root shell"
+msgstr "Consola de root"
+
+#: gpe-su.desktop.in.h:2
+msgid "gpe-su"
+msgstr ""

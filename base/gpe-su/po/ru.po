@@ -1,0 +1,27 @@
+# Translation of gpe-su-0.09.po to Russian.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-su package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-su 0.09\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2003-10-29 20:24+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-su.c:164
+msgid "Enter password for root:"
+msgstr "Введете пароль root'a:"
+
+#: gpe-su.desktop.in.h:1
+msgid "Root shell"
+msgstr "Оболочка root'a"
+
+#: gpe-su.desktop.in.h:2
+msgid "gpe-su"
+msgstr "gpe-su"
