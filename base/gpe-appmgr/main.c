@@ -1191,8 +1191,18 @@ void create_main_window()
 	set_window_pixmap();
 
 #ifndef DEBUG
-	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
-			    (GtkSignalFunc)gtk_true, NULL);
+	switch (cfg_options.on_window_close)
+	{
+	case WINDOW_CLOSE_IGNORE:
+		gtk_signal_connect (GTK_OBJECT(window), "delete_event",
+				    (GtkSignalFunc)gtk_true, NULL);
+		break;
+	case WINDOW_CLOSE_HIDE: /* unimplemented */
+	case WINDOW_CLOSE_EXIT:
+		gtk_signal_connect (GTK_OBJECT(window), "delete_event",
+				    (GtkSignalFunc)gtk_main_quit, NULL);
+	break;
+	}
 #else
 	gtk_signal_connect (GTK_OBJECT(window), "delete_event",
 			    (GtkSignalFunc)gtk_main_quit, NULL);

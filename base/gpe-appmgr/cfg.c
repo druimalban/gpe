@@ -37,6 +37,7 @@ void cfg_load ()
 	cfg_options.auto_hide_group_labels = 1;
 	cfg_options.tab_view = TAB_VIEW_ICONS;
 	cfg_options.show_recent_apps = 0;
+	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
 
 	home_dir = (char*) getenv("HOME");
 	if (home_dir)
@@ -85,6 +86,18 @@ void cfg_load ()
 		case 'y':
 		case 't':
 			cfg_options.show_recent_apps = 1;
+			break;
+		}
+	}
+
+	/* What to do when the user tries to close us */
+	if ((s = package_get_data (p, "on_window_close")))
+	{
+		switch (tolower(*s))
+		{
+		case 'H': case 'h': /* not implemented! */
+		case 'E': case 'e':
+			cfg_options.on_window_close = WINDOW_CLOSE_EXIT;
 			break;
 		}
 	}

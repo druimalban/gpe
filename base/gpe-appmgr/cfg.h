@@ -25,6 +25,13 @@ typedef enum
         TAB_VIEW_LIST,
 } tab_view_style;
 
+typedef enum
+{
+	WINDOW_CLOSE_EXIT,
+	WINDOW_CLOSE_IGNORE,
+	WINDOW_CLOSE_HIDE,
+} window_close_command;
+
 struct cfg_options_s
 {
 	int show_all_group;
@@ -33,6 +40,7 @@ struct cfg_options_s
 	int recent_apps_number;
 	int list_icon_size;
 	tab_view_style tab_view;
+	window_close_command on_window_close;
 } cfg_options;
 
 void cfg_load ();
