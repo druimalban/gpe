@@ -33,30 +33,41 @@ struct usqld_conn * usqld_connect(const char * server,
   struct hostent * he;
   int sock_fd;
   int rv;
-  
-  if(NULL==(he=gethostbyname(server))|| 
-     NULL==he->h_addr){
-    *errmsg = strdup("host name lookup failure");
-    return NULL;
-  }
-  saddr.sin_family = AF_INET;
-  saddr.sin_port = htons(USQLD_SERVER_PORT);
-  inet_pton(AF_INET,"127.0.0.1",&saddr.sin_addr.s_addr);
-  
-  sock_fd = socket(PF_INET,SOCK_STREAM,0);
-  if(sock_fd==-1){
-    *errmsg = strdup("unable to allocate local socket");    
-    return NULL;
-  }
-  
-  if(0!=connect(sock_fd,(struct sockaddr*)&saddr,sizeof(saddr))){
-    *errmsg = strdup("unable to connect socket to server");    
-    return NULL;
-  }
-
-  
-  assert(USQLD_OK==XDR_tree_new_compound(XDR_STRUCT,
-					 2,
+   
+   saddr.sin_family = PF_INET;
+   saddr.sin_port = htons(USQLD_SERVER_PORT);
+   
+   saddr.sin_addr.s_addr = inet_addr(server);
+   if(saddr.sin_addr.s_addr == INADDR_NONE)
+     {
+	
+	if(NULL==(he=gethostbyname(server))|| 
+	   NULL==he->h_addr){
+	   *errmsg = strdup("host name lookup failure");
+	   return NULL;
+	}
+	
+	
+	memcpy(&saddr.sin_addr,
+	       *he->h_addr_list,
+	       sizeof(struct in_addr));
+	
+     }
+   
+   sock_fd = socket(PF_INET,SOCK_STREAM,0);
+   if(sock_fd==-1){
+      *errmsg = strdup("unable to allocate local socket");    
+      return NULL;
+   }
+   
+   if(0!=connect(sock_fd,(struct sockaddr*)&saddr,sizeof(saddr))){
+      *errmsg = strdup("unable to connect socket to server");    
+      return NULL;
+   }
+   
+   
+   assert(USQLD_OK==XDR_tree_new_compound(XDR_STRUCT,
+					  2,
 					 (XDR_tree_compound**)&elems));
   
   XDR_t_set_comp_elem(XDR_TREE_COMPOUND(elems),0,
@@ -156,14 +167,15 @@ int usqld_exec(
 
   XDR_tree_free(out_p);
   
-  if(USQLD_OK!=(rv=usqld_recv_packet(con->server_fd,&in_p))){
-    *errmsg = strdup("usqld network: unable to get a response from query");
-    return rv;
-  }
 
   complete = 0;
 
   while(!complete){
+    if(USQLD_OK!=(rv=usqld_recv_packet(con->server_fd,&in_p))){
+      *errmsg = strdup("usqld network: unable to get a response from query");
+      return rv;
+    }
+    
     switch(usqld_get_packet_type(in_p)){
     case PICKLE_OK:
       complete =1;

@@ -25,19 +25,19 @@ int test_print_results(void * f,int nrows,
 
 int main (int argc, char ** argv) 
 {
-  usqld_conn * con;
-  char * errstring;
-  XDR_schema * s;
-  
-  
-  s = usqld_get_protocol();
-  XDR_dump_schema(s);
-  if(NULL==(con=usqld_connect("localhost",
-			      "test",&errstring))){
-    fprintf(stderr,"couldn't connect to database: %s\n",errstring);
-    exit(1);
-  }
-  fprintf(stderr,"connected to database\n");
+   usqld_conn * con;
+   char * errstring;
+   XDR_schema * s;
+   
+   
+   s = usqld_get_protocol();
+   XDR_dump_schema(s);
+   if(NULL==(con=usqld_connect("pc-80-192-26-107-bt.blueyonder.co.uk",
+			       "test",&errstring))){
+      fprintf(stderr,"couldn't connect to database: %s\n",errstring);
+      exit(1);
+   }
+   fprintf(stderr,"connected to database\n");
   if(USQLD_OK!=
      usqld_exec(con,
 		"CREATE TABLE foo(x int, y int)",
