@@ -1,3 +1,14 @@
+2004-07-04  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.70 released.
+
+2004-07-04  Philip Blundell  <philb@gnu.org>
+
+	* X11/gpe-login.gtkrc: Change background colour.
+
+	* gpe-login.c (main): If in full-screen mode, choose font
+	according to screen width.
+
 2004-07-03  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.69 released.

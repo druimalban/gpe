@@ -1,2 +1,9 @@
 gtk-font-name = "Sans 8"
 include "/usr/share/themes/Angelistic/gtk-2.0/gtkrc"
+
+style "default"
+{
+  bg[NORMAL] = "#90d8ff"
+}
+
+widget "*" style "default"

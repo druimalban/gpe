@@ -1637,6 +1637,14 @@ main (int argc, char *argv[])
 	    {
 	      gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
 	      geometry_set = TRUE;
+
+	      /* Set larger fonts on big screens */
+	      if (gdk_screen_width () >= 800)
+		gtk_rc_parse_string ("gtk-font-name = \"Sans 14\"");
+	      else if (gdk_screen_width () >= 640)
+		gtk_rc_parse_string ("gtk-font-name = \"Sans 12\"");
+	      else if (gdk_screen_width () >= 480)
+		gtk_rc_parse_string ("gtk-font-name = \"Sans 10\"");
 	    }
 	}
 
