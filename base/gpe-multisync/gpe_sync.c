@@ -125,13 +125,14 @@ sync_disconnect (gpe_conn *conn)
       
   GPE_DEBUG(conn, "sync_disconnect");    
   
+  gpe_disconnect (conn);
+
   /* cleanup memory from the connection */
   if(conn->device_addr)
     g_free(conn->device_addr);
   if(conn->username)
     g_free(conn->username);
-  g_free(conn);
-  
+  g_free(conn);  
   
   sync_set_requestdone(sync_pair);
 }

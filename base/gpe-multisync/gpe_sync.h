@@ -9,11 +9,13 @@ typedef struct {
   char* device_addr;
   char* username;
 
-  nsqlc *n;
+  nsqlc *calendar, *contacts, *todo;
 } gpe_conn;
 
-#define GPE_DEBUG(conn, x) fprintf (stderr, "%s", (x))
+#define GPE_DEBUG(conn, x) fprintf (stderr, "%s\n", (x))
 
 extern gboolean gpe_connect (gpe_conn *conn);
+extern void gpe_disconnect (gpe_conn *conn);
+
 extern gboolean gpe_load_config (gpe_conn *conn);
 extern gboolean gpe_save_config (gpe_conn *conn);

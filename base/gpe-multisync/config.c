@@ -65,7 +65,7 @@ gpe_load_config (gpe_conn *conn)
 
   g_free (path);
 
-  return FALSE;
+  return TRUE;
 }
 
 gboolean
@@ -88,5 +88,5 @@ gpe_save_config (gpe_conn *conn)
 
   g_free (path);
 
-  return FALSE;
+  return TRUE;
 }
