@@ -34,7 +34,6 @@ typedef struct
 
 typedef struct
 {
-  gchar *channel;
   gchar *topic;
   GList *users;
   IRCGtkWidgets *widgets;
@@ -46,20 +45,57 @@ typedef struct
   gchar *name;
   int fd;
   gboolean connected;
-  GList *channels;
+  GHashTable *channel;
   IRCUserInfo *user_info;
   IRCGtkWidgets *widgets;
 } IRCServer;
 
+/* Send a the users message to specified channel on specified server */
 gboolean
-irc_server_send_message (IRCServer *server, gchar *message)
+irc_channel_send_message (IRCServer *server, gchar *message)
 {
   printf ("IRC Send Message.\n");
   return TRUE;
 }
 
+/* Join secified channel on specified server */
 gboolean
-irc_server_login (IRCServer *server)
+irc_server_join_channel (IRCServer **server, gchar *channel)
+{
+  int send_result;
+  gchar *join_string;
+  IRCChannel *irc_channel;
+
+  printf ("Joining channel %s...", channel);
+
+  join_string = g_strdup_printf ("JOIN %s\r\n", channel);
+  send_result = send (server->fd, join_string, strlen (join_string), 0);
+
+  if (send_result != -1)
+  {
+    printf ("Channel joined.\n");
+    irc_channel = g_malloc (sizeof (irc_channel));
+    g_hash_table_insert (server->channel, (gpointer) channel, (gpointer) irc_channel);
+    return TRUE;
+  }
+
+  printf ("Unable to join channel.\n");
+  return FALSE;
+}
+
+/* Autojoin any enabled channels */
+gboolean
+irc_server_login_init (IRCServer **server)
+{
+  server->channel = g_hash_table_new (g_str_hash, g_str_equal);
+  irc_server_join_channel (server, "#gpe");
+
+  return TRUE;
+}
+
+/* Login to the IRC server with the username and password values from server->user_info */
+gboolean
+irc_server_login (IRCServer **server)
 {
   int send_result;
   gchar *login_string;
@@ -69,28 +105,23 @@ irc_server_login (IRCServer *server)
   else
     login_string = g_strdup_printf ("NICK %s\r\nUSER %s - - :%s\r\n", server->user_info->nick, server->user_info->username, server->user_info->real_name);
 
-  printf ("Now logging in...\n");
+  printf ("Now logging in...");
 
-  if (server->connected == TRUE)
+  send_result = send (server->fd, login_string, strlen (login_string), 0);
+
+  if (send_result != -1)
   {
-    send_result = send (server->fd, login_string, strlen (login_string), 0);
-    if (send_result != -1)
-    {
-      printf ("Logged in.\n");
-      return TRUE;
-    }
-    else
-    {
-      printf ("Login failed.\n");
-      return FALSE;
-    }
+    printf ("Logged in.\n");
+    irc_server_login_init (server);
+    return TRUE;
   }
 
+  printf ("Login failed.\n");
   return FALSE;
 }
 
 gboolean
-irc_server_connect (IRCServer *server)
+irc_server_connect (IRCServer **server)
 {
   int fd, connect_result;
   struct addrinfo *address;
@@ -101,7 +132,7 @@ irc_server_connect (IRCServer *server)
     return FALSE;
   }
 
-  printf ("Connecting to %s...\n", server->name);
+  printf ("Connecting to %s...", server->name);
 
   while (address)
   {
@@ -140,17 +171,13 @@ irc_server_disconnect (IRCServer *server)
   return TRUE;
 }
 
-gboolean
-irc_server_join_channel (IRCServer *server, gchar *channel)
-{
-  printf ("IRC Join Channel.\n");
-  return TRUE;
-}
-
 int
 main (int argc, char *argv[])
 {
   IRCServer *server;
+
+  server = g_malloc (sizeof (*server));
+  server->user_info = g_malloc (sizeof (*server->user_info));
 
   if (argc > 2)
   {
@@ -158,7 +185,7 @@ main (int argc, char *argv[])
     server->user_info->nick = g_strdup ("argv[2]");
     server->user_info->username = g_strdup ("argv[2]");
     server->user_info->real_name = g_strdup ("argv[2]");
-    irc_server_connect (server);
+    irc_server_connect (&server);
   }
   else
   {
@@ -166,7 +193,7 @@ main (int argc, char *argv[])
     server->user_info->nick = g_strdup ("dc_gpe-irc");
     server->user_info->username = g_strdup ("dc_gpe-irc");
     server->user_info->real_name = g_strdup ("dc_gpe-irc");
-    irc_server_connect (server);
+    irc_server_connect (&server);
   }
 
   return 0;
