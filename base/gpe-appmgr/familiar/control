@@ -5,4 +5,6 @@ Version: 0.10
 Architecture: arm
 Maintainer: Robert Mibus <mibus@bigpond.com>
 Depends: libgpewidget1
+Provides: gpe-appmgr
+Replaces: gpe-appmgr
 Description: A PalmOS-style launcher for GPE
