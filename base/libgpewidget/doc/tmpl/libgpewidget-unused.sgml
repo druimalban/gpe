@@ -1,42 +1,28 @@
-<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:Long_Description ##### -->
+<!-- ##### STRUCT box_desc ##### -->
 <para>
 
 </para>
 
+@label: 
+@value: 
 
-<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:See_Also ##### -->
+<!-- ##### STRUCT box_desc2 ##### -->
 <para>
 
 </para>
 
+@label: 
+@value: 
+@suggestions: 
 
-<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:Short_Description ##### -->
-
-
-
-<!-- ##### SECTION ./tmpl/gtkgpepixmap.sgml:Title ##### -->
-GtkGpePixmap
-
-
-<!-- ##### SECTION ./tmpl/render.sgml:Long_Description ##### -->
+<!-- ##### STRUCT gpe_icon ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### SECTION ./tmpl/render.sgml:See_Also ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### SECTION ./tmpl/render.sgml:Short_Description ##### -->
-
-
-
-<!-- ##### SECTION ./tmpl/render.sgml:Title ##### -->
-render
-
+@shortname: 
+@filename: 
+@pixbuf: 
 
 <!-- ##### FUNCTION gpe_render_icon ##### -->
 <para>

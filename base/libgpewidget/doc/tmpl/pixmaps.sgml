@@ -16,15 +16,6 @@ storage list and identified by a name string.
 Used by: Most GPE applications.
 </para>
 
-<!-- ##### STRUCT gpe_icon ##### -->
-<para>
-
-</para>
-
-@shortname: 
-@filename: 
-@pixbuf: 
-
 <!-- ##### FUNCTION gpe_load_icons ##### -->
 <para>
 This function is used to load a set of icons into memory and makes them 

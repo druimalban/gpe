@@ -1,3 +1,6 @@
+2005-03-31  Florian Boor <florian@kernelconcepts.de>
+
+	* gpeiconlistitem.c, doc/tmpl/gpeiconlistitem.sgml: Documentation.
 
 2005-03-30  Florian Boor <florian@kernelconcepts.de>
 

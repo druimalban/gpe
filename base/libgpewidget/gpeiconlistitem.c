@@ -37,12 +37,27 @@ gpe_icon_list_item_init (GPEIconListItem *item)
 {
 }
 
+
+/**
+ * gpe_icon_list_item_button_press:
+ * @i: Item
+ * @b: Button event to emit
+ * 
+ * Emit a button press event on a #GPEIconListItem.
+ */
 void
 gpe_icon_list_item_button_press (GPEIconListItem *i, GdkEventButton *b)
 {
   g_signal_emit (G_OBJECT (i), my_signals[0], 0, b);
 }
 
+/**
+ * gpe_icon_list_item_button_release:
+ * @i: Item
+ * @b: Button event to emit
+ * 
+ * Emit a button release event on a #GPEIconListItem.
+ */
 void
 gpe_icon_list_item_button_release (GPEIconListItem *i, GdkEventButton *b)
 {
@@ -106,12 +121,32 @@ gpe_icon_list_item_get_type (void)
   return item_type;
 }
 
+/**
+ * gpe_icon_list_item_get_pixbuf:
+ * @i: Item to get icon pixbuf from.
+ * 
+ * Returns the currently diplayed icon from a #GPEIconListItem.
+ * This function alsways returns the icon with the currently displayed size.
+ *
+ * Returns: Pointer to GdkPixbuf containing the current icon.
+ */
 GdkPixbuf *
 gpe_icon_list_item_get_pixbuf (GPEIconListItem *i)
 {
   return i->pb_scaled ? i->pb_scaled : i->pb;
 }
 
+/**
+ * gpe_icon_list_item_set_pixbuf:
+ * @i: Item to alter.
+ * @pixbuf: New icon to associate with item.
+ * 
+ * Set the icon displayed by the item. 
+ * The pixbuf will be resized to the icon size defined by the #GPEIconListView
+ * the item belongs to. If an old icon exists its reference will be released by 
+ * gdk_pixbuf_unref(). 
+ *
+ */
 void
 gpe_icon_list_item_set_pixbuf (GPEIconListItem *i, GdkPixbuf *pixbuf)
 {
@@ -130,12 +165,27 @@ gpe_icon_list_item_set_pixbuf (GPEIconListItem *i, GdkPixbuf *pixbuf)
     }
 }
 
+/**
+ * gpe_icon_list_item_set_parent:
+ * @i: Item to move.
+ * @view: #GPEIconListView to move the item to.
+ * 
+ * Change the #GPEIconListView the item belongs to.
+ *
+ */
 void
 gpe_icon_list_item_set_parent (GPEIconListItem *item, GPEIconListView *parent)
 {
   item->parent = parent;
 }
 
+/**
+ * gpe_icon_list_item_new:
+ * 
+ * Create a new item widget.
+ *
+ * Returns: New widget.
+ */
 GObject *
 gpe_icon_list_item_new (void)
 {
