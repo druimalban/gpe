@@ -1,3 +1,7 @@
+
+2004-07-12  Florian Boor  <florian.boor@kernelconcepts.de>
+	* Fixed segfault due to missing check.
+
 2004-07-01  Florian Boor  <florian.boor@kernelconcepts.de>
 	* Makefile: Updated MIME stuff to latest standards.
 

@@ -47,7 +47,7 @@
 
 GtkWidget *window, *main_scrolled_window, *fullscreen_window, *fullscreen_toggle_popup, *fullscreen_toolbar_popup, *vbox2;
 GtkWidget *dirbrowser_window;
-GtkWidget *view_widget, *image_widget;
+GtkWidget *view_widget = NULL, *image_widget;
 GdkPixbuf *image_pixbuf, *scaled_image_pixbuf = NULL;
 GtkWidget *image_event_box;
 GtkWidget *loading_toolbar, *tools_toolbar;
@@ -229,7 +229,8 @@ show_image (GtkWidget *widget, GList *image_filename)
   float width_ratio, height_ratio;
   float scale_width_ratio, scale_height_ratio;
 
-  gtk_widget_hide (view_widget);
+  if (view_widget)
+  	gtk_widget_hide (view_widget);
 
   image_filenames = image_filename;
   image_pixbuf = gdk_pixbuf_new_from_file ((gchar *) image_filename->data, NULL);
