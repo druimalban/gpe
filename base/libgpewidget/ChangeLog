@@ -1,5 +1,11 @@
 2002-06-16  Philip Blundell  <pb@debian.org>
 
+	* Makefile (MEMBERS): Add picturebutton.
+	* picturebutton.h: New file.
+	* picturebutton.c: Likewise.
+
+2002-06-16  Philip Blundell  <pb@debian.org>
+
 	* render.c (gpe_render_icon): Use GtkGpePixmap in place of GtkPixmap.
 
 	* gtkgpepixmap.h (GTK_TYPE_GPE_PIXMAP): Correct definition.
