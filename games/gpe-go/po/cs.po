@@ -4,66 +4,81 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-go 0.04\n"
-"POT-Creation-Date: 2003-10-12 22:18+0300\n"
-"PO-Revision-Date: 2003-10-15 22:56+0100\n"
+"Project-Id-Version: gpe-go 0.05\n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2003-11-15 01:57+0100\n"
 "Last-Translator: Libor Klepac <elkropac@students.zcu.cz>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-go.c:734
+#: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
 msgstr "Č:%d B:%d"
 
-#: gpe-go.c:967
+#: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
 msgstr "Hru nelze uložit do %s."
 
-#: gpe-go.c:1066
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Nová..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Uložit..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Nahrát..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Možnosti hry"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "První"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Přesun na začátek hry"
+
+#: gpe-go.c:1435
 msgid "Undo"
 msgstr "Zpět"
 
-#: gpe-go.c:1080
+#: gpe-go.c:1441
 msgid "Redo"
 msgstr "Znovu"
 
-#: gpe-go.c:1088
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Předchozí"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Přesun na konec hry"
+
+#: gpe-go.c:1457
 msgid "B:0  W:0 "
 msgstr "Č:0 B:0"
 
-#: gpe-go.c:1109
-msgid "PASS"
+#: gpe-go.c:1467
+msgid "Pass"
 msgstr "Vynechat tah"
 
-#: gpe-go.c:1122
-msgid "Save"
-msgstr "Uložit"
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Vynechat tah"
 
-#: gpe-go.c:1126
-msgid "Save as..."
-msgstr "Uložit jako..."
-
-#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
-#: gpe-go-19.desktop.in.h:1
+#: gpe-go.desktop.in.h:1
 msgid "GPE Go"
 msgstr "GPE Go"
 
 #: gpe-go.desktop.in.h:2
 msgid "Go"
 msgstr "Go"
-
-#: gpe-go-9.desktop.in.h:2
-msgid "Go 9"
-msgstr "Go 9"
-
-#: gpe-go-13.desktop.in.h:2
-msgid "Go 13"
-msgstr "Go 13"
-
-#: gpe-go-19.desktop.in.h:2
-msgid "Go 19"
-msgstr "Go 19"
