@@ -25,11 +25,6 @@
 #include "conf.h"
 #include "confGUI.h"
 
-extern GtkWidget *sleep_idle_spin;
-extern GtkWidget *dim_spin;
-extern GtkWidget *sleep_cpu_spin;
-extern GtkWidget *sleep_choose_irq;
-
 static int runProg(char *cmd)
 {
   int	status;
@@ -56,13 +51,14 @@ static int runProg(char *cmd)
 
   return status;
 }
+
 void
 on_sleep_idle_spin_activate (GtkEditable     *editable,
 			     gpointer         user_data)
 {
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  wgt = sleep_idle_spin;
+  wgt = lookup_widget((GtkWidget *)editable, "sleep_idle_spin");
   setConfigInt(ISconf, "auto-sleep_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
 }
 
@@ -73,7 +69,7 @@ on_sleep_idle_spin_changed (GtkEditable     *editable,
 {
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  wgt = sleep_idle_spin;
+  wgt = lookup_widget((GtkWidget *)editable, "sleep_idle_spin");
   setConfigInt(ISconf, "auto-sleep_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
 }
 
@@ -84,7 +80,7 @@ AS_checked (GtkToggleButton *togglebutton,
 {
   GtkWidget	*sleepSpin;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  sleepSpin = sleep_idle_spin;;
+  sleepSpin = lookup_widget((GtkWidget *)togglebutton, "sleep_idle_spin");
   if(!gtk_toggle_button_get_active(togglebutton)) {
     setConfigInt(ISconf, "auto-sleep_time", 0); gtk_spin_button_set_value((GtkSpinButton *)sleepSpin, 0);
   }
@@ -92,13 +88,14 @@ AS_checked (GtkToggleButton *togglebutton,
   gtk_widget_set_sensitive(sleepSpin, gtk_toggle_button_get_active(togglebutton));
 }
 
+
 void
 on_dim_spin_activate (GtkEditable     *editable,
 		      gpointer         user_data)
 {
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  wgt = dim_spin;
+  wgt = lookup_widget((GtkWidget *)editable, "dim_spin");
   setConfigInt(ISconf, "dim_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
 }
 
@@ -109,7 +106,7 @@ on_dim_spin_changed (GtkEditable     *editable,
 {
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  wgt = dim_spin;
+  wgt = lookup_widget((GtkWidget *)editable, "dim_spin");
   setConfigInt(ISconf, "dim_time", gtk_spin_button_get_value_as_int((GtkSpinButton *)wgt));
 }
 
@@ -120,7 +117,7 @@ AD_checked (GtkToggleButton *togglebutton,
 {
   GtkWidget	*dimSpin;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  dimSpin = dim_spin;
+  dimSpin = lookup_widget((GtkWidget *)togglebutton, "dim_spin");
   if(!gtk_toggle_button_get_active(togglebutton)) {
     setConfigInt(ISconf, "dim_time", 0); gtk_spin_button_set_value((GtkSpinButton *)dimSpin, 0);
   }
@@ -129,13 +126,14 @@ AD_checked (GtkToggleButton *togglebutton,
 
 }
 
+
 void
 cpu_checked (GtkToggleButton *togglebutton,
 	     gpointer         user_data)
 {
   GtkWidget	*cpuSpin;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  cpuSpin = sleep_cpu_spin;
+  cpuSpin = lookup_widget((GtkWidget *)togglebutton, "sleep_cpu_spin");
   setConfigInt(ISconf, "check_cpu", gtk_toggle_button_get_active(togglebutton));
   gtk_widget_set_sensitive(cpuSpin, getConfigInt(ISconf, "check_cpu"));
 }
@@ -147,7 +145,7 @@ on_sleep_cpu_spin_activate (GtkEditable     *editable,
 {
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  wgt = sleep_cpu_spin;
+  wgt = lookup_widget((GtkWidget *)editable, "sleep_cpu_spin");
   setConfigDbl(ISconf, "CPU_value", gtk_spin_button_get_value_as_float((GtkSpinButton *)wgt));
 }
 
@@ -158,7 +156,7 @@ on_sleep_cpu_spin_changed (GtkEditable     *editable,
 {
   GtkWidget	*wgt;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  wgt = sleep_cpu_spin;
+  wgt = lookup_widget((GtkWidget *)editable, "sleep_cpu_spin");
   setConfigDbl(ISconf, "CPU_value", gtk_spin_button_get_value_as_float((GtkSpinButton *)wgt));
 }
 
@@ -193,7 +191,7 @@ on_sleep_probe_irq_toggled (GtkToggleButton *togglebutton,
 {
   GtkWidget	*irqProbe;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  irqProbe = sleep_choose_irq;
+  irqProbe = lookup_widget((GtkWidget *)togglebutton, "sleep_choose_irq");
   setConfigInt(ISconf, "probe_IRQs", gtk_toggle_button_get_active(togglebutton));
   gtk_widget_set_sensitive(irqProbe, getConfigInt(ISconf, "probe_IRQs"));
 }
@@ -256,6 +254,14 @@ stop_button (GtkButton       *button,
   sprintf(cmd, "%s stop", ISconf->binCmd); runProg(cmd);
 }
 
+
+void
+mainquit (GtkButton       *button,
+	  gpointer         user_data)
+{
+  /* do I really need to free everything */
+  gtk_main_quit();
+}
 
 
 void

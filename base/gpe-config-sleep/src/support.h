@@ -18,9 +18,9 @@
  * or alternatively any widget in the component, and the name of the widget
  * you want returned.
  */
-/*GtkWidget*  lookup_widget              (GtkWidget       *widget,
+GtkWidget*  lookup_widget              (GtkWidget       *widget,
                                         const gchar     *widget_name);
-*/
+
 /* get_widget() is deprecated. Use lookup_widget instead. */
 #define get_widget lookup_widget
 

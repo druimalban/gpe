@@ -9,16 +9,14 @@
 
 #include <sys/param.h>
 #include <gtk/gtk.h>
-#include <gpe/init.h>
-#include <string.h>
-#include <stdlib.h>
 
 #include "interface.h"
 #include "support.h"
 #include "conf.h"
 #include "confGUI.h"
 
-GtkWidget *Sleep_Build_Objects()
+int
+main (int argc, char *argv[])
 {
   char cname[MAXPATHLEN];
   GtkWidget *GPE_Config_Sleep;
@@ -33,6 +31,13 @@ GtkWidget *Sleep_Build_Objects()
   strcpy(ISconf->binCmd, "/etc/init.d/ipaq-sleep");
   load_IRQs(ISconf, "/proc/interrupts");
 
+  gtk_set_locale ();
+  gtk_init (&argc, &argv);
+
+  add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
+  add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
+
+
   /*
    * The following code was added by Glade to create one of each component
    * (except popup menus), just so that you see something after building
@@ -45,6 +50,7 @@ GtkWidget *Sleep_Build_Objects()
 
   gtk_widget_show (GPE_Config_Sleep);
 
-  return GPE_Config_Sleep;
+  gtk_main ();
+  return 0;
 }
 

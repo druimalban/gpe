@@ -2,19 +2,9 @@
 #include <gtk/gtk.h>
 
 #include "callbacks.h"
+#include "support.h"
 #include "conf.h"
 #include "confGUI.h"
-
-extern  GtkWidget	*sleep_enable;
-extern  GtkWidget	*sleep_idle_spin;
-extern  GtkWidget	*dim_enable;
-extern  GtkWidget	*dim_spin;
-extern  GtkWidget	*sleep_apm;
-extern  GtkWidget	*sleep_cpu;
-extern  GtkWidget	*sleep_cpu_spin;
-extern  GtkWidget	*sleep_probe_irq;
-extern  GtkWidget	*sleep_choose_irq;
-extern  GtkWidget	*irqList;
 
 void set_conf_defaults(GtkWidget *top, ipaq_conf_t *conf)
 {
@@ -22,33 +12,33 @@ void set_conf_defaults(GtkWidget *top, ipaq_conf_t *conf)
   GtkWidget	*wgt;
 
   ival = getConfigInt(conf, "auto-sleep_time");
-  wgt = sleep_enable;
+  wgt = lookup_widget(top, "sleep_enable");
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), (ival > 0));
-  wgt = sleep_idle_spin;
+  wgt = lookup_widget(top, "sleep_idle_spin");
   gtk_spin_button_set_value((GtkSpinButton *)wgt, (gfloat)ival);
   gtk_widget_set_sensitive(wgt, (ival > 0));
 
   ival = getConfigInt(conf, "dim_time");
-  wgt = dim_enable;
+  wgt = lookup_widget(top, "dim_enable");
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), (ival > 0));
-  wgt = dim_spin;
+  wgt = lookup_widget(top, "dim_spin");
   gtk_spin_button_set_value((GtkSpinButton *)wgt, (gfloat)ival);
   gtk_widget_set_sensitive(wgt, (ival > 0));
 
-  wgt = sleep_apm;
+  wgt = lookup_widget(top, "sleep_apm");
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), getConfigInt(conf, "check_apm"));  
 
   ival = getConfigInt(conf, "check_cpu");
-  wgt = sleep_cpu;
+  wgt = lookup_widget(top, "sleep_cpu");
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), ival);
-  wgt = sleep_cpu_spin;
+  wgt = lookup_widget(top, "sleep_cpu_spin");
   gtk_spin_button_set_value((GtkSpinButton *)wgt, getConfigDbl(conf, "CPU_value"));
   gtk_widget_set_sensitive(wgt, ival);
 
   ival = getConfigInt(conf, "probe_IRQs");
-  wgt = sleep_probe_irq;
+  wgt = lookup_widget(top, "sleep_probe_irq");
   gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(wgt), ival);
-  wgt = sleep_choose_irq;
+  wgt = lookup_widget(top, "sleep_choose_irq");
   gtk_widget_set_sensitive(wgt, ival);
 
   /* can we get the current dim-level??? */
@@ -79,7 +69,7 @@ void init_irq_list(GtkWidget *top, GdkWindow *win, ipaq_conf_t *conf)
     box_pixmap = gdk_pixmap_create_from_xpm_d (win, &box_bitmap, NULL, box_xpm);
   }
 
-  wgt = irqList;
+  wgt = lookup_widget(top, "irqList");
   temp[0] = ""; temp[1] = "";
   irqL = getConfigIntL(conf, &nIrq, "IRQ");
   for(i = 0; i < conf->nIrq; i++) {
