@@ -428,8 +428,10 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
 
   network_name = (gchar *) gtk_entry_get_text (GTK_ENTRY (entry));
   if (strlen (network_name) > 0)
+  {
     network = g_hash_table_lookup (network_hash, (gconstpointer) network_name);
-  iter = network->servers;
+    iter = network->servers;
+  }
   if (iter != NULL)
   {
     while (iter)
@@ -442,6 +444,8 @@ select_servers_from_network (GtkWidget *widget, GHashTable *network_hash)
     g_list_free(popdown_strings);
     gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (server_combo)->entry), ((struct sql_network_server *) (network->servers->data))->name);
     gtk_entry_set_text (GTK_ENTRY (nick_entry), network->nick);
+    gtk_entry_set_text (GTK_ENTRY (real_name_entry), network->real_name);
+    gtk_entry_set_text (GTK_ENTRY (password_entry), network->password);
   }
 }
 
