@@ -128,6 +128,15 @@ static void
 radio_on (void)
 {
   sigset_t sigs;
+  int fd;
+
+  fd = socket (PF_BLUETOOTH, SOCK_RAW, BTPROTO_L2CAP);
+  if (fd < 0)
+    {
+      gpe_error_box (_("No kernel support for Bluetooth"));
+      return;
+    }
+  close (fd);
 
   gtk_widget_hide (menu_radio_on);
   gtk_widget_show (menu_radio_off);
@@ -456,14 +465,6 @@ main (int argc, char *argv[])
     exit (1);
 
   setlocale (LC_ALL, "");
-
-  dd = socket (PF_BLUETOOTH, SOCK_RAW, BTPROTO_L2CAP);
-  if (dd < 0)
-    {
-      gpe_error_box (_("No kernel support for Bluetooth on this machine"));
-      exit (1);
-    }
-  close (dd);
 
   dd = hci_open_dev (0);
   if (dd != -1)
