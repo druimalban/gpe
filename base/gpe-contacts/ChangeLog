@@ -1,3 +1,10 @@
+2002-10-02  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add m4.
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): Add config.rpath.
+	* configure.in (AC_OUTPUT): Add m4/Makefile.
+
 2002-09-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c: Small spelling fixes. Add copyright info to top of

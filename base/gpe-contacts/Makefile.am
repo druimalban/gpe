@@ -2,9 +2,9 @@
 
 PREFIX = /usr/local
 
-SUBDIRS = po src
+SUBDIRS = m4  po src
 
-EXTRA_DIST = \
+EXTRA_DIST = config.rpath  \
 	autogen.sh \
 	adb.glade
 
@@ -35,3 +35,5 @@ dist-hook:
 	fi
 
 include ../build/Makefile.dpkg_ipkg
+
+ACLOCAL_AMFLAGS = -I m4
