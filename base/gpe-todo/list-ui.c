@@ -18,6 +18,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/render.h>
 #include <gpe/picturebutton.h>
+#include <gpe/question.h>
 
 #include "todo.h"
 
@@ -85,7 +86,6 @@ purge_completed (GtkWidget *w, gpointer list)
 			"question", _("Delete"), "ok", _("Cancel"), "cancel", NULL) == 0)
     {
       GSList *iter = items;
-      guint i;
 
       while (iter)
 	{
