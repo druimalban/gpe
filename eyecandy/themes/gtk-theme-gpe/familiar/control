@@ -1,0 +1,8 @@
+Package: gtk-theme-gpe
+Section: x11
+Priority: optional
+Version: 0.01
+Architecture: any
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk1.2, gtk-engines-xenophilia
+Description: Default GTK theme for GPE

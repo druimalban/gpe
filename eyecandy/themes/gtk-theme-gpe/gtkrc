@@ -1,0 +1,132 @@
+module_path "/usr/lib/gtk/themes/engines"
+
+style "default" {
+    font = "-adobe-helvetica-medium-r-*-*-9-*-*-*-p-*-iso8859-1"
+
+    bg[ACTIVE]		= "#ebebeb"
+    fg[ACTIVE]		= "#000000"
+    bg[NORMAL]		= "#dddddd"
+    fg[NORMAL]		= "#000000"
+    bg[INSENSITIVE]	= "#cccccc"
+    fg[INSENSITIVE]	= "#555555"
+    bg[PRELIGHT]	= "#eeeeee"
+    fg[PRELIGHT]	= "#000000"
+    bg[SELECTED]	= "#334080"
+    fg[SELECTED]	= "#ffffff"
+    base[NORMAL]	= "#eeeeee"
+    base[ACTIVE]	= "#dddddd"
+    base[SELECTED]	= "#447080"
+    base[INSENSITIVE]	= "#eeeeee"
+    base[PRELIGHT]	= "#eeeeee"
+}
+
+style "xeno_engine" {
+    engine "xeno" {
+	thin			= true
+	scrollbar_knob		= dimple
+	scrollbar_width		= 10
+	stepper_ends		= true
+	stepper_arrows		= false
+	shine			= 2.0
+	shade			= 0.7
+    }
+}
+
+style "xeno_list" {
+    base[ACTIVE]	="#ffffff"
+}
+
+style "xeno_tooltips" {
+    bg[NORMAL]		= "#ffeeaa"
+    fg[NORMAL]		= "#000000"
+}
+
+style "xeno_button" {
+    bg[NORMAL]		= "#eaeaea"
+    bg[PRELIGHT]	= "#eaeaea"
+    bg[INSENSITIVE]	= "#dddddd"
+    base[NORMAL]	= "#ffffff"
+    base[ACTIVE]	= "#bdbcbb"
+    base[PRELIGHT]	= "#bdbcbb"
+}
+
+style "xeno_menu" {
+    bg[PRELIGHT]	= "#ffffff"
+}
+
+style "xeno_range" = "xeno_button" {
+    bg[ACTIVE]		= "#bbbbbb"
+}
+
+style "xeno_infobar" {
+    bg[NORMAL]		= "#afaead"
+}
+
+class "GtkWidget"		style "default"
+
+# Applying the Xenophilia engine to GtkFrame gives undesirable results.
+# It doesn't seem to be possible to apply the engine to GtkWidget and
+# then selectively remove it from just that one class. :-(
+#
+## Level 1 widgets (GtkObject children):
+class "GtkData"			style "xeno_engine"
+#
+## Level 2 widgets (GtkObject->GtkWidget children):
+class "GtkCalendar"		style "xeno_engine"
+class "GtkDrawingArea"		style "xeno_engine"
+class "GtkEditable"		style "xeno_engine"
+class "GtkMisc"			style "xeno_engine"
+class "GtkPreview"		style "xeno_engine"
+class "GtkRuler"		style "xeno_engine"
+class "GtkSeparator"		style "xeno_engine"
+#
+## Level 3 widgets (GtkObject->GtkWidget->GtkContainer children):
+class "GtkBox"			style "xeno_engine"
+class "GtkFixed"		style "xeno_engine"
+class "GtkLayout"		style "xeno_engine"
+class "GtkMenuShell"		style "xeno_engine"
+class "GtkNotebook"		style "xeno_engine"
+class "GtkPacker"		style "xeno_engine"
+class "GtkPaned"		style "xeno_engine"
+class "GtkSocket"		style "xeno_engine"
+class "GtkTable"		style "xeno_engine"
+class "GtkToolbar"		style "xeno_engine"
+#
+## Level 4 widgets (GtkObject->GtkWidget->GtkContainer->GtkBin children):
+class "GtkAlignment"		style "xeno_engine"
+class "GtkAspectFrame"		style "xeno_engine"
+#class "GtkFrame"		style "xeno_engine"
+class "GtkEventBox"		style "xeno_engine"
+class "GtkHandleBox"		style "xeno_engine"
+class "GtkInvisible"		style "xeno_engine"
+class "GtkItem"			style "xeno_engine"
+class "GtkScrolledWindow"	style "xeno_engine"
+class "GtkViewport"		style "xeno_engine"
+class "GtkWindow"		style "xeno_engine"
+
+class "GtkScrollbar"		style "xeno_engine"
+class "GtkList"			style "xeno_engine"
+class "GtkTree"			style "xeno_engine"
+class "GtkCList"		style "xeno_engine"
+class "GtkCTree"		style "xeno_engine"
+class "GtkButton"		style "xeno_engine"
+class "GtkSpinButton"		style "xeno_engine"
+class "GtkRange"		style "xeno_engine"
+class "GtkProgress"		style "xeno_engine"
+class "GtkStatusbar"		style "xeno_engine"
+class "GtkMenuItem"		style "xeno_engine"
+class "GtkMenu"			style "xeno_engine"
+
+class "GtkList"			style "xeno_list"
+class "GtkTree"			style "xeno_list"
+class "GtkCList"		style "xeno_list"
+class "GtkCTree"		style "xeno_list"
+class "GtkButton"		style "xeno_button"
+class "GtkSpinButton"		style "xeno_button"
+class "GtkRange"		style "xeno_range"
+class "GtkProgress"		style "xeno_infobar"
+class "GtkStatusbar"		style "xeno_infobar"
+class "GtkMenuItem"		style "xeno_menu"
+class "GtkMenu"			style "xeno_menu"
+
+widget "gtk-tooltips*"		style "xeno_tooltips"

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+update-alternatives --remove etc-gtkrc /usr/share/themes/GPE/gtk/gtkrc
+
