@@ -1,9 +1,17 @@
+2002-12-27  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.34 released.
+
 2002-12-26  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (MEMBERS): Add tray.
 	* tray.c: New file.
 	* gpe/tray.h: Likewise.
 	
+2002-12-23  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.33 released.
+
 2002-12-23  Philip Blundell  <philb@gnu.org>
 
 	Merge changes from hacked-iconlist-branch:
