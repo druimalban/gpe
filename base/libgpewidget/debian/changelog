@@ -1,3 +1,10 @@
+libgpewidget (0.73-1) unstable; urgency=low
+
+  * New upstream version.
+  * Link explicitly with Xrender.  (Closes: #215575)
+
+ -- Philip Blundell <pb@nexus.co.uk>  Mon, 13 Oct 2003 19:33:09 +0100
+
 libgpewidget (0.72-1) unstable; urgency=low
 
   * New upstream version.
