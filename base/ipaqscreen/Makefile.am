@@ -29,3 +29,4 @@ dist-hook:
 	  done \
 	fi
 
+include ../build/Makefile.dpkg_ipkg
