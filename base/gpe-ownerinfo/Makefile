@@ -8,7 +8,7 @@ LINGUAS = de hu id pt fr zh_TW ro sv nl sk cs
 
 LIB_TARGET = libgpe-ownerinfo.a
 LIB_MEMBERS = $(PACKAGE)
-MEMBERS = main gpe-ownerinfo
+MEMBERS = main
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
@@ -38,7 +38,7 @@ CFLAGS += -MD
 .PHONY: all-mo install-mo update-po extract-po clean-po translation-package dist dist-prep ipkg dpkg printinfo tag
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
-SOURCES = $(patsubst %,%.c,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS) $(LIB_MEMBERS))
 LIB_OBJS = $(patsubst %,%.o,$(LIB_MEMBERS))
 LIB_SOURCES = $(patsubst %,%.c,$(LIB_MEMBERS))
 

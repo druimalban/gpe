@@ -1,5 +1,7 @@
 2003-10-09  Colin Marquardt  <colin@marquardt-home.de>
 
+	* Makefile (SOURCES): Add $LIB_MEMBERS here, leave MEMBERS alone.
+
 	* main.c (main): Don't print CVS Revision, it's useless.
 
 	* Makefile (MEMBERS): Add gpe-ownerinfo so that all strings end up
