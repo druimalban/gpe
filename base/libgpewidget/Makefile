@@ -6,7 +6,7 @@ CVSBUILD = yes
 
 LINGUAS = ro de id pt fr ga wa sv nl cs
 
-MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist
+MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus screensize question gtksimplemenu spacing tray tap translabel popup popup_menu gpetimesel gpeiconlistitem gpeclockface gpetooltips2 gpe-iconlist gpewindowlist
 
 SONAME = libgpewidget.so.1
 BINPACKAGE = libgpewidget1
@@ -24,7 +24,7 @@ LDFLAGS = $(STANDARD_LDFLAGS) $(GTKLIBS) $(shell pkg-config --libs xrender)
 CFLAGS += -fPIC
 CPPFLAGS += -I./gpe
 
-HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h
+HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))

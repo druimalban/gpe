@@ -1,8 +1,20 @@
+2004-01-18  Philip Blundell  <philb@gnu.org>
+
+	* windows.c: Add object interface.  Rename to ...
+	* gpewindowlist.c: ... this.
+	* gpe/windows.h: Rename to ...
+	* gpe/gpewindowlist.h: ... this.
+
 2003-11-08  Moray Allan  <moray@handhelds.org>
 
 	* debian/copyright: Cosmetic changes to keep lintian happy.
 
 2003-10-19  Philip Blundell  <philb@gnu.org>
+
+	* windows.c (initialize): New function.
+	(gpe_get_client_window_list): Call it to intern required atoms.
+	(gpe_get_window_name): Likewise.
+	(gpe_get_window_icon): Likewise.
 
 	* Makefile: Use STANDARD_CFLAGS, STANDARD_LDFLAGS, STANDARD_CPPFLAGS.
 
