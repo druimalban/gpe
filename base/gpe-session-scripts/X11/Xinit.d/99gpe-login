@@ -8,5 +8,6 @@ TRANSPARENT=
 if [ -x /usr/X11R6/bin/xsetroot ]; then
   TRANSPARENT="--transparent"
 fi
+#HARD=--hard
 
-/usr/bin/gpe-login $TRANSPARENT $GEOMETRY
+/usr/bin/gpe-login $HARD $TRANSPARENT $GEOMETRY

@@ -36,7 +36,7 @@ update-po: po/$(PACKAGE).pot
 po/$(PACKAGE).pot: $(SOURCES)
 	xgettext -k_ -o po/$(PACKAGE).pot $^
 
-gpe-login: gpe-login.o nocursor.o
+gpe-login: gpe-login.o nocursor.o rootpixmap.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) -lcrypt
 
 gpe-logout: gpe-logout.o

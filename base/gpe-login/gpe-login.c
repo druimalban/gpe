@@ -59,6 +59,7 @@ static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
 
 static gboolean autolock_mode;
+static gboolean hard_keys_mode;
 
 static GtkWidget *window;
 static GtkWidget *focus;
@@ -68,12 +69,33 @@ static guint xkbd_xid;
 
 static Atom suspended_atom;
 
-static GtkStyle *style;
+static int hard_key_length = 4;
+static gchar *hard_key_buf;
 
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
   { NULL, NULL }
 };
+
+typedef struct
+{
+  const gchar *name;
+  gchar map;
+  guint keyval;
+} key_map_t;
+
+static key_map_t keymap[] = 
+  {
+    { "XF86Calendar", '1' },
+    { "telephone", '2' },
+    { "XF86Mail", '3' },
+    { "XF86Start", '4' },
+    { "KP_1", '1' },
+    { "KP_2", '2' },
+    { "KP_3", '3' },
+    { "KP_4", '4' },
+    { NULL }
+  };
 
 static void
 cleanup_children (void)
@@ -202,15 +224,11 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 }
 
 static gboolean
-login_correct (GtkWidget *entry, struct passwd **pwe_ret)
+login_correct (const gchar *pwstr, struct passwd **pwe_ret)
 {
-  gchar *pwstr;
   struct passwd *pwe;
   struct spwd *spe;
   char *p;
-
-  pwstr = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
-  gtk_entry_set_text (GTK_ENTRY (entry), "");
 
   pwe = getpwnam (current_username);
   if (pwe == NULL)
@@ -221,8 +239,6 @@ login_correct (GtkWidget *entry, struct passwd **pwe_ret)
     pwe->pw_passwd = spe->sp_pwdp;
 
   p = crypt (pwstr, pwe->pw_passwd);
-  memset (pwstr, 0, strlen (pwstr));
-  g_free (pwstr);
 
   if (strcmp (p, pwe->pw_passwd))
     return FALSE;
@@ -236,13 +252,19 @@ login_correct (GtkWidget *entry, struct passwd **pwe_ret)
 static void
 enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
 {
-  if (login_correct (entry, NULL))
+  gchar *pwstr = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  gtk_entry_set_text (GTK_ENTRY (entry), "");
+
+  if (login_correct (pwstr, NULL))
     {
       gdk_keyboard_ungrab (GDK_CURRENT_TIME);
       gtk_widget_hide (window);
     }
   else
     gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
+
+  memset (pwstr, 0, strlen (pwstr));
+  g_free (pwstr);
 }
 
 static GdkFilterReturn
@@ -271,17 +293,22 @@ static void
 enter_callback (GtkWidget *widget, GtkWidget *entry)
 {
   struct passwd *pwe;
+  gchar *pwstr = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
+  gtk_entry_set_text (GTK_ENTRY (entry), "");
 
   if (current_username == NULL)
     return;
 
-  if (login_correct (entry, &pwe))
+  if (login_correct (pwstr, &pwe))
     {
       do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
       gtk_main_quit ();
     }
   else
     gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
+
+  memset (pwstr, 0, strlen (pwstr));
+  g_free (pwstr);
 }
 
 static void
@@ -429,6 +456,60 @@ spawn_xkbd (void)
   return socket;
 }
 
+static void
+hard_key_insert (gchar c)
+{
+  struct passwd *pwe;
+
+  if (current_username == NULL)
+    return;
+
+  memmove (hard_key_buf, hard_key_buf + 1, hard_key_length - 1);
+  hard_key_buf[hard_key_length - 1] = c;
+
+  if (login_correct (hard_key_buf, &pwe))
+    {
+      do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
+      gtk_main_quit ();
+    }
+}
+
+static gboolean
+key_press_event (GtkWidget *window, GdkEventKey *event)
+{
+  key_map_t *k = keymap;
+  while (k->name)
+    {
+      if (k->keyval == event->keyval)
+	{
+	  hard_key_insert (k->map);
+	  return TRUE;
+	}
+      k++;
+    }
+  printf ("No match for %d\n", event->keyval);
+  return FALSE;
+}
+
+static void
+mapped (GtkWidget *window)
+{
+  Pixmap rmap = GetRootPixmap ();
+  if (rmap != None)
+    {
+      Pixmap pmap;
+      printf("handle is %08x\n", rmap);
+      pmap = CutWinPixmap (GDK_WINDOW_XWINDOW (window->window), rmap, 
+			   GDK_GC_XGC (window->style->black_gc));
+      if (pmap != None)
+	{
+	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
+	  window->style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
+	  gtk_widget_set_style (window, window->style);
+	}
+    }
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -466,6 +547,8 @@ main (int argc, char *argv[])
 	flag_geom = TRUE;
       else if (strcmp (argv[i], "--transparent") == 0)
 	flag_transparent = TRUE;
+      else if (strcmp (argv[1], "--hard-keys") == 0)
+	hard_keys_mode = TRUE;
     }
 
   signal (SIGCHLD, SIG_IGN);
@@ -504,8 +587,24 @@ main (int argc, char *argv[])
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  if (access (xkbd_path, X_OK) == 0)
-    socket = spawn_xkbd ();
+  if (hard_keys_mode)
+    {
+      key_map_t *k = keymap;
+      while (k->name)
+	{
+	  k->keyval = gdk_keyval_from_name (k->name);
+	  k++;
+	}
+
+      hard_key_buf = g_malloc (hard_key_length + 1);
+      memset (hard_key_buf, ' ', hard_key_length);
+      hard_key_buf[hard_key_length] = 0;
+    }
+  else
+    {
+      if (access (xkbd_path, X_OK) == 0)
+	socket = spawn_xkbd ();
+    }
 
   gtk_widget_realize (window);
 
@@ -605,7 +704,6 @@ main (int argc, char *argv[])
       frame = gtk_frame_new (autolock_mode ? _("Screen locked") : _("Log in"));
 
       login_label = gtk_label_new (_("Username"));
-      password_label = gtk_label_new (_("Password"));
       label_result = gtk_label_new ("");
       gtk_rc_parse_string ("widget '*login_result_label*' style 'gpe_login_result'");
       gtk_widget_set_name (label_result, "login_result_label");
@@ -621,54 +719,78 @@ main (int argc, char *argv[])
 	  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
 	}
 
-      entry = gtk_entry_new ();
-      gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
+      if (! hard_keys_mode)
+	{
+	  entry = gtk_entry_new ();
+	  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
+	  password_label = gtk_label_new (_("Password"));
+	  hbox_password = gtk_hbox_new (FALSE, 5);
+	  gtk_box_pack_start (GTK_BOX (hbox_password), entry, TRUE, TRUE, 0);
+	  gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
+	  gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
+	  gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
+	}
 
       gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
       
-      hbox_password = gtk_hbox_new (FALSE, 5);
-      gtk_box_pack_start (GTK_BOX (hbox_password), entry, TRUE, TRUE, 0);
-      gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
-      
       table = gtk_table_new (2, 2, FALSE);
       gtk_table_attach_defaults (GTK_TABLE (table), login_label, 0, 1, 0, 1);
       gtk_table_attach_defaults (GTK_TABLE (table), option, 1, 2, 0, 1);
-      gtk_table_attach_defaults (GTK_TABLE (table), password_label, 0, 1, 1, 2);
-      gtk_table_attach_defaults (GTK_TABLE (table), hbox_password, 1, 2, 1, 2);
+      if (! hard_keys_mode)
+	{
+	  gtk_table_attach_defaults (GTK_TABLE (table), password_label, 0, 1, 1, 2);
+	  gtk_table_attach_defaults (GTK_TABLE (table), hbox_password, 1, 2, 1, 2);
+	}
       gtk_label_set_justify (GTK_LABEL (login_label), GTK_JUSTIFY_LEFT);
       gtk_misc_set_alignment (GTK_MISC (login_label), 0, 0.5);
-      gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
-      gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
 
       vbox = gtk_vbox_new (FALSE, 0);
 
       gtk_box_pack_start (GTK_BOX (vbox), table, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), label_result, FALSE, FALSE, 0);
+      
+      if (hard_keys_mode)
+	{
+	  GtkWidget *keys_hint = gtk_label_new (_("Enter password with hard keys"));
+	  gtk_widget_show (keys_hint);
+	  gtk_box_pack_start (GTK_BOX (vbox), keys_hint, FALSE, FALSE, 0);
+	}
+
       if (socket)
 	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
-      
+
       gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
       
-      if (autolock_mode)
+      if (! hard_keys_mode)
 	{
-	  gtk_signal_connect (GTK_OBJECT (entry), "activate",
-			      GTK_SIGNAL_FUNC (enter_lock_callback), entry);
-	  gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-			      GTK_SIGNAL_FUNC (enter_lock_callback), entry);
+	  if (autolock_mode)
+	    {
+	      gtk_signal_connect (GTK_OBJECT (entry), "activate",
+				  GTK_SIGNAL_FUNC (enter_lock_callback), entry);
+	      gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
+				  GTK_SIGNAL_FUNC (enter_lock_callback), entry);
+	    }
+	  else
+	    {
+	      gtk_signal_connect (GTK_OBJECT (entry), "activate",
+				  GTK_SIGNAL_FUNC (enter_callback), entry);
+	      gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
+				  GTK_SIGNAL_FUNC (enter_callback), entry);
+	    }
+	  focus = entry;
 	}
       else
 	{
-	  gtk_signal_connect (GTK_OBJECT (entry), "activate",
-			      GTK_SIGNAL_FUNC (enter_callback), entry);
-	  gtk_signal_connect (GTK_OBJECT (ok_button), "clicked",
-			      GTK_SIGNAL_FUNC (enter_callback), entry);
+	  gtk_signal_connect (GTK_OBJECT (window), "key-press-event",
+			      GTK_SIGNAL_FUNC (key_press_event), window);
+	  focus = window;
 	}
 
-      focus = entry;
       gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
+
       if (! autolock_mode)
 	gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
@@ -763,11 +885,8 @@ main (int argc, char *argv[])
   gtk_widget_add_events (GTK_WIDGET (window), GDK_BUTTON_PRESS_MASK);
 
   if (flag_transparent)
-    {
-      style = gtk_style_copy (window->style);
-      style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap *)GDK_PARENT_RELATIVE;
-      gtk_widget_set_style (window, style);
-    }
+    gtk_signal_connect (GTK_OBJECT (window), "map-event",
+			GTK_SIGNAL_FUNC (mapped), NULL);
 
   if (autolock_mode)
     {

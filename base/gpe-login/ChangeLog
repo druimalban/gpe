@@ -1,3 +1,18 @@
+2002-10-11  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (login_correct): First argument is a string, not a
+	widget.
+	(enter_lock_callback): Update call to above.
+	(enter_callback): Likewise.
+	(hard_key_insert, key_press_event, mapped): New functions.
+	(main): Support --hard-keys. 
+
+	* X11/Xinit.d/99gpe-login (HARD): Add commented out definition.
+
+	* rootpixmap.c: New file.
+	* Makefile (gpe-login): Build it.
+	* gpe-login.c (main): Avoid use of ParentRelative for transparency.
+
 2002-10-08  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login, gpe-login2 0.24 released.
