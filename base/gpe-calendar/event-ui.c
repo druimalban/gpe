@@ -29,6 +29,7 @@
 #include <gpe/spacing.h>
 #include <gpe/schedule.h>
 #include <gpe/pim-categories.h>
+#include <gpe/pim-categories-ui.h>
 
 #include "globals.h"
 #include "event-ui.h"
