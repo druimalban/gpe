@@ -1,3 +1,12 @@
+2004-03-25  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.13 released.
+
+2004-03-25  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Bring up to modern standards vis-a-vis PACKAGE_CFLAGS,
+	etc.
+
 2004-02-23  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
                                                                                 
         * release version 0.12 
