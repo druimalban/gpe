@@ -25,7 +25,10 @@ OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
-all: libdm.so
+all: libdm.so mt
+
+mt: mt.c
+	$(CC) -o $@ $^ -I/usr/X11R6/include -L/usr/X11R6/lib -lX11
 
 libdm.so: $(SONAME)
 	ln -sf $^ $@
@@ -46,6 +49,5 @@ install-devel:
 
 clean:
 	rm -f $(OBJS) $(SONAME) libdotdesktop.so $(DEPS)
-
 
 -include $(DEPS)
