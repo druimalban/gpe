@@ -34,7 +34,7 @@ static struct tag_map map[] =
     { "nickname", NULL },
     { "comment", "note" },
     { "work_organization", "organization"},
-    { "company", "org"},
+    { "company", "organization"},
     { NULL, NULL }
   };
 
