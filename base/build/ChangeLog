@@ -1,3 +1,10 @@
+2003-08-05  Colin Marquardt  <colin@marquardt-home.de>
+
+	* README: Mention make source.
+
+	* Makefile.dpkg_ipkg (source): New target depending on the tag and
+	dist-upload targets.
+
 2003-08-02  Philip Blundell  <philb@gnu.org>
 
 	* README: Mention make freshen-po too.

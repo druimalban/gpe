@@ -48,7 +48,12 @@ in your control file (make sure you also upload the source to
 ftp://gpe.handhelds.org/gpe/source/$(PACKAGE)-$(VERSION).tar.gz -
 'make dist-upload' attempts to do that for you).
 
-Look at gpe/base/libgpewidget/Makefile for a real-world example.
+If you are sure that everything will go alright, you can use 
+'make source' which will create the tarball, tag CVS and upload the
+tarball in one go.
+
+Take a look at gpe/base/libgpewidget/Makefile for a real-world
+example.
 
 
 Makefile.translation

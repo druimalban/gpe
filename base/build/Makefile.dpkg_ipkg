@@ -64,3 +64,5 @@ printinfo:
 
 tag: 
 	cvs tag $(CVSTAG)
+
+source: tag dist-upload
