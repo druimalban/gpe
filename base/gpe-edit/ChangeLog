@@ -1,0 +1,5 @@
+2002-07-29  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-edit.menu: Give full path to icon. Move to section PIM (to
+	conform to http://familiar.handhelds.org/policy/menu.html)
+
