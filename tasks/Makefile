@@ -63,7 +63,7 @@ DEP_gpe-apps2 = \
 
 
 #---This is the base to run GPE
-VER_gpe-task-base = 0.4
+VER_gpe-task-base = 0.5
 DEP_gpe-task-base = \
     \
     gpe-collateral-gtk2, \
@@ -89,6 +89,7 @@ DEP_gpe-task-base = \
     minibat, \
     minipredict, \
     matchbox-panel-hacks, \
+    mbinputmgr,
     \
     xstroke, \
     xkbd, \
