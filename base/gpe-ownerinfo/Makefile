@@ -56,7 +56,6 @@ $(PACKAGE): $(OBJS)
 install-program: all 
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
-	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)/etc/gpe/
 
 clean: clean-po

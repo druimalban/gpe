@@ -1,3 +1,7 @@
+2003-07-06  Moray Allan  <moray@sermisy.org>
+
+	* Makefile (install-program): No longer install old-style menu file.
+
 2003-05-06  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/ro.po: Update.
