@@ -338,10 +338,7 @@ create_edit (void)
   GtkWidget *edit_cancel;
   GtkWidget *edit_save;
   GtkWidget *edit_delete = NULL;
-  GtkTooltips *tooltips;
   GtkWidget *vbox, *action_area;
-
-  tooltips = gtk_tooltips_new ();
 
   if (mode_large_screen)
     {
@@ -399,7 +396,6 @@ create_edit (void)
   g_signal_connect (G_OBJECT (edit), "key_press_event", 
 		    G_CALLBACK (edit_window_key_press_event), edit);
 
-  g_object_set_data (G_OBJECT (edit), "tooltips", tooltips);
   g_object_set_data (G_OBJECT (edit), "notebook2", notebook2);
 
   if (mode_large_screen)

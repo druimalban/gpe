@@ -1,5 +1,7 @@
 2005-02-15  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * db.c (db_check_tags): Speedup and fix, only write data if necessary.
+    * editing.c (create_edit): Removed unused and buggy tooltips code.
     * main.c (build_children): Add basic support for displaying images.
                                Some formating fixes.
 

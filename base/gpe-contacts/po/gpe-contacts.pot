@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-01-01 14:25+0000\n"
+"POT-Creation-Date: 2005-02-08 19:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "EMail"
 msgstr ""
 
-#: editing.c:116 main.c:1227
+#: editing.c:116 main.c:1230
 msgid "Details"
 msgstr ""
 
@@ -68,67 +68,67 @@ msgstr ""
 msgid "No contact selected."
 msgstr ""
 
-#: main.c:553 main.c:1282 main.c:1348
+#: main.c:553 main.c:1285 main.c:1351
 msgid "Contact"
 msgstr ""
 
-#: main.c:1191 gpe-contacts.desktop.in.h:1
+#: main.c:1194 gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr ""
 
-#: main.c:1204
+#: main.c:1207
 msgid "Tap this button to add a new contact."
 msgstr ""
 
-#: main.c:1211
+#: main.c:1214
 msgid "Edit"
 msgstr ""
 
-#: main.c:1212
+#: main.c:1215
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: main.c:1218
+#: main.c:1221
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: main.c:1228
+#: main.c:1231
 msgid "Tap here to show contacts details."
 msgstr ""
 
-#: main.c:1237
+#: main.c:1240
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: main.c:1242
+#: main.c:1245
 msgid "Properties"
 msgstr ""
 
-#: main.c:1242
+#: main.c:1245
 msgid "Tap here to configure this program."
 msgstr ""
 
-#: main.c:1248
+#: main.c:1251
 msgid "Close"
 msgstr ""
 
-#: main.c:1248
+#: main.c:1251
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
-#: main.c:1308
+#: main.c:1311
 msgid "Find:"
 msgstr ""
 
-#: main.c:1315
+#: main.c:1318
 msgid "in"
 msgstr ""
 
-#: main.c:1501
+#: main.c:1504
 msgid "My Card"
 msgstr ""
 
-#: main.c:1504
+#: main.c:1507
 msgid "Saving vcard failed"
 msgstr ""
 
@@ -185,7 +185,7 @@ msgid "Tap here to delete the selected item."
 msgstr ""
 
 #. TRANSLATORS: kB = kilo bytes
-#: configure.c:131 configure.c:337
+#: configure.c:131 configure.c:341
 msgid "Current size:"
 msgstr ""
 
@@ -193,79 +193,79 @@ msgstr ""
 msgid "kB (optimised)"
 msgstr ""
 
-#: configure.c:177
-msgid "<b>Detail panel:</b>"
+#: configure.c:178
+msgid "Detail panel:"
 msgstr ""
 
-#: configure.c:203
+#: configure.c:207
 msgid "NAME"
 msgstr ""
 
-#: configure.c:213
+#: configure.c:217
 msgid "Add"
 msgstr ""
 
-#: configure.c:220
+#: configure.c:224
 msgid "Remove"
 msgstr ""
 
-#: configure.c:242
+#: configure.c:246
 msgid "Label"
 msgstr ""
 
-#: configure.c:247
+#: configure.c:251
 msgid "Data item"
 msgstr ""
 
-#: configure.c:291
+#: configure.c:295
 msgid "Screen Layout"
 msgstr ""
 
-#: configure.c:297
+#: configure.c:301
 msgid "List position"
 msgstr ""
 
-#: configure.c:300
+#: configure.c:304
 msgid "left"
 msgstr ""
 
-#: configure.c:302
+#: configure.c:306
 msgid "right"
 msgstr ""
 
-#: configure.c:330
+#: configure.c:334
 msgid "Database Size"
 msgstr ""
 
-#: configure.c:337
+#: configure.c:341
 msgid "kB"
 msgstr ""
 
-#: configure.c:342
+#: configure.c:346
 msgid "Actions"
 msgstr ""
 
-#: configure.c:349
+#: configure.c:353
 msgid "Optimise database"
 msgstr ""
 
-#: configure.c:352
+#: configure.c:356
 msgid "Run"
 msgstr ""
 
-#: configure.c:458
+#: configure.c:462
 msgid "Editing Layout"
 msgstr ""
 
-#: configure.c:460
+#: configure.c:464
 msgid "Setup"
 msgstr ""
 
-#: configure.c:461
+#: configure.c:465
 msgid "Database"
 msgstr ""
 
-#: configure.c:493
+#: configure.c:497
 msgid "Contacts: Configuration"
 msgstr ""
 

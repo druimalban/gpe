@@ -77,13 +77,18 @@ db_check_tags(void)
       for (iter = list; iter; iter = iter->next)
         {
            gchar *utag = g_ascii_strup (iter->data, -1);
-           r = sqlite_exec_printf (db, "update contacts set tag='%q' where (tag='%q')", 
+           if (strcmp(iter->data, utag))
+             {
+               r = sqlite_exec_printf (db, "update contacts set tag='%q' where (tag='%q')", 
                                    NULL, NULL, &err, utag, iter->data);
-           if (r) 
-             fprintf(stderr, "Err: %s\n", err);
-           if (r)
-             free (err);
+               if (r) 
+                 {
+                   fprintf(stderr, "Err: %s\n", err);
+                   free (err);
+                 }
+             }
            g_free(iter->data);
+           g_free(utag);
         }
       g_slist_free(list);
     }
