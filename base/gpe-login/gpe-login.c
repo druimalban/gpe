@@ -78,11 +78,6 @@ static Atom suspended_atom;
 static int hard_key_length = 4;
 static gchar *hard_key_buf;
 
-static struct gpe_icon my_icons[] = {
-  { "ok", "ok" },
-  { NULL, NULL }
-};
-
 typedef struct
 {
   const gchar *name;
@@ -700,8 +695,6 @@ main (int argc, char *argv[])
 
   signal (SIGCHLD, SIG_IGN);
 
-  gpe_load_icons (my_icons);
-
   if (! autolock_mode)
     {
       if (access (GPE_LOGIN_SETUP, X_OK) == 0)
@@ -842,7 +835,7 @@ main (int argc, char *argv[])
   menu = gtk_menu_new ();
   slurp_passwd (menu);
 
-  ok_button = gpe_picture_button (window->style, _("OK"), "ok");
+  ok_button = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
 
   vbox2 = gtk_vbox_new (FALSE, 0);
 
