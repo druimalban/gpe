@@ -700,7 +700,7 @@ char* get_color_from_widget(GtkWidget* w)
   r = acolor.red >> 8;
   g = acolor.green >> 8;
   b = acolor.blue >> 8;
-  result = g_strdup_printf("#%02x%02x%02x",r,g,b);
+  result = g_strdup_printf("rgb:%02x/%02x/%02x",r,g,b);
   return result;
 }
 
@@ -767,7 +767,7 @@ Theme_Save ()
 	
 	/* desktop font color */
 	confstr = get_color_from_widget(self.bColorFont);
-	system_printf ("xst write %s%s str \"%s\"", KEY_MATCHBOX, "Desktop/FontColor", confstr);
+	system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Desktop/FontColor", confstr);
 	free(confstr);
 	
 	/* application font type and size */

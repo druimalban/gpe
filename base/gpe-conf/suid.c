@@ -503,6 +503,11 @@ suidloop (int write, int read)
 					fscanf (in, "%100s", arg1);
 					update_packages ();
 				}
+				else if (strcmp (cmd, "NWIS") == 0)  // run package installation
+				{
+					fscanf (in, "%100s", arg1);
+					do_package_install (arg1);
+				}
 				else if (strcmp (cmd, "PAIS") == 0)  // install a ipk package
 				{
 					fscanf (in, "%100s", arg1);

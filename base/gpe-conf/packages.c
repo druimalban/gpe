@@ -42,8 +42,10 @@
 /* --- module global variables --- */
 
 static GtkWidget *notebook;
-static GtkWidget *txLog;
-static GtkWidget *bUpdate;
+static GtkWidget *txLog, *txLog2;
+static GtkWidget *bUpdate, *bInstall;
+static GtkWidget *ePackage;
+static int timeout = -1;
 
 /* --- local intelligence --- */
 
@@ -138,7 +140,9 @@ static gboolean poll_log_pipe_update()
      if (strstr(str,"<end>")) 
      {
        gtk_button_set_label(GTK_BUTTON(bUpdate),_("Start"));
-	   gtk_widget_set_sensitive(bUpdate,TRUE);
+       gtk_timeout_remove(timeout);
+       gtk_widget_set_sensitive(bInstall,TRUE);
+       gtk_widget_set_sensitive(bUpdate,TRUE);
        printlog(txLog,_("Update finished. Please check log messages for errors."));
 	 }
 	 else
@@ -149,6 +153,33 @@ static gboolean poll_log_pipe_update()
   return TRUE;	
 }
 
+
+static gboolean poll_log_pipe_install()
+{
+  static char str[256];
+  struct pollfd pfd[1];
+
+  pfd[0].fd = suidinfd;
+  pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
+    
+  while (poll(pfd,1,0))
+  {
+     fgets (str, 255, suidin);
+     if (strstr(str,"<end>")) 
+     {
+       gtk_timeout_remove(timeout);
+       gtk_widget_set_sensitive(bInstall,TRUE);
+       gtk_widget_set_sensitive(bUpdate,TRUE);
+       gtk_button_set_label(GTK_BUTTON(bInstall),_("Install"));
+       printlog(txLog2,_("Install finished. Please check log messages for errors."));
+	 }
+	 else
+	 {
+       printlog(txLog2,str);
+	 }
+  }
+  return TRUE;	
+}
 /*
  *  This function is called from suid task to perform the update.  
  *  Any output is returned through pipe.
@@ -178,6 +209,7 @@ void do_package_update()
   fsync(nsreturnfd);
 }
 
+
 void on_network_update_clicked(GtkButton *button, gpointer user_data)
 {
   GtkTextBuffer *logbuf;
@@ -185,15 +217,44 @@ void on_network_update_clicked(GtkButton *button, gpointer user_data)
 	
   gtk_button_set_label(button,_("Running..."));
   gtk_widget_set_sensitive(bUpdate,FALSE);
+  gtk_widget_set_sensitive(bInstall,FALSE);
 	
   /* clear log */	
   logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
   gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
   gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
   gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
+
+  timeout = gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_update, NULL);
 	
   suid_exec("NWUD","NWUD");
 	
+}
+
+
+void on_package_install_clicked(GtkButton *button, gpointer user_data)
+{
+  GtkTextBuffer *logbuf;
+  GtkTextIter start,end;
+  gchar *pname;
+	
+  gtk_button_set_label(button,_("Running..."));
+  gtk_widget_set_sensitive(bInstall,FALSE);
+  gtk_widget_set_sensitive(bUpdate,FALSE);
+	
+  /* clear log */	
+  logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog2));
+  gtk_text_buffer_get_start_iter(GTK_TEXT_BUFFER(logbuf),&start);
+  gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
+  gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
+
+  pname = gtk_editable_get_chars(GTK_EDITABLE(ePackage),0,-1);
+
+  timeout = gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_install, NULL);
+	
+  suid_exec("NWIS",pname);
+
+  g_free(pname);	
 }
 
 /* --- gpe-conf interface --- */
@@ -229,7 +290,8 @@ Packages_Build_Objects (void)
   gtk_container_set_border_width (GTK_CONTAINER (notebook), gpe_get_border ());
   
   gtk_object_set_data(GTK_OBJECT(notebook),"tooltips",tooltips);
-	
+
+  /* update tab */	
   vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
   cur = gtk_label_new(_("Update"));
@@ -265,8 +327,48 @@ Packages_Build_Objects (void)
   gtk_container_add(GTK_CONTAINER(cur),txLog);
   gtk_box_pack_start_defaults(GTK_BOX(vbox),cur);	
    
-  gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_update, NULL);
+  /* install tab */
+  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
 
+  cur = gtk_label_new(_("Install"));
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,cur);
+
+  cur = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+  tmp = g_strdup_printf("<b>%s</b>",_("Install a package"));
+  gtk_label_set_markup(GTK_LABEL(cur),tmp);
+  free(tmp);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+
+  ePackage = gtk_entry_new();
+  gtk_box_pack_start(GTK_BOX(vbox),ePackage,FALSE,TRUE,0);	
+  gtk_tooltips_set_tip (tooltips, ePackage, _("Enter name of package to be installed here."), NULL);
+  
+  cur = gtk_button_new_with_label(_("Install"));
+  bInstall = cur;
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,FALSE,gpe_get_boxspacing());	
+  g_signal_connect(G_OBJECT (cur), "clicked",G_CALLBACK(on_package_install_clicked),NULL);
+  gtk_tooltips_set_tip (tooltips, cur, _("Install a package from a configured source."), NULL);
+  
+  cur = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(cur),0.0,0.5);
+  tmp = g_strdup_printf("<b>%s</b>",_("Activity log"));
+  gtk_label_set_markup(GTK_LABEL(cur),tmp);
+  free(tmp);
+  gtk_box_pack_start(GTK_BOX(vbox),cur,FALSE,TRUE,0);	
+  
+  cur = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(cur),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(cur),GTK_SHADOW_IN);
+  gtk_tooltips_set_tip (tooltips, cur, _("This window shows all output from the packet manager installing the package."), NULL);
+  
+  txLog2 = gtk_text_view_new();
+  gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txLog2),GTK_WRAP_WORD);
+  gtk_container_add(GTK_CONTAINER(cur),txLog2);
+  gtk_box_pack_start_defaults(GTK_BOX(vbox),cur);	
+  
+  /* todo: config tab */
+   
   /* change buffering of suid process input pipe */
   if (setvbuf(suidin,NULL,_IONBF,0) != 0) 
     fprintf(stderr,"gpe-conf: error setting buffer size!");
