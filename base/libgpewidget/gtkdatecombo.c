@@ -270,8 +270,8 @@ gtk_date_combo_ignore_year (GtkDateCombo *combo, gboolean yes)
   if (combo->ignore_year != yes)
     {
       combo->ignore_year = yes;
-      if (c->year == 0) 
-        c->year = 2000;
+      if (combo->year == 0) 
+        combo->year = 2000;
       update_text(combo);
     }
 }
