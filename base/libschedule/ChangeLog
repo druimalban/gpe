@@ -1,4 +1,8 @@
 2004-02-23  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+                                                                                
+        * release version 0.12 
+                                                                                
+2004-02-23  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 	
 	* atd.c : using Nils fix for re-scheduling issues
 
