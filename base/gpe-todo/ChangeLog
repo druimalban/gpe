@@ -1,5 +1,9 @@
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.34 released.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
 	* main.c (open_window): Use gtk_widget_show_all.
 
 	* todo-ui.c (edit_item): Set border width on container.  Remove
