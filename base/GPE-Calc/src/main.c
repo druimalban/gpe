@@ -20,8 +20,10 @@ GtkWidget *GPE_Calc;
   gtk_set_locale ();
   gtk_init (&argc, &argv);
 
+#if 0
   add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
   add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
+#endif
 
   GPE_Calc=create_GPE_Calc();
   gtk_widget_show(GPE_Calc);

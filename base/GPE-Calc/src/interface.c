@@ -264,35 +264,35 @@ create_GPE_Calc (void)
                       GTK_SIGNAL_FUNC (on_Point_clicked),
                       NULL);
   gtk_signal_connect (GTK_OBJECT (Three), "clicked",
-                      GTK_SIGNAL_FUNC (on_Three_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "3");
   gtk_signal_connect (GTK_OBJECT (Six), "clicked",
-                      GTK_SIGNAL_FUNC (on_Six_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "6");
   gtk_signal_connect (GTK_OBJECT (Nine), "clicked",
-                      GTK_SIGNAL_FUNC (on_Nine_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "9");
   gtk_signal_connect (GTK_OBJECT (Zero), "clicked",
-                      GTK_SIGNAL_FUNC (on_Zero_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "0");
   gtk_signal_connect (GTK_OBJECT (Two), "clicked",
-                      GTK_SIGNAL_FUNC (on_Two_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "2");
   gtk_signal_connect (GTK_OBJECT (Five), "clicked",
-                      GTK_SIGNAL_FUNC (on_Five_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "5");
   gtk_signal_connect (GTK_OBJECT (Eight), "clicked",
-                      GTK_SIGNAL_FUNC (on_Eight_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "8");
   gtk_signal_connect (GTK_OBJECT (Seven), "clicked",
-                      GTK_SIGNAL_FUNC (on_Seven_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "7");
   gtk_signal_connect (GTK_OBJECT (Four), "clicked",
-                      GTK_SIGNAL_FUNC (on_Four_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "4");
   gtk_signal_connect (GTK_OBJECT (One), "clicked",
-                      GTK_SIGNAL_FUNC (on_One_clicked),
-                      NULL);
+                      GTK_SIGNAL_FUNC (on_number_clicked),
+                      "1");
 
   return GPE_Calc;
 }

@@ -292,8 +292,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Three_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:01:43 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;3&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:58 GMT</last_modification_time>
 	</signal>
 	<label>3</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -319,8 +320,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Six_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:02:15 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;6&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:34 GMT</last_modification_time>
 	</signal>
 	<label>6</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -346,8 +348,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Nine_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:02:39 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;9&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:11 GMT</last_modification_time>
 	</signal>
 	<label>9</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -373,8 +376,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Zero_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:01:02 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;0&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:14:06 GMT</last_modification_time>
 	</signal>
 	<label>0</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -400,8 +404,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Two_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:01:35 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;2&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:50 GMT</last_modification_time>
 	</signal>
 	<label>2</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -427,8 +432,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Five_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:02:07 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;5&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:26 GMT</last_modification_time>
 	</signal>
 	<label>5</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -454,8 +460,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Eight_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:02:47 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;8&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:03 GMT</last_modification_time>
 	</signal>
 	<label>8</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -481,8 +488,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Seven_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:02:59 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;7&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:12:52 GMT</last_modification_time>
 	</signal>
 	<label>7</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -508,8 +516,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_Four_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:01:59 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;4&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:19 GMT</last_modification_time>
 	</signal>
 	<label>4</label>
 	<relief>GTK_RELIEF_NORMAL</relief>
@@ -535,8 +544,9 @@
 	<can_focus>True</can_focus>
 	<signal>
 	  <name>clicked</name>
-	  <handler>on_One_clicked</handler>
-	  <last_modification_time>Sun, 07 Apr 2002 15:01:26 GMT</last_modification_time>
+	  <handler>on_number_clicked</handler>
+	  <data>&quot;1&quot;</data>
+	  <last_modification_time>Fri, 10 May 2002 22:13:43 GMT</last_modification_time>
 	</signal>
 	<label>1</label>
 	<relief>GTK_RELIEF_NORMAL</relief>

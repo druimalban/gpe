@@ -34,41 +34,5 @@ on_Point_clicked                       (GtkButton       *button,
                                         gpointer         user_data);
 
 void
-on_Three_clicked                       (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Six_clicked                         (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Nine_clicked                        (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Zero_clicked                        (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Two_clicked                         (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Five_clicked                        (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Eight_clicked                       (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Seven_clicked                       (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_Four_clicked                        (GtkButton       *button,
-                                        gpointer         user_data);
-
-void
-on_One_clicked                         (GtkButton       *button,
+on_number_clicked                      (GtkButton       *button,
                                         gpointer         user_data);
