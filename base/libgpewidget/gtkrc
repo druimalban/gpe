@@ -1,0 +1,72 @@
+# ------------------------------------------------------------------------
+
+# the normal gpe font
+style "gpe_normal"
+{
+  font = "-*-helvetica-medium-r-*-*-12-*-*-*-p-*-iso8859-1"
+  fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}
+
+# the same normal font in bold
+style "gpe_bold"
+{
+  font = "-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1"
+  fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}
+
+# the same normal font in italic
+style "gpe_italic"
+{
+  font = "-*-helvetica-medium-o-*-*-12-*-*-*-*-*-iso8859-1"
+  fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}
+
+# the same normal font in bold-italic
+style "gpe_bold_italic"
+{
+  font = "-*-helvetica-bold-o-*-*-12-*-*-*-*-*-iso8859-1"
+  fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}
+
+# ------------------------------------------------------------------------
+
+# Used as the Today frame title:
+style "gpe_today_title" = "gpe_bold"
+{
+}
+
+# Used in the Today view:
+#    "there is an appointment today"
+style "gpe_appt_today" = "gpe_bold"
+{
+  fg[NORMAL] = { 0.0, 0.0, 0.0 }
+}
+
+# Used in the Today view:
+#    "an appointment is upcoming soon"
+style "gpe_appt_upcoming" = "gpe_bold"
+{
+  fg[NORMAL] = { 0.6, 0.0, 0.0 }
+}
+
+# Used in the Today view:
+#    "an appointment is ongoing right now"
+style "gpe_appt_ongoing" = "gpe_bold"
+{
+  fg[NORMAL] = { 0.0, 0.0, 0.6 }
+}
+
+# Used in the Today view:
+#    the "Info for <foo>" text
+style "gpe_username" = "gpe_bold"
+{
+  fg[NORMAL] = { 0.3, 0.3, 0.3 }
+}
+
+
+# gpe-login:
+#    "Login incorrect"
+style "gpe_login_incorrect" = "gpe_bold"
+{
+  fg[NORMAL] = { 0.6, 0.0, 0.0 }
+}
