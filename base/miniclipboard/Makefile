@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = miniclipboard
 CVSBUILD = yes
 DEBUG = yes
-VERSION = 0.1
+VERSION = 0.2
 
 MEMBERS = miniclipboard mbpixbuf mbtray
 
