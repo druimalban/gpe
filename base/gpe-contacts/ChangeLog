@@ -1,5 +1,6 @@
 2004-08-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    Released Version 0.28
     * Makefile: Updated version number.
     * main.c: Support of some standard hotkeys (Ctrl+q, Ctrl+n...)
     * db.c: We support contacts without name now.
