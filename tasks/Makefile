@@ -51,6 +51,9 @@ clean:
 #====================================================
 #================= TASKS DEFINITION =================
 
+VER_gpe2 = 0.02
+DEP_gpe2 = gpe-apps2 gpe-task-games
+
 #---Meta tasks
 VER_gpe-apps2 = 0.42
 DEP_gpe-apps2 = \
