@@ -69,7 +69,7 @@ gtk_simple_menu_class_init (GtkSimpleMenuClass * klass)
 
   widget_class->show = gtk_simple_menu_show;
 
-  my_signals[0] = gtk_signal_new ("changed",
+  my_signals[0] = gtk_signal_new ("item-changed",
 				  GTK_RUN_LAST,
 #if GTK_MAJOR_VERSION < 2
 				  oclass->type,

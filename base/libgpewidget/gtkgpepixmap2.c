@@ -89,6 +89,9 @@ gtk_gpe_pixmap_init (GtkGpePixmap *pixmap)
 
   pixmap->pixmap = NULL;
   pixmap->mask = NULL;
+  pixmap->pixmap_active = NULL;
+  pixmap->pixmap_prelight = NULL;
+  pixmap->pixmap_selected = NULL;
 }
 
 GtkWidget*

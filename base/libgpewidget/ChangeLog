@@ -1,5 +1,15 @@
 2002-11-30  Philip Blundell  <philb@gnu.org>
 
+	* gtkgpepixmap.c (gtk_gpe_pixmap_init): Likewise.
+
+	* gtkgpepixmap2.c (gtk_gpe_pixmap_init): Add missing
+	initialisations.
+
+	* gtksimplemenu.c (gtk_simple_menu_class_init): Rename signal from
+	"changed" to "item-changed" to avoid name clash.
+
+2002-11-30  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.28 released.
 
 2002-11-30  Philip Blundell  <philb@gnu.org>
