@@ -2,12 +2,13 @@ PREFIX = /usr/local
 PACKAGE = gpe-edit
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.18
+VERSION = 0.19
 
 MEMBERS = main
-LINGUAS = id pt de zh_TW fr ro wa sv nl
+LINGUAS = id pt de zh_TW fr ro wa sv nl sk
 
-CFLAGS = `pkg-config --cflags gtk+-2.0`
+CFLAGS += $(GPECFLAGS)
+LDFLAGS += $(GPELIBS)
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -16,16 +17,6 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-
-ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
-else
-CFLAGS += -I/usr/include/gpe
-endif
-LDFLAGS += -lgpewidget
-
-LDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CFLAGS += -I../libdisplaymigration
 LDFLAGS += -L../libdisplaymigration -ldisplaymigration

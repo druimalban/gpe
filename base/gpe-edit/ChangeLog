@@ -1,3 +1,13 @@
+2003-09-12  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.19 released.
+
+2003-09-12  Philip Blundell  <philb@gnu.org>
+
+	* Makefile: Use $(GPEFLAGS), $(GPELIBS).
+	(LINGUAS): Add sk.
+	* po/sk.po: New file, courtesy Marcel Telka.
+
 2003-08-05  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add nl.
