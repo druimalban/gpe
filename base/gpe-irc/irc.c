@@ -345,7 +345,7 @@ irc_server_disconnect (IRCServer * server)
 
 
 IRCChannel *
-irc_server_channel_get (IRCServer * server, gchar * channel_name)
+irc_server_channel_get (IRCServer * server, const gchar * channel_name)
 {
   IRCChannel *ircchannel = NULL;
 

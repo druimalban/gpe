@@ -59,7 +59,8 @@ extern gboolean irc_pong (IRCServer *server, gchar *target);
 
 
 /* Some handy functions */
-extern IRCChannel *irc_server_channel_get(IRCServer *server, gchar *channel_name);
+extern IRCChannel *irc_server_channel_get(IRCServer *server,
+	const gchar *channel_name);
 
 
 #endif
