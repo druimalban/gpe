@@ -1,3 +1,29 @@
+2004-10-07  Phil Blundell  <pb@nexus.co.uk>
+
+	* day_view.c (list_key_press_event): Use left/right keys to move
+	between days.
+	
+	* week_view.c (week_view_key_press_event): Replace big list of
+	"if" statements with switch.  Use left/right keys to move between
+	weeks.
+	(draw_expose_event): Draw cursor in blue, not red, to reassure
+	users that nothing is wrong.  Remove ugly grey bar on left of
+	screen.  Add "wide mode" with date labels on left and first event
+	on same line as label.	
+
+	* month_view.c (draw_expose_event): Draw cursor in blue, not red.
+	(button_press): Make button-1 clicks move the highlight, and
+	button-3 clicks pop up the menu.
+	(month_view_update): Provide forward decl.  Simplify handling of
+	active_day a bit.
+
+	* gtkdatesel.c (gtk_date_sel_move_day): New function.
+	(gtk_date_sel_move_week): Likewise.
+	(gtk_date_sel_move_month): Likewise.
+	(day_click, week_click, month_click): Implement in terms of above.
+	* gtkdatesel.h (gtk_date_sel_move_day, gtk_date_sel_move_week,
+	gtk_date_sel_move_month): New prototypes.
+
 2004-10-06 Florian Boor <florian.boor@kernelconcepts.de>
 
     * event-ui.c: Added warning if event starts in the past.

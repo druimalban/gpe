@@ -60,6 +60,9 @@ void            gtk_date_sel_set_time (GtkDateSel *sel, time_t time);
 void            gtk_date_sel_set_month_style (GtkDateSel *sel, GtkDateSelMonthStyle style);
 void            gtk_date_sel_set_day (GtkDateSel *sel, int year, int month, int day);
 
+void		gtk_date_sel_move_week (GtkDateSel *sel, int d);
+void		gtk_date_sel_move_month (GtkDateSel *sel, int d);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

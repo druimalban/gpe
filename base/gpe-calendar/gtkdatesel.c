@@ -82,12 +82,25 @@ days_in_month (struct tm *tm)
     }
 }
 
+void
+gtk_date_sel_move_day (GtkDateSel *sel, int d)
+{
+  sel->time += d * 60 * 60 * 24;
+  sel->day_clamped = -1;
+  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+}
+
 static void
 day_click (GtkWidget *w, GtkDateSel *sel)
 {
   int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
-  sel->time += d * 60 * 60 * 24;
-  sel->day_clamped = -1;
+  gtk_date_sel_move_day (sel, d);
+}
+
+void
+gtk_date_sel_move_week (GtkDateSel *sel, int d)
+{
+  sel->time += d * 60 * 60 * 24 * 7;
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
 }
 
@@ -95,14 +108,12 @@ static void
 week_click (GtkWidget *w, GtkDateSel *sel)
 {
   int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
-  sel->time += d * 60 * 60 * 24 * 7;
-  g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+  gtk_date_sel_move_week (sel, d);
 }
 
-static void
-month_click (GtkWidget *w, GtkDateSel *sel)
+void
+gtk_date_sel_move_month (GtkDateSel *sel, int d)
 {
-  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
   struct tm tm;
   guint mdays;
   localtime_r (&sel->time, &tm);
@@ -143,6 +154,13 @@ month_click (GtkWidget *w, GtkDateSel *sel)
     }
   sel->time = mktime (&tm);
   g_signal_emit (G_OBJECT (sel), my_signals[0], 0);
+}
+
+static void
+month_click (GtkWidget *w, GtkDateSel *sel)
+{
+  int d = g_object_get_data (G_OBJECT (w), "direction") ? 1 : -1;
+  gtk_date_sel_move_month (sel, d);
 }
 
 static void

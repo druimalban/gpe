@@ -105,7 +105,8 @@ list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
   
   if (k->keyval == GDK_Down)
   {
-    gtk_clist_select_row(GTK_CLIST(clist),row + 1, 0);
+    gtk_clist_select_row (GTK_CLIST(clist),row + 1, 0);
+
     if (row == lastrow)
       {
         lastrow = -1;
@@ -117,7 +118,19 @@ list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
         return FALSE;
       }
   }
+
+  if (k->keyval == GDK_Left)
+    {
+      gtk_date_sel_move_day (datesel, -1);
+      return TRUE;
+    }
   
+  if (k->keyval == GDK_Right)
+    {
+      gtk_date_sel_move_day (datesel, 1);
+      return TRUE;
+    }
+
   if (k->keyval == GDK_Return)
   {
     if (row >= 0)

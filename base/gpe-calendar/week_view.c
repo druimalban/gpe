@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,41 +63,43 @@ draw_expose_event (GtkWidget *widget,
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
   GdkGC *black_gc;
-  GdkGC *gray_gc;
   GdkGC *white_gc;
-  GdkGC *red_gc;
+  GdkGC *blue_gc;
   guint max_width;
   guint max_height;
   guint day;
-  GdkColor red;
+  GdkColor blue;
   GdkColormap *colormap;
   PangoLayout *pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
   PangoLayout *pl_evt = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
   gboolean draw_sep = FALSE;
+  gboolean wide_mode = FALSE;
+  gint day_label_width = 0;
 
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
-  red_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (red_gc, widget->style->black_gc);
+  if (widget->allocation.width > widget->allocation.height)
+    wide_mode = TRUE;
+
+  blue_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (blue_gc, widget->style->black_gc);
   colormap = gdk_window_get_colormap (widget->window);
-  red.red = 0xffff;
-  red.green = 0;
-  red.blue = 0;
-  gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
-  gdk_gc_set_foreground (red_gc, &red);
+  blue.red = 0;
+  blue.green = 0;
+  blue.blue = 0xffff;
+  gdk_colormap_alloc_color (colormap, &blue, FALSE, TRUE);
+  gdk_gc_set_foreground (blue_gc, &blue);
 
   darea = GTK_DRAWING_AREA (widget);
   drawable = widget->window;
   white_gc = widget->style->white_gc;
-  gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
   max_width = widget->allocation.width;
   max_height = widget->allocation.height;
 
   gdk_gc_set_clip_rectangle (black_gc, &event->area);
-  gdk_gc_set_clip_rectangle (red_gc, &event->area);
-  gdk_gc_set_clip_rectangle (gray_gc, &event->area);
+  gdk_gc_set_clip_rectangle (blue_gc, &event->area);
   gdk_gc_set_clip_rectangle (white_gc, &event->area);
 
   for (day = 0; day < 7; day++)
@@ -105,6 +107,20 @@ draw_expose_event (GtkWidget *widget,
       GSList *iter;
       for (iter = week_days[day].events; iter; iter = iter->next)
         ((event_t)iter->data)->mark = FALSE;
+    }
+
+  if (wide_mode)
+    {
+      for (day = 0; day < 7; day++)
+	{
+	  PangoRectangle pr;
+
+	  pango_layout_set_width (pl, max_width * PANGO_SCALE);
+	  pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
+	  pango_layout_get_pixel_extents (pl, &pr, NULL);
+	  if (pr.width > day_label_width)
+	    day_label_width = pr.width;
+	}
     }
 
   for (day = 0; day < 7; day++)
@@ -117,15 +133,12 @@ draw_expose_event (GtkWidget *widget,
         gdk_draw_line (drawable, black_gc, 0, y, max_width, y);
 
       gdk_draw_rectangle (drawable, white_gc, 
-			  TRUE, time_width, y + 1, max_width - time_width, max_height);
-
-      gdk_draw_rectangle (drawable, gray_gc, 
-			  TRUE, 0, y + 1, time_width, max_height);
+			  TRUE, 0, y + 1, max_width, max_height);
 
       pango_layout_set_width (pl, max_width * PANGO_SCALE);
       pango_layout_set_markup (pl, week_days[day].string, strlen (week_days[day].string));
       pango_layout_get_pixel_extents (pl, &pr, NULL);
-      x = max_width - pr.width - 8;
+      x = wide_mode ? 4 : max_width - pr.width - 8;
       gtk_paint_layout (widget->style,
 			widget->window,
 			GTK_WIDGET_STATE (widget),
@@ -135,7 +148,9 @@ draw_expose_event (GtkWidget *widget,
 			"label",
 			x, y,
 			pl);
-      y += pr.height + 2;
+
+      if (!wide_mode)
+	y += pr.height + 2;
 
       if (week_days[day].events)
       {
@@ -146,35 +161,36 @@ draw_expose_event (GtkWidget *widget,
 	      struct tm tm;
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
+	      int x = wide_mode ? day_label_width + 8 : 2;
 	      
 	      if ((ev->flags & FLAG_UNTIMED) == 0)
-            {
-              if (ev->mark == FALSE)
-                {
-                  gchar *buffer;
-                  localtime_r (&ev->start, &tm);
-                  strftime (buf, sizeof (buf), "%H:%M", &tm);
-                  buffer = g_locale_to_utf8 (buf, -1, NULL,
-                             NULL, NULL);
-                  pango_layout_set_text (pl_evt, buffer, strlen (buffer));
-                  gtk_paint_layout (widget->style,
-                        widget->window,
-                        GTK_WIDGET_STATE (widget),
-                        FALSE,
-                        &event->area,
-                        widget,
-                        "label",
-                        2, y - 2,
-                        pl_evt);
-    
-                  pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
-                  if (height < pr.height)
-                    height = pr.height;
-                  ev->mark = TRUE;
-                  g_free (buffer);
-                }
-              }
-
+		{
+		  if (ev->mark == FALSE)
+		    {
+		      gchar *buffer;
+		      localtime_r (&ev->start, &tm);
+		      strftime (buf, sizeof (buf), "%H:%M", &tm);
+		      buffer = g_locale_to_utf8 (buf, -1, NULL,
+						 NULL, NULL);
+		      pango_layout_set_text (pl_evt, buffer, strlen (buffer));
+		      gtk_paint_layout (widget->style,
+					widget->window,
+					GTK_WIDGET_STATE (widget),
+					FALSE,
+					&event->area,
+					widget,
+					"label",
+					x, y,
+					pl_evt);
+		      
+		      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
+		      if (height < pr.height)
+			height = pr.height;
+		      ev->mark = TRUE;
+		      g_free (buffer);
+		    }
+		}
+	      
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
 	      pango_layout_set_text (pl_evt, evd->summary, -1);
 	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
@@ -185,22 +201,22 @@ draw_expose_event (GtkWidget *widget,
 				&event->area,
 				widget,
 				"label",
-				2 + time_width, y - 2,
+				x + time_width + 4, y,
 				pl_evt);
 
-          if (height < pr.height)
-            height = pr.height;
-
+	      if (height < pr.height)
+		height = pr.height;
+	      
 	      y += height + 2;
 	    }
 	}
 
-	  if (week_days[day].is_today)
+      if (week_days[day].is_today)
         {
-	      gdk_draw_rectangle (drawable, red_gc, FALSE, 0, 
+	  gdk_draw_rectangle (drawable, blue_gc, FALSE, 0, 
                               week_days[day].y0, max_width, 
                               week_days[day].y1 - week_days[day].y0);
-          gdk_draw_rectangle (drawable, red_gc, FALSE, 1, 
+          gdk_draw_rectangle (drawable, blue_gc, FALSE, 1, 
                               week_days[day].y0 + 1, max_width - 2, 
                               week_days[day].y1 - week_days[day].y0 - 2);
           draw_sep = FALSE;
@@ -209,7 +225,7 @@ draw_expose_event (GtkWidget *widget,
        draw_sep = TRUE;
   }
 
-  gdk_gc_unref (red_gc);
+  gdk_gc_unref (blue_gc);
 
   g_object_unref (pl);
   g_object_unref (pl_evt);
@@ -399,87 +415,91 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 {
   int i;
   struct render_ctl *c;
-  
-  if (k->keyval == GDK_Escape)
+
+  switch (k->keyval)
     {
+    case GDK_Escape:
       for (i=0;i<7;i++)
-      if (week_days[i].is_active)
-        {
-          c = &week_days[i].rc;
-          if (c->valid)
-            {
-              if (pop_window) 
-                gtk_widget_destroy (pop_window);
+	if (week_days[i].is_active)
+	  {
+	    c = &week_days[i].rc;
+	    if (c->valid)
+	      {
+		if (pop_window) 
+		  gtk_widget_destroy (pop_window);
                 pop_window = NULL;
                 c_old = NULL;
-            }    
-        }
-    }
-    
-  if (k->keyval == GDK_Down) 
-  {
-    for (i=0;i<7;i++)
-      if (week_days[i].is_active)
-        {
-          if (i < 6) 
-            {
-              week_days[i].is_active = FALSE;
-              week_days[i+1].is_active = TRUE;
-              c = &week_days[i+1].rc;
-              viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
-              week_view_update();
-            }
-          break;
-        }
-    return TRUE;
-  }
-  if (k->keyval == GDK_Up) 
-  {
-    for (i=0;i<7;i++)
-      if (week_days[i].is_active)
-        {
-          if (i > 0) 
-            {
-              week_days[i].is_active = FALSE;
-              week_days[i-1].is_active = TRUE;
-              c = &week_days[i-1].rc;
-              viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
-              week_view_update();
-            }
-          break;
-        }
-    return TRUE;
-  }
+	      }    
+	  }
+      return TRUE;
 
-  if (k->keyval == GDK_space)
-    {
+    case GDK_Left:
+      gtk_date_sel_move_week (datesel, -1);
+      return TRUE;
+
+    case GDK_Right:
+      gtk_date_sel_move_week (datesel, 1);
+      return TRUE;
+
+    case GDK_Down:
       for (i=0;i<7;i++)
-          if (week_days[i].is_active) break;
+	if (week_days[i].is_active)
+	  {
+	    if (i < 6) 
+	      {
+		week_days[i].is_active = FALSE;
+		week_days[i+1].is_active = TRUE;
+		c = &week_days[i+1].rc;
+		viewtime = time_from_day (c->popup.year,c->popup.month,c->popup.day);
+		week_view_update ();
+	      }
+	    break;
+	  }
+      return TRUE;
+
+    case GDK_Up:
+      for (i=0;i<7;i++)
+	if (week_days[i].is_active)
+	  {
+	    if (i > 0) 
+	      {
+		week_days[i].is_active = FALSE;
+		week_days[i-1].is_active = TRUE;
+		c = &week_days[i-1].rc;
+		viewtime = time_from_day (c->popup.year,c->popup.month,c->popup.day);
+		week_view_update ();
+	      }
+	    break;
+	  }
+      return TRUE;
+
+    case GDK_space:
+      for (i=0;i<7;i++)
+	if (week_days[i].is_active) 
+	  break;
             
       c = &week_days[i].rc;
       if (c->valid)
         {
           if (pop_window) 
             gtk_widget_destroy (pop_window);
-              if (c != c_old) 
+	  if (c != c_old) 
             {
               pop_window = day_popup (main_window, &c->popup, FALSE);
               c_old = c;
             }
-           else 
-            {
-              pop_window = NULL;
-              c_old = NULL;
-            }
-         }
-         return TRUE;
-     }  
-     
-  if (k->keyval == GDK_Return)
-    {
+	  else 
+	    {
+	      pop_window = NULL;
+	      c_old = NULL;
+	    }
+	}
+      return TRUE;
+
+    case GDK_Return:
       for (i=0;i<7;i++)
-         if (week_days[i].is_active) break;
-            
+	if (week_days[i].is_active) break;
+      
       c = &week_days[i].rc;
       if (c->valid)
         {

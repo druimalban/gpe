@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -45,6 +45,8 @@ struct render_ctl
 
 static struct render_ctl rc[TOTAL_DAYS];
 
+static gint month_view_update (void);
+
 static gboolean
 button_press (GtkWidget *widget,
 	      GdkEventButton *event,
@@ -71,21 +73,28 @@ button_press (GtkWidget *widget,
     {
       if (event->type == GDK_BUTTON_PRESS)
 	{
-	  if (pop_window) 
-	    gtk_widget_destroy (pop_window);
+	  if (event->button == 3)
+	    {
+	      if (pop_window) 
+		gtk_widget_destroy (pop_window);
 
-	  if (c != c_old) 
-	    {
-	      pop_window = day_popup (main_window, &c->popup, TRUE);
-	      c_old = c;
+	      if (c != c_old) 
+		{
+		  pop_window = day_popup (main_window, &c->popup, TRUE);
+		  c_old = c;
+		}
+	      else 
+		{
+		  pop_window = NULL;
+		  c_old = NULL;
+		}
 	    }
-	  else 
+	  else
 	    {
-	      pop_window = NULL;
-	      c_old = NULL;
+	      viewtime = time_from_day (c->popup.year, c->popup.month, c->popup.day);
+	      month_view_update ();
 	    }
 	}
-      
       else if (event->type == GDK_2BUTTON_PRESS)
         {
           struct tm tm;
@@ -118,11 +127,11 @@ draw_expose_event (GtkWidget *widget,
   GdkGC *cream_gc;
   GdkGC *light_gray_gc;
   GdkGC *dark_gray_gc;
-  GdkGC *red_gc;
+  GdkGC *blue_gc;
   GdkColor cream;
   GdkColor light_gray;
   GdkColor dark_gray;
-  GdkColor red;
+  GdkColor blue;
   GdkColormap *colormap;
   guint i, j;
   PangoLayout *pl;
@@ -130,24 +139,25 @@ draw_expose_event (GtkWidget *widget,
   static nl_item days[7];
   
   if (week_starts_monday) 
-  {
-  	  days[0] = ABDAY_2;
-  	  days[1] = ABDAY_3;
-  	  days[2] = ABDAY_4;
-  	  days[3] = ABDAY_5;
-  	  days[4] = ABDAY_6;
-  	  days[5] = ABDAY_7;
-  	  days[6] = ABDAY_1;
-  }
-  else {
-  	  days[0] = ABDAY_1;
-  	  days[1] = ABDAY_2;
-  	  days[2] = ABDAY_3;
-  	  days[3] = ABDAY_4;
-  	  days[4] = ABDAY_5;
-  	  days[5] = ABDAY_6;
-  	  days[6] = ABDAY_7;
-  }
+    {
+      days[0] = ABDAY_2;
+      days[1] = ABDAY_3;
+      days[2] = ABDAY_4;
+      days[3] = ABDAY_5;
+      days[4] = ABDAY_6;
+      days[5] = ABDAY_7;
+      days[6] = ABDAY_1;
+    }
+  else 
+    {
+      days[0] = ABDAY_1;
+      days[1] = ABDAY_2;
+      days[2] = ABDAY_3;
+      days[3] = ABDAY_4;
+      days[4] = ABDAY_5;
+      days[5] = ABDAY_6;
+      days[6] = ABDAY_7;
+    }
   
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
@@ -169,13 +179,13 @@ draw_expose_event (GtkWidget *widget,
   gdk_colormap_alloc_color (colormap, &light_gray, FALSE, TRUE);
   gdk_gc_set_foreground (light_gray_gc, &light_gray);
 
-  red_gc = gdk_gc_new (widget->window);
-  gdk_gc_copy (red_gc, widget->style->black_gc);
-  red.red = 65535;
-  red.green = 0;
-  red.blue = 0;
-  gdk_colormap_alloc_color (colormap, &red, FALSE, TRUE);
-  gdk_gc_set_foreground (red_gc, &red);
+  blue_gc = gdk_gc_new (widget->window);
+  gdk_gc_copy (blue_gc, widget->style->black_gc);
+  blue.red = 0;
+  blue.green = 0;
+  blue.blue = 0xffff;
+  gdk_colormap_alloc_color (colormap, &blue, FALSE, TRUE);
+  gdk_gc_set_foreground (blue_gc, &blue);
 
   dark_gray_gc = gdk_gc_new (widget->window);
   gdk_gc_copy (dark_gray_gc, widget->style->black_gc);
@@ -193,7 +203,7 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (cream_gc, &event->area);
   gdk_gc_set_clip_rectangle (light_gray_gc, &event->area);
   gdk_gc_set_clip_rectangle (dark_gray_gc, &event->area);
-  gdk_gc_set_clip_rectangle (red_gc, &event->area);
+  gdk_gc_set_clip_rectangle (blue_gc, &event->area);
 
   pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
 
@@ -292,9 +302,9 @@ draw_expose_event (GtkWidget *widget,
 
 	  if ((!force_today && c->active) || (force_today && c->today))
 	    {
-	      gdk_draw_rectangle (drawable, red_gc, FALSE,
+	      gdk_draw_rectangle (drawable, blue_gc, FALSE,
 				  x, y, xs, ys);
-	      gdk_draw_rectangle (drawable, red_gc, FALSE,
+	      gdk_draw_rectangle (drawable, blue_gc, FALSE,
 				  x + 1, y + 1, xs - 2, ys - 2);
 	    }
 	}
@@ -304,7 +314,7 @@ draw_expose_event (GtkWidget *widget,
   gdk_gc_set_clip_rectangle (gray_gc, NULL);
   gdk_gc_set_clip_rectangle (white_gc, NULL);
 
-  gdk_gc_unref (red_gc);
+  gdk_gc_unref (blue_gc);
   gdk_gc_unref (cream_gc);
   gdk_gc_unref (light_gray_gc);
   gdk_gc_unref (dark_gray_gc);
@@ -331,7 +341,7 @@ day_of_week(guint year, guint month, guint day)
 }
 
 static gint
-month_view_update ()
+month_view_update (void)
 {
   guint day;
   time_t start, end;
@@ -359,8 +369,8 @@ month_view_update ()
       struct render_ctl *c = &rc[day];
       if (c->popup.events)
         c->popup.events = NULL;
-      if (rday == tm_start.tm_mday) active_day = day;
-      c->active = (day == active_day) ? TRUE : FALSE;
+      if (rday == tm_start.tm_mday) 
+	active_day = day;
     }
 
   for (day = 1; day <= days; day++)
@@ -379,12 +389,14 @@ month_view_update ()
       tm_end.tm_sec = 59;
       end = mktime (&tm_end);
       
-      if (!tm_start.tm_isdst) {
-	      start+=60*60;
-	      end+=60*60;
-      }
+      if (!tm_start.tm_isdst) 
+	{
+	  start+=60*60;
+	  end+=60*60;
+	}
 
-      if (day_events[day]) event_db_list_destroy (day_events[day]);
+      if (day_events[day]) 
+	event_db_list_destroy (day_events[day]);
       day_events[day] = event_db_list_for_period (start, end);
 
       for (iter = day_events[day]; iter; iter = iter->next)
@@ -408,19 +420,14 @@ month_view_update ()
           c->popup.events = day_events[rday];
         }
 
-         c->today = ((year == today.tm_year + 1900
+      c->today = ((year == today.tm_year + 1900
 		   && month == today.tm_mon
 		   && rday == today.tm_mday)) ? TRUE : FALSE;
-         if (!c->initialized)
-            {
-              c->active = c->today;
-              c->initialized = TRUE;
-            } 
-       if (c->active)
-         active_day = day;            
+
+      c->active = (day == active_day) ? TRUE : FALSE;
     }
 
-  gtk_widget_draw (draw, NULL);
+  gtk_widget_queue_draw (draw);
 
   return TRUE;
 }
