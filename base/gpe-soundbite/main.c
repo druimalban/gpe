@@ -111,12 +111,13 @@ gint continue_sound (gpointer data)
   }
 
   pid = waitpid (sound_process, NULL, WNOHANG);
-/*  printf ("waitpid in continue_sound gives %d\n", pid); */
   if (pid != 0)
-  {
-    stop_sound ();
-    gtk_exit (0);
-  }
+    {
+      if (pid < 0)
+       perror ("waitpid");
+      stop_sound ();
+      gtk_exit (0);
+    }
 
   return TRUE;
 }
@@ -124,8 +125,6 @@ gint continue_sound (gpointer data)
 void start_sound (void)
 {
   stop_sound ();
-
-  timeout_handler = gtk_timeout_add (150, continue_sound, NULL);
 
   /* it would be nicer if when we play back sound files we had a proper
      progress bar here - to do that we need to find out in advance how
@@ -152,6 +151,8 @@ void start_sound (void)
               {
                 signal (SIGINT, sigint);
                 sound_encode (infd, outfd);
+               close (infd);
+               close (outfd);
                 exit(0);
               }
             else
@@ -188,6 +189,8 @@ void start_sound (void)
               {
                 signal (SIGINT, sigint);
                 sound_decode (infd, outfd);
+               close (infd);
+               close (outfd);
                 exit (0);
               }
             else
@@ -204,6 +207,8 @@ void start_sound (void)
            exit(1);
         }
     }
+
+  timeout_handler = gtk_timeout_add (150, continue_sound, NULL);
 
   timer = g_timer_new ();
   g_timer_start (timer);

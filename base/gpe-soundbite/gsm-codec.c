@@ -16,6 +16,27 @@ gboolean stop;
 
 #define NSAMP 160
 
+/*
+ * The GSM codec requires complete frames.  When reading from the network,
+ * short reads can occur: this function coalesces them together.  When reading
+ * from a local device this will be equivalent to plain read().
+ */
+size_t
+cooked_read (int infd, void *buf, size_t bufsiz)
+{
+  int n;
+  size_t bytes = 0;
+
+  do {
+    n = read (infd, buf + bytes, bufsiz - bytes);
+    if (n < 0)
+      return n;
+    bytes += n;
+  } while (bytes < bufsiz && n);
+
+  return bytes;
+}
+
 int
 sound_encode (int infd, int outfd)
 {
@@ -30,7 +51,7 @@ sound_encode (int infd, int outfd)
   do {
     guint i;
 
-    r = read (infd, indata1, sizeof (indata1));
+    r = cooked_read (infd, indata1, sizeof (indata1));
     if (r < 0)
       {
 	gsm_destroy (g);
