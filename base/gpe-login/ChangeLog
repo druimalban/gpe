@@ -3,6 +3,7 @@
 	* gpe-logout.sh: Swap order of the buttons. Make primary text
 	bold and larger, add secondary text.
 	Fix quotes in Pango markup.
+	Swapped button order change was buggy, fix.
 
 	* gpe-logout.png: Remove padding.
 
