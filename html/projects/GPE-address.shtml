@@ -5,8 +5,8 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
-<CENTER><IMG SRC="/images/address1.gif" ALT="this is what it could look like">
-<IMG SRC="/images/address2.gif" ALT="this is what it could look like"></CENTER>
+<CENTER><IMG src="/images/gpe-contacts.png" ALT="[gpe-contacts screenshot]">
+<IMG src="/images/gpe-contacts2.png" ALT="[gpe-contacts screenshot]"></CENTER>
 <HR>
 <H2>Function</H2>
 <P>
