@@ -53,6 +53,10 @@ gpe_error_box (char *text)
   label = gtk_label_new (text);
   hbox = gtk_hbox_new (FALSE, 4);
 
+#if GTK_MAJOR_VERSION >= 2
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+#endif
+
   gtk_widget_realize (dialog);
 
   ok = gpe_picture_button (dialog->style, _("OK"), "ok");

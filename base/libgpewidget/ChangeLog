@@ -1,5 +1,11 @@
 2002-10-13  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.27 released.
+
+2002-10-13  Philip Blundell  <philb@gnu.org>
+
+	* errorbox.c (gpe_error_box): Set line wrap on when GTK2 is in use.
+
 	* po/en_AU.po: New file.
 	* Makefile (LINGUAS): Add en_AU.
 

@@ -66,7 +66,7 @@ upstream: clean
 dpkg: upstream
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage -sa ; cd ..; rm -rf $$PV)
 
-install: $(SONAME)
+install: $(SONAME) install-mo
 	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 ifneq ($(GTK2),yes)

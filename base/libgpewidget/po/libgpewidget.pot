@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-10-13 13:08+0100\n"
+"POT-Creation-Date: 2002-10-13 23:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: errorbox.c:58 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:675
+#: errorbox.c:62 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:675
 #: dirbrowser.c:307 about.c:125
 msgid "OK"
 msgstr ""
