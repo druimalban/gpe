@@ -43,6 +43,8 @@
 #define BIN_INFO PREFIX "/bin/gpe-info"
 #define BIN_CONFIG PREFIX "/bin/gpe-conf"
 #define BIN_PING "/bin/ping"
+#define BIN_ACTIVATE PREFIX "/bin/gpe-shield --activate"
+#define LOADRULES_MARK ".gpe/gpe-shield-load"
 
 #define PARAM_INFO "network"
 #define PARAM_CONFIG "network"
@@ -79,6 +81,18 @@ static int netlink_fd;
    eth0    0105A8C0        0102A8C0        0006    0       0       0       FFFFFFF0                     */
 
 #define RTF_UP  0x1
+
+
+static void
+activate_networking_rules(void)
+{
+	char* flag = g_strdup_printf("%s/%s",g_get_home_dir(),LOADRULES_MARK);
+	if (!access(flag,F_OK))
+	{
+		system(BIN_ACTIVATE);
+	}
+	g_free(flag);
+}
 
 static gboolean
 net_get_status()
@@ -314,6 +328,9 @@ main (int argc, char *argv[])
 	GtkTooltips *tooltips;
 	GdkPixbuf *pixmap;
 
+	/* first check firewall stuff */
+	activate_networking_rules();
+	
 	if (gpe_application_init (&argc, &argv) == FALSE)
 		exit (1);
 

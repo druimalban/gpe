@@ -1,9 +1,8 @@
 PACKAGE = gpe-mininet
-VERSION = 0.3
+VERSION = 0.4
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
-GTK2 = yes
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
@@ -11,51 +10,30 @@ DESTDIR = /
 LINGUAS =
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L.
-CFLAGS += -Wall -I../libgpewidget 
+PACKAGE_LDFLAGS += -L../libgpewidget -L.
+PACKAGE_CFLAGS += -Wall -I../libgpewidget 
 BUILD = ../build
 else
-CFLAGS += -I$(PREFIX)/include/gpe
+PACKAGE_CFLAGS += -I$(PREFIX)/include/gpe
 BUILD = build
 endif
 
 ifeq ($(DEBUG),yes)
-CFLAGS += -g -DDEBUG
+PACKAGE_CFLAGS += -g -DDEBUG
 else
-CFLAGS += -Os -fomit-frame-pointer
+PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
-CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
+PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
-CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += -I.
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 libmb` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0` `pkg-config --libs gthread-2.0 libmb`
 
-# setup how to compile
-ifeq ($(NATIVE),yes)
-
-STRIP=strip
-CC=gcc
-
-CFLAGS +=  -Wall $(GTKCFLAGS)
-LDFLAGS += -lgpewidget $(GTKLDFLAGS) 
-
-else # we do cross-compile...
-
-CC=arm-linux-gcc
-STRIP=arm-linux-strip
-
-CFLAGS +=  -Wall -mtune=strongarm -march=armv4 $(GTKCFLAGS) 
-LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
-LDFLAGS += -lgpewidget $(GTKLDFLAGS)
-LDFLAGS += -lm 
-LDFLAGS += -lgmodule-2.0 -ldl -lXinerama
-LDFLAGS += -lX11 -lXext -lXrender -lgdk-x11-2.0
-
-endif #native or cross-compile
-
+PACKAGE_CFLAGS +=  -Wall $(GTKCFLAGS)
+PACKAGE_LDFLAGS += -lgpewidget $(GTKLDFLAGS) 
 
 MEMBERS  = main netlink iwlib
 
@@ -71,9 +49,7 @@ PIXMAPS += net-off.png
 all: $(PACKAGE) 
 
 $(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
-
-CFLAGS += $(MIMECFLAGS)
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 
 install-program: $(PACKAGE) all-desktop
