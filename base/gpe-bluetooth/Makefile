@@ -10,28 +10,23 @@ GLADE = bluez-pin-gpe.glade
 
 MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver obex-vcard obex-vcal obex-unknown obexclient obex-glib obexclient-dbus obexclient-file
 
-CFLAGS += -MD `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` -Wall `pkg-config --cflags mimedir-1.0` -I../libgpevtype
-
-CPPFLAGS += -D_GNU_SOURCE -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g # -lefence
+ifeq ($(CVSBUILD),yes)
+LIBGPEVTYPE_PC = libgpevtype-uninstalled
+LIBGPEVTYPE_PC_EXTRA=PKG_CONFIG_PATH=../../base/libgpevtype
 else
-CFLAGS += -Os -fomit-frame-pointer
+LIBGPEVTYPE_PC = libgpevtype
 endif
+
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` `pkg-config --cflags mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --cflags $(LIBGPEVTYPE_PC)`
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
+PACKAGE_CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_LDFLAGS += $(GPELIBS) -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex `pkg-config --libs mimedir-1.0` `$(LIBGPEVTYPE_PC_EXTRA) pkg-config --libs $(LIBGPEVTYPE_PC)` -lsqlite
 
 ifeq ($(CVSBUILD),yes)
-CFLAGS += -I../libgpewidget
-LDFLAGS += -L../libgpewidget
 BUILD = ../build
 else
-CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex `pkg-config --libs mimedir-1.0` -L../libgpevtype -lgpevtype -lsqlite
-
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
@@ -67,7 +62,7 @@ bluez.conf: ../bluez-pin/bluez.conf
 extract-po: pin-ui.c pin-dbus.c
 
 $(PACKAGE): pin-ui.h $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 bnep-helper: bnep-helper.c
 
@@ -100,10 +95,9 @@ install-program: all $(GLADE) bluez.conf
 	install -m 644 bluez.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/
 
 clean:
-	rm -f $(PACKAGE) $(OBJS) pin-ui.c pin-dbus.c pin-ui.h
+	rm -f $(PACKAGE) $(OBJS) $(DEPS) pin-ui.c pin-dbus.c pin-ui.h
 
-include $(BUILD)/Makefile.translation-auto-linguas
+include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
 
 -include $(DEPS)
-
