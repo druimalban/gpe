@@ -27,6 +27,7 @@
 #include <gpe/question.h>
 
 #include "mime-sql.h"
+#include "gnome-exec.h"
 
 #define _(x) dgettext(PACKAGE, x)
 
@@ -70,6 +71,7 @@ struct gpe_icon my_icons[] = {
   { "refresh", "refresh" },
   { "stop", "stop" },
   { "home", "home" },
+  { "open", "open" },
   { "dir-up", "dir-up" },
   { "ok", "ok" },
   { "cancel", "cancel" },
@@ -84,6 +86,12 @@ guint window_x = 240, window_y = 310;
 static void set_directory (gchar *new_directory);
 static void update_spinner (void);
 static void set_spinner_rest (void);
+
+static void
+kill_widget (GtkObject *object, GtkWidget *widget)
+{
+  gtk_widget_destroy (widget);
+}
 
 static void
 safety_check (void)
@@ -197,6 +205,128 @@ get_file_extension (gchar *filename)
   }
 }
 
+static void
+run_program (char *exec, char *program)
+{
+  char *command;
+  //char *cmd[] = {"/bin/sh", "-c", ""};
+
+  command = g_strdup_printf ("%s %s &", program, exec);
+  //printf ("%s %s\n", program, exec);
+  //cmd[3] = g_strdup_printf ("%s", command);
+  //printf ("%s", cmd[3]);
+  //gnome_execute_async (NULL, 3, cmd);
+  system (command);
+}
+
+void static
+open_with (GtkButton *button, gpointer data)
+{
+  char *command, *program, *exec;
+
+  program = gtk_entry_get_text (GTK_ENTRY (data));
+  exec = gtk_object_get_data (GTK_OBJECT (button), "exec");
+
+  command = g_strdup_printf ("%s %s &", program, exec);
+  system (command);
+}
+
+void static
+open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *event, gpointer data)
+{
+  gchar *program;
+
+  program = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+  gtk_entry_set_text (GTK_ENTRY (data), program);
+}
+
+void static
+ask_open_with (char *exec)
+{
+  GtkWidget *window, *fakeparentwindow, *clist, *entry, *label;
+  GtkWidget *open_button, *cancel_button;
+  GdkPixbuf *pixbuf = NULL, *spixbuf;
+  GdkPixmap *pixmap;
+  GdkBitmap *bitmap;
+
+  int i = 5;
+  int row_num = 0;
+  gchar *programs[] = {"GPE Edit", "gpe-edit", "Dillo", "dillo", "Quick Image Viewer", "qiv"};
+  gchar *row_text[2];
+  gchar *pixmap_file;
+
+  fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_widget_realize (fakeparentwindow);
+
+  window = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW(window), "Open With...");
+  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(fakeparentwindow));
+  gtk_widget_realize (window);
+ 
+  gtk_window_set_modal (GTK_WINDOW (window), TRUE);
+  gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
+
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+                      GTK_SIGNAL_FUNC (kill_widget),
+                      window);
+
+  label = gtk_label_new ("Open with program");
+  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
+
+  entry = gtk_entry_new ();
+  gtk_entry_set_text (GTK_ENTRY (entry), "gpe-edit");
+
+  clist = gtk_clist_new (2);
+  gtk_signal_connect (GTK_OBJECT (clist), "select-row",
+                      GTK_SIGNAL_FUNC (open_with_row_selected),
+                      entry);
+  gtk_clist_set_column_width (GTK_CLIST (clist), 0, 12);
+
+  open_button = gpe_picture_button (window->style, "Open with", "open");
+  gtk_object_set_data (GTK_OBJECT (open_button), "exec", (gpointer) exec);
+  gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
+                      GTK_SIGNAL_FUNC (open_with),
+                      entry);
+  gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
+                      GTK_SIGNAL_FUNC (kill_widget),
+                      window);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
+                      open_button);
+
+  cancel_button = gpe_picture_button (window->style, "Cancel", "cancel");
+  gtk_signal_connect (GTK_OBJECT (cancel_button), "clicked",
+                      GTK_SIGNAL_FUNC (kill_widget),
+                      window);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->action_area),
+                      cancel_button);
+
+  //gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), hbox);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, TRUE, TRUE, 4);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clist, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), entry, TRUE, TRUE, 4);
+
+  for ( ; i > 0; i = i - 2)
+  {
+    row_text[0] = 0;
+    row_text[1] = programs[i-1];
+    gtk_clist_append (GTK_CLIST (clist), row_text);
+    gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) programs[i]);
+
+    pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, programs[i]);
+    pixbuf = gdk_pixbuf_new_from_file (pixmap_file);
+    if (pixbuf != NULL)
+    {
+      spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
+      gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
+      gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
+    }
+
+    row_num++;
+  }
+
+  gtk_widget_show_all (window);	
+}
+
 static gint
 unignore_press (gpointer data)
 {
@@ -236,7 +366,18 @@ button_released (GtkObject *button, gpointer data)
   path = (gchar *) gtk_object_get_data (GTK_OBJECT (button), "path");
   type = (gchar *) gtk_object_get_data (GTK_OBJECT (button), "type");
 
-  if (strcmp (type, "directory") == 0)
+  if (strcmp (type, "file") == 0)
+  {
+    if (mime)
+    {
+      run_program (path, mime->program);
+    }
+    else
+    {
+      ask_open_with (path);
+    }
+  }
+  else if (strcmp (type, "directory") == 0)
     set_directory (path);
 
   return TRUE;	
@@ -290,21 +431,20 @@ button_leave (GtkWidget *button, GdkEventCrossing *event)
 
 /* Make the contents for the current directory. */
 static void
-set_icons_view (void)
+make_view (gchar *view)
 {
   struct dirent *d;
-  struct mime_type *file_mime;
+  struct mime_type *file_mime = NULL;
   DIR *dir;
   int i = 0;
   int cols;
   int loop_num = 0;
   gchar *fp, *buf, *extension, *file_type;
-  gchar *previous_extension;
+  gchar *previous_extension = "";
   GdkFont *font; /* Font in the label */
-  char *icon;
   GdkPixbuf *pixbuf = NULL, *spixbuf;
   GtkWidget *pixmap;
-  GtkWidget *table, *button, *label, *vbox;
+  GtkWidget *table, *button, *label, *box;
 
   loading_directory = 1;
 
@@ -313,15 +453,15 @@ set_icons_view (void)
 
   /* Get the number of columns assuming 70px per item, 20px scrollbar */
   /* This should really find out how much space it *can* use */
-  if (window->allocation.width - 20 > 70)
+  if (window->allocation.width - 20 > 70 && strcmp (view, "icons") == 0)
     cols = (window->allocation.width - 20) / 70;
   else
     cols = 1;
 
-  table = gtk_table_new (3, cols, TRUE);
+  table = gtk_table_new (5, cols, TRUE);
   view_widget = table;
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (view_scrolld), table);
-  gtk_widget_show (table);
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (view_scrolld), view_widget);
+  gtk_widget_show (view_widget);
 
   dir = opendir (current_directory);
   if (dir)
@@ -357,7 +497,23 @@ set_icons_view (void)
           {
             file_type = g_strdup_printf ("directory");
             pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/directory.png");
-            previous_extension = g_strdup_printf ("");
+            previous_extension = "";
+          }
+          else if (__S_ISTYPE ((s.st_mode), __S_IEXEC))
+          {
+            file_type = g_strdup_printf ("executable");
+            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/executable.png");
+            previous_extension = "";
+          }
+          else if (strcmp (fp, "COPYING") == 0)
+          {
+            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-copying.png");
+            file_type = g_strdup_printf ("copying");
+          }
+          else if (strcmp (fp, "CREDITS") == 0)
+          {
+            pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/gnome-text-x-credits.png");
+            file_type = g_strdup_printf ("credits");
           }
           else
           {
@@ -367,7 +523,6 @@ set_icons_view (void)
             if (mime_types)
             {
               GSList *iter;
-              struct mime_type *file_mime;
 
               for (iter = mime_types; iter; iter = iter->next)
               {
@@ -389,7 +544,7 @@ set_icons_view (void)
               if (file_mime == NULL)
               {
                 pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
-                previous_extension = g_strdup_printf ("");
+                previous_extension = "";
               }
               else if (strcmp (previous_extension, file_mime->extension))
               {
@@ -400,7 +555,7 @@ set_icons_view (void)
             else
             {
               pixbuf = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/gpe-filemanager/document-icons/regular.png");
-              previous_extension = g_strdup_printf ("");
+              previous_extension = "";
             }
           }
 
@@ -416,17 +571,39 @@ set_icons_view (void)
           else
             font = gtk_widget_get_style (label)->font;
 
-          make_nice_title (label, font, fp);
+          if (strcmp (view, "icons") == 0)
+          {
+            make_nice_title (label, font, fp);
+          }
+          else
+          {
+            gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
+            gtk_label_set_text (GTK_LABEL (label), fp);
+            gtk_widget_set_usize (label, 0, 16);
+          }
 
           /* Button VBox */
-          vbox = gtk_vbox_new (0,0);
-          gtk_box_pack_end_defaults (GTK_BOX (vbox), label);
+          if (strcmp (view, "icons") == 0)
+          {
+            box = gtk_vbox_new (0,0);
+          }
+          else
+          {
+            box = gtk_hbox_new (0,0);
+            gtk_box_pack_end_defaults (GTK_BOX (box), gtk_label_new (""));
+          }
 
-          spixbuf = gdk_pixbuf_scale_simple (pixbuf, 32, 32, GDK_INTERP_BILINEAR);
+          gtk_box_pack_end (GTK_BOX (box), label, FALSE, FALSE, 0);
+
+          if (strcmp (view, "icons") == 0)
+            spixbuf = gdk_pixbuf_scale_simple (pixbuf, 32, 32, GDK_INTERP_BILINEAR);
+          else
+            spixbuf = gdk_pixbuf_scale_simple (pixbuf, 16, 16, GDK_INTERP_BILINEAR);
 
           pixmap = gpe_render_icon (view_scrolld->style, spixbuf);
           gdk_pixbuf_unref (spixbuf);
-          gtk_box_pack_end_defaults (GTK_BOX (vbox), pixmap);
+
+          gtk_box_pack_end (GTK_BOX (box), pixmap, FALSE, FALSE, 0);
 
           /* The 'button' itself */
           button = gtk_event_box_new ();
@@ -443,10 +620,11 @@ set_icons_view (void)
           gtk_signal_connect( GTK_OBJECT (button), "enter_notify_event", GTK_SIGNAL_FUNC (button_enter), NULL);
           gtk_signal_connect( GTK_OBJECT (button), "leave_notify_event", GTK_SIGNAL_FUNC (button_leave), NULL);
 
-          gtk_container_add (GTK_CONTAINER (button), vbox);
+          gtk_container_add (GTK_CONTAINER (button), box);
+
           gtk_table_attach_defaults (GTK_TABLE (table), button, i%cols,i%cols+1,i/cols,i/cols+1);
 
-          gtk_widget_show (vbox);
+          gtk_widget_show (box);
           gtk_widget_show (label);
           gtk_widget_show (pixmap);
           gtk_widget_show (button);
@@ -462,29 +640,10 @@ set_icons_view (void)
 }
 
 static void
-set_list_view (void)
-{
-  
-}
-
-static void
 set_view (GtkWidget *button, gpointer data)
 {
-  if (strcmp (current_view, (gchar *) data) == 0)
-  {
-    //gtk_widget_destroy (view_widget);
-
-    if (strcmp ((gchar *) data, "icons") == 0)
-    {
-      current_view = g_strdup_printf ("icons");
-      set_icons_view ();
-    }
-    else if (strcmp ((gchar *) data, "list") == 1)
-    {
-      current_view = g_strdup_printf ("list");
-      set_list_view ();
-    }
-  }
+  current_view = (gchar *) data;
+  make_view ((gchar *) data);
 }
 
 static void
@@ -506,8 +665,8 @@ set_directory (gchar *new_directory)
       entry = (GtkWidget *) gtk_object_get_data (GTK_OBJECT (window), "entry");
       current_directory = g_strdup_printf ("%s", new_directory);
       gtk_entry_set_text (GTK_ENTRY (entry), current_directory);
-      history = g_list_append (history, current_directory);
-      history_place = g_list_length (history) - 1;
+      history_place++;
+      history = g_list_insert (history, current_directory, history_place);
       refresh_view ();
     }
     else
@@ -524,7 +683,6 @@ set_directory (gchar *new_directory)
 static void
 goto_directory (GtkWidget *widget, GtkWidget *entry)
 {
-  struct stat s;
   gchar *new_directory;
 
   safety_check ();
@@ -632,6 +790,8 @@ set_spinner_rest (void)
 
   gpe_render_pixmap (spinner_style ? &spinner_style->bg[GTK_STATE_NORMAL] : NULL,  spinner_rest_pixbuf, &pixmap, &bitmap);
   gtk_pixmap_set (GTK_PIXMAP (spinner), pixmap, bitmap);
+
+  current_spinner_num = 0;
 }
 
 int
@@ -646,7 +806,7 @@ main (int argc, char *argv[])
   GdkPixbuf *rest_pixbuf = NULL;
   GdkPixmap *rest_pixmap;
   GdkBitmap *rest_bitmap;
-  int i;
+  int i = 0;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -780,10 +940,14 @@ main (int argc, char *argv[])
   if (mime_types)
   {
     GSList *iter;
+
+    printf ("|\textension\t\t|\tmime_name\t|\tprogram\t|\n\n");
+
     for (iter = mime_types; iter; iter = iter->next)
     {
       struct mime_type *c = iter->data;
-      printf ("\n--\nSQL > mime_name: %s\nSQL > extension: %s\n--\n", c->mime_name, c->extension);
+
+      printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->mime_name, c->extension, c->program);
     }
   }
 
