@@ -1,5 +1,7 @@
 2003-07-26  Phil Blundell  <pb@nexus.co.uk>
 
+	* Makefile: Don't ship clock background pixmaps.
+
 	* gpeclockface.c (BACKGROUND_IMAGE): New macro, not defined.
 	(gpe_clock_face_get_shape): New function.
 	(get_bg_gc): Deleted.
