@@ -1,0 +1,21 @@
+-*- text -*-
+
+* Configure option: use one single owner setting (default, settable
+  by root?) or info for the current user
+
+* Show owner/user photo, optionally
+
+* Use vCard. Example (address fields might be wrong order):
+
+    BEGIN:VCARD                             
+    VERSION:2.1				   
+    REV:20020725T161606Z			   
+    UID:0				   
+    FN:Thomas Stephens			   
+    N:Stephens;Thomas			   
+    ADR;HOME:;address;city;state;zip;country
+    ADR;WORK:				   
+    TEL;WORK:555-1234			   
+    X-Qtopia-Gender:0			   
+    END:VCARD                               
+
