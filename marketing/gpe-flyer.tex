@@ -1,0 +1,99 @@
+\pdfcompresslevel=9
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[margin=0.8cm,noheadfoot,a4paper]{geometry}
+\usepackage{calc}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ae}
+\usepackage{bembo}
+\usepackage{ragged2e}
+\usepackage{paralist}
+%\usepackage{eso-pic}
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+\hypersetup {
+    pdfpagemode=Full,
+    colorlinks,
+    urlcolor=black,
+    pdftitle={GPE Flyer},
+    pdfauthor={Colin Marquardt},
+    pdfsubject={$Revision$, $Date$},
+    pdfkeywords={gpe marketing features technology flyer},
+}
+
+% ------------------------------------------------------------------------------
+% accompanying wiki page: http://handhelds.org/z/wiki/GPEMarketing
+
+\newcommand{\flyertext}{%
+%\AddToShipoutPicture{%
+%\includegraphics[width=\textwidth/2-1cm]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}}
+\textbf{\large
+  \includegraphics[height=\lineheight*3/5]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}
+GPE: The GPE Palmtop Environment
+  \includegraphics[height=\lineheight*3/5]{/opt/applications/gpe_cvs_dev/gpe/gpe-logo/gpe-logo-simple.jpg}
+}
+
+\smallskip
+\href{http://gpe.handhelds.org}{\texttt{gpe.handhelds.org}} --
+\href{mailto:gpe@handhelds.org}{\texttt{mailto:gpe@handhelds.org}}
+
+\smallskip
+A Free Software GUI environment targeted at palmtop/handheld
+computers, such as the HP iPAQ and the Sharp Zaurus. Think »GNOME
+for handhelds«.
+
+% GPE provides the infrastructure for developing palmtop applications,
+% and includes core Personal Information Management (PIM)
+% applications.
+
+\smallskip
+\textbf{Key Features}
+\begin{compactitem}
+   \item Custom GTK-based widget library
+   \item Applications: calendar, to do list, address book, media
+     player, notebook, games, and more
+   \item System utilities including Wi-Fi and Bluetooth manager
+   \item Internationalization
+   \item Display migration: »teleport« running applications to other
+     displays
+\end{compactitem}
+
+\smallskip
+\textbf{Technology}
+\begin{compactitem}
+\item X Window System{\texttrademark}{}: XFree86~4.3/tinyX with Render
+  and Resize/Rotate extensions
+   \item fontconfig
+   \item XFT2 with subpixel anti-aliased font support
+   \item GTK+~2.2, featuring bidirectional text, display migration
+     etc.
+   \item freedesktop.org standards support
+   \item Matchbox, a lightweight window manager designed for
+     embedded devices
+   \item SQLite for data storage
+   \item GStreamer multimedia framework
+   \item Packages available for Familiar Linux. OpenZaurus support
+     upcoming.
+\end{compactitem}
+
+\smallskip
+\textit{Users and developers welcome!}
+}
+
+% ------------------------------------------------------------------------------
+
+\begin{document}
+\thispagestyle{empty}
+\pagestyle{empty}
+\RaggedRight
+\begin{table}
+  \begin{tabular}{p{\textwidth/2-1cm}p{1cm}p{\textwidth/2-1cm}}%
+    \flyertext{} & & \flyertext{}\\[1cm]
+    \flyertext{} & & \flyertext{}
+%    \\\vspace{1cm}%
+  \end{tabular}
+\end{table}
+\end{document}
