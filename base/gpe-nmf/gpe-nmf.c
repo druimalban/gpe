@@ -133,19 +133,24 @@ set_volume (GtkObject *o, player_t p)
 static void
 update_time (struct nmf_frontend *fe, struct player_status *ps)
 {
+  char buf[32];
+
+  unsigned long seconds = ps->time / GST_SECOND;
+  unsigned long minutes = seconds / 60;
+  seconds = seconds % 60;
+
+  snprintf (buf, sizeof (buf)-1, "%02d:%02d", minutes, seconds);
+  buf[sizeof (buf)-1] = 0;
+  gtk_label_set_text (GTK_LABEL (fe->time_label), buf);
+ 
+#if 0 
   if (ps->total_time)
     {
-      unsigned long seconds = ps->time / ps->sample_rate;
-      unsigned long minutes = seconds / 60;
-      char buf[32];
       double d = (double)ps->time / (double)ps->total_time;
       gtk_adjustment_set_value (fe->progress_adjustment, d);
       gtk_widget_draw (fe->progress_slider, NULL);
-      seconds = seconds % 60;
-      snprintf (buf, sizeof (buf)-1, "%02d:%02d", minutes, seconds);
-      buf[sizeof (buf)-1] = 0;
-      gtk_label_set_text (GTK_LABEL (fe->time_label), buf);
     }
+#endif
 }
 
 static gboolean
