@@ -242,9 +242,8 @@ edit_finished (GtkWidget *d)
 }
 
 static void
-click_delete (GtkWidget *widget, GtkWidget *dw)
+click_delete (GtkWidget *widget, GtkWidget *d)
 {
-  GtkWidget *d = gtk_widget_get_toplevel (widget);
   struct edit_state *s = g_object_get_data (G_OBJECT (d), "edit_state");
   event_t ev = s->ev, ev_real;
   event_details_t ev_d;

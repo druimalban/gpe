@@ -2,6 +2,7 @@
 
 	* event-ui.c (edit_event): Exercise caution around details struct
 	since pointers may be NULL.
+	(click_delete): Remove useless call to gtk_widget_get_toplevel.
 
 2004-02-23  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
