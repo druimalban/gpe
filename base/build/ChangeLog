@@ -1,5 +1,9 @@
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.dpkg_ipkg (GPECFLAGS, GPELIBS): Define.
+
+2003-09-12  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.dpkg_ipkg: Add rule to make .pc from .pc.in.
 
 2003-09-06  Philip Blundell  <philb@gnu.org>
