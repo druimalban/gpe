@@ -3,7 +3,7 @@ PREFIX = /usr/local
 DEBUG = yes
 GTK2 = yes
 CVSBUILD = yes
-VERSION = 0.1
+VERSION = 0.2
 
 LINGUAS = 
 
@@ -12,7 +12,7 @@ MEMBERS = clock
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
-CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libeventdb
+CPPFLAGS = -D_GNU_SOURCE -I../libgpewidget -I../libschedule
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g
@@ -39,7 +39,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -L../libeventdb -lgpewidget -leventdb $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -L../libschedule -lgpewidget -lschedule $(LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
