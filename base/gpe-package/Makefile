@@ -1,10 +1,10 @@
 PACKAGE = gpe-package
-VERSION = 0.0.9-2
-NATIVE = yes
+VERSION = 0.1.0
 CVSBUILD = yes
 DEBUG = no
 INSTALL = install
-PREFIX = /usr/
+STRIP = strip
+PREFIX = /usr/local
 DESTDIR = /
 
 LINGUAS = 
@@ -13,11 +13,8 @@ EXTRA_DESKTOPS = gpe-package.desktop.in
 HELPFILE = gpe-package.html
 
 ifeq ($(CVSBUILD),yes)
-LDFLAGS += -L../libgpewidget -L../libdisplaymigration -ldisplaymigration -L.
-CFLAGS += -Wall -I../libgpewidget -I. -I/home/fuchs/Projekte/gpe/familiar/dist/ipkg/C
 BUILD = ../build
 else
-CFLAGS += -I/usr/local/include/gpe
 BUILD = build
 endif
 
@@ -29,36 +26,15 @@ else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 
-CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
-CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -DIPKG_LIB
+PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE
+PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_CFLAGS += -DIPKG_LIB  -I/skiff/local/arm-linux/include/libipkg
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` 
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0 gdk-2.0 gdk-pixbuf-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0 libipkg` 
+GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0 gdk-pixbuf-2.0 libipkg`
 
-# setup how to compile
-ifeq ($(NATIVE),yes)
-
-STRIP=strip
-CC=gcc
-
-CFLAGS += $(GTKCFLAGS) -Wall
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0` 
-LDFLAGS += -lipkg 
-
-else # we do cross-compile...
-
-CC=arm-linux-gcc
-STRIP=arm-linux-strip
-
-CFLAGS += -march=armv4 -mtune=strongarm
-CFLAGS += $(GTKCFLAGS) -Wall 
-LDFLAGS += -lgpewidget $(GTKLDFLAGS) -Wall 
-LDFLAGS += -lipkg 
-LDFLAGS += -lXinerama
-
-endif #native or cross-compile
-
+PACKAGE_CFLAGS += $(GPECFLAGS) $(GTKCFLAGS) $(STANDARD_CFLAGS) 
+PACKAGE_LDFLAGS += $(GPELIBS) $(GTKLDFLAGS) $(STANDARD_LDFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -70,8 +46,7 @@ PIXMAPS = gpe-package.png local-package-16.png
 all: $(PACKAGE) 
 
 $(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) 
-#/skiff/local/arm-linux/lib/libbb.a 
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/CONTROL

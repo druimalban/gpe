@@ -1,3 +1,8 @@
+2004-06-12 Florian Boor <florian.boor@kernelconcepts.de>
+	* Makefile: Version 0.1.0 is what we are working on. 
+	* Makefile: Updated to latest standards.
+	* main.c: Removed obsolete definition of _GNU_SOURCE.
+	
 2004-06-11 Florian Boor <florian.boor@kernelconcepts.de>
 	* main.c: Moving the kill() call to a better place, many thanks Phil!
 	
