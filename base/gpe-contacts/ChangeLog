@@ -1,3 +1,7 @@
+2005-02-16  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * main.c: Add import button and feedback dialog.
+
 2005-02-15  Florian Boor <florian.boor@kernelconcepts.de>
 
     * db.c (db_check_tags): Speedup and fix, only write data if necessary.

@@ -1192,6 +1192,69 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
   gtk_editable_select_region(GTK_EDITABLE(searchentry),0,-1);
 }
 
+static int 
+import_one_file(const gchar *filename)
+{
+  GError *err = NULL;
+  gchar *content = NULL;
+  gsize count = 0;
+  int result = 0;
+	
+  if (g_file_get_contents(filename, &content, &count, &err))
+    {
+      result = import_vcard(content, count);
+      g_free(content);
+    }
+  else
+    result = -1;
+  return result;
+}
+
+static void
+on_import_vcard (GtkWidget *widget, gpointer data)
+{
+  GtkWidget *filesel, *feedbackdlg;
+  
+  filesel = gtk_file_selection_new(_("Choose file"));
+  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel), TRUE);
+  
+  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+    {
+      gchar *errstr = NULL;
+      int ec = 0, i = 0;
+      gchar **files = 
+        gtk_file_selection_get_selections(GTK_FILE_SELECTION(filesel));
+      gtk_widget_hide(filesel); 
+      while (files[i])
+        {
+          if (import_one_file(files[i]) < 0) 
+            {
+              gchar *tmp;
+              if (!errstr) 
+                errstr=g_strdup("");
+              ec++;
+			  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
+              if (errstr) 
+                 g_free(errstr);
+              errstr = tmp;
+            }
+          i++;  
+        }
+      if (ec)
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
+      else
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          _("Import successful"));
+      gtk_dialog_run(GTK_DIALOG(feedbackdlg));
+      gtk_widget_destroy(feedbackdlg);
+    }
+  gtk_widget_destroy(filesel);
+  update_display();
+}
+
 static GtkWidget *
 create_main (gboolean edit_structure)
 {
@@ -1275,6 +1338,12 @@ create_main (gboolean edit_structure)
 			    _("Properties"), _("Tap here to configure this program."),
   			    G_CALLBACK (configure), (gpointer)edit_structure, -1);
 				
+  pw = gtk_image_new_from_stock(GTK_STOCK_OPEN, 
+                                gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
+			    _("Import"), _("Open file to import a contact from it."), 
+                NULL, pw, G_CALLBACK (on_import_vcard), NULL);
+    
   gtk_toolbar_append_space(GTK_TOOLBAR(toolbar));
 
   gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
@@ -1420,26 +1489,6 @@ create_main (gboolean edit_structure)
   return main_window;
 }
 
-
-static int 
-import_one_file(const gchar *filename)
-{
-  GError *err = NULL;
-  gchar *content = NULL;
-  gsize count = 0;
-  int result = 0;
-	
-  if (g_file_get_contents(filename, &content, &count, &err))
-    {
-      result = import_vcard(content, count);
-      g_free(content);
-    }
-  else
-    result = -1;
-  return result;
-}
-
-
 int
 main (int argc, char *argv[])
 {
@@ -1488,14 +1537,11 @@ main (int argc, char *argv[])
   if (ifile)
     {
       int ret;
-      /*GtkWidget *dialog = NULL;*/
+      GtkWidget *dialog = NULL;
       
       ret =  import_one_file(ifile);
       if (ret)
-        printf("Could not import file %s.\n", ifile);
-      else
-        printf("Successfully imported %s.\n", ifile);
-/*       dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
+       dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
 	                                    GTK_BUTTONS_OK,
 	                                    _("Could not import file %s."),
 	                                     ifile);
@@ -1506,7 +1552,7 @@ main (int argc, char *argv[])
 	                                      ifile);
       gtk_dialog_run(GTK_DIALOG(dialog));
       gtk_widget_destroy(dialog);
-*/      
+      
       exit (EXIT_SUCCESS);
     }
   
