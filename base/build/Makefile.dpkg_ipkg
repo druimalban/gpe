@@ -37,8 +37,7 @@ ipkg: clean
 	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
 	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
 	$(MAKE) DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install-program
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
+	ipkg-build -o 0 -g 0 familiar/dist
 	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; fi
 	$(MAKE) printinfo
 

@@ -1,3 +1,7 @@
+2003-04-30  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.dpkg_ipkg (ipkg): Call ipkg-build with '-o 0 -g 0'.
+
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (real-translation-package): Convert _ in
