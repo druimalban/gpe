@@ -7,6 +7,7 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <stdio.h>
 #include <gtk/gtk.h>
 
 #include "render.h"
@@ -41,6 +42,40 @@ gpe_picture_button (GtkStyle *style, gchar *text, gchar *icon)
   gtk_box_pack_start (GTK_BOX (hbox2), hbox, TRUE, FALSE, 0);
 
   gtk_container_add (GTK_CONTAINER (button), hbox2);
+
+  return button;
+}
+
+
+GtkWidget *
+gpe_button_new_from_stock (const gchar *stock_id, int type)
+{
+  GtkWidget *button, *hbox, *image, *label, *align;
+  GtkStockItem item;
+
+  button = gtk_button_new ();
+
+  if (gtk_stock_lookup (stock_id, &item) == TRUE);
+  {
+    hbox = gtk_hbox_new (FALSE, 2);
+    align = gtk_alignment_new (0.5, 0.5, 0.0, 0.0);
+
+    if (type == GPE_BUTTON_TYPE_ICON || type == GPE_BUTTON_TYPE_BOTH)
+    {
+      image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_MENU);
+      gtk_box_pack_start (GTK_BOX (hbox), image, FALSE, FALSE, 0);
+    }
+
+    if (type == GPE_BUTTON_TYPE_LABEL || type == GPE_BUTTON_TYPE_BOTH)
+    {
+      label = gtk_label_new (item.label);
+      gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+    }
+      
+    gtk_container_add (GTK_CONTAINER (button), align);
+    gtk_container_add (GTK_CONTAINER (align), hbox);
+    gtk_widget_show_all (align);
+  }
 
   return button;
 }

@@ -10,7 +10,15 @@
 #ifndef PICTUREBUTTON_H
 #define PICTUREBUTTON_H
 
+enum
+{
+  GPE_BUTTON_TYPE_ICON,
+  GPE_BUTTON_TYPE_LABEL,
+  GPE_BUTTON_TYPE_BOTH
+};
+
 extern GtkWidget *gpe_picture_button (GtkStyle *style, 
 				      gchar *text, gchar *icon);
+extern GtkWidget *gpe_button_new_from_stock (const gchar *stock_id, int type);
 
 #endif
