@@ -24,8 +24,8 @@ static volatile gboolean currently_handling_error = FALSE;
 
 #define _(x) dgettext(PACKAGE, x)
 
-void
-gpe_error_box (const char *text)
+static void
+do_gpe_error_box (const char *text, gboolean block)
 {
   GtkWidget *label, *ok, *dialog, *icon;
   GtkWidget *hbox;
@@ -75,17 +75,33 @@ gpe_error_box (const char *text)
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_window_set_position (GTK_WINDOW (dialog), GTK_WIN_POS_CENTER);
 
-  gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
-
+  if (block)
+    {
+      gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
+			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+    }
+      
   gtk_signal_connect (GTK_OBJECT (dialog), "destroy",
                     GTK_SIGNAL_FUNC (gtk_widget_destroy),(gpointer)fakewindow);
 
   gtk_widget_show_all (dialog);
 
-  currently_handling_error = FALSE;
+  if (block)
+    gtk_main ();
 
-  gtk_main ();
+  currently_handling_error = FALSE;
+}
+
+void
+gpe_error_box (const char *text)
+{
+  do_gpe_error_box (text, TRUE);
+}
+
+void
+gpe_error_box_nonblocking (const char *text)
+{
+  do_gpe_error_box (text, FALSE);
 }
 
 void

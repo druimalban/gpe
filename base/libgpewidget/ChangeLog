@@ -1,5 +1,14 @@
 2002-12-14  Philip Blundell  <philb@gnu.org>
 
+	* errorbox.c (do_gpe_error_box): Renamed from gpe_error_box.  New
+	argument block.  Don't call gtk_main if this is false, instead
+	return immediately.
+	(gpe_error_box): Call above with block=TRUE.
+	(gpe_error_box_nonblocking): Likewise, with block=FALSE.
+	* gpe/errorbox.h (gpe_error_box_fmt): Add prototype.	
+
+2002-12-14  Philip Blundell  <philb@gnu.org>
+
 	* po/en_AU.po (Content-Type): Charset is iso-8859-1.
 
 2002-12-04  Philip Blundell  <philb@gnu.org>
