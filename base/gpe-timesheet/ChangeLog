@@ -1,5 +1,6 @@
 2004-08-06  Florian Boor <florian.boor@kernelconcepts.de>
 	
+	* html.c: Added more browsers, but we need a better solution.
 	* main.c: Fixed button order and dialog behaviour.
 
 2004-06-23  Philip Blundell  <philb@gnu.org>

@@ -24,6 +24,8 @@
 #define FILE_URL_PREFIX "file://"
 #define HTML_APP1 "/usr/bin/dillo"
 #define HTML_APP2 "/usr/bin/minimo"
+#define HTML_APP3 "/usr/bin/mozilla"
+#define HTML_APP4 "/usr/bin/firefox"
 
 static char **myjournal = NULL;
 static int jlen = 0;
@@ -117,8 +119,9 @@ journal_show(const char *filename)
   /* check if we are able to execute one of the display
   applications */
   if (!access(HTML_APP1,X_OK)) app = HTML_APP1;
-    else
-       if (!access(HTML_APP2,X_OK)) app = HTML_APP2;
+    else if (!access(HTML_APP2,X_OK)) app = HTML_APP2;
+      else if (!access(HTML_APP3,X_OK)) app = HTML_APP3;
+        else if (!access(HTML_APP4,X_OK)) app = HTML_APP4;
 	
   /* return if no app is available */
   if (app == NULL) 
