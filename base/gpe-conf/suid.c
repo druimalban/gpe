@@ -1,4 +1,5 @@
 /*
+
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
@@ -25,13 +26,16 @@
 
 #include "suid.h"
 #include "applets.h"
-#include "gpe/pixmaps.h"
-#include "gpe/render.h"
-#include "gpe/picturebutton.h"
+//#include "gpe/pixmaps.h"
+//#include "gpe/render.h"
+//#include "gpe/picturebutton.h"
 #include "login-setup.h"
+#include "gpe-admin.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
+static int global_user_access = FALSE;
+static int know_global_user_access = FALSE;
 
 int check_root_passwd (const char *passwd);
 int check_user_access (const char *cmd);
@@ -85,7 +89,12 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gcha
   if (!g_file_get_contents (file, &content, &length, &err))
   {
 	  fprintf(stderr,"Could not access file: %s.\n",file);
-	  return;
+	  if (access(file,F_OK)) // file exists, but access is denied
+	  {
+		  i = 0;
+		  delim = NULL;
+		  goto writefile;
+	  }
   }
   lines = g_strsplit (content, delim, 2048);
   g_free (delim);
@@ -115,17 +124,25 @@ change_cfg_value (const gchar * file, const gchar * var, const gchar * val, gcha
 
   i--;
 
+writefile:
+	
   if ((delim == NULL) && val)
     {
-      lines = realloc (lines, i * sizeof (gchar *));
+      lines = realloc (lines, (i+1) * sizeof (gchar *));
       lines[i] = g_strdup_printf ("%s%c%s", var,seperator,val);
       i++;
+      lines[i] = NULL;
     }
   else
     free (delim);
-
+  
   fnew = fopen (file, "w");
-
+  if (!fnew) 
+  {
+     fprintf(stderr,"Could not write to file: %s.\n",file);
+     return;
+  }	  
+  
   for (j = 0; j < i; j++)
     {
       fprintf (fnew, "%s\n", lines[j]);
@@ -230,8 +247,18 @@ int
 check_user_access (const char *cmd)
 {
   if (!geteuid ())
-    return TRUE;
-  return FALSE;			// this !allows everything
+  return TRUE;
+  if (!know_global_user_access) // read this only once
+  {
+  	gchar* acstr;
+	acstr = get_file_var(GPE_CONF_CFGFILE,"user_access");
+	if (acstr==NULL)
+		acstr = "0";
+	global_user_access = atoi(acstr);
+	know_global_user_access = TRUE;
+  }	
+  
+  return global_user_access;	
 }
 
 

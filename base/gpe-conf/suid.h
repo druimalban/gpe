@@ -1,4 +1,8 @@
+#ifndef _SUID_H
+#define _SUID_H
+
 #include <stdio.h>
+#include <glib.h>
 
 FILE *suidout;
 FILE *suidin;
@@ -8,3 +12,5 @@ int ask_root_passwd();
 int check_user_access (const char *cmd);
 int check_root_passwd (const char *passwd);
 void change_cfg_value (const gchar *file, const gchar *var, const gchar* val, gchar seperator);
+
+#endif

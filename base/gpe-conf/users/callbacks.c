@@ -71,7 +71,6 @@ users_on_edit_clicked                      (GtkButton       *button,
     
   }
 
-
 }
 void
 users_on_delete_clicked                      (GtkButton       *button,
@@ -100,7 +99,7 @@ users_on_delete_clicked                      (GtkButton       *button,
 	i--;
       }
     if(cur->pw.pw_uid < MINUSERUID)
-      gpe_error_box(_("Dont remove\n system users!"));
+      gpe_error_box(_("You can't remove\n system users!"));
     else
       {
 	*prec = cur->next;

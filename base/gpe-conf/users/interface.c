@@ -20,7 +20,7 @@
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
-static gchar *listTitles[4];
+static gchar *listTitles[3];
 
 pwlist *pwroot = NULL;
 
@@ -47,15 +47,9 @@ InitSpacings () {
    * GTK_FILL    the widget should fill the space allocated to it.
    */
   
-  /*
-   * GTK_SHRINK to make it as small as possible, but use GTK_FILL to
-   * let it fill on the left side (so that the right alignment
-   * works:
-   */ 
   table_attach_left_col_x = GTK_FILL; 
   table_attach_left_col_y = 0;
   table_attach_right_col_x = GTK_EXPAND | GTK_FILL;
-  //table_attach_right_col_x = GTK_SHRINK | GTK_EXPAND | GTK_FILL;
   table_attach_right_col_y = GTK_FILL;
   
   /*
@@ -116,7 +110,7 @@ GtkWidget *user_list;
 void ReloadList()
 {
   pwlist *cur = pwroot;
-  gchar *entry[4];
+  gchar *entry[3];
   gtk_clist_clear(GTK_CLIST(user_list));
   while(cur != NULL)
   {
@@ -125,13 +119,13 @@ void ReloadList()
 	{
 	  entry[0] = g_strdup_printf("%s",cur->pw.pw_name);
 	  entry[1] = g_strdup_printf("%s",cur->pw.pw_gecos);
-	  entry[2] = g_strdup_printf("%s",cur->pw.pw_shell);
-	  entry[3] = g_strdup_printf("%s",cur->pw.pw_dir);
+//	  entry[2] = g_strdup_printf("%s",cur->pw.pw_shell);
+	  entry[2] = g_strdup_printf("%s",cur->pw.pw_dir);
 	  gtk_clist_append( GTK_CLIST(user_list), entry);
 	  g_free(entry[0]);
 	  g_free(entry[1]);
+//	  g_free(entry[2]);
 	  g_free(entry[2]);
-	  g_free(entry[3]);
 	}
       cur = cur->next;
     }
@@ -189,58 +183,53 @@ GtkWidget*
 Users_Build_Objects (void)
 {
   GtkWidget *vbox1;
-  GtkWidget *hbuttonbox1;
+  GtkWidget *pw;
+  GtkWidget *toolbar;
   GtkWidget *button1;
   GtkWidget *button2;
   GtkWidget *button3;
 
   listTitles[0] = _("User Name");
   listTitles[1] = _("User Info");
-  listTitles[2] = _("Shell");
-  listTitles[3] = _("Home");
+  //listTitles[2] = _("Shell");
+  listTitles[2] = _("Home");
 
   InitSpacings ();
 
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox1), border_width);
 
-  hbuttonbox1 = gtk_hbutton_box_new ();
-  gtk_hbutton_box_set_spacing_default (0);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (hbuttonbox1), GTK_BUTTONBOX_START);
-  gtk_button_box_set_child_size (GTK_BUTTON_BOX (hbuttonbox1), 20, -1);
+  toolbar = gtk_toolbar_new ();
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
+			       GTK_ORIENTATION_HORIZONTAL);
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
 
-  gtk_box_pack_start (GTK_BOX (vbox1), hbuttonbox1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), toolbar, FALSE, FALSE, 0);
+  gtk_box_reorder_child (GTK_BOX (vbox1), toolbar, 0);
+  gtk_widget_show (toolbar);
 
-  button1 = gpe_picture_button (wstyle, _("Add"), "new");
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("new"));
+  button1 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Add user"),
+			   _("Add user"), _("Add a new user"), pw,
+			   GTK_SIGNAL_FUNC (users_on_new_clicked), NULL);
 
-  gtk_container_add (GTK_CONTAINER (hbuttonbox1), button1);
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("properties"));
+  button2 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Edit user"),
+			   _("Edit user"), _("Edit existing user"), pw,
+			   GTK_SIGNAL_FUNC (users_on_edit_clicked), NULL);
 
-  button2 = gpe_picture_button (wstyle, _("Edit"), "properties");
-
-  gtk_container_add (GTK_CONTAINER (hbuttonbox1), button2);
-
-  button3 = gpe_picture_button (wstyle, _("Remove"), "delete");
-
-  gtk_container_add (GTK_CONTAINER (hbuttonbox1), button3);
-
-  user_list = gtk_clist_new_with_titles (4,listTitles);
+  pw = gtk_image_new_from_pixbuf (gpe_find_icon ("delete"));
+  button3 = gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete user"),
+			   _("Delete user"), _("Delete existing user"), pw,
+			   GTK_SIGNAL_FUNC (users_on_delete_clicked), NULL);
+			   
+  user_list = gtk_clist_new_with_titles (3,listTitles);
   InitPwList();
   ReloadList();
 
   gtk_widget_show (user_list);
  
   gtk_box_pack_start (GTK_BOX (vbox1), user_list, TRUE, TRUE, 0);
-  
-  gtk_signal_connect_after (GTK_OBJECT (button1), "clicked",
-			    GTK_SIGNAL_FUNC (users_on_new_clicked),
-			    NULL);
-  
-  gtk_signal_connect_after (GTK_OBJECT (button2), "clicked",
-			    GTK_SIGNAL_FUNC (users_on_edit_clicked),
-			    NULL);
-  gtk_signal_connect_after (GTK_OBJECT (button3), "clicked",
-			    GTK_SIGNAL_FUNC (users_on_delete_clicked),
-			    NULL);
 
   return vbox1;
 }
@@ -270,7 +259,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
   self->cur = init;
   self->w = userchange = gtk_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW(userchange), GTK_WINDOW(parent));
-  gtk_window_set_title (GTK_WINDOW (userchange), _("Add user"));
+  gtk_window_set_title (GTK_WINDOW (userchange), _("User settings"));
   gtk_window_set_modal (GTK_WINDOW (userchange), TRUE);
 
   vbox2 = GTK_DIALOG (userchange)->vbox;

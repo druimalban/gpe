@@ -73,6 +73,7 @@ MEMBERS += login-setup
 MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
 MEMBERS += users/interface users/callbacks  
 MEMBERS += cfgfile
+MEMBERS += gpe-admin
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -96,6 +97,7 @@ PIXMAPS += gpe-config-time.png
 PIXMAPS += gpe-config.png
 PIXMAPS += gpe-config-users.png
 PIXMAPS += gpe-config-login-setup.png
+PIXMAPS += gpe-config-admin.png
 
 all: $(PACKAGE) 
 
@@ -127,7 +129,7 @@ install: gpe-conf
 
 ipkg: clean
 	rm -rf familiar/dist
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr install
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr BINDIR=/usr/bin prefix=/usr install
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
 	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name= Global Config
+Comment=Global GPE Conf Settings
+Exec=gpe-conf admin
+Terminal=0
+Type=Application
+Icon=gpe-config-admin.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False

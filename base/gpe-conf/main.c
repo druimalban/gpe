@@ -37,6 +37,7 @@
 #include "ownerinfo.h"
 #include "login-setup.h"
 #include "users.h"
+#include "gpe-admin.h"
 #include "sleep/conf.h"
 
 #include "gpe/init.h"
@@ -85,7 +86,7 @@ struct Applet applets[]=
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore, "Owner", "ownerinfo", "Owner Information"},
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup"},
+    { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , "GPE" ,"admin","GPE Conf Administration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Configuration"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
@@ -221,73 +222,6 @@ void make_container()
 		      (GtkSignalFunc) Restore_Callback, NULL);
 
 }
-void main_all()
-{
-/*  int i;
-  GtkWidget *ntree;
-  GtkWidget *root_tree;
-  GtkWidget *sys_root;
-  GtkWidget *split;
-
-  self.alone_applet=0;
-
-  initwindow();
-  split=gtk_hpaned_new();
-
-  gtk_container_add (GTK_CONTAINER (self.w), split);
-
-  gtk_widget_show(split);
-
-  root_tree = gtk_tree_new();
-  sys_root = gtk_tree_item_new_with_label("System");
-  gtk_widget_show(sys_root);
-  gtk_tree_append(GTK_TREE(root_tree),sys_root);
-
-   
-
-  gtk_paned_add1(GTK_PANED(split),root_tree);
-
-
-  self.vbox = gtk_vbox_new(FALSE,0);
-  gtk_paned_add2(GTK_PANED(split),self.vbox);
-
-  
-  make_container();
-
-  self.applet = gtk_label_new("GPE Configuration\nby Pierre Tardy\n\nInspired by sysset\nby James Weatherall.");
-  gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
-
-  ntree =  gtk_tree_new();
-  gtk_widget_show(ntree);
-
-  for(i = 0; i< applets_nb ; i++)
-    {
-      GtkWidget *item;
-      item = gtk_tree_item_new_with_label(applets[i].label);
-      gtk_signal_connect (GTK_OBJECT(item), "select",
-			  (GtkSignalFunc) item_select, (gpointer)i);
-       
-      gtk_widget_show(item);
-      gtk_tree_append(GTK_TREE(ntree),item);
-    }
-
-  gtk_tree_item_set_subtree(GTK_TREE_ITEM(sys_root),ntree);
-  gtk_tree_item_expand(GTK_TREE_ITEM(sys_root));
-
-  self.cur_applet = -1;
-  gtk_widget_show_all(self.w);
- 
-  gtk_widget_show(self.w);
-
-  gtk_widget_hide(self.save);
-  gtk_widget_hide(self.cancel);
-  
-  gtk_main();
-  gtk_exit(0);
-*/  
-  return;
-}
-
 
 
 void main_one(int argc, char **argv,int applet)
