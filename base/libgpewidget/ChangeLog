@@ -4,6 +4,10 @@
 	* gpe/gpeclockface.h: Likewise.
 	* Makefile (MEMBERS): Add gpeclockface.
 
+	* pixmaps/clock.png, pixmaps/clock24.png,
+	pixmaps/day-night-wheel.png: New files.
+	* Makefile (install-program): Install them.
+
 2003-03-31  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlistitem.c: New file.

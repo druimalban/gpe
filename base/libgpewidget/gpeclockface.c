@@ -434,13 +434,13 @@ static void
 gpe_clock_face_init (GpeClockFace *clock)
 {
   if (clock_background == NULL)
-    clock_background = gdk_pixbuf_new_from_file ("./clock.png", NULL);
+    clock_background = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/clock.png", NULL);
   
   if (clock_background_24 == NULL)
-    clock_background_24 = gdk_pixbuf_new_from_file ("./clock24.png", NULL);
+    clock_background_24 = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/clock24.png", NULL);
   
   if (day_night_wheel == NULL)
-    day_night_wheel = gdk_pixbuf_new_from_file ("./day-night-wheel.png", NULL);
+    day_night_wheel = gdk_pixbuf_new_from_file (PREFIX "/share/gpe/pixmaps/default/day-night-wheel.png", NULL);
 
   background_width = gdk_pixbuf_get_width (clock_background);
   background_height = gdk_pixbuf_get_height (clock_background);
