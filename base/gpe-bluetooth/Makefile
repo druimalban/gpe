@@ -4,7 +4,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.37
+VERSION = 0.38
 
 GLADE = bluez-pin-gpe.glade
 

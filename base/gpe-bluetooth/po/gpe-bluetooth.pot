@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-21 21:35+0100\n"
+"POT-Creation-Date: 2005-02-27 14:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,27 +60,27 @@ msgstr ""
 msgid "hciattach died unexpectedly"
 msgstr ""
 
-#: main.c:540
+#: main.c:556
 msgid "Bluetooth control"
 msgstr ""
 
-#: main.c:545
+#: main.c:561
 msgid "Switch radio on"
 msgstr ""
 
-#: main.c:546
+#: main.c:562
 msgid "Switch radio off"
 msgstr ""
 
-#: main.c:547
+#: main.c:563
 msgid "Devices..."
 msgstr ""
 
-#: main.c:548
+#: main.c:564
 msgid "Remove from panel"
 msgstr ""
 
-#: main.c:583
+#: main.c:596
 msgid ""
 "This is the Bluetooth control.\n"
 "Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
@@ -150,17 +150,17 @@ msgstr ""
 msgid "Incoming connection from %s"
 msgstr ""
 
-#: dbus.c:101 dbus.c:123
+#: dbus.c:104 dbus.c:126
 #, c-format
 msgid "Failed to acquire service: %s"
 msgstr ""
 
-#: dbus.c:107
+#: dbus.c:110
 #, c-format
 msgid "Failed to open connection to system message bus: %s"
 msgstr ""
 
-#: dbus.c:129
+#: dbus.c:132
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
 msgstr ""
@@ -181,6 +181,10 @@ msgstr ""
 
 #: headset.c:206
 msgid "Connect HEADSET"
+msgstr ""
+
+#: obexserver.c:274
+msgid "Couldn't register OBEX service"
 msgstr ""
 
 #: obex-vcard.c:107
