@@ -121,7 +121,7 @@ find_icon (char *base)
   for (i=0;directories[i];i++)
     {
       temp = g_strdup_printf ("%s/%s", directories[i], base);
-      if (access (temp, R_OK))
+      if (!access (temp, R_OK))
 	return temp;
 
       g_free (temp);
@@ -148,61 +148,26 @@ create_icon_pixmap (GtkStyle *style, char *fn, int size)
   return w;
 }
 
-char *get_closest_icon (struct package *p, int iconsize)
-{
-  char *tmp;
-  char *fn;
-
-  tmp = g_strdup_printf ("icon%d", iconsize);
-  fn = package_get_data (p, tmp);
-  if (!fn)
-    fn = package_get_data (p, "icon");
-  if (!fn)
-    fn = package_get_data (p, "icon48");
-  if (!fn)
-    {
-      /* TODO: run 48->16
-       * maybe get actual closest, preferring larger?
-       */
-    }
-  
-  g_free (tmp);
-  
-  return fn;
-}
-
 char *
 get_icon_fn (struct package *p, int iconsize)
 {
   char *fn, *full_fn;
   
-  fn = get_closest_icon(p,iconsize);
+  fn = package_get_data (p, "icon");
   if (!fn)
     return fn;
 
-  full_fn = find_icon(fn);
+  full_fn = find_icon (fn);
+
+  if (full_fn == NULL)
+    printf("couldn't find %s\n", fn);
   
   return full_fn;
-}
-
-int 
-has_icon (struct package *p)
-{
-  char *tmp;
-  if ((tmp = get_icon_fn(p,0)))
-    {
-      free (tmp);
-      return 1;
-    }
-
-  return 0;
 }
 
 void 
 run_package (struct package *p) 
 {
-  GList *l;
-
   printf ("Running: %s\n", package_get_data (p, "title"));
 
   /* Actually run the program */
@@ -216,266 +181,108 @@ btn_clicked (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
   return TRUE;
 }
 
-GList *load_simple_list (char *fn)
-{
-	GList *l=NULL;
-	char line[1024], *t;
-	FILE *inp;
-
-	inp = fopen (fn, "r");
-	if (!inp)
-		return NULL;
-
-	t = line;
-	do
-	{
-		*t = getc (inp);
-		if (*t == '\n' || t - line > 1000)
-		{
-			*t = 0;
-			l = g_list_append (l, strdup (line));
-			t = line;
-			continue;
-		}
-		t++;
-	} while (!feof (inp));
-
-	fclose (inp);
-
-	return l;
-}
-
-GList *load_forced_groups ()
-{
-	char *fn;
-	GList *l;
-
-	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr_group-order", g_get_home_dir ());
-
-	l = load_simple_list (fn);
-
-	g_free (fn);
-
-	return l;
-}
-
-GList *load_ignored_items ()
-{
-	char *fn;
-	GList *l;
-
-	fn = g_strdup_printf ("%s/.gpe/gpe-appmgr_ignored-items", g_get_home_dir ());
-
-	l = load_simple_list (fn);
-
-	g_free (fn);
-
-	return l;
-}
-
-GList *load_translations_from (char *fmt, char *a1, char *a2)
-{
-	GList *rl;
-	char *p = g_strdup_printf (fmt, a1, a2);
-	rl = load_simple_list (p);
-	free (p);
-	return rl;
-}
-
-struct translation_entry
-{
-  gchar *a, *b;
-};
-
-
-GSList *load_group_translations ()
-{
-	GList *l = NULL, *i;
-	GSList *tmap = NULL;
-
-	char *locale = setlocale (LC_MESSAGES, NULL);
-	if (locale) {
-		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s", (char*)g_get_home_dir (), locale);
-		if (!l)
-			l = load_translations_from ("/usr/share/gpe/group-map.%s", locale, NULL);
-		if (!l) {
-			gchar *ln = g_strdup (locale);
-			char *p = strchr (ln, '_');
-			if (p) {
-				*p = 0;
-				l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s",  (char*)g_get_home_dir (), ln);
-				if (!l)
-					l = load_translations_from ("/usr/share/gpe/group-map.%s", ln, NULL);
-			}
-			g_free (ln);
-		}
-	}
-	if (!l)
-		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map",  (char*)g_get_home_dir (), NULL);
-	if (!l)
-		l = load_translations_from ("/usr/share/gpe/group-map", NULL, NULL);
-
-	for (i = l; i; i = i->next) {
-		char *s = i->data;
-		char *p = strchr (s, '=');
-		if (p) {
-			struct translation_entry *t = g_malloc (sizeof (*t));
-			*p++ = 0;
-			t->a = g_strdup (s);
-			t->b = g_strdup (p);
-			tmap = g_slist_append (tmap, t);
-		}
-		free (i->data);
-	}
-	g_list_free (i);
-
-	return tmap;
-}
-
-char *translate_group_name (char *name)
-{
-	GSList *i;
-	
-	for (i = translate_list; i; i = i->next) {
-		struct translation_entry *t = i->data;
-		if (!strcmp (t->a, name)) {
-			return t->b;
-		}
-	}
-
-	return name;
-}
-
 /* clean_up():
  * free all data etc.
  */
-void clean_up ()
+static void 
+clean_up (void)
 {
-	GList *l;
+  GList *l;
 
-	TRACE("clean_up");
+  for (l = items; l; l = l->next)
+    {
+      if (l->data)
+	package_free ((struct package *)l->data);
+    }
+  g_list_free (items);
 
-	l = items;
-	while (l)
-	{
-		if (l->data)
-			package_free ((struct package *)l->data);
-		l = l->next;
-	}
-	g_list_free (items);
-
-	l = groups;
-	while (l)
-	{
-		if (l->data)
-			free (l->data);
-		l = l->next;
-	}
-	g_list_free (groups);
-
-	groups = items = NULL;
+  for (l = groups; l; l = l->next)
+    {
+      struct package_group *g = l->data;
+      g_list_free (g->items);
+      g_free (g->name);
+      g_free (g);
+    }
+  g_list_free (groups);
+  
+  groups = items = NULL;
 }
 
-void cb_package_add (struct package *p)
+static struct package_group *
+find_group_by_name (const char *name)
 {
-	TRACE ("cb_package_add");
+  GList *i;
+  struct package_group *g;
 
-	/* add the item to the list */
-	if (p)
+  for (i = groups; i; i = i->next)
+    {
+      g = i->data;
+      if (!strcmp (g->name, name))
+	return g;
+    }
+
+  g = g_malloc0 (sizeof (*g));
+  g->name = g_strdup (name);
+  groups = g_list_append (groups, g);
+  return g;
+}
+
+static void 
+cb_package_add (struct package *p)
+{
+  const char *group_name;
+  struct package_group *group;
+
+  group_name = package_get_data (p, "section");
+  group = find_group_by_name (group_name);
+
+  items = g_list_insert_sorted (items, p, (GCompareFunc)package_compare);
+  group->items = g_list_insert_sorted (group->items, p, (GCompareFunc)package_compare);
+}
+
+static void
+load_from (const char *path)
+{
+  DIR *dir;
+  struct dirent *entry;
+
+  dir = opendir (path);
+  if (dir)
+    {
+      while ((entry = readdir (dir)))
 	{
-		/* The package has to provide an icon and a section */
-		if (has_icon (p) && package_get_data (p, "section"))
-		{
-			/* Don't allow X/Y section names (eg. "Games/Strategy") */
-			if (strchr (package_get_data (p, "section"), '/'))
-				*(strchr(package_get_data (p, "section"), '/'))=0;
-			items = g_list_insert_sorted (items, p, (GCompareFunc)package_compare);
-			/* Update the groups if necessary */
-			if ((g_list_find_custom (groups, package_get_data (p, "section"),
-						 (GCompareFunc) strcmp) == NULL) &&
-			    (g_list_find_custom (forced_groups, package_get_data (p, "section"),
-						 (GCompareFunc) strcmp) == NULL))
-				groups = g_list_insert_sorted (groups, strdup(package_get_data(p,"section")), (GCompareFunc)strcasecmp);
-		}
-		else
-			package_free (p);
+	  char *temp;
+	  struct package *p;
+	  
+	  if (entry->d_name[0] == '.')
+	    continue;
+	  
+	  temp = g_strdup_printf ("%s/%s", PREFIX "/share/applications", entry->d_name);
+	  p = package_from_dotdesktop (temp, NULL);
+	  if (p)
+	    cb_package_add (p);
 
+	  g_free (temp);
 	}
+
+      closedir (dir);
+    }
 }
 
 /* Reloads the menu files into memory */
-int refresh_list ()
+int 
+refresh_list (void)
 {
-	GList *ignored_items;
-	DIR *dir;
-	struct dirent *entry;
-	char *user_menu = NULL, *home_dir;
-	GSList *j;
+  /* Remove the tap-hold popup menu timeout if it's there */
+  popup_menu_cancel ();
 
-	TRACE ("refresh_list");
+  clean_up ();
+  
+  load_from (PREFIX "/share/applications");
 
-	/* Remove the tap-hold popup menu timeout if it's there */
-	popup_menu_cancel ();
-
-	clean_up ();
-
-	/* flush old translations */
-	for (j = translate_list; j; j = j->next) {
-		struct translation_entry *t = j->data;
-		g_free (t->a);
-		g_free (t->b);
-		g_free (t);
-	}
-	g_slist_free (translate_list);
-
-	forced_groups = load_forced_groups ();
-	ignored_items = load_ignored_items ();
-	translate_list = load_group_translations ();
-	
-	dir = opendir (PREFIX "/share/applications");
-	if (dir)
-	{
-		while ((entry = readdir (dir)))
-		{
-			char *temp;
-
-			if (entry->d_name[0] == '.')
-				continue;
-
-			/* read the file if we don't want to ignore it */
-			temp = g_strdup_printf ("%s/%s", PREFIX "/share/applications", entry->d_name);
-			if (g_list_find_custom (ignored_items, temp, (GCompareFunc)strcmp))
-			{
-				g_free (temp);
-				continue;
-			}
-
-			cb_package_add (package_from_dotdesktop (temp, NULL));
-			g_free (temp);
-		}
-		closedir (dir);
-	}
-
-	groups = g_list_concat (forced_groups, groups);
-
-	/* We allocated a string for the user's menu dir; free it */
-	if (user_menu)
-		g_free (user_menu);
-
-	TRACE ("refresh_list: end");
-	return FALSE;
+  TRACE ("refresh_list: end");
+  return FALSE;
 }
-
-/* refresh_tabs() is called through GTK so that
-   the window already exists; thus we can get it's
-   size and determine the number of columns available.
-   It's also called when XRANDR does its job.
-
-   It's done this way (a timeout via a draw callback)
-   because calling refresh_tabs() directly from the
-   draw callback was causing crashes (apparently
-   within Gtk, not sure though)
-*/
 
 void
 refresh_tabs (void)

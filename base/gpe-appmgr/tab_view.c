@@ -187,11 +187,10 @@ create_tab (GList *all_items, char *current_group, tab_view_style style)
 
 		p = (struct package *) this_item->data;
 
-		if (!current_group || (current_group && !strcmp (current_group, package_get_data (p, "section"))))
-			gpe_iconlist_add_item (GPE_ICONLIST(il),
-					       package_get_data (p, "title"),
-					       get_icon_fn (p, 48),
-					       (gpointer)p);
+		gpe_iconlist_add_item (GPE_ICONLIST (il),
+				       package_get_data (p, "title"),
+				       get_icon_fn (p, 48),
+				       (gpointer)p);
 		
 		this_item = this_item->next;
 
@@ -212,7 +211,7 @@ create_tab_label (char *name, char *icon_file, GtkStyle *style)
 	if (!img)
 		img = create_icon_pixmap (style, "/usr/share/pixmaps/menu_unknown_group16.png", 16);
 
-	lbl = gtk_label_new (translate_group_name (name));
+	lbl = gtk_label_new (name);
 
 	hb = gtk_hbox_new (FALSE, 0);
 	if (img)
@@ -259,39 +258,33 @@ create_all_tab ()
 static void 
 refresh_callback (void)
 {
-	GList *l;
-	int old_tab;
+  GList *l;
+  int old_tab;
 
-	TRACE ("refresh_tabs");
+  old_tab = gtk_notebook_get_current_page (GTK_NOTEBOOK (notebook));
 
-	old_tab = gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook));
+  gtk_widget_hide (notebook);
 
-	gtk_widget_hide (notebook);
+  clear_appmgr_tabs ();
 
-	clear_appmgr_tabs ();
+  create_all_tab ();
 
-	create_all_tab ();
-
-	/* Create the normal tabs if wanted */
-	l = groups;
-	while (l)
-	{
-		gtk_notebook_append_page (
-			GTK_NOTEBOOK(notebook),
-			create_tab (items, l->data, cfg_options.tab_view),
-			create_group_tab_label(l->data, notebook->style));
-
-		l = l->next;
-	}
-
-	if (old_tab != -1)
-		gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
-
-	gtk_widget_show_all (notebook);
-
-	autohide_labels (0);
-
-	TRACE ("refresh_tabs: <end>");
+  /* Create the normal tabs if wanted */
+  for (l = groups; l; l = l->next)
+    {
+      struct package_group *g = l->data;
+      gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
+				create_tab (g->items, g->name, cfg_options.tab_view),
+				create_group_tab_label (g->name, notebook->style));
+      
+    }
+  
+  if (old_tab != -1)
+    gtk_notebook_set_page (GTK_NOTEBOOK(notebook), old_tab);
+  
+  gtk_widget_show_all (notebook);
+  
+  autohide_labels (0);
 }
 
 static void 

@@ -76,14 +76,13 @@ run_callback (GObject *obj, GdkEventButton *ev, struct package *p)
 static GtkWidget *
 create_row (GList *all_items, char *current_group)
 {
-  GtkWidget *il;
+  GtkWidget *view;
   GList *this_item;
-  //char *icon_file;
 
-  il = gpe_icon_list_view_new ();
+  view = gpe_icon_list_view_new ();
 
-  gpe_icon_list_view_set_rows (GPE_ICON_LIST_VIEW (il), 1);
-  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (il), 32);
+  gpe_icon_list_view_set_rows (GPE_ICON_LIST_VIEW (view), 1);
+  gpe_icon_list_view_set_icon_xmargin (GPE_ICON_LIST_VIEW (view), 32);
   
   this_item = all_items;
   while (this_item)
@@ -93,21 +92,18 @@ create_row (GList *all_items, char *current_group)
  
       p = (struct package *) this_item->data;
       
-      if (!current_group || (current_group && !strcmp (current_group, package_get_data (p, "section")))) {
-	item = gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (il),
-					    package_get_data (p, "title"),
-					    get_icon_fn (p, 48),
-					    (gpointer)p);
-
-	g_signal_connect (item, "button-release", G_CALLBACK (run_callback), p);
-      }
+      item = gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (view),
+					  package_get_data (p, "title"),
+					  get_icon_fn (p, 48),
+					  (gpointer)p);
+      
+      g_signal_connect (item, "button-release", G_CALLBACK (run_callback), p);
       
       this_item = this_item->next;
-      
     }
   
-  gtk_widget_show (il);
-  return il;
+  gtk_widget_show (view);
+  return view;
 }
 
 static void 
@@ -121,10 +117,10 @@ refresh_callback (void)
 
   for (l = groups; l; l = l->next)
     {
-      gchar *group = l->data;
+      struct package_group *group = l->data;
       GtkWidget *row;
 
-      row = create_row (items, group);
+      row = create_row (group->items, group->name);
 
       rows = g_slist_append (rows, row);
       n_rows++;
@@ -136,7 +132,9 @@ refresh_callback (void)
   for (i = 0, p = rows, l = groups; i < n_rows; i++)
     {
       GtkWidget *label;
-      label = gtk_label_new (l->data);
+      struct package_group *g = l->data;
+
+      label = gtk_label_new (g->name);
       gtk_widget_show (label);
 
       gtk_table_attach (GTK_TABLE (table), GTK_WIDGET (label), 0, 1, i, i + 1, 0, 0, 0, 0);

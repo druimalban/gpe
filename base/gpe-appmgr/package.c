@@ -134,13 +134,6 @@ struct package *package_from_dotdesktop (char *filename, char *lang)
 	/* Hackish mapping onto familiar menu policy groups.
 	   TODO: Make this configurable */
 	{
-		/* Idea:
-		struct folder_cfg {
-			GList *contains;
-			GList *not_contains;
-		};
-		GList *folders;
-		*/
 		struct mapping {
 			char *from, *to;
 		} mappings[] = {
@@ -155,12 +148,10 @@ struct package *package_from_dotdesktop (char *filename, char *lang)
 			{"Amusement", "Games"},
 			{"Office", "Office"},
 			{"Internet", "Internet"},
-
 			{NULL, NULL}
 		};
 		char *categories = dotdesktop_get (dd, "Categories");
 		int i;
-		printf ("Categories = %s\n", categories);
 		for (i=0;mappings[i].from != NULL;i++)
 		{
 			char *from=g_strdup_printf ("%s;", mappings[i].from);

@@ -18,12 +18,19 @@
 #ifndef PACKAGE_H
 #define PACKAGE_H
 
+struct package_group
+{
+  gchar *name;
+  GList *items;
+};
+
 struct package
 {
-	char *name;
-	char *data;
-	struct package *next;
+  char *name;
+  char *data;
+  struct package *next;
 };
+
 /* Creates a new package structure, filled with NULLs.
    probably not really useful to most people */
 struct package *package_new ();

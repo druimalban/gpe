@@ -31,10 +31,12 @@ GList *items;
 GList *groups;
 
 /* Refresh the UI with the icons */
-void refresh_tabs (void);
+extern void refresh_tabs (void);
 
-char *get_icon_fn (struct package *p, int iconsize);
+extern char *get_icon_fn (struct package *p, int iconsize);
 
-void run_package (struct package *p);
+extern GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size);
+
+extern void run_package (struct package *p);
 
 #endif
