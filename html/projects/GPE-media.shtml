@@ -1,6 +1,6 @@
 
-<!--#set var="addtitle" value="Notebook"-->
-<!--#set var="pagename" value="notebook"-->
+<!--#set var="addtitle" value="Media"-->
+<!--#set var="pagename" value="media"-->
 <!--#set var="author" value="Nils Faerber"-->
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->

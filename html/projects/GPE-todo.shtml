@@ -1,6 +1,6 @@
 
-<!--#set var="addtitle" value="Projects"-->
-<!--#set var="pagename" value="projects"-->
+<!--#set var="addtitle" value="Todo"-->
+<!--#set var="pagename" value="todo"-->
 <!--#set var="author" value="Nils Faerber"-->
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
