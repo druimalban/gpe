@@ -1,8 +1,8 @@
 
-<!--#set var="addtitle" value="Todo List"-->
-<!--#set var="pagename" value="todo"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#set var="addtitle" value="Login"-->
+<!--#set var="pagename" value="login"-->
+<!--#set var="author" value="Phil Blundell"-->
+<!--#set var="authoremail" value="philb@gnu.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <H2>Coordinator</H2>
