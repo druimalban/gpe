@@ -60,10 +60,12 @@ open_window (void)
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
 
   gtk_widget_set_usize (window, 240, 320);
-  gtk_widget_show (window);
 
+  gtk_widget_realize (window);
   if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
     gdk_window_set_icon (window->window, NULL, pmap, bmap);
+
+  gtk_widget_show (window);
 }
 
 int

@@ -1,3 +1,10 @@
+2002-06-23  Philip Blundell  <philb@gnu.org>
+
+	* main.c (open_window): Set icon before mapping window so WM
+	notices it.
+
+	* Version 0.10 released.
+
 2002-06-22  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.09 released.
