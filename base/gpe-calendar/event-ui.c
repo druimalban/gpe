@@ -1019,16 +1019,17 @@ build_edit_event_window (void)
 
   /* Reccurence page */
 
-  vboxrepeattop = gtk_vbox_new (FALSE, 0);
+  vboxrepeattop = gtk_vbox_new (FALSE, gpe_get_boxspacing());
+  gtk_container_set_border_width(GTK_CONTAINER(vboxrepeattop),gpe_get_border());
 
   scrolledwindowrecur = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolledwindowrecur), vboxrepeattop);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindowrecur),
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
-  recurborder = gtk_frame_new (_("Type:"));
+  recurborder = gtk_frame_new (_("Type"));
   gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurborder,
-                           TRUE, TRUE, 0);
+                           FALSE, TRUE, 0);
   gtk_container_add (GTK_CONTAINER (recurborder), vboxrepeat);
 
   vboxrecur = gtk_vbox_new (FALSE, 0);
@@ -1229,10 +1230,10 @@ build_edit_event_window (void)
 
 /* Begin end-date vbox */
 
-  recurendborder = gtk_frame_new (_("End Date:"));
+  recurendborder = gtk_frame_new (_("End Date"));
   gtk_container_add (GTK_CONTAINER (recurendborder), vboxend);
-  gtk_box_pack_end (GTK_BOX (vboxrepeattop), recurendborder,
-                    FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vboxrepeattop), recurendborder,
+                    FALSE, TRUE, 0);
 
   /* forever radio button */
   radiobuttonforever = gtk_radio_button_new_with_label (NULL, _("forever"));
@@ -1331,7 +1332,7 @@ build_edit_event_window (void)
 
   gpe_set_window_icon (window, "icon");
 
-  gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
+  gtk_window_set_default_size (GTK_WINDOW (window), 240, 340);
   gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
   
   /* if screen is large enough, make it a real dialog */

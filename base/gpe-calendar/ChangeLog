@@ -1,3 +1,7 @@
+2004-08-05  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * event-ui.c: Fixed titles, layout and positions of recurrence tab.
+
 2004-07-23  Florian Boor <florian.boor@kernelconcepts.de>
     
     * Released V 0.54
