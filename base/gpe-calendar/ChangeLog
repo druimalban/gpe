@@ -1,5 +1,13 @@
 2004-10-09  Phil Blundell  <pb@nexus.co.uk>
 
+	* month_view.c (title_height): New global.
+	(button_press): Use it.
+	(draw_expose_event): Likewise.  Avoid wasteful re-initialisation
+	of static data on every call.  Draw day number in top-left corner
+	of cell.
+	(calc_title_height): New function.
+	(month_view): Call it.
+
 	* gtkdatesel.h (gtk_date_sel_move_day): Really add prototype.
 
 	* week_view.c (struct week_day): Delete 'initialized'.

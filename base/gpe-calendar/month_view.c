@@ -47,6 +47,8 @@ static struct render_ctl rc[TOTAL_DAYS];
 
 static gint month_view_update (void);
 
+static gint title_height;
+
 static gboolean
 button_press (GtkWidget *widget,
 	      GdkEventButton *event,
@@ -62,11 +64,12 @@ button_press (GtkWidget *widget,
   if (x < xp || y < ys)
     return FALSE;
 
+  y -= title_height;
+
   x -= xp;
   x /= xs;
 
   y /= ys;
-  y -= 1;
 
   c = &rc[x + (y * 7) - week_offset];
   if (c->valid)
@@ -113,6 +116,40 @@ button_press (GtkWidget *widget,
   return TRUE;
 }
 
+static nl_item days1[] = 
+  { ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7, ABDAY_1 };
+static nl_item days2[] = 
+  { ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7 };
+
+static void
+calc_title_height (GtkWidget *widget)
+{
+  PangoLayout *pl;
+  PangoRectangle pr;
+  int i;
+  int max_height = 0;
+
+  pl = gtk_widget_create_pango_layout (GTK_WIDGET (widget), NULL);
+
+  for (i = 0; i < 7; i++)
+    {
+      gchar *s = g_locale_to_utf8 (nl_langinfo (days1[i]), -1,
+                                   NULL, NULL, NULL);
+      pango_layout_set_text (pl, s, strlen (s));
+      pango_layout_get_pixel_extents (pl, &pr, NULL);
+
+      if (pr.height > max_height)
+	max_height = pr.height;
+
+      g_free (s);
+    }
+
+  printf ("max height=%d\n", max_height);
+  title_height = max_height + 8;
+
+  g_object_unref (pl);
+}
+
 static gint
 draw_expose_event (GtkWidget *widget,
 		   GdkEventExpose *event,
@@ -136,29 +173,9 @@ draw_expose_event (GtkWidget *widget,
   guint i, j;
   PangoLayout *pl;
   PangoRectangle pr;
-  static nl_item days[7];
-  
-  if (week_starts_monday) 
-    {
-      days[0] = ABDAY_2;
-      days[1] = ABDAY_3;
-      days[2] = ABDAY_4;
-      days[3] = ABDAY_5;
-      days[4] = ABDAY_6;
-      days[5] = ABDAY_7;
-      days[6] = ABDAY_1;
-    }
-  else 
-    {
-      days[0] = ABDAY_1;
-      days[1] = ABDAY_2;
-      days[2] = ABDAY_3;
-      days[3] = ABDAY_4;
-      days[4] = ABDAY_5;
-      days[5] = ABDAY_6;
-      days[6] = ABDAY_7;
-    }
-  
+  nl_item *days;
+
+  days = week_starts_monday ? days1 : days2;
   g_return_val_if_fail (widget != NULL, TRUE);
   g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
 
@@ -218,9 +235,7 @@ draw_expose_event (GtkWidget *widget,
 			 event->area.width, event->area.height);
 
   gdk_draw_rectangle (drawable, light_gray_gc, 1,
-		      0, ys / 2,
-		      width,
-		      ys / 2);
+		      0, 0, width, title_height);
 
   for (i = 0; i < 7; i++)
     {
@@ -239,7 +254,7 @@ draw_expose_event (GtkWidget *widget,
 			&event->area,
 			widget,
 			"label",
-			x + (xs - w) / 2, ys / 2,
+			x + (xs - w) / 2, 1,
 			pl);
 
       for (j = 0; j < (TOTAL_DAYS / 7); j++)
@@ -247,7 +262,7 @@ draw_expose_event (GtkWidget *widget,
 	  gchar *buffer;
 	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
-	  guint y = (j + 1) * ys;
+	  guint y = j * ys + title_height;
 
 	  if (c->valid)
 	    {
@@ -273,7 +288,7 @@ draw_expose_event (GtkWidget *widget,
 				&event->area,
 				widget,
 				"label",
-				x + (xs - w) / 2, y + (ys / 2)/* + font->ascent*/,
+				x + 2, y,
 				pl);
 	      g_free (buffer);
 	    }
@@ -298,7 +313,7 @@ draw_expose_event (GtkWidget *widget,
 	{
 	  guint d = i + (7 * j) - week_offset;
 	  struct render_ctl *c = &rc[d];
-	  guint y = (j + 1) * ys;
+	  guint y = j * ys + title_height;
 
 	  if ((!force_today && c->active) || (force_today && c->today))
 	    {
@@ -658,6 +673,8 @@ month_view(void)
       rc[day].initialized = FALSE;
   
   g_object_set_data(G_OBJECT(main_window),"datesel-month",datesel);
+  
+  calc_title_height (draw);
 
   return vbox;
 }
