@@ -9,7 +9,7 @@
 
 
 gint
-maybe_upgrade_datafile (FILE *fp);
+maybe_upgrade_datafile ();
 
-guint
-upgrade_to_v2 (FILE *fp, guint version);
+gint
+upgrade_to_v2 (guint new_version);

@@ -1,3 +1,15 @@
+2002-09-01  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/interface.c (create_GPE_Ownerinfo): Scale small icon.
+
+	* src/main.h (Module): Functions have different parameters now.
+
+	* src/main.c: More tweaks for upgrading and displaying the right icon.
+
+2002-08-30  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/interface.c (create_GPE_Ownerinfo): s/tux-48/ownerphoto/
+
 2002-08-28  Colin Marquardt  <colin@marquardt-home.de>
 
 	* src/main.c: Add code to handle upgrades between different data
