@@ -1271,8 +1271,8 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  /* (LanguageCode) translators: please replace this with your own
-     Pango language code: */
+  /* (LanguageCode) */
+  /* TRANSLATORS: please replace this with your own Pango language code: */
   pango_lang_code = g_strdup (_("en"));
   
   setlocale (LC_ALL, "");
