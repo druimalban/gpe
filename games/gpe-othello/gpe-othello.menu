@@ -1,3 +1,0 @@
-?package(gpe-othello):needs=x11 section=Games\
-  title="Othello" command=gpe-othello
-  icon=/usr/share/pixmaps/gpe-othello.png

@@ -46,9 +46,7 @@ $(PACKAGE): $(OBJS)
 install-program: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/

@@ -1,3 +1,0 @@
-?package(gpe-pegged):needs=x11 section=Games\
-  title="Pegged" command=gpe-pegged
-  icon=/usr/share/pixmaps/gpe-pegged.png
