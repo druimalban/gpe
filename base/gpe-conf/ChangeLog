@@ -1,5 +1,9 @@
 2005-02-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* Makefile: Fixed typo, updated .desktop generation and MEMBERS.
+	* keys/keys.*: New files providing keys and button config tool.
+	* main.c: Add i8n support for applet table.
+	
 	* keys/keyboard.*: New files for new keyboard support.
 	* packages.*, gpe-conf-keyboard.desktop.in, pixmaps/gpe-config-keyboard.png,
 	  keyboard.*, keyboards.def: Removed obsolete files.

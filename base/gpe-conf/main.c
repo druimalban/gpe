@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,9 +41,7 @@
 #include "serial.h"
 #include "cardinfo.h"
 #include "tasks.h"
-#include "keys/kbd.h"
-#include "keys/keyctl.h"
-#include "keys/keyboard.h"
+#include "keys/keys.h"
 #include "sleep/conf.h"
 #include "sound/sound.h"
 
@@ -53,8 +51,10 @@
 #include <gpe/pixmaps.h>
 #include <gpe/spacing.h>
 
+#define N_(_x) (_x)
 
-/* These aren't in the header files, so we prototype them here.
+/* 
+ * some prototypes
  */
 int setresuid(uid_t ruid, uid_t euid, uid_t suid);
 int setresgid(gid_t rgid, gid_t egid, gid_t sgid);
@@ -84,39 +84,37 @@ GtkWidget *mainw; /* for some dialogs */
 struct Applet applets[]=
   {
     { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , 
-		"Time" ,"time" ,"Time and Date Setup",PREFIX "/share/pixmaps/gpe-config-time.png"},
+		N_("Time") ,"time" ,N_("Time and Date Setup"),PREFIX "/share/pixmaps/gpe-config-time.png"},
     { &screen_Build_Objects, &screen_Free_Objects, &screen_Save, &screen_Restore,
-		"Screen" , "screen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-screen.png"},
-    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore ,
-		"vKeyboard" ,"kbd", "Virtual Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-kbd.png"},
-    { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore ,
-		"Buttons" ,"keyctl", "Button Configuration",PREFIX "/share/pixmaps/gpe-config-keyctl.png"},
+		N_("Screen") , "screen", N_("Screen Setup"), PREFIX "/share/pixmaps/gpe-config-screen.png"},
+    { &Keys_Build_Objects, &Unimplemented_Free_Objects, &Keys_Save, &Keys_Restore ,
+		N_("Keys & Buttons") ,"keys", N_("Keys and Buttons Setup"),PREFIX "/share/pixmaps/gpe-config-kbd.png"},
     { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore ,
-		"Network" ,"network","Network Setup",PREFIX "/share/pixmaps/gpe-config-network.png"},
+		N_("Network") ,"network",N_("Network Setup"),PREFIX "/share/pixmaps/gpe-config-network.png"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
-		"Theme" ,"theme", "Look and Feel",PREFIX "/share/pixmaps/gpe-config-theme.png"},
+		N_("Theme") ,"theme", N_("Look and Feel"),PREFIX "/share/pixmaps/gpe-config-theme.png"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
-		"Sleep" ,"sleep","Sleep Configuration",PREFIX "/share/pixmaps/gpe-config-sleep.png"},
+		N_("Power") ,"sleep",N_("Power safe Configuration"),PREFIX "/share/pixmaps/gpe-config-sleep.png"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
-		"Owner", "ownerinfo", "Owner Information",PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
+		N_("Owner"), "ownerinfo", N_("Owner Information"),PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore,
-		"Login", "login-setup", "Login Setup",PREFIX "/share/pixmaps/gpe-config-login-setup.png"},
+		N_("Login"), "login-setup", N_("Login Setup"),PREFIX "/share/pixmaps/gpe-config-login-setup.png"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore ,
-		"Users" ,"users","User Administration",PREFIX "/share/pixmaps/gpe-config-users.png"},
+		N_("Users"),"users" ,N_("User Administration"),PREFIX "/share/pixmaps/gpe-config-users.png"},
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , 
-		"GPE" ,"admin","GPE Conf Administration",PREFIX "/share/pixmaps/gpe-config-admin.png"},
+		N_("GPE") ,"admin",N_("GPE Conf Administration"),PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore ,
-		"Serial" ,"serial","Serial Port Configuration",PREFIX "/share/pixmaps/gpe-config-serial.png"},
+		N_("Serial Ports") ,"serial", N_("Serial Port Configuration"),PREFIX "/share/pixmaps/gpe-config-serial.png"},
     { &Cardinfo_Build_Objects, &Cardinfo_Free_Objects, &Unimplemented_Save, &Cardinfo_Restore ,
-		"Cardinfo" ,"cardinfo","PC/CF Card Info and Config",PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
+		N_("PCMCIA/CF Cards") ,"cardinfo", N_("PCMCIA/CF Card Info and Config"),PREFIX "/share/pixmaps/gpe-config-cardinfo.png"},
     { &Sound_Build_Objects, &Sound_Free_Objects, &Sound_Save, &Sound_Restore , 
-		"Sound" ,"sound","Sound Setup",PREFIX "/share/pixmaps/gpe-config-sound.png"},
+		N_("Sound") ,"sound", N_("Sound Setup"), PREFIX "/share/pixmaps/gpe-config-sound.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
-		"Task nameserver" ,"task_nameserver","Task for changing nameserver", PREFIX "/share/pixmaps/gpe-config-admin.png"},
+		N_("Task nameserver") ,"task_nameserver", N_("Task for changing nameserver"), PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
-		"Task sound" ,"task_sound","Command line task saving/restoring sound settings.", PREFIX "/share/pixmaps/gpe-config-admin.png"},
+		N_("Task sound") ,"task_sound", N_("Command line task saving/restoring sound settings."), PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
-		"Task background image" ,"task_background","Only select background image.", PREFIX "/share/pixmaps/gpe-config-admin.png"}
+		N_("Task background image") ,"task_background", N_("Only select background image."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
   
 struct gpe_icon my_icons[] = {
@@ -315,7 +313,7 @@ void main_one(int argc, char **argv,int applet)
   /* check if we are called to do a command line task */
   if (argc > 2)
   {
-	  if (!strcmp(argv[1],"task_nameserver"))
+	  if (!strcmp(argv[1], "task_nameserver"))
 	  {
 		  handled = TRUE;
 		  if (argc == 3)

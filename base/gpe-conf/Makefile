@@ -33,8 +33,7 @@ EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
 	gpe-conf-cardinfo.desktop.in \
 	gpe-conf-screen.desktop.in \
-	gpe-conf-kbd.desktop.in \
-	gpe-conf-keyctl.desktop.in \
+	gpe-conf-keys.desktop.in \
 	gpe-conf-login-setup.desktop.in \
 	gpe-conf-network.desktop.in \
 	gpe-conf-ownerinfo.desktop.in \
@@ -95,7 +94,8 @@ MEMBERS += users/passwd
 MEMBERS += sound/sound
 MEMBERS += sound/soundctrl
 MEMBERS += sound/alarmctrl
-MAMBERS += keys/keyboard
+MEMBERS += keys/keyboard
+MEMBERS += keys/keys
 
 MEMBERS_INFO  = main-info
 MEMBERS_INFO += storage

@@ -1,7 +1,7 @@
 [Desktop Entry]
-_Name=Virtual Keyboard
-_Comment=Virtual Keyboard Setup
-Exec=gpe-conf kbd
+_Name=Keys and Buttons
+_Comment=Keyboard and Button Setup
+Exec=gpe-conf keys
 Terminal=0
 Type=Application
 Icon=gpe-config-kbd.png
