@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <math.h>
+#include <time.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -77,6 +78,8 @@ struct gpe_icon my_icons[] = {
   { "pan", "gallery/pan" },
   { "rotate", "gallery/rotate" },
   { "sharpen", "gallery/sharpen" },
+  { "list_view", "gallery/list_view" },
+  { "icon_view", "gallery/icon_view" },
   { "blur", "gallery/blur" },
   { "ok", "ok" },
   { "cancel", "cancel" },
@@ -94,7 +97,7 @@ typedef struct {
   gint width;
   gint height;
   gint file_size;
-  gint file_modified;
+  time_t file_modified;
   gchar *file_name;
 } ImageInfo;
 
@@ -408,24 +411,15 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 {
   ImageInfo *image_info;
   PangoLayout *pango_title_layout, *pango_dimensions_layout, *pango_size_layout, *pango_modified_layout;
-  PangoRectangle pango_title_rect, pango_dimensions_rect, pango_size_rect;
-  PangoAttrList *pango_title_attr_list, *pango_normal_attr_list;
-  PangoAttribute *pango_attr_weight, *pango_attr_small;
+  PangoRectangle pango_title_rect, pango_dimensions_rect, pango_size_rect, pango_modified_rect;
   GList *this_item;
-  gint y = 0;
+  gint y = 0, text_y = 0;
 
   printf ("Starting rendering...\n");
 
-  pango_title_attr_list = pango_attr_list_new ();
-  pango_normal_attr_list = pango_attr_list_new ();
-
-  pango_attr_weight = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
-  pango_attr_small = pango_attr_scale_new (PANGO_SCALE_SMALL);
-
-  pango_attr_list_insert (pango_title_attr_list, pango_attr_weight);
-  pango_attr_list_insert (pango_normal_attr_list, pango_attr_small);
-
   this_item = loaded_images;
+
+  gdk_draw_rectangle (drawing_area->window, drawing_area->style->white_gc, TRUE, 0, 0, drawing_area->allocation.width, drawing_area->allocation.height);
 
   while (this_item)
   {
@@ -433,44 +427,45 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 
     pango_title_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_title_layout, -1);
-    pango_layout_set_markup (pango_title_layout, basename (image_info->file_name), strlen (basename (image_info->file_name)));
-    pango_layout_set_attributes (pango_title_layout, pango_title_attr_list);
+    pango_layout_set_markup (pango_title_layout, g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>", basename (image_info->file_name)), -1);
     pango_layout_get_pixel_extents (pango_title_layout, &pango_title_rect, NULL);
 
     pango_dimensions_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_dimensions_layout, -1);
-    pango_layout_set_markup (pango_dimensions_layout, g_strdup_printf ("Dimensions: %dx%d", image_info->orig_width, image_info->orig_height), -1);
-    pango_layout_set_attributes (pango_dimensions_layout, pango_normal_attr_list);
+    pango_layout_set_markup (pango_dimensions_layout, g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>", image_info->orig_width, image_info->orig_height), -1);
     pango_layout_get_pixel_extents (pango_dimensions_layout, &pango_dimensions_rect, NULL);
 
     pango_size_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_size_layout, -1);
-    pango_layout_set_markup (pango_size_layout, g_strdup_printf ("Size: %dk", image_info->file_size), -1);
-    pango_layout_set_attributes (pango_size_layout, pango_normal_attr_list);
+    pango_layout_set_markup (pango_size_layout, g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>", image_info->file_size), -1);
     pango_layout_get_pixel_extents (pango_size_layout, &pango_size_rect, NULL);
 
     pango_modified_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_modified_layout, -1);
-    pango_layout_set_markup (pango_modified_layout, g_strdup_printf ("Last modified: %d", image_info->file_modified), -1);
-    pango_layout_set_attributes (pango_modified_layout, pango_normal_attr_list);
+    pango_layout_set_markup (pango_modified_layout, g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", ctime (&image_info->file_modified)), -1);
+    pango_layout_get_pixel_extents (pango_modified_layout, &pango_modified_rect, NULL);
 
-    y = y + MARGIN_Y;
-
-    gdk_draw_rectangle (drawing_area->window, drawing_area->style->white_gc, TRUE, 0, y - MARGIN_Y, drawing_area->allocation.width, MAX_ICON_SIZE + (MARGIN_Y * 2));
-    gdk_draw_line (drawing_area->window, drawing_area->style->black_gc, MARGIN_X, y + MAX_ICON_SIZE + MARGIN_Y, drawing_area->allocation.width - MARGIN_X, y + MAX_ICON_SIZE + MARGIN_Y);
-    gdk_pixbuf_render_to_drawable (image_info->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, MARGIN_X, y, image_info->width, image_info->height, GDK_RGB_DITHER_NORMAL, MARGIN_X, y);
+    gdk_pixbuf_render_to_drawable (image_info->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, MARGIN_X, y + MARGIN_Y, image_info->width, image_info->height, GDK_RGB_DITHER_NORMAL, MARGIN_X, y + MARGIN_Y);
 
     gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y, pango_title_layout);
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + pango_title_rect.height + MARGIN_Y, pango_dimensions_layout);
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + pango_title_rect.height + pango_dimensions_rect.height + (MARGIN_Y * 2), pango_size_layout);
-    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + pango_title_rect.height + pango_dimensions_rect.height + pango_size_rect.height + (MARGIN_Y * 3), pango_modified_layout);
+    text_y = pango_title_rect.height + MARGIN_Y;
+    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, pango_dimensions_layout);
+    text_y = text_y + pango_dimensions_rect.height + MARGIN_Y;
+    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, pango_size_layout);
+    text_y = text_y + pango_size_rect.height + MARGIN_Y;
+    gdk_draw_layout (drawing_area->window, drawing_area->style->black_gc, (MARGIN_X * 3) + MAX_ICON_SIZE, y + text_y, pango_modified_layout);
+    text_y = text_y + pango_modified_rect.height;
 
-    y = y + MAX_ICON_SIZE + MARGIN_Y + 1;
+    if (text_y >= MAX_ICON_SIZE)
+      y = y + text_y;
+    else
+      y = y + MAX_ICON_SIZE;
 
-    gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
+    y = y + (MARGIN_Y * 2);
 
-    while (gtk_events_pending ())
-      gtk_main_iteration ();
+    gdk_draw_line (drawing_area->window, drawing_area->style->black_gc, MARGIN_X, y, drawing_area->allocation.width - MARGIN_X, y);
+
+    y = y + 1;
 
     this_item = this_item->next;
   }
@@ -500,9 +495,9 @@ render_list_view ()
     image_info->width = gdk_pixbuf_get_width (image_info->pixbuf);
     image_info->height = gdk_pixbuf_get_height (image_info->pixbuf);
 
-    //stat (image_info->file_name, &file_stats);
-    image_info->file_size = 0;
-    image_info->file_modified = 0;
+    stat (image_info->file_name, &file_stats);
+    image_info->file_size = file_stats.st_size / 1024;
+    image_info->file_modified = file_stats.st_mtime;
 
     printf ("Rendering image %s\n", image_info->file_name);
 
@@ -533,6 +528,11 @@ render_list_view ()
     }
 
     this_item = this_item->next;
+
+    gtk_progress_bar_pulse (GTK_PROGRESS_BAR (loading_progress_bar));
+
+    while (gtk_events_pending ())
+      gtk_main_iteration ();
   }
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -582,16 +582,10 @@ render_icon_view ()
   return il;
 }
 
-void
-add_directory (gchar *directory)
+static void
+render_view (GtkWidget *parent, gint view)
 {
-  gchar *filename;
-  struct dirent *d;
-  DIR *dir;
-
-  loading_directory = 1;
-  printf ("Selected directory: %s\n", directory);
-  g_list_free (image_filenames);
+  image_filenames = g_list_first (image_filenames);
 
   if (image_widget)
   {
@@ -603,12 +597,36 @@ add_directory (gchar *directory)
 
   gtk_widget_show (loading_toolbar);
 
+  if (view_widget)
+    gtk_widget_destroy (view_widget);
+
+  if (view == 0)
+    view_widget = render_icon_view ();
+  if (view == 1)
+    view_widget = render_list_view ();
+
+  gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
+		      GTK_SIGNAL_FUNC (show_image), NULL);
+  gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
+
+  gtk_widget_hide (loading_toolbar);
+}
+
+void
+add_directory (gchar *directory)
+{
+  gchar *filename;
+  struct dirent *d;
+  DIR *dir;
+
+  loading_directory = 1;
+  printf ("Selected directory: %s\n", directory);
+  g_list_free (image_filenames);
+  image_filenames = NULL;
+
   dir = opendir (directory);
   if (dir)
   {
-    if (view_widget)
-      gtk_widget_destroy (view_widget);
-
     while (d = readdir (dir), d != NULL)
     {
       if (loading_directory == 0)
@@ -630,12 +648,7 @@ add_directory (gchar *directory)
 	}
       }
     }
-    view_widget = render_list_view (image_filenames);
-    gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
-		        GTK_SIGNAL_FUNC (show_image), NULL);
-    gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
-
-    gtk_widget_hide (loading_toolbar);
+    render_view (NULL, current_view);
   }
 }
 
@@ -892,8 +905,17 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Slideshow"), 
 			   _("Slideshow"), _("Slideshow"), pw, show_new_slideshow, NULL);
 
-  gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), view_option_menu,
-			   _("Select View"), _("Select View"));
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
+  p = gpe_find_icon ("icon_view");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
+			   _("Icon view"), _("Icon view"), pw, render_view, 0);
+
+  p = gpe_find_icon ("list_view");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("List view"), 
+			   _("List view"), _("List view"), pw, render_view, 1);
 
   p = gpe_find_icon ("fullscreen");
   pw = gpe_render_icon (window->style, p);

@@ -64,6 +64,8 @@ install: all
 	install -m 644 pixmaps/blur.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/blur.png
 	install -m 644 pixmaps/pan.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/pan.png
 	install -m 644 pixmaps/rotate.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/rotate.png
+	install -m 644 pixmaps/list_view.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/list_view.png
+	install -m 644 pixmaps/icon_view.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/icon_view.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-gallery
 
 clean:
