@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<opml>
+  <head>
+    <expansionState>1,8,24,25,32,33</expansionState>
+  </head>
+  <body>
+    <outline text="Main">
+      <outline text="App Manager"/>
+      <outline text="Beam"/>
+      <outline text="Bluetooth"/>
+      <outline text="Calculator"/>
+      <outline text="Calendar"/>
+      <outline text="Conf"/>
+      <outline text="Contacts">
+        <outline text="make font sizes of notebook tabs auto adjust to required size"/>
+      </outline>
+      <outline text="Database editor"/>
+      <outline text="Edit"/>
+      <outline text="Filemanager"/>
+      <outline text="Gallery"/>
+      <outline text="IRC"/>
+      <outline text="Login"/>
+      <outline text="Mail"/>
+      <outline text="NMF"/>
+      <outline text="Sketchbook"/>
+      <outline text="Soundbite"/>
+      <outline text="Timesheet"/>
+      <outline text="Today"/>
+      <outline text="Todo"/>
+      <outline text="Word"/>
+    </outline>
+    <outline text="Libraries">
+      <outline text="GPE">
+        <outline text="GPE"/>
+        <outline text="Conf"/>
+        <outline text="Database"/>
+        <outline text="Widget"/>
+      </outline>
+      <outline text="Todo DB"/>
+      <outline text="Soundgen"/>
+    </outline>
+    <outline text="Matchbox">
+      <outline text="Dockapps">
+        <outline text="Battery"/>
+        <outline text="Clipboard"/>
+        <outline text="Frontlight control"/>
+        <outline text="Theme changer"/>
+      </outline>
+    </outline>
+  </body>
+</opml>
