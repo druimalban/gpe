@@ -3,7 +3,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.18
+VERSION = 0.20
 
 MEMBERS = main dun sdp pan lap rfcomm
 
