@@ -157,6 +157,9 @@ main (int argc, char *argv[])
 	flag_c = TRUE;
     }
 
+  if (geteuid () == 0)
+    exit (system (command));
+
   window = gtk_dialog_new ();
   
   hbox = gtk_hbox_new (FALSE, 0);
