@@ -1,5 +1,17 @@
 2002-08-30  Philip Blundell  <philb@gnu.org>
 
+	* event-db.h (event_s): Add "sequence".
+	* event-db.c (event_db_write): Write out SEQUENCE tag.
+	(load_data_callback): Read it back in again.
+
+	* event-ui.c (click_ok): Bump sequence number on existing events.
+
+2002-08-30  Philip Blundell  <philb@gnu.org>
+
+	* event_db.h (struct calendar_time_s): New struct.
+
+2002-08-30  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (struct edit_state): Delete "old_alarm".
 	(click_ok): Replace test of s->old_alarm with direct inspection of
 	ev->flags.

@@ -138,6 +138,10 @@ load_data_callback (void *arg, int argc, char **argv, char **names)
 	  ev->alarm = atoi (argv[1]);
 	  ev->flags |= FLAG_ALARM;
 	}
+      else if (!strcasecmp (argv[0], "sequence"))
+	{
+	  ev->sequence = atoi (argv[1]);
+	}
     }
   return 0;
 }
@@ -478,7 +482,8 @@ event_db_write (event_t ev, char **err)
       || insert_values (sqliteh, ev->uid, "rincrement", "%d", ev->recur.increment)
       || insert_values (sqliteh, ev->uid, "rdaymask", "%d", ev->recur.daymask)
       || insert_values (sqliteh, ev->uid, "modified", "%q", buf_modified)
-      || insert_values (sqliteh, ev->uid, "start", "%q", buf_start))
+      || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
+      || insert_values (sqliteh, ev->uid, "sequence", "%d", ev->sequence))
     return FALSE;
 
   if (ev->recur.end != 0)

@@ -214,6 +214,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   if (s->ev) 
     {
       ev = s->ev;
+      ev->sequence++;
       ev_d = event_db_get_details (ev);
       if (ev->flags & FLAG_ALARM) 
 	unschedule_alarm (ev->uid);

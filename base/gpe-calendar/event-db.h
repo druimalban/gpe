@@ -44,6 +44,7 @@ typedef time_t calendar_time_t;
 typedef struct event_s
 {
   unsigned long uid;
+  unsigned long sequence;
 
   calendar_time_t start;
   time_t modified;
