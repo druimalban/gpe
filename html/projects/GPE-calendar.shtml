@@ -8,9 +8,8 @@
 <H2>Coordinator</H2>
 <P>
 The coordinator for this sub-project is Philip Blundell
-(<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>) . If you want to contribute to
-this
-project, please contact him directly.
+(<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>) . If you want to 
+contribute to this project, please contact him directly.
 </P>
 
 <H2>Function</H2>
@@ -18,21 +17,23 @@ project, please contact him directly.
 This is very obvious. The calendar stores and manages scheduled events.
 Special functionality included is support for
 <UL>
-<LI> Entries whithout due-time, just a note for a particular day.
-<LI> Reoccuring events with options for daily, workdays, weekends, monthly,
-yearly (birthdays or other anniversarys)
-<LI> Beaming entries via IrDA IrOBEX in vCalendar format.
+<LI> Entries without due-time, just a note for a particular day.
+<LI> Recurring events with options for daily, workdays, weekends, monthly,
+yearly (birthdays or other anniversaries)
+<LI> Beaming entries via IrDA/Bluetooth OBEX in vCalendar format.
 <LI> Different view modes to give the user a good overview.
 </UL>
 </P>
 
+<H2>Status</H2>
+<P>
+The source code can be found in <A href="../cvs.shtml">CVS</A>, module
+<B>gpe-calendar</B>.  At present it is not complete though most of the
+major parts are in place.
+
 <H2>User interface</H2>
 <P>
-Philip Blundell (<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>) just posted a nice UI mock-up application to
-<A
-HREF="ftp://ftp.armlinux.org/users/philb/cotidie">ftp://ftp.armlinux.org/users/philb/cotidie</A>
-(ARM binary). For those that don't want to run it, here are some
-screenshots:
+The screenshots below are a little out of date but give a basic idea:
 </P>
 <P>
 <IMG SRC="/images/cotidie-main.png" ALT="Main view">
@@ -40,21 +41,5 @@ screenshots:
 <IMG SRC="/images/cotidie-todo.png" ALT="New todo entry">
 <IMG SRC="/images/cotidie-week.png" ALT="Week view">
 </P>
-
-<H2>Data to store</H2>
-<P>
-Here a short start of what data has to be stored:
-<PRE>
-char[] description;
-datetime starttime;
-datetime endtime;
-bool alarm;
-datetime alarm_before_starttime; /* amount of time to ring alarm before
-actual starttime */
-repeattype repeat;
-unsigned int flags; /* some misc. flags like enable/disable item, etc. */
-
-enum repeattype = once, daily, weekly, monthly, yearly, workdays, weekends;
-</PRE>
 
 <!--#include virtual="/includes/foot.shtml"-->
