@@ -2,7 +2,16 @@
 
 	* gpe-login.c (read_key_events): New function.
 	(key_pressed): Likewise.
-	(main): Handle key-pressed events.
+	(main): Handle key-pressed events.  Ignore SIGCHLD.
+
+	* familiar/control.gpe-login: Set version to 0.11.
+	* familiar/control.gpe-dm: Likewise.
+
+	* gpe-login-setup: Rename to ...
+	* gpe-login.setup: ... this.
+	* gpe-login.buttons: New file.
+	* Makefile (install): Put above in /etc/X11.
+	(clean): Remove gpe-dm too.
 
 2002-06-19  Philip Blundell  <philb@gnu.org>
 
