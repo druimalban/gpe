@@ -1,5 +1,9 @@
 2003-02-13  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.34 released.
+
+2003-02-13  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Just say "Start" and "End"
 	not "Start on" and "End on".  Put recurrence widgets inside a
 	notebook.  Remove setting of window default size.
