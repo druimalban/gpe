@@ -1106,7 +1106,10 @@ list_button_press_event (GtkWidget *widget, GdkEventButton *b, GtkListStore *lis
             }
           else
             {
-                edit_contact(widget, NULL);
+                if (mode_landscape)
+                  edit_contact(widget, NULL);
+                else
+                  show_details_window(widget);
             }
         }
     }
