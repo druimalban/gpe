@@ -420,8 +420,6 @@ sigchld_handler (int sig)
 static void
 clicked (GtkWidget *w, GdkEventButton *ev)
 {
-  gpe_system_tray_send_message (dock_window, "Hello world of dock messages", 0);
-
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
