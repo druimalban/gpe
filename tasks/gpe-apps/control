@@ -1,7 +1,7 @@
 Package: gpe-apps
 Section: base
 Priority: optional
-Version: 0.04
+Version: 0.05
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: gpe-calendar, gpe-todo, gpe-appmgr, gpe-login, gpe-dm, gpe-session-scripts, xkbd, matchbox, gtk-engines-xenophilia, xfonts-75dpi, gpe-what, gpe-edit, gpe-soundbite, keylaunch, esd, sfm, detect-stylus, xstroke, dillo, gpe-soundserver, gpe-bootsplash, gpe-kbd, gtk-theme-gpe, gpe-minicalc
