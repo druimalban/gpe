@@ -868,7 +868,6 @@ main (int argc, char *argv[])
 					 pango_lang_code,
 					 _("Record"),
 					 _("recalibrates touchscreen")));
-  gtk_label_set_line_wrap (GTK_LABEL (calibrate_hint), TRUE);
 
   if (autolock_mode || have_users)
     {
