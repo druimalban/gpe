@@ -25,6 +25,8 @@
 #include <time.h>
 #include "applets.h"
 #include "gpe/gtkminifilesel.h"
+#include "gpe/gtkminifilesel.h"
+#include "gpe/errorbox.h"
 
 
 /***************************************************************************************/
@@ -193,8 +195,16 @@ void ask_user_a_file(char *path, char *prompt,
 /***************************************************************************************/
 
 
-void system_and_gfree(gchar *cmd)
+int system_and_gfree(gchar *cmd)
 {
-  system(cmd);
+  int rv;
+  gchar *buf;
+  rv = system(cmd);
+  if(rv != 0)
+    {
+      buf = g_strdup_printf("%s\n failed with return code %d\nperhaps you have \nmisinstalled something",cmd, rv);
+      gpe_error_box(buf);
+      g_free(buf);
+    }
   g_free(cmd);
 }

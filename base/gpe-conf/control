@@ -4,5 +4,5 @@ Priority: optional
 Version: 0.0.1
 Architecture: arm
 Maintainer: Pierre Tardy <tardyp@free.fr>
-Depends: libgtk1.2, libgpewidget0, libgdk-pixbuf2
+Depends: libgpewidget0 (0.15+) 
 Description: A set of configuration GUI

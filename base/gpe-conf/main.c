@@ -30,6 +30,7 @@
 #include "network.h"
 #include "theme.h"
 #include "keyctl.h"
+#include "sleep.h"
 
 
 #include "gpe/init.h"
@@ -65,6 +66,7 @@ struct Applet applets[]=
     { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Unimplemented_Restore , "Buttons" ,"keyctl", "Buttons Configuration:"},
     { &Network_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Network" ,"network","IP Adresses:"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Unimplemented_Restore , "Theme" ,"theme", "Global apparence:"},
+    { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sleep" ,"sleep","Sleep Config:"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Sound" ,"sound","Sound Setup:"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Mouse" ,"mouse","Mouse Config:"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Energy" ,"apm", "Advanced Power Management Setup"},
@@ -76,6 +78,8 @@ struct Applet applets[]=
 struct gpe_icon my_icons[] = {
   { "save" },
   { "cancel" },
+  { "media-play" },
+  { "media-stop" },
   { "ipaq" },
   { NULL, NULL }
 };
@@ -117,8 +121,16 @@ void item_select(GtkWidget *ignored, gpointer user_data)
   gtk_container_add(GTK_CONTAINER(self.frame),self.applet);
   gtk_frame_set_label(GTK_FRAME(self.frame),applets[i].frame_label);
   gtk_widget_show_all(self.applet);
-  gtk_widget_show(self.save);
-  gtk_widget_show(self.cancel);
+
+  if(applets[self.cur_applet].Save != &Unimplemented_Save)
+    gtk_widget_show(self.save);
+  else
+    gtk_widget_hide(self.save);
+    
+  if(applets[self.cur_applet].Restore != &Unimplemented_Restore)
+    gtk_widget_show(self.cancel);
+  else
+    gtk_widget_hide(self.cancel);
 }
 
 void initwindow()
@@ -147,11 +159,16 @@ void initwindow()
 void make_container()
 {
   GtkWidget *hbuttons;
+  //  GtkWidget *scrolledwindow = gtk_scrolled_window_new(NULL,NULL);
+
+  //  gtk_widget_show (scrolledwindow);
+  //  gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
 
   self.frame = gtk_frame_new ("About GPE-Conf:");
-  gtk_widget_set_usize (self.frame, 240, 250);
 
-  gtk_box_pack_start(GTK_BOX(self.vbox),self.frame,TRUE, TRUE, 0);
+  //  gtk_container_add(GTK_CONTAINER(scrolledwindow),self.frame);
+  gtk_container_add(GTK_CONTAINER(self.vbox),self.frame);
+  gtk_widget_set_usize (self.frame, 240, 250);
 
   hbuttons = gtk_hbox_new(TRUE,0);
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons,TRUE, TRUE, 0);

@@ -35,8 +35,6 @@ void set_brightness (int brightness)
 
 int get_brightness ()
 {
-  
-  FILE *pipe;
   int brightness;
   char state[5];
 #ifdef __i386__

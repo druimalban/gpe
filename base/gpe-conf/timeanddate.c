@@ -31,7 +31,7 @@ static struct
 
 void GetInternetTime()
 {
-  system_printf("ntpdate %s",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
+  system_printf("gpe-confsuid --sntime %s",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
   Time_Restore();
 }
 
@@ -108,14 +108,15 @@ void Time_Save()
   m=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.m));
   s=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.s));
   tm.tm_mday=day;
-  tm.tm_mon=month-1;
+  tm.tm_mon=month;
   tm.tm_year=year-1900;
   tm.tm_hour=h;
   tm.tm_min=m;
   tm.tm_sec=s;
   tm.tm_isdst = 0;
   t=mktime(&tm);
-  stime(&t);
+  system_printf("gpe-confsuid --stime %ld",t);
+  //  stime(&t);
 }
 void Time_Restore()
 {

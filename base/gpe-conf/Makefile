@@ -9,17 +9,25 @@ MEMBERS += kbd
 MEMBERS += network
 MEMBERS += theme
 MEMBERS += keyctl
+MEMBERS += sleep/main sleep/interface sleep/callbacks sleep/conf sleep/confGUI 
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
-all: gpe-conf
+all: gpe-conf gpe-confsuid
 
 gpe-conf: $(OBJS)
 	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs`
 	strip gpe-conf
 
+gpe-confsuid: gpe-confsuid.c
+	$(CC) -o $@ gpe-confsuid.c 
+	strip gpe-confsuid
+
 install: gpe-conf
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
+	sudo chown root.root gpe-confsuid
+	sudo chmod a+s gpe-confsuid 
+	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-confsuid
 
 ipkgl:
 	cp $(HOME)/gpe-conf ./

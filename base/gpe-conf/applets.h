@@ -29,8 +29,8 @@ void ask_user_a_file(char *path, char *prompt,
 int mystrcmp(char *s, char *c);
 
 // one usefull macro..
-void system_and_gfree(gchar *cmd);
-#define system_printf(x,y...)   system_and_gfree(g_strdup_printf(x,y))
+int system_and_gfree(gchar *cmd);
+#define system_printf(y...)   system_and_gfree(g_strdup_printf(y))
 
 extern struct gpe_icon my_icons[];
 extern GtkStyle *wstyle; // for pixmaps

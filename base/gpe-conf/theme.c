@@ -80,7 +80,7 @@ void get_wallpaper_filename(char *cur)
   if(strlen(home) > 240)
       gpe_error_box( "bad $HOME !!");
 
-  sprintf(cur,"%s/.wallpaper",home);
+  sprintf(cur,"%s/.gpe/wallpaper",home);
 
 }
 char * get_cur_gtktheme()
@@ -222,6 +222,8 @@ void Theme_Save()
 	  fprintf(f,file);
 	  fclose(f);
 	}
+      if(system_printf("qiv -z %s",file))
+	gpe_error_box("you need qiv installed\n to set the wallpaper!!");
     }
 }
 

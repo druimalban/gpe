@@ -18,7 +18,6 @@
 
 void calibrate ()
 {
-	int pid;
 
 #ifdef __i386__
 	gpe_error_box ("you are on 386 machine!!");

@@ -133,10 +133,6 @@ GtkWidget *Keyctl_Build_Objects()
   self.button[3]=button_4;
   self.button[4]=button_5;
   
-  //  gtk_widget_show (scrolledwindow1);
-  //gtk_container_add (GTK_CONTAINER (frame1), scrolledwindow1);
-  //gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_ALWAYS, GTK_POLICY_ALWAYS);
-
   gtk_widget_show (layout1);
   gtk_container_add (GTK_CONTAINER (vbox1), layout1);
   gtk_layout_set_size (GTK_LAYOUT (layout1), 400, 400);
