@@ -30,11 +30,11 @@ print_xsetting (XSettingsSetting *setting)
   switch (setting->type)
     {
     case XSETTINGS_TYPE_INT:
-      printf ("(integer) %d", setting->data.v_int);
+      printf ("int %d", setting->data.v_int);
       break;
 
     case XSETTINGS_TYPE_COLOR:
-      printf ("(colour) %04x %04x %04x %04x",
+      printf ("col %04x %04x %04x %04x",
 	      setting->data.v_color.red,
 	      setting->data.v_color.green,
 	      setting->data.v_color.blue,
@@ -42,7 +42,7 @@ print_xsetting (XSettingsSetting *setting)
       break;
 
     case XSETTINGS_TYPE_STRING:
-      printf ("(string) %s", setting->data.v_string);
+      printf ("str %s", setting->data.v_string);
       break;
     }
 
