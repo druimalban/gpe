@@ -1,3 +1,7 @@
+2003-03-28  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.40 released.
+
 2003-03-27  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (click_ok): Fix formatting.
