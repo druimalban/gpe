@@ -1,0 +1,9 @@
+Package: startup-monitor
+Section: x11
+Priority: optional
+Version: 0.10
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: xlibs, startup-notification, matchbox, gpe-icons (>= 0.19)
+Description: Startup notification monitor applet
+

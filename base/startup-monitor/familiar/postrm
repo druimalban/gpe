@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -f /etc/Xsession-gpe.d/70startup-monitor
+
