@@ -237,9 +237,9 @@ db_store_setting (sqlite *db, XSettingsSetting *setting)
 }
 
 void
-load_defaults (XSettingsManager *manager, sqlite *db)
+load_defaults_file (XSettingsManager *manager, sqlite *db, const char *file)
 {
-  FILE *fp = fopen ("/etc/gpe/xsettings.default", "r");
+  FILE *fp = fopen (file, "r");
   if (fp)
     {
       char buf[128];
@@ -272,6 +272,34 @@ load_defaults (XSettingsManager *manager, sqlite *db)
 	}
 
       fclose (fp);
+    }
+}
+
+#define DEFAULT_FILE "/etc/gpe/xsettings.default"
+#define DEFAULT_DIR  "/etc/gpe/xsettings-default.d"
+
+void
+load_defaults (XSettingsManager *manager, sqlite *db)
+{
+  GDir *dir = g_dir_open (DEFAULT_DIR, 0, NULL);
+  char *file = g_strdup (DEFAULT_FILE);
+  const char *entry = NULL;
+
+  while (file)
+    {
+      load_defaults_file (manager, db, file);
+      g_free (file);
+
+      if (dir)
+	if ((entry = g_dir_read_name (dir)) != NULL)
+	  {
+	    file = g_build_filename (DEFAULT_DIR, entry, NULL);
+	  }
+	else
+	  {
+	    file = NULL;
+	    g_dir_close (dir);
+	  }
     }
 }
 
