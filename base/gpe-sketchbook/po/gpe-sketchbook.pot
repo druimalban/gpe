@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-19 01:22+0300\n"
+"POT-Creation-Date: 2003-04-20 01:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,27 +14,39 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:111
+#: src/gpe-sketchbook.c:112
 msgid "Sketchbook: preferences"
 msgstr ""
 
-#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:115
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:116
 msgid "Sketchbook"
 msgstr ""
 
-#: src/preferences.c:85
+#: src/preferences.c:76
+msgid ""
+"Cannot create XSettings client.\n"
+"Use default preferences."
+msgstr ""
+
+#: src/preferences.c:152
+msgid ""
+"gpe-confd is not running.\n"
+"Cannot save the preferences."
+msgstr ""
+
+#: src/preferences.c:209
 msgid "Use joypad scrolling"
 msgstr ""
 
-#: src/preferences.c:93
+#: src/preferences.c:217
 msgid "Grow on scroll"
 msgstr ""
 
-#: src/preferences.c:100
+#: src/preferences.c:224
 msgid "OK"
 msgstr ""
 
-#: src/preferences.c:101 src/selector-cb.c:67 src/sketchpad-cb.c:244
+#: src/preferences.c:225 src/selector-cb.c:67 src/sketchpad-cb.c:244
 msgid "Cancel"
 msgstr ""
 
@@ -62,7 +74,7 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:477
+#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
 msgid "Delete"
 msgstr ""
 
@@ -93,7 +105,7 @@ msgstr ""
 msgid "Discard"
 msgstr ""
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:476
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
 msgid "Save"
 msgstr ""
 
@@ -101,15 +113,15 @@ msgstr ""
 msgid "Save current sketch?"
 msgstr ""
 
-#: src/sketchpad-gui.c:474
+#: src/sketchpad-gui.c:465
 msgid "New"
 msgstr ""
 
-#: src/sketchpad-gui.c:475
+#: src/sketchpad-gui.c:466
 msgid "Import"
 msgstr ""
 
-#: src/sketchpad-gui.c:478
+#: src/sketchpad-gui.c:469
 msgid "Properties"
 msgstr ""
 
