@@ -120,6 +120,7 @@ set_day_view (void)
 {
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
+  update_current_view ();
 }
 
 void
@@ -160,6 +161,7 @@ static void
 gpe_cal_exit()
 {
   schedule_next(0, 0);
+  event_db_stop();
   gtk_main_quit();	
 }
 		
