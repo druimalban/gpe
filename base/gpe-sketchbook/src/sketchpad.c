@@ -15,11 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+#include "gpe/errorbox.h"
 #include "gpe-sketchbook.h"
 #include "sketchpad.h"
 #include "sketchpad-cb.h"
 #include "files.h"
 #include "selector.h"
+#include "selector-cb.h"
+
 
 //--i18n
 #include <libintl.h>
@@ -67,8 +70,8 @@ void sketchpad_init(){
   drawing_area_pixmap_buffer = NULL;
   is_current_sketch_modified = FALSE;
 
-  drawing_area_width  = 320;//230;
-  drawing_area_height = 320;//250;
+  drawing_area_width  = SKETCH_WIDTH;
+  drawing_area_height = SKETCH_HEIGHT;
 
   prev_pos_x = NO_PREV_POS;
   prev_pos_y = NO_PREV_POS;
@@ -119,6 +122,8 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_tools_pencil), TRUE);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_brush_medium), TRUE);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_color_black),  TRUE);
+
+  gtk_widget_grab_focus(drawing_area);
 
 }//window_sketchpad_init()
 
@@ -194,11 +199,55 @@ void sketchpad_open_file(gchar * fullpath_filename){
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){
-  reset_drawing_area(drawing_area);
+  drawing_area_width = SKETCH_WIDTH;
+  drawing_area_height = SKETCH_HEIGHT;
+  reset_drawing_area();
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
-  sketchpad_refresh_drawing_area(drawing_area);
+  sketchpad_refresh_drawing_area();
 }//sketchpad_new_sketch()
+
+
+/*
+ * Creates a new sketch and opens the selected image when the fileselector's
+ * OK button is clicked.
+ */
+static void import_from_filesel(GtkFileSelection *fs, GtkButton *ignored)
+{
+  const gchar *file = gtk_file_selection_get_filename(fs);
+
+  if(! file_load(file)){
+    gpe_error_box_fmt(_("Import of `%s' failed."), file);
+    // leave the file selector open
+  }
+  else {
+    current_sketch = SKETCH_NEW;
+    is_current_sketch_modified = TRUE;	// so the user is prompted to save
+    sketchpad_reset_title();
+    gtk_widget_destroy(GTK_WIDGET(fs));
+
+    // Switch to the sketchpad page if we were called from the image selector
+    switch_to_page(PAGE_SKETCHPAD);
+  }
+}
+
+
+// Opens a file selection dialog for the user to import an image
+void sketchpad_import_image(void){
+  GtkWidget *file_selector = gtk_file_selection_new(_("Import Image ..."));
+
+  gtk_file_selection_complete(GTK_FILE_SELECTION(file_selector), "*.png");
+
+  gtk_signal_connect_object
+      (GTK_OBJECT(GTK_FILE_SELECTION(file_selector)->ok_button),
+       "clicked", GTK_SIGNAL_FUNC(import_from_filesel), file_selector);
+
+  gtk_signal_connect_object
+      (GTK_OBJECT(GTK_FILE_SELECTION(file_selector)->cancel_button),
+       "clicked", GTK_SIGNAL_FUNC(gtk_widget_destroy), file_selector);
+
+  gtk_widget_show(file_selector);
+}
 
 void sketchpad_set_drawing_area(GtkWidget * a_drawing_area){
   drawing_area = a_drawing_area;
@@ -262,15 +311,41 @@ void draw_line (gdouble x1, gdouble y1,
   }
 }
 
-void reset_drawing_area(){
+/*
+ * Changes the drawing area's size, and ensures it's realized
+ */
+static void set_drawing_area_size(int width, int height){
+  drawing_area_width = width;
+  drawing_area_height = height;
+  gtk_widget_set_usize(drawing_area, width, height);
+
   if(! GTK_WIDGET_REALIZED(drawing_area)){ //drawing_area->window == NULL
     gtk_widget_realize(drawing_area);
   }
-  if(drawing_area_pixmap_buffer) gdk_pixmap_unref(drawing_area_pixmap_buffer);
-  drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
-                                              drawing_area_width,
-                                              drawing_area_height,
-                                              -1);
+
+  // If the window size has changed, we will need to create a new pixmap.
+  if (drawing_area_pixmap_buffer){
+    gint oldwidth, oldheight;
+    gdk_drawable_get_size(GDK_DRAWABLE(drawing_area_pixmap_buffer),
+                          &oldwidth, &oldheight);
+    if (oldwidth != drawing_area_width || oldheight != drawing_area_height){
+      gdk_pixmap_unref(drawing_area_pixmap_buffer);
+      drawing_area_pixmap_buffer = NULL;
+    }
+  }
+
+  if(! drawing_area_pixmap_buffer){
+    drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
+						drawing_area_width,
+						drawing_area_height,
+						-1);
+  }
+}
+
+// Creates or recreates the drawing area buffer and paints it blank
+void reset_drawing_area(void){
+  set_drawing_area_size(drawing_area_width, drawing_area_height);
+
   //paint a white rectangle covering the whole area
   gdk_draw_rectangle (drawing_area_pixmap_buffer,
                       drawing_area->style->white_gc,
@@ -281,19 +356,13 @@ void reset_drawing_area(){
   graphical_context = gdk_gc_new(drawing_area->window);
 }
 
-void sketchpad_refresh_drawing_area(){
+void sketchpad_refresh_drawing_area(void){
   gdk_draw_pixmap(drawing_area->window,
                   drawing_area->style->fg_gc[GTK_WIDGET_STATE (drawing_area)],
                   drawing_area_pixmap_buffer,
                   0, 0, 0, 0,
                   drawing_area_width, drawing_area_height);  
 }
-
-void clear_drawing_area(){//FIXME: unused ?
-  reset_drawing_area();
-  sketchpad_refresh_drawing_area();
-}
-
 
 GdkPixbuf * sketchpad_get_current_sketch_pixbuf(){
   return gdk_pixbuf_get_from_drawable(NULL,//GdkPixbuf *dest,
@@ -311,15 +380,9 @@ void sketchpad_set_current_sketch_from_pixbuf(GdkPixbuf * pixbuf){
   drawing_area_width  = gdk_pixbuf_get_width (pixbuf);
   drawing_area_height = gdk_pixbuf_get_height(pixbuf);
 
-  if(! GTK_WIDGET_REALIZED(drawing_area)){ //drawing_area->window == NULL
-    gtk_widget_realize(drawing_area);
-  }
-  if(! drawing_area_pixmap_buffer){
-    drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
-                                                drawing_area_width,
-                                                drawing_area_height,
-                                                -1);
-  }
+  set_drawing_area_size(gdk_pixbuf_get_width(pixbuf),
+                        gdk_pixbuf_get_height(pixbuf));
+
   gdk_pixbuf_render_to_drawable(pixbuf,//GdkPixbuf *pixbuf,
                                 drawing_area_pixmap_buffer,//GdkDrawable *drawable,
                                 graphical_context,//GdkGC *gc,
@@ -332,5 +395,5 @@ void sketchpad_set_current_sketch_from_pixbuf(GdkPixbuf * pixbuf){
                                 GDK_RGB_DITHER_NONE,//GdkRgbDither dither,
                                 0,//int x_dither,
                                 0);//int y_dither);
-  sketchpad_refresh_drawing_area(drawing_area);
+  sketchpad_refresh_drawing_area();
 }

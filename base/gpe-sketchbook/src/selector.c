@@ -85,12 +85,12 @@ void window_selector_init(GtkWidget * window_selector){
       switch(errno){
         case EEXIST: //already exists
           gpe_error_box_fmt(_("Cannot read the sketchbook directory: %s. Exit."),
-                            sys_errlist[scandir_errno]);
+                            strerror(scandir_errno));
           break;
         case EACCES: //write permission is denied
         case ENOSPC: //file system doesn't have enough room
         default:
-          gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchbook.save_dir, sys_errlist[errno]);
+          gpe_error_box_fmt(_("Cannot create %s: %s. Exit."), sketchbook.save_dir, strerror(errno));
       }
       app_quit();
     }

@@ -51,16 +51,17 @@ extern gboolean is_current_sketch_modified;
 void sketchpad_init();
 void window_sketchpad_init(GtkWidget * window_sketchpad);
 
-void reset_drawing_area();
+void reset_drawing_area(void);
 
 void sketchpad_set_drawing_area(GtkWidget * a_drawing_area);
-void sketchpad_refresh_drawing_area();
+void sketchpad_refresh_drawing_area(void);
 void sketchpad_set_current_sketch_from_pixbuf(GdkPixbuf * pixbuf);
 GdkPixbuf * sketchpad_get_current_sketch_pixbuf();
 
 void sketchpad_open_file(gchar * fullpath_filename);
 void sketchpad_new_sketch();
 void sketchpad_reset_title();
+void sketchpad_import_image(void);
 
 //--drawing functions
 void draw_point(gdouble x, gdouble y);
@@ -99,5 +100,9 @@ extern GdkColor blue;
 //void sketchpad_set_brush   (gint    brush);
 void sketchpad_set_tool_s  (gchar * tool);
 void sketchpad_set_brush_s (gchar * brush);
+
+// Initial sketch sizes
+#define SKETCH_WIDTH 320
+#define SKETCH_HEIGHT 320
 
 #endif

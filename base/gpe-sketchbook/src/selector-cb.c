@@ -73,6 +73,10 @@ void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
 
 }
 
+void on_button_selector_import_clicked (GtkButton *button, gpointer user_data){
+  sketchpad_import_image();
+}
+
 
 void _switch_icon(GtkButton * button){
   GtkWidget * old_icon;

@@ -417,6 +417,7 @@ GtkWidget * _files_popup_new (GtkWidget *parent_button){
   GtkWidget *vbox;//to return
 
   GtkWidget * button_new;
+  GtkWidget * button_import;
   GtkWidget * button_save;
   GtkWidget * button_delete;
   GtkWidget * button_properties;
@@ -424,6 +425,7 @@ GtkWidget * _files_popup_new (GtkWidget *parent_button){
   GtkStyle * style = sketchbook.window->style;
 
   button_new        = gpe_picture_button_aligned (style, _("New"), "new", GPE_POS_LEFT);
+  button_import     = gpe_picture_button_aligned (style, _("Import"), "import", GPE_POS_LEFT);
   button_save       = gpe_picture_button_aligned (style, _("Save"), "save", GPE_POS_LEFT);
   button_delete     = gpe_picture_button_aligned (style, _("Delete"), "delete", GPE_POS_LEFT);
   button_properties = gpe_picture_button_aligned (style, _("Properties"), "properties", GPE_POS_LEFT);
@@ -434,12 +436,14 @@ GtkWidget * _files_popup_new (GtkWidget *parent_button){
               G_CALLBACK (on_button_file_ ##action ##_clicked), NULL);
 
   _BUTTON_SETUP(new);
+  _BUTTON_SETUP(import);
   _BUTTON_SETUP(save);
   _BUTTON_SETUP(delete);
   _BUTTON_SETUP(properties);
 
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_new,        FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), button_import,     FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_save,       FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_delete,     FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), button_properties, FALSE, FALSE, 0);

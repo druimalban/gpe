@@ -181,6 +181,13 @@ void on_button_file_new_clicked (GtkButton *button, gpointer user_data){
   popup_menu_close (sketchpad.files_popup_button);
 }
 
+void on_button_file_import_clicked (GtkButton *button, gpointer user_data){
+  if(_save_current_if_needed() != ACTION_CANCELED){
+    sketchpad_import_image();
+  }
+  popup_menu_close (sketchpad.files_popup_button);
+}
+
 void on_button_file_properties_clicked (GtkButton *button, gpointer user_data){
   //does nothing yet
   popup_menu_close (sketchpad.files_popup_button);
@@ -282,7 +289,7 @@ on_drawing_area_configure_event (GtkWidget        * widget,
                                  gpointer          user_data){
   //when window is created or resized
   if(!drawing_area_pixmap_buffer){
-    reset_drawing_area(widget);
+    reset_drawing_area();
   }
   return FALSE;
 }

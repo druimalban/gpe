@@ -28,6 +28,7 @@ void on_button_list_view_clicked   (GtkButton *button, gpointer user_data);
 /* files toolbar*/
 void on_button_file_save_clicked   (GtkButton *button, gpointer user_data);
 void on_button_file_new_clicked    (GtkButton *button, gpointer user_data);
+void on_button_file_import_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_properties_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_delete_clicked (GtkButton *button, gpointer user_data);
 void on_button_file_prev_clicked   (GtkButton *button, gpointer user_data);

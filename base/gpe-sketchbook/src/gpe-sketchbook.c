@@ -46,6 +46,7 @@ static struct gpe_icon my_icons[] = {
   //GPE stock icons
   { "new",        "new"   },
   { "open",       "edit"  },
+  { "import",     "open"  },
   { "delete",     "delete"},
   { "save",       "save"  },
   { "properties", "properties"  },
