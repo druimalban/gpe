@@ -30,7 +30,7 @@ endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
-DEPS = $(patsubst %,%.d,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS)) bnep-helper.d rfcomm-helper.d
 
 all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
 
@@ -66,9 +66,11 @@ extract-po: pin-ui.c pin-dbus.c
 $(PACKAGE): pin-ui.h $(OBJS)
 	$(CC) -o $@ $(OBJS) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
-bnep-helper: bnep-helper.c
+bnep-helper: bnep-helper.o
+	$(CC) -o $@ $< $(LDFLAGS) $(STANDARD_LDFLAGS) -lbluetooth
 
-rfcomm-helper: rfcomm-helper.c
+rfcomm-helper: rfcomm-helper.o
+	$(CC) -o $@ $< $(LDFLAGS) $(STANDARD_LDFLAGS) -lbluetooth
 
 install-program: all $(GLADE) bluez.conf
 	install -d $(DESTDIR)$(PREFIX)/bin
