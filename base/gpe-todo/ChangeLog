@@ -1,5 +1,9 @@
 2004-02-15  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.42 released.
+
+2004-02-15  Philip Blundell  <philb@gnu.org>
+
 	* list-ui.c (top_level): Cache pointers to tick-box and notick-box
 	icons.
 	(toggle_completed): Use them.
