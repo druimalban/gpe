@@ -47,9 +47,9 @@
 
 #define IR_INBOX "/tmp"
 
-#define COMMAND_IR_ON  "/usr/bin/irsw on"
-#define COMMAND_IR_OFF  "/usr/bin/irsw off"
-#define COMMAND_VCARD_IMPORT "/usr/bin/vcard-import < " IR_INBOX "/%s"
+#define COMMAND_IR_ON  PREFIX "/bin/irsw on"
+#define COMMAND_IR_OFF PREFIX "/bin/irsw off"
+#define COMMAND_VCARD_IMPORT PREFIX "/bin/vcard-import < " IR_INBOX "/%s"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
 #define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
 
