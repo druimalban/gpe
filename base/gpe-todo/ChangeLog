@@ -1,3 +1,7 @@
+2004-08-28  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.48 released.
+
 2004-08-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* list-ui.c (sort_by_priority): Swap sense of comparison.
