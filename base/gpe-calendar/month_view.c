@@ -119,7 +119,6 @@ draw_expose_event (GtkWidget *widget,
 #if GTK_MAJOR_VERSION < 2
   GdkFont *font = widget->style->font;
 #else
-  PangoContext *pc;
   PangoLayout *pl;
   PangoRectangle pr;
 #endif

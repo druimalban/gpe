@@ -356,7 +356,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
 #if GTK_MAJOR_VERSION < 2
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->description), 
-						     0, -1);
+					      0, -1);
 #else
   {
     GtkTextIter start, end;

@@ -1,3 +1,14 @@
+2002-12-07  Philip Blundell  <philb@gnu.org>
+
+	* month_view.c (draw_expose_event): Remove unused variable.
+	* event-db.c (insert_values): Remove spurious token-paste.
+
+2002-12-06  Philip Blundell  <philb@gnu.org>
+
+	* gpe-calendar.desktop: New file.
+	* Makefile (install): Install it.
+	Patch from Matthew Allum <breakfast@10.am>
+
 2002-11-30  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.26 released.

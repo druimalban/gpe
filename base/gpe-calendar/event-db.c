@@ -514,7 +514,7 @@ event_db_list_destroy (GSList *l)
 }
 
 #define insert_values(db, id, key, format, value)	\
-	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" ## format ## "')", \
+	sqlite_exec_printf (db, "insert into calendar values (%d, '%q', '" format "')", \
 			    NULL, NULL, err, id, key, value)
 
 /* Dump out an event to the SQL database */
