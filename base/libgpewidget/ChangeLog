@@ -1,3 +1,7 @@
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
+	* gtkdatesel.c (make_field): Reduce padding.
+
 2003-01-01  Robert Mibus  <mibus@handhelds.org>
 
 	* gpeiconlist.gob: Unbolden on popup (ugly rendering otherwise).

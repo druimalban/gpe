@@ -219,9 +219,9 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
   gtk_signal_connect (GTK_OBJECT (e->arrow_l), "clicked", click, sel);
   gtk_signal_connect (GTK_OBJECT (e->arrow_r), "clicked", click, sel);
 
-  gtk_box_pack_start (GTK_BOX (sel), e->arrow_l, TRUE, FALSE, 2);
-  gtk_box_pack_start (GTK_BOX (sel), e->text, TRUE, TRUE, 2);
-  gtk_box_pack_start (GTK_BOX (sel), e->arrow_r, TRUE, FALSE, 2);
+  gtk_box_pack_start (GTK_BOX (sel), e->arrow_l, TRUE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (sel), e->text, TRUE, TRUE, 1);
+  gtk_box_pack_start (GTK_BOX (sel), e->arrow_r, TRUE, FALSE, 0);
 
   gtk_signal_connect (GTK_OBJECT (sel), "changed", update, e->text);
   update (sel, e->text);
