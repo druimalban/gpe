@@ -16,23 +16,31 @@ PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = de pt_PT
+VERSION = 0.2.0
+GTK2 = yes
 
 YACC = byacc
 LEX  = flex
 CC   = gcc
+STRIP = strip
+
+ifeq ($(GTK2),yes)
+CONTROL = control1
+else
+CONTROL = control
+endif
 
 #GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0` -DGTK_ENABLE_BROKEN
 #GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype
-CONTROL = control
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
+LDFLAGS = -L/skiff/local/arm-linux/lib/X11  -lXinerama -lgdk-x11-2.0 -lX11 -lXrender -lXext
 endif
 
 CFLAGS += -Wall
@@ -78,5 +86,19 @@ install: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../build/Makefile.dpkg_ipkg
+ipkg: clean
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	sed -e s/VERSION/$(VERSION)/ < familiar/$(CONTROL) > familiar/dist/CONTROL/control
+	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
+	if test -e familiar/preinst;   then install familiar/preinst   familiar/dist/CONTROL; fi
+	if test -e familiar/postinst;  then install familiar/postinst  familiar/dist/CONTROL; fi
+	if test -e familiar/prerm;     then install familiar/prerm     familiar/dist/CONTROL; fi
+	if test -e familiar/postrm;    then install familiar/postrm    familiar/dist/CONTROL; fi
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install
+	$(STRIP) familiar/dist/usr/bin/gpe-wlancfg
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
+
+
 -include $(DEPS)

@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=WLAN config
-Comment=GPE WLAN config
+Name=WLAN Config
+Comment=GPE WLAN Config
 Exec=gpe-wlancfg
 Terminal=0
 Type=Application

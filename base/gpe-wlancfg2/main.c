@@ -31,7 +31,7 @@
 #include "support.h"
 
 GtkWidget	*GPE_WLANCFG;
-static struct gpe_icon icon = {"icon", PREFIX "/share/pixmaps/gpe-wlancfg.png"};
+static struct gpe_icon icon[] = {{"icon", PREFIX "/share/pixmaps/gpe-wlancfg.png"},{NULL,NULL}};
 
 
 int main (int argc, char *argv[])
@@ -48,12 +48,9 @@ int main (int argc, char *argv[])
 
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	textdomain (PACKAGE);
-	
-//	gtk_set_locale ();	
-//	gtk_init (&argc, &argv);
-	
+		
 	if (gpe_application_init (&argc, &argv) == FALSE) exit (1);
-	
+	if (gpe_load_icons (icon) == FALSE) exit (1);	
 	add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
 	GPE_WLANCFG = create_GPE_WLANCFG ();
