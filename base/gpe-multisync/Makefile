@@ -6,20 +6,20 @@ VERSION = 0.1
 
 LINGUAS = 
 
-MEMBERS = gui gpe_sync config connection
+MEMBERS = gui gpe_sync config connection calendar contacts todo
 
 GLADECFLAGS = `pkg-config --cflags libglade-2.0`
 GLADELDFLAGS += `pkg-config --libs libglade-2.0`
 
-CPPFLAGS = -D_GNU_SOURCE -I../libnsqlc
+CPPFLAGS = -D_GNU_SOURCE -I../libnsqlc -I../libgpevtype
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g 
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -fPIC -Wall $(GLADECFLAGS)
-LDFLAGS += $(GLADELDFLAGS) -L../libnsqlc -lnsqlc
+CFLAGS += -fPIC -Wall $(GLADECFLAGS) `pkg-config --cflags mimedir-1.0`
+LDFLAGS += $(GLADELDFLAGS) -L../libnsqlc -lnsqlc `pkg-config --libs mimedir-1.0` -L../libgpevtype -lgpevtype
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 

@@ -15,9 +15,9 @@
 #include <string.h>
 #include <fcntl.h>
 
-#include "multisync.h"
-
 #include "gpe_sync.h"
+
+#include <gpe/tag-db.h>
 
 nsqlc *
 gpe_connect_one (gpe_conn *conn, gchar *db, char **err)
@@ -65,4 +65,59 @@ gpe_disconnect (gpe_conn *conn)
 
   if (conn->todo)
     nsqlc_close (conn->todo);
+}
+
+static int
+fetch_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 2)
+    {
+      GSList **data = (GSList **)arg;
+      gpe_tag_pair *p = g_malloc (sizeof (*p));
+
+      p->tag = g_strdup (argv[0]);
+      p->value = g_strdup (argv[1]);
+
+      *data = g_slist_prepend (*data, p);
+    }
+
+  return 0;
+}
+
+GSList *
+fetch_tag_data (nsqlc *db, const gchar *query_str, guint id)
+{
+  GSList *data = NULL;
+
+  nsqlc_exec_printf (db, query_str, fetch_callback, &data, NULL, id);
+
+  return data;
+}
+
+static int
+fetch_uid_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 1)
+    {
+      GSList **data = (GSList **)arg;
+
+      *data = g_slist_prepend (*data, (void *)atoi (argv[0]));
+    }
+
+  return 0;
+}
+
+GSList *
+fetch_uid_list (nsqlc *db, const gchar *query, ...)
+{
+  GSList *data = NULL;
+  va_list ap;
+
+  va_start (ap, query);
+
+  nsqlc_exec_vprintf (db, query, fetch_uid_callback, &data, NULL, ap);
+
+  va_end (ap);
+
+  return data;
 }

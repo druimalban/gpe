@@ -173,25 +173,22 @@ get_changes (gpe_conn *conn, sync_object_type newdbs)
 
   GPE_DEBUG(conn, "get_changes"); 
   
-  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_CALENDAR) 
-  {
-  }
+  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_CALENDAR)
+    changes = sync_calendar (changes, conn, newdbs & SYNC_OBJECT_TYPE_CALENDAR);
   
   if (conn->commondata.object_types & SYNC_OBJECT_TYPE_PHONEBOOK) 
-  {
-  }
+    changes = sync_contacts (changes, conn, newdbs & SYNC_OBJECT_TYPE_PHONEBOOK);
   
-  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_TODO) 
-  {
-  }
+  if (conn->commondata.object_types & SYNC_OBJECT_TYPE_TODO)
+    changes = sync_todo (changes, conn, newdbs & SYNC_OBJECT_TYPE_TODO);
   
   /* Allocate the change_info struct */
-  chinfo = g_malloc0(sizeof(change_info));
+  chinfo = g_malloc0 (sizeof (change_info));
   chinfo->changes = changes;
   
   /* Did we detect any reset databases */
   chinfo->newdbs = retnewdbs;
-  sync_set_requestdata(chinfo, conn->sync_pair);
+  sync_set_requestdata (chinfo, conn->sync_pair);
   
   return;
 }
