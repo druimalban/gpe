@@ -18,6 +18,15 @@
 
 #include <gpe/spacing.h>
 
+gchar *Ntpservers[5]=
+  {
+    "time.apple.com",
+    "time.esec.com.au",
+    "ptbtime1.ptb.de",
+    "ntp2c.mcc.ac.uk",
+    "ntppub.tamu.edu"
+  };
+
 static struct 
 {
   GtkWidget *categories;
@@ -41,13 +50,14 @@ static struct
   GtkWidget *h;
   GtkWidget *m;
   GtkWidget *s;
-  GtkWidget *internetserver;
+  GtkWidget *ntpserver;
   GtkWidget *internet;
 }self;
 
 void GetInternetTime()
 {
-  fprintf(suidout,"NTPD\n%s\n",gtk_entry_get_text(GTK_ENTRY(self.internetserver)));
+
+  fprintf(suidout,"NTPD\n%s\n", gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
   fflush(suidout);
   printf("\n");
   sleep(1);
@@ -56,6 +66,9 @@ void GetInternetTime()
 
 GtkWidget *Time_Build_Objects()
 {  
+  guint idx;
+  GList *ntpsrv = NULL;
+ 
   GtkObject *adj;
   // get the time and the date.
   time_t t = time(NULL);
@@ -151,17 +164,22 @@ GtkWidget *Time_Build_Objects()
 
   self.controlvbox3 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (self.catconthbox3), self.controlvbox3, TRUE, TRUE, 0);
-  
-  self.internetserver = gtk_entry_new_with_max_length(30);
-  gtk_entry_set_text(GTK_ENTRY(self.internetserver),"time.apple.com");
 
-  gtk_box_pack_start(GTK_BOX(self.controlvbox3),self.internetserver, FALSE, FALSE, 0);
+
+  self.ntpserver = gtk_combo_new ();
+
+  for (idx=0; idx<5; idx++) {
+    ntpsrv = g_list_append (ntpsrv, Ntpservers[idx]);
+  }
+
+  gtk_combo_set_popdown_strings (GTK_COMBO (self.ntpserver), ntpsrv);
+  gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.ntpserver, FALSE, FALSE, 0);
 
   self.internet = gtk_button_new_with_label("Get time from network");
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
 		      (GtkSignalFunc) GetInternetTime, NULL);
 
-  gtk_box_pack_start(GTK_BOX(self.controlvbox3),self.internet, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.internet, FALSE, FALSE, 0);
 
   gtk_widget_show_all(self.categories);
   return self.categories;
