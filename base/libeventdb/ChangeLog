@@ -1,3 +1,9 @@
+2004-02-21  Phil Blundell  <pb@nexus.co.uk>
+
+	* event-db.c (event_db_write): Write out categories.
+	(load_details_callback): Read in categories;
+	* gpe/event-db.h (struct event_details_s): Add categories.
+
 2004-02-21  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
                                                                                 
         * Version 0.11 released.

@@ -295,6 +295,8 @@ load_details_callback (void *arg, int argc, char *argv[], char **names)
 	}
       else if (!strcasecmp (argv[0], "sequence"))
 	evd->sequence = atoi (argv[1]);
+      else if (!strcasecmp (argv[0], "category"))
+	evd->categories = g_slist_prepend (evd->categories, (gpointer)atoi (argv[1]));
     }
   return 0;
 }
@@ -347,6 +349,7 @@ event_db_forget_details (event_t ev)
 	    g_free (evd->description);
 	  if (evd->summary)
 	    g_free (evd->summary);
+	  g_slist_free (evd->categories);
 	  g_free (evd);
 	}
       ev->details = NULL;
@@ -703,6 +706,7 @@ event_db_write (event_t ev, char **err)
   struct tm tm;
   event_details_t ev_d = event_db_get_details (ev);
   gboolean rc = FALSE;
+  GSList *iter;
 
   gmtime_r (&ev->start, &tm);
   strftime (buf_start, sizeof (buf_start), 
@@ -718,6 +722,12 @@ event_db_write (event_t ev, char **err)
       || insert_values (sqliteh, ev->uid, "start", "%q", buf_start)
       || insert_values (sqliteh, ev->uid, "sequence", "%d", ev_d->sequence))
     goto exit;
+
+  for (iter = ev_d->categories; iter; iter = iter->next)
+    {
+      if (insert_values (sqliteh, ev->uid, "category", "%d", (int)iter->data))
+	goto exit;
+    }
 
   if (ev->recur)
     {

@@ -41,6 +41,8 @@ typedef struct event_details_s
 
   char *summary;
   char *description;
+
+  GSList *categories;
 } *event_details_t;
 
 #define FLAG_UNTIMED   (1 << 0)
