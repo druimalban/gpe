@@ -1,3 +1,6 @@
+2004-04-17		Florian Boor <florian.boor@kernelconcepts.de>
+	* Network checking code improved, we ping the gateway now.
+	
 2004-04-01		Florian Boor <florian.boor@kernelconcepts.de>
 	* Rewrote dock code to use libmb.
 	

@@ -42,6 +42,8 @@
 
 #define BIN_INFO PREFIX "/bin/gpe-info"
 #define BIN_CONFIG PREFIX "/bin/gpe-conf"
+#define BIN_PING "/bin/ping"
+
 #define PARAM_INFO "network"
 #define PARAM_CONFIG "network"
 
@@ -84,6 +86,9 @@ net_get_status()
 	FILE *pipe;
 	char buffer[256];
 	int result = FALSE;
+	char gw[9];
+	char *ip = NULL;
+	int ipdigit[4];
 	
 	pipe = fopen ("/proc/net/route", "r");
 
@@ -109,6 +114,8 @@ net_get_status()
 					continue;	// Not default route
 				while (isspace (*q))
 					q++;
+				strncpy(gw,q,8); // copy ip of gw
+				gw[8] = 0;
 				p = strchr (q, '\t');	// Skip over gateway
 				if (!p)
 					continue;
@@ -128,6 +135,26 @@ net_get_status()
 			}
 		}
 		pclose(pipe);		
+	}
+	/* check if we can ping our default gw */
+	if (result)
+	{
+		sscanf(gw,"%02x%02x%02x%02x",
+			&ipdigit[0],&ipdigit[1],&ipdigit[2],&ipdigit[3]);
+		ip = g_strdup_printf("%s -c 1 -q %i.%i.%i.%i",
+			BIN_PING,ipdigit[3],ipdigit[2],ipdigit[1],ipdigit[0]);
+
+		pipe = popen (ip, "r");
+		if (pipe > 0)
+		{
+			while ((feof(pipe) == 0))
+			{
+				fgets (buffer, 255, pipe);
+				if (strstr(buffer,"100%"))
+				  result = FALSE;
+			}
+			pclose(pipe);		
+		}		
 	}
 	return result;
 }

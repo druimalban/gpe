@@ -62,6 +62,14 @@ rtnl_open (void)
 static void
 rtnl_wireless_event (struct iw_event *iwe)
 {
+	printf("%X\n",iwe->cmd);
+	if (iwe->cmd == SIOCSIWESSID)
+			printf("essid %s %i\n",iwe->u.essid.pointer,iwe->len);
+	if (iwe->cmd == SIOCGIWAP)
+			printf("ap %2x:%2x:%2x:%2x:%2x:%2x: %i\n",iwe->u.ap_addr.sa_data[0],iwe->u.ap_addr.sa_data[1],
+	iwe->u.ap_addr.sa_data[2],iwe->u.ap_addr.sa_data[3],iwe->u.ap_addr.sa_data[4],iwe->u.ap_addr.sa_data[5],
+	iwe->len);
+		
   // do something appropriate
 }
 
