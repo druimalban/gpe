@@ -67,7 +67,7 @@ int parse_file(char *file,char *format,...)
 
   f = fopen (file, "r");
 
-  if (pipe > 0)
+  if (f != NULL)
     {
       rv = vparse(f,format,ap);
       fclose (f);
@@ -86,7 +86,7 @@ int parse_file_and_gfree(char *file,char *format,...)
 
   f = fopen (file, "r");
 
-  if (pipe > 0)
+  if (f != NULL)
     {
       rv = vparse(f,format,ap);
       fclose (f);
