@@ -1,3 +1,14 @@
+2002-12-20  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlist.gob (_title_height): Unref PangoLayout to avoid
+	memory leak.
+	(_expose): Likewise.
+
+2002-12-19  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlist.gob (_get_icon): Remove spurious "*col" term from
+	loop condition.
+
 2002-12-18  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlist.gob: Include <string.h> to fix warning.

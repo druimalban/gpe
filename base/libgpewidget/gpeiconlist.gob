@@ -128,6 +128,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		pango_layout_get_pixel_extents  (pl, NULL, &pr);
 		label_height = pr.height;
 
+		g_object_unref (pl);
+
 		return label_height;
 	}
 
@@ -341,6 +343,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			icons = icons->next;
 		}
 
+		g_object_unref (pl);
+
 		MAYBE_PRINTF ("done expose\n");
 		return TRUE;
 	}
@@ -453,7 +457,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		GList *icons;
 
 		icons = il->_priv->icons;
-		for (i=0;i<row*col*il->_priv->cols+col && icons;i++)
+		for (i=0;i<row*il->_priv->cols+col && icons;i++)
 			icons = icons->next;
 
 		return icons ? icons->data : NULL;
