@@ -330,7 +330,7 @@ xmit:
 	nop
 	nop
 
-	ldi	tmp, 16
+	ldi	tmp, 8
 loop:
 	ror	this_bit
 	brcc	send_0
