@@ -33,7 +33,7 @@ PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo)
 PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo)
 endif
 
-HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h tray.h popup.h gpeiconlistview.h gpeclockface.h gpeiconlistitem.h infoprint.h
+HEADERS += init.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h gpe-iconlist.h gtksimplemenu.h gpewindowlist.h tray.h popup.h gpeiconlistview.h gpeclockface.h gpeiconlistitem.h infoprint.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
