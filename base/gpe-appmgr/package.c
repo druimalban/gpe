@@ -164,9 +164,9 @@ struct package *package_from_dotdesktop (char *filename, char *lang)
 			char *from=g_strdup_printf ("%s;", mappings[i].from);
 			if (strstr(categories, from))
 			{
-				printf ("Found: %s\n", mappings[i].to);
-				package_set_data (p, "section", mappings[i].to);
-				break;
+			  //printf ("Found: %s\n", mappings[i].to);
+			  package_set_data (p, "section", mappings[i].to);
+			  break;
 			}
 			g_free (from);
 		}

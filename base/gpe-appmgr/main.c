@@ -31,6 +31,9 @@
 /* I/O */
 #include <stdio.h>
 
+/* Option parsing */
+#include <getopt.h>
+
 /* malloc / free */
 #include <stdlib.h>
 
@@ -92,6 +95,8 @@ struct gpe_icon my_icons[] = {
 
 void create_recent_list ();
 char *translate_group_name (char *name);
+
+gboolean flag_desktop;
 
 extern gboolean gpe_appmgr_start_xsettings (void);
 
@@ -655,19 +660,30 @@ extern GtkWidget * create_tab_view (void);
 void create_main_window()
 {
   GtkWidget *child;
+  int w = 640, h = 480;
 
   TRACE ("create_main_window");
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  gtk_window_set_title (GTK_WINDOW(window), "Programs");
-  gtk_widget_set_usize (window, 235,280);
+  gtk_window_set_title (GTK_WINDOW( window), "Programs");
   gtk_widget_realize (window);
+
+  if (flag_desktop)
+    {
+      gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_DESKTOP);
+      w = gdk_screen_width ();
+      h = gdk_screen_height ();
+    }
+
+  gtk_window_set_default_size (GTK_WINDOW (window), w, h);
+    
   set_window_pixmap();
 
   g_signal_connect (G_OBJECT(window), "delete_event", G_CALLBACK (on_window_delete), NULL);
 
-  child = create_tab_view ();
+  //child = create_tab_view ();
+  child = create_row_view ();
   gtk_container_add (GTK_CONTAINER (window), child);
   
   gtk_widget_show_all (window);
@@ -694,6 +710,30 @@ main (int argc, char *argv[])
   
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
+
+  while (1)
+    {
+      int this_option_optind = optind ? optind : 1;
+      int option_index = 0;
+      int c;
+
+      static struct option long_options[] = {
+	{"desktope", 0, 0, 'd'},
+	{0, 0, 0, 0}
+      };
+      
+      c = getopt_long (argc, argv, "d",
+		       long_options, &option_index);
+      if (c == -1)
+	break;
+
+      switch (c)
+	{
+	case 'd':
+	  flag_desktop = TRUE;
+	  break;
+	}
+    }
   
   /* update the menu data */
   refresh_list ();

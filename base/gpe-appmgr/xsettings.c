@@ -30,6 +30,7 @@ notify_func (const char       *name,
 //	printf ("notify!\n");
 //	printf ("SET %s\n", name);
 
+#if 0
   if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
       char *p = (char*)name + strlen (KEY_BASE);
@@ -78,6 +79,7 @@ notify_func (const char       *name,
       }
 
     }
+#endif
 }
 
 static GdkFilterReturn
