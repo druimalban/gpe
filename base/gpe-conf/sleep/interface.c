@@ -82,13 +82,11 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   GPE_Config_Sleep = gtk_hbox_new (0,0);
 
   table1 = gtk_table_new (3, 2, FALSE);
-  gtk_widget_set_name (table1, "table1");
 
   gtk_widget_show (table1);
   gtk_container_add (GTK_CONTAINER (GPE_Config_Sleep), table1);
 
   sleep = gtk_frame_new ("Auto-sleep");
-  gtk_widget_set_name (sleep, "sleep");
 
   gtk_widget_show (sleep);
   gtk_table_attach (GTK_TABLE (table1), sleep, 0, 1, 0, 1,
@@ -361,7 +359,6 @@ create_irq_win (ipaq_conf_t *ISconf)
   GtkWidget *irq_done;
 
   irq_win = gtk_window_new (GTK_WINDOW_DIALOG);
-  gtk_widget_set_name (irq_win, "irq_win");
   gtk_window_set_title (GTK_WINDOW (irq_win), "Select IRQs");
   gtk_window_set_modal (GTK_WINDOW (irq_win), TRUE);
   gtk_window_set_default_size (GTK_WINDOW (irq_win), 200, 150);
