@@ -1,9 +1,9 @@
-/* soundgen.c - Generate sine-wave sounds and play them on /dev/dsp.
+/* soundgen.h - Generate sine-wave sounds and play them on /dev/dsp.
 
    Copyright (C) 2002 by Nils Faerber <nils@kernelconcepts.de>
 
    You should have received a copy of the GNU Library General Public
-   License along with the Gnome Library; see the file COPYING.LIB.  If not,
+   License along with the this library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
