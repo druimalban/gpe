@@ -7,7 +7,7 @@ VERSION = 0.10
 
 LINGUAS = 
 
-MEMBERS = clock
+MEMBERS = clock da-clock
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`

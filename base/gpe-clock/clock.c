@@ -22,6 +22,8 @@
 #include <gpe/popup.h>
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
+#include <gpe/gtkdatecombo.h>
+#include <gpe/gtktimesel.h>
 
 GtkWidget *panel_window, *time_label;
 
@@ -118,8 +120,53 @@ set_time_window (void)
 }
 
 static void
+do_set_alarm (GtkWidget *window)
+{
+  gtk_widget_destroy (window);
+}
+
+static void
 alarm_window (void)
 {
+  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
+  GtkWidget *cancel_button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  GtkWidget *time_label = gtk_label_new (_("Time:"));
+  GtkWidget *date_button, *days_button;
+  GtkWidget *date_entry = gtk_date_combo_new ();
+  GtkWidget *date_hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *time_hbox = gtk_hbox_new (FALSE, 0);
+  GtkWidget *time_sel = gtk_time_sel_new ();
+  GtkWidget *clock = clock_widget (GTK_TIME_SEL (time_sel)->minute_adj);
+  int spacing = gpe_get_boxspacing ();
+  GSList *radiogroup;
+
+  gtk_window_set_title (GTK_WINDOW (window), _("Set alarm"));
+
+  date_button = gtk_radio_button_new_with_label (NULL, _("Date:"));
+  radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (date_button));
+  days_button = gtk_radio_button_new_with_label (radiogroup, _("Each week, on:"));
+
+  gtk_box_pack_start (GTK_BOX (date_hbox), date_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (date_hbox), date_entry, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (time_hbox), time_label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (time_hbox), time_sel, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clock, TRUE, TRUE, spacing);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), time_hbox, FALSE, FALSE, spacing);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, spacing);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, spacing);
+
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);
+
+  gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
+
+  gtk_widget_show_all (window);
+
+  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (do_set_alarm), window);
+  g_signal_connect_swapped (G_OBJECT (cancel_button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
 }
 
 static void
@@ -177,7 +224,7 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
 
   g_signal_connect (G_OBJECT (panel_window), "button-press-event", G_CALLBACK (clicked), menu);
-  gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK);
+  gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   g_timeout_add (1000, (GtkFunction) update_time, time_label);
 
