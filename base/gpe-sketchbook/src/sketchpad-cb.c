@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 #include <gtk/gtk.h>
-#include <gdk/gdkkeysyms.h> //up down right left keys
 
 #include "sketchpad-cb.h"
 #include "sketchpad-gui.h"
@@ -350,62 +349,3 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
   return FALSE;
 }
 
-gboolean on_drawing_area_key_press_event (GtkWidget   * widget,
-                                          GdkEventKey * event,
-                                          gpointer      scrolledwindow){
-
-  /*
-   *    |<-----[ page_size ]------------>|
-   *   lower   |                        upper
-   *           `value
-   */
-
-  GtkAdjustment * adj;
-  GtkOrientation orientation;
-  gdouble new_value;
-
-  /**/if (event->type != GDK_KEY_PRESS) return FALSE;
-
-  switch(event->keyval){
-    case GDK_Left:  case GDK_KP_4: 
-    case GDK_Right: case GDK_KP_6:
-      orientation = GTK_ORIENTATION_HORIZONTAL;
-      break;
-    case GDK_Up:    case GDK_KP_8:
-    case GDK_Down:  case GDK_KP_2:
-      orientation = GTK_ORIENTATION_VERTICAL;
-      break;
-
-#ifdef DESKTOP
-    case GDK_q:
-      gtk_main_quit();
-#endif
-
-    default:
-      return FALSE;
-  }
-
-  if(orientation == GTK_ORIENTATION_VERTICAL){
-    adj = gtk_scrolled_window_get_vadjustment((GtkScrolledWindow *) scrolledwindow);
-  }
-  else{//GTK_ORIENTATION_HORIZONTAL
-    adj = gtk_scrolled_window_get_hadjustment((GtkScrolledWindow *) scrolledwindow);
-  }
-  
-  switch(event->keyval){
-    case GDK_Left:  case GDK_KP_4:
-    case GDK_Up:    case GDK_KP_8:
-      new_value = adj->value - adj->step_increment;
-      if(new_value < adj->lower) new_value = adj->lower;
-      gtk_adjustment_set_value(adj, new_value);
-      break;
-    case GDK_Right: case GDK_KP_6:
-    case GDK_Down:  case GDK_KP_2:
-      new_value = adj->value + adj->step_increment;
-      if( (new_value + adj->page_size) > adj->upper) new_value = adj->upper - adj->page_size;
-      gtk_adjustment_set_value(adj, new_value);
-      break;
-  }
-
-  return TRUE;//TRUE avoid to change the focus when using arrow keys
-}
