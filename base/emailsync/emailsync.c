@@ -16,7 +16,7 @@
 //#include <math.h>
 
 
-#define VERSION "0.0.11"
+#define VERSION "0.0.12"
 #define MIN(a,b)	(((a)<(b)) ? (a):(b))
 
 #define safe_strcpy(a,b) {siof=sizeof(a);a[siof-1]=0;strncpy(a,b,siof-1);}
@@ -719,6 +719,7 @@ char action;
 		else if (starts_with(argv[0],"size=")) sscanf(index(argv[0],'=')+1,"%d",&options.size);
 		else if (starts_with(argv[0],"debug=")) sscanf(index(argv[0],'=')+1,"%d",&debug);
 		else if (starts_with(argv[0],"verbose=")) sscanf(index(argv[0],'=')+1,"%d",&verbose);
+		else if (starts_with(argv[0],"timeout=")) sscanf(index(argv[0],'=')+1,"%f",&options.timeout);
 		else if (starts_with(argv[0],"proto=pop")) options.pop3=1;
 		else if (starts_with(argv[0],"proto=imap")) options.pop3=0;
 		else if (starts_with(argv[0],"proto=smtp")) options.smtp=1;
@@ -741,17 +742,19 @@ char action;
 			"port=<port>\n"
 			"ssl=<1 for imaps, 0 for imap>\n"
 			"since=<date>					(e.g. 1-mar-2002)\n"
-			"size=<max size in bytes>\n"
+			"size=<max msg size in bytes>\n"
 			"debug=<0 1 2 or 3>\n"
+			"timeout=<milli-seconds>\n"
 			"prefix=<directory where to write mail to>\n"
 			"verbose=<0 1 or 2>\n"
 			"remove=1			(remove msg body if too big)\n"
-			"no_del=1			( do not delete msgs from outbox after send)"
+			"no_del=1			( do not delete msgs from outbox after send)\n"
 			"cleandir=1			(remove old messages from disk)\n"
 			"\n\n"
 			"DEFAULTS:\n"
 			"by default, all parameters take the value of zero\n"
-			"except cleandir which is 1, and prefix which is \"~/.emailsync/\"\n"
+			"except cleandir which is 1, timeout (10,000 milisec)\n"
+			"and prefix which is \"~/.emailsync/\"\n"
 			"port by default is 143 for ssl==0 or 993 for ssl==1 (proto=imap),\n"
 			"                   110 for ssl==0 or 995 for ssl==1 (proto=pop3),\n"
 			"                    25 for ssl==0 or 465 for ssl==1 (proto=smtp)\n"
