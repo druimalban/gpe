@@ -1,7 +1,7 @@
 <!--#set var="addtitle" value="Games"-->
 <!--#set var="pagename" value="games"-->
-<!--#set var="author" value="Nils Faerber"-->
-<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#set var="author" value="Phil Blundell"-->
+<!--#set var="authoremail" value="pb@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
 <H2>Function</H2>
@@ -24,6 +24,6 @@
 <IMG SRC="/images/gpe-tetris.png" ALT="[Tetris]">
 <IMG SRC="/images/gpe-julia.png" ALT="[Julia set]">
 <IMG SRC="/images/xdemineur.png" ALT="[xdemineur]">
+<IMG SRC="/images/gpe-lights.png" ALT="[Lights Out]">
 </P>
 <!--#include virtual="/includes/foot.shtml"-->
-
