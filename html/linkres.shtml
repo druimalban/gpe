@@ -11,7 +11,7 @@
 </UL>
 </P>
 
-<H3>The Handhelds.org site</H3>
+<H3>The handhelds.org site</H3>
 <P>
 <UL>
 <LI><A HREF="http://www.handhelds.org">http://www.handhelds.org</A>
@@ -37,6 +37,8 @@ SyncML library<BR>
 <H3>Useful documentation</H3>
 <P>
 <UL>
+<LI> GNOME Human Interface Guidelines (1.0)<BR>
+<A HREF="http://developer.gnome.org/projects/gup/hig/1.0/">http://developer.gnome.org/projects/gup/hig/1.0/</A>
 <LI> Apple Newton application interface guidelines<BR>
 <A HREF="http://www.unna.org/unna/development/documentation/">http://www.unna.org/unna/development/documentation/</A>
 </UL>
