@@ -15,7 +15,7 @@
 
 /* Gtk etc. */
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 /* directory listing */
 #include<sys/types.h>
@@ -36,6 +36,8 @@
 
 #include <X11/Xatom.h>
 
+#include "render.h"
+
 /* everything else */
 #include "main.h"
 #include "cfg.h"
@@ -43,7 +45,7 @@
 #include "popupmenu.h"
 #include "xsi.h"
 
-#define DEBUG
+//#define DEBUG
 #ifdef DEBUG
 #define DBG(x) {fprintf x ;}
 #define TRACE(x) {fprintf(stderr,"TRACE: " x "\n");}
@@ -66,6 +68,8 @@ time_t last_update=0;
 
 /* For not starting an app twice after a double click */
 int ignore_press = 0;
+
+GdkPixbuf *default_pixbuf;
 
 GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style, GtkWidget *curr_sw);
 void create_recent_list ();
@@ -331,23 +335,34 @@ void make_nice_title (GtkWidget *label, GdkFont *font, char *full_title)
 
 GtkWidget *create_icon_pixmap (char *fn, int size)
 {
-	GdkImlibImage *image;
-	GdkPixmap *pm;
-	GdkBitmap *bm;
-	GtkWidget *pixmap;
-
-	image = gdk_imlib_load_image(fn);
-	if (!image)
+	GdkPixbuf *pixbuf, *spixbuf;
+	GdkPixmap *pixmap;
+	GdkBitmap *bitmap;
+	GtkWidget *w;
+	pixbuf = gdk_pixbuf_new_from_file (fn);
+	if (pixbuf == NULL)
 		return NULL;
-	if (gdk_imlib_render(image, size,size) <= 0)
+	spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, 
+					   GDK_INTERP_BILINEAR);
+	gdk_pixbuf_unref (pixbuf);
+	gdk_pixbuf_render_pixmap_and_mask (spixbuf, &pixmap, &bitmap, 127);
+	gdk_pixbuf_unref (spixbuf);
+	w = gtk_pixmap_new (pixmap, bitmap);
+	return w;
+}
+
+GtkWidget *pixmap_from_file (char *fn)
+{
+	GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file (fn);
+	GdkPixmap *pixmap;
+	GdkBitmap *bitmap;
+	GtkWidget *w;
+	if (pixbuf == NULL)
 		return NULL;
-	pm = gdk_imlib_copy_image(image);
-	bm = gdk_imlib_copy_mask(image);
-	pixmap = gtk_pixmap_new (pm,bm);
-
-	gdk_imlib_destroy_image(image);
-
-	return pixmap;
+	gdk_pixbuf_render_pixmap_and_mask (pixbuf, &pixmap, &bitmap, 127);
+	w = gtk_pixmap_new (pixmap, bitmap);
+	gdk_pixbuf_unref (pixbuf);
+	return w;
 }
 
 char *get_closest_icon (struct package *p, int iconsize)
@@ -416,8 +431,6 @@ void create_recent_list ()
 		struct package *p;
 		GtkWidget *btn;
 		GtkWidget *img=NULL;
-		GdkPixmap *pm;
-		GdkBitmap *bm;
 		char *icon;
 
 		p = (struct package *) this_item->data;
@@ -430,8 +443,7 @@ void create_recent_list ()
 			free (icon);
 		}
 		if (!img)
-			if (gdk_imlib_load_file_to_pixmap("/usr/share/pixmaps/menu_unknown_program16.png",&pm,&bm))
-				img = gtk_pixmap_new (pm, bm);
+			img = pixmap_from_file("/usr/share/pixmaps/menu_unknown_program16.png");
 
 		/* The button itself */
 		btn = gtk_event_box_new ();
@@ -513,21 +525,23 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 		if (style == TAB_VIEW_ICONS)
 		{
 			GdkFont *font; /* Font in the label */
-			GtkWidget *img=NULL,*lbl;
-			GdkPixmap *pm;
-			GdkBitmap *bm;
+			GtkWidget *lbl;
 			char *icon;
+			GdkPixbuf *pixbuf = NULL;
+			GtkWidget *pixmap;
 
 			/* Button picture */
 			icon = find_icon (get_closest_icon (p, 48));
 			if (icon)
 			{
-				img = create_icon_pixmap (icon, 48);
+				pixbuf = gdk_pixbuf_new_from_file (icon);
 				free (icon);
 			}
-			if (!img)
-				if (gdk_imlib_load_file_to_pixmap("/usr/share/pixmaps/menu_unknown_program.png",&pm,&bm))
-					img = gtk_pixmap_new (pm, bm);
+			if (!pixbuf) {
+				if (!default_pixbuf)
+					default_pixbuf = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/menu_unknown_program48.png");
+				pixbuf = default_pixbuf;
+			}
 
 			/* Button label */
 			lbl = gtk_label_new("");
@@ -543,9 +557,15 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 			/* Button VBox */
 			vb = gtk_vbox_new(0,0);
 			gtk_box_pack_end_defaults (GTK_BOX(vb),lbl);
-			if (img)
-				gtk_box_pack_end_defaults (GTK_BOX(vb),img);
-
+			if (pixbuf) {
+				GdkPixbuf *spixbuf = gdk_pixbuf_scale_simple (pixbuf, 48, 48, GDK_INTERP_BILINEAR);
+				gdk_pixbuf_unref (pixbuf);
+				pixmap = gpe_render_icon (notebook->style, 
+							  spixbuf);
+				gdk_pixbuf_unref (spixbuf);
+				gtk_box_pack_end_defaults (GTK_BOX(vb), 
+							   pixmap);
+			}
 
 			/* The 'button' itself */
 			btn = gtk_event_box_new ();
@@ -556,8 +576,6 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 		} else /* Thus style == TAB_VIEW_LIST */
 		{
 			GtkWidget *img=NULL,*lbl;
-			GdkPixmap *pm;
-			GdkBitmap *bm;
 			char *icon;
 
 			/* Button picture */
@@ -568,8 +586,7 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
 				free (icon);
 			}
 			if (!img)
-				if (gdk_imlib_load_file_to_pixmap("/usr/share/pixmaps/menu_unknown_program16.png",&pm,&bm))
-					img = gtk_pixmap_new (pm, bm);
+				img = pixmap_from_file ("/usr/share/pixmaps/menu_unknown_program16.png");
 
 			/* Button label */
 			lbl = gtk_label_new(package_get_data (p, "title"));
@@ -621,23 +638,15 @@ GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style sty
  */
 GtkWidget *create_group_tab_label (char *group)
 {
-	GdkPixmap *pm;
-	GdkBitmap *bm;
 	GtkWidget *img=NULL,*lbl,*hb;
 	char *icon_file;
 
 	icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", group);
-
-	if (gdk_imlib_load_file_to_pixmap(icon_file, &pm, &bm))
-		img = gtk_pixmap_new (pm,bm);
+	img = pixmap_from_file(icon_file);
 	g_free (icon_file);
 
 	if (!img)
-	{
-		if (gdk_imlib_load_file_to_pixmap(
-			"/usr/share/pixmaps/menu_unknown_group16.png", &pm, &bm))
-			img = gtk_pixmap_new (pm,bm);
-	}
+		img = pixmap_from_file("/usr/share/pixmaps/menu_unknown_group16.png");
 
 	lbl = gtk_label_new (group);
 
@@ -799,6 +808,7 @@ int refresh_list ()
 
 	char *directories[]=
 	{
+		"/usr/local/lib/menu",
 		"/usr/lib/menu",
 		"/home/mibus/programming/c/gpe/gpe-appmgr/dist/usr/lib/menu", /* test dir */
 		"/mnt/ramfs/lib/menu",
@@ -1038,7 +1048,6 @@ int main(int argc, char *argv[]) {
 
 	/* Init gtk & friends */
 	gtk_init (&argc, &argv);
-	gdk_imlib_init();
 
 	/* load our configuration */
 	cfg_load ();

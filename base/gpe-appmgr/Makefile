@@ -1,8 +1,8 @@
 #CC=gcc
 CC=arm-linux-gcc
-CFLAGS=-g -I/usr/local/arm/arm-linux/include `gtk-config --cflags` `imlib-config --cflags-gdk` -I/usr/include -Wall
-#LDFLAGS=`gtk-config --libs` `imlib-config --libs-gdk`
-LDFLAGS=-L/usr/local/arm/arm-linux/lib -L/usr/local/arm/arm-linux/lib/X11 -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm -lgdk_imlib
+CFLAGS=-g -I/usr/local/arm/arm-linux/include `gtk-config --cflags` -I/usr/include -Wall `gdk-pixbuf-config --cflags` -Os -fomit-frame-pointer -I../libgpewidget -I/usr/local/arm/arm-linux/include/X11/extensions
+#LDFLAGS=-L../libgpewidget -lgpewidget `gtk-config --libs` `gdk-pixbuf-config --libs`
+LDFLAGS=-L../libgpewidget -lgpewidget -L/usr/local/arm/arm-linux/lib -L/usr/local/arm/arm-linux/lib/X11 -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXext -lX11 -lm -lgdk_pixbuf
 STRIP=arm-linux-strip
 INSTALL=install
 
