@@ -2,7 +2,7 @@ VERSION = 0.2.7-1
 
 PACKAGE = gpe-sketchbook
 
-LINGUAS = fr pt de zh_TW ro sv nl cs sk ru
+LINGUAS = fr pt de zh_TW ro sv nl cs sk ru sr
 MEMBERS = \
 	gpe-sketchbook       \
         preferences          \
