@@ -48,8 +48,6 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 
-  gtk_set_locale ();
-
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -87,7 +85,7 @@ main (int argc, char *argv[])
   ownername    = g_strdup ("GPE User");
   owneremail   = g_strdup ("nobody@localhost.localdomain");
   ownerphone   = g_strdup ("+99 (9999) 999-9999");
-  owneraddress = g_strdup ("Edit file\n/etc/gpe/gpe-ownerinfo.data\nto change this data.");
+  owneraddress = g_strdup ("Use\n\"GPE Configuration\"\nto change this data.");
 
   GPE_Ownerinfo = create_GPE_Ownerinfo ();
 

@@ -1,3 +1,14 @@
+2002-08-21  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.am (install-data-local): Remove commented out
+	code. gpe-conf now has a module to write the owner info.
+ 
+	* src/main.c (main): Tell the user to use gpe-conf to edit data.
+
+2002-08-20  Colin Marquardt  <colin@marquardt-home.de>
+
+	* src/main.c (main): Don't call gtk_set_locale().
+
 2002-08-18  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile.am (install-data-local): Remove

@@ -21,9 +21,6 @@ install-data-local:
 	  done \
 	fi
 	$(mkinstalldirs) $(DESTDIR)/etc/gpe/
-#	if test ! -e $(DESTDIR)/etc/gpe/gpe-ownerinfo.data; then \
-#	  $(INSTALL_DATA) gpe-ownerinfo.data $(DESTDIR)/etc/gpe/gpe-ownerinfo.data; \
-#	fi
 	$(mkinstalldirs) $(DESTDIR)$(PREFIX)/share/gpe/
 	$(INSTALL_DATA) gpe-ownerinfo-bg.png $(DESTDIR)$(PREFIX)/share/gpe/gpe-ownerinfo-bg.png
 
