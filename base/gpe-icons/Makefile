@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-icons
-PIXMAPS = copy.png cut.png exit.png new.png open.png paste.png save.png save_as.png home.png future_view.png day_view.png week_view.png month_view.png year_view.png cancel.png empty.png properties.png search.png search_and_replace.png delete.png ok.png error.png lock.png clock.png stop_clock.png dir-open.png dir-close.png
+PIXMAPS = copy.png cut.png exit.png new.png open.png paste.png save.png save_as.png home.png future_view.png day_view.png week_view.png month_view.png year_view.png cancel.png empty.png properties.png search.png search_and_replace.png delete.png ok.png error.png lock.png clock.png stop_clock.png dir-open.png dir-closed.png
 
 SPIXMAPS = delrecord.xpm new.xpm tick.xpm
 
