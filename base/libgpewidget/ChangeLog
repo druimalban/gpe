@@ -1,3 +1,8 @@
+2004-06-07  Florian Boor <florian.boor@kernelconcepts.de>
+	
+	* gpeiconlictview.[c,h]: Added new listview layout with text right
+                                 besides of icons.
+
 2004-06-02  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (HEADERS): Add gpeclockface.h.

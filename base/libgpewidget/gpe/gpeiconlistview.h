@@ -21,6 +21,12 @@
 
 #define GPE_ICON_LIST_VIEW_GET_CLASS(obj) G_TYPE_INSTANCE_GET_CLASS ((obj), gpe_icon_list_view_get_type(), GPEIconListViewClass)
 
+typedef enum
+{
+  GPE_TEXT_BELOW,
+  GPE_TEXT_RIGHT
+}t_gpe_textpos;
+
 struct _GPEIconListView
 {
   GtkWidget class;
@@ -41,6 +47,7 @@ struct _GPEIconListView
   guint label_height;
 
   int rows_set;
+  t_gpe_textpos textpos;
 };
 
 typedef struct _GPEIconListView	        GPEIconListView;
@@ -70,5 +77,7 @@ void gpe_icon_list_view_set_icon_size (GPEIconListView *self, guint size);
 
 void gpe_icon_list_view_popup_removed (GPEIconListView *self);
 void gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows);
+
+void gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpos);
 
 #endif

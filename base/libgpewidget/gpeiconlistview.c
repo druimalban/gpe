@@ -51,15 +51,20 @@ static void _gpe_icon_list_view_cancel_popup (GPEIconListView *il);
 static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row);
 
 #define LABEL_YMARGIN	8
+#define LABEL_XMARGIN   5
 #define TOP_MARGIN	5
 
 #define il_label_height(_x)	(GPE_ICON_LIST_VIEW (_x)->label_height)
 #define il_icon_size(_x)	(GPE_ICON_LIST_VIEW (_x)->icon_size)
 #define il_row_height(_x)	(il_icon_size (_x) \
-	                         + (((GPE_ICON_LIST_VIEW (_x))->flag_show_title) ? \
+	                         + ((((GPE_ICON_LIST_VIEW (_x))->flag_show_title) \
+                            && ((GPE_ICON_LIST_VIEW (_x))->textpos == GPE_TEXT_BELOW))? \
 		                     (il_label_height (_x)) : 0 ) \
 				 + LABEL_YMARGIN)
-#define il_col_width(_x)	(il_icon_size (_x) + (2 * GPE_ICON_LIST_VIEW (_x)->icon_xmargin))
+#define il_col_width(_x)	(((GPE_ICON_LIST_VIEW (_x))->textpos == GPE_TEXT_BELOW) \
+                    ? (il_icon_size (_x) \
+                        + (2 * GPE_ICON_LIST_VIEW (_x)->icon_xmargin)) \
+                   : (GTK_WIDGET (_x)->allocation.width))
 
 
 /* Set the background */
@@ -171,8 +176,11 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 
   pl = pango_layout_new (pc);
   pango_layout_set_width (pl, il_col_width (il) * PANGO_SCALE);
-  pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
-	  
+  if (il->textpos == GPE_TEXT_BELOW)
+    pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
+  else
+    pango_layout_set_alignment (pl, PANGO_ALIGN_LEFT);
+  
   label_height = il_label_height (il);
 
   for (icons = il->icons; icons != NULL; icons = icons->next) 
@@ -248,8 +256,11 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      pixbuf_h = gdk_pixbuf_get_height (pixbuf);
 
 	      // adjust X position for actual size
-	      x_offset = (il_col_width (il) - pixbuf_w) / 2;
-
+          if (il->textpos == GPE_TEXT_BELOW)
+	        x_offset = (il_col_width (il) - pixbuf_w) / 2;
+          else 
+            x_offset = LABEL_XMARGIN;
+          
 	      r1.x = cell_x + x_offset;
 	      r1.y = cell_y;
 	      r1.width = pixbuf_w;
@@ -269,10 +280,20 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	    {
 	      /* if show_title mode is set and current title non NULL, then */
 	      /* Compute & render the title */
-	      r1.x = cell_x;
-	      r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
-	      r1.width = cell_w;
-	      r1.height = label_height;
+          if (il->textpos == GPE_TEXT_BELOW)
+          {
+	        r1.x = cell_x;
+	        r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
+	        r1.width = cell_w;
+	        r1.height = label_height;
+          }
+          else
+          {
+	        r1.x = LABEL_XMARGIN + 2 * il->icon_size;
+	        r1.y = row * il_row_height (il) + LABEL_YMARGIN;
+	        r1.width = widget->allocation.width - r1.x;
+	        r1.height = label_height;
+          }
 	      
 	      if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
 		{
@@ -398,17 +419,28 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocatio
   int count;
   int da_new_height;
 
-  /* calculate number of columns that will fit.  If none will, use one anyway */
-  self->cols = allocation->width / il_col_width (self);
-  if (self->cols == 0)
-    self->cols = 1;
-	  
+  /* only one col in list mode, calculate otherwise */
+  if (self->textpos == GPE_TEXT_RIGHT) 
+      self->cols = 1;
+  else
+  {  
+    /* calculate number of columns that will fit.  If none will, use one anyway */
+    self->cols = allocation->width / il_col_width (self);
+    if (self->cols == 0)
+      self->cols = 1;
+  }  
   count = g_list_length (self->icons);
-		
-  self->rows = (count - 1) / self->cols + 1;
-  if (self->rows_set && self->rows > self->rows_set)
-    self->rows = self->rows_set;
- 
+
+  if (self->textpos == GPE_TEXT_BELOW)
+  {      
+    self->rows = (count - 1) / self->cols + 1;
+    if (self->rows_set && self->rows > self->rows_set)
+      self->rows = self->rows_set;
+  }
+  else
+  {
+    self->rows = 1;
+  }
   da_new_height = self->rows * il_row_height (self) + TOP_MARGIN;
   gtk_widget_set_usize (GTK_WIDGET (self), -1, da_new_height);
 }
@@ -627,6 +659,15 @@ gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows)
   self->rows_set = rows;
 }
 
+void
+gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpos)
+{
+  if (self->textpos == textpos) 
+      return;
+  self->textpos = textpos;
+  gtk_widget_draw (GTK_WIDGET (self), NULL);
+}
+
 static void
 gpe_icon_list_view_init (GPEIconListView *self)
 {
@@ -638,6 +679,7 @@ gpe_icon_list_view_init (GPEIconListView *self)
   self->flag_embolden = FALSE;
   self->flag_show_title = TRUE;
   self->rows_set = 0;
+  self->textpos = GPE_TEXT_BELOW;
 
   self->label_height = _gpe_icon_list_view_title_height (self);
 }
