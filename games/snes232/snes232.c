@@ -37,8 +37,7 @@ struct snes232 {
 
 /*
  * snes232_interrupt() is called by the low level driver when characters
- * are ready for us. We then buffer them for further processing, or call the
- * packet processing routine.
+ * are ready for us.
  */
 
 static int button_map[16] =
@@ -55,8 +54,8 @@ static int button_map[16] =
 	0,	/* 9 */   /* left */
 	0,	/* 10 */  /* down */
 	0,	/* 11 */  /* up */
-	BTN_START,	/* 12 */
-	BTN_SELECT,	/* 13 */
+	BTN_SELECT,	/* 12 */
+	BTN_START,	/* 13 */
 	BTN_Y,	/* 14 */
 	BTN_B,	/* 15 */
 };
@@ -103,8 +102,7 @@ static void snes232_disconnect(struct serio *serio)
 
 /*
  * snes232_connect() is the routine that is called when someone adds a
- * new serio device. It looks for the Snes232, and if found, registers
- * it as an input device.
+ * new serio device.
  */
 
 static void snes232_connect(struct serio *serio, struct serio_dev *dev)
