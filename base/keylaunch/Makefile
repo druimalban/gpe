@@ -1,6 +1,8 @@
 PACKAGE   = keylaunch
 VERSION   = 1.3.0-5gpe9
 
+DEBUG     = 1
+
 CC        = gcc
 #CFLAGS    = -g -O2 -Wall
 CFLAGS    = -Os -fomit-frame-pointer -Wall
@@ -11,7 +13,7 @@ LDPATH    = -L$(XROOT)/lib
 
 PROG      = keylaunch
 
-DESTDIR	  =
+DESTDIR	  = /usr/local
 PREFIX    = /usr
 RCFILE1	  = .$(PROG)rc
 RCFILE2   = /etc/$(PROG)rc
@@ -30,9 +32,9 @@ $(OBJS): %.o: %.c $(HEADERS)
 install: all
 	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	install -D $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
-        install -d $(DESTDIR)/etc/X11/Xsession.d
+	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
-        install -d $(DESTDIR)/etc/X11/Xinit.d
+	install -d $(DESTDIR)/etc/X11/Xinit.d
 	install 90norepeat  $(DESTDIR)/etc/X11/Xinit.d/90norepeat
 
 clean:

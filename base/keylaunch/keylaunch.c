@@ -20,6 +20,8 @@
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
  */
 
+#define _GNU_SOURCE
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
@@ -166,39 +168,57 @@ void
 create_new_key (char *key_string)
 {
   Key *k;
-  char *key_str, *command = NULL, *temp = NULL, *window = NULL;
+  char *key_str;
+  char *sep1, *sep2;
 
 #ifdef DEBUG
-  printf ("create_new_key\n");
+  printf ("create_new_key: %s\n", key_string);
 #endif
 
-  key_str = strtok (key_string, ":");
-  if (key_str != NULL)
+  sep1 = strchr (key_string, ':');
+  if (sep1 == NULL)
     {
-      temp = strtok (NULL, ":");
-      if (temp != NULL)
-	{
-	  window = temp;
-	  command = strtok (NULL, "\n");
-	}
+      fprintf (stderr, "Invalid line in file: %s\n", key_string);
+      exit (1);
     }
 
-  if (key_str == NULL || command == NULL)
-    return;
+  if ((k = malloc (sizeof (*k))) == NULL)
+    {
+      fprintf (stderr, "Unable to allocate memory for key!\n");
+      exit (1);
+    }
+  k->next = NULL;
 
-  if (strlen (key_str) < 4)
-    return;
+  if (key == NULL)
+    key = k;
+  else
+    lastkey->next = k;
 
-  if ((k = malloc (sizeof *k)) == NULL)
-    return;
-  k->next = key;
-  key = k;
-
-  if (lastkey == NULL)
-    lastkey = k;
+  lastkey = k;
 
   k->modifier = 0;
   k->keycode = 0;
+
+  key_str = strndup (key_string, sep1 - key_string);
+
+  sep2 = strchr (&sep1[1], ':');
+
+  if (sep2 == NULL)
+    {
+      k->window = NULL;
+      k->command = strdup (&sep1[1]);
+    }
+  else
+    {
+      k->window = strndup (&sep1[1], sep2 - sep1 - 1);
+      k->command = strdup (&sep2[1]);
+    }
+
+  if (strlen (key_str) < 4)
+    {
+      fprintf (stderr, "No key specified: '%s'\n", key_string);
+      exit (1);
+    }
 
   if (key_str[0] == '?')
     {
@@ -214,12 +234,12 @@ create_new_key (char *key_string)
 	k->modifier = k->modifier | Mod1Mask;
     }
 
-  if (strncmp (key_str+3, "Pressed ", 8) == 0)
+  if ((strlen (key_str) > 11) && (strncmp (key_str+3, "Pressed ", 8) == 0))
     {
       k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 11));
       k->type = 2;
     }
-  else if (strncmp (key_str+3, "Held ", 5) == 0)
+  else if ((strlen (key_str) > 8) && (strncmp (key_str+3, "Held ", 5) == 0))
     {
       k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 8));
       k->type = 1;
@@ -230,13 +250,19 @@ create_new_key (char *key_string)
       k->type = 0;
     }
 
+  if (k->keycode == 0)
+    {
+      fprintf (stderr, "Keysym not found, for key definition '%s'\n", key_str);
+      exit(1);
+    }
+
   grab_key (k->keycode, k->modifier, root);
-  k->command = strdup (command);
-  if (window && strcmp (window, "-"))
-    k->window = strdup (window);
-  else
-    k->window = NULL;
-  /* fprintf (stderr, "new key: %s (%X) (%d) (%d)\n", k->window, k->keycode, k->modifier, k->type); */
+
+  free (key_str);
+
+#ifdef DEBUG
+  fprintf (stderr, "new key: '%s' '%s' (%X) (%d) (%d)\n", k->window, k->command, k->keycode, k->modifier, k->type);
+#endif
   return;
 }
 
@@ -297,25 +323,23 @@ void
 parse_rc (char *rc_file)
 {
   FILE *rc;
-  char buf[1024], *lvalue, *rvalue;
+  char buf[1024];
 
 #ifdef DEBUG
-  printf ("parse_rc\n");
+  printf ("parse_rc: %s\n", rc_file);
 #endif
 
   if ((rc = fopen (rc_file, "r")))
     {
       while (fgets (buf, sizeof buf, rc))
 	{
-	  lvalue = strtok (buf, "=");
-	  if (lvalue)
+	  if (!strncmp (buf, "key=", 4))
 	    {
-	      if (!strcmp (lvalue, "key"))
+	      if (buf[strlen(buf)-1] == '\n')
 		{
-		  rvalue = strtok (NULL, "\n");
-		  if (rvalue)
-		    create_new_key (rvalue);
+		  buf[strlen(buf)-1] = 0;
 		}
+	      create_new_key (&buf[4]);
 	    }
 	}
       fclose (rc);
