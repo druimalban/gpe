@@ -1,5 +1,7 @@
 2004-05-22  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (PACKAGE_CFLAGS, PACKAGE_LDFLAGS): No longer need Render.
+
 	* gpewindowlist.c (gpe_window_list_list_changed): Make static.
 	(gpe_window_list_active_window_changed): Likewise.
 	(gpe_window_list_init): Install event filter on root window.
