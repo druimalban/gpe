@@ -7,6 +7,8 @@
 	* main.c (main): Correctly query for DISPLAY in environment.
 	Patch from Sjoerd Simons <sjoerd@luon.net>
 
+	* familiar/control1 (Source): Added.
+
 2003-10-21  Bastien Nocera  <hadess@hadess.net>
 
 	* Makefile: updated

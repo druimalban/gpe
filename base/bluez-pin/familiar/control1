@@ -2,6 +2,7 @@ Package: bluez-pin2
 Section: base
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: sqlite, libgpewidget1, gpe-icons (>= 0.18), bluez-pin-locale*, dbus-glib-1
