@@ -1,3 +1,11 @@
+2003-02-21  Philip Blundell  <philb@gnu.org>
+
+	* Makefile.translation (real-translation-package): Replace
+	$(PACKAGE) with $(BINPACKAGE).
+	(BINPACKAGE): Set to $(PACKAGE) if not already defined.
+
+	* Makefile.dpkg_ipkg (ipkg): Make translation-ipkg if LINGUAS is set.
+
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.translation (clean-po): Also remove .desktop.in.h.

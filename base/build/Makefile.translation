@@ -13,6 +13,10 @@ ifeq ($(DIR_PO),)
 DIR_PO := po
 endif
 
+ifeq ($(BINPACKAGE),)
+BINPACKAGE := $(PACKAGE)
+endif
+
 mo-files = $(patsubst %,$(DIR_PO)/%.mo,$(LINGUAS))
 po-files = $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
 
@@ -54,7 +58,7 @@ real-translation-package: all-mo
 		mkdir -p $(transdist)/$$i/CONTROL; \
 		mkdir -p $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES; \
 		install -m 644 po/$$LINGUA.mo $(transdist)/$$i$(PREFIX)/share/locale/$$LINGUA/LC_MESSAGES/$(PACKAGE).mo; \
-		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(PACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
+		sed -e "s/<maintainer>/$(MAINTAINER)/;s/<package>/$(BINPACKAGE)/;s/<version>/$(VERSION)/;s/<language>/$$i/" $(templates)/control.translation > $(transdist)/$$i/CONTROL/control; \
 		install $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
 		chown -R root.root $(transdist)/$$i; \
 		$(IPKG_BUILD) $(transdist)/$$i; \

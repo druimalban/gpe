@@ -31,6 +31,7 @@ ipkg: clean
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr prefix=/usr DEBUG=no install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
+	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; fi
 	$(MAKE) printinfo
 
 dpkg: dist
