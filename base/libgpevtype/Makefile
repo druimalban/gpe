@@ -39,6 +39,7 @@ $(SONAME): $(OBJS)
 install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(PACKAGE).so
+	install -m 644 $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
 
 clean:
 	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
