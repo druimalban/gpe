@@ -7,7 +7,7 @@ GROUP = games
 HIGHSCORE_FILE = $(HIGHSCORE_PATH)/highscore.dat
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.6
+VERSION = 0.6-1
 
 CC = gcc
 
@@ -54,9 +54,9 @@ install: all
 	install -m 644 pixmaps/pause.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/pause.png
 	install -m 644 pixmaps/highscores.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/tetris/highscores.png
 	install $(PROGRAM) $(BIN_PATH)/$(PROGRAM)
-	install -d $(DESTDIR)$(PREFIX)/lib/menu
+	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
-	install -m 644 gpe-tetris.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-tetris
+	install -m 644 gpe-tetris.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -m 644 gpe-tetris.png $(DESTDIR)$(PREFIX)/share/pixmaps/
 
 uninstall:
