@@ -1,3 +1,7 @@
+2003-07-13  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.64 released.
+
 2003-07-26  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile: Don't ship clock background pixmaps.
