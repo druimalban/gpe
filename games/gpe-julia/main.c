@@ -139,7 +139,7 @@ void choose_julia (gint pixelx, gint pixely)
 
 void choose_centre (gint pixelx, gint pixely)
 {
-  if (zoom <= 1.05)
+  if (zoom <= 1.02)
     {
       zoom = 1;
       xcentre = 0;
@@ -239,6 +239,24 @@ void redraw (void)
   gdk_window_process_updates (GTK_WIDGET(image_widget)->window, FALSE);
 }
 
+void zoom_in (gint pixelx, gint pixely, double zoomfactor)
+{
+  zoom = zoom * zoomfactor;
+  choose_centre (pixelx, pixely);
+  draw_init ();
+  draw ();
+  redraw ();
+}
+
+void zoom_out (gint pixelx, gint pixely, double zoomfactor)
+{
+  zoom = zoom / zoomfactor;
+  choose_centre (pixelx, pixely);
+  draw_init ();
+  draw ();
+  redraw ();
+}
+
 void
 motion_notify (GtkWidget *widget, GdkEventMotion *motion, gpointer *data)
 {
@@ -248,6 +266,14 @@ motion_notify (GtkWidget *widget, GdkEventMotion *motion, gpointer *data)
       current_fractal = fractal_julia;
       draw_julia ();
       redraw ();
+    }
+  else if (current_mode == mode_zoom_in)
+    {
+      zoom_in (motion->x, motion->y, 1.1);
+    }
+  else
+    {
+      zoom_in (motion->x, motion->y, 1.1);
     }
   gdk_window_get_pointer (widget->window, NULL, NULL, NULL);
 }
@@ -270,19 +296,11 @@ button_release_event (GtkWidget *widget, GdkEventButton *button, gpointer *data)
     }
   else if (current_mode == mode_zoom_in)
     {
-      zoom = zoom * 1.3;
-      choose_centre (button->x, button->y);
-      draw_init ();
-      draw ();
-      redraw ();
+      zoom_in (button->x, button->y, 1.3);
     }
   else if (current_mode == mode_zoom_out)
     {
-      zoom = zoom / 1.3;
-      choose_centre (button->x, button->y);
-      draw_init ();
-      draw ();
-      redraw ();
+      zoom_in (button->x, button->y, 1.3);
     }
 }
 
@@ -306,14 +324,14 @@ home                  (void)
 }
 
 void
-zoom_in                  (void)
+zoom_in_button                  (void)
 {
   current_mode = mode_zoom_in;
   statusbar_update ();
 }
 
 void
-zoom_out                  (void)
+zoom_out_button                  (void)
 {
   current_mode = mode_zoom_out;
   statusbar_update ();
@@ -375,7 +393,7 @@ main(int argc, char *argv[])
   icon = gpe_render_icon (window->style, iconpixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR(toolbar), _("In"),
 			   _("Zoom in"), _("Zoom in"),
-			   icon, zoom_in, NULL);
+			   icon, zoom_in_button, NULL);
 
   iconpixbuf = gpe_find_icon ("zoom_out");
   if (!iconpixbuf)
@@ -383,7 +401,7 @@ main(int argc, char *argv[])
   icon = gpe_render_icon (window->style, iconpixbuf);
   gtk_toolbar_append_item (GTK_TOOLBAR(toolbar), _("Out"),
 			   _("Zoom out"), _("Zoom out"),
-			   icon, zoom_out, NULL);
+			   icon, zoom_out_button, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
