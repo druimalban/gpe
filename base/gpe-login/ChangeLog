@@ -1,3 +1,7 @@
+2003-02-11  Philip Blundell  <pb@nexus.co.uk>
+
+	* X11/gpe-login.gtkrc (gtk-font-name): Set to Sans 8.
+
 2003-02-05  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.35 released.
