@@ -204,6 +204,11 @@ make_field (GtkDateSel *sel, struct elem *e, void (*click)(GtkWidget *, GtkDateS
   e->arrow_r = gtk_button_new ();
   e->text = gtk_label_new ("");
 
+  gtk_widget_show (e->arrow_l);
+  gtk_widget_show (e->arrow_r);
+  gtk_widget_show (arrow_l);
+  gtk_widget_show (arrow_r);
+
   gtk_container_add (GTK_CONTAINER (e->arrow_l), arrow_l);
   gtk_container_add (GTK_CONTAINER (e->arrow_r), arrow_r);
 

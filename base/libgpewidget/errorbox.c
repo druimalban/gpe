@@ -31,11 +31,10 @@ gpe_error_box (char *text)
   GtkWidget *hbox;
   GdkPixbuf *p;
 
+  fprintf (stderr, "GPE-ERROR: %s\n", text);
+
   if (currently_handling_error)
-    {
-      fprintf (stderr, "%s\n", text);
-      return;
-    }
+    return;
 
   currently_handling_error = TRUE;
 
