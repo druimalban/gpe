@@ -1,0 +1,10 @@
+Package: gpe-keylock
+Version: VERSION
+Source: SOURCE
+Architecture: arm
+Maintainer: Phil Blundell <pb@nexus.co.uk>
+Depends: libc6, libgtk2.0-0, gpe-icons
+Section: gpe
+Priority: standard
+Description: Keyboard and screen locker for GPE
+

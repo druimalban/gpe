@@ -16,8 +16,8 @@ LDFLAGS = -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
-CFLAGS += -Wall $(GPECFLAGS)
-LDFLAGS += $(GPELIBS)
+CFLAGS += -Wall $(GTKCFLAGS)
+LDFLAGS += $(GTKLIBS)
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -38,15 +38,13 @@ all: $(PACKAGE) all-mo
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-install-program: all
+install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
-	install -d $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-taskmanager
-	install -m 644 xkill.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gpe-taskmanager/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)

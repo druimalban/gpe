@@ -151,7 +151,7 @@ create_widgets (GtkWidget *parent)
   GtkWidget *hbox;
   GtkWidget *label;
 
-  lock = gtk_image_new_from_file (PREFIX "/share/gpe/pixmaps/default/lock.png");
+  lock = gtk_image_new_from_file (PREFIX "/share/pixmaps/gpe-keylock.png");
 
   hbox = gtk_vbox_new (FALSE, 4);
 

@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Keylock
+_Comment=Prevents accidental keypresses
+Exec=gpe-keylock
+Terminal=0
+Type=Application
+Icon=gpe-keylock.png
+Categories=Utility;GPE
+StartupNotify=True
+SingleInstance=True
