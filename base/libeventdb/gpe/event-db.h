@@ -81,6 +81,8 @@ typedef struct event_s
   gboolean mark;
 } *event_t;
 
+#define EVENT_DB_USE_MEMCHUNK
+
 #ifdef EVENT_DB_USE_MEMCHUNK
 
 extern GMemChunk *event_chunk, *recur_chunk;

@@ -1,8 +1,8 @@
 Package: libeventdb0
 Section: base
 Priority: optional
-Version: 0.03
+Version: VERSION
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libc6, libsqlite0, libglib2.0-0
+Depends: libc6, libsqlite0, libglib2.0-0, libgpewidget1
 Description: Library that provides access to gpe-calendar's database.

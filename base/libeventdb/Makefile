@@ -1,16 +1,17 @@
 PREFIX = /usr/local
 PACKAGE = libeventdb
 #DEBUG = yes 
+VERSION = 0.04
 
-#LINGUAS = en_AU
+LINGUAS = 
 
 MEMBERS = event-db old-db 
 
 SONAME = libeventdb.so.0
 CONTROL = control
 
-CFLAGS = `pkg-config --cflags glib-2.0`
-LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite
+CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
+LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
 

@@ -1,3 +1,10 @@
+2003-02-16  Philip Blundell  <philb@gnu.org>
+
+	* gpe/event-db.h (EVENT_DB_USE_MEMCHUNK): Define.
+
+	* Makefile (CFLAGS): Build with -DG_DISABLE_DEPRECATED.
+	(LDFLAGS): Link with libgpewidget.
+
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.02 released.
