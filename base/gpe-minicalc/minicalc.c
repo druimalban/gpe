@@ -26,7 +26,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
-#include "init.h"
+#include <gpe/init.h>
 
 #include <gmp.h>
 
@@ -43,6 +43,8 @@ static gboolean point;
 
 static GtkStyle *button_style;
 static GtkStyle *clear_button_style;
+
+void do_equals (GtkWidget *w);
 
 void
 update_display (void)
@@ -74,8 +76,13 @@ display_to_val (void)
     }
   else
     strcpy (p, buf);
-  if (mpf_set_str (dv, p, base))
-    error ();
+  if (p[0] == 0)
+    mpf_set_ui (dv, 0U);
+  else
+    {
+      if (mpf_set_str (dv, p, base))
+	error ();
+    }
   g_free (p);
 }
 
@@ -270,6 +277,8 @@ base_button (GtkWidget *box, char *string, int n)
 void
 do_binop (GtkWidget *w, int op)
 {
+  if (binop)
+    do_equals (w);
   binop = op;
   display_to_val ();
   mpf_set (accum, dv);
