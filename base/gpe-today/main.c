@@ -99,7 +99,7 @@ void set_background(const char *spec)
         if (!spec)
             return;
 
-        for (i=0, type=NO_BG_SET; i < nt; i++) {
+        for (i=0, type=NO_BG_SET, offset=0; i < nt; i++) {
             offset = strlen(cm[i].pat);
             if (offset <= strlen(spec) && !strncmp(cm[i].pat, spec, offset)) {
                 type = cm[i].t;
