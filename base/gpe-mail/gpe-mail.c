@@ -16,7 +16,7 @@
 #include <gtk/gtk.h>
 #include "gtkcolombo.h"
 
-#define VERSION "0.0.6"
+#define VERSION "0.0.7"
 
 struct {
    char *path;
@@ -47,7 +47,7 @@ struct {
    {
       {"Username","Password","Server","Port","Use pop3 instead of imap","SSL","Size (bytes)","Since (days), imap only ",NULL,NULL},
       {"Email Adress","Smtp Server","Port","SSL",NULL,NULL,NULL,NULL,NULL,NULL},
-      {"Mark msgs as seen when viewed","Open html in dillo",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
+      {"Mark msgs as seen when viewed","Open Alternative text/html as html in dillo",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
    }
 };
 
@@ -758,6 +758,7 @@ int do_sync2()
          sprintf(s+strlen(s)," since=%02d-%s-%04d",dy,s3,yy);
       }
    }
+   strcat(s," 2>&1 ");
    //printf("cmdline: %s \n",s);
    self.sigchild=0;
    self.sync.f=(FILE *)popen(s,"r");
@@ -779,6 +780,7 @@ void do_sync(GtkButton *button, gpointer user_data)
    sprintf(s,"%s/OUTBOX",config.expanded_path);
    if (!file_exists(s)) do_send=0;
    sprintf(s,"/usr/bin/emailsync server=%s port=%s ssl=%d proto=smtp verbose=2 prefix=%s",get_config("Outgoing","Smtp Server"),get_config("Outgoing","Port"),(int)(1-((*get_config("Outgoing","SSL"))-1)),config.expanded_path);
+   strcat(s," 2>&1 ");
    //printf("cmdline(smtp): %s \n",s);
    if ((NULL==self.sync.win)||!GTK_IS_WIDGET(self.sync.win))
    {
@@ -1037,7 +1039,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 
 
 
-   open_in_dillo=get_config_boolean("Misc","Open html in dillo");
+   open_in_dillo=get_config_boolean("Misc","Open Alternative text/html as html in dillo");
    is_html=0;
    sp=(char **)&s;
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,3,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
@@ -1208,7 +1210,9 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
       if (!is_html) open_in_dillo=0;
       if (open_in_dillo )
       {
-         f=(FILE *)fopen("/tmp/gpe-mail.html","w");
+	 sprintf(s,"dillo /tmp/gpe-mail-%d.html",(int)geteuid());
+         f=(FILE *)fopen(s+6,"w");
+	 strcat(s," &");
 	 if (f==NULL) open_in_dillo=0;
 	 else
 	 {
@@ -1218,7 +1222,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 		 if (open_in_dillo)
 		 {
       			gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,"\n\n----------------------------\n Html mail opened in dillo\n----------------------------\n",-1);
-		  	system("dillo /tmp/gpe-mail.html &");
+		  	system(s);
 		 }
 	 }
       }
