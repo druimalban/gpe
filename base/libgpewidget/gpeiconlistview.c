@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "gpeiconlistview.h"
 #include "gpeiconlistitem.h"
@@ -159,86 +160,74 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 {
   GPEIconListView *il;
   GList *icons;
-  GdkPixbuf *dest;
   int row=0, col=0;
   PangoContext *pc;
   PangoLayout *pl;
   int label_height;
-  int i;
 	  
   il = GPE_ICON_LIST_VIEW (widget);
   
   /* Pango font rendering setup */
-  if ((pc = gtk_widget_get_pango_context (widget)) == NULL)
-    pc = gtk_widget_create_pango_context (widget);
-  
+  pc = gtk_widget_create_pango_context (widget);
+
   pl = pango_layout_new (pc);
   pango_layout_set_width (pl, il_col_width (il) * PANGO_SCALE);
   pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
 	  
   label_height = il_label_height (il);
 
-  /* Make a new pixbuf for rendering icons to */
-  dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
-			 event->area.width, event->area.height);
-  
-  /* set the background color */
-  gdk_pixbuf_fill (dest, il->bgcolor);
-  
-  /* Paint the background image, scaled */
-  if (il->bgpixbuf)
-    {
-      /* ??? pb: what's this loop for?  why not just render the area of
-	 background image given by event->area?  */
-      for (i = 0; 
-	   i < il->rows * il_row_height (il); 
-	   i += gdk_pixbuf_get_height (il->bgpixbuf)) 
-	{
-	  GdkRectangle r1, dst;
-	  r1.x = 0; r1.y = i;
-	  r1.width = gdk_pixbuf_get_width (il->bgpixbuf);
-	  r1.height = gdk_pixbuf_get_height (il->bgpixbuf);
-	  
-	  if (gdk_rectangle_intersect (&r1, &(event->area), &dst)) {
-	    gdk_pixbuf_composite (il->bgpixbuf, dest,
-				  dst.x-event->area.x,
-				  dst.y-event->area.y,
-				  dst.width, dst.height,
-				  r1.x-event->area.x, r1.y-event->area.y,
-				  1,
-				  1,
-				  GDK_INTERP_BILINEAR, 255);
-	  }
-	}
-    }
-  
   for (icons = il->icons; icons != NULL; icons = icons->next) 
     {
       GdkRectangle r1, r2, dst;
       GPEIconListItem *icon;
-      GdkPixbuf *pixbuf=NULL;
-      
+      GdkPixbuf *pixbuf = NULL;
+      int cell_x, cell_y, cell_w, cell_h;
+ 
       icon = icons->data;
       
       /* Compute & render the icon */
-      r1.x=col * il_col_width (il);
-      r1.y=row * il_row_height (il) + 5;
-      r1.width = il_col_width (il);
-      r1.height = il->icon_size;
-      
+      cell_x = col * il_col_width (il);
+      cell_y = row * il_row_height (il) + 5;
+      cell_w = il_col_width (il);
+      cell_h = il->icon_size + LABEL_YMARGIN + label_height;
+
       r2.x = event->area.x;
       r2.y = event->area.y;
       r2.width = event->area.width;
       r2.height = event->area.height;
-	      
-      if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
+
+      r1.x = cell_x;
+      r1.y = cell_y;
+      r1.width = cell_w;
+      r1.height = cell_h;
+      
+      if (gdk_rectangle_intersect (&r1, &r2, &dst))
 	{
+	  gboolean selected = FALSE;
+
+	  if (il->mrow == row && il->mcol == col)
+	    selected = TRUE;
+
+	  state = (selected && !il->flag_embolden) ? GTK_STATE_SELECTED : GTK_WIDGET_STATE (widget);
+
+	  gtk_paint_flat_box (widget->style,
+			      widget->window,
+			      state,
+			      GTK_SHADOW_NONE,
+			      &dst,
+			      widget,
+			      "",
+			      cell_x,
+			      cell_y,
+			      cell_w,
+			      cell_h);
+	  
 	  /* Get the icon from the cache if its there, if not put it there :) */
 	  if (icon->pb_scaled)
 	    pixbuf = icon->pb_scaled;
 	  else 
 	    {
-	      if (icon->pb == NULL)
+	      if (icon->pb == NULL && icon->icon != NULL)
 		icon->pb = gdk_pixbuf_new_from_file (icon->icon, NULL);
 	      
 	      _gpe_icon_list_view_check_icon_size (il, G_OBJECT (icon));
@@ -252,126 +241,100 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      pixbuf = icon->pb_scaled;
 	    }
 	  
-	  if (pixbuf) 
+	  if (pixbuf)
 	    {
-	      // adjust X position for actual size
-	      r1.width = gdk_pixbuf_get_width (pixbuf);
-	      r1.x=col * il_col_width (il) + (il_col_width (il) - r1.width) / 2;
+	      int pixbuf_w, pixbuf_h, x_offset;
 	      
-	      // recompute intersection: maybe nothing to do any more
+	      pixbuf_w = gdk_pixbuf_get_width (pixbuf);
+	      pixbuf_h = gdk_pixbuf_get_height (pixbuf);
+
+	      // adjust X position for actual size
+	      x_offset = (il_col_width (il) - pixbuf_w) / 2;
+
+	      r1.x = cell_x + x_offset;
+	      r1.y = cell_y;
+	      r1.width = pixbuf_w;
+	      r1.height = pixbuf_h;
+	      
+	      if (gdk_rectangle_intersect (&r1, &r2, &dst))
+		gdk_draw_pixbuf (widget->window, 
+				 widget->style->fg_gc[widget->state],
+				 pixbuf, 
+				 dst.x - r1.x, dst.y - r1.y, 
+				 dst.x, dst.y, 
+				 dst.width, dst.height,
+				 GDK_RGB_DITHER_NORMAL, 0, 0);
+	    }
+	  
+	  if (il->flag_show_title && icon->title)
+	    {
+	      /* if show_title mode is set and current title non NULL, then */
+	      /* Compute & render the title */
+	      r1.x = cell_x;
+	      r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
+	      r1.width = cell_w;
+	      r1.height = label_height;
+	      
 	      if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
 		{
-		  gdk_pixbuf_composite (pixbuf, dest, // from, to
-					dst.x - event->area.x, //dest_x
-					dst.y - event->area.y,// + va->value, // dest_y
-					dst.width, dst.height, // dest_width, dest_height
-					r1.x - event->area.x, // offset_x
-					r1.y - event->area.y, // + va->value, // offset_y
-					1.0, 1.0,
-					GDK_INTERP_BILINEAR, // filtering
-					col == il->mcol && row == il->mrow ? 128 : 255);
+		  char *stxt; int slen;
+		  PangoRectangle pr;
+		  
+		  stxt=icon->title;
+		  slen = strlen (stxt);
+		  
+		  if (selected && il->flag_embolden) 
+		    {
+		      char *newtxt;
+		      newtxt = g_strdup_printf ("<b>%s</b>", stxt);
+		      pango_layout_set_markup (pl, newtxt, -1);
+		      g_free (newtxt);
+		    } 
+		  else
+		    pango_layout_set_text (pl, stxt, -1);
+		  
+		  pango_layout_get_pixel_extents  (pl, NULL, &pr);
+	      
+		  while ((pango_layout_get_line_count (pl) > 2 ||
+			  pr.width > il_col_width (il)) && slen>0) {
+		    char *newtxt;
+		    char *fmt;
+		    if (stxt[slen-2] == ' ')
+		      slen--;
+		    
+		    if (selected && il->flag_embolden)
+		      fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
+		    else
+		      fmt = g_strdup_printf ("%%.%ds...", --slen);
+		    
+		    newtxt = g_strdup_printf (fmt, stxt);
+		    g_free (fmt);
+		    
+		    if (selected)
+		      pango_layout_set_markup (pl, newtxt, -1);
+		    else
+		      pango_layout_set_text (pl, newtxt, -1);
+		    g_free (newtxt);
+		    
+		    pango_layout_get_pixel_extents  (pl, NULL, &pr);
+		  }
+		  
+		  gtk_paint_layout (widget->style, widget->window, state,
+				    FALSE, &dst, widget, "", r1.x, r1.y, pl);
 		}
-	    }
+	    } //(if show title, compute and render)
 	}
-      
+
       if (++col == il->cols) 
 	{
 	  col = 0; 
 	  row++;
 	}
     }
-  
-  /* Dump to drawingarea */
-  gdk_pixbuf_render_to_drawable (dest, widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
-				 0, 0, event->area.x, event->area.y,
-				 event->area.width, event->area.height,
-				 GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
-  
-  gdk_pixbuf_unref (dest);
-  
-  col = row = 0;
-  
-  for (icons = il->icons; icons != NULL; icons = icons->next) 
-    {
-      GdkRectangle r1, r2, dst;
-      GPEIconListItem *icon;
-      icon = icons->data;
-      
-      if (il->flag_show_title && icon->title)
-	{
-	  /* if show_title mode is set and current title non NULL, then */
-	  /* Compute & render the title */
-	  r1.x=col * il_col_width (il);
-	  r1.y=row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
-	  r1.width = il_col_width (il);
-	  r1.height = label_height;
-	  
-	  r2.x = event->area.x;
-	  r2.y = event->area.y;
-	  r2.width = event->area.width;
-	  r2.height = event->area.height;
-	  
-	  if (gdk_rectangle_intersect (&r1, &r2, &dst)) 
-	    {
-	      char *stxt; int slen;
-	      int selected=0;
-	      PangoRectangle pr;
-	      
-	      stxt=icon->title;
-	      slen = strlen (stxt);
-	      
-	      selected = (il->mrow == row && il->mcol == col);
-	      if (selected && il->flag_embolden) 
-		{
-		  char *newtxt;
-		  newtxt = g_strdup_printf ("<b>%s</b>", stxt);
-		  pango_layout_set_markup (pl, newtxt, -1);
-		  g_free (newtxt);
-		} 
-	      else
-		pango_layout_set_text (pl, stxt, -1);
-	      
-	      pango_layout_get_pixel_extents  (pl, NULL, &pr);
-	      
-	      while ((pango_layout_get_line_count (pl) > 2 ||
-		      pr.width > il_col_width (il)) && slen>0) {
-		char *newtxt;
-		char *fmt;
-		if (stxt[slen-2] == ' ')
-		  slen--;
-		
-		if (selected && il->flag_embolden)
-		  fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
-		else
-		  fmt = g_strdup_printf ("%%.%ds...", --slen);
-		
-		newtxt = g_strdup_printf (fmt, stxt);
-		g_free (fmt);
-		
-		if (selected)
-		  pango_layout_set_markup (pl, newtxt, -1);
-		else
-		  pango_layout_set_text (pl, newtxt, -1);
-		g_free (newtxt);
-		
-		pango_layout_get_pixel_extents  (pl, NULL, &pr);
-	      }
-	      
-	      gtk_paint_layout (widget->style, widget->window, GTK_WIDGET_STATE (widget),
-				FALSE, &dst,
-				widget, "detail?wtf?", r1.x, r1.y, pl);
-	    }
-	} //(if show title, compute and render)
-      
-      if (++col == il->cols) 
-	{
-	  col = 0; 
-	  row++;
-	}
-    }
-  
+
   g_object_unref (pl);
-  
+  g_object_unref (pc);
+
   return TRUE;
 }
 
@@ -648,7 +611,7 @@ gpe_icon_list_view_init (GPEIconListView *self)
   self->icon_size = 48;
   self->icon_xmargin = 12;
   self->bgcolor = 0xffffffff;
-  self->flag_embolden = TRUE;
+  self->flag_embolden = FALSE;
   self->flag_show_title = TRUE;
   self->rows_set = 0;
 

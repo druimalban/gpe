@@ -1,3 +1,10 @@
+2004-05-21  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistview.c (gpe_icon_list_view_init): Make embolden FALSE
+	by default.
+	(_gpe_icon_list_view_expose): Remove backing pixbuf; draw into the
+	window directly.
+
 2004-05-16  Philip Blundell  <philb@gnu.org>
 
 	* gpeclockface.c: Use Cairo to draw hands, if enabled.  Remove
