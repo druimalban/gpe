@@ -1,11 +1,12 @@
 <!-- ##### SECTION Title ##### -->
-init
+Init 
 
 <!-- ##### SECTION Short_Description ##### -->
-
+Initialisation of applications
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
+Functions used for application initialisation.
 
 </para>
 
@@ -16,12 +17,13 @@ init
 
 <!-- ##### FUNCTION gpe_application_init ##### -->
 <para>
-
+Initialise a GPE application. This function is called on startup of a GPE
+application. It replaces gtk_init() which is used in normal GTK applications.
 </para>
 
-@argc: 
-@argv: 
-@Returns: 
+@argc: argument count passed to main()
+@argv: argument array passed to main()
+@Returns: TRUE on success, FALSE on failure
 
 
 <!-- ##### FUNCTION gpe_saved_args ##### -->
@@ -30,6 +32,4 @@ init
 </para>
 
 @argc: 
-@argv: 
-
-
+@argv:
