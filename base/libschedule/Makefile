@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libschedule
 #DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.13
+VERSION = 0.14
 
 LINGUAS = 
 
