@@ -7,15 +7,23 @@ module_id() {
 if [ ! -f /etc/sysconfig/bluetooth ]; then
   echo -n "Checking for built-in Bluetooth: "
   case `module_id` in
-    "iPAQ 5400" | "iPAQ 3900")
+    "iPAQ 5400")
 	BLUETOOTH=yes
 	PORT=/dev/tts/1
 	SPEED=921600
+        PROTO=any
+	;;
+    "iPAQ 3900")
+	BLUETOOTH=yes
+	PORT=/dev/tts/1
+	SPEED=921600
+        PROTO=bcsp
 	;;
     "iPAQ 3800")
 	BLUETOOTH=yes
 	PORT=/dev/ttySB0
 	SPEED=230400
+        PROTO=bcsp
 	;;
     *)
 	BLUETOOTH=no
@@ -33,6 +41,6 @@ if [ ! -f /etc/sysconfig/bluetooth ]; then
   if [ $BLUETOOTH = "yes" ]; then
     echo "BLUETOOTH_PORT=$PORT" >>/etc/sysconfig/bluetooth
     echo "BLUETOOTH_SPEED=$SPEED" >>/etc/sysconfig/bluetooth
-    echo "BLUETOOTH_PROTOCOL=bcsp" >>/etc/sysconfig/bluetooth
+    echo "BLUETOOTH_PROTOCOL=$PROTO" >>/etc/sysconfig/bluetooth
   fi
 fi
