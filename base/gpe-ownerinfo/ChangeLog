@@ -2,6 +2,8 @@
 
 	* gpe-ownerinfo2.c (main): Clean up. Use pango markup in places
 	where it makes sense.
+	(main): Make labels selectable where it makes sense (well, it
+	doesn't really. Let's see.) Blue email address, yay! :)
 
 2003-01-18  Colin Marquardt  <colin@marquardt-home.de>
 

@@ -757,16 +757,20 @@ main (int argc, char *argv[])
   gtk_label_set_markup (GTK_LABEL (name),
 			g_strdup_printf ("<span>%s</span>",
 					 ownername));
+  gtk_label_set_selectable (GTK_LABEL (name), TRUE);
   gtk_label_set_markup (GTK_LABEL (email),
-			g_strdup_printf ("<small><tt>%s</tt></small>",
+			g_strdup_printf ("<span foreground='darkblue'><small><tt>%s</tt></small></span>",
 					 owneremail));
+  gtk_label_set_selectable (GTK_LABEL (email), TRUE);
   gtk_label_set_markup (GTK_LABEL (phone),
 			g_strdup_printf ("<span>%s</span>",
 					 ownerphone));
+  gtk_label_set_selectable (GTK_LABEL (phone), TRUE);
   gtk_label_set_markup (GTK_LABEL (address),
 			g_strdup_printf ("<span>%s</span>",
 					 owneraddress));
-  
+  gtk_label_set_selectable (GTK_LABEL (address), TRUE);
+    
   /* make window transparent if option -t is given: */
   if (flag_transparent) {
     gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
