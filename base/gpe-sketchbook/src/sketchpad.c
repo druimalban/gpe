@@ -270,6 +270,9 @@ void draw_line (gdouble x1, gdouble y1,
 }
 
 void reset_drawing_area(){
+  if(! GTK_WIDGET_REALIZED(drawing_area)){ //drawing_area->window == NULL
+    gtk_widget_realize(drawing_area);
+  }
   if(drawing_area_pixmap_buffer) gdk_pixmap_unref(drawing_area_pixmap_buffer);
   drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
                                               drawing_area_width,
@@ -314,6 +317,16 @@ GdkPixbuf * sketchpad_get_current_sketch_pixbuf(){
 void sketchpad_set_current_sketch_from_pixbuf(GdkPixbuf * pixbuf){
   drawing_area_width  = gdk_pixbuf_get_width (pixbuf);
   drawing_area_height = gdk_pixbuf_get_height(pixbuf);
+
+  if(! GTK_WIDGET_REALIZED(drawing_area)){ //drawing_area->window == NULL
+    gtk_widget_realize(drawing_area);
+  }
+  if(! drawing_area_pixmap_buffer){
+    drawing_area_pixmap_buffer = gdk_pixmap_new(drawing_area->window,
+                                                drawing_area_width,
+                                                drawing_area_height,
+                                                -1);
+  }
   gdk_pixbuf_render_to_drawable(pixbuf,//GdkPixbuf *pixbuf,
                                 drawing_area_pixmap_buffer,//GdkDrawable *drawable,
                                 graphical_context,//GdkGC *gc,
