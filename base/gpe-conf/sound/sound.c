@@ -66,6 +66,7 @@ struct
 	GtkWidget *cMute;
 	GtkWidget *slMain;
 	GtkWidget *slAlarm;
+	GtkWidget *bTest;
 	t_mixer *channels;
 	GtkWidget *slider[MAX_CHANNELS];
 }
@@ -87,6 +88,16 @@ timeout_callback(void)
 
 
 static void
+on_test_clicked(GtkButton *b, gpointer userdata)
+{
+	int level = get_alarm_level();
+	int cur_pcm, cur_vol;
+/*	
+	set_volume (self.channels[cn].nr, self.channels[cn].value);
+*/
+}
+
+static void
 do_change_alarm(GtkRange *range, gpointer data)
 {
 	set_alarm_level((int)gtk_range_get_value(range));
@@ -97,8 +108,10 @@ static void
 on_auto_toggled(GtkToggleButton *tb, gpointer userdata)
 {
 	int alarm_auto = gtk_toggle_button_get_active(tb);
-	gtk_widget_set_sensitive(self.slAlarm, 
-	                         !alarm_auto && get_alarm_enabled());
+	gboolean enable = (!alarm_auto && get_alarm_enabled()) ? TRUE : FALSE;
+	
+	gtk_widget_set_sensitive(self.slAlarm, enable);
+	gtk_widget_set_sensitive(self.bTest, enable);
 	set_alarm_automatic(alarm_auto);
 }
 
@@ -107,8 +120,10 @@ static void
 on_alarm_toggled(GtkToggleButton *tb, gpointer userdata)
 {
 	int alarm_enable = gtk_toggle_button_get_active(tb);
-	gtk_widget_set_sensitive(self.slAlarm, 
-	                         alarm_enable && !get_alarm_automatic());
+	gboolean enable = (alarm_enable && !get_alarm_automatic()) ? TRUE : FALSE;
+	
+	gtk_widget_set_sensitive(self.slAlarm, enable);
+	gtk_widget_set_sensitive(self.bTest, enable);
 	set_alarm_enabled(alarm_enable);
 }
 
@@ -281,7 +296,11 @@ Sound_Build_Objects (void)
 	if (!pbuf)
 		pbuf = gpe_try_find_icon ("unkn", &err);
 	image = gtk_image_new_from_pixbuf(pbuf);
-		
+	
+	self.bTest = gtk_button_new_with_label(_("Test"));
+	g_signal_connect (G_OBJECT(self.bTest), "clicked",
+	                  G_CALLBACK (on_test_clicked), NULL);
+	
 	gtk_misc_set_alignment(GTK_MISC(label), 0, 0.5);
 	gtk_scale_set_draw_value(GTK_SCALE(slider), FALSE);
 	gtk_range_set_value(GTK_RANGE(slider), get_alarm_level());
@@ -294,6 +313,8 @@ Sound_Build_Objects (void)
 	gtk_table_attach(GTK_TABLE(table), label, 1, 2, i + 6, i + 7, 
 	                 GTK_FILL, GTK_FILL, 0, 0);
 	gtk_table_attach(GTK_TABLE(table), slider, 2, 3, i + 6, i + 7, 
+	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
+	gtk_table_attach(GTK_TABLE(table), self.bTest, 2, 3, i + 7, i + 8, 
 	                 GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
 	
 	g_timeout_add(1000, (GSourceFunc)timeout_callback, NULL);

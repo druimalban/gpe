@@ -5,12 +5,15 @@ typedef struct
   GtkWidget *lightl;
   GtkWidget *brightnessl;
   GtkWidget *brightness;
-  GtkWidget *screensaverl;
+  GtkWidget *displayl;
+  GtkWidget *calibratel;
+/*  GtkWidget *screensaverl;
   GtkWidget *screensaverl2;
   GtkWidget *screensaverl3;
   GtkWidget *screensaver;
   GtkWidget *screensaverbt1;
   GtkWidget *screensaverbt2;
+*/	
 #ifndef DISABLE_XRANDR
   GtkWidget *rotation;
   GtkWidget *rotationl;

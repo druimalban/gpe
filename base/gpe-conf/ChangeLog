@@ -1,3 +1,11 @@
+2004-10-12	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* sound.c: Started to implement alarm test function.
+	* ownerinfo.c: Introduced defines for image size. Increased size to 64x64.
+	* screen/main.c, callbacks.h: disabled screensaver setting. (Currently
+	                              useless on a PDA). Changed display layout.
+	* calibrate.c: Changed error message.
+
 2004-10-10	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Renamed "ipaqscreen" stuff to "screen".

@@ -45,6 +45,11 @@ void File_Selected (char *file,
 #define UPGRADE_NOT_NEEDED  0
 #define GPE_LOGIN_STARTUP	"/etc/X11/Xsession.d/50autolock"
 
+#ifndef IMG_HEIGHT
+  #define IMG_HEIGHT 64
+  #define IMG_WIDTH  64
+#endif
+
 GtkWidget *photofile;
 GtkWidget *name;
 GtkWidget *email;
@@ -322,7 +327,7 @@ GtkWidget *Ownerinfo_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y | GTK_EXPAND), 0, 0);
   
   /* these values are just a dummy size for the initial display */
-  photo = gpe_create_pixmap (table, ownerphotofile, 24, 32);
+  photo = gpe_create_pixmap (table, ownerphotofile, IMG_WIDTH, IMG_WIDTH);
   gtk_container_add (GTK_CONTAINER (button), photo);
 
   gtk_signal_connect (GTK_OBJECT (button), "clicked",
@@ -573,15 +578,10 @@ void File_Selected (char *file,
 {
   /* check if we can read the selected file */
   /* FIXME: gotta check if it's a valid png file */
-  int width, height;
   if (access (file, R_OK) == 0) {
     gtk_entry_set_text (GTK_ENTRY (photofile), file);
-	width = 32;
-	height = 48;
     gtk_container_remove (GTK_CONTAINER (button), photo);
-    photo = gpe_create_pixmap (button, file,
-					 width,
-					 height);
+    photo = gpe_create_pixmap (button, file, IMG_WIDTH, IMG_HEIGHT);
     gtk_container_add (GTK_CONTAINER (button), photo);
     gtk_widget_show (GTK_WIDGET (photo));
   }

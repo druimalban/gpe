@@ -57,8 +57,8 @@ GtkWidget *screen_Build_Objects()
   guint i;
   int ss_sec;
   gchar *tstr;
-  GtkWidget* hbox;
-	
+/*  GtkWidget* hbox;
+*/	
   guint gpe_boxspacing = gpe_get_boxspacing ();
   guint gpe_border     = gpe_get_border ();
 
@@ -115,7 +115,7 @@ GtkWidget *screen_Build_Objects()
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (adjLight));
   gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_TOP);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
-
+/*
   self.screensaverl = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.screensaverl),0.0,0.5);
   tstr = g_strdup_printf ("<b>%s</b>", _("Screensaver"));
@@ -145,13 +145,16 @@ GtkWidget *screen_Build_Objects()
   self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (self.adjSaver)));
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), TRUE);
-
+*/
 #ifndef DISABLE_XRANDR
-  self.rotationl = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(self.rotationl),0.0,0.5);
-  tstr = g_strdup_printf ("<b>%s</b>", _("Orientation"));
-  gtk_label_set_markup (GTK_LABEL (self.rotationl), tstr);
+  self.displayl = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.displayl),0.0,0.5);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Display"));
+  gtk_label_set_markup (GTK_LABEL (self.displayl), tstr);
   g_free(tstr);
+  
+  self.rotationl = gtk_label_new(_("Rotation"));
+  gtk_misc_set_alignment(GTK_MISC(self.rotationl),0.0,0.5);
   
   self.rotation = gtk_option_menu_new ();
   gtk_widget_set_sensitive(self.rotation,rotation_available);
@@ -173,8 +176,10 @@ GtkWidget *screen_Build_Objects()
   tstr = g_strdup_printf ("<b>%s</b>", _("Touchscreen"));
   gtk_label_set_markup (GTK_LABEL (self.touchscreen), tstr);
   g_free(tstr);
-	
-  self.calibrate = gtk_button_new_with_label(_("Calibrate"));
+
+  self.calibratel = gtk_label_new(_("Calibrate"));
+  gtk_misc_set_alignment(GTK_MISC(self.calibratel),0.0,0.5);
+  self.calibrate = gtk_button_new_with_label(_("Start"));
 	
   gtk_table_attach (GTK_TABLE (self.table), self.lightl, 0, 1, 0, 1,
                     (GtkAttachOptions) (table_attach_left_col_x),
@@ -189,7 +194,7 @@ GtkWidget *screen_Build_Objects()
   gtk_table_attach (GTK_TABLE (self.table), self.brightness, 1, 2, 1, 2,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-										
+/*										
   gtk_table_attach (GTK_TABLE (self.table), self.screensaverl, 0, 1, 3, 4,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
@@ -217,8 +222,12 @@ GtkWidget *screen_Build_Objects()
   gtk_table_attach (GTK_TABLE (self.table), self.screensaver, 1, 2, 5, 6,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
-
+*/
 #ifndef DISABLE_XRANDR
+  gtk_table_attach (GTK_TABLE (self.table), self.displayl, 0, 1, 6, 7,
+                    (GtkAttachOptions) (table_attach_left_col_x),
+                    (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
+					
   gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 7, 8,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
@@ -228,12 +237,15 @@ GtkWidget *screen_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 #endif
-  gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 8, 9,
+  gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 2, 8, 9,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.touchscreen), table_justify_left_col);
+  gtk_table_attach (GTK_TABLE (self.table), self.calibratel, 0, 1, 9, 10,
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 8, 9,
+  gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 9, 10,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
@@ -242,10 +254,10 @@ GtkWidget *screen_Build_Objects()
                       GTK_SIGNAL_FUNC (on_brightness_hscale_draw),
                       NULL);
 		  
-  gtk_signal_connect (GTK_OBJECT (self.screensaver), "format-value",
+/*  gtk_signal_connect (GTK_OBJECT (self.screensaver), "format-value",
                       GTK_SIGNAL_FUNC (change_screen_saver_label),
                       NULL);
-
+*/
 #ifndef DISABLE_XRANDR
   gtk_signal_connect (GTK_OBJECT (gtk_option_menu_get_menu(GTK_OPTION_MENU (self.rotation))), "selection-done",
                       GTK_SIGNAL_FUNC (on_rotation_entry_changed),
@@ -259,7 +271,8 @@ GtkWidget *screen_Build_Objects()
 #ifndef DISABLE_XRANDR
   initval.orientation = get_rotation();
 #endif    
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), ss_sec ? TRUE : FALSE);
+/*  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), ss_sec ? TRUE : FALSE);
+*/
   gtk_timeout_add(2000,(GtkFunction)on_light_check,(gpointer)adjLight);
     
   initialising = 0;
@@ -302,7 +315,8 @@ void screen_Free_Objects()
 
 void screen_Save()
 {
-  int sec;
+/*
+	int sec;
 
   if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.screensaverbt1)))
   {
@@ -319,6 +333,7 @@ void screen_Save()
   {
 	  xset_set_ss_sec(0);
   }
+*/	
 }
 
 void screen_Restore()
