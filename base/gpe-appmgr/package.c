@@ -68,10 +68,10 @@ struct package *read_attrib (FILE *inp)
 
 	/* Read the data */
 	t = temp;
-	if ((c = getc (inp)) == '\"')
+	if ((c = getc (inp)) == '\"') /* " balance quotes for emacs hilite */
 	{
 		/* Quoted text */
-		while ((*t++ = getc (inp)) != '\"' && t - temp < 1000 && !feof(inp))
+		while ((*t++ = getc (inp)) != '\"' && t - temp < 1000 && !feof(inp)) /* " balance quotes */
 			;
 		*--t = 0;
 	} else
