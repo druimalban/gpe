@@ -2,9 +2,10 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = yes
 CVSBUILD = yes
-PIXMAPS = `cd pixmaps/document-icons && ls *.png`
+MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
+SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 
-MEMBERS = main
+MEMBERS = main mime-sql
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
@@ -28,7 +29,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget
+LDFLAGS += -lgpewidget -lsqlite
 
 ifeq ($(GTK2),yes)
 LDFLAGS += `pkg-config --libs gtk+-2.0`
@@ -61,7 +62,8 @@ install: all
 	install -D gpe-filemanager $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 	install -D -m 644 gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png
 	install -D -m 644 gpe-filemanager.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-filemanager
-	for i in $(PIXMAPS); do install -D pixmaps/document-icons/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/document-icons/$$i; done
+	for i in $(MIME_PIXMAPS); do install -D pixmaps/document-icons/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/document-icons/$$i; done
+	for i in $(SPINNER_PIXMAPS); do install -D pixmaps/spinner/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/spinner/$$i; done
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 
 upstream: clean
