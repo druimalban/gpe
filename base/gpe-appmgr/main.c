@@ -148,10 +148,6 @@ get_icon_fn (GnomeDesktopFile *p, int iconsize)
 
   full_fn = find_icon (fn);
 
-  g_free (fn);    return fn;
-
-  full_fn = find_icon (fn);
-
   g_free (fn);
 
   if (full_fn == NULL)
@@ -214,16 +210,30 @@ static struct package_group *
 find_group_for_package (GnomeDesktopFile *package)
 {
   GList *i;
-  struct package_group *g;
+  gchar **secs;
+  int nsecs;
 
-  for (i = groups; i; i = i->next)
+  if (gnome_desktop_file_get_strings (package, NULL, "Categories", NULL, &secs, &nsecs))
     {
-      GList *c;
-      g = i->data;
-      for (c = g->categories; c; c = c->next)
-	if (gnome_desktop_file_has_section (package, c->data))
-	  return g;
+      for (i = groups; i; i = i->next)
+	{
+	  GList *c;
+	  struct package_group *g;
+	  g = i->data;
+	  for (c = g->categories; c; c = c->next)
+	    {
+	      int i;
+	      for (i = 0; i < nsecs; i++)
+		if (!strcmp (secs[i], c->data))
+		  {
+		    g_strfreev (secs);
+		    return g;
+		  }
+	    }
+	}
     }
+
+  g_strfreev (secs);
 
   return other_group;
 }
