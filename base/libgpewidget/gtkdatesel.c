@@ -345,4 +345,5 @@ void
 gtk_date_sel_set_time (GtkDateSel *sel, time_t time)
 {
   sel->time = time;
+  gtk_signal_emit (GTK_OBJECT (sel), my_signals[0]);
 }

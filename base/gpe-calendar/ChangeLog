@@ -1,29 +1,9 @@
-2002-08-19  Philip Blundell  <philb@gnu.org>
+2002-08-22  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
-	* main.c (new_view): Avoid gtk_widget_show_all.
-	* day_view.c (day_view): Show the widgets.
-	* week_view.c (week_view): Likewise.	
-	* year_view.c (year_view): Likewise.
-	* month_view.c (month_view): Likewise.
-	* future_view.c (future_view): Likewise,
-
-	* Makefile: Use translation and packaging infrastructure from
-	Makefile.dpkg_ipkg and Makefile.translation.
-	* po/Makefile: Likewise.
-
-	* po/gpe-calendar.pot: Update.
-	* po/de.po: Likewise.
-	* po/pt_PT.po: Likewise.
-
-	* event-db.c: Correct path to GPE include files.
-	* main.c: Likewise.
-	* day_view.c: Likewise.
-	* week_view.c: Likewise.
-	* month_view.c: Likewise.
-	* year_view.c: Likewise.
-	* future_view.c: Likewise.
-	* event-ui.c: Likewise.
-	* day_popup.c: Likewise.
+	* day_view.c (day_view_update, update_hooks_callback): move set_time.
+	* week_view.c (week_view_update, update_hooks_callback): Likewise.	
+	* month_view.c (month__view_update, update_hooks_callback): Likewise.
+	* year_view.c (year_view_update, update_hooks_callback): Likewise.
 	
 2002-08-05  Colin Marquardt  <colin@marquardt-home.de>
 
