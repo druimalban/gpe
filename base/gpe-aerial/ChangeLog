@@ -1,3 +1,8 @@
+10/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- Registered to translation project.
+	- Added po/gpe-aerial.pot to cvs.
+	- Version update.
+	
 09/27/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- control1: Updated dependencies.
 	- Makefile: Changed Version to deal with ipkg.
