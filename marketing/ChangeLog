@@ -1,3 +1,8 @@
+2004-06-16  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-flyer*.tex: Fix \rcsInfo usage by moving it outside the
+	\flyertext (re-)definition.
+
 2004-05-02  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe-flyer*.tex: Clean up a bit. Don't give full local path for
