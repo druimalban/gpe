@@ -23,18 +23,12 @@
 #include "gsoko.h"
 
 gboolean
-load_png (const char *name, GdkPixmap **pixmap, GdkBitmap **bitmap)
+load_png (const char *name, GdkPixbuf **pixmap)
 {
-  GdkPixbuf *pixbuf;
+  *pixmap = gdk_pixbuf_new_from_file (name, NULL);
 
-  pixbuf = gdk_pixbuf_new_from_file (name, NULL);
-
-  if (pixbuf)
-    {
-      gdk_pixbuf_render_pixmap_and_mask (pixbuf, pixmap, bitmap, 127);
-      gdk_pixbuf_unref (pixbuf);
-      return TRUE;
-    }
+  if (*pixmap)
+    return TRUE;
 
   fprintf (stderr, "couldn't load %s\n", name);
 
@@ -48,25 +42,19 @@ void load_pixmaps(void)
 #if 0
 	/* macro: i = direction index; name = direction name */
 	#define load_pxm(a, i, name)	\
-		load_png (PREFIX "/share/gsoko/img/" #name ".png", &a##_pxm[i][0], &a##_btm[i][0]);	\
-		load_png (PREFIX "/share/gsoko/img/" #name "1.png", &a##_pxm[i][1], &a##_btm[i][1]); \
-		load_png (PREFIX "/share/gsoko/img/" #name "2.png", &a##_pxm[i][2], &a##_btm[i][2]); \
+		load_png (PREFIX "/share/gsoko/img/" #name ".png", &a##_pxm[i][0]);	\
+		load_png (PREFIX "/share/gsoko/img/" #name "1.png", &a##_pxm[i][1]); \
+		load_png (PREFIX "/share/gsoko/img/" #name "2.png", &a##_pxm[i][2]); \
 		a##_pxm[i][3] = a##_pxm[i][1];	\
-		a##_btm[i][3] = a##_btm[i][1];	\
-		a##_pxm[i][4] = a##_pxm[i][2];	\
-		a##_btm[i][4] = a##_btm[i][2];
+		a##_pxm[i][4] = a##_pxm[i][2];
 #else
 	/* macro: i = direction index; name = direction name */
 	#define load_pxm(a, i, name)	\
-		load_png (PREFIX "/share/gsoko/img/man.png", &a##_pxm[i][0], &a##_btm[i][0]);	\
+		load_png (PREFIX "/share/gsoko/img/man.png", &a##_pxm[i][0]);	\
 		a##_pxm[i][1] = a##_pxm[i][0];	\
-		a##_btm[i][1] = a##_btm[i][0];	\
 		a##_pxm[i][2] = a##_pxm[i][0];	\
-		a##_btm[i][2] = a##_btm[i][0];	\
 		a##_pxm[i][3] = a##_pxm[i][1];	\
-		a##_btm[i][3] = a##_btm[i][1];	\
-		a##_pxm[i][4] = a##_pxm[i][2];	\
-		a##_btm[i][4] = a##_btm[i][2];
+		a##_pxm[i][4] = a##_pxm[i][2];
 #endif
 
 	load_pxm(s, 1, left);
@@ -79,11 +67,11 @@ void load_pixmaps(void)
 	load_pxm(ps, 3, pup);
 	load_pxm(ps, 4, pdown);
 	
-	load_png (PREFIX "/share/gsoko/img/wall.png", &wall_pxm, NULL);
-	load_png (PREFIX "/share/gsoko/img/tile.png", &tile_pxm, NULL);
-	load_png (PREFIX "/share/gsoko/img/tile2.png", &tile2_pxm, NULL);
-	load_png (PREFIX "/share/gsoko/img/box.png", &box_pxm, NULL);
-	load_png (PREFIX "/share/gsoko/img/box2.png", &box2_pxm, NULL);
+	load_png (PREFIX "/share/gsoko/img/wall.png", &wall_pxm);
+	load_png (PREFIX "/share/gsoko/img/tile.png", &tile_pxm);
+	load_png (PREFIX "/share/gsoko/img/tile2.png", &tile2_pxm);
+	load_png (PREFIX "/share/gsoko/img/box.png", &box_pxm);
+	load_png (PREFIX "/share/gsoko/img/box2.png", &box2_pxm);
 }
 
 

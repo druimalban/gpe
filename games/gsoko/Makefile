@@ -1,7 +1,7 @@
 
 PACKAGE_CFLAGS = -Wall $(GPECFLAGS) $(GTKCFLAGS) -DPREFIX=\"$(PREFIX)\"
 OBJS = control.o game.o gfx.o gsoko.o init.o interface.o move.o
-VERSION = 0.4.2-gpe5
+VERSION = 0.4.2-gpe6
 PACKAGE = gsoko
 
 PREFIX = /usr/local
@@ -44,4 +44,4 @@ move.o:		move.c gsoko.h
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation
-
+-include $(DEPS)

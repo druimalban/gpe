@@ -51,24 +51,17 @@ GdkRectangle draw_s (void)
 
 	if (s_push)	/* if we are pushing a box */	
 	{
-		/* configure darea_gc to clip from ps_mask */
-		gdk_gc_set_clip_origin(darea_gc, rect.x, rect.y);
-		gdk_gc_set_clip_mask(darea_gc, ps_btm[s_dir][s_step]);
-
 		/* draw ps_pxm onto darea_pxm trough darea_gc */
-		gdk_draw_pixmap(
+		gdk_draw_pixbuf(
 			darea_pxm, darea_gc,
 			ps_pxm[s_dir][s_step], 0, 0,
-			rect.x, rect.y, W_S, H_S);
-
-		/* remove masking */
-		gdk_gc_set_clip_mask(darea_gc, NULL);
+			rect.x, rect.y, W_S, H_S, GDK_RGB_DITHER_NORMAL, 0, 0);
 
 		/* draw the pushed box */
-		gdk_draw_pixmap(
+		gdk_draw_pixbuf(
 			darea_pxm, darea_gc,
 			box_pxm, 0, 0,
-			rect.x + o_box[s_dir][0], rect.y + o_box[s_dir][1], W_TILE, H_TILE);
+			rect.x + o_box[s_dir][0], rect.y + o_box[s_dir][1], W_TILE, H_TILE, GDK_RGB_DITHER_NORMAL, 0, 0);
 		
 		rect.x += o_bloc[s_dir][0];
 		rect.y += o_bloc[s_dir][1];
@@ -77,15 +70,10 @@ GdkRectangle draw_s (void)
 	}
 	else
 	{
-		gdk_gc_set_clip_origin(darea_gc, rect.x, rect.y);
-		gdk_gc_set_clip_mask(darea_gc, s_btm[s_dir][s_step]);
-
-		gdk_draw_pixmap(
+		gdk_draw_pixbuf(
 			darea_pxm, darea_gc,
 			s_pxm[s_dir][s_step], 0, 0,
-			rect.x, rect.y, W_S, H_S);
-
-		gdk_gc_set_clip_mask(darea_gc, NULL);
+			rect.x, rect.y, W_S, H_S, GDK_RGB_DITHER_NORMAL, 0, 0);
 
 		rect.width = W_S;
 		rect.height = H_S;
@@ -142,19 +130,19 @@ void draw_tile (int i, int j)
 	switch (board[i][j])
 	{
 		case 0:
-			gdk_draw_pixmap(darea_pxm, darea_gc, tile_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE);
+			gdk_draw_pixbuf(darea_pxm, darea_gc, tile_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE, GDK_RGB_DITHER_NORMAL, 0, 0);
 			break;
 		case 1:
-			gdk_draw_pixmap(darea_pxm, darea_gc, tile2_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE);
+			gdk_draw_pixbuf(darea_pxm, darea_gc, tile2_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE, GDK_RGB_DITHER_NORMAL, 0, 0);
 			break;
 		case 2:
-			gdk_draw_pixmap(darea_pxm, darea_gc, wall_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE);
+			gdk_draw_pixbuf(darea_pxm, darea_gc, wall_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE, GDK_RGB_DITHER_NORMAL, 0, 0);
 			break;
 		case 3:
-			gdk_draw_pixmap(darea_pxm, darea_gc, box_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE);
+			gdk_draw_pixbuf(darea_pxm, darea_gc, box_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE, GDK_RGB_DITHER_NORMAL, 0, 0);
 			break;
 		case 4:
-			gdk_draw_pixmap(darea_pxm, darea_gc, box2_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE);
+			gdk_draw_pixbuf(darea_pxm, darea_gc, box2_pxm, 0, 0, i * W_TILE, j * H_TILE, W_TILE, H_TILE, GDK_RGB_DITHER_NORMAL, 0, 0);
 			break;
 	}
 }

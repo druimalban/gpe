@@ -91,17 +91,15 @@ History hist[HIST_SIZE];  /* history for undo */
 int s_hist;               /* current index for history */
 
 /* pixmaps and their masks : [dir][step][pixmap/mask] */
-GdkPixmap *s_pxm[5][5];
-GdkPixmap *ps_pxm[5][5];
-GdkBitmap *s_btm[5][5];
-GdkBitmap *ps_btm[5][5];
+GdkPixbuf *s_pxm[5][5];
+GdkPixbuf *ps_pxm[5][5];
 
 /* tiles */
-GdkPixmap *wall_pxm;
-GdkPixmap *tile_pxm;
-GdkPixmap *tile2_pxm;
-GdkPixmap *box_pxm;
-GdkPixmap *box2_pxm;
+GdkPixbuf *wall_pxm;
+GdkPixbuf *tile_pxm;
+GdkPixbuf *tile2_pxm;
+GdkPixbuf *box_pxm;
+GdkPixbuf *box2_pxm;
 
 /* indicates the offset[dir][X/Y] resulting from a movement */
 extern const int mv_result[5][2];
