@@ -175,14 +175,14 @@ do_run_scan (void)
   return TRUE;
 }
 
-static int
+static void *
 run_scan (void *data)
 {
   do_run_scan ();
 
   scan_complete = TRUE;
 
-  return 0;
+  return NULL;
 }
 
 static void
@@ -587,7 +587,7 @@ show_devices (void)
   if (pthread_create (&scan_thread, 0, run_scan, NULL))
     gpe_perror_box (_("Unable to scan"));
   else
-    gtk_timeout_add (100, G_CALLBACK (check_scan_complete), NULL);
+    gtk_timeout_add (100, (GtkFunction) check_scan_complete, NULL);
 }
 
 static void
@@ -633,7 +633,7 @@ main (int argc, char *argv[])
   GtkWidget *window;
   GdkBitmap *bitmap;
   GtkWidget *menu_remove;
-  GtkWidget *tooltips;
+  GtkTooltips *tooltips;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
