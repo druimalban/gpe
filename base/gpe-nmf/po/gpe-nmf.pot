@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-09 13:26+0000\n"
+"POT-Creation-Date: 2003-03-09 19:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,11 +28,19 @@ msgid "Title"
 msgstr ""
 
 #: playlist_edit.c:266
-msgid "Open"
+msgid "Open file"
+msgstr ""
+
+#: playlist_edit.c:266
+msgid "Tap here to add a file or directory."
 msgstr ""
 
 #: playlist_edit.c:270
 msgid "Delete"
+msgstr ""
+
+#: playlist_edit.c:270
+msgid "Tap here to remove the selected item."
 msgstr ""
 
 #: gpe-nmf.desktop.in.h:1
