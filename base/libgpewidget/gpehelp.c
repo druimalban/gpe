@@ -39,24 +39,36 @@ gboolean
 gpe_show_help(const char* book, const char* topic)
 {
 	char *helpfile;
-	char *helpcommand;
+	char *helpadress;
+	char *app = NULL;
 	pid_t p_help;
 	
+	/* construction of help file name */
 	helpfile = g_strdup_printf	("%s/%s%s",
 									GPE_HELP_PATH,
 									book,
 									GPE_HELP_FILE_SUFFIX
 								);
+	
+	/* check if the file is readable */
 	if (access(helpfile,R_OK))
 		return TRUE;
-	if ((access(GPE_HELP_APP1,X_OK)) && (access(GPE_HELP_APP2,X_OK)))
+	
+	/* check if we are able to execute one of the displaying applications */
+	if (!access(GPE_HELP_APP1,X_OK)) app = GPE_HELP_APP1;
+	else if (!access(GPE_HELP_APP2,X_OK)) app = GPE_HELP_APP2;
+	
+	/* return if no app is available */
+	if (app == NULL) 
 		return TRUE;
 	
-	helpcommand = g_strdup_printf	("%s%s#%s",
+	/* construct the complete help address */
+	helpadress = g_strdup_printf	("%s%s#%s",
 										GPE_HELP_FILE_PREFIX,
 										helpfile,
 										topic
 									);
+	/* fork and exec displaying application */
 	p_help = fork();
 	switch (p_help)
 	{
@@ -64,12 +76,14 @@ gpe_show_help(const char* book, const char* topic)
 			return TRUE;
 		break;
 		case  0: 
-			execlp(GPE_HELP_APP1,helpcommand,NULL);
+				execlp(app,helpadress,NULL);
 		break;
 		default: 
-			g_free(helpcommand);
+			g_free(helpadress);
 			g_free(helpfile);
 			return FALSE;
 		break;
 	} 
+	/* we should never get there, help the compiler - he doesn't know */
+	return TRUE;
 }

@@ -1,5 +1,5 @@
 2004-02-21  Florian Boor <florian.boor@kernelconcepts.de>
-
+	* gpehelp.c: Some minor improvements and comments.
 	* gpehelp.c, gpehelp.h: New files implementing gpe_show_help().
 	* removed gpe/about.h: Obsolete header file.
 	
