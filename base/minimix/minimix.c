@@ -168,7 +168,7 @@ main (int argc, char **argv)
   gpe_system_tray_dock (window->window);
 
   slider_window = gtk_window_new (GTK_WINDOW_POPUP);
-  slider = gtk_vscale_new_with_range (0, 255, 1);
+  slider = gtk_vscale_new_with_range (0, 100, 1);
 
   gtk_scale_set_draw_value (GTK_SCALE (slider), FALSE);
   gtk_widget_set_usize (slider_window, -1, SLIDER_HEIGHT);
