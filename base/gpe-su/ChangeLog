@@ -1,3 +1,8 @@
+2004-06-18  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Makefile: Fixed name of variable that provides gtk libraries.
+	* gpe-su.c: Ignore GDK warnings in stderr.
+
 2004-06-07  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.13 released.
