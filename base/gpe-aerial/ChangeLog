@@ -1,3 +1,10 @@
+09/27/2003		Florian Boor <florian.boor@kernelconcepts.de>
+	- control1: Updated dependencies.
+	- Makefile: Changed Version to deal with ipkg.
+	- main.c: 	Make several colums resizable.
+	- Changed several paths to icons.
+	- released 0.2.6-3
+	
 07/01/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- Makefile	Changed path for icons to /usr/share/pixmaps
 	- *.desktop	Removed absolute path to icon.

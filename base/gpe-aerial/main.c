@@ -48,7 +48,7 @@
 #define _(x) gettext(x)
 
 /* we use the prismstumbler scan engine */
-#define SCANNER_EXEC "/usr/bin/prismstumbler"
+#define SCANNER_EXEC PREFIX "/bin/prismstumbler"
 
 #define CL_RED 		"#FF6666"
 #define CL_GREEN 	"#66FF66"
@@ -59,10 +59,10 @@
 static GThread *scan_thread;
 
 struct gpe_icon my_icons[] = {
-	{"scan-on", "scan-on-16"},
-	{"scan-off", "scan-off-16"},
-	{"network", "pccard-network.png"},
-	{"gpe-aerial"},
+	{"scan-on", PREFIX "/share/pixmaps/scan-on-16.png"},
+	{"scan-off", PREFIX "/share/pixmaps/scan-off-16.png"},
+	{"network", PREFIX "/share/pixmaps/pccard-network.png"},
+	{"gpe-aerial", PREFIX "/share/pixmaps/gpe-aerial.png"},
 	{NULL}
 };
 
@@ -413,6 +413,7 @@ show_networks (void)
 								   "background",
 								   COL_COLOR,
 								   NULL);
+		gtk_tree_view_column_set_resizable(column,TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 		renderer = gtk_cell_renderer_text_new ();
@@ -423,6 +424,7 @@ show_networks (void)
 								   "background",
 								   COL_COLOR,
 								   NULL);
+		gtk_tree_view_column_set_resizable(column,TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 		renderer = gtk_cell_renderer_text_new ();
@@ -433,6 +435,7 @@ show_networks (void)
 								   "background",
 								   COL_COLOR,
 								   NULL);
+		gtk_tree_view_column_set_resizable(column,TRUE);
 		gtk_tree_view_append_column (GTK_TREE_VIEW (tree), column);
 
 

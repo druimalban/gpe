@@ -26,7 +26,7 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-#define VERSIONSTR "prismstumbler 0.7.0"
+#define VERSIONSTR "Prismstumbler 0.7.0"
 
 #define MAX_BUFFER_SIZE 3000	/* Size of receive buffer */
 
@@ -39,7 +39,7 @@
 #define DT_HOSTAP  0x04
 
 #define PS_SOCKET "/tmp/.psintercom"
-#define DHCP_COMMAND "dhcpcd -i %s &"
+#define DHCP_COMMAND "dhcpcd %s &"
 #define SEQ_USERNET 0xFFFF
 
 typedef enum
@@ -72,6 +72,18 @@ typedef enum
 	I_FAILED
 }
 info_t;
+
+typedef enum
+{
+	N_NET,
+	N_ADHOC,
+	N_HOST,
+	N_GATEWAY,
+	N_AP,
+	N_STA,
+	N_MAX
+}
+node_t;
 
 typedef struct
 {
@@ -131,6 +143,8 @@ typedef struct
 	int hasIntIV;
 	int dhcp;
 	unsigned char subnet[5];
+	unsigned char src_ip[5];
+	unsigned char dst_ip[5];
 	int protocol;
 	int isAdHoc;
 }
@@ -146,6 +160,8 @@ typedef struct
 	time_t first, last;
 	char type[20];
 	unsigned char ip_range[5];
+	unsigned char new_src_ip[5];
+	unsigned char new_dst_ip[5];
 	char ap[16];
 	unsigned long pdata, psum, pint;
 	char wep_key[48];
@@ -163,6 +179,16 @@ typedef struct
 	char pvec[PMAX];	// seen protocols
 }
 psnetinfo_t;
+
+
+typedef struct
+{
+	node_t type;
+	unsigned char ip[5];
+	char bssid[32];
+	char description[32];
+}
+psnode_t;
 
 
 typedef struct

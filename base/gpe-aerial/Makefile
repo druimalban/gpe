@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.6-1
+VERSION = 0.2.6-3
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -79,7 +79,7 @@ $(PACKAGE): $(OBJS)
 CFLAGS += $(MIMECFLAGS)
 
 
-install-program: $(PACKAGE)
+install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
