@@ -1,6 +1,7 @@
 2003-03-15  Damien Tanner  <dctanner@gekk>
 
 	* main.c: Removed alot of errors and print statements.
+	(render_list_view_expose_event): Fixed a new leaking strings.
 
 2003-03-14  Damien Tanner  <dctanner@gekk>
 

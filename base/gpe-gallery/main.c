@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <math.h>
 #include <time.h>
+#include <mcheck.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -399,6 +400,7 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
   PangoLayout *pango_title_layout, *pango_dimensions_layout, *pango_size_layout, *pango_modified_layout;
   PangoRectangle pango_title_rect, pango_dimensions_rect, pango_size_rect, pango_modified_rect;
   GList *this_item;
+  gchar *buf;
   gint y = 0, text_y = 0;
 
   this_item = loaded_images;
@@ -411,22 +413,30 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 
     pango_title_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_title_layout, -1);
-    pango_layout_set_markup (pango_title_layout, g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>", basename (image_info->file_name)), -1);
+    buf = g_strdup_printf ("<span size=\"small\" weight=\"bold\">%s</span>", basename (image_info->file_name));
+    pango_layout_set_markup (pango_title_layout, buf, -1);
+    g_free (buf);
     pango_layout_get_pixel_extents (pango_title_layout, &pango_title_rect, NULL);
 
     pango_dimensions_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_dimensions_layout, -1);
-    pango_layout_set_markup (pango_dimensions_layout, g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>", image_info->orig_width, image_info->orig_height), -1);
+    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Dimensions: %dx%d</span>", image_info->orig_width, image_info->orig_height);
+    pango_layout_set_markup (pango_dimensions_layout, buf, -1);
+    g_free (buf);
     pango_layout_get_pixel_extents (pango_dimensions_layout, &pango_dimensions_rect, NULL);
 
     pango_size_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_size_layout, -1);
-    pango_layout_set_markup (pango_size_layout, g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>", image_info->file_size), -1);
+    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Size: %dk</span>", image_info->file_size);
+    pango_layout_set_markup (pango_size_layout, buf, -1);
+    g_free (buf);
     pango_layout_get_pixel_extents (pango_size_layout, &pango_size_rect, NULL);
 
     pango_modified_layout = gtk_widget_create_pango_layout (drawing_area, NULL);
     pango_layout_set_width (pango_modified_layout, -1);
-    pango_layout_set_markup (pango_modified_layout, g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", ctime (&image_info->file_modified)), -1);
+    buf = g_strdup_printf ("<span size=\"x-small\" foreground=\"#555555\">Modified: %s</span>", ctime (&image_info->file_modified));
+    pango_layout_set_markup (pango_modified_layout, buf, -1);
+    g_free (buf);
     pango_layout_get_pixel_extents (pango_modified_layout, &pango_modified_rect, NULL);
 
     gdk_pixbuf_render_to_drawable (image_info->pixbuf, drawing_area->window, drawing_area->style->white_gc, 0, 0, MARGIN_X, y + MARGIN_Y, image_info->width, image_info->height, GDK_RGB_DITHER_NORMAL, MARGIN_X, y + MARGIN_Y);
@@ -790,6 +800,8 @@ main (int argc, char *argv[])
   GdkPixmap *pmap;
   GdkBitmap *bmap;
   struct stat arg_stat;
+
+  mtrace ();
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
