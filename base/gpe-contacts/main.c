@@ -68,7 +68,6 @@ update_categories (void)
   for (iter = categories; iter; iter = iter->next)
     {
       struct category *c = iter->data;
-      printf("append %s\n", c->name);
       gtk_simple_menu_append_item (menu, c->name);
     }
 
