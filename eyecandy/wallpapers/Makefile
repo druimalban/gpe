@@ -1,5 +1,3 @@
-# FIXME: allow non-root building
-
 PREFIX = /usr
 WALLPAPERS = audiotux gnu linuxaddict tux tux2 wintertux woman1 woman2
 
@@ -9,20 +7,21 @@ all:
 	  mkdir -p familiar/dist/CONTROL; \
 	  echo "Package: wallpaper-ayo-$$i" > familiar/dist/CONTROL/control; \
 	  cat familiar/control >> familiar/dist/CONTROL/control; \
-	  install -D ayo_$$i.png familiar/dist/$(PREFIX)/share/wallpapers/ayo_$$i.png; \
-	  chown -R root.root familiar/dist; \
-	  ipkg-build familiar/dist; \
+	  mkdir -p familiar/dist/$(PREFIX)/share/wallpapers/; \
+	  install -m 644 ayo_$$i.png familiar/dist/$(PREFIX)/share/wallpapers/ayo_$$i.png; \
+	  fakeroot "chown -R root.root familiar/dist; ipkg-build familiar/dist";\
 	done
 
 	echo "Package: wallpapers-ayo-all" > familiar/dist/CONTROL/control
 	cat familiar/control >> familiar/dist/CONTROL/control
 	echo -n "Conflicts: " >> familiar/dist/CONTROL/control
+	mkdir -p familiar/dist/$(PREFIX)/share/wallpapers/
 	for i in $(WALLPAPERS); do \
-	  install -D ayo_$$i.png familiar/dist/$(PREFIX)/share/wallpapers/ayo_$$i.png; \
+	  install -m 644 ayo_$$i.png familiar/dist/$(PREFIX)/share/wallpapers/ayo_$$i.png; \
 	  echo -n "wallpapers-ayo-$$i, " >> familiar/dist/CONTROL/control; \
 	done
 	cat familiar/dist/CONTROL/control | sed -e "s/, $$//" > familiar/dist/CONTROL/control
-	ipkg-build familiar/dist
+	fakeroot "chown -R root.root familiar/dist; ipkg-build familiar/dist"
 	rm -rf familiar/dist
 
 #	if test -e familiar/conffiles; then install -m 644 familiar/conffiles familiar/dist/CONTROL; fi
