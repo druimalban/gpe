@@ -1,5 +1,9 @@
 2003-03-09  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.52 released.
+	
+2003-03-09  Philip Blundell  <philb@gnu.org>
+
 	* gpeiconlist.gob (_expose): Don't cache full-size images that are
 	backed by files on disk.
 	* gpe-iconlist.c: Regenerate.
