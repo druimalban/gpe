@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <libgnomevfs/gnome-vfs.h>
+#include <libgnomevfs/gnome-vfs-mime-handlers.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -216,14 +217,15 @@ open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *
 }
 
 void static
-ask_open_with (char *exec)
+ask_open_with (FileInfomation *file_info)
 {
   GtkWidget *window, *fakeparentwindow, *clist, *entry, *label;
   GtkWidget *open_button, *cancel_button;
   GdkPixbuf *pixbuf = NULL, *spixbuf;
   GdkPixmap *pixmap;
   GdkBitmap *bitmap;
-  GSList *iter;
+  GList *iter, *applications;
+  GnomeVFSMimeApplication *application;
   int row_num = 0;
   gchar *pixmap_file, *row_text[2];
 
@@ -277,6 +279,35 @@ ask_open_with (char *exec)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clist, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), entry, TRUE, TRUE, 4);
 
+  if (file_info->vfs->mime_type)
+    applications = gnome_vfs_mime_get_short_list_applications (file_info->vfs->mime_type);
+  else
+    applications = gnome_vfs_mime_get_all_applications (file_info->vfs->mime_type);
+
+  while (applications)
+  {
+    application = (GnomeVFSMimeApplication *)(((GList *)applications)->data);
+
+    row_text[0] = "";
+    row_text[1] = application->name;
+    gtk_clist_append (GTK_CLIST (clist), row_text);
+    gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application->command);
+
+    pixmap_file = g_strdup_printf (PREFIX "/share/pixmaps/%s.png", application->command);
+    pixbuf = gdk1_pixbuf_new_from_file (pixmap_file);
+    if (pixbuf != NULL)
+    {
+      spixbuf = gdk_pixbuf_scale_simple (pixbuf, 12, 12, GDK_INTERP_BILINEAR);
+      gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
+      gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
+    }
+    row_num++;
+
+    printf ("Got application %s\n", ((GnomeVFSMimeApplication *)(((GList *)applications)->data))->command);
+    applications = applications->next;
+  }
+
+/*
   if (mime_programs)
   {
     for (iter = mime_programs; iter; iter = iter->next)
@@ -299,6 +330,7 @@ ask_open_with (char *exec)
       row_num++;
     }
   }
+*/
 
   if (row_num == 0)
   {
@@ -314,13 +346,33 @@ ask_open_with (char *exec)
 void
 button_clicked (GtkWidget *widget, gpointer udata)
 {
+  GnomeVFSMimeApplication *default_mime_application;
   FileInfomation *file_info;
+  gchar *command;
+  GList *applications;
+
   file_info = (FileInfomation *) udata;
 
   printf ("You clicked on %s\n", file_info->filename);
 
-  if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR)
-    ask_open_with (file_info->filename);
+  if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
+  {
+    printf ("Mime type is %s\n", file_info->vfs->mime_type);
+
+    if file_info->vfs->mime_type)
+    {
+      default_mime_application = gnome_vfs_get_default_application (file_info->vfs->mime_type);
+      if (default_mime_application != NULL)
+      {
+        command = g_strdup_printf ("%s %s &", default_mime_application->command, file_info->filename);
+        system (command);
+      }
+      else
+        ask_open_with (file_info);
+    }
+    else
+      ask_open_with (file_info);
+  }
   else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
     browse_directory (file_info->filename);
 }
@@ -377,9 +429,9 @@ add_icon (FileInfomation *file_info)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/directory.png");
   else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
   {
-    mime_type = gnome_vfs_get_mime_type (file_info->filename);
-    if (mime_type)
-      mime_icon = find_icon_path (mime_type);
+   file_info->vfs->mime_type = gnome_vfs_get_mime_type (file_info->filename);
+    if (file_info->vfs->mime_type)
+      mime_icon = find_icon_path (file_info->vfs->mime_type);
     else
       mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
   }
