@@ -56,14 +56,12 @@ void page_add (GtkVBox *vb)
 				      cfg_options.auto_hide_group_labels);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), auto_hide_group_labels_check);
 
-#if 0
 	/* Show 'recent' tab */
 	show_recent_check =
 		gtk_check_button_new_with_label ("Show 'Recent' tab");
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(show_recent_check),
 				      cfg_options.show_recent_apps);
 	gtk_box_pack_start_defaults (GTK_BOX(vb), show_recent_check);
-#endif
 
 	/* Tab view type */
 	frame = gtk_frame_new ("Tab view");
