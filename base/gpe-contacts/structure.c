@@ -226,7 +226,7 @@ build_edit_tree (GtkCTree *ct, GSList *list, GtkCTreeNode *parent)
 GtkWidget *
 edit_structure (void)
 {
-  GtkWidget *tree = gtk_ctree_new (2, 0);
+  GtkWidget *tree = gtk_ctree_new (1, 0);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *toolbar;
