@@ -1,5 +1,6 @@
 2004-09-21 Florian Boor <florian.boor@kernelconcepts.de>
 
+	* Released Version 0.7
 	* interface.c: Aded feedback dialog applying rules.
 	               Improved button bar help, removed obsolete stuff.
 	* interface.c: Removed useless "info" menu entry, changed shortcut.
