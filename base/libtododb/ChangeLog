@@ -1,3 +1,12 @@
+2003-02-16  Philip Blundell  <philb@gnu.org>
+
+	* todo-db.c (item_callback): Use g_malloc0.
+	(todo_db_new_item): Likewise.
+
+	* Makefile (CFLAGS): Add -DG_DISABLE_DEPRECATED.
+
+	* familiar/control (Depends): Add libgpewidget1.
+
 2003-02-02  Philip Blundell  <philb@gnu.org>
 
 	* todo-db.c (todo_db_categories, todo_db_items): Make static.

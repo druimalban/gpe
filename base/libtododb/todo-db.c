@@ -158,8 +158,7 @@ item_callback (void *arg, int argc, char **argv, char **names)
     {
       char *err;
       int id = atoi (argv[0]);
-      struct todo_item *i = g_malloc (sizeof (struct todo_item));
-      memset (i, 0, sizeof (*i));
+      struct todo_item *i = g_malloc0 (sizeof (struct todo_item));
       i->id = id;
       if (sqlite_exec_printf (sqliteh, "select tag,value from todo where uid=%d",
 			      item_data_callback, i, &err, id))
@@ -382,8 +381,7 @@ todo_db_new_item (void)
 		   NULL, NULL, &err))
     return NULL;
   
-  i = g_malloc (sizeof (struct todo_item));
-  memset (i, 0, sizeof (*i));
+  i = g_malloc0 (sizeof (struct todo_item));
 
   i->id = sqlite_last_insert_rowid (sqliteh);
 

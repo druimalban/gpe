@@ -1,15 +1,16 @@
 PREFIX = /usr/local
 PACKAGE = libtododb
 #DEBUG = yes 
+VERSION = 0.02
 
-#LINGUAS = en_AU
+LINGUAS =
 
 MEMBERS = todo-db old-db 
 
 SONAME = libtododb.so.0
 CONTROL = control
 
-CFLAGS = `pkg-config --cflags glib-2.0`
+CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
 LDFLAGS = `pkg-config --libs glib-2.0` -lsqlite -L../libgpewidget -lgpewidget
 
 CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
