@@ -117,21 +117,13 @@ init_tools(void)
 	if (!access(CMD_GCONF,X_OK))
 		use_gconf = TRUE;
 	else
-		(!access(CMD_XST,X_OK))
-		use_xst = TRUE;	
+		if (!access(CMD_XST,X_OK))
+			use_xst = TRUE;	
 }
 
 gboolean
 mbbg_parse_spec(MBDesktopBG *mbbg, char *spec)
 {
-  /*
-  img-stretched:filename>
-  img-tiled:<filename>
-  col-solid:<color definition>
-  col-gradient-vertical:<start color>,<end color>
-  col-gradient-horizontal:<start color>,<end color>
-  */
-
   XColor tmpxcol;
   int i, mapping_cnt, spec_offset = 0, type = 0;
   char *bg_def = NULL, *p = NULL;
@@ -711,7 +703,10 @@ on_matchbox_entry_changed (GtkWidget * menu, gpointer user_data)
 			    -1);
   if ((tn) && (strlen (tn)))
     {
-      system_printf ("xst write %s%s str %s", KEY_THEME, "ThemeName", tn);
+	  if (use_xst)
+		system_printf (CMD_XST " write %s%s str %s", KEY_THEME, "ThemeName", tn);
+	  if (use_gconf)
+#warning here		system_printf (CMD_GCONF " write %s%s str %s", KEY_THEME, "ThemeName", tn);
     }
   if (tn)
     g_free (tn);

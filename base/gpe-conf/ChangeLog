@@ -1,3 +1,6 @@
+2004-06-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* theme.c: Second step of teaching gpe-conf gconf.
+
 2004-06-15	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c: First step of teaching gpe-conf gconf.
 	* sysinfo.c: Try to get flash size from /proc/mtd too. 
