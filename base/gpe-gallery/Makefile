@@ -70,6 +70,8 @@ install: all
 	install -m 644 pixmaps/zoom_fit.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/zoom_fit.png
 	install -m 644 pixmaps/sharpen.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/sharpen.png
 	install -m 644 pixmaps/blur.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/blur.png
+	install -m 644 pixmaps/pan.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/pan.png
+	install -m 644 pixmaps/rotate.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/gallery/rotate.png
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-gallery
 
 upstream: clean

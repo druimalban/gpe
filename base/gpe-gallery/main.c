@@ -65,6 +65,8 @@ struct gpe_icon my_icons[] = {
   { "zoom_out", "gallery/zoom_out" },
   { "zoom_1", "gallery/zoom_1" },
   { "zoom_fit", "gallery/zoom_fit" },
+  { "pan", "gallery/pan" },
+  { "rotate", "gallery/rotate" },
   { "sharpen", "gallery/sharpen" },
   { "blur", "gallery/blur" },
   { "ok", "ok" },
@@ -206,9 +208,6 @@ open_from_file (gchar *filename)
 void
 image_sharpen ()
 {
-  if (!scaled_image_pixbuf)
-    scaled_image_pixbuf = image_pixbuf;
-
   sharpen (scaled_image_pixbuf);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
@@ -216,9 +215,6 @@ image_sharpen ()
 void
 image_blur ()
 {
-  if (!scaled_image_pixbuf)
-    scaled_image_pixbuf = image_pixbuf;
-
   blur (scaled_image_pixbuf);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
@@ -665,8 +661,6 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Fullscreen"), 
 			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, enable_fullscreen, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
-
   p = gpe_find_icon ("zoom_in");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom In"), 
@@ -676,8 +670,6 @@ main (int argc, char *argv[])
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom Out"), 
 			   _("Zoom Out"), _("Zoom Out"), pw, image_zoom_out, NULL);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
   p = gpe_find_icon ("zoom_1");
   pw = gpe_render_icon (window->style, p);
@@ -689,8 +681,6 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom to Fit"), 
 			   _("Zoom to Fit"), _("Zoom to Fit"), pw, image_zoom_fit, NULL);
 
-  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
-
   p = gpe_find_icon ("sharpen");
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Sharpen"), 
@@ -700,6 +690,16 @@ main (int argc, char *argv[])
   pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Blur"), 
 			   _("Blur"), _("Blur"), pw, image_blur, NULL);
+
+  p = gpe_find_icon ("pan");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Pan"), 
+			   _("Toggle Pan"), _("Toggle Pan"), pw, NULL, NULL);
+
+  p = gpe_find_icon ("rotate");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Rotate"), 
+			   _("Toggle Rotate"), _("Toggle Rotate"), pw, NULL, NULL);
 
   gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_label,
 			   _("Loading..."), _("Loading..."));

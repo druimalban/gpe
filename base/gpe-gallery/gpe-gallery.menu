@@ -2,7 +2,7 @@
  needs=x11 \
  title="Image Gallery" \
  logtitle="Image Gallery" \
- command=gpe-edit \
+ command=gpe-gallery \
  icon48=/usr/share/pixmaps/gpe-gallery.png \
  section=PIM \
  windowtitle="GPE Gallery *"
