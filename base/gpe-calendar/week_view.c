@@ -18,6 +18,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <gpe/event-db.h>
+#include <gpe/stylus.h>
 
 #include "globals.h"
 #include "week_view.h"
@@ -30,7 +31,7 @@
 static GtkWidget *week_view_draw;
 static struct tm today;
 static guint min_cell_height = 38;
-static GtkWidget *datesel;
+static GtkWidget *datesel, *calendar;
 
 static guint time_width, available_width;
 
@@ -388,9 +389,33 @@ week_view_update (void)
 }
 
 static void
-changed_callback (GtkWidget *widget, GtkWidget *entry)
+day_changed_calendar (GtkWidget *widget)
 {
+  int day, month, year;
+  struct tm tm;
+
+  localtime_r (&viewtime, &tm);
+
+  gtk_calendar_get_date (GTK_CALENDAR (widget), &year, &month, &day);
+
+  tm.tm_year = year - 1900;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+
+  viewtime = mktime (&tm);
+
+  set_time_all_views ();
+  week_view_update ();
+}
+
+static void
+day_changed_datesel (GtkWidget *widget, GtkWidget *entry)
+{
+  struct tm tm;
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
+  localtime_r (&viewtime, &tm);
+  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
+  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
 
   week_view_update ();
 }
@@ -398,8 +423,11 @@ changed_callback (GtkWidget *widget, GtkWidget *entry)
 static void
 update_hook_callback (void)
 {
+  struct tm tm;
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
+  localtime_r (&viewtime, &tm);
+  gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
+  gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
 
   week_view_update ();
 }
@@ -428,11 +456,11 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
       return TRUE;
 
     case GDK_Left:
-      gtk_date_sel_move_week (datesel, -1);
+      gtk_date_sel_move_week (GTK_DATE_SEL (datesel), -1);
       return TRUE;
 
     case GDK_Right:
-      gtk_date_sel_move_week (datesel, 1);
+      gtk_date_sel_move_week (GTK_DATE_SEL (datesel), 1);
       return TRUE;
 
     case GDK_Down:
@@ -445,6 +473,8 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 		week_days[i+1].is_active = TRUE;
 		c = &week_days[i+1].rc;
 		viewtime = time_from_day (c->popup.year,c->popup.month,c->popup.day);
+		gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
+		gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
 		week_view_update ();
 	      }
 	    break;
@@ -461,6 +491,8 @@ week_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 		week_days[i-1].is_active = TRUE;
 		c = &week_days[i-1].rc;
 		viewtime = time_from_day (c->popup.year,c->popup.month,c->popup.day);
+		gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
+		gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
 		week_view_update ();
 	      }
 	    break;
@@ -551,7 +583,9 @@ week_view_button_press (GtkWidget *widget,
           for (i=0;i<7;i++)
              week_days[i].is_active = FALSE;
           week_days[get_day_from_y(y)].is_active = TRUE;
-          viewtime = time_from_day(c->popup.year,c->popup.month,c->popup.day);
+          viewtime = time_from_day(c->popup.year, c->popup.month, c->popup.day);
+	  gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
+	  gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
           week_view_update();
           
           if (pop_window) 
@@ -590,16 +624,28 @@ week_view_button_press (GtkWidget *widget,
 GtkWidget *
 week_view (void)
 {
-  int i;
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *draw = gtk_drawing_area_new ();
   GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
+  gboolean landscape;
+  GtkWidget *hbox;
+
+  landscape = gdk_screen_width () > gdk_screen_height () ? TRUE : FALSE;
+  hbox = gtk_hbox_new (FALSE, 0);
+
+  calendar = gtk_calendar_new ();
+  GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);  
+
+  gtk_calendar_set_display_options (GTK_CALENDAR (calendar), 
+				    GTK_CALENDAR_SHOW_DAY_NAMES 
+				    | (week_starts_monday ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
 
   datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
 
   gtk_widget_show (draw);
   gtk_widget_show (scroller);
   gtk_widget_show (datesel);
+  gtk_widget_show (hbox);
 
   g_signal_connect (G_OBJECT (draw), "expose_event",
                     G_CALLBACK (draw_expose_event), datesel);
@@ -609,18 +655,35 @@ week_view (void)
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
   gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+
+  gtk_box_pack_start (GTK_BOX (hbox), scroller, TRUE, TRUE, 0);
+  if (landscape)
+    {
+      GtkWidget *sep;
+      sep = gtk_vseparator_new ();
+
+      gtk_box_pack_start (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (hbox), calendar, FALSE, FALSE, 0);
+
+      gtk_widget_show (sep);
+      gtk_widget_show (calendar);
+    }
+
+  g_signal_connect (G_OBJECT (calendar), 
+		    gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
+		    G_CALLBACK (day_changed_calendar), NULL);
 
   g_signal_connect (G_OBJECT (datesel), "changed",
-                    G_CALLBACK (changed_callback), NULL);
+                    G_CALLBACK (day_changed_datesel), NULL);
 
   g_object_set_data (G_OBJECT (vbox), "update_hook",
                      (gpointer) update_hook_callback);
 
   week_view_draw = draw;
   
-  GTK_WIDGET_SET_FLAGS(datesel, GTK_CAN_FOCUS);
-  gtk_widget_grab_focus(datesel);
+  GTK_WIDGET_SET_FLAGS (datesel, GTK_CAN_FOCUS);
+  gtk_widget_grab_focus (datesel);
   g_signal_connect (G_OBJECT (datesel), "key_press_event", 
 		    G_CALLBACK (week_view_key_press_event), NULL);
   g_signal_connect(G_OBJECT (draw), "button-press-event",

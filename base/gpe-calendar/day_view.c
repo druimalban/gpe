@@ -507,7 +507,7 @@ day_view_update ()
 }
 
 static void
-day_change_calendar (GtkWidget *widget)
+day_changed_calendar (GtkWidget *widget)
 {
   int day, month, year;
   struct tm tm;
@@ -534,6 +534,7 @@ date_sel_changed (GtkWidget *widget, GtkWidget *clist)
   localtime_r (&viewtime, &tm);
   gtk_calendar_select_month (GTK_CALENDAR (calendar), tm.tm_mon, tm.tm_year + 1900);
   gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+
   day_view_update ();
 }
 
@@ -582,6 +583,7 @@ day_view (void)
   landscape = gdk_screen_width () > gdk_screen_height () ? TRUE : FALSE;
 
   calendar = gtk_calendar_new ();
+  GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);  
 
   gtk_widget_show (scrolled_window);
   gtk_widget_show (hbox);
@@ -599,7 +601,7 @@ day_view (void)
  
   g_signal_connect (G_OBJECT (calendar), 
 		    gpe_stylus_mode () ? "day-selected" : "day-selected-double-click",
-		    G_CALLBACK (day_change_calendar), NULL);
+		    G_CALLBACK (day_changed_calendar), NULL);
   
   g_signal_connect (G_OBJECT (day_list), "select_row",
                     G_CALLBACK (selection_made), NULL);
