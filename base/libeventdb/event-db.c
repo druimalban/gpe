@@ -19,7 +19,7 @@
 
 #include <gpe/errorbox.h>
 
-#include "event-db.h"
+#include <gpe/event-db.h>
 
 static unsigned long dbversion;
 static sqlite *sqliteh;
