@@ -1,6 +1,6 @@
 PACKAGE = gpe-today
 PREFIX = /usr/local
-VERSION = 0.07
+VERSION = 0.08
 CVSBUILD = yes
 #DEBUG = yes
 #EFENCE = yes
