@@ -154,7 +154,7 @@ upgrade_to_v2 (guint new_version)
       	  oldcontent[numchar]='\0';
       	}
 
-      printf ("oldcontent:\n%s\n", oldcontent);
+      printf ("gpe-ownerinfo: oldcontent:\n%s\n", oldcontent);
       
       fclose (fp);
     }
@@ -234,7 +234,7 @@ maybe_upgrade_datafile ()
       
       if (version != CURRENT_DATAFILE_VER) {
 	for (idx = version+1; idx <= CURRENT_DATAFILE_VER; idx++) {
-	  printf ("Need to upgrade. idx is %d\n", idx);
+	  printf ("gpe-ownerinfo: Need to upgrade. idx is %d\n", idx);
 	  switch (idx) {
 	  case 0:
 	    break;
@@ -257,11 +257,11 @@ maybe_upgrade_datafile ()
     }
 
   if (upgrade_result == UPGRADE_ERROR) {
-    printf ("Had found version %d, but cannot upgrade for some reason.\n", version);
+    printf ("gpe-ownerinfo: Had found version %d, but cannot upgrade for some reason.\n", version);
     return (UPGRADE_ERROR);
   }
   else {
-    printf ("Had found version %d.\n", version);
+    /* printf ("gpe-ownerinfo: found version %d, which is the current one.\n", version); */
     return UPGRADE_NOT_NEEDED;
   }
 }
@@ -441,7 +441,7 @@ main (int argc, char *argv[])
 
       upgrade_result = maybe_upgrade_datafile ();
 
-      printf ("upgrade_result: %d\n", upgrade_result);
+      /* printf ("gpe-ownerinfo: upgrade_result: %d\n", upgrade_result); */
       
       if (upgrade_result == UPGRADE_NOT_NEEDED) {	
 	/*  we have at least version 2, so we need to skip the 1st line

@@ -1,3 +1,7 @@
+2003-02-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-ownerinfo2.c (main): Don't spam user with debug info.
+
 2003-02-20  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (VERSION): Set to 0.09.
