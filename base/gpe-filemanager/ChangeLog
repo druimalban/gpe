@@ -1,3 +1,8 @@
+2004-09-01  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Changed click behaviour not to run an action on single click.
+              Rewrote "open with" dialog.
+    * Makefile: New version number.
 
 2004-08-15  Florian Boor  <florian.boor@kernelconcepts.de>
 

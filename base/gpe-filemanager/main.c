@@ -658,14 +658,10 @@ GtkWidget
 
 
 static void
-open_with (GtkButton *button, gpointer data)
+open_with (GnomeVFSMimeApplication *application, 
+           FileInformation *file_info)
 {
-  GnomeVFSMimeApplication *application;
-  FileInformation *file_info;
   pid_t pid;
-
-  file_info = gtk_object_get_data (GTK_OBJECT (button), "FileInformation");
-  application = gtk_object_get_data (GTK_OBJECT (data), "GnomeVFSMimeApplication");
 
   if (application)
   {
@@ -677,9 +673,15 @@ open_with (GtkButton *button, gpointer data)
 		break;
 		case  0: 
           if (application->requires_terminal)
-               execlp(DEFAULT_TERMINAL,DEFAULT_TERMINAL,application->command,file_info->filename);
+               execlp(DEFAULT_TERMINAL,DEFAULT_TERMINAL,
+                      application->command,
+                      file_info->filename);
           else
-               execlp(application->command,application->command,file_info->filename,NULL);
+               execlp(application->command,
+                      application->command,
+                      file_info->filename,
+                      NULL);
+          exit(-1); /* die in case of failing to exec */
 		break;
 		default: 
 		break;
@@ -687,7 +689,7 @@ open_with (GtkButton *button, gpointer data)
   }
 }
 
-static void
+/*static void
 open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *event, gpointer entry)
 {
   GnomeVFSMimeApplication *application;
@@ -696,7 +698,7 @@ open_with_row_selected (GtkCList *clist, gint row, gint column, GdkEventButton *
   gtk_object_set_data (GTK_OBJECT (entry), "GnomeVFSMimeApplication", (gpointer) application);
   gtk_entry_set_text (GTK_ENTRY (entry), application->name);
 }
-
+*/
 static void
 rename_file (GtkWidget *dialog_window, gint response_id)
 {
@@ -925,101 +927,111 @@ show_file_properties ()
 static void
 ask_open_with (FileInformation *file_info)
 {
-  GtkWidget *dialog_window, *fakeparentwindow, *clist, *entry, *label;
+  GtkWidget *dialog_window, *combo, *label, *entry;
   GtkWidget *open_button, *cancel_button;
-  GList *applications;
-  GnomeVFSMimeApplication *application;
-  int row_num = 0;
-  gchar *row_text[1];
-
-  fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_widget_realize (fakeparentwindow);
+  GList *applications = NULL;
+  GList *appnames = NULL;
 
   dialog_window = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW(dialog_window), "Open With...");
-  gtk_window_set_transient_for (GTK_WINDOW(dialog_window), GTK_WINDOW(fakeparentwindow));
-  gtk_widget_realize (dialog_window);
- 
+  gtk_window_set_transient_for (GTK_WINDOW(dialog_window), GTK_WINDOW(window));
   gtk_window_set_modal (GTK_WINDOW (dialog_window), TRUE);
-  gtk_window_set_position (GTK_WINDOW (dialog_window), GTK_WIN_POS_CENTER);
-
-  gtk_signal_connect (GTK_OBJECT (dialog_window), "destroy",
-                      GTK_SIGNAL_FUNC (kill_widget),
-                      dialog_window);
-
-  label = gtk_label_new ("Open with program");
-  gtk_misc_set_alignment (GTK_MISC (label), 0.5, 0.5);
+  
+  label = gtk_label_new (NULL);
+  gtk_label_set_markup(GTK_LABEL(label), _("<b>Open with program</b>"));
+  gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
   entry = gtk_entry_new ();
 
-  clist = gtk_clist_new (1);
-  gtk_signal_connect (GTK_OBJECT (clist), "select-row",
-                      GTK_SIGNAL_FUNC (open_with_row_selected),
-                      entry);
+  combo = gtk_combo_new();
+  gtk_combo_set_value_in_list(GTK_COMBO(combo), TRUE, FALSE);
+    
+  cancel_button = gtk_dialog_add_button(GTK_DIALOG(dialog_window), 
+                                        GTK_STOCK_CANCEL, 
+                                        GTK_RESPONSE_CANCEL);
 
-  cancel_button = gpe_picture_button (dialog_window->style, "Cancel", "cancel");
-  gtk_signal_connect (GTK_OBJECT (cancel_button), "clicked",
-                      GTK_SIGNAL_FUNC (kill_widget),
-                      dialog_window);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
-                      cancel_button);
-
-  open_button = gpe_picture_button (dialog_window->style, "Open", "open");
-  gtk_object_set_data (GTK_OBJECT (open_button), "FileInformation", (gpointer) file_info);
-  gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
-                      GTK_SIGNAL_FUNC (open_with),
-                      entry);
-  gtk_signal_connect (GTK_OBJECT (open_button), "clicked",
-                      GTK_SIGNAL_FUNC (kill_widget),
-                      dialog_window);
-  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->action_area),
-                      open_button);
-                      
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), label, TRUE, TRUE, 4);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), clist, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), entry, TRUE, TRUE, 4);
+  open_button = gtk_dialog_add_button(GTK_DIALOG(dialog_window), GTK_STOCK_OK, 
+                                      GTK_RESPONSE_OK);
+  gtk_container_set_border_width(GTK_CONTAINER(GTK_DIALOG (dialog_window)->vbox), 
+                                 gpe_get_border());
+  gtk_box_set_spacing(GTK_BOX(GTK_DIALOG (dialog_window)->vbox), 
+                                 gpe_get_boxspacing());
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), label, 
+                      TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog_window)->vbox), combo, 
+                      TRUE, TRUE, 0);
+  GTK_WIDGET_SET_FLAGS(open_button, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(open_button);
 
   if (file_info->vfs->mime_type)
-    applications = gnome_vfs_mime_get_short_list_applications (file_info->vfs->mime_type);
+    {
+      applications = 
+        gnome_vfs_application_registry_get_applications(file_info->vfs->mime_type);
+      
+      if (applications) /* translate list, get app info */
+        {
+          GList *iter;
+          for (iter = applications; iter; iter = iter->next)
+            iter->data = 
+              gnome_vfs_application_registry_get_mime_application(iter->data);
+        }
+      else  
+        applications = 
+          gnome_vfs_mime_get_short_list_applications (file_info->vfs->mime_type);
+    }
   else
-    applications = gnome_vfs_mime_get_all_applications (file_info->vfs->mime_type);
+    applications = 
+      gnome_vfs_mime_get_all_applications (file_info->vfs->mime_type);
 
+  /* fill combo with application names */
   if (applications)
   {
-    while (applications)
+    GnomeVFSMimeApplication *app; 
+    GList *iter = applications;
+    
+    while (iter)
     {
-      application = (GnomeVFSMimeApplication *)(((GList *)applications)->data);
+      app = (GnomeVFSMimeApplication *)(iter->data);
 
-      row_text[0] = application->name;
-      gtk_clist_append (GTK_CLIST (clist), row_text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application);
-
-      printf ("Got application %s\n", 
-		((GnomeVFSMimeApplication *)(((GList *)applications)->data))->command);
-      applications = applications->next;
-      row_num ++;
+      appnames = g_list_append(appnames, app->name);
+      iter = iter->next;
     }
+    gtk_combo_set_popdown_strings(GTK_COMBO(combo), appnames);
   }
   else
   {
-	GList *r_applications = 
-	  gnome_vfs_application_registry_get_applications(file_info->vfs->mime_type);
-	  
-    while (r_applications)
-    {
-      GnomeVFSMimeApplication *application = 
-	    gnome_vfs_application_registry_get_mime_application(r_applications->data);
-      row_text[0] = application->name;
-      gtk_clist_append (GTK_CLIST (clist), row_text);
-      gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) application);
-
-      printf ("Application from registry %s\n", 
-		((GnomeVFSMimeApplication *)(application)->command));
-      r_applications = r_applications->next;
-      row_num ++;
-    }
+    gtk_widget_set_sensitive (combo, FALSE);
+    gtk_widget_set_sensitive (open_button, FALSE);
+    gtk_label_set_markup (GTK_LABEL (label), 
+                          _("<b>No available applications</b>"));
   }
+
+  gtk_widget_show_all (dialog_window);
   
+  /* run dialog */
+  if (gtk_dialog_run(GTK_DIALOG(dialog_window)) == GTK_RESPONSE_OK)
+    {
+      GnomeVFSMimeApplication *app; 
+      GList *iter = applications;
+      const gchar *selected_app = 
+        gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(combo)->entry));
+      
+      while (iter)
+      {
+        app = (GnomeVFSMimeApplication *)(((GList *)iter)->data);
+  
+        if (!strcmp(selected_app, app->name))
+          {
+            open_with(app, file_info);
+            break;
+          }
+        iter = iter->next;
+      }
+    }
+    
+  gtk_widget_destroy(dialog_window);
+  g_list_free(appnames);
+    
 /*
   if (mime_programs)
   {
@@ -1044,16 +1056,6 @@ ask_open_with (FileInformation *file_info)
     }
   }
 */
-
-  if (row_num == 0)
-  {
-    gtk_widget_destroy (entry);
-    gtk_widget_destroy (clist);
-    gtk_widget_destroy (open_button);
-    gtk_label_set_text (GTK_LABEL (label), _("No available applications"));
-  }
-
-  gtk_widget_show_all (dialog_window);	
 }
 
 static void
@@ -1517,6 +1519,7 @@ browse_directory (gchar *directory)
 static void
 refresh_current_directory (void)
 {
+  printf("trigg\n");
   browse_directory (g_strdup(current_directory));
 }
 
@@ -1623,7 +1626,7 @@ view_list (GtkWidget *widget)
 static gboolean
 tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
 {
-  if (b->button == 3)
+  if ((b->button == 3) || ((b->button == 1) && (b->type == GDK_2BUTTON_PRESS)))
     {
       gint x, y;
       GtkTreeViewColumn *col;
@@ -1646,7 +1649,10 @@ tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
 	    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
 		
 	    gtk_tree_path_free (path);
-        show_popup (NULL, i);
+        if (b->button == 3) 
+          show_popup (NULL, i);
+        else
+          button_clicked (NULL, i);
 	  }
 	  else
         show_popup (NULL, NULL);
@@ -1659,6 +1665,7 @@ tree_button_press (GtkWidget *tree,GdkEventButton *b, gpointer user_data)
 static gboolean
 tree_button_release (GtkWidget *tree, GdkEventButton *b)
 {
+  
   if (b->button == 1)
     {
       gint x, y;
@@ -1672,19 +1679,20 @@ tree_button_release (GtkWidget *tree, GdkEventButton *b)
 					 x, y,
 					 &path, &col,
 					 NULL, NULL))
-	{
-	  GtkTreeIter iter;
-      GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
-	  FileInformation *i;
+      {
+	    GtkTreeIter iter;
+        GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+	    /*FileInformation *i;
+	    gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
+        */
+        gtk_tree_view_set_cursor(GTK_TREE_VIEW(tree), path, NULL, FALSE);
 
-	  gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
-
-	  gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
+	   // gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, tree == view_widget ? COL_DATA : COL_DIRDATA, &i, -1);
 		
-	  gtk_tree_path_free (path);
+	    gtk_tree_path_free (path);
 		
-      button_clicked (NULL, i);
-	}
+        //button_clicked (NULL, i);
+      }
   }
   return TRUE;
 }
@@ -2018,6 +2026,7 @@ main (int argc, char *argv[])
       else
         set_directory_home (NULL);
     }
+  
   initialized = TRUE;  
   gtk_main();
 
