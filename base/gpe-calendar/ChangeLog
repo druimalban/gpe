@@ -1,5 +1,9 @@
 2003-03-22  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.36 released.
+
+2003-03-22  Phil Blundell  <pb@nexus.co.uk>
+
 	* event-ui.c (build_edit_event_window): Don't use GtkDialog.
 
 	* Makefile (LDFLAGS): Add -rpath-link for libxsettings.
