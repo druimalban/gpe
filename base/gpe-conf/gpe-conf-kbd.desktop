@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=External Keyboard
-Comment=External Keyboard Setup
-Exec=gpe-conf keyboard
+Name=Virtual Keyboard
+Comment=Virtual Keyboard Setup
+Exec=gpe-conf kbd
 Terminal=0
 Type=Application
-Icon=gpe-config-keyboard.png
+Icon=gpe-config-kbd.png
 Categories=Application;SystemSettings;GPE
 StartupNotify=False
 SingleInstance=True

@@ -69,7 +69,7 @@ MEMBERS += unimplemented
 MEMBERS += timeanddate
 MEMBERS += appmgr_setup ../gpe-appmgr/package 
 MEMBERS += ipaqscreen/main ipaqscreen/brightness  ipaqscreen/rotation ipaqscreen/calibrate ipaqscreen/callbacks ipaqscreen/xset 
-MEMBERS += kbd
+MEMBERS += kbd keyboard
 MEMBERS += network
 MEMBERS += theme
 MEMBERS += keyctl
@@ -93,7 +93,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 PIXMAPS = gpe-config-apm.png
 PIXMAPS += gpe-config-appmgr.png
 PIXMAPS += gpe-config-ipaqscreen.png
-PIXMAPS += gpe-config-keyboard.png
+PIXMAPS += gpe-config-kbd.png
 PIXMAPS += gpe-config-keyctl.png
 PIXMAPS += gpe-config-mixer.png
 PIXMAPS += gpe-config-mouse.png
@@ -118,6 +118,7 @@ PIXMAPS += pccard-cdrom.png pccard-ide.png pccard-memory.png
 PIXMAPS += pccard-parport.png pccard-scsi.png pccard-unknown.png
 PIXMAPS += pccard-network.png
 PIXMAPS += gpe-config-logread.png
+PIXMAPS += gpe-config-keyboard.png
 
 all: $(PACKAGE) 
 
@@ -133,10 +134,11 @@ gpe-confsuid: gpe-confsuid.c
 install-program: gpe-conf
 	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
 	mkdir -p $(DESTDIR)/etc/gpe
-	$(INSTALL) familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
-	mkdir -p $(DESTDIR)$(BINDIR)
-	$(INSTALL) gpe-conf $(DESTDIR)/$(BINDIR)/gpe-conf
-	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-conf
+	$(INSTALL) -m 644 familiar/gpe-config.conf $(DESTDIR)/etc/gpe/
+	$(INSTALL) -m 644 keyboards.def $(DESTDIR)/etc/gpe/
+	mkdir -p $(DESTDIR)/$(PREFIX)/bin
+	$(INSTALL) gpe-conf $(DESTDIR)$(PREFIX)/bin/gpe-conf
+	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-conf
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/menu
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done

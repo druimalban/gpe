@@ -1,5 +1,15 @@
 When			Who				Where						What
 
+15.04.2003		Florian			Makefile					Added applet and configuration file for 
+							    keyboards.def				configuration of external keyboards. (in progress)
+								keyboard.*
+								pixmaps/gpe-config-kbd.png
+								gpe-conf-kbd.desktop
+								gpe-conf-keyboard.desktop
+								suid.c						Some formating "upgrades".
+								control1					Version update.
+								pixmaps/...					Updated some pixmaps.
+
 14.04.2003		Florian			Makefile					Changed to standard build system.
 								po/gpe-conf.pot				Added file for translation support.
 								packages.c					Changed wrap mode.

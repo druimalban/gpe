@@ -31,6 +31,7 @@
 #include "ipaqscreen.h"
 #include "unimplemented.h"
 #include "kbd.h"
+#include "keyboard.h"
 #include "network.h"
 #include "theme.h"
 #include "keyctl.h"
@@ -85,7 +86,8 @@ struct Applet applets[]=
     { &Time_Build_Objects, &Time_Free_Objects, &Time_Save, &Time_Restore , "Time" ,"time" ,"Time and Date Setup"},
     { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , "Appmgr" ,"appmgr", "Launcher Setup"},
     { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore , "Screen" , "ipaqscreen", "Screen Setup"},
-    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore , "vKeyboard" ,"keyboard", "Virtual Keyboard Setup"},
+    { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore , "vKeyboard" ,"kbd", "Virtual Keyboard Setup"},
+    { &Keyboard_Build_Objects, &Unimplemented_Free_Objects, &Keyboard_Save, &Keyboard_Restore , "Keyboard" ,"keyboard", "External Keyboard Setup"},
     { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore , "Buttons" ,"keyctl", "Button Configuration"},
     { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore , "Network" ,"network","IP Addresses"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore , "Theme" ,"theme", "Global Appearance Setup"},
