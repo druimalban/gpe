@@ -13,7 +13,6 @@ CC = gcc
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-CONTROL = control1
 
 CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 LDFLAGS = $(GTKLDFLAGS)

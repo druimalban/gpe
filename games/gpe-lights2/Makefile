@@ -8,7 +8,6 @@ MEMBERS = gpe-lights
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-CONTROL = control
 
 CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
 ifeq ($(DEBUG),yes)
