@@ -14,11 +14,11 @@ ipkg:
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/control familiar/dist/CONTROL
-	if test -x familiar/conffiles; then cp familiar/conffiles familiar/dist/CONTROL; fi
-	if test -x familiar/preinst;   then cp familiar/preinst   familiar/dist/CONTROL; fi
-	if test -x familiar/postinst;  then cp familiar/postinst  familiar/dist/CONTROL; fi
-	if test -x familiar/prerm;     then cp familiar/prerm     familiar/dist/CONTROL; fi
-	if test -x familiar/postrm;    then cp familiar/postrm    familiar/dist/CONTROL; fi
+	if test -e familiar/conffiles; then cp familiar/conffiles familiar/dist/CONTROL; fi
+	if test -e familiar/preinst;   then cp familiar/preinst   familiar/dist/CONTROL; fi
+	if test -e familiar/postinst;  then cp familiar/postinst  familiar/dist/CONTROL; fi
+	if test -e familiar/prerm;     then cp familiar/prerm     familiar/dist/CONTROL; fi
+	if test -e familiar/postrm;    then cp familiar/postrm    familiar/dist/CONTROL; fi
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
