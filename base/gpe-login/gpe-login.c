@@ -101,16 +101,26 @@ move_callback (GtkWidget *widget, GtkWidget *entry)
 static void
 do_login (uid_t uid, gid_t gid, char *dir)
 {
+  pid_t spid;
+
   cleanup_children ();
+  
+  spid = fork ();
+  
+  if (spid == 0)
+    {
+      setuid (uid);
+      setgid (gid);
+      setenv ("HOME", dir, 1);
+      chdir (dir);
+      
+      if (access (".xsession", X_OK) == 0)
+	execl (".xsession", ".xsession", NULL);
+      execl ("/etc/X11/Xsession", "/etc/X11/Xsession", NULL);
+      _exit (1);
+    }
 
-  setuid (uid);
-  setgid (gid);
-  setenv ("HOME", dir, 1);
-  chdir (dir);
-
-  if (access (".xsession", X_OK) == 0)
-    execl (".xsession", ".xsession", NULL);
-  execl ("/etc/X11/Xsession", "/etc/X11/Xsession", NULL);
+  waitpid (spid, NULL, 0);
 }
 
 static void
@@ -390,6 +400,7 @@ main (int argc, char *argv[])
       GtkWidget *hbox_username, *hbox_fullname;
       GtkWidget *hbox_password, *hbox_confirm;
       GtkWidget *table;
+      GtkWidget *vbox;
 
       label_username = gtk_label_new (_("Username"));
       label_fullname = gtk_label_new (_("Full name"));
@@ -449,8 +460,12 @@ main (int argc, char *argv[])
 			 GTK_SIGNAL_FUNC (enter_newuser_callback), NULL);
 
       frame = gtk_frame_new (_("New user"));
+
+      vbox = gtk_vbox_new (FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
       
-      gtk_container_add (GTK_CONTAINER (frame), table);
+      gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
       gtk_container_set_border_width (GTK_CONTAINER (table), 5);
 
