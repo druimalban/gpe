@@ -3,6 +3,7 @@
 	* po/fr.po: New file from Translation Project, courtesy Luc Pionchon.
 	* Makefile (LINGUAS): Add fr.
 
+	* po/pt.po: Updated, courtesy Luis Oliveira.
 	* po/pt_PT.po: Deleted.
 
 2003-04-03  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>

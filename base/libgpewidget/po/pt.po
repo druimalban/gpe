@@ -5,75 +5,38 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpewidget 0.46\n"
-"POT-Creation-Date: 2003-02-01 16:44+0000\n"
-"PO-Revision-Date: 2003-03-18 21:17+0000\n"
+"Project-Id-Version: libgpewidget 0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2003-04-05 06:19+0000\n"
 "Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
 "Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-15\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: errorbox.c:58
-msgid "Error"
-msgstr "Erro"
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "ERRO-GPE: %s\n"
 
-#: pixmaps.c:81
+#: pixmaps.c:82
 #, c-format
 msgid "Unable to load icon \"%s\""
-msgstr "Não foi possível carregar o ícone \"%s\""
+msgstr "N,bc(Bo foi poss,bm(Bvel carregar o ,bm(Bcone \"%s\""
 
-#: pixmaps.c:167
+#: pixmaps.c:168
 #, c-format
 msgid "Icon \"%s\" not loaded"
-msgstr "Ícone \"%s\" não carregado"
+msgstr ",bM(Bcone \"%s\" n,bc(Bo carregado"
 
-#: dirbrowser.c:307
-msgid "OK"
-msgstr "OK"
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Não está nenhum directório seleccionado."
 
-#: dirbrowser.c:315
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: what.c:69
+#: what.c:78
 msgid "No help available."
-msgstr "Ajuda não disponível."
+msgstr "Ajuda n,bc(Bo dispon,bm(Bvel."
 
-#: gtkdatesel.c:187
-msgid "%Y"
-msgstr "%Y"
-
-#: gtkdatesel.c:196
-msgid "%b"
-msgstr "%b"
-
-#: gtkdatesel.c:199
-msgid "%B"
-msgstr "%B"
-
-#: gtkdatesel.c:202
-#, c-format
-msgid "%m"
-msgstr "%m"
-
-#: gtkdatesel.c:213
-msgid "Week %V"
-msgstr "Semana %V"
-
-#: gtkdatesel.c:219
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: question.c:136
+#: question.c:175
 msgid "Question"
-msgstr "Questão"
-
-#: question.c:137
-msgid "No"
-msgstr "Não"
-
-#: question.c:137
-msgid "Yes"
-msgstr "Sim"
+msgstr "Quest,bc(Bo"

@@ -1,3 +1,7 @@
+2003-04-07  Philip Blundell  <philb@gnu.org>
+
+	* po/pt.po: Updated, courtesy Luis Oliveira.
+
 2003-04-05  Phil Blundell  <pb@nexus.co.uk>
 
 	* gpe/gpeiconlistitem.h (gpe_icon_list_item_button_press,
