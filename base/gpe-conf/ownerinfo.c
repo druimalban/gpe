@@ -139,7 +139,11 @@ GtkWidget *Ownerinfo_Build_Objects()
 	  {
 	    ownerphotofile = g_strdup (buf);
 	    ownerphotofile[strlen (ownerphotofile)-1]='\0';
-	    my_icons[9].filename = g_strdup (ownerphotofile);
+	    if (access (ownerphotofile, R_OK) == 0)
+	      my_icons[9].filename = g_strdup (ownerphotofile);
+	    else
+	      fprintf (stderr, "gpe-conf ownerinfo: file '%s' could not be found, using default.\n",
+		       ownerphotofile);
 	  }
       }
       if (fgets (buf, sizeof (buf), fp))
@@ -416,12 +420,12 @@ maybe_upgrade_datafile ()
 	    version = strtol (firstline + strlen (INFO_MATCH), (char **)NULL, 10);
 	    
 	    if (version == 0) {
-	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d, which should not happen.\n",
+	      fprintf (stderr, "gpe-conf ownerinfo: file '%s' is version %d, which should not happen.\n",
 		       GPE_OWNERINFO_DATA, version);
 	      fprintf (stderr, "   Please file a bug. I am continuing anyway.\n");
 	    }
 	    if (version > CURRENT_DATAFILE_VER) {
-	      fprintf (stderr, "gpe-ownerinfo: file '%s' is version %d.\n   I only know how to handle version %d. Exiting.\n",
+	      fprintf (stderr, "gpe-conf ownerinfo: file '%s' is version %d.\n   I only know how to handle version %d. Exiting.\n",
 		       GPE_OWNERINFO_DATA, version, CURRENT_DATAFILE_VER);
 	      fclose (fp);
 	      exit (1);
@@ -513,7 +517,7 @@ upgrade_to_v2 (guint new_version)
 
       fputs (oldcontent, fp);
       
-      printf ("gpe-ownerinfo: Migrated data file '%s' to version %d.\n",
+      printf ("gpe-conf ownerinfo: Migrated data file '%s' to version %d.\n",
 	      GPE_OWNERINFO_DATA, new_version);
 
       fclose (fp);
