@@ -1,3 +1,6 @@
+PACKAGE   = keylaunch
+VERSION   = 1.3.0-5gpe9
+
 CC        = gcc
 #CFLAGS    = -g -O2 -Wall
 CFLAGS    = -Os -fomit-frame-pointer -Wall
@@ -33,7 +36,7 @@ install: all
 clean:
 	rm -f $(PROG) $(OBJS)
 
-ipkg:
+old-ipkg:
 	strip $(PROG)
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
@@ -41,3 +44,5 @@ ipkg:
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
+
+include ../build/Makefile.dpkg_ipkg
