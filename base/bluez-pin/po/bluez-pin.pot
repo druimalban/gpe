@@ -7,7 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-09-06 15:10+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-26 11:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,28 +16,26 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:70
+#: main.c:84
 #, c-format
 msgid "Usage: %s <in|out> <address>\n"
 msgstr ""
 
-#: main.c:71
+#: main.c:85
 #, c-format
 msgid " or    %s --dbus\n"
 msgstr ""
 
-#: pin-ui.c:88
-msgid "Outgoing connection to"
+#: pin-ui.c:134
+#, c-format
+msgid "Outgoing connection to %s"
 msgstr ""
 
-#: pin-ui.c:89
-msgid "Incoming connection from"
+#: pin-ui.c:135
+#, c-format
+msgid "Incoming connection from %s"
 msgstr ""
 
-#: pin-ui.c:101
-msgid "PIN:"
-msgstr ""
-
-#: pin-ui.c:148
+#: pin-ui.c:163
 msgid "Bluetooth PIN"
 msgstr ""
