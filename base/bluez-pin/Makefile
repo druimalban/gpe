@@ -3,7 +3,7 @@ PACKAGE = bluez-pin
 GTK2 = yes
 VERSION = 0.08
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_DISABLE_DEPRECATED
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
