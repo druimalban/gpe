@@ -107,6 +107,7 @@ month_view_update ()
   guint days;
 
   gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
+  gtk_widget_draw (datesel, NULL);
       
   if (! light_style)
     {
