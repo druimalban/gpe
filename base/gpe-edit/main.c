@@ -262,6 +262,9 @@ select_open_file (void)
   gtk_signal_connect_object (GTK_OBJECT (GTK_FILE_SELECTION(file_selector)->cancel_button),
 		             "clicked", GTK_SIGNAL_FUNC (gtk_widget_destroy),
 		             (gpointer) file_selector);
+  gtk_window_set_transient_for(GTK_WINDOW(file_selector), GTK_WINDOW(main_window));
+  gtk_window_set_modal(GTK_WINDOW(file_selector), TRUE);
+	
   gtk_widget_show (file_selector);
 }
 
@@ -284,6 +287,8 @@ select_save_file_as (void)
   suggested_filename = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
 
   file_selector = gtk_file_selection_new (_("Save as..."));
+  gtk_window_set_transient_for(GTK_WINDOW(file_selector), GTK_WINDOW(main_window));
+  gtk_window_set_modal(GTK_WINDOW(file_selector), TRUE);
 
   gtk_file_selection_set_filename (GTK_FILE_SELECTION (file_selector), suggested_filename);
 
