@@ -8,7 +8,6 @@
  */
 
 #include <gtk/gtk.h>
-#include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gpe/errorbox.h>
 #include <time.h>
 #include <stdio.h>

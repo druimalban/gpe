@@ -2,12 +2,12 @@ PACKAGE = gpe-today
 PREFIX = /usr/local
 #DEBUG = yes 
 #LINGUAS = pt_PT
-#GTK2 = yes
+GTK2 = yes
 
 MEMBERS = main todo calendar date event-db old-db
 
 ifeq ($(GTK2),yes)
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 else
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
@@ -38,7 +38,7 @@ PIXMAPS = calendar.png date.png
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -lsqlite $(LDFLAGS)
 
 install: all install-mo
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
