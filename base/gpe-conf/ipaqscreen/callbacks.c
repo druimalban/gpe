@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002   Moray Allan <moray@sermisy.org>,Pierre TARDY <tardyp@free.fr>
- *               2003   Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003,2004   Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@ on_light_check(gpointer adj)
 {
   if (get_light_state())
   {
-    gtk_adjustment_set_value(GTK_ADJUSTMENT(adj),(gfloat) get_brightness() / 2.55);
+    gtk_adjustment_set_value(GTK_RANGE(self.brightness)->adjustment,(gfloat) get_brightness() / 2.55);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch1),TRUE);
   }
   else
@@ -59,26 +59,6 @@ on_brightness_hscale_draw              (GtkObject       *adjustment,
 	char val[10];
 	snprintf(val,9,"%d",(int) (GTK_ADJUSTMENT(adjustment)->value * 2.55));
 	suid_exec("SCRB",val);
-}
-
-
-
-void change_screen_saver_label(int);
-
-void
-on_screensaver_hscale_draw              (GtkWidget       *adjustment,
-                                        gpointer         user_data)
-{
-  int sec;
-
-  if(GTK_ADJUSTMENT(adjustment)->value>0.1)
-    sec=1+(int)exp(GTK_ADJUSTMENT(adjustment)->value/2.8208);// an exponentiel range from 0 to 20 min
-  else
-    sec = 0;
-  if(sec>60)
-    sec = sec - sec%60;
-
-  change_screen_saver_label(sec);  
 }
 
 void

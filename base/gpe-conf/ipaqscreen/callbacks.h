@@ -7,8 +7,10 @@ typedef struct
   GtkWidget *brightness;
   GtkWidget *screensaverl;
   GtkWidget *screensaverl2;
+  GtkWidget *screensaverl3;
   GtkWidget *screensaver;
-  GtkWidget *screensaverbt;
+  GtkWidget *screensaverbt1;
+  GtkWidget *screensaverbt2;
   GtkWidget *rotation;
   GtkWidget *rotationl;
   GtkWidget *touchscreen;
@@ -19,9 +21,6 @@ typedef struct
 
 void
 on_brightness_hscale_draw              (GtkObject       *adjustment,
-                                        gpointer         user_data);
-void
-on_screensaver_hscale_draw              (GtkWidget       *adjustment,
                                         gpointer         user_data);
 void
 on_screensaver_button_clicked              (GtkWidget       *widget,

@@ -44,6 +44,8 @@ static struct
 // type moved to callbacks.h
 tself self;
 
+gchar* change_screen_saver_label (GtkScale *scale, gdouble sec);
+
 GtkWidget *ipaqscreen_Build_Objects()
 {
   GtkWidget *menu = NULL;
@@ -95,19 +97,19 @@ GtkWidget *ipaqscreen_Build_Objects()
   
   self.brightnessl = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.brightnessl),0.0,0.5);
-  tstr = g_strdup_printf ("<span foreground=\"#000000\"> %s </span>", _("Brightness"));
+  tstr = g_strdup_printf ("%s", _("Brightness"));
   gtk_label_set_markup (GTK_LABEL (self.brightnessl), tstr);
   g_free(tstr);
   
   self.lightstl = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.lightstl),0.0,0.5);
-  tstr = g_strdup_printf ("<span foreground=\"#000000\"> %s </span>", _("State"));
+  tstr = g_strdup_printf ("%s", _("State"));
   gtk_label_set_markup (GTK_LABEL (self.lightstl), tstr);
   g_free(tstr);
   
   adjLight = gtk_adjustment_new ( (gfloat) get_brightness () / 2.55, 0, 100, 0, 0, 0);
   self.brightness = gtk_hscale_new(GTK_ADJUSTMENT (adjLight));
-  gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_RIGHT);
+  gtk_scale_set_value_pos (GTK_SCALE (self.brightness), GTK_POS_TOP);
   gtk_scale_set_digits (GTK_SCALE (self.brightness), 0);
 
   self.screensaverl = gtk_label_new(NULL);
@@ -118,17 +120,24 @@ GtkWidget *ipaqscreen_Build_Objects()
   
   self.screensaverl2 = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.screensaverl2),0.0,0.5);
-  tstr = g_strdup_printf ("<span foreground=\"#000000\"> %s </span>", _("Delay until start"));
+  tstr = g_strdup_printf ("%s", _("Delay until start"));
   gtk_label_set_markup (GTK_LABEL (self.screensaverl2), tstr);
   g_free(tstr);
 
-  self.screensaverbt = gtk_check_button_new_with_label (_("Activated"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), (gboolean)ss_sec);
+  self.screensaverl3 = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(self.screensaverl3),0.0,0.5);
+  tstr = g_strdup_printf ("%s", _("State"));
+  gtk_label_set_markup (GTK_LABEL (self.screensaverl3), tstr);
+  g_free(tstr);
+  
+  self.screensaverbt1 = gtk_radio_button_new_with_label (NULL,_("on"));
+  self.screensaverbt2 = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.screensaverbt1),_("off"));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt1), (gboolean)ss_sec);
 
-  self.adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0);
+  self.adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 1, 20, 0, 0, 0);
   self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (self.adjSaver)));
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
-  gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
+  gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), TRUE);
 
   self.rotationl = gtk_label_new(NULL);
   gtk_misc_set_alignment(GTK_MISC(self.rotationl),0.0,0.5);
@@ -193,7 +202,16 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.screensaverl), table_justify_left_col);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.screensaverbt, 1, 2, 3, 4,
+ gtk_table_attach (GTK_TABLE (self.table), self.screensaverl3, 0, 1, 4, 5,
+                    (GtkAttachOptions) (table_attach_right_col_x),
+                    (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
+  gtk_misc_set_padding (GTK_MISC (self.screensaverl3),
+			gpe_boxspacing, gpe_boxspacing);
+
+  hbox = gtk_hbox_new(FALSE,gpe_boxspacing);
+  gtk_box_pack_start(GTK_BOX(hbox),self.screensaverbt1 ,FALSE,TRUE,0);
+  gtk_box_pack_start_defaults(GTK_BOX(hbox),self.screensaverbt2);
+  gtk_table_attach (GTK_TABLE (self.table), hbox, 1, 2, 4, 5,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
@@ -202,26 +220,26 @@ GtkWidget *ipaqscreen_Build_Objects()
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
   gtk_misc_set_padding (GTK_MISC (self.screensaverl2),
 			gpe_boxspacing, gpe_boxspacing);
-					
+								
   gtk_table_attach (GTK_TABLE (self.table), self.screensaver, 1, 2, 5, 6,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 6, 7,
+  gtk_table_attach (GTK_TABLE (self.table), self.rotationl, 0, 1, 7, 8,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.rotationl), table_justify_left_col);
  
-  gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 6, 7,
+  gtk_table_attach (GTK_TABLE (self.table), self.rotation, 1, 2, 7, 8,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 7, 8,
+  gtk_table_attach (GTK_TABLE (self.table), self.touchscreen, 0, 1, 8, 9,
                     (GtkAttachOptions) (table_attach_left_col_x),
                     (GtkAttachOptions) (table_attach_left_col_y), 0, gpe_boxspacing);
   gtk_label_set_justify (GTK_LABEL (self.touchscreen), table_justify_left_col);
 
-  gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 7, 8,
+  gtk_table_attach (GTK_TABLE (self.table), self.calibrate, 1, 2, 8, 9,
                     (GtkAttachOptions) (table_attach_right_col_x),
                     (GtkAttachOptions) (table_attach_right_col_y), 0, gpe_boxspacing);
 
@@ -229,9 +247,9 @@ GtkWidget *ipaqscreen_Build_Objects()
   gtk_signal_connect (GTK_OBJECT (adjLight), "value_changed",
                       GTK_SIGNAL_FUNC (on_brightness_hscale_draw),
                       NULL);
-
-  gtk_signal_connect (GTK_OBJECT (self.adjSaver), "value_changed",
-                      GTK_SIGNAL_FUNC (on_screensaver_hscale_draw),
+		  
+  gtk_signal_connect (GTK_OBJECT (self.screensaver), "format-value",
+                      GTK_SIGNAL_FUNC (change_screen_saver_label),
                       NULL);
 
   gtk_signal_connect (GTK_OBJECT (gtk_option_menu_get_menu(GTK_OPTION_MENU (self.rotation))), "selection-done",
@@ -255,28 +273,38 @@ GtkWidget *ipaqscreen_Build_Objects()
   else
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.rbLightswitch2),TRUE);
   
-  gtk_timeout_add(2500,(GtkFunction)on_light_check,(gpointer)adjLight);
+  gtk_timeout_add(2000,(GtkFunction)on_light_check,(gpointer)adjLight);
     
   initialising = 0;
 
   return self.table;
 }
 
-void change_screen_saver_label(int sec)
+gchar*
+change_screen_saver_label (GtkScale *scale, gdouble val)
 {
-  int min = sec /60;
-  char buf[30];
-  if(min>0)
+  int min; 
+  int sec;
+  gchar* buf;
+
+  if(val > 0.1)
+    sec=1+(int)exp(val/2.8208);// an exponentiel range from 0 to 20 min
+  else
+    sec = 0;
+  if(sec>60)
+    sec = sec - sec % 60;
+	
+  min = sec / 60;
+  
+  if(min > 0)
     {
       sec = min * 60;
-      sprintf(buf,"%d %s",min,_("minutes"));
+      buf = g_strdup_printf("%d %s",min,_("min"));
     }
-  else if(sec)
-    sprintf(buf,"%d %s",sec,_("seconds"));
-  else
-      sprintf(buf,_("Off"));
-
-  gtk_label_set_text(GTK_LABEL(self.screensaverl2),buf);
+  else 
+    buf = g_strdup_printf("%d %s",sec,_("sec"));
+  
+  return buf;
 }
 
 void ipaqscreen_Free_Objects()
@@ -287,7 +315,7 @@ void ipaqscreen_Save()
 {
   int sec;
 
-  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.screensaverbt)))
+  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.screensaverbt1)))
   {
     if(GTK_ADJUSTMENT(self.adjSaver)->value>0.1)
       sec=1+(int)exp(GTK_ADJUSTMENT(self.adjSaver)->value/2.8208);// an exponentiel range from 0 to 20 min
@@ -310,4 +338,3 @@ void ipaqscreen_Restore()
   turn_light(initval.light);
   set_rotation(initval.orientation);
 }
-
