@@ -12,11 +12,12 @@ LIBS=		`sdl-config --libs`
 
 PREFIX = /usr/local
 BUILD = ../../base/build
+VERSION = 1.3
 
-BINDIR=		$(PREFIX)/games
-LIBDIR=		$(PREFIX)/games/lib
-BINOWN=		games
-BINGRP=		bin
+BINDIR=		$(DESTDIR)$(PREFIX)/bin
+LIBDIR=		$(DESTDIR)$(PREFIX)/lib
+BINOWN=		root
+BINGRP=		root
 
 MAPS=		maps/baby.rep maps/future.rep maps/orient.rep \
 		maps/school.rep maps/work.rep maps/africa.rep \
@@ -50,7 +51,7 @@ all: $(PROG)
 $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
 
-install: $(PROG) $(MAPS) $(BMPS)
+install-program: $(PROG) $(MAPS) $(BMPS)
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(BINDIR)
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/maps
 	install -m 755 -d -o $(BINOWN) -g $(BINGRP) $(LIBDIR)/repton/bmps

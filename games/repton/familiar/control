@@ -1,0 +1,8 @@
+Package: repton
+Version: VERSION
+Architecture: arm
+Section: games
+Priority: extra
+Maintainer: Phil Blundell <pb@nexus.co.uk>
+Depends: libsdl1.2
+Description: SDL-based Repton clone
