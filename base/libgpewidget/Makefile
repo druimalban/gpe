@@ -1,6 +1,6 @@
 SONAME = libgpewidget.so.0
 
-MEMBERS = gtkdatesel gtkdatecombo errorbox
+MEMBERS = gtkdatesel gtkdatecombo errorbox init
 
 CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall -fPIC
 ifeq ($(DEBUG),yes)
