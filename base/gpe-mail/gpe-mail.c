@@ -34,7 +34,7 @@ struct {
          "root@localhost","smtp","auto","\2","","","","","",""
       },
       {
-         "\1","","","","","","","","",""
+         "\1","\2","","","","","","","",""
       }
    }
 };
@@ -47,7 +47,7 @@ struct {
    {
       {"Username","Password","Server","Port","Use pop3 instead of imap","SSL","Size (bytes)","Since (days), imap only ",NULL,NULL},
       {"Email Adress","Smtp Server","Port","SSL",NULL,NULL,NULL,NULL,NULL,NULL},
-      {"Mark msgs as seen when viewed",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
+      {"Mark msgs as seen when viewed","Open html in dillo",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}
    }
 };
 
@@ -1030,10 +1030,15 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    char heb;
    char *sp2;
    char type;
+   char alternative;
+   char open_in_dillo;
+   char is_html;
    int i;
 
 
 
+   open_in_dillo=get_config_boolean("Misc","Open html in dillo");
+   is_html=0;
    sp=(char **)&s;
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,3,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)self.mt);return;}
    //printf("s=%s\n",*sp);
@@ -1089,6 +1094,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    f=(FILE *)fopen(s2,"r");
    boundary[0]=0;
    heb=0;
+   alternative=0;
    if (f)
    {
       do
@@ -1098,6 +1104,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
          if (!s2[0]) break;
 	 //printf("s2=%s\n",s2);
          convert(s2);
+	 if (starts_with(s2,"Content-Type: multipart/alternative")) alternative=1;
          if (NULL!=(sp2=strstr(s2,"boundary=\"")))
          {
             sp2+=strlen("boundary=\"");
@@ -1113,6 +1120,8 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
       } while (s2[0]);
       fclose(f);
    }
+   //printf("%s alternative \n",alternative ? "has": "hasn't");
+   if (!open_in_dillo) alternative=0;
 
 
    sprintf(s2,"%s/%s/%s.flags",config.expanded_path,self.current_folder,self.cur_msg);
@@ -1158,7 +1167,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
       s2[0]=0;
       if (boundary[0])
       {
-         do
+         for (i=0;i<alternative+1;i++) do
          {
             s2[0]=0;
 	    fgets(s2,sizeof(s2),f);
@@ -1172,6 +1181,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 	    if ((sp2=strstr(s2,"Content-Transfer-Encoding: base64"))!=NULL) type='B';
 	    if ((sp2=strstr(s2,"Content-Transfer-Encoding: quoted-printable"))!=NULL) type='Q';
 	    if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
+	    if (starts_with(s2,"Content-Type: text/html")) is_html=1;
 	    //if (NULL!=(sp2=strstr(s2,"charset="))) printf("%s\n",sp2);
 	 }
       }
@@ -1194,9 +1204,27 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
          heb_l2v(s2);
          //printf(" -> %s\n",s2);
       }
-      gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,s2,-1);
-      //printf("body:\n%s\n",s2);
       fclose(f);
+      if (!is_html) open_in_dillo=0;
+      if (open_in_dillo )
+      {
+         f=(FILE *)fopen("/tmp/gpe-mail.html","w");
+	 if (f==NULL) open_in_dillo=0;
+	 else
+	 {
+		 if (!fwrite(s3,strlen(s3),1,f)) open_in_dillo=0;
+		 if (!fwrite(s2,strlen(s2),1,f)) open_in_dillo=0;
+		 fclose(f);
+		 if (open_in_dillo)
+		 {
+      			gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,"\n\n----------------------------\n Html mail opened in dillo\n----------------------------\n",-1);
+		  	system("dillo /tmp/gpe-mail.html &");
+		 }
+	 }
+      }
+      if (! open_in_dillo )
+      	gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,s2,-1);
+      //printf("body:\n%s\n",s2);
    } else gtk_text_insert((GtkText *)self.mt,self.heb_font,self.heb_fg,self.heb_bg,"-----------------------------\n     body has not been\n  downloaded with message\n-----------------------------\n",-1);
    gtk_text_thaw((GtkText *)self.mt);
 }
