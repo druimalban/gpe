@@ -1,0 +1,6 @@
+2003-02-24  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (LINGUAS): Add eo.
+	* po/eo.po: New file from Translation Project.
+
+
