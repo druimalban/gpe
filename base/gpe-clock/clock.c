@@ -166,8 +166,8 @@ alarm_window (void)
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), clock, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), time_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, 0);
+  //gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), date_hbox, FALSE, FALSE, 0);
+  //gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), days_button, FALSE, FALSE, 0);
 
 /* weekly hbox1 */
   weeklytable = gtk_table_new (2, 4, FALSE);
@@ -182,7 +182,7 @@ alarm_window (void)
       gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 4, i - 3, 1, 2);
     }
 
-  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), weeklytable, FALSE, FALSE, 0);
+  //gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), weeklytable, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancel_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), ok_button, FALSE, FALSE, 0);

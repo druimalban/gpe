@@ -27,7 +27,7 @@ static guint x_offset, y_offset;
 static gboolean hand = TRUE;
 
 static GtkAdjustment *hour_adj, *minute_adj;
-static GdkPixbuf *clock_background, *day_night_wheel;
+static GdkPixbuf *clock_background, *clock_background_24, *day_night_wheel;
 
 static Display *dpy;
 
@@ -143,6 +143,7 @@ draw_clock (GtkWidget *widget,
 {
   GtkDrawingArea *darea;
   GdkDrawable *drawable;
+  GdkPixbuf *current_background;
   GdkGC *gc, *tmp_gc;
   GdkRectangle pixbuf_rect, intersect_rect;
   double hour_angle, minute_angle;
@@ -189,25 +190,30 @@ draw_clock (GtkWidget *widget,
 		      0, 0, widget->allocation.width, widget->allocation.height);
   
   g_object_unref (tmp_gc);
-  
+
+  if (gtk_adjustment_get_value (hour_adj) >= 12)
+    current_background = clock_background_24;
+  else
+    current_background = clock_background;
+
   if (event)
-    {
+  {
       pixbuf_rect.x = x_offset;
       pixbuf_rect.y = y_offset;
       pixbuf_rect.width = background_width;
       pixbuf_rect.height = background_height;
 
       if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
-	gdk_pixbuf_render_to_drawable (clock_background, 
+	gdk_pixbuf_render_to_drawable (current_background, 
 				       backing_pixmap,
 				       backing_gc, 
 				       intersect_rect.x - x_offset, intersect_rect.y - y_offset, 
 				       intersect_rect.x, intersect_rect.y,
 				       intersect_rect.width, intersect_rect.height,
 				       GDK_RGB_DITHER_NONE, 0, 0);
-    }
+  }
   else
-    gdk_pixbuf_render_to_drawable (clock_background, 
+    gdk_pixbuf_render_to_drawable (current_background, 
 				   backing_pixmap,
 				   backing_gc, 
 				   0, 0, x_offset, y_offset,
@@ -220,6 +226,14 @@ draw_clock (GtkWidget *widget,
 				 0, 0, (x_offset + CLOCK_RADIUS) - (gdk_pixbuf_get_width (day_night_wheel) / 2), 
 				 (y_offset + CLOCK_RADIUS) - (gdk_pixbuf_get_height (day_night_wheel) / 2), 
 				 -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+
+  gdk_draw_arc (backing_pixmap, widget->style->white_gc, TRUE,
+		((x_offset + CLOCK_RADIUS) - (gdk_pixbuf_get_width (day_night_wheel) / 2)) - 2,
+		((y_offset + CLOCK_RADIUS) - (gdk_pixbuf_get_height (day_night_wheel) / 2)) - 2,
+		gdk_pixbuf_get_width (day_night_wheel) + 4,
+		gdk_pixbuf_get_height (day_night_wheel) + 4,
+		(gtk_adjustment_get_value (hour_adj) * -360 / 24) * 64,
+		180 * 64);
 
   minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
   hour_angle = gtk_adjustment_get_value (hour_adj) * 2 * M_PI / 12;
@@ -318,6 +332,7 @@ clock_widget (GtkAdjustment *hadj, GtkAdjustment *madj)
   GtkWidget *w = gtk_drawing_area_new ();
 
   clock_background = gdk_pixbuf_new_from_file ("./clock.png", NULL);
+  clock_background_24 = gdk_pixbuf_new_from_file ("./clock24.png", NULL);
   day_night_wheel = gdk_pixbuf_new_from_file ("./day-night-wheel.png", NULL);
 
   gtk_widget_set_usize (w, CLOCK_RADIUS * 2 + 4, CLOCK_RADIUS * 2 + 4);
