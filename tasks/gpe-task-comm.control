@@ -4,5 +4,5 @@ Priority: optional
 Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: _DEPS_
-Description: Task package for GPE Communication applications, like web browser, irc client, email client, ... You will need to be connected to a network to fully use such applications.
+Recommends: _DEPS_
+Description: GPE Communication applications

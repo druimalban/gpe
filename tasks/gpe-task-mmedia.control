@@ -4,5 +4,5 @@ Priority: optional
 Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: _DEPS_
-Description: Task package for GPE MultiMedia applications.
+Recommends: _DEPS_
+Description: GPE MultiMedia applications.

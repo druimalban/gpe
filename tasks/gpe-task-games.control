@@ -1,4 +1,5 @@
 Package: gpe-task-games
+Conflicts: gpe-games, gpe-games2
 Provides: gpe-games, gpe-games2
 Replaces: gpe-games, gpe-games2
 Section: games
@@ -6,5 +7,5 @@ Priority: optional
 Version: _VERSION_
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: _DEPS_
+Recommends: _DEPS_
 Description: Task package for GPE games.
