@@ -1,3 +1,15 @@
+2003-03-15  Damien Tanner  <dctanner@gekk>
+
+	* main.c: Removed alot of errors and print statements.
+
+2003-03-14  Damien Tanner  <dctanner@gekk>
+
+	* main.c: Automatic detection of single image or directory when loading from the command line.
+
+2003-03-10  Damien Tanner  <dctanner@gekk>
+
+	* main.c (render_list_view_free): An attempt to prevent gpe-gallery from bloating in memory size.
+
 2003-03-09  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.6 released.

@@ -121,7 +121,7 @@ update_window_title (void)
   gtk_window_set_title (GTK_WINDOW (window), window_title);
 }
 
-double
+static double
 angle (GtkWidget *w, int x, int y)
 {
   int dx = x - (w->allocation.width / 2),
@@ -132,7 +132,7 @@ angle (GtkWidget *w, int x, int y)
   return a;
 }
 
-void
+static void
 rotate_button_down (GtkWidget *w, GdkEventButton *b)
 {
   int x = b->x, y = b->y;
@@ -145,7 +145,7 @@ rotate_button_down (GtkWidget *w, GdkEventButton *b)
 		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
 }
 
-void
+static void
 pan_button_down (GtkWidget *w, GdkEventButton *b)
 {
   x_start = b->x_root;
@@ -162,7 +162,7 @@ pan_button_down (GtkWidget *w, GdkEventButton *b)
 		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
 }
 
-void
+static void
 button_down (GtkWidget *w, GdkEventButton *b)
 {
   if (rotate_flag)
@@ -171,13 +171,13 @@ button_down (GtkWidget *w, GdkEventButton *b)
     pan_button_down (w, b);
 }
 
-void
+static void
 button_up (GtkWidget *w, GdkEventButton *b)
 {
   gdk_pointer_ungrab (b->time);
 }
 
-void
+static void
 rotate (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 {
   int x = m->x, y = m->y;
@@ -196,7 +196,7 @@ rotate (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
   gdk_window_get_pointer (w->window, NULL, NULL, NULL);
 }
 
-void
+static void
 pan (GtkWidget *w, GdkEventMotion *m)
 {
   gint dx = m->x_root - x_start, dy = m->y_root - y_start;
@@ -217,7 +217,7 @@ pan (GtkWidget *w, GdkEventMotion *m)
   gdk_window_get_pointer (w->window, NULL, NULL, NULL);
 }
 
-void
+static void
 motion_notify (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 {
   if (rotate_flag)
@@ -226,7 +226,7 @@ motion_notify (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
     pan (w, m);
 }
 
-gboolean
+static gboolean
 set_rotate (GtkWidget *w)
 {
   rotate_flag = TRUE;
@@ -234,7 +234,7 @@ set_rotate (GtkWidget *w)
   return TRUE;
 }
 
-gboolean
+static gboolean
 set_pan (GtkWidget *w)
 {
   rotate_flag = FALSE;
@@ -242,13 +242,13 @@ set_pan (GtkWidget *w)
   return TRUE;
 }
 
-void
-show_image (GtkWidget *widget, gpointer *udata)
+static void
+show_image (GtkWidget *widget, GList *loaded_filenames)
 {
   gchar *filename;
 
-  image_filenames = udata;
-  filename = ((GList *) udata)->data;
+  image_filenames = loaded_filenames;
+  filename = loaded_filenames->data;
 
   gtk_widget_hide (view_widget);
 
@@ -261,11 +261,9 @@ show_image (GtkWidget *widget, gpointer *udata)
   gtk_widget_show (image_event_box);
   gtk_widget_show (image_widget);
   gtk_widget_show (scrolled_window);
-
-  printf ("You just clicked on an image called %s\n", filename);
 }
 
-void
+static void
 open_from_file (gchar *filename)
 {
   GList *buf = NULL;
@@ -274,21 +272,21 @@ open_from_file (gchar *filename)
   show_image (NULL, buf);
 }
 
-void
+static void
 image_sharpen ()
 {
   sharpen (scaled_image_pixbuf);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
-void
+static void
 image_blur ()
 {
   blur (scaled_image_pixbuf);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
-gboolean
+static gboolean
 image_zoom_hyper (GdkPixbuf *pixbuf)
 {
   gint width, height;
@@ -318,7 +316,7 @@ image_zoom_in ()
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_NEAREST);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 
-  zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
+  zoom_timer_id = gtk_timeout_add (1000, GTK_SIGNAL_FUNC (image_zoom_hyper), scaled_image_pixbuf);
 }
 
 void
@@ -337,7 +335,7 @@ image_zoom_out ()
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_NEAREST);
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 
-  zoom_timer_id = gtk_timeout_add (1000, image_zoom_hyper, scaled_image_pixbuf);
+  zoom_timer_id = gtk_timeout_add (1000, GTK_SIGNAL_FUNC (image_zoom_hyper), scaled_image_pixbuf);
 
 }
 
@@ -381,7 +379,7 @@ image_zoom_fit ()
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
-void
+static void
 hide_image ()
 {
   if (view_widget)
@@ -394,18 +392,6 @@ hide_image ()
   }
 }
 
-void
-enable_fullscreen ()
-{
-  //gdk_window_fullscreen (GDK_WINDOW (window));
-}
-
-void
-disable_fullscreen ()
-{
-  //gdk_window_unfullscreen (GDK_WINDOW (window));
-}
-
 static gboolean
 render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, GList *loaded_images)
 {
@@ -414,8 +400,6 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
   PangoRectangle pango_title_rect, pango_dimensions_rect, pango_size_rect, pango_modified_rect;
   GList *this_item;
   gint y = 0, text_y = 0;
-
-  printf ("Starting rendering...\n");
 
   this_item = loaded_images;
 
@@ -467,9 +451,35 @@ render_list_view_expose_event (GtkWidget *drawing_area, GdkEventExpose *event, G
 
     y = y + 1;
 
+    g_object_unref (pango_title_layout);
+    g_object_unref (pango_dimensions_layout);
+    g_object_unref (pango_size_layout);
+    g_object_unref (pango_modified_layout);
+
     this_item = this_item->next;
   }
   return TRUE;
+}
+
+static void
+render_list_view_free (GtkObject *object, GList *loaded_images)
+{
+  ImageInfo *image_info;
+  GList *this_item;
+
+  printf ("Attempting to unref old pixmaps.\n");
+
+  this_item = loaded_images;
+  while (this_item)
+  {
+    printf ("Unrefing pixbuf.\n");
+    image_info = (ImageInfo *) this_item->data;
+    g_object_unref (image_info->pixbuf);
+
+    this_item = this_item->next;
+  }
+
+  g_list_free (loaded_images);
 }
 
 static GtkWidget *
@@ -481,7 +491,6 @@ render_list_view ()
   GList *loaded_images = NULL;
   GList *this_item;
   gint num_items = g_list_length (image_filenames);
-  gint pixbuf_height, pixbuf_width;
   struct stat file_stats;
 
   this_item = image_filenames;
@@ -498,8 +507,6 @@ render_list_view ()
     stat (image_info->file_name, &file_stats);
     image_info->file_size = file_stats.st_size / 1024;
     image_info->file_modified = file_stats.st_mtime;
-
-    printf ("Rendering image %s\n", image_info->file_name);
 
     if (image_info->pixbuf)
     {
@@ -544,6 +551,8 @@ render_list_view ()
   gtk_widget_set_size_request (GTK_WIDGET (drawing_area), scrolled_window_requisition.width, num_items * (MAX_ICON_SIZE + (MARGIN_Y * 2) + 1));
   g_signal_connect (G_OBJECT (drawing_area), "expose_event",  
                     G_CALLBACK (render_list_view_expose_event), loaded_images);
+  g_signal_connect (G_OBJECT (scrolled_window), "destroy",  
+                    G_CALLBACK (render_list_view_free), loaded_images);
 
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window), drawing_area);
   gtk_widget_show_all (scrolled_window);
@@ -559,14 +568,12 @@ render_icon_view ()
   gchar *image_filename, *buf;
 
   il = gpe_iconlist_new ();
-  printf ("Starting rendering...\n");
+
   this_item = image_filenames;
   while (this_item)
   {
     image_filename = (gchar *) this_item->data;
     buf = g_strdup (image_filename);
-
-    printf ("Rendering image %s\n", image_filename);
 
     gpe_iconlist_add_item (GPE_ICONLIST(il), basename (buf), image_filename, (gpointer) this_item);
 
@@ -612,7 +619,7 @@ render_view (GtkWidget *parent, gint view)
   gtk_widget_hide (loading_toolbar);
 }
 
-void
+static void
 add_directory (gchar *directory)
 {
   gchar *filename;
@@ -620,7 +627,6 @@ add_directory (gchar *directory)
   DIR *dir;
 
   loading_directory = 1;
-  printf ("Selected directory: %s\n", directory);
   g_list_free (image_filenames);
   image_filenames = NULL;
 
@@ -636,13 +642,11 @@ add_directory (gchar *directory)
       {
         struct stat s;
         filename = g_strdup_printf ("%s%s", directory, g_strdup (d->d_name));
-	printf ("Seen %s\n", filename);
 
         if (stat (filename, &s) == 0)
         {
-	  if (strstr (filename, ".png") || strstr (filename, ".jpg"))
+	  if (strstr (filename, ".png") || strstr (filename, ".jpg") || strstr (filename, ".jpeg"))
 	  {
-	    //printf ("Added %s\n", filename);
 	    image_filenames = g_list_append (image_filenames, (gpointer) filename);
 	  }
 	}
@@ -652,7 +656,7 @@ add_directory (gchar *directory)
   }
 }
 
-void
+static void
 next_image ()
 {
   GList *buf;
@@ -669,7 +673,7 @@ next_image ()
   }
 }
 
-void
+static void
 previous_image ()
 {
   GList *buf;
@@ -686,7 +690,7 @@ previous_image ()
   }
 }
 
-void
+static void
 stop_slideshow ()
 {
   if (slideshow_timer != 0)
@@ -695,13 +699,13 @@ stop_slideshow ()
   }
 }
 
-void
+static void
 start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
 {
   GtkWidget *parent_window;
   guint delay;
 
-  parent_window = g_object_get_data (spin_button, "parent_window");
+  parent_window = g_object_get_data (G_OBJECT (spin_button), "parent_window");
   delay = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spin_button));
 
   gtk_widget_destroy (parent_window);
@@ -716,7 +720,7 @@ start_slideshow (GtkWidget *widget, GtkWidget *spin_button)
   }
 }
 
-void
+static void
 show_new_slideshow (void)
 {
   GtkWidget *slideshow_dialog;
@@ -742,7 +746,7 @@ show_new_slideshow (void)
   start_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Start"), "slideshow");
   close_button = gpe_picture_button (GTK_DIALOG (slideshow_dialog)->action_area->style, _("Cancel"), "cancel");
 
-  g_object_set_data (spin_button, G_OBJECT (slideshow_dialog), "parent_window");
+  g_object_set_data (G_OBJECT (spin_button), (gpointer) slideshow_dialog, "parent_window");
 
   gtk_signal_connect (GTK_OBJECT (start_button), "clicked",
 		      GTK_SIGNAL_FUNC (start_slideshow), spin_button);
@@ -765,12 +769,12 @@ show_new_slideshow (void)
   gtk_widget_show (close_button);
 }
 
-void
+static void
 show_dirbrowser (void)
 {
   if (!dirbrowser_window)
   {
-    dirbrowser_window = gpe_create_dir_browser (_("Select directory"), g_get_home_dir (), GTK_SELECTION_SINGLE, add_directory);
+    dirbrowser_window = gpe_create_dir_browser (_("Select directory"), (gchar *) g_get_home_dir (), GTK_SELECTION_SINGLE, add_directory);
     gtk_signal_connect (GTK_OBJECT (dirbrowser_window), "destroy", GTK_SIGNAL_FUNC (gtk_widget_destroyed), &dirbrowser_window);
     gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
   }
@@ -781,12 +785,11 @@ show_dirbrowser (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *loading_label, *toolbar_icon;
-  GtkWidget *view_option_menu, *view_menu, *view_menu_item;
+  GtkWidget *vbox, *toolbar, *loading_label, *toolbar_icon;
   GdkPixbuf *p;
-  GtkWidget *pw;
   GdkPixmap *pmap;
   GdkBitmap *bmap;
+  struct stat arg_stat;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -808,9 +811,6 @@ main (int argc, char *argv[])
   gtk_widget_realize (window);
 
   vbox = gtk_vbox_new (FALSE, 0);
-
-  hbox = gtk_hbox_new (FALSE, 0);
-
   vbox2 = gtk_vbox_new (FALSE, 0);
 
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -829,22 +829,6 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (image_event_box), "motion-notify-event", GTK_SIGNAL_FUNC (motion_notify), NULL);
 
   gtk_widget_add_events (GTK_WIDGET (image_event_box), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
-
-  view_option_menu = gtk_option_menu_new ();
-  view_menu = gtk_menu_new ();
-  gtk_option_menu_set_menu(GTK_OPTION_MENU (view_option_menu) ,view_menu);
-
-  view_menu_item = gtk_menu_item_new_with_label ("Icon view");
-  gtk_widget_show (view_menu_item);
-  gtk_menu_append (GTK_MENU (view_menu), view_menu_item);
-  //gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
-  //   (GtkSignalFunc) set_view, "icons");
-
-  view_menu_item = gtk_menu_item_new_with_label ("List view");
-  gtk_widget_show (view_menu_item);
-  gtk_menu_append (GTK_MENU (view_menu), view_menu_item);
-  //gtk_signal_connect (GTK_OBJECT (view_menu_item), "activate", 
-  //   (GtkSignalFunc) set_view, "list");
 
   loading_label = gtk_label_new ("Loading...");
 
@@ -901,66 +885,66 @@ main (int argc, char *argv[])
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon ("slideshow");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Slideshow"), 
-			   _("Slideshow"), _("Slideshow"), pw, show_new_slideshow, NULL);
+			   _("Slideshow"), _("Slideshow"), toolbar_icon, show_new_slideshow, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon ("icon_view");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Icon view"), 
-			   _("Icon view"), _("Icon view"), pw, render_view, 0);
+			   _("Icon view"), _("Icon view"), toolbar_icon, render_view, (gpointer) 0);
 
   p = gpe_find_icon ("list_view");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("List view"), 
-			   _("List view"), _("List view"), pw, render_view, 1);
+			   _("List view"), _("List view"), toolbar_icon, render_view, (gpointer) 1);
 
   p = gpe_find_icon ("fullscreen");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Fullscreen"), 
-			   _("Toggle fullscreen"), _("Toggle fullscreen"), pw, enable_fullscreen, NULL);
+			   _("Toggle fullscreen"), _("Toggle fullscreen"), toolbar_icon, NULL, NULL);
 
   p = gpe_find_icon ("zoom_in");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom In"), 
-			   _("Zoom In"), _("Zoom In"), pw, image_zoom_in, NULL);
+			   _("Zoom In"), _("Zoom In"), toolbar_icon, image_zoom_in, NULL);
 
   p = gpe_find_icon ("zoom_out");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom Out"), 
-			   _("Zoom Out"), _("Zoom Out"), pw, image_zoom_out, NULL);
+			   _("Zoom Out"), _("Zoom Out"), toolbar_icon, image_zoom_out, NULL);
 
   p = gpe_find_icon ("zoom_1");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom 1:1"), 
-			   _("Zoom 1:1"), _("Zoom 1:1"), pw, image_zoom_1, NULL);
+			   _("Zoom 1:1"), _("Zoom 1:1"), toolbar_icon, image_zoom_1, NULL);
 
   p = gpe_find_icon ("zoom_fit");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom to Fit"), 
-			   _("Zoom to Fit"), _("Zoom to Fit"), pw, image_zoom_fit, NULL);
+			   _("Zoom to Fit"), _("Zoom to Fit"), toolbar_icon, image_zoom_fit, NULL);
 
   p = gpe_find_icon ("sharpen");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Sharpen"), 
-			   _("Sharpen"), _("Sharpen"), pw, image_sharpen, NULL);
+			   _("Sharpen"), _("Sharpen"), toolbar_icon, image_sharpen, NULL);
 
   p = gpe_find_icon ("blur");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Blur"), 
-			   _("Blur"), _("Blur"), pw, image_blur, NULL);
+			   _("Blur"), _("Blur"), toolbar_icon, image_blur, NULL);
 
   p = gpe_find_icon ("pan");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Pan"), 
-			   _("Toggle Pan"), _("Toggle Pan"), pw, set_pan, NULL);
+			   _("Toggle Pan"), _("Toggle Pan"), toolbar_icon, set_pan, NULL);
 
   p = gpe_find_icon ("rotate");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Rotate"), 
-			   _("Toggle Rotate"), _("Toggle Rotate"), pw, set_rotate, NULL);
+			   _("Toggle Rotate"), _("Toggle Rotate"), toolbar_icon, set_rotate, NULL);
 
   gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_label,
 			   _("Loading..."), _("Loading..."));
@@ -969,12 +953,11 @@ main (int argc, char *argv[])
 			   _("Progress"), _("Progress"));
 
   p = gpe_find_icon ("stop");
-  pw = gpe_render_icon (window->style, p);
+  toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (loading_toolbar), _("Stop Loading"), 
-			   _("Stop Loading"), _("Stop Loading"), pw, NULL, NULL);
+			   _("Stop Loading"), _("Stop Loading"), toolbar_icon, NULL, NULL);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
-  //gtk_box_pack_start (GTK_BOX (hbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), vbox2, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox2), scrolled_window, TRUE, TRUE, 0);
@@ -990,16 +973,20 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
   gtk_widget_show (loading_label);
   gtk_widget_show (loading_progress_bar);
-  //gtk_widget_show (view_option_menu);
-  //gtk_widget_show (view_menu);
 
   if (argc > 1)
   {
-    open_from_file (argv[1]);
-  }
-  else
-  {
-    gtk_widget_show (hbox);
+    stat (argv[1], &arg_stat);
+
+    if (S_ISREG (arg_stat.st_mode))
+    {
+      open_from_file (argv[1]);
+      gtk_widget_hide (toolbar);
+    }
+    else if (S_ISDIR (arg_stat.st_mode))
+    {
+      add_directory (g_strdup_printf ("%s/", argv[1]));
+    }
   }
 
   gtk_main();
