@@ -10,6 +10,7 @@
 #ifndef PIXMAPS_H
 #define PIXMAPS_H
 
+#include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
@@ -26,6 +27,7 @@ extern GdkPixbuf *gpe_try_find_icon (const char *name, gchar **error);
 extern gboolean gpe_find_icon_pixmap (const char *name,
 				      GdkPixmap **pixmap,
 				      GdkBitmap **bitmap);
+
 extern void gpe_set_window_icon (GtkWidget *window, gchar *icon);
 
 #endif

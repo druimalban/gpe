@@ -1,5 +1,9 @@
 2002-12-22  Philip Blundell  <philb@gnu.org>
 
+	* gpe/pixmaps.h: Include gtk/gtk.h.
+
+2002-12-22  Philip Blundell  <philb@gnu.org>
+
 	* pixmaps.c (gpe_set_window_icon): New function.
 	(gpe_find_icon_pixmap): Don't check return code from
 	gpe_find_icon.
