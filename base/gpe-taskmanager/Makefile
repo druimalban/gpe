@@ -9,16 +9,9 @@ LINGUAS = nl cs fr
 
 MEMBERS = gpe-taskmanager
 
-CPPFLAGS = $(GPECFLAGS) -D_GNU_SOURCE -I../libeventdb
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+CPPFLAGS += $(STANDARD_CPPFLAGS)
+CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
+LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
 .SUFFIXES: .d
 
@@ -35,7 +28,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(GPELIBS) $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS)
 
 install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
