@@ -29,8 +29,7 @@ GtkWidget *Sleep_Build_Objects()
     strcpy(cname, "/etc/ipaq-sleep.conf");
     ISconf = load_ISconf(cname);
     if(ISconf == NULL) {
-      fprintf(stderr, "Error loading configuration file\n");
-      exit(1);
+	ISconf = default_ISconf();
     }
   }
   strcpy(ISconf->binCmd, "/etc/init.d/ipaq-sleep");

@@ -55,6 +55,7 @@ void delConfigDbl(ipaq_conf_t *c, const char *name, double val);
 
 void check_configurable(ipaq_conf_t *c);
 ipaq_conf_t *load_ISconf(const char *fname);
+ipaq_conf_t *default_ISconf();
 void load_IRQs(ipaq_conf_t *c, const char *fname);
 int save_ISconf(ipaq_conf_t *c, const char *fname);
 
