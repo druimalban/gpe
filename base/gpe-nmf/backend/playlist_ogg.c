@@ -30,11 +30,11 @@ parse_headers (vorbis_comment *vc, struct playlist *p)
       if (e)
 	{
 	  e++;
-	  if (!strncmp (s, "ARTIST", 6))
+	  if (!strncasecmp (s, "ARTIST", 6))
 	    p->data.track.artist = g_strdup (e);
-	  else if (!strncmp (s, "ALBUM", 5))
+	  else if (!strncasecmp (s, "ALBUM", 5))
 	    p->data.track.album = g_strdup (e);
-	  else if (!strncmp (s, "TITLE", 5))
+	  else if (!strncasecmp (s, "TITLE", 5))
 	    p->title = g_strdup (e);
 	}
     }
