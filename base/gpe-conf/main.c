@@ -102,6 +102,7 @@ struct gpe_icon my_icons[] = {
   { "ipaq" },
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
+  { "default-bg", PREFIX "/share/pixmaps/gpe-default-bg.png" }, 
   { NULL, NULL }
 };
 

@@ -83,7 +83,7 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ======================================================================== */
   /* get the data from the file if existant */
-  ownerphotofile = g_strdup (PREFIX "/share/gpe/pixmaps/default/tux-48.png");
+  ownerphotofile = g_strdup ("ownerphoto");
   ownername      = g_strdup ("GPE User");
   owneremail     = g_strdup ("nobody@localhost.localdomain");
   ownerphone     = g_strdup ("+99 (9999) 999-9999");

@@ -49,13 +49,32 @@ gpe_create_pixmap                      (GtkWidget       *widget,
 {
   GtkWidget *pixmap;
   GdkPixbuf *icon;
-
+  gchar* err;
+#if GDK_PIXBUF_MAJOR >= 2
+  GError *g_error = NULL;
+#endif
+	
   guint width, height;
   /* some "random" initial values: */
   gfloat scale, scale_width = 2.72, scale_height = 3.14;
   guint maxwidth = 32, maxheight = 32;
   
-  icon = gpe_find_icon (filename);
+  icon = gpe_try_find_icon (filename, &err);
+  if (!icon) { 
+	  g_free(err);
+	  #if GDK_PIXBUF_MAJOR < 2
+  	  icon = gdk_pixbuf_new_from_file (filename);
+      #else
+      icon = gdk_pixbuf_new_from_file (filename, &g_error);
+      #endif
+
+      #if GDK_PIXBUF_MAJOR >= 2
+      if (icon == NULL)
+      {
+        g_error_free (g_error);
+      }
+      #endif
+  }	
   width  = gdk_pixbuf_get_width (icon);
   height = gdk_pixbuf_get_height (icon);
   /* g_message ("image is %d x %d", width, height); */

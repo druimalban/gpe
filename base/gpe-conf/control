@@ -1,8 +1,8 @@
 Package: gpe-conf
 Section: base
 Priority: optional
-Version: 0.0.5
+Version: 0.0.7
 Architecture: arm
 Maintainer: Pierre Tardy <tardyp@free.fr>
-Depends: libgpewidget0 (>= 0.25), gpe-icons (>= 0.13)
+Depends: libgpewidget1 (>= 0.25), gpe-icons (>= 0.13)
 Description: A set of configuration GUI

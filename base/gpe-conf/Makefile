@@ -1,5 +1,5 @@
 PACKAGE = gpe-conf
-VERSION = 0.0.5
+VERSION = 0.0.7
 
 PREFIX = /usr/local
 BINDIR=$(PREFIX)/bin
@@ -9,17 +9,17 @@ STRIP = strip
 GTK2 = yes
 
 ifeq ($(GTK2),yes)
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`-DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 CONTROL = control1
 else
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
-GTKLDFLAGS =  `gtk-config --libs` 
+GTKLDFLAGS = `gtk-config --libs` 
 CONTROL = control
 endif
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall -fomit-frame-pointer -I../libgpewidget -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\"
-LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt 
+LDFLAGS = $(GTKLDFLAGS) -L../libgpewidget  -lgpewidget -lcrypt -L../libdotdesktop -ldotdesktop
 CC = gcc
 
 MEMBERS  = main applets parser suid
@@ -68,7 +68,7 @@ gpe-conf: $(OBJS)
 	
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
-	strip gpe-confsuid
+	$(STRIP) gpe-confsuid
 
 install: gpe-conf
 	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)

@@ -25,7 +25,6 @@
 #define _XOPEN_SOURCE /* Pour GlibC2 */
 #include <time.h>
 #include "applets.h"
-#include <gpe/gtkminifilesel.h>
 #include <gpe/errorbox.h>
 
 
@@ -125,14 +124,14 @@ select_fs                                (GtkButton       *button,
   struct stat st;
   struct fstruct *s = (struct fstruct *)user_data;
 
-  file=gtk_mini_file_selection_get_filename(GTK_MINI_FILE_SELECTION(s->fs));
+  file=gtk_file_selection_get_filename(GTK_FILE_SELECTION(s->fs));
   if(stat(file,&st)==0)
     {
       if(S_ISDIR(st.st_mode))
 	{
 	  // TODO dont do anything for now. (work in libgpewidget)
 	  //printf("%s\n",file);
-	  //gtk_mini_file_selection_set_directory(GTK_MINI_FILE_SELECTION(s->fs),file);
+	  //gtk_mini_file_selection_set_directory(GTK_FILE_SELECTION(s->fs),file);
 	}
       else
 	{
@@ -168,12 +167,12 @@ void ask_user_a_file(char *path, char *prompt,
 {
   char buf[1024];
   char * ret = getcwd (buf, 1024);
-  if(path)                         // this is a hack, we're all waiting a gtk_mini_file_selection_change_directory().. (TODO)
+  if(path)                         // this is a hack, we're all waiting a gtk_file_selection_change_directory().. (TODO)
     chdir(path);
   {
-    GtkWidget *fileselection1 = gtk_mini_file_selection_new (prompt ? prompt : "Select File");
-    GtkWidget *ok_button1 = GTK_MINI_FILE_SELECTION (fileselection1)->ok_button;
-    GtkWidget *cancel_button1 = GTK_MINI_FILE_SELECTION (fileselection1)->cancel_button;
+    GtkWidget *fileselection1 = gtk_file_selection_new (prompt ? prompt : "Select File");
+    GtkWidget *ok_button1 = GTK_FILE_SELECTION (fileselection1)->ok_button;
+    GtkWidget *cancel_button1 = GTK_FILE_SELECTION (fileselection1)->cancel_button;
     struct fstruct *s= (struct fstruct *)malloc(sizeof(struct fstruct));
     if(ret)
       chdir(buf);
