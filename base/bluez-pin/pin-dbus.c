@@ -30,7 +30,7 @@ struct pin_request_context
   DBusMessage *message;
 };
 
-extern void bluez_pin_request (struct pin_request_context *ctx, gboolean out, const gchar *address);
+extern void bluez_pin_request (struct pin_request_context *ctx, gboolean outgoing, const gchar *address, const gchar *name);
 
 static void
 bluez_pin_send_dbus_reply (DBusConnection *connection, DBusMessage *message, const char *pin)
@@ -95,7 +95,7 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
   baswap (&sbdaddr, &bdaddr);
   address = batostr (&sbdaddr);
 
-  bluez_pin_request (ctx, out, address);
+  bluez_pin_request (ctx, out, address, NULL);
 
   return;
 
