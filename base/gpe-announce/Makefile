@@ -37,7 +37,7 @@ PIXMAPS = bell.xpm
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -L../libsoundgen -lsoundgen $(GTKLDFLAGS) -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -L../libsoundgen -lsoundgen $(GTKLDFLAGS) -lsqlite $(LDFLAGS) -lesd
 
 install: all install-mo
 	for i in $(PIXMAPS); do install -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/$(PACKAGE)/pixmaps/$$i; done
