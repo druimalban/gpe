@@ -94,7 +94,10 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
 gboolean
 todo_delete_object (struct db *db, const char *uid, gboolean soft)
 {
-  return FALSE;
+  nsqlc_exec_printf (db->db, "delete from todo where uid='%q'", NULL, NULL, NULL, uid);
+  nsqlc_exec_printf (db->db, "delete from todo_urn where uid='%q'", NULL, NULL, NULL, uid);
+
+  return TRUE;
 }
 
 struct db todo_db = 

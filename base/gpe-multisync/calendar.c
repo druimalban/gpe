@@ -75,7 +75,10 @@ calendar_push_object (struct db *db, const char *obj, const char *uid,
 gboolean
 calendar_delete_object (struct db *db, const char *uid, gboolean soft)
 {
-  return FALSE;
+  nsqlc_exec_printf (db->db, "delete from calendar where uid='%q'", NULL, NULL, NULL, uid);
+  nsqlc_exec_printf (db->db, "delete from calendar_urn where uid='%q'", NULL, NULL, NULL, uid);
+
+  return TRUE;
 }
 
 struct db calendar_db = 

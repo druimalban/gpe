@@ -82,7 +82,10 @@ contacts_push_object (struct db *db, const char *obj, const char *uid,
 gboolean
 contacts_delete_object (struct db *db, const char *uid, gboolean soft)
 {
-  return FALSE;
+  nsqlc_exec_printf (db->db, "delete from contacts where urn='%q'", NULL, NULL, NULL, uid);
+  nsqlc_exec_printf (db->db, "delete from contacts_urn where urn='%q'", NULL, NULL, NULL, uid);
+
+  return TRUE;
 }
 
 struct db contacts_db = 
