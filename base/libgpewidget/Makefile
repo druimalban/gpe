@@ -63,8 +63,8 @@ install-program: $(SONAME)
 install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -sf $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
-	install -d $(DESTDIR)$(PREFIX)/lib/pkg-config
-	install -m 644 $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkg-config/
+	install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
+	install -m 644 $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/
 
 clean: clean-po
 	rm -f $(OBJS) $(SONAME) libgpewidget.so $(DEPS) $(PACKAGE).pc $(PACKAGE)-uninstalled.pc
