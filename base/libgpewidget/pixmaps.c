@@ -72,7 +72,10 @@ gpe_load_icons (struct gpe_icon *p)
 
   if (home == NULL)
     home = "/";
-  
+
+  if (theme_dir)
+    abort ();
+
   s = strlen (home) + strlen (theme_dir_tail) + 1;
   buf = alloca (s);
   strcpy (buf, home);

@@ -2,6 +2,8 @@
 
 	* errorbox.c (gpe_error_box): Remove call to gpe_load_icons.
 
+	* pixmaps.c (gpe_load_icons): Abort if called more than once.
+
 2002-06-20  Philip Blundell  <pb@debian.org>
 
 	* picturebutton.c (gpe_picture_button): Tweak packing so that icon
