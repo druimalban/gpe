@@ -1,3 +1,12 @@
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.45 released.
+
+2004-02-29  Phil Blundell  <pb@nexus.co.uk>
+
+	* todo-ui.c (update_categories): Rebuild categories menu since
+	list may have changed.
+
 2004-02-25  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.44 released.

@@ -232,6 +232,8 @@ update_categories (GtkWidget *w, GSList *new, struct edit_todo *t)
   str = build_categories_string (t);
   gtk_label_set_text (GTK_LABEL (t->categories_label), str);
   g_free (str);
+
+  categories_menu ();
 }
 
 static void
