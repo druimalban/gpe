@@ -1,0 +1,32 @@
+# Turkish translation of gpe-taskmanager
+# Copyright (C) 2005 gpe-taskmanager.
+# This file is distributed under the same license as the gpe-taskmanager package.
+# Abdullah Ulas <ulas@sdf.lonestar.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-taskmanager 0.14\n"
+"POT-Creation-Date: 2003-08-17 14:08+0100\n"
+"PO-Revision-Date: 2005-03-27 11:41+0300\n"
+"Last-Translator: Abdullah Ulas <ulas@sdf.lonestar.org>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-taskmanager.c:226
+msgid "No program is selected"
+msgstr "Program seçilmedi"
+
+#: gpe-taskmanager.c:246
+msgid "Icon"
+msgstr "Ýkon"
+
+#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
+msgid "Running programs"
+msgstr "Çalýþan programlar"
+
+#: gpe-taskmanager.c:260
+msgid "Kill program"
+msgstr "Programý sonlandýr"

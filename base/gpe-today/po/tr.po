@@ -1,0 +1,40 @@
+# Turkish translation of gpe-today.
+# Copyright (C) 2005 gpe-today.
+# This file is distributed under the same license as the gpe-today package.
+# Abdullah Ulas <ulas@freeshell.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2005-03-30 08:52+0300\n"
+"Last-Translator: Abdullah Ulas <ulas@freeshell.org>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:179 gpe-today.desktop.in.h:2
+msgid "Summary"
+msgstr "Özet"
+
+#: todo.c:40
+msgid "No todo items"
+msgstr "Yapýlacak þeyler yok"
+
+#: calendar.c:104
+msgid "No events today"
+msgstr "Bugün herhangi bir durum yok"
+
+#: calendar.c:132
+msgid "All day event"
+msgstr "Tüm gün durumlarý"
+
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "X istemci ayarlarý oluþturulamadý"
+
+#: gpe-today.desktop.in.h:1
+msgid "GPE Today"
+msgstr "GPE Bugün"
