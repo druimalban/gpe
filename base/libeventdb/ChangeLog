@@ -1,3 +1,7 @@
+2003-04-25  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.07 released.
+
 2003-04-20  Philip Blundell  <philb@gnu.org>
 
 	* event-db.c (event_db_write): Write out "modified" tag as Unix time.

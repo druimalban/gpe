@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libeventdb
 #DEBUG = yes 
 CVSBUILD = yes
-VERSION = 0.06
+VERSION = 0.07
 
 LINGUAS = 
 
