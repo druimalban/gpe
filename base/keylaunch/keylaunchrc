@@ -3,3 +3,5 @@ key=???XF86Calendar:Calendar:gpe-calendar
 key=???telephone:Contacts:gpe-contacts
 key=???XF86Mail:Mail:gpe-mail
 key=???XF86Start:Programs:gpe-appmgr
+key=???XF86PowerDown:apm --suspend
+key=???Held XF86PowerDown:bl-toggle
