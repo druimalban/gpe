@@ -2,12 +2,12 @@
 
 # Broadcast hotplug events on D-BUS and then call the appropriate agent
 
-PATH="/org/handhelds/gpe/hotplug"
+OBJECT="/org/handhelds/gpe/hotplug"
 MESSAGE="HotplugEvent"
 
 invoke_dbus () 
 {
-  cmd="dbus-send --system $PATH $MESSAGE"
+  cmd="dbus-send --system $OBJECT $MESSAGE"
   while [ $# -gt 0 ]; do
     cmd="$cmd :$1"
     shift

@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = hotplug-dbus
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.6
+VERSION = 0.7
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -13,14 +13,12 @@ endif
 all:
 
 install-program:
-	install -d $(DESTDIR)/etc/init.d
-	install -d $(DESTDIR)/etc/rcS.d
 	install -d $(DESTDIR)/sbin
-	install -d $(DESTDIR)/etc/dbus-1/system.d
-	install hotplug-dbus.init $(DESTDIR)/etc/init.d/hotplug-dbus
 	install hotplug-dbus $(DESTDIR)/sbin
+	install -d $(DESTDIR)/etc/dbus-1/system.d
 	install -m 644 hotplug.conf $(DESTDIR)/etc/dbus-1/system.d
-	ln -s ../init.d/hotplug-dbus $(DESTDIR)/etc/rcS.d/S01hotplug-dbus
+	install -d $(DESTDIR)/etc/hotplug.d/default
+	ln -sf /sbin/hotplug-dbus $(DESTDIR)/etc/hotplug.d/11-dbus.hotplug
 
 clean:
 

@@ -1,3 +1,15 @@
+2004-10-16  Phil Blundell  <pb@nexus.co.uk>
+
+	* Version 0.7 released.
+
+2004-10-16  Phil Blundell  <pb@nexus.co.uk>
+
+	* hotplug-dbus.init: Deleted.
+	* Makefile (install): Don't install hotplug-dbus.init.  Make
+	symlink from /sbin/hotplug-dbus to
+	/etc/hotplug.d/default/11-dbus.hotplug.
+	* hotplug-dbus: Use $OBJECT, not $PATH.
+
 2004-01-19  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.6 released.
