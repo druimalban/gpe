@@ -443,7 +443,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		else self->_priv->cols = 1;
 		count = g_list_length (self->_priv->icons);
 		
-		self->_priv->rows = ((count+self->_priv->cols-1)/self->_priv->cols);
+		self->_priv->rows = (count - 1) / self->_priv->cols + 1;
 
     MAYBE_PRINTF("luc> _recalc count : %d\n", count);
     MAYBE_PRINTF("luc> _recalc col   : %d\n", self->_priv->cols);
