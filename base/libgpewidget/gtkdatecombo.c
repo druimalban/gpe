@@ -153,6 +153,21 @@ gtk_date_combo_size_allocate (GtkWidget     *widget,
 }
 
 static void
+gtk_date_combo_show (GtkWidget *widget)
+{
+  GtkDateCombo *combo;
+
+  g_return_if_fail (widget != NULL);
+  g_return_if_fail (GTK_IS_DATE_COMBO (widget));
+
+  GTK_WIDGET_CLASS (parent_class)->show (widget);
+
+  combo = GTK_DATE_COMBO (widget);
+  gtk_widget_show (combo->entry);
+  gtk_widget_show (combo->button);
+}
+
+static void
 gtk_date_combo_class_init (GtkDateComboClass * klass)
 {
   GtkObjectClass *oclass;
@@ -165,6 +180,7 @@ gtk_date_combo_class_init (GtkDateComboClass * klass)
   oclass->destroy = gtk_date_combo_destroy;
   
   widget_class->size_allocate = gtk_date_combo_size_allocate;
+  widget_class->show = gtk_date_combo_show;
 }
 
 guint
