@@ -1,7 +1,7 @@
 Package: gpe-ownerinfo
 Section: base
 Priority: optional
-Version: 0.01
+Version: 0.02
 Architecture: arm
 Maintainer: Colin Marquardt <ipaq@marquardt-home.de>
 Depends: libgtk1.2, libgpewidget0 (>= 0.08)
