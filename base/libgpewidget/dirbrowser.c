@@ -154,7 +154,8 @@ ok_clicked (GObject *obj, GObject *window)
   if (gtk_tree_selection_get_selected (selection, &model, &iter))
     {
       gchar *path;
-      gtk_tree_model_get (model, &iter, PATH_COLUMN, &path, -1);      
+      gtk_tree_model_get (model, &iter, PATH_COLUMN, &path, -1);   
+      gtk_widget_hide (GTK_WIDGET (window));   
       handler (path);
       g_free (path);
       

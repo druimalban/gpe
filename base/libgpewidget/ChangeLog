@@ -1,3 +1,7 @@
+2003-03-09  Damien Tanner  <dctanner@gekk>
+
+	* dirbrowser.c (ok_clicked): The window will hide itself before calling the handler, this is so the user will recieve some visual feedback that something is being done about loading the path.
+
 2003-03-08  Colin Marquardt  <colin@marquardt-home.de>
 
 	* gpe/spacing.h: Define GPE_GNOME_SCALING.
