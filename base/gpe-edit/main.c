@@ -27,7 +27,7 @@
 #include <gpe/question.h>
 #include <gpe/gtkminifilesel.h>
 
-#define WINDOW_NAME "GPE Edit"
+#define WINDOW_NAME "Editor"
 #define _(_x) gettext (_x)
 
 gchar *buffer;
@@ -85,7 +85,7 @@ update_window_title (void)
   gchar *window_title;
   gchar *displayname;
 
-  if (filename == NULL)
+  if (filename == NULL || strlen (filename) == 0)
   {
     displayname = g_malloc (strlen (_("Untitled")) + 2);
     strcpy (displayname, _("Untitled"));
@@ -122,6 +122,7 @@ new_file (void)
 {
   clear_text_area ();
   filename = "";
+  file_modified = 0;
   update_window_title ();
 }
 
@@ -571,13 +572,6 @@ main (int argc, char *argv[])
   pw = gpe_render_icon (main_window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Replace"), 
 			   _("Replace a string"), _("Replace a string"), pw, replace_string, vbox);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  p = gpe_find_icon ("exit");
-  pw = gpe_render_icon (main_window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
-			   _("Exit"), _("Exit"), pw, ask_save_before_exit, NULL);
 
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (vbox));
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
