@@ -22,7 +22,7 @@
 #include "globals.h"
 
 static int
-load_callback (void *arg, int argc, char **argv, char **names)
+load_callback0 (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 7)
     {
@@ -61,40 +61,31 @@ load_callback (void *arg, int argc, char **argv, char **names)
 }
 
 gboolean
-convert_old_db (sqlite *sqliteh)
+convert_old_db (int oldversion, sqlite *sqliteh)
 {
   char *err;
-  int nrow, ncol;
-  char **results;
-
-  if (sqlite_get_table (sqliteh, "select uid from events where start='*MIGRATED*'", &results, 
-			&nrow, &ncol, &err))
+  
+  if (oldversion==0) 
     {
+      if (sqlite_exec (sqliteh, "select uid, start, duration, alarmtime, recurring, summary, description from events", load_callback0, NULL, &err))
+        {
+          gpe_error_box (err);
+          free (err);
+          return FALSE;
+        }
+
+    }
+
+  oldversion=1; /* set equal to new version */
+  
+  if (sqlite_exec_printf (sqliteh, 
+			  "insert into calendar_dbinfo (version) values (%d)", 
+			  NULL, NULL, &err, oldversion))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
       free (err);
       return FALSE;
     }
-
-  sqlite_free_table (results);
-  if (nrow)
-    {
-      /* Database already converted */
-      return TRUE;
-    }
-
-  if (sqlite_exec (sqliteh, "select uid, start, duration, alarmtime, recurring, summary, description from events", load_callback, NULL, &err))
-    {
-      gpe_error_box (err);
-      free (err);
-      return FALSE;
-    }
-
-  if (sqlite_exec (sqliteh, "insert into events values (0, '*MIGRATED*', NULL, NULL, NULL, NULL, NULL, NULL)",
-		   NULL, NULL, &err))
-    {
-      gpe_error_box (err);
-      free (err);
-      return FALSE;
-    }
-
+    
   return TRUE;
 }

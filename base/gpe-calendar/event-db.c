@@ -21,6 +21,7 @@
 #include "event-db.h"
 #include "globals.h"
 
+static unsigned long dbversion;
 static sqlite *sqliteh;
 
 static GSList *single_events, *recurring_events;
@@ -33,8 +34,10 @@ static const char *schema_str =
 "create table calendar (uid integer NOT NULL, tag text, value text)";
 static const char *schema2_str = 
 "create table calendar_urn (uid INTEGER PRIMARY KEY)";
+static const char *schema_info = 
+"create table calendar_dbinfo (version integer NOT NULL)";
 
-extern gboolean convert_old_db (sqlite *);
+extern gboolean convert_old_db (int oldversion, sqlite *);
 
 static gint
 event_sort_func (const event_t ev1, const event_t ev2)
@@ -144,6 +147,17 @@ load_callback (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
+static int
+dbinfo_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 1)
+    {
+      dbversion = atoi (argv[0]);
+    }
+
+  return 0;
+}
+
 gboolean
 event_db_start (void)
 {
@@ -164,18 +178,37 @@ event_db_start (void)
       return FALSE;
     }
 
-  sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
-  sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
+  sqlite_exec (sqliteh, schema_info, NULL, NULL, &err);
   
-  if (sqlite_exec (sqliteh, "select uid from calendar_urn", load_callback, NULL, &err))
+  if (sqlite_exec (sqliteh, "select version from calendar_dbinfo", dbinfo_callback, NULL, &err))
     {
+      dbversion=0;
       gpe_error_box (err);
       free (err);
       return FALSE;
     }
 
-  convert_old_db (sqliteh);
-
+  sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
+  sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
+      
+  if (dbversion==1) 
+    {
+      printf("do not need to convert!\n");
+      if (sqlite_exec (sqliteh, "select uid from calendar_urn", load_callback, NULL, &err))
+        {
+          gpe_error_box (err);
+          free (err);
+          return FALSE;
+        }
+    }
+    
+  else 
+    {
+      printf("converting!\n");
+      convert_old_db (dbversion, sqliteh);
+      dbversion=1;
+    }
+    
   return TRUE;
 }
 
