@@ -131,8 +131,6 @@ draw_expose_event (GtkWidget *widget,
 	      struct tm tm;
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
-	      gchar *summary = g_locale_to_utf8 (evd->summary, -1, NULL,
-	                                         NULL, NULL);
 	      
 	      if ((ev->flags & FLAG_UNTIMED) == 0)
 		{
@@ -163,7 +161,7 @@ draw_expose_event (GtkWidget *widget,
 		}
 
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
-	      pango_layout_set_text (pl_evt, summary, strlen (summary));
+	      pango_layout_set_text (pl_evt, evd->summary, -1);
 	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 	      gtk_paint_layout (widget->style,
 				widget->window,
@@ -179,7 +177,6 @@ draw_expose_event (GtkWidget *widget,
 		height = pr.height;
 
 	      y += height + 2;
-	      g_free (summary);
 	    }
 	}
 
@@ -306,13 +303,10 @@ week_view_update (void)
 	    {
 	      event_t ev = iter->data;
 	      event_details_t evd = event_db_get_details (ev);
-	      gchar *summary = g_locale_to_utf8 (evd->summary, -1, NULL,
-	                                         NULL, NULL);
 	      pango_layout_set_width (pl_evt, available_width * PANGO_SCALE);
-	      pango_layout_set_text (pl_evt, summary, strlen (summary));
+	      pango_layout_set_text (pl_evt, evd->summary, -1);
 	      pango_layout_get_pixel_extents (pl_evt, &pr, NULL);
 	      height += pr.height + 2;
-	      g_free (summary);
 	    }
 	}
 
