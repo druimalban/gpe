@@ -4,7 +4,7 @@ INCLUDES= -I../xdr/
 LDFLAGS=-L../xdr/
 CFLAGS=-g
 
-usqld_LDADD=-lxdr -lpthread -lsqlite 
+usqld_LDADD=-lxdr -lpthread -lsqlite -lefence
 usqld_client_test_SOURCES=usqld-client-test.c
 usqld_client_test_LDADD=-lusqld -lxdr
 usqld_SOURCES=usqld-server.c usqld-conhandler.c usqld-protocol.c 

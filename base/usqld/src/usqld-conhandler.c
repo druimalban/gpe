@@ -56,13 +56,13 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
   }
   tc->database_name = strdup(database);
   /*we are set*/
-  fprintf(stderr,"sending OK\n");
+  fprintf(stderr,"database:%s is now open,sending OK\n",database);
   reply = usqld_ok_packet();
   goto connect_send_reply;
  connect_send_reply:
   assert(reply!=NULL);
   rv =  usqld_send_packet(tc->client_fd,reply);
-  //XDR_tree_free(reply);
+  XDR_tree_free(reply);
   return rv; 
 }
 
@@ -105,11 +105,11 @@ int usqld_send_row(usqld_row_context * rc,
 				  head_elems);
     if(USQLD_OK!=(rv=usqld_send_packet(rc->tc->client_fd,
 				       srpacket))){
-      //XDR_tree_free(srpacket);
+      XDR_tree_free(srpacket);
       rc->rv = rv;
       return -1;			 
     }
-    //XDR_tree_free(srpacket);
+    XDR_tree_free(srpacket);
     rc->headsent = 1;
   }
   
@@ -125,12 +125,12 @@ int usqld_send_row(usqld_row_context * rc,
 
   if(USQLD_OK!=(rv=usqld_send_packet(rc->tc->client_fd,
 				     rowpacket))){
-      //XDR_tree_free(rowpacket);
+      XDR_tree_free(rowpacket);
       rc->rv = rv;
       return -1;			 
       
   }
-  //XDR_tree_free(rowpacket);
+  XDR_tree_free(rowpacket);
   return 0;  
 }
 

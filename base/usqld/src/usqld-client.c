@@ -144,7 +144,7 @@ int usqld_exec(
     return rv;
   }
 
-  XDR_tree_free(p);
+  //  XDR_tree_free(p);
   
   if(USQLD_OK!=(rv=usqld_recv_packet(con->server_fd,&p))){
     *errmsg = strdup("usqld network: unable to get a response from query");
