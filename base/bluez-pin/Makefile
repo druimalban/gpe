@@ -6,13 +6,13 @@ bluez-pin: bluez-pin.o
 bluez-pin.o: bluez-pin.c
 	$(CC) -c -o $@ $< `gtk-config --cflags` `gdk-pixbuf-config --cflags` -I../libgpewidget -Os -Wall -fomit-frame-pointer
 
-install:
+install: bluez-pin
 	install -D bluez-pin $(DESTDIR)/usr/bin/bluez-pin
 	install -D bt-logo.png $(DESTDIR)/usr/share/pixmaps/bt-logo.png
 	strip $(DESTDIR)/usr/bin/bluez-pin
 
 clean:
-	rm bluez-pin bluez-pin.o
+	rm -f bluez-pin bluez-pin.o
 
 ipkg:	
 	rm -rf dist

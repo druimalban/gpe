@@ -132,8 +132,6 @@ void
 ask_user (int outgoing, const char *address)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
-  GdkBitmap *logo_mask;
-  GdkPixmap *logo_pixmap;
   GtkWidget *logo = NULL;
   GtkWidget *text1, *text2, *text3, *hbox, *vbox;
   GtkWidget *vbox_top;
