@@ -3,6 +3,8 @@
 	* gpe-flyer.tex: Use rcsinfo.sty, pull in all translations into
 	one document.
 
+	* gpe-flyer*.tex: Say "Revision: ".
+
 	* gpe-flyer_de.tex, gpe-flyer_es.tex: Use rcsinfo.sty.
 
 2004-04-10  Colin Marquardt  <colin@marquardt-home.de>
