@@ -18,7 +18,7 @@ libgpewidget.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) -lgtk -lgdk_imlib $(LDFLAGS)
 
 install: $(SONAME)
 	install -D $(SONAME) $(DESTDIR)/usr/lib/$(SONAME)
