@@ -1,3 +1,8 @@
+2003-02-11  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-terminal.menu: Add option -sr ro rxvt-aa call to get the
+	scrollbars on the right.
+
 2002-07-30  Moray Allan  <moray@handhelds.org>
 
 	* gpe-terminal.menu: Fixed (presumably) typo in command.
