@@ -1,3 +1,11 @@
+2002-11-74  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.26 released.
+
+2002-11-27  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/25dotfiles: Launch xkbd, not gpe-kbd.
+
 2002-11-24  Philip Blundell  <philb@gnu.org>
 
 	* gpe-session-scripts 0.25 released.

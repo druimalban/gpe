@@ -3,7 +3,7 @@
 if [ ! -f $HOME/.mbdock ]; then
 gpe-question --question "Add default applications to dock?" --buttons cancel:Cancel ok:Add || (
  mbmenu &
- monolaunch -k /usr/share/xkbd/img/kbd.xpm gpe-kbd &
+ monolaunch -k /usr/share/xkbd/img/kbd.xpm xkbd &
  xstroke &
  miniapm &
  minivol &
