@@ -186,13 +186,36 @@ gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
   g_object_get (G_OBJECT (vcard), "email-list", &l, NULL);
   while (l)
     {
-      MIMEDirVCardEMail *email;
+      MIMEDirVCardEMail *email = l->data;
+      gchar *s = NULL;
+
+      g_object_get (G_OBJECT (email), "address", &s, NULL);
+
+      if (s)
+	insert ("home.email", s);
+
       l = g_slist_next (l);
     }
+
   g_object_get (G_OBJECT (vcard), "phone-list", &l, NULL);
   while (l)
     {
-      MIMEDirVCardPhone *phone;
+      MIMEDirVCardPhone *phone = l->data;
+      gchar *s = NULL;
+      gboolean home = FALSE, work = FALSE;
+
+      g_object_get (G_OBJECT (phone), "number", &s, NULL);
+
+      if (s)
+	{
+	  g_object_get (G_OBJECT (phone), "home", &home, NULL);
+	  g_object_get (G_OBJECT (phone), "work", &work, NULL);
+	  if (home)
+	    insert ("home.phone", s);
+	  if (work)
+	    insert ("work.phone", s);
+	}
+
       l = g_slist_next (l);
     }
 

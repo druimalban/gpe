@@ -3,7 +3,7 @@ PACKAGE = gpe-beam
 DEBUG = yes
 CVSBUILD = yes
 
-all: send-vcard import-vcard
+all: vcard-export vcard-import
 
 GTKCFLAGS = `pkg-config --cflags mimedir-1.0`
 GTKLDFLAGS += `pkg-config --libs mimedir-1.0`
@@ -19,9 +19,8 @@ CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR
 
 LDFLAGS += $(GTKLDFLAGS) -lsqlite
 
-send-vcard: send-vcard.o vcard.o
-	$(CC) -o $@ $^ $(LDFLAGS) -lopenobex
-
-import-vcard: import-vcard.o vcard.o
+vcard-export: send-vcard.o vcard.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+vcard-import: import-vcard.o vcard.o
+	$(CC) -o $@ $^ $(LDFLAGS)
