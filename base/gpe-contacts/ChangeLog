@@ -1,3 +1,19 @@
+2004-02-17  Philip Blundell  <philb@gnu.org>
+
+	* callbacks.c: Deleted.
+	(retrieve_special_fields, on_edit_save_clicked,
+	on_categories_clicked, store_filename, on_edit_cancel_clicked):
+	Move to editing.c.
+	(on_bDetAdd_clicked, on_bDetRemove_clicked, on_clist8_select_row,
+	on_clist8_unselect_row, on_setup_destroy): Move to new file
+	configure.c.
+	* main.c (create_pageSetup, configure): Move to configure.c.
+	(build_categories_string, store_special_fields, edit_person): Move
+	to editing.c.
+	* Makefile (MEMBERS): Delete callbacks.  Add configure.
+	* proto.h (configure, edit_person, update_display,
+	load_panel_config): Add prototypes.
+
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
 	* db.c (db_free_categories): New function.

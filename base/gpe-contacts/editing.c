@@ -8,6 +8,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <gtk/gtk.h>
 
 #include <gpe/errorbox.h>
@@ -19,6 +20,7 @@
 #include "structure.h"
 #include "callbacks.h"
 #include "db.h"
+#include "categories.h"
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -329,5 +331,207 @@ edit_window (void)
 #endif
       
   return w;
+}
+
+void
+retrieve_special_fields (GtkWidget * edit, struct person *p)
+{
+  GSList *cl = g_object_get_data (G_OBJECT (edit), "category-widgets");
+  db_delete_tag (p, "CATEGORY");
+  while (cl)
+    {
+      GtkWidget *w = cl->data;
+      if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w)))
+	{
+	  guint c = (guint) g_object_get_data (G_OBJECT (w), "category");
+	  char buf[32];
+	  snprintf (buf, sizeof (buf) - 1, "%d", c);
+	  buf[sizeof (buf) - 1] = 0;
+	  db_set_multi_data (p, "CATEGORY", g_strdup (buf));
+	}
+      cl = cl->next;
+    }
+
+  db_delete_tag (p, "BIRTHDAY");
+  {
+    GtkDateCombo *c = GTK_DATE_COMBO (lookup_widget (edit, "datecombo"));
+    if (c->set)
+      {
+	char buf[32];
+	snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", c->year, c->month,
+		  c->day);
+	buf[sizeof (buf) - 1] = 0;
+	db_set_data (p, "BIRTHDAY", g_strdup (buf));
+      }
+  }
+}
+
+static gchar *
+build_categories_string (struct person *p)
+{
+  gchar *s = NULL;
+  GSList *iter = p->data;
+
+  for (; iter; iter = iter->next)
+    {
+      struct tag_value *t = iter->data;
+      if (!strcasecmp (t->tag, "category"))
+	{
+	  gchar *cat;
+	  cat = db_get_category_name (atoi (t->value));
+
+	  if (cat)
+	    {
+	      if (s)
+		{
+		  char *ns = g_strdup_printf ("%s, %s", s, cat);
+		  g_free (s);
+		  s = ns;
+		}
+	      else
+		s = g_strdup (cat);
+	    }
+	}
+    }
+
+  return s;
+}
+
+static void
+store_special_fields (GtkWidget * edit, struct person *p)
+{
+  GtkWidget *w;
+  struct tag_value *v;
+  gchar *str;
+
+  w = lookup_widget (edit, "datecombo");
+  v = p ? db_find_tag (p, "BIRTHDAY") : NULL;
+  if (v && v->value)
+    {
+      guint year, month, day;
+      sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
+      gtk_date_combo_set_date (GTK_DATE_COMBO (w), year, month, day);
+    }
+  else
+    gtk_date_combo_clear (GTK_DATE_COMBO (w));
+
+  str = build_categories_string (p);
+  if (str)
+    {
+      w = lookup_widget (edit, "categories-label");
+      gtk_label_set_text (GTK_LABEL (w), str);
+      g_free (str);
+    }
+}
+
+void
+edit_person (struct person *p)
+{
+  GtkWidget *w = edit_window ();
+  GtkWidget *entry = lookup_widget (w, "name_entry");
+  if (p)
+    {
+      GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
+      GSList *iter;
+      for (iter = tags; iter; iter = iter->next)
+	{
+	  GtkWidget *w = iter->data;
+	  gchar *tag = gtk_object_get_data (GTK_OBJECT (w), "db-tag");
+	  struct tag_value *v = db_find_tag (p, tag);
+	  guint pos = 0;
+	  if (v && v->value)
+	    {
+	      if (GTK_IS_EDITABLE (w))
+		gtk_editable_insert_text (GTK_EDITABLE (w), v->value,
+					  strlen (v->value), &pos);
+	      else
+		gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (w)), 
+					  v->value, -1);
+	    }
+	}
+      gtk_object_set_data (GTK_OBJECT (w), "person", p);
+    }
+  store_special_fields (w, p);
+  gtk_widget_show_all (w);
+  gtk_widget_grab_focus (entry);
+}
+
+void
+on_edit_save_clicked (GtkButton * button, gpointer user_data)
+{
+  GtkWidget *edit = (GtkWidget *) user_data;
+  GSList *tags;
+  struct person *p = g_object_get_data (G_OBJECT (edit), "person");
+  if (p == NULL)
+    p = new_person ();
+  
+  for (tags = g_object_get_data (G_OBJECT (edit), "tag-widgets");
+       tags; tags = tags->next)
+    {
+      GtkWidget *w = tags->data;
+      gchar *text, *tag;
+      if (GTK_IS_EDITABLE (w))
+	text = gtk_editable_get_chars (GTK_EDITABLE (w), 0, -1);
+      else
+	{
+	  GtkTextBuffer *buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (w));
+	  GtkTextIter start, end;
+	  gtk_text_buffer_get_bounds (buf, &start, &end);
+	  text = gtk_text_buffer_get_text (buf, &start, &end, FALSE);
+	}
+      tag = g_object_get_data (G_OBJECT (w), "db-tag");
+      db_set_data (p, tag, text);
+    }
+
+  retrieve_special_fields (edit, p);
+
+  if (commit_person (p))
+    {
+      gtk_widget_destroy (edit);
+      discard_person (p);
+      update_display ();
+    }
+}
+
+void
+on_categories_clicked (GtkButton *button, gpointer user_data)
+{
+  struct person *p;
+
+  p = g_object_get_data (G_OBJECT (user_data), "person");
+
+  change_categories (p);
+}
+
+void 
+store_filename (GtkWidget * w, GtkFileSelection * selector)
+{
+  const gchar *selected_filename =
+    gtk_file_selection_get_filename (GTK_FILE_SELECTION (selector));
+}
+
+void
+on_edit_bt_image_clicked (GtkButton * button, gpointer user_data)
+{
+  GtkWidget *filesel = gtk_file_selection_new ("Select image");
+
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
+		      "clicked", G_CALLBACK (store_filename), filesel);
+
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->ok_button),
+		    "clicked", G_CALLBACK (gtk_widget_destroy),
+		    (gpointer) filesel);
+
+  g_signal_connect (G_OBJECT (GTK_FILE_SELECTION (filesel)->cancel_button),
+		    "clicked", G_CALLBACK (gtk_widget_destroy),
+		    (gpointer) filesel);
+
+  gtk_widget_show_all (filesel);
+}
+
+void
+on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
+{
+  gtk_widget_destroy (GTK_WIDGET (user_data));
 }
 

@@ -35,7 +35,7 @@ CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall `pkg-config --cflags libxml-2.0`
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = callbacks db editing main structure support categories
+MEMBERS = db editing main structure support categories configure
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))
