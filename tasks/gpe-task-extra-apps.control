@@ -1,0 +1,10 @@
+Package: gpe-task-extra-apps
+Provides: gpe-task-extra-apps
+Replaces: gpe-task-extra-apps
+Section: base
+Priority: optional
+Version: 0.1
+Architecture: all
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: _DEPS_
+Description: Task package for extra GPE applications. You may not have a real use of such applications. And you may wish to install them separatly according to your needs. But this package is a good way to install them all.

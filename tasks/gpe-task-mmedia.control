@@ -1,0 +1,10 @@
+Package: gpe-task-mmedia
+Provides: gpe-task-mmedia
+Replaces: gpe-task-mmedia
+Section: base
+Priority: optional
+Version: 0.1
+Architecture: all
+Maintainer: GPE Hackers <gpe@handhelds.org>
+Depends: _DEPS_
+Description: Task package for GPE MultiMedia applications.
