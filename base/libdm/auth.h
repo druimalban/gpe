@@ -20,9 +20,9 @@ struct rsa_key
 
 extern void update_challenge (void);
 extern void generate_challenge (void);
+
 extern gboolean check_rsa_sig (char *display, char *data);
 
-extern GcryMPI mpi_from_sexp (GcrySexp r, char *tag);
-extern char *hex_from_mpi (GcryMPI m);
+extern void create_hash (char *display, char *challenge, size_t len, char *result);
 
 #endif

@@ -18,15 +18,6 @@
 
 static gchar *home_dir;
 
-#if 0
-GcryMPI
-mpi_from_sexp (GcrySexp r, char *tag)
-{
-  size_t len;
-  GcrySexp s = gcry_sexp_find_token (r, tag, 0);
-  return gcry_sexp_nth_mpi (s, 1, GCRYMPI_FMT_STD);
-}
-
 char *
 hex_from_mpi (GcryMPI m)
 {
@@ -36,7 +27,6 @@ hex_from_mpi (GcryMPI m)
 
   return buf;
 }
-#endif
 
 int
 generate_key (struct rsa_key *rv)

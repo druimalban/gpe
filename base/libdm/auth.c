@@ -61,57 +61,6 @@ create_hash (char *display, char *challenge, size_t len, char *result)
   g_free (buf);
 }
 
-GcryMPI
-mpi_from_sexp (GcrySexp r, char *tag)
-{
-  GcrySexp s = gcry_sexp_find_token (r, tag, 0);
-  return gcry_sexp_nth_mpi (s, 1, GCRYMPI_FMT_STD);
-}
-
-char *
-hex_from_mpi (GcryMPI m)
-{
-  char *buf;
-
-  gcry_mpi_aprint (GCRYMPI_FMT_HEX, (void *)&buf, NULL, m);
-
-  return buf;
-}
-
-gboolean
-sign_hash (struct rsa_key *k, char *hash, gchar **result)
-{
-  GcryMPI mpi;
-  GcrySexp data, sig, key;
-  size_t nb = 19;
-  int rc;
-  char *hex;
-
-  gcry_mpi_scan (&mpi, GCRYMPI_FMT_USG, hash, &nb);
-
-  gcry_sexp_build (&data, NULL, "(data (flags pkcs1) (hash sha1 %m))", mpi);
-  
-  gcry_sexp_build (&key, NULL, "(private-key (rsa (n %m) (e %m) (d %m) (p %m) (q %m) (u %m)))",
-		   k->n, k->e, k->d, k->p, k->q, k->u);
-
-  rc = gcry_pk_sign (&sig, data, key);
-
-  gcry_sexp_release (data);
-  gcry_sexp_release (key);
-  gcry_mpi_release (mpi);
-
-  if (rc)
-    return FALSE;
-
-  mpi = mpi_from_sexp (sig, "s");
-  hex = hex_from_mpi (mpi);
-  *result = g_strdup (hex);
-  gcry_free (hex);
-  gcry_mpi_release (mpi);
-
-  return TRUE;
-}
-
 gboolean
 check_signature (struct rsa_key *k, char *hash, char *sigbuf)
 {
@@ -147,7 +96,7 @@ check_signature (struct rsa_key *k, char *hash, char *sigbuf)
   return TRUE;
 }
 
-struct rsa_key *
+static struct rsa_key *
 parse_pubkey (char *s)
 {
   struct rsa_key *r;
@@ -166,7 +115,7 @@ parse_pubkey (char *s)
   return r;
 }
 
-struct rsa_key *
+static struct rsa_key *
 lookup_pubkey (u_int32_t id)
 {
   const gchar *home_dir = g_get_home_dir ();
@@ -203,7 +152,7 @@ lookup_pubkey (u_int32_t id)
   return r;
 }
 
-void
+static void
 free_pubkey (struct rsa_key *k)
 {
   gcry_mpi_release (k->n);
