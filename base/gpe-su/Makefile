@@ -2,15 +2,30 @@ PREFIX = /usr/local
 PACKAGE = gpe-su
 DEBUG = yes
 CVSBUILD = yes
+GTK2 = yes
 
 MEMBERS = gpe-su
 
-CFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags` -D_GNU_SOURCE -Wall
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0` -lfreetype -lgpewidget -lutil
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs` -lutil -lgpewidget 
+endif
+
+CPPFLAGS += -D_GNU_SOURCE
+
+CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm
+CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += -MD
+
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS = $(GTKLDFLAGS) -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
+LDFLAGS = $(GTKLDFLAGS)
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
@@ -20,7 +35,6 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget `gtk-config --libs` -lutil
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
@@ -29,25 +43,16 @@ all: $(PACKAGE)
 $(PACKAGE): $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+clean:
+	rm -f $(PACKAGE) $(OBJS) $(DEPS)
+
 install: all
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -D $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
 	install -D $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
+include ../build/Makefile.dpkg_ipkg
+include ../build/Makefile.translation
 
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
 
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
-clean:
-	rm -f $(PACKAGE) $(OBJS)

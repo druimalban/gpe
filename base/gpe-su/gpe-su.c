@@ -22,11 +22,11 @@
 
 #include <gtk/gtk.h>
 
-#include "pixmaps.h"
-#include "init.h"
-#include "render.h"
-#include "picturebutton.h"
-#include "errorbox.h"
+#include "gpe/pixmaps.h"
+#include "gpe/init.h"
+#include "gpe/render.h"
+#include "gpe/picturebutton.h"
+#include "gpe/errorbox.h"
 
 static struct gpe_icon my_icons[] = {
   { "ok" },
