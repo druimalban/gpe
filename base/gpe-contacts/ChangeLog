@@ -8,6 +8,7 @@
 	* icons/entry.xpm, icons/frame.xpm, icons/notebook.xpm: Deleted.
 	* icons/entry.png, icons/frame.png, icons/notebook.png: New.
 	* src/main.c (my_icons): Adjust filenames accordingly.
+	* Makefile (install): Likewise.
 
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
