@@ -2,9 +2,9 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include "render.h"
-#include "pixmaps.h"
-#include "picturebutton.h"
+#include <gpe/render.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
 
 #include "tetris.h"
 

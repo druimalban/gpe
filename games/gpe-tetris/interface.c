@@ -7,11 +7,11 @@
 
 #include "tetris.h"
 
-#include "init.h"
-#include "render.h"
-#include "pixmaps.h"
-#include "picturebutton.h"
-#include "what.h"
+#include <gpe/init.h>
+#include <gpe/render.h>
+#include <gpe/pixmaps.h>
+#include <gpe/picturebutton.h>
+#include <gpe/what.h>
 
 #define _(_x) gettext (_x)
 
@@ -178,7 +178,12 @@ void new_highscore_name()
   GtkWidget *label = gtk_label_new ("Your Name:");
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 
+#if GTK_MAJOR_VERSION >= 2
+  new_highscore_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+#else
   new_highscore_window = gtk_window_new (GTK_WINDOW_DIALOG);
+#endif
+  
   highscore_name_entry = gtk_entry_new ();
   ok = gpe_picture_button (new_highscore_window->style, _("OK"), "ok");
 
@@ -455,11 +460,12 @@ void show_highscore_wrapper()
 void game_show_next_block()
 {
 	show_next_block = !show_next_block;
-	if(!game_over)
+	if(!game_over) {
 		if(!show_next_block)
 			draw_block(0,0,next_block,next_frame,TRUE,TRUE);
 		else
 			draw_block(0,0,next_block,next_frame,FALSE,TRUE);
+	}
 }
 
 
@@ -520,11 +526,17 @@ int main(int argc,char *argv[])
 	gtk_widget_show(toolbar_hbox);
 
 	// toolbar
+#if GTK_MAJOR_VERSION >= 2
+	toolbar = gtk_toolbar_new ();
+	gtk_box_pack_start(GTK_BOX(toolbar_hbox),toolbar,FALSE,FALSE,0);
+	gtk_widget_show(toolbar);
+#else
 	toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
 	gtk_box_pack_start(GTK_BOX(toolbar_hbox),toolbar,FALSE,FALSE,0);
 	gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
 	gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
 	gtk_widget_show(toolbar);
+#endif
 
 	p = gpe_find_icon ("new");
 	pw = gpe_render_icon (main_window->style, p);
@@ -549,11 +561,17 @@ int main(int argc,char *argv[])
 			   _("Highscores"), _("Highscores"), pw, show_highscore_wrapper, NULL);
 
 	// toolbar 2
+#if GTK_MAJOR_VERSION >= 2
+	toolbar2 = gtk_toolbar_new ();
+	gtk_box_pack_end(GTK_BOX(toolbar_hbox),toolbar2,FALSE,FALSE,0);
+	gtk_widget_show(toolbar2);
+#else
 	toolbar2 = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
 	gtk_box_pack_end(GTK_BOX(toolbar_hbox),toolbar2,FALSE,FALSE,0);
 	gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
 	gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_SPACE_LINE);
 	gtk_widget_show(toolbar2);
+#endif
 
 	p = gpe_find_icon ("help");
 	pw = gpe_render_icon (main_window->style, p);

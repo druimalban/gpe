@@ -10,10 +10,22 @@ CVSBUILD = yes
 
 CC = gcc
 
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+ifeq ($(GTK2),yes)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+CONTROL = control1
+else
+GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
+GTKLDFLAGS = `gtk-config --libs`
+CONTROL = control
+endif
+
+CFLAGS = $(GTKCFLAGS) -DHIGHSCORE_FILE=\"$(HIGHSCORE_FILE)\" -DDOWN_DROPS -D_GNU_SOURCE -Wall -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PROGRAM)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+LDFLAGS = $(GTKLDFLAGS)
+
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS += -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
@@ -26,10 +38,8 @@ CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
 
-LIBS = `gdk-pixbuf-config --libs` `gtk-config --libs`
-
 all: $(OBJS)
-	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS) $(LIBS)
+	$(CC) $(DEFINES) $(CFLAGS) $(OBJS) -o $(PROGRAM) $(LDFLAGS)
 
 clean: 
 	rm -f *.o $(PROGRAM)
@@ -56,10 +66,5 @@ uninstall:
 dist:
 	-cd .. ; tar c gtktetris-0.5 | gzip -9 > gtktetris-0.5.tar.gz
 
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/postinst familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
+include ../../base/build/Makefile.dpkg_ipkg
+-include $(DEPS)
