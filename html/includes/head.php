@@ -24,5 +24,5 @@
 </td> 
 </tr>
 </table>
-<?php include("menu.php"); ?>
+<?php include("includes/menu.php"); ?>
 <hr>
