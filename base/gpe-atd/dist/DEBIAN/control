@@ -1,4 +1,5 @@
 Package: gpe-atd
+Replaces: atd
 Priority: optional
 Version: 0.6-gpe
 Section: admin
