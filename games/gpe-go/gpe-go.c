@@ -770,6 +770,10 @@ void play_at(int col, int row){
     return;
   }
   if(go.grid[col][row] != EMPTY){
+    //NOTE: according to SGF, a stone must be placed,
+    //      "no matter what was there before"
+    //      ==> check != EMPTY on GUI event level
+    //          to allow such thing from SGF file
     return;
   }
 
@@ -778,7 +782,6 @@ void play_at(int col, int row){
     GoItem color;
     color = color_to_play();
     put_stone(color, col, row);
-    update_last_played_mark_to(col, row);
     append_hitem(PLAY, color, col, row);
   }
 
@@ -824,11 +827,28 @@ void play_at(int col, int row){
   }
   update_capture_label();
 
-  {//--Check for suicide
+  //--Check for suicide
+  if(!is_alive_group_of(col, row)){
+    //gpe_error_box("SUICIDE");
+
+    //disallow suicides:
+    remove_stone(col, row);
+    {
+      GNode * node = go.history;
+      go.history = go.history->parent;
+      delete_hitem(node, NULL);
+      g_node_destroy(node);
+    }
+  }
+  else{ //--play the stone
+    GoItem color;
+    color = color_to_play();
+    update_last_played_mark_to(col, row);
+
+    //--next turn
+    go.turn++;
   }
 
-  //--next turn
-  go.turn++;
 }
 
 void variation_choice(){
