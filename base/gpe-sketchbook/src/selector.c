@@ -145,7 +145,7 @@ int _direntry_selector (const struct dirent * direntry){
   return 1;
 }
 
-void delete_current_sketch(gpointer __unused){
+void delete_current_sketch(){
   gchar    * fullpath_filename;
   gboolean is_deleted = FALSE;
   

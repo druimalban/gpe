@@ -60,10 +60,9 @@ void on_button_selector_open_clicked (GtkButton *button, gpointer user_data){
 void on_button_selector_delete_clicked (GtkButton *button, gpointer user_data){
   if(!is_current_sketch_selected || is_current_sketch_new) return;
   //--ask confirmation (maybe a preference)
-  _confirm_action_dialog_box("Delete sketch?",
-                             "Delete",
-                             &delete_current_sketch,
-                             NULL);
+  if(confirm_action_dialog_box("Delete sketch?","Delete")){
+    delete_current_sketch();
+  }
 }
 
 void on_clist_selector_select_row (GtkCList *clist, gint row, gint column,

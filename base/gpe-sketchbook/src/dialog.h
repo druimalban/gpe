@@ -9,8 +9,12 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-void _confirm_action_dialog_box(gchar * text,
-                                gchar * action_button_label,
-                                void (*action_function)(gpointer data),
-                                gpointer action_function_data);
+/* Exemple:
+   if(confirm_action_dialog_box("Delete document?","Delete")){
+     delete_document();
+   }
+*/
+gboolean confirm_action_dialog_box(gchar * text,
+                                   gchar * action_button_label);
+
 #endif

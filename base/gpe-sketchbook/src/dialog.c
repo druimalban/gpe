@@ -13,25 +13,17 @@
 
 #define _(_x) (_x) //gettext(_x)
 
-struct __confirm_action_data{
-  GtkWidget * dialog;
-  void (* action_func)(gpointer data);
-  gpointer action_data;
-};
+gboolean user_choice;
+#define ACTION TRUE
+#define CANCEL FALSE
 
-static void __confirm_action_dialog_box_on_action_button_clicked(GtkButton * button,
-                                                                 gpointer user_data){
-  struct __confirm_action_data * data = (struct __confirm_action_data *)user_data;
-  data->action_func(data->action_data);
-  gtk_widget_destroy(data->dialog);
+static void _confirm_action(GtkButton * button, gpointer dialog_to_destroy){
+  user_choice = ACTION;
+  gtk_widget_destroy(GTK_WIDGET(dialog_to_destroy));
 }
 
-void _confirm_action_dialog_box(gchar * text,
-                                gchar * action_button_label,
-                                void (*action_function)(gpointer data),
-                                gpointer action_function_data){  
-  
-  struct __confirm_action_data action_data;
+gboolean confirm_action_dialog_box(gchar * text,
+                                   gchar * action_button_label){  
 
   GtkWidget * dialog;
   GtkWidget * label;
@@ -39,6 +31,9 @@ void _confirm_action_dialog_box(gchar * text,
   GtkWidget * button_cancel;
 
   GtkWidget * hbox;
+
+  //--by default, cancel the action
+  user_choice = CANCEL;
 
   //--dialog
   dialog = gtk_dialog_new ();
@@ -53,12 +48,9 @@ void _confirm_action_dialog_box(gchar * text,
 
   //--action button
   button_action = gpe_picture_button (dialog->style, action_button_label, "ok");
-  action_data.dialog      = dialog;
-  action_data.action_func = action_function;
-  action_data.action_data = action_function_data;
   gtk_signal_connect (GTK_OBJECT (button_action), "clicked",
-                      GTK_SIGNAL_FUNC (__confirm_action_dialog_box_on_action_button_clicked), 
-                      &action_data);
+                      GTK_SIGNAL_FUNC (_confirm_action),
+                      (gpointer)dialog);
 
   //--cancel button
   button_cancel = gpe_picture_button (dialog->style, _("Cancel"), "cancel");
@@ -78,4 +70,6 @@ void _confirm_action_dialog_box(gchar * text,
   gtk_widget_show_all (dialog);
 
   gtk_main ();
-}
+
+  return user_choice;
+}//confirm_action_dialog_box()
