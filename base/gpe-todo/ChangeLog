@@ -1,3 +1,7 @@
+2005-01-29  Phil Blundell  <philb@gnu.org>
+
+	* Version 0.51 released.
+
 2004-11-25  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* list-ui.c: Applied patch by Christian Gillot to toggle visibility

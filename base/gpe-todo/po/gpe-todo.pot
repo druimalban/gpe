@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-28 11:55+0100\n"
+"POT-Creation-Date: 2004-11-18 22:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:60 gpe-todo.desktop.in.h:2
+#: main.c:62 gpe-todo.desktop.in.h:2
 msgid "To-do list"
 msgstr ""
 
@@ -48,48 +48,88 @@ msgstr ""
 msgid "Low"
 msgstr ""
 
-#: todo-ui.c:265
+#: todo-ui.c:271
 msgid "Summary:"
 msgstr ""
 
-#: todo-ui.c:266
+#: todo-ui.c:272
 msgid "Details:"
 msgstr ""
 
-#: todo-ui.c:309
+#: todo-ui.c:320
 msgid "Due:"
 msgstr ""
 
-#: todo-ui.c:323
+#: todo-ui.c:334
 msgid "Categories:"
 msgstr ""
 
-#: todo-ui.c:373
-msgid "Pri:"
+#: todo-ui.c:384
+msgid "Priority:"
 msgstr ""
 
-#: todo-ui.c:434
+#: todo-ui.c:446
 msgid "Edit to-do item"
 msgstr ""
 
-#: todo-ui.c:443 list-ui.c:293
+#: todo-ui.c:455
 msgid "New item"
 msgstr ""
 
-#: list-ui.c:71
+#: list-ui.c:75
 msgid "All items"
 msgstr ""
 
-#: list-ui.c:293
+#: list-ui.c:199 list-ui.c:290
+msgid "standard"
+msgstr ""
+
+#: list-ui.c:202 list-ui.c:293
+msgid "high"
+msgstr ""
+
+#: list-ui.c:205 list-ui.c:296
+msgid "low"
+msgstr ""
+
+#: list-ui.c:208 list-ui.c:299
+msgid "none"
+msgstr ""
+
+#: list-ui.c:451
 msgid "Tap here to add a new item."
 msgstr ""
 
-#: list-ui.c:313
+#: list-ui.c:455
+msgid "Delete completed items"
+msgstr ""
+
+#: list-ui.c:456
+msgid "Tap here to delete completed items."
+msgstr ""
+
+#: list-ui.c:474
 msgid "Quit"
 msgstr ""
 
-#: list-ui.c:313
+#: list-ui.c:474
 msgid "Tap here to quit the program."
+msgstr ""
+
+#: list-ui.c:496
+msgid "Status"
+msgstr ""
+
+#: list-ui.c:505
+msgid "Summary"
+msgstr ""
+
+#: list-ui.c:513
+msgid "Priority"
+msgstr ""
+
+#: list-ui.c:521
+msgid "Due Date"
 msgstr ""
 
 #: gpe-todo.desktop.in.h:1
