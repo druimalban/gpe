@@ -148,9 +148,9 @@ void about_box(gchar * app_name,
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), vbox3);
-    gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (vbox3), label_minihelp, FALSE, FALSE, 0);
-    gtk_box_pack_end   (GTK_BOX (vbox3), label_legal, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox),  scrolled_window, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox3), label_minihelp,  TRUE, TRUE, 0);
+    gtk_box_pack_end   (GTK_BOX (vbox3), label_legal,     FALSE, FALSE, 0);
     gtk_box_pack_end   (GTK_BOX (vbox3), gtk_hseparator_new(), FALSE, FALSE, 0);
     
     //OK button
