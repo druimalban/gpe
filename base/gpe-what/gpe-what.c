@@ -60,6 +60,8 @@ static struct timeval close_time;
 
 static MBPixbufImage *img_icon, *img_icon_active;
 
+int xoff, yoff;
+
 static void
 redraw_popup (void)
 {
@@ -76,12 +78,14 @@ redraw_popup (void)
 	{
 	  PangoLayoutRun *this = run->data;
 	  PangoRectangle rect;
+
+	  memset (&rect, 0, sizeof (rect));
 	  
 	  pango_layout_index_to_pos (pango_layout, this->item->offset, &rect);
 
 	  pango_xft_render (xftdraw, &fg_xftcol, pango_font, this->glyphs,
-			    XPADDING + rect.x / PANGO_SCALE,
-			    YPADDING + (rect.y + pango_font_metrics_get_ascent (pango_metrics)) / PANGO_SCALE);
+			    XPADDING + rect.x / PANGO_SCALE - xoff,
+			    YPADDING + (rect.y + pango_font_metrics_get_ascent (pango_metrics)) / PANGO_SCALE - yoff);
 	}
     }
 }
@@ -121,6 +125,8 @@ popup_box (const char *text, int length, int x, int y, int timeout)
   pango_layout_set_text (pango_layout, text, length);
 
   pango_layout_get_pixel_extents (pango_layout, &ink_rect, NULL);
+  xoff = ink_rect.x;
+  yoff = ink_rect.y;
   w = ink_rect.width + (2 * XPADDING);
   h = ink_rect.height + (2 * YPADDING);
 
@@ -369,9 +375,8 @@ main (int argc, char *argv[])
   pango_metrics = pango_font_get_metrics (pango_font, NULL);
 
   pango_layout = pango_layout_new (pango_ctx);
-  pango_layout_set_justify (pango_layout, TRUE);
-
   pango_layout_set_width (pango_layout, 180 * PANGO_SCALE);
+  pango_layout_set_alignment (pango_layout, PANGO_ALIGN_LEFT);
 
   colortmp.red   = 0;
   colortmp.green = 0;
