@@ -1,5 +1,5 @@
 PACKAGE   = keylaunch
-VERSION   = 2.0.3
+VERSION   = 2.0.4
 
 #DEBUG     = 1
 CVSBUILD  = yes
