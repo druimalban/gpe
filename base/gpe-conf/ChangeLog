@@ -1,15 +1,6 @@
-2004-09-13	Florian Boor  	<florian.boor@kernelconcepts.de>
-	
-	* soundctrl.c: Re-enabled channel filtering.
-	* sound.c: Added initialisation of audio device.
-	* sound/*: Implemented muting, restoring of mute status.
-	* tasks.c: Removed obsolete save line.
-	* sound*.c: Fixed several bugs.
-	* sound/soundsettings.sh: New script to restore sound settings.
-	* Makefile: Installation of script to Xsession.d.
-
 2004-09-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 	
+	* soundctrl.c: Fixed segfault and some minor issues.
 	* sound.c: Added some comments.
 	* main.c: Minor fix in applet handling.
 	* tasks.*: Implemented sound settings save/restore task.

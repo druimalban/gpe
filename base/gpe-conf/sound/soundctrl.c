@@ -31,9 +31,9 @@
 #include "soundctrl.h"
 
 #define DEVNAME_MIXER "/dev/mixer"
-#define DEVNAME_AUDIO1 "/dev/audio"
+#define DEVNAME_AUDIO1 "/dev/sound/dsp"
 #define DEVNAME_AUDIO2 "/dev/dsp"
-#define DEVNAME_AUDIO3 "/dev/sound/dsp"
+#define DEVNAME_AUDIO3 "/dev/audio"
 
 static char* FILE_SETTINGS = NULL;
 
@@ -44,11 +44,11 @@ static char* mixer_names[] = SOUND_DEVICE_NAMES;
 static char* mixer_labels[] = SOUND_DEVICE_LABELS;
 static t_mixer mchannels[SOUND_MIXER_NRDEVICES];
 
-static int devmask = 0, recmask = 0, recsrc = 0;
+static int devmask = 0, recmask = 0;
 static int mixfd;
 static int active_channels = 0;
 
-static char* show_channels[] = {"vol", "pcm", "mic"};
+static char* show_channels[] = {"vol", "pcm", "mic", "pcm2", "bass", "treble", NULL};
 
 
 /* initialize device to the settings our sample file uses */
@@ -268,10 +268,6 @@ sound_init(void)
 			return;
 		}
 		if (ioctl(mixfd, SOUND_MIXER_READ_RECMASK, &recmask) == -1) 
-		{
-			return;
-		}
-		if (ioctl(mixfd, SOUND_MIXER_READ_RECSRC, &recsrc) == -1) 
 		{
 			return;
 		}
