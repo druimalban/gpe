@@ -24,5 +24,5 @@
 </td> 
 </tr>
 </table>
-<?php include("includes/menu.php"); ?>
+<?php include("/home/gpe/website/html/includes/menu.php"); ?>
 <hr>
