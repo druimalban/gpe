@@ -104,12 +104,15 @@ void draw_position (GtkWidget *widget, int x, int y, GdkPixbuf *pixbuf)
   xoff = 0;
   yoff = 0;
 
+  xoff += PIECE_SIZE/2 - gdk_pixbuf_get_width (pixbuf) / 2;
+  yoff += PIECE_SIZE/2 - gdk_pixbuf_get_height (pixbuf) / 2;
+
   gdk_draw_pixbuf (widget->window,
                   widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
                   pixbuf,
                   0,0,
                   x*PIECE_SIZE+xoff,y*PIECE_SIZE+yoff,
-                  -1,-1,
+                  gdk_pixbuf_get_width(pixbuf),gdk_pixbuf_get_height(pixbuf),
                   GDK_RGB_DITHER_NORMAL,
                   0,0);
 }
@@ -160,6 +163,11 @@ expose_event_callback (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   }
 
   draw_pieces (widget);
+  
+  if (sel_x != -1) {
+	  printf ("SEL DRAW\n");
+    draw_position (widget, sel_x, sel_y, pixbuf_peg_sel);
+  }
   
   return TRUE;
 }
