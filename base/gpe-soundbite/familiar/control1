@@ -2,6 +2,7 @@ Package: gpe-soundbite2
 Section: base
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Moray Allan <moray@handhelds.org>
 Depends: libgpewidget1, gpe-icons (>= 0.04), libgsm1, libesd0
