@@ -1,3 +1,8 @@
+2004-05-22  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistview.c (_gpe_icon_list_view_expose): Avoid crash if
+	icon can't be loaded.
+
 2004-05-21  Philip Blundell  <philb@gnu.org>
 
 	* gpeiconlistview.c: Remove dependency on GtkDrawingArea.

@@ -231,7 +231,7 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      
 	      _gpe_icon_list_view_check_icon_size (il, G_OBJECT (icon));
 	      
-	      if (icon->icon) 
+	      if (icon->icon && icon->pb)
 		{
 		  gdk_pixbuf_unref (icon->pb);
 		  icon->pb = NULL;
