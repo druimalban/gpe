@@ -24,9 +24,10 @@ install-program: gpe-dm
 	mkdir -p $(DESTDIR)/etc/rc2.d
 	install gpe-dm.init $(DESTDIR)/etc/init.d/gpe-dm
 	ln -sf /etc/init.d/gpe-dm $(DESTDIR)/etc/rc2.d/S99gpe-dm
-	install -D X11/Xsession $(DESTDIR)/etc/X11/Xsession
-	install -D X11/Xinit $(DESTDIR)/etc/X11/Xinit
-	install -D X11/Xserver $(DESTDIR)/etc/X11/Xserver
+	install -d $(DESTDIR)/etc/X11
+	install Xsession $(DESTDIR)/etc/X11/Xsession
+	install Xinit $(DESTDIR)/etc/X11/Xinit
+	install Xserver $(DESTDIR)/etc/X11/Xserver
 
 clean: clean-po
 	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o

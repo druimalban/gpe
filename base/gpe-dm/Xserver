@@ -1,0 +1,28 @@
+#!/bin/sh
+# 
+if [ ! -x /usr/X11R6/bin/Xipaq ] ; then exit 0 ; fi
+
+. /etc/profile
+
+module_id() {
+    ## used to read from assets, but sometimes assets is corrupted
+    # grep "Module ID" /proc/hal/assets | sed "s/.*://"
+    echo ' iPAQ' `cat /proc/hal/model`
+}
+
+export USER=root
+export HOME=/root
+export XAPPLRESDIR=/usr/X11R6/lib/app-defaults
+export XFILESEARCHPATH=./%N%S%C.ad:/usr/X11R6/lib/X11/%L/%T/%N%S%C:/usr/X11R6/lib/X11/%l/%T/%N%S%C:/usr/X11R6/lib/X11/%T/%N%S%C:./%N%S.ad:/usr/X11R6/lib/X11/%L/%T/%N%S:/usr/X11R6/lib/X11/%l/%T/%N%S:/usr/X11R6/lib/X11/%T/%N%S:/usr/local/lib/X11/app-defaults/%N%S%C.ad
+
+ARGS="-dpi 100 -br"
+
+# start off server in conventional location.
+case `module_id` in
+	" iPAQ 3100" | " iPAQ 3800")
+		ARGS="$ARGS -screen 240x320@90" ;;
+	" iPAQ 3600" | " iPAQ 3700" | " iPAQ 3900" )
+		ARGS="$ARGS -screen 240x320@270" ;;
+esac
+
+exec Xipaq $ARGS $*
