@@ -3,7 +3,7 @@ PACKAGE = gpe-bluetooth
 DEBUG = no
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.16
+VERSION = 0.17
 
 MEMBERS = main dun sdp
 
