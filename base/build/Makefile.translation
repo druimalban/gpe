@@ -37,7 +37,7 @@ clean-po:
 	rm -rf $(DIR_PO)/*.mo
 
 $(PACKAGE).desktop: $(PACKAGE).desktop.in $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
-	intltool-merge -d $(DIR_PO) $^ $@
+	intltool-merge -d $(DIR_PO) $< $@
 
 # ------------------------------------------------------------------------
 

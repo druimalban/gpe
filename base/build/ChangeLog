@@ -1,5 +1,10 @@
 2003-02-17  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.translation ($(PACKAGE).desktop): Fix disastrous typo
+	in rule.
+
+2003-02-17  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.translation ($(PACKAGE).desktop): New rule.
 	(extract-po): Extract strings from .desktop file also.
 
