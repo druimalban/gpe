@@ -18,10 +18,13 @@
 #include <string.h>
 
 #include "tasks.h"
-#include "applets.h"
+#include "suid.h"
 
 void task_change_nameserver(char *newns)
 {
-	suid_exec ("SDNS", newns);
+	if (!geteuid())
+		change_cfg_value ("/etc/resolv.conf", "nameserver", newns, ' ');
+	else
+		fprintf(stderr,"Only root is allowed to change the nameserver!\n");
 	usleep(200000);
 }

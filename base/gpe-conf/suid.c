@@ -540,14 +540,27 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "CMCP") == 0)  // copy pcmcia config
 				{
-					fscanf (in, "%s", arg1);
-					system_printf ("/bin/cp %s %s",
+					fscanf (in, "%d", &numarg); // numarg==1 tells us the destination is wlan-ng.conf
+					if (numarg)
+					{
+						system_printf ("/bin/cp %s %s",
+						       pcmcia_tmpcfgfile,
+						       wlan_ng_cfgfile);
+						system_printf ("chmod 0644 %s",
+						       wlan_ng_cfgfile);
+						system_printf ("/bin/rm -f %s",
+						       pcmcia_tmpcfgfile);
+					}
+					else
+					{
+						system_printf ("/bin/cp %s %s",
 						       pcmcia_tmpcfgfile,
 						       pcmcia_cfgfile);
-					system_printf ("chmod 0644 %s",
+						system_printf ("chmod 0644 %s",
 						       pcmcia_cfgfile);
-					system_printf ("/bin/rm -f %s",
+						system_printf ("/bin/rm -f %s",
 						       pcmcia_tmpcfgfile);
+					}
 				}
 				else if (strcmp (cmd, "KBDC") == 0)  // write a new keyboard config file
 				{

@@ -104,6 +104,7 @@ static GList *drivers = NULL;
 static const char *pidfile = "/var/run/cardmgr.pid";
 const char *pcmcia_tmpcfgfile = "/tmp/config";
 const char *pcmcia_cfgfile = "/etc/pcmcia/config";
+const char *wlan_ng_cfgfile = "/etc/pcmcia/wlan-ng.conf";
 static char *stabfile;
 
 #define PIXMAP_PATH PREFIX "/share/pixmaps/"
@@ -126,12 +127,21 @@ save_config (char *config, int socket)
 	char **cfg;
 	char *cur_bind;
 	int new;
+	gboolean use_wlan_ng = FALSE;
+	const char *cfgfile = pcmcia_cfgfile;
+	gboolean changes = FALSE;
 
 	cfg = g_strsplit (config, "\n", 4);	// idstr,version,manfid,binding
 	cur_bind = malloc (strlen (st[socket].card.str) - 5);	// current driver binding
 	snprintf (cur_bind, strlen (st[socket].card.str) - 6,
 		  st[socket].card.str + 3);
-
+	
+	/* determine config file type */
+	if (strstr(config,"prism2_cs"))
+	{
+		use_wlan_ng = TRUE;
+		cfgfile = wlan_ng_cfgfile;
+	}
 	new = g_str_has_prefix (g_strchomp (cur_bind), "unsupported card");	// check if this is a known card
 
 	if (new)
@@ -141,11 +151,11 @@ save_config (char *config, int socket)
 	}
 
 	tmpval = "";
-	if (!g_file_get_contents (pcmcia_cfgfile, &content, &length, &err))
+	if (!g_file_get_contents (cfgfile, &content, &length, &err))
 	{
 		fprintf (stderr, "Could not access file: %s.\n",
-			 pcmcia_cfgfile);
-		if (access (pcmcia_cfgfile, F_OK))	// file exists, but access is denied
+			 cfgfile);
+		if (access (cfgfile, F_OK))	// file exists, but access is denied
 		{
 			i = 0;
 			goto writefile;
@@ -197,7 +207,10 @@ save_config (char *config, int socket)
 	}
 
 	i--;
-      writefile:
+
+
+/* writes info to configfile */	
+writefile:
 
 	if (new)
 	{
@@ -241,7 +254,83 @@ save_config (char *config, int socket)
 	}
 	fclose (fnew);
 	g_strfreev (lines);
-}
+
+	/* copy new file */
+	if (use_wlan_ng)
+		suid_exec ("CMCP", "1");
+	else
+		suid_exec ("CMCP", "0");
+	usleep(400000);
+
+	/* search other files, eliminate all entries for same id */
+	if (use_wlan_ng)
+		cfgfile = pcmcia_cfgfile;
+	else
+		cfgfile = wlan_ng_cfgfile;
+	
+	if (!g_file_get_contents (cfgfile, &content, &length, &err))
+	{
+		fprintf (stderr, "Could not access file: %s.\n",
+			 cfgfile);
+	}
+	lines = g_strsplit (content, "\n", 4096);
+	g_free (content);
+	
+	/* clean strings for easier identification */
+	for (i=0;i<4;i++)
+	{
+		delim = cfg[i];
+		cfg[i]=g_strchomp(cfg[i]);
+	}
+	
+	i = 1;
+	while (lines[i])
+	{
+		if (g_str_has_prefix (g_strchomp (lines[i]), "card") && lines[i+1] && lines[i+2] &&
+			(strstr(lines[i+1],cfg[1]) || strstr(lines[i+2],cfg[1]) || strstr(lines[i+1],cfg[2]) || strstr(lines[i+2],cfg[2])))
+		{
+			changes = TRUE;
+			for (j=0;j<3;j++)
+			{
+				delim = lines[i+j];
+				lines[i+j] = g_strdup_printf ("# %s", delim);
+				free (delim);
+			}
+			i+=2;
+			if (lines[i+1] && strlen(lines[i+1]))
+			{
+				delim = lines[i+1];
+				lines[i+1] = g_strdup_printf ("# %s", delim);
+				free (delim);
+			}
+		}
+		i++;
+	}
+	
+	if (changes)
+	{
+		fnew = fopen (pcmcia_tmpcfgfile, "w");
+		if (!fnew)
+		{
+			gpe_error_box (_("Could not write to temporal config file."));
+			return;
+		}
+
+		for (j = 0; j < i; j++)
+		{
+			fprintf (fnew, "%s\n", lines[j]);
+		}
+		fclose (fnew);
+		
+		/* copy new file */
+		if (use_wlan_ng)
+			suid_exec ("CMCP", "0");
+		else
+			suid_exec ("CMCP", "1");
+		usleep(400000);
+	}
+	g_strfreev (lines);
+}  
 
 
 static char *
@@ -395,6 +484,11 @@ get_driver_list ()
 			}
 		}
 		pclose (pipe);
+		
+		if (!access(wlan_ng_cfgfile,F_OK))
+			drivers =
+				g_list_append (drivers, g_strdup ("prism2_cs"));
+		
 		return 0;
 	}
 	return -1;
@@ -574,7 +668,7 @@ new_field (field_t * field, GtkWidget * parent, int pos, char *strlabel)
 	gtk_table_attach (GTK_TABLE (parent), label, 0, 1, pos, pos + 1,
 			  GTK_FILL, 0, 0, 0);
 	gtk_table_attach (GTK_TABLE (parent), result, 1, 2, pos, pos + 1,
-			  GTK_SHRINK | GTK_FILL, GTK_FILL | GTK_SHRINK, 0, 0);
+			  GTK_SHRINK | GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_SHRINK | GTK_EXPAND, 0, 0);
 	field->widget = result;
 	gtk_misc_set_alignment (GTK_MISC (result), 0.0, 0.5);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
@@ -948,7 +1042,6 @@ do_ioctl (int chan, int cmd)
 	}
 	if (ret != 0)
 		fprintf (stderr, "%s", strerror (errno));
-//      do_alert("%s: %s", _("Operation failed"), strerror(errno));
 }
 
 
@@ -1034,8 +1127,7 @@ dialog_driver_response (GtkDialog * dialog, gint response, gpointer param)
 
 			/* save new config */
 			save_config (config, (int) param);
-			suid_exec ("CMCP", "CMCP");
-			sleep (1);
+		
 			free (config);
 			reset_cardmgr (NULL);
 		}

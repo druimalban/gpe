@@ -22,6 +22,7 @@ extern socket_info_t st[];
 extern int ns;
 extern const char *pcmcia_tmpcfgfile;
 extern const char *pcmcia_cfgfile;
+extern const char *wlan_ng_cfgfile;
 
 int init_pcmcia_suid();
 void do_reset();

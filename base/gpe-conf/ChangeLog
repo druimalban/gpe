@@ -1,5 +1,10 @@
 When			Who				Where						What
 
+01.07.2003		Florian			cardinfo.*					Added support for wlan-ng driver. Changing from/to 
+								suid.c						this driver is now possible. 
+															Fixed displaying bug.
+								tasks.c						Don't allow non-root users to change DNS.							
+
 30.06.2003		Florian			main.c						New feature: Command line tasks.
 								tasks.*						First one: change nameserver.
 								Makefile
