@@ -1,6 +1,8 @@
 2004-01-19 Paul Jakma <paul@dishone.st>
 
 	* Makefile: bump version, gpe-irc now actually mostly works.
+	* smiley_list: add some smileys
+	* quick_list: add couple of useful phrases
 	
 2004-01-19 Paul Jakma <paul@dishone.st>
 
