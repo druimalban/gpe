@@ -45,16 +45,14 @@ int main (int argc, char *argv[])
 	GdkPixmap 	*pmap;
 	GdkBitmap 	*bmap;
 
-	setlocale (LC_ALL, "");
-
-	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-	textdomain (PACKAGE);
 		
 	if (gpe_application_init (&argc, &argv) == FALSE) exit (1);
 	if (gpe_load_icons (icon) == FALSE) exit (1);	
 	add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
 	GPE_WLANCFG = create_GPE_WLANCFG ();
+
+	gtk_widget_realize (GPE_WLANCFG);
   
 	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
 		gdk_window_set_icon (GPE_WLANCFG->window, NULL, pmap, bmap);
@@ -110,4 +108,3 @@ int main (int argc, char *argv[])
 	gtk_main ();
 	return 0;
 }
-
