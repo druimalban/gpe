@@ -31,7 +31,9 @@ void redalert_set_alarm (const char *program, guint alarm_id, time_t unixtime, c
 		return; /* FIXME: die horribly */
 
 	fprintf(f, "#!/bin/sh\n");
-	fprintf (f, "%s\n", command);
+	// I'm not sure how good an idea this is, but... :
+	fprintf(f, "export DISPLAY=:0\n");
+	fprintf(f, "%s\n", command);
 	fprintf(f, "/bin/rm $0\n");
 	fclose(f);
 
