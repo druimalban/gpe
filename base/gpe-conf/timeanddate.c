@@ -777,8 +777,8 @@ void Time_Save()
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_WARNING,
 						 GTK_BUTTONS_OK,
-						 _("To make timezone settings take effect,"\
-                       	  "you'll need to log out and log in again."));
+						 _("To make timezone settings take effect, "\
+               "you'll need to log out and log in again."));
     gtk_dialog_run(GTK_DIALOG(dialog));
   }
 }
