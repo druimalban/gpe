@@ -52,7 +52,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: all
 	install -Ds $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	install -D gpe-default-bg.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-default-bg.png
+	install -D -m 644 gpe-default-bg.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-default-bg.png
 	mkdir -p $(DESTDIR)/etc/gpe
 
 clean:
