@@ -14,9 +14,9 @@
 <p>
 <img src="images/calendar-month.png">
 </td><td>
-<img src="images/calendar-day.png">
+<img src="images/calendar-event.png">
 </td><td>
-<img src="images/cotidie-appt.png">
+<img src="images/gpe-edit.png">
 </td></tr><tr><td>
 <p>
 <img src="images/gpe-soundbite.png">
@@ -26,16 +26,15 @@
 <img src="images/gpe-todo.png">
 </td></tr><tr><td>
 <p>
+</td><td>
+<img src="images/gpe-conf-applets.png">
+</td><td>
+<img src="images/gpe-conf-buttons.png">
+</td></tr><tr><td>
+<p>
 <img src="images/gpe-mail1.png">
 </td><td>
 <img src="images/gpe-mail2.png">
-</td><td>
-<img src="images/gpe-conf-applets.png">
-</td></tr><tr><td>
-<p>
-<img src="images/gpe-conf-buttons.png">
-</td><td>
-<img src="images/gpe-edit.png">
 </td></tr>
 </table>
 
