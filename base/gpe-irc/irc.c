@@ -17,7 +17,7 @@
 
 #include <gtk/gtk.h>
 
-#define SERVICE "irc"
+#define SERVICE "ircd"
 
 typedef struct
 {
@@ -57,8 +57,9 @@ irc_server_read (IRCServer *server)
 {
   fd_set rfds;
   struct timeval tv;
-  int data_waiting;
+  int data_waiting, buf_len;
   char buf[256];
+  char *message;
 
   FD_ZERO (&rfds);
   FD_SET (server->fd, &rfds);
@@ -76,8 +77,9 @@ irc_server_read (IRCServer *server)
     if (data_waiting)
     {
       printf ("Data waiting.\n");
-      read (server->fd, buf, sizeof (buf));
-      printf ("Data: %s\n", buf);
+      buf_len = read (server->fd, buf, sizeof (buf));
+      snprintf (message, buf_len, "%s");
+      printf ("%s", message);
     }
     else
       sleep (.1);
@@ -219,9 +221,9 @@ main (int argc, char *argv[])
   if (argc > 2)
   {
     server->name = g_strdup (argv[1]);
-    server->user_info->nick = g_strdup ("argv[2]");
-    server->user_info->username = g_strdup ("argv[2]");
-    server->user_info->real_name = g_strdup ("argv[2]");
+    server->user_info->nick = g_strdup (argv[2]);
+    server->user_info->username = g_strdup (argv[2]);
+    server->user_info->real_name = g_strdup (argv[2]);
     irc_server_connect (server);
   }
   else
