@@ -18,17 +18,13 @@
 
 gint bells_and_whistles ( );
 
-gint
-on_ok_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
+gint on_resched_clicked (GtkButton *button, gpointer user_data);
 
-gint
-on_mute_clicked                     (GtkButton       *button,
-                                        gpointer         user_data);
+gint on_snooze_clicked (GtkButton *button, gpointer user_data);
 
-gint
-on_snooze_clicked                     (GtkButton       *button,
-                                        char         *user_data);
+gint on_mute_clicked (GtkButton *button, gpointer user_data);
+
+gint on_ok_clicked (GtkButton *button, gpointer user_data);
 
 GtkWidget* create_window (char *announcetext);
 
