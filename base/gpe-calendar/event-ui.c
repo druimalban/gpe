@@ -75,6 +75,9 @@ struct edit_state
 
 static GtkWidget *cached_window;
 
+/* minute, hour, day, week */
+static const int alarm_multipliers[] = { 60, 60*60, 24*60*60, 7*24*60*60 };
+ 
 static void
 destroy_user_data (gpointer p)
 {
@@ -400,26 +403,12 @@ click_ok (GtkWidget *widget, GtkWidget *d)
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     {
-      int multiplier = 1;
+      unsigned int mi;
+ 
+      mi = gtk_option_menu_get_history (GTK_OPTION_MENU (s->alarmoption));
       
       ev->flags |= FLAG_ALARM;
-      switch (gtk_option_menu_get_history (GTK_OPTION_MENU (s->alarmoption)))
-	{
-	case 0:
-	  multiplier = 60;
-	  break;
-	case 1:
-	  multiplier = 60*60;
-	  break;
-	case 2:
-	  multiplier = 24*60*60;
-	  break;
-	case 3:
-	  multiplier = 7*24*60*60;
-	  break;
-	}
-
-      ev->alarm = multiplier * gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
+      ev->alarm = alarm_multipliers[mi] * gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
     }
   else
     ev->flags &= ~FLAG_ALARM;
@@ -806,7 +795,7 @@ build_edit_event_window (void)
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   alarmmenu           = gtk_menu_new ();
   alarmbutton         = gtk_check_button_new_with_label (_("Alarm"));
-  alarmadj            = gtk_adjustment_new (5.0, 1.0, 100.0, 1.0, 5.0, 5.0);
+  alarmadj            = gtk_adjustment_new (5.0, 1.0, 10000.0, 1.0, 5.0, 5.0);
   alarmspin           = gtk_spin_button_new (GTK_ADJUSTMENT (alarmadj), 1.0, 0);
   alarmoption         = gtk_option_menu_new ();
   alarmlabel          = gtk_label_new (_("before event"));
@@ -1267,8 +1256,23 @@ edit_event (event_t ev)
     
       if (ev->flags & FLAG_ALARM)
         {
+	  unsigned int unit = 0;	/* minutes */
+
           gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
-          gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm);
+
+	  if (ev->alarm)
+	    {
+	      unsigned int i;
+
+	      for (i = 0; i < 4; i++)
+		{
+		  if ((ev->alarm % alarm_multipliers[i]) == 0)
+		    unit = i;
+		}
+	    }
+
+          gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->alarmspin), ev->alarm / alarm_multipliers[unit]);
+	  gtk_option_menu_set_history (GTK_OPTION_MENU (s->alarmoption), unit);
         }
       else
         gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), FALSE);

@@ -1,3 +1,9 @@
+2003-04-25  Philip Blundell  <philb@gnu.org>
+
+	* event-ui.c (build_edit_event_window): Increase range of alarm spinner.
+	(click_ok): Use an array rather than a switch to decode alarm multipliers.
+	(edit_event): Set units appropriately for alarm time.
+
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.42 released.
