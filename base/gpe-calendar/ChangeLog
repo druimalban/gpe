@@ -4,6 +4,8 @@
 	(click_ok): Use an array rather than a switch to decode alarm multipliers.
 	(edit_event): Set units appropriately for alarm time.
 
+	* old-db.c: Deleted.
+
 2003-04-21  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.42 released.
