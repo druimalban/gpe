@@ -490,7 +490,9 @@ power_button_filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 
   if (xev->type == KeyPress || xev->type == KeyRelease)
     {
-      if (xev->xkey.keycode == XF86XK_PowerDown)
+      KeySym ks = XKeycodeToKeysym (xev->xany.display, xev->xkey.keycode, 0);
+
+      if (ks == XF86XK_PowerDown)
 	{
 	  xev->xkey.window = DefaultRootWindow (xev->xany.display);
 	  XSendEvent (xev->xany.display, DefaultRootWindow (xev->xany.display),

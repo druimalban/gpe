@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-login
 CVSBUILD = yes
 GTK2 = yes
-VERSION = 0.47
+VERSION = 0.48
 DEBUG = no
 
 LINGUAS = de
@@ -100,7 +100,6 @@ ipkg:
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
 	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; fi
-	$(MAKE) printinfo
 
 clean: clean-po
 	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o
