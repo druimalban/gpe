@@ -1,166 +1,1644 @@
-2003-12-16  Colin Marquardt  <colin@marquardt-home.de>
+2004-04-22 20:06  michaelo
 
-	* includes/head.php: Link GPE logo to point to the GPE home page.
+	* cvs.phtml: Added a link to Gnome CVS (hopefully the last try)
 
-	* includes/menu.php: Name section "Home/News".
+2004-04-22 19:57  michaelo
 
-	* gpe-news.php: Add "News" heading.
+	* cvs.phtml: Added the location of libbluetooth sources (one more
+	  try)
 
-	* includes/menu.php: Name section "Mailing list/IRC".
+2004-04-22 19:19  michaelo
 
-	* includes/foot.php: Link "Last modified" to ChangeLog.
+	* cvs.phtml: One more try (added the location for libsdp2 sources)
 
-	* includes/menu.php: Use &middot; instead of |, looks nicer.
+2004-04-22 18:55  michaelo
 
-	* includes/foot.php: Fix "Last modified".
+	* cvs.phtml: One more try (added sources for libgmp3)
 
-	* download.phtml: Clean/reword download links.
+2004-04-22 18:46  michaelo
 
-2003-10-01  Colin Marquardt  <colin@marquardt-home.de>
+	* cvs.phtml: Added the location of libsasl2 sources: yet another
+	  excuse for checking whether the automatic update of
+	  gpe.handhelds.org after this commit works or not (working on it).
 
-	* documentation.phtml: Add link to wiki page "GpeNewbie".
-	Add a space.
+2004-04-22 18:16  michaelo
 
-2003-09-20  Colin Marquardt  <colin@marquardt-home.de>
+	* cvs.phtml: Mentioned where to find the sources of sqlite.
 
-	* cvs.phtml: Add note about make 3.80 being required.
-	Mention a few more packages one might need for compiling.
-	Need even more packages.
+2004-04-22 17:14  michaelo
 
-2003-09-18  Colin Marquardt  <colin@marquardt-home.de>
+	* cvs.phtml: Updated requirements, and mentioned libmimedir
 
-	* index.phtml: Add protest about SW patents taking the HTML from
-	debian.org.
-	Add horizontal rule.
+2004-03-29 13:38  florian
 
-2003-07-31  Philip Blundell  <philb@gnu.org>
+	* documentation.phtml: Added libgpewidget API reference hoping
+	  someone updates it :-)
 
-	* gpe-news.php: Use 'clean' theme.
-	* css/style.css: Update appropriately.
+2004-03-27 16:15  florian
 
-	* includes/menu.php: One copy of Screenshots link is enough.
+	* developers/libgpewidget.shtml: Added description of help
+	  interface.
 
-2003-07-19  Philip Blundell  <philb@gnu.org>
+2004-01-16 00:27  moray
 
-	* documentation.shtml, contact.shtml, linkres.shtml, index.shtml,
-	download.shtml: Deleted, replaced by...
-	* documentation.phtml, contact.phtml, linkres.phtml, index.phtml,
-	download.phtml: ... these.  Use PHP rather than SSI.
-	* includes/foot.php, includes/menu.php, includes/head.php: New
-	files.
+	* contact.phtml: Added elephantum.
 
-	* gpe-news.php: New file.
-	* css/style.css: Add styles used by news section.
+2004-01-15 22:45  moray
 
-2003-07-15  Colin Marquardt  <colin@marquardt-home.de>
+	* images/: people.png, people_eu.png: Updated maps.
 
-	* documentation/uml_gtk2_xcompile.shtml: First version. Many
-	thanks to Toby Gray.
+2004-01-15 22:39  moray
 
-	* documentation.shtml: Add link to 
-	"User Mode Linux cross compiling environment with GTK2".
+	* people.coord: Added elephantum.
 
-2003-07-13  Colin Marquardt  <colin@marquardt-home.de>
+2003-12-16 21:13  cmarqu
 
-	* linkres.shtml: Add link to art.gnome.org.
+	* download.phtml: [no log message]
 
-2003-06-13  Colin Marquardt  <colin@marquardt-home.de>
+2003-12-16 21:11  cmarqu
 
-	* linkres.shtml: Add link to Carlitus' NOIA icons.
+	* includes/head.php, ChangeLog: * includes/head.php: Link GPE logo
+	  to point to the GPE home page.
 
-2003-06-11  Colin Marquardt  <colin@marquardt-home.de>
+2003-12-16 21:06  cmarqu
 
-	* projects/GPE-usqld.shtml: Small update.
+	* includes/menu.php, ChangeLog, gpe-news.php: * includes/menu.php:
+	  Name section "Home/News".
 
-	* documentation.shtml: Link libgpewidget docs.
+	  * gpe-news.php: Add "News" heading.
 
-	* linkres.shtml: Link the website ChangeLog.
+2003-12-16 20:59  cmarqu
 
-2003-06-10  Colin Marquardt  <colin@marquardt-home.de>
+	* ChangeLog, includes/foot.php, includes/menu.php: *
+	  includes/menu.php: Name section "Mailing list/IRC".
 
-	* linkres.shtml: Add links to icons.
+	  * includes/foot.php: Link "Last modified" to ChangeLog.
 
-2003-06-09  Colin Marquardt  <colin@marquardt-home.de>
+	  * includes/menu.php: Use &middot; instead of |, looks nicer.
 
-	* screenshots.shtml: Nicer source layout. Add captions.
-	Nicer table layout. Set size explicitly for the images.
-	Use two new scaps.
+	  * includes/foot.php: Fix "Last modified".
 
-	* documentation/wireless.shtml: New addtitle and pagename. Use
-	scaps from CVS.
-	Revert "pagename".
+2003-12-16 20:51  cmarqu
 
-	* documentation.shtml: New file.
-	Don't mention GPE in the title.
+	* includes/foot.php, includes/menu.php, ChangeLog: *
+	  includes/menu.php: Use &middot; instead of |, looks nicer.
 
-	* documentation/wireless.shtml: New file, taken from the wiki.
+	  * includes/foot.php: Fix "Last modified".
 
-2003-04-11  Colin Marquardt  <colin@marquardt-home.de>
+2003-12-16 20:26  cmarqu
 
-	* linkres.shtml (href): Link QEMU.
+	* ChangeLog, download.phtml: Clean/reword download links.
+
+2003-11-15 20:49  pb
+
+	* index.phtml: comment out software patent protest stuff
+
+2003-10-26 02:20  moray
+
+	* contact.phtml: fix my location to be edinburgh
+
+2003-10-20 22:42  moray
+
+	* people.coord: Move myself back to Edinburgh.
+
+2003-10-19 19:28  pb
+
+	* download.phtml: fix broken link to cvs
+
+2003-10-01 22:10  cmarqu
+
+	* ChangeLog, documentation.phtml: Add a space.
+
+2003-10-01 22:05  cmarqu
+
+	* ChangeLog, documentation.phtml: Add link to wiki page
+	  "GpeNewbie".
+
+2003-09-20 01:59  cmarqu
+
+	* ChangeLog, cvs.phtml: Add note about make 3.80 being required.
+	  Mention a few more packages one might need for compiling.  Need
+	  even more packages.
+
+2003-09-20 01:26  cmarqu
+
+	* ChangeLog, cvs.phtml: Add note about make 3.80 being required.
+
+2003-09-18 19:57  cmarqu
+
+	* ChangeLog, index.phtml: Add protest about SW patents taking the
+	  HTML from debian.org.  Add horizontal rule.
+
+2003-09-18 19:52  cmarqu
+
+	* ChangeLog, index.phtml: Add protest about SW patents taking the
+	  HTML from debian.org.
+
+2003-08-01 01:32  pb
+
+	* includes/head.php: set table width=100%
+
+2003-08-01 01:29  pb
+
+	* includes/head.php: undo last change
+
+2003-08-01 01:28  pb
+
+	* includes/head.php: remove alignment and width
+
+2003-08-01 01:27  pb
+
+	* includes/head.php: add handhelds.org logo and link
+
+2003-08-01 00:53  luc
+
+	* projects/GPE-notebook.shtml: changed my mail
+
+2003-08-01 00:40  pb
+
+	* cvs.phtml: reinstate lost cvs page
+
+2003-07-31 12:04  pb
+
+	* ChangeLog: changelog
+
+2003-07-31 11:59  pb
+
+	* gpe-news.php, css/style.css: tweak appearance of news section
+
+2003-07-30 21:30  pb
+
+	* includes/menu.php: remove spare copy of screenshots link
+
+2003-07-27 21:44  pb
+
+	* projects/index.phtml: fix path to foot.phtml
+
+2003-07-19 17:30  pb
+
+	* includes/head.php: full path to menu.php
+
+2003-07-19 17:28  pb
+
+	* contact.php, contact.phtml, cvs.php, documentation.php,
+	  documentation.phtml, download.php, download.phtml, index.php,
+	  index.phtml, linkres.php, linkres.phtml, includes/menu.php,
+	  projects/index.phtml, projects/index.shtml: phtml
+
+2003-07-19 17:26  pb
+
+	* includes/: foot.shtml, head.shtml, menu.shtml: bring back .shtml
+	  includes
+
+2003-07-19 17:18  pb
+
+	* documentation.php, documentation.shtml, index.shtml, linkres.php,
+	  linkres.shtml, projects.shtml, screenshots.shtml,
+	  standards.shtml, includes/foot.shtml, includes/head.shtml,
+	  includes/menu.php, includes/menu.shtml: death to shtml!
+
+2003-07-19 17:11  pb
+
+	* contact.php, contact.shtml, cvs.php, cvs.shtml, download.php,
+	  download.shtml, includes/menu.php: convert more shtml pages to
+	  php
+
+2003-07-19 17:01  pb
+
+	* includes/menu.php: correct naming of links page
+
+2003-07-19 16:59  pb
+
+	* includes/menu.php: pass $pagename explicitly to function call
+
+2003-07-18 12:30  pb
+
+	* gpe-news.php: new file
+
+2003-07-18 12:29  pb
+
+	* index.php, new-index.php: make php index the default
+
+2003-07-18 12:01  pb
+
+	* css/style.css: borrow some extra stuff from handhelds.org for now
+
+2003-07-18 11:58  pb
+
+	* includes/: head.php, menu.php: menu fixes
+
+2003-07-18 11:54  pb
+
+	* includes/: head.php, menu.php: add php-ized menu
+
+2003-07-18 11:43  pb
+
+	* includes/head.php: fix typo
+
+2003-07-18 11:36  pb
+
+	* new-index.php, includes/foot.php, includes/head.php: working on
+	  php
+
+2003-07-15 21:24  cmarqu
+
+	* ChangeLog, documentation.shtml,
+	  documentation/uml_gtk2_xcompile.shtml: *
+	  documentation/uml_gtk2_xcompile.shtml: First version. Many thanks
+	  to Toby Gray.
+
+	  * documentation.shtml: Add link to "User Mode Linux cross
+	  compiling environment with GTK2".
+
+2003-07-13 22:37  cmarqu
+
+	* ChangeLog, linkres.shtml: Add link to art.gnome.org.
+
+2003-07-07 22:04  moray
+
+	* includes/head.shtml, projects/GPE-games.shtml: Use UTF-8
+	  character encoding for all pages.
+
+2003-07-02 10:06  mibus
+
+	* projects/GPE-games.shtml: Add notices for othello / ataxx.
+
+2003-07-02 10:04  mibus
+
+	* projects/GPE-appmgr.shtml: Add a big notice about the
+	  non-inclusion of appmgr in the normal install. :)
+
+2003-06-27 23:39  occ
+
+	* includes/menu.shtml: change screenshots link.
+
+2003-06-13 22:50  cmarqu
+
+	* ChangeLog, linkres.shtml: Add link to Carlitus' NOIA icons.
+
+2003-06-11 20:23  cmarqu
+
+	* ChangeLog, documentation.shtml, projects/GPE-usqld.shtml: *
+	  projects/GPE-usqld.shtml: Small update.  * documentation.shtml:
+	  Link libgpewidget docs.
+
+2003-06-11 20:12  cmarqu
+
+	* ChangeLog, linkres.shtml: Link the website ChangeLog.
+
+2003-06-10 21:45  cmarqu
+
+	* ChangeLog, linkres.shtml: Add links to icons.
+
+2003-06-09 04:31  cmarqu
+
+	* ChangeLog, screenshots.shtml: Use two new scaps.
+
+2003-06-09 04:29  cmarqu
+
+	* images/: gpe-login-ownerinfo.png, mbdesktop.png: New scaps.
+
+2003-06-09 04:17  cmarqu
+
+	* ChangeLog, screenshots.shtml: Nicer table layout. Set size
+	  explicitly for the images.
+
+2003-06-09 03:44  cmarqu
+
+	* ChangeLog, screenshots.shtml: Nicer source layout. Add captions.
+
+2003-06-09 03:07  cmarqu
+
+	* ChangeLog, documentation/wireless.shtml: *
+	  documentation/wireless.shtml: New addtitle and pagename. Use
+	  scaps from CVS.  Revert "pagename".
+
+	  * documentation/wireless.shtml: New file, taken from the wiki.
+
+2003-06-09 02:56  cmarqu
+
+	* documentation/wireless.shtml, ChangeLog, documentation.shtml: *
+	  documentation/wireless.shtml: New addtitle and pagename. Use
+	  scaps from CVS.
+
+	  * documentation.shtml: New file.  Don't mention GPE in the title.
+
+	  * documentation/wireless.shtml: New file, taken from the wiki.
+
+2003-06-09 02:50  cmarqu
+
+	* documentation/: wireless_assign_driver.png,
+	  wireless_card_recognized.png, wireless_network_address.png,
+	  wireless_network_cur_cfg.png, wireless_network_new_if.png,
+	  wireless_network_settings.png, wireless_wlancfg_adhoc.png,
+	  wireless_wlancfg_channel.png, wireless_wlancfg_wep.png,
+	  wireless_wlancfg_wep_key.png: Scaps.
+
+2003-06-09 02:35  cmarqu
+
+	* includes/menu.shtml, ChangeLog, documentation.shtml,
+	  documentation/wireless.shtml: * documentation.shtml: New file.
+
+	  * documentation/wireless.shtml: New file, taken from the wiki.
+
+2003-05-28 03:45  jg
+
+	* contact.shtml, people.coord: add myself...
+
+2003-04-24 17:58  nils
+
+	* index.shtml: Added Open Source and GPL/LGPL statements.
+
+2003-04-24 17:46  nils
+
+	* linkres.shtml: Fixed href typos.
+
+2003-04-15 16:26  nils
+
+	* linkres.shtml: Fixed typo
+
+2003-04-11 22:33  cmarqu
+
+	* linkres.shtml: (href): Link QEMU.
+
+2003-04-11 22:28  cmarqu
 
 	* includes/menu.shtml: Point to hh.org bugzilla.
 
-2003-04-10  Colin Marquardt  <colin@marquardt-home.de>
+2003-04-10 19:08  cmarqu
 
-	* linkres.shtml (href): Add link to XMerge.
+	* linkres.shtml: (href): Add link to XMerge.
 
-2003-04-08  Colin Marquardt  <colin@marquardt-home.de>
+2003-04-08 23:38  cmarqu
+
+	* linkres.shtml: Fix HTML.  Again. Sigh.
+
+2003-04-08 23:35  cmarqu
 
 	* linkres.shtml: Fix HTML.
-	Again. Sigh.
 
-2003-04-01  Colin Marquardt  <colin@marquardt-home.de>
+2003-04-01 18:43  cmarqu
 
-	* download.shtml (href): Change to new boot image location.
+	* download.shtml: (href): Change to new boot image location.
 
-2003-03-31  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-31 19:54  cmarqu
 
 	* cvs.shtml: Mention pb's new makefile that can build GPE as a
-	whole.
+	  whole.
 
-2003-03-16  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-16 15:02  cmarqu
+
+	* contact.shtml: Add info about our GMANE newsgroup.  (href):
+	  Changed wording.
+
+2003-03-16 14:58  cmarqu
 
 	* contact.shtml: Add info about our GMANE newsgroup.
-	(href): Changed wording.
 
-2003-03-12  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-13 00:18  cmarqu
 
-	* download.shtml (href): Remove link to pb's images.
+	* download.shtml: Remove link to pb's images.
 
-2003-03-09  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-09 17:27  cmarqu
 
-	* download.shtml (href): Link to installation instructions.
+	* download.shtml: (href): Link to installation instructions.
 
-2003-03-06  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-08 10:00  florian
+
+	* contact.shtml: Updated Oles name...
+
+2003-03-07 19:01  cmarqu
+
+	* contact.shtml, people.coord, images/people.png,
+	  images/people_eu.png: Add paul, florian and ole.
+
+2003-03-06 00:14  cmarqu
 
 	* contact.shtml: List archive is now at
-	http://handhelds.org/hypermail/gpe/current/.
+	  http://handhelds.org/hypermail/gpe/current/.
 
-2003-03-05  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-05 21:04  cmarqu
 
-	* download.shtml (href): Link to nelson's bootgpe2 images.
+	* download.shtml: (href): Link to nelson's bootgpe2 images.
 
-2003-02-27  Colin Marquardt  <colin@marquardt-home.de>
+2003-03-05 12:52  dctanner
+
+	* developers/libgpewidget.shtml: More documentation.
+
+2003-03-01 03:43  dctanner
+
+	* developers/libgpewidget.shtml: Started some stuff about toolbars.
+
+2003-03-01 03:18  dctanner
+
+	* developers/: libgpewidget.shtml, images/stock_button_both.png,
+	  images/stock_button_icon.png, images/stock_button_label.png,
+	  images/toolbar.png, images/window_toolbar_icon.png: New cute
+	  little widget images.
+
+2003-02-28 23:58  dctanner
+
+	* developers/libgpewidget.shtml: Beginning of new libgpewidget
+	  documentation.
+
+2003-02-27 00:24  cmarqu
+
+	* download.shtml: Link to pb's bootgpe2 images.  Link to our
+	  sources directory.  Minor change.
+
+2003-02-27 00:22  cmarqu
+
+	* download.shtml: Link to pb's bootgpe2 images.  Link to our
+	  sources directory.
+
+2003-02-27 00:16  cmarqu
 
 	* download.shtml: Link to pb's bootgpe2 images.
-	Link to our sources directory.
-	Minor change.
 
-2003-02-23  Colin Marquardt  <colin@marquardt-home.de>
+2003-02-25 02:10  luc
+
+	* screenshots.shtml, images/gpe-sketchbook-0.1.4-selector.png,
+	  images/gpe-sketchbook-0.1.4-sketch1.png,
+	  images/gpe-sketchbook-0.1.4-sketch2.png,
+	  images/gpe-sketchbook-select-icon.png,
+	  images/gpe-sketchbook-select-list.png,
+	  images/gpe-sketchbook-sketch1.png,
+	  images/gpe-sketchbook-sketch2.png,
+	  images/gpe-sketchbook-sketch3.png, projects/GPE-notebook.shtml:
+	  updated gpe-sketchbook screenshots
+
+2003-02-23 16:21  moray
+
+	* css/style.css: Use Bitstream Vera Sans Mono for monospaced text
+	  if available.
+
+2003-02-23 15:45  moray
+
+	* css/style.css: Try 'Bitstream Vera Sans' font name.
+
+2003-02-23 15:42  moray
+
+	* css/style.css: Fix 'Vera' font name to 'Vera Sans'
+
+2003-02-23 00:52  cmarqu
 
 	* cvs.shtml: Fix small typo.
 
-2003-02-18  Colin Marquardt  <colin@marquardt-home.de>
+2003-02-18 21:08  cmarqu
 
 	* linkres.shtml: Link to XSETTINGS and D-BUS.
 
+2003-02-18 01:18  cmarqu
+
 	* includes/foot.shtml: Remove quick links.
 
+2003-02-18 00:27  cmarqu
+
+	* css/style.css: Still not bright enough.
+
+2003-02-18 00:19  cmarqu
+
 	* css/style.css: Make background a bit lighter. Let's see...
-	Still not bright enough.
 
-2003-02-13  Colin Marquardt  <colin@marquardt-home.de>
+2003-02-13 17:48  cmarqu
 
-	* linkres.shtml (href): Add links to multisync and PaxAnima.
+	* linkres.shtml: (href): Add links to multisync and PaxAnima.
+
+2003-02-12 18:27  cmarqu
+
+	* cvs.shtml, download.shtml, includes/head.shtml: Some small
+	  tweaks.
+
+2003-02-12 18:16  cmarqu
+
+	* contact.shtml, download.shtml, index.shtml, linkres.shtml,
+	  standards.shtml, css/style.css, includes/menu.shtml,
+	  projects/GPE-setup.shtml: Major rearrangement.
+
+2003-02-12 17:42  cmarqu
+
+	* index.shtml, css/style.css, includes/foot.shtml: Fiddle around
+	  with colors and stuff.
+
+2003-02-12 17:35  cmarqu
+
+	* css/style.css, index.shtml: Add quick links to main page. Make
+	  css a bit nicer.
+
+2003-02-02 20:32  cmarqu
+
+	* images/: people.png, people_eu.png: Added spung.
+
+2003-02-02 20:20  luis
+
+	* contact.shtml, people.coord: luis, the ssllloooww coder
+
+2003-01-13 20:17  nils
+
+	* linkres.shtml: Updated SQLite link. (NF 030113)
+
+2003-01-12 21:49  cmarqu
+
+	* images/people_eu.png: Added Erez Doron.
+
+2003-01-12 21:48  cmarqu
+
+	* people.coord: Fix bug in _eu image generation example.
+
+2003-01-12 21:41  cmarqu
+
+	* images/people.png: Added Erez Doron.
+
+2003-01-12 21:37  cmarqu
+
+	* contact.shtml, people.coord: Added Erez Doron.
+
+2003-01-08 02:54  moray
+
+	* screenshots.shtml: Added gpe-contacts image to screenshots page.
+
+2003-01-07 00:26  moray
+
+	* images/favicon.ico: New file: site icon for browsers that want
+	  one.
+
+2003-01-07 00:26  moray
+
+	* includes/head.shtml: Added reference to site icon for browsers
+	  that want one.
+
+2003-01-05 18:28  moray
+
+	* css/style.css: Use same style for PRE as for CODE, TT
+
+2003-01-05 18:27  moray
+
+	* projects/libgpewidget.shtml: Fixed incorrect tag.
+
+2003-01-05 15:24  moray
+
+	* standards.shtml: Fixed size of final heading.
+
+2003-01-05 15:23  moray
+
+	* linkres.shtml, standards.shtml: Moved standards information from
+	  linkres to standards.
+
+2003-01-05 15:10  moray
+
+	* linkres.shtml: Added link to Palm UI doc.
+
+2003-01-05 14:29  moray
+
+	* standards.shtml: Added <p> tag where needed.
+
+2003-01-05 14:27  moray
+
+	* standards.shtml: Added notes about freedesktop, HIG.
+
+2003-01-05 04:56  moray
+
+	* download.shtml: Added trailing slash.
+
+2003-01-05 04:56  moray
+
+	* download.shtml: Hm, the GPE specific package download area is
+	  rather out of date.
+
+2003-01-05 04:42  moray
+
+	* download.shtml: Minor rewordings/presentation changes.
+
+2003-01-05 04:37  moray
+
+	* projects/index.shtml: Further tidying.
+
+2003-01-05 04:32  moray
+
+	* projects/index.shtml: Tied up presentation.
+
+2003-01-05 04:18  moray
+
+	* projects/index.shtml: Put headings in heading tags.
+
+2003-01-05 04:16  moray
+
+	* index.shtml: Further rewordings (which hopefully make the text
+	  read more easily).
+
+2003-01-05 03:37  moray
+
+	* css/style.css: (Trying again on text alignment.)
+
+2003-01-05 03:36  moray
+
+	* css/style.css: Specify left-alignment in tables.
+
+2003-01-05 03:34  moray
+
+	* contact.shtml: Move table headers (back?) into TH tags.
+
+2003-01-05 03:34  moray
+
+	* css/style.css: Set TH style.
+
+2003-01-05 03:30  moray
+
+	* cvs.shtml: Removed </P> tags where <P> not open.
+
+2003-01-05 03:29  moray
+
+	* linkres.shtml: Removed unnecessary/invalid <P>, </P> tags.
+
+2003-01-05 03:27  moray
+
+	* download.shtml: Added quotes around a parameter value as
+	  required.
+
+2003-01-05 03:26  moray
+
+	* contact.shtml: Added (required) ALT text.
+
+2003-01-05 03:23  moray
+
+	* contact.shtml: Removed </P> where <P> not open.
+
+2003-01-05 03:22  moray
+
+	* contact.shtml: Moved misplaced </P> tags.
+
+2003-01-05 03:20  moray
+
+	* screenshots.shtml: Added (required) alt text.
+
+2003-01-05 03:18  moray
+
+	* projects/index.shtml: Removed misplaced </P>
+
+2003-01-05 03:17  moray
+
+	* includes/foot.shtml: Trying with <P> removed for now
+
+2003-01-05 03:15  moray
+
+	* includes/foot.shtml: Moved <HR>
+
+2003-01-05 03:14  moray
+
+	* includes/foot.shtml: Remove spurious table closure.
+
+2003-01-05 03:13  moray
+
+	* includes/head.shtml: Correct valign="center" to valign="middle".
+
+2003-01-05 03:12  moray
+
+	* includes/head.shtml: Don't try to specify number of table
+	  cols/rows.
+
+2003-01-05 03:10  moray
+
+	* includes/head.shtml: Don't try to set 'TEXT' text color with
+	  'fgcolor'.
+
+2003-01-05 03:08  moray
+
+	* includes/head.shtml: Specify character set encoding - should we
+	  instead say the pages are UTF-8?
+
+2003-01-05 03:03  moray
+
+	* includes/head.shtml: Add DTD reference (loose, for now).
+
+2003-01-05 02:57  moray
+
+	* includes/head.shtml: Linked in CSS stylesheet.
+
+2003-01-05 02:54  moray
+
+	* includes/head.shtml: Fixed table cell width for logo.
+
+2003-01-05 02:54  moray
+
+	* includes/: foot.shtml, menu.shtml: Added <div> wrapper.
+
+2003-01-05 02:51  moray
+
+	* css/style.css: New file.
+
+2003-01-05 01:24  moray
+
+	* includes/menu.shtml: Improve item consistency.
+
+2003-01-05 01:22  moray
+
+	* index.shtml: Added comma.
+
+2003-01-05 00:37  moray
+
+	* index.shtml: Minor change to phrasing.
+
+2003-01-05 00:15  moray
+
+	* linkres.shtml: Fixed typo; added link.
+
+2003-01-05 00:11  moray
+
+	* cvs.shtml: Minor fixes/changes.
+
+2003-01-05 00:02  moray
+
+	* standards.shtml: Fixed typos.
+
+2003-01-04 23:56  moray
+
+	* download.shtml: Fix typo.
+
+2003-01-04 16:42  pb
+
+	* projects/GPE-login.shtml: add logout shot
+
+2003-01-04 16:42  pb
+
+	* images/gpe-logout.png: new
+
+2003-01-03 05:43  moray
+
+	* images/gpe-julia.png: Updated image.
+
+2003-01-03 02:26  pb
+
+	* projects/GPE-games.shtml: add lights out screenshot
+
+2003-01-03 02:25  pb
+
+	* images/gpe-lights.png: new
+
+2003-01-03 02:16  pb
+
+	* projects/GPE-games.shtml: update
+
+2003-01-03 01:51  pb
+
+	* images/xdemineur.png: new
+
+2003-01-02 05:34  moray
+
+	* projects/GPE-games.shtml: Added mentions of xdemineur, gpe-julia.
+
+2003-01-02 05:28  moray
+
+	* images/gpe-julia.png: New file.
+
+2003-01-02 01:55  pb
+
+	* linkres.shtml: add link to xdg
+
+2003-01-02 01:50  pb
+
+	* projects/index.shtml: remove comments about addressbook being a
+	  must-have, todo being the "last typical PIM", etc.
+
+2003-01-02 01:50  pb
+
+	* projects/GPE-address.shtml: put screenshots under the body of the
+	  text
+
+2003-01-02 01:42  pb
+
+	* projects/GPE-media.shtml: update
+
+2002-12-29 17:50  pb
+
+	* projects/GPE-what.shtml: add screenshot
+
+2002-12-29 17:48  pb
+
+	* images/gpe-what.png: another screenshot
+
+2002-12-29 17:42  dctanner
+
+	* images/: calendar-event.png, calendar-month.png,
+	  calendar-week.png, gpe-contacts.png, gpe-contacts2.png,
+	  gpe-edit.png, gpe-filemanager.png, gpe-login-new.png,
+	  gpe-login.png, gpe-todo.png: New screenshots.
+
+2002-12-29 14:50  pb
+
+	* projects/GPE-calendar.shtml: distinguish between current and
+	  proposed features.
+
+2002-12-29 14:47  pb
+
+	* projects/GPE-notebook.shtml: fix typo
+
+2002-12-29 14:45  pb
+
+	* projects/GPE-address.shtml: update a bit
+
+2002-12-29 14:45  pb
+
+	* projects/GPE-login.shtml: updates.  mention hard keys mode
+
+2002-12-29 14:40  pb
+
+	* index.shtml: improve wording of first paragraph
+
+2002-10-28 11:56  nils
+
+	* linkres.shtml: Umm... typo fixing ;)
+
+2002-10-28 11:54  nils
+
+	* linkres.shtml: Added GPE Wiki to links/resources.
+
+2002-10-14 20:34  cmarqu
+
+	* images/gpe-conf-buttons.png: New version, old one was chopped
+	  off...
+
+2002-10-14 19:33  moray
+
+	* screenshots.shtml: added filemanager screenshot to page
+
+2002-10-14 19:33  moray
+
+	* images/gpe-filemanager.png: added filemanager screenshot
+
+2002-10-14 19:30  moray
+
+	* screenshots.shtml: screenshots.shtml
+
+2002-10-14 19:29  moray
+
+	* images/: gpe-login.png, gpe-login2.png: Replaced old login
+	  screenshot with newer one.
+
+2002-10-14 19:27  moray
+
+	* images/gtktetris.png, projects/GPE-games.shtml:
+	  Removed ancient gtktetris image.
+
+2002-10-14 19:25  moray
+
+	* projects/GPE-calendar.shtml: fixed screenshot to new image name
+
+2002-10-14 19:22  moray
+
+	* images/: calendar-week.png, calendar-day.png: updated image
+
+2002-10-14 19:17  moray
+
+	* projects/GPE-address.shtml: added updated screenshots to page
+
+2002-10-14 19:14  moray
+
+	* projects/GPE-setup.shtml: added screenshot to page
+
+2002-10-14 19:11  moray
+
+	* screenshots.shtml: reordered screenshots to fit
+
+2002-10-14 19:09  moray
+
+	* screenshots.shtml: reordered screenshots
+
+2002-10-14 19:03  moray
+
+	* images/: calendar-event.png, cotidie-appt.png, gpe-todo.png:
+	  updated image
+
+2002-10-14 18:58  moray
+
+	* images/: terminal.png, calendar-month.png: updated image
+
+2002-10-14 18:56  moray
+
+	* images/: address2.gif, gpe-contacts2.png: replaced ancient image
+	  with up-to-date version
+
+2002-10-14 18:52  moray
+
+	* images/: address1.gif, gpe-contacts.png: replaced ancient image
+	  with up-to-date version
+
+2002-10-14 18:47  moray
+
+	* images/dillo.png: added screenshot of (scaled, aa) dillo
+
+2002-10-12 18:58  pb
+
+	* screenshots.shtml, images/gpe-edit.png: add gpe-edit
+
+2002-10-12 18:41  pb
+
+	* images/gpe-appmgr.png: new appmgr
+
+2002-09-28 13:37  nils
+
+	* contact.shtml: Changed my name's spelling :)
+
+2002-09-25 00:58  cmarqu
+
+	* screenshots.shtml: Add gpe-conf-buttons.png.	CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/screenshots.shtml CVS:
+
+2002-09-25 00:47  cmarqu
+
+	* images/gpe-conf-buttons.png: New file.
+
+2002-09-25 00:35  cmarqu
+
+	* screenshots.shtml: Add gpe-conf-applets.png.	CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/screenshots.shtml CVS:
+
+2002-09-25 00:35  cmarqu
+
+	* images/gpe-conf-applets.png: Show the gpe-conf applets in
+	  gpe-appmgr.
+
+2002-09-25 00:24  cmarqu
+
+	* screenshots.shtml: Use gpe-login2.png, not gpe-login.png.  CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/screenshots.shtml CVS:
+
+2002-09-25 00:23  cmarqu
+
+	* images/gpe-login2.png: Show bg image and gpe-ownerinfo.
+
+2002-09-25 00:16  cmarqu
+
+	* includes/foot.shtml: Stupid typo.  CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/includes/foot.shtml CVS:
+
+2002-09-25 00:15  cmarqu
+
+	* includes/foot.shtml: Make a bit nicer.  CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/includes/foot.shtml CVS:
+
+2002-09-25 00:11  cmarqu
+
+	* cvs.shtml: Add myself as page maintainer.  CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/cvs.shtml CVS:
+
+2002-09-25 00:09  cmarqu
+
+	* cvs.shtml: Fix stupid instructions :) CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/cvs.shtml CVS:
+
+2002-09-21 19:44  cmarqu
+
+	* cvs.shtml: Tell users about prerequisites.
+
+2002-09-12 00:47  occ
+
+	* contact.shtml, download.shtml: added mod do download.shtml by ??
+	  updated my nick in contact.shtml
+
+2002-09-12 00:43  occ
+
+	* images/login-xkbd.png: added from pb.
+
+2002-09-10 17:22  nils
+
+	* download.shtml: Added hint to Familiar 0.6 or later.
+
+2002-09-09 20:20  cmarqu
+
+	* contact.shtml: Changed my mail address.
+
+2002-09-09 20:19  cmarqu
+
+	* contact.shtml: Two new users, owen and wizly.
+
+2002-09-09 20:19  cmarqu
+
+	* images/people_eu.png, images/people.png, people.coord: Two new
+	  people, owen and wizly.
+
+2002-09-09 17:37  occ
+
+	* contact.shtml: changed colin to the maintainer of this page, as i
+	  am getting requests to update the map,
+
+2002-09-01 17:26  cmarqu
+
+	* projects/libgpewidget.shtml: Add more clarification for the icon
+	  loading procedure.
+
+2002-09-01 13:11  cmarqu
+
+	* projects/libgpewidget.shtml: Mention that gpe_find_icon loads
+	  filename.png, not filename.
+
+2002-08-30 02:28  pionchon
+
+	* contact.shtml: spelling fix
+
+2002-08-28 23:53  cmarqu
+
+	* images/people.png, images/people_eu.png, contact.shtml,
+	  people.coord: * images/people_eu.png, images/people.png: New
+	  runs.
+
+	  * people.coord: Moved luc up in the list. Updated xplanet
+	  instructions for the Europe map so that luc is on it.
+
+	  * contact.shtml: Added luc.
+
+2002-08-19 17:29  cmarqu
+
+	* globe.shtml: Removed.
+
+2002-08-19 00:26  cmarqu
+
+	* projects/: GPE-mail.shtml, GPE-notebook.shtml: Fixed typos.
+
+2002-08-18 14:48  pionchon
+
+	* people.coord: added luc
+
+2002-08-18 14:41  pionchon
+
+	* images/gpe-sketchbook-0.1.4-selector.png,
+	  images/gpe-sketchbook-0.1.4-sketch1.png,
+	  images/gpe-sketchbook-0.1.4-sketch2.png,
+	  projects/GPE-notebook.shtml: added gpe-sketchbook
+
+2002-08-18 09:25  erez
+
+	* projects/: GPE-mail.shtml, index.shtml: [no log message]
+
+2002-08-17 16:02  cmarqu
+
+	* contact.shtml, people.coord, images/people.png: Generate new
+	  files, add some more instructions.
+
+2002-08-16 23:49  moray
+
+	* contact.shtml: s/too see/to see/
+
+2002-08-16 19:40  jamey
+
+	* people.coord: added jamey
+
+2002-08-16 19:09  tardyp
+
+	* projects/GPE-setup.shtml: [no log message]
+
+2002-08-16 19:01  cmarqu
+
+	* contact.shtml: Added pierre in the list.
+
+2002-08-16 18:58  cmarqu
+
+	* contact.shtml: Add location of the used image.
+
+2002-08-16 18:21  cmarqu
+
+	* images/people.png, images/people_eu.png, people.coord: Added
+	  pierre.
+
+2002-08-16 18:10  cmarqu
+
+	* contact.shtml: Added width and height attributes to image tags.
+	  Provide new command line.
+
+2002-08-16 18:05  cmarqu
+
+	* people.coord: Added two commented-out reference points.
+
+2002-08-16 18:04  cmarqu
+
+	* images/: people.png, people_eu.png: Nicer images.
+
+2002-08-15 23:05  moray
+
+	* contact.shtml: Changed spelling of my name.
+
+2002-08-15 22:57  cmarqu
+
+	* includes/menu.shtml: Remove globe.shtml.
+
+2002-08-15 22:57  cmarqu
+
+	* people.coord: Add nils, do alignment.
+
+2002-08-15 22:56  cmarqu
+
+	* index.shtml: Say that we use X and GTK.
+
+2002-08-15 22:55  cmarqu
+
+	* contact.shtml: Add people's locations.
+
+2002-08-15 22:46  cmarqu
+
+	* images/: people.png, people_eu.png: Added Files:  people.png
+	  people_eu.png
+
+2002-08-15 21:52  cmarqu
+
+	* people.coord: Some locations.
+
+2002-08-15 21:39  moray
+
+	* globe.shtml: added myself
+
+2002-08-13 10:41  erez
+
+	* images/gpe-mail1.png: change picture
+
+2002-08-13 10:28  erez
+
+	* projects/GPE-mail.shtml: typo fix
+
+2002-08-13 08:37  erez
+
+	* projects/index.shtml: add link to gpe-mail
+
+2002-08-13 00:49  pb
+
+	* globe.shtml: add self
+
+2002-08-13 00:19  erez
+
+	* screenshots.shtml: add gpe-mail screenshots
+
+2002-08-13 00:08  erez
+
+	* images/gpe-mail1.png, images/gpe-mail2.png,
+	  projects/GPE-mail.shtml: create gpe-mail page
+
+2002-08-07 17:40  cmarqu
+
+	* globe.shtml: Added myself.
+
+2002-08-07 11:24  mibus
+
+	* globe.shtml, includes/menu.shtml: "GPE around the globe" page for
+	  where people live.
+
+2002-07-31 21:42  cmarqu
+
+	* index.shtml: Add "The" in title.
+
+2002-07-31 21:39  cmarqu
+
+	* index.shtml: s/GNU Palmtop Environment/GPE Palmtop Environment/
+
+2002-07-31 18:17  cmarqu
+
+	* cvs.shtml: Rearrange page.  CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/cvs.shtml CVS:
+
+2002-07-31 18:13  cmarqu
+
+	* cvs.shtml: Short instruction about CVS checkout.  CVS:
+	  ----------------------------------------------------------------------
+	  CVS: Enter Log.  Lines beginning with `CVS:' are removed
+	  automatically CVS: CVS: Commiting
+	  /opt/applications/gpe_cvs_dev/gpe/html/cvs.shtml CVS:
+
+2002-07-29 22:28  cmarqu
+
+	* projects/GPE-login.shtml: Mention gpe-login.geometry.
+
+2002-07-29 21:35  pb
+
+	* projects/GPE-login.shtml: remove outdated button stuff
+
+2002-07-14 18:15  mibus
+
+	* projects/GPE-appmgr.shtml: CVS *is* the latest appmgr now
+
+2002-07-14 18:13  mibus
+
+	* images/gpe-appmgr.png: Show off the latest CVS appmgr
+
+2002-07-13 19:16  pb
+
+	* projects/: GPE-what.html, GPE-what.shtml, index.shtml: add
+	  gpe-what
+
+2002-07-13 19:15  pb
+
+	* projects/GPE-what.html: New file
+
+2002-07-13 19:11  pb
+
+	* projects/libgpewidget.shtml: add more documentation
+
+2002-06-28 02:52  moray
+
+	* images/terminal.png: updated screenshot, with dock visible
+
+2002-06-28 02:47  moray
+
+	* screenshots.shtml, images/gpe-tetris.png: added gpe-tetris
+	  screenshot
+
+2002-06-25 01:23  occ
+
+	* contact.shtml: added IRC port.
+
+2002-06-25 01:18  occ
+
+	* includes/menu.shtml: changed "Mailing List" to "Contact/Mailing
+	  List" to reflect the fact that it now has IRC and Mailing List
+	  info
+
+2002-06-25 01:17  occ
+
+	* contact.shtml: added IRC info,
+
+2002-06-25 00:39  moray
+
+	* includes/menu.shtml: changed menu as per user complaints to list
+	  ;)
+
+2002-06-25 00:35  moray
+
+	* includes/menu.shtml: changed menu as per user complaints to list
+	  ;)
+
+2002-06-23 06:09  moray
+
+	* screenshots.shtml: rearranged slightly, and added gpe-soundbite
+	  image
+
+2002-06-23 05:38  moray
+
+	* images/gpe-soundbite.png: redid gpe-soundbite screenshot with
+	  newer gpe-appmgr as background ;)
+
+2002-06-23 05:32  moray
+
+	* projects/GPE-soundbite.shtml, images/gpe-soundbite.png: added
+	  gpe-soundbite screenshot
+
+2002-06-21 22:30  moray
+
+	* images/gpe-appmgr.png: more recent screenshot
+
+2002-06-21 20:01  moray
+
+	* projects/GPE-soundbite.shtml: removed doubt over GSM codec
+
+2002-06-21 20:00  moray
+
+	* projects/GPE-soundbite.shtml: updated page slightly to reflect
+	  progress made
+
+2002-06-21 19:47  moray
+
+	* projects/GPE-todo.shtml: added screenshot
+
+2002-06-21 19:45  moray
+
+	* screenshots.shtml: added gpe-todo screenshot
+
+2002-06-21 19:45  moray
+
+	* images/gpe-todo.png: new screenshot of gpe-todo
+
+2002-06-21 19:40  moray
+
+	* screenshots.shtml: added terminal screenshot
+
+2002-06-21 19:40  moray
+
+	* images/terminal.png: screenshot with xkbd, terminal emulator
+
+2002-06-21 19:31  moray
+
+	* images/: cotidie-appt.png, gpe-appmgr.png: replaced with
+	  fullscreen screenshot from ipaq
+
+2002-06-21 19:27  moray
+
+	* images/calendar-week.png: replaced with fullscreen screenshot
+	  from ipaq
+
+2002-06-21 19:22  moray
+
+	* images/: calendar-day.png, calendar-month.png: replaced with
+	  fullscreen screenshot from ipaq
+
+2002-06-21 19:05  moray
+
+	* images/: gpe-login-new.png, gpe-login.png: replaced with fullsize
+	  screenshot from ipaq
+
+2002-06-21 19:01  moray
+
+	* includes/menu.shtml: added menu item for screenshots page
+
+2002-06-21 18:56  moray
+
+	* screenshots.shtml: rearranged to fix table layout
+
+2002-06-21 18:53  moray
+
+	* screenshots.shtml: removed least pretty screenshots
+
+2002-06-21 18:49  moray
+
+	* screenshots.shtml: fixed image src locations
+
+2002-06-21 18:47  moray
+
+	* screenshots.shtml: new page with a collection of GPE screenshots
+
+2002-06-20 09:50  pb
+
+	* projects/GPE-login.shtml: update description of gpe-login
+
+2002-06-19 21:34  moray
+
+	* projects/GPE-soundbite.shtml:
+
+	  Updated page to say that I'm working on it...
+
+2002-06-19 21:33  cmarqu
+
+	* projects/GPE-login.shtml: Document /etc/X11/gpe-login.buttons.
+
+2002-06-19 21:09  cmarqu
+
+	* projects/GPE-login.shtml: Added some explanations that Phil gave
+	  on #gpe.
+
+2002-06-18 16:20  cmarqu
+
+	* projects/GPE-media.shtml: Added a link to mibus' home page.
+
+2002-06-17 20:39  pb
+
+	* includes/menu.shtml: add link to bugs
+
+2002-06-16 20:02  pb
+
+	* projects/GPE-today.shtml: remove unwanted email address
+
+2002-06-16 19:49  pb
+
+	* projects/GPE-today.shtml: fix title
+
+2002-06-16 19:48  pb
+
+	* projects/: GPE-time-tracker.shtml, GPE-today.shtml, index.shtml:
+	  add today
+
+2002-06-16 19:47  pb
+
+	* images/today.png: add today screencap
+
+2002-06-08 13:44  pb
+
+	* projects/: index.shtml, libgpewidget.shtml: add libgpewidget
+
+2002-06-08 13:02  pb
+
+	* projects/index.shtml: add link to wiki
+
+2002-06-08 12:36  pb
+
+	* projects/GPE-login.shtml: add missing "pub"
+
+2002-06-08 12:35  pb
+
+	* projects/GPE-login.shtml: add link to xstuff.tgz
+
+2002-06-08 12:32  pb
+
+	* images/gpe-login-new.png, images/gpe-login.png,
+	  projects/GPE-login.shtml: update gpe-login screenshots
+
+2002-06-08 12:28  pb
+
+	* images/bluez-pin.png, projects/bluez-pin.shtml: add bluez-pin
+	  screenshot
+
+2002-06-08 12:25  pb
+
+	* projects/GPE-calendar.shtml: rearrange images slightly
+
+2002-06-08 12:24  pb
+
+	* images/calendar-day.png, images/calendar-month.png,
+	  images/calendar-week.png, images/cotidie-main.png,
+	  images/cotidie-week.png, projects/GPE-calendar.shtml: update
+	  calendar screenshots
+
+2002-06-08 12:18  pb
+
+	* projects/: GPE-soundbite.html, GPE-soundbite.shtml: whoops
+
+2002-06-08 12:17  pb
+
+	* projects/: GPE-alarms.shtml, GPE-setup.shtml, GPE-soundbite.html,
+	  GPE-time-tracker.shtml, bluez-pin.shtml, index.shtml: update
+	  project information
+
+2002-05-29 11:26  pb
+
+	* projects/GPE-login.shtml: Fix typo.
+
+2002-05-29 11:25  pb
+
+	* projects/index.shtml: Add time tracker, login
+
+2002-05-29 11:25  pb
+
+	* projects/GPE-time-tracker.shtml: new file
+
+2002-05-29 11:14  pb
+
+	* projects/GPE-login.shtml: fix header information
+
+2002-05-29 11:12  pb
+
+	* projects/GPE-login.shtml, images/gpe-login.png: new file
+
+2002-05-29 11:01  pb
+
+	* projects/GPE-calendar.shtml: Add mention of precompiled binaries
+
+2002-05-29 11:00  pb
+
+	* index.shtml: Fix spelling, etc.
+
+2002-05-29 11:00  pb
+
+	* projects/GPE-todo.shtml: Add some information
+
+2002-05-15 11:54  occ
+
+	* download.shtml: oops
+
+2002-05-15 11:47  occ
+
+	* includes/menu.shtml: oops
+
+2002-05-15 11:46  occ
+
+	* download.shtml, includes/menu.shtml: added download page.
+
+2002-05-14 14:47  occ
+
+	* projects/GPE-usqld.shtml: changed version number
+
+2002-05-14 00:31  pb
+
+	* projects/GPE-calendar.shtml: remove "todo" screenshot, no longer
+	  applicable here
+
+2002-05-14 00:27  pb
+
+	* images/cotidie-appt.png: update
+
+2002-05-13 15:40  occ
+
+	* projects/GPE-usqld.shtml: first release!.
+
+2002-05-12 20:31  pb
+
+	* projects/GPE-calendar.shtml: update
+
+2002-05-04 09:08  mibus
+
+	* projects/GPE-appmgr.shtml: Add an http:// to an href; thanks to
+	  Peter Korsgaard <jacmet@sunsite.dk>
+
+2002-04-03 12:42  mibus
+
+	* projects/GPE-appmgr.shtml: Removed the 'Why no status-bar'
+	  section.
+
+2002-04-03 12:38  mibus
+
+	* projects/GPE-appmgr.shtml: Modify 'Functions' a little.
+
+2002-04-03 12:32  mibus
+
+	* projects/GPE-appmgr.shtml: Add a note pointing to
+	  handhelds.org/~mibus/ for appmgr tidbits.  Say what CVS module
+	  the appmgr is.
+
+2002-04-03 10:58  occ
+
+	* pim.sql: just to test the update script
+
+2002-04-02 14:30  mibus
+
+	* projects/GPE-appmgr.shtml: Explain why appmgr doesn't show many
+	  (old) apps in the list.
+
+2002-03-30 19:28  nils
+
+	* contact.shtml, cvs.shtml, index.shtml, linkres.shtml,
+	  includes/foot.shtml, includes/menu.shtml, projects/index.shtml:
+	  Update update updates ;) And some minor fixes... (NF)
+
+2002-03-27 15:45  occ
+
+	* gpe.shtml, index.html, index.shtml, standards.shtml: moved
+	  gpe.shtml to index.shtml moved pim.sql to a link, as it isn't
+	  finished and including it makes it look mor official than it is.
+
+2002-03-27 10:02  mibus
+
+	* cvs.shtml: CVS root is /cvs/gpe not /cvs/GPE.
+
+2002-03-27 10:01  mibus
+
+	* images/fmenu.png, images/gpe-appmgr.png,
+	  projects/GPE-appmgr.shtml: Update appmgr page to mention
+	  gpe-appmgr not fmenu.
+
+2002-03-27 09:36  occ
+
+	* projects/GPE-usqld.shtml: updates
+
+2002-03-26 18:45  occ
+
+	* projects/: GPE-media.shtml, GPE-todo.shtml: fixed long titles too
+
+2002-03-26 18:44  occ
+
+	* projects/: GPE-media.shtml, GPE-todo.shtml: fixed a couple of
+	  titles
+
+2002-03-26 18:29  occ
+
+	* images/gpe-logo-lr.jpg: lo-res logo
+
+2002-03-26 18:12  occ
+
+	* projects/index.shtml: added a <p> where there should be one
+
+2002-03-26 18:11  occ
+
+	* projects/GPE-usqld.shtml: typo!
+
+2002-03-26 17:57  occ
+
+	* contact.shtml, cvs.shtml, gpe.shtml, index.html, linkres.shtml,
+	  pim.sql, projects.shtml, standards.shtml, images/gpe_logo.png,
+	  includes/foot.shtml, includes/head.shtml, includes/menu.shtml,
+	  images/address1.gif, images/address2.gif,
+	  images/cotidie-appt.png, images/cotidie-main.png,
+	  images/cotidie-todo.png, images/cotidie-week.png,
+	  images/fmenu.png, images/gpe-logo.png, images/gtktetris.png,
+	  images/menu.gif, images/solitaire.png, images/status.png,
+	  images/wm-shot1.png, images/wm-shot2.png, images/wm-shot3.png,
+	  projects/GPE-address.shtml, projects/GPE-alarms.shtml,
+	  projects/GPE-appmgr.shtml, projects/index.shtml,
+	  projects/GPE-calendar.shtml, projects/GPE-games.shtml,
+	  projects/GPE-media.shtml, projects/GPE-notebook.shtml,
+	  projects/GPE-setup.shtml, projects/GPE-todo.shtml,
+	  projects/GPE-usqld.shtml: Initial revision
+
+2002-03-26 17:57  occ
+
+	* contact.shtml, cvs.shtml, gpe.shtml, index.html, linkres.shtml,
+	  pim.sql, projects.shtml, standards.shtml, images/gpe_logo.png,
+	  includes/foot.shtml, includes/head.shtml, includes/menu.shtml,
+	  images/address1.gif, images/address2.gif,
+	  images/cotidie-appt.png, images/cotidie-main.png,
+	  images/cotidie-todo.png, images/cotidie-week.png,
+	  images/fmenu.png, images/gpe-logo.png, images/gtktetris.png,
+	  images/menu.gif, images/solitaire.png, images/status.png,
+	  images/wm-shot1.png, images/wm-shot2.png, images/wm-shot3.png,
+	  projects/GPE-address.shtml, projects/GPE-alarms.shtml,
+	  projects/GPE-appmgr.shtml, projects/index.shtml,
+	  projects/GPE-calendar.shtml, projects/GPE-games.shtml,
+	  projects/GPE-media.shtml, projects/GPE-notebook.shtml,
+	  projects/GPE-setup.shtml, projects/GPE-todo.shtml,
+	  projects/GPE-usqld.shtml: initial website import
 
