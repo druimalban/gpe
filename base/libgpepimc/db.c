@@ -2,7 +2,7 @@
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
+ * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  */
@@ -136,4 +136,7 @@ gpe_pim_category_new (const gchar *name, gint *id)
 void 
 gpe_pim_category_delete (struct gpe_pim_category *c)
 {
+  sqlite_exec_printf (db, "delete from category where id='%d'", NULL, NULL, NULL, c->id);
+
+  categories = g_slist_remove (categories, c);
 }
