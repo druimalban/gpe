@@ -1,5 +1,10 @@
 2002-08-30  Philip Blundell  <philb@gnu.org>
 
+	* event-db.h (FLAG_TENTATIVE): New.
+	(calendar_time_t): New type.
+	(event_t): Delete "confirmed".  Change type of "start" to 
+	calendar_time_t.
+
 	* event-ui.c (click_delete): Test for flags & FLAG_ALARM.
 	(edit_event): Likewise.
 	(click_ok): Likewise.  Set FLAG_ALARM bit appropriately.

@@ -28,15 +28,18 @@ typedef struct event_details_s
   char *description;
 } *event_details_t;
 
-#define FLAG_UNTIMED  (1 << 0)
-#define FLAG_ALARM    (1 << 1)
+#define FLAG_UNTIMED   (1 << 0)
+#define FLAG_ALARM     (1 << 1)
+#define FLAG_TENTATIVE (1 << 2)
+
+typedef time_t calendar_time_t;
 
 typedef struct event_s
 {
   unsigned long uid;
 
-  time_t start, modified;
-  unsigned long confirmed;	/* 0 == tentative */
+  calendar_time_t start;
+  time_t modified;
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* seconds before event */
   unsigned long flags;
