@@ -194,10 +194,15 @@ draw_expose_event (GtkWidget *widget,
 	    }
 	}
 
-      if (week_days[day].is_active)
+	  if ((!force_today && week_days[day].is_active)
+          || (force_today && week_days[day].is_today))
         {
-	      gdk_draw_rectangle (drawable, red_gc, FALSE, 0, week_days[day].y0, max_width, week_days[day].y1 - week_days[day].y0);
-          gdk_draw_rectangle (drawable, red_gc, FALSE, 1, week_days[day].y0 + 1, max_width - 2, week_days[day].y1 - week_days[day].y0 - 2);
+	      gdk_draw_rectangle (drawable, red_gc, FALSE, 0, 
+                              week_days[day].y0, max_width, 
+                              week_days[day].y1 - week_days[day].y0);
+          gdk_draw_rectangle (drawable, red_gc, FALSE, 1, 
+                              week_days[day].y0 + 1, max_width - 2, 
+                              week_days[day].y1 - week_days[day].y0 - 2);
           draw_sep = FALSE;
         }
       else

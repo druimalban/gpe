@@ -290,7 +290,7 @@ draw_expose_event (GtkWidget *widget,
 	  struct render_ctl *c = &rc[d];
 	  guint y = (j + 1) * ys;
 
-	  if (c->active)
+	  if ((!force_today && c->active) || (force_today && c->today))
 	    {
 	      gdk_draw_rectangle (drawable, red_gc, FALSE,
 				  x, y, xs, ys);
@@ -385,7 +385,7 @@ month_view_update ()
       day_events[day] = event_db_list_for_period (start, end);
 
       for (iter = day_events[day]; iter; iter = iter->next)
-	((event_t)iter->data)->mark = FALSE;
+        ((event_t)iter->data)->mark = FALSE;
     }
 
   wday = 1 - day_of_week(year, month + 1, 1);
@@ -414,7 +414,7 @@ month_view_update ()
               c->active = c->today;
               c->initialized = TRUE;
             } 
-       if (c->active) 
+       if (c->active)
          active_day = day;            
     }
 
@@ -457,7 +457,7 @@ resize_table (GtkWidget *widget,
       ys = height / 7;
 
       if (ys > xs)
-	ys = xs;
+        ys = xs;
 
       gtk_widget_draw (draw, NULL);
     }
@@ -467,7 +467,7 @@ static gboolean
 month_view_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *user_data)
 {
   struct render_ctl *c;
-printf("kp\n");  
+ 
   if (k->keyval == GDK_Escape)
     {
       c = &rc[active_day];
@@ -531,7 +531,7 @@ printf("kp\n");
     {
       if ((active_day >= 7) && (rc[active_day-7].valid))
         {
-          active_day-=7;
+          active_day -= 7;
         }
       else
         gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(widget)),
@@ -577,7 +577,7 @@ printf("kp\n");
           tm.tm_sec = 0;
           selected_time = mktime (&tm);
           if (pop_window) 
-            gtk_widget_destroy (pop_window);
+              gtk_widget_destroy (pop_window);
           set_time_and_day_view (selected_time);    
         }
       return TRUE; 

@@ -775,11 +775,12 @@ build_edit_event_window (void)
 
   gtk_box_pack_start (GTK_BOX (menutypehbox), menutypelabel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (menutypehbox), s->optionmenutype, TRUE, TRUE, 0);
-
   /* Building the summary wigets */
   summaryhbox         = gtk_hbox_new (FALSE, boxspacing);
   summaryentry        = gtk_entry_new ();
-  summarylabel        = gtk_label_new (_("Summary:"));
+  summarylabel        = gtk_label_new (_("Text:"));
+  
+  gtk_misc_set_alignment(GTK_MISC(summarylabel),0,0.5);
 
   gtk_box_pack_start (GTK_BOX (summaryhbox), summarylabel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (summaryhbox), summaryentry, TRUE, TRUE, 0);
@@ -795,10 +796,13 @@ build_edit_event_window (void)
   gtk_combo_set_popdown_strings (GTK_COMBO (starttime), times);
   gtk_combo_set_popdown_strings (GTK_COMBO (endtime), times);
 
-  startdatelabel      = gtk_label_new (_("Start:"));
-  enddatelabel        = gtk_label_new (_("End:"));
-  starttimelabel      = gtk_label_new (_("at:"));
-  endtimelabel        = gtk_label_new (_("at:"));
+  startdatelabel      = gtk_label_new (_("Start at:"));
+  enddatelabel        = gtk_label_new (_("End at:"));
+  starttimelabel      = gtk_label_new (_("on:"));
+  endtimelabel        = gtk_label_new (_("on:"));
+  
+  gtk_misc_set_alignment(GTK_MISC(startdatelabel),0,0.5);
+  gtk_misc_set_alignment(GTK_MISC(enddatelabel),0,0.5);
 
   s->startdate        = gtk_date_combo_new ();
   s->enddate          = gtk_date_combo_new ();
@@ -812,27 +816,27 @@ build_edit_event_window (void)
 
   gtk_table_attach (GTK_TABLE (startendtable), startdatelabel, 0, 1, 0, 1,
                     0, 0, 0, boxspacing);
-  gtk_table_attach (GTK_TABLE (startendtable), s->startdate, 1, 2, 0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (startendtable), starttime, 1, 2, 0, 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), starttimelabel, 2, 3, 0, 1,
                     0, 0, 0, boxspacing);
-  gtk_table_attach (GTK_TABLE (startendtable), starttime, 3, 4, 0, 1,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (startendtable), s->startdate, 3, 4, 0, 1,
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), enddatelabel, 0, 1, 1, 2,
                     0, 0, 0, boxspacing);
-  gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 1, 2, 1, 2,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (startendtable), endtime, 1, 2, 1, 2,
+                    GTK_FILL, GTK_FILL, 0, 0);
   gtk_table_attach (GTK_TABLE (startendtable), endtimelabel, 2, 3, 1, 2,
                     0, 0, 0, boxspacing);
-  gtk_table_attach (GTK_TABLE (startendtable), endtime, 3, 4, 1, 2,
-                    GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
+  gtk_table_attach (GTK_TABLE (startendtable), s->enddate, 3, 4, 1, 2,
+                    GTK_FILL, GTK_FILL, 0, 0);
 
   gtk_box_pack_start (GTK_BOX (vboxappointment), startendtable, FALSE, FALSE, 0);
 
   datetimetable       = gtk_table_new (2, 2, FALSE);
 
   datelabel           = gtk_label_new (_("Date:"));
-  gtk_misc_set_alignment (GTK_MISC (datelabel), 0.0, 0.0);
+  gtk_misc_set_alignment (GTK_MISC (datelabel), 0.0, 0.5);
 
   s->remindertimebutton = gtk_check_button_new_with_label (_("Time:"));
   g_signal_connect (G_OBJECT (s->remindertimebutton), "clicked",
@@ -868,7 +872,7 @@ build_edit_event_window (void)
 
   /* Categories */
   cathbox = gtk_hbox_new (FALSE, 0);
-  catbutton = gtk_button_new_with_label (_("Categories:"));
+  catbutton = gtk_button_new_with_label (_("Categories"));
   catlabel = gtk_label_new (NULL);
 
   gtk_box_pack_start (GTK_BOX (cathbox), catbutton, FALSE, FALSE, 0);
@@ -953,10 +957,14 @@ build_edit_event_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (vboxrecur), border);
 
   /* Button box */
-  buttonbox           = gtk_hbox_new (FALSE, 0);
+  buttonbox           = gtk_hbutton_box_new ();
   buttonok            = gtk_button_new_from_stock (GTK_STOCK_SAVE);
   buttoncancel        = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   buttondelete        = gtk_button_new_from_stock (GTK_STOCK_DELETE);
+
+  gtk_container_set_border_width (GTK_CONTAINER (buttonbox), border);
+  gtk_button_box_set_layout(GTK_BUTTON_BOX(buttonbox),GTK_BUTTONBOX_END);
+  gtk_box_set_spacing(GTK_BOX(buttonbox),4);
 
   gtk_box_pack_start (GTK_BOX (buttonbox), buttondelete, TRUE, FALSE, 4);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 4);
@@ -1284,7 +1292,12 @@ build_edit_event_window (void)
   gpe_set_window_icon (window, "icon");
 
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
-
+  gtk_window_set_transient_for (GTK_WINDOW(window), GTK_WINDOW(main_window));
+  
+  /* if screen is large enough, make it a real dialog */
+  if (gdk_screen_width() > 320)
+    gtk_window_set_type_hint(GTK_WINDOW(window),GDK_WINDOW_TYPE_HINT_DIALOG);
+  
   g_signal_connect (G_OBJECT (window), "delete_event",
                     G_CALLBACK (edit_finished), NULL);
 
@@ -1292,6 +1305,9 @@ build_edit_event_window (void)
 		            G_CALLBACK (event_ui_key_press_event), NULL);
   gtk_widget_add_events (GTK_WIDGET (window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
+  
+  GTK_WIDGET_SET_FLAGS (summaryentry, GTK_CAN_DEFAULT);
+  gtk_widget_grab_default(summaryentry);
   
   return window;
 }

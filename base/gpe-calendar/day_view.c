@@ -42,7 +42,7 @@ static GtkStyle *light_style, *dark_style, *time_style;
 static GdkColor light_color, dark_color, time_color;
 
 
-static void
+void
 delete_event (event_t ev)
 {
   event_t ev_real;
@@ -566,7 +566,8 @@ day_view(void)
   g_object_set_data (G_OBJECT (vbox), "update_hook",
 		     (gpointer) update_hook_callback);
 
-  scroll_adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+  scroll_adjustment = 
+    gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
 
   g_signal_connect (G_OBJECT (day_list), "key_press_event", 
 		    G_CALLBACK (list_key_press_event), NULL);

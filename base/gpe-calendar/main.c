@@ -45,6 +45,7 @@ extern gboolean gpe_calendar_start_xsettings (void);
 
 GList *times;
 time_t viewtime;
+gboolean force_today = FALSE;
 
 GtkWidget *main_window, *pop_window;
 GtkWidget *notebook;
@@ -145,6 +146,7 @@ new_appointment (void)
 static void
 set_today(void)
 {
+  force_today = !force_today;
   time (&viewtime);
   update_current_view ();
 }
@@ -155,6 +157,22 @@ set_time_and_day_view(time_t selected_time)
   viewtime=selected_time;
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (day_button), TRUE);
   new_view (day);
+  update_current_view();
+}
+
+void
+set_day(int year, int month, int day)
+{
+  struct tm tm;
+  time_t selected_time;
+  localtime_r (&viewtime, &tm);
+  tm.tm_year = year;
+  tm.tm_mon = month;
+  tm.tm_mday = day;
+  tm.tm_hour = 0;
+  tm.tm_min = 0;
+  tm.tm_sec = 0;
+  selected_time = mktime (&tm);
   update_current_view();
 }
 

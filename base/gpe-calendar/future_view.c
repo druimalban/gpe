@@ -12,12 +12,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <libintl.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
+
+#include <gpe/question.h>
 
 #include "globals.h"
 #include "future_view.h"
 #include "event-ui.h"
+
+#define _(x) gettext(x)
 
 GSList *events;
 GtkWidget *future_list;
@@ -28,6 +34,10 @@ selection_made (GtkWidget *clist, int row, gint column,
 {
   event_t ev;
 
+  g_object_set_data(G_OBJECT(clist),"last-row",
+    g_object_get_data(G_OBJECT(clist),"selected-row"));
+  g_object_set_data(G_OBJECT(clist),"selected-row",(void *)row);
+  
   if (event->type == GDK_2BUTTON_PRESS)
     {
       ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
@@ -91,6 +101,88 @@ future_view_update ()
 }
 
 
+static gboolean
+list_key_press_event (GtkWidget *clist, GdkEventKey *k, gpointer user_data)
+{
+  int row;
+  event_t ev;
+  GtkWidget *w;
+  int lastrow = (int)g_object_get_data(G_OBJECT(clist),"last-row");
+  
+  row = (int)g_object_get_data(G_OBJECT(clist),"selected-row");
+  
+  if (k->keyval == GDK_Up)
+  {
+    gtk_clist_select_row(GTK_CLIST(clist),row-1, 0);
+    if (!row)
+      {
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(clist)),
+		                         GTK_DIR_UP);
+        return TRUE;
+      }
+    else
+      return FALSE;
+  }
+  
+  if (k->keyval == GDK_Down)
+  {
+    gtk_clist_select_row(GTK_CLIST(clist),row + 1, 0);
+    if (row == lastrow)
+      {
+        gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(clist)),
+		                      GTK_DIR_TAB_FORWARD);
+        lastrow = -1;
+        return TRUE;
+      }
+    else
+      {
+        lastrow = row;
+        return FALSE;
+      }
+  }
+  
+  if (k->keyval == GDK_Return)
+  {
+    if (row >= 0)
+      {
+        struct tm tm;
+        ev = gtk_clist_get_row_data(GTK_CLIST (clist), row);
+        if (ev)
+          {
+            w = edit_event(ev);
+          }
+        else
+          {
+            char *t;
+            localtime_r (&viewtime, &tm);
+            if (gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t))
+              strptime (t, TIMEFMT, &tm);
+            w = new_event (mktime (&tm), 1);
+          }
+        gtk_widget_show (w);
+      }
+    return TRUE;
+  }
+ 
+  if (k->keyval == GDK_Delete)
+  {
+    row = (int)g_object_get_data(G_OBJECT(clist),"selected-row");
+    if (row >= 0)
+      {
+        ev = gtk_clist_get_row_data(GTK_CLIST (clist), row);
+        if ((ev) && (gpe_question_ask (_("Delete event?"), _("Question"), "question",
+			   "!gtk-no", NULL, "!gtk-yes", NULL, NULL)))
+          {
+            delete_event(ev);
+            g_object_set_data(G_OBJECT(clist),"selected-row",(void *)-1);
+          }
+      }
+    return TRUE;
+  }
+  
+  return FALSE;
+}
+
 void
 future_free_lists(void)
 {
@@ -137,6 +229,10 @@ future_view (void)
 
   g_object_set_data (G_OBJECT (vbox), "update_hook",
                      (gpointer) future_view_update);
+                     
+  g_signal_connect (G_OBJECT (future_list), "key_press_event", 
+		    G_CALLBACK (list_key_press_event), NULL);
+  g_object_set_data(G_OBJECT(future_list),"selected-row",(void *)0);
 
   return vbox;
 }
