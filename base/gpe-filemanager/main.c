@@ -43,6 +43,8 @@
 #define DEFAULT_ICON_PATH "/pixmaps"
 #define ZOOM_INCREMENT 8
 
+#define MAX_SYM_DEPTH 256
+
 GtkWidget *window;
 GtkWidget *combo;
 GtkWidget *view_scrolld;
@@ -108,6 +110,7 @@ static void popup_ask_move_file (void);
 static void popup_ask_rename_file (void);
 static void popup_ask_delete_file (void);
 static void show_file_properties (void);
+static void refresh_current_directory (void);
 
 static GtkItemFactoryEntry menu_items[] =
 {
@@ -347,6 +350,8 @@ popup_ask_move_file ()
   gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
 
   gtk_widget_show_all (dirbrowser_window);
+
+  refresh_current_directory();
 }
 
 static void
@@ -375,6 +380,8 @@ popup_ask_rename_file ()
   gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 
   gtk_widget_show_all (dialog_window);
+
+  refresh_current_directory();
 }
 
 static void
@@ -395,6 +402,8 @@ popup_ask_delete_file ()
 
       if (r != GNOME_VFS_OK)
 	gpe_error_box (gnome_vfs_result_to_string (r));
+      
+      refresh_current_directory();
     }
 
   g_free (label_text);
@@ -548,6 +557,31 @@ button_clicked (GtkWidget *widget, gpointer udata)
 
   printf ("You clicked on %s\n", file_info->filename);
 
+  /* Handle Symbolic Links -- CM */
+  if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK) {
+    GnomeVFSURI *uri = gnome_vfs_uri_new (file_info->vfs->symlink_name);
+    GnomeVFSFileInfo *vfs = gnome_vfs_file_info_new ();
+    int cur_depth = MAX_SYM_DEPTH;
+
+    do {
+      uri = gnome_vfs_uri_new (file_info->vfs->symlink_name);
+      file_info->vfs = gnome_vfs_file_info_new ();
+
+      if (gnome_vfs_get_file_info_uri (uri, vfs, GNOME_VFS_FILE_INFO_DEFAULT) 
+          != GNOME_VFS_OK) {
+            printf ("Symbolic link %s leads to inaccessable file!\n", file_info->filename);
+            return;
+      }
+
+      file_info->vfs = vfs;
+    } while (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK && (--cur_depth > 0));
+
+    if (cur_depth <= 0) {
+      printf ("max symbolic link depth exceeded for %s\n", file_info->filename);
+      return;
+    }
+  }
+
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
   {
     if (file_info->vfs->mime_type)
@@ -569,6 +603,7 @@ button_clicked (GtkWidget *widget, gpointer udata)
   }
   else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
     browse_directory (file_info->filename);
+  
 }
 
 gchar *
@@ -646,6 +681,8 @@ add_icon (FileInfomation *file_info)
     else
       mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
   }
+  else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK)
+    mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/symlink.png");
   else
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
 
@@ -763,6 +800,14 @@ browse_directory (gchar *directory)
     //gpe_error_box ("No such file or directory.");
   }
 }
+
+static void
+refresh_current_directory (void)
+{
+  browse_directory (current_directory);
+}
+
+
 static void
 set_directory_home (GtkWidget *widget)
 {
