@@ -629,7 +629,6 @@ main (int argc, char *argv[])
   gboolean flag_xkbd = FALSE;
   FILE *cfp;
   GdkCursor *cursor;
-  gchar *pango_lang_code;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
