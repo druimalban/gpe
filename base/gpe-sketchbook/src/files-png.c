@@ -84,7 +84,11 @@ gint file_load_png(const gchar * fullpath_filename){
 
   gc = gdk_gc_new(drawing_area->window);
 
+#ifdef GTK2
+  pixbuf = gdk_pixbuf_new_from_file(fullpath_filename, NULL); //GError **error
+#else
   pixbuf = gdk_pixbuf_new_from_file(fullpath_filename);
+#endif
   if(pixbuf == NULL){
     return 0;
   }

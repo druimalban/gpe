@@ -1,9 +1,11 @@
-Package: gpe-sketchbook
+Package: gpe-sketchbook2
 Section: base
 Priority: optional
 Version: pre0.1.7
 Architecture: arm
 Maintainer: Luc Pionchon <luc.pionchon@welho.com>
-Depends: libgtk1.2, libgpewidget0, libpng2, libgdk-pixbuf2, gpe-icons
+Depends: libgtk2.0-0, libgpewidget1, libpng2, libgdk-pixbuf2, gpe-icons
 Description: A GPE notebook to sketch your notes
-Provides gpe-sketchbook
+Provides: gpe-sketchbook
+
+

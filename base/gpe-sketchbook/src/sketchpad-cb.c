@@ -61,7 +61,7 @@ void on_window_size_allocate (GtkWidget     * widget,
 
   if(dock == NULL) return;
 
-  if(allocation->width > 240)//FIXME: that's very ugly way to detect LANDSCAPE mode!
+  if(allocation->width > 260)//240)//FIXME: that's very ugly way to detect LANDSCAPE mode!
     gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_VERTICAL);
   else//Portrait mode
     gpe_dock_change_toolbar_orientation((GpeDock *)dock, GTK_ORIENTATION_HORIZONTAL); 

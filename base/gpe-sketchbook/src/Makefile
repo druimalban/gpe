@@ -1,7 +1,13 @@
 include ../config.makefile
 
-VERSION = $(shell grep 'Version: ' ../familiar/control | cut -d ' ' -f 2)
-PACKAGE = $(shell grep 'Package: ' ../familiar/control | cut -d ' ' -f 2)
+ifeq ($(GTK2),yes)
+CONTROL_FILE = ../familiar/control1
+else
+CONTROL_FILE = ../familiar/control
+endif
+
+VERSION = $(shell grep 'Version: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
+PACKAGE = $(shell grep 'Package: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
 
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
@@ -12,7 +18,7 @@ CFLAGS += -Wall #-g
 CFLAGS += -Os
 CFLAGS += -MD #(deps)
 
-#-- varaibles
+#-- variables
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\"
 CPPFLAGS += -DVERSION=\"$(VERSION)\"
 CPPFLAGS += -DPREFIX=\"$(PREFIX)\"
@@ -22,30 +28,41 @@ ifdef DESKTOP #environement variable to set if you want extra code included.
 CPPFLAGS += -DDESKTOP
 endif
 
-#-- base
+#-- GPE widgets
 LIB_GPE_WIDGET = ../../libgpewidget
-CFLAGS += -I$(LIB_GPE_WIDGET)
-CFLAGS += `gtk-config --cflags`
-LIBS   += -L$(LIB_GPE_WIDGET) -lgpewidget #need to be before gtk libs (overwrite things)
-LIBS   += `gtk-config --libs`
+CFLAGS  += -I$(LIB_GPE_WIDGET)
+LDFLAGS += -L$(LIB_GPE_WIDGET)
 
-#-- GDK pixbuf
-CFLAGS += `gdk-pixbuf-config --cflags`
-LIBS   += `gdk-pixbuf-config --libs`
+LDFLAGS += -lgpewidget #need to be before gtk libs (overwrite things)
+
+#-- GTK
+ifeq ($(GTK2),yes)
+CFLAGS  +=  -DGTK2 #-DGTK_ENABLE_BROKEN
+CFLAGS  += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0`
+LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
+#libpng
+CPPFLAGS += -I/usr/include
+LDFLAGS  += -L/usr/lib -lpng
+else
+CFLAGS  += `gtk-config --cflags`
+LDFLAGS += `gtk-config --libs`
+CFLAGS  += `gdk-pixbuf-config --cflags`
+LDFLAGS += `gdk-pixbuf-config --libs`
+#libpng
+CPPFLAGS += -I/usr/include
+LDFLAGS  += -L/usr/lib -lpng
+endif
 
 #-- SQLite
 ifdef USE_SQLITE
-LIBS += -lsqlite
+LDFLAGS += -lsqlite
 endif
 
-#-- libpng support
-CPPFLAGS += -I/usr/include
-LIBS     += -L/usr/lib -lpng
 
-#-- @ handhelds.org
+#-- @ handhelds.org
 CPPFLAGS += -I../../include
-LIBS     += -L../../lib
-LIBS     += -lgdk_pixbuf
+LDFLAGS  += -L../../lib
+LDFLAGS  += -lgdk_pixbuf
 
 #.SUFFIXES: .d
 
@@ -56,7 +73,7 @@ arm: $(ARM_BIN)
 
 #--package
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -g $(LIBS)
+	$(CC) -o $@ $^ -g $(LDFLAGS)
 
 $(ARM_BIN):
 	../utils/dummy-arm-bin &> /dev/null && make $(PACKAGE)

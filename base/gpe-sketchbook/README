@@ -1,3 +1,11 @@
 GPE sketchbook: a notebook to sketch your notes
 by Luc Pionchon <luc.pionchon@welho.com>
 
+Building:
+--------
+variables to set,
+
+DESKTOP=1  -- includes extra code for desktop use
+GTK2=yes   -- use GTK2 libs
+
+then make.

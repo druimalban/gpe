@@ -1,7 +1,14 @@
 include ./config.makefile
 
-VERSION = $(shell grep 'Version: ' familiar/control | cut -d ' ' -f 2)
-PACKAGE = $(shell grep 'Package: ' familiar/control | cut -d ' ' -f 2)
+ifeq ($(GTK2),yes)
+CONTROL_FILE = familiar/control1
+else
+CONTROL_FILE = familiar/control
+endif
+
+VERSION = $(shell grep 'Version: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
+PACKAGE = $(shell grep 'Package: ' $(CONTROL_FILE) | cut -d ' ' -f 2)
+
 SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
 
 PIXMAPS = `cd pixmaps && ls *.png`
@@ -58,6 +65,7 @@ dist:
 	cp pixmaps/*.png $(DIST_NAME)/pixmaps
 	mkdir $(DIST_NAME)/familiar
 	cp familiar/control  $(DIST_NAME)/familiar
+	cp familiar/control1 $(DIST_NAME)/familiar
 	cp familiar/postinst $(DIST_NAME)/familiar
 	mkdir $(DIST_NAME)/po
 	cp po/*.po po/*.pot $(DIST_NAME)/po

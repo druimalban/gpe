@@ -119,6 +119,7 @@ void on_button_sketchpad_view_clicked (GtkButton *button, gpointer user_data){
 }
 
 void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
+#ifdef NOT_DEF
   gpe_about(PACKAGE,
             VERSION,
             //icon
@@ -133,5 +134,6 @@ void on_button_selector_about_clicked (GtkButton *button, gpointer user_data){
             //legal
             _("(c) 2002 Luc Pionchon\n" //FIXME: use build variables
             "Distributed under GPL"));
+#endif
 }
 
