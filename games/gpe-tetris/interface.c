@@ -11,7 +11,6 @@
 #include <gpe/render.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
-#include <gpe/what.h>
 
 #define _(_x) gettext (_x)
 
