@@ -59,7 +59,9 @@ GtkWidget *Ownerinfo_Build_Objects()
   GtkWidget *owner_email_label;
   GtkWidget *owner_phone_label;
   GtkWidget *owner_address_label;
+  GtkWidget *scrolledwindow;
   GtkWidget *scrolledwindow1;
+  GtkWidget *viewport;
   GtkWidget *viewport1;
   gint upgrade_result = UPGRADE_ERROR;
 
@@ -136,9 +138,17 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ======================================================================== */
   /* draw the GUI */
+  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  viewport = gtk_viewport_new (NULL, NULL);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow), viewport);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (viewport), GTK_SHADOW_NONE);
+
   table = gtk_table_new (6, 2, FALSE);
   gtk_widget_set_name (table, "table");
-  gtk_widget_show (table);
+  gtk_container_add (GTK_CONTAINER (viewport), table);
 
   /* ------------------------------------------------------------------------ */
   owner_name_label = gtk_label_new (_("Name"));
@@ -258,7 +268,7 @@ GtkWidget *Ownerinfo_Build_Objects()
   else 
     gtk_widget_set_sensitive (table, FALSE);
  
-  return table;
+  return scrolledwindow;
 
 }
 
