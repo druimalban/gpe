@@ -16,9 +16,9 @@ PACKAGE = gpe-wlancfg
 PREFIX = /usr/local
 DEBUG = no
 LINGUAS = de pt_PT
-VERSION = 0.2.2
+VERSION = 0.2.3
 GTK2 = yes
-
+BUILD = ../build
 
 YACC = byacc
 LEX  = flex
@@ -54,6 +54,7 @@ LEX_OUTPUT_ROOT = lex.yy
 MEMBERS = main interface support helptext config-parser callbacks confpars_wl confscan_wl
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PIXMAPS = 
 
@@ -70,7 +71,7 @@ $(PACKAGE): $(OBJS)
 	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
 	else :; fi
 
-install: all 
+install-program: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
@@ -82,7 +83,7 @@ install: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-ipkg: clean
+ipkg-old: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	sed -e s/VERSION/$(VERSION)/ < familiar/$(CONTROL) > familiar/dist/CONTROL/control
@@ -96,5 +97,8 @@ ipkg: clean
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 
+
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
 
 -include $(DEPS)

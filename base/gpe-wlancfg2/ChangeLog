@@ -1,5 +1,7 @@
 08/13/2003	Florian Boor <florian.boor@kernelconcepts.de>
-
+	
+	- created new pot file, removed obsolete cruft.
+	- Makefile is now a real gpe makefile
 	- Added "default" checkbox.
 	- Improved help displaying.
 	
