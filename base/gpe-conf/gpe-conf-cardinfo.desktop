@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=PC/CF Cards
-Comment=PC/CF Cards infomation
+Comment=PC/CF Cards info and config
 Exec=gpe-conf cardinfo
 Terminal=0
 Type=Application

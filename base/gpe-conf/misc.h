@@ -1,3 +1,5 @@
+#ifndef CONF_MISC_H
+#define CONF_MISC_H
 /*
  * Miscellaneous functions for gpe-conf
  *
@@ -8,6 +10,9 @@
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  */
+
+
+int is_network_up();
 
 GtkWidget*
 lookup_widget                          (GtkWidget       *widget,
@@ -24,3 +29,5 @@ char
 
 char
 *gpe_basename (char *s);
+
+#endif

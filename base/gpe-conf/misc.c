@@ -2,16 +2,44 @@
  * Miscellaneous functions for gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+ *               2003  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
+ *
  */
 
 #include <gtk/gtk.h>
 #include <gpe/pixmaps.h>
 #include <gpe/render.h>
+#include <stdio.h>
+
+/*
+ *  Check if network is up. 
+ */
+int is_network_up()
+{
+	FILE *pipe;
+	char buffer[256];
+	int result = FALSE;
+	
+	pipe = popen ("/bin/netstat -rn", "r");
+
+	if (pipe > 0)
+    {
+  		while ((feof(pipe) == 0))
+    	{
+      		fgets (buffer, 255, pipe);
+			if (g_str_has_prefix(buffer,"0.0.0.0") || g_str_has_prefix(buffer,"default"))
+			  result = TRUE;
+		}
+		pclose(pipe);		
+	}
+	return result;
+}
+
 
 GtkWidget*
 lookup_widget                          (GtkWidget       *widget,

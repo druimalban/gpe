@@ -20,6 +20,7 @@
 #include "applets.h"
 #include "timeanddate.h"
 #include "suid.h"
+#include "misc.h"
 
 #include <gpe/spacing.h>
 #include <gpe/errorbox.h>
@@ -435,7 +436,8 @@ GtkWidget *Time_Build_Objects()
   self.internet = gtk_button_new_with_label(_("Get time from network"));
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
 		      (GtkSignalFunc) GetInternetTime, NULL);
-
+  gtk_widget_set_sensitive(self.internet,is_network_up());
+  
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.internet, FALSE, FALSE, 0);
   gtk_tooltips_set_tip (tooltips, self.internet, _("If i'm connected to the Internet, you may press this butten to set the time on this device using the timeserver above."), NULL);
 

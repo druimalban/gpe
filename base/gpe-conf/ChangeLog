@@ -1,5 +1,10 @@
 When			Who				Where						What
 
+04.04.2003		Florian			cardinfo.c					Some minor updates in pcmcia frontend.
+								misc.*						Added network check.
+								timeanddate.c				"Get time from net" now only active if network is up.
+								main.c
+
 04.04.2003		Florian			cardinfo.c					Changed config set generation to generate only sets without "version".
 
 04.04.2003		Florian			cardinfo.c					Fixed some bugs in card handling. Should look better now and find all known cards.

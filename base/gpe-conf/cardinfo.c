@@ -462,7 +462,7 @@ init_pcmcia_suid()
     servinfo_t serv;
 
     if (geteuid() != 0) {
-	  fprintf(stderr, "gpe-conf must be setuid root to use cardinfo seature\n");
+	  fprintf(stderr, "gpe-conf must be setuid root to use cardinfo feature.\n");
 	  return -1;
     }
 
@@ -828,7 +828,6 @@ dialog_driver_response (GtkDialog * dialog, gint response, gpointer param)
 		  free(config);
 		  free(ident);
 		  config = tmp;
-		  printf("-config-\n%s-end-\n",config);
 
 		  /* save new config */
 		  save_config(config,(int)param);
@@ -1006,10 +1005,12 @@ Cardinfo_Build_Objects (void)
 
 	  /* top label */
 	  label = gtk_label_new(NULL);
+	  gtk_label_set_line_wrap(GTK_LABEL(label),TRUE);
+	  gtk_widget_set_size_request(label,160,40);
 	  snprintf(iname,100,"<b>%s %d</b>",_("Information for socket"),i);
 	  gtk_label_set_markup(GTK_LABEL(label),iname);
 	  gtk_misc_set_alignment(GTK_MISC(label),0.5,0.5);
-      gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,TRUE,0);
+      gtk_box_pack_start(GTK_BOX(hbox),label,FALSE,FALSE,0);
  
 	  st[i].card.widget = label;
 	  st[i].card.str = strdup("");
