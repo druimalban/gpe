@@ -134,7 +134,7 @@ GtkWidget *Ownerinfo_Build_Objects()
 
   /* ------------------------------------------------------------------------ */
   owner_phone_label = gtk_label_new (_("Phone"));
-  gtk_table_attach (GTK_TABLE (table1), owner_phone_label, 0, 1, 3, 4,
+  gtk_table_attach (GTK_TABLE (table1), owner_phone_label, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_phone_label), GTK_JUSTIFY_LEFT);
@@ -142,22 +142,23 @@ GtkWidget *Ownerinfo_Build_Objects()
   gtk_misc_set_padding (GTK_MISC (owner_phone_label), 5, 0);
 
   phone = gtk_entry_new ();
-  gtk_table_attach (GTK_TABLE (table1), phone, 1, 2, 3, 4,
+  gtk_entry_set_text (GTK_ENTRY (phone), ownerphone);
+  gtk_table_attach (GTK_TABLE (table1), phone, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
   /* ------------------------------------------------------------------------ */
   owner_address_label = gtk_label_new (_("Address"));
-  gtk_table_attach (GTK_TABLE (table1), owner_address_label, 0, 1, 2, 3,
+  gtk_table_attach (GTK_TABLE (table1), owner_address_label, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
   gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
   gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
 
 
   scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-  gtk_table_attach (GTK_TABLE (table1), scrolledwindow1, 1, 2, 2, 3,
+  gtk_table_attach (GTK_TABLE (table1), scrolledwindow1, 1, 2, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1),
