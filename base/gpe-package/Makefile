@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.9
+VERSION = 0.0.9-1
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -14,8 +14,7 @@ HELPFILE = gpe-package.html
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libdisplaymigration -ldisplaymigration -L.
-CFLAGS += -I/home/fuchs/Projekte/gpe/familiar/dist/ipkg/C
-CFLAGS += -Wall -I../libgpewidget -I.
+CFLAGS += -Wall -I../libgpewidget -I. -I/home/fuchs/Projekte/gpe/familiar/dist/ipkg/C
 BUILD = ../build
 else
 CFLAGS += -I/usr/local/include/gpe
@@ -56,7 +55,7 @@ CFLAGS += -march=armv4 -mtune=strongarm
 CFLAGS += $(GTKCFLAGS) -Wall 
 LDFLAGS += -lgpewidget $(GTKLDFLAGS) -Wall 
 LDFLAGS += -lipkg 
-LDFLAGS += -lXinerama 
+LDFLAGS += -lXinerama
 
 endif #native or cross-compile
 
