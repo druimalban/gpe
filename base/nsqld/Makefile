@@ -1,9 +1,10 @@
 PACKAGE = nsqld
 PREFIX = /usr/local
 DEBUG = no
-VERSION = 0.5
+VERSION = 0.5-2
 CVSBUILD = yes
 SASL = no
+STRIP = strip
 
 LINGUAS = 
 
@@ -35,7 +36,8 @@ $(PACKAGE): $(OBJS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin
+	$(STRIP) $(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
