@@ -1,41 +1,37 @@
 PACKAGE = gpe-lights
-PREFIX = /usr/local
+PREFIX = /usr
 DEBUG = no
 LINGUAS = 
 VERSION = 0.13
+DEBUG = no
+CVSBUILD = yes
 
 MEMBERS = gpe-lights
 
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0`
 
-CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE 
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS)
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../../base/build
 else
-CFLAGS += -Os -fomit-frame-pointer
+BUILD = build
 endif
-CFLAGS += -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD -I../../base/libgpewidget
-
-LDFLAGS += -L../../base/libgpewidget -lgpewidget
-
-.SUFFIXES: .d
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
-DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all 
-	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -s -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
@@ -49,5 +45,6 @@ install-program: all
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
 
-include ../../base/build/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
 -include $(DEPS)
