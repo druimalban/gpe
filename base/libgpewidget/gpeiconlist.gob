@@ -572,10 +572,6 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		GPEIconList *il = data;
 		int row, col;
 
-		/* I'd like to run this after the popup menu pops back down, but
-		   I can't seem to :( */
-		gpe_iconlist_popup_removed (il);
-
 		gpe_iconlist_show_popup(il, gpe_iconlist__get_icon(il,col, row)->udata);
 
 		return FALSE;

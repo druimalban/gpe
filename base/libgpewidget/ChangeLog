@@ -1,3 +1,10 @@
+2003-01-04  Robert Mibus  <mibus@handhelds.org>
+
+	* gpeiconlist.gob: Use the _obvious_ rendering fix pb suggested.
+	(ie. back out my last change)
+
+	* gpe-iconlist.[ch]: regenerate.
+
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.38 released.
