@@ -1,0 +1,8 @@
+?package(gpe-mapviewer): \
+ needs=x11 \
+ title="Mapviewer" \
+ logtitle="Mapviewer" \
+ command=gpe-gallery \
+ icon48=/usr/share/pixmaps/gpe-mapviewer.png \
+ section=Utilities \
+ windowtitle="GPE Mapviewer"
