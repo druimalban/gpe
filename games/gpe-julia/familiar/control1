@@ -1,0 +1,12 @@
+Package: gpe-julia2
+Section: base
+Priority: optional
+Version: 0.0.1
+Architecture: arm
+Maintainer: Moray Allan <moray@handhelds.org>
+Depends: libgpewidget1, gpe-icons
+Conflicts: gpe-julia
+Description: Julia/mandelbrot set generator.
+ gpe-julia is a fixed-point fractal drawing program. It can draw the Julia
+ set for a particular point, or the Mandelbrot set. You can zoom in to look
+ more closely at areas of interest.
