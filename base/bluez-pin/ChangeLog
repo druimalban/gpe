@@ -1,3 +1,15 @@
+2003-10-21  Bastien Nocera  <hadess@hadess.net>
+
+	* Makefile: updated
+	* .cvsignore: updated
+	* Makefile: install the glade files
+	* bluez-pin-gpe.glade:
+	* bluez-pin.glade: one glade file for desktop GNOME, and one for GPE
+	* pin-ui.c: (bluez_pin_guess_name), (bluez_pin_request): use the
+	glade files instead of an hard-coded UI
+	Show the nice name cached by gnome-bluetooth from gconf if available
+	* bt-logo.png: new logo from Jakub Steiner <jimmac@ximian.com>
+
 2003-10-16  Bastien Nocera  <hadess@hadess.net>
 
 	* Makefile: install the new bluez.conf file

@@ -1,4 +1,6 @@
 bluez-pin
 *.ipk
 *.ipk.asc
+*gladep
+*.bak
 
