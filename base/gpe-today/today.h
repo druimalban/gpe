@@ -30,7 +30,7 @@
 
 #define IMAGEPATH(file) PREFIX "/share/" PACKAGE "/pixmaps/" #file
 //#define IMAGEPATH(file) "./pixmaps/" #file
-#define DATAPATH(file) PREFIX "/share/" PACKAGE #file
+#define DATAPATH(file) PREFIX "/share/" PACKAGE "/" #file
 
 enum { PORTRAIT, LANDSCAPE };
 

@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 		exit(1);
 
 	gtk_rc_parse(DATAPATH(gtkrc));
-
+	
 	init_main_window();
 	load_modules();
 	
