@@ -1,7 +1,7 @@
-CC = gcc
-CFLAGS = -Wall
+
+PACKAGE_CFLAGS = -Wall $(GPECFLAGS) $(GTKCFLAGS) -DPREFIX=\"$(PREFIX)\"
 OBJS = control.o game.o gfx.o gsoko.o init.o interface.o move.o
-VERSION = 0.4.2-gpe4
+VERSION = 0.4.2-gpe5
 PACKAGE = gsoko
 
 PREFIX = /usr/local
@@ -10,14 +10,14 @@ BUILD = ../../base/build
 all:	gsoko
 
 gsoko:	$(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) `pkg-config --libs gtk+-2.0`
+	$(CC) $(CFLAGS) $(PACKAGE_CFLAGS) -o $@ $(OBJS) `pkg-config --libs gtk+-2.0`
 
 clean:
 	rm -f *.o
 	rm -f gsoko
 
-.c.o:
-	$(CC) $(CFLAGS) -c `pkg-config --cflags gtk+-2.0` $< -DPREFIX=\"$(PREFIX)\"
+#.c.o:
+#	$(CC) $(CFLAGS) $(PACKAGE_CFLAGS) -c `pkg-config --cflags gtk+-2.0` $< -DPREFIX=\"$(PREFIX)\"
 
 LEVELS = 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
 IMGS = box.png box2.png man.png tile.png tile2.png wall.png
