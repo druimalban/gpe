@@ -1,7 +1,7 @@
 A Simple Spec for Application Display/Screen Migration. 
 
-A window capable of migration sets a property _GPE_CHANGE_DISPLAY on
-itself.  Its type is also _GPE_CHANGE_DISPLAY and it is initially set
+A window capable of migration sets a property _GPE_DISPLAY_CHANGE on
+itself.  Its type is also _GPE_DISPLAY_CHANGE and it is initially set
 to zero length.
 
 Changing this property to a non-empty value will signal the
@@ -13,8 +13,9 @@ application to migrate.  The format for the property is:
 
 A successful migration will result in the application generating a
 destroyNotify event on its original display.  Following successful
-migration, the application must reset the _GPE_CHANGE_DISPLAY
-property to zero length.
+migration, the application must reset the _GPE_DISPLAY_CHANGE
+property to zero length to indicate that it is safe to request further
+migrations.
 
 If migration fails, the application generates a textual error message
 and deposits this as a STRING property using the window handle and
