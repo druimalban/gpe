@@ -5,3 +5,5 @@ INCLUDES = @LAUNCHER_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NA
 LDADD = @LAUNCHER_LIBS@
 
 libgpelaunch_la_SOURCES = launch.c launch.h desktop_file.c desktop_file.h
+
+include gpe-dist.am
