@@ -1,1 +1,0 @@
-?package(gpe-today): needs=x11 title=Today command=gpe-today icon48=gpe-today.png section=PIM windowtitle=gpe-today
