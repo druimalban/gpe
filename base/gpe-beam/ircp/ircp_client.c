@@ -196,7 +196,6 @@ int ircp_cli_connect(ircp_client_t *cli)
 
 	DEBUG(4, "\n");
 	ircp_return_val_if_fail(cli != NULL, -1);
-
 	cli->infocb(IRCP_EV_CONNECTING, "");
 #ifdef DEBUG_TCP
 	{
@@ -214,6 +213,7 @@ int ircp_cli_connect(ircp_client_t *cli)
 #else
 	ret = IrOBEX_TransportConnect(cli->obexhandle, "OBEX:IrXfer");
 #endif
+printf("connecting...%i",ret);
 	if (ret < 0) {
 		cli->infocb(IRCP_EV_ERR, "");
 		return -1;
@@ -226,6 +226,7 @@ int ircp_cli_connect(ircp_client_t *cli)
 		cli->infocb(IRCP_EV_ERR, "");
 	else
 		cli->infocb(IRCP_EV_OK, "");
+printf("c...%i",ret);
 
 	return ret;
 }

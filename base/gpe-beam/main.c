@@ -260,16 +260,17 @@ static int
 vparse (FILE * f, char *format, va_list ap)
 {
 	char buffer[256];
+	int ret = 0;
 	fgets (buffer, 255, f);
 	while ((feof (f) == 0))
 	{
-		if (vsscanf (buffer, format, ap) > 0)
+		if ((ret = vsscanf (buffer, format, ap)) > 0)
 		{
-			return 0;
+			return ret;
 		}
 		fgets (buffer, 255, f);
 	}
-	return 1;
+	return 0;
 }
 
 
@@ -341,7 +342,6 @@ exec_file_tx (char* filename)
 }
 
 
-
 void 
 tx_file_select(char *filename, gpointer data)
 {
@@ -354,9 +354,23 @@ tx_file_select(char *filename, gpointer data)
 
 
 void
+exec_file_abort()
+{
+	gdk_threads_enter();
+	gtk_widget_destroy(dlgStatus);
+	lStatus = NULL;
+	gdk_threads_leave();
+}
+
+
+void
 tx_file_cancel(gpointer data)
 {
-	return;
+	scan_thread =
+		g_thread_create ((GThreadFunc) exec_file_abort, NULL, FALSE, NULL);
+
+	if (scan_thread == NULL)
+		gpe_perror_box (_("Unable to start file transmit."));
 }
 
 
@@ -365,7 +379,7 @@ do_send_file (void)
 {
 	if (!radio_is_on) radio_on();
 	
-	cli =  ircp_cli_open(ircp_info_cb);
+	cli = ircp_cli_open(ircp_info_cb);
 	
 	gdk_threads_enter ();
 	dlgStatus = bt_progress_dialog (_("IR Receive and Transmit........."), gpe_find_icon("irda"));
@@ -388,7 +402,6 @@ do_send_file (void)
 		gdk_threads_leave ();
 		printf("exit do send...\n");
 	}
-	do{sleep(1);}while(cli);
 }
 
 
@@ -467,15 +480,27 @@ static gboolean
 get_irstatus (void)
 {
 	static char nick[32];
+	static char nick2[32];
 	static unsigned int chint = 0;
 	unsigned long long saddr = 0;
 	unsigned long long daddr = 0;
 	char *ts;
-
-	if (!parse_file
-	    (IR_DISCOVERY,
+	int success = FALSE;
+	
+	if (parse_file(IR_DISCOVERY,
 	     "nickname: %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx", nick,
-	     &chint, &saddr, &daddr))
+	     &chint, &saddr, &daddr) == 4)
+	success = TRUE;
+	else
+		if (parse_file(IR_DISCOVERY,
+	     "nickname: %s %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx", nick,nick2,
+	     &chint, &saddr, &daddr) == 5)
+		{
+			success = TRUE;
+			snprintf(nick + strlen(nick),32-strlen(nick)," %s",nick2);
+		}
+	
+	if (success)
 	{
 		if (strlen (nick))
 			nick[strlen (nick) - 1] = 0;
@@ -539,14 +564,14 @@ show_control (void)
 		GtkWidget *lcActions = gtk_label_new (NULL);
 
 		GtkWidget *l1 = gtk_label_new (_("Name:"));
-		GtkWidget *l2 = gtk_label_new (_("Hint:"));
+		GtkWidget *l2 = gtk_label_new (_("Services:"));
 		GtkWidget *l3 = gtk_label_new (_("Address:"));
 
 
 		lDevice = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lDevice), 0, 0.5);
 		lCHint = gtk_label_new (NULL);
-		gtk_misc_set_alignment (GTK_MISC (lCHint), 0, 0.5);
+		gtk_misc_set_alignment (GTK_MISC (lCHint), 0, 0.0);
 		lSaddr = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lSaddr), 0, 0.5);
 
@@ -610,7 +635,11 @@ show_control (void)
 				  GTK_FILL | GTK_EXPAND,
 				  GTK_FILL | GTK_EXPAND, 0, 0);
 
-		lTStatus = gtk_label_new(_("Status"));
+		if (radio_is_on)
+			lTStatus = gtk_label_new(_("IR transceiver on"));
+		else
+			lTStatus = gtk_label_new(_("IR transceiver off"));
+		
 		gtk_table_attach (GTK_TABLE (table), lTStatus, 0, 3, 6, 7,
 				  GTK_FILL | GTK_EXPAND,
 				  GTK_FILL | GTK_EXPAND, 0, 0);

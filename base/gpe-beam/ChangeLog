@@ -1,5 +1,10 @@
 07/29/2003		Florian Boor <florian.boor@kernelconcepts.de>
 
+	- Some optical changes
+	- minor bugfixes
+
+07/29/2003		Florian Boor <florian.boor@kernelconcepts.de>
+
 	- IR transmission and receive routines and fixes.
 	- Some layout changes.
 	- Status message line.

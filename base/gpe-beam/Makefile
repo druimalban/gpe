@@ -19,7 +19,7 @@ BUILD = build
 endif
 
 ifeq ($(DEBUG),yes)
-CFLAGS += -g -DDEBUG
+CFLAGS += -g -DDEBUG -DIRCP_DEBUG=9
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
