@@ -2,6 +2,7 @@ PACKAGE = minilite
 PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
+VERSION = 0.11
 
 LINGUAS = 
 
