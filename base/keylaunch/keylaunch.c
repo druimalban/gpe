@@ -50,6 +50,13 @@ struct _Key
   char *window;
 };
 
+struct key_event
+{
+  XEvent ev;
+  struct timeval time;
+  struct key_event *next;
+};
+
 Display *dpy;
 Window root;
 Key *key = NULL;
@@ -60,6 +67,8 @@ time_t last_update;
 #endif
 struct timeval key_press_time;
 char *rc_file;
+
+struct key_event *keys_down;
 
 /*
  *
@@ -421,6 +430,18 @@ initialize (int argc, char *argv[])
   parse_rc (rc_file);
 }
 
+#ifdef DEBUG
+static void print_key (XEvent ev)
+{
+  KeySym t;
+  char *t2;
+  t = XKeycodeToKeysym (dpy, ev.xkey.keycode, 0);
+  t2 = XKeysymToString (t);
+  printf ("key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
+	  ev.xkey.state);
+}
+#endif
+
 /*
  *
  * Main
@@ -463,13 +484,43 @@ main (int argc, char *argv[])
     {
       XEvent ev;
 
+      while (!XPending (dpy) && keys_down)
+	{
+	  int fd = ConnectionNumber (dpy);
+	  fd_set fds;
+          struct timeval time_now, time_required;
+	  struct key_event *k = keys_down;
+
+	  gettimeofday (&time_now, NULL);
+	  timersub (&k->time, &time_now, &time_required);
+
+	  FD_ZERO (&fds);
+	  FD_SET (fd, &fds);
+
+	  if (select (fd + 1, &fds, NULL, NULL, &time_required) > 0)
+	    break;
+
+#ifdef DEBUG
+	  fprintf (stderr, "timeout\n");
+	  print_key (k->ev);
+#endif
+
+	  process_key (k->ev, 1);
+	  
+	  if (keys_down)
+	  keys_down = k->next;
+	  free (k);
+	}
+
       XNextEvent (dpy, &ev);
       if (ev.type == KeyPress)
         {
+	  struct key_event *k;
           struct timeval time_now;
           struct timeval time_elapsed;
 #ifdef DEBUG
           fprintf (stderr, "key press event...\n");
+	  print_key (ev);
 #endif
 
 	  gettimeofday (&time_now, NULL);
@@ -488,45 +539,58 @@ main (int argc, char *argv[])
 	      key_press_time = time_now;
 	    }
 
+	  k = malloc (sizeof (struct key_event));
+	  memcpy (&k->ev, &ev, sizeof (ev));
+	  k->next = NULL;
+	  time_elapsed.tv_sec = 0;
+	  time_elapsed.tv_usec = 500000;
+	  timeradd (&time_now, &time_elapsed, &k->time);
+
+	  if (keys_down)
+	    {
+	      struct key_event *p;
+	      for (p = keys_down; p->next; p = p->next)
+		p->next = k;
+	    }
+	  else
+	    keys_down = k;
+
 	  process_key (ev, 2);
 
 	}
       else if (ev.type == KeyRelease
 	       && (key_press_time.tv_sec || key_press_time.tv_usec))
 	{
-	  KeySym t;
-	  char *t2;
-          struct timeval key_release_time;
-	  struct timeval time_elapsed;
-	  int type = 0;
+	  int type = 1;
+	  struct key_event **kp;
+
 #ifdef DEBUG
 	  fprintf (stderr, "key release event...\n");
-#endif
-	  t = XKeycodeToKeysym (dpy, ev.xkey.keycode, 0);
-	  t2 = XKeysymToString (t);
-#ifdef DEBUG
-	  printf ("key: %s (%X %lx) (%d)\n", t2, ev.xkey.keycode, t,
-	          ev.xkey.state);
+	  print_key (ev);
 #endif
 
-          gettimeofday (&key_release_time, NULL);
-
-	  timersub (&key_release_time, &key_press_time, &time_elapsed);
-	  if ((time_elapsed.tv_sec == 0) && (time_elapsed.tv_usec < 500000))
+	  for (kp = &keys_down; *kp; kp = &(*kp)->next)
 	    {
-#ifdef DEBUG
-	      fprintf (stderr, "short press\n");
-#endif
+	      struct key_event *k = *kp;
+	      if (k->ev.xkey.keycode == ev.xkey.keycode
+		  && k->ev.xkey.state == ev.xkey.state)
+		{
+		  type = 0;
+		  *kp = k->next;
+		  free (k);
+		  break;
+		}
 	    }
+
+#ifdef DEBUG
+	  if (type == 0)
+	    fprintf (stderr, "short press\n");
           else
-	    {
-#ifdef DEBUG
-	      fprintf (stderr, "long press\n");
+	    fprintf (stderr, "long press\n");
 #endif
-	      type = 1;
-	    }
 
-	  process_key (ev, type);
+	  if (type == 0)
+	    process_key (ev, type);
 
           free_keys ();
           XTestFakeKeyEvent (dpy, ev.xkey.keycode, True, 0);
