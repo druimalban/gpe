@@ -42,7 +42,17 @@ href="http://www.freedesktop.org/standards/">freedesktop.org
 standards</a>.
 </p>
 
-<p>GPE programs should comply with the <a href="http://developer.gnome.org/projects/gup/hig/1.0/">GNOME Human Interface Guidelines</a> where it is appropriate. Some deviations have to be made to deal with peculiarities of the palmtop environment, such as small screens; some of these changes and additions to the GNOME HIG can be found on the <a href="http://www.handhelds.org/z/wiki/GpeHIG">GPE HIG</a> Wiki page.
+<p>GPE programs should comply with the 
+<a href="http://developer.gnome.org/projects/gup/hig/1.0/">GNOME Human
+Interface Guidelines</a> where it is appropriate. Some deviations have
+to be made to deal with peculiarities of the palmtop environment, such
+as small screens; some of these changes and additions to the GNOME HIG
+can be found on the 
+<a href="http://www.handhelds.org/z/wiki/GpeHIG">GPE HIG</a> Wiki page.
+</p>
+
+<p>OpenOffice has a project for Document Editing on Small Devices: 
+<a href="http://xml.openoffice.org/xmerge/"XMerge</a>.
 </p>
 
 <h2>SQL schemas</h2> 
