@@ -186,6 +186,7 @@ extract_time (struct alarm_state *alarm)
 {
   struct tm tm;
   time_t t;
+  int wasdst;
 
   memset (&tm, 0, sizeof (tm));
 
@@ -197,7 +198,11 @@ extract_time (struct alarm_state *alarm)
 
   t = mktime (&tm);
 
+  wasdst = tm.tm_isdst;
+
   /* Break it out again to get DST right */
+  memset (&tm, 0, sizeof (tm));
+
   localtime_r (&t, &tm);
 
   tm.tm_year = alarm->year - 1900;
@@ -205,8 +210,7 @@ extract_time (struct alarm_state *alarm)
   tm.tm_mday = alarm->day;
   tm.tm_hour = alarm->hour;
   tm.tm_min = alarm->minute;
-
-  printf ("extracted time %02d:%02d\n", tm.tm_hour, tm.tm_min);
+  tm.tm_isdst = wasdst;
 
   return mktime (&tm);
 }
@@ -277,7 +281,7 @@ set_alarm (struct alarm_state *alarm)
 	gmtime_r (&t, &utm);
 
 	printf ("local time %s\n", asctime (&ltm));
-	printf ("universal time %s %x\n", asctime (&utm), t);
+	printf ("universal time %s %d\n", asctime (&utm), t);
       }
 
       if (schedule_set_alarm (1, t, "gpe-announce\ngpe-clock --check-alarm\n") == FALSE)
