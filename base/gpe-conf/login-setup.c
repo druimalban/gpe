@@ -127,7 +127,6 @@ GtkWidget *Login_Setup_Build_Objects()
   rootwarn_hbox = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (rootwarn_hbox);
 
-  /* FIXME: GTK2: make this text bold */
   rootwarn_label = gtk_label_new (_("Some or all of these settings can only be changed by the user 'root'."));
   gtk_widget_show (rootwarn_label);
   gtk_label_set_justify (GTK_LABEL (rootwarn_label), GTK_JUSTIFY_LEFT);
@@ -149,7 +148,9 @@ GtkWidget *Login_Setup_Build_Objects()
   catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (categories), catvbox1, TRUE, TRUE, 0);
   
-  catlabel1 = gtk_label_new (_("General")); /* FIXME: GTK2: make this bold */
+  catlabel1 = gtk_label_new (NULL);
+  /* TRANSLATORS: Please ignore the tags <> */
+  gtk_label_set_markup(GTK_LABEL(catlabel1),_("<b>General</b>"));
   gtk_box_pack_start (GTK_BOX (catvbox1), catlabel1, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (catlabel1), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (catlabel1), 0, 0.5);

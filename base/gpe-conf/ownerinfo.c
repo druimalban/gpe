@@ -61,7 +61,7 @@ FILE *fp;
 
 GtkWidget *Ownerinfo_Build_Objects()
 {
-  GtkWidget *table;
+  GtkWidget *table, *lHeader;
   GtkWidget *vbox, *hbox, *label, *icon;
   GtkWidget *scrolledwindow1;
   GtkWidget *viewport1;
@@ -114,8 +114,6 @@ GtkWidget *Ownerinfo_Build_Objects()
 
       upgrade_result = maybe_upgrade_datafile ();
 
-      /* printf ("upgrade_result: %d\n", upgrade_result); */
-      
       if (upgrade_result == UPGRADE_NOT_NEEDED) {	
 	/*  we have at least version 2, so we need to skip the 1st line
 	 *  and read the photofile file name:
@@ -191,18 +189,20 @@ GtkWidget *Ownerinfo_Build_Objects()
    * whereas normally gpe_boxspacing is around *each* of two adjacent widgets:
    */
   vbox = gtk_vbox_new (FALSE, gpe_boxspacing);
-  gtk_widget_show (vbox);
   gtk_container_set_border_width (GTK_CONTAINER (vbox), gpe_border);
   
   hbox = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox);
 
-  /* FIXME: GTK2: make this text bold */
+  lHeader = gtk_label_new (NULL);
+  gtk_label_set_markup(GTK_LABEL(lHeader),_("<b>Information about  the Owner</b>"));
+  gtk_label_set_justify (GTK_LABEL (lHeader), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lHeader), 0, 0.5);
+  gtk_box_pack_start (GTK_BOX (vbox), lHeader, FALSE, TRUE, 0);
+  
   label = gtk_label_new (_("Only the user 'root' is allowed to change this information"));
-  gtk_widget_show (label);
   gtk_label_set_justify (GTK_LABEL (label), GTK_JUSTIFY_LEFT);
   gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label), 0, 0.5);
 
   pixbuf = gpe_find_icon ("warning16");
   icon = gtk_image_new_from_pixbuf (pixbuf);

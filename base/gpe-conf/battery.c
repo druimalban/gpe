@@ -305,7 +305,7 @@ Battery_Build_Objects (void)
 		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
 		
 		label1 = gtk_label_new (NULL);
-		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 3);
+		gtk_box_pack_start (GTK_BOX (vbox), label1, FALSE, FALSE, 0);
 		
 		if (i==0) 
 			batt_int = batt;
