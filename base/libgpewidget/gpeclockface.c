@@ -22,6 +22,8 @@
 
 #include "gpeclockface.h"
 
+#define BACKGROUND_IMAGE TRUE
+
 #ifdef BACKGROUND_IMAGE
 static GdkPixbuf *clock_background, *clock_background_24;
 static guint background_width, background_height;
@@ -45,7 +47,7 @@ struct _GpeClockFace
 
   guint x_offset, y_offset;
 
-  GtkAdjustment *hour_adj, *minute_adj;
+  GtkAdjustment *hour_adj, *minute_adj, *second_adj;
 
   gboolean can_render;
   XftDraw *draw;
@@ -57,9 +59,9 @@ struct _GpeClockFace
   gboolean do_grabs;
   gboolean grabbed;
 
-  gulong hour_handler, minute_handler;
+  gulong hour_handler, minute_handler, second_handler;
 
-  double hour_angle, minute_angle;
+  double hour_angle, minute_angle, second_angle;
 };
 
 struct _GpeClockFaceClass
@@ -70,26 +72,27 @@ struct _GpeClockFaceClass
 static void
 draw_hand (GpeClockFace *clock,
 	   double angle, 
-	   guint length)
+	   guint length,
+	   guint thick)
 {
   GdkPoint points[5];
   XPointDouble poly[5];
   int i;
   double sa = sin (angle), ca = cos (angle);
 
-  points[0].x = 3;
+  points[0].x = thick;
   points[0].y = 0;
 
-  points[1].x = 3;
+  points[1].x = thick;
   points[1].y = length - 4;
 
   points[2].x = 0;
   points[2].y = length;
 
-  points[3].x = -3;
+  points[3].x = -thick;
   points[3].y = length - 4;
 
-  points[4].x = -3;
+  points[4].x = -thick;
   points[4].y = 0;
 
   for (i = 0; i < 5; i++)
@@ -115,7 +118,7 @@ draw_hand (GpeClockFace *clock,
     }
   else
     {
-      for (i = 0; i < 5; i++)
+      for (i = 0; i < thick; i++)
 	{
 	  points[i].x = poly[i].x;
 	  points[i].y = poly[i].y;
@@ -132,6 +135,8 @@ draw_hand (GpeClockFace *clock,
 static void
 hand_angles (GpeClockFace *clock)
 {
+  if (clock->second_adj != NULL)
+    clock->second_angle = gtk_adjustment_get_value (clock->second_adj) * 2 * M_PI / 60;
   clock->minute_angle = gtk_adjustment_get_value (clock->minute_adj) * 2 * M_PI / 60;
   clock->hour_angle = gtk_adjustment_get_value (clock->hour_adj) * 2 * M_PI / 12
     + gtk_adjustment_get_value (clock->minute_adj) * 2 * M_PI / 60 / 12;
@@ -269,8 +274,10 @@ gpe_clock_face_expose (GtkWidget *widget,
 		+ gtk_adjustment_get_value (clock->minute_adj) * -(360 * 64 / 24) / 60,
 		180 * 64);
 
-  draw_hand (clock, clock->minute_angle, 7 * clock->radius / 8);
-  draw_hand (clock, clock->hour_angle, 3 * clock->radius / 5);
+  if (clock->second_adj != NULL)
+    draw_hand (clock, clock->second_angle, 7 * clock->radius / 8, 1);
+  draw_hand (clock, clock->minute_angle, 7 * clock->radius / 8, 3);
+  draw_hand (clock, clock->hour_angle, 3 * clock->radius / 5, 3);
 
   gdk_draw_drawable (drawable, gc, clock->backing_pixmap, 0, 0, 0, 0, 
 		     widget->allocation.width, widget->allocation.height);
@@ -303,13 +310,22 @@ gpe_clock_face_button_press (GtkWidget *w, GdkEventButton *b)
   double start_angle = angle_from_xy (x_start, y_start);
   double hour_angle = ((int)gtk_adjustment_get_value (clock->hour_adj) % 12) * 2 * M_PI / 12;
   double minute_angle = gtk_adjustment_get_value (clock->minute_adj) * 2 * M_PI / 60;
+  double second_angle;
 
+  if (clock->second_adj != NULL)
+    second_angle = gtk_adjustment_get_value (clock->second_adj) * 2 * M_PI / 60;
+  else
+    second_angle = 0; /* just to avoid gcc warning */
+  
   hour_angle -= start_angle;
   minute_angle -= start_angle;
   if (hour_angle < 0)
     hour_angle = -hour_angle;
-  if (minute_angle < 0)
-    minute_angle = -minute_angle;
+  if (clock->second_adj != NULL) {
+    second_angle -= start_angle;
+    if (second_angle < 0)
+      second_angle = -second_angle;
+  }
 
   if (r > (clock->radius * 3 / 5) || (minute_angle < hour_angle))
     clock->dragging_minute_hand = TRUE;
@@ -409,7 +425,7 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 					  widget->allocation.height,
 					  gdk_drawable_get_depth (widget->window));
 
-  gdk_draw_rectangle (clock->backing_pixmap, widget->style->bg_gc[GTK_STATE_NORMAL], 
+  gdk_draw_rectangle (clock->backing_pixmap, widget->style->bg_gc[GTK_STATE_NORMAL],
 		      TRUE, 0, 0, widget->allocation.width, widget->allocation.height);
 
   clock->backing_gc = gdk_gc_new (clock->backing_pixmap);
@@ -525,6 +541,9 @@ gpe_clock_face_realize (GtkWidget *widget)
 					  G_CALLBACK (adjustment_value_changed), clock);
   clock->minute_handler = g_signal_connect (G_OBJECT (clock->minute_adj), "value_changed", 
 					    G_CALLBACK (adjustment_value_changed), clock);
+  if (clock->second_adj != NULL)
+    clock->second_handler = g_signal_connect (G_OBJECT (clock->second_adj), "value_changed", 
+					      G_CALLBACK (adjustment_value_changed), clock);
 }
 
 GdkBitmap *
@@ -572,6 +591,8 @@ gpe_clock_face_unrealize (GtkWidget *widget)
 
   g_signal_handler_disconnect (clock->hour_adj, clock->hour_handler);
   g_signal_handler_disconnect (clock->minute_adj, clock->minute_handler);
+  if (clock->second_adj != NULL)
+    g_signal_handler_disconnect (clock->second_adj, clock->second_handler);
 
   gpe_clock_face_unprepare_xrender (widget);
 
@@ -675,12 +696,13 @@ gpe_clock_face_get_type (void)
 }
 
 GtkWidget *
-gpe_clock_face_new (GtkAdjustment *hour, GtkAdjustment *minute)
+gpe_clock_face_new (GtkAdjustment *hour, GtkAdjustment *minute, GtkAdjustment *second)
 {
   GpeClockFace *clock = g_object_new (gpe_clock_face_get_type (), NULL);
 
   clock->hour_adj = hour;
   clock->minute_adj = minute;
+  clock->second_adj = second;
 
   hand_angles (clock);
 

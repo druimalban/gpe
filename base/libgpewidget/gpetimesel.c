@@ -82,7 +82,8 @@ do_popup (GtkWidget *button, GpeTimeSel *sel)
       sel->popup = gtk_window_new (GTK_WINDOW_POPUP);
 
       clock = gpe_clock_face_new (GTK_ADJUSTMENT (sel->hour_adj), 
-				  GTK_ADJUSTMENT (sel->minute_adj));
+				  GTK_ADJUSTMENT (sel->minute_adj),
+				  NULL);
 
       gpe_clock_face_set_do_grabs (GPE_CLOCK_FACE (clock), FALSE);
 

@@ -1,3 +1,11 @@
+2003-08-31  Nils Faerber <nils@kernelconcepts.de>
+
+	* gpeclockface.c: Added new hand for seconds
+	* gpetimesel.c: Take care of new second hand of gpeclockface
+	* gpe/gpeclockface.h: Updated prototype to reflect second hand
+	* TODO: Avoid draggability of gpeclockface hands when using it
+	as a time display (not edit)
+
 2003-08-29  Philip Blundell  <philb@gnu.org>
 
 	* gpeclockface.c (gpe_clock_face_prepare_xrender): Clear backing
