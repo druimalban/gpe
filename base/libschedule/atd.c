@@ -49,7 +49,7 @@ alarm_filename (guint id, time_t start)
 }
 
 static const char *boilerplate_1 = "#!/bin/sh\nexport DISPLAY=:0\n";
-static const char *condensorplate_1 = "rm -f $0\n";
+static const char *condensorplate_1 = "\nrm -f $0\n";
 
 gboolean
 schedule_set_alarm (guint id, time_t start, const gchar *action)
