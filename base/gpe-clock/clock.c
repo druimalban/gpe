@@ -378,6 +378,7 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   format_12_button = gtk_radio_button_new_with_label (NULL, _("12-hour format"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (format_12_button));
   format_24_button = gtk_radio_button_new_with_label (radiogroup, _("24-hour format"));
+  radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (format_12_button));
   format_analogue_button = gtk_radio_button_new_with_label (radiogroup, _("Analogue format"));
 
   seconds_button = gtk_check_button_new_with_label (_("Show seconds"));
@@ -400,7 +401,7 @@ prefs_window (GtkWidget *w, GtkWidget *time_label)
   g_signal_connect (G_OBJECT (format_12_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_12);
   g_signal_connect (G_OBJECT (format_analogue_button), "toggled", G_CALLBACK (set_format), (void *)FORMAT_ANALOGUE);
  
-  g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (click_ok), window);
+  g_signal_connect (G_OBJECT (ok_button), "clicked", G_CALLBACK (click_ok), window);
 }
 
 static void
