@@ -20,7 +20,6 @@
 #include <gpe/errorbox.h>
 
 #include "event-db.h"
-#include "globals.h"
 
 static unsigned long dbversion;
 static sqlite *sqliteh;
@@ -334,6 +333,18 @@ event_db_forget_details (event_t ev)
 gboolean
 event_db_stop (void)
 {
+  GSList *iter;
+
+  for (iter = one_shot_events; iter; iter = g_slist_next (iter))
+    event_db_destroy(iter->data);
+  event_db_list_destroy(one_shot_events);
+  one_shot_events = NULL;
+
+  for (iter = recurring_events; iter; iter = g_slist_next (iter))
+    event_db_destroy(iter->data);
+  event_db_list_destroy(recurring_events);
+  recurring_events = NULL;
+	
   sqlite_close (sqliteh);
   return TRUE;
 }
@@ -749,4 +760,12 @@ event_db_get_recurrence (event_t ev)
     }
 
   return ev->recur;
+}
+
+gboolean
+event_db_refresh (void)
+{
+  event_db_stop();
+
+  return event_db_start();
 }

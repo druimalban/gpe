@@ -13,6 +13,14 @@
 #include <glib.h>
 #include <time.h>
 
+#define MON  (1 << 0)
+#define TUE  (1 << 1)
+#define WED  (1 << 2)
+#define THU  (1 << 3)
+#define FRI  (1 << 4)
+#define SAT  (1 << 5)
+#define SUN  (1 << 6)
+
 typedef enum
 {
   RECUR_NONE,
@@ -106,6 +114,7 @@ extern GMemChunk *event_chunk, *recur_chunk;
 #endif
 
 extern gboolean event_db_start (void);
+extern gboolean event_db_refresh (void);
 extern gboolean event_db_stop (void);
 
 extern gboolean event_db_add (event_t);

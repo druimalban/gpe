@@ -35,11 +35,3 @@ extern GdkFont *yearfont, *datefont;
 /* stuff that could perhaps be configurable */
 #define TIMEFMT "%R"
 #define MONTHTIMEFMT "%a %d"
-
-#define MON  (1 << 0)
-#define TUE  (1 << 1)
-#define WED  (1 << 2)
-#define THU  (1 << 3)
-#define FRI  (1 << 4)
-#define SAT  (1 << 5)
-#define SUN  (1 << 6)
