@@ -263,7 +263,9 @@ gboolean islearning = FALSE;
 		gtk_widget_set_sensitive(batt_ext.llifetime, FALSE);
 		
 		/* read data from proc entry */
-		fseek(file_apm,0,SEEK_SET);
+		fclose(file_apm);
+		file_apm = fopen(PROC_APM,"r");
+
 		if (fscanf(file_apm,
 			       "%*f %*f %*s %*s %*s %*s %i%% %i",
 		           &percent, 

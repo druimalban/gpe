@@ -114,7 +114,6 @@ get_flash_size()
 		g_strfreev(strv);
 	}
 	result /= (1024 * 1024);
-	result++;
 
 	/* nothing in mtd, try partitions */
 	if (result == 0)
@@ -292,8 +291,10 @@ get_distribution_time()
 	/* OpenEmbedded */
 	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
 	{
+		if (strchr(tmp,'\n'))
+			strchr(tmp,'\n')[0] = 0;
 		if (strlen(tmp) >= 10)
-			result = g_strdup_printf("%s %4s-%2s-%2s %2s:%2s", 
+			result = g_strdup_printf("%s %.4s-%.2s-%.2s\n%.2s:%.2s", 
 				_("Build"), &tmp[0], &tmp[4], &tmp[6], &tmp[8], &tmp[10]);
 		else
 			result = g_strdup_printf("%s %s",_("Build"),tmp);
@@ -543,8 +544,8 @@ Sysinfo_Build_Objects (int whichtab)
 		gtk_label_set_markup(GTK_LABEL(tw),ts);
 		gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.2);
 		g_free(ts);
-		gtk_table_attach(GTK_TABLE(table),tw,1,2,7,8,GTK_FILL,
-						 GTK_FILL,0,0);
+		gtk_table_attach(GTK_TABLE(table),tw,1,2,7,8,GTK_FILL | GTK_EXPAND
+					     ,GTK_FILL,0,0);
 		g_free(fv);
 		g_free(ft);
 	}

@@ -1,5 +1,6 @@
 2004-06-17	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Released V 0.1.11
+	* battery.c, sysinfo.c: Minor fixes: Device needs reopening. Formating.
 	* sysinfo.c: Swapped methods identifying flash size.
 	* sysinfo.c: Added some Zaurus models.
 	* sysinfo.c, Makefile: We know about Familiar and OpenEmbedded now.

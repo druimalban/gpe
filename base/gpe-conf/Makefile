@@ -55,7 +55,7 @@ PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS) -I.
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt -L/usr/X11R6/lib -lXrandr 
 
 #Uncomment this if you use the old GTK2 crosstoolchain
-#PACKAGE_LDFLAGS +=  /skiff/local/arm-linux/lib/X11/libXinerama.a
+PACKAGE_LDFLAGS +=  /skiff/local/arm-linux/lib/X11/libXinerama.a
 
 ifeq ($(DEBUG),yes)
 PACKAGE_CFLAGS += -g -DDEBUG
