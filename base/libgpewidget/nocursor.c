@@ -43,7 +43,6 @@ gdk_window_set_cursor (GdkWindow *window,
 {
   if (gpe_stylus_mode ())
     {
-      printf ("stylus mode: yes\n");
       if (! nocursor)
 	{
 	  char bits = 0;
@@ -58,8 +57,5 @@ gdk_window_set_cursor (GdkWindow *window,
       _gdk_window_set_cursor (window, nocursor);
     }
   else
-    {
-      printf ("stylus mode: no\n");
-      _gdk_window_set_cursor (window, cursor);
-    }
+    _gdk_window_set_cursor (window, cursor);
 }
