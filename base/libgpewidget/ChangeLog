@@ -1,5 +1,9 @@
 2003-04-18  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.60 released.
+	
+2003-04-18  Philip Blundell  <philb@gnu.org>
+
 	* gpe/tray.h (gpe_system_tray_send_message): Add prototype.
 	(gpe_system_tray_cancel_message): Likewise.
 
