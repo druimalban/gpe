@@ -32,6 +32,7 @@
 #include "applets.h"
 #include "suid.h"
 #include "parser.h"
+#include "packages.h"
 
 
 /* --- local types and constants --- */
@@ -57,13 +58,13 @@ t_kbd;
 
 static t_kbd *kbds = NULL;
 static int numkbds = 0;
-
+static char *instlog = NULL;
 
 /* --- local intelligence --- */
 
 // writes the config file
-static int
-write_keyboard_cfg (int whichkbd)
+void
+write_keyboard_cfg (char* content)
 {
 	FILE *fnew;
 	
@@ -71,15 +72,22 @@ write_keyboard_cfg (int whichkbd)
 	if (!fnew)
 	{
 		fprintf (stderr, "Could not write to file: %s.\n", KBDCFG_FILE);
-		return TRUE;
+		return;
 	}
 
-	fprintf (fnew, "KBD_IDENT=%s\n", kbds[whichkbd].identifier);
-	fprintf (fnew, "KBD_DEVICE=%s\n", kbds[whichkbd].device_name);
+	fprintf (fnew, "%s", content);
 	fclose (fnew);
-	return FALSE;
 }
 
+// creates the config file contents
+static char*
+create_keyboard_cfg (int whichkbd)
+{
+	char* result;
+	
+	result = g_strdup_printf ("KBD_IDENT=%s\nKBD_DEVICE=%s\n", kbds[whichkbd].identifier,kbds[whichkbd].device_name);
+	return result;
+}
 
 // reads the config file
 static char *
@@ -178,10 +186,32 @@ get_keyboard_defs ()
 	return numkbds;
 }
 
-void do_install (GtkWidget * button, GdkEventButton * event,
-		 gpointer user_data)
+void
+get_output(char *what)
 {
+	int len = 0; 
+	if (strstr(what,"<end>"))
+	{
+		gpe_error_box(instlog);
+		free(instlog);
+		instlog = NULL;
+	}
+	else
+	{
+		if (instlog) len = strlen(instlog);
+		instlog = realloc(instlog, len + strlen(what) +1);
+		sprintf(instlog+len,"%s",what);
+	}
+}
 
+void 
+do_install (GtkWidget * button,
+		 int nr)
+{
+	gtk_widget_set_sensitive(button,FALSE);
+	suid_exec("PAIS",kbds[nr].package_name);
+	gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_generic, (void*)get_output);
+#warning	install support package
 }
 
 /* --- gpe-conf interface --- */
@@ -195,12 +225,15 @@ void
 Keyboard_Save ()
 {
 	int i;
+	char *cfg;
 // write name of device to config file
 	for (i=0;i<numkbds;i++)
 	{
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(kbds[i].rbSelect)))
 		{
-			write_keyboard_cfg(i);
+			cfg = create_keyboard_cfg(i);
+			suid_exec("KBDC",cfg);
+			free(cfg);
 			break;
 		}
 	}
@@ -286,7 +319,8 @@ Keyboard_Build_Objects (void)
 				      ("Tap here to install support for this keyboard."),
 				      NULL);
 			g_signal_connect (kbds[i].bInstall, "clicked",
-				  G_CALLBACK (do_install), &kbds[i]);
+				  G_CALLBACK (do_install), (void*)i);
+			gtk_widget_set_sensitive(kbds[i].bInstall,!do_package_check(kbds[i].package_name));
 		}
 	}
 

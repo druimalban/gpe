@@ -358,7 +358,7 @@ suidloop (int write, int read)
 	char passwd[100];
 	FILE *in = fdopen (read, "r");
 	char *bin = NULL;
-	char arg1[100];
+	char arg1[255];
 	char arg2[100];
 	int numarg = 0;
 
@@ -379,14 +379,13 @@ suidloop (int write, int read)
 			bin = NULL;
 			if ((check_user_access (cmd) == TRUE) || (check_root_passwd (passwd)))	// we want to know it exact
 			{
-				/* if (strcmp (cmd, "CHEK") == 0)  we do nothing - just check root password */
 
-				if (strcmp (cmd, "NTPD") == 0)
+				if (strcmp (cmd, "NTPD") == 0)  // sets system time from timeserver
 				{
 					fscanf (in, "%100s", arg2);	// get timeserver
 					update_time_from_net (arg2);
 				}
-				else if (strcmp (cmd, "STIM") == 0)
+				else if (strcmp (cmd, "STIM") == 0)  // sets the system time
 				{
 					time_t t;
 					fscanf (in, "%ld", &t);
@@ -401,7 +400,7 @@ suidloop (int write, int read)
 				}
 				/* of course it is a security hole */
 				/* but certainly enough for PDA..  */
-				else if (strcmp (cmd, "CPPW") == 0)
+				else if (strcmp (cmd, "CPPW") == 0)  // installs a new passwd file
 				{
 					bin = "/bin/cp";
 					strcpy (arg1, "/tmp/passwd");
@@ -412,7 +411,7 @@ suidloop (int write, int read)
 					system_printf ("chmod 0644 %s", arg2);
 					system_printf ("/bin/rm -f %s", arg1);
 				}
-				else if (strcmp (cmd, "CPIF") == 0)
+				else if (strcmp (cmd, "CPIF") == 0)  // installs a new interfaces file
 				{
 					fscanf (in, "%100s", arg2);	// to forget soon...
 					bin = "/bin/cp";
@@ -427,7 +426,7 @@ suidloop (int write, int read)
 					system_printf ("/bin/rm -f %s", arg1);
 					system ("/etc/init.d/networking restart");
 				}
-				else if (strcmp (cmd, "CPOI") == 0)
+				else if (strcmp (cmd, "CPOI") == 0)  // rewrites owner information data
 				{
 					bin = "/bin/cp";
 					system_printf ("/bin/cp %s %s",
@@ -438,87 +437,92 @@ suidloop (int write, int read)
 					system_printf ("/bin/rm -f %s",
 						       GPE_OWNERINFO_TMP);
 				}
-				else if (strcmp (cmd, "XCAL") == 0)
+				else if (strcmp (cmd, "XCAL") == 0)  // runs xcalibrate
 				{
 					system ("/usr/X11R6/bin/xcalibrate");
 				}
-				else if (strcmp (cmd, "STZO") == 0)
+				else if (strcmp (cmd, "STZO") == 0)  // changes the timezone setting 
 				{
 					fscanf (in, "%100s", arg2);
 					set_timezone (arg2);
 				}
-				else if (strcmp (cmd, "ULBS") == 0)
+				else if (strcmp (cmd, "ULBS") == 0)  // turn login bg on/off
 				{
 					fscanf (in, "%1s", arg2);
 					update_login_bg_sh (arg2);
 				}
-				else if (strcmp (cmd, "UOIS") == 0)
+				else if (strcmp (cmd, "UOIS") == 0)  // change if owner information is shown or not
 				{
 					fscanf (in, "%1s", arg2);
 					update_ownerinfo_sh (arg2);
 				}
-				else if (strcmp (cmd, "ULDS") == 0)
+				else if (strcmp (cmd, "ULDS") == 0)  // change auto lock of display
 				{
 					fscanf (in, "%1s", arg2);
 					update_login_lock_auto (arg2);
 				}
-				else if (strcmp (cmd, "ULBF") == 0)
+				else if (strcmp (cmd, "ULBF") == 0)  // change background of login screen
 				{
 					fscanf (in, "%100s", arg2);
 					update_login_background (arg2);
 				}
-				else if (strcmp (cmd, "DHCP") == 0)
+				else if (strcmp (cmd, "DHCP") == 0)  // switch dhcp usage on/off
 				{
 					fscanf (in, "%100s", arg2);
 					update_dhcp_status (arg2);
 				}
-				else if (strcmp (cmd, "SDNS") == 0)
+				else if (strcmp (cmd, "SDNS") == 0)  // change to another dns server
 				{
 					fscanf (in, "%100s", arg2);
 					update_dns_server (arg2);
 				}
-				else if (strcmp (cmd, "SCRB") == 0)
+				else if (strcmp (cmd, "SCRB") == 0)  // change frontlight brightness
 				{
 					fscanf (in, "%d", &numarg);
 					update_screen_brightness (numarg);
 				}
-				else if (strcmp (cmd, "SCRR") == 0)
+				else if (strcmp (cmd, "SCRR") == 0)  // rotate screen
 				{
 					fscanf (in, "%d", &numarg);
 					update_screen_rotation (numarg);
 				}
-				else if (strcmp (cmd, "SCRL") == 0)
+				else if (strcmp (cmd, "SCRL") == 0)  // chnage frontlight state
 				{
 					fscanf (in, "%d", &numarg);
 					update_light_status (numarg);
 				}
-				else if (strcmp (cmd, "CRHD") == 0)
+				else if (strcmp (cmd, "CRHD") == 0)  // create a users home directory
 				{
 					fscanf (in, "%100s", arg1);	// directory
 					fscanf (in, "%100s", arg2);	// username
 					create_homedir (arg1, arg2);
 				}
-				else if (strcmp (cmd, "NWUD") == 0)
+				else if (strcmp (cmd, "NWUD") == 0)  // run system packages update
 				{
 					fscanf (in, "%100s", arg1);
 					update_packages ();
 				}
-				else if (strcmp (cmd, "SERU") == 0)
+				else if (strcmp (cmd, "PAIS") == 0)  // install a ipk package
+				{
+					fscanf (in, "%100s", arg1);
+					do_package_install (arg1);
+				}
+				else if (strcmp (cmd, "SERU") == 0)  // change serial port usage
 				{
 					fscanf (in, "%d", &numarg);
 					assign_serial_port (numarg);
 				}
-				else if (strcmp (cmd, "CMID") == 0)
+				else if (strcmp (cmd, "CMID") == 0)  // identify pcmcia card
 				{
 					fscanf (in, "%d", &numarg);
 					do_get_card_ident (numarg);
 				}
-				else if (strcmp (cmd, "CMRE") == 0)
+				else if (strcmp (cmd, "CMRE") == 0)  // reset cardmgr
 				{
 					fscanf (in, "%100s", arg1);
 					do_reset ();
 				}
-				else if (strcmp (cmd, "CMCP") == 0)
+				else if (strcmp (cmd, "CMCP") == 0)  // copy pcmcia config
 				{
 					fscanf (in, "%s", arg1);
 					system_printf ("/bin/cp %s %s",
@@ -529,7 +533,12 @@ suidloop (int write, int read)
 					system_printf ("/bin/rm -f %s",
 						       pcmcia_tmpcfgfile);
 				}
-				else if (strcmp (cmd, "GAUA") == 0)
+				else if (strcmp (cmd, "KBDC") == 0)  // write a new keyboard config file
+				{
+					fscanf (in, "%255s", arg1);
+					write_keyboard_cfg (arg1);
+				}
+				else if (strcmp (cmd, "GAUA") == 0)  // change user access to gpe-conf
 				{
 					fscanf (in, "%100s", arg1);
 					do_change_user_access (arg1);
@@ -541,7 +550,7 @@ suidloop (int write, int read)
 				{
 					fscanf (in, "%100s", arg2);
 				}
-				else if (strcmp (cmd, "STIM") == 0)
+				else if (strcmp (cmd, "STIM") == 0) 
 				{
 					time_t t;
 					fscanf (in, "%ld", &t);

@@ -47,24 +47,84 @@ static GtkWidget *bUpdate;
 
 /* --- local intelligence --- */
 
+
 /*
- *	Installs an ipk package.
+ *  This function is called from suid task to perform a package install.  
+ *  Any output is returned through pipe.
  */
-int do_package_install(char *package)
+int do_package_install(const char *package)
 {
-	return TRUE;
+  FILE *pipe;
+  static char cur[256];
+		
+  if (setvbuf(nsreturn,NULL,_IONBF,0) != 0) 
+    fprintf(stderr,"gpe-conf: error setting buffer size!");
+  fprintf(nsreturn,"%s %s\n",_("Installing package"),package);
+  snprintf(cur,256,"ipkg -force-defaults install %s 2>&1",package);
+  pipe = popen(cur, "r");
+
+  if (pipe > 0)
+    {
+      while ((!feof (pipe)) && (!ferror (pipe)))
+	  {
+	    if (fgets(cur, 255, pipe) > 0)
+			fprintf(nsreturn,"%s",cur);
+	  }
+	  pclose(pipe);
+    } 
+	
+  fprintf(nsreturn,"<end>\n");
+  fflush(nsreturn);
+  fsync(nsreturnfd);
+  return TRUE;
 }
+
 
 /* 
  * Checks if the given packeage is installed.
  */
-int do_package_check(char *package)
+int do_package_check(const char *package)
 {
-	return FALSE;
+	char s1[100], s2[100], s3[100];
+	char *command = g_strdup_printf("/usr/bin/ipkg status %s",package);
+	if (parse_pipe(command,"Status: %s %s %s",s1,s2,s3))
+	{
+		return FALSE;
+	}
+	else		
+	{
+		printf("s1: %s, s2: %s, s3: %s\n",s1,s2,s3);
+		if (!strcmp(s1,"install") && !strcmp(s2,"ok") && !strcmp(s3,"installed"))
+			return TRUE;
+		else
+			return FALSE;
+	}
 }
 
 
-gboolean poll_log_pipe()
+gboolean poll_log_pipe_generic(void callback(char*))
+{
+  static char str[256];
+  struct pollfd pfd[1];
+
+  pfd[0].fd = suidinfd;
+  pfd[0].events = (POLLIN | POLLRDNORM | POLLRDBAND | POLLPRI);
+  while (poll(pfd,1,0))
+  {
+     fgets (str, 255, suidin);
+	 {
+       callback(str);
+	 }
+     if (strstr(str,"<end>")) 
+     {
+		 return FALSE;
+	 }
+  }
+  return TRUE;	
+}
+
+
+static gboolean poll_log_pipe_update()
 {
   static char str[256];
   struct pollfd pfd[1];
@@ -92,7 +152,7 @@ gboolean poll_log_pipe()
 /*
  *  This function is called from suid task to perform the update.  
  *  Any output is returned through pipe.
-*/
+ */
 void do_package_update()
 {
   FILE *pipe;
@@ -205,7 +265,7 @@ Packages_Build_Objects (void)
   gtk_container_add(GTK_CONTAINER(cur),txLog);
   gtk_box_pack_start_defaults(GTK_BOX(vbox),cur);	
    
-  gtk_timeout_add (1000, (GtkFunction) poll_log_pipe, NULL);
+  gtk_timeout_add (1000, (GtkFunction) poll_log_pipe_update, NULL);
 
   /* change buffering of suid process input pipe */
   if (setvbuf(suidin,NULL,_IONBF,0) != 0) 

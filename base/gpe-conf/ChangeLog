@@ -1,5 +1,11 @@
 When			Who				Where						What
 
+25.04.2003		Florian			keyboards.def				Bugfixes, added package installation for keyboard packages.
+								keyboard.c					(very basic)
+								packages.*					
+								suid.c						Some comments and tasks for package installation.
+								timeanddate.c				Changed setting time call, some cleanups. 
+
 25.04.2003		Florian			po/pt.po					Added translation.
 								Makefile
 

@@ -5,7 +5,7 @@ device=/dev/microkbd/snapntype
 support-package=snapntype-microkbd
 
 [Stowaway]
-module-package=microkbd-modules
+module-package=stowaway-modules
 module-name=h3600_stowaway
 device=/dev/stowaway
 support-package=stowaway-h3600

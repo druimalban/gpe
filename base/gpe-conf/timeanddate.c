@@ -40,7 +40,7 @@ gchar *Ntpservers[6]=
   };
 
 gchar *timezones[][3]= {
-    {"UTC / WET / GMT","UTC","WEDST"},
+    {"UTC / WET / GMT","UTC-0","WEDST"},
     {"MET / MEZ / CET / SWT","MEZ-1","MESZ"},
     {"EET","EET-2","EETD"},
     {"BT","BT-3","BT"},
@@ -121,7 +121,8 @@ static struct
   GtkWidget *offsetlabel;
 } self;
 
-int trc = 0;  // countdown for waiting for time change
+static int trc = 0;  // countdown for waiting for time change
+static int isdst;    // is a dst active?
 
 /* --- local intelligence --- */
 
@@ -169,18 +170,6 @@ char *compose_tz_advanced(tzinfo tzi)
 		}
 	}	
 	
-	return(result);
-}
-
-
-/*
- *  This function composes a TZ string from given parameters.
- */
-char *compose_tz_simple(char *tz,char *dst)
-{
-	char *result;
-	
-	result = g_strdup_printf("%s%s",tz,dst);
 	return(result);
 }
 
@@ -341,6 +330,7 @@ GtkWidget *Time_Build_Objects()
 
   if(ts.tm_year < 2002)
     ts.tm_year=2002;
+  isdst = ts.tm_isdst;
 
   tooltips = gtk_tooltips_new ();
   
@@ -591,27 +581,8 @@ void Time_Save()
   time_t t;
   char* par = malloc(100);
   tzinfo tz;
-  
-  gtk_calendar_get_date(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),&year,&month,&day);
-  h=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.h));
-  m=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.m));
-  s=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.s));
-  tm.tm_mday=day;
-  tm.tm_mon=month;
-  tm.tm_year=year-1900;
-  tm.tm_hour=h;
-  tm.tm_min=m;
-  tm.tm_sec=s;
-  tm.tm_isdst = 0;
-  t=mktime(&tm);
-
-  /* set time */
-  snprintf(par,99,"%ld",t);
-  suid_exec("STIM",par);
-  
-  free(par);
-  
-  /* set timezone */
+ 
+   /* set timezone */
     
   for (s=0;s<=TZ_MAXINDEX;s++)
 	  if (!strcmp(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.timezone)->entry)),timezones[s][0]))
@@ -632,12 +603,50 @@ void Time_Save()
 			tz.utcdstofs_m = 0;
 		}
 		par = compose_tz_advanced(tz);
-		printf("TZ = %s\n",par);
-  		if (setenv("TZ",par,1))
-	  		gpe_error_box(_("Could not set timezone."));
+		printf("new TZ = %s\n",par);
+//  		if (setenv("TZ",par,1))
+//	  		gpe_error_box(_("Could not set timezone."));
 		suid_exec("STZO",par);
 		break;
 	  }
+ 
+  tz = get_tz_info(par);
+	  
+  gtk_calendar_get_date(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),&year,&month,&day);
+  h=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.h));
+  m=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.m));
+  s=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.s));
+  tm.tm_mday=day;
+  tm.tm_mon=month;
+  tm.tm_year=year-1900;
+  if (isdst)
+  {
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.defaultdst)))
+    {
+      tm.tm_hour=(h+24+(tz.utcofs_h+24-1)%24) % 24; // defaults to one hour ahead
+      tm.tm_min=(m+60+tz.utcofs_m) % 60;
+	}
+	else
+    {
+      tm.tm_hour=(h+24+tz.utcdstofs_h) % 24;
+      tm.tm_min=(m+60+tz.utcdstofs_m) % 60;
+	}
+
+  }
+  else
+  {
+     tm.tm_hour=(h+24+tz.utcofs_h) % 24;
+     tm.tm_min=(m+60+tz.utcofs_m) % 60;
+  }
+  tm.tm_sec=s;
+  tm.tm_isdst = isdst;
+  t = timegm(&tm);
+  
+  /* set time */
+  snprintf(par,99,"%ld",t);
+  suid_exec("STIM",par);
+  
+  free(par);  
 }
 
 void Time_Restore()

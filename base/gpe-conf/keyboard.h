@@ -6,4 +6,6 @@ void Keyboard_Free_Objects();
 void Keyboard_Save();
 void Keyboard_Restore();
 
+void write_keyboard_cfg (char* content);
+
 #endif
