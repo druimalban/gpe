@@ -539,50 +539,50 @@ get_day_from_y(int yc)
 
 
 static gboolean
-week_view_button_press (GtkWidget *widget,
-	                    GdkEventButton *event,
-	                    gpointer d)
+week_view_button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
 {
   guint y = event->y;
   struct render_ctl *c;
 
-  if (event->button != 1)
-    return FALSE;
-
-  c = &week_days[get_day_from_y(y)].rc;
+  c = &week_days[get_day_from_y (y)].rc;
   if (c->valid)
     {
       if (event->type == GDK_BUTTON_PRESS)
         {
-          int i;
-          for (i=0;i<7;i++)
-             week_days[i].is_active = FALSE;
-          week_days[get_day_from_y(y)].is_active = TRUE;
-          viewtime = time_from_day(c->popup.year, c->popup.month, c->popup.day);
-	  gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
-	  gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
-          week_view_update();
-          
-          if (pop_window) 
-            gtk_widget_destroy (pop_window);
+	  if (event->button == 1)
+	    {
+	      int i;
+	      for (i = 0; i < 7; i++)
+		week_days[i].is_active = FALSE;
+	      week_days[get_day_from_y (y)].is_active = TRUE;
+	      viewtime = time_from_day (c->popup.year, c->popup.month, c->popup.day);
+	      gtk_calendar_select_month (GTK_CALENDAR (calendar), c->popup.month, c->popup.year + 1900);
+	      gtk_calendar_select_day (GTK_CALENDAR (calendar), c->popup.day);
+	      week_view_update();
+	    }
+	  else if (event->button == 3)
+	    {
+	      if (pop_window) 
+		gtk_widget_destroy (pop_window);
     
-          if (c != c_old) 
-            {
-              pop_window = day_popup (main_window, &c->popup, FALSE);
-              c_old = c;
-            }
-          else 
-            {
-              pop_window = NULL;
-              c_old = NULL;
-            }
+	      if (c != c_old) 
+		{
+		  pop_window = day_popup (main_window, &c->popup, FALSE);
+		  c_old = c;
+		}
+	      else 
+		{
+		  pop_window = NULL;
+		  c_old = NULL;
+		}
+	    }
         }
       else if (event->type == GDK_2BUTTON_PRESS)
         {
           struct tm tm;
           time_t selected_time;
           localtime_r (&viewtime, &tm);
-          tm.tm_year = c->popup.year;// - 1900;
+          tm.tm_year = c->popup.year;
           tm.tm_mon = c->popup.month;
           tm.tm_mday = c->popup.day;
           selected_time = mktime (&tm);

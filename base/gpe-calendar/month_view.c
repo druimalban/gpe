@@ -50,16 +50,11 @@ static gint month_view_update (void);
 static gint title_height;
 
 static gboolean
-button_press (GtkWidget *widget,
-	      GdkEventButton *event,
-	      gpointer d)
+button_press (GtkWidget *widget, GdkEventButton *event, gpointer d)
 {
   guint x = event->x;
   guint y = event->y;
   struct render_ctl *c;
-
-  if (event->button != 1)
-    return FALSE;
 
   if (x < xp || y < ys)
     return FALSE;
