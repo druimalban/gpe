@@ -29,19 +29,23 @@ static GError *gerr = NULL;
 static void
 handle_gerr (const char *err, GError *gerr)
 {
-  if (DEBUG)
+#ifdef DEBUG
     fprintf (stderr, "%s", err);
+#endif
     
   if (gerr && gerr->message)
     {
-      if (DEBUG)
-        fprintf (stderr, " %s\n", gerr->message);
+#ifdef DEBUG
+      fprintf (stderr, " %s\n", gerr->message);
+#endif
       g_error_free (gerr);
     }
-  else if (DEBUG)
+#ifdef DEBUG
+    else
     {
       fprintf (stderr, " <no gerr>\n");
     }
+#endif
 }
 
 static gboolean
@@ -54,7 +58,7 @@ irc_server_send (IRCServer * server, gchar * command, const gchar * param)
     {
       str = g_strdup_printf ("%s %s\n", command, param);
 
-#if DEBUG
+#ifdef DEBUG
       printf ("Sending [%s]\n", str);
 #endif
 
@@ -184,9 +188,10 @@ irc_server_in (GIOChannel * source, GIOCondition condition, gpointer data)
 
   if (condition != G_IO_IN)
     {
-      if (DEBUG)
+#ifdef DEBUG
         fprintf (stderr, "%s:%d woken up, but for %d, not G_IO_IN\n", 
                  __FILE__, __LINE__, condition);
+#endif
       return FALSE;
     }
 
@@ -203,7 +208,9 @@ irc_server_in (GIOChannel * source, GIOCondition condition, gpointer data)
 #else
   if (status == G_IO_STATUS_NORMAL)
     {
-      printf ("[%s]\n", line->str);
+#ifdef DEBUG
+      fprintf (stderr, "[%s]\n", line->str);
+#endif
       irc_server_parse (server, line->str);
     }
   else
@@ -226,10 +233,13 @@ irc_server_hup (GIOChannel * source, GIOCondition condition, gpointer data)
 
   server->connected = FALSE;
   status = g_io_channel_shutdown (source, FALSE, &gerr);
-  if (status != G_IO_STATUS_NORMAL && DEBUG)
+
+#ifdef DEBUG
+  if (status != G_IO_STATUS_NORMAL)
     {
       handle_gerr ("irc_server_hup: g_io_channel_shutdown err,", gerr);
     }
+#endif
 
   //g_io_channel_unref (source);
   return FALSE;
