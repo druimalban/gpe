@@ -279,7 +279,7 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 }
 
 static gboolean
-run_scan (void)
+run_scan (gpointer data)
 {
   bdaddr_t bdaddr;
   inquiry_info *info = NULL;
@@ -307,7 +307,6 @@ run_scan (void)
       gpe_perror_box_nonblocking (_("Inquiry failed"));
       gtk_widget_show_all (devices_window);
       gdk_threads_leave ();
-      close (dev_id);
       return FALSE;
     }
 
@@ -319,7 +318,6 @@ run_scan (void)
       gpe_perror_box_nonblocking (_("HCI device open failed"));
       gtk_widget_show_all (devices_window);
       gdk_threads_leave ();
-      close (dev_id);
       free(info);
       return FALSE;
     }
@@ -380,7 +378,7 @@ run_scan (void)
     }
   
   close (dd);
-  close (dev_id);
+  free (info);
 
   gdk_threads_enter ();
 
