@@ -1812,7 +1812,7 @@ main (int argc, char *argv[])
       gtk_box_pack_start (GTK_BOX (vbox2), vbox, FALSE, FALSE, 0);
 
       if (socket)
-	gtk_box_pack_end (GTK_BOX (vbox2), socket, FALSE, FALSE, 0);
+	gtk_box_pack_end (GTK_BOX (vbox2), socket, TRUE, TRUE, 0);
       
 #if 0
       gtk_box_pack_end (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);

@@ -1,5 +1,13 @@
 2004-07-04  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.71 released.
+
+2004-07-04  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (main): Tweak packing options for new-user mode.
+
+2004-07-04  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.70 released.
 
 2004-07-04  Philip Blundell  <philb@gnu.org>
