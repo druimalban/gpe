@@ -7,6 +7,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#include <stdlib.h>
+
 #include <glib.h>
 #include <gcrypt.h>
 #include <sys/stat.h>
