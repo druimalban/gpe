@@ -159,7 +159,9 @@ get_flash_size()
 t_deviceinfo 
 get_device_info()
 {
+	gboolean islinux26 = FALSE;
 	t_deviceinfo result;
+	struct utsname uinfo;
 #ifdef __arm__	
 	char **strv;
 	int len = 0;
@@ -173,6 +175,8 @@ get_device_info()
 	result.ram = 0;
 	result.flash = 0;
 
+	uname(&uinfo);
+	
 #ifdef __arm__
 	/* check mach type and model */
 	if (!access(P_IPAQ,F_OK))
@@ -235,6 +239,7 @@ get_device_info()
 #endif
 #ifdef __i386__
 	result.cpu = g_strdup(_("Intel x86 or compatible"));
+	result.model = g_strdup_printf("%s, %s", _("IBM type PC"), uinfo.machine);
 #endif
 #ifdef __mips__
 	result.cpu = g_strdup(_("Mips"));
@@ -246,12 +251,19 @@ get_device_info()
 	result.cpu = g_strdup(_("IBM Power or PowerPC"));
 #endif
 	if (!result.model)
-		result.model = g_strdup(MACHINE);
+		result.model = g_strdup_printf("%s (%s)", uinfo.machine, MACHINE);
 #endif
 	
+	/* are we on linux >= 2.6.0 */
+	
+	islinux26 = g_str_has_prefix(uinfo.version, "2.6");
+	
 	/* memory and flash size */
+	
 	system_memory();
-	result.ram = meminfo.total / 1024 + 1;
+	result.ram = meminfo.total;
+	if (!islinux26) 
+		result.ram = result.ram / 1024 + 1;
 	result.flash = get_flash_size();
 	return result;
 }

@@ -1,3 +1,9 @@
+2004-10-24	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* sysinfo.c (get_device_info): Changed memory size info to (hopefully)
+	                               work with linux 2.6.
+	                               Added some more details from uname().
+
 2004-10-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* users/callbacks.c, interface.c: Support for standalone password dialog.
