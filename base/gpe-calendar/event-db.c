@@ -16,6 +16,9 @@
 
 #include "event-db.h"
 
+#define SECONDS_IN_DAY (24*60*60)
+#define SECONDS_IN_WEEK (7*SECONDS_IN_DAY)
+
 static sqlite *sqliteh;
 
 static GSList *single_events, *recurring_events;
@@ -60,14 +63,15 @@ event_db_remove_internal (event_t ev)
 static int
 load_callback (void *arg, int argc, char **argv, char **names)
 {
-  if (argc == 3)
+  if (argc == 5)
     {
       event_t ev = g_malloc (sizeof (struct event_s));
       
       ev->uid = atoi (argv[0]);
       ev->start = (time_t)atoi (argv[1]);
       ev->duration = argv[2] ? atoi(argv[2]) : 0;
-      ev->recur.type = RECUR_NONE;	/* @@@ */
+      ev->alarm = atoi (argv[3]);
+      ev->recur.type = atoi (argv[4]);
       
       if (event_db_add_internal (ev) == FALSE)
 	return 1;
@@ -81,7 +85,7 @@ event_db_start (void)
 {
   static const char *schema_str = 
     "create table events (uid integer NOT NULL, start integer NOT NULL,"
-    " duration integer, alarm integer, description text)";
+    " duration integer, alarm integer, description text, recur_type integer)";
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
@@ -101,8 +105,8 @@ event_db_start (void)
     }
 
   sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
-
-  if (sqlite_exec (sqliteh, "select uid, start, duration from events",
+  
+  if (sqlite_exec (sqliteh, "select uid, start, duration, alarm, recur_type from events",
 		   load_callback, NULL, &err))
     {
       fprintf (stderr, "%s\n", err);
@@ -213,10 +217,10 @@ event_db_add (event_t ev)
     return FALSE;
   
   if (sqlite_exec_printf (sqliteh, 
-			  "insert into events values (%d, %d, %d, %d, '%q')", 
+			  "insert into events values (%d, %d, %d, %d, '%q', %d)", 
 			  NULL, NULL, &err, 
-			  ev->uid, ev->start, ev->duration, 0, 
-			  ev->details->description))
+			  ev->uid, ev->start, ev->duration, ev->alarm, 
+			  ev->details->description, ev->recur.type))
     {
       event_db_remove_internal (ev);
       fprintf (stderr, "%s\n", err);
