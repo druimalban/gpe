@@ -24,6 +24,8 @@
 
 #include <bluetooth/bluetooth.h>
 
+#define WRONG_ARGS_ERROR "org.handhelds.gpe.bluez.Error.WrongArgs"
+
 struct pin_request_context
 {
   DBusConnection *connection;
@@ -63,12 +65,18 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
   char *address;
   DBusMessage *reply;
   struct pin_request_context *ctx;
+  DBusError error;
 
+  dbus_error_init (&error);
   dbus_message_iter_init (message, &iter);
-  
+ 
   type = dbus_message_iter_get_arg_type (&iter);
   if (type != DBUS_TYPE_BOOLEAN)
+  {
+    reply = dbus_message_new_error_reply (message, WRONG_ARGS_ERROR,
+		    			  "Boolean expected, other type given");
     goto error;
+  }
 
   out = dbus_message_iter_get_boolean (&iter);
 
@@ -81,7 +89,11 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
 
       type = dbus_message_iter_get_arg_type (&iter);
       if (type != DBUS_TYPE_BYTE)
+      {
+        reply = dbus_message_new_error_reply (message, WRONG_ARGS_ERROR,
+					      "Byte type expected, other type given");
 	goto error;
+      }
 
       p[i] = dbus_message_iter_get_byte (&iter);
     }
@@ -100,6 +112,5 @@ bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message)
   return;
 
  error:
-  reply = dbus_message_new_error_reply (message, NULL, NULL);
   dbus_connection_send (connection, reply, NULL);
 }

@@ -23,8 +23,14 @@
 #include <dbus/dbus-glib.h>
 
 #define REQUEST_NAME "org.handhelds.gpe.bluez.pin-request"
+#define SERVICE_NAME "org.handhelds.gpe.bluez"
 
 #define _(x) gettext(x)
+
+struct pin_request_context;
+
+extern void bluez_pin_handle_dbus_request (DBusConnection *connection, DBusMessage *message);
+extern void bluez_pin_request (struct pin_request_context *ctx, gboolean outgoing, const gchar *address, const gchar *name);
 
 DBusHandlerResult
 handler_func (DBusMessageHandler *handler,
@@ -62,6 +68,14 @@ bluez_pin_dbus_server_run (void)
 
   handler = dbus_message_handler_new (handler_func, NULL, NULL);
   dbus_connection_add_filter (connection, handler);
+
+  dbus_bus_acquire_service (connection, SERVICE_NAME, 0, &error);
+  if (dbus_error_is_set (&error))
+    {
+      fprintf (stderr, "Failed to acquire service: %s\n", error.message);
+      dbus_error_free (&error);
+      exit (1);
+    }
 }
 
 void
@@ -75,8 +89,6 @@ usage (char *argv[])
 int 
 main (int argc, char *argv[])
 {
-  char *pin;
-  gboolean gui_started;
   char *dpy = getenv (dpy);
   gboolean dbus_mode = FALSE;
   gchar *address, *name = NULL;
