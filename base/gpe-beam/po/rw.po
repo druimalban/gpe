@@ -1,0 +1,305 @@
+# Kinyarwanda translations for gpe-beam package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-beam package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-beam 0.2.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-10-16 14:18+0200\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:167
+msgid "Error"
+msgstr "Ikosa"
+
+#: main.c:172
+msgid "Failed"
+msgstr "Yapfuye"
+
+#: main.c:175
+msgid "Done"
+msgstr "Byakozwe"
+
+# sw/source\ui\app\app.src:STR_STATSTR_LAYOUTINIT.text
+#: main.c:178
+msgid "Connecting..."
+msgstr "Kwihuza..."
+
+#: main.c:182
+msgid "Disconnecting..."
+msgstr ""
+
+#: main.c:185
+msgid "Sending..."
+msgstr ""
+
+#: main.c:188
+msgid "Receiving"
+msgstr ""
+
+#: main.c:197
+#, fuzzy
+msgid "Waiting for incoming connection"
+msgstr "kugirango Ukwihuza"
+
+#: main.c:200
+msgid "Connected"
+msgstr ""
+
+#: main.c:203
+msgid "Disconnecting"
+msgstr ""
+
+#: main.c:224
+msgid "Telephony"
+msgstr ""
+
+#: main.c:230
+#, fuzzy
+msgid "File Server"
+msgstr "Idosiye"
+
+#: main.c:236
+msgid "IrCOMM"
+msgstr ""
+
+#: main.c:242
+msgid "IrOBEX"
+msgstr ""
+
+#: main.c:251
+msgid "PnP"
+msgstr ""
+
+#: main.c:257
+msgid "PDA/Palmtop"
+msgstr ""
+
+#: main.c:263
+msgid "Computer"
+msgstr ""
+
+#: main.c:269
+msgid "Printer"
+msgstr "Mucapyi"
+
+# VCARD_LDAP_MODEM_TYPE
+# # @name VCARD_LDAP_MODEM_TYPE
+# # @loc None
+#: main.c:275
+msgid "Modem"
+msgstr "Modemu"
+
+#: main.c:281
+msgid "Fax"
+msgstr "Fagisi"
+
+#: main.c:287
+msgid "LAN Access"
+msgstr ""
+
+#: main.c:361
+#, fuzzy
+msgid "Transmitted file"
+msgstr "IDOSIYE"
+
+#: main.c:370
+#, fuzzy
+msgid "Could not transmit file"
+msgstr "OYA IDOSIYE"
+
+#: main.c:396 main.c:447
+#, fuzzy
+msgid "Unable to start file transmit."
+msgstr "Kuri Gutangira IDOSIYE"
+
+#: main.c:419
+#, fuzzy
+msgid "IR Receive and Transmit........."
+msgstr "Na"
+
+#: main.c:462
+#, fuzzy
+msgid "IR Receive and Transmit....."
+msgstr ""
+"Project- Id- Version: basctl\n"
+"POT- Creation- Date: 2003- 12- 07 17: 13+ 02\n"
+"PO- Revision- Date: 2004- 11- 04 10: 13- 0700\n"
+"Last- Translator: Language- Team:< en@ li. org> MIME- Version: 1. 0\n"
+"Content- Type: text/ plain; charset= UTF- 8\n"
+"Content- Transfer- Encoding: 8bit\n"
+"X- Generator: KBabel 1. 0\n"
+"."
+
+#: main.c:471 main.c:473
+#, fuzzy
+msgid "Error opening IR client."
+msgstr "Gufungura%S Umukiriya"
+
+#: main.c:480
+#, fuzzy
+msgid "Select file to transmit"
+msgstr "IDOSIYE Kuri"
+
+#: main.c:504
+#, fuzzy
+msgid "Could not start import tool."
+msgstr "OYA Gutangira Kuzana"
+
+#: main.c:511
+#, fuzzy
+msgid "vCard was imported successfully."
+msgstr "cyavuye ahandi/ cyatumijwe"
+
+#: main.c:519
+#, fuzzy
+msgid "Import of vCard failed."
+msgstr "Bya Byanze"
+
+#: main.c:548
+#, fuzzy, c-format
+msgid "File '%s' looks like a vCard, do you want to import it?"
+msgstr "Idosiye nka a Kuri Kuzana"
+
+#: main.c:568 main.c:630
+#, fuzzy
+msgid "Unable to start receiver."
+msgstr "Kuri Gutangira Mwakirizi"
+
+#: main.c:582
+#, fuzzy
+msgid "IR Receive and transmit control"
+msgstr "Na Igenzura"
+
+#: main.c:592 main.c:595
+#, fuzzy
+msgid "Error opening IR server."
+msgstr "Gufungura%S Seriveri"
+
+#: main.c:607
+#, fuzzy
+msgid "Received file"
+msgstr "IDOSIYE"
+
+#: main.c:645
+msgid "Transmitting VCard"
+msgstr ""
+
+#: main.c:743
+msgid "Name:"
+msgstr "Izina:"
+
+#: main.c:744
+msgid "Services:"
+msgstr ""
+
+#: main.c:745
+msgid "Address:"
+msgstr "Aderesi:"
+
+#: main.c:752
+msgid "Peer Information"
+msgstr ""
+
+#: main.c:755
+msgid "Peer Actions"
+msgstr ""
+
+#: main.c:763 main.c:991
+#, fuzzy
+msgid "Send File"
+msgstr "Idosiye"
+
+#: main.c:771 main.c:992
+#, fuzzy
+msgid "Receive File"
+msgstr "Idosiye"
+
+#: main.c:821 main.c:886
+#, fuzzy
+msgid "IR transceiver on"
+msgstr "ku"
+
+#: main.c:823 main.c:910
+#, fuzzy
+msgid "IR transceiver off"
+msgstr "Bidakora"
+
+#: main.c:834
+msgid "Infrared Control"
+msgstr ""
+
+#: main.c:983
+msgid "IrDa tool"
+msgstr ""
+
+#: main.c:988
+#, fuzzy
+msgid "Switch IR on"
+msgstr "ku"
+
+#: main.c:989
+#, fuzzy
+msgid "Switch IR off"
+msgstr "Bidakora"
+
+#: main.c:990
+msgid "Send vCard"
+msgstr ""
+
+# #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
+# basctl/source\basicide\basidesh.src:RID_BASICIDE_OBJECTBAR.SID_CHOOSE_CONTROLS.text
+# #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
+# basctl/source\basicide\tbxctl.src:RID_TBXCONTROLS.RID_TOOLBOX.text
+# #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
+# basctl/source\basicide\tbxctl.src:RID_TBXCONTROLS.text
+#: main.c:993
+#, fuzzy
+msgid "Controls..."
+msgstr "Amagenzura"
+
+#: main.c:994
+#, fuzzy
+msgid "Remove from dock"
+msgstr "Bivuye"
+
+#: main.c:1061
+#, fuzzy
+msgid "This is the infrared communications control."
+msgstr "ni i Igenzura"
+
+#: dbus.c:76
+#, fuzzy, c-format
+msgid "Failed to acquire service: %s"
+msgstr "Kuri Serivisi"
+
+#: dbus.c:82
+#, fuzzy, c-format
+msgid "Failed to open connection to session message bus: %s"
+msgstr "Kuri Gufungura Ukwihuza Kuri Umukoro Ubutumwa"
+
+#: gpe-beam.desktop.in.h:1
+#, fuzzy
+msgid "IrDa control"
+msgstr "Igenzura"
+
+#: gpe-beam.desktop.in.h:2
+#, fuzzy
+msgid "Panel based infrared communications control"
+msgstr "Igenzura"
