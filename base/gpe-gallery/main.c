@@ -17,7 +17,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
-
 #include <gtk/gtk.h>
 
 #include <gpe/init.h>
@@ -28,6 +27,8 @@
 #include <gpe/question.h>
 #include <gpe/dirbrowser.h>
 #include <gpe/gpe-iconlist.h>
+
+#include "image_tools.h"
 
 #define WINDOW_NAME "Gallery"
 #define _(_x) gettext (_x)
@@ -55,6 +56,8 @@ struct gpe_icon my_icons[] = {
   { "zoom_out", "gallery/zoom_out" },
   { "zoom_1", "gallery/zoom_1" },
   { "zoom_fit", "gallery/zoom_fit" },
+  { "sharpen", "gallery/sharpen" },
+  { "blur", "gallery/blur" },
   { "ok", "ok" },
   { "cancel", "cancel" },
   { "stop", "stop" },
@@ -86,6 +89,9 @@ show_image (GtkWidget *widget, gpointer *udata)
   gtk_widget_hide (view_widget);
 
   image_pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
+  scaled_image_pixbuf = NULL;
+
+printf ("IMAGE DATA\n\n%s\n\n", gdk_pixbuf_get_pixels( GDK_PIXBUF( image_pixbuf ) )[3000]);
 
   image_widget = gtk_image_new_from_pixbuf (image_pixbuf);
   gtk_box_pack_start (GTK_BOX (vbox2), image_widget, TRUE, TRUE, 0);
@@ -94,6 +100,26 @@ show_image (GtkWidget *widget, gpointer *udata)
   gtk_widget_show (image_widget);
 
   printf ("You just clicked on an image called %s\n", filename);
+}
+
+void
+image_sharpen ()
+{
+  if (!scaled_image_pixbuf)
+    scaled_image_pixbuf = image_pixbuf;
+
+  sharpen (scaled_image_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+}
+
+void
+image_blur ()
+{
+  if (!scaled_image_pixbuf)
+    scaled_image_pixbuf = image_pixbuf;
+
+  blur (scaled_image_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
 void
@@ -137,43 +163,29 @@ void
 image_zoom_fit ()
 {
   gint width, height;
+  gint widget_width, widget_height;
   float ratio;
 
   if (!scaled_image_pixbuf)
     scaled_image_pixbuf = image_pixbuf;
 
+  widget_width = view_widget->allocation.width;
+  widget_height = view_widget->allocation.height - (tools_toolbar->allocation.height);
+
   width = gdk_pixbuf_get_width (GDK_PIXBUF (image_pixbuf));
   height = gdk_pixbuf_get_height (GDK_PIXBUF (image_pixbuf));
 
-  if (height > width)
+  if( height > width )
   {
-    if (height < 200)
-    {
-      ratio = (float) 200 / (float) height;
-      height = 200;
-      width = ratio * width;
-    }
-    else
-    {
-      ratio = (float) height / (float) 200;
-      height = 200;
-      width = width / ratio;
-    }
+    ratio = (float) widget_height / (float) height;
+    height = widget_height;
+    width = width * ratio;
   }
   else
   {
-    if (width < 240)
-    {
-      ratio = (float) 240 / (float) width;
-      width = 240;
-      height = ratio * height;
-    }
-    else
-    {
-      ratio = (float) width / (float) 240;
-      width = 240;
-      height = height / ratio;
-    }
+    ratio = (float) widget_width / (float) width;
+    width = widget_width;
+    height = height * ratio;
   }
 
   scaled_image_pixbuf = gdk_pixbuf_scale_simple (GDK_PIXBUF (image_pixbuf), width, height, GDK_INTERP_BILINEAR);
@@ -412,7 +424,7 @@ show_dirbrowser (void)
 int
 main (int argc, char *argv[])
 {
-  GtkWidget *vbox, *hbox, *toolbar, *info_label, *loading_label;
+  GtkWidget *vbox, *hbox, *toolbar, *loading_label;
   GtkWidget *view_option_menu, *view_menu, *view_menu_item;
   GdkPixbuf *p;
   GtkWidget *pw;
@@ -461,7 +473,6 @@ main (int argc, char *argv[])
   //   (GtkSignalFunc) set_view, "list");
 
   loading_label = gtk_label_new ("Loading...");
-  info_label = gtk_label_new ("No Image");
 
   loading_progress_bar = gtk_progress_bar_new ();
 
@@ -560,8 +571,15 @@ main (int argc, char *argv[])
 
   gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
 
-  gtk_toolbar_append_widget (GTK_TOOLBAR (tools_toolbar), info_label,
-			   _("Image Infomation"), _("Image Infomation"));
+  p = gpe_find_icon ("sharpen");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Sharpen"), 
+			   _("Sharpen"), _("Sharpen"), pw, image_sharpen, NULL);
+
+  p = gpe_find_icon ("blur");
+  pw = gpe_render_icon (window->style, p);
+  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Blur"), 
+			   _("Blur"), _("Blur"), pw, image_blur, NULL);
 
   gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_label,
 			   _("Loading..."), _("Loading..."));
@@ -589,7 +607,6 @@ main (int argc, char *argv[])
   gtk_widget_show (vbox2);
   gtk_widget_show (hbox);
   gtk_widget_show (toolbar);
-  gtk_widget_show (info_label);
   gtk_widget_show (loading_label);
   gtk_widget_show (loading_progress_bar);
   gtk_widget_show (view_option_menu);
