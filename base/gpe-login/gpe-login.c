@@ -40,7 +40,7 @@
 static const char *current_username;
 static GtkWidget *label_result;
 static gboolean have_users;
-static pid_t mypid;
+static pid_t cpid;
 
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
@@ -48,7 +48,7 @@ static GtkWidget *entry_password, *entry_confirm;
 static void
 cleanup_children (void)
 {
-  kill (-mypid, 15);
+  kill (-cpid, 15);
 }
 
 static void
@@ -251,16 +251,14 @@ main (int argc, char *argv[])
   GdkPixmap *gpe_pix;
   GdkBitmap *gpe_pix_mask;
 
-  pid_t cpid;
-
   gtk_set_locale ();
   gtk_init (&argc, &argv);
   gdk_imlib_init ();
 
-  mypid = getpid ();
   cpid = fork ();
   if (cpid == 0)
     {
+      pid_t mypid = getpid ();
       setpgid (0, mypid);
       system (GPE_LOGIN_SETUP);
       _exit (0);
