@@ -124,6 +124,11 @@ popup_box (const char *text, int length, int x, int y)
   if (y + h >= root_h)
     y -= h;
 
+  if (x < 0)
+    x = 0;
+  if (y < 0)
+    y = 0;
+
   win_popup = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), x, y, w, h, 0, 0, bgcol);
   mask = XCreatePixmap (dpy, win_popup, w, h, 1);
 
@@ -141,7 +146,7 @@ popup_box (const char *text, int length, int x, int y)
   XFillRectangle (dpy, mask, gc1, 0, YPADDING, XPADDING, ink_rect.height);
   XFillRectangle (dpy, mask, gc1, ink_rect.width + XPADDING, YPADDING, XPADDING, ink_rect.height);
 
-  XFillArc (dpy, mask, gc1, 0, 0, XPADDING * 2, YPADDING * 2, 90 * 64, 180 * 64);
+  XFillArc (dpy, mask, gc1, 0, 0, XPADDING * 2, YPADDING * 2, 90 * 64, 140 * 64);
   XFillArc (dpy, mask, gc1, ink_rect.width, 0, XPADDING * 2, YPADDING * 2, 0 * 64, 90 * 64);
   XFillArc (dpy, mask, gc1, 0, ink_rect.height, XPADDING * 2, YPADDING * 2, 180 * 64, 270 * 64);
   XFillArc (dpy, mask, gc1, ink_rect.width, ink_rect.height, XPADDING * 2, YPADDING * 2, 0 * 64, -90 * 64);
@@ -278,6 +283,7 @@ main (int argc, char *argv[])
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
+  bind_textdomain_codeset (PACKAGE, "UTF-8");
 
   dpy = XOpenDisplay (NULL);
   if (dpy == NULL)
@@ -327,7 +333,7 @@ main (int argc, char *argv[])
   fontdes = pango_font_description_new ();
 
   pango_font_description_set_family_static (fontdes, "Sans");
-  pango_font_description_set_size (fontdes, 10 * PANGO_SCALE);
+  pango_font_description_set_size (fontdes, 8 * PANGO_SCALE);
   
   pango_context_set_font_description (pango_ctx, fontdes);
 
