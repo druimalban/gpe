@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Root Shell
+Comment=gpe-su
+Exec=gpe-su
+Terminal=0
+Type=Application
+Icon=gpe-su.png
+Categories=Utility;GPE
+StartupNotify=True
