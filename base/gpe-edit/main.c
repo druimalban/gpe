@@ -49,6 +49,7 @@ struct gpe_icon my_icons[] = {
   { "dir-up", "dir-up" },
   { "ok", "ok" },
   { "cancel", "cancel" },
+  { "icon", PREFIX "/share/pixmaps/gpe-edit.png" },
   {NULL, NULL}
 };
 
@@ -232,6 +233,8 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *toolbar, *scroll;
   GdkPixbuf *p;
   GtkWidget *pw;
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -320,6 +323,9 @@ main (int argc, char *argv[])
   gtk_widget_show (text_area);
 
   what_init ();
+
+  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
 
   gtk_main();
   return 0;
