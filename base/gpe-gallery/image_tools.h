@@ -8,7 +8,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-extern image_convolve( GdkPixbuf* pixbuf, int* mask, int mask_size, int mask_divisor );
-extern void blur( GdkPixbuf* pixbuf );
-extern void sharpen( GdkPixbuf* pixbuf );
-extern GdkPixbuf* image_rotate( GdkPixbuf* pixbuf, int degrees );
+extern void image_tools_blur (GdkPixbuf* pixbuf);
+extern void image_tools_sharpen (GdkPixbuf* pixbuf);
+extern GdkPixbuf *image_tools_rotate (GdkPixbuf* pixbuf);

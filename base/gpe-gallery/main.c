@@ -62,8 +62,6 @@ guint slideshow_timer = 0;
 
 guint x_start, y_start, x_max, y_max;
 double xadj_start, yadj_start;
-
-gboolean rotate_flag;
 guint zoom_timer_id;
 
 struct gpe_icon my_icons[] = {
@@ -105,7 +103,6 @@ typedef struct {
 guint window_x = 240, window_y = 310;
 
 static double starting_angle;	// for rotating drags
-static GdkPixbuf *rotate_pixbuf;
 
 static void
 kill_widget (GtkWidget *parent, GtkWidget *widget)
@@ -134,19 +131,6 @@ angle (GtkWidget *w, int x, int y)
 }
 
 static void
-rotate_button_down (GtkWidget *w, GdkEventButton *b)
-{
-  int x = b->x, y = b->y;
-  double a = angle (w, x, y);
-
-  starting_angle = a;
-
-  gdk_pointer_grab (w->window, FALSE, 
-		    GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK,
-		    confine_pointer_to_window ? w->window : NULL, NULL, b->time);
-}
-
-static void
 pan_button_down (GtkWidget *w, GdkEventButton *b)
 {
   x_start = b->x_root;
@@ -166,35 +150,13 @@ pan_button_down (GtkWidget *w, GdkEventButton *b)
 static void
 button_down (GtkWidget *w, GdkEventButton *b)
 {
-  if (rotate_flag)
-    rotate_button_down (w, b);
-  else
-    pan_button_down (w, b);
+  pan_button_down (w, b);
 }
 
 static void
 button_up (GtkWidget *w, GdkEventButton *b)
 {
   gdk_pointer_ungrab (b->time);
-}
-
-static void
-rotate (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
-{
-  int x = m->x, y = m->y;
-  double a = angle (w, x, y);
-  int deg = (int)((a - starting_angle) * 360 / (2 * M_PI));
-
-  if (rotate_pixbuf)
-    gdk_pixbuf_unref (rotate_pixbuf);
-
-  if (deg < 0) deg += 360;
-
-  rotate_pixbuf = image_rotate (image_pixbuf, deg);
-
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), rotate_pixbuf);
-
-  gdk_window_get_pointer (w->window, NULL, NULL, NULL);
 }
 
 static void
@@ -221,26 +183,7 @@ pan (GtkWidget *w, GdkEventMotion *m)
 static void
 motion_notify (GtkWidget *w, GdkEventMotion *m, GdkPixbuf *pixbuf)
 {
-  if (rotate_flag)
-    rotate (w, m, pixbuf);
-  else
-    pan (w, m);
-}
-
-static gboolean
-set_rotate (GtkWidget *w)
-{
-  rotate_flag = TRUE;
-
-  return TRUE;
-}
-
-static gboolean
-set_pan (GtkWidget *w)
-{
-  rotate_flag = FALSE;
-
-  return TRUE;
+  pan (w, m);
 }
 
 static void
@@ -273,20 +216,6 @@ open_from_file (gchar *filename)
   show_image (NULL, buf);
 }
 
-static void
-image_sharpen ()
-{
-  sharpen (scaled_image_pixbuf);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
-}
-
-static void
-image_blur ()
-{
-  blur (scaled_image_pixbuf);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
-}
-
 static gboolean
 image_zoom_hyper (GdkPixbuf *pixbuf)
 {
@@ -299,6 +228,43 @@ image_zoom_hyper (GdkPixbuf *pixbuf)
   gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 
   return FALSE;
+}
+
+static void
+image_rotate ()
+{
+  GdkPixbuf *pixbuf;
+
+  gtk_timeout_remove (zoom_timer_id);
+
+  if (!scaled_image_pixbuf)
+    scaled_image_pixbuf = image_pixbuf;
+
+  pixbuf = image_tools_rotate (GDK_PIXBUF (image_pixbuf), 90);
+  g_object_unref (image_pixbuf);
+  image_pixbuf = pixbuf;
+
+  pixbuf = image_tools_rotate (GDK_PIXBUF (scaled_image_pixbuf), 90);
+  g_object_unref (scaled_image_pixbuf);
+  scaled_image_pixbuf = pixbuf;
+
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+
+  zoom_timer_id = gtk_timeout_add (1000, GTK_SIGNAL_FUNC (image_zoom_hyper), scaled_image_pixbuf);
+}
+
+static void
+image_sharpen ()
+{
+  image_tools_sharpen (scaled_image_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
+}
+
+static void
+image_blur ()
+{
+  image_tools_blur (scaled_image_pixbuf);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (image_widget), GDK_PIXBUF (scaled_image_pixbuf));
 }
 
 void
@@ -920,6 +886,8 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Fullscreen"), 
 			   _("Toggle fullscreen"), _("Toggle fullscreen"), toolbar_icon, NULL, NULL);
 
+  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
+
   p = gpe_find_icon ("zoom_in");
   toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom In"), 
@@ -940,6 +908,8 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Zoom to Fit"), 
 			   _("Zoom to Fit"), _("Zoom to Fit"), toolbar_icon, image_zoom_fit, NULL);
 
+  gtk_toolbar_append_space (GTK_TOOLBAR (tools_toolbar));
+
   p = gpe_find_icon ("sharpen");
   toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Sharpen"), 
@@ -950,15 +920,10 @@ main (int argc, char *argv[])
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Blur"), 
 			   _("Blur"), _("Blur"), toolbar_icon, image_blur, NULL);
 
-  p = gpe_find_icon ("pan");
-  toolbar_icon = gtk_image_new_from_pixbuf (p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Pan"), 
-			   _("Toggle Pan"), _("Toggle Pan"), toolbar_icon, set_pan, NULL);
-
   p = gpe_find_icon ("rotate");
   toolbar_icon = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (tools_toolbar), _("Rotate"), 
-			   _("Toggle Rotate"), _("Toggle Rotate"), toolbar_icon, set_rotate, NULL);
+			   _("Toggle Rotate"), _("Toggle Rotate"), toolbar_icon, image_rotate, NULL);
 
   gtk_toolbar_append_widget (GTK_TOOLBAR (loading_toolbar), loading_label,
 			   _("Loading..."), _("Loading..."));
