@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-04-22 11:20+0200\n"
+"POT-Creation-Date: 2003-05-05 16:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,109 +54,104 @@ msgstr ""
 msgid "Sorry, wrong password."
 msgstr ""
 
-#: timeanddate.c:350
+#: timeanddate.c:341
 msgid "Time & Date"
 msgstr ""
 
-#: timeanddate.c:364
+#: timeanddate.c:357
 msgid "Date"
 msgstr ""
 
-#: timeanddate.c:385
+#: timeanddate.c:371
 msgid "Enter current date here or use button to select."
 msgstr ""
 
-#: timeanddate.c:392
+#: timeanddate.c:376
 msgid "Time"
 msgstr ""
 
-#: timeanddate.c:429 network.c:340
+#: timeanddate.c:401
 msgid "Network"
 msgstr ""
 
-#: timeanddate.c:455
-msgid "Here you may select which timeserver i use to set my clock."
+#: timeanddate.c:419
+msgid "Select the timeserver to use to set the clock."
 msgstr ""
 
-#: timeanddate.c:457
+#: timeanddate.c:421
 msgid "Get time from network"
 msgstr ""
 
-#: timeanddate.c:463
+#: timeanddate.c:428
 msgid ""
-"If i'm connected to the Internet, you may press this butten to set the time "
-"on this device using the timeserver above."
+"If connected to the Internet, you may press this button to set the time on "
+"this device using the timeserver above."
 msgstr ""
 
-#: timeanddate.c:468 timeanddate.c:474
+#: timeanddate.c:433 timeanddate.c:442
 msgid "Timezone"
 msgstr ""
 
-#: timeanddate.c:512
+#: timeanddate.c:470
 msgid ""
-"Select your current timezone here. The setting applies after after next "
-"login."
+"Select your current timezone here. The setting applies after the next login."
 msgstr ""
 
-#: timeanddate.c:518
+#: timeanddate.c:478
 msgid "Daylight Saving"
 msgstr ""
 
-#: timeanddate.c:524
+#: timeanddate.c:485
 msgid "Use daylight saving time"
 msgstr ""
 
-#: timeanddate.c:529
+#: timeanddate.c:492
 msgid ""
 "Check this box if you want your device to handle daylight saving time for "
 "you."
 msgstr ""
 
-#: timeanddate.c:531
-msgid "Offset"
+#: timeanddate.c:494
+msgid "Offset:"
 msgstr ""
 
-#: timeanddate.c:538
+#: timeanddate.c:503
 msgid "Default"
 msgstr ""
 
-#: timeanddate.c:543
+#: timeanddate.c:510
 msgid "Use default DST offset of one hour?"
 msgstr ""
 
-#: timeanddate.c:548
+#: timeanddate.c:515
 msgid "Hours"
 msgstr ""
 
-#: timeanddate.c:551
+#: timeanddate.c:518
 msgid "Select daylight saving time offset hours here."
 msgstr ""
 
-#: timeanddate.c:556
+#: timeanddate.c:523
 msgid "Minutes"
 msgstr ""
 
-#: timeanddate.c:559
+#: timeanddate.c:526
 msgid "Select daylight saving time offset minutes here."
 msgstr ""
 
-#: timeanddate.c:565
+#: timeanddate.c:532
 msgid "Advanced Settings"
 msgstr ""
 
-#: timeanddate.c:570
+#: timeanddate.c:538
 msgid "Use advanced settings"
 msgstr ""
 
-#: timeanddate.c:572
+#: timeanddate.c:541
 msgid "Check this if you want to use the advanced settings below."
 msgstr ""
 
-#: timeanddate.c:637
-msgid "Could not set timezone."
-msgstr ""
-
-#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:74
+#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
 msgid "General"
 msgstr ""
 
@@ -228,11 +223,11 @@ msgstr ""
 msgid "Calibrate"
 msgstr ""
 
-#: ipaqscreen/main.c:160 network.c:553
+#: ipaqscreen/main.c:160 network.c:730
 msgid "on"
 msgstr ""
 
-#: ipaqscreen/main.c:161 network.c:561
+#: ipaqscreen/main.c:161 network.c:741
 msgid "off"
 msgstr ""
 
@@ -268,116 +263,211 @@ msgstr ""
 msgid "User defined"
 msgstr ""
 
-#: keyboard.c:138
-msgid "Error reading keyboard definition)"
+#: keyboard.c:131
+msgid "Could not read keyboard definition file."
 msgstr ""
 
-#: keyboard.c:212
+#: keyboard.c:171
+msgid "Error reading keyboard definition."
+msgstr ""
+
+#: keyboard.c:274
 msgid ""
 "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently "
 "not installed."
 msgstr ""
 
-#: keyboard.c:217
+#: keyboard.c:279
 msgid "External Keyboard Type"
 msgstr ""
 
-#: keyboard.c:224
+#: keyboard.c:286
 msgid ""
 "Here you may select your external keyboard model. \t\t\t\t  To install "
 "software support connect your device to \t\t\t\t  internet and click the "
 "\"Install\" button."
 msgstr ""
 
-#: keyboard.c:245
+#: keyboard.c:308
 msgid "Tap here to select this keyboard model."
 msgstr ""
 
-#: keyboard.c:252
+#: keyboard.c:315
 msgid "Install"
 msgstr ""
 
-#: keyboard.c:258
+#: keyboard.c:321
 msgid "Tap here to install support for this keyboard."
 msgstr ""
 
-#: network.c:115
+#: network.c:95
+msgid "Current Config"
+msgstr ""
+
+#: network.c:172
 msgid "New interface:"
 msgstr ""
 
-#: network.c:121
+#: network.c:178
 msgid "Enter name of new interface"
 msgstr ""
 
-#: network.c:127
+#: network.c:185
 msgid "This interface definition already exists!"
 msgstr ""
 
-#: network.c:163
+#: network.c:226
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:163
+#: network.c:226
 msgid "Question"
 msgstr ""
 
-#: network.c:337
+#: network.c:440
 msgid "Address"
 msgstr ""
 
-#: network.c:338
+#: network.c:443
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr ""
+
+#: network.c:445
 msgid "Netmask"
 msgstr ""
 
-#: network.c:339
+#: network.c:448
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr ""
+
+#: network.c:450
 msgid "Broadcast"
 msgstr ""
 
-#: network.c:341
+#: network.c:453
+msgid ""
+"Enter your broadcast address here, usually the same like your IP with 255 as "
+"last number."
+msgstr ""
+
+#: network.c:455
 msgid "Gateway"
 msgstr ""
 
-#: network.c:407
+#: network.c:458
+msgid "Enter the IP Address of your default gateway here."
+msgstr ""
+
+#: network.c:540
 msgid "Hostname"
 msgstr ""
 
-#: network.c:473
+#: network.c:543
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr ""
+
+#: network.c:626
 msgid "Provider"
 msgstr ""
 
-#: network.c:527
+#: network.c:629
+msgid ""
+"Here you need to enter the name if the provider configuration to use for "
+"this interface."
+msgstr ""
+
+#: network.c:653
+msgid "Global Settings"
+msgstr ""
+
+#: network.c:694
 msgid "Proxy"
 msgstr ""
 
-#: network.c:531
+#: network.c:696
+msgid ""
+"If you want/need to use a proxy, enter it here. (This only applies to dillo "
+"for now.)"
+msgstr ""
+
+#: network.c:701
 msgid "No proxy for"
 msgstr ""
 
-#: network.c:539
+#: network.c:704
+msgid ""
+"Here you should enter your local domain for that you don't want to use a "
+"proxy."
+msgstr ""
+
+#: network.c:713
+msgid "Use DHCP in any case (usually not needed)."
+msgstr ""
+
+#: network.c:715
 msgid "Use DHCP"
 msgstr ""
 
-#: network.c:572
+#: network.c:754
 msgid "DNS server"
 msgstr ""
 
-#: network.c:752 network.c:753
+#: network.c:757
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr ""
+
+#: network.c:938
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use static for manual interface configuration, dhcp to use DHCP and ppp to "
+"make the device a point to point device."
+msgstr ""
+
+#: network.c:970 network.c:971
 msgid "Add Interface"
 msgstr ""
 
-#: network.c:758 network.c:759
+#: network.c:972
+msgid "Add a new Interface"
+msgstr ""
+
+#: network.c:980 network.c:981
 msgid "Remove Interface"
 msgstr ""
 
-#: network.c:775
+#: network.c:982
+msgid "Remove current Interface"
+msgstr ""
+
+#: network.c:995
+msgid "Information"
+msgstr ""
+
+#: network.c:996 network.c:997
+msgid "Show current configuration."
+msgstr ""
+
+#: network.c:1008
+msgid "Close"
+msgstr ""
+
+#: network.c:1009
+msgid "Close  network tool"
+msgstr ""
+
+#: network.c:1010
+msgid "Close network tool"
+msgstr ""
+
+#: network.c:1025
 msgid "Couldn't read network configuration."
 msgstr ""
 
-#: network.c:784
+#: network.c:1034
 msgid "global"
 msgstr ""
 
-#: theme.c:220 theme.c:224 theme.c:888 theme.c:908 theme.c:1004 theme.c:1010
+#: theme.c:220 theme.c:224 theme.c:891 theme.c:911 theme.c:1007 theme.c:1013
 msgid "Color"
 msgstr ""
 
@@ -393,85 +483,85 @@ msgstr ""
 msgid "Blue"
 msgstr ""
 
-#: theme.c:641
+#: theme.c:644
 msgid "Select color"
 msgstr ""
 
-#: theme.c:667 theme.c:733
+#: theme.c:670 theme.c:736
 msgid ""
 "You don't have read access\n"
 "to selected background image!"
 msgstr ""
 
-#: theme.c:811
+#: theme.c:814
 msgid "Theme"
 msgstr ""
 
-#: theme.c:820
+#: theme.c:823
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:832
+#: theme.c:835
 msgid "Name"
 msgstr ""
 
-#: theme.c:847
+#: theme.c:850
 msgid "Background"
 msgstr ""
 
-#: theme.c:858
+#: theme.c:861
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:865
+#: theme.c:868
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:879
+#: theme.c:882
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:883
+#: theme.c:886
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:899
+#: theme.c:902
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:919
+#: theme.c:922
 msgid "Image"
 msgstr ""
 
-#: theme.c:945
+#: theme.c:948
 msgid "Centered"
 msgstr ""
 
-#: theme.c:949
+#: theme.c:952
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:952
+#: theme.c:955
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:957
+#: theme.c:960
 msgid "Font"
 msgstr ""
 
-#: theme.c:966 theme.c:986
+#: theme.c:969 theme.c:989
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:973 theme.c:1028
+#: theme.c:976 theme.c:1031
 msgid "Family"
 msgstr ""
 
-#: theme.c:993 theme.c:1048
+#: theme.c:996 theme.c:1051
 msgid "Size"
 msgstr ""
 
-#: theme.c:1021 theme.c:1041
+#: theme.c:1024 theme.c:1044
 msgid "Application Font"
 msgstr ""
 
@@ -697,11 +787,7 @@ msgstr ""
 msgid "No write access to network configuration."
 msgstr ""
 
-#: gpe-admin.c:45
-msgid "This setting can only be changed by user root!"
-msgstr ""
-
-#: gpe-admin.c:81
+#: gpe-admin.c:93
 msgid "Allow users to configure everything"
 msgstr ""
 
@@ -745,51 +831,51 @@ msgstr ""
 msgid "System Memory"
 msgstr ""
 
-#: serial.c:143
+#: serial.c:146
 msgid "Couldn't find default runlevel!"
 msgstr ""
 
-#: serial.c:265 serial.c:269
+#: serial.c:268 serial.c:272
 msgid ""
 "Simple interface to serial port configuration. Disabled components are not "
 "installed."
 msgstr ""
 
-#: serial.c:267
+#: serial.c:270
 msgid "Simple"
 msgstr ""
 
-#: serial.c:272
+#: serial.c:275
 msgid "Serial port default usage"
 msgstr ""
 
-#: serial.c:276
+#: serial.c:279
 msgid "Select desired software to use serial port here."
 msgstr ""
 
-#: serial.c:278
+#: serial.c:281
 msgid "Console"
 msgstr ""
 
-#: serial.c:280
+#: serial.c:283
 msgid "This option runs console on serial port. (default)"
 msgstr ""
 
-#: serial.c:282
+#: serial.c:285
 msgid "GPS Daemon"
 msgstr ""
 
-#: serial.c:285
+#: serial.c:288
 msgid ""
 "This option enables the start of GPSD, which provides data from a GPS "
 "reciver to applications."
 msgstr ""
 
-#: serial.c:287
+#: serial.c:290
 msgid "Nothing (free)"
 msgstr ""
 
-#: serial.c:289
+#: serial.c:292
 msgid "Don't start any software that uses the serial port."
 msgstr ""
 
@@ -801,226 +887,501 @@ msgstr ""
 msgid "System Log"
 msgstr ""
 
-#: packages.c:80 packages.c:185
+#: packages.c:62
+msgid "Installing package"
+msgstr ""
+
+#: packages.c:140 packages.c:245
 msgid "Start"
 msgstr ""
 
-#: packages.c:82
+#: packages.c:142
 msgid "Update finished. Please check log messages for errors."
 msgstr ""
 
-#: packages.c:103
+#: packages.c:163
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr ""
 
-#: packages.c:126
+#: packages.c:186
 msgid "Running..."
 msgstr ""
 
-#: packages.c:175
+#: packages.c:235
 msgid "Update"
 msgstr ""
 
-#: packages.c:180
+#: packages.c:240
 msgid "Update from network"
 msgstr ""
 
-#: packages.c:189
+#: packages.c:249
 msgid "Update entire system over an internet connection."
 msgstr ""
 
-#: packages.c:193
+#: packages.c:253
 msgid "Activity log"
 msgstr ""
 
-#: packages.c:201
+#: packages.c:261
 msgid ""
 "This window shows all output from the packet manager that performs the "
 "update."
 msgstr ""
 
-#: cardinfo.c:224
+#: cardinfo.c:234
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:394
+#: cardinfo.c:426
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:398
+#: cardinfo.c:432
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:402
+#: cardinfo.c:436
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:467
+#: cardinfo.c:511
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:480
+#: cardinfo.c:530
 msgid "No pcmcia driver in /proc/devices"
 msgstr ""
 
-#: cardinfo.c:482
+#: cardinfo.c:533
 msgid "Could not open /proc/devices"
 msgstr ""
 
-#: cardinfo.c:491
+#: cardinfo.c:545
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:497
+#: cardinfo.c:554
 msgid "Card Services release does not match!"
 msgstr ""
 
-#: cardinfo.c:499
+#: cardinfo.c:559
 msgid "Could not get CS revision info!\n"
 msgstr ""
 
-#: cardinfo.c:629
+#: cardinfo.c:716
 msgid "flock(stabfile) failed)"
 msgstr ""
 
-#: cardinfo.c:714
+#: cardinfo.c:732
+msgid "no driver loaded"
+msgstr ""
+
+#: cardinfo.c:841
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:722
+#: cardinfo.c:859
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:729
+#: cardinfo.c:874
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:786
-msgid "Operation failed"
-msgstr ""
-
-#: cardinfo.c:861 cardinfo.c:983 cardinfo.c:984
+#: cardinfo.c:1064 cardinfo.c:1224 cardinfo.c:1225
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:868
+#: cardinfo.c:1073
 msgid ""
 "This dialog allows you to select/change\n"
 "the driver assignment for a\n"
 "PCMCIA/CF card."
 msgstr ""
 
-#: cardinfo.c:875
+#: cardinfo.c:1082
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:884
+#: cardinfo.c:1093
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:884
+#: cardinfo.c:1093
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:952 cardinfo.c:953
+#: cardinfo.c:1165
 msgid "Insert Card"
 msgstr ""
 
-#: cardinfo.c:953
+#: cardinfo.c:1167
 msgid "Tap here to start card insertion manually."
 msgstr ""
 
-#: cardinfo.c:957 cardinfo.c:958
+#: cardinfo.c:1175
 msgid "Eject Card"
 msgstr ""
 
-#: cardinfo.c:958
+#: cardinfo.c:1177
 msgid "Tap here to eject card manually."
 msgstr ""
 
-#: cardinfo.c:962 cardinfo.c:963
+#: cardinfo.c:1185
 msgid "Suspend Card"
 msgstr ""
 
-#: cardinfo.c:963
+#: cardinfo.c:1187
 msgid "Tap here to suspend current card."
 msgstr ""
 
-#: cardinfo.c:967 cardinfo.c:968
+#: cardinfo.c:1195
 msgid "Resume Card"
 msgstr ""
 
-#: cardinfo.c:968
+#: cardinfo.c:1197
 msgid "Tap here to resume current card."
 msgstr ""
 
-#: cardinfo.c:972 cardinfo.c:973
+#: cardinfo.c:1205
 msgid "Reset Card"
 msgstr ""
 
-#: cardinfo.c:973
+#: cardinfo.c:1206
 msgid "Tap here to reset current card."
 msgstr ""
 
-#: cardinfo.c:978 cardinfo.c:979
+#: cardinfo.c:1214 cardinfo.c:1215
 msgid "Reset Card Manager"
 msgstr ""
 
-#: cardinfo.c:979
+#: cardinfo.c:1217
 msgid ""
 "Tap here to reset card manager. This commits all updates to pcmcia config "
 "files."
 msgstr ""
 
-#: cardinfo.c:984
+#: cardinfo.c:1227
 msgid ""
 "Tap here to assign a driver to this card / change current driver assignment."
 msgstr ""
 
-#: cardinfo.c:989 cardinfo.c:990
+#: cardinfo.c:1234 cardinfo.c:1235
 msgid "Exit applet"
 msgstr ""
 
-#: cardinfo.c:998 cardinfo.c:1006
+#: cardinfo.c:1244 cardinfo.c:1257
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1003
+#: cardinfo.c:1252
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1026
+#: cardinfo.c:1283
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1035
+#: cardinfo.c:1292
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1036
+#: cardinfo.c:1293
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1037
+#: cardinfo.c:1294
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1038
+#: cardinfo.c:1295
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1039
+#: cardinfo.c:1296
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1040
+#: cardinfo.c:1297
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1046
+#: cardinfo.c:1304
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1059
+#: cardinfo.c:1321
 msgid "PCMCIA initialisation failed"
+msgstr ""
+
+#: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
+#: tools/interface.c:622
+msgid "[NONE SET]"
+msgstr ""
+
+#: tools/interface.c:394
+#, c-format
+msgid "rresolve: unsupport address family %d !\n"
+msgstr ""
+
+#: tools/interface.c:677 tools/interface.c:1650
+msgid "UNSPEC"
+msgstr ""
+
+#: tools/interface.c:679
+msgid "UNIX Domain"
+msgstr ""
+
+#: tools/interface.c:682
+msgid "DARPA Internet"
+msgstr ""
+
+#: tools/interface.c:685
+msgid "IPv6"
+msgstr ""
+
+#: tools/interface.c:688 tools/interface.c:1671
+msgid "AMPR AX.25"
+msgstr ""
+
+#: tools/interface.c:691 tools/interface.c:1677
+msgid "AMPR NET/ROM"
+msgstr ""
+
+#: tools/interface.c:694
+msgid "Novell IPX"
+msgstr ""
+
+#: tools/interface.c:697
+msgid "Appletalk DDP"
+msgstr ""
+
+#: tools/interface.c:700 tools/interface.c:1712
+msgid "Econet"
+msgstr ""
+
+#: tools/interface.c:703
+msgid "CCITT X.25"
+msgstr ""
+
+#: tools/interface.c:706 tools/interface.c:1674
+msgid "AMPR ROSE"
+msgstr ""
+
+#: tools/interface.c:709 tools/interface.c:1662
+msgid "Ash"
+msgstr ""
+
+#: tools/interface.c:736
+msgid "Too much address family arguments.\n"
+msgstr ""
+
+#: tools/interface.c:747
+#, c-format
+msgid "Unknown address family `%s'.\n"
+msgstr ""
+
+#: tools/interface.c:810
+msgid "Please don't supply more than one address family.\n"
+msgstr ""
+
+#: tools/interface.c:937
+msgid "No usable address families found.\n"
+msgstr ""
+
+#: tools/interface.c:1007
+#, c-format
+msgid "warning: no inet socket available: %s\n"
+msgstr ""
+
+#: tools/interface.c:1159
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr ""
+
+#: tools/interface.c:1402
+msgid "Device not found"
+msgstr ""
+
+#: tools/interface.c:1406
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr ""
+
+#: tools/interface.c:1480 tools/interface.c:1497
+#, c-format
+msgid "in_ether(%s): invalid ether address!\n"
+msgstr ""
+
+#: tools/interface.c:1511
+#, c-format
+msgid "in_ether(%s): trailing : ignored!\n"
+msgstr ""
+
+#: tools/interface.c:1523
+#, c-format
+msgid "in_ether(%s): trailing junk!\n"
+msgstr ""
+
+#: tools/interface.c:1555
+msgid "You cannot start PPP with this program.\n"
+msgstr ""
+
+#: tools/interface.c:1649
+msgid "Local Loopback"
+msgstr ""
+
+#: tools/interface.c:1652
+msgid "Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1653
+msgid "VJ Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1654
+msgid "6-bit Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1655
+msgid "VJ 6-bit Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1656
+msgid "Adaptive Serial Line IP"
+msgstr ""
+
+#: tools/interface.c:1659
+msgid "Ethernet"
+msgstr ""
+
+#: tools/interface.c:1665
+msgid "Fiber Distributed Data Interface"
+msgstr ""
+
+#: tools/interface.c:1668
+msgid "HIPPI"
+msgstr ""
+
+#: tools/interface.c:1680
+msgid "generic X.25"
+msgstr ""
+
+#: tools/interface.c:1683
+msgid "IPIP Tunnel"
+msgstr ""
+
+#: tools/interface.c:1686
+msgid "Point-to-Point Protocol"
+msgstr ""
+
+#: tools/interface.c:1689
+msgid "(Cisco)-HDLC"
+msgstr ""
+
+#: tools/interface.c:1690
+msgid "LAPB"
+msgstr ""
+
+#: tools/interface.c:1693
+msgid "ARCnet"
+msgstr ""
+
+#: tools/interface.c:1696
+msgid "Frame Relay DLCI"
+msgstr ""
+
+#: tools/interface.c:1697
+msgid "Frame Relay Access Device"
+msgstr ""
+
+#: tools/interface.c:1700
+msgid "IPv6-in-IPv4"
+msgstr ""
+
+#: tools/interface.c:1703
+msgid "IrLAP"
+msgstr ""
+
+#: tools/interface.c:1706
+msgid "16/4 Mbps Token Ring"
+msgstr ""
+
+#: tools/interface.c:1708
+msgid "16/4 Mbps Token Ring (New)"
+msgstr ""
+
+#: tools/interface.c:1818
+#, c-format
+msgid ""
+"<span foreground=\"#0000E0\"> Interface: <i>%s</i></span>\n"
+"Type: %s\n"
+msgstr ""
+
+#: tools/interface.c:1826
+#, c-format
+msgid "HWaddr: %s\n"
+msgstr ""
+
+#: tools/interface.c:1832
+#, c-format
+msgid "Media: %s"
+msgstr ""
+
+#: tools/interface.c:1837
+msgid "(auto)"
+msgstr ""
+
+#: tools/interface.c:1849
+#, c-format
+msgid "Address: %s\n"
+msgstr ""
+
+#: tools/interface.c:1854
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr ""
+
+#: tools/interface.c:1859
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr ""
+
+#: tools/interface.c:1863
+#, c-format
+msgid "Netmask: %s\n"
+msgstr ""
+
+#: tools/interface.c:1882
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr ""
+
+#: tools/interface.c:1886
+msgid "Scope: "
+msgstr ""
+
+#: tools/interface.c:1891
+msgid "Global"
+msgstr ""
+
+#: tools/interface.c:1894
+msgid "Link"
+msgstr ""
+
+#: tools/interface.c:1897
+msgid "Site"
+msgstr ""
+
+#: tools/interface.c:1900
+msgid "Compat"
+msgstr ""
+
+#: tools/interface.c:1903
+msgid "Host"
+msgstr ""
+
+#: tools/interface.c:1906
+msgid "Unknown"
 msgstr ""

@@ -82,7 +82,7 @@ show_current_config (GtkWidget * button)
 
 	for (ife = int_list; ife; ife = ife->next)
 	{
-		if (ife->flags & IFF_UP)
+		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
 		{
 			tmp = if_to_infostr (ife);
 			buffer = realloc (buffer,
@@ -303,7 +303,7 @@ create_editable_entry (NWInterface_t * piface, GtkWidget * attach_to,
 	GtkWidget *label;
 	gchar wname[100];
 	
-guint gpe_boxspacing = gpe_get_boxspacing ();
+	guint gpe_boxspacing = gpe_get_boxspacing ();
 
 	label = gtk_label_new (ltext);
 	gtk_tooltips_set_tip (tooltips, label, tooltip, NULL);

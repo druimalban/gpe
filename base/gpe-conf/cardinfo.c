@@ -1053,6 +1053,10 @@ do_driver_dialog (GtkWidget * parent_button)
 	char *identmsg = NULL;
 	char **idents;
 	char *str;
+    static char *fn[] = {
+	"multifunction", "memory", "serial", "parallel",
+	"fixed disk", "video", "network", "AIMS", "SCSI"
+    };
 
 	i = gtk_notebook_get_current_page (GTK_NOTEBOOK (notebook));
 	cb = gtk_combo_new ();
@@ -1070,7 +1074,8 @@ do_driver_dialog (GtkWidget * parent_button)
 					 GTK_RESPONSE_ACCEPT, NULL);
 
 	l = gtk_label_new (_
-			   ("This dialog allows you to select/change\nthe driver assignment for a\nPCMCIA/CF card."));
+			   ("This dialog allows you to select/\nchange the driver "\
+			   "assignment for a\nPCMCIA or CF card."));
 	gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.5);
 	gtk_box_pack_start (GTK_BOX (GTK_DIALOG (w)->vbox), l, FALSE, TRUE,
 			    gpe_get_boxspacing ());
@@ -1089,9 +1094,19 @@ do_driver_dialog (GtkWidget * parent_button)
 	idents = g_strsplit (identmsg, "\n", 4);
 	l = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (l), 0.0, 0.5);
-	str = g_strdup_printf ("<i>%s\n%s: %s\n%s: %s</i>", idents[0],
+	
+	if ((atoi(idents[3]) >= 0) && (atoi(idents[3]) <= 7))
+	{
+		str = g_strdup_printf ("<i>%s\n%s: %s\n%s: %s (%s)</i>", idents[0],
+			       _("Manuf. Id"), idents[2], _("Class"),
+			       fn[atoi(idents[3])],g_strstrip(idents[3]));
+	}
+	else
+	{
+		str = g_strdup_printf ("<i>%s\n%s: %s\n%s: %s</i>", idents[0],
 			       _("Manuf. Id"), idents[2], _("Class"),
 			       idents[3]);
+	}
 	gtk_label_set_markup (GTK_LABEL (l), str);
 	free (str);
 	g_strfreev (idents);

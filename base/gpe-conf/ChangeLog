@@ -1,5 +1,11 @@
 When			Who				Where						What
 
+06.05.2003		Florian			cardinfo.c					Device class now shown as text, some display and format updates. 
+								timeanddate.c				Removed unused vars.
+								Makefile					Version update.
+								network.c					Removed loopback interface from list.
+								keyctl.c					Added button to reset defaults.
+
 05.05.2003		Florian			po/ro.po					Addition of forgotten Romanian support.
 								Makefile
 

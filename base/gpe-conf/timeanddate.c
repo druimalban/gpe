@@ -313,8 +313,6 @@ GtkWidget *Time_Build_Objects()
   struct tm ts;     /* gtk_cal seems to modify the ptr
 				returned by localtime, so we duplicate it.. */
 
-  guint gpe_catspacing = gpe_get_catspacing ();
-  gchar *gpe_catindent = gpe_get_catindent ();
   guint gpe_border     = gpe_get_border ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
   
