@@ -5,6 +5,8 @@ GTK2 = yes
 VERSION = 0.44
 DEBUG = no
 
+LINGUAS = de
+
 ifeq ($(GTK2),yes)
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0`
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
@@ -42,18 +44,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 EXTRA_DESKTOPS = gpe-logout.desktop.in
 
-all: gpe-login gpe-lock-display mo
-
-mo:
-	make -C po
-
-install-po: mo
-	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
-
-update-po: po/$(PACKAGE).pot
-
-po/$(PACKAGE).pot: $(SOURCES)
-	xgettext -k_ -o po/$(PACKAGE).pot $^
+all: gpe-login gpe-lock-display
 
 gpe-login: gpe-login.o nocursor.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_ROOT) -lcrypt
@@ -61,9 +52,9 @@ gpe-login: gpe-login.o nocursor.o
 gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
-install: install-login
+install: install-login install-scripts
 
-install-login: gpe-login install-po
+install-login: gpe-login
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
 	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
@@ -114,6 +105,8 @@ ipkg:
 	make DESTDIR=`pwd`/familiar/dist.gpe-session-scripts PREFIX=/usr install-scripts
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
+	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; fi
+	$(MAKE) printinfo
 
 clean: clean-po
 	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o

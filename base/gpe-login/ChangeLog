@@ -4,8 +4,14 @@
 
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Delete old rules relating to .po files.  Call
+	translation-ipkg.
+	* po/Makefile: Deleted.
+
 	* gpe-login.c (parse_xkbd_args): Make first arg const to avoid
 	warning.
+	(calibrate_hint_hook): New function.
+	(main): Add dynamic translation to labels.
 
 2003-03-23  Philip Blundell  <philb@gnu.org>
 	    Moray Allen  <moray@sermisy.org>

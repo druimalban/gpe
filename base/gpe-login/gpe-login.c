@@ -40,10 +40,12 @@
 #include <gpe/spacing.h>
 #include <gpe/render.h>
 #include <gpe/gtksimplemenu.h>
+#include <gpe/translabel.h>
 
 #include "rootpixmap.h"
 
 #define _(x) gettext(x)
+#define N_(x) (x)
 
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login.setup"
 #define PRE_SESSION "/etc/X11/gpe-login.pre-session"
@@ -1046,6 +1048,19 @@ locale_read_user (const char *username)
   return item;
 }
 
+static void
+calibrate_hint_hook (GtkWidget *w, gpointer data)
+{
+  gchar *p = g_strdup_printf ("<span lang='%s'><i>%s</i> %s</span>",
+			      pango_lang_code,
+			      _("Record"),
+			      _("recalibrates touchscreen"));
+
+  gtk_label_set_markup (GTK_LABEL (w), p);
+
+  g_free (p);
+}
+
 int
 main (int argc, char *argv[])
 {
@@ -1294,11 +1309,7 @@ main (int argc, char *argv[])
   vbox2 = gtk_vbox_new (FALSE, 0);
 
   calibrate_hint = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (calibrate_hint),
-			g_strdup_printf ("<span lang='%s'><i>%s</i> %s</span>",
-					 pango_lang_code,
-					 _("Record"),
-					 _("recalibrates touchscreen")));
+  gtk_widget_add_translation_hook (calibrate_hint, calibrate_hint_hook, NULL);
 
   if (autolock_mode || have_users)
     {
@@ -1317,7 +1328,7 @@ main (int argc, char *argv[])
 	  gtk_box_pack_start (GTK_BOX (vbox2), lock_label, FALSE, FALSE, 0);
 	}
       
-      login_label = gtk_label_new (_("Username"));
+      login_label = gtk_label_new_with_translation (PACKAGE, N_("Username"));
       label_result = gtk_label_new (NULL);
 
       if (autolock_mode)
@@ -1342,7 +1353,7 @@ main (int argc, char *argv[])
 	{
 	  entry = gtk_entry_new ();
 	  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
-	  password_label = gtk_label_new (_("Password"));
+	  password_label = gtk_label_new_with_translation (PACKAGE, N_("Password"));
 	  hbox_password = gtk_hbox_new (FALSE, gpe_boxspacing);
 	  gtk_box_pack_start (GTK_BOX (hbox_password), entry, TRUE, TRUE, 0);
 	  gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
@@ -1356,7 +1367,7 @@ main (int argc, char *argv[])
 
       if (! autolock_mode)
 	{
-	  GtkWidget *language_label = gtk_label_new (_("Language"));
+	  GtkWidget *language_label = gtk_label_new_with_translation (PACKAGE, N_("Language"));
 	  GtkWidget *language_option_menu = build_language_menu ();
 
 	  gtk_table_attach (GTK_TABLE (table), language_label, 0, 1, 2, 3, 0, GTK_EXPAND | GTK_FILL, xpad, ypad);
