@@ -20,7 +20,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/tododb.h>
 
-extern gboolean converted_item (struct todo_db_item *i);
+extern gboolean converted_item (struct todo_item *i);
 extern int converted_category (const char *title);
 
 GSList *lists;
@@ -69,7 +69,7 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
       char *description = argv[3];
       int state = atoi (argv[4]);
       char *due = argv[5];
-      struct todo_db_item *i = g_malloc (sizeof (struct todo_db_item));
+      struct todo_item *i = g_malloc (sizeof (struct todo_item));
       
       GSList *iter;
       time_t t = (time_t)0;
@@ -94,7 +94,7 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
       
       for (iter = lists; iter; iter = iter->next)
 	{
-	  struct todo_db_category *t = g_malloc (sizeof (struct todo_db_category));
+	  struct todo_category *t = g_malloc (sizeof (struct todo_category));
           struct todo_list *l = iter->data;
 	  if (l->id == list)
 	  {

@@ -29,10 +29,10 @@ static const char *fname = "/.gpe/todo";
 
 extern gboolean convert_old_db (int oldversion, sqlite *);
 
-static struct todo_db_category *
+static struct todo_category *
 new_category_internal (int id, const char *title)
 {
-  struct todo_db_category *t = g_malloc (sizeof (struct todo_db_category));
+  struct todo_category *t = g_malloc (sizeof (struct todo_category));
 
   t->title = title;
   t->id = id;
@@ -59,7 +59,7 @@ converted_category (const char *title)
   return sqlite_last_insert_rowid (sqliteh);
 }
 
-struct todo_db_category *
+struct todo_category *
 todo_db_new_category (const char *title)
 {
   char *err;
@@ -75,14 +75,14 @@ todo_db_new_category (const char *title)
   return new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
 }
 
-struct todo_db_category *
+struct todo_category *
 todo_db_category_find_by_id (int i)
 {
   GSList *iter;
 
   for (iter = todo_db_categories; iter; iter = iter->next)
     {
-      struct todo_db_category *c = (struct todo_db_category *)iter->data;
+      struct todo_category *c = (struct todo_category *)iter->data;
       if (c->id == i)
 	return c;
     }
@@ -91,7 +91,7 @@ todo_db_category_find_by_id (int i)
 }
 
 void
-todo_db_del_category (struct todo_db_category *c)
+todo_db_del_category (struct todo_category *c)
 {
   char *err;
 
@@ -111,7 +111,7 @@ todo_db_del_category (struct todo_db_category *c)
 static int
 item_data_callback (void *arg, int argc, char **argv, char **names)
 {
-  struct todo_db_item *i = (struct todo_db_item *)arg;
+  struct todo_item *i = (struct todo_item *)arg;
 
   if (argc == 2 && argv[0] && argv[1])
     {
@@ -123,7 +123,7 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
 	i->state = atoi (argv[1]);
       else if (!strcmp (argv[0], "CATEGORY"))
 	{
-	  struct todo_db_category *c = todo_db_category_find_by_id (atoi (argv[1]));
+	  struct todo_category *c = todo_db_category_find_by_id (atoi (argv[1]));
 	  if (c)
 	    i->categories = g_slist_append (i->categories, c);;
 	}
@@ -146,7 +146,7 @@ item_callback (void *arg, int argc, char **argv, char **names)
     {
       char *err;
       int id = atoi (argv[0]);
-      struct todo_db_item *i = g_malloc (sizeof (struct todo_db_item));
+      struct todo_item *i = g_malloc (sizeof (struct todo_item));
       memset (i, 0, sizeof (*i));
       i->id = id;
       if (sqlite_exec_printf (sqliteh, "select tag,value from todo where uid=%d",
@@ -282,7 +282,7 @@ todo_db_stop (void)
 gint
 list_sort_func (gconstpointer a, gconstpointer b)
 {
-  const struct todo_db_item *ia = a, *ib = b;
+  const struct todo_item *ia = a, *ib = b;
 
   if (ia->time == ib->time)
     return 0;
@@ -300,7 +300,7 @@ list_sort_func (gconstpointer a, gconstpointer b)
 			    NULL, NULL, &err, id, key, value)
 
 gboolean
-todo_db_push_item (struct todo_db_item *i)
+todo_db_push_item (struct todo_item *i)
 {
   char *err;
   gboolean rollback = FALSE;
@@ -330,7 +330,7 @@ todo_db_push_item (struct todo_db_item *i)
 
   for (iter = i->categories; iter; iter = iter->next)
     {
-      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", ((struct todo_db_category *)iter->data)->id))
+      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", ((struct todo_category *)iter->data)->id))
 	goto error;
     }
 
@@ -348,7 +348,7 @@ todo_db_push_item (struct todo_db_item *i)
 }
 
 gboolean 
-converted_item (struct todo_db_item *i)
+converted_item (struct todo_item *i)
 {
   char *err;
   if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
@@ -361,16 +361,16 @@ converted_item (struct todo_db_item *i)
   return todo_db_push_item (i);
 }
 
-struct todo_db_item *
+struct todo_item *
 todo_db_new_item (void)
 {
   char *err;
-  struct todo_db_item *i;
+  struct todo_item *i;
   if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
     return NULL;
   
-  i = g_malloc (sizeof (struct todo_db_item));
+  i = g_malloc (sizeof (struct todo_item));
   memset (i, 0, sizeof (*i));
 
   i->id = sqlite_last_insert_rowid (sqliteh);
@@ -381,7 +381,7 @@ todo_db_new_item (void)
 }
 
 void 
-todo_db_delete_item (struct todo_db_item *i)
+todo_db_delete_item (struct todo_item *i)
 {
   sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
 		      NULL, NULL, NULL,
