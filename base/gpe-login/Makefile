@@ -87,6 +87,8 @@ install-scripts:
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
+	install -d $(DESTDIR)/etc/gpe
+	install -m 644 X11/xsettings.default $(DESTDIR)/etc/gpe/
 
 ipkg:
 	make PREFIX=/usr clean all
