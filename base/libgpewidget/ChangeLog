@@ -1,5 +1,9 @@
 2004-07-14  Philip Blundell  <philb@gnu.org>
 
+	* Makefile: Version 0.85 released.
+
+2004-07-14  Philip Blundell  <philb@gnu.org>
+
 	* gpeiconlistview.c (LABEL_YMARGIN): Set to 17.
 	(_gpe_icon_list_view_expose): Tweak text positioning.
 	(_gpe_icon_list_view_recalc_size): Set req->width appropriately.
