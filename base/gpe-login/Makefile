@@ -12,8 +12,13 @@ mo:
 install-po:
 	make -C po install DESTDIR=$(DESTDIR) PREFIX=$(PREFIX)
 
-$(PACKAGE): gpe-login.o
+all: gpe-login gpe-dm
+
+gpe-login: gpe-login.o
 	$(CC) -o $@ $< -L../libgpewidget -lgpewidget `gtk-config --libs` -lcrypt
+
+gpe-dm: gpe-dm.o
+	$(CC) -o $@ $<
 
 install: install-po
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)

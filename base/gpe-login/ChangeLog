@@ -1,0 +1,9 @@
+2002-06-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-dm.c: New file.
+	* Makefile (gpe-dm): New target.
+	(all): Include it.
+
+	* gpe-login.c (do_login): Remove useless fork.
+	
+

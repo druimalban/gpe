@@ -115,26 +115,19 @@ move_callback (GtkWidget *widget, GtkWidget *entry)
 static void
 do_login (uid_t uid, gid_t gid, char *dir)
 {
-  pid_t spid;
-
   cleanup_children ();
   
-  spid = fork ();
+  setuid (uid);
+  setgid (gid);
+  setenv ("HOME", dir, 1);
+  chdir (dir);
   
-  if (spid == 0)
-    {
-      setuid (uid);
-      setgid (gid);
-      setenv ("HOME", dir, 1);
-      chdir (dir);
-      
-      if (access (".xsession", X_OK) == 0)
-	execl (".xsession", ".xsession", NULL);
-      execl ("/etc/X11/Xsession", "/etc/X11/Xsession", NULL);
-      _exit (1);
-    }
+  if (access (".xsession", X_OK) == 0)
+    execl (".xsession", ".xsession", NULL);
+  execl ("/etc/X11/Xsession", "/etc/X11/Xsession", NULL);
+  execl ("/usr/bin/x-terminal-emulator", "/usr/bin/x-terminal-emulator", NULL);
 
-  waitpid (spid, NULL, 0);
+  _exit (1);
 }
 
 static void
