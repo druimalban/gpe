@@ -1,5 +1,7 @@
 2002-09-11  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/control (Depends): gpe-login (>= 0.21)
+
 	* Version 0.04-4 is released.
 	
 	* familiar/control (Depends): gpe-icons (>= 0.13)
