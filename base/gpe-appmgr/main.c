@@ -646,9 +646,13 @@ main (int argc, char *argv[])
   g->categories = g_list_append (g->categories, "PPP");
   g = make_group ("Games");
   g->categories = g_list_append (g->categories, "Game");
+  g->categories = g_list_append (g->categories, "Games");		// gpe-othello!
   g = make_group ("Settings");
   g->categories = g_list_append (g->categories, "SystemSettings");
   g->categories = g_list_append (g->categories, "Settings");
+  g->hide = TRUE;
+  g = make_group ("Actions");
+  g->categories = g_list_append (g->categories, "Action");
   g->hide = TRUE;
 
   other_group = make_group ("Other");

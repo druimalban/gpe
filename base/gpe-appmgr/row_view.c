@@ -180,8 +180,8 @@ make_label (char *text, int height)
   cairo_stroke (cr);
 
   cairo_select_font (cr, "Sans", CAIRO_FONT_SLANT_NORMAL,
-		     CAIRO_FONT_WEIGHT_BOLD);
-  cairo_scale_font (cr, 16.0);
+		     CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_scale_font (cr, 14.0);
 
   cairo_text_extents (cr, text, &extents);
 
