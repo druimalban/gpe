@@ -13,6 +13,7 @@
 #include <time.h>
 
 #include <gtk/gtk.h>
+#include <gdk_imlib.h>
 
 #include "globals.h"
 
@@ -86,6 +87,7 @@ main(int argc, char *argv[])
   gint nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
   gtk_init(&argc, &argv);
+  gdk_imlib_init();
 
   for (hour = 0; hour < 24; hour++)
     {

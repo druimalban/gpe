@@ -8,8 +8,11 @@
  */
 
 #include <gtk/gtk.h>
+#include <gdk_imlib.h>
 
 #include "globals.h"
+
+#define GPE_ICON "/usr/share/pixmaps/gpe-logo.png"
 
 static void
 thanks(GtkWidget *widget,
@@ -34,13 +37,13 @@ about(void)
   gtk_signal_connect (GTK_OBJECT (ok), "clicked",
 		      GTK_SIGNAL_FUNC (thanks), window);
 
-  gtk_widget_realize (window);
-  gpe_pix = gdk_pixmap_create_from_xpm (window->window, 
-					&gpe_pix_mask, NULL, 
-					"gpe.xpm");
-  logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
+  if (gdk_imlib_load_file_to_pixmap (GPE_ICON, &gpe_pix, &gpe_pix_mask))
+    {
+      logo = gtk_pixmap_new (gpe_pix, gpe_pix_mask);
 
-  gtk_box_pack_start (GTK_BOX (vbox), logo, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox), logo, FALSE, FALSE, 0);
+    }
+
   gtk_box_pack_start (GTK_BOX (vbox), label_name, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label_date, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label_copy, FALSE, FALSE, 0);
