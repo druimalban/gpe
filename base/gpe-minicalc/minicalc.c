@@ -39,6 +39,7 @@ static int base = 10;
 static gboolean display_volatile;
 static gboolean in_error;
 static char binop;
+static gboolean point;
 
 void
 update_display (void)
@@ -64,37 +65,53 @@ void
 val_to_display (void)
 {
   mp_exp_t exp;
-  char *s = mpf_get_str (NULL, &exp, base, sizeof (buf) - 4, dv);
+  char *ss = mpf_get_str (NULL, &exp, base, sizeof (buf) - 32, dv);
+  char *s = ss;
   size_t l = strlen (s);
+  char *op = buf;
+  size_t oplen = sizeof (buf) - 1;
+
+  if (s[0] == '-')
+    {
+      *op++ = '-';
+      oplen--;
+      l--;
+      s++;
+    }
+
   if (exp == 0)
     {
-      buf[0] = '0';
+      op[0] = '0';
       if (l)
 	{
-	  buf[1] = '.';
-	  strcpy (buf+2, s);
+	  op[1] = '.';
+	  strcpy (op+2, s);
 	}
       else
-	buf[1] = 0;
+	op[1] = 0;
     }
   else if (exp == l)
     {
-      strcpy (buf, s);
+      strncpy (op, s, oplen);
     }
   else if (exp > 0 && exp < l)
     {
-      strncpy (buf, s, exp);
-      buf[exp] = '.';
-      strcpy (buf + exp + 1, s + exp);
+      strncpy (op, s, exp);
+      op[exp] = '.';
+      strcpy (op + exp + 1, s + exp);
     }
   else if (exp < 0)
     {
-      strcpy (buf, "-exp");
       if (exp > -40)
 	{
 	}
       else
 	{
+	  char *p;
+	  op[0] = s[0];
+	  op[1] = '.';
+	  p = stpcpy (op + 2, s);
+	  snprintf (p, oplen - (p - op), "@%d", exp);
 	}
     }
   else
@@ -102,16 +119,20 @@ val_to_display (void)
       if (exp <= 40)
 	{
 	  int n;
-	  strcpy (buf, s);
+	  strcpy (op, s);
 	  for (n = 0; n < (exp - l); n++)
-	    strcat (buf, "0");
+	    strcat (op, "0");
 	}
       else
 	{
-	  strcpy (buf, "XeY");
+	  char *p;
+	  op[0] = s[0];
+	  op[1] = '.';
+	  p = stpcpy (op + 2, s);
+	  snprintf (p, oplen - (p - op), "@%d", exp);
 	}
     }
-  free (s);
+  free (ss);
   display_volatile = TRUE;
   update_display ();
 }
@@ -124,6 +145,7 @@ push_char (char c)
     return;
   if (display_volatile)
     {
+      point = FALSE;
       s = 0;
       display_volatile = FALSE;
     }
@@ -148,6 +170,7 @@ push_digit (GtkWidget *w, int n)
 void
 clear (gboolean all)
 {
+  point = FALSE;
   buf[0] = 0;
   update_display ();
   if (all)
@@ -195,7 +218,7 @@ base_button (GtkWidget *box, char *string, int n)
       w = gtk_radio_button_new_with_label (NULL, string);
       radio_group = w;
     }
-  gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (set_base), n);
+  gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (set_base), (gpointer)n);
   gtk_widget_show (w);
   gtk_box_pack_start (GTK_BOX (box), w, FALSE, FALSE, 0);
 }
@@ -241,6 +264,16 @@ do_equals (GtkWidget *w)
     }
 }
 
+void
+do_point (GtkWidget *w)
+{
+  if (point == FALSE && strlen (buf) < (sizeof (buf) - 2))
+    {
+      point = TRUE;
+      strcat (buf, ".");
+    }
+}
+
 struct
 {
   char *str;
@@ -263,8 +296,8 @@ struct
     { "*", do_binop, '*' },
     { "/", do_binop, '/' },
 
-    { "." },
-    { "+/-" },
+    { ".", do_point },
+    { NULL }, //{ "+/-", do_plusminus },
     { NULL },
     { "=", do_equals },
   };
@@ -278,7 +311,7 @@ make_button (GtkWidget *table, char *str, int x, int y, void *func, int arg)
       gtk_widget_set_usize (w, 32, 16);
       gtk_table_attach_defaults (GTK_TABLE (table), w, x, x+1, y, y+1);
       if (func)
-	gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (func), arg);
+	gtk_signal_connect (GTK_OBJECT (w), "clicked", GTK_SIGNAL_FUNC (func), (gpointer)arg);
       gtk_widget_show (w);
     }
 }
