@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-16 16:16+0200\n"
+"POT-Creation-Date: 2003-03-16 16:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,10 +48,6 @@ msgstr ""
 
 #: src/selector-cb.c:67 src/sketchpad-cb.c:196
 msgid "Delete"
-msgstr ""
-
-#: src/sketchpad.c:183
-msgid " "
 msgstr ""
 
 #: src/sketchpad.c:184

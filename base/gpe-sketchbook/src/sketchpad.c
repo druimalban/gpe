@@ -180,7 +180,7 @@ void sketchpad_reset_title(){
                           (is_current_sketch_new)?sketch_list_size+1:current_sketch +1,
                           sketch_list_size,
                           (is_current_sketch_modified)?" *":"",
-                          (is_current_sketch_new)?_(" "):"",
+                          (is_current_sketch_new)?" ":"",
                           (is_current_sketch_new)?_("new"):"");
   gtk_window_set_title(GTK_WINDOW (sketchbook.window), title);
   g_free(title);
