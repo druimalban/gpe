@@ -17,25 +17,18 @@ PREFIX = /usr/local
 CVSBUILD = yes
 DEBUG = no
 LINGUAS = 
-VERSION = 0.09
+VERSION = 0.10
 
 MEMBERS = main interface callbacks
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags gthread-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0` `pkg-config --libs gthread-2.0`
+PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gthread-2.0`
+PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs gthread-2.0`
 
-CPPFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -I../libgpewidget -I../libsoundgen -I../libschedule
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CPPFLAGS += -I../libsoundgen -I../libschedule
+PACKAGE_LDFLAGS += -L../libsoundgen -L../libschedule
 endif
-CFLAGS += -Wall
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
-
-.SUFFIXES: .d
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -50,7 +43,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget -L../libsoundgen -lsoundgen $(GTKLDFLAGS) -lsqlite $(LDFLAGS) -L../libschedule -lschedule
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -lsoundgen -lschedule
 
 install-program: all 
 	install -d $(DESTDIR)$(PREFIX)/bin
