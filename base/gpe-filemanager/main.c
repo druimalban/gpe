@@ -523,20 +523,25 @@ static void
 create_directory_interactive(void)
 {
   GtkWidget *dialog;
-  GtkWidget *entry;
+  GtkWidget *entry, *btnOK;
   int response;
   gchar *directory, *diruri;
 
   dialog = gtk_message_dialog_new (GTK_WINDOW (window), 
     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
     GTK_MESSAGE_QUESTION,
-    GTK_BUTTONS_OK_CANCEL, "Create directory");
+    GTK_BUTTONS_CANCEL, "Create directory");
   entry = gtk_entry_new ();
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), entry, FALSE, TRUE, 0);
+  btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog),GTK_STOCK_OK,GTK_RESPONSE_OK);
 
   gtk_widget_show_all (dialog);
   gtk_widget_grab_focus(GTK_WIDGET(entry));
+  GTK_WIDGET_SET_FLAGS(btnOK,GTK_CAN_DEFAULT);
+  gtk_entry_set_activates_default(GTK_ENTRY(entry),TRUE);
+  gtk_widget_grab_default(btnOK);
+  
   response = gtk_dialog_run(GTK_DIALOG(dialog));
   if (response == GTK_RESPONSE_OK)
   {
@@ -1978,6 +1983,11 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (gtk_item_factory_get_widget (item_factory, "<main>")), "hide",
 		    GTK_SIGNAL_FUNC (hide_menu), NULL);
   gtk_widget_show_all (window);
+  
+  if (directory_browser)
+    gtk_widget_show_all(dir_view_window);
+  else
+	gtk_widget_hide(dir_view_window);
 
   gnome_vfs_init ();
   gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,

@@ -1,6 +1,9 @@
+2004-08-06  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c: Directory create dialog closes correcty on enter now.
 
 2004-08-05  Florian Boor  <florian.boor@kernelconcepts.de>
-
+    
 	* gpe-filemanager.png: Replaced by icon that is used by gnome.
 
 2004-07-27  Florian Boor  <florian.boor@kernelconcepts.de>
