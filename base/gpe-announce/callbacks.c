@@ -1,3 +1,19 @@
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+ 
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,27 +43,27 @@ int curl, curr;
 static void
 schedule_alarm(char *buf, time_t when)
 {
-  char filename[256], command[256];
-  FILE *f;
+char filename[256], command[256];
+FILE *f;
 	
-  sprintf(filename, "/var/spool/at/%d.1234", (int)when);
+	sprintf(filename, "/var/spool/at/%d.1234", (int)when);
   
-  f=fopen(filename, "w");
+	f=fopen(filename, "w");
 	
-  fprintf(f, "#!/bin/sh\n");
-  fprintf(f, "export DISPLAY=:0.0\n");
-  fprintf(f, "/usr/bin/gpe-announce '%s'\n", buf);
-  fprintf(f, "/bin/rm $0\n");
+	fprintf(f, "#!/bin/sh\n");
+	fprintf(f, "export DISPLAY=:0.0\n");
+	fprintf(f, "/usr/bin/gpe-announce '%s'\n", buf);
+	fprintf(f, "/bin/rm $0\n");
   
-  fclose(f);
+	fclose(f);
   
-  sprintf(command, "chmod 755 %s", filename);
+	sprintf(command, "chmod 755 %s", filename);
   		  
-  system(command);
+	system(command);
   
-  sprintf(command, "echo >/var/spool/at/trigger");
+	sprintf(command, "echo >/var/spool/at/trigger");
   		  
-  system(command);
+	system(command);
   
 }
 	
@@ -116,21 +132,24 @@ return (NULL);
 
 int get_vol(int fd, int *left, int *right)
 {
-  int vol;
-  int err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol);  
-  if(err != -1) {
-    *left = vol & 0xff;
-    *right = (vol >> 8) & 0xff;
-  }
-  return err;
+int vol;
+int err = ioctl(fd, SOUND_MIXER_READ_VOLUME, &vol);  
+
+	if(err != -1) {
+		*left = vol & 0xff;
+		*right = (vol >> 8) & 0xff;
+	}
+
+	return err;
 }
 
 
 int set_vol(int fd, int left, int right)
 {
-  int vol = left | (right << 8);
-  int err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);  
-  return err;
+int vol = left | (right << 8);
+int err = ioctl(fd, MIXER_WRITE(SOUND_MIXER_VOLUME), &vol);  
+
+return err;
 }
 
 gint bells_and_whistles ( )
@@ -153,8 +172,7 @@ gint bells_and_whistles ( )
 	} else
 		pthread_detach(mythread);
 	
-	return(1);
-	
+return(1);
 }
 
 gint
@@ -192,5 +210,3 @@ on_mute_clicked                     (GtkButton       *button,
 	PlayAlarmStop = TRUE;
 	return(FALSE);
 }
-
-
