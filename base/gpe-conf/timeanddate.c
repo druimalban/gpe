@@ -15,12 +15,18 @@
 #define _XOPEN_SOURCE /* For GlibC2 */
 #endif
 #include <time.h>
+#include <ctype.h>
+
 #include "applets.h"
 #include "timeanddate.h"
 #include "suid.h"
 
 #include <gpe/spacing.h>
 #include <gpe/errorbox.h>
+#include <gpe/gtkdatecombo.h>
+
+
+/* --- local types and constants --- */
 
 gchar *Ntpservers[6]=
   {
@@ -32,13 +38,47 @@ gchar *Ntpservers[6]=
     "ntppub.tamu.edu"
   };
 
-gchar *timezones[3]=
-  {
-    "UTC",
-    "MET",
-    "GMT"
+gchar *timezones[][3]= {
+    {"UTC / WET / GMT)","UTC","WEDST"},
+    {"MET / MEZ / CET / SWT","MEZ-1","MESZ"},
+    {"EET","EET-2",""},
+    {"BT","BT-3",""},
+    {"IST","IST-5:30",""},
+    {"WAST","WAST-7",""},
+    {"CCT","CCT-8","CDT"},
+    {"JST","JST-9",""},
+    {"GST / EAST","GST-10",""},
+    {"IDLE / NZT","NZT-12",""},
+    {"HST","HST+10","PDT"},
+    {"AkST / YST","AkST+9","YDT"},
+    {"PST","PST+8","PDT"},
+    {"MST","MST+7","MDT"},
+    {"CST","CST+6","CDT"},
+    {"EST","EST+5","EDT"},
+    {"AST","AST+4","ADT"},
+    {"WAT","WAT+1","WDT"},
+	{"<advanced>","<>",""}
   };
 
+#define TZ_MAXINDEX 19
+
+typedef struct 
+{
+	char tzname[5];
+	char dstname[5];
+	int utcofs_h;
+	int utcofs_m;
+	int utcdstofs_h;
+	int utcdstofs_m;
+	/*
+	DT switching 
+	
+	*/
+} tzinfo;	
+
+
+/* --- module global variables --- */
+  
 static struct 
 {
   GtkWidget *categories;
@@ -72,12 +112,142 @@ static struct
   GtkWidget *timezone;
 } self;
 
+
+/* --- local intelligence --- */
+
+/*
+ *  This function composes a TZ string from given tzinfo struct.
+ */
+/*char *compose_tz_advanced(tzinfo tzi)
+{
+	char *result;
+	
+}
+*/
+
+/*
+ *  This function composes a TZ string from given parameters.
+ */
+char *compose_tz_simple(char *tz,char *dst)
+{
+	char *result;
+	
+	result = g_strdup_printf("%s%s",tz,dst);
+	return(result);
+}
+
+
+/*
+ *  This function parses the given TZ string.
+ */
+tzinfo get_tz_info(char *tzstr)
+{
+	int i = 0;
+	int j = 0;
+	tzinfo result;
+	char numtmp[10]; 
+	char numtmp2[10]; 
+	
+	/* init with defaults */
+	sprintf(result.tzname,"UTC");
+	sprintf(result.dstname,"");
+	result.utcofs_h = 0;
+	result.utcofs_m = 0;
+	result.utcdstofs_h = 0;
+	result.utcdstofs_m = 0;	
+	
+	/* get timezone name */ 
+	while ((i<strlen(tzstr)) && (isalpha(tzstr[i])) && (i < 5))
+	{
+		result.tzname[i] = tzstr[i];
+		i++;
+	}
+	result.tzname[i] = 0;
+	
+	/* ignore whitespace */
+	while ((i<strlen(tzstr)) && (isblank(tzstr[i])))
+	{
+		i++;
+	}
+	
+	j = i;
+	/* get tz utc offset */
+	while ((i<strlen(tzstr)) && (isdigit(tzstr[i]) || ispunct(tzstr[i])))
+	{
+		numtmp[i-j] = tzstr[i];
+		i++;
+	}
+	
+	/* seperate hours/minutes in offset */
+	if (strstr(numtmp,":"))
+	{
+		snprintf(numtmp2,strstr(numtmp,":")-numtmp-1,"%s",numtmp);
+		result.utcofs_h = atoi(numtmp2);
+		result.utcofs_m = atoi(strstr(numtmp,":")+1);
+	}
+	else
+	{
+		result.utcofs_h = atoi(numtmp);
+	}
+	memset(numtmp,' ',10);
+	
+	/* ignore whitespace */
+	while ((i<strlen(tzstr)) && (isblank(tzstr[i])))
+	{
+		i++;
+	}
+	
+	j = i;
+	/* get dst name */ 
+	while ((i<strlen(tzstr)) && (isalpha(tzstr[i])) && (i-j < 5))
+	{
+		result.dstname[i-j] = tzstr[i];
+		i++;
+	}
+	result.dstname[i-j] = 0;
+		
+	/* ignore whitespace */
+	while ((i<strlen(tzstr)) && (isblank(tzstr[i])))
+	{
+		i++;
+	}
+	
+	j = i;
+	/* get dst utc offset */
+	while ((i<strlen(tzstr)) && (isdigit(tzstr[i]) || ispunct(tzstr[i])))
+	{
+		numtmp[i-j] = tzstr[i];
+		i++;
+	}
+	
+	/* seperate hours/minutes in offset */
+	if (strstr(numtmp,":"))
+	{
+		snprintf(numtmp2,strstr(numtmp,":")-numtmp-1,"%s",numtmp);
+		result.utcdstofs_h = atoi(numtmp2);
+		result.utcdstofs_m = atoi(strstr(numtmp,":")+1);
+	}
+	else
+	{
+		result.utcdstofs_h = atoi(numtmp);
+	}
+	
+	/*
+		Add parser for dst switching here.
+	*/
+	
+	return(result);
+}
+
 void GetInternetTime()
 {
   suid_exec("NTPD",gtk_entry_get_text (GTK_ENTRY (GTK_COMBO (self.ntpserver)->entry)));
   sleep(1);
   Time_Restore();
 }
+
+
+/* --- gpe-conf interface --- */
 
 GtkWidget *Time_Build_Objects()
 {  
@@ -86,6 +256,7 @@ GtkWidget *Time_Build_Objects()
   GList *tzones = NULL;
  
   GtkObject *adj;
+  GtkTooltips *tooltips;
   // get the time and the date.
   time_t t = time(NULL);
   struct tm *tsptr = localtime(&t);
@@ -100,13 +271,18 @@ GtkWidget *Time_Build_Objects()
   gchar *fstr = NULL;
   guint mark = 0;
   
+  tzinfo tzi;
+  
   ts.tm_year+=1900;
 
   if(ts.tm_year < 2002)
     ts.tm_year=2002;
 
+  tooltips = gtk_tooltips_new ();
 
   self.categories = gtk_vbox_new (FALSE, gpe_catspacing);
+  gtk_object_set_data(GTK_OBJECT(self.categories),"tooltips",tooltips);
+  
   gtk_container_set_border_width (GTK_CONTAINER (self.categories), gpe_border);
 
   /* -------------------------------------------------------------------------- */
@@ -130,11 +306,12 @@ GtkWidget *Time_Build_Objects()
   self.controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (self.catconthbox1), self.controlvbox1, TRUE, TRUE, 0);
   
-  self.cal = gtk_calendar_new ();
-  gtk_calendar_select_month (GTK_CALENDAR (self.cal), ts.tm_mon, ts.tm_year);
-  gtk_calendar_select_day (GTK_CALENDAR (self.cal), ts.tm_mday);
+  self.cal = gtk_date_combo_new ();
+  gtk_calendar_select_month (GTK_CALENDAR (GTK_DATE_COMBO(self.cal)->cal), ts.tm_mon, ts.tm_year);
+  gtk_calendar_select_day (GTK_CALENDAR (GTK_DATE_COMBO(self.cal)->cal), ts.tm_mday);
   
   gtk_box_pack_start (GTK_BOX (self.controlvbox1), self.cal, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, self.cal, _("Enter current date here or use button to select."), NULL);
 
   /* -------------------------------------------------------------------------- */
   self.catvbox2 = gtk_vbox_new (FALSE, gpe_boxspacing);
@@ -196,20 +373,26 @@ GtkWidget *Time_Build_Objects()
 
 
   self.timezone = gtk_combo_new ();
+  tzi = get_tz_info(getenv("TZ"));
 
-  fstr = getenv("TZ");
-  if (fstr) 
-	fstr=g_strdup(getenv("TZ"));
+  if (strlen(tzi.tzname)) 
+	fstr=g_strdup(tzi.tzname);
   else
     fstr=g_strdup("UTC");
+  
+  printf("TZ.name = %s\n",tzi.tzname);
+  printf("TZ.dstname = %s\n",tzi.dstname);
+  printf("TZ.utcofs_h = %i\n",tzi.utcofs_h);
+  printf("TZ.utcdstofs_h = %i\n",tzi.utcdstofs_h);
 
-  for (idx=0; idx<3; idx++) {
-    tzones = g_list_append (tzones, timezones[idx]);
-    if (!strcmp(timezones[idx],fstr)) mark=idx;
+  for (idx=0; idx<TZ_MAXINDEX; idx++) {
+    tzones = g_list_append (tzones, timezones[idx][0]);
+    if (strstr(timezones[idx][0],fstr)) mark=idx;
   }
 
   gtk_combo_set_popdown_strings (GTK_COMBO (self.timezone), tzones);
   gtk_box_pack_start(GTK_BOX(self.controlvbox4), self.timezone, FALSE, FALSE, 0); 
+  gtk_tooltips_set_tip (tooltips, self.timezone, _("Select your current timezone here. The setting applies after after next login."), NULL);
 
   gtk_list_select_item(GTK_LIST(GTK_COMBO(self.timezone)->list),mark);
   
@@ -247,12 +430,14 @@ GtkWidget *Time_Build_Objects()
 
   gtk_combo_set_popdown_strings (GTK_COMBO (self.ntpserver), ntpsrv);
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.ntpserver, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, self.ntpserver, _("Here you may select which timeserver i use to set my clock."), NULL);
 
   self.internet = gtk_button_new_with_label(_("Get time from network"));
   gtk_signal_connect (GTK_OBJECT(self.internet), "clicked",
 		      (GtkSignalFunc) GetInternetTime, NULL);
 
   gtk_box_pack_start(GTK_BOX(self.controlvbox3), self.internet, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, self.internet, _("If i'm connected to the Internet, you may press this butten to set the time on this device using the timeserver above."), NULL);
 
   
    /*------------------------------*/
@@ -273,7 +458,8 @@ void Time_Save()
   time_t t;
   char* par = malloc(100);
   
-  gtk_calendar_get_date(GTK_CALENDAR(self.cal),&year,&month,&day);
+  
+  gtk_calendar_get_date(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),&year,&month,&day);
   h=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.h));
   m=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.m));
   s=gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(self.s));
@@ -289,11 +475,20 @@ void Time_Save()
   /* set time */
   snprintf(par,99,"%ld",t);
   suid_exec("STIM",par);
+  
   free(par);
+  
   /* set timezone */
-  if (setenv("TZ",gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.timezone)->entry)),1))
-	  gpe_error_box(_("Could not set timezone."));
-  suid_exec("STZO",gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.timezone)->entry)));
+  for (s=0;s<=TZ_MAXINDEX;s++)
+	  if (!strcmp(gtk_entry_get_text(GTK_ENTRY(GTK_COMBO(self.timezone)->entry)),timezones[s][0]))
+	  {
+		par = compose_tz_simple(timezones[s][1],timezones[s][2]);
+		printf("TZ = %s\n",par);
+  		if (setenv("TZ",par,1))
+	  		gpe_error_box(_("Could not set timezone."));
+		suid_exec("STZO",par);
+		break;
+	  }
 }
 
 void Time_Restore()
@@ -302,8 +497,8 @@ void Time_Restore()
   struct tm *tsptr = localtime(&t);
   struct tm ts = *tsptr;     /* gtk_cal seems to modify the ptr
 				returned by localtime, so we duplicate it.. */
-  gtk_calendar_select_month(GTK_CALENDAR(self.cal),ts.tm_mon,ts.tm_year+1900);
-  gtk_calendar_select_day(GTK_CALENDAR(self.cal),ts.tm_mday);
+  gtk_calendar_select_month(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),ts.tm_mon,ts.tm_year+1900);
+  gtk_calendar_select_day(GTK_CALENDAR(GTK_DATE_COMBO(self.cal)->cal),ts.tm_mday);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.h),ts.tm_hour);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.m),ts.tm_min);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.s),ts.tm_sec);

@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name= Package Manager
-Comment=Manage installed packages
+Name= Update Manager
+Comment=Update installed packages
 Exec=gpe-conf packages
 Terminal=0
 Type=Application
