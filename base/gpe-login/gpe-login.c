@@ -34,6 +34,7 @@
 
 #include <gpe/errorbox.h>
 #include <gpe/init.h>
+#include <gpe/spacing.h>
 #include <gpe/render.h>
 #include <gpe/gtksimplemenu.h>
 
@@ -390,7 +391,7 @@ enter_lock_callback (GtkWidget *widget, GtkWidget *entry)
     }
   else
     gtk_label_set_markup (GTK_LABEL (label_result),
-			  g_strdup_printf ("<span lang='%s' foreground='red'>%s</span>",
+			  g_strdup_printf ("<span lang='%s' foreground='red'><b>%s</b></span>",
 					   pango_lang_code,
 					   _("Login incorrect")));
   
@@ -639,6 +640,11 @@ main (int argc, char *argv[])
   FILE *cfp;
   GdkCursor *cursor;
 
+  /* gchar *gpe_catindent = gpe_get_catindent ();  */
+  /* guint gpe_catspacing = gpe_get_catspacing (); */
+  guint gpe_boxspacing = gpe_get_boxspacing ();
+  guint gpe_border     = gpe_get_border ();
+
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -874,7 +880,7 @@ main (int argc, char *argv[])
       GtkWidget *hbox_password;
       GtkWidget *login_label, *lock_label, *password_label;
       GtkWidget *entry = NULL, *table;
-      guint xpad = 4, ypad = 1;
+      guint xpad = gpe_boxspacing, ypad = 1;
 
       if (autolock_mode) 
 	{
@@ -910,14 +916,15 @@ main (int argc, char *argv[])
 	  entry = gtk_entry_new ();
 	  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 	  password_label = gtk_label_new (_("Password"));
-	  hbox_password = gtk_hbox_new (FALSE, 5);
+	  hbox_password = gtk_hbox_new (FALSE, gpe_boxspacing);
 	  gtk_box_pack_start (GTK_BOX (hbox_password), entry, TRUE, TRUE, 0);
 	  gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
-	  gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
-	  gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
 
 	  gtk_table_attach (GTK_TABLE (table), password_label, 0, 1, 1, 2, 0, GTK_EXPAND | GTK_FILL, xpad, ypad);
 	  gtk_table_attach (GTK_TABLE (table), hbox_password, 1, 2, 1, 2, GTK_EXPAND | GTK_FILL, GTK_EXPAND | GTK_FILL, xpad, ypad);
+
+	  gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
+	  gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
 	}
 
       if (! autolock_mode)
@@ -956,7 +963,7 @@ main (int argc, char *argv[])
 	  gtk_box_pack_start (GTK_BOX (vbox), socket_box, TRUE, TRUE, 0);
 	}
 
-      gtk_container_set_border_width (GTK_CONTAINER (vbox), 5);
+      gtk_container_set_border_width (GTK_CONTAINER (vbox), 0);
       
       if (! hard_keys_mode)
 	{
@@ -1017,13 +1024,13 @@ main (int argc, char *argv[])
       gtk_entry_set_visibility (GTK_ENTRY (entry_confirm), FALSE);
 
       gtk_box_pack_start (GTK_BOX (hbox_username), label_username, 
-			  FALSE, FALSE, 4);
+			  FALSE, FALSE, gpe_boxspacing);
       gtk_box_pack_start (GTK_BOX (hbox_fullname), label_fullname, 
-			  FALSE, FALSE, 4);
+			  FALSE, FALSE, gpe_boxspacing);
       gtk_box_pack_start (GTK_BOX (hbox_password), label_password, 
-			  FALSE, FALSE, 4);
+			  FALSE, FALSE, gpe_boxspacing);
       gtk_box_pack_start (GTK_BOX (hbox_confirm), label_confirm,
-			  FALSE, FALSE, 4);
+			  FALSE, FALSE, gpe_boxspacing);
 
       table = gtk_table_new (4, 2, FALSE);
       gtk_table_attach_defaults (GTK_TABLE (table), hbox_username, 
@@ -1063,14 +1070,14 @@ main (int argc, char *argv[])
 	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
       
       gtk_container_add (GTK_CONTAINER (frame), vbox);
-      gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
-      gtk_container_set_border_width (GTK_CONTAINER (table), 5);
+      gtk_container_set_border_width (GTK_CONTAINER (frame), gpe_border);
+      gtk_container_set_border_width (GTK_CONTAINER (table), gpe_border);
 
       focus = entry_username;
 
-      gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 5);
+      gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, gpe_boxspacing);
       gtk_box_pack_start (GTK_BOX (vbox2), frame, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, 5);
+      gtk_box_pack_start (GTK_BOX (vbox2), hbox, FALSE, FALSE, gpe_boxspacing);
       gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
     }
 

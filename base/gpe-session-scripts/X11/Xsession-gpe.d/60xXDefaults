@@ -1,2 +1,4 @@
 #!/bin/sh
-xrdb -merge -nocpp < $HOME/.Xdefaults
+if [ -e $HOME/.Xdefaults ]; then
+    xrdb -merge -nocpp < $HOME/.Xdefaults
+fi
