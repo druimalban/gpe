@@ -16,9 +16,16 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 
 ifeq ($(NATIVE),yes)
-LDFLAGS += -lgpewidget `gtk-config --libs` `gdk-pixbuf-config --libs`
 STRIP=strip
+
+ifeq ($(GTK2),yes)
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0 gdk-pixbuf-2.0`
+CFLAGS += `pkg-config --cflags gtk+-2.0 gdk-pixbuf-2.0` -Wall -DGTK2
+else
+LDFLAGS += -lgpewidget `gtk-config --libs` `gdk-pixbuf-config --libs`
 CFLAGS += `gtk-config --cflags` `gdk-pixbuf-config --cflags` -Wall
+endif
+
 else
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
@@ -55,16 +62,12 @@ install: gpe-appmgr gpe-appmgr-setup
 	$(INSTALL) -D dist/etc/menu-methods/gpe_appmgr $(DESTDIR)/$(ETCDIR)/menu-methods/gpe_appmgr
 	$(INSTALL) -D dist/usr/lib/menu/gpe-appmgr-setup $(DESTDIR)/$(PREFIX)/lib/menu/gpe-appmgr-setup
 
-ipk:
-	make PREFIX=/usr DESTDIR=`pwd`/build all install
-	$(INSTALL) -D dist/CONTROL/control build/CONTROL/control
-	ipkg-build build
-
-ipkg: ipk
-
 clean:
 	rm -f *.o gpe-appmgr gpe-appmgr-setup
 
 distclean: clean
 	rm -f *.ipk
 	rm -f dist/usr/bin/*
+
+include ../build/Makefile.translation
+include ../build/Makefile.dpkg_ipkg
