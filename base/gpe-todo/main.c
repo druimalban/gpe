@@ -47,6 +47,8 @@ extern GtkWidget *top_level (GtkWidget *window);
 static void
 open_window (void)
 {
+  GdkPixmap *pmap;
+  GdkBitmap *bmap;
   GtkWidget *top;
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -60,6 +62,9 @@ open_window (void)
 
   gtk_widget_set_usize (window, 240, 320);
   gtk_widget_show (window);
+
+  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
+    gdk_window_set_icon (window->window, NULL, pmap, bmap);
 }
 
 int
@@ -83,9 +88,6 @@ main(int argc, char *argv[])
 
   open_window ();
   
-  if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-    gdk_window_set_icon (main_window->window, NULL, pmap, bmap);
-
   gtk_main ();
 
   return 0;
