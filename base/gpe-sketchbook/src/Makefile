@@ -6,7 +6,6 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 DEPS    = $(patsubst %,%.d,$(MEMBERS))
 OBJS    = $(patsubst %,%.o,$(MEMBERS))
 
-CC      = gcc
 CFLAGS += -Wall
 CFLAGS += -MD #(deps)
 
