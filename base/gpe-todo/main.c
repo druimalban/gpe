@@ -259,6 +259,9 @@ open_window (void)
   the_notebook = listbook;
   gtk_container_add (GTK_CONTAINER (window), listbook);
 
+  gtk_signal_connect (GTK_OBJECT (window), "destroy",
+		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+
   gtk_widget_set_usize (window, 240, 320);
   gtk_widget_show_all (window);
 }
