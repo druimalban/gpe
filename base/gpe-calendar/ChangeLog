@@ -1,5 +1,8 @@
 2003-03-29  Philip Blundell  <philb@gnu.org>
 
+	* week_view.c (draw_expose_event): Rearrange decls for pre-C99
+	compilers.
+
 	* Makefile (clean): Also remove .desktop file.
 
 	* event-ui.c (build_edit_event_window): Use tables in recurrence

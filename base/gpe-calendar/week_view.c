@@ -135,10 +135,11 @@ draw_expose_event (GtkWidget *widget,
 		{
 		  if (ev->mark == FALSE)
 		    {
+		      gchar *buffer;
 		      localtime_r (&ev->start, &tm);
 		      strftime (buf, sizeof (buf), "%H:%M", &tm);
-		      gchar *buffer = g_locale_to_utf8 (buf, -1, NULL,
-		                                        NULL, NULL);
+		      buffer = g_locale_to_utf8 (buf, -1, NULL,
+						 NULL, NULL);
 		      pango_layout_set_text (pl_evt, buffer, strlen (buffer));
 		      gtk_paint_layout (widget->style,
 					widget->window,
