@@ -78,7 +78,7 @@ install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libgpewidget.so
 
-ipkg:
+ipkg: clean
 	rm -rf familiar/dist
 	mkdir -p familiar/dist/CONTROL
 	cp familiar/$(CONTROL) familiar/dist/CONTROL/control

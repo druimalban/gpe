@@ -1,3 +1,19 @@
+2002-11-30  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.28 released.
+
+2002-11-30  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (ipkg): Depend on clean.
+
+	* render.c (gpe_render_icon): Handle SELECTED state too.
+
+	* gtkgpepixmap2.c (gtk_gpe_pixmap_expose): Draw appropriate pixmap.
+	(gtk_gpe_pixmap_set_selected): New.
+	* gpe/gtkgpepixmap.h (struct _GtkGpePixmap): Add pixmap_selected.
+	(gtk_gpe_pixmap_set_selected): Add prototype.
+	* gtkgpepixmap.c (gtk_gpe_pixmap_set_selected): New.
+	
 2002-11-14  Robert Mibus  <mibus@handhelds.org>
 
 	* gpeiconlist.gob, gpe-iconlist.c, gpe/gpe-iconlist.h:

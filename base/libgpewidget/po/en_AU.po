@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-10-13 23:52+0100\n"
+"POT-Creation-Date: 2002-11-29 23:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,8 +19,8 @@ msgstr ""
 msgid "Error"
 msgstr "Strewth!"
 
-#: errorbox.c:62 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:675
-#: dirbrowser.c:307 about.c:125
+#: errorbox.c:62 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:662
+#: dirbrowser.c:307
 msgid "OK"
 msgstr ""
 
@@ -31,37 +31,49 @@ msgid ""
 "\"%s\""
 msgstr ""
 
-#: smallbox.c:56 smallbox.c:154 gtkminifilesel.c:150 gtkminifilesel.c:199
-#: gtkminifilesel.c:243 gtkminifilesel.c:671 dirbrowser.c:315
+#: smallbox.c:56 smallbox.c:154 gtkminifilesel.c:148 gtkminifilesel.c:194
+#: gtkminifilesel.c:238 gtkminifilesel.c:658 dirbrowser.c:315
 msgid "Cancel"
 msgstr ""
 
-#: gtkminifilesel.c:134 gtkminifilesel.c:154 gtkminifilesel.c:276
+#: gtkminifilesel.c:110
+msgid "Delete contents of folders?"
+msgstr ""
+
+#: gtkminifilesel.c:135 gtkminifilesel.c:152 gtkminifilesel.c:271
 msgid "Rename"
 msgstr ""
 
-#: gtkminifilesel.c:143
+#: gtkminifilesel.c:141
 msgid "New name:"
 msgstr ""
 
-#: gtkminifilesel.c:182 gtkminifilesel.c:203 gtkminifilesel.c:281
+#: gtkminifilesel.c:180 gtkminifilesel.c:198 gtkminifilesel.c:276
 msgid "Delete"
 msgstr ""
 
-#: gtkminifilesel.c:191
+#: gtkminifilesel.c:186
 #, c-format
-msgid "Do you really want to delete %s"
+msgid "Really delete %s?"
 msgstr ""
 
-#: gtkminifilesel.c:227
+#: gtkminifilesel.c:190
+msgid "Delete contents of folders"
+msgstr ""
+
+#: gtkminifilesel.c:222
 msgid "Create directory"
 msgstr ""
 
-#: gtkminifilesel.c:247
+#: gtkminifilesel.c:231
+msgid "Directory name:"
+msgstr ""
+
+#: gtkminifilesel.c:242
 msgid "Create"
 msgstr ""
 
-#: gtkminifilesel.c:271
+#: gtkminifilesel.c:266
 msgid "New directory"
 msgstr ""
 
@@ -82,18 +94,14 @@ msgstr ""
 msgid "%a, %d"
 msgstr ""
 
-#: question.c:124
+#: question.c:125
 msgid "Question"
 msgstr ""
 
-#: question.c:125
+#: question.c:126
 msgid "No"
 msgstr ""
 
-#: question.c:125
+#: question.c:126
 msgid "Yes"
-msgstr ""
-
-#: about.c:57
-msgid "About "
 msgstr ""
