@@ -469,8 +469,8 @@ network_info (netinfo_t * ni)
 				       ni->net.ip_range[2],
 				       ni->net.ip_range[3]);
 	else
-		tmp = g_strdup_printf ("%s: %s", _("Subnet"),
-				       _("<i>unknown</i>"));
+		tmp = g_strdup_printf ("%s: <i>%s</i>", _("Subnet"),
+				       _("unknown"));
 	gtk_label_set_markup (GTK_LABEL (lSubnet), tmp);
 	g_free (tmp);
 

@@ -568,7 +568,7 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 	guint gpe_boxspacing = gpe_get_boxspacing ();
 	guint gpe_border = gpe_get_border ();
 
-	gchar *tmpval;
+	gchar *tmpval1, *tmpval2;
 	gint response;
 	char  tmp_key[256];
 	
@@ -602,9 +602,12 @@ show_wificonfig(GtkWidget *window, NWInterface_t *iface)
 
 	label = gtk_label_new (NULL);
 	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	tmpval = g_strdup_printf (_("<b>WiFi config for %s</b>"),iface->name);
-	gtk_label_set_markup (GTK_LABEL (label), tmpval);
-	g_free (tmpval);
+
+	tmpval1 = g_strdup_printf (_("WiFi config for %s"), iface->name);
+	tmpval2 = g_strdup_printf ("<b>%s</b>", tmpval1);
+	gtk_label_set_markup (GTK_LABEL (label), tmpval2);
+	g_free (tmpval1);
+  g_free (tmpval2);
 	gtk_table_attach (GTK_TABLE (ctable), label, 0, 2, 0, 1,
 			  (GtkAttachOptions) (GTK_FILL),
 			  (GtkAttachOptions) (GTK_FILL),

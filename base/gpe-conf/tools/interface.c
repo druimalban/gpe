@@ -1868,7 +1868,15 @@ char* if_to_infostr(struct interface *ptr)
     if (hw == NULL)
 	hw = get_hwntype(-1);
 
-    sprintf(tmp,_("<b>Interface %s</b>\nType: %s\n"), ptr->name, _(hw->title));
+    /*sprintf(tmp,_("<b>Interface %s</b>\nType: %s\n"), ptr->name, _(hw->title));*/
+    {
+      char s[256], t[256];
+      
+      sprintf(s, _("Interface %s"), ptr->name);
+      sprintf(t, _("Type: %s"), _(hw->title));
+      sprintf(tmp, "<b>%s</b>\n%s\n", s, t);
+    }
+
 	buffer = realloc(buffer,strlen(buffer)+strlen(tmp)+1);
 	strcat(buffer,tmp);
 	

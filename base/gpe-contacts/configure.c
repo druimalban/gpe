@@ -158,7 +158,8 @@ create_pageSetup (GObject *container)
   GtkWidget *tree_view;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *col;
-  
+  gchar *s;
+
   wSetup = mainw;
 
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_STRING);
@@ -174,7 +175,10 @@ create_pageSetup (GObject *container)
   gtk_widget_show (vbox9);
 
   frame2 = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (frame2), _("<b>Detail panel:</b>"));
+  s = g_strdup_printf("<b>%s</b>", _("Detail panel:"));
+  gtk_label_set_markup (GTK_LABEL (frame2), s);
+  g_free (s);
+
   gtk_misc_set_alignment (GTK_MISC (frame2), 0.0, 0.5);
   gtk_widget_show (frame2);
   gtk_box_pack_start (GTK_BOX (vbox9), frame2, FALSE, FALSE, 0);

@@ -1,3 +1,7 @@
+2005-01-01  Luc Pionchon  <luc@handhelds.org>
+
+	* configure.c (create_pageSetup): remove markup from i18n'ed strings
+
 2005-01-01  Phil Blundell  <philb@gnu.org>
 
 	* Version 0.34 released.

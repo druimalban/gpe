@@ -1261,11 +1261,15 @@ build_root_password_box (void)
   GtkWidget *hbox;
   GtkWidget *ok_button;
   guint gpe_boxspacing = gpe_get_boxspacing ();
+  gchar *s;
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
  
   label_title = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label_title), _("<b>System setup</b>"));
+  s = g_strdup_printf ("<b>%s</b>", _("System setup"));
+  gtk_label_set_markup (GTK_LABEL (label_title), s);
+  g_free (s);
+
   label_prompt = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (label_prompt), _("Please choose a password for the\n<i>root</i> account.\n\nThis will be needed when performing\nsystem administration.\n"));
   label_password = gtk_label_new (_("Password"));
@@ -1326,6 +1330,7 @@ build_new_user_box (void)
   GtkWidget *ok_button;
   GtkWidget *label_language, *hbox_language;
   guint gpe_boxspacing = gpe_get_boxspacing ();
+  gchar *s;
 
   ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
@@ -1395,7 +1400,9 @@ build_new_user_box (void)
 		    G_CALLBACK (enter_newuser_callback), NULL);
   
   label = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (label), _("<b>New user details</b>"));
+  s = g_strdup_printf ("<b>%s</b>", _("New user details"));
+  gtk_label_set_markup (GTK_LABEL (label), s);
+  g_free (s);
   
   hbox = gtk_hbox_new (FALSE, 0);
   gtk_box_pack_end (GTK_BOX (hbox), ok_button, FALSE, FALSE, 0);

@@ -1,3 +1,8 @@
+2005-01-01  Luc Pionchon  <luc@handhelds.org>
+
+	* network.c (show_wificonfig): remove markup from i18n'ed strings.
+	* tools/interface.c (if_to_infostr): Likewise.
+
 2004-11-28	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* cfgfile.*, network.c: Fixed device position handling which contained 

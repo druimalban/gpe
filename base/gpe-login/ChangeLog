@@ -1,3 +1,8 @@
+2005-01-01  Luc Pionchon  <luc@handhelds.org>
+
+	* gpe-login.c (build_root_password_box): remove markup from i18n'ed strings.
+	(build_new_user_box): Likewise.
+
 2004-11-07  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile (LINGUAS): Add zh_CN.

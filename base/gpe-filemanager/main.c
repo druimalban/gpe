@@ -723,6 +723,7 @@ ask_open_with (FileInformation *file_info)
   GtkWidget *open_button, *cancel_button;
   GList *applications = NULL;
   GList *appnames = NULL;
+  gchar *s;
 
   dialog_window = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW(dialog_window), "Open With...");
@@ -730,7 +731,10 @@ ask_open_with (FileInformation *file_info)
   gtk_window_set_modal (GTK_WINDOW (dialog_window), TRUE);
   
   label = gtk_label_new (NULL);
-  gtk_label_set_markup(GTK_LABEL(label), _("<b>Open with program</b>"));
+  s = g_strdup_printf("<b>%s</b>", _("Open with program"));
+  gtk_label_set_markup(GTK_LABEL(label), s);
+  g_free (s);
+
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
   entry = gtk_entry_new ();
@@ -792,10 +796,14 @@ ask_open_with (FileInformation *file_info)
   }
   else
   {
+    gchar *s;
     gtk_widget_set_sensitive (combo, FALSE);
     gtk_widget_set_sensitive (open_button, FALSE);
-    gtk_label_set_markup (GTK_LABEL (label), 
-                          _("<b>No available applications</b>"));
+
+    s = g_strdup_printf("<b>%s</b>", _("No available applications"));
+    gtk_label_set_markup (GTK_LABEL (label), s);
+    g_free (s);
+
   }
 
   gtk_widget_show_all (dialog_window);

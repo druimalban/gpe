@@ -1,3 +1,8 @@
+2005-01-01  Luc Pionchon  <luc@handhelds.org>
+
+	* main.c (ask_open_with): remove markup from i18n'ed strings
+	(ask_open_with): Likewise.
+
 2004-11-18  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * guitools.c: Added path for PC cards.
