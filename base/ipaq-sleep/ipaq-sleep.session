@@ -1,1 +1,2 @@
+#!/bin/sh
 /etc/init.d/ipaq-sleep start
