@@ -1,5 +1,7 @@
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
+	* adb.glade: Deleted.
+
 	* Makefile (MEMBERS): Remove interface.
 	* interface.c: Deleted.
 	* interface.h: Likewise.
