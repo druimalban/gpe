@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libxsettings0
 DEBUG = no
 CVSBUILD = yes
+VERSION = 0.10
 
 .SUFFIXES: .os
 
