@@ -1,5 +1,12 @@
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
+	* gpe-dm.c, gpe-dm.init, familiar/control.gpe-dm: Moved to new
+	directory ../gpe-dm.
+	* Makefile (install-dm): Delete.
+	(ipkg, install, all, clean): Remove reference to gpe-dm.
+
+2003-02-21  Philip Blundell  <philb@gnu.org>
+
 	* gpe-login 0.41 released.
 	
 2003-02-21  Philip Blundell  <philb@gnu.org>

@@ -34,7 +34,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 EXTRA_DESKTOPS = gpe-logout.desktop.in
 
-all: gpe-login gpe-dm gpe-lock-display mo
+all: gpe-login gpe-lock-display mo
 
 mo:
 	make -C po
@@ -50,13 +50,10 @@ po/$(PACKAGE).pot: $(SOURCES)
 gpe-login: gpe-login.o nocursor.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(GTKLDFLAGS) $(LDFLAGS_ROOT) -lcrypt
 
-gpe-dm: gpe-dm.o
-	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
-
 gpe-lock-display: gpe-lock-display.o
 	$(CC) -o $@ $^ -L/usr/X11R6/lib -lX11
 
-install: install-dm install-login
+install: install-login
 
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
@@ -75,17 +72,6 @@ install-login: gpe-login install-po
 	install -m 755 X11/10unsetgtkrc $(DESTDIR)/etc/X11/Xsession.d/10unsetgtkrc
 	install -d $(DESTDIR)/etc/X11/Xinit.d
 	install -m 755 gpe-login.xinit $(DESTDIR)/etc/X11/Xinit.d/99gpe-login
-
-install-dm: gpe-dm
-	install -D gpe-dm $(DESTDIR)$(PREFIX)/bin/gpe-dm
-	strip $(DESTDIR)$(PREFIX)/bin/gpe-dm
-	mkdir -p $(DESTDIR)/etc/init.d
-	mkdir -p $(DESTDIR)/etc/rc2.d
-	install gpe-dm.init $(DESTDIR)/etc/init.d/gpe-dm
-	ln -sf /etc/init.d/gpe-dm $(DESTDIR)/etc/rc2.d/S99gpe-dm
-	install -D X11/Xsession $(DESTDIR)/etc/X11/Xsession
-	install -D X11/Xinit $(DESTDIR)/etc/X11/Xinit
-	install -D X11/Xserver $(DESTDIR)/etc/X11/Xserver
 
 install-scripts: gpe-logout.desktop
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
@@ -112,13 +98,6 @@ ipkg:
 	chown -R root.root familiar/dist.gpe-login
 	ipkg-build familiar/dist.gpe-login
 	#
-	rm -rf familiar/dist.gpe-dm
-	mkdir -p familiar/dist.gpe-dm/CONTROL
-	cp familiar/control.gpe-dm familiar/dist.gpe-dm/CONTROL/control
-	make DESTDIR=`pwd`/familiar/dist.gpe-dm PREFIX=/usr install-dm
-	chown -R root.root familiar/dist.gpe-dm
-	ipkg-build familiar/dist.gpe-dm
-	#
 	rm -rf familiar/dist.gpe-session-scripts
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
 	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
@@ -126,8 +105,8 @@ ipkg:
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
 
-clean:
-	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o nocursor.o
+clean: clean-po
+	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o
 
 include ../build/Makefile.translation
 -include $(DEPS)
