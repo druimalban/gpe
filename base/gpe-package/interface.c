@@ -156,6 +156,47 @@ void printlog(GtkWidget *textview, gchar *str)
 
 
 /* --- local intelligence --- */
+
+void 
+wait_command_finish()
+{
+	while (running_command != CMD_NONE)
+	{
+		gtk_main_iteration();
+		gtk_main_iteration();
+		usleep(100000);
+		get_pending_messages();
+	}
+}
+
+gboolean
+update_check(GtkTreeModel *model, GtkTreePath *path,
+             GtkTreeIter *iter,
+             gpointer data)
+{
+	pkg_state_want_t dstate;
+	char *name;
+	
+	gtk_tree_model_get (GTK_TREE_MODEL(store), iter, 
+						COL_DESIREDSTATE, &dstate,
+						COL_NAME,&name,	-1);
+	switch (dstate)
+	{
+		case SW_INSTALL:
+			send_message(PK_COMMAND,CMD_INSTALL,name,"");
+			wait_command_finish();
+		break;
+		case SW_DEINSTALL:
+			send_message(PK_COMMAND,CMD_REMOVE, name,"");
+			wait_command_finish();
+		break;
+		default:
+		break;
+	}	
+	return TRUE;
+}
+
+
 void do_question(int nr, char *question)
 {
 	GtkWidget *dialog;
@@ -419,29 +460,11 @@ on_system_update_clicked(GtkButton *button, gpointer user_data)
   gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
   gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
   send_message(PK_COMMAND,CMD_UPDATE,"","");
-	while (running_command != CMD_NONE)
-	{
-		gtk_main_iteration();
-		gtk_main_iteration();
-		usleep(100000);
-		get_pending_messages();
-	}
-  send_message(PK_COMMAND,CMD_UPGRADE,"-force-depends","");
-	while (running_command != CMD_NONE)
-	{
-		gtk_main_iteration();
-		gtk_main_iteration();
-		usleep(100000);
-		get_pending_messages();
-	}
-  send_message(PK_COMMAND,CMD_LIST,"","");
-	while (running_command != CMD_NONE)
-	{
-		gtk_main_iteration();
-		gtk_main_iteration();
-		usleep(100000);
-		get_pending_messages();
-	}
+	wait_command_finish();
+	send_message(PK_COMMAND,CMD_UPGRADE,"-force-depends","");
+	wait_command_finish();
+	send_message(PK_COMMAND,CMD_LIST,"","");
+	wait_command_finish();
 }
 
 
@@ -460,28 +483,16 @@ on_packages_update_clicked(GtkButton *button, gpointer user_data)
   gtk_text_buffer_get_end_iter(GTK_TEXT_BUFFER(logbuf),&end);
   gtk_text_buffer_delete(GTK_TEXT_BUFFER(logbuf),&start,&end);
   send_message(PK_COMMAND,CMD_UPDATE,"","");
-	while (running_command != CMD_NONE)
-	{
-		gtk_main_iteration();
-		gtk_main_iteration();
-		usleep(100000);
-		get_pending_messages();
-	}
-  send_message(PK_COMMAND,CMD_LIST,"","");
-	while (running_command != CMD_NONE)
-	{
-		gtk_main_iteration();
-		gtk_main_iteration();
-		usleep(100000);
-		get_pending_messages();
-	}
+	wait_command_finish();
+	send_message(PK_COMMAND,CMD_LIST,"","");
+	wait_command_finish();
 }
 
 
 void 
 on_package_install_clicked(GtkButton *button, gpointer user_data)
 {
-
+	gtk_tree_model_foreach(GTK_TREE_MODEL(store),update_check,NULL);
 }
 
 
