@@ -19,6 +19,7 @@ dist: clean dist-prep
 	$(MAKE) printinfo
 
 dist-prep:
+install-mo:
 # empty, can be filled in Makefile.translation
 
 install: install-program install-mo
