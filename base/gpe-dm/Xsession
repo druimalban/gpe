@@ -4,7 +4,7 @@
 HOME_VOLATILE=/home/$USER/ramdisk
 export HOME_VOLATILE
 
-source /etc/profile
+. /etc/profile
 
 SYSSESSIONDIR=/etc/X11/Xsession-gpe.d
 
