@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -29,6 +30,7 @@ sqlite *database;
 #endif
 
 Atom gpe_settings_update_atom;
+gboolean defaults_needed;
 
 char *
 xsetting_stringize (XSettingsSetting *setting)
@@ -184,24 +186,6 @@ read_one_setting (void *arg, int argc, char **argv, char **names)
   return 0;
 }
 
-gboolean
-suck_in_settings (XSettingsManager *manager, sqlite *db)
-{
-  char *err;
-
-  if (sqlite_exec (db, "select key, value from xsettings", read_one_setting,
-		   NULL, &err))
-    {
-      fprintf (stderr, "sqlite: %s\n", err);
-      free (err);
-      return FALSE;
-    }
-
-  xsettings_manager_notify (manager);
-
-  return TRUE;
-}
-
 void
 db_store_setting (sqlite *db, XSettingsSetting *setting)
 {
@@ -216,6 +200,59 @@ db_store_setting (sqlite *db, XSettingsSetting *setting)
     }
 
   g_free (str);
+}
+
+void
+load_defaults (XSettingsManager *manager, sqlite *db)
+{
+  FILE *fp = fopen ("/etc/gpe/xsettings.default", "r");
+  if (fp)
+    {
+      char buf[128];
+      while (!feof (fp))
+	{
+	  if (fgets (buf, sizeof (buf), fp) && buf[0] != '#')
+	    {
+	      XSettingsSetting s;
+	      char *p = strchr (buf, ':');
+	      if (!p)
+		{
+		  fprintf (stderr, "bad line in defaults file: \"%s\"\n", buf);
+		  continue;
+		}
+	      *(p++) = 0;
+	      if (xsettings_unstringize (p, &s))
+		{
+		  s.name = g_strdup (buf);
+		  db_store_setting (db, &s);
+		  xsettings_manager_set_setting (manager, &s);
+		}
+	    }
+	}
+
+      fclose (fp);
+    }
+}
+
+gboolean
+suck_in_settings (XSettingsManager *manager, sqlite *db)
+{
+  char *err;
+
+  if (sqlite_exec (db, "select key, value from xsettings", read_one_setting,
+		   NULL, &err))
+    {
+      fprintf (stderr, "sqlite: %s\n", err);
+      free (err);
+      return FALSE;
+    }
+
+  if (defaults_needed)
+    load_defaults (manager, db);
+
+  xsettings_manager_notify (manager);
+
+  return TRUE;
 }
 
 sqlite *
@@ -233,7 +270,8 @@ database_open (void)
   if (db)
     {
       static const char *schema_info = "create table xsettings (key text, value text)";
-      sqlite_exec (db, schema_info, NULL, NULL, &err);
+      if (sqlite_exec (db, schema_info, NULL, NULL, &err) == 0)
+	defaults_needed = TRUE;
     }
   else
     {
@@ -263,7 +301,7 @@ write_setting (Display *dpy, Window w, unsigned long prop)
 			  &data) != Success)
     return;
 
-  if (XGetWindowProperty (dpy, w, prop, 0, length, FALSE,
+  if (XGetWindowProperty (dpy, w, prop, 0, length, TRUE,
 			  actual_type, &actual_type,
 			  &actual_format, &nitems, &length,
 			  &data) != Success)
@@ -359,7 +397,8 @@ main (int argc, char **argv)
 
   suck_in_settings (manager, database);
 
-  gpe_settings_update_atom = XInternAtom (dpy, "GPE_SETTINGS_UPDATE", 0);
+  gpe_settings_update_atom = XInternAtom (dpy, "_GPE_SETTINGS_UPDATE", 0);
+  XSetSelectionOwner (dpy, gpe_settings_update_atom, win, CurrentTime);
 
   while (! terminated)
     {
