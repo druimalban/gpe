@@ -32,12 +32,14 @@ all: gpe-conf gpe-confsuid
 gpe-conf: $(OBJS)
 	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs` -lcrypt
 	strip gpe-conf
+	cp gpe-conf gpe-conf.pc
+	
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
 	strip gpe-confsuid
 
 install: gpe-conf
-	./gpe-conf jhdgkjhd | ./buildmenu.pl >$(DESTDIR)/usr/lib/menu/gpe-conf #build the menu
+	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl >$(DESTDIR)/usr/lib/menu/gpe-conf #build the menu
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
 	sudo chown root.root gpe-confsuid
 	sudo chmod a+s gpe-confsuid 
