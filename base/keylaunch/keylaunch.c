@@ -116,6 +116,8 @@ init_keyboard ()
   KeyCode *map;
   int m, k;
 
+  XSelectInput (dpy, root, KeyPressMask | KeyReleaseMask);
+
 #ifdef DEBUG
   printf ("init_keyboard\n");
 #endif
