@@ -186,6 +186,7 @@ void raise_window(Display *display, Window w)
 	 		XMapRaised(display, w);
   	else if( iState == IconicState )
 	 		XMapRaised(display, w);
+	else XRaiseWindow (display, w);
 }
 
 int try_to_raise_window (Display *display, char *window)
@@ -206,11 +207,15 @@ int try_to_raise_window (Display *display, char *window)
 
 			wm_state_atom = XInternAtom(display, "WM_STATE", True);
         		XGetWindowAttributes(display, xid, &xid_attrib);
-			if (xid_attrib.map_state == IsUnmapped ||
+			if (True || xid_attrib.map_state == IsUnmapped ||
 				wm_state(display, xid) != NormalState)
 			{
 				raise_window (display, xid);
 				printf ("raised window\n");
+			}
+			else
+			{
+				printf ("window already raised?\n");
 			}
 		}
 		else
