@@ -71,6 +71,10 @@ static GtkWidget *menu_devices;
 static GtkWidget *devices_window;
 static GtkWidget *iconlist;
 
+static GtkWidget *pan_connect, *pan_disconnect;
+static GtkWidget *lap_connect, *lap_disconnect;
+static GtkWidget *dun_connect, *dun_disconnect;
+
 static GSList *devices;
 
 static struct bt_device *this_device;
@@ -221,10 +225,12 @@ do_stop_radio (void)
   for (iter = devices; iter; iter = iter->next)
     {
       struct bt_device *bd = (struct bt_device *)iter->data;
+#if 0
       if (bd->pid)
 	{
 	  stop_dun (bd);
 	}
+#endif
     }
   if (hciattach_pid)
     {
@@ -279,37 +285,6 @@ device_info (struct bt_device *bd)
       
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox1, FALSE, FALSE, 0);
 
-  if (bd->type == 0)
-    sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
-  
-  if (bd->type != BT_UNKNOWN)
-    {
-      GtkWidget *label;
-      char str[80];
-      
-      strcpy (str, _("Service class: "));
-      switch (bd->type)
-	{
-	case BT_DUN:
-	  strcat (str, _("Dial-Up Network"));
-	  break;
-	case BT_LAP:
-	  strcat (str, _("LAN Access"));
-	  break;
-	case BT_NAP:
-	  strcat (str, _("PAN NAP"));
-	  break;
-	default:
-	  strcat (str, _("unknown"));
-	  break;
-	}
-      
-      label = gtk_label_new (str);
-      gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-      gtk_widget_show (label);
-      gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), label, FALSE, FALSE, 4);
-    }
-  
   gtk_box_pack_end (GTK_BOX (GTK_DIALOG (window)->action_area), dismiss, FALSE, FALSE, 0);
   
   gtk_widget_realize (window);
@@ -327,9 +302,34 @@ show_device_info (void)
 }
 
 static void
-device_clicked (GtkWidget *w, gpointer data)
+device_clicked (GtkWidget *w, GdkEventButton *e, gpointer data)
 {
   this_device = (struct bt_device *)data;
+  GSList *iter;
+  
+  gtk_widget_hide (pan_connect);
+  gtk_widget_hide (pan_disconnect);
+  gtk_widget_hide (lap_connect);
+  gtk_widget_hide (lap_disconnect);
+  gtk_widget_hide (dun_connect);
+  gtk_widget_hide (dun_disconnect);
+
+  for (iter = this_device->services; iter; iter = iter->next)
+    {
+      struct bt_service *sv = iter->data;
+      switch (sv->type)
+	{
+	case BT_DUN:
+	  gtk_widget_show (dun_connect);
+	  break;
+	case BT_LAP:
+	  gtk_widget_show (lap_connect);
+	  break;
+	case BT_NAP:
+	  gtk_widget_show (pan_connect);
+	  break;
+	}
+    }
 
   gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, w, 1, GDK_CURRENT_TIME);
 }
@@ -346,7 +346,15 @@ check_scan_complete (void)
       for (iter = devices; iter; iter = iter->next)
 	{
 	  struct bt_device *bd = iter->data;
-	  gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
+	  GObject *item;
+	  item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST (iconlist), bd->name, bd->pixbuf, bd);
+	  g_signal_connect (G_OBJECT (item), "button-release", G_CALLBACK (device_clicked), bd);
+
+	  if (bd->sdp == FALSE)
+	    {
+	      bd->sdp = TRUE;
+	      sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
+	    }
 	}
 
       return FALSE;
@@ -370,9 +378,6 @@ show_devices (void)
       gtk_container_add (GTK_CONTAINER (devices_window), iconlist);
       gpe_iconlist_set_embolden (GPE_ICONLIST (iconlist), FALSE);
 
-      g_signal_connect (G_OBJECT (iconlist), "clicked", 
-			G_CALLBACK (device_clicked), NULL);
-      
       g_signal_connect (G_OBJECT (devices_window), "destroy", 
 			G_CALLBACK (devices_window_destroyed), NULL);
     }
@@ -412,6 +417,40 @@ static void
 clicked (GtkWidget *w, GdkEventButton *ev)
 {
   gtk_menu_popup (GTK_MENU (menu), NULL, NULL, gpe_popup_menu_position, w, ev->button, ev->time);
+}
+
+static void
+pan_connect_menu (void)
+{
+}
+
+static void
+pan_disconnect_menu (void)
+{
+}
+
+static void
+lap_connect_menu (void)
+{
+  start_dun (this_device);
+}
+
+static void
+lap_disconnect_menu (void)
+{
+  stop_dun (this_device);
+}
+
+static void
+dun_connect_menu (void)
+{
+  start_dun (this_device);
+}
+
+static void
+dun_disconnect_menu (void)
+{
+  stop_dun (this_device);
 }
 
 int
@@ -475,11 +514,31 @@ main (int argc, char *argv[])
   device_menu = gtk_menu_new ();
   details = gtk_menu_item_new_with_label (_("Details ..."));
 
+  pan_connect = gtk_menu_item_new_with_label (_("Connect PAN"));
+  pan_disconnect = gtk_menu_item_new_with_label (_("Disconnect PAN"));
+  lap_connect = gtk_menu_item_new_with_label (_("Connect LAP"));
+  lap_disconnect = gtk_menu_item_new_with_label (_("Disconnect LAP"));
+  dun_connect = gtk_menu_item_new_with_label (_("Connect DUN"));
+  dun_disconnect = gtk_menu_item_new_with_label (_("Disconnect DUN"));
+
+  g_signal_connect (G_OBJECT (pan_connect), "activate", G_CALLBACK (pan_connect_menu), NULL);
+  g_signal_connect (G_OBJECT (pan_disconnect), "activate", G_CALLBACK (pan_disconnect_menu), NULL);
+  g_signal_connect (G_OBJECT (lap_connect), "activate", G_CALLBACK (lap_connect_menu), NULL);
+  g_signal_connect (G_OBJECT (lap_disconnect), "activate", G_CALLBACK (lap_disconnect_menu), NULL);
+  g_signal_connect (G_OBJECT (dun_connect), "activate", G_CALLBACK (dun_connect_menu), NULL);
+  g_signal_connect (G_OBJECT (dun_disconnect), "activate", G_CALLBACK (dun_disconnect_menu), NULL);
+
   g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), NULL);
 
   gtk_widget_show (details);
 
   gtk_menu_append (GTK_MENU (device_menu), details);
+  gtk_menu_append (GTK_MENU (device_menu), pan_connect);
+  gtk_menu_append (GTK_MENU (device_menu), pan_disconnect);
+  gtk_menu_append (GTK_MENU (device_menu), lap_connect);
+  gtk_menu_append (GTK_MENU (device_menu), lap_disconnect);
+  gtk_menu_append (GTK_MENU (device_menu), dun_connect);
+  gtk_menu_append (GTK_MENU (device_menu), dun_disconnect);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);

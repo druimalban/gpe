@@ -61,45 +61,36 @@ stop_dun (struct bt_device *bd)
 }
 
 void
-dun_button_clicked (GtkWidget *window, gpointer data)
+start_dun (struct bt_device *bd)
 {
-  struct bt_device *bd = (struct bt_device *)data;
+  /* connect */
+  char port[16];
+  char address[64];
+  pid_t p;
+  GSList *list;
+  struct bt_service *sv = NULL;
 
-  if (bd->pid)
+  for (list = bd->services; list; list = list->next)
     {
-      stop_dun (bd);
-      bd->pid = 0;
-    }
-  else
-    {
-      /* connect */
-      char port[16];
-      char address[64];
-      pid_t p;
-
-      if (! radio_is_on)
-	{
-	  gpe_error_box (_("Radio is switched off"));
-	  return;
-	}
-      
-      strcpy (address, batostr (&bd->bdaddr));
-      sprintf (port, "%d", bd->port);
-
-      p = vfork ();
-
-      if (p == 0)
-	{
-	  execlp ("dund", "dund", "-n", "-C", port, "-c", address, NULL);
-	  _exit (1);
-	}
-
-      bd->pid = p;
+      struct bt_service *tsv = list->data;
+      if (tsv->type == BT_DUN)
+	sv = tsv;
     }
 
-  if (bd->button)
+  if (! radio_is_on)
     {
-      GtkWidget *label = gtk_bin_get_child (GTK_BIN (bd->button));
-      gtk_label_set_text (GTK_LABEL (label), bd->pid ? _("Disconnect") : _("Connect"));
+      gpe_error_box (_("Radio is switched off"));
+      return;
+    }
+  
+  strcpy (address, batostr (&bd->bdaddr));
+  sprintf (port, "%d", sv->port);
+  
+  p = vfork ();
+  
+  if (p == 0)
+    {
+      execlp ("dund", "dund", "-n", "-C", port, "-c", address, NULL);
+      _exit (1);
     }
 }

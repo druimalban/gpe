@@ -76,12 +76,12 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
   if (status) 
     return FALSE;
 
-  bd->type = BT_UNKNOWN;
-
   for (; seq; seq = next)
     {
       sdp_record_t *svcrec = (sdp_record_t *) seq->data;
       sdp_list_t *list = 0;
+      bt_service_type type = BT_UNKNOWN;
+      uuid_t sub_group;
 
       if (sdp_get_service_classes (svcrec, &list) == 0) 
 	{
@@ -91,20 +91,22 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 	    {
 	      uuid_t *u = list->data;
 	      if (sdp_uuid_cmp (u, &lap_uuid) == 0)
-		bd->type = BT_LAP;
+		type = BT_LAP;
 	      else if (sdp_uuid_cmp (u, &dun_uuid) == 0)
-		bd->type = BT_DUN;
+		type = BT_DUN;
 	      else if (sdp_uuid_cmp (u, &nap_uuid) == 0)
-		bd->type = BT_NAP;
+		type = BT_NAP;
 
 	      next = list->next;
 	      free (list);
 	    }
 	}
 
-      if (bd->type != BT_UNKNOWN)
+      if (type != BT_UNKNOWN)
 	{
-	  uuid_t sub_group;
+	  struct bt_service *sv = g_malloc0 (sizeof (struct bt_service));
+
+	  sv->type = type;
 
 	  if (sdp_get_access_protos (svcrec, &list) == 0) 
 	    {
@@ -127,7 +129,7 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 
 			case SDP_UINT8:
 			  if (rfcomm)
-			    bd->port = p->val.uint8;
+			    sv->port = p->val.uint8;
 			  break;
 			}
 		      nextp = protos->next;
@@ -139,9 +141,11 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 		}
 	    }
 
-	  if (sdp_get_group_id (svcrec, &sub_group) != -1)
-	    sdp_browse_device (bd, sub_group.value.uuid16);
+	  bd->services = g_slist_append (bd->services, sv);
 	}
+
+      if (sdp_get_group_id (svcrec, &sub_group) != -1)
+	sdp_browse_device (bd, sub_group.value.uuid16);
 
       next = seq->next;
       free (seq);

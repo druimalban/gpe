@@ -5,7 +5,7 @@ typedef enum
     BT_LAP,
     BT_DUN,
     BT_NAP
-  } bt_device_type;
+  } bt_service_type;
 
 struct bt_device
 {
@@ -13,7 +13,13 @@ struct bt_device
   guint class;
   bdaddr_t bdaddr;
   GdkPixbuf *pixbuf;
-  bt_device_type type;
+  gboolean sdp;
+  GSList *services;
+};
+
+struct bt_service
+{
+  bt_service_type type;
   guint port;
   pid_t pid;
 };
