@@ -1,0 +1,36 @@
+/* XPM */
+static char *xpm_flag[] = {
+/* width height ncolors chars_per_pixel */
+"10 10 19 1",
+/* colors */
+"  c #000000",
+". c #C68787",
+"X c #999999",
+"o c #878787",
+"O c #7F7F7F",
+"+ c #D95A5A",
+"@ c #9A5A5A",
+"# c #ECECEC",
+"$ c #2D2D2D",
+"% c #EC2D2D",
+"& c #CCCCCC",
+"* c #FF0000",
+"= c #8C8C8C",
+"- c #5A5A5A",
+"; c #FFFFFF",
+": c #DFDFDF",
+"> c #D9D9D9",
+", c #B3B3B3",
+"< c None",
+/* pixels */
+";;;;;;;;;:",
+";#>>>>>>&O",
+";>,.%+,,XO",
+";>%**+,,XO",
+";>.%*+,,XO",
+";>,,.@,,XO",
+";>,,-$,,XO",
+";>o    oXO",
+";&XXXXXX=O",
+":OOOOOOOOO"
+};

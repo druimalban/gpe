@@ -1,0 +1,26 @@
+/* XPM */
+static char *xpm_mine[] = {
+/* width height ncolors chars_per_pixel */
+"10 10 9 1",
+/* colors */
+"  c #000000",
+". c #878787",
+"X c #2D2D2D",
+"o c #808080",
+"O c #5A5A5A",
+"+ c #FFFFFF",
+"@ c #404040",
+"# c #B3B3B3",
+"$ c None",
+/* pixels */
+"####..####",
+"#.##XX##.#",
+"##O    O##",
+"## @o   ##",
+".X o+   X.",
+".X      X.",
+"##      ##",
+"##O    O##",
+"#.##XX##.#",
+"####..####"
+};

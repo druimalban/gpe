@@ -1,0 +1,23 @@
+/* XPM */
+static char *xpm_square_8[] = {
+/* width height ncolors chars_per_pixel */
+"10 10 6 1",
+/* colors */
+"  c #C68CAB",
+". c #EC3C9B",
+"X c #D964A3",
+"o c #FF1493",
+"O c #B3B3B3",
+"+ c None",
+/* pixels */
+"OOOOOOOOOO",
+"OO oooo OO",
+"OOoo..ooOO",
+"OOoo  ooOO",
+"OO oooo OO",
+"OO.o..o.OO",
+"OOoo  ooOO",
+"OO.oooo.OO",
+"OOOXXXXOOO",
+"OOOOOOOOOO"
+};

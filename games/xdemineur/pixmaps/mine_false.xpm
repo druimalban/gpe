@@ -1,0 +1,26 @@
+/* XPM */
+static char *xpm_mine_false[] = {
+/* width height ncolors chars_per_pixel */
+"10 10 9 1",
+/* colors */
+"  c #000000",
+". c #C68787",
+"X c #878787",
+"o c #804040",
+"O c #2D2D2D",
+"+ c #400000",
+"@ c #FF0000",
+"# c #B3B3B3",
+"$ c None",
+/* pixels */
+"..##XX##..",
+".@.#OO#.@.",
+"#.@+  +@.#",
+"##+@o+@+##",
+"XO o@@+ OX",
+"XO +@@+ OX",
+"##+@++@+##",
+"#.@+  +@.#",
+".@.#OO#.@.",
+"..##XX##.."
+};

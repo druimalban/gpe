@@ -1,0 +1,28 @@
+/* XPM */
+static char *xpm_digit_0[] = {
+/* width height ncolors chars_per_pixel */
+"10 15 6 1",
+/* colors */
+"  c #000000",
+". c #800000",
+"X c #400000",
+"o c #FF0000",
+"O c #C00000",
+"+ c None",
+/* pixels */
+"          ",
+" .oooooo. ",
+" o.oooo.o ",
+" oo    oo ",
+" oo    oo ",
+" oO    Oo ",
+" O      O ",
+" X      X ",
+" oX    Xo ",
+" oo    oo ",
+" oo    oo ",
+" oo    oo ",
+" o.oooo.o ",
+" .oooooo. ",
+"          "
+};

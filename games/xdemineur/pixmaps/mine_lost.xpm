@@ -1,0 +1,26 @@
+/* XPM */
+static char *xpm_mine_lost[] = {
+/* width height ncolors chars_per_pixel */
+"10 10 9 1",
+/* colors */
+"  c #000000",
+". c #800000",
+"X c #400000",
+"o c #FF0000",
+"O c #808080",
+"+ c #C00000",
+"@ c #FFFFFF",
+"# c #404040",
+"$ c None",
+/* pixels */
+"oooo++oooo",
+"o+ooXXoo+o",
+"oo.    .oo",
+"oo #O   oo",
+"+X O@   X+",
+"+X      X+",
+"oo      oo",
+"oo.    .oo",
+"o+ooXXoo+o",
+"oooo++oooo"
+};
