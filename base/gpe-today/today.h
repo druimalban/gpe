@@ -43,6 +43,19 @@ struct {
 	gint mode;    /* either PORTRAIT or LANDSCAPE */
 } window;
 
+struct myscroll {
+	GtkAdjustment *adjust;
+	GtkWidget *draw;
+	GtkWidget *scrollbar;
+	GSList *list;
+	int yspacing;
+	int width;
+};
+
+struct myscroll * myscroll_new(gboolean continuous);
+
+void markup_printf(PangoLayout *pl, const char *fmt, ...);
+
 int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
                              GdkBitmap **mask, int alpha);
 

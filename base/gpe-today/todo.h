@@ -9,7 +9,7 @@
 
 #ifndef HAVE_TODO_H
 #define HAVE_TODO_H
-
+/*
 struct {
 	GtkWidget *toplevel;
 } todo_module;
@@ -17,5 +17,5 @@ struct {
 void todo_init(void);
 void todo_free(void);
 void todo_update(void);
-
+*/
 #endif /* !HAVE_TODO_H */

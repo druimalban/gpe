@@ -118,3 +118,127 @@ int load_pixmap_non_critical(const char *path, GdkPixmap **pixmap,
 
 	return 1;
 }
+
+void myscroll_adjust_cb(GtkAdjustment *adjustment, gpointer draw)
+{
+	gtk_widget_queue_draw(draw);
+}
+
+gboolean myscroll_draw_cb(GtkWidget *wid, GdkEventExpose *event, gpointer data)
+{
+	GSList *i;
+	struct myscroll *scroll = data;
+	int ny, y = - scroll->adjust->value;
+
+	/* might be better to iterate over the lines
+	 * instead of the whole layouts */
+
+	for (i = scroll->list; i; i = g_slist_next(i)) {
+		PangoLayout *pl = i->data;
+		
+		pango_layout_get_pixel_size(pl, NULL, &ny);
+		if (y + ny + scroll->yspacing <= 0) {
+			y += ny + scroll->yspacing;
+			continue;
+		}
+		
+		gdk_draw_layout(wid->window,
+				wid->style->fg_gc[GTK_WIDGET_STATE(wid)],
+				0, y, pl);
+		
+		y += ny + scroll->yspacing;
+		
+		if (y >= wid->allocation.height)
+			break;
+	}
+	
+	return TRUE;
+}
+
+gboolean myscroll_button_cb(GtkWidget *wid, GdkEventButton *ev, gpointer draw)
+{
+	gtk_widget_queue_draw(draw);
+    
+	return FALSE;
+}
+
+void myscroll_update_upper_adjust(struct myscroll *scroll)
+{
+	int size, y;
+	GSList *i;
+	
+	for (size=0, i = scroll->list; i; i = g_slist_next(i)) {
+		PangoLayout *pl = i->data;
+		
+		pango_layout_get_pixel_size(pl, NULL, &y);
+		size += y + scroll->yspacing;
+	}
+	
+	scroll->adjust->upper = size;
+	gtk_adjustment_changed(scroll->adjust);
+}
+
+gboolean myscroll_size_cb(GtkWidget *wid, GdkEventConfigure *ev, gpointer data)
+{
+	struct myscroll *scroll = data;
+	GSList *i;
+	
+	scroll->adjust->page_size = ev->height;
+	scroll->adjust->value = 0;
+	scroll->width = ev->width;
+	
+	for (i = scroll->list; i; i = g_slist_next(i)) {
+		PangoLayout *pl = i->data;   
+		pango_layout_set_width(pl, ev->width * PANGO_SCALE);
+	}
+	
+	myscroll_update_upper_adjust(scroll);
+	
+	if (scroll->adjust->page_size >= scroll->adjust->upper)
+		gtk_widget_hide(scroll->scrollbar);
+	else if (!GTK_WIDGET_VISIBLE(scroll->scrollbar))
+		gtk_widget_show(scroll->scrollbar);
+	
+	return TRUE;
+}
+
+struct myscroll * myscroll_new(gboolean continuous)
+{
+	struct myscroll *scroll = g_malloc(sizeof(struct myscroll));
+	
+	scroll->draw = gtk_drawing_area_new();
+	scroll->adjust = (GtkAdjustment *) gtk_adjustment_new(0, 0, 0, 10, 10, 1);
+	scroll->scrollbar = gtk_vscrollbar_new(scroll->adjust);
+	
+	g_signal_connect(G_OBJECT(scroll->draw), "expose-event",  
+			 G_CALLBACK(myscroll_draw_cb), scroll);
+	
+	g_signal_connect(G_OBJECT(scroll->draw), "configure-event",
+			 G_CALLBACK(myscroll_size_cb), scroll);
+	
+	if (continuous)
+		g_signal_connect(G_OBJECT(scroll->adjust), "value-changed",
+				 G_CALLBACK(myscroll_adjust_cb), scroll->draw);
+	else
+		g_signal_connect(G_OBJECT(scroll->scrollbar), "button-release-event",
+				 G_CALLBACK(myscroll_button_cb), scroll->draw);
+	
+	scroll->list = NULL;
+	scroll->yspacing = 2;
+	
+	return scroll;
+}
+
+void markup_printf(PangoLayout *pl, const char *fmt, ...)
+{
+	va_list ap;
+	char *str;
+
+	va_start (ap, fmt);
+	vasprintf (&str, fmt, ap);
+	va_end (ap);
+
+	pango_layout_set_markup(pl, str, strlen(str));
+
+	g_free (str);
+}

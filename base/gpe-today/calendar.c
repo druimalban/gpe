@@ -32,10 +32,7 @@ static void free_calendar_entries(void);
 
 struct calevent {
 	event_t ev;
-	GtkWidget *wid;
-	  GtkWidget *summary;
-	  GtkWidget *time;
-	char *time_str;
+	PangoLayout *pl;
 	gboolean in_progress;
 };
 
@@ -43,8 +40,7 @@ int calendar_init(void)
 {
  	GdkPixmap *pix;
 	GdkBitmap *mask;
-	GtkWidget *scroll;
-	char *home = g_get_home_dir();
+	gchar *home = (gchar *) g_get_home_dir();
 
 	/* calendar db full path */
 	db_fname = g_malloc(strlen(home) + strlen(CALENDAR_DB) + 1);
@@ -67,31 +63,18 @@ int calendar_init(void)
 	gtk_box_pack_start(GTK_BOX(calendar.vboxlogo), calendar.logo, FALSE,
 	                   FALSE, 0);
 
-	/* scrolled window with a vbox */
-	scroll = gtk_scrolled_window_new(NULL, NULL);
-	gtk_widget_set_parent_window(scroll, window.toplevel->window);
-	gtk_box_pack_start(GTK_BOX(calendar.toplevel), scroll, TRUE, TRUE, 0);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
-	                               GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-	calendar.viewport = gtk_viewport_new(NULL, NULL);
-	gtk_viewport_set_shadow_type(GTK_VIEWPORT(calendar.viewport), GTK_SHADOW_NONE);
-	gtk_container_add(GTK_CONTAINER(scroll), calendar.viewport);
-
-	calendar.eventsvbox = gtk_vbox_new(FALSE, 2);
-	gtk_container_add(GTK_CONTAINER(calendar.viewport), calendar.eventsvbox);
+	/* scrollable pango layout list */
+	calendar.scroll = myscroll_new(TRUE);
+	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->draw,
+			   TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(calendar.toplevel), calendar.scroll->scrollbar,
+			   FALSE, FALSE, 0);
 
 	gtk_widget_show_all(calendar.toplevel);
 
 	/* update and set regular update intervals */
 	calendar_update(NULL);
 	calendar_update_tag = g_timeout_add(UPDATE_INTERVAL, calendar_update, NULL);
-
-	/* gtkrc stuff */
-	gtk_rc_parse_string("widget '*calendar_time' style 'calendar_time'");
-	gtk_rc_parse_string("widget '*calendar_summary' style 'calendar_summary'");
-	gtk_rc_parse_string("widget '*event_in_progress-summary' style 'event_in_progress-summary'");
-	gtk_rc_parse_string("widget '*event_in_progress-time' style 'event_in_progress-time'");
 
 	return 1;
 }
@@ -125,7 +108,7 @@ gboolean calendar_update(gpointer data)
 
 	/* check events' status */
 	time(&current_time);
-	for (i = 0; (event = (struct calevent *) g_slist_nth_data(calendar_entries, i)); i++) {
+	for (i = 0; (event = g_slist_nth_data(calendar_entries, i)); i++) {
 		if ((event->ev->start + event->ev->duration) < current_time) {
 			/* event finished */
 			/* TODO: simply remove the event's widget */
@@ -149,9 +132,7 @@ gboolean calendar_update(gpointer data)
 
 			/* event is in progress */
 			event->in_progress = TRUE;
-			gtk_widget_set_name(event->summary, "event_in_progress-summary");
-			gtk_widget_set_name(event->time, "event_in_progress-time");
-			
+
 			continue;
 		}
 	}
@@ -197,50 +178,36 @@ void calendar_events_db_update(void)
 
 static void calendar_add_event(event_t event)
 {
-	GtkWidget *vbox, *label;
 	struct calevent *cal = g_malloc(sizeof(struct calevent));
 	event_details_t details;
+	/* FIXME: how big should these be? */
+	char strtimestart[25], strtimeend[25], timestr[50];
 
-	vbox = gtk_vbox_new(FALSE, 0);
 	cal->ev = event;
-	cal->wid = vbox;
 	cal->in_progress = FALSE;
-	calendar_entries = g_slist_append(calendar_entries, (gpointer) cal);
+	calendar_entries = g_slist_append(calendar_entries, cal);
 
 	details = event_db_get_details(event);
 
-	cal->summary = label = gtk_label_new(details->summary);
-	gtk_widget_set_name(label, "calendar_summary");
-	gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
+	cal->pl = gtk_widget_create_pango_layout(calendar.scroll->draw, NULL);
+	pango_layout_set_wrap(cal->pl, PANGO_WRAP_WORD);
+	calendar.scroll->list = g_slist_append(calendar.scroll->list, cal->pl);
 
 	if (!(event->flags & FLAG_UNTIMED)) {
-		/* FIXME: how big should the strings be? */
-		char strtimestart[25];
-		char strtimeend[25];
-		char str[50];
 		calendar_time_t end = event->start + event->duration;
 
 		strftime(strtimestart, sizeof strtimestart, "%H:%M",
 		         localtime(&event->start));
 		strftime(strtimeend, sizeof strtimeend, "%H:%M",
 		         localtime(&end));
-		snprintf(str, sizeof str, "%s - %s", strtimestart, strtimeend);
+		snprintf(timestr, sizeof timestr, "%s - %s", strtimestart, strtimeend);
 
-		cal->time_str = g_strdup(str);
-		cal->time = label = gtk_label_new(str);
-		gtk_widget_set_name(label, "calendar_time");
 	} else {
-		cal->time = label = gtk_label_new(_("All day event"));
-		gtk_widget_set_name(label, "calendar_alldayevent");
+		snprintf(timestr, sizeof timestr, "<i>%s</i>", _("All day event"));
 	}
-	gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
-	gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 0);
 
 	/* TODO: LOCATION / NOTES labels */
-
-	gtk_box_pack_start(GTK_BOX(calendar.eventsvbox), vbox, FALSE, FALSE, 0);
-	gtk_widget_show_all(vbox);
+	markup_printf(cal->pl, "<b>%s</b>\n%s", details->summary, timestr);
 
 	/* change event->start for recurring events */
 	if (event->recur) {
@@ -260,6 +227,8 @@ static void calendar_add_event(event_t event)
 
 		event->start = mktime(ev);
 	}
+
+	event_db_forget_details(event);
 }
 
 static void free_calendar_entries(void)
@@ -267,12 +236,12 @@ static void free_calendar_entries(void)
 	int i;
 	struct calevent *event;
 
-	for (i = 0; (event = (struct calevent *) g_slist_nth_data(calendar_entries, i)); i++) {
-		gtk_container_remove(GTK_CONTAINER(calendar.eventsvbox), event->wid);
-		g_free(event->time_str);
+	for (i = 0; (event = g_slist_nth_data(calendar_entries, i)); i++) {
+		g_object_unref(event->pl);
 		g_free(event);
 	}
 
+	g_slist_free(calendar.scroll->list);
 	g_slist_free(calendar_entries);
-	calendar_entries = NULL;
+	calendar_entries = calendar.scroll->list = NULL;
 }

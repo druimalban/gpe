@@ -10,6 +10,7 @@
 #ifndef HAVE_CALENDAR_H
 #define HAVE_CALENDAR_H
 
+#include "today.h"
 #include "event-db.h"
 
 struct {
@@ -17,8 +18,8 @@ struct {
 
 	GtkWidget *vboxlogo;
 	  GtkWidget *logo;
-	GtkWidget *viewport;
-	  GtkWidget *eventsvbox;
+
+	struct myscroll *scroll;
 } calendar;
 
 int calendar_init(void);
