@@ -306,3 +306,55 @@ edit_window (void)
 
   return w;
 }
+
+static void
+print_structure_1 (FILE *fp, edit_thing_t e, int level)
+{
+  GSList *iter;
+  guint i;
+
+  for (i = 0; i < level; i++)
+    fputs ("  ", fp);
+
+  switch (e->type)
+    {
+    case PAGE:
+      fprintf (fp, "page \"%s\" (\n", e->name);
+      for (iter = e->children; iter; iter = iter->next)
+	print_structure_1 (fp, iter->data, level + 1);
+      for (i = 0; i < level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, ")\n\n");
+      break;
+
+    case GROUP:
+      fprintf (fp, "group \"%s\" (\n", e->name);
+      for (iter = e->children; iter; iter = iter->next)
+	print_structure_1 (fp, iter->data, level + 1);
+      for (i = 0; i < level; i++)
+	fputs ("  ", fp);
+      fprintf (fp, ")\n");
+      break;
+
+    case ITEM_SINGLE_LINE:
+      fprintf (fp, "item single-line %d \"%s\"\n", e->tag, e->name);
+      break;
+
+    case ITEM_MULTI_LINE:
+      fprintf (fp, "item multi-line %d \"%s\"\n", e->tag, e->name);
+      break;
+    }
+}
+
+void
+print_structure (FILE *fp)
+{
+  GSList *page;
+
+  for (page = edit_pages; page; page = page->next)
+    {
+      edit_thing_t e = page->data;
+
+      print_structure_1 (fp, e, 0);
+    }
+}

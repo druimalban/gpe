@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <stdio.h>
 
 #include <sqlite.h>
 
@@ -9,7 +10,32 @@
 
 #define DB_NAME "/.gpe/contacts"
 
-sqlite *db;
+static sqlite *db;
+
+static const char *schema = 
+"create table person (
+	id		int NOT NULL,
+	name		text NOT NULL,
+	summary		text,
+	birthday	text,
+	categories	text,
+	notes		text,
+	PRIMARY KEY(id)
+);
+
+create table person_attr (
+	person		int NOT NULL,
+	attr		int NOT NULL,
+	value		text
+);
+	
+create table attr_types (
+	id		int NOT NULL,
+	type		int NOT NULL,
+	name		text NOT NULL,
+	PRIMARY KEY(id)
+);
+";
 
 int 
 db_open(void) 
