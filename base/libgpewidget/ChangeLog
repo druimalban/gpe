@@ -1,5 +1,9 @@
 2003-03-23  Phil Blundell  <pb@nexus.co.uk>
 
+	* Version 0.54 released.
+
+2003-03-23  Phil Blundell  <pb@nexus.co.uk>
+
 	* tap.c: Avoid generating clicks during drag.
 
 2003-03-22  Phil Blundell  <pb@nexus.co.uk>
