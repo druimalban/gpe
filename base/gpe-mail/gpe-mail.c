@@ -144,12 +144,31 @@ GtkTextIter start_iter, end_iter;
 struct dirent * direntptr;
 DIR *dir;
 FILE *f;
+char encoding_name[30];
 
 void my_locale_to_utf8(char *s)
 {
 	char *s2;
-        s2=g_locale_to_utf8(s,-1,NULL,NULL,NULL);
-	if (s2==NULL) {s[0]=0;return;};
+	if (!s[0]) return;
+	if (encoding_name[0]==0)
+	{
+	   s2=g_locale_to_utf8(s,-1,NULL,NULL,NULL);
+	}
+	else
+	{
+	   s2=g_convert (s, -1, "UTF-8", encoding_name,NULL,NULL, NULL);
+	   //printf(" '%s' (%s) converted to '%s' (utf8)\n",s,encoding_name,s2);
+	}
+	if (s2==NULL)
+	{
+	   s[0]=0;
+	   fprintf(stderr,"Warning: can't convert '%s' from '%s' to 'utf8'\n",
+	   		s,encoding_name[0] ? encoding_name:"local-encoding");
+	   return;
+	}
+	if (s2[0]==0)
+	   fprintf(stderr,"Warning: '%s' ('%s') converted to en empty string\n",
+	   	s,encoding_name);
 	strcpy(s,s2);
 }
 
@@ -434,14 +453,17 @@ void convert(char *s)
    while (*sp==' ') sp++;
    if (s!=sp) strcpy(s,sp);
 
+   encoding_name[0]=0;
    // look for '=?', if not found do return
    if (NULL==(sp=strstr(s,"=?"))) return;
-   sp2=sp;
    //if (starts_with(sp,"=?windows-1255?")) heb=1;
 
 
+   sp2=sp;
    sp+=2; // skip the =?
    while (*sp && *sp!='?')sp++; // skip the encoding
+   *sp=0;
+   strncpy(encoding_name,sp2+2,sizeof(encoding_name));
    sp++; // skip the ?
    method=*(sp++); // find if Q or B
    sp++; // skip the ?
@@ -766,7 +788,8 @@ int update_sync_text()
       return 0;
    }
    s[i]=0;
-   gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,g_locale_to_utf8(s,-1,NULL,NULL,NULL),-1);
+   my_locale_to_utf8(s);
+   gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)self.sync.tb,s,-1);
    return 1;
 }
 
@@ -1076,7 +1099,8 @@ void do_compose(GtkButton *button, gpointer user_data)
       if (starts_with(*sp,"fwd:")) *sp+=4;
       while (**sp==' ') (*sp)++;
       sprintf(s2,"Compose: Fwd: %s",*sp);
-      gtk_window_set_title(GTK_WINDOW(compose->win),g_locale_from_utf8(s2,-1,NULL,NULL,NULL));
+      //gtk_window_set_title(GTK_WINDOW(compose->win),g_locale_from_utf8(s2,-1,NULL,NULL,NULL));
+      gtk_window_set_title(GTK_WINDOW(compose->win),s2);
       sprintf(s2,"Fwd: %s",*sp);
       Gtk_entry_set_text(GTK_ENTRY(compose->entries[4]),s2);
       s2[0]=0;
@@ -1091,7 +1115,8 @@ void do_compose(GtkButton *button, gpointer user_data)
       if (starts_with(*sp,"re:")) *sp+=3;
       while (**sp==' ') (*sp)++;
       sprintf(s2,"Compose: Re: %s",*sp);
-      gtk_window_set_title(GTK_WINDOW(compose->win),g_locale_from_utf8(s2,-1,NULL,NULL,NULL));
+      //gtk_window_set_title(GTK_WINDOW(compose->win),g_locale_from_utf8(s2,-1,NULL,NULL,NULL));
+      gtk_window_set_title(GTK_WINDOW(compose->win),s2);
       sprintf(s2,"Re: %s",*sp);
       Gtk_entry_set_text(GTK_ENTRY(compose->entries[4]),s2);
       sp=(char **)&s;
@@ -1115,7 +1140,6 @@ void do_compose(GtkButton *button, gpointer user_data)
          if (sp3!=NULL)
          {
       gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)compose->text_buffer,"> ",-1);
-      //gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)compose->text_buffer,g_locale_to_utf8(sp2,sp3-sp2+1,NULL,NULL,NULL),-1);
       gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)compose->text_buffer,sp2,sp3-sp2+1);
             sp2=sp3+1;
          } else sp2=NULL;
@@ -1152,6 +1176,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    int i;
    char double_click;
    struct msg_body_t *body;
+   char body_encoding_name[30];
    
    
    if (event==NULL) double_click=0;
@@ -1277,6 +1302,7 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    boundary[0]=0;
    //heb=0;
    alternative=0;
+   body_encoding_name[0]=0;
    if (f)
    {
       do
@@ -1299,9 +1325,20 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
          }
 	 //if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
 	 //if (NULL!=(sp2=strstr(s2,"charset="))) printf("%s\n",sp2);
+	 if (NULL!=(sp2=strstr(s2,"charset="))) 
+	 {
+	    sp2+=strlen("charset=");
+	    if (*sp2=='"') sp2++;
+	    sp3=sp2;
+	    while (*sp2 && *sp2!='"' && *sp2!='\n' && *sp2!='\a' && *sp2!=';' && *sp2!=',' )sp2++;
+	    strncpy(body_encoding_name,sp3,(sp2-sp3));
+	    body_encoding_name[sp2-sp3]=0;
+	    //printf("encoding(at header): '%s'\n",body_encoding_name);
+	 }
       } while (s2[0]);
       fclose(f);
    }
+   strncpy(encoding_name,body_encoding_name,sizeof(body_encoding_name));
    //printf("%s alternative \n",alternative ? "has": "hasn't");
    if (!open_in_dillo) alternative=0;
 
@@ -1336,13 +1373,13 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
    strcat(s3,"\nSubject: ");
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,0,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)body->t);return;}
    strcat(s3,*sp);
-   gtk_window_set_title(GTK_WINDOW(body->win),g_locale_from_utf8(*sp,-1,NULL,NULL,NULL));
+   //gtk_window_set_title(GTK_WINDOW(body->win),g_locale_from_utf8(*sp,-1,NULL,NULL,NULL));
+   gtk_window_set_title(GTK_WINDOW(body->win),*sp);
    strcat(s3,"\nDate: ");
    if (0==gtk_clist_get_text((GtkCList *)self.cl1,row,2,sp)) {printf("can not find file name in clist\n");gtk_text_thaw((GtkText *)body->t);return;}
    strcat(s3,*sp);
    strcat(s3,"\n\n");
    //printf("s3=%s\n",s3);
-   //gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)body->tb,g_locale_to_utf8(s3,-1,NULL,NULL,NULL),-1);
    gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)body->tb,s3,-1);
 
    //printf("opening: '%s'\n",s2);
@@ -1366,9 +1403,20 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
 	    if ((sp2=strstr(s2,"Content-Transfer-Encoding: base64"))!=NULL) type='B';
 	    if ((sp2=strstr(s2,"Content-Transfer-Encoding: quoted-printable"))!=NULL) type='Q';
 	    //if (NULL!=(sp2=strstr(s2,"charset=\"windows-1255\""))) heb=1;
+	    if (NULL!=(sp2=strstr(s2,"charset=")))
+	    {
+	       sp2+=strlen("charset=");
+	       if (*sp2=='"') sp2++;
+	       sp3=sp2;
+	       while (*sp2 && *sp2!='"' && *sp2!='\n' && *sp2!='\a' && *sp2!=';' && *sp2!=',' )sp2++;
+	       strncpy(body_encoding_name,sp3,(sp2-sp3));
+	       body_encoding_name[sp2-sp3]=0;
+	       //printf("encoding(at body): '%s'\n",body_encoding_name);
+	    }
 	    if (starts_with(s2,"Content-Type: text/html")) is_html=1;
 	    //if (NULL!=(sp2=strstr(s2,"charset="))) printf("%s\n",sp2);
 	 }
+         strncpy(encoding_name,body_encoding_name,sizeof(body_encoding_name));
       }
       s2[0]=0;
       do
@@ -1407,7 +1455,8 @@ void on_subj_sel (GtkCList *clist, gint row, gint column,
       }
       if (! open_in_dillo )
 	//printf("s2=%s\n",s2);
-   	gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)body->tb,g_locale_to_utf8(s2,-1,NULL,NULL,NULL),-1);
+	my_locale_to_utf8(s2);
+   	gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)body->tb,s2,-1);
       //printf("body:\n%s\n",s2);
    } else
   	   gtk_text_buffer_insert_at_cursor((GtkTextBuffer *)body->tb,"-----------------------------\n     body has not been\n  downloaded with message\n-----------------------------\n",-1);
@@ -1492,9 +1541,8 @@ int open_mailfolder()
                fgets(s,sizeof(s),f);
 	       //printf("s(before)=%s\n",s);
                convert(s);
-	       //strcpy(s,g_locale_to_utf8(s,-1,NULL,NULL,NULL));
-	       my_locale_to_utf8(s);
 	       //printf("s(after)=%s\n",s);
+	       my_locale_to_utf8(s);
                if (starts_with(s,"Subject:")) strcpy(subj,s+9);
                if (starts_with(s,self.fromto)) strcpy(from,s+strlen(self.fromto)+1);
                if (starts_with(s,"Date:")) strcpy(date,s+6);
