@@ -4,6 +4,8 @@ VERSION = 0.08
 CVSBUILD = yes
 #DEBUG = yes
 #EFENCE = yes
+
+#FIXME: add: sr
 LINGUAS = pt de zh_TW ga ro wa fr sv nl cs sk ru
 
 MEMBERS = main todo calendar date xsettings
