@@ -18,7 +18,7 @@ CVSBUILD = yes
 DEBUG = no
 LINGUAS = 
 GTK2 = yes
-VERSION = 0.04
+VERSION = 0.06
 
 MEMBERS = main interface callbacks
 
