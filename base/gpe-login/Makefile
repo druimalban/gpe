@@ -48,7 +48,7 @@ gpe-lock-display: gpe-lock-display.o
 
 install: install-scripts
 
-install-program: gpe-login
+install-program: gpe-login gpe-lock-display
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
 	install -s gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
@@ -81,7 +81,7 @@ install-scripts: gpe-logout.desktop
 	mkdir -p familiar/dist.gpe-session-scripts/usr/bin
 	install gpe-logout.sh familiar/dist.gpe-session-scripts/usr/bin/gpe-logout
 
-ipkg:
+scripts-ipkg:
 	rm -rf familiar/dist.gpe-session-scripts
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
 	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
@@ -89,6 +89,8 @@ ipkg:
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
 	if [ "x$(LINGUAS)" != "x" ]; then make translation-ipkg; fi
+
+ipkg: scripts-ipkg
 
 clean: clean-po
 	rm -f gpe-login gpe-login.o gpe-lock-display gpe-lock-display.o nocursor.o
