@@ -1,0 +1,74 @@
+# Swedish messages for gpe-go.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Christian Rose <menthos@menthos.com>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.04\n"
+"POT-Creation-Date: 2003-10-12 22:18+0300\n"
+"PO-Revision-Date: 2003-10-13 22:07+0200\n"
+"Last-Translator: Christian Rose <menthos@menthos.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Report-Msgid-Bugs-To: \n"
+
+# skulle gissa att detta är Svart och Vit
+#: gpe-go.c:734
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "S:%d  V:%d "
+
+#: gpe-go.c:967
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Kan inte spara spelet i %s."
+
+#: gpe-go.c:1066
+msgid "Undo"
+msgstr "Ångra"
+
+#: gpe-go.c:1080
+msgid "Redo"
+msgstr "Gör om"
+
+#: gpe-go.c:1088
+msgid "B:0  W:0 "
+msgstr "S:0  V:0 "
+
+#: gpe-go.c:1109
+msgid "PASS"
+msgstr "PASS"
+
+#: gpe-go.c:1122
+msgid "Save"
+msgstr "Spara"
+
+#: gpe-go.c:1126
+msgid "Save as..."
+msgstr "Spara som..."
+
+#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
+#: gpe-go-19.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE-Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Go"
+
+#: gpe-go-9.desktop.in.h:2
+msgid "Go 9"
+msgstr "Go 9"
+
+#: gpe-go-13.desktop.in.h:2
+msgid "Go 13"
+msgstr "Go 13"
+
+#: gpe-go-19.desktop.in.h:2
+msgid "Go 19"
+msgstr "Go 19"
+
+#~ msgid "B:%d  W:%d"
+#~ msgstr "S:%d  V:%d"

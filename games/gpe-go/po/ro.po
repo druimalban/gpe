@@ -1,0 +1,72 @@
+# Mesajele în limba românã pentru gpe-sketchbook.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-go.
+# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.04\n"
+"POT-Creation-Date: 2003-10-12 22:18+0300\n"
+"PO-Revision-Date: 2003-10-13 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: gpe-go.c:734
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "B:%d  W:%d "
+
+#: gpe-go.c:967
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Nu pot salva jocul în %s."
+
+#: gpe-go.c:1066
+msgid "Undo"
+msgstr "Desfã"
+
+#: gpe-go.c:1080
+msgid "Redo"
+msgstr "Refã"
+
+#: gpe-go.c:1088
+msgid "B:0  W:0 "
+msgstr "B:0  W:0 "
+
+#: gpe-go.c:1109
+msgid "PASS"
+msgstr "PASS"
+
+#: gpe-go.c:1122
+msgid "Save"
+msgstr "Salveazã"
+
+#: gpe-go.c:1126
+msgid "Save as..."
+msgstr "Salveazã ca..."
+
+#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
+#: gpe-go-19.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Go"
+
+#: gpe-go-9.desktop.in.h:2
+msgid "Go 9"
+msgstr "Go 9"
+
+#: gpe-go-13.desktop.in.h:2
+msgid "Go 13"
+msgstr "Go 13"
+
+#: gpe-go-19.desktop.in.h:2
+msgid "Go 19"
+msgstr "Go 19"
