@@ -25,8 +25,9 @@
 typedef struct _selector {
   GtkWidget * iconlist;
 
-  GtkWidget * button_edit;
-  GtkWidget * button_delete;
+  GtkWidget * button_edit;  //to set unsensitive
+  GtkWidget * button_delete;//to set unsensitive
+  GtkWidget * button_view;  //to switch the icon (from gpe-sketchbook.c)
 } Selector;
 extern Selector selector;
 

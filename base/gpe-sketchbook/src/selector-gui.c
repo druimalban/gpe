@@ -136,6 +136,7 @@ GtkWidget * build_selector_toolbar(){
   pixbuf = gpe_find_icon ("list");
   pixmap = gtk_image_new_from_pixbuf (pixbuf);
   g_object_set_data((GObject *) button, "list_mode_icon", pixmap);
+  selector.button_view = button;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 

@@ -187,7 +187,7 @@ void gui_init(){
     case PAGE_SELECTOR_ICON_TABLE:
       gtk_notebook_set_page(notebook, PAGE_SELECTOR);
       icons_mode = sketchbook.prefs.start_with == PAGE_SELECTOR_LIST;
-      on_button_selector_change_view_clicked (NULL, NULL);
+      on_button_selector_change_view_clicked (GTK_BUTTON (selector.button_view), NULL);
       break;
     case PAGE_SELECTOR:
       gtk_notebook_set_page(notebook, PAGE_SELECTOR);
