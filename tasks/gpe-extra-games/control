@@ -1,9 +1,0 @@
-Package: gpe-extra-games
-Section: games
-Priority: optional
-Version: 0.1
-Architecture: arm
-Maintainer: GPE Hackers <gpe@handhelds.org>
-Depends: repton, sfcave-sdl, snes9x
-Description: Additional GPE games not included in base imag
-
