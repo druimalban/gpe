@@ -1,3 +1,9 @@
+2005-02-02  Colin Marquardt  <colin@marquardt-home.de>
+
+	* po/vi.po: New file courtesy Clytie Siddall.
+
+	* Makefile (LINGUAS): Add vi.
+
 2004-11-20  Colin Marquardt  <colin@marquardt-home.de>
 
 	* po/zh_CN.po: New file courtesy Meng Jie.
