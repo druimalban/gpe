@@ -61,6 +61,7 @@ struct _GpeClockFace
 
   GdkPixmap *backing_pixmap;
   GdkGC *backing_gc;
+  GdkGC *backing_poly_gc;
   
   gboolean dragging_minute_hand;
   gboolean do_grabs;
@@ -138,14 +139,14 @@ draw_hand (GpeClockFace *clock,
   else
 #endif
     {
-      for (i = 0; i < thick; i++)
+      for (i = 0; i < 5; i++)
 	{
 	  points[i].x = poly[i].x;
 	  points[i].y = poly[i].y;
 	}
 
       gdk_draw_polygon (clock->backing_pixmap,
-			clock->backing_gc,
+			clock->backing_poly_gc,
 			TRUE,
 			points,
 			5);
@@ -173,7 +174,9 @@ gpe_clock_face_expose (GtkWidget *widget,
   GdkGC *white_gc;
 #ifdef BACKGROUND_IMAGE
   GdkRectangle pixbuf_rect, intersect_rect;
+#ifndef HAVE_XRENDER
   GdkGC *tmp_gc;
+#endif
   GdkPixbuf *current_background;
 #else
   int i;
@@ -193,7 +196,14 @@ gpe_clock_face_expose (GtkWidget *widget,
   dpy = GDK_WINDOW_XDISPLAY (drawable);
 
   if (event)
-    gdk_gc_set_clip_rectangle (clock->backing_gc, &event->area);
+    {
+      gdk_gc_set_clip_rectangle (clock->backing_gc, &event->area);
+      if (clock->backing_poly_gc)
+	gdk_gc_set_clip_rectangle (clock->backing_poly_gc, &event->area);
+    }
+
+  gdk_draw_rectangle (clock->backing_pixmap, clock->backing_gc,
+		      TRUE, 0, 0, widget->allocation.width, widget->allocation.height);
 
   gdk_gc_set_clip_rectangle (gc, NULL);
   gdk_gc_set_clip_rectangle (white_gc, NULL);
@@ -303,6 +313,8 @@ gpe_clock_face_expose (GtkWidget *widget,
 		     widget->allocation.width, widget->allocation.height);
 
   gdk_gc_set_clip_rectangle (clock->backing_gc, NULL);
+  if (clock->backing_poly_gc)
+    gdk_gc_set_clip_rectangle (clock->backing_poly_gc, NULL);
 
   return TRUE;
 }
@@ -439,16 +451,16 @@ static void
 gpe_clock_face_prepare_xrender (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
+  GdkGCValues gcv;
 
   clock->backing_pixmap = gdk_pixmap_new (widget->window,
 					  widget->allocation.width, 
 					  widget->allocation.height,
 					  gdk_drawable_get_depth (widget->window));
 
-  gdk_draw_rectangle (clock->backing_pixmap, widget->style->bg_gc[GTK_STATE_NORMAL],
-		      TRUE, 0, 0, widget->allocation.width, widget->allocation.height);
-
   clock->backing_gc = gdk_gc_new (clock->backing_pixmap);
+  gdk_gc_get_values (widget->style->bg_gc[GTK_STATE_NORMAL], &gcv);
+  gdk_gc_set_foreground (clock->backing_gc, &gcv.foreground);
 
 #ifdef HAVE_XRENDER
   if (clock->can_render)
@@ -472,7 +484,11 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
       att.poly_edge = PolyEdgeSmooth;
       XRenderChangePicture (dpy, clock->image_pict, CPPolyEdge, &att);
     }
+  else
 #endif
+    {
+      clock->backing_poly_gc = gdk_gc_new (clock->backing_pixmap);
+    }
 }
 
 static void
@@ -495,6 +511,12 @@ gpe_clock_face_unprepare_xrender (GtkWidget *widget)
     {
       g_object_unref (clock->backing_gc);
       clock->backing_gc = NULL;
+    }
+
+  if (clock->backing_poly_gc)
+    {
+      g_object_unref (clock->backing_poly_gc);
+      clock->backing_poly_gc = NULL;
     }
       
   if (clock->backing_pixmap)
@@ -666,6 +688,7 @@ gpe_clock_face_init (GpeClockFace *clock)
 #endif
   clock->backing_pixmap = NULL;
   clock->backing_gc = NULL;
+  clock->backing_poly_gc = NULL;
   clock->grabbed = FALSE;
   clock->do_grabs = TRUE;
 }

@@ -1,3 +1,19 @@
+2003-09-13  Philip Blundell  <philb@gnu.org>
+
+	* gpeclockface.c (struct _GpeClockFace): Add backing_poly_gc.
+	(draw_hand): Undo mistaken use of "thick" for number of points in
+	non-RENDER code path.  Use backing_poly_gc for drawing in this
+	case.
+	(gpe_clock_face_expose): Fix unused warning when HAVE_XRENDER.
+	Clear backing pixmap to background colour on every redraw,
+	otherwise repeated compositing of pixmap causes problems.  Set
+	clip rectangle for backing_poly_gc.
+	(gpe_clock_face_prepare_xrender): Create backing_poly_gc if
+	necessary.  Set foreground colour for backing_gc to be same as
+	normal widget background.
+	(gpe_clock_face_unprepare_xrender): Delete backing_poly_gc.
+	(gpe_clock_face_init): Set backing_poly_gc to NULL.
+
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.69.1 released.
