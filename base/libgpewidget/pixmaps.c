@@ -69,6 +69,7 @@ gpe_load_icons (struct gpe_icon *p)
   gchar *home = getenv ("HOME");
   gchar *buf;
   size_t s;
+  gboolean ok = TRUE;
 
   if (home == NULL)
     home = "/";
@@ -98,14 +99,14 @@ gpe_load_icons (struct gpe_icon *p)
 	{
 	  gpe_error_box (error);
 	  g_free (error);
-	  exit (1);
+	  ok = FALSE;
 	}
 
       g_datalist_set_data (&pbdata, p->shortname, p);
       p++;
     }
 
-  return TRUE;
+  return ok;
 }
 
 GdkPixbuf *

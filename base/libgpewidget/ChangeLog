@@ -1,5 +1,8 @@
 2002-07-13  Philip Blundell  <philb@gnu.org>
 
+	* pixmaps.c (gpe_load_icons): Return FALSE if any icons failed to
+	load, rather than calling exit.
+
 	* what.c (close_clicked): Remove spurious argument.
 	(gpe_what_init): Set style[GTK_STATE_PRELIGHT] too.
 	(do_widget): Display private text too, if it's different from the
