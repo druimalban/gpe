@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.6-4
+VERSION = 0.2.7
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -8,7 +8,7 @@ INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
 
-LINGUAS =
+LINGUAS = de
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L.
