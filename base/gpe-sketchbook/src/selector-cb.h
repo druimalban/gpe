@@ -38,3 +38,6 @@ gboolean on_treeview_selection_change(GtkTreeSelection *selection,
                                       GtkTreePath *path,
                                       gboolean path_currently_selected,
                                       gpointer data);
+
+void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *treepath, gpointer user_data);
+void on_iconlist_selection_changed(GtkIconView *iconview, gpointer user_data);

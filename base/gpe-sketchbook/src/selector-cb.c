@@ -129,6 +129,8 @@ gboolean on_treeview_selection_change(GtkTreeSelection *selection,
 
     //FIXME: selection is done HERE - remove duplicated and dead code.
 
+    //FIXME: update selection on IconView
+
     current_sketch = indices[0];
     set_current_sketch_selected();
     return TRUE;
@@ -163,6 +165,59 @@ gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_mo
     default: return FALSE;//FALSE to propagate the event further
   }
 }
+
+void on_iconlist_selection_changed(GtkIconView *iconview, gpointer user_data){
+  GList * selected_item_list = NULL;
+
+  //**/g_printerr("Icon list Selection changed.\n");
+
+  selected_item_list = gtk_icon_view_get_selected_items(iconview);
+
+  //**/g_printerr("selection: %d items\n", g_list_length(selected_item_list));
+
+  if(selected_item_list && g_list_length(selected_item_list) == 1)
+  {
+    GtkTreePath * tree_path;
+    gint * indices;
+
+    tree_path = (GtkTreePath *) g_list_nth_data(selected_item_list, 0);
+
+    indices = gtk_tree_path_get_indices(tree_path);
+    current_sketch = indices[0];
+    set_current_sketch_selected();
+  }
+
+  //FIXME: update selection on TreeView
+
+  g_list_foreach (selected_item_list, (GFunc) gtk_tree_path_free, NULL);
+  g_list_free    (selected_item_list);
+}
+
+
+void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *tree_path, gpointer user_data){
+  GtkTreeModel *model;
+  GtkTreeIter iter;
+  gchar * fullpath_filename;
+  gint * indices;
+
+  /**/g_printerr("Icon list item activated.\n");
+  
+  model = selector.listmodel;
+
+  gtk_tree_model_get_iter (model, &iter, tree_path);
+  gtk_tree_model_get (model, &iter,
+                      ENTRY_URL, &fullpath_filename,
+                      -1);
+
+  indices = gtk_tree_path_get_indices(tree_path);
+  current_sketch = indices[0];
+  set_current_sketch_selected();
+
+  sketchpad_open_file(fullpath_filename);
+  g_free(fullpath_filename);
+  switch_to_page(PAGE_SKETCHPAD);
+}
+
 
 void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused){
   switch_to_page(PAGE_PREFERENCES);

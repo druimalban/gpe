@@ -281,9 +281,6 @@ GtkWidget * build_scrollable_textlist(){
   return scrolledwindow;
 }
 
-
-void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *treepath, gpointer user_data);
-
 GtkWidget * build_scrollable_iconlist(GtkWidget * window){
   GtkWidget * scrolledwindow;//to return
   GtkWidget * icon_view;
@@ -315,8 +312,9 @@ GtkWidget * build_scrollable_iconlist(GtkWidget * window){
   //gtk_icon_view_set_text_column   (GTK_ICON_VIEW (icon_view), ENTRY_TITLE);
   gtk_icon_view_set_pixbuf_column (GTK_ICON_VIEW (icon_view), ENTRY_THUMBNAIL);
   
-  /* Connect to the "item_activated" signal */
-  g_signal_connect (icon_view, "item_activated", G_CALLBACK (on_iconlist_item_activated), model);
+  /* Connect signals */
+  g_signal_connect (icon_view, "item_activated",    G_CALLBACK (on_iconlist_item_activated),    NULL);
+  g_signal_connect (icon_view, "selection-changed", G_CALLBACK (on_iconlist_selection_changed), NULL);
 
   //--Scrolled window and packing
   scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
@@ -328,30 +326,3 @@ GtkWidget * build_scrollable_iconlist(GtkWidget * window){
 
 }
 
-//FIXME: to move to selector-cb.c/h
-#include "gpe-sketchbook.h"
-#include "sketchpad.h"
-
-void on_iconlist_item_activated(GtkIconView *iconview, GtkTreePath *tree_path, gpointer user_data){
-  GtkTreeModel *model;
-  GtkTreeIter iter;
-  gchar * fullpath_filename;
-  gint * indices;
-
-  /**/g_printerr("Icon list item activated.\n");
-  
-  model = selector.listmodel;
-
-  gtk_tree_model_get_iter (model, &iter, tree_path);
-  gtk_tree_model_get (model, &iter,
-                      ENTRY_URL, &fullpath_filename,
-                      -1);
-
-  indices = gtk_tree_path_get_indices(tree_path);
-  current_sketch = indices[0];
-  set_current_sketch_selected();
-
-  sketchpad_open_file(fullpath_filename);
-  g_free(fullpath_filename);
-  switch_to_page(PAGE_SKETCHPAD);
-}
