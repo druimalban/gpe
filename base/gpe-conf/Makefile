@@ -187,7 +187,7 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE) gpe-info $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o
+	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

@@ -1,6 +1,7 @@
 
 2004-08-05	Florian Boor  	<florian.boor@kernelconcepts.de>
- 
+
+	* Makefile: Improved "clean" target.
 	* Released Version 0.1.12
 	* brightness.c: Minor bugfix.
 
