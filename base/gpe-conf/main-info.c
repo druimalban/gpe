@@ -90,19 +90,9 @@ void make_container(int whichtab)
 {
   GtkWidget *hbuttons;
 
-/*  GtkWidget *scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-  self.viewport = gtk_viewport_new (NULL, NULL);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow),self.viewport);
-  gtk_viewport_set_shadow_type (GTK_VIEWPORT (self.viewport), GTK_SHADOW_NONE);
-
-  gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
-*/
   hbuttons = gtk_hbutton_box_new();
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons, FALSE, TRUE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_border());
+  gtk_container_set_border_width (GTK_CONTAINER (hbuttons), gpe_get_boxspacing());
 
   self.dismiss = gpe_button_new_from_stock(GTK_STOCK_CLOSE,GPE_BUTTON_TYPE_BOTH);
   gtk_box_pack_start(GTK_BOX(hbuttons),self.dismiss,FALSE, TRUE, 0);
@@ -111,7 +101,6 @@ void make_container(int whichtab)
 		      (GtkSignalFunc) Sysinfo_Free_Objects, NULL);
 			  
   self.applet = Sysinfo_Build_Objects(whichtab);
-//  gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
   gtk_container_add(GTK_CONTAINER(self.vbox),self.applet);
 	
   gtk_widget_show_all(self.applet);
