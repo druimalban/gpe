@@ -1,3 +1,11 @@
+2003-05-29  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.44 released.
+	
+2003-05-29  Philip Blundell  <philb@gnu.org>
+
+	* X11/xsettings.default: Set gtk-dialog icon size to 30,30.
+
 2003-04-28 Paul Jakma <paul@dishone.st>
 
 	* gpe-login.c (global): Added default_locale global.
