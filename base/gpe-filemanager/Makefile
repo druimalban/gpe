@@ -7,7 +7,7 @@ SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 MIME_HANDLERS = `cd mime-handlers && ls *.mime`
 GTK2 = yes
 
-MEMBERS = main mime-sql mime-programs-sql
+MEMBERS = main mime-sql mime-programs-sql mime
 MEMBERS2 = update_mime_db hash mime-sql mime-programs-sql
 
 ifeq ($(GTK2),yes)
