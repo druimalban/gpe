@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-su
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.17
+VERSION = 0.18
 
 #FIXME: add: 
 LINGUAS = nl pt fr sk cs de sv ro ru sr es

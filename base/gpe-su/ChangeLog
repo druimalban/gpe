@@ -1,3 +1,9 @@
+2004-08-16  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Released V 0.18
+    * gpe-su.c: Implemented avoiding password input if there is no 
+                root password.
+
 2004-08-13  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Released V 0.17

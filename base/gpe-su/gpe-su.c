@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <signal.h>
+#include <pwd.h>
 
 #include <gtk/gtk.h>
 
@@ -122,7 +123,28 @@ do_su (void)
       gtk_widget_grab_focus (entry);
     }
   else
-    gtk_main_quit ();
+    if (gtk_main_level()) 
+        gtk_main_quit ();
+}
+
+gboolean
+no_root_passwd (void)
+{
+	struct passwd *pwent;
+	setpwent ();
+	pwent = getpwent ();
+	while (pwent)
+	{
+		if (strcmp (pwent->pw_name, "root") == 0)
+		{
+			if (!pwent->pw_passwd || !strlen(pwent->pw_passwd))
+				return TRUE;
+			else
+				return FALSE;
+		}
+		pwent = getpwent ();
+	}
+	return FALSE;
 }
 
 int
@@ -183,30 +205,37 @@ main (int argc, char *argv[])
 
   gtk_box_pack_start (GTK_BOX (hbox), vbox, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
-		      hbox, FALSE, FALSE, 0);
+              hbox, FALSE, FALSE, 0);
 
   buttonok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
   buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
-		      buttoncancel, TRUE, TRUE, 0);
+              buttoncancel, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area),
-		      buttonok, TRUE, TRUE, 0);
+              buttonok, TRUE, TRUE, 0);
 
   GTK_WIDGET_SET_FLAGS (buttonok, GTK_CAN_DEFAULT);
   gtk_widget_grab_default (buttonok);
 
   gtk_signal_connect (GTK_OBJECT (window), "destroy", 
-		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+              GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
 
   gtk_signal_connect (GTK_OBJECT (entry), "activate", do_su, NULL);
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", do_su, NULL);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", gtk_main_quit, NULL);
-
-  gtk_widget_show_all (window);
-  gtk_widget_grab_focus (entry);
-
-  gtk_main ();
+  
+  if (no_root_passwd())
+    {
+      do_su();
+    }
+  else
+    {
+      gtk_widget_show_all (window);
+      gtk_widget_grab_focus (entry);
+    
+      gtk_main ();
+    }
 
   exit (0);
 }
