@@ -2,9 +2,10 @@ Package: gpe-login2
 Section: x11
 Priority: optional
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: gpe-icons (>= 0.05), libgpewidget1 (>= 0.07), xkbd, librootimage0, gpe-login-locale*
+Depends: gpe-icons (>= 0.05), libgpewidget1 (>= 0.07), xkbd, gpe-login-locale*, xstroke
 Description: Gtk-based login program
 Provides: gpe-login, gpe-session-starter
 Replaces: gpe-login

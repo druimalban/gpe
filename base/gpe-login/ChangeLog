@@ -1,3 +1,13 @@
+2003-08-02  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.56 released.
+	
+2003-08-02  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.gpe-session-scripts (Depends): Undo last change.
+	* familiar/control1 (Depends): Remove librootimage0.  Add xstroke.
+	(Source): Added.
+
 2003-08-01  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.55 released.
