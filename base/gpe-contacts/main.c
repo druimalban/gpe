@@ -744,6 +744,8 @@ do_search (GObject *obj, GtkWidget *entry)
       g_slist_free (l);
     }
 
+  all_entries = g_slist_sort (all_entries, sort_entries);
+
   gtk_list_store_clear (list_store);
 
   for (iter = all_entries; iter; iter = iter->next)

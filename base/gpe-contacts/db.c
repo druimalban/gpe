@@ -271,7 +271,7 @@ read_one_entry (void *arg, int argc, char **argv, char **names)
 #endif  
 
   if (p->name)
-    *list = g_slist_insert_sorted (*list, p, (GCompareFunc) sort_entries);
+    *list = g_slist_prepend (*list, p);
   else
     discard_person (p);
 
@@ -416,7 +416,7 @@ void
 db_set_multi_data (struct person *p, gchar * tag, gchar * value)
 {
   struct tag_value *t = new_tag_value (g_strdup (tag), value);
-  p->data = g_slist_append (p->data, t);
+  p->data = g_slist_prepend (p->data, t);
 }
 
 void
@@ -431,7 +431,7 @@ db_set_data (struct person *p, gchar * tag, gchar * value)
   else
     {
       t = new_tag_value (g_strdup (tag), value);
-      p->data = g_slist_append (p->data, t);
+      p->data = g_slist_prepend (p->data, t);
     }
 }
 
@@ -601,7 +601,7 @@ load_one_attribute (void *arg, int argc, char **argv, char **names)
       c->id = atoi (argv[0]);
       c->name = g_strdup (argv[1]);
 
-      *list = g_slist_append (*list, c);
+      *list = g_slist_prepend (*list, c);
     }
 
   return 0;
@@ -641,7 +641,7 @@ db_get_entries_alpha (const gchar * alphalist)
       struct person *p = i->data;
       
       if (strchr (alphalist, p->name[0]))
-	list = g_slist_append (list, p);
+	list = g_slist_insert_sorted (list, p, (GCompareFunc) sort_entries);
       else
 	discard_person (p);
     }
@@ -650,7 +650,6 @@ db_get_entries_alpha (const gchar * alphalist)
 
   return list;
 }
-
 
 gint
 db_get_tag_list (gchar *** list)

@@ -46,6 +46,7 @@ extern void db_delete_config_values (gint group, gchar *identifier);
 extern gchar* db_get_config_tag (gint group, const gchar *tagname);
 extern void db_free_result(char** table);
 
+extern gint sort_entries (struct person * a, struct person * b);
 
 struct category
 {

@@ -1,3 +1,14 @@
+2003-04-12  Philip Blundell  <philb@gnu.org>
+
+	* db.h (sort_entries): Add prototype.
+	* main.c (do_search): Sort the returned list.
+
+	* db.c (db_get_entries_alpha): Use g_slist_insert_sorted.
+	(read_one_entry): Use g_slist_prepend.
+	(load_one_attribute): Likewise.
+	(db_set_data): Likewise.
+	(db_set_multi_data): Likewise.
+
 2003-04-11  Philip Blundell  <philb@gnu.org>
 
 	* editing.c (create_edit): Don't use GtkDialog.
