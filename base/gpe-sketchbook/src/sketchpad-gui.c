@@ -55,7 +55,7 @@ GtkWidget * sketchpad_build_window(){
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window_sketchpad), 240, 280);
 #endif
-  gtk_signal_connect (GTK_OBJECT (window_sketchpad), "destroy",
+  gtk_signal_connect (GTK_OBJECT (window_sketchpad), "delete_event",
                       GTK_SIGNAL_FUNC (on_window_sketchpad_destroy), NULL);
 
   dock = gpe_dock_new();
