@@ -13,17 +13,23 @@
 #include <stdio.h>
 #include <sqlite.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
 
+#include "errorbox.h"
+
 #define BT_ICON "/usr/share/pixmaps/bt-logo.png"
 
-char *address;
-GtkWidget *check;
-sqlite *sqliteh;
+static char *address;
+static char *name = "";
+static GtkWidget *check;
+static sqlite *sqliteh;
 
-const char *dname = "/.gpe/bluez-pin";
+static const char *dname = "/.gpe";
+static const char *fname = "/bluetooth";
 
 int
 sql_start (void)
@@ -34,19 +40,29 @@ sql_start (void)
   size_t len;
   if (home == NULL) 
     home = "";
-  len = strlen (home) + strlen (dname);
+  len = strlen (home) + strlen (dname) + strlen (fname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, dname);
+  if (access (buf, F_OK))
+    {
+      if (mkdir (buf, 0700))
+	{
+	  gpe_perror_box (buf);
+	  g_free (buf);
+	  return -1;
+	}
+    }
+  strcat (buf, fname);
   sqliteh = sqlite_open (buf, 0, &err);
   if (sqliteh == NULL)
     {
-      fprintf (stderr, "%s\n", err);
+      gpe_error_box (err);
       free (err);
       return -1;
     }
 
-  sqlite_exec (sqliteh, "create table device_pin (address text NOT NULL, pin text)", NULL, NULL, &err);
+  sqlite_exec (sqliteh, "create table btdevice (address text NOT NULL, pin text, name text)", NULL, NULL, &err);
 
   return 0;
 }
@@ -61,7 +77,7 @@ lookup_in_list (int outgoing, const char *address, char **pin)
   if (sql_start ())
     return 0;
   
-  if (sqlite_get_table_printf (sqliteh, "select pin from device_pin where address='%q'", &results, &nrow, &ncol, &err, address))
+  if (sqlite_get_table_printf (sqliteh, "select pin from btdevice where address='%q'", &results, &nrow, &ncol, &err, address))
     return 0;
 
   if (nrow == 0)
@@ -98,7 +114,7 @@ click_ok(GtkWidget *widget,
   if (save && sqliteh)
     {
       char *err;
-      if (sqlite_exec_printf (sqliteh, "insert into device_pin values('%q','%q')", NULL, NULL, &err, address, pin))
+      if (sqlite_exec_printf (sqliteh, "insert into btdevice values('%q','%q','%q')", NULL, NULL, &err, address, pin, name))
 	{
 	  fprintf (stderr, "%s\n", err);
 	  free(err);
@@ -118,7 +134,7 @@ ask_user (int outgoing, const char *address)
   GdkBitmap *logo_mask;
   GdkPixmap *logo_pixmap;
   GtkWidget *logo = NULL;
-  GtkWidget *text1, *text2, *hbox, *vbox;
+  GtkWidget *text1, *text2, *text3, *hbox, *vbox;
   GtkWidget *vbox_top;
   GtkWidget *hbox_pin;
   GtkWidget *pin_label, *entry;
@@ -137,7 +153,6 @@ ask_user (int outgoing, const char *address)
   gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 
   check = gtk_check_button_new_with_label ("Save in database");
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check), TRUE);
 
   hbox = gtk_hbox_new (FALSE, 4);
   vbox = gtk_vbox_new (FALSE, 0);
@@ -149,6 +164,11 @@ ask_user (int outgoing, const char *address)
   text2 = gtk_label_new (address);
 
   gtk_box_pack_start (GTK_BOX (vbox), text1, TRUE, TRUE, 0);
+  if (name[0])
+    {
+      text3 = gtk_label_new (name);
+      gtk_box_pack_start (GTK_BOX (vbox), text3, TRUE, TRUE, 0);
+    }
   gtk_box_pack_start (GTK_BOX (vbox), text2, TRUE, TRUE, 0);
 
   if (logo)
@@ -178,8 +198,11 @@ ask_user (int outgoing, const char *address)
   gtk_box_pack_start (GTK_BOX (vbox_top), hbox_but, TRUE, TRUE, 0);
 
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
+  gtk_container_set_border_width (GTK_CONTAINER (window), 5);
 
   gtk_widget_grab_focus (entry);
+
+  gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
   gtk_widget_show_all (window);
   gtk_main ();
@@ -207,7 +230,7 @@ main(int argc, char *argv[])
   if (gui_started)
     gdk_imlib_init ();
 
-  if (argc != 3)
+  if (argc < 3)
     usage (argv);
 
   if (strcmp (argv[1], "in") == 0)
@@ -218,6 +241,8 @@ main(int argc, char *argv[])
     usage (argv);
 
   address = argv[2];
+  if (argc == 4)
+    name = argv[3];
 
   if (lookup_in_list (outgoing, address, &pin))
     {
