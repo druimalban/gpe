@@ -181,9 +181,9 @@ gboolean dialog_destroy()
 void
 do_package_info(const char* name, const char *info)
 {
-	GtkWidget *sw;
-	GtkWidget *textview;
-	GtkTextBuffer *buffer;
+GtkWidget *sw;
+GtkWidget *textview;
+GtkTextBuffer *buffer;
 	
 	if (dlgInfo == NULL) {
 		dlgInfo = gtk_dialog_new_with_buttons(_("Package information"),GTK_WINDOW(fMain),
@@ -247,7 +247,7 @@ GtkWidget *hbox;
 void
 show_message(GtkMessageType type, char* message)
 {
-	GtkWidget* dialog;
+GtkWidget* dialog;
 	
 	dialog = gtk_message_dialog_new (GTK_WINDOW(fMain),
 					 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -391,7 +391,6 @@ GtkTreeIter iter;
 	gtk_statusbar_push(GTK_STATUSBAR(sbar),
 		id,_("Updating views, please wait..."));
 	
-#warning improve this
 	gtk_tree_store_clear(GTK_TREE_STORE(store));
 	
 	for (i=0; i<pkg_count; i++) {
@@ -515,7 +514,7 @@ void do_end_command()
 
 void do_safe_exit(int sig)
 {
-	GtkWidget *dialog;
+GtkWidget *dialog;
 
 	if (pkg_selection_changed > 0) {
 		dialog = gtk_message_dialog_new (GTK_WINDOW (fMain),
@@ -653,7 +652,6 @@ char *color;
 
 void do_local_install(char *filename,gpointer userdata)
 {
-	printf(filename);
 	if (!access(filename,F_OK)) {
 		send_message(PK_COMMAND,CMD_INSTALL,"",filename);
 		wait_command_finish();
@@ -669,7 +667,9 @@ void do_local_install(char *filename,gpointer userdata)
 int mainloop (int argc, char *argv[])
 {
 struct sockaddr_un name;
-	
+int opt;
+gboolean mode_upgrade = FALSE;
+
 	sleep(1); /* wait for second process to initialize */
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
@@ -679,6 +679,12 @@ struct sockaddr_un name;
 	signal (SIGINT, do_safe_exit);
 	signal (SIGTERM, do_safe_exit);
  	
+	while ((opt = getopt(argc, argv, "u")) > 0)
+	{
+		if (opt == 'u')
+			mode_upgrade = TRUE;
+	}
+
 	/* Create socket from which to read. */
 	sock = socket (AF_UNIX, SOCK_STREAM, 0);
 	if (sock < 0) {
@@ -703,8 +709,11 @@ struct sockaddr_un name;
 	create_fMain ();
 	gtk_widget_show (fMain);
   
-	/* get packages list */
-	send_message(PK_COMMAND,CMD_LIST,NULL,NULL);
+	/* do initial actions */
+	if (mode_upgrade)
+		on_system_update_clicked(NULL, NULL);
+	else
+		send_message(PK_COMMAND,CMD_LIST,NULL,NULL);
 	
 	gtk_timeout_add(500,get_pending_messages,NULL);
 	
@@ -727,16 +736,15 @@ int do_package_check(const char *package)
 
 void on_select_local(GtkButton *button, gpointer user_data)
 {
-	//ask_user_a_file("/tmp",_("Select package file"),do_local_install,NULL,NULL);
 	package_choose(fMain, do_local_install);
 }
 
 
 void on_package_info_clicked(GtkButton *button, gpointer user_data)
 {
-	GtkTreeIter iter;
-	GtkTreeSelection *sel;
-	char *name = NULL;
+GtkTreeIter iter;
+GtkTreeSelection *sel;
+char *name = NULL;
 	
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	
@@ -749,8 +757,8 @@ void on_package_info_clicked(GtkButton *button, gpointer user_data)
 
 void on_system_update_clicked(GtkButton *button, gpointer user_data)
 {
-GtkTextBuffer *logbuf;
-GtkTextIter start,end;
+	GtkTextBuffer *logbuf;
+	GtkTextIter start,end;
 	
 	gtk_widget_set_sensitive(miUpdate,FALSE);
 	gtk_widget_set_sensitive(miApply,FALSE);
@@ -758,6 +766,11 @@ GtkTextIter start,end;
 	gtk_widget_set_sensitive(bApply,FALSE);
 
 	error = 0;
+	
+	show_message(GTK_MESSAGE_INFO, 
+	             _("Make sure your internet connection is up " \ 
+	               "or your update source is available and " \
+	               "press OK to continue."));
 	
 	/* clear log */	
 	logbuf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txLog));
@@ -884,14 +897,14 @@ return (gtk_item_factory_get_widget (itemfactory, "<main>"));
 
 void create_fMain (void)
 {
-	GtkWidget *vbox;
-	GtkWidget *cur;
-	GtkWidget *toolbar;
-	GtkWidget *pw;
-	GtkTooltips *tooltips;
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	char *tmp;
+GtkWidget *vbox;
+GtkWidget *cur;
+GtkWidget *toolbar;
+GtkWidget *pw;
+GtkTooltips *tooltips;
+GtkCellRenderer *renderer;
+GtkTreeViewColumn *column;
+char *tmp;
 
 	/* init tree storage stuff */
 	store = gtk_tree_store_new (N_COLUMNS,

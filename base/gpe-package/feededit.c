@@ -41,9 +41,9 @@ write_feed(GtkTreeModel *model, GtkTreePath *path,
            GtkTreeIter *iter,
            gpointer data)
 {
-	FILE *fp = data;
-	gchar *name = NULL, *url = NULL;
-	gint type;
+FILE *fp = data;
+gchar *name = NULL, *url = NULL;
+gint type;
 
 	gtk_tree_model_get (GTK_TREE_MODEL(model), iter, 
 	                    FEED_NAME, &name, 
@@ -83,13 +83,13 @@ write_feeds_to_file(const gchar *filename)
 static void
 edit_feed(GtkTreeIter *iter)
 {
-	GtkWidget *dialog, *btn;
-	GtkWidget *table = gtk_table_new(2, 3, FALSE);
-	GtkWidget *cbCompressed;
-	GtkWidget *label;
-	GtkWidget *eName, *eURL;
-	gchar *name = NULL, *url = NULL;
-	gint type = FT_COMPRESSED;
+GtkWidget *dialog, *btn;
+GtkWidget *table = gtk_table_new(2, 3, FALSE);
+GtkWidget *cbCompressed;
+GtkWidget *label;
+GtkWidget *eName, *eURL;
+gchar *name = NULL, *url = NULL;
+gint type = FT_COMPRESSED;
 	
 	gtk_table_set_col_spacings(GTK_TABLE(table), gpe_get_boxspacing());
 	gtk_table_set_row_spacings(GTK_TABLE(table), gpe_get_boxspacing());
@@ -156,11 +156,11 @@ edit_feed(GtkTreeIter *iter)
 static void
 read_feeds_from_file(const gchar *filename)
 {
-	FILE *fp = fopen(filename, "r");
-	char buf[255];
-	char name[64], url[255], stype[10];
-	int type = FT_PROTECTED;
-	GtkTreeIter iter;
+FILE *fp = fopen(filename, "r");
+char buf[255];
+char name[64], url[255], stype[10];
+int type = FT_PROTECTED;
+GtkTreeIter iter;
 	
 	if (fp != NULL)
 	{
@@ -188,7 +188,7 @@ read_feeds_from_file(const gchar *filename)
 void
 on_add_feed(GtkWidget *button, gpointer data)
 {
-	GtkTreeIter iter;
+GtkTreeIter iter;
 	
 	gtk_list_store_append(feedstore, &iter);
 	gtk_list_store_set(feedstore, &iter, FEED_TYPE, FT_COMPRESSED, -1);
@@ -198,10 +198,10 @@ on_add_feed(GtkWidget *button, gpointer data)
 void
 on_remove_feed(GtkWidget *button, gpointer data)
 {
-	GtkTreeIter iter;
-	GtkTreeSelection *sel;
-	GtkWidget *treeview = data;
-	GtkWidget *dialog;
+GtkTreeIter iter;
+GtkTreeSelection *sel;
+GtkWidget *treeview = data;
+GtkWidget *dialog;
 	
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	
@@ -225,9 +225,9 @@ on_remove_feed(GtkWidget *button, gpointer data)
 void
 on_edit_feed(GtkWidget *button, gpointer data)
 {
-	GtkTreeIter iter;
-	GtkTreeSelection *sel;
-	GtkWidget *treeview = data;
+GtkTreeIter iter;
+GtkTreeSelection *sel;
+GtkWidget *treeview = data;
 	
 	sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 	
@@ -241,13 +241,13 @@ on_edit_feed(GtkWidget *button, gpointer data)
 GtkWidget *
 create_feed_edit(void)
 {
-	GtkWidget *vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
-	GtkWidget *toolbar = gtk_toolbar_new();
-	GtkWidget *label = gtk_label_new(NULL);
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkWidget *treeview, *vp, *sw;
-	gchar *ts;
+GtkWidget *vbox = gtk_vbox_new(FALSE, gpe_get_boxspacing());
+GtkWidget *toolbar = gtk_toolbar_new();
+GtkWidget *label = gtk_label_new(NULL);
+GtkCellRenderer *renderer;
+GtkTreeViewColumn *column;
+GtkWidget *treeview, *vp, *sw;
+gchar *ts;
 	
 	feedstore = gtk_list_store_new(FEED_FIELDNUM, 
 	                               G_TYPE_INT,

@@ -1,5 +1,8 @@
 2004-10-19 Florian Boor <florian.boor@kernelconcepts.de>
 
+	* feededit.c, interface.c: Some reformating.
+	* interface.c: Comand line switch "-u" to start upgrade.
+	               Remove old cruft and debug output.
 	* interface.c: Changed some message types, minor format changes.
 	* feededit.c: Support for writing new feed configuration.
 	              Finished feed editor.
