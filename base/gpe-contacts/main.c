@@ -121,7 +121,7 @@ load_tab_config ()
       tabdefs[5].label = g_strdup ("vwxyz");
       tabdefs[5].chars = tabdefs[5].label;
       tabdefs[6].label = g_strdup ("other");
-      tabdefs[6].chars = g_strdup ("1234567890+-?!$");
+      tabdefs[6].chars = g_strdup ("!abcdefghijklmnopqrstuvwxyz");
       num_tabs = 7;
     }
 

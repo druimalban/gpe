@@ -1,3 +1,8 @@
+2003-04-28  Florian Boor <florian.boor@kernelconcepts.de>
+	* db.c (db_get_entries_alpha): SQL code bugfixes, speedup.
+	  Supports inverse char lists now. (first char='!')
+	* main.c, contacts-tab.conf.de: new defaults.
+
 2003-04-27  Philip Blundell  <philb@gnu.org>
 
 	* main.c (load_tab_config): Reformat.  Avoid

@@ -635,23 +635,34 @@ db_get_entries_alpha (const gchar * alphalist)
   GSList *list = NULL;
   GSList *i;
 
-  char *command, *tmp;
+  char *command, *tmp, *modifier;
   char *err;
-  int r, s;
+  int r, s, t;
 
   s = strlen(alphalist);
   command = g_strdup("");
-  for (r=0;r<s;r++)
+	
+  if (alphalist[0] == '!')
   {
-     tmp = g_strdup_printf("%s(contacts.value like '%c%%') or (contacts.value like '%c%%')",
+    t = 1;
+	modifier = g_strdup(" NOT ");
+  }	  
+  else
+  {
+	t = 0;  
+	modifier = g_strdup(" ");
+  }
+  for (r=t;r<s;r++)
+  {
+     tmp = g_strdup_printf("%s(value like '%c%%') or (value like '%c%%')",
 	   command,g_ascii_toupper(alphalist[r]),g_ascii_tolower(alphalist[r]));
 	 free(command); 
 	 if (r != s-1)
 	   command = g_strdup_printf("%s or",tmp);					 
   }
 
-  command = g_strdup_printf("select distinct contacts_urn.urn from contacts_urn, \
-  		contacts where ((contacts_urn.urn = contacts.urn) and (%s))",tmp);
+  command = g_strdup_printf("select urn from  \
+  		contacts where ((( tag = 'NAME') or ( tag = 'name')) and%s(%s))",modifier,tmp);
   free(tmp);
 #ifdef USE_USQLD	
   r = usqld_exec (db, command,
