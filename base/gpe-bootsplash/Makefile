@@ -23,3 +23,11 @@ install-program: gpe-bootsplash
 
 clean:
 	rm -f gpe-bootsplash splash.o
+
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+fi
+include $(BUILD)/Makefile.dpkg-ipkg
+
