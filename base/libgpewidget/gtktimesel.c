@@ -13,15 +13,6 @@
 
 #define _(x) gettext(x)
 
-struct _GtkTimeSel
-{
-  GtkHBox hbox;
-
-  GtkObject *hour_adj, *minute_adj;
-  GtkWidget *hour_spin, *minute_spin;
-  GtkWidget *label;
-};
-
 struct _GtkTimeSelClass 
 {
   GtkHBoxClass parent_class;
