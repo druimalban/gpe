@@ -170,8 +170,9 @@ GtkWidget * build_scrollable_icons(GtkWidget * window){
 
   iconlist = gpe_iconlist_new();
   gpe_iconlist_set_icon_size (GPE_ICONLIST(iconlist), THUMBNAIL_SIZE);
-  gpe_iconlist_set_bg_color  (GPE_ICONLIST(iconlist), 0xddddd444);//light grey 
+  gpe_iconlist_set_bg_color  (GPE_ICONLIST(iconlist), 0xbabac444);//0xddddd444);//light grey 
 	gpe_iconlist_set_show_title(GPE_ICONLIST(iconlist), FALSE);
+  gpe_iconlist_set_icon_xmargin (GPE_ICONLIST(iconlist), 4);
 
   g_signal_connect (G_OBJECT (iconlist), "clicked",
                     G_CALLBACK (on_iconlist_clicked), "clicked!!!");
