@@ -1,8 +1,7 @@
 [Desktop Entry]
-Encoding=Legacy-Mixed
-Name=Sokoban
-Comment=Clone of the Sokoban game
-Comment[sv]=Klon av spelet Sokoban
+Encoding=UTF-8
+_Name=Sokoban
+_Comment=Clone of the Sokoban game
 Exec=gsoko
 Icon=/usr/share/pixmaps/gsoko.png
 Terminal=false
