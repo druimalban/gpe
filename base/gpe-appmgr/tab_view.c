@@ -55,10 +55,6 @@
 #include "main.h"
 
 #include "cfg.h"
-#include "package.h"
-#include "plugin.h"
-#include "popupmenu.h"
-#include "tray.h"
 #include "launch.h"
 
 //#define DEBUG
@@ -76,19 +72,10 @@ static int ignore_press = 0;
 static void 
 cb_clicked (GtkWidget *il, gpointer udata, gpointer data) 
 {
-  struct package *p;
+  GnomeDesktopFile *p;
   p = udata;
   
   run_package (p);
-}
-
-static void 
-cb_popup (GtkWidget *il, gpointer udata, gpointer data) 
-{
-  struct package *p;
-  p = udata;
-  printf ("Popup: %s\n", package_get_data (p, "title"));
-  popup_menu_activate (udata, il);
 }
 
 static void 
@@ -172,28 +159,25 @@ create_tab (GList *all_items, char *current_group, tab_view_style style)
 	il = gpe_iconlist_new ();
 
 	gtk_signal_connect (GTK_OBJECT (il), "clicked", (GtkSignalFunc)cb_clicked, NULL);
-	gtk_signal_connect (GTK_OBJECT (il), "show_popup", (GtkSignalFunc)cb_popup, NULL);
-	//icon_file = g_strdup_printf ("/usr/share/pixmaps/group_%s.png", current_group ? current_group : "All");
-	//gpe_iconlist_set_bg (il, icon_file);
-	//g_free (icon_file);
-
 	gpe_iconlist_set_bg (GPE_ICONLIST(il), "/usr/share/pixmaps/gpe-default-bg.png");
 
 
 	this_item = all_items;
 	while (this_item)
 	{
-		struct package *p;
+	  GnomeDesktopFile *p;
+	  gchar *name;
 
-		p = (struct package *) this_item->data;
-
-		gpe_iconlist_add_item (GPE_ICONLIST (il),
-				       package_get_data (p, "title"),
-				       get_icon_fn (p, 48),
-				       (gpointer)p);
-		
-		this_item = this_item->next;
-
+	  p = (GnomeDesktopFile *) this_item->data;
+	  
+	  gnome_desktop_file_get_string (p, NULL, "Name", &name);
+	  
+	  gpe_iconlist_add_item (GPE_ICONLIST (il),
+				 name,
+				 get_icon_fn (p, 48),
+				 (gpointer)p);
+	  
+	  this_item = this_item->next;
 	}
 
 	gtk_widget_show (il);

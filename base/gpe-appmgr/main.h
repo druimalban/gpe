@@ -17,9 +17,16 @@
 #define MAIN_H
 
 #include <gtk/gtk.h>
+#include <desktop_file.h>
 
-#include "package.h"
 #include "cfg.h"
+
+struct package_group
+{
+  gchar *name;
+  GList *categories;
+  GList *items;
+};
 
 /* main window */
 GtkWidget *window;
@@ -33,10 +40,10 @@ GList *groups;
 /* Refresh the UI with the icons */
 extern void refresh_tabs (void);
 
-extern char *get_icon_fn (struct package *p, int iconsize);
-
 extern GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size);
 
-extern void run_package (struct package *p);
+char *get_icon_fn (GnomeDesktopFile *p, int iconsize);
+
+void run_package (GnomeDesktopFile *p);
 
 #endif

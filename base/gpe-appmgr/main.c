@@ -56,13 +56,8 @@
 
 /* everything else */
 #include "main.h"
-
 #include "cfg.h"
-#include "package.h"
-#include "plugin.h"
-#include "popupmenu.h"
 #include "launch.h"
-#include <dlfcn.h>
 #include "tray.h"
 
 //#define DEBUG
@@ -74,18 +69,11 @@
 #define DBG(x) ;
 #endif
 
-GList *forced_groups=NULL;
-
-GtkWidget *current_button=NULL;
-int current_button_is_down=0;
-
-GtkWidget *recent_tab=NULL;
-
 time_t last_update=0;
 
-GSList *translate_list;
-
 GdkPixbuf *default_pixbuf;
+
+struct package_group *other_group;
 
 struct gpe_icon my_icons[] = {
   { "icon", "/usr/share/pixmaps/gpe-appmgr.png" },
@@ -97,6 +85,7 @@ char *translate_group_name (char *name);
 gboolean flag_desktop;
 gboolean flag_rows;
 GtkWidget *child;
+Display *dpy;
 
 extern gboolean gpe_appmgr_start_xsettings (void);
 
@@ -149,15 +138,21 @@ create_icon_pixmap (GtkStyle *style, char *fn, int size)
 }
 
 char *
-get_icon_fn (struct package *p, int iconsize)
+get_icon_fn (GnomeDesktopFile *p, int iconsize)
 {
   char *fn, *full_fn;
   
-  fn = package_get_data (p, "icon");
+  gnome_desktop_file_get_string (p, NULL, "Icon", &fn);
   if (!fn)
     return fn;
 
   full_fn = find_icon (fn);
+
+  g_free (fn);    return fn;
+
+  full_fn = find_icon (fn);
+
+  g_free (fn);
 
   if (full_fn == NULL)
     printf("couldn't find %s\n", fn);
@@ -166,12 +161,16 @@ get_icon_fn (struct package *p, int iconsize)
 }
 
 void 
-run_package (struct package *p) 
+run_package (GnomeDesktopFile *p)
 {
-  printf ("Running: %s\n", package_get_data (p, "title"));
+  gchar *cmd;
+  gchar *title;
+
+  gnome_desktop_file_get_string (p, NULL, "Exec", &cmd);
+  gnome_desktop_file_get_string (p, NULL, "Comment", &title);
 
   /* Actually run the program */
-  run_program (package_get_data (p, "command"), package_get_data (p, "title"));
+  gpe_launch_program (dpy, cmd, title);
 }
 
 gboolean 
@@ -192,10 +191,12 @@ clean_up (void)
   for (l = items; l; l = l->next)
     {
       if (l->data)
-	package_free ((struct package *)l->data);
+	gnome_desktop_file_free ((GnomeDesktopFile *)l->data);
     }
   g_list_free (items);
+  items = NULL;
 
+#if 0
   for (l = groups; l; l = l->next)
     {
       struct package_group *g = l->data;
@@ -205,36 +206,51 @@ clean_up (void)
     }
   g_list_free (groups);
   
-  groups = items = NULL;
+  groups = NULL;
+#endif
 }
 
 static struct package_group *
-find_group_by_name (const char *name)
+find_group_for_package (GnomeDesktopFile *package)
 {
   GList *i;
   struct package_group *g;
 
   for (i = groups; i; i = i->next)
     {
+      GList *c;
       g = i->data;
-      if (!strcmp (g->name, name))
-	return g;
+      for (c = g->categories; c; c = c->next)
+	if (gnome_desktop_file_has_section (package, c->data))
+	  return g;
     }
 
-  g = g_malloc0 (sizeof (*g));
-  g->name = g_strdup (name);
-  groups = g_list_append (groups, g);
-  return g;
+  return other_group;
+}
+
+static gint
+package_compare (GnomeDesktopFile *a, GnomeDesktopFile *b)
+{
+  gchar *na, *nb;
+  gint r;
+
+  gnome_desktop_file_get_string (a, NULL, "Name", &na);
+  gnome_desktop_file_get_string (b, NULL, "Name", &nb);
+  
+  r = strcmp (na, nb);
+
+  g_free (na);
+  g_free (nb);
+
+  return r;
 }
 
 static void 
-cb_package_add (struct package *p)
+cb_package_add (GnomeDesktopFile *p)
 {
-  const char *group_name;
   struct package_group *group;
 
-  group_name = package_get_data (p, "section");
-  group = find_group_by_name (group_name);
+  group = find_group_for_package (p);
 
   items = g_list_insert_sorted (items, p, (GCompareFunc)package_compare);
   group->items = g_list_insert_sorted (group->items, p, (GCompareFunc)package_compare);
@@ -252,13 +268,13 @@ load_from (const char *path)
       while ((entry = readdir (dir)))
 	{
 	  char *temp;
-	  struct package *p;
+	  GnomeDesktopFile *p;
 	  
 	  if (entry->d_name[0] == '.')
 	    continue;
 	  
 	  temp = g_strdup_printf ("%s/%s", PREFIX "/share/applications", entry->d_name);
-	  p = package_from_dotdesktop (temp, NULL);
+	  p = gnome_desktop_file_load (temp, NULL);
 	  if (p)
 	    cb_package_add (p);
 
@@ -273,9 +289,6 @@ load_from (const char *path)
 int 
 refresh_list (void)
 {
-  /* Remove the tap-hold popup menu timeout if it's there */
-  popup_menu_cancel ();
-
   clean_up ();
   
   load_from (PREFIX "/share/applications");
@@ -396,6 +409,11 @@ main (int argc, char *argv[])
 	  break;
 	}
     }
+
+  other_group = g_malloc0 (sizeof (struct package_group));
+  other_group->name = "Other";
+
+  groups = g_list_append (groups, other_group);
   
   /* update the menu data */
   refresh_list ();
@@ -416,10 +434,12 @@ main (int argc, char *argv[])
   
   gpe_appmgr_start_xsettings ();
   
-  /* start the event loop */
-  gtk_main();
+  dpy = GDK_WINDOW_XDISPLAY (window->window);
   
-  clean_up();
+  /* start the event loop */
+  gtk_main ();
+  
+  clean_up ();
   
   exit (0);
 }

@@ -48,7 +48,6 @@
 #include "main.h"
 
 #include "cfg.h"
-#include "package.h"
 #include "popupmenu.h"
 
 //#define DEBUG
@@ -64,7 +63,7 @@ GtkWidget *bin;
 GtkWidget *table;
 
 static void
-run_callback (GObject *obj, GdkEventButton *ev, struct package *p)
+run_callback (GObject *obj, GdkEventButton *ev, GnomeDesktopFile *p)
 {
   run_package (p);
 }
@@ -87,16 +86,19 @@ create_row (GList *all_items, char *current_group)
   this_item = all_items;
   while (this_item)
     {
-      struct package *p;
+      GnomeDesktopFile *p;
       GObject *item;
+      gchar *name = NULL;
  
-      p = (struct package *) this_item->data;
-      
+      p = (GnomeDesktopFile *) this_item->data;
+     
+      gnome_desktop_file_get_string (p, NULL, "Name", &name);
+ 
       item = gpe_icon_list_view_add_item (GPE_ICON_LIST_VIEW (view),
-					  package_get_data (p, "title"),
+					  name,
 					  get_icon_fn (p, 48),
 					  (gpointer)p);
-      
+
       g_signal_connect (item, "button-release", G_CALLBACK (run_callback), p);
       
       this_item = this_item->next;
