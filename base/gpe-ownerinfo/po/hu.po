@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.20\n"
 "POT-Creation-Date: 2003-03-04 00:17+0100\n"
-"PO-Revision-Date: 2003-03-06 07:54+0100\n"
+"PO-Revision-Date: 2003-03-08 19:13+0100\n"
 "Last-Translator: Andras Timar <timar_a@freemail.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -61,7 +61,7 @@ msgstr "+99 (9999) 999-9999"
 
 #: gpe-ownerinfo.c:439
 msgid "Configurable with"
-msgstr "Beállítható"
+msgstr "Beállítható a"
 
 #: gpe-ownerinfo.c:440 gpe-ownerinfo.c:549
 msgid "Owner Information"
@@ -69,11 +69,11 @@ msgstr "Tulajdonos adatai"
 
 #: gpe-ownerinfo.c:441
 msgid "under"
-msgstr "alatt"
+msgstr "pontban a"
 
 #: gpe-ownerinfo.c:441
 msgid " Settings."
-msgstr " Beállítások."
+msgstr " Beállításoknál."
 
 #: gpe-ownerinfo.c:578
 msgid "Address:"
