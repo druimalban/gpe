@@ -17,10 +17,10 @@
 #include <glib.h>
 
 #include "event-db.h"
+#include "event-ui.h"
 #include "gtkdatesel.h"
 #include "globals.h"
 #include "day_view.h"
-#include "clist_view.h"
 
 extern GdkFont *timefont, *datefont;
   
@@ -60,6 +60,37 @@ format_event (event_t ev)
   p[l - 1] = 0;
   
   return g_strdup (buf);
+}
+
+static void 
+selection_made( GtkWidget      *clist,
+		gint            row,
+		gint            column,
+		GdkEventButton *event,
+		GtkWidget      *widget)
+{
+  event_t ev;
+    
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      guint hour = row;
+      struct tm tm;
+      
+      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+
+      if (ev) 
+	{
+	  gtk_widget_show (edit_event (ev));
+	}
+      else 
+	{
+	  char *t;
+	  gtk_clist_get_text (GTK_CLIST (clist), row, 0, &t);
+	  localtime_r (&viewtime, &tm);
+	  strptime (t, TIMEFMT, &tm);
+	  gtk_widget_show (new_event (mktime (&tm), 1));
+	}
+    }
 }
 
 static gint

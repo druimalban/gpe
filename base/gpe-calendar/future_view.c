@@ -18,9 +18,31 @@
 #include "gtkdatesel.h"
 #include "globals.h"
 #include "future_view.h"
-#include "clist_view.h"
+#include "event-ui.h"
 
 GtkWidget *future_list;
+
+static void 
+selection_made( GtkWidget      *clist,
+		gint            row,
+		gint            column,
+		GdkEventButton *event,
+		GtkWidget      *widget)
+{
+  event_t ev;
+    
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      GtkWidget *appt;
+      
+      ev = gtk_clist_get_row_data (GTK_CLIST (clist), row);
+      if (ev)
+	{
+	  appt = edit_event (ev);
+	  gtk_widget_show (appt);
+	}
+    }
+}
 
 static gint
 future_view_update ()
