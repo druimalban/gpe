@@ -756,56 +756,37 @@ main (int argc, char *argv[])
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar2), GTK_TOOLBAR_ICONS);
 #endif
 
-  p = gpe_find_icon ("left");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Back"), 
-			   _("Back"), _("Back"), pw, history_back, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_BACK,
+			    _("Back"), _("Go back in history."),
+			    G_CALLBACK (history_back), NULL, -1);
 
-  p = gpe_find_icon ("right");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Forward"), 
-			   _("Forward"), _("Forward"), pw, history_forward, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_FORWARD,
+			    _("Forward"), _("Go forward in history."),
+			    G_CALLBACK (history_forward), NULL, -1);
 
-  p = gpe_find_icon ("up");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Up one level"), 
-			   _("Up one level"), _("Up one level"), pw, up_one_level, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_GO_UP,
+			    _("Up one level"), _("Go up one level."),
+			    G_CALLBACK (up_one_level), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_icon ("stop");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop"), 
-			   _("Stop"), _("Stop"), pw, safety_check, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_STOP,
+			    _("Stop"), _("Stop the current process."),
+			    G_CALLBACK (safety_check), NULL, -1);
 
-  //p = gpe_find_icon ("refresh");
-  //pw = gpe_render_icon (window->style, p);
-  //gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Refresh"), 
-  //			   _("Refresh"), _("Refresh"), pw, refresh_view, NULL);
-
-  p = gpe_find_icon ("home");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Home"), 
-			   _("Home"), _("Home"), pw, set_directory_home, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_HOME,
+			    _("Home"), _("Goto your home directory."),
+			    G_CALLBACK (set_directory_home), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_icon ("zoom_in");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Zoom In"), 
-			   _("Zoom In"), _("Zoom In"), pw, zoom_in, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_IN,
+			    _("Zoom in"), _("Zoom in."),
+			    G_CALLBACK (zoom_in), NULL, -1);
 
-  p = gpe_find_icon ("zoom_out");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Zoom Out"), 
-			   _("Zoom Out"), _("Zoom Out"), pw, zoom_out, NULL);
-
-  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-
-  p = gpe_find_icon ("preferences");
-  pw = gpe_render_icon (window->style, p);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Preferences"), 
-			   _("Preferences"), _("Preferences"), pw, NULL, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_ZOOM_OUT,
+			    _("Zoom out"), _("Zoom out."),
+			    G_CALLBACK (zoom_out), NULL, -1);
 
   p = gpe_find_icon ("dir-up");
   pw = gpe_render_icon (window->style, p);
