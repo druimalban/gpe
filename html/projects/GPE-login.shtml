@@ -36,7 +36,9 @@ from <CODE>/etc/X11/Xinit.d</CODE> in order.</LI>
 <LI><CODE>gpe-dm</CODE> launches <CODE>gpe-login</CODE>.</LI>
 <LI><CODE>gpe-login</CODE> runs <CODE>/etc/X11/gpe-login.setup</CODE>
 as root, and waits for it to finish.</LI>
-<LI><CODE>gpe-login</CODE> displays UI and invites the user to log in.</LI>
+<LI><CODE>gpe-login</CODE> reads <CODE>/etc/X11/gpe-login.geometry</CODE>
+and sets its geometry accordingly.</LI>
+<LI><CODE>gpe-login</CODE> displays the UI and invites the user to log in.</LI>
 <LI>Any processes started by <CODE>gpe-login.setup</CODE> are terminated.
 (Processes started by <CODE>/etc/X11/Xinit</CODE> are not killed, and
 will persist into the user's session.)</LI>
