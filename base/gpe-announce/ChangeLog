@@ -1,8 +1,17 @@
+2004-03-06  Toby Gray <toby@yargybot.com>
+
+	* announce.h: minor tidy-up
+	* interface.c: tidied-up widget names, added widgets for variable-length
+	  snooze
+	* callbacks.c: renamed mythread to SoundThread, tidied-up for consistent
+	  layout, edited on_snooze_clicked to implement variable-length snooze
+ 	* Version 0.09 is released.
+
 2003-09-16  Joe McCarthy <jjmcc@pitt.edu>
-                                                                                
-        * callbacks.c : remove the pthread_detatch so that we can pthread_join at the end of a "session" and not have the "loud ending"
-        * Version 0.07 is released.
-                                                                                
+
+	* callbacks.c : remove the pthread_detatch so that we can pthread_join at the end of a "session" and not have the "loud ending"
+ 	* Version 0.07 is released.
+
 2003-07-07  Moray Allan  <moray@sermisy.org>
 
 	* Makefile : Removed legacy GTK1 support.
