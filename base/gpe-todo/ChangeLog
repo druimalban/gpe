@@ -1,3 +1,7 @@
+2003-03-23  Damien Tanner  <dctanner@handhelds.org>
+
+	* list-ui.c (top_level): Using stock icons.
+
 2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (CVSBUILD): New variable.

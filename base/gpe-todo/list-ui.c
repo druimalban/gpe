@@ -327,14 +327,14 @@ top_level (GtkWidget *window)
 			   _("Tap here to configure categories."),
 			   pw, GTK_SIGNAL_FUNC (configure), NULL);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("clean", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
+  pw = gtk_image_new_from_stock (GTK_STOCK_CLEAR, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Purge"), 
 			   _("Purge completed items"), 
 			   _("Tap here to purge completed items from the list."),
 			   pw, GTK_SIGNAL_FUNC (purge_completed), NULL);
 
-  pw = gtk_image_new_from_pixbuf (gpe_find_icon_scaled ("hide", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar))));
+  pw = gtk_image_new_from_stock (GTK_STOCK_GOTO_BOTTOM, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Re-sort"), 
 			   _("Move completed items to the end of the list"), 
