@@ -109,6 +109,8 @@ static int text_offset = 20;
 static XftFont *msg_font;
 static XftColor fg_xftcol;
 
+static Atom interactive_help_atom;
+
 #ifdef HAVE_APM_H
 
 static int 
@@ -168,16 +170,11 @@ paint (void)
   while (!read_apm(apm_vals))
     usleep(50000L);
 
-  if (apm_vals[PERCENTAGE] <= 0 || apm_vals[PERCENTAGE] > 99)
-    { 
-      r = 0x66; g = 0xff; b = 0x33; ac_power = True; 
-      apm_vals[PERCENTAGE] = -1;
-    }
-  else if (apm_vals[PERCENTAGE] <= 30)
+  if (apm_vals[PERCENTAGE] <= 30)
     { r = 0xff; g = 0; b = 0; }
   else if (apm_vals[PERCENTAGE] < 75)
     { r = 0xff; g = 0x99; b = 0x33; }
-  else if (apm_vals[PERCENTAGE] <= 100)
+  else
     { r = 0x66; g = 0xff; b = 0x33; }
 
   if (apm_vals[AC_POWER] == AC_LINE_STATUS_ON) 
@@ -240,7 +237,6 @@ paint (void)
 
   XSetWindowBackgroundPixmap(dpy, win_panel, pxm_backing);
   XClearWindow(dpy, win_panel);
-
 }
 
 static void
@@ -359,6 +355,12 @@ GetWinPosition (Display *dpy, Window win, int *x, int *y, int *w, int *h)
   return 0;
 }
 
+static int
+no_errors (Display *dpy, XErrorEvent *ev)
+{
+  return 0;
+}
+
 int 
 main (int argc, char **argv)
 {
@@ -381,8 +383,8 @@ main (int argc, char **argv)
 
   if ((dpy = XOpenDisplay(dpy_name)) == NULL)
     {
-      fprintf(stderr, _("Cannot connect to X server on display %s."),
-	      dpy_name);
+      fprintf(stderr, _("Cannot connect to X server on display %s\n"),
+	      XDisplayName(dpy_name));
       exit(1);
     }
 
@@ -449,7 +451,7 @@ main (int argc, char **argv)
   }
 #endif
 
-  if ((msg_font = XftFontOpenName(dpy, screen,"sans,verdana-6:bold")) 
+  if ((msg_font = XftFontOpenName(dpy, screen,"sans-7")) 
       == NULL)
     { printf("Cant open XFT font\n"); exit(0); }
 
@@ -492,6 +494,10 @@ main (int argc, char **argv)
 	       |ButtonPressMask|ButtonReleaseMask|VisibilityChangeMask); 
   XSelectInput(dpy, win_popup, ExposureMask | ButtonPressMask); 
 
+  interactive_help_atom = XInternAtom (dpy, "_GPE_INTERACTIVE_HELP", False);
+  XChangeProperty (dpy, win_panel, interactive_help_atom, interactive_help_atom,
+		   32, PropModeReplace, NULL, 0);
+
   xfd = ConnectionNumber (dpy);
 
   while (1)
@@ -515,6 +521,18 @@ main (int argc, char **argv)
 	  XNextEvent(dpy, &xevent);
 	  switch (xevent.type) 
 	    {
+	    case ClientMessage:
+	      if (xevent.xclient.message_type == interactive_help_atom)
+		{
+		  Window w = xevent.xclient.data.l[0];
+		  const char *str = _("This is the battery monitor.\nTap here to find out how much power is left.\n");
+		  void *old_handler = XSetErrorHandler (no_errors);
+		  XChangeProperty (dpy, w, interactive_help_atom, XA_STRING, 8,
+				   PropModeReplace, str, strlen (str));
+		  XFlush (dpy);
+		  XSetErrorHandler (old_handler);
+		}
+	      break;
 	    case Expose:
 	      if (xevent.xexpose.window == win_popup)
 		{
@@ -586,9 +604,12 @@ main (int argc, char **argv)
 		  XDestroyImage (image);
 		  XShapeCombineMask (dpy, win_popup, ShapeBounding, 0, 0, popup_mask, ShapeSet);
 		  XMapRaised (dpy, win_popup);
+		  XGrabPointer (dpy, win_popup, True, ButtonPressMask, GrabModeAsync, GrabModeAsync,
+				None, None, xevent.xbutton.time);
 		}
 	      else
 		{
+		  XUngrabPointer (dpy, xevent.xbutton.time);
 		  XUnmapWindow (dpy, win_popup);
 		  XFreePixmap (dpy, popup_pixmap);
 		  popup_pixmap = 0;
