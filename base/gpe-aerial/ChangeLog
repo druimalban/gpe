@@ -3,6 +3,7 @@
 	.desktop ->
 	.desktop.in
 				Added po dir.
+	netedit.c	Started adding gpe-what help.
 
 06/10/2003		Florian Boor <florian.boor@kernelconcepts.de>
 	- main.c	Minor signal display changes.

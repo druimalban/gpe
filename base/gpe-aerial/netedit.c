@@ -1,7 +1,7 @@
 /*
  * gpe-aerial (c) 2003 Florian Boor <florian.boor@kernelconcepts.de>
  *
- * Networks editor module.
+ * Networks editor/information module.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -212,6 +212,7 @@ network_edit (netinfo_t * ni)
 	GtkWidget *lWEP = gtk_label_new (_("WEP enabled"));
 	GtkWidget *lDhcp = gtk_label_new (_("Use DHCP"));
 	GtkWidget *table = gtk_table_new (6, 3, FALSE);
+	GtkTooltips *tooltips = gtk_tooltips_new ();
 	
 	rbTypeAdHoc = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(rbTypeManaged),_("Ad-Hoc"));
 	eChannel = gtk_spin_button_new(GTK_ADJUSTMENT(gtk_adjustment_new(1.0,1.0,14.0,1.0,1.0,1.0)),1.0,0);
@@ -227,6 +228,10 @@ network_edit (netinfo_t * ni)
 	lWEPKey = gtk_label_new (_("WEP-Key"));
 	eWEPKey = gtk_entry_new ();
 
+//	gtk_object_set_data (GTK_OBJECT (window), "tooltips", tooltips);
+	
+	gtk_tooltips_add_tip(tooltips,eIP,_("Enter your desired IP address here, e.g. 192.168.1.2"),NULL);
+	
 	g_object_set_data(G_OBJECT(window),"netinfo",ni);
 	gtk_window_set_title (GTK_WINDOW (window), _("Network editor"));
 	gpe_set_window_icon (GTK_WIDGET (window), "gpe-aerial");
