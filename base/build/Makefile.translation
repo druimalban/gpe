@@ -3,13 +3,17 @@
 # use ipkg-build or ipkg-deb-build
 IPKG_BUILD := ipkg-build
 
-mo-files = $(patsubst %,po/%.mo,$(LINGUAS))
-po-files = $(patsubst %,po/%.po,$(LINGUAS))
+ifeq ($(DIR_PO),)
+DIR_PO := po
+endif
+
+mo-files = $(patsubst %,$(DIR_PO)/%.mo,$(LINGUAS))
+po-files = $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
 
 all-mo: $(mo-files)
 
 install-mo: all-mo
-	for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 po/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done
+	for i in $(LINGUAS); do mkdir -p $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES; install -m 644 $(DIR_PO)/$$i.mo $(DESTDIR)$(PREFIX)/share/locale/$$i/LC_MESSAGES/$(PACKAGE).mo; done
 
 .po8.mo:;
 	msgfmt -o $@ $<
@@ -17,18 +21,18 @@ install-mo: all-mo
 .po.po8:;
 	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; recode $${CTYPE}..UTF-8 <$< >$@
 
-update-po: $(po-files) po/$(PACKAGE).pot
+update-po: $(po-files) $(DIR_PO)/$(PACKAGE).pot
 
-po/%.po: po/$(PACKAGE).pot
+$(DIR_PO)/%.po: $(DIR_PO)/$(PACKAGE).pot
 	msgmerge -o $@.new $@ $^
 	if cmp -s $@.new $@; then rm $@.new; else mv $@.new $@; fi
 
-po/$(PACKAGE).pot: $(SOURCES)
-	xgettext -k_ -o po/$(PACKAGE).pot.new $^
-	if cmp -s po/$(PACKAGE).pot.new $(PACKAGE).pot; then rm po/$(PACKAGE).pot.new; else mv po/$(PACKAGE).pot.new po/$(PACKAGE).pot; fi
+$(DIR_PO)/$(PACKAGE).pot: $(SOURCES)
+	xgettext -k_ -o $(DIR_PO)/$(PACKAGE).pot.new $^
+	if cmp -s $(DIR_PO)/$(PACKAGE).pot.new $(PACKAGE).pot; then rm $(DIR_PO)/$(PACKAGE).pot.new; else mv $(DIR_PO)/$(PACKAGE).pot.new $(DIR_PO)/$(PACKAGE).pot; fi
 
 clean-po:
-	rm -rf po/*.mo
+	rm -rf $(DIR_PO)/*.mo
 
 # ------------------------------------------------------------------------
 
