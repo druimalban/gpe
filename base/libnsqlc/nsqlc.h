@@ -76,6 +76,7 @@ typedef struct nsqlc nsqlc;
 ** provide in anticipation of that enhancement.
 */
 nsqlc *nsqlc_open(const char *database, int mode, char **errmsg);
+nsqlc *nsqlc_open_ssh(const char *database, int mode, char **errmsg);
 
 /*
 ** A function to close the database.
