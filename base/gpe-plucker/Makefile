@@ -3,7 +3,7 @@ PACKAGE = gpe-plucker
 DEBUG = no
 CVSBUILD = yes
 GST = yes
-VERSION = 0.1
+VERSION = 0.2
 
 MEMBERS = gpe-plucker
 
