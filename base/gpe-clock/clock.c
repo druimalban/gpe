@@ -645,6 +645,7 @@ select_new_format (int new_format)
   else
     {
       time_label = gtk_label_new (NULL);
+      gtk_widget_set_name (time_label, "time_label");
       
       gtk_container_add (GTK_CONTAINER (panel_window), time_label);
       gtk_widget_show (time_label);
@@ -747,6 +748,7 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (menu_alarm), "activate", G_CALLBACK (alarm_window), NULL);
 
   panel_window = gtk_plug_new (0);
+  gtk_widget_set_name (panel_window, "gpe-clock");
 
   if (format == FORMAT_ANALOGUE)
     {
@@ -768,6 +770,7 @@ main (int argc, char *argv[])
   else
     {
       time_label = gtk_label_new (NULL);
+      gtk_widget_set_name (time_label, "time_label");
 
       update_time_label (time_label);
 
@@ -779,7 +782,6 @@ main (int argc, char *argv[])
       gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
     }
 
-  gtk_widget_set_name (panel_window, "gpe-clock");
   gtk_widget_show (panel_window);
   g_signal_connect (G_OBJECT (panel_window), "configure-event", G_CALLBACK (external_event), NULL);
 
