@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = xst
 CVSBUILD = yes
 DEBUG = no
-VERSION = 0.12
+VERSION = 0.13
 
 MEMBERS = xst
 
