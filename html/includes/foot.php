@@ -1,11 +1,11 @@
-<HR>
+<hr>
 <div class="footer">
-<SMALL>
-Last modified: <?php echo $LAST_MODIFIED; ?>
-Page maintained by <?php echo $author ?> <a href='mailto:<?php echo
-	  $authoremail; ?>'>&lt;<?php echo
-	  $authoremail; ?>&gt;</a>.
-</SMALL>
+<small>
+Last modified at <?PHP print gmdate("Y-m-d H:i", getlastmod()); ?> GMT 
+&middot; 
+Page maintained by <?php echo $author ?> 
+<a href='mailto:<?php echo $authoremail; ?>'>&lt;<?php echo $authoremail; ?>&gt;</a>.
+</small>
 </div>
 </body> 
 </html>

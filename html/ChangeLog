@@ -1,5 +1,9 @@
 2003-12-16  Colin Marquardt  <colin@marquardt-home.de>
 
+	* includes/menu.php: Use &middot; instead of |, looks nicer.
+
+	* includes/foot.php: Fix "Last modified".
+
 	* download.phtml: Clean/reword download links.
 
 2003-10-01  Colin Marquardt  <colin@marquardt-home.de>

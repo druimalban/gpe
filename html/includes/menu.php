@@ -15,21 +15,21 @@ function menu_entry($page, $title, $link,$thispage)
 <small>
 
 <?php menu_entry("home", "Home", "/", $pagename); ?>
- |
+ &middot;
 <?php menu_entry("projects", "Projects", "/projects/", $pagename); ?>
- |
+ &middot;
 <?php menu_entry("documentation", "Documentation", "/documentation.phtml", $pagename); ?>
- |
+ &middot;
 <?php menu_entry("screenshots", "Screenshots", "/screenshots/", $pagename); ?>
- |
+ &middot;
 <?php menu_entry("download", "Download", "/download.phtml", $pagename); ?>
- |
+ &middot;
 <?php menu_entry("contact", "Mailing list", "/contact.phtml", $pagename); ?>
- |
+ &middot;
 <A href="http://handhelds.org/bugzilla/">Bugs</A>
- |
+ &middot;
 <?php menu_entry("cvs", "CVS", "/cvs.phtml", $pagename); ?>
- |
+ &middot;
 <?php menu_entry("linkres", "Links/Resources", "/linkres.phtml", $pagename); ?>
 
 </small>
