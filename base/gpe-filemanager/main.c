@@ -195,7 +195,7 @@ ask_open_with (char *exec)
   struct mime_program *file_program = NULL;
   GSList *iter;
   int row_num = 0;
-  gchar *pixmap_file;
+  gchar *pixmap_file, *row_text[2];
 
   fakeparentwindow = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_widget_realize (fakeparentwindow);
@@ -253,7 +253,9 @@ ask_open_with (char *exec)
     {
       struct mime_program *program = iter->data;
 
-      gtk_clist_append (GTK_CLIST (clist), program->name);
+      row_text[0] = "";
+      row_text[1] = program->name;
+      gtk_clist_append (GTK_CLIST (clist), row_text);
       gtk_clist_set_row_data (GTK_CLIST (clist), row_num, (gpointer) program->command);
 
       pixmap_file = g_strdup_printf ("%s/share/pixmaps/%s.png", PREFIX, program->command);
@@ -264,7 +266,6 @@ ask_open_with (char *exec)
         gpe_render_pixmap (NULL, spixbuf, &pixmap, &bitmap);
         gtk_clist_set_pixmap (GTK_CLIST (clist), row_num, 0, pixmap, bitmap);
       }
-
       row_num++;
     }
   }
