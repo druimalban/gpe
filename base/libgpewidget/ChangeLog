@@ -1,3 +1,11 @@
+2003-03-04  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.50 released.
+	
+2003-03-04  Philip Blundell  <philb@gnu.org>
+
+	* init.c (gpe_application_init): Tolerate NULL argc and/or argv.
+
 2003-03-02  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (MEMBERS): Add windows.

@@ -42,10 +42,13 @@ gpe_application_init (int *argc, char **argv[])
   const gchar *home_dir = g_get_home_dir ();
   gint i;
 
-  saved_argc = *argc;
-  saved_argv = g_malloc (*argc * sizeof (gchar *));
-  for (i = 0; i < saved_argc; i++)
-    saved_argv[i] = g_strdup ((*argv)[i]);
+  if (argc && argv)
+    {
+      saved_argc = *argc;
+      saved_argv = g_malloc (*argc * sizeof (gchar *));
+      for (i = 0; i < saved_argc; i++)
+	saved_argv[i] = g_strdup ((*argv)[i]);
+    }
 
   gtk_rc_add_default_file (default_gtkrc_file);
   user_gtkrc_file = g_strdup_printf ("%s/.gpe/gtkrc", home_dir);
