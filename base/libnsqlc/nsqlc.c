@@ -95,7 +95,6 @@ write_command (nsqlc *ctx, const char *cmd, ...)
 
   free (buf);
 
-//  write (ctx->outfd, buf2, strlen (buf2));
   write_str_encoded(buf2,ctx->outfd);
   g_free (buf2);
 }
