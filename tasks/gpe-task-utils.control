@@ -1,10 +1,8 @@
 Package: gpe-task-utils
-Provides: gpe-task-utils
-Replaces: gpe-task-utils
 Section: base
 Priority: optional
-Version: 0.1
+Version: 0.2
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
-Description: Task package for GPE system utils, such as a terminal emulator, a text editor, ...
+Description: Task package for GPE system utils, such as a terminal emulator, a text editor, and more.

@@ -1,9 +1,7 @@
 Package: gpe-task-extra-apps
-Provides: gpe-task-extra-apps
-Replaces: gpe-task-extra-apps
 Section: base
 Priority: optional
-Version: 0.1
+Version: 0.2
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
