@@ -15,6 +15,10 @@
 #include <pty.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
+#include <signal.h>
 
 #include <gtk/gtk.h>
 
@@ -22,6 +26,7 @@
 #include "init.h"
 #include "render.h"
 #include "picturebutton.h"
+#include "errorbox.h"
 
 static struct gpe_icon my_icons[] = {
   { "ok", "ok" },
@@ -31,7 +36,6 @@ static struct gpe_icon my_icons[] = {
 };
 
 static GtkWidget *entry;
-static GtkWidget *window;
 
 #define _(x) gettext(x)
 
@@ -50,6 +54,7 @@ do_su (void)
   gboolean newline = FALSE;
   char cr = 10;
   int n;
+  struct termios tp;
 
   result = g_malloc (rlen);
   rp = result;
@@ -60,17 +65,16 @@ do_su (void)
   
   if (pid == 0)
     {
-      struct termios tp;
-      if (tcgetattr (1, &tp))
-	perror ("tcgetattr");
-      cfmakeraw (&tp);
-      if (tcsetattr (1, TCSANOW, &tp))
-        perror ("tcsetattr");
       execl (SU, SU, "-c", "x-terminal-emulator", NULL);
       exit (1);
     }
 
   sleep (1);
+  if (tcgetattr (pty, &tp))
+    perror ("tcgetattr");
+  cfmakeraw (&tp);
+  if (tcsetattr (pty, TCSANOW, &tp))
+    perror ("tcsetattr");
   write (pty, password, pwlen);
   write (pty, &cr, 1);
   memset (password, 0, pwlen);
@@ -102,7 +106,14 @@ do_su (void)
 	}
     }
   *rp = 0;
-  printf ("%s\n", result);
+
+  if (strncmp (result, "Password:", 9))
+    {
+      gpe_error_box (result);
+      kill (pid, 15);
+    }
+  else
+    gtk_main_quit ();
 }
 
 int
@@ -165,6 +176,7 @@ main (int argc, char *argv[])
   gtk_signal_connect (GTK_OBJECT (window), "destroy", 
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
 
+  gtk_signal_connect (GTK_OBJECT (entry), "activate", do_su, NULL);
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked", do_su, NULL);
   gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked", gtk_main_quit, NULL);
 
