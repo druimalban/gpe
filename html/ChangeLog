@@ -1,3 +1,7 @@
+2004-07-28  Colin Marquardt  <colin@marquardt-home.de>
+
+	* documentation.phtml: Add links to the new docs in the Wiki.
+
 2004-04-22 20:06  michaelo
 
 	* cvs.phtml: Added a link to Gnome CVS (hopefully the last try)
