@@ -1,5 +1,12 @@
 2003-03-24  Philip Blundell  <philb@gnu.org>
 
+	* about.c: Deleted.
+	* gpetooltips.c: Likewise.
+	* gtkgpepixmap.c: Likewise.
+	* Makefile: Remove GTK 1 support.
+
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.55 released.
 
 2003-03-24  Philip Blundell  <philb@gnu.org>

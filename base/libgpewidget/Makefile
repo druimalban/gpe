@@ -11,18 +11,11 @@ LINGUAS = ro de id pt
 
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing tray tap translabel popup windows popup_menu
 
-ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gpe-iconlist
 HEADERS += gpe-iconlist.h
 SONAME = libgpewidget.so.1
 CONTROL = control1
 BINPACKAGE = libgpewidget1
-else
-MEMBERS += gpetooltips gtkgpepixmap about
-SONAME = libgpewidget.so.0
-CONTROL = control
-BINPACKAGE = libgpewidget0
-endif
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
