@@ -16,6 +16,8 @@ sqlite is used.
 
 Interface description:
 
+Everything is defined in gpe-sql.h
+
 t_sql_handle
 This is a wrapper for a connection to a database and is defined as sqlite or 
 usqld_conn depending on USE_USQLD compiler cirective. 

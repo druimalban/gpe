@@ -28,7 +28,7 @@
 // this is the interface
 
 int sql_list_tables(t_sql_handle* sqlh, char*** resvec);
-t_sql_handle* sql_open (char *dbtoopen);
+t_sql_handle* sql_open (const char *dbtoopen);
 void sql_close (t_sql_handle* sqlh);
 
 #ifndef USE_USQLD

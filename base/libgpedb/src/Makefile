@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -O2 -I../include `glib-config --cflags` -I../../libgpewidget
 
-USE_USQLD = yes
+USE_USQLD = no
 
 ifeq ($(USE_USQLD),yes) 
 CFLAGS += -DUSE_USQLD -lusqld -I../../usqld/src

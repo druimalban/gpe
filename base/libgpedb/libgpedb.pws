@@ -1,12 +1,12 @@
 
 [filenumbers]
 0=63
-1=17
-2=78
-3=21
-4=75
-5=514
-6=1
+1=21
+2=75
+3=514
+4=1
+5=78
+6=17
 
 [filemarkers]
 0=
@@ -25,12 +25,12 @@ ShowLocals=true
 
 [filelist]
 0=/home/fuchs/Projekte/gpe/todo.txt
-1=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/include/gpe-sql.h
-2=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/src/gpe-sql.c
-3=/home/fuchs/Projekte/prismstumbler/src/psgui.c
-4=/home/fuchs/Projekte/prismstumbler/src/main.c
-5=/home/fuchs/Projekte/gpe/sqlite-build/sqlite.h
-6=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/usage.txt
+1=/home/fuchs/Projekte/prismstumbler/src/psgui.c
+2=/home/fuchs/Projekte/prismstumbler/src/main.c
+3=/home/fuchs/Projekte/gpe/sqlite-build/sqlite.h
+4=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/usage.txt
+5=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/src/gpe-sql.c
+6=/home/fuchs/Projekte/gpe/gpe/base/libgpedb/include/gpe-sql.h
 
 [replace_text]
 0=wdcmain

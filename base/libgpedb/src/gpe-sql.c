@@ -35,7 +35,7 @@ sql_list_tables(t_sql_handle* sqlh, char*** resvec)
 
 
 t_sql_handle*
-sql_open (char *dbtoopen)
+sql_open (const char *dbtoopen)
 {
   static const char *create_control_str = "create table _acontrol (
 	atable	TEXT NOT NULL,
