@@ -1,0 +1,16 @@
+
+<!--#set var="addtitle" value="Notebook"-->
+<!--#set var="pagename" value="notebook"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<H2>Function</H2>
+<P>
+One of the most important applications. The user will have the possibility
+to enter information fast and especially retrieve that information fast. It
+should also be possible to beam items as ASCII-text using IrDA IrOBEX which
+is a common standard.
+</P>
+<!--#include virtual="/includes/foot.shtml"-->
+

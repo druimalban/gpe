@@ -1,0 +1,14 @@
+
+<!--#set var="addtitle" value="Projects"-->
+<!--#set var="pagename" value="projects"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<H2>Function</H2>
+<P>
+I have never really understood the need for a todo list application so maybe
+someone else can comment on this ;)
+</P>
+
+<!--#include virtual="/includes/foot.shtml"-->

@@ -1,0 +1,37 @@
+
+<!--#set var="addtitle" value="Projects"-->
+<!--#set var="pagename" value="projects"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+The following projects are relevant to GPE: 
+
+Core software/libraries:<br>
+<ul> 
+<LI> <I><A HREF="GPE-usqld.shtml">uSQLd Database Engine</A></I> A minimimalist database engine base upon <a href="http://www.hwaci.com/sw/sqlite/"> SQLite</a>
+</ul>
+
+ Applications:<BR>
+ 	<UL>
+	<LI> <I><A HREF="GPE-appmgr.shtml">Application Manager</A></I>, the so to say main menu of the PDA user
+	interface. It launches applications and controls that certain applications
+	are only launched once.
+	<LI> <I><A HREF="GPE-setup.shtml">System setup</A></I>, which will consist of several smaller parts to
+	setup the PDA system, for example date and time config, network
+	configuration, multi-user configuration (this is new for PDAs!)
+	<LI> <I><A HREF="GPE-address.shtml">Address book</A></I>, the first of the typical PIM applications. This is
+	a must-have.
+	<LI> <I><A HREF="GPE-calendar.shtml">Calendar</A></I>, the second PIM application and not less important.
+	<LI> <I><A HREF="GPE-notebook.shtml">Notebook</A></I>, the third of the main PIMs.
+	<LI> <I><A HREF="GPE-todo.shtml">Todo list</A></I>, the last typical PIM.
+	<LI> <I><A HREF="GPE-alarms.shtml">Alarm clock</A></I>, for me one of the most important
+	applications.
+	<LI> <I><A HREF="GPE-media.shtml">Media Player</A></I>, a nice add-on feauture, good for boring
+	meetings and to impress your friends.
+	<LI> <I><A HREF="GPE-games.shtml">Games</A></I> ;)
+	<LI> ... and for sure many more to come
+</UL>
+	
+
+<!--#include virtual="/includes/foot.shtml"-->

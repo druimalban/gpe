@@ -1,0 +1,11 @@
+<!--#set var="addtitle" value="Contacting us"-->
+<!--#set var="pagename" value="contact"-->
+<!--#include virtual="includes/head.shtml"-->
+
+The main point of contact for the GPE project is the mailing list
+gpe@handhelds.org
+<p> 
+Information about subscribing to this list and archives can be found
+here: <a href="http://handhelds.org/mailman/listinfo/gpe">http://handhelds.org/mailman/listinfo/gpe</a>
+
+<!--#include virtual="includes/foot.shtml"-->

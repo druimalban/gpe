@@ -1,0 +1,12 @@
+<!--#set var="addtitle" value="CVS"-->
+<!--#set var="pagename" value="cvs"-->
+<!--#include virtual="includes/head.shtml"-->
+
+<h2>Acessing the GPE CVS repository</h2> For a more detailed
+description about how to use Handhelds.org CVS please see <a
+href="http://www.handhelds.org/handhelds-faq/development.html#USING-CVS">
+here</a>
+
+the GPE CVSROOT is: <b>/cvs/GPE</b> 
+
+ <!--#include virtual="includes/foot.shtml"-->

@@ -1,0 +1,22 @@
+<!--#if expr="!${author}"-->
+<!--#set var="author" value="Owen Cliffe"-->
+<!--#set var="authoremail" value="occ@handhelds.org"-->
+<!--#endif -->
+
+<HTML> 
+<HEAD> 
+<TITLE> GPE: <!--#echo var="addtitle"--></TITLE> 
+</HEAD> 
+<BODY bgcolor="#ffffff" fgcolor="#000000">
+<table cols=2 rows=1 border=0>
+<tr>
+<td width=10>
+<img src="/images/gpe-logo.png" alt="logo">
+</td>
+<td width="*" valign="center">
+<h1> GPE: <!--#echo var="addtitle"--></h1>
+</td> 
+</tr>
+</table>
+<!--#include file="menu.shtml"-->
+<hr>

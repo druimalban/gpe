@@ -1,0 +1,18 @@
+
+<!--#set var="addtitle" value="Addressbook"-->
+<!--#set var="pagename" value="addressbook"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<CENTER><IMG SRC="/images/address1.gif" ALT="this is what it could look like">
+<IMG SRC="/images/address2.gif" ALT="this is what it could look like"></CENTER>
+<HR>
+<H2>Function</H2>
+<P>
+This is very obvious. It stores contact addresses and is able to categorize
+them. Nice features should include IrDA IrOBEX support for beaming them in
+vCard format.
+</P>
+
+<!--#include virtual="/includes/foot.shtml"-->

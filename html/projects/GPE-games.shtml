@@ -1,0 +1,42 @@
+<!--#set var="addtitle" value="Games"-->
+<!--#set var="pagename" value="games"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<H2>Function</H2>
+<P>
+Some nice games against boring meetings would be nice, like Tetris, Mines,
+etc.
+</P>
+<P>Philip Blundell (<A HREF="mailto:philb@gnu.org">philb@gnu.org</A>) posted
+the following to the GPE mailinglist:
+</P>
+<P>
+<I>
+Obviously, no PDA will have any credibility on the street unless it includes
+Tetris and Solitaire.  So, I tracked down an implementation of each, bashed
+them about a bit to make them usable on the iPAQ, and here they are:
+</P>
+<P>
+<A HREF="ftp://ftp.armlinux.org/users/philb/gtktetris">ftp://ftp.armlinux.org/users/philb/gtktetris</A> (iPAQ binary)<BR>
+<A HREF="ftp://ftp.armlinux.org/users/philb/gtktetris-0.5-pb.tar.gz">ftp://ftp.armlinux.org/users/philb/gtktetris-0.5-pb.tar.gz</A> (source)<BR>
+<A HREF="ftp://ftp.armlinux.org/users/philb/sol">ftp://ftp.armlinux.org/users/philb/sol</A> (iPAQ binary)<BR>
+<A HREF="ftp://ftp.armlinux.org/users/philb/sol.tar.gz">ftp://ftp.armlinux.org/users/philb/sol.tar.gz</A> (source)<BR>
+</P>
+<P>
+The Solitaire one could use some more work: most of the binary size and
+startup
+time is due to the way it stores the card pixmaps, and the images themselves
+are a bit fuzzier than would be ideal.
+</P>
+</I>
+<P>
+And here are some screenshots of those two:
+</P>
+<P>
+<IMG SRC="/images/gtktetris.png">
+<IMG SRC="/images/solitaire.png">
+</P>
+<!--#include virtual="/includes/foot.shtml"-->
+

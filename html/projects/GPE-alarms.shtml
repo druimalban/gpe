@@ -1,0 +1,27 @@
+<!--#set var="addtitle" value="Alarms"-->
+<!--#set var="pagename" value="alarms"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="/includes/head.shtml"-->
+
+<H2>Function</H2>
+<P>
+Sometimes a calendar entry is not what you want when you set an alarm. This
+application will take of that and give the opportunity to quickly enter
+alarms with the options
+<UL>
+<LI> Once
+<LI> Weekdays (as an alarm-clock feature to wake you up)
+<LI> Weekends
+<LI> Every week
+<LI> Every month
+<LI> Every year
+</UL>
+Sounds familiar? Yes, the calendar uses the same scheme and so the calendar
+and the alarm clock will share the same code for that function. Both will
+use an underlaying daemon with a well defined API to set alarms. The daemon
+will then take care of setting up the RTC alarm and perform a requested
+action (like ringing a bell sound).
+</P>
+
+<!--#include virtual="/includes/foot.shtml"-->

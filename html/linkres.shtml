@@ -1,0 +1,42 @@
+<!--#set var="addtitle" value="Links/Resources"-->
+<!--#set var="pagename" value="linkres"-->
+<!--#set var="author" value="Nils Faerber"-->
+<!--#set var="authoremail" value="nils@handhelds.org"-->
+<!--#include virtual="includes/head.shtml"-->
+
+<H3>The Handhelds.org site</H3>
+<P>
+<A HREF="http://www.handhelds.org">http://www.handhelds.org</A>
+</P>
+
+<H3>Useful standards</H3>
+<P>
+<UL>
+<LI> IETF/IMC iCalendar<BR>
+<A HREF="http://www.imc.org/ietf-calendar/">http://www.imc.org/ietf-calendar/</A>
+<LI> IETF/IMC vCard and vCalendar<BR>
+<A HREF="http://www.imc.org/pdi/">http://www.imc.org/pdi/</A>
+<LI> SyncML<BR>
+<A HREF="http://www.syncml.org">http://www.syncml.org</A>
+</UL>
+</P>
+
+<H3>Useful documentation</H3>
+<P>
+<UL>
+<LI> Apple Newton application interface guidelines<BR>
+<A HREF="http://www.unna.org/unna/development/documentation/">http://www.unna.org/unna/development/documentation/</A>
+</UL>
+</P>
+
+
+<H3>Interesting applications</H3>
+<P>
+<UL>
+<LI>Sam J. Engstr&ouml;m has a nice collection<BR>
+<A HREF="http://www.samengstrom.com/ipaq/">http://www.samengstrom.com/ipaq/</A>
+<LI>sqlite is the database engine library used by some applications and usqld<BR>
+<A HREF="http://www.hwaci.com/sqlite/">http://www.hwaci.com/sqlite/</A>
+</UL>
+</P>
+<!--#include virtual="includes/foot.shtml"-->
