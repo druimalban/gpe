@@ -127,11 +127,13 @@ new_file (void)
 }
 
 static void
-open_file (char *filename)
+open_file (char *new_filename)
 {
   struct stat file_stat;
   FILE *fp;
   int pos = 0;
+
+  filename = g_strdup (new_filename);
 
   if ( (fp = fopen(filename, "r")) == NULL)
   {
