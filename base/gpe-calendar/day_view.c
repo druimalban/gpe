@@ -220,7 +220,6 @@ day_view_update ()
 
       if (day_events[hour]) event_db_list_destroy (day_events[hour]);
       day_events[hour] = event_db_untimed_list_for_period (start, end-1, FALSE);
-      gtk_clist_set_row_data (GTK_CLIST (day_list), row, NULL);
       
       for (iter = day_events[hour]; iter; iter = iter->next)
 	((event_t)iter->data)->mark = FALSE;
@@ -271,13 +270,13 @@ day_view_update ()
       if (w > width) width = w;
 	
       gtk_clist_append (GTK_CLIST (day_list), line_info);
+      gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
 
       if (ev) 
 	{
 	  GdkPixmap *pmap;
 	  GdkBitmap *bmap;
 	  
-	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
     	  if ((ev->flags & FLAG_ALARM) && ev->recur)
 	    {
 	      if (gpe_find_icon_pixmap ("bell_recur", &pmap, &bmap))
@@ -328,7 +327,6 @@ day_view_update ()
 
           gtk_clist_append (GTK_CLIST (day_list), line_info);
 	  gtk_clist_set_row_data (GTK_CLIST (day_list), row, ev);
-
 	  gtk_clist_set_cell_style (GTK_CLIST (day_list), row, 1, dark_style);
 	  row++;
        } 
