@@ -5,10 +5,11 @@ gpe-question --question "Add default applications to dock?" --buttons cancel:Can
  mbmenu &
  monolaunch -k /usr/share/pixmaps/xkbd.xpm xkbd &
  xstroke &
- miniapm &
+ minibat &
  minivol &
  minilite &
  minitheme &
  gpe-what &
+ minitime &
 )
 fi

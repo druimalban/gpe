@@ -1,3 +1,11 @@
+2003-02-02  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install-scripts): Install .desktop for gpe-logout
+	also.
+
+	* X11/Xsession-gpe.d/25dotfiles: Add minitime.  Replace miniapm
+	with minibat.
+
 2003-01-25  Philip Blundell  <philb@gnu.org>
 
 	* gpe-dm 0.20 released.
@@ -16,7 +24,6 @@
 	* familiar/gpe-logout.menu: Deleted.
 	* Makefile (ipkg): Don't install it.
 	* gpe-logout.desktop: New file.
-	* Makefile (install-scripts): Ship it.
 	
 	* gpe-login.c (main): Set cursor for window.
 

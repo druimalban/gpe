@@ -90,7 +90,9 @@ install-scripts:
 	install -d $(DESTDIR)/etc/gpe
 	install -m 644 X11/xsettings.default $(DESTDIR)/etc/gpe/
 	mkdir -p familiar/dist.gpe-session-scripts/usr/share/pixmaps
-	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps/gpe-logout.png
+	install -m 644 gpe-logout.png familiar/dist.gpe-session-scripts/usr/share/pixmaps
+	mkdir -p familiar/dist.gpe-session-scripts/usr/share/applications
+	install -m 644 gpe-logout.desktop familiar/dist.gpe-session-scripts/usr/share/applications
 
 ipkg:
 	make PREFIX=/usr clean all
