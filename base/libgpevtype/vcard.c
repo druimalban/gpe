@@ -236,14 +236,7 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	  g_object_get (G_OBJECT (phone), "fax", &fax, NULL);
 	  g_object_get (G_OBJECT (phone), "cell", &cell, NULL);
 	  g_object_get (G_OBJECT (phone), "voice", &voice, NULL);
-	
-	  if (voice && !cell) 
-	    {		  
-	      if (work)
-		data = gpe_tag_list_prepend (data, "work.telephone", s);
-	      else
-		data = gpe_tag_list_prepend (data, "home.telephone", s);
-	    }
+
 	  if (fax)
 	    {		  
 	      if (work)
@@ -257,6 +250,13 @@ vcard_to_tags (MIMEDirVCard *vcard)
 		data = gpe_tag_list_prepend (data, "work.mobile", s);
 	      else
 		data = gpe_tag_list_prepend (data, "home.mobile", s);
+	    }
+	  if ((voice && !cell) || (!fax && !cell))
+	    {		  
+	      if (work)
+		data = gpe_tag_list_prepend (data, "work.telephone", s);
+	      else
+		data = gpe_tag_list_prepend (data, "home.telephone", s);
 	    }
 	}
       
