@@ -2,18 +2,12 @@ PREFIX = /usr/local
 PACKAGE = gpe-irc
 DEBUG = yes
 CVSBUILD = yes
-GTK2 = yes
 
 MEMBERS = main irc irc_input dictionary general_config general_config_sql networks_config networks_config_sql irc_parse ctcp
 LINGUAS = de
 
-ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0`
 CONTROL = control1
-else
-CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` 
-CONTROL = control
-endif
 
 CFLAGS += -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
@@ -69,3 +63,6 @@ install-program: all
 
 clean:
 	rm -f gpe-irc $(OBJS)
+
+include ../build/Makefile.dpkg_ipkg
+
