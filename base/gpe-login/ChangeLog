@@ -1,5 +1,14 @@
 2003-09-22  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login 0.64 released.
+
+2003-09-22  Philip Blundell  <philb@gnu.org>
+
+	* X11/gpe-login.pre-session: Also set permissions on
+	/dev/touchscreen/0.
+
+2003-09-22  Philip Blundell  <philb@gnu.org>
+
 	* gpe-session-scripts 0.52 released.
 
 2003-09-22  Philip Blundell  <philb@gnu.org>
