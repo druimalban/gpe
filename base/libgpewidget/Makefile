@@ -7,7 +7,7 @@ GTKRC = gtkrc
 MEMBERS = gtkdatecombo errorbox init pixmaps smallbox gtkminifilesel render dirbrowser picturebutton what stylus gtkdatesel screensize question gtksimplemenu spacing
 
 ifeq ($(GTK2),yes)
-MEMBERS += gpetooltips2 gtkgpepixmap2 
+MEMBERS += gpetooltips2 gtkgpepixmap2 gpe-iconlist
 SONAME = libgpewidget.so.1
 CONTROL = control1
 else
@@ -47,6 +47,10 @@ libgpewidget.so: $(SONAME)
 
 $(SONAME): $(OBJS)
 	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
+
+gpe-iconlist.c: gpeiconlist.gob
+	gob2 --no-private-header gpeiconlist.gob
+	mv -f gpe-iconlist.h gpe/
 
 libgpewidget.a: $(OBJS)
 	ar cq $@ $^

@@ -1,0 +1,428 @@
+/* gpe-appmgr(-alpha)
+   (C) 2002 Robert Mibus <mibus@handhelds.org>
+*/
+
+requires 2.0.0
+
+%{
+#include <stdlib.h>
+#include <stdio.h>
+#include <gtk/gtk.h>
+#include "gpe-iconlist.h"
+
+struct ILIcon
+{
+	char *title;
+	char *icon;
+	gpointer udata;
+	GdkPixbuf *pb;
+};
+
+%}
+
+class GPE:IconList from Gtk:Scrolled:Window {
+	private GList *icons = NULL;
+	private GdkPixbuf *bgpixbuf = NULL;
+	private int rows = 1;
+	private int cols = 1;
+	private int mcol = -1;
+	private int mrow = -1;
+
+/* Signals */
+	signal last NONE(POINTER)
+	void clicked(self, gpointer udata);
+
+/* init and other gtkish methods */
+	init (self)
+	{
+		GtkWidget *vp, *da;
+
+		gtk_scrolled_window_set_hadjustment (GTK_SCROLLED_WINDOW(self), NULL);
+		gtk_scrolled_window_set_vadjustment (GTK_SCROLLED_WINDOW(self), NULL);
+
+		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(GTK_SCROLLED_WINDOW(self)),
+						GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+
+		vp = gtk_viewport_new (NULL, NULL);
+		gtk_container_add (GTK_CONTAINER(self), vp);
+
+		da = gtk_drawing_area_new ();
+		gtk_widget_add_events (GTK_WIDGET (da), GDK_BUTTON_PRESS_MASK |
+				       GDK_BUTTON_RELEASE_MASK);
+		gtk_signal_connect (GTK_OBJECT(da), "expose_event",
+				    (GtkSignalFunc)gpe_iconlist__expose, NULL);
+		gtk_signal_connect (GTK_OBJECT(da), "button_release_event",
+				    GTK_SIGNAL_FUNC(gpe_iconlist__button_release), NULL);
+		gtk_signal_connect (GTK_OBJECT(da), "button_press_event",
+				    GTK_SIGNAL_FUNC(gpe_iconlist__button_press), NULL);
+		gtk_container_add (GTK_CONTAINER(vp), da);
+
+		gtk_object_set_data (GTK_OBJECT (self), "da", da);
+		gtk_object_set_data (GTK_OBJECT (da), "il", self);
+		gtk_object_set_data (GTK_OBJECT (da), "va", gtk_viewport_get_vadjustment(GTK_VIEWPORT(vp)));
+
+		gtk_widget_show_all (vp);
+	}
+
+	public GtkWidget *
+	new (void)
+	{
+		return GTK_WIDGET(GET_NEW);
+	}
+
+/* Set the background */
+	public void set_bg (GPE:IconList *self, char *bg)
+	{
+		if (self->_priv->bgpixbuf)
+			gdk_pixbuf_unref (self->_priv->bgpixbuf);
+		if (bg)
+			self->_priv->bgpixbuf = gdk_pixbuf_new_from_file (bg, NULL);
+		else
+			self->_priv->bgpixbuf = NULL;
+	}
+
+/* Helper - max. height of a label */
+	private gint _title_height (GtkWidget *widget) {
+		PangoContext *pc;
+		PangoLayout *pl;
+		PangoRectangle pr;
+		int label_height;
+
+		printf ("_title_height\n");
+		/* Pango font rendering setup */
+		if ((pc = gtk_widget_get_pango_context (GTK_WIDGET(widget))) == NULL)
+			pc = gtk_widget_create_pango_context (GTK_WIDGET(widget));
+		pl = pango_layout_new (pc);
+		
+		/* Find out how tall icon labels will be */
+		pango_layout_set_text (pl, "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm\nQWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm", -1);
+		pango_layout_get_pixel_extents  (pl, NULL, &pr);
+		label_height = pr.height;
+
+		return label_height;
+	}
+
+/* Expose handler */
+	private gboolean _expose (GtkWidget *widget, GdkEventExpose *event, gpointer data)
+	{
+		GPEIconList *il;
+		GList *icons;
+		GdkPixbuf *dest;
+		int row=0, col=0;
+		GtkAdjustment *va;
+		PangoContext *pc;
+		PangoLayout *pl;
+		int label_height;
+		int i;
+
+		printf ("iconlist_expose\n");
+		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
+
+		/* Pango font rendering setup */
+		if ((pc = gtk_widget_get_pango_context (widget)) == NULL)
+			pc = gtk_widget_create_pango_context (widget);
+		pl = pango_layout_new (pc);
+		pango_layout_set_width (pl, 70 * PANGO_SCALE);
+		pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
+		//pango_layout_set_wrap (pl, PANGO_WRAP_CHAR);
+
+		label_height = gpe_iconlist__title_height (widget);
+
+		/* Get the GtkAdjustment used for the vertical scrollbar
+		   va->value is the current displacement of the view as compared to the widget */
+		va = gtk_object_get_data (GTK_OBJECT (widget), "va");
+
+		/* No idea ;-) */
+		gdk_window_set_back_pixmap (widget->window, NULL, FALSE);
+
+		/* Make a new pixbuf for rendering icons to */
+		dest = gdk_pixbuf_new (GDK_COLORSPACE_RGB, FALSE, 8,
+				       event->area.width, event->area.height);
+
+		/* Whiten the background
+		   -> for use with a transparent bg? cool... */
+		gdk_pixbuf_fill (dest, 0xffffffff);
+
+		/* Paint the background image, scaled */
+/*
+			gdk_pixbuf_composite (il->_priv->bgpixbuf, dest,
+					      0, i, event->area.width, event->area.height,
+					      -event->area.x, -event->area.y + i,
+					      1,//(double) widget->allocation.width / gdk_pixbuf_get_width (il->_priv->bgpixbuf),
+					      1,//(double) widget->allocation.height / gdk_pixbuf_get_height (il->_priv->bgpixbuf),
+					      GDK_INTERP_BILINEAR, 255);
+*/
+
+		if (il->_priv->bgpixbuf)
+			for (i=0; i < il->_priv->rows * (60 + label_height); i += gdk_pixbuf_get_height(il->_priv->bgpixbuf)) {
+				GdkRectangle r1, dst;
+				r1.x = 0; r1.y = i;
+				r1.width = gdk_pixbuf_get_width (il->_priv->bgpixbuf);
+				r1.height = gdk_pixbuf_get_height (il->_priv->bgpixbuf);
+
+				printf ("placing bg image at (0,%d)\n", i);
+				printf ("of maximum height %d\n", il->_priv->rows * (60 + label_height));
+				printf ("image height = %d\n", gdk_pixbuf_get_height (il->_priv->bgpixbuf));
+				if (gdk_rectangle_intersect (&r1, &(event->area), &dst)) {
+					gdk_pixbuf_composite (il->_priv->bgpixbuf, dest,
+							      dst.x-event->area.x,
+							      dst.y-event->area.y,
+							      dst.width, dst.height,
+							      r1.x-event->area.x, r1.y-event->area.y,
+							      1,
+							      1,
+							      GDK_INTERP_BILINEAR, 255);
+				}
+			}
+
+
+		icons = il->_priv->icons;
+		while (icons) {
+			GdkRectangle r1, r2, dst;
+			struct ILIcon *icon;
+			icon = icons->data;
+			
+			/* Compute & render the icon */
+			r1.x=col * 70 + 11;
+			r1.y=row * (60 + label_height) + 5;
+			r1.width = 48; // gdk_pixbuf_get_width(pixbuf);
+			r1.height = 48; // gdk_pixbuf_get_height(pixbuf);
+
+			r2.x = event->area.x;
+			r2.y = event->area.y;
+			r2.width = event->area.width;
+			r2.height = event->area.height;
+	  
+			if (gdk_rectangle_intersect (&r1, &r2, &dst)) {
+				GdkPixbuf *pixbuf=NULL;
+
+				/* Get the icon from the cache if its there, if not put it there :) */
+				if (icon->pb)
+					pixbuf = icon->pb;
+				else
+					icon->pb = pixbuf = gdk_pixbuf_new_from_file (icon->icon, NULL);
+
+				if (pixbuf) {
+					gdk_pixbuf_composite (pixbuf, dest, // from, to
+							      dst.x - event->area.x, //dest_x
+							      dst.y - event->area.y,// + va->value, // dest_y
+							      dst.width, dst.height, // dest_width, dest_height
+							      r1.x-event->area.x, // offset_x
+							      r1.y-event->area.y,// + va->value, // offset_y
+							      (double)48/gdk_pixbuf_get_width (pixbuf), // scale_x
+							      (double)48/gdk_pixbuf_get_width (pixbuf), // scale y
+							      GDK_INTERP_BILINEAR, // filtering
+							      //(gpe_iconlist__contains (r1, il->_priv->mx, il->_priv->my)) ? 128 : 255); // forced whole-alpha
+							      col == il->_priv->mcol && row == il->_priv->mrow ? 128 : 255);
+				//gdk_pixbuf_unref (pixbuf);
+				}
+			}
+
+			if (++col == il->_priv->cols) {
+				col = 0; row++;
+			}
+
+			icons = icons->next;
+		}
+
+		/* Dump to drawingarea */
+		gdk_pixbuf_render_to_drawable (dest, widget->window, widget->style->fg_gc[GTK_STATE_NORMAL],
+					       0, 0, event->area.x, event->area.y,
+					       event->area.width, event->area.height,
+					       GDK_RGB_DITHER_NORMAL, event->area.x, event->area.y);
+
+		gdk_pixbuf_unref (dest);
+
+		col = row = 0;
+
+		icons = il->_priv->icons;
+		while (icons) {
+			GdkRectangle r1, r2, dst;
+			struct ILIcon *icon;
+			icon = icons->data;
+
+			/* Compute & render the title */
+			r1.x=col * 70;
+			r1.y=row * (60 + label_height) + 55;
+			r1.width = 70;
+			r1.height = label_height;
+
+			r2.x = event->area.x;
+			r2.y = event->area.y;
+			r2.width = event->area.width;
+			r2.height = event->area.height;
+	  
+			if (gdk_rectangle_intersect (&r1, &r2, &dst)) {
+				char *stxt; int slen;
+				int selected=0;
+				PangoRectangle pr;
+
+				stxt=icon->title;
+				slen = strlen (stxt);
+
+				selected = (il->_priv->mrow == row && il->_priv->mcol == col);
+				if (selected) {
+					char *newtxt;
+					newtxt = g_strdup_printf ("<b>%s</b>", stxt);
+					pango_layout_set_markup (pl, newtxt, -1);
+					g_free (newtxt);
+				} else
+					pango_layout_set_text (pl, stxt, -1);
+
+				pango_layout_get_pixel_extents  (pl, NULL, &pr);
+
+				while ((pango_layout_get_line_count (pl) > 2 ||
+					pr.width > 70) && slen>0) {
+					char *newtxt;
+					char *fmt;
+					if (stxt[slen-2] == ' ')
+						slen--;
+
+					if (selected)
+						fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
+					else
+						fmt = g_strdup_printf ("%%.%ds...", --slen);
+
+					newtxt = g_strdup_printf (fmt, stxt);
+					g_free (fmt);
+
+					if (selected)
+						pango_layout_set_markup (pl, newtxt, -1);
+					else
+						pango_layout_set_text (pl, newtxt, -1);
+					g_free (newtxt);
+
+					pango_layout_get_pixel_extents  (pl, NULL, &pr);
+				}
+
+				gtk_paint_layout (widget->style, widget->window, GTK_WIDGET_STATE (widget),
+						  FALSE, &dst,
+						  widget, "detail?wtf?", r1.x, r1.y, pl);
+			}
+
+			if (++col == il->_priv->cols) {
+				col = 0; row++;
+			}
+			icons = icons->next;
+		}
+
+		printf ("done expose\n");
+		return TRUE;
+	}
+
+	private struct ILIcon *new_icon (char *title, char *icon, gpointer udata)
+	{
+		struct ILIcon *ret;
+		ret = (struct ILIcon *) malloc (sizeof (struct ILIcon));
+		ret->title = title;
+		ret->icon = icon;
+		ret->udata = udata;
+		ret->pb = NULL;
+		return ret;
+	}
+
+	public void add_item (self, char *title, char *icon, gpointer udata)
+	{
+		self->_priv->icons = g_list_append (self->_priv->icons, gpe_iconlist_new_icon (title, icon, udata));
+	}
+
+	override (Gtk:Widget)
+	void
+	size_allocate (Gtk:Widget *self, GtkAllocation *allocation)
+	{
+		int count=0;
+		int label_height;
+		GPEIconList *il;
+		il = GPE_ICONLIST(self);
+
+		printf ("iconlist: size_allocate\n");
+
+		if ((int)gtk_object_get_data (GTK_OBJECT(il), "size_x") == allocation->width &&
+		    (int)gtk_object_get_data (GTK_OBJECT(il), "size_y") == allocation->height)
+			return;
+
+		printf ("new size: %dx%d\n", allocation->width, allocation->height);
+
+		gtk_object_set_data (GTK_OBJECT(il), "size_x", (gpointer)allocation->width);
+		gtk_object_set_data (GTK_OBJECT(il), "size_y", (gpointer)allocation->height);
+		
+		if (allocation->width - 15 > 70) 
+			il->_priv->cols = (allocation->width - 15) / 70;
+		else
+			il->_priv->cols = 1;
+		
+		count = g_list_length (il->_priv->icons);
+		
+		il->_priv->rows = ((count+il->_priv->cols-1)/il->_priv->cols);
+		
+		label_height = gpe_iconlist__title_height (GTK_WIDGET(il));
+		
+		gtk_drawing_area_size (
+			GTK_DRAWING_AREA(gtk_object_get_data (GTK_OBJECT(il), "da")),
+			allocation->width, il->_priv->rows * (60 + label_height) + 5);
+		
+		PARENT_HANDLER (self, allocation);
+	}
+
+	private void _get_rowcol (GtkWidget *widget, int x, int y, int *col, int *row) {
+		int label_height;
+
+		label_height = gpe_iconlist__title_height (GTK_WIDGET(widget));
+
+		*col = (double)x / (double)70;
+		*row = (double)y / (double)(60 + label_height);
+	}
+
+	private void _refresh_containing (GtkWidget *widget, int col, int row) {
+		int x, y;
+		int label_height;
+
+		label_height = gpe_iconlist__title_height (GTK_WIDGET(widget));
+
+		x=col * 70;
+		y=row * (60 + label_height);
+
+		gtk_widget_queue_draw_area (widget, x, y, 70, 60 + label_height + 5);
+	}
+
+	private gint _button_release (GtkWidget *widget, GdkEventButton *event) {
+		GPEIconList *il;
+		int col, row;
+		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
+
+		gpe_iconlist__refresh_containing (GTK_WIDGET(widget), il->_priv->mcol, il->_priv->mrow);
+
+		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(col), &(row));
+		if (col == il->_priv->mcol && row == il->_priv->mrow) {
+			int i;
+			GList *icons;
+
+			icons = il->_priv->icons;
+			for (i=0;i<il->_priv->mrow*il->_priv->cols+il->_priv->mcol;i++)
+				icons = icons->next;
+
+			gpe_iconlist_clicked (il, ((struct ILIcon *)icons->data)->udata);
+		}
+
+		il->_priv->mcol = il->_priv->mrow = -1;
+
+		return TRUE;
+	}
+
+	private gint _button_press (GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
+		GPEIconList *il;
+
+		il = GPE_ICONLIST(gtk_object_get_data (GTK_OBJECT(widget), "il"));
+
+//		printf ("btn_press\n");
+//		printf ("(%f,%f) btn %d\n", event->x, event->y, event->button);
+
+		//il->_priv->mx = event->x;
+		//il->_priv->my = event->y;
+
+		gpe_iconlist__get_rowcol (widget, event->x, event->y, &(il->_priv->mcol), &(il->_priv->mrow));
+		gpe_iconlist__refresh_containing (widget, il->_priv->mcol, il->_priv->mrow);
+
+		return TRUE;
+	}
+}
