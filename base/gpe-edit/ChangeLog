@@ -1,3 +1,7 @@
+2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile (install): Remove, let Makefile.dpkg_ipkg provide it.
+
 2003-03-19  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add pt.

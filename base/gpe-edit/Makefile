@@ -46,12 +46,16 @@ CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
+ifeq ($(CVSBUILD),yes)
+BUILD = ../build
+else
+BUILD = build
+endif
+
 all: gpe-edit all-mo
 
 gpe-edit: $(OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
-
-install: install-program install-mo
 
 install-program: all gpe-edit.desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
@@ -65,6 +69,5 @@ install-program: all gpe-edit.desktop
 clean: clean-po
 	rm -f gpe-edit $(OBJS)
 
-include ../build/Makefile.translation
-include ../build/Makefile.dpkg_ipkg
-
+include $(BUILD)/Makefile.translation
+include $(BUILD)/Makefile.dpkg_ipkg
