@@ -37,7 +37,7 @@ select_file_done (GtkWidget *w, GtkWidget *filesel)
 
   filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
 
-  fd = open (filename, O_WRONLY);
+  fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
   if (fd >= 0)
     {
       if (write (fd, data, len) < len)
@@ -57,7 +57,7 @@ import_unknown (const char *name, const gchar *data, size_t len)
 {
   gchar *query;
 
-  query = g_strdup_printf (_("Received a file '%s'.  Save it?"), name ? name : _("<no name>"));
+  query = g_strdup_printf (_("Received a file '%s' (%d bytes).  Save it?"), name ? name : _("<no name>"), len);
   
   if (gpe_question_ask (query, NULL, "bt-logo", "!gtk-cancel", NULL, "!gtk-ok", NULL, NULL))
     {

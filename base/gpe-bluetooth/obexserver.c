@@ -13,19 +13,12 @@
 #include <stdio.h>
 #include <libintl.h>
 #include <errno.h>
-#include <netinet/in.h>
-#include <sys/poll.h>
-#include <sys/wait.h>
+#include <string.h>
 #include <sys/socket.h>
 
 #include <gtk/gtk.h>
-#include <gpe/errorbox.h>
-#include <gpe/question.h>
 
 #include <bluetooth/bluetooth.h>
-#include <bluetooth/l2cap.h>
-#include <bluetooth/hci.h>
-#include <bluetooth/hci_lib.h>
 #include <bluetooth/sdp.h>
 #include <bluetooth/sdp_lib.h>
 
@@ -49,6 +42,8 @@ static GList *channels;
 static void
 file_received (gchar *name, const uint8_t *data, size_t data_len)
 {
+  gdk_threads_enter ();
+
   if (name)
     {
       /* Try to guess type of file */
@@ -62,8 +57,11 @@ file_received (gchar *name, const uint8_t *data, size_t data_len)
       else
 	import_unknown (name, data, data_len);
       
-      g_free (name);
+      g_free (lname);
     }
+
+  gdk_flush ();
+  gdk_threads_leave ();
 }
 
 static void 
@@ -87,7 +85,7 @@ put_done (obex_t *handle, obex_object_t *object)
 	  break;
 
 	case OBEX_HDR_NAME:
-	  name = g_malloc (hlen / 2);
+	  name = g_malloc ((hlen / 2) + 1);
 	  OBEX_UnicodeToChar (name, hv.bs, hlen);
 	  break;
 	  
@@ -151,8 +149,13 @@ handle_disconnect (obex_t *handle)
 	  g_io_channel_unref (chan->chan);
 
 	  g_free (chan);
+
+	  return;
 	}
     }
+
+  fprintf (stderr, "Couldn't find channel in list.\n");
+  abort ();
 }
 
 static gboolean
@@ -206,7 +209,8 @@ obex_event (obex_t *handle, obex_object_t *object, int mode, int event, int obex
     case OBEX_EV_ACCEPTHINT:
       chan = g_malloc (sizeof (*chan));
       obex = OBEX_ServerAccept (handle, obex_conn_event, NULL);
-      chan->chan = g_io_channel_unix_new (OBEX_GetFD (obex));
+      chan->fd = OBEX_GetFD (obex);
+      chan->chan = g_io_channel_unix_new (chan->fd);
       chan->source = g_io_add_watch (chan->chan, G_IO_IN | G_IO_ERR | G_IO_HUP, io_callback, obex);
       channels = g_list_prepend (channels, chan);
       break;

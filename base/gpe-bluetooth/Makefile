@@ -16,7 +16,7 @@ CPPFLAGS += -D_GNU_SOURCE -DDBUS_API_SUBJECT_TO_CHANGE -DGPE_BLUETOOTH
 
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS = -g # -lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
