@@ -1,5 +1,10 @@
 2004-10-09  Phil Blundell  <pb@nexus.co.uk>
 
+	* week_view.c (struct week_day): Delete 'initialized'.
+	(week_view, week_view_update): Remove references to above member.
+
+	* main.c (time_from_day): Don't force time to 00:00.
+
 	* day_view.c (day_view): Add calendar if screen is landscape.
 	(list_exposed): Fix warning.
 	(update_hook_callback): Keep calendar up to date.

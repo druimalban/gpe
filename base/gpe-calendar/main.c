@@ -93,7 +93,7 @@ days_in_month (guint year, guint month)
 }
 
 time_t
-time_from_day(int year, int month, int day)
+time_from_day (int year, int month, int day)
 {
   struct tm tm;
   time_t selected_time;
@@ -101,9 +101,6 @@ time_from_day(int year, int month, int day)
   tm.tm_year = year;
   tm.tm_mon = month;
   tm.tm_mday = day;
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  tm.tm_sec = 0;
   selected_time = mktime (&tm);
   return selected_time;
 }

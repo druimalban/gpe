@@ -50,7 +50,6 @@ struct week_day
   GSList *events;
   gboolean is_today;
   gboolean is_active;
-  gboolean initialized;
   struct render_ctl rc;
 } week_days[7];
 
@@ -289,21 +288,17 @@ week_view_update (void)
       week_days[day].is_today = (tm.tm_mday == today.tm_mday 
 		       && tm.tm_mon == today.tm_mon 
 		       && tm.tm_year == today.tm_year);
-//      if (!week_days[day].initialized)
-         {
-           week_days[day].is_active = week_days[day].is_today;
-           week_days[day].initialized = TRUE;
-         }
+      week_days[day].is_active = week_days[day].is_today;
       strftime (buf, sizeof (buf), "<b>%a %d %B</b>", &tm);
       if (d->string)
-	     g_free (d->string);
+	g_free (d->string);
       d->string = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
 
       c->popup.day = tm.tm_mday;
       c->popup.year = tm.tm_year;
       c->popup.month = tm.tm_mon;
- 	  c->valid = TRUE;
-	  c->popup.events = week_days[day].events;
+      c->valid = TRUE;
+      c->popup.events = week_days[day].events;
       c->today = ((tm.tm_year == today.tm_year + 1900
 		   && tm.tm_mon == today.tm_mon
 		   && tm.tm_mday == today.tm_mday)) ? TRUE : FALSE;
@@ -312,7 +307,6 @@ week_view_update (void)
 
       for (iter = week_days[day].events; iter; iter = iter->next)
         ((event_t)iter->data)->mark = FALSE;
-      
     }
 
   for (day = 0; day < 7; day++)
@@ -625,8 +619,6 @@ week_view (void)
 
   week_view_draw = draw;
   
-  for (i=0;i<7;i++)
-    week_days[i].initialized = FALSE;
   GTK_WIDGET_SET_FLAGS(datesel, GTK_CAN_FOCUS);
   gtk_widget_grab_focus(datesel);
   g_signal_connect (G_OBJECT (datesel), "key_press_event", 
