@@ -844,6 +844,7 @@ main (int argc, char *argv[])
   vbox2 = gtk_vbox_new (FALSE, 0);
 
   calibrate_hint = gtk_label_new (_("Press Record to recalibrate touchscreen"));
+  gtk_label_set_line_wrap (GTK_LABEL (calibrate_hint), TRUE);
 
   if (autolock_mode || have_users)
     {
