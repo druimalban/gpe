@@ -35,6 +35,19 @@ struct display_item {
 
 static void refresh_todo_markup(struct display_item *di);
 
+static void make_no_items_label(void)
+{
+	const char *str = _("No todo items");
+	
+	if (todo.message)
+		return;
+	
+	todo.message = gtk_widget_create_pango_layout(todo.scroll->draw, NULL);
+	pango_layout_set_wrap(calendar.noevent, PANGO_WRAP_WORD);
+	todo.scroll->list = g_slist_append(todo.scroll->list, todo.message);
+	pango_layout_set_markup(todo.message, str, strlen(str));
+}
+
 static void free_items(void)
 {
 	int i;
@@ -147,11 +160,8 @@ static void todo_db_update(void)
 		refresh_todo_markup(di);
 	}
 
-	if (g_slist_length(items) == 0) {
-		todo.message = gtk_widget_create_pango_layout(todo.scroll->draw, NULL);
-		todo.scroll->list = g_slist_append(todo.scroll->list, todo.message);
-		markup_printf(todo.message, "%s", _("No todo items"));
-	}
+	if (g_slist_length(items) == 0)
+		make_no_items_label();
 }
 
 static void refresh_todo_markup(struct display_item *di)
@@ -178,8 +188,10 @@ gboolean todo_update(gpointer data)
 	GSList *iter;
 
 	if (stat(db_fname, &db) == -1) {
-		gpe_perror_box(_("Error stating todo DB"));
-		return FALSE;
+		if (g_slist_length(items) != 0)
+			free_items();
+		make_no_items_label();
+		return TRUE;
 	}
 
 	if (db.st_mtime > prev_modified) {

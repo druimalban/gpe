@@ -150,8 +150,10 @@ gboolean calendar_update(gpointer data)
 	int i;
 
 	if (stat(db_fname, &db) == -1) {
-		gpe_perror_box(_("Error stating calendar DB"));
-		return FALSE;
+		if (g_slist_length(calendar_entries) != 0)
+			free_calendar_entries();
+		make_no_events_label();
+		return TRUE;
 	}
 
 	if (db.st_mtime > prev_modified) { /* DB changed */
