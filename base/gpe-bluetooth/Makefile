@@ -8,7 +8,7 @@ VERSION = 0.31
 
 GLADE = bluez-pin-gpe.glade
 
-MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset
+MEMBERS = main dun sdp pan lap rfcomm pin-ui dbus pin-dbus headset obexserver
 
 CFLAGS = `pkg-config --cflags gtk+-2.0` `pkg-config --cflags dbus-glib-1` `pkg-config --cflags libglade-2.0` -Wall
 
@@ -29,7 +29,7 @@ else
 CFLAGS += -I/usr/include/gpe
 BUILD = build
 endif
-LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0`
+LDFLAGS += -lgpewidget `pkg-config --libs gtk+-2.0` -lbluetooth -lsdp `pkg-config --libs gthread-2.0` `pkg-config --libs dbus-glib-1` `pkg-config --libs libglade-2.0` -lopenobex
 
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 

@@ -573,6 +573,7 @@ main (int argc, char *argv[])
   lap_init ();
   pan_init ();
   headset_init ();
+  obex_init ();
 
   dock_window = window->window;
   gpe_system_tray_dock (window->window);
