@@ -1,21 +1,23 @@
 #!/bin/sh
+
 module_id() {
-    grep "Module ID" /proc/hal/assets | sed "s/.*://"
-    }
+    # Get model name
+    echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
+}
+
+depmod
 
 case $1 in
 'start')
-	DIR=/usr/share/gpe/bootsplash
-	FN=""
-# start off server in conventional location.
-	echo `module_id`
 	case `module_id` in
-		" iPAQ 3100" )	    FN="3100" ;;
-		" iPAQ 3600" )	    FN="3600" ;;
-		" iPAQ 3700" )	    FN="3700" ;;
-		" iPAQ 3800" )	    FN="3800" ;;
+		"HP IPAQ H3100" )
+			ARGS="--mono" ;;
+		"HP IPAQ H3600" | "HP IPAQ H3700" | "HP IPAQ H3900" )
+		    	ARGS="--flip" ;;
+		"HP IPAQ H3800" | "HP IPAQ H5400" | "HP IPAQ H2200" )
+			;;
 	esac
-	[ $FN ] && gunzip -c < $DIR/$FN > /dev/fb0
+	/usr/bin/gpe-bootsplash $ARGS
 	;;
 'stop')
 ;;
