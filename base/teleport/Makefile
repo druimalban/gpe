@@ -13,7 +13,7 @@ CFLAGS = $(GTKCFLAGS) -I../libgpewidget -Wall -I../libdm
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
-MEMBERS = teleport crypt
+MEMBERS = teleport crypt displays keygen
 
 CFLAGS += -I../libdm `libgcrypt-config --cflags`
 LDFLAGS += -L../libdm -ldm `libgcrypt-config --libs`
@@ -35,7 +35,7 @@ all: teleport all-mo tp-keygen
 teleport: $(OBJS)
 	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) $(LDFLAGS)
 
-tp-keygen: tp-keygen.o
+tp-keygen: tp-keygen.o keygen.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 clean:

@@ -24,6 +24,8 @@
 #include <gpe/smallbox.h>
 #include <gpe/errorbox.h>
 
+#include "displays.h"
+
 #define _(x) gettext(x)
 
 Atom migrate_atom;
@@ -34,22 +36,6 @@ GtkListStore *list_store;
 
 gboolean grabbed;
 
-struct gpe_icon
-my_icons[] = 
-  {
-    { "ok" },
-    { NULL }
-  };
-
-struct display
-{
-  gchar *host;
-  guint dpy;
-  guint screen;
-  gchar *str;
-};
-
-static GSList *displays;
 struct display *selected_dpy;
 
 static void
@@ -169,8 +155,8 @@ add_ok (GtkWidget *w, GtkWidget *window)
   const gchar *host = gtk_entry_get_text (GTK_ENTRY (host_entry));
   guint dpy = (guint)gtk_adjustment_get_value (dpy_adjustment);
   guint screen = (guint)gtk_adjustment_get_value (screen_adjustment);
-  struct display *d = g_malloc (sizeof (struct display));
   GtkTreeIter iter;
+  struct display *d;
 
   if (host[0] == 0)
     {
@@ -178,12 +164,7 @@ add_ok (GtkWidget *w, GtkWidget *window)
       return;
     }
 
-  d->host = g_strdup (host);
-  d->dpy = dpy;
-  d->screen = screen;
-  d->str = g_strdup_printf ("%s:%d.%d", host, dpy, screen);
-
-  displays = g_slist_append (displays, d);
+  d = add_display (host, dpy, screen);
 
   gtk_list_store_append (list_store, &iter);
   gtk_list_store_set (list_store, &iter, 0, d->str, 1, d, -1);
@@ -202,11 +183,8 @@ remove_callback (GtkWidget *button, GtkWidget *list_view)
     {
       struct display *d;
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &d, -1);
-      displays = g_slist_remove (displays, d);
       gtk_list_store_remove (GTK_LIST_STORE (model), &iter);
-      g_free (d->host);
-      g_free (d->str);
-      g_free (d);
+      remove_display (d);
     }
   else
     gpe_error_box (_("No display selected"));
@@ -388,9 +366,6 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  if (gpe_load_icons (my_icons) == FALSE)
-    exit (1);
-
   dpy = GDK_DISPLAY ();
   string_atom = XInternAtom (dpy, "STRING", False);
   migrate_atom = XInternAtom (dpy, "_GPE_DISPLAY_CHANGE", False);
@@ -401,6 +376,8 @@ main (int argc, char *argv[])
   gdk_window_add_filter (NULL, window_filter, NULL);
 
   crypt_init ();
+
+  displays_init ();
 
   open_window ();
 
