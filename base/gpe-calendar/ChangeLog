@@ -1,5 +1,9 @@
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.28 released.
+
+2003-01-01  Philip Blundell  <philb@gnu.org>
+
 	* event-ui.c (build_edit_event_window): Tasks are not yet properly
 	implemented; don't offer them on the menu.
 
