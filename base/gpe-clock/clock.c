@@ -27,6 +27,9 @@ GtkWidget *panel_window, *time_label;
 
 #define _(x) gettext(x)
 
+static gboolean show_seconds;
+static gboolean format_24 = TRUE;
+
 static void
 update_time (GtkWidget *label)
 {
@@ -35,12 +38,37 @@ update_time (GtkWidget *label)
   struct tm tm;
   time (&t);
   localtime_r (&t, &tm);
-  strftime (buf, sizeof (buf), "%H:%M:%S", &tm);
+  const char *format;
+
+  if (format_24)
+    {
+      format = show_seconds ? "%H:%M:%S" : "%H:%M";
+    }
+  else
+    {
+      format = show_seconds ? "%I:%M:%S%p" : "%I:%M%p";
+    }
+  
+  strftime (buf, sizeof (buf), format, &tm);
   gtk_label_set_text (GTK_LABEL (label), buf);
 }
 
 static void
-prefs_window (void)
+set_seconds (GtkWidget *w, GtkWidget *time_label)
+{
+  show_seconds = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+  update_time (time_label);
+}
+
+static void
+set_format (GtkWidget *w, GtkWidget *time_label)
+{
+  format_24 = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (w));
+  update_time (time_label);
+}
+
+static void
+prefs_window (GtkWidget *w, GtkWidget *time_label)
 {
   GtkWidget *window = gtk_dialog_new ();
   GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
@@ -51,11 +79,16 @@ prefs_window (void)
   GSList    *radiogroup;
   int spacing = gpe_get_boxspacing ();
 
+  gtk_window_set_title (GTK_WINDOW (window), _("Clock preferences"));
+
   format_12_button = gtk_radio_button_new_with_label (NULL, _("12-hour format"));
   radiogroup = gtk_radio_button_group (GTK_RADIO_BUTTON (format_12_button));
   format_24_button = gtk_radio_button_new_with_label (radiogroup, _("24-hour format"));
 
   seconds_button = gtk_check_button_new_with_label (_("Show seconds"));
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (seconds_button), show_seconds);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (format_24_button), format_24);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_12_button, FALSE, FALSE, spacing);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), format_24_button, FALSE, FALSE, spacing);
@@ -66,7 +99,10 @@ prefs_window (void)
   gtk_container_set_border_width (GTK_CONTAINER (window), gpe_get_border ());
 
   gtk_widget_show_all (window);
-  
+
+  g_signal_connect (G_OBJECT (seconds_button), "toggled", G_CALLBACK (set_seconds), time_label);
+  g_signal_connect (G_OBJECT (format_24_button), "toggled", G_CALLBACK (set_format), time_label);
+ 
   g_signal_connect_swapped (G_OBJECT (ok_button), "clicked", G_CALLBACK (gtk_widget_destroy), window);
 }
 
@@ -135,7 +171,7 @@ main (int argc, char *argv[])
   gtk_menu_append (GTK_MENU (menu), menu_prefs);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
 
-  g_signal_connect (G_OBJECT (menu_prefs), "activate", G_CALLBACK (prefs_window), NULL);
+  g_signal_connect (G_OBJECT (menu_prefs), "activate", G_CALLBACK (prefs_window), time_label);
   g_signal_connect (G_OBJECT (menu_set_time), "activate", G_CALLBACK (set_time_window), NULL);
   g_signal_connect (G_OBJECT (menu_alarm), "activate", G_CALLBACK (alarm_window), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate", G_CALLBACK (gtk_main_quit), NULL);
