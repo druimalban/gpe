@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2002-05-11 12:28+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: about.c:37 event-ui.c:336
+msgid "OK"
+msgstr ""
+
+#: event-ui.c:305
+msgid "Event"
+msgstr ""
+
+#: event-ui.c:306
+msgid "Recurrence"
+msgstr ""
+
+#: event-ui.c:323
+msgid "Start date"
+msgstr ""
+
+#: event-ui.c:324
+msgid "End date"
+msgstr ""
+
+#: event-ui.c:326
+msgid "From"
+msgstr ""
+
+#: event-ui.c:330
+msgid "All day"
+msgstr ""
+
+#: event-ui.c:333
+msgid "to"
+msgstr ""
+
+#: event-ui.c:337
+msgid "Cancel"
+msgstr ""
+
+#: event-ui.c:344
+msgid "Alarm"
+msgstr ""
+
+#: event-ui.c:357
+msgid "minutes before"
+msgstr ""
+
+#: event-ui.c:358
+msgid "hours before"
+msgstr ""
+
+#: event-ui.c:359
+msgid "days before"
+msgstr ""
+
+#: event-ui.c:360
+msgid "weeks before"
+msgstr ""
+
+#: event-ui.c:361
+msgid "months before"
+msgstr ""
+
+#: event-ui.c:362
+msgid "years before"
+msgstr ""
+
+#: event-ui.c:455
+msgid "Type:"
+msgstr ""
+
+#: event-ui.c:465
+msgid "None"
+msgstr ""
+
+#: event-ui.c:471
+msgid "Daily"
+msgstr ""
+
+#: event-ui.c:476
+msgid "Weekly"
+msgstr ""
+
+#: event-ui.c:481
+msgid "Monthly"
+msgstr ""
+
+#: event-ui.c:486
+msgid "Yearly"
+msgstr ""
+
+#: event-ui.c:506 event-ui.c:557 event-ui.c:579
+msgid "Every"
+msgstr ""
+
+#: event-ui.c:518
+msgid "day(s)"
+msgstr ""
+
+#: event-ui.c:569
+msgid "month(s)"
+msgstr ""
+
+#: event-ui.c:591
+msgid "year(s)"
+msgstr ""
+
+#: event-ui.c:604
+msgid "End Date:"
+msgstr ""
+
+#: event-ui.c:610
+msgid "forever"
+msgstr ""
+
+#: event-ui.c:623
+msgid "end after"
+msgstr ""
+
+#: event-ui.c:638
+msgid "event(s)"
+msgstr ""
