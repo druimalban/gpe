@@ -1,5 +1,6 @@
 #define MAX_IRQS 255
 
+#define DEFAULTSUSER "/ipaq-sleep.conf"
 #define DEFAULTS "/etc/ipaq-sleep.conf"
 #define APM "/proc/apm"
 #define INTERRUPTS "/proc/interrupts"
@@ -20,4 +21,4 @@
 #define iflag	"IRQ"
 #define bflag	"low_battery"
 
-const char *sleep_command="/sbin/pm_helper suspend";
+const char *sleep_command="/usr/bin/apm --suspend";

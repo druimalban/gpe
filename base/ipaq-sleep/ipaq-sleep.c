@@ -145,13 +145,104 @@ void parse_command_line (int argc, char **argv) {
 	extern char *optarg;
 	int c=0;
 	int i, save=0;
-	char dline[64], func[12], value[12];
+	char dline[64], func[12], value[12], userdefaults[256];
+	char *home = getenv ("HOME");
 	FILE *f;
 	
 	f=fopen(DEFAULTS, "r");
 	
 	if (! f) fprintf(stderr, "problem opening %s\n", DEFAULTS);
 	else {
+		while(fgets(dline,sizeof(dline),f)) {
+			if (sscanf(dline,"%s = %s", func, value) == 2) {
+				if (strcmp(func, uflag)==0) {
+					sleep_idle=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "sleep_idle=%d\n", sleep_idle);
+#endif
+					if (sleep_idle>0) sleeping=1;
+					else {
+#ifdef DEBUG
+						if (debug) fprintf(dgfp, "sleeping disabled!\n");
+#endif
+						sleeping=0;
+					}
+				}
+				if (strcmp(func, oflag)==0) {
+					dim_idle=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "dim_idle=%d\n", dim_idle);
+#endif
+					if (dim_idle>0) dimming=1;
+					else {
+#ifdef DEBUG
+						if (debug) fprintf(dgfp, "dimming disabled!\n");
+#endif
+						dimming=0;
+					}
+				}
+				if (strcmp(func, aflag)==0) {
+					apm=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "apm=%d\n", apm);
+#endif
+				}
+				if (strcmp(func, cflag)==0) {
+					cpu=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "cpu=%d\n", cpu);
+#endif
+				}
+				if (strcmp(func, xflag)==0) {
+					X=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "X=%d\n", cpu);
+#endif
+				}
+				if (strcmp(func, dflag)==0) {
+					debug=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "debug=%d\n", cpu);
+#endif
+				}
+				if (strcmp(func, Cflag)==0) {
+					load_check=atof(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "load_check=%lf\n", load_check);
+#endif
+				}
+				if (strcmp(func, pflag)==0) {
+					probe=atoi(value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "probe=%d\n", probe);
+#endif
+				}
+				if (strcmp(func, bflag)==0) {
+					battery_level=atoi (value);
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "battery=%d\n", battery_level);
+#endif
+				}
+				if (strcmp(func, iflag)==0) {
+					i = atoi(value);
+					if ((i < 0) || (i >= MAX_IRQS)) 
+						fprintf(stderr, "ipaq-sleep: bad irq number %d in /etc/ipaqsleep.conf\n", i);
+					irqs[i]=1;
+#ifdef DEBUG
+					if (debug) fprintf(dgfp, "IRQ %d set\n", i);
+#endif
+				}
+			}
+		}
+		fclose(f);
+	}
+	
+	sprintf(userdefaults, "%s%s", home, DEFAULTSUSER);
+	
+	f=fopen(userdefaults, "r");
+	
+	if (f)
+	{
 		while(fgets(dline,sizeof(dline),f)) {
 			if (sscanf(dline,"%s = %s", func, value) == 2) {
 				if (strcmp(func, uflag)==0) {
