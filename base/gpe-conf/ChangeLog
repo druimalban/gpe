@@ -1,3 +1,6 @@
+2003-08-20	Florian Boor	<florian.boor@kernelconcepts.de>
+	* Finshed simple gps setup frontend.
+	
 2003-08-18	Florian Boor	<florian.boor@kernelconcepts.de>
 	* Started adding gpsd setup to serial module (for now).
 	* fixed calibrate.c, rotation.c for correct build on non-arm platforms

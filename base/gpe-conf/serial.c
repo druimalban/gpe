@@ -78,6 +78,9 @@ static struct
 	GtkWidget *rbConsole;	
 	GtkWidget *rbGPSD;	
 	GtkWidget *rbFree;	
+	GtkWidget *rbEarthmate;
+	GtkWidget *rbNMEA;
+	GtkWidget *cbBaudrate;
 }self;
 
 
@@ -197,11 +200,21 @@ Serial_Build_Objects (void)
 {
   GtkWidget *label;
   GtkWidget *vbox;
+  GtkWidget *table;
   gchar iname[100];
   GtkTooltips *tooltips;
+  GSList *bauds = NULL;
 	
   int gpsd_installed = !access(GPSD_STARTUP_SCRIPT,F_OK);
 
+  bauds = g_slist_append(bauds,"1200");
+  bauds = g_slist_append(bauds,"2400");
+  bauds = g_slist_append(bauds,"4800");
+  bauds = g_slist_append(bauds,"9600");
+  bauds = g_slist_append(bauds,"19200");
+  bauds = g_slist_append(bauds,"38400");
+  bauds = g_slist_append(bauds,"115000");
+	
   tooltips = gtk_tooltips_new();
   
   notebook = gtk_notebook_new();
@@ -266,19 +279,41 @@ Serial_Build_Objects (void)
   -r port      [ set dgps rtcm-sc104 port ]
 */
   
-  vbox = gtk_vbox_new(FALSE,gpe_get_boxspacing());
-  gtk_tooltips_set_tip(tooltips,vbox,_("This page configures the GPS receiver software."),NULL);
+  table = gtk_table_new(3,3,FALSE);
+ 
+  gtk_tooltips_set_tip(tooltips,table,_("This page configures the GPS receiver software."),NULL);
+  gtk_widget_set_sensitive(table,gpsd_installed);
   
   label = gtk_label_new(_("GPS Receiver"));
-  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,label);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook),table,label);
   gtk_tooltips_set_tip(tooltips,label,_("This page configures the GPS receiver software."),NULL);
 	
   label = gtk_label_new(NULL);
   snprintf(iname,100,"<b>%s</b>",_("GPS settings"));
   gtk_label_set_markup(GTK_LABEL(label),iname);
   gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
-  gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,TRUE,0);
+  gtk_table_attach(GTK_TABLE(table),label,0,2,0,1,GTK_FILL,GTK_FILL,0,gpe_get_boxspacing());
     
+  label = gtk_label_new(_("Receiver Type"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach(GTK_TABLE(table),label,0,2,1,2,GTK_FILL,GTK_FILL,0,0);
   
+  self.rbNMEA = gtk_radio_button_new_with_label(NULL,_("NMEA"));
+  gtk_table_attach(GTK_TABLE(table),self.rbNMEA,0,1,2,3,GTK_FILL,GTK_FILL,gpe_get_boxspacing(),gpe_get_boxspacing());
+  gtk_tooltips_set_tip(tooltips,self.rbNMEA,_("The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"),NULL);
+  
+  self.rbEarthmate = gtk_radio_button_new_with_label_from_widget(GTK_RADIO_BUTTON(self.rbNMEA),_("Earthmate"));
+  gtk_table_attach(GTK_TABLE(table),self.rbEarthmate,1,2,2,3,GTK_FILL,GTK_FILL,gpe_get_boxspacing(),gpe_get_boxspacing());
+  gtk_widget_set_sensitive(self.rbEarthmate,gpsd_installed);
+  gtk_tooltips_set_tip(tooltips,self.rbEarthmate,_("GPS receiver is an Earthmate GPS."),NULL);
+
+  label = gtk_label_new(_("Baud Rate"));
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+  gtk_table_attach(GTK_TABLE(table),label,0,2,3,4,GTK_FILL,GTK_FILL,0,0);
+  
+  self.cbBaudrate = gtk_combo_new();
+  gtk_combo_set_popdown_strings(GTK_COMBO(self.cbBaudrate),bauds);  
+  gtk_table_attach(GTK_TABLE(table),self.cbBaudrate,0,2,4,5,GTK_FILL,GTK_FILL,gpe_get_boxspacing(),gpe_get_boxspacing());
+    
   return notebook;
 }
