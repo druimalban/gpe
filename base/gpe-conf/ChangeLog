@@ -1,5 +1,12 @@
 When			Who				Where						What
 
+22.03.2003		Florian			ipaqscreen/callbacks.*		Fixed screensaver tool, works now, doesn't cause conf to hang.
+								ipaqscreen/xset.c			Updated icon.
+								ipaqscreen/main.c
+								suid.c						fixed screen setup access control
+
+22.03.2003		Florian			suid.c						fixed screen settings root access bug
+
 20.03.2003		Florian			suid.c						rtc is now updated after setting time.
 
 20.03.2003		Florian			users/* suid.c				Added homedir creation.

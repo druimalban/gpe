@@ -14,6 +14,7 @@ typedef struct
   GtkWidget *touchscreen;
   GtkWidget *calibrate;
   GtkWidget *rbLightswitch1, *rbLightswitch2;
+  GtkObject* adjSaver;
 }tself;
 
 void

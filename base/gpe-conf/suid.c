@@ -301,7 +301,7 @@ int
 check_user_access (const char *cmd)
 {
   if (!geteuid ())
-  return TRUE;
+    return TRUE;
   if (!know_global_user_access) // read this only once
   {
   	gchar* acstr;
@@ -314,6 +314,7 @@ check_user_access (const char *cmd)
   // allow screen settings
   if (!strcmp(cmd,"SCRR")) return TRUE;
   if (!strcmp(cmd,"SCRB")) return TRUE;
+  if (!strcmp(cmd,"SCRL")) return TRUE;
 	  
   return global_user_access;	
 }

@@ -39,10 +39,7 @@ static struct
 	int brightness;
 	int light;
 	int orientation;
-	
-	/* unused
 	int screensaver;
-	*/
 }initval;
 // type moved to callbacks.h
 tself self;
@@ -66,7 +63,6 @@ GtkWidget *ipaqscreen_Build_Objects()
   GtkJustification table_justify_left_col;
   GtkJustification table_justify_right_col;
   
-  GtkObject* adjSaver;
   GtkObject* adjLight;
 
   RotationLabels[0] = _("Portrait");
@@ -83,6 +79,7 @@ GtkWidget *ipaqscreen_Build_Objects()
   table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
   ss_sec = xset_get_ss_sec();
+  initval.screensaver = ss_sec;
   /* ======================================================================== */
   /* draw the GUI */
 
@@ -126,10 +123,10 @@ GtkWidget *ipaqscreen_Build_Objects()
   g_free(tstr);
 
   self.screensaverbt = gtk_check_button_new_with_label (_("Activated"));
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), TRUE);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self.screensaverbt), (gboolean)ss_sec);
 
-  adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0);
-  self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (adjSaver)));
+  self.adjSaver = gtk_adjustment_new ( ss_sec ? log((float)ss_sec)*2.8208 : 0, 0, 20, 0, 0, 0);
+  self.screensaver = GTK_WIDGET(gtk_hscale_new(GTK_ADJUSTMENT (self.adjSaver)));
   gtk_scale_set_digits (GTK_SCALE (self.screensaver), 2);
   gtk_scale_set_draw_value (GTK_SCALE (self.screensaver), FALSE);
 
@@ -233,7 +230,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                       GTK_SIGNAL_FUNC (on_brightness_hscale_draw),
                       NULL);
 
-  gtk_signal_connect (GTK_OBJECT (adjSaver), "value_changed",
+  gtk_signal_connect (GTK_OBJECT (self.adjSaver), "value_changed",
                       GTK_SIGNAL_FUNC (on_screensaver_hscale_draw),
                       NULL);
 
@@ -272,12 +269,12 @@ void change_screen_saver_label(int sec)
   if(min>0)
     {
       sec = min * 60;
-      sprintf(buf,"%d minutes",min);
+      sprintf(buf,"%d %s",min,_("minutes"));
     }
   else if(sec)
-    sprintf(buf,"%d seconds",sec);
+    sprintf(buf,"%d %s",sec,_("seconds"));
   else
-      sprintf(buf,"Off");
+      sprintf(buf,_("Off"));
 
   gtk_label_set_text(GTK_LABEL(self.screensaverl2),buf);
 }
@@ -288,6 +285,23 @@ void ipaqscreen_Free_Objects()
 
 void ipaqscreen_Save()
 {
+  int sec;
+
+  if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.screensaverbt)))
+  {
+    if(GTK_ADJUSTMENT(self.adjSaver)->value>0.1)
+      sec=1+(int)exp(GTK_ADJUSTMENT(self.adjSaver)->value/2.8208);// an exponentiel range from 0 to 20 min
+    else
+      sec = 0;
+    if(sec>60)
+      sec = sec - sec%60;
+	
+	  xset_set_ss_sec(sec); 
+  }
+  else
+  {
+	  xset_set_ss_sec(0);
+  }
 }
 
 void ipaqscreen_Restore()

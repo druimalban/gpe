@@ -22,7 +22,7 @@
 
 int xset_get_ss_sec()
 {
-  int sec = 60;
+  int sec = 0;
   if(parse_pipe("xset q","  timeout:  %5d",&sec))
     {
        gpe_error_box( "couldn't read screen saver time");
@@ -30,6 +30,7 @@ int xset_get_ss_sec()
   return sec;
 
 }
+
 void xset_set_ss_sec(int sec)
 {
   if(sec)

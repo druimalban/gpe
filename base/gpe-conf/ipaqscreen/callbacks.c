@@ -36,7 +36,8 @@ on_light_on (GtkWidget *sender, gpointer user_data)
 		suid_exec("SCRL","0");
 }
 
-gint on_light_check(gpointer adj)
+gint 
+on_light_check(gpointer adj)
 {
   if (get_light_state())
   {
@@ -77,10 +78,7 @@ on_screensaver_hscale_draw              (GtkWidget       *adjustment,
   if(sec>60)
     sec = sec - sec%60;
 
-  change_screen_saver_label(sec);
-
-  xset_set_ss_sec(sec); // round to the min.
-  
+  change_screen_saver_label(sec);  
 }
 
 void
