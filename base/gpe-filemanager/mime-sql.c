@@ -78,6 +78,19 @@ del_mime_extension (struct mime_type *e)
   mime_types = g_slist_remove (mime_types, e);
 }
 
+void
+del_mime_all ()
+{
+  char *err;
+
+  if (sqlite_exec_printf (sqliteh, "delete from mime_types",
+			  NULL, NULL, &err))
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+}
+
 static int
 mime_type_callback (void *arg, int argc, char **argv, char **names)
 {

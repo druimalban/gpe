@@ -1,43 +1,26 @@
+/*
+ * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
+ * Original code by Matthew Allum <mallum@handhelds.org>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
 #include <glib.h>
+#include <sys/types.h>
+#include <dirent.h>
+
 #include "update_mime_db.h"
 #include "hash.h"
 #include "mime-sql.h"
 #include "mime-programs-sql.h"
-
-/*  
-    TODO:
-    
-    o Parse initial [Desktop Entry] style lines
-      - support actions
-
-    o Basic parsing of Exec substitutions ( eg %f etc )
-
-    o add more functionaility from desktop spec for stnadard 
-      required keys, such as type ( can point to an enum ) etc
-
-    o Parse .directorys too XXX handled now by vfolder
-      - see standard catogaries
-        http://www.freedesktop.org/standards/VFolderDesktops.txt
-
-    o parse true/false to non-null/NULL
-
-    o ignore space around ='s
-
-    o vfolder 'OnlyShowIn' key for dock apps 
-      - eg OnlyShowIn=X-MB-DOCK ?
-      - or maybe just set an X-MB_DOCKAPP: true key ?
-      - or both ?
-      - Catogarie=Applet ?
-
-    o check ENV(DESKTOP_FILE_PATH), /usr/(local)/share/applications,
-      .applications
-
-*/
 
 static int
 _parse_ini_entry (IniFile *ini);
@@ -46,7 +29,7 @@ _parse_ini_entry (IniFile *ini);
 static char *
 trim (char *str)
 {
-  char *result = str;
+char *result = str;
 
   while (isspace(*result))
     result++;
@@ -75,7 +58,7 @@ _parse_ini_entry (IniFile *ini)
 	{
 	  ini->type = strdup ("Mime Type");
 	}
-      else if (strncasecmp ("[mime program association]", data, 26))
+      else if (strncasecmp ("[mime program association]", data, 26) == 0)
 	{
 	  ini->type = strdup ("Mime Program Association");
 	}
@@ -171,7 +154,29 @@ ini_free (IniFile *ini)
   free(ini);
 }
 
+static gchar *
+get_file_extension (gchar *filename)
+{
+  int i;
+  gchar *extension;
 
+  for (i = strlen (filename); i > 0; i--)
+  {
+    if (filename[i] == '.')
+      break;
+  }
+
+  if (i == strlen (filename))
+  {
+    return NULL;
+  }
+  else
+  {
+    extension = g_malloc (strlen (filename) - i);
+    extension = g_strdup (filename + i + 1);
+    return extension;
+  }
+}
 
 int
 main (int argc, char **argv)
@@ -179,6 +184,9 @@ main (int argc, char **argv)
   IniFile *ini = NULL;
   struct nlist *n;
   const char *lang;
+  gchar *filename;
+  struct dirent *d;
+  DIR *dir;
 
   int utf8_mode = 0;
   char *s;
@@ -212,17 +220,45 @@ main (int argc, char **argv)
   if (lang != NULL && !strcmp(lang, "C"))
     lang = NULL;
 
-  ini = ini_new_from_file (argv[1], lang);
+  dir = opendir ("/etc/mime-handlers");
 
-  if (strcmp (ini->type, "Mime Type") == 0)
+  if (dir)
+  {
+    del_mime_all ();
+    del_mime_program_all ();
+
+    while (d = readdir (dir), d != NULL)
     {
-      struct mime_type *e = g_malloc (sizeof (struct mime_type));
+      if (strcmp (get_file_extension (d->d_name), "mime") == 0)
+      {
+	filename = g_strdup_printf ("/etc/mime-handlers/%s", d->d_name);
+	ini = ini_new_from_file (filename, lang);
 
-      printf("name => %s \n", ini_get (ini, "Name"));
-      printf("type => %s \n", ini_get (ini, "Type"));
-      printf("extension => %s \n", ini_get (ini, "Extension"));
-      printf("icon => %s \n", ini_get (ini, "Icon"));
+        if (strcmp (ini->type, "Mime Type") == 0)
+        {
+	  printf ("---------------------------\n");
+          printf ("name => %s \n", ini_get (ini, "Name"));
+          printf ("type => %s \n", ini_get (ini, "Type"));
+          printf ("extension => %s \n", ini_get (ini, "Extension"));
+          printf ("icon => %s \n", ini_get (ini, "Icon"));
 
-      e = new_mime_type (ini_get (ini, "Type"), ini_get (ini, "Name"), ini_get (ini, "Extension"), ini_get (ini, "Icon"));
+          new_mime_type (ini_get (ini, "Type"), ini_get (ini, "Name"), ini_get (ini, "Extension"), ini_get (ini, "Icon"));
+	}
+        else if (strcmp (ini->type, "Mime Program Association") == 0)
+        {
+	  printf ("---------------------------\n");
+          printf ("name => %s \n", ini_get (ini, "Name"));
+          printf ("mime association => %s \n", ini_get (ini, "Association"));
+          printf ("command => %s \n", ini_get (ini, "Command"));
+
+          new_mime_program (ini_get (ini, "Name"), ini_get (ini, "Association"), ini_get (ini, "Command"));
+	}
+
+	ini_free (ini);
+      }
     }
+  }
 }
+
+
+

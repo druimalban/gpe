@@ -1,0 +1,5 @@
+[Mime Type]
+Name=Gzip Compressed File
+Type=application/x-compress
+Icon=application-x-gzip
+Extension=gz

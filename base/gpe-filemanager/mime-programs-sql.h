@@ -14,4 +14,6 @@ extern struct mime_program *new_mime_program (const char *name, const char *mime
 
 extern void del_mime_program (struct mime_program *e);
 
+extern void del_mime_program_all (void);
+
 extern void sql_close (void);

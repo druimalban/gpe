@@ -75,6 +75,19 @@ del_mime_program (struct mime_program *e)
   mime_programs = g_slist_remove (mime_programs, e);
 }
 
+void
+del_mime_program_all ()
+{
+  char *err;
+
+  if (sqlite_exec_printf (sqliteh, "delete from mime_programs",
+			  NULL, NULL, &err))
+    {
+      gpe_error_box (err);
+      free (err);
+    }
+}
+
 static int
 mime_program_callback (void *arg, int argc, char **argv, char **names)
 {

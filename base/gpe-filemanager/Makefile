@@ -4,6 +4,7 @@ DEBUG = yes
 CVSBUILD = yes
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
+MIME_HANDLERS = `cd mime-handlers && ls *.mime`
 GTK2 = yes
 
 MEMBERS = main mime-sql mime-programs-sql
@@ -59,6 +60,7 @@ install: all
 	install -D update_mime_db $(DESTDIR)$(PREFIX)/bin/update_mime_db
 	install -D -m 644 gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png
 	install -D -m 644 gpe-filemanager.menu $(DESTDIR)$(PREFIX)/lib/menu/gpe-filemanager
+	for i in $(MIME_HANDLERS); do install -D mime-handlers/$$i $(DESTDIR)/etc/mime-handlers/$$i; done
 	for i in $(MIME_PIXMAPS); do install -D pixmaps/document-icons/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/document-icons/$$i; done
 	for i in $(SPINNER_PIXMAPS); do install -D pixmaps/spinner/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/spinner/$$i; done
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
