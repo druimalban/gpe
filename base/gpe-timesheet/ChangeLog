@@ -1,3 +1,8 @@
+2004-05-03  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Added files: html.c, html.h implementinh html output stuff.
+	* main.c, html.c, html.h: Next part of journal implementation.
+
 2004-05-03  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.14 released.

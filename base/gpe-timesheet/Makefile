@@ -9,7 +9,7 @@ PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -lsqlite
 
-MEMBERS = main sql
+MEMBERS = main sql html
 
 DEPS = $(patsubst %,%.d,$(MEMBERS))
 OBJS = $(patsubst %,%.o,$(MEMBERS))

@@ -20,8 +20,10 @@
 #include <gpe/smallbox.h>
 
 #include "sql.h"
+#include "html.h"
 
 #define _(_x) gettext(_x)
+#define JOURNAL_FILE "/tmp/journal.html"
 
 static const guint window_x = 240, window_y = 320;
 
@@ -35,14 +37,17 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
+
 static GdkWindow *top_level_window;
 
 static GtkWidget *btn_con, *btn_coff;
-
+s
 
 static void
 journal (GtkWidget *w, gpointer user_data)
 {
+  char **myjournal = NULL;
+  int jlen = 0;
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
@@ -50,7 +55,11 @@ journal (GtkWidget *w, gpointer user_data)
       struct task *t;
       t = gtk_ctree_node_get_row_data (ct, node);
 	  /* here we go... */
-	  
+	  jlen = journal_add_header(t->description,&myjournal);
+	  // scan tree, add lines here
+	  jlen = journal_add_footer(&myjournal, jlen);
+      journal_to_file(myjournal, JOURNAL_FILE);
+	  journal_show(JOURNAL_FILE);
     }
 }
 
