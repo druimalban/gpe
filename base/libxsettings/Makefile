@@ -38,6 +38,10 @@ install-program: $(LIBXSETTINGS_SO)
 	install -d $(DESTDIR)$(PREFIX)/lib
 	install -s $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
 
+install-devel:
+	install -m 644 xsettings-common.h $(PREFIX)/include/
+	ln -sf $(LIBXSETTINGS_SO) $(PREFIX)/lib/libXsettings.so
+
 clean:
 	rm -f $(LIBXSETTINGS_SO) libXsettings.so
 	rm -f $(XSETTINGS_OBJS) $(DEPS)
