@@ -16,6 +16,7 @@
 #include <stdio.h>  //sscanf()
 #include <string.h> //strlen()
 
+#include "gpe-go.h"
 #include "model.h"
 #include "board.h"
 #include "sgf-handler.h"
@@ -74,7 +75,9 @@ int main (int argc, char ** argv){
   setlocale (LC_ALL, "");
 
   gui_init ();
+
   load_graphics();
+
   app_init (argc, argv);
 
   gtk_main ();
@@ -100,8 +103,8 @@ void status_update(char * message){
   g_strdelimit(message, "\n\t\r", ' ');//make message a "flat" string
   _remove_duplicated(message, ' ');
 
-  gtk_statusbar_pop (GTK_STATUSBAR(go.status), 0);
-  gtk_statusbar_push(GTK_STATUSBAR(go.status), 0, message);
+  gtk_statusbar_pop (GTK_STATUSBAR(go.ui.status), 0);
+  gtk_statusbar_push(GTK_STATUSBAR(go.ui.status), 0, message);
 
   {//if the message is longer than the label, alert the user
     GtkWidget * label;
@@ -109,20 +112,20 @@ void status_update(char * message){
     int text_width;
     int label_width;
 
-    label = (GTK_STATUSBAR(go.status))->label;//NOTE: access to private field
+    label = (GTK_STATUSBAR(go.ui.status))->label;//NOTE: access to private field
     label_width = label->allocation.width;
     layout = gtk_label_get_layout(GTK_LABEL(label));
     pango_layout_get_pixel_size (layout, &text_width, NULL);
     TRACE("GOT width %d / %d", text_width, label_width);
 
     if(text_width > label_width){
-      gtk_label_set_text(GTK_LABEL(go.status_expander), "(...)");
+      gtk_label_set_text(GTK_LABEL(go.ui.status_expander), "(...)");
     }
     else{
       /*TRANSLATORS: initial of "Comments"
-        => Small labeled button to open the comment editor.
+        A small labeled button to open the comment editor.
         The surrounding spaces are desired.*/
-      gtk_label_set_text(GTK_LABEL(go.status_expander), _(" C "));
+      gtk_label_set_text(GTK_LABEL(go.ui.status_expander), _(" C "));
     }
   }
 }
@@ -143,7 +146,7 @@ void status_update_current(){
   char item;
   gchar * message;
 
-  hitem = go.history->data;
+  hitem = go.game.history->data;
   if(!hitem){
     return;
   }
@@ -170,17 +173,38 @@ void status_update_current(){
 }
 
 void update_capture_label(){
-  free(go.capture_string);
-  go.capture_string = (char *) malloc (20 * sizeof(char));
+  free(go.ui.capture_string);
+  go.ui.capture_string = (char *) malloc (20 * sizeof(char));
   /* TRANSLATORS: B = Black stones, W = White stones */
-  sprintf(go.capture_string, _("B:%d  W:%d "), go.black_captures, go.white_captures);
-  gtk_label_set_text (GTK_LABEL (go.capture_label), go.capture_string);
+  sprintf(go.ui.capture_string, _("B:%d  W:%d "), go.game.black_captures, go.game.white_captures);
+  gtk_label_set_text (GTK_LABEL (go.ui.capture_label), go.ui.capture_string);
 }
 
 
 void on_file_selection_ok(GtkWidget *widget, gpointer file_selector){
-  if(go.save_game) save_game();
-  else load_game();
+  char * filename;
+  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (file_selector)));
+
+  /* save or load */
+  if(go.ui.save_game){
+    char * filename_sgf;
+
+    if(g_str_has_suffix(filename, ".sgf") == FALSE){
+      filename_sgf = g_strconcat (filename, ".sgf", NULL);
+      g_free(filename);
+    }
+    else{
+      filename_sgf = filename;
+    }
+
+    save_game(filename_sgf);
+    g_free(filename_sgf);
+  }
+  else{
+    //NOTE: show a loading progression dialog?
+    load_game(filename);
+    g_free(filename);
+  }
 }
 
 //CLEAN: connect directly to the called function
@@ -200,50 +224,50 @@ void on_button_next_pressed (void){
 }
 
 void on_button_pass_clicked (void){
-  if(go.lock_variation_choice) return;
+  if(go.board.lock_variation_choice) return;//CLEAN go.board.lock...
   pass_turn();
 }
 
 void on_button_newgame_cancel_clicked (void){
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 void on_button_newgame_ok_clicked (void){
-  init_new_game(go.selected_game_size);
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+  init_new_game(go.ui.selected_game_size);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 void on_button_game_new_clicked(GtkButton *button, gpointer unused){
-  popup_menu_close(go.game_popup_button);
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_GAME_SETTINGS);
+  popup_menu_close(go.ui.game_menu_popup_button);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_GAME_SETTINGS);
 }
 void on_button_game_save_clicked(GtkButton *button, gpointer unused){
-  popup_menu_close(go.game_popup_button);
-  go.save_game = TRUE;
-  gtk_window_set_title( GTK_WINDOW(go.file_selector), _("Save game as..."));
-  gtk_widget_show (go.file_selector);
+  popup_menu_close(go.ui.game_menu_popup_button);
+  go.ui.save_game = TRUE;
+  gtk_window_set_title( GTK_WINDOW(go.ui.file_selector), _("Save game as..."));
+  gtk_widget_show (go.ui.file_selector);
 }
 void on_button_game_load_clicked(GtkButton *button, gpointer unused){
-  popup_menu_close(go.game_popup_button);//FIXME: connect function on "clicked"
-  go.save_game = FALSE;
-  gtk_window_set_title( GTK_WINDOW(go.file_selector), _("Load game..."));
-  gtk_widget_show (go.file_selector);
+  popup_menu_close(go.ui.game_menu_popup_button);//FIXME: connect function on "clicked"
+  go.ui.save_game = FALSE;
+  gtk_window_set_title( GTK_WINDOW(go.ui.file_selector), _("Load game..."));
+  gtk_widget_show (go.ui.file_selector);
 }
 
 void on_radiobutton_size_clicked (GtkButton *button, gpointer size){
   if(size == NULL){
-    go.selected_game_size =
-      gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(go.game_size_spiner));
+    go.ui.selected_game_size =
+      gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(go.ui.game_size_spiner));
   }
   else{
-    go.selected_game_size = GPOINTER_TO_INT(size);
+    go.ui.selected_game_size = GPOINTER_TO_INT(size);
   }
 }
 
 void on_spinbutton_value_changed(GtkSpinButton *spinbutton,
                                  gpointer radiobutton){
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton), TRUE);
-  go.selected_game_size = gtk_spin_button_get_value_as_int (spinbutton);
+  go.ui.selected_game_size = gtk_spin_button_get_value_as_int (spinbutton);
 }
 
 GtkWidget * build_new_game_dialog(){
@@ -335,10 +359,10 @@ GtkWidget * build_new_game_dialog(){
   gtk_box_pack_start (GTK_BOX (hbox), spinbutton1, FALSE, FALSE, 0);
 
   //default
-  go.selected_game_size = 19;
+  go.ui.selected_game_size = 19;
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobutton4), TRUE);
 
-  go.game_size_spiner = spinbutton1;
+  go.ui.game_size_spiner = spinbutton1;
 
   game_size = vbox;
 
@@ -379,49 +403,49 @@ GtkWidget * build_new_game_dialog(){
 void on_button_edit_comment_clicked(){
   Hitem * hitem;
 
-  if(go.lock_variation_choice) return;
+  if(go.board.lock_variation_choice) return;
 
-  hitem = go.history->data;
+  hitem = go.game.history->data;
   if(hitem && hitem->comment){
-    gtk_text_buffer_set_text (go.comment_buffer, hitem->comment, -1);
+    gtk_text_buffer_set_text (go.ui.comment_buffer, hitem->comment, -1);
   }
   else{
-    gtk_text_buffer_set_text (go.comment_buffer, "", -1);
+    gtk_text_buffer_set_text (go.ui.comment_buffer, "", -1);
   }
-  go.comment_edited = FALSE;
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_COMMENT_EDITOR);
-  gtk_widget_grab_focus(go.comment_text_view);
+  go.ui.comment_edited = FALSE;
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_COMMENT_EDITOR);
+  gtk_widget_grab_focus(go.ui.comment_text_view);
 }
 
 void on_textbuffer_changed (GtkTextBuffer * textbuffer, gpointer unused){
-  go.comment_edited = TRUE;
+  go.ui.comment_edited = TRUE;
 }
 
 void on_button_comment_cancel_clicked (void){
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 void on_button_comment_ok_clicked (void){
-  if(go.comment_edited){
+  if(go.ui.comment_edited){
     gchar * s;
     GtkTextIter it_start;
     GtkTextIter it_end;
     
-    gtk_text_buffer_get_bounds   (go.comment_buffer, &it_start, &it_end);
-    s = gtk_text_buffer_get_text (go.comment_buffer, &it_start, &it_end, FALSE);
+    gtk_text_buffer_get_bounds   (go.ui.comment_buffer, &it_start, &it_end);
+    s = gtk_text_buffer_get_text (go.ui.comment_buffer, &it_start, &it_end, FALSE);
     TRACE("Got -->%s<--", s);
 
     g_strstrip(s);
 
-    if( strlen(s) > 0 && go.history->data ){
+    if( strlen(s) > 0 && go.game.history->data ){
       Hitem * hitem;
-      hitem = go.history->data;
+      hitem = go.game.history->data;
       if(hitem->comment) free(hitem->comment);
       hitem->comment = s;
     }
     status_update_current();
   }
-  gtk_notebook_set_page(GTK_NOTEBOOK(go.notebook), PAGE_BOARD);
+  gtk_notebook_set_page(GTK_NOTEBOOK(go.ui.notebook), PAGE_BOARD);
 }
 
 GtkWidget * build_comment_editor(){
@@ -465,10 +489,10 @@ GtkWidget * build_comment_editor(){
   //--Text editor
   comment_text_view = gtk_text_view_new ();
   gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW(comment_text_view), GTK_WRAP_CHAR);
-  go.comment_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (comment_text_view));
-  g_signal_connect (G_OBJECT (go.comment_buffer), "changed",
+  go.ui.comment_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (comment_text_view));
+  g_signal_connect (G_OBJECT (go.ui.comment_buffer), "changed",
                     G_CALLBACK (on_textbuffer_changed), NULL);
-  go.comment_text_view = comment_text_view;
+  go.ui.comment_text_view = comment_text_view;
 
   //scrolled window
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
@@ -518,7 +542,7 @@ GtkWidget * _game_popup_menu_new (GtkWidget *parent_button){
   GtkWidget * button_load;
   GtkWidget * button_save;
 
-  GtkStyle * style = go.window->style;
+  GtkStyle * style = go.ui.window->style;
 
   button_new  = gpe_picture_button_aligned (style, _("New...") , "!gtk-new" , GPE_POS_LEFT);
   button_save = gpe_picture_button_aligned (style, _("Save..."), "!gtk-save", GPE_POS_LEFT);
@@ -558,7 +582,7 @@ void gui_init(){
 
   //--toplevel window
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  go.window = window;
+  go.ui.window = window;
 
 #ifdef DESKTOP
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 280);
@@ -581,7 +605,7 @@ void gui_init(){
   gtk_button_set_relief (GTK_BUTTON (widget), GTK_RELIEF_NONE);
   gtk_toolbar_append_widget(GTK_TOOLBAR (toolbar), widget,
                             _("Game menu"), _("Game menu"));
-  go.game_popup_button = widget;
+  go.ui.game_menu_popup_button = widget;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -625,7 +649,7 @@ void gui_init(){
   capture_label = gtk_label_new("");
   
   gtk_toolbar_append_widget (GTK_TOOLBAR (toolbar), capture_label, NULL, NULL);
-  go.capture_label = capture_label;
+  go.ui.capture_label = capture_label;
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
@@ -638,11 +662,6 @@ void gui_init(){
   //--file selector
   widget = gtk_file_selection_new (NULL);
 
-  g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
-                    "clicked",
-                    G_CALLBACK (on_file_selection_ok),
-                    (gpointer) widget);
-
   g_signal_connect_swapped (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
                             "clicked",
                             G_CALLBACK (gtk_widget_hide), 
@@ -653,16 +672,21 @@ void gui_init(){
                             G_CALLBACK (gtk_widget_hide),
                             (gpointer) widget);
 
+  g_signal_connect (GTK_OBJECT (GTK_FILE_SELECTION (widget)->ok_button),
+                    "clicked",
+                    G_CALLBACK (on_file_selection_ok),
+                    (gpointer) widget);
+
   //gtk_file_selection_complete(GTK_FILE_SELECTION(widget), "*.sgf");
-  go.file_selector = widget;
+  go.ui.file_selector = widget;
 
   //--Go Board
-  go.drawing_area = go_board_new();
+  go_board_init();
 
   //--Status bar
   widget = gtk_statusbar_new();
   gtk_statusbar_set_has_resize_grip(GTK_STATUSBAR(widget), FALSE);
-  go.status = widget;
+  go.ui.status = widget;
 
   {//[Comments] button / Status expander
     GtkWidget * event_box;
@@ -674,9 +698,9 @@ void gui_init(){
 
     widget = gtk_label_new("");
     gtk_container_add (GTK_CONTAINER (event_box), widget);
-    gtk_box_pack_start (GTK_BOX (go.status), event_box, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (go.ui.status), event_box, FALSE, FALSE, 0);
 
-    go.status_expander = widget;
+    go.ui.status_expander = widget;
   }
 
   //--Comment editor
@@ -691,11 +715,11 @@ void gui_init(){
   vbox = gtk_vbox_new (FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar,      FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), go.drawing_area, TRUE,  TRUE,  0);
-  gtk_box_pack_start (GTK_BOX (vbox), go.status,    FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), go.board.widget, TRUE,  TRUE,  0);
+  gtk_box_pack_start (GTK_BOX (vbox), go.ui.status,    FALSE, FALSE, 0);
 
   widget = gtk_notebook_new();
-  go.notebook = widget;
+  go.ui.notebook = widget;
   gtk_notebook_set_show_border(GTK_NOTEBOOK(widget), FALSE);
   gtk_notebook_set_show_tabs  (GTK_NOTEBOOK(widget), FALSE);
 

@@ -13,8 +13,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-//CLEAN: move away GUI stuff
-#include <gtk/gtk.h>
+#include <glib.h>
 
 void init_new_game(int game_size);
 
@@ -27,59 +26,11 @@ void pass_turn();
 void goto_first();
 void goto_last ();
 
-typedef struct _go {
-  //--ui
-  GtkWidget * window;
-  GtkWidget * notebook;
+typedef struct {
 
-  GtkWidget * status;
-  GtkWidget * status_expander;
+  int size; //9, 13, 19, ...
 
-  GdkPixmap * drawing_area_pixmap_buffer;
-  GtkWidget * drawing_area;
-
-  GdkPixbuf * loaded_board;
-  GdkPixbuf * loaded_black_stone;
-  GdkPixbuf * loaded_white_stone;
-
-  GdkPixbuf * pixbuf_black_stone;
-  GdkPixbuf * pixbuf_white_stone;
-  GdkPixmap * pixmap_empty_board;
-
-  GtkWidget * capture_label;
-  char      * capture_string;
-
-  GtkWidget * file_selector;
-
-  GtkWidget * game_popup_button;
-
-  int selected_game_size;
-  GtkWidget * game_size_spiner;
-
-  gboolean save_game;
-
-  GtkWidget * comment_text_view;
-  GtkTextBuffer * comment_buffer;
-  gboolean comment_edited;
-
-#ifdef TURN_LABEL
-  GtkWidget * turn_label;
-  char      * turn_string;
-#endif
-
-  //--board
-  int board_size;//px PARAM - size of the board widget
-  int margin;    //***px - left/top margin
-  
-  int cell_size;  //***px - == stone_size + stone_space 
-  int stone_size; //px
-  int stone_space;//px PARAM space between two stones (0/1 px)
-  
-  int grid_stroke;//px PARAM width of the grid stroke (1px)
-
-  //--game
-  int game_size; //9, 13, 19, ...
-
+  //CLEAN typedef char GridItem;
   char ** grid;   //current state of the board
   char ** stamps;
 
@@ -96,16 +47,15 @@ typedef struct _go {
   int col;
   int row;
 
-  GNode * history_root; //root node
+  //Game Tree
+  GNode * history_root; //root node //CLEAN: GNode * tree;
   GNode * history;      //current pointer
   GNode * main_branch;  //ref to the leaf of the main branch
   GNode * variation_main_branch_node;
 
-  gboolean lock_variation_choice;
+} GoGame;
 
-} Go;
-
-Go go;
+//GList * collection; to handle games collections
 
 typedef enum {
   EMPTY = 0,
@@ -127,13 +77,18 @@ typedef enum {
   CAPTURE
 } GoAction;
 
-typedef struct _hist_item{
+typedef struct {//FIXME: match SGF specs
   GoAction action;
   GoItem   item;
   int col;
   int row;
-  gchar * comment;
   //GList * captured; FIXME: to use
-} Hitem;
+
+  gchar * comment;
+  //GList * marks;
+  //...
+
+  //char * unknown_properties;
+} Hitem;//CLEAN: GoNode
 
 #endif

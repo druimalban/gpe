@@ -14,6 +14,7 @@
 #include <glib.h>
 #include <stdio.h>  //sscanf()
 
+#include "gpe-go.h"//CLEAN do not include. work with GoGame as parameter!
 #include "sgf-handler.h"
 
 #include "sgf.h"
@@ -43,6 +44,11 @@ GQueue * branches;
 gboolean is_first_branch;
 GNode * loaded_main_branch;//to avoid overwritting by undo()/play_at() calls
 
+void load_game(const char * filename){
+  //catch the potential errors
+  load_sgf_file(filename);
+}
+
 void sgf_parsed_init(){
   is_first_branch = TRUE;
   loaded_main_branch = NULL;
@@ -50,12 +56,12 @@ void sgf_parsed_init(){
 }
 void sgf_parsed_end(){
   is_first_branch = TRUE;
-  go.main_branch = loaded_main_branch;
+  go.game.main_branch = loaded_main_branch;
 }
 
 void sgf_parsed_open_gametree(){
   if(branches == NULL) branches = g_queue_new();
-  g_queue_push_head(branches, go.history);
+  g_queue_push_head(branches, go.game.history);
 }
 
 void sgf_parsed_close_gametree(){
@@ -64,13 +70,12 @@ void sgf_parsed_close_gametree(){
 
   if(is_first_branch){ is_first_branch = FALSE;}
 
-  while(go.history != hist){
+  while(go.game.history != hist){
     undo_turn();  
     //stop when closing the first node (depth == 2)
-    if(g_node_depth(go.history) == 2) return;
+    if(g_node_depth(go.game.history) == 2) return;
   }  
 }
-
 
 void sgf_parsed_prop_int(PropIdent prop_id, int value){
   switch(prop_id){
@@ -92,9 +97,9 @@ void sgf_parsed_prop_int(PropIdent prop_id, int value){
 void sgf_parsed_prop_string(PropIdent prop_id, const char * s){
   switch(prop_id){
   case SYMBOL_C:
-    if(go.history && go.history->data){
+    if(go.game.history && go.game.history->data){
       Hitem * hitem;
-      hitem = go.history->data;
+      hitem = go.game.history->data;
       hitem->comment = g_strdup(s);
     }
     break;
@@ -116,11 +121,11 @@ void sgf_parsed_prop_move(PropIdent prop_id, char row, char col){
       pass_turn();
     }
     else {
-      play_at(col - 'a' +1, row - 'a' + 1);
+      play_at(col - 'a' + 1, row - 'a' + 1);/* [a..z] --> [1..26] */
     }
     //keep a ref to the main branch
     if(is_first_branch){
-      loaded_main_branch = go.history;
+      loaded_main_branch = go.game.history;
     }
     break;
   default:
@@ -189,60 +194,26 @@ void _save_tree_to_sgf_from (GNode *node, FILE * f){
   if(has_siblings) fprintf(f, " )\n");  
 }
 
-void save_game(){
+void save_game(const char * filename){
   FILE * f;
-  char * filename;
-  char * filename_sgf;
 
-  //--Open file
-  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
-  if(g_str_has_suffix(filename, ".sgf") == FALSE){
-    filename_sgf = g_strconcat (filename, ".sgf", NULL);
-    g_free(filename);
-  }
-  else{
-    filename_sgf = filename;
-  }
-  f = fopen(filename_sgf, "w");
+  f = fopen(filename, "w");
   if(!f){
-    gtk_widget_hide (go.file_selector);
-    gpe_error_box_fmt (_("Cannot save the game into %s."), filename_sgf);
+    gpe_error_box_fmt (_("Cannot save the game into %s."), filename);
     return;
   }
-  g_free(filename_sgf);
 
-
-  //--Save history
+  /* header */
   fprintf(f, "(;GM[1]FF[3]\n");
-  fprintf(f, "RU[Japanese]SZ[%d]\n", go.game_size);
+  fprintf(f, "RU[Japanese]SZ[%d]\n", go.game.size);
   fprintf(f, "PW[%s]\n", "white");
   fprintf(f, "PB[%s]\n", "black");
 
-  _save_tree_to_sgf_from (go.history_root, f);
+  /* tree */
+  _save_tree_to_sgf_from (go.game.history_root, f);
 
+  /* footer */
   fprintf(f, "\n)\n");
 
   fclose(f);
 }
-
-void load_game(){
-  char * filename;
-  char * filename_sgf;
-
-  filename = g_strdup(gtk_file_selection_get_filename (GTK_FILE_SELECTION (go.file_selector)));
-  if(g_str_has_suffix(filename, ".sgf") == FALSE){
-    filename_sgf = g_strconcat (filename, ".sgf", NULL);
-    g_free(filename);
-  }
-  else{
-    filename_sgf = filename;
-  }
-
-  //gtk_widget_hide (go.file_selector);
-  //loading... dialog
-
-  load_sgf_file(filename_sgf);
-
-  g_free(filename_sgf);
-}
-

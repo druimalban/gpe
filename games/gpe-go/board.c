@@ -12,6 +12,7 @@
  */
 #include <gtk/gtk.h>
 
+#include "gpe-go.h"//CLEAN do not include, use GoGame GoBoard parameters
 #include "board.h"
 #include "model.h"
 
@@ -32,29 +33,29 @@ GdkColor blue = {0,     0, 0, 65535};
 
 void load_graphics(){
   //--board and stones
-  go.loaded_board       = gdk_pixbuf_new_from_file(PIXMAPS_SRC "board", NULL);
-  go.loaded_black_stone = gdk_pixbuf_new_from_file(PIXMAPS_SRC "black.png", NULL);
-  go.loaded_white_stone = gdk_pixbuf_new_from_file(PIXMAPS_SRC "white.png", NULL);
+  go.board.loaded_board       = gdk_pixbuf_new_from_file(PIXMAPS_SRC "board", NULL);
+  go.board.loaded_black_stone = gdk_pixbuf_new_from_file(PIXMAPS_SRC "black.png", NULL);
+  go.board.loaded_white_stone = gdk_pixbuf_new_from_file(PIXMAPS_SRC "white.png", NULL);
 
   //--colors
-  gc = gdk_gc_new(go.drawing_area->window);
+  gc = gdk_gc_new(go.board.drawing_area->window);
   colormap = gdk_colormap_get_system();
   gdk_colormap_alloc_color(colormap, &red ,  FALSE,TRUE);
   gdk_colormap_alloc_color(colormap, &blue,  FALSE,TRUE);
 }
 
 void scale_graphics(){
-  int stone_size = go.stone_size;
+  int stone_size = go.board.stone_size;
   int i;
   int cell_size;
   int border_trans; //grid's translation from the border of the board
 
   //--black stone
-  if(go.pixbuf_black_stone != NULL){
-    gdk_pixbuf_unref(go.pixbuf_black_stone);
+  if(go.board.pixbuf_black_stone != NULL){
+    gdk_pixbuf_unref(go.board.pixbuf_black_stone);
   }
-  if(go.loaded_black_stone != NULL){
-    go.pixbuf_black_stone = gdk_pixbuf_scale_simple (go.loaded_black_stone,
+  if(go.board.loaded_black_stone != NULL){
+    go.board.pixbuf_black_stone = gdk_pixbuf_scale_simple (go.board.loaded_black_stone,
                                             stone_size,
                                             stone_size,
                                             GDK_INTERP_BILINEAR);
@@ -70,11 +71,11 @@ void scale_graphics(){
   TRACE("scaled black stone");
 
   //--white stone
-  if(go.pixbuf_white_stone != NULL){
-    gdk_pixbuf_unref(go.pixbuf_white_stone);
+  if(go.board.pixbuf_white_stone != NULL){
+    gdk_pixbuf_unref(go.board.pixbuf_white_stone);
   }
-  if(go.loaded_white_stone != NULL){
-    go.pixbuf_white_stone = gdk_pixbuf_scale_simple (go.loaded_white_stone,
+  if(go.board.loaded_white_stone != NULL){
+    go.board.pixbuf_white_stone = gdk_pixbuf_scale_simple (go.board.loaded_white_stone,
                                             stone_size,
                                             stone_size,
                                             GDK_INTERP_BILINEAR);
@@ -96,20 +97,20 @@ void scale_graphics(){
   TRACE("scaled white stone");
 
   //--Board
-  if(go.pixmap_empty_board == NULL){
-    go.pixmap_empty_board = gdk_pixmap_new (go.drawing_area->window,
+  if(go.board.pixmap_empty_board == NULL){
+    go.board.pixmap_empty_board = gdk_pixmap_new (go.board.drawing_area->window,
                                             BOARD_SIZE,
                                             BOARD_SIZE,
                                             -1);
   }
-  if(go.loaded_board != NULL){
+  if(go.board.loaded_board != NULL){
     GdkPixbuf * scaled_bg;
 
-    scaled_bg = gdk_pixbuf_scale_simple (go.loaded_board,
+    scaled_bg = gdk_pixbuf_scale_simple (go.board.loaded_board,
                                          BOARD_SIZE, BOARD_SIZE,
                                          GDK_INTERP_BILINEAR);
-    gdk_draw_pixbuf(go.pixmap_empty_board,
-                    go.drawing_area->style->white_gc,
+    gdk_draw_pixbuf(go.board.pixmap_empty_board,
+                    go.board.drawing_area->style->white_gc,
                     scaled_bg,
                     0, 0, 0, 0,
                     -1, -1,
@@ -119,8 +120,8 @@ void scale_graphics(){
     gdk_pixbuf_unref(scaled_bg);
   }
   else{//draw it yourself
-    gdk_draw_rectangle (go.pixmap_empty_board,
-                        go.drawing_area->style->white_gc,//FIXME: use better color
+    gdk_draw_rectangle (go.board.pixmap_empty_board,
+                        go.board.drawing_area->style->white_gc,//FIXME: use better color
                         TRUE,
                         0, 0,
                         BOARD_SIZE,
@@ -129,18 +130,18 @@ void scale_graphics(){
   TRACE("scaled board");
 
   //grid
-  cell_size = go.cell_size;
-  border_trans = go.margin + go.cell_size / 2;
+  cell_size = go.board.cell_size;
+  border_trans = go.board.margin + go.board.cell_size / 2;
   
-  for(i=0; i< go.game_size; i++){
+  for(i=0; i< go.game.size; i++){
     //vertical lines
-    gdk_draw_line(go.pixmap_empty_board,
-                  go.drawing_area->style->black_gc,
+    gdk_draw_line(go.board.pixmap_empty_board,
+                  go.board.drawing_area->style->black_gc,
                   border_trans + cell_size * i, border_trans,
                   border_trans + cell_size * i, BOARD_SIZE - border_trans);
     //horizontal lines
-    gdk_draw_line(go.pixmap_empty_board,
-                  go.drawing_area->style->black_gc,
+    gdk_draw_line(go.board.pixmap_empty_board,
+                  go.board.drawing_area->style->black_gc,
                   border_trans, border_trans + cell_size * i,
                   BOARD_SIZE - border_trans, border_trans + cell_size * i);
   }
@@ -150,20 +151,20 @@ void scale_graphics(){
 
 #define ADVANTAGE_POINT_SIZE 3
 #define paint_point(x,y) \
-      gdk_draw_rectangle(go.pixmap_empty_board, \
-               go.drawing_area->style->black_gc, TRUE, \
+      gdk_draw_rectangle(go.board.pixmap_empty_board, \
+               go.board.drawing_area->style->black_gc, TRUE, \
                border_trans + cell_size * (x-1) - ADVANTAGE_POINT_SIZE/2, \
                border_trans + cell_size * (y-1) - ADVANTAGE_POINT_SIZE/2, \
                ADVANTAGE_POINT_SIZE, ADVANTAGE_POINT_SIZE);
 
-  if(go.game_size == 9){
+  if(go.game.size == 9){
     paint_point(3, 3);
     paint_point(7, 3);
     paint_point(5, 5);
     paint_point(3, 7);
     paint_point(7, 7);
   }
-  else if(go.game_size == 13){
+  else if(go.game.size == 13){
     paint_point( 4,  4);
     paint_point( 4,  7);
     paint_point( 4, 10);
@@ -174,7 +175,7 @@ void scale_graphics(){
     paint_point(10,  7);
     paint_point(10, 10);
   }
-  else if(go.game_size == 19){
+  else if(go.game.size == 19){
     paint_point( 4,  4);
     paint_point( 4, 10);
     paint_point( 4, 16);
@@ -191,28 +192,28 @@ void scale_graphics(){
 
 void paint_board(GtkWidget * widget){
   GdkRectangle rect;
-  gdk_draw_drawable (go.drawing_area_pixmap_buffer,
+  gdk_draw_drawable (go.board.drawing_area_pixmap_buffer,
                      widget->style->black_gc,
-                     go.pixmap_empty_board,
+                     go.board.pixmap_empty_board,
                      0, 0, 0, 0, BOARD_SIZE, BOARD_SIZE);
   rect.x = rect.y = 0;
   rect.width = rect.height = BOARD_SIZE;
-  gtk_widget_draw (go.drawing_area, &rect);
+  gtk_widget_draw (go.board.drawing_area, &rect);
 }
 
 void unpaint_stone(int col, int row){
   GdkRectangle rect;
 
-  rect.x = (col -1) * go.cell_size + go.margin;
-  rect.y = (row -1) * go.cell_size + go.margin;
-  rect.width = rect.height = go.cell_size;
+  rect.x = (col -1) * go.board.cell_size + go.board.margin;
+  rect.y = (row -1) * go.board.cell_size + go.board.margin;
+  rect.width = rect.height = go.board.cell_size;
 
-  gdk_draw_drawable (go.drawing_area_pixmap_buffer,
-                     go.drawing_area->style->black_gc,
-                     go.pixmap_empty_board,
+  gdk_draw_drawable (go.board.drawing_area_pixmap_buffer,
+                     go.board.drawing_area->style->black_gc,
+                     go.board.pixmap_empty_board,
                      rect.x, rect.y, rect.x, rect.y,
                      rect.width, rect.height);
-  gtk_widget_draw (go.drawing_area, &rect);
+  gtk_widget_draw (go.board.drawing_area, &rect);
 }
 
 /* optional last args for specific marks */
@@ -221,22 +222,22 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
   int position;
   int size;
 
-  rect.x = go.margin + (col -1) * go.cell_size + go.stone_space;
-  rect.y = go.margin + (row -1) * go.cell_size + go.stone_space;
-  rect.width = rect.height = go.stone_size;
+  rect.x = go.board.margin + (col -1) * go.board.cell_size + go.board.stone_space;
+  rect.y = go.board.margin + (row -1) * go.board.cell_size + go.board.stone_space;
+  rect.width = rect.height = go.board.stone_size;
 
   TRACE("mark (%d %d) %s", col, row,
-        (go.grid[col][row] == BLACK_STONE)?"black":"white");
+        (go.game.grid[col][row] == BLACK_STONE)?"black":"white");
 
   gdk_gc_set_foreground(gc, color);
 
   switch(mark){
     case MARK_SQUARE:
-      position = go.stone_size / 4;
-      size = go.stone_size / 2;
-      if( !((size - go.grid_stroke)%2) ) size++;
+      position = go.board.stone_size / 4;
+      size = go.board.stone_size / 2;
+      if( !((size - go.board.grid_stroke)%2) ) size++;
 
-      gdk_draw_rectangle (go.drawing_area_pixmap_buffer,
+      gdk_draw_rectangle (go.board.drawing_area_pixmap_buffer,
                           gc,
                           FALSE,
                           rect.x + position, rect.y + position,
@@ -244,11 +245,11 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
                           );
       break;
     case MARK_SPOT:
-      size = go.stone_size / 1.5;
-      if( !((size - go.grid_stroke)%2) ) size++;
-      position = (go.cell_size - size ) / 2 -1;
+      size = go.board.stone_size / 1.5;
+      if( !((size - go.board.grid_stroke)%2) ) size++;
+      position = (go.board.cell_size - size ) / 2 -1;
 
-      gdk_draw_arc(go.drawing_area_pixmap_buffer,
+      gdk_draw_arc(go.board.drawing_area_pixmap_buffer,
                    gc,
                    TRUE,//filled
                    rect.x + position,
@@ -270,16 +271,16 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
         int text_heigh;
 
         //Pango context and layout
-        context = gtk_widget_create_pango_context(go.drawing_area);
+        context = gtk_widget_create_pango_context(go.board.drawing_area);
         //pango_context_set_
         layout = pango_layout_new (context);
 
         //font
-        font_size = (int)(go.stone_size * (1 - 0.6)); //stone -x%
+        font_size = (int)(go.board.stone_size * (1 - 0.6)); //stone -x%
         if(font_size < 6)  font_size = 6; //min
         if(font_size > 10) font_size = 10;//max NOTE: check desktop default
         font_name = g_strdup_printf("Mono %d", font_size);
-        TRACE("FONT %s (stone: %d)", font_name, go.stone_size);
+        TRACE("FONT %s (stone: %d)", font_name, go.board.stone_size);
         font = pango_font_description_from_string (font_name);
         pango_layout_set_font_description (layout, font);
 
@@ -291,19 +292,19 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
         pango_layout_set_text (layout, s, -1);
 
         //color
-        if(go.grid[col][row] == BLACK_STONE)
-          gc = go.drawing_area->style->white_gc;
+        if(go.game.grid[col][row] == BLACK_STONE)
+          gc = go.board.drawing_area->style->white_gc;
         else
-          gc = go.drawing_area->style->black_gc;
+          gc = go.board.drawing_area->style->black_gc;
 
         //rendering
         text_width = text_heigh = 0;
         pango_layout_get_pixel_size (layout, &text_width, &text_heigh);
         TRACE("LABEL w %d h %d", text_width, text_heigh);
-        gdk_draw_layout(go.drawing_area_pixmap_buffer,
+        gdk_draw_layout(go.board.drawing_area_pixmap_buffer,
                         gc,
-                        rect.x + (go.stone_size - text_width) / 2,//layout's left
-                        rect.y + (go.stone_size - text_heigh) / 2,//layout's top
+                        rect.x + (go.board.stone_size - text_width) / 2,//layout's left
+                        rect.y + (go.board.stone_size - text_heigh) / 2,//layout's top
                         layout);
         g_free(context); g_free(layout);//NOTE: allocate once.
       }
@@ -312,31 +313,31 @@ void paint_mark(int col, int row, GoMark mark, GdkColor * color, ...){
     default:
       break;
   }
-  gtk_widget_draw (go.drawing_area, &rect);
+  gtk_widget_draw (go.board.drawing_area, &rect);
 }//paint_mark()
 
 void paint_stone(int col, int row, GoItem item){
   GdkRectangle rect;
 
-  rect.x = (col -1) * go.cell_size + go.margin + go.stone_space;
-  rect.y = (row -1) * go.cell_size + go.margin + go.stone_space;
-  rect.width = rect.height = go.stone_size;
+  rect.x = (col -1) * go.board.cell_size + go.board.margin + go.board.stone_space;
+  rect.y = (row -1) * go.board.cell_size + go.board.margin + go.board.stone_space;
+  rect.width = rect.height = go.board.stone_size;
 
   TRACE("paint");
  
   switch (item){
   case BLACK_STONE:
-    gdk_draw_pixbuf(go.drawing_area_pixmap_buffer,
-                    go.drawing_area->style->white_gc,
-                    go.pixbuf_black_stone,
+    gdk_draw_pixbuf(go.board.drawing_area_pixmap_buffer,
+                    go.board.drawing_area->style->white_gc,
+                    go.board.pixbuf_black_stone,
                     0, 0, rect.x, rect.y,
                     -1, -1,
                     GDK_RGB_DITHER_NONE, 0, 0);
     break;
   case WHITE_STONE:
-    gdk_draw_pixbuf(go.drawing_area_pixmap_buffer,
-                    go.drawing_area->style->white_gc,
-                    go.pixbuf_white_stone,
+    gdk_draw_pixbuf(go.board.drawing_area_pixmap_buffer,
+                    go.board.drawing_area->style->white_gc,
+                    go.board.pixbuf_white_stone,
                     0, 0, rect.x, rect.y,
                     -1, -1,
                     GDK_RGB_DITHER_NONE, 0, 0);
@@ -344,7 +345,7 @@ void paint_stone(int col, int row, GoItem item){
   case EMPTY:
     break;
   }//switch item
-  gtk_widget_draw (go.drawing_area, &rect);
+  gtk_widget_draw (go.board.drawing_area, &rect);
 }
 
 
@@ -353,8 +354,8 @@ on_drawing_area_configure_event (GtkWidget         * widget,
                                  GdkEventConfigure * event,
                                  gpointer            user_data){
   //when window is created or resized
-  if(!go.drawing_area_pixmap_buffer){
-    go.drawing_area_pixmap_buffer = gdk_pixmap_new(widget->window,
+  if(!go.board.drawing_area_pixmap_buffer){
+    go.board.drawing_area_pixmap_buffer = gdk_pixmap_new(widget->window,
                                                    BOARD_SIZE,
                                                    BOARD_SIZE,
                                                    -1);
@@ -370,7 +371,7 @@ on_drawing_area_expose_event (GtkWidget       *widget,
   //refresh the part outdated by the event
   gdk_draw_pixmap(widget->window,
                   widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-                  go.drawing_area_pixmap_buffer,
+                  go.board.drawing_area_pixmap_buffer,
                   event->area.x, event->area.y,
                   event->area.x, event->area.y,
                   event->area.width, event->area.height);
@@ -382,15 +383,15 @@ on_drawing_area_button_release_event(GtkWidget       *widget,
                                      GdkEventButton  *event,
                                      gpointer         user_data){
   TRACE("release");
-  go.col = (event->x - go.margin) / go.cell_size + 1;
-  go.row = (event->y - go.margin) / go.cell_size + 1;
-  play_at(go.col, go.row);
+  go.game.col = (event->x - go.board.margin) / go.board.cell_size + 1;
+  go.game.row = (event->y - go.board.margin) / go.board.cell_size + 1;
+  play_at(go.game.col, go.game.row);
 
   return FALSE;
 }
 
 
-GtkWidget * go_board_new(){
+void go_board_init(){
   GtkWidget * drawing_area;
 
   //--drawing area (Go Board)
@@ -402,7 +403,7 @@ GtkWidget * go_board_new(){
                          | GDK_BUTTON_RELEASE_MASK
                          );
 
-  go.drawing_area_pixmap_buffer = NULL;
+  go.board.drawing_area_pixmap_buffer = NULL;
 
   g_signal_connect (G_OBJECT (drawing_area), "configure_event",
                     G_CALLBACK (on_drawing_area_configure_event), NULL);
@@ -411,6 +412,7 @@ GtkWidget * go_board_new(){
   g_signal_connect (G_OBJECT (drawing_area), "button_release_event",
                     G_CALLBACK (on_drawing_area_button_release_event), NULL);
 
-  return drawing_area;
+  go.board.drawing_area = drawing_area;
+  go.board.widget       = drawing_area;//the top level widget
 
 }

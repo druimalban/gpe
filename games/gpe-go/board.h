@@ -17,12 +17,39 @@
 
 #include "model.h"
 
-#define BOARD_SIZE 240 //pixels
+#define BOARD_SIZE 240 //pixels CLEAN: remove
 
 extern GdkColor red;
 extern GdkColor blue;
 
-GtkWidget * go_board_new();
+typedef struct {
+  GtkWidget * widget; /* the top level container */
+
+  GtkWidget * drawing_area;
+  GdkPixmap * drawing_area_pixmap_buffer;
+
+  /* graphics */
+  GdkPixbuf * loaded_board;
+  GdkPixbuf * loaded_black_stone;
+  GdkPixbuf * loaded_white_stone;
+
+  GdkPixbuf * pixbuf_black_stone;
+  GdkPixbuf * pixbuf_white_stone;
+  GdkPixmap * pixmap_empty_board;
+
+  int size;       //px PARAM - size of the board widget
+
+  int margin;     //***px - left/top margin
+  int cell_size;  //***px - == stone_size + stone_space 
+  int stone_size; //px
+  int stone_space;//px PARAM space between two stones (0/1 px)  
+  int grid_stroke;//px PARAM width of the grid stroke (1px)
+
+  gboolean lock_variation_choice;
+
+} GoBoard;
+
+void go_board_init();
 
 void load_graphics();
 void scale_graphics();
