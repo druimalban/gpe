@@ -1,5 +1,7 @@
 2003-04-10  Philip Blundell  <philb@gnu.org>
 
+	* familiar/control: Deleted.
+
 	* week_view.c (draw_expose_event): Remove spurious
 	g_locale_to_utf8.
 	(week_view_update): Likewise.
