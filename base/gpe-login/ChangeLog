@@ -1,3 +1,13 @@
+2003-07-18  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login 0.53 released.
+
+2003-07-18  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/98standard-apps: Use
+	.matchbox/mbdock.session.
+	* standard.mbdock: Update.
+
 2003-07-16  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.52 released.

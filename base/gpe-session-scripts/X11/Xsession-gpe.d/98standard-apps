@@ -1,8 +1,9 @@
 #!/bin/sh
 
 # No action if .mbdock exists
-if [ ! -f $HOME/.mbdock ]; then
-  cp /etc/gpe/gpe.mbdock $HOME/.mbdock
+if [ ! -f $HOME/.matchbox/mbdock.session ]; then
+  mkdir -p $HOME/.matchbox
+  cp /etc/gpe/gpe.mbdock $HOME/.matchbox/mbdock.session
 
   gpe-question --icon !gtk-dialog-info --question "<b>Welcome to GPE!</b>
 
