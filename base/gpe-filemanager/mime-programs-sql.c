@@ -78,7 +78,7 @@ del_mime_program (struct mime_program *e)
 static int
 mime_program_callback (void *arg, int argc, char **argv, char **names)
 {
-  if (argc == 5 && argv[0] && argv[1])
+  if (argc == 4 && argv[0] && argv[1])
     new_mime_program_internal (atoi (argv[0]), g_strdup (argv[1]), g_strdup (argv[2]), g_strdup (argv[3]));
   return 0;
 }

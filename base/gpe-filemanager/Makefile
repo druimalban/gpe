@@ -6,7 +6,8 @@ MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 SPINNER_PIXMAPS = `cd pixmaps/spinner && ls *.png`
 GTK2 = yes
 
-MEMBERS = main mime_edit_db mime-sql mime-programs-sql
+MEMBERS = main mime-sql mime-programs-sql
+MEMBERS2 = mime_edit_db mime-sql mime-programs-sql
 
 ifeq ($(GTK2),yes)
 CFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
@@ -41,11 +42,16 @@ endif
 CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
+OBJS2 = $(patsubst %,%.o,$(MEMBERS2))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
+SOURCES2 = $(patsubst %,%.c,$(MEMBERS2))
 
-all: gpe-filemanager
+all: gpe-filemanager mime_edit_db
 
 gpe-filemanager: $(OBJS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+mime_edit_db: $(OBJS2)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
 install: all

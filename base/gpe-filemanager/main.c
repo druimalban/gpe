@@ -732,17 +732,17 @@ main (int argc, char *argv[])
   gtk_option_menu_set_history (GTK_OPTION_MENU (view_option_menu), 0);
 
   
-  if (mime_types)
+  if (mime_programs)
   {
     GSList *iter;
 
-    printf ("|\textension\t\t|\tmime_name\t|\n\n");
+    printf ("|\tname\t\t|\tmime\t|\tcommand\t|\n\n");
 
-    for (iter = mime_types; iter; iter = iter->next)
+    for (iter = mime_programs; iter; iter = iter->next)
     {
-      struct mime_type *c = iter->data;
+      struct mime_program *c = iter->data;
 
-      printf ("|\t%s\t\t|\t%s\t|\n", c->mime_name, c->extension);
+      printf ("|\t%s\t\t|\t%s\t|\t%s\t|\n", c->name, c->mime, c->command);
     }
   }
 
