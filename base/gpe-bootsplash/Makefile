@@ -10,7 +10,6 @@ gpe-bootsplash: splash.c
 	$(CC) $(CFLAGS) -fomit-frame-pointer -Os splash.c -o gpe-bootsplash
 
 install-program: gpe-bootsplash
-	mkdir -p $(DESTDIR)/CONTROL
 	mkdir -p $(DESTDIR)/usr/bin
 	mkdir -p $(DESTDIR)/usr/share/gpe
 	mkdir -p $(DESTDIR)/etc/rcS.d
