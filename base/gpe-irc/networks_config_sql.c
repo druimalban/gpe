@@ -26,7 +26,7 @@
 
 static sqlite *sqliteh;
 
-static const char *fname = "/.gpe/irc-networks";
+static const char *fname = "/.gpe/irc";
 
 GSList *sql_networks;
 
@@ -68,7 +68,7 @@ new_sql_network (const char *name, const char *nick, const char *real_name, cons
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "insert into irc_networks values (NULL, '%q', '%q', '%q', '%q')",
+  if (sqlite_exec_printf (sqliteh, "insert into networks values (NULL, '%q', '%q', '%q', '%q')",
 			  NULL, NULL, &err, name, nick, real_name, password))
     {
       gpe_error_box (err);
@@ -84,7 +84,7 @@ new_sql_network_server (const char *name, int port, struct sql_network *network)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "insert into irc_servers values (NULL, '%q', '%d', '%d')",
+  if (sqlite_exec_printf (sqliteh, "insert into servers values (NULL, '%q', '%d', '%d')",
 			  NULL, NULL, &err, name, port, network->id))
     {
       gpe_error_box (err);
@@ -100,7 +100,7 @@ edit_sql_network (struct sql_network *network)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "replace into irc_networks values ('%d', '%q', '%q', '%q', '%q')",
+  if (sqlite_exec_printf (sqliteh, "replace into networks values ('%d', '%q', '%q', '%q', '%q')",
 			  NULL, NULL, &err, network->id, network->name, network->nick, network->real_name, network->password))
     {
       gpe_error_box (err);
@@ -114,7 +114,7 @@ edit_sql_network_server (struct sql_network_server *network_server, struct sql_n
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "replace into irc_servers values ('%d', '%q', '%d', '%d')",
+  if (sqlite_exec_printf (sqliteh, "replace into servers values ('%d', '%q', '%d', '%d')",
 			  NULL, NULL, &err, network_server->id, network_server->name, network_server->port, network->id))
     {
       gpe_error_box (err);
@@ -127,7 +127,7 @@ del_sql_network (struct sql_network *e)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "delete from irc_networks where uid=%d",
+  if (sqlite_exec_printf (sqliteh, "delete from networks where uid=%d",
 			  NULL, NULL, &err,
 			  e->id))
     {
@@ -143,7 +143,7 @@ del_sql_network_server (struct sql_network *e, struct sql_network_server *s)
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "delete from irc_servers where uid=%d",
+  if (sqlite_exec_printf (sqliteh, "delete from servers where uid=%d",
 			  NULL, NULL, &err,
 			  s->id))
     {
@@ -159,7 +159,7 @@ del_sql_networks_all ()
 {
   char *err;
 
-  if (sqlite_exec_printf (sqliteh, "delete from mime_types",
+  if (sqlite_exec_printf (sqliteh, "delete from networks",
 			  NULL, NULL, &err))
     {
       gpe_error_box (err);
@@ -209,15 +209,16 @@ add_default_sql_networks (void)
   struct sql_network *e = g_malloc (sizeof (struct sql_network));
 
   e = new_sql_network ("FreeNode", "", "", "");
+  new_sql_network_server ("irc.freenode.net", 6667, e);
 }
 
 int
 networks_sql_start (void)
 {
   static const char *schema1_str = 
-    "create table irc_networks (uid INTEGER PRIMARY KEY, name TEXT, nick TEXT, real_name TEXT, password TEXT)";
+    "create table networks (uid INTEGER PRIMARY KEY, name TEXT, nick TEXT, real_name TEXT, password TEXT)";
   static const char *schema2_str = 
-    "create table irc_servers (uid INTEGER PRIMARY KEY, name TEXT, port INTEGER, network INTEGER)";
+    "create table servers (uid INTEGER PRIMARY KEY, name TEXT, port INTEGER, network INTEGER)";
 
   const char *home = getenv ("HOME");
   char *buf;
@@ -241,14 +242,14 @@ networks_sql_start (void)
   sqlite_exec (sqliteh, schema1_str, NULL, NULL, &err);
   sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err);
 
-  if (sqlite_exec (sqliteh, "select uid,name,nick,real_name,password from irc_networks",
+  if (sqlite_exec (sqliteh, "select uid,name,nick,real_name,password from networks",
 		   sql_network_callback, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
       return -1;
     }
-  if (sqlite_exec (sqliteh, "select uid,name,port,network from irc_servers",
+  if (sqlite_exec (sqliteh, "select uid,name,port,network from servers",
 		   sql_network_server_callback, NULL, &err))
     {
       gpe_error_box (err);
@@ -267,3 +268,12 @@ networks_sql_close (void)
 {
   sqlite_close (sqliteh);
 }
+
+
+
+
+
+
+
+
+
