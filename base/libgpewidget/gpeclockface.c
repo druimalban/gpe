@@ -645,8 +645,8 @@ gpe_clock_face_size_request (GtkWidget	  *widget,
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
 
-  requisition->height = (clock->radius + 1) * 2;
-  requisition->width = (clock->radius + 1) * 2;
+  requisition->height = (clock->radius + 3) * 2;
+  requisition->width = (clock->radius + 3) * 2;
 }
 
 static void

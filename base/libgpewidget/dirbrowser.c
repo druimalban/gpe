@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -194,6 +194,7 @@ gpe_create_dir_browser (gchar * title, gchar *current_path,
   GtkCellRenderer *pix_renderer = gtk_cell_renderer_pixbuf_new ();
   GtkTreeViewColumn *column = gtk_tree_view_column_new ();
   GtkTreePath *path;
+  gchar *p;
 
   if (!pix_closed)
     pix_closed = gpe_try_find_icon ("dir-closed", NULL);
@@ -217,8 +218,53 @@ gpe_create_dir_browser (gchar * title, gchar *current_path,
   gtk_container_add (GTK_CONTAINER (scrolled_window), tree_view);
 
   path = gtk_tree_path_new_first ();
-  gtk_tree_view_expand_row (GTK_TREE_VIEW (tree_view), path, TRUE);
+  gtk_tree_view_expand_row (GTK_TREE_VIEW (tree_view), path, FALSE);
   gtk_tree_path_free (path);
+
+  p = current_path;
+  while (p)
+    {
+      gchar *next;
+      GtkTreeIter new_iter;
+      gboolean found = FALSE;
+
+      while (*p == '/')
+	p++;
+      if (*p == 0)
+	break;
+
+      next = strchr (p, '/');
+
+      if (next)
+	*(next++) = 0;
+
+      if (!gtk_tree_model_iter_children (GTK_TREE_MODEL (store), &new_iter, &iter))
+	break;
+
+      do
+	{
+	  gchar *name;
+	  gtk_tree_model_get (GTK_TREE_MODEL (store), &new_iter, NAME_COLUMN, &name, -1);
+	  if (!strcmp (name, p))
+	    {
+	      path = gtk_tree_model_get_path (GTK_TREE_MODEL (store), &new_iter);
+	      gtk_tree_view_expand_row (GTK_TREE_VIEW (tree_view), path, FALSE);	
+	      gtk_tree_view_set_cursor (GTK_TREE_VIEW (tree_view), path, NULL, FALSE);
+	      gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (tree_view), path, NULL, FALSE, 0, 0);
+	      gtk_tree_path_free (path);
+	      found = TRUE;
+	      break;
+	    }
+	  g_free (name);
+	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (store), &new_iter));
+
+      if (!found)
+	break;
+
+      iter = new_iter;
+
+      p = next;
+    }
 
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);
 

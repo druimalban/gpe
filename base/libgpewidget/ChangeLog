@@ -1,3 +1,7 @@
+2004-08-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* dirbrowser.c (gpe_create_dir_browser): Honour supplied path.
+
 2004-08-08  Phil Blundell  <pb@nexus.co.uk>
 
 	* Makefile: Version 0.88 released.
