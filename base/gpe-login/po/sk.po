@@ -1,0 +1,84 @@
+# Slovak translations for gpe-login package
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-login package.
+# Marcel Telka <marcel@telka.sk>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2003-09-09 23:20+0200\n"
+"Last-Translator: Marcel Telka <marcel@telka.sk>\n"
+"Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr "Nesprávne prihlásenie"
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr "Používateľ už existuje"
+
+#: gpe-login.c:581
+msgid "Passwords don't match"
+msgstr "Heslá sa nezhodujú"
+
+#: gpe-login.c:590
+msgid "Empty password not allowed"
+msgstr "Prázdne heslo nie je povolené"
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Zaznamenať"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr "prekalibrovať dotykovú obrazovku"
+
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr "sk"
+
+#: gpe-login.c:1396
+msgid "Screen locked"
+msgstr "Obrazovka uzamknutá"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Meno používateľa"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Heslo"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Jazyk"
+
+#: gpe-login.c:1460
+msgid "Enter password with hard keys"
+msgstr "Zadajte heslo tvrdými klávesami"
+
+#: gpe-login.c:1517
+msgid "Full name"
+msgstr "Celé meno"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Potvrdiť heslo"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "Nový používateľ"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Odhlásiť"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Odhlásiť z GPE"

@@ -1,5 +1,8 @@
 2004-03-08  Philip Blundell  <philb@gnu.org>
 
+	* po/cs.po, po/fr.po, po/hu.po, po/ro.po, po/ru.po, po/sk.po,
+	po/sr.po: New.
+
 	* gpe-login.buttons: Obsolete.  Deleted.
 
 	* X11/Xinit.d, X11/Xsession.d, X11/xsettings.default,

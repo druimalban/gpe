@@ -1,0 +1,84 @@
+# French translation for gpe-login.
+# Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
+# This file is distributed under the same license as the PACKAGE package.
+# Luc Pionchon <luc@handhelds.org>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2003-10-16 19:55+0300\n"
+"Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
+"Language-Team: French <traduc@traduc.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr "Login incorrect"
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr "L'utilisateur existe déjà"
+
+#: gpe-login.c:581
+msgid "Passwords don't match"
+msgstr "Les mots de passe ne correspondent pas"
+
+#: gpe-login.c:590
+msgid "Empty password not allowed"
+msgstr "Vous ne pouvez pas utiliser un mot de passe vide."
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Enregistrer"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr "Recalibrer l'écran tactile"
+
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr "fr"
+
+#: gpe-login.c:1396
+msgid "Screen locked"
+msgstr "Écran bloqué"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Mot de passe"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Langage"
+
+#: gpe-login.c:1460
+msgid "Enter password with hard keys"
+msgstr "Saisir le mot de passe avec les boutons de l'appareil"
+
+#: gpe-login.c:1517
+msgid "Full name"
+msgstr "Nom complet"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Confirmer le mot de passe"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "Nouvel utilisateur"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Fermer la session"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Fermer la session GPE"

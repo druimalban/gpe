@@ -65,7 +65,7 @@ install-program: gpe-login gpe-lock-display
 	install -m 644 gpe-login.sysconfig $(DESTDIR)/etc/sysconfig/gpelogin
 
 clean: clean-po
-	rm -f gpe-login $(OBJS) $(DEPS) gpe-lock-display gpe-lock-display.o nocursor.o
+	rm -f gpe-login $(OBJS) $(DEPS) gpe-lock-display gpe-lock-display.o gpe-lock-display.d
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

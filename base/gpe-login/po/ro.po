@@ -1,0 +1,87 @@
+# Mesajele în limba românã pentru gpe-login.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-login.
+# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+#
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2003-09-08 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr "Login incorect"
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr "Utilizatorul existã deja"
+
+#: gpe-login.c:581
+msgid "Passwords don't match"
+msgstr "Parolele nu se potrivesc"
+
+#: gpe-login.c:590
+msgid "Empty password not allowed"
+msgstr "Nu este permisã parolã goalã"
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Înregistrare"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr "recalibrare touchscreen"
+
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr "ro"
+
+#: gpe-login.c:1396
+msgid "Screen locked"
+msgstr "Ecran încuiat"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Nume utilizator"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Parolã"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Limbã"
+
+#: gpe-login.c:1460
+msgid "Enter password with hard keys"
+msgstr "Introduceþi parolã cu chei hard"
+
+#: gpe-login.c:1517
+msgid "Full name"
+msgstr "Nume întreg"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Confirmare parolã"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "Utilizator nou"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Terminã (logout)"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Terminã (logout) GPE"

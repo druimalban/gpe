@@ -1,0 +1,85 @@
+# Translation of gpe-login-0.60.po to Russian.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-login package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2003-10-29 20:06+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr "Неверный логин"
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr "Пользователь уже существует"
+
+#: gpe-login.c:581
+msgid "Passwords don't match"
+msgstr "Пароли не совпадают"
+
+#: gpe-login.c:590
+msgid "Empty password not allowed"
+msgstr "Пустые пароли не разрешены"
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Записать"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr "перекалибрует сенсорный экран"
+
+#  TRANSLATORS: please replace this with your own Pango language code:
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr "ru"
+
+#: gpe-login.c:1396
+msgid "Screen locked"
+msgstr "Экран заблокирован"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Пароль"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Язык"
+
+#: gpe-login.c:1460
+msgid "Enter password with hard keys"
+msgstr "Введите пароль при помощи аппаратных клавиш"
+
+#: gpe-login.c:1517
+msgid "Full name"
+msgstr "Полное имя"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Подтверждение пароля"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "Новый пользователь"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Выход из системы"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Выход из системы GPE"
