@@ -63,13 +63,27 @@ load_callback (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 5)
     {
+      char *p;
+      struct tm tm;
       event_t ev = g_malloc (sizeof (struct event_s));
       
+      ev->flags = 0;
       ev->uid = atoi (argv[0]);
-      ev->start = (time_t)atoi (argv[1]);
+
+      memset (&tm, 0, sizeof (tm));
+      p = strptime (argv[1], "%Y-%m-%d", &tm);
+      if (p == NULL)
+	{
+	  fprintf (stderr, "Unable to parse date: %s\n", argv[1]);
+	  return 1;
+	}
+      p = strptime (p, " %H:%M", &tm);
+      if (p == NULL)
+	ev->flags |= FLAG_UNTIMED;
+      
+      ev->start = timegm (&tm);
       ev->duration = argv[2] ? atoi(argv[2]) : 0;
       ev->alarm = atoi (argv[3]);
-      ev->recur.type = atoi (argv[4]);
       
       if (event_db_add_internal (ev) == FALSE)
 	return 1;
@@ -82,15 +96,15 @@ gboolean
 event_db_start (void)
 {
   static const char *schema_str = 
-    "create table events (uid integer NOT NULL, start integer NOT NULL,"
-    " duration integer, alarm integer, description text, summary text, recur_type integer)";
+    "create table events (uid integer NOT NULL, start text NOT NULL,"
+    " duration integer, alarmtime integer, alarmtype text, summary text, description text, recurring text)";
   const char *home = getenv ("HOME");
   char *buf;
   char *err;
   size_t len;
   if (home == NULL) 
     home = "";
-  len = strlen (home) + strlen (dname);
+  len = strlen (home) + strlen (dname) + 1;
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, dname);
@@ -104,8 +118,7 @@ event_db_start (void)
 
   sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
   
-  if (sqlite_exec (sqliteh, "select uid, start, duration, alarm, recur_type from events",
-		   load_callback, NULL, &err))
+  if (sqlite_exec (sqliteh, "select uid, start, duration, alarmtime, recurring from events", load_callback, NULL, &err))
     {
       fprintf (stderr, "sqlite: %s\n", err);
       free (err);
@@ -165,8 +178,8 @@ event_db_stop (void)
   return TRUE;
 }
 
-GSList *
-event_db_list_for_period (time_t start, time_t end)
+static GSList *
+event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed)
 {
   GSList *iter;
   GSList *list = NULL;
@@ -176,12 +189,15 @@ event_db_list_for_period (time_t start, time_t end)
       event_t ev = iter->data;
       assert (ev->recur.type == RECUR_NONE);
 
+      if (untimed != ((ev->flags & FLAG_UNTIMED) != 0))
+	continue;
+
       /* Stop if event hasn't started yet */
       if (ev->start > end)
 	break;
 
       /* Skip events that have finished already */
-      if (ev->start + ev->duration <= start)
+      if (ev->duration && (ev->start + ev->duration <= start))
 	continue;
 
       list = g_slist_append (list, ev);
@@ -207,23 +223,47 @@ event_db_list_for_period (time_t start, time_t end)
   return list;
 }
 
+GSList *
+event_db_list_for_period (time_t start, time_t end)
+{
+  return event_db_list_for_period_internal (start, end, FALSE);
+}
+
+GSList *
+event_db_untimed_list_for_period (time_t start, time_t end)
+{
+  return event_db_list_for_period_internal (start, end, TRUE);
+}
+
+void
+event_db_list_destroy (GSList *l)
+{
+  g_slist_free (l);
+}
+
 /* Add an event to both the in-memory list and the SQL database */
 gboolean
 event_db_add (event_t ev)
 {
   char *err;
+  char buf[256];
+  struct tm tm;
 
   ev->uid = uid;
 
   if (event_db_add_internal (ev) == FALSE)
     return FALSE;
-  
+ 
+  gmtime_r (&ev->start, &tm);
+  strftime (buf, 256, 
+	    (ev->flags & FLAG_UNTIMED) ? "%Y-%m-%d" : "%Y-%m-%d %H:%M",
+	    &tm);
+ 
   if (sqlite_exec_printf (sqliteh, 
-			  "insert into events values (%d, %d, %d, %d, '%q', '%q', %d)", 
+			  "insert into events (uid, start, duration, alarmtime, description, summary) values (%d, '%q', %d, %d, '%q', '%q')", 
 			  NULL, NULL, &err, 
-			  ev->uid, ev->start, ev->duration, ev->alarm, 
-			  ev->details->description, ev->details->summary,
-			  ev->recur.type))
+			  ev->uid, buf, ev->duration, ev->alarm, 
+			  ev->details->description, ev->details->summary))
     {
       event_db_remove_internal (ev);
       fprintf (stderr, "sqlite: %s\n", err);

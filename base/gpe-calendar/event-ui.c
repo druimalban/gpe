@@ -32,6 +32,7 @@ struct edit_state
 
   GtkWidget *startdate, *enddate;
   GtkWidget *starttime, *endtime;
+  GtkWidget *alldaybutton;
   
   GtkWidget *alarmbutton;
   GtkWidget *alarmspin;
@@ -88,6 +89,17 @@ recalculate_sensitivities(GtkWidget *widget,
     {
       gtk_widget_set_sensitive (s->alarmoption, 0);
       gtk_widget_set_sensitive (s->alarmspin, 0);
+    }
+
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alldaybutton)))
+    {
+      gtk_widget_set_sensitive (s->starttime, 0);
+      gtk_widget_set_sensitive (s->endtime, 0);
+    }
+  else
+    {
+      gtk_widget_set_sensitive (s->starttime, 1);
+      gtk_widget_set_sensitive (s->endtime, 1);
     }
   
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonnone))) 
@@ -200,7 +212,6 @@ click_ok(GtkWidget *widget,
   struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
   event_t ev;
   event_details_t ev_d;
-  struct tm tm, tm2;
   struct tm tm_start, tm_end;
   char *start = gtk_editable_get_chars (GTK_EDITABLE (GTK_COMBO 
 						      (s->starttime)->entry), 
@@ -224,41 +235,46 @@ click_ok(GtkWidget *widget,
   ev_d->summary = gtk_editable_get_chars (GTK_EDITABLE (s->summary), 
 					  0, -1);
 
-  memset(&tm, 0, sizeof(tm));
+  memset(&tm_start, 0, sizeof (struct tm));
+  memset(&tm_end, 0, sizeof (struct tm));
 
-  tm.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
-  tm.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
-  tm.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
-  tm.tm_sec = 0;
+  tm_start.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
+  tm_start.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
+  tm_start.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
 
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  ev->duration = 24 * 60 * 60;
+  tm_end.tm_year = GTK_DATE_COMBO (s->enddate)->year - 1900;
+  tm_end.tm_mon = GTK_DATE_COMBO (s->enddate)->month;
+  tm_end.tm_mday = GTK_DATE_COMBO (s->enddate)->day;
 
-  if (strptime (start, TIMEFMT, &tm_start))
+  ev->flags = 0;
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alldaybutton)))
     {
-      tm.tm_hour = tm_start.tm_hour;
-      tm.tm_min = tm_start.tm_min;
-      
-      if (strptime (end, TIMEFMT, &tm_end))
+      ev->flags |= FLAG_UNTIMED;
+
+      /* NB: all-day events use UTC here */
+      ev->start = timegm (&tm_start);
+      ev->duration = timegm (&tm_end) - ev->start;
+    }
+  else
+    {
+      strptime (start, TIMEFMT, &tm_start);
+      strptime (end, TIMEFMT, &tm_end);
+
+      ev->start = mktime (&tm_start);
+      ev->duration = mktime (&tm_end) - ev->start;
+
+      /* If DST was in effect, mktime will have "helpfully" incremented the
+	 hour.  Knock it back and run the conversion again so it comes out
+	 right.  */
+      if (tm_start.tm_isdst)
 	{
-	  ev->duration = ((tm_end.tm_hour - tm_start.tm_hour) * 60
-			  + (tm_end.tm_min - tm_start.tm_min)) * 60;
+	  tm_start.tm_hour --;
+	  ev->start = mktime (&tm_start);
 	}
     }
 
   g_free (end);
   g_free (start);
-
-  tm.tm_hour = tm.tm_hour - 1;
-  ev->start = mktime (&tm);
-
-  localtime_r (&ev->start, &tm2);
-  if (tm2.tm_isdst)
-    {
-      tm.tm_isdst = tm2.tm_isdst;
-      ev->start = mktime (&tm);
-    }
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->alarmbutton)))
     ev->alarm = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (s->alarmspin));
@@ -390,6 +406,9 @@ edit_event_window(void)
   gtk_box_pack_end (GTK_BOX (enddatebox), endtimelabel, FALSE, FALSE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), s->enddate, TRUE, TRUE, 2);
   gtk_box_pack_end (GTK_BOX (enddatebox), enddatelabel, FALSE, FALSE, 2);
+
+  gtk_signal_connect (GTK_OBJECT (alldaybutton), "toggled", 
+		      GTK_SIGNAL_FUNC (recalculate_sensitivities), window);
 
   gtk_text_set_editable (GTK_TEXT (description), TRUE);
   gtk_text_set_word_wrap (GTK_TEXT (description), TRUE);
@@ -755,6 +774,7 @@ edit_event_window(void)
   s->deletebutton = buttondelete;
   s->starttime = starttime;
   s->endtime = endtime;
+  s->alldaybutton = alldaybutton;
   s->alarmbutton = alarmbutton;
   s->alarmspin = alarmspin;
   s->alarmoption = alarmoption;

@@ -151,6 +151,9 @@ week_view_update (void)
       GSList *iter;      
       guint height = datefont->ascent + datefont->descent;
 
+      if (week_days[day].events)
+	event_db_list_destroy (week_days[day].events);
+
       week_days[day].events = event_db_list_for_period (t, t + SECONDS_IN_DAY - 1);
       week_days[day].y = y;
 

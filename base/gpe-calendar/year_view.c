@@ -219,7 +219,7 @@ year_view_update (void)
 					    basetime + ((i + 1) * SECONDS_IN_DAY) - 1);
       if (l)
 	{
-	  g_slist_free (l);
+	  event_db_list_destroy (l);
 	  day_event_bits[i / sizeof(unsigned int)] |= 1 << (i % sizeof (unsigned int));
 	}
     }

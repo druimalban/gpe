@@ -195,6 +195,9 @@ day_view_update ()
        } 
     }
 
+  for (hour = 0; hour <= 23; hour++)
+    event_db_list_destroy (day_events[hour]);
+
   for (i = 0; i < row; i++)
     gtk_clist_set_cell_style (GTK_CLIST (day_list), i, 0, time_style);
 

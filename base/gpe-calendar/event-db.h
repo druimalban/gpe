@@ -28,6 +28,8 @@ typedef struct event_details_s
   char *description;
 } *event_details_t;
 
+#define FLAG_UNTIMED  (1 << 0)
+
 typedef struct event_s
 {
   unsigned long uid;
@@ -35,6 +37,7 @@ typedef struct event_s
   time_t start;
   unsigned long duration;	/* 0 == instantaneous */
   unsigned long alarm;		/* -1 == none */
+  unsigned long flags;
   
   struct
   {
@@ -65,5 +68,7 @@ extern event_details_t event_db_get_details (event_t);
 extern void event_db_forget_details (event_t);
 
 extern GSList *event_db_list_for_period (time_t start, time_t end);
+extern GSList *event_db_untimed_list_for_period (time_t start, time_t end);
+extern void event_db_list_destroy (GSList *);
 
 #endif

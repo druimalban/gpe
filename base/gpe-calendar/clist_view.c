@@ -42,7 +42,7 @@ selection_made( GtkWidget      *clist,
       else 
 	{
 	  localtime_r (&viewtime, &tm);
-	  tm.tm_hour = hour+1;
+	  tm.tm_hour = hour;
 	  tm.tm_min = 0;
 	  tm.tm_sec = 0;
 	  appt = new_event (mktime (&tm), 1);
