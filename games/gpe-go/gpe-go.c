@@ -294,10 +294,14 @@ GtkWidget * build_new_game_dialog(){
   GtkWidget * image;
   GdkPixbuf * pixbuf;
 
+  char *s;
+
+
   //--title
   label = gtk_label_new (NULL);
-  /* TRANSLATORS: keep the <big><b> tags */
-  gtk_label_set_markup (GTK_LABEL (label), _("<big><b>New Game</b></big>"));
+  s = g_strdup_printf("<big><b>%s</b></big>", _("New Game"));
+  gtk_label_set_markup (GTK_LABEL (label), s);
+  g_free (s);
 
   //image
   pixbuf = gpe_find_icon ("this_app_icon");
@@ -321,8 +325,10 @@ GtkWidget * build_new_game_dialog(){
   game_size = vbox;
 
   label = gtk_label_new (NULL);
-  /* TRANSLATORS: keep the <b> tags */
-  gtk_label_set_markup (GTK_LABEL (label), _("<b>Game Size</b>"));
+  s = g_strdup_printf("<b>%s</b>", _("Game Size"));
+  gtk_label_set_markup (GTK_LABEL (label), s);
+  g_free (s);
+
   gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
   gtk_box_pack_start (GTK_BOX (vbox), label, TRUE, TRUE, 0);
 
@@ -471,10 +477,13 @@ GtkWidget * build_comment_editor(){
   GtkWidget * comment_text_view;
   GtkWidget * scrolled_window;
 
+  char *s;
+
   //--title
   label = gtk_label_new (NULL);
-  /* TRANSLATORS: keep the <big><b> tags */
-  gtk_label_set_markup (GTK_LABEL (label), _("<big><b>Comment editor</b></big>"));
+  s = g_strdup_printf("<big><b>%s</b></big>", _("Comment editor"));
+  gtk_label_set_markup (GTK_LABEL (label), s);
+  g_free (s);
 
   //image
   pixbuf = gpe_find_icon ("this_app_icon");
