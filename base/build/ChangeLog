@@ -1,3 +1,10 @@
+2003-02-14  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control.translation: Depend on virtual-locale-CC not
+	locale-base-CC.
+	
+	* Makefile.translation (.po.po8): Use iconv in place of recode.
+
 2003-02-13  Phil Blundell <pb@nexus.co.uk>
 
 	* Makefile.translation: Delete rule calling msgmerge.

@@ -25,7 +25,7 @@ install-mo: all-mo
 	msgfmt -o $@ $<
 
 .po.po8:;
-	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; recode $${CTYPE}..UTF-8 <$< >$@
+	CTYPE=`grep "^\"Content-Type:" $< | sed 's/^.*charset=//;s/\\\\.*//'`; iconv -f $${CTYPE} -t UTF-8 <$< >$@
 
 update-po: $(po-files) $(DIR_PO)/$(PACKAGE).pot extract-po
 

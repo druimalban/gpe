@@ -5,5 +5,5 @@ Priority: optional
 Version: <version>
 Architecture: all
 Maintainer: <maintainer>
-Depends: ipkg (>= 0.99.30), <package>, locale-base-<language>
+Depends: ipkg (>= 0.99.30), <package>, virtual-locale-<language>
 Description: Translation into <language> for <package>.
