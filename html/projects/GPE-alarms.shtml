@@ -24,4 +24,10 @@ will then take care of setting up the RTC alarm and perform a requested
 action (like ringing a bell sound).
 </P>
 
+<H2>Status</H2>
+<P>
+I don't think anybody is working on this project at the moment.  If
+you would like to volunteer, send mail to the <A
+href="mailto:gpe@handhelds.org">list</A>.
+
 <!--#include virtual="/includes/foot.shtml"-->
