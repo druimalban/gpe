@@ -17,7 +17,7 @@
 #define POPUPMENU_H
 #include <gtk/gtk.h>
 
-int popup_menu_activate (gpointer data);
+int popup_menu_activate (gpointer data, GtkWidget *il);
 void popup_menu_later (int delay, gpointer data);
 void popup_menu_cancel ();
 

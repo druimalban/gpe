@@ -16,6 +16,7 @@
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gpe/gpe-iconlist.h>
 
 #include "package.h"
 #include "popupmenu.h"
@@ -24,6 +25,12 @@
 #include "main.h"
 
 static int menu_timeout_id=0;
+
+static int on_popdown (GtkWidget *menuitem, gpointer data)
+{
+	gpe_iconlist_popup_removed (data);
+	return 0;
+}
 
 static int on_menuitem_force_run (GtkWidget *menuitem, gpointer data)
 {
@@ -73,24 +80,17 @@ void trim_text (GdkFont *font, char *text, int px)
 }
 
 /* Long-hold popup menu */
-int popup_menu_activate (gpointer data)
+int popup_menu_activate (gpointer data, GtkWidget *il)
 {
 	struct package *p;
 	GtkWidget *menu, *mi;
 	GList *l=NULL, *r=NULL;
 	char *window_title;
-#ifndef GTK2
-	GdkFont *font; /* Font in the menu label */
-#endif
+
 	p = (struct package *)data;
 
 	menu = gtk_menu_new ();
-#ifndef GTK2
-	if (gtk_rc_get_style (menu))
-		font = gtk_rc_get_style (menu)->font;
-	else
-		font = gtk_widget_get_style (menu)->font;
-#endif
+
 	window_title = package_get_data (p, "windowtitle");
 	if (window_title)
 		r = l = get_windows_with_name (window_title);
@@ -99,13 +99,11 @@ int popup_menu_activate (gpointer data)
 		struct window_info *w;
 
 		w = (struct window_info *) l->data;
-#ifndef GTK2
-		trim_text (font, w->name, 100);
-#endif
+
 		mi = gtk_menu_item_new_with_label (w->name);
 		gtk_signal_connect( GTK_OBJECT(mi), "activate",
 				    GTK_SIGNAL_FUNC(on_menuitem_raise), (gpointer)w->xid);
-		gtk_menu_append (GTK_MENU(menu), mi);
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu), mi);
 
 		window_info_free (w);
 
@@ -115,20 +113,23 @@ int popup_menu_activate (gpointer data)
 	if (r)
 	{
 		g_list_free (r);
-		gtk_menu_append (GTK_MENU(menu), gtk_menu_item_new());
+		gtk_menu_shell_append (GTK_MENU_SHELL(menu), gtk_menu_item_new());
 	}
 
 	mi = gtk_menu_item_new_with_label ("Force run");
 	gtk_signal_connect( GTK_OBJECT(mi), "activate",
 			    GTK_SIGNAL_FUNC(on_menuitem_force_run), p);
-	gtk_menu_append (GTK_MENU(menu), mi);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), mi);
 
 	mi = gtk_menu_item_new_with_label ("Properties");
 	gtk_signal_connect( GTK_OBJECT(mi), "activate",
 			    GTK_SIGNAL_FUNC(on_menuitem_properties), p);
-	gtk_menu_append (GTK_MENU(menu), mi);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), mi);
 
 	gtk_widget_show_all (menu);
+
+	gtk_signal_connect( GTK_OBJECT(menu), "deactivate",
+			    GTK_SIGNAL_FUNC(on_popdown), il);
 
 	gtk_menu_popup (GTK_MENU(menu), NULL, NULL, NULL, NULL, 0, 0);
 
