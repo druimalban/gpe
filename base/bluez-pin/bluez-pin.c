@@ -130,7 +130,7 @@ click_ok(GtkWidget *widget,
 void
 ask_user (int outgoing, const char *address)
 {
-  GtkWidget *window = gtk_window_new (GTK_WINDOW_POPUP);
+  GtkWidget *window = gtk_window_new (GTK_WINDOW_DIALOG);
   GdkBitmap *logo_mask;
   GdkPixmap *logo_pixmap;
   GtkWidget *logo = NULL;
@@ -150,7 +150,6 @@ ask_user (int outgoing, const char *address)
 
   pin_label = gtk_label_new ("PIN:");
   entry = gtk_entry_new ();
-  gtk_entry_set_visibility (GTK_ENTRY (entry), FALSE);
 
   check = gtk_check_button_new_with_label ("Save in database");
 
@@ -200,11 +199,12 @@ ask_user (int outgoing, const char *address)
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
   gtk_container_set_border_width (GTK_CONTAINER (window), 5);
 
-  gtk_widget_grab_focus (entry);
-
   gtk_window_set_position (GTK_WINDOW (window), GTK_WIN_POS_CENTER);
 
   gtk_widget_show_all (window);
+
+  gtk_widget_grab_focus (entry);
+
   gtk_main ();
 }
 
