@@ -12,6 +12,7 @@
 #include <errno.h>
 #include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "errorbox.h"

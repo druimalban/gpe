@@ -1,3 +1,8 @@
+2002-06-16  Philip Blundell  <pb@debian.org>
+
+	* errorbox.c: Add missing #include <stdio.h>.
+	* control (Version): Set to 0.05
+
 2002-06-16  Luis Oliveira  <luismbo@netcabo.pt>
 
        * errorbox.c (gpe_error_box): Set label padding to 4 when packing.
