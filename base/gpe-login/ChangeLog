@@ -1,3 +1,15 @@
+2004-07-03  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.69 released.
+	
+2004-07-03  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (my_error_box): New.
+	(enter_newuser_callback): Use it.
+	(enter_root_callback): Likewise.
+	(main): Tweak packing attributes.  Disable calibration hint
+	temporarily.
+
 2004-06-23  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.68 released.

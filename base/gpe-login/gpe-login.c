@@ -561,6 +561,37 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
 }
 
 static void
+my_error_box (gchar *text)
+{
+  GtkWidget *w, *f;
+  GtkWidget *ok, *vbox, *hbox, *icon, *label;
+
+  w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  f = gtk_frame_new (NULL);
+  gtk_container_add (GTK_CONTAINER (w), f);
+  vbox = gtk_vbox_new (FALSE, 0);
+  gtk_container_add (GTK_CONTAINER (f), vbox);
+  hbox = gtk_hbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, 0);
+  icon = gtk_image_new_from_stock (GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_DIALOG);
+  gtk_box_pack_start (GTK_BOX (hbox), icon, FALSE, FALSE, 0);
+  label = gtk_label_new (text);
+  gtk_box_pack_start (GTK_BOX (hbox), label, TRUE, TRUE, 0);
+  gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
+  ok = gtk_button_new_from_stock (GTK_STOCK_OK);
+  gtk_box_pack_end (GTK_BOX (vbox), ok, FALSE, FALSE, 2);
+  gtk_window_set_position (GTK_WINDOW (w), GTK_WIN_POS_CENTER);
+
+  gtk_widget_show_all (w);
+
+  g_signal_connect (G_OBJECT (ok), "clicked", gtk_main_quit, NULL);
+
+  gtk_main ();
+
+  gtk_widget_destroy (w);
+}
+
+static void
 enter_root_callback (GtkWidget *widget, gpointer h)
 {
   const gchar *password, *confirm;
@@ -575,7 +606,7 @@ enter_root_callback (GtkWidget *widget, gpointer h)
 
   if (strcmp (password, confirm))
     {
-      gpe_error_box (_("Passwords don't match"));
+      my_error_box (_("Passwords don't match"));
       gtk_entry_set_text (GTK_ENTRY (entry_password), "");
       gtk_entry_set_text (GTK_ENTRY (entry_confirm), "");
       gtk_widget_grab_focus (entry_password);
@@ -584,7 +615,7 @@ enter_root_callback (GtkWidget *widget, gpointer h)
 
   if (password[0] == 0)
     {
-      gpe_error_box (_("Empty password not allowed"));
+      my_error_box (_("Empty password not allowed"));
       gtk_widget_grab_focus (entry_password);
       return;
     }
@@ -592,7 +623,7 @@ enter_root_callback (GtkWidget *widget, gpointer h)
   fp = fopen ("/etc/passwd.new", "w");
   if (! fp)
     {
-      gpe_error_box ("Couldn't open new password file for writing");
+      my_error_box ("Couldn't open new password file for writing");
       exit (1);
     }
 
@@ -646,7 +677,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   pwe = getpwnam (username);
   if (pwe)
     {
-      gpe_error_box (_("User already exists"));
+      my_error_box (_("User already exists"));
 
       gtk_entry_set_text (GTK_ENTRY (entry_username), "");
       gtk_entry_set_text (GTK_ENTRY (entry_password), "");
@@ -657,7 +688,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
 
   if (strcmp (password, confirm))
     {
-      gpe_error_box (_("Passwords don't match"));
+      my_error_box (_("Passwords don't match"));
       gtk_entry_set_text (GTK_ENTRY (entry_password), "");
       gtk_entry_set_text (GTK_ENTRY (entry_confirm), "");
       gtk_widget_grab_focus (entry_password);
@@ -666,7 +697,7 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
 
   if (password[0] == 0)
     {
-      gpe_error_box (_("Empty password not allowed"));
+      my_error_box (_("Empty password not allowed"));
       gtk_widget_grab_focus (entry_password);
       return;
     }
@@ -1749,10 +1780,12 @@ main (int argc, char *argv[])
 	  focus = window;
 	}
 
-      gtk_box_pack_start (GTK_BOX (vbox2), vbox, FALSE, FALSE, 0);
+      gtk_box_pack_start (GTK_BOX (vbox2), vbox, TRUE, TRUE, 0);
 
+#if 0
       if (! autolock_mode)
 	gtk_box_pack_start (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
+#endif
     }
   else
     {
@@ -1773,7 +1806,9 @@ main (int argc, char *argv[])
       if (socket)
 	gtk_box_pack_end (GTK_BOX (vbox2), socket, FALSE, FALSE, 0);
       
+#if 0
       gtk_box_pack_end (GTK_BOX (vbox2), calibrate_hint, FALSE, FALSE, 0);
+#endif
     }
 
   gtk_container_set_border_width (GTK_CONTAINER (vbox2), gpe_border);
