@@ -188,6 +188,9 @@ void item_select(int useronly, gpointer user_data)
   self.cur_applet = i;
 
   self.applet = applets[i].Build_Objects(useronly);
+ 
+  if (self.applet)
+  {
   gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
 	
   gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
@@ -220,6 +223,7 @@ void item_select(int useronly, gpointer user_data)
   }
   else
     gtk_widget_hide(self.cancel);
+  }
 }
 
 
@@ -289,9 +293,11 @@ void make_container()
 void main_one(int argc, char **argv,int applet)
 {
   int handled = FALSE;
-  gboolean user_only_setup = FALSE; /* Don't change to suid mode. */  
+  gboolean special_flag = FALSE; /* Don't change to suid mode or similar. */  
+  gboolean standalone = FALSE; /* applet creates its own window */
 	
   self.alone_applet = 1;
+  self.applet = NULL;
 
   my_icons[count_icons - 1].filename = applets[applet].icon_file;
 	
@@ -315,7 +321,12 @@ void main_one(int argc, char **argv,int applet)
 	  }
 	  if (!strcmp(argv[2],"user_only"))
 	  {
-		  user_only_setup = TRUE;
+		  special_flag = TRUE;
+	  }
+	  if (!strcmp(argv[2],"password"))
+	  {
+		  special_flag = TRUE;
+		  standalone = TRUE;
 	  }
 	  if (!strcmp(argv[1],"task_sound"))
 	  {
@@ -331,23 +342,23 @@ void main_one(int argc, char **argv,int applet)
   /* If no task? - start applet */
   if (!handled)
   { 
-	  initwindow();
-	
-	  self.vbox = gtk_vbox_new(FALSE,0);
-	  gtk_container_add(GTK_CONTAINER(self.w),self.vbox);
-	
 	  self.cur_applet = -1;
-	  self.applet = NULL;
-	
-	  make_container();
-	
-	  gpe_set_window_icon(self.w, "icon");
-	  gtk_widget_show_all(self.w);
-	 
-	  gtk_widget_show(self.w);
-	
+	  self.applet = NULL;	  if (!standalone)
+	  {
+		  initwindow();
+		
+		  self.vbox = gtk_vbox_new(FALSE,0);
+		  gtk_container_add(GTK_CONTAINER(self.w),self.vbox);
+				
+		  make_container();
+		
+		  gpe_set_window_icon(self.w, "icon");
+		  gtk_widget_show_all(self.w);
+		 
+		  gtk_widget_show(self.w);
+	  }
 	   
-	  item_select(user_only_setup, (gpointer)applet);
+	  item_select(special_flag, (gpointer)applet);
 	  gtk_main();
 	  gtk_exit(0);
   }

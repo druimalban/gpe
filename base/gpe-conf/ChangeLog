@@ -1,3 +1,13 @@
+2004-10-16	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* users/callbacks.c, interface.c: Support for standalone password dialog.
+	* main.c: Added simple support for applets creating its own window.
+	          New parameter to users setup: "password" for password change
+			  dialog only.
+	* cfgfile.c, network.c: Never open a file an dont check if opening was
+	                        successful.
+	* suid.c, network.*: Improved applying of network config changes.
+
 2004-10-12	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* Released Version 0.1.20

@@ -436,26 +436,28 @@ gint get_scheme_list()
 	iflen = l;
 
 	fd = fopen(_PATH_PROCNET_WIRELESS, "r");
-	fgets(buffer, 256, fd);		// chuck first two lines;
-	fgets(buffer, 256, fd);
-	while (!feof(fd)) {
-		if (fgets(buffer, 256, fd) == NULL)
-			break;
-		name = buffer;
-		sep = strrchr(buffer, ':');
-		if (sep) *sep = 0;
-		while(*name == ' ') name++;
-
-		for (i = 0; i < iflen; i++)
-		{
-			if (!strcmp (name, iflist[i].name))
+	if (fd)
+	{
+		fgets(buffer, 256, fd);		// chuck first two lines;
+		fgets(buffer, 256, fd);
+		while (!feof(fd)) {
+			if (fgets(buffer, 256, fd) == NULL)
+				break;
+			name = buffer;
+			sep = strrchr(buffer, ':');
+			if (sep) *sep = 0;
+			while(*name == ' ') name++;
+	
+			for (i = 0; i < iflen; i++)
 			{
-				iflist[i].iswireless = TRUE;
+				if (!strcmp (name, iflist[i].name))
+				{
+					iflist[i].iswireless = TRUE;
+				}
 			}
 		}
+		fclose(fd);
 	}
-	fclose(fd);
-
 	return l;
 }
 

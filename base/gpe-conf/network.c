@@ -123,9 +123,34 @@ show_current_config (GtkWidget * button)
 	free (buffer);
 }
 
+void
+copy_new_interfaces(void)
+{
+	struct interface *ife;
+	struct interface *int_list;
+		
+	int_list = if_getlist ();
+	
+	system_printf ("/bin/cp %s %s", NET_NEWFILE, NET_CONFIGFILE);
+	system_printf ("chmod 0644 %s", NET_CONFIGFILE);
+	system_printf ("/bin/rm -f %s", NET_NEWFILE);
+	
+	for (ife = int_list; ife; ife = ife->next)
+	{
+		if ((ife->flags & IFF_UP) && !(ife->flags & IFF_LOOPBACK))
+		{
+			gchar *cmd = g_strdup_printf("/sbin/ifdown %s", ife->name);
+			system(cmd);
+			g_free(cmd);
+			cmd = g_strdup_printf("/sbin/ifup %s", ife->name);
+			system(cmd);
+			g_free(cmd);
+		}
+	}
+}
 
 static GList *
-get_unconfigured_interfaces ()
+get_unconfigured_interfaces (void)
 {
 #define num_suggestions 3	
 	
@@ -139,34 +164,34 @@ get_unconfigured_interfaces ()
 	gchar suggestions[num_suggestions][6] = {"eth0", "wlan0", "bnep0"};
 	
 	fd = fopen(_PATH_PROCNET_DEV, "r");
-	fgets(buffer, 256, fd);		// chuck first two lines;
-	fgets(buffer, 256, fd);
-	while (!feof(fd)) {
-		if (fgets(buffer, 256, fd) == NULL)
-			break;
-		name = buffer;
-		sep = strrchr(buffer, ':');
-		if (sep) *sep = 0;
-		while(*name == ' ') name++;
-
-		found = FALSE;
-		for (i = 0; i < iflen; i++)
-		{
-			if (!strcmp (name, iflist[i].name))
-			{
-				found = TRUE;
+	if (fd)
+	{
+		fgets(buffer, 256, fd);		// chuck first two lines;
+		fgets(buffer, 256, fd);
+		while (!feof(fd)) {
+			if (fgets(buffer, 256, fd) == NULL)
 				break;
+			name = buffer;
+			sep = strrchr(buffer, ':');
+			if (sep) *sep = 0;
+			while(*name == ' ') name++;
+	
+			found = FALSE;
+			for (i = 0; i < iflen; i++)
+			{
+				if (!strcmp (name, iflist[i].name))
+				{
+					found = TRUE;
+					break;
+				}
+			}
+			if (!found)
+			{
+				result = g_list_append (result, g_strdup (name));
 			}
 		}
-		if (!found)
-		{
-			result = g_list_append (result, g_strdup (name));
-		}
-
-
+		fclose(fd);
 	}
-	fclose(fd);
-	
 	for (j = 0; j < num_suggestions; j++)
 	{
 		found = FALSE;

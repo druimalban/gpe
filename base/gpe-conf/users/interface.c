@@ -202,15 +202,15 @@ void Users_Restore()
 }
 
 GtkWidget*
-Users_Build_Objects (void)
+Users_Build_Objects (gboolean password_only)
 {
-  GtkWidget *vbox1;
-  GtkWidget *pw;
-  GtkWidget *toolbar;
-  GtkWidget *button1;
-  GtkWidget *button2;
-  GtkWidget *button3;
-  GtkWidget *button4;
+  GtkWidget *vbox1 = NULL;
+  GtkWidget *pw = NULL;
+  GtkWidget *toolbar = NULL;
+  GtkWidget *button1 = NULL;
+  GtkWidget *button2 = NULL;
+  GtkWidget *button3 = NULL;
+  GtkWidget *button4 = NULL;
 
   listTitles[0] = _("User Name");
   listTitles[1] = _("User Info");
@@ -218,6 +218,8 @@ Users_Build_Objects (void)
 
   InitSpacings ();
 
+  if (!password_only)
+  {
   vbox1 = gtk_vbox_new (FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox1), border_width);
 
@@ -254,28 +256,40 @@ Users_Build_Objects (void)
   gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(pw),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_container_add (GTK_CONTAINER (pw), user_list);
+  }
   
   InitPwList();
-  ReloadList();
+  if (!password_only)
+    {
+      ReloadList();
 
-  gtk_widget_show (user_list);
- 
-  gtk_box_pack_start (GTK_BOX (vbox1), pw, TRUE, TRUE, 0);
+      gtk_widget_show (user_list);
+      gtk_box_pack_start (GTK_BOX (vbox1), pw, TRUE, TRUE, 0);
   
-  /* check if we have the permissions to change users */
-  if (suid_exec("CHEK",""))
-  {
-	  gtk_widget_set_sensitive(user_list, FALSE);
-	  gtk_widget_set_sensitive(button1, FALSE);
-	  gtk_widget_set_sensitive(button2, FALSE);
-	  gtk_widget_set_sensitive(button3, FALSE);
-	  have_access = FALSE;
-  }
+      /* check if we have the permissions to change users */
+      if (suid_exec("CHEK",""))
+        {
+	      gtk_widget_set_sensitive(user_list, FALSE);
+	      gtk_widget_set_sensitive(button1, FALSE);
+	      gtk_widget_set_sensitive(button2, FALSE);
+	      gtk_widget_set_sensitive(button3, FALSE);
+	      have_access = FALSE;
+        }
+      else
+        {
+	      have_access = TRUE;
+        }
+    }
   else
-  {
-	  have_access = TRUE;
-  }
-  return vbox1;
+	have_access = FALSE;
+  
+  if (password_only)
+    {
+      gtk_widget_show(create_passwindow(pwroot, NULL));
+      return NULL; 
+    }
+  else
+  	return vbox1;
 }
 
 GtkWidget*
@@ -440,7 +454,7 @@ create_userchange (pwlist *init,GtkWidget *parent)
 }
 
 GtkWidget*
-create_passwindow (pwlist *init,GtkWidget *parent)
+create_passwindow (pwlist *init, GtkWidget *parent)
 {
   GtkWidget *passwindow;
   GtkWidget *vbox3;
@@ -463,9 +477,8 @@ create_passwindow (pwlist *init,GtkWidget *parent)
   gtk_window_set_transient_for (GTK_WINDOW(passwindow), GTK_WINDOW(parent));
   gtk_window_set_title (GTK_WINDOW (passwindow), _("Change Password"));
   gtk_window_set_modal (GTK_WINDOW (passwindow), TRUE);
-
   vbox3 = GTK_DIALOG (passwindow)->vbox;
-
+  
   table3 = gtk_table_new (3, 3, FALSE);
 
   gtk_widget_show (table3);
@@ -561,9 +574,12 @@ create_passwindow (pwlist *init,GtkWidget *parent)
                       GTK_SIGNAL_FUNC (users_on_changepasswd_clicked),
                       (gpointer)self);
 
-  /* in case of destruction by close (X) button */
-  gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
+  if (parent)
+ 	 gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
 		      (GtkSignalFunc) freedata, (gpointer)self);
+  else
+ 	 gtk_signal_connect (GTK_OBJECT(passwindow) , "destroy", 
+		      gtk_main_quit, NULL);
 
   return passwindow;
 }

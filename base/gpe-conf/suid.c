@@ -45,6 +45,7 @@
 #include "cardinfo.h"
 #include "timeanddate.h"
 #include "users/passwd.h"
+#include "network.h"
 
 static GtkWidget *passwd_entry;
 static int retv;
@@ -359,13 +360,7 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "CPIF") == 0)  // installs a new interfaces file
 				{
 					fscanf (in, "%100s", arg2);	// to forget soon...
-					strcpy (arg1, "/tmp/interfaces");
-					strcpy (arg2, "/etc/network/interfaces");
-					system ("/etc/init.d/networking stop");
-					system_printf ("/bin/cp %s %s", arg1, arg2);
-					system_printf ("chmod 0644 %s", arg2);
-					system_printf ("/bin/rm -f %s", arg1);
-					system ("/etc/init.d/networking start");
+					copy_new_interfaces();
 				}
 				else if (strcmp (cmd, "CPOI") == 0)  // rewrites owner information data
 				{
