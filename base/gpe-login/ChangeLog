@@ -1,3 +1,7 @@
+2002-09-05  Colin Marquardt  <colin@marquardt-home.de>
+
+	* gpe-login.c (main): Remove gtk_set_locale() call.
+
 2002-09-04  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.21 released.

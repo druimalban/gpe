@@ -442,8 +442,6 @@ main (int argc, char *argv[])
   gboolean flag_geom = FALSE;
   gboolean flag_transparent = FALSE;
 
-  gtk_set_locale ();
-
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
