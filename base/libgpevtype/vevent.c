@@ -134,7 +134,8 @@ vevent_to_tags (MIMEDirVEvent *vevent)
 
 	  g_object_get (G_OBJECT (vevent), t->vc ? t->vc : t->tag, &value, NULL);
 
-	  data = gpe_tag_list_prepend (data, t->tag, g_strdup_printf ("%d", value));
+	  if (value != 0)
+	    data = gpe_tag_list_prepend (data, t->tag, g_strdup_printf ("%d", value));
 	}
       else
 	abort ();
@@ -147,6 +148,8 @@ vevent_to_tags (MIMEDirVEvent *vevent)
     {
       struct tm tm;
       gchar buf[256];
+      MIMEDirDateTime *end_date;
+      time_t start_t, end_t;
   
       mimedir_datetime_get_struct_tm (date, &tm);
 
@@ -155,6 +158,19 @@ vevent_to_tags (MIMEDirVEvent *vevent)
 		&tm); 
       
       data = gpe_tag_list_prepend (data, "start", g_strdup (buf));
+
+      g_object_get (G_OBJECT (vevent), "dtend", &end_date, NULL);
+      if (end_date)
+	{
+	  unsigned int duration;
+
+	  start_t = mimedir_datetime_get_time_t (date);
+	  end_t = mimedir_datetime_get_time_t (end_date);
+
+	  duration = end_t - start_t;
+	  sprintf (buf, "%d", duration);
+	  data = gpe_tag_list_prepend (data, "duration", g_strdup (buf));
+	}
     }
 
   return data;
