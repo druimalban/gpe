@@ -13,6 +13,7 @@ MEMBERS = gtkdatecombo errorbox init pixmaps smallbox render dirbrowser pictureb
 
 ifeq ($(GTK2),yes)
 MEMBERS += gpetooltips2 gpe-iconlist
+HEADERS += gpe-iconlist.h
 SONAME = libgpewidget.so.1
 CONTROL = control1
 BINPACKAGE = libgpewidget1
@@ -47,7 +48,7 @@ CFLAGS += -MD
 
 CPPFLAGS += -I./gpe
 
-HEADERS = init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h
+HEADERS += init.h render.h errorbox.h smallbox.h pixmaps.h gtkdatecombo.h gtkdatesel.h dirbrowser.h stylus.h picturebutton.h spacing.h translabel.h question.h windows.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
