@@ -58,6 +58,26 @@ struct nsqlc_query_context
 
 int verbose = 1;
 
+void
+write_str_encoded (char *s, int fd)
+{
+  char buf[3];
+  while (*s)
+    {
+      char c = *s++;
+
+     if (!isprint (c) || isspace (c) || c == '%')
+	 {
+	   sprintf (buf, "%%%02x", c);
+	   write(fd,buf,3);
+	 }
+      else
+	   write (fd, &c, 1);
+    }
+	sprintf(buf,"\r\n");
+	write (fd, buf, 2);
+}
+
 static void
 write_command (nsqlc *ctx, const char *cmd, ...)
 {
@@ -68,15 +88,15 @@ write_command (nsqlc *ctx, const char *cmd, ...)
   vasprintf (&buf, cmd, va);
   va_end (va);
 
-  buf2 = g_strdup_printf ("%08x %s\r\n", ctx->seq++, buf);
+  buf2 = g_strdup_printf ("%08x %s", ctx->seq++, buf);
 
   if (verbose)
     fprintf (stderr, "-> %s\n", buf);
 
   free (buf);
 
-  write (ctx->outfd, buf2, strlen (buf2));
-
+//  write (ctx->outfd, buf2, strlen (buf2));
+  write_str_encoded(buf2,ctx->outfd);
   g_free (buf2);
 }
 
