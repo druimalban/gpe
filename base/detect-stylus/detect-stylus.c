@@ -49,7 +49,6 @@ main (int argc, char *argv[])
 	      if (!strncmp (de->d_name, "event", 5))
 		{
 		  char buf[512];
-		  int fd;
 		  sprintf (buf, "/dev/input/%s", de->d_name);
 		  fd = open (buf, O_RDONLY);
 		  if (fd >= 0)
