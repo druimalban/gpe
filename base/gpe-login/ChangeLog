@@ -1,5 +1,13 @@
 2002-10-08  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login, gpe-login2 0.24 released.
+	
+2002-10-08  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (login_correct): Avoid abuse of gtk_entry_get_chars.
+
+2002-10-08  Philip Blundell  <philb@gnu.org>
+
 	* gpe-session-scripts 0.20-1 released.
 
 2002-10-08  Philip Blundell  <philb@gnu.org>

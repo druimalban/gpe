@@ -204,12 +204,12 @@ do_login (const char *name, uid_t uid, gid_t gid, char *dir, char *shell)
 static gboolean
 login_correct (GtkWidget *entry, struct passwd **pwe_ret)
 {
-  const gchar *pwstr;
+  gchar *pwstr;
   struct passwd *pwe;
   struct spwd *spe;
   char *p;
 
-  pwstr = gtk_entry_get_text (GTK_ENTRY (entry));
+  pwstr = gtk_editable_get_chars (GTK_EDITABLE (entry), 0, -1);
   gtk_entry_set_text (GTK_ENTRY (entry), "");
 
   pwe = getpwnam (current_username);
@@ -221,6 +221,9 @@ login_correct (GtkWidget *entry, struct passwd **pwe_ret)
     pwe->pw_passwd = spe->sp_pwdp;
 
   p = crypt (pwstr, pwe->pw_passwd);
+  memset (pwstr, 0, strlen (pwstr));
+  g_free (pwstr);
+
   if (strcmp (p, pwe->pw_passwd))
     return FALSE;
 
