@@ -1,5 +1,12 @@
 2002-10-12  Philip Blundell  <philb@gnu.org>
 
+	* gpe-session-scripts 0.21 released.
+
+2002-10-12  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession-gpe.d/25dotfiles: Launch the apps rather than
+	fiddling with .mbdock.  Run mbmenu as well as mmenu.
+
 	* gpe-login.c (keymap): Add NESW keys.
 	(parse_xkbd_args): New function.
 	(spawn_xkbd): Use it.
