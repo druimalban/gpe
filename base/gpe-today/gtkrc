@@ -3,10 +3,10 @@
 #   bg_pixmap[NORMAL] = "background.xpm"
 #}
 
-style "transparent"
-{
-	bg_pixmap[NORMAL] = "<parent>"
-}
+#style "transparent"
+#{
+#	bg_pixmap[NORMAL] = "<parent>"
+#}
 
 style "date_box"
 {
@@ -15,29 +15,30 @@ style "date_box"
 
 style "date_label"
 {
+	font_name = "Sans 9"
 	fg[NORMAL] = { 1.0, 1.0, 1.0 }
 }
 
 style "event_in_progress-summary"
 {
+	font_name = "Sans Bold 9"
 	fg[NORMAL] = { 1.0, 0, 0 }
-	fontset = "-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1"
 }
 
 style "event_in_progress-time"
 {
+	font_name = "Sans 9"
         fg[NORMAL] = { 1.0, 0, 0 }
-	fontset = "-*-helvetica-medium-r-*-*-12-*-*-*-p-*-iso8859-1"
 }
 
 style "calendar_time"
 {
-	fontset = "-*-helvetica-medium-r-*-*-12-*-*-*-p-*-iso8859-1"
+	font_name = "Sans 9"	
 	fg[NORMAL] = { 0.0, 0.0, 0.0 }
 }
 
 style "calendar_summary"
 {
-	fontset = "-*-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1"
+	font_name = "Sans Bold 9"
         fg[NORMAL] = { 0.0, 0.0, 0.0 }
 }
