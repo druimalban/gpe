@@ -55,7 +55,7 @@ clean: clean-po
 
 clean-po:
 	rm -rf $(DIR_PO)/*.mo
-	for i in $(all-desktops); do if [ -f $$i.in ]; then rm -f $$i; rm -f $$i.in.h; fi; done
+	for i in $(desktop-files); do if [ -f $$i.in ]; then rm -f $$i; rm -f $$i.in.h; fi; done
 
 %.desktop: %.desktop.in $(patsubst %,$(DIR_PO)/%.po,$(LINGUAS))
 	intltool-merge -u -d $(DIR_PO) $< $@
