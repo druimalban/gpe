@@ -5,22 +5,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-today 0.02\n"
-"POT-Creation-Date: 2003-03-28 15:54+0000\n"
-"PO-Revision-Date: 2003-04-14 22:14+0800\n"
+"Project-Id-Version: gpe-today 0.06\n"
+"POT-Creation-Date: 2003-04-21 04:30+0100\n"
+"PO-Revision-Date: 2003-04-21 17:22+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=Big5\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:107 gpe-today.desktop.in.h:2
+#: main.c:179 gpe-today.desktop.in.h:2
 msgid "Summary"
 msgstr "摘要"
 
-#: todo.c:143
-msgid "Error stating todo DB"
-msgstr "啟動待辦事項資料庫時發生錯誤"
+#: todo.c:40
+msgid "No todo items"
+msgstr "沒有待辦事項項目"
 
 #: calendar.c:104
 msgid "No events today"
@@ -30,10 +30,16 @@ msgstr "今天沒有事件"
 msgid "All day event"
 msgstr "整日事件"
 
-#: calendar.c:153
-msgid "Error stating calendar DB"
-msgstr "啟動行事曆資料庫時發生錯誤"
+#: xsettings.c:80
+msgid "Cannot create XSettings client"
+msgstr "不能建立 XSettings 客戶端"
 
 #: gpe-today.desktop.in.h:1
 msgid "GPE Today"
 msgstr "GPE 今日"
+
+#~ msgid "Error stating todo DB"
+#~ msgstr "啟動待辦事項資料庫時發生錯誤"
+
+#~ msgid "Error stating calendar DB"
+#~ msgstr "啟動行事曆資料庫時發生錯誤"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-today 0.06\n"
 "POT-Creation-Date: 2003-04-21 04:30+0100\n"
-"PO-Revision-Date: 2003-04-22 18:03+0200\n"
+"PO-Revision-Date: 2003-04-23 18:30+0200\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 
 #: main.c:179 gpe-today.desktop.in.h:2
 msgid "Summary"
-msgstr "Zusammenfassung"
+msgstr "Heute"
 
 #: todo.c:40
 msgid "No todo items"
