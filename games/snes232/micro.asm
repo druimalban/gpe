@@ -40,6 +40,9 @@
 .equ DDRB	= $17
 .equ PINB	= $16
 
+.equ PORTD	= $12
+.equ DDRD	= $11
+
 .equ ACSR	= $8
 
 .equ TIMERVAL   = 195
@@ -198,6 +201,7 @@
 reset_vec:
 	ldi	tmp, $e7		; set all but 3,4 outputs, high
 	out	DDRB, tmp
+	ldi	tmp, $ff		; enable pullups on 3, 4
 	out	PORTB, tmp
 
 	ldi	tmp, $ff		; set all bits outputs, high
