@@ -30,7 +30,7 @@ todo_get_changes (struct db *db, int newdb)
   if (newdb)
     list = fetch_uid_list (db->db, "select distinct uid from todo_urn");
   else
-    list = fetch_uid_list (db->db, "select uid from todo where tag='modified' and value>%d",
+    list = fetch_uid_list (db->db, "select uid from todo where (tag='modified' or tag='MODIFIED') and value>%d",
 			   db->last_timestamp);
   
   for (i = list; i; i = i->next)
@@ -52,7 +52,7 @@ todo_get_changes (struct db *db, int newdb)
 
       obj = g_malloc0 (sizeof (*obj));
       obj->comp = string;
-      obj->uid = g_strdup_printf ("%d", urn);
+      obj->uid = g_strdup_printf ("todo-%d", urn);
       obj->object_type = SYNC_OBJECT_TYPE_TODO;
       obj->change_type = SYNC_OBJ_MODIFIED; 
 
@@ -78,12 +78,18 @@ todo_push_object (struct db *db, const char *obj, const char *uid,
     return FALSE;
 
   list = mimedir_vcal_get_todo_list (vcal);
+  if (list == NULL)
+    {
+      g_object_unref (vcal);
+      return FALSE;
+    }
+
   vtodo = MIMEDIR_VTODO (list->data);
 
   tags = vtodo_to_tags (vtodo);
 
   if (uid)
-    id = atoi (uid);
+    sscanf (uid, "todo-%d", &id);
   else
     {
       char *errmsg;

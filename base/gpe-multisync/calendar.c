@@ -30,7 +30,7 @@ calendar_get_changes (struct db *db, int newdb)
   if (newdb)
     list = fetch_uid_list (db->db, "select distinct uid from calendar_urn");
   else
-    list = fetch_uid_list (db->db, "select uid from calendar where tag='modified' and value>%d",
+    list = fetch_uid_list (db->db, "select uid from calendar where (tag='modified' or tag='MODIFIED') and value>%d",
 			   db->last_timestamp);
 
   for (i = list; i; i = i->next)
@@ -78,8 +78,11 @@ calendar_push_object (struct db *db, const char *obj, const char *uid,
     return FALSE;
 
   list = mimedir_vcal_get_event_list (vcal);
-  if(list == NULL)
-    return FALSE;
+  if (list == NULL)
+    {
+      g_object_unref (vcal);
+      return FALSE;
+    }
   
   vevent = MIMEDIR_VEVENT (list->data);
 
