@@ -1,5 +1,11 @@
 2004-02-16  Philip Blundell  <philb@gnu.org>
 
+	* main.c (config_categories_box): Deleted.
+	(new_category, delete_category): Likewise.
+	(configure): Remove "Categories" tab.
+
+2004-02-16  Philip Blundell  <philb@gnu.org>
+
 	* adb.glade: Deleted.
 
 	* Makefile (MEMBERS): Remove interface.

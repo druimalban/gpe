@@ -549,116 +549,17 @@ delete_contact (GtkWidget * widget, gpointer d)
 }
 
 static void
-new_category (GtkWidget * w, gpointer p)
-{
-  gchar *name = smallbox (_("New Category"), _("Name"), "");
-  if (name && name[0])
-    {
-      gchar *line_info[1];
-      guint id;
-      line_info[0] = name;
-      if (db_insert_category (name, &id))
-	gtk_clist_append (GTK_CLIST (p), line_info);
-    }
-
-  update_categories ();
-}
-
-static void
-delete_category (GtkWidget * w, gpointer clist)
-{
-  if (GTK_CLIST (clist)->selection)
-    {
-      guint row = (guint) (GTK_CLIST (clist)->selection->data);
-      guint id = (guint) gtk_clist_get_row_data (GTK_CLIST (clist), row);
-      if (gpe_question_ask (_("Really delete this category?"), _("Confirm"), 
-			    "question", _("Delete"), "delete", _("Cancel"),
-			    "cancel", NULL) == 0)
-	{
-	  if (db_delete_category (id))
-	    {
-	      gtk_clist_remove (GTK_CLIST (clist), row);
-	      update_categories ();
-	    }
-	}
-    }
-}
-
-static GtkWidget *
-config_categories_box (void)
-{
-  GtkWidget *box = gtk_vbox_new (FALSE, 0);
-  GtkWidget *clist = gtk_clist_new (1);
-  GtkWidget *toolbar;
-  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GSList *categories;
-
-  toolbar = gtk_toolbar_new ();
-  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar),
-			       GTK_ORIENTATION_HORIZONTAL);
-  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-
-  gtk_widget_show (toolbar);
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
-			    _("New category"), _("Tap here to create a category."),
-			    G_CALLBACK (new_category), clist, -1);
-
-  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_DELETE,
-			    _("Delete category"), _("Tap here to delete the selected category."),
-			    G_CALLBACK (delete_category), clist, -1);
-
-  categories = db_get_categories ();
-  if (categories)
-    {
-      GSList *iter;
-      guint row = 0;
-      
-      for (iter = categories; iter; iter = iter->next)
-	{
-	  gchar *line_info[1];
-	  struct category *c = iter->data;
-	  line_info[0] = c->name;
-	  gtk_clist_append (GTK_CLIST (clist), line_info);
-	  gtk_clist_set_row_data (GTK_CLIST (clist), row, (gpointer) c->id);
-	  g_free (c->name);
-	  g_free (c);
-	  row++;
-	}
-
-      g_slist_free (categories);
-    }
-
-  gtk_container_add (GTK_CONTAINER (scrolled), clist);
-  gtk_widget_show (clist);
-  gtk_widget_show (scrolled);
-
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-
-  gtk_box_pack_start (GTK_BOX (box), toolbar, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (box), scrolled, TRUE, TRUE, 0);
-
-  gtk_widget_show (box);
-  return box;
-}
-
-static void
 configure (GtkWidget * widget, gpointer d)
 {
   GtkWidget *window = gtk_dialog_new ();
   GtkWidget *notebook = gtk_notebook_new ();
   GtkWidget *editlabel = gtk_label_new (_("Editing Layout"));
   GtkWidget *editbox = edit_structure ();
-  GtkWidget *categorieslabel = gtk_label_new (_("Categories"));
-  GtkWidget *categoriesbox = config_categories_box ();
   GtkWidget *configlabel = gtk_label_new (_("Setup"));
   GtkWidget *configbox = create_pageSetup ();
   GtkWidget *ok_button = gtk_button_new_from_stock (GTK_STOCK_OK);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), editbox, editlabel);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook),
-			    categoriesbox, categorieslabel);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), configbox, configlabel);
 
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (window)->vbox), notebook);
