@@ -1,3 +1,11 @@
+2004-02-23  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+                                                                                
+        * Version 0.13 released.
+                                                                                
+2004-02-23  Joseph J. McCarthy <mccarthy@engrng.pitt.edu>
+                                                                                
+        * event-db.c: once again, rework recur slightly 
+                                                                                
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.12 released.
