@@ -1,4 +1,4 @@
-2002-10-26  Luc Pionchon  <luc.pionchon@welho.com>
+2002-10-26  Luc Pionchon  <luc@handhelds.org>
 
 	* src/selector-gui.c: 
 	* src/selector-cb.c: 
@@ -6,12 +6,12 @@
 	* src/sketchpad-gui.c: 
 	* src/files-png.c: initial GTK2 port: makes it to compile and run
 
-2002-10-20  Luc Pionchon  <luc.pionchon@welho.com>
+2002-10-20  Luc Pionchon  <luc@handhelds.org>
 
 	* src/selector-gui.c: added icons view to the selector, which is
 	an alternative to the clist.
 
-2002-09-13  Luc Pionchon  <luc.pionchon@welho.com>
+2002-09-13  Luc Pionchon  <luc@handhelds.org>
 
 	* src/sketchpad-gui.c src/sketchpad-cb.[ch]: added support for
 	keypad scrolling.
@@ -21,7 +21,7 @@
 	drawing area in both landscape/portrait modes - which is much
 	nicer ;)	
 
-2002-08-91  Luc Pionchon <luc.pionchon@welho.com>
+2002-08-91  Luc Pionchon <luc@handhelds.org>
 
 	* sketchpad-gui.[ch] sketchpad-cb.c: fixed the pb of popup being under
 	the parent window: basicaly changed the gtk_main/gtk_main_quit pair by
