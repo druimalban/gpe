@@ -71,8 +71,8 @@ void sketchpad_init(){
   drawing_area_pixmap_buffer = NULL;
   is_current_sketch_modified = FALSE;
 
-  drawing_area_width  = SKETCH_WIDTH;
-  drawing_area_height = SKETCH_HEIGHT;
+  drawing_area_width  = gdk_screen_width() - 26; //SKETCH_WIDTH;
+  drawing_area_height = gdk_screen_height() - 130; // SKETCH_HEIGHT;
 
   prev_pos_x = NO_PREV_POS;
   prev_pos_y = NO_PREV_POS;
@@ -199,8 +199,8 @@ void sketchpad_open_file(gchar * fullpath_filename){
 }//sketchpad_open_file()
 
 void sketchpad_new_sketch(){
-  drawing_area_width = SKETCH_WIDTH;
-  drawing_area_height = SKETCH_HEIGHT;
+  drawing_area_width  = gdk_screen_width() - 26; //SKETCH_WIDTH;
+  drawing_area_height = gdk_screen_height() - 130; // SKETCH_HEIGHT;
   reset_drawing_area();
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();
