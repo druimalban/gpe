@@ -58,7 +58,7 @@ start_server (gboolean crashed)
   xserver_pid = fork ();
   if (xserver_pid == 0)
     {
-      execl (XSERVER, XSERVER, dpyname, NULL);
+      execl (XSERVER, XSERVER, dpyname, "-noreset", NULL);
       _exit (1);
     }
   server_started = t;
@@ -79,17 +79,26 @@ shutdown (int s)
 int
 main(int argc, char *argv[])
 {
+  gboolean nodaemon = FALSE;
+  int i;
+
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  daemon (0, 0);
+  dpyname = ":0";
 
-  if (argc == 2)
-    dpyname = argv[1];
-  else
-    dpyname = ":0";
+  for (i = 1; i < argc; i++)
+    {
+      if (argv[i][0] == ':')
+	dpyname = argv[i];
+      else if (!strcmp (argv[i], "-n"))
+	nodaemon = TRUE;
+    }
+
+  if (! nodaemon)
+    daemon (0, 0);
 
   start_server (FALSE);
 
@@ -104,21 +113,12 @@ main(int argc, char *argv[])
     {
       pid_t wpid;
       gboolean f = FALSE;
-      Window win;
 
       dpy = XOpenDisplay (dpyname);
       if (dpy == NULL)
 	continue;
 
-      win = XCreateSimpleWindow(dpy,
-				RootWindow (dpy, DefaultScreen (dpy)),
-				0, 0,
-				0, 0,
-				0, BlackPixel(dpy, DefaultScreen (dpy)),
-				WhitePixel(dpy, DefaultScreen (dpy)));
-
       /* start Xinit and wait for it to finish */
-      sleep (1);
       xinit_pid = fork ();
       if (xinit_pid == 0)
 	{

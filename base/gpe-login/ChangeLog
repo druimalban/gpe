@@ -1,5 +1,11 @@
 2002-07-21  Philip Blundell  <philb@gnu.org>
 
+	* gpe-login.setup (PATH): Include /usr/X11R6/bin.
+
+	* gpe-dm.c (main): Don't create dummy window.  Remove useless
+	sleep.  If -n option was given, don't call daemon().
+	(start_server): Pass -noreset to server.
+
 	* gpe-login.c (main): Use /etc/X11/gpe-login.geometry if it exists.
 
 2002-07-20  Philip Blundell  <philb@gnu.org>

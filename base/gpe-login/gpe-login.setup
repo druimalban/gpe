@@ -1,4 +1,6 @@
 #!/bin/sh
 
+PATH=$PATH:/usr/X11R6/bin
+
 keylaunch -f /etc/X11/gpe-login.keylaunchrc &
 xmodmap -e "keycode 135 = Mode_switch Multi_key"                                
