@@ -1,5 +1,8 @@
 When			Who				Where						What
 
+13.06.2003		Florian			po/ro.po					New Portoguese and Romanian translations.
+								po/pt.po	
+
 11.06.2003		Florian			po/gpe-conf.pot				Updated pot file.
 								po/fr.po					Added French language file.  
 								Makefile					New version, released 0.1.0-pre4

@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.0.9\n"
-"POT-Creation-Date: 2003-04-22 11:20+0200\n"
-"PO-Revision-Date: 2003-04-23 02:42+0000\n"
+"Project-Id-Version: gpe-conf 0.1.0-pre4\n"
+"POT-Creation-Date: 2003-06-11 18:07+0200\n"
+"PO-Revision-Date: 2003-06-13 04:45+0100\n"
 "Last-Translator: Luis Oliveira <luismbo@netcabo.pt>\n"
 "Language-Team: Portuguese <translation-team-pt@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -63,109 +63,109 @@ msgstr ""
 msgid "Sorry, wrong password."
 msgstr "Password incorrecta"
 
-#: timeanddate.c:350
+#: timeanddate.c:349
 msgid "Time & Date"
 msgstr "Data & Horas"
 
-#: timeanddate.c:364
+#: timeanddate.c:365
 msgid "Date"
 msgstr "Data"
 
-#: timeanddate.c:385
+#: timeanddate.c:379
 msgid "Enter current date here or use button to select."
 msgstr "Insira a data current aqui ou utilize o butão para seleccionar."
 
-#: timeanddate.c:392
+#: timeanddate.c:384
 msgid "Time"
 msgstr "Horas"
 
-#: timeanddate.c:429 network.c:340
+#: timeanddate.c:409
 msgid "Network"
 msgstr "Rede"
 
-#: timeanddate.c:455
-msgid "Here you may select which timeserver i use to set my clock."
-msgstr "Aqui é possível seleccionar o timeserver utilizado para acertar o relógio."
+#: timeanddate.c:427
+msgid "Select the timeserver to use to set the clock."
+msgstr "Seleccione o timeserver a utilizar para acertar o relógio."
 
-#: timeanddate.c:457
+#: timeanddate.c:429
 msgid "Get time from network"
 msgstr "Obter as horas pela rede"
 
-#: timeanddate.c:463
-msgid "If i'm connected to the Internet, you may press this butten to set the time on this device using the timeserver above."
+#: timeanddate.c:436
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "Se houver ligação à Internet, pode carregar neste butão para acertar as horas utilizando o timeserver em cima indicado."
 
-#: timeanddate.c:468 timeanddate.c:474
+#: timeanddate.c:441 timeanddate.c:450
 msgid "Timezone"
 msgstr "Fuso horário"
 
-#: timeanddate.c:512
-msgid "Select your current timezone here. The setting applies after after next login."
-msgstr "Seleccione aqui you fuso horário, este será aplicado na próxima sessão."
+#: timeanddate.c:478
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Seleccione aqui o fuso horário, este será aplicado na próxima sessão."
 
-#: timeanddate.c:518
+#: timeanddate.c:486
 msgid "Daylight Saving"
 msgstr "Horário Verão/Inverno"
 
-#: timeanddate.c:524
+#: timeanddate.c:493
 msgid "Use daylight saving time"
 msgstr "Mundança automática de horário"
 
-#: timeanddate.c:529
+#: timeanddate.c:500
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "Seleccione esta caixa se quiser que o computador faça a mudança automática do horário."
 
-#: timeanddate.c:531
-msgid "Offset"
-msgstr "Diferença"
+#: timeanddate.c:502
+msgid "Offset:"
+msgstr "Avanço:"
 
-#: timeanddate.c:538
+#: timeanddate.c:511
 msgid "Default"
 msgstr "Por omissão"
 
-#: timeanddate.c:543
+#: timeanddate.c:518
 msgid "Use default DST offset of one hour?"
 msgstr "Utilizar diferença de horário verão de um hora por omissão?"
 
-#: timeanddate.c:548
+#: timeanddate.c:523
 msgid "Hours"
 msgstr "Horas"
 
-#: timeanddate.c:551
+#: timeanddate.c:526
 msgid "Select daylight saving time offset hours here."
 msgstr "Seleccione aqui a diferença de horas na mudança de horário de verão."
 
-#: timeanddate.c:556
+#: timeanddate.c:531
 msgid "Minutes"
 msgstr "Minutos"
 
-#: timeanddate.c:559
+#: timeanddate.c:534
 msgid "Select daylight saving time offset minutes here."
 msgstr "Seleccione aqui a diferença de minutos no horário de verão."
 
-#: timeanddate.c:565
+#: timeanddate.c:540
 msgid "Advanced Settings"
 msgstr "Opções Avançadas"
 
-#: timeanddate.c:570
+#: timeanddate.c:546
 msgid "Use advanced settings"
 msgstr "Utilizar opções avançadas"
 
-#: timeanddate.c:572
+#: timeanddate.c:549
 msgid "Check this if you want to use the advanced settings below."
 msgstr "Seleccione aqui se deseja utilizar as opções avançadas em baixo."
 
-#: timeanddate.c:637
-msgid "Could not set timezone."
-msgstr "Não possível seleccionar o fuso horário."
+#: timeanddate.c:646
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
+msgstr "Para que as opções do fuso horário entrem em efeito é preciso reiniciar a sessão."
 
-#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:74
+#: appmgr_setup.c:189 login-setup.c:152 gpe-admin.c:86
 msgid "General"
-msgstr ""
+msgstr "Geral"
 
 #: appmgr_setup.c:237
 msgid "Tab View"
-msgstr "Vista de abas"
+msgstr "Vista com Tabs"
 
 #: appmgr_setup.c:252
 msgid "Icon"
@@ -231,11 +231,11 @@ msgstr "Touchscreen"
 msgid "Calibrate"
 msgstr "Calibrar"
 
-#: ipaqscreen/main.c:160 network.c:553
+#: ipaqscreen/main.c:160 network.c:731
 msgid "on"
 msgstr "ligado"
 
-#: ipaqscreen/main.c:161 network.c:561
+#: ipaqscreen/main.c:161 network.c:742
 msgid "off"
 msgstr "desligado"
 
@@ -271,131 +271,220 @@ msgstr "Geomtria / Formato do Teclado"
 msgid "User defined"
 msgstr "Definido pelo utilizador"
 
-#: keyboard.c:138
-msgid "Error reading keyboard definition)"
+#: keyboard.c:131
+#, fuzzy
+msgid "Could not read keyboard definition file."
+msgstr "Não foi possível ler as definições do teclado"
+
+#: keyboard.c:171
+msgid "Error reading keyboard definition."
 msgstr "Erro ao ler as definições do teclado"
 
-#: keyboard.c:212
+#: keyboard.c:274
 msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
-msgstr "Configuração de teclado externa. Butões desactivados \\t\\t\\t\\t\\tnão estão de momento instalados."
+msgstr "Configuração de teclado externa. Butões desactivados não estão de momento instalados."
 
-#: keyboard.c:217
+#: keyboard.c:279
 msgid "External Keyboard Type"
 msgstr "Tipo de Teclado Externo"
 
-#: keyboard.c:224
+#: keyboard.c:286
 msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
-msgstr "Aqui pode seleccionar o modelo so seu teclado externo. \\t\\t\\t\\t Para install o software de apoio ligue o dispositivo à \\t\\t\\t\\t  internet e clique no botão \"Instalar\"."
+msgstr "Aqui pode seleccionar o modelo so seu teclado externo. Para install o software de apoio ligue o dispositivo à internet e clique no botão \"Instalar\"."
 
-#: keyboard.c:245
+#: keyboard.c:308
 msgid "Tap here to select this keyboard model."
 msgstr "Clique aqui apara seleccionar este modelo de teclado."
 
-#: keyboard.c:252
+#: keyboard.c:315
 msgid "Install"
 msgstr "Instalar"
 
-#: keyboard.c:258
+#: keyboard.c:321
 msgid "Tap here to install support for this keyboard."
 msgstr "Clique aqui para instalar o sofware de apoio para este teclado."
 
-#: network.c:115
+#: network.c:95
+msgid "Current Config"
+msgstr "Configuração Corrente"
+
+#: network.c:173
 msgid "New interface:"
 msgstr "Nova interface:"
 
-#: network.c:121
+#: network.c:179
 msgid "Enter name of new interface"
 msgstr "Insira o nome da nova interface"
 
-#: network.c:127
+#: network.c:186
 msgid "This interface definition already exists!"
 msgstr "Esta interface já existe!"
 
-#: network.c:163
+#: network.c:227
 msgid "Do you want to delete this interface?"
 msgstr "Deseja apagar esta interface?"
 
-#: network.c:163
+#: network.c:227 keyctl.c:159
 msgid "Question"
 msgstr "Questão"
 
-#: network.c:337
+#: network.c:441
 msgid "Address"
 msgstr "Endereço"
 
-#: network.c:338
+#: network.c:444
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "Insira o seu endereço IP aqui, ex: 192.168.1.2"
+
+#: network.c:446
 msgid "Netmask"
 msgstr "Netmask"
 
-#: network.c:339
+#: network.c:449
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Insira a máscara de rede aqui, ex: 255.255.255.0 na maioria dos casos"
+
+#: network.c:451
 msgid "Broadcast"
 msgstr "Broadcast"
 
-#: network.c:341
+#: network.c:454
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Insira o seu enderenço de broadcast aqui, normalmente igual ao seu IP mas com 255 como último número."
+
+#: network.c:456
 msgid "Gateway"
 msgstr "Gateway"
 
-#: network.c:407
+#: network.c:459
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Insira aqui o endereço IP da gateway por omissão."
+
+#: network.c:541
 msgid "Hostname"
 msgstr "Hostname"
 
-#: network.c:473
+#: network.c:544
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Insira o hostname que deseja aqui. Este parâmetro é opcional."
+
+#: network.c:627
 msgid "Provider"
 msgstr "Provedor"
 
-#: network.c:527
+#: network.c:630
+msgid "Here you need to enter the name if the provider configuration to use for this interface."
+msgstr "Aqui deve inserir o nome da configuração a utilizar para esta interface."
+
+#: network.c:654
+msgid "Global Settings"
+msgstr "Opções Globais"
+
+#: network.c:695
 msgid "Proxy"
 msgstr "Proxy"
 
-#: network.c:531
+#: network.c:697
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Se quer utilizar um proxy, insira-o aqui. (Por agora, isto apenas se aplica ao dillo)"
+
+#: network.c:702
 msgid "No proxy for"
 msgstr "Não utilizar proxy para"
 
-#: network.c:539
+#: network.c:705
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Aqui deve inserir os domínios para os quais não pretende utilizar proxy."
+
+#: network.c:714
+msgid "Use DHCP in any case (usually not needed)."
+msgstr "Usar DHCP sempre (normalmente desnecessário)."
+
+#: network.c:716
 msgid "Use DHCP"
 msgstr "Utilizar DHCP"
 
-#: network.c:572
+#: network.c:755
 msgid "DNS server"
 msgstr "servidor DNS"
 
-#: network.c:752 network.c:753
+#: network.c:758
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Insira aqui o IP do servidor DNS que pretende utilizar."
+
+#: network.c:939
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use static for manual interface configuration, dhcp to use DHCP and ppp to make the device a point to point device."
+msgstr ""
+"Aqui é possível modificar a configuração base do seu dispositivo.\n"
+"Utilize static para configurar a interface manualmente, dhcp para utilizar DHCP ou ppp para utilizar o protocolo PPP"
+
+#: network.c:971 network.c:972
 msgid "Add Interface"
 msgstr "Adicionar Interface"
 
-#: network.c:758 network.c:759
+#: network.c:973
+msgid "Add a new Interface"
+msgstr "Adicionar uma nova Interface"
+
+#: network.c:981 network.c:982
 msgid "Remove Interface"
 msgstr "Remover Interface"
 
-#: network.c:775
+#: network.c:983
+msgid "Remove current Interface"
+msgstr "Remover a Interface corrente"
+
+#: network.c:996
+msgid "Information"
+msgstr "Informação"
+
+#: network.c:997 network.c:998
+msgid "Show current configuration."
+msgstr "Mostrar a configuração corrente."
+
+#: network.c:1009
+msgid "Close"
+msgstr "Fechar"
+
+#: network.c:1010
+msgid "Close  network tool"
+msgstr "Fechar configuração da rede"
+
+#: network.c:1011
+msgid "Close network tool"
+msgstr "Fechar configuração da rede"
+
+#: network.c:1026
 msgid "Couldn't read network configuration."
 msgstr "Não foi possível ler a configuração de rede."
 
-#: network.c:784
+#: network.c:1035
 msgid "global"
 msgstr "global"
 
-#: theme.c:220 theme.c:224 theme.c:888 theme.c:908 theme.c:1004 theme.c:1010
+#: theme.c:221 theme.c:225 theme.c:920 theme.c:940 theme.c:1036 theme.c:1042
 msgid "Color"
 msgstr "Côr"
 
-#: theme.c:392
+#: theme.c:393
 msgid "Red"
 msgstr "Vermelho"
 
-#: theme.c:397
+#: theme.c:398
 msgid "Green"
 msgstr "Verde"
 
-#: theme.c:402
+#: theme.c:403
 msgid "Blue"
 msgstr "Azul"
 
-#: theme.c:641
+#: theme.c:654
 msgid "Select color"
 msgstr "Seleccione uma côr"
 
-#: theme.c:667 theme.c:733
+#: theme.c:680 theme.c:746
 msgid ""
 "You don't have read access\n"
 "to selected background image!"
@@ -403,79 +492,91 @@ msgstr ""
 "Não tem permissões de leitura\n"
 "para a imagem seleccionada!"
 
-#: theme.c:811
+#: theme.c:828
 msgid "Theme"
 msgstr "Theme"
 
-#: theme.c:820
+#: theme.c:837
 msgid "Desktop Theme"
 msgstr "Desktop Theme"
 
-#: theme.c:832
+#: theme.c:849
 msgid "Name"
 msgstr "Nome"
 
-#: theme.c:847
+#: theme.c:865
+msgid "Icon Size"
+msgstr "Tamanho dos Ícones"
+
+#: theme.c:879
 msgid "Background"
 msgstr "Fundo"
 
-#: theme.c:858
+#: theme.c:890
 msgid "Background Settings"
 msgstr "Opções de Fundo"
 
-#: theme.c:865
+#: theme.c:897
 msgid "Solid color"
 msgstr "Côr plana"
 
-#: theme.c:879
+#: theme.c:911
 msgid "Horizontal"
 msgstr "Horizontal"
 
-#: theme.c:883
+#: theme.c:915
 msgid "Vertical"
 msgstr "Vertical"
 
-#: theme.c:899
+#: theme.c:931
 msgid "Color gradient"
 msgstr "Gradação de côr"
 
-#: theme.c:919
+#: theme.c:951
 msgid "Image"
 msgstr "Imagem"
 
-#: theme.c:945
+#: theme.c:977
 msgid "Centered"
 msgstr "Centrada"
 
-#: theme.c:949
+#: theme.c:981
 msgid "Tiled"
 msgstr "Mosaico"
 
-#: theme.c:952
+#: theme.c:984
 msgid "Stretched"
 msgstr "Esticada"
 
-#: theme.c:957
-msgid "Font"
-msgstr "Fonte"
+#: theme.c:989
+msgid "Fonts"
+msgstr "Fontes"
 
-#: theme.c:966 theme.c:986
+#: theme.c:998 theme.c:1018
 msgid "Desktop Font"
 msgstr "Fonte de Desktop"
 
-#: theme.c:973 theme.c:1028
+#: theme.c:1005 theme.c:1060
 msgid "Family"
 msgstr "Família"
 
-#: theme.c:993 theme.c:1048
+#: theme.c:1025 theme.c:1080
 msgid "Size"
 msgstr "Tamanho"
 
-#: theme.c:1021 theme.c:1041
+#: theme.c:1053 theme.c:1073
 msgid "Application Font"
 msgstr "Fonte das Aplicações"
 
-#: keyctl.c:231
+#: keyctl.c:159
+msgid "Reset button config to default?"
+msgstr "Restaurar as definições dos butões?"
+
+#: keyctl.c:196
+msgid "Defaults"
+msgstr "Defaults"
+
+#: keyctl.c:301
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr "ERRO: Não foi possível abrir o keylaunchrc para escrita!\n"
 
@@ -703,11 +804,7 @@ msgstr ""
 msgid "No write access to network configuration."
 msgstr "Não tem acesso de escrita às configurações da rede."
 
-#: gpe-admin.c:45
-msgid "This setting can only be changed by user root!"
-msgstr "Esta opção só pode ser alterada pelo utilizador root!"
-
-#: gpe-admin.c:81
+#: gpe-admin.c:93
 msgid "Allow users to configure everything"
 msgstr "Permitir aos utilizadores configurar tudo"
 
@@ -751,47 +848,47 @@ msgstr "Memória livre"
 msgid "System Memory"
 msgstr "Memória de Sistema"
 
-#: serial.c:143
+#: serial.c:146
 msgid "Couldn't find default runlevel!"
 msgstr "Não foi possível encontrar o runlevel por omissão!"
 
-#: serial.c:265 serial.c:269
+#: serial.c:268 serial.c:272
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr "Interface simples de configuração da porta de série. Não estão instalados componentes desactivados."
 
-#: serial.c:267
+#: serial.c:270
 msgid "Simple"
 msgstr "Simples"
 
-#: serial.c:272
+#: serial.c:275
 msgid "Serial port default usage"
 msgstr "Utilização da porta de série por omissão"
 
-#: serial.c:276
+#: serial.c:279
 msgid "Select desired software to use serial port here."
 msgstr "Seleccione aqui o software desejado para utilzar a porta de série."
 
-#: serial.c:278
+#: serial.c:281
 msgid "Console"
 msgstr "Consola"
 
-#: serial.c:280
+#: serial.c:283
 msgid "This option runs console on serial port. (default)"
 msgstr "Estão opção corre a consola na porta de sério. (por omissão)"
 
-#: serial.c:282
+#: serial.c:285
 msgid "GPS Daemon"
 msgstr "Daemon GPS"
 
-#: serial.c:285
+#: serial.c:288
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
 msgstr "Esta opção activa a inicialização do GPSD que fornece informação de um receptor GPS às aplicações."
 
-#: serial.c:287
+#: serial.c:290
 msgid "Nothing (free)"
 msgstr "Nada (livre)"
 
-#: serial.c:289
+#: serial.c:292
 msgid "Don't start any software that uses the serial port."
 msgstr "Não iniciar nenhum software que utilize a porta de série."
 
@@ -803,224 +900,510 @@ msgstr "<syslog vazio>"
 msgid "System Log"
 msgstr "Log the Sistema"
 
-#: packages.c:80 packages.c:185
+#: packages.c:62
+msgid "Installing package"
+msgstr "A instalar pacote"
+
+#: packages.c:140 packages.c:245
 msgid "Start"
 msgstr "Iniciar"
 
-#: packages.c:82
+#: packages.c:142
 msgid "Update finished. Please check log messages for errors."
 msgstr "Actualização concluida. Por favor verifique se existem erros nas mensagem do log."
 
-#: packages.c:103
+#: packages.c:163
 msgid "Update using \"ipkg upgrade\" started.\n"
 msgstr "Actualização utilizando \"ipkg upgrade\" iniciada.\n"
 
-#: packages.c:126
+#: packages.c:186
 msgid "Running..."
 msgstr "A Executar..."
 
-#: packages.c:175
+#: packages.c:235
 msgid "Update"
 msgstr "Actualizar"
 
-#: packages.c:180
+#: packages.c:240
 msgid "Update from network"
 msgstr "Actualizar através da rede"
 
-#: packages.c:189
+#: packages.c:249
 msgid "Update entire system over an internet connection."
 msgstr "Actualizar todo o sistema via uma ligação à Internet."
 
-#: packages.c:193
+#: packages.c:253
 msgid "Activity log"
 msgstr "Log de actividade"
 
-#: packages.c:201
+#: packages.c:261
 msgid "This window shows all output from the packet manager that performs the update."
 msgstr "Esta janela mostra todo o resultado do programa que executa a actualização."
 
-#: cardinfo.c:224
+#: cardinfo.c:234
 msgid "Could not write to temporal config file."
 msgstr "Não foi possível escrever no ficheiro de configuração temporário."
 
-#: cardinfo.c:394
+#: cardinfo.c:426
 msgid "Could not open pidfile:"
 msgstr "Não foi possível abrir o pidfile:"
 
-#: cardinfo.c:398
+#: cardinfo.c:432
 msgid "Could not read pidfile"
 msgstr "Não foi possível ler o pidfile"
 
-#: cardinfo.c:402
+#: cardinfo.c:436
 msgid "Could not signal cardmgr:"
 msgstr "Não foi possível enviar sinal ao cardmgr:"
 
-#: cardinfo.c:467
+#: cardinfo.c:511
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "O gpe-conf tem de ser setuid para poder utilizador para utilizar o cardinfo."
 
-#: cardinfo.c:480
+#: cardinfo.c:530
 msgid "No pcmcia driver in /proc/devices"
 msgstr "Não há nenhum controlador pcmcia em /proc/devices"
 
-#: cardinfo.c:482
+#: cardinfo.c:533
 msgid "Could not open /proc/devices"
 msgstr "Não foi possível abrir o /proc/devices"
 
-#: cardinfo.c:491
+#: cardinfo.c:545
 msgid "No sockets found\n"
 msgstr "Nenhuma socket encontrada\n"
 
-#: cardinfo.c:497
+#: cardinfo.c:554
 msgid "Card Services release does not match!"
 msgstr "A versão do Card Services não coincide!"
 
-#: cardinfo.c:499
+#: cardinfo.c:559
 msgid "Could not get CS revision info!\n"
 msgstr "Não foi possível obter informação acerca do CS!\n"
 
-#: cardinfo.c:629
+#: cardinfo.c:716
 msgid "flock(stabfile) failed)"
 msgstr "flock(stabfile) falhou"
 
-#: cardinfo.c:714
+#: cardinfo.c:732
+msgid "no driver loaded"
+msgstr "nenhum driver carregado"
+
+#: cardinfo.c:841
 msgid "ready"
 msgstr "disponível"
 
-#: cardinfo.c:722
+#: cardinfo.c:859
 msgid "not ready"
 msgstr "não disponível"
 
-#: cardinfo.c:729
+#: cardinfo.c:874
 msgid "suspended"
 msgstr "suspenso"
 
-#: cardinfo.c:786
-msgid "Operation failed"
-msgstr "Operação falhou"
-
-#: cardinfo.c:861 cardinfo.c:983 cardinfo.c:984
+#: cardinfo.c:1068 cardinfo.c:1239 cardinfo.c:1240
 msgid "Assign Driver"
 msgstr "Atribuir Controlador"
 
-#: cardinfo.c:868
+#: cardinfo.c:1077
 msgid ""
-"This dialog allows you to select/change\n"
-"the driver assignment for a\n"
-"PCMCIA/CF card."
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
 msgstr ""
 "Esta janela permite-lhe seleccionar ou\n"
 "modificar a atribuição de um controlador\n"
 "a um cartão PCMCIA/CF."
 
-#: cardinfo.c:875
+#: cardinfo.c:1087
 msgid "Your current card identifies itself as:"
 msgstr "O cartão corrente está identificado como:"
 
-#: cardinfo.c:884
+#: cardinfo.c:1101 cardinfo.c:1107
 msgid "Manuf. Id"
 msgstr "Manuf. Id"
 
-#: cardinfo.c:884
+#: cardinfo.c:1101 cardinfo.c:1107
 msgid "Class"
 msgstr "Classe"
 
-#: cardinfo.c:952 cardinfo.c:953
+#: cardinfo.c:1180
 msgid "Insert Card"
 msgstr "Insira Cartão"
 
-#: cardinfo.c:953
+#: cardinfo.c:1182
 msgid "Tap here to start card insertion manually."
 msgstr "Clique aqui para iniciar inserção do cartão manualmente."
 
-#: cardinfo.c:957 cardinfo.c:958
+#: cardinfo.c:1190
 msgid "Eject Card"
 msgstr "Ejectar Cartão"
 
-#: cardinfo.c:958
+#: cardinfo.c:1192
 msgid "Tap here to eject card manually."
 msgstr "Clique aqui para ejectar o cartão manualmente."
 
-#: cardinfo.c:962 cardinfo.c:963
+#: cardinfo.c:1200
 msgid "Suspend Card"
 msgstr "Suspender Cartão"
 
-#: cardinfo.c:963
+#: cardinfo.c:1202
 msgid "Tap here to suspend current card."
 msgstr "Clique aqui para suspender o cartão corrente."
 
-#: cardinfo.c:967 cardinfo.c:968
+#: cardinfo.c:1210
 msgid "Resume Card"
 msgstr "Resumir Cartão"
 
-#: cardinfo.c:968
+#: cardinfo.c:1212
 msgid "Tap here to resume current card."
 msgstr "Clique aqui para resumir o cartão corrente."
 
-#: cardinfo.c:972 cardinfo.c:973
+#: cardinfo.c:1220
 msgid "Reset Card"
 msgstr "Reiniciar Cartão"
 
-#: cardinfo.c:973
+#: cardinfo.c:1221
 msgid "Tap here to reset current card."
 msgstr "Clique aqui para reiniciar o cartão corrente."
 
-#: cardinfo.c:978 cardinfo.c:979
+#: cardinfo.c:1229 cardinfo.c:1230
 msgid "Reset Card Manager"
 msgstr "Reiniciar o Card Manager"
 
-#: cardinfo.c:979
+#: cardinfo.c:1232
 msgid "Tap here to reset card manager. This commits all updates to pcmcia config files."
 msgstr "Clique aqui para reiniciar o card manager. Isto força a escrita de todas as actualizações aos ficheiros de configuração PCMCIA."
 
-#: cardinfo.c:984
+#: cardinfo.c:1242
 msgid "Tap here to assign a driver to this card / change current driver assignment."
 msgstr "Clique aqui para atribuir um controlador a este cartão ou alterar a atribuição actual."
 
-#: cardinfo.c:989 cardinfo.c:990
+#: cardinfo.c:1249 cardinfo.c:1250
 msgid "Exit applet"
 msgstr "Sair do applet"
 
-#: cardinfo.c:998 cardinfo.c:1006
+#: cardinfo.c:1259 cardinfo.c:1272
 msgid "PC/CF card socket information."
 msgstr "Informação acerca do socket do cartão PC/CF."
 
-#: cardinfo.c:1003
+#: cardinfo.c:1267
 msgid "Socket"
 msgstr "Socket"
 
-#: cardinfo.c:1026
+#: cardinfo.c:1298
 msgid "Information for socket"
 msgstr "Informação da socket"
 
-#: cardinfo.c:1035
+#: cardinfo.c:1307
 msgid "State:"
 msgstr "Estado:"
 
-#: cardinfo.c:1036
+#: cardinfo.c:1308
 msgid "Device:"
 msgstr "Dispositivo:"
 
-#: cardinfo.c:1037
+#: cardinfo.c:1309
 msgid "Driver:"
 msgstr "Controlador:"
 
-#: cardinfo.c:1038
+#: cardinfo.c:1310
 msgid "Type:"
 msgstr "Tipo:"
 
-#: cardinfo.c:1039
+#: cardinfo.c:1311
 msgid "I/O:"
 msgstr "E/S:"
 
-#: cardinfo.c:1040
+#: cardinfo.c:1312
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1046
+#: cardinfo.c:1319
 msgid "Flags:"
 msgstr "Flags:"
 
-#: cardinfo.c:1059
+#: cardinfo.c:1336
 msgid "PCMCIA initialisation failed"
 msgstr "Inicialição PCMCIA falhou"
+
+#: tools/interface.c:286 tools/interface.c:486 tools/interface.c:502
+#: tools/interface.c:622
+msgid "[NONE SET]"
+msgstr "[NENHUM ESCOLHIDO]"
+
+#: tools/interface.c:394
+#, c-format
+msgid "rresolve: unsupport address family %d !\n"
+msgstr "rresolve: família de endereços não suportada %d !\n"
+
+#: tools/interface.c:677 tools/interface.c:1650
+msgid "UNSPEC"
+msgstr "UNSPEC"
+
+#: tools/interface.c:679
+msgid "UNIX Domain"
+msgstr "UNIX Domain"
+
+#: tools/interface.c:682
+msgid "DARPA Internet"
+msgstr "DARPA Internet"
+
+#: tools/interface.c:685
+msgid "IPv6"
+msgstr "IPv6"
+
+#: tools/interface.c:688 tools/interface.c:1671
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: tools/interface.c:691 tools/interface.c:1677
+msgid "AMPR NET/ROM"
+msgstr "AMPT NET/ROM"
+
+#: tools/interface.c:694
+msgid "Novell IPX"
+msgstr "Novel IPX"
+
+#: tools/interface.c:697
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: tools/interface.c:700 tools/interface.c:1712
+msgid "Econet"
+msgstr "Econet"
+
+#: tools/interface.c:703
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: tools/interface.c:706 tools/interface.c:1674
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: tools/interface.c:709 tools/interface.c:1662
+msgid "Ash"
+msgstr "Ash"
+
+#: tools/interface.c:736
+msgid "Too much address family arguments.\n"
+msgstr "Demasiados argumentos na família de enfereços.\n"
+
+#: tools/interface.c:747
+#, c-format
+msgid "Unknown address family `%s'.\n"
+msgstr "Família de endereços desconhecida `%s'.\n"
+
+#: tools/interface.c:810
+msgid "Please don't supply more than one address family.\n"
+msgstr "Por favor forneça apenas uma família de endereços.\n"
+
+#: tools/interface.c:937
+msgid "No usable address families found.\n"
+msgstr "Não foram encontradas famílias de enfereços utilizáveis.\n"
+
+#: tools/interface.c:1007
+#, c-format
+msgid "warning: no inet socket available: %s\n"
+msgstr "aviso: nenhuma inet socket disponível: %s\n"
+
+#: tools/interface.c:1159
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Aviso: não foi possível abrir %s (%s). Output limitado.\n"
+
+#: tools/interface.c:1402
+msgid "Device not found"
+msgstr "Dispositivo não encontrado"
+
+#: tools/interface.c:1406
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: erro ao tentar obter informação acerca da interface: %s\n"
+
+#: tools/interface.c:1480 tools/interface.c:1497
+#, c-format
+msgid "in_ether(%s): invalid ether address!\n"
+msgstr "in_ether(%s): endereço ether inválido!\n"
+
+#: tools/interface.c:1511
+#, c-format
+msgid "in_ether(%s): trailing : ignored!\n"
+msgstr "in_ether(%s): trailing : ignorado!\n"
+
+#: tools/interface.c:1523
+#, c-format
+msgid "in_ether(%s): trailing junk!\n"
+msgstr "in_ether(%s)\" trailing junk!\n"
+
+#: tools/interface.c:1555
+msgid "You cannot start PPP with this program.\n"
+msgstr "Não é iniciar o PPP com este programa.\n"
+
+#: tools/interface.c:1649
+msgid "Local Loopback"
+msgstr "Loopback Local"
+
+#: tools/interface.c:1652
+msgid "Serial Line IP"
+msgstr "Serial Line IP"
+
+#: tools/interface.c:1653
+msgid "VJ Serial Line IP"
+msgstr "VJ Serial Line IP"
+
+#: tools/interface.c:1654
+msgid "6-bit Serial Line IP"
+msgstr "6-bit Serial Line IP"
+
+#: tools/interface.c:1655
+msgid "VJ 6-bit Serial Line IP"
+msgstr "VJ 6-bit Serial Line IP"
+
+#: tools/interface.c:1656
+msgid "Adaptive Serial Line IP"
+msgstr "Adpative Serial Line IP"
+
+#: tools/interface.c:1659
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: tools/interface.c:1665
+msgid "Fiber Distributed Data Interface"
+msgstr "Fiber Distributed Data Interface"
+
+#: tools/interface.c:1668
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: tools/interface.c:1680
+msgid "generic X.25"
+msgstr "X.25 genérico"
+
+#: tools/interface.c:1683
+msgid "IPIP Tunnel"
+msgstr "IPIP Tunnel"
+
+#: tools/interface.c:1686
+msgid "Point-to-Point Protocol"
+msgstr "Point-to-Point Protocol"
+
+#: tools/interface.c:1689
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: tools/interface.c:1690
+msgid "LAPB"
+msgstr "LAPB"
+
+#: tools/interface.c:1693
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: tools/interface.c:1696
+msgid "Frame Relay DLCI"
+msgstr "Frame Realy DLCI"
+
+#: tools/interface.c:1697
+msgid "Frame Relay Access Device"
+msgstr "Frame Relay Access Device"
+
+#: tools/interface.c:1700
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-via-IPv4"
+
+#: tools/interface.c:1703
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: tools/interface.c:1706
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps Token Ring"
+
+#: tools/interface.c:1708
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "16/4 Mbps Token Ring (New)"
+
+#: tools/interface.c:1818
+#, c-format
+msgid ""
+"<b>Interface %s</b>\n"
+"Type: %s\n"
+msgstr ""
+"<b> Interface %s</b>\n"
+"Tipo: %s\n"
+
+#: tools/interface.c:1826
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
+
+#: tools/interface.c:1832
+#, c-format
+msgid "Media: %s"
+msgstr "Mídia: %s"
+
+#: tools/interface.c:1837
+msgid "(auto)"
+msgstr "(auto)"
+
+#: tools/interface.c:1849
+#, c-format
+msgid "Address: %s\n"
+msgstr "Morada: %s\n"
+
+#: tools/interface.c:1854
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-t-P: %s\n"
+
+#: tools/interface.c:1858
+#, c-format
+msgid "Netmask: %s\n"
+msgstr "Netmask: %s\n"
+
+#: tools/interface.c:1862
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr "Broadcast: %s\n"
+
+#: tools/interface.c:1882
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "Endereço IPv6: %s/%d\n"
+
+#: tools/interface.c:1886
+msgid "Scope: "
+msgstr "Scope: "
+
+#: tools/interface.c:1891
+msgid "Global"
+msgstr "Global"
+
+#: tools/interface.c:1894
+msgid "Link"
+msgstr "Link"
+
+#: tools/interface.c:1897
+msgid "Site"
+msgstr "Sítio"
+
+#: tools/interface.c:1900
+msgid "Compat"
+msgstr "Compat"
+
+#: tools/interface.c:1903
+msgid "Host"
+msgstr "Host"
+
+#: tools/interface.c:1906
+msgid "Unknown"
+msgstr "Desconhecido"
+
+#~ msgid "Could not set timezone."
+#~ msgstr "Não possível seleccionar o fuso horário."
+
+#~ msgid "This setting can only be changed by user root!"
+#~ msgstr "Esta opção só pode ser alterada pelo utilizador root!"
+
+#~ msgid "Operation failed"
+#~ msgstr "Operação falhou"
