@@ -26,8 +26,9 @@ module <b>gpe-login</b>.  Precompiled binaries for iPAQ are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 </P>
 
-<H2>Screenshot</H2>
+<H2>Screenshots</H2>
 
 <IMG SRC="../images/gpe-login.png">
+<IMG SRC="../images/gpe-login-new.png">
 
 <!--#include virtual="/includes/foot.shtml"-->
