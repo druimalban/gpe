@@ -120,9 +120,6 @@ void window_sketchpad_init(GtkWidget * window_sketchpad){
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_brush_medium), TRUE);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (sketchpad.button_color_black),  TRUE);
 
-  //keyboard focus to the drawing area
-  gtk_widget_grab_focus   (drawing_area); //FIXME: keypad events removed!
-
 }//window_sketchpad_init()
 
 GdkCursor * _eraser_cursors_new(gchar * bits, gint width, gint height){//gint diameter){
