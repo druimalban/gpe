@@ -48,6 +48,8 @@ install-program: all
 	install -m 644 network.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/bluetooth/
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -d $(DESTDIR)/etc/bluetooth/
+	install hciattach.sh $(DESTDIR)/etc/bluetooth/hciattach
 
 clean:
 	rm -f $(PACKAGE) $(OBJS)
