@@ -143,51 +143,70 @@ find_request (obex_t *obex)
   return req;
 }
 
+static gboolean
+obex_state_machine (struct obex_push_req *req)
+{
+  obex_object_t *object;
+  obex_headerdata_t hdd;
+  uint8_t unicode_buf[200];
+  int namebuf_len;
+
+  switch (req->state)
+    {
+    case STATE_CONNECT:
+      gdk_threads_enter ();
+      bt_progress_dialog_update (req->progress_dialog, _("Sending data"));
+      gdk_flush ();
+      gdk_threads_leave ();
+      object = OBEX_ObjectNew (req->obex, OBEX_CMD_PUT);
+      namebuf_len = OBEX_CharToUnicode (unicode_buf, req->filename, sizeof (unicode_buf));
+      hdd.bs = unicode_buf;
+      OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_NAME, hdd, namebuf_len, 0);
+      hdd.bq4 = req->len;
+      OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_LENGTH, hdd, sizeof (uint32_t), 0);
+      hdd.bs = req->data;
+      OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_BODY, hdd, req->len, 0);
+      OBEX_Request (req->obex, object);
+      req->state = STATE_PUT;
+      break;
+    case STATE_PUT:
+      object = OBEX_ObjectNew (req->obex, OBEX_CMD_DISCONNECT);
+      OBEX_Request (req->obex, object);
+      req->state = STATE_DISCONNECT;
+      break;
+    case STATE_DISCONNECT:
+      gdk_threads_enter ();
+      gtk_widget_destroy (req->progress_dialog);
+      gdk_flush ();
+      gdk_threads_leave ();
+      g_static_mutex_lock (&active_reqs_mutex);
+      active_reqs = g_list_remove (active_reqs, req);
+      g_static_mutex_unlock (&active_reqs_mutex);
+      obex_disconnect_input (req->obex);
+      OBEX_Cleanup (req->obex);
+      run_callback (req, TRUE);
+      break;
+    }
+
+  return FALSE;
+}
+
 static void
 obex_event (obex_t *obex, obex_object_t *old_object, int mode, int event, int obex_cmd, int obex_rsp)
 {
-  obex_object_t *object;
   struct obex_push_req *req;
-  obex_headerdata_t hdd;
 
   req = find_request (obex);
 
   switch (event)
     {
+    case OBEX_EV_PROGRESS:
+      /* do nothing */
+      break;
     case OBEX_EV_REQDONE:
-      switch (req->state)
-	{
-	case STATE_CONNECT:
-	  gdk_threads_enter ();
-	  bt_progress_dialog_update (req->progress_dialog, _("Sending data"));
-	  gdk_flush ();
-	  gdk_threads_leave ();
-	  object = OBEX_ObjectNew (req->obex, OBEX_CMD_PUT);
-	  hdd.bq4 = req->len;
-	  OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_LENGTH, hdd, sizeof (uint32_t), 0);
-	  hdd.bs = req->data;
-	  OBEX_ObjectAddHeader (req->obex, object, OBEX_HDR_BODY, hdd, req->len, 0);
-	  OBEX_Request (req->obex, object);
-	  req->state = STATE_PUT;
-	  break;
-	case STATE_PUT:
-	  object = OBEX_ObjectNew (req->obex, OBEX_CMD_DISCONNECT);
-	  OBEX_Request (req->obex, object);
-	  req->state = STATE_DISCONNECT;
-	  break;
-	case STATE_DISCONNECT:
-	  gdk_threads_enter ();
-	  gtk_widget_destroy (req->progress_dialog);
-	  gdk_flush ();
-	  gdk_threads_leave ();
-	  g_static_mutex_lock (&active_reqs_mutex);
-	  active_reqs = g_list_remove (active_reqs, req);
-	  g_static_mutex_unlock (&active_reqs_mutex);
-	  obex_disconnect_input (req->obex);
-	  OBEX_Cleanup (req->obex);
-	  run_callback (req, TRUE);
-	  break;
-	}
+      /* At this point, libopenobex is still threaded and will not accept a new request.
+	 Schedule a timeout to start the next phase.  */
+      g_timeout_add (1, (GSourceFunc)obex_state_machine, req);
       break;
     default:
       printf ("unknown obex client event %d\n", event);
