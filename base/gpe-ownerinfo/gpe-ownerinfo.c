@@ -153,12 +153,6 @@ realize (GtkWidget *w)
   gdk_window_set_back_pixmap (vp->bin_window, NULL, TRUE);
 }
 
-void
-realize2 (GtkWidget *w)
-{
-  gdk_window_set_back_pixmap (w->window, NULL, TRUE);
-}
-
 /*
  *  Return value: upgrade status
  *

@@ -1,3 +1,15 @@
+2003-02-17  Philip Blundell  <philb@gnu.org>
+
+	* gpe-ownerinfo2.c (on_configure_event): Delete.
+	(realize): New.
+	(mapped): Clone the style.
+	(draw_address): New.
+	(do_scroll_address): Likewise.
+	(set_address_size): Likewise.
+	(main): Use a drawing area for the address section, not a
+	GtkLabel/GtkScrolledWindow.  Set style individually on each widget
+	if required.
+
 2003-02-12  Colin Marquardt  <colin@marquardt-home.de>
 
 	* Makefile (VERSION): Bump up version.
