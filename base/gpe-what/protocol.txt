@@ -1,0 +1,19 @@
+Simple Modal Help Protocol
+--------------------------
+
+Windows which support interactive help should set a
+_GPE_INTERACTIVE_HELP property on themselves.  [Maybe WM_PROTOCOLS
+would be better for this.]
+
+When a mouse click happens in help mode, gpe-what will send a
+clientmessage to the appropriate window, with type
+_GPE_INTERACTIVE_HELP and payload:
+
+l[0]	a Window
+l[1]	x coordinate of mouse click relative to destination window
+l[2]	y coordinate of mouse click relative to destination window
+l[3]	an Atom
+
+The receiving program should respond to this message by setting its
+desired help text as a property of type STRING, using the Window and
+Atom specified in the clientmessage.
