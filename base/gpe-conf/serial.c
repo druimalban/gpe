@@ -449,11 +449,18 @@ Serial_Build_Objects (void)
 			      _("This option runs console on serial port. (default)"),
 			      NULL);
 	gtk_widget_set_sensitive (self.rbConsole, getty_installed);
-
-	self.rbGPSD =
-		gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
-							     (self.rbConsole),
-							     _("GPS Daemon"));
+    
+	if (gpsd_installed)
+		self.rbGPSD =
+			gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
+			                                              (self.rbConsole),
+							                            _("GPS Daemon"));
+	else
+		self.rbGPSD =
+			gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON
+			                                              (self.rbConsole),
+							                            _("GPS Daemon (needs 'gpsd')"));
+		
 	gtk_box_pack_start (GTK_BOX (vbox), self.rbGPSD, FALSE, TRUE, 0);
 	gtk_widget_set_sensitive (self.rbGPSD, gpsd_installed);
 	gtk_tooltips_set_tip (tooltips, self.rbGPSD,

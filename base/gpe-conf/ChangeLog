@@ -1,3 +1,7 @@
+2004-09-28	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* serial.c: Added hint that gpsd is necessary to use GPS settings.
+
 2004-09-22	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* theme.c: Changed maximum application font size from 20 to 16.
