@@ -1,3 +1,9 @@
+2003-03-23  Colin Marquardt  <colin@marquardt-home.de>
+
+	* Makefile.translation (real-translation-package): Write out list
+	of translation packages so that ipkg-upload can handle them
+	together.
+
 2003-03-22  Colin Marquardt  <colin@marquardt-home.de>
 
 	* README: Talk about the 'install' target a bit.

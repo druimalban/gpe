@@ -55,9 +55,10 @@ MAINTAINER = $(shell grep 'Maintainer: ' familiar/$(CONTROL) | cut -d ' ' -f 2-)
 
 transdist := familiar/dist-translation
 templates := ../build/familiar
+ipkglist  := translation-ipkgs.txt
 
 real-translation-package: all-mo
-	rm -rf $(transdist)
+	rm -rf $(transdist) $(ipkglist)
 	for LINGUA in $(LINGUAS); do \
 		i=$$(echo $$LINGUA | tr '[A-Z_]' '[a-z-]'); \
 		mkdir -p $(transdist)/$$i/CONTROL; \
@@ -67,6 +68,7 @@ real-translation-package: all-mo
 		install $(templates)/postinst.translation $(transdist)/$$i/CONTROL/postinst; \
 		chown -R root.root $(transdist)/$$i; \
 		$(IPKG_BUILD) $(transdist)/$$i; \
+		printf "$(PACKAGE)-$${i}_$(VERSION)_all.ipk " >> $(ipkglist); \
 	done
 
 translation-ipkg:
