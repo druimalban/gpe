@@ -44,6 +44,7 @@ static GtkWidget *menu;
 
 static XSettingsClient *client;
 static Display *dpy;
+static Window mywindow;
 
 struct _XSettingsClient
 {
@@ -76,13 +77,19 @@ clicked (GtkWidget *w, GdkEventButton *ev)
 static void
 set_theme (GtkWidget *w, gchar *value)
 {
-  Atom gpe_settings_update_atom = XInternAtom (dpy, "GPE_SETTINGS_UPDATE", 0);
-  Window win = xsettings_client_manager_window (client);
+  Atom gpe_settings_update_atom = XInternAtom (dpy, "_GPE_SETTINGS_UPDATE", 0);
+  Window win = XGetSelectionOwner (dpy, gpe_settings_update_atom);
   XSettingsType type;
   size_t length, name_len;
   gchar *buffer;
   XClientMessageEvent ev;
   gchar *prop = "/MATCHBOX/THEME";
+
+  if (win == None)
+    {
+      gpe_error_box (_("Could not set theme.  Is gpe-confd running?"));
+      return;
+    }
 
   type = XSETTINGS_TYPE_STRING;
   length = 4 + ((strlen (value) + 3) & ~3);
@@ -99,11 +106,11 @@ set_theme (GtkWidget *w, gchar *value)
   *((unsigned long *)(buffer + 4 + name_len)) = strlen (value);
   memcpy (buffer + 8 + name_len, value, strlen (value));
 
-  XChangeProperty (dpy, win, gpe_settings_update_atom, gpe_settings_update_atom,
+  XChangeProperty (dpy, mywindow, gpe_settings_update_atom, gpe_settings_update_atom,
 		   8, PropModeReplace, buffer, length + 4 + name_len);
   
   ev.type = ClientMessage;
-  ev.window = win;
+  ev.window = mywindow;
   ev.message_type = gpe_settings_update_atom;
   ev.format = 32;
   ev.data.l[0] = gpe_settings_update_atom;
@@ -180,6 +187,7 @@ main (int argc, char *argv[])
       exit (1);
     }
 
+  mywindow = GDK_WINDOW_XWINDOW (window->window);
   gpe_system_tray_dock (window->window);
 
   gtk_main ();
