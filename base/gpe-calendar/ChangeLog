@@ -1,3 +1,17 @@
+2003-01-06  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* event-db.c (event_sort_func): add a "recur" sort_func so we
+	can reverse-sort recurring by enddate and skip ones with old
+	end dates, also add ALARM flag to cloned events 
+	* event-ui.c (schedule_alarm): change schedule alarm to have a
+	date input as well as event_t input (so we can do recurring 
+	alarms), add schedule_next function; use schedule_next function
+	INSTEAD of schedule_alarm in editted and new events
+	* event-ui.h : add schedule_next function
+	* main.c (main): add getopt stuff to read -s flag, erase 
+	year_view stuff, add schedule_next stuff at init and at exit,
+	get rid of render_icon
+
 2003-01-06  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LDFLAGS): Add -L../libdm -ldm.

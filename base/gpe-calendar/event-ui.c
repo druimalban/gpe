@@ -175,34 +175,40 @@ recalculate_sensitivities (GtkWidget *widget,
 }
 
 static void
-schedule_alarm(event_t ev)
+schedule_alarm(event_t ev, time_t start)
 {
   time_t alarm_t;
   event_details_t ev_d;
   char filename[256], command[256];
   FILE *f;
 	
-  alarm_t = ev->start-60*ev->alarm;
+  alarm_t = start-60*ev->alarm;
   ev_d = event_db_get_details (ev);
   
   sprintf(filename, "/var/spool/at/%d.1234", (int)alarm_t);
   
-  f=fopen(filename, "w");
-	
-  fprintf(f, "#!/bin/sh\n");
-  fprintf(f, "export DISPLAY=:0.0\n");
-  fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
-  fprintf(f, "/bin/rm $0\n");
-  
-  fclose(f);
-  
-  sprintf(command, "chmod 755 %s", filename);
-  		  
-  system(command);
-  
-  sprintf(command, "echo >/var/spool/at/trigger");
-  		  
-  system(command);
+  if (!fopen(filename, "r"))
+  {
+    if ((f=fopen(filename, "w")))
+    {
+      fprintf(f, "#!/bin/sh\n");
+      fprintf(f, "export DISPLAY=:0.0\n");
+      fprintf(f, "/usr/bin/gpe-announce '%s'\n", ev_d->summary);
+      fprintf(f, "/usr/bin/gpe-calendar -s\n");
+      fprintf(f, "/bin/rm $0\n");
+
+      fclose(f);
+
+      sprintf(command, "chmod 755 %s", filename);
+        	      
+      system(command);
+
+      sprintf(command, "echo >/var/spool/at/trigger");
+        	      
+      system(command);
+    }
+    
+  }
   
 }
 
@@ -222,6 +228,33 @@ unschedule_alarm(event_t ev)
   system(command);
 }
 
+void
+schedule_next()
+{
+  GSList *events=NULL, *iter;
+  struct tm tm;
+  time_t end, start=time(NULL);
+  
+  localtime_r (&start, &tm);
+  tm.tm_year++;
+  end=mktime (&tm);   
+  
+  events = event_db_list_for_period (start, end);
+  
+  for (iter = events; iter; iter = g_slist_next (iter))
+    {
+      event_t ev_real, ev = iter->data;
+      
+      if (ev->flags & FLAG_ALARM) {
+	ev_real = event_db_find_by_uid (ev->uid);
+	schedule_alarm (ev_real, ev->start);
+	break;
+      }
+      
+    }
+
+}
+    
 static void
 edit_finished (GtkWidget *d)
 {
@@ -238,7 +271,10 @@ click_delete (GtkWidget *widget, event_t ev)
   GtkWidget *d = gtk_widget_get_toplevel (widget);
   
   if (ev->flags & FLAG_ALARM) 
+  { 
     unschedule_alarm (ev);
+    schedule_next();
+  }
   
   event_db_remove (ev);
   update_current_view ();
@@ -469,7 +505,7 @@ click_ok (GtkWidget *widget, GtkWidget *d)
     event_db_flush (ev);
 
   if (ev->flags & FLAG_ALARM)  
-    schedule_alarm (ev);
+    schedule_next();
 
   event_db_forget_details (ev);
   

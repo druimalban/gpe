@@ -11,6 +11,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <unistd.h>
+#include <getopt.h>
 
 #include <gtk/gtk.h>
 #include <libintl.h>
@@ -26,7 +28,6 @@
 #include "day_view.h"
 #include "week_view.h"
 #include "future_view.h"
-#include "year_view.h"
 #include "month_view.h"
 
 #include <libdm.h>
@@ -41,8 +42,6 @@ time_t viewtime;
 GtkWidget *main_window, *pop_window;
 GtkWidget *notebook;
 
-GdkFont *yearfont, *datefont;
-
 struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "home", "home" },
@@ -50,7 +49,6 @@ struct gpe_icon my_icons[] = {
   { "day_view", "day_view" },
   { "week_view", "week_view" },
   { "month_view", "month_view" },
-  { "year_view", "year_view" },
   { "exit", "exit" },
   { "delete", "delete" },
   { "save", "save" },
@@ -63,8 +61,8 @@ struct gpe_icon my_icons[] = {
   {NULL, NULL}
 };
 
-static GtkWidget *day, *week, *month, *future, *year, *current_view;
-static GtkWidget *day_button, *week_button, *month_button, *year_button, *future_button;
+static GtkWidget *day, *week, *month, *future, *current_view;
+static GtkWidget *day_button, *week_button, *month_button, *future_button;
 
 guint window_x = 240, window_y = 310;
 
@@ -153,6 +151,13 @@ button_toggled (GtkWidget *widget, gpointer data)
     new_view (data);
 }
 
+static void
+gpe_cal_exit()
+{
+  schedule_next();
+  gtk_main_quit();	
+}
+		
 int
 main (int argc, char *argv[])
 {
@@ -161,6 +166,8 @@ main (int argc, char *argv[])
   GtkWidget *pw;
 
   guint hour;
+  int option_letter;
+  extern char *optarg;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -178,6 +185,16 @@ main (int argc, char *argv[])
   if (event_db_start () == FALSE)
     exit (1);
 
+  schedule_next();
+  
+  while ((option_letter = getopt(argc, argv, "s")) != -1 ){
+  
+    if (option_letter == 's') {    
+      exit(0);     
+    }   
+
+  }   
+  
   for (hour = 0; hour < 24; hour++)
     {
       char buf[32];
@@ -195,19 +212,6 @@ main (int argc, char *argv[])
       times = g_list_append (times, g_strdup (buf));
     }
 
-  datefont = gdk_font_load ("-*-*-medium-r-normal--7-*-*-*-c-*-*");
-  if (datefont == NULL)
-    {
-      printf ("Couldn't get date font\n");
-      abort ();
-    }
-  yearfont = gdk_font_load ("-*-*-medium-r-normal--7-*-*-*-*-*-*");
-  if (yearfont == NULL)
-    {
-      printf ("Couldn't get year font\n");
-      abort ();
-    }
-
   vbox = gtk_vbox_new (FALSE, 0);
   notebook = gtk_notebook_new ();
 
@@ -216,12 +220,11 @@ main (int argc, char *argv[])
   day = day_view ();
   month = month_view ();
   future = future_view ();
-  year = year_view ();
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW(main_window), "Calendar");
   gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
+		      GTK_SIGNAL_FUNC (gpe_cal_exit), NULL);
 
   libdm_mark_window (main_window);
 
@@ -238,7 +241,7 @@ main (int argc, char *argv[])
 #endif
 
   p = gpe_find_icon ("new");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Appointment"), 
 			   _("New Appointment"), 
 			   _("Tap here to add a new appointment or reminder"), 
@@ -247,14 +250,14 @@ main (int argc, char *argv[])
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon ("home");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"), 
 			   _("Today"), _("Today"), pw, set_today, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
   p = gpe_find_icon ("future_view");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   future_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					      GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
 					      _("Future"), _("Future View"), 
@@ -262,7 +265,7 @@ main (int argc, char *argv[])
 					      pw, GTK_SIGNAL_FUNC (button_toggled), future);
 
   p = gpe_find_icon ("day_view");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					   GTK_TOOLBAR_CHILD_RADIOBUTTON, future_button,
 					   ("Day"), _("Day View"), 
@@ -270,7 +273,7 @@ main (int argc, char *argv[])
 					   pw, GTK_SIGNAL_FUNC (button_toggled), day);
   
   p = gpe_find_icon ("week_view");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   week_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_RADIOBUTTON, day_button,
 					    _("Week"), _("Week View"), 
@@ -278,28 +281,20 @@ main (int argc, char *argv[])
 					    pw, GTK_SIGNAL_FUNC (button_toggled), week);
 
   p = gpe_find_icon ("month_view");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   month_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					     GTK_TOOLBAR_CHILD_RADIOBUTTON, week_button,
 					     _("Month"), _("Month View"), 
 					     _("Tap here to select month-at-a-time view."),
 					     pw, GTK_SIGNAL_FUNC (button_toggled), month);
 
-  p = gpe_find_icon ("year_view");
-  pw = gpe_render_icon (main_window->style, p);
-  year_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
-					    GTK_TOOLBAR_CHILD_RADIOBUTTON, month_button,
-					    _("Year"), _("Year View"), 
-					    _("Tap here to select year-at-a-time view."),
-					    pw, GTK_SIGNAL_FUNC (button_toggled), year);
-
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
   
   p = gpe_find_icon ("exit");
-  pw = gpe_render_icon (main_window->style, p);
+  pw = gtk_image_new_from_pixbuf(p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
 			   _("Exit"), _("Tap here to exit the program"),
-			   pw, GTK_SIGNAL_FUNC (gtk_exit), NULL);
+			   pw, GTK_SIGNAL_FUNC (gpe_cal_exit), NULL);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
@@ -309,13 +304,11 @@ main (int argc, char *argv[])
   gtk_widget_show (day);
   gtk_widget_show (week);
   gtk_widget_show (month);
-  gtk_widget_show (year);
   gtk_widget_show (future);
 
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), day, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), week, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), month, NULL);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), year, NULL);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), future, NULL);
 
   gtk_widget_show (notebook);

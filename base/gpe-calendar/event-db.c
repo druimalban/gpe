@@ -49,6 +49,14 @@ event_sort_func (const event_t ev1, const event_t ev2)
   return (ev1->start > ev2->start) ? 1 : 0;
 }
 
+static gint
+event_sort_func_recur (const event_t ev1, const event_t ev2)
+{
+  recur_t r1 = ev1->recur;
+  recur_t r2 = ev2->recur;
+  return (r1->end > r2->end) ? 0 : 1;
+}
+
 /* Add an event to the in-memory list */
 static gboolean
 event_db_add_internal (event_t ev)
@@ -58,7 +66,7 @@ event_db_add_internal (event_t ev)
 
   if (ev->recur)
     recurring_events = g_slist_insert_sorted (recurring_events, ev, 
-					      (GCompareFunc)event_sort_func);
+					      (GCompareFunc)event_sort_func_recur);
   else
     one_shot_events = g_slist_insert_sorted (one_shot_events, ev, 
 					     (GCompareFunc)event_sort_func);
@@ -401,6 +409,7 @@ event_db_clone (event_t ev)
   event_t n = event_db__alloc_event ();
   memcpy (n, ev, sizeof (*ev));
   n->flags |= FLAG_CLONE;
+  if (ev->flags & FLAG_ALARM) n->flags |= FLAG_ALARM;
   return n;
 }
 
@@ -459,14 +468,14 @@ event_db_list_for_period_internal (time_t start, time_t end, gboolean untimed,
 	    continue;
 	}
 
+      /* Skip events that have finished already */
+      if (r->end && fixed_start > r->end)
+	break;
+
       /* Skip events that haven't started yet */
       if (end && fixed_start > end)
 	continue;
       
-      /* Skip events that have finished already */
-      if (r->end && fixed_start > r->end)
-	continue;
-
       switch (r->type)
 	{
 	case RECUR_NONE:

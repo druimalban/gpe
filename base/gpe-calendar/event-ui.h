@@ -20,5 +20,6 @@ extern GtkWidget *new_event(time_t t, guint timesel);
 extern GtkWidget *edit_event(event_t ev);
 
 extern void event_ui_init (void);
+extern void schedule_next(void);
 
 #endif
