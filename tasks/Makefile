@@ -43,6 +43,7 @@ TMP_FILE = temporary_file_which_will_be_destroyed_without_warning
 	@sed 's:_DEPS_:$(DEP_$@):' < $(TMP_FILE) > dist/CONTROL/control
 	@rm -rf $(TMP_FILE)
 	@ipkg-build -o root -g root dist
+	gpg -sb --armor $@_$(VER_$@)_all.ipk
 
 clean:
 	rm -rf dist *.ipk *.ipk.asc *~ .*~
@@ -136,12 +137,11 @@ DEP_gpe-task-pim = \
 #FIXME: 2 calculators!
 
 #------------------------------------------ System utilities
-VER_gpe-task-utils = 0.2
+VER_gpe-task-utils = 0.3
 DEP_gpe-task-utils = \
     gpe-task-base, \
     gpe-edit2, \
     gpe-terminal, \
-    gpe-filemanager2, \
     gpe-taskmanager
 
 #------------------------------------------ Communication apps
@@ -161,11 +161,12 @@ DEP_gpe-task-mmedia = \
     gpe-mixer
 
 #------------------------------------------ Extra apps
-VER_gpe-task-extra-apps = 0.2
+VER_gpe-task-extra-apps = 0.3
 DEP_gpe-task-extra-apps = \
     gpe-task-base, \
     figment, \
     gpe-timesheet2, \
+    gpe-filemanager2, \
     greader
 
 #------------------------------------------ Games
