@@ -22,7 +22,5 @@ GtkWidget * sketchpad_build_window();
 
 /** WARNING: will destroy button->child if any */
 void colorbox_button_set_color(GtkWidget * button, GdkColor * color);
-extern GtkWidget * current_brush_pixmap;
-extern GtkWidget * current_brush_button;
 
 #endif

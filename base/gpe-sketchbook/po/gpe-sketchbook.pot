@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-08-30 02:50+0300\n"
+"POT-Creation-Date: 2002-08-31 15:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:106 src/sketchpad-gui.c:387
+#: src/gpe-sketchbook.c:106 src/sketchpad-gui.c:388
 msgid "Sketch selector"
 msgstr ""
 
@@ -32,16 +32,16 @@ msgstr ""
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:105
+#: src/selector-cb.c:64 src/sketchpad-cb.c:106
 msgid "Delete sketch?"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:53 src/sketchpad-cb.c:92
-#: src/sketchpad-cb.c:105
+#: src/selector-cb.c:64 src/sketchpad-cb.c:54 src/sketchpad-cb.c:93
+#: src/sketchpad-cb.c:106
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:64 src/sketchpad-cb.c:105
+#: src/selector-cb.c:64 src/sketchpad-cb.c:106
 msgid "Delete"
 msgstr ""
 
@@ -62,7 +62,7 @@ msgid ""
 "Distributed under GPL"
 msgstr ""
 
-#: src/selector-gui.c:85 src/sketchpad-gui.c:359
+#: src/selector-gui.c:85 src/sketchpad-gui.c:360
 msgid "New sketch"
 msgstr ""
 
@@ -78,53 +78,53 @@ msgstr ""
 msgid "About gpe-sketchbook"
 msgstr ""
 
-#: src/sketchpad-cb.c:42
+#: src/sketchpad-cb.c:43
 msgid ""
 "Sketch modified;\n"
 "save before exiting?"
 msgstr ""
 
-#: src/sketchpad-cb.c:43
+#: src/sketchpad-cb.c:44
 msgid "Exit"
 msgstr ""
 
-#: src/sketchpad-cb.c:43 src/sketchpad-cb.c:53 src/sketchpad-cb.c:92
+#: src/sketchpad-cb.c:44 src/sketchpad-cb.c:54 src/sketchpad-cb.c:93
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:53 src/sketchpad-cb.c:92
+#: src/sketchpad-cb.c:54 src/sketchpad-cb.c:93
 msgid "Save last sketch?"
 msgstr ""
 
-#: src/sketchpad-gui.c:217
+#: src/sketchpad-gui.c:218
 msgid "Eraser"
 msgstr ""
 
-#: src/sketchpad-gui.c:219
+#: src/sketchpad-gui.c:220
 msgid "Pencil"
 msgstr ""
 
-#: src/sketchpad-gui.c:221
+#: src/sketchpad-gui.c:222
 msgid "Brush type"
 msgstr ""
 
-#: src/sketchpad-gui.c:222
+#: src/sketchpad-gui.c:223
 msgid "Color"
 msgstr ""
 
-#: src/sketchpad-gui.c:364
+#: src/sketchpad-gui.c:365
 msgid "Save sketch"
 msgstr ""
 
-#: src/sketchpad-gui.c:369
+#: src/sketchpad-gui.c:370
 msgid "Delete sketch"
 msgstr ""
 
-#: src/sketchpad-gui.c:377
+#: src/sketchpad-gui.c:378
 msgid "Previous sketch"
 msgstr ""
 
-#: src/sketchpad-gui.c:382
+#: src/sketchpad-gui.c:383
 msgid "Next sketch"
 msgstr ""
 

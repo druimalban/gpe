@@ -28,6 +28,7 @@
 
 #include "dialog.h"
 #include "gpe/question.h"
+#include "gpe/gtkgpepixmap.h"
 
 //--i18n
 #include <libintl.h>
@@ -135,43 +136,51 @@ void on_button_file_next_clicked (GtkButton *button, gpointer user_data){
 //---------------------------------------------------------
 //--------------------- DRAWING TOOLBAR -------------------
 void on_radiobutton_tool_clicked (GtkButton *button, gpointer user_data){
-  //**/g_printerr("selected: %s\n", (gchar *) user_data);
   sketchpad_set_tool_s((gchar *) user_data);
 }
 
 void on_button_brushes_clicked(GtkButton * button, gpointer brushbox){
-  if(current_brush_button != NULL)
-    gtk_widget_reparent(current_brush_pixmap, current_brush_button);
+  gtk_widget_hide    (GTK_WIDGET (brushbox));
   gtk_widget_show_all(GTK_WIDGET (brushbox));
-  gtk_main();
-  if(GTK_BIN (button)->child != NULL)
-    gtk_widget_destroy(GTK_BIN (button)->child);
-  gtk_widget_reparent(current_brush_pixmap, GTK_WIDGET (button));
-  gtk_widget_hide(GTK_WIDGET (brushbox));
 }
 
 void on_button_colors_clicked(GtkButton * button, gpointer colorbox){
+  gtk_widget_hide    (GTK_WIDGET (colorbox));
   gtk_widget_show_all(GTK_WIDGET (colorbox));
-  gtk_main();
-  colorbox_button_set_color(GTK_WIDGET (button), current_color);
-  gtk_widget_hide(GTK_WIDGET (colorbox));
 }
 
 
-void on_radiobutton_brush_clicked (GtkButton *button, gpointer user_data){
-  //**/g_printerr("selected: %s\n", (gchar *) user_data);
-  sketchpad_set_brush_s((gchar *) user_data);
-  current_brush_pixmap = GTK_BIN (button)->child;
-  current_brush_button = GTK_WIDGET(button);//needed to reparent the pixmap... (bidouille)
-  gtk_main_quit();//exit brushbox
+void on_radiobutton_brush_clicked (GtkButton *button, gpointer brush){
+  GtkWidget * brushbox;
+  GtkWidget * topbutton;
+  GtkGpePixmap * topbutton_pixmap;
+  GdkPixmap * button_image;
+  GdkBitmap * button_mask;
+
+  sketchpad_set_brush_s((gchar *) brush);
+
+  brushbox  = gtk_widget_get_toplevel((GtkWidget *)button);
+  topbutton = gtk_object_get_data((GtkObject *) brushbox, "calling_button");
+  topbutton_pixmap = gtk_object_get_data((GtkObject *) topbutton, "pixmap");
+  gtk_gpe_pixmap_get(GTK_GPE_PIXMAP(GTK_BIN (button)->child), &button_image, &button_mask);
+  gtk_gpe_pixmap_set(topbutton_pixmap, button_image, button_mask);
+
+  gtk_widget_hide(GTK_WIDGET (brushbox));
 }
 
 
-void on_radiobutton_color_clicked (GtkButton *button, gpointer user_data){
-  //**/g_printerr("selected: %s\n", (gchar *) user_data);
-  current_color = user_data;
-  gtk_main_quit();//exit colorbox
+void on_radiobutton_color_clicked (GtkButton *button, gpointer color){
+  GtkWidget * colorbox;
+  GtkWidget * topbutton;
+
+  current_color = (GdkColor *)color;
+
+  colorbox  = gtk_widget_get_toplevel((GtkWidget *)button);
+  topbutton = gtk_object_get_data((GtkObject *) colorbox, "calling_button");
+  colorbox_button_set_color(GTK_WIDGET (topbutton), current_color);
   //NOTE: if(tool == ERASER) sketchpad_set_tool_s("pencil"); (need toggle buttons)
+
+  gtk_widget_hide(GTK_WIDGET (colorbox));
 }
 
 //---------------------------------------------------------

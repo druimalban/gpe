@@ -134,9 +134,6 @@ GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height){
 GtkWidget * brushbox_new();
 GtkWidget * colorbox_new();
 
-GtkWidget * current_brush_pixmap;
-GtkWidget * current_brush_button = NULL;
-
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   //draw toolbar
   GtkWidget * toolbar;
@@ -152,6 +149,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   //brushes
   GtkWidget * brushbox;
   GtkWidget * button_brushes;
+  GtkWidget * button_brushes_pixmap;
 
   //colors
   GtkWidget * colorbox;
@@ -193,11 +191,13 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
   gtk_button_set_relief (GTK_BUTTON (button_brushes), GTK_RELIEF_NONE);
   gtk_widget_set_usize (button_brushes,  20, 20);
   pixbuf = gpe_find_icon ("brush_medium");//default value.
-  current_brush_pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_brushes), current_brush_pixmap);
+  button_brushes_pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_object_set_data((GtkObject *) button_brushes, "pixmap", button_brushes_pixmap);
+  gtk_container_add (GTK_CONTAINER (button_brushes), button_brushes_pixmap);
 
   brushbox = brushbox_new();
   /**/gtk_window_set_transient_for(GTK_WINDOW(brushbox), GTK_WINDOW(window));
+  gtk_object_set_data((GtkObject *) brushbox, "calling_button", button_brushes);
   gtk_signal_connect (GTK_OBJECT (button_brushes), "clicked",
                       GTK_SIGNAL_FUNC (on_button_brushes_clicked), brushbox);
 
@@ -209,6 +209,7 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
 
   colorbox = colorbox_new();
   /**/gtk_window_set_transient_for(GTK_WINDOW(colorbox), GTK_WINDOW(window));
+  gtk_object_set_data((GtkObject *) colorbox, "calling_button", button_colors);
   gtk_signal_connect (GTK_OBJECT (button_colors), "clicked",
                       GTK_SIGNAL_FUNC (on_button_colors_clicked), colorbox);
 
