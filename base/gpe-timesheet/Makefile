@@ -1,10 +1,10 @@
 PREFIX = /usr/local
 
-CFLAGS = `gtk-config --cflags` -g -I../libgpewidget -Wall
+CFLAGS = `gdk-pixbuf-config --cflags` `gtk-config --cflags` -g -I../libgpewidget -Wall
 CFLAGS += -DPACKAGE=\"gpe-timesheet\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 gpe-timesheet: main.o sql.o
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gtk-config --libs` -lsqlite -g
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget `gdk-pixbuf-config --libs` `gtk-config --libs` -lsqlite -g
 
 install:
 	install -D gpe-timesheet $(DESTDIR)$(PREFIX)/bin/gpe-timesheet

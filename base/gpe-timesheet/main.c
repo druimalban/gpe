@@ -16,22 +16,25 @@
 #include <gtk/gtk.h>
 
 #include "pixmaps.h"
+#include "render.h"
 #include "init.h"
 #include "sql.h"
 #include "smallbox.h"
 
 #define _(_x) gettext(_x)
 
-#define MY_PIXMAPS_DIR PREFIX "/share/gpe-timesheet/pixmaps"
-#define PIXMAPS_DIR PREFIX "/share/gpe/pixmaps"
-
 static const guint window_x = 240, window_y = 320;
 
-struct pix my_pix[] = {
+struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "delete", "delete" },
-  { "clock", "watch" },
-  { "stop_clock", "pause_watch" },
+  { "clock", "clock" },
+  { "stop_clock", "stop_clock" },
+  { "ok", "ok" },
+  { NULL, NULL }
+};
+
+struct pix my_pix[] = {
   { "ok", "ok" },
   { NULL, NULL }
 };
@@ -43,7 +46,7 @@ start_timing(GtkWidget *w, gpointer user_data)
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      struct pix *px = find_pixmap ("tick");
+      struct pix *px = find_pixmap ("ok");
       gtk_ctree_node_set_pixmap (ct, node, 1, px->pixmap, px->mask);
     }
 }
@@ -135,7 +138,7 @@ main(int argc, char *argv[])
   GtkWidget *pw;
   GtkWidget *tree;
   GtkWidget *chatter;
-  struct pix *p;
+  GdkPixbuf *p;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -143,9 +146,12 @@ main(int argc, char *argv[])
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);  
+  textdomain (PACKAGE);
 
-  if (load_pixmaps (my_pix) == FALSE)
+  if (gpe_load_pixmaps (my_pix) == FALSE)
+    exit (1);
+
+  if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
   if (sql_start () == FALSE)
@@ -164,26 +170,26 @@ main(int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox_top), tree, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox_top), chatter, FALSE, FALSE, 0);
 
-  p = find_pixmap ("new");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("new");
+  pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New task"), 
 			   _("New task"), _("New task"),
 			   pw, ui_new_task, tree);
 
-  p = find_pixmap ("delete");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("delete");
+  pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete task"),
 			   _("Delete task"), _("Delete task"),
 			   pw, ui_delete_task, tree);
 
-  p = find_pixmap ("clock");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("clock");
+  pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Start timing"),
 			   _("Start timing"), _("Start timing"),
 			   pw, start_timing, tree);
   
-  p = find_pixmap ("stop_clock");
-  pw = gtk_pixmap_new (p->pixmap, p->mask);
+  p = gpe_find_icon ("stop_clock");
+  pw = gpe_render_icon (window->style, p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Stop timing"),
 			   _("Stop timing"), _("Stop timing"),
 			   pw, stop_timing, tree);
