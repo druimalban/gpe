@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-01-17 22:10+0000\n"
+"POT-Creation-Date: 2004-02-15 01:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,144 +16,92 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:56 gpe-todo.desktop.in.h:2
+#: main.c:59 gpe-todo.desktop.in.h:2
 msgid "To-do list"
 msgstr ""
 
-#: todo-ui.c:273
-msgid "Select categories"
-msgstr ""
-
-#: todo-ui.c:295
-msgid "Summary:"
-msgstr ""
-
-#: todo-ui.c:296
-msgid "Details:"
-msgstr ""
-
-#: todo-ui.c:303
-msgid "Not started"
-msgstr ""
-
-#: todo-ui.c:303
-msgid "In progress"
-msgstr ""
-
-#: todo-ui.c:304
-msgid "Completed"
-msgstr ""
-
-#: todo-ui.c:328
-msgid "Due:"
-msgstr ""
-
-#: todo-ui.c:343
-msgid "Categories:"
-msgstr ""
-
-#: todo-ui.c:435
-msgid "Edit to-do item"
-msgstr ""
-
-#: todo-ui.c:442 list-ui.c:309
-msgid "New item"
-msgstr ""
-
-#: list-ui.c:52
-msgid "All items"
-msgstr ""
-
-#: list-ui.c:81
-msgid "Are you sure you want to delete all completed items permanently?"
-msgstr ""
-
-#: list-ui.c:81
-msgid "Confirm"
-msgstr ""
-
-#: list-ui.c:82
-msgid "Delete"
-msgstr ""
-
-#: list-ui.c:309
-msgid "Tap here to add a new item."
-msgstr ""
-
-#: list-ui.c:326
-msgid "Configure"
-msgstr ""
-
-#: list-ui.c:327
-msgid "Configure categories"
-msgstr ""
-
-#: list-ui.c:328
-msgid "Tap here to configure categories."
-msgstr ""
-
-#: list-ui.c:343
-msgid "Purge"
-msgstr ""
-
-#: list-ui.c:344
-msgid "Purge completed items"
-msgstr ""
-
-#: list-ui.c:345
-msgid "Tap here to purge completed items from the list."
-msgstr ""
-
-#: list-ui.c:350
-msgid "Re-sort"
-msgstr ""
-
-#: list-ui.c:351
-msgid "Move completed items to the end of the list"
-msgstr ""
-
-#: list-ui.c:352
-msgid "Tap here to move completed items to the end of the list."
-msgstr ""
-
-#: list-ui.c:372
-msgid "Quit"
-msgstr ""
-
-#: list-ui.c:372
-msgid "Tap here to quit the program."
-msgstr ""
-
-#: configure.c:59
+#: todo-ui.c:274
 msgid "Category name must not be blank"
 msgstr ""
 
-#: configure.c:69
+#: todo-ui.c:284
 msgid "A category by that name already exists"
 msgstr ""
 
-#: configure.c:97
+#: todo-ui.c:318
 msgid "Name:"
 msgstr ""
 
-#: configure.c:125 configure.c:171
+#: todo-ui.c:345 todo-ui.c:477
 msgid "New category"
 msgstr ""
 
-#: configure.c:146
-msgid "To-do list: Categories"
-msgstr ""
-
-#: configure.c:171
+#: todo-ui.c:478
 msgid "Tap here to add a new category."
 msgstr ""
 
-#: configure.c:175
+#: todo-ui.c:482
 msgid "Delete category"
 msgstr ""
 
-#: configure.c:175
+#: todo-ui.c:483
 msgid "Tap here to delete the selected category."
+msgstr ""
+
+#: todo-ui.c:554
+msgid "Select categories"
+msgstr ""
+
+#: todo-ui.c:578
+msgid "Summary:"
+msgstr ""
+
+#: todo-ui.c:579
+msgid "Details:"
+msgstr ""
+
+#: todo-ui.c:586
+msgid "Not started"
+msgstr ""
+
+#: todo-ui.c:586
+msgid "In progress"
+msgstr ""
+
+#: todo-ui.c:587
+msgid "Completed"
+msgstr ""
+
+#: todo-ui.c:611
+msgid "Due:"
+msgstr ""
+
+#: todo-ui.c:625
+msgid "Categories:"
+msgstr ""
+
+#: todo-ui.c:716
+msgid "Edit to-do item"
+msgstr ""
+
+#: todo-ui.c:723 list-ui.c:276
+msgid "New item"
+msgstr ""
+
+#: list-ui.c:73
+msgid "All items"
+msgstr ""
+
+#: list-ui.c:276
+msgid "Tap here to add a new item."
+msgstr ""
+
+#: list-ui.c:296
+msgid "Quit"
+msgstr ""
+
+#: list-ui.c:296
+msgid "Tap here to quit the program."
 msgstr ""
 
 #: gpe-todo.desktop.in.h:1
