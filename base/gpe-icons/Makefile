@@ -1,6 +1,9 @@
+PIXMAPS = close.xpm config.xpm new.xpm save.xpm
+
 install:
-	install -D gpe-logo.png $(DESTDIR)/usr/share/pixmaps/gpe-logo.png
-	install -D error.png $(DESTDIR)/usr/share/pixmaps/error.png
+	for i in $(PIXMAPS); do install -D $$i $(DESTDIR)/usr/share/gpe/pixmaps/$$i; done
+	install -D gpe-logo.png $(DESTDIR)/usr/share/gpe/pixmaps/gpe-logo.png
+	install -D error.png $(DESTDIR)/usr/share/gpe/pixmaps/error.png
 
 ipkg:
 	rm -rf dist
