@@ -21,7 +21,12 @@
 </td>
 <td width="*" valign="middle">
 <h1> GPE: <?php echo $addtitle; ?></h1>
-</td> 
+</td>
+<td align="right">
+<a href="http://handhelds.org">
+<img src="http://www.handhelds.org/images/handheld_icon_white.jpg" alt="handhelds.org">
+</a>
+</td>
 </tr>
 </table>
 <?php include("/home/gpe/website/html/includes/menu.php"); ?>
