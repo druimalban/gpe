@@ -1,3 +1,12 @@
+2002-07-18  Philip Blundell  <philb@gnu.org>
+
+	* X11/gpe-login.pre-session: New file.
+	* Makefile (install-scripts): Install it.
+
+	* X11/Xsession-gpe.d/70unclutter: Deleted.
+
+	* gpe-session-scripts 0.11 released.
+
 2002-07-17  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (install-dm): Install initscript too.

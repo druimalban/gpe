@@ -54,6 +54,7 @@ install-scripts:
 	install -D X11/Xsession $(DESTDIR)/etc/X11/Xsession
 	install -D X11/Xinit $(DESTDIR)/etc/X11/Xinit
 	install -D X11/Xserver $(DESTDIR)/etc/X11/Xserver
+	install -D X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
 	for i in X11/Xsession-gpe.d X11/Xinit.d; do mkdir -p $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; cp $$FILES $(DESTDIR)/etc/$$i/; done
 
 ipkg:
