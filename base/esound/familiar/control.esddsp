@@ -1,7 +1,7 @@
 Package: esddsp
 Section: base
 Priority: optional
-Version: 0.2.28-gpe1
+Version: 0.2.28-gpe2
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Description: Really bad hack to make OSS programs use ESD
