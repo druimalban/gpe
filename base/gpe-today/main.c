@@ -47,51 +47,47 @@ int main(int argc, char **argv)
 	exit(0);
 }
 
+static gboolean free_pixmap (Pixmap pix)
+{
+	XFreePixmap (GDK_DISPLAY(), pix);
+	return TRUE;
+}
+
 static gboolean resize_callback(GtkWidget *wid, GdkEventConfigure *event,
 				gpointer data)
 {
 	Pixmap rmap;
-	static Pixmap pmap = None;
-	static GdkPixmap *pix = NULL;
+	GdkPixmap *old_pix = g_object_get_data (G_OBJECT (wid), "bg-pixmap");
 
 	if ((wid->allocation.height >= wid->allocation.width) == window.mode) {
 		window.mode = !window.mode;
 	}
 
-	if (pix) {
-		g_object_unref(pix);
-		g_object_unref(pix);
-		g_object_unref(pix);
-	}
-
 	rmap = GetRootPixmap(GDK_DISPLAY());
 
-	g_print("ROOT PIXMAP: %ld\n", rmap);
-	
 	if (rmap != None) {
-		if (pmap != None)
-			XFreePixmap(GDK_DISPLAY(), pmap);
-
-		pmap = CutWinPixmap(GDK_DISPLAY(),
+		Pixmap pmap = CutWinPixmap(GDK_DISPLAY(),
 		                    GDK_WINDOW_XWINDOW(wid->window), rmap,
 		                    GDK_GC_XGC(wid->style->black_gc));
-
-		g_print("PIXMAP: %ld\n", pmap);
 		
 		if (pmap != None) {
-			pix = gdk_pixmap_foreign_new(pmap);
+			GdkPixmap *pix = gdk_pixmap_foreign_new(pmap);
 			wid->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
-			g_object_ref(pix);
 			wid->style->bg_pixmap[GTK_STATE_ACTIVE] = pix;
-			g_object_ref(pix);
 			wid->style->bg_pixmap[GTK_STATE_PRELIGHT] = pix;
 			gtk_widget_set_style(wid, wid->style);
+			g_object_set_data_full (G_OBJECT (pix), "pixmap", (void *)pmap, (GDestroyNotify)free_pixmap);
+			g_object_set_data (G_OBJECT (wid), "bg-pixmap", pix);
 		}
 	}
 
 	gtk_widget_queue_draw(calendar.scroll->draw);
 	gtk_widget_queue_draw(calendar.toplevel);
-	
+
+	if (old_pix) {
+		g_object_unref(old_pix);
+	}
+
 	return FALSE;
 }
 
