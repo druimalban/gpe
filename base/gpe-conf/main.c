@@ -43,6 +43,7 @@
 #include "storage.h"
 #include "serial.h"
 #include "logread.h"
+#include "packages.h"
 
 #include <gpe/init.h>
 #include <gpe/picturebutton.h>
@@ -68,6 +69,7 @@ static struct {
 
   GtkWidget *save;
   GtkWidget *cancel;
+  GtkWidget *dismiss;
   
   int cur_applet;
   int alone_applet;
@@ -90,11 +92,11 @@ struct Applet applets[]=
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore, "Login", "login-setup", "Login Setup"},
     { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore , "Users" ,"users","User Administration"},
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , "GPE" ,"admin","GPE Conf Administration"},
-    { &Storage_Build_Objects, &Storage_Free_Objects, &Storage_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
+    { &Storage_Build_Objects, &Storage_Free_Objects, &Unimplemented_Save, &Storage_Restore , "Storage" ,"storage","Storage Information"},
     { &Serial_Build_Objects, &Serial_Free_Objects, &Serial_Save, &Serial_Restore , "Serial" ,"serial","Serial Port Configuration"},
     { &Logread_Build_Objects, &Logread_Free_Objects, &Logread_Save, &Logread_Restore , "Logread" ,"logread", "Show logfile"},
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Screensvr" ,"screensaver","Screen Saver Configuration"},
-    { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore , "Software" ,"software","Adding and Removing Programs"},
+    { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore , "Packages" ,"packages","Adding and Removing Programs"},
   };
 struct gpe_icon my_icons[] = {
   { "save" },
@@ -147,18 +149,33 @@ void item_select(GtkWidget *ignored, gpointer user_data)
 
   self.applet = applets[i].Build_Objects();
   gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
-  //gtk_frame_set_label(GTK_FRAME(self.frame),applets[i].frame_label);
+	
   gtk_widget_show_all(self.applet);
 
   gtk_window_set_title(GTK_WINDOW(self.w), applets[i].frame_label);
   
   if(applets[self.cur_applet].Save != &Unimplemented_Save)
+  {
     gtk_widget_show(self.save);
+  }
   else
+  {
     gtk_widget_hide(self.save);
-    
+  }  
+  
   if(applets[self.cur_applet].Restore != &Unimplemented_Restore)
-    gtk_widget_show(self.cancel);
+  {
+	if(applets[self.cur_applet].Save == &Unimplemented_Save)
+	{
+      gtk_widget_hide(self.cancel);
+      gtk_widget_show(self.dismiss);
+	}
+    else
+	{
+      gtk_widget_hide(self.dismiss);
+      gtk_widget_show(self.cancel);
+	}
+  }
   else
     gtk_widget_hide(self.cancel);
 }
@@ -188,8 +205,8 @@ void initwindow()
    gtk_signal_connect (GTK_OBJECT(self.w), "destroy", 
       (GtkSignalFunc) gtk_main_quit, NULL);
 
-
 }
+
 
 void make_container()
 {
@@ -215,10 +232,15 @@ void make_container()
   self.save = gpe_picture_button (self.w->style, _("Apply"), _("save"));
   gtk_box_pack_start(GTK_BOX(hbuttons),self.save,FALSE, TRUE, 0);
 
+  self.dismiss = gpe_picture_button (self.w->style, _("Dismiss"), _("close"));
+  gtk_box_pack_start(GTK_BOX(hbuttons),self.dismiss,FALSE, TRUE, 0);
+  
   gtk_signal_connect (GTK_OBJECT(self.save), "clicked",
 		      (GtkSignalFunc) Save_Callback, NULL);
   gtk_signal_connect (GTK_OBJECT(self.cancel), "clicked",
 		      (GtkSignalFunc) Restore_Callback, NULL);
+  gtk_signal_connect (GTK_OBJECT(self.dismiss), "clicked",
+		      (GtkSignalFunc) Save_Callback, NULL);
 
 }
 
@@ -296,8 +318,8 @@ int main(int argc, char **argv)
       setresgid(getgid(),getgid(),getgid()); // abandon privilege..
       if(argc == 1)
 	{
-		fprintf(stderr,"This mode is disabled, please try:\n");
-	    printf("\ngpe-conf [AppletName]\nwhere AppletName is in:\n");
+		fprintf(stderr,_("This mode is disabled, please try:\n"));
+	    fprintf(stderr,_("\ngpe-conf [AppletName]\nwhere AppletName is in:\n"));
 	    for ( i = 0 ; i< applets_nb ; i++)
 		if (applets[i].Build_Objects != Unimplemented_Build_Objects)
 		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);
@@ -311,8 +333,8 @@ int main(int argc, char **argv)
 	    }
 	  if (i ==applets_nb)
 	    {
-	      fprintf(stderr,"Applet %s unknown!\n",argv[1]);
-	      printf("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n");
+	      fprintf(stderr,_("Applet %s unknown!\n"),argv[1]);
+	      printf(_("\n\nUsage: gpe-conf [AppletName]\nwhere AppletName is in:\n"));
 	      for( i = 0 ; i< applets_nb ; i++)
 		if(applets[i].Build_Objects != Unimplemented_Build_Objects)
 		  printf("%s\t\t:%s\n",applets[i].name,applets[i].frame_label);

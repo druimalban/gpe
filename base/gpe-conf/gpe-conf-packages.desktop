@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name= Package Manager
+Comment=Manage installed packages
+Exec=gpe-conf packages
+Terminal=0
+Type=Application
+Icon=gpe-config-packages.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=False
+SingleInstance=True

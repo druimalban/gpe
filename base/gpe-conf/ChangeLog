@@ -1,5 +1,15 @@
 When			Who				Where						What
 
+23.03.2003		Florian			main.c						New (still empty) package management applet. 
+								packages.*
+								gpe-conf-packages.desktop
+								gpe-config-packages.png
+								Makefile
+
+23.03.2003		Florian			main.c 						Config items with only one button are now showed as "dismiss".
+
+23.03.2003		Florian			kbd.c						Now current setting is showed.
+
 23.03.2003		Florian			users/interface.c			User list now has automatic scrollbars :-)
 
 23.03.2003		Florian			ipaqscreen/callbacks.c		Changed sleep conf to use suid task.

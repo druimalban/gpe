@@ -1,3 +1,15 @@
+/*
+ * gpe-conf
+ *
+ * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
+ *               2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version
+ * 2 of the License, or (at your option) any later version.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,7 +73,7 @@ gboolean setup_current_option_is(char *file)
 	gchar *fn;
 	gboolean ret;
 
-	fn = g_strdup_printf ("%s/.kbdconfig", g_get_home_dir());
+	fn = g_strdup_printf ("%s/.xkbd", g_get_home_dir());
 	inp = fopen (fn, "r");
 	g_free (fn);
 	if (!inp)
@@ -112,7 +124,8 @@ GtkWidget *Kbd_Build_Objects()
 
   GtkWidget *opt1;
   char *user_kbdrc;
-
+  char *tmp;
+  
   guint gpe_catspacing = gpe_get_catspacing ();
   gchar *gpe_catindent = gpe_get_catindent ();
   guint gpe_boxspacing = gpe_get_boxspacing ();
@@ -125,7 +138,11 @@ GtkWidget *Kbd_Build_Objects()
   catvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (categories), catvbox1, TRUE, TRUE, 0);
   
-  catlabel1 = gtk_label_new (_("Keyboard Geometry/Layout")); 
+  catlabel1 = gtk_label_new (NULL);
+  tmp = g_strdup_printf("<b>%s</b>",_("Keyboard Geometry / Layout"));
+  gtk_label_set_markup(GTK_LABEL(catlabel1),tmp);
+  free(tmp);
+  
   gtk_box_pack_start (GTK_BOX (catvbox1), catlabel1, FALSE, FALSE, 0);
   gtk_label_set_justify (GTK_LABEL (catlabel1), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (catlabel1), 0, 0.5);
@@ -139,7 +156,6 @@ GtkWidget *Kbd_Build_Objects()
   controlvbox1 = gtk_vbox_new (FALSE, gpe_boxspacing);
   gtk_box_pack_start (GTK_BOX (catconthbox1), controlvbox1, TRUE, TRUE, 0);
   
-  /* FIXME: this is an ugly mix between Keyboard Geometry and Keyboard Layout */
   opt1 = setup_kb (controlvbox1, NULL, _("Standard"), XKBD_DIR "en_GB.qwerty.xkbd");
   setup_kb (controlvbox1,        opt1, _("Tiny"),     XKBD_DIR "en_GB.qwerty.tiny.xkbd");
   setup_kb (controlvbox1,        opt1, _("US"),       XKBD_DIR "en_US.qwerty.xkbd"); 

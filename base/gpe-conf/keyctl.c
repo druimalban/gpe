@@ -63,7 +63,6 @@ void init_buttons()
 		keylaunchrc = g_strdup("/etc/keylaunchrc");
 	
     strcpy(buttons[0],"");
- #warning	for user use $HOME/.keylaunchrc
     /* read from configfile and set buttons */
     fd=fopen(keylaunchrc,"r");
     if (fd==NULL) {

@@ -79,6 +79,7 @@ MEMBERS += storage
 MEMBERS += widgets/sp-color-slider
 MEMBERS += serial
 MEMBERS += logread
+MEMBERS += packages
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -105,6 +106,7 @@ PIXMAPS += gpe-config-login-setup.png
 PIXMAPS += gpe-config-admin.png
 PIXMAPS += gpe-config-storage.png
 PIXMAPS += gpe-config-serial.png
+PIXMAPS += gpe-config-packages.png
 
 all: $(PACKAGE) 
 
