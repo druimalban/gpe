@@ -218,7 +218,6 @@ week_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *draw = gtk_drawing_area_new ();
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *scroller = gtk_scrolled_window_new (NULL, NULL);
 
   datesel = gtk_date_sel_new (GTKDATESEL_WEEK);
@@ -233,8 +232,7 @@ week_view(void)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroller),
 				  GTK_POLICY_NEVER, GTK_POLICY_ALWAYS);
 
-  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 4);
+  gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), scroller, TRUE, TRUE, 0);
 
   gtk_signal_connect (GTK_OBJECT (datesel), "changed",
