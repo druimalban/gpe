@@ -47,6 +47,10 @@ struct _GPEIconListView
 
   int rows_set;
   t_gpe_textpos textpos;
+
+  GdkGC *border_gc;
+  GdkColor border_color;
+  gboolean border_set;
 };
 
 struct _GPEIconListViewClass 
@@ -68,9 +72,10 @@ static GtkWidgetClass *parent_class;
 static void _gpe_icon_list_view_cancel_popup (GPEIconListView *il);
 static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row);
 
-#define LABEL_YMARGIN	17
+#define LABEL_YMARGIN	2
 #define LABEL_XMARGIN   5
-#define TOP_MARGIN	5
+#define TOP_MARGIN	0
+#define ROW_PADDING	8
 
 #define il_label_height(_x)	(GPE_ICON_LIST_VIEW (_x)->label_height)
 #define il_icon_size(_x)	(GPE_ICON_LIST_VIEW (_x)->icon_size)
@@ -78,7 +83,7 @@ static GPEIconListItem *_gpe_icon_list_view_get_icon (GPEIconListView *il, int c
 	                         + ((((GPE_ICON_LIST_VIEW (_x))->flag_show_title) \
                             && ((GPE_ICON_LIST_VIEW (_x))->textpos == GPE_TEXT_BELOW))? \
 		                     (il_label_height (_x)) : 0 ) \
-				 + LABEL_YMARGIN)
+				 + LABEL_YMARGIN + ROW_PADDING)
 #define il_col_width(_x)	(((GPE_ICON_LIST_VIEW (_x))->textpos == GPE_TEXT_BELOW) \
                     ? (il_icon_size (_x) \
                         + (2 * GPE_ICON_LIST_VIEW (_x)->icon_xmargin)) \
@@ -110,6 +115,30 @@ void
 gpe_icon_list_view_set_bg_color (GPEIconListView *self, guint32 color)
 {
   self->bgcolor = color;
+}
+
+void
+gpe_icon_list_view_set_border_color (GPEIconListView *self, guint32 color)
+{
+  self->border_color.red = (color & 0xff);
+  self->border_color.green = (color & 0xff00) >> 8;
+  self->border_color.blue = (color & 0xff0000) >> 16;
+
+  self->border_color.red |= (self->border_color.red << 8);
+  self->border_color.green |= (self->border_color.green << 8);
+  self->border_color.blue |= (self->border_color.blue << 8);
+
+  self->border_color.pixel = color;
+
+  if (GTK_WIDGET_REALIZED (GTK_WIDGET (self)))
+    {
+      if (!self->border_gc)
+	self->border_gc = gdk_gc_new (GTK_WIDGET (self)->window);
+
+      gdk_gc_set_foreground (self->border_gc, &self->border_color);
+    }
+
+  self->border_set = TRUE;
 }
 
 /* Helper - max. height of a label */
@@ -276,12 +305,21 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
     {
       GdkPixbuf *s, *p;
       int ax, ay;
+      int w, h;
       ax = event->area.x + GTK_WIDGET (il)->allocation.x;
       ay = event->area.y + GTK_WIDGET (il)->allocation.y;
+
+      w = gdk_pixbuf_get_width (il->bgpixbuf) - ax;
+      if (w > event->area.width)
+	w = event->area.width;
+
+      h = gdk_pixbuf_get_height (il->bgpixbuf) - ay;
+      if (h > event->area.height)
+	h = event->area.height;
       
       s = gdk_pixbuf_new_subpixbuf (il->bgpixbuf,
 				    ax, ay,
-				    event->area.width, event->area.height);
+				    w, h);
       p = gdk_pixbuf_copy (s);
       apply_translucency (il, p);
       gdk_draw_pixbuf (widget->window, 
@@ -289,11 +327,15 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 		       p,
 		       0, 0,
 		       event->area.x, event->area.y,
-		       event->area.width, event->area.height,
+		       w, h,
 		       GDK_RGB_DITHER_NORMAL, 0, 0);
       
       gdk_pixbuf_unref (s);
       gdk_pixbuf_unref (p);
+
+      if (il->border_gc)
+	gdk_draw_rectangle (widget->window, il->border_gc, FALSE, 0, 0, 
+			    GTK_WIDGET (il)->allocation.width - 1, GTK_WIDGET (il)->allocation.height - 1);
     }
 
   for (icons = il->icons; icons != NULL; icons = icons->next) 
@@ -306,7 +348,7 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
       icon = icons->data;
       
       cell_x = col * il_col_width (il);
-      cell_y = row * il_row_height (il) + 5;
+      cell_y = row * il_row_height (il) + TOP_MARGIN;
       cell_w = il_col_width (il);
       cell_h = il->icon_size + LABEL_YMARGIN + label_height;
 
@@ -399,14 +441,14 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      if (il->textpos == GPE_TEXT_BELOW)
 		{
 		  r1.x = cell_x;
-		  r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN - 8;
+		  r1.y = row * il_row_height (il) + il->icon_size + LABEL_YMARGIN;
 		  r1.width = cell_w;
 		  r1.height = label_height;
 		}
 	      else
 		{
 		  r1.x = LABEL_XMARGIN + 2 * il->icon_size;
-		  r1.y = row * il_row_height (il) + LABEL_YMARGIN - 8;
+		  r1.y = row * il_row_height (il) + LABEL_YMARGIN;
 		  r1.width = widget->allocation.width - r1.x;
 		  r1.height = label_height;
 		}
@@ -559,7 +601,8 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self,
     req->width = self->cols * il_col_width (self);
   else
     req->width = count * il_col_width (self);
-  req->height = self->rows * il_row_height (self) + TOP_MARGIN;
+
+  req->height = self->rows * il_row_height (self) - ROW_PADDING;
 }
 	
 static void
@@ -724,6 +767,7 @@ _gpe_icon_list_view_realize (GtkWidget *widget)
 {
   GdkWindowAttr attributes;
   gint attributes_mask;
+  GPEIconListView *self = GPE_ICON_LIST_VIEW (widget);
 
   _gpe_icon_list_view_resize (GPE_ICON_LIST_VIEW (widget));
 
@@ -749,6 +793,13 @@ _gpe_icon_list_view_realize (GtkWidget *widget)
 
   widget->style = gtk_style_attach (widget->style, widget->window);
   gtk_style_set_background (widget->style, widget->window, GTK_STATE_NORMAL);
+
+  if (self->border_set)
+    {
+      self->border_gc = gdk_gc_new (GTK_WIDGET (self)->window);
+      
+      gdk_gc_set_foreground (self->border_gc, &self->border_color);
+    }
 }
 
 static GPEIconListItem *
@@ -767,10 +818,11 @@ _gpe_icon_list_view_get_icon (GPEIconListView *il, int col, int row)
 static void 
 _gpe_icon_list_view_cancel_popup (GPEIconListView *il) 
 {
-  if (il->popup_timeout != 0) {
-    gtk_timeout_remove (il->popup_timeout);
-    il->popup_timeout = 0;
-  }
+  if (il->popup_timeout != 0) 
+    {
+      gtk_timeout_remove (il->popup_timeout);
+      il->popup_timeout = 0;
+    }
 }
 
 void 
@@ -796,7 +848,7 @@ void
 gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpos)
 {
   if (self->textpos == textpos) 
-      return;
+    return;
   self->textpos = textpos;
   if (GTK_WIDGET_REALIZED (self))
     _gpe_icon_list_view_resize (self);

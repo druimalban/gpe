@@ -25,7 +25,7 @@ typedef enum
 {
   GPE_TEXT_BELOW,
   GPE_TEXT_RIGHT
-}t_gpe_textpos;
+} t_gpe_textpos;
 
 struct _GPEIconListView;
 
@@ -58,5 +58,7 @@ void gpe_icon_list_view_popup_removed (GPEIconListView *self);
 void gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows);
 
 void gpe_icon_list_view_set_textpos (GPEIconListView *self, t_gpe_textpos textpos);
+
+void gpe_icon_list_view_set_border_color (GPEIconListView *self, guint32 color);
 
 #endif

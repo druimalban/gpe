@@ -1,3 +1,23 @@
+2004-10-04  Philip Blundell  <philb@gnu.org>
+
+	* gpeiconlistview.c (struct _GPEIconListView): New members
+	border_gc, border_color, border_set.
+	(LABEL_YMARGIN): Reduce to 2.
+	(ROW_PADDING): New.  Set to 8.
+	(TOP_MARGING): Set to 0.
+	(il_icon_height): Take ROW_PADDING into account.
+	(gpe_icon_list_view_set_border_color): New.
+	(_gpe_icon_list_view_expose): Clamp translucent region to extents
+	of background pixmap.  Draw border if selected.  Replace hardcoded
+	offset with TOP_MARGIN.
+	(_gpe_icon_list_view_recalc_size): Don't add in TOP_MARGIN.
+	Subtract out "extra" ROW_PADDING.
+	(_gpe_icon_list_view_realize): Make GC for border if required.
+	(_gpe_icon_list_view_cancel_popup): Reformat.
+	(gpe_icon_list_view_set_textpos): Likewise.
+	* gpe/gpeiconlistview.h (gpe_icon_list_view_set_border_color): New
+	prototype.
+
 2004-09-06  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.90 released.
