@@ -6,6 +6,7 @@
 	[ ]thumbnails table
 	[ ]GTK2
 	---
+	[ ]memory management use $HOME_VOLATILE rather than $HOME
 	[ ]categories (1 level first)
 	[ ]app preferences
 	[ ]note properties
@@ -25,7 +26,6 @@
 		[ ]property: save_as_backgroung
 		[ ]property: background [choice...]
 		[ ]need save background ref with sketch!
-	[ ]duplicate_current function?
 	[ ]stamps
 		[ ].sketchbook/stamps/*.png
 		[ ]property: save_as_stamp --> need extract bouding box! and transparence
@@ -65,6 +65,9 @@
 		[ ]a line of text??? (=note on note!)
 		[ ]volatile/permanante
 		[ ]date/time (read only?)
+	[ ]misc
+		[ ]duplicate_current function?
+		[ ]e-mail note
 [ ]GUI
 	--
 	[ ]make drawing area centered if smaller than viewport

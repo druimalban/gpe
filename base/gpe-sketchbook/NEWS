@@ -1,7 +1,7 @@
 GPE sketchbook NEWS
 
 * pre 0.1.7
-- basic GTK2 port
+- basic GTK2 support
 
 * 0.1.6 2002-10-26
 - added icon view mode to the selector
