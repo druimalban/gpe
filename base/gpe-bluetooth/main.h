@@ -26,3 +26,5 @@ struct bt_service_desc
 extern gboolean radio_is_on;
 
 extern GSList *service_desc_list;
+
+extern bdaddr_t src_addr;

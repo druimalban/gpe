@@ -54,6 +54,8 @@
 static pthread_t scan_thread;
 static gboolean scan_complete;
 
+bdaddr_t src_addr = *BDADDR_ANY;
+
 struct gpe_icon my_icons[] = {
   { "bt-on", "bluetooth/bt-on" },
   { "bt-off", "bluetooth/bt-off" },
@@ -75,8 +77,6 @@ static GtkWidget *devices_window;
 static GtkWidget *iconlist;
 
 static GSList *devices;
-
-static struct bt_device *this_device;
 
 gboolean radio_is_on;
 
@@ -298,15 +298,16 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
   GSList *iter;
   GtkWidget *device_menu;
   GtkWidget *details;
+  struct bt_device *bd = (struct bt_device *)data;
 
   device_menu = gtk_menu_new ();
 
   details = gtk_menu_item_new_with_label (_("Details ..."));
-  g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), NULL);
+  g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), bd);
   gtk_widget_show (details);
   gtk_menu_append (GTK_MENU (device_menu), details);
 
-  for (iter = this_device->services; iter; iter = iter->next)
+  for (iter = bd->services; iter; iter = iter->next)
     {
       struct bt_service *sv = iter->data;
 
@@ -314,7 +315,9 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 	sv->desc->popup_menu (sv, device_menu);
     }
 
-  g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (g_object_unref), NULL);
+#if 0
+  g_signal_connect (G_OBJECT (device_menu), "hide", G_CALLBACK (gtk_widget_destroy), NULL);
+#endif
 
   gtk_menu_popup (GTK_MENU (device_menu), NULL, NULL, NULL, widget, 1, GDK_CURRENT_TIME);
 }

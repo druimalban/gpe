@@ -15,8 +15,7 @@
 #include <signal.h>
 #include <errno.h>
 #include <stdio.h>
-
-#include <glib.h>
+#include <gtk/gtk.h>
 
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/sdp.h>
@@ -131,7 +130,7 @@ sdp_browse_device (struct bt_device *bd, uint16_t group_id)
 
 		  if (sdp_uuid_cmp (u, &d->uuid) == 0)
 		    {
-		      struct bt_service *sv = d->scan (svcrec);
+		      struct bt_service *sv = d->scan (svcrec, bd);
 
 		      if (sv)
 			bd->services = g_slist_append (bd->services, sv);
