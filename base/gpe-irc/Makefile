@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-irc
-DEBUG = no
+DEBUG = yes
 CVSBUILD = yes
 GTK2 = yes
 

@@ -26,6 +26,7 @@ typedef struct
 typedef struct
 {
   gchar *nick;
+  gchar *username;
   gchar *real_name;
   gchar *email;
   gchar *password;
@@ -51,10 +52,41 @@ typedef struct
 } IRCServer;
 
 gboolean
-irc_server_send_message (ICRServer *server, gchar *message)
+irc_server_send_message (IRCServer *server, gchar *message)
 {
   printf ("IRC Send Message.\n");
   return TRUE;
+}
+
+gboolean
+irc_server_login (IRCServer *server)
+{
+  int send_result;
+  gchar *login_string;
+
+  if (server->user_info->password)
+    login_string = g_strdup_printf ("PASS %s\r\nNICK %s\r\nUSER %s - - :%s\r\n", server->user_info->password, server->user_info->nick, server->user_info->username, server->user_info->real_name);
+  else
+    login_string = g_strdup_printf ("NICK %s\r\nUSER %s - - :%s\r\n", server->user_info->nick, server->user_info->username, server->user_info->real_name);
+
+  printf ("Now logging in...\n");
+
+  if (server->connected == TRUE)
+  {
+    send_result = send (server->fd, login_string, strlen (login_string), 0);
+    if (send_result != -1)
+    {
+      printf ("Logged in.\n");
+      return TRUE;
+    }
+    else
+    {
+      printf ("Login failed.\n");
+      return FALSE;
+    }
+  }
+
+  return FALSE;
 }
 
 gboolean
@@ -63,7 +95,7 @@ irc_server_connect (IRCServer *server)
   int fd, connect_result;
   struct addrinfo *address;
 
-  if (getaddrinfo (server->name, SERVICE, NULL, address) != 0)
+  if (getaddrinfo (server->name, SERVICE, NULL, &address) != 0)
   {
     printf ("Unable to obtain info about %s\n", server->name);
     return FALSE;
@@ -88,14 +120,17 @@ irc_server_connect (IRCServer *server)
 
   if (connect_result != -1)
   {
+    server->connected = TRUE;
     printf ("Connected.\n");
-    return TRUE;
+
+    if (irc_server_login (server) == TRUE)
+    {
+      return TRUE;
+    }
   }
-  else
-  {
-    printf ("Uname to connect.\n");
-    return FALSE;
-  }
+
+  printf ("Uname to connect.\n");
+  return FALSE;
 }
 
 gboolean
@@ -117,9 +152,20 @@ main (int argc, char *argv[])
 {
   IRCServer *server;
 
-  if (argc > 1)
+  if (argc > 2)
   {
     server->name = g_strdup (argv[1]);
+    server->user_info->nick = g_strdup ("argv[2]");
+    server->user_info->username = g_strdup ("argv[2]");
+    server->user_info->real_name = g_strdup ("argv[2]");
+    irc_server_connect (server);
+  }
+  else
+  {
+    server->name = g_strdup ("irc.handhelds.org");
+    server->user_info->nick = g_strdup ("dc_gpe-irc");
+    server->user_info->username = g_strdup ("dc_gpe-irc");
+    server->user_info->real_name = g_strdup ("dc_gpe-irc");
     irc_server_connect (server);
   }
 
