@@ -57,6 +57,7 @@ void sgf_parsed_init(){
 void sgf_parsed_end(){
   is_first_branch = TRUE;
   go.game.main_branch = loaded_main_branch;
+  goto_first();
 }
 
 void sgf_parsed_open_gametree(){
