@@ -1,0 +1,288 @@
+# Serbian translation of `gpe-contacts'.
+# Copyright (C) 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the `gpe-contacts' package.
+# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2004.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts 0.12\n"
+"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"PO-Revision-Date: 2004-02-03 01:52-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
+"Language-Team: Serbian <sr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: db.c:103 db.c:136 editing.c:188 main.c:437
+msgid "Name"
+msgstr "Име"
+
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr "Телефон"
+
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr "Епошта"
+
+#: editing.c:170
+msgid "Edit Contact"
+msgstr "Уреди контакт"
+
+#: editing.c:192
+msgid "more detailed name options"
+msgstr "подробније опције за име"
+
+#: editing.c:194
+msgid "Summary"
+msgstr "Сажетак"
+
+#: editing.c:200
+msgid "Birthday"
+msgstr "Рођендан"
+
+#: editing.c:206
+msgid "Image"
+msgstr "Слика"
+
+#: editing.c:222
+msgid "Schedule"
+msgstr "Распоред"
+
+#: editing.c:226
+msgid "automatic appointment"
+msgstr "аутоматски састанак"
+
+#: editing.c:235
+msgid "click to choose file"
+msgstr "кликни за избор датотеке"
+
+#: editing.c:237 main.c:536
+msgid "Categories"
+msgstr "Категорије"
+
+#: editing.c:279
+msgid "Personal"
+msgstr "Лично"
+
+#: interface.c:44 main.c:538
+msgid "Setup"
+msgstr "Подешавање"
+
+#: interface.c:56 main.c:143
+msgid "Detail panel"
+msgstr "Табла појединости"
+
+#: interface.c:95 main.c:182
+msgid "NAME"
+msgstr "ИМЕ"
+
+#: interface.c:105 main.c:192
+msgid "Add"
+msgstr "Додај"
+
+#: interface.c:113 main.c:200
+msgid "Remove"
+msgstr "Уклони"
+
+#: interface.c:141 main.c:230
+msgid "Data Field"
+msgstr "Поље податка"
+
+#: interface.c:149 main.c:238
+msgid "Label"
+msgstr "Ознака"
+
+#: interface.c:157 main.c:246
+msgid "Pages"
+msgstr "Страница"
+
+#: main.c:298
+msgid "All categories"
+msgstr "Све категорије"
+
+#: main.c:424
+msgid "Really delete this contact?"
+msgstr "Заиста избрисати овај контакт?"
+
+#: main.c:424 main.c:457 structure.c:179
+msgid "Confirm"
+msgstr "Потврди"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Delete"
+msgstr "Избриши"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Cancel"
+msgstr "Поништи"
+
+#: main.c:437
+msgid "New Category"
+msgstr "Нова категорија"
+
+#: main.c:457
+msgid "Really delete this category?"
+msgstr "Заиста избрисати ову категорију?"
+
+#: main.c:487
+msgid "New category"
+msgstr "Нова категорија"
+
+#: main.c:487
+msgid "Tap here to create a category."
+msgstr "Лупни овде за нову категорију."
+
+#: main.c:491
+msgid "Delete category"
+msgstr "Избриши категорију"
+
+#: main.c:491
+msgid "Tap here to delete the selected category."
+msgstr "Лупни овде за брисање означене категорије."
+
+#: main.c:534
+msgid "Editing Layout"
+msgstr "Уређивање изгледа"
+
+#: main.c:559
+msgid "Contacts: Configuration"
+msgstr "Контакти: Подешавање"
+
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Контакти"
+
+#: main.c:808
+msgid "New contact"
+msgstr "Нови контакт"
+
+#: main.c:808
+msgid "Tap here to add a new contact."
+msgstr "Лупни овде за нови контакт"
+
+#: main.c:814
+msgid "Edit"
+msgstr "Уреди"
+
+#: main.c:815
+msgid "Edit contact"
+msgstr "Уреди контакт"
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr "Лупни овде за уређивање означеног контакта."
+
+#: main.c:819
+msgid "Delete contact"
+msgstr "Избриши контакт"
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr "Лупни овде за брисање означеног контакта."
+
+#: main.c:823
+msgid "Properties"
+msgstr "Подешавања"
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr "Лупни овде за подешавање програма."
+
+#: main.c:835
+msgid "ABC"
+msgstr "АБВГ"
+
+#: main.c:843
+msgid "DEF"
+msgstr "ДЂЕЖЗ"
+
+#: main.c:850
+msgid "GHIJ"
+msgstr "ИЈКЛЉ"
+
+#: main.c:857
+msgid "KLMN"
+msgstr "МНЊО"
+
+#: main.c:864
+msgid "OPQR"
+msgstr "ПРСТ"
+
+#: main.c:871
+msgid "STUV"
+msgstr "ЋУФХ"
+
+#: main.c:878
+msgid "WXYZ"
+msgstr "ЦЧЏШ"
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr "Контакт"
+
+#: main.c:901
+msgid "Find:"
+msgstr "Нађи:"
+
+#: main.c:907
+msgid "in"
+msgstr "у"
+
+#: structure.c:108 structure.c:238
+msgid "New page"
+msgstr "Нова страна"
+
+#: structure.c:108 structure.c:127 structure.c:152
+msgid "Title"
+msgstr "Наслов"
+
+#: structure.c:127
+msgid "New group"
+msgstr "Нова група"
+
+#: structure.c:139 structure.c:169
+msgid "No container selected"
+msgstr "Без одабраног садржаоца"
+
+#: structure.c:153
+msgid "Tag"
+msgstr "Ознака"
+
+#: structure.c:155
+msgid "New field"
+msgstr "Ново поље"
+
+#: structure.c:179
+msgid "Really delete this field?"
+msgstr "Заиста избрисати ово поље?"
+
+#: structure.c:237
+msgid "Page"
+msgstr "Страна"
+
+#: structure.c:238
+msgid "Tap here to add a page."
+msgstr "Лупни овде за нову страну"
+
+#: structure.c:254
+msgid "Delete item"
+msgstr "Избриши ставку"
+
+#: structure.c:254
+msgid "Tap here to delete the selected item."
+msgstr "Лупини овде за брисање означене ставке."
+
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Не могу наћи пиксмапу: %s"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Грешка учитавајући пиксмапу: %s"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "GPE Контакти"

@@ -1,0 +1,288 @@
+# Contacts Hungarian Translation
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the Contats package.
+# Hegedus Gabor <hygy@freemail.hu>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts 0.12\n"
+"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"PO-Revision-Date: 2003-11-28 23:32+0100\n"
+"Last-Translator: Hegedus Gabor <hygy@freemail.hu>\n"
+"Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: db.c:103 db.c:136 editing.c:188 main.c:437
+msgid "Name"
+msgstr "Név"
+
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr "Telefon"
+
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr "EMail"
+
+#: editing.c:170
+msgid "Edit Contact"
+msgstr "Kapcsolat szerkesztése"
+
+#: editing.c:192
+msgid "more detailed name options"
+msgstr "Részletesebb név opciók"
+
+#: editing.c:194
+msgid "Summary"
+msgstr "Összesítés"
+
+#: editing.c:200
+msgid "Birthday"
+msgstr "Születésnap"
+
+#: editing.c:206
+msgid "Image"
+msgstr "Kép"
+
+#: editing.c:222
+msgid "Schedule"
+msgstr "Ütemterv"
+
+#: editing.c:226
+msgid "automatic appointment"
+msgstr ""
+
+#: editing.c:235
+msgid "click to choose file"
+msgstr "kattints a file kiválasztáshoz"
+
+#: editing.c:237 main.c:536
+msgid "Categories"
+msgstr "Kategóriák"
+
+#: editing.c:279
+msgid "Personal"
+msgstr "Személyes"
+
+#: interface.c:44 main.c:538
+msgid "Setup"
+msgstr "Beállítás"
+
+#: interface.c:56 main.c:143
+msgid "Detail panel"
+msgstr "Részletes panel"
+
+#: interface.c:95 main.c:182
+msgid "NAME"
+msgstr "NÉV"
+
+#: interface.c:105 main.c:192
+msgid "Add"
+msgstr "Hozzáad"
+
+#: interface.c:113 main.c:200
+msgid "Remove"
+msgstr "Eltávolít"
+
+#: interface.c:141 main.c:230
+msgid "Data Field"
+msgstr "Adat mezõ"
+
+#: interface.c:149 main.c:238
+msgid "Label"
+msgstr "Címke"
+
+#: interface.c:157 main.c:246
+msgid "Pages"
+msgstr "Lapok"
+
+#: main.c:298
+msgid "All categories"
+msgstr "Összes kategória"
+
+#: main.c:424
+msgid "Really delete this contact?"
+msgstr "Tényleg töröljem ezt a kapcsolatot?"
+
+#: main.c:424 main.c:457 structure.c:179
+msgid "Confirm"
+msgstr "Megerõsít"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Delete"
+msgstr "Töröl"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Cancel"
+msgstr "Mégse"
+
+#: main.c:437
+msgid "New Category"
+msgstr "Új Kategória"
+
+#: main.c:457
+msgid "Really delete this category?"
+msgstr "Tényleg törlöd ezt a kategóriát?"
+
+#: main.c:487
+msgid "New category"
+msgstr "Új kategória"
+
+#: main.c:487
+msgid "Tap here to create a category."
+msgstr "Nyomj ide új kategória létrehozásához."
+
+#: main.c:491
+msgid "Delete category"
+msgstr "Kategória törlése"
+
+#: main.c:491
+msgid "Tap here to delete the selected category."
+msgstr "Nyomj ide a kiválasztott kategória törléséhez."
+
+#: main.c:534
+msgid "Editing Layout"
+msgstr "Elrendezés Szerkesztése"
+
+#: main.c:559
+msgid "Contacts: Configuration"
+msgstr "Kapcsolatok: Beállítások"
+
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Kapcsolatok"
+
+#: main.c:808
+msgid "New contact"
+msgstr "Új kapcsolat"
+
+#: main.c:808
+msgid "Tap here to add a new contact."
+msgstr "Nyomj ide új kapcsolat hozzáadásához."
+
+#: main.c:814
+msgid "Edit"
+msgstr "Szerkeszt"
+
+#: main.c:815
+msgid "Edit contact"
+msgstr "Kapcsolat szerkesztése"
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr "Nyomj ide a kiválasztott kapcsolat szerkesztéséhez."
+
+#: main.c:819
+msgid "Delete contact"
+msgstr "Kapcsolat törlése"
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr "Nyomj ide a kiválasztott kapcsolat törléséhez."
+
+#: main.c:823
+msgid "Properties"
+msgstr "Tulajdonságok"
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr "Nyomj ide a program konfigurálásához."
+
+#: main.c:835
+msgid "ABC"
+msgstr ""
+
+#: main.c:843
+msgid "DEF"
+msgstr ""
+
+#: main.c:850
+msgid "GHIJ"
+msgstr ""
+
+#: main.c:857
+msgid "KLMN"
+msgstr ""
+
+#: main.c:864
+msgid "OPQR"
+msgstr ""
+
+#: main.c:871
+msgid "STUV"
+msgstr ""
+
+#: main.c:878
+msgid "WXYZ"
+msgstr ""
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#: main.c:901
+msgid "Find:"
+msgstr "Keres:"
+
+#: main.c:907
+msgid "in"
+msgstr "ben"
+
+#: structure.c:108 structure.c:238
+msgid "New page"
+msgstr "Új lap"
+
+#: structure.c:108 structure.c:127 structure.c:152
+msgid "Title"
+msgstr "Cím"
+
+#: structure.c:127
+msgid "New group"
+msgstr "Új csoport"
+
+#: structure.c:139 structure.c:169
+msgid "No container selected"
+msgstr "Nincs tároló kiválasztva"
+
+#: structure.c:153
+msgid "Tag"
+msgstr ""
+
+#: structure.c:155
+msgid "New field"
+msgstr "Új mezõ"
+
+#: structure.c:179
+msgid "Really delete this field?"
+msgstr "Tényleg töröljem ezt a mezõt?"
+
+#: structure.c:237
+msgid "Page"
+msgstr "Lap"
+
+#: structure.c:238
+msgid "Tap here to add a page."
+msgstr "Nyomj ide egy lap hozzá adásához."
+
+#: structure.c:254
+msgid "Delete item"
+msgstr "Bejegyzés törlése"
+
+#: structure.c:254
+msgid "Tap here to delete the selected item."
+msgstr "Nyomj ide a kiválasztott bejegyzés törléséhez."
+
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Nem találom a pixmap filet: %s"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Hiba a pixmap file betöltése közben: %s"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "GPE Kapcsolatok"

@@ -1,0 +1,292 @@
+# Mesajele în limba românã pentru gpe-contacts.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Acest fiºier este distribuit sub aceeaºi licenþã ca ºi pachetul gpe-contacts.
+# Laurentiu Buzdugan <buzdugan@voyager.net>, 2003.
+#
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts-0.12\n"
+"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"PO-Revision-Date: 2003-05-05 12:00-0500\n"
+"Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
+"Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: db.c:103 db.c:136 editing.c:188 main.c:437
+msgid "Name"
+msgstr "Nume"
+
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr "Telefon"
+
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr "Email"
+
+#: editing.c:170
+msgid "Edit Contact"
+msgstr "Editare Contact"
+
+#: editing.c:192
+msgid "more detailed name options"
+msgstr "opþiuni nume mai detaliate"
+
+#: editing.c:194
+msgid "Summary"
+msgstr "Rezumat"
+
+#: editing.c:200
+msgid "Birthday"
+msgstr "Ziua de naºtere"
+
+#: editing.c:206
+msgid "Image"
+msgstr "Imagine"
+
+#: editing.c:222
+msgid "Schedule"
+msgstr "Orar"
+
+#: editing.c:226
+msgid "automatic appointment"
+msgstr "întãlnire automatã"
+
+#: editing.c:235
+msgid "click to choose file"
+msgstr "clic pentru a alege fiºierul"
+
+#: editing.c:237 main.c:536
+msgid "Categories"
+msgstr "Categorii"
+
+#: editing.c:279
+msgid "Personal"
+msgstr "Personal"
+
+#: interface.c:44 main.c:538
+msgid "Setup"
+msgstr "Setare"
+
+#: interface.c:56 main.c:143
+msgid "Detail panel"
+msgstr "Panou detalii"
+
+#: interface.c:95 main.c:182
+msgid "NAME"
+msgstr "NUME"
+
+#: interface.c:105 main.c:192
+msgid "Add"
+msgstr "Adaugã"
+
+#: interface.c:113 main.c:200
+msgid "Remove"
+msgstr "Eliminã"
+
+#: interface.c:141 main.c:230
+msgid "Data Field"
+msgstr "Câmp Datã"
+
+#: interface.c:149 main.c:238
+msgid "Label"
+msgstr "Etichetã"
+
+#: interface.c:157 main.c:246
+msgid "Pages"
+msgstr "Pagini"
+
+#: main.c:298
+msgid "All categories"
+msgstr "Toate categoriile"
+
+#: main.c:424
+msgid "Really delete this contact?"
+msgstr "ªtergeþi într-adevãr acest contact?"
+
+#: main.c:424 main.c:457 structure.c:179
+msgid "Confirm"
+msgstr "Confirm"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Delete"
+msgstr "ªterge"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Cancel"
+msgstr "Renunþã"
+
+#: main.c:437
+msgid "New Category"
+msgstr "Categorie Nouã"
+
+#: main.c:457
+msgid "Really delete this category?"
+msgstr "ªtergeþi într-adevãr aceastã categorie?"
+
+#: main.c:487
+msgid "New category"
+msgstr "Categorie nouã"
+
+#: main.c:487
+msgid "Tap here to create a category."
+msgstr "Apãsaþi aici pentru a crea o categorie."
+
+#: main.c:491
+msgid "Delete category"
+msgstr "ªtergeþi categorie?"
+
+#: main.c:491
+msgid "Tap here to delete the selected category."
+msgstr "Apãsaþi aici pentru a ºterge categoria selectatã."
+
+#: main.c:534
+msgid "Editing Layout"
+msgstr "Editare aranjament"
+
+#: main.c:559
+msgid "Contacts: Configuration"
+msgstr "Contacte: Configurare"
+
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Contacte"
+
+#: main.c:808
+msgid "New contact"
+msgstr "Contact nou"
+
+#: main.c:808
+msgid "Tap here to add a new contact."
+msgstr "Apãsaþi aici pentru a adãuga un nou contact."
+
+#: main.c:814
+msgid "Edit"
+msgstr "Editare"
+
+#: main.c:815
+msgid "Edit contact"
+msgstr "Editare contact"
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr "Apãsaþi aici pentru a edita contactul selectat."
+
+#: main.c:819
+msgid "Delete contact"
+msgstr "ªterge contact"
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr "Apãsaþi aici pentru a ºterge contactul selectat."
+
+#: main.c:823
+msgid "Properties"
+msgstr "Proprietãþi"
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr "Apãsaþi aici pentru a configura programul."
+
+#: main.c:835
+msgid "ABC"
+msgstr "ABC"
+
+#: main.c:843
+msgid "DEF"
+msgstr "DEF"
+
+#: main.c:850
+msgid "GHIJ"
+msgstr "GHIJ"
+
+#: main.c:857
+msgid "KLMN"
+msgstr "KLMN"
+
+#: main.c:864
+msgid "OPQR"
+msgstr "OPQR"
+
+#: main.c:871
+msgid "STUV"
+msgstr "STUV"
+
+#: main.c:878
+msgid "WXYZ"
+msgstr "WXYZ"
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr "Contact"
+
+#: main.c:901
+msgid "Find:"
+msgstr "Cautã:"
+
+#: main.c:907
+msgid "in"
+msgstr "în"
+
+#: structure.c:108 structure.c:238
+msgid "New page"
+msgstr "Paginã nouã"
+
+#: structure.c:108 structure.c:127 structure.c:152
+msgid "Title"
+msgstr "Titlu"
+
+#: structure.c:127
+msgid "New group"
+msgstr "Grup nou"
+
+#: structure.c:139 structure.c:169
+msgid "No container selected"
+msgstr "Nici un dosar selectat"
+
+#: structure.c:153
+msgid "Tag"
+msgstr "Marcaj"
+
+#: structure.c:155
+msgid "New field"
+msgstr "Câmp nou"
+
+#: structure.c:179
+msgid "Really delete this field?"
+msgstr "ªtergeþi într-adevãr acest câmp?"
+
+#: structure.c:237
+msgid "Page"
+msgstr "Paginã"
+
+#: structure.c:238
+msgid "Tap here to add a page."
+msgstr "Apãsaþi aici pentru a adãuga o paginã."
+
+#: structure.c:254
+msgid "Delete item"
+msgstr "ªterge articol"
+
+#: structure.c:254
+msgid "Tap here to delete the selected item."
+msgstr "Apãsaþi aici pentru a ºterge articolul selectat."
+
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Nu am putut gãsi fiºierul pixmap: %s"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Eroare la încãrcarea fiºierului: %s"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "Contacte GPE"

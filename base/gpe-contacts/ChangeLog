@@ -1,3 +1,15 @@
+2004-02-23  Phil Blundell  <pb@nexus.co.uk>
+
+	* po/cs.po, po/hu.po, po/nl.po, po/ro.po, po/ru.po, po/sk.po,
+	po/sr.po: New files.
+
+	* main.c (t_tabdef, load_tab_config): Deleted.
+	(create_main): Remove notebook handling.  Clear CAN_FOCUS flag on
+	tree view widget.
+	(main_view_switch_page): Deleted.
+	(main): Don't call update_display.
+	(update_display): Use do_search.
+
 2004-02-22  Phil Blundell  <pb@nexus.co.uk>
 
 	* Version 0.17 released.

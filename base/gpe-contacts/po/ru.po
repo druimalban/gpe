@@ -1,0 +1,289 @@
+# Translation of gpe-contacts-0.12.po to Russian.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-contacts package.
+# Pavel Maryanov <acid_jack@ukr.net>, 2003.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts 0.12\n"
+"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"PO-Revision-Date: 2003-10-25 13:07+0200\n"
+"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: db.c:103 db.c:136 editing.c:188 main.c:437
+msgid "Name"
+msgstr "Имя"
+
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr "Телефон"
+
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr "Эл. почта"
+
+#: editing.c:170
+msgid "Edit Contact"
+msgstr "Редактировать контакт"
+
+#: editing.c:192
+msgid "more detailed name options"
+msgstr "более подробные параметры имени"
+
+#: editing.c:194
+msgid "Summary"
+msgstr "Сводка"
+
+#: editing.c:200
+msgid "Birthday"
+msgstr "Дата рождения"
+
+#: editing.c:206
+msgid "Image"
+msgstr "Изображение"
+
+#: editing.c:222
+msgid "Schedule"
+msgstr "Расписание"
+
+#: editing.c:226
+msgid "automatic appointment"
+msgstr "автоматическая встреча"
+
+#: editing.c:235
+msgid "click to choose file"
+msgstr "нажмите, чтобы выбрать файл"
+
+#: editing.c:237 main.c:536
+msgid "Categories"
+msgstr "Категории"
+
+#: editing.c:279
+msgid "Personal"
+msgstr "Личные"
+
+#: interface.c:44 main.c:538
+msgid "Setup"
+msgstr "Установка"
+
+#: interface.c:56 main.c:143
+msgid "Detail panel"
+msgstr "Подробная панель"
+
+#: interface.c:95 main.c:182
+msgid "NAME"
+msgstr "ИМЯ"
+
+#: interface.c:105 main.c:192
+msgid "Add"
+msgstr "Добавить"
+
+#: interface.c:113 main.c:200
+msgid "Remove"
+msgstr "Удалить"
+
+#: interface.c:141 main.c:230
+msgid "Data Field"
+msgstr "Поле данных"
+
+#: interface.c:149 main.c:238
+msgid "Label"
+msgstr "Метка"
+
+#: interface.c:157 main.c:246
+msgid "Pages"
+msgstr "Страницы"
+
+#: main.c:298
+msgid "All categories"
+msgstr "Все категории"
+
+#: main.c:424
+msgid "Really delete this contact?"
+msgstr "Действительно удалить этот контакт?"
+
+#: main.c:424 main.c:457 structure.c:179
+msgid "Confirm"
+msgstr "Подтверждение"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Delete"
+msgstr "Удалить"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Cancel"
+msgstr "Отмена"
+
+#: main.c:437
+msgid "New Category"
+msgstr "Новая категория"
+
+#: main.c:457
+msgid "Really delete this category?"
+msgstr "Действительно удалить эту категорию?"
+
+#: main.c:487
+msgid "New category"
+msgstr "Новая категория"
+
+#: main.c:487
+msgid "Tap here to create a category."
+msgstr "Нажмите сюда, чтобы создать категорию."
+
+#: main.c:491
+msgid "Delete category"
+msgstr "Удалить категорию"
+
+#: main.c:491
+msgid "Tap here to delete the selected category."
+msgstr "Нажмите сюда, чтобы удалить выбранную категорию."
+
+#: main.c:534
+msgid "Editing Layout"
+msgstr "Редактирование размещения"
+
+#: main.c:559
+msgid "Contacts: Configuration"
+msgstr "Контакты: Конфигурация"
+
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Контакты"
+
+#: main.c:808
+msgid "New contact"
+msgstr "Новый контакт"
+
+#: main.c:808
+msgid "Tap here to add a new contact."
+msgstr "Нажните сюда, чтобы добавить новый контакт"
+
+#: main.c:814
+msgid "Edit"
+msgstr "Редактировать"
+
+#: main.c:815
+msgid "Edit contact"
+msgstr "Редактировать контакт"
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr "Нажмите сюда, чтобы редактировать выбранный контакт."
+
+#: main.c:819
+msgid "Delete contact"
+msgstr "Удалить контакт"
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr "Нажмите сюда, чтобы редактировать удалить выбранный контакт."
+
+#: main.c:823
+msgid "Properties"
+msgstr "Свойства"
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr "Нажмите сюда, чтобы настроить программу."
+
+#: main.c:835
+msgid "ABC"
+msgstr "ABC"
+
+#: main.c:843
+msgid "DEF"
+msgstr "DEF"
+
+#: main.c:850
+msgid "GHIJ"
+msgstr "GHIJ"
+
+#: main.c:857
+msgid "KLMN"
+msgstr "KLMN"
+
+#: main.c:864
+msgid "OPQR"
+msgstr "OPQR"
+
+#: main.c:871
+msgid "STUV"
+msgstr "STUV"
+
+#: main.c:878
+msgid "WXYZ"
+msgstr "WXYZ"
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr "Контакт"
+
+#: main.c:901
+msgid "Find:"
+msgstr "Найти:"
+
+#: main.c:907
+msgid "in"
+msgstr "в"
+
+#: structure.c:108 structure.c:238
+msgid "New page"
+msgstr "Новая страница"
+
+#: structure.c:108 structure.c:127 structure.c:152
+msgid "Title"
+msgstr "Заголовок"
+
+#: structure.c:127
+msgid "New group"
+msgstr "Новая группа"
+
+#: structure.c:139 structure.c:169
+msgid "No container selected"
+msgstr "Контейнер не выбран"
+
+#: structure.c:153
+msgid "Tag"
+msgstr "Тэг"
+
+#: structure.c:155
+msgid "New field"
+msgstr "Новое поле"
+
+#: structure.c:179
+msgid "Really delete this field?"
+msgstr "Действительно хотите удалить это поле?"
+
+#: structure.c:237
+msgid "Page"
+msgstr "Страница"
+
+#: structure.c:238
+msgid "Tap here to add a page."
+msgstr "Нажмите сюда, чтобы добавить страницу."
+
+#: structure.c:254
+msgid "Delete item"
+msgstr "Удалить пункт"
+
+#: structure.c:254
+msgid "Tap here to delete the selected item."
+msgstr "Нажмите сюда, чтобы удалить выбранный пункт."
+
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Невозможно найти pixmap-файл: %s"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Ошибка загрузки pixmap-файла: %s"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "Контакты GPE"

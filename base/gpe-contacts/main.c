@@ -38,11 +38,11 @@
 #define TAB_CONFIG_LOCAL ".contacts-tab"
 #define TAB_CONFIG_GLOBAL "/etc/gpe/contacts-tab.conf"
 
-static GtkWidget *categories_smenu;
-gchar *active_chars;
+GtkWidget *categories_smenu;
 GtkWidget *mainw;
 GtkListStore *list_store;
 GtkWidget *list_view;
+GtkWidget *search_entry;
 
 struct gpe_icon my_icons[] = {
   {"edit"},
@@ -55,78 +55,6 @@ struct gpe_icon my_icons[] = {
   {"icon", MY_PIXMAPS_DIR "gpe-contacts.png" },
   {NULL, NULL}
 };
-
-
-/* type that holds tab configuration data */
-typedef struct 
-{
-	char *label;
-	char *chars;
-}t_tabdef;
-
-t_tabdef *tabdefs = NULL;
-int num_tabs = 0;
-
-/* loads tab config from file */
-/* doesn't free existing structs! */
-static int 
-load_tab_config ()
-{
-  FILE *fnew;
-  char *label, *chars;
-  char *localfile;
-	
-  label = malloc(33);
-  chars = malloc(256);
-  num_tabs = 0;
-
-  localfile = g_strdup_printf ("%s/%s", g_get_home_dir (), TAB_CONFIG_LOCAL);
-  if (!access (localfile, R_OK))
-    fnew = fopen (localfile, "r");
-  else if (!access (TAB_CONFIG_GLOBAL, R_OK))
-    fnew = fopen (TAB_CONFIG_GLOBAL, "r");
-  else
-    fnew = NULL;
-
-  /* scans config file */  
-  /* TAB=<label> <charlist> */
-  if (fnew)
-    {
-      while (!feof (fnew) && (2 == fscanf (fnew, "TAB=%32s %255s\n", label, chars)))
-	{
-	  num_tabs++;
-	  tabdefs = realloc(tabdefs,num_tabs*sizeof(t_tabdef));
-	  tabdefs[num_tabs-1].label = g_strdup (label);
-	  tabdefs[num_tabs-1].chars = g_strdup (chars);
-	}
-      fclose (fnew);
-    }
-  else  // defaults
-    {
-      tabdefs = g_malloc (7*sizeof (t_tabdef));
-      tabdefs[0].label = g_strdup ("abcd");
-      tabdefs[0].chars = tabdefs[0].label;
-      tabdefs[1].label = g_strdup ("efgh");
-      tabdefs[1].chars = tabdefs[1].label;
-      tabdefs[2].label = g_strdup ("ijkl");
-      tabdefs[2].chars = tabdefs[2].label;
-      tabdefs[3].label = g_strdup ("mnop");
-      tabdefs[3].chars = tabdefs[3].label;
-      tabdefs[4].label = g_strdup ("qrstu");
-      tabdefs[4].chars = tabdefs[4].label;
-      tabdefs[5].label = g_strdup ("vwxyz");
-      tabdefs[5].chars = tabdefs[5].label;
-      tabdefs[6].label = g_strdup ("other");
-      tabdefs[6].chars = g_strdup ("!abcdefghijklmnopqrstuvwxyz");
-      num_tabs = 7;
-    }
-
-  free (label);
-  free (chars);
-  free (localfile);
-  active_chars = tabdefs[0].chars;
-  return num_tabs;
-}
 
 void
 load_panel_config (void)
@@ -343,36 +271,6 @@ selection_made (GtkTreeSelection *sel, GObject *o)
     }
 }
 
-void
-update_display (void)
-{
-  GSList *items = db_get_entries_alpha (active_chars), *iter;
-
-  gtk_list_store_clear (list_store);
-
-  for (iter = items; iter; iter = iter->next)
-    {
-      struct person *p = iter->data;
-      GtkTreeIter iter;
-
-      gtk_list_store_append (list_store, &iter);
-      gtk_list_store_set (list_store, &iter, 0, p->name, 1, p->id, -1);
-
-      discard_person (p);
-    }
-  
-  g_slist_free (items);
-}
-
-static void
-main_view_switch_page (GtkNotebook * notebook,
-		       GtkNotebookPage * page,
-		       gint page_num, gpointer user_data)
-{
-  active_chars = tabdefs[page_num].chars;
-  update_display ();
-}
-
 static gboolean
 match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *cat)
 {
@@ -488,14 +386,17 @@ schedule_search (GObject *obj)
   g_timeout_add (SEARCH_DELAY, search_timer_func, s);
 }
 
+void
+update_display (void)
+{
+  do_search (G_OBJECT (search_entry), search_entry);
+}
+
 static GtkWidget*
 create_main (void)
 {
   GtkWidget *main_window;
   GtkWidget *vbox1;
-  GtkWidget *nbList;
-  GtkWidget *empty_notebook_page;
-  GtkWidget *label46a;
   GtkWidget *hbox3;
   GtkWidget *label83, *label84;
   GtkWidget *entry1;
@@ -507,7 +408,6 @@ create_main (void)
   GtkTreeViewColumn *column;
   GtkTreeSelection *tree_sel;
   GtkWidget *scrolled_window;
-  int i;
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Contacts"));
@@ -560,23 +460,6 @@ create_main (void)
 			    _("Close"), _("Tap here to exit gpe-contacts."),
 			    G_CALLBACK (gtk_main_quit), NULL, -1);
 
-  nbList = gtk_notebook_new ();
-  gtk_box_pack_start (GTK_BOX (vbox1), nbList, FALSE, FALSE, 0);
-  gtk_notebook_set_show_border (GTK_NOTEBOOK (nbList), FALSE);
-  gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (nbList), 1);
-  gtk_notebook_set_tab_vborder (GTK_NOTEBOOK (nbList), 0);
-  gtk_notebook_set_scrollable(GTK_NOTEBOOK (nbList), TRUE);
-
-  load_tab_config();
-
-  for (i=0;i<num_tabs;i++)
-  {
-     empty_notebook_page = gtk_vbox_new (FALSE, 0);
-     label46a = gtk_label_new(tabdefs[i].label);
-     gtk_widget_show (label46a);
-     gtk_notebook_append_page(GTK_NOTEBOOK(nbList),empty_notebook_page,label46a);	  
-  }
-  
   scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), 
 				  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
@@ -584,7 +467,9 @@ create_main (void)
   list_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (list_view), FALSE);
   tree_sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (list_view));
-  
+
+  GTK_WIDGET_UNSET_FLAGS (list_view, GTK_CAN_FOCUS);
+ 
   gtk_container_add (GTK_CONTAINER (scrolled_window), list_view);
   gtk_box_pack_start (GTK_BOX (vbox1), scrolled_window, TRUE, TRUE, 0);
 
@@ -603,7 +488,7 @@ create_main (void)
   gtk_box_pack_start (GTK_BOX (hbox3), entry1, TRUE, TRUE, 0);
 
   label84 = gtk_label_new (_("in"));
-  gtk_box_pack_start (GTK_BOX (hbox3), label84, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox3), label84, FALSE, FALSE, 2);
 
   categories_smenu = gtk_simple_menu_new ();
   gtk_box_pack_start (GTK_BOX (hbox3), categories_smenu, TRUE, TRUE, 0);
@@ -613,6 +498,8 @@ create_main (void)
   g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "changed", G_CALLBACK (schedule_search), NULL);
 
+  search_entry = entry1;
+
   pDetail = gtk_frame_new (_("Contact"));
   gtk_box_pack_start (GTK_BOX (vbox1), pDetail, FALSE, TRUE, 0);
 
@@ -621,9 +508,6 @@ create_main (void)
   gtk_table_set_col_spacings (GTK_TABLE (tabDetail), 6);
   g_object_set_data (G_OBJECT (main_window), "tabDetail", tabDetail);
   g_object_set_data (G_OBJECT (main_window), "entry", entry1);
-
-  g_signal_connect (G_OBJECT (nbList), "switch_page",
-		    G_CALLBACK (main_view_switch_page), NULL);
 
   g_signal_connect (G_OBJECT (tree_sel), "changed",
 		    G_CALLBACK (selection_made), main_window);
@@ -661,7 +545,6 @@ main (int argc, char *argv[])
 
   mainw = create_main ();
   update_categories ();
-  update_display ();
   show_details (NULL);
 
   gtk_signal_connect (GTK_OBJECT (mainw), "destroy", gtk_main_quit, NULL);
