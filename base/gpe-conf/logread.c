@@ -27,6 +27,7 @@
 #include <sys/types.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
+#include <sys/poll.h>
 
 #include <libintl.h>
 #define _(x) gettext(x)
@@ -99,7 +100,8 @@ int logread_main()
 {
 	int i;
 	char buffer[256];
-			
+	struct pollfd pfd;
+		
 	if ( (log_shmid = shmget(KEY_ID, 0, 0)) == -1)
 	{
 		printlog(txLog,_("Can't find circular buffer, is syslog running?"));
@@ -159,8 +161,11 @@ int logread_main()
 printf("reading\n");	
 	if (fsession > 0)
 	{
-		while ((i = read(fsession,buffer,255)) > 0)
+		pfd.fd = fsession;
+		pfd.events = POLLIN;
+		while (poll(&pfd,1,10) > 0)
 		{
+			i = read(fsession,buffer,255);
 			buffer[i] = 0;
 			printlog(txLog2,buffer);
 		}
@@ -244,7 +249,8 @@ Logread_Build_Objects (void)
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,tw);
   
   tstr = g_strdup_printf("%s/.xsession-errors",g_get_home_dir());
-  fsession = open(tstr,O_RDONLY | O_NONBLOCK);
+  fsession = open(tstr,O_RDONLY);
+  fcntl(fsession,O_NONBLOCK);
   if (fsession < 0) printlog(txLog2,_("Could not open X session log."));
   g_free(tstr);
  
