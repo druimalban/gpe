@@ -45,6 +45,7 @@ sync_contacts (GList *data, gpe_conn *conn, int newdb)
       obj->comp = string;
       obj->uid = g_strdup_printf ("%d", urn);
       obj->object_type = SYNC_OBJECT_TYPE_PHONEBOOK;
+      obj->change_type = SYNC_OBJ_MODIFIED; 
 
       data = g_list_append (data, obj);
  
