@@ -477,8 +477,13 @@ set_members (GtkMiniFileSelection *fs)
 		    }
 		  else
 		    {
+#if GTK_MAJOR_VERSION < 2
 		      gchar *fn = g_strdup (d->d_name);
-		      files = g_slist_append (files, fn);
+#else
+		      gchar *fn = g_locale_to_utf8 (d->d_name, -1, NULL, NULL, NULL);
+#endif
+		      if (fn)
+			files = g_slist_append (files, fn);
 		    }
 		}
 	    }
@@ -553,12 +558,25 @@ selection_made(GtkWidget      *clist,
 	{
 	case 1:
 	  {
-	    gchar *s;
+	    gchar *s, *ls;
+#if GTK_MAJOR_VERSION >= 2
+	    ls = g_locale_from_utf8 (text, -1, NULL, NULL, NULL);
+	    g_free (text);
+	    text = ls;
+	    if (! text)
+	      break;
+#else
+	    text = g_strdup (text);
+#endif
 	    if (strcmp (fs->directory, "/"))
-	      s = g_strdup_printf ("%s/%s", fs->directory, text);
+	      {
+		s = g_strdup_printf ("%s/%s", fs->directory, text);
+		g_free (text);
+	      }
 	    else
-	      s = g_strdup (text);
-	    set_directory (fs, s);
+	      s = text;
+	    if (s)
+	      set_directory (fs, s);
 	    gtk_widget_grab_focus (fs->entry);
 	    break;
 	  }
@@ -750,6 +768,16 @@ gchar *
 gtk_mini_file_selection_get_filename (GtkMiniFileSelection *fs)
 {
   gchar *chars = gtk_editable_get_chars (GTK_EDITABLE (fs->entry), 0, -1);
+
+#if GTK_MAJOR_VERSION >= 2
+  {
+    gchar *p = chars;
+    chars = g_locale_from_utf8 (chars, -1, NULL, NULL, NULL);
+    g_free (p);
+    if (chars == NULL)
+      return NULL;
+  }
+#endif
 
   if (chars[0] != '/')
     {

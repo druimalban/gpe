@@ -1,3 +1,13 @@
+2002-12-04  Philip Blundell  <philb@gnu.org>
+
+	Version 0.31 released.
+
+2002-12-04  Philip Blundell  <philb@gnu.org>
+
+	* gtkminifilesel.c (set_members): Convert strings to utf8.
+	(selection_made): Convert strings to locale encoding.
+	(gtk_mini_file_selection_get_filename): Likewise.
+
 2002-12-01  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.30 released.
