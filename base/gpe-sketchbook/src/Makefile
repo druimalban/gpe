@@ -50,6 +50,7 @@ LDFLAGS += `pkg-config --libs   gtk+-2.0 gdk-pixbuf-2.0`
 ifeq ($(CVSBUILD),yes)
 CFLAGS  += -I../../libxsettings -I../../libxsettings-client
 LDFLAGS += -L../../libxsettings -L../../libxsettings-client -lXsettings-client
+LDFLAGS += -Wl,-rpath-link,../../libxsettings
 else
 LDFLAGS += -lXsettings-client
 endif
