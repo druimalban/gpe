@@ -12,18 +12,9 @@ LVORBIS = -L../../vorbis-fixp/lib
 BACKEND = libgpenmf.so.0
 BACKEND_SO = libgpenmf.so
 
-MEMBERS = playlist_db playlist_xml playlist_m3u
-ifneq ($(GST),yes)
-MEMBERS += decoder stream file_stream player audio 
-MAD_MEMBERS = mad playlist_id3
-OGG_MEMBERS = vorbis playlist_ogg
-CODECS = d-vorbis.so d-mad.so
-LDFLAGS += -lesd
-else
-MEMBERS += gstplayer
+MEMBERS = playlist_db playlist_xml playlist_m3u gstplayer
 LDFLAGS += `pkg-config --libs gstreamer` -lpthread
 CPPFLAGS += `pkg-config --cflags gstreamer`
-endif
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 OGG_OBJS = $(patsubst %,%.o,$(OGG_MEMBERS))

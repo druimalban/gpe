@@ -18,11 +18,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -I./backend
 
-ifneq ($(GST),yes)
-CPPFLAGS +=  -I../vorbis-fixp/lib
-else
 CPPFLAGS += -DGST_NMF `pkg-config --cflags gstreamer`
-endif
 
 ifeq ($(CVSBUILD),yes)
 CFLAGS += -I../libgpewidget
@@ -30,7 +26,7 @@ LDFLAGS += -L../libgpewidget
 else
 CFLAGS += -I/usr/include/gpe
 endif
-LDFLAGS += -lgpewidget1 $(GTKLDFLAGS)
+LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
