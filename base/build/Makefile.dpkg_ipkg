@@ -9,6 +9,9 @@ else
 CONTROL = control
 endif
 
+# can change this to e.g. /var/tmp/deb
+DEB_PATH = ../deb
+
 dist: clean dist-prep
 	rm -rf ../$(PACKAGE)-$(VERSION)
 	mkdir ../$(PACKAGE)-$(VERSION)
@@ -42,10 +45,10 @@ ipkg: clean
 	$(MAKE) printinfo
 
 dpkg: dist
-	mkdir -p ../deb
-	( cd ../deb; rm -rf $(PACKAGE)-$(VERSION); ln -s ../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; tar xzf $(PACKAGE)_$(VERSION).orig.tar.gz )
-	mkdir -p ../deb/$(PACKAGE)-$(VERSION)/debian
-	for i in debian/*; do if test -f $$i; then cp $$i ../deb/$(PACKAGE)-$(VERSION)/debian/; fi; done
+	mkdir -p $(DEB_PATH)
+	( olddir=`pwd`; cd $(DEB_PATH); rm -rf $(PACKAGE)-$(VERSION); ln -s $$olddir/../$(PACKAGE)-$(VERSION).tar.gz $(PACKAGE)_$(VERSION).orig.tar.gz ; tar xzf $(PACKAGE)_$(VERSION).orig.tar.gz )
+	mkdir -p $(DEB_PATH)/$(PACKAGE)-$(VERSION)/debian
+	for i in debian/*; do if test -f $$i; then cp $$i $(DEB_PATH)/$(PACKAGE)-$(VERSION)/debian/; fi; done
 
 CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
 printinfo:
