@@ -754,6 +754,7 @@ main (int argc, char *argv[])
       gtk_widget_add_events (panel_window, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
     }
 
+  gtk_widget_set_name (panel_window, "gpe-clock");
   gtk_widget_show (panel_window);
   g_signal_connect (G_OBJECT (panel_window), "configure-event", G_CALLBACK (external_event), NULL);
 
