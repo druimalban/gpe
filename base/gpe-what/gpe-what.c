@@ -75,10 +75,16 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   window = gtk_plug_new (0);
-  gtk_widget_realize (window);
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
+
+  if (tray_init (dpy, 0))
+    {
+      gtk_plug_construct (window, tray_get_window ());
+    }  
+
+  gtk_widget_realize (window);
 
   icon = gpe_render_icon (window->style, gpe_find_icon ("what"));
   gtk_widget_show (icon);
@@ -109,11 +115,8 @@ main (int argc, char *argv[])
 		   PropModeReplace, (unsigned char *)
 		   &window_type_dock_atom, 1);
   XSync (dpy, 0);
-  if (tray_init (dpy, GDK_WINDOW_XWINDOW (window->window)))
-    {
-      gtk_plug_construct (window, tray_get_window ());
-      gtk_widget_show (window);
-    }  
+
+  gtk_widget_show (window);
 
   gtk_main ();
 
