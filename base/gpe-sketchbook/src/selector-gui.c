@@ -26,6 +26,9 @@
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
 
 GtkWidget * create_window_selector(){
 
@@ -33,12 +36,7 @@ GtkWidget * create_window_selector(){
   GtkWidget *vbox1;
 
   //toolbar
-  GtkWidget *hbox_selector_toolbar;
-  GtkWidget *button_selector_new;    
-  GtkWidget *button_selector_open;   
-  GtkWidget *button_selector_delete; 
-  GtkWidget *button_sketchpad_view;
-  GtkWidget *button_selector_about;
+  GtkWidget *toolbar;
   GdkPixbuf *pixbuf;
   GtkWidget *pixmap;
 
@@ -77,58 +75,43 @@ GtkWidget * create_window_selector(){
                       GTK_SIGNAL_FUNC (on_clist_selector_unselect_row), NULL);
 
   //--Toolbar
-  button_selector_new    = gtk_button_new ();
-  button_selector_open   = gtk_button_new ();
-  button_selector_delete = gtk_button_new ();
-  button_sketchpad_view  = gtk_button_new ();
-  button_selector_about  = gtk_button_new ();
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
 
-  //no relief
-  gtk_button_set_relief (GTK_BUTTON (button_selector_about),  GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_sketchpad_view),  GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_selector_delete), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_selector_open),   GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_selector_new),    GTK_RELIEF_NONE);
-
-  //pixmaps
   pixbuf = gpe_find_icon ("new");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_selector_new), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("New sketch"), _("New sketch"),
+                           pixmap, on_button_selector_new_clicked, NULL);
   pixbuf = gpe_find_icon ("open");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_selector_open), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Open selected sketch"), _("Open selected sketch"),
+                           pixmap, on_button_selector_open_clicked, NULL);
   pixbuf = gpe_find_icon ("delete");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_selector_delete), pixmap);
-  pixbuf = gpe_find_icon ("sketchpad");
-  pixmap = gpe_render_icon (window_selector->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_sketchpad_view), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Delete selected sketch"), _("Delete selected sketch"),
+                           pixmap, on_button_selector_delete_clicked, NULL);
+  //pixbuf = gpe_find_icon ("sketchpad");
+  //pixmap = gpe_render_icon (window_selector->style, pixbuf);
+  //gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+  //                         _("Switch to the sketchpad view"), _("Switch to the sketchpad view"),
+  //                         pixmap, on_button_selector_sketchpad_view_clicked, NULL);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
   pixbuf = gpe_find_icon ("about");
   pixmap = gpe_render_icon (window_selector->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_selector_about), pixmap);
-
-  //signals connection
-  gtk_signal_connect (GTK_OBJECT (button_selector_new), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_selector_new_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_selector_open), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_selector_open_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_selector_delete), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_selector_delete_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_sketchpad_view), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_sketchpad_view_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_selector_about), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_selector_about_clicked), NULL);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,//FIXME: need to put on top right
+                            _("About gpe-sketchbook"), _("About gpe-sketchbook"),//FIXME: use build vars
+                           pixmap, on_button_selector_about_clicked, NULL);
 
   //--packing
-  hbox_selector_toolbar = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_selector_new,    FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_selector_open,   FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_selector_delete, FALSE, FALSE, 0);
-  //FIXME: remove related code gtk_box_pack_start (GTK_BOX (hbox_selector_toolbar), button_sketchpad_view,  FALSE, FALSE, 0);
-  gtk_box_pack_end   (GTK_BOX (hbox_selector_toolbar), button_selector_about,  FALSE, FALSE, 0);
 
   vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox_selector_toolbar,         FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), toolbar,                       FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox1), scrolledwindow_selector_clist, TRUE,  TRUE,  0);
 
   gtk_container_add (GTK_CONTAINER (window_selector), vbox1);

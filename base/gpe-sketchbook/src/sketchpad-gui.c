@@ -25,6 +25,10 @@
 #include "gpe/pixmaps.h"
 #include "gpe/render.h"
 
+//--i18n
+#include <libintl.h>
+#define _(_x) gettext (_x)
+
 GtkWidget * sketchpad_build_scrollable_drawing_area(gint width, gint height);
 GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window);
 GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window);
@@ -315,76 +319,49 @@ GtkWidget * sketchpad_build_drawing_toolbar(GtkWidget * window){
 
 GtkWidget * sketchpad_build_files_toolbar(GtkWidget * window){
   //file toolbar
-  GtkWidget *hbox_filetools;
+  GtkWidget * toolbar;
 
   GdkPixbuf *pixbuf;
   GtkWidget *pixmap;
 
-  GtkWidget *button_file_save;  
-  GtkWidget *button_file_new;   
-  GtkWidget *button_file_delete;
-  GtkWidget *button_file_prev;  
-  GtkWidget *button_file_next;  
-  GtkWidget *button_list_view;  
+  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
+  gtk_toolbar_set_space_style   (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
+  //gtk_toolbar_set_space_size    (GTK_TOOLBAR (toolbar), 0);
 
-  //buttons
-  button_file_save   = gtk_button_new ();
-  button_file_new    = gtk_button_new ();
-  button_file_delete = gtk_button_new ();
-  button_file_prev   = gtk_button_new ();
-  button_file_next   = gtk_button_new ();
-  button_list_view   = gtk_button_new ();
-
-  //pixmaps
-  pixbuf = gpe_find_icon ("save");
-  pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_file_save), pixmap);
   pixbuf = gpe_find_icon ("new");
   pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_file_new), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("New sketch"), _("New sketch"),
+                           pixmap, on_button_file_new_clicked, NULL);
+  pixbuf = gpe_find_icon ("save");
+  pixmap = gpe_render_icon (window->style, pixbuf);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Save sketch"), _("Save sketch"),
+                           pixmap, on_button_file_save_clicked, NULL);
   pixbuf = gpe_find_icon ("delete");
   pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_file_delete), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Delete sketch"), _("Delete sketch"),
+                           pixmap, on_button_file_delete_clicked, NULL);
+
+  gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
+
   pixbuf = gpe_find_icon ("left");
   pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_file_prev), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Previous sketch"), _("Previous sketch"),
+                           pixmap, on_button_file_prev_clicked, NULL);
   pixbuf = gpe_find_icon ("right");
   pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_file_next), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Next sketch"), _("Next sketch"),
+                           pixmap, on_button_file_next_clicked, NULL);
   pixbuf = gpe_find_icon ("list");
   pixmap = gpe_render_icon (window->style, pixbuf);
-  gtk_container_add (GTK_CONTAINER (button_list_view), pixmap);
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), NULL,
+                           _("Sketch selector"), _("Sketch selector"),
+                           pixmap, on_button_list_view_clicked, NULL);
 
-  //no relief
-  gtk_button_set_relief (GTK_BUTTON (button_file_save),   GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_file_new),    GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_file_delete), GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_file_prev),   GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_file_next),   GTK_RELIEF_NONE);
-  gtk_button_set_relief (GTK_BUTTON (button_list_view),   GTK_RELIEF_NONE);
-
-  //--signals connection
-  gtk_signal_connect (GTK_OBJECT (button_file_save), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_file_save_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_file_new), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_file_new_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_file_delete), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_file_delete_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_file_prev), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_file_prev_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_file_next), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_file_next_clicked), NULL);
-  gtk_signal_connect (GTK_OBJECT (button_list_view), "clicked",
-                      GTK_SIGNAL_FUNC (on_button_list_view_clicked), NULL);
-
-  //--packing
-  hbox_filetools = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_new,    FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_save,   FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_delete, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_prev,   FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_file_next,   FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox_filetools), button_list_view,   FALSE, FALSE, 0);
-
-  return hbox_filetools;
+  return toolbar;
 }//sketchpad_build_files_toolbar()
