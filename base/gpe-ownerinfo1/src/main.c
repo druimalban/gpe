@@ -34,6 +34,8 @@
 #include "interface.h"
 #include "support.h"
 
+#include "rootpixmap.h"
+
 #include "main.h"
 
 #define CURRENT_DATAFILE_VER 2
@@ -53,6 +55,24 @@ struct gpe_icon my_icons[] = {
   { "ownerphoto", "tux-48" },
   { NULL }
 };
+
+static void
+mapped (GtkWidget *window)
+{
+  Pixmap rmap = GetRootPixmap (GDK_DISPLAY ());
+  if (rmap != None)
+    {
+      Pixmap pmap;
+      pmap = CutWinPixmap (GDK_DISPLAY(), GDK_WINDOW_XWINDOW (window->window), rmap, 
+			   GDK_GC_XGC (window->style->black_gc));
+      if (pmap != None)
+	{
+	  GdkPixmap *gpmap = gdk_pixmap_foreign_new (pmap);      
+	  window->style->bg_pixmap[GTK_STATE_NORMAL] = gpmap;
+	  gtk_widget_set_style (window, window->style);
+	}
+    }
+}
 
 int
 main (int argc, char *argv[])
@@ -193,9 +213,6 @@ main (int argc, char *argv[])
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
-  add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
-  add_pixmap_directory (PACKAGE_SOURCE_DIR "/pixmaps");
-
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
@@ -249,16 +266,8 @@ main (int argc, char *argv[])
 
   /* make window transparent if option -t is given: */
   if (flag_transparent) {
-    widget = lookup_widget (GPE_Ownerinfo, "viewport1");
-    widget->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
-    gtk_widget_set_style (GTK_WIDGET (widget), widget->style);
-    
-    GPE_Ownerinfo->style->bg_pixmap[GTK_STATE_NORMAL] = (GdkPixmap*) GDK_PARENT_RELATIVE;
-    gtk_widget_set_style (GTK_WIDGET (GPE_Ownerinfo), GPE_Ownerinfo->style);
- 
-    gtk_widget_realize (GPE_Ownerinfo);
-    gtk_widget_realize (widget);
-    gdk_window_set_back_pixmap (GTK_VIEWPORT (widget)->view_window, NULL, TRUE);
+    gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "map-event",
+			GTK_SIGNAL_FUNC (mapped), NULL);
   }
 
   gtk_widget_show (GPE_Ownerinfo);
@@ -270,7 +279,6 @@ main (int argc, char *argv[])
   gtk_main ();
   return 0;
 }
-
 
 /*
  *  Return value: upgrade status
