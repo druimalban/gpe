@@ -149,7 +149,26 @@ static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 static gint 
 transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
 {
-    return 1;
+  GtkWidget *dialog_window;
+  GtkWidget *label;
+  gchar *label_text;
+  struct passwd *pwd = getpwuid(getuid());
+
+  switch (info->status)
+  {
+	  case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
+		  return 1;
+	  break;
+	  case GNOME_VFS_XFER_PROGRESS_STATUS_XFSERROR:
+		  // error-retry/ignore/abort dialog;
+	  break;
+	  case GNOME_VFS_XFER_PROGRESS_STATUS_OVERWRITE:
+		 // overwrite dialog 
+	  break;
+     default:
+        return 1; //shoul never get there	
+     break;	  
+  }
 }
 
 
