@@ -1,6 +1,8 @@
 2005-02-16  Florian Boor <florian.boor@kernelconcepts.de>
 
-    * main.c: Add import button and feedback dialog.
+    * db.c (db_open): Close database if it is already open.
+    * main.c (on_import_vcard): Ensure database is refreshed.
+    * editing.c (create_edit): Mark edit window for migration.
 
 2005-02-15  Florian Boor <florian.boor@kernelconcepts.de>
 

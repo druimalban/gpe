@@ -31,7 +31,7 @@
 
 #include <sqlite.h>
 
-static sqlite *db;
+static sqlite *db = NULL; 
 
 extern void migrate_old_categories (sqlite *db);
 
@@ -103,7 +103,8 @@ db_open (gboolean open_vcard)
 
   buf = g_strdup_printf("%s/%s", g_get_home_dir(), 
                                  open_vcard ? DB_NAME_VCARD : DB_NAME_CONTACTS);
-  
+  if (db) 
+    sqlite_close(db);
   db = sqlite_open (buf, 0, &errmsg);
   g_free (buf);
 	

@@ -1252,6 +1252,7 @@ on_import_vcard (GtkWidget *widget, gpointer data)
       gtk_widget_destroy(feedbackdlg);
     }
   gtk_widget_destroy(filesel);
+  db_open(FALSE);
   update_display();
 }
 
