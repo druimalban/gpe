@@ -68,9 +68,6 @@ void window_selector_init(GtkWidget * window_selector){
   int scandir_errno;
   GdkColormap * colormap;
 
-  //--window title
-  gtk_window_set_title (GTK_WINDOW (window_selector), _("Sketchbook"));
-
   //--alternate bg color for list items
   colormap = gdk_colormap_get_system();
   bg_color.red   = 65535;
@@ -116,7 +113,16 @@ void window_selector_init(GtkWidget * window_selector){
       note = note_new();
       note->fullpath_filename = fullpath_filename;
 
-      build_thumbnail_widget(note, window_selector->style);//FIXME: just get scaled pixbuf
+      {//--update thumbnail
+        GdkPixbuf * pixbuf;
+        GdkPixbuf * pixbuf_scaled;
+        pixbuf = gdk_pixbuf_new_from_file(note->fullpath_filename, NULL); //GError **error
+        pixbuf_scaled = gdk_pixbuf_scale_simple (pixbuf,
+                                                 THUMBNAIL_SIZE, THUMBNAIL_SIZE,
+                                                 GDK_INTERP_BILINEAR);
+        gdk_pixbuf_unref(pixbuf);
+        note->thumbnail = pixbuf_scaled;
+      }
       gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(scrolledwindow_selector_icons),//li
                                     "Sketch",//FIXME: does not allow NULL title
                                     note->thumbnail,

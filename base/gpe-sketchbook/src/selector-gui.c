@@ -167,47 +167,26 @@ GtkWidget * build_scrollable_clist(){
 }
 
 
-#define THUMBNAIL_SIZE 64
 void on_iconlist_clicked    (GtkWidget * iconlist, gpointer il_data, gpointer data);
 //void on_iconlist_show_popup (GtkWidget * iconlist, gpointer il_data, gpointer data);
 
 GtkWidget * build_scrollable_icons(GtkWidget * window){
-//  GtkWidget * scrolledwindow;
-//  GtkWidget * table;
-//
-//  table = gtk_table_new (1, 1, FALSE);//empty table, will be resized if needed
-//  set_selector_icons_table(table);
-//  
-//  //--scrolled window
-//  scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-//  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
-//                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-//  gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolledwindow), table);
-//
-//  gtk_widget_show_all(table->parent);//viewport
-//
-//  return scrolledwindow;
   GtkWidget * iconlist;
 
   iconlist = gpe_iconlist_new();
   gpe_iconlist_set_icon_size (GPE_ICONLIST(iconlist), THUMBNAIL_SIZE);
   gpe_iconlist_set_bg_color  (GPE_ICONLIST(iconlist), 0xddddd444);//light grey 
+	gpe_iconlist_set_show_title(GPE_ICONLIST(iconlist), FALSE);
 
   g_signal_connect (G_OBJECT (iconlist), "clicked",
                     G_CALLBACK (on_iconlist_clicked), "clicked!!!");
   //g_signal_connect (G_OBJECT (iconlist), "show_popup",
   //                  G_CALLBACK (on_iconlist_show_popup), "popup!!!");
-  //**/gtk_widget_show(iconlist);
 
   return iconlist;
 }
 
 #include "note.h"
-void on_iconsview_icon_clicked(GtkButton *button, gpointer note){
-  current_sketch = gtk_clist_find_row_from_data(selector_clist, note);
-  //**/g_printerr("Icon: %d\n", current_sketch);
-  set_current_sketch_selected();
-}
 void on_iconlist_clicked (GtkWidget * iconlist, gpointer note, gpointer data) {
   //**/g_printerr("ICONLIST> %s\n", (char *)data);
   current_sketch = gtk_clist_find_row_from_data(selector_clist, note);
@@ -250,88 +229,3 @@ void build_thumbnail_widget(Note * note, GtkStyle * style){
   note->icon_widget = button;
 }
 
-void gtk_table_remove2 (GtkContainer *container,
-                       GtkWidget    *widget){
-  // Function borrowed from gtk-1.2/gtktable.c
-  // GTK - The GIMP Toolkit
-  // Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald
-  //
-  // Changed "unparent()" to "parent = NULL"
-  //
-  GtkTable *table;
-  GtkTableChild *child;
-  GList *children;
-
-  g_return_if_fail (container != NULL);
-  g_return_if_fail (GTK_IS_TABLE (container));
-  g_return_if_fail (widget != NULL);
-
-  table = GTK_TABLE (container);
-  children = table->children;
-
-  while (children)
-    {
-      child = children->data;
-      children = children->next;
-
-      if (child->widget == widget)
-        {
-          gboolean was_visible = GTK_WIDGET_VISIBLE (widget);
-
-          //gtk_widget_unparent (widget);
-          widget->parent = NULL;
-
-          table->children = g_list_remove (table->children, child);
-          g_free (child);
-
-          if (was_visible && GTK_WIDGET_VISIBLE (container))
-            gtk_widget_queue_resize (GTK_WIDGET (container));
-          break;
-        }
-    }
-}
-
-#define MARGE 10 //a bit more...
-void selector_pack_icons(GtkWidget * table){
-  gint table_cols;
-  gint table_rows;
-
-  Note * note;
-
-  int i;
-
-  //--resize table
-  table_cols = (240 - MARGE) / THUMBNAIL_SIZE;
-  //(window_preview->allocation.width - MARGE) / THUMBNAIL_SIZE;
-  table_rows = (sketch_list_size - 1) / table_cols +1;
-  //**/g_printerr("table: %dx%d\n", table_rows, table_cols);
-  gtk_table_resize(GTK_TABLE(table), table_rows, table_cols);
-
-  //--pack widgets
-  for(i=0; i<sketch_list_size; i++){
-    note   = gtk_clist_get_row_data(selector_clist, i);
-    gtk_table_remove2 ((GtkContainer *)table, note->icon_widget);
-    gtk_table_attach_defaults((GtkTable *)table,
-                              note->icon_widget,
-                              i % table_cols, i % table_cols + 1,
-                              i / table_cols, i / table_cols + 1);
-  }
-}
-
-void selector_repack_icon(GtkTable * table, Note * note){
-  gint table_cols;
-  gint i;
-
-  table_cols = (240 - MARGE) / THUMBNAIL_SIZE;
-  i = gtk_clist_find_row_from_data(selector_clist, note);
-  gtk_table_remove2 ((GtkContainer *)table, note->icon_widget);
-  gtk_table_attach_defaults((GtkTable *)table,
-                            note->icon_widget,
-                            i % table_cols, i % table_cols + 1,
-                            i / table_cols, i / table_cols + 1);
-}
-
-void selector_refresh_icon_view(){
-  //reorder icons in the table after width change or icon added
-  //check and if needed call pack_icons
-}

@@ -20,6 +20,8 @@
 
 #include <gtk/gtk.h>
 
+#define THUMBNAIL_SIZE 64
+
 extern GtkCList  * selector_clist; 
 extern GdkColor bg_color;
 void set_selector_clist(GtkCList * clist);

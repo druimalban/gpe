@@ -56,9 +56,9 @@ void on_window_sketchpad_destroy(GtkObject *object, gpointer user_data){
 void on_window_size_allocate (GtkWidget     * widget,
                               GtkAllocation * allocation,
                               gpointer        dock){
-  ///**/g_printerr("Window size allocated: (%d,%d) (%d,%d)\n",
-  ///**/           allocation->x, allocation->y,
-  ///**/           allocation->width, allocation->height);
+  //**/g_printerr("Window size allocated: (%d,%d) (%d,%d)\n",
+  //**/           allocation->x, allocation->y,
+  //**/           allocation->width, allocation->height);
 
   if(dock == NULL) return;
 
@@ -134,7 +134,18 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   }
 
   file_save(note->fullpath_filename); //FIXME: should catch saving errors
-  build_thumbnail_widget(note, sketchbook.window->style);//FIXME: use buffer, do NOT read from file!
+  {//--update thumbnail
+    GdkPixbuf * pixbuf;
+    GdkPixbuf * pixbuf_scaled;
+    pixbuf = sketchpad_get_current_sketch_pixbuf();
+    pixbuf_scaled = gdk_pixbuf_scale_simple (pixbuf,
+                                             THUMBNAIL_SIZE, THUMBNAIL_SIZE,
+                                             GDK_INTERP_BILINEAR);
+    gdk_pixbuf_unref(pixbuf);
+    gdk_pixbuf_unref(note->thumbnail);
+    note->thumbnail = pixbuf_scaled;
+  }
+
   if(is_current_sketch_new){
     gchar * name[1];
 

@@ -25,11 +25,7 @@ extern gboolean icons_mode;
 GtkWidget * create_window_selector (void);
 GtkWidget * selector_gui();
 
-/**/
-GtkWidget * create_window_preview  ();
 #include "note.h"
 void build_thumbnail_widget(Note * note, GtkStyle * style);
-void selector_pack_icons(GtkWidget * table);
-void selector_repack_icon(GtkTable * table, Note * note);
 
 #endif
