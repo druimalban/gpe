@@ -242,30 +242,19 @@ do_command (struct nsql_context *ctx, char *cmd, GError **error)
 gboolean
 process_line (struct nsql_context *ctx, char *l)
 {
-  int p;
   char *id, *cmd;
   GError *error = NULL;
   int rc;
   char *line;
 
-  line = decode_string(l);
+  line = decode_string (l);
 	
-/*  while (isspace (*line))
-    line++;
-  
-  p = strlen (line);
-  while (p > 0 && isspace(line[p - 1]))
-    {
-      line[p - 1] = 0;
-      p--;
-    }
-*/
-  g_strstrip(line);
+  g_strstrip (line);
   if (line[0] == 0)
-  {
-	g_free(line);
-    return TRUE;
-  }
+    {
+      g_free(line);
+      return TRUE;
+    }
   id = line;
   while (*line && !isspace (*line))
     line++;

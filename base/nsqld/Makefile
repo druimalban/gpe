@@ -1,7 +1,7 @@
 PACKAGE = nsqld
 PREFIX = /usr/local
 DEBUG = no
-VERSION = 0.4
+VERSION = 0.5
 CVSBUILD = yes
 SASL = no
 
@@ -9,23 +9,14 @@ LINGUAS =
 
 MEMBERS = nsqld common
 
-CPPFLAGS = -D_GNU_SOURCE
-ifeq ($(DEBUG),yes)
-CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -Wall `pkg-config --cflags glib-2.0`
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
-CFLAGS += -MD
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0`
+PACKAGE_LDFLAGS += -lsqlite `pkg-config --libs glib-2.0`
 
 ifeq ($(SASL),yes)
-SASL_LIBS = -lsasl2
-CPPFLAGS += -DUSE_SASL
+PACKAGE_LDFLAGS += -lsasl2
+PACKAGE_CPPFLAGS += -DUSE_SASL
 endif
-
-.SUFFIXES: .d
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -40,7 +31,7 @@ endif
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ -lsqlite `pkg-config --libs glib-2.0` $(SASL_LIBS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
