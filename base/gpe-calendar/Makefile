@@ -1,8 +1,8 @@
 DEBUG = yes
 
-MEMBERS = main gtkdatesel day_view week_view future_view event-ui about event-db year_view gtkdatecombo
+MEMBERS = main day_view week_view future_view event-ui about event-db year_view
 
-CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall
+CFLAGS = `gtk-config --cflags` -D_GNU_SOURCE -Wall -I../libgpewidget
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
 LDFLAGS = -g
@@ -13,7 +13,7 @@ endif
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
 gpe-calendar: $(OBJS)
-	$(CC) -o $@ $^ `gtk-config --libs` -lgdk_imlib -lsqlite $(LDFLAGS)
+	$(CC) -o $@ $^ `gtk-config --libs` -lgdk_imlib -lsqlite -L../libgpewidget -lgpewidget $(LDFLAGS)
 
 install:
 	install -D gpe-calendar $(DESTDIR)/usr/bin/gpe-calendar
