@@ -7,7 +7,6 @@ MEMBERS = \
 	gpe-sketchbook       \
         preferences          \
 	dock                 \
-	note                 \
 	selector	     \
 	selector-cb	     \
 	selector-gui	     \

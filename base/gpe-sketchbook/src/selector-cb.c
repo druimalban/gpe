@@ -23,7 +23,6 @@
 
 #include "gpe-sketchbook.h"
 #include "files.h"
-#include "note.h"
 #include "sketchpad.h"
 
 #include "gpe/question.h"
@@ -115,6 +114,31 @@ void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_da
   if(button) _switch_icon(button);
 }
 
+gboolean on_treeview_selection_change(GtkTreeSelection *selection,
+                                      GtkTreeModel *model,
+                                      GtkTreePath *path,
+                                      gboolean path_currently_selected,
+                                      gpointer data){
+  // Used by gtk_tree_selection_set_select_function().
+  // Called whenever a row's state might change.
+  // Returns TRUE to indicates to selection that it is okay to change the selection.
+
+  if(!path_currently_selected){
+    gint * indices;
+    indices = gtk_tree_path_get_indices(path);
+
+    /**/g_printerr("select: %d\n", indices[0]);
+
+    //FIXME: selection is done HERE - remove duplicated and dead code.
+
+    current_sketch = indices[0];
+    set_current_sketch_selected();
+    return TRUE;
+  }
+
+  return TRUE;
+}
+
 gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_model){
   switch(event->type){
     case GDK_2BUTTON_PRESS://double click --> activate the item
@@ -137,20 +161,12 @@ gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_mo
         switch_to_page(PAGE_SKETCHPAD);
         return TRUE;
       }
-    case GDK_BUTTON_PRESS:
-
-
-
-      //FIXME: cannot use the index of the CList.
-      current_sketch = 0;
-
-
-
-      set_current_sketch_selected();
-      gtk_widget_set_sensitive(selector.button_edit,   TRUE);
-      gtk_widget_set_sensitive(selector.button_delete, TRUE);
-      return FALSE;
-
+    case GDK_BUTTON_PRESS://single click --> select the item
+      {
+        gtk_widget_set_sensitive(selector.button_edit,   TRUE);
+        gtk_widget_set_sensitive(selector.button_delete, TRUE);
+        return FALSE;
+      }
     default: return FALSE;//FALSE to propagate the event further
   }
 }

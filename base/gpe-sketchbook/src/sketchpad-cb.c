@@ -24,7 +24,6 @@
 
 #include "gpe-sketchbook.h"
 #include "files.h"
-#include "note.h"
 #include "selector.h"
 #include "selector-cb.h"
 
@@ -100,14 +99,12 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   else{
     GtkTreeSelection * selection;
     GtkTreePath * path;
-    gchar * path_string;
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(selector.textlistview));
-    path_string = g_strdup_printf("%d", current_sketch);
-    /**/g_printerr("Selecting %d", current_sketch);
-    path = gtk_tree_path_new_from_string(path_string);
-    g_free(path_string);
+    /**/g_printerr("Selecting %d\n", current_sketch);
+    path = gtk_tree_path_new_from_indices(current_sketch, -1);
     gtk_tree_selection_select_path(selection, path);
+    gtk_tree_path_free(path);
 
     //set the current one selected
     set_current_sketch_selected();
@@ -160,22 +157,31 @@ gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
 //--------------------- FILE TOOLBAR ----------------------
 
 void on_button_file_save_clicked(GtkButton *button, gpointer unused){
-  Note * note;
+  gchar     * filename  = NULL;
+  GdkPixbuf * thumbnail = NULL;
+  GtkTreeIter iter;
 
   if(!is_current_sketch_modified){
     popup_menu_close (sketchpad.files_popup_button);
     return;
   }
   if(is_current_sketch_new){
-    note = note_new();
-    note->fullpath_filename = file_new_fullpath_filename();
+    filename = file_new_fullpath_filename();
   }
   else{
-    note =  gtk_clist_get_row_data(GTK_CLIST(selector.textlistview), current_sketch);
+    //access the existing row data
+    gchar * path_string;
+    path_string = g_strdup_printf("%d", current_sketch);
+
+    /*gboolean*/gtk_tree_model_get_iter_from_string( selector.listmodel, &iter, path_string);
+    g_free(path_string);
+    gtk_tree_model_get(selector.listmodel, &iter,
+                       ENTRY_URL, &filename,
+                       ENTRY_THUMBNAIL, &thumbnail, -1);
   }
 
-  file_save(note->fullpath_filename); //FIXME: should catch saving errors
-  {//--update thumbnail
+  file_save(filename); //FIXME: should catch saving errors
+  {//--make thumbnail
     GdkPixbuf * pixbuf;
     GdkPixbuf * pixbuf_scaled;
     pixbuf = sketchpad_get_current_sketch_pixbuf();
@@ -183,29 +189,21 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
                                              THUMBNAIL_SIZE, THUMBNAIL_SIZE,
                                              GDK_INTERP_BILINEAR);
     gdk_pixbuf_unref(pixbuf);
-    if(note->thumbnail) gdk_pixbuf_unref(note->thumbnail);
-    note->thumbnail = pixbuf_scaled;
+    if(thumbnail) gdk_pixbuf_unref(thumbnail);
+    thumbnail = pixbuf_scaled;
   }
 
   if(is_current_sketch_new){
-    gchar * name[1];
-
+    current_sketch = sketch_list_size;
     sketch_list_size++;
 
-    name[0] = make_label_from_filename(note->fullpath_filename);
-    current_sketch = gtk_clist_append(GTK_CLIST(selector.textlistview), name);
-    g_free(name[0]);
-    gtk_clist_set_row_data_full(GTK_CLIST(selector.textlistview), current_sketch, note, note_destroy);
-
-    gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
-                                  NULL,// "Sketch"
-                                  note->thumbnail,
-                                  note);
+    selector_add_note(make_label_from_filename(filename), filename, thumbnail);
   }
   else{
     //update icon_view
-    gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST(selector.iconlist),
-                                              note->thumbnail, note);
+    //gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST(selector.iconlist), thumbnail, 
+    //&iter);this is not the same (*iter)!!! FIXME: update to new gpe-iconlist API
+
   }
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();

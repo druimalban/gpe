@@ -32,7 +32,6 @@
 
 #include "selector.h"
 #include "selector-gui.h"
-#include "note.h"
 #include "files.h"
 #include "sketchpad.h"
 #include "gpe-sketchbook.h"
@@ -55,7 +54,7 @@ void selector_init(){
   store = gtk_list_store_new (NUM_ENTRIES,
                               G_TYPE_STRING,//title
                               G_TYPE_STRING,//note's url
-                              G_TYPE_OBJECT//thumbnail
+                              GDK_TYPE_PIXBUF//thumbnail
                               );
   selector.listmodel = GTK_TREE_MODEL(store);
 
@@ -63,6 +62,27 @@ void selector_init(){
   current_sketch   = SKETCH_NEW;
 
 }//selector_init()
+
+void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
+  GtkListStore * store;
+  GtkTreeIter iter;
+    
+  store = GTK_LIST_STORE(selector.listmodel);
+  gtk_list_store_append (store, &iter);
+  gtk_list_store_set (store, &iter,
+                      ENTRY_TITLE,     title,
+                      ENTRY_URL,       url,
+                      ENTRY_THUMBNAIL, thumbnail,
+                      -1);
+  g_free(url);  //liststore take a copy
+  g_free(title);//liststore take a copy
+  
+  //gpe-iconlist is not linked to the model, so update it
+  gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+                                NULL, //title
+                                thumbnail,//icon
+                                gtk_tree_iter_copy(&iter));//udata
+}
 
 void window_selector_init(GtkWidget * window_selector){
   struct dirent ** direntries;
@@ -105,12 +125,7 @@ void window_selector_init(GtkWidget * window_selector){
     gchar * title;
     GdkPixbuf * thumbnail;
     int i;
-    GtkListStore * store;
-    GtkTreeIter iter;
-    
-    store = GTK_LIST_STORE(selector.listmodel);
     for(i = 0; i < scandir_nb_entries; i++){
-      //Note * note;
 
       title = make_label_from_filename(direntries[i]->d_name);
       fullpath_filename = g_strdup_printf("%s%s", sketchbook.save_dir, direntries[i]->d_name);
@@ -125,28 +140,15 @@ void window_selector_init(GtkWidget * window_selector){
         gdk_pixbuf_unref(pixbuf);
       }
 
-      gtk_list_store_append (store, &iter);
-      gtk_list_store_set (store, &iter,
-                          ENTRY_TITLE,     title,
-                          ENTRY_URL,       fullpath_filename,
-                          ENTRY_THUMBNAIL, thumbnail,
-                          -1);
+      selector_add_note(title, fullpath_filename, thumbnail);
 
-      gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
-                                    NULL,//"Sketch",
-                                    thumbnail,//icon
-                                    /*note*/NULL);//udata
-
-      //do NOT g_free(fullpath_filename) now! :)
       sketch_list_size++;
-
-      g_free(title);//???
     }
 
     free(direntries);
   }//else
 }//window_selector_init()
-  
+
 void selector_refresh_list(){}
 
 gchar * make_label_from_filename(const gchar * filename){
@@ -246,17 +248,18 @@ void open_indexed_sketch(gint index){
   GtkTreeModel * model;
   GtkTreeIter iter;
   gboolean got_it;
-  gchar * path_string;
+  GtkTreePath * path;
   gchar * fullpath_filename;
   
   model = GTK_TREE_MODEL(selector.listmodel);
 
-  path_string = g_strdup_printf("%d", index);
-  got_it = gtk_tree_model_get_iter_from_string(model, &iter, path_string);
+  path = gtk_tree_path_new_from_indices (index, -1);
+
+  got_it = gtk_tree_model_get_iter(model, &iter, path);
+  gtk_tree_path_free(path);
   if(!got_it) return;
 
   gtk_tree_model_get(model, &iter, ENTRY_URL, &fullpath_filename, -1);
   sketchpad_open_file(fullpath_filename);
-  g_free(path_string);
 }
 

@@ -29,12 +29,11 @@ void on_button_selector_import_clicked (GtkButton *button, gpointer  user_data);
 void on_button_selector_change_view_clicked (GtkButton *button, gpointer user_data);
 void on_button_selector_preferences_clicked (GtkButton *button, gpointer _unused);
 
-//--clist
-void on_clist_selector_select_row      (GtkCList  *clist,  gint row, gint column,
-                                        GdkEvent  *event,  gpointer user_data);
-void on_clist_selector_unselect_row    (GtkCList  *clist,  gint row, gint column,
-                                        GdkEvent  *event,  gpointer user_data);
-void on_list_sketch_files_select_child (GtkList   *list,   GtkWidget *widget, gpointer user_data);
-void on_clist_selector_click_column    (GtkCList  *clist,  gint column,  gpointer user_data);
-
+//--list
 gboolean on_treeview_event(GtkWidget *treeview, GdkEvent *event, gpointer the_model);
+
+gboolean on_treeview_selection_change(GtkTreeSelection *selection,
+                                      GtkTreeModel *model,
+                                      GtkTreePath *path,
+                                      gboolean path_currently_selected,
+                                      gpointer data);

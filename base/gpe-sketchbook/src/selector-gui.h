@@ -18,7 +18,6 @@
 #ifndef SELECTOR_GUI_H
 #define SELECTOR_GUI_H
 
-extern GtkWidget * scrolledwindow_selector_clist;
 extern gboolean icons_mode;
 
 GtkWidget * create_window_selector (void);

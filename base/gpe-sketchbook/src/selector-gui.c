@@ -164,6 +164,12 @@ GtkWidget * build_scrollable_textlist(){
   gtk_tree_selection_set_mode(gtk_tree_view_get_selection(treeview), GTK_SELECTION_SINGLE);
   gtk_tree_view_set_headers_visible(treeview, FALSE);
 
+  gtk_tree_selection_set_select_function(gtk_tree_view_get_selection(treeview),
+                                         on_treeview_selection_change, //GtkTreeSelectionFunc func,
+                                         NULL, //gpointer data,
+                                         NULL  //GtkDestroyNotify destroy
+                                         );
+
   g_signal_connect(G_OBJECT(treeview), "event", G_CALLBACK(on_treeview_event), model);
 
   g_object_unref(G_OBJECT(model));//treeview keep a ref on its model
@@ -173,8 +179,8 @@ GtkWidget * build_scrollable_textlist(){
   renderer = gtk_cell_renderer_text_new ();
   column = gtk_tree_view_column_new_with_attributes ("title", renderer,
                                                      "text", ENTRY_TITLE,
-                                                     //"editable", TRUE,
                                                      NULL);
+  //g_object_set(renderer, "editable", TRUE, NULL);
   //g_signal_connect (G_OBJECT (renderer), "edited", G_CALLBACK (on_title_edited), model);
   gtk_tree_view_column_set_sort_column_id (column, ENTRY_TITLE);
   gtk_tree_view_append_column (treeview, column);
@@ -209,12 +215,24 @@ GtkWidget * build_scrollable_iconlist(GtkWidget * window){
   return iconlist;
 }
 
-#include "note.h"
-void on_iconlist_clicked (GtkWidget * iconlist, gpointer note, gpointer data) {
+//FIXME: to move to selector-cb.c/h
+#include "gpe-sketchbook.h"
+#include "sketchpad.h"
+void on_iconlist_clicked (GtkWidget * iconlist, gpointer iter, gpointer data) {
   //**/g_printerr("ICONLIST> %s\n", (char *)data);
-  current_sketch = gtk_clist_find_row_from_data(GTK_CLIST(selector.textlistview), note);
+  GtkTreeModel * model;
+  gchar * fullpath_filename;
+        
+  model = GTK_TREE_MODEL(selector.listmodel);
+
+  gtk_tree_model_get(model, (GtkTreeIter *)iter,
+                     ENTRY_URL, &fullpath_filename, -1);
+
+  sketchpad_open_file(fullpath_filename);
+  switch_to_page(PAGE_SKETCHPAD);
+
+  current_sketch = 
   set_current_sketch_selected();
-  on_button_selector_open_clicked (NULL, NULL);
 }
 
 //void on_iconlist_show_popup (GtkWidget *il, gpointer note, gpointer data) {

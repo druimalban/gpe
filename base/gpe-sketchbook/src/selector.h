@@ -43,6 +43,8 @@ enum{//Entry id for the list store
   NUM_ENTRIES
 };
 
+void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail);
+
 extern gint sketch_list_size;
 #define is_sketch_list_empty (sketch_list_size == 0)
 
