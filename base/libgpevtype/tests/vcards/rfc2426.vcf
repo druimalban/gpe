@@ -1,0 +1,89 @@
+BEGIN:VCARD
+        FN:Mr. John Q. Public\, Esq.
+        N:Stevenson;John;Philip,Paul;Dr.;Jr.,M.D.,A.C.P.
+        NICKNAME:Jim,Jimmie
+        PHOTO;VALUE=uri:http://www.abc.com/pub/photos
+         /jqpublic.gif
+        PHOTO;ENCODING=b;TYPE=JPEG:MIICajCCAdOgAwIBAgICBEUwDQYJKoZIhvcN
+         AQEEBQAwdzELMAkGA1UEBhMCVVMxLDAqBgNVBAoTI05ldHNjYXBlIENvbW11bm
+         ljYXRpb25zIENvcnBvcmF0aW9uMRwwGgYDVQQLExNJbmZvcm1hdGlvbiBTeXN0
+         <...remainder of "B" encoded binary data...>
+        BDAY:1996-04-15
+        BDAY:1953-10-15T23:10:00Z
+        BDAY:1987-09-27T08:30:00-06:00
+        ADR;TYPE=dom,home,postal,parcel:;;123 Main
+          Street;Any Town;CA;91921-1234
+        LABEL;TYPE=dom,home,postal,parcel:Mr.John Q. Public\, Esq.\n
+         Mail Drop: TNE QB\n123 Main Street\nAny Town\, CA  91921-1234
+         \nU.S.A.
+        TEL;TYPE=work,voice,pref,msg:+1-213-555-1234
+        EMAIL;TYPE=internet:jqpublic@xyz.dom1.com
+        EMAIL;TYPE=internet:jdoe@isp.net
+        EMAIL;TYPE=internet,pref:jane_doe@abc.com
+        MAILER:PigeonMail 2.1
+        TZ:-05:00
+        TZ;VALUE=text:-05:00; EST; Raleigh/North America
+        ;This example has a single value, not a structure text value.
+        GEO:37.386013;-122.082932
+        TITLE:Director\, Research and Development
+        ROLE:Programmer
+        LOGO;VALUE=uri:http://www.abc.com/pub/logos/abccorp.jpg
+        LOGO;ENCODING=b;TYPE=JPEG:MIICajCCAdOgAwIBAgICBEUwDQYJKoZIhvcN
+         AQEEBQAwdzELMAkGA1UEBhMCVVMxLDAqBgNVBAoTI05ldHNjYXBlIENvbW11bm
+         ljYXRpb25zIENvcnBvcmF0aW9uMRwwGgYDVQQLExNJbmZvcm1hdGlvbiBTeXN0
+         <...the remainder of "B" encoded binary data...>
+        AGENT;VALUE=uri:
+         CID:JQPUBLIC.part3.960129T083020.xyzMail@host3.com
+        AGENT:BEGIN:VCARD\nFN:Susan Thomas\nTEL:+1-919-555-
+         1234\nEMAIL\;INTERNET:sthomas@host.com\nEND:VCARD\n
+        ORG:ABC\, Inc.;North American Division;Marketing
+        CATEGORIES:TRAVEL AGENT
+        CATEGORIES:INTERNET,IETF,INDUSTRY,INFORMATION TECHNOLOGY
+        NOTE:This fax number is operational 0800 to 1715
+          EST\, Mon-Fri.
+        PRODID:-//ONLINE DIRECTORY//NONSGML Version 1//EN
+        REV:1995-10-31T22:27:10Z
+        REV:1997-11-15
+        FN:Rene van der Harten
+        N:van der Harten;Rene;J.;Sir;R.D.O.N.
+        SORT-STRING:Harten
+        FN:Robert Pau Shou Chang
+        N:Pau;Shou Chang;Robert
+        SORT-STRING:Pau
+        FN:Osamu Koura
+        N:Koura;Osamu
+        SORT-STRING:Koura
+        FN:Oscar del Pozo
+        N:del Pozo Triscon;Oscar
+        SORT-STRING:Pozo
+        FN:Chistine d'Aboville
+        N:d'Aboville;Christine
+        SORT-STRING:Aboville
+        SOUND;TYPE=BASIC;VALUE=uri:CID:JOHNQPUBLIC.part8.
+         19960229T080000.xyzMail@host1.com
+        SOUND;TYPE=BASIC;ENCODING=b:MIICajCCAdOgAwIBAgICBEUwDQYJKoZIhvcN
+         AQEEBQAwdzELMAkGA1UEBhMCVVMxLDAqBgNVBAoTI05ldHNjYXBlIENvbW11bm
+         ljYXRpb25zIENvcnBvcmF0aW9uMRwwGgYDVQQLExNJbmZvcm1hdGlvbiBTeXN0
+         <...the remainder of "B" encoded binary data...>
+        UID:19950401-080045-40000F192713-0052
+        URL:http://www.swbyps.restaurant.french/~chezchic.html
+        VERSION:3.0
+        CLASS:PUBLIC
+        CLASS:PRIVATE
+        CLASS:CONFIDENTIAL
+        KEY;ENCODING=b:MIICajCCAdOgAwIBAgICBEUwDQYJKoZIhvcNAQEEBQA
+         wdzELMAkGA1UEBhMCVVMxLDAqBgNVBAoTI05ldHNjYXBlIENbW11bmljYX
+         Rpb25zIENvcnBvcmF0aW9uMRwwGgYDVQQLExNJbmZvcm1hdGlvbiBTeXN0
+         ZW1zMRwwGgYDVQQDExNyb290Y2EubmV0c2NhcGUuY29tMB4XDTk3MDYwNj
+         E5NDc1OVoXDTk3MTIwMzE5NDc1OVowgYkxCzAJBgNVBAYTAlVTMSYwJAYD
+         VQQKEx1OZXRzY2FwZSBDb21tdW5pY2F0aW9ucyBDb3JwLjEYMBYGA1UEAx
+         MPVGltb3RoeSBBIEhvd2VzMSEwHwYJKoZIhvcNAQkBFhJob3dlc0BuZXRz
+         Y2FwZS5jb20xFTATBgoJkiaJk/IsZAEBEwVob3dlczBcMA0GCSqGSIb3DQ
+         EBAQUAA0sAMEgCQQC0JZf6wkg8pLMXHHCUvMfL5H6zjSk4vTTXZpYyrdN2
+         dXcoX49LKiOmgeJSzoiFKHtLOIboyludF90CgqcxtwKnAgMBAAGjNjA0MB
+         EGCWCGSAGG+EIBAQQEAwIAoDAfBgNVHSMEGDAWgBT84FToB/GV3jr3mcau
+         +hUMbsQukjANBgkqhkiG9w0BAQQFAAOBgQBexv7o7mi3PLXadkmNP9LcIP
+         mx93HGp0Kgyx1jIVMyNgsemeAwBM+MSlhMfcpbTrONwNjZYW8vJDSoi//y
+         rZlVt9bJbs7MNYZVsyF1unsqaln4/vy6Uawfg8VUMk1U7jt8LYpo4YULU7
+         UZHPYVUaSgVttImOHZIKi4hlPXBOhcUQ==
+END:VCARD
