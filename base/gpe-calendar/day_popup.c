@@ -40,6 +40,12 @@ day_clicked(GtkWidget *widget,
 	    GtkWidget *w)
 {
   struct day_popup *p = gtk_object_get_data (GTK_OBJECT (w), "popup-data");
+  struct tm tm;
+  localtime_r (&viewtime, &tm);
+  tm.tm_year = p->year - 1900;
+  tm.tm_mon = p->month;
+  tm.tm_mday = p->day;
+  viewtime = mktime (&tm);
   gtk_widget_destroy (w);
   set_day_view ();
 }
@@ -79,7 +85,6 @@ day_popup(GtkWidget *parent, struct day_popup *p)
   GtkWidget *close_button = gtk_button_new ();
   GtkWidget *label;
   GtkWidget *contents;
-  GtkWidget *opopup;
   char buf[256];
   struct tm tm;
 
