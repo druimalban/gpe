@@ -278,6 +278,31 @@ db_get_entries (void)
   return list;
 }
 
+GSList *
+db_get_entries_filtered (gchar *str)
+{
+  GSList *list = NULL;
+  char *err;
+  int r, i;
+  gchar *strsearch;
+
+  if ((!str) || !strlen(str)) 
+    return db_get_entries();
+  
+  strsearch = g_strdup_printf("%%%s%%", str); 
+  r = sqlite_exec_printf (db, "select distinct urn from contacts where value like '%q'",
+		   read_one_entry, &list, &err, strsearch);
+  g_free(strsearch);
+  if (r)
+    {
+      gpe_error_box (err);
+      free (err);
+      return NULL;
+    }
+
+  return list;
+}
+
 static int
 read_entry_data (void *arg, int argc, char **argv, char **names)
 {

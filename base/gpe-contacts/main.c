@@ -655,7 +655,6 @@ match_for_search (struct person *p, const gchar *text, struct gpe_pim_category *
   gchar *fn;
   gchar *name;
   gchar *company;
-  
   if ((text == NULL) && (cat == NULL)) /* some speedup */
     return TRUE;
   
