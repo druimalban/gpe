@@ -42,6 +42,12 @@
 #include <gpe/init.h>
 #include <gpe/pixmaps.h>
 
+
+/* These aren't in the header files, so we prototype them here.
+ */
+int setresuid(uid_t ruid, uid_t euid, uid_t suid);
+int setresgid(gid_t rgid, gid_t egid, gid_t sgid);
+
 int suidPID;
 
 GtkStyle *wstyle;
@@ -50,6 +56,7 @@ static struct {
 
   GtkWidget *applet;
   GtkWidget *vbox;
+  GtkWidget *viewport;
   GtkWidget *frame;
 
   GtkWidget *save;
@@ -124,12 +131,12 @@ void item_select(GtkWidget *ignored, gpointer user_data)
     {
       gtk_widget_hide(self.applet);
       // TODO there must be a memory leak here..
-      gtk_container_remove(GTK_CONTAINER(self.frame),self.applet);
+      gtk_container_remove(GTK_CONTAINER(self.viewport),self.applet);
     }
   self.cur_applet = i;
 
   self.applet = applets[i].Build_Objects();
-  gtk_container_add(GTK_CONTAINER(self.frame),self.applet);
+  gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
   gtk_frame_set_label(GTK_FRAME(self.frame),applets[i].frame_label);
   gtk_widget_show_all(self.applet);
 
@@ -191,10 +198,14 @@ void WindowDrawEvent              (GtkWidget       *widget,
 void make_container()
 {
   GtkWidget *hbuttons;
-  //  GtkWidget *scrolledwindow = gtk_scrolled_window_new(NULL,NULL);
 
-  //  gtk_widget_show (scrolledwindow);
-  //  gtk_container_add (GTK_CONTAINER (self.vbox), scrolledwindow);
+  GtkWidget *scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  self.viewport = gtk_viewport_new (NULL, NULL);
+  gtk_container_add (GTK_CONTAINER (scrolledwindow),self.viewport);
+  gtk_viewport_set_shadow_type (GTK_VIEWPORT (self.viewport), GTK_SHADOW_NONE);
 
 
   self.frame = gtk_frame_new ("About GPE Configuration");
@@ -206,6 +217,7 @@ void make_container()
 
   //  gtk_container_add(GTK_CONTAINER(scrolledwindow),self.frame);
   gtk_container_add(GTK_CONTAINER(self.vbox),self.frame);
+  gtk_container_add (GTK_CONTAINER (self.frame), scrolledwindow);
 
   hbuttons = gtk_hbutton_box_new();
   gtk_box_pack_end(GTK_BOX(self.vbox),hbuttons,TRUE, TRUE, 0);
@@ -256,7 +268,7 @@ void main_all()
   make_container();
 
   self.applet = gtk_label_new("GPE Configuration\nby Pierre Tardy\n\nInspired by sysset \nby James Weatherall.");
-  gtk_container_add(GTK_CONTAINER(self.frame),self.applet);
+  gtk_container_add(GTK_CONTAINER(self.viewport),self.applet);
 
   ntree =  gtk_tree_new();
   gtk_widget_show(ntree);
@@ -351,8 +363,10 @@ int main(int argc, char **argv)
       close(pipe1[1]);
       suidout = fdopen(pipe2[1],"w");
       suidin = fdopen(pipe1[0],"r");
-      seteuid(getuid()); // abandon privilege..
 
+	
+      setresuid(getuid(),getuid(),getuid()); // abandon privilege..
+      setresgid(getgid(),getgid(),getgid()); // abandon privilege..
       if(argc == 1)
 	{
 	  main_all(argc,argv);

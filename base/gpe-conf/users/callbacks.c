@@ -10,7 +10,8 @@
 #include "../applets.h"
 #define _XOPEN_SOURCE_
 #include <unistd.h>
-
+#include <crypt.h>
+#include <time.h>
 
 
 

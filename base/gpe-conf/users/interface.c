@@ -100,7 +100,7 @@ void Users_Free_Objects()
 
 void Users_Save()
 {
-  pwlist *cur = pwroot,*next;
+  pwlist *cur = pwroot;
   FILE *f = fopen("/tmp/passwd","w");
 
   while(cur != NULL)
@@ -159,6 +159,8 @@ Users_Build_Objects (void)
   gtk_container_add (GTK_CONTAINER (hbuttonbox1), button3);
 
   scrw = gtk_scrolled_window_new(NULL,NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrw),
+				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   user_list = gtk_clist_new_with_titles (4,listTitles);
   InitPwList();

@@ -37,8 +37,6 @@ char *RotationLabels[4]=
 static struct
 {
   GtkWidget *table;
-  GtkWidget *scrolledwindow;
-  GtkWidget *viewport;
   GtkWidget *hbox2;
   GtkWidget *brightnessl;
   GtkWidget *brightness;
@@ -102,17 +100,9 @@ GtkWidget *ipaqscreen_Build_Objects()
   ss_sec = xset_get_ss_sec();
   /* ======================================================================== */
   /* draw the GUI */
-  self.scrolledwindow = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (self.scrolledwindow),
-				  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  self.viewport = gtk_viewport_new (NULL, NULL);
-  gtk_container_add (GTK_CONTAINER (self.scrolledwindow), self.viewport);
-  gtk_viewport_set_shadow_type (GTK_VIEWPORT (self.viewport), GTK_SHADOW_NONE);
 
   self.table = gtk_table_new(2,6,FALSE);
   gtk_widget_set_name (self.table, "table");
-  gtk_container_add (GTK_CONTAINER (self.viewport), self.table);
   gtk_container_set_border_width (GTK_CONTAINER (self.table), widget_padding_x);
 
   self.brightnessl = gtk_label_new("Brightness:");
@@ -238,7 +228,7 @@ GtkWidget *ipaqscreen_Build_Objects()
                       NULL);
   initialising = 0;
 
-  return self.scrolledwindow;
+  return self.table;
 }
 void change_screen_saver_label(int sec)
 {

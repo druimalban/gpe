@@ -234,6 +234,8 @@ ipaq_conf_t *load_ISconf(const char *fname)
 ipaq_conf_t *default_ISconf()
 {
 	printf("default are not implemented. please copy a vaid ipaqsleep.conf into your home.\n");
+	exit(1);
+	return 0;
 }
 		
 void load_IRQs(ipaq_conf_t *conf, const char *fname)

@@ -19,7 +19,8 @@
 #include <signal.h>
 #include <time.h>
 #include <errno.h>
- 
+#include <crypt.h>
+
 #include "suid.h"
 #include "applets.h"
 #include "gpe/pixmaps.h"
@@ -54,16 +55,13 @@ int execlp2(char *a1,char *a2,char *a3,char *a4,char *a5)
 void suidloop(int write,int read) 
 {
   char cmd[5];
-  FILE 
-    *in = fdopen(read,"r"),
-    *out = fdopen(write,"w");
+  FILE *in = fdopen(read,"r");
+//iFILE    *out = fdopen(write,"w");
   char *bin = NULL;
   char arg1[100];
   char arg2[100];
-  char arg3[100];
   int numarg=0;
 
-  
   while(!feof(in)) // the prg exits with sigpipe
     {
       fflush(stdout);
@@ -98,6 +96,10 @@ void suidloop(int write,int read)
 	      strcpy(arg2,"/etc/passwd");
 	      numarg = 2;
 	    }
+	  else if(strcmp(cmd,"XCAL")==0) 
+	    {
+	      system("xcalibrate");
+	    }
 	  if(bin) // fork and exec
 	    {
 	      int PID;
@@ -118,7 +120,7 @@ void suidloop(int write,int read)
 		    }
 		  exit(0);
 		default:
-	      
+	     	break; 
 		}
 	    }
 	}

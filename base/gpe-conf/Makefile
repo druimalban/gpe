@@ -1,6 +1,6 @@
-VERSION = 0.0.3
+VERSION = 0.0.4
 
-ifeq ($(pc),"") # simple test to recognise if we are from ipaq
+ifndef ($(pc)) # simple test to recognise if we are from ipaq
 PREFIX = "/usr/local"
 else
 PREFIX = "/usr"
@@ -24,10 +24,10 @@ MEMBERS += users/interface users/callbacks
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 
-ARM_BINARY= gpe-conf gpe-confsuid
+ARM_BINARY= gpe-conf 
 
 ARM_BINARYPATHED = $(patsubst %,/armbins/%,$(ARM_BINARY))
-all: gpe-conf gpe-confsuid
+all: gpe-conf 
 
 gpe-conf: $(OBJS)
 	$(CC) -o $@ $(OBJS) -L../libgpewidget  -lgpewidget `gdk-pixbuf-config --libs` -lcrypt
@@ -40,10 +40,9 @@ gpe-confsuid: gpe-confsuid.c
 
 install: gpe-conf
 	./gpe-conf.pc jhdgkjhd | ./buildmenu.pl >$(DESTDIR)/usr/lib/menu/gpe-conf #build the menu
+	sudo chown root.root gpe-conf
+	sudo chmod a+s gpe-conf 
 	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-conf
-	sudo chown root.root gpe-confsuid
-	sudo chmod a+s gpe-confsuid 
-	install -D gpe-conf $(DESTDIR)/usr/bin/gpe-confsuid
 
 ipkg:
 	find dist -name CVS |xargs rm -rf				#erase CVS stuff
@@ -53,6 +52,7 @@ ipkg:
 	sudo chown -R root.root dist
 	ipkg-build dist
 	sudo chown -R pierre.pierre dist
+
 clean:
 	rm -f gpe-conf $(OBJS) *~ */*~ *.ipk
 

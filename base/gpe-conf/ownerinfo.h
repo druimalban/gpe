@@ -18,10 +18,6 @@ maybe_upgrade_datafile ();
 gint
 upgrade_to_v2 (guint new_version);
 
-static
-void File_Selected (char *file,
-		    gpointer data);
-
 void
 choose_photofile              (GtkWidget     *button,
 			       gpointer       user_data);

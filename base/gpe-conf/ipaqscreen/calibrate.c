@@ -15,6 +15,7 @@
 #include "gpe/errorbox.h"
 
 #include "calibrate.h"
+#include "../suid.h"
 
 void calibrate ()
 {
@@ -23,6 +24,7 @@ void calibrate ()
 	gpe_error_box ("you are on 386 machine!!");
 	return ; // xrandr doesnt exit on i386 dev machines!
 #endif
-	if(system("xcalibrate"))
-	  gpe_error_box ("xcalibrate exited abnormally");
+	fprintf(suidout,"XCAL\n");
+	fflush(suidout);
+
 }

@@ -31,6 +31,11 @@
 
 #include "applets.h"
 #include "ownerinfo.h"
+
+static
+void File_Selected (char *file,
+		    gpointer data);
+
 char *dirname(char *s)
 {
 	int i;
