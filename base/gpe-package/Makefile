@@ -1,5 +1,5 @@
 PACKAGE = gpe-package
-VERSION = 0.0.9-1
+VERSION = 0.0.9-2
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -70,7 +70,8 @@ PIXMAPS = gpe-package.png local-package-16.png
 all: $(PACKAGE) 
 
 $(PACKAGE): $(OBJS)
-	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
+	$(CC) -g -o $@ $(OBJS) $(LDFLAGS) 
+#/skiff/local/arm-linux/lib/libbb.a 
 
 install-program: $(PACKAGE) all-desktop
 	mkdir -p $(DESTDIR)/CONTROL
