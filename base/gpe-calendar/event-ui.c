@@ -266,15 +266,17 @@ schedule_next(guint skip, guint uid)
     }
 }
     
-static void
+static gboolean
 edit_finished (GtkWidget *d)
 {
   gtk_widget_hide (d);
 
-  if (cached_window)
+  if (1 || cached_window)
     gtk_widget_destroy (d);
   else
     cached_window = d;
+
+  return TRUE;
 }
 
 static void
@@ -526,13 +528,6 @@ click_ok (GtkWidget *widget, GtkWidget *d)
   edit_finished (d);
 }
 
-static void
-click_cancel (GtkWidget *widget,
-	      GtkWidget *d)
-{
-  edit_finished (d);
-}
-
 static gboolean
 set_notebook_page (GtkWidget *w, struct edit_state *s)
 {
@@ -740,8 +735,8 @@ build_edit_event_window (void)
 
   gtk_signal_connect (GTK_OBJECT (buttonok), "clicked",
 		      GTK_SIGNAL_FUNC (click_ok), window);
-  gtk_signal_connect (GTK_OBJECT (buttoncancel), "clicked",
-		      GTK_SIGNAL_FUNC (click_cancel), window);
+  g_signal_connect_swapped (G_OBJECT (buttoncancel), "clicked",
+			    G_CALLBACK (edit_finished), window);
 
   gtk_container_add (GTK_CONTAINER (descriptionframe), description);
   gtk_container_set_border_width (GTK_CONTAINER (descriptionframe), 2);
@@ -1104,7 +1099,7 @@ build_edit_event_window (void)
 
   gtk_window_set_default_size (GTK_WINDOW (window), 280, 320);
   
-  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
+  gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 		      GTK_SIGNAL_FUNC (edit_finished), NULL);
 
   return window;

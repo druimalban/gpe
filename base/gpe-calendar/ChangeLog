@@ -1,11 +1,13 @@
 2003-01-19  Philip Blundell  <philb@gnu.org>
 
 	* event-ui.c (build_edit_event_window): Don't realize window
-	explicitly.  Install "destroy" handler on new window.
-	(edit_finished): Re-enable caching.
+	explicitly.  Install "destroy" handler on new window.  Connect
+	cancel button to edit_finished directly.
 	(click_delete): Reformat.
 	(click_ok): Likewise.
 	(schedule_next): Likewise.
+	(edit_finished): Return TRUE as gboolean.
+	(click_cancel): Delete.
 
 2003-01-18  Philip Blundell  <philb@gnu.org>
 
