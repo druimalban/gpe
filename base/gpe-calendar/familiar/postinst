@@ -4,8 +4,9 @@ if test -x /usr/bin/update-menus; then
     update-menus;
 fi
 
-#remove this later!!
-chmod -R a+wr /var/spool/at
+if test -d /etc/X11/Xsession-gpe.d/; then 
+    ln -fs /etc/X11/Xsession.d/99gpe-calendar /etc/X11/Xsession-gpe.d/99gpe-calendar
+fi
 
 # return success
 exit 0;
