@@ -68,7 +68,7 @@ static void
 filter (GdkEvent *ev, gpointer data)
 {
   if (do_fn
-      && (ev->button.state & GDK_MOD1_MASK)
+      && (ev->button.state & GDK_MOD3_MASK)
       && ev->button.button == 1)
     {
       ev->button.button = 3;
