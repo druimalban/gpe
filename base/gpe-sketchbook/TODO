@@ -2,9 +2,11 @@
 	---
 	[ ]when create/save FAST, (<1s) two files with same name --> overwrite, BUT two entries in the clist!
 	[ ]grab keyevent (for joypad scrolling) + xstroke --> mess!
-[ ]GENERAL
-	[ ]thumbnails table
-	[ ]GTK2
+[ ]GENERAL todo
+	[ ]link against libpng12 instead of libpng3
+	[ ]add .desktop
+	[ ]thumbnails table, improvements
+	[ ]GTK2, improvements
 	---
 	[ ]memory management use $HOME_VOLATILE rather than $HOME
 	[ ]categories (1 level first)
