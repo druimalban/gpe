@@ -103,15 +103,16 @@ notify_func (const char       *name,
 static void
 usage (void)
 {
-  fprintf (stderr, "Usage: xst read  [property]\n");
-  fprintf (stderr, "       xst write <property> <format> <value>\n");
+  fprintf (stderr, "Usage: xst read   [property]\n");
+  fprintf (stderr, "       xst write  <property> <format> <value>\n");
+  fprintf (stderr, "       xst delete <property>\n");
 }
 
 int
 main (int argc, char *argv[])
 {
   char *disp = NULL;
-  gboolean flag_read = FALSE, flag_write = FALSE;
+  gboolean flag_read = FALSE, flag_write = FALSE, flag_delete = FALSE;
   gchar *prop = NULL, *format = NULL, *value = NULL;
   XSettingsNotifyFunc notify_fp = NULL;
 
@@ -146,6 +147,16 @@ main (int argc, char *argv[])
       format = argv[3];
       value = argv[4];
     }
+  else if (!strcmp (argv[1], "delete"))
+    {
+      flag_delete = TRUE;
+      if (argc < 3)
+	{
+	  usage ();
+	  exit (1);
+	}
+      prop = argv[2];
+    }
   else
     {
       usage ();
@@ -175,7 +186,7 @@ main (int argc, char *argv[])
       xsettings_client_destroy (client);
     }
       
-  if (flag_write)
+  if (flag_write || flag_delete)
     {
       Atom gpe_settings_update_atom = XInternAtom (dpy, "_GPE_SETTINGS_UPDATE", 0);
       Window manager = XGetSelectionOwner (dpy, gpe_settings_update_atom);
@@ -193,48 +204,59 @@ main (int argc, char *argv[])
 	}
 
       win = XCreateSimpleWindow (dpy, DefaultRootWindow (dpy), 1, 1, 1, 1, 0, 0, 0);
-      
-      if (!strcmp (format, "int"))
+
+      if (flag_write)
 	{
-	  type = XSETTINGS_TYPE_INT;
-	  length = 4;
-	}
-      else if (!strcmp (format, "col"))
-	{
-	  type = XSETTINGS_TYPE_COLOR;
-	  length = 8;
-	}
-      else if (!strcmp (format, "str"))
-	{
-	  type = XSETTINGS_TYPE_STRING;
-	  length = 4 + (strlen (value) + 3) & ~3;
+	  if (!strcmp (format, "int"))
+	    {
+	      type = XSETTINGS_TYPE_INT;
+	      length = 4;
+	    }
+	  else if (!strcmp (format, "col"))
+	    {
+	      type = XSETTINGS_TYPE_COLOR;
+	      length = 8;
+	    }
+	  else if (!strcmp (format, "str"))
+	    {
+	      type = XSETTINGS_TYPE_STRING;
+	      length = 4 + (strlen (value) + 3) & ~3;
+	    }
+	  else
+	    {
+	      fprintf (stderr, "Format \"%s\" not recognised (try int/col/str)\n", format);
+	      exit (1);
+	    }
 	}
       else
-	{
-	  fprintf (stderr, "Format \"%s\" not recognised (try int/col/str)\n", format);
-	  exit (1);
-	}
+	length = 0;
       
       name_len = strlen (prop);
       name_len = (name_len + 3) & ~3;
       buffer = g_malloc (length + 4 + name_len);
-      *buffer = type;
+      if (flag_write)
+	*buffer = type;
+      else
+	*buffer = 0xff;
       buffer[1] = 0;
       buffer[2] = name_len & 0xff;
       buffer[3] = (name_len >> 8) & 0xff;
       memcpy (buffer + 4, prop, name_len);
-      
-      switch (type)
+
+      if (flag_write)
 	{
-	case XSETTINGS_TYPE_INT:
-	  *((unsigned long *)(buffer + 4 + name_len)) = atoi (value);
-	  break;
-	case XSETTINGS_TYPE_STRING:
-	  *((unsigned long *)(buffer + 4 + name_len)) = strlen (value);
-	  memcpy (buffer + 8 + name_len, value, strlen (value));
-	  break;
-	case XSETTINGS_TYPE_COLOR:
-	  break;
+	  switch (type)
+	    {
+	    case XSETTINGS_TYPE_INT:
+	      *((unsigned long *)(buffer + 4 + name_len)) = atoi (value);
+	      break;
+	    case XSETTINGS_TYPE_STRING:
+	      *((unsigned long *)(buffer + 4 + name_len)) = strlen (value);
+	      memcpy (buffer + 8 + name_len, value, strlen (value));
+	      break;
+	    case XSETTINGS_TYPE_COLOR:
+	      break;
+	    }
 	}
       
       XChangeProperty (dpy, win, gpe_settings_update_atom, gpe_settings_update_atom,
