@@ -28,11 +28,11 @@
 static struct gpe_icon my_icons[] = {
   { "ok" },
   { "cancel" },
-  { "stock_media-prev" },
-  { "stock_media-next" },
-  { "stock_media-play" },
-  { "stock_media-pause" },
-  { "stock_media-stop" },
+  { "media-prev" },
+  { "media-next" },
+  { "media-play" },
+  { "media-pause" },
+  { "media-stop" },
   { NULL, NULL }
 };
 
@@ -137,7 +137,7 @@ main (int argc, char *argv[])
   style = gtk_style_copy (hbox->style);
   style->bg[0] = col;
   
-  p = gpe_find_icon ("stock_media-prev");
+  p = gpe_find_icon ("media-prev");
   w = gpe_render_icon (window->style, p);
   gtk_widget_show (w);
   prev = gtk_button_new ();
@@ -146,7 +146,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (prev), w);
   gtk_box_pack_start (GTK_BOX (hbox), prev, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("stock_media-rew");
+  p = gpe_find_icon ("media-rew");
   w = gpe_render_icon (window->style, p);
   gtk_widget_show (w);
   rewind = gtk_button_new ();
@@ -155,7 +155,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (rewind), w);
   gtk_box_pack_start (GTK_BOX (hbox), rewind, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("stock_media-play");
+  p = gpe_find_icon ("media-play");
   w = gpe_render_icon (window->style, p);
   play = gtk_button_new ();
   gtk_widget_show (play);
@@ -164,7 +164,7 @@ main (int argc, char *argv[])
   gtk_widget_show (w);
   gtk_box_pack_start (GTK_BOX (hbox), play, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("stock_media-pause");
+  p = gpe_find_icon ("media-pause");
   w = gpe_render_icon (window->style, p);
   pause = gtk_button_new ();
   gtk_widget_show (pause);
@@ -173,7 +173,7 @@ main (int argc, char *argv[])
   gtk_widget_show (w);
   gtk_box_pack_start (GTK_BOX (hbox), pause, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("stock_media-stop");
+  p = gpe_find_icon ("media-stop");
   w = gpe_render_icon (window->style, p);
   stop = gtk_button_new ();
   gtk_widget_show (stop);
@@ -182,7 +182,7 @@ main (int argc, char *argv[])
   gtk_widget_show (w);
   gtk_box_pack_start (GTK_BOX (hbox), stop, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("stock_media-fwd");
+  p = gpe_find_icon ("media-fwd");
   w = gpe_render_icon (window->style, p);
   forward = gtk_button_new ();
   gtk_widget_show (forward);
@@ -191,7 +191,7 @@ main (int argc, char *argv[])
   gtk_widget_show (w);
   gtk_box_pack_start (GTK_BOX (hbox), forward, TRUE, TRUE, 0);
 
-  p = gpe_find_icon ("stock_media-next");
+  p = gpe_find_icon ("media-next");
   w = gpe_render_icon (window->style, p);
   next = gtk_button_new ();
   gtk_widget_show (next);
