@@ -45,7 +45,6 @@ main (int argc, char *argv[])
 {
 
   GtkWidget *widget;
-  static GtkWidget *icon;
   
   gchar *ownername, *owneremail, *ownerphone, *owneraddress;
   FILE *fp;

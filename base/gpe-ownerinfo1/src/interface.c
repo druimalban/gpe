@@ -14,6 +14,9 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 
+#include <gpe/pixmaps.h>
+#include <gpe/render.h>
+
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
@@ -23,6 +26,7 @@ create_GPE_Ownerinfo (void)
 {
   GtkWidget *GPE_Ownerinfo;
   GtkWidget *frame1;
+  GtkWidget *notebook;
   GtkWidget *table1;
   GtkWidget *owner_name_label;
   GtkWidget *name;
@@ -35,10 +39,17 @@ create_GPE_Ownerinfo (void)
   GtkWidget *address;
   GtkWidget *vbox1;
   GtkWidget *owner_address_label;
-  GtkWidget *photobutton;
-  GtkWidget *pixmap1;
+  GtkWidget *smallphotobutton;
+  GtkWidget *smallphoto;
+  GtkWidget *label3;
+  GtkWidget *bigphotobutton;
+  GtkWidget *bigphoto;
+  GtkWidget *label4;
   GtkTooltips *tooltips;
-
+  // GtkStyle* style;
+  GtkStyle *style = gtk_style_new();
+  GdkColor myGdkColor = {0, 0xAFFF, 0xFFFF, 0xCFFF};
+	  
   tooltips = gtk_tooltips_new ();
 
   GPE_Ownerinfo = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -48,7 +59,7 @@ create_GPE_Ownerinfo (void)
   gtk_window_set_default_size (GTK_WINDOW (GPE_Ownerinfo), 240, 120);
   gtk_window_set_policy (GTK_WINDOW (GPE_Ownerinfo), TRUE, TRUE, TRUE);
 
-  frame1 = gtk_frame_new (_("Owner Info"));
+  frame1 = gtk_frame_new (_("Owner Information"));
   gtk_widget_set_name (frame1, "frame1");
   gtk_widget_ref (frame1);
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "frame1", frame1,
@@ -56,13 +67,24 @@ create_GPE_Ownerinfo (void)
   gtk_widget_show (frame1);
   gtk_container_add (GTK_CONTAINER (GPE_Ownerinfo), frame1);
 
+  notebook = gtk_notebook_new ();
+  gtk_widget_set_name (notebook, "notebook");
+  gtk_widget_ref (notebook);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "notebook", notebook,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (notebook);
+  gtk_container_add (GTK_CONTAINER (frame1), notebook);
+  GTK_WIDGET_UNSET_FLAGS (notebook, GTK_CAN_FOCUS);
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (notebook), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (notebook), FALSE);
+
   table1 = gtk_table_new (4, 2, FALSE);
   gtk_widget_set_name (table1, "table1");
   gtk_widget_ref (table1);
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "table1", table1,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (table1);
-  gtk_container_add (GTK_CONTAINER (frame1), table1);
+  gtk_container_add (GTK_CONTAINER (notebook), table1);
 
   owner_name_label = gtk_label_new (_("Name"));
   gtk_widget_set_name (owner_name_label, "owner_name_label");
@@ -194,33 +216,77 @@ create_GPE_Ownerinfo (void)
   gtk_misc_set_alignment (GTK_MISC (owner_address_label), 0, 0);
   gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
 
-  photobutton = gtk_button_new ();
-  gtk_widget_set_name (photobutton, "photobutton");
-  gtk_widget_ref (photobutton);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "photobutton", photobutton,
+  smallphotobutton = gtk_button_new ();
+  gtk_widget_set_name (smallphotobutton, "smallphotobutton");
+  gtk_widget_ref (smallphotobutton);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "smallphotobutton", smallphotobutton,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (photobutton);
-  gtk_box_pack_end (GTK_BOX (vbox1), photobutton, TRUE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, photobutton, _("Owner photo"), NULL);
-  gtk_button_set_relief (GTK_BUTTON (photobutton), GTK_RELIEF_NONE);
+  gtk_widget_show (smallphotobutton);
+  gtk_box_pack_end (GTK_BOX (vbox1), smallphotobutton, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, smallphotobutton, _("Owner photo"), NULL);
+  gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
 
-  pixmap1 = gpe_render_icon (GPE_Ownerinfo->style, gpe_find_icon ("tux-48"));
-  //  pixmap1 = create_pixmap (GPE_Ownerinfo, NULL);
-  gtk_widget_set_name (pixmap1, "pixmap1");
-  gtk_widget_ref (pixmap1);
-  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "pixmap1", pixmap1,
+  smallphoto = gpe_render_icon (GPE_Ownerinfo->style, gpe_find_icon ("tux-48"));
+  //smallphoto = create_pixmap (GPE_Ownerinfo, NULL);
+  gtk_widget_set_name (smallphoto, "smallphoto");
+  gtk_widget_ref (smallphoto);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "smallphoto", smallphoto,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (pixmap1);
-  gtk_container_add (GTK_CONTAINER (photobutton), pixmap1);
+  gtk_widget_show (smallphoto);
+  gtk_container_add (GTK_CONTAINER (smallphotobutton), smallphoto);
+
+  label3 = gtk_label_new (_("label3"));
+  gtk_widget_set_name (label3, "label3");
+  gtk_widget_ref (label3);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "label3", label3,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label3);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label3);
+
+  bigphotobutton = gtk_button_new ();
+  gtk_widget_set_name (bigphotobutton, "bigphotobutton");
+  gtk_widget_ref (bigphotobutton);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "bigphotobutton", bigphotobutton,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (bigphotobutton);
+  gtk_container_add (GTK_CONTAINER (notebook), bigphotobutton);
+  GTK_WIDGET_UNSET_FLAGS (bigphotobutton, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, bigphotobutton, _("Owner photo"), NULL);
+  gtk_button_set_relief (GTK_BUTTON (bigphotobutton), GTK_RELIEF_NONE);
+
+  //  style->bg[GTK_STATE_PRELIGHT] = myGdkColor;
+  style->bg[GTK_STATE_PRELIGHT] = style->bg[GTK_STATE_NORMAL];
+  style->bg[GTK_STATE_NORMAL] = myGdkColor;
+  gtk_widget_set_style (GTK_WIDGET (bigphotobutton), style);
+  
+  bigphoto = gpe_render_icon (GPE_Ownerinfo->style, gpe_find_icon ("tux-48"));
+  //bigphoto = create_pixmap (GPE_Ownerinfo, NULL);
+  gtk_widget_set_name (bigphoto, "bigphoto");
+  gtk_widget_ref (bigphoto);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "bigphoto", bigphoto,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (bigphoto);
+  gtk_container_add (GTK_CONTAINER (bigphotobutton), bigphoto);
+
+  label4 = gtk_label_new (_("label4"));
+  gtk_widget_set_name (label4, "label4");
+  gtk_widget_ref (label4);
+  gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "label4", label4,
+                            (GtkDestroyNotify) gtk_widget_unref);
+  gtk_widget_show (label4);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label4);
 
   gtk_signal_connect (GTK_OBJECT (GPE_Ownerinfo), "destroy",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
-  gtk_signal_connect (GTK_OBJECT (photobutton), "clicked",
-                      GTK_SIGNAL_FUNC (on_photobutton_clicked),
+  gtk_signal_connect (GTK_OBJECT (smallphotobutton), "clicked",
+                      GTK_SIGNAL_FUNC (on_smallphotobutton_clicked),
+                      NULL);
+  gtk_signal_connect (GTK_OBJECT (bigphotobutton), "clicked",
+                      GTK_SIGNAL_FUNC (on_bigphotobutton_clicked),
                       NULL);
 
-  gtk_widget_grab_focus (photobutton);
+  gtk_widget_grab_focus (smallphotobutton);
   gtk_object_set_data (GTK_OBJECT (GPE_Ownerinfo), "tooltips", tooltips);
 
   return GPE_Ownerinfo;

@@ -1,5 +1,7 @@
 2002-08-26  Colin Marquardt  <colin@marquardt-home.de>
 
+	* src/main.c, gpe-ownerinfo.glade, src/interface.c, src/callbacks.c: Use the new notebooks.
+
 	* gpe-ownerinfo.glade (Module): Add the photo button.
 
 	* src/callbacks.c (on_photobutton_clicked): Hide main window part,

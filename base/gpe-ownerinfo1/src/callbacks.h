@@ -2,7 +2,7 @@
 
 
 void
-on_photobutton_clicked                 (GtkButton       *button,
+on_smallphotobutton_clicked            (GtkButton       *button,
                                         gpointer         user_data);
 
 void
