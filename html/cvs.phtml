@@ -50,11 +50,13 @@ A makefile in 'gpe_cvs/base' helps you build (most of) GPE:
       $ make -f Makefile.gpe DESTDIR=`pwd`/tmp-install install
    </pre>
 
+make 3.80 is required, version 3.79.1 has been seen to not work.
+
 If this doesn't work for you: prerequisites for building GPE
 applications are libgpewidget, gpe-icons and, for some applications,
-libsqlite. libsqlite is not in GPE CVS, but is likely to be available
-as a package for your distribution, perhaps called 'libsqlite-dev' or
-'libsqlite-devel').
+libsqlite. libsqlite is not in GPE CVS, but is likely to be
+available as a package for your distribution, perhaps called
+'libsqlite-dev' or 'libsqlite-devel').
 
 So do the following before you attempt to compile one of the GPE
 applications:

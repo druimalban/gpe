@@ -1,3 +1,7 @@
+2003-09-20  Colin Marquardt  <colin@marquardt-home.de>
+
+	* cvs.phtml: Add note about make 3.80 being required.
+
 2003-09-18  Colin Marquardt  <colin@marquardt-home.de>
 
 	* index.phtml: Add protest about SW patents taking the HTML from
