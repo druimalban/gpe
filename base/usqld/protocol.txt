@@ -1,11 +1,7 @@
 uSQL protocol v0.2.0
 -------------
 
-These are the FSMs for client and server in the usqld protocol should
-probably do a formal verrification for liveness etc.  seing as that is
-waht i am allegedly good at...
-
-
+* needs to get fixed for queries in callbacks
 
 client states:
 s0: 
@@ -13,30 +9,30 @@ s0:
 
 s0.1: 
     resv(ERR)->s0;
-    resv(OK)->s1;
+   |resv(OK)->s1;
 
 s1:   
     send(DISCONNECT())->s1.1;
-    send(QUERY(qstr))->s2;
+   |send(QUERY(qstr))->s2;
   
 s1.1: 
     resv(OK)->s0;  
 
 s2: 
     resv(OK)->s1;
-    resv(ERR)->s1;
-    send(INTERRUPT)->s3;
-    resv(Startrows(header*))->s4;
+   |resv(ERR)->s1;
+   |send(INTERRUPT)->s3;
+   |resv(Startrows(header*))->s4;
 
 s3: 
     resv(row(_)->s3;
-    resv(INTERRUPTED)->s1;
+   |resv(INTERRUPTED)->s1;
 
 s4: 
     resv(ROW(rowdata*))->s4;
-    resv(ERR)->s1;
-    send(INTERRUPT)->s3;
-    resv(OK)->s1;
+   |resv(ERR)->s1;
+   |send(INTERRUPT)->s3;
+   |resv(OK)->s1;
 
 
 server states: 
@@ -45,12 +41,12 @@ s0:
   
 s0.1:
     send(OK)->s1;
-    send(ERR)->s0;
+   |send(ERR)->s0;
 
 s1:	
     resv(QUERY(qstr))->s2;
-    resv(DISCONNECT)->s1.1;
-    resv(INTERRUPT)->s1.2;
+   |resv(DISCONNECT)->s1.1;
+   |resv(INTERRUPT)->s1.2;
 
 s1.2: 
     send (INTERRUPTED)->s1;
@@ -59,10 +55,10 @@ s1.1:
     send(OK)->s0;
 
 s2:
-    send(OK)->s1;
-    send(STARTROWS(header*))->s2.1;
+   send(OK)->s1;
+  |send(STARTROWS(header*))->s2.1;
 
 s2.1:
     resv(INTERRUPT)->s1.2;
-    send(ROW(rowdata))->s2.1;
-	
+   |send(ROW(rowdata))->s2.1;
+   |send(OK)->s1;

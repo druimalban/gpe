@@ -2,6 +2,7 @@
 #ifndef _USQLD_CLIENT_H_
 #define _USQLD_CLIENT_H_
 
+#include <stdarg.h>
 extern char * USQLD_VERSION;
 extern char * USQLD_PROTOCOL_VERSION;
 
@@ -11,10 +12,13 @@ usqld_conn * usqld_connect(const char * server,
 			   const char * database,
 			   char ** errmsg);
 
+void usqld_disconnect(usqld_conn *);
 
 void usqld_interrupt(usqld_conn*);
 
-typedef int (*usqld_callback)(void*,int, char*const*,  char*const*);
+int usqld_complete(const char *sql);
+
+typedef int (*usqld_callback)(void*,int, char**,  char**);
 
 int usqld_exec(
   usqld_conn*,                      /* An open database */
@@ -23,8 +27,52 @@ int usqld_exec(
   void *,                       /* 1st argument to callback function */
   char **errmsg                 /* Error msg written here */
 );
+int usqld_exec_printf(
+  usqld_conn*,                      /* An open database */
+  const char *sqlFormat,        /* printf-style format string for the SQL */
+  usqld_callback,              /* Callback function */
+  void *,                       /* 1st argument to callback function */
+  char **errmsg,                /* Error msg written here */
+  ...                           /* Arguments to the format string. */
+);
+int usqld_exec_vprintf(
+  usqld_conn*,                      /* An open database */
+  const char *sqlFormat,        /* printf-style format string for the SQL */
+  usqld_callback,              /* Callback function */
+  void *,                       /* 1st argument to callback function */
+  char **errmsg,                /* Error msg written here */
+  va_list ap                    /* Arguments to the format string. */
+);
+int usqld_get_table_printf(
+  usqld_conn*,               /* An open database */
+  const char *sqlFormat, /* printf-style format string for the SQL */
+  char ***resultp,       /* Result written to a char *[]  that this points to */
+  int *nrow,             /* Number of result rows written here */
+  int *ncolumn,          /* Number of result columns written here */
+  char **errmsg,         /* Error msg written here */
+  ...                    /* Arguments to the format string */
+);
+int usqld_get_table_vprintf(
+  usqld_conn*,               /* An open database */
+  const char *sqlFormat, /* printf-style format string for the SQL */
+  char ***resultp,       /* Result written to a char *[]  that this points to */
+  int *nrow,             /* Number of result rows written here */
+  int *ncolumn,          /* Number of result columns written here */
+  char **errmsg,         /* Error msg written here */
+  va_list ap             /* Arguments to the format string */
+);
 
-
+int usqld_get_table(
+  usqld_conn *db,                 /* The database on which the SQL executes */
+  const char *zSql,           /* The SQL to be executed */
+  char ***pazResult,          /* Write the result table here */
+  int *pnRow,                 /* Write the number of rows in the result here */
+  int *pnColumn,              /* Write the number of columns of result here */
+  char **pzErrMsg             /* Write error messages here */
+);
+void usqld_free_table(
+  char **azResult             /* Result returned from from sqlite_get_table() */
+);
 #define SQLITE_OK           0   /* Successful result */
 #define SQLITE_ERROR        1   /* SQL error or missing database */
 #define SQLITE_INTERNAL     2   /* An internal logic error in SQLite */

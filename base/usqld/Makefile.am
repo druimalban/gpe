@@ -1,3 +1,3 @@
-SUBDIRS = xdr src test
+SUBDIRS = xdr xdr src test usqldsh
 
 

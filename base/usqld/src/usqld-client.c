@@ -39,6 +39,7 @@ void usqld_interrupt(usqld_conn * conn){
   
 }
 
+
 struct usqld_conn * usqld_connect(const char * server,
 				  const char * database,
 				  char ** errmsg){
@@ -256,7 +257,7 @@ int usqld_exec(
 		  (XDR_TREE_COMPOUND(in_p))),i)));
 	  }
 	  
-	  if(0!=cb(arg,nrows,heads,rowdata)){
+	  if(0!=cb(arg,nrows,rowdata,heads)){
 	    rv = SQLITE_ABORT;
 	    if(!con->awaiting_interrupted)
 	      usqld_interrupt(con);
@@ -303,3 +304,75 @@ int usqld_exec(
 }
     
 
+void usqld_disconnect(usqld_conn * con){
+  usqld_packet *out_p,*in_p;
+ 
+  out_p= XDR_tree_new_union(PICKLE_DISCONNECT,
+			    XDR_tree_new_void());
+
+  if(USQLD_OK!=usqld_send_packet(con->server_fd,out_p)){
+    XDR_tree_free(out_p);
+    return;
+  }
+  if(USQLD_OK!=usqld_recv_packet(con->server_fd,&in_p)){
+    return;
+  }
+  XDR_tree_free(in_p);
+  return;
+  
+}
+
+
+int usqld_complete(const char *zSql){
+  int isComplete = 0;
+  while( *zSql ){
+    switch( *zSql ){
+      case ';': {
+        isComplete = 1;
+        break;
+      }
+      case ' ':
+      case '\t':
+      case '\n':
+      case '\f': {
+        break;
+      }
+      case '[': {
+        isComplete = 0;
+        zSql++;
+        while( *zSql && *zSql!=']' ){ zSql++; }
+        if( *zSql==0 ) return 0;
+        break;
+      }
+      case '\'': {
+        isComplete = 0;
+        zSql++;
+        while( *zSql && *zSql!='\'' ){ zSql++; }
+        if( *zSql==0 ) return 0;
+        break;
+      }
+      case '"': {
+        isComplete = 0;
+        zSql++;
+        while( *zSql && *zSql!='"' ){ zSql++; }
+        if( *zSql==0 ) return 0;
+        break;
+      }
+      case '-': {
+        if( zSql[1]!='-' ){
+          isComplete = 0;
+          break;
+        }
+        while( *zSql && *zSql!='\n' ){ zSql++; }
+        if( *zSql==0 ) return isComplete;
+        break;
+      } 
+      default: {
+        isComplete = 0;
+        break;
+      }
+    }
+    zSql++;
+  }
+  return isComplete;
+}

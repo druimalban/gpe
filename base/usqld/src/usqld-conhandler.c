@@ -257,21 +257,17 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
 void * usqld_conhandler_main(usqld_conhand_init  * init){
   usqld_tc tc;
   usqld_packet * p = NULL;
-  int rv = USQLD_OK,resp_rv = USQLD_OK;
-
-  bzero(&tc,sizeof(usqld_tc));
-
-
+  int rv = USQLD_OK,resp_rv = USQLD_OK,terminate_now = 0;
   
+  bzero(&tc,sizeof(usqld_tc));
    
   tc.db =NULL;
   tc.client_fd = init->fd;
-  tc.config = init->config;
-  
-   
+  tc.config = init->config;   
   free(init);
   
-  while(USQLD_OK==(rv=usqld_recv_packet(tc.client_fd,&p))){
+  while(!terminate_now && 
+	USQLD_OK==(rv=usqld_recv_packet(tc.client_fd,&p))){
     switch(usqld_get_packet_type(p)){
     case PICKLE_INTERRUPT:
       {
@@ -290,6 +286,9 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
     case PICKLE_QUERY: 
       resp_rv = usqld_do_query(&tc,p);
       break; 
+    case PICKLE_DISCONNECT:
+      terminate_now =1;
+      break;
     default:
       {
 	fprintf(stderr,"unsupported packet type %d\n",
@@ -297,12 +296,13 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
 	break;
       }
     }
+    XDR_tree_free(p);
     if(resp_rv!=USQLD_OK){
       fprintf(stderr,"error %d while sending response\n",resp_rv);
       break;
     }
   }
-
+  
   if(rv!=USQLD_OK){
     fprintf(stderr,"error %d while demarshalling request\n",rv);
   }

@@ -209,7 +209,7 @@ int  XDR_serialize_elem(XDR_schema * in_s,
 	return XDR_IO_ERROR;
       
       if(XDR_OK!=(rv=XDR_serialize_elem(d_t,
-					XDR_TREE_COMPOUND(t)->subelems[1],
+				        XDR_t_get_comp_elem(t,1),
 					fd)))
 	return rv;
     }

@@ -27,9 +27,9 @@ int main(int argc, char * argv[])
 
    int single_thread =0;
    char * database_dir = NULL;
-   char c;
+   int c;
 
-   while((c = getopt(argc,argv,"xd:"))!=-1){
+   while((c = getopt(argc,argv,"xd:"))!=EOF){
       switch(c){	 
        case 'x':
 	 single_thread = 1;
@@ -46,7 +46,7 @@ int main(int argc, char * argv[])
 		    optopt);
 	 break;
        default:
-	 printf("err\n");
+	 printf("unknown error while parsing command line command was %c\n",c);
 	 exit(1);
       }
    }

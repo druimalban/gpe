@@ -1,4 +1,4 @@
-bin_PROGRAMS=writer_example reader_example 
+EXTRA_PROGRAMS=writer_example reader_example 
 LDADD=-lxdr
 LDFLAGS=-L../
 CFLAGS=-I../

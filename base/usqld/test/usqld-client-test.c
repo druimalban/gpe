@@ -8,8 +8,8 @@
 #include "usqld-protocol.h"
 
 int test_print_results(void * f,int nrows,
-		       const char ** heads,
-		       const char ** vals){
+		       const char ** vals,
+		        const char ** heads){
   int i;
   for(i = 0;i<nrows;i++){
     printf("%s\t|",heads[i]);
