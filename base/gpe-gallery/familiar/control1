@@ -1,7 +1,7 @@
 Package: gpe-gallery
 Section: base
 Priority: optional
-Version: 0.5
+Version: VERSION
 Architecture: arm
 Maintainer: Damien Tanner <dctanner@magenet.com>
 Depends: gpe-icons (>= 0.05), libgpewidget1 (>= 0.08)
