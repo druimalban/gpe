@@ -1,2 +1,2 @@
 #!/bin/sh
-gpe-soundbite record
+exec gpe-soundbite record

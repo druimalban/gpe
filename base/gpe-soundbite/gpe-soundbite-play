@@ -1,2 +1,2 @@
 #!/bin/sh
-gpe-soundbite play
+exec gpe-soundbite play
