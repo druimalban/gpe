@@ -1,5 +1,6 @@
 2004-07-13  Florian Boor  <florian.boor@kernelconcepts.de>
-    
+
+    * editing.c: Finished handling of direction keys.
     * editing.c: Implementation for dynamic built images.
     * editing.c: Fixed image handling.
     * editing.c: Several minor fixes.

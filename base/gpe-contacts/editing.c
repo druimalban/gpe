@@ -29,13 +29,13 @@ void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
 void on_edit_save_clicked (GtkButton * button, gpointer user_data);
 void on_edit_bt_image_clicked (GtkWidget *image, gpointer user_data);
 void on_categories_clicked (GtkButton *button, gpointer user_data);
-void        
-tv_move_cursor (GtkTextView *textview,
-                                            GtkMovementStep arg1,
-                                            gint arg2,
-                                            gboolean arg3,
-                                            gpointer user_data);
-
+void tv_move_cursor (GtkTextView *textview,
+                     GtkMovementStep arg1,
+                     gint arg2, gboolean arg3,
+                     gpointer user_data);
+gboolean tv_focus_in (GtkWidget *widget,
+                      GdkEventFocus *event,
+                      gpointer user_data);
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -123,6 +123,8 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (ww), GTK_WRAP_WORD);
           g_signal_connect(G_OBJECT(ww),"move_cursor",
             G_CALLBACK(tv_move_cursor),NULL);
+          g_signal_connect(G_OBJECT(ww),"focus-in-event",
+            G_CALLBACK(tv_focus_in),NULL);
         
           gtk_widget_set_usize (GTK_WIDGET (ww), -1, 64);
           if (e->name)
@@ -604,94 +606,44 @@ on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
   gtk_widget_destroy (GTK_WIDGET (user_data));
 }
 
-GtkWidget *
-find_next_focusable_widget(GtkWidget *w)
-{
-  GtkWidget *parent = gtk_widget_get_parent(w);
-  GtkWidget *result = NULL;
-  GList *children = gtk_container_get_children(GTK_CONTAINER(parent));
-  GList *iter;
-  
-  while (!result && parent)
-    {
-      for (iter = children; iter; iter = iter->next)
-        {
-           if ((iter->data == w) && (iter->next))
-             {
-               if (GTK_WIDGET_CAN_FOCUS(GTK_WIDGET(iter->next->data)))
-                 result = iter->next->data;
-               else if (!(result = find_next_focusable_widget(iter->next->data)))
-                 w = iter->next->data;
-             }
-        }
-      w = parent;
-      g_list_free(children);
-      parent = gtk_widget_get_parent(w);
-      children = gtk_container_get_children(GTK_CONTAINER(parent));
-    }
-printf("ptr %p\n",result);
-  return (result);
-}
-
-GtkWidget *
-find_previous_focusable_widget(GtkWidget *w)
-{
-  GtkWidget *parent = gtk_widget_get_parent(w);
-  GtkWidget *result = NULL;
-  GList *children = gtk_container_get_children(GTK_CONTAINER(parent));
-  GList *iter;
-  
-  while (!result && parent)
-    {
-      for (iter = g_list_last(children); iter; iter = iter->prev)
-        {
-           if ((iter->data == w) && (iter->prev))
-             {
-               if (GTK_WIDGET_CAN_FOCUS(GTK_WIDGET(iter->prev->data)))
-                 result = iter->prev->data;
-               else
-                 w = iter->prev->data;
-             }  
-        }
-      w = parent;
-      g_list_free(children);
-      parent = gtk_widget_get_parent(parent);
-      children = gtk_container_get_children(GTK_CONTAINER(parent));
-    }
-printf("ptr %p\n",result);
-  return (result);
-}
-
 void        
 tv_move_cursor (GtkTextView *textview,
-                                            GtkMovementStep arg1,
-                                            gint arg2,
-                                            gboolean arg3,
-                                            gpointer user_data)
+                GtkMovementStep arg1,
+                gint arg2,
+                gboolean arg3,
+                gpointer user_data)
 {
   GtkTextBuffer *buf = gtk_text_view_get_buffer(textview);
-  GtkWidget *newfocus;
   
   int cnt = (int)g_object_get_data(G_OBJECT(textview),"cnt");
   
   if (arg1 == GTK_MOVEMENT_DISPLAY_LINES)
     {
       cnt += arg2;
-  printf("move %i %i %i\n",arg1, arg2, cnt);
-      if (cnt > gtk_text_buffer_get_line_count(buf))
+      if (cnt >= gtk_text_buffer_get_line_count(buf))
         {
           cnt = 0;
-          newfocus = find_next_focusable_widget(GTK_WIDGET(textview));
-          if (newfocus)
-            gtk_widget_grab_focus(newfocus);
+          gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(textview)),
+		                         GTK_DIR_DOWN);
         }
       else if (cnt < 0)
         {
           cnt = 0;
-          newfocus = find_previous_focusable_widget(GTK_WIDGET(textview));
-          if (newfocus)
-            gtk_widget_grab_focus(newfocus);
+          gtk_widget_child_focus(gtk_widget_get_toplevel(GTK_WIDGET(textview)),
+		                         GTK_DIR_UP);
         }  
       g_object_set_data(G_OBJECT(textview),"cnt",(void*)cnt);  
     }
+}
+
+gboolean 
+tv_focus_in (GtkWidget *widget,
+             GdkEventFocus *event,
+             gpointer user_data)
+{
+  GtkTextIter iter;
+  GtkTextBuffer *buf = gtk_text_view_get_buffer(GTK_TEXT_VIEW(widget));
+  gtk_text_buffer_get_start_iter(buf,&iter);
+  gtk_text_buffer_place_cursor(buf,&iter);
+  return FALSE;
 }
