@@ -1,0 +1,7 @@
+?package(ipaqscreen): \
+ needs="x11"\
+ section="Configuration/"\
+ title="Screen Settings"\
+ command="ipaqscreen" \
+ icon48="/usr/share/pixmaps/ipaqscreen.png"
+ windowtitle="Screen Settings"
