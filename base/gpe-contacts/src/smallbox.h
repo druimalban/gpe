@@ -12,6 +12,13 @@
 
 #include <gtk/gtk.h>
 
+struct box_desc
+{
+  gchar *label;
+  gchar *value;
+};
+
+extern gboolean smallbox_x (gchar *title, struct box_desc *d);
 extern gchar *smallbox (gchar *title, gchar *labeltext, gchar *dval);
 
 #endif

@@ -29,6 +29,11 @@ create table person_attr (
 	attr		int NOT NULL,
 	value		text
 );
+
+create table attr (
+	attr		int NOT NULL,
+	description	text
+);
 ";
 
 int 
@@ -195,7 +200,7 @@ db_insert_category (gchar *name, guint *id)
 }
 
 gboolean
-db_insert_attribute (guint id)
+db_insert_attribute (guint id, gchar *desc)
 {
   return TRUE;
 }

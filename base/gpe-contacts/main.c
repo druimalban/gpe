@@ -63,22 +63,57 @@ new_category (GtkWidget *w, gpointer p)
 }
 
 static void
+delete_category (GtkWidget *w, gpointer p)
+{
+}
+
+static void
 new_attribute (GtkWidget *w, gpointer p)
 {
-  gchar *name = smallbox(_("New attribute"), _("Tag"), "");
-  if (name && name[0])
-    {
-      gchar *line_info[1];
-      guint nr = atoi (name);
-      if (nr == 0)
-	{
-	  gpe_error_box (_("Invalid attribute tag"));
-	  return;
-	}
+  gchar *name;
+  gchar *desc;
+  struct box_desc dx[3];
 
-      line_info[0] = name;
-      if (db_insert_attribute (nr))
-	gtk_clist_append (GTK_CLIST (p), line_info);
+  dx[0].label = _("Tag");
+  dx[1].label = _("Description");
+  dx[2].label = NULL;
+  dx[0].value = NULL;
+  dx[1].value = NULL;
+  dx[2].value = NULL;
+
+  if (smallbox_x (_("New attribute"), dx) == TRUE)
+    {
+      name = dx[0].value;
+      desc = dx[1].value;
+
+      if (name[0])
+	{
+	  gchar *line_info[2];
+	  guint nr = atoi (name);
+	  if (nr == 0)
+	    {
+	      gpe_error_box (_("Invalid attribute tag"));
+	      return;
+	    }
+	  if (desc[0] == 0)
+	    {
+	      gpe_error_box (_("No description given"));
+	      return;
+	    }
+	  
+	  line_info[0] = name;
+	  line_info[1] = desc;
+	  if (db_insert_attribute (nr, desc))
+	    {
+	      gtk_clist_append (GTK_CLIST (p), line_info);
+	      gtk_clist_columns_autosize (GTK_CLIST (p));
+	    }
+	}
+      else
+	{
+	  g_free (name);
+	  g_free (desc);
+	}
     }
 }
 
@@ -111,7 +146,8 @@ config_categories_box(void)
   p = find_pixmap ("delete");
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
-			   _("Delete"), _("Delete"), pw, NULL, NULL);
+			   _("Delete"), _("Delete"), pw, 
+			   delete_category, clist);
 
   gtk_container_add (GTK_CONTAINER (scrolled), clist);
   gtk_widget_show (clist);
@@ -132,7 +168,7 @@ static GtkWidget *
 config_attributes_box(void)
 {
   GtkWidget *box = gtk_vbox_new (FALSE, 0);
-  GtkWidget *clist = gtk_clist_new (1);
+  GtkWidget *clist = gtk_clist_new (2);
   GtkWidget *toolbar;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   struct pix *p;
@@ -153,7 +189,7 @@ config_attributes_box(void)
   pw = gtk_pixmap_new (p->pixmap, p->mask);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, delete_attribute, 
-			   NULL);
+			   clist);
   gtk_container_add (GTK_CONTAINER (scrolled), clist);
   gtk_widget_show (clist);
   gtk_widget_show (scrolled);
