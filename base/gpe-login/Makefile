@@ -13,7 +13,7 @@ CFLAGS += -I/usr/include/gpe
 endif
 LDFLAGS += -lgpewidget
 
-all: gpe-login gpe-dm gpe-lock-display mo
+all: gpe-login gpe-logout gpe-dm gpe-lock-display mo
 
 mo:
 	make -C po
@@ -39,8 +39,10 @@ install: install-dm install-login
 
 install-login: gpe-login install-po
 	install -D gpe-login $(DESTDIR)$(PREFIX)/bin/gpe-login
+	install -D gpe-logout $(DESTDIR)$(PREFIX)/bin/gpe-logout
 	install -D gpe-lock-display $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-login
+	strip $(DESTDIR)$(PREFIX)/bin/gpe-logout
 	strip $(DESTDIR)$(PREFIX)/bin/gpe-lock-display
 
 install-dm: gpe-dm
@@ -92,4 +94,4 @@ ipkg:
 	ipkg-build familiar/dist.gpe-session-scripts
 
 clean:
-	rm -f gpe-login gpe-login.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o
+	rm -f gpe-login gpe-login.o gpe-logout gpe-logout.o gpe-dm gpe-dm.o gpe-lock-display gpe-lock-display.o

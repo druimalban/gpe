@@ -3,5 +3,5 @@
  title="Log out" \
  logtitle="Log out" \
  icon48=/usr/share/pixmaps/gpe-logout.png \
- command="mbcontrol -exit" \
+ command="gpe-logout" \
  section=System
