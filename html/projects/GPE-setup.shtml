@@ -4,6 +4,8 @@
 <!--#set var="authoremail" value="nils@handhelds.org"-->
 <!--#include virtual="/includes/head.shtml"-->
 
+<img src="/images/gpe-conf-applets.png" alt="[screenshot]">
+
 <H2>Function</H2>
 <P>
 GPE Setup will control the whole machine. It includes sub-applications for
