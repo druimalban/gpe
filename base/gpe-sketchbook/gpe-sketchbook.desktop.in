@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=Sketchbook
-Comment=GPE Sketchbook
+_Name=Sketchbook
+_Comment=GPE Sketchbook
 Exec=gpe-sketchbook
 Terminal=0
 Type=Application

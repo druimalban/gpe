@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-11-06 18:21+0200\n"
+"POT-Creation-Date: 2003-02-24 17:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:107
+#: src/gpe-sketchbook.c:111
 msgid "Sketch selector"
 msgstr ""
 
@@ -32,16 +32,16 @@ msgstr ""
 msgid "%s  at  %s"
 msgstr ""
 
-#: src/selector-cb.c:65 src/sketchpad-cb.c:150
+#: src/selector-cb.c:65 src/sketchpad-cb.c:169
 msgid "Delete sketch?"
 msgstr ""
 
-#: src/selector-cb.c:65 src/sketchpad-cb.c:73 src/sketchpad-cb.c:137
-#: src/sketchpad-cb.c:150
+#: src/selector-cb.c:65 src/sketchpad-cb.c:73 src/sketchpad-cb.c:149
+#: src/sketchpad-cb.c:169
 msgid "Cancel"
 msgstr ""
 
-#: src/selector-cb.c:65 src/sketchpad-cb.c:150
+#: src/selector-cb.c:65 src/sketchpad-cb.c:169
 msgid "Delete"
 msgstr ""
 
@@ -72,23 +72,31 @@ msgstr ""
 msgid "Exit"
 msgstr ""
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:73 src/sketchpad-cb.c:137
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:73 src/sketchpad-cb.c:149
 msgid "Save"
 msgstr ""
 
-#: src/sketchpad-cb.c:73 src/sketchpad-cb.c:137
+#: src/sketchpad-cb.c:73 src/sketchpad-cb.c:149
 msgid "Save last sketch?"
 msgstr ""
 
-#: src/files-png.c:166
+#: src/files-png.c:180
 msgid ""
 "Keys for PNG tEXt chunks must have at least 1 and at most 79 characters."
 msgstr ""
 
-#: src/files-png.c:174
+#: src/files-png.c:188
 msgid "Keys for PNG tEXt chunks must be ASCII characters."
 msgstr ""
 
-#: src/files-png.c:195
+#: src/files-png.c:209
 msgid "Value for PNG tEXt chunk can not be converted to ISO-8859-1 encoding."
+msgstr ""
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr ""
+
+#: gpe-sketchbook.desktop.in.h:2
+msgid "Sketchbook"
 msgstr ""
