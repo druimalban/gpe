@@ -40,7 +40,7 @@ struct req_context;
 
 static void send_reply (struct req_context *ctx, const char *pin);
 
-int
+static int
 sql_start (void)
 {
   char *err;
@@ -59,7 +59,7 @@ sql_start (void)
   return 0;
 }
 
-int
+static int
 lookup_in_list (int outgoing, const char *address, char **pin)
 {
   char *err;
@@ -137,10 +137,10 @@ click_ok (GtkWidget *widget, GtkWidget *window)
   gtk_widget_destroy (window);
 }
 
-void
+static void
 ask_user_dialog (int outgoing, const char *address, struct req_context *ctx)
 {
-  GtkWidget *window = gtk_dialog_new ();
+  GtkWidget *window;
   GtkWidget *logo = NULL;
   GtkWidget *text1, *text2, *text3, *hbox, *vbox;
   GtkWidget *hbox_pin;
@@ -150,6 +150,8 @@ ask_user_dialog (int outgoing, const char *address, struct req_context *ctx)
 
   const char *dir = outgoing ? _("Outgoing connection to") 
     : _("Incoming connection from");
+
+  window = gtk_dialog_new ();
  
   pixbuf = gdk_pixbuf_new_from_file (BT_ICON, NULL);
   if (pixbuf)
@@ -200,6 +202,9 @@ ask_user_dialog (int outgoing, const char *address, struct req_context *ctx)
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), hbox_pin, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), check, TRUE, TRUE, 0);
 
+  if (!sqliteh)
+    gtk_widget_set_sensitive (check, FALSE);
+
   g_object_set_data (G_OBJECT (window), "entry", entry);
   g_object_set_data (G_OBJECT (window), "context", ctx);
 
@@ -210,19 +215,12 @@ ask_user_dialog (int outgoing, const char *address, struct req_context *ctx)
   gtk_widget_grab_focus (entry);
 }
 
-void
+static void
 ask_user (int outgoing, const char *address)
 {
   ask_user_dialog (outgoing, address, NULL);
 
   gtk_main ();
-}
-
-void
-usage (char *argv[])
-{
-  fprintf (stderr, _("Usage: %s <in|out> <address>\n"), argv[0]);
-  exit (1);
 }
 
 struct req_context
@@ -336,12 +334,19 @@ dbus_server_run (void)
 
   handler = dbus_message_handler_new (handler_func, NULL, NULL);
   dbus_connection_add_filter (connection, handler);
+}
 
-  gtk_main ();
+#ifdef MAIN
+
+void
+usage (char *argv[])
+{
+  fprintf (stderr, _("Usage: %s <in|out> <address>\n"), argv[0]);
+  exit (1);
 }
 
 int 
-main(int argc, char *argv[])
+main (int argc, char *argv[])
 {
   char *pin;
   gboolean gui_started;
@@ -395,6 +400,8 @@ main(int argc, char *argv[])
   if (dbus_mode)
     {
       dbus_server_run ();
+
+      gtk_main ();
     }
   else
     {
@@ -428,3 +435,6 @@ main(int argc, char *argv[])
 
   exit (0);
 }
+
+#endif
+
