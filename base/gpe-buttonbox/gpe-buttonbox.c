@@ -190,8 +190,10 @@ do_build_icon (gchar *name, GdkPixbuf *icon_pix)
   GtkWidget *icon;
   GtkWidget *text;
   GtkWidget *ebox;
+  GdkPixbuf *scaled;
 
-  icon = gtk_image_new_from_pixbuf (icon_pix);
+  scaled = gdk_pixbuf_scale_simple (icon_pix, 32, 32, GDK_INTERP_BILINEAR);
+  icon = gtk_image_new_from_pixbuf (scaled);
   text = gtk_label_new (name);
   wbox = gtk_vbox_new (FALSE, 0);
   ebox = gtk_event_box_new ();
@@ -203,7 +205,7 @@ do_build_icon (gchar *name, GdkPixbuf *icon_pix)
   gtk_widget_show (text);
   gtk_widget_show (wbox);
 
-  gtk_widget_set_usize (GTK_WIDGET (wbox), SLOT_WIDTH - SLOT_MARGIN, 64);
+  gtk_widget_set_usize (GTK_WIDGET (wbox), SLOT_WIDTH - SLOT_MARGIN, 48);
   
   gtk_container_add (GTK_CONTAINER (ebox), wbox);
 
@@ -262,6 +264,7 @@ find_slot_for_class (struct class_record *c)
 	      c->slot = i;
 	      c->widget = build_icon_for_class (c);
 	      gtk_fixed_put (GTK_FIXED (box), c->widget, (i + 1) * SLOT_WIDTH, 0);
+	      gtk_widget_show (c->widget);
 	      return;
 	    }
 	}
@@ -347,6 +350,7 @@ window_added (GPEWindowList *list, Window w)
   GtkWidget *widget;
   Atom type;
   Window leader;
+  gchar *class;
 
   type = gpe_get_window_property (dpy, w, atoms[_NET_WM_WINDOW_TYPE]);
   if (type == atoms[_NET_WM_WINDOW_TYPE_DOCK] || type == atoms[_NET_WM_WINDOW_TYPE_DESKTOP])
@@ -356,6 +360,9 @@ window_added (GPEWindowList *list, Window w)
     return;
 
   if (gpe_get_window_property (dpy, w, atoms[_NET_WM_SKIP_PAGER]) != None)
+    return;
+
+  if (gpe_get_wm_class (dpy, w, NULL, &class) == FALSE)
     return;
 
   leader = gpe_get_wm_leader (dpy, w);
@@ -368,7 +375,7 @@ window_added (GPEWindowList *list, Window w)
   if (r->name == NULL)
     r->name = gpe_get_window_name (dpy, w);
   r->icon = gpe_get_window_icon (dpy, w);
-  gpe_get_wm_class (dpy, w, NULL, &r->class);
+  r->class = class;
 
   add_window_record (r);
 
@@ -414,9 +421,33 @@ main (int argc, char *argv[])
   GObject *list;
   GtkWidget *desktop_button;
   GdkPixbuf *desk_icon;
+  gboolean flag_panel = FALSE;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
+
+  while (1)
+    {
+      int this_option_optind = optind ? optind : 1;
+      int option_index = 0;
+      int c;
+
+      static struct option long_options[] = {
+	{"panel", 0, 0, 'p'},
+	{0, 0, 0, 0}
+      };
+      
+      c = getopt_long (argc, argv, "p", long_options, &option_index);
+      if (c == -1)
+	break;
+
+      switch (c)
+	{
+	case 'p':
+	  flag_panel = TRUE;
+	  break;
+	}
+    }
 
   setlocale (LC_ALL, "");
 
@@ -424,7 +455,10 @@ main (int argc, char *argv[])
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  if (flag_panel)
+    window = gtk_plug_new (0);
+  else
+    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
   box = gtk_fixed_new ();
 
@@ -441,6 +475,7 @@ main (int argc, char *argv[])
   desktop_button = do_build_icon ("Desktop", desk_icon);
   gtk_fixed_put (GTK_FIXED (box), desktop_button, 0, 0);
   g_signal_connect (G_OBJECT (desktop_button), "button_release_event", G_CALLBACK (desktop_button_release), NULL);
+  gtk_widget_show (desktop_button);
 
   other_button = do_build_icon ("Other", NULL);
   gtk_fixed_put (GTK_FIXED (box), other_button, (NR_SLOTS + 1) * SLOT_WIDTH, 0);
@@ -448,8 +483,17 @@ main (int argc, char *argv[])
 
   add_initial_windows (GPE_WINDOW_LIST (list));
 
+  gtk_widget_set_usize (box, (NR_SLOTS + 2) * SLOT_WIDTH, -1);
+
   gtk_container_add (GTK_CONTAINER (window), box);
-  gtk_widget_show_all (window);
+  gtk_widget_show (box);
+  gtk_widget_show (window);
+
+  if (flag_panel)
+    {
+      gtk_widget_realize (window);
+      gpe_system_tray_dock (window->window);
+    }
 
   gtk_main ();
 
