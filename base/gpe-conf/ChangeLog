@@ -1,5 +1,14 @@
+2004-02-08	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile: CVS version is 0.1.6 now.
+	* theme.c: Added switch "Visual performance to turn composite stuff on/off.
+	* Released and packaged 0.1.5
+	
+2004-02-07	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Fixed theme selection if unknown theme is configured.
+	* Fixed color settings to work with latest mb* stuff.
+
 2004-01-22	Florian Boor  	<florian.boor@kernelconcepts.de>
-	* Added min-info.c i forgot.
+	* Added main-info.c i forgot.
 
 2004-01-21	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Applied Libor's patches for some renamings in sysinfo.c and

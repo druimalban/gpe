@@ -151,6 +151,7 @@ toolbar_set_style (GtkWidget * bar, gint percent)
 		rc_style->color_flags[GTK_STATE_NORMAL] |= GTK_RC_BG;
 
 		gtk_widget_modify_style (bar, rc_style);
+		gtk_rc_style_unref(rc_style);					  
 	}
 
 	gtk_widget_ensure_style (bar);

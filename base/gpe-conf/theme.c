@@ -26,9 +26,6 @@
 #include <X11/Xcms.h>
 #include <X11/Xlib.h>
 #include <libintl.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE		/* Pour GlibC2 */
-#endif
 #include <time.h>
 #include "applets.h"
 #include "theme.h"
@@ -63,6 +60,7 @@ static struct
   GtkWidget *slIconSize;
   GtkWidget *slToolbarSize;
   GtkWidget *cDefault;
+  GtkWidget *cPerformance;
 }
 self;
 
@@ -594,6 +592,15 @@ notify_func (const char *name,
            widget_set_color_rgb8(self.bColorFont,(float)(tmpxcol.red >> 8)/255.0,(float)(tmpxcol.green >> 8)/255.0,(float)(tmpxcol.blue >> 8)/255.0);
 		}
 	}
+	
+	if (!strcmp (p, "COMPOSITE"))
+	{
+	  if (setting->type == XSETTINGS_TYPE_STRING)
+	    {
+			gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cPerformance),
+				!strcmp(setting->data.v_string,"on"));
+		}
+	}
    }
  }
 
@@ -741,7 +748,7 @@ char* get_color_from_widget(GtkWidget* w)
   r = acolor.red >> 8;
   g = acolor.green >> 8;
   b = acolor.blue >> 8;
-  result = g_strdup_printf("rgb:%02x/%02x/%02x",r,g,b);
+  result = g_strdup_printf("#%02x%02x%02x",r,g,b);
   return result;
 }
 
@@ -800,7 +807,7 @@ Theme_Save ()
 	}
 	
 	/* background style*/  	
-	if (confstr)
+	if (confstr != NULL)
 	{
 		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "Background", confstr);
 		free(confstr);
@@ -809,6 +816,13 @@ Theme_Save ()
 	{
 		system_printf ("xst delete %s%s", KEY_MATCHBOX, "Background");
 	}
+	
+	/* composite/performance setting */
+	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(self.cPerformance)))
+		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "on");
+	else
+		system_printf ("xst write %s%s str %s", KEY_MATCHBOX, "COMPOSITE", "off");
+		
 			
 	/* desktop font type and size */
 	label = g_object_get_data (G_OBJECT (self.bFont), "label");
@@ -909,7 +923,7 @@ Theme_Build_Objects ()
   self.cbTheme = gtk_combo_new ();
   themeitems = make_items_from_dir (matchboxpath,"matchbox");
   gtk_combo_set_popdown_strings (GTK_COMBO (self.cbTheme), themeitems);
-  gtk_combo_set_value_in_list (GTK_COMBO (self.cbTheme), TRUE, FALSE);
+  gtk_combo_set_value_in_list (GTK_COMBO (self.cbTheme), FALSE, FALSE);
   gtk_editable_set_editable (GTK_EDITABLE(GTK_COMBO(self.cbTheme)->entry), FALSE);
   gtk_widget_set_size_request (self.cbTheme, 120, -1);
   gtk_box_pack_start (GTK_BOX (hbox), self.cbTheme, FALSE, TRUE, 0);
@@ -918,7 +932,7 @@ Theme_Build_Objects ()
 		      GTK_SIGNAL_FUNC (on_matchbox_entry_changed), NULL);
 			  
   label = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.9);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
   tstr = g_strdup_printf ("<b>%s</b>", _("Icon Size"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
@@ -934,7 +948,7 @@ Theme_Build_Objects ()
   gtk_range_set_increments(GTK_RANGE(self.slIconSize),2.0,4.0);
   
   label = gtk_label_new(NULL);
-  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.9);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
   tstr = g_strdup_printf ("<b>%s</b>", _("Toolbar Icon Size"));
   gtk_label_set_markup (GTK_LABEL (label), tstr);
   g_free (tstr);
@@ -948,7 +962,21 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   gtk_range_set_value(GTK_RANGE(self.slToolbarSize),2.0);  
   gtk_range_set_increments(GTK_RANGE(self.slToolbarSize),1.0,1.0);
- /*---------------------------------------------*/
+  
+  label = gtk_label_new(NULL);
+  gtk_misc_set_alignment(GTK_MISC(label),0.0,0.1);
+  tstr = g_strdup_printf ("<b>%s</b>", _("Visual Performance"));
+  gtk_label_set_markup (GTK_LABEL (label), tstr);
+  g_free (tstr);
+  gtk_table_attach (GTK_TABLE (table), label, 0, 2, 6, 7,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+  self.cPerformance = gtk_check_button_new_with_label(_("Visual Performance"));
+  gtk_table_attach (GTK_TABLE (table), self.cPerformance, 0, 2, 7, 8,
+		    (GtkAttachOptions) (table_attach_left_col_x),
+		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
+
+ /* Background tab */
 
   label = gtk_label_new (_("Background"));
   table = gtk_table_new (3, 2, FALSE);
@@ -1178,6 +1206,7 @@ Theme_Build_Objects ()
   gtk_widget_modify_style (self.demolabel2, astyle);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFS),(float)9.0);
   gtk_spin_button_set_value(GTK_SPIN_BUTTON(self.spFSApp),(float)9.0);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self.cDefault),TRUE);
   label = g_object_get_data (G_OBJECT (self.bFont), "label");
   gtk_label_set_text(GTK_LABEL(label),"Sans");	
   label = g_object_get_data (G_OBJECT (self.bFontApp), "label");
