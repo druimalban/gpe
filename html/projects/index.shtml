@@ -42,6 +42,11 @@ Utilities:<br>
 	<LI> <I><A HREF="GPE-login.shtml">Multi-user login</A></I>
 	<LI> <I><A HREF="bluez-pin.shtml">Bluetooth PIN manager</A></I>
 </UL>
+
+Libraries:<br>
+<UL>
+	<LI> <I><A HREF="libgpewidget.shtml">libgpewidget</A></I>
+</UL>
 </p>
 
 <p>
