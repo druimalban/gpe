@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libgpevtype
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.3
+VERSION = 0.4
 
 LINGUAS = 
 
@@ -10,7 +10,7 @@ MEMBERS = tag-db vcard vtodo vevent
 
 SONAME = $(PACKAGE).so.0
 
-PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(shell pkg-config --cflags glib-2.0) $(shell pkg-config --cflags mimedir-1.0) -DG_DISABLE_DEPRECATED
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(shell pkg-config --cflags glib-2.0) $(shell pkg-config --cflags mimedir-1.0) -DG_DISABLE_DEPRECATED -fPIC
 PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(shell pkg-config --libs glib-2.0) $(shell pkg-config --libs mimedir-1.0)
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\"
 
