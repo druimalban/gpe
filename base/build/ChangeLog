@@ -1,3 +1,8 @@
+2004-02-08  Phil Blundell  <pb@nexus.co.uk>
+
+	* Makefile.dpkg_ipkg (GPECFLAGS, GPELIBS): Only define if not
+	IN_LIBGPEWIDGET.
+
 2003-10-19  Philip Blundell  <philb@gnu.org>
 
 	* Makefile.dpkg_ipkg (dist): Don't exclude "familiar" directory

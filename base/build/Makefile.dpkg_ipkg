@@ -18,8 +18,10 @@ else
 LIBGPEWIDGET_PC = libgpewidget
 endif
 
+ifeq ($(IN_LIBGPEWIDGET),)
 GPECFLAGS = $(shell $(PC_EXTRA) pkg-config --cflags $(LIBGPEWIDGET_PC))
 GPELIBS = $(shell $(PC_EXTRA) pkg-config --libs $(LIBGPEWIDGET_PC))
+endif
 
 GTKCFLAGS = $(shell pkg-config --cflags gtk+-2.0)
 GTKLIBS = $(shell pkg-config --libs gtk+-2.0)
