@@ -1,3 +1,9 @@
+
+2004-09-17  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* ipaq-sleep.h: Hide default user configfile, most users won't
+                        know what to do with it.
+
 2004-08-18  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Version 0.8 released.

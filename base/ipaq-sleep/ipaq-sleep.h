@@ -1,6 +1,6 @@
 #define MAX_IRQS 255
 
-#define DEFAULTSUSER "/ipaq-sleep.conf"
+#define DEFAULTSUSER "/.ipaq-sleep.conf"
 #define DEFAULTS "/etc/ipaq-sleep.conf"
 #define INTERRUPTS "/proc/interrupts"
 #define LOADAVG "/proc/loadavg"
@@ -70,4 +70,3 @@ const char *sleep_command="/usr/bin/apm --suspend";
    * #define BATTERY_FLAGS_CRITICAL  (0x4)
    * #define BATTERY_FLAGS_ABSENT    (0x80)
    */
-                  
