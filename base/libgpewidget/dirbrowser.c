@@ -21,6 +21,7 @@
 #include <dirent.h>
 #include <stdio.h>
 #include <libintl.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 
@@ -157,7 +158,7 @@ ok_clicked (GObject *obj, GObject *window)
       handler (path);
       g_free (path);
       
-      gtk_widget_destroy (window);
+      gtk_widget_destroy (GTK_WIDGET (window));
       return;
     }
 
@@ -167,7 +168,7 @@ ok_clicked (GObject *obj, GObject *window)
 static void
 cancel_clicked (GObject *obj, GObject *window)
 {
-  gtk_widget_destroy (window);
+  gtk_widget_destroy (GTK_WIDGET (window));
 }
 
 GtkWidget *

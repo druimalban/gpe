@@ -1,5 +1,11 @@
 2003-02-15  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (BINPACKAGE): Define.
+
+	* dirbrowser.c: Fix warnings.
+
+2003-02-15  Philip Blundell  <philb@gnu.org>
+
 	* Version 0.47 released.
 	
 2003-02-15  Philip Blundell  <philb@gnu.org>
