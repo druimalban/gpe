@@ -116,7 +116,10 @@ gint continue_sound (gpointer data)
       else
         {
           if (time >= playlength)
-            gtk_exit (0);
+	    {
+	      stop_sound ();
+              gtk_exit (0);
+            }
           gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, playlength);
         }
     }
@@ -386,15 +389,14 @@ main(int argc, char *argv[])
       filename = NULL;
     }
 
+  if (gpe_application_init (&argc, &argv) == FALSE)
+    {
+      exit (1);
+    }
+
   if (filename)
     {
       start_sound ();
-    }
-
-  if (gpe_application_init (&argc, &argv) == FALSE)
-    {
-      stop_sound ();
-      exit (1);
     }
 
   if (filename == NULL)
