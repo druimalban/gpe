@@ -42,9 +42,6 @@ int main(int argc, char **argv)
 	
 	gtk_widget_show_all(window.toplevel);
 	
-	/* transparency hack, force redraw */
-	gtk_widget_queue_draw(calendar.scroll->draw);
-	
 	gtk_main();
 
 	exit(0);
@@ -76,12 +73,15 @@ static gboolean resize_callback(GtkWidget *widget, GdkEventConfigure *event,
 
 	rmap = GetRootPixmap(GDK_DISPLAY());
 
+	g_print("ROOT PIXMAP: %ld\n", rmap);
+	
 	if (rmap != None) {
-		Pixmap pmap;
-		pmap = CutWinPixmap(GDK_DISPLAY(),
-		GDK_WINDOW_XWINDOW(widget->window), rmap,
-		GDK_GC_XGC(widget->style->black_gc));
+		Pixmap pmap = CutWinPixmap(GDK_DISPLAY(),
+		                    GDK_WINDOW_XWINDOW(widget->window), rmap,
+		                    GDK_GC_XGC(widget->style->black_gc));
 
+		g_print("PIXMAP: %ld\n", pmap);
+		
 		if (pmap != None) {
 			pix = gdk_pixmap_foreign_new(pmap);
 			widget->style->bg_pixmap[GTK_STATE_NORMAL] = pix;
@@ -93,6 +93,9 @@ static gboolean resize_callback(GtkWidget *widget, GdkEventConfigure *event,
 		}
 	}
 
+	gtk_widget_queue_draw(calendar.scroll->draw);
+	gtk_widget_queue_draw(calendar.toplevel);
+	
 	return FALSE;
 }
 
