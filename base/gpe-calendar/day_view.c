@@ -65,7 +65,7 @@ day_view_update ()
   time_t start, end;
   event_t ev;
   event_details_t evd;
-  struct tm tm;
+  struct tm tm_start, tm_end;
   char buf[10];
   gchar *line_info[2];
   GSList *day_events[24];
@@ -104,15 +104,18 @@ day_view_update ()
       GSList *iter;
       int found=0;
       
-      localtime_r (&viewtime, &tm);
-      tm.tm_hour = hour;
-      tm.tm_min = 0;
-      tm.tm_sec = 0;
-      start=mktime (&tm);
-      tm.tm_hour++;
-      end=mktime (&tm);
+      localtime_r (&viewtime, &tm_start);
+      tm_start.tm_hour = hour;
+      tm_start.tm_min = 0;
+      tm_start.tm_sec = 0;
+      start=mktime (&tm_start);
+      localtime_r (&viewtime, &tm_end);
+      tm_end.tm_hour = hour+1;
+      tm_end.tm_min = 0;
+      tm_end.tm_sec = 0;
+      end=mktime (&tm_end);
       
-      day_events[hour] = event_db_list_for_period (start, end);
+      day_events[hour] = event_db_list_for_period (start, end-1);
       
       for (iter = day_events[hour]; iter; iter = iter->next)
 	{
@@ -121,7 +124,7 @@ day_view_update ()
 	  evd = event_db_get_details (ev);
 
           line_info[1]=evd->description;
-          strftime (buf, sizeof (buf), "%l:%M%p", &tm);
+          strftime (buf, sizeof (buf), "%l:%M%p", &tm_start);
           line_info[0]=buf;
       
           gtk_clist_append(GTK_CLIST(day_list), line_info);
@@ -135,7 +138,7 @@ day_view_update ()
        if (!found) {
        
 	  line_info[1]=NULL;
-          strftime (buf, sizeof (buf), "%l:%M%p", &tm);
+          strftime (buf, sizeof (buf), "%l:%M%p", &tm_start);
           line_info[0]=buf;
       
           gtk_clist_append(GTK_CLIST(day_list), line_info);

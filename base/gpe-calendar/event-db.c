@@ -232,7 +232,7 @@ event_db_add (event_t ev)
   return TRUE;
 }
 
-/* Remove an event from both the in-memory list and the SQL database */
+/* Remove an event from both the in-memory list and the SQL database from ev pointer */
 gboolean
 event_db_remove (event_t ev)
 {
@@ -241,6 +241,43 @@ event_db_remove (event_t ev)
 
   sqlite_exec_printf (sqliteh, "delete from events where uid=%d", 
 		      NULL, NULL, NULL, ev->uid);
+
+  return TRUE;
+}
+
+/* Remove an event from both the in-memory list and the SQL database from uid  */
+gboolean
+event_db_remove_by_uid (gint uid)
+{
+  
+  GSList *iter;
+  
+  for (iter = single_events; iter; iter = g_slist_next (iter))
+    {
+      event_t ev = iter->data;
+      assert (ev->recur.type == RECUR_NONE);
+
+      if (ev->uid == uid) {
+	  event_db_remove_internal (ev);    
+	  break;
+      }
+
+    }
+
+  for (iter = recurring_events; iter; iter = g_slist_next (iter))
+    {
+      event_t ev = iter->data;
+      assert (ev->recur.type != RECUR_NONE);
+
+      if (ev->uid == uid) {
+	  event_db_remove_internal (ev);    
+	  break;
+      }
+      
+    }
+    
+  sqlite_exec_printf (sqliteh, "delete from events where uid=%d", 
+		      NULL, NULL, NULL, uid);
 
   return TRUE;
 }

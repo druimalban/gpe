@@ -217,10 +217,10 @@ year_view_update (void)
       if (l)
 	{
 	  g_slist_free (l);
-	  day_event_bits[i / sizeof(unsigned int)] |= 1 << (i % sizeof (unsigned int));
+	  day_event_bits[(i-1) / sizeof(unsigned int)] |= 1 << ((i-1) % sizeof (unsigned int));
 	}
       else
-	day_event_bits[i / sizeof(unsigned int)] &= ~(1 << (i % sizeof (unsigned int)));
+	day_event_bits[(i-1) / sizeof(unsigned int)] &= ~(1 << ((i-1) % sizeof (unsigned int)));
     }
 
   gtk_widget_draw (g_draw, NULL);
@@ -241,7 +241,10 @@ year_view(void)
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   gtk_drawing_area_size (GTK_DRAWING_AREA (draw), 240, 14 * 20);
   gtk_signal_connect (GTK_OBJECT (draw),
 		      "expose_event",
@@ -252,9 +255,10 @@ year_view(void)
 		     GTK_SIGNAL_FUNC (changed_callback), draw);
 
   gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), draw, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW(scrolled_window), draw);
+  
+  gtk_box_pack_start (GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX(vbox), hbox, FALSE, FALSE, 0);
   gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
 		       (gpointer) year_view_update);
 

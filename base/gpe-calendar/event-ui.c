@@ -25,6 +25,8 @@
 
 struct edit_state
 {
+  gint old_ev_uid;
+  gboolean old_alarm;
   GtkWidget *deletebutton;
 
   GtkWidget *startdate, *enddate;
@@ -162,16 +164,15 @@ schedule_alarm(event_t ev)
 }
 
 static void
-unschedule_alarm(event_t ev)
+unschedule_alarm(gint uid)
 {
   char uschedulerm[30];
   
-  if(ev->alarm!=-1) {
-    sprintf(uschedulerm,"/usr/bin/uschedulerm %d\n", ev->uid);
-    system(uschedulerm);
-    sprintf(uschedulerm,"/usr/bin/uschedulerm -c %d\n", ev->uid);
-    system(uschedulerm);
-  }
+  sprintf(uschedulerm,"/usr/bin/uschedulerm %d\n", uid);
+  system(uschedulerm);
+  sprintf(uschedulerm,"/usr/bin/uschedulerm -c %d\n", uid);
+  system(uschedulerm);
+  
 }
 
 static void
@@ -179,8 +180,8 @@ click_delete(GtkWidget *widget, event_t ev)
 {
   GtkWidget *d=gtk_widget_get_toplevel(widget);
   
-  event_db_remove (ev);
-  unschedule_alarm(ev);
+  event_db_remove(ev);
+  if(ev->alarm!=-1) unschedule_alarm(ev->uid);
   
   update_current_view ();
   
@@ -193,7 +194,7 @@ click_ok(GtkWidget *widget,
 	 GtkWidget *d)
 {
   struct edit_state *s = gtk_object_get_data (GTK_OBJECT (d), "edit_state");
-  event_t ev = event_db_new ();
+  event_t ev;
   event_details_t ev_d;
   struct tm tm, tm2;
   struct tm tm_start, tm_end;
@@ -204,6 +205,12 @@ click_ok(GtkWidget *widget,
 						    (s->endtime)->entry),
 				      0, -1);
 
+  if (s->old_ev_uid!=-1) {
+	  if (s->old_alarm) unschedule_alarm(s->old_ev_uid);
+	  event_db_remove_by_uid(s->old_ev_uid);
+  }
+  
+  ev = event_db_new ();
   ev_d = event_db_alloc_details (ev);
   ev_d->description = gtk_editable_get_chars (GTK_EDITABLE (s->text), 
 						     0, -1);
@@ -249,6 +256,7 @@ click_ok(GtkWidget *widget,
   else if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (s->radiobuttonyearly))) 
   	ev->recur.type=RECUR_YEARLY;
   
+  tm.tm_hour=tm.tm_hour-1;
   ev->start = mktime (&tm);
 
   localtime_r (&ev->start, &tm2);
@@ -642,8 +650,9 @@ edit_event_window(event_t ev)
 			    labeleventpage);
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxalarm,
 			    labelalarmpage);
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, 
-			    labelrecurpage);
+  /* KEEP RECURRENCE PAGE OUT UNTIL WE ACTUALLY SUPPORT IT BETTER */
+  /*gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vboxrepeattop, 
+			    labelrecurpage);*/
 
   gtk_widget_grab_focus (text);
 
@@ -694,6 +703,8 @@ new_event(time_t t, guint timesel, event_t ev)
 						  "edit_state");
       if (ev==NULL) {
 	      
+	      s->old_ev_uid=-1;
+	      s->old_alarm=FALSE;
 	      gtk_widget_set_sensitive (s->deletebutton, FALSE);
 
 	      localtime_r (&t, &tm);
@@ -711,6 +722,7 @@ new_event(time_t t, guint timesel, event_t ev)
       
       else {
      
+	      s->old_ev_uid=ev->uid;
 	      gtk_widget_set_sensitive (s->deletebutton, TRUE);
 	      evd=event_db_get_details (ev);
               gtk_text_insert (GTK_TEXT (s->text), NULL, NULL, NULL, evd->description, -1);
@@ -730,11 +742,12 @@ new_event(time_t t, guint timesel, event_t ev)
 	      
 	      if(ev->alarm!=-1) {
 		      
+	        s->old_alarm=TRUE;
 	        gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (s->alarmbutton), TRUE);
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(s->alarmspin), ev->alarm);
 		
 	      }
-  
+  	      else s->old_alarm=FALSE;
   
 	      switch(ev->recur.type)
 	      	{

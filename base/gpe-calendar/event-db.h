@@ -53,6 +53,7 @@ extern gboolean event_db_stop (void);
 
 extern gboolean event_db_add (event_t);
 extern gboolean event_db_remove (event_t);
+extern gboolean event_db_remove_by_uid (gint);
 
 extern event_t event_db_new (void);
 extern void event_db_destroy (event_t);
