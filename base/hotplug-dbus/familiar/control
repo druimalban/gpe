@@ -1,5 +1,6 @@
 Package: hotplug-dbus
 Version: VERSION
+Source: SOURCE
 Architecture: all
 Section: base
 Priority: optional

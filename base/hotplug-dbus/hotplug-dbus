@@ -18,6 +18,9 @@ case $1 in
 net)
 	invoke_dbus net $ACTION $INTERFACE
 	;;
+bluetooth)
+	invoke_dbus bluetooth $ACTION $DEVICE
+	;;
 *)
 	invoke_dbus $*
 	;;
