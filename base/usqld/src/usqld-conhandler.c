@@ -16,6 +16,11 @@
 #include "usqld-protocol.h"
 #include <error.h>
 
+#define FILENAME_MAX 512
+
+/*
+  configuration structure for a thread
+ */
 typedef struct{
   int client_fd;
   sqlite * db;
@@ -26,6 +31,7 @@ typedef struct{
 /*
   checks the incoming stream to see if a packet header is there
   return the the start (i.e. the type) of the incomming packet
+  used to deal with an interrupt send during a packet transmit
  */
 unsigned int usqld_peek_next_packet(int fd){
   unsigned char header[4];
@@ -35,6 +41,9 @@ unsigned int usqld_peek_next_packet(int fd){
   }
 }
 
+/*
+  implements the connection request.
+ */
 int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
   char * database = NULL;
   char * version = NULL;
@@ -66,9 +75,8 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
     goto connect_send_reply;
   }
 
-  strncpy(fn_buf,tc->config->db_base_dir,512);
-  strncat(fn_buf,database,512);
-
+  strncpy(fn_buf,tc->config->db_base_dir,FILENAME_MAX);
+  strncat(fn_buf,database,FILENAME_MAX);
 
   if(NULL==(tc->db=sqlite_open(fn_buf,0644,&errmsg))){
     reply = usqld_error_packet(SQLITE_CANTOPEN,errmsg);
@@ -87,30 +95,33 @@ int  usqld_do_connect(usqld_tc * tc,usqld_packet * p){
   return rv; 
 }
 
+/*
+  structure passed to the row-send
+ 
+ */
 typedef struct{
   usqld_tc * tc;
   int headsent;
   int rv;
   int terminate_now;
+  int interrupted;
 }usqld_row_context;
 
 int usqld_send_row(usqld_row_context * rc,
 		   int nfields,
 		   char ** fields,
 		   char ** heads){
-
+  
   XDR_tree *rowpacket = NULL;
   XDR_tree_compound *field_elems;
   int i;
   int rv;
-
-
-
-  if(PICKLE_INTERRUPT=usqld_peek_next_packet(rc->tc->client_fd){
+  
+  if(PICKLE_INTERRUPT=usqld_peek_next_packet(rc->tc->client_fd)){
     rc->interrupted = 1;
     return 1;
   }
-
+  
 #ifdef VERBOSE_DEBUG
   for(i = 0;i<nfiels;i++){
     fprintf(stderr,"\t%s,",heads[i]);
@@ -119,10 +130,10 @@ int usqld_send_row(usqld_row_context * rc,
   fprintf(stderr,"(");
   for(i = 0;i<nfields;i++){
     fprintf(stderr,"\t%s,",fields[i]);
-  }
+     }
   fprintf(stderr,")\n");
 #endif
-
+     
   if(!rc->headsent){
     XDR_tree  * srpacket = NULL;
     XDR_tree_compound  *head_elems = NULL;
@@ -157,18 +168,21 @@ int usqld_send_row(usqld_row_context * rc,
   }
   rowpacket = XDR_tree_new_union(PICKLE_ROW,
 				 (XDR_tree*)field_elems);
-
+  
   if(USQLD_OK!=(rv=usqld_send_packet(rc->tc->client_fd,
 				     rowpacket))){
-      XDR_tree_free(rowpacket);
-      rc->rv = rv;
-      return 1;
-      
+    XDR_tree_free(rowpacket);
+    rc->rv = rv;
+    return 1;
+    
   }
   XDR_tree_free(rowpacket);
   return 0;  
 }
 
+/*
+  implements a the response to a query request
+ */
 int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
   XDR_tree * reply = NULL;
   int rv;
@@ -190,18 +204,20 @@ int usqld_do_query(usqld_tc * tc, usqld_packet * packet){
 	    XDR_t_get_comp_elem(XDR_TREE_COMPOUND(packet),1)));
 
   fprintf(stderr,"About to try and exec the sql: \"%s\"\n",sql);
-  
+ 
   if(SQLITE_OK!=(rv=sqlite_exec(tc->db,
 				sql,
 				(sqlite_callback)usqld_send_row,
 				(void*)&rc,
 				&errmsg))){
-      
     
-
-    if(rc.terminate_now)
+    
+    
+    if(rc.interrupted){
+      reply  = XDR_tree_new_union(PICKLE_INTERRUPTED,
+				  XDR_tree_new_void());
+    }else if(rc.terminate_now)
       goto query_send_reply; //fatal error
-    
     if(errmsg==NULL){
       reply = usqld_error_packet(rv,"Unknown sql error");
     }else{
@@ -241,6 +257,17 @@ void * usqld_conhandler_main(usqld_conhand_init  * init){
   
   while(USQLD_OK==(rv=usqld_recv_packet(tc.client_fd,&p))){
     switch(usqld_get_packet_type(p)){
+    case PICKLE_INTERRUPT:
+      {
+	//we could still have a interrupt after we have finished
+	//sending a query-result
+	//so we send an INTERRUPTED packet anway
+	XDR_tree  * out_p;
+	out_p = XDR_tree_new_union(PICKLE_INTERRUPTED,
+				   XDR_tree_new_void());
+	repsp_rv = usqld_send_packet(tc.client_fd,out_p);
+	XDR_tree_free(out_p);
+      }
     case PICKLE_CONNECT:
       resp_rv = usqld_do_connect(&tc,p);
       break;

@@ -21,6 +21,8 @@ struct {
   {"PICKLE_ROW", PICKLE_ROW},
   {"PICKLE_EOF", PICKLE_EOF},
   {"PICKLE_MAX", PICKLE_MAX},
+  {"PICKLE_INTERRUPT", PICKLE_INTERRUPT},
+  {"PICKLE_INTERRUPTED", PICKLE_INTERRUPTED},
   {NULL,0x0}
 };
 
@@ -60,7 +62,7 @@ XDR_schema * usqld_make_protocol(){
   XDR_schema * connect_elems[2];
   XDR_schema * err_elems[2];
   
-  XDR_union_discrim  elems[8];
+  XDR_union_discrim  elems[9];
   
   elems[0].t = eof_packet = XDR_schema_new_void();
   elems[0].d = PICKLE_EOF;
@@ -90,17 +92,20 @@ XDR_schema * usqld_make_protocol(){
   elems[7].t = XDR_schema_new_void();
   elems[7].d = PICKLE_OK;
   
-  protocol = XDR_schema_new_type_union(8,elems);   
+  elems[8].t = XDR_schema_new_void();
+  elems[8].d = PICKLE_INTERRUPT;
+
+  protocol = XDR_schema_new_type_union(9,elems);   
   
   return protocol;
 }
 
 /**
    returns an instance of the usqld protocol
-  we only bother to instantiate the protocol once per session
-  as it is read-only and can never be freed anyway.
-  this does rather assume pthreads...
- */
+   we only bother to instantiate the protocol once per session
+   as it is read-only and can never be freed anyway.
+   this does rather assume pthreads...
+*/
 XDR_schema * usqld_get_protocol(){
    assert(0==pthread_mutex_lock(&protocol_schema_lock));
    {  
@@ -151,7 +156,7 @@ int usqld_send_packet(int fd,XDR_tree* packet){
    XDR_tree_dump(packet);
 #endif
 
-  return XDR_serialize_elem(usqld_get_protocol(),packet,fd);
+   return XDR_serialize_elem(usqld_get_protocol(),packet,fd);
 }
 
 int usqld_get_packet_type(XDR_tree*packet){
