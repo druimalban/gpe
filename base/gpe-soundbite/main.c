@@ -122,15 +122,15 @@ gint continue_sound (gpointer data)
       if (recording)
         {
 	  struct statfs buf;
-	  int available_time;
+	  long available_time;
           gtk_progress_configure (GTK_PROGRESS(progress_bar), time, 0.0, time);
 	  if (statfs (filename, &buf) != 0)
 	    perror ("statfs");
           /* fprintf (stderr, "%ld KB remaining\n", buf.f_bavail * (buf.f_bsize >> 10)); */
-	  available_time = (int) ((double) (buf.f_bavail * buf.f_bsize)) / (1650.*2.);
+	  available_time = (long) (((double) (buf.f_bavail * buf.f_bsize)) / 1650.*2.);
 	  if (available_time < 7200)
 	    {
-	      gtk_label_set_text (GTK_LABEL(label), g_strdup_printf ("%s (%02d:%02d %s)", _("Recording"), available_time / 60, available_time % 60, _("available")));
+	      gtk_label_set_text (GTK_LABEL(label), g_strdup_printf ("%s (%02ld:%02ld %s)", _("Recording"), available_time / 60, available_time % 60, _("available")));
             }
         }
       else
@@ -312,6 +312,7 @@ on_cancel_button_clicked                (GtkButton       *button,
   stop_sound();
   if (recording)
     remove (filename);
+  fprintf (stderr, "cancelled\n");
   gtk_exit(0);
 }
 
@@ -320,6 +321,7 @@ on_ok_button_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
   stop_sound();
+  fprintf (stderr, "exiting\n");
   gtk_exit(0);
 }
 
