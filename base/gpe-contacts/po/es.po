@@ -1,0 +1,290 @@
+# Localización en castellano de gpe-contacts.
+# Copyright © 2004 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-contacts package.
+# J.Manrique <jsmanrique@asturlinux.org>, 2004.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-contacts 0.12\n"
+"POT-Creation-Date: 2003-03-30 15:59+0100\n"
+"PO-Revision-Date: 2004-06-18 16:00+0100\n"
+"Last-Translator: J.Manrique <jsmanrique@asturlinux.org>\n"
+"Language-Team: Spanish <es@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: db.c:103 db.c:136 editing.c:188 main.c:437
+msgid "Name"
+msgstr "Nombre"
+
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr "Teléfono"
+
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr "eMail"
+
+#: editing.c:170
+msgid "Edit Contact"
+msgstr "Editar contacto"
+
+#: editing.c:192
+msgid "more detailed name options"
+msgstr "opciones del nombre más detalladas"
+
+#: editing.c:194
+msgid "Summary"
+msgstr "Resumen"
+
+#: editing.c:200
+msgid "Birthday"
+msgstr "Cumpleaños"
+
+#: editing.c:206
+msgid "Image"
+msgstr "Imagen"
+
+#: editing.c:222
+msgid "Schedule"
+msgstr "Cita"
+
+#: editing.c:226
+msgid "automatic appointment"
+msgstr "cita automática"
+
+#: editing.c:235
+msgid "click to choose file"
+msgstr "pulsa para escoger archivo"
+
+#: editing.c:237 main.c:536
+msgid "Categories"
+msgstr "Categorias"
+
+#: editing.c:279
+msgid "Personal"
+msgstr "Personal"
+
+#: interface.c:44 main.c:538
+msgid "Setup"
+msgstr "Configuración"
+
+#: interface.c:56 main.c:143
+msgid "Detail panel"
+msgstr "Panel de detalles"
+
+#: interface.c:95 main.c:182
+msgid "NAME"
+msgstr "NOMBRE"
+
+#: interface.c:105 main.c:192
+msgid "Add"
+msgstr "Añadir"
+
+#: interface.c:113 main.c:200
+msgid "Remove"
+msgstr "Quitar"
+
+#: interface.c:141 main.c:230
+msgid "Data Field"
+msgstr "Campo de dato"
+
+#: interface.c:149 main.c:238
+msgid "Label"
+msgstr "Etiqueta"
+
+#: interface.c:157 main.c:246
+msgid "Pages"
+msgstr "Páginas"
+
+#: main.c:298
+msgid "All categories"
+msgstr "Todas las categorías"
+
+#: main.c:424
+msgid "Really delete this contact?"
+msgstr "¿Borrar este contacto realmente?"
+
+#: main.c:424 main.c:457 structure.c:179
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Delete"
+msgstr "Borrar"
+
+#: main.c:425 main.c:458 structure.c:180
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: main.c:437
+msgid "New Category"
+msgstr "Nueva categoría"
+
+#: main.c:457
+msgid "Really delete this category?"
+msgstr "¿Borrar esta categoría realmente?"
+
+#: main.c:487
+msgid "New category"
+msgstr "Nueva categoría"
+
+#: main.c:487
+msgid "Tap here to create a category."
+msgstr "Pulse aquí para crear una categoría."
+
+#: main.c:491
+msgid "Delete category"
+msgstr "Borrar categoría"
+
+#: main.c:491
+msgid "Tap here to delete the selected category."
+msgstr "Pulse aquí para borrar la categoría seleccionada."
+
+#: main.c:534
+msgid "Editing Layout"
+msgstr "Editar disposición"
+
+#: main.c:559
+msgid "Contacts: Configuration"
+msgstr "Contactos: Configuración"
+
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Contactos"
+
+#: main.c:808
+msgid "New contact"
+msgstr "Nuevo contacto"
+
+#: main.c:808
+msgid "Tap here to add a new contact."
+msgstr "Pulse aquí para añadir nuevo contacto."
+
+#: main.c:814
+msgid "Edit"
+msgstr "Editar"
+
+#: main.c:815
+msgid "Edit contact"
+msgstr "Editar contacto"
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr "Pulse aquí para editar el contacto seleccionado."
+
+#: main.c:819
+msgid "Delete contact"
+msgstr "Borrar contacto"
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr "Pulse aquí para borrar el contacto seleccionado."
+
+#: main.c:823
+msgid "Properties"
+msgstr "Propiedades"
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr "Pulse aquí para configurar el programa."
+
+#: main.c:835
+msgid "ABC"
+msgstr ""
+
+#: main.c:843
+msgid "DEF"
+msgstr ""
+
+#: main.c:850
+msgid "GHIJ"
+msgstr ""
+
+#: main.c:857
+msgid "KLMN"
+msgstr ""
+
+#: main.c:864
+msgid "OPQR"
+msgstr ""
+
+#: main.c:871
+msgid "STUV"
+msgstr ""
+
+#: main.c:878
+msgid "WXYZ"
+msgstr ""
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr "Contacto"
+
+#: main.c:901
+msgid "Find:"
+msgstr "Buscar:"
+
+#: main.c:907
+msgid "in"
+msgstr "en"
+
+#: structure.c:108 structure.c:238
+msgid "New page"
+msgstr "Página nueva"
+
+#: structure.c:108 structure.c:127 structure.c:152
+msgid "Title"
+msgstr "Título"
+
+#: structure.c:127
+msgid "New group"
+msgstr "Nuevo grupo"
+
+#: structure.c:139 structure.c:169
+msgid "No container selected"
+msgstr "No se seleccionó contenedor"
+
+#: structure.c:153
+msgid "Tag"
+msgstr "Etiqueta"
+
+#: structure.c:155
+msgid "New field"
+msgstr "Nuevo campo"
+
+#: structure.c:179
+msgid "Really delete this field?"
+msgstr "¿Borrar este campo realmente?"
+
+#: structure.c:237
+msgid "Page"
+msgstr "Página"
+
+#: structure.c:238
+msgid "Tap here to add a page."
+msgstr "Pulse aquí para añadir una página."
+
+#: structure.c:254
+msgid "Delete item"
+msgstr "Borrar elemento"
+
+#: structure.c:254
+msgid "Tap here to delete the selected item."
+msgstr "Pulse aquí para borrar el elemento seleccionado."
+
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "Fichero pixmap no encontrado: %s"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "Error cargando fichero pixmap: %s"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
+msgstr "GPE Contactos"

@@ -36,6 +36,7 @@ void tv_move_cursor (GtkTextView *textview,
 gboolean tv_focus_in (GtkWidget *widget,
                       GdkEventFocus *event,
                       gpointer user_data);
+void on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data);
 
 static void
 add_tag (gchar *tag, GtkWidget *w, GtkWidget *pw)
@@ -146,7 +147,7 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
         case ITEM_DATE:
         {
           GtkWidget *l = gtk_label_new (e->name);
-          GtkWidget *hbox, *esched, *datecombo;
+          GtkWidget *hbox, *cbsched, *datecombo, *cbnoyear;
           pop_singles (vbox, singles, pw);
           singles = NULL;
           
@@ -157,9 +158,14 @@ build_children (GtkWidget *vbox, GSList *children, GtkWidget *pw)
           datecombo = gtk_date_combo_new ();
           gtk_box_pack_start (GTK_BOX (hbox), datecombo, TRUE, TRUE, 0);
 
-          esched = gtk_check_button_new_with_label (_("Schedule"));
-          gtk_widget_set_sensitive (esched, FALSE);
-          gtk_box_pack_start (GTK_BOX (hbox), esched, TRUE, TRUE, 0);
+/*          cbsched = gtk_check_button_new_with_label (_("Schedule"));
+          gtk_widget_set_sensitive (cbsched, FALSE);
+          gtk_box_pack_start (GTK_BOX (hbox), cbsched, TRUE, TRUE, 0);
+*/          cbnoyear = gtk_check_button_new_with_label (_("no year"));
+          gtk_box_pack_start (GTK_BOX (hbox), cbnoyear, TRUE, TRUE, 0);
+          g_signal_connect (G_OBJECT (cbnoyear), "toggled",
+		    G_CALLBACK (on_unknown_year_toggled), datecombo);
+          g_object_set_data(G_OBJECT(datecombo),"cbnoyear",cbnoyear);
           gtk_box_pack_start (GTK_BOX (vbox), hbox, TRUE, TRUE, gpe_get_boxspacing());
           add_tag (e->tag, datecombo, pw);
         }
@@ -469,8 +475,16 @@ edit_person (struct person *p)
                   if (v->value)
                     {
                       guint year, month, day;
+                      GtkToggleButton *cbnoyear;
+                      
                       sscanf (v->value, "%04d%02d%02d", &year, &month, &day);
                       gtk_date_combo_set_date (GTK_DATE_COMBO (w), year, month, day);
+                      if (year == 0)
+                        {
+                          gtk_date_combo_ignore_year(GTK_DATE_COMBO(w),TRUE);
+                          cbnoyear = g_object_get_data(G_OBJECT(w),"cbnoyear");
+                          gtk_toggle_button_set_active(cbnoyear,TRUE);
+                        }
                     }
                   else
                     gtk_date_combo_clear (GTK_DATE_COMBO (w));
@@ -516,9 +530,13 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
           GtkDateCombo *c = GTK_DATE_COMBO (w);
           if (c->set)
             {
-               snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", 
-                 c->year, c->month, c->day);
-               buf[sizeof (buf) - 1] = 0;
+              if (c->ignore_year)
+                snprintf (buf, sizeof (buf) - 1, "0000%02d%02d", 
+                  c->month, c->day);
+              else
+                snprintf (buf, sizeof (buf) - 1, "%04d%02d%02d", 
+                  c->year, c->month, c->day);
+              buf[sizeof (buf) - 1] = 0;
               text = g_strdup(buf);
             }
           else
@@ -646,4 +664,12 @@ tv_focus_in (GtkWidget *widget,
   gtk_text_buffer_get_start_iter(buf,&iter);
   gtk_text_buffer_place_cursor(buf,&iter);
   return FALSE;
+}
+
+void
+on_unknown_year_toggled (GtkToggleButton *togglebutton, gpointer user_data)
+{
+  GtkDateCombo *cb = user_data;
+  
+  gtk_date_combo_ignore_year(cb, gtk_toggle_button_get_active(togglebutton));
 }

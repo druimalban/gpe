@@ -19,6 +19,7 @@
 #include <libdisplaymigration/displaymigration.h>
 #include <unistd.h>
 #include <locale.h>
+#include <time.h>
 #include <gdk/gdkkeysyms.h>
 
 #include <gpe/init.h>
@@ -295,13 +296,24 @@ show_details (struct person *p)
                 if (!strcmp(id->tag,"BIRTHDAY") && strlen(id->value)>=8) 
                   {
                     int year,month,day;
+                    struct tm tm;
+                    char buf[32];
+
+                    memset(&tm, 0, sizeof(tm));
                     sscanf(id->value,"%04d%02d%02d",&year,&month,&day);
+                    if (year)
+                      { 
+                        tm.tm_year = year - 1900;
+                        tm.tm_mon = month;
+                        tm.tm_mday = day;
+                        strftime(buf, sizeof(buf), "%x", &tm);
+                      }
+                    else 
+                      snprintf(buf,sizeof(buf),"%02d/%02d",month+1,day);
                     lleft = gtk_label_new(_("Birthday:"));
                     gtk_misc_set_alignment(GTK_MISC(lleft),0,0);
                     gtk_table_attach(table, lleft, 0, 1, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
-                    ts = g_strdup_printf("%04d-%02d-%02d",year,month+1,day);
-                    lright = gtk_label_new(ts);
-                    g_free(ts);
+                    lright = gtk_label_new(buf);
                     gtk_misc_set_alignment(GTK_MISC(lright),0,0);
                     gtk_table_attach(table, lright, 1, 2, i, i+1, GTK_FILL, GTK_FILL, 0, 0);
                     i++;
