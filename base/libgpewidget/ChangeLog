@@ -1,3 +1,7 @@
+2003-02-11  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.45 released.
+
 2003-02-02  Philip Blundell  <philb@gnu.org>
 
 	* what.c (gpe_what_init): Add missing underscore to property name.
