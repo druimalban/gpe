@@ -39,6 +39,7 @@ struct nsqlc
 
 #define TYPE_SQL	1
 #define TYPE_TIME	2
+#define TYPE_LAST_ID	3
 
 struct nsqlc_query_context
 {
@@ -227,7 +228,7 @@ read_response (struct nsqlc_query_context *q)
 	{
 	  if (q->type == TYPE_SQL)
 	    data_line (q, p + 1);
-	  else if (q->type == TYPE_TIME)
+	  else if (q->type == TYPE_TIME || q->type == TYPE_LAST_ID)
 	    time_line (q, p + 1);
 	}
       else if (*p == '!')
@@ -493,4 +494,29 @@ nsqlc_get_time (nsqlc *ctx, time_t *t, char **err)
     read_response (&query);
 					       
   return query.result;
+}
+
+int 
+nsqlc_last_insert_rowid (nsqlc *ctx)
+{
+  struct nsqlc_query_context query;
+  int i;
+
+  memset (&query, 0, sizeof (query));
+
+  query.ctx = ctx;
+  query.aborting = FALSE;
+  query.result = 0;
+  query.error = NULL;
+  query.type = TYPE_LAST_ID;
+  query.cb_data = &i;
+
+  ctx->busy = 1;
+
+  write_command (ctx, ".lastid");
+
+  while (ctx->busy)
+    read_response (&query);
+					       
+  return i;
 }
