@@ -25,4 +25,4 @@
 # Get the earth image from http://flatplanet.neurofractal.org/getmap.cgi?earthmap_hires.jpg
 # In images, run: 
 # xplanet -shade 100 -markerfile ../people.coord -output people.png -geometry 700x350 -font /usr/share/fonts/truetype/Verdana.ttf -fontsize 9 -image /opt/applications/earth_images/earthmap_hires.jpg
-# xplanet -shade 100 -markerfile ../people.coord -output people_e -geometry 600x300 -font /usr/share/fonts/truetype/Verdana.ttf -fontsize 9 -lat 052.00 -lon 000.00 -projection orthographic -radius 200 -image /opt/applications/earth_images/earthmap_hires.jpg
+# xplanet -shade 100 -markerfile ../people.coord -output people_eu.png -geometry 600x300 -font /usr/share/fonts/truetype/Verdana.ttf -fontsize 9 -lat 052.00 -lon 000.00 -projection orthographic -radius 200 -image /opt/applications/earth_images/earthmap_hires.jpg
