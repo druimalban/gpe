@@ -11,6 +11,7 @@
 #include <gtk/gtk.h>
 #include <libintl.h>
 #include <sys/types.h>
+#include <pwd.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -32,6 +33,7 @@
 #include <gpe/question.h>
 #include <gpe/gpe-iconlist.h>
 #include <gpe/dirbrowser.h>
+#include <gpe/spacing.h>
 
 #include "mime-sql.h"
 #include "mime-programs-sql.h"
@@ -135,18 +137,63 @@ static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 
 
 
-static void auth_callback 
-                    (gconstpointer in,
-					 gsize         in_size,
-					 gpointer      out,
-					 gsize         out_size,
-					 gpointer      callback_data)
+static void auth_callback (gconstpointer in,
+                           gsize         in_size,
+                           gpointer      out,
+                           gsize         out_size,
+                           gpointer      callback_data)
 {
-    const GnomeVFSModuleCallbackAuthenticationIn *q_in = in;
-    GnomeVFSModuleCallbackAuthenticationOut *q_out = out;
-    printf("URI: %s\n",q_in->uri);
-    q_out->username = NULL;
-    q_out->password = NULL;
+  const GnomeVFSModuleCallbackAuthenticationIn *q_in = in;
+  GnomeVFSModuleCallbackAuthenticationOut *q_out = out;
+  GtkWidget *dialog_window;
+  GtkWidget *table, *label, *entry_user, *entry_passwd;
+  gchar *label_text;
+  struct passwd *pwd = getpwuid(getuid());
+
+  printf("URI: %s\n",q_in->uri);
+  q_out->username = NULL;
+  q_out->password = NULL;
+	
+  label_text = g_strdup_printf ("<b>Enter credentials to access</b>\n%s", q_in->uri);
+
+  dialog_window = gtk_dialog_new_with_buttons ("Restricted Resource", 
+    GTK_WINDOW (window), GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
+    GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, 
+    GTK_STOCK_OK, GTK_RESPONSE_ACCEPT, NULL);
+  
+  table = gtk_table_new(3,2,FALSE);
+  gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
+  
+  label = gtk_label_new (NULL);
+  gtk_label_set_justify(GTK_LABEL(label),GTK_JUSTIFY_LEFT);
+  gtk_label_set_line_wrap(GTK_LABEL(label),TRUE);
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+  gtk_label_set_markup(GTK_LABEL(label),label_text);
+  g_free (label_text);
+
+  entry_user = gtk_entry_new ();
+  gtk_entry_set_text(GTK_ENTRY(entry_user),pwd->pw_name);
+  entry_passwd = gtk_entry_new ();
+  gtk_entry_set_visibility(GTK_ENTRY(entry_passwd),FALSE);
+
+  gtk_table_attach(GTK_TABLE(table),entry_user,1,2,1,2,GTK_FILL,GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),entry_passwd,1,2,2,3,GTK_FILL,GTK_FILL,0,0);
+  gtk_table_attach(GTK_TABLE(table),label,0,2,0,1,GTK_FILL,GTK_FILL,0,0);
+  label = gtk_label_new("Username");
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+  gtk_table_attach(GTK_TABLE(table),label,0,1,1,2,GTK_FILL,GTK_FILL,0,0);
+  label = gtk_label_new("Password");
+  gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
+  gtk_table_attach(GTK_TABLE(table),label,0,1,2,3,GTK_FILL,GTK_FILL,0,0);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog_window)->vbox),table);
+
+  gtk_widget_show_all (dialog_window);
+  if (gtk_dialog_run(GTK_DIALOG(dialog_window)) == GTK_RESPONSE_ACCEPT)
+  {
+	q_out->username = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry_user)));
+	q_out->password = g_strdup(gtk_entry_get_text(GTK_ENTRY(entry_passwd)));
+  }
+  gtk_widget_destroy(dialog_window);
 }
 
 
@@ -313,7 +360,7 @@ rename_file (GtkWidget *dialog_window, gint response_id)
       error = g_strdup ("Destination file already exists.");
       break;
     default:
-      error = g_strdup_printf ("Error code %d", result);
+      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
       break;
     }
 
@@ -356,7 +403,7 @@ move_file (gchar *directory)
       error = g_strdup ("Read only file system.");
       break;
     default:
-      error = g_strdup_printf ("Error code %d", result);
+      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
       break;
     }
 
