@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
-Depends: libgpewidget1 (>= 0.76), libdisplaymigration0, xst (>0.12), gpe-mixer
+Depends: libgpewidget1 (>= 0.76), libdisplaymigration0, xst (>0.12), gpe-icons (>= 0.23)
 Description: A set of configuration GUI
 Replaces: gpe-conf2
 Provides: gpe-conf2
