@@ -79,6 +79,8 @@ void 	gpe_iconlist_set_embolden	(GPEIconList * self,
 					gboolean yes);
 void 	gpe_iconlist_set_show_title	(GPEIconList * self,
 					gboolean yes);
+void 	gpe_iconlist_set_icon_xmargin	(GPEIconList * self,
+					guint margin);
 void 	gpe_iconlist_clear	(GPEIconList * self);
 void 	gpe_iconlist_set_icon_size	(GPEIconList * self,
 					guint size);

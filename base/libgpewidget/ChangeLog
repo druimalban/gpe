@@ -1,3 +1,9 @@
+2003-03-23  Luc Pionchon  <luc@handhelds.org>
+
+	* gpeiconlist.gob (set_icon_xmargin): new function.
+	(il_row_height): now checks if flag_show_title is set.
+	(il_col_width): now use icon_xmargin parameter. Uses only one margin each side.
+
 2003-03-23  Damien Tanner  <dctanner@dctanner>
 
 	* popup_menu.c (popup_menu_button_new_type_color): Returns GdkColor to callback.

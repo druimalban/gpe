@@ -35,14 +35,18 @@ requires 2.0.0
 #endif
 
 #define LABEL_YMARGIN	8
-#define LABEL_XMARGIN	8
+//#define LABEL_XMARGIN	8  replaced by private variable icon_xmargin
 
 #define COL_WIDTH 70 //luc: unused
 
 #define il_label_height(_x)	(GPE_ICONLIST (_x)->_priv->label_height)
 #define il_icon_size(_x)	(GPE_ICONLIST (_x)->_priv->icon_size)
-#define il_row_height(_x)	(il_icon_size (_x) + il_label_height (_x) + LABEL_YMARGIN)
-#define il_col_width(_x)	(il_icon_size (_x) + (3 * LABEL_XMARGIN))
+#define il_row_height(_x)	(il_icon_size (_x) \
+                           + ( ((GPE_ICONLIST (_x)->_priv)->flag_show_title) ? \
+                             (il_label_height (_x)):0 ) \
+                           + LABEL_YMARGIN              \
+                          )
+#define il_col_width(_x)	(il_icon_size (_x) + (2 * GPE_ICONLIST (_x)->_priv->icon_xmargin))
 
 struct ILIcon
 {
@@ -75,6 +79,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private gboolean flag_embolden = TRUE;
   private gboolean flag_show_title = TRUE;
 	private guint icon_size = 48;
+  private guint icon_xmargin = 12;//replaces LABEL_XMARGIN
 	private guint label_height = 0;
 
 /* Signals */
@@ -527,6 +532,11 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	public void set_show_title (self, gboolean yes)
 	{
 		self->_priv->flag_show_title = yes;
+	}
+
+	public void set_icon_xmargin (self, guint margin)
+	{
+		self->_priv->icon_xmargin = margin;
 	}
 
 	public void clear (self)
