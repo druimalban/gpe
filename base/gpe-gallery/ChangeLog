@@ -1,5 +1,6 @@
 2004-09-07  Florian Boor  <florian.boor@kernelconcepts.de>
 
+    * Released Version 0.95
     * main.c: Added scrollbars if necessary.
     * main.c: Fixed several displaying issues.
     * Makefile: V 0.95
