@@ -36,7 +36,7 @@ $(PROG): $(OBJS)
 $(OBJS): %.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -c $< -o $@
 
-install: all
+install-program: all
 	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	install -D $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
 	install -d $(DESTDIR)/etc/X11/Xsession.d
@@ -56,4 +56,5 @@ old-ipkg:
 	chown -R root.root familiar/dist
 	ipkg-build familiar/dist
 
+include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
