@@ -1,1 +1,1 @@
-x-window-manager 
+exec x-window-manager 
