@@ -5,6 +5,7 @@ CVSBUILD = yes
 VERSION = 0.43
 DEBUG = no
 
+#FIXME: add: nl ru sr sk sv wa
 LINGUAS = de id pt zh_TW fr ro cs
 
 CPPFLAGS += $(STANDARD_CPPFLAGS)
