@@ -1,5 +1,6 @@
 2004-10-07	Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Released Version 0.45
     * Fixed sysfs interface to find the correct interface.
 
 2004-10-07	Florian Boor <florian.boor@kernelconcepts.de>
