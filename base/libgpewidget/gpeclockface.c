@@ -437,6 +437,50 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 }
 
 static void
+gpe_clock_face_unprepare_xrender (GtkWidget *widget)
+{
+  GpeClockFace *clock = GPE_CLOCK_FACE (widget);
+
+  if (clock->can_render)
+    {
+      XftDrawDestroy (clock->draw);
+      
+      clock->image_pict = 0;
+      clock->src_pict = 0;
+      clock->draw = NULL;
+    }
+      
+  if (clock->backing_gc)
+    {
+      g_object_unref (clock->backing_gc);
+      clock->backing_gc = NULL;
+    }
+      
+  if (clock->backing_pixmap)
+    {
+      g_object_unref (clock->backing_pixmap);
+      clock->backing_pixmap = NULL;
+    }
+}
+
+static void
+gpe_clock_face_size_allocate (GtkWidget     *widget,
+			      GtkAllocation *allocation)
+{
+  widget->allocation = *allocation;
+
+  if (GTK_WIDGET_REALIZED (widget))
+    {
+      gdk_window_move_resize (widget->window,
+			      allocation->x, allocation->y,
+			      allocation->width, allocation->height);
+
+      gpe_clock_face_unprepare_xrender (widget);
+      gpe_clock_face_prepare_xrender (widget);
+    }
+}
+
+static void
 gpe_clock_face_realize (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
@@ -528,26 +572,7 @@ gpe_clock_face_unrealize (GtkWidget *widget)
   g_signal_handler_disconnect (clock->hour_adj, clock->hour_handler);
   g_signal_handler_disconnect (clock->minute_adj, clock->minute_handler);
 
-  if (clock->can_render)
-    {
-      XftDrawDestroy (clock->draw);
-
-      clock->image_pict = 0;
-      clock->src_pict = 0;
-      clock->draw = NULL;
-    }
-  
-  if (clock->backing_gc)
-    {
-      g_object_unref (clock->backing_gc);
-      clock->backing_gc = NULL;
-    }
-
-  if (clock->backing_pixmap)
-    {
-      g_object_unref (clock->backing_pixmap);
-      clock->backing_pixmap = NULL;
-    }
+  gpe_clock_face_unprepare_xrender (widget);
 
   if (GTK_WIDGET_CLASS (parent_class)->unrealize)
     (* GTK_WIDGET_CLASS (parent_class)->unrealize) (widget);
@@ -606,7 +631,7 @@ gpe_clock_face_class_init (GpeClockFaceClass * klass)
   widget_class->realize = gpe_clock_face_realize;
   widget_class->unrealize = gpe_clock_face_unrealize;
   widget_class->size_request = gpe_clock_face_size_request;
-  //  widget_class->size_allocate = gpe_clock_face_size_allocate;
+  widget_class->size_allocate = gpe_clock_face_size_allocate;
   widget_class->expose_event = gpe_clock_face_expose;
   widget_class->button_press_event = gpe_clock_face_button_press;
   widget_class->button_release_event = gpe_clock_face_button_release;

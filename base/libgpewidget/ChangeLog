@@ -1,3 +1,11 @@
+2003-08-22  Philip Blundell  <philb@gnu.org>
+
+	* gpeclockface.c (gpe_clock_face_unrealize): Move RENDER related
+	code to ...
+	(gpe_clock_face_unprepare_xrender): ... here.  New function.
+	(gpe_clock_face_size_allocate): New function.
+	(gpe_clock_face_class_init): Register above in method structure.
+
 2003-08-05  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (LINGUAS): Add nl.
