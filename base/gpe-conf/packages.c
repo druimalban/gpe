@@ -19,7 +19,6 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <stropts.h>
 #include <poll.h>
 
 #include <libintl.h>

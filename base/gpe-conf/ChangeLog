@@ -1,3 +1,7 @@
+2004-11-17	Florian Boor  	<florian.boor@kernelconcepts.de>
+	
+	* cardinfo.c, packages.c: Removed including unused header file.
+
 2004-11-11	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* soundctl.c: Fixed some more restore bugs.

@@ -30,7 +30,6 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/file.h>
-#include <stropts.h>
 #include <poll.h>
 #include <time.h>
 
