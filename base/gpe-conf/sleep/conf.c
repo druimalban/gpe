@@ -19,16 +19,6 @@ static confCfg *findCfg(ipaq_conf_t *ISconf, const char *name)
   return c;
 }
 
-static void addIRQ(ipaq_conf_t *c, int irq, char *desc)
-{
-  if(!(c->nIrq % CONF_BLOCK)) {
-    c->ilist = (irqCfg *)realloc(c->ilist, ((c->nIrq * CONF_BLOCK)+CONF_BLOCK)*sizeof(irqCfg));
-    memset(&c->ilist[c->nIrq], 0, CONF_BLOCK*sizeof(irqCfg));
-  }
-  c->ilist[c->nIrq].num = irq;
-  c->ilist[c->nIrq].desc = strdup(desc);
-  c->nIrq++;
-}
 
 static confCfg *addConfigOpt(ipaq_conf_t *c, const char *name)
 {
@@ -231,6 +221,8 @@ ipaq_conf_t *load_ISconf(const char *fname)
   fclose(fp);
   return conf;
 }
+
+
 ipaq_conf_t *default_ISconf()
 {
 	printf("Defaults are not implemented.\nPlease copy a valid ipaqsleep.conf to your home directory.\n");
@@ -238,35 +230,6 @@ ipaq_conf_t *default_ISconf()
 	return 0;
 }
 		
-void load_IRQs(ipaq_conf_t *conf, const char *fname)
-{
-  FILE 	*fp;
-  char	*c, *s, line[BUFSIZ], desc[64];
-  int	irq, junk;
-
-  fp = fopen(fname, "r");
-  if(!fp) { perror(fname); return; }
-  s = fgets(line, BUFSIZ, fp);
-  while (!feof(fp)) {
-    if(!strlen(line)) { s = fgets(line, BUFSIZ, fp); continue; }
-    irq = junk = 0; memset(desc, 0, sizeof(desc));
-    if((c = strchr(line, '\n')) != NULL) *c = (char)NULL;
-    if(sscanf(line, "%d: %d %s", &irq, &junk, desc) != 3) {
-      fprintf(stderr, "ERROR parsing IRQ entry [%s]\n", line);
-      s = fgets(line, BUFSIZ, fp); continue;
-    }
-    while(s && *s && *s != ':') s++; s++;	/* get past the irq: field */
-    while(s && *s && !isdigit(*s)) s++;
-    while(s && *s && isdigit(*s)) s++;		/* get past the num field */
-    while(s && *s && isspace(*s)) s++;
-    strcpy(desc, s);
-
-    addIRQ(conf, irq, desc);
-/*      fprintf(stderr, "added %d [%s]\n", irq, desc); */
-    s = fgets(line, BUFSIZ, fp);
- }
-  fclose(fp);
-}
 
 int save_ISconf(ipaq_conf_t *c, const char *fname)
 {

@@ -32,7 +32,6 @@
 #include "ipaqscreen.h"
 #include "unimplemented.h"
 #include "kbd.h"
-#include "keyboard.h"
 #include "network.h"
 #include "theme.h"
 #include "keyctl.h"
@@ -45,6 +44,7 @@
 #include "serial.h"
 #ifdef PACKAGETOOL		
 #include "packages.h"
+#include "keyboard.h"
 #endif
 #include "cardinfo.h"
 #include "tasks.h"
@@ -93,14 +93,12 @@ struct Applet applets[]=
 		"Screen" , "ipaqscreen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-ipaqscreen.png"},
     { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore ,
 		"vKeyboard" ,"kbd", "Virtual Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-kbd.png"},
-    { &Keyboard_Build_Objects, &Unimplemented_Free_Objects, &Keyboard_Save, &Keyboard_Restore ,
-		"Keyboard" ,"keyboard", "External Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-keyboard.png"},
     { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore ,
 		"Buttons" ,"keyctl", "Button Configuration",PREFIX "/share/pixmaps/gpe-config-keyctl.png"},
     { &Network_Build_Objects, &Network_Free_Objects, &Network_Save, &Network_Restore ,
 		"Network" ,"network","IP Addresses",PREFIX "/share/pixmaps/gpe-config-network.png"},
     { &Theme_Build_Objects, &Unimplemented_Free_Objects, &Theme_Save, &Theme_Restore ,
-		"Theme" ,"theme", "Appearance Settings",PREFIX "/share/pixmaps/gpe-config-theme.png"},
+		"Theme" ,"theme", "Look and Feel",PREFIX "/share/pixmaps/gpe-config-theme.png"},
     { &Sleep_Build_Objects, &Unimplemented_Free_Objects, &Sleep_Save, &Sleep_Restore ,
 		"Sleep" ,"sleep","Sleep Configuration",PREFIX "/share/pixmaps/gpe-config-sleep.png"},
     { &Ownerinfo_Build_Objects, &Ownerinfo_Free_Objects, &Ownerinfo_Save, &Ownerinfo_Restore,
@@ -118,6 +116,8 @@ struct Applet applets[]=
 #ifdef PACKAGETOOL		
     { &Packages_Build_Objects, &Packages_Free_Objects, &Unimplemented_Save, &Packages_Restore ,
 		"Packages" ,"packages","Add and Remove packages",PREFIX "/share/pixmaps/gpe-config-packages.png"},
+    { &Keyboard_Build_Objects, &Unimplemented_Free_Objects, &Keyboard_Save, &Keyboard_Restore ,
+		"Keyboard" ,"keyboard", "External Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-keyboard.png"},
 #endif		
     { &Unimplemented_Build_Objects, &Unimplemented_Free_Objects, &Unimplemented_Save, &Unimplemented_Restore ,
 		"Task nameserver" ,"task_nameserver","Task for changing nameserver", NULL}

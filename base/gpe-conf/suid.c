@@ -37,10 +37,10 @@
 #include "ipaqscreen/rotation.h"
 #ifdef PACKAGETOOL		
 #include "packages.h"
+#include "keyboard.h"
 #endif
 #include "serial.h"
 #include "cardinfo.h"
-#include "keyboard.h"
 #include "timeanddate.h"
 
 static GtkWidget *passwd_entry;
@@ -373,16 +373,11 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "CPIF") == 0)  // installs a new interfaces file
 				{
-#warning fixme system_printf
 					fscanf (in, "%100s", arg2);	// to forget soon...
-					bin = "/bin/cp";
-					system ("killall dhcpcd");
+					system ("/usr/bin/killall dhcpcd");
 					strcpy (arg1, "/tmp/interfaces");
-					strcpy (arg2,
-						"/etc/network/interfaces");
-					numarg = 2;
-					system_printf ("/bin/cp %s %s", arg1,
-						       arg2);
+					strcpy (arg2, "/etc/network/interfaces");
+					system_printf ("/bin/cp %s %s", arg1,arg2);
 					system_printf ("chmod 0644 %s", arg2);
 					system_printf ("/bin/rm -f %s", arg1);
 					system ("/etc/init.d/networking restart");
@@ -529,11 +524,13 @@ suidloop (int write, int read)
 						       pcmcia_tmpcfgfile);
 					}
 				}
+#ifdef PACKAGETOOL		
 				else if (strcmp (cmd, "KBDC") == 0)  // write a new keyboard config file
 				{
 					fscanf (in, "%255s", arg1);
 					write_keyboard_cfg (arg1);
 				}
+#endif				
 				else if (strcmp (cmd, "GAUA") == 0)  // change user access to gpe-conf
 				{
 					fscanf (in, "%100s", arg1);

@@ -21,13 +21,11 @@
 GtkWidget *sleep_idle_spin;
 GtkWidget *dim_spin;
 GtkWidget *sleep_cpu_spin;
-GtkWidget *sleep_choose_irq;
 GtkWidget *sleep_enable;
 GtkWidget *dim_enable;
 GtkWidget *sleep_apm;
 GtkWidget *sleep_cpu;
 GtkWidget *sleep_probe_irq;
-GtkWidget *irqList;
 
 extern GtkStyle *wstyle;
 GtkWidget*
@@ -141,7 +139,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_table_attach (GTK_TABLE (table1), frame6, 0, 1, 5, 6,
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
                     (GtkAttachOptions) (GTK_SHRINK | GTK_FILL), 0, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (frame6), 1);
 
   dim_adj = gtk_adjustment_new (blVal, 0, 255, 1, 5, 0);
   dim_scale = gtk_hscale_new (GTK_ADJUSTMENT (dim_adj));
@@ -205,14 +202,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
 
   gtk_tooltips_set_tip (tooltips, sleep_probe_irq, _("Check IRQ activity"), NULL);
 
-  sleep_choose_irq = gtk_button_new_with_label (_("Choose IRQs"));
-  gtk_widget_show (sleep_choose_irq);
-  gtk_table_attach (GTK_TABLE (table1), sleep_choose_irq, 2, 4, 9, 10,
-                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
-                    (GtkAttachOptions) (GTK_SHRINK), gpe_box_spacing, 0);
-					
-  gtk_container_set_border_width (GTK_CONTAINER (sleep_choose_irq), 1);
-  
   gtk_signal_connect (GTK_OBJECT (GPE_Config_Sleep), "delete_event",
                       GTK_SIGNAL_FUNC (gtk_main_quit),
                       NULL);
@@ -252,9 +241,6 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_signal_connect (GTK_OBJECT (sleep_cpu_spin), "focus_out_event",
                       GTK_SIGNAL_FUNC (on_sleep_cpu_spin_focus_out_event),
                       ISconf);
-  gtk_signal_connect (GTK_OBJECT (sleep_choose_irq), "clicked",
-                      GTK_SIGNAL_FUNC (irq_choose_but),
-                      ISconf);
   gtk_signal_connect (GTK_OBJECT (sleep_apm), "toggled",
                       GTK_SIGNAL_FUNC (on_sleep_apm_toggled),
                       ISconf);
@@ -270,83 +256,4 @@ create_GPE_Config_Sleep (ipaq_conf_t *ISconf)
   gtk_object_set_data (GTK_OBJECT (GPE_Config_Sleep), "tooltips", tooltips);
 
   return GPE_Config_Sleep;
-}
-
-GtkWidget*
-create_irq_win (ipaq_conf_t *ISconf)
-{
-  GtkWidget *irq_win;
-  GtkWidget *vbox3;
-  GtkWidget *scrolledwindow1;
-  GtkWidget *irq_tog;
-  GtkWidget *irq_des;
-  GtkWidget *irq_done;
-
-#if GTK_MAJOR_VERSION >= 2
-  irq_win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-#else
-  irq_win = gtk_window_new (GTK_WINDOW_DIALOG);
-#endif
-  
-  gtk_window_set_title (GTK_WINDOW (irq_win), "Select IRQs");
-  gtk_window_set_modal (GTK_WINDOW (irq_win), TRUE);
-  gtk_window_set_default_size (GTK_WINDOW (irq_win), 200, 150);
-  gtk_window_set_policy (GTK_WINDOW (irq_win), TRUE, TRUE, TRUE);
-
-  vbox3 = gtk_vbox_new (FALSE, 0);
-
-  gtk_widget_show (vbox3);
-  gtk_container_add (GTK_CONTAINER (irq_win), vbox3);
-
-  scrolledwindow1 = gtk_scrolled_window_new (NULL, NULL);
-
-  gtk_widget_show (scrolledwindow1);
-  gtk_box_pack_start (GTK_BOX (vbox3), scrolledwindow1, TRUE, TRUE, 0);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolledwindow1), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-
-  irqList = gtk_clist_new (2);
-
-  gtk_widget_show (irqList);
-  gtk_container_add (GTK_CONTAINER (scrolledwindow1), irqList);
-  GTK_WIDGET_UNSET_FLAGS (irqList, GTK_CAN_FOCUS);
-  gtk_clist_set_column_width (GTK_CLIST (irqList), 0, 34);
-  gtk_clist_set_column_width (GTK_CLIST (irqList), 1, 80);
-  gtk_clist_column_titles_show (GTK_CLIST (irqList));
-
-  irq_tog = gtk_label_new ("Active");
-
-  gtk_widget_show (irq_tog);
-  gtk_clist_set_column_widget (GTK_CLIST (irqList), 0, irq_tog);
-  gtk_label_set_justify (GTK_LABEL (irq_tog), GTK_JUSTIFY_LEFT);
-
-  irq_des = gtk_label_new ("Description");
-
-  gtk_widget_show (irq_des);
-  gtk_clist_set_column_widget (GTK_CLIST (irqList), 1, irq_des);
-  gtk_label_set_justify (GTK_LABEL (irq_des), GTK_JUSTIFY_LEFT);
-
-  irq_done = gtk_button_new_with_label ("Done");
-
-  gtk_widget_show (irq_done);
-  gtk_box_pack_start (GTK_BOX (vbox3), irq_done, FALSE, FALSE, 0);
-  gtk_container_set_border_width (GTK_CONTAINER (irq_done), 2);
-  GTK_WIDGET_UNSET_FLAGS (irq_done, GTK_CAN_FOCUS);
-
-  gtk_signal_connect (GTK_OBJECT (irq_win), "delete_event",
-                      GTK_SIGNAL_FUNC (gtk_widget_hide),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (irq_win), "destroy_event",
-                      GTK_SIGNAL_FUNC (gtk_widget_hide),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (irqList), "select_row",
-                      GTK_SIGNAL_FUNC (irq_select_row),
-                      ISconf);
-  gtk_signal_connect (GTK_OBJECT (irqList), "unselect_row",
-                      GTK_SIGNAL_FUNC (irq_select_row),
-                      ISconf);
-  gtk_signal_connect (GTK_OBJECT (irq_done), "clicked",
-                      GTK_SIGNAL_FUNC (irq_done_clicked),
-                      ISconf);
-
-  return irq_win;
 }

@@ -21,7 +21,6 @@
 extern GtkWidget *sleep_idle_spin;
 extern GtkWidget *dim_spin;
 extern GtkWidget *sleep_cpu_spin;
-extern GtkWidget *sleep_choose_irq;
 
 
 void
@@ -132,21 +131,6 @@ on_sleep_cpu_spin_changed (GtkEditable     *editable,
 
 
 void
-irq_choose_but (GtkButton       *button,
-		gpointer         user_data)
-{
-  ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  static GtkWidget *irqWin = NULL;
-
-  if(!irqWin) {
-    irqWin = create_irq_win(ISconf);
-    init_irq_list(irqWin, gtk_widget_get_parent_window(GTK_WIDGET(button)), ISconf);
-  }
-  gtk_widget_show_all(irqWin);
-}
-
-
-void
 on_sleep_apm_toggled (GtkToggleButton *togglebutton,
 		      gpointer         user_data)
 {
@@ -159,11 +143,8 @@ void
 on_sleep_probe_irq_toggled (GtkToggleButton *togglebutton,
 			    gpointer         user_data)
 {
-  GtkWidget	*irqProbe;
   ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  irqProbe = sleep_choose_irq;
   setConfigInt(ISconf, "probe_IRQs", gtk_toggle_button_get_active(togglebutton));
-  gtk_widget_set_sensitive(irqProbe, getConfigInt(ISconf, "probe_IRQs"));
 }
 
 
@@ -209,37 +190,6 @@ stop_button (GtkButton       *button,
   runProg(cmd);
 }
 
-void
-irq_done_clicked (GtkButton       *button,
-		  gpointer         user_data)
-{
-  gtk_widget_hide(gtk_widget_get_toplevel(GTK_WIDGET(button)));
-}
-
-void
-irq_select_row (GtkCList *clist, gint row, gint column,
-		GdkEvent *event, gpointer user_data)
-{
-  int	j, found;
-  int	nIrq, *irqL;
-
-  ipaq_conf_t	*ISconf = (ipaq_conf_t *)user_data;
-  if(column != 0) return;
-
-  irqL = getConfigIntL(ISconf, &nIrq, "IRQ"); found = FALSE;
-  for(j = 0; j < nIrq; j++)
-    if(ISconf->ilist[row].num == irqL[j]) { found = TRUE; break; }
-  free(irqL);
-
-  if(found) {	/* turn off */
-    gtk_clist_set_pixmap(clist, row, 0, get_box_pixmap(), get_box_bitmap());
-    delConfigInt(ISconf, "IRQ", ISconf->ilist[row].num);
-  }
-  else {
-    gtk_clist_set_pixmap(clist, row, 0, get_tick_pixmap(), get_tick_bitmap());
-    addConfigInt(ISconf, "IRQ", ISconf->ilist[row].num);
-  }
-}
 
 gboolean
 on_sleep_idle_spin_focus_out_event     (GtkWidget       *widget,

@@ -7,7 +7,7 @@ IPAQ_INCLUDES = -I/home/fuchs/ipaq/linux/include
 INSTALL = install
 PREFIX = /usr/
 DESTDIR = /
-PACKAGETOOL = yes
+PACKAGETOOL = no
 
 LINGUAS = pt ro de fr cs nl sv sk ru
 EXTRA_DESKTOPS = \
@@ -15,7 +15,6 @@ EXTRA_DESKTOPS = \
 	gpe-conf-cardinfo.desktop.in \
 	gpe-conf-ipaqscreen.desktop.in \
 	gpe-conf-kbd.desktop.in \
-	gpe-conf-keyboard.desktop.in \
 	gpe-conf-keyctl.desktop.in \
 	gpe-conf-login-setup.desktop.in \
 	gpe-conf-network.desktop.in \
@@ -81,7 +80,7 @@ MEMBERS += unimplemented
 MEMBERS += timeanddate
 MEMBERS += appmgr_setup ../gpe-appmgr/package 
 MEMBERS += ipaqscreen/main ipaqscreen/brightness  ipaqscreen/rotation ipaqscreen/calibrate ipaqscreen/callbacks ipaqscreen/xset 
-MEMBERS += kbd keyboard
+MEMBERS += kbd
 MEMBERS += network
 MEMBERS += theme
 MEMBERS += keyctl
@@ -107,7 +106,8 @@ MEMBERS_INFO += sysinfo
 
 ifeq ($(PACKAGETOOL),yes)
 EXTRA_DESKTOP += gpe-conf-packages.desktop.in 
-MEMBERS += packages
+EXTRA_DESKTOP += gpe-conf-keyboard.desktop.in
+MEMBERS += packages keyboard
 CFLAGS += -D PACKAGETOOL
 endif
 
@@ -195,7 +195,7 @@ install-program: all all-desktop
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
 
 clean:
-	rm -f $(PACKAGE) gpe-info $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o
+	rm -f $(PACKAGE) gpe-info $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o
 
 include $(BUILD)/Makefile.dpkg_ipkg
 include $(BUILD)/Makefile.translation

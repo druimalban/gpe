@@ -1,4 +1,10 @@
 2004-02-09	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* Makefile: Compile without package tool per default.
+	* suid.c: Some minor fixes.
+	* keyboard.c, main.c, Makefile: External keyboard tool switched with 
+		PACKAGETOOL switch, it depends on it.
+	* sleep/*: Removed obsolete IRQ setup stuff.
+	* main.c: Changed applet title. 
 	* theme.c: Changed some labels.
 
 2004-02-08	Florian Boor  	<florian.boor@kernelconcepts.de>
