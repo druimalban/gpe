@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <time.h>
+#include <inttypes.h>
 
 #include <openobex/obex.h>
 
@@ -174,4 +175,3 @@ int ircp_checkdir(const char *path, const char *dir, cd_flags flags)
 out:
 	return ret;
 }
-	

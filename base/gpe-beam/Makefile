@@ -1,5 +1,5 @@
 PACKAGE = gpe-beam
-VERSION = 0.2.1
+VERSION = 0.2.2
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -21,7 +21,7 @@ endif
 ifeq ($(DEBUG),yes)
 CFLAGS += -g -DDEBUG -DIRCP_DEBUG=9
 else
-CFLAGS += -Os -fomit-frame-pointer
+CFLAGS += -Os -fomit-frame-pointer -march=armv4 -mtune=strongarm
 endif
 
 CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DPACKAGE=\"$(PACKAGE)\" 
@@ -105,9 +105,9 @@ install-program: all
 	mkdir -p $(DESTDIR)/$(PREFIX)/bin
 	$(INSTALL) $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	$(INSTALL) irsw $(DESTDIR)$(PREFIX)/bin/
-#	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
-#	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
-#	$(INSTALL) vcard-import-file $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) vcard-export $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) vcard-import $(DESTDIR)$(PREFIX)/bin/
+	$(INSTALL) vcard-import-file $(DESTDIR)$(PREFIX)/bin/
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/*
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done

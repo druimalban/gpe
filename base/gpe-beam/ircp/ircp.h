@@ -1,6 +1,8 @@
 #ifndef IRCP_H
 #define IRCP_H
 
+#include <inttypes.h>
+
 #define ircp_return_if_fail(test)       do { if (!(test)) return; } while(0);
 #define ircp_return_val_if_fail(test, val)      do { if (!(test)) return val; } while(0);
 

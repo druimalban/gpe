@@ -1,5 +1,9 @@
 08/14/2003		Florian Boor <florian.boor@kernelconcepts.de>
-
+	
+	- Makefile updates: Tuning, installation of mimedir utils.
+	- New version: 0.2.2
+	- Added import facility for VCARD files.
+	- Some fixes to compile with older openobex libs.
 	- Fixed status label in GUI.
 
 07/30/2003		Florian Boor <florian.boor@kernelconcepts.de>

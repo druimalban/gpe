@@ -45,12 +45,14 @@
 
 #define _(x) gettext(x)
 
+#define IR_INBOX "/tmp"
+
 #define COMMAND_IR_ON  "/usr/bin/irsw on"
 #define COMMAND_IR_OFF  "/usr/bin/irsw off"
+#define COMMAND_VCARD_IMPORT "/usr/bin/vcard-import < cat " IR_INBOX "/%s"
 #define IR_DISCOVERY "/proc/net/irda/discovery"
 #define IR_DISCOVERY_STATUS "/proc/sys/net/irda/discovery"
 
-static char *IR_INBOX = "/tmp" ;
 
 struct gpe_icon my_icons[] = {
 	{"irda-on", "/usr/share/pixmaps/irda-on-16.png"},
@@ -108,7 +110,7 @@ bt_progress_dialog (gchar * text, GdkPixbuf * pixbuf)
 
 	gtk_container_add (GTK_CONTAINER (window), hbox);
 	lStatus = label;
-	
+
 	return window;
 }
 
@@ -117,11 +119,11 @@ void
 ircp_info_cb (int event, char *param)
 {
 	char *ts;
-	
+
 	if (lStatus == NULL)
 		return;
 
-	gdk_threads_enter();
+	gdk_threads_enter ();
 	switch (event)
 	{
 	case IRCP_EV_ERRMSG:
@@ -148,8 +150,9 @@ ircp_info_cb (int event, char *param)
 	case IRCP_EV_RECEIVING:
 		ts = g_strdup_printf ("%s: %s", _("Receiving"), param);
 		gtk_label_set_text (GTK_LABEL (lStatus), ts);
-		if (str_last_filename) free(str_last_filename);
-		str_last_filename = g_strdup(param);
+		if (str_last_filename)
+			free (str_last_filename);
+		str_last_filename = g_strdup (param);
 		free (ts);
 		break;
 	case IRCP_EV_LISTENING:
@@ -163,7 +166,7 @@ ircp_info_cb (int event, char *param)
 		gtk_label_set_text (GTK_LABEL (lStatus), _("Disconnecting"));
 		break;
 	}
-	gdk_threads_leave();
+	gdk_threads_leave ();
 }
 
 
@@ -295,58 +298,62 @@ parse_file (char *file, char *format, ...)
 
 
 static int
-irda_is_on()
+irda_is_on ()
 {
 	int result = FALSE;
-	parse_file(IR_DISCOVERY_STATUS,"%d",&result);
+	parse_file (IR_DISCOVERY_STATUS, "%d", &result);
 	return result;
 }
 
 
 static void
-exec_file_tx (char* filename)
+exec_file_tx (char *filename)
 {
 	char *ts;
-	
-	if (cli == NULL) return;
-	gdk_threads_enter();
-	gtk_window_present(GTK_WINDOW(dlgStatus));
-	gdk_threads_leave();
-	if(ircp_cli_connect(cli) >= 0) 
+
+	if (cli == NULL)
+		return;
+	gdk_threads_enter ();
+	gtk_window_present (GTK_WINDOW (dlgStatus));
+	gdk_threads_leave ();
+	if (ircp_cli_connect (cli) >= 0)
 	{
-		ircp_put(cli, filename);
-		ircp_cli_disconnect(cli);
-		gdk_threads_enter();
-		ts = g_strdup_printf("%s %s",_("Transmitted file"),filename);
+		ircp_put (cli, filename);
+		ircp_cli_disconnect (cli);
+		gdk_threads_enter ();
+		ts = g_strdup_printf ("%s %s", _("Transmitted file"),
+				      filename);
 		gtk_label_set_text (GTK_LABEL (lTStatus), ts);
-		free(ts);
-		gdk_threads_leave();
+		free (ts);
+		gdk_threads_leave ();
 	}
 	else
 	{
-		gdk_threads_enter();
-		ts = g_strdup_printf("%s %s",_("Could not transmit file"),filename);
+		gdk_threads_enter ();
+		ts = g_strdup_printf ("%s %s", _("Could not transmit file"),
+				      filename);
 		gtk_label_set_text (GTK_LABEL (lTStatus), ts);
-		free(ts);
-		gdk_threads_leave();
+		free (ts);
+		gdk_threads_leave ();
 	}
-	ircp_cli_close(cli);
+	ircp_cli_close (cli);
 	cli = NULL;
 
-	sleep(3);
-	gdk_threads_enter();
-	free(filename);
-	gtk_widget_destroy(dlgStatus);
+	sleep (3);
+	gdk_threads_enter ();
+	free (filename);
+	gtk_widget_destroy (dlgStatus);
 	lStatus = NULL;
-	gdk_threads_leave();
+	gdk_threads_leave ();
 }
 
 
-void 
-tx_file_select(char *filename, gpointer data)
+void
+tx_file_select (char *filename, gpointer data)
 {
 	scan_thread =
-		g_thread_create ((GThreadFunc) exec_file_tx, strdup(filename), FALSE, NULL);
+		g_thread_create ((GThreadFunc) exec_file_tx,
+				 strdup (filename), FALSE, NULL);
 
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start file transmit."));
@@ -354,20 +361,21 @@ tx_file_select(char *filename, gpointer data)
 
 
 void
-exec_file_abort()
+exec_file_abort ()
 {
-	gdk_threads_enter();
-	gtk_widget_destroy(dlgStatus);
+	gdk_threads_enter ();
+	gtk_widget_destroy (dlgStatus);
 	lStatus = NULL;
-	gdk_threads_leave();
+	gdk_threads_leave ();
 }
 
 
 void
-tx_file_cancel(gpointer data)
+tx_file_cancel (gpointer data)
 {
 	scan_thread =
-		g_thread_create ((GThreadFunc) exec_file_abort, NULL, FALSE, NULL);
+		g_thread_create ((GThreadFunc) exec_file_abort, NULL, FALSE,
+				 NULL);
 
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start file transmit."));
@@ -377,31 +385,94 @@ tx_file_cancel(gpointer data)
 static void
 do_send_file (void)
 {
-	if (!radio_is_on) radio_on();
-	
-	cli = ircp_cli_open(ircp_info_cb);
-	
+	if (!radio_is_on)
+		radio_on ();
+
+	cli = ircp_cli_open (ircp_info_cb);
+
 	gdk_threads_enter ();
-	dlgStatus = bt_progress_dialog (_("IR Receive and Transmit........."), gpe_find_icon("irda"));
-	gtk_widget_show_all(dlgStatus);
+	dlgStatus =
+		bt_progress_dialog (_("IR Receive and Transmit........."),
+				    gpe_find_icon ("irda"));
+	gtk_widget_show_all (dlgStatus);
 	gdk_threads_leave ();
-	
+
 	if (cli == NULL)
 	{
 		gdk_threads_enter ();
-		gtk_label_set_text (GTK_LABEL (lStatus), _("Error opening IR client."));
-		gtk_label_set_text (GTK_LABEL (lTStatus), _("Error opening IR client."));
+		gtk_label_set_text (GTK_LABEL (lStatus),
+				    _("Error opening IR client."));
+		gtk_label_set_text (GTK_LABEL (lTStatus),
+				    _("Error opening IR client."));
 		gdk_threads_leave ();
 	}
 	else
 	{
 		gdk_threads_enter ();
-		ask_user_a_file (getenv("HOME"), _("Select file to transmit"),
-		tx_file_select,
-		tx_file_cancel, NULL);
+		ask_user_a_file (getenv ("HOME"),
+				 _("Select file to transmit"), tx_file_select,
+				 tx_file_cancel, NULL);
 		gdk_threads_leave ();
-		printf("exit do send...\n");
+		printf ("exit do send...\n");
 	}
+}
+
+
+static void
+check_file_import (char *filename)
+{
+	GtkWidget *dlg;
+	char *imp;
+
+	/* ultra simple check for a vcf file */
+	if (strstr (filename, "vcf"))
+	{
+		dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
+					      GTK_DIALOG_DESTROY_WITH_PARENT,
+					      GTK_MESSAGE_QUESTION,
+					      GTK_BUTTONS_YES_NO,
+					      _
+					      ("The file %s looks like a VCARD, "
+					       "may i import it?"), filename);
+		if (gtk_dialog_run (GTK_DIALOG (dlg)) == GTK_RESPONSE_YES)
+		{
+			gtk_widget_destroy (dlg);
+			imp = g_strdup_printf
+				(COMMAND_VCARD_IMPORT, filename);
+			switch (system (imp))
+			{
+			case -1:
+				dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
+							      GTK_DIALOG_DESTROY_WITH_PARENT,
+							      GTK_MESSAGE_ERROR,
+							      GTK_BUTTONS_CLOSE,
+							      _
+							      ("Could not start import tool."));
+				break;
+			case 0:
+				dlg = gtk_message_dialog_new (GTK_WINDOW(control_window),
+							      GTK_DIALOG_DESTROY_WITH_PARENT,
+							      GTK_MESSAGE_INFO,
+							      GTK_BUTTONS_CLOSE,
+							      _
+							      ("VCARD was successfully imorted."));
+				break;
+			default:
+				dlg = gtk_message_dialog_new
+					(GTK_WINDOW(control_window),
+					 GTK_DIALOG_DESTROY_WITH_PARENT,
+					 GTK_MESSAGE_ERROR,
+					 GTK_BUTTONS_CLOSE,
+					 _("Import of VCARD failed."));
+				break;
+			}
+			gtk_dialog_run (GTK_DIALOG (dlg));
+			gtk_widget_destroy (dlg);
+			g_free (imp);
+		}
+
+	}
+
 }
 
 
@@ -409,8 +480,8 @@ static void
 send_file (void)
 {
 	scan_thread =
-		g_thread_create ((GThreadFunc) do_send_file, NULL, FALSE, NULL);
-
+		g_thread_create ((GThreadFunc)
+				 do_send_file, NULL, FALSE, NULL);
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start receiver."));
 }
@@ -421,21 +492,25 @@ do_receive_file (void)
 {
 	ircp_server_t *srv = NULL;
 	char *ts;
-	
-	if (!radio_is_on) radio_on();
-	
+	if (!radio_is_on)
+		radio_on ();
 	gdk_threads_enter ();
-	dlgStatus = bt_progress_dialog (_("IR Receive and Transmit......."), gpe_find_icon("irda"));
-	gtk_widget_show_all(dlgStatus);
-	gtk_window_present(GTK_WINDOW(dlgStatus));
+	dlgStatus =
+		bt_progress_dialog (_
+				    ("IR Receive and transmit control"),
+				    gpe_find_icon ("irda"));
+	gtk_widget_show_all (dlgStatus);
+	gtk_window_present (GTK_WINDOW (dlgStatus));
 	gdk_threads_leave ();
-
 	srv = ircp_srv_open (ircp_info_cb);
 	if (srv == NULL)
 	{
 		gdk_threads_enter ();
-		gtk_label_set_text (GTK_LABEL (lStatus), _("Error opening IR server."));
-		gtk_label_set_text (GTK_LABEL (lTStatus), _("Error opening IR server."));
+		gtk_label_set_text (GTK_LABEL
+				    (lStatus), _("Error opening IR server."));
+		gtk_label_set_text (GTK_LABEL
+				    (lTStatus),
+				    _("Error opening IR server."));
 		gdk_threads_leave ();
 	}
 	else
@@ -444,14 +519,18 @@ do_receive_file (void)
 		ircp_srv_close (srv);
 		if (str_last_filename)
 		{
-			ts = g_strdup_printf("%s %s",_("Received file"),str_last_filename);
+			ts = g_strdup_printf ("%s %s",
+					      _
+					      ("Received file"),
+					      str_last_filename);
 			gtk_label_set_text (GTK_LABEL (lTStatus), ts);
-			free(ts);
+			free (ts);
+			check_file_import (str_last_filename);
 		}
 	}
-	sleep(3);
+	sleep (3);
 	gdk_threads_enter ();
-	gtk_widget_destroy(dlgStatus);
+	gtk_widget_destroy (dlgStatus);
 	lStatus = NULL;
 	gdk_threads_leave ();
 }
@@ -461,11 +540,10 @@ static void
 receive_file (void)
 {
 	scan_thread =
-		g_thread_create ((GThreadFunc) do_receive_file, NULL, FALSE, NULL);
-
+		g_thread_create ((GThreadFunc)
+				 do_receive_file, NULL, FALSE, NULL);
 	if (scan_thread == NULL)
 		gpe_perror_box (_("Unable to start receiver."));
-
 }
 
 
@@ -486,20 +564,19 @@ get_irstatus (void)
 	unsigned long long daddr = 0;
 	char *ts;
 	int success = FALSE;
-	
-	if (parse_file(IR_DISCOVERY,
-	     "nickname: %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx", nick,
-	     &chint, &saddr, &daddr) == 4)
-	success = TRUE;
-	else
-		if (parse_file(IR_DISCOVERY,
-	     "nickname: %s %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx", nick,nick2,
-	     &chint, &saddr, &daddr) == 5)
-		{
-			success = TRUE;
-			snprintf(nick + strlen(nick),32-strlen(nick)," %s",nick2);
-		}
-	
+	if (parse_file (IR_DISCOVERY,
+			"nickname: %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx",
+			nick, &chint, &saddr, &daddr) == 4)
+		success = TRUE;
+	else if (parse_file (IR_DISCOVERY,
+			     "nickname: %s %s hint: 0x%4x, saddr: 0x%8llx, daddr: 0x%8llx",
+			     nick, nick2, &chint, &saddr, &daddr) == 5)
+	{
+		success = TRUE;
+		snprintf (nick + strlen (nick),
+			  32 - strlen (nick), " %s", nick2);
+	}
+
 	if (success)
 	{
 		if (strlen (nick))
@@ -507,7 +584,6 @@ get_irstatus (void)
 		gtk_label_set_text (GTK_LABEL (lDevice), nick);
 		snprintf (nick, 32, "0x%8llx", saddr);
 		gtk_label_set_text (GTK_LABEL (lSaddr), nick);
-
 		ts = parse_hints (chint);
 		gtk_label_set_text (GTK_LABEL (lCHint), ts);
 		free (ts);
@@ -527,9 +603,7 @@ control_window_destroyed (void)
 {
 	control_window = NULL;
 	lTStatus = NULL;
-	
-	radio_off();
-	
+	radio_off ();
 	/* stop updates from scanner */
 	if (timeout_id)
 	{
@@ -546,12 +620,13 @@ show_control (void)
 {
 	GtkWidget *img;
 	GtkWidget *tw, *hb;
-
 	if (control_window == NULL)
 	{
 		GtkWidget *hsep = gtk_hseparator_new ();
-		GtkWidget *sw = gtk_scrolled_window_new (NULL, NULL);
-		GtkWidget *vbox = gtk_vbox_new (FALSE, gpe_get_boxspacing ());
+		GtkWidget *sw = gtk_scrolled_window_new (NULL,
+							 NULL);
+		GtkWidget *vbox = gtk_vbox_new (FALSE,
+						gpe_get_boxspacing ());
 		GtkWidget *hbox = gtk_hbutton_box_new ();
 		GtkWidget *bSend = gtk_button_new ();
 		GtkWidget *bReceive = gtk_button_new ();
@@ -559,143 +634,137 @@ show_control (void)
 			gtk_button_new_from_stock (GTK_STOCK_CLOSE);
 		GtkWidget *table = gtk_table_new (6, 3, FALSE);
 		GtkTooltips *tooltips = gtk_tooltips_new ();
-
 		GtkWidget *lcPeer = gtk_label_new (NULL);
 		GtkWidget *lcActions = gtk_label_new (NULL);
-
 		GtkWidget *l1 = gtk_label_new (_("Name:"));
 		GtkWidget *l2 = gtk_label_new (_("Services:"));
 		GtkWidget *l3 = gtk_label_new (_("Address:"));
-
-
 		lDevice = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lDevice), 0, 0.5);
 		lCHint = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lCHint), 0, 0.0);
 		lSaddr = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (lSaddr), 0, 0.5);
-
-		gtk_label_set_markup (GTK_LABEL (lcPeer),
-				      _("<b>Peer Information</b>"));
-		gtk_label_set_markup (GTK_LABEL (lcActions),
-				      _("<b>Peer Actions</b>"));
-
+		gtk_label_set_markup (GTK_LABEL
+				      (lcPeer), _("<b>Peer Information</b>"));
+		gtk_label_set_markup (GTK_LABEL
+				      (lcActions), _("<b>Peer Actions</b>"));
 		hb = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
-		img = gtk_image_new_from_stock (GTK_STOCK_GO_UP,
-						GTK_ICON_SIZE_BUTTON);
+		img = gtk_image_new_from_stock
+			(GTK_STOCK_GO_UP, GTK_ICON_SIZE_BUTTON);
 		gtk_container_add (GTK_CONTAINER (hb), img);
 		tw = gtk_label_new (_("Send File"));
 		gtk_misc_set_alignment (GTK_MISC (tw), 0, 0.5);
 		gtk_container_add (GTK_CONTAINER (hb), tw);
 		gtk_container_add (GTK_CONTAINER (bSend), hb);
-
 		hb = gtk_hbox_new (FALSE, gpe_get_boxspacing ());
-		img = gtk_image_new_from_stock (GTK_STOCK_GO_DOWN,
-						GTK_ICON_SIZE_BUTTON);
+		img = gtk_image_new_from_stock
+			(GTK_STOCK_GO_DOWN, GTK_ICON_SIZE_BUTTON);
 		gtk_container_add (GTK_CONTAINER (hb), img);
 		tw = gtk_label_new (_("Receive File"));
 		gtk_misc_set_alignment (GTK_MISC (tw), 0, 0.5);
 		gtk_container_add (GTK_CONTAINER (hb), tw);
 		gtk_container_add (GTK_CONTAINER (bReceive), hb);
-
 		gtk_box_pack_start (GTK_BOX (hbox), bSend, FALSE, TRUE, 0);
 		gtk_box_pack_start (GTK_BOX (hbox), bReceive, FALSE, TRUE, 0);
-
 		gtk_misc_set_alignment (GTK_MISC (lcPeer), 0, 0.5);
 		gtk_misc_set_alignment (GTK_MISC (lcActions), 0, 0.5);
 		gtk_misc_set_alignment (GTK_MISC (l1), 0, 0.5);
 		gtk_misc_set_alignment (GTK_MISC (l2), 0, 0.0);
 		gtk_misc_set_alignment (GTK_MISC (l3), 0, 0.5);
-
-		gtk_table_attach (GTK_TABLE (table), lcPeer, 0, 3, 0, 1,
-				  GTK_FILL | GTK_EXPAND,
-				  GTK_FILL | GTK_EXPAND, 0, 0);
-
-		gtk_table_attach (GTK_TABLE (table), l1, 0, 1, 1, 2, GTK_FILL,
-				  GTK_FILL, 0, 0);
-		gtk_table_attach (GTK_TABLE (table), lDevice, 1, 2, 1, 2,
-				  GTK_FILL, GTK_FILL, 0, 0);
-
-		gtk_table_attach (GTK_TABLE (table), l3, 0, 1, 2, 3, GTK_FILL,
-				  GTK_FILL, 0, 0);
-		gtk_table_attach (GTK_TABLE (table), lSaddr, 1, 2, 2, 3,
-				  GTK_FILL, GTK_FILL, 0, 0);
-
-		gtk_table_attach (GTK_TABLE (table), l2, 0, 1, 3, 4, GTK_FILL,
-				  GTK_FILL, 0, 0);
-		gtk_table_attach (GTK_TABLE (table), lCHint, 1, 2, 3, 4,
-				  GTK_FILL | GTK_EXPAND,
-				  GTK_FILL | GTK_EXPAND, 0, 0);
-
-		gtk_table_attach (GTK_TABLE (table), lcActions, 0, 3, 4, 5,
-				  GTK_FILL ,
-				  GTK_FILL , 0, 0);
-				  
-		gtk_table_attach (GTK_TABLE (table), hbox, 0, 3, 5, 6,
-				  GTK_FILL | GTK_EXPAND,
-				  GTK_FILL | GTK_EXPAND, 0, 0);
-
+		gtk_table_attach (GTK_TABLE
+				  (table),
+				  lcPeer, 0, 3,
+				  0, 1,
+				  GTK_FILL |
+				  GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table), l1,
+				  0, 1, 1, 2, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table),
+				  lDevice, 1, 2,
+				  1, 2, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table), l3,
+				  0, 1, 2, 3, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table),
+				  lSaddr, 1, 2,
+				  2, 3, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table), l2,
+				  0, 1, 3, 4, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table),
+				  lCHint, 1, 2,
+				  3, 4,
+				  GTK_FILL |
+				  GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table),
+				  lcActions, 0,
+				  3, 4, 5, GTK_FILL, GTK_FILL, 0, 0);
+		gtk_table_attach (GTK_TABLE
+				  (table), hbox,
+				  0, 3, 5, 6,
+				  GTK_FILL |
+				  GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0);
 		if (radio_is_on)
-			lTStatus = gtk_label_new(_("IR transceiver on"));
+			lTStatus = gtk_label_new (_("IR transceiver on"));
 		else
-			lTStatus = gtk_label_new(_("IR transceiver off"));
-		
-		gtk_label_set_line_wrap(GTK_LABEL(lTStatus),TRUE);
-		
-		gtk_table_attach (GTK_TABLE (table), lTStatus, 0, 3, 6, 7,
-				  GTK_FILL,
-				  GTK_FILL | GTK_EXPAND, 0, 0);
-				  
+			lTStatus = gtk_label_new (_("IR transceiver off"));
+		gtk_label_set_line_wrap (GTK_LABEL (lTStatus), TRUE);
+		gtk_table_attach (GTK_TABLE
+				  (table),
+				  lTStatus, 0,
+				  3, 6, 7,
+				  GTK_FILL, GTK_FILL | GTK_EXPAND, 0, 0);
 		hbox = gtk_hbutton_box_new ();
-
 		control_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-
-		gtk_window_set_title (GTK_WINDOW (control_window),
+		gtk_window_set_title (GTK_WINDOW
+				      (control_window),
 				      _("Infrared Control"));
 		gpe_set_window_icon (control_window, "irda");
-
-
-		gtk_container_set_border_width (GTK_CONTAINER (vbox),
-						gpe_get_border ());
-		gtk_table_set_row_spacings (GTK_TABLE (table),
-					    gpe_get_boxspacing ());
-		gtk_table_set_col_spacings (GTK_TABLE (table),
-					    gpe_get_boxspacing ());
-
-		gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-						GTK_POLICY_NEVER,
-						GTK_POLICY_AUTOMATIC);
-
-		gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW
-						       (sw), vbox);
+		gtk_container_set_border_width
+			(GTK_CONTAINER (vbox), gpe_get_border ());
+		gtk_table_set_row_spacings
+			(GTK_TABLE (table), gpe_get_boxspacing ());
+		gtk_table_set_col_spacings
+			(GTK_TABLE (table), gpe_get_boxspacing ());
+		gtk_scrolled_window_set_policy
+			(GTK_SCROLLED_WINDOW (sw),
+			 GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+		gtk_scrolled_window_add_with_viewport
+			(GTK_SCROLLED_WINDOW (sw), vbox);
 		gtk_container_add (GTK_CONTAINER (control_window), sw);
-
 		gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
-		gtk_box_pack_start (GTK_BOX (vbox), hsep, FALSE, TRUE, gpe_get_boxspacing());
-
+		gtk_box_pack_start (GTK_BOX
+				    (vbox),
+				    hsep, FALSE, TRUE, gpe_get_boxspacing ());
 		gtk_box_pack_start (GTK_BOX (hbox), bClose, FALSE, TRUE, 0);
-
 		gtk_box_pack_end (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-
 		gtk_widget_realize (control_window);
 		gtk_widget_show_all (control_window);
-
-
-		g_signal_connect (G_OBJECT (bSend), "clicked",
+		g_signal_connect (G_OBJECT
+				  (bSend),
+				  "clicked",
 				  G_CALLBACK (send_file), control_window);
-		g_signal_connect (G_OBJECT (bReceive), "clicked",
+		g_signal_connect (G_OBJECT
+				  (bReceive),
+				  "clicked",
 				  G_CALLBACK (receive_file), control_window);
-
-		g_signal_connect_swapped (G_OBJECT (bClose), "clicked",
-					  G_CALLBACK (gtk_widget_destroy),
-					  control_window);
-		g_signal_connect (G_OBJECT (control_window), "destroy",
-				  G_CALLBACK (control_window_destroyed),
-				  NULL);
-
+		g_signal_connect_swapped
+			(G_OBJECT (bClose), "clicked",
+			 G_CALLBACK (gtk_widget_destroy), control_window);
+		g_signal_connect (G_OBJECT
+				  (control_window),
+				  "destroy",
+				  G_CALLBACK
+				  (control_window_destroyed), NULL);
 		timeout_id =
-			gtk_timeout_add (1000, (GtkFunction) get_irstatus,
-					 NULL);
+			gtk_timeout_add (1000,
+					 (GtkFunction) get_irstatus, NULL);
 	}
 }
 
@@ -704,15 +773,12 @@ static void
 radio_on (void)
 {
 	sigset_t sigs;
-
 	gtk_widget_hide (menu_radio_on);
 	gtk_widget_show (menu_radio_off);
 	gtk_widget_set_sensitive (menu_vcard, TRUE);
-
 	system (COMMAND_IR_ON);
-
-	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
-				   gpe_find_icon ("irda-on"));
+	gtk_image_set_from_pixbuf
+		(GTK_IMAGE (icon), gpe_find_icon ("irda-on"));
 	radio_is_on = TRUE;
 	sigemptyset (&sigs);
 	sigaddset (&sigs, SIGCHLD);
@@ -720,7 +786,8 @@ radio_on (void)
 //  hciattach_pid = fork_hciattach ();
 	sigprocmask (SIG_UNBLOCK, &sigs, NULL);
 	if (lTStatus)
-		gtk_label_set_text(GTK_LABEL(lTStatus),_("IR transceiver on"));
+		gtk_label_set_text (GTK_LABEL
+				    (lTStatus), _("IR transceiver on"));
 }
 
 
@@ -738,13 +805,12 @@ radio_off (void)
 	gtk_widget_hide (menu_radio_off);
 	gtk_widget_show (menu_radio_on);
 	gtk_widget_set_sensitive (menu_vcard, FALSE);
-
-	gtk_image_set_from_pixbuf (GTK_IMAGE (icon),
-				   gpe_find_icon ("irda-off"));
-
+	gtk_image_set_from_pixbuf
+		(GTK_IMAGE (icon), gpe_find_icon ("irda-off"));
 	do_stop_radio ();
 	if (lTStatus)
-		gtk_label_set_text(GTK_LABEL(lTStatus),_("IR transceiver off"));
+		gtk_label_set_text (GTK_LABEL
+				    (lTStatus), _("IR transceiver off"));
 }
 
 
@@ -760,15 +826,16 @@ cancel_dock_message (guint id)
 void
 schedule_message_delete (guint id, guint time)
 {
-	g_timeout_add (time, (GSourceFunc) cancel_dock_message,
-		       (gpointer) id);
+	g_timeout_add (time,
+		       (GSourceFunc) cancel_dock_message, (gpointer) id);
 }
 
 
 static void
 clicked (GtkWidget * w, GdkEventButton * ev)
 {
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
+	gtk_menu_popup (GTK_MENU (menu),
+			NULL, NULL,
 			gpe_popup_menu_position, w, ev->button, ev->time);
 }
 
@@ -781,45 +848,40 @@ main (int argc, char *argv[])
 	GtkWidget *menu_remove;
 	GtkTooltips *tooltips;
 	GdkBitmap *bitmap;
-
 	g_thread_init (NULL);
 	gdk_threads_init ();
-
 	if (gpe_application_init (&argc, &argv) == FALSE)
 		exit (1);
-
 	setlocale (LC_ALL, "");
-
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);
-
 	window = gtk_plug_new (0);
 	gtk_widget_set_usize (window, 16, 16);
 	gtk_widget_realize (window);
-
 	gtk_window_set_title (GTK_WINDOW (window), _("IrDa control"));
-
 	menu = gtk_menu_new ();
 	menu_radio_on = gtk_menu_item_new_with_label (_("Switch IR on"));
 	menu_radio_off = gtk_menu_item_new_with_label (_("Switch IR off"));
 	menu_vcard = gtk_menu_item_new_with_label (_("Send vcard"));
 	menu_control = gtk_menu_item_new_with_label (_("Controls..."));
 	menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
-
-	g_signal_connect (G_OBJECT (menu_radio_on), "activate",
-			  G_CALLBACK (radio_on), NULL);
-	g_signal_connect (G_OBJECT (menu_radio_off), "activate",
-			  G_CALLBACK (radio_off), NULL);
-	g_signal_connect (G_OBJECT (menu_vcard), "activate",
-			  G_CALLBACK (send_vcard), NULL);
-	g_signal_connect (G_OBJECT (menu_control), "activate",
-			  G_CALLBACK (show_control), NULL);
-	g_signal_connect (G_OBJECT (menu_remove), "activate",
-			  G_CALLBACK (gtk_main_quit), NULL);
-
-	radio_is_on = irda_is_on();
-
+	g_signal_connect (G_OBJECT
+			  (menu_radio_on),
+			  "activate", G_CALLBACK (radio_on), NULL);
+	g_signal_connect (G_OBJECT
+			  (menu_radio_off),
+			  "activate", G_CALLBACK (radio_off), NULL);
+	g_signal_connect (G_OBJECT
+			  (menu_vcard),
+			  "activate", G_CALLBACK (send_vcard), NULL);
+	g_signal_connect (G_OBJECT
+			  (menu_control),
+			  "activate", G_CALLBACK (show_control), NULL);
+	g_signal_connect (G_OBJECT
+			  (menu_remove),
+			  "activate", G_CALLBACK (gtk_main_quit), NULL);
+	radio_is_on = irda_is_on ();
 	if (!radio_is_on)
 	{
 		gtk_widget_set_sensitive (menu_vcard, FALSE);
@@ -834,51 +896,38 @@ main (int argc, char *argv[])
 	gtk_widget_show (menu_control);
 	gtk_widget_show (menu_vcard);
 	gtk_widget_show (menu_remove);
-
 	gtk_menu_append (GTK_MENU (menu), menu_radio_on);
 	gtk_menu_append (GTK_MENU (menu), menu_radio_off);
 	gtk_menu_append (GTK_MENU (menu), menu_vcard);
 	gtk_menu_append (GTK_MENU (menu), menu_control);
 	gtk_menu_append (GTK_MENU (menu), menu_remove);
-
 	if (gpe_load_icons (my_icons) == FALSE)
 		exit (1);
-
-	icon = gtk_image_new_from_pixbuf (gpe_find_icon
-					  (radio_is_on ? "irda-on" :
-					   "irda-off"));
-	gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("irda-on"), NULL,
-					   &bitmap, 255);
+	icon = gtk_image_new_from_pixbuf
+		(gpe_find_icon (radio_is_on ? "irda-on" : "irda-off"));
+	gdk_pixbuf_render_pixmap_and_mask
+		(gpe_find_icon ("irda-on"), NULL, &bitmap, 255);
 	gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 	gdk_bitmap_unref (bitmap);
 	gtk_widget_show (icon);
-
 	gpe_set_window_icon (window, "irda");
-
 	tooltips = gtk_tooltips_new ();
-	gtk_tooltips_set_tip (GTK_TOOLTIPS (tooltips), window,
-			      _
-			      ("This is the infrared communications control."),
-			      NULL);
-
-	g_signal_connect (G_OBJECT (window), "button-press-event",
-			  G_CALLBACK (clicked), NULL);
+	gtk_tooltips_set_tip
+		(GTK_TOOLTIPS (tooltips),
+		 window,
+		 _("This is the infrared communications control."), NULL);
+	g_signal_connect (G_OBJECT
+			  (window),
+			  "button-press-event", G_CALLBACK (clicked), NULL);
 	gtk_widget_add_events (window, GDK_BUTTON_PRESS_MASK);
-
 	gtk_container_add (GTK_CONTAINER (window), icon);
-
 	dpy = GDK_WINDOW_XDISPLAY (window->window);
-
 	gtk_widget_show (window);
-
 	atexit (do_stop_radio);
-
 	dock_window = window->window;
 	gpe_system_tray_dock (window->window);
-
 	gdk_threads_enter ();
 	gtk_main ();
 	gdk_threads_leave ();
-
 	exit (0);
 }
