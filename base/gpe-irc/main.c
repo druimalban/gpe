@@ -92,7 +92,11 @@ update_window_title ()
 {
   gchar *new_title;
 
-  new_title = g_strdup_printf ("IRC Client - %s @ %s", selected_server->user_info->nick, selected_server->name);
+  if (selected_server != NULL)
+    new_title = g_strdup_printf ("IRC Client - %s @ %s", selected_server->user_info->nick, selected_server->name);
+  else
+    new_title = g_strdup ("IRC Client");
+
   gtk_window_set_title (GTK_WINDOW (main_window), new_title);
 }
 
@@ -107,23 +111,35 @@ remove_invalid_utf8_chars (GString *text)
     return NULL;
 }
 
+gboolean
+scroll_text_view_to_bottom ()
+{
+  GtkTextBuffer *text_buffer;
+  GtkTextIter start, end;
+
+  text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
+  gtk_text_buffer_get_bounds (text_buffer, &start, &end);
+  gtk_text_view_scroll_to_iter (main_text_view, &end, 0, TRUE, 1.0, 1.0);
+
+  return FALSE;
+}
+
 void
 update_text_view (GString *text)
 {
   GtkTextBuffer *text_buffer;
   GtkTextIter start, end;
-  GtkAdjustment *vadjust;
 
   //text = remove_invalid_utf8_chars (text);
   if (text->str != NULL)
   {
     printf ("update_text_view's text\n----------------------------\n%s\n----------------------\n", text->str);
     text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (main_text_view));
-    vadjust = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (scroll));
 
     gtk_text_buffer_get_bounds (text_buffer, &start, &end);
     gtk_text_buffer_insert (text_buffer, &end, text->str, strlen (text->str));
-    gtk_adjustment_set_value (vadjust, vadjust->upper);
+
+    gtk_idle_add (scroll_text_view_to_bottom, NULL);
   }
 }
 
@@ -161,8 +177,56 @@ button_clicked (GtkWidget *button)
   }
 }
 
+void
+quit_channel (IRCServer *server, IRCChannel *channel)
+{
+  irc_part (server, channel->name, "GPE IRC");
+  gtk_widget_destroy (channel->button);
+  button_clicked (server->button);
+}
+
+void
+quit_channel_from_hash (gpointer key, gpointer value, gpointer data)
+{
+  quit_channel ((IRCServer *) data, (IRCChannel *) value);
+}
+
+void
+disconnect_from_server (IRCServer *server)
+{
+  irc_quit (server, "GPE IRC");
+  server->connected = FALSE;
+  g_io_channel_shutdown (server->io_channel, FALSE, NULL);
+  g_hash_table_foreach (server->channel, quit_channel_from_hash, (gpointer) server);
+
+  servers = g_list_remove (servers, (gconstpointer) server);                                            
+  if (servers != NULL)
+    button_clicked (((IRCServer *) servers->data)->button);
+  else
+  {
+    clear_text_view ();
+    selected_server = NULL;
+    selected_channel = NULL;
+    selected_button = NULL;
+  }
+
+  gtk_widget_destroy (server->button);
+}
+
+void
+close_button_clicked ()
+{
+  if (selected_button != NULL)
+  {
+    if (gtk_object_get_data (GTK_OBJECT (selected_button), "type") == IRC_SERVER)
+      disconnect_from_server (selected_server);
+    else
+      quit_channel (selected_server, selected_channel);
+  }
+}
+
 gboolean
-disconnect_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
+watch_disconnect_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 {
   ((IRCServer *) data)->connected = FALSE;
   return FALSE;
@@ -172,24 +236,23 @@ gboolean
 get_data_from_server (GIOChannel *source, GIOCondition condition, gpointer data)
 {
   GString *new_text;
-  gchar *new_string;
   gsize new_string_length;
 
   new_text = g_string_new ("");
 
   if (((IRCServer *) data)->connected == FALSE)
+  {
+    disconnect_from_server ((IRCServer *) data);
     return FALSE;
+  }
 
-  //if (g_io_channel_read_to_end (source, &new_string, &new_string_length, NULL) != G_IO_STATUS_NORMAL)
   if (g_io_channel_read_line_string (source, new_text, NULL, NULL) == G_IO_STATUS_NORMAL)
   {
-    if ((IRCServer *) data == selected_server)
+    if (data == selected_server)
     {
-      printf ("STRING -- %s\n", new_text->str);
-      //new_text = g_string_new (new_string);
       update_text_view (new_text);
-      //server->text = g_string_append (server->text, new_text->str);
     }
+    ((IRCServer *) data)->text = g_string_append (((IRCServer *) data)->text, new_text->str);
   }
 
   return TRUE;
@@ -244,8 +307,8 @@ new_connection (GtkWidget *parent, GtkWidget *parent_window)
   gtk_widget_destroy (parent_window);
 
   irc_server_connect (server);
-  g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, server);
-  g_io_add_watch (server->io_channel, G_IO_HUP, disconnect_from_server, server);
+  g_io_add_watch (server->io_channel, G_IO_IN, get_data_from_server, (gpointer) server);
+  g_io_add_watch (server->io_channel, G_IO_HUP, watch_disconnect_from_server, (gpointer) server);
 }
 
 void
@@ -401,6 +464,8 @@ main (int argc, char *argv[])
   new_connection_button = gpe_picture_button (hbox->style, NULL, "globe");
   users_button = gtk_button_new ();
 
+  gtk_signal_connect (GTK_OBJECT (close_button), "clicked",
+    		      GTK_SIGNAL_FUNC (close_button_clicked), NULL);
   gtk_signal_connect (GTK_OBJECT (new_connection_button), "clicked",
     		      GTK_SIGNAL_FUNC (new_connection_dialog), NULL);
   gtk_signal_connect (GTK_OBJECT (users_button), "clicked",

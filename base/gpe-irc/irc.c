@@ -8,6 +8,7 @@
  */
 
 #include <stdio.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/select.h>
@@ -21,6 +22,108 @@
 
 #define SERVICE "ircd"
 
+
+static gboolean
+irc_server_send (IRCServer *server, gchar *command, gchar *param)
+{
+	gboolean ret = FALSE;
+	gchar *str = NULL;
+
+	if(server)
+	{
+		str = g_strdup_printf("%s %s\n", command, param);
+
+		if((g_io_channel_write_chars (server->io_channel, str, -1, NULL, NULL) == G_IO_STATUS_NORMAL) && (g_io_channel_flush (server->io_channel, NULL)))
+		{
+			ret = TRUE;
+		}
+
+		g_free(str);
+	}
+
+	return ret;
+}
+
+gboolean
+irc_nick (IRCServer *server, gchar *nick)
+{
+	return irc_server_send(server, "NICK", nick);
+}
+
+gboolean
+irc_user (IRCServer *server, gchar *username, gchar *realname)
+{
+	gboolean ret = FALSE;
+	gchar *str;
+	
+	str = g_strdup_printf("%s - - :%s", username, realname);
+	ret = irc_server_send(server, "USER", str);
+	g_free(str);
+	return ret;
+}
+
+gboolean
+irc_pass (IRCServer *server, gchar *password)
+{
+	return irc_server_send(server, "PASS", password);
+}
+
+gboolean
+irc_join (IRCServer *server, gchar *channel)
+{
+	return irc_server_send(server, "JOIN", channel);
+}
+
+gboolean
+irc_part (IRCServer *server, gchar *channel, gchar *reason)
+{
+	gboolean ret = FALSE;
+	gchar *str;
+	
+	str = g_strdup_printf("%s :%s", channel, reason);
+	ret = irc_server_send(server, "PART", str);
+	g_free(str);
+	return ret;
+}
+
+gboolean
+irc_privmsg (IRCServer *server, gchar *target, gchar *msg)
+{
+	gboolean ret = FALSE;
+	gchar *str;
+	
+	str = g_strdup_printf("%s :%s", target, msg);
+	ret = irc_server_send(server, "PRIVMSG", str);
+	g_free(str);
+	return ret;
+}
+
+gboolean
+irc_action (IRCServer *server, gchar *target, gchar *msg)
+{
+	gboolean ret = FALSE;
+	gchar *str;
+	
+	str = g_strdup_printf("ACTION %s", msg);
+	ret = irc_privmsg(server, target, str);
+	g_free(str);
+	return ret;
+}
+
+gboolean
+irc_quit (IRCServer *server, gchar *reason)
+{
+	gboolean ret = FALSE;
+	gchar *str;
+	
+	str = g_strdup_printf(":%s", reason);
+	ret = irc_server_send(server, "QUIT", str);
+	g_free(str);
+	return ret;
+}
+
+
+#if 0
 gint
 irc_server_read (IRCServer *server, gchar **passback_message)
 {
@@ -81,6 +184,7 @@ irc_server_read (IRCServer *server, gchar **passback_message)
 
   return -1;
 }
+#endif
 
 /* Send a the users message to specified channel on specified server */
 gboolean
@@ -134,6 +238,23 @@ irc_server_login (IRCServer *server)
   gchar *login_string;
 
   printf ("Sending user info now...\n");
+
+  if(server->user_info->password)
+  {
+	  irc_pass(server, server->user_info->password);
+  }
+  irc_nick(server, server->user_info->nick);
+  irc_user(server, server->user_info->username, server->user_info->real_name);
+
+  irc_join(server, "#gpeirc");
+  /*
+  irc_privmsg(server, "#gpe", "Testing 123");
+  irc_privmsg(server, "pigeon", "Testing 123");
+  irc_action(server, "#gpe", "tests gpe-irc");
+  irc_part(server, "#gpe", "testing finishes");
+  */
+
+  /*
   if (server->user_info->password)
     login_string = g_strdup_printf ("PASS %s\r\nNICK %s\r\nUSER %s - - :%s\r\n", server->user_info->password, server->user_info->nick, server->user_info->username, server->user_info->real_name);
   else
@@ -141,9 +262,10 @@ irc_server_login (IRCServer *server)
 
   printf ("Now logging in...");
 
-  //  if (g_io_channel_write_chars (server->io_channel, login_string, -1, NULL, NULL) == G_IO_STATUS_NORMAL)
-  if (send (server->fd, login_string, strlen (login_string), 0) != -1)
+  if (g_io_channel_write_chars (server->io_channel, login_string, -1, NULL, NULL) == G_IO_STATUS_NORMAL)
+  //if (send (server->fd, login_string, strlen (login_string), 0) != -1)
   {
+	g_io_channel_flush(server->io_channel, NULL);
     printf ("Logged in.\n");
     irc_server_login_init (server);
     return TRUE;
@@ -151,6 +273,7 @@ irc_server_login (IRCServer *server)
 
   printf ("Login failed.\n");
   return FALSE;
+	*/
 }
 
 gboolean
@@ -177,6 +300,7 @@ irc_server_connect (IRCServer *server)
       {
 	server->fd = fd;
 	server->io_channel = g_io_channel_unix_new (fd);
+	g_io_channel_set_encoding(server->io_channel, "ISO-8859-1", NULL);
 	g_io_channel_set_line_term (server->io_channel, "\r\n", 2);
 	break;
       }

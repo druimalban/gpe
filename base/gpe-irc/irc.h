@@ -45,3 +45,7 @@ extern gboolean irc_server_login (IRCServer *server);
 extern gboolean irc_server_connect (IRCServer *server);
 
 extern gboolean irc_server_disconnect (IRCServer *server);
+
+extern gboolean irc_quit (IRCServer *server, gchar *reason);
+
+extern gboolean irc_part (IRCServer *server, gchar *channel, gchar *reason);
