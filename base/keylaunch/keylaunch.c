@@ -43,6 +43,7 @@ struct _Key
   int keycode;
   unsigned int modifier;
   char *command;
+  int long_press;
   Key *next;
   char *window;
 };
@@ -198,6 +199,13 @@ create_new_key (char *key_string)
 	k->modifier = k->modifier | Mod1Mask;
     }
   k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 3));
+  k->long_press = 0;
+
+  if (k->keycode == NoSymbol && (strncmp (key_str+3, "Held", 4) == 0))
+    {
+      k->keycode = XKeysymToKeycode (dpy, XStringToKeysym (key_str + 7));
+      k->long_press = 1;
+    }
 
   grab_key (k->keycode, k->modifier, root);
   k->command = strdup (command);
@@ -466,6 +474,7 @@ main (int argc, char *argv[])
 		ev.xkey.state & (Mod1Mask | ControlMask | ShiftMask);
 	      for (k = key; k != NULL; k = k->next)
 		if (k->keycode == ev.xkey.keycode
+		    && (k->long_press == long_press)
 		    && (k->modifier == AnyModifier
 			|| k->modifier == ev.xkey.state))
 		  {

@@ -67,8 +67,8 @@ Window Window_With_Name(dpy, top, name)
 		printf ("checking window of name '%s' (looking for '%s')\n", window_name, name);
 		XFree(window_name);
 	}
-	else
-	  printf ("ignoring window, no name set\n");
+	/* else
+	  printf ("ignoring window, no name set\n"); */
 
         if (XFetchName(dpy, top, &window_name) && !strcmp(window_name, name)) {
 		XFree(window_name);
