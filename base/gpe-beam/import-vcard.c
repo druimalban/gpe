@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include <libintl.h>
+
+#include <mimedir/mimedir-vcard.h>
+
+#include <sqlite.h>
+
+#include "vcard.h"
+
+#define _(x) gettext (x)
+
+#define DB_NAME "/.gpe/contacts"
+
+sqlite *db;
+
+int 
+db_open(void) 
+{
+  /* open persistent connection */
+  char *errmsg;
+  char *buf;
+  size_t len;
+  const char *home = g_get_home_dir ();
+  
+  len = strlen (home) + strlen (DB_NAME) + 1;
+  buf = g_malloc (len);
+  strcpy (buf, home);
+  strcat (buf, DB_NAME);
+  
+  db = sqlite_open (buf, 0, &errmsg);
+  g_free (buf);
+  
+  if (db == NULL) 
+    {
+      fprintf (stderr, "%s", errmsg);
+      free (errmsg);
+      return -1;
+    }
+
+  return 0;
+}
+
+int
+main (int argc, char *argv[])
+{
+  guint uid;
+  MIMEDirVCard *vcard;
+  gchar *str;
+  GError *err = NULL;
+  GIOChannel *channel;
+  FILE *fp;
+  char line[256];
+
+  g_type_init ();
+
+  if (db_open ())
+    exit (1);
+
+  channel = g_io_channel_unix_new (0);
+
+  vcard = mimedir_vcard_new_from_channel (channel, &err);
+  if (vcard == NULL)
+    {
+      fprintf (stderr, "%s\n", err->message);
+      g_clear_error (&err);
+      exit (1);
+    }
+
+  str = mimedir_vcard_get_as_string (vcard);
+  puts (str);
+
+  if (gpe_import_vcard (db, vcard) == FALSE)
+    exit (1);
+
+  exit (0);
+}

@@ -118,3 +118,40 @@ gpe_export_vcard (sqlite *db, guint uid)
 
   return vcard;
 }
+
+gboolean
+gpe_import_vcard (sqlite *db, MIMEDirVCard *vcard)
+{
+  char *err;
+  guint id;
+
+  if (sqlite_exec (db, "begin transaction", NULL, NULL, &err))
+    {
+      fprintf (stderr, "%s\n", err);
+      free (err);
+      return FALSE;
+    }
+
+  if (sqlite_exec (db, "insert into contacts_urn values (NULL)",
+		   NULL, NULL, &err))
+    goto error;
+
+  id = sqlite_last_insert_rowid (db);
+
+  fprintf (stderr, "uid is %d\n", id);
+
+  if (sqlite_exec (db, "commit transaction", NULL, NULL, &err))
+    {
+      fprintf (stderr, "%s\n", err);
+      free (err);
+      return FALSE;
+    }
+
+  return TRUE;
+
+ error:
+  sqlite_exec (db, "rollback transaction", NULL, NULL, NULL);
+  fprintf (stderr, "%s\n", err);
+  free (err);
+  return FALSE;
+}
