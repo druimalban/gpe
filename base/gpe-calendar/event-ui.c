@@ -699,17 +699,17 @@ edit_event_window(void)
 
   /* begin alarm page */
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("minutes")));
+		   gtk_menu_item_new_with_label (_("minute(s)")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("hours")));
+		   gtk_menu_item_new_with_label (_("hour(s)")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("days")));
+		   gtk_menu_item_new_with_label (_("day(s)")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("weeks")));
+		   gtk_menu_item_new_with_label (_("week(s)")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("months")));
+		   gtk_menu_item_new_with_label (_("month(s)")));
   gtk_menu_append (GTK_MENU (alarmmenu), 
-		   gtk_menu_item_new_with_label (_("years")));
+		   gtk_menu_item_new_with_label (_("year(s)")));
 		
   gtk_option_menu_set_menu (GTK_OPTION_MENU (alarmoption), alarmmenu);
   gtk_widget_set_usize (alarmoption, 120, -1);
