@@ -1,0 +1,30 @@
+
+Starting from the 0.0.27 version, Ol-irc compiles both witk gtk 1.0.x and
+gtk 1.2.x. For now all functions are present, whatever gtk version is used.
+But this is very likely to change in a near future: New functions will work
+only with gtk 1.2.x. When compiling with gtk 1.0.x, these functions will be
+disabled.
+
+Version 0.0.29 introduces (finally) the DCC Send/Get. I'm not really sure if
+there is no fatal bug in the implementation, because I can't test it deeply
+(it seems to work on my local loopback, but on the Internet...)
+
+Version 0.0.30 introduces a first attempt of ignore mechanism. But you can't
+yet un-ignore a nick, you have to open the server ignore list box and remove
+the ignore by hand. As usual, this will be improved in the future :)
+
+Version 0.0.32 : Ol-Irc is now capable of retrieving the userhost mask of a
+nick by itself when needed. Menus User->Ignore and Control->Ban will try to
+retrieve the userhost masks before anything else.
+lso new in this version : Channel members are sorted by ops/voice/others. It
+should be quite easy to implement other orders in the future.
+
+Version 0.0.33 has seen big internal changes. The most visible : Names
+resolution is now asynchronous (Ol-Irc shouldn't any more stop responding
+when doing a name resolution (server or /dns)).
+
+Preferences started from 0.0.34. For now, it's rather limited... but it will
+become soon really *great* and very powerful :) Ol-Irc is being completely
+reorganised, big changes are taking place internally. The Gtk+ 1.2.x is now
+required to compile Ol-Irc, you can't any more use Gtk 1.0.x ...
+

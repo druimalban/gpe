@@ -1,0 +1,53 @@
+
+# I know, I should better use automake :/
+# I will use it in the future, but for the meantime... this works well enough :)
+
+# To compile in debug mode, just type make debug
+# To compile statically and in debug mode, type make static-debug
+
+@SET_MAKE@
+
+all:
+	@cd src && $(MAKE) all
+
+debug:
+	@cd src && $(MAKE) debug
+
+static-debug:
+	@cd src && $(MAKE) static-debug
+
+static:
+	@cd src && $(MAKE) static
+
+remake: clean all
+
+help:
+	@echo
+	@echo "Ol-Irc (c) 1998, 1999 Olrick"
+	@echo
+	@echo "Makefile targets: all remake help clean distclean static install uninstall"
+	@echo
+
+clean:
+	@echo
+	@cd src && $(MAKE) clean
+	@echo
+	rm -f core olirc olirc-static
+	@echo
+
+distclean:
+	@echo
+	@cd src && $(MAKE) distclean
+	@echo
+	rm -f core Makefile config.cache config.status config.log olirc olirc-static
+	@echo
+
+install:
+	@echo
+	@echo "Not yet implemented, sorry. But it's on the way :)"
+	@echo
+
+install-strip: install
+	
+uninstall: install
+

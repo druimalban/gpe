@@ -1,0 +1,246 @@
+
+Ceci est un brouillon de docs pour Ol-Irc. Un travail monstrueux reste à fournir...
+le principal étant la traduction en anglais :) Si quelqu'un veut s'y essayer... :)
+
+Les docs finales devraient etre disponibles en HTML comme au format texte, et peut
+etre en d'autres formats...
+
+
+.../...
+
+
++---------------------------+
+|                           |
+|      Les Préférences      |
+|      ~~~~~~~~~~~~~~~      |
+|                           |
++---------------------------+
+
+Ol-Irc dispose (enfin, c'est en cours de développement :) d'un système de préférences
+assez original mais (à mon avis) très puissant.
+
+Les préférences permettent à l'utilisateur de configurer Ol-Irc selon ses gouts personnels.
+Pour le moment, peu de possibilités sont offertes, (à vrai dire, on peut juste régler les
+fontes dans la 0.0.34 :) mais dans le futur, Ol-Irc devrait être configurable dans les
+plus petits détails.
+
+Explication du système de préférences
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Chaque préférence peut avoir une ou plusieurs valeurs possibles. Chacune de ces valeurs
+peut être associée à une série de masques, permettant à Ol-Irc de décider quand utiliser
+telle valeur plutot que telle autre.
+
+Je vais essayer d'expliquer ce système à l'aide d'un exemple simple : la préférence
+"Font Normal".
+
+Cette préférence permet à l'utilisateur de choisir la fonte utilisée pour afficher le
+texte "normal" (ni gras, ni souligné) dans les fenêtres de Ol-Irc.
+
+Quand Ol-Irc démarre la première fois, cette préférence possède une seule valeur :
+"-adobe-courier-medium-r-normal-*-12-*-*-*-m-*-iso8859-1" ". C'est donc cette fonte
+là qui est utilisée dans toutes les fenêtres, que ce soit des serveurs, channels
+ou queries, tant que l'utilisateur ne modifie pas cette valeur.
+
+Chaque préférence possède donc au moins une valeur, qui est appellée "valeur par défaut".
+Cette valeur par défaut est la seule valeur qui ne soit associée à aucun masque particulier.
+Chaque préférence possède une valeur par défaut lorsque Ol-Irc est démarré la première fois.
+
+Mais il est possible d'associer autant d'autres valeurs que l'on veut à la plupart des
+préférences. Par exemple, dans le cas de la préférence "Font Normal", l'utilisateur
+pourrait vouloir utiliser une fonte plus petite que la fonte par défaut dans les fenêtres
+de type DCC Chat, et une fonte plus grosse dans les fenêtres de channels. L'utilisateur
+pourrait même aller jusqu'à vouloir une fonte non proportionnelle dans les fenêtres DCC Chat
+ouvertes avec des utilisateurs ayant pour hostmask "*!eggdrop@*.foo.bar"; et pourquoi pas,
+tant qu'on y est, une fonte à caratères cyriliques dans toutes les fenêtres de channels 
+du réseau "IrcNet" ayant pour nom "#russia*"...
+
+C'est là que la puissance du système de préférences de Ol-Irc commence à se dévoiler. Essayez
+donc de faire celà avec mIRC...
+
+Pour parvenir à ce résultat, chaque valeur de préférence doit être associée à des masques
+qui permettent à Ol-Irc de choisir quelle valeur utiliser, en fonction du type de fenêtre,
+du réseau IRC, du server IRC, du channel et de l'user avec qui un DCC Chat ou un Query est ouvert.
+
+En tout, 5 masques sont associés à chaque valeur de préférence (sauf pour la valeur par défaut,
+qui n'est assicée à aucun masque). Les 5 masques sont :
+
+* Le type de fenêtre
+
+Pour le moment, 5 types de fenêtres sont possibles :
+
+- Console
+- Server
+- Channel
+- Query
+- DCC Chat
+
+Il est possible de préciser un ou plusieurs de ces types dans le masque de préférence,
+par exemple pour utiliser une fonte donnée sur toutes les fenêtres de type channel OU de type
+query.
+
+* Le network
+
+Toutes les fenêtres sont rattachées à un type de réseau (network) IRC spécifique (sauf
+la console et les DCC quand le serveur corresondant a été fermé). 
+Il est possible de préciser un nom de réseau (par ex. "IrcNet") ou bien un masque
+(par ex. "*Net").
+
+* Le serveur
+
+Il est possible de préciser un nom de serveur (par ex. "irc.twiny.net") ou bien un masque
+(par ex. "*.fr")
+
+* Le channel
+
+Il est possible de préciser un nom de channels (par ex. "#linux-fr") ou bien un masque
+(par ex. "#linux*", ou "#linux.??", ou même "&*" pour tous les channels de type "&")
+
+* Le userhost
+
+On peut préciser soit un nick ou un masque de nick (par ex. "Olrick", ou "Olrick*"),
+ou bien un userhost ou un masque de userhoset (par ex. "Olrick!Olrick@snow.hexanet.fr",
+ou "*!Olrick@*.hexanet.fr", ou encore "*!*@*.fr")
+
+
+Les majuscules/minuscules n'ont pas d'importance.
+
+Evaluation des différents masques
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pour chercher la préférence correspondant le plus possible, Ol-Irc parcours la liste des
+masques présents pour cette préférence, et suit l'algorithme suivant:
+
+- On rejette tous les masques dont le type fenêtre ne correspond pas. S'il ne reste plus rien,
+  on prend la valeur par défaut de la préférence.
+
+- On regarde quelles items parmis le network, server, channel et userhost correspondent au masque.
+  Toutes ces items ne sont pas toujours prises en compte (par exemple, tester l'userhost pour
+  déterminer la fonte bold d'un serveur n'a pas de signification).
+  Si un masque de préférence a plus d'items correspondantes que tous les autres, on prend la valeur
+  de préférence corresondante, et on ne va pas plus loin.
+  Si plusieurs masques de préférences ont le même nombre d'items correspondantes, on regarde le
+  nombre de caratères autres que les jokers '?' et '*' des items.
+  Par exemple, un masque"*.tm.fr" sera plus prioritaire qu'un masque "*.fr" si on le teste contre
+  "truc.muche.cybercable.tm.fr"
+  Enfin, si plusieurs masques possèdent le même nombre d'items correspondantes avec exactement le même
+  nombre de lettres, le premier sera pris en compte.
+
+
+  
+.../...
+
+
+
++-----------------------+
+|                       |
+|      Les Ignores      |
+|      ~~~~~~~~~~~      |
+|                       |
++-----------------------+
+
+Les ignores vous permettent d'éviter les messages de certaines personnes.
+
+Un ignore est caractérisée par :
+
+- un masque
+- les types de messages à ignorer
+
+Le masque spécifie quelle personnes sont concernées par l'ignore.
+Il est de la forme habituelle : "nickname!username@machine.provider.domain"
+L'utilisation des jokers '?' et '*' n'importe où dans le masque permet
+une grande souplesse d'utilisation. Exemples :
+
+nou!cha@...aol.com
+*!lamer@tntrei-2-4.abo.wanaboo.fr
+*!*@*.wanaboo.fr
+
+Remarque: si vous ne précisez pas '*' comme nickname, la personne concernée
+ne sera plus prise en compte par l'ignore dès qu'elle changera de nickname.
+Le masque conseillé est donc "*!username@machine.provider.domain".
+
+Ajout d'un ignore
+~~~~~~~~~~~~~~~~~
+
+- Grace à la commande /ignore [pas encore implémentée]
+- Grace au bouton "Add an ignore" de la boite de dialogue Ignore List
+- En cliquant avec le bouton droit sur un user dans un channel et en choissisant
+  "Ignore".
+
+.../...
+
+Les types de messages à ignorer peuvent etre :
+
+- Private Messages
+
+Concerne les messages (/msg, actions (/me) mais pas les /notices) qui
+vous sont envoyés en privé (en général, depuis une fenetre de query).
+
+- Channel Messages
+
+Concerne tous les messages et action (/me) et notices envoyés dans un channel
+où vous vous trouvez.
+[Dans le futur il sera possible de préciser la liste exacte de channels ou
+l'ignore doit etre effectif]
+
+- Invites
+
+Concerne les messages d'invite à joindre un channel. Vous pouvez mettre un
+ignore ayant pour mask "*!*@*" et comme type de message "Invites", pour ne plus
+jamais voir les invites qui vous sont envoyées (quoique des fois, celà peut etre
+génant).
+
+- Notices
+
+Concerne les /notices qui vous sont envoyées en privé.
+
+- CTCP
+
+Concerne les requètes CTCP (y compris les requètes DCC), qu'elles soient
+public (dans un channel) ou privées (envoyées à vous seulement).
+[Pour le moment une requète CTCP est indiquée quand meme par Ol-Irc, mais
+aucune réponse n'est renvoyée à la personne ayant fait la requète]
+
+.../...
+
+Bouton "Ignore All Messages"
+
+Ce bouton est juste un raccourci pour sélectionner tous les types de messages
+d'un seul click.
+
+Exclusion : Bouton "Never ignore this mask"
+
+Une possibilité spéciale permet de ne jamais ignorer les messages d'un
+certain masque. Celà sert par exemple si vous ignorez les messages de
+"*!*@*.wanaboo.fr" mais que vous voulez quand meme recevoir les messages
+de "*!copain@*.wanaboo.fr". Dans ce cas, vous rajouter un ignore avec le
+masque désiré ("*!copain@wanaboo.fr") et vous cliquez sur sur "Never ignore
+this mask" dans la boite de dialogue. Note: Les ignores ayant été spécifiées
+comme Exclude sont toujours traités en priorité par rapport aux autres ignores
+- l'ordre dans lequel se trouvent les ignores dans la boite
+Server->Ignores List n'a pas d'importance à ce point de vue là.
+
+
+Temps de vie d'un ignore
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Un ignore spécifié en tant que "Expire on server closing" se terminera lors de la
+fermeture de la fenetre du server (une deconnection ne suffit pas à retirer un
+ignore de ce type) ou lorsque vous quitterez Ol-Irc [Dans le futur on pourra
+spécifier la sauvegarde des ignores, pour qu'ils soient réactivés lors du
+lancement suivant de Ol-Irc].
+
+Vous pouvez aussi spécifier un nombre de minutes. Lorsque ce nombre de minutes
+est écoulé, Ol-Irc retire automatiquement l'ignore de la liste et vous en averti
+par un message dans la fenetre active du server.
+
+Remarque
+~~~~~~~~
+
+Il faut savoir qu'un message ignoré est quand meme reçu par Ol-Irc (la
+plupart des servers IRC ne permettent pas de réellement d'éviter la réception
+de messages). Ol-Irc se contente de ne pas prendre en compte les messages
+reçus (ils n'apparaissent nulle part et vous n'en n'avez donc pas connaissance).
+Ceci explique que vous pouvez très bien vous faire flooder sans en etre conscient,
+si vous avec placé un ignore sur le(s) flooder(s)...
+

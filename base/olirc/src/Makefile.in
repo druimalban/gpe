@@ -1,0 +1,90 @@
+
+@SET_MAKE@
+
+MAIN    = olirc
+OBJECTS = misc.o dns.o prefs.o \
+          icons.o menus.o toolbar.o \
+          windows.o entry.o histories.o \
+          console.o servers.o channels.o queries.o dcc.o \
+			 dialogs.o windows_dialogs.o servers_dialogs.o channels_dialogs.o \
+			 prefs_dialogs.o network.o parse_msg.o ctcp.o ignores.o \
+          scripting.o tcl.o main.o
+
+CFLAGS  = @GTK_CFLAGS@ @TCL_CFLAGS@ -O2 -Wall 
+LDFLAGS = @GTK_LIBS@ @TCL_LIBS@
+CC      = @CC@
+
+LDFLAGS_STATIC = @GTK_LIBS_STATIC@ @TCL_LIBS@
+OBJECTS_STATIC = @GTK_OBJS_STATIC@
+
+all: $(MAIN)
+
+remake: clean all
+
+help:
+	@echo
+	@echo "Ol-Irc (c) 1998, 1999 Olrick"
+	@echo
+	@echo "Makefile targets: all remake help clean distclean static install uninstall"
+	@echo
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+$(MAIN): $(OBJECTS)
+	@echo
+	@rm -f $(MAIN) ../$(MAIN)
+	$(CC) -o $(MAIN) $(CFLAGS) $(LDFLAGS) $(OBJECTS)
+	@chmod 600 $(OBJECTS)
+	@chmod 700 $(MAIN)
+	@ln $(MAIN) ../$(MAIN)
+	@echo
+	@ls -l $(MAIN)
+	@echo
+
+static: $(OBJECTS)
+	@echo
+	@rm -f $(MAIN)-static ../$(MAIN)-static
+	$(CC) -o $(MAIN)-static $(CFLAGS) $(LDFLAGS_STATIC) $(OBJECTS) $(OBJECTS_STATIC)
+	@chmod 600 $(OBJECTS)
+	@chmod 700 $(MAIN)-static
+	@ln $(MAIN)-static ../$(MAIN)-static
+	@echo
+	@ls -l $(MAIN)-static
+	@echo
+
+debug:
+	@echo
+	@echo "Compiling Ol-Irc in debug mode !"
+	@echo
+	@$(MAKE) CFLAGS='$(CFLAGS) -g -DDEBUG' all
+	@echo
+
+static-debug:
+	@echo
+	@echo "Compiling Ol-Irc in debug mode !"
+	@echo
+	@$(MAKE) CFLAGS='$(CFLAGS) -g -DDEBUG' static
+	@echo
+
+clean:
+	@echo
+	@echo rm -f \*.o $(MAIN) $(MAIN)-static core
+	@rm -f *.o $(MAIN) $(MAIN)-static core
+	@echo
+
+distclean:
+	@echo
+	@echo rm -f \*.o $(MAIN) $(MAIN)-static core Makefile config.h
+	@rm -f *.o $(MAIN) $(MAIN)-static core Makefile config.h
+	@echo
+
+install:
+	@echo
+	@echo "Not yet implemented, sorry."
+	@echo
+
+install-strip: install
+
+uninstall: install
+

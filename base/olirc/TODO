@@ -1,0 +1,30 @@
+
+-- TODO --
+
+A lot of things !
+
+First, all the code would better be rewritten completely :) For now, it is
+awfully ugly and illogical... and that's why there is a lot of bugs :)
+
+The management of texts have to be changed completely - scrollings are
+currently awful...
+
+Gnome support must really be added...
+
+Olirc *should* be made compliant with all IRC standards (IRC, CTCP, DCC, etc.)
+and de-facto standards (colors, TDCC, ...)
+Currently this is clearly not the case !
+
+There is currently *NO* kind of protection against lame practices like
+text flood, icmp flood and so on. Do not attempt an IRC war with Ol-Irc,
+you will loose before starting. (By the way, IRC wars are more than useless,
+aren't they ?) A flood protection should be added anyway...
+
+
+
+If you have made any fixes or patchs, please send them to me :)
+
+If you have any ideas, I will welcome them too.
+
+mailto: <olirc@hexanet.fr>
+

@@ -1,0 +1,14 @@
+
+-- INSTALL --
+
+First, to configure the scripts for your system, type ./configure
+
+Then you can compile olirc in two different ways:
+
++ Dynamically linked with gtk libraries (simply type make)
++ Statically linked with gtk libraries (type make static)
+
+For now, olirc can't be 'installed', despite of the fact that the configure script
+proposes installation options. Just copy the executable 'olirc' somewhere in your path
+if you want to use it :)
+

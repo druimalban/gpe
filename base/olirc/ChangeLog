@@ -1,0 +1,202 @@
+
+* ol-Irc 0.0.38
+
+- Unexpected queries closures on nick case changes should be fixed
+- New escapes sequences for the text entry : \000 -> \377 to specifiy a char
+  in octal, \x00 -> \xff in hexadecimal. NUL, CR and LF are not well handled.
+- Embedding of the TCL scripting language. It works, but ALL variables / proc
+  will change and then change again in the future.
+- /load tries to load and execute scripts. Filenames ending in .tcl are
+  processed as TCL scripts - in the future .py files will be processed as
+  Python scripts, and .pl as Perl scripts.
+- /source is now an alias of /load (instead of doing a CTCP SOURCE)
+- Olirc now sends mIRC compatible CTCP PINGs (what a disgrace !)
+- waitpid() crash on SunOs should be fixed (thanks Khalimero for your shell ;)
+- Removed a few compilation warnings on OpenBSD (thanks bedlam)
+- Use the HOME variable if the getpwuid() function returns no home directory
+
+* ol-Irc 0.0.37 - 11.10.1999
+
+- It is now possible to copy/paste channels topics with the mouse
+- Internally : VW_output() entirely rewritten, should be much powerful
+- Some messages parsing changed/added (err_unavailresource, rpl_inviting)
+
+* ol-Irc 0.0.36 (not released)
+
+(I didn't remember what i did during this period)
+
+* ol-irc 0.0.35 - 06.07.1999
+
+- Some bugfixes
+
+* ol-irc 0.0.34 - 03.07.1999
+
+- Ol-Irc now requires Gtk+ 1.2 to compile...
+- Each notebook page has now its own text entry
+- Fixed lame bugs in all functions using gdk_input_add() (Thanks Khalimero)
+  In particular, /dns and name resolution should work as expected...
+- Quit dialogs rewritten, should be better
+- Prefs finally started ! You can change some fonts :)
+- Big changes in the preferences system (not yet visible to the user)
+- Texts are now buffered in each window (not yet visible to the user)
+- You can now send a SIGUSR2 to Ol-Irc to make it abort() and coredump
+
+* ol-irc 0.0.33 - 21.06.1999
+
+- Improvements in Ignore List dialog box and when ignoring CTCP messages
+- Big changes (and the final ones, I hope) in the management of Servers Lists
+  Now, Ol-Irc just needs a (large) list of predefined servers :)
+- Names resolution is now asynchronous (using child processes)
+- New command: /dns
+- To compile Ol-Irc in debug mode, you can simply type: make debug
+- Bug fixes in Server_Callbacks functions
+
+* ol-irc 0.0.32 - 08.06.1999
+
+  A really big amount of changes. The main ones are :
+
+- Management of channel members entirely rewritten. Members are now sorted in
+  a ops/voiced/others order, and it will be easy to choose another order when
+  preferences are at least implemented. User Tab completion uses another member
+  list that the user will be able to sort in a different way from the channel
+  member list
+- Userhosts of channel members are stored as soon as possible, this allows
+  quick ignore / ban, without having to retrieve the userhost mask
+- Ignore box and bans menus retrieve the userhost if it is still unknown
+- The status bar has changed and uses frames now
+- You cannot edit the topic of unjoined channels
+- Channel->Part no longer closes the channel window, you have to use
+  Window->Close. I think it's more logical.
+- Olirc no longer complains when receiving JOIN/PART/NOTICE messages for
+  channels just left or not joined
+- First implementation of scripting. The first scripting langugage will be
+  Python (www.python.org) but my dreams are to allow the user to choose any
+  scripting language he/she wants with Ol-Irc :)
+- First attempt of internationalization/localization. I should rather use GNU
+  gettext to do this kind of work. So things are likely to change again soon.
+- Bugfixes in ignores dialog boxes
+- New commands : /userhost /list /motd /trace
+
+* ol-irc 0.0.31 - 15.05.1999
+
+- Some cleanups in windows.c to allow Ol-Irc to run with the new gtk 1.2.3
+  without displaying gtk-warnings
+
+* ol-irc 0.0.30 - 08.05.1999
+
+- Alt+Space has been replaced with Ctrl+w (or Ctrl+W) to switch to the next
+  (or previous) window. Some window managers were used to eat Alt+Space events
+- Olirc no longer complains when receiving messages for channels not joined
+- \\x char sequences now work (x is no more interpreted)
+- Added \g sequence to produce 0x07 chars, and added Ctrl+G shortcut
+- Logging into files should work again :/
+- Better parsing of '/dcc' commands (for instance, '/dcc chat' followed by
+  spaces should no longer crash)
+- You can't any more send text to non-joined channels (e.g. after a kick)
+- Menu 'Ol-irc->Disconnect' replaced with 'Quit All', and it now works
+- You can't any more DCC Send empty files (that made olirc crash). But you can
+  still accept empty files sent to you - and olirc will crash if you do that
+- First implementation of messages Ignores. /ignore command does not work yet.
+  Ol-Irc can't yet retrieve the full userhost of a nick, so the only ignore
+  mask proposed for now is "Nick!*@*". You have to modify it by hand if it is
+  not suitable for you. Ignore List dialog box does not work well with
+  gtk 1.0.  This might be fixed later. Please upgrade to 1.2 ! Note : If you
+  want to unignore someone, you have to do Server->Ignore List->Remove.
+- Fixed a serious bug that made olirc crash when opening a new server just
+  after having closed one. Many thanks to Khalimero and Rouc :)
+- DCC Send/Get dialog boxes code patched by Khalimero
+- Chars > 128 are now displayed well in server raw windows
+- Removed some compilation warnings
+- DCC Send now handles filenames with spaces (spaces are replaced with '_')
+
+* ol-irc 0.0.29 - 06.04.1999
+
+- Multiples Nickname Change dialog boxes can now be opened at the same time
+- Multiples Logfile Fileselection boxes can now be opened at the same time
+- Rewritten the Strip_Codes() function
+- Finally it happened ! DCC Send/Get implemented... and (I hope :/) working 
+- /join command now allows to join +k channels by accepting keys
+- Fileselectors now have a "Home" button
+- Fileselectors now try to remember the last directory used
+- You can now send control codes, with escapes sequences \b, \r, \u, \k and \o.
+  You can use Ctrl+B, Ctrl+R, Ctrl+U, Ctrl+K and Ctrl+O as shortcuts.
+- Added Server->Properties menu, to allow the changes of nick/username/realname
+  of a server without having to close its window first
+- Fixed a bug that prevented new users (without prefs file) from starting olirc
+- Olirc now displays a warning if run as root
+- Important changes in the management of servers / local servers
+- Colors preferences are now stored in prefs file
+- Changing nick while connecting to a server no longer makes olirc crash
+- DCC Chat now handles CTCP ACTION, and the /me command works in chat windows
+- Now sends password (if any) when connecting to an irc server
+
+* ol-irc 0.0.28 - 29.03.1999
+
+- Added /action command, alias to /me, and /raw, alias to /quote
+- Added /clear command to clear the window
+- Added User submenu for Query windows
+- Parse command line before initializing Gtk
+- New command line flag: -f, makes olirc fork() on startup
+- olirc -v gives a much shorter output than olirc --version
+- You can now close the Console. It will be possible to reopen it in a future
+  version.
+- Closed connections should now be noticed at once
+- The Server->Change Nick menu now works
+- Fixed the CTCP CLIENTINFO answer
+- CTCP VERSION reply is now more compliant with the CTCP standard
+- Added CTCP SOURCE management, /source command and CTCP->Source submenu
+- Added CTCP ECHO management
+- New servers are opened in the right window, not always in the first one
+- Servers and channels are now reopened on startup
+- Added first attempt icons (made by Khalimero, thanks :)
+- Checked parse_msg.c against server messages formats. I hope all messages
+  managers implemented for the moment are now compliant with server messages...
+- Added /banlist command, to get the ban list of a channel
+- Now displaying control codes in Raw Log Windows
+- Added Ol-irc->Connect All menu, that connects all idle servers
+- Rewritten the management of mirc color codes
+
+* ol-irc 0.0.27 - 16.03.1999
+
+- Rewritten ctcp.c
+- CTCP Replies preferences are now stored in prefs file
+- Windows tab position are now stored in prefs file
+- Very slightly modified the servers preferences interface
+- Strips control codes when logging into files
+- No more crashes when connecting to a server without MOTD
+- make static now works will all gtk >= 1.0.4, including 1.1.x and 1.2.x
+- If you want to compile olirc in debug mode, edit the Makefile after the
+  ./configure and comment out the 2 marked lines at the beginning.
+
+* ol-irc 0.0.26 - 20.02.1999
+
+- menus.c entirely rewritten - I'm not yet proud of it, but no more ashamed
+  of it :) It now works with 1.0.x as well as with 1.1.x. I hope having
+  removed almost all of the memory leaks of the old code.
+- Added management of CTCP TIME requests - but ctcp.c needs to be rewritten
+- Fixed a bug in the entries parser: escape sequence \\ really works now.
+- Added beta Tab completion for nicks and / commands
+- Added beta management of SOCKS V4 firewalls (does NOT work with DCC yet)
+- Slightly modified the create new window / move to another window interface.
+
+* ol-irc 0.0.25 - 07.02.1999
+
+- New entries parser, handle escape sequences : \n, \\ and \/.
+- Cut and paste works well in DCC chat.
+- First implementation of shell command line option(s).
+- Ol-irc normally switches to black and white on monochrome displays, so all
+  texts should be viewable.
+- Bugfixes: Double-clicks on the scollbar of memberlists no longer query
+  random users. No more crashes when adding new servers without connecting
+  to them.  Fixed a bug that made ol-irc crash if the server connection was
+  closed when DCC chating with someone on this server.
+- The logging function now writes the logs into files instead of the standard
+  output, but for now it writes a raw log (i.e., with style char sequences).
+- The CTCP menu is now labelled 'CTCP' instead of 'CTPC' 8-) Thanks, Rouc :)
+- Ol-irc now compiles with gtk-1.0.4+ and gtk-1.1.9+, so hopefully with the
+  future stable versions gtk-1.2+ too. Tests made with 1.0.4, 1.0.6, 1.1.9
+  and 1.1.15. Version 1.1.9 generates lots of Gtk-CRITICAL errors with popups
+  menus. This is caused by a bug that has been fixed in 1.1.10. With 1.1.9 too,
+  the fileselect dialog box doesn't work well. If you want to use a 1.1.x
+  version, please get at least 1.1.15.
+

@@ -1,0 +1,44 @@
+
+When compiled with TCL, Ol-Irc add a set of new TCL variables and commands,
+that you can use in your scripts to manipulate the features of Ol-Irc.
+
+-- !! ALL THIS WILL CHANGE AND THEN CHANGE AGAIN !! --
+
+-- Variables --
+
+olirc()
+
+olirc(version)
+olirc(date)
+
+-- Commands --
+
+olirc
+
+	quit
+
+vwindow
+
+	list				Returns a TCL List of the ID of all currently open vwindows
+	title	ID			Returns the current Title of the window
+	name				Returns the current Name of the window
+	close				Closes the window immediately
+	activate			Activates the window
+	write	[-nohilight] string	Writes a string in the window
+	server
+	channel
+	query
+	dcc
+
+server
+
+	list			Returns a TCL list of the ID of all currently open servers
+					(not necessarly connected)
+
+	status ID	Returns the status of the server
+	connect
+	disconnect
+	quit [message]
+	puts string	Sends an IRC Message to the server
+	channels
+

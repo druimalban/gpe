@@ -1,0 +1,688 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT(src/main.c)
+
+AC_CONFIG_HEADER(src/config.h)
+
+AM_SANITY_CHECK
+
+AC_PROG_CC
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h unistd.h string.h sys/varargs.h stdarg.h sys/time.h signal.h netinet/in.h sys/types.h arpa/inet.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+
+dnl Checks for library functions.
+AC_TYPE_SIGNAL
+AC_CHECK_FUNCS(memmove socket gettimeofday setsockopt inet_aton)
+
+AC_FUNC_VPRINTF
+AC_FUNC_STRFTIME
+
+AC_PATH_X
+
+AM_PATH_GTK(1.2.0, , AC_MSG_ERROR(GTK+ is not installed or badly configured on your system...))
+
+AC_PATH_PROG(gmake, gmake)
+AC_PROG_MAKE_SET
+
+AC_PROG_INSTALL
+
+dnl #####################################################################################################
+
+dnl TCL Stuff... based on configure.in of eggdrop1.4.0 :/
+
+AC_ARG_ENABLE(tcl, [  --disable-tcl           Do not try to find and use TCL], tclenable="$enableval")
+AC_ARG_WITH(tcllib, [  --with-tcllib=PATH      full path to tcl library], tcllibname=$withval)
+AC_ARG_WITH(tclinc, [  --with-tclinc=PATH      full path to tcl header], tclincname=$withval)
+
+if test ! "_${tcllibname}" = "_"
+then
+	tcl_needed="yes"
+elif test ! "_${tclincname}" = "_"
+then
+	tcl_needed="yes"
+elif test "_$tclenable" = "_yes"
+then
+	tcl_needed="yes"
+elif test "_$tclenable" = "_no"
+then
+	tcl_needed="no"
+elif test "_$tclenable" = "_"
+then
+	tcl_needed="use_it_if_found"
+else
+	cat << 'EOF' >&2
+configure: error:
+
+   Please use --with-tcllib and --with-tclinc instead of --enable-tcl
+   to specify the paths to the tcl library and the tcl header.
+
+EOF
+	exit 1
+fi
+
+if test ! "_$tcl_needed" = "_no"
+then
+
+dnl # dnl awk is needed for Tcl library stuff and version number checking.
+dnl # 
+dnl # AC_PROG_AWK
+dnl # 
+dnl # if test "_${AWK}" = "_"
+dnl # then
+dnl #   cat << 'EOF' >&2
+dnl # configure: error:
+dnl # 
+dnl #   This system seems to lack a working 'awk' command.
+dnl #   A working 'awk' command is required to compile Ol-Irc.
+dnl # 
+dnl # EOF
+dnl #   exit 1
+dnl # fi
+
+tclrecommendver="8.2.1"
+
+tcllibnames="tcl tcl8.3 tcl83 tcl8.2 tcl82 tcl8.1 tcl81 \
+	tcl8.0 tcl80 tcl7.6 tcl76 tcl7.5 tcl75 tcl7.4 tcl74 \
+	tcl7.3 tcl73 tcl7.2 tcl72 tcl7.1 tcl71 tcl7.0 tcl70"
+
+tcllibextensions=".so .so.1 .so.1.0 .so.1.2 .a"
+
+tcllibpaths="/usr/local/lib /usr/local/pkgs/tcl/lib \
+	/usr/lib /lib /usr/i486-linuxaout/lib \
+	$HOME/lib $HOME/tcl/lib $HOME"
+
+tclheadernames="tcl.h"
+
+tclheaderpaths="/usr/local/include /usr/local/pkgs/tcl/include \
+	/usr/include $HOME/include $HOME/tcl/include $HOME"
+
+# make sure either both or neither $tcllibname and $tclincname are set
+if test ! "_${tcllibname}" = "_"
+then
+  if test "_${tclincname}" = "_"
+  then
+    cat << 'EOF' >&2
+configure: warning:
+
+  You must specify both --with-tcllib and --with-tclinc for them to work.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+    tcllibname=""
+    TCLLIB=""
+    TCLINC=""
+  fi
+else
+  if test ! "_${tclincname}" = "_"
+  then
+    cat << 'EOF' >&2
+configure: warning:
+
+  You must specify both --with-tcllib and --with-tclinc for them to work.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+    tclincname=""
+    TCLLIB=""
+    TCLINC=""
+  fi
+fi
+
+# make sure either both or neither $TCLLIB and $TCLINC are set
+if test ! "_${TCLLIB}" = "_"
+then
+  if test "_${TCLINC}" = "_"
+  then
+    cat << 'EOF' >&2
+configure: warning:
+
+  Environment variable TCLLIB was set, but I did not detect TCLINC.
+  Please set both TCLLIB and TCLINC correctly if you wish to use them.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+    TCLLIB=""
+  fi
+else
+  if test ! "_${TCLINC}" = "_"
+  then
+    cat << 'EOF' >&2
+configure: warning:
+
+  Environment variable TCLINC was set, but I did not detect TCLLIB.
+  Please set both TCLLIB and TCLINC correctly if you wish to use them.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+    TCLINC=""
+  fi
+fi
+
+# look for Tcl library: if $tcllibname is set, check there first
+if test ! "_${tcllibname}" = "_"
+then
+  if test -f "$tcllibname" && test -r "$tcllibname"
+  then
+    TCLLIB=`$DIRNAME $tcllibname`
+    TCLLIBFN=`$BASENAME $tcllibname | cut -c4-`
+changequote(,)dnl
+    TCLLIBEXT=".`echo $TCLLIBFN | $AWK '{j=split($1, i, "."); print i[j]}'`"
+changequote([, ])dnl
+    TCLLIBFNS=`$BASENAME $tcllibname $TCLLIBEXT | cut -c4-`
+  else
+    cat << EOF >&2
+configure: warning:
+
+  The file '$tcllibname' given to option --with-tcllib is not valid.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+    tcllibname=""
+    tclincname=""
+    TCLLIB=""
+    TCLLIBFN=""
+    TCLINC=""
+    TCLINCFN=""
+  fi
+fi
+
+# look for Tcl header: if $tclincname is set, check there first
+if test ! "_${tclincname}" = "_"
+then
+  if test -f "$tclincname" && test -r "$tclincname"
+  then
+    TCLINC=`$DIRNAME $tclincname`
+    TCLINCFN=`$BASENAME $tclincname`
+  else
+    cat << EOF >&2
+configure: warning:
+
+  The file '$tclincname' given to option --with-tclinc is not valid.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+    tcllibname=""
+    tclincname=""
+    TCLLIB=""
+    TCLLIBFN=""
+    TCLINC=""
+    TCLINCFN=""
+  fi
+fi
+
+# look for Tcl library: if $TCLLIB is set, check there first
+if test "_${TCLLIBFN}" = "_"
+then
+  if test ! "_${TCLLIB}" = "_"
+  then
+    if test -d "${TCLLIB}"
+    then
+      for tcllibfns in $tcllibnames
+      do
+	for tcllibext in $tcllibextensions
+	do
+	  if test -r "$TCLLIB/lib$tcllibfns$tcllibext"
+	  then
+	    TCLLIBFN=$tcllibfns$tcllibext
+	    TCLLIBEXT=$tcllibext
+	    TCLLIBFNS=$tcllibfns
+	    break 2
+	  fi
+	done
+      done
+    fi
+    if test "_${TCLLIBFN}" = "_"
+    then
+      cat << 'EOF' >&2
+configure: warning:
+
+  Environment variable TCLLIB was set, but incorrect.
+  Please set both TCLLIB and TCLINC correctly if you wish to use them.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+      TCLLIB=""
+      TCLLIBFN=""
+      TCLINC=""
+      TCLINCFN=""
+    fi
+  fi
+fi
+
+# look for Tcl header: if $TCLINC is set, check there first
+if test "_${TCLINCFN}" = "_"
+then
+  if test ! "_${TCLINC}" = "_"
+  then
+    if test -d "${TCLINC}"
+    then
+      for tclheaderfn in $tclheadernames
+      do
+	if test -r "$TCLINC/$tclheaderfn"
+	then
+	  TCLINCFN=$tclheaderfn
+	fi
+      done
+    fi
+    if test "_${TCLINCFN}" = "_"
+    then
+      cat << 'EOF' >&2
+configure: warning:
+
+  Environment variable TCLINC was set, but incorrect.
+  Please set both TCLLIB and TCLINC correctly if you wish to use them.
+  configure will now attempt to autodetect both the Tcl library and header...
+
+EOF
+      TCLLIB=""
+      TCLLIBFN=""
+      TCLINC=""
+      TCLINCFN=""
+    fi
+  fi
+fi
+
+dnl # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+AC_MSG_CHECKING(for Tcl library)
+
+# attempt autodetect for $TCLLIBFN if it's not set
+if test ! "_${TCLLIBFN}" = "_"
+then
+  AC_MSG_RESULT(using $TCLLIB/lib$TCLLIBFN)
+else
+  for tcllibfns in $tcllibnames
+  do
+    for tcllibext in $tcllibextensions
+    do
+      for tcllibpath in $tcllibpaths
+      do
+	if test -r "$tcllibpath/lib$tcllibfns$tcllibext"
+	then
+	  AC_MSG_RESULT(found $tcllibpath/lib$tcllibfns$tcllibext)
+	  TCLLIB=$tcllibpath
+	  TCLLIBFN=$tcllibfns$tcllibext
+	  TCLLIBEXT=$tcllibext
+	  TCLLIBFNS=$tcllibfns
+	  break 3
+	fi
+      done
+    done
+  done
+fi
+
+# show if $TCLLIBFN wasn't found
+if test "_${TCLLIBFN}" = "_"
+then
+  AC_MSG_RESULT(not found)
+fi
+
+dnl # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+AC_MSG_CHECKING(for Tcl header)
+
+# attempt autodetect for $TCLINCFN if it's not set
+if test ! "_${TCLINCFN}" = "_"
+then
+  AC_MSG_RESULT(using $TCLINC/$TCLINCFN)
+else
+  for tclheaderpath in $tclheaderpaths
+  do
+    for tclheaderfn in $tclheadernames
+    do
+      if test -r "$tclheaderpath/$tclheaderfn"
+      then
+	AC_MSG_RESULT(found $tclheaderpath/$tclheaderfn)
+	TCLINC=$tclheaderpath
+	TCLINCFN=$tclheaderfn
+	break 2
+      fi
+    done
+  done
+  # FreeBSD hack ...
+  if test "_${TCLINCFN}" = "_"
+  then
+    for tcllibfns in $tcllibnames
+    do
+      for tclheaderpath in $tclheaderpaths
+      do
+	for tclheaderfn in $tclheadernames
+	do
+	  if test -r "$tclheaderpath/$tcllibfns/$tclheaderfn"
+	  then
+	    AC_MSG_RESULT(found $tclheaderpath/$tcllibfns/$tclheaderfn)
+	    TCLINC=$tclheaderpath/$tcllibfns
+	    TCLINCFN=$tclheaderfn
+	    break 3
+	  fi
+	done
+      done
+    done
+  fi
+fi
+
+# show if $TCLINCFN wasn't found
+if test "_${TCLINCFN}" = "_"
+then
+  AC_MSG_RESULT(not found)
+fi
+
+dnl # # # # # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+
+if test "_${TCLLIBFN}" = "_" || test "_${TCLINCFN}" = "_"
+then
+
+	if test "_$tcl_needed" = "_yes"
+	then
+
+	cat << 'EOF' >&2
+configure: error:
+
+   I can't find Tcl on this system.
+
+   If you already have Tcl installed on this system, and I just wasn't
+	looking in the right place for it, set the environment variables
+	TCLLIB and TCLINC so I will know where to find 'libtcl.a'
+	(or 'libtcl.so') and 'tcl.h' (respectively).
+	Then please run 'configure' again.
+
+	If you don't want TCL support in Ol-Irc, just type :
+	./configure --disable-tcl
+
+EOF
+
+	exit 1
+
+	fi
+
+	if test "_${TCLLIBFN}" = "_" && test "_${TCLINCFN}" = "_"
+	then
+		TCL_SUP="no (TCL not found)"
+	elif test "_${TCLLIBFN}" = "_"
+	then
+		TCL_SUP="no (TCL library not found)"
+	else
+		TCL_SUP="no (TCL header not found)"
+	fi
+else
+
+TCL_SUP="yes"
+
+fi
+
+dnl # # # # # # # # # # # # # # # # # # # # # ## # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+dnl 
+dnl # done looking, now either TCLLIBFN & TCLINCFN are both set, or we bail
+dnl #	if test ! "_${TCLLIBFN}" = "_" && test ! "_${TCLINCFN}" = "_"
+dnl #	then
+dnl #	
+dnl #	  # find Tcl's version
+dnl #	  TCL_VERSION=`grep TCL_VERSION $TCLINC/$TCLINCFN | head -1 | $AWK '{gsub(/\"/, "", $3); print $3}'`
+dnl #	  TCL_PATCH_LEVEL=`grep TCL_PATCH_LEVEL $TCLINC/$TCLINCFN | head -1 | $AWK '{gsub(/\"/, "", $3); print $3}'`
+dnl #	fi
+dnl #	
+dnl #	# check if we found Tcl's version
+dnl #	AC_MSG_CHECKING(for Tcl version)
+dnl #	if test ! "_${TCL_VERSION}" = "_"
+dnl #	then
+dnl #	  if test ! "_${TCL_PATCH_LEVEL}" = "_"
+dnl #	  then
+dnl #	    AC_MSG_RESULT($TCL_PATCH_LEVEL)
+dnl #	    TCL_FOUND=1
+dnl #	  else
+dnl #	    AC_MSG_RESULT($TCL_VERSION)
+dnl #	    TCL_FOUND=1
+dnl #	  fi
+dnl #	else
+dnl #	  AC_MSG_RESULT(not found)
+dnl #	  TCL_FOUND=0
+dnl #	fi
+dnl #	
+dnl #	if test $TCL_FOUND = 0
+dnl #	then
+dnl #	  cat << 'EOF' >&2
+dnl #	configure: error:
+dnl #	
+dnl #	  I can't find Tcl on this system.
+dnl #	
+dnl #	  Eggdrop now requires Tcl to compile.  If you already have Tcl
+dnl #	  installed on this system, and I just wasn't looking in the right
+dnl #	  place for it, set the environment variables TCLLIB and TCLINC so
+dnl #	  I will know where to find 'libtcl.a' (or 'libtcl.so') and 'tcl.h'
+dnl #	  (respectively).  Then run 'configure' again.
+dnl #	
+dnl #	  Read the README file if you don't know what Tcl is or how to get
+dnl #	  it and install it.
+dnl #	
+dnl #	EOF
+dnl #	  exit 1
+dnl #	fi
+dnl #	
+dnl #	# is this Tcl version too old for us to use ?
+dnl #	TCL_VER_PRE70=`echo $TCL_VERSION | $AWK '{split($1, i, "."); if (i[1] < 7) print "yes"; else print "no"}'`
+dnl #	if test "$TCL_VER_PRE70" = "_yes"
+dnl #	then
+dnl #	  cat << EOF >&2
+dnl #	configure: error:
+dnl #	
+dnl #	  Your Tcl version is much too old for eggdrop to use.
+dnl #	  I suggest you download and complie a more recent version.
+dnl #	  The most reliable current version is $tclrecommendver
+dnl #	
+dnl #	EOF
+dnl #	  exit 1
+dnl #	fi
+dnl #	
+dnl #	# are we using a pre 7.5 Tcl version ?
+dnl #	changequote(,)dnl
+dnl #	TCL_VER_PRE75=`echo $TCL_VERSION | $AWK '{split($1, i, "."); if (((i[1] == 7) && (i[2] < 5)) || (i[1] < 7)) print "yes"; else print "no"}'`
+dnl #	changequote([, ])dnl
+dnl #	if test "_${TCL_VER_PRE75}" = "_yes"
+dnl #	then
+dnl #	  AC_DEFINE(HAVE_PRE7_5_TCL)
+dnl #	fi
+dnl #	
+dnl #	# set TCL_TESTLIBS for Tcl library tests
+dnl #	if test ! "_${TCLLIBEXT}" = "_.a"
+dnl #	then
+dnl #	  TCL_TESTLIBS="-L$TCLLIB -l$TCLLIBFNS -lm $LIBS"
+dnl #	else
+dnl #	  if test ! "_${tcllibname}" = "_"
+dnl #	  then
+dnl #	    TCL_TESTLIBS="$TCLLIB/lib$TCLLIBFN -lm $LIBS"
+dnl #	  else
+dnl #	    TCL_TESTLIBS="-L$TCLLIB -l$TCLLIBFNS -lm $LIBS"
+dnl #	  fi
+dnl #	fi
+dnl #	if test "_${ac_cv_lib_pthread_pthread_mutex_init}" = "_yes"
+dnl #	then
+dnl #	  TCL_TESTLIBS="-lpthread $TCL_TESTLIBS"
+dnl #	fi
+dnl #	
+dnl #	# check for Tcl_Free()
+dnl #	AC_MSG_CHECKING(if Tcl library has Tcl_Free)
+dnl #	if eval "test \"`echo '$''{'ac_cv_var_tcl_free'+set}'`\" = set"
+dnl #	then
+dnl #	  echo $ac_n "(cached) $ac_c" 1>&6
+dnl #	else
+dnl #	  ac_save_LIBS="$LIBS"
+dnl #	  LIBS="$TCL_TESTLIBS"
+dnl #	  cat > conftest.$ac_ext << EOF
+dnl #	#include "confdefs.h"
+dnl #	char Tcl_Free();
+dnl #	
+dnl #	int main() {
+dnl #	  Tcl_Free();
+dnl #	  return 0;
+dnl #	}
+dnl #	EOF
+dnl #	  if { (eval echo configure: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}
+dnl #	  then
+dnl #	    rm -rf conftest*
+dnl #	    eval "ac_cv_var_tcl_free=yes"
+dnl #	  else
+dnl #	    echo "configure: failed program was:" >&5
+dnl #	    cat conftest.$ac_ext >&5
+dnl #	    rm -rf conftest*
+dnl #	    eval "ac_cv_var_tcl_free=no"
+dnl #	  fi
+dnl #	  rm -f conftest*
+dnl #	  LIBS="$ac_save_LIBS"
+dnl #	fi
+dnl #	
+dnl #	if test "_${ac_cv_var_tcl_free}" = "_yes"
+dnl #	then
+dnl #	  AC_MSG_RESULT(yes)
+dnl #	  AC_DEFINE(HAVE_TCL_FREE)
+dnl #	else
+dnl #	  AC_MSG_RESULT(no)
+dnl #	fi
+dnl #	
+dnl #	# check for TclpFinalizeThreadData()
+dnl #	AC_MSG_CHECKING(if Tcl library has threads)
+dnl #	if eval "test \"`echo '$''{'ac_cv_var_tcl_threads'+set}'`\" = set"
+dnl #	then
+dnl #	  echo $ac_n "(cached) $ac_c" 1>&6
+dnl #	else
+dnl #	  ac_save_LIBS="$LIBS"
+dnl #	  LIBS="$TCL_TESTLIBS"
+dnl #	  cat > conftest.$ac_ext << EOF
+dnl #	#include "confdefs.h"
+dnl #	char TclpFinalizeThreadData();
+dnl #	
+dnl #	int main() {
+dnl #	  TclpFinalizeThreadData();
+dnl #	  return 0;
+dnl #	}
+dnl #	EOF
+dnl #	  if { (eval echo configure: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}
+dnl #	  then
+dnl #	    rm -rf conftest*
+dnl #	    eval "ac_cv_var_tcl_threads=yes"
+dnl #	  else
+dnl #	    echo "configure: failed program was:" >&5
+dnl #	    cat conftest.$ac_ext >&5
+dnl #	    rm -rf conftest*
+dnl #	    eval "ac_cv_var_tcl_threads=no"
+dnl #	  fi
+dnl #	  rm -f conftest*
+dnl #	  LIBS="$ac_save_LIBS"
+dnl #	fi
+dnl #	
+dnl #	if test "_${ac_cv_var_tcl_threads}" = "_yes"
+dnl #	then
+dnl #	  AC_MSG_RESULT(yes)
+dnl #	  cat << 'EOF' >&2
+dnl #	configure: warning:
+dnl #	
+dnl #	  Your Tcl library is compiled with threads.
+dnl #	  There are known problems, but we will attempt to work around them.
+dnl #	
+dnl #	EOF
+dnl #	  AC_DEFINE(HAVE_TCL_THREADS)
+dnl #	
+dnl #	  # add -lpthread to $LIBS if we have it
+dnl #	  if test "_${ac_cv_lib_pthread_pthread_mutex_init}" = "_yes"
+dnl #	  then
+dnl #	    LIBS="-lpthread $LIBS"
+dnl #	  fi
+dnl #	else
+dnl #	  AC_MSG_RESULT(no)
+dnl #	fi
+dnl #	
+dnl #	if test ! "_${TCLLIBEXT}" = "_.a"
+dnl #	then
+dnl #	  TCL_REQS="$TCLLIB/lib$TCLLIBFN"
+dnl #	  TCL_LIBS="-L$TCLLIB -l$TCLLIBFNS -lm"
+dnl #	else
+dnl #	
+dnl #	  # set default make as static for unshared Tcl library
+dnl #	  if test ! "$DEFAULT_MAKE" = "static"
+dnl #	  then
+dnl #	    cat << 'EOF' >&2
+dnl #	configure: warning:
+dnl #	
+dnl #	  Your Tcl library is not a shared lib.
+dnl #	  configure will now set default make type to static...
+dnl #	
+dnl #	EOF
+dnl #	    DEFAULT_MAKE=static
+dnl #	  fi
+dnl #	
+dnl #	  # are we using a pre 7.4 Tcl version ?
+dnl #	changequote(,)dnl
+dnl #	  TCL_VER_PRE74=`echo $TCL_VERSION | $AWK '{split($1, i, "."); if (((i[1] == 7) && (i[2] < 4)) || (i[1] < 7)) print "yes"; else print "no"}'`
+dnl #	changequote([, ])dnl
+dnl #	  if test "_${TCL_VER_PRE74}" = "_no"
+dnl #	  then
+dnl #	
+dnl #	    # was the --with-tcllib option given ?
+dnl #	    if test ! "_${tcllibname}" = "_"
+dnl #	    then
+dnl #	      TCL_REQS="$TCLLIB/lib$TCLLIBFN"
+dnl #	      TCL_LIBS="$TCLLIB/lib$TCLLIBFN -lm"
+dnl #	    else
+dnl #	      TCL_REQS="$TCLLIB/lib$TCLLIBFN"
+dnl #	      TCL_LIBS="-L$TCLLIB -l$TCLLIBFNS -lm"
+dnl #	    fi
+dnl #	  else
+dnl #	    cat << EOF >&2
+dnl #	configure: warning:
+dnl #	
+dnl #	  Your Tcl version ($TCL_VERSION) is older than 7.4.
+dnl #	  There are known problems, but we will attempt to work around them.
+dnl #	
+dnl #	EOF
+dnl #	    TCL_REQS="libtcle.a"
+dnl #	    TCL_LIBS="-L. -ltcle -lm"
+dnl #	  fi
+dnl #	fi
+dnl 
+dnl # AC_SUBST(TCLLIB)
+dnl # AC_SUBST(TCLLIBFN)
+dnl # AC_SUBST(TCLINC)
+dnl # AC_SUBST(TCLINCFN)
+dnl # AC_SUBST(TCL_REQS)
+dnl # AC_SUBST(TCL_LIBS)
+
+	TCL_CFLAGS="-DUSE_TCL -I$TCLINC"
+	TCL_LIBS="-L$TCLLIB -l$TCLLIBFNS"
+
+else
+
+	TCL_CFLAGS=""
+	TCL_LIBS=""
+	TCL_SUP="disabled"
+
+fi
+
+AC_SUBST(TCL_CFLAGS)
+AC_SUBST(TCL_LIBS)
+
+dnl #####################################################################################################
+
+AC_OUTPUT(Makefile src/Makefile)
+
+echo ""
+echo "Ol-Irc configuration :"
+echo ""
+echo "GTK+ version                 `gtk-config --version`"
+echo "TCL scripting                $TCL_SUP"
+
+echo ""
+echo "Configuration complete."
+echo ""
+
+if test "_$gmake" = "_" ; then
+	echo "You can now type 'make' to compile ol-irc."
+else
+	echo "You can now type 'gmake' to compile ol-irc."
+fi
+
+echo ""
+

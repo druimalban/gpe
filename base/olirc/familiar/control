@@ -1,0 +1,8 @@
+Package: olirc
+Section: x11
+Priority: optional
+Version: 0.0-1
+Architecture: arm
+Maintainer: Phil Blundell <pb@debian.org>
+Depends: libgtk1.2
+Description: GTK-based irc client
