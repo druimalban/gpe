@@ -102,6 +102,17 @@ class GPE:IconList from Gtk:Scrolled:Window {
 					      title, icon, udata);
 	}
 
+	public GObject *add_item_pixbuf (self, char *title, GdkPixbuf *icon, gpointer udata)
+	{
+	  return gpe_icon_list_view_add_item_pixbuf (GPE_ICON_LIST_VIEW (self->_priv->view),
+					             title, icon, udata);
+	}
+
+	public void remove_item (self, GObject *item)
+	{
+	  gpe_icon_list_view_remove_item (GPE_ICON_LIST_VIEW (self->_priv->view), item);
+	}
+
 	public void set_embolden (self, gboolean yes)
 	{
 	  gpe_icon_list_view_set_embolden (GPE_ICON_LIST_VIEW (self->_priv->view), yes);
