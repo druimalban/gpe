@@ -1,7 +1,3 @@
-ifndef PREFIX
-PREFIX = /usr/local
-endif
-
 VERSION = 0.2.7-1
 
 PACKAGE = gpe-sketchbook
