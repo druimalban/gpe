@@ -1,3 +1,11 @@
+2003-09-17  Colin Marquardt  <colin@marquardt-home.de>
+
+	* tools/interface.c: Don't gettextize string used for DEBUG.
+
+	* cardinfo.c (Cardinfo_Build_Objects): s/Tap/Click/
+
+	* keyboard.c (Keyboard_Build_Objects): Change string (remove tabs).
+
 2003-09-16	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* timeanddate.c: Changed file permissions and made root edit global profile.
 	

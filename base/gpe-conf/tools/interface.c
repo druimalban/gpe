@@ -393,14 +393,14 @@ static int INET_rresolve(char *name, size_t len, struct sockaddr_in *s_in,
     /* Grmpf. -FvK */
     if (s_in->sin_family != AF_INET) {
 #ifdef DEBUG
-	fprintf(stderr, _("rresolve: unsupport address family %d !\n"), s_in->sin_family);
+	fprintf(stderr, "rresolve: unsupported address family %d!\n", s_in->sin_family);
 #endif
 	errno = EAFNOSUPPORT;
 	return (-1);
     }
     ad = (unsigned long) s_in->sin_addr.s_addr;
 #ifdef DEBUG
-    fprintf (stderr, "rresolve: %08lx, mask %08x, num %08x \n", ad, netmask, numeric);
+    fprintf (stderr, "rresolve: %08lx, mask %08x, num %08x\n", ad, netmask, numeric);
 #endif
     if (ad == INADDR_ANY) {
 	if ((numeric & 0x0FFF) == 0) {
@@ -735,7 +735,7 @@ static int aftrans_opt(const char *arg)
 	    if (strcmp(tmp1, paft->alias))
 		continue;
 	    if (strlen(paft->name) + strlen(afname) + 1 >= sizeof(afname)) {
-		fprintf(stderr, _("Too much address family arguments.\n"));
+		fprintf(stderr, _("Too many address family arguments.\n"));
 		return (0);
 	    }
 	    if (paft->flag)
@@ -746,7 +746,7 @@ static int aftrans_opt(const char *arg)
 	    break;
 	}
 	if (!paft->alias) {
-	    fprintf(stderr, _("Unknown address family `%s'.\n"), tmp1);
+	    fprintf(stderr, _("Unknown address family '%s'.\n"), tmp1);
 	    return (1);
 	}
 	tmp1 = tmp2;
@@ -1006,7 +1006,7 @@ static int if_readconf(void)
        (as of 2.1.128) */ 
     skfd2 = get_socket_for_af(AF_INET);
     if (skfd2 < 0) {
-	fprintf(stderr, _("warning: no inet socket available: %s\n"),
+	fprintf(stderr, _("Warning: no inet socket available: %s\n"),
 		strerror(errno));
 	/* Try to soldier on with whatever socket we can get hold of.  */
 	skfd2 = sockets_open(0);
@@ -1479,7 +1479,7 @@ static int in_ether(char *bufp, struct sockaddr *sap)
 	    val = c - 'A' + 10;
 	else {
 #ifdef DEBUG
-	    fprintf(stderr, _("in_ether(%s): invalid ether address!\n"), orig);
+	    fprintf(stderr, "in_ether(%s): invalid ether address!\n", orig);
 #endif
 	    errno = EINVAL;
 	    return (-1);
@@ -1496,7 +1496,7 @@ static int in_ether(char *bufp, struct sockaddr *sap)
 	    val >>= 4;
 	else {
 #ifdef DEBUG
-	    fprintf(stderr, _("in_ether(%s): invalid ether address!\n"), orig);
+	    fprintf(stderr, "in_ether(%s): invalid ether address!\n", orig);
 #endif
 	    errno = EINVAL;
 	    return (-1);
@@ -1510,7 +1510,7 @@ static int in_ether(char *bufp, struct sockaddr *sap)
 	if (*bufp == ':') {
 	    if (i == ETH_ALEN) {
 #ifdef DEBUG
-		fprintf(stderr, _("in_ether(%s): trailing : ignored!\n"),
+		fprintf(stderr, "in_ether(%s): trailing : ignored!\n",
 			orig)
 #endif
 		    ;		/* nothing */
@@ -1522,7 +1522,7 @@ static int in_ether(char *bufp, struct sockaddr *sap)
     /* That's it.  Any trailing junk? */
     if ((i == ETH_ALEN) && (*bufp != '\0')) {
 #ifdef DEBUG
-	fprintf(stderr, _("in_ether(%s): trailing junk!\n"), orig);
+	fprintf(stderr, "in_ether(%s): trailing junk!\n", orig);
 	errno = EINVAL;
 	return (-1);
 #endif

@@ -625,10 +625,10 @@ init_pcmcia_suid ()
 		if (major == -ENODEV)
 			PCMCIA_ERROR =
 				g_strdup (_
-					  ("No pcmcia driver in /proc/devices"));
+					  ("No PCMCIA driver in '/proc/devices'"));
 		else
 			PCMCIA_ERROR =
-				g_strdup (_("Could not open /proc/devices"));
+				g_strdup (_("Could not open '/proc/devices'"));
 		return -1;
 	}
 
@@ -1284,7 +1284,7 @@ Cardinfo_Build_Objects (void)
 		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					 _("Insert Card"), _("Insert Card"),
 					 _
-					 ("Tap here to start card insertion manually."),
+					 ("Click here to start card insertion manually."),
 					 label, (GtkSignalFunc) do_menu,
 					 (void *) 6);
 
@@ -1294,7 +1294,7 @@ Cardinfo_Build_Objects (void)
 		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					 _("Eject Card"), _("Eject Card"),
 					 _
-					 ("Tap here to eject card manually."),
+					 ("Click here to eject card manually."),
 					 label, (GtkSignalFunc) do_menu,
 					 (void *) 5);
 
@@ -1304,7 +1304,7 @@ Cardinfo_Build_Objects (void)
 		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					 _("Suspend Card"), _("Suspend Card"),
 					 _
-					 ("Tap here to suspend current card."),
+					 ("Click here to suspend current card."),
 					 label, (GtkSignalFunc) do_menu,
 					 (void *) 3);
 
@@ -1314,7 +1314,7 @@ Cardinfo_Build_Objects (void)
 		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					 _("Resume Card"), _("Resume Card"),
 					 _
-					 ("Tap here to resume current card."),
+					 ("Click here to resume current card."),
 					 label, (GtkSignalFunc) do_menu,
 					 (void *) 4);
 
@@ -1323,7 +1323,7 @@ Cardinfo_Build_Objects (void)
 	toolicons[2] =
 		gtk_toolbar_append_item (GTK_TOOLBAR (toolbar),
 					 _("Reset Card"), _("Reset Card"),
-					 _("Tap here to reset current card."),
+					 _("Click here to reset current card."),
 					 label, (GtkSignalFunc) do_menu,
 					 (void *) 2);
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
@@ -1334,7 +1334,7 @@ Cardinfo_Build_Objects (void)
 				 _("Reset Card Manager"),
 				 _("Reset Card Manager"),
 				 _
-				 ("Tap here to reset card manager. This commits all updates to pcmcia config files."),
+				 ("Click here to reset card manager. This commits all updates to pcmcia config files."),
 				 label, (GtkSignalFunc) reset_cardmgr, NULL);
 
 	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
@@ -1344,7 +1344,7 @@ Cardinfo_Build_Objects (void)
 					 _("Assign Driver"),
 					 _("Assign Driver"),
 					 _
-					 ("Tap here to assign a driver to this card / change current driver assignment."),
+					 ("Click here to assign a driver to this card / change current driver assignment."),
 					 label,
 					 (GtkSignalFunc) do_driver_dialog,
 					 NULL);

@@ -939,9 +939,9 @@ Network_Build_Objects ()
 
 	help_devtype =
 		_("Here you may change the basic configuration type of "
-		  "your device.\nUse static for manual interface "
-		  "configuration, dhcp to use DHCP and ppp to make "
-		  "the device a point to point device.");
+		  "your device.\nUse \"static\" for manual interface "
+		  "configuration, \"dhcp\" to use DHCP and \"ppp\" to make "
+		  "the device a point-to-point device.");
 
 	have_access = (access (NET_CONFIGFILE, W_OK) == 0);
 	if (!have_access)
