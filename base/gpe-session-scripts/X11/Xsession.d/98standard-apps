@@ -5,6 +5,8 @@ if [ ! -f $HOME/.matchbox/mbdock.session ]; then
   mkdir -p $HOME/.matchbox
   cp /etc/gpe/gpe.mbdock $HOME/.matchbox/mbdock.session
 
+  gpe-conf time user_only
+
   gpe-question --icon !gtk-dialog-info --question "<b>Welcome to GPE!</b>
 
 I have added some standard programs to the panel at 

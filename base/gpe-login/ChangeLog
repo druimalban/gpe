@@ -1,3 +1,11 @@
+2003-09-19  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.51 released.
+	
+2003-09-19  Philip Blundell  <philb@gnu.org>
+
+	* X11/Xsession.d/98standard-apps: Call gpe-conf to set up timezone.
+
 2003-09-15  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login 0.62 released.
