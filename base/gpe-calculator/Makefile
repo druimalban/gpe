@@ -22,7 +22,7 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -Wall $(GTKCFLAGS)
 LDFLAGS += $(GTKLDFLAGS)
-CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DPACKAGE_DATA_DIR=\"$(PREFIX)/share\"
 CFLAGS += -MD
 
 .SUFFIXES: .d
