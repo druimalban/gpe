@@ -1,3 +1,9 @@
+libgpewidget (0.44-1) unstable; urgency=low
+
+  * New upstream version.
+
+ -- Philip Blundell <pb@debian.org>  Sun, 26 Jan 2003 14:04:50 +0000
+
 libgpewidget (0.10-2) unstable; urgency=low
 
   * Include missing headers in libgpewidget-dev

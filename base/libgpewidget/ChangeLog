@@ -1,3 +1,18 @@
+2003-01-27  Philip Blundell  <philb@gnu.org>
+
+	* debian/changelog: Update.
+	* debian/control: Likewise.
+	* debian/copyright: Likewise.
+	* debian/libgpewidget0.dirs, debian/libgpewidget0.files: Removed.
+	* debian/libgpewidget1.dirs, debian/libgpewidget1.files: New.
+
+2003-01-26  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (VERSION, CVSBUILD): Define.
+	(BUILD): Define.  Use it to find makefile fragments.
+	(ipkg, dpkg, upstream): Delete.
+	(install-devel): Headers are in gpe/.
+
 2003-01-25  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.44 released.

@@ -4,16 +4,16 @@ Thu, 13 Jun 2002 19:30:06 +0100.
 It was downloaded from http://gpe.handhelds.org
 
 Upstream Author(s): 
-	Phil Blundell <pb@armlinux.org>
+	Phil Blundell <pb@handhelds.org>
 
 Copyright:
 
- Copyright (C) 2001, 2002 Philip Blundell <philb@gnu.org>
+ Copyright (C) 2001, 2002, 2003 Philip Blundell <philb@gnu.org>
 
  This library is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public
+ modify it under the terms of the GNU General Public
  License as published by the Free Software Foundation; either
  version 2 of the License, or (at your option) any later version.
  
- Refer to /usr/share/common-licenses/LGPL-2.1 for the full text.
+ Refer to /usr/share/common-licenses/GPL-2 for the full text.
 
