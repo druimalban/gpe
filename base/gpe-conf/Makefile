@@ -65,13 +65,14 @@ gpe-conf: $(OBJS)
 	$(CC) -g -o $@ $(OBJS) $(LDFLAGS)
 	cp gpe-conf gpe-conf.pc
 	$(STRIP) gpe-conf
-	
+
 gpe-confsuid: gpe-confsuid.c
 	$(CC) -o $@ gpe-confsuid.c 
 	$(STRIP) gpe-confsuid
 
 install: gpe-conf
 	sed -e s/VERSION/$(VERSION)/ <$(CONTROL).pre > $(CONTROL)
+	mkdir -p $(DESTDIR)/etc/gpe
 	mkdir -p $(DESTDIR)$(BINDIR)
 	$(INSTALL) gpe-conf $(DESTDIR)/$(BINDIR)/gpe-conf
 	$(STRIP) $(DESTDIR)/$(BINDIR)/gpe-conf
