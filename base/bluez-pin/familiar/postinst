@@ -1,0 +1,3 @@
+#!/bin/sh
+
+update-alternatives --install /bin/bluepin bluepin /usr/bin/bluez-pin 10
