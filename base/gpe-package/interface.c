@@ -247,7 +247,7 @@ GtkWidget *hbox;
 void
 show_message(GtkMessageType type, char* message)
 {
-GtkWidget* dialog;
+	GtkWidget* dialog;
 	
 	dialog = gtk_message_dialog_new (GTK_WINDOW(fMain),
 					 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -426,14 +426,14 @@ void on_tree_filter_changed(GtkCheckMenuItem *menuitem, gpointer user_data)
 
 void on_about_clicked (GtkWidget * w)
 {
-	show_message(GTK_MESSAGE_INFO,HELPMESSAGE);
+	show_message(GTK_MESSAGE_INFO, HELPMESSAGE);
 }
 
 
 void on_help_clicked (GtkWidget * w)
 {
 	if (gpe_show_help("gpe-package",NULL))
-		show_message(GTK_MESSAGE_ERROR, NOHELPMESSAGE);
+		show_message(GTK_MESSAGE_INFO, NOHELPMESSAGE);
 }
 
 
@@ -561,16 +561,13 @@ struct pollfd pfd[1];
 			do_message_dlg(GTK_MESSAGE_ERROR,_("Communication error, cannot continue."));
 			exit (1);
 		} else if (msg.type == PK_FRONT) {
-			// fprintf(stderr,"interf.: got type %d ctype %d\n", msg.type, msg.ctype);
 			switch (msg.ctype) {
 				case PK_QUESTION:
 					do_question(msg.content.tf.priority, msg.content.tf.str1);
 					break;
 				case PK_ERROR:
-					//do_message_dlg(GTK_MESSAGE_ERROR,msg.content.tf.str1);
 					if (!ErrorDialogOpen) {
 						GtkWidget *dialog;
-						//do_message_dlg(GTK_MESSAGE_ERROR, "Some error occured, please see log-tab");
 						dialog = gtk_message_dialog_new (GTK_WINDOW(fMain),
 		                                  GTK_DIALOG_DESTROY_WITH_PARENT | GTK_DIALOG_MODAL,
                 		                  GTK_MESSAGE_ERROR,
@@ -661,7 +658,7 @@ void do_local_install(char *filename,gpointer userdata)
 		send_message(PK_COMMAND,CMD_INSTALL,"",filename);
 		wait_command_finish();
 	} else {
-		do_message_dlg(GTK_MESSAGE_ERROR,
+		do_message_dlg(GTK_MESSAGE_WARNING,
 		_("The selected file could not be accessed."));
 	}
 }
