@@ -1,6 +1,10 @@
+2004-05-05  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Finished journal framework, now only content is missing.
+
 2004-05-03  Florian Boor <florian.boor@kernelconcepts.de>
 
-	* Added files: html.c, html.h implementinh html output stuff.
+	* Added files: html.c, html.h implementing html output stuff.
 	* main.c, html.c, html.h: Next part of journal implementation.
 
 2004-05-03  Philip Blundell  <philb@gnu.org>

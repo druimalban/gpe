@@ -18,6 +18,7 @@
 #include <gpe/errorbox.h>
 
 #include "sql.h"
+#include "html.h"
 
 static const char *fname = "/.gpe/timesheet";
 
@@ -168,7 +169,7 @@ scan_logs (GSList *list)
       t->started = FALSE;
 	  
       if (t->children)
-	scan_logs (t->children);
+        scan_logs (t->children);
       else
 	{
 	  char *err;
@@ -176,6 +177,48 @@ scan_logs (GSList *list)
 
 	  r = sqlite_exec_printf (sqliteh, "select time, action from log where task=%d order by time desc", 
 				  scan_log_callback, t, &err,
+				  t->id);
+	  if (r != 0 && r != SQLITE_ABORT)
+	    {
+	      gpe_error_box (err);
+	      free (err);
+	      return;
+	    }
+	}
+    }
+}
+
+static int
+journal_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 2)
+    {
+      struct task *t = arg;
+      if (argv[1])
+      journal_add_line(*t); // this is a fake
+    }
+  return 0;
+}
+
+void
+scan_journal (GSList *list)
+{
+  GSList *iter;
+  for (iter = list; iter; iter = iter->next)
+    {
+      struct task *t = iter->data;
+
+      t->started = FALSE;
+	  
+      if (t->children)
+        scan_journal (t->children);
+      else
+	{
+	  char *err;
+	  int r;
+
+	  r = sqlite_exec_printf (sqliteh, "select time, action from log where task=%d order by time desc", 
+				  journal_callback, t, &err,
 				  t->id);
 	  if (r != 0 && r != SQLITE_ABORT)
 	    {

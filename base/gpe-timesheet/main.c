@@ -41,25 +41,23 @@ struct gpe_icon my_icons[] = {
 static GdkWindow *top_level_window;
 
 static GtkWidget *btn_con, *btn_coff;
-s
 
 static void
 journal (GtkWidget *w, gpointer user_data)
 {
-  char **myjournal = NULL;
-  int jlen = 0;
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
       struct task *t;
       t = gtk_ctree_node_get_row_data (ct, node);
-	  /* here we go... */
-	  jlen = journal_add_header(t->description,&myjournal);
-	  // scan tree, add lines here
-	  jlen = journal_add_footer(&myjournal, jlen);
-      journal_to_file(myjournal, JOURNAL_FILE);
-	  journal_show(JOURNAL_FILE);
+      /* here we go... */
+      journal_add_header(t->description);
+      // scan tree, add lines here
+      scan_journal(g_slist_find(root,t));
+      journal_add_footer();
+      journal_to_file(JOURNAL_FILE);
+      journal_show(JOURNAL_FILE);
     }
 }
 
@@ -348,12 +346,12 @@ tree_select_row (GtkCTree *ct, GList *node, gint col, gpointer data)
       t = gtk_ctree_node_get_row_data (ct, node);
       if (t->started)
         {
-	  set_active (0, 1);
-	}
+          set_active (0, 1);
+        }
       else
-	{
-	  set_active (1, 0);
-	}
+        {
+          set_active (1, 0);
+        }
     }
 }
 
@@ -433,7 +431,7 @@ main(int argc, char *argv[])
 			   _("Note"), _("Note"),
 			   pw, (GtkSignalFunc)note, tree);
 
-#if 0
+#if 1
   p = gpe_find_icon ("journal");
   pw = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Journal"),
