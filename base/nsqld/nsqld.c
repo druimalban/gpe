@@ -131,7 +131,7 @@ data_callback (void *arg, int argc, char **argv, char **names)
   
   ctx = (struct nsql_context *)arg;
 
-  fprintf (ctx->ofp, "%s -", ctx->cmd_id);
+  fprintf (ctx->ofp, "%s - %d", ctx->cmd_id, argc);
 
   for (i = 0; i < argc; i++)
     {
