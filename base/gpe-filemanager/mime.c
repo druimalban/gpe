@@ -18,7 +18,7 @@
 #include "mime.h"
 
 static int
-_parse_desktop_entry(DotDesktop *dd, gchar *section)
+_parse_desktop_entry(struct DotDesktop *dd, gchar *section)
 {
   FILE *fp;
   char data[256];
