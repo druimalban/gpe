@@ -53,6 +53,8 @@ guint screen_w, screen_h;
 GtkWidget *current_button=NULL;
 int current_button_is_down=0;
 
+GtkWidget *popup_menu;
+
 /* For not starting an app twice after a double click */
 int ignore_press = 0;
 
@@ -340,6 +342,18 @@ ask_open_with (FileInfomation *file_info)
 }
 
 void
+show_popup (GtkWidget *widget, gpointer udata)
+{
+  FileInfomation *file_info;
+
+  file_info = (FileInfomation *) udata;
+
+  printf ("popup for %s\n", file_info->filename);
+
+  gtk_menu_popup (popup_menu, NULL, NULL, NULL, NULL, 1, gtk_get_current_event_time ());
+}
+
+void
 button_clicked (GtkWidget *widget, gpointer udata)
 {
   GnomeVFSMimeApplication *default_mime_application;
@@ -465,10 +479,15 @@ make_view (gchar *view)
     gtk_widget_destroy (view_widget);
 
   view_widget = gpe_iconlist_new ();
+
   gtk_signal_connect (GTK_OBJECT (view_widget), "clicked",
 		      GTK_SIGNAL_FUNC (button_clicked), NULL);
+  gtk_signal_connect (GTK_OBJECT (view_widget), "show-popup",
+		      GTK_SIGNAL_FUNC (show_popup), NULL);
+
   gtk_box_pack_start (GTK_BOX (vbox2), view_widget, TRUE, TRUE, 0);
   gtk_widget_show (view_widget);
+  gpe_iconlist_set_icon_size (view_widget, 32);
 
 
   uri = gnome_vfs_uri_new (current_directory);
@@ -816,6 +835,17 @@ main (int argc, char *argv[])
   gtk_widget_show (view_option_menu);
   gtk_widget_show (view_menu);
   gtk_widget_show (vbox2);
+
+  popup_menu = gtk_menu_new ();
+  {
+    GtkWidget *i;
+    i = gtk_menu_item_new_with_label (_("Delete"));
+    gtk_widget_show (i);
+    gtk_menu_append (GTK_MENU (popup_menu), i);
+    i = gtk_menu_item_new_with_label (_("Rename"));
+    gtk_widget_show (i);
+    gtk_menu_append (GTK_MENU (popup_menu), i);
+  }
 
   gnome_vfs_init ();
 
