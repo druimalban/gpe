@@ -110,7 +110,18 @@ bt_progress_dialog (gchar *text, GdkPixbuf *pixbuf)
 
   gtk_container_add (GTK_CONTAINER (window), hbox);
 
+  g_object_set_data (G_OBJECT (window), "label", label);
+
   return window;
+}
+
+void
+bt_progress_dialog_update (GtkWidget *w, gchar *new_text)
+{
+  GtkWidget *label;
+
+  label = GTK_WIDGET (g_object_get_data (G_OBJECT (w), "label"));
+  gtk_label_set_text (GTK_LABEL (label), new_text);
 }
 
 static pid_t
@@ -370,6 +381,10 @@ run_scan (void)
 
   gdk_threads_enter ();
 
+  gtk_widget_show_all (devices_window);
+
+  bt_progress_dialog_update (w, _("Retrieving service information"));
+
   for (iter = devices; iter; iter = iter->next)
     {
       struct bt_device *bd = iter->data;
@@ -379,13 +394,16 @@ run_scan (void)
       
       if (bd->sdp == FALSE)
 	{
+	  gdk_threads_leave ();
+
 	  bd->sdp = TRUE;
 	  sdp_browse_device (bd, PUBLIC_BROWSE_GROUP);
+
+	  gdk_threads_enter ();
 	}
     }
 
   gtk_widget_destroy (w);
-  gtk_widget_show_all (devices_window);
 
   gdk_threads_leave ();
 
