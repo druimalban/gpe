@@ -38,6 +38,8 @@
 #include <gpe/picturebutton.h>
 #include <gpe/render.h>
 
+#include "rootpixmap.h"
+
 #define _(x) gettext(x)
 
 #define GPE_LOGIN_SETUP "/etc/X11/gpe-login.setup"
@@ -54,6 +56,8 @@ static gboolean have_users;
 static pid_t setup_pid;
 static pid_t kbd_pid;
 static const char *xkbd_path = "/usr/bin/xkbd";
+static const char *xkbd_str;
+static gboolean force_xkbd;
 
 static GtkWidget *entry_username, *entry_fullname;
 static GtkWidget *entry_password, *entry_confirm;
@@ -90,10 +94,18 @@ static key_map_t keymap[] =
     { "telephone", '2' },
     { "XF86Mail", '3' },
     { "XF86Start", '4' },
-    { "KP_1", '1' },
-    { "KP_2", '2' },
-    { "KP_3", '3' },
-    { "KP_4", '4' },
+    { "Up", 'N' },
+    { "Down", 'S' },
+    { "Left", 'W' },
+    { "Right", 'E' },
+    { "1", '1' },
+    { "2", '2' },
+    { "3", '3' },
+    { "4", '4' },
+    { "N", 'N' },
+    { "S", 'S' },
+    { "W", 'W' },
+    { "E", 'E' },
     { NULL }
   };
 
@@ -408,6 +420,69 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   gtk_main_quit ();
 }
 
+#define MAX_ARGS 8
+
+static void
+parse_xkbd_args (char *cmd, char **argv)
+{
+  char *p = cmd;
+  char *buf = alloca (strlen (cmd) + 1), *bufp = buf;
+  int nargs = 0;
+  int escape = 0, squote = 0, dquote = 0;
+
+  while (*p)
+    {
+      if (escape)
+	{
+	  *bufp++ = *p;
+	  escape = 0;
+	}
+      else
+	{
+	  switch (*p)
+	    {
+	    case '\\':
+	      escape = 1;
+	      break;
+	    case '"':
+	      if (squote)
+		*bufp++ = *p;
+	      else
+		dquote = !dquote;
+	      break;
+	    case '\'':
+	      if (dquote)
+		*bufp++ = *p;
+	      else
+		squote = !squote;
+	      break;
+	    case ' ':
+	      if (!squote && !dquote)
+		{
+		  *bufp = 0;
+		  if (nargs < MAX_ARGS)
+		    argv[nargs++] = strdup (buf);
+		  bufp = buf;
+		  break;
+		}
+	    default:
+	      *bufp++ = *p;
+	      break;
+	    }
+	}
+      p++;
+    }
+  
+  if (bufp != buf)
+    {
+      *bufp = 0;
+      if (nargs < MAX_ARGS)
+	argv[nargs++] = strdup (buf);
+    }
+
+  argv[nargs] = NULL;
+}
+
 static GtkWidget *
 spawn_xkbd (void)
 {
@@ -419,13 +494,20 @@ spawn_xkbd (void)
   kbd_pid = fork ();
   if (kbd_pid == 0)
     {
+      char *xkbd_args[MAX_ARGS + 1];
       close (fd[0]);
       if (dup2 (fd[1], 1) < 0)
 	perror ("dup2");
       close (fd[1]);
       if (fcntl (1, F_SETFD, 0))
 	perror ("fcntl");
-      execl (xkbd_path, xkbd_path, "-xid", NULL);
+      xkbd_args[0] = (char *)xkbd_path;
+      xkbd_args[1] = "-xid";
+      if (xkbd_str)
+	parse_xkbd_args (xkbd_str, xkbd_args + 2);
+      else
+	xkbd_args[2] = NULL;
+      execv (xkbd_path, xkbd_args);
       perror (xkbd_path);
       _exit (1);
     }
@@ -469,8 +551,17 @@ hard_key_insert (gchar c)
 
   if (login_correct (hard_key_buf, &pwe))
     {
-      do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
-      gtk_main_quit ();
+      if (autolock_mode)
+	{
+	  gdk_keyboard_ungrab (GDK_CURRENT_TIME);
+	  gtk_widget_hide (window);
+	  memset (hard_key_buf, ' ', hard_key_length);
+	}
+      else
+	{
+	  do_login (current_username, pwe->pw_uid, pwe->pw_gid, pwe->pw_dir, pwe->pw_shell);
+	  gtk_main_quit ();
+	}
     }
 }
 
@@ -498,7 +589,6 @@ mapped (GtkWidget *window)
   if (rmap != None)
     {
       Pixmap pmap;
-      printf("handle is %08x\n", rmap);
       pmap = CutWinPixmap (GDK_WINDOW_XWINDOW (window->window), rmap, 
 			   GDK_GC_XGC (window->style->black_gc));
       if (pmap != None)
@@ -525,6 +615,7 @@ main (int argc, char *argv[])
   char *geometry_str = FALSE;
   gboolean flag_geom = FALSE;
   gboolean flag_transparent = FALSE;
+  gboolean flag_xkbd = FALSE;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
@@ -541,14 +632,24 @@ main (int argc, char *argv[])
 	  geometry_str = argv[i];
 	  flag_geom = FALSE;
 	}
+      else if (flag_xkbd)
+	{
+	  xkbd_str = argv[i];
+	  flag_xkbd = FALSE;
+	}
       else if (strcmp (argv[i], "--autolock") == 0)
 	autolock_mode = TRUE;
       else if (strcmp (argv[i], "--geometry") == 0 || strncmp (argv[i], "-g", 2) == 0)
 	flag_geom = TRUE;
       else if (strcmp (argv[i], "--transparent") == 0)
 	flag_transparent = TRUE;
-      else if (strcmp (argv[1], "--hard-keys") == 0)
+      else if (strcmp (argv[i], "--hard-keys") == 0)
 	hard_keys_mode = TRUE;
+      else if (strcmp (argv[i], "--xkbd") == 0)
+	{
+	  force_xkbd = TRUE;
+	  flag_xkbd = TRUE;
+	}
     }
 
   signal (SIGCHLD, SIG_IGN);
@@ -600,7 +701,8 @@ main (int argc, char *argv[])
       memset (hard_key_buf, ' ', hard_key_length);
       hard_key_buf[hard_key_length] = 0;
     }
-  else
+
+  if (!hard_keys_mode || force_xkbd)
     {
       if (access (xkbd_path, X_OK) == 0)
 	socket = spawn_xkbd ();
@@ -699,7 +801,7 @@ main (int argc, char *argv[])
     {
       GtkWidget *hbox_password;
       GtkWidget *login_label, *password_label;
-      GtkWidget *entry, *table;
+      GtkWidget *entry = NULL, *table;
 
       frame = gtk_frame_new (autolock_mode ? _("Screen locked") : _("Log in"));
 
@@ -719,6 +821,11 @@ main (int argc, char *argv[])
 	  gtk_option_menu_set_menu (GTK_OPTION_MENU (option), menu);
 	}
 
+      gtk_signal_connect (GTK_OBJECT (window), "delete_event",
+			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+      
+      table = gtk_table_new (2, 2, FALSE);
+
       if (! hard_keys_mode)
 	{
 	  entry = gtk_entry_new ();
@@ -729,19 +836,14 @@ main (int argc, char *argv[])
 	  gtk_box_pack_end (GTK_BOX (hbox_password), ok_button, FALSE, FALSE, 0);
 	  gtk_label_set_justify (GTK_LABEL (password_label), GTK_JUSTIFY_LEFT);
 	  gtk_misc_set_alignment (GTK_MISC (password_label), 0, 0.5);
-	}
 
-      gtk_signal_connect (GTK_OBJECT (window), "delete_event",
-			  GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
-      
-      table = gtk_table_new (2, 2, FALSE);
-      gtk_table_attach_defaults (GTK_TABLE (table), login_label, 0, 1, 0, 1);
-      gtk_table_attach_defaults (GTK_TABLE (table), option, 1, 2, 0, 1);
-      if (! hard_keys_mode)
-	{
 	  gtk_table_attach_defaults (GTK_TABLE (table), password_label, 0, 1, 1, 2);
 	  gtk_table_attach_defaults (GTK_TABLE (table), hbox_password, 1, 2, 1, 2);
 	}
+
+      gtk_table_attach_defaults (GTK_TABLE (table), login_label, 0, 1, 0, 1);
+      gtk_table_attach_defaults (GTK_TABLE (table), option, 1, 2, 0, 1);
+
       gtk_label_set_justify (GTK_LABEL (login_label), GTK_JUSTIFY_LEFT);
       gtk_misc_set_alignment (GTK_MISC (login_label), 0, 0.5);
 

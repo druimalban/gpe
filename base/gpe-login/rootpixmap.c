@@ -4,11 +4,13 @@
 
 #include <gdk/gdkx.h>
 
+#include "rootpixmap.h"
+
 #define Xscreen 0
 
 static int Xdepth;
 
-int
+static int
 GetRootDimensions( int* width, int* height )
 {
   Window root ;
@@ -25,7 +27,7 @@ GetRootDimensions( int* width, int* height )
   return (*width>0 && *height>0)?1:0 ;
 }
 
-int
+static int
 GetWinPosition (Window win, int *x, int *y, int *wp, int *hp)
 {
   Window root, parent, *children ;

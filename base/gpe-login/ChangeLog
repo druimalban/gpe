@@ -1,3 +1,17 @@
+2002-10-12  Philip Blundell  <philb@gnu.org>
+
+	* gpe-login.c (keymap): Add NESW keys.
+	(parse_xkbd_args): New function.
+	(spawn_xkbd): Use it.
+	(hard_key_insert): Support autolock mode.
+	(mapped): Remove stray debug.
+	(main): Support --xkbd flag.  Suppress warnings.
+
+	* rootpixmap.h: New file.
+	* main.c, rootpixmap.c: Include it.
+
+	* Makefile (GTK2): Default is yes.
+
 2002-10-11  Philip Blundell  <philb@gnu.org>
 
 	* gpe-login.c (login_correct): First argument is a string, not a
