@@ -40,12 +40,10 @@ create_GPE_Ownerinfo (void)
   GtkWidget *vbox1;
   GtkWidget *owner_address_label;
   GtkWidget *smallphotobutton;
-  GtkWidget *smallphoto;
   GtkWidget *label3;
   GtkWidget *bigphotobutton;
   GtkWidget *bigphoto;
   GtkWidget *label4;
-  // GtkStyle* style;
   GtkStyle *style = gtk_style_new();
   GdkColor myGdkColor = {0, 0xAFFF, 0xFFFF, 0xCFFF};
 	  
@@ -201,7 +199,8 @@ create_GPE_Ownerinfo (void)
   gtk_widget_show (vbox1);
   gtk_table_attach (GTK_TABLE (table1), vbox1, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+                    (GtkAttachOptions) (GTK_FILL),
+		    0, 0);
 
   owner_address_label = gtk_label_new (_("Address"));
   gtk_widget_set_name (owner_address_label, "owner_address_label");
@@ -209,10 +208,10 @@ create_GPE_Ownerinfo (void)
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "owner_address_label", owner_address_label,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (owner_address_label);
-  gtk_box_pack_start (GTK_BOX (vbox1), owner_address_label, FALSE, FALSE, 1);
+  gtk_box_pack_start (GTK_BOX (vbox1), owner_address_label, TRUE, TRUE, 0);
   gtk_label_set_justify (GTK_LABEL (owner_address_label), GTK_JUSTIFY_RIGHT);
   gtk_misc_set_alignment (GTK_MISC (owner_address_label), 1, 0);
-  gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0);
+  gtk_misc_set_padding (GTK_MISC (owner_address_label), 5, 0); // !!!!!
 
   smallphotobutton = gtk_button_new ();
   gtk_widget_set_name (smallphotobutton, "smallphotobutton");
@@ -220,16 +219,19 @@ create_GPE_Ownerinfo (void)
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "smallphotobutton", smallphotobutton,
                             (GtkDestroyNotify) gtk_widget_unref);
   gtk_widget_show (smallphotobutton);
-  gtk_box_pack_end (GTK_BOX (vbox1), smallphotobutton, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox1), smallphotobutton, TRUE, TRUE, 0);
   gtk_button_set_relief (GTK_BUTTON (smallphotobutton), GTK_RELIEF_NONE);
 
+  /* 
   smallphoto = create_pixmap (GPE_Ownerinfo, "ownerphoto");
   gtk_widget_set_name (smallphoto, "smallphoto");
   gtk_widget_ref (smallphoto);
   gtk_object_set_data_full (GTK_OBJECT (GPE_Ownerinfo), "smallphoto", smallphoto,
                             (GtkDestroyNotify) gtk_widget_unref);
-  gtk_widget_show (smallphoto);
+  //gtk_widget_show (smallphoto);
+  //gtk_widget_realize (smallphoto);
   gtk_container_add (GTK_CONTAINER (smallphotobutton), smallphoto);
+  */
 
   label3 = gtk_label_new (_("label3"));
   gtk_widget_set_name (label3, "label3");
