@@ -5,15 +5,18 @@ CVSBUILD = yes
 VERSION = 0.10
 
 #FIXME: add: ru sr
-LINGUAS = nl pt fr sk cs de sv ro
+LINGUAS = nl pt fr sk cs de sv ro 
 
 MEMBERS = gpe-su
 
-CPPFLAGS += $(STANDARD_CPPFLAGS)
-CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
-LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0 gdk-2.0`
+GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0`
 
-LDFLAGS += -lutil
+PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) $(GTKLDFLAGS)
+
+PACKAGE_LDFLAGS += -lutil
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
@@ -28,7 +31,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
