@@ -1,14 +1,21 @@
 [Desktop Entry]
 Name=User Access
-Name[cs]=Přístup uživetelů
+Name[cs]=Přístup uživatelů
 Name[de]=Benutzerzugriff
+Name[fr]=Accès Utilisateur
 Name[pt]=Acesso do Utilizador
 Name[ro]=Acces Utilizator
+Name[ru]=Доступ пользователей
+Name[sk]=Práva používateľa
+Name[sv]=Användaråtkomst
 Comment=User access administration
 Comment[cs]=Nastavení přístupu uživatelů
 Comment[de]=Administrierung des Benutzerzugriffs
 Comment[pt]=Administração do acesso do utilizador
 Comment[ro]=Administraţie acces utilizator
+Comment[ru]=Администрирование доступа пользователей
+Comment[sk]=Správa prístupových práv používateľa
+Comment[sv]=Administration av användaråtkomst
 Exec=gpe-conf admin
 Terminal=0
 Type=Application

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-09-24 18:32+0200\n"
+"POT-Creation-Date: 2003-11-03 16:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,31 +16,31 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:292
+#: main.c:314
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: main.c:356
+#: main.c:377
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:384
+#: main.c:405
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:385
+#: main.c:406
 msgid ""
 "\n"
 "gpe-conf [AppletName]\n"
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:398
+#: main.c:419
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:399
+#: main.c:420
 msgid ""
 "\n"
 "\n"
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Do you want to delete this interface?"
 msgstr ""
 
-#: network.c:228 keyctl.c:163
+#: network.c:228 keyctl.c:169
 msgid "Question"
 msgstr ""
 
@@ -490,117 +490,119 @@ msgstr ""
 msgid "global"
 msgstr ""
 
-#: theme.c:398
+#: theme.c:416
 msgid "Red"
 msgstr ""
 
-#: theme.c:403
+#: theme.c:421
 msgid "Green"
 msgstr ""
 
-#: theme.c:408
+#: theme.c:426
 msgid "Blue"
 msgstr ""
 
-#: theme.c:659
+#: theme.c:680
 msgid "Select color"
 msgstr ""
 
-#: theme.c:685 theme.c:751
-msgid ""
-"You don't have read access\n"
-"to selected background image!"
+#: theme.c:706 theme.c:778
+msgid "You don't have read access to selected background image!"
 msgstr ""
 
-#: theme.c:833
+#: theme.c:862
 msgid "Theme"
 msgstr ""
 
-#: theme.c:842
+#: theme.c:871
 msgid "Desktop Theme"
 msgstr ""
 
-#: theme.c:854
+#: theme.c:883
 msgid "Name"
 msgstr ""
 
-#: theme.c:870
+#: theme.c:899
 msgid "Icon Size"
 msgstr ""
 
-#: theme.c:884
+#: theme.c:913
 msgid "Background"
 msgstr ""
 
-#: theme.c:895
+#: theme.c:924
 msgid "Background Settings"
 msgstr ""
 
-#: theme.c:902
+#: theme.c:931
+msgid "Theme Default"
+msgstr ""
+
+#: theme.c:938
 msgid "Solid color"
 msgstr ""
 
-#: theme.c:916
+#: theme.c:952
 msgid "Horizontal"
 msgstr ""
 
-#: theme.c:920
+#: theme.c:956
 msgid "Vertical"
 msgstr ""
 
-#: theme.c:925 theme.c:945 theme.c:1041 theme.c:1047
+#: theme.c:961 theme.c:980 theme.c:1076 theme.c:1082
 msgid "Color"
 msgstr ""
 
-#: theme.c:936
+#: theme.c:971
 msgid "Color gradient"
 msgstr ""
 
-#: theme.c:956
+#: theme.c:991
 msgid "Image"
 msgstr ""
 
-#: theme.c:982
+#: theme.c:1017
 msgid "Centered"
 msgstr ""
 
-#: theme.c:986
+#: theme.c:1021
 msgid "Tiled"
 msgstr ""
 
-#: theme.c:989
+#: theme.c:1024
 msgid "Stretched"
 msgstr ""
 
-#: theme.c:994
+#: theme.c:1029
 msgid "Fonts"
 msgstr ""
 
-#: theme.c:1003 theme.c:1023
+#: theme.c:1038 theme.c:1058
 msgid "Desktop Font"
 msgstr ""
 
-#: theme.c:1010 theme.c:1065
+#: theme.c:1045 theme.c:1100
 msgid "Family"
 msgstr ""
 
-#: theme.c:1030 theme.c:1085
+#: theme.c:1065 theme.c:1120
 msgid "Size"
 msgstr ""
 
-#: theme.c:1058 theme.c:1078
+#: theme.c:1093 theme.c:1113
 msgid "Application Font"
 msgstr ""
 
-#: keyctl.c:163
+#: keyctl.c:169
 msgid "Reset button config to default?"
 msgstr ""
 
-#: keyctl.c:200
+#: keyctl.c:206
 msgid "Defaults"
 msgstr ""
 
-#: keyctl.c:299
+#: keyctl.c:315
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
 msgstr ""
 
@@ -1261,254 +1263,254 @@ msgstr ""
 msgid "PCMCIA initialisation failed"
 msgstr ""
 
-#: tools/interface.c:288 tools/interface.c:488 tools/interface.c:504
-#: tools/interface.c:624
+#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
+#: tools/interface.c:662
 msgid "[NONE SET]"
 msgstr ""
 
-#: tools/interface.c:679 tools/interface.c:1677
+#: tools/interface.c:717 tools/interface.c:1715
 msgid "UNSPEC"
 msgstr ""
 
-#: tools/interface.c:681
+#: tools/interface.c:719
 msgid "UNIX Domain"
 msgstr ""
 
-#: tools/interface.c:684
+#: tools/interface.c:722
 msgid "DARPA Internet"
 msgstr ""
 
-#: tools/interface.c:687
+#: tools/interface.c:725
 msgid "IPv6"
 msgstr ""
 
-#: tools/interface.c:690 tools/interface.c:1698
+#: tools/interface.c:728 tools/interface.c:1736
 msgid "AMPR AX.25"
 msgstr ""
 
-#: tools/interface.c:693 tools/interface.c:1704
+#: tools/interface.c:731 tools/interface.c:1742
 msgid "AMPR NET/ROM"
 msgstr ""
 
-#: tools/interface.c:696
+#: tools/interface.c:734
 msgid "Novell IPX"
 msgstr ""
 
-#: tools/interface.c:699
+#: tools/interface.c:737
 msgid "Appletalk DDP"
 msgstr ""
 
-#: tools/interface.c:702 tools/interface.c:1739
+#: tools/interface.c:740 tools/interface.c:1777
 msgid "Econet"
 msgstr ""
 
-#: tools/interface.c:705
+#: tools/interface.c:743
 msgid "CCITT X.25"
 msgstr ""
 
-#: tools/interface.c:708 tools/interface.c:1701
+#: tools/interface.c:746 tools/interface.c:1739
 msgid "AMPR ROSE"
 msgstr ""
 
-#: tools/interface.c:711 tools/interface.c:1689
+#: tools/interface.c:749 tools/interface.c:1727
 msgid "Ash"
 msgstr ""
 
-#: tools/interface.c:738
+#: tools/interface.c:776
 msgid "Too many address family arguments.\n"
 msgstr ""
 
-#: tools/interface.c:749
+#: tools/interface.c:787
 #, c-format
 msgid "Unknown address family '%s'.\n"
 msgstr ""
 
-#: tools/interface.c:812
+#: tools/interface.c:850
 msgid "Please don't supply more than one address family.\n"
 msgstr ""
 
-#: tools/interface.c:939
+#: tools/interface.c:977
 msgid "No usable address families found.\n"
 msgstr ""
 
-#: tools/interface.c:1009
+#: tools/interface.c:1047
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
 msgstr ""
 
-#: tools/interface.c:1161
+#: tools/interface.c:1199
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
 msgstr ""
 
-#: tools/interface.c:1404
+#: tools/interface.c:1442
 msgid "Device not found"
 msgstr ""
 
-#: tools/interface.c:1408
+#: tools/interface.c:1446
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
 msgstr ""
 
-#: tools/interface.c:1582
+#: tools/interface.c:1620
 msgid "You cannot start PPP with this program.\n"
 msgstr ""
 
-#: tools/interface.c:1676
+#: tools/interface.c:1714
 msgid "Local Loopback"
 msgstr ""
 
-#: tools/interface.c:1679
+#: tools/interface.c:1717
 msgid "Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1680
+#: tools/interface.c:1718
 msgid "VJ Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1681
+#: tools/interface.c:1719
 msgid "6-bit Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1682
+#: tools/interface.c:1720
 msgid "VJ 6-bit Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1683
+#: tools/interface.c:1721
 msgid "Adaptive Serial Line IP"
 msgstr ""
 
-#: tools/interface.c:1686
+#: tools/interface.c:1724
 msgid "Ethernet"
 msgstr ""
 
-#: tools/interface.c:1692
+#: tools/interface.c:1730
 msgid "Fiber Distributed Data Interface"
 msgstr ""
 
-#: tools/interface.c:1695
+#: tools/interface.c:1733
 msgid "HIPPI"
 msgstr ""
 
-#: tools/interface.c:1707
+#: tools/interface.c:1745
 msgid "generic X.25"
 msgstr ""
 
-#: tools/interface.c:1710
+#: tools/interface.c:1748
 msgid "IPIP Tunnel"
 msgstr ""
 
-#: tools/interface.c:1713
+#: tools/interface.c:1751
 msgid "Point-to-Point Protocol"
 msgstr ""
 
-#: tools/interface.c:1716
+#: tools/interface.c:1754
 msgid "(Cisco)-HDLC"
 msgstr ""
 
-#: tools/interface.c:1717
+#: tools/interface.c:1755
 msgid "LAPB"
 msgstr ""
 
-#: tools/interface.c:1720
+#: tools/interface.c:1758
 msgid "ARCnet"
 msgstr ""
 
-#: tools/interface.c:1723
+#: tools/interface.c:1761
 msgid "Frame Relay DLCI"
 msgstr ""
 
-#: tools/interface.c:1724
+#: tools/interface.c:1762
 msgid "Frame Relay Access Device"
 msgstr ""
 
-#: tools/interface.c:1727
+#: tools/interface.c:1765
 msgid "IPv6-in-IPv4"
 msgstr ""
 
-#: tools/interface.c:1730
+#: tools/interface.c:1768
 msgid "IrLAP"
 msgstr ""
 
-#: tools/interface.c:1733
+#: tools/interface.c:1771
 msgid "16/4 Mbps Token Ring"
 msgstr ""
 
-#: tools/interface.c:1735
+#: tools/interface.c:1773
 msgid "16/4 Mbps Token Ring (New)"
 msgstr ""
 
-#: tools/interface.c:1845
+#: tools/interface.c:1884
 #, c-format
 msgid ""
 "<b>Interface %s</b>\n"
 "Type: %s\n"
 msgstr ""
 
-#: tools/interface.c:1853
+#: tools/interface.c:1892
 #, c-format
 msgid "HWaddr (MAC): %s\n"
 msgstr ""
 
-#: tools/interface.c:1859
+#: tools/interface.c:1898
 #, c-format
 msgid "Media: %s"
 msgstr ""
 
-#: tools/interface.c:1864
+#: tools/interface.c:1903
 msgid "(auto)"
 msgstr ""
 
-#: tools/interface.c:1876
+#: tools/interface.c:1915
 #, c-format
 msgid "Address: %s\n"
 msgstr ""
 
-#: tools/interface.c:1881
+#: tools/interface.c:1920
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr ""
 
-#: tools/interface.c:1885
+#: tools/interface.c:1924
 #, c-format
 msgid "Netmask: %s\n"
 msgstr ""
 
-#: tools/interface.c:1889
+#: tools/interface.c:1928
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr ""
 
-#: tools/interface.c:1909
+#: tools/interface.c:1969
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr ""
 
-#: tools/interface.c:1913
+#: tools/interface.c:1978
 msgid "Scope: "
 msgstr ""
 
-#: tools/interface.c:1918
+#: tools/interface.c:1983
 msgid "Global"
 msgstr ""
 
-#: tools/interface.c:1921
+#: tools/interface.c:1986
 msgid "Link"
 msgstr ""
 
-#: tools/interface.c:1924
+#: tools/interface.c:1989
 msgid "Site"
 msgstr ""
 
-#: tools/interface.c:1927
+#: tools/interface.c:1992
 msgid "Compat"
 msgstr ""
 
-#: tools/interface.c:1930
+#: tools/interface.c:1995
 msgid "Host"
 msgstr ""
 
-#: tools/interface.c:1933
+#: tools/interface.c:1998
 msgid "Unknown"
 msgstr ""
 
