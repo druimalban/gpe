@@ -1,4 +1,13 @@
+2003-08-12  Philip Blundell  <philb@gnu.org>
+
+	* familiar/postinst.gpe-session-scripts: New file.
+	* Makefile (scripts-ipkg): Install it.
+
 2003-08-11  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (install-scripts): Install Xsession.d, not Xsession-gpe.d.
+	* X11/Xsession-gpe.d: Renamed to ...
+	* X11/Xsession.d: ... this.
 
 	* X11/10unsetgtkrc: Deleted.
 	* Makefile (install-program): Don't install it.

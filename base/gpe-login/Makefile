@@ -75,7 +75,7 @@ install-program: gpe-login gpe-lock-display
 	install -m 644 gpe-login.sysconfig $(DESTDIR)/etc/sysconfig/gpelogin
 
 install-scripts: gpe-logout.desktop
-	for i in X11/Xsession-gpe.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
+	for i in X11/Xsession.d X11/Xinit.d; do install -d $(DESTDIR)/etc/$$i; FILES=`echo $$i/* | sed "s:$$i/CVS::"`; install -m 755 $$FILES $(DESTDIR)/etc/$$i/; done
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 gpe-xcalibrate.sh $(DESTDIR)$(PREFIX)/bin/gpe-xcalibrate.sh
 	install -d $(DESTDIR)/etc/gpe
@@ -94,6 +94,7 @@ scripts-ipkg:
 	rm -rf familiar/dist.gpe-session-scripts
 	mkdir -p familiar/dist.gpe-session-scripts/CONTROL
 	cp familiar/control.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/control
+	install familiar/postinst.gpe-session-scripts familiar/dist.gpe-session-scripts/CONTROL/postinst
 	make DESTDIR=`pwd`/familiar/dist.gpe-session-scripts PREFIX=/usr install-scripts
 	chown -R root.root familiar/dist.gpe-session-scripts
 	ipkg-build familiar/dist.gpe-session-scripts
