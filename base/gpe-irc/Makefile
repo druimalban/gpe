@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = gpe-irc
-VERSION = 0.05
+VERSION = 0.06
 DEBUG = yes
 CVSBUILD = yes
 
