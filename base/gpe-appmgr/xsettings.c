@@ -32,7 +32,7 @@ notify_func (const char       *name,
 
   if (strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
-      char *p = name + strlen (KEY_BASE);
+      char *p = (char*)name + strlen (KEY_BASE);
 
       if (!strcmp (p, "SHOW-ALL-GROUP"))
 	{
@@ -52,7 +52,6 @@ notify_func (const char       *name,
 						       create_group_tab_label("All", notebook->style));
 
 		    gtk_notebook_set_page (GTK_NOTEBOOK(notebook), 0);
-//		    autohide_labels ();
 	    }
 	}
 

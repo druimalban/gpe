@@ -97,13 +97,12 @@ void create_recent_list ();
 void create_recent_box(GtkBox *cont);
 char *translate_group_name (char *name);
 
+extern gboolean gpe_appmgr_start_xsettings (void);
+
 void autohide_labels (int page) {
 	GtkWidget *hb;
 	int i=0;
-	int pagenum = page == -1 ? gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook)) - 1 : page;
-
-	if (!cfg_options.auto_hide_group_labels)
-		return;
+	int pagenum = page == -1 ? gtk_notebook_get_current_page (GTK_NOTEBOOK(notebook)) : page;
 
 	while (1)
 	{
@@ -126,8 +125,7 @@ void autohide_labels (int page) {
 		{
 			if (GTK_IS_LABEL(children->data))
 			{
-
-				if (i == pagenum)
+				if (!cfg_options.auto_hide_group_labels || i == pagenum)
 					gtk_widget_show (GTK_WIDGET(children->data));
 				else
 					gtk_widget_hide (GTK_WIDGET(children->data));
@@ -149,116 +147,6 @@ gint unignore_press (gpointer data)
 	ignore_press = 0;
 	return FALSE;
 }
-
-#if 0
-/* Callback for selecting a program to run */
-gint btn_released (GtkObject *btn, gpointer data)
-{
-	struct package *p;
-	GList *l;
-
-	popup_menu_cancel ();
-
-	gtk_widget_set_state (GTK_WIDGET(btn), GTK_STATE_NORMAL);
-
-	/* Clear the variables stating what button is down etc. 
-	 * and close if we're not on the original button */
-	if (GTK_WIDGET(btn) != current_button || !current_button_is_down)
-	{
-		current_button = NULL;
-		current_button_is_down = 0;
-		return TRUE;
-	}
-
-	if (!GTK_IS_EVENT_BOX(btn)) /* Could be the notebook! */
-		return TRUE;
-
-	if (ignore_press)
-		return TRUE;
-
-	/* So we ignore a second press within 1000msec */
-	ignore_press = 1;
-	gtk_timeout_add (1000, unignore_press, NULL);
-
-	p = (struct package *) gtk_object_get_data (GTK_OBJECT(btn), "program");
-	run_program (package_get_data (p, "command"),
-		     cfg_options.use_windowtitle ? package_get_data (p, "windowtitle") : NULL);
-
-	/* Add it to the recently-run list
-	   Remove it first if it's already there
-	   (so it moves to the front) */
-	if ((l = g_list_find (recent_items, p)))
-		recent_items = g_list_remove_link(recent_items, l);
-
-	if (cfg_options.show_recent_apps)
-	{
-		recent_items = g_list_prepend (recent_items, p);
-
-		while (g_list_length (recent_items) > cfg_options.recent_apps_number)
-		{
-			recent_items = g_list_remove_link(recent_items,
-							  g_list_last (recent_items));
-		}
-
-		create_recent_list ();
-	} else {
-		g_list_free (recent_items);
-		recent_items = NULL;
-	}
-
-	return TRUE;	
-}
-
-gint btn_pressed (GtkWidget *btn, GdkEventButton *ev, gpointer data)
-{
-	struct package *p;
-
-	popup_menu_cancel ();
-
-	/* We only want left mouse button events */
-	if (ev && (!(ev->button == 1)))
-	    return TRUE;
-
-	if (ignore_press) /* Ignore double clicks! */ {
-		return TRUE;
-	}
-
-	current_button = btn;
-	current_button_is_down = 1;
-
-	p = (struct package *) gtk_object_get_data (GTK_OBJECT(btn), "program");
-	popup_menu_later (500, p);
-
-	gtk_widget_set_state (btn, GTK_STATE_SELECTED);
-
-	return TRUE;	
-}
-
-gint btn_enter (GtkWidget *btn, GdkEventCrossing *event)
-{
-	/* We only want left mouse button events */
-	if (!(event->state & 256))
-	{
-		current_button = NULL;
-		return TRUE;
-	}
-
-	/* If we're moving onto the button that was last selected,
-	   do the same as if we've just started pressing on it again */
-	if (btn == current_button)
-		btn_pressed (btn, NULL, NULL);
-
-	return TRUE;
-}
-
-gint btn_leave (GtkWidget *btn, GdkEventCrossing *event)
-{
-	popup_menu_cancel ();
-	gtk_widget_set_state (btn, GTK_STATE_NORMAL);
-	current_button_is_down = 0;
-	return TRUE;
-}
-#endif
 
 /* Remove the appmgr (not plugin) tabs from the notebook */
 void clear_appmgr_tabs ()
@@ -320,11 +208,9 @@ GtkWidget *create_icon_pixmap (GtkStyle *style, char *fn, int size)
 {
 	GdkPixbuf *pixbuf, *spixbuf;
 	GtkWidget *w;
-#ifdef GTK2
+
 	pixbuf = gdk_pixbuf_new_from_file (fn, NULL);
-#else
-	pixbuf = gdk_pixbuf_new_from_file (fn);
-#endif
+
 	if (pixbuf == NULL)
 		return NULL;
 
@@ -384,13 +270,14 @@ int has_icon (struct package *p)
 
 void create_recent_list ()
 {
+#if 0
 	GtkWidget *hb;
 	GList *this_item;
 	GList *cl;
 	GtkWidget *w;
 
 	TRACE("create_recent_list");
-#if 0
+
 	if (recent_tab == NULL)
 		return;
 
@@ -584,6 +471,8 @@ void refresh_tabs ()
 
 	gtk_widget_show_all (notebook);
 
+	autohide_labels (0);
+
 	TRACE ("refresh_tabs: <end>");
 }
 
@@ -666,7 +555,7 @@ GSList *load_group_translations ()
 
 	char *locale = setlocale (LC_MESSAGES, NULL);
 	if (locale) {
-		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s", g_get_home_dir (), locale);
+		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s", (char*)g_get_home_dir (), locale);
 		if (!l)
 			l = load_translations_from ("/usr/share/gpe/group-map.%s", locale, NULL);
 		if (!l) {
@@ -674,7 +563,7 @@ GSList *load_group_translations ()
 			char *p = strchr (ln, '_');
 			if (p) {
 				*p = 0;
-				l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s", g_get_home_dir (), ln);
+				l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map.%s",  (char*)g_get_home_dir (), ln);
 				if (!l)
 					l = load_translations_from ("/usr/share/gpe/group-map.%s", ln, NULL);
 			}
@@ -682,7 +571,7 @@ GSList *load_group_translations ()
 		}
 	}
 	if (!l)
-		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map", g_get_home_dir (), NULL);
+		l = load_translations_from ("%s/.gpe/gpe-appmgr_group-map",  (char*)g_get_home_dir (), NULL);
 	if (!l)
 		l = load_translations_from ("/usr/share/gpe/group-map", NULL, NULL);
 
@@ -954,6 +843,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 /* Create the 'recent' list as a dock app or normal widget */
 void create_recent_box(GtkBox *cont)
 {
+#if 0
 	GdkAtom window_type;
 	GdkAtom window_type_dock;
 	static GtkWidget *w=NULL;
@@ -962,11 +852,6 @@ void create_recent_box(GtkBox *cont)
 	TRACE ("create_recent_box");
 
 	if (w != NULL) {
-#ifdef GTK2
-		;
-#else
-		gtk_widget_destroy (w);
-#endif
 		w = NULL;
 	} else if (recent_tab != NULL) {
 		gtk_widget_destroy (recent_tab);
@@ -1001,6 +886,7 @@ void create_recent_box(GtkBox *cont)
 	}
 
 	TRACE ("create_recent_box: end");
+#endif
 }
 
 void icons_page_up_down (int down)
@@ -1159,8 +1045,8 @@ int main(int argc, char *argv[]) {
 	if (gpe_load_icons (my_icons) == FALSE)
 		exit (1);
 
-	/* load our configuration */
-//	cfg_load ();
+	/* load our configuration defaults */
+	cfg_load ();
 
 	/* update the menu data */
 	refresh_list ();

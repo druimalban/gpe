@@ -33,6 +33,7 @@ void cfg_load ()
 	char *home_dir;
 	char config_path[]=".gpe/gpe-appmgr";
 	char *s;
+#endif
 
 	/* Default options */
 	cfg_options.show_all_group = 0;
@@ -42,6 +43,7 @@ void cfg_load ()
 	cfg_options.on_window_close = WINDOW_CLOSE_IGNORE;
 	cfg_options.use_windowtitle = 1;
 
+#if 0
 	home_dir = (char*) getenv("HOME");
 	if (home_dir)
 	{

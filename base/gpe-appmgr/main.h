@@ -17,6 +17,8 @@
 #define MAIN_H
 #include <gtk/gtk.h>
 
+#include "cfg.h"
+
 /* main window */
 GtkWidget *window;
 GtkWidget *notebook;
@@ -31,6 +33,11 @@ void refresh_tabs (void);
 
 /* Creates the image/label combo for a tab */
 GtkWidget *create_tab_label (char *name, char *icon_file, GtkStyle *style);
+GtkWidget *create_group_tab_label (char *group, GtkStyle *style);
+
+/* Creates a tab */
+GtkWidget *create_tab (GList *all_items, char *current_group, tab_view_style style);
+
 
 /* Refreshes the tab labels for autohide */
 void autohide_labels (int page);
