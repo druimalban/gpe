@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -257,8 +257,8 @@ change_categories (GtkWidget *w, gpointer p)
 
   gpe_set_window_icon (window, "icon");
 
-  okbutton = gpe_picture_button (window->style, _("OK"), "ok");
-  cancelbutton = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  okbutton = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  cancelbutton = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (categories_ok), window);
   g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_cancel), window);
@@ -308,9 +308,9 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   libdm_mark_window (window);
 
-  buttonok = gpe_picture_button (window->style, _("Save"), "save");
-  buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
-  buttondelete = gpe_picture_button (window->style, _("Delete"), "delete");
+  buttonok = gpe_button_new_from_stock (GTK_STOCK_SAVE, GPE_BUTTON_TYPE_BOTH);
+  buttoncancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
+  buttondelete = gpe_button_new_from_stock (GTK_STOCK_DELETE, GPE_BUTTON_TYPE_BOTH);
  
   for (i = 0; i < 3; i++)
     {

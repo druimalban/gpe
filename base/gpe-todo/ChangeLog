@@ -1,3 +1,24 @@
+2003-01-18  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.31 released.
+
+2003-01-18  Philip Blundell  <philb@gnu.org>
+
+	* todo-sql.c (category_find_by_id): New function.
+	(item_data_callback): Use it.
+	(push_item): Save category ID, not pointer.
+
+	* configure.c: Fix warnings.
+	
+	* configure.c (configure): Use stock icons.
+	(new_category_box): Likewise.
+	* todo-ui.c (edit_item): Likewise.
+	* list-ui.c (top_level): Likewise.
+	* main.c (my_icons): Remove now-redundant entries.
+
+	* list-ui.c (top_level): Select for release events also.
+	(draw_click_event): Only act on button 1.
+
 2003-01-05  Philip Blundell  <philb@gnu.org>
 
 	* Makefile (GTKCFLAGS): Remove -DGTK_ENABLE_BROKEN.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -233,7 +233,7 @@ draw_click_event (GtkWidget *widget,
 {
   unsigned int idx = event->y/ystep;
 
-  if (event->type == GDK_BUTTON_PRESS && event->x < xcol)
+  if (event->type == GDK_BUTTON_PRESS && event->button == 1 && event->x < xcol)
     {
       GSList *iter;
       for (iter = display_items; iter; iter = iter->next)
@@ -252,7 +252,7 @@ draw_click_event (GtkWidget *widget,
 	    }
 	}
     }
-  else if (event->type == GDK_BUTTON_PRESS && event->x > 18)
+  else if (event->type == GDK_BUTTON_PRESS && event->button == 1 && event->x > 18)
     {
       GSList *iter;
       for (iter = display_items; iter; iter = iter->next)
@@ -328,7 +328,7 @@ top_level (GtkWidget *window)
   gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar2), GTK_RELIEF_NONE);
 #endif
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
+  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("New"), 
 			   _("Add a new item"), 
@@ -356,7 +356,7 @@ top_level (GtkWidget *window)
 			   _("Move completed items to the end of the list"),
 			   pw, (GtkSignalFunc)show_hide_completed, NULL);
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("exit"));
+  pw = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar2), 
 			   _("Exit"), 
 			   _("Exit the program"), 
@@ -381,7 +381,7 @@ top_level (GtkWidget *window)
   gtk_signal_connect (GTK_OBJECT (draw), "button_press_event",
 		      GTK_SIGNAL_FUNC (draw_click_event), NULL);
 
-  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK);
+  gtk_widget_add_events (GTK_WIDGET (draw), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 
   gtk_widget_show (draw);
   gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled),

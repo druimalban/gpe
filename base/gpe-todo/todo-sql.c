@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -77,6 +77,21 @@ new_category (const char *title)
   return new_category_internal (sqlite_last_insert_rowid (sqliteh), title);
 }
 
+struct todo_category *
+category_find_by_id (int i)
+{
+  GSList *iter;
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      struct todo_category *c = (struct todo_category *)iter->data;
+      if (c->id == i)
+	return c;
+    }
+
+  return NULL;
+}
+
 void
 del_category (struct todo_category *c)
 {
@@ -109,7 +124,11 @@ item_data_callback (void *arg, int argc, char **argv, char **names)
       else if (!strcmp (argv[0], "STATE"))
 	i->state = atoi (argv[1]);
       else if (!strcmp (argv[0], "CATEGORY"))
-	i->categories = g_slist_append (i->categories, (gpointer)atoi (argv[1]));
+	{
+	  struct todo_category *c = category_find_by_id (atoi (argv[1]));
+	  if (c)
+	    i->categories = g_slist_append (i->categories, c);;
+	}
       else if (!strcmp (argv[0], "DUE"))
 	{
 	  struct tm tm;
@@ -313,7 +332,7 @@ push_item (struct todo_item *i)
 
   for (iter = i->categories; iter; iter = iter->next)
     {
-      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", iter->data))
+      if (insert_values (sqliteh, i->id, "CATEGORY", "%d", ((struct todo_category *)iter->data)->id))
 	goto error;
     }
 

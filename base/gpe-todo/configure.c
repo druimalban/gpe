@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,8 @@
 #include <gpe/errorbox.h>
 #include <gpe/render.h>
 #include <gpe/picturebutton.h>
+
+#include <libdm.h>
 
 #include "todo.h"
 
@@ -104,8 +106,8 @@ new_category_box (GtkWidget *w, gpointer data)
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list: Categories"));
   gpe_set_window_icon (window, "icon");
 
-  ok = gpe_picture_button (window->style, _("OK"), "ok");
-  cancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  ok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  cancel = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   gtk_widget_show (ok);
   gtk_widget_show (cancel);
@@ -130,7 +132,7 @@ new_category_box (GtkWidget *w, gpointer data)
 		      GTK_SIGNAL_FUNC (ui_create_new_category), window);
   
   gtk_signal_connect (GTK_OBJECT (cancel), "clicked",
-		      close_window, window);
+		      GTK_SIGNAL_FUNC (close_window), window);
 
   gtk_widget_show (vbox);
 
@@ -200,18 +202,17 @@ configure (GtkWidget *w, gpointer list)
 
   gtk_widget_realize (window);
 
-  okbutton = gpe_picture_button (window->style, _("OK"), "ok");
+  okbutton = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  gtk_signal_connect (GTK_OBJECT (okbutton), "clicked", GTK_SIGNAL_FUNC (close_configure), window);
 
-  gtk_signal_connect (GTK_OBJECT (okbutton), "clicked", close_configure, window);
-
-  pw = gpe_render_icon (window->style, gpe_find_icon ("new"));
+  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("New"), 
 			   _("Create a new category"), 
 			   _("Create a new category"),
 			   pw, new_category_box, clist);
 
-  pw = gpe_render_icon (window->style, gpe_find_icon ("delete"));
+  pw = gtk_image_new_from_stock (GTK_STOCK_DELETE, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), 
 			   _("Delete"),
 			   _("Delete the selected category"), 

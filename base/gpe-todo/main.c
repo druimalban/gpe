@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
+ * Copyright (C) 2002, 2003 Philip Blundell <philb@gnu.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,16 +23,9 @@
 #include "todo-sql.h"
 
 static struct gpe_icon my_icons[] = {
-  { "ok" },
-  { "cancel" },
-  { "save" },
-  { "new" },
   { "hide" },
   { "clean" },
   { "properties" },
-  { "delete"  },
-  { "cancel" },
-  { "exit" },
   { "question" },
   { "icon", PREFIX "/share/pixmaps/gpe-todo.png" },
   { "tick" },
