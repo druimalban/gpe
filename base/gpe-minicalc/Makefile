@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-minicalc
 DEBUG = no
 CVSBUILD = yes
+VERSION = 0.06
 
 MEMBERS = minicalc display
 
