@@ -996,7 +996,7 @@ main (int argc, char *argv[])
 	gtk_widget_show (icon);
 	gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("scan-off"), NULL,
 					   &bitmap, 255);
-	gtk_widget_shape_combine_mask (window, bitmap, 2, 2);
+	gtk_widget_shape_combine_mask (window, bitmap, 0, 0);
 	gdk_bitmap_unref (bitmap);
 
 	gpe_set_window_icon (window, "gpe-aerial");
