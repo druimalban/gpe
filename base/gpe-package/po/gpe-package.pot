@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-07-27 22:25+0200\n"
+"POT-Creation-Date: 2004-10-20 10:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,8 +20,8 @@ msgstr ""
 msgid "Unable to fork"
 msgstr ""
 
-#: interface.c:67
-msgid "Displaying help failed."
+#: interface.c:68
+msgid "Help for this application is not installed."
 msgstr ""
 
 #: interface.c:121
@@ -45,7 +45,7 @@ msgid "/_Packages"
 msgstr ""
 
 #: interface.c:126
-msgid "/Packages/Show _Installed"
+msgid "/Packages/Show Insta_lled"
 msgstr ""
 
 #: interface.c:127
@@ -88,134 +88,193 @@ msgstr ""
 msgid "/_Help/About"
 msgstr ""
 
-#: interface.c:192
+#: interface.c:189
 msgid "Package information"
 msgstr ""
 
-#: interface.c:284
+#: interface.c:278
 msgid "Reading packages list..."
 msgstr ""
 
-#: interface.c:290
+#: interface.c:284
 msgid "Updating package lists"
 msgstr ""
 
-#: interface.c:293
+#: interface.c:287
 msgid "Upgrading installed system"
 msgstr ""
 
-#: interface.c:296
+#: interface.c:290
 msgid "Installing"
 msgstr ""
 
-#: interface.c:299
+#: interface.c:293
 msgid "Retrieving package information"
 msgstr ""
 
-#: interface.c:302
+#: interface.c:296
 msgid "Working..."
 msgstr ""
 
-#: interface.c:403
+#: interface.c:392
 msgid "Updating views, please wait..."
 msgstr ""
 
-#: interface.c:528
+#: interface.c:504
 msgid "Command finished. Please check log messages for errors."
 msgstr ""
 
-#: interface.c:550
+#: interface.c:524
 msgid "Package selection was changed. Really exit?"
 msgstr ""
 
-#: interface.c:577
+#: interface.c:553
 msgid "IPKG backend failure, cannot continue."
 msgstr ""
 
-#: interface.c:585
+#: interface.c:560
 msgid "Communication error, cannot continue."
 msgstr ""
 
-#: interface.c:688
+#: interface.c:574
+msgid ""
+"An error occurred.\n"
+"Please consult the message log\n"
+"for hints what went wrong."
+msgstr ""
+
+#: interface.c:660
 msgid "The selected file could not be accessed."
 msgstr ""
 
-#: interface.c:760
-msgid "Select package file"
+#: interface.c:771
+msgid "Make sure your internet connection is up "
 msgstr ""
 
-#: interface.c:806
+#: interface.c:772
+msgid "or your update source is available and press OK to continue."
+msgstr ""
+
+#: interface.c:787
 msgid "Some packages could not be updated, please check your configuration."
 msgstr ""
 
-#: interface.c:809
+#: interface.c:790
 msgid "System updated sucessfully."
 msgstr ""
 
-#: interface.c:836
+#: interface.c:816
 msgid "Some lists could not be updated, please check your configuration."
 msgstr ""
 
-#: interface.c:839
+#: interface.c:819
 msgid "Package lists updated successfully."
 msgstr ""
 
-#: interface.c:852
+#: interface.c:832
 msgid "changes could not be applied."
 msgstr ""
 
-#: interface.c:857
+#: interface.c:836
 msgid "Packages installed sucessfully."
 msgstr ""
 
-#: interface.c:942
-msgid "GPE Package"
+#: interface.c:922 gpe-package.desktop.in.h:2
+msgid "Package Manager"
 msgstr ""
 
-#: interface.c:966
+#: interface.c:946
 msgid "Apply package selection"
 msgstr ""
 
-#: interface.c:972 interface.c:973
+#: interface.c:952
+msgid "Close"
+msgstr ""
+
+#: interface.c:953
 msgid "Close application"
 msgstr ""
 
-#: interface.c:988
+#: interface.c:968
 msgid "List"
 msgstr ""
 
-#: interface.c:993
+#: interface.c:973
 msgid "Package List"
 msgstr ""
 
-#: interface.c:1017
+#: interface.c:997
 msgid "Inst."
 msgstr ""
 
-#: interface.c:1027
+#: interface.c:1007 feededit.c:106 feededit.c:293
 msgid "Name"
 msgstr ""
 
-#: interface.c:1041
+#: interface.c:1020
 msgid "Messages"
 msgstr ""
 
-#: interface.c:1046
+#: interface.c:1025
 msgid "Messages Log"
 msgstr ""
 
-#: interface.c:1056
+#: interface.c:1035
 msgid "This window shows all messages from the packet manager."
 msgstr ""
 
-#: filesel.c:97
-msgid "Select File"
+#: interface.c:1042
+msgid "Feeds"
+msgstr ""
+
+#: filechooser.c:40
+msgid "Choose packages"
+msgstr ""
+
+#: feededit.c:76
+msgid "Could not open"
+msgstr ""
+
+#: feededit.c:77
+msgid "for writing."
+msgstr ""
+
+#: feededit.c:97
+msgid "Feed Properties"
+msgstr ""
+
+#: feededit.c:111
+msgid "Location (URL)"
+msgstr ""
+
+#: feededit.c:116
+msgid "Compressed"
+msgstr ""
+
+#: feededit.c:215
+msgid "Delete selected feed?"
+msgstr ""
+
+#: feededit.c:259
+msgid "Package Feeds"
+msgstr ""
+
+#: feededit.c:270
+msgid "Add a new package feed."
+msgstr ""
+
+#: feededit.c:274
+msgid "Remove selected package feed."
+msgstr ""
+
+#: feededit.c:278
+msgid "Edit selected package feed."
+msgstr ""
+
+#: feededit.c:302
+msgid "Location"
 msgstr ""
 
 #: gpe-package.desktop.in.h:1
 msgid "Install and update packages"
-msgstr ""
-
-#: gpe-package.desktop.in.h:2
-msgid "Package Manager"
 msgstr ""
