@@ -1,0 +1,40 @@
+#!/bin/sh
+# chkconfig: 345 45 96
+# processname: usbnet
+IPTABLES=/sbin/iptables
+IFCONFIG=/sbin/ifconfig
+INSMOD=/sbin/insmod
+RMMOD=/sbin/rmmod
+
+HOSTIP=192.168.0.201
+IPAQIP=192.168.0.202
+
+usage()
+{
+        echo "Usage: $0 {start|stop}"
+}
+
+#if [ $# -lt 1 ] then usage; exit 1; fi
+
+action=$1
+case "$action" in
+         start)
+                # ipmasq for USB Network
+                $IPTABLES -t nat -I POSTROUTING -j MASQUERADE -s $IPAQIP/32
+
+                # allow forwarding
+                $IPTABLES -I FORWARD -s $IPAQIP/32 -j ACCEPT
+                $IPTABLES -I FORWARD -d $IPAQIP/32 -j ACCEPT
+                echo 1 > /proc/sys/net/ipv4/ip_forward
+         ;;
+         stop)
+                $IPTABLES -t nat -F
+                $IPTABLES -F
+                echo 0 > /proc/sys/net/ipv4/ip_forward
+         ;;
+         *)
+                 usage
+                 exit 1
+         ;;
+esac
+exit 0
