@@ -92,7 +92,8 @@ void on_button_list_view_clicked(GtkButton *button, gpointer user_data){
   if (_save_current_if_needed() == ACTION_CANCELED) return;
 
   if(is_current_sketch_new){
-    g_signal_emit_by_name(G_OBJECT(selector.textlistview), "unselect-all", NULL);//FIXME: wrong params
+    gboolean ret;
+    g_signal_emit_by_name(G_OBJECT(selector.textlistview), "unselect-all", &ret);
     gtk_widget_set_sensitive(selector.button_edit,   FALSE);
     gtk_widget_set_sensitive(selector.button_delete, FALSE);
   }
@@ -159,6 +160,7 @@ gint on_key_press(GtkWidget *widget, GdkEventKey *ev, gpointer data){
 void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   gchar     * filename  = NULL;
   GdkPixbuf * thumbnail = NULL;
+  GObject   * iconlist_item = NULL;
   GtkTreeIter iter;
 
   if(!is_current_sketch_modified){
@@ -177,7 +179,9 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
     g_free(path_string);
     gtk_tree_model_get(selector.listmodel, &iter,
                        ENTRY_URL, &filename,
-                       ENTRY_THUMBNAIL, &thumbnail, -1);
+                       ENTRY_THUMBNAIL, &thumbnail,
+                       ENTRY_ICONLISTITEM, &iconlist_item,
+                       -1);
   }
 
   file_save(filename); //FIXME: should catch saving errors
@@ -201,9 +205,7 @@ void on_button_file_save_clicked(GtkButton *button, gpointer unused){
   }
   else{
     //update icon_view
-    //gpe_iconlist_update_icon_item_with_udata (GPE_ICONLIST(selector.iconlist), thumbnail, 
-    //&iter);this is not the same (*iter)!!! FIXME: update to new gpe-iconlist API
-
+  	gpe_iconlist_set_item_icon(GPE_ICONLIST(selector.iconlist), iconlist_item, thumbnail);
   }
   is_current_sketch_modified = FALSE;
   sketchpad_reset_title();

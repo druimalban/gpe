@@ -40,6 +40,7 @@ enum{//Entry id for the list store
   ENTRY_TITLE = 0,
   ENTRY_URL,
   ENTRY_THUMBNAIL,
+  ENTRY_ICONLISTITEM,
   NUM_ENTRIES
 };
 

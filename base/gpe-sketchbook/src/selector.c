@@ -29,6 +29,7 @@
 
 #include "gpe/errorbox.h"
 #include "gpe/gpe-iconlist.h"
+#include "gpe/gpeiconlistitem.h"
 
 #include "selector.h"
 #include "selector-gui.h"
@@ -54,7 +55,8 @@ void selector_init(){
   store = gtk_list_store_new (NUM_ENTRIES,
                               G_TYPE_STRING,//title
                               G_TYPE_STRING,//note's url
-                              GDK_TYPE_PIXBUF//thumbnail
+                              GDK_TYPE_PIXBUF,//thumbnail
+                              G_TYPE_OBJECT//GPEIconListItem
                               );
   selector.listmodel = GTK_TREE_MODEL(store);
 
@@ -66,7 +68,8 @@ void selector_init(){
 void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
   GtkListStore * store;
   GtkTreeIter iter;
-    
+  GObject * item;
+
   store = GTK_LIST_STORE(selector.listmodel);
   gtk_list_store_append (store, &iter);
   gtk_list_store_set (store, &iter,
@@ -78,10 +81,13 @@ void selector_add_note(gchar * title, gchar * url, GdkPixbuf * thumbnail){
   g_free(title);//liststore take a copy
   
   //gpe-iconlist is not linked to the model, so update it
-  gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
-                                NULL, //title
-                                thumbnail,//icon
-                                gtk_tree_iter_copy(&iter));//udata
+  item = gpe_iconlist_add_item_pixbuf (GPE_ICONLIST(selector.iconlist),
+                                       NULL, //title
+                                       thumbnail,//icon
+                                       gtk_tree_iter_copy(&iter));//udata
+  gtk_list_store_set (store, &iter,
+                      ENTRY_ICONLISTITEM, item,
+                      -1);  
 }
 
 void window_selector_init(GtkWidget * window_selector){
@@ -204,31 +210,36 @@ int _direntry_selector (const struct dirent * direntry){
 void delete_current_sketch(){
   gboolean is_deleted = FALSE;
   
-  GtkTreeView * treeview;
-  GtkTreeSelection * selection;
-  gboolean selected;
   GtkTreeModel * model;
   GtkTreeIter iter;
+  gboolean got_it;
+  GtkTreePath * path;
   gchar * fullpath_filename;
   
-  treeview = GTK_TREE_VIEW(selector.textlistview);
   model = GTK_TREE_MODEL(selector.listmodel);
-  selection = gtk_tree_view_get_selection(treeview);
-  selected = gtk_tree_selection_get_selected (selection, &model, &iter);        
-  if(!selected) return;
 
-  //--Delete the selected sketch
+  path = gtk_tree_path_new_from_indices (current_sketch, -1);
+
+  got_it = gtk_tree_model_get_iter(model, &iter, path);
+  gtk_tree_path_free(path);
+  if(!got_it) return;
+
   gtk_tree_model_get(model, &iter,
-                     ENTRY_URL, &fullpath_filename, -1);
+                     ENTRY_URL, &fullpath_filename,
+                     -1);
   
+  //--Delete the selected sketch
   is_deleted = file_delete(fullpath_filename);
   
   if(is_deleted){
-    //FIXME: remove from iconlist
-    //gpe_iconlist_remove_item_with_udata(GPE_ICONLIST(selector.iconlist), note);
+    GObject * iconlist_item;
+    gtk_tree_model_get(model, &iter,
+                       ENTRY_ICONLISTITEM, &iconlist_item,
+                       -1);
+
+    gpe_iconlist_remove_item(GPE_ICONLIST(selector.iconlist), iconlist_item);
 
     gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
-
 
     if(is_current_sketch_last) current_sketch--;
     sketch_list_size--;

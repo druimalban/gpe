@@ -231,7 +231,16 @@ void on_iconlist_clicked (GtkWidget * iconlist, gpointer iter, gpointer data) {
   sketchpad_open_file(fullpath_filename);
   switch_to_page(PAGE_SKETCHPAD);
 
-  current_sketch = 
+  {
+    GtkTreePath * path;
+    gint * indices;
+    path = gtk_tree_model_get_path(selector.listmodel, iter);
+    indices = gtk_tree_path_get_indices(path);
+
+    current_sketch = indices[0];
+
+    gtk_tree_path_free(path);
+  }
   set_current_sketch_selected();
 }
 
