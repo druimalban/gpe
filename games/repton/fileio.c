@@ -141,7 +141,7 @@ decode_palette(struct map_s *mptr, char *in)
 	int i;
 	for (i = 0; i < 4; i++) {
 	  int c = trans[(int)in[i]];
-	  mptr->palette[i] = game_palette[c].r | (game_palette[c].g << 5) | (game_palette[c].b << 11);
+	  mptr->palette[i] = (game_palette[c].r >> 1) | (game_palette[c].g << 5) | ((game_palette[c].b >> 1) << 11);
 	}
 }
 

@@ -210,42 +210,32 @@ check_keyboard(struct map_s *mptr)
   return 0;
 }
 
-/*
- * The following delay values may require some tuning.
- * The default values works fine on a 486dx2/66.
- */
-#define REDRAW_DELAY		10
-#define OBJECT_CHECK_DELAY	5
-#define EGG_CHECK_DELAY		55
-#define MONSTER_CHECK_DELAY	20
-#define PLANT_CHECK_DELAY	500
-#define KEYBOARD_CHECK_DELAY	10
+#define EGG_COUNT 3
+#define MONSTER_COUNT 6
+#define PLANT_COUNT 40
 
 void
 svgalib_loop(struct map_s *mptr)
 {
-	int cl, last_redraw, last_kbcheck, last_objcheck, last_eggcheck, last_moncheck, last_plcheck;
 	int quit = 0;
-	int flag = 0;
+	int count = 0;
 
 	svgalib_draw_map(mptr);
-
-	last_redraw = last_kbcheck = last_objcheck = last_eggcheck = last_moncheck = last_plcheck = clock();
 
 	dead = endlevel = 0;
 
 	while (!quit && !dead && !endlevel) {
+		count++;
 		SDL_Delay (40);
+		check_objects(mptr);
 		quit = check_keyboard(mptr);
 		svgalib_draw_map(mptr);
-		flag = !flag;
-		if (flag)
-		  {
-		    check_objects(mptr);
-		    check_monsters(mptr);
-		    check_plants(mptr);
-		    check_eggs(mptr);
-		  }
+		if ((count % MONSTER_COUNT) == 0)
+			check_monsters(mptr);
+		if ((count % PLANT_COUNT) == 0)
+			check_plants(mptr);
+		if ((count % EGG_COUNT) == 0)
+			check_eggs(mptr);
 	}
 }
 
@@ -283,24 +273,45 @@ do_transport(struct map_s *mptr)
 #endif
 }
 
-#if 0
+#define PALETTE(x)  (pal[x*3] >> 1) | (pal[x*3 + 1] << 5) | ((pal[x*3 + 2] >> 1) << 11)
+
 static void
 load_image(char *filename)
 {
 	char *buf;
 	FILE *fin;
+	char pal[768];
+	int i, j;
+	char *d;
+	unsigned short *p;
 
 	if ((buf = (char *)malloc(320 * 200)) == NULL)
 		err(1, NULL);
 	if ((fin = fopen(filename, "r")) == NULL)
 		err(1, "%s", NULL);
-	fread(buf, 768, 1, fin);
-	gl_setpalette(buf);
+
+	fread(pal, 768, 1, fin);
 	fread(buf, 64000, 1, fin);
-	gl_putbox(0, 0, 320, 200, buf);
-	fclose(fin);	
+	fclose(fin);
+
+	d = buf;
+	p = (unsigned short *)scr_physical->pixels;
+
+	for (j = 0; j < 200; j++)
+	{
+		for (i = 0; i < 320; i++)
+		{
+			unsigned char c = *d++;
+			*p++ = PALETTE(c);
+		}
+	}
+
 	free(buf);
+
+	SDL_UpdateRect (scr_physical, 0, 0, 0, 0);
 }
+
+#if 0
 
 #define WRITE_CENTERED(y,buf) \
 	gl_write(WIDTH/2 - strlen(buf) * 8 / 2, y, buf)
@@ -323,32 +334,27 @@ episode_name(char *episode)
 static void
 redraw_main_screen(char *episode, int level)
 {
-#if 0
 	char buf[128];
-	wmouse_hide();
 	load_image(PATH_BITMAPS "/main.bmp");
+#if 0
 	sprintf(buf, "Episode %s - Level %d", episode_name(episode), level+1);
 	gl_setwritemode(WRITEMODE_MASKED);
 	WRITE_CENTERED(190, buf);
-	wmouse_show();
 #endif
 }
 
 static void
 wait_until_event(void)
 {
-#if 0
 	for (;;) {
-		wmouse_update();
-		keyboard_update();
-
-		if (keyboard_keypressed(SCANCODE_Q) || keyboard_keypressed(SCANCODE_ESCAPE) ||
-		    keyboard_keypressed(SCANCODE_ENTER) || keyboard_keypressed(SCANCODE_SPACE))
-			break;
-		if (wmouse_button & MOUSE_LEFTBUTTON && !wmouse_oldbutton) 
-			break;
+		SDL_Event ev;
+		
+		if (SDL_PollEvent (&ev))
+		{
+			if (ev.type == SDL_KEYDOWN)
+				break;
+		}
 	}
-#endif
 }
 
 struct episode_s {
@@ -610,25 +616,24 @@ start_level(char *file, int *level)
 	strcat(buf, file);
 	current_map = load_map(buf, *level);
 
-#if 0
-	wmouse_hide();
 	load_image(PATH_BITMAPS "/start.bmp");
+
+#if 0
 	sprintf(buf, "Episode %s", episode_name(file));
 	WRITE_CENTERED(45, buf);
 	sprintf(buf, "Level %d", *level+1);
 	WRITE_CENTERED(70, buf);
 	sprintf(buf, "Password %s", current_map->password);
 	WRITE_CENTERED(95, buf);
+#endif
 
-	wmouse_show();
 	sound(SND_START_LEVEL);
 	wait_until_event();
-	wmouse_hide();
 
+#if 0
 	gl_clearscreen(0);
 
 	gl_setfont(8, 8, font1);
-
 #endif
 
 	svgalib_loop(current_map);
@@ -668,12 +673,7 @@ main_screen(void)
 
 	sdl_init();
 
-#if 0
-	wmouse_reset();
-	wmouse_show();
-
 	redraw_main_screen(episode, level);
-#endif
 
 	for (;;) {
 #if 0

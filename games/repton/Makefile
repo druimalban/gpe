@@ -5,12 +5,14 @@
 #
 
 CC=		gcc
-COPT=		-O2 -fomit-frame-pointer -fno-strength-reduce
-CFLAGS=		-I. -Wall $(COPT) `sdl-config --cflags`
-LDFLAGS=	-s
+COPT=		-O2
+CFLAGS=		-I. -Wall $(COPT) `sdl-config --cflags` -MD
+LDFLAGS=
 LIBS=		`sdl-config --libs`
 
-PREFIX=		/usr
+PREFIX = /usr/local
+BUILD = ../../base/build
+
 BINDIR=		$(PREFIX)/games
 LIBDIR=		$(PREFIX)/games/lib
 BINOWN=		games
@@ -32,8 +34,14 @@ SNDS=		snds/bridge1.ub snds/chirp.ub snds/choo.ub \
 		snds/dx_ep_a2.ub snds/music_box.ub snds/orchhit.ub \
 		snds/pinknois.ub snds/screech.ub snds/space.ub
 
-OBJS=		main.o kernel.o fileio.o sdl.o showmap.o sound.o \
-		err.o soundIt.o
+MEMBERS=	main kernel fileio sdl showmap sound \
+		err soundIt
+
+.SUFFIXES: .d
+
+OBJS = $(patsubst %,%.o,$(MEMBERS))
+DEPS = $(patsubst %,%.d,$(MEMBERS))
+SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 PROG=		repton
 
@@ -72,3 +80,7 @@ showmap.o: showmap.c repton.h mapsprites.c
 sound.o: sound.c repton.h pathnames.h soundIt.h
 soundIt.o: soundIt.c soundIt.h
 svgalib.o: svgalib.c repton.h mouse.h pathnames.h palette.c
+
+include $(BUILD)/Makefile.dpkg_ipkg
+include $(BUILD)/Makefile.translation
+-include $(DEPS)
