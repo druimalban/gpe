@@ -34,11 +34,6 @@ struct gpe_icon my_icons[] = {
   { NULL, NULL }
 };
 
-struct pix my_pix[] = {
-  { "ok", "ok" },
-  { NULL, NULL }
-};
-
 static void
 start_timing(GtkWidget *w, gpointer user_data)
 {
@@ -46,8 +41,10 @@ start_timing(GtkWidget *w, gpointer user_data)
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      struct pix *px = find_pixmap ("ok");
-      gtk_ctree_node_set_pixmap (ct, node, 1, px->pixmap, px->mask);
+      GdkPixmap *pixmap;
+      GdkBitmap *bitmap;
+      gpe_find_icon_pixmap ("ok", &pixmap, &bitmap);
+      gtk_ctree_node_set_pixmap (ct, node, 1, pixmap, bitmap);
     }
 }
 
@@ -148,9 +145,6 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
-  if (gpe_load_pixmaps (my_pix) == FALSE)
-    exit (1);
-
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
@@ -169,6 +163,9 @@ main(int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (vbox_top), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox_top), tree, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox_top), chatter, FALSE, FALSE, 0);
+
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_realize (window);
 
   p = gpe_find_icon ("new");
   pw = gpe_render_icon (window->style, p);
@@ -202,7 +199,6 @@ main(int argc, char *argv[])
 
   load_tasks (root, GTK_CTREE (tree), NULL);
 
-  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
   gtk_widget_set_usize (window, window_x, window_y);
 
