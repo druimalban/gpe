@@ -7,4 +7,4 @@ Depends: libgtk2.0-0, libgpewidget1, gpe-icons
 Maintainer: Phil Blundell <pb@debian.org>
 Description: A simple light puzzle 
 Replaces: gpe-lights22
-
+Source: SOURCE
