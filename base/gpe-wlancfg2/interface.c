@@ -20,11 +20,11 @@
 #include "support.h"
 
 #define GLADE_HOOKUP_OBJECT(component,widget,name) \
-  gtk_object_set_data_full (GTK_OBJECT (component), name, \
-    gtk_widget_ref (widget), (GtkDestroyNotify) gtk_widget_unref)
+  g_object_set_data_full (G_OBJECT (component), name, \
+    gtk_widget_ref (widget), (GDestroyNotify) gtk_widget_unref)
 
 #define GLADE_HOOKUP_OBJECT_NO_REF(component,widget,name) \
-  gtk_object_set_data (GTK_OBJECT (component), name, widget)
+  g_object_set_data (G_OBJECT (component), name, widget)
 
 GtkWidget*
 create_GeneralHelpWin (void)
@@ -38,7 +38,7 @@ create_GeneralHelpWin (void)
 
   GeneralHelpWin = gtk_dialog_new ();
   gtk_widget_set_name (GeneralHelpWin, "GeneralHelpWin");
-  gtk_widget_set_usize (GeneralHelpWin, 230, 220);
+  gtk_widget_set_size_request (GeneralHelpWin, 230, 220);
   gtk_window_set_title (GTK_WINDOW (GeneralHelpWin), _("Help"));
   gtk_window_set_position (GTK_WINDOW (GeneralHelpWin), GTK_WIN_POS_CENTER);
   gtk_window_set_modal (GTK_WINDOW (GeneralHelpWin), TRUE);
@@ -195,40 +195,43 @@ create_GPE_WLANCFG (void)
   GtkWidget *nbSimple;
   GtkWidget *tbGerenral_simple;
   GtkWidget *lblChannel_simple;
-  GtkWidget *edESSID_simple;
-  GtkWidget *lblEssid_simple;
-  GtkWidget *hsGeneral;
-  GtkWidget *lblnwType_simple;
   GtkObject *sbChannel_simple_adj;
   GtkWidget *sbChannel_simple;
   GtkWidget *rbInfrastructure;
   GSList *rbInfrastructure_group = NULL;
   GtkWidget *rbAdHoc;
+  GtkWidget *lblnwType_simple;
+  GtkWidget *lblHeader_general_simple;
+  GtkWidget *hsGeneral;
+  GtkWidget *lblEssid_simple;
+  GtkWidget *edESSID_simple;
   GtkWidget *lblGeneral_simple;
   GtkWidget *tbWEP_simple;
-  GtkWidget *hseparator6;
-  GtkWidget *lblKey1_simple;
-  GtkWidget *lblKey2_simple;
-  GtkWidget *lblKey3_simple;
-  GtkWidget *lblKey4_simple;
   GtkWidget *lblActiveKey_simple;
   GtkObject *sbActiveKey_simple_adj;
   GtkWidget *sbActiveKey_simple;
+  GtkWidget *lblKey4_simple;
+  GtkWidget *edKey4_simple;
+  GtkWidget *lblKey3_simple;
+  GtkWidget *edKey3_simple;
+  GtkWidget *lblKey2_simple;
+  GtkWidget *edKey2_simple;
+  GtkWidget *lblKey1_simple;
+  GtkWidget *edKey1_simple;
+  GtkWidget *hseparator6;
   GtkWidget *tbWEPSettings_simple;
-  GtkWidget *lblWEP_simple_Text;
+  GtkWidget *lblKeyFormat_simple;
+  GtkWidget *rbAuthOpen;
+  GSList *rbAuthOpen_group = NULL;
+  GtkWidget *rbAuthShared;
+  GtkWidget *rbKeyHex;
+  GtkWidget *rbKeyString;
   GtkWidget *lblAuthType_simple;
   GtkWidget *rbWEPenable;
   GSList *rbWEPenable_group = NULL;
-  GtkWidget *rbAuthOpen;
-  GtkWidget *rbKeyHex;
   GtkWidget *rbWEPdisable;
-  GtkWidget *rbAuthShared;
-  GtkWidget *rbKeyString;
-  GtkWidget *lblKeyFormat_simple;
-  GtkWidget *edKey1_simple;
-  GtkWidget *edKey2_simple;
-  GtkWidget *edKey3_simple;
-  GtkWidget *edKey4_simple;
+  GtkWidget *lblWEP_simple_Text;
+  GtkWidget *lblHeader_encryption_simple;
   GtkWidget *lblWEP_simple;
   GtkWidget *lblTab3;
 
@@ -500,7 +503,7 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbDefaultChannel), rbDefaultChannel_group);
-  rbDefaultChannel_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbDefaultChannel));
+  rbDefaultChannel_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbDefaultChannel));
 
   rbFrequency = gtk_radio_button_new_with_mnemonic (NULL, _("Frequency:"));
   gtk_widget_set_name (rbFrequency, "rbFrequency");
@@ -509,7 +512,7 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbFrequency), rbDefaultChannel_group);
-  rbDefaultChannel_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbFrequency));
+  rbDefaultChannel_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbFrequency));
 
   rbChannel = gtk_radio_button_new_with_mnemonic (NULL, _("Channel:"));
   gtk_widget_set_name (rbChannel, "rbChannel");
@@ -518,7 +521,7 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbChannel), rbDefaultChannel_group);
-  rbDefaultChannel_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbChannel));
+  rbDefaultChannel_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbChannel));
 
   sbFrequency_adj = gtk_adjustment_new (2.412, 2.4, 2.4836, 0.001, 0.01, 0.1);
   sbFrequency = gtk_spin_button_new (GTK_ADJUSTMENT (sbFrequency_adj), 0.001, 4);
@@ -637,14 +640,14 @@ create_GPE_WLANCFG (void)
   gtk_widget_show (rbOpen);
   gtk_box_pack_start (GTK_BOX (vbMode), rbOpen, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbOpen), rbOpen_group);
-  rbOpen_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbOpen));
+  rbOpen_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbOpen));
 
   rbRestricted = gtk_radio_button_new_with_mnemonic (NULL, _("Restricted"));
   gtk_widget_set_name (rbRestricted, "rbRestricted");
   gtk_widget_show (rbRestricted);
   gtk_box_pack_start (GTK_BOX (vbMode), rbRestricted, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbRestricted), rbOpen_group);
-  rbOpen_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbRestricted));
+  rbOpen_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbRestricted));
 
   vbEncryption = gtk_vbox_new (FALSE, 0);
   gtk_widget_set_name (vbEncryption, "vbEncryption");
@@ -658,14 +661,14 @@ create_GPE_WLANCFG (void)
   gtk_widget_show (rbOn);
   gtk_box_pack_start (GTK_BOX (vbEncryption), rbOn, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbOn), rbOn_group);
-  rbOn_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbOn));
+  rbOn_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbOn));
 
   rbOff = gtk_radio_button_new_with_mnemonic (NULL, _("Off"));
   gtk_widget_set_name (rbOff, "rbOff");
   gtk_widget_show (rbOff);
   gtk_box_pack_start (GTK_BOX (vbEncryption), rbOff, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbOff), rbOn_group);
-  rbOn_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbOff));
+  rbOn_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbOff));
 
   lblEncryption = gtk_label_new (_("Encryption:"));
   gtk_widget_set_name (lblEncryption, "lblEncryption");
@@ -718,14 +721,14 @@ create_GPE_WLANCFG (void)
   gtk_widget_show (rbHex);
   gtk_box_pack_start (GTK_BOX (vbKeyFormat), rbHex, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbHex), rbHex_group);
-  rbHex_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbHex));
+  rbHex_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbHex));
 
   rbStringValues = gtk_radio_button_new_with_mnemonic (NULL, _("String values"));
   gtk_widget_set_name (rbStringValues, "rbStringValues");
   gtk_widget_show (rbStringValues);
   gtk_box_pack_start (GTK_BOX (vbKeyFormat), rbStringValues, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbStringValues), rbHex_group);
-  rbHex_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbStringValues));
+  rbHex_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbStringValues));
 
   lblKey1 = gtk_label_new (_("Key #1:"));
   gtk_widget_set_name (lblKey1, "lblKey1");
@@ -937,7 +940,6 @@ create_GPE_WLANCFG (void)
   gtk_widget_show (hbbHelp);
   gtk_box_pack_start (GTK_BOX (vbConfigSelection), hbbHelp, FALSE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbbHelp), 10);
-  gtk_button_box_set_spacing (GTK_BUTTON_BOX (hbbHelp), 0);
 
   btnHelp = gtk_button_new_from_stock ("gtk-help");
   gtk_widget_set_name (btnHelp, "btnHelp");
@@ -981,11 +983,72 @@ create_GPE_WLANCFG (void)
   lblChannel_simple = gtk_label_new (_("Channel:"));
   gtk_widget_set_name (lblChannel_simple, "lblChannel_simple");
   gtk_widget_show (lblChannel_simple);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblChannel_simple, 0, 1, 2, 3,
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblChannel_simple, 0, 1, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
   gtk_label_set_justify (GTK_LABEL (lblChannel_simple), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (lblChannel_simple), 0, 0.5);
+
+  sbChannel_simple_adj = gtk_adjustment_new (1, 1, 13, 1, 5, 10);
+  sbChannel_simple = gtk_spin_button_new (GTK_ADJUSTMENT (sbChannel_simple_adj), 1, 0);
+  gtk_widget_set_name (sbChannel_simple, "sbChannel_simple");
+  gtk_widget_show (sbChannel_simple);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), sbChannel_simple, 1, 2, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (sbChannel_simple), TRUE);
+
+  rbInfrastructure = gtk_radio_button_new_with_mnemonic (NULL, _("Infrastructure"));
+  gtk_widget_set_name (rbInfrastructure, "rbInfrastructure");
+  gtk_widget_show (rbInfrastructure);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), rbInfrastructure, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 2);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbInfrastructure), rbInfrastructure_group);
+  rbInfrastructure_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbInfrastructure));
+
+  rbAdHoc = gtk_radio_button_new_with_mnemonic (NULL, _("Ad-Hoc"));
+  gtk_widget_set_name (rbAdHoc, "rbAdHoc");
+  gtk_widget_show (rbAdHoc);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), rbAdHoc, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 2);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAdHoc), rbInfrastructure_group);
+  rbInfrastructure_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbAdHoc));
+
+  lblnwType_simple = gtk_label_new (_("Network type:"));
+  gtk_widget_set_name (lblnwType_simple, "lblnwType_simple");
+  gtk_widget_show (lblnwType_simple);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblnwType_simple, 0, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 6);
+  gtk_label_set_justify (GTK_LABEL (lblnwType_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblnwType_simple), 0, 0.5);
+
+  lblHeader_general_simple = gtk_label_new (_("Basic Settings"));
+  gtk_widget_set_name (lblHeader_general_simple, "lblHeader_general_simple");
+  gtk_widget_show (lblHeader_general_simple);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblHeader_general_simple, 0, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblHeader_general_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblHeader_general_simple), 0, 0.5);
+
+  hsGeneral = gtk_hseparator_new ();
+  gtk_widget_set_name (hsGeneral, "hsGeneral");
+  gtk_widget_show (hsGeneral);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), hsGeneral, 0, 2, 5, 6,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 11);
+
+  lblEssid_simple = gtk_label_new (_("Network name (ESSID):"));
+  gtk_widget_set_name (lblEssid_simple, "lblEssid_simple");
+  gtk_widget_show (lblEssid_simple);
+  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblEssid_simple, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblEssid_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblEssid_simple), 0, 0.5);
 
   edESSID_simple = gtk_entry_new ();
   gtk_widget_set_name (edESSID_simple, "edESSID_simple");
@@ -995,65 +1058,13 @@ create_GPE_WLANCFG (void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_entry_set_text (GTK_ENTRY (edESSID_simple), _("any"));
 
-  lblEssid_simple = gtk_label_new (_("ESSID:"));
-  gtk_widget_set_name (lblEssid_simple, "lblEssid_simple");
-  gtk_widget_show (lblEssid_simple);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblEssid_simple, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblEssid_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblEssid_simple), 0, 0.5);
-
-  hsGeneral = gtk_hseparator_new ();
-  gtk_widget_set_name (hsGeneral, "hsGeneral");
-  gtk_widget_show (hsGeneral);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), hsGeneral, 0, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_FILL), 0, 11);
-
-  lblnwType_simple = gtk_label_new (_("Network type:"));
-  gtk_widget_set_name (lblnwType_simple, "lblnwType_simple");
-  gtk_widget_show (lblnwType_simple);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), lblnwType_simple, 0, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 6);
-  gtk_label_set_justify (GTK_LABEL (lblnwType_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblnwType_simple), 0, 0.5);
-
-  sbChannel_simple_adj = gtk_adjustment_new (1, 1, 13, 1, 5, 10);
-  sbChannel_simple = gtk_spin_button_new (GTK_ADJUSTMENT (sbChannel_simple_adj), 1, 0);
-  gtk_widget_set_name (sbChannel_simple, "sbChannel_simple");
-  gtk_widget_show (sbChannel_simple);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), sbChannel_simple, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (sbChannel_simple), TRUE);
-
-  rbInfrastructure = gtk_radio_button_new_with_mnemonic (NULL, _("Infrastructure"));
-  gtk_widget_set_name (rbInfrastructure, "rbInfrastructure");
-  gtk_widget_show (rbInfrastructure);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), rbInfrastructure, 0, 1, 1, 2,
-                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 2);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbInfrastructure), rbInfrastructure_group);
-  rbInfrastructure_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbInfrastructure));
-
-  rbAdHoc = gtk_radio_button_new_with_mnemonic (NULL, _("Ad-Hoc"));
-  gtk_widget_set_name (rbAdHoc, "rbAdHoc");
-  gtk_widget_show (rbAdHoc);
-  gtk_table_attach (GTK_TABLE (tbGerenral_simple), rbAdHoc, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_SHRINK | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 2);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAdHoc), rbInfrastructure_group);
-  rbInfrastructure_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbAdHoc));
-
   lblGeneral_simple = gtk_label_new (_("General"));
   gtk_widget_set_name (lblGeneral_simple, "lblGeneral_simple");
   gtk_widget_show (lblGeneral_simple);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbSimple), gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbSimple), 0), lblGeneral_simple);
   gtk_label_set_justify (GTK_LABEL (lblGeneral_simple), GTK_JUSTIFY_LEFT);
 
-  tbWEP_simple = gtk_table_new (7, 2, FALSE);
+  tbWEP_simple = gtk_table_new (8, 3, FALSE);
   gtk_widget_set_name (tbWEP_simple, "tbWEP_simple");
   gtk_widget_show (tbWEP_simple);
   gtk_container_add (GTK_CONTAINER (nbSimple), tbWEP_simple);
@@ -1061,53 +1072,10 @@ create_GPE_WLANCFG (void)
   gtk_table_set_row_spacings (GTK_TABLE (tbWEP_simple), 5);
   gtk_table_set_col_spacings (GTK_TABLE (tbWEP_simple), 10);
 
-  hseparator6 = gtk_hseparator_new ();
-  gtk_widget_set_name (hseparator6, "hseparator6");
-  gtk_widget_show (hseparator6);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), hseparator6, 0, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
-
-  lblKey1_simple = gtk_label_new (_("Key #1:"));
-  gtk_widget_set_name (lblKey1_simple, "lblKey1_simple");
-  gtk_widget_show (lblKey1_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey1_simple, 0, 1, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblKey1_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblKey1_simple), 0, 0.5);
-
-  lblKey2_simple = gtk_label_new (_("Key #2:"));
-  gtk_widget_set_name (lblKey2_simple, "lblKey2_simple");
-  gtk_widget_show (lblKey2_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey2_simple, 0, 1, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblKey2_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblKey2_simple), 0, 0.5);
-
-  lblKey3_simple = gtk_label_new (_("Key #3:"));
-  gtk_widget_set_name (lblKey3_simple, "lblKey3_simple");
-  gtk_widget_show (lblKey3_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey3_simple, 0, 1, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblKey3_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblKey3_simple), 0, 0.5);
-
-  lblKey4_simple = gtk_label_new (_("Key #4:"));
-  gtk_widget_set_name (lblKey4_simple, "lblKey4_simple");
-  gtk_widget_show (lblKey4_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey4_simple, 0, 1, 5, 6,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblKey4_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblKey4_simple), 0, 0.5);
-
   lblActiveKey_simple = gtk_label_new (_("Active key:"));
   gtk_widget_set_name (lblActiveKey_simple, "lblActiveKey_simple");
   gtk_widget_show (lblActiveKey_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblActiveKey_simple, 0, 1, 6, 7,
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblActiveKey_simple, 0, 1, 7, 8,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
   gtk_label_set_justify (GTK_LABEL (lblActiveKey_simple), GTK_JUSTIFY_LEFT);
@@ -1117,31 +1085,136 @@ create_GPE_WLANCFG (void)
   sbActiveKey_simple = gtk_spin_button_new (GTK_ADJUSTMENT (sbActiveKey_simple_adj), 1, 0);
   gtk_widget_set_name (sbActiveKey_simple, "sbActiveKey_simple");
   gtk_widget_show (sbActiveKey_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), sbActiveKey_simple, 1, 2, 6, 7,
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), sbActiveKey_simple, 1, 2, 7, 8,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  tbWEPSettings_simple = gtk_table_new (3, 3, FALSE);
+  lblKey4_simple = gtk_label_new (_("Key #4:"));
+  gtk_widget_set_name (lblKey4_simple, "lblKey4_simple");
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey4_simple, 0, 1, 6, 7,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblKey4_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblKey4_simple), 0, 0.5);
+
+  edKey4_simple = gtk_entry_new ();
+  gtk_widget_set_name (edKey4_simple, "edKey4_simple");
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey4_simple, 1, 3, 6, 7,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  lblKey3_simple = gtk_label_new (_("Key #3:"));
+  gtk_widget_set_name (lblKey3_simple, "lblKey3_simple");
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey3_simple, 0, 1, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblKey3_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblKey3_simple), 0, 0.5);
+
+  edKey3_simple = gtk_entry_new ();
+  gtk_widget_set_name (edKey3_simple, "edKey3_simple");
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey3_simple, 1, 3, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  lblKey2_simple = gtk_label_new (_("Key #2:"));
+  gtk_widget_set_name (lblKey2_simple, "lblKey2_simple");
+  gtk_widget_show (lblKey2_simple);
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey2_simple, 0, 1, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblKey2_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblKey2_simple), 0, 0.5);
+
+  edKey2_simple = gtk_entry_new ();
+  gtk_widget_set_name (edKey2_simple, "edKey2_simple");
+  gtk_widget_show (edKey2_simple);
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey2_simple, 1, 3, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  lblKey1_simple = gtk_label_new (_("Key #1:"));
+  gtk_widget_set_name (lblKey1_simple, "lblKey1_simple");
+  gtk_widget_show (lblKey1_simple);
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblKey1_simple, 0, 1, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblKey1_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblKey1_simple), 0, 0.5);
+
+  edKey1_simple = gtk_entry_new ();
+  gtk_widget_set_name (edKey1_simple, "edKey1_simple");
+  gtk_widget_show (edKey1_simple);
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey1_simple, 1, 3, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  hseparator6 = gtk_hseparator_new ();
+  gtk_widget_set_name (hseparator6, "hseparator6");
+  gtk_widget_show (hseparator6);
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), hseparator6, 0, 3, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  tbWEPSettings_simple = gtk_table_new (6, 3, FALSE);
   gtk_widget_set_name (tbWEPSettings_simple, "tbWEPSettings_simple");
   gtk_widget_show (tbWEPSettings_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), tbWEPSettings_simple, 0, 2, 0, 1,
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), tbWEPSettings_simple, 0, 3, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_table_set_col_spacings (GTK_TABLE (tbWEPSettings_simple), 4);
 
-  lblWEP_simple_Text = gtk_label_new (_("WEP"));
-  gtk_widget_set_name (lblWEP_simple_Text, "lblWEP_simple_Text");
-  gtk_widget_show (lblWEP_simple_Text);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), lblWEP_simple_Text, 0, 1, 0, 1,
+  lblKeyFormat_simple = gtk_label_new (_("Key format:"));
+  gtk_widget_set_name (lblKeyFormat_simple, "lblKeyFormat_simple");
+  gtk_widget_show (lblKeyFormat_simple);
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), lblKeyFormat_simple, 0, 2, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblKeyFormat_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblKeyFormat_simple), 0, 0.5);
+
+  rbAuthOpen = gtk_radio_button_new_with_mnemonic (NULL, _("Open system"));
+  gtk_widget_set_name (rbAuthOpen, "rbAuthOpen");
+  gtk_widget_show (rbAuthOpen);
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbAuthOpen, 1, 2, 3, 4,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblWEP_simple_Text), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblWEP_simple_Text), 0, 0.5);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAuthOpen), rbAuthOpen_group);
+  rbAuthOpen_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbAuthOpen));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rbAuthOpen), TRUE);
 
-  lblAuthType_simple = gtk_label_new (_("Auth. type"));
+  rbAuthShared = gtk_radio_button_new_with_mnemonic (NULL, _("Shared key"));
+  gtk_widget_set_name (rbAuthShared, "rbAuthShared");
+  gtk_widget_show (rbAuthShared);
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbAuthShared, 2, 3, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAuthShared), rbAuthOpen_group);
+  rbAuthOpen_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbAuthShared));
+
+  rbKeyHex = gtk_radio_button_new_with_mnemonic (NULL, _("Hex"));
+  gtk_widget_set_name (rbKeyHex, "rbKeyHex");
+  gtk_widget_show (rbKeyHex);
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbKeyHex, 1, 2, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbKeyHex), rbHex_group);
+  rbHex_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbKeyHex));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (rbKeyHex), TRUE);
+
+  rbKeyString = gtk_radio_button_new_with_mnemonic (NULL, _("String"));
+  gtk_widget_set_name (rbKeyString, "rbKeyString");
+  gtk_widget_show (rbKeyString);
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbKeyString, 2, 3, 5, 6,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbKeyString), rbHex_group);
+  rbHex_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbKeyString));
+
+  lblAuthType_simple = gtk_label_new (_("Authentication type:"));
   gtk_widget_set_name (lblAuthType_simple, "lblAuthType_simple");
   gtk_widget_show (lblAuthType_simple);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), lblAuthType_simple, 0, 1, 1, 2,
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), lblAuthType_simple, 0, 2, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND), 0, 0);
   gtk_label_set_justify (GTK_LABEL (lblAuthType_simple), GTK_JUSTIFY_LEFT);
@@ -1150,93 +1223,38 @@ create_GPE_WLANCFG (void)
   rbWEPenable = gtk_radio_button_new_with_mnemonic (NULL, _("Enable"));
   gtk_widget_set_name (rbWEPenable, "rbWEPenable");
   gtk_widget_show (rbWEPenable);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbWEPenable, 1, 2, 0, 1,
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbWEPenable, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND), 0, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbWEPenable), rbWEPenable_group);
-  rbWEPenable_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbWEPenable));
-
-  rbAuthOpen = gtk_radio_button_new_with_mnemonic (NULL, _("Open system"));
-  gtk_widget_set_name (rbAuthOpen, "rbAuthOpen");
-  gtk_widget_show (rbAuthOpen);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbAuthOpen, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAuthOpen), rbWEPenable_group);
-  rbWEPenable_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbAuthOpen));
-
-  rbKeyHex = gtk_radio_button_new_with_mnemonic (NULL, _("Hex"));
-  gtk_widget_set_name (rbKeyHex, "rbKeyHex");
-  gtk_widget_show (rbKeyHex);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbKeyHex, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbKeyHex), rbWEPenable_group);
-  rbWEPenable_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbKeyHex));
+  rbWEPenable_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbWEPenable));
 
   rbWEPdisable = gtk_radio_button_new_with_mnemonic (NULL, _("Disable"));
   gtk_widget_set_name (rbWEPdisable, "rbWEPdisable");
   gtk_widget_show (rbWEPdisable);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbWEPdisable, 2, 3, 0, 1,
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbWEPdisable, 2, 3, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND), 0, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbWEPdisable), rbWEPenable_group);
-  rbWEPenable_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbWEPdisable));
+  rbWEPenable_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (rbWEPdisable));
 
-  rbAuthShared = gtk_radio_button_new_with_mnemonic (NULL, _("Shared key"));
-  gtk_widget_set_name (rbAuthShared, "rbAuthShared");
-  gtk_widget_show (rbAuthShared);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbAuthShared, 2, 3, 1, 2,
+  lblWEP_simple_Text = gtk_label_new (_("WEP:"));
+  gtk_widget_set_name (lblWEP_simple_Text, "lblWEP_simple_Text");
+  gtk_widget_show (lblWEP_simple_Text);
+  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), lblWEP_simple_Text, 0, 2, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND), 0, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbAuthShared), rbWEPenable_group);
-  rbWEPenable_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbAuthShared));
+  gtk_label_set_justify (GTK_LABEL (lblWEP_simple_Text), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblWEP_simple_Text), 0, 0.5);
 
-  rbKeyString = gtk_radio_button_new_with_mnemonic (NULL, _("String"));
-  gtk_widget_set_name (rbKeyString, "rbKeyString");
-  gtk_widget_show (rbKeyString);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), rbKeyString, 2, 3, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (rbKeyString), rbWEPenable_group);
-  rbWEPenable_group = gtk_radio_button_group (GTK_RADIO_BUTTON (rbKeyString));
-
-  lblKeyFormat_simple = gtk_label_new (_("Key format:"));
-  gtk_widget_set_name (lblKeyFormat_simple, "lblKeyFormat_simple");
-  gtk_widget_show (lblKeyFormat_simple);
-  gtk_table_attach (GTK_TABLE (tbWEPSettings_simple), lblKeyFormat_simple, 0, 1, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
-  gtk_label_set_justify (GTK_LABEL (lblKeyFormat_simple), GTK_JUSTIFY_LEFT);
-  gtk_misc_set_alignment (GTK_MISC (lblKeyFormat_simple), 0, 0.5);
-
-  edKey1_simple = gtk_entry_new ();
-  gtk_widget_set_name (edKey1_simple, "edKey1_simple");
-  gtk_widget_show (edKey1_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey1_simple, 1, 2, 2, 3,
+  lblHeader_encryption_simple = gtk_label_new (_("Encryption Settings"));
+  gtk_widget_set_name (lblHeader_encryption_simple, "lblHeader_encryption_simple");
+  gtk_widget_show (lblHeader_encryption_simple);
+  gtk_table_attach (GTK_TABLE (tbWEP_simple), lblHeader_encryption_simple, 0, 2, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-
-  edKey2_simple = gtk_entry_new ();
-  gtk_widget_set_name (edKey2_simple, "edKey2_simple");
-  gtk_widget_show (edKey2_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey2_simple, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  edKey3_simple = gtk_entry_new ();
-  gtk_widget_set_name (edKey3_simple, "edKey3_simple");
-  gtk_widget_show (edKey3_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey3_simple, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  edKey4_simple = gtk_entry_new ();
-  gtk_widget_set_name (edKey4_simple, "edKey4_simple");
-  gtk_widget_show (edKey4_simple);
-  gtk_table_attach (GTK_TABLE (tbWEP_simple), edKey4_simple, 1, 2, 5, 6,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_justify (GTK_LABEL (lblHeader_encryption_simple), GTK_JUSTIFY_LEFT);
+  gtk_misc_set_alignment (GTK_MISC (lblHeader_encryption_simple), 0, 0.5);
 
   lblWEP_simple = gtk_label_new (_("WEP"));
   gtk_widget_set_name (lblWEP_simple, "lblWEP_simple");
@@ -1250,33 +1268,33 @@ create_GPE_WLANCFG (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (nbPseudoMain), gtk_notebook_get_nth_page (GTK_NOTEBOOK (nbPseudoMain), 2), lblTab3);
   gtk_label_set_justify (GTK_LABEL (lblTab3), GTK_JUSTIFY_LEFT);
 
-  gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "delete_event",
-                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "destroy",
-                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "destroy_event",
-                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (GPE_WLANCFG), "show",
-                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_show),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (tvSchemeList), "row_activated",
-                      GTK_SIGNAL_FUNC (on_tvSchemeList_row_activated),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (rbFrequency), "toggled",
-                      GTK_SIGNAL_FUNC (on_rbFrequency_toggled),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (rbChannel), "toggled",
-                      GTK_SIGNAL_FUNC (on_rbChannel_toggled),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (btnHelp), "clicked",
-                      GTK_SIGNAL_FUNC (on_btnHelp_clicked),
-                      NULL);
-  gtk_signal_connect (GTK_OBJECT (btnBack), "clicked",
-                      GTK_SIGNAL_FUNC (on_GPE_WLANCFG_de_event),
-                      NULL);
+  g_signal_connect ((gpointer) GPE_WLANCFG, "delete_event",
+                    G_CALLBACK (on_GPE_WLANCFG_de_event),
+                    NULL);
+  g_signal_connect ((gpointer) GPE_WLANCFG, "destroy",
+                    G_CALLBACK (on_GPE_WLANCFG_de_event),
+                    NULL);
+  g_signal_connect ((gpointer) GPE_WLANCFG, "destroy_event",
+                    G_CALLBACK (on_GPE_WLANCFG_de_event),
+                    NULL);
+  g_signal_connect ((gpointer) GPE_WLANCFG, "show",
+                    G_CALLBACK (on_GPE_WLANCFG_show),
+                    NULL);
+  g_signal_connect ((gpointer) tvSchemeList, "row_activated",
+                    G_CALLBACK (on_tvSchemeList_row_activated),
+                    NULL);
+  g_signal_connect ((gpointer) rbFrequency, "toggled",
+                    G_CALLBACK (on_rbFrequency_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) rbChannel, "toggled",
+                    G_CALLBACK (on_rbChannel_toggled),
+                    NULL);
+  g_signal_connect ((gpointer) btnHelp, "clicked",
+                    G_CALLBACK (on_btnHelp_clicked),
+                    NULL);
+  g_signal_connect ((gpointer) btnBack, "clicked",
+                    G_CALLBACK (on_GPE_WLANCFG_de_event),
+                    NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (GPE_WLANCFG, GPE_WLANCFG, "GPE_WLANCFG");
@@ -1382,36 +1400,38 @@ create_GPE_WLANCFG (void)
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, nbSimple, "nbSimple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, tbGerenral_simple, "tbGerenral_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblChannel_simple, "lblChannel_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edESSID_simple, "edESSID_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblEssid_simple, "lblEssid_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hsGeneral, "hsGeneral");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblnwType_simple, "lblnwType_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, sbChannel_simple, "sbChannel_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbInfrastructure, "rbInfrastructure");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbAdHoc, "rbAdHoc");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblnwType_simple, "lblnwType_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblHeader_general_simple, "lblHeader_general_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hsGeneral, "hsGeneral");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblEssid_simple, "lblEssid_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edESSID_simple, "edESSID_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblGeneral_simple, "lblGeneral_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, tbWEP_simple, "tbWEP_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hseparator6, "hseparator6");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey1_simple, "lblKey1_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey2_simple, "lblKey2_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey3_simple, "lblKey3_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey4_simple, "lblKey4_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblActiveKey_simple, "lblActiveKey_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, sbActiveKey_simple, "sbActiveKey_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey4_simple, "lblKey4_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey4_simple, "edKey4_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey3_simple, "lblKey3_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey3_simple, "edKey3_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey2_simple, "lblKey2_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey2_simple, "edKey2_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKey1_simple, "lblKey1_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey1_simple, "edKey1_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, hseparator6, "hseparator6");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, tbWEPSettings_simple, "tbWEPSettings_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblWEP_simple_Text, "lblWEP_simple_Text");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKeyFormat_simple, "lblKeyFormat_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbAuthOpen, "rbAuthOpen");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbAuthShared, "rbAuthShared");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbKeyHex, "rbKeyHex");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbKeyString, "rbKeyString");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblAuthType_simple, "lblAuthType_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbWEPenable, "rbWEPenable");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbAuthOpen, "rbAuthOpen");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbKeyHex, "rbKeyHex");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbWEPdisable, "rbWEPdisable");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbAuthShared, "rbAuthShared");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, rbKeyString, "rbKeyString");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblKeyFormat_simple, "lblKeyFormat_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey1_simple, "edKey1_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey2_simple, "edKey2_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey3_simple, "edKey3_simple");
-  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, edKey4_simple, "edKey4_simple");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblWEP_simple_Text, "lblWEP_simple_Text");
+  GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblHeader_encryption_simple, "lblHeader_encryption_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblWEP_simple, "lblWEP_simple");
   GLADE_HOOKUP_OBJECT (GPE_WLANCFG, lblTab3, "lblTab3");
 

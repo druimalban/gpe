@@ -62,10 +62,12 @@ int main (int argc, char *argv[])
 	GtkTreeView	*treeview;
 	GtkTreeViewColumn *tcolumn;
 	GtkCellRenderer *renderer;
- 
+ 	gchar *ts;
+	
 	setlocale (LC_ALL, "");
 
 	bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset (PACKAGE, "UTF-8");
 	textdomain (PACKAGE);	
 	
 	if (gpe_application_init (&argc, &argv) == FALSE) 
@@ -80,12 +82,6 @@ int main (int argc, char *argv[])
 
 	gtk_widget_realize (GPE_WLANCFG);
   
-	/* now depricated?
-	  
-	if (gpe_find_icon_pixmap ("icon", &pmap, &bmap))
-		gdk_window_set_icon (GPE_WLANCFG->window, NULL, pmap, bmap);
-	
-	*/
 	gpe_set_window_icon(GPE_WLANCFG, "icon");
 
 	vbSchemes = lookup_widget (GPE_WLANCFG, "vbSchemes");
@@ -114,11 +110,6 @@ int main (int argc, char *argv[])
 		 (GtkSignalFunc) on_btnDelete_clicked, NULL);
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_main));
 	
-/*
-	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_main), _("Exit"),
-		_("Exit"), _("Exit"), pw, (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL);
-*/
 	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_main), GTK_STOCK_QUIT,_("Exit"),
 		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
 	
@@ -138,9 +129,8 @@ int main (int argc, char *argv[])
 		 (GtkSignalFunc) on_btnExpert_clicked, NULL);
 	gtk_toolbar_append_space (GTK_TOOLBAR (toolbar_simple));
 	
-	pw =  gtk_image_new_from_pixbuf(gpe_find_icon ("exit"));
-	gtk_toolbar_append_item (GTK_TOOLBAR (toolbar_simple), _("Exit"),
-		_("Exit"), _("Exit"), pw, (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL);
+	gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar_simple), GTK_STOCK_QUIT,_("Exit"),
+		_("Exit"), (GtkSignalFunc) on_GPE_WLANCFG_de_event, NULL, -1);
 
 
 	
@@ -186,6 +176,17 @@ int main (int argc, char *argv[])
 						     NULL);
 						     
 	gtk_tree_view_append_column (treeview, tcolumn);
+	
+	/* set some labels bold */
+	pw = lookup_widget (GPE_WLANCFG, "lblHeader_general_simple");
+	ts = g_strdup_printf("<b>%s</b>",gtk_label_get_text(GTK_LABEL(pw)));
+	gtk_label_set_markup(GTK_LABEL(pw),ts);
+	g_free(ts);
+
+	pw = lookup_widget (GPE_WLANCFG, "lblHeader_encryption_simple");
+	ts = g_strdup_printf("<b>%s</b>",gtk_label_get_text(GTK_LABEL(pw)));
+	gtk_label_set_markup(GTK_LABEL(pw),ts);
+	g_free(ts);
 
 	init_help();
 
