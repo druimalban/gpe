@@ -1,5 +1,6 @@
 Package: gpe-autostarter
 Version: VERSION
+Source: SOURCE
 Architecture: arm
 Section: base
 Priority: optional

@@ -2,8 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-autostarter
 DEBUG = no
 CVSBUILD = yes
-GTK2 = yes
-VERSION = 0.2
+VERSION = 0.3
 
 MEMBERS = autostarter net bluetooth
 
