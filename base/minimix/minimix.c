@@ -119,7 +119,7 @@ main (int argc, char **argv)
 
   window = gtk_plug_new (0);
   gtk_window_set_resizable (GTK_WINDOW(window),TRUE);
-  gtk_widget_set_usize (window, 16, 16);
+  gtk_widget_set_usize (window, 30, 32);
   gtk_widget_realize (window);
 
   if (gpe_load_icons (my_icons) == FALSE) 
@@ -146,7 +146,6 @@ main (int argc, char **argv)
   gdk_bitmap_unref (bitmap);
 
   icon = gtk_image_new_from_pixbuf (gpe_find_icon ("minimix"));
-  gtk_misc_set_alignment(GTK_MISC(icon),0.0,0.5);
   gtk_container_add (GTK_CONTAINER (window), icon);
 
   gtk_widget_show_all (window);
