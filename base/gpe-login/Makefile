@@ -5,7 +5,7 @@ gpe-login.o: gpe-login.c
 	$(CC) -c -o $@ $< `gtk-config --cflags` -Os -Wall -fomit-frame-pointer
 
 install:
-	cp gpe-login $(DESTDIR)/usr/bin/
+	install -D gpe-login $(DESTDIR)/usr/bin/gpe-login
 	strip $(DESTDIR)/usr/bin/gpe-login
 
 ipkg:
