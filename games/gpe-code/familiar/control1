@@ -1,5 +1,6 @@
 Package: gpe-code2 
 Version: VERSION
+Source: SOURCE
 Section: games
 Priority: optional
 Architecture: arm
