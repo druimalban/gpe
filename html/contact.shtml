@@ -4,8 +4,8 @@
 <!--#set var="author" value="Colin Marquardt"-->
 <!--#set var="authoremail" value="gpe-web@marquardt-home.de"-->
 
-<P>
 <h2>Mailing List</h2> 
+<P>
 The main point of contact for the GPE project is the mailing list
 <a href="mailto:gpe@handhelds.org">gpe@handhelds.org</a>.
 </P>
@@ -21,17 +21,18 @@ You can read past articles in the mailing list archive at
 <A HREF="http://handhelds.org/pipermail/gpe/">http://handhelds.org/pipermail/gpe/</A>.
 </P>
 
-<P>
 <h2>IRC</h2> 
+<P>
 GPE coders and users can be be found on the #gpe channel of irc.handhelds.org (port 6667).
 
-<P>
 <h2>GPE around the globe</h2> 
 
+<P>
 GPE team members are spread all around the globe. If you're a GPE
 user/developer/hacker and are headed somewhere, check here to see if
 there's anyone you can visit!
 </p>
+
 <p>
 <table border="0" width="100%">
 <tr><th width="15%"></th><th width="20%"></th><th width="65%"></th></tr>
