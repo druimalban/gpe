@@ -1,3 +1,7 @@
+2004-11-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* tasks.c: Fixed bug caused sound to be muted on restore.
+
 2004-11-06	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* login-setup.*, suid.c: Implemented autologin switch. Fixed some formating.

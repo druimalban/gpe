@@ -49,7 +49,7 @@ task_sound(char *action)
 	{
 		sound_init();
 		sound_load_settings();
-		if (get_mute_status)
+		if (get_mute_status())
 			set_mute_status(TRUE);
 	}
 	else
