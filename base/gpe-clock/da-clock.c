@@ -16,13 +16,14 @@
 
 #include <gtk/gtk.h>
 
-static int clock_radius = 40, border = 2;
+static int clock_radius = 64, border = 2;
 
 static guint x_offset, y_offset;
 
 static gboolean hand = TRUE;
 
 static GtkAdjustment *hour_adj, *minute_adj;
+static GdkPixbuf *clock_background;
 
 static void
 draw_hand (GdkDrawable *drawable, 
@@ -80,6 +81,9 @@ draw_clock (GtkWidget *widget,
   GdkGC *black_gc;
   GdkGC *gray_gc;
   GdkGC *white_gc;
+  GdkGC *blue_gc;
+  GdkGC *red_gc;
+  GdkRectangle pixbuf_rect, intersect_rect;
   double hour_angle, minute_angle;
 
   g_return_val_if_fail (widget != NULL, TRUE);
@@ -90,6 +94,8 @@ draw_clock (GtkWidget *widget,
   white_gc = widget->style->white_gc;
   gray_gc = widget->style->bg_gc[GTK_STATE_NORMAL];
   black_gc = widget->style->black_gc;
+  //blue_gc = widget->style->blue_gc;
+  //red_gc = widget->style->red_gc;
 
   x_offset = (widget->allocation.width / 2) - clock_radius;
   y_offset = (widget->allocation.height / 2) - clock_radius;
@@ -101,23 +107,34 @@ draw_clock (GtkWidget *widget,
       gdk_gc_set_clip_rectangle (white_gc, &event->area);
     }
 
-  if (event)
-    {
-      gdk_draw_arc (drawable, black_gc, TRUE, 
-		    x_offset, y_offset,
-		    clock_radius * 2, clock_radius * 2, 
-		    0, 360 * 64);
-    }
+  /*
+  gdk_draw_arc (drawable, black_gc, TRUE, 
+		x_offset, y_offset,
+		clock_radius * 2, clock_radius * 2, 
+		0, 360 * 64);
 
   gdk_draw_arc (drawable, white_gc, TRUE, 
 		x_offset + border, y_offset + border,
 		(clock_radius - border) * 2, (clock_radius - border) * 2,
 		0, 360 * 64);
+  */
 
+  /*
   gdk_draw_arc (drawable, black_gc, TRUE, 
 		x_offset + clock_radius - 3, y_offset + clock_radius - 3,
 		6, 6, 
 		0, 360 * 64);
+  */
+
+  gdk_draw_rectangle (drawable, gray_gc, TRUE, x_offset, y_offset, clock_radius * 2, clock_radius * 2);
+
+  pixbuf_rect.x = x_offset;
+  pixbuf_rect.y = y_offset;
+  pixbuf_rect.width = gdk_pixbuf_get_width (clock_background);
+  pixbuf_rect.height = gdk_pixbuf_get_height (clock_background);
+
+  if (gdk_rectangle_intersect (&pixbuf_rect, &event->area, &intersect_rect) == TRUE)
+    gdk_pixbuf_render_to_drawable (clock_background, drawable, gray_gc, intersect_rect.x - x_offset, intersect_rect.y - y_offset, intersect_rect.x, intersect_rect.y, intersect_rect.width, intersect_rect.height, GDK_RGB_DITHER_NONE, 0, 0);
 
   minute_angle = gtk_adjustment_get_value (minute_adj) * 2 * M_PI / 60;
   hour_angle = gtk_adjustment_get_value (hour_adj) * 2 * M_PI / 12;
@@ -204,6 +221,8 @@ GtkWidget *
 clock_widget (GtkAdjustment *hadj, GtkAdjustment *madj)
 {
   GtkWidget *w = gtk_drawing_area_new ();
+
+  clock_background = gdk_pixbuf_new_from_file ("./clock.png", NULL);
 
   gtk_widget_set_usize (w, clock_radius * 2 + 4, clock_radius * 2 + 4);
 
