@@ -1,7 +1,7 @@
 Package: gpe-login2
 Section: x11
 Priority: optional
-Version: 0.42
+Version: 0.43
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
 Depends: gpe-icons (>= 0.05), libgpewidget1 (>= 0.07), xkbd, librootimage0, gpe-login-locale*
