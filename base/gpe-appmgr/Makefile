@@ -54,7 +54,6 @@ install: gpe-appmgr gpe-appmgr-setup
 	$(INSTALL) -D dist/usr/share/pixmaps/*.png  $(DESTDIR)/$(PREFIX)/share/pixmaps
 	$(INSTALL) -D dist/etc/menu-methods/gpe_appmgr $(DESTDIR)/$(ETCDIR)/menu-methods/gpe_appmgr
 	$(INSTALL) -D dist/usr/lib/menu/gpe-appmgr-setup $(DESTDIR)/$(PREFIX)/lib/menu/gpe-appmgr-setup
-	$(INSTALL) -D dist/usr/lib/menu/terminal $(DESTDIR)/$(PREFIX)/lib/menu/terminal
 
 ipk:
 	make DESTDIR=`pwd`/build all install
