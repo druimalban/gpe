@@ -8,7 +8,7 @@ uSQLd is basically a network RPC wrapper for D. Richard Hipp's fantastic open so
 
 <p> 
 
-At time of writing (26 March 2002)  uSQLD is under  heavy development heading for a release. code can be found in <a href="/cvs.shtml">GPE cvs</a>.
+At time of writing (26 March 2002)  uSQLD is under  heavy development heading for a release. code can be found in <a href="/cvs.shtml">GPE cvs</a> in the base/usqld directory.
 
 
 <!--#include virtual="/includes/foot.shtml"-->
