@@ -57,6 +57,9 @@ Keys_Save ()
 	str = g_strdup_printf("%s %s", model, port);
 	suid_exec("KBDD", str);
 	g_free(str);
+	
+	Kbd_Save ();
+	Keyctl_Save ();
 }
 
 void

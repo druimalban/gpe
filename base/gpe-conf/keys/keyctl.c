@@ -259,6 +259,7 @@ init_buttons ()
 			for (i = 0; i < NUM_BUTTONS; i++)
 				if (strlen(buffer) && (buffer[0] !='#') && 
 					strstr(buffer, buttondefs[i].key) &&
+					!strstr(buffer, "???Held") &&
 					!strstr(buffer, "???Combine"))
 				{
 					slash = strrchr (buffer, ':');
@@ -503,6 +504,7 @@ Keyctl_Save ()
 		{
 			if (strlen(cfglines[j]) && (cfglines[j][0] !='#') && 
 				strstr(cfglines[j], buttondefs[i].key) &&
+				!strstr(cfglines[j], "???Held") &&
 				!strstr(cfglines[j], "???Combine"))
 			{
 				g_free(cfglines[j]);

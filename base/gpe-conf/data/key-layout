@@ -8,7 +8,7 @@ image = /usr/share/pixmaps/ipaq-s1.png
 
 [Power]
 title = Power Button
-symbol = ibuttonp.png
+symbol = gpe-config-apm.png
 key = XF86Power
 modificator = ???Pressed
 command = apm --suspend
