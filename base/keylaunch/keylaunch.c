@@ -23,6 +23,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -31,6 +32,8 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 
+#include "xsi.h"
+
 typedef struct _Key Key;
 
 struct _Key
@@ -38,6 +41,7 @@ struct _Key
   int keycode, modifier;
   char *command;
   Key *next;
+  char *window;
 };
 
 Display *dpy;
@@ -111,7 +115,7 @@ void grab_key(int keycode, unsigned int modifiers, Window w)
 {
   if(keycode)
   {
-    XGrabKey(dpy, keycode, modifiers, w, False, GrabModeAsync, GrabModeAsync);
+    XGrabKey(dpy, keycode, modifiers, w, True, GrabModeAsync, GrabModeAsync);
     XGrabKey(dpy, keycode, modifiers|NumLockMask, w, False, GrabModeAsync, GrabModeAsync); 
     XGrabKey(dpy, keycode, modifiers|CapsLockMask, w, False, GrabModeAsync, GrabModeAsync);
     XGrabKey(dpy, keycode, modifiers|ScrollLockMask, w, False, GrabModeAsync, GrabModeAsync);
@@ -124,7 +128,7 @@ void grab_key(int keycode, unsigned int modifiers, Window w)
 void create_new_key(char *key_string)
 {
   Key *k;
-  char *key_str, *command=NULL;
+  char *key_str, *command=NULL, *temp=NULL, *window=NULL;
 
 #ifdef DEBUG
   printf("create_new_key\n");
@@ -132,7 +136,14 @@ void create_new_key(char *key_string)
 
   key_str=strtok(key_string, ":");
   if(key_str!=NULL)
-    command=strtok(NULL, "\n");
+  {
+    temp=strtok(command, ":");
+    if(temp!=NULL)
+    {
+      window=temp;
+      command=strtok(NULL, "\n");
+    }
+  }
   
   if(key_str==NULL || command==NULL) return;
 
@@ -154,6 +165,10 @@ void create_new_key(char *key_string)
 
   grab_key(k->keycode, k->modifier, root);
   k->command=strdup(command);
+  if (window)
+    k->window=strdup(window);
+  else
+    k->window=NULL;
   return;
 }
 
@@ -342,7 +357,16 @@ int main(int argc, char *argv[])
         ev.xkey.state=ev.xkey.state&(Mod1Mask|ControlMask|ShiftMask);
         for(k=key;k!=NULL;k=k->next)
           if(k->keycode==ev.xkey.keycode && k->modifier==ev.xkey.state)
-            fork_exec(k->command);
+          {
+            if (k->window == NULL || (try_to_raise_window(dpy, k->window) != 0))
+              fork_exec(k->command);
+          }
+      }
+      if(ev.type==KeyRelease)
+      {
+        free_keys();
+        XTestFakeKeyEvent(dpy, ev.xkey.keycode, False, 0);
+        parse_rc(rc_file);
       }
     }
     if(get_last_update(rc_file)!=last_update)

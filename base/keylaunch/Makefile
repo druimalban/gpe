@@ -2,7 +2,7 @@ CC        = gcc
 CFLAGS    = -g -O2 -Wall
 XROOT     = /usr/X11R6
 INCLUDES  = -I$(XROOT)/include
-LIBS      = -lX11 
+LIBS      = -lX11 -lXtst
 LDPATH    = -L$(XROOT)/lib
 
 PROG      = keylaunch
@@ -13,7 +13,7 @@ RCFILE1	  = .$(PROG)rc
 RCFILE2   = /etc/$(PROG)rc
 DEFINES   = -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" #-DDEBUG
 
-OBJS      = $(PROG).o  
+OBJS      = $(PROG).o xsi.o
 
 all: $(PROG) 
 
