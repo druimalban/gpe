@@ -327,7 +327,9 @@ nsqlc_open (const char *database, int mode, char **errmsg)
 void
 nsqlc_close (nsqlc *ctx)
 {
-  close (ctx->fd);
+  close (ctx->infd);
+  if (ctx->infd != ctx->outfd)
+    close (ctx->outfd);
 
   g_free (ctx);
 }
