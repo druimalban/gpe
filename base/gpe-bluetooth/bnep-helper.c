@@ -22,6 +22,8 @@ bnep_connadd(int sk, uint16_t role)
 {
   struct bnep_connadd_req req;
 
+  memset (&req, 0, sizeof (req));
+
   req.sock = sk;
   req.role = role;
 

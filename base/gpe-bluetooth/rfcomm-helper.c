@@ -75,6 +75,7 @@ main (int argc, char *argv[])
 
   if (argc == 3 && !strcmp (argv[2], "ppp"))
     {
+      setreuid (0, 0);
       execl ("/usr/sbin/pppd", "pppd", buf, "call", "lap", NULL);
       perror ("pppd");
       exit (1);

@@ -109,6 +109,7 @@ lap_thread (struct bt_service_lap *svc)
   gdk_threads_enter ();
   svc->w = bt_progress_dialog (text, svc->bd->pixbuf);
   gtk_widget_show_all (svc->w);
+  gdk_flush ();
   gdk_threads_leave ();
   g_free (text);
 
@@ -116,6 +117,7 @@ lap_thread (struct bt_service_lap *svc)
 
   gdk_threads_enter ();
   gtk_widget_destroy (svc->w);
+  gdk_flush ();
   gdk_threads_leave ();
 
   if (rc == FALSE)
