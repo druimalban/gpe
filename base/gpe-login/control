@@ -1,8 +1,8 @@
 Package: gpe-login
 Section: x11
 Priority: optional
-Version: 0.04
+Version: 0.05
 Architecture: arm
 Maintainer: Phil Blundell <pb@debian.org>
-Depends: libgtk1.2, gdk-imlib1, gpe-icons, libgpewidget0 (>= 0.02)
+Depends: libgtk1.2, gdk-imlib1, gpe-icons (>= 0.02), libgpewidget0 (>= 0.03)
 Description: Gtk-based login program for GPE
