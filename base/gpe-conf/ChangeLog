@@ -1,3 +1,9 @@
+2004-10-25	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* suid.c: Set hardware clock using hwclock.
+	* storage.c (system_memory): Rewrote parser to work on linux 2.6 and 2.4.
+	* sysinfo.c (get_device_info): Removed some now useless stuff.
+
 2004-10-24	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* sysinfo.c (get_device_info): Changed memory size info to (hopefully)

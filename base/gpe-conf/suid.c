@@ -95,6 +95,7 @@ update_time_from_net (const gchar * server)
 	}
 	else			// if ok, update rtc time
 	{
+		system("/sbin/hwclock --systohc");
 		system ("echo > /var/spool/at/trigger");
 	}
 	g_free(tstr);
@@ -337,11 +338,11 @@ suidloop (int write, int read)
 					time_t t;
 					fscanf (in, "%ld", &t);
 					if (stime (&t) == -1)
-						fprintf (stderr,
-							 "Error while setting the time: %d\n",
-							 errno);
+						fprintf (stderr, "Error while setting the time: %d\n",
+						         errno);
 					else	// if ok, update rtc time
 					{
+						system("/sbin/hwclock --systohc");
 						system ("echo > /var/spool/at/trigger");
 					}
 				}

@@ -270,7 +270,7 @@ gint update_bat_values(gpointer data)
 		/* read data from proc entry */
 		fclose(file_apm);
 		file_apm = fopen(PROC_APM, "r");
-//		1.16 1.2 0x03 0x01 0x00 0x01 100% -1 ?
+/*//		1.16 1.2 0x03 0x01 0x00 0x01 100% -1 ?
 		{
 			char buf[255];
 			memset(buf, 0, 255);
@@ -287,7 +287,7 @@ printf("#read %i\n", sscanf(buf,
 		           &remaining,
 		           unit));
 		}
-		if (fscanf(file_apm,
+*/		if (fscanf(file_apm,
 			       "%*f %*f %*s 0x%x 0x%x 0x%x %i%% %i %4s",
 		           &ac_connected,
 		           &status,

@@ -54,41 +54,32 @@ which_fs_type (char *fsline)
 	return FS_T_UNKNOWN;
 }
 
-/* from minisys */
 int
 system_memory (void)
 {
-	u_int64_t my_mem_used, my_mem_max;
-	u_int64_t my_swap_max;
+	unsigned long mem_free, mem_total;
 
-	static int mem_delay = 0;
 	FILE *mem;
-	static u_int64_t aa, ab, ac, ad, ae, af, ag, ah;
-	/* put this in permanent storage instead of stack */
-	static char not_needed[2048];
-	if (mem_delay-- <= 0)
+	static char line[255];
+	mem = fopen ("/proc/meminfo", "r");
+	if (mem)
 	{
-		mem = fopen ("/proc/meminfo", "r");
-		fgets (not_needed, 2048, mem);
-
-		fscanf (mem, "%*s %Ld %Ld %Ld %Ld %Ld %Ld", &aa, &ab, &ac,
-			&ad, &ae, &af);
-		fscanf (mem, "%*s %Ld %Ld", &ag, &ah);
+		while (fgets (line, 255, mem))
+		{	
+			if (g_str_has_prefix(line, "MemTotal"))
+				sscanf(line, "%*s %lu %*s", &mem_total);
+			else if (g_str_has_prefix(line, "MemFree"))
+			{
+				sscanf(line, "%*s %lu %*s", &mem_free);
+				break;
+			}
+		}
 		fclose (mem);
-		mem_delay = 25;
-
-		/* calculate it */
-		my_mem_max = aa;	/* memory.total; */
-		my_swap_max = ag;	/* swap.total; */
-
-		my_mem_used = ah + ab - af - ae;
-
-		meminfo.total = my_mem_max / 1024;
-		meminfo.used = my_mem_used / 1024;
-		meminfo.avail = (my_mem_max - my_mem_used) / 1024;
-		return 0;
+		meminfo.total = mem_total / 1024;
+		meminfo.used = (mem_total - mem_free) / 1024;
+		meminfo.avail = mem_free / 1024;
 	}
-	return 1;
+	return 0;
 }
 
 
@@ -183,13 +174,13 @@ update_status ()
     /* TRANSLATORS: MB == Mega Bytes*/
 		sprintf (cnew2, "%s: <i>%4.1f</i> %s", _("Free memory"),
 			 ((float) meminfo.total -
-			  (float) meminfo.used) / 1024.0, _("MB"));
+			  (float) meminfo.used), _("MB"));
 		gtk_label_set_markup (GTK_LABEL (meminfo.label3), cnew2);
 
 		fstr = g_strdup_printf ("%s%s %4.1f %s %s",
 					"<span foreground=\"black\">",
 					_("Total:"),
-					(float) meminfo.total / 1024.0,
+					(float) meminfo.total,
 					_("MB"), "</span>");
 		gtk_label_set_markup (GTK_LABEL (meminfo.label2), fstr);
 		g_free (fstr);
@@ -452,7 +443,7 @@ Storage_Build_Objects (void)
 					       (float) meminfo.total);
 		sprintf (cnew2, "%s: <i>%4.1f</i> %s", _("Free memory"),
 			 ((float) meminfo.total -
-			  (float) meminfo.used) / 1024.0, _("MB"));
+			  (float) meminfo.used), _("MB"));
 		label1 = gtk_label_new (NULL);
 		gtk_misc_set_alignment (GTK_MISC (label1), 0.0, 0.5);
 		meminfo.label3 = label1;
@@ -464,7 +455,7 @@ Storage_Build_Objects (void)
 		fstr = g_strdup_printf ("%s%s %4.1f %s %s",
 					"<span foreground=\"black\">",
 					_("Total:"),
-					(float) meminfo.total / 1024.0,
+					(float) meminfo.total,
 					_("MB"), "</span>");
 		gtk_label_set_markup (GTK_LABEL (label1), fstr);
 		g_free (fstr);
