@@ -313,8 +313,8 @@ handler_func (DBusMessageHandler *handler,
   return DBUS_HANDLER_RESULT_ALLOW_MORE_HANDLERS;
 }
 
-static void
-dbus_server_run (void)
+void
+bluez_pin_dbus_server_run (void)
 {
   DBusConnection *connection;
   DBusError error;
@@ -399,7 +399,7 @@ main (int argc, char *argv[])
 
   if (dbus_mode)
     {
-      dbus_server_run ();
+      bluez_pin_dbus_server_run ();
 
       gtk_main ();
     }
