@@ -75,7 +75,6 @@ GpePrefsResult gpe_prefs_init(gchar * prog_name){
   //--Create table if necessary, we assume table exists if database is present
   
   if (!dbexists){
-    //if already exists, will return an error.
     error = sqlite_exec (prefs_db, db_schema, NULL, NULL, &errmsg);
     TRACE("%s", db_schema);
     if(error){
