@@ -3,7 +3,7 @@ Provides: gpe-games, gpe-games2
 Replaces: gpe-games, gpe-games2
 Section: games
 Priority: optional
-Version: 0.11
+Version: _VERSION_
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_

@@ -19,17 +19,20 @@ ALL_TASKS = \
 
 default: $(ALL_TASKS)
 
+TMP_FILE = temporary_file_which_will_be_destroyed_without_warning
 % : %.control
 	@rm -rf dist
 	@mkdir -p dist/CONTROL
-	@sed 's:_DEPS_:$(DEP_$@):' < $< > dist/CONTROL/control
+	@sed 's:_VERSION_:$(VER_$@):' < $< > $(TMP_FILE)
+	@sed 's:_DEPS_:$(DEP_$@):' < $(TMP_FILE) > dist/CONTROL/control
+	@rm -rf $(TMP_FILE)
 	@ipkg-build -o root -g root dist
 
 clean:
 	rm -rf dist *.ipk *.ipk.asc *~ .*~
 
 #---Meta tasks
-DEP_gpe-apps = \
+DEP_gpe-apps2 = \
     gpe-task-base, \
     gpe-task-comm, \
     gpe-task-mmedia, \
@@ -86,12 +89,18 @@ DEP_gpe-task-base = \
     hotplug-dbus
 #FIXME: could be refined (contains hardware dependant packages)
 
+VER_gpe-collateral-gtk2 = 0.03
 DEP_gpe-collateral-gtk2 = \
     libgtk2.0-0, \
     gtk2-theme-angelistic, \
     ttf-bitstream-vera
 
-#---The following tasks aims to be user-level tasks
+#------------------------------------------
+# The following aim to be USER LEVEL tasks
+#------------------------------------------
+
+#------------------------------------------ PIM applications
+VER_gpe-task-pim = 0.2
 DEP_gpe-task-pim = \
     gpe-task-base, \
     gpe-calendar2, \
@@ -106,6 +115,8 @@ DEP_gpe-task-pim = \
     gpe-calculator2
 #FIXME: 2 calculators!
 
+#------------------------------------------ System utilities
+VER_gpe-task-utils = 0.2
 DEP_gpe-task-utils = \
     gpe-task-base, \
     gpe-edit2, \
@@ -113,24 +124,32 @@ DEP_gpe-task-utils = \
     gpe-filemanager2, \
     gpe-taskmanager
 
+#------------------------------------------ Communication apps
+VER_gpe-task-comm = 0.2
 DEP_gpe-task-comm = \
     gpe-task-base, \
     dillo2, \
     gpe-irc
 #FIXME: add email/contacts
 
+#------------------------------------------ Multimedia apps
+VER_gpe-task-mmedia = 0.2
 DEP_gpe-task-mmedia = \
     gpe-task-base, \
     gpe-gallery, \
     gpe-nmf, \
     gpe-mixer
 
+#------------------------------------------ Extra apps
+VER_gpe-task-extra-apps = 0.2
 DEP_gpe-task-extra-apps = \
     gpe-task-base, \
     figment, \
     gpe-timesheet2, \
     greader
 
+#------------------------------------------ Games
+VER_gpe-task-games = 0.11
 DEP_gpe-task-games = \
     gpe-tetris2, \
     xdemineur, \
@@ -142,6 +161,8 @@ DEP_gpe-task-games = \
     pdamaze
 #FIXME: couple of games to move to extra-games.
 
+#------------------------------------------ Extra games
+VER_gpe-task-extra-games = 0.2
 DEP_gpe-task-extra-games = \
     repton, \
     sfcave-sdl, \

@@ -1,7 +1,7 @@
 Package: gpe-collateral-gtk2
 Section: base
 Priority: optional
-Version: 0.03
+Version: _VERSION_
 Provides: gpe-collateral
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>

@@ -1,7 +1,7 @@
 Package: gpe-task-extra-games
 Section: games
 Priority: optional
-Version: 0.2
+Version: _VERSION_
 Architecture: arm
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_

@@ -1,7 +1,7 @@
 Package: gpe-task-base
 Section: base
 Priority: optional
-Version: 0.2
+Version: _VERSION_
 Architecture: all
 Maintainer: GPE Hackers <gpe@handhelds.org>
 Depends: _DEPS_
