@@ -7,8 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.0-pre9\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-09-18 17:55+0200\n"
-"PO-Revision-Date: 2003-10-16 22:03+0300\n"
+"PO-Revision-Date: 2004-02-15 01:12+0200\n"
 "Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -71,11 +72,11 @@ msgstr ""
 
 #: applets.c:405 ipaqscreen/calibrate.c:34
 msgid "Sorry, wrong password."
-msgstr "Désolé, mauvais mot de passe"
+msgstr "Désolé, mauvais mot de passe."
 
 #: timeanddate.c:436
 msgid "Time & Date"
-msgstr "Date & Heure"
+msgstr "Date et Heure"
 
 #: timeanddate.c:452
 msgid "Date"
@@ -83,7 +84,7 @@ msgstr "Date"
 
 #: timeanddate.c:466
 msgid "Enter current date here or use button to select."
-msgstr "Saisissez la date ici, ou bien pressez le boutton pour la sélectionner."
+msgstr "Saisissez la date ici, ou bien pressez le bouton pour la sélectionner."
 
 #: timeanddate.c:471
 msgid "Time"
@@ -91,7 +92,7 @@ msgstr "Heure"
 
 #: timeanddate.c:485
 msgid "Network"
-msgstr "Mise à jour réseau"
+msgstr "Mise à jour réseau :"
 
 #: timeanddate.c:503
 msgid "Select the timeserver to use to set the clock."
@@ -103,7 +104,7 @@ msgstr "Mettre à jour"
 
 #: timeanddate.c:512
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Si vous êtes connectés à internet, vous pouvez presser ce bouton pour mettre à jour la date et l'heure."
+msgstr "Si vous êtes connectés à internet, vous pouvez presser ce bouton pour mettre à jour la date et l'heure, à partir du serveur spécifié."
 
 #: timeanddate.c:517 timeanddate.c:526
 msgid "Timezone"
@@ -163,11 +164,11 @@ msgstr "Général"
 
 #: appmgr_setup.c:206
 msgid "Show 'All' group"
-msgstr "Montrer le group \"Tout\""
+msgstr "Montrer l'onglet \"Tout\""
 
 #: appmgr_setup.c:214
 msgid "Auto-hide group labels"
-msgstr "Cacher les noms des groupes"
+msgstr "Cacher le nom des groupes"
 
 #: appmgr_setup.c:221
 msgid "Show 'Recent' tab"
@@ -280,7 +281,7 @@ msgstr "La rotation de l'écran n'est pas paramètrable sur cette plateforme."
 
 #: kbd.c:146
 msgid "Keyboard Geometry / Layout"
-msgstr "Type de clavier"
+msgstr "Type du clavier virtuel"
 
 #: kbd.c:186
 msgid "User defined"
@@ -292,7 +293,7 @@ msgstr "Erreur de lecture du fichier de définition des claviers"
 
 #: keyboard.c:171
 msgid "Error reading keyboard definition."
-msgstr "Erreur de lecture du fichier de définition des claviers"
+msgstr "Erreur de lecture du fichier de définition des claviers."
 
 #: keyboard.c:274
 msgid "External keyboard configuration. Model support packages not installed if inactive."
@@ -332,11 +333,11 @@ msgstr "Nouvelle Interface"
 
 #: network.c:187
 msgid "This interface definition already exists!"
-msgstr "Il y a déjà une interface définie avec ce nom !"
+msgstr "Il y a déjà une interface définie par ce nom !"
 
 #: network.c:228
 msgid "Do you want to delete this interface?"
-msgstr "Voulez vous détruire cette définition d'interface ?"
+msgstr "Voulez vous détruire la définition de cette interface ?"
 
 #: network.c:228 keyctl.c:162
 msgid "Question"
@@ -364,23 +365,23 @@ msgstr "Broadcast"
 
 #: network.c:456
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Entrer ici votre adresse 'broadcast', qui est en général comme votre adresse IP avec 255 à la place du dernier nombre."
+msgstr "Entrer ici votre adresse broadcast, qui est en général comme votre adresse IP avec 255 à la place du dernier nombre."
 
 #: network.c:458
 msgid "Gateway"
-msgstr "Gateway"
+msgstr "Passerelle"
 
 #: network.c:461
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Entrer ici l'adresse IP du 'gateway' par défaut."
+msgstr "Saisir ici l'adresse IP de la passerelle par défaut."
 
 #: network.c:543
 msgid "Hostname"
-msgstr "Hostname"
+msgstr "Nom d'hôte"
 
 #: network.c:546
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Entrer ici le nom de la machine. Ce parametre est optionel."
+msgstr "Saisir ici le nom de votre machine. Ce paramètre est optionel."
 
 #: network.c:629
 msgid "Provider"
@@ -388,7 +389,7 @@ msgstr "Provider"
 
 #: network.c:632
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr "Entrer ici le nom du fournisseur d'accès à utiliser pour cette interface réseau."
+msgstr "Saisir ici le nom du fournisseur d'accès à utiliser pour cette interface réseau."
 
 #: network.c:656
 msgid "Global Settings"
@@ -408,7 +409,7 @@ msgstr "Pas de proxy pour"
 
 #: network.c:707
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Entrer ici le domaine pour lequel vous ne voulez pas de proxy."
+msgstr "Saisir ici le domaine pour lequel vous ne voulez pas de proxy."
 
 #: network.c:716
 msgid "Use DHCP in any case (usually not needed)."
@@ -432,7 +433,7 @@ msgstr "Serveur DNS"
 
 #: network.c:760
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Entrer ici l'adresse IP du DNS (Serveur de Noms de Domaine) à utiliser."
+msgstr "Saisir ici l'adresse IP du DNS (Serveur de Noms de Domaine) à utiliser."
 
 #: network.c:941
 msgid ""
@@ -452,11 +453,11 @@ msgstr "Ajouter une interface réseau."
 
 #: network.c:978 network.c:979
 msgid "Remove Interface"
-msgstr "Retirer une interface réseau."
+msgstr "Effacer une interface réseau."
 
 #: network.c:980
 msgid "Remove current Interface"
-msgstr "Retirer l'interface réseau courante."
+msgstr "Effacer l'interface réseau sélectionnée."
 
 #: network.c:993
 msgid "Information"
@@ -472,7 +473,7 @@ msgstr "Fermer"
 
 #: network.c:1007 network.c:1008
 msgid "Close network tool"
-msgstr "Fermer l'outil de configuration réseau"
+msgstr "Fermer l'outil de configuration réseau."
 
 #: network.c:1023
 msgid "Couldn't read network configuration."
@@ -516,7 +517,7 @@ msgstr "Thème"
 
 #: theme.c:837
 msgid "Desktop Theme"
-msgstr "Thème du bureau"
+msgstr "Thème"
 
 #: theme.c:849
 msgid "Name"
@@ -528,7 +529,7 @@ msgstr "Taille des icones"
 
 #: theme.c:879
 msgid "Background"
-msgstr "Fond"
+msgstr "Fond d'écran"
 
 #: theme.c:890
 msgid "Background Settings"
@@ -536,7 +537,7 @@ msgstr "Paramètres du fond d'écran"
 
 #: theme.c:897
 msgid "Solid color"
-msgstr "Couleur pleine"
+msgstr "Couleur unie"
 
 #: theme.c:911
 msgid "Horizontal"
@@ -560,7 +561,7 @@ msgstr "Centrée"
 
 #: theme.c:981
 msgid "Tiled"
-msgstr "Répétée"
+msgstr "Mosaïque"
 
 #: theme.c:984
 msgid "Stretched"
@@ -592,7 +593,7 @@ msgstr "Recharger la configuration par défaut ?"
 
 #: keyctl.c:199
 msgid "Defaults"
-msgstr "Défaut"
+msgstr "Valeurs par défaut"
 
 #: keyctl.c:304
 msgid "ERROR: Can't open keylaunchrc for writing!\n"
@@ -600,15 +601,15 @@ msgstr "ERREUR : impossible d'ouvrir en écriture \"keylaunchrc\" !\n"
 
 #: ownerinfo.c:201
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Seul le super-utilisateur (root) peut changer ce paramètre."
+msgstr "Seul le super-utilisateur (root) peut changer ces informations."
 
 #: ownerinfo.c:236
 msgid "E-Mail:"
-msgstr "E-Mail"
+msgstr "mel."
 
 #: ownerinfo.c:251
 msgid "Phone:"
-msgstr "Téléphone"
+msgstr "Tel."
 
 #: ownerinfo.c:266
 msgid "Address:"
@@ -824,7 +825,7 @@ msgstr "Pas d'accès en écriture pour les paramètres réseaux."
 
 #: gpe-admin.c:93
 msgid "Allow users to configure everything"
-msgstr "Permètre à tout utilisateur de tout configurer"
+msgstr "Permettre à tout utilisateur de tout configurer"
 
 #: storage.c:195 storage.c:445
 msgid "System Memory"
@@ -879,7 +880,7 @@ msgstr "Impossible de trouver le niveau d'exécution (runlevel) par défaut!"
 #: serial.c:289 serial.c:295
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr ""
-"Simple interface pour configurer le port série.\n"
+"Interface pour configurer le port série.\n"
 "Les composants non sélectionables ne sont pas installés."
 
 #: serial.c:292
@@ -902,7 +903,6 @@ msgstr "Console"
 msgid "This option runs console on serial port. (default)"
 msgstr "Cette option connecte la console sur le port série. (défaut)"
 
-# ouaip, "deamon" n'est pas "demon" mais n'est-ce pas la traduction française commune ?
 #: serial.c:316
 msgid "GPS Daemon"
 msgstr "Démon GPS"
@@ -917,7 +917,7 @@ msgstr "Rien (port série libre)"
 
 #: serial.c:330
 msgid "Don't start any software that uses the serial port."
-msgstr "Ne lancer aucun logiciel qui utilise le port série."
+msgstr "Aucun logiciel n'utilisera le port série."
 
 #: serial.c:368 serial.c:375
 msgid "This page configures the GPS receiver software."
@@ -935,25 +935,27 @@ msgstr "Paramètres du GPS"
 msgid "Receiver Type"
 msgstr "Type d'antenne"
 
+# National Marine Electronics Association --> normes et protocoles
 #: serial.c:390
 msgid "NMEA"
 msgstr "NMEA"
 
+# the msgid is buggy ??? 'receiver is a sends'
 #: serial.c:395
 msgid "The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"
-msgstr ""
+msgstr "Le module GPS envoie des données NMEA (c'est la valeur par défaut de la plupart des antennes GPS)."
 
 #: serial.c:401
 msgid "Earthmate"
-msgstr ""
+msgstr "Earthmate"
 
 #: serial.c:407
 msgid "GPS receiver is an Earthmate GPS."
-msgstr ""
+msgstr "Le module GPS est de type Earthmate."
 
 #: serial.c:411
 msgid "Baud Rate"
-msgstr ""
+msgstr "Taux de transfert"
 
 #: logread.c:107
 msgid "Can't find circular buffer, is syslog running?"
@@ -982,15 +984,15 @@ msgstr "Journal de la session"
 
 #: logread.c:257
 msgid "Could not open X session log."
-msgstr "Impossible d'ouvrir le carnet de bord (log) de la session X."
+msgstr "Impossible d'ouvrir le journal (log) de la session X."
 
 #: packages.c:67
 msgid "Removing package"
-msgstr "Retire le paquet"
+msgstr "Retire le paquetage"
 
 #: packages.c:72
 msgid "Installing package"
-msgstr "Installe le paquet"
+msgstr "Installe le paquetage"
 
 #: packages.c:151 packages.c:325
 msgid "Start"
@@ -1016,7 +1018,7 @@ msgstr "Mise à jour commencée. (ipkg upgrade)\n"
 
 #: packages.c:230 packages.c:254
 msgid "Running..."
-msgstr "En cours ..."
+msgstr "En cours..."
 
 #: packages.c:315
 msgid "Update"
@@ -1038,7 +1040,7 @@ msgstr "Rapport d'activité"
 
 #: packages.c:341
 msgid "This window shows all output from the packet manager that performs the update."
-msgstr "Cette fenêtre affiche les messages du gestionnaire de paquets (ipkg)."
+msgstr "Cette fenêtre affiche les messages du gestionnaire de paquetages (ipkg)."
 
 #: packages.c:351
 msgid "Install/Remove"
@@ -1046,23 +1048,23 @@ msgstr "Installer/Retirer"
 
 #: packages.c:356
 msgid "Install/Remove a package"
-msgstr "Installer/Retirer un paquet"
+msgstr "Installer/Retirer un paquetage"
 
 #: packages.c:363
 msgid "Enter name of package to be installed here."
-msgstr "Entrer ici le nom du package à installer"
+msgstr "Saisir ici le nom du paquetage à installer."
 
 #: packages.c:369
 msgid "Install a package from a configured source."
-msgstr "Installe un paquet à partir d'une source configurée."
+msgstr "Installe un paquetage à partir d'une source configurée."
 
 #: packages.c:375
 msgid "Remove the package."
-msgstr "Retirer le paquet."
+msgstr "Retirer le paquetage."
 
 #: packages.c:387
 msgid "This window shows all output from the packet manager installing the package."
-msgstr "Cette fenêtre affiche les messages du gestionnaire de paquets (ipkg)."
+msgstr "Cette fenêtre affiche les messages du gestionnaire de paquetages (ipkg)."
 
 #: cardinfo.c:145 cardinfo.c:833
 msgid "card not recognized"
@@ -1090,7 +1092,7 @@ msgstr "gpe-conf doit être \"setuid root\" pour utiliser les fonctionnalités de 
 
 #: cardinfo.c:628
 msgid "No PCMCIA driver in '/proc/devices'"
-msgstr "Pas de driver PCMCIA dans /proc/devices"
+msgstr "Pas de pilote PCMCIA dans /proc/devices"
 
 #: cardinfo.c:631
 msgid "Could not open '/proc/devices'"
@@ -1114,7 +1116,7 @@ msgstr ""
 
 #: cardinfo.c:839
 msgid "no driver loaded"
-msgstr "Aucun pilote de périphérique chargé"
+msgstr "Pas pilote de chargé"
 
 #: cardinfo.c:948
 msgid "ready"
@@ -1130,7 +1132,7 @@ msgstr "en veille"
 
 #: cardinfo.c:1173 cardinfo.c:1344 cardinfo.c:1345
 msgid "Assign Driver"
-msgstr "Assigner le Driver"
+msgstr "Assigner le Pilote"
 
 #: cardinfo.c:1182
 msgid ""
@@ -1139,7 +1141,7 @@ msgid ""
 "PCMCIA or CF card."
 msgstr ""
 "Vous pouvez changer/sélectionner ici\n"
-"le driver d'une carte PCMCIA."
+"le pilote d'une carte PCMCIA."
 
 #: cardinfo.c:1192
 msgid "Your current card identifies itself as:"
@@ -1171,11 +1173,11 @@ msgstr "Cliquer ici pour éjecter la carte à la main."
 
 #: cardinfo.c:1305
 msgid "Suspend Card"
-msgstr "Suspendre la carte"
+msgstr "Mettre la carte en veille"
 
 #: cardinfo.c:1307
 msgid "Click here to suspend current card."
-msgstr "Cliquer ici pour suspendre la carte."
+msgstr "Cliquer ici pour mettre la carte en veille."
 
 #: cardinfo.c:1315
 msgid "Resume Card"
@@ -1187,7 +1189,7 @@ msgstr "Cliquer ici pour réactiver la carte."
 
 #: cardinfo.c:1325
 msgid "Reset Card"
-msgstr "Réinitialise la carte"
+msgstr "Réinitialiser la carte"
 
 #: cardinfo.c:1326
 msgid "Click here to reset current card."
@@ -1211,7 +1213,7 @@ msgstr "Quitter le module"
 
 #: cardinfo.c:1364 cardinfo.c:1377
 msgid "PC/CF card socket information."
-msgstr "Information sur la carte PC/CF."
+msgstr "Information sur les cartes PC/CF."
 
 #: cardinfo.c:1372
 msgid "Socket"
@@ -1229,11 +1231,9 @@ msgstr "État :"
 msgid "Device:"
 msgstr "Carte :"
 
-# NOTE: driver --> pilote (de prériphérique)
-#       à changer de partout (...)
 #: cardinfo.c:1414
 msgid "Driver:"
-msgstr "Driver"
+msgstr "Pilote"
 
 #: cardinfo.c:1415
 msgid "Type:"
@@ -1253,7 +1253,7 @@ msgstr "Flags :"
 
 #: cardinfo.c:1441
 msgid "PCMCIA initialisation failed"
-msgstr "Echec de l'initialisation PCMCIA"
+msgstr "Échec de l'initialisation PCMCIA"
 
 #: tools/interface.c:288 tools/interface.c:488 tools/interface.c:504
 #: tools/interface.c:624
@@ -1310,7 +1310,7 @@ msgstr "Ash"
 
 #: tools/interface.c:738
 msgid "Too many address family arguments.\n"
-msgstr "trop d'arguments.\n"
+msgstr "Trop d'arguments.\n"
 
 #: tools/interface.c:749
 #, c-format
@@ -1319,7 +1319,7 @@ msgstr "Famille d'adresses '%s' inconnue.\n"
 
 #: tools/interface.c:812
 msgid "Please don't supply more than one address family.\n"
-msgstr "Ne pas donner plus d'une famille d'adresse.\n"
+msgstr "Ne pas donner plus d'une famille d'adresses.\n"
 
 #: tools/interface.c:939
 msgid "No usable address families found.\n"
@@ -1378,11 +1378,11 @@ msgstr "Ehternet"
 
 #: tools/interface.c:1692
 msgid "Fiber Distributed Data Interface"
-msgstr ""
+msgstr "Interface FDDI"
 
 #: tools/interface.c:1695
 msgid "HIPPI"
-msgstr ""
+msgstr "HIPPI"
 
 #: tools/interface.c:1707
 msgid "generic X.25"
@@ -1408,29 +1408,32 @@ msgstr "LAPB"
 msgid "ARCnet"
 msgstr "ARCnet"
 
+# Data Link Control Identifier
 #: tools/interface.c:1723
 msgid "Frame Relay DLCI"
-msgstr ""
+msgstr "Frame Relay DLCI"
 
 #: tools/interface.c:1724
 msgid "Frame Relay Access Device"
-msgstr ""
+msgstr "Frame Relay Access Device"
 
+# Linux+IPv6-HOWTO-fr/chapter-configuring-ipv6-in-ipv4-tunnels.html
 #: tools/interface.c:1727
 msgid "IPv6-in-IPv4"
-msgstr ""
+msgstr "IPv6-in-IPv4"
 
+# InfraRed Link Access Protocol
 #: tools/interface.c:1730
 msgid "IrLAP"
-msgstr ""
+msgstr "IrLAP"
 
 #: tools/interface.c:1733
 msgid "16/4 Mbps Token Ring"
-msgstr ""
+msgstr "16/4 Mops Token Ring"
 
 #: tools/interface.c:1735
 msgid "16/4 Mbps Token Ring (New)"
-msgstr ""
+msgstr "16/4 Mops Token Ring (Nouveau)"
 
 #: tools/interface.c:1845
 #, c-format
@@ -1438,16 +1441,19 @@ msgid ""
 "<b>Interface %s</b>\n"
 "Type: %s\n"
 msgstr ""
+"<b>Interface %s</b>\n"
+"Type : %s\n"
 
+# Hardware address
 #: tools/interface.c:1853
 #, c-format
 msgid "HWaddr (MAC): %s\n"
-msgstr ""
+msgstr "HWaddr (MAC): %s\n"
 
 #: tools/interface.c:1859
 #, c-format
 msgid "Media: %s"
-msgstr "Media: %s"
+msgstr "Media : %s"
 
 #: tools/interface.c:1864
 msgid "(auto)"
@@ -1461,7 +1467,7 @@ msgstr "Adresse : %s\n"
 #: tools/interface.c:1881
 #, c-format
 msgid "P-t-P: %s\n"
-msgstr ""
+msgstr "P-t-P : %s\n"
 
 #: tools/interface.c:1885
 #, c-format
@@ -1480,7 +1486,7 @@ msgstr "Adresse IPv6 : %s/%d\n"
 
 #: tools/interface.c:1913
 msgid "Scope: "
-msgstr ""
+msgstr "Scope : "
 
 #: tools/interface.c:1918
 msgid "Global"
@@ -1494,13 +1500,14 @@ msgstr "Lien"
 msgid "Site"
 msgstr "Site"
 
+# type de scope
 #: tools/interface.c:1927
 msgid "Compat"
-msgstr ""
+msgstr "Compat"
 
 #: tools/interface.c:1930
 msgid "Host"
-msgstr ""
+msgstr "Hôte"
 
 #: tools/interface.c:1933
 msgid "Unknown"
@@ -1541,7 +1548,7 @@ msgstr "Status : pleine"
 
 #: battery.c:148 battery.c:200
 msgid "Status: no battery"
-msgstr "Status : pas de baterie"
+msgstr "Status : pas de batterie"
 
 #: battery.c:151 battery.c:203 battery.c:222
 msgid "Status: unknown"
@@ -1557,7 +1564,7 @@ msgstr "sur secteur (AC)"
 
 #: battery.c:161 battery.c:213
 msgid "Lifetime"
-msgstr "Durée de vie"
+msgstr "Autonomie"
 
 #: battery.c:194
 msgid "Status: not installed"
@@ -1573,7 +1580,7 @@ msgstr "Voltage : inconnu"
 
 #: battery.c:226
 msgid "Lifetime: unknown"
-msgstr "Durée de vie : inconnue"
+msgstr "Autonomie : inconnue"
 
 #: battery.c:265
 msgid "Internal battery"
@@ -1589,7 +1596,7 @@ msgstr "Accès Utilisateur"
 
 #: gpe-conf-admin.desktop.in.h:2
 msgid "User access administration"
-msgstr ""
+msgstr "Accès des utilisateurs au système"
 
 #: gpe-conf-battery.desktop.in.h:1
 msgid "Battery Info"
@@ -1605,15 +1612,15 @@ msgstr "Cartes PC/CF"
 
 #: gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
-msgstr "Informations et configuration des cartes PC/CF."
+msgstr "Informations et configuration des cartes PC/CF"
 
 #: gpe-conf-ipaqscreen.desktop.in.h:1
 msgid "Screen Setup"
-msgstr "Configuration de l'écran"
+msgstr "Écran"
 
 #: gpe-conf-kbd.desktop.in.h:1
 msgid "Virtual Keyboard"
-msgstr "Clavier virtuel"
+msgstr "Clavier Virtuel"
 
 #: gpe-conf-kbd.desktop.in.h:2
 msgid "Virtual Keyboard Setup"
@@ -1621,7 +1628,7 @@ msgstr "Configuration du clavier virtuel"
 
 #: gpe-conf-keyboard.desktop.in.h:1
 msgid "External Keyboard"
-msgstr "Clavier externe"
+msgstr "Clavier Externe"
 
 #: gpe-conf-keyboard.desktop.in.h:2
 msgid "External Keyboard Setup"
@@ -1629,15 +1636,15 @@ msgstr "Configuration du clavier externe"
 
 #: gpe-conf-keyctl.desktop.in.h:1
 msgid "Button Config"
-msgstr "Boutons"
+msgstr "Bouttons"
 
 #: gpe-conf-keyctl.desktop.in.h:2
 msgid "Button Configuration"
-msgstr "Configuration des boutons"
+msgstr "Configuration des bouttons"
 
 #: gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
-msgstr "Session"
+msgstr "Sessions"
 
 #: gpe-conf-logread.desktop.in.h:1
 msgid "Accesss System Log "
@@ -1653,7 +1660,7 @@ msgstr "Configuration du réseau"
 
 #: gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
-msgstr "Propriétaire"
+msgstr "Proprio"
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
@@ -1665,7 +1672,7 @@ msgstr "Mises à jour"
 
 #: gpe-conf-packages.desktop.in.h:2
 msgid "Update installed packages"
-msgstr "Mise à jour des paquets installés"
+msgstr "Mise à jour des paquetages installés"
 
 #: gpe-conf-serial.desktop.in.h:1
 msgid " Serial Ports"

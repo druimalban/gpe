@@ -50,7 +50,7 @@
 #include <gpe/smallbox.h>
 #include <gpe/gtksimplemenu.h>
 
-// offset for page to interface
+/* offset for page to interface */
 #define PAGE_OFFSET 1
 
 
@@ -154,6 +154,7 @@ add_interface (GtkWidget * widget, gpointer d)
 	GtkWidget *ctable = NULL;
 	GtkWidget *label;
 	gint i;
+	gint existing = -1;
 	struct box_desc2 ifbox[2];
 
 	ifbox[0].suggestions = get_unconfigured_interfaces ();
@@ -183,27 +184,39 @@ add_interface (GtkWidget * widget, gpointer d)
 		for (i = 0; i < iflen; i++)
 			if (!strcmp (ifname, iflist[i].name))
 			{
-				gpe_error_box (_
-					       ("This interface definition already exists!"));
-				return;
+				if (iflist[i].status != NWSTATE_REMOVED)
+				{
+					gpe_error_box(
+						_("This interface definition already exists!"));
+					return;
+				}
+				else
+					existing = i; /* remember this interface definition */
 			}
-		iflen++;
-		iflist = (NWInterface_t *) realloc (iflist,
-						    iflen *
-						    sizeof (NWInterface_t));
-		memset (&iflist[iflen - 1], '\0', sizeof (NWInterface_t));
-		iflist[iflen - 1].status = NWSTATE_NEW;
-		strcpy (iflist[iflen - 1].name, ifname);
-		iflist[iflen - 1].isstatic = TRUE;
-		iflist[iflen - 1].isinet = TRUE;
-		iflist[iflen - 1].isloop = FALSE;
-		iflist[iflen - 1].isdhcp = FALSE;
-		iflist[iflen - 1].isppp = FALSE;
-
-		ctable = create_nwstatic_widgets (iflist[iflen - 1]);
+			
+		if (existing < 0)
+		{
+			iflen++;
+			iflist = (NWInterface_t *) realloc (iflist,
+								iflen *
+								sizeof (NWInterface_t));
+			memset (&iflist[iflen - 1], '\0', sizeof (NWInterface_t));
+			iflist[iflen - 1].status = NWSTATE_NEW;
+			strcpy (iflist[iflen - 1].name, ifname);
+			iflist[iflen - 1].isstatic = TRUE;
+			iflist[iflen - 1].isinet = TRUE;
+			iflist[iflen - 1].isloop = FALSE;
+			iflist[iflen - 1].isdhcp = FALSE;
+			iflist[iflen - 1].isppp = FALSE;
+			i = iflen-1;
+		}
+		else
+			i = existing;
+		
+		ctable = create_nwstatic_widgets (iflist[i]);
 		if (ctable)
 		{
-			label = gtk_label_new (iflist[iflen - 1].name);
+			label = gtk_label_new (iflist[i].name);
 			gtk_notebook_append_page (GTK_NOTEBOOK (table),
 						  GTK_WIDGET (ctable), label);
 			gtk_widget_show_all (table);

@@ -1,6 +1,12 @@
 2004-03-02	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* keyctl.c: We restart keylaunch now, this applies changes instantly.
 	* keyctl.c: Moved init of edit field to fix #1169.
+	* network.c: Improved handling of deleted interfaces. Fixes #1153.
+	* Removed obsolete generated .desktop files from cvs.
+	* main.c: Removed loading of obsolete icons.
+	* cardinfo.c: Fixed bug caused loading unused icon.
+	* control: Changed dependency to newer version of libgpewidget.
+	* Released V 0.1.6
 	
 2004-02-18	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* battery.c, Makefile: Battery status shows learning status now.

@@ -4,7 +4,7 @@ Priority: optional
 Version: VERSION
 Architecture: arm
 Maintainer: Florian Boor <florian.boor@kernelconcepts.de>
-Depends: libgpewidget1 (>= 0.40), libdotdesktop, libdisplaymigration0, xst (>0.12)
+Depends: libgpewidget1 (>= 0.76), libdotdesktop, libdisplaymigration0, xst (>0.12)
 Description: A set of configuration GUI
 Replaces: gpe-conf2
 Provides: gpe-conf2

@@ -464,7 +464,7 @@ Keyctl_Save ()
 			gpe_error_box (_("Could not restart key handler!\n"));
 		break;
 		case  0: 
-				execlp(KEYLAUNCH_BIN,NULL);
+			execlp(KEYLAUNCH_BIN,NULL);
 		break;
 		default: 
 		break;

@@ -1333,9 +1333,6 @@ Cardinfo_Build_Objects (void)
 	/* toolbar and packing */
 	gtk_box_pack_start (GTK_BOX (bookbox), notebook, TRUE, TRUE, 0);
 
-	label = gtk_image_new_from_pixbuf (gpe_find_icon_scaled
-					   ("menu-insert", 16));
-
 	/* socket tabs */
 	for (i = 0; i < ns; i++)
 	{

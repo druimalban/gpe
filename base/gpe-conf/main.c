@@ -133,18 +133,11 @@ struct gpe_icon my_icons[] = {
   { "exit" },
   { "ownerphoto", "tux-48" },
   { "warning16", "warning16" },
-  { "menu-insert", PREFIX "/share/pixmaps/menu-insert.png" }, 
-  { "menu-eject", PREFIX "/share/pixmaps/menu-eject.png" }, 
-  { "menu-suspend", PREFIX "/share/pixmaps/menu-suspend.png" }, 
-  { "menu-resume", PREFIX "/share/pixmaps/menu-resume.png" }, 
-  { "menu-reset", PREFIX "/share/pixmaps/menu-reset.png" }, 
-  { "menu-reset2", PREFIX "/share/pixmaps/menu-reset2.png" }, 
-  { "menu-assign", PREFIX "/share/pixmaps/menu-assign.png" }, 
   { "icon", NULL },
   { NULL, NULL }
 };
 
-#define count_icons 17
+#define count_icons 10
 
 int applets_nb = sizeof(applets) / sizeof(struct Applet);
 
@@ -153,7 +146,10 @@ void Save_Callback()
 {
   applets[self.cur_applet].Save();
   if(self.alone_applet)
+  {
+    gtk_main_quit();
     gtk_exit(0);
+  }
 }
 
 
@@ -161,7 +157,10 @@ void Restore_Callback()
 {
   applets[self.cur_applet].Restore();
   if(self.alone_applet)
+  {
+    gtk_main_quit();
     gtk_exit(0);
+  }
 }
 
 
