@@ -101,7 +101,7 @@ void do_package_update()
   if (setvbuf(nsreturn,NULL,_IONBF,0) != 0) 
     fprintf(stderr,"gpe-conf: error setting buffer size!");
   fprintf(nsreturn,_("Update using \"ipkg upgrade\" started.\n"));
-  pipe = popen("ipkg update 2>&1 && ipkg upgrade 2>&1", "r");
+  pipe = popen("ipkg update 2>&1 && ipkg -force-defaults upgrade 2>&1", "r");
 
   if (pipe > 0)
     {

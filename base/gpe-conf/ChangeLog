@@ -1,6 +1,11 @@
 When			Who				Where						What
 
-22.04.2003		Florian			keyboard.c					Restore routine and soem bugfixes.
+24.04.203		Florian			packages.c					Added -force-defaults to ipkg call to prevent questions we can't answer.
+								gpe-admin.*					Changed handling of global setup, no need to login as root anymore.
+								suid.c
+								control1					New version: 0.0.9-9
+								
+22.04.2003		Florian			keyboard.c					Restore routine and some bugfixes.
 								pixmaps/gpe-conf-cardinfo.png
 															jimmac created a great pcmcia icon - thanks!
 	

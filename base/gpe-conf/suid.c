@@ -515,7 +515,7 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "CMRE") == 0)
 				{
-					fscanf (in, "%s", arg1);
+					fscanf (in, "%100s", arg1);
 					do_reset ();
 				}
 				else if (strcmp (cmd, "CMCP") == 0)
@@ -529,40 +529,11 @@ suidloop (int write, int read)
 					system_printf ("/bin/rm -f %s",
 						       pcmcia_tmpcfgfile);
 				}
-#if 0
-				if (bin)	// fork and exec
+				else if (strcmp (cmd, "GAUA") == 0)
 				{
-					int PID;
-					switch (PID = fork ())
-					{
-					case -1:
-						fprintf (stderr,
-							 "cant fork\n");
-						exit (errno);
-					case 0:
-						switch (numarg)
-						{
-						case 1:
-							execlp (bin,
-								strrchr (bin,
-									 '/')
-								+ 1, arg1,
-								NULL);
-							break;
-						case 2:
-							execlp (bin,
-								strrchr (bin,
-									 '/')
-								+ 1, arg1,
-								arg2, NULL);
-							break;
-						}
-						exit (0);
-					default:
-						break;
-					}
+					fscanf (in, "%100s", arg1);
+					do_change_user_access (arg1);
 				}
-#endif
 			}	// if check_user_access
 			else	// clear buffer
 			{

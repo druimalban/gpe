@@ -31,31 +31,43 @@
 #include "suid.h"
 #include "cfgfile.h"
 
+/* --- local types and constants --- */
+
+
+/* --- module global variables --- */
+
 static GtkWidget *cbUserAccess;
+
+/* --- local intelligence --- */
+
+void do_change_user_access(char *acstr)
+{
+	change_cfg_value (GPE_CONF_CFGFILE, "user_access", acstr, '=');
+}
+
+
+/* --- gpe-conf interface --- */
 
 void GpeAdmin_Free_Objects()
 {
 }
 
+
 void GpeAdmin_Save()
 {
 	gint access = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(cbUserAccess));
 	gchar* acstr;
-	if (geteuid())
-		gpe_error_box(_("This setting can only be changed by user root!"));
-	else
-	{
-		acstr = g_strdup_printf("%i",access);
-		change_cfg_value (GPE_CONF_CFGFILE, "user_access", acstr, '=');
-		g_free(acstr);
-	}
+	
+	acstr = g_strdup_printf("%i",access);
+	suid_exec("GAUA",acstr);
+	g_free(acstr);
 }
 
 void GpeAdmin_Restore()
 {
 	gchar* acstr;
 	acstr = get_file_var(GPE_CONF_CFGFILE,"user_access");
-	if (acstr==NULL)
+	if (acstr == NULL)
 		acstr = "0";
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(cbUserAccess),atoi(acstr));		
 }
