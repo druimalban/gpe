@@ -170,6 +170,7 @@ item_callback (void *arg, int argc, char **argv, char **names)
       int id = atoi (argv[0]);
       struct todo_item *i = g_malloc0 (sizeof (struct todo_item));
       i->id = id;
+      i->priority = PRIORITY_STANDARD;
       if (sqlite_exec_printf (sqliteh, "select tag,value from todo where uid=%d",
 			      item_data_callback, i, &err, id))
 	{

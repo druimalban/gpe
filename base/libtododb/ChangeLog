@@ -13,6 +13,7 @@
 	* todo-db.c (item_data_callback): Compare tags case-insensitive.
 	Handle PRIORITY.
 	(todo_db_push_item): Write out PRIORITY.
+	(item_callback): Set priority to STANDARD if not specified.
 
 2004-02-13  Phil Blundell  <pb@nexus.co.uk>
 
