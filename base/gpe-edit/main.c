@@ -136,12 +136,17 @@ new_file (void)
  					      _("Don't save"), "stop", "!gtk-save", 
 	                      NULL, NULL))
       save_file ();
+	else
+	  file_modified = 0;
   }
-  clear_text_area ();
-  if (filename) g_free(filename);
-  filename = NULL;
-  file_modified = 0;
-  update_window_title ();
+  if (!file_modified)
+  {
+    clear_text_area ();
+    if (filename) g_free(filename);
+    filename = NULL;
+    file_modified = 0;
+    update_window_title ();
+  }
 }
 
 static void
@@ -347,8 +352,12 @@ ask_save_before_exit (void)
     {
     case 1: /* Save */
       save_file ();
+	  if (!file_modified) 
+		  gtk_exit(0);
+	break;
     case 0: /* Don't Save */
       gtk_exit (0);
+	break;
     }
   }
   else

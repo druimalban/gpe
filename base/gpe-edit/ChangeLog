@@ -1,3 +1,12 @@
+2004-08-13  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Version 0.25 released
+	* main.c: Fixed two more nasty bugs in file save handling.
+
+2004-08-12  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Version 0.24 released
+
 2004-08-11  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* main.c: Asks to save a modified file if "new" is clicked.
