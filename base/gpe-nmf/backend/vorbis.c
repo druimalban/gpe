@@ -36,6 +36,9 @@ struct vorbis_context
   vorbis_info *vi;
   int current_section;
 
+  unsigned long long time;
+  unsigned long long total_time;
+
   gboolean bos;
   gboolean eos;
 
@@ -71,6 +74,7 @@ vorbis_play_loop (void *vv)
 	{
 	  v->vc = ov_comment(&v->vf, -1);
 	  v->vi = ov_info(&v->vf, -1);
+	  v->total_time = ov_pcm_total (&v->vf, -1);
 	  v->bos = 0;
 	}
 
@@ -94,6 +98,8 @@ vorbis_play_loop (void *vv)
 	{
 	  audio_write (v->audio, buffer, ret);
 
+	  v->time += (ret / 4);
+
 	  /* did we enter a new logical bitstream? */
 	  if (old_section != v->current_section && old_section != -1) 
 	    v->bos = TRUE; /* Read new headers next time through */
@@ -116,13 +122,17 @@ vorbisfile_cb_read (void *ptr, size_t size, size_t nmemb, void *arg)
 static int 
 vorbisfile_cb_seek (void *arg, ogg_int64_t offset, int whence)
 {
-  return -1;
+  struct vorbis_context *v = (struct vorbis_context *)arg;
+
+  return stream_seek (v->s, offset, whence);
 }
 
 static long 
 vorbisfile_cb_tell (void *arg)
 {
-  return -1;
+  struct vorbis_context *v = (struct vorbis_context *)arg;
+
+  return stream_tell (v->s);
 }
 
 static int 
@@ -144,11 +154,15 @@ vorbis_open (struct stream *s, audio_t audio)
 {
   struct vorbis_context *v = g_malloc (sizeof (struct vorbis_context));
   int ret;
-
+  
+  memset (v, 0, sizeof (*v));
   v->engine = &the_decoder;
   v->audio = audio;
   v->s = s;
   v->eos = FALSE;
+  v->time = 0;
+  v->total_time = 0;
+  v->bos = 1;
   
   ret = pthread_create (&v->thread, 0, vorbis_play_loop, v);
   if (ret < 0)
@@ -178,6 +192,8 @@ static void
 vorbis_stats (struct vorbis_context *v, struct decoder_stats *ds)
 {
   ds->finished = v->eos;
+  ds->time = v->time;
+  ds->total_time = v->total_time;
 }
 
 extern gboolean playlist_fill_ogg_data (struct playlist *p);

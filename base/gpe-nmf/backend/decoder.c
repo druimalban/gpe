@@ -83,9 +83,12 @@ decoder_init (void)
       struct dirent *d;
       while (d = readdir (dirp), d != NULL)
 	{
-	  char *fp = g_strdup_printf ("%s/%s", DECODER_PATH, d->d_name);
-	  load_decoder (fp);
-	  g_free (fp);
+	  if (d->d_name[0] != '.')
+	    {
+	      char *fp = g_strdup_printf ("%s/%s", DECODER_PATH, d->d_name);
+	      load_decoder (fp);
+	      g_free (fp);
+	    }
 	}
       closedir (dirp);
     }

@@ -11,6 +11,7 @@
 #include <gtk/gtk.h>
 #include <assert.h>
 #include <libintl.h>
+#include <string.h>
 
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
@@ -19,18 +20,14 @@
 #include <gpe/render.h>
 #include <gpe/smallbox.h>
 
-#include "playlist_db.h"
+#include "frontend.h"
+#include "decoder.h"
 
 #define _(x) gettext(x)
 
 #if GTK_MAJOR_VERSION < 2
 #error Eat flaming death, GTK 1 users!
 #endif
-
-typedef void (*double_click_func)(struct playlist *, void *);
-
-static double_click_func double_click_hook;
-static void *double_click_data;
 
 enum
   {
@@ -39,7 +36,7 @@ enum
     N_COLUMNS
   };
 
-void
+static void
 store_playlist (GtkTreeStore *store, struct playlist *p, GtkTreeIter *parent)
 {
   GSList *i;
@@ -71,21 +68,56 @@ close_file_sel (GtkWidget *w, gpointer d)
   gtk_widget_destroy (GTK_WIDGET (d));
 }
 
-static void
-select_file_done (GtkWidget *fs, gpointer d)
+void
+load_file (struct nmf_frontend *fe, gchar *s)
 {
-  struct playlist *p = playlist_new_track ();
-  p->data.track.url = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (fs));
+  struct playlist *p = NULL;
 
+  if (strstr (s, ".npl") || strstr (s, ".xml"))
+    {
+      p = playlist_xml_load (s);
+      if (p)
+	{
+	  player_set_playlist (fe->player, p);
+	  playlist_edit_push (fe->playlist_widget, p);
+	}
+    }
+  else
+    {
+      p = playlist_new_track ();
+      p->data.track.url = s;
+      decoder_fill_in_playlist (p);
+
+      if (p->title == NULL)
+	p->title = p->data.track.url;
+    }
+
+  if (p)
+    {
+      fe->playlist->data.list = g_slist_append (fe->playlist->data.list, p);
+      player_set_playlist (fe->player, fe->playlist);
+      playlist_edit_push (fe->playlist_widget, fe->playlist);
+    }
+}
+
+static void
+select_file_done (GtkWidget *fs, struct nmf_frontend *fe)
+{
+  char *s = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (fs));
+  
+  load_file (fe, s);
+  
   gtk_widget_destroy (fs);
 }
 
 static void
-new_entry (GtkWidget *w, gpointer d)
+new_entry (GtkWidget *w, struct nmf_frontend *fe)
 {
   GtkWidget *fs = gtk_mini_file_selection_new (_("Select file"));
-  gtk_signal_connect (GTK_OBJECT (GTK_MINI_FILE_SELECTION (fs)->cancel_button), "clicked", close_file_sel, fs);
-  gtk_signal_connect (GTK_OBJECT (fs), "completed", select_file_done, d);
+  gtk_signal_connect (GTK_OBJECT (GTK_MINI_FILE_SELECTION (fs)->cancel_button), 
+		      "clicked", GTK_SIGNAL_FUNC (close_file_sel), fs);
+  gtk_signal_connect (GTK_OBJECT (fs), "completed", 
+		      GTK_SIGNAL_FUNC (select_file_done), fe);
   gtk_widget_show (fs);
 }
 
@@ -123,31 +155,34 @@ playlist_edit_push (GtkWidget *w, struct playlist *p)
   gtk_widget_draw (w, NULL);
 }
 
-void
-playlist_edit_double_click_hook (void *p, void *d)
-{
-  double_click_hook = (double_click_func)p;
-  double_click_data = d;
-}
-
 static void
 row_signal (GtkTreeView *treeview, GtkTreePath *path,
-	    GtkTreeViewColumn *col, gpointer d)
+	    GtkTreeViewColumn *col, struct nmf_frontend *fe)
 {
-  GtkTreeModel *model = (GtkTreeModel *)d;
   GtkTreeIter iter;
   
-  if (gtk_tree_model_get_iter (model, &iter, path))
+  if (gtk_tree_model_get_iter (fe->model, &iter, path))
     {
       struct playlist *item;
-      gtk_tree_model_get (model, &iter, DATA_COLUMN, &item, -1);
-      if (double_click_hook)
-	double_click_hook (double_click_data, item);
+      struct player_status ps;
+      gtk_tree_model_get (fe->model, &iter, DATA_COLUMN, &item, -1);
+      player_set_playlist (fe->player, item);
+      player_play (fe->player);
+      player_status (fe->player, &ps);
+      update_track_info (fe, ps.item);
+      fe->playing = TRUE;
     }
 }
 
+static gboolean
+hide_window (GtkWidget *w)
+{
+  gtk_widget_hide (w);
+  return TRUE;
+}
+
 GtkWidget *
-playlist_edit (struct playlist *p)
+playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *toolbar = gtk_toolbar_new ();
@@ -162,20 +197,15 @@ playlist_edit (struct playlist *p)
 									NULL);
   GtkWidget *pw;
 
-  pw = gpe_render_icon (NULL, gpe_find_icon ("new"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Track"), 
-			   _("Track"), _("Track"), pw, 
-			   new_entry, treeview);
-
-  pw = gpe_render_icon (NULL, gpe_find_icon ("dir-closed"));
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Folder"), 
-			   _("Folder"), _("Folder"), pw, 
-			   new_folder, treeview);
+  pw = gpe_render_icon (NULL, gpe_find_icon ("open"));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 
+			   _("Open"), _("Open"), pw, 
+			   GTK_SIGNAL_FUNC (new_entry), fe);
 
   pw = gpe_render_icon (NULL, gpe_find_icon ("delete"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Delete"), 
 			   _("Delete"), _("Delete"), pw, 
-			   delete, treeview);
+			   GTK_SIGNAL_FUNC (delete), fe);
   
   gtk_object_set_data (GTK_OBJECT (window), "store", store);
   store_playlist (store, p, NULL);
@@ -185,13 +215,18 @@ playlist_edit (struct playlist *p)
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), treeview, TRUE, TRUE, 0);
 
-  gtk_signal_connect (GTK_WIDGET (treeview), "row-activated",
-		      GTK_SIGNAL_FUNC (row_signal), store);
+  fe->model = GTK_TREE_MODEL (store);
+
+  gtk_signal_connect (GTK_OBJECT (treeview), "row-activated",
+		      GTK_SIGNAL_FUNC (row_signal), fe);
 
   gtk_widget_show (toolbar);
   gtk_widget_show (treeview);
   gtk_widget_show (vbox);
   gtk_container_add (GTK_CONTAINER (window), vbox);
+
+  gtk_signal_connect (GTK_OBJECT (window), "delete-event",
+		      GTK_SIGNAL_FUNC (hide_window), NULL);
 
   return window;
 }

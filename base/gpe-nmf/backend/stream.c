@@ -36,3 +36,18 @@ stream_close (stream_t s)
   struct generic_stream *g = (struct generic_stream *)s;
   return g->e->close (s);
 }
+
+int 
+stream_seek (stream_t s, int64_t offset, int whence)
+{
+  struct generic_stream *g = (struct generic_stream *)s;
+  return g->e->seek (s, offset, whence);
+}
+
+long
+stream_tell (stream_t s)
+{
+  struct generic_stream *g = (struct generic_stream *)s;
+
+  return g->e->tell (s);
+}

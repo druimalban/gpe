@@ -21,6 +21,7 @@ typedef struct decoder *decoder_t;
 struct decoder_stats
 {
   unsigned long long time;
+  unsigned long long total_time;
   gboolean finished;
 };
 

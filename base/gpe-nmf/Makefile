@@ -5,7 +5,7 @@ CVSBUILD = yes
 
 MEMBERS = gpe-nmf playlist_edit
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0` -DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
@@ -33,13 +33,13 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: backend $(PACKAGE)
 
 backend:
-	make -C backend
+	make -C backend PREFIX=$(PREFIX)
 
 $(PACKAGE): $(OBJS) $(LIB)
 	$(CC) -o $@ $^ $(LDFLAGS) -Lbackend -lgpenmf
 
 install: all
-	make -C backend install
+	make -C backend PREFIX=$(PREFIX) DESTDIR=$(DESTDIR) install
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
@@ -52,7 +52,7 @@ clean:
 	rm -f $(PACKAGE) $(OBJS)
 
 ipkg:
-	rm -rf familiar/dist
+	rm -rf familiar/dist familiar/dist-mp3 familiar/dist-ogg
 	mkdir -p familiar/dist/CONTROL
 	mkdir -p familiar/dist-mp3/CONTROL
 	mkdir -p familiar/dist-ogg/CONTROL

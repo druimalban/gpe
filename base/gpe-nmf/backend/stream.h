@@ -11,11 +11,14 @@
 #define STREAM_H
 
 #include <glib.h>
+#include <inttypes.h>
 
 typedef struct stream *stream_t;
 
 extern stream_t stream_open (gchar *url);
 extern int stream_read (stream_t, void *, size_t);
 extern void stream_close (stream_t);
+extern int stream_seek (stream_t, int64_t offset, int whence);
+extern long stream_tell (stream_t);
 
 #endif

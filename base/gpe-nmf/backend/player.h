@@ -17,7 +17,9 @@ typedef struct player *player_t;
 struct player_status
 {
   struct playlist *item;
+  unsigned long sample_rate;
   unsigned long long time;
+  unsigned long long total_time;
   gboolean changed;
 };
 
@@ -25,7 +27,7 @@ extern player_t player_new (void);
 extern void player_destroy (player_t);
 extern void player_set_playlist (player_t, struct playlist *);
 
-extern void player_play (player_t);
+extern gboolean player_play (player_t);
 extern void player_stop (player_t);
 extern void player_pause (player_t);
 extern void player_next_track (player_t);
@@ -35,5 +37,7 @@ extern void player_status (player_t, struct player_status *);
 
 extern void player_set_volume (player_t, int);
 extern struct playlist *player_get_playlist (player_t p);
+
+extern void player_error_handler (player_t, void (*func)(gchar *));
 
 #endif

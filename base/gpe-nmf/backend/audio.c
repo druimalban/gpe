@@ -28,6 +28,11 @@ audio_open (void)
 {
   audio_t a = g_malloc (sizeof (struct audio));
   a->fd = esd_play_stream_fallback (ESD_BITS16 | ESD_STEREO | ESD_STREAM | ESD_PLAY, 44100, NULL, NULL);
+  if (a->fd < 0)
+    {
+      g_free (a);
+      return FALSE;
+    }
   a->volume = 256;
   return a;
 }

@@ -28,11 +28,8 @@
 #include <gpe/errorbox.h>
 #include <gpe/gtkminifilesel.h>
 
-#include "playlist_db.h"
-#include "player.h"
+#include "frontend.h"
 #include "decoder.h"
-
-gboolean playing;
 
 static struct gpe_icon my_icons[] = {
   { "ok" },
@@ -45,8 +42,8 @@ static struct gpe_icon my_icons[] = {
   { "media-eject" },
   { "media-playlist", "open" },
   { "new" },
+  { "open" },
   { "delete" },
-  { "exit" },
   { "save" },
   { "dir-closed" },
   { NULL, NULL }
@@ -54,157 +51,73 @@ static struct gpe_icon my_icons[] = {
 
 /* GTK */
 GtkWidget *window;				/* Main window */
-GtkWidget *slider;				/* Playback slider */
-GtkAdjustment *slider_adjustment;		/* Slider position indication */
-float upper, step, page, pos;		/* Slider adjustment values */
 GtkWidget *buttons_hbox;			/* Container for playback buttons */
-
-GtkWidget *time_label, *artist_label, *title_label;
-
-GtkWidget *playlist_widget;
 
 #define _(x) gettext(x)
 
-extern GtkWidget *playlist_edit (struct playlist *);
-extern void playlist_edit_push (GtkWidget *w, struct playlist *);
-extern void playlist_edit_double_click_hook (void *, player_t);
-
-struct playlist *top_level_playlist;
-
-static void
-update_track_info (struct playlist *p)
+void
+update_track_info (struct nmf_frontend *fe, struct playlist *p)
 {
   if (p)
     {
       assert (p->type == ITEM_TYPE_TRACK);
       
-      gtk_label_set_text (GTK_LABEL (title_label), p->title);
-      gtk_label_set_text (GTK_LABEL (artist_label), p->data.track.artist);
+      gtk_label_set_text (GTK_LABEL (fe->title_label), p->title);
+      gtk_label_set_text (GTK_LABEL (fe->artist_label), p->data.track.artist);
     }
   else
     {
-      gtk_label_set_text (GTK_LABEL (title_label), "");
-      gtk_label_set_text (GTK_LABEL (artist_label), "");
+      gtk_label_set_text (GTK_LABEL (fe->title_label), "");
+      gtk_label_set_text (GTK_LABEL (fe->artist_label), "");
     }
 }
 
 static void
-playlist_toggle (GtkWidget *w, gpointer d)
+eject_clicked (GtkWidget *w, struct nmf_frontend *fe)
 {
-  if (playlist_widget)
-    {
-      gtk_widget_destroy (playlist_widget);
-      playlist_widget = NULL;
-    }
+  if (GTK_WIDGET_VISIBLE (fe->playlist_widget))
+    gtk_widget_hide (fe->playlist_widget);
   else
-    {
-      playlist_widget = playlist_edit (top_level_playlist);
-      gtk_widget_show (playlist_widget);
-    }
+    gtk_widget_show (fe->playlist_widget);
 }
 
 static void
-double_click_hook (player_t p, struct playlist *i)
+play_clicked (GtkWidget *w, struct nmf_frontend *fe)
 {
-  struct player_status ps;
-  player_set_playlist (p, i);
-  player_play (p);
-  player_status (p, &ps);
-  update_track_info (ps.item);
-  playing = TRUE;
-}
-
-static void
-close_file_sel (GtkWidget *w, gpointer d)
-{
-  gtk_widget_destroy (GTK_WIDGET (d));
-}
-
-static void
-select_file_done (GtkWidget *fs, gpointer d)
-{
-  char *s = gtk_mini_file_selection_get_filename (GTK_MINI_FILE_SELECTION (fs));
-  player_t player = (player_t)d;
-
-  if (strstr (s, ".npl") || strstr (s, ".xml"))
-    {
-      struct playlist *p = playlist_xml_load (s);
-      if (p)
-	{
-	  player_set_playlist (player, p);
-	  top_level_playlist = p;
-	  if (playlist_widget)
-	    playlist_edit_push (playlist_widget, p);
-	}
-    }
-  else
-    {
-      struct playlist *p = playlist_new_list ();
-      struct playlist *t = playlist_new_track ();
-      t->data.track.url = s;
-      decoder_fill_in_playlist (t);
-
-      if (t->title == NULL)
-	t->title = t->data.track.url;
-
-      p->data.list = g_slist_append (p->data.list, t);
-
-      player_set_playlist (player, p);
-      top_level_playlist = p;
-      if (playlist_widget)
-	playlist_edit_push (playlist_widget, p);
-    }
-
-  gtk_widget_destroy (fs);
-}
-
-static void
-eject_clicked (GtkWidget *w, gpointer d)
-{
-  GtkWidget *filesel = gtk_mini_file_selection_new (_("Select file"));
-  gtk_signal_connect (GTK_OBJECT (GTK_MINI_FILE_SELECTION (filesel)->cancel_button), 
-		      "clicked", GTK_SIGNAL_FUNC (close_file_sel), filesel);
-  gtk_signal_connect (GTK_OBJECT (filesel), "completed", GTK_SIGNAL_FUNC (select_file_done), d);
-  gtk_widget_show (filesel);
-}
-
-static void
-play_clicked (GtkWidget *w, player_t p)
-{
-  if (!playing)
+  if (!fe->playing)
     {
       struct player_status ps;
-      player_play (p);
-      player_status (p, &ps);
-      update_track_info (ps.item);
-      playing = TRUE;
+      player_play (fe->player);
+      player_status (fe->player, &ps);
+      update_track_info (fe, ps.item);
+      fe->playing = TRUE;
     }
 }
 
 static void
-stop_clicked (GtkWidget *w, player_t p)
+stop_clicked (GtkWidget *w, struct nmf_frontend *fe)
 {
-  player_stop (p);
-  update_track_info (NULL);
-  playing = FALSE;
+  player_stop (fe->player);
+  update_track_info (fe, NULL);
+  fe->playing = FALSE;
 }
 
 static void
-next_clicked (GtkWidget *w, player_t p)
+next_clicked (GtkWidget *w, struct nmf_frontend *fe)
 {
   struct player_status ps;
-  player_next_track (p);
-  player_status (p, &ps);
-  update_track_info (ps.item);
+  player_next_track (fe->player);
+  player_status (fe->player, &ps);
+  update_track_info (fe, ps.item);
 }
 
 static void
-prev_clicked (GtkWidget *w, player_t p)
+prev_clicked (GtkWidget *w, struct nmf_frontend *fe)
 {
   struct player_status ps;
-  player_prev_track (p);
-  player_status (p, &ps);
-  update_track_info (ps.item);
+  player_prev_track (fe->player);
+  player_status (fe->player, &ps);
+  update_track_info (fe, ps.item);
 }
 
 static void
@@ -216,18 +129,24 @@ set_volume (GtkObject *o, player_t p)
 }
 
 static void
-update_time (unsigned long long t)
+update_time (struct nmf_frontend *fe, struct player_status *ps)
 {
+  if (ps->total_time)
+    {
+      double d = (double)ps->time / (double)ps->total_time;
+      gtk_adjustment_set_value (fe->progress_adjustment, d);
+      gtk_widget_draw (fe->progress_slider, NULL);
+    }
 }
 
 static gboolean
-player_poll_func (player_t player)
+player_poll_func (struct nmf_frontend *fe)
 {
   struct player_status ps;
-  player_status (player, &ps);
+  player_status (fe->player, &ps);
   if (ps.changed)
-    update_track_info (ps.item);
-  update_time (ps.time);
+    update_track_info (fe, ps.item);
+  update_time (fe, &ps);
   return TRUE;
 }
 
@@ -241,11 +160,11 @@ main (int argc, char *argv[])
   GtkWidget *vbox, *vbox2, *vbox3;
   GdkColor col;
   GtkStyle *style;
-  GtkWidget *prev_button, *play_button, *pause_button, *stop_button, *next_button, *eject_button, *exit_button, *playlist_button;
+  GtkWidget *prev_button, *play_button, *pause_button, *stop_button, *next_button, *eject_button, *exit_button;
   GtkWidget *rewind_button, *forward_button;
   GtkWidget *vol_slider;
   GtkObject *vol_adjust;
-  player_t player;
+  struct nmf_frontend *fe = g_malloc (sizeof (struct nmf_frontend));
 
   gchar *color = "gray80";
   Atom window_type_atom, window_type_toolbar_atom;
@@ -277,10 +196,18 @@ main (int argc, char *argv[])
 		  (unsigned char *) &window_type_toolbar_atom, 1);
 
   decoder_init ();
-  player = player_new ();
-  g_timeout_add (20, (GSourceFunc)player_poll_func, player);
+  fe->player = player_new ();
+  if (fe->player == NULL)
+    {
+      gpe_error_box (_("Unable to initialise player"));
+      exit (1);
+    }
 
-  playlist_edit_double_click_hook (double_click_hook, player);
+  fe->playlist = playlist_new_list ();
+  player_error_handler (fe->player, gpe_error_box);
+  g_timeout_add (20, (GSourceFunc)player_poll_func, fe);
+
+  fe->playlist_widget = playlist_edit (fe, NULL);
 
   /* Destroy handler */
 
@@ -306,7 +233,7 @@ main (int argc, char *argv[])
   gtk_widget_set_style (prev_button, style);
   gtk_container_add (GTK_CONTAINER (prev_button), w);
   gtk_signal_connect (GTK_OBJECT (prev_button), "clicked",
-		      GTK_SIGNAL_FUNC (prev_clicked), player);
+		      GTK_SIGNAL_FUNC (prev_clicked), fe);
 
   p = gpe_find_icon ("media-rew");
   w = gpe_render_icon (window->style, p);
@@ -324,7 +251,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (play_button), w);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (play_button), "clicked", 
-		      GTK_SIGNAL_FUNC (play_clicked), player);
+		      GTK_SIGNAL_FUNC (play_clicked), fe);
 
   p = gpe_find_icon ("media-pause");
   w = gpe_render_icon (window->style, p);
@@ -342,7 +269,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (stop_button), w);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (stop_button), "clicked", 
-		      GTK_SIGNAL_FUNC (stop_clicked), player);
+		      GTK_SIGNAL_FUNC (stop_clicked), fe);
 
   p = gpe_find_icon ("media-fwd");
   w = gpe_render_icon (window->style, p);
@@ -360,7 +287,7 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (next_button), w);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (next_button), "clicked",
-		      GTK_SIGNAL_FUNC (next_clicked), player);
+		      GTK_SIGNAL_FUNC (next_clicked), fe);
 
   p = gpe_find_icon ("media-eject");
   w = gpe_render_icon (window->style, p);
@@ -370,9 +297,9 @@ main (int argc, char *argv[])
   gtk_container_add (GTK_CONTAINER (eject_button), w);
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (eject_button), "clicked", 
-		      GTK_SIGNAL_FUNC (eject_clicked), player);
+		      GTK_SIGNAL_FUNC (eject_clicked), fe);
 
-  p = gpe_find_icon ("exit");
+  p = gpe_find_icon ("cancel");
   w = gpe_render_icon (window->style, p);
   exit_button = gtk_button_new ();
   gtk_widget_show (exit_button);
@@ -381,38 +308,28 @@ main (int argc, char *argv[])
   gtk_widget_show (w);
   gtk_signal_connect (GTK_OBJECT (exit_button), "clicked",
 		      GTK_SIGNAL_FUNC (gtk_main_quit), NULL);
+  gtk_button_set_relief (GTK_BUTTON (exit_button), GTK_RELIEF_NONE);
 
-  p = gpe_find_icon ("media-playlist");
-  w = gpe_render_icon (window->style, p);
-  playlist_button = gtk_button_new ();
-  gtk_widget_show (playlist_button);
-  gtk_widget_set_style (playlist_button, style);
-  gtk_container_add (GTK_CONTAINER (playlist_button), w);
-  gtk_widget_show (w);
-  gtk_signal_connect (GTK_OBJECT (playlist_button), "clicked",
-		      GTK_SIGNAL_FUNC (playlist_toggle), player);
-
-  time_label = gtk_label_new ("");
-  artist_label = gtk_label_new ("");
-  title_label = gtk_label_new ("");
-  gtk_misc_set_alignment (GTK_MISC (artist_label), 0.0, 0.5);
-  gtk_misc_set_alignment (GTK_MISC (title_label), 0.0, 0.5);
+  fe->time_label = gtk_label_new ("");
+  fe->artist_label = gtk_label_new ("");
+  fe->title_label = gtk_label_new ("");
+  gtk_misc_set_alignment (GTK_MISC (fe->artist_label), 0.0, 0.5);
+  gtk_misc_set_alignment (GTK_MISC (fe->title_label), 0.0, 0.5);
 
   vol_adjust = gtk_adjustment_new (0.0, 0.0, 1.0, 0.1, 0.2, 0.2);
   vol_slider = gtk_vscale_new (GTK_ADJUSTMENT (vol_adjust));
   gtk_scale_set_draw_value (GTK_SCALE (vol_slider), FALSE);
   gtk_widget_set_style (vol_slider, style);
   gtk_signal_connect (GTK_OBJECT (vol_adjust), "value-changed", 
-		      GTK_SIGNAL_FUNC (set_volume), player);
+		      GTK_SIGNAL_FUNC (set_volume), fe->player);
 
-  slider_adjustment = (GtkAdjustment *) gtk_adjustment_new (0.0, 0.0, 0.0, 
-						     0.0, 0.0, 0.0);
+  fe->progress_adjustment = (GtkAdjustment *) gtk_adjustment_new (0.0, 0.0, 1.0, 
+								  0.1, 0.2, 0.2);
 
-  slider = gtk_hscale_new(GTK_ADJUSTMENT(slider_adjustment));
-  gtk_scale_set_draw_value(GTK_SCALE(slider), FALSE);
-  gtk_widget_set_style (slider, style);
-  GTK_WIDGET_UNSET_FLAGS (slider, GTK_CAN_FOCUS);
-  gtk_range_set_update_policy (GTK_RANGE (slider), GTK_UPDATE_CONTINUOUS);
+  fe->progress_slider = gtk_hscale_new (GTK_ADJUSTMENT (fe->progress_adjustment));
+  gtk_scale_set_draw_value (GTK_SCALE (fe->progress_slider), FALSE);
+  gtk_widget_set_style (fe->progress_slider, style);
+  gtk_widget_set_usize (fe->progress_slider, -1, 16);
 
   gtk_container_add (GTK_CONTAINER (window), hbox2);
 
@@ -420,34 +337,31 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox2), vbox, TRUE, TRUE, 0);
   
   gtk_box_pack_start (GTK_BOX (vbox), hbox3, TRUE, TRUE, 0);
-  //  gtk_box_pack_start (GTK_BOX (vbox), slider, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), fe->progress_slider, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), buttons_hbox, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (hbox3), vbox2, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (hbox3), vbox3, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (vbox2), title_label, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox2), artist_label, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), fe->title_label, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox2), fe->artist_label, TRUE, TRUE, 0);
 
   gtk_box_pack_start (GTK_BOX (vbox3), hbox4, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox3), time_label, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox3), fe->time_label, FALSE, FALSE, 0);
 
-  gtk_box_pack_start (GTK_BOX (hbox4), playlist_button, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox4), exit_button, FALSE, FALSE, 0);
 
   gtk_box_pack_start (GTK_BOX (buttons_hbox), prev_button, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (buttons_hbox), rewind_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), play_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), pause_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), stop_button, TRUE, TRUE, 0);
-  gtk_box_pack_start (GTK_BOX (buttons_hbox), forward_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), eject_button, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (buttons_hbox), next_button, TRUE, TRUE, 0);
 
-  gtk_widget_show (time_label);
-  gtk_widget_show (artist_label);
-  gtk_widget_show (title_label);
-  gtk_widget_show (slider);
+  gtk_widget_show (fe->time_label);
+  gtk_widget_show (fe->artist_label);
+  gtk_widget_show (fe->title_label);
+  gtk_widget_show (fe->progress_slider);
   gtk_widget_show (vol_slider);
 
   gtk_widget_show (vbox);

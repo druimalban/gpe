@@ -55,12 +55,28 @@ file_stream_close (struct stream *s)
   g_free (s);
 }
 
+void
+file_stream_seek (struct stream *s, int64_t offset, int whence)
+{
+  struct file_stream *f = (struct file_stream *)s;
+  return lseek (f->fd, offset, whence);
+}
+
+long
+file_stream_tell (struct stream *s)
+{
+  struct file_stream *f = (struct file_stream *)s;
+  return lseek (f->fd, 0, SEEK_CUR);  
+}
+
 struct stream_engine file_stream_struct = 
   {
     "file",
 
     file_stream_open,
     file_stream_read,
-    file_stream_close
+    file_stream_close,
+    file_stream_seek,
+    file_stream_tell
   };
 

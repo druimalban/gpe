@@ -10,9 +10,11 @@
 #include "player.h"
 #include "decoder.h"
 #include "stream.h"
-#include <esd.h>
 
-int output;
+#include <esd.h>
+#include <libintl.h>
+
+#define _(x) gettext(x)
 
 struct player
 {
@@ -23,7 +25,22 @@ struct player
   decoder_t decoder;
   stream_t stream;
   audio_t audio;
+
+  void (*error_func)(gchar *);
 };
+
+void
+player_error (player_t player, gchar *s)
+{
+  if (player->error_func)
+    player->error_func (s);
+}
+
+void
+player_error_handler (player_t player, void (*error_func)(gchar *))
+{
+  player->error_func = error_func;
+}
 
 player_t
 player_new (void)
@@ -31,6 +48,11 @@ player_new (void)
   player_t p = g_malloc (sizeof (struct player));
   memset (p, 0, sizeof (struct player));
   p->audio = audio_open ();
+  if (p->audio == NULL)
+    {
+      g_free (p);
+      return NULL;
+    }
   return p;
 }
 
@@ -73,10 +95,16 @@ player_stop (player_t p)
     }
 }
 
-void
+gboolean
 player_play (player_t p)
 {
   player_stop (p);
+
+  if (p->list == NULL)
+    {
+      player_error (p, _("No playlist"));
+      return FALSE;
+    }
 
   p->cur = playlist_fetch_item (p->list, p->idx);
   if (p->cur)
@@ -84,18 +112,21 @@ player_play (player_t p)
       p->stream = stream_open (p->cur->data.track.url);
       if (p->stream == NULL)
 	{
+	  player_error (p, _("Cannot open stream"));
 	  p->cur = NULL;
-	  return;
+	  return FALSE;
 	}
       p->decoder = decoder_open (p->cur->data.track.url, p->stream, p->audio);
       if (p->decoder == NULL)
 	{
+	  player_error (p, _("Cannot decode this stream"));
 	  stream_close (p->stream);
 	  p->stream = NULL;
 	  p->cur = NULL;
-	  return;
+	  return FALSE;
 	}
     }
+  return TRUE;
 }
 
 void
@@ -113,8 +144,13 @@ player_status (player_t p, struct player_status *s)
 	  player_next_track (p);
 	}
       else
-	s->time = ds.time;
+	{
+	  s->time = ds.time;
+	  s->total_time = ds.total_time;
+	}
     }
+  else
+    s->time = s->total_time = 0;
 
   s->item = p->cur;
 }

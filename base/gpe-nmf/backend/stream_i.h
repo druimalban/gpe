@@ -20,6 +20,8 @@ struct stream_engine
   stream_t (*open)(gchar *name);
   int (*read) (stream_t, void *buf, int size);
   void (*close) (stream_t);
+  int (*seek) (stream_t, int64_t, int);
+  long (*tell) (stream_t);
 };
 
 #endif
