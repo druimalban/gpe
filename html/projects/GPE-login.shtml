@@ -25,6 +25,10 @@ The source code can be found in <A href="../cvs.shtml">CVS</A>,
 module <b>gpe-login</b>.  Precompiled binaries for iPAQ are available
 in the Familiar <A href="http://familiar.handhelds.org/familiar/feeds/unstable/">unstable feed</A>.
 </P>
+<P>
+Some example startup scripts are provided 
+<A href="ftp://ftp.handhelds.org/projects/gpe/xstuff.tgz">here</A>.
+</P>
 
 <H2>Screenshots</H2>
 
