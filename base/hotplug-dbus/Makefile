@@ -18,7 +18,7 @@ install-program:
 	install -d $(DESTDIR)/etc/dbus-1/system.d
 	install -m 644 hotplug.conf $(DESTDIR)/etc/dbus-1/system.d
 	install -d $(DESTDIR)/etc/hotplug.d/default
-	ln -sf /sbin/hotplug-dbus $(DESTDIR)/etc/hotplug.d/11-dbus.hotplug
+	ln -sf /sbin/hotplug-dbus $(DESTDIR)/etc/hotplug.d/default/11-dbus.hotplug
 
 clean:
 
