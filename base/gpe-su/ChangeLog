@@ -1,6 +1,11 @@
+2004-08-13  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Released V 0.17
+	* gpe-su.c: Fix to avoid empty error messages.
 
 2004-08-11  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* released V 0.16
 	* Changed  "su -" to "su"
 
 2004-06-21  Philip Blundell  <philb@gnu.org>
@@ -170,4 +175,3 @@
 	* gpe-su.menu: Give full path name for icon. Move to section
 	Utilities (to conform to
 	http://familiar.handhelds.org/policy/menu.html).
-

@@ -113,7 +113,8 @@ do_su (void)
   *rp = 0;
 
   if ((strncmp (result, "Password:", 9))
-	  && (!strstr(result, "Gdk-WARNING")))
+	  && (!strstr(result, "Gdk-WARNING"))
+ 	  && (strlen(g_strstrip(result))))
     {
       gpe_error_box (result);
       kill (pid, 15);
