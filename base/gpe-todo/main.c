@@ -21,8 +21,8 @@
 #include "pixmaps.h"
 #include "init.h"
 
-#define PIXMAPS_DIR "/usr/share/gpe/pixmaps"
-#define MY_PIXMAPS_DIR "/usr/share/gpe-todo/pixmaps"
+#define PIXMAPS_DIR PREFIX "/share/gpe/pixmaps"
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe-todo/pixmaps"
 
 struct pix my_pix[] = {
   { "new", MY_PIXMAPS_DIR "/new.png" },

@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 
 CFLAGS = `gtk-config --cflags` -g -I../libgpewidget -Wall
-CFLAGS += -DPACKAGE=\"gpe-todo\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
+CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 all: gpe-todo mo
 
