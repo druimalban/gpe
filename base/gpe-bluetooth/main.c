@@ -61,6 +61,7 @@ struct gpe_icon my_icons[] = {
   { "cellphone", "bluetooth/cellphone" },
   { "network", "bluetooth/network" },
   { "computer", "bluetooth/Computer" },
+  { "printer", "bluetooth/Printer" },
   { "bt-logo" },
   { NULL }
 };
@@ -349,6 +350,9 @@ run_scan (void)
 	  break;
 	case 0x300:
 	  bd->pixbuf = gpe_find_icon ("network");
+	  break;
+	case 0x600:
+	  bd->pixbuf = gpe_find_icon ("printer");
 	  break;
 	default:
 	  bd->pixbuf = gpe_find_icon ("bt-logo");
