@@ -14,7 +14,7 @@ endif
 
 CPPFLAGS += -D_GNU_SOURCE
 
-CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall
+CFLAGS = $(GTKCFLAGS) -g -I../libgpewidget -Wall -I../libdm
 CFLAGS += -DPACKAGE=\"gpe-todo\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
 
@@ -27,7 +27,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 all: gpe-todo all-mo
 
 gpe-todo: $(OBJS)
-	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite
+	$(CC) -o $@ $^ -L../libgpewidget -lgpewidget $(GTKLDFLAGS) -g -lsqlite -L../libdm -ldm
 
 clean:
 	rm -f gpe-todo $(OBJS) $(DEPS)

@@ -99,6 +99,8 @@ new_category_box (GtkWidget *w, gpointer data)
   guint screen_width, screen_height;
   GtkRequisition requisition;
 
+  libdm_mark_window (window);
+
   gtk_window_set_title (GTK_WINDOW (window), _("To-do list: Categories"));
   gpe_set_window_icon (window, "icon");
 
@@ -169,6 +171,8 @@ configure (GtkWidget *w, gpointer list)
   GtkWidget *vboxtop = gtk_vbox_new (FALSE, 0);
   GtkWidget *okbutton;
   GSList *l;
+
+  libdm_mark_window (window);
 
 #if GTK_MAJOR_VERSION < 2
   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, 

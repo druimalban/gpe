@@ -18,6 +18,8 @@
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
 
+#include <libdm.h>
+
 #include "todo.h"
 #include "todo-sql.h"
 
@@ -91,6 +93,8 @@ click_ok (GtkWidget *widget,
   time_t when;
   struct tm tm;
   const char *what, *summary;
+  GtkTextBuffer *buf;
+  GtkTextIter start, end;
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (t->duetoggle)))
     {
@@ -103,7 +107,9 @@ click_ok (GtkWidget *widget,
   else
     when = (time_t)0;
 
-  what = gtk_editable_get_chars (GTK_EDITABLE (t->text), 0, -1);
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (t->text));
+  gtk_text_buffer_get_bounds (buf, &start, &end);
+  what = gtk_text_buffer_get_text (GTK_TEXT_BUFFER (buf), &start, &end, FALSE);
   summary = gtk_editable_get_chars (GTK_EDITABLE (t->summary), 0, -1);
 
   if (t->item)
@@ -275,7 +281,7 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 {
   GtkWidget *window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *text = gtk_text_new (NULL, NULL);
+  GtkWidget *text = gtk_text_view_new ();
   GtkWidget *duebox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *buttonok;
@@ -299,6 +305,8 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   time_t the_time;
 
   gtk_widget_realize (window);
+
+  libdm_mark_window (window);
 
   buttonok = gpe_picture_button (window->style, _("Save"), "save");
   buttoncancel = gpe_picture_button (window->style, _("Cancel"), "cancel");
@@ -391,8 +399,8 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
   gtk_box_pack_start (GTK_BOX (vbox), frame_details, TRUE, TRUE, 2);
   gtk_box_pack_start (GTK_BOX (vbox), buttonbox, FALSE, FALSE, 2);
 
-  gtk_text_set_editable (GTK_TEXT (text), TRUE);
-  gtk_text_set_word_wrap (GTK_TEXT (text), TRUE);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (text), TRUE);
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
 
   gtk_container_add (GTK_CONTAINER (window), vbox);
 
@@ -402,10 +410,9 @@ edit_item (struct todo_item *item, struct todo_category *initial_category)
 
   if (item)
     {
-      gint p = 0;
       if (item->what)
-	gtk_editable_insert_text (GTK_EDITABLE (text), item->what, 
-				  strlen (item->what), &p);
+	gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (text)), 
+				  item->what, -1);
       if (item->summary)
 	gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
       gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);

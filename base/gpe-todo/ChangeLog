@@ -1,3 +1,27 @@
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
+	* Version 0.30 released.
+
+2003-01-05  Philip Blundell  <philb@gnu.org>
+
+	* familiar/control1 (Depends): Add libdm0.
+
+	* Makefile (gpe-todo): Link with -ldm.
+	(CFLAGS): Add -I../libdm.
+
+	* todo-ui.c (edit_item, click_ok): Replace GtkText with
+	GtkTextBuffer.
+
+	* todo-ui.c (edit_item): Mark window for migration.
+	* configure.c (configure): Likewise.
+	(new_category_box): Likewise.
+	* main.c (open_window): Likewise.
+	(main): Call libdm_init.
+
+	* list-ui.c (item_layout): Delete.
+	(draw_item): Create a new layout each time, and unref it
+	afterwards.
+
 2003-01-01  Philip Blundell  <philb@gnu.org>
 
 	* gpe-todo.desktop (SingleInstance): Set to true.

@@ -111,17 +111,6 @@ show_hide_completed (GtkWidget *w, gpointer list)
   refresh_items ();
 }
 
-#if GTK_MAJOR_VERSION >= 2
-PangoLayout *
-item_layout (struct todo_item *i)
-{
-  if (i->layout == NULL)
-    i->layout = gtk_widget_create_pango_layout (g_draw, i->summary);
-
-  return i->layout;
-}
-#endif
-
 static void
 draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct todo_item *i, guint skew, GdkEventExpose *event)
 {
@@ -139,7 +128,7 @@ draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct
       width = gdk_string_width (font, i->summary);
       height = font->ascent + font->descent;
 #else
-      PangoLayout *l = item_layout (i);
+      PangoLayout *l = gtk_widget_create_pango_layout (g_draw, i->summary);
       
       gtk_paint_layout (widget->style,
 			widget->window,
@@ -154,6 +143,8 @@ draw_item (GdkDrawable *drawable, GtkWidget *widget, guint xcol, guint y, struct
       pango_layout_get_size (l, &width, &height);
       width /= PANGO_SCALE;
       height /= PANGO_SCALE;
+
+      g_object_unref (l);
 #endif
     }
   else

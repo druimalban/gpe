@@ -17,6 +17,8 @@
 #include <gpe/pixmaps.h>
 #include <gpe/init.h>
 
+#include <libdm.h>
+
 #include "todo.h"
 #include "todo-sql.h"
 
@@ -53,6 +55,8 @@ open_window (void)
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
+  libdm_mark_window (window);
+
   top = top_level (window);
 
   gtk_container_add (GTK_CONTAINER (window), top);
@@ -83,6 +87,8 @@ main(int argc, char *argv[])
 
   if (sql_start ())
     exit (1);
+
+  libdm_init ();
 
   open_window ();
   
