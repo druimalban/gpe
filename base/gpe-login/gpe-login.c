@@ -42,7 +42,8 @@
 static const char *current_username;
 static GtkWidget *label_result;
 static gboolean have_users;
-static pid_t cpid;
+static pid_t setup_pid;
+static pid_t kbd_pid;
 static const char *xkbd_path = "/usr/bin/xkbd";
 
 static GtkWidget *entry_username, *entry_fullname;
@@ -51,7 +52,11 @@ static GtkWidget *entry_password, *entry_confirm;
 static void
 cleanup_children (void)
 {
-  kill (-cpid, 15);
+  if (setup_pid)
+    kill (-setup_pid, 15);
+
+  if (kbd_pid)
+    kill (kbd_pid, 15);
 }
 
 static void
@@ -150,6 +155,8 @@ enter_callback (GtkWidget *widget, GtkWidget *entry)
     goto login_incorrect;
   
   do_login (pwe->pw_uid, pwe->pw_gid, pwe->pw_dir);
+  gtk_main_quit ();
+  return;
 
  login_incorrect:
   gtk_label_set_text (GTK_LABEL (label_result), _("Login incorrect"));
@@ -248,6 +255,8 @@ enter_newuser_callback (GtkWidget *widget, gpointer h)
   fclose (fp);
 
   do_login (uid, gid, home);
+
+  gtk_main_quit ();
 }
 
 int
@@ -260,8 +269,7 @@ main (int argc, char *argv[])
   GtkWidget *frame;
   GtkWidget *logo = NULL;
   GtkWidget *focus;
-  GtkWidget *socket;
-  pid_t kpid;
+  GtkWidget *socket = NULL;
   int fd[2];
   guint xkbd_xid = 0;
 
@@ -272,16 +280,24 @@ main (int argc, char *argv[])
   gtk_init (&argc, &argv);
   gdk_imlib_init ();
 
-  cpid = fork ();
-  if (cpid == 0)
-    {
-      pid_t mypid = getpid ();
-      setpgid (0, mypid);
-      system (GPE_LOGIN_SETUP);
-      _exit (0);
-    }
+  setlocale (LC_ALL, "");
 
-  waitpid (cpid, NULL, 0);
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
+
+  if (access (GPE_LOGIN_SETUP, X_OK) == 0)
+    {
+      setup_pid = fork ();
+      if (setup_pid == 0)
+	{
+	  pid_t mypid = getpid ();
+	  setpgid (0, mypid);
+	  system (GPE_LOGIN_SETUP);
+	  _exit (0);
+	}
+      
+      waitpid (setup_pid, NULL, 0);
+    }
 
   signal (SIGINT, cleanup_children_and_exit);
   signal (SIGQUIT, cleanup_children_and_exit);
@@ -289,42 +305,44 @@ main (int argc, char *argv[])
   
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 
-  socket = gtk_socket_new ();
-
-  pipe (fd);
-  kpid = fork ();
-  if (kpid == 0)
+  if (access (xkbd_path, X_OK) == 0)
     {
-      close (fd[0]);
-      if (dup2 (fd[1], 1) < 0)
-	perror ("dup2");
-      close (fd[1]);
-      if (fcntl (1, F_SETFD, 0))
-	perror ("fcntl");
-      execl (xkbd_path, xkbd_path, "-xid", NULL);
-      _exit (1);
-    }
-
-  close (fd[1]);
-
-  {
-    char buf[256];
-    char c;
-    int a = 0;
-    size_t n;
-
-    do {
-      n = read (fd[0], &c, 1);
-      if (n)
+      socket = gtk_socket_new ();
+      pipe (fd);
+      kbd_pid = fork ();
+      if (kbd_pid == 0)
 	{
-	  buf[a++] = c;
+	  close (fd[0]);
+	  if (dup2 (fd[1], 1) < 0)
+	    perror ("dup2");
+	  close (fd[1]);
+	  if (fcntl (1, F_SETFD, 0))
+	    perror ("fcntl");
+	  execl (xkbd_path, xkbd_path, "-xid", NULL);
+	  _exit (1);
 	}
-    } while (n && (c != 10) && (a < (sizeof (buf) - 1)));
 
-    if (a)
+      close (fd[1]);
+      
       {
-	buf[a] = 0;
-	xkbd_xid = atoi (buf);
+	char buf[256];
+	char c;
+	int a = 0;
+	size_t n;
+	
+	do {
+	  n = read (fd[0], &c, 1);
+	  if (n)
+	    {
+	      buf[a++] = c;
+	    }
+	} while (n && (c != 10) && (a < (sizeof (buf) - 1)));
+	
+	if (a)
+	  {
+	    buf[a] = 0;
+	    xkbd_xid = atoi (buf);
+	  }
       }
   }
 
@@ -380,7 +398,8 @@ main (int argc, char *argv[])
       gtk_box_pack_start (GTK_BOX (vbox), hbox_user, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), hbox_password, FALSE, FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), label_result, FALSE, FALSE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
+      if (socket)
+	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
       
       gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
@@ -463,7 +482,8 @@ main (int argc, char *argv[])
 
       vbox = gtk_vbox_new (FALSE, 0);
       gtk_box_pack_start (GTK_BOX (vbox), table, TRUE, TRUE, 0);
-      gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
+      if (socket)
+	gtk_box_pack_start (GTK_BOX (vbox), socket, TRUE, TRUE, 0);
       
       gtk_container_add (GTK_CONTAINER (frame), vbox);
       gtk_container_set_border_width (GTK_CONTAINER (frame), 5);
@@ -484,8 +504,8 @@ main (int argc, char *argv[])
 
   gtk_widget_show_all (window);
 
-  if (xkbd_xid)
-    gtk_socket_steal (socket, xkbd_xid);
+  if (xkbd_xid && socket)
+    gtk_socket_steal (GTK_SOCKET (socket), xkbd_xid);
 
   gtk_widget_grab_focus (focus);
 

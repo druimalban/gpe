@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <libintl.h>
+#include <locale.h>
 
 #include <gtk/gtk.h>
 #include <gdk_imlib.h>
@@ -59,6 +60,11 @@ main(int argc, char *argv[])
 {
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
+
+  setlocale (LC_ALL, "");
+
+  bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
+  textdomain (PACKAGE);
 
   if (load_pixmaps (my_pix) == FALSE)
     exit (1);
