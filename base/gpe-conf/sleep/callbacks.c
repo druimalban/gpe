@@ -17,7 +17,7 @@
 #include "conf.h"
 #include "confGUI.h"
 #include "../applets.h"
-#include "../ipaqscreen/brightness.h"
+#include "../screen/brightness.h"
 
 extern GtkWidget *sleep_idle_spin;
 extern GtkWidget *dim_spin, *dim_scale;

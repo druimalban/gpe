@@ -16,7 +16,7 @@
 #include "callbacks.h"
 #include "interface.h"
 #include "../applets.h"
-#include "../ipaqscreen/brightness.h"
+#include "../screen/brightness.h"
 #include "conf.h"
 
 GtkWidget *sleep_idle_spin;

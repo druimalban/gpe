@@ -33,9 +33,9 @@
 #include "gpe-admin.h"
 #include "cfgfile.h"
 #include "ownerinfo.h"
-#include "ipaqscreen/brightness.h"
+#include "screen/brightness.h"
 #ifndef DISABLE_XRANDR
-#include "ipaqscreen/rotation.h"
+#include "screen/rotation.h"
 #endif
 #ifdef PACKAGETOOL		
 #include "packages.h"

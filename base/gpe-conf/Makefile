@@ -32,7 +32,7 @@ endif
 EXTRA_DESKTOPS = \
 	gpe-conf-admin.desktop.in \
 	gpe-conf-cardinfo.desktop.in \
-	gpe-conf-ipaqscreen.desktop.in \
+	gpe-conf-screen.desktop.in \
 	gpe-conf-kbd.desktop.in \
 	gpe-conf-keyctl.desktop.in \
 	gpe-conf-login-setup.desktop.in \
@@ -75,7 +75,7 @@ MEMBERS  = main applets parser suid
 MEMBERS += misc
 MEMBERS += unimplemented
 MEMBERS += timeanddate
-MEMBERS += ipaqscreen/main ipaqscreen/brightness  ipaqscreen/rotation ipaqscreen/calibrate ipaqscreen/callbacks ipaqscreen/xset 
+MEMBERS += screen/main screen/brightness  screen/rotation screen/calibrate screen/callbacks screen/xset 
 MEMBERS += kbd
 MEMBERS += network
 MEMBERS += theme
@@ -123,7 +123,7 @@ SOURCES_INFO = $(patsubst %,%.c,$(MEMBERS_INFO))
 SOURCES += $(SOURCES_CONF) $(SOURCES_INFO) 
 
 PIXMAPS = gpe-config-apm.png
-PIXMAPS += gpe-config-ipaqscreen.png
+PIXMAPS += gpe-config-screen.png
 PIXMAPS += gpe-config-kbd.png
 PIXMAPS += gpe-config-keyctl.png
 PIXMAPS += gpe-config-mixer.png
@@ -201,7 +201,7 @@ install-program: all all-desktop
 
 clean:
 	rm -f $(PACKAGE) gpe-info gpe-conf.pc $(OBJS) $(OBJS_INFO) *~ */*~ *.ipk *.o sleep/*.o *.upload.html *.asc *.desktop *.d
-	rm -f ipaqscreen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d sound/*.d
+	rm -f screen/*.d pcmcia/*.d sleep/*.d widgets/*.d tools/*.d users/*.d sound/*.d
 	
 	
 	

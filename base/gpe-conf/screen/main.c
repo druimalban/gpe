@@ -50,7 +50,7 @@ tself self;
 
 gchar* change_screen_saver_label (GtkScale *scale, gdouble sec);
 
-GtkWidget *ipaqscreen_Build_Objects()
+GtkWidget *screen_Build_Objects()
 {
   GtkWidget *menu = NULL;
   GtkWidget *glade_menuitem = NULL;
@@ -296,11 +296,11 @@ change_screen_saver_label (GtkScale *scale, gdouble val)
   return buf;
 }
 
-void ipaqscreen_Free_Objects()
+void screen_Free_Objects()
 {
 }
 
-void ipaqscreen_Save()
+void screen_Save()
 {
   int sec;
 
@@ -321,7 +321,7 @@ void ipaqscreen_Save()
   }
 }
 
-void ipaqscreen_Restore()
+void screen_Restore()
 {
   set_brightness(initval.brightness);
 #ifndef DISABLE_XRANDR	

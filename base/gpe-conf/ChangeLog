@@ -1,3 +1,7 @@
+2004-10-10	Florian Boor  	<florian.boor@kernelconcepts.de>
+
+	* Renamed "ipaqscreen" stuff to "screen".
+
 2004-10-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 
 	* brightness.c: Some more fixes.

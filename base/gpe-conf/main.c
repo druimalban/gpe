@@ -29,7 +29,7 @@
 #include "applets.h"
 #include "timeanddate.h"
 #include "appmgr_setup.h"
-#include "ipaqscreen.h"
+#include "screen.h"
 #include "unimplemented.h"
 #include "kbd.h"
 #include "network.h"
@@ -90,8 +90,8 @@ struct Applet applets[]=
 		"Time" ,"time" ,"Time and Date Setup",PREFIX "/share/pixmaps/gpe-config-time.png"},
 /*    { &Appmgr_Build_Objects, &Appmgr_Free_Objects, &Appmgr_Save, &Appmgr_Restore , 
 		"Appmgr" ,"appmgr", "Launcher Setup", PREFIX "/share/pixmaps/gpe-config-appmgr.png"},
-*/    { &ipaqscreen_Build_Objects, &ipaqscreen_Free_Objects, &ipaqscreen_Save, &ipaqscreen_Restore,
-		"Screen" , "ipaqscreen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-ipaqscreen.png"},
+*/    { &screen_Build_Objects, &screen_Free_Objects, &screen_Save, &screen_Restore,
+		"Screen" , "screen", "Screen Setup", PREFIX "/share/pixmaps/gpe-config-screen.png"},
     { &Kbd_Build_Objects, &Unimplemented_Free_Objects, &Kbd_Save, &Kbd_Restore ,
 		"vKeyboard" ,"kbd", "Virtual Keyboard Setup",PREFIX "/share/pixmaps/gpe-config-kbd.png"},
     { &Keyctl_Build_Objects, &Unimplemented_Free_Objects, &Keyctl_Save, &Keyctl_Restore ,
