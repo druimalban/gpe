@@ -52,6 +52,8 @@ typedef struct
 	char *pixname;
 	char *ident;
 	char *command;
+	char *modificator;
+	char *title;
 	int type;
 }
 t_buttondef;
@@ -70,11 +72,11 @@ static struct
 self;
 
 t_buttondef buttondef[NUM_BUTTONS] = {
-	{NULL, "XF86AudioRecord","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
-    {NULL, "XF86Calendar","gpe-calendar",0},
-	{NULL, "telephone","gpe-contacts",0},
-	{NULL, "XF86Mail","gpe-taskmanager",0},
-	{NULL, "XF86Start","mbcontrol -desktop",0}};
+	{NULL, "???XF86AudioRecord","gpe-soundbite record --autogenerate-filename $HOME_VOLATILE",0},
+    {NULL, "???XF86Calendar","gpe-calendar",0},
+	{NULL, "???telephone","gpe-contacts",0},
+	{NULL, "???XF86Mail","gpe-taskmanager",0},
+	{NULL, "???XF86Start","mbcontrol -desktop",0}};
 
 static int active_button = 0;
 
@@ -107,11 +109,18 @@ init_buttons ()
 {
 	FILE *fd;
 	GtkButton *target;
-	char buffer[1024];
+	char *buffer = NULL;
 	char *slash;
 	char btext[16];
 	int i;
+	size_t len;
 
+	active_button = 0;
+	
+	/* make string variables from initial constants */
+	for (i=0;i<NUM_BUTTONS;i++)
+		buttondef[i].command = g_strdup(buttondef[i].command);
+	
 	/* default keylaunchrc in homedir */
 	keylaunchrc =
 		g_strdup_printf ("%s/.keylaunchrc", getenv ("HOME"));
@@ -123,70 +132,29 @@ init_buttons ()
 		keylaunchrc = g_strdup ("/etc/keylaunchrc");
 	}
 
-	buttons[0][0] = 0;
-	
 	/* read from configfile and set buttons */
 	fd = fopen (keylaunchrc, "r");
-	if (fd == NULL)
-	{
-		/* defaults */
-		for (i = 0; i < 8; i++)
-		{
-			strcpy (buttons[i], default_keyctl_conf[i]);
-			slash = strrchr (buttons[i], '/');
-			if (slash == NULL)
-			{
-				slash = strrchr (buttons[i], ':');
-			};
-			if (slash == NULL)
-			{
-				// FIXME: compensate broken entry!
-				slash = buttons[i];
-			}
-			else
-			{
-				slash++;	// select next char after selected position
-			}
-			strncpy (btext, slash, 15);
-			btext[15] = '\x0';
-			target = GTK_BUTTON (self.button[i]);
-			gtk_button_set_label (GTK_BUTTON (target), btext);
-		}
-	}
-	else
+	if (fd != NULL)
 	{
 		/* load from configfile */
-		for (i = 0; i < 8; i++)
+		while (getline(&buffer,&len,fd) > 0)
 		{
-			fgets (buffer, 1023, fd);
-			slash = strchr (buffer, '\n');
-			if (slash != NULL)
-			{
-				*slash = '\x0';
-			}
-			strcpy (buttons[i], buffer);
-			slash = strrchr (buttons[i], '/');
-			if (slash == NULL)
-			{
-				slash = strrchr (buttons[i], ':');
-			};
-			if (slash == NULL)
-			{
-				// FIXME: compensate broken entry!
-				slash = buttons[i];
-			}
-			else
-			{
-				slash++;	// select next char after selected position
-			}
-			strncpy (btext, slash, 15);
-			btext[15] = '\x0';
-			target = GTK_BUTTON (self.button[i]);
-			gtk_button_set_label (GTK_BUTTON (target), btext);
+printf("rl: %s",buffer);
+			/* this will not work with modificators other than ??? */
+			for (i=0;i<NUM_BUTTONS;i++)
+				if (strstr(buffer,buttondef[i].ident))
+				{
+					slash = strchr (buffer, ':');
+printf("c: %s",slash);
+					if (slash && ((slash - buffer) > 0))
+					{
+						slash++;
+						g_free(buttondef[i].command);
+						buttondef[i].command = g_strdup(slash);
+					}
+				}
 		}
 		fclose (fd);
-//		strncpy (buttons[5], default_keyctl_conf[5], 1023);
-//		strncpy (buttons[6], default_keyctl_conf[6], 1023);
 	}
 }
 
@@ -196,6 +164,7 @@ on_button_clicked (GtkButton * button, gpointer user_data)
 {
 	ask_user_a_file ("/usr/bin", NULL, FileSelected, NULL, button);
 }
+
 
 void
 on_button_select (GtkButton * button, gpointer user_data)
@@ -217,35 +186,11 @@ on_button_select (GtkButton * button, gpointer user_data)
 void
 on_defaults_clicked (GtkButton * button, gpointer user_data)
 {
-	int i;
-	char btext[16];
-	char *slash;
 	
 	if (gpe_question_ask
 	    (_("Reset button config to default?"), _("Question"), "question",
 	     "!gtk-no", NULL, "!gtk-yes", NULL, NULL))
 	{
-		for (i = 0; i < 8; i++)
-		{
-			strcpy (buttons[i], default_keyctl_conf[i]);
-			slash = strrchr (buttons[i], '/');
-			if (slash == NULL)
-			{
-				slash = strrchr (buttons[i], ':');
-			};
-			if (slash == NULL)
-			{
-				slash = buttons[i];
-			}
-			else
-			{
-				slash++;	// select next char after selected position
-			}
-			strncpy (btext, slash, 15);
-			btext[15] = '\x0';
-			gtk_button_set_label (GTK_BUTTON (self.button[i]),
-					      btext);
-		}
 	}
 }
 
@@ -322,12 +267,8 @@ Keyctl_Build_Objects ()
 	
 	gtk_widget_grab_focus(self.button[0]);
 	gtk_entry_set_text(GTK_ENTRY(self.edit),buttondef[0].command);
-	active_button = 0;
-	/* make string variables from initial constants */
-	for (i=0;i<NUM_BUTTONS;i++)
-		buttondef[i].command = g_strdup(buttondef[i].command);
 	
-//	init_buttons ();
+	init_buttons ();
 	
 	return vbox;
 }

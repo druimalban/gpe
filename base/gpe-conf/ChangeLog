@@ -1,4 +1,8 @@
 2003-11-19	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* theme.c: Fixed wrong brackets.
+	* keyctl.c: Started config reading code.
+	
+2003-11-19	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* theme.c: Set some more intelligent defaults.
 	
 2003-11-16	Florian Boor  	<florian.boor@kernelconcepts.de>
