@@ -21,7 +21,7 @@
 static char *cursoff = "\033[?25l\000";
 
 int 
-main(void)
+main(int argc, char *argv[])
 {
   GdkPixbuf *buf =  gdk_pixbuf_new_from_file (IMAGE);
   guchar *pix;
@@ -31,9 +31,16 @@ main(void)
   size_t stride;
   struct fb_cursorstate curs;
   int tty;
+  int xsize = 240, ysize = 320;
+  gboolean flip = FALSE;
 
   if (buf == NULL)
     exit (1);
+
+  if ((argc > 1) && !strcmp(argv[1], "--flip"))
+    {
+      flip = TRUE;
+    }
 
   pix = gdk_pixbuf_get_pixels (buf);
   fd = open (FB, O_RDWR);
@@ -60,10 +67,10 @@ main(void)
 
   stride = gdk_pixbuf_get_rowstride (buf);
 
-  for (y = 0; y < 320; y++)
+  for (y = 0; y < ysize; y++)
     {
       guchar *ppix = pix;
-      for (x = 0; x < 240; x++)
+      for (x = 0; x < xsize; x++)
 	{
 	  guchar red, green, blue;
 	  gushort w;
@@ -76,7 +83,14 @@ main(void)
 	  blue >>= 3;
 	  w = blue | (green << 5) | (red << 11);
 
-	  fb[(319 - y) + (320 * x)] = w;
+	  if (flip)
+	    {
+	      fb[(y) + (ysize * ((xsize - 1) - x))] = w;
+	    }
+	  else
+	    {
+	      fb[((ysize - 1) - y) + (ysize * x)] = w;
+ 	    }
 	}
       pix += stride;
     }
