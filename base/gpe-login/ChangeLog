@@ -9,6 +9,12 @@
 	* gpe-logout.sh: New file.
 	* gpe-logout.c: Deleted.
 
+2003-02-12  Philip Blundell  <philb@gnu.org>
+
+	* gpe-session-scripts 0.36 released.
+
+2003-02-12  Philip Blundell  <philb@gnu.org>
+
 	* X11/Xsession-gpe.d/25dotfiles: Remove minitheme.
 
 2003-02-11  Philip Blundell  <philb@gnu.org>
