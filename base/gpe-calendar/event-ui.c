@@ -577,10 +577,10 @@ build_edit_event_window (void)
             *vboxend, *vboxtop, *vboxrecur,
             *vboxappointment, *vboxreminder, *vboxtask;
 
-  GtkWidget *hboxrecurtypes, *hboxendafter, *hboxendon,
+  GtkWidget *recurtable, *hboxendafter, *hboxendon,
             *hboxtask1, *hboxtask2;
 
-  GSList    *vboxrecur_group, *vboxend_group;
+  GSList    *vboxend_group;
   GSList    *radiogroup;
 
   GtkWidget *menu1, *menu2;
@@ -595,7 +595,7 @@ build_edit_event_window (void)
   GtkWidget *recurborder, *recurendborder;
   GtkWidget *vboxrepeattop;
 
-  GtkWidget *weeklyhbox1, *weeklyhbox2, *weeklyhbox3,
+  GtkWidget *weeklytable, *weeklyhbox3,
             *monthlyhbox1, *monthlyhbox2, *dailyhbox, *yearlyhbox;
   GtkWidget *weeklylabelevery, *weeklylabelweeks, *weeklyspin;
 
@@ -632,7 +632,6 @@ build_edit_event_window (void)
   vboxtop             = gtk_vbox_new (FALSE, 0);
 
   hboxendafter        = gtk_hbox_new (FALSE, 0);
-  hboxrecurtypes      = gtk_hbox_new (FALSE, 0);
   hboxtask1           = gtk_hbox_new (FALSE, 0);
   hboxtask2           = gtk_hbox_new (FALSE, 0);
 
@@ -853,31 +852,23 @@ build_edit_event_window (void)
   gtk_box_pack_start (GTK_BOX (vboxrepeat), vboxrecur, FALSE, FALSE, 0);
 
 /* recurrence radio buttons */
+  recurtable = gtk_table_new (3, 2, FALSE);
+  gtk_box_pack_start (GTK_BOX (vboxrecur), recurtable, FALSE, FALSE, 0);
+
   radiobuttonnone = gtk_radio_button_new_with_label (NULL, _("No recurrence"));
-  gtk_box_pack_start (GTK_BOX (vboxrecur), radiobuttonnone,
-                           FALSE, FALSE, 0);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonnone), TRUE);
+  gtk_table_attach_defaults (GTK_TABLE (recurtable), radiobuttonnone, 0, 1, 0, 1);
 
-  vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonnone));
-  radiobuttondaily = gtk_radio_button_new_with_label (vboxrecur_group, _("Daily"));
-  gtk_box_pack_start (GTK_BOX (hboxrecurtypes), radiobuttondaily,
-                           FALSE, FALSE, 0);
+  radiobuttondaily = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radiobuttonnone), _("Daily"));
+  gtk_table_attach_defaults (GTK_TABLE (recurtable), radiobuttondaily, 0, 1, 1, 2);
 
-  vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttondaily));
-  radiobuttonweekly = gtk_radio_button_new_with_label (vboxrecur_group, _("Weekly"));
-  gtk_box_pack_start (GTK_BOX (hboxrecurtypes), radiobuttonweekly,
-                           FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vboxrecur), hboxrecurtypes, FALSE, FALSE, 0);
+  radiobuttonweekly = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radiobuttonnone), _("Weekly"));
+  gtk_table_attach_defaults (GTK_TABLE (recurtable), radiobuttonweekly, 1, 2, 1, 2);
 
-  vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonweekly));
-  radiobuttonmonthly = gtk_radio_button_new_with_label (vboxrecur_group, _("Monthly"));
-  gtk_box_pack_start (GTK_BOX (hboxrecurtypes), radiobuttonmonthly,
-                           FALSE, FALSE, 0);
+  radiobuttonmonthly = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radiobuttonnone), _("Monthly"));
+  gtk_table_attach_defaults (GTK_TABLE (recurtable), radiobuttonmonthly, 0, 1, 2, 3);
 
-  vboxrecur_group = gtk_radio_button_group (GTK_RADIO_BUTTON (radiobuttonmonthly));
-  radiobuttonyearly = gtk_radio_button_new_with_label (vboxrecur_group, _("Yearly"));
-  gtk_box_pack_start (GTK_BOX (hboxrecurtypes), radiobuttonyearly,
-                           FALSE, FALSE, 0);
+  radiobuttonyearly = gtk_radio_button_new_with_label_from_widget (GTK_RADIO_BUTTON (radiobuttonnone), _("Yearly"));
+  gtk_table_attach_defaults (GTK_TABLE (recurtable), radiobuttonyearly, 1, 2, 2, 3);
 
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (radiobuttonnone), TRUE);
 
@@ -931,22 +922,24 @@ build_edit_event_window (void)
                              FALSE, FALSE, 0);
 
 /* weekly hbox1 */
-  weeklyhbox1      = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklyhbox1, FALSE, FALSE, 0);
-  for (i = 0; i < 4; i++)
+  weeklytable      = gtk_table_new (3, 3, FALSE);
+  gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklytable, FALSE, FALSE, 0);
+  for (i = 0; i < 3; i++)
     {
       GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
-      gtk_box_pack_start (GTK_BOX (weeklyhbox1), b, FALSE, FALSE, 0);
+      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i, i + 1, 0, 1);
       s->checkbuttonwday[i] = b;
     }
-
-/* weekly hbox2 */
-  weeklyhbox2      = gtk_hbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (s->weeklybox), weeklyhbox2, FALSE, FALSE, 0);
-  for (i = 4; i < 7; i++)
+  for (i = 3; i < 6; i++)
     {
       GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
-      gtk_box_pack_start (GTK_BOX (weeklyhbox2), b, FALSE, FALSE, 0);
+      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 3, i - 2, 1, 2);
+      s->checkbuttonwday[i] = b;
+    }
+  for (i = 6; i < 7; i++)
+    {
+      GtkWidget *b = gtk_check_button_new_with_label (nl_langinfo(days[i]));
+      gtk_table_attach_defaults (GTK_TABLE (weeklytable), b, i - 6, i - 5, 2, 3);
       s->checkbuttonwday[i] = b;
     }
 
