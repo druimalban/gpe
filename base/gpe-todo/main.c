@@ -26,6 +26,7 @@ static struct gpe_icon my_icons[] = {
   { "cancel", "cancel" },
   { "save", "save" },
   { "new", "new" },
+  { "hide", "hide" },
   { "properties", "properties" },
   { "delete", "delete" },
   { "cancel", "cancel" },

@@ -1,3 +1,9 @@
+2002-07-10  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
+
+	* main.c : add "hide" to the my_icons list
+
+	* todo-ui.c (click_delete): erase/close window when delete is clicked
+
 2002-06-23  Joseph J. McCarthy  <mccarthy@engrng.pitt.edu>
 
 	* main.c : Include a global "hide" (to become a "preference" eventually)

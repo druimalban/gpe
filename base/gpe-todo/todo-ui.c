@@ -65,6 +65,11 @@ click_delete(GtkWidget *widget,
   
   if (t->item)
     delete_item (t->list, t->item);
+  
+  gtk_widget_draw (g_draw, NULL);
+
+  gtk_widget_hide (window);
+  gtk_widget_destroy (window);
 }
 
 static void
