@@ -41,9 +41,8 @@ $(LIBXSETTINGS_SO): $(XSETTINGS_OBJS)
 	$(CC) -o $@ $^ -shared -Wl,-soname -Wl,$(LIBXSETTINGS_SO) -nostartfiles -L/usr/X11R6/lib -lX11 -L../libxsettings -lXsettings
 
 install-program: $(LIBXSETTINGS_SO)
-	mkdir -p $(DESTDIR)$(PREFIX)/lib
-	install $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
-	strip $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
+	install -d $(DESTDIR)$(PREFIX)/lib
+	install -s $(LIBXSETTINGS_SO) $(DESTDIR)$(PREFIX)/lib/$(LIBXSETTINGS_SO)
 
 clean:
 	rm -f $(LIBXSETTINGS_SO) libXsettings-client.so

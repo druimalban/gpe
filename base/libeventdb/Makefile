@@ -57,8 +57,8 @@ clean:
 	rm -f $(OBJS) $(SONAME) $(PACKAGE).so $(DEPS)
 
 install-program: $(SONAME)
-	install -D $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
-	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install -d $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 include $(BUILD)/Makefile.translation
 include $(BUILD)/Makefile.dpkg_ipkg
