@@ -147,7 +147,8 @@ set_today(void)
 static void
 button_toggled (GtkWidget *widget, gpointer data)
 {
-  new_view (data);
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget)))
+    new_view (data);
 }
 
 int
