@@ -1,5 +1,7 @@
 2002-07-31  Colin Marquardt  <colin@marquardt-home.de>
 
+	* familiar/control (Version):  Bump up to version 0.02-1.
+
 	* Makefile.am (install-data-local): Copy pixmap to the right place.
 
 	* familiar/postinst, familiar/postrm: New files.
