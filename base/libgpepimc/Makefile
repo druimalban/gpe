@@ -10,20 +10,13 @@ MEMBERS = ui db
 
 SONAME = $(PACKAGE).so.0
 
-CFLAGS = $(GPECFLAGS) -DG_DISABLE_DEPRECATED -I../libdisplaymigration
-LDFLAGS = $(GPELIBS) -L../libdisplaymigration -ldisplaymigration
-
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -g #-O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
+ifeq ($(CVSBUILD),yes)
+PACKAGE_CPPFLAGS += -I../libdisplaymigration 
+PACKAGE_LDFLAGS += -L../libdisplaymigration 
 endif
-CFLAGS += -MD
-
-CPPFLAGS += -I.
+PACKAGE_CFLAGS = $(GPECFLAGS) -fPIC
+PACKAGE_LDFLAGS = $(GPELIBS) -ldisplaymigration
+PACKAGE_CPPFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -DG_DISABLE_DEPRECATED -I.
 
 HEADERS = gpe/pim-categories.h gpe/pim-categories-ui.h
 
@@ -43,10 +36,7 @@ $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 install-devel: $(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/$$i; done
