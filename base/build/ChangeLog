@@ -1,5 +1,9 @@
 2003-02-21  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.translation (%.desktop): Generalize from
+	$(PACKAGE).desktop.
+	(extract-po): Iterate over $(EXTRA_DESKTOPS) as well.
+
 	* familiar/control.translation (Provides): Add <package>-locale.
 
 	* Makefile.translation (real-translation-package): Replace
