@@ -2,6 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-minicalc
 DEBUG = no
 CVSBUILD = yes
+GTK2 = yes
 
 MEMBERS = minicalc
 
