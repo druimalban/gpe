@@ -9,7 +9,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-/* Exemple:
+/* Example:
    if(confirm_action_dialog_box("Delete document?","Delete")){
      delete_document();
    }
