@@ -12,6 +12,7 @@
 #include <gtk/gtk.h>
 #include <gpe/spacing.h>
 #include <gpe/errorbox.h>
+#include <gpe/pixmaps.h>
 #include <libintl.h>
 #include "netedit.h"
 
