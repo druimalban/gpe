@@ -1,1 +1,1 @@
-?package(gpe-edit): needs=x11 title=GPE Edit command=gpe-edit icon48=gpe-edit.png section=Applications windowtitle=gpe-edit
+?package(gpe-edit): needs=x11 title="Text Editor" command=gpe-edit icon48=gpe-edit.png section=Applications windowtitle=gpe-edit
