@@ -3,16 +3,20 @@
 <!--#include virtual="includes/head.shtml"-->
 
 <P>
+<h2> Mailing List</h2> 
 The main point of contact for the GPE project is the mailing list
-<I>gpe@handhelds.org</I>
+<I><a href="mailto:gpe@handhelds.org">gpe@handhelds.org</a></I>
 </P>
 <p> 
-Information about subscribing to this list and archives can be found
-here:<BR>
-<a href="http://handhelds.org/mailman/listinfo/gpe">http://handhelds.org/mailman/listinfo/gpe</a>
+To subscribe to the list go to <BR>
+<a href="http://handhelds.org/mailman/listinfo/gpe">http://handhelds.org/mailman/listinfo/gpe</a> and follow the instructions. 
 </P>
 <P>
 You can read past articles in the mailinglist archive at<BR>
 <A HREF="http://handhelds.org/pipermail/gpe/">http://handhelds.org/pipermail/gpe/</A>
 </P>
+<P>
+<h2>IRC</h2> 
+GPE coders can be sometimes be found on the #gpe channel of irc.handhelds.org
+
 <!--#include virtual="includes/foot.shtml"-->
