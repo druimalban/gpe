@@ -16,3 +16,14 @@ MEMBERS = \
 	sketchpad-gui	     \
 	files 
 
+ifndef PREFIX
+PREFIX = /usr/local
+endif
+
+ifndef DEBUG
+DEBUG = no
+endif
+
+ifndef CVSBUILD
+CVSBUILD = yes
+endif

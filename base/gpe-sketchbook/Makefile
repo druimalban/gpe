@@ -1,17 +1,5 @@
 include ./config.makefile
 
-ifndef PREFIX
-PREFIX = /usr/local
-endif
-
-ifndef DEBUG
-DEBUG = no
-endif
-
-ifndef CVSBUILD
-CVSBUILD = yes
-endif
-
 SOURCES = $(patsubst %,src/%.c,$(MEMBERS))
 
 PIXMAPS = `cd pixmaps && ls *.png`
