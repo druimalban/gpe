@@ -62,8 +62,8 @@ smallbox_x (gchar *title, struct box_desc *d)
   GtkWidget *buttonok, *buttoncancel;
 
   gtk_widget_realize (window);
-  buttonok  = gpe_picture_button (window->style, _("OK"), "ok");
-  buttoncancel  = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  buttonok  = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  buttoncancel  = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
 
   gtk_widget_show (buttonok);
   gtk_widget_show (buttoncancel);
@@ -160,8 +160,8 @@ gboolean
 smallbox_x2 (gchar *title, struct box_desc2 *d)
 {
   GtkWidget *window = gtk_dialog_new ();
-  GtkWidget *buttonok  = gpe_picture_button (window->style, _("OK"), "ok");
-  GtkWidget *buttoncancel  = gpe_picture_button (window->style, _("Cancel"), "cancel");
+  GtkWidget *buttonok  = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  GtkWidget *buttoncancel  = gpe_button_new_from_stock (GTK_STOCK_CANCEL, GPE_BUTTON_TYPE_BOTH);
   GtkWidget *table;
   GtkWidget **entry;
   gboolean destroyed = FALSE;

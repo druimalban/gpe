@@ -1,3 +1,9 @@
+libgpewidget (0.44-2) unstable; urgency=low
+
+  * Build-depend on recode.
+
+ -- Philip Blundell <pb@debian.org>  Fri, 31 Jan 2003 21:41:19 +0000
+
 libgpewidget (0.44-1) unstable; urgency=low
 
   * New upstream version.

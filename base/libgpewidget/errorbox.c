@@ -69,7 +69,7 @@ do_gpe_error_box (const char *text, gboolean block)
 
   gtk_widget_realize (dialog);
 
-  ok = gpe_picture_button (dialog->style, _("OK"), "ok");
+  ok = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
   gtk_signal_connect_object (GTK_OBJECT (ok), "clicked",
 			     GTK_SIGNAL_FUNC (gtk_widget_destroy), 
 			     (gpointer)dialog);

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-01-04 14:30+0000\n"
+"POT-Creation-Date: 2003-02-01 16:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,105 +15,66 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: errorbox.c:48
+#: errorbox.c:58
 msgid "Error"
 msgstr "Strewth!"
 
-#: errorbox.c:62 smallbox.c:55 smallbox.c:153 gtkminifilesel.c:670
-#: dirbrowser.c:307
-msgid "OK"
-msgstr ""
-
-#: pixmaps.c:71
+#: pixmaps.c:81
 #, c-format
 msgid "Unable to load icon \"%s\""
 msgstr ""
 
-#: pixmaps.c:74
-#, c-format
-msgid "Unable to load icon \"%s\": %s"
-msgstr ""
-
-#: pixmaps.c:158
+#: pixmaps.c:167
 #, c-format
 msgid "Icon \"%s\" not loaded"
 msgstr ""
 
-#: smallbox.c:56 smallbox.c:154 gtkminifilesel.c:148 gtkminifilesel.c:194
-#: gtkminifilesel.c:238 gtkminifilesel.c:666 dirbrowser.c:315
+#: dirbrowser.c:307
+msgid "OK"
+msgstr ""
+
+#: dirbrowser.c:315
 msgid "Cancel"
 msgstr ""
 
-#: gtkminifilesel.c:110
-msgid "Delete contents of folders?"
-msgstr ""
-
-#: gtkminifilesel.c:135 gtkminifilesel.c:152 gtkminifilesel.c:271
-msgid "Rename"
-msgstr ""
-
-#: gtkminifilesel.c:141
-msgid "New name:"
-msgstr ""
-
-#: gtkminifilesel.c:180 gtkminifilesel.c:198 gtkminifilesel.c:276
-msgid "Delete"
-msgstr ""
-
-#: gtkminifilesel.c:186
-#, c-format
-msgid "Really delete %s?"
-msgstr ""
-
-#: gtkminifilesel.c:190
-msgid "Delete contents of folders"
-msgstr ""
-
-#: gtkminifilesel.c:222
-msgid "Create directory"
-msgstr ""
-
-#: gtkminifilesel.c:231
-msgid "Directory name:"
-msgstr ""
-
-#: gtkminifilesel.c:242
-msgid "Create"
-msgstr ""
-
-#: gtkminifilesel.c:266
-msgid "New directory"
-msgstr ""
-
-#: what.c:59
+#: what.c:69
 msgid "No help available."
 msgstr ""
 
-#: gtkdatesel.c:176
+#: gtkdatesel.c:187
 msgid "%Y"
 msgstr ""
 
-#: gtkdatesel.c:182
+#: gtkdatesel.c:196
+msgid "%b"
+msgstr ""
+
+#: gtkdatesel.c:199
 msgid "%B"
 msgstr ""
 
-#: gtkdatesel.c:188
+#: gtkdatesel.c:202
+#, c-format
+msgid "%m"
+msgstr ""
+
+#: gtkdatesel.c:213
 msgid "Week %V"
 msgstr ""
 
-#: gtkdatesel.c:194
+#: gtkdatesel.c:219
 #, c-format
 msgid "%a, %d"
 msgstr ""
 
-#: question.c:125
+#: question.c:136
 msgid "Question"
 msgstr ""
 
-#: question.c:126
+#: question.c:137
 msgid "No"
 msgstr ""
 
-#: question.c:126
+#: question.c:137
 msgid "Yes"
 msgstr ""

@@ -80,13 +80,12 @@ gpe_load_one_icon (const char *filename, gchar **error)
 #if GDK_PIXBUF_MAJOR < 2
       snprintf (buf, sizeof (buf) - 1, _("Unable to load icon \"%s\""),
 		filename);
-#else
-      snprintf (buf, sizeof (buf) - 1, _("Unable to load icon \"%s\": %s"),
-		filename, g_error->message);
-      g_error_free (g_error);
-#endif
       buf[sizeof (buf)-1] = 0;
       *error = g_strdup (buf);
+#else
+      *error = g_strdup (g_error->message);
+      g_error_free (g_error);
+#endif
     }
 
   return pb;

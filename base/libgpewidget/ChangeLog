@@ -1,3 +1,13 @@
+2003-02-01  Philip Blundell  <philb@gnu.org>
+
+	* pixmaps.c (gpe_load_one_icon): Remove redundancy in error message.
+
+	* errorbox.c (do_gpe_error_box): Use stock button.
+	* smallbox.c (smallbox_x2): Likewise.
+	(smallbox_x): Likewise,
+
+	* debian/control, debian/changelog: Update.
+
 2003-01-27  Philip Blundell  <philb@gnu.org>
 
 	* debian/changelog: Update.
