@@ -38,7 +38,7 @@ ipkg:
 	rm -rf dist
 	mkdir -p dist/CONTROL
 	cp control postinst dist/CONTROL
-	make DESTDIR=`pwd`/dist install
+	make DESTDIR=`pwd`/dist PREFIX=/usr install
 	chown -R root.root dist
 	ipkg-build dist
 
