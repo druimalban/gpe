@@ -240,6 +240,9 @@ add_callback (void)
 
   gtk_window_set_title (GTK_WINDOW (window), _("New display"));
 
+  gtk_widget_realize (window);
+  gdk_window_set_type_hint (window->window, GDK_WINDOW_TYPE_HINT_DIALOG);
+
   gtk_container_add (GTK_CONTAINER (window), vbox);
   
   gtk_widget_show_all (window);
