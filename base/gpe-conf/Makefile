@@ -94,7 +94,7 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 
 PIXMAPS = gpe-config-apm.png
-PIXMAPS += gpe-config-appmgr.png
+#PIXMAPS += gpe-config-appmgr.png
 PIXMAPS += gpe-config-ipaqscreen.png
 PIXMAPS += gpe-config-kbd.png
 PIXMAPS += gpe-config-keyctl.png
