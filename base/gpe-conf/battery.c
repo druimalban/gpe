@@ -104,7 +104,7 @@ gint update_bat_values(gpointer data)
 	parse_file(PROC_BATTERY," Is learning? %*s %s",tmp);
 	if (strstr(tmp,"yes"))
 		islearning = TRUE;
-	
+#warning TODO: Switch to modern proc interface.	
 	if (ioctl(TSfd, GET_BATTERY_STATUS, &battery_val) == 0)
 	{
 		if (battery_val.battery_count < 2) {

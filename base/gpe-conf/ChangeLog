@@ -1,5 +1,7 @@
 2005-04-02	Florian Boor  	<florian.boor@kernelconcepts.de>
 
+	* Released Version 0.1.23
+	* battery.c: Add note.
 	* keyboard.c: Improved GUI.
 	* Makefile: Add missing X11 libraries.
 
