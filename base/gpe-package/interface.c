@@ -37,6 +37,8 @@
 #include <gpe/errorbox.h>
 #include <gpe/spacing.h>
 #include <gpe/pixmaps.h>
+#include <gpe/gpehelp.h>
+#include <gpe/about.h>
 
 #include "packages.h"
 #include "interface.h"
@@ -61,7 +63,9 @@
 
 #define HELPMESSAGE "GPE-Package\nVersion " VERSION \
 		"\nGPE frontend for ipkg\n\nflorian@handhelds.org"
-		
+
+#define NOHELPMESSAGE N_("Displaying help failed.")
+
 /* --- module global variables --- */
 
 
@@ -107,6 +111,7 @@ void on_packages_update_clicked(GtkButton *button, gpointer user_data);
 void on_system_update_clicked(GtkButton *button, gpointer user_data);
 void on_package_install_clicked(GtkButton *button, gpointer user_data);
 void on_about_clicked (GtkWidget * w);
+void on_help_clicked (GtkWidget * w);
 
 
 static GtkItemFactoryEntry mMain_items[] = {
@@ -123,7 +128,7 @@ static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_Packages/s3"), NULL , NULL,    0, "<Separator>"},
   { N_("/Packages/_Apply"), "", on_package_install_clicked, MI_PACKAGES_APPLY, "<StockItem>", GTK_STOCK_APPLY},
   { N_("/_Help"),         NULL,         NULL,           0, "<Branch>" },
-  { N_("/_Help/Index"),   NULL,         NULL,    0, "<StockItem>",GTK_STOCK_HELP },
+  { N_("/_Help/Index"),   NULL,         on_help_clicked,    0, "<StockItem>",GTK_STOCK_HELP },
   { N_("/_Help/About"),   NULL,         on_about_clicked,    0, "<Item>" },
 };
 
@@ -381,6 +386,14 @@ void
 on_about_clicked (GtkWidget * w)
 {
 	show_message(GTK_MESSAGE_INFO,HELPMESSAGE);
+}
+
+
+void
+on_help_clicked (GtkWidget * w)
+{
+	if (gpe_show_help("gpe-package",""))
+		show_message(GTK_MESSAGE_ERROR,NOHELPMESSAGE);
 }
 
 

@@ -10,6 +10,7 @@ DESTDIR = /
 LINGUAS = 
 
 EXTRA_DESKTOPS = gpe-package.desktop.in 
+HELPFILE = gpe-package.html
 
 ifeq ($(CVSBUILD),yes)
 LDFLAGS += -L../libgpewidget -L../libdisplaymigration -ldisplaymigration -L.
@@ -86,6 +87,8 @@ install-program: $(PACKAGE) all-desktop
 	for i in $(PIXMAPS); do install -m 644 -D pixmaps/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/$$i; done
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	$(INSTALL) -m 644 *.desktop $(DESTDIR)$(PREFIX)/share/applications
+	mkdir -p $(DESTDIR)$(PREFIX)/share/doc/gpe
+	$(INSTALL) -m 644 HELPFILE $(DESTDIR)$(PREFIX)/share/doc/gpe/
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) *~ */*~ *.ipk *.o

@@ -1,3 +1,6 @@
+2004-02-21 Florian Boor <florian.boor@kernelconcepts.de>
+	* interface.c: Help function implemented.
+
 2004-02-11 Florian Boor <florian.boor@kernelconcepts.de>
 	* interface.c: Added list filtering from menu.
 	* interface.c: Status messages for update ops.
