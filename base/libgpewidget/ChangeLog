@@ -1,5 +1,9 @@
 2003-09-12  Philip Blundell  <philb@gnu.org>
 
+	* Version 0.69 released.
+
+2003-09-12  Philip Blundell  <philb@gnu.org>
+
 	* Makefile (all): Build .pc files.
 	(install-devel): Also install $(PACKAGE).pc.
 	* libgpewidget-uninstalled.pc.in: New file.
