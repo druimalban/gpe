@@ -19,12 +19,16 @@ struct task
   guint time_cf;
   GSList *children;
   struct task *parent;
+  gboolean started;
 };
 
 extern gboolean sql_start (void);
 extern GSList *tasks, *root;
 
-extern void new_task (gchar *description, struct task *parent);
+extern struct task *new_task (gchar *description, struct task *parent);
 extern void delete_task (struct task *t);
+
+extern gboolean log_entry (gboolean start, time_t time, struct task *task);
+extern void scan_logs (GSList *);
 
 #endif

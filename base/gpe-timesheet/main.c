@@ -36,16 +36,25 @@ struct gpe_icon my_icons[] = {
 };
 
 static void
+mark_started (GtkCTree *ct, GtkCTreeNode *node)
+{
+  GdkPixmap *pixmap;
+  GdkBitmap *bitmap;
+  gpe_find_icon_pixmap ("ok", &pixmap, &bitmap);
+  gtk_ctree_node_set_pixmap (ct, node, 1, pixmap, bitmap);
+}
+
+static void
 start_timing(GtkWidget *w, gpointer user_data)
 {
   GtkCTree *ct = GTK_CTREE (user_data);
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
-      GdkPixmap *pixmap;
-      GdkBitmap *bitmap;
-      gpe_find_icon_pixmap ("ok", &pixmap, &bitmap);
-      gtk_ctree_node_set_pixmap (ct, node, 1, pixmap, bitmap);
+      struct task *t;
+      t = gtk_ctree_node_get_row_data (ct, node);
+      log_entry (TRUE, time (NULL), t);
+      mark_started (ct, node);
     }
 }
 
@@ -56,7 +65,10 @@ stop_timing(GtkWidget *w, gpointer user_data)
   if (GTK_CLIST (ct)->selection)
     {
       GtkCTreeNode *node = GTK_CTREE_NODE (GTK_CLIST (ct)->selection->data);
+      struct task *t;
       gtk_ctree_node_set_text (ct, node, 1, "");
+      t = gtk_ctree_node_get_row_data (ct, node);
+      log_entry (FALSE, time (NULL), t);
     }
 }
 
@@ -99,10 +111,12 @@ ui_new_task(GtkWidget *w, gpointer p)
   text[1] = "";
   if (text[0])
     {
+      struct task *t;
       node = gtk_ctree_insert_node (ctree, parent, NULL,
 				    text, 0, NULL, NULL, NULL, NULL,
 				    TRUE, TRUE);
-      new_task (text[0], pt);
+      t = new_task (text[0], pt);
+      gtk_ctree_node_set_row_data (ctree, node, t);
     }
 }
 
@@ -122,6 +136,8 @@ load_tasks (GSList *list, GtkCTree *ctree, GtkCTreeNode *parent)
 				    text, 0, NULL, NULL, NULL, NULL,
 				    t->children ? FALSE : TRUE, TRUE);
       gtk_ctree_node_set_row_data (ctree, node, t);
+      if (t->started)
+	mark_started (ctree, node);
       if (t->children)
 	load_tasks (t->children, ctree, node);
     }
@@ -198,8 +214,9 @@ main(int argc, char *argv[])
   gtk_widget_show (tree);
   gtk_widget_show (chatter);
 
+  scan_logs (root);
   load_tasks (root, GTK_CTREE (tree), NULL);
-
+  
   gtk_container_add (GTK_CONTAINER (window), vbox_top);
   gtk_widget_set_usize (window, window_x, window_y);
 

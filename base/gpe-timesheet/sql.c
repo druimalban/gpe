@@ -30,7 +30,25 @@ static guint max_task_id;
 
 GSList *tasks, *root;
 
-struct task *find_by_id (guint id)
+gboolean
+log_entry (gboolean start, time_t time, struct task *task)
+{
+  char *err;
+  if (sqlite_exec_printf (sqliteh,
+			  "insert into log values (%d, %d, %d)",
+			  NULL, NULL, &err,
+			  task->id, time, start))
+    {
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+
+  return TRUE;
+}
+
+struct task *
+find_by_id (guint id)
 {
   GSList *iter;
 
@@ -44,7 +62,7 @@ struct task *find_by_id (guint id)
   return NULL;
 }
 
-static void
+static struct task *
 internal_note_task (guint id, gchar *text, guint elapsed, struct task *pt)
 {
   struct task *t;
@@ -62,6 +80,8 @@ internal_note_task (guint id, gchar *text, guint elapsed, struct task *pt)
   tasks = g_slist_append (tasks, t);
   if (id > max_task_id)
     max_task_id = id;
+
+  return t;
 }
 
 static int
@@ -115,7 +135,52 @@ sql_start (void)
   return TRUE;
 }
 
+static int
+scan_log_callback (void *arg, int argc, char **argv, char **names)
+{
+  if (argc == 2)
+    {
+      unsigned long time = atoi (argv[0]);
+      int start = atoi (argv[1]);
+      struct task *t = arg;
+      if (start)
+	t->started = TRUE;
+      return 1;
+    }
+  return 0;
+}
+
 void
+scan_logs (GSList *list)
+{
+  GSList *iter;
+  for (iter = list; iter; iter = iter->next)
+    {
+      struct task *t = iter->data;
+
+      t->started = FALSE;
+	  
+      if (t->children)
+	scan_logs (t->children);
+      else
+	{
+	  char *err;
+	  int r;
+
+	  r = sqlite_exec_printf (sqliteh, "select time, start from log where task=%d order by time desc", 
+				  scan_log_callback, t, &err,
+				  t->id);
+	  if (r != 0 && r != SQLITE_ABORT)
+	    {
+	      gpe_error_box (err);
+	      free (err);
+	      return;
+	    }
+	}
+    }
+}
+
+struct task *
 new_task (gchar *description, struct task *parent)
 {
   char *err;
@@ -128,10 +193,10 @@ new_task (gchar *description, struct task *parent)
     {
       gpe_error_box (err);
       free (err);
-      return;
+      return NULL;
     }
 
-  internal_note_task (new_id, description, 0, parent);
+  return internal_note_task (new_id, description, 0, parent);
 }
 
 void
