@@ -1,3 +1,6 @@
+2004-06-08	Florian Boor  	<florian.boor@kernelconcepts.de>
+	
+	* ipaqscreen/rotation.c: Some more lines of Xrandr code.
 
 2004-06-07	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* ipaqscreen/rotation.c: Start implementing using Xrandr extensions

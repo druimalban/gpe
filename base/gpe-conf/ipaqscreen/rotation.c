@@ -117,11 +117,12 @@ int get_rotation ()
 void set_rotation (int rotation)
 {
 	Rotation sc_rotation;
-	XRRScreenConfiguration *rr_screen;
+	XRRScreenConfiguration *scr_config;
 	Rotation current_rotation;
+	int size;
 
-	rr_screen =  XRRGetScreenInfo (dpy,RootWindow (dpy, screen));
-	
+	scr_config =  XRRGetScreenInfo (dpy,RootWindow (dpy, screen));
+	size = XRRConfigCurrentConfiguration (scr_config, &current_rotation);	
 //	rr_screen = XRRGetScreenInfo (dpy, RootWindow (dpy, screen));
 //	XRRRotations (dpy, screen, &current_rotation);
 //	XRRFreeScreenConfigInfo (rr_screen);
@@ -146,13 +147,13 @@ void set_rotation (int rotation)
 	break;
 	}
 	XRRSetScreenConfig (dpy, 
-			   rr_screen,
+			   scr_config,
 			   RootWindow (dpy, screen),
-			   (int)rr_screen->current_size,
+			   size,
 			   sc_rotation,
 			   CurrentTime);
 	
-	XRRFreeScreenConfigInfo (rr_screen);
+	XRRFreeScreenConfigInfo (scr_config);
 	
 /* on ipaq rotate keypad as well */	
 #ifdef MACH_IPAQ
