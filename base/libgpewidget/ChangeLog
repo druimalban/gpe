@@ -1,5 +1,10 @@
 2004-05-27  Philip Blundell  <philb@gnu.org>
 
+	* Makefile (MEMBERS): Remove tap.
+	* tap.h: Deleted.
+	* init.c (gpe_application_init): Delete call to tap_hold_init.
+	* tap.c: Delete; moved to libgtkstylus.
+
 	* gpewindowbits.c (gpe_get_wm_leader): New function.
 	(gpe_get_window_property): Likewise.
 	* gpewindowlist.c (struct _GPEWindowListClass): Add window-added
