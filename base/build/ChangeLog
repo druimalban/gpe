@@ -1,5 +1,10 @@
 2003-06-28  Philip Blundell  <philb@gnu.org>
 
+	* Makefile.dpkg_ipkg (dist): Use $(BUILD) as source when copying
+	makefiles.
+
+2003-06-28  Philip Blundell  <philb@gnu.org>
+
 	* Makefile.translation (clean): Depend on clean-po.
 
 	* Makefile.dpkg_ipkg: Put Debian files in $(DEB_PATH) rather than
