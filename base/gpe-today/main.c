@@ -33,7 +33,11 @@ int main(int argc, char **argv)
 {
 	if (!gpe_application_init(&argc, &argv))
 		exit(1);
-        
+
+	bindtextdomain(PACKAGE, PACKAGE_LOCALE_DIR);
+	bind_textdomain_codeset(PACKAGE, "UTF-8");
+	textdomain(PACKAGE);
+	
 	gtk_rc_parse(DATAPATH(gtkrc));
 	
 	init_main_window();

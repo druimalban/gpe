@@ -74,10 +74,11 @@ void date_update(void)
 	time_t t;
 
 	time(&t);
-	strftime(str, sizeof str, "%A, %d %B %Y", localtime(&t));
+	strftime(str, sizeof str, _("%A, %d %B %Y"), localtime(&t));
 	
 	g_free(date.label_text);
-	date.label_text = g_strdup(str);
+	date.label_text = g_locale_to_utf8(str, -1, NULL, NULL, NULL);
+	//date.label_text = g_strdup(str);
 
 	gtk_label_set_text(GTK_LABEL(date.label), date.label_text);
 }
