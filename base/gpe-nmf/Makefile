@@ -57,6 +57,7 @@ ipkg:
 	mkdir -p familiar/dist-mp3/CONTROL
 	mkdir -p familiar/dist-ogg/CONTROL
 	cp familiar/control familiar/dist/CONTROL
+	cp familiar/postinst familiar/dist/CONTROL
 	cp familiar/control.mp3 familiar/dist-mp3/CONTROL/control
 	cp familiar/control.ogg familiar/dist-ogg/CONTROL/control
 	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
