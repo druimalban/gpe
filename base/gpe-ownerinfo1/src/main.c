@@ -64,6 +64,7 @@ main (int argc, char *argv[])
   FILE *fp;
   gchar * geometry = NULL;
   gboolean flag_transparent = FALSE;
+  gboolean flag_keep_on_top = FALSE;
   gint x = -1, y = -1, h = 0, w = 0;
   gint val;
   gint opt;
@@ -76,7 +77,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 #endif
 
-  while ((opt = getopt (argc,argv,"htg:")) != EOF)
+  while ((opt = getopt (argc,argv,"hktg:")) != EOF)
     {
       switch (opt) {
       case 'g':
@@ -85,12 +86,16 @@ main (int argc, char *argv[])
       case 't':
 	flag_transparent = TRUE;
 	break;
+      case 'k':
+	flag_keep_on_top = TRUE;
+	break;
       case 'h':
 	printf ("GPE Owner Info $Revision$\n");
 	printf ("\n");
 	printf ("Valid options:\n");
 	printf ("   -g GEOMETRY  window geometry (default: 240x120+0+200)\n");
 	printf ("   -t           make window transparent\n");
+	printf ("   -k           always keep window on top (override redirect)\n");
 	printf ("   -h           this help text\n");
 	exit (1);
       case '?':
@@ -254,8 +259,12 @@ main (int argc, char *argv[])
     gtk_widget_realize (widget);
     gdk_window_set_back_pixmap (GTK_VIEWPORT (widget)->view_window, NULL, TRUE);
   }
-  
+
   gtk_widget_show (GPE_Ownerinfo);
+
+  if (flag_keep_on_top) {
+    gdk_window_set_override_redirect (GPE_Ownerinfo->window, TRUE);
+  }
 
   gtk_main ();
   return 0;

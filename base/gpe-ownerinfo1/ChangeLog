@@ -1,5 +1,9 @@
 2002-09-11  Colin Marquardt  <colin@marquardt-home.de>
 
+	* src/main.c (main): Add option -k (keep on top with override
+	redirect). Use that option (for the
+	gdk_window_set_override_redirect() call).
+
 	* src/interface.c (Module): Try to let the button not extend
 	beyond the visible area. Still not working. Check in what I have
 	for now.
