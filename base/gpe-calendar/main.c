@@ -83,8 +83,7 @@ update_current_view (void)
 {
   if (current_view)
     {
-      gpointer p = gtk_object_get_data (GTK_OBJECT (current_view),
-					"update_hook");
+      gpointer p = g_object_get_data (G_OBJECT (current_view), "update_hook");
       if (p)
 	{
 	  void (*f)(void) = p;
@@ -102,7 +101,7 @@ new_view (GtkWidget *widget)
   if (pop_window)
     gtk_widget_destroy (pop_window);
 
-  do 
+  do
     {
       w = gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), i);
       if (w == widget)
@@ -158,13 +157,13 @@ button_toggled (GtkWidget *widget, gpointer data)
 }
 
 static void
-gpe_cal_exit()
+gpe_cal_exit (void)
 {
-  schedule_next(0, 0);
-  event_db_stop();
-  gtk_main_quit();	
+  schedule_next (0, 0);
+  event_db_stop ();
+  gtk_main_quit ();
 }
-		
+
 int
 main (int argc, char *argv[])
 {
@@ -186,8 +185,8 @@ main (int argc, char *argv[])
   setlocale (LC_ALL, "");
 
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
-  textdomain (PACKAGE);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
+  textdomain (PACKAGE);
 
   libdm_init ();
 
@@ -196,27 +195,27 @@ main (int argc, char *argv[])
 
   while ((option_letter = getopt (argc, argv, "s:e:")) != -1)
     {
-      if (option_letter == 's') 
-	{  
+      if (option_letter == 's')
+	{
 	  skip = atol (optarg);
-	  schedule_only = TRUE;   
+	  schedule_only = TRUE;
 	}
 
       if (option_letter == 'e')
-	uid = atol (optarg);  
+	uid = atol (optarg);
     }
-  
+
   schedule_next (skip, uid);
-  
-  if (schedule_only) 
+
+  if (schedule_only)
     exit (EXIT_SUCCESS);
-  
+
   for (hour = 0; hour < 24; hour++)
     {
       char buf[32];
       struct tm tm;
       time_t t=time(NULL);
-      
+
       localtime_r (&t, &tm);
       tm.tm_hour = hour;
       tm.tm_min = 0;
@@ -239,75 +238,66 @@ main (int argc, char *argv[])
 
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (main_window), _("Calendar"));
-  gtk_signal_connect (GTK_OBJECT (main_window), "destroy",
-		      GTK_SIGNAL_FUNC (gpe_cal_exit), NULL);
+  g_signal_connect (G_OBJECT (main_window), "destroy",
+                    G_CALLBACK (gpe_cal_exit), NULL);
 
   libdm_mark_window (main_window);
 
   gtk_widget_realize (main_window);
 
-#if GTK_MAJOR_VERSION < 2
-  toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
-  gtk_toolbar_set_button_relief (GTK_TOOLBAR (toolbar), GTK_RELIEF_NONE);
-  gtk_toolbar_set_space_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_SPACE_LINE);
-#else
   toolbar = gtk_toolbar_new ();
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
-#endif
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_NEW, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("New Appointment"), 
-			   _("New Appointment"), 
-			   _("Tap here to add a new appointment or reminder"), 
-			   pw, new_appointment, NULL);
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_NEW,
+			    _("New appointment"), _("Tap here to add a new appointment or reminder"),
+			    G_CALLBACK (new_appointment), NULL, -1);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"), 
+  pw = gtk_image_new_from_stock (GTK_STOCK_HOME, gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Today"),
 			   _("Today"), _("Today"), pw, set_today, NULL);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
 
-  p = gpe_find_icon ("future_view");
-  pw = gtk_image_new_from_pixbuf(p);
+  p = gpe_find_icon_scaled ("future_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  pw = gtk_image_new_from_pixbuf (p);
   future_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					      GTK_TOOLBAR_CHILD_RADIOBUTTON, NULL,
-					      _("Future"), _("Future View"), 
+					      _("Future"), _("Future View"),
 					      _("Tap here to see all future events."),
 					      pw, GTK_SIGNAL_FUNC (button_toggled), future);
 
-  p = gpe_find_icon ("day_view");
-  pw = gtk_image_new_from_pixbuf(p);
+  p = gpe_find_icon_scaled ("day_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  pw = gtk_image_new_from_pixbuf (p);
   day_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					   GTK_TOOLBAR_CHILD_RADIOBUTTON, future_button,
-					   ("Day"), _("Day View"), 
+					   ("Day"), _("Day View"),
 					   _("Tap here to select day-at-a-time view."),
 					   pw, GTK_SIGNAL_FUNC (button_toggled), day);
   
-  p = gpe_find_icon ("week_view");
-  pw = gtk_image_new_from_pixbuf(p);
+  p = gpe_find_icon_scaled ("week_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  pw = gtk_image_new_from_pixbuf (p);
   week_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					    GTK_TOOLBAR_CHILD_RADIOBUTTON, day_button,
-					    _("Week"), _("Week View"), 
+					    _("Week"), _("Week View"),
 					    _("Tap here to select week-at-a-time view."),
 					    pw, GTK_SIGNAL_FUNC (button_toggled), week);
 
-  p = gpe_find_icon ("month_view");
-  pw = gtk_image_new_from_pixbuf(p);
+  p = gpe_find_icon_scaled ("month_view", gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  pw = gtk_image_new_from_pixbuf (p);
   month_button = gtk_toolbar_append_element (GTK_TOOLBAR (toolbar),
 					     GTK_TOOLBAR_CHILD_RADIOBUTTON, week_button,
-					     _("Month"), _("Month View"), 
+					     _("Month"), _("Month View"),
 					     _("Tap here to select month-at-a-time view."),
 					     pw, GTK_SIGNAL_FUNC (button_toggled), month);
 
   gtk_toolbar_append_space (GTK_TOOLBAR (toolbar));
-  
-  pw = gtk_image_new_from_stock (GTK_STOCK_QUIT, GTK_ICON_SIZE_SMALL_TOOLBAR);
-  gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Exit"), 
-			   _("Exit"), _("Tap here to exit the program"),
-			   pw, GTK_SIGNAL_FUNC (gpe_cal_exit), NULL);
+
+  gtk_toolbar_insert_stock (GTK_TOOLBAR (toolbar), GTK_STOCK_QUIT,
+			    _("Exit"), _("Tap here to exit the program"),
+			    G_CALLBACK (gpe_cal_exit), NULL, -1);
 
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), notebook, TRUE, TRUE, 0);
@@ -339,9 +329,9 @@ main (int argc, char *argv[])
   gpe_calendar_start_xsettings ();
 
   init_views();
-  
+
   set_day_view ();
- 
+
   gtk_main ();
 
   return 0;

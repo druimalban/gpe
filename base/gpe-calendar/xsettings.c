@@ -35,7 +35,7 @@ notify_func (const char *name, XSettingsAction action,
        || action == XSETTINGS_ACTION_CHANGED)
       && strncmp (name, KEY_BASE, strlen (KEY_BASE)) == 0)
     {
-      char *p = name + strlen (KEY_BASE);
+      const char *p = name + strlen (KEY_BASE);
       if (!strcasecmp (p, "week-starts-monday")
 	  || !strcasecmp (p, "Calendar/week-starts-monday"))
 	{
