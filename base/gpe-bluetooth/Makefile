@@ -34,6 +34,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 
 all: $(PACKAGE) all-mo bnep-helper rfcomm-helper
 
+ifeq ($(CVSBUILD),yes)
 pin-ui.c: ../bluez-pin/pin-ui.c
 	rm -f $@
 	cp $< $@
@@ -58,6 +59,7 @@ bluez.conf: ../bluez-pin/bluez.conf
 	rm -f $@
 	cp $< $@
 	chmod a-w $@
+endif
 
 extract-po: pin-ui.c pin-dbus.c
 
