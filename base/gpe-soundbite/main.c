@@ -211,8 +211,13 @@ on_key_release_signal                  (GtkWidget *widget,
     {
       gdouble time;
       time = g_timer_elapsed (timer, NULL);
-      if (time > 0.4) /* if less assume just mean to 'click' button */
+      if (time > 2.0) /* if less assume just mean to 'click' button */
         stop_sound ();
+        gtk_exit (0);
+    }
+  else
+    {
+      printf ("Key released: '%s'\n", gdk_keyval_name (event->keyval));
     }
 }
 
@@ -308,7 +313,16 @@ main(int argc, char *argv[])
           length = strftime (s, length, "%Y-%m-%d %H:%M:%S", time2);
           if (length > 0)
             {
-              filename = g_strdup_printf ("%s/Voice memo at %s", getenv("HOME"), s);
+	      struct stat buf;
+	      int i = 1;
+
+              filename = g_strdup_printf ("%s/%s at %s", getenv("HOME"), _("Voice memo at"), s);
+	      while (stat (filename, &buf) == 0)
+	        {
+		  i++;
+		  g_free (filename);
+                  filename = g_strdup_printf ("%s/%s at %s (%d)", getenv("HOME"), _("Voice memo at"), s, i);
+                }
             }
         }
       else
@@ -426,7 +440,7 @@ main(int argc, char *argv[])
     {
       gtk_widget_show (window);
       gtk_widget_add_events (window, GDK_KEY_RELEASE_MASK);
-      gtk_widget_grab_focus (window);
+      gtk_widget_grab_focus (GTK_DIALOG (window)->action_area);
     }
 
   gtk_main ();
