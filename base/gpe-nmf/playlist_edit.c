@@ -205,6 +205,8 @@ playlist_edit (struct nmf_frontend *fe, struct playlist *p)
 									NULL);
   GtkWidget *pw;
 
+  gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
+
   pw = gpe_render_icon (NULL, gpe_find_icon ("open"));
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Open"), 
 			   _("Open"), _("Open"), pw, 
