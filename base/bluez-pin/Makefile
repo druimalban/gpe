@@ -1,10 +1,10 @@
 all: bluez-pin
 
 bluez-pin: bluez-pin.o
-	$(CC) -o $@ $< `gtk-config --libs` -lsqlite -lgdk_imlib -L../libgpewidget -lgpewidget
+	$(CC) -o $@ $< -L../libgpewidget -lgpewidget `gtk-config --libs` -lsqlite
 
 bluez-pin.o: bluez-pin.c
-	$(CC) -c -o $@ $< `gtk-config --cflags` -I../libgpewidget -Os -Wall -fomit-frame-pointer
+	$(CC) -c -o $@ $< `gtk-config --cflags` `gdk-pixbuf-config --cflags` -I../libgpewidget -Os -Wall -fomit-frame-pointer
 
 install:
 	install -D bluez-pin $(DESTDIR)/usr/bin/bluez-pin

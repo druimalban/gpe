@@ -17,9 +17,10 @@
 #include <sys/stat.h>
 
 #include <gtk/gtk.h>
-#include <gdk_imlib.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "errorbox.h"
+#include "render.h"
 
 #define BT_ICON "/usr/share/pixmaps/bt-logo.png"
 
@@ -139,14 +140,16 @@ ask_user (int outgoing, const char *address)
   GtkWidget *hbox_pin;
   GtkWidget *pin_label, *entry;
   GtkWidget *buttonok, *buttoncancel, *hbox_but;
+  GdkPixbuf *pixbuf;
 
   const char *dir = outgoing ? "Outgoing connection to" 
     : "Incoming connection from";
  
   gtk_widget_realize (window);
 
-  if (gdk_imlib_load_file_to_pixmap (BT_ICON, &logo_pixmap, &logo_mask))
-    logo = gtk_pixmap_new (logo_pixmap, logo_mask);
+  pixbuf = gdk_pixbuf_new_from_file (BT_ICON);
+  if (pixbuf)
+    logo = gpe_render_icon (window->style, pixbuf);
 
   pin_label = gtk_label_new ("PIN:");
   entry = gtk_entry_new ();
@@ -226,9 +229,6 @@ main(int argc, char *argv[])
 
   gtk_set_locale ();
   gui_started = gtk_init_check (&argc, &argv);
-
-  if (gui_started)
-    gdk_imlib_init ();
 
   if (argc < 3)
     usage (argv);
