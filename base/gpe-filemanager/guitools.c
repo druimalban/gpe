@@ -40,6 +40,7 @@ t_storage;
 static t_storage *storages = NULL;
 static int num_storage = 0;
 static time_t mtab_time = 0;
+static size_t mtab_size = -1;
 
 /* checks if a tree is mounted */
 static gboolean
@@ -204,10 +205,12 @@ check_mount(void)
   
   if (!stat(FILE_MTAB, &sdat))
     {
-      if (mtab_time != sdat.st_ctime)
+      if ((mtab_time != sdat.st_ctime) ||
+          (mtab_size != sdat.st_size))
         {
           do_scheduled_update();
           mtab_time = sdat.st_ctime;
+          mtab_size = sdat.st_size;
         }
     }
   return TRUE;	

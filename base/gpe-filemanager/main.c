@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <gdk/gdkx.h>
+#include <gdk/gdkkeysyms.h>
 #include <libgnomevfs/gnome-vfs.h>
 #include <libgnomevfs/gnome-vfs-mime.h>
 #include <libgnomevfs/gnome-vfs-mime-handlers.h>
@@ -37,12 +38,13 @@
 #include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/gpeiconlistview.h>
-#include <gpe/dirbrowser.h>
 #include <gpe/spacing.h>
 #include <gpe/gpehelp.h>
 #include <X11/Xlib.h>
 #include <gpe/infoprint.h>
 
+#include "main.h"
+#include "fileops.h"
 #include "guitools.h"
 #include "bluetooth.h"
 
@@ -91,7 +93,7 @@ enum
 
 static GtkTreeStore *dirstore = NULL;
 
-static GtkWidget *window;
+GtkWidget *window;
 static GtkWidget *combo;
 static GtkWidget *view_widget;
 static GtkWidget *dir_view_widget;
@@ -142,20 +144,8 @@ static gboolean view_is_icons = FALSE;
 static gboolean directory_browser = TRUE;
 static gboolean limited_view = FALSE;
 
-static GList *file_clipboard = NULL;
-
 static GHashTable *loaded_icons;
-static GtkWidget *progress_dialog = NULL;
-static gboolean abort_transfer = FALSE;
-static GList *dirlist = NULL;
 static gboolean initialized = FALSE;
-
-
-typedef struct
-{
-  gchar *filename;
-  GnomeVFSFileInfo *vfs;
-} FileInformation;
 
 FileInformation *current_popup_file;
 
@@ -186,12 +176,10 @@ static void popup_ask_open_with (void);
 static void popup_ask_move_file (void);
 static void popup_ask_rename_file (void);
 static void popup_ask_delete_file (void);
+static void popup_copy_file_clip (void);
 static void show_file_properties (void);
-static void refresh_current_directory (void);
 static void send_with_bluetooth (void);
 static void send_with_irda (void);
-static void copy_file_clip (void);
-static void paste_file_clip (void);
 static void create_directory_interactive(void);
 static GtkWidget* create_view_widget_icons(void);
 static GtkWidget* create_view_widget_list(void);
@@ -209,7 +197,7 @@ static GtkItemFactoryEntry menu_items[] =
   { "/sep1",	         NULL, NULL,	             0, "<Separator>" },
   { "/Send via _Bluetooth", NULL, send_with_bluetooth, 0, "<Item>" },
   { "/Send via _Infrared", NULL, send_with_irda, 0, "<Item>" },
-  { "/_Copy",          NULL, copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
+  { "/_Copy",          NULL, popup_copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
   { "/_Paste",          NULL, paste_file_clip,         0, "<StockItem>", GTK_STOCK_PASTE },
   { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
   { "/_Rename",          NULL, popup_ask_rename_file,          0, "<Item>" },
@@ -224,7 +212,7 @@ static int nmenu_items = sizeof (menu_items) / sizeof (menu_items[0]);
 /* items of the main menu */
 static GtkItemFactoryEntry mMain_items[] = {
   { N_("/_File"),         NULL,         NULL, 0, "<Branch>" },
-  { N_("/_File/_Copy"),          NULL, copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
+  { N_("/_File/_Copy"),          NULL, popup_copy_file_clip,         0, "<StockItem>", GTK_STOCK_COPY },
   { N_("/_File/_Paste"),          NULL, paste_file_clip,         0, "<StockItem>", GTK_STOCK_PASTE },
   { N_("/_File/_Move"),            NULL, popup_ask_move_file,            0, "<Item>" },
   { N_("/_File/_Rename"),          NULL, popup_ask_rename_file,          0, "<Item>" },
@@ -244,6 +232,45 @@ static GtkItemFactoryEntry mMain_items[] = {
 };
 
 int mMain_items_count = sizeof(mMain_items) / sizeof(GtkItemFactoryEntry);
+
+
+static void 
+popup_ask_delete_file (void)
+{
+  gint col;
+  
+  if (active_view == view_widget)
+    col = COL_DATA;
+  else
+    col = COL_DIRDATA;
+  
+  ask_delete_file(active_view, col);
+}
+
+static void 
+popup_ask_move_file (void)
+{
+  gint col;
+  
+  if (active_view == view_widget)
+    col = COL_DATA;
+  else
+    col = COL_DIRDATA;
+  
+  ask_move_file(active_view, col);
+}
+
+static void 
+popup_copy_file_clip (void)
+{
+  gint col;
+  
+  if (active_view == view_widget)
+    col = COL_DATA;
+  else
+    col = COL_DIRDATA;
+  copy_file_clip(active_view, col);
+}
 
 /* create menu from description */
 GtkWidget *
@@ -327,155 +354,6 @@ on_help_clicked (GtkWidget * w)
 	if (gpe_show_help(PACKAGE,NULL))
 		show_message(GTK_MESSAGE_INFO, NOHELPMESSAGE);
 }
-
-
-static void
-progress_response(GtkDialog *dialog, gint arg1, gpointer user_data)
-{
-  /* check and break */
-  abort_transfer = TRUE;  
-}
-
-static GtkWidget*
-progress_dialog_create(gchar *title)
-{
-  GtkWidget *dialog;
-  GtkWidget *progress;
-  dialog = gtk_dialog_new_with_buttons (title, GTK_WINDOW (window), 
-             GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
-             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
-         progress = gtk_progress_bar_new();
-         gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),
-                            progress,FALSE,TRUE,0);
-         g_object_set_data(G_OBJECT(dialog),"bar",progress);
-         g_signal_connect(G_OBJECT(dialog),"response",
-                          G_CALLBACK(progress_response),NULL);
-         gtk_widget_show_all(dialog);
-  return dialog;
-}
-
-static gint 
-transfer_callback(GnomeVFSXferProgressInfo *info, gpointer data)
-{
-  GtkWidget *dialog;
-  GtkWidget *label;
-  gchar *text;
-  int response;
-  gboolean applytoall;
-
-  if (abort_transfer)
-  {
-    gtk_widget_destroy(progress_dialog);
-    progress_dialog = NULL;
-    abort_transfer = FALSE;
-    return 0;
-  }
-  switch (info->status)
-  {
-	  case GNOME_VFS_XFER_PROGRESS_STATUS_OK:
-          if (progress_dialog == NULL)
-              progress_dialog = progress_dialog_create("Transfer progress");
-          else if (info->bytes_total)
-          {
-            GtkWidget *bar = g_object_get_data(G_OBJECT(progress_dialog),"bar");
-            gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(bar),
-                                          (gdouble)info->total_bytes_copied
-                                          /(gdouble)(info->bytes_total));
-          }
-          if (info->phase == GNOME_VFS_XFER_PHASE_COMPLETED)
-          {
-            gtk_widget_destroy(progress_dialog);
-            progress_dialog = NULL;
-          }
-          gtk_main_iteration_do(FALSE);
-          return 1;
-	  break;
-	  case GNOME_VFS_XFER_PROGRESS_STATUS_VFSERROR:
-		  /* error query dialog */
-          text = g_strdup_printf ("Error: %s", 
-            gnome_vfs_result_to_string(info->vfs_status));
-          dialog = gtk_dialog_new_with_buttons ("Error", GTK_WINDOW (window), 
-             GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
-             "_Skip", GTK_RESPONSE_HELP,
-             "_Retry", GTK_RESPONSE_APPLY, 
-             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
-         label = gtk_label_new(text);
-         g_free(text);
-         gtk_misc_set_alignment(GTK_MISC(label),0,0.5);
-         gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),label,FALSE,TRUE,0);
-         gtk_widget_show_all(dialog);
-         response = gtk_dialog_run(GTK_DIALOG(dialog));
-         gtk_widget_destroy(dialog);
-         switch (response)
-         {
-             case GTK_RESPONSE_CANCEL: 
-                 gtk_widget_destroy(progress_dialog);
-                 progress_dialog = NULL;
-                 return GNOME_VFS_XFER_ERROR_ACTION_ABORT;
-             break;
-             case GTK_RESPONSE_HELP: 
-                 return GNOME_VFS_XFER_ERROR_ACTION_SKIP;
-             break;
-             case GTK_RESPONSE_APPLY: 
-                 return GNOME_VFS_XFER_ERROR_ACTION_RETRY;
-             break;
-             default: 
-                 gtk_widget_destroy(progress_dialog);
-                 progress_dialog = NULL;
-                 return GNOME_VFS_XFER_ERROR_ACTION_ABORT;
-             break;
-         }
-	  break;
-	  case GNOME_VFS_XFER_PROGRESS_STATUS_OVERWRITE:
-		 /* overwrite query dialog */
-          text = g_strdup_printf ("Overwrite file:\n%s", info->target_name);
-          dialog = gtk_dialog_new_with_buttons ("File exists", GTK_WINDOW (window), 
-             GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, 
-             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, 
-             GTK_STOCK_YES, GTK_RESPONSE_YES,
-             GTK_STOCK_NO, GTK_RESPONSE_NO, NULL);
-         label = gtk_label_new(text);
-         g_free(text);
-         gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),label,FALSE,TRUE,0);
-         label = gtk_check_button_new_with_label("Apply to all");
-         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(label),FALSE);
-         gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),label,FALSE,TRUE,0);
-         gtk_widget_show_all(dialog);
-         response = gtk_dialog_run(GTK_DIALOG(dialog));
-         applytoall = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(label));
-         gtk_widget_destroy(dialog);
-         switch (response)
-         {
-           case GTK_RESPONSE_CANCEL:
-             gtk_widget_destroy(progress_dialog);
-             progress_dialog = NULL;
-             return GNOME_VFS_XFER_OVERWRITE_ACTION_ABORT;
-           break;
-           case GTK_RESPONSE_YES:
-             if (applytoall)                 
-                 return GNOME_VFS_XFER_OVERWRITE_ACTION_REPLACE_ALL;
-             else
-                 return GNOME_VFS_XFER_OVERWRITE_ACTION_REPLACE;
-           break;
-           case GTK_RESPONSE_NO: 
-               if (applytoall)
-                 return GNOME_VFS_XFER_OVERWRITE_ACTION_SKIP_ALL;
-               else
-                 return GNOME_VFS_XFER_OVERWRITE_ACTION_SKIP;
-           break;
-           default:
-             gtk_widget_destroy(progress_dialog);
-             progress_dialog = NULL;
-             return GNOME_VFS_XFER_OVERWRITE_ACTION_ABORT;
-           break;
-         }
-	  break;
-     default:
-        return 1; /* we should never get there */
-     break;	  
-  }
-}
-
 
 static void 
 auth_callback (gconstpointer in,
@@ -588,122 +466,6 @@ do_select_all(GtkWidget *w, gpointer d)
   
   sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
   gtk_tree_selection_select_all(sel);
-}
-
-static void
-copy_file (const gchar *src_uri_txt, const gchar *dest_uri_txt)
-{
-  GnomeVFSURI *uri_src = gnome_vfs_uri_new(src_uri_txt);
-  GnomeVFSURI *uri_dest = gnome_vfs_uri_new(dest_uri_txt);
-  GnomeVFSResult result;
-  gchar *error;
-  
-      
-  result = gnome_vfs_xfer_uri (uri_src,
-                               uri_dest,
-                               GNOME_VFS_XFER_FOLLOW_LINKS 
-                                 | GNOME_VFS_XFER_RECURSIVE 
-                                 | GNOME_VFS_XFER_EMPTY_DIRECTORIES,
-                               GNOME_VFS_XFER_ERROR_MODE_QUERY,
-                               GNOME_VFS_XFER_OVERWRITE_MODE_QUERY,
-                               (GnomeVFSXferProgressCallback) transfer_callback,
-                               NULL);
-  if ((result != GNOME_VFS_OK) && (result != GNOME_VFS_ERROR_INTERRUPTED))
-    {
-      error = g_strdup_printf ("Error: %s", gnome_vfs_result_to_string(result));
-      gpe_error_box (error);
-      g_free (error);
-    }
-  else
-    {
-      gpe_popup_infoprint(GDK_DISPLAY(), _("File copied."));
-    }
-  gnome_vfs_uri_unref(uri_src);
-  gnome_vfs_uri_unref(uri_dest);
-}
-
-static void 
-clear_clipboard (void)
-{
-  GList *iter = file_clipboard;
-  
-  if (!file_clipboard) 
-    return;
-  
-  while (iter)
-  {
-    g_free(iter->data);
-    iter = iter->next;
-  }
-  g_list_free(file_clipboard);
-  file_clipboard = NULL;
-}
-
-static void
-clip_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
-               gpointer data)
-{
-  FileInformation *cfi = NULL;
-  gint col = (gint)data;
-
-  gtk_tree_model_get(model, iter, col, &cfi, -1);
-  if (cfi)
-  {
-    if (GNOME_VFS_FILE_INFO_LOCAL(cfi->vfs))
-      file_clipboard = g_list_append(file_clipboard, 
-                                     gnome_vfs_get_uri_from_local_path(cfi->filename));
-    else
-      file_clipboard = g_list_append(file_clipboard, g_strdup(cfi->filename));
-  }
-}
-
-static void 
-copy_file_clip (void)
-{
-  clear_clipboard();
-  GtkTreeSelection *sel = NULL;
-  gint col;
-
-  if (active_view)
-    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
-  if (active_view == view_widget)
-    col = COL_DATA;
-  else
-    col = COL_DIRDATA;
-  
-  if (!sel) 
-    return;
-  
-  gtk_tree_selection_selected_foreach(sel, 
-                                     (GtkTreeSelectionForeachFunc)clip_one_file,
-                                     (gpointer)col);
-  
-  gpe_popup_infoprint(GDK_DISPLAY(), _("File(s) copied to clipboard."));
-}
-
-
-static void
-copy_one_file (gpointer file, gpointer userdata)
-{
-  gchar *target_file;
-  target_file = 
-    g_strdup_printf("%s/%s",
-                    current_directory,
-                    g_path_get_basename(file));
-  if (strcmp(file, target_file)) /* check if not the same */
-    copy_file(file, target_file);
-  g_free(target_file);
-}
-
-static void 
-paste_file_clip (void)
-{
-  if (file_clipboard == NULL) 
-    return;
-  
-  g_list_foreach(file_clipboard, copy_one_file, NULL);
-  
-  refresh_current_directory(); 
 }
 
 static void
@@ -836,78 +598,6 @@ rename_file (GtkWidget *dialog_window, gint response_id)
 
 
 static void
-move_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
-               gpointer data)
-{
-  GnomeVFSResult result;
-  gint col;
-  gchar *directory = (gchar*)data;
-  gchar *dest;
-
-  if (active_view == view_widget)
-    col = COL_DATA;
-  else
-    col = COL_DIRDATA;
-
-  FileInformation *cfi = NULL;
-  
-  gtk_tree_model_get(model, iter, col, &cfi, -1);
-  if (cfi)
-    {
-      dest = g_strdup_printf ("%s/%s", directory, cfi->vfs->name);
-      result = gnome_vfs_move_uri (gnome_vfs_uri_new (cfi->filename), 
-                                   gnome_vfs_uri_new (dest), TRUE);
-      g_free (dest); 
-      if (result != GNOME_VFS_OK)
-        gpe_error_box (gnome_vfs_result_to_string (result));
-    }
-}
-
-static void
-move_files (gchar *directory)
-{
-  GtkTreeSelection *sel = NULL;
-  
-  if (active_view)
-    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
-  
-  if (!sel) 
-    return;
-  
-  if (gtk_tree_selection_count_selected_rows(sel))
-  {
-    gtk_tree_selection_selected_foreach(sel, 
-                                        (GtkTreeSelectionForeachFunc)move_one_file,
-                                        (gpointer)directory);
-    refresh_current_directory();
-    gpe_popup_infoprint(GDK_DISPLAY(), _("File(s) moved."));
-  }
-}
-
-static void
-popup_ask_move_file ()
-{
-  GtkWidget *dirbrowser_window;
-  GtkTreeSelection *sel = NULL;
-
-  if (active_view)
-    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
-  
-  if (!sel) 
-    return;
-  
-  if (gtk_tree_selection_count_selected_rows(sel))
-  {
-    dirbrowser_window = gpe_create_dir_browser (_("Move to directory..."), 
-                                                (gchar *) g_get_home_dir (), 
-                                                GTK_SELECTION_SINGLE, move_files);
-    gtk_window_set_transient_for (GTK_WINDOW (dirbrowser_window), GTK_WINDOW (window));
-
-    gtk_widget_show_all (dirbrowser_window);
-  }
-}
-
-static void
 popup_ask_rename_file ()
 {
   GtkWidget *dialog_window;
@@ -948,132 +638,6 @@ popup_ask_rename_file ()
   gtk_widget_show_all (dialog_window);
 }
 
-gboolean 
-delete_cb_recursive(const gchar *rel_path,
-                   GnomeVFSFileInfo *info,
-                   gboolean recursing_will_loop,
-                   gpointer data,
-                   gboolean *recurse)
-{
-   gchar *path = data;
-   gchar *fn = g_strdup_printf("%s/%s", path, rel_path);
-  
-   if (info->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
-   {
-     *recurse = TRUE;
-     GnomeVFSResult r = 0;
-     if (!recursing_will_loop)
-     r = gnome_vfs_directory_visit (fn,
-                                GNOME_VFS_FILE_INFO_DEFAULT,
-                                GNOME_VFS_DIRECTORY_VISIT_DEFAULT,
-                                (GnomeVFSDirectoryVisitFunc) delete_cb_recursive,
-                                strdup(fn)); 
-     /* HACK: We collect the empty directories in a list to delete after 
-              visiting the complete tree to prevent gnome-vfs from stopping
-              visiting directories 
-     */
-     if (r == GNOME_VFS_OK)
-     {
-       dirlist = g_list_append(dirlist, fn);
-     }
-     else
-       fprintf(stderr, "Err %s\n", gnome_vfs_result_to_string(r));
-
-   }
-   else
-   {
-     gnome_vfs_unlink_from_uri (gnome_vfs_uri_new (fn));
-     g_free(fn);
-   }
-   
-   return TRUE;
-}
-
-
-static GnomeVFSResult
-delete_directory_recursive(FileInformation *dir)
-{
-  gchar *path = g_strdup(dir->filename);
-  GList *iter;
-  gnome_vfs_directory_visit    (dir->filename,
-                                GNOME_VFS_FILE_INFO_DEFAULT,
-                                GNOME_VFS_DIRECTORY_VISIT_DEFAULT,
-                                (GnomeVFSDirectoryVisitFunc) delete_cb_recursive,
-                                path); 
-  g_free(path);
-  iter = dirlist;
-  while (iter)
-    {
-      gnome_vfs_remove_directory(iter->data);
-      g_free(iter->data);
-      iter=iter->next;
-    }
-  g_list_free(dirlist);
-  dirlist = NULL;    
-  return gnome_vfs_remove_directory_from_uri(gnome_vfs_uri_new (dir->filename));
-}
-
-
-static void
-delete_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
-                 gpointer data)
-{
-  gboolean isdir;
-  GnomeVFSURI *uri;
-  GnomeVFSResult r;
-  gint col = (gint)data;
-
-  FileInformation *cfi = NULL;
-  
-  gtk_tree_model_get(model, iter, col, &cfi, -1);
-  if (cfi)
-  {
-    isdir = (cfi->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY);
-      if (isdir)
-        r = delete_directory_recursive(cfi);
-      else
-        {
-          uri = gnome_vfs_uri_new (cfi->filename);
-          r = gnome_vfs_unlink_from_uri (uri);
-          gnome_vfs_uri_unref(uri);
-        }
-
-      if (r != GNOME_VFS_OK)
-        gpe_error_box (gnome_vfs_result_to_string (r));
-  }
-}
-
-
-static void
-popup_ask_delete_file ()
-{
-  GtkTreeSelection *sel = NULL;
-  gint col;
-  
-  if (active_view)
-    sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
-  if (active_view == view_widget)
-    col = COL_DATA;
-  else
-    col = COL_DIRDATA;
-  
-  if (!sel) 
-    return;
-  
-  if (gtk_tree_selection_count_selected_rows(sel))
-  {
-    if (gpe_question_ask (_("Delete selected object(s)?"), 
-                          _("Confirm"), "!gtk-dialog-question", 
-	                     "!gtk-cancel", NULL, "!gtk-delete", NULL, 
-                         NULL, NULL) == 1)
-      {
-        gtk_tree_selection_selected_foreach(sel, 
-                                            (GtkTreeSelectionForeachFunc)delete_one_file,
-                                            (gpointer)col);
-        refresh_current_directory();
-      }
-  }
-}
 
 static void
 show_file_properties ()
@@ -1769,7 +1333,7 @@ browse_directory (gchar *directory)
   make_view ();
 }
 
-static void
+void
 refresh_current_directory (void)
 {
   browse_directory (g_strdup(current_directory));
@@ -1918,6 +1482,36 @@ tree_button_press (GtkWidget *tree, GdkEventButton *b, gpointer user_data)
   return FALSE;
 }
 
+static gboolean
+tree_key_down (GtkWidget *tree, GdkEventKey *k, gpointer user_data)
+{
+  GtkTreePath *path;
+  
+  if (k->keyval == GDK_Return)
+    {
+      GtkTreeModel *store = gtk_tree_view_get_model(GTK_TREE_VIEW(tree));
+      
+      gtk_tree_view_get_cursor(GTK_TREE_VIEW(tree), &path, NULL);
+      
+      if (path)
+        {
+          GtkTreeIter iter;
+          FileInformation *i;
+    
+          gtk_tree_model_get_iter (GTK_TREE_MODEL (store), &iter, path);
+    
+          gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, 
+                              tree == view_widget ? COL_DATA : COL_DIRDATA, 
+                              &i, -1);
+            
+          gtk_tree_path_free (path);
+          
+          button_clicked(NULL, i);
+          return TRUE;
+        }
+    }
+  return FALSE;
+}
 
 static gboolean
 tree_focus_in (GtkWidget *tree, GdkEventFocus *f, gpointer data)
@@ -2000,6 +1594,8 @@ create_view_widget_list(void)
 
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
+	g_signal_connect (G_OBJECT(treeview), "key-press-event", 
+		G_CALLBACK(tree_key_down), NULL);
 	g_signal_connect (G_OBJECT(treeview), "focus-in-event", 
 		G_CALLBACK(tree_focus_in), NULL);
 
@@ -2085,6 +1681,8 @@ create_dir_view_widget(void)
     
 	g_signal_connect (G_OBJECT(treeview), "button_press_event", 
 		G_CALLBACK(tree_button_press), NULL);
+	g_signal_connect (G_OBJECT(treeview), "key-press-event", 
+		G_CALLBACK(tree_key_down), NULL);
 	g_signal_connect (G_OBJECT(treeview), "focus-in-event", 
 		G_CALLBACK(tree_focus_in), NULL);
     gtk_widget_show_all(dir_view_window);
@@ -2275,7 +1873,7 @@ main (int argc, char *argv[])
 			
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_dirbrowser_menu_item), directory_browser);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(set_myfiles_menu_item), limited_view);
-
+  
   gtk_widget_show_all (window);
   
   gnome_vfs_module_callback_set_default (GNOME_VFS_MODULE_CALLBACK_AUTHENTICATION,

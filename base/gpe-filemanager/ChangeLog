@@ -1,3 +1,13 @@
+2004-11-01  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * fileops.*: New files containing file operation implemetations.
+    * main.h: New file exporting stuff from main.c.
+    * main.*, fileops.*: Moved functions to fileops.
+    * guitools.c: Additional check to fix mount detection if /etc/mtab 
+                  is a link.
+    * main.c: Handle return in lists like doubleclicks.
+    * Makefile: New version: 0.22
+
 2004-10-28  Florian Boor  <florian.boor@kernelconcepts.de>
 
     Released V 0.21
