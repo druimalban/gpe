@@ -1,18 +1,16 @@
 PREFIX = /usr/local
 PACKAGE = gpe-minicalc
-DEBUG = yes
+DEBUG = no
 CVSBUILD = yes
 
 MEMBERS = minicalc
 
 ifeq ($(GTK2),yes)
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`-DGTK_ENABLE_BROKEN
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
 GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
-CONTROL = control1
 else
 GTKCFLAGS = `gtk-config --cflags` `gdk-pixbuf-config --cflags`
 GTKLDFLAGS = `gtk-config --libs`
-CONTROL = control
 endif
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
@@ -47,19 +45,8 @@ install: all
 	install -m 644 $(PACKAGE).xpm $(DESTDIR)$(PREFIX)/share/pixmaps
 	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
-upstream: clean
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a $(PACKAGE) $(PACKAGE)-$$VERSION.orig; tar czf $(PACKAGE)_$$VERSION.orig.tar.gz --exclude=$(PACKAGE)-$$VERSION.orig/debian --exclude=$(PACKAGE)-$$VERSION.orig/CVS --exclude=$(PACKAGE)-$$VERSION.orig/familiar $(PACKAGE)-$$VERSION.orig ; rm -rf $(PACKAGE)-$$VERSION.orig )
-
-dpkg: upstream
-	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; TMP=/var/tmp/debian/$(PACKAGE); PV=$(PACKAGE)-$$VERSION; rm -rf $$TMP; mkdir -p $$TMP; cp ../$(PACKAGE)_$$VERSION.orig.tar.gz $$TMP; (cd $$TMP; tar xzf $(PACKAGE)_$$VERSION.orig.tar.gz ; mv $$PV.orig $$PV ); mkdir -p $$TMP/$$PV/debian; cp debian/* $$TMP/$$PV/debian; cd $$TMP/$$PV; fakeroot dpkg-buildpackage  ; cd ..; rm -rf $$PV)
-
-ipkg:
-	rm -rf familiar/dist
-	mkdir -p familiar/dist/CONTROL
-	cp familiar/control familiar/dist/CONTROL
-	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr install
-	chown -R root.root familiar/dist
-	ipkg-build familiar/dist
-
 clean:
 	rm -f $(PACKAGE) $(OBJS)
+
+include ../build/Makefile.dpkg_ipkg
+
