@@ -82,7 +82,7 @@ main(int argc, char *argv[])
 
   if ((question == NULL) || (text[0] == NULL))
     {
-      fprintf (stderr, "Syntax: gpe-question --question \"Question text\" --buttons [\"cancel:Cancel text\"] [...] \"ok:OK text\"\n");
+      fprintf (stderr, "Syntax: gpe-question --question \"Question text\" --buttons [icon1:]text1 [[icon2:]text2] [...]\n");
       return -1;
     }
 
