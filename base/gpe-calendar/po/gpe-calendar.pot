@@ -1,13 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR Free Software Foundation, Inc.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-09-02 23:44+0100\n"
+"POT-Creation-Date: 2002-09-05 20:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,35 +14,35 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:210 main.c:211
+#: main.c:225 main.c:226
 msgid "New Appointment"
 msgstr ""
 
-#: main.c:217 main.c:218
+#: main.c:232 main.c:233
 msgid "Today"
 msgstr ""
 
-#: main.c:224 main.c:225
+#: main.c:239 main.c:240
 msgid "Future View"
 msgstr ""
 
-#: main.c:229 main.c:230
+#: main.c:244 main.c:245
 msgid "Day View"
 msgstr ""
 
-#: main.c:234 main.c:235
+#: main.c:249 main.c:250
 msgid "Week View"
 msgstr ""
 
-#: main.c:239 main.c:240
+#: main.c:254 main.c:255
 msgid "Month View"
 msgstr ""
 
-#: main.c:244 main.c:245
+#: main.c:259 main.c:260
 msgid "Year View"
 msgstr ""
 
-#: main.c:251 main.c:252
+#: main.c:266 main.c:267
 msgid "Exit"
 msgstr ""
 

@@ -97,6 +97,7 @@ day_popup (GtkWidget *parent, struct day_popup *p)
   tm.tm_year = p->year - 1900;
   tm.tm_mon = p->month;
   tm.tm_mday = p->day;
+  mktime (&tm);
   strftime(buf, sizeof (buf), "%a %d %B", &tm);
   label = gtk_label_new (buf);
 

@@ -1,3 +1,12 @@
+2002-09-05  Philip Blundell  <philb@gnu.org>
+
+	* main.c (main): Reinstate yearfont, datefont.
+	* globals.h: Likewise.
+	* year_view.c: Roll back to non-GtkCalendar version.
+
+	* day_popup.c (day_popup): Call mktime to calculate day of week
+	correctly.
+
 2002-09-04  Philip Blundell  <philb@gnu.org>
 
 	* Version 0.20 released.

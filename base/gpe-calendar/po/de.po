@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar\n"
-"POT-Creation-Date: 2002-09-02 23:44+0100\n"
+"POT-Creation-Date: 2002-09-05 20:18+0100\n"
 "PO-Revision-Date: 2002-06-14 20:14+0200\n"
 "Last-Translator: Colin Marquardt <ipaq@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -13,35 +13,35 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:210 main.c:211
+#: main.c:225 main.c:226
 msgid "New Appointment"
 msgstr "Neuer Termin"
 
-#: main.c:217 main.c:218
+#: main.c:232 main.c:233
 msgid "Today"
 msgstr "Heute"
 
-#: main.c:224 main.c:225
+#: main.c:239 main.c:240
 msgid "Future View"
 msgstr "Zukunftsansicht"
 
-#: main.c:229 main.c:230
+#: main.c:244 main.c:245
 msgid "Day View"
 msgstr "Tagesansicht"
 
-#: main.c:234 main.c:235
+#: main.c:249 main.c:250
 msgid "Week View"
 msgstr "Wochenansicht"
 
-#: main.c:239 main.c:240
+#: main.c:254 main.c:255
 msgid "Month View"
 msgstr "Monatsansicht"
 
-#: main.c:244 main.c:245
+#: main.c:259 main.c:260
 msgid "Year View"
 msgstr "Jahresansicht"
 
-#: main.c:251 main.c:252
+#: main.c:266 main.c:267
 msgid "Exit"
 msgstr "Beenden"
 

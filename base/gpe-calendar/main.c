@@ -38,6 +38,8 @@ time_t viewtime;
 
 GtkWidget *main_window, *pop_window;
 
+GdkFont *yearfont, *datefont;
+
 struct gpe_icon my_icons[] = {
   { "new", "new" },
   { "home", "home" },
@@ -190,6 +192,19 @@ main(int argc, char *argv[])
       tm.tm_min = 30;
       strftime (buf, sizeof(buf), TIMEFMT, &tm);
       times = g_list_append (times, g_strdup (buf));
+    }
+
+  datefont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-c-*-*");
+  if (datefont == NULL)
+    {
+      printf ("Couldn't get date font\n");
+      abort ();
+    }
+  yearfont = gdk_font_load ("-*-*-medium-r-normal--8-*-*-*-*-*-*");
+  if (yearfont == NULL)
+    {
+      printf ("Couldn't get year font\n");
+      abort ();
     }
 
   vbox = gtk_vbox_new (FALSE, 0);

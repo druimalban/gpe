@@ -15,16 +15,13 @@
 #include <langinfo.h>
 
 #include <gtk/gtk.h>
+#include <gpe/gtkdatesel.h>
 
 #include "globals.h"
 #include "year_view.h"
 #include "event-db.h"
-#include <gpe/gtkdatesel.h>
-#include "day_popup.h"
 
-static GtkWidget *g_table;
-static GtkWidget *cal[12];
-static GtkWidget *datesel;
+static GtkWidget *g_draw;
 
 static const nl_item months[] = { MON_1, MON_2, MON_3, MON_4,
 				  MON_5, MON_6, MON_7, MON_8,
@@ -32,25 +29,187 @@ static const nl_item months[] = { MON_1, MON_2, MON_3, MON_4,
 
 static unsigned int day_event_bits[(366 / sizeof(unsigned int)) + 1];
 
+static guint day_pitch, month_width, yoff;
+static guint months_across, month_height, space;
+static guint day_vpitch;
+static guint old_x;
+
+static void
+calc_geometry (GtkWidget *widget)
+{
+  guint rows;
+  guint x = widget->allocation.width;
+  guint y;
+
+  if (x == old_x)
+    return;
+
+  old_x = x;
+
+  months_across = x / month_width;
+
+  if (months_across == 0)
+    months_across = 1;
+
+  space = (x - (months_across * month_width)) / (months_across + 1);
+  rows = (12 + (months_across - 1)) / months_across;
+  y = rows * month_height + yoff + 4;
+
+  if (widget->allocation.height != y)
+    gtk_widget_set_usize (widget, -1, y);
+}
+
+static guint
+day_of_week(guint year, guint month, guint day)
+{
+  guint result;
+
+  if (month < 3) 
+    {
+      month += 12;
+      --year;
+    }
+
+  result = day + (13 * month - 27)/5 + year + year/4
+    - year/100 + year/400;
+  return ((result + 6) % 7);
+}
+
+static gint
+draw_expose_event (GtkWidget *widget,
+		   GdkEventExpose *event,
+		   gpointer user_data)
+{
+  GtkDrawingArea *darea;
+  GdkDrawable *drawable;
+  GdkGC *black_gc;
+  GdkGC *grey_gc;
+  GdkGC *white_gc;
+  GdkGC *red_gc;
+  GdkColor grey_col, red_col;
+  guint max_width;
+  guint max_height;
+  struct tm tm, today;
+  gint dbias;
+  guint year;
+  time_t t;
+  guint m;
+  guint dn = 0;
+
+  static guint days[] = { 31, 28, 31, 30, 31, 30, 
+			  31, 31, 30, 31, 30, 31 };
+
+  g_return_val_if_fail (widget != NULL, TRUE);
+  g_return_val_if_fail (GTK_IS_DRAWING_AREA (widget), TRUE);
+
+  time (&t);
+  localtime_r (&t, &today);
+
+  localtime_r (&viewtime, &tm);
+  dbias = tm.tm_wday - (tm.tm_yday % 7) - 1;
+  if (dbias < 0) dbias += 7;
+
+  year = tm.tm_year + 1900;
+  if ((year % 4) == 0
+      && ((year % 100) != 0
+	  || (year % 400) == 0))
+    days[1] = 29;
+  else
+    days[1] = 28;
+
+  darea = GTK_DRAWING_AREA (widget);
+  drawable = widget->window;
+  white_gc = widget->style->white_gc;
+  black_gc = widget->style->black_gc;
+  max_width = widget->allocation.width;
+  max_height = widget->allocation.height;
+
+  grey_gc = gdk_gc_new (drawable);
+  grey_col.pixel = gdk_rgb_xpixel_from_rgb(0xffe0e0e0);
+  gdk_gc_set_foreground(grey_gc, &grey_col);
+
+  red_gc = gdk_gc_new (drawable);
+  red_col.pixel = gdk_rgb_xpixel_from_rgb(0xffff0000);
+  gdk_gc_set_foreground(red_gc, &red_col);
+
+  gdk_gc_set_clip_rectangle (black_gc, &event->area);
+  gdk_gc_set_clip_rectangle (red_gc, &event->area);
+  gdk_gc_set_clip_rectangle (grey_gc, &event->area);
+  gdk_gc_set_clip_rectangle (white_gc, &event->area);
+
+  gdk_draw_rectangle (drawable, white_gc, TRUE, 0, 0, max_width, max_height);
+
+  for (m = 0; m < 12; m++)
+    {
+      const char *s = nl_langinfo(months[m]);
+      guint i = m % months_across, j = m / months_across;
+      guint x = space + (i * (space + month_width));
+      guint y = 4 + (j * month_height);
+      guint w = gdk_string_width (datefont, s);
+      guint d, dy;
+      guint y1 = y + yoff;
+
+      /* Draw the month label */
+      gdk_draw_string (drawable, datefont, black_gc, 
+		       x + (month_width / 2) - (w / 2), y + datefont->ascent, s);
+
+      /* Draw the weekend highlight */
+      gdk_draw_rectangle (drawable, grey_gc, 1,
+			  x + (5 * day_pitch), y1, 2 * day_pitch, 5 * day_vpitch);
+
+      /* Draw the days */
+      dy = day_of_week (year, m + 1, 1);
+      for (d = 1; d <= days[m]; d++)
+	{
+	  GdkGC *fg_gc = black_gc;
+	  char buf[32];
+	  guint x1, w;
+	  snprintf (buf, sizeof (buf), "%d", d);
+	  w = gdk_string_width (yearfont, buf);
+	  x1 = x + (dy * day_pitch);
+
+	  if (day_event_bits[dn / sizeof(unsigned int)] & (1 << (dn % sizeof(unsigned int))))
+	    {
+	      gdk_draw_rectangle (drawable, black_gc, 1, x1, y1,
+				  day_pitch, day_vpitch);
+	      fg_gc = white_gc;
+	    }
+
+	  if (d == today.tm_mday && m == today.tm_mon  && tm.tm_year == today.tm_year)
+	    fg_gc = red_gc;
+
+	  gdk_draw_string (drawable, yearfont, fg_gc, 
+			 x1 + ((day_pitch - w) / 2), y1 + yearfont->ascent, 
+			 buf);
+	  if (++dy == 7)
+	    {
+	      dy = 0;
+	      y1 += day_vpitch;
+	    }
+	  
+	  dn++;
+	}
+    }
+
+  gdk_gc_unref (grey_gc);
+  gdk_gc_unref (red_gc);
+
+  return TRUE;
+}
+
 static void
 year_view_update (void)
 {
-  guint i, dy = 0, year, month, day;
+  guint i;
   time_t basetime;
-  struct tm tm;
-  localtime_r (&viewtime, &tm);
-  
-  year = tm.tm_year + 1900;
-  month = tm.tm_mon;
-  day = tm.tm_mday;
-  
-  tm.tm_mday = 1;
-  tm.tm_mon = 0;
-  tm.tm_yday = 0;
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  tm.tm_sec = 0;
-  basetime = mktime (&tm);
+  struct tm *tm = localtime (&viewtime);
+  tm->tm_mday = 1;
+  tm->tm_mon = 0;
+  tm->tm_yday = 0;
+  tm->tm_hour = 0;
+  tm->tm_min = 0;
+  tm->tm_sec = 0;
+  basetime = mktime (tm);
 
   memset (day_event_bits, 0, sizeof (day_event_bits));
 
@@ -65,142 +224,70 @@ year_view_update (void)
 	}
     }
 
-  for (i = 0; i < 12; i++)
-    {
-      guint md, days;
-      gtk_calendar_freeze (GTK_CALENDAR (cal[i]));
-      gtk_calendar_select_month (GTK_CALENDAR (cal[i]), i, year);
-      if (i == month) 
-	gtk_calendar_select_day (GTK_CALENDAR (cal[i]), day);
-      else  
-	gtk_calendar_select_day (GTK_CALENDAR (cal[i]), 0);
-      
-      gtk_calendar_clear_marks (GTK_CALENDAR (cal[i]));
-
-      days = days_in_month (year, i);
-
-      for (md = 0; md < days; md++)
-	{
-	  if (day_event_bits[dy / sizeof (unsigned int)] & 
-	      1 << (dy % sizeof (unsigned int)))
-	    gtk_calendar_mark_day (GTK_CALENDAR (cal[i]), md + 1);
-	  dy++;
-	}
-
-      gtk_calendar_thaw (GTK_CALENDAR (cal[i]));
-    }
-
-  gtk_widget_draw (g_table, NULL);
+  calc_geometry (g_draw);
+  gtk_widget_draw (g_draw, NULL);
 }
 
 static void
 changed_callback(GtkWidget *widget,
-		 gpointer d)
+		 GtkWidget *draw)
 {
   viewtime = gtk_date_sel_get_time (GTK_DATE_SEL (widget));
   year_view_update ();
-}
-
-static void
-update_hook_callback()
-{
-  gtk_date_sel_set_time (GTK_DATE_SEL (datesel), viewtime);
-  gtk_widget_draw (datesel, NULL);
-
-  year_view_update ();
-}
-
-static void
-destroy_popup(GtkObject *o, gpointer d)
-{
-  struct day_popup *p = (struct day_popup *)d;
-  event_db_list_destroy (p->events);
-  g_free (p);
-}
-
-static void
-day_selected (GtkWidget *w, gpointer d)
-{
-  struct day_popup *p = g_malloc (sizeof (struct day_popup));
-  GtkWidget *o;
-  struct tm tm;
-  time_t t;
-
-  gtk_calendar_get_date (GTK_CALENDAR (w), &p->year, &p->month, &p->day);
-
-  localtime_r (&viewtime, &tm);
-  tm.tm_hour = 0;
-  tm.tm_min = 0;
-  tm.tm_sec = 0;
-  tm.tm_year = p->year - 1900;
-  tm.tm_mon = p->month;
-  tm.tm_mday = p->day;
-  t = mktime (&tm);
-
-  p->events = event_db_list_for_period (t, t + SECONDS_IN_DAY - 1);
-
-  o = day_popup (main_window, p);
-  if (o)
-    {
-      gtk_signal_connect (GTK_OBJECT(o), "destroy", GTK_SIGNAL_FUNC (destroy_popup), p);
-    }
-  else
-    {
-      g_free (p);
-    }
 }
 
 GtkWidget *
 year_view(void)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
-  GtkWidget *table = gtk_table_new (12, 2, FALSE);
-  GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
-  GtkWidget *label;
-  guint i;
+  GtkWidget *datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  char buf[32];
+  guint d, maxw = 0;
+  
+  g_draw = gtk_drawing_area_new ();
 
-  gtk_widget_show (hbox);
-  gtk_widget_show (table);
-  gtk_widget_show (scrolled);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window),
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_signal_connect (GTK_OBJECT (g_draw),
+		      "expose_event",
+		      GTK_SIGNAL_FUNC (draw_expose_event),
+		      NULL);
+  gtk_signal_connect (GTK_OBJECT (g_draw),
+		      "configure_event",
+		      GTK_SIGNAL_FUNC (calc_geometry),
+		      NULL);
 
-  datesel = gtk_date_sel_new (GTKDATESEL_YEAR);
-  gtk_widget_show (datesel);
- 
-  for (i = 0; i < 12; i++)
+  gtk_signal_connect (GTK_OBJECT (datesel), "changed",
+		     GTK_SIGNAL_FUNC (changed_callback), g_draw);
+
+  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled_window),
+					 g_draw);
+  
+  gtk_box_pack_start (GTK_BOX (vbox), datesel, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, TRUE, TRUE, 0);
+  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
+		       (gpointer) year_view_update);
+
+  for (d = 10; d < 32; d++)
     {
-      guint x = i % 2, y = (i / 2) * 2;
-      cal[i] = gtk_calendar_new ();  
-      gtk_widget_show (cal[i]);
-
-      gtk_calendar_display_options (GTK_CALENDAR (cal[i]), week_starts_monday ? GTK_CALENDAR_WEEK_START_MONDAY : 0);
-      gtk_table_attach_defaults (GTK_TABLE (table),
-				 cal[i],
-				 x, x+1,
-				 y+1, y+2);
-      label = gtk_label_new (nl_langinfo(months[i]));
-      gtk_table_attach_defaults (GTK_TABLE (table),
-				 label,
-				 x, x+1,
-				 y, y+1);
-
-      gtk_signal_connect (GTK_OBJECT (cal[i]), "day-selected-double-click",
-			  GTK_SIGNAL_FUNC (day_selected), NULL);
+      guint w;
+      snprintf (buf, sizeof (buf), "%d", d);
+      w = gdk_string_width (yearfont, buf);
+      if (w > maxw)
+	maxw = w;
     }
 
-  gtk_signal_connect(GTK_OBJECT (datesel), "changed",
-		     GTK_SIGNAL_FUNC (changed_callback), NULL);
+  day_pitch = maxw + 4;
+  day_vpitch = yearfont->ascent + yearfont->descent;
+  yoff = datefont->ascent + datefont->descent + 1;
+  month_width = (day_pitch * 7) + 4;
+  month_height = (day_vpitch * 5) + 4 + yoff;
+  calc_geometry (g_draw);
 
-  gtk_scrolled_window_add_with_viewport (GTK_SCROLLED_WINDOW (scrolled), 
-					 table);
-
-  gtk_box_pack_start (GTK_BOX (hbox), datesel, TRUE, FALSE, 0); 
-  gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0); 
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
-  gtk_object_set_data (GTK_OBJECT (vbox), "update_hook", 
-		       (gpointer) update_hook_callback);
-
-  g_table = table;
+  gtk_widget_show (g_draw);
+  gtk_widget_show (datesel);
+  gtk_widget_show (scrolled_window);
 
   return vbox;
 }

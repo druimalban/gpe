@@ -27,6 +27,8 @@ extern GdkBitmap *close_mask, *day_mask;
 
 extern GtkWidget *main_window, *pop_window;
 
+extern GdkFont *yearfont, *datefont;
+
 #define SECONDS_IN_DAY (24*60*60)
 
 /* stuff that could perhaps be configurable */
