@@ -53,8 +53,8 @@ install-program: gpe-login gpe-lock-display
 	install -m 644 gpe-login.keylaunchrc $(DESTDIR)/etc/X11/gpe-login.keylaunchrc
 	install -m 644 X11/gpe-login.gtkrc $(DESTDIR)/etc/X11/gpe-login.gtkrc
 	install -m 755 X11/gpe-login.pre-session $(DESTDIR)/etc/X11/gpe-login.pre-session
-	install -d $(DESTDIR)/etc/suspend-scripts
-	install -m 755 gpe-login.suspend $(DESTDIR)/etc/suspend-scripts/S98lock-display
+	install -d $(DESTDIR)/etc/apm/resume.d
+	install -m 755 gpe-login.suspend $(DESTDIR)/etc/apm/resume.d/S98lock-display
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install -m 755 gpe-login.session $(DESTDIR)/etc/X11/Xsession.d/50autolock
 	install -d $(DESTDIR)/etc/X11/Xinit.d
