@@ -42,7 +42,7 @@ static struct gpe_icon my_icons[] = {
 
   //GPE stock icons
   { "new",    "new"   },
-  { "open",   "open"  },
+  { "open",   "gpe-sketchbook/edit"  }, //distributed separatly until next gpe-icons release
   { "delete", "delete"},
   { "save",   "save"  },
   { "left",   "left"  },
