@@ -18,7 +18,7 @@
 #   that's it.
 #------------------------
 
-VERSION = 0.44
+VERSION = 0.45
 
 ALL_TASKS = \
     gpe2 \
@@ -97,6 +97,7 @@ DEP_gpe-task-base = \
     gpe-dm, \
     gpe-login2, \
     gpe-session-scripts, \
+    gpe-terminal, \
     \
     keylaunch, \
     esd, \
@@ -169,7 +170,6 @@ DEP_gpe-task-pim = \
 DEP_gpe-task-utils = \
     gpe-task-base, \
     gpe-edit2, \
-    gpe-terminal, \
     gpe-taskmanager
 
 #------------------------------------------ Communication apps
