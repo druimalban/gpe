@@ -1,5 +1,6 @@
 Package: gpe-announce2
 Section: base
+Source: SOURCE
 Priority: optional
 Version: VERSION
 Architecture: arm
