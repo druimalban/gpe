@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=My VCard
+_Comment=Edit personal vcard
+Exec=gpe-contacts -v
+Terminal=0
+Type=Application
+Icon=gpe-contacts.png
+Categories=Application;SystemSettings;GPE
+StartupNotify=True
+SingleInstance=True

@@ -37,7 +37,7 @@ struct edit_thing
 typedef struct edit_thing *edit_thing_t;
 
 extern GtkWidget *edit_structure (void);
-extern GtkWidget *edit_window (void);
+extern GtkWidget *edit_window (gboolean isdialog);
 
 extern void print_structure (FILE *);
 extern gboolean read_structure (gchar *);

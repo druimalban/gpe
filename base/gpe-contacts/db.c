@@ -23,7 +23,8 @@
 #include "support.h"
 #include "main.h"
 
-#define DB_NAME "/.gpe/contacts"
+#define DB_NAME_CONTACTS "/.gpe/contacts"
+#define DB_NAME_VCARD "/.gpe/vcard"
 #define LAYOUT_NAME "/.gpe/contacts-layout.xml"
 #define DEFAULT_STRUCTURE PREFIX "/share/gpe-contacts/default-layout.xml"
 #define LARGE_STRUCTURE PREFIX "/share/gpe-contacts/contacts-layout-bigscreen.xml"
@@ -42,21 +43,14 @@ static const char *schema2_str = "create table contacts_urn (urn INTEGER PRIMARY
 static const char *schema4_str = "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
 
 int 
-db_open (void)
+db_open (gboolean open_vcard)
 {
   /* open persistent connection */
   char *errmsg;
-  
   char *buf;
-  size_t len;
-  char *home = getenv ("HOME");
-  if (home == NULL)
-    home = "";
-  
-  len = strlen (home) + strlen (DB_NAME) + 1;
-  buf = g_malloc (len);
-  strcpy (buf, home);
-  strcat (buf, DB_NAME);
+
+  buf = g_strdup_printf("%s/%s", g_get_home_dir(), 
+                                 open_vcard ? DB_NAME_VCARD : DB_NAME_CONTACTS);
   
   db = sqlite_open (buf, 0, &errmsg);
   g_free (buf);
@@ -666,7 +660,7 @@ db_compress (void)
 gint
 db_size (void)
 {
-  gchar *fn = g_strdup_printf("%s/" DB_NAME, g_get_home_dir());
+  gchar *fn = g_strdup_printf("%s/" DB_NAME_CONTACTS, g_get_home_dir());
   int result = 0;
   struct stat dat;
   

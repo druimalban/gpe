@@ -404,7 +404,7 @@ create_edit (void)
 }
 
 GtkWidget *
-edit_window (void)
+edit_window (gboolean isdialog)
 {
   GtkWidget *w = create_edit ();
   GtkWidget *book = lookup_widget (w, "notebook2");
@@ -442,7 +442,8 @@ edit_window (void)
           g_signal_connect (G_OBJECT (catbutton), "clicked",
 		    G_CALLBACK (on_categories_clicked), w);
           g_object_set_data (G_OBJECT (w), "categories-label", catlabel);
-          gtk_widget_show_all(cathbox);
+          if (!isdialog)
+            gtk_widget_show_all(cathbox);
         }
     }
 
@@ -525,16 +526,14 @@ update_categories_list (GtkWidget *ui, GSList *selected, GtkWidget *edit)
 }
 
 void
-edit_person (struct person *p, gboolean isnew)
+edit_person (struct person *p, gchar *title, gboolean isdialog)
 {
-  GtkWidget *catlabel, *w = edit_window ();
+  GtkWidget *catlabel, *w = edit_window (isdialog);
   gchar *str;
   
-  if (isnew)
-    gtk_window_set_title (GTK_WINDOW (w), _("New Contact"));
-  else
-    gtk_window_set_title (GTK_WINDOW (w), _("Edit Contact"));
-      
+  gtk_window_set_title (GTK_WINDOW (w), title);
+  g_object_set_data(G_OBJECT(w), "isdialog", (gpointer)isdialog);  
+  
   if (p)
     {
       GSList *tags = gtk_object_get_data (GTK_OBJECT (w), "tag-widgets");
@@ -871,6 +870,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
   GSList *tags;
   struct person *p = g_object_get_data (G_OBJECT (edit), "person");
   gchar *nametext = NULL;
+  gboolean isdialog = (gboolean) g_object_get_data(G_OBJECT(edit), "isdialog");
   
   for (tags = g_object_get_data (G_OBJECT (edit), "tag-widgets");
        tags; tags = tags->next)
@@ -926,8 +926,15 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
   if (commit_person (p))
     {
       gtk_widget_destroy (edit);
-      discard_person (p);
-      update_display ();
+      if (isdialog)
+        {
+          gtk_main_quit();
+        }
+      else
+        {
+          discard_person (p);
+          update_display ();
+        }
     }
 }
 
@@ -988,8 +995,17 @@ on_edit_bt_image_clicked (GtkWidget *bimage, gpointer user_data)
 void
 on_edit_cancel_clicked (GtkButton * button, gpointer user_data)
 {
-  gtk_widget_destroy (GTK_WIDGET (user_data));
-  update_display();
+  GtkWidget *edit = user_data;
+  if (g_object_get_data(G_OBJECT(edit), "isdialog"))
+    {
+      gtk_main_quit();
+      exit(EXIT_SUCCESS);
+    }
+  else
+    {
+      update_display ();
+    }
+  gtk_widget_destroy (GTK_WIDGET (edit));
 }
 
 void        

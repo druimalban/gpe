@@ -102,19 +102,13 @@ menu_do_send_irda (void)
   g_free (card);
 }
 
-static void
-select_file_done (GtkWidget *w, GtkWidget *filesel)
+gboolean
+save_to_file(guint uid, const gchar *filename)
 {
-  guint uid;
-  const gchar *filename;
   gchar *card;
   int fd;
-
-  uid = (guint)g_object_get_data (G_OBJECT (filesel), "uid");
-
+  
   card = export_to_vcard (uid);
-
-  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
 
   fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
   if (fd < 0)
@@ -127,11 +121,31 @@ select_file_done (GtkWidget *w, GtkWidget *filesel)
     goto error;
 
   g_free (card);
+  return FALSE;
+  
+ error:
+  g_free (card);
+  return TRUE;
+}
+
+
+static void
+select_file_done (GtkWidget *w, GtkWidget *filesel)
+{
+  guint uid;
+  const gchar *filename;
+
+  uid = (guint)g_object_get_data (G_OBJECT (filesel), "uid");
+
+  filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
+  
+  if (save_to_file(uid, filename))
+    goto error;
+  
   gtk_widget_destroy (filesel);
   return;
 
  error:
-  g_free (card);
   gpe_perror_box (filename);
   gtk_widget_destroy (filesel);
 }

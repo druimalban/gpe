@@ -1,5 +1,16 @@
 2004-10-16  Florian Boor <florian.boor@kernelconcepts.de>
 
+    * Released Version 0.32
+    * main.c: Moved screen layout detection.
+    * edit-vcard.desktop.in, edit-vcard.png: New files
+    * export.* (save_to_file): New function to save vcards.
+    * editing.c: Change behaviour if running standalone.
+    * proto.h, editing.c, main.c: Made edit window title free selectable.
+    * main.c: Added switch to edit personal vcard only.
+    * db.* (db_open): Open alternate database.
+
+2004-10-16  Florian Boor <florian.boor@kernelconcepts.de>
+
     * editing.c (phone_key_press_event): Fixed copy and paste hotkeys.
     
 2004-10-13  Florian Boor <florian.boor@kernelconcepts.de>

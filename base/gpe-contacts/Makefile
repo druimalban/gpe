@@ -4,7 +4,7 @@ GTK2 = yes
 pkgdatadir = $(PREFIX)/share/$(PACKAGE)
 CVSBUILD = yes
 STRIP = strip
-VERSION = 0.31
+VERSION = 0.32
 DEBUG = no
 MYPIXMAPSDIR = $(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)
 
@@ -15,6 +15,8 @@ BUILD = ../build
 else
 BUILD = build
 endif
+
+EXTRA_DESKTOPS = edit-vcard.desktop.in
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CPPFLAGS += -I../libdisplaymigration -I../libgpepimc -I../libgpevtype
@@ -46,14 +48,16 @@ $(PACKAGE): $(OBJS)
 clean:
 	rm -f gpe-contacts $(OBJS) $(DEPS)
 
-install-program: all $(PACKAGE).desktop
+install-program: all all-desktop
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install  gpe-contacts $(DESTDIR)$(PREFIX)/bin/gpe-contacts
 	$(STRIP) $(DESTDIR)$(PREFIX)/bin/gpe-contacts
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 gpe-contacts.desktop $(DESTDIR)$(PREFIX)/share/applications/
+	install -m 644 edit-vcard.desktop $(DESTDIR)$(PREFIX)/share/applications/
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 icons/gpe-contacts.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-contacts.png
+	install -m 644 icons/edit-vcard.png $(DESTDIR)$(PREFIX)/share/pixmaps/edit-vcard.png
 	install -d $(DESTDIR)$(pkgdatadir)
 	install -m 644 contacts-layout.xml $(DESTDIR)$(pkgdatadir)/default-layout.xml
 	install -m 644 $(LAYOUT_BIGSCREEN) $(DESTDIR)$(pkgdatadir)/contacts-layout-bigscreen.xml

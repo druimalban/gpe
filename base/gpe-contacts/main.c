@@ -77,7 +77,7 @@ menu_do_edit (void)
 {
   struct person *p;
   p = db_get_by_uid (menu_uid);
-  edit_person (p, FALSE);
+  edit_person (p,  _("Edit Contact"), FALSE);
 }
 
 static void
@@ -157,7 +157,7 @@ new_contact (GtkWidget * widget, gpointer d)
   gtk_widget_set_sensitive (new_button, FALSE);
   gtk_widget_set_sensitive (edit_button, FALSE);
   p = new_person ();
-  edit_person (p, TRUE);
+  edit_person (p, _("New Contact"), FALSE);
 }
 
 static void
@@ -179,7 +179,7 @@ edit_contact (GtkWidget * widget, gpointer d)
       gtk_widget_set_sensitive (edit_button, FALSE);
       gtk_tree_model_get (GTK_TREE_MODEL (model), &iter, 1, &uid, -1);
       p = db_get_by_uid (uid);
-      edit_person (p, FALSE);
+      edit_person (p, _("Edit Contact"), FALSE);
     }
 }
 
@@ -1172,8 +1172,6 @@ create_main (gboolean edit_structure)
   /* screen layout detection */
   size_x = gdk_screen_width();
   size_y = gdk_screen_height();  
-  mode_large_screen = (size_x > 240) && (size_y > 320);
-  mode_landscape = (size_x > size_y);
   size_x /= 4;
   size_y /= 3;
   if (size_x < 240) size_x = 240;
@@ -1406,8 +1404,10 @@ main (int argc, char *argv[])
 {
   int arg;
   gboolean edit_structure = TRUE;
+  gboolean edit_vcard = FALSE;
   gchar *ifile = NULL;
   GtkTreePath *path;
+  gint size_x, size_y;
   
 #ifdef ENABLE_NLS
   setlocale (LC_ALL, "");
@@ -1423,8 +1423,14 @@ main (int argc, char *argv[])
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
 
+  /* screen layout detection */
+  size_x = gdk_screen_width();
+  size_y = gdk_screen_height();  
+  mode_large_screen = (size_x > 240) && (size_y > 320);
+  mode_landscape = (size_x > size_y);
+  
   /* check command line args */
-  while ((arg = getopt(argc, argv, "ni:")) >= 0)
+  while ((arg = getopt(argc, argv, "ni:v")) >= 0)
   {
     if (arg == 'n')
       {
@@ -1433,6 +1439,8 @@ main (int argc, char *argv[])
       }
     if (arg == 'i')
 		ifile = optarg;
+    if (arg == 'v')
+      edit_vcard = TRUE;
   }    
 
   /* are we called to import a file? */
@@ -1465,13 +1473,35 @@ main (int argc, char *argv[])
 
   displaymigration_init ();
   
-  if (db_open ())
+ /* we are called to edit a users personal vcard */
+  if (edit_vcard)
+    {
+      struct person *p;
+      const gchar *MY_VCARD = g_strdup_printf("%s/.gpe/user.vcf", 
+                                              g_get_home_dir());
+  
+      if (db_open (TRUE))
+        exit (1);
+      load_well_known_tags ();
+      load_structure ();
+      
+      p = db_get_by_uid (1);
+      if (!p)
+        p = new_person();
+      edit_person (p, _("My Card"), TRUE);
+      gtk_main();
+      if (save_to_file(1, MY_VCARD))
+        gpe_perror_box(_("Saving vcard failed"));
+      exit (EXIT_SUCCESS);
+    }
+    
+   if (db_open (FALSE))
     exit (1);
 
   load_well_known_tags ();
 
   list_store = gtk_list_store_new (2, G_TYPE_STRING, G_TYPE_INT);
-
+   
   mainw = create_main (edit_structure);
   popup_menu = create_popup (mainw);
   update_categories ();

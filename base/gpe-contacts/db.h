@@ -8,7 +8,7 @@
 #define CONFIG_PANEL 0
 #define CONFIG_LIST  1
 
-extern int db_open (void);
+extern int db_open (gboolean open_vcard);
 extern gboolean load_structure (void);
 
 struct tag_value
