@@ -1,5 +1,5 @@
 PACKAGE = gpe-aerial
-VERSION = 0.2.8
+VERSION = 0.2.9
 NATIVE = yes
 CVSBUILD = yes
 DEBUG = no
@@ -47,7 +47,7 @@ else # we do cross-compile...
 CC=arm-linux-gcc
 STRIP=arm-linux-strip
 
-CFLAGS +=  -Wall $(GTKCFLAGS)
+CFLAGS +=  -Wall -march=armv4 -mtune=strongarm $(GTKCFLAGS)
 LDFLAGS += -L/skiff/local/arm-linux/lib -L/skiff/local/arm-linux/lib/X11  
 LDFLAGS += -lgpewidget $(GTKLDFLAGS)
 LDFLAGS += -lm 
@@ -67,9 +67,6 @@ SOURCES = $(patsubst %,%.c,$(MEMBERS))
 PIXMAPS = gpe-aerial.png
 PIXMAPS += scan-on-16.png
 PIXMAPS += scan-off-16.png
-#PIXMAPS += scan-err.png
-#PIXMAPS += wlan-net.png
-#PIXMAPS += wlan-adhoc.png
 
 all: $(PACKAGE) 
 

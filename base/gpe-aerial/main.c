@@ -1,5 +1,5 @@
 /*
- * gpe-aerial (c) 2003 Florian Boor <florian.boor@kernelconcepts.de>
+ * gpe-aerial (c) 2003, 2004 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * Basic applet skeleton taken from gpe-bluetooth (see below)
  *
@@ -993,8 +993,7 @@ main (int argc, char *argv[])
 		exit (1);
 
 	icon = gtk_image_new_from_pixbuf (gpe_find_icon
-					  (radio_is_on ? "scan-on" :
-	"scan-off")); 
+					  (radio_is_on ? "scan-on" : "scan-off")); 
 
 	gtk_widget_show (icon);
 	gdk_pixbuf_render_pixmap_and_mask (gpe_find_icon ("scan-off"), NULL,

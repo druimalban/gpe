@@ -1,3 +1,6 @@
+2004-03-04		Florian Boor <florian.boor@kernelconcepts.de>
+	* Makefile: Version pushed to V 0.2.9.
+	
 2004-02-06		Florian Boor <florian.boor@kernelconcepts.de>
 	* main.c: Fixed major memory leak.
 
