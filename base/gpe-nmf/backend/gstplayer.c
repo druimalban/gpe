@@ -281,10 +281,16 @@ metadata_notify (GObject *obj, GObject *the_obj, GParamSpec *spec, player_t p)
 static void
 build_pipeline (player_t p, struct playlist *t, gboolean really_play)
 {
-  p->filesrc = gst_element_factory_make (p->source_elem, "disk_source");
+  gchar *source_elem = p->source_elem;
+  gchar *sink_elem = (really_play ? p->sink_elem : "fakesink");
+  if ((strncmp(t->data.track.url, "http:", 5) == 0)
+      && (strcmp(source_elem, "filesrc") == 0))
+    source_elem = "httpclientsrc";
+
+  p->filesrc = gst_element_factory_make (source_elem, "disk_source");
   p->decoder = gst_element_factory_make ("spider", "decoder");
   p->volume = gst_element_factory_make ("volume", "volume");
-  p->audiosink = gst_element_factory_make (really_play ? p->sink_elem : "fakesink", "play_audio");
+  p->audiosink = gst_element_factory_make (sink_elem, "play_audio");
 
   if (!p->filesrc || !p->decoder || !p->volume || !p->audiosink)
     {
