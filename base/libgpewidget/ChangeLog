@@ -1,3 +1,8 @@
+2002-06-18  Moray Allan  <moray@sermisy.org>
+
+	* errorbox.c (gpe_error_box): Add a test in case we're already
+	trying to bring up an error box (if so, print to stderr instead).
+
 2002-06-17  Philip Blundell  <pb@debian.org>
 
 	* gtkminifilesel.c (gtk_mini_file_selection_init): Use picture 
