@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = libnsqlc
 #DEBUG = yes 
 CVSBUILD = yes
-VERSION = 0.1
+VERSION = 0.2
 
 LINGUAS = 
 
@@ -10,20 +10,9 @@ MEMBERS = nsqlc printf
 
 SONAME = $(PACKAGE).so.0
 
-CFLAGS = `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
-LDFLAGS = `pkg-config --libs glib-2.0`
-
-CFLAGS += -DPREFIX=\"$(PREFIX)\" -DPACKAGE=\"$(PACKAGE)\" -D_GNU_SOURCE -Wall -fPIC
-
-ifeq ($(DEBUG),yes)
-CFLAGS += -g #-O2 -g
-LDFLAGS += -g
-else
-CFLAGS += -Os -fomit-frame-pointer
-endif
-CFLAGS += -MD
-
-CPPFLAGS += -I.
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) `pkg-config --cflags glib-2.0` -DG_DISABLE_DEPRECATED
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) `pkg-config --libs glib-2.0`
 
 HEADERS = event-db.h
 
@@ -43,13 +32,10 @@ $(PACKAGE).so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS) $(PACKAGE_LDFLAGS)
 
 nsqlc-test: nsqlc-test.c
-	$(CC) $(CFLAGS) -o $@ $< -L. -lnsqlc
-
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+	$(CC) $(CFLAGS) $(PACKAGE_CFLAGS) -o $@ $< -L. -lnsqlc $(LDFLAGS)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
