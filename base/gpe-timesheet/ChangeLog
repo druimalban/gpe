@@ -4,6 +4,8 @@
 	
 2004-05-03  Philip Blundell  <philb@gnu.org>
 
+	* main.c (main): Disable "journal" icon temporarily.
+
 	* Makefile: Update to use PACKAGE_CFLAGS, etc.
 	(LINGUAS): Add nl, ga, ru, sr, sk, sv.
 

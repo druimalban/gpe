@@ -424,11 +424,13 @@ main(int argc, char *argv[])
 			   _("Note"), _("Note"),
 			   pw, (GtkSignalFunc)note, tree);
 
+#if 0
   p = gpe_find_icon ("journal");
   pw = gtk_image_new_from_pixbuf (p);
   gtk_toolbar_append_item (GTK_TOOLBAR (toolbar), _("Journal"),
 			   _("Show journal"), _("Show journal"),
 			   pw, (GtkSignalFunc)journal, tree);
+#endif
 			   
   gtk_widget_show (toolbar);
   gtk_widget_show (vbox_top);
