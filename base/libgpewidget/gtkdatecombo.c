@@ -111,7 +111,6 @@ gtk_date_combo_init (GtkDateCombo *combo)
   combo->calw = gtk_window_new (GTK_WINDOW_POPUP);
   combo->cal_open = FALSE;
   gtk_widget_show (combo->cal);
-  gtk_widget_ref (combo->calw);
   gtk_container_add (GTK_CONTAINER (combo->calw), combo->cal);
 
   gtk_window_set_policy (GTK_WINDOW (combo->calw), FALSE, FALSE, TRUE);
@@ -124,16 +123,6 @@ gtk_date_combo_init (GtkDateCombo *combo)
 }
 
 static GtkHBoxClass *parent_class = NULL;
-
-static void
-gtk_date_combo_destroy (GtkObject * combo)
-{
-  gtk_widget_destroy (GTK_DATE_COMBO (combo)->calw);
-  gtk_widget_unref (GTK_DATE_COMBO (combo)->calw);
-
-  if (GTK_OBJECT_CLASS (parent_class)->destroy)
-    (*GTK_OBJECT_CLASS (parent_class)->destroy) (combo);
-}
 
 static void
 gtk_date_combo_size_allocate (GtkWidget     *widget,
@@ -187,8 +176,6 @@ gtk_date_combo_class_init (GtkDateComboClass * klass)
   oclass = (GtkObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
-  oclass->destroy = gtk_date_combo_destroy;
-  
   widget_class->size_allocate = gtk_date_combo_size_allocate;
   widget_class->show = gtk_date_combo_show;
 }
