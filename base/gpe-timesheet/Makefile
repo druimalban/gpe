@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = gpe-timesheet
 CVSBUILD = yes
-VERSION = 0.11
+VERSION = 0.12
 GTK2 = yes
 LINGUAS = id pt zh_TW fr
 
