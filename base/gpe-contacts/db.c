@@ -634,7 +634,6 @@ GSList *
 db_get_entries_alpha (const gchar * alphalist)
 {
   GSList *list = NULL;
-  GSList *i;
 
   char *command, *tmp, *modifier;
   char *err;

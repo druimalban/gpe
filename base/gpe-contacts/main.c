@@ -881,6 +881,7 @@ create_main (void)
   gtk_notebook_set_show_border (GTK_NOTEBOOK (nbList), FALSE);
   gtk_notebook_set_tab_hborder (GTK_NOTEBOOK (nbList), 1);
   gtk_notebook_set_tab_vborder (GTK_NOTEBOOK (nbList), 0);
+  gtk_notebook_set_scrollable(GTK_NOTEBOOK (nbList), TRUE);
 
   load_tab_config();
 

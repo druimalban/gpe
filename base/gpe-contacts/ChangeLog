@@ -1,3 +1,7 @@
+2003-05-28  Florian Boor <florian.boor@kernelconcepts.de>
+	* main.c Removed obsolete var definition.
+			 Made tabbed notebook scrollable to support more tabs.
+
 2003-04-28  Florian Boor <florian.boor@kernelconcepts.de>
 	* db.c, a speedup for read_one_entry - should be treated as a test
 
