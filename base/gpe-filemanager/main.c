@@ -211,7 +211,7 @@ static GtkItemFactoryEntry menu_items[] =
   { "/_Paste",          NULL, paste_file_clip,         0, "<StockItem>", GTK_STOCK_PASTE },
   { "/_Move",            NULL, popup_ask_move_file,            0, "<Item>" },
   { "/_Rename",          NULL, popup_ask_rename_file,          0, "<Item>" },
-  { "/_Delete",          NULL, popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
+  { "/_Delete",   "Delete", popup_ask_delete_file,         0, "<StockItem>", GTK_STOCK_DELETE },
   { "/_Create Directory",NULL, create_directory_interactive, 0, "<Item>"},
   { "/sep2",	         NULL, NULL,	             0, "<Separator>" },
   { "/_Properties",      NULL, show_file_properties, 0, "<StockItem>", GTK_STOCK_PROPERTIES },

@@ -1,3 +1,7 @@
+2004-10-19  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* main.c (toplevel): Delete if delete key is pressed. 
+
 2004-10-16  Phil Blundell  <pb@nexus.co.uk>
 
 	* main.c (menu_items): Add 'Send via Infrared'.
