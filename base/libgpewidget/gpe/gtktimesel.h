@@ -21,6 +21,15 @@
 
 #define GTK_TIME_SEL_GET_CLASS(obj)	G_TYPE_INSTANCE_GET_CLASS ((obj), gtk_time_sel_get_type(), GtkTime_SelClass)
 
+struct _GtkTimeSel
+{
+  GtkHBox hbox;
+
+  GtkObject *hour_adj, *minute_adj;
+  GtkWidget *hour_spin, *minute_spin;
+  GtkWidget *label;
+};
+
 typedef struct _GtkTimeSel	   GtkTimeSel;
 typedef struct _GtkTimeSelClass    GtkTimeSelClass;
 
