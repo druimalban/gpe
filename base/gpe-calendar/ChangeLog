@@ -1,5 +1,9 @@
 2003-03-19  Christian Meyer  <chrisime@gnome.org>
 
+        * event-ui.c: Indentation fixes.
+	
+2003-03-19  Christian Meyer  <chrisime@gnome.org>
+
         * event-ui.c: Remove GTK 1 compatibility.
 
 2003-03-19  Philip Blundell  <philb@gnu.org>
