@@ -439,7 +439,9 @@ _gpe_icon_list_view_recalc_size (GPEIconListView *self, GtkAllocation *allocatio
   count = g_list_length (self->icons);
 		
   self->rows = (count - 1) / self->cols + 1;
-  
+  if (self->rows_set && self->rows > self->rows_set)
+    self->rows = self->rows_set;
+ 
   // update drawing area
   da_new_height = self->rows * il_row_height (self) + TOP_MARGIN;
   gtk_widget_set_usize (GTK_WIDGET (self), -1, da_new_height);
@@ -632,6 +634,12 @@ gpe_icon_list_view_popup_removed (GPEIconListView *self)
   _gpe_icon_list_view_refresh_containing (self, col, row);
 }
 
+void
+gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows)
+{
+  self->rows_set = rows;
+}
+
 static void
 gpe_icon_list_view_init (GPEIconListView *self)
 {
@@ -642,6 +650,7 @@ gpe_icon_list_view_init (GPEIconListView *self)
   self->bgcolor = 0xffffffff;
   self->flag_embolden = TRUE;
   self->flag_show_title = TRUE;
+  self->rows_set = 0;
 
   gtk_widget_add_events (GTK_WIDGET (self), GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
 

@@ -39,6 +39,8 @@ struct _GPEIconListView
   guint icon_size;
   guint icon_xmargin;
   guint label_height;
+
+  int rows_set;
 };
 
 typedef struct _GPEIconListView	        GPEIconListView;
@@ -67,5 +69,6 @@ void gpe_icon_list_view_clear (GPEIconListView *self);
 void gpe_icon_list_view_set_icon_size (GPEIconListView *self, guint size);
 
 void gpe_icon_list_view_popup_removed (GPEIconListView *self);
+void gpe_icon_list_view_set_rows (GPEIconListView *self, guint rows);
 
 #endif
