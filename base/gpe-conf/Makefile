@@ -8,7 +8,7 @@ PREFIX = /usr/
 DESTDIR = /
 PACKAGETOOL = no
 STRIP = strip
-MACHINE = other
+MACHINE = unknown
 
 
 LINGUAS = pt ro de fr cs nl sv sk ru
@@ -50,7 +50,7 @@ endif
 GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
 GTKLDFLAGS = `pkg-config --libs gtk+-2.0 gdk-2.0` 
 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I.
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I. 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GTKCFLAGS) $(GPECFLAGS) -I.
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GTKLDFLAGS) $(GPELIBS) -lXsettings -lXsettings-client -lcrypt -L/usr/X11R6/lib -lXrandr
 
@@ -60,7 +60,7 @@ else
 PACKAGE_CFLAGS += -Os -fomit-frame-pointer
 endif
 
-PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE 
+PACKAGE_CFLAGS += -DVERSION=\"$(VERSION)\" -DPREFIX=\"$(PREFIX)\" -D_GNU_SOURCE -DMACHINE=\"$(MACHINE)\"
 PACKAGE_CFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 
 

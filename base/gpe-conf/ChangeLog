@@ -2,6 +2,12 @@
 	* battery.c: Added some APM support. With some luck it should work on any 
 	             system with /proc/apm.
 	
+2004-06-11	Florian Boor  	<florian.boor@kernelconcepts.de>
+	* users/interface.h: Removed obsolete cruft.
+	* logread.c: Fixed missing setup of scrollbars.
+	* sysinfo.c: Fixed multiple sources of segfaults on non-iPaq platforms.
+	* sysinfo.c, Makefile: Improved information on several platforms.
+	
 2004-06-10	Florian Boor  	<florian.boor@kernelconcepts.de>
 	* Released V 0.1.10
 	* Removed obsolete file.

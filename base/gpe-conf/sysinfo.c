@@ -170,6 +170,24 @@ get_device_info()
 		}
 		g_strfreev(strv);
 	}
+#else
+#ifdef __arm__
+	result.cpu = g_strdup(_("ARM"));
+#endif
+#ifdef __i386__
+	result.cpu = g_strdup(_("Intel x86 or compatible"));
+#endif
+#ifdef __mips__
+	result.cpu = g_strdup(_("Mips"));
+	#ifdef __sgi__
+		result.model = g_strdup(_("Silicon Graphics Machine"));
+	#endif
+#endif
+#ifdef _POWER
+	result.cpu = g_strdup(_("IBM Power or PowerPC"));
+#endif
+	if (!result.model)
+		result.model = g_strdup(MACHINE);
 #endif
 	
 	/* memory and flash size */
@@ -191,8 +209,9 @@ get_familiar_version()
 	{
 		if (strchr(result,'\n'))
 			strchr(result,'\n')[0] = 0;
+	 	return g_strstrip(result);
 	}
-	return g_strstrip(result);
+	return result;
 }
 
 
@@ -207,8 +226,9 @@ get_familiar_time()
 	{
 		if (strchr(result,'\n'))
 			strchr(result,'\n')[0] = 0;
+		return g_strstrip(result);
 	}
-	return g_strstrip(result);
+	return result;
 }
 
 
@@ -427,7 +447,7 @@ Sysinfo_Build_Objects (int whichtab)
 		gtk_table_attach(GTK_TABLE(table),tw,0,1,4,7,GTK_FILL | GTK_EXPAND,
 						 GTK_FILL,0,0);
 		tw = gtk_label_new(NULL);
-    /*TRANSLATORS: "Familiar" is the name of the linux disrtribution.*/
+    /*TRANSLATORS: "Familiar" is the name of the linux distribution.*/
 		ts = g_strdup_printf("<i>%s</i>",_("Familiar Version"));
 		gtk_label_set_markup(GTK_LABEL(tw),ts);
 		gtk_misc_set_alignment(GTK_MISC(tw),0.0,0.8);
