@@ -112,11 +112,13 @@ int
 generic_set_level(int level)
 {
   FILE *f_light;
+  int val = level/8;
   
+  if (val < 1) val = 1;
   f_light = fopen(GENERIC_PROC_DRIVER,"w");
   if (f_light != NULL)
   {
-    fprintf(f_light,"%d\n", level/8);
+    fprintf(f_light,"%d\n", val);
   	fclose(f_light);
 	return level;
   }
@@ -145,6 +147,7 @@ simpad_new_set_level(int level)
 {
   FILE *f_light;
   
+  if (level < 1) level = 1;
   f_light = fopen(SIMPAD_BACKLIGHT_REG_NEW,"w");
   if (f_light != NULL)
   {
@@ -179,6 +182,7 @@ simpad_set_level(int level)
   int val;
   FILE *f_light;
   
+  if (level < 1) level = 1;
   f_light = fopen(SIMPAD_BACKLIGHT_REG,"w");
   if (f_light >= 0)
   {

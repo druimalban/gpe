@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003  Florian Boor <florian.boor@kernelconcepts.de>
+ *	             2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,9 +27,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <gtk/gtk.h>
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE /* For GlibC2 */
-#endif
 #include <time.h>
 #include <ctype.h>
 
@@ -78,7 +75,8 @@ gchar *timezones[][3]= {
   };
 
 #define TZ_MAXINDEX 18
-
+#define SCREENSAVER_RESET_CMD "xset s reset"
+  
 typedef struct 
 {
 	char tzname[8];
@@ -87,10 +85,6 @@ typedef struct
 	int utcofs_m;
 	int utcdstofs_h;
 	int utcdstofs_m;
-	/*
-	DT switching 
-	
-	*/
 } tzinfo;	
 
 
@@ -368,6 +362,7 @@ gboolean refresh_time()
 		gtk_widget_set_sensitive(self.internet,TRUE);
 		gtk_timeout_remove(tid);
 	}
+	system (SCREENSAVER_RESET_CMD);
 	return (trc ? TRUE : FALSE);
 }
 
@@ -695,7 +690,9 @@ void Time_Save()
 	  /* set time */ 
 	  snprintf(par,99,"%ld",t);
 	  suid_exec("STIM",par);  
-	  free(par);  
+	  free(par);
+	  usleep(300000);
+      system (SCREENSAVER_RESET_CMD);
   }
   if (need_warning)
   {
@@ -703,7 +700,8 @@ void Time_Save()
 						 GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_WARNING,
 						 GTK_BUTTONS_OK,
-						 _("To make timezone settings take effect, you'll need to log out and log in again."));
+						 _("To make timezone settings take effect,"\
+                       	  "you'll need to log out and log in again."));
     gtk_dialog_run(GTK_DIALOG(dialog));
   }
 }

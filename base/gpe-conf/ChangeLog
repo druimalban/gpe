@@ -1,5 +1,8 @@
 2004-08-08	Florian Boor  	<florian.boor@kernelconcepts.de>
-
+ 
+    * brightness.c: Do not set level to 0 on platforms that my have a 
+	                non-transflective display.
+	* time.c: Reset X screensaver after setting time. Removed obsolete stuff.
 	* theme.c: Guessing of better defaults.
 	* applets.c: Fixed typo in widget name.
 
