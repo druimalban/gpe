@@ -1,5 +1,6 @@
 2004-09-15  Florian Boor  <florian.boor@kernelconcepts.de>
     
+    * main.c: Clear display if nothing to select in search list.
     * main.c: Set list to first contact on application start.
     * db.*, main.c: Added middle name and company to search.
     * namedetail.c: Fixed minor bug causing wrong defaults and warnings.

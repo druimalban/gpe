@@ -554,6 +554,7 @@ do_search (GObject *obj, GtkWidget *entry)
   all_entries = g_slist_sort (all_entries, (GCompareFunc)sort_entries);
 
   gtk_list_store_clear (list_store);
+  show_details(NULL);
 
   for (iter = all_entries; iter; iter = iter->next)
     {
