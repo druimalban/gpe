@@ -77,6 +77,8 @@ void 	gpe_iconlist_add_item_pixbuf	(GPEIconList * self,
 					gpointer udata);
 void 	gpe_iconlist_set_embolden	(GPEIconList * self,
 					gboolean yes);
+void 	gpe_iconlist_set_show_title	(GPEIconList * self,
+					gboolean yes);
 void 	gpe_iconlist_clear	(GPEIconList * self);
 void 	gpe_iconlist_set_icon_size	(GPEIconList * self,
 					guint size);

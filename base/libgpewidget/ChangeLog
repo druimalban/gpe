@@ -1,5 +1,11 @@
 2003-03-16  Luc Pionchon  <luc@handhelds.org>
 
+	* gpeiconlist.gob (set_show_title): New public function to allow titleless iconlist
+	(_expose): render title only with show_title mode, and if non NULL title
+	* gpe-iconlist.[ch]: regenerate.
+	
+2003-03-16  Luc Pionchon  <luc@handhelds.org>
+
 	* gpeiconlist.gob (set_bg_color): New public function to set the bg color
 	(update_icon_item_with_udata): New public function to update an icon
 	(remove_item_with_udata): New public function to remove an icon

@@ -37,7 +37,7 @@ requires 2.0.0
 #define LABEL_YMARGIN	8
 #define LABEL_XMARGIN	8
 
-#define COL_WIDTH 70
+#define COL_WIDTH 70 //luc: unused
 
 #define il_label_height(_x)	(GPE_ICONLIST (_x)->_priv->label_height)
 #define il_icon_size(_x)	(GPE_ICONLIST (_x)->_priv->icon_size)
@@ -73,6 +73,7 @@ class GPE:IconList from Gtk:Scrolled:Window {
 	private int mrow = -1;
 	private int popup_timeout = 0;
 	private gboolean flag_embolden = TRUE;
+  private gboolean flag_show_title = TRUE;
 	private guint icon_size = 48;
 	private guint label_height = 0;
 
@@ -346,64 +347,67 @@ class GPE:IconList from Gtk:Scrolled:Window {
 			struct ILIcon *icon;
 			icon = icons->data;
 
-			/* Compute & render the title */
-			r1.x=col * il_col_width (il);
-			r1.y=row * il_row_height (il) + il->_priv->icon_size + LABEL_YMARGIN;
-			r1.width = il_col_width (il);
-			r1.height = label_height;
-
-			r2.x = event->area.x;
-			r2.y = event->area.y;
-			r2.width = event->area.width;
-			r2.height = event->area.height;
-	  
-			if (gdk_rectangle_intersect (&r1, &r2, &dst)) {
-				char *stxt; int slen;
-				int selected=0;
-				PangoRectangle pr;
-
-				stxt=icon->title;
-				slen = strlen (stxt);
-
-				selected = (il->_priv->mrow == row && il->_priv->mcol == col);
-				if (selected && il->_priv->flag_embolden) {
-					char *newtxt;
-					newtxt = g_strdup_printf ("<b>%s</b>", stxt);
-					pango_layout_set_markup (pl, newtxt, -1);
-					g_free (newtxt);
-				} else
-					pango_layout_set_text (pl, stxt, -1);
-
-				pango_layout_get_pixel_extents  (pl, NULL, &pr);
-
-				while ((pango_layout_get_line_count (pl) > 2 ||
-					pr.width > il_col_width (il)) && slen>0) {
-					char *newtxt;
-					char *fmt;
-					if (stxt[slen-2] == ' ')
-						slen--;
-
-					if (selected && il->_priv->flag_embolden)
-						fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
-					else
-						fmt = g_strdup_printf ("%%.%ds...", --slen);
-
-					newtxt = g_strdup_printf (fmt, stxt);
-					g_free (fmt);
-
-					if (selected)
-						pango_layout_set_markup (pl, newtxt, -1);
-					else
-						pango_layout_set_text (pl, newtxt, -1);
-					g_free (newtxt);
-
-					pango_layout_get_pixel_extents  (pl, NULL, &pr);
-				}
-
-				gtk_paint_layout (widget->style, widget->window, GTK_WIDGET_STATE (widget),
-						  FALSE, &dst,
-						  widget, "detail?wtf?", r1.x, r1.y, pl);
-			}
+      if(il->_priv->flag_show_title && icon->title){
+        /* if show_title mode is set and current title non NULL, then */
+        /* Compute & render the title */
+        r1.x=col * il_col_width (il);
+        r1.y=row * il_row_height (il) + il->_priv->icon_size + LABEL_YMARGIN;
+        r1.width = il_col_width (il);
+        r1.height = label_height;
+        
+        r2.x = event->area.x;
+        r2.y = event->area.y;
+        r2.width = event->area.width;
+        r2.height = event->area.height;
+        
+        if (gdk_rectangle_intersect (&r1, &r2, &dst)) {
+          char *stxt; int slen;
+          int selected=0;
+          PangoRectangle pr;
+          
+          stxt=icon->title;
+          slen = strlen (stxt);
+          
+          selected = (il->_priv->mrow == row && il->_priv->mcol == col);
+          if (selected && il->_priv->flag_embolden) {
+            char *newtxt;
+            newtxt = g_strdup_printf ("<b>%s</b>", stxt);
+            pango_layout_set_markup (pl, newtxt, -1);
+            g_free (newtxt);
+          } else
+            pango_layout_set_text (pl, stxt, -1);
+          
+          pango_layout_get_pixel_extents  (pl, NULL, &pr);
+          
+          while ((pango_layout_get_line_count (pl) > 2 ||
+                  pr.width > il_col_width (il)) && slen>0) {
+            char *newtxt;
+            char *fmt;
+            if (stxt[slen-2] == ' ')
+              slen--;
+            
+            if (selected && il->_priv->flag_embolden)
+              fmt = g_strdup_printf ("<b>%%.%ds...</b>", --slen);
+            else
+              fmt = g_strdup_printf ("%%.%ds...", --slen);
+            
+            newtxt = g_strdup_printf (fmt, stxt);
+            g_free (fmt);
+            
+            if (selected)
+              pango_layout_set_markup (pl, newtxt, -1);
+            else
+              pango_layout_set_text (pl, newtxt, -1);
+            g_free (newtxt);
+            
+            pango_layout_get_pixel_extents  (pl, NULL, &pr);
+          }
+          
+          gtk_paint_layout (widget->style, widget->window, GTK_WIDGET_STATE (widget),
+                            FALSE, &dst,
+                            widget, "detail?wtf?", r1.x, r1.y, pl);
+        }
+      }//(if show title, compute and render)
 
 			if (++col == il->_priv->cols) {
 				col = 0; row++;
@@ -520,6 +524,11 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		self->_priv->flag_embolden = yes;
 	}
 
+	public void set_show_title (self, gboolean yes)
+	{
+		self->_priv->flag_show_title = yes;
+	}
+
 	public void clear (self)
 	{
 		GList *iter;
@@ -569,6 +578,8 @@ class GPE:IconList from Gtk:Scrolled:Window {
 		    (int)g_object_get_data (G_OBJECT(il), "size_y") == allocation->height)
 			return;
 
+    MAYBE_PRINTF ("old size: %dx%d\n", (int)g_object_get_data (G_OBJECT(il), "size_x"),
+                                       (int)g_object_get_data (G_OBJECT(il), "size_y"));
 		MAYBE_PRINTF ("new size: %dx%d\n", allocation->width, allocation->height);
 
 		g_object_set_data (G_OBJECT(il), "size_x", (gpointer)allocation->width);
