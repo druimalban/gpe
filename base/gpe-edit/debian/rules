@@ -27,7 +27,7 @@ build: build-stamp
 
 build-stamp: configure-stamp 
 	dh_testdir
-	$(MAKE) CVSBUILD=no
+	$(MAKE) CVSBUILD=no PREFIX=/usr
 	touch build-stamp
 
 clean:
