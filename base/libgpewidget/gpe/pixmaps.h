@@ -24,6 +24,10 @@
 #include <gdk/gdk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
+#if GTK_MAJOR_VERSION < 2
+#error Compiling with GTK 1 is not supported
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */

@@ -23,8 +23,8 @@ static GtkHBoxClass *parent_class = NULL;
 static void
 gtk_time_sel_init (GtkTimeSel *sel)
 {
-  sel->hour_adj = gtk_adjustment_new (0, 0, 24, 1, 15, 15);
-  sel->minute_adj = gtk_adjustment_new (0, 0, 60, 1, 15, 15);
+  sel->hour_adj = gtk_adjustment_new (0, 0, 23, 1, 15, 15);
+  sel->minute_adj = gtk_adjustment_new (0, 0, 59, 1, 15, 15);
 
   sel->hour_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sel->hour_adj), 1, 0);
   sel->minute_spin = gtk_spin_button_new (GTK_ADJUSTMENT (sel->minute_adj), 1, 0);
